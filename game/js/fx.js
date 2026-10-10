@@ -1197,6 +1197,7 @@
         p(c, x - 5 + o, y, 9, h, '#6aa8d0');
         p(c, x - 4 + o, y, 4, h, '#9fd0e8');
         p(c, x - 7 + o, y, 3, h, '#ffffff');
+        if (((y / 3 + ((t * 16) | 0)) | 0) % 3) p(c, x - 9 + o, y, 1, h, '#ff5a40'); // mép trước đang gây sát thương: chấm đỏ cam chạy (khác lúc báo trước)
         if (((y / 3 + ((t * 8) | 0)) | 0) % 3 === 0) { p(c, x - 9 + o, y, 2, 1, '#e9f9ff'); p(c, x + 10 + o, y + 1, 3, 1, 'rgba(159,208,232,0.7)'); }
       }
     };

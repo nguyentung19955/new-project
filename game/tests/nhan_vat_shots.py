@@ -83,6 +83,9 @@ SCENES = [
     ('vung', 'Vùng nguy hiểm: báo trước (đỏ mịn, đầy dần) khác vùng đang gây sát thương (vũng có viền nóng đập theo nhịp)',
      "() => { const c = T.vao(0, { seed: 2 }); const P = T.P; G.zoneCircle(P.x + 50, P.y - 10, 24, 0.5, 1, 'poison', { then: 4 }); G.zoneCircle(P.x - 50, P.y + 8, 22, 0.5, 1, 'fire', { then: 4 }); T.z3 = G.zoneCircle(P.x + 5, P.y + 40, 20, 1.4, 1, null, {}); return [c[0], c[1] + 10]; }",
      [("T.run(14)", 'báo trước'), ("T.run(17)", 'nổ: chớp'), ("T.run(8)", 'vũng hiện ra'), ("T.run(20)", 'đang gây sát thương'), ("T.run(15)", 'nhịp đập'), ("T.run(170)", 'sắp tắt')], (100, 58)),
+    ('tuong-nuoc', 'Tường nước của Ngư Tinh: báo trước (vệt đỏ nhấp nháy, khe trắng) rồi tường chạy (mép trước đỏ cam đang gây sát thương)',
+     "() => { const c = T.vao(1, { seed: 2 }); const P = T.P; T.W.zones.push({ wall: true, x: P.x + 100, y: P.y, ang: Math.PI, s: 10, v: 155, th: 14, half: 60, g: 22, gw: 12, wait: 0.5, maxS: 220, dmg: 0, el: 'ice' }); return [c[0] + 20, c[1] + 10]; }",
+     [("T.run(10)", 'báo trước'), ("T.run(16)", 'bắt đầu chạy'), ("T.run(8)", 'đang chạy'), ("T.run(8)", 'qua em bé'), ("T.run(8)", ''), ("T.run(10)", '')], (100, 56)),
     ('tram-nguyet', 'Trảm Nguyệt (kiếm, chiêu đặc biệt): vệt chém bay xuyên quái',
      "() => { const c = T.vao(0, { seed: 6, melee: 'sword' }); T.coc('rusher', 60, 0); T.coc('swarm', 100, 6); return [c[0] + 45, c[1]]; }",
      [("T.run(3, { specialP: true })", 'ra chiêu'), ("T.run(3)", ''), ("T.run(3)", ''), ("T.run(4)", ''), ("T.run(5)", ''), ("T.run(8)", '')], (100, 50)),
@@ -94,7 +97,7 @@ for r, ten in enumerate(['Rừng già', 'Hang biển', 'Lâu đài cổ']):
     SCENES.append(('trum-' + ['rung', 'bien', 'laudai'][r], 'Trùm ' + ten + ': ra chiêu, trúng đòn, vùng nguy hiểm',
                    """() => { G.pointers.clear(); G.testSave({ lvl: 16 }); G.rnd = G.srand(3); G.startStage(%d, 4, 0); const S = G.getRun(); G.gotoRoom(S.map.rooms.findIndex((x) => x.type === 'boss'));
                      const W = G.getWorld(), P = S.P, b = W.boss; T.W = W; T.P = P; T.b = b; T.clean(); for (let k = 0; k < Math.ceil(b.intro * 60) + 20; k++) T.frame({}); T.clean();
-                     P.x = W.x0 + 70; P.y = W.y1 - 40; b.x = (W.x0 + W.x1) / 2 + 20; b.y = (W.y0 + W.y1) / 2; return [(W.x0 + W.x1) / 2, (W.y0 + W.y1) / 2 + 4]; }""" % r,
+                     P.x = W.x0 + 70; P.y = W.y1 - 40; b.x = (W.x0 + W.x1) / 2 + 20; b.y = (W.y0 + W.y1) / 2; return [(W.x0 + W.x1) / 2, (W.y0 + W.y1) / 2 - 22]; }""" % r,
                    [("T.run(30)", ''), ("T.run(30)", ''), ("T.P.x = T.b.x - 26; T.P.y = T.b.y + 4; T.P.face = 1; T.run(4, { atkP: true, atk: true })", 'trúng đòn'), ("T.run(40)", ''), ("T.run(40)", ''), ("T.run(40)", '')], (150, 84)))
 
 

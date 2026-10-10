@@ -576,6 +576,8 @@
       if (Math.abs(b - z.g) <= z.gw) continue;
       const o = Math.sin(b * 0.2 + t * 12) * 2;
       for (let a = -z.th / 2; a <= z.th / 2; a += 2) { const q = at(z.s + a + o, b); p(c, q[0], q[1], 2, 2, a > z.th / 2 - 3 ? '#ffffff' : a > 0 ? '#9fd0e8' : '#4a80b0'); }
+      // mép trước đang gây sát thương: chấm đỏ cam chạy trước bọt (khác vệt báo trước nhấp nháy), màu vùng nguy hiểm docs/vfx/BANG-MAU.md
+      if (((b >> 1) + ((t * 16) | 0)) % 3) { const q = at(z.s + z.th / 2 + 3 + o, b); p(c, q[0], q[1], 1, 2, '#ff5a40'); }
     }
     for (const s of [-1, 1]) { const q = at(z.s, z.g + s * z.gw); p(c, q[0] - 1, q[1] - 1, 3, 3, '#ffffff'); }
   }
