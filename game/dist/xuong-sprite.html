@@ -8250,8 +8250,12 @@ window.XS_THU_URL = "xuong-sprite-thu.html";
     armor: { a_r1: 'ao_vai', a_r2: 'ao_da_bien', a_r3: 'giap_da', a_moc: 'ao_vo_cay', a_ngu: 'ao_vay', a_ho: 'ao_long' },
   };
   // Gộp: bộ khởi đầu, rồi mũ áo đang mặc trong game (o.helm, o.armor), rồi o.outfit nếu có (hoặc o.p.outfit: đồ gắn sẵn trên người chơi).
+  const KHONG_DO = { hat: null, robe: null, back: null, hand: null, mask: null };
   function outfitOf(key, o) {
-    const st = HERO[key].outfit, x = (o && o.outfit) || (o && o.p && o.p.outfit) || {};
+    // Thân AI (em-be-<key>): không khoác bộ đồ khởi đầu mặc định (mũ trùm, áo trùm… che mặt và hình riêng của nhân vật);
+    // chỉ hiện đồ người chơi thật sự đang mặc (o.outfit / o.p.outfit / mũ áo trang bị) và cánh.
+    const SCx = G.spriteCustom, coAI = !!(SCx && SCx.cuaEmBe && SCx.cuaEmBe(key));
+    const st = coAI ? KHONG_DO : HERO[key].outfit, x = (o && o.outfit) || (o && o.p && o.p.outfit) || {};
     const pick = (k, gear) => (x[k] !== undefined ? x[k] : gear || st[k]);
     return {
       hat: pick('hat', o && o.helm && L.fromGear.helm[o.helm]), robe: pick('robe', o && o.armor && L.fromGear.armor[o.armor]),
@@ -8926,11 +8930,15 @@ window.XS_THU_URL = "xuong-sprite-thu.html";
   function lopDo(fr, neo, khop) {
     khop = khop || null;
     const D = dungLopDo(fr, neo, khop), quay = D.quay, ps = D.ps, n2 = D.n2;
-    const N = fr.n || 1, id = [fr.key, ofKey(fr.of), fr.tint, D.an + D.f, D.nd.join(','), D.nt.join(','), quay ? [khop.rot, khop.x, khop.y].join(',') : '', N].join('|') + ((neo && neo.khoa) || '');
+    // Lăn: thân AI cuộn tròn thành cục nhỏ hơn hẳn lúc đứng, xoay đồ quanh chân thì mũ, cánh, đồ lưng văng ra ngoài thân
+    // (trông như rụng). Các khung cuộn tròn (xoay 60°..300°) tạm ẩn mũ, cánh, đồ lưng; áo, bùa vẫn bám thân.
+    const rq = quay ? ((((khop.rot | 0) % 360) + 360) % 360) : 0, cuon = quay && fr.anim === 'dodge' && rq >= 60 && rq <= 300;
+    const of = cuon ? Object.assign({}, fr.of, { hat: null, wing: null, back: null }) : fr.of;
+    const N = fr.n || 1, id = [fr.key, ofKey(of), fr.tint, D.an + D.f, D.nd.join(','), D.nt.join(','), quay ? [khop.rot, khop.x, khop.y].join(',') : '', N].join('|') + ((neo && neo.khoa) || '');
     let r = LCACHE.get(id);
     if (r) return r;
     if (LCACHE.size >= 1400) LCACHE.clear();
-    const mk = (only) => { const sp = kidSprite(fr.key, fr.of, ps, fr.tint, only, n2, N); return { cv: sp.cv, ox: ps.x - sp.ox, oy: ps.y - sp.oy, w: sp.w, h: sp.h, trong: sp.bb.x1 < sp.bb.x0 || (sp.cv.width <= 1 && sp.cv.height <= 1) }; };
+    const mk = (only) => { const sp = kidSprite(fr.key, of, ps, fr.tint, only, n2, N); return { cv: sp.cv, ox: ps.x - sp.ox, oy: ps.y - sp.oy, w: sp.w, h: sp.h, trong: sp.bb.x1 < sp.bb.x0 || (sp.cv.width <= 1 && sp.cv.height <= 1) }; };
     r = { sau: mk('aiSau'), truoc: mk('aiTruoc') };
     LCACHE.set(id, r);
     return r;
