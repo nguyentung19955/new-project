@@ -99,17 +99,27 @@
   footer.huong b { color: var(--hi); }
   .nhap-cu { background: #3a2812; border: 2px solid var(--gold); border-radius: 12px; padding: 12px; margin-bottom: 12px; }
   .an { display: none !important; }
+  header.dau, nav.buoc, .nut, .the, .vung-ve, .chan-trang, .hd, h3, label { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  .bao { pointer-events: none; }
   @media (max-width: 700px) {
     body { font-size: 16px; }
     .ten-cc small { display: none; }
   }
   @media (max-height: 520px) and (orientation: landscape) {
-    /* điện thoại ngang: bảng điều khiển bên phải, vùng vẽ thấp hơn */
-    header.dau { position: static; }
-    .khu { flex-wrap: nowrap; }
-    .khu > .ben { flex: 0 0 300px; max-height: 86vh; overflow-y: auto; }
-    #cvRap { height: 80vh; }
-    #cvTo { height: 62vh; }
+    /* điện thoại ngang: thanh trên/dưới gọn, bảng điều khiển bên phải cuộn riêng, vùng vẽ cao hết cỡ */
+    header.dau { position: static; padding: 4px 10px; }
+    .ten-cc { font-size: 17px; }
+    .ten-cc small { display: none; }
+    nav.buoc button { min-height: 42px; font-size: 15px; padding: 2px 10px; }
+    main { padding: 8px 10px; }
+    .hd { font-size: 15px; padding: 6px 10px; margin-bottom: 8px; }
+    .khu { flex-wrap: nowrap; gap: 10px; }
+    .khu > .ben { flex: 0 0 300px; max-height: calc(100vh - 190px); overflow-y: auto; }
+    #cvRap { height: calc(100vh - 190px); min-height: 200px; }
+    #cvTo { height: calc(100vh - 190px); min-height: 180px; }
+    .chan-trang { padding: 4px 10px; }
+    .chan-trang .nut { min-height: 44px; }
+    .bao { top: 8px; bottom: auto; }
   }
 </style>
 </head>
