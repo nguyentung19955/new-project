@@ -124,6 +124,7 @@
 
   <section class="buoc" id="buoc3" hidden>
     <h2><span class="so">3</span>Kiểm tra và tải file <span id="theKq" class="the"></span></h2>
+    <p class="chu-y" style="margin-top:-4px">Đang tách cho: <b id="dangCho" style="color:var(--hi);font-size:15px"></b>. Nhìn hình bên dưới, đúng con này thì mới tải.</p>
     <div class="ket-qua">
       <div style="min-width:0">
         <div class="hang" id="nutDongTac"></div>
@@ -739,6 +740,7 @@ function chay() {
   $('theKq').className = 'the ' + (KQ.dat ? 'dat' : 'hong'); $('theKq').textContent = KQ.dat ? 'ĐẠT' : 'CÓ LỖI';
   $('huongDan').textContent = KQ.dat ? 'Gửi file ' + Q.ma + '.sprite.json cho Claude để đưa vào game.' : 'Còn lỗi: thử đổi "Cách tách", chỉnh ô "Cắt" ở bước 2, hoặc nhờ ChatGPT vẽ lại cho đủ số hình mỗi hàng.';
   $('nutTaiJson').textContent = 'Tải ' + Q.ma + '.sprite.json';
+  $('dangCho').textContent = Q.ten + ' (' + Q.ma + ')';
   veTam(); $('buoc3').hidden = false; batDauChay();
 }
 
