@@ -868,7 +868,7 @@
       c.beginPath(); c.arc(cx, cy, STRIP.r - 1, 0, 7); c.clip(); VS.face(c, k, cx, cy + 1, 1);
       c.restore();
       if (S.news[k]) { c.save(); c.beginPath(); c.arc(cx + 7.5, cy - 7.5, 3, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = INK; c.stroke(); c.restore(); }
-      if (!compact) ui.text(NPCS[k].ngan, cx, 46.5, { size: 6.5, bold: true, align: 'center', color: on ? '#f6dc92' : '#e8dcc0' });
+      if (!compact) ui.text(NPCS[k].ngan, cx, 46.5, { size: 6.5, bold: true, tiny: true, align: 'center', color: on ? '#f6dc92' : '#e8dcc0' });
       if (clickable && G.click && Math.abs(G.click.x - cx) <= STRIP.gap / 2 && G.click.y >= 14 && G.click.y <= (compact ? 43 : 50)) { hit = k; G.click = null; G.sfx && G.sfx('ui'); }
     });
     return hit;

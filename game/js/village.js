@@ -16,6 +16,10 @@
   const SOFT = '#a9c2b4', TXT = '#f1e6c6', GOLD = '#f6dc92', GOOD = '#9be07a', WARN = '#ff9a5a';
 
   function say(s) { V.msg = s; V.msgT = 2.5; }
+  // V25 (chữ to hơn): đoạn chữ trong khung cố định — vượt quá maxLines dòng thì vẽ cỡ nhỏ cũ để không lọt khỏi khung
+  function fitPara(str, x, y, w, o, maxLines) { return ui.para(str, x, y, w, Object.assign({}, o, { tiny: ui.wrap(str, w, o.size, o.bold).length > maxLines })); }
+  // Cắt một dòng cho vừa bề rộng, thêm "…"
+  function cut1(str, w, size, bold) { const a = ui.wrap(str, w, size, bold); return a.length > 1 ? a[0] + '…' : a[0] || ''; }
   function canPay(c) {
     const sv = G.save;
     if (!c) return true;
@@ -244,15 +248,15 @@
       if (!h) return;
       T.inset(x0, ry, 214, h - 2, false, { fill: got ? '#24484a' : '#17302f', col: got && E ? E.dark : T.C.brD });
       ui.text(q[0], x0 + 5, ry + 10, { size: 8, bold: true, color: got && E ? E.col : SOFT });
-      ui.text(locked ? 'Cần bậc Lam' : got ? 'Đã mở' : i === st + 1 ? 'Sắp mở: ' + G.MARKS[i - 1] + ' dấu ấn' : 'Chưa mở', x0 + 209, ry + 10, { size: 6.5, align: 'right', bold: got, color: locked ? WARN : got ? GOOD : SOFT });
-      if (q[1]) ui.para(q[1], x0 + 5, ry + 19, 204, { size: 6.5, color: TXT });
+      ui.text(locked ? 'Cần bậc Lam' : got ? 'Đã mở' : i === st + 1 ? 'Sắp mở: ' + G.MARKS[i - 1] + ' dấu ấn' : 'Chưa mở', x0 + 209, ry + 10, { size: 6.5, align: 'right', bold: got, tiny: true, color: locked ? WARN : got ? GOOD : SOFT });
+      if (q[1]) fitPara(q[1], x0 + 5, ry + 19, 204, { size: 6.5, color: TXT }, 2);
       else if (el) {
         const f = G.HE_FEATURES[el][q[2]];
         ui.text('Đặc trưng ' + (q[2] + 1) + ': ' + f.name, x0 + 62, ry + 10, { size: 7.5, bold: true, color: got ? E.col2 : TXT });
-        ui.para(f.desc, x0 + 5, ry + 20, 204, { size: 6.5, color: TXT });
+        fitPara(f.desc, x0 + 5, ry + 20, 204, { size: 6.5, color: TXT }, 2);
       } else {
         ui.text(q[2] ? 'Đặc trưng 2: phản ứng dây chuyền' : 'Đặc trưng 1: thứ để lại trên sân', x0 + 5, ry + 21, { size: 7, color: TXT });
-        ui.text(G.ELS.map((e) => G.EL[e].name + ': ' + G.HE_FEATURES[e][q[2]].name).join(' · '), x0 + 5, ry + 31, { size: 7, color: TXT });
+        ui.text(G.ELS.map((e) => G.EL[e].name + ': ' + G.HE_FEATURES[e][q[2]].name).join(' · '), x0 + 5, ry + 31, { size: 7, color: TXT, tiny: ui.wrap(G.ELS.map((e) => G.EL[e].name + ': ' + G.HE_FEATURES[e][q[2]].name).join(' · '), 204, 7).length > 1 });
       }
       ry += h;
     });
@@ -436,7 +440,7 @@
     pager(stash.length, ROWS, CX, 241);
     stash.slice(V.page * ROWS, V.page * ROWS + ROWS).forEach((w, k) => {
       const y = 141 + k * PITCH, picked = multi && BD.ids.has(w.id);
-      const hit = G.weaponLine(w, CX, y, CW - 18, picked || (!multi && V.sel === w.id));
+      const hit = G.weaponLine(w, CX, y, CW - 18, picked || (!multi && V.sel === w.id), BD ? 44 : 0);
       if (BD) ui.text(BD.wPrice(w) + ' vàng', CX + CW - 22, y + 9.5, { size: 6.5, align: 'right', color: w.lock ? SOFT : GOLD });
       if (lockAt(w, y)) return;
       if (hit) {
@@ -538,7 +542,7 @@
       O.drawIcon(G.ux, k, CX + 15, y + 14, 20);
       ui.text(Ti.name + ' · ' + O.SLOT_NAME[Ti.slot], CX + 32, y + 11, { size: 8, bold: true, color: TXT });
       const st = O.stats({ k, r: 0 });
-      ui.text(Object.keys(st).map((q) => O.statText(q, st[q])).join(', ') + (own ? ' · đã có' : ''), CX + 32, y + 22, { size: 6.5, color: own ? GOOD : SOFT });
+      ui.text(cut1(Object.keys(st).map((q) => O.statText(q, st[q])).join(', ') + (own ? ' · đã có' : ''), CW - 120, 6.5), CX + 32, y + 22, { size: 6.5, color: own ? GOOD : SOFT });
       if (T.sbtn(CX + CW - 84, y + 5, 78, 18, 'Mua ' + Ti.price + ' vàng', { size: 7.5, pad: 2, disabled: sv.gold < Ti.price || O.full(sv) })) {
         const it = O.buy(sv, k);
         if (it) { G.persist(); G.sfx('pick'); VS.checkNews(); say('Của cháu đây, ' + Ti.name + '. Sang Cô Thợ May mà mặc thử.'); }

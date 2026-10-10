@@ -501,7 +501,7 @@
     const r = B.HUB, held = [...G.pointers.values()].some((q) => !q.role && !q.stale && G.inRect(q, r[0], r[1], r[2], r[3]));
     T.plate(r[0], r[1] + (held ? 1 : 0), r[2], r[3]);
     bagIcon(r[0] + r[2] / 2, r[1] + 11 + (held ? 1 : 0), 1.25);
-    ui.text('Hành trang', r[0] + r[2] / 2, r[1] + 27 + (held ? 1 : 0), { size: 6.5, bold: true, align: 'center', color: GOLD });
+    ui.text('Hành trang', r[0] + r[2] / 2, r[1] + 27 + (held ? 1 : 0), { size: 6.5, bold: true, tiny: true, align: 'center', color: GOLD });
     if ((G.click && G.inRect(G.click, r[0] - 2, r[1] - 1, r[2] + 4, r[3] + 2)) || G.keyP.KeyB) { G.click = null; B.openVillage(); return true; }
     return false;
   };
