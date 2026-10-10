@@ -135,8 +135,9 @@
       </div>
       <div class="hang" style="margin-top:8px">
         <label class="hang" style="gap:6px">Mép <select id="kieuMep" style="min-width:0"><option value="mem">Mềm (giữ quầng sáng trong suốt)</option><option value="sac">Sắc (đặc hoặc trong suốt)</option></select></label>
-        <label class="hang" style="gap:6px">Độ nét <select id="doNet" style="min-width:0"><option value="min">Mịn</option><option value="net">Sắc nét</option></select></label>
-        <label class="hang" style="gap:6px">Số màu <select id="soMau" style="min-width:0"><option value="32">32</option><option value="24">24</option><option value="16">16</option></select></label>
+        <label class="hang" style="gap:6px">Độ nét <select id="heNet" style="min-width:0"><option value="2">Gấp đôi (khuyên dùng)</option><option value="1">Thường</option></select></label>
+        <label class="hang" style="gap:6px">Nét vẽ <select id="doNet" style="min-width:0"><option value="min">Mịn</option><option value="net">Sắc nét</option></select></label>
+        <label class="hang" style="gap:6px">Số màu <select id="soMau" style="min-width:0"><option value="48">48</option><option value="32">32</option><option value="24">24</option><option value="16">16</option></select></label>
         <label class="hang" style="gap:6px">Cỡ <select id="coThem" style="min-width:0"><option value="0.7">70%</option><option value="0.85">85%</option><option value="1" selected>100%</option><option value="1.15">115%</option></select></label>
         <label class="hang" style="gap:6px"><input type="checkbox" id="latNgang"> Lật ngang (CHỈ khi hiệu ứng trong ảnh hướng sang TRÁI)</label>
         <label class="hang" style="gap:6px"><input type="checkbox" id="locDom" checked> Lọc đốm màu nền</label>
@@ -324,6 +325,10 @@ document.addEventListener('paste', (e) => { const it = [...(e.clipboardData || {
 ['catTren', 'catDuoi', 'catTrai', 'catPhai', 'cachTach', 'soCot'].forEach(id => $(id).onchange = () => { BO = []; ANH && chay(); });
 ['latNgang', 'doNet', 'locDom', 'soMau', 'kieuMep', 'coThem', 'vienToi'].forEach(id => $(id).onchange = () => ANH && chay());
 $('nutLamLai').onclick = () => ANH && chay();
+// Độ nét gấp đôi: ảnh trong file có số điểm ảnh gấp 2 (khung_rong, khung_cao, goc vẫn theo điểm ảnh game). Gấp đôi dùng 48 màu, thường 32.
+const NET = () => +$('heNet').value === 2 ? 2 : 1;
+$('soMau').value = '48';
+$('heNet').onchange = () => { $('soMau').value = NET() === 2 ? '48' : '32'; ANH && chay(); };
 
 // ===================== XỬ LÝ =====================
 function layAnh() {
@@ -596,7 +601,8 @@ function chay() {
   const { P, duong } = tachNen(A, coAlpha, mem);
   const K = timKhung(W, H, P, duong);
   veGoc(A, P, K.thay, K.boRa);
-  const { fw: FW, fh: FH, gx: GX, gy: GY, so: SO } = Q;
+  // N = độ nét: cỡ khung và điểm neo trong ảnh = số game × N. Số ghi vào file vẫn theo game.
+  const N = NET(), FW = Q.fw * N, FH = Q.fh * N, GX = Q.gx * N, GY = Q.gy * N, SO = Q.so;
   // nội dung từng khung (cắt sát) và vị trí dọc trong ô (giữ chuyển động lên xuống giữa các khung)
   const ds = [];
   for (const c of K.o) {
@@ -611,9 +617,9 @@ function chay() {
   const loi = K.loi.slice(), ghi = K.ghi.slice();
   if (ds.length) {
     const U0 = Math.min(...ds.map(f => f.ry0)), U1 = Math.max(...ds.map(f => f.ry1)), UH = U1 - U0 + 1, maxW = Math.max(...ds.map(f => f.w));
-    const traiX = Q.canh === 'trai' ? Math.max(1, GX - 2) : 0; // vệt vũ khí: mép trái của hình bắt đầu ngay chỗ tay
-    const s = Math.min((FW - 2 - (traiX || 2)) / maxW, (FH - 4) / UH) * +$('coThem').value;
-    const caoU = UH * s, dinhU = Q.doc === 'day' ? FH - 2 - caoU : GY - caoU / 2;
+    const traiX = Q.canh === 'trai' ? Math.max(N, GX - 2 * N) : 0; // vệt vũ khí: mép trái của hình bắt đầu ngay chỗ tay
+    const s = Math.min((FW - 2 * N - (traiX || 2 * N)) / maxW, (FH - 4 * N) / UH) * +$('coThem').value;
+    const caoU = UH * s, dinhU = Q.doc === 'day' ? FH - 2 * N - caoU : GY - caoU / 2;
     ds.forEach((f, i) => {
       const nw = Math.max(1, Math.round(f.w * s)), nh = Math.max(1, Math.round(f.h * s)), o = thuNho(f, nw, nh, lat, mem);
       let ox = Q.canh === 'trai' ? traiX : Math.round(GX - nw / 2), oy = Math.round(dinhU + (f.ry0 - U0) * s);
@@ -623,6 +629,7 @@ function chay() {
     if (ds.length < SO) for (let i = ds.length; i < SO; i++) loi.push('Thiếu khung ' + (i + 1));
   } else loi.push('Không tìm thấy hiệu ứng nào trong ảnh (kiểm tra màu nền đúng như prompt)');
   giamMau(tam, +$('soMau').value - 1);
+  // viền tối (nếu chọn) luôn 1 điểm ảnh của ảnh: khi gấp đôi trông gọn hơn viền 2 điểm
   if ($('vienToi').checked) {
     const them = [];
     for (let y = 0; y < TH; y++) for (let x = 0; x < TW; x++) {
@@ -635,7 +642,8 @@ function chay() {
   const mau = new Set(); let nuaTrong = 0, dac = 0;
   for (let i = 0; i < tam.length; i += 4) if (tam[i+3]) { mau.add(tam[i] << 16 | tam[i+1] << 8 | tam[i+2]); if (tam[i+3] < 255) nuaTrong++; else dac++; }
   const muc = [];
-  muc.push([`Dải ${TW}×${TH}: ${SO} khung, mỗi khung ${FW}×${FH}`, true]);
+  const dungCo = TW === Q.fw * SO * N && TH === Q.fh * N;
+  muc.push([`Độ nét ${N === 2 ? 'gấp đôi' : 'thường'}: dải ${TW}×${TH} = (${Q.fw * SO}×${Q.fh}) × ${N}, ${SO} khung, mỗi khung ${FW}×${FH}`, dungCo]);
   muc.push([`${mau.size} màu (tối đa ${$('soMau').value})`, mau.size <= +$('soMau').value]);
   const mep = [], trongK = [];
   for (let c = 0; c < SO; c++) {
@@ -645,11 +653,11 @@ function chay() {
   }
   muc.push([`Đủ ${SO} khung có hình` + (trongK.length ? ' (khung trống: ' + trongK.join(', ') + ')' : ''), !trongK.length && !loi.length]);
   muc.push(['Hình nằm trong khung' + (mep.length ? ' (chạm mép: khung ' + mep.join(', ') + ', có thể bị cắt)' : ''), mep.length <= Math.ceil(SO / 2)]);
-  muc.push([`Điểm neo (${GX}, ${GY}), ${Q.canh === 'trai' ? 'hình bám mép trái (tay em bé)' : 'hình đặt giữa'}`, true]);
+  muc.push([`Điểm neo (${Q.gx}, ${Q.gy}) điểm ảnh game${N > 1 ? ` = (${GX}, ${GY}) trong ảnh` : ''}, ${Q.canh === 'trai' ? 'hình bám mép trái (tay em bé)' : 'hình đặt giữa'}`, true]);
   muc.push([mem ? `Mép mềm: ${nuaTrong} điểm nửa trong suốt (quầng sáng)` : 'Mép sắc: chỉ đặc hoặc trong suốt', true]);
   loi.forEach(t => muc.push([t, false]));
   ghi.forEach(t => muc.push([t, true]));
-  KQ = { tam, TW, TH, FW, FH, dat: muc.every(m => m[1]) };
+  KQ = { tam, TW, TH, FW, FH, N, dat: muc.every(m => m[1]) };
   $('dsKiem').innerHTML = muc.map(([t, ok]) => `<li class="${ok ? '' : 'loi'}">${t}</li>`).join('')
     + `<li class="ghi">Tự nhìn: hiệu ứng chạy đúng thứ tự (bắt đầu → kết thúc), hướng sang PHẢI, cỡ vừa với hình em bé/quái mẫu. Hiệu ứng ngược hướng thì tích "Lật ngang" ở bước 2.</li>`;
   $('theKq').className = 'the ' + (KQ.dat ? 'dat' : 'hong'); $('theKq').textContent = KQ.dat ? 'ĐẠT' : 'CÓ LỖI';
@@ -700,7 +708,7 @@ function veTam() {
   g.strokeStyle = 'rgba(246,220,146,.45)'; g.lineWidth = 1;
   for (let c = 0; c <= Q.so; c++) { g.beginPath(); g.moveTo(c * FW * k + .5, 0); g.lineTo(c * FW * k + .5, cv.height); g.stroke(); }
   g.fillStyle = 'rgba(255,138,112,.9)';
-  for (let c = 0; c < Q.so; c++) g.fillRect((c * FW + Q.gx) * k - 1, Q.gy * k - 1, 3, 3);
+  for (let c = 0; c < Q.so; c++) g.fillRect((c * FW + Q.gx * KQ.N) * k - 1, Q.gy * KQ.N * k - 1, 3, 3);
 }
 $('chonNen').innerHTML = NEN_XEM.map(([id, col, t], i) => `<button class="nut nho phu${i ? '' : ' chon'}" data-c="${col}"><span class="o-mau" style="background:${col}"></span> ${t}</button>`).join('');
 $('chonNen').onclick = (e) => { const b = e.target.closest('button'); if (!b) return; nenXem = b.dataset.c; [...$('chonNen').children].forEach(x => x.classList.toggle('chon', x === b)); if (KQ) veTam(); };
@@ -715,9 +723,10 @@ let t0 = performance.now(), hoat = false;
 function batDauChay() { if (!hoat) { hoat = true; requestAnimationFrame(khungChay); } }
 function khungChay(now) {
   if (KQ && canvasTam) {
-    const cv = $('cvChay'), g = cv.getContext('2d'), { FW, FH } = KQ, dan = Q.xem === 'dan';
+    const cv = $('cvChay'), g = cv.getContext('2d'), N = KQ.N, FW = Q.fw, FH = Q.fh, dan = Q.xem === 'dan'; // FW, FH: điểm ảnh game
     const vw = dan ? 200 : Math.max(120, FW + 60), vh = Math.max(70, FH + 30);
-    const k = Math.max(2, Math.min(6, Math.floor(Math.min(640 / vw, 360 / vh))));
+    // k = điểm màn hình cho 1 điểm ảnh game, bội của N để ảnh gấp đôi hiện đúng độ nét thật
+    const k = Math.max(2, N * Math.floor(Math.min(6, Math.floor(Math.min(640 / vw, 360 / vh))) / N) || N);
     if (cv.width !== vw * k || cv.height !== vh * k) { cv.width = vw * k; cv.height = vh * k; cv.style.width = '100%'; cv.style.maxWidth = (vw * k) + 'px'; }
     g.imageSmoothingEnabled = false; g.fillStyle = nenXem; g.fillRect(0, 0, cv.width, cv.height);
     const cham = $('xemCham').checked ? 4 : 1, giay = Q.giay * cham, trai = $('xemTrai').checked;
@@ -738,7 +747,7 @@ function khungChay(now) {
       if (dan && Q.xoay) g.rotate(goc);
       g.scale((trai ? -1 : 1) * (Q.co || 1), Q.co || 1);
       if (Q.cong) g.globalCompositeOperation = 'lighter';
-      g.drawImage(canvasTam, f * FW, 0, FW, FH, -Q.gx * k, -Q.gy * k, FW * k, FH * k);
+      g.drawImage(canvasTam, f * FW * N, 0, FW * N, FH * N, -Q.gx * k, -Q.gy * k, FW * k, FH * k);
       g.restore();
       if (Q.xem === 'chu') { g.fillStyle = '#ffd27a'; g.fillText('Bé lên cấp 5!', ax * k, ay * k); }
     }
@@ -755,7 +764,7 @@ $('nutTaiJson').onclick = () => {
   if (!canvasTam) return;
   const tep = {
     loai: 'linh-khi-sprite', phien_ban: 1, doi_tuong: 'hieu-ung', ma: Q.ma, ten: Q.ten,
-    tam: canvasTam.toDataURL('image/png'), khung_rong: Q.fw, khung_cao: Q.fh, goc: [Q.gx, Q.gy],
+    tam: canvasTam.toDataURL('image/png'), ...(KQ.N > 1 ? { net: KQ.N } : {}), khung_rong: Q.fw, khung_cao: Q.fh, goc: [Q.gx, Q.gy],
     so: Q.so, giay: Q.giay, lap: !!Q.lap, xoay: !!Q.xoay, co: Q.co || 1, tron: Q.cong ? 'cong' : 'thuong',
   };
   taiXuong(Q.ma + '.sprite.json', new Blob([JSON.stringify(tep)], { type: 'application/json' }));
