@@ -5,6 +5,7 @@
 //   { loai:"linh-khi-sprite", doi_tuong:"hieu-ung", ma:"hu-<tên>", ten, tam:"data:image/png;base64,…" (dải khung ngang),
 //     khung_rong, khung_cao, goc:[x,y] (điểm neo: chỗ đặt vào game), so (số khung), giay (thời lượng), lap (lặp?),
 //     xoay (xoay theo hướng bay/hướng đánh?), co (hệ số cỡ, mặc định 1), tron ("cong" = cộng sáng 'lighter' cho ánh sáng) }
+// Tuỳ chọn "net" (số nguyên 1..4, mặc định 1): ảnh có số điểm ảnh gấp net lần; khung_rong, khung_cao, goc vẫn tính theo điểm ảnh game.
 // Ảnh vẽ quay sang PHẢI; game tự lật khi quay trái. Dùng lại một ảnh, không tạo canvas mới mỗi khung (mượt trên điện thoại).
 // Nạp TRƯỚC js/sprite_custom.js (sprite_custom chuyển tệp hiệu ứng sang đây).
 (function () {
@@ -25,10 +26,11 @@
         ma: tep.ma, ten: String(tep.ten || tep.ma), fw, fh, ax: isFinite(+goc[0]) ? +goc[0] : fw / 2, ay: isFinite(+goc[1]) ? +goc[1] : fh / 2,
         so: clamp(tep.so | 0, 1, 64), giay: +tep.giay > 0 ? clamp(+tep.giay, 0.05, 10) : 0.5, lap: !!tep.lap, xoay: !!tep.xoay,
         co: +tep.co > 0 ? clamp(+tep.co, 0.1, 8) : 1, cong: tep.tron === 'cong', img: null, ready: false, cot: 1,
+        net: tep.net == null || !isFinite(+tep.net) ? 1 : clamp(Math.round(+tep.net), 1, 4),
       };
       if (typeof Image !== 'undefined') {
         const img = new Image();
-        img.onload = () => { a.img = img; a.cot = Math.max(1, Math.floor(img.width / fw)); a.ready = true; };
+        img.onload = () => { a.img = img; a.cot = Math.max(1, Math.floor(img.width / (fw * a.net))); a.ready = true; };
         img.onerror = () => { FA.loi.push(a.ma + ': ảnh hỏng'); };
         img.src = tep.tam;
       }
@@ -73,7 +75,8 @@
       c.imageSmoothingEnabled = false;
       if (a.cong) c.globalCompositeOperation = 'lighter';
       if (mo != null && mo < 1) c.globalAlpha *= clamp(mo, 0, 1);
-      c.drawImage(a.img, (f % a.cot) * a.fw, Math.floor(f / a.cot) * a.fh, a.fw, a.fh, -a.ax, -a.ay, a.fw, a.fh);
+      const n = a.net, sw = a.fw * n, sh = a.fh * n;
+      c.drawImage(a.img, (f % a.cot) * sw, Math.floor(f / a.cot) * sh, sw, sh, -a.ax, -a.ay, a.fw, a.fh);
     } finally { c.restore(); }
     return true;
   };

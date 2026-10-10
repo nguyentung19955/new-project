@@ -124,7 +124,7 @@
     const all = Object.keys(sv.stars).length >= 15;
     if (!all) V.diff = 0;
     const map = V.diff ? sv.stars2 : sv.stars;
-    c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = 1;
+    G.wxDat(c, 0, 0); c.globalAlpha = 1;
     c.drawImage(VS.mapArt(night), 0, 0);
     // đường nét đứt nối các ải theo thứ tự; chưa mở thì nhạt
     const ink = night ? '#3a2a4a' : '#7a4a30', faint = night ? '#6a6488' : '#b8a880';
@@ -681,8 +681,13 @@
   function settings() {
     const sv = G.save, CL = G.cloud, CU = G.cloudUI;
     frame('Cổng làng: cài đặt');
-    if (T.btn(CX + 4, 72, 146, 26, 'Âm thanh: ' + (sv.sound ? 'bật' : 'tắt'), { size: 9 })) { sv.sound = !sv.sound; G.persist(); G.audioStart(); }
-    if (T.btn(CX + 154, 72, 146, 26, 'Toàn màn hình', { size: 9 })) {
+    if (T.btn(CX + 4, 72, 96, 26, 'Âm thanh: ' + (sv.sound ? 'bật' : 'tắt'), { size: 8.5 })) { sv.sound = !sv.sound; G.persist(); G.audioStart(); }
+    // Độ nét hình (js/engine.js G.NET): Cao = canvas thế giới gấp đôi điểm ảnh (ảnh AI rõ hơn), Thường = như cũ (nhẹ máy yếu)
+    if (T.btn(CX + 104, 72, 96, 26, 'Độ nét: ' + (sv.net === 'thuong' ? 'Thường' : 'Cao'), { size: 8.5 })) {
+      if (sv.net === 'thuong') delete sv.net; else sv.net = 'thuong';
+      G.persist(); say(sv.net === 'thuong' ? 'Độ nét Thường: nhẹ máy hơn, hình AI kém rõ hơn.' : 'Độ nét Cao: hình AI rõ gấp đôi.');
+    }
+    if (T.btn(CX + 204, 72, 96, 26, 'Toàn màn hình', { size: 8.5 })) {
       try { const el = document.documentElement; if (document.fullscreenElement) document.exitFullscreen(); else el.requestFullscreen().catch(() => say('Thiết bị này không cho bật toàn màn hình.')); } catch (e) { say('Thiết bị này không cho bật toàn màn hình.'); }
     }
     T.head('Lưu tiến trình', CX + 4, 113);

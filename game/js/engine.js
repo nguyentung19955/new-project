@@ -9,6 +9,23 @@
   G.ux = uiCv.getContext('2d');
   G.wx.imageSmoothingEnabled = false;
   G.scale = 1;
+  // Độ nét gấp đôi: canvas thế giới có số điểm ảnh thật gấp G.NET lần (480x270 -> 960x540), nhưng mọi code vẫn vẽ theo
+  // toạ độ 480x270 như cũ nhờ phép phóng xNET đặt sẵn. Chỗ nào tự đặt lại phép biến hình (setTransform) trên canvas thế giới
+  // thì nhân thêm G.NET (dùng G.wxDat). Hình vẽ bằng code: mỗi điểm ảnh cũ thành 2x2, trông y như trước; ảnh AI có "net": 2
+  // thì hiện đủ chi tiết gấp đôi. Cài đặt "Độ nét" (Anh Mõ): Cao = 2, Thường = 1 (G.save.net = 'thuong').
+  G.NET = 0;
+  G.setNet = function (n) {
+    n = n >= 2 ? 2 : 1;
+    if (G.NET === n && world.width === G.W * n) return;
+    G.NET = n;
+    world.width = G.W * n; world.height = G.H * n; // đổi cỡ canvas thì mọi trạng thái bút bị đặt lại
+    G.wx.imageSmoothingEnabled = false;
+    G.wx.setTransform(n, 0, 0, n, 0, 0);
+  };
+  G.netMuon = () => (G.save && G.save.net === 'thuong' ? 1 : 2);
+  // Đặt phép biến hình cho canvas thế giới theo toạ độ game: tương đương c.setTransform(a, 0, 0, a, x, y) của bản cũ.
+  G.wxDat = function (c, x, y, a) { const n = G.NET || 1; a = a == null ? 1 : a; c.setTransform(a * n, 0, 0, a * n, (x || 0) * n, (y || 0) * n); };
+  G.setNet(2);
 
   // Khoá ngang: cầm máy dọc thì xoay cả khung game 90 độ để game luôn nằm ngang kín màn hình.
   // Trình duyệt không cho trang web tắt tự xoay của máy, nên ta tự xoay hình và tự đổi toạ độ ngón tay.
@@ -293,6 +310,7 @@
       s.mats = arr3(s.mats); s.shards = arr3(s.shards);
       s.forge = G.clamp(Math.floor(num(s.forge, 1)), 1, G.FORGE_CAP.length - 1);
       s.sound = s.sound !== false;
+      if (s.net !== 'thuong') delete s.net; // độ nét: không có (mặc định) là Cao, 'thuong' là Thường
       for (const k of ['stars', 'stars2', 'scars', 'tut']) s[k] = obj(s[k]);
       for (const k of ['stars', 'stars2']) for (const id in s[k]) s[k][id] = G.clamp(Math.floor(num(s[k][id], 1)), 1, 3);
       for (const id in s.scars) if (!G.ELS.includes(s.scars[id])) delete s.scars[id];
@@ -491,6 +509,7 @@
     while (acc >= STEP && n < 5) { G.tickDraw = n === 0; G.tick(); acc -= STEP; n++; }
     if (acc > STEP) acc = 0; // khung hình quá chậm: bỏ phần dư, không chạy bù dồn
     if (G.scene && !G.noRender) {
+      if (G.NET !== G.netMuon()) G.setNet(G.netMuon());
       ui.begin();
       G.scene.draw();
       if (G.theme && G.theme.endFrame) G.theme.endFrame(); // tên biểu tượng tài nguyên khi chạm vào

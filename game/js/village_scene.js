@@ -772,7 +772,7 @@
   VS.drawWorld = function (o) {
     o = o || {};
     const c = G.wx, Bt = build(), cam = Math.round(S.cam), sv = G.save, t = S.t;
-    c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = 1; c.globalCompositeOperation = 'source-over';
+    G.wxDat(c, 0, 0); c.globalAlpha = 1; c.globalCompositeOperation = 'source-over';
     c.fillStyle = '#101a1a'; c.fillRect(0, 0, 480, OY);
     c.translate(0, OY);
     c.drawImage(Bt.ground, -cam, 0);
@@ -828,7 +828,7 @@
       if (a < 0.25) continue;
       c.fillStyle = 'rgba(210,255,120,' + (0.22 * a).toFixed(2) + ')'; c.fillRect(x - 1, y - 1, 3, 3); p(c, x, y, 1, 1, '#eaff9a');
     }
-    c.setTransform(1, 0, 0, 1, 0, 0);
+    G.wxDat(c, 0, 0);
     if (o.dim) { c.fillStyle = 'rgba(10,8,16,' + o.dim + ')'; c.fillRect(0, 0, 480, H); }
   };
   // Đổi một điểm trong làng sang toạ độ màn hình

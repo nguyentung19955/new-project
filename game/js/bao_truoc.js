@@ -305,10 +305,10 @@
       if (W.boss) hit(W.boss, (W.boss.drawW || 120) * 0.6, (W.boss.drawH || 120) * 1.2 + 10);
       if (B[2] <= B[0]) return;
       need = true;
-      // từ toạ độ thế giới sang điểm ảnh #world (đang có phép dời của khung)
-      const m = c.getTransform(), w = c.canvas;
-      const x = clamp(Math.floor(B[0] + m.e) - 2, 0, w.width), y = clamp(Math.floor(B[1] + m.f) - 2, 0, w.height);
-      const x1 = clamp(Math.ceil(B[2] + m.e) + 2, 0, w.width), y1 = clamp(Math.ceil(B[3] + m.f) + 2, 0, w.height);
+      // từ toạ độ thế giới sang điểm ảnh màn hình game 480x270 (đang có phép dời của khung; canvas thật gấp G.NET lần)
+      const m = c.getTransform(), w = c.canvas, N = G.NET || 1, me = m.e / N, mf = m.f / N;
+      const x = clamp(Math.floor(B[0] + me) - 2, 0, G.W), y = clamp(Math.floor(B[1] + mf) - 2, 0, G.H);
+      const x1 = clamp(Math.ceil(B[2] + me) + 2, 0, G.W), y1 = clamp(Math.ceil(B[3] + mf) + 2, 0, G.H);
       if (x1 <= x || y1 <= y) { need = false; return; }
       SB[0] = x; SB[1] = y; SB[2] = x1 - x; SB[3] = y1 - y;
       if (filt == null) filt = makeFilter();
@@ -316,15 +316,15 @@
       if (!snapCv) snapCv = document.createElement('canvas');
       if (snapCv.width !== w.width || snapCv.height !== w.height) { snapCv.width = w.width; snapCv.height = w.height; }
       const s = snapCv.getContext('2d');
-      s.clearRect(x, y, SB[2], SB[3]);
-      s.drawImage(w, x, y, SB[2], SB[3], x, y, SB[2], SB[3]);
+      s.clearRect(x * N, y * N, SB[2] * N, SB[3] * N);
+      s.drawImage(w, x * N, y * N, SB[2] * N, SB[3] * N, x * N, y * N, SB[2] * N, SB[3] * N);
       snapOk = true;
     } catch (e) { snapOk = false; need = false; }
   };
-  // chỉ làm trong khung bao (x, y, w, h: điểm ảnh của #world) để nhẹ máy
-  function maskOut(c, sc, x, y, w, h) {
+  // chỉ làm trong khung bao (x, y, w, h: điểm ảnh màn hình game 480x270) để nhẹ máy. Canvas #world thật gấp G.NET lần.
+  function maskOut(c, sc, x0, y0, w0, h0) {
     if (!filt || !snapOk) return false;
-    const wv = G.wx.canvas, kx = c.canvas.width / wv.width, ky = c.canvas.height / wv.height;
+    const wv = G.wx.canvas, N = wv.width / G.W, x = x0 * N, y = y0 * N, w = w0 * N, h = h0 * N, kx = c.canvas.width / wv.width, ky = c.canvas.height / wv.height;
     if (!mCv) { mCv = document.createElement('canvas'); mCx = mCv.getContext('2d'); aCv = document.createElement('canvas'); aCx = aCv.getContext('2d'); }
     if (mCv.width < w || mCv.height < h) { mCv.width = aCv.width = Math.max(w, mCv.width); mCv.height = aCv.height = Math.max(h, mCv.height); }
     mCx.globalCompositeOperation = 'copy'; mCx.drawImage(wv, x, y, w, h, 0, 0, w, h);

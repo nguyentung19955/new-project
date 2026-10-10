@@ -15,19 +15,21 @@
   const cache = new Map();
 
   function canvas(w, h) { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; return cv; }
-  // Thêm viền tối 1 điểm ảnh quanh hình (vẽ bóng hình tối lệch 4 hướng rồi vẽ hình lên trên).
-  function vien(src, pad) {
+  // Thêm viền tối 1 điểm ảnh (game) quanh hình (vẽ bóng hình tối lệch 4 hướng rồi vẽ hình lên trên). k: hình đang ở độ nét gấp k.
+  function vien(src, pad, k) {
+    k = k || 1; pad *= k;
     const w = src.width + pad * 2, h = src.height + pad * 2, sil = canvas(w, h), sc = sil.getContext('2d');
     sc.drawImage(src, pad, pad); sc.globalCompositeOperation = 'source-in'; sc.fillStyle = OL; sc.fillRect(0, 0, w, h);
     const out = canvas(w, h), c = out.getContext('2d'); c.imageSmoothingEnabled = false;
-    for (const d of [[-1, 0], [1, 0], [0, -1], [0, 1], [1, 1]]) c.drawImage(sil, d[0], d[1]);
+    for (const d of [[-1, 0], [1, 0], [0, -1], [0, 1], [1, 1]]) c.drawImage(sil, d[0] * k, d[1] * k);
     c.drawImage(src, pad, pad);
     return out;
   }
-  // Hình (đã viền) của một món, lưu lại theo khoá. Tâm hình ở giữa canvas.
+  // Hình (đã viền) của một món, lưu lại theo khoá. Tâm hình ở giữa canvas. Canvas có độ nét gấp cv.net lần (= G.NET lúc tạo):
+  // hình AI (vật phẩm, vũ khí) giữ được chi tiết gấp đôi khi vẽ lên canvas thế giới; hình vẽ bằng code y như cũ.
   function hinh(o) {
-    const k = khoa(o); let cv = cache.get(k); if (cv) return cv;
-    const S = 22, src = canvas(S, S), c = src.getContext('2d'); c.imageSmoothingEnabled = false;
+    const N = G.NET || 1, k = khoa(o) + '|' + N; let cv = cache.get(k); if (cv) return cv;
+    const S = 22, src = canvas(S * N, S * N), c = src.getContext('2d'); c.imageSmoothingEnabled = false; c.scale(N, N);
     try {
       // Vật phẩm có hình tự vẽ (Xưởng Sprite, js/sprite_custom.js) thì dùng hình đó.
       const tv = G.spriteCustom && G.spriteCustom.vatPham ? G.spriteCustom.vatPham(o.kind === 'linhkhi' ? 'linhkhi-' + o.el : o.kind) : null;
@@ -47,7 +49,7 @@
         if (/^shard/.test(o.kind)) { c.fillStyle = '#ffffff'; c.fillRect(11, 8, 1, 3); } // vệt sáng trên mảnh vỡ
       }
     } catch (e) { /* thiếu hình thì để trống */ }
-    cv = vien(src, 1); cache.set(k, cv);
+    cv = vien(src, 1, N); cv.net = N; cache.set(k, cv);
     if (cache.size > 200) cache.delete(cache.keys().next().value);
     return cv;
   }
@@ -156,7 +158,8 @@
     // hình món đồ (đã viền tối), vũ khí nằm nghiêng sẵn trong hình thu nhỏ
     const cv = hinh(o);
     c.imageSmoothingEnabled = false;
-    c.drawImage(cv, ix - (cv.width >> 1), iy - (cv.height >> 1));
+    const n = cv.net || 1, cw = cv.width / n, ch = cv.height / n;
+    c.drawImage(cv, ix - (cw >> 1), iy - (ch >> 1), cw, ch);
     // lấp lánh: đồ Vàng, vàng, mảnh trùm thường xuyên hơn
     const nhieu = r >= 3 || o.kind === 'gold' || /^shard/.test(o.kind);
     const nhip = Math.floor(t * (nhieu ? 5 : 2.5) + o.x * 0.3) % (nhieu ? 3 : 5);
@@ -253,7 +256,8 @@
         a = q < 0.1 ? q / 0.1 : q > 0.65 ? Math.max(0, (1 - q) / 0.35) : 1;
       }
       c.globalAlpha = ga * a;
-      c.drawImage(b.cv, Math.round(x - (b.cv.width >> 1)), Math.round(y - (b.cv.height >> 1)));
+      const n = b.cv.net || 1, bw = b.cv.width / n, bh = b.cv.height / n;
+      c.drawImage(b.cv, Math.round(x - (bw >> 1)), Math.round(y - (bh >> 1)), bw, bh);
     }
     c.globalAlpha = ga; c.imageSmoothingEnabled = sm;
   };

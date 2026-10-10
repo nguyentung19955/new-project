@@ -1022,9 +1022,9 @@
     let sx = 0, sy = 0;
     if (F && F.shakeOffset) { const o = F.shakeOffset(); sx = o.x; sy = o.y; }
     else if (W.shake > 0) { sx = Math.round(Math.random() * 4 - 2); sy = Math.round(Math.random() * 2 - 1); }
-    c.setTransform(1, 0, 0, 1, 0, 0);
+    G.wxDat(c, 0, 0);
     A.bg(c, reg, W.seed, cam, W.w, W.shrink);
-    c.setTransform(1, 0, 0, 1, -cam + sx, sy);
+    G.wxDat(c, -cam + sx, sy);
     for (const z of W.zones) {
       if (F && F.zone && F.zone(c, z, W)) continue;
       if (z.wave) {
@@ -1083,7 +1083,7 @@
     for (const s of W.slashes) A.slash(c, s);
     for (const o of W.parts) A.p(c, Math.round(o.x), Math.round(o.y), o.s, o.s, o.col);
     if (F && F.drawOver) F.drawOver(c);
-    c.setTransform(1, 0, 0, 1, 0, 0);
+    G.wxDat(c, 0, 0);
     // chữ sát thương vẽ ở lớp giao diện cho nét
     for (const o of W.texts) G.ui.text(o.s, o.x - cam, o.y, { size: o.size, align: 'center', color: o.col, bold: true });
     if (G.doRoi && !P.dead) G.doRoi.nhan(W, P); // tên ngắn của đồ rơi khi lại gần

@@ -715,12 +715,13 @@
     const k = T.phase === 0 ? Math.min(1, T.t / TRANS_OUT) : 1 - Math.min(1, T.t / TRANS_IN);
     const sgn = T.phase === 0 ? -1 : 1;
     const ox = Math.round(v[0] * SLIDE * k * sgn), oy = Math.round(v[1] * SLIDE * k * sgn);
-    c.setTransform(1, 0, 0, 1, 0, 0);
+    c.setTransform(1, 0, 0, 1, 0, 0); // dán lại chính canvas: theo điểm ảnh thật (gấp G.NET)
     if (ox || oy) {
       c.globalCompositeOperation = 'copy';
-      c.drawImage(c.canvas, ox, oy);
+      c.drawImage(c.canvas, ox * G.NET, oy * G.NET);
       c.globalCompositeOperation = 'source-over';
     }
+    G.wxDat(c, 0, 0);
     c.fillStyle = 'rgba(0,0,0,' + Math.min(1, k * 1.1).toFixed(3) + ')';
     c.fillRect(0, 0, G.W, G.H);
   }

@@ -53,7 +53,7 @@
 </div><canvas id="ui"></canvas></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.10-2158";
+(window.G = window.G || {}).VERSION = "lk-2026.10.10-2215";
 
 // ===== js/data.js =====
 // Dữ liệu game: hệ, vũ khí, hero, quái, vùng, trang bị. Mọi con số cân bằng nằm ở đây.
@@ -417,6 +417,23 @@
   G.ux = uiCv.getContext('2d');
   G.wx.imageSmoothingEnabled = false;
   G.scale = 1;
+  // Độ nét gấp đôi: canvas thế giới có số điểm ảnh thật gấp G.NET lần (480x270 -> 960x540), nhưng mọi code vẫn vẽ theo
+  // toạ độ 480x270 như cũ nhờ phép phóng xNET đặt sẵn. Chỗ nào tự đặt lại phép biến hình (setTransform) trên canvas thế giới
+  // thì nhân thêm G.NET (dùng G.wxDat). Hình vẽ bằng code: mỗi điểm ảnh cũ thành 2x2, trông y như trước; ảnh AI có "net": 2
+  // thì hiện đủ chi tiết gấp đôi. Cài đặt "Độ nét" (Anh Mõ): Cao = 2, Thường = 1 (G.save.net = 'thuong').
+  G.NET = 0;
+  G.setNet = function (n) {
+    n = n >= 2 ? 2 : 1;
+    if (G.NET === n && world.width === G.W * n) return;
+    G.NET = n;
+    world.width = G.W * n; world.height = G.H * n; // đổi cỡ canvas thì mọi trạng thái bút bị đặt lại
+    G.wx.imageSmoothingEnabled = false;
+    G.wx.setTransform(n, 0, 0, n, 0, 0);
+  };
+  G.netMuon = () => (G.save && G.save.net === 'thuong' ? 1 : 2);
+  // Đặt phép biến hình cho canvas thế giới theo toạ độ game: tương đương c.setTransform(a, 0, 0, a, x, y) của bản cũ.
+  G.wxDat = function (c, x, y, a) { const n = G.NET || 1; a = a == null ? 1 : a; c.setTransform(a * n, 0, 0, a * n, (x || 0) * n, (y || 0) * n); };
+  G.setNet(2);
 
   // Khoá ngang: cầm máy dọc thì xoay cả khung game 90 độ để game luôn nằm ngang kín màn hình.
   // Trình duyệt không cho trang web tắt tự xoay của máy, nên ta tự xoay hình và tự đổi toạ độ ngón tay.
@@ -701,6 +718,7 @@
       s.mats = arr3(s.mats); s.shards = arr3(s.shards);
       s.forge = G.clamp(Math.floor(num(s.forge, 1)), 1, G.FORGE_CAP.length - 1);
       s.sound = s.sound !== false;
+      if (s.net !== 'thuong') delete s.net; // độ nét: không có (mặc định) là Cao, 'thuong' là Thường
       for (const k of ['stars', 'stars2', 'scars', 'tut']) s[k] = obj(s[k]);
       for (const k of ['stars', 'stars2']) for (const id in s[k]) s[k][id] = G.clamp(Math.floor(num(s[k][id], 1)), 1, 3);
       for (const id in s.scars) if (!G.ELS.includes(s.scars[id])) delete s.scars[id];
@@ -899,6 +917,7 @@
     while (acc >= STEP && n < 5) { G.tickDraw = n === 0; G.tick(); acc -= STEP; n++; }
     if (acc > STEP) acc = 0; // khung hình quá chậm: bỏ phần dư, không chạy bù dồn
     if (G.scene && !G.noRender) {
+      if (G.NET !== G.netMuon()) G.setNet(G.netMuon());
       ui.begin();
       G.scene.draw();
       if (G.theme && G.theme.endFrame) G.theme.endFrame(); // tên biểu tượng tài nguyên khi chạm vào
@@ -11593,9 +11612,9 @@
     let sx = 0, sy = 0;
     if (F && F.shakeOffset) { const o = F.shakeOffset(); sx = o.x; sy = o.y; }
     else if (W.shake > 0) { sx = Math.round(Math.random() * 4 - 2); sy = Math.round(Math.random() * 2 - 1); }
-    c.setTransform(1, 0, 0, 1, 0, 0);
+    G.wxDat(c, 0, 0);
     A.bg(c, reg, W.seed, cam, W.w, W.shrink);
-    c.setTransform(1, 0, 0, 1, -cam + sx, sy);
+    G.wxDat(c, -cam + sx, sy);
     for (const z of W.zones) {
       if (F && F.zone && F.zone(c, z, W)) continue;
       if (z.wave) {
@@ -11654,7 +11673,7 @@
     for (const s of W.slashes) A.slash(c, s);
     for (const o of W.parts) A.p(c, Math.round(o.x), Math.round(o.y), o.s, o.s, o.col);
     if (F && F.drawOver) F.drawOver(c);
-    c.setTransform(1, 0, 0, 1, 0, 0);
+    G.wxDat(c, 0, 0);
     // chữ sát thương vẽ ở lớp giao diện cho nét
     for (const o of W.texts) G.ui.text(o.s, o.x - cam, o.y, { size: o.size, align: 'center', color: o.col, bold: true });
     if (G.doRoi && !P.dead) G.doRoi.nhan(W, P); // tên ngắn của đồ rơi khi lại gần
@@ -16580,6 +16599,7 @@
 //   { loai:"linh-khi-sprite", doi_tuong:"hieu-ung", ma:"hu-<tên>", ten, tam:"data:image/png;base64,…" (dải khung ngang),
 //     khung_rong, khung_cao, goc:[x,y] (điểm neo: chỗ đặt vào game), so (số khung), giay (thời lượng), lap (lặp?),
 //     xoay (xoay theo hướng bay/hướng đánh?), co (hệ số cỡ, mặc định 1), tron ("cong" = cộng sáng 'lighter' cho ánh sáng) }
+// Tuỳ chọn "net" (số nguyên 1..4, mặc định 1): ảnh có số điểm ảnh gấp net lần; khung_rong, khung_cao, goc vẫn tính theo điểm ảnh game.
 // Ảnh vẽ quay sang PHẢI; game tự lật khi quay trái. Dùng lại một ảnh, không tạo canvas mới mỗi khung (mượt trên điện thoại).
 // Nạp TRƯỚC js/sprite_custom.js (sprite_custom chuyển tệp hiệu ứng sang đây).
 (function () {
@@ -16600,10 +16620,11 @@
         ma: tep.ma, ten: String(tep.ten || tep.ma), fw, fh, ax: isFinite(+goc[0]) ? +goc[0] : fw / 2, ay: isFinite(+goc[1]) ? +goc[1] : fh / 2,
         so: clamp(tep.so | 0, 1, 64), giay: +tep.giay > 0 ? clamp(+tep.giay, 0.05, 10) : 0.5, lap: !!tep.lap, xoay: !!tep.xoay,
         co: +tep.co > 0 ? clamp(+tep.co, 0.1, 8) : 1, cong: tep.tron === 'cong', img: null, ready: false, cot: 1,
+        net: tep.net == null || !isFinite(+tep.net) ? 1 : clamp(Math.round(+tep.net), 1, 4),
       };
       if (typeof Image !== 'undefined') {
         const img = new Image();
-        img.onload = () => { a.img = img; a.cot = Math.max(1, Math.floor(img.width / fw)); a.ready = true; };
+        img.onload = () => { a.img = img; a.cot = Math.max(1, Math.floor(img.width / (fw * a.net))); a.ready = true; };
         img.onerror = () => { FA.loi.push(a.ma + ': ảnh hỏng'); };
         img.src = tep.tam;
       }
@@ -16648,7 +16669,8 @@
       c.imageSmoothingEnabled = false;
       if (a.cong) c.globalCompositeOperation = 'lighter';
       if (mo != null && mo < 1) c.globalAlpha *= clamp(mo, 0, 1);
-      c.drawImage(a.img, (f % a.cot) * a.fw, Math.floor(f / a.cot) * a.fh, a.fw, a.fh, -a.ax, -a.ay, a.fw, a.fh);
+      const n = a.net, sw = a.fw * n, sh = a.fh * n;
+      c.drawImage(a.img, (f % a.cot) * sw, Math.floor(f / a.cot) * sh, sw, sh, -a.ax, -a.ay, a.fw, a.fh);
     } finally { c.restore(); }
     return true;
   };
@@ -18992,6 +19014,11 @@ MA._xong();
   const LOOP = { idle: true, move: true, noi: true };
 
   const SC = (G.spriteCustom = { ds: {}, ANIMS, LOOP, loi: [] });
+  // "net" (số nguyên 1..4, mặc định 1): ảnh trong tệp ("tam" hoặc "anh") có số điểm ảnh gấp net lần, còn MỌI số khác trong tệp
+  // (khung_rong, khung_cao, goc, rong, cao, neo, vu_khi.cam/mui/day, trang_phuc.lech...) vẫn tính theo điểm ảnh GAME.
+  // Game cắt vùng ảnh gấp net lần rồi vẽ ra đúng cỡ game: trên canvas thế giới nét gấp đôi (G.NET = 2) hiện đủ chi tiết.
+  const docNet = (v) => (v == null || !isFinite(+v) ? 1 : clamp(Math.round(+v), 1, 4));
+  SC.docNet = docNet;
 
   // ---------- nạp một tệp ----------
   // tep: nội dung tệp .sprite.json (đối tượng). Trả về sprite (đang nạp ảnh) hoặc null nếu tệp hỏng.
@@ -19013,7 +19040,7 @@ MA._xong();
       const sp = {
         ma: tep.ma, ten: String(tep.ten || tep.ma), doi: tep.doi_tuong === 'em-be' ? 'em-be' : tep.doi_tuong === 'nguoi-lang' ? 'nguoi-lang' : 'quai', fw, fh, ax: +goc[0] || 0, ay: +goc[1] || 0,
         lat: /^(trai|trái|left)$/i.test(String(tep.huong || tep.quay || '')), // ảnh vẽ quay TRÁI thì ghi "huong":"trai" — game tự lật lại để đầu luôn hướng về phía đi
-        rong: tep.rong | 0 || fw, cao: tep.cao | 0 || fh, bong: +tep.bong || Math.max(6, (tep.rong | 0) * 0.62), dt, img: null, ready: false, mau: {}, vung: tep.vung || 'moi',
+        net: docNet(tep.net), rong: tep.rong | 0 || fw, cao: tep.cao | 0 || fh, bong: +tep.bong || Math.max(6, (tep.rong | 0) * 0.62), dt, img: null, ready: false, mau: {}, vung: tep.vung || 'moi',
       };
       // Bộ phận "Đứng yên" và độ nhún cả người chọn trong công cụ. Tấm sprite đã dựng sẵn theo lựa chọn này, nên game chỉ
       // phát đúng từng khung, không tự thêm nhún, lắc hay xoay nào lên hình tự vẽ (bộ phận đứng yên giữ nguyên trong game).
@@ -19066,16 +19093,16 @@ MA._xong();
   // o: { alpha, flash (0..1 chớp trắng), tint: [màu, độ đậm], dy }
   SC.veKhung = function (c, sp, ten, i, face, o) {
     o = o || {};
-    const a = sp.dt[ten] || sp.dt.idle, sx = i * sp.fw, sy = a.hang * sp.fh, ga = c.globalAlpha;
+    const a = sp.dt[ten] || sp.dt.idle, n = sp.net || 1, sx = i * sp.fw * n, sy = a.hang * sp.fh * n, sw = sp.fw * n, sh = sp.fh * n, ga = c.globalAlpha;
     c.save();
     c.imageSmoothingEnabled = false;
     if ((face < 0) !== !!sp.lat) c.scale(-1, 1);
     const dx = -sp.ax, dy = -sp.ay + (o.dy || 0);
     if (o.alpha != null) c.globalAlpha = ga * clamp(o.alpha, 0, 1);
     const a1 = c.globalAlpha;
-    c.drawImage(sp.img, sx, sy, sp.fw, sp.fh, dx, dy, sp.fw, sp.fh);
-    if (o.tint && o.tint[1] > 0) { c.globalAlpha = a1 * clamp(o.tint[1], 0, 1); c.drawImage(nhuom(sp, o.tint[0]), sx, sy, sp.fw, sp.fh, dx, dy, sp.fw, sp.fh); }
-    if (o.flash > 0) { c.globalAlpha = a1 * clamp(o.flash, 0, 1); c.drawImage(nhuom(sp, '#ffffff'), sx, sy, sp.fw, sp.fh, dx, dy, sp.fw, sp.fh); }
+    c.drawImage(sp.img, sx, sy, sw, sh, dx, dy, sp.fw, sp.fh);
+    if (o.tint && o.tint[1] > 0) { c.globalAlpha = a1 * clamp(o.tint[1], 0, 1); c.drawImage(nhuom(sp, o.tint[0]), sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); }
+    if (o.flash > 0) { c.globalAlpha = a1 * clamp(o.flash, 0, 1); c.drawImage(nhuom(sp, '#ffffff'), sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); }
     c.restore();
   };
 
@@ -19253,8 +19280,8 @@ MA._xong();
         }
         if (fr.sil) for (const col in fr.sil) if (fr.sil[col] === img) { // ánh viền màu bậc quanh em bé
           c.save(); c.translate(x - fr.ox, y - fr.oy); c.globalCompositeOperation = 'source-over';
-          const a = sp.dt[s.ten] || sp.dt.idle;
-          c.drawImage(nhuom(sp, col), s.i * sp.fw, a.hang * sp.fh, sp.fw, sp.fh, -sp.ax, -sp.ay, sp.fw, sp.fh);
+          const a = sp.dt[s.ten] || sp.dt.idle, n = sp.net || 1;
+          c.drawImage(nhuom(sp, col), s.i * sp.fw * n, a.hang * sp.fh * n, sp.fw * n, sp.fh * n, -sp.ax, -sp.ay, sp.fw, sp.fh);
           if (lop) for (const l of [lop.sau, lop.truoc]) if (!l.trong) c.drawImage(bongMau(l, col), l.ox, l.oy);
           c.restore();
           return;
@@ -19277,19 +19304,20 @@ MA._xong();
     SC.veKhung(c, sp, ten, khungLap(a, Math.max(0, o.t || 0)), o.face < 0 ? -1 : 1, {});
     c.restore();
   };
-  // Vùng khuôn mặt (phần đầu) của khung đứng thở đầu tiên: [x, y, rộng, cao] trong tấm sprite.
+  // Vùng khuôn mặt (phần đầu) của khung đứng thở đầu tiên: [x, y, rộng, cao] theo điểm ảnh THẬT của tấm sprite (gấp net lần).
   function vungMat(sp) {
     if (sp.mat) return sp.mat;
-    const a = sp.dt.idle, cv = document.createElement('canvas'); cv.width = sp.fw; cv.height = sp.fh;
-    const x = cv.getContext('2d'); x.drawImage(sp.img, 0, a.hang * sp.fh, sp.fw, sp.fh, 0, 0, sp.fw, sp.fh);
-    const d = x.getImageData(0, 0, sp.fw, sp.fh).data;
-    let y0 = -1, y1 = -1; for (let y = 0; y < sp.fh && y0 < 0; y++) for (let i = 0; i < sp.fw; i++) if (d[(y * sp.fw + i) * 4 + 3] > 127) { y0 = y; break; }
-    for (let y = sp.fh - 1; y >= 0 && y1 < 0; y--) for (let i = 0; i < sp.fw; i++) if (d[(y * sp.fw + i) * 4 + 3] > 127) { y1 = y; break; }
-    if (y0 < 0) return (sp.mat = [0, a.hang * sp.fh, sp.fw, sp.fh]);
-    const hh = Math.max(6, Math.round((y1 - y0 + 1) * 0.42)), ww = Math.round(hh * 1.15);
-    let n = 0, sx = 0; for (let y = y0; y < y0 + hh; y++) for (let i = 0; i < sp.fw; i++) if (d[(y * sp.fw + i) * 4 + 3] > 127) { n++; sx += i; }
-    const cx = n ? sx / n : sp.ax;
-    return (sp.mat = [Math.round(cx - ww / 2), a.hang * sp.fh + y0, ww, hh]);
+    const N = sp.net || 1, fw = sp.fw * N, fh = sp.fh * N;
+    const a = sp.dt.idle, cv = document.createElement('canvas'); cv.width = fw; cv.height = fh;
+    const x = cv.getContext('2d'); x.drawImage(sp.img, 0, a.hang * fh, fw, fh, 0, 0, fw, fh);
+    const d = x.getImageData(0, 0, fw, fh).data;
+    let y0 = -1, y1 = -1; for (let y = 0; y < fh && y0 < 0; y++) for (let i = 0; i < fw; i++) if (d[(y * fw + i) * 4 + 3] > 127) { y0 = y; break; }
+    for (let y = fh - 1; y >= 0 && y1 < 0; y--) for (let i = 0; i < fw; i++) if (d[(y * fw + i) * 4 + 3] > 127) { y1 = y; break; }
+    if (y0 < 0) return (sp.mat = [0, a.hang * fh, fw, fh]);
+    const hh = Math.max(6 * N, Math.round((y1 - y0 + 1) * 0.42)), ww = Math.round(hh * 1.15);
+    let n = 0, sx = 0; for (let y = y0; y < y0 + hh; y++) for (let i = 0; i < fw; i++) if (d[(y * fw + i) * 4 + 3] > 127) { n++; sx += i; }
+    const cx = n ? sx / n : sp.ax * N;
+    return (sp.mat = [Math.round(cx - ww / 2), a.hang * fh + y0, ww, hh]);
   }
   SC.vungMat = vungMat;
   let lanNL = 0;
@@ -19331,7 +19359,8 @@ MA._xong();
   }
   const P2 = (a) => (Array.isArray(a) && a.length === 2 && isFinite(a[0]) && isFinite(a[1]) ? [+a[0], +a[1]] : null);
   function themDo(tep) {
-    const doi = tep.doi_tuong, sp = { ma: tep.ma, ten: String(tep.ten || tep.ma), doi, rong: 0, cao: 0, img: null, px: null, ready: false, xoay: new Map(), mau: {} };
+    // rong, cao: cỡ theo điểm ảnh GAME; pw, ph: cỡ ảnh thật (gấp net lần); px: màu từng điểm ảnh THẬT (pw x ph).
+    const doi = tep.doi_tuong, sp = { ma: tep.ma, ten: String(tep.ten || tep.ma), doi, net: docNet(tep.net), rong: 0, cao: 0, pw: 0, ph: 0, img: null, px: null, ready: false, xoay: new Map(), mau: {} };
     if (doi === 'vu-khi') {
       const v = tep.vu_khi || {};
       if (!/^(sword|bow|spear|hammer)$/.test(v.loai)) throw new Error('loại vũ khí sai');
@@ -19346,7 +19375,8 @@ MA._xong();
       sp.vp = tep.vat_pham;
     }
     const xong = (src) => {
-      sp.img = src; sp.rong = src.width; sp.cao = src.height; sp.px = docDiem(src); sp.ready = true; sp.xoay.clear(); sp.mau = {};
+      sp.img = src; sp.pw = src.width; sp.ph = src.height; sp.rong = Math.max(1, Math.round(src.width / sp.net)); sp.cao = Math.max(1, Math.round(src.height / sp.net));
+      sp.px = docDiem(src); sp.ready = true; sp.xoay.clear(); sp.mau = {};
       if (SC.do[sp.ma] !== sp) return;
       if (sp.vk) noiVuKhi(); else if (sp.tp) noiTrangPhuc(sp); else noiVatPham();
       xoaNhoDo();
@@ -19380,23 +19410,27 @@ MA._xong();
     return (o.branch && st && doSan(b + '-' + o.branch + '-' + st)) || (o.branch && st && doSan(b + '-' + o.branch)) || doSan(b);
   };
   // Hình vũ khí xoay góc a (độ, 0 chĩa về trước, -90 chĩa lên): điểm cầm ở gốc. Nhớ theo góc (bước 5 độ) và bậc.
+  // Trả về { cv, dx, dy, w, h, c, s }: dx, dy, w, h theo điểm ảnh GAME; cv có số điểm ảnh gấp net lần (vẽ bằng drawImage có cỡ đích).
   function xoayVk(sp, a, rar) {
     a = Math.round(a / 5) * 5;
     const k = a + '|' + rar; let r = sp.xoay.get(k); if (r) return r;
-    const V = sp.vk, w = sp.rong, h = sp.cao, th = Math.atan2(V.mui[1] - V.cam[1], V.mui[0] - V.cam[0]), q = a * D2R - th, c = Math.cos(q), s = Math.sin(q);
+    const V = sp.vk, N = sp.net || 1, w = sp.rong, h = sp.cao, pw = sp.pw || w, ph = sp.ph || h, th = Math.atan2(V.mui[1] - V.cam[1], V.mui[0] - V.cam[0]), q = a * D2R - th, c = Math.cos(q), s = Math.sin(q);
     let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
     for (const p of [[0, 0], [w, 0], [0, h], [w, h]]) { const u = p[0] - V.cam[0], v = p[1] - V.cam[1], X = u * c - v * s, Y = u * s + v * c; x0 = Math.min(x0, X); y0 = Math.min(y0, Y); x1 = Math.max(x1, X); y1 = Math.max(y1, Y); }
     x0 = Math.floor(x0) - 1; y0 = Math.floor(y0) - 1; x1 = Math.ceil(x1) + 1; y1 = Math.ceil(y1) + 1;
-    const W = x1 - x0, H = y1 - y0, cv = document.createElement('canvas'); cv.width = Math.max(1, W); cv.height = Math.max(1, H);
-    const g = cv.getContext('2d'), vien = RAR_VIEN[rar] || null;
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-      const X = x + x0 + 0.5, Y = y + y0 + 0.5, u = X * c + Y * s + V.cam[0], v = -X * s + Y * c + V.cam[1], i = Math.floor(u), j = Math.floor(v);
-      if (i < 0 || j < 0 || i >= w || j >= h) continue;
-      let col = sp.px[j * w + i]; if (!col) continue;
+    const W = x1 - x0, H = y1 - y0, CW = Math.max(1, W * N), CH = Math.max(1, H * N), cv = document.createElement('canvas'); cv.width = CW; cv.height = CH;
+    const g = cv.getContext('2d'), vien = RAR_VIEN[rar] || null, id = g.createImageData(CW, CH), d = id.data;
+    for (let y = 0; y < CH; y++) for (let x = 0; x < CW; x++) {
+      // tâm điểm ảnh thật (x, y) theo toạ độ game -> điểm trên ảnh gốc (toạ độ game) -> điểm ảnh thật của ảnh gốc
+      const X = x0 + (x + 0.5) / N, Y = y0 + (y + 0.5) / N, u = X * c + Y * s + V.cam[0], v = -X * s + Y * c + V.cam[1], i = Math.floor(u * N), j = Math.floor(v * N);
+      if (i < 0 || j < 0 || i >= pw || j >= ph) continue;
+      let col = sp.px[j * pw + i]; if (!col) continue;
       if (vien && col === INK) col = vien;
-      g.fillStyle = col; g.fillRect(x, y, 1, 1);
+      const n = parseInt(col.slice(1), 16), o = (y * CW + x) * 4;
+      d[o] = (n >> 16) & 255; d[o + 1] = (n >> 8) & 255; d[o + 2] = n & 255; d[o + 3] = 255;
     }
-    r = { cv, dx: x0, dy: y0, c, s };
+    g.putImageData(id, 0, 0);
+    r = { cv, dx: x0, dy: y0, w: W, h: H, c, s };
     if (sp.xoay.size > 400) sp.xoay.clear();
     sp.xoay.set(k, r);
     return r;
@@ -19407,7 +19441,7 @@ MA._xong();
   SC.veVuKhi = function (c, sp, opts, x0, y0, ang, pull) {
     const rar = Math.max(0, Math.min(3, (opts && opts.rarity) | 0)), R = xoayVk(sp, ang || 0, rar), X = Math.round(x0), Y = Math.round(y0);
     const sm = c.imageSmoothingEnabled; c.imageSmoothingEnabled = false;
-    c.drawImage(R.cv, X + R.dx, Y + R.dy);
+    c.drawImage(R.cv, X + R.dx, Y + R.dy, R.w, R.h);
     c.imageSmoothingEnabled = sm;
     const V = sp.vk; if (!V.day) return;
     // dây cung: hai đầu dây (chấm trong công cụ) nối qua điểm kéo; giương cung thì có mũi tên
@@ -19425,9 +19459,9 @@ MA._xong();
   // Ô đồ: vũ khí nằm chéo (cung đứng), vừa trong ô sz, tâm (x, y).
   SC.iconVuKhi = function (c, sp, opts, x, y, sz) {
     const ang = sp.vk.loai === 'bow' ? 0 : -45, R = xoayVk(sp, ang, Math.max(0, Math.min(3, (opts && opts.rarity) | 0)));
-    sz = sz || 24; const m = Math.max(R.cv.width, R.cv.height); let k = sz / m; if (k >= 1) k = Math.max(1, Math.floor(k));
+    sz = sz || 24; const m = Math.max(R.w, R.h); let k = sz / m; if (k >= 1) k = Math.max(1, Math.floor(k));
     const sm = c.imageSmoothingEnabled; c.imageSmoothingEnabled = false;
-    c.drawImage(R.cv, Math.round(x - (R.cv.width * k) / 2), Math.round(y - (R.cv.height * k) / 2), Math.round(R.cv.width * k), Math.round(R.cv.height * k));
+    c.drawImage(R.cv, Math.round(x - (R.w * k) / 2), Math.round(y - (R.h * k) / 2), Math.round(R.w * k), Math.round(R.h * k));
     c.imageSmoothingEnabled = sm;
   };
   function noiVuKhi() {
@@ -19442,16 +19476,23 @@ MA._xong();
 
   // ---------- TRANG PHỤC ----------
   // Đặt ảnh vào hệ toạ độ F của em bé (F.ox, F.oy, góc xoay): điểm ảnh (i, j) nằm ở (lx + i, ly + j) trong hệ F.
+  // Khung em bé là hình 1 điểm ảnh game: ảnh có net > 1 thì lấy điểm ảnh thật ở giữa mỗi ô net x net (thu về đúng cỡ game).
+  function diemGame(sp, i, j) {
+    const N = sp.net || 1;
+    if (N === 1) return sp.px[j * sp.rong + i];
+    const pw = sp.pw, x = Math.min(pw - 1, Math.floor((i + 0.5) * N)), y = Math.min(sp.ph - 1, Math.floor((j + 0.5) * N));
+    return sp.px[y * pw + x];
+  }
   function veVaoKhung(F, sp, lx, ly, doi) {
-    const S = F.S, w = sp.rong, h = sp.cao, px = sp.px;
-    if (F.z) { for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) { const col = px[j * w + i]; if (col) S.p(F.ox + lx + i, F.oy + ly + j, doi ? doi(col) : col); } return; }
+    const S = F.S, w = sp.rong, h = sp.cao;
+    if (F.z) { for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) { const col = diemGame(sp, i, j); if (col) S.p(F.ox + lx + i, F.oy + ly + j, doi ? doi(col) : col); } return; }
     const cs = F.cs, sn = F.sn;
     let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
     for (const p of [[lx, ly], [lx + w, ly], [lx, ly + h], [lx + w, ly + h]]) { const q = F.pt(p[0], p[1]); x0 = Math.min(x0, q[0]); y0 = Math.min(y0, q[1]); x1 = Math.max(x1, q[0]); y1 = Math.max(y1, q[1]); }
     for (let y = Math.floor(y0) - 1; y <= Math.ceil(y1) + 1; y++) for (let x = Math.floor(x0) - 1; x <= Math.ceil(x1) + 1; x++) {
       const dx = x - F.ox, dy = y - F.oy, u = dx * cs + dy * sn, v = -dx * sn + dy * cs, i = Math.round(u - lx), j = Math.round(v - ly);
       if (i < 0 || j < 0 || i >= w || j >= h) continue;
-      const col = px[j * w + i]; if (col) S.p(x, y, doi ? doi(col) : col);
+      const col = diemGame(sp, i, j); if (col) S.p(x, y, doi ? doi(col) : col);
     }
   }
   SC.veVaoKhung = veVaoKhung;
@@ -20581,10 +20622,10 @@ MA._xong();
       if (W.boss) hit(W.boss, (W.boss.drawW || 120) * 0.6, (W.boss.drawH || 120) * 1.2 + 10);
       if (B[2] <= B[0]) return;
       need = true;
-      // từ toạ độ thế giới sang điểm ảnh #world (đang có phép dời của khung)
-      const m = c.getTransform(), w = c.canvas;
-      const x = clamp(Math.floor(B[0] + m.e) - 2, 0, w.width), y = clamp(Math.floor(B[1] + m.f) - 2, 0, w.height);
-      const x1 = clamp(Math.ceil(B[2] + m.e) + 2, 0, w.width), y1 = clamp(Math.ceil(B[3] + m.f) + 2, 0, w.height);
+      // từ toạ độ thế giới sang điểm ảnh màn hình game 480x270 (đang có phép dời của khung; canvas thật gấp G.NET lần)
+      const m = c.getTransform(), w = c.canvas, N = G.NET || 1, me = m.e / N, mf = m.f / N;
+      const x = clamp(Math.floor(B[0] + me) - 2, 0, G.W), y = clamp(Math.floor(B[1] + mf) - 2, 0, G.H);
+      const x1 = clamp(Math.ceil(B[2] + me) + 2, 0, G.W), y1 = clamp(Math.ceil(B[3] + mf) + 2, 0, G.H);
       if (x1 <= x || y1 <= y) { need = false; return; }
       SB[0] = x; SB[1] = y; SB[2] = x1 - x; SB[3] = y1 - y;
       if (filt == null) filt = makeFilter();
@@ -20592,15 +20633,15 @@ MA._xong();
       if (!snapCv) snapCv = document.createElement('canvas');
       if (snapCv.width !== w.width || snapCv.height !== w.height) { snapCv.width = w.width; snapCv.height = w.height; }
       const s = snapCv.getContext('2d');
-      s.clearRect(x, y, SB[2], SB[3]);
-      s.drawImage(w, x, y, SB[2], SB[3], x, y, SB[2], SB[3]);
+      s.clearRect(x * N, y * N, SB[2] * N, SB[3] * N);
+      s.drawImage(w, x * N, y * N, SB[2] * N, SB[3] * N, x * N, y * N, SB[2] * N, SB[3] * N);
       snapOk = true;
     } catch (e) { snapOk = false; need = false; }
   };
-  // chỉ làm trong khung bao (x, y, w, h: điểm ảnh của #world) để nhẹ máy
-  function maskOut(c, sc, x, y, w, h) {
+  // chỉ làm trong khung bao (x, y, w, h: điểm ảnh màn hình game 480x270) để nhẹ máy. Canvas #world thật gấp G.NET lần.
+  function maskOut(c, sc, x0, y0, w0, h0) {
     if (!filt || !snapOk) return false;
-    const wv = G.wx.canvas, kx = c.canvas.width / wv.width, ky = c.canvas.height / wv.height;
+    const wv = G.wx.canvas, N = wv.width / G.W, x = x0 * N, y = y0 * N, w = w0 * N, h = h0 * N, kx = c.canvas.width / wv.width, ky = c.canvas.height / wv.height;
     if (!mCv) { mCv = document.createElement('canvas'); mCx = mCv.getContext('2d'); aCv = document.createElement('canvas'); aCx = aCv.getContext('2d'); }
     if (mCv.width < w || mCv.height < h) { mCv.width = aCv.width = Math.max(w, mCv.width); mCv.height = aCv.height = Math.max(h, mCv.height); }
     mCx.globalCompositeOperation = 'copy'; mCx.drawImage(wv, x, y, w, h, 0, 0, w, h);
@@ -24353,12 +24394,13 @@ MA._xong();
     const k = T.phase === 0 ? Math.min(1, T.t / TRANS_OUT) : 1 - Math.min(1, T.t / TRANS_IN);
     const sgn = T.phase === 0 ? -1 : 1;
     const ox = Math.round(v[0] * SLIDE * k * sgn), oy = Math.round(v[1] * SLIDE * k * sgn);
-    c.setTransform(1, 0, 0, 1, 0, 0);
+    c.setTransform(1, 0, 0, 1, 0, 0); // dán lại chính canvas: theo điểm ảnh thật (gấp G.NET)
     if (ox || oy) {
       c.globalCompositeOperation = 'copy';
-      c.drawImage(c.canvas, ox, oy);
+      c.drawImage(c.canvas, ox * G.NET, oy * G.NET);
       c.globalCompositeOperation = 'source-over';
     }
+    G.wxDat(c, 0, 0);
     c.fillStyle = 'rgba(0,0,0,' + Math.min(1, k * 1.1).toFixed(3) + ')';
     c.fillRect(0, 0, G.W, G.H);
   }
@@ -25747,7 +25789,7 @@ MA._xong();
   VS.drawWorld = function (o) {
     o = o || {};
     const c = G.wx, Bt = build(), cam = Math.round(S.cam), sv = G.save, t = S.t;
-    c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = 1; c.globalCompositeOperation = 'source-over';
+    G.wxDat(c, 0, 0); c.globalAlpha = 1; c.globalCompositeOperation = 'source-over';
     c.fillStyle = '#101a1a'; c.fillRect(0, 0, 480, OY);
     c.translate(0, OY);
     c.drawImage(Bt.ground, -cam, 0);
@@ -25803,7 +25845,7 @@ MA._xong();
       if (a < 0.25) continue;
       c.fillStyle = 'rgba(210,255,120,' + (0.22 * a).toFixed(2) + ')'; c.fillRect(x - 1, y - 1, 3, 3); p(c, x, y, 1, 1, '#eaff9a');
     }
-    c.setTransform(1, 0, 0, 1, 0, 0);
+    G.wxDat(c, 0, 0);
     if (o.dim) { c.fillStyle = 'rgba(10,8,16,' + o.dim + ')'; c.fillRect(0, 0, 480, H); }
   };
   // Đổi một điểm trong làng sang toạ độ màn hình
@@ -26096,7 +26138,7 @@ MA._xong();
     const all = Object.keys(sv.stars).length >= 15;
     if (!all) V.diff = 0;
     const map = V.diff ? sv.stars2 : sv.stars;
-    c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = 1;
+    G.wxDat(c, 0, 0); c.globalAlpha = 1;
     c.drawImage(VS.mapArt(night), 0, 0);
     // đường nét đứt nối các ải theo thứ tự; chưa mở thì nhạt
     const ink = night ? '#3a2a4a' : '#7a4a30', faint = night ? '#6a6488' : '#b8a880';
@@ -26653,8 +26695,13 @@ MA._xong();
   function settings() {
     const sv = G.save, CL = G.cloud, CU = G.cloudUI;
     frame('Cổng làng: cài đặt');
-    if (T.btn(CX + 4, 72, 146, 26, 'Âm thanh: ' + (sv.sound ? 'bật' : 'tắt'), { size: 9 })) { sv.sound = !sv.sound; G.persist(); G.audioStart(); }
-    if (T.btn(CX + 154, 72, 146, 26, 'Toàn màn hình', { size: 9 })) {
+    if (T.btn(CX + 4, 72, 96, 26, 'Âm thanh: ' + (sv.sound ? 'bật' : 'tắt'), { size: 8.5 })) { sv.sound = !sv.sound; G.persist(); G.audioStart(); }
+    // Độ nét hình (js/engine.js G.NET): Cao = canvas thế giới gấp đôi điểm ảnh (ảnh AI rõ hơn), Thường = như cũ (nhẹ máy yếu)
+    if (T.btn(CX + 104, 72, 96, 26, 'Độ nét: ' + (sv.net === 'thuong' ? 'Thường' : 'Cao'), { size: 8.5 })) {
+      if (sv.net === 'thuong') delete sv.net; else sv.net = 'thuong';
+      G.persist(); say(sv.net === 'thuong' ? 'Độ nét Thường: nhẹ máy hơn, hình AI kém rõ hơn.' : 'Độ nét Cao: hình AI rõ gấp đôi.');
+    }
+    if (T.btn(CX + 204, 72, 96, 26, 'Toàn màn hình', { size: 8.5 })) {
       try { const el = document.documentElement; if (document.fullscreenElement) document.exitFullscreen(); else el.requestFullscreen().catch(() => say('Thiết bị này không cho bật toàn màn hình.')); } catch (e) { say('Thiết bị này không cho bật toàn màn hình.'); }
     }
     T.head('Lưu tiến trình', CX + 4, 113);
@@ -30359,19 +30406,21 @@ MA._xong();
   const cache = new Map();
 
   function canvas(w, h) { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; return cv; }
-  // Thêm viền tối 1 điểm ảnh quanh hình (vẽ bóng hình tối lệch 4 hướng rồi vẽ hình lên trên).
-  function vien(src, pad) {
+  // Thêm viền tối 1 điểm ảnh (game) quanh hình (vẽ bóng hình tối lệch 4 hướng rồi vẽ hình lên trên). k: hình đang ở độ nét gấp k.
+  function vien(src, pad, k) {
+    k = k || 1; pad *= k;
     const w = src.width + pad * 2, h = src.height + pad * 2, sil = canvas(w, h), sc = sil.getContext('2d');
     sc.drawImage(src, pad, pad); sc.globalCompositeOperation = 'source-in'; sc.fillStyle = OL; sc.fillRect(0, 0, w, h);
     const out = canvas(w, h), c = out.getContext('2d'); c.imageSmoothingEnabled = false;
-    for (const d of [[-1, 0], [1, 0], [0, -1], [0, 1], [1, 1]]) c.drawImage(sil, d[0], d[1]);
+    for (const d of [[-1, 0], [1, 0], [0, -1], [0, 1], [1, 1]]) c.drawImage(sil, d[0] * k, d[1] * k);
     c.drawImage(src, pad, pad);
     return out;
   }
-  // Hình (đã viền) của một món, lưu lại theo khoá. Tâm hình ở giữa canvas.
+  // Hình (đã viền) của một món, lưu lại theo khoá. Tâm hình ở giữa canvas. Canvas có độ nét gấp cv.net lần (= G.NET lúc tạo):
+  // hình AI (vật phẩm, vũ khí) giữ được chi tiết gấp đôi khi vẽ lên canvas thế giới; hình vẽ bằng code y như cũ.
   function hinh(o) {
-    const k = khoa(o); let cv = cache.get(k); if (cv) return cv;
-    const S = 22, src = canvas(S, S), c = src.getContext('2d'); c.imageSmoothingEnabled = false;
+    const N = G.NET || 1, k = khoa(o) + '|' + N; let cv = cache.get(k); if (cv) return cv;
+    const S = 22, src = canvas(S * N, S * N), c = src.getContext('2d'); c.imageSmoothingEnabled = false; c.scale(N, N);
     try {
       // Vật phẩm có hình tự vẽ (Xưởng Sprite, js/sprite_custom.js) thì dùng hình đó.
       const tv = G.spriteCustom && G.spriteCustom.vatPham ? G.spriteCustom.vatPham(o.kind === 'linhkhi' ? 'linhkhi-' + o.el : o.kind) : null;
@@ -30391,7 +30440,7 @@ MA._xong();
         if (/^shard/.test(o.kind)) { c.fillStyle = '#ffffff'; c.fillRect(11, 8, 1, 3); } // vệt sáng trên mảnh vỡ
       }
     } catch (e) { /* thiếu hình thì để trống */ }
-    cv = vien(src, 1); cache.set(k, cv);
+    cv = vien(src, 1, N); cv.net = N; cache.set(k, cv);
     if (cache.size > 200) cache.delete(cache.keys().next().value);
     return cv;
   }
@@ -30500,7 +30549,8 @@ MA._xong();
     // hình món đồ (đã viền tối), vũ khí nằm nghiêng sẵn trong hình thu nhỏ
     const cv = hinh(o);
     c.imageSmoothingEnabled = false;
-    c.drawImage(cv, ix - (cv.width >> 1), iy - (cv.height >> 1));
+    const n = cv.net || 1, cw = cv.width / n, ch = cv.height / n;
+    c.drawImage(cv, ix - (cw >> 1), iy - (ch >> 1), cw, ch);
     // lấp lánh: đồ Vàng, vàng, mảnh trùm thường xuyên hơn
     const nhieu = r >= 3 || o.kind === 'gold' || /^shard/.test(o.kind);
     const nhip = Math.floor(t * (nhieu ? 5 : 2.5) + o.x * 0.3) % (nhieu ? 3 : 5);
@@ -30597,7 +30647,8 @@ MA._xong();
         a = q < 0.1 ? q / 0.1 : q > 0.65 ? Math.max(0, (1 - q) / 0.35) : 1;
       }
       c.globalAlpha = ga * a;
-      c.drawImage(b.cv, Math.round(x - (b.cv.width >> 1)), Math.round(y - (b.cv.height >> 1)));
+      const n = b.cv.net || 1, bw = b.cv.width / n, bh = b.cv.height / n;
+      c.drawImage(b.cv, Math.round(x - (bw >> 1)), Math.round(y - (bh >> 1)), bw, bh);
     }
     c.globalAlpha = ga; c.imageSmoothingEnabled = sm;
   };
@@ -30806,8 +30857,8 @@ window.FIREBASE_CONFIG = {
     // dùng bản trên mây; đang trong ải thì chờ về làng mới thay (không làm rối trận đang đánh)
     apply(s, at) {
       if (G.scene === G.StageScene) { this.pendingApply = { s, at }; return; }
-      const snd = G.save ? G.save.sound : true;
-      s.sound = snd; s.owner = this.user ? this.user.uid : s.owner; s.savedAt = at || s.savedAt || Date.now();
+      const snd = G.save ? G.save.sound : true, net = G.save ? G.save.net : undefined;
+      s.sound = snd; if (net) s.net = net; else delete s.net; // âm thanh, độ nét: giữ theo máy s.owner = this.user ? this.user.uid : s.owner; s.savedAt = at || s.savedAt || Date.now();
       G.save = s; lastBody = body(s); basePersist();
       this.pendingApply = null;
       try { if (G.villageScene && G.villageScene.checkNews) G.villageScene.checkNews(); } catch (e) { /* bỏ qua */ }
