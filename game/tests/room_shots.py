@@ -211,7 +211,7 @@ def shot_boss(c):
 def shot_types(c):
     panels = []
     todo = (('chest', 0, 'Rương báu', 'Lại gần rồi bấm Đánh để chọn một phần thưởng'), ('fountain', 1, 'Suối hồi', 'Hồi máu hoặc mana; cho biết trùm đã học gì'),
-            ('merchant', 2, 'Thương nhân', 'Bán bình máu, bùa hệ, quặng'), ('challenge', 1, 'Thử thách', 'Bệ đồng hồ cát: hạ hết quái trước khi hết giờ'),
+            ('merchant', 2, 'Thương nhân', 'Bán bình máu, bùa hệ, huyết ấn'), ('challenge', 1, 'Thử thách', 'Bệ đồng hồ cát: hạ hết quái trước khi hết giờ'),
             ('curse', 0, 'Lời nguyền', 'Bàn thờ: chịu bất lợi để dấu ấn tăng gấp đôi'), ('elite', 2, 'Tinh anh', 'Vòng lửa trên sàn, quái tinh anh mang hệ'))
     for t, r, name, sub in todo:
         c.ev("""([t, r]) => {

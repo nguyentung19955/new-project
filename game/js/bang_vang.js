@@ -78,8 +78,11 @@
   };
 
   // ---------- tải bảng theo trang ----------
+  // V57: thời gian hạ trùm (đo kỹ năng) đứng TRƯỚC Sức mạnh (đo cày). Chủ dự án từng chọn chỉ MỘT bảng (Sức mạnh) nên mặc định
+  // vẫn một bảng; đổi B.TRUM_TRUOC = true thì có thêm các thẻ thời gian hạ từng trùm, đặt trước thẻ Sức mạnh.
+  B.TRUM_TRUOC = false;
   function cats() {
-    // chủ dự án: bảng vàng chỉ cần MỘT bảng xếp hạng (theo Sức mạnh), không chia nhiều thẻ
+    if (B.TRUM_TRUOC) return G.REGIONS.map((R) => ['b_' + R.boss, R.bossName]).filter((q) => C.BOSSES.includes(q[0].slice(2))).concat([['power', 'Sức mạnh']]);
     return [['power', 'Sức mạnh']];
   }
   function cur() { return (B.data[B.cat] = B.data[B.cat] || { items: [], cursor: null, more: true, loading: false, err: '' }); }
@@ -119,7 +122,7 @@
     const A = G.villageApi;
     const list = cats();
     const w = Math.floor((CW - (list.length - 1) * 3) / list.length);
-    B.cat = 'power';
+    if (!list.some((q) => q[0] === B.cat)) B.cat = list[0][0];
     if (list.length > 1) list.forEach(([k, n], i) => { if (T.sbtn(CX + i * (w + 3), 95, w, 18, n, { size: 7.5, pad: 2, sel: B.cat === k })) { B.cat = k; B.page = 0; } });
     else ui.text('Xếp hạng theo Sức mạnh', CX + 2, 108, { size: 9, bold: true, color: GOLD });
     if (!C.online()) {
@@ -127,18 +130,18 @@
       const r = rec(), sv = G.save;
       T.inset(CX, 116, CW, 104, false);
       ui.para('Bảng vàng cần mạng. ' + C.label() + '.', CX + 7, 129, CW - 14, { size: 7.5, color: SOFT });
-      ui.text('Kỷ lục của con (trên máy)', CX + 7, 150, { size: 8, bold: true, color: GOLD });
+      // V57: hàng thời gian hạ trùm (kỹ năng) lên trước, ba ô Sức mạnh / sao / xa nhất xuống sau
+      ui.text('Kỷ lục của con: hạ trùm nhanh nhất', CX + 7, 150, { size: 8, bold: true, color: GOLD });
+      const tw = Math.floor((CW - 14) / 3);
+      G.REGIONS.forEach((R, i) => ui.text(R.bossName + '  ' + (r.b[R.boss] ? secs(r.b[R.boss]) : '–'), CX + 7 + i * tw, 163, { size: 7.5, color: r.b[R.boss] ? TXT : SOFT }));
       const boxes = [['Sức mạnh', String(r.power || powerNow())], ['Tổng sao', '★ ' + C.starSum(sv)], ['Xa nhất', C.farText(C.far(sv))]];
       const bw = Math.floor((CW - 14 - 2 * 4) / 3);
       boxes.forEach((q, i) => {
         const bx = CX + 7 + i * (bw + 4);
-        T.inset(bx, 156, bw, 28, false, { fill: 'rgba(0,0,0,0.22)' });
-        ui.text(q[0], bx + bw / 2, 166, { size: 6.5, align: 'center', color: SOFT });
-        ui.text(cutTo(q[1], bw - 6, 8.5), bx + bw / 2, 178.5, { size: 8.5, bold: true, align: 'center', color: TXT });
+        T.inset(bx, 176, bw, 28, false, { fill: 'rgba(0,0,0,0.22)' });
+        ui.text(q[0], bx + bw / 2, 186, { size: 6.5, align: 'center', color: SOFT });
+        ui.text(cutTo(q[1], bw - 6, 8.5), bx + bw / 2, 198.5, { size: 8.5, bold: true, align: 'center', color: TXT });
       });
-      ui.text('Hạ trùm nhanh nhất', CX + 7, 197, { size: 7, bold: true, color: GOLD });
-      const tw = Math.floor((CW - 14) / 3);
-      G.REGIONS.forEach((R, i) => ui.text(R.bossName + '  ' + (r.b[R.boss] ? secs(r.b[R.boss]) : '–'), CX + 7 + i * tw, 210, { size: 7.5, color: r.b[R.boss] ? TXT : SOFT }));
       return 'Bảng vàng treo ở đình, phải có mạng mới xem được, con ạ.';
     }
     if (B.t && G.time - B.t > 120) B.reload(); // để lâu thì tải lại

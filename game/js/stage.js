@@ -5,9 +5,17 @@
   G.getRun = () => S;
 
   // o: { family, gold } như G.newWeapon. Rương đồ đầy (12 món) thì đổi thành vàng, trừ vũ khí Vàng luôn được giữ.
+  // V56: món bị đổi được ghi vào G.lastSold để dòng báo nói rõ món gì, bậc gì, được bao nhiêu vàng (G.soldText).
   G.giveWeapon = function (type, tier, o) {
-    if (G.save.weapons.length >= 12 && tier < 3) { G.save.gold += 30 * (tier + 1); return null; }
+    if (G.save.weapons.length >= 12 && tier < 3) { const g = 30 * (tier + 1); G.save.gold += g; G.lastSold = { type, tier, gold: g }; return null; }
     return G.newWeapon(G.save, type, tier, o);
+  };
+  // Ví dụ: "Kiếm Tím bị đổi thành 90 vàng vì rương đầy"
+  G.soldText = function () {
+    const q = G.lastSold;
+    if (!q) return 'vàng (rương đồ đầy)';
+    const wt = G.WTYPES[q.type], rar = G.RARITY[q.tier];
+    return (wt ? wt.name : 'Vũ khí') + (rar ? ' ' + rar.name : '') + ' bị đổi thành ' + q.gold + ' vàng vì rương đầy';
   };
   // Bậc của vũ khí rơi từ rương và tinh anh ở vùng r: đa số Thường, cao nhất Tím, vùng sau tỉ lệ tốt hơn.
   G.rollRarity = function (r) {
@@ -26,7 +34,7 @@
   G.onEliteDown = function (e) {
     if (!S || !S.W || G.rnd() >= G.DROP.elite) return;
     const w = G.giveWeapon(G.pick(G.WKEYS), G.rollRarity(S.r));
-    if (!w) { S.got.push('vàng (rương đồ đầy)'); return; }
+    if (!w) { const t = G.soldText(); S.got.push(t); S.W.banner = { s: 'Tinh anh rơi ' + t, col: '#b8b0a0', t: 3 }; return; }
     S.got.push({ s: rarName(w), w });
     S.W.banner = { s: 'Tinh anh rơi ' + rarName(w), col: G.RARITY[G.wRar(w)].col, t: 3 };
     if (G.doRoi) G.doRoi.tha(S.W, e.x, e.y, { kind: 'weapon', w, s: G.wName(w) }); // nằm trên sàn chỗ tinh anh gục, đi qua là nhặt
@@ -60,12 +68,12 @@
   const TUT = {
     start: 'Kéo cần bên trái để đi. Bấm (hoặc giữ) nút Đánh để chém, bấm Né để lăn tránh.',
     fight1: 'Đánh vỡ chậu than để đốt quái. Kết liễu quái đang cháy thì kiếm nhận dấu ấn Lửa.',
-    chest: 'Lại gần rương rồi bấm Đánh để mở. Bùa hệ phủ hệ đó lên vũ khí trong 60 giây.',
+    chest: 'Lại gần rương rồi bấm Đánh để mở. Bùa hệ phủ hệ đó lên vũ khí đến hết ải.',
     fight2: 'Thanh xanh là mana. Đủ 25 mana thì bấm Đặc biệt để tung đòn mạnh.',
     elite: 'Quái tinh anh mang hệ. Chạm ô vũ khí ở góc trên bên phải để đổi sang cung.',
     fountain: 'Lại gần suối đỏ để hồi máu hoặc suối xanh để hồi mana rồi bấm Đánh, chỉ chọn được một. Dòng chữ phía trên cho biết trùm đã học gì từ bạn.',
     boss: 'Trùm kháng hệ bạn dùng nhiều nhất. Đánh vỡ vật mang hệ khắc chế ở gần nó để gây sát thương lớn.',
-    merchant: 'Thương nhân bán bình máu, bùa hệ và quặng. Lại gần rồi bấm Đánh để xem hàng.',
+    merchant: 'Thương nhân bán bình máu, bùa hệ và huyết ấn. Lại gần rồi bấm Đánh để xem hàng.',
     challenge: 'Phòng thử thách: hạ hết quái trước khi hết giờ để nhận thưởng.',
     curse: 'Bàn thờ lời nguyền: chịu một bất lợi để dấu ấn tăng gấp đôi đến hết ải. Bỏ qua cũng được.',
     door: 'Hết quái rồi, cửa đã mở. Đi vào cửa có mũi tên để sang phòng kề. Bản đồ nhỏ ở góc phải cho biết phòng nào ở đâu.',
@@ -83,7 +91,7 @@
     const seed = o.seed || 1 + Math.floor(G.rnd() * 999999);
     const map = G.mapgen.make(kind, seed);
     // Ải hướng dẫn: phòng phụ ngẫu nhiên (Thử thách, Lời nguyền) đổi thành Thương nhân cho người mới dễ hiểu.
-    if (tut) for (const R of map.rooms) if (R.type === 'challenge' || R.type === 'curse') R.type = 'merchant';
+    if (tut) for (const R of map.rooms) { if (R.type === 'challenge' || R.type === 'curse') R.type = 'merchant'; delete R.goal; } // ải hướng dẫn: không có phòng mục tiêu
     G.save.lastKind = kind;
     S = {
       r, i, diff: diff ? 1 : 0, base: G.stageStats(r, i, diff), P: G.buildPlayer(), map, rooms: map.rooms.map((x) => x.type), idx: -1,
@@ -131,6 +139,7 @@
         // sàn nhỏ: mỗi đợt chỉ một bầy nhỏ, để người chơi không bị sáu con vây cùng lúc
         // sàn nhỏ: mỗi đợt chỉ một bầy nhỏ và một con cảm tử
         if (cost[r] > pts + 0.3 || ((r === 'swarm' || r === 'kami' || r === 'bomber') && list.includes(r))) continue;
+        if (r === 'archer' && list.filter((x) => x === 'archer').length >= 2) continue; // V51: tối đa 2 xạ thủ mỗi đợt
         list.push(r);
         pts -= cost[r];
       }
@@ -143,10 +152,11 @@
   function freeSpot(minD, pad) {
     const W = S.W, P = S.P;
     let best = null, bd = -1;
-    for (let k = 0; k < 14; k++) {
+    for (let k = 0; k < 30; k++) { // V52: 14 -> 30 lần thử để quái ít khi mọc sát em bé
       const x = G.rr(W.x0 + pad, (W.px1 != null ? W.px1 : W.x1) - pad), y = G.rr(W.y0 + pad, W.y1 - 6);
       let d = Math.hypot(x - P.x, y - P.y);
       for (const s of W.spawns) d = Math.min(d, Math.hypot(x - s.x, y - s.y) * 3);
+      for (const p of W.props) if (p.env && !p.dead && Math.hypot(x - p.x, y - p.y) < 14) d = Math.min(d, minD - 1); // tránh mọc đè vật mang hệ
       if (d >= minD) return [x, y];
       if (d > bd) { bd = d; best = [x, y]; }
     }
@@ -196,25 +206,40 @@
     W.spawns = W.spawns.filter((s) => s.t > 0);
   }
   // Chỗ đặt vật mang hệ: trong sàn, không nằm trên lối vào cửa, không đè lên vật khác.
+  function spotOk(x, y) {
+    const W = S.W, g = W.geo;
+    if (x < W.x0 + 16 || x > (W.px1 != null ? W.px1 : W.x1) - 16 || y < W.y0 + 16 || y > W.y1 - 8) return false;
+    if (Math.abs(x - g.cx) < 26 && (y < W.y0 + 44 || y > W.y1 - 40)) return false;
+    if (Math.abs(y - g.cy) < 26 && (x < W.x0 + 40 || x > W.x1 - 40)) return false;
+    if (W.props.some((p) => p.type !== 'roomFore' && Math.hypot(p.x - x, p.y - y) < 30)) return false;
+    if (Math.hypot(x - g.cx, y - g.cy - 26) < 24) return false; // chỗ người chơi đứng khi bắt đầu ở giữa phòng
+    return true;
+  }
   function propSpot() {
     const W = S.W, g = W.geo;
     for (let k = 0; k < 30; k++) {
       const x = G.rr(W.x0 + 16, (W.px1 != null ? W.px1 : W.x1) - 16), y = G.rr(W.y0 + 16, W.y1 - 8);
-      if (Math.abs(x - g.cx) < 26 && (y < W.y0 + 44 || y > W.y1 - 40)) continue;
-      if (Math.abs(y - g.cy) < 26 && (x < W.x0 + 40 || x > W.x1 - 40)) continue;
-      if (W.props.some((p) => p.type !== 'roomFore' && Math.hypot(p.x - x, p.y - y) < 30)) continue;
-      if (Math.hypot(x - g.cx, y - g.cy - 26) < 24) continue; // chỗ người chơi đứng khi bắt đầu ở giữa phòng
-      return [x, y];
+      if (spotOk(x, y)) return [x, y];
     }
     return [g.cx + G.rr(-40, 40), g.cy + G.rr(-30, 30)];
   }
+  // V20: vật mang hệ xếp theo vài MẪU CÓ CHỦ ĐÍCH để vị trí đứng có ý nghĩa (không thêm vật cản, vật vẫn đi xuyên được):
+  //   'roi'   rải ngẫu nhiên 1–2 vật như cũ (40%);
+  //   'hang'  hàng 3 vật cùng hệ ngang giữa phòng (dụ quái qua hàng rồi đập) (20%);
+  //   'goc'   bốn góc cùng hệ (kéo quái ra góc) (20%);
+  //   'hai'   hai vật KHÁC hệ hai bên trái/phải (chọn hệ nào để đánh) (20%).
+  // Chỗ nào trong mẫu bị vướng (lối cửa, vật khác, chỗ đứng đầu phòng) thì chỗ đó lấy ngẫu nhiên như cũ.
   function addEnv(n, el) {
-    const W = S.W, reg = G.REGIONS[S.r];
-    for (let k = 0; k < n; k++) {
-      const e = el || (G.rnd() < 0.65 ? reg.el : G.pick(G.ELS));
-      const q = propSpot();
-      W.props.push({ type: PROP_OF[e], env: true, x: q[0], y: q[1] });
-    }
+    const W = S.W, reg = G.REGIONS[S.r], g = W.geo;
+    const elOf = () => el || (G.rnd() < 0.65 ? reg.el : G.pick(G.ELS));
+    const put = (e, x, y) => { const q = x != null && spotOk(x, y) ? [x, y] : propSpot(); W.props.push({ type: PROP_OF[e], env: true, x: q[0], y: q[1] }); };
+    const r = G.rnd(), xr = (W.px1 != null ? W.px1 : W.x1);
+    if (r < 0.4) { for (let k = 0; k < n; k++) put(elOf()); return; }
+    const e = elOf();
+    if (r < 0.6) { for (const dx of [-52, 0, 52]) put(e, g.cx + dx, g.cy - 14); return; }
+    if (r < 0.8) { for (const [x, y] of [[W.x0 + 26, W.y0 + 24], [xr - 26, W.y0 + 24], [W.x0 + 26, W.y1 - 14], [xr - 26, W.y1 - 14]]) put(e, x, y); return; }
+    const e2 = el ? e : G.pick(G.ELS.filter((k) => k !== e));
+    put(e, g.cx - 58, g.cy + 30); put(e2, g.cx + 58, g.cy + 30);
   }
 
   // Dựng một phòng lần đầu bước vào.
@@ -235,17 +260,24 @@
     W.props.push({ type: 'roomFore', x: 0, y: 9999 }); // lớp phủ trước của phòng, vẽ sau nhân vật
     S.W = W; S.challenge = null;
     const cx = geo.cx, cy = geo.cy;
+    // V19: phòng mục tiêu = phòng Thử thách, hoặc phòng Đánh quái được mapgen.js gắn R.goal (mỗi ải luôn có đúng một phòng như vậy).
+    // Phòng Đánh quái mang mục tiêu vẫn là phòng quái (cửa Trùm, mảnh chìa, Suối hồi tính như cũ), chỉ đổi đợt quái và đồng hồ.
+    const goal = type === 'challenge' ? R.goal || 'timed' : type === 'fight' && !S.tut ? R.goal || null : null;
     if (type === 'start' || type === 'fight' || type === 'elite' || type === 'challenge') {
-      W.waves = buildWaves(type);
+      W.waves = buildWaves(goal ? 'challenge' : type);
       if (S.tut && type === 'start') W.waves = [['rusher', 'rusher', 'rusher']];
       else if (S.tut && id === 1) {
         W.waves = [['swarm', 'swarm'], ['swarm', 'swarm', 'rusher']];
         W.props.push({ type: 'brazier', env: true, x: cx - 34, y: cy - 12 }, { type: 'brazier', env: true, x: cx + 36, y: cy + 22 });
       } else if (type !== 'start') {
-        if (type === 'challenge') W.props.push({ type: 'pedestal', x: cx, y: cy - 2 });
+        if (goal) W.props.push({ type: 'pedestal', x: cx, y: cy - 2 });
         addEnv(1 + (G.rnd() < 0.5 ? 1 : 0));
       }
-      if (type === 'challenge') S.challenge = { t: G.ROOM_WAVES.challengeTime, hits: 0, hp: P.hp };
+      if (goal) {
+        S.challenge = { t: G.ROOM_WAVES.challengeTime, hits: 0, hp: P.hp, goal };
+        W.goal = goal;
+        W.banner = { s: goal === 'survive' ? 'Thử thách: trụ được ' + G.ROOM_WAVES.challengeTime + ' giây để nhận thưởng!' : 'Thử thách: hạ hết quái trong ' + G.ROOM_WAVES.challengeTime + ' giây để nhận thưởng!', col: '#ffd27a', t: 3 };
+      }
       W.hadWaves = true;
     } else if (type === 'chest') {
       W.props.push({ type: 'chest', x: cx, y: cy + 4, act: 'chest' });
@@ -338,16 +370,21 @@
     const was = M.gateOpen(map, S.cleared);
     W.cleared = true;
     S.cleared[S.idx] = true;
+    if (S.challenge && S.challenge.goal === 'survive') { // V19: trụ đủ giờ thì quái còn lại tan, các vòng mọc đang chờ bị huỷ
+      W.spawns = [];
+      for (const e of W.ents) if (!e.dead && !e.isBoss) G.kill(e, {});
+    }
     for (const e of W.ents) if (e.add && !e.dead) G.kill(e, {}); // quái phụ (bầy được gọi thêm) tan theo
     W.zones = W.zones.filter((z) => z.team === 'player' || !(z.t > 0) && !z.wall);
     G.sfx('pick', 0.8);
     S.P.hp = Math.min(S.P.maxhp, S.P.hp + S.P.maxhp * 0.08);
     if (S.challenge) {
-      const ok = S.challenge.t > 0;
+      const surv = S.challenge.goal === 'survive';
+      const ok = surv || S.challenge.t > 0; // trụ được: tới được lúc hết giờ là đạt (gục thì đã thua cả ải)
       if (ok) {
         if (G.rnd() < 0.5) { G.save.stones++; S.got.push('1 đá tôi'); } else { G.save.ore += 6; S.got.push('6 quặng'); }
         G.save.gold += 80;
-        W.banner = { s: 'Vượt thử thách! Nhận ' + S.got[S.got.length - 1] + ' và 80 vàng', col: '#ffd23f', t: 3 };
+        W.banner = { s: (surv ? 'Trụ vững! Nhận ' : 'Vượt thử thách! Nhận ') + S.got[S.got.length - 1] + ' và 80 vàng', col: '#ffd23f', t: 3 };
       } else W.banner = { s: 'Hết giờ, không có thưởng', col: '#b8b0a0', t: 2.5 };
       S.challenge = null;
       for (const p of W.props) if (p.type === 'pedestal') p.used = true;
@@ -396,7 +433,7 @@
     return [
       { kind: 'weapon', type, tier, family, look, label: G.wName(look), sub: 'Bậc ' + G.RARITY[tier].name + '. Vũ khí mới, cất vào rương đồ' },
       { kind: 'ore', n: 5 + S.r * 3, label: (5 + S.r * 3) + ' quặng', sub: 'Dùng để mài vũ khí ở lò rèn' },
-      { kind: 'charm', el: S.tut ? 'fire' : G.pick(G.ELS), label: '', sub: 'Phủ hệ lên cả hai vũ khí trong 60 giây' },
+      { kind: 'charm', el: S.tut ? 'fire' : G.pick(G.ELS), label: '', sub: 'Phủ hệ lên vũ khí đang mang đến hết ải' },
     ].map((o) => { if (o.kind === 'charm') o.label = 'Bùa ' + G.EL[o.el].name; return o; });
   }
   // Suối hồi chỉ dùng được khi đã dọn đủ 3 phòng quái (2 Đánh quái và Tinh anh). Ở Kiểu A và C thì lúc tới suối luôn đã đủ;
@@ -422,7 +459,11 @@
     const cur = P.weapons[P.cur];
     P.weapons = G.save.carry.map((id) => G.weaponById(id)).filter(Boolean);
     P.cur = Math.max(0, P.weapons.indexOf(cur));
+    if (S.coatEl) for (const w of P.weapons) if (!(P.coats[w.id] && P.coats[w.id].t > 0)) P.coats[w.id] = { el: S.coatEl, t: COAT_STAGE }; // vũ khí vừa đổi ở Suối hồi cũng mang bùa
   }
+  // V19: bùa hệ (Rương, Thương nhân) kéo dài đến hết ải thay cho 60 giây. Bùa nằm trên người chơi của lượt này nên hết ải là hết.
+  const COAT_STAGE = 1e6;
+  function coatStage(el) { S.coatEl = el; G.addCoat(el, COAT_STAGE); }
 
   // Tính và lưu phần thưởng (gọi đúng một lần mỗi lượt chơi). Thắng thì gọi ngay lúc hạ trùm, trước khi người chơi vào cổng.
   function settle(win) {
@@ -456,7 +497,7 @@
       // Vũ khí rơi: trùm vùng theo G.bossDrop (lần đầu chắc chắn Vàng); ải thường thì 50% một món bậc ngẫu nhiên.
       if (big || G.rnd() < G.DROP.stage) {
         const nw = big ? G.bossDrop(S.r) : G.giveWeapon(G.pick(G.WKEYS), G.rollRarity(S.r + (again ? G.DROP.againBonus : 0)));
-        R.lines.push(nw ? { s: (big ? reg.bossName + ' rơi ' : 'Nhặt được ') + rarName(nw), w: nw } : 'Rương đồ đầy, vũ khí rớt đổi thành vàng');
+        R.lines.push(nw ? { s: (big ? reg.bossName + ' rơi ' : 'Nhặt được ') + rarName(nw), w: nw } : G.soldText());
       }
       // Bùa cũ (tinh anh 25%) nay là trang phục ô Bùa, bậc Lam; trùm rơi trang phục (trùm vùng: món Tím hoặc Vàng của bộ vùng).
       const O = G.outfit;
@@ -546,7 +587,7 @@
   G.usePortal = function () { if (S && S.won && S.mode === 'play') { G.sfx('evolve', 1.4); finish(true); } };
   // Dùng khi chạy thử: nhảy thẳng tới phòng số n (0 là Bắt đầu, 7 là Trùm). type: ép loại phòng và dựng lại phòng đó.
   G.gotoRoom = function (n, type) {
-    if (type) { S.map.rooms[n].type = type; S.rooms[n] = type; delete S.worlds[n]; delete S.cleared[n]; }
+    if (type) { S.map.rooms[n].type = type; S.rooms[n] = type; delete S.worlds[n]; delete S.cleared[n]; if (type !== 'challenge') delete S.map.rooms[n].goal; }
     S.trans = null; S.mode = 'play';
     enterRoom(n, null);
   };
@@ -662,11 +703,16 @@
           if (W.waveT <= 0) {
             W.waveI++;
             W.waveT = 0.7;
+            // V19 "Trụ được 30 giây": hết đợt mà chưa hết giờ thì thêm một đợt quái nữa (cùng cách chọn đợt của phòng Thử thách)
+            if (W.waveI >= W.waves.length && S.challenge && S.challenge.goal === 'survive' && S.challenge.t > 0) W.waves.push(buildWaves('challenge')[0]);
             if (W.waveI < W.waves.length) spawnWave(W.waves[W.waveI]); else clearRoom();
           }
         }
       }
-      if (S.challenge) S.challenge.t -= dt;
+      if (S.challenge) {
+        S.challenge.t -= dt;
+        if (S.challenge.goal === 'survive' && S.challenge.t <= 0 && !W.cleared && !P.dead && W.over !== 'dead') clearRoom(); // hết giờ = dọn phòng
+      }
       // trùm chết hoành tráng (cử động chết dài vài giây) rồi mới mọc cổng dịch chuyển
       if (W.type === 'boss' && S.loot.bossDown && !S.won) { S.endT += dt; if (S.endT > (W.bossDieT || 1.2)) winPortal(); return; }
       if (W.over === 'dead' && !S.won) { S.endT += dt; if (S.endT > 1.2) finish(false); return; }
@@ -785,7 +831,7 @@
     let sx = 5;
     for (const k of G.ELS) if (P.st[k] > 0) { if (G.lk && G.lk.icon) { ui.rect(sx, 54, 11, 11, 'rgba(14,10,8,0.85)', G.EL[k].col); G.lk.icon(k, sx + 5.5, 59.5, 0.9, false, 1); } else ui.rect(sx, 54, 10, 10, G.EL[k].col, '#000'); sx += 13; }
     const cw = G.curW(P), coat = P.coats[cw.id];
-    if (coat && coat.t > 0) ui.text('Bùa ' + G.EL[coat.el].name + ' ' + Math.ceil(coat.t) + ' giây', sx + 1, 62.5, { size: 7.5, color: G.EL[coat.el].col, bold: true });
+    if (coat && coat.t > 0) ui.text('Bùa ' + G.EL[coat.el].name + (coat.t > COAT_STAGE / 2 ? ' đến hết ải' : ' ' + Math.ceil(coat.t) + ' giây'), sx + 1, 62.5, { size: 7.5, color: G.EL[coat.el].col, bold: true });
     // tên vùng và loại phòng ở lề trái; bản đồ nhỏ ở lề phải (thay hàng chấm phòng trước đây)
     // Phòng trùm rộng (sàn từ x = 80): cột trái hẹp nên chữ sức mạnh xuống hai dòng, không tràn vào sàn.
     const narrow = !!(W.geo && W.geo.big);
@@ -861,7 +907,7 @@
       lines.forEach((l, i) => ui.text(l, 240, 18 + i * 9, { size: 7, align: 'center', color: '#ffd9c8', bold: true }));
       by = 14 + lines.length * 9 + 4;
     }
-    if (S.challenge) { ui.text('Thử thách: hạ hết quái trong ' + Math.max(0, Math.ceil(S.challenge.t)) + ' giây', 240, 20, { size: 8, align: 'center', color: S.challenge.t > 8 ? '#ffd27a' : '#ff6a5a', bold: true }); }
+    if (S.challenge) { ui.text((S.challenge.goal === 'survive' ? 'Thử thách: trụ thêm ' : 'Thử thách: hạ hết quái trong ') + Math.max(0, Math.ceil(S.challenge.t)) + ' giây', 240, 20, { size: 8, align: 'center', color: S.challenge.t > 8 ? '#ffd27a' : '#ff6a5a', bold: true }); }
     // Lời chỉ dẫn của ải đầu nằm ở lề trái, không che phòng. Ở phòng trùm tự ẩn sau 12 giây.
     let hint = S.hint;
     if (hint && W.cleared && W.hadWaves) hint = TUT.door;
@@ -997,9 +1043,9 @@
       const x = 72 + i * 114;
       const isW = o.kind === 'weapon';
       if (ui.btn(x, 84, 108, 100, isW ? '' : o.label, { sub: '', size: 10 })) {
-        if (isW) { const w = G.giveWeapon(o.type, o.tier, { family: o.family }); S.got.push(w ? { s: rarName(w), w } : 'vàng (rương đồ đầy)'); }
+        if (isW) { const w = G.giveWeapon(o.type, o.tier, { family: o.family }); S.got.push(w ? { s: rarName(w), w } : G.soldText()); }
         if (o.kind === 'ore') { G.save.ore += o.n; S.got.push(o.n + ' quặng'); }
-        if (o.kind === 'charm') G.addCoat(o.el, 60);
+        if (o.kind === 'charm') coatStage(o.el);
         S.prop.used = true;
         S.mode = 'play';
         G.sfx('pick');
@@ -1068,13 +1114,17 @@
     ui.text(sv.gold + ' vàng', 398, 65, { size: 8, align: 'right', color: '#ffd23f', bold: true });
     const items = [
       { id: 'potion', label: 'Bình máu', sub: 'Hồi 30% máu', cost: 60, ok: P.potions < 3, f: () => { P.potions++; } },
-      { id: 'charm', label: 'Bùa ' + G.EL[sh.el].name, sub: 'Phủ hệ 60 giây', cost: 80, ok: true, f: () => G.addCoat(sh.el, 60) },
-      { id: 'ore', label: '3 quặng', sub: 'Để mài vũ khí', cost: 100, ok: true, f: () => { sv.ore += 3; S.got.push('3 quặng'); } },
+      { id: 'charm', label: 'Bùa ' + G.EL[sh.el].name, sub: 'Phủ hệ đến hết ải', cost: 80, ok: true, f: () => coatStage(sh.el) },
+      // V59: món chỉ có trong ải, thay cho 3 quặng: đổi 25% máu tối đa lấy dấu ấn ×1,5 đến hết ải (trả bằng máu, không tốn vàng)
+      { id: 'blood', label: 'Huyết ấn', sub: 'Dấu ấn ×1,5 đến hết ải', cost: 0, hpCost: 0.25, ok: P.hp > P.maxhp * 0.35, f: () => {
+        P.hp = Math.max(1, P.hp - Math.round(P.maxhp * 0.25)); S.marksMult *= 1.5; S.W.marksMult = S.marksMult; S.got.push('Huyết ấn: dấu ấn ×1,5');
+        G.burst(P.x, P.y - 8, '#ff6a5a', 14, 60);
+      } },
     ];
     items.forEach((it, i) => {
       const x = 82 + i * 108;
       const dis = sh.bought[it.id] || sv.gold < it.cost || !it.ok;
-      if (ui.btn(x, 78, 100, 80, it.label, { sub: sh.bought[it.id] ? 'Đã mua' : it.cost + ' vàng', size: 9.5, disabled: dis })) {
+      if (ui.btn(x, 78, 100, 80, it.label, { sub: sh.bought[it.id] ? 'Đã mua' : it.hpCost ? Math.round(it.hpCost * 100) + '% máu' : it.cost + ' vàng', size: 9.5, disabled: dis })) {
         sv.gold -= it.cost; sh.bought[it.id] = true; it.f(); G.sfx('pick');
       }
       ui.text(it.sub, x + 50, 170, { size: 7, align: 'center', color: '#d9cdb8' });
