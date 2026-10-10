@@ -325,6 +325,7 @@ function tachO(A, x0, y0, x1, y1, coAlpha) {
 // Tách nền toàn ảnh (xoá cả đường kẻ lưới), tìm các cụm điểm, chia 6 hàng theo chiều cao, mỗi hàng xếp trái → phải.
 function tuTim(A, coAlpha) {
   const { W, H, d } = A, N = W * H, P = new Uint8ClampedArray(d), fg = new Uint8Array(N);
+  let duong = new Uint8Array(N);
   if (coAlpha) {
     for (let j = 0; j < N; j++) fg[j] = d[j*4+3] >= 128 ? 1 : 0;
   } else {
@@ -345,7 +346,7 @@ function tuTim(A, coAlpha) {
     const giong = (j) => { for (const c of nen) if (Math.abs(d[j*4] - c[0]) + Math.abs(d[j*4+1] - c[1]) + Math.abs(d[j*4+2] - c[2]) < 40) return true; return false; };
     const laNen = new Uint8Array(N); for (let j = 0; j < N; j++) laNen[j] = giong(j) ? 1 : 0;
     // đường kẻ lưới và vệt bóng mảnh: nét khác nền dày ≤ 4 điểm nhưng dài thẳng ≥ L điểm
-    const duong = new Uint8Array(N), L = Math.max(24, Math.round(Math.min(W / 8, H / 6) * 0.45));
+    const L = Math.max(24, Math.round(Math.min(W / 8, H / 6) * 0.45));
     const doc = new Uint16Array(N), ngang = new Uint16Array(N);
     for (let y = 0; y < H; y++) { let x = 0; while (x < W) { if (laNen[y*W+x]) { x++; continue; } let e = x; while (e < W && !laNen[y*W+e]) e++; for (let t = x; t < e; t++) ngang[y*W+t] = Math.min(65535, e - x); x = e; } }
     for (let x = 0; x < W; x++) { let y = 0; while (y < H) { if (laNen[y*W+x]) { y++; continue; } let e = y; while (e < H && !laNen[e*W+x]) e++; for (let t = y; t < e; t++) doc[t*W+x] = Math.min(65535, e - y); y = e; } }
@@ -411,6 +412,8 @@ function tuTim(A, coAlpha) {
     c.cx = (c.x0 + c.x1) / 2; c.cy = (c.y0 + c.y1) / 2; cum.push(c);
   }
   if (!cum.length) return { loi: ['Không tìm thấy hình nào trong ảnh'] };
+  const theoLuoi = tachTheoLuoiKe(W, H, duong, nhan, cum, P);
+  if (theoLuoi) return theoLuoi;
   const maxN = Math.max(...cum.map(c => c.n));
   const vua = cum.filter(c => c.n >= 0.05 * maxN).map(c => c.n).sort((a, b) => a - b);
   const ref = vua[vua.length >> 1];
@@ -478,6 +481,50 @@ function tuTim(A, coAlpha) {
     }
     hinh[r + ',' + c] = { w, h, px };
   }
+  return { hinh, loi, ghi, khung };
+}
+
+// Ảnh có kẻ lưới thật: dò đường kẻ (bao nhiêu cột cũng được), mỗi ô là một khung; phần lan sang ô khác bị cắt bỏ.
+function tachTheoLuoiKe(W, H, duong, nhan, cum, P) {
+  const dai = (laHang) => {
+    const n1 = laHang ? H : W, n2 = laHang ? W : H, vt = [];
+    for (let v = 0; v < n1; v++) { let n = 0; for (let t = 0; t < n2; t++) if (duong[laHang ? v * W + t : t * W + v]) n++; if (n >= 0.45 * n2) vt.push(v); }
+    const tam = []; for (const v of vt) { if (tam.length && v - tam[tam.length - 1].b <= 3) tam[tam.length - 1].b = v; else tam.push({ a: v, b: v }); }
+    const bien = [0, ...tam.map(t => (t.a + t.b) >> 1), n1], bang = [];
+    for (let i = 0; i + 1 < bien.length; i++) bang.push([bien[i], bien[i + 1]]);
+    const rong = bang.map(b => b[1] - b[0]).sort((a, b) => a - b), giua = rong[rong.length >> 1] || 0;
+    return bang.filter(b => b[1] - b[0] >= 0.4 * giua);
+  };
+  const hang = dai(true), cot = dai(false);
+  if (hang.length !== 6 || cot.length < Math.max(...SO)) return null;
+  const o = [];
+  hang.forEach(([y0, y1], r) => cot.forEach(([x0, x1], c) => {
+    const dem = new Map(), m = 3;
+    for (let y = y0 + m; y < y1 - m; y++) for (let x = x0 + m; x < x1 - m; x++) { const id = nhan[y * W + x]; if (id >= 0) dem.set(id, (dem.get(id) || 0) + 1); }
+    const lonNhat = Math.max(0, ...dem.values());
+    o.push({ r, c, x0: x0 + m, y0: y0 + m, x1: x1 - m - 1, y1: y1 - m - 1, dem, lonNhat });
+  }));
+  const coHinh = o.map(c => c.lonNhat).filter(n => n > 0).sort((a, b) => a - b), ref = coHinh[coHinh.length >> 1] || 1;
+  let catNgang = 0, tongKhung = 0;
+  const khung = [], loi = [], ghi = ['Ảnh có kẻ lưới: ' + cot.length + ' cột × 6 hàng, tách theo từng ô'], hinh = {};
+  for (let r = 0; r < 6; r++) {
+    const ds = o.filter(c => c.r === r && c.lonNhat >= 0.15 * ref);
+    let chon = ds;
+    if (ds.length > SO[r]) { chon = []; for (let i = 0; i < SO[r]; i++) chon.push(ds[Math.round(i * (ds.length - 1) / (SO[r] - 1))]); ghi.push(`Hàng ${r + 1}: thấy ${ds.length} hình, lấy ${SO[r]} hình rải đều`); }
+    if (ds.length < SO[r]) loi.push(`Hàng ${r + 1} (${TEN_DT[r].toLowerCase()}): chỉ thấy ${ds.length} hình, cần ${SO[r]}`);
+    chon.forEach((cell, c) => {
+      const giu = new Set([...cell.dem].filter(([, n]) => n >= 0.15 * cell.lonNhat).map(([id]) => id));
+      let x0 = W, y0 = H, x1 = -1, y1 = -1;
+      for (let y = cell.y0; y <= cell.y1; y++) for (let x = cell.x0; x <= cell.x1; x++) if (giu.has(nhan[y * W + x])) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+      tongKhung++; if (x0 <= cell.x0 || x1 >= cell.x1) catNgang++;
+      const w = x1 - x0 + 1, h = y1 - y0 + 1, px = new Uint8ClampedArray(w * h * 4);
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const j = (y + y0) * W + x + x0; if (giu.has(nhan[j])) px.set(P.subarray(j * 4, j * 4 + 4), (y * w + x) * 4); }
+      hinh[r + ',' + c] = { w, h, px };
+      khung.push({ r, c, f: { x0, y0, x1, y1 } });
+    });
+  }
+  // lưới không khớp hình (cắt ngang thân nhiều con) thì bỏ, chuyển sang tự tìm từng con
+  if (catNgang > 0.3 * tongKhung) return null;
   return { hinh, loi, ghi, khung };
 }
 
