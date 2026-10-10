@@ -542,11 +542,11 @@
   function drawCres(c, o) {
     const q = o.q;
     if (q.done) { q.gone = true; return; }
-    const PL = pal(q.he ? q.he.el : null), th = angOf(q), g = Math.min(1, 0.75 + q.walked / 160);
+    const PL = pal(q.he ? q.he.el : null), th = angOf(q), g = Math.min(0.85, 0.62 + q.walked / 220); // nhỏ hơn trước (0,75 → 1) để vệt không che quái và em bé
     const X = Math.round(q.x), Y = Math.round(q.y - 12);
     c.save(); c.translate(X, Y); c.rotate(th);
     try {
-      for (let i = 2; i >= 1; i--) { c.globalAlpha = 0.22 * (3 - i); crescent(c, -i * 9, 0, 17 * g, 19 * g, -8, 0, 1, PL.c, 0, 1, true, true, 1, 0); }
+      for (let i = 2; i >= 1; i--) { c.globalAlpha = 0.15 * (3 - i); crescent(c, -i * 9, 0, 17 * g, 19 * g, -8, 0, 1, PL.c, 0, 1, true, true, 1, 0); }
       c.globalAlpha = 1;
       crescent(c, 1, 0, 19 * g, 21 * g, -8, 0, 1, PL.d, 0, 1, true, false, 1, 0);
       crescent(c, 0, 0, 17 * g, 19 * g, -7, 0, 1, PL.c, 0, 1, true, false, 1, 0);
