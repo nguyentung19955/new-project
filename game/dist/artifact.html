@@ -11772,10 +11772,10 @@
   // (Hotfix 10/10: nón ±60 độ quá hẹp — giáo đâm theo hướng cần thay vì vào quái lệch bên.)
   const CONE = -0.17; // cos 100 độ
   function inCone(P, e) {
-    if (P.stickX == null) return true;
+    if (G.AIM_CONE == null || P.stickX == null) return true; // chủ dự án 10/10: điện thoại khó nhắm → luôn tự ngắm vào quái gần nhất mọi hướng (đặt G.AIM_CONE = số cos để bật lại nón)
     const dx = e.x - P.x, dy = (e.y - P.y) / ZK(), d = Math.hypot(dx, dy);
     if (d < 1e-6) return false;
-    return (dx * P.stickX + dy * P.stickY) / d >= CONE;
+    return (dx * P.stickX + dy * P.stickY) / d >= G.AIM_CONE;
   }
   M.inCone = inCone;
   function aimM(P, range) {
