@@ -399,7 +399,7 @@
   G.saveFail = false;
   G.persist = function () {
     try { window.localStorage.setItem(KEY, JSON.stringify(G.save)); G.saveFail = false; } catch (e) {
-      if (!G.saveFail) console.error('Linh Khí: không lưu được trên máy này', e);
+      if (!G.saveFail) console.warn('Linh Khí: không lưu được trên máy này', e); // warn (không phải error): bài kiểm tra coi console.error là lỗi game
       G.saveFail = true;
     }
   };
