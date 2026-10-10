@@ -887,7 +887,7 @@ function chonMon(i, giu) {
   $('nutBo').textContent = c.bo ? 'Lấy lại món này' : 'Bỏ món này';
   $('nutBo').className = 'nut nho ' + (c.bo ? 'phu' : 'do');
   $('nutTaiMot').disabled = c.bo;
-  $('nutTaiMot').textContent = 'Tải ' + m.ma + '.sprite.json';
+  $('nutTaiMot').textContent = 'Tải ' + m.ma + ' (2 bản: gấp đôi + thường)';
   veSua();
   dangKy();
   if (!giu) $('chiTiet').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1055,22 +1055,50 @@ requestAnimationFrame(khungXem);
 // ===================== TẢI VỀ =====================
 function taiXuong(ten, blob) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = ten; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000); }
 const jsonMon = (i) => JSON.stringify(phanTep(i, false));
-$('nutTaiMot').onclick = () => { if (CHON < 0 || !KQ[CHON]) return; const m = L.ds[CHON]; taiXuong(m.ma + '.sprite.json', new Blob([jsonMon(CHON)], { type: 'application/json' })); bao('Đã tải ' + m.ma + '.sprite.json'); };
 function napJSZip() {
   if (window.JSZip) return Promise.resolve(window.JSZip);
   return new Promise((ok, no) => { const s = document.createElement('script'); s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'; s.onload = () => (window.JSZip ? ok(window.JSZip) : no()); s.onerror = no; document.head.appendChild(s); });
 }
+// Làm 2 bản cho các món: nét gấp đôi và nét thường (như cũ). Chỉnh tay (xoay, lật, điểm cầm…) giữ nguyên ở cả hai bản.
+function haiBan(ds) {
+  const netCu = $('heNet').value, gap = {}, thuong = {};
+  const lay = (dich) => { for (const i of ds) if (KQ[i]) dich[i] = jsonMon(i); };
+  try {
+    $('heNet').value = '2'; chay(false); lay(gap);
+    $('heNet').value = '1'; chay(false); lay(thuong);
+  } finally { $('heNet').value = netCu; chay(false); }
+  return { gap, thuong };
+}
+$('nutTaiMot').onclick = async () => {
+  if (CHON < 0 || !KQ[CHON]) return;
+  const i = CHON, m = L.ds[i], hb = haiBan([i]);
+  try {
+    const JSZip = await napJSZip(), z = new JSZip();
+    if (hb.gap[i]) z.file(m.ma + '.sprite.json', hb.gap[i]);
+    if (hb.thuong[i]) z.file(m.ma + '.thuong.sprite.json', hb.thuong[i]);
+    taiXuong(m.ma + '_2-ban.zip', await z.generateAsync({ type: 'blob', compression: 'DEFLATE' }));
+    bao('Đã tải ' + m.ma + '_2-ban.zip (bản nét gấp đôi + bản thường)');
+  } catch (e) {
+    if (hb.gap[i]) taiXuong(m.ma + '.sprite.json', new Blob([hb.gap[i]], { type: 'application/json' }));
+    if (hb.thuong[i]) setTimeout(() => taiXuong(m.ma + '.thuong.sprite.json', new Blob([hb.thuong[i]], { type: 'application/json' })), 800);
+    bao('Đã tải 2 tệp: ' + m.ma + '.sprite.json (gấp đôi) và ' + m.ma + '.thuong.sprite.json (thường)');
+  }
+};
+// Tải cả lô: trong .zip mỗi món có 2 tệp: <mã>.sprite.json (nét gấp đôi) và <mã>.thuong.sprite.json (nét thường)
 $('nutTaiZip').onclick = async () => {
   const ds = L.ds.map((m, i) => i).filter((i) => KQ[i] && !chinhCua(i).bo);
   if (!ds.length) return;
   $('nutTaiZip').disabled = true;
   try {
-    const JSZip = await napJSZip(), z = new JSZip();
-    for (const i of ds) z.file(L.ds[i].ma + '.sprite.json', jsonMon(i));
+    const JSZip = await napJSZip(), z = new JSZip(), hb = haiBan(ds);
+    for (const i of ds) {
+      if (hb.gap[i]) z.file(L.ds[i].ma + '.sprite.json', hb.gap[i]);
+      if (hb.thuong[i]) z.file(L.ds[i].ma + '.thuong.sprite.json', hb.thuong[i]);
+    }
     const blob = await z.generateAsync({ type: 'blob', compression: 'DEFLATE' });
-    taiXuong((L.doi === 'vat-pham' ? 'vat-pham' : L.id) + '.zip', blob);
+    taiXuong((L.doi === 'vat-pham' ? 'vat-pham' : L.id) + '_2-ban.zip', blob);
     const thieu = L.ds.filter((m, i) => !KQ[i]).map((m) => m.ten);
-    bao('Đã tải ' + ds.length + ' món' + (thieu.length ? '. Còn thiếu: ' + thieu.join(', ') : ''));
+    bao('Đã tải ' + ds.length + ' món, mỗi món 2 bản (gấp đôi + thường)' + (thieu.length ? '. Còn thiếu: ' + thieu.join(', ') : ''));
   } catch (e) {
     bao('Không tải được thư viện nén .zip (mạng?). Tải từng món: chạm món rồi bấm "Tải file này"');
   }
