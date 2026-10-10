@@ -10,6 +10,7 @@ extends Node2D
 @export var ma := "em-be-hunter"                ## Mã trong game. Em bé: em-be-smith, em-be-hunter, em-be-healer, em-be-wrestler
 @export var ten := "Thợ Săn"                    ## Tên hiển thị
 @export_enum("em-be", "hieu-ung") var loai := "em-be"
+@export_enum("em-be", "quai") var doi_tuong := "em-be"   ## em-be: game tự vẽ vũ khí (ẩn VuKhiXem). quai: vũ khí là một phần của quái, giữ lại khi xuất.
 @export var cao_trong_game := 33                ## Em bé: chiều cao khi đứng (điểm ảnh trong game). Hiệu ứng: chiều cao lớn nhất.
 @export var khung_moi_giay := 12                ## Số khung hình mỗi giây khi chụp
 @export var dong_tac: PackedStringArray = ["idle", "move", "tele", "atk", "hit", "die", "ne"]  ## Các động tác sẽ xuất (đúng tên trong AnimationPlayer)
@@ -28,7 +29,7 @@ func _ready() -> void:
 		return
 	var vp := get_viewport()
 	vp.transparent_bg = true
-	for p in an_khi_xuat:
+	for p in (an_khi_xuat if doi_tuong == "em-be" else []):
 		var n := get_node_or_null(p)
 		if n is CanvasItem:
 			n.visible = false
@@ -103,7 +104,7 @@ func _ready() -> void:
 		rong = maxi(1, roundi(u0.size.x * k))
 	var tep := {
 		"loai": "linh-khi-sprite", "phien_ban": 1, "nguon": "godot",
-		"ma": ma, "ten": ten, "doi_tuong": "em-be" if loai == "em-be" else "hieu-ung", "vung": "moi",
+		"ma": ma, "ten": ten, "doi_tuong": doi_tuong if loai == "em-be" else "hieu-ung", "vung": "moi",
 		"tam": "data:image/png;base64," + Marshalls.raw_to_base64(tam.save_png_to_buffer()),
 		"khung_rong": fw, "khung_cao": fh,
 		"goc": [roundi((goc.x - r.position.x) * k), roundi((goc.y - r.position.y) * k)],
@@ -185,6 +186,11 @@ func tu_rap() -> void:
 	gan.call($Hinh/Than/TayTruoc, c["tay_truoc"], "tay_truoc", pta)
 	gan.call($Hinh/Than/TaySau, c["tay_sau"], "tay_sau", pts)
 	$Hinh/Than/TaySau/Anh.modulate = Color(0.82, 0.82, 0.82)
+	# Cả hai tay nằm sau thân để đầu khớp vai được thân che (tay trước vẫn vẽ trên tay sau).
+	$Hinh/Than/TayTruoc.show_behind_parent = true
+	$Hinh/Than/TayTruoc.z_index = 0
+	# Hai chân nằm sau thân để đầu khớp hông được thân che.
+	hinh.move_child($Hinh/ChanTruoc, than.get_index())
 	$Hinh/ChanSau/Anh.modulate = Color(0.82, 0.82, 0.82)
 	# Đầu: cổ cắm sâu vào cổ áo.
 	var sd: Vector2 = co.call(c["dau"])
