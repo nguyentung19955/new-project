@@ -8723,7 +8723,24 @@ window.XS_THU_URL = "xuong-sprite-thu.html";
     const S = new Spr(120, 112, 60, 74);
     drawKid(S, key, of, ps, only);
     S.finish();
+    vanhBe(S);
     return S.toCanvas(TINT[tintK] || null);
+  }
+  // Vành sáng (rim light) phía nguồn sáng (trên – bên phải, như bóng sẵn có của từng miếng): điểm ngay trong viền ngoài ở mép phải
+  // sáng thêm một nấc, mép trên sáng nhẹ (mép trên các miếng đã tự sáng). Chỉ đường bao ngoài (ngoài viền là khoảng trống), không đụng
+  // nét trong. Làm một lần lúc dựng khung (khung được nhớ), không tốn gì lúc vẽ. Cường độ G.VFX.vien (0 = như cũ).
+  const RIM = new Map();
+  function rimOf(c, k) { const key = c + k; let r = RIM.get(key); if (!r) { r = mixHex(c, '#fff6de', k); RIM.set(key, r); } return r; }
+  function vanhBe(S) {
+    const v = G.VFX && G.VFX.vien != null ? +G.VFX.vien : 1;
+    if (!(v > 0)) return;
+    const W = S.w, M = S.main, n = W * S.h, kr = 0.22 * Math.min(1.5, v), kt = 0.1 * Math.min(1.5, v);
+    for (let i = 2 * W + 2; i < n - 2 * W - 2; i++) {
+      const c = M[i];
+      if (!c || c === INK || S.nol[i] || c[0] !== '#' || c.length !== 7) continue;
+      if (M[i + 1] === INK && !M[i + 2]) M[i] = rimOf(c, kr);
+      else if (M[i - W] === INK && !M[i - 2 * W]) M[i] = rimOf(c, kt);
+    }
   }
   const ofKey = (of) => [of.hat, of.robe, of.back, of.hand, of.mask, of.wing ? of.wing.kind + of.wing.level : '', of.rar ? [of.rar.hat, of.rar.robe, of.rar.back, of.rar.hand].join('') : ''].join(',');
   // Trả về mọi thứ cần để vẽ một khung: hình bé, chỗ đặt, và thông tin vũ khí.
@@ -10176,8 +10193,32 @@ function ghepHinh(B, P) {
     if (hit >= 0) { o1[Y * W + X] = pre[hit]; if (o2) o2[Y * W + X] = fxl[hit]; }
   }
   const F = { w: W, h: H, d: o1 };
-  if (B.A) { vien0(F); if (o2) for (let i = 0; i < o2.length; i++) if (o2[i] != null) F.d[i] = o2[i] === XOA ? null : o2[i]; }
+  if (B.A) vien0(F);
+  vanhSang(F); // vành sáng mép trên (trước lớp hiệu ứng rời để không viền lên tia sáng, bong bóng)
+  if (B.A && o2) for (let i = 0; i < o2.length; i++) if (o2[i] != null) F.d[i] = o2[i] === XOA ? null : o2[i];
   F.ox = M + B.cx; F.oy = M + B.foot; return F;
+}
+// ---------- vành sáng (rim light) và viền đều cho hình nhỏ trên điện thoại (giai đoạn 3, dt-nhan-vat) ----------
+// Làm một lần lúc dựng khung (khung được nhớ trong KHUNG), không tốn thêm gì lúc vẽ.
+// 1) Điểm thân nằm ngay dưới viền tối ở MÉP TRÊN hình (phía trên viền là khoảng trống) sáng lên một nấc: ánh sáng từ trên chiếu xuống,
+//    lật hình trái/phải vẫn đúng. Hai bên sườn sáng nhẹ hơn. Tách thân quái khỏi nền tối cùng tông (lợn rừng nâu trên đất nâu).
+// 2) Viền tối 1 điểm ảnh: mọi khung đều đã được tô viền lại sau khi xoay bộ phận (vien0 ở trên), đã kiểm: cả 36 con.
+// Cường độ: G.VFX.vien (0 = tắt, như cũ). Đổi G.VFX.vien lúc đang chơi thì gọi G.monsterArt.xoaNho() để dựng lại khung.
+const SANG = new Map();
+function laTo(col) { return !col || col === OL || col === '#0a0c1e' || col === '#1c0f18' || doSang(col) < 13; }
+const DOSANG = new Map();
+function doSang(col) { let v = DOSANG.get(col); if (v != null) return v; v = 999; if (col[0] === '#' && col.length === 7) { const n = parseInt(col.slice(1), 16); v = ((n >> 16) * .3 + ((n >> 8) & 255) * .55 + (n & 255) * .15) / 2.55; } DOSANG.set(col, v); return v; }
+function sangLen(col, k) { const key = col + k; let s = SANG.get(key); if (s) return s; s = col;
+  if (col[0] === '#' && col.length === 7) { const n = parseInt(col.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255, m = (a, t) => Math.round(a + (t - a) * k);
+    s = '#' + ((1 << 24) + (m(r, 255) << 16) + (m(g, 246) << 8) + m(b, 222)).toString(16).slice(1); }
+  SANG.set(key, s); return s; }
+function vanhSang(F) {
+  const k = G.VFX && G.VFX.vien != null ? +G.VFX.vien : 1; if (!(k > 0)) return;
+  const W = F.w, H = F.h, d = F.d, tren = .38 * Math.min(1.5, k), ben = .15 * Math.min(1.5, k);
+  for (let y = 2; y < H - 1; y++) for (let x = 2; x < W - 2; x++) { const i = y * W + x, c = d[i]; if (!c || laTo(c)) continue;
+    const u = d[i - W];
+    if (u && laTo(u) && !d[i - 2 * W]) { d[i] = sangLen(c, tren); continue; } // mép trên
+    if (u && !laTo(u) && ((laTo(d[i - 1]) && d[i - 1] && !d[i - 2]) || (laTo(d[i + 1]) && d[i + 1] && !d[i + 2]))) d[i] = sangLen(c, ben); } // hai sườn, nhẹ hơn
 }
 MA._ghep = ghepHinh;
 function taoCanvas(w, h) { let cv; if (typeof document !== 'undefined') { cv = document.createElement('canvas'); cv.width = w; cv.height = h; } else cv = new OffscreenCanvas(w, h); return cv; }
@@ -10186,9 +10227,9 @@ function tanRa(put, F, T, B, E) {
   const W = F.w, H = F.h, u = clamp(T.u, 0, 1), k = T.k, mau = T.mau || ['#ffffff'], ox = F.ox, oy = F.oy, bh = B.bh, bw = B.bw, top = oy - bh, size = Math.max(bw, bh), mcx = ox, mcy = oy - bh / 2, sd = T.hat || 0;
   const cs2 = Math.max(2, Math.round(size / 9));
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { let c = F.d[y * W + x]; if (!c) continue; const r = hh(x, y, sd); let nx = x, ny = y;
-    if (k === 'vo' || k === 'no') { const q = k === 'vo' ? cs2 : (T.co || 1), gx = Math.floor(x / q), gy = Math.floor(y / q), r1 = hh(gx, gy, 1), r2 = hh(gx, gy, 2), r3 = hh(gx, gy, 3); if (u > .45 + .55 * r3) continue;
-      let dx = (gx + .5) * q - mcx, dy = (gy + .5) * q - mcy; const dl = Math.hypot(dx, dy) || 1; dx = dx / dl + (r1 - .5) * .9; dy = dy / dl + (r2 - .5) * .9 - (k === 'vo' ? .5 : 0); const e = 1 - (1 - u) * (1 - u), sp = size * (k === 'vo' ? .55 : .95) * (.35 + .65 * r1);
-      nx = x + dx * sp * e; ny = y + dy * sp * e + (k === 'vo' ? size * .9 * u * u : 0); if (k === 'vo' && ny > oy - 1) ny = oy - 1 - (r2 * 2 | 0); if (u < .1 && !T.hien) c = '#ffffff'; else if (r > 1.25 - u) c = mau[(r1 * mau.length) | 0]; }
+    if (k === 'vo' || k === 'no') { const q = k === 'vo' ? cs2 : (T.co || 2), gx = Math.floor(x / q), gy = Math.floor(y / q), r1 = hh(gx, gy, 1), r2 = hh(gx, gy, 2), r3 = hh(gx, gy, 3); if (u > .45 + .55 * r3) continue; if (k === 'no' && r < u * .95) continue; // nổ: mảnh 2 điểm, thưa dần khi bay (bớt đám bụi điểm ảnh che sân)
+      let dx = (gx + .5) * q - mcx, dy = (gy + .5) * q - mcy; const dl = Math.hypot(dx, dy) || 1; dx = dx / dl + (r1 - .5) * .9; dy = dy / dl + (r2 - .5) * .9 - (k === 'vo' ? .5 : 0); const e = 1 - (1 - u) * (1 - u), sp = size * (k === 'vo' ? .55 : .62) * (.35 + .65 * r1);
+      nx = x + dx * sp * e; ny = y + dy * sp * e + (k === 'vo' ? size * .9 * u * u : 0); if (k === 'vo' && ny > oy - 1) ny = oy - 1 - (r2 * 2 | 0); if (u < .05 && !T.hien) c = '#ffffff'; else if (r > 1.25 - u) c = mau[(r1 * mau.length) | 0]; }
     else if (k === 'tan') { if (r < u * 1.25 - .3) continue; const e = Math.pow(1 - u, 1.6); ny = oy - (oy - y) * (e * .95 + .05) ; nx = mcx + (x - mcx) * (1 + u * .9) + Math.sin(y * .7 + u * 9) * u * 1.5; if (r > 1.3 - u * 1.2) c = mau[(r * 7 % 1 * mau.length) | 0]; }
     else if (k === 'chay') { const yb = top - 4 + u * (bh + 12), dd = yb - y; if (dd > 0) { const life = dd / (8 + r * 14); if (life > 1 || r < .45) continue; ny = y - dd * (.5 + r) * .8; nx = x + Math.sin(dd * .4 + r * 6) * 2 * life; c = mau[Math.min(mau.length - 1, (life * mau.length) | 0)]; } else if (dd > -2) c = '#fff6b0'; else if (dd > -5 && r < .6) c = '#ff8a1e'; }
     else if (k === 'ra') { const del = r * .45 + (y - top) / bh * .15, tt = u - del; if (tt > 0) { ny = Math.min(oy - 1 - ((r * 3) | 0), y + size * 2.4 * tt * tt); nx = x + (hh(x, y, 5) - .5) * tt * size * .5; if (ny >= oy - 3) { if (u > .7 + r * .3) continue; c = mau[(r * mau.length) | 0]; } } }
@@ -10302,7 +10343,7 @@ const CHIEU = MA.chieu = {
 const NHAN = { idle: 'Đứng thở', move: 'Di chuyển', tele: 'Báo trước đòn', atk: 'Ra đòn', hit: 'Trúng đòn', die: 'Chết', spawn: 'Xuất hiện', intro: 'Ra mắt', stun: 'Choáng', phase2: 'Chuyển sang pha 2', phase3: 'Chuyển sang pha 3' };
 const BUI = ['#8a8290', '#5a5460', '#cbc3c0'];
 const CH = MA.chuan = {
-  idle(P) { P.tho(.035); if (P.d.bay) P.h += sn(P.u) * 1.5; },
+  idle(P) { P.tho(.035); if (P.d.bay) { P.h += sn(P.u) * 1.5; P.rot += 2 * sn(P.u + .2); } else { P.rot += 1.5 * sn(P.u + .25); P.sh += .6 * sn(P.u); } }, // thở + lắc lư nhẹ (con không tự viết cử động đứng)
   move(P) { if (P.d.bay) { P.h += sn(P.u * 2) * 1.5; P.rot += -4 + sn(P.u) * 2; P.tho(.03, P.u * 2); } else { const s = Math.abs(sn(P.u)); P.h += s * 2; P.sy *= 1 + s * .06 - .03; P.sx *= 1 - s * .04 + .02; P.rot += sn(P.u) * 3 - 2; } },
   tele(P) { const u = P.u, k = kf(u, [[0, 0], [.35, 1, 'out'], [1, 1]]); P.theo(-3 * k); P.sy *= 1 - .1 * k; P.sx *= 1 + .07 * k; P.rot += -P.aim * 10 * k; if (u > .35) P.x += (((u * 24) | 0) % 2 ? .6 : -.6); P.flash = u > .7 ? ((u * 24 | 0) % 2 ? .35 : 0) : 0; P.fxBao(u); },
   atk(P) { const u = P.u, k = kf(u, [[0, -3], [.18, 8, 'out'], [.45, 6], [1, 0, 'io']]); P.theo(k); const st = kf(u, [[0, .9], [.18, 1.14, 'out'], [.4, .94], [.6, 1.03], [1, 1]]); P.sx *= st; P.sy *= 2 - st; P.rot += -P.aim * 12 * (1 - u) + kf(u, [[0, 0], [.18, -8, 'out'], [1, 0]]); P.fxDon(u); },
@@ -10366,7 +10407,8 @@ MA._xong = function () { MA.list.length = 0; const TT = ['bien', 'rung', 'laudai
 
 // ---------- VẼ ----------
 // c: bút canvas 2D (đơn vị = điểm ảnh của game). (x, y): điểm chân quái. o: {anim, t (giây từ lúc bắt đầu cử động), face (-1 trái, 1 phải),
-// dir (góc radian của đòn: 0 = phải, PI/2 = xuống), phase (1..3, chỉ trùm vùng), hit (0..1 chớp trắng), bao: false để tắt vùng báo trước, fx: false để tắt hết hiệu ứng rời}
+// dir (góc radian của đòn: 0 = phải, PI/2 = xuống), phase (1..3, chỉ trùm vùng), hit (0..1 chớp trắng), bao: false để tắt vùng báo trước, fx: false để tắt hết hiệu ứng rời,
+// tint: [màu, độ phủ] nhuộm cả hình (nhịp độc, cháy), chop: hệ số 0..1 nhân vào chớp trắng của chính cử động (lúc khựng hình)}
 MA.draw = function (c, id, x, y, o) {
   const d = DEFS[id]; if (!d) return; o = o || {};
   let ph = d.pha ? clamp(o.phase || 1, 1, d.pha) : 1; const nm = d.anims[o.anim] ? o.anim : 'idle', an = d.anims[nm];
@@ -10383,11 +10425,15 @@ MA.draw = function (c, id, x, y, o) {
   const sx = Math.round(P.x), sy = Math.round(P.y - P.h);
   const ve = (img, dx, dy, a) => { c.save(); c.globalAlpha = ga * a; c.translate(sx + dx, sy + dy); if (face > 0) c.scale(-1, 1); c.drawImage(img, -fr.ox, -fr.oy); c.restore(); };
   if (P.bongMa) for (const m of P.bongMa) { ve(fr.cv, m.x || 0, m.y || 0, (m.a == null ? .3 : m.a) * P.a); if (m.mau) ve(bongHinh(fr, m.mau), m.x || 0, m.y || 0, (m.a == null ? .3 : m.a) * .7 * P.a); }
-  if (P.a > 0) { ve(fr.cv, 0, 0, P.a); if (P.tint && P.tint[1] > 0) ve(bongHinh(fr, P.tint[0]), 0, 0, P.a * clamp(P.tint[1], 0, 1)); const fl = Math.max(P.flash || 0, o.hit || 0); if (fl > 0) ve(bongHinh(fr, '#ffffff'), 0, 0, P.a * clamp(fl, 0, 1)); }
+  if (P.a > 0) { ve(fr.cv, 0, 0, P.a); if (P.tint && P.tint[1] > 0) ve(bongHinh(fr, P.tint[0]), 0, 0, P.a * clamp(P.tint[1], 0, 1));
+    if (o.tint && o.tint[1] > 0) ve(bongHinh(fr, o.tint[0]), 0, 0, P.a * clamp(o.tint[1], 0, 1)); // nhuộm màu hệ (nhịp độc / cháy) do game truyền vào
+    const fl = Math.max((P.flash || 0) * (o.chop == null ? 1 : o.chop), o.hit || 0); if (fl > 0) ve(bongHinh(fr, '#ffffff'), 0, 0, P.a * clamp(fl, 0, 1)); } // o.chop: hệ số chớp trắng của cử động (khựng hình thì nhạt đi)
   if (o.fx !== false) for (const f of P._o) { c.save(); f(c, P); c.restore(); }
   c.restore();
 };
 // Tiện cho game: thời lượng một cử động (giây), và xoá bộ nhớ khung hình.
+// Chiều cao hình thật (điểm ảnh, từ chân tới đỉnh) gồm cả độ bay của quái bay và chừa 2 điểm cho nhịp thở: để đặt thanh máu, biểu tượng trên đầu.
+MA.cao = (id) => { const d = DEFS[id]; if (!d) return 0; const B = goc(d, 1); return B.bh + (d.bay ? (d.cao || 8) + 2 : 0) + 2; };
 MA.dur = (id, anim) => { const d = DEFS[id]; return d && d.anims[anim] ? d.anims[anim].d : 0; };
 MA.xoaNho = () => KHUNG.clear();
 
