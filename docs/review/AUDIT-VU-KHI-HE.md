@@ -226,3 +226,13 @@ Kết luận: game **không** để đứng spam thắng ở chỗ quan trọng 
 - **Phản ứng hệ (Nổ khói, Sốc nhiệt) khi mang hai vũ khí khác nhánh** chưa đo tần suất: các bài chỉ dùng một vũ khí mỗi lượt.
 - **Không đo** độ trễ nút, cửa sổ bất tử, tự ngắm, "báo trước so với thời gian chạy thoát", "trùm học theo bạn": thuộc phiên `au-chien-dau`. Bảng trùm ở phần 4 chỉ ghi thời gian báo trước trên giấy để tiện đối chiếu.
 - **Các con số đề xuất** (ví dụ hệ số trùm nhỏ 2,6–2,9; Nổ lan 0,7; Nhát lướt ×2,0; búa chạm ở 35% động tác) là điểm khởi đầu để thử, **chưa** chạy `tests/cay.py` với số mới (phiên này không sửa code game).
+
+---
+
+## 8. Đối chiếu với AUDIT-CHIEN-DAU (đã gộp vào nhánh lúc kết thúc phiên)
+
+Phiên `au-chien-dau` xong cùng lúc; đọc lại để tránh mâu thuẫn:
+- **Búa (3.1)**: AUDIT-CHIEN-DAU mục #16 tìm ra thêm một nguyên nhân cùng chiều: Né huỷ nhát búa nhưng **không trả lại thời gian chờ** (`atkT = 0`, `cdT` giữ nguyên), nên lộn xong còn chờ ~0,43 giây mới nện lại được. Hai đề xuất bổ sung nhau: búa chạm sớm hơn (phiên này) và trả `cdT` khi Né huỷ đòn (phiên kia). Mục #15 của họ cũng xác nhận lấy đà nấc 2 có st/giây thấp hơn nện thường.
+- **Âm thanh (1.2)**: mục #5 của họ: các đòn mạnh nhất (Nhát lướt, Xốc tới, Trảm Nguyệt, Phi Thương, Địa Chấn, sóng búa) trúng mà **không có tiếng trúng**. Gộp chung với đề xuất thêm tiếng chí mạng/khiên ở đây.
+- **st/giây**: số của họ đo trên **bia đứng yên, theo đồng hồ, có khựng hình** (cung ngang hoặc hơn cận chiến khi đánh một bia); số của phiên này đo **bot đánh quái mới thật, không vẽ nên không khựng hình** (cung thấp nhất). Hai cách đo trả lời hai câu hỏi khác nhau; không mâu thuẫn. Khi sửa cân bằng nên xem cả hai.
+- **Hồ Tinh "Vồ mồi" báo 0,44 giây** (bảng trùm phần 4): họ đo đi bộ ra mất ít nhất 0,33 giây — kịp nếu phản xạ nhanh, khó với người mới. Không đổi kết luận 5.5 (không có đòn hoàn toàn không đọc được).
