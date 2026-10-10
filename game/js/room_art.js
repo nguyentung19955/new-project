@@ -105,14 +105,21 @@
         const t = Math.max(0, Math.min(1, ((x - cx) * vx + (y - cy) * vy) / L2));
         const wob = Math.sin(t * 7.5 + tx * 0.05) * 3;
         const px = cx + vx * t + (Math.abs(vy) > Math.abs(vx) ? wob : 0), py = cy + vy * t + (Math.abs(vy) > Math.abs(vx) ? 0 : wob);
-        best = Math.min(best, Math.hypot(x - px, y - py) - (1 - t) * 3);
+        const dx = x - px, dy = y - py;
+        best = Math.min(best, Math.sqrt(dx * dx + dy * dy) - (1 - t) * 3);
       }
-      const e = Math.hypot((x - cx) / 30, (y - cy) / 21);
+      const ex = (x - cx) / 30, ey = (y - cy) / 21, e = Math.sqrt(ex * ex + ey * ey);
       return Math.max(1 - smooth(hw * 0.45, hw, best), 1 - smooth(0.7, 1.05, e));
     };
   }
   // Làm gắt phần lẻ: chỉ chấm xen kẽ ở dải hẹp giữa hai nấc, còn lại là mảng màu phẳng (đúng kiểu pixel art, không rỗ khắp nơi).
   const sharp = (f) => { const i = Math.floor(f), t = f - i; return i + (t < 0.32 ? 0 : t > 0.68 ? 0.999 : (t - 0.32) / 0.36); };
+  // Lấy mẫu trước một trường mượt trên lưới thưa 2 điểm ảnh trong khung sàn (dựng phòng nhanh hơn ~4 lần; trường mượt nên không thấy khác).
+  function grid2(g, fn) {
+    const x0 = g.fx0, y0 = g.fy0, gw = ((g.fx1 - x0) >> 1) + 2, gh = ((g.fy1 - y0) >> 1) + 2, v = new Float32Array(gw * gh);
+    for (let j = 0; j < gh; j++) for (let i = 0; i < gw; i++) v[j * gw + i] = fn(x0 + i * 2 + 1, y0 + j * 2 + 1);
+    return (x, y) => v[((y - y0) >> 1) * gw + ((x - x0) >> 1)];
+  }
   const SKIP = -99;
   function rampFill(x0, y0, w, h, ramp, fn) {
     const cols = ramp.map(hex), n = cols.length - 1, id = c.getImageData(x0, y0, w, h), d = id.data;
@@ -400,7 +407,7 @@
       // Sàn hang: phiến đá lớn xếp không đều (ô Voronoi), mỗi phiến một độ sáng, khe nứt tối, mép trên phiến có gờ sáng, mép dưới tối.
       // Đá ướt loang thành mảng lớn (nhiễu mượt). Không rắc chấm lẻ; vũng nước ít, to, có viền.
       const w = g.fx1 - g.fx0, h = g.fy1 - g.fy0, CS = 25;
-      const n1 = vnoise(rn, 34, g.W, g.H), n2 = vnoise(rn, 7, g.W, g.H);
+      const n1 = grid2(g, vnoise(rn, 34, g.W, g.H)), n2 = vnoise(rn, 7, g.W, g.H);
       const gw = Math.ceil(g.W / CS) + 2, gh = Math.ceil(g.H / CS) + 2, sx = new Float32Array(gw * gh), sy = new Float32Array(gw * gh), tone = new Float32Array(gw * gh);
       for (let j = 0; j < gh; j++) for (let i = 0; i < gw; i++) { const k = j * gw + i; sx[k] = (i - 1 + 0.2 + rn() * 0.6) * CS; sy[k] = (j - 1 + 0.2 + rn() * 0.6) * CS * 0.8; tone[k] = rn(); }
       rampFill(g.fx0, g.fy0, w, h, C.ground, (x, y) => {
@@ -408,10 +415,10 @@
         let d1 = 1e9, d2 = 1e9, k1 = 0;
         for (let j = cj - 1; j <= cj + 1; j++) for (let i = ci - 1; i <= ci + 1; i++) {
           if (i < 0 || j < 0 || i >= gw || j >= gh) continue;
-          const k = j * gw + i, dx = x - sx[k], dy = (y - sy[k]) * 1.25, dd = Math.sqrt(dx * dx + dy * dy);
+          const k = j * gw + i, dx = x - sx[k], dy = (y - sy[k]) * 1.25, dd = dx * dx + dy * dy;
           if (dd < d1) { d2 = d1; d1 = dd; k1 = k; } else if (dd < d2) d2 = dd;
         }
-        const e = d2 - d1;
+        const e = Math.sqrt(d2) - Math.sqrt(d1);
         if (e < 1.1) return 0.6 + (tone[k1] - 0.5) * 0.6;
         let f = 2.1 + (tone[k1] - 0.5) * 1.1 + (n1(x, y) - 0.5) * 1.3 + (n2(x, y) - 0.5) * 0.35;
         if (e < 2.6) f += sy[k1] > y ? 0.9 : -0.6;
@@ -579,7 +586,8 @@
       const vert = Math.abs(y1 - y0) > Math.abs(x1 - x0);
       const x = x0 + (x1 - x0) * t + (vert ? w : 0), y = y0 + (y1 - y0) * t + (vert ? 0 : w);
       r(x, y, 2, 2, '#5a3f26'); r(x, y, 1, 1, F.thorn);
-      if (i % 4 === 0) { const s = (i / 4) % 2 ? 1 : -1; if (vert) { r(x + s * 2, y, 2, 1, '#d8c090'); r(x + s * 3, y - 1, 1, 1, '#d8c090'); } else { r(x, y + s * 2, 1, 2, '#d8c090'); r(x + 1, y + s * 3, 1, 1, '#d8c090'); } }
+      // gai: thưa hơn và trầm hơn (trước là chấm sáng dày, nhìn rối)
+      if (i % 7 === 3) { const s = (i / 7) % 2 < 1 ? 1 : -1; if (vert) { r(x + s * 2, y, 2, 1, '#9a8460'); r(x + s * 3, y - 1, 1, 1, '#c0a87a'); } else { r(x, y + s * 2, 1, 2, '#9a8460'); r(x + 1, y + s * 3, 1, 1, '#c0a87a'); } }
     }
   }
   const Forest = {
@@ -592,7 +600,7 @@
       // Sàn nhiều lớp: đất nền chia mảng lớn (nhiễu mượt) – lối mòn đất nện nối các cửa – mảng rêu dày dần về phía tường.
       // Chuyển giữa các nấc màu bằng lưới chấm; chi tiết nhỏ (khóm cỏ, lá, đá) ít và đi theo cụm, không rắc đều.
       const w = g.fx1 - g.fx0, h = g.fy1 - g.fy0;
-      const n1 = vnoise(rn, 30, g.W, g.H), n2 = vnoise(rn, 8, g.W, g.H), nm = vnoise(rn, 22, g.W, g.H), pf = pathField(g, 9);
+      const n1 = grid2(g, vnoise(rn, 30, g.W, g.H)), n2 = vnoise(rn, 8, g.W, g.H), nm = grid2(g, vnoise(rn, 22, g.W, g.H)), pf = grid2(g, pathField(g, 9));
       const edgeOf = (x, y) => 1 - smooth(0, 34, Math.min(x - g.fx0, g.fx1 - x, (y - g.fy0) * 1.3, g.fy1 - y));
       const MOSS0 = 5; // các nấc rêu nằm sau các nấc đất trong dải màu
       rampFill(g.fx0, g.fy0, w, h, F.ground, (x, y) => {
@@ -981,9 +989,11 @@
   const arrow0 = arrow;
   // Trộn số hạt giống: G.srand là LCG nên hai hạt giống liền nhau (các phòng trong một ải) cho số đầu gần như nhau.
   const hs = (n) => { n = (n | 0) || 11; n = Math.imul(n ^ (n >>> 16), 0x45d9f3b); n = Math.imul(n ^ (n >>> 16), 0x45d9f3b); return (n ^ (n >>> 16)) >>> 0; };
-  function buildRoom(T, g, seed) {
+  // Phần vỏ phòng (sàn, ánh sáng, tường, trang trí, điểm nhấn) không phụ thuộc cửa đóng hay mở: dựng một lần, nhớ riêng.
+  // Khi dọn xong phòng, cửa mở ra thì chỉ vẽ lại cửa lên bản sao của vỏ (không tính lại lưới chấm), khỏi giật hình lúc hạ quái cuối.
+  function buildShell(T, g, seed) {
     const rn = G.srand(hs(seed || 11));
-    const base = mk(g.W, g.H), fore = mk(g.W, g.H);
+    const base = mk(g.W, g.H);
     g.lights = [];
     g.glows = []; // quầng sáng hắt xuống sàn (đuốc, tinh thể, nấm...): tô một lần ở lightPass
     g.casts = []; // bóng đổ hình bình hành (cột, gốc cây, tượng)
@@ -1002,6 +1012,13 @@
     const acc = accentPlan(T, g, G.srand(hs((seed || 11) * 7 + 3)));
     lightPass(T, g);
     if (acc) acc();
+    return { cv: base.canvas, lights: g.lights, amb: g.amb, accSide: g.accSide };
+  }
+  function buildRoom(T, g, seed, shell) {
+    const base = mk(g.W, g.H), fore = mk(g.W, g.H);
+    base.drawImage(shell.cv, 0, 0);
+    g.lights = shell.lights.slice(); g.amb = shell.amb.slice(); g.accSide = shell.accSide;
+    c = base;
     const fores = [], rd = G.srand((seed || 11) + 5);
     for (const d of g.doors) { const f = T.door(g, d, rd); if (f) fores.push(f); emblem(g, d); }
     c = fore;
@@ -1013,8 +1030,9 @@
   }
   // ---------- Giai đoạn 2: điểm nhấn thị giác của phòng (một món, ở một góc trên, không đụng lối cửa) ----------
   // Lập kế hoạch trước lightPass (để quầng sáng của nó được tô xuống sàn), vẽ sau lightPass (để vật vẫn sáng rõ).
-  // Rừng già: cột nắng xuyên tán lá hoặc gốc cây cổ thụ phủ rêu có nấm sáng. Hang biển: cụm tinh thể lớn hoặc tia sáng từ khe trần
-  // rọi xuống vũng nước. Lâu đài cổ: lò than (lửa động) hoặc tượng đá vỡ có nến hai bên. Chỉ là hình vẽ: không va chạm, không đổi luật.
+  // Rừng già: cột nắng xuyên tán lá hoặc gốc cây cổ thụ phủ rêu. Hang biển: mỏ neo cũ hoặc tia sáng từ khe trần rọi xuống vũng nước.
+  // Lâu đài cổ: cửa sổ kính màu rọi nắng hoặc tượng đá vỡ có nến hai bên. Không vẽ thứ giống vật bấm được (nấm độc, tinh thể băng,
+  // lò lửa) để khỏi nhầm. Chỉ là hình vẽ: không va chạm, không đổi luật.
   function shaftAt(g, rn) {
     const tops = g.doors.filter((d) => d.side === 'top').map((d) => d.at);
     for (let k = 0; k < 12; k++) {
@@ -1175,11 +1193,13 @@
     const cx = (g.fx0 + g.fx1) / 2, cy = (g.fy0 + g.fy1) / 2 + 6, rx = w * 0.5, ry = h * 0.5;
     const LC = hex(T.light), glows = (g.glows || []).map((o) => Object.assign({ c: hex(o.col) }, o)), casts = g.casts || [];
     const STEP = 0.05, SAT = T.sat || 0.86, sh = T.shade, CL = T.centerLight || 0.09, ED = T.edgeDark || 0.16;
-    for (let y = 0; y < h; y++) {
-      const gy = y0 + y, dt = gy - g.fy0, db = g.fy1 - 1 - gy;
-      for (let x = 0; x < w; x++) {
-        const gx = x0 + x, o = (y * w + x) * 4;
-        const e = Math.hypot((gx - cx) / rx, (gy - cy) / ry);
+    // Ánh sáng thay đổi chậm nên tính trên lưới thưa 2 điểm ảnh (nhanh hơn ~4 lần), rồi tô từng điểm ảnh bằng lưới chấm.
+    const gw = (w >> 1) + 1, gh = (h >> 1) + 1, KK = new Float32Array(gw * gh), KP = new Float32Array(gw * gh), TC = new Float32Array(gw * gh * 3);
+    for (let j = 0; j < gh; j++) {
+      const gy = y0 + j * 2 + 0.5, dt = gy - g.fy0, db = g.fy1 - 1 - gy;
+      for (let i = 0; i < gw; i++) {
+        const gx = x0 + i * 2 + 0.5, n = j * gw + i;
+        const ex = (gx - cx) / rx, ey = (gy - cy) / ry, e = Math.sqrt(ex * ex + ey * ey);
         const kc = CL * (1 - smooth(0.2, 1.0, e));
         let k = kc - ED * smooth(0.6, 1.3, e), kp = kc, tr = LC[0] * kc, tg = LC[1] * kc, tb = LC[2] * kc;
         const dl = gx - g.fx0, dr = g.fx1 - 1 - gx;
@@ -1188,27 +1208,36 @@
         if (dl < sh[1]) s = Math.max(s, 0.42 * (1 - dl / sh[1]));
         if (dr < sh[2]) s = Math.max(s, 0.36 * (1 - dr / sh[2]));
         if (db < sh[3]) s = Math.max(s, 0.3 * (1 - db / sh[3]));
-        for (const q of casts) { // bóng đổ của cột, thân cây...: hình bình hành ngả về bên trái phía dưới
+        for (const q of casts) { // bóng đổ của cột, gốc cây, tượng: hình bình hành ngả về bên trái phía dưới
           const u = gy - q.y;
           if (u < 0 || u >= q.len) continue;
           const xl = q.x - u * 0.6;
-          if (gx >= xl && gx < xl + q.w) s = Math.max(s, q.a * (1 - u / q.len * 0.5));
+          if (gx >= xl && gx < xl + q.w) s = Math.max(s, q.a * (1 - (u / q.len) * 0.5));
         }
         k -= s;
-        for (const L of glows) {
-          const q = Math.hypot((gx - L.x) / L.rx, (gy - L.y) / L.ry);
+        for (let t = 0; t < glows.length; t++) {
+          const L = glows[t], qx = (gx - L.x) / L.rx, qy = (gy - L.y) / L.ry;
+          if (qx >= 1 || qx <= -1 || qy >= 1 || qy <= -1) continue;
+          const q = Math.sqrt(qx * qx + qy * qy);
           if (q >= 1) continue;
           const a = L.a * (1 - q) * (1 - q * 0.5);
           k += a; kp += a; tr += L.c[0] * a; tg += L.c[1] * a; tb += L.c[2] * a;
         }
+        KK[n] = k; KP[n] = kp; TC[n * 3] = tr; TC[n * 3 + 1] = tg; TC[n * 3 + 2] = tb;
+      }
+    }
+    for (let y = 0; y < h; y++) {
+      const gy = y0 + y, row = (y >> 1) * gw;
+      for (let x = 0; x < w; x++) {
+        const gx = x0 + x, o = (y * w + x) * 4, n = row + (x >> 1), k = KK[n], kp = KP[n];
         const qk = Math.floor(sharp(k / STEP) + bay(gx, gy)) * STEP;
         let R = d[o], Gc = d[o + 1], B = d[o + 2];
         const lum = R * 0.3 + Gc * 0.59 + B * 0.11;
         R = lum + (R - lum) * SAT; Gc = lum + (Gc - lum) * SAT; B = lum + (B - lum) * SAT;
         if (qk < 0) { const m = Math.max(0, 1 + qk); R *= m; Gc *= m; B *= m; }
         else if (qk > 0 && kp > 0) {
-          const f = (qk / kp) * 0.55;
-          R = R * (1 + qk * 0.35) + tr * f; Gc = Gc * (1 + qk * 0.35) + tg * f; B = B * (1 + qk * 0.35) + tb * f;
+          const f = (qk / kp) * 0.55, t3 = n * 3;
+          R = R * (1 + qk * 0.35) + TC[t3] * f; Gc = Gc * (1 + qk * 0.35) + TC[t3 + 1] * f; B = B * (1 + qk * 0.35) + TC[t3 + 2] * f;
         }
         d[o] = R > 255 ? 255 : R; d[o + 1] = Gc > 255 ? 255 : Gc; d[o + 2] = B > 255 ? 255 : B;
       }
@@ -1234,7 +1263,7 @@
     c.putImageData(id, x0, y0);
   }
 
-  const cache = new Map();
+  const cache = new Map(), shells = new Map();
   function get(W) {
     const doors = W.doors || [];
     const key = [W.uid, W.region, W.type, W.seed, doors.map((d) => d.dir + (d.open ? 1 : 0) + (d.gate ? 'g' : '') + (d.boss ? 'b' : '')).join(',')].join('|');
@@ -1242,8 +1271,17 @@
     if (!room) {
       const g = Object.assign({}, W.geo, { type: W.type, variant: W.variant || 0 });
       g.doors = doors.map((d) => ({ side: SIDE_OF[d.dir], dir: d.dir, at: d.dir === 'up' || d.dir === 'down' ? g.cx : g.cy, state: d.open ? 'open' : 'locked', gate: !!d.gate, boss: !!d.boss }));
+      const T = THEMES[W.region] || Castle, skey = [W.uid, W.region, W.type, W.seed, W.variant || 0, doors.map((d) => d.dir).join(',')].join('|');
       building = true;
-      try { room = buildRoom(THEMES[W.region] || Castle, g, W.seed); } finally { building = false; }
+      try {
+        let shell = shells.get(skey);
+        if (!shell) {
+          shell = buildShell(T, Object.assign({}, g, { doors: g.doors }), W.seed);
+          if (shells.size >= 4) shells.delete(shells.keys().next().value);
+          shells.set(skey, shell);
+        }
+        room = buildRoom(T, g, W.seed, shell);
+      } finally { building = false; }
       if (cache.size >= 4) cache.delete(cache.keys().next().value);
       cache.set(key, room);
     }
@@ -1251,6 +1289,7 @@
   }
   RA.get = get;
   RA.cache = cache;
+  RA.shells = shells;
 
   // ---------- chuyển động môi trường theo vùng (VFX Phase 4) ----------
   // Chỉ những thứ hợp vùng: Rừng già có đom đóm, phấn hoa, lá rơi, cỏ lay, nấm sáng thở; Hang biển có vũng nước gợn,
@@ -1282,6 +1321,7 @@
       for (let i = 0; i < 3; i++) A2.push({ k: 'mist', y: g.fy0 + 24 + i * Math.round((fh - 40) / 3) + rn() * 10, h: 7 + Math.floor(rn() * 4), ph: rn() * 90, sp: 2 + rn() * 2.5 });
     } else {
       mote(0, 5, '#ffd9a0', wy + 2, g.fy0 + 16); // bụi bay trong ánh đuốc
+      A2.push({ k: 'emist', y: g.fy0 + 2, h: 7, len: 70, sp: 2, ph: rn() * 90, col: '#d8c0a0' }); // hơi khói mỏng sát chân tường sau
       mote(1, 6, '#ffe6b8', g.fy0 + 10, g.fy1 - 10);
     }
   }

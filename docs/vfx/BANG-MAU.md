@@ -34,10 +34,10 @@ Lấy từ: `game/js/room_art.js` (bảng `F` Rừng già, `C` Hang biển, `K` 
 | Lá tối / vừa / sáng / điểm sáng | `#13291a` `#1d3d25` `#2f5f34` `#4c8a3e` | tán lá, rào lá |
 | Vỏ cây tối / vừa / sáng | `#261c14` `#3b2d20` `#57432e` | thân cây tường sau |
 | Rêu / rêu sáng | `#3d6a2e` `#69994a` | |
-| Đất nền sàn | `#3f4130` | nâu rêu, hơi lục để quái nâu (lợn rừng) tách màu |
-| Lối mòn, giữa phòng | `#55503a` | đất nện sáng hơn, nơi đánh nhau |
-| Mảng rêu/cỏ trên sàn | `#38492b` → `#46602f` | mảng lớn, ít, theo cụm |
-| Viền tối sát tường | `#262a1d` | 10–16 điểm ảnh sát tường |
+| Dải đất nền (5 nấc, tối → sáng) | `#262a1d` `#313526` `#3d402e` `#4a4936` `#56523c` | nâu rêu, hơi lục để quái nâu (lợn rừng, Mộc Tinh) tách màu; nấc sáng nhất là lối mòn |
+| Dải rêu (4 nấc) | `#283620` `#314327` `#3b512d` `#466033` | mảng lớn, dày dần về phía tường |
+| Khóm cỏ (gốc – thân – ngọn) | `#34502a` `#4a6c34` `#66894a` | chỉ mọc trong mảng rêu, theo cụm |
+| Viền tối sát tường | nấc tối nhất + bóng đổ lưới chấm | 13 điểm ảnh dưới tường sau, 8 trái, 4 phải |
 | Màu đèn (ánh sáng giữa phòng, đom đóm) | `#e4f0a0` | |
 | Sương | `#c8dcb0` | rất mỏng, chỉ ở rìa |
 
@@ -47,9 +47,7 @@ Lấy từ: `game/js/room_art.js` (bảng `F` Rừng già, `C` Hang biển, `K` 
 | Khoảng tối | `#0a121c` | |
 | Đá tối / vừa / sáng | `#141d29` `#22303f` `#34495c` | vách hang |
 | Đá ướt (ánh) | `#6f9ab8` | |
-| Sàn đá nền | `#39424d` | |
-| Giữa phòng | `#46505b` | phiến đá phẳng, sáng hơn |
-| Viền tối sát vách | `#1f2731` | |
+| Dải đá sàn (5 nấc) | `#1b222b` `#29313b` `#333c47` `#3e4853` `#4a5560` | phiến đá lớn (khe nứt nấc 0–1, gờ sáng mép trên +1 nấc, mép dưới −0,6 nấc) |
 | Nước tối / nước / ánh nước | `#123650` `#1b4a66` `#8fd0ea` | |
 | Tinh thể tối / vừa / sáng | `#2a7fae` `#58c8ea` `#d8f6ff` | điểm nhấn |
 | Màu đèn | `#9fe0f4` | |
@@ -66,9 +64,8 @@ Lấy từ: `game/js/room_art.js` (bảng `F` Rừng già, `C` Hang biển, `K` 
 | Sắt / sắt sáng | `#55555e` `#8a8a96` | song cửa, giá đuốc |
 | Đỏ cờ / đỏ tối | `#7a2a2a` `#4e1c20` | chỉ ở tường, cờ, thảm |
 | Vàng đồng (viền thảm, cờ) | `#c89a3a` | |
-| Sàn đá nền | `#4c4442` | |
-| Giữa phòng (ánh đuốc) | `#5a504b` | |
-| Viền tối sát tường | `#2a2324` | |
+| Sàn đá nền | `#4f4745` (biến thể ±5–10%) | viên 16×16, mép trên sáng, mép dưới tối |
+| Giữa phòng / quầng đuốc | ánh sáng `#ffc878`, quầng `#ffb060` tô lưới chấm | |
 | Màu đèn (đuốc) | `#ffc878` / quầng `#ff9a40` | |
 | Bụi trong ánh lửa | `#ffd9a0` | |
 
@@ -141,7 +138,9 @@ Lấy từ: `game/js/ui_theme.js` bảng `C` (phiên `dt-hud-dang-nhap` có th�
 | Thanh trùm | `#b8452f` → `#ff9a6a` |
 | Bậc đồ: Thường / Lam / Tím / Vàng | `#b9b1a2` `#4aa3ff` `#b36bff` `#ffc83d` |
 
-## 6. Ánh sáng và sương (phiên dt-dau-truong)
+## 6. Ánh sáng và sương (phiên dt-dau-truong, đã làm trong `room_art.js`)
+- Số thực tế: sáng giữa phòng Rừng 0,10 / Hang 0,09 / Lâu đài 0,07; tối rìa 0,15–0,17; độ đậm màu sàn ×0,84–0,88; nấc lưới chấm 5%.
+- Tiền cảnh (góc dưới): Rừng `#08130b` `#112317` `#1c3622` viền `#335a36`; Hang `#05090e` `#0e1823` `#182838` viền `#36587a`; Lâu đài `#0c0809` `#1e1717` `#2c2322` viền `#5a4840`.
 - Ánh sáng giữa phòng: hình elip lớn theo màu đèn vùng, tô bằng **lưới điểm ảnh (dither)** 2–3 nấc, độ trong ≤ 0,07; không gradient mịn, không blur.
 - Rìa phòng: tối hơn giữa phòng khoảng 15–25% (dither), KHÔNG phủ đen nặng ở góc.
 - Đuốc/đèn: quầng sáng bậc thang (3 nấc elip, mỗi nấc độ trong cố định) + hạt sáng; chập chờn ở lớp động.
