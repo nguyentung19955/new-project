@@ -50,7 +50,7 @@
 | 3 | Không viền trắng hay pixel rác | Alpha chỉ có 0 hoặc 255; không có điểm ảnh lẻ ngoài thân | Có quầng xám hoặc trắng, điểm lẻ | Đặt lên nền đen và nền trắng ở ×4 |
 | 4 | Không mờ | Cạnh sắc, đếm được số màu (≤ 16 với sprite thường, ≤ 32 với trùm) | Có dải chuyển màu, nhiều màu gần nhau | Đếm màu (ví dụ dùng PIL `getcolors`) |
 | 5 | Không lệch hoạt ảnh | Chân nằm đúng `goc` ở mọi khung idle và move (± 1 px khi có nhún) | Hình trôi hoặc rung | Chồng các khung lên nhau |
-| 6 | Đúng hướng | Em bé quay **phải**, quái và trùm quay **trái** | Ngược hướng (sau khi code lật sẽ thành đi lùi) | Xem khung idle |
+| 6 | Đúng hướng | Em bé, quái và trùm đều quay **PHẢI** (sprite_custom.js: face<0 thì lật sang trái; ảnh gốc phải quay phải) | Ngược hướng (sau khi code lật sẽ thành đi lùi) | Xem khung idle |
 | 7 | Không che giao diện hay đòn | Không vẽ hiệu ứng, vùng đỏ hay đạn vào thân. Không có mảng đỏ tươi (đỏ = nguy hiểm) | Thân có vòng nổ hoặc lửa lớn che vùng báo trước | So với `anh/canh/hieu_ung_dong_*_kem_giao_dien.png` |
 | 8 | Không đổi hitbox / gameplay / timing | `giay` trong tệp = thời lượng code (xem manifest `animation_states`). Không sửa `mobs.js`, `combat.js`, `data.js` | Đổi thời lượng hoặc kích thước để "đẹp hơn" | Kiểm diff: chỉ được có thêm tệp trong `game/art/custom/` |
 | 9 | Điểm cầm vũ khí (em bé) | Tay gần khớp REST: kiếm (12,−9), giáo (11,−15), búa (12,−10), cung (3,−16) tính từ chân, sai lệch ± 1 px | Vũ khí lơ lửng hoặc xuyên đầu | Xem trong Xưởng Sprite hoặc bản `dist` |
