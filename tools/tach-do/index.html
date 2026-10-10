@@ -141,7 +141,7 @@
 
   <section class="buoc" id="buoc3" hidden>
     <h2><span class="so">3</span>Kiểm tra và tải file <span id="theKq" class="the"></span></h2>
-    <p class="chu-y" style="margin-top:-4px">Lô: <b id="dangCho" style="color:var(--hi)"></b>. Chạm vào một món để xem kỹ, sửa điểm cầm, đổi cỡ, hoặc bỏ món đó (món bỏ thì không tải).</p>
+    <p class="chu-y" style="margin-top:-4px">Lô: <b id="dangCho" style="color:var(--hi)"></b>. Chạm vào một món để xem kỹ, sửa điểm cầm (vũ khí) hoặc điểm neo (trang phục), đổi cỡ, hoặc bỏ món đó (món bỏ thì không tải).</p>
     <div class="luoi-mon" id="dsMon"></div>
     <ul class="kiem" id="dsKiem"></ul>
     <div class="hang" style="margin-top:12px">
@@ -334,15 +334,15 @@ const coVien = () => !(L.doi === 'trang-phuc' && L.o === 'masks');
 function taoPrompt(L) {
   const n = L.ds.length, tong = L.cot * L.hang, nen = L.nenXanh ? 'XANH LÁ #00FF00' : 'HỒNG TÍM #FF00FF';
   const loai = L.doi === 'vu-khi' ? 'vũ khí loại ' + TEN_VK[L.loai].toLowerCase() : L.doi === 'trang-phuc' ? 'trang phục (' + O_TP[L.o][0].toLowerCase() + ')' : 'vật phẩm (biểu tượng đồ rơi, tài nguyên)';
-  const ds = L.ds.map((m, i) => `ô ${i + 1}: ${m.ten}. ${m.mo.replace(/\.$/, '')} (màu chính ${m.mau.slice(0, 3).join(' ')}; trong game chỉ ${m.w}×${m.h} điểm ảnh)`).join('; ');
+  const ds = L.ds.map((m, i) => `ô ${i + 1}: ${m.ten}. ${m.mo.replace(/\.$/, '')} (màu chính ${m.mau.slice(0, 3).join(' ')}; trong game chỉ ${m.w}×${m.h} điểm ảnh${L.doi === 'trang-phuc' ? ', ' + dangMon(m) : ''})`).join('; ');
   let huong = '';
   if (L.doi === 'vu-khi' && L.loai !== 'bow') huong = 'HƯỚNG: mọi món NẰM NGANG, nhìn ngang phẳng: cán/chuôi bên TRÁI, mũi/lưỡi/đầu búa bên PHẢI, lưỡi hướng lên, dài gấp 2 đến 4 lần bề cao. Mỗi món có một đôi mắt nhỏ dễ thương (vũ khí sống). ';
   else if (L.doi === 'vu-khi') huong = 'HƯỚNG: mọi món DỰNG ĐỨNG, nhìn ngang phẳng: thân cung (hoặc nỏ, ná) cong phình sang bên PHẢI, hai đầu cung ở trên cùng và dưới cùng, phía bên trái để trống. KHÔNG vẽ dây cung, KHÔNG vẽ mũi tên (game tự vẽ dây và tên). Mỗi món có một đôi mắt nhỏ dễ thương (vũ khí sống). ';
   else if (L.doi === 'trang-phuc') {
     huong = 'Món đồ dành cho em bé chibi cao khoảng 33 điểm ảnh (đầu khoảng 13 điểm ảnh): vẽ RIÊNG món đồ, KHÔNG có người mặc, không đầu, không thân, không tay em bé. ';
-    huong += { hats: 'Mũ nhìn chéo 3/4 quay sang PHẢI như đang đội trên đầu, miệng mũ ở dưới. ', robes: 'Chỉ phần thân áo nhìn chéo 3/4 quay sang PHẢI, KHÔNG vẽ tay áo (game tự vẽ tay), không đầu. ',
-      backs: 'Đồ đeo sau lưng nhìn chéo 3/4 quay sang PHẢI, đứng thẳng, không dây đeo dài. ', hands: 'Bùa đeo dựng đứng, chỗ treo ở trên; búa nhỏ dựng đứng cán ở dưới; găng tay nằm ngang. ',
-      masks: 'Dấu vẽ trên mặt: một hình phẳng rất đơn giản, đậm, nhìn chính diện, chỉ 1 đến 2 màu, KHÔNG viền đen, KHÔNG có khuôn mặt. Trong game dấu chỉ 4 đến 11 điểm ảnh nên vẽ khối thật to và đơn giản. ',
+    huong += { hats: 'Mũ nhìn chéo 3/4 quay sang PHẢI như đang đội trên đầu, miệng mũ ở dưới. ', robes: 'Chỉ phần thân áo nhìn chéo 3/4 quay sang PHẢI, kiểu áo KHÔNG TAY (như áo gi lê, áo yếm): KHÔNG vẽ tay áo, kể cả tay áo ngắn, hai bên vai cắt gọn (game tự vẽ tay), cổ áo thấp, không cổ đứng cao, không mũ trùm, không đầu. ',
+      backs: 'Đồ đeo sau lưng nhìn chéo 3/4 quay sang PHẢI, đứng thẳng (DỰNG ĐỨNG, không nằm ngang), không dây đeo dài. ', hands: 'Bùa đeo dựng đứng, dài và hẹp: móc treo ở trên cùng, dây treo thẳng, tua rủ THẲNG xuống dưới, không xoè sang hai bên; búa nhỏ dựng đứng cán ở dưới; găng tay nằm ngang. ',
+      masks: 'Dấu vẽ trên mặt: một hình phẳng rất đơn giản, đậm, nhìn chính diện, chỉ 1 đến 2 màu, KHÔNG viền đen, KHÔNG có khuôn mặt, KHÔNG che mắt (trừ mặt nạ hổ). Trong game dấu chỉ 4 đến 11 điểm ảnh nên vẽ khối thật to và đơn giản, nét dày, không nét mảnh rời, đúng dáng ghi ở từng ô. ',
       wings: 'Chỉ MỘT bên cánh cho mỗi ô, gốc cánh ở góc DƯỚI BÊN PHẢI của hình, cánh xoè lên trên và sang trái (game tự vẽ cánh thứ hai và cho cánh vỗ). ' }[L.o];
   } else huong = 'Mỗi món là một biểu tượng nhìn chính diện, hình khối đậm đơn giản, 2 đến 4 màu phẳng, đọc được ở cỡ 7×7 điểm ảnh, viền tối cùng tông màu món. ';
   const oTrong = tong > n ? `Ô ${n + 1}${tong - n > 1 ? ' đến ô ' + tong : ''} (cuối hàng dưới) để TRỐNG hoàn toàn. ` : '';
@@ -355,6 +355,13 @@ function taoPrompt(L) {
     + `Nền trơn MỘT MÀU ${nen} phủ kín mọi ô (không ô cờ, không nền trắng, không chuyển màu), không dùng màu nền này trong món đồ. Chỉ cần gửi tấm ảnh, không cần code, không cần file json.`;
 }
 
+// Dáng món theo cỡ trong game (ChatGPT hay vẽ sai dáng: dấu mặt nạ ngang thành vuông, bùa dài thành tròn, trống đứng thành nằm)
+function dangMon(m) {
+  const r = m.w / m.h, k = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
+  if (r >= 1.5) return 'dáng NGANG DẸT, rộng gấp khoảng ' + k(r) + ' lần cao';
+  if (r <= 0.67) return 'dáng ĐỨNG CAO HẸP, cao gấp khoảng ' + k(1 / r) + ' lần rộng';
+  return 'dáng gần vuông';
+}
 function hienLo() {
   $('dsLo').innerHTML = L.ds.map((m) => `<li><b>${m.ten}</b> · ${m.w}×${m.h} · <span style="font-size:11px">${m.ma}</span></li>`).join('');
   $('moTaLo').textContent = `${L.ds.length} món, lưới ${L.cot} cột × ${L.hang} hàng, nền ${L.nenXanh ? 'xanh lá' : 'hồng tím'}. ` + (L.doi === 'vu-khi' ? (laCung() ? 'Cung dựng đứng, không dây, không tên.' : 'Vũ khí nằm ngang, chuôi trái, mũi phải.') : L.doi === 'trang-phuc' ? 'Chỉ vẽ món đồ, không có người.' : 'Biểu tượng nhỏ, nhìn chính diện.');
@@ -764,6 +771,23 @@ function datDiem(i) { // điểm tự đặt theo quy ước; điểm người d
     D.lech = o === 'hats' ? [Math.round(0.5 - wg / 2), Math.round(2 - hg)] : C0 ? [Math.round(C0[0] - wg / 2), Math.round(C0[1] - hg / 2)] : [-wg + 2, -hg + 3];
     D.lech = [D.lech[0] + c.dl[0], D.lech[1] + c.dl[1]];
     D.kieu = o === 'hands' && m.look === 'bua_con' ? 'cam' : 'bua';
+    // Điểm neo món đồ (docs/review/ghep-trang-bi/DINH-DANG-GHEP.md mục 3), tính theo điểm ảnh của ẢNH; tự đoán, người dùng chạm để sửa.
+    const bw = x1 - x0 + 1, bh = y1 - y0 + 1, mepHang = (y) => { let a = -1, b = -1; for (let x = 0; x < w; x++) if (dac(x, y)) { if (a < 0) a = x; b = x; } return a < 0 ? [x0, x1] : [a, b]; };
+    const hangTB = (ya, yb) => { let s0 = 0, n = 0; for (let y = Math.max(y0, ya); y <= Math.min(y1, yb); y++) { const [a, b] = mepHang(y); s0 += (a + b + 1) / 2; n++; } return n ? s0 / n : (x0 + x1 + 1) / 2; };
+    const dot = Math.max(1, Math.round(bh * 0.12)), P = {};
+    if (o === 'hats') { const yd = y1 + 1 - Math.max(1, Math.round(bh * 0.15)); P.dinh_dau = [hangTB(yd - 1, yd + 1), yd]; P.gay = [mepHang(yd)[0] + Math.max(1, bw * 0.12), yd]; }
+    else if (o === 'masks') P.mat = [(x0 + x1 + 1) / 2, (y0 + y1 + 1) / 2];
+    else if (o === 'robes') {
+      if (m.look === 'kho_vat') { P.eo = [hangTB(y0, y0 + dot), y0 + 0.5]; P.hong = [hangTB(y1 - dot, y1), y1 + 1]; }
+      else {
+        const yv = y0 + Math.max(1, Math.round(bh * 0.2)), [a, b] = mepHang(yv), vao = (b - a + 1) * 0.15;
+        P.co = [hangTB(y0, y0 + dot), y0 + 0.5]; P.vai_sau = [a + vao, yv + 0.5]; P.vai_truoc = [b + 1 - vao, yv + 0.5]; P.hong = [hangTB(y1 - dot, y1), y1 + 1];
+      }
+    } else if (o === 'backs') P.lung = [x0 + bw * 0.6, y0 + bh * 0.4];
+    else if (o === 'wings') { let bx = x1, by = y1, best = -1; for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (dac(x, y) && x + y > best) { best = x + y; bx = x; by = y; } const lui = Math.max(1, Math.round(Math.min(bw, bh) * 0.08)); P.goc_canh = [bx + 0.5 - lui, by + 0.5 - lui]; }
+    else if (o === 'hands') { if (D.kieu === 'cam') { const yc = y0 + Math.round(bh * 0.78); P.tay_truoc = [hangTB(yc - 1, yc + 1), yc + 0.5]; } else P.eo = [hangTB(y0, y0 + dot), y0 + 0.5]; }
+    for (const k in P) if (c.diem[k]) P[k] = [c.diem[k][0] * w, c.diem[k][1] * h];
+    D.neo = P;
   }
   K.D = D;
 }
@@ -777,7 +801,13 @@ function phanTep(i, dungCanvas, thuong) {
   else if (N > 1) t.net = N;
   if (dungCanvas) t.anhCanvas = cv; else t.anh = cv.toDataURL('image/png');
   if (L.doi === 'vu-khi') t.vu_khi = { loai: L.loai, dong: m.dong, he: null, gd: null, cam: G(D.cam), mui: G(D.mui), day: laCung() ? [G(D.day0), G(D.day1)] : null };
-  else if (L.doi === 'trang-phuc') t.trang_phuc = { o: L.o, look: m.look, lech: D.lech.slice(), lop: L.o === 'hats' ? c.lop : 'sau', kieu: D.kieu, tay_ao: L.o === 'robes' ? !!c.tayAo : true };
+  else if (L.doi === 'trang-phuc') {
+    t.trang_phuc = { o: L.o, look: m.look, lech: D.lech.slice(), lop: L.o === 'hats' ? c.lop : 'sau', kieu: D.kieu, tay_ao: L.o === 'robes' ? !!c.tayAo : true };
+    // điểm neo trên ảnh món đồ, theo điểm ảnh GAME (làm tròn nửa điểm); co_chuan: cỡ lúc xuất (rộng, cao)
+    const n5 = (v) => Math.round((v / N) * 2) / 2, diem = {};
+    for (const k in D.neo || {}) diem[k] = [n5(D.neo[k][0]), n5(D.neo[k][1])];
+    if (Object.keys(diem).length) { t.trang_phuc.diem = diem; t.trang_phuc.co_chuan = [t.rong, t.cao]; }
+  }
   else t.vat_pham = m.vp;
   return t;
 }
@@ -864,6 +894,12 @@ function hienKetQua() {
 
 // ===================== CHI TIẾT MỘT MÓN =====================
 let CHE = 'cam';
+// tên điểm neo món đồ: [chữ hiện, màu chấm]
+const NEO = { dinh_dau: ['Đỉnh đầu', '#ffd23c'], gay: ['Gáy', '#6fc1d8'], mat: ['Mắt', '#ffd23c'], co: ['Cổ', '#ffd23c'], vai_sau: ['Vai sau', '#6fc1d8'], vai_truoc: ['Vai trước', '#ff5a46'],
+  hong: ['Hông', '#c88cff'], eo: ['Eo', '#c88cff'], lung: ['Lưng', '#ffd23c'], goc_canh: ['Gốc cánh', '#ff5a46'], tay_truoc: ['Tay cầm', '#ff5a46'] };
+const NEO_GOI = { hats: 'Đỉnh đầu: chỗ đỉnh đầu em bé chạm vào trong mũ (giữa, phía dưới). Gáy: phía sau đầu.', masks: 'Mắt: tâm dấu, đặt vào giữa vùng mắt.',
+  robes: 'Cổ: giữa mép trên cổ áo. Hai vai: hai đầu vai. Hông: giữa mép dưới áo.', backs: 'Lưng: chỗ món đồ áp vào lưng (giữa hai bả vai).',
+  wings: 'Gốc cánh: chỗ cánh mọc ra từ lưng (góc dưới bên phải).', hands: 'Eo: móc treo trên cùng của bùa (treo ở thắt lưng). Tay cầm: chỗ bàn tay nắm.' };
 function chonMon(i, giu) {
   CHON = i; const K = KQ[i], m = L.ds[i], c = chinhCua(i);
   [...$('dsMon').children].forEach((b, k) => b.classList.toggle('chon', k === i));
@@ -877,6 +913,11 @@ function chonMon(i, giu) {
     if (!ds.some((q) => q[0] === CHE)) CHE = 'cam';
     for (const q of ds) { const b = document.createElement('button'); b.type = 'button'; b.className = 'nut nho phu' + (CHE === q[0] ? ' chon' : ''); b.textContent = q[1]; b.onclick = () => { CHE = q[0]; chonMon(i, true); }; cd.appendChild(b); }
     $('goiYSua').textContent = 'Chọn điểm ở trên rồi chạm vào hình để đặt lại. Hình thoi đỏ: chỗ tay cầm. Chấm vàng: hướng mũi chĩa ra.' + (laCung() ? ' Chấm xanh: hai đầu dây (game tự vẽ dây nối hai chấm).' : '');
+  } else if (L.doi === 'trang-phuc' && K.D.neo) {
+    const ds = Object.keys(K.D.neo);
+    if (!ds.includes(CHE)) CHE = ds[0];
+    for (const k of ds) { const b = document.createElement('button'); b.type = 'button'; b.className = 'nut nho phu' + (CHE === k ? ' chon' : ''); b.innerHTML = `<span style="color:${NEO[k][1]}">●</span> ${NEO[k][0]}`; b.onclick = () => { CHE = k; chonMon(i, true); }; cd.appendChild(b); }
+    $('goiYSua').textContent = 'Điểm neo: chỗ món đồ khớp vào người (game đặt điểm này trùng điểm cùng tên trên em bé). Công cụ tự đoán; sai thì chọn tên điểm ở trên rồi chạm vào hình để đặt lại. ' + NEO_GOI[L.o];
   } else $('goiYSua').textContent = L.doi === 'trang-phuc' ? 'Hình món đồ đúng cỡ trong game.' : 'Hình đúng cỡ rơi trên sàn.';
   $('khoiLech').classList.toggle('an', L.doi !== 'trang-phuc');
   const tuy = $('khoiTuy'); tuy.innerHTML = '';
@@ -910,6 +951,15 @@ function veSua() {
   for (let y = 0; y < O.h; y++) for (let x = 0; x < O.w; x++) if ((x + y) % 2) { g.fillStyle = 'rgba(255,255,255,.05)'; g.fillRect(x0 + x * z, y0 + y * z, z, z); }
   g.imageSmoothingEnabled = false; g.drawImage(O.cv, x0, y0, O.w * z, O.h * z);
   boSua = { x0, y0, z };
+  if (L.doi === 'trang-phuc' && D.neo) {
+    for (const k in D.neo) {
+      const p = [x0 + D.neo[k][0] * z, y0 + D.neo[k][1] * z], r = k === CHE ? 8 : 6;
+      g.fillStyle = NEO[k][1]; g.strokeStyle = '#1a120a'; g.lineWidth = 2; g.beginPath(); g.arc(p[0], p[1], r, 0, Math.PI * 2); g.fill(); g.stroke();
+      if (k === CHE) { g.strokeStyle = '#fff4c8'; g.beginPath(); g.arc(p[0], p[1], r + 4, 0, Math.PI * 2); g.stroke(); }
+      g.font = 'bold 12px system-ui'; g.textBaseline = 'middle'; g.lineWidth = 3; g.strokeStyle = '#1a120a'; g.strokeText(NEO[k][0], p[0] + r + 3, p[1]); g.fillStyle = '#fff0c4'; g.fillText(NEO[k][0], p[0] + r + 3, p[1]);
+    }
+    return;
+  }
   if (L.doi !== 'vu-khi') return;
   const P = (p) => [x0 + p[0] * z, y0 + p[1] * z], cam = P(D.cam), mui = P(D.mui);
   g.strokeStyle = '#1a120a'; g.lineWidth = 5; g.beginPath(); g.moveTo(cam[0], cam[1]); g.lineTo(mui[0], mui[1]); g.stroke();
@@ -919,7 +969,7 @@ function veSua() {
   cham(mui, '#ffd23c'); cham(cam, '#ff5a46', true);
 }
 $('cvSua').addEventListener('click', (e) => {
-  if (CHON < 0 || !boSua || L.doi !== 'vu-khi') return;
+  if (CHON < 0 || !boSua || (L.doi !== 'vu-khi' && !(L.doi === 'trang-phuc' && KQ[CHON].D.neo && KQ[CHON].D.neo[CHE]))) return;
   const cv = $('cvSua'), r = cv.getBoundingClientRect(), K = KQ[CHON], O = K.out;
   const x = (((e.clientX - r.left) / r.width) * cv.width - boSua.x0) / boSua.z, y = (((e.clientY - r.top) / r.height) * cv.height - boSua.y0) / boSua.z;
   if (x < -2 || y < -2 || x > O.w + 2 || y > O.h + 2) return;
