@@ -12,9 +12,12 @@
   if (!A) return;
   const TAU = Math.PI * 2;
   const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
-  const APPEAR = 0.15, FLASH = 0.22;
+  const APPEAR = 0.15, FLASH = 0.22, CANCEL = 0.16;
 
-  const BT = (G.baoTruoc = { q: [], ghosts: [], on: true, mask: true, errs: 0 });
+  const BT = (G.baoTruoc = { q: [], ghosts: [], gone: [], on: true, mask: true, errs: 0 });
+  // Vùng báo đang hiện ở khung trước / khung này (vật vùng -> hình đã vẽ). Vùng biến mất mà chưa nổ (quái chết, bị choáng
+  // nên đòn bị huỷ) thì mờ dần trong CANCEL giây thay vì tắt phụt.
+  let lastSeen = new Map(), nowSeen = new Map();
   const seen = new WeakMap(); // vật -> lúc thấy lần đầu (G.time), để làm hiện ra mượt cho vùng không có t0
   const fired = new WeakSet(); // vùng đã chớp nổ (khỏi chớp hai lần)
   let curW = null;
@@ -72,6 +75,7 @@
       it.u = t0 ? clamp(1 - z.t / t0, 0, 1) : 0;
       if (z.bomb && z.bomb.fl > 0) { const gone = t0 - z.t, fl = z.bomb.fl; it.age = gone; it.u = gone < fl ? 0 : clamp((gone - fl) / Math.max(0.01, t0 - fl), 0, 1); }
       BT.add(it);
+      nowSeen.set(z, it);
     } else if (!fired.has(z)) {
       fired.add(z);
       const it = geo(z); it.at = G.time;
@@ -163,7 +167,33 @@
     c.lineWidth = 3; c.stroke();
     c.strokeStyle = 'rgba(' + C.rim + ',' + (0.7 + 0.3 * beat * (0.4 + 0.6 * late)).toFixed(3) + ')';
     c.lineWidth = Math.max(1.4 / sc, 0.6); c.stroke();
+    // sắp ra đòn (15% cuối): lòng vùng sáng dần lên và viền trắng dày dần (lấy đà), để biết lúc nào phải né
+    const pre = u > 0.85 ? (u - 0.85) / 0.15 : 0;
+    if (pre > 0) {
+      path(c, it, 1);
+      c.fillStyle = 'rgba(255,236,214,' + (0.16 * pre).toFixed(3) + ')'; c.fill();
+      c.strokeStyle = 'rgba(255,248,236,' + (0.45 + 0.45 * pre).toFixed(3) + ')';
+      c.lineWidth = Math.max(1.4 / sc, 0.6) + 1.2 * pre; c.stroke();
+    }
+    // hướng đòn: các mũi chữ V chạy từ gốc ra ngoài (đường thẳng, hình quạt)
+    if ((it.k === 'line' || (it.k === 'cone' && it.span < TAU - 0.01)) && e > 0.5) chevrons(c, it, C, sc, late);
     c.restore();
+  }
+  function chevrons(c, it, C, sc, late) {
+    const L = it.k === 'line' ? it.len : it.r, sz = it.k === 'line' ? Math.min(7, it.w * 0.32) : Math.min(8, it.r * 0.12);
+    if (L < 24 || sz < 2.5) return;
+    const ph = (G.time * (1.2 + 1.6 * late)) % 1, ca = Math.cos(it.ang), sa = Math.sin(it.ang);
+    c.lineWidth = Math.max(1.2 / sc, 0.6); c.lineJoin = 'round'; c.lineCap = 'round';
+    for (let i = 0; i < 3; i++) {
+      const f = (i + ph) / 3, d = 6 + (L - 14) * f, a = Math.sin(f * Math.PI); // hiện ra ở gốc, tan ở mép
+      const x = it.x + ca * d, y = it.y + sa * d;
+      c.strokeStyle = 'rgba(' + C.rim + ',' + (0.7 * a).toFixed(3) + ')';
+      c.beginPath();
+      c.moveTo(x - ca * sz - sa * sz, y - sa * sz + ca * sz);
+      c.lineTo(x, y);
+      c.lineTo(x - ca * sz + sa * sz, y - sa * sz - ca * sz);
+      c.stroke();
+    }
   }
   // đòn ra: chớp sáng một nhịp rồi tan
   function drawFlash(c, it, f, sc) {
@@ -232,6 +262,7 @@
         if (z.shape === 'circle' || z.shape === 'rect' || z.shape === 'line' || z.shape === 'cone' || z.shape === 'donut') one(geo(z));
       }
       for (const g of BT.ghosts) one(g);
+      for (const g of BT.gone) one(g);
       for (const it of BT.q) one(it); // vòng mọc quái (đã thêm lúc vẽ nền)
       for (const e of W.ents) {
         if (e.dead) continue;
@@ -331,9 +362,13 @@
   BT.draw = function (cam, sx, sy) {
     const q = BT.q;
     const W = G.getWorld ? G.getWorld() : null;
-    if (W !== curW) { curW = W; BT.ghosts.length = 0; }
+    if (W !== curW) { curW = W; BT.ghosts.length = 0; BT.gone.length = 0; lastSeen.clear(); nowSeen.clear(); }
+    // vùng khung trước còn, khung này mất mà chưa nổ: đòn bị huỷ -> mờ dần
+    if (!G.noRender) for (const [z, it] of lastSeen) if (!nowSeen.has(z) && !fired.has(z) && z.dead && BT.gone.length < 40) { it.at = G.time; BT.gone.push(it); }
+    const tmp = lastSeen; lastSeen = nowSeen; nowSeen = tmp; nowSeen.clear();
     BT.ghosts = BT.ghosts.filter((g) => G.time - g.at >= 0 && G.time - g.at < FLASH);
-    if ((!q.length && !BT.ghosts.length) || G.noRender || !W) { q.length = 0; return; }
+    BT.gone = BT.gone.filter((g) => G.time - g.at >= 0 && G.time - g.at < CANCEL);
+    if ((!q.length && !BT.ghosts.length && !BT.gone.length) || G.noRender || !W) { q.length = 0; return; }
     try {
       const sc = G.uiScale || 1, cw = Math.max(1, Math.round(G.W * sc)), ch = Math.max(1, Math.round(G.H * sc));
       if (!cv) { cv = document.createElement('canvas'); cx = cv.getContext('2d'); }
@@ -343,6 +378,7 @@
       const B = [1e9, 1e9, -1e9, -1e9];
       for (const it of q) box(it, B);
       for (const g of BT.ghosts) box(g, B);
+      for (const g of BT.gone) box(g, B);
       const ox = -cam + (sx || 0), oy = sy || 0;
       const bx = clamp(Math.floor(B[0] + ox), 0, G.W), by = clamp(Math.floor(B[1] + oy), 0, G.H);
       const bw = clamp(Math.ceil(B[2] + ox), 0, G.W) - bx, bh = clamp(Math.ceil(B[3] + oy), 0, G.H) - by;
@@ -356,6 +392,7 @@
         drawTele(c, it, sc);
       }
       for (const g of BT.ghosts) drawFlash(c, g, (G.time - g.at) / FLASH, sc);
+      for (const g of BT.gone) { const f = (G.time - g.at) / CANCEL; g.dim = (1 - f) * (1 - f); g.age = 1; drawTele(c, g, sc); }
       if (need && BT.mask !== 0) {
         // xoá chỗ nhân vật: trong phần chung của khung bao lúc vẽ và phần nền đã chụp
         const mx = Math.max(bx, SB[0]), my = Math.max(by, SB[1]), mw = Math.min(bx + bw, SB[0] + SB[2]) - mx, mh = Math.min(by + bh, SB[1] + SB[3]) - my;

@@ -691,7 +691,11 @@
           seg(L * 0.5 + f * 4, 5, 1, PL[1]);
           pr(-(10 + f * 5), -3, 2, 1, PL[1]); pr(-(16 - f * 3), 3, 2, 1, PL[1]);
         } else {
-          seg(5, L, 1, 'rgba(255,255,255,0.55)'); seg(5, L * 0.55, 1, PL[1]);
+          // thân vệt sáng sát sau tên, đuôi mảnh dần rồi thành chấm thưa
+          seg(4, L * 0.3, 3, 'rgba(255,255,255,0.16)');
+          seg(4, L * 0.7, 1, 'rgba(255,255,255,0.55)'); seg(4, L * 0.45, 1, PL[1]);
+          c.fillStyle = 'rgba(255,255,255,0.3)';
+          for (let i = Math.round(4 + L * 0.7); i < 4 + L * 1.2; i += 2) c.fillRect(Math.floor(x - ux * (i + 0.5)), Math.floor(y - uy * (i + 0.5)), 1, 1);
           if (o.col && o.col !== '#f1ead9') seg(9, L * 0.5, 3, A_(o.col, 0.35));
         }
       } else if (o.team === 'enemy') {
@@ -741,10 +745,11 @@
       if (R() < 0.2) emit(0, x + rr(-B.w, B.w), y - rr(4, B.h), rr(-15, 15), rr(-70, -40), rr(0.3, 0.5), RAMP.ember, 1, 0, 0, null, 1);
     }
     if (v.pn > 0) {
-      const k = 0.25 + 0.12 * v.pn;
+      // bọt, giọt, hơi độc (thưa hơn trước: hạt nổi lên và hào quang độc nằm ở js/fx_ky_nang.js)
+      const k = (0.14 + 0.07 * v.pn) * hatK();
       if (R() < k) emit(11, x + rr(-B.w, B.w), y - rr(3, B.h * 0.9), rr(-4, 4), rr(-22, -10), rr(0.5, 0.85), RAMP.poison, 2, 0, 0, null, 1);
-      if (R() < k * 0.7) emit(5, x + rr(-B.w, B.w) * 0.8, y - rr(4, B.h * 0.6), 0, 5, 0.6, RAMP.poison, 1, 220, 0, y + rr(-1, 2), 1);
-      if (R() < 0.12 + 0.05 * v.pn) emit(2, x + rr(-B.w, B.w), y - rr(2, B.h * 0.7), rr(-5, 5), rr(-12, -5), rr(0.5, 0.8), RAMP.vapor, 3, 0, 0.5, null, 1);
+      if (R() < k * 0.6) emit(5, x + rr(-B.w, B.w) * 0.8, y - rr(4, B.h * 0.6), 0, 5, 0.6, RAMP.poison, 1, 220, 0, y + rr(-1, 2), 1);
+      if (R() < (0.08 + 0.03 * v.pn) * hatK()) emit(2, x + rr(-B.w, B.w), y - rr(2, B.h * 0.7), rr(-5, 5), rr(-12, -5), rr(0.5, 0.8), RAMP.vapor, 3, 0, 0.5, null, 1);
     }
     if (v.ice > 0 || v.frozen) {
       if (R() < 0.3) emit(2, x + rr(-B.w - 3, B.w + 3), y - rr(0, 4), rr(-10, 10), rr(-5, 0), rr(0.5, 0.9), RAMP.mist, 3, 0, 0.5, null, 0);
@@ -887,31 +892,34 @@
   };
 
   // ---------- kết hợp hệ và vụ nổ ----------
+  // Hệ số số hạt G.VFX.hat (js/vfx_cfg.js) cho phần kỹ năng: nổ, độc, đạn
+  function hatK() { const v = G.VFX && G.VFX.hat; return v == null ? 1 : v; }
   function blastFire(x, y, r, power) {
     add({ ty: 'scorch', x, y, r: r * 0.55, t: 2.2, ly: 0 });
     addRing(x, y, 5, r, 0.3, '#ffd23f', 4, 0);
     addRing(x, y, 2, r * 0.8, 0.26, '#ff7a2a', 3, 0, 0.05);
     add({ ty: 'flash', x, y: y - 8, r: 12 * power, t: 0.12, c: '#fff3b0', c2: '#ffa53a', ly: 1, sq: true });
-    const n = Math.round(16 * power);
+    const n = Math.round(16 * power * hatK());
     for (let i = 0; i < n; i++) { const a = R() * TAU, d = rr(0, r * 0.5), v = rr(20, 70); emit(9, x + Math.cos(a) * d, y - 4 + Math.sin(a) * d * 0.5, Math.cos(a) * v, Math.sin(a) * v * 0.4 - rr(30, 80), rr(0.3, 0.65), RAMP.fire, R() < 0.5 ? 6 : 4, -40, 1.5, null, 1); }
-    for (let i = 0; i < n * 0.6; i++) { const a = R() * TAU, v = rr(30, r * 1.6); emit(2, x + Math.cos(a) * 6, y - 8 + Math.sin(a) * 4, Math.cos(a) * v, Math.sin(a) * v * 0.5 - 16, rr(0.5, 1.0), R() < 0.5 ? RAMP.smoke : RAMP.dark, R() < 0.5 ? 6 : 4, -14, 2.2, null, 1); }
-    for (let i = 0; i < 8; i++) { const a = R() * TAU, v = rr(60, 150); emit(0, x, y - 6, Math.cos(a) * v, Math.sin(a) * v * 0.6 - 60, rr(0.4, 0.8), RAMP.ember, 1, 220, 0, y + rr(-4, 6), 1); }
+    // khói: ít và nhỏ hơn, toả ra mép và bốc lên nhanh để không che quái ở giữa vụ nổ
+    for (let i = 0; i < n * 0.4; i++) { const a = R() * TAU, v = rr(r * 0.8, r * 1.8); emit(2, x + Math.cos(a) * 8, y - 8 + Math.sin(a) * 4, Math.cos(a) * v, Math.sin(a) * v * 0.5 - 26, rr(0.4, 0.8), R() < 0.6 ? RAMP.smoke : RAMP.dark, R() < 0.4 ? 5 : 3, -18, 2.6, null, 1); }
+    for (let i = 0; i < Math.round(8 * hatK()); i++) { const a = R() * TAU, v = rr(60, 150); emit(0, x, y - 6, Math.cos(a) * v, Math.sin(a) * v * 0.6 - 60, rr(0.4, 0.8), RAMP.ember, 1, 220, 0, y + rr(-4, 6), 1); }
   }
   function blastPoison(x, y, r, power) {
     addRing(x, y, 5, r, 0.34, '#c2f58a', 3, 0);
     addRing(x, y, 2, r * 0.75, 0.3, '#6fcf3a', 2, 0, 0.06);
     add({ ty: 'flash', x, y: y - 8, r: 9 * power, t: 0.1, c: '#e6ffc0', c2: '#8fe04a', ly: 1, sq: true });
-    const n = Math.round(14 * power);
-    for (let i = 0; i < n; i++) { const a = R() * TAU, v = rr(20, r * 1.5); emit(2, x, y - 6, Math.cos(a) * v, Math.sin(a) * v * 0.5 - 6, rr(0.6, 1.2), RAMP.vapor, R() < 0.5 ? 6 : 4, -6, 2.2, null, 1); }
+    const n = Math.round(14 * power * hatK());
+    for (let i = 0; i < n * 0.7; i++) { const a = R() * TAU, v = rr(r * 0.5, r * 1.5); emit(2, x, y - 6, Math.cos(a) * v, Math.sin(a) * v * 0.5 - 6, rr(0.6, 1.1), RAMP.vapor, R() < 0.4 ? 5 : 3, -6, 2.2, null, 1); }
     for (let i = 0; i < n; i++) { const a = R() * TAU, v = rr(40, 130); emit(5, x, y - 8, Math.cos(a) * v, Math.sin(a) * v * 0.5 - rr(60, 140), rr(0.5, 0.9), RAMP.poison, 2, 380, 0, y + rr(-8, 10), 1); }
-    for (let i = 0; i < 7; i++) emit(11, x + rr(-r, r) * 0.6, y + rr(-r, r) * 0.3, 0, rr(-26, -10), rr(0.5, 1.0), RAMP.poison, 2, 0, 0, null, 1);
+    for (let i = 0; i < Math.round(7 * hatK()); i++) emit(11, x + rr(-r, r) * 0.6, y + rr(-r, r) * 0.3, 0, rr(-26, -10), rr(0.5, 1.0), RAMP.poison, 2, 0, 0, null, 1);
   }
   function blastIce(x, y, r, power) {
     addRing(x, y, 5, r, 0.26, '#ffffff', 3, 0);
     addRing(x, y, 2, r * 0.85, 0.3, '#7fd4ff', 2, 0, 0.05);
     add({ ty: 'flash', x, y: y - 8, r: 11 * power, t: 0.1, c: '#ffffff', c2: '#bfeaff', ly: 1 });
     add({ ty: 'spikes', x, y, r: r * 0.7, t: 0.55, ly: 1, sd: R() * 50 });
-    const n = Math.round(16 * power);
+    const n = Math.round(16 * power * hatK());
     for (let i = 0; i < n; i++) { const a = (i / n) * TAU + rr(-0.2, 0.2), v = rr(70, 190); emit(4, x, y - 8, Math.cos(a) * v, Math.sin(a) * v * 0.55 - 30, rr(0.35, 0.7), RAMP.ice, R() < 0.5 ? 2 : 1, 200, 1.5, y + rr(-6, 8), 1); }
     for (let i = 0; i < 8; i++) { const a = R() * TAU, v = rr(20, r); emit(2, x, y - 2, Math.cos(a) * v, Math.sin(a) * v * 0.4, rr(0.5, 0.9), RAMP.mist, 4, 0, 2, null, 0); }
     for (let i = 0; i < 6; i++) emit(6, x + rr(-r, r) * 0.7, y - rr(0, 26), 0, 0, rr(0.25, 0.6), RAMP.ice, 3, 0, 0, null, 1);
@@ -958,9 +966,10 @@
   // Dính hiệu ứng mới: một nhúm hạt nhỏ báo hệ
   api('status', (t, el) => {
     const B = bodyOf(t), y = t.y - B.h * 0.5;
-    if (el === 'fire') for (let i = 0; i < 4; i++) emit(9, t.x + rr(-B.w, B.w), y + rr(-4, 6), rr(-10, 10), rr(-60, -30), rr(0.25, 0.4), RAMP.fire, 4, -20, 0, null, 1);
-    else if (el === 'poison') for (let i = 0; i < 4; i++) emit(5, t.x + rr(-B.w, B.w), y, rr(-30, 30), rr(-70, -20), rr(0.4, 0.6), RAMP.poison, 2, 300, 0, t.y + rr(-1, 3), 1);
-    else for (let i = 0; i < 3; i++) emit(6, t.x + rr(-B.w, B.w), y + rr(-8, 8), 0, 0, rr(0.2, 0.35), RAMP.ice, 3, 0, 0, null, 1);
+    const n = Math.round(4 * hatK());
+    if (el === 'fire') for (let i = 0; i < n; i++) emit(9, t.x + rr(-B.w, B.w), y + rr(-4, 6), rr(-10, 10), rr(-60, -30), rr(0.25, 0.4), RAMP.fire, 4, -20, 0, null, 1);
+    else if (el === 'poison') for (let i = 0; i < n; i++) emit(5, t.x + rr(-B.w, B.w), y, rr(-30, 30), rr(-70, -20), rr(0.4, 0.6), RAMP.poison, 2, 300, 0, t.y + rr(-1, 3), 1);
+    else for (let i = 0; i < n - 1; i++) emit(6, t.x + rr(-B.w, B.w), y + rr(-8, 8), 0, 0, rr(0.2, 0.35), RAMP.ice, 3, 0, 0, null, 1);
   });
 
   // ---------- vùng báo trước của quái và trùm khi phát nổ ----------
