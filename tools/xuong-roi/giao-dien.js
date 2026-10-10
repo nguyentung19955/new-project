@@ -7,7 +7,7 @@
   const VUNG = { rung: 'Rừng già', bien: 'Hang biển', laudai: 'Lâu đài cổ' };
   const DOI = { 'em-be': 'Em bé', quai: 'Quái' };
   // PHIÊN BẢN: tăng số mỗi lần sửa công cụ, ghi ngày sửa. Mã bản (6 ký tự) do game/build.py tính từ nội dung mã nguồn.
-  const PHIEN_BAN = { so: '2.2', ngay: '10/10/2026' };
+  const PHIEN_BAN = { so: '2.3', ngay: '10/10/2026' };
   XR.PHIEN_BAN = PHIEN_BAN;
   const TEN_BUOC = ['Loại', 'Nạp ảnh', 'Gán vai', 'Ráp', 'Động tác', 'Xuất'];
   const dpr = () => Math.min(3, window.devicePixelRatio || 1);
@@ -58,7 +58,7 @@
           goc: S.goc, cao: S.cao, toiSau: S.toiSau, banLe: S.banLe, dong_tac: S.dong_tac, khungDoan: S.khungDoan, canRap: S.canRap, buoc: S.buoc,
           daXoa: S.daXoa || [],
           coGoc: S.coGoc || null,
-          manh: S.manh.map((p) => ({ id: p.id, rect: p.rect || null, lat: !!p.lat, daToi: !!p.daToi, vai: p.vai, cha: p.cha, sx: p.sx, sy: p.sy, w: p.w, h: p.h, dat: p.dat, truc: p.truc, lop: p.lop, src: p.cv.toDataURL('image/png') })),
+          manh: S.manh.map((p) => ({ id: p.id, rect: p.rect || null, banSao: !!p.banSao, lat: !!p.lat, daToi: !!p.daToi, vai: p.vai, cha: p.cha, sx: p.sx, sy: p.sy, w: p.w, h: p.h, dat: p.dat, truc: p.truc, lop: p.lop, src: p.cv.toDataURL('image/png') })),
         };
         localStorage.setItem(KHOA, JSON.stringify(d));
       } catch (e) { /* đầy bộ nhớ hoặc trình duyệt chặn: bỏ qua */ }
@@ -72,7 +72,7 @@
       try {
         const img = await XR.tuDataUrl(m.src), cv = XR.taoCanvas(img.width, img.height);
         cv.getContext('2d').drawImage(img, 0, 0);
-        ds.push({ id: m.id, rect: m.rect || null, lat: !!m.lat, daToi: !!m.daToi, vai: m.vai, cha: m.cha, sx: m.sx, sy: m.sy, w: cv.width, h: cv.height, dat: m.dat, truc: m.truc, lop: m.lop, cv });
+        ds.push({ id: m.id, rect: m.rect || null, banSao: !!m.banSao, lat: !!m.lat, daToi: !!m.daToi, vai: m.vai, cha: m.cha, sx: m.sx, sy: m.sy, w: cv.width, h: cv.height, dat: m.dat, truc: m.truc, lop: m.lop, cv });
       } catch (e) { /* mảnh hỏng: bỏ */ }
     }
     Object.assign(S, {
@@ -193,7 +193,7 @@
     c.drawImage(S.anhGoc, 0, 0, W, H);
     c.font = '700 ' + Math.round(15 * k) + 'px system-ui, sans-serif'; c.textBaseline = 'top';
     for (const p of S.manh) {
-      if (!p.rect) continue;
+      if (!p.rect || p.banSao) continue;
       const [x, y, w, h] = p.rect.map((v) => v * viewTam), chon = S.chon.has(p.id);
       c.lineWidth = (chon ? 4 : 2.5) * k; c.strokeStyle = chon ? '#f6dc92' : '#3f8f7f';
       c.fillStyle = chon ? 'rgba(246,220,146,.15)' : 'rgba(63,143,127,.10)';
@@ -261,7 +261,7 @@
     });
     const n = S.chon.size;
     $('soChon').textContent = n;
-    $('nutGop').disabled = n < 2; $('nutLat').disabled = n < 1; $('nutXoa').disabled = n < 1;
+    $('nutGop').disabled = n < 2; $('nutLat').disabled = n < 1; $('nutXoa').disabled = n < 1; $('nutNhanDoi').disabled = n < 1;
     requestAnimationFrame(veTam);
   }
   $('chonVaiCho').onchange = () => { vaiTay = $('chonVaiCho').value; veBuoc2(); };
@@ -338,6 +338,22 @@
     p.cv = XR.latCanvas(p.cv); p.so = null; p._a = null; p.lat = !p.lat; p.cv0 = null; p.a = 0; p.m = [0, 0];
     if (p.dat && p.truc) p.truc = [p.dat[0] + p.w - (p.truc[0] - p.dat[0]), p.truc[1]];
   }
+  // NHÂN ĐÔI: hai tay / hai chân vẽ giống hệt nhau nên chỉ cần một; bản sao nhận vai phía sau / phía xa (máy tự tô tối)
+  const CAP_SAU = { 'tay-truoc': 'tay-sau', 'chan-truoc': 'chan-sau', 'chan-truoc-gan': 'chan-truoc-xa', 'chan-sau-gan': 'chan-sau-xa',
+    'cang-truoc': 'cang-sau', 'chan-gan-1': 'chan-xa-1', 'chan-gan-2': 'chan-xa-2', 'chan-gan-3': 'chan-xa-3' };
+  Object.keys(CAP_SAU).forEach((k) => (CAP_SAU[CAP_SAU[k]] = CAP_SAU[CAP_SAU[k]] || k));
+  $('nutNhanDoi').onclick = () => {
+    const ds = S.manh.filter((p) => S.chon.has(p.id)); if (!ds.length) return;
+    const co = new Set(S.manh.map((p) => p.vai));
+    for (const p of ds) {
+      const c = XR.taoCanvas(p.cv.width, p.cv.height); c.getContext('2d').drawImage(p.cv, 0, 0);
+      const vai = CAP_SAU[p.vai] && !co.has(CAP_SAU[p.vai]) ? CAP_SAU[p.vai] : p.vai === 'phu-kien' ? 'phu-kien' : (CAP_SAU[p.vai] || 'phu-kien');
+      co.add(vai);
+      S.manh.push({ id: idMoi(), cv: c, sx: p.sx, sy: p.sy, w: p.w, h: p.h, rect: p.rect ? p.rect.slice() : null, lat: p.lat, vai, banSao: true });
+    }
+    S.chon.clear(); S.canRap = true; doiRig(); veBuoc2(); luu();
+    bao('Đã nhân đôi ' + ds.length + ' mảnh (bản sao là phía sau, máy tự tô tối).', 2500);
+  };
   $('nutChonHet').onclick = () => { if (S.chon.size === S.manh.length) S.chon.clear(); else S.manh.forEach((p) => S.chon.add(p.id)); veBuoc2(); };
 
   // ===== BƯỚC 3 =====

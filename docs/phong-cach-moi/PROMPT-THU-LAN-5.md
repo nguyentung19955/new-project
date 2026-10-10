@@ -25,13 +25,26 @@ Redraw exactly the same chibi hunter, same style, same colors, same size, as a p
 
 Khoanh ở Xưởng Rối (khung **Người**), máy nhắc đúng thứ tự này: Thân → Đầu → Tay trước → Tay sau → Chân trước → Chân sau → Vũ khí (bấm **Bỏ qua**) → ống tên (máy gọi là Phụ kiện).
 
-## 1b. Thợ Săn bản 2: khớp chuẩn cho 2D bone animation (khuyên dùng thay mục 1)
+## 1b. Thợ Săn bản 3: khớp chuẩn cho 2D bone animation (khuyên dùng thay mục 1)
+
+Bản 2 ra ảnh `mau-thu5/tho-san-v2_parts.png` (10/10), có 4 lỗi đã sửa trong bản 3:
+- Cổ dài như que kem: Gemini hiểu "long neck stub" thành một que dài hơn cả đầu.
+- Gemini vẽ chấm tròn hồng lên vai thân và lên đầu chân: nó hiểu "shoulder sockets" thành một hình vẽ.
+- Thiếu chân sau.
+- Hai bàn tay ngón cái ngược chiều nhau.
+
+Ảnh bản 2 vẫn dùng được: lúc khoanh đầu thì cắt bớt cổ, còn chân sau thì chọn chân trước rồi bấm Nhân đôi. Riêng chấm hồng phải bảo Gemini vẽ lại.
 
 A: dùng A của mục 1.
 
 B:
 ```
-Redraw exactly the same chibi hunter, same style, same colors, same size, as a professional paper-doll parts sheet for 2D bone animation, all parts facing RIGHT in 3/4 view, on a plain pure white background, every part far apart from the others with wide white space, nothing touching, nothing overlapping. No grid, no guide lines, no red dots, no markers, no text, no labels, no numbers, no shadow. Arrange the parts in rows exactly like this. ROW 1 (top): 1) on the left, the TORSO with the front flap of the green cloak over the off-white tunic: an open round collar at the top where the neck goes in, two round shoulder sockets, the cloak hem at the bottom; WITHOUT the quiver, without sleeves, without arms, without legs, no flat cut edges; 2) on the right, the HEAD with the hood, ear tips, mask and sparrow, with a LONG neck stub at the bottom (about one third of the head height), straight, skin colored, with a rounded end, made to slide deep inside the collar. ROW 2: 3) on the left, the FRONT ARM; 4) on the right, the BACK ARM, an exact copy of the front arm. ROW 3: 5) on the left, the FRONT LEG; 6) on the right, the BACK LEG, an exact copy of the front leg. ROW 4 (bottom): 7) the bamboo quiver with its leaves, alone, as its own separate piece. Each arm is one piece hanging perfectly STRAIGHT and VERTICAL like a doll standing at attention: at the TOP a big round ball-shaped shoulder cap (ball-and-socket joint) in the same off-white color as the sleeve, never a flat cut; off-white sleeve; pale hand at the BOTTOM with the thumb toward the right; no bend at the elbow, not tilted. Each leg is one piece hanging perfectly STRAIGHT and VERTICAL: at the TOP a long rounded hip end (the upper thigh) in the same color as the leg, made to hide under the cloak hem; the brown boot at the BOTTOM with the toes pointing to the RIGHT; no bend at the knee, not tilted. Both arms are identical twins and both legs are identical twins: same shape, same length, same colors; do NOT make the back ones darker or a different color (the game darkens the back arm and back leg by itself). All joint ends are smooth, round and filled with the same color as the skin or cloth, never white, never empty, no visible joint knobs.
+Redraw exactly the same chibi hunter, same style, same colors, same size, as a professional paper-doll parts sheet for 2D bone animation, all parts facing RIGHT in 3/4 view, on a plain pure white background, every part far apart from the others with wide white space, nothing touching, nothing overlapping. No grid, no guide lines, no dots, no circles, no markers, no text, no labels, no numbers, no shadow. Do not draw any circle, ring or colored disc on the joints or on the torso: joint ends are plain smooth rounded shapes filled with the normal cloth or skin color. Arrange the parts in rows exactly like this. ROW 1 (top): 1) on the left, the TORSO with the front flap of the green cloak over the off-white tunic, with an open collar at the top; WITHOUT the quiver, without sleeves, without arms, without legs, no flat cut edges, nothing drawn on the shoulders; 2) on the right, the HEAD with the hood, ear tips, mask and sparrow, with a SHORT neck stub at the bottom: only as long as one fifth of the head height, skin colored, rounded at the end. ROW 2: 3) on the left, the FRONT ARM; 4) on the right, the BACK ARM, an exact copy of the front arm. ROW 3: 5) on the left, the FRONT LEG; 6) on the right, the BACK LEG, an exact copy of the front leg; there must be TWO legs. ROW 4 (bottom): 7) the bamboo quiver with its leaves, alone, standing upright. Each arm is one piece hanging perfectly STRAIGHT and VERTICAL like a doll standing at attention: the top end is a big smooth rounded shoulder cap in the same off-white color as the sleeve, never a flat cut; off-white sleeve; pale hand at the BOTTOM, both hands drawn the same way with the thumb toward the right; no bend at the elbow, not tilted. Each leg is one piece hanging perfectly STRAIGHT and VERTICAL: the top end is a long smooth rounded upper thigh in the leg's own color, made to hide under the cloak hem; the brown boot at the BOTTOM with the toes pointing to the RIGHT; no bend at the knee, not tilted. Both arms are identical twins and both legs are identical twins: same shape, same length, same colors; do NOT make the back ones darker or a different color (the game darkens them by itself).
+```
+
+Nếu ảnh vẫn có chấm tròn, gửi thêm câu này:
+```
+Remove every pink or colored circle and dot drawn on the shoulders, the torso and the tops of the legs. The joint ends must be plain, the same color as the cloth or skin, with nothing drawn on them. Keep everything else exactly the same.
 ```
 
 Xưởng Rối tự lo phần còn lại (không cần Gemini vẽ):
