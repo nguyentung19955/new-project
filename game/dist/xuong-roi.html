@@ -97,6 +97,11 @@
   .chan-trang .nut { flex: 1; }
   footer.huong { max-width: 1400px; margin: 10px auto 24px; padding: 14px; color: var(--sub); font-size: 16px; text-align: center; }
   footer.huong b { color: var(--hi); }
+  .phien-ban { /* phiên bản công cụ: góc dưới bên phải, nằm trên thanh nút */
+    position: fixed; right: 10px; bottom: calc(78px + env(safe-area-inset-bottom)); z-index: 11; pointer-events: none;
+    background: rgba(26,18,10,.88); border: 1px solid var(--brD); border-radius: 8px; padding: 3px 9px; font-size: 13px; color: var(--sub);
+  }
+  .phien-ban b { color: var(--hi); }
   .nhap-cu { background: #3a2812; border: 2px solid var(--gold); border-radius: 12px; padding: 12px; margin-bottom: 12px; }
   .an { display: none !important; }
   header.dau, nav.buoc, .nut, .the, .vung-ve, .chan-trang, .hd, h3, label { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
@@ -120,6 +125,7 @@
     .chan-trang { padding: 4px 10px; }
     .chan-trang .nut { min-height: 44px; }
     .bao { top: 8px; bottom: auto; }
+    .phien-ban { bottom: calc(58px + env(safe-area-inset-bottom)); font-size: 12px; }
   }
 </style>
 </head>
@@ -315,12 +321,14 @@
 </div>
 <footer class="huong">Xuất xong gửi tệp <b>.rig.json</b> cho Claude, hoặc đặt vào <b>game/art/chibi/</b>.</footer>
 <div class="bao" id="bao"></div>
+<div class="phien-ban" id="phienBan"></div>
 <input type="file" id="tepAnh" accept="image/*" class="an">
 <input type="file" id="tepAnhMo" accept="image/*" class="an">
 <input type="file" id="tepRig" accept=".json,application/json" class="an">
 
 <script>
 // Xưởng Rối (tools/xuong-roi). TỆP ĐƯỢC TẠO BỞI game/build.py, đừng sửa tay.
+window.XR_MA_BAN = "398be3";
 // ===== game/js/chibi_rig.js =====
 // HÌNH CHIBI KHUNG XƯƠNG (định dạng "linh-khi-rig", xem docs/phong-cach-moi/KE-HOACH-CHIBI.md).
 // Mỗi nhân vật là MỘT ảnh chứa các mảnh (đầu, thân, tay, chân, đuôi, vũ khí). Mỗi khung hình game xoay và nhún
@@ -1391,6 +1399,9 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
   const KHOA = 'xuong-roi-nhap-v1';
   const VUNG = { rung: 'Rừng già', bien: 'Hang biển', laudai: 'Lâu đài cổ' };
   const DOI = { 'em-be': 'Em bé', quai: 'Quái' };
+  // PHIÊN BẢN: tăng số mỗi lần sửa công cụ, ghi ngày sửa. Mã bản (6 ký tự) do game/build.py tính từ nội dung mã nguồn.
+  const PHIEN_BAN = { so: '1.4', ngay: '10/10/2026' };
+  XR.PHIEN_BAN = PHIEN_BAN;
   const TEN_BUOC = ['Loại', 'Nạp ảnh', 'Gán vai', 'Ráp', 'Động tác', 'Xuất'];
   const dpr = () => Math.min(3, window.devicePixelRatio || 1);
   let demId = 0;
@@ -2021,6 +2032,13 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
   $('nutTiep').onclick = () => { if (S.buoc === 6) $('nutXuat').click(); else sangBuoc(S.buoc + 1); };
   window.addEventListener('resize', () => { if (S.buoc === 4) { S.view = null; veRap(); } });
 
+  (function () {
+    const e = $('phienBan'), ma = window.XR_MA_BAN;
+    e.innerHTML = '';
+    e.appendChild(el('b', { text: 'Phiên bản ' + PHIEN_BAN.so }));
+    e.appendChild(document.createTextNode(' · ' + PHIEN_BAN.ngay + (ma ? ' · mã ' + ma : '')));
+    e.title = 'Xưởng Rối phiên bản ' + PHIEN_BAN.so;
+  })();
   sangBuoc(1);
 })();
 </script>

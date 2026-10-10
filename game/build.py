@@ -300,7 +300,10 @@ def build_xuong_roi():
             sys.exit('Xưởng Rối thiếu tệp: ' + src)
         with open(path, encoding='utf-8') as f:
             parts.append('// ===== ' + os.path.relpath(path, os.path.dirname(ROOT)) + ' =====\n' + f.read().rstrip() + '\n')
-    js = '// Xưởng Rối (tools/xuong-roi). TỆP ĐƯỢC TẠO BỞI game/build.py, đừng sửa tay.\n' + ''.join(parts)
+    import hashlib
+    ma_ban = hashlib.sha1((page + ''.join(parts)).encode('utf-8')).hexdigest()[:6]  # đổi khi mã công cụ hoặc chibi_rig.js đổi
+    js = ('// Xưởng Rối (tools/xuong-roi). TỆP ĐƯỢC TẠO BỞI game/build.py, đừng sửa tay.\n'
+          + 'window.XR_MA_BAN = ' + json.dumps(ma_ban) + ';\n' + ''.join(parts))
     html = re.sub(r'<script src="[^"]+"></script>\s*', '', page)
     html = html.replace('</body>', '<script>\n' + safe_js(js) + '</script>\n</body>')
     dest = os.path.join(DIST, 'xuong-roi.html')

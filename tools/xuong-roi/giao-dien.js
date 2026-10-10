@@ -6,6 +6,9 @@
   const KHOA = 'xuong-roi-nhap-v1';
   const VUNG = { rung: 'Rừng già', bien: 'Hang biển', laudai: 'Lâu đài cổ' };
   const DOI = { 'em-be': 'Em bé', quai: 'Quái' };
+  // PHIÊN BẢN: tăng số mỗi lần sửa công cụ, ghi ngày sửa. Mã bản (6 ký tự) do game/build.py tính từ nội dung mã nguồn.
+  const PHIEN_BAN = { so: '1.4', ngay: '10/10/2026' };
+  XR.PHIEN_BAN = PHIEN_BAN;
   const TEN_BUOC = ['Loại', 'Nạp ảnh', 'Gán vai', 'Ráp', 'Động tác', 'Xuất'];
   const dpr = () => Math.min(3, window.devicePixelRatio || 1);
   let demId = 0;
@@ -636,5 +639,12 @@
   $('nutTiep').onclick = () => { if (S.buoc === 6) $('nutXuat').click(); else sangBuoc(S.buoc + 1); };
   window.addEventListener('resize', () => { if (S.buoc === 4) { S.view = null; veRap(); } });
 
+  (function () {
+    const e = $('phienBan'), ma = window.XR_MA_BAN;
+    e.innerHTML = '';
+    e.appendChild(el('b', { text: 'Phiên bản ' + PHIEN_BAN.so }));
+    e.appendChild(document.createTextNode(' · ' + PHIEN_BAN.ngay + (ma ? ' · mã ' + ma : '')));
+    e.title = 'Xưởng Rối phiên bản ' + PHIEN_BAN.so;
+  })();
   sangBuoc(1);
 })();
