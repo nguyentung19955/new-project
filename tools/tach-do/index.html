@@ -111,6 +111,16 @@
       <textarea id="oPrompt" readonly></textarea>
     </details>
     <p class="chu-y">Dán prompt vào ChatGPT. ChatGPT chỉ cần vẽ MỘT tấm ảnh có đủ các món, rồi bạn lưu ảnh đó về máy.</p>
+    <div id="vungHe" hidden style="margin-top:10px">
+      <p class="chu-y"><b>Lô theo hệ:</b> khi dán prompt vào ChatGPT, nhớ <b>GỬI KÈM ảnh bản thường</b> của lô này (10 món, lưới 5×2) để ChatGPT vẽ lại đúng dáng. Chưa có ảnh đó thì bấm nút dưới, rồi chạm giữ ảnh hiện ra để lưu vào máy.</p>
+      <div class="hang">
+        <button class="nut phu" id="nutAnhThuong">Lấy ảnh bản thường của lô</button>
+        <button class="nut phu" id="nutTepThuong">Thả tệp bản thường (tuỳ chọn)</button>
+      </div>
+      <input type="file" id="chonTepThuong" accept=".json,.zip,application/json,application/zip" multiple hidden>
+      <p class="chu-y" id="ttThuong"></p>
+      <img id="anhThuong" alt="Ảnh bản thường của lô" hidden style="max-width:100%;image-rendering:pixelated;border-radius:8px;margin-top:6px">
+    </div>
   </section>
 
   <section class="buoc">
@@ -321,6 +331,18 @@ for (const L of LO) {
   const hong = dung(300), xanh = dung(120);
   L.nenXanh = hong > xanh; L.xungDot = Math.min(hong, xanh) > 0;
 }
+// Lô vũ khí theo hệ: vẽ lại đúng 10 món bản thường, chỉ đổi sang hệ Lửa / Độc / Băng. Xuất vk-<loại>-<dòng>-<fire|poison|ice>.sprite.json
+// (giai đoạn để trống: game dùng ảnh này cho mọi giai đoạn của nhánh, tự thêm hạt hiệu ứng theo giai đoạn).
+const HE_VK = {
+  fire: ['Lửa', 'lưỡi/thân đổi sang màu đỏ cam như sắt vừa nung (#8a1c12, #e8492a, #ffb347), có vân lửa chạy dọc lưỡi, vài ngọn lửa nhỏ bám sát mép lưỡi (dính liền vào món, không bay rời), viền tối đổi sang đỏ sẫm #4a1010'],
+  poison: ['Độc', 'lưỡi/thân đổi sang màu xanh lá độc pha tím (#1d5a2a, #49a83c, #b5ea6a và tím #6b3a8f), có rêu mốc bám, vài giọt nọc xanh đang nhỏ xuống (dính liền vào món), viền tối đổi sang xanh rêu sẫm #12331a'],
+  ice: ['Băng', 'lưỡi/thân đổi sang màu xanh băng và trắng (#2f62ad, #7fc4f2, #eafcff), có tinh thể băng nhọn bám dọc lưỡi, lớp sương giá trắng phủ mép (dính liền vào món), viền tối đổi sang xanh đậm #1c3a70'],
+};
+for (const k in TEN_VK) {
+  const B = LO.find((l) => l.id === 'vk-' + k);
+  for (const he in HE_VK) LO.push({ id: 'vk-' + k + '-' + he, ten: 'Vũ khí · ' + TEN_VK[k] + ' · hệ ' + HE_VK[he][0] + ' (10 món)', doi: 'vu-khi', loai: k, he, cot: 5, hang: 2, mau: 16,
+    nenXanh: he !== 'poison', xungDot: false, ds: B.ds.map((m) => Object.assign({}, m, { ma: m.ma + '-' + he, ten: m.ten + ' (' + HE_VK[he][0] + ')' })) });
+}
 function hex2rgb(h) { const v = parseInt(h.slice(1), 16); return [(v >> 16) & 255, (v >> 8) & 255, v & 255]; }
 function sacDo(r, g, b) { const mx = Math.max(r, g, b), mn = Math.min(r, g, b), c = mx - mn; if (!c) return [0, 0];
   const h = mx === r ? ((g - b) / c) % 6 : mx === g ? (b - r) / c + 2 : (r - g) / c + 4; return [(h * 60 + 360) % 360, c / mx]; }
@@ -333,6 +355,7 @@ const coVien = () => !(L.doi === 'trang-phuc' && L.o === 'masks');
 
 // ===================== PROMPT =====================
 function taoPrompt(L) {
+  if (L.he) return taoPromptHe(L);
   const n = L.ds.length, tong = L.cot * L.hang, nen = L.nenXanh ? 'XANH LÁ #00FF00' : 'HỒNG TÍM #FF00FF';
   const loai = L.doi === 'vu-khi' ? 'vũ khí loại ' + TEN_VK[L.loai].toLowerCase() : L.doi === 'trang-phuc' ? 'trang phục (' + O_TP[L.o][0].toLowerCase() + ')' : 'vật phẩm (biểu tượng đồ rơi, tài nguyên)';
   const ds = L.ds.map((m, i) => `ô ${i + 1}: ${m.ten}. ${m.mo.replace(/\.$/, '')} (màu chính ${m.mau.slice(0, 3).join(' ')}; trong game chỉ ${m.w}×${m.h} điểm ảnh${L.doi === 'trang-phuc' ? ', ' + dangMon(m) : ''})`).join('; ');
@@ -356,6 +379,20 @@ function taoPrompt(L) {
     + `Nền trơn MỘT MÀU ${nen} phủ kín mọi ô (không ô cờ, không nền trắng, không chuyển màu), không dùng màu nền này trong món đồ. Chỉ cần gửi tấm ảnh, không cần code, không cần file json.`;
 }
 
+function taoPromptHe(L) {
+  const H = HE_VK[L.he], nen = L.he === 'poison' ? 'HỒNG TÍM #FF00FF' : 'XANH LÁ #00FF00', bow = L.loai === 'bow';
+  const ds = L.ds.map((m, i) => `ô ${i + 1}: ${m.ten.replace(/ \(.*\)$/, '')} hệ ${H[0]}`).join('; ');
+  return `TÔI GỬI KÈM MỘT TẤM ẢNH: lưới 5 cột × 2 hàng gồm 10 ${TEN_VK[L.loai].toLowerCase()} bản thường của game Linh Khí (pixel art 2D, cảm hứng dân gian Việt Nam). `
+    + `Hãy dùng công cụ tạo ảnh vẽ lại MỘT tấm ảnh mới gồm ĐÚNG 10 món đó: giữ Y HỆT dáng, cỡ, hướng, vị trí trong ô, đôi mắt và thứ tự của từng món như ảnh gửi kèm, CHỈ ĐỔI sang hệ ${H[0].toUpperCase()}: ${H[1]}. `
+    + `Phần cán, chuôi gần tay cầm giữ màu gần như cũ. Thứ tự đọc từ trái sang phải, hết hàng trên mới xuống hàng dưới: ${ds}. `
+    + `BỐ CỤC: lưới ĐỀU đúng 5 cột × 2 hàng = 10 ô như ảnh gửi kèm (KHÔNG thêm cột, KHÔNG thêm hàng), kẻ lưới mảnh màu tối, mỗi ô đúng MỘT món. `
+    + (bow ? 'Cung DỰNG ĐỨNG như ảnh gửi kèm, KHÔNG vẽ dây cung, KHÔNG vẽ mũi tên (game tự vẽ). ' : 'Món NẰM NGANG như ảnh gửi kèm: chuôi bên TRÁI, mũi bên PHẢI. ')
+    + `CỠ TRONG Ô: mỗi món chiếm khoảng 70% ô, nằm giữa ô, nằm TRỌN trong ô, không lấn sang ô bên cạnh. `
+    + `KIỂU VẼ: pixel art, màu phẳng, đổ bóng 3 sắc, viền tối một nét quanh mép; hiệu ứng hệ (lửa, giọt, băng) phải dính liền vào món, không bay rời xa. `
+    + `KHÔNG vẽ: chữ, số, nhãn, tên món, bảng phụ, bảng màu, mặt đất, bóng dưới vật, tia lửa hay khói bay rời, ô chỉ có hiệu ứng. `
+    + `Nền trơn MỘT MÀU ${nen} phủ kín mọi ô (không ô cờ, không nền trắng, không chuyển màu), không dùng màu nền này trong món đồ. Chỉ cần gửi tấm ảnh, không cần code.`;
+}
+
 // Dáng món theo cỡ trong game (ChatGPT hay vẽ sai dáng: dấu mặt nạ ngang thành vuông, bùa dài thành tròn, trống đứng thành nằm)
 function dangMon(m) {
   const r = m.w / m.h, k = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
@@ -369,7 +406,77 @@ function hienLo() {
   $('oPrompt').value = taoPrompt(L);
   $('soMau').value = String(L.mau);
   $('locDom').checked = !L.xungDot;
+  $('vungHe').hidden = !L.he; $('anhThuong').hidden = true;
+  if (L.he) { hienTTThuong(); napBanThuong(); }
 }
+// ----- Bản thường cho lô hệ: điểm cầm/mũi/dây lấy theo bản thường cùng dòng; ảnh bản thường để gửi kèm ChatGPT -----
+const BAN_THUONG = {}; // mã vk-<loại>-<dòng> -> nội dung tệp .sprite.json
+let napBT = null;
+function nhanTepThuong(t) {
+  if (!t || t.doi_tuong !== 'vu-khi' || !t.vu_khi || !/^vk-(sword|bow|spear|hammer)-\d$/.test(t.ma || '')) return false;
+  const cu = BAN_THUONG[t.ma];
+  if (cu && cu.tuTep && !t.tuTep) return false; // tệp người dùng thả vào được ưu tiên
+  if (cu && t.tuTep && (+cu.net || 1) > (+t.net || 1) && cu.tuTep) return false; // giữ bản nét gấp đôi
+  BAN_THUONG[t.ma] = t; return true;
+}
+function hienTTThuong() {
+  if (!L || !L.he) return;
+  const co = L.ds.filter((m) => BAN_THUONG['vk-' + L.loai + '-' + m.dong]).length;
+  $('ttThuong').textContent = co ? `Đã có bản thường ${co}/10 món: điểm cầm, mũi${laCung() ? ', dây cung' : ''} sẽ đặt giống bản thường.` : 'Chưa có bản thường: công cụ tự đoán điểm cầm, mũi như lô thường.';
+}
+function napBanThuong() { // lấy các vũ khí AI đang có trong game (cùng trang web) làm bản thường
+  if (napBT) return napBT;
+  napBT = (async () => {
+    for (const u of ['index.html', '../../game/dist/linh-khi.html']) {
+      try {
+        const r = await fetch(u); if (!r.ok) continue;
+        const t = await r.text(), k = '.customSpriteData = ', a = t.indexOf(k); if (a < 0) continue;
+        const b = t.indexOf(';\n', a); if (b < 0) continue; // JSON gọn một dòng
+        const ds = JSON.parse(t.slice(a + k.length, b)); let n = 0;
+        for (const x of ds) if (nhanTepThuong(x)) n++;
+        if (n) break;
+      } catch (e) { /* bỏ qua */ }
+    }
+    hienTTThuong();
+    if (ANH && L.he) chay(false);
+  })();
+  return napBT;
+}
+$('nutTepThuong').onclick = () => $('chonTepThuong').click();
+$('chonTepThuong').onchange = async (e) => {
+  let n = 0;
+  for (const f of [...e.target.files]) {
+    try {
+      if (/\.zip$/i.test(f.name)) {
+        const JSZip = await napJSZip(), z = await JSZip.loadAsync(f);
+        for (const ten of Object.keys(z.files)) if (/\.sprite\.json$/i.test(ten) && !/\.thuong\./i.test(ten)) { const t = JSON.parse(await z.files[ten].async('string')); t.tuTep = true; if (nhanTepThuong(t)) n++; }
+      } else { const t = JSON.parse(await f.text()); t.tuTep = true; if (nhanTepThuong(t)) n++; }
+    } catch (er) { /* bỏ qua tệp hỏng */ }
+  }
+  e.target.value = '';
+  bao(n ? 'Đã nhận ' + n + ' tệp bản thường' : 'Không thấy tệp vũ khí bản thường (vk-<loại>-<dòng>.sprite.json)');
+  hienTTThuong();
+  if (ANH) chay(false);
+};
+$('nutAnhThuong').onclick = async () => {
+  await napBanThuong();
+  const ds = L.ds.map((m) => BAN_THUONG['vk-' + L.loai + '-' + m.dong]);
+  if (!ds.some(Boolean)) { bao('Chưa có bản thường của lô này: dùng tấm ảnh ChatGPT đã vẽ lô thường, hoặc thả tệp bản thường'); return; }
+  const O = 240, cv = document.createElement('canvas'); cv.width = O * 5; cv.height = O * 2;
+  const g = cv.getContext('2d'); g.fillStyle = L.he === 'poison' ? '#ff00ff' : '#00ff00'; g.fillRect(0, 0, cv.width, cv.height);
+  const anh = await Promise.all(ds.map((t) => t ? new Promise((ok) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ok(null); i.src = t.anh; }) : null));
+  g.imageSmoothingEnabled = false;
+  anh.forEach((im, i) => {
+    if (!im) return;
+    const k = Math.min((O * 0.7) / im.width, (O * 0.7) / im.height), w = im.width * k, h = im.height * k;
+    g.drawImage(im, (i % 5) * O + (O - w) / 2, Math.floor(i / 5) * O + (O - h) / 2, w, h);
+  });
+  g.strokeStyle = '#222'; g.lineWidth = 2;
+  for (let x = 0; x <= 5; x++) { g.beginPath(); g.moveTo(x * O, 0); g.lineTo(x * O, cv.height); g.stroke(); }
+  for (let y = 0; y <= 2; y++) { g.beginPath(); g.moveTo(0, y * O); g.lineTo(cv.width, y * O); g.stroke(); }
+  const url = cv.toDataURL('image/png'), im = $('anhThuong'); im.src = url; im.hidden = false;
+  bao('Chạm giữ ảnh để lưu vào máy, rồi gửi kèm prompt cho ChatGPT');
+};
 LO.forEach((l, i) => { const o = document.createElement('option'); o.value = i; o.textContent = l.ten; $('chonLo').appendChild(o); });
 try { const i = localStorage.getItem('td_lo'); if (i != null && LO[i]) $('chonLo').value = i; } catch (e) { /* bỏ qua */ }
 L = LO[+$('chonLo').value];
@@ -766,6 +873,13 @@ function datDiem(i) { // điểm tự đặt theo quy ước; điểm người d
       const xc = Math.round(x0 + bw * 0.14); D.cam = [xc + 0.5, giuaCot(Math.min(x1, xc))];
       let s = 0, n = 0; for (let x = Math.max(x0, x1 - 2); x <= x1; x++) { s += giuaCot(x); n++; } D.mui = [x1 + 1, s / n];
     }
+    // Lô hệ: có tệp bản thường cùng dòng thì đặt điểm cầm, mũi, dây đúng như bản thường (theo tỉ lệ cỡ ảnh)
+    const BT = L.he ? BAN_THUONG['vk-' + L.loai + '-' + m.dong] : null;
+    if (BT) {
+      const V = BT.vu_khi, kx = w / BT.rong, ky = h / BT.cao, q = (p) => [p[0] * kx, p[1] * ky];
+      if (V.cam) D.cam = q(V.cam); if (V.mui) D.mui = q(V.mui);
+      if (laCung() && V.day && V.day[0] && V.day[1]) { D.day0 = q(V.day[0]); D.day1 = q(V.day[1]); }
+    }
     for (const k in c.diem) if (D[k]) D[k] = [c.diem[k][0] * w, c.diem[k][1] * h];
   } else if (L.doi === 'trang-phuc') {
     const o = L.o, C0 = { hats: [0.5, -3.5], masks: [2.5, 0.5], robes: [0, -7], backs: [-5, -8], hands: [3, -2], wings: null }[o];
@@ -801,7 +915,7 @@ function phanTep(i, dungCanvas, thuong) {
   if (thuong && N > 1) { cv = document.createElement('canvas'); cv.width = K.out.w / N; cv.height = K.out.h / N; const x = cv.getContext('2d'); x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high'; x.drawImage(K.out.cv, 0, 0, cv.width, cv.height); }
   else if (N > 1) t.net = N;
   if (dungCanvas) t.anhCanvas = cv; else t.anh = cv.toDataURL('image/png');
-  if (L.doi === 'vu-khi') t.vu_khi = { loai: L.loai, dong: m.dong, he: null, gd: null, cam: G(D.cam), mui: G(D.mui), day: laCung() ? [G(D.day0), G(D.day1)] : null };
+  if (L.doi === 'vu-khi') t.vu_khi = { loai: L.loai, dong: m.dong, he: L.he || null, gd: null, cam: G(D.cam), mui: G(D.mui), day: laCung() ? [G(D.day0), G(D.day1)] : null };
   else if (L.doi === 'trang-phuc') {
     t.trang_phuc = { o: L.o, look: m.look, lech: D.lech.slice(), lop: L.o === 'hats' ? c.lop : 'sau', kieu: D.kieu, tay_ao: L.o === 'robes' ? !!c.tayAo : true };
     // điểm neo trên ảnh món đồ, theo điểm ảnh GAME (làm tròn nửa điểm); co_chuan: cỡ lúc xuất (rộng, cao)
@@ -1065,7 +1179,7 @@ function khungXem(now) {
   let goiY = '';
   if (L.doi === 'vu-khi') {
     if (GAME) {
-      const o = { type: L.loai, family: m.dong, rarity: 0, branch: null, stage: 0, marks: { fire: 0, poison: 0, ice: 0 }, sharpen: 0 };
+      const o = { type: L.loai, family: m.dong, rarity: 0, branch: L.he || null, stage: L.he ? 1 + (Math.floor(t / 2) % 3) : 0, marks: { fire: 0, poison: 0, ice: 0 }, sharpen: 0 };
       try { GAME.art.hero(g, { x: 45, y: 74, face: 1, key: 'smith', t, move: false, atk: (t % 0.7) / 0.7, dodge: -1, weapon: o }); } catch (e) { /* bỏ qua */ }
       goiY = 'Bên trái: em bé trong game ' + (laCung() ? 'bắn' : 'vung') + ' vũ khí này. ';
     } else {
