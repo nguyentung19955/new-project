@@ -385,14 +385,18 @@
     c.setTransform(G.uiScale, 0, 0, G.uiScale, G.ox * G.dpr, G.oy * G.dpr);
     c.textBaseline = 'alphabetic';
   };
-  ui.font = function (size, bold) {
-    G.ux.font = (bold ? '700 ' : '500 ') + size + 'px ' + FONT;
+  // Sàn cỡ chữ (V25): chữ không nhỏ hơn 7,5 đơn vị (khoảng 11 px trên điện thoại cầm ngang; trước là 6,5 ≈ 9,4 px).
+  // Sàn nằm ngay trong ui.font nên mọi chỗ đo chữ (ui.wrap, measureText sau ui.font) cũng đo đúng cỡ sẽ vẽ, chữ xuống dòng không tràn.
+  // tiny = true: số nhỏ trên ô vũ khí, nhãn trong ô chật được giữ sàn cũ 6,5 (truyền { tiny: true } cho ui.text / ui.para).
+  ui.MIN = 7.5; ui.MIN_TINY = 6.5;
+  ui.fs = (size, tiny) => Math.max(tiny ? ui.MIN_TINY : ui.MIN, size || 9);
+  ui.font = function (size, bold, tiny) {
+    G.ux.font = (bold ? '700 ' : '500 ') + ui.fs(size, tiny) + 'px ' + FONT;
   };
   ui.text = function (str, x, y, o) {
     o = o || {};
     const c = G.ux;
-    // Chữ không nhỏ hơn 6,5 để còn đọc được trên điện thoại.
-    ui.font(Math.max(6.5, o.size || 9), o.bold);
+    ui.font(o.size || 9, o.bold, o.tiny); // sàn cỡ chữ: ui.fs ở trên
     c.textAlign = o.align || 'left';
     if (o.shadow !== false) {
       c.fillStyle = 'rgba(0,0,0,0.75)';
@@ -401,8 +405,8 @@
     c.fillStyle = o.color || '#f1ead9';
     c.fillText(str, x, y);
   };
-  ui.wrap = function (str, maxW, size, bold) {
-    ui.font(Math.max(6.5, size || 9), bold);
+  ui.wrap = function (str, maxW, size, bold, tiny) {
+    ui.font(size || 9, bold, tiny);
     const words = String(str).split(' ');
     const lines = [];
     let cur = '';
@@ -415,8 +419,8 @@
   };
   ui.para = function (str, x, y, maxW, o) {
     o = o || {};
-    const size = Math.max(6.5, o.size || 9);
-    const lines = ui.wrap(str, maxW, size, o.bold);
+    const size = ui.fs(o.size, o.tiny);
+    const lines = ui.wrap(str, maxW, size, o.bold, o.tiny);
     lines.forEach((l, i) => ui.text(l, x, y + i * (size + 3), o));
     return y + lines.length * (size + 3);
   };

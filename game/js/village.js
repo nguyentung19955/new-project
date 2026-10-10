@@ -173,13 +173,15 @@
     if (V.sel) {
       const r = V.sel[0], i = V.sel[1], R = G.REGIONS[r], b = G.stageStats(r, i, V.diff);
       ui.text(R.name + ' · ' + (i === 4 ? 'Ải trùm' : 'Ải ' + (i + 1)) + (V.diff ? ' · khó 2' : ''), 256, 219, { size: 9.5, bold: true, color: GOLD });
-      const l2 = (i === 4 ? 'Trùm vùng ' + R.bossName : 'Trùm nhỏ ' + R.mini) + ' · 8 phòng · ';
+      const l2 = (i === 4 ? 'Trùm ' + R.bossName : 'Trùm nhỏ ' + R.mini) + ' · 8 phòng · ';
       ui.text(l2, 256, 230, { size: 7, color: TXT });
       ui.font(7); ui.text('hệ ' + G.EL[R.el].name, 256 + G.ux.measureText(l2).width, 230, { size: 7, color: G.EL[R.el].col });
       // Sức mạnh khuyên dùng so với sức mạnh hiện tại của bé (G.power): xanh đủ, vàng sát nút, đỏ thiếu
       const need = G.stageRec(r, i, V.diff), col = G.powerCol(pw, need);
       ui.text('Sức mạnh khuyên dùng ' + need + ' · bé ' + pw, 256, 240, { size: 7.5, bold: true, color: col });
-      ui.para('Thưởng: ' + b.xp + ' kinh nghiệm, ~' + b.gold + ' vàng, ' + (5 + i) + ' ' + R.mat.toLowerCase() + (i === 4 ? ', ' + (V.diff ? 4 : 3) + ' mảnh ' + R.bossName + ', vũ khí quý' : ''), 256, 250.5, 144, { size: 6.5, color: SOFT });
+      // V25: chữ to hơn; dòng thưởng dài quá 2 dòng (ải trùm) thì giữ cỡ nhỏ cũ để không lọt khỏi khung
+      const rw = 'Thưởng: ' + b.xp + ' kinh nghiệm, ~' + b.gold + ' vàng, ' + (5 + i) + ' ' + R.mat.toLowerCase() + (i === 4 ? ', ' + (V.diff ? 4 : 3) + ' mảnh ' + R.bossName + ', vũ khí quý' : '');
+      ui.para(rw, 256, 250.5, 144, { size: 6.5, color: SOFT, tiny: ui.wrap(rw, 144, 6.5).length > 2 });
       if (T.btn(404, 217, 64, 38, 'Lên đò', { size: 11, primary: true })) G.startStage(r, i, V.diff);
     } else ui.text('Chạm một ải trên tranh để xem.', 256, 238, { size: 8, color: SOFT });
   }
@@ -265,7 +267,7 @@
     pager(list.length, ROWS, CX + CW - 100, 189);
     list.slice(V.page * ROWS, V.page * ROWS + ROWS).forEach((w, k) => {
       const y = LIST_Y + k * PITCH;
-      if (G.weaponLine(w, CX, y, CW, V.sel === w.id)) { V.sel = w.id; G.click = null; G.sfx('ui'); }
+      if (G.weaponLine(w, CX, y, CW, V.sel === w.id, carry.includes(w.id) ? 48 : 0)) { V.sel = w.id; G.click = null; G.sfx('ui'); }
       if (carry.includes(w.id)) ui.text('đang mang', CX + CW - 6, y + 9.5, { size: 6.5, align: 'right', color: GOOD });
     });
     ui.text(list.length + ' vũ khí', CX + 2, 200.5, { size: 7, color: SOFT });
@@ -294,13 +296,19 @@
         const cap = G.FORGE_CAP[sv.forge];
         const cost = G.sharpenFull(w.sharpen);
         ui.text(G.wName(w), CX + 8, DET_Y + 14, { size: 8.5, bold: true, color: R4[G.wRar(w)].col });
-        ui.text('Sát thương mỗi đòn ' + G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1), CX + 8, DET_Y + 26, { size: 7.5 });
+        // V26: số trước → sau khi mài (mài thử trên chính món rồi trả lại ngay, không lưu)
+        const lvl = sv.heroes[sv.hero].lvl, f1 = (v) => v.toFixed(1).replace('.', ','), dNow = G.wBase(w, lvl);
+        let dAfter = null;
+        if (w.sharpen < Math.min(cap, G.MAX_SHARPEN)) { w.sharpen++; try { dAfter = G.wBase(w, lvl); } finally { w.sharpen--; } }
+        ui.text('Sát thương mỗi đòn ' + f1(dNow) + (dAfter != null ? ' → ' + f1(dAfter) + ' sau khi mài' : ''), CX + 8, DET_Y + 26, { size: 7.5 });
         if (w.sharpen >= G.MAX_SHARPEN) { ui.text('Đã mài tối đa.', CX + 8, DET_Y + 40, { size: 8, color: GOOD }); line = 'Lưỡi này bén hết cỡ rồi cháu ạ.'; }
         else if (w.sharpen >= cap) { ui.para('Lò cấp ' + sv.forge + ' chỉ mài tới +' + cap + '. Hãy nâng lò.', CX + 8, DET_Y + 38, 290, { size: 7.5, color: WARN }); line = 'Lò còn yếu, phải nâng lò mới mài tiếp được.'; }
         else {
           ui.para('Lên +' + (w.sharpen + 1) + ' tốn: ' + costText(cost), CX + 8, DET_Y + 38, 198, { size: 7.5, color: canPay(cost) ? TXT : WARN });
           if (!canPay(cost)) line = 'Chưa đủ nguyên liệu. Vào ải kiếm thêm rồi quay lại nhé.';
-          if (actBtn('Mài', { disabled: !canPay(cost) })) { pay(cost); w.sharpen++; G.persist(); G.sfx('evolve'); say('Đã mài ' + G.wName(w) + ' lên +' + w.sharpen + '!'); }
+          // V21: mài món đang mang thì Sức mạnh tăng bao nhiêu (món trong rương không tính vào Sức mạnh)
+          const gain = G.upg && G.upg.gainOf ? G.upg.gainOf('sh' + w.id + '-' + w.sharpen + '-' + sv.hero + '-' + lvl, (s) => { const x = s.weapons.find((q) => q.id === w.id); if (x) x.sharpen++; }) : 0;
+          if (actBtn('Mài', { disabled: !canPay(cost), sub: gain > 0 ? G.upg.gainText(gain) : '', subSize: 7.5 })) { pay(cost); w.sharpen++; G.persist(); G.sfx('evolve'); say('Đã mài ' + G.wName(w) + ' lên +' + w.sharpen + '!'); }
         }
       }
     } else if (V.ftab === 'tier') {
@@ -321,7 +329,8 @@
         ui.para('Sát thương gốc ' + xm(R4[r].mult) + ' lên ' + xm(R4[r + 1].mult) + ', thêm 1 dòng phụ' + (r === 0 ? ', tiến hóa được tới Thức tỉnh' : '') + '.', CX + 8, DET_Y + 25, 198, { size: 7, color: TXT });
         ui.para('Tốn: ' + costText(cost), CX + 8, DET_Y + 46, 198, { size: 7, color: canPay(cost) ? TXT : WARN });
         line = 'Dấu ấn và tiến hóa được giữ nguyên.' + (canPay(cost) ? '' : ' Nhưng cháu chưa đủ nguyên liệu.');
-        if (actBtn('Nâng bậc', { size: 10, disabled: !canPay(cost) })) raise(r + 1, 0);
+        const gain = G.upg && G.upg.gainOf ? G.upg.gainOf('ti' + w.id + '-' + r + '-' + w.sharpen + '-' + sv.hero, (s) => { const x = s.weapons.find((q) => q.id === w.id); if (x) { x.rarity = r + 1; if (x.tier != null) x.tier = r + 1; if (G.fitAffixes) G.fitAffixes(x); } }) : 0; // V21
+        if (actBtn('Nâng bậc', { size: 10, disabled: !canPay(cost), sub: gain > 0 ? G.upg.gainText(gain) : '', subSize: 7.5 })) raise(r + 1, 0);
       } else {
         // Nấc cuối lên Vàng: cần mảnh trùm (chỉ trùm vùng rơi). Dùng mảnh trùm vùng nào thì nhận hệ số Vàng của vùng đó.
         const isGold = G.wRar(w) === 3, opts = [0, 1, 2].filter((k) => !isGold || k > w.gold);
@@ -597,6 +606,9 @@
       for (let j = 0; j < 5; j++) { ui.rect(CX + 46 + j * 12, y0 + 5, 9, 8, j < n ? '#ffd23f' : '#0d1716', j < n ? '#fff0a8' : T.C.brD); }
       if (n < 5) {
         ui.para('Tiếp: ' + Bk.nodes[n], CX + 6, y0 + 24, 236, { size: 7, color: TXT });
+        // V21: học thêm một điểm nhánh này thì Sức mạnh tăng bao nhiêu (nút như hồi máu mỗi phòng không đổi con số thì không ghi)
+        const gain = G.upg && G.upg.gainOf ? G.upg.gainOf('sk' + k + '-' + b + '-' + n + '-' + hs.lvl, (s) => { s.heroes[s.hero].sk[b]++; }) : 0;
+        if (gain > 0) ui.text(G.upg.gainText(gain), CX + CW - 60, y0 + 15, { size: 7.5, bold: true, align: 'right', color: GOOD });
         if (T.sbtn(CX + CW - 54, y0 + 8, 48, 24, 'Học', { size: 9, pad: 4, primary: pts > 0, disabled: pts <= 0 })) { hs.sk[b]++; G.persist(); G.sfx('evolve'); VS.checkNews(); }
       } else ui.text('Đã học hết nhánh này.', CX + 6, y0 + 28, { size: 7.5, color: GOOD });
     });

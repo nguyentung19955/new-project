@@ -274,6 +274,30 @@
     }
     return { power: G.power(), rec, tips };
   };
+  // ---------- V21/V26: "+X Sức mạnh" cạnh nút nâng cấp, so món mới với món đang mang ----------
+  // Sức mạnh tăng thêm (làm tròn) nếu làm fn trên bản sao của bản lưu (bản lưu thật không đổi). Nhớ kết quả theo key trong 1 giây
+  // để không tính lại mỗi khung hình; key nên chứa trạng thái liên quan (ví dụ cấp mài) để đổi xong là tính lại ngay.
+  const GC = new Map();
+  U.gainOf = function (key, fn, sv) {
+    sv = sv || G.save;
+    const now = G.time || 0, hit = GC.get(key);
+    if (hit && hit.sv === sv && now - hit.t < 1 && now >= hit.t) return hit.v;
+    let v = 0;
+    try { v = Math.round(U.powerWith(sv, fn) - U.powerWith(sv)); } catch (e) { v = 0; }
+    if (!isFinite(v)) v = 0;
+    if (GC.size > 120) GC.clear();
+    GC.set(key, { v, t: now, sv });
+    return v;
+  };
+  // Mang món w thay ô slot thì Sức mạnh đổi bao nhiêu (âm: kém hơn món đang mang ở ô đó).
+  U.swapGain = function (w, slot, sv) {
+    sv = sv || G.save;
+    if (!w || !sv.carry || slot >= sv.carry.length || sv.carry.includes(w.id)) return 0;
+    const cur = sv.carry[slot];
+    return U.gainOf('sw' + w.id + '-' + slot + '-' + cur + '-' + (w.sharpen | 0) + '-' + G.wRar(w), (s) => { s.carry[slot] = w.id; }, sv);
+  };
+  // Chữ "+12 Sức mạnh" (hoặc "−5 Sức mạnh"); 0 thì trả chuỗi rỗng.
+  U.gainText = (v, short) => (v > 0 ? '+' + v : v < 0 ? '−' + -v : '') + (v ? (short ? ' SM' : ' Sức mạnh') : '');
   const WHO_NAME = { ren: 'Ông Thợ Rèn', may: 'Cô Thợ May', xen: 'Bà Hàng Xén', do: 'Cụ Đồ', lai: 'Chú Lái Đò' };
   U.WHO_NAME = WHO_NAME;
 })();

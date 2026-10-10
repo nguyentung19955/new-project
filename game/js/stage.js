@@ -1013,15 +1013,26 @@
       ui.para(o.sub, x + 6, isW ? 162 : 160, 96, { size: 6.5, color: '#f0d9b0' });
     });
   }
-  function weaponLine(w, x, y, wd, sel) {
+  // Cắt một dòng chữ cho vừa bề rộng wd (thêm "…"). Đo bằng ui.font nên theo đúng sàn cỡ chữ (V25).
+  function cutLine(str, wd, size, bold) {
+    str = String(str);
+    ui.font(size, bold);
+    const c = G.ux;
+    if (c.measureText(str).width <= wd) return str;
+    let lo = 0, hi = str.length;
+    while (lo < hi) { const m = (lo + hi + 1) >> 1; if (c.measureText(str.slice(0, m) + '…').width <= wd) lo = m; else hi = m - 1; }
+    return str.slice(0, lo).trimEnd() + '…';
+  }
+  // rightPad: chừa chỗ bên phải dòng tên (lò rèn ghi "đang mang" ở đó)
+  function weaponLine(w, x, y, wd, sel, rightPad) {
     const mi = markInfo(w);
     const rar = G.RARITY[G.wRar(w)];
     G.theme.inset(x, y, wd, 22, sel);
     // ô hình vũ khí: viền mang màu bậc
     G.theme.slot(x + 2, y + 1, 20, G.wRar(w));
     G.art.weaponIcon(G.ux, w, x + 12, y + 11, 17);
-    ui.text(G.wName(w), x + 26, y + 9.5, { size: 7.5, bold: true, color: rar.col });
-    ui.text(mi.txt, x + 26, y + 18.5, { size: 6.5, color: mi.col === '#666' ? '#a9c2b4' : mi.col });
+    ui.text(cutLine(G.wName(w), wd - 30 - (rightPad || 0), 7.5, true), x + 26, y + 9.5, { size: 7.5, bold: true, color: rar.col });
+    ui.text(cutLine(mi.txt, wd - 30, 6.5), x + 26, y + 18.5, { size: 6.5, color: mi.col === '#666' ? '#a9c2b4' : mi.col });
     return G.click && G.inRect(G.click, x, y, wd, 22);
   }
   G.weaponLine = weaponLine;
@@ -1122,13 +1133,14 @@
       y += 2;
     }
     if (!R.win && !S.quit && R.tips) { panelLose(R); return; }
+    if (R.v18 === undefined) goldKeepHint(R);
     // Phần thưởng: chữ ở cột trái; vũ khí nhận được thành thẻ viền màu bậc ở cột phải (khung thẻ của chủ đề trống đồng).
     const TH = G.theme, texts = R.lines.filter((l) => !l.w), weps = R.lines.filter((l) => l.w);
     // Khối linh khí (js/linhkhi.js) nằm sát trên hàng nút: mỗi vũ khí đang mang một dòng. Phần thưởng xếp phía trên khối này.
     const lkN = G.lk && S.P ? S.P.weapons.length : 0, lkTop = lkN ? (!R.win && !S.quit ? 186 : 213) - (11 + lkN * 21) : 0;
     const lim = lkN ? lkTop - 3 : 208;
     const rows = Math.max(1, Math.floor((lim - y) / 11.5));
-    const line = (l, cx, cy) => ui.text(l, cx, cy, { size: 7.5, color: l.includes('lên cấp') || l.includes('Cứu được') || l.includes('Kỷ lục') ? '#ffd27a' : '#e8dfcc' });
+    const line = (l, cx, cy) => ui.text(l, cx, cy, { size: 7.5, color: l.includes('lên cấp') || l.includes('Cứu được') || l.includes('Kỷ lục') || (R.v18 && R.v18.includes(l)) ? '#ffd27a' : '#e8dfcc' });
     texts.slice(0, rows).forEach((l, i) => line(l, 86, y + i * 11.5));
     let ry = y - 9;
     // ít vũ khí thì thẻ cao hai dòng; nhiều thì thẻ thấp lại một dòng để món nào cũng có hình
@@ -1141,11 +1153,18 @@
       if (pitch >= 22) {
         TH.slot(247, ry + 2, 20, rar);
         G.art.weaponIcon(G.ux, l.w, 257, ry + 12, 16);
-        ui.text((k > 0 ? l.s.slice(0, k).trim().replace(/:$/, '') : 'Nhận được') + ' · bậc ' + G.RARITY[rar].name, 271, ry + 9.5, { size: 6.5, color: '#a9c2b4' });
+        // V26: ▲/▼ so với vũ khí đang mang (Sức mạnh nếu mang món này thay một ô; món đang mang rồi thì không ghi)
+        const cmp = cmpMark(l.w), cw = cmp ? cutLine(cmp.s, 50, 6.5, true) : '';
+        if (cmp) { ui.font(6.5, true); }
+        const cmpW = cmp ? G.ux.measureText(cw).width + 3 : 0;
+        ui.text(cutLine((k > 0 ? l.s.slice(0, k).trim().replace(/:$/, '') : 'Nhận được') + ' · bậc ' + G.RARITY[rar].name, 121 - cmpW, 6.5), 271, ry + 9.5, { size: 6.5, color: '#a9c2b4' });
+        if (cmp) ui.text(cw, 392, ry + 9.5, { size: 6.5, bold: true, align: 'right', color: cmp.up ? '#9be07a' : '#ff9a5a' });
         ui.text(cut(nm, 118, 7.5), 271, ry + 19.5, { size: 7.5, bold: true, color: G.RARITY[rar].col });
       } else {
         G.art.weaponIcon(G.ux, l.w, 254, ry + h / 2, Math.min(12, h - 2));
-        ui.text(cut(nm, 128, 7), 263, ry + h / 2 + 2.6, { size: 7, bold: true, color: G.RARITY[rar].col });
+        const cmp = cmpMark(l.w);
+        if (cmp) ui.text(cmp.up ? '▲' : '▼', 392, ry + h / 2 + 2.6, { size: 7, bold: true, align: 'right', color: cmp.up ? '#9be07a' : '#ff9a5a' });
+        ui.text(cut(nm, cmp ? 116 : 128, 7), 263, ry + h / 2 + 2.6, { size: 7, bold: true, color: G.RARITY[rar].col });
       }
       ry += pitch;
     });
@@ -1164,6 +1183,108 @@
     if (ui.btn(86, 216, 140, 26, 'Về làng')) { S = null; G.setScene(G.Village); return; }
     if (ui.btn(254, 216, 140, 26, R.win ? 'Chơi lại ải này' : 'Thử lại')) G.startStage(S.r, S.i, S.diff);
   }
+  // V26: thẻ vũ khí ở màn kết quả: ▲ nếu mang món này thay một ô đang mang thì Sức mạnh tăng, ▼ nếu ô nào cũng giảm.
+  function cmpMark(w) {
+    const sv = G.save, U = G.upg;
+    if (!w || !U || !U.swapGain || !sv.carry || sv.carry.includes(w.id) || !G.weaponById(w.id)) return null;
+    let best = null;
+    for (let slot = 0; slot < sv.carry.length; slot++) { const g = U.swapGain(w, slot, sv); if (best == null || g > best) best = g; }
+    if (!best) return null;
+    return { up: best > 0, s: (best > 0 ? '▲ ' : '▼ ') + U.gainText(best, true) };
+  }
+  // V18 bước 1: trùm rơi món Vàng mà món đang mang (chưa Vàng) đã có linh khí → nhắc luyện món cũ lên Vàng ở Thợ Rèn để giữ linh khí.
+  // Tính một lần, thêm vài dòng lên đầu phần thưởng (R.v18 giữ các dòng đó để tô vàng).
+  function goldKeepHint(R) {
+    R.v18 = null;
+    try {
+      const sv = G.save;
+      if (!R.win || !R.lines.some((l) => l && l.w && G.wRar(l.w) === 3)) return;
+      let best = null, bm = 0;
+      for (const id of sv.carry) {
+        const w = G.weaponById(id);
+        if (!w || G.wRar(w) >= 3) continue;
+        const m = Object.values(w.marks || {}).reduce((a, b) => a + (+b || 0), 0);
+        if (m > bm) { bm = m; best = w; }
+      }
+      if (!best || bm < 1) return;
+      const msg = 'Món cũ ' + G.wName(best) + ' có ' + Math.floor(bm) + ' linh khí: luyện nó lên Vàng ở Thợ Rèn để giữ (đổi sang món mới thì linh khí không theo sang).';
+      R.v18 = ui.wrap(msg, 154, 7.5).slice(0, 3);
+      R.lines.unshift(...R.v18);
+    } catch (e) { R.v18 = null; }
+  }
+  // V17: VÌ SAO THUA. Đọc máu mất theo nguồn (W.hurtBy) và đòn cuối (W.lastHurt) do js/combat.js ghi; tên chiêu trùm b.skillName (js/boss.js).
+  // Chưa có số liệu (bản cũ, hay khoá khác tên) thì bỏ qua, bảng thua giữ như trước. Không bao giờ được làm lỗi bảng thua.
+  const HURT = { // tên nguồn và một mẹo cố định cho nguồn đó
+    spiky: ['Gai', 'Gai đang dựng gai thì đừng chém: đứng xa chờ gai bay qua rồi hãy đánh.'],
+    archer: ['Xạ thủ', 'Hạ Xạ thủ trước, và đi vòng chứ đừng đứng yên một chỗ.'],
+    kami: ['Cảm tử', 'Cảm tử lao tới rồi nổ: thấy vòng đỏ quanh nó là lăn né ra xa.'],
+    bomber: ['Đặt bom', 'Bom có vòng báo trước: bước ra khỏi vòng rồi mới đánh tiếp.'],
+    nimble: ['Nhanh nhẹn', 'Nhanh nhẹn lặn rồi trồi sau lưng: thấy vòng đỏ dưới chân thì né.'],
+    shield: ['Khiên', 'Khiên đỡ đòn phía trước: vòng ra sau lưng nó mà đánh.'],
+    swarm: ['Bầy nhỏ', 'Bầy nhỏ đông: vừa đánh vừa lùi, đừng để bị vây.'],
+    rusher: ['Lính xông', 'Lính xông lao thẳng tới: né sang bên rồi đánh vào lưng.'],
+    elite: ['Tinh anh', 'Tinh anh đánh đau: đánh vài đòn rồi lăn né, đừng đứng đỡ.'],
+    mini: ['Trùm nhỏ', 'Trùm nhỏ ra đòn có báo trước: thấy là lăn né rồi mới đánh.'],
+    boss: ['Đòn trùm', 'Trùm ra chiêu có báo trước: thấy là lăn né, đừng tham đánh thêm.'],
+    zone: ['Vùng đỏ của trùm', 'Vùng đỏ dưới đất sắp nổ: ra khỏi vùng đỏ trước rồi mới đánh.'],
+    dot: ['Cháy, độc', 'Đang cháy hay trúng độc thì đừng đứng yên, máu thấp thì uống bình máu sớm.'],
+    other: ['Đòn khác', 'Lăn né đúng lúc thì không bị trúng đòn: né khi thấy báo trước.'],
+  };
+  const HURT_ALIAS = { gai: 'spiky', xathu: 'archer', camtu: 'kami', datbom: 'bomber', bom: 'bomber', bomb: 'bomber', khien: 'shield', bay: 'swarm', bayn: 'swarm',
+    tinhanh: 'elite', trumnho: 'mini', minis: 'mini', trum: 'boss', bosshit: 'boss', bossskill: 'boss', bossmelee: 'boss', bossatk: 'boss', bossshot: 'boss',
+    bosszone: 'zone', bossarea: 'zone', bossvung: 'zone', area: 'zone', vung: 'zone', vungdo: 'zone', fire: 'dot', poison: 'dot', burn: 'dot', dots: 'dot', chay: 'dot', doc: 'dot' };
+  function hurtKey(k) {
+    const s = String(k);
+    if (HURT[s]) return s;
+    const lo = s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/[^a-z]/g, '');
+    if (HURT[lo]) return lo;
+    if (HURT_ALIAS[lo]) return HURT_ALIAS[lo];
+    if (G.ROLES && G.ROLES[s]) return s;
+    if (/zone|area|vung/.test(lo)) return 'zone';
+    if (/^boss|^trum/.test(lo)) return 'boss';
+    return s;
+  }
+  function hurtInfo(k) {
+    const key = hurtKey(k);
+    if (HURT[key]) return { key, name: HURT[key][0], tip: HURT[key][1] };
+    if (G.ROLES && G.ROLES[key]) return { key, name: G.ROLES[key].name, tip: HURT.other[1] };
+    if (/[^\x00-\x7f]| /.test(key)) return { key, name: key, tip: HURT.other[1] }; // khoá đã là tên tiếng Việt
+    return { key: 'other', name: HURT.other[0], tip: HURT.other[1] };
+  }
+  const hurtAmt = (v) => (typeof v === 'number' ? v : v && typeof v === 'object' ? +(v.amt != null ? v.amt : v.hp != null ? v.hp : v.dmg != null ? v.dmg : v.v != null ? v.v : v.n) || 0 : 0);
+  function loseWhy() {
+    const W = S.W, b = W && W.boss, out = { most: null, pct: 0, last: null, boss: null };
+    // 1. Máu mất theo nguồn: cộng ở phòng đang đứng và các phòng đã qua (mỗi bảng đếm chỉ cộng một lần)
+    const tot = {}, seen = new Set();
+    const add = (o) => {
+      if (!o || typeof o !== 'object' || seen.has(o)) return;
+      seen.add(o);
+      for (const k in o) { const a = hurtAmt(o[k]); if (a > 0 && isFinite(a)) { const q = hurtInfo(k).name; tot[q] = (tot[q] || 0) + a; tot['\u0000' + q] = hurtInfo(k).tip; } }
+    };
+    add(S.hurtBy);
+    if (W) add(W.hurtBy);
+    if (S.worlds) for (const id in S.worlds) add(S.worlds[id] && S.worlds[id].hurtBy);
+    let sum = 0;
+    for (const q in tot) if (q[0] !== '\u0000') { sum += tot[q]; if (!out.most || tot[q] > tot[out.most]) out.most = q; }
+    if (out.most && sum > 0) { out.pct = Math.round((tot[out.most] / sum) * 100); out.tip = tot['\u0000' + out.most]; } else out.most = null;
+    // 2. Đòn cuối hạ bé
+    const lh = (W && W.lastHurt) || S.lastHurt;
+    if (lh) {
+      let nm = null, key = null;
+      if (typeof lh === 'string') nm = lh;
+      else if (typeof lh === 'object') { nm = lh.name || lh.skill || lh.skillName || null; key = lh.src || lh.kind || lh.key || lh.role || lh.type || null; if (typeof key !== 'string') key = null; }
+      if (!nm && key) { const hi = hurtInfo(key); if ((hi.key === 'boss' || hi.key === 'zone') && b && b.skillName) nm = b.skillName; else nm = hi.name; }
+      if (typeof nm === 'string' && nm) out.last = nm;
+    }
+    // 3. Thua ở phòng trùm: trùm kháng gì, yếu gì, đã học gì (như hàng chip dưới tên trùm)
+    if (b && !b.dead) {
+      const parts = [];
+      for (const l of b.layers || []) parts.push(l.type === 'resist' ? 'kháng ' + G.EL[l.el].name : G.layerText(l));
+      if (b.weak && b.weak.length) parts.push('yếu ' + b.weak.map((e) => G.EL[e].name).join(', '));
+      if (parts.length) out.boss = (b.name ? b.name + ': ' : 'Trùm: ') + parts.join(', ');
+    }
+    return out.most || out.last || out.boss ? out : null;
+  }
   // BẢNG THUA: không có "thua nhiều thì mạnh thêm". Bảng chỉ rõ nên cày gì: Sức mạnh hiện tại so với khuyên dùng, rồi 2-3 gợi ý
   // nâng cấp cụ thể (G.upgradeTips, js/upgrade.js). Bấm một gợi ý thì về làng và mở thẳng bảng của người làng làm việc đó.
   function panelLose(R) {
@@ -1177,12 +1298,25 @@
     const pw = T2.power, rec = T2.rec, col = G.powerCol(pw, rec);
     ui.text('Sức mạnh ' + pw + ' / khuyên dùng ' + rec + (pw < rec ? ' · còn thiếu ' + (rec - pw) : ' · đủ sức, thử lại né kỹ hơn nhé'), W0, 65, { size: 8, bold: true, color: col });
     ui.bar(W0, 69, 308, 3, G.clamp(pw / rec, 0, 1), col);
-    ui.text(T2.tips.length ? 'Nên cày gì (bấm để tới chỗ người làng):' : 'Đã nâng cấp hết mức hiện có: chơi lại ải cũ để lên cấp.', W0, 82, { size: 7, bold: true, color: '#f6dc92' });
-    T2.tips.forEach((t, k) => {
-      const y = 86 + k * 23, h = 21;
+    // V17: vì sao thua (tối đa 3 dòng); có thì bớt một gợi ý nâng cấp cho vừa bảng. Không có số liệu: bảng như cũ.
+    if (R.why === undefined) { try { R.why = loseWhy(); } catch (e) { R.why = null; } }
+    const why = R.why, wl = [];
+    if (why) {
+      const gv = why.last ? ' · gục vì: ' + why.last : '';
+      if (why.most) {
+        wl.push(['Mất máu nhiều nhất: ' + why.most + ' (' + why.pct + '%)' + gv, '#ff9a7a', true]);
+        wl.push(['Mẹo: ' + why.tip, '#d9cdb8', false]);
+      } else if (gv) wl.push(['Bé gục vì: ' + why.last, '#ff9a7a', true]);
+      if (why.boss) wl.push([why.boss, '#f6dc92', false]);
+    }
+    wl.forEach((q, i) => ui.text(cutLine(q[0], 308, 7.5, q[2]), W0, 78 + i * 10, { size: 7.5, bold: q[2], color: q[1] }));
+    const tips = wl.length ? T2.tips.slice(0, 2) : T2.tips, hy = wl.length ? 80 + wl.length * 10 : 82, ty = hy + 4;
+    ui.text(tips.length ? 'Nên cày gì (bấm để tới chỗ người làng):' : 'Đã nâng cấp hết mức hiện có: chơi lại ải cũ để lên cấp.', W0, hy, { size: 7, bold: true, color: '#f6dc92' });
+    tips.forEach((t, k) => {
+      const y = ty + k * 23, h = 21;
       ui.rect(W0, y, 308, h, t.ok ? 'rgba(60,110,60,0.45)' : 'rgba(30,48,46,0.85)', t.ok ? '#8fd07a' : '#5f7a74');
       const hit = G.click && G.inRect(G.click, W0, y, 308, h);
-      ui.text((k + 1) + '. ' + t.text, W0 + 5, y + 8.5, { size: 7.5, bold: true, color: '#fff0c4' });
+      ui.text(cutLine((k + 1) + '. ' + t.text, 236, 7.5, true), W0 + 5, y + 8.5, { size: 7.5, bold: true, color: '#fff0c4' });
       ui.text(t.gain > 0 ? '+' + t.gain + ' sức mạnh' : 'không tốn gì', W0 + 302, y + 8.5, { size: 7, bold: true, align: 'right', color: '#9be07a' });
       const sl = ui.wrap(t.sub, 270, 6.5, true);
       ui.text(sl[0] + (sl.length > 1 ? '…' : ''), W0 + 12, y + 17.5, { size: 6.5, color: t.ok ? '#c8f0b0' : '#d9cdb8' });
@@ -1192,7 +1326,7 @@
     if (!S) return;
     // khối linh khí của từng vũ khí (js/linhkhi.js) nằm dưới các gợi ý
     const lkN = G.lk && S.P ? S.P.weapons.length : 0;
-    if (lkN) G.lk.resultBlock(S, 84, Math.max(86 + T2.tips.length * 23 + 2, 213 - (11 + lkN * 21)), 312);
+    if (lkN) G.lk.resultBlock(S, 84, Math.max(ty + tips.length * 23 + 2, 213 - (11 + lkN * 21)), 312);
     if (ui.btn(86, 216, 140, 26, 'Về làng')) { S = null; G.setScene(G.Village); return; }
     if (ui.btn(254, 216, 140, 26, 'Thử lại')) G.startStage(S.r, S.i, S.diff);
   }
