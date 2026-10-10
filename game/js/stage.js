@@ -674,7 +674,7 @@
       const sv = G.save;
       if (sv.tut && !sv.tut.potion && !G.noRender && !W.banner && P.potions > 0 && !W.noPotion && !P.dead && P.hp < P.maxhp * 0.4) {
         sv.tut.potion = 1;
-        W.banner = { s: 'Máu thấp! Chạm ô Bình máu (góc trên bên trái) để hồi 30% máu.', col: '#ffb0a0', t: 5, tip: true };
+        W.banner = { s: 'Máu thấp! Chạm ô Bình máu (góc trên bên trái) để hồi 30% máu.', col: '#ffb0a0', t: 5, tip: true, urgent: true };
       }
       pickLoot(W, P); // đồ rơi trên sàn (sau trùm, tinh anh, quái): đi lại gần là nhặt
       // bước vào cửa đang mở thì sang phòng kề (phòng trùm: chỉ sau khi đã thắng)
@@ -869,7 +869,7 @@
     // Dòng mẹo (cách đánh của vũ khí, mẹo nút Chưởng: W.banner.tip) cũng nằm ở lề trái dưới lời chỉ dẫn, không đè tường và cửa phía trên.
     let tipB = W.banner && W.banner.tip ? W.banner : null;
     // Phòng đầu ải hướng dẫn chỉ một ô chữ: mẹo vũ khí chờ (không đếm giờ), sang phòng kế mới hiện.
-    if (tipB && hint && S.tut && W.type === 'start') { tipB.t = Math.max(tipB.t, 5); S.heldTip = tipB; tipB = null; }
+    if (tipB && !tipB.urgent && hint && S.tut && W.type === 'start') { tipB.t = Math.max(tipB.t, 5); S.heldTip = tipB; tipB = null; }
     if (S.mode === 'play' && (hint || tipB)) {
       const hw = W.geo.big ? 64 : 118; // phòng trùm rộng hơn nên ô chữ hẹp lại, không đè lên sàn
       let hy = W.geo.big ? 100 : 93;

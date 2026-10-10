@@ -214,7 +214,7 @@ JS = r"""
   ok('Bùa cũ ghi thẳng vào bản lưu sau khi nạp vẫn được chuyển và có tác dụng', P.charm === 'c_greed' && O.worn(G.save, 'hand').k === 'bua_tham');
   G.botInput = null;
   // ----- 8. làng: dấu chấm than, bảng Cô Thợ May vẽ được mọi thẻ, em bé mặc đúng đồ -----
-  G.testSave({}); G.setScene(G.Village);
+  G.testSave({}); G.save.stars = { '0-0': 3, '0-1': 3 }; G.setScene(G.Village); // qua 2 ải: hết luật "người mới chỉ một chấm đỏ" (village_scene.js checkNews)
   const VS = G.villageScene, VA = G.villageApi;
   VS.checkNews(); const nw0 = !!VS.state.news.may;
   O.add(G.save, 'mu_rom', 0); VS.checkNews();
