@@ -522,10 +522,15 @@ async function napCoSan() {
       const t = await r.text(), a = t.indexOf(DAU_DO); if (a < 0) continue;
       const b0 = a + DAU_DO.length; let b = t.indexOf(';\n// =====', b0); if (b < 0) b = t.indexOf(';\n', b0); if (b < 0) continue;
       const ds = JSON.parse(t.slice(b0, b).replace(/<\\!--/g, '<!--'));
-      let n = 0, v = 0;
+      let n = 0, v = 0, th = 0;
       for (const d of ds) if (d && (d.doi_tuong === 'trang-phuc' || d.doi_tuong === 'vu-khi')) { const co = !!MON[d.ma]; nhanTep(d, d.ma, true); if (!co && MON[d.ma]) { if (d.doi_tuong === 'vu-khi') v++; else n++; } }
+      // Thân em bé AI đang có trong game (em-be-<key>): nạp sẵn như thả tệp, trừ khi người dùng đã thả bản khác
+      const keyCu = S.key, thanCu = S.than;
+      for (const d of ds) if (d && d.doi_tuong === 'em-be') { const m = String(d.ma || '').match(/^em-be-(smith|hunter|healer|wrestler)$/); if (m && !THAN[m[1]]) { nhanTep(d, d.ma, true); th++; } }
+      S.key = keyCu; S.than = THAN[keyCu] ? (thanCu === 'code' && th === 0 ? 'code' : 'ai') : 'code';
       coSanXong = true;
-      $('ttCoSan').innerHTML = '✔ Đã có sẵn <b>' + n + '</b> món trang phục ảnh AI và <b>' + v + '</b> vũ khí ảnh AI của game, cùng mọi đồ vẽ bằng code. Thả tệp ở trên để thêm món mới hoặc thay món có sẵn.';
+      $('ttCoSan').innerHTML = '✔ Đã có sẵn <b>' + th + '</b> thân em bé AI, <b>' + n + '</b> món trang phục ảnh AI và <b>' + v + '</b> vũ khí ảnh AI của game, cùng mọi đồ vẽ bằng code. Thả tệp ở trên để thêm món mới hoặc thay món có sẵn.';
+      try { capNhatThan(); capNhatMoi(); dungDongTac(); } catch (e) { /* chưa dựng xong giao diện */ }
       sauKhiCoDo(); return;
     } catch (e) { /* thử nguồn sau */ }
   }
