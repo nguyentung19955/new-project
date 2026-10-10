@@ -812,8 +812,8 @@ function chay() {
     : 'Tự nhìn: người làng quay mặt sang PHẢI (hoặc nhìn thẳng), đủ hai động tác đứng thở và nói chuyện.';
   $('dsKiem').innerHTML = muc.map(([t, ok]) => `<li class="${ok ? '' : 'loi'}">${t}</li>`).join('') + `<li class="ghi">${nhin} Nếu ảnh gốc quay trái thì tích ô "Lật ngang" ở bước 2.</li>`;
   $('theKq').className = 'the ' + (KQ.dat ? 'dat' : 'hong'); $('theKq').textContent = KQ.dat ? 'ĐẠT' : 'CÓ LỖI';
-  $('huongDan').textContent = KQ.dat ? 'Gửi file ' + Q.ma + '.sprite.json cho Claude để đưa vào game.' : 'Còn lỗi: thử đổi "Cách tách", cắt bớt ở bước 2, chạm bỏ khung thừa, hoặc nhờ ChatGPT vẽ lại cho đủ số hình mỗi hàng.';
-  $('nutTaiJson').textContent = 'Tải ' + Q.ma + '.sprite.json';
+  $('huongDan').textContent = KQ.dat ? 'Gửi tệp ' + Q.ma + '_2-ban.zip cho Claude để đưa vào game.' : 'Còn lỗi: thử đổi "Cách tách", cắt bớt ở bước 2, chạm bỏ khung thừa, hoặc nhờ ChatGPT vẽ lại cho đủ số hình mỗi hàng.';
+  $('nutTaiJson').textContent = 'Tải ' + Q.ma + ' (2 bản: gấp đôi + thường)';
   $('dangCho').textContent = Q.ten + ' (' + Q.ma + ')';
   veTam();
   if (Q.loai === 'em-be' && !NEO_TAY) tuKhop();
@@ -1013,12 +1013,32 @@ hienNV();
 // ===================== TẢI VỀ =====================
 function taiXuong(ten, blob) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = ten; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); }
 $('nutTaiPng').onclick = () => canvasTam && canvasTam.toBlob(b => taiXuong(Q.ma + '.png', b), 'image/png');
-$('nutTaiJson').onclick = () => {
+function taoTep() { const tep = tepEmBe(); if (Q.loai === 'em-be') tep.neo = neoJson(); return tep; }
+function napZip() {
+  if (window.JSZip) return Promise.resolve(window.JSZip);
+  return new Promise((ok, no) => { const s = document.createElement('script'); s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'; s.onload = () => (window.JSZip ? ok(window.JSZip) : no()); s.onerror = no; document.head.appendChild(s); });
+}
+// Tải 2 bản trong 1 tệp .zip: <mã>.sprite.json (nét gấp đôi) và <mã>.thuong.sprite.json (nét thường, như cũ). Điểm neo giữ nguyên ở cả hai bản.
+$('nutTaiJson').onclick = async () => {
   if (!canvasTam) return;
-  const tep = tepEmBe();
-  if (Q.loai === 'em-be') tep.neo = neoJson();
-  taiXuong(Q.ma + '.sprite.json', new Blob([JSON.stringify(tep)], { type: 'application/json' }));
-  bao('Đã tải ' + Q.ma + '.sprite.json, gửi file này cho Claude');
+  const netCu = $('heNet').value, mauCu = $('soMau').value, neoCu = JSON.parse(JSON.stringify(NEO)), tayCu = NEO_TAY, banDau = taoTep();
+  let gapDoi = banDau, thuong = banDau;
+  try {
+    if (+netCu === 2) { $('heNet').value = '1'; $('soMau').value = '32'; NEO_TAY = true; chay(); NEO = JSON.parse(JSON.stringify(neoCu)); thuong = taoTep(); }
+    else { $('heNet').value = '2'; $('soMau').value = '48'; NEO_TAY = true; chay(); NEO = JSON.parse(JSON.stringify(neoCu)); gapDoi = taoTep(); }
+  } finally { $('heNet').value = netCu; $('soMau').value = mauCu; NEO_TAY = true; chay(); NEO = neoCu; NEO_TAY = tayCu; if (typeof hienNeo === 'function') hienNeo(); if (typeof capNeo === 'function') capNeo(); }
+  const json = t => new Blob([JSON.stringify(t)], { type: 'application/json' });
+  try {
+    const Z = await napZip(), z = new Z();
+    z.file(Q.ma + '.sprite.json', JSON.stringify(gapDoi));
+    z.file(Q.ma + '.thuong.sprite.json', JSON.stringify(thuong));
+    taiXuong(Q.ma + '_2-ban.zip', await z.generateAsync({ type: 'blob' }));
+    bao('Đã tải ' + Q.ma + '_2-ban.zip (bản nét gấp đôi + bản thường), gửi tệp này cho Claude');
+  } catch (e) {
+    taiXuong(Q.ma + '.sprite.json', json(gapDoi));
+    setTimeout(() => taiXuong(Q.ma + '.thuong.sprite.json', json(thuong)), 800);
+    bao('Đã tải 2 tệp ' + Q.ma + '.sprite.json (gấp đôi) và ' + Q.ma + '.thuong.sprite.json (thường), gửi cả hai cho Claude');
+  }
 };
 </script>
 </body>
