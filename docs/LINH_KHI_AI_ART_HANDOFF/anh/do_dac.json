@@ -1,0 +1,3942 @@
+{
+ "ghi_chu": "Số đo bằng cách vẽ hàm thật của game lên canvas trong suốt và đếm điểm ảnh có alpha>8. Đơn vị: điểm ảnh thế giới (1 px = 1 px của lớp 480x270).",
+ "em_be": {
+  "o_ve": {
+   "rong": 96,
+   "cao": 80,
+   "goc_chan_x": 44,
+   "goc_chan_y": 66
+  },
+  "smith": {
+   "ten": "Thợ Rèn",
+   "hop_bao_idle_khung0": {
+    "x0": 34,
+    "y0": 36,
+    "x1": 52,
+    "y1": 66,
+    "w": 19,
+    "h": 31
+   },
+   "mau_chinh_idle": [
+    "#1b1118",
+    "#d2362e",
+    "#8c1c1f",
+    "#f6f0e2",
+    "#f47a62",
+    "#f8f1e1",
+    "#c9c0ae",
+    "#f6957d",
+    "#5f6b84",
+    "#a54c49",
+    "#5a3822",
+    "#2a2230"
+   ],
+   "hang": [
+    {
+     "hang": 0,
+     "nhan": "dung_yen (idle, tay không)",
+     "anim": "idle",
+     "vu_khi": null,
+     "so_khung": 8,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -10,
+      "tren": -30,
+      "phai": 8,
+      "duoi": 0,
+      "rong": 19,
+      "cao": 31
+     }
+    },
+    {
+     "hang": 1,
+     "nhan": "chay (run, tay không)",
+     "anim": "run",
+     "vu_khi": null,
+     "so_khung": 8,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -8,
+      "tren": -33,
+      "phai": 12,
+      "duoi": 1,
+      "rong": 21,
+      "cao": 35
+     }
+    },
+    {
+     "hang": 2,
+     "nhan": "dung_yen cầm kiếm",
+     "anim": "idle",
+     "vu_khi": "sword",
+     "so_khung": 8,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -10,
+      "tren": -47,
+      "phai": 20,
+      "duoi": 2,
+      "rong": 31,
+      "cao": 50
+     }
+    },
+    {
+     "hang": 3,
+     "nhan": "danh kiếm combo 1",
+     "anim": "atk",
+     "vu_khi": "sword",
+     "so_khung": 10,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -28,
+      "tren": -56,
+      "phai": 49,
+      "duoi": 4,
+      "rong": 78,
+      "cao": 61
+     }
+    },
+    {
+     "hang": 4,
+     "nhan": "danh kiếm combo 3",
+     "anim": "atk",
+     "vu_khi": "sword",
+     "so_khung": 10,
+     "bien_the": 2,
+     "hop_bao_tu_chan": {
+      "trai": -38,
+      "tren": -58,
+      "phai": 48,
+      "duoi": 12,
+      "rong": 87,
+      "cao": 71
+     }
+    },
+    {
+     "hang": 5,
+     "nhan": "danh giáo",
+     "anim": "atk",
+     "vu_khi": "spear",
+     "so_khung": 10,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -21,
+      "tren": -31,
+      "phai": 51,
+      "duoi": 0,
+      "rong": 73,
+      "cao": 32
+     }
+    },
+    {
+     "hang": 6,
+     "nhan": "danh búa",
+     "anim": "atk",
+     "vu_khi": "hammer",
+     "so_khung": 14,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -31,
+      "tren": -64,
+      "phai": 42,
+      "duoi": 5,
+      "rong": 74,
+      "cao": 70
+     }
+    },
+    {
+     "hang": 7,
+     "nhan": "bắn cung (ngắm ngang)",
+     "anim": "atk",
+     "vu_khi": "bow",
+     "so_khung": 12,
+     "bien_the": 6,
+     "hop_bao_tu_chan": {
+      "trai": -13,
+      "tren": -38,
+      "phai": 31,
+      "duoi": 0,
+      "rong": 45,
+      "cao": 39
+     }
+    },
+    {
+     "hang": 8,
+     "nhan": "lộn né (dodge, ngang)",
+     "anim": "dodge",
+     "vu_khi": "sword",
+     "so_khung": 8,
+     "bien_the": 2,
+     "hop_bao_tu_chan": {
+      "trai": -19,
+      "tren": -32,
+      "phai": 40,
+      "duoi": 3,
+      "rong": 60,
+      "cao": 36
+     }
+    },
+    {
+     "hang": 9,
+     "nhan": "trúng đòn (hurt)",
+     "anim": "hurt",
+     "vu_khi": "sword",
+     "so_khung": 1,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -13,
+      "tren": -48,
+      "phai": 24,
+      "duoi": 1,
+      "rong": 38,
+      "cao": 50
+     }
+    },
+    {
+     "hang": 10,
+     "nhan": "ngã (die)",
+     "anim": "die",
+     "vu_khi": null,
+     "so_khung": 8,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -32,
+      "tren": -34,
+      "phai": 8,
+      "duoi": 2,
+      "rong": 41,
+      "cao": 37
+     }
+    }
+   ],
+   "so_cot": 14
+  },
+  "hunter": {
+   "ten": "Thợ Săn",
+   "hop_bao_idle_khung0": {
+    "x0": 31,
+    "y0": 34,
+    "x1": 52,
+    "y1": 66,
+    "w": 22,
+    "h": 33
+   },
+   "mau_chinh_idle": [
+    "#1b1118",
+    "#479544",
+    "#255a2c",
+    "#f6f0e2",
+    "#8a5a34",
+    "#8fd070",
+    "#a8d888",
+    "#5a3822",
+    "#557c53",
+    "#b78350",
+    "#f8f1e1",
+    "#c9c0ae"
+   ],
+   "hang": [
+    {
+     "hang": 0,
+     "nhan": "dung_yen (idle, tay không)",
+     "anim": "idle",
+     "vu_khi": null,
+     "so_khung": 8,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -13,
+      "tren": -32,
+      "phai": 8,
+      "duoi": 0,
+      "rong": 22,
+      "cao": 33
+     }
+    },
+    {
+     "hang": 1,
+     "nhan": "chay (run, tay không)",
+     "anim": "run",
+     "vu_khi": null,
+     "so_khung": 8,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -9,
+      "tren": -35,
+      "phai": 12,
+      "duoi": 1,
+      "rong": 22,
+      "cao": 37
+     }
+    },
+    {
+     "hang": 2,
+     "nhan": "dung_yen cầm kiếm",
+     "anim": "idle",
+     "vu_khi": "sword",
+     "so_khung": 8,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -13,
+      "tren": -47,
+      "phai": 20,
+      "duoi": 2,
+      "rong": 34,
+      "cao": 50
+     }
+    },
+    {
+     "hang": 3,
+     "nhan": "danh kiếm combo 1",
+     "anim": "atk",
+     "vu_khi": "sword",
+     "so_khung": 10,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -28,
+      "tren": -56,
+      "phai": 49,
+      "duoi": 4,
+      "rong": 78,
+      "cao": 61
+     }
+    },
+    {
+     "hang": 4,
+     "nhan": "danh kiếm combo 3",
+     "anim": "atk",
+     "vu_khi": "sword",
+     "so_khung": 10,
+     "bien_the": 2,
+     "hop_bao_tu_chan": {
+      "trai": -38,
+      "tren": -58,
+      "phai": 48,
+      "duoi": 12,
+      "rong": 87,
+      "cao": 71
+     }
+    },
+    {
+     "hang": 5,
+     "nhan": "danh giáo",
+     "anim": "atk",
+     "vu_khi": "spear",
+     "so_khung": 10,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -26,
+      "tren": -33,
+      "phai": 51,
+      "duoi": 0,
+      "rong": 78,
+      "cao": 34
+     }
+    },
+    {
+     "hang": 6,
+     "nhan": "danh búa",
+     "anim": "atk",
+     "vu_khi": "hammer",
+     "so_khung": 14,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -31,
+      "tren": -64,
+      "phai": 42,
+      "duoi": 5,
+      "rong": 74,
+      "cao": 70
+     }
+    },
+    {
+     "hang": 7,
+     "nhan": "bắn cung (ngắm ngang)",
+     "anim": "atk",
+     "vu_khi": "bow",
+     "so_khung": 12,
+     "bien_the": 6,
+     "hop_bao_tu_chan": {
+      "trai": -18,
+      "tren": -38,
+      "phai": 31,
+      "duoi": 0,
+      "rong": 50,
+      "cao": 39
+     }
+    },
+    {
+     "hang": 8,
+     "nhan": "lộn né (dodge, ngang)",
+     "anim": "dodge",
+     "vu_khi": "sword",
+     "so_khung": 8,
+     "bien_the": 2,
+     "hop_bao_tu_chan": {
+      "trai": -21,
+      "tren": -33,
+      "phai": 40,
+      "duoi": 4,
+      "rong": 62,
+      "cao": 38
+     }
+    },
+    {
+     "hang": 9,
+     "nhan": "trúng đòn (hurt)",
+     "anim": "hurt",
+     "vu_khi": "sword",
+     "so_khung": 1,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -19,
+      "tren": -48,
+      "phai": 24,
+      "duoi": 1,
+      "rong": 44,
+      "cao": 50
+     }
+    },
+    {
+     "hang": 10,
+     "nhan": "ngã (die)",
+     "anim": "die",
+     "vu_khi": null,
+     "so_khung": 8,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -34,
+      "tren": -35,
+      "phai": 8,
+      "duoi": 5,
+      "rong": 43,
+      "cao": 41
+     }
+    }
+   ],
+   "so_cot": 14
+  },
+  "healer": {
+   "ten": "Thầy Lang",
+   "hop_bao_idle_khung0": {
+    "x0": 29,
+    "y0": 35,
+    "x1": 52,
+    "y1": 66,
+    "w": 24,
+    "h": 32
+   },
+   "mau_chinh_idle": [
+    "#1b1118",
+    "#4468c0",
+    "#27407f",
+    "#f6f0e2",
+    "#e09c4a",
+    "#a8642a",
+    "#86a8f0",
+    "#a1b9ec",
+    "#92b0ee",
+    "#479544",
+    "#576894",
+    "#f8f1e1"
+   ],
+   "hang": [
+    {
+     "hang": 0,
+     "nhan": "dung_yen (idle, tay không)",
+     "anim": "idle",
+     "vu_khi": null,
+     "so_khung": 8,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -15,
+      "tren": -31,
+      "phai": 8,
+      "duoi": 0,
+      "rong": 24,
+      "cao": 32
+     }
+    },
+    {
+     "hang": 1,
+     "nhan": "chay (run, tay không)",
+     "anim": "run",
+     "vu_khi": null,
+     "so_khung": 8,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -12,
+      "tren": -33,
+      "phai": 12,
+      "duoi": 1,
+      "rong": 25,
+      "cao": 35
+     }
+    },
+    {
+     "hang": 2,
+     "nhan": "dung_yen cầm kiếm",
+     "anim": "idle",
+     "vu_khi": "sword",
+     "so_khung": 8,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -15,
+      "tren": -47,
+      "phai": 20,
+      "duoi": 2,
+      "rong": 36,
+      "cao": 50
+     }
+    },
+    {
+     "hang": 3,
+     "nhan": "danh kiếm combo 1",
+     "anim": "atk",
+     "vu_khi": "sword",
+     "so_khung": 10,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -28,
+      "tren": -56,
+      "phai": 49,
+      "duoi": 4,
+      "rong": 78,
+      "cao": 61
+     }
+    },
+    {
+     "hang": 4,
+     "nhan": "danh kiếm combo 3",
+     "anim": "atk",
+     "vu_khi": "sword",
+     "so_khung": 10,
+     "bien_the": 2,
+     "hop_bao_tu_chan": {
+      "trai": -38,
+      "tren": -58,
+      "phai": 48,
+      "duoi": 12,
+      "rong": 87,
+      "cao": 71
+     }
+    },
+    {
+     "hang": 5,
+     "nhan": "danh giáo",
+     "anim": "atk",
+     "vu_khi": "spear",
+     "so_khung": 10,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -27,
+      "tren": -37,
+      "phai": 51,
+      "duoi": 0,
+      "rong": 79,
+      "cao": 38
+     }
+    },
+    {
+     "hang": 6,
+     "nhan": "danh búa",
+     "anim": "atk",
+     "vu_khi": "hammer",
+     "so_khung": 14,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -31,
+      "tren": -64,
+      "phai": 42,
+      "duoi": 5,
+      "rong": 74,
+      "cao": 70
+     }
+    },
+    {
+     "hang": 7,
+     "nhan": "bắn cung (ngắm ngang)",
+     "anim": "atk",
+     "vu_khi": "bow",
+     "so_khung": 12,
+     "bien_the": 6,
+     "hop_bao_tu_chan": {
+      "trai": -20,
+      "tren": -38,
+      "phai": 31,
+      "duoi": 0,
+      "rong": 52,
+      "cao": 39
+     }
+    },
+    {
+     "hang": 8,
+     "nhan": "lộn né (dodge, ngang)",
+     "anim": "dodge",
+     "vu_khi": "sword",
+     "so_khung": 8,
+     "bien_the": 2,
+     "hop_bao_tu_chan": {
+      "trai": -20,
+      "tren": -41,
+      "phai": 40,
+      "duoi": 3,
+      "rong": 61,
+      "cao": 45
+     }
+    },
+    {
+     "hang": 9,
+     "nhan": "trúng đòn (hurt)",
+     "anim": "hurt",
+     "vu_khi": "sword",
+     "so_khung": 1,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -20,
+      "tren": -48,
+      "phai": 24,
+      "duoi": 1,
+      "rong": 45,
+      "cao": 50
+     }
+    },
+    {
+     "hang": 10,
+     "nhan": "ngã (die)",
+     "anim": "die",
+     "vu_khi": null,
+     "so_khung": 8,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -33,
+      "tren": -34,
+      "phai": 8,
+      "duoi": 7,
+      "rong": 42,
+      "cao": 42
+     }
+    }
+   ],
+   "so_cot": 14
+  },
+  "wrestler": {
+   "ten": "Đô Vật",
+   "hop_bao_idle_khung0": {
+    "x0": 33,
+    "y0": 38,
+    "x1": 52,
+    "y1": 66,
+    "w": 20,
+    "h": 29
+   },
+   "mau_chinh_idle": [
+    "#1b1118",
+    "#9a4a16",
+    "#dd7c2a",
+    "#f6f0e2",
+    "#8c1c1f",
+    "#f8b25c",
+    "#d2362e",
+    "#f5866e",
+    "#f47a62",
+    "#b07042",
+    "#c9c0ae",
+    "#2a2230"
+   ],
+   "hang": [
+    {
+     "hang": 0,
+     "nhan": "dung_yen (idle, tay không)",
+     "anim": "idle",
+     "vu_khi": null,
+     "so_khung": 8,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -11,
+      "tren": -28,
+      "phai": 8,
+      "duoi": 0,
+      "rong": 20,
+      "cao": 29
+     }
+    },
+    {
+     "hang": 1,
+     "nhan": "chay (run, tay không)",
+     "anim": "run",
+     "vu_khi": null,
+     "so_khung": 8,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -8,
+      "tren": -31,
+      "phai": 12,
+      "duoi": 1,
+      "rong": 21,
+      "cao": 33
+     }
+    },
+    {
+     "hang": 2,
+     "nhan": "dung_yen cầm kiếm",
+     "anim": "idle",
+     "vu_khi": "sword",
+     "so_khung": 8,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -11,
+      "tren": -47,
+      "phai": 20,
+      "duoi": 2,
+      "rong": 32,
+      "cao": 50
+     }
+    },
+    {
+     "hang": 3,
+     "nhan": "danh kiếm combo 1",
+     "anim": "atk",
+     "vu_khi": "sword",
+     "so_khung": 10,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -28,
+      "tren": -56,
+      "phai": 49,
+      "duoi": 4,
+      "rong": 78,
+      "cao": 61
+     }
+    },
+    {
+     "hang": 4,
+     "nhan": "danh kiếm combo 3",
+     "anim": "atk",
+     "vu_khi": "sword",
+     "so_khung": 10,
+     "bien_the": 2,
+     "hop_bao_tu_chan": {
+      "trai": -38,
+      "tren": -58,
+      "phai": 48,
+      "duoi": 12,
+      "rong": 87,
+      "cao": 71
+     }
+    },
+    {
+     "hang": 5,
+     "nhan": "danh giáo",
+     "anim": "atk",
+     "vu_khi": "spear",
+     "so_khung": 10,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -26,
+      "tren": -30,
+      "phai": 51,
+      "duoi": 0,
+      "rong": 78,
+      "cao": 31
+     }
+    },
+    {
+     "hang": 6,
+     "nhan": "danh búa",
+     "anim": "atk",
+     "vu_khi": "hammer",
+     "so_khung": 14,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -31,
+      "tren": -64,
+      "phai": 42,
+      "duoi": 5,
+      "rong": 74,
+      "cao": 70
+     }
+    },
+    {
+     "hang": 7,
+     "nhan": "bắn cung (ngắm ngang)",
+     "anim": "atk",
+     "vu_khi": "bow",
+     "so_khung": 12,
+     "bien_the": 6,
+     "hop_bao_tu_chan": {
+      "trai": -17,
+      "tren": -38,
+      "phai": 31,
+      "duoi": 0,
+      "rong": 49,
+      "cao": 39
+     }
+    },
+    {
+     "hang": 8,
+     "nhan": "lộn né (dodge, ngang)",
+     "anim": "dodge",
+     "vu_khi": "sword",
+     "so_khung": 8,
+     "bien_the": 2,
+     "hop_bao_tu_chan": {
+      "trai": -20,
+      "tren": -36,
+      "phai": 40,
+      "duoi": 6,
+      "rong": 61,
+      "cao": 43
+     }
+    },
+    {
+     "hang": 9,
+     "nhan": "trúng đòn (hurt)",
+     "anim": "hurt",
+     "vu_khi": "sword",
+     "so_khung": 1,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -18,
+      "tren": -48,
+      "phai": 24,
+      "duoi": 1,
+      "rong": 43,
+      "cao": 50
+     }
+    },
+    {
+     "hang": 10,
+     "nhan": "ngã (die)",
+     "anim": "die",
+     "vu_khi": null,
+     "so_khung": 8,
+     "bien_the": 0,
+     "hop_bao_tu_chan": {
+      "trai": -30,
+      "tren": -31,
+      "phai": 8,
+      "duoi": 3,
+      "rong": 39,
+      "cao": 35
+     }
+    }
+   ],
+   "so_cot": 14
+  }
+ },
+ "vu_khi": {
+  "o_ve": {
+   "rong": 96,
+   "cao": 56,
+   "diem_cam": [
+    24,
+    28
+   ],
+   "goc": 0
+  },
+  "dong": [
+   {
+    "loai": "sword",
+    "dong": 0,
+    "ten": "Kiếm Rèn",
+    "co_dung_nghi": {
+     "rong": 17,
+     "cao": 48,
+     "dai_than": 44
+    },
+    "mui_cach_diem_cam": 35,
+    "hop_bao_ngang": {
+     "x0": 17,
+     "y0": 19,
+     "x1": 60,
+     "y1": 37,
+     "w": 44,
+     "h": 19
+    }
+   },
+   {
+    "loai": "sword",
+    "dong": 1,
+    "ten": "Đao Lưỡi Liềm",
+    "co_dung_nghi": {
+     "rong": 28,
+     "cao": 43,
+     "dai_than": 43
+    },
+    "mui_cach_diem_cam": 34,
+    "hop_bao_ngang": {
+     "x0": 16,
+     "y0": 6,
+     "x1": 59,
+     "y1": 33,
+     "w": 44,
+     "h": 28
+    }
+   },
+   {
+    "loai": "sword",
+    "dong": 2,
+    "ten": "Kiếm Lá Lúa",
+    "co_dung_nghi": {
+     "rong": 20,
+     "cao": 45,
+     "dai_than": 45
+    },
+    "mui_cach_diem_cam": 36,
+    "hop_bao_ngang": {
+     "x0": 17,
+     "y0": 18,
+     "x1": 61,
+     "y1": 37,
+     "w": 45,
+     "h": 20
+    }
+   },
+   {
+    "loai": "sword",
+    "dong": 3,
+    "ten": "Gươm Rồng",
+    "co_dung_nghi": {
+     "rong": 24,
+     "cao": 46,
+     "dai_than": 46
+    },
+    "mui_cach_diem_cam": 35,
+    "hop_bao_ngang": {
+     "x0": 15,
+     "y0": 16,
+     "x1": 60,
+     "y1": 39,
+     "w": 46,
+     "h": 24
+    }
+   },
+   {
+    "loai": "sword",
+    "dong": 4,
+    "ten": "Mã Tấu",
+    "co_dung_nghi": {
+     "rong": 16,
+     "cao": 52,
+     "dai_than": 46
+    },
+    "mui_cach_diem_cam": 35,
+    "hop_bao_ngang": {
+     "x0": 15,
+     "y0": 21,
+     "x1": 60,
+     "y1": 37,
+     "w": 46,
+     "h": 17
+    }
+   },
+   {
+    "loai": "sword",
+    "dong": 5,
+    "ten": "Dao Rựa",
+    "co_dung_nghi": {
+     "rong": 17,
+     "cao": 47,
+     "dai_than": 47
+    },
+    "mui_cach_diem_cam": 37,
+    "hop_bao_ngang": {
+     "x0": 15,
+     "y0": 24,
+     "x1": 62,
+     "y1": 41,
+     "w": 48,
+     "h": 18
+    }
+   },
+   {
+    "loai": "sword",
+    "dong": 6,
+    "ten": "Kiếm Tre",
+    "co_dung_nghi": {
+     "rong": 21,
+     "cao": 44,
+     "dai_than": 44
+    },
+    "mui_cach_diem_cam": 36,
+    "hop_bao_ngang": {
+     "x0": 17,
+     "y0": 20,
+     "x1": 61,
+     "y1": 41,
+     "w": 45,
+     "h": 22
+    }
+   },
+   {
+    "loai": "sword",
+    "dong": 7,
+    "ten": "Đoản Kiếm Đông Sơn",
+    "co_dung_nghi": {
+     "rong": 21,
+     "cao": 47,
+     "dai_than": 47
+    },
+    "mui_cach_diem_cam": 36,
+    "hop_bao_ngang": {
+     "x0": 14,
+     "y0": 18,
+     "x1": 61,
+     "y1": 39,
+     "w": 48,
+     "h": 22
+    }
+   },
+   {
+    "loai": "sword",
+    "dong": 8,
+    "ten": "Đao Cá Chép",
+    "co_dung_nghi": {
+     "rong": 20,
+     "cao": 47,
+     "dai_than": 47
+    },
+    "mui_cach_diem_cam": 37,
+    "hop_bao_ngang": {
+     "x0": 16,
+     "y0": 18,
+     "x1": 62,
+     "y1": 38,
+     "w": 47,
+     "h": 21
+    }
+   },
+   {
+    "loai": "sword",
+    "dong": 9,
+    "ten": "Kiếm Sóng Nước",
+    "co_dung_nghi": {
+     "rong": 18,
+     "cao": 46,
+     "dai_than": 46
+    },
+    "mui_cach_diem_cam": 37,
+    "hop_bao_ngang": {
+     "x0": 17,
+     "y0": 20,
+     "x1": 62,
+     "y1": 37,
+     "w": 46,
+     "h": 18
+    }
+   },
+   {
+    "loai": "bow",
+    "dong": 0,
+    "ten": "Cung Rồng Rắn",
+    "co_dung_nghi": {
+     "rong": 22,
+     "cao": 38,
+     "dai_than": 38
+    },
+    "mui_cach_diem_cam": 9,
+    "hop_bao_ngang": {
+     "x0": 13,
+     "y0": 6,
+     "x1": 34,
+     "y1": 43,
+     "w": 22,
+     "h": 38
+    }
+   },
+   {
+    "loai": "bow",
+    "dong": 1,
+    "ten": "Nỏ Thần",
+    "co_dung_nghi": {
+     "rong": 31,
+     "cao": 37,
+     "dai_than": 37
+    },
+    "mui_cach_diem_cam": 16,
+    "hop_bao_ngang": {
+     "x0": 11,
+     "y0": 10,
+     "x1": 41,
+     "y1": 46,
+     "w": 31,
+     "h": 37
+    }
+   },
+   {
+    "loai": "bow",
+    "dong": 2,
+    "ten": "Cung Sừng Trâu",
+    "co_dung_nghi": {
+     "rong": 21,
+     "cao": 37,
+     "dai_than": 37
+    },
+    "mui_cach_diem_cam": 10,
+    "hop_bao_ngang": {
+     "x0": 15,
+     "y0": 10,
+     "x1": 35,
+     "y1": 46,
+     "w": 21,
+     "h": 37
+    }
+   },
+   {
+    "loai": "bow",
+    "dong": 3,
+    "ten": "Cung Tre",
+    "co_dung_nghi": {
+     "rong": 22,
+     "cao": 40,
+     "dai_than": 40
+    },
+    "mui_cach_diem_cam": 9,
+    "hop_bao_ngang": {
+     "x0": 13,
+     "y0": 8,
+     "x1": 34,
+     "y1": 47,
+     "w": 22,
+     "h": 40
+    }
+   },
+   {
+    "loai": "bow",
+    "dong": 4,
+    "ten": "Ná Thun",
+    "co_dung_nghi": {
+     "rong": 19,
+     "cao": 32,
+     "dai_than": 32
+    },
+    "mui_cach_diem_cam": 8,
+    "hop_bao_ngang": {
+     "x0": 15,
+     "y0": 12,
+     "x1": 33,
+     "y1": 43,
+     "w": 19,
+     "h": 32
+    }
+   },
+   {
+    "loai": "bow",
+    "dong": 5,
+    "ten": "Cung Cánh Cò",
+    "co_dung_nghi": {
+     "rong": 25,
+     "cao": 37,
+     "dai_than": 37
+    },
+    "mui_cach_diem_cam": 14,
+    "hop_bao_ngang": {
+     "x0": 15,
+     "y0": 10,
+     "x1": 39,
+     "y1": 46,
+     "w": 25,
+     "h": 37
+    }
+   },
+   {
+    "loai": "bow",
+    "dong": 6,
+    "ten": "Cung Trăng Khuyết",
+    "co_dung_nghi": {
+     "rong": 20,
+     "cao": 44,
+     "dai_than": 37
+    },
+    "mui_cach_diem_cam": 8,
+    "hop_bao_ngang": {
+     "x0": 14,
+     "y0": 10,
+     "x1": 33,
+     "y1": 53,
+     "w": 20,
+     "h": 44
+    }
+   },
+   {
+    "loai": "bow",
+    "dong": 7,
+    "ten": "Cung Đàn Bầu",
+    "co_dung_nghi": {
+     "rong": 18,
+     "cao": 39,
+     "dai_than": 39
+    },
+    "mui_cach_diem_cam": 8,
+    "hop_bao_ngang": {
+     "x0": 16,
+     "y0": 8,
+     "x1": 36,
+     "y1": 46,
+     "w": 21,
+     "h": 39
+    }
+   },
+   {
+    "loai": "bow",
+    "dong": 8,
+    "ten": "Cung Xương Cá",
+    "co_dung_nghi": {
+     "rong": 20,
+     "cao": 40,
+     "dai_than": 40
+    },
+    "mui_cach_diem_cam": 8,
+    "hop_bao_ngang": {
+     "x0": 14,
+     "y0": 8,
+     "x1": 33,
+     "y1": 47,
+     "w": 20,
+     "h": 40
+    }
+   },
+   {
+    "loai": "bow",
+    "dong": 9,
+    "ten": "Cung Đèn Ông Sao",
+    "co_dung_nghi": {
+     "rong": 25,
+     "cao": 40,
+     "dai_than": 37
+    },
+    "mui_cach_diem_cam": 13,
+    "hop_bao_ngang": {
+     "x0": 14,
+     "y0": 9,
+     "x1": 38,
+     "y1": 48,
+     "w": 25,
+     "h": 40
+    }
+   },
+   {
+    "loai": "spear",
+    "dong": 0,
+    "ten": "Giáo Tre Vót",
+    "co_dung_nghi": {
+     "rong": 18,
+     "cao": 57,
+     "dai_than": 57
+    },
+    "mui_cach_diem_cam": 36,
+    "hop_bao_ngang": {
+     "x0": 4,
+     "y0": 23,
+     "x1": 61,
+     "y1": 40,
+     "w": 58,
+     "h": 18
+    }
+   },
+   {
+    "loai": "spear",
+    "dong": 1,
+    "ten": "Đinh Ba",
+    "co_dung_nghi": {
+     "rong": 22,
+     "cao": 57,
+     "dai_than": 57
+    },
+    "mui_cach_diem_cam": 36,
+    "hop_bao_ngang": {
+     "x0": 4,
+     "y0": 17,
+     "x1": 61,
+     "y1": 39,
+     "w": 58,
+     "h": 23
+    }
+   },
+   {
+    "loai": "spear",
+    "dong": 2,
+    "ten": "Câu Liêm",
+    "co_dung_nghi": {
+     "rong": 21,
+     "cao": 56,
+     "dai_than": 56
+    },
+    "mui_cach_diem_cam": 35,
+    "hop_bao_ngang": {
+     "x0": 4,
+     "y0": 23,
+     "x1": 60,
+     "y1": 44,
+     "w": 57,
+     "h": 22
+    }
+   },
+   {
+    "loai": "spear",
+    "dong": 3,
+    "ten": "Mác",
+    "co_dung_nghi": {
+     "rong": 15,
+     "cao": 58,
+     "dai_than": 58
+    },
+    "mui_cach_diem_cam": 37,
+    "hop_bao_ngang": {
+     "x0": 4,
+     "y0": 20,
+     "x1": 62,
+     "y1": 34,
+     "w": 59,
+     "h": 15
+    }
+   },
+   {
+    "loai": "spear",
+    "dong": 4,
+    "ten": "Lao Phóng",
+    "co_dung_nghi": {
+     "rong": 20,
+     "cao": 57,
+     "dai_than": 57
+    },
+    "mui_cach_diem_cam": 36,
+    "hop_bao_ngang": {
+     "x0": 4,
+     "y0": 22,
+     "x1": 61,
+     "y1": 41,
+     "w": 58,
+     "h": 20
+    }
+   },
+   {
+    "loai": "spear",
+    "dong": 5,
+    "ten": "Giáo Đồng Đông Sơn",
+    "co_dung_nghi": {
+     "rong": 15,
+     "cao": 57,
+     "dai_than": 57
+    },
+    "mui_cach_diem_cam": 36,
+    "hop_bao_ngang": {
+     "x0": 4,
+     "y0": 21,
+     "x1": 61,
+     "y1": 35,
+     "w": 58,
+     "h": 15
+    }
+   },
+   {
+    "loai": "spear",
+    "dong": 6,
+    "ten": "Xà Mâu",
+    "co_dung_nghi": {
+     "rong": 15,
+     "cao": 61,
+     "dai_than": 61
+    },
+    "mui_cach_diem_cam": 40,
+    "hop_bao_ngang": {
+     "x0": 4,
+     "y0": 21,
+     "x1": 65,
+     "y1": 36,
+     "w": 62,
+     "h": 16
+    }
+   },
+   {
+    "loai": "spear",
+    "dong": 7,
+    "ten": "Mái Chèo",
+    "co_dung_nghi": {
+     "rong": 13,
+     "cao": 56,
+     "dai_than": 56
+    },
+    "mui_cach_diem_cam": 36,
+    "hop_bao_ngang": {
+     "x0": 5,
+     "y0": 22,
+     "x1": 61,
+     "y1": 34,
+     "w": 57,
+     "h": 13
+    }
+   },
+   {
+    "loai": "spear",
+    "dong": 8,
+    "ten": "Cờ Lau",
+    "co_dung_nghi": {
+     "rong": 21,
+     "cao": 59,
+     "dai_than": 59
+    },
+    "mui_cach_diem_cam": 38,
+    "hop_bao_ngang": {
+     "x0": 4,
+     "y0": 18,
+     "x1": 63,
+     "y1": 38,
+     "w": 60,
+     "h": 21
+    }
+   },
+   {
+    "loai": "spear",
+    "dong": 9,
+    "ten": "Bút Lông",
+    "co_dung_nghi": {
+     "rong": 11,
+     "cao": 62,
+     "dai_than": 61
+    },
+    "mui_cach_diem_cam": 36,
+    "hop_bao_ngang": {
+     "x0": 1,
+     "y0": 23,
+     "x1": 62,
+     "y1": 33,
+     "w": 62,
+     "h": 11
+    }
+   },
+   {
+    "loai": "hammer",
+    "dong": 0,
+    "ten": "Búa Lò Rèn",
+    "co_dung_nghi": {
+     "rong": 25,
+     "cao": 41,
+     "dai_than": 41
+    },
+    "mui_cach_diem_cam": 31,
+    "hop_bao_ngang": {
+     "x0": 15,
+     "y0": 16,
+     "x1": 55,
+     "y1": 40,
+     "w": 41,
+     "h": 25
+    }
+   },
+   {
+    "loai": "hammer",
+    "dong": 1,
+    "ten": "Chày Giã Gạo",
+    "co_dung_nghi": {
+     "rong": 17,
+     "cao": 44,
+     "dai_than": 44
+    },
+    "mui_cach_diem_cam": 33,
+    "hop_bao_ngang": {
+     "x0": 15,
+     "y0": 20,
+     "x1": 58,
+     "y1": 36,
+     "w": 44,
+     "h": 17
+    }
+   },
+   {
+    "loai": "hammer",
+    "dong": 2,
+    "ten": "Chùy Gai",
+    "co_dung_nghi": {
+     "rong": 27,
+     "cao": 44,
+     "dai_than": 44
+    },
+    "mui_cach_diem_cam": 34,
+    "hop_bao_ngang": {
+     "x0": 15,
+     "y0": 15,
+     "x1": 59,
+     "y1": 41,
+     "w": 45,
+     "h": 27
+    }
+   },
+   {
+    "loai": "hammer",
+    "dong": 3,
+    "ten": "Rìu Đá",
+    "co_dung_nghi": {
+     "rong": 24,
+     "cao": 42,
+     "dai_than": 42
+    },
+    "mui_cach_diem_cam": 32,
+    "hop_bao_ngang": {
+     "x0": 15,
+     "y0": 19,
+     "x1": 57,
+     "y1": 44,
+     "w": 43,
+     "h": 26
+    }
+   },
+   {
+    "loai": "hammer",
+    "dong": 4,
+    "ten": "Vồ Gỗ",
+    "co_dung_nghi": {
+     "rong": 28,
+     "cao": 40,
+     "dai_than": 40
+    },
+    "mui_cach_diem_cam": 30,
+    "hop_bao_ngang": {
+     "x0": 15,
+     "y0": 14,
+     "x1": 55,
+     "y1": 42,
+     "w": 41,
+     "h": 29
+    }
+   },
+   {
+    "loai": "hammer",
+    "dong": 5,
+    "ten": "Chiêng Đồng",
+    "co_dung_nghi": {
+     "rong": 23,
+     "cao": 45,
+     "dai_than": 45
+    },
+    "mui_cach_diem_cam": 35,
+    "hop_bao_ngang": {
+     "x0": 15,
+     "y0": 16,
+     "x1": 60,
+     "y1": 40,
+     "w": 46,
+     "h": 25
+    }
+   },
+   {
+    "loai": "hammer",
+    "dong": 6,
+    "ten": "Trống Đồng",
+    "co_dung_nghi": {
+     "rong": 26,
+     "cao": 42,
+     "dai_than": 42
+    },
+    "mui_cach_diem_cam": 32,
+    "hop_bao_ngang": {
+     "x0": 15,
+     "y0": 16,
+     "x1": 57,
+     "y1": 41,
+     "w": 43,
+     "h": 26
+    }
+   },
+   {
+    "loai": "hammer",
+    "dong": 7,
+    "ten": "Rìu Xéo Đông Sơn",
+    "co_dung_nghi": {
+     "rong": 22,
+     "cao": 41,
+     "dai_than": 41
+    },
+    "mui_cach_diem_cam": 31,
+    "hop_bao_ngang": {
+     "x0": 15,
+     "y0": 24,
+     "x1": 56,
+     "y1": 46,
+     "w": 42,
+     "h": 23
+    }
+   },
+   {
+    "loai": "hammer",
+    "dong": 8,
+    "ten": "Búa Đầu Trâu",
+    "co_dung_nghi": {
+     "rong": 33,
+     "cao": 44,
+     "dai_than": 44
+    },
+    "mui_cach_diem_cam": 34,
+    "hop_bao_ngang": {
+     "x0": 15,
+     "y0": 11,
+     "x1": 58,
+     "y1": 45,
+     "w": 44,
+     "h": 35
+    }
+   },
+   {
+    "loai": "hammer",
+    "dong": 9,
+    "ten": "Chùy Hồ Lô",
+    "co_dung_nghi": {
+     "rong": 21,
+     "cao": 45,
+     "dai_than": 45
+    },
+    "mui_cach_diem_cam": 35,
+    "hop_bao_ngang": {
+     "x0": 16,
+     "y0": 18,
+     "x1": 60,
+     "y1": 39,
+     "w": 45,
+     "h": 22
+    }
+   }
+  ],
+  "hang_them": [
+   "Kiếm Rèn Hỏa Thần",
+   "Kiếm Rèn Độc Vương",
+   "Kiếm Rèn Băng Đế",
+   "Kiếm Rèn",
+   "Kiếm Rèn (Lam)",
+   "Kiếm Rèn (Tím)",
+   "Kiếm Rèn (Vàng)"
+  ]
+ },
+ "quai": {
+  "cot": [
+   [
+    "idle",
+    0
+   ],
+   [
+    "idle",
+    0.5
+   ],
+   [
+    "move",
+    0
+   ],
+   [
+    "move",
+    0.5
+   ],
+   [
+    "tele",
+    0.6
+   ],
+   [
+    "atk",
+    0.2
+   ],
+   [
+    "atk",
+    0.45
+   ],
+   [
+    "hit",
+    0.1
+   ],
+   [
+    "die",
+    0.35
+   ],
+   [
+    "die",
+    0.75
+   ]
+  ],
+  "rung": {
+   "o_rong": 127,
+   "con": [
+    {
+     "id": "heoCon",
+     "ten": "Heo Rừng Con",
+     "vung": "rung",
+     "loai": "thuong",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 56,
+      "cao": 32
+     },
+     "cao_ve": 34,
+     "hop_bao_idle_t0": {
+      "rong": 52,
+      "cao": 37
+     },
+     "mau_chinh": [
+      "#80542c",
+      "#14182e",
+      "#4e3018",
+      "#1a1210",
+      "#24140e",
+      "#c89460",
+      "#0a0c1e",
+      "#fff8e0",
+      "#e8c890",
+      "#769f70",
+      "#22692c",
+      "#e8a090"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 0,
+     "hang_cao": 66
+    },
+    {
+     "id": "ongVo",
+     "ten": "Bầy Ong Vò Vẽ",
+     "vung": "rung",
+     "loai": "thuong",
+     "bay": true,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 44,
+      "cao": 39
+     },
+     "cao_ve": 51,
+     "hop_bao_idle_t0": {
+      "rong": 43,
+      "cao": 49
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#1a1210",
+      "#0a0c1e",
+      "#7aa8a4",
+      "#c45a1a",
+      "#c8e8e0",
+      "#a8901a",
+      "#e8d83c",
+      "#ff9a2a",
+      "#d8f4ec",
+      "#9cc8c0",
+      "#ffc83c"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 66,
+     "hang_cao": 73
+    },
+    {
+     "id": "boHung",
+     "ten": "Bọ Hung Mai Cứng",
+     "vung": "rung",
+     "loai": "thuong",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 54,
+      "cao": 34
+     },
+     "cao_ve": 36,
+     "hop_bao_idle_t0": {
+      "rong": 54,
+      "cao": 39
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#3a9a5c",
+      "#1a1210",
+      "#b08a3a",
+      "#2a1a0c",
+      "#0c2a22",
+      "#1a5a40",
+      "#6a4a1e",
+      "#0a0c1e",
+      "#b4f0b0",
+      "#f4dc94",
+      "#fff8e0"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 139,
+     "hang_cao": 68
+    },
+    {
+     "id": "hoaBaoTu",
+     "ten": "Hoa Phun Bào Tử",
+     "vung": "rung",
+     "loai": "thuong",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 53,
+      "cao": 36
+     },
+     "cao_ve": 38,
+     "hop_bao_idle_t0": {
+      "rong": 53,
+      "cao": 42
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#78b818",
+      "#3a0a14",
+      "#22692c",
+      "#0a0c1e",
+      "#123a1c",
+      "#58208c",
+      "#9a48d4",
+      "#46a83c",
+      "#2a0e44",
+      "#7a1028",
+      "#b0261a"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 207,
+     "hang_cao": 70
+    },
+    {
+     "id": "chonBong",
+     "ten": "Chồn Bóng",
+     "vung": "rung",
+     "loai": "thuong",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 63,
+      "cao": 28
+     },
+     "cao_ve": 30,
+     "hop_bao_idle_t0": {
+      "rong": 63,
+      "cao": 35
+     },
+     "mau_chinh": [
+      "#221836",
+      "#14182e",
+      "#40305e",
+      "#0c0816",
+      "#0a0c1e",
+      "#9a48d4",
+      "#9a88c8",
+      "#b8a8d8",
+      "#58208c",
+      "#897b8f",
+      "#fff8e0",
+      "#d8cce8"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 277,
+     "hang_cao": 62
+    },
+    {
+     "id": "namPhong",
+     "ten": "Nấm Phồng",
+     "vung": "rung",
+     "loai": "thuong",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 32,
+      "cao": 27
+     },
+     "cao_ve": 29,
+     "hop_bao_idle_t0": {
+      "rong": 32,
+      "cao": 37
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#9a48d4",
+      "#b0a488",
+      "#2a0e44",
+      "#58208c",
+      "#0a0c1e",
+      "#e8e0c4",
+      "#3c5a0c",
+      "#6a5c48",
+      "#78b818",
+      "#1c0f18",
+      "#5c3a1e"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 339,
+     "hang_cao": 61
+    },
+    {
+     "id": "socNo",
+     "ten": "Sóc Ném Quả Nổ",
+     "vung": "rung",
+     "loai": "thuong",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 49,
+      "cao": 37
+     },
+     "cao_ve": 39,
+     "hop_bao_idle_t0": {
+      "rong": 49,
+      "cao": 43
+     },
+     "mau_chinh": [
+      "#d0682a",
+      "#14182e",
+      "#8a3a14",
+      "#3a1408",
+      "#0a0c1e",
+      "#f0d8a8",
+      "#ffb870",
+      "#7a38b0",
+      "#160a26",
+      "#b68161",
+      "#2e1a10",
+      "#fff8e0"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 400,
+     "hang_cao": 71
+    },
+    {
+     "id": "nhimDoc",
+     "ten": "Nhím Gai Độc",
+     "vung": "rung",
+     "loai": "thuong",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 44,
+      "cao": 28
+     },
+     "cao_ve": 30,
+     "hop_bao_idle_t0": {
+      "rong": 44,
+      "cao": 32
+     },
+     "mau_chinh": [
+      "#1c1210",
+      "#14182e",
+      "#6a4c38",
+      "#3e2a20",
+      "#9a48d4",
+      "#0a0c1e",
+      "#e8e0c4",
+      "#b89878",
+      "#c08ad8",
+      "#fff8e0",
+      "#daf57a",
+      "#eec6f2"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 471,
+     "hang_cao": 62
+    },
+    {
+     "id": "heoNanh",
+     "ten": "Heo Rừng Nanh Dài",
+     "vung": "rung",
+     "loai": "tinhanh",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 90,
+      "cao": 44
+     },
+     "cao_ve": 46,
+     "hop_bao_idle_t0": {
+      "rong": 90,
+      "cao": 52
+     },
+     "mau_chinh": [
+      "#3a2012",
+      "#644022",
+      "#14182e",
+      "#1a1210",
+      "#180c0a",
+      "#fff8e0",
+      "#b0a488",
+      "#0a0c1e",
+      "#b08050",
+      "#9a48d4",
+      "#e8a090",
+      "#3a0a14"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0
+     },
+     "hang_y": 533,
+     "hang_cao": 78
+    },
+    {
+     "id": "namPhongChua",
+     "ten": "Nấm Phồng Chúa",
+     "vung": "rung",
+     "loai": "tinhanh",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 83,
+      "cao": 44
+     },
+     "cao_ve": 46,
+     "hop_bao_idle_t0": {
+      "rong": 83,
+      "cao": 51
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#a048e0",
+      "#b0a488",
+      "#f4ffb0",
+      "#5c1c98",
+      "#2a0a48",
+      "#3c5a0c",
+      "#e8e0c4",
+      "#6a5c48",
+      "#0a0c1e",
+      "#fff8e0",
+      "#ff5a3c"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0
+     },
+     "hang_y": 611,
+     "hang_cao": 78
+    },
+    {
+     "id": "namChua",
+     "ten": "Nấm Chúa",
+     "vung": "rung",
+     "loai": "trumnho",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 97,
+      "cao": 64
+     },
+     "cao_ve": 66,
+     "hop_bao_idle_t0": {
+      "rong": 97,
+      "cao": 71
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#9a48d4",
+      "#2a0e44",
+      "#5c3a1e",
+      "#58208c",
+      "#9a8a78",
+      "#1a0830",
+      "#0a0c1e",
+      "#4a3c40",
+      "#2e1a10",
+      "#c4f43c",
+      "#d4c8a8"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "8": 0
+     },
+     "hang_y": 689,
+     "hang_cao": 98
+    }
+   ]
+  },
+  "bien": {
+   "o_rong": 146,
+   "con": [
+    {
+     "id": "cua",
+     "ten": "Cua Lính",
+     "vung": "bien",
+     "loai": "thuong",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 48,
+      "cao": 36
+     },
+     "cao_ve": 38,
+     "hop_bao_idle_t0": {
+      "rong": 47,
+      "cao": 41
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#3883d4",
+      "#ee5c3a",
+      "#1b4c92",
+      "#0a0c1e",
+      "#b32a2c",
+      "#0e2a5a",
+      "#6a1220",
+      "#3a0a14",
+      "#bcd9ee",
+      "#32496e",
+      "#fff8e0"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 0,
+     "hang_cao": 70
+    },
+    {
+     "id": "caCon",
+     "ten": "Bầy Cá Con",
+     "vung": "bien",
+     "loai": "thuong",
+     "bay": true,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 36,
+      "cao": 31
+     },
+     "cao_ve": 39,
+     "hop_bao_idle_t0": {
+      "rong": 36,
+      "cao": 39
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#0a0c1e",
+      "#3a0a14",
+      "#b32a2c",
+      "#0e746e",
+      "#1b4c92",
+      "#ffffff",
+      "#3883d4",
+      "#6a1220",
+      "#063b3c",
+      "#1fb49c",
+      "#ee5c3a"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 70,
+     "hang_cao": 65
+    },
+    {
+     "id": "oc",
+     "ten": "Ốc Mượn Hồn",
+     "vung": "bien",
+     "loai": "thuong",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 52,
+      "cao": 41
+     },
+     "cao_ve": 43,
+     "hop_bao_idle_t0": {
+      "rong": 52,
+      "cao": 46
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#9bb4e8",
+      "#5265ae",
+      "#2c3a7c",
+      "#0a0c1e",
+      "#d84e38",
+      "#4a0c18",
+      "#b32a2c",
+      "#a9d8ee",
+      "#ee5c3a",
+      "#8f2428",
+      "#cae3e8"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 135,
+     "hang_cao": 75
+    },
+    {
+     "id": "haiQuy",
+     "ten": "Hải Quỳ",
+     "vung": "bien",
+     "loai": "thuong",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 45,
+      "cao": 40
+     },
+     "cao_ve": 42,
+     "hop_bao_idle_t0": {
+      "rong": 44,
+      "cao": 47
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#6a1220",
+      "#0e746e",
+      "#b32a2c",
+      "#ee5c3a",
+      "#0a0c1e",
+      "#063b3c",
+      "#1fb49c",
+      "#ffe14a",
+      "#98f3da",
+      "#80343d",
+      "#3a0a14"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 210,
+     "hang_cao": 74
+    },
+    {
+     "id": "caChuon",
+     "ten": "Cá Chuồn",
+     "vung": "bien",
+     "loai": "thuong",
+     "bay": true,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 53,
+      "cao": 34
+     },
+     "cao_ve": 46,
+     "hop_bao_idle_t0": {
+      "rong": 53,
+      "cao": 47
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#a9d8ee",
+      "#d9ecfa",
+      "#3883d4",
+      "#4f86b0",
+      "#0a0c1e",
+      "#1b4c92",
+      "#9fd8f5",
+      "#0e2a5a",
+      "#ffffff",
+      "#728daf",
+      "#ee5c3a"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 284,
+     "hang_cao": 68
+    },
+    {
+     "id": "caNoc",
+     "ten": "Cá Nóc",
+     "vung": "bien",
+     "loai": "thuong",
+     "bay": true,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 32,
+      "cao": 26
+     },
+     "cao_ve": 36,
+     "hop_bao_idle_t0": {
+      "rong": 32,
+      "cao": 35
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#e6f4f2",
+      "#063b3c",
+      "#1fb49c",
+      "#0a0c1e",
+      "#ffffff",
+      "#0e746e",
+      "#ee5c3a",
+      "#a9d8ee",
+      "#ffe14a",
+      "#3a0a14",
+      "#1c0f18"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 352,
+     "hang_cao": 60
+    },
+    {
+     "id": "sua",
+     "ten": "Sứa Bom",
+     "vung": "bien",
+     "loai": "thuong",
+     "bay": true,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 39,
+      "cao": 37
+     },
+     "cao_ve": 47,
+     "hop_bao_idle_t0": {
+      "rong": 39,
+      "cao": 47
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#50bde6",
+      "#2273b2",
+      "#0f437a",
+      "#0a0c1e",
+      "#2b5f9e",
+      "#070f2a",
+      "#d4f5ff",
+      "#1c0f18",
+      "#3fa8d8",
+      "#16285c",
+      "#335e89"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 412,
+     "hang_cao": 71
+    },
+    {
+     "id": "nhim",
+     "ten": "Nhím Biển",
+     "vung": "bien",
+     "loai": "thuong",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 29,
+      "cao": 24
+     },
+     "cao_ve": 26,
+     "hop_bao_idle_t0": {
+      "rong": 29,
+      "cao": 27
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#281d62",
+      "#4836a0",
+      "#0a0c1e",
+      "#110b2c",
+      "#bfe9ff",
+      "#1c0f18",
+      "#ffe14a",
+      "#988aee",
+      "#ffa98d",
+      "#d7eef2",
+      "#ffffff"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 483,
+     "hang_cao": 58
+    },
+    {
+     "id": "cuaTuong",
+     "ten": "Cua Tướng",
+     "vung": "bien",
+     "loai": "tinhanh",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 84,
+      "cao": 63
+     },
+     "cao_ve": 65,
+     "hop_bao_idle_t0": {
+      "rong": 84,
+      "cao": 72
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#ee5c3a",
+      "#3883d4",
+      "#1b4c92",
+      "#b32a2c",
+      "#0e2a5a",
+      "#0a0c1e",
+      "#6a1220",
+      "#32496e",
+      "#c9b078",
+      "#f17353",
+      "#a6deff"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0
+     },
+     "hang_y": 541,
+     "hang_cao": 97
+    },
+    {
+     "id": "caNocChua",
+     "ten": "Cá Nóc Chúa",
+     "vung": "bien",
+     "loai": "tinhanh",
+     "bay": true,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 66,
+      "cao": 61
+     },
+     "cao_ve": 71,
+     "hop_bao_idle_t0": {
+      "rong": 65,
+      "cao": 73
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#ffffff",
+      "#e6f4f2",
+      "#dff6ff",
+      "#1aa894",
+      "#a9d8ee",
+      "#052f33",
+      "#0c6a66",
+      "#0a0c1e",
+      "#ff4a36",
+      "#ee5c3a",
+      "#fffefa"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0
+     },
+     "hang_y": 638,
+     "hang_cao": 95
+    },
+    {
+     "id": "cuaDa",
+     "ten": "Cua Đá",
+     "vung": "bien",
+     "loai": "trumnho",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 116,
+      "cao": 70
+     },
+     "cao_ve": 72,
+     "hop_bao_idle_t0": {
+      "rong": 117,
+      "cao": 78
+     },
+     "mau_chinh": [
+      "#7187a8",
+      "#46567a",
+      "#14182e",
+      "#222a40",
+      "#0e1220",
+      "#a9bcd8",
+      "#0a0c1e",
+      "#5ff0d8",
+      "#2a0a18",
+      "#d6fffa",
+      "#ffffff",
+      "#4fd8d0"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "8": 0
+     },
+     "hang_y": 733,
+     "hang_cao": 104
+    }
+   ]
+  },
+  "laudai": {
+   "o_rong": 139,
+   "con": [
+    {
+     "id": "linhMa",
+     "ten": "Lính Ma Giáp Gỉ",
+     "vung": "laudai",
+     "loai": "thuong",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 50,
+      "cao": 31
+     },
+     "cao_ve": 33,
+     "hop_bao_idle_t0": {
+      "rong": 50,
+      "cao": 36
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#5c1a22",
+      "#3a1a10",
+      "#a85a26",
+      "#6e3418",
+      "#0a0c1e",
+      "#9a3428",
+      "#e07048",
+      "#f0582a",
+      "#e09a4c",
+      "#26222c",
+      "#c9956c"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 0,
+     "hang_cao": 65
+    },
+    {
+     "id": "doiThan",
+     "ten": "Bầy Dơi Than",
+     "vung": "laudai",
+     "loai": "thuong",
+     "bay": true,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 46,
+      "cao": 31
+     },
+     "cao_ve": 45,
+     "hop_bao_idle_t0": {
+      "rong": 45,
+      "cao": 50
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#26222c",
+      "#48424e",
+      "#0a0c1e",
+      "#f0506e",
+      "#474247",
+      "#a8324a",
+      "#787370",
+      "#fff8e0",
+      "#3a0a14",
+      "#f68f99",
+      "#c97c82"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 65,
+     "hang_cao": 65
+    },
+    {
+     "id": "tuongDa",
+     "ten": "Tượng Đá Cầm Khiên",
+     "vung": "laudai",
+     "loai": "thuong",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 50,
+      "cao": 32
+     },
+     "cao_ve": 34,
+     "hop_bao_idle_t0": {
+      "rong": 51,
+      "cao": 37
+     },
+     "mau_chinh": [
+      "#8a8288",
+      "#14182e",
+      "#57505a",
+      "#2c2830",
+      "#cbc3c0",
+      "#0a0c1e",
+      "#f0582a",
+      "#6e3418",
+      "#a85a26",
+      "#7c7672",
+      "#70696e",
+      "#dfd6cb"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 130,
+     "hang_cao": 66
+    },
+    {
+     "id": "denLong",
+     "ten": "Đèn Lồng Ma",
+     "vung": "laudai",
+     "loai": "thuong",
+     "bay": true,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 44,
+      "cao": 34
+     },
+     "cao_ve": 46,
+     "hop_bao_idle_t0": {
+      "rong": 44,
+      "cao": 46
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#f0582a",
+      "#5a0e0c",
+      "#ff8a1e",
+      "#ffd23c",
+      "#b0261a",
+      "#c43c10",
+      "#26222c",
+      "#0a0c1e",
+      "#fff8e0",
+      "#1c0f18",
+      "#fff6b0"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 196,
+     "hang_cao": 68
+    },
+    {
+     "id": "meoDen",
+     "ten": "Mèo Đen Hai Đuôi",
+     "vung": "laudai",
+     "loai": "thuong",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 58,
+      "cao": 32
+     },
+     "cao_ve": 34,
+     "hop_bao_idle_t0": {
+      "rong": 58,
+      "cao": 39
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#26222c",
+      "#0a0c1e",
+      "#48424e",
+      "#474247",
+      "#0e0c12",
+      "#a8324a",
+      "#c97c82",
+      "#f0582a",
+      "#c43c10",
+      "#ffd23c",
+      "#fff8e0"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 264,
+     "hang_cao": 66
+    },
+    {
+     "id": "huLua",
+     "ten": "Hũ Lửa Sống",
+     "vung": "laudai",
+     "loai": "thuong",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 30,
+      "cao": 30
+     },
+     "cao_ve": 32,
+     "hop_bao_idle_t0": {
+      "rong": 30,
+      "cao": 40
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#5c2418",
+      "#96402a",
+      "#2a1210",
+      "#ffd23c",
+      "#0a0c1e",
+      "#744436",
+      "#f0582a",
+      "#3a0a14",
+      "#1c0f18",
+      "#96643a",
+      "#9a7463"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 330,
+     "hang_cao": 64
+    },
+    {
+     "id": "tieuYeu",
+     "ten": "Tiểu Yêu Ném Pháo",
+     "vung": "laudai",
+     "loai": "thuong",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 44,
+      "cao": 32
+     },
+     "cao_ve": 34,
+     "hop_bao_idle_t0": {
+      "rong": 44,
+      "cao": 36
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#f0582a",
+      "#b0261a",
+      "#5a0e0c",
+      "#0a0c1e",
+      "#ffb070",
+      "#fff8e0",
+      "#bc4537",
+      "#ce7564",
+      "#3a0a14",
+      "#ffe14a",
+      "#ffd23c"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 394,
+     "hang_cao": 66
+    },
+    {
+     "id": "nhimThan",
+     "ten": "Nhím Than Hồng",
+     "vung": "laudai",
+     "loai": "thuong",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 30,
+      "cao": 27
+     },
+     "cao_ve": 29,
+     "hop_bao_idle_t0": {
+      "rong": 31,
+      "cao": 30
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#26222c",
+      "#48424e",
+      "#0a0c1e",
+      "#0e0c12",
+      "#f0506e",
+      "#1c0f18",
+      "#b0261a",
+      "#ff8a1e",
+      "#f0582a",
+      "#ffcb9a",
+      "#f68f99"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "hang_y": 460,
+     "hang_cao": 61
+    },
+    {
+     "id": "tuongMa",
+     "ten": "Tướng Ma",
+     "vung": "laudai",
+     "loai": "tinhanh",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 64,
+      "cao": 44
+     },
+     "cao_ve": 46,
+     "hop_bao_idle_t0": {
+      "rong": 64,
+      "cao": 50
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#a85a26",
+      "#6e3418",
+      "#3a1a10",
+      "#5a0e0c",
+      "#ff8a1e",
+      "#b0261a",
+      "#ffd23c",
+      "#e8e0c4",
+      "#0a0c1e",
+      "#5c1a22",
+      "#f0582a"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0
+     },
+     "hang_y": 521,
+     "hang_cao": 78
+    },
+    {
+     "id": "huChua",
+     "ten": "Hũ Lửa Chúa",
+     "vung": "laudai",
+     "loai": "tinhanh",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 68,
+      "cao": 42
+     },
+     "cao_ve": 44,
+     "hop_bao_idle_t0": {
+      "rong": 68,
+      "cao": 48
+     },
+     "mau_chinh": [
+      "#14182e",
+      "#8a1c16",
+      "#d2401e",
+      "#ff8a1e",
+      "#3a0c0c",
+      "#ffd23c",
+      "#fff6b0",
+      "#0a0c1e",
+      "#c43c10",
+      "#fff8e0",
+      "#b0a488",
+      "#9c3d34"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0
+     },
+     "hang_y": 599,
+     "hang_cao": 76
+    },
+    {
+     "id": "hoLua",
+     "ten": "Hổ Lửa",
+     "vung": "laudai",
+     "loai": "trumnho",
+     "bay": false,
+     "pha": 1,
+     "khung_luoi": {
+      "rong": 109,
+      "cao": 65
+     },
+     "cao_ve": 67,
+     "hop_bao_idle_t0": {
+      "rong": 109,
+      "cao": 72
+     },
+     "mau_chinh": [
+      "#2e1a1c",
+      "#52302a",
+      "#140a0e",
+      "#14182e",
+      "#c43c10",
+      "#ff8a1e",
+      "#ffd23c",
+      "#f0582a",
+      "#84503c",
+      "#9a8a78",
+      "#fff8e0",
+      "#0a0c1e"
+     ],
+     "dong_tac_giay": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "8": 0
+     },
+     "hang_y": 675,
+     "hang_cao": 99
+    }
+   ]
+  }
+ },
+ "trum": {
+  "cot": [
+   [
+    "idle",
+    0
+   ],
+   [
+    "move",
+    0.5
+   ],
+   [
+    "c1",
+    0.5
+   ],
+   [
+    "c2",
+    0.5
+   ],
+   [
+    "c3",
+    0.5
+   ],
+   [
+    "hit",
+    0.2
+   ],
+   [
+    "stun",
+    0.3
+   ],
+   [
+    "die",
+    0.5
+   ]
+  ],
+  "mocTinh": {
+   "ten": "Mộc Tinh",
+   "khung_luoi": {
+    "rong": 140,
+    "cao": 126
+   },
+   "o": [
+    181,
+    188
+   ],
+   "dong_tac_giay": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0,
+    "4": 0,
+    "5": 0,
+    "6": 0,
+    "7": 0,
+    "8": 0,
+    "9": 0,
+    "10": 0,
+    "11": 0,
+    "12": 0,
+    "13": 0,
+    "14": 0,
+    "15": 0
+   },
+   "mau": [
+    {
+     "pha": 1,
+     "anim": "idle",
+     "u": 0,
+     "hop_bao": {
+      "rong": 140,
+      "cao": 137
+     }
+    },
+    {
+     "pha": 1,
+     "anim": "move",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 141,
+      "cao": 136
+     }
+    },
+    {
+     "pha": 1,
+     "anim": "c1",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 161,
+      "cao": 151
+     }
+    },
+    {
+     "pha": 1,
+     "anim": "c2",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 146,
+      "cao": 132
+     }
+    },
+    {
+     "pha": 1,
+     "anim": "c3",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 144,
+      "cao": 134
+     }
+    },
+    {
+     "pha": 1,
+     "anim": "hit",
+     "u": 0.2,
+     "hop_bao": {
+      "rong": 140,
+      "cao": 140
+     }
+    },
+    {
+     "pha": 1,
+     "anim": "stun",
+     "u": 0.3,
+     "hop_bao": {
+      "rong": 146,
+      "cao": 130
+     }
+    },
+    {
+     "pha": 1,
+     "anim": "die",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 181,
+      "cao": 188
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "idle",
+     "u": 0,
+     "hop_bao": {
+      "rong": 152,
+      "cao": 138
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "move",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 151,
+      "cao": 137
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "c1",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 168,
+      "cao": 151
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "c2",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 147,
+      "cao": 133
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "c3",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 150,
+      "cao": 135
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "hit",
+     "u": 0.2,
+     "hop_bao": {
+      "rong": 151,
+      "cao": 140
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "stun",
+     "u": 0.3,
+     "hop_bao": {
+      "rong": 139,
+      "cao": 132
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "die",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 181,
+      "cao": 188
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "idle",
+     "u": 0,
+     "hop_bao": {
+      "rong": 144,
+      "cao": 137
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "move",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 144,
+      "cao": 136
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "c1",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 164,
+      "cao": 151
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "c2",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 148,
+      "cao": 132
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "c3",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 144,
+      "cao": 134
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "hit",
+     "u": 0.2,
+     "hop_bao": {
+      "rong": 144,
+      "cao": 140
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "stun",
+     "u": 0.3,
+     "hop_bao": {
+      "rong": 147,
+      "cao": 131
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "die",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 181,
+      "cao": 188
+     }
+    }
+   ]
+  },
+  "nguTinh": {
+   "ten": "Ngư Tinh",
+   "khung_luoi": {
+    "rong": 150,
+    "cao": 102
+   },
+   "o": [
+    193,
+    158
+   ],
+   "dong_tac_giay": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0,
+    "4": 0,
+    "5": 0,
+    "6": 0,
+    "7": 0,
+    "8": 0,
+    "9": 0,
+    "10": 0,
+    "11": 0,
+    "12": 0,
+    "13": 0,
+    "14": 0,
+    "15": 0
+   },
+   "mau": [
+    {
+     "pha": 1,
+     "anim": "idle",
+     "u": 0,
+     "hop_bao": {
+      "rong": 152,
+      "cao": 105
+     }
+    },
+    {
+     "pha": 1,
+     "anim": "move",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 159,
+      "cao": 108
+     }
+    },
+    {
+     "pha": 1,
+     "anim": "c1",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 146,
+      "cao": 102
+     }
+    },
+    {
+     "pha": 1,
+     "anim": "c2",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 153,
+      "cao": 112
+     }
+    },
+    {
+     "pha": 1,
+     "anim": "c3",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 172,
+      "cao": 112
+     }
+    },
+    {
+     "pha": 1,
+     "anim": "hit",
+     "u": 0.2,
+     "hop_bao": {
+      "rong": 150,
+      "cao": 102
+     }
+    },
+    {
+     "pha": 1,
+     "anim": "stun",
+     "u": 0.3,
+     "hop_bao": {
+      "rong": 151,
+      "cao": 102
+     }
+    },
+    {
+     "pha": 1,
+     "anim": "die",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 193,
+      "cao": 158
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "idle",
+     "u": 0,
+     "hop_bao": {
+      "rong": 152,
+      "cao": 108
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "move",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 159,
+      "cao": 111
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "c1",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 146,
+      "cao": 105
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "c2",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 153,
+      "cao": 115
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "c3",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 172,
+      "cao": 115
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "hit",
+     "u": 0.2,
+     "hop_bao": {
+      "rong": 150,
+      "cao": 105
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "stun",
+     "u": 0.3,
+     "hop_bao": {
+      "rong": 152,
+      "cao": 106
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "die",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 193,
+      "cao": 158
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "idle",
+     "u": 0,
+     "hop_bao": {
+      "rong": 152,
+      "cao": 103
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "move",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 159,
+      "cao": 106
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "c1",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 146,
+      "cao": 102
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "c2",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 150,
+      "cao": 112
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "c3",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 172,
+      "cao": 112
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "hit",
+     "u": 0.2,
+     "hop_bao": {
+      "rong": 150,
+      "cao": 102
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "stun",
+     "u": 0.3,
+     "hop_bao": {
+      "rong": 150,
+      "cao": 102
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "die",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 193,
+      "cao": 158
+     }
+    }
+   ]
+  },
+  "hoTinh": {
+   "ten": "Hồ Tinh",
+   "khung_luoi": {
+    "rong": 174,
+    "cao": 115
+   },
+   "o": [
+    316,
+    208
+   ],
+   "dong_tac_giay": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0,
+    "4": 0,
+    "5": 0,
+    "6": 0,
+    "7": 0,
+    "8": 0,
+    "9": 0,
+    "10": 0,
+    "11": 0,
+    "12": 0,
+    "13": 0,
+    "14": 0,
+    "15": 0
+   },
+   "mau": [
+    {
+     "pha": 1,
+     "anim": "idle",
+     "u": 0,
+     "hop_bao": {
+      "rong": 177,
+      "cao": 125
+     }
+    },
+    {
+     "pha": 1,
+     "anim": "move",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 180,
+      "cao": 125
+     }
+    },
+    {
+     "pha": 1,
+     "anim": "c1",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 180,
+      "cao": 125
+     }
+    },
+    {
+     "pha": 1,
+     "anim": "c2",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 173,
+      "cao": 124
+     }
+    },
+    {
+     "pha": 1,
+     "anim": "c3",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 207,
+      "cao": 132
+     }
+    },
+    {
+     "pha": 1,
+     "anim": "hit",
+     "u": 0.2,
+     "hop_bao": {
+      "rong": 174,
+      "cao": 125
+     }
+    },
+    {
+     "pha": 1,
+     "anim": "stun",
+     "u": 0.3,
+     "hop_bao": {
+      "rong": 186,
+      "cao": 115
+     }
+    },
+    {
+     "pha": 1,
+     "anim": "die",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 316,
+      "cao": 208
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "idle",
+     "u": 0,
+     "hop_bao": {
+      "rong": 274,
+      "cao": 129
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "move",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 271,
+      "cao": 126
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "c1",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 264,
+      "cao": 130
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "c2",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 257,
+      "cao": 128
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "c3",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 262,
+      "cao": 132
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "hit",
+     "u": 0.2,
+     "hop_bao": {
+      "rong": 271,
+      "cao": 129
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "stun",
+     "u": 0.3,
+     "hop_bao": {
+      "rong": 278,
+      "cao": 116
+     }
+    },
+    {
+     "pha": 2,
+     "anim": "die",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 316,
+      "cao": 208
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "idle",
+     "u": 0,
+     "hop_bao": {
+      "rong": 279,
+      "cao": 188
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "move",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 280,
+      "cao": 189
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "c1",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 282,
+      "cao": 187
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "c2",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 289,
+      "cao": 185
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "c3",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 289,
+      "cao": 188
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "hit",
+     "u": 0.2,
+     "hop_bao": {
+      "rong": 281,
+      "cao": 185
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "stun",
+     "u": 0.3,
+     "hop_bao": {
+      "rong": 294,
+      "cao": 178
+     }
+    },
+    {
+     "pha": 3,
+     "anim": "die",
+     "u": 0.5,
+     "hop_bao": {
+      "rong": 316,
+      "cao": 208
+     }
+    }
+   ]
+  }
+ },
+ "canh": [
+  {
+   "vung": "rung",
+   "ten": "Rừng già",
+   "geo": {
+    "fx0": 136,
+    "fy0": 56,
+    "fx1": 344,
+    "fy1": 252,
+    "W": 480,
+    "H": 270,
+    "wh": 42,
+    "cap": 7,
+    "sw": 14,
+    "fw": 12,
+    "big": false,
+    "cx": 240,
+    "cy": 154,
+    "bounds": {
+     "x0": 145,
+     "x1": 335,
+     "y0": 64,
+     "y1": 248
+    }
+   }
+  },
+  {
+   "vung": "bien",
+   "ten": "Hang biển",
+   "geo": {
+    "fx0": 136,
+    "fy0": 56,
+    "fx1": 344,
+    "fy1": 252,
+    "W": 480,
+    "H": 270,
+    "wh": 42,
+    "cap": 7,
+    "sw": 14,
+    "fw": 12,
+    "big": false,
+    "cx": 240,
+    "cy": 154,
+    "bounds": {
+     "x0": 145,
+     "x1": 335,
+     "y0": 64,
+     "y1": 248
+    }
+   }
+  },
+  {
+   "vung": "laudai",
+   "ten": "Lâu đài cổ",
+   "geo": {
+    "fx0": 136,
+    "fy0": 56,
+    "fx1": 344,
+    "fy1": 252,
+    "W": 480,
+    "H": 270,
+    "wh": 42,
+    "cap": 7,
+    "sw": 14,
+    "fw": 12,
+    "big": false,
+    "cx": 240,
+    "cy": 154,
+    "bounds": {
+     "x0": 145,
+     "x1": 335,
+     "y0": 64,
+     "y1": 248
+    }
+   }
+  }
+ ],
+ "loi_trang": [
+  "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently",
+  "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently",
+  "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently",
+  "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently",
+  "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently",
+  "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently",
+  "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently",
+  "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently",
+  "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently",
+  "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently",
+  "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently",
+  "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently",
+  "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently",
+  "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently",
+  "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently",
+  "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently",
+  "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently",
+  "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently",
+  "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently",
+  "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently"
+ ]
+}
