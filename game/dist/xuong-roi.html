@@ -371,7 +371,7 @@
 
 <script>
 // Xưởng Rối (tools/xuong-roi). TỆP ĐƯỢC TẠO BỞI game/build.py, đừng sửa tay.
-window.XR_MA_BAN = "addeeb";
+window.XR_MA_BAN = "bc0957";
 // ===== game/js/chibi_rig.js =====
 // HÌNH CHIBI KHUNG XƯƠNG (định dạng "linh-khi-rig", xem docs/phong-cach-moi/KE-HOACH-CHIBI.md).
 // Mỗi nhân vật là MỘT ảnh chứa các mảnh (đầu, thân, tay, chân, đuôi, vũ khí). Mỗi khung hình game xoay và nhún
@@ -425,6 +425,8 @@ window.XR_MA_BAN = "addeeb";
         const dat = P2(m.dat) || [0, 0], truc = P2(m.truc) || [dat[0] + o[2] / 2, dat[1] + o[3] / 2];
         const p = { ten: m.ten, vai: String(m.vai || 'phu-kien'), cha: m.cha || null, o, dat, truc, lop: +m.lop || 0, i, con: [] };
         // nap: [bán kính, màu]: "bản lề ảo", hình tròn cùng màu chi vẽ ngay tại khớp để không bao giờ hở khoảng trống
+        // phu_co: [x, y, w, h] dải cổ áo của thân, vẽ lại đè lên chỏm cổ sau khi vẽ đầu
+        if (Array.isArray(m.phu_co) && m.phu_co.length === 4 && m.phu_co.every((v) => isFinite(v)) && m.phu_co[2] > 0 && m.phu_co[3] > 0) p.phuCo = m.phu_co.map(Number);
         if (Array.isArray(m.nap) && +m.nap[0] > 0 && /^#[0-9a-fA-F]{6}$/.test(String(m.nap[1]))) p.nap = [+m.nap[0], String(m.nap[1])];
         if (theoTen[p.ten]) throw new Error('trùng tên mảnh ' + p.ten);
         theoTen[p.ten] = p; manh.push(p);
@@ -830,6 +832,19 @@ window.XR_MA_BAN = "addeeb";
       if (mau) { ctx.globalAlpha = a0 * clamp(tint[1], 0, 1); ctx.drawImage(mau, o[0], o[1], o[2], o[3], p.dat[0], p.dat[1], o[2], o[3]); }
       if (trang) { ctx.globalAlpha = a0 * flash; ctx.drawImage(trang, o[0], o[1], o[2], o[3], p.dat[0], p.dat[1], o[2], o[3]); }
       ctx.restore();
+      // vừa vẽ xong đầu: vẽ lại dải cổ áo của thân đè lên chỏm cổ (viền cổ áo che chỗ nối)
+      if (p.vai === 'dau' && p.cha) {
+        const t = rig.theoTen[p.cha];
+        if (t && t.phuCo && M[t.ten]) {
+          const mt = M[t.ten], to = t.o, r = t.phuCo;
+          ctx.save(); ctx.transform(mt[0], mt[1], mt[2], mt[3], mt[4], mt[5]);
+          ctx.beginPath(); ctx.rect(r[0], r[1], r[2], r[3]); ctx.clip();
+          ctx.globalAlpha = a0; ctx.drawImage(rig.img, to[0], to[1], to[2], to[3], t.dat[0], t.dat[1], to[2], to[3]);
+          if (mau) { ctx.globalAlpha = a0 * clamp(tint[1], 0, 1); ctx.drawImage(mau, to[0], to[1], to[2], to[3], t.dat[0], t.dat[1], to[2], to[3]); }
+          if (trang) { ctx.globalAlpha = a0 * flash; ctx.drawImage(trang, to[0], to[1], to[2], to[3], t.dat[0], t.dat[1], to[2], to[3]); }
+          ctx.restore();
+        }
+      }
       if (opts.giuaManh) { try { opts.giuaManh(ctx, rig, M, k, p); } catch (e) { /* bỏ qua */ } }
     }
     if (opts.sauManh) { ctx.globalAlpha = a0; try { opts.sauManh(ctx, rig, M, k); } catch (e) { /* bỏ qua */ } }
@@ -1358,14 +1373,15 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
     nguoi: {
       // CÂY XƯƠNG CỐ ĐỊNH: thân là gốc, mọi bộ phận gắn vào thân (vũ khí gắn vào tay trước).
       // Điểm gắn nằm SÂU BÊN TRONG thân áo (không ở mép), xoay bao nhiêu cũng không lộ khoảng trống.
-      // Thứ tự vẽ cố định: chân sau → tay sau → đầu (cổ) → thân → phụ kiện → chân trước → tay trước (→ vũ khí).
+      // Thứ tự vẽ cố định (dưới lên trên): chân sau + tay sau (tối hơn 10%) → thân → ống tên / phụ kiện → đầu → chân trước + tay trước (→ vũ khí).
       // Số đo là tỉ lệ theo khung bao phần CÓ HÌNH của mảnh (không tính lề trống của ô cắt).
-      // ĐẦU: tâm xoay ở GỐC đoạn cổ (đáy mảnh đầu), cắm sâu trong cổ áo; đầu vẽ SAU thân nên viền cổ áo che chỗ nối.
+      // ĐẦU: tâm xoay ở GỐC chỏm cổ (đáy mảnh đầu), cắm sâu trong cổ áo. Đầu vẽ TRÊN thân, nhưng game vẽ lại
+      // riêng dải cổ áo của thân đè lên chỏm cổ (phu_co), nên chỗ nối luôn bị cổ áo che.
       'chan-sau': { cha: 'than', lop: 0, khop: [0.5, 0.12], gan: [0.4, 0.8] },
       'tay-sau': { cha: 'than', lop: 1, khop: [0.45, 0.16], gan: [0.36, 0.26] },
-      dau: { cha: 'than', lop: 2, khop: [0.5, 0.99], gan: [0.5, 0.17] },
-      than: { lop: 3, khop: [0.5, 0.95] },
-      'phu-kien': { cha: 'than', lop: 4, khop: [0.5, 0.35], gan: [0.3, 0.3] },
+      than: { lop: 2, khop: [0.5, 0.95] },
+      'phu-kien': { cha: 'than', lop: 3, khop: [0.5, 0.35], gan: [0.3, 0.3] },
+      dau: { cha: 'than', lop: 4, khop: [0.5, 0.99], gan: [0.5, 0.17] },
       'chan-truoc': { cha: 'than', lop: 5, khop: [0.5, 0.12], gan: [0.6, 0.8] },
       'tay-truoc': { cha: 'than', lop: 6, khop: [0.45, 0.16], gan: [0.64, 0.26] },
       'vu-khi': { cha: 'tay-truoc', lop: 7, khop: [0.5, 0.75], gan: [0.62, 0.88] },
@@ -1534,6 +1550,16 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
     if (!n) return null;
     const hx = (v) => Math.round(v / n).toString(16).padStart(2, '0');
     return [Math.round(r * 10) / 10, '#' + hx(sr) + hx(sg) + hx(sb)];
+  };
+  // DẢI CỔ ÁO (khung người): ô chữ nhật quanh chỗ cổ cắm vào thân (toạ độ tư thế ráp). Game vẽ lại phần thân trong ô này
+  // ngay sau khi vẽ đầu, để viền cổ áo đè lên chỏm cổ. Trả về [x, y, w, h] hoặc null.
+  XR.dayCoAo = function (ds, khung) {
+    if (khung !== 'nguoi') return null;
+    const dau = ds.find((p) => p.vai === 'dau'), than = ds.find((p) => p.vai === 'than');
+    if (!dau || !than || dau.cha !== than.id) return null;
+    const n = XR.napKhop(dau, khung); if (!n) return null;
+    const rong = (n[0] / 0.36) * 1.5; // bề ngang cổ x 1,5
+    return [dau.truc[0] - rong / 2, dau.truc[1] - rong * 0.45, rong, rong * 0.9];
   };
   XR.gocManh = (p) => Math.round(((p.a || 0) * 180) / Math.PI);
 
@@ -1726,7 +1752,7 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
   // Prompt mới bảo Gemini vẽ hai tay (hai chân) GIỐNG HỆT nhau; công cụ tự tô tối mảnh phía sau cho có chiều sâu.
   const CAP = { 'tay-sau': 'tay-truoc', 'chan-sau': 'chan-truoc', 'chan-truoc-xa': 'chan-truoc-gan', 'chan-sau-xa': 'chan-sau-gan',
     'cang-sau': 'cang-truoc', 'chan-xa-1': 'chan-gan-1', 'chan-xa-2': 'chan-gan-2', 'chan-xa-3': 'chan-gan-3' };
-  XR.DO_TOI = 0.24;
+  XR.DO_TOI = 0.1; // tay chân phía sau tối hơn 10%
   XR.tinhToi = function (ds, bat) {
     for (const p of ds) {
       p.toi = 0;
@@ -1803,6 +1829,7 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
         ten: p.ten, vai: p.vai, cha: p.cha == null ? null : tenTheoId[p.cha] || null,
         o: o[p.id], dat: [r(p.dat[0]), r(p.dat[1])], truc: [r(p.truc[0]), r(p.truc[1])], lop: p.lop,
         ...((p.toi || p.daToi) ? { da_to_toi: true } : {}), // công cụ đã tô tối sẵn trong ảnh (game bỏ qua khoá này)
+        ...(p.vai === 'than' && S.banLe !== false && XR.dayCoAo(ds, S.khung) ? { phu_co: XR.dayCoAo(ds, S.khung).map((v) => Math.round(v * k * 10) / 10) } : {}),
         ...(S.banLe !== false && XR.napKhop(p, S.khung) ? { nap: ((n) => [Math.round(n[0] * k * 10) / 10, n[1]])(XR.napKhop(p, S.khung)) } : {}),
       })),
     };
@@ -1853,7 +1880,7 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
   const VUNG = { rung: 'Rừng già', bien: 'Hang biển', laudai: 'Lâu đài cổ' };
   const DOI = { 'em-be': 'Em bé', quai: 'Quái' };
   // PHIÊN BẢN: tăng số mỗi lần sửa công cụ, ghi ngày sửa. Mã bản (6 ký tự) do game/build.py tính từ nội dung mã nguồn.
-  const PHIEN_BAN = { so: '2.1', ngay: '10/10/2026' };
+  const PHIEN_BAN = { so: '2.2', ngay: '10/10/2026' };
   XR.PHIEN_BAN = PHIEN_BAN;
   const TEN_BUOC = ['Loại', 'Nạp ảnh', 'Gán vai', 'Ráp', 'Động tác', 'Xuất'];
   const dpr = () => Math.min(3, window.devicePixelRatio || 1);
@@ -2501,7 +2528,7 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
       const ten = {}; S.manh.forEach((p) => (ten[p.id] = p.ten));
       rig = G.chibi.add({
         loai: 'linh-khi-rig', phien_ban: 1, ma: MA_XEM, ten: S.ten || 'xem', doi_tuong: S.doi_tuong, khung: S.khung, anhCanvas: cv, cao: +S.cao || 40, goc: S.goc.slice(),
-        manh: S.manh.map((p) => ({ ten: p.ten, vai: p.vai, cha: p.cha ? ten[p.cha] : null, o: o[p.id], dat: p.dat, truc: p.truc, lop: p.lop, nap: S.banLe !== false ? XR.napKhop(p, S.khung) : null })),
+        manh: S.manh.map((p) => ({ ten: p.ten, vai: p.vai, cha: p.cha ? ten[p.cha] : null, o: o[p.id], dat: p.dat, truc: p.truc, lop: p.lop, nap: S.banLe !== false ? XR.napKhop(p, S.khung) : null, phu_co: p.vai === 'than' && S.banLe !== false ? XR.dayCoAo(S.manh, S.khung) : null })),
         dong_tac: S.dong_tac,
       });
       rigCu = false;

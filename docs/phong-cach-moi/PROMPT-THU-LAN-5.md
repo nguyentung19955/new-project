@@ -25,6 +25,21 @@ Redraw exactly the same chibi hunter, same style, same colors, same size, as a p
 
 Khoanh ở Xưởng Rối (khung **Người**), máy nhắc đúng thứ tự này: Thân → Đầu → Tay trước → Tay sau → Chân trước → Chân sau → Vũ khí (bấm **Bỏ qua**) → ống tên (máy gọi là Phụ kiện).
 
+## 1b. Thợ Săn bản 2: khớp chuẩn cho 2D bone animation (khuyên dùng thay mục 1)
+
+A: dùng A của mục 1.
+
+B:
+```
+Redraw exactly the same chibi hunter, same style, same colors, same size, as a professional paper-doll parts sheet for 2D bone animation, all parts facing RIGHT in 3/4 view, on a plain pure white background, every part far apart from the others with wide white space, nothing touching, nothing overlapping. No grid, no guide lines, no red dots, no markers, no text, no labels, no numbers, no shadow. Arrange the parts in rows exactly like this. ROW 1 (top): 1) on the left, the TORSO with the front flap of the green cloak over the off-white tunic: an open round collar at the top where the neck goes in, two round shoulder sockets, the cloak hem at the bottom; WITHOUT the quiver, without sleeves, without arms, without legs, no flat cut edges; 2) on the right, the HEAD with the hood, ear tips, mask and sparrow, with a LONG neck stub at the bottom (about one third of the head height), straight, skin colored, with a rounded end, made to slide deep inside the collar. ROW 2: 3) on the left, the FRONT ARM; 4) on the right, the BACK ARM, an exact copy of the front arm. ROW 3: 5) on the left, the FRONT LEG; 6) on the right, the BACK LEG, an exact copy of the front leg. ROW 4 (bottom): 7) the bamboo quiver with its leaves, alone, as its own separate piece. Each arm is one piece hanging perfectly STRAIGHT and VERTICAL like a doll standing at attention: at the TOP a big round ball-shaped shoulder cap (ball-and-socket joint) in the same off-white color as the sleeve, never a flat cut; off-white sleeve; pale hand at the BOTTOM with the thumb toward the right; no bend at the elbow, not tilted. Each leg is one piece hanging perfectly STRAIGHT and VERTICAL: at the TOP a long rounded hip end (the upper thigh) in the same color as the leg, made to hide under the cloak hem; the brown boot at the BOTTOM with the toes pointing to the RIGHT; no bend at the knee, not tilted. Both arms are identical twins and both legs are identical twins: same shape, same length, same colors; do NOT make the back ones darker or a different color (the game darkens the back arm and back leg by itself). All joint ends are smooth, round and filled with the same color as the skin or cloth, never white, never empty, no visible joint knobs.
+```
+
+Xưởng Rối tự lo phần còn lại (không cần Gemini vẽ):
+- Thứ tự lớp từ dưới lên: chân sau + tay sau (tối hơn 10%) → thân → ống tên → đầu → chân trước + tay trước.
+- Tâm xoay đặt ở tâm chỏm vai, gốc chỏm cổ và đầu tròn ở hông.
+- Viền cổ áo được vẽ lại đè lên chỏm cổ.
+- Nắp che khớp cùng màu chi.
+
 ## 2. Quái bốn chân: Heo Rừng Con (khung Bốn chân, thay `heoCon`)
 
 A:

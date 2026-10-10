@@ -18856,6 +18856,8 @@ MA._xong();
         const dat = P2(m.dat) || [0, 0], truc = P2(m.truc) || [dat[0] + o[2] / 2, dat[1] + o[3] / 2];
         const p = { ten: m.ten, vai: String(m.vai || 'phu-kien'), cha: m.cha || null, o, dat, truc, lop: +m.lop || 0, i, con: [] };
         // nap: [bán kính, màu]: "bản lề ảo", hình tròn cùng màu chi vẽ ngay tại khớp để không bao giờ hở khoảng trống
+        // phu_co: [x, y, w, h] dải cổ áo của thân, vẽ lại đè lên chỏm cổ sau khi vẽ đầu
+        if (Array.isArray(m.phu_co) && m.phu_co.length === 4 && m.phu_co.every((v) => isFinite(v)) && m.phu_co[2] > 0 && m.phu_co[3] > 0) p.phuCo = m.phu_co.map(Number);
         if (Array.isArray(m.nap) && +m.nap[0] > 0 && /^#[0-9a-fA-F]{6}$/.test(String(m.nap[1]))) p.nap = [+m.nap[0], String(m.nap[1])];
         if (theoTen[p.ten]) throw new Error('trùng tên mảnh ' + p.ten);
         theoTen[p.ten] = p; manh.push(p);
@@ -19261,6 +19263,19 @@ MA._xong();
       if (mau) { ctx.globalAlpha = a0 * clamp(tint[1], 0, 1); ctx.drawImage(mau, o[0], o[1], o[2], o[3], p.dat[0], p.dat[1], o[2], o[3]); }
       if (trang) { ctx.globalAlpha = a0 * flash; ctx.drawImage(trang, o[0], o[1], o[2], o[3], p.dat[0], p.dat[1], o[2], o[3]); }
       ctx.restore();
+      // vừa vẽ xong đầu: vẽ lại dải cổ áo của thân đè lên chỏm cổ (viền cổ áo che chỗ nối)
+      if (p.vai === 'dau' && p.cha) {
+        const t = rig.theoTen[p.cha];
+        if (t && t.phuCo && M[t.ten]) {
+          const mt = M[t.ten], to = t.o, r = t.phuCo;
+          ctx.save(); ctx.transform(mt[0], mt[1], mt[2], mt[3], mt[4], mt[5]);
+          ctx.beginPath(); ctx.rect(r[0], r[1], r[2], r[3]); ctx.clip();
+          ctx.globalAlpha = a0; ctx.drawImage(rig.img, to[0], to[1], to[2], to[3], t.dat[0], t.dat[1], to[2], to[3]);
+          if (mau) { ctx.globalAlpha = a0 * clamp(tint[1], 0, 1); ctx.drawImage(mau, to[0], to[1], to[2], to[3], t.dat[0], t.dat[1], to[2], to[3]); }
+          if (trang) { ctx.globalAlpha = a0 * flash; ctx.drawImage(trang, to[0], to[1], to[2], to[3], t.dat[0], t.dat[1], to[2], to[3]); }
+          ctx.restore();
+        }
+      }
       if (opts.giuaManh) { try { opts.giuaManh(ctx, rig, M, k, p); } catch (e) { /* bỏ qua */ } }
     }
     if (opts.sauManh) { ctx.globalAlpha = a0; try { opts.sauManh(ctx, rig, M, k); } catch (e) { /* bỏ qua */ } }

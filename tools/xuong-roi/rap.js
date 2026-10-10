@@ -87,14 +87,15 @@
     nguoi: {
       // CÂY XƯƠNG CỐ ĐỊNH: thân là gốc, mọi bộ phận gắn vào thân (vũ khí gắn vào tay trước).
       // Điểm gắn nằm SÂU BÊN TRONG thân áo (không ở mép), xoay bao nhiêu cũng không lộ khoảng trống.
-      // Thứ tự vẽ cố định: chân sau → tay sau → đầu (cổ) → thân → phụ kiện → chân trước → tay trước (→ vũ khí).
+      // Thứ tự vẽ cố định (dưới lên trên): chân sau + tay sau (tối hơn 10%) → thân → ống tên / phụ kiện → đầu → chân trước + tay trước (→ vũ khí).
       // Số đo là tỉ lệ theo khung bao phần CÓ HÌNH của mảnh (không tính lề trống của ô cắt).
-      // ĐẦU: tâm xoay ở GỐC đoạn cổ (đáy mảnh đầu), cắm sâu trong cổ áo; đầu vẽ SAU thân nên viền cổ áo che chỗ nối.
+      // ĐẦU: tâm xoay ở GỐC chỏm cổ (đáy mảnh đầu), cắm sâu trong cổ áo. Đầu vẽ TRÊN thân, nhưng game vẽ lại
+      // riêng dải cổ áo của thân đè lên chỏm cổ (phu_co), nên chỗ nối luôn bị cổ áo che.
       'chan-sau': { cha: 'than', lop: 0, khop: [0.5, 0.12], gan: [0.4, 0.8] },
       'tay-sau': { cha: 'than', lop: 1, khop: [0.45, 0.16], gan: [0.36, 0.26] },
-      dau: { cha: 'than', lop: 2, khop: [0.5, 0.99], gan: [0.5, 0.17] },
-      than: { lop: 3, khop: [0.5, 0.95] },
-      'phu-kien': { cha: 'than', lop: 4, khop: [0.5, 0.35], gan: [0.3, 0.3] },
+      than: { lop: 2, khop: [0.5, 0.95] },
+      'phu-kien': { cha: 'than', lop: 3, khop: [0.5, 0.35], gan: [0.3, 0.3] },
+      dau: { cha: 'than', lop: 4, khop: [0.5, 0.99], gan: [0.5, 0.17] },
       'chan-truoc': { cha: 'than', lop: 5, khop: [0.5, 0.12], gan: [0.6, 0.8] },
       'tay-truoc': { cha: 'than', lop: 6, khop: [0.45, 0.16], gan: [0.64, 0.26] },
       'vu-khi': { cha: 'tay-truoc', lop: 7, khop: [0.5, 0.75], gan: [0.62, 0.88] },
@@ -263,6 +264,16 @@
     if (!n) return null;
     const hx = (v) => Math.round(v / n).toString(16).padStart(2, '0');
     return [Math.round(r * 10) / 10, '#' + hx(sr) + hx(sg) + hx(sb)];
+  };
+  // DẢI CỔ ÁO (khung người): ô chữ nhật quanh chỗ cổ cắm vào thân (toạ độ tư thế ráp). Game vẽ lại phần thân trong ô này
+  // ngay sau khi vẽ đầu, để viền cổ áo đè lên chỏm cổ. Trả về [x, y, w, h] hoặc null.
+  XR.dayCoAo = function (ds, khung) {
+    if (khung !== 'nguoi') return null;
+    const dau = ds.find((p) => p.vai === 'dau'), than = ds.find((p) => p.vai === 'than');
+    if (!dau || !than || dau.cha !== than.id) return null;
+    const n = XR.napKhop(dau, khung); if (!n) return null;
+    const rong = (n[0] / 0.36) * 1.5; // bề ngang cổ x 1,5
+    return [dau.truc[0] - rong / 2, dau.truc[1] - rong * 0.45, rong, rong * 0.9];
   };
   XR.gocManh = (p) => Math.round(((p.a || 0) * 180) / Math.PI);
 
@@ -455,7 +466,7 @@
   // Prompt mới bảo Gemini vẽ hai tay (hai chân) GIỐNG HỆT nhau; công cụ tự tô tối mảnh phía sau cho có chiều sâu.
   const CAP = { 'tay-sau': 'tay-truoc', 'chan-sau': 'chan-truoc', 'chan-truoc-xa': 'chan-truoc-gan', 'chan-sau-xa': 'chan-sau-gan',
     'cang-sau': 'cang-truoc', 'chan-xa-1': 'chan-gan-1', 'chan-xa-2': 'chan-gan-2', 'chan-xa-3': 'chan-gan-3' };
-  XR.DO_TOI = 0.24;
+  XR.DO_TOI = 0.1; // tay chân phía sau tối hơn 10%
   XR.tinhToi = function (ds, bat) {
     for (const p of ds) {
       p.toi = 0;
@@ -532,6 +543,7 @@
         ten: p.ten, vai: p.vai, cha: p.cha == null ? null : tenTheoId[p.cha] || null,
         o: o[p.id], dat: [r(p.dat[0]), r(p.dat[1])], truc: [r(p.truc[0]), r(p.truc[1])], lop: p.lop,
         ...((p.toi || p.daToi) ? { da_to_toi: true } : {}), // công cụ đã tô tối sẵn trong ảnh (game bỏ qua khoá này)
+        ...(p.vai === 'than' && S.banLe !== false && XR.dayCoAo(ds, S.khung) ? { phu_co: XR.dayCoAo(ds, S.khung).map((v) => Math.round(v * k * 10) / 10) } : {}),
         ...(S.banLe !== false && XR.napKhop(p, S.khung) ? { nap: ((n) => [Math.round(n[0] * k * 10) / 10, n[1]])(XR.napKhop(p, S.khung)) } : {}),
       })),
     };

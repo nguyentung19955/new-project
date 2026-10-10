@@ -7,7 +7,7 @@
   const VUNG = { rung: 'Rừng già', bien: 'Hang biển', laudai: 'Lâu đài cổ' };
   const DOI = { 'em-be': 'Em bé', quai: 'Quái' };
   // PHIÊN BẢN: tăng số mỗi lần sửa công cụ, ghi ngày sửa. Mã bản (6 ký tự) do game/build.py tính từ nội dung mã nguồn.
-  const PHIEN_BAN = { so: '2.1', ngay: '10/10/2026' };
+  const PHIEN_BAN = { so: '2.2', ngay: '10/10/2026' };
   XR.PHIEN_BAN = PHIEN_BAN;
   const TEN_BUOC = ['Loại', 'Nạp ảnh', 'Gán vai', 'Ráp', 'Động tác', 'Xuất'];
   const dpr = () => Math.min(3, window.devicePixelRatio || 1);
@@ -655,7 +655,7 @@
       const ten = {}; S.manh.forEach((p) => (ten[p.id] = p.ten));
       rig = G.chibi.add({
         loai: 'linh-khi-rig', phien_ban: 1, ma: MA_XEM, ten: S.ten || 'xem', doi_tuong: S.doi_tuong, khung: S.khung, anhCanvas: cv, cao: +S.cao || 40, goc: S.goc.slice(),
-        manh: S.manh.map((p) => ({ ten: p.ten, vai: p.vai, cha: p.cha ? ten[p.cha] : null, o: o[p.id], dat: p.dat, truc: p.truc, lop: p.lop, nap: S.banLe !== false ? XR.napKhop(p, S.khung) : null })),
+        manh: S.manh.map((p) => ({ ten: p.ten, vai: p.vai, cha: p.cha ? ten[p.cha] : null, o: o[p.id], dat: p.dat, truc: p.truc, lop: p.lop, nap: S.banLe !== false ? XR.napKhop(p, S.khung) : null, phu_co: p.vai === 'than' && S.banLe !== false ? XR.dayCoAo(S.manh, S.khung) : null })),
         dong_tac: S.dong_tac,
       });
       rigCu = false;
