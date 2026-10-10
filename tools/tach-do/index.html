@@ -784,7 +784,7 @@ function datDiem(i) { // điểm tự đặt theo quy ước; điểm người d
         const yv = y0 + Math.max(1, Math.round(bh * 0.2)), [a, b] = mepHang(yv), vao = (b - a + 1) * 0.15;
         P.co = [hangTB(y0, y0 + dot), y0 + 0.5]; P.vai_sau = [a + vao, yv + 0.5]; P.vai_truoc = [b + 1 - vao, yv + 0.5]; P.hong = [hangTB(y1 - dot, y1), y1 + 1];
       }
-    } else if (o === 'backs') P.lung = [x0 + bw * 0.6, y0 + bh * 0.4];
+    } else if (o === 'backs') P.lung = [x0 + bw * 0.6, y0 + bh * 0.6];
     else if (o === 'wings') { let bx = x1, by = y1, best = -1; for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (dac(x, y) && x + y > best) { best = x + y; bx = x; by = y; } const lui = Math.max(1, Math.round(Math.min(bw, bh) * 0.08)); P.goc_canh = [bx + 0.5 - lui, by + 0.5 - lui]; }
     else if (o === 'hands') { if (D.kieu === 'cam') { const yc = y0 + Math.round(bh * 0.78); P.tay_truoc = [hangTB(yc - 1, yc + 1), yc + 0.5]; } else P.eo = [hangTB(y0, y0 + dot), y0 + 0.5]; }
     for (const k in P) if (c.diem[k]) P[k] = [c.diem[k][0] * w, c.diem[k][1] * h];
@@ -899,7 +899,7 @@ let CHE = 'cam';
 const NEO = { dinh_dau: ['Đỉnh đầu', '#ffd23c'], gay: ['Gáy', '#6fc1d8'], mat: ['Mắt', '#ffd23c'], co: ['Cổ', '#ffd23c'], vai_sau: ['Vai sau', '#6fc1d8'], vai_truoc: ['Vai trước', '#ff5a46'],
   hong: ['Hông', '#c88cff'], eo: ['Eo', '#c88cff'], lung: ['Lưng', '#ffd23c'], goc_canh: ['Gốc cánh', '#ff5a46'], tay_truoc: ['Tay cầm', '#ff5a46'] };
 const NEO_GOI = { hats: 'Đỉnh đầu: chỗ đỉnh đầu em bé chạm vào trong mũ (giữa, phía dưới). Gáy: phía sau đầu.', masks: 'Mắt: tâm dấu, đặt vào giữa vùng mắt.',
-  robes: 'Cổ: giữa mép trên cổ áo. Hai vai: hai đầu vai. Hông: giữa mép dưới áo.', backs: 'Lưng: chỗ món đồ áp vào lưng (giữa hai bả vai).',
+  robes: 'Cổ: giữa mép trên cổ áo. Hai vai: hai đầu vai. Hông: giữa mép dưới áo.', backs: 'Lưng: chỗ món đồ áp vào lưng em bé (giữa hai bả vai). Đồ đeo lưng thường nhô cao hơn vai nên điểm này nằm khoảng giữa món đồ.',
   wings: 'Gốc cánh: chỗ cánh mọc ra từ lưng (góc dưới bên phải).', hands: 'Eo: móc treo trên cùng của bùa (treo ở thắt lưng). Tay cầm: chỗ bàn tay nắm.' };
 function chonMon(i, giu) {
   CHON = i; const K = KQ[i], m = L.ds[i], c = chinhCua(i);

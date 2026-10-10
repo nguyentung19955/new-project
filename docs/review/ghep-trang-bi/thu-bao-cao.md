@@ -6,7 +6,8 @@ Ngày 10/10/2026. Câu hỏi của bạn: *"thử dùng tool rồi ghép với c
 
 - **Công cụ Tách Đồ tách được đủ 38/38 món** ở cả 5 ảnh, đúng thứ tự, cả bản nét gấp đôi lẫn bản thường. Không phải sửa cách tách.
 - **ChatGPT vẽ đúng thứ tự và đúng món** ở cả 5 lô. Nhưng nhiều món **sai dáng** so với chỗ trong game (áo có tay dài, dấu mặt nạ sai dáng, trống nằm ngang, bùa xoè ngang).
-- **Khoác lên em bé trong game (bản hiện tại, chưa có điểm neo):** phần lớn món **lệch nhẹ**: đặt thấp hơn đồ vẽ bằng code khoảng 2 đến 4 điểm ảnh. Khi phiên "ghep-loi" cho game đọc điểm neo, các món này sẽ tự lên đúng chỗ.
+- **Khoác lên em bé trong game, bản cũ chưa có điểm neo:** phần lớn món **lệch nhẹ**: đặt thấp hơn đồ vẽ bằng code khoảng 2 đến 4 điểm ảnh.
+- **Bản mới của phiên "ghep-loi" (đặt theo điểm neo, vừa đẩy lên):** áo ôm thân đúng cổ đến hông, khố đô vật về đúng hông, đồ lưng lên ngang vai. Xem mục 7.
 - **Không dùng được, phải vẽ lại (7 món):** găng đồng, dấu đô vật, dấu lá, áo choàng, khăn choàng sương, trống đồng nhỏ, và nên vẽ lại khố đô vật nếu muốn đẹp.
 - **Chưa đưa món nào vào game.** Tệp thử nằm ở `docs/review/ghep-trang-bi/tep/`. Riêng 4 cánh đã có sẵn trong game từ trước (phiên khác đưa vào). Tệp cánh của phiên này giống hệt, chỉ thêm điểm neo.
 
@@ -19,8 +20,8 @@ Ngày 10/10/2026. Câu hỏi của bạn: *"thử dùng tool rồi ghép với c
 | Tách Đồ: tệp tải về (cả bản gấp đôi và bản thường) có thêm `diem` và `co_chuan` | **ĐÃ SỬA THẬT** |
 | Tách Đồ: prompt vẽ ghi rõ **dáng** từng món, áo không tay, bùa dài hẹp, đồ lưng dựng đứng, dấu mặt không che mắt | **ĐÃ SỬA THẬT** (chỉ đổi chữ trong prompt, không đổi lô hay mã) |
 | Thuật toán tách (nền xanh lá, tia lửa rời, mặt nạ) | Không cần sửa: đã tách đúng |
-| Đặt đồ theo điểm neo trong game | Việc của phiên "ghep-loi". Lúc phiên này kết thúc, game **chưa** có phần đó nên chưa chụp được ảnh "sau" (xem cuối báo cáo) |
-| Ẩn mặt nạ AI ở khung quay lưng, neo áo choàng và khăn vào cổ | **CHỈ ĐỀ XUẤT** (cho phiên ghep-loi) |
+| Đặt đồ theo điểm neo trong game | Việc của phiên "ghep-loi" (đã đẩy lên lúc gần cuối). Phiên này đã chụp ảnh "sau" để so (mục 7) |
+| Neo áo choàng và khăn vào cổ, kiểu găng tay | **CHỈ ĐỀ XUẤT** (cho phiên ghep-loi) |
 | Vẽ lại 7 món | **CẦN VẼ LẠI ẢNH** (dùng prompt mới của Tách Đồ) |
 
 Mọi tính năng cũ của Tách Đồ vẫn giữ: tải 2 bản, lật, xoay, to nhỏ, dời bằng mũi tên, bỏ món, vũ khí. Không có tên trường mới ngoài định dạng đã chốt: chỉ dùng `diem` và `co_chuan`.
@@ -49,7 +50,7 @@ Khi tách, công cụ **tự đoán** các điểm sau. Toạ độ tính theo �
 | Mặt nạ | `mat` | tâm hình |
 | Áo | `co`, `vai_sau`, `vai_truoc`, `hong` | cổ: giữa mép trên. Hai vai: ở 20% bề cao, cách mép áo 15% bề ngang. Hông: giữa mép dưới |
 | Khố đô vật | `eo`, `hong` | eo: giữa mép trên (đai). Hông: giữa mép dưới |
-| Đồ lưng | `lung` | 60% ngang, 40% cao (phía áp vào lưng) |
+| Đồ lưng | `lung` | 60% ngang, 60% cao (phía áp vào lưng). Lúc đầu dùng 40% cao, thử trong game thấy đồ lưng thấp khoảng 3 nên đổi sang 60% |
 | Cánh | `goc_canh` | điểm xa nhất ở góc dưới bên phải (gốc cánh), lùi vào trong một chút |
 | Bùa | `eo` | giữa móc treo trên cùng |
 | Đồ cầm (búa tí hon) | `tay_truoc` | giữa cán, ở 78% bề cao |
@@ -147,7 +148,7 @@ Chung: đồ AI nằm **thấp hơn đồ code khoảng 3 đến 4**.
 | la · Dấu lá | 7×8 (11×8) | **không hợp** | thành mảng xanh to che nửa mặt và mắt |
 | xoay · Dấu nước | 4×4 | khớp | chấm xoáy xanh ở vùng mắt, giống code |
 | du · Dấu đô vật | 5×5 (10×5) | **không hợp** | vẽ hình con bướm nét mảnh, thu về 5×5 chỉ còn vài chấm đỏ, gần như không thấy. Cần vẽ lại: hai vạch đỏ dày nằm ngang |
-| ho · Mặt nạ hổ | 10×9 (11×9) | khớp (là mặt nạ cả mặt) | che kín mặt như mặt nạ thật. **Lỗi game:** ở khung chém, em bé quay đầu nên mặt nạ code bị ẩn, nhưng mặt nạ AI vẫn hiện ở **sau gáy**. Dấu lá cũng vậy |
+| ho · Mặt nạ hổ | 10×9 (11×9) | khớp (là mặt nạ cả mặt) | che kín mặt như mặt nạ thật. Ở khung chém em bé xoay người, mặt nạ theo mặt sang bên trái giống dấu code, không lỗi |
 
 ### Bùa và đồ tay (10)
 
@@ -176,9 +177,8 @@ Bùa: điểm neo `eo` (móc treo) sẽ kéo bùa lên đúng thắt lưng. Mu�
 
 **Cho phiên ghep-loi (game), chỉ là đề xuất:**
 1. Đặt theo điểm neo sẽ sửa hầu hết lỗi "thấp 2 đến 4 điểm ảnh" ở trên. Không cần vẽ lại áo, cánh, phần lớn đồ lưng và bùa.
-2. Mặt nạ AI: ẩn ở những khung mà mặt nạ code bị ẩn (khung chém quay đầu).
-3. Áo choàng và khăn choàng: nên cho phép đồ lưng neo vào `co` thay vì `lung`. Cách làm: trong tệp món đồ chỉ ghi điểm `co` (định dạng đã cho phép). Công cụ hiện tự đoán `lung` cho mọi đồ lưng; người dùng có thể đổi tay sau khi game hỗ trợ.
-4. Găng tay: cần kiểu "găng" riêng (ảnh nhỏ đặt ở `tay_truoc` và `tay_sau`). Hiện không có trong định dạng, nên để sau.
+2. Áo choàng và khăn choàng: nên cho phép đồ lưng neo vào `co` thay vì `lung`. Cách làm: trong tệp món đồ chỉ ghi điểm `co` (định dạng đã cho phép). Công cụ hiện tự đoán `lung` cho mọi đồ lưng; người dùng có thể đổi tay sau khi game hỗ trợ.
+3. Găng tay: cần kiểu "găng" riêng (ảnh nhỏ đặt ở `tay_truoc` và `tay_sau`). Hiện không có trong định dạng, nên để sau.
 
 **Sửa prompt vẽ (đã sửa trong Tách Đồ):**
 - Mỗi ô thêm câu về dáng, ví dụ "dáng NGANG DẸT, rộng gấp khoảng 2 lần cao" (dấu đô vật), "dáng ĐỨNG CAO HẸP…" (bùa, trống), "dáng gần vuông".
@@ -195,9 +195,25 @@ Bùa: điểm neo `eo` (móc treo) sẽ kéo bùa lên đúng thắt lưng. Mu�
 
 ## 7. Ảnh trước và sau khi có điểm neo
 
-Lúc phiên này kết thúc, phiên "ghep-loi" **chưa đẩy** phần game đặt đồ theo điểm neo lên nhánh. Vì vậy chỉ có ảnh "trước" (bản game hiện tại).
+Gần cuối phiên, phiên "ghep-loi" đẩy lên phần game đặt đồ theo điểm neo (commit `213989f`). Phiên này chạy lại cùng bảng xem thử với cùng tệp trong `tep/`:
+- **Trước** (game cũ, đặt theo `lech`): `anh-thu/tp-*.png`, `anh-thu/phoi-nhieu-mon.png`
+- **Sau** (game mới, đặt theo điểm neo): `anh-thu/sau/tp-*.png`, `anh-thu/sau/phoi-nhieu-mon.png`
 
-Khi phần đó có trong game, chạy lại bảng xem thử với các tệp trong `tep/` là thấy bản "sau", vì các tệp này đã có sẵn `diem`.
+Đã thấy trên ảnh "sau":
+
+| Lô | Trước | Sau |
+|---|---|---|
+| Áo | thấp khoảng 2, che chân. Khố đô vật nằm ở ngực | **khớp**: mép trên ở cổ, mép dưới ở hông. Khố đô vật về đúng hông. Áo lông trắng gọn vào thân |
+| Đồ lưng | thấp 3 đến 4 | **gần khớp**: lên ngang vai, chỉ còn bầu hồ lô hơi thấp (chạm điểm `lung` lên cao hơn là được). Áo choàng và khăn choàng vẫn **không hợp** vì vẽ sai kiểu |
+| Cánh | gốc hơi thấp | gần như cũ, lệch nhẹ (game giữ cách đặt cánh riêng có vỗ cánh) |
+| Bùa | treo sát đất | treo từ thắt lưng, gần như bùa code. Vẫn nhỏ |
+| Mặt nạ | | dấu lá vẫn che mặt, dấu đô vật vẫn gần như không thấy: phải vẽ lại |
+| Găng đồng | | vẫn treo ở hông: không dùng được |
+
+Kết luận sau khi có điểm neo:
+- **Dùng được** (khớp hoặc lệch nhẹ, chỉnh bằng chạm điểm neo trong Tách Đồ hoặc "chỉnh theo cặp" trong trang Ghép Trang Bị): 13 áo, 4 cánh, bầu hồ lô, ống tên, gùi tre, 8 bùa, búa tí hon, dấu lửa, dấu nước, mặt nạ hổ.
+- **Phải vẽ lại:** áo choàng, khăn choàng sương, trống đồng nhỏ, dấu lá, dấu đô vật, găng đồng.
+- Đã soát thêm ở 4 em bé: thân code của cả 4 có cùng dáng, nên đồ khớp ở một em thì khớp ở cả 4.
 
 ## Cách đã kiểm
 
@@ -205,6 +221,6 @@ Khi phần đó có trong game, chạy lại bảng xem thử với các tệp t
 - `python3 game/build.py`: chạy được. Các tệp game do nó tạo lại **không** được đẩy lên
 - Chạy Tách Đồ thật bằng Chromium cho 5 lô, tải 2 bản qua chính hàm tải của trang
 - Xem thử bằng game thật trong Chromium
-- Workflow đẩy lên: xanh
+- Workflow lần đẩy Tách Đồ: xanh
 
 Không sửa `game/js`, không thêm gì vào `game/art/custom/`.
