@@ -707,7 +707,7 @@
     c.setTransform(1, 0, 0, 1, 0, 0);
     if (ox || oy) {
       c.globalCompositeOperation = 'copy';
-      c.drawImage(c.canvas, ox, oy);
+      c.drawImage(c.canvas, 0, 0, c.canvas.width, c.canvas.height, ox, oy, G.W, G.H); // canvas nét cao: dán theo đơn vị game
       c.globalCompositeOperation = 'source-over';
     }
     c.fillStyle = 'rgba(0,0,0,' + Math.min(1, k * 1.1).toFixed(3) + ')';

@@ -44,6 +44,7 @@ jobs:
           cp game/web/* "$RUNNER_TEMP/web/site/"
           # Xưởng Sprite: công cụ tự vẽ sprite (https://spiritblade.web.app/xuong-sprite.html) và bản game thử nó mở bên trong
           cp game/dist/xuong-sprite.html game/dist/xuong-sprite-thu.html "$RUNNER_TEMP/web/site/"
+          cp game/dist/xuong-roi.html "$RUNNER_TEMP/web/site/"
           cat > "$RUNNER_TEMP/web/firebase.json" <<EOF
           {
             "hosting": {
