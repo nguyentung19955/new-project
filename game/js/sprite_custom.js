@@ -41,6 +41,9 @@
       // Tệp cũ không có hai mục này: null, phát như trước.
       sp.dungYen = Array.isArray(tep.dung_yen) ? tep.dung_yen.filter((x) => typeof x === 'string' && /^[A-Za-z0-9_]{1,20}$/.test(x)).slice(0, 20) : null;
       sp.nhun = tep.nhun == null || !isFinite(+tep.nhun) ? null : clamp(+tep.nhun, 0, 200);
+      // Em bé thân AI: đồ đang mặc (mũ, áo, đồ lưng, bùa, dấu mặt nạ, cánh) vẫn khoác lên thân AI, trừ khi tệp ghi "khoac_do": false.
+      // "neo": { "dau": [dx, dy], "than": [dx, dy], "<động tác>": { "dau": [..], "than": [..] } } dời chỗ đặt đồ (điểm ảnh) cho khớp hình AI.
+      if (sp.doi === 'em-be') { sp.khoacDo = tep.khoac_do !== false; sp.neo = docNeo(tep.neo); }
       if (typeof Image !== 'undefined') {
         const img = new Image();
         img.onload = () => { sp.img = img; sp.ready = true; };
@@ -194,6 +197,18 @@
   }
 
   // ---------- EM BÉ ----------
+  const so2 = (a) => (Array.isArray(a) && a.length === 2 && isFinite(a[0]) && isFinite(a[1]) ? [clamp(Math.round(+a[0]), -30, 30), clamp(Math.round(+a[1]), -30, 30)] : null);
+  function docNeo(n) {
+    const goc = { dau: (n && so2(n.dau)) || [0, 0], than: (n && so2(n.than)) || [0, 0] }, kq = { goc, theo: {} };
+    if (n && typeof n === 'object') for (const k of ANIMS) {
+      const m = n[k]; if (!m || typeof m !== 'object') continue;
+      kq.theo[k] = { dau: so2(m.dau) || goc.dau, than: so2(m.than) || goc.than };
+    }
+    return kq;
+  }
+  SC.docNeo = docNeo;
+  // Điểm neo của động tác ten (động tác không ghi riêng thì dùng neo chung).
+  SC.neoCua = (sp, ten) => (sp.neo ? sp.neo.theo[ten] || sp.neo.goc : null);
   // Mã tệp: "em-be" cho cả bốn em bé, hoặc "em-be-smith", "em-be-hunter", "em-be-healer", "em-be-wrestler" cho từng bé.
   SC.cuaEmBe = (key) => SC.get('em-be-' + (key || 'smith')) || SC.get('em-be');
   SC.chonEmBe = function (sp, o) {
@@ -219,6 +234,17 @@
     return null;
   }
   SC.emBeTint = emBeTint;
+  // Hình một màu của một lớp đồ (ánh viền bậc), nhớ trên chính lớp đó.
+  function bongMau(l, col) {
+    l.mau = l.mau || {};
+    let cv = l.mau[col];
+    if (!cv) {
+      cv = document.createElement('canvas'); cv.width = l.cv.width; cv.height = l.cv.height;
+      const x = cv.getContext('2d'); x.drawImage(l.cv, 0, 0); x.globalCompositeOperation = 'source-in'; x.fillStyle = col; x.fillRect(0, 0, cv.width, cv.height);
+      l.mau[col] = cv;
+    }
+    return cv;
+  }
   function noiEmBe() {
     const A = G.art;
     if (!A || !A.hero || A._spriteCustom || !SC.noi) return;
@@ -231,14 +257,22 @@
       try { fr = G.tinhLinh.frame(o); } catch (e) { fr = null; }
       if (!fr) return hero0.call(A, c, o);
       const s = SC.chonEmBe(sp, o), tint = emBeTint(o);
+      let lop = null; // đồ đang mặc khoác lên thân AI: lớp sau thân và lớp trước thân, vẽ theo khung xương của em bé gốc
+      if (sp.khoacDo && G.tinhLinh.lopDo) { try { lop = G.tinhLinh.lopDo(fr, SC.neoCua(sp, s.ten)); } catch (e) { lop = null; } }
       // Em bé gốc vẫn vẽ bóng, vũ khí, hào quang trang phục; chỗ vẽ thân thì vẽ hình tự vẽ.
       const gia = butGia(c, function (img, x, y) {
         const than = img === fr.cv || (arguments.length === 3 && x === fr.ox && y === fr.oy && img && img.width === fr.cv.width && img.height === fr.cv.height);
-        if (than) { SC.veKhung(c, sp, s.ten, s.i, 1, { tint }); return; }
+        if (than) {
+          if (lop && !lop.sau.trong) c.drawImage(lop.sau.cv, lop.sau.ox, lop.sau.oy);
+          SC.veKhung(c, sp, s.ten, s.i, 1, { tint });
+          if (lop && !lop.truoc.trong) c.drawImage(lop.truoc.cv, lop.truoc.ox, lop.truoc.oy);
+          return;
+        }
         if (fr.sil) for (const col in fr.sil) if (fr.sil[col] === img) { // ánh viền màu bậc quanh em bé
           c.save(); c.translate(x - fr.ox, y - fr.oy); c.globalCompositeOperation = 'source-over';
           const a = sp.dt[s.ten] || sp.dt.idle;
           c.drawImage(nhuom(sp, col), s.i * sp.fw, a.hang * sp.fh, sp.fw, sp.fh, -sp.ax, -sp.ay, sp.fw, sp.fh);
+          if (lop) for (const l of [lop.sau, lop.truoc]) if (!l.trong) c.drawImage(bongMau(l, col), l.ox, l.oy);
           c.restore();
           return;
         }

@@ -576,6 +576,9 @@
   // ====================================================================
   // 4. VẼ MỘT EM BÉ THEO LỚP
   // Thứ tự: lưng (cánh, đồ đeo) -> thân trần -> áo -> mũ -> mặt nạ -> tay gần. only: chỉ vẽ một lớp (để tách lớp cho dễ nhìn).
+  // Thân AI (em-be-*.sprite.json, js/sprite_custom.js): only = 'aiSau' chỉ vẽ đồ nằm SAU thân (đồ đeo lưng, cánh),
+  // only = 'aiTruoc' chỉ vẽ đồ nằm TRƯỚC thân (áo, mũ, dấu mặt nạ, bùa, đồ cầm, dây đeo); bỏ thân trần, tay áo và găng
+  // (tay chân là của hình AI). neo: { dau: [dx, dy], than: [dx, dy] } dời điểm neo đầu, thân cho khớp hình AI.
   // ====================================================================
   const SHN = [2, -10], SHF = [-2, -10]; // vai gần, vai xa
   function reach(sh, h, max) { const dx = h[0] - sh[0], dy = h[1] - sh[1], d = Math.hypot(dx, dy); return d <= max ? h : [sh[0] + (dx / d) * max, sh[1] + (dy / d) * max]; }
@@ -587,16 +590,22 @@
     else { H.r(0, -1, 2, 3, INK); H.r(4, -1, 2, 3, INK); H.p(0, -1, SH); H.p(4, -1, SH); if (kind === 'wide') { H.r(0, -2, 2, 1, INK); H.r(4, -2, 2, 1, INK); } }
     if (kind === 'wide' || kind === 'hurt') H.r(2, 3, 2, 2, INK); else if (kind === 'x') H.r(2, 3, 2, 1, INK); else if (kind === 'shut') { H.p(2, 3, INK); H.p(3, 3, INK); H.p(2, 4, '#e86a6a'); H.p(3, 4, '#e86a6a'); } else { H.p(2, 3, INK); H.p(3, 3, INK); }
   }
-  function drawKid(S, key, of, ps, only) {
-    const hero = HERO[key], C = hero.col;
-    const B = S.fr(0, 0, ps.rot || 0), H = B.sub(ps.hdx || 0, -18 + (ps.hdy || 0), ps.ha || 0);
+  function drawKid(S, key, of, ps, only, neo) {
+    const hero = HERO[key], C = hero.col, ai = only === 'aiSau' || only === 'aiTruoc';
+    const nt = (neo && neo.than) || [0, 0], nd = (neo && neo.dau) || [0, 0], q0 = rotv(nt[0], nt[1], ps.rot || 0);
+    const B = S.fr(q0[0], q0[1], ps.rot || 0), H = B.sub((ps.hdx || 0) + nd[0] - nt[0], -18 + (ps.hdy || 0) + nd[1] - nt[1], ps.ha || 0);
     const cx = { S, B, H, C, f: ps.f | 0, ps, key, lv: of.wing ? of.wing.level : 0 };
     // Nhịp đung đưa của vải và tua theo động tác: đứng thì lay nhẹ, chạy thì bay ra sau và lắc theo bước, lộn thì văng hẳn ra sau.
     const an = ps.anim, f8 = (ps.f | 0) & 7;
     cx.tr = an === 'run' ? 1 : an === 'dodge' ? 3 : an === 'atk' || an === 'spec' || an === 'dash' || an === 'sweep' ? 1 : 0;
     cx.sw = an === 'run' ? [0, 1, 1, 0, 0, -1, -1, 0][f8] : an === 'dodge' ? [1, -1][f8 & 1] : an === 'idle' ? [0, 0, 0, 1, 1, 1, 0, 0][f8] : 0;
     const rar = of.rar || {}, rc = (k) => RAR_COL[rar[k] | 0];
-    const lay = (name) => (opt, fn) => { if (only && only !== name) return; S.part(opt, fn); };
+    let pha = 'sau'; // thân AI: đồ vẽ trước khi tới thân trần là lớp sau, từ thân trần trở đi là lớp trước
+    const lay = (name) => (opt, fn) => {
+      if (ai) { if (only === 'aiSau' ? pha !== 'sau' || name !== 'lung' : pha !== 'truoc' || name === 'than') return; }
+      else if (only && only !== name) return;
+      S.part(opt, fn);
+    };
     const Pb = lay('lung'), Pt = lay('than'), Pa = lay('ao'), Pm = lay('mu'), Pk = lay('mat'), Ph = lay('tay');
     const hat = L.hats[of.hat], robe = L.robes[of.robe], back = L.backs[of.back], hand = L.hands[of.hand], wing = of.wing && L.wings[of.wing.kind];
     let hn = ps.hn || [5, -7], hf = ps.hf || [-4, -7];
@@ -605,13 +614,14 @@
     const glove = hand && hand.glove;
     const arm = (sh, h, near) => {
       Pt((s) => { B.l(sh[0], sh[1], h[0], h[1], 2, near ? SKIN : Dk(SKIN)); });
-      if (robe && robe.sleeve) { const k = robe.sleeveLen || 0.72, R = robe.sleeve(cx); Pa((s) => { B.l(sh[0], sh[1], sh[0] + (h[0] - sh[0]) * k, sh[1] + (h[1] - sh[1]) * k, 3, near ? R : [R[0], R[0], R[1]]); }); }
-      if (glove) Ph((s) => { B.r(h[0] - 1, h[1] - 1, 3, 3, glove); s.in(() => { B.p(h[0] + 1, h[1] - 1, SH); }); });
+      if (robe && robe.sleeve && !ai) { const k = robe.sleeveLen || 0.72, R = robe.sleeve(cx); Pa((s) => { B.l(sh[0], sh[1], sh[0] + (h[0] - sh[0]) * k, sh[1] + (h[1] - sh[1]) * k, 3, near ? R : [R[0], R[0], R[1]]); }); }
+      if (glove && !ai) Ph((s) => { B.r(h[0] - 1, h[1] - 1, 3, 3, glove); s.in(() => { B.p(h[0] + 1, h[1] - 1, SH); }); });
       else Pt((s) => { B.r(h[0] - 1, h[1] - 1, 2, 2, Md(MASK)); });
     };
     // 1. lớp lưng
     if (back) back.draw(cx, Pb);
     if (wing) wing.draw(cx, Pb); // cánh mọc từ vai nên nằm trước đồ đeo lưng
+    pha = 'truoc';
     // 2. thân trần
     arm(SHF, hf, false);
     const ff = ps.ff || [2, 0], fb = ps.fb || [-2, 0];
@@ -1063,9 +1073,9 @@
   // ====================================================================
   const KCACHE = new Map();
   const TINT = { F: ['#ffffff', 0.6], I: ['#9fdcff', 0.45], P: ['#8fe04a', 0.35] };
-  function kidSprite(key, of, ps, tintK, only) {
+  function kidSprite(key, of, ps, tintK, only, neo) {
     const S = new Spr(120, 112, 60, 74);
-    drawKid(S, key, of, ps, only);
+    drawKid(S, key, of, ps, only, neo);
     S.finish();
     vanhBe(S);
     return S.toCanvas(TINT[tintK] || null);
@@ -1102,13 +1112,26 @@
     const sp = kidSprite(key, of, ps, tintK);
     fr = {
       cv: sp.cv, ox: ps.x - sp.ox, oy: ps.y - sp.oy, sh: HERO[key].shadow, dead: !!ps.dead, air: ps.air || 0,
-      anim: sel[0], f: sel[1], v: sel[2], hands: ps.hands || null, tint: tintK,
+      anim: sel[0], f: sel[1], v: sel[2], hands: ps.hands || null, tint: tintK, id, key, of, ps,
       // Thông tin cho vũ khí: điểm cầm (x,y) tính từ chân bé lúc quay phải, góc (độ, 0 là chĩa về trước, âm là chĩa lên),
       // độ kéo dây, trước hay sau bé, tâm trạng.
       weapon: ps.w ? { type: wt, x: Math.round(ps.w.x), y: Math.round(ps.w.y), ang: Math.round(ps.w.ang), pull: ps.w.pull || 0, front: !!ps.w.front, mood: ps.w.mood || 'idle', sx: ps.w.sx == null ? null : ps.w.sx } : null,
     };
     KCACHE.set(id, fr);
     return fr;
+  }
+  // Thân AI: hai lớp đồ (sau thân, trước thân) của đúng khung fr, theo điểm neo. Nhớ theo khung và neo.
+  const LCACHE = new Map();
+  function lopDo(fr, neo) {
+    const nk = neo ? [neo.dau || '', neo.than || ''].join(';') : '';
+    const id = fr.id + '#' + nk;
+    let r = LCACHE.get(id);
+    if (r) return r;
+    if (LCACHE.size >= 1400) LCACHE.clear();
+    const mk = (only) => { const sp = kidSprite(fr.key, fr.of, fr.ps, fr.tint, only, neo); return { cv: sp.cv, ox: fr.ps.x - sp.ox, oy: fr.ps.y - sp.oy, trong: sp.bb.x1 < sp.bb.x0 || (sp.cv.width <= 1 && sp.cv.height <= 1) }; };
+    r = { sau: mk('aiSau'), truoc: mk('aiTruoc') };
+    LCACHE.set(id, r);
+    return r;
   }
   function wLook(w) {
     let el = null, stage = 0;
@@ -1319,7 +1342,8 @@
     kidSprite, weaponSprite, drawKid, Spr, layers: ['lung', 'than', 'ao', 'mu', 'mat', 'tay'],
     cacheSize: () => KCACHE.size + WCACHE.size,
     // Xoá hình đã nhớ (Xưởng Sprite gọi khi vừa có hình tự vẽ cho đồ mặc).
-    clearCache: () => { KCACHE.clear(); ICACHE.clear(); },
+    clearCache: () => { KCACHE.clear(); ICACHE.clear(); LCACHE.clear(); },
+    lopDo, // thân AI: lớp đồ sau và trước thân của một khung (js/sprite_custom.js gọi)
     itemIcon,
     palette: { MASK, SKIN, RED, GRN, BLU, ORG, GOLD, WD, STEEL, GOURD, BRZ },
   };

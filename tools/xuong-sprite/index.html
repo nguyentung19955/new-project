@@ -8241,6 +8241,9 @@ window.XS_THU_URL = "thu.html";
   // ====================================================================
   // 4. VẼ MỘT EM BÉ THEO LỚP
   // Thứ tự: lưng (cánh, đồ đeo) -> thân trần -> áo -> mũ -> mặt nạ -> tay gần. only: chỉ vẽ một lớp (để tách lớp cho dễ nhìn).
+  // Thân AI (em-be-*.sprite.json, js/sprite_custom.js): only = 'aiSau' chỉ vẽ đồ nằm SAU thân (đồ đeo lưng, cánh),
+  // only = 'aiTruoc' chỉ vẽ đồ nằm TRƯỚC thân (áo, mũ, dấu mặt nạ, bùa, đồ cầm, dây đeo); bỏ thân trần, tay áo và găng
+  // (tay chân là của hình AI). neo: { dau: [dx, dy], than: [dx, dy] } dời điểm neo đầu, thân cho khớp hình AI.
   // ====================================================================
   const SHN = [2, -10], SHF = [-2, -10]; // vai gần, vai xa
   function reach(sh, h, max) { const dx = h[0] - sh[0], dy = h[1] - sh[1], d = Math.hypot(dx, dy); return d <= max ? h : [sh[0] + (dx / d) * max, sh[1] + (dy / d) * max]; }
@@ -8252,16 +8255,22 @@ window.XS_THU_URL = "thu.html";
     else { H.r(0, -1, 2, 3, INK); H.r(4, -1, 2, 3, INK); H.p(0, -1, SH); H.p(4, -1, SH); if (kind === 'wide') { H.r(0, -2, 2, 1, INK); H.r(4, -2, 2, 1, INK); } }
     if (kind === 'wide' || kind === 'hurt') H.r(2, 3, 2, 2, INK); else if (kind === 'x') H.r(2, 3, 2, 1, INK); else if (kind === 'shut') { H.p(2, 3, INK); H.p(3, 3, INK); H.p(2, 4, '#e86a6a'); H.p(3, 4, '#e86a6a'); } else { H.p(2, 3, INK); H.p(3, 3, INK); }
   }
-  function drawKid(S, key, of, ps, only) {
-    const hero = HERO[key], C = hero.col;
-    const B = S.fr(0, 0, ps.rot || 0), H = B.sub(ps.hdx || 0, -18 + (ps.hdy || 0), ps.ha || 0);
+  function drawKid(S, key, of, ps, only, neo) {
+    const hero = HERO[key], C = hero.col, ai = only === 'aiSau' || only === 'aiTruoc';
+    const nt = (neo && neo.than) || [0, 0], nd = (neo && neo.dau) || [0, 0], q0 = rotv(nt[0], nt[1], ps.rot || 0);
+    const B = S.fr(q0[0], q0[1], ps.rot || 0), H = B.sub((ps.hdx || 0) + nd[0] - nt[0], -18 + (ps.hdy || 0) + nd[1] - nt[1], ps.ha || 0);
     const cx = { S, B, H, C, f: ps.f | 0, ps, key, lv: of.wing ? of.wing.level : 0 };
     // Nhịp đung đưa của vải và tua theo động tác: đứng thì lay nhẹ, chạy thì bay ra sau và lắc theo bước, lộn thì văng hẳn ra sau.
     const an = ps.anim, f8 = (ps.f | 0) & 7;
     cx.tr = an === 'run' ? 1 : an === 'dodge' ? 3 : an === 'atk' || an === 'spec' || an === 'dash' || an === 'sweep' ? 1 : 0;
     cx.sw = an === 'run' ? [0, 1, 1, 0, 0, -1, -1, 0][f8] : an === 'dodge' ? [1, -1][f8 & 1] : an === 'idle' ? [0, 0, 0, 1, 1, 1, 0, 0][f8] : 0;
     const rar = of.rar || {}, rc = (k) => RAR_COL[rar[k] | 0];
-    const lay = (name) => (opt, fn) => { if (only && only !== name) return; S.part(opt, fn); };
+    let pha = 'sau'; // thân AI: đồ vẽ trước khi tới thân trần là lớp sau, từ thân trần trở đi là lớp trước
+    const lay = (name) => (opt, fn) => {
+      if (ai) { if (only === 'aiSau' ? pha !== 'sau' || name !== 'lung' : pha !== 'truoc' || name === 'than') return; }
+      else if (only && only !== name) return;
+      S.part(opt, fn);
+    };
     const Pb = lay('lung'), Pt = lay('than'), Pa = lay('ao'), Pm = lay('mu'), Pk = lay('mat'), Ph = lay('tay');
     const hat = L.hats[of.hat], robe = L.robes[of.robe], back = L.backs[of.back], hand = L.hands[of.hand], wing = of.wing && L.wings[of.wing.kind];
     let hn = ps.hn || [5, -7], hf = ps.hf || [-4, -7];
@@ -8270,13 +8279,14 @@ window.XS_THU_URL = "thu.html";
     const glove = hand && hand.glove;
     const arm = (sh, h, near) => {
       Pt((s) => { B.l(sh[0], sh[1], h[0], h[1], 2, near ? SKIN : Dk(SKIN)); });
-      if (robe && robe.sleeve) { const k = robe.sleeveLen || 0.72, R = robe.sleeve(cx); Pa((s) => { B.l(sh[0], sh[1], sh[0] + (h[0] - sh[0]) * k, sh[1] + (h[1] - sh[1]) * k, 3, near ? R : [R[0], R[0], R[1]]); }); }
-      if (glove) Ph((s) => { B.r(h[0] - 1, h[1] - 1, 3, 3, glove); s.in(() => { B.p(h[0] + 1, h[1] - 1, SH); }); });
+      if (robe && robe.sleeve && !ai) { const k = robe.sleeveLen || 0.72, R = robe.sleeve(cx); Pa((s) => { B.l(sh[0], sh[1], sh[0] + (h[0] - sh[0]) * k, sh[1] + (h[1] - sh[1]) * k, 3, near ? R : [R[0], R[0], R[1]]); }); }
+      if (glove && !ai) Ph((s) => { B.r(h[0] - 1, h[1] - 1, 3, 3, glove); s.in(() => { B.p(h[0] + 1, h[1] - 1, SH); }); });
       else Pt((s) => { B.r(h[0] - 1, h[1] - 1, 2, 2, Md(MASK)); });
     };
     // 1. lớp lưng
     if (back) back.draw(cx, Pb);
     if (wing) wing.draw(cx, Pb); // cánh mọc từ vai nên nằm trước đồ đeo lưng
+    pha = 'truoc';
     // 2. thân trần
     arm(SHF, hf, false);
     const ff = ps.ff || [2, 0], fb = ps.fb || [-2, 0];
@@ -8728,9 +8738,9 @@ window.XS_THU_URL = "thu.html";
   // ====================================================================
   const KCACHE = new Map();
   const TINT = { F: ['#ffffff', 0.6], I: ['#9fdcff', 0.45], P: ['#8fe04a', 0.35] };
-  function kidSprite(key, of, ps, tintK, only) {
+  function kidSprite(key, of, ps, tintK, only, neo) {
     const S = new Spr(120, 112, 60, 74);
-    drawKid(S, key, of, ps, only);
+    drawKid(S, key, of, ps, only, neo);
     S.finish();
     vanhBe(S);
     return S.toCanvas(TINT[tintK] || null);
@@ -8767,13 +8777,26 @@ window.XS_THU_URL = "thu.html";
     const sp = kidSprite(key, of, ps, tintK);
     fr = {
       cv: sp.cv, ox: ps.x - sp.ox, oy: ps.y - sp.oy, sh: HERO[key].shadow, dead: !!ps.dead, air: ps.air || 0,
-      anim: sel[0], f: sel[1], v: sel[2], hands: ps.hands || null, tint: tintK,
+      anim: sel[0], f: sel[1], v: sel[2], hands: ps.hands || null, tint: tintK, id, key, of, ps,
       // Thông tin cho vũ khí: điểm cầm (x,y) tính từ chân bé lúc quay phải, góc (độ, 0 là chĩa về trước, âm là chĩa lên),
       // độ kéo dây, trước hay sau bé, tâm trạng.
       weapon: ps.w ? { type: wt, x: Math.round(ps.w.x), y: Math.round(ps.w.y), ang: Math.round(ps.w.ang), pull: ps.w.pull || 0, front: !!ps.w.front, mood: ps.w.mood || 'idle', sx: ps.w.sx == null ? null : ps.w.sx } : null,
     };
     KCACHE.set(id, fr);
     return fr;
+  }
+  // Thân AI: hai lớp đồ (sau thân, trước thân) của đúng khung fr, theo điểm neo. Nhớ theo khung và neo.
+  const LCACHE = new Map();
+  function lopDo(fr, neo) {
+    const nk = neo ? [neo.dau || '', neo.than || ''].join(';') : '';
+    const id = fr.id + '#' + nk;
+    let r = LCACHE.get(id);
+    if (r) return r;
+    if (LCACHE.size >= 1400) LCACHE.clear();
+    const mk = (only) => { const sp = kidSprite(fr.key, fr.of, fr.ps, fr.tint, only, neo); return { cv: sp.cv, ox: fr.ps.x - sp.ox, oy: fr.ps.y - sp.oy, trong: sp.bb.x1 < sp.bb.x0 || (sp.cv.width <= 1 && sp.cv.height <= 1) }; };
+    r = { sau: mk('aiSau'), truoc: mk('aiTruoc') };
+    LCACHE.set(id, r);
+    return r;
   }
   function wLook(w) {
     let el = null, stage = 0;
@@ -8984,7 +9007,8 @@ window.XS_THU_URL = "thu.html";
     kidSprite, weaponSprite, drawKid, Spr, layers: ['lung', 'than', 'ao', 'mu', 'mat', 'tay'],
     cacheSize: () => KCACHE.size + WCACHE.size,
     // Xoá hình đã nhớ (Xưởng Sprite gọi khi vừa có hình tự vẽ cho đồ mặc).
-    clearCache: () => { KCACHE.clear(); ICACHE.clear(); },
+    clearCache: () => { KCACHE.clear(); ICACHE.clear(); LCACHE.clear(); },
+    lopDo, // thân AI: lớp đồ sau và trước thân của một khung (js/sprite_custom.js gọi)
     itemIcon,
     palette: { MASK, SKIN, RED, GRN, BLU, ORG, GOLD, WD, STEEL, GOURD, BRZ },
   };
@@ -14379,6 +14403,9 @@ MA._xong();
       // Tệp cũ không có hai mục này: null, phát như trước.
       sp.dungYen = Array.isArray(tep.dung_yen) ? tep.dung_yen.filter((x) => typeof x === 'string' && /^[A-Za-z0-9_]{1,20}$/.test(x)).slice(0, 20) : null;
       sp.nhun = tep.nhun == null || !isFinite(+tep.nhun) ? null : clamp(+tep.nhun, 0, 200);
+      // Em bé thân AI: đồ đang mặc (mũ, áo, đồ lưng, bùa, dấu mặt nạ, cánh) vẫn khoác lên thân AI, trừ khi tệp ghi "khoac_do": false.
+      // "neo": { "dau": [dx, dy], "than": [dx, dy], "<động tác>": { "dau": [..], "than": [..] } } dời chỗ đặt đồ (điểm ảnh) cho khớp hình AI.
+      if (sp.doi === 'em-be') { sp.khoacDo = tep.khoac_do !== false; sp.neo = docNeo(tep.neo); }
       if (typeof Image !== 'undefined') {
         const img = new Image();
         img.onload = () => { sp.img = img; sp.ready = true; };
@@ -14532,6 +14559,18 @@ MA._xong();
   }
 
   // ---------- EM BÉ ----------
+  const so2 = (a) => (Array.isArray(a) && a.length === 2 && isFinite(a[0]) && isFinite(a[1]) ? [clamp(Math.round(+a[0]), -30, 30), clamp(Math.round(+a[1]), -30, 30)] : null);
+  function docNeo(n) {
+    const goc = { dau: (n && so2(n.dau)) || [0, 0], than: (n && so2(n.than)) || [0, 0] }, kq = { goc, theo: {} };
+    if (n && typeof n === 'object') for (const k of ANIMS) {
+      const m = n[k]; if (!m || typeof m !== 'object') continue;
+      kq.theo[k] = { dau: so2(m.dau) || goc.dau, than: so2(m.than) || goc.than };
+    }
+    return kq;
+  }
+  SC.docNeo = docNeo;
+  // Điểm neo của động tác ten (động tác không ghi riêng thì dùng neo chung).
+  SC.neoCua = (sp, ten) => (sp.neo ? sp.neo.theo[ten] || sp.neo.goc : null);
   // Mã tệp: "em-be" cho cả bốn em bé, hoặc "em-be-smith", "em-be-hunter", "em-be-healer", "em-be-wrestler" cho từng bé.
   SC.cuaEmBe = (key) => SC.get('em-be-' + (key || 'smith')) || SC.get('em-be');
   SC.chonEmBe = function (sp, o) {
@@ -14557,6 +14596,17 @@ MA._xong();
     return null;
   }
   SC.emBeTint = emBeTint;
+  // Hình một màu của một lớp đồ (ánh viền bậc), nhớ trên chính lớp đó.
+  function bongMau(l, col) {
+    l.mau = l.mau || {};
+    let cv = l.mau[col];
+    if (!cv) {
+      cv = document.createElement('canvas'); cv.width = l.cv.width; cv.height = l.cv.height;
+      const x = cv.getContext('2d'); x.drawImage(l.cv, 0, 0); x.globalCompositeOperation = 'source-in'; x.fillStyle = col; x.fillRect(0, 0, cv.width, cv.height);
+      l.mau[col] = cv;
+    }
+    return cv;
+  }
   function noiEmBe() {
     const A = G.art;
     if (!A || !A.hero || A._spriteCustom || !SC.noi) return;
@@ -14569,14 +14619,22 @@ MA._xong();
       try { fr = G.tinhLinh.frame(o); } catch (e) { fr = null; }
       if (!fr) return hero0.call(A, c, o);
       const s = SC.chonEmBe(sp, o), tint = emBeTint(o);
+      let lop = null; // đồ đang mặc khoác lên thân AI: lớp sau thân và lớp trước thân, vẽ theo khung xương của em bé gốc
+      if (sp.khoacDo && G.tinhLinh.lopDo) { try { lop = G.tinhLinh.lopDo(fr, SC.neoCua(sp, s.ten)); } catch (e) { lop = null; } }
       // Em bé gốc vẫn vẽ bóng, vũ khí, hào quang trang phục; chỗ vẽ thân thì vẽ hình tự vẽ.
       const gia = butGia(c, function (img, x, y) {
         const than = img === fr.cv || (arguments.length === 3 && x === fr.ox && y === fr.oy && img && img.width === fr.cv.width && img.height === fr.cv.height);
-        if (than) { SC.veKhung(c, sp, s.ten, s.i, 1, { tint }); return; }
+        if (than) {
+          if (lop && !lop.sau.trong) c.drawImage(lop.sau.cv, lop.sau.ox, lop.sau.oy);
+          SC.veKhung(c, sp, s.ten, s.i, 1, { tint });
+          if (lop && !lop.truoc.trong) c.drawImage(lop.truoc.cv, lop.truoc.ox, lop.truoc.oy);
+          return;
+        }
         if (fr.sil) for (const col in fr.sil) if (fr.sil[col] === img) { // ánh viền màu bậc quanh em bé
           c.save(); c.translate(x - fr.ox, y - fr.oy); c.globalCompositeOperation = 'source-over';
           const a = sp.dt[s.ten] || sp.dt.idle;
           c.drawImage(nhuom(sp, col), s.i * sp.fw, a.hang * sp.fh, sp.fw, sp.fh, -sp.ax, -sp.ay, sp.fw, sp.fh);
+          if (lop) for (const l of [lop.sau, lop.truoc]) if (!l.trong) c.drawImage(bongMau(l, col), l.ox, l.oy);
           c.restore();
           return;
         }
