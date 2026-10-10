@@ -753,7 +753,8 @@
   function titleLogin(CL) {
     if (V.gBusy) return;
     V.gBusy = true; V.tMsg = 'Đang mở trang đăng nhập Google…'; V.tMsgT = 30;
-    CL.google().then((r) => { V.tMsg = r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google, giữ nguyên tiến trình.' : 'Đã đăng nhập Google.'; }, (e) => { V.tMsg = 'Chưa đăng nhập được: ' + e.message; })
+    // V1: đăng nhập thất bại (cửa sổ bị chặn, bị đóng, mở trong Zalo/Messenger/Facebook) → bật cờ V.loginFail để màn chào hiện nút "Chơi tạm"
+    CL.google().then((r) => { V.loginFail = false; V.tMsg = r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google, giữ nguyên tiến trình.' : 'Đã đăng nhập Google.'; }, (e) => { V.loginFail = true; V.tMsg = 'Chưa đăng nhập được: ' + e.message; })
       .then(() => { V.gBusy = false; V.tMsgT = 8; say(V.tMsg); });
   }
   // Bố cục màn chào (toạ độ 480x270), Giai đoạn 4 yêu cầu 2: logo > nút chính > nút phụ > dòng thông tin.
@@ -840,7 +841,9 @@
         // mây kết nối hỏng quá 10 giây: cho chơi tạm, chỉ lưu trên máy, để không ai bị kẹt ngoài cửa
         V.tWait = loading ? (V.tWait || 0) + 1 / 60 : 0;
         const Gs = TL.guest;
-        if ((CL.status === 'error' || V.tWait > 10) && T.btn(Gs[0], Gs[1], Gs[2], Gs[3], 'Chơi tạm (không lưu mây)', { size: 7.5 })) G.setScene(G.Village);
+        // V1: đăng nhập Google vừa thất bại cũng cho chơi tạm ngay (không phải chờ 10 giây), kèm dòng gợi ý mở bằng trình duyệt thật
+        if ((CL.status === 'error' || V.tWait > 10 || V.loginFail) && T.btn(Gs[0], Gs[1], Gs[2], Gs[3], 'Chơi tạm (chưa lưu mây)', { size: 7.5 })) G.setScene(G.Village);
+        if (V.loginFail && !busy) ui.text('Mở bằng Chrome/Safari để đăng nhập Google', 240, Gs[1] + Gs[3] + 11, { size: 7, align: 'center', color: '#e8d7b0' });
       }
       if (CL) {
         const on = CL.online(), guest = CL.isGuest();
@@ -848,7 +851,7 @@
           if (T.btn(R0[0], R0[1], R0[2], R0[3], on && !guest ? '✓ ' + String(CL.who()).slice(0, 14) : 'Đăng nhập Google', { size: 8, primary: on && guest, disabled: !on || !guest })) titleLogin(CL);
           if (T.btn(R1[0], R1[1], R1[2], R1[3], '🏆 Bảng vàng', { size: 8, disabled: !G.bangVang })) { V.tRank = true; G.bangVang.reload && G.bangVang.reload(); }
         }
-        if (CL.gMsg) { V.tMsg = CL.gMsg; V.tMsgT = 8; CL.gMsg = ''; }
+        if (CL.gMsg) { if (/^Chưa đăng nhập|chưa trả kết quả/.test(CL.gMsg)) V.loginFail = true; V.tMsg = CL.gMsg; V.tMsgT = 8; CL.gMsg = ''; }
         if (V.tMsgT > 0) V.tMsgT -= 1 / 60;
         const line = V.tMsgT > 0 && V.tMsg ? V.tMsg : need && !ok ? 'Đăng nhập Google để lưu tiến trình và lên Bảng vàng. ' + CL.label() : CL.label();
         const lines = ui.wrap(line, 260, 7); // hẹp để không chạm hình em bé bên trái
