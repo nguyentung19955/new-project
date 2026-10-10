@@ -662,7 +662,7 @@ function chay() {
     + `<li class="ghi">Tự nhìn: hiệu ứng chạy đúng thứ tự (bắt đầu → kết thúc), hướng sang PHẢI, cỡ vừa với hình em bé/quái mẫu. Hiệu ứng ngược hướng thì tích "Lật ngang" ở bước 2.</li>`;
   $('theKq').className = 'the ' + (KQ.dat ? 'dat' : 'hong'); $('theKq').textContent = KQ.dat ? 'ĐẠT' : 'CÓ LỖI';
   $('huongDan').textContent = KQ.dat ? 'Gửi file ' + Q.ma + '.sprite.json cho Claude để đưa vào game (thư mục game/art/custom).' : 'Còn lỗi: thử đổi "Cách tách" (Chia đều + đúng số cột), chỉnh ô "Cắt" ở bước 2, hoặc nhờ ChatGPT vẽ lại đúng một hàng ' + SO + ' khung.';
-  $('nutTaiJson').textContent = 'Tải ' + Q.ma + '.sprite.json';
+  $('nutTaiJson').textContent = 'Tải ' + Q.ma + ' (2 bản: gấp đôi + thường)';
   $('dangCho').textContent = Q.ten + ' (' + Q.ma + ')';
   veTam(); $('buoc3').hidden = false; t0 = performance.now(); batDauChay();
 }
@@ -760,15 +760,38 @@ function khungChay(now) {
 // ===================== TẢI VỀ =====================
 function taiXuong(ten, blob) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = ten; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); }
 $('nutTaiPng').onclick = () => canvasTam && canvasTam.toBlob(b => taiXuong(Q.ma + '.png', b), 'image/png');
-$('nutTaiJson').onclick = () => {
-  if (!canvasTam) return;
-  const tep = {
+function taoTep() {
+  return {
     loai: 'linh-khi-sprite', phien_ban: 1, doi_tuong: 'hieu-ung', ma: Q.ma, ten: Q.ten,
     tam: canvasTam.toDataURL('image/png'), ...(KQ.N > 1 ? { net: KQ.N } : {}), khung_rong: Q.fw, khung_cao: Q.fh, goc: [Q.gx, Q.gy],
     so: Q.so, giay: Q.giay, lap: !!Q.lap, xoay: !!Q.xoay, co: Q.co || 1, tron: Q.cong ? 'cong' : 'thuong',
   };
-  taiXuong(Q.ma + '.sprite.json', new Blob([JSON.stringify(tep)], { type: 'application/json' }));
-  bao('Đã tải ' + Q.ma + '.sprite.json, gửi file này cho Claude');
+}
+function napZip() {
+  if (window.JSZip) return Promise.resolve(window.JSZip);
+  return new Promise((ok, no) => { const s = document.createElement('script'); s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'; s.onload = () => (window.JSZip ? ok(window.JSZip) : no()); s.onerror = no; document.head.appendChild(s); });
+}
+// Tải 2 bản trong 1 tệp .zip: <mã>.sprite.json (nét gấp đôi) và <mã>.thuong.sprite.json (nét thường, như cũ)
+$('nutTaiJson').onclick = async () => {
+  if (!canvasTam) return;
+  const netCu = $('heNet').value, mauCu = $('soMau').value, banDau = taoTep();
+  let gapDoi = banDau, thuong = banDau;
+  try {
+    if (+netCu === 2) { $('heNet').value = '1'; $('soMau').value = '32'; chay(); thuong = taoTep(); }
+    else { $('heNet').value = '2'; $('soMau').value = '48'; chay(); gapDoi = taoTep(); }
+  } finally { $('heNet').value = netCu; $('soMau').value = mauCu; chay(); }
+  const json = t => new Blob([JSON.stringify(t)], { type: 'application/json' });
+  try {
+    const Z = await napZip(), z = new Z();
+    z.file(Q.ma + '.sprite.json', JSON.stringify(gapDoi));
+    z.file(Q.ma + '.thuong.sprite.json', JSON.stringify(thuong));
+    taiXuong(Q.ma + '_2-ban.zip', await z.generateAsync({ type: 'blob' }));
+    bao('Đã tải ' + Q.ma + '_2-ban.zip (bản nét gấp đôi + bản thường), gửi tệp này cho Claude');
+  } catch (e) {
+    taiXuong(Q.ma + '.sprite.json', json(gapDoi));
+    setTimeout(() => taiXuong(Q.ma + '.thuong.sprite.json', json(thuong)), 800);
+    bao('Đã tải 2 tệp ' + Q.ma + '.sprite.json (gấp đôi) và ' + Q.ma + '.thuong.sprite.json (thường), gửi cả hai cho Claude');
+  }
 };
 </script>
 </body>
