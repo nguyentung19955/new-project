@@ -1,3 +1,4 @@
+@tool
 extends Node2D
 ## XUẤT VŨ KHÍ CHO GAME LINH KHÍ
 ## Mở vu_khi.tscn rồi bấm F6. Godot chụp hình vũ khí, đo điểm cầm (chấm Cam) và mũi (chấm Mui),
@@ -9,9 +10,12 @@ extends Node2D
 @export_enum("sword", "bow", "spear", "hammer") var loai_vu_khi := "sword"  ## sword=Kiếm, bow=Cung, spear=Giáo, hammer=Búa
 @export var dong := 3
 @export var dai_trong_game := 46                 ## Chiều dài vũ khí trong game (điểm ảnh)
+@export_tool_button("Tự xoá nền và đặt điểm cầm, mũi") var nut_tu_dat = tu_dat
 
 
 func _ready() -> void:
+	if Engine.is_editor_hint():
+		return
 	var vp := get_viewport()
 	vp.transparent_bg = true
 	for c in [$Cam, $Mui]:
@@ -58,3 +62,45 @@ func _ready() -> void:
 	lop.add_child(chu)
 	if DisplayServer.get_name() == "headless" or OS.get_cmdline_user_args().has("--tu-dong"):
 		get_tree().quit()
+
+
+# ---------- TỰ ĐẶT (bấm nút trong Inspector) ----------
+## Lấy ảnh đang gắn ở nút Anh: xoá nền trắng, cắt sát, đặt giữa khung, đặt Cam ở chuôi (bên trái) và Mui ở đầu mũi (bên phải).
+func tu_dat() -> void:
+	var anh: Sprite2D = $Anh
+	if anh.texture == null:
+		push_warning("Hãy kéo ảnh vũ khí vào ô Texture của nút Anh trước")
+		return
+	var manh := TuRap.tach(anh.texture.get_image(), 0.002)
+	if manh.is_empty():
+		push_warning("Không tìm thấy vũ khí trong ảnh")
+		return
+	var img: Image = manh[0]["anh"]
+	anh.texture = TuRap.luu_anh(img, "res://anh/tach/" + ma + "/vu_khi.res")
+	anh.region_enabled = false
+	anh.centered = true
+	anh.offset = Vector2.ZERO
+	anh.rotation = 0
+	var w := img.get_width()
+	var h := img.get_height()
+	var s := 620.0 / w
+	anh.scale = Vector2(s, s)
+	anh.position = Vector2(512, 512)
+	var giua_cot := func(x: int) -> float:
+		var tong := 0.0
+		var n := 0
+		for y in h:
+			if img.get_pixel(x, y).a > 0.5:
+				tong += y
+				n += 1
+		return tong / n if n > 0 else h / 2.0
+	var x_cam := int(w * 0.14)
+	var x_mui := w - 1
+	while x_mui > 0 and is_equal_approx(giua_cot.call(x_mui), h / 2.0) and img.get_pixel(x_mui, h / 2).a < 0.5:
+		x_mui -= 1
+	var doi := func(x: float, y: float) -> Vector2: return anh.position + (Vector2(x, y) - Vector2(w, h) / 2.0) * s
+	$Cam.position = doi.call(x_cam, giua_cot.call(x_cam))
+	$Mui.position = doi.call(x_mui, giua_cot.call(x_mui))
+	print("Đã đặt: kéo lại chấm Cam vào giữa chuôi nếu chưa đúng.")
+	if Engine.is_editor_hint():
+		EditorInterface.mark_scene_as_unsaved()

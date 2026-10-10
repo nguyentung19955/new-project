@@ -1,3 +1,4 @@
+@tool
 extends Node2D
 ## XUẤT SPRITE CHO GAME LINH KHÍ
 ## Mở cảnh (em_be.tscn hoặc hieu_ung_kiem.tscn) rồi bấm F6 ("Chạy cảnh này").
@@ -15,10 +16,16 @@ extends Node2D
 @export var an_khi_xuat: Array[NodePath] = []   ## Những thứ chỉ để xem thử, ẩn đi khi chụp (ví dụ vũ khí cầm tay)
 @export var co_xem_truoc := 256                 ## Chiều cao mỗi khung trong ảnh xem trước
 
+@export_group("Tự ráp từ ảnh Gemini")
+@export var anh_gemini: Texture2D                ## Kéo ảnh tách bộ phận của Gemini vào đây
+@export_tool_button("Tự ráp từ ảnh Gemini") var nut_tu_rap = tu_rap
+
 var _chu: Label
 
 
 func _ready() -> void:
+	if Engine.is_editor_hint():
+		return
 	var vp := get_viewport()
 	vp.transparent_bg = true
 	for p in an_khi_xuat:
@@ -127,3 +134,108 @@ func _hien(s: String) -> void:
 	lop.add_child(_chu)
 	if DisplayServer.get_name() == "headless" or OS.get_cmdline_user_args().has("--tu-dong"):
 		get_tree().quit()
+
+
+# ---------- TỰ RÁP (bấm nút trong Inspector) ----------
+func tu_rap() -> void:
+	if loai != "em-be":
+		push_warning("Tự ráp chỉ dùng cho em bé")
+		return
+	if anh_gemini == null:
+		push_warning("Hãy kéo ảnh Gemini (tách bộ phận) vào ô Anh Gemini trước")
+		return
+	var manh := TuRap.tach(anh_gemini.get_image())
+	var c := TuRap.chia_nguoi(manh)
+	if c.has("loi"):
+		push_warning("Tự ráp: " + c["loi"])
+		print("Tự ráp: ", c["loi"])
+		return
+	var thu_muc := "res://anh/tach/" + ma + "/"
+	var hinh: Node2D = $Hinh
+	var than: Node2D = $Hinh/Than
+	var gan := func(khop: Node2D, m: Dictionary, ten_tep: String, truc: Vector2) -> void:
+		var anh: Sprite2D = khop.get_node("Anh")
+		anh.texture = TuRap.luu_anh(m["anh"], thu_muc + ten_tep + ".res")
+		anh.region_enabled = false
+		anh.centered = true
+		anh.offset = Vector2(m["o"].size) / 2.0 - truc
+	var co := func(m: Dictionary) -> Vector2: return Vector2(m["o"].size)
+	# Chân: khớp hông gần đỉnh, bàn chân chạm đất.
+	var sct: Vector2 = co.call(c["chan_truoc"])
+	var scs: Vector2 = co.call(c["chan_sau"])
+	var pct := Vector2(sct.x / 2, minf(sct.x * 0.45, sct.y * 0.18))
+	var pcs := Vector2(scs.x / 2, minf(scs.x * 0.45, scs.y * 0.18))
+	var L := maxf(sct.y - pct.y, scs.y - pcs.y)
+	var st: Vector2 = co.call(c["than"])
+	var hong := Vector2(st.x / 2, st.y * 0.86)
+	var dx := st.x * 0.12
+	$Hinh/ChanTruoc.position = Vector2(dx, -L)
+	$Hinh/ChanSau.position = Vector2(-dx, -L)
+	gan.call($Hinh/ChanTruoc, c["chan_truoc"], "chan_truoc", pct)
+	gan.call($Hinh/ChanSau, c["chan_sau"], "chan_sau", pcs)
+	gan.call(than, c["than"], "than", hong)
+	# Tay: khớp vai ở hai bên ngực.
+	var sta: Vector2 = co.call(c["tay_truoc"])
+	var sts: Vector2 = co.call(c["tay_sau"])
+	var pta := Vector2(sta.x / 2, minf(sta.x * 0.5, sta.y * 0.2))
+	var pts := Vector2(sts.x / 2, minf(sts.x * 0.5, sts.y * 0.2))
+	var vai_y := st.y * 0.2 - hong.y
+	$Hinh/Than/TayTruoc.position = Vector2(st.x * 0.28, vai_y)
+	$Hinh/Than/TaySau.position = Vector2(-st.x * 0.28, vai_y)
+	gan.call($Hinh/Than/TayTruoc, c["tay_truoc"], "tay_truoc", pta)
+	gan.call($Hinh/Than/TaySau, c["tay_sau"], "tay_sau", pts)
+	$Hinh/Than/TaySau/Anh.modulate = Color(0.82, 0.82, 0.82)
+	$Hinh/ChanSau/Anh.modulate = Color(0.82, 0.82, 0.82)
+	# Đầu: cổ cắm sâu vào cổ áo.
+	var sd: Vector2 = co.call(c["dau"])
+	$Hinh/Than/Dau.position = Vector2(0, st.y * 0.06 - hong.y)
+	gan.call($Hinh/Than/Dau, c["dau"], "dau", Vector2(sd.x / 2, sd.y * 0.93))
+	# Vũ khí xem thử ở bàn tay trước.
+	var vk: Sprite2D = $Hinh/Than/TayTruoc/VuKhiXem
+	vk.position = Vector2(0, sta.y - pta.y - sta.x * 0.3)
+	if c["vu_khi"] != null:
+		vk.texture = TuRap.luu_anh(c["vu_khi"]["anh"], thu_muc + "vu_khi.res")
+		vk.offset = Vector2(c["vu_khi"]["o"].size.x * 0.3, 0)
+		vk.scale = Vector2.ONE
+	# Phụ kiện (áo choàng, đuôi...): treo sau lưng ở cổ.
+	for n in than.get_children():
+		if n.name.begins_with("PhuKien"):
+			than.remove_child(n)
+			n.queue_free()
+	var i := 0
+	for m in c["phu_kien"]:
+		i += 1
+		var k := Node2D.new()
+		k.name = "PhuKien%d" % i
+		k.position = Vector2(0, st.y * 0.12 - hong.y)
+		k.show_behind_parent = true
+		than.add_child(k)
+		k.owner = self
+		var a := Sprite2D.new()
+		a.name = "Anh"
+		k.add_child(a)
+		a.owner = self
+		gan.call(k, m, "phu_kien_%d" % i, Vector2(co.call(m).x / 2, 0))
+	# Cỡ: cả người cao khoảng 700 điểm trong khung 1024.
+	var H := L + (hong.y - st.y * 0.06) + sd.y * 0.93
+	var S := 700.0 / H
+	hinh.scale = Vector2(S, S)
+	# Chỉnh các động tác mẫu theo người mới (độ nhún của thân tỉ lệ theo chiều cao).
+	var L_cu: float = get_meta("rap_L", 130.0)
+	var H_cu: float = get_meta("rap_H", 530.0)
+	var ap: AnimationPlayer = $AnimationPlayer
+	for ten_dt in ap.get_animation_list():
+		var a: Animation = ap.get_animation(ten_dt)
+		var tr := a.find_track(NodePath("Hinh/Than:position"), Animation.TYPE_VALUE)
+		if tr < 0:
+			continue
+		for kk in a.track_get_key_count(tr):
+			var v: Vector2 = a.track_get_key_value(tr, kk)
+			a.track_set_key_value(tr, kk, Vector2(0, -L) + (v - Vector2(0, -L_cu)) * (H / H_cu))
+	than.position = Vector2(0, -L)
+	set_meta("rap_L", L)
+	set_meta("rap_H", H)
+	var bao := "Tự ráp xong: %d mảnh (%s). Bấm ▶ ở AnimationPlayer để xem, F6 để xuất." % [manh.size(), "có vũ khí" if c["vu_khi"] != null else "không vũ khí"]
+	print(bao)
+	if Engine.is_editor_hint():
+		EditorInterface.mark_scene_as_unsaved()
