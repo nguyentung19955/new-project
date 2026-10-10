@@ -46,7 +46,7 @@
     return { name: name(), power: r.power, stars: C.starSum(sv), far: C.far(sv), hero: sv.hero, b: Object.assign({}, r.b) };
   }
   B.entry = entry; B.rec = rec;
-  const secs = (t) => (Math.round(t * 10) / 10).toFixed(1).replace('.', ',') + ' giây';
+  const secs = (t) => { const n = (Math.round(t * 10) / 10).toFixed(1); return G.t('{0} giây', G.LANG === 'en' ? n : n.replace('.', ',')); };
 
   // Gọi từ settle() trong js/stage.js lúc tính thưởng (trước khi lưu): ghi kỷ lục, thêm dòng báo vào màn kết quả.
   G.onStageEnd = function (S, R) {
@@ -58,12 +58,12 @@
       const old = r.b[reg.boss];
       if (!old || t < old) {
         r.b[reg.boss] = Math.round(t * 10) / 10;
-        R.lines.push((old ? '★ Kỷ lục mới: ' : '★ Kỷ lục đầu: ') + reg.bossName + ' ' + secs(t)); // ngắn cho vừa cột phải màn kết quả
+        R.lines.push(G.t(old ? '★ Kỷ lục mới: {0} {1}' : '★ Kỷ lục đầu: {0} {1}', reg.bossName, secs(t))); // ngắn cho vừa cột phải màn kết quả
         R.record = true;
       }
     }
     const p = notePower();
-    if (p === true) { R.lines.push('★ Kỷ lục mới: Sức mạnh ' + r.power); R.record = true; }
+    if (p === true) { R.lines.push(G.t('★ Kỷ lục mới: Sức mạnh {0}', r.power)); R.record = true; }
     B.sync();
   };
 
@@ -111,7 +111,7 @@
     ui.text(String(n), cx + 0.5, cy + 2.6, { size: 6.5, bold: true, align: 'center', color: '#1a120a', shadow: false });
   }
   // Cắt chữ cho vừa bề rộng (thêm dấu …)
-  function cutTo(s, wd, sz) { ui.font(sz, true); if (G.ux.measureText(s).width <= wd) return s; while (s.length > 1 && G.ux.measureText(s + '…').width > wd) s = s.slice(0, -1); return s + '…'; }
+  function cutTo(s, wd, sz) { s = G.tv(s); ui.font(sz, true); if (G.ux.measureText(s).width <= wd) return s; while (s.length > 1 && G.ux.measureText(s + '…').width > wd) s = s.slice(0, -1); return s + '…'; }
   function heroName(k) { return G.HEROES[k] ? G.HEROES[k].name : ''; }
 
   // ---------- bảng vẽ (Cụ Đồ, thẻ Bảng vàng). CX, CW: vùng nội dung của bảng làng ----------
@@ -126,7 +126,7 @@
       // Không có mạng: chỉ hiện kỷ lục trên máy, xếp thành ba ô số + một hàng thời gian hạ trùm (Giai đoạn 4: căn thẳng hàng, chữ đều cỡ)
       const r = rec(), sv = G.save;
       T.inset(CX, 116, CW, 104, false);
-      ui.para('Bảng vàng cần mạng. ' + C.label() + '.', CX + 7, 129, CW - 14, { size: 7.5, color: SOFT });
+      ui.para(G.t('Bảng vàng cần mạng. {0}.', C.label()), CX + 7, 129, CW - 14, { size: 7.5, color: SOFT });
       ui.text('Kỷ lục của con (trên máy)', CX + 7, 150, { size: 8, bold: true, color: GOLD });
       const boxes = [['Sức mạnh', String(r.power || powerNow())], ['Tổng sao', '★ ' + C.starSum(sv)], ['Xa nhất', C.farText(C.far(sv))]];
       const bw = Math.floor((CW - 14 - 2 * 4) / 3);
@@ -138,7 +138,7 @@
       });
       ui.text('Hạ trùm nhanh nhất', CX + 7, 197, { size: 7, bold: true, color: GOLD });
       const tw = Math.floor((CW - 14) / 3);
-      G.REGIONS.forEach((R, i) => ui.text(R.bossName + '  ' + (r.b[R.boss] ? secs(r.b[R.boss]) : '–'), CX + 7 + i * tw, 210, { size: 7.5, color: r.b[R.boss] ? TXT : SOFT }));
+      G.REGIONS.forEach((R, i) => ui.text(G.t('{0}  {1}', R.bossName, r.b[R.boss] ? secs(r.b[R.boss]) : '–'), CX + 7 + i * tw, 210, { size: 7.5, color: r.b[R.boss] ? TXT : SOFT }));
       return 'Bảng vàng treo ở đình, phải có mạng mới xem được, con ạ.';
     }
     if (B.t && G.time - B.t > 120) B.reload(); // để lâu thì tải lại
@@ -164,9 +164,9 @@
       const col = n === 1 ? '#ffd24a' : n === 2 ? '#d6d2c8' : n === 3 ? '#e09a5a' : TXT;
       if (n <= 3) medal(cx.rank + 3, y + 5.5, n); // ba người đầu: huy chương vàng, bạc, đồng
       else ui.text(String(n), cx.rank + 3, y + 8.5, { size: 7.5, align: 'center', color: col });
-      ui.text(cut(x.name || 'Khách', 140, 7.5), cx.name, y + 8.5, { size: 7.5, bold: mine, color: mine ? GOLD : TXT });
+      ui.text(x.name ? G.kd(cut(G.kd(x.name), 140, 7.5)) : 'Khách', cx.name, y + 8.5, { size: 7.5, bold: mine, color: mine ? GOLD : TXT });
       ui.text(fmt(B.cat, x), cx.val + 38, y + 8.5, { size: 7.5, bold: true, align: 'right', color: col });
-      ui.text(cut(heroName(x.hero) + ' · ' + C.farText(x.far || 0), CW - 218, 7), cx.extra, y + 8.5, { size: 7, color: SOFT });
+      ui.text(cut(G.t('{0} · {1}', heroName(x.hero), C.farText(x.far || 0)), CW - 218, 7), cx.extra, y + 8.5, { size: 7, color: SOFT });
     });
     if (!rows.length) ui.text(D.loading ? 'Đang tải bảng…' : D.err || 'Chưa có ai trên bảng này. Con lên đầu tiên đi!', CX + CW / 2, 170, { size: 8, align: 'center', color: D.err ? '#ff9a5a' : SOFT });
     // dòng của mình (luôn hiện)
@@ -178,17 +178,17 @@
     const at = D.items.findIndex((x) => x.uid === me);
     T.inset(CX, 224, CW, 15, true);
     ui.text(at >= 0 ? String(at + 1) : '-', cx.rank + 3, 234.5, { size: 7.5, bold: true, align: 'center', color: GOLD });
-    ui.text(cut('Con: ' + mine.name, 140, 7.5), cx.name, 234.5, { size: 7.5, bold: true, color: GOLD });
+    ui.text(cut(G.t('Con: {0}', G.kd(mine.name)), 140, 7.5), cx.name, 234.5, { size: 7.5, bold: true, color: GOLD });
     ui.text(fmt(B.cat, mine), cx.val + 38, 234.5, { size: 7.5, bold: true, align: 'right', color: GOLD });
-    ui.text(at >= 0 ? 'hạng ' + (at + 1) : D.more ? 'ngoài ' + D.items.length + ' dòng đã tải' : 'ngoài ' + MAX + ' người đầu', cx.extra, 234.5, { size: 7, color: SOFT });
+    ui.text(at >= 0 ? G.t('hạng {0}', at + 1) : D.more ? G.t('ngoài {0} dòng đã tải', D.items.length) : G.t('ngoài {0} người đầu', MAX), cx.extra, 234.5, { size: 7, color: SOFT });
     // hàng nút dưới cùng
     if (pages > 1) {
       if (T.sbtn(CX, 243, 24, 18, '‹', { size: 10, pad: 3, disabled: B.page === 0 })) B.page--;
-      ui.text('Trang ' + (B.page + 1) + (D.more ? '' : '/' + pages), CX + 50, 255, { size: 7.5, align: 'center', color: SOFT });
+      ui.text(G.t('Trang {0}', B.page + 1 + (D.more ? '' : '/' + pages)), CX + 50, 255, { size: 7.5, align: 'center', color: SOFT });
       if (T.sbtn(CX + 76, 243, 24, 18, '›', { size: 10, pad: 3, disabled: B.page >= pages - 1 || (D.loading && B.page * PER + PER >= D.items.length) })) B.page++;
     }
     if (T.sbtn(CX + 150, 243, 72, 18, 'Đổi tên', { size: 7.5, pad: 2 }) && G.cloudUI) {
-      G.cloudUI.rename(mine.name, cleanName).then((v) => { if (v) { G.save.lbName = v; G.persist(); B.sync(true); B.reload(); A.say('Đổi tên thành ' + v + '.'); } });
+      G.cloudUI.rename(mine.name, cleanName).then((v) => { if (v) { G.save.lbName = v; G.persist(); B.sync(true); B.reload(); A.say(G.t('Đổi tên thành {0}.', G.kd(v))); } });
     }
     if (T.sbtn(CX + 228, 243, 76, 18, 'Tải lại', { size: 7.5, pad: 2 })) B.reload();
     return 'Bảng vàng của làng: ai mạnh nhất, nhiều sao nhất, hạ trùm nhanh nhất đều được ghi tên.';

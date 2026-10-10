@@ -24,8 +24,12 @@
   G.wName = function (w) {
     const st = G.wStage(w), WA = G.weaponArt;
     const base = WA ? WA.name(WA.fromWeapon(w)) : G.WTYPES[w.type].name + (st ? ' ' + G.NAME_WORDS[w.branch][st - 1] : '');
+    // Ngôn ngữ khác: dịch tên gốc và danh hiệu lúc hiện (w.title nằm trong bản lưu, luôn là tiếng Việt).
+    if (G.LANG !== 'vi') return (WA || !st ? G.tv(base) : G.tv(G.WTYPES[w.type].name) + ' ' + G.tv(G.NAME_WORDS[w.branch][st - 1])) + titleOf(w.title) + (w.sharpen ? ' +' + w.sharpen : '');
     return base + (w.title || '') + (w.sharpen ? ' +' + w.sharpen : '');
   };
+  const KE_HA = ', kẻ hạ ';
+  function titleOf(t) { return !t ? '' : t.indexOf(KE_HA) === 0 ? G.t(', kẻ hạ {0}', t.slice(KE_HA.length)) : G.tv(t); }
   // Hệ số bậc: Vàng của vùng sau cao hơn (G.GOLD_MULT).
   G.wRarMult = (w) => (G.wRar(w) === 3 ? G.GOLD_MULT[w.gold | 0] || G.GOLD_MULT[0] : G.RARITY[G.wRar(w)].mult);
   G.wBase = function (w, lvl) {
@@ -34,7 +38,7 @@
   function nameWeapon(w) {
     // Danh hiệu chỉ tính boss vùng, không tính trùm nhỏ.
     const bk = Object.keys(w.bossKills || {}).filter((k) => G.REGIONS.some((r) => r.bossName === k)).sort((a, b) => w.bossKills[b] - w.bossKills[a])[0];
-    w.title = bk ? ', kẻ hạ ' + bk : w.kills >= 1000 ? ', nghìn mạng' : '';
+    w.title = bk ? KE_HA + bk : w.kills >= 1000 ? ', nghìn mạng' : '';
     w.named = true;
   }
   G.addMarks = function (w, el, n) {
@@ -54,7 +58,7 @@
     if (after > before) {
       // Lên Thành hình và Thức tỉnh: báo luôn tên đặc trưng hệ vừa mở.
       const ft = after >= 2 ? G.HE_FEATURES[w.branch][after - 2] : null;
-      if (W) W.banner = { s: G.wName(w) + ' đạt mốc ' + G.STAGE_NAMES[after] + '!' + (ft ? ' Mở đặc trưng: ' + ft.name : ''), col: G.EL[w.branch].col, t: ft ? 4.5 : 3.5, feature: ft ? ft.name : null };
+      if (W) W.banner = { s: ft ? G.t('{0} đạt mốc {1}! Mở đặc trưng: {2}', G.wName(w), G.STAGE_NAMES[after], ft.name) : G.t('{0} đạt mốc {1}!', G.wName(w), G.STAGE_NAMES[after]), col: G.EL[w.branch].col, t: ft ? 4.5 : 3.5, feature: ft ? ft.name : null };
       G.sfx('evolve');
       if (W) FX('evolve', w.branch, after);
     }
@@ -368,7 +372,7 @@
     // quái thường thỉnh thoảng rơi một viên linh khí của vùng: phải nhặt mới có (js/do_roi.js gọi onPick)
     if (!big && L && !e.add && G.doRoi && G.rnd() < L.drop) {
       const n = Math.round(L.orb * W.marksMult);
-      G.doRoi.tha(W, e.x, e.y, { kind: 'linhkhi', el: regEl, s: 'Linh khí ' + G.EL[regEl].name, onPick: () => { const P2 = W.P, cw = curW(P2); if (cw) { G.addMarks(cw, regEl, n * P2.markMult); G.flashMarks && G.flashMarks(); } } });
+      G.doRoi.tha(W, e.x, e.y, { kind: 'linhkhi', el: regEl, s: G.t('Linh khí {0}', G.EL[regEl].name), onPick: () => { const P2 = W.P, cw = curW(P2); if (cw) { G.addMarks(cw, regEl, n * P2.markMult); G.flashMarks && G.flashMarks(); } } });
     }
     if (G.moves) G.moves.onKill(e, o, w); // đặc trưng hệ khi quái chết: Nổ lan, Lây độc (chỉ ở Thức tỉnh)
     if (G.chuong) G.chuong.onKill(e); // Lây độc của Độc chưởng, Băng vỡ của Băng chưởng

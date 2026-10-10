@@ -56,7 +56,9 @@
     if (attrs) for (const k in attrs) e.setAttribute(k, attrs[k]);
     return e;
   }
-  function btn(label, cls, act, fn) { const b = el('button', 'lk-btn ' + (cls || ''), label, { type: 'button', 'data-act': act }); if (fn) b.onclick = fn; return b; }
+  // Chữ đưa vào khung HTML không được tự dịch như chữ vẽ trên canvas: nhãn nút dịch ở đây, các dòng chữ khác dịch bằng G.t ở chỗ tạo.
+  // Nội dung người dùng gõ (góp ý, liên hệ, ghi chú, tên) không dịch.
+  function btn(label, cls, act, fn) { const b = el('button', 'lk-btn ' + (cls || ''), G.tv(label), { type: 'button', 'data-act': act }); if (fn) b.onclick = fn; return b; }
   let root = null, onClose = null;
   function css() { if (!document.getElementById('lk-css')) { const s = el('style', null, CSS, { id: 'lk-css' }); document.head.appendChild(s); } }
   // mở khung: chặn mọi chạm, phím, cuộn khỏi lọt xuống game
@@ -85,8 +87,8 @@
   function frame(title, wide) {
     const box = el('div', 'lk-box' + (wide ? ' wide' : ''));
     const head = el('div', 'lk-head');
-    head.appendChild(el('span', null, title));
-    const x = btn('✕', 's lk-x', 'close', () => close()); x.setAttribute('aria-label', 'Đóng'); head.appendChild(x);
+    head.appendChild(el('span', null, G.t(title)));
+    const x = btn('✕', 's lk-x', 'close', () => close()); x.setAttribute('aria-label', G.t('Đóng')); head.appendChild(x);
     const body = el('div', 'lk-body'), foot = el('div', 'lk-foot');
     box.append(head, body, foot);
     return { box, body, foot };
@@ -134,8 +136,8 @@
   function saveStore(s) { try { localStorage.setItem(FB_KEY, JSON.stringify(s)); } catch (e) { /* bỏ qua */ } }
   function limitMsg() {
     const s = store(), now = Date.now(), day = new Date().toDateString();
-    if (s.day === day && (s.n || 0) >= LIMIT_DAY) return 'Hôm nay đã gửi ' + LIMIT_DAY + ' góp ý rồi, mai gửi tiếp nhé.';
-    if (s.last && now - s.last < LIMIT_GAP) return 'Vừa gửi xong, đợi ' + Math.ceil((LIMIT_GAP - (now - s.last)) / 1000) + ' giây nữa nhé.';
+    if (s.day === day && (s.n || 0) >= LIMIT_DAY) return G.t('Hôm nay đã gửi {0} góp ý rồi, mai gửi tiếp nhé.', LIMIT_DAY);
+    if (s.last && now - s.last < LIMIT_GAP) return G.t('Vừa gửi xong, đợi {0} giây nữa nhé.', Math.ceil((LIMIT_GAP - (now - s.last)) / 1000));
     return '';
   }
   function count() { const s = store(), day = new Date().toDateString(); if (s.day !== day) { s.day = day; s.n = 0; } s.n = (s.n || 0) + 1; s.last = Date.now(); saveStore(s); }
@@ -151,7 +153,7 @@
     for (const f of q) { try { await C.sendFeedback(f); sent++; } catch (e) { left.push(f); } }
     const s2 = store(); s2.queue = left; saveStore(s2);
     flushing = false;
-    if (sent) toast('Đã gửi ' + sent + ' góp ý đang chờ. Cảm ơn bạn!');
+    if (sent) toast(G.t('Đã gửi {0} góp ý đang chờ. Cảm ơn bạn!', sent));
     return sent;
   }
   C.flushFeedback = flush;
@@ -169,30 +171,30 @@
     let kind = 'bug';
     const chips = el('div', 'lk-chips');
     const paint = () => chips.querySelectorAll('button').forEach((b) => b.classList.toggle('on', b.dataset.k === kind));
-    for (const [k, n] of KINDS) { const b = btn(n, 's', 'fb-kind', () => { kind = k; paint(); }); b.dataset.k = k; chips.appendChild(b); }
+    for (const [k, n] of KINDS) { const b = btn(G.tc('góp ý', n), 's', 'fb-kind', () => { kind = k; paint(); }); b.dataset.k = k; chips.appendChild(b); }
     paint();
-    const ta = el('textarea', null, null, { id: 'lk-fb-text', maxlength: '1000', placeholder: 'Bạn gặp lỗi gì, muốn thêm gì, chỗ nào quá khó hay quá dễ… (10 đến 1000 ký tự)' });
+    const ta = el('textarea', null, null, { id: 'lk-fb-text', maxlength: '1000', placeholder: G.t('Bạn gặp lỗi gì, muốn thêm gì, chỗ nào quá khó hay quá dễ… (10 đến 1000 ký tự)') });
     const cnt = el('span', 'lk-sub', '0/1000', { id: 'lk-fb-count' });
     ta.oninput = () => { if (ta.value.length > 1000) ta.value = ta.value.slice(0, 1000); cnt.textContent = ta.value.length + '/1000'; };
-    const contact = el('input', null, null, { id: 'lk-fb-contact', type: 'text', maxlength: '120', placeholder: 'Liên hệ nếu muốn được trả lời (không bắt buộc): Zalo, email…' });
-    F.body.append(el('div', 'lk-sub', 'Loại góp ý'), chips, ta, el('div', 'lk-row', null));
+    const contact = el('input', null, null, { id: 'lk-fb-contact', type: 'text', maxlength: '120', placeholder: G.t('Liên hệ nếu muốn được trả lời (không bắt buộc): Zalo, email…') });
+    F.body.append(el('div', 'lk-sub', G.t('Loại góp ý')), chips, ta, el('div', 'lk-row', null));
     F.body.lastChild.append(cnt);
     F.body.append(contact);
     let attach = null;
     if (shot) {
       const row = el('label', 'lk-row lk-shot');
       attach = el('input', null, null, { type: 'checkbox', id: 'lk-fb-shot' }); attach.checked = true;
-      const img = el('img', null, null, { src: shot, alt: 'Ảnh chụp trận' });
-      row.append(attach, el('span', null, 'Đính kèm ảnh chụp trận'), img);
+      const img = el('img', null, null, { src: shot, alt: G.t('Ảnh chụp trận') });
+      row.append(attach, el('span', null, G.t('Đính kèm ảnh chụp trận')), img);
       F.body.append(row);
     }
-    F.body.append(el('div', 'lk-sub', 'Gửi kèm: phiên bản ' + G.VERSION + ', chỗ đang mở (' + info.where + '), cỡ màn hình, loại máy và trình duyệt. Không gửi email hay tên của bạn.'));
-    const note = el('div', 'lk-sub', C.online() ? '' : 'Đang ngoại tuyến: góp ý sẽ được lưu trên máy và tự gửi khi có mạng.', { id: 'lk-fb-note' });
+    F.body.append(el('div', 'lk-sub', G.t('Gửi kèm: phiên bản {0}, chỗ đang mở ({1}), cỡ màn hình, loại máy và trình duyệt. Không gửi email hay tên của bạn.', G.VERSION, info.where)));
+    const note = el('div', 'lk-sub', C.online() ? '' : G.t('Đang ngoại tuyến: góp ý sẽ được lưu trên máy và tự gửi khi có mạng.'), { id: 'lk-fb-note' });
     const err = el('div', 'lk-err', '', { id: 'lk-fb-err' });
     F.body.append(note, err);
     const send = btn('Gửi góp ý', 'p', 'fb-send', async () => {
       const text = ta.value.trim();
-      if (text.length < 10) { err.textContent = 'Viết ít nhất 10 ký tự nhé.'; return; }
+      if (text.length < 10) { err.textContent = G.t('Viết ít nhất 10 ký tự nhé.'); return; }
       const lim = limitMsg();
       if (lim) { err.textContent = lim; return; }
       err.textContent = ''; send.disabled = true;
@@ -212,9 +214,9 @@
   function thanks(F, ok) {
     F.body.textContent = ''; F.foot.textContent = '';
     const t = el('div', 'lk-thanks', null, { id: 'lk-fb-thanks' });
-    t.append(el('b', null, 'Cảm ơn góp ý của bạn!'),
-      el('div', null, ok ? 'Góp ý đã được gửi.' : 'Đang không có mạng: góp ý đã được lưu trên máy và sẽ tự gửi khi có mạng.'),
-      el('div', 'lk-sub', 'Chúng tôi sẽ đọc từng góp ý để làm Linh Khí hay hơn.'));
+    t.append(el('b', null, G.t('Cảm ơn góp ý của bạn!')),
+      el('div', null, G.t(ok ? 'Góp ý đã được gửi.' : 'Đang không có mạng: góp ý đã được lưu trên máy và sẽ tự gửi khi có mạng.')),
+      el('div', 'lk-sub', G.t('Chúng tôi sẽ đọc từng góp ý để làm Linh Khí hay hơn.')));
     F.body.append(t);
     F.foot.append(btn('Đóng', 'p', 'fb-close', () => close()));
   }
@@ -227,47 +229,47 @@
     const S = { items: [], cursor: null, more: true, kind: 'all', st: 'all', busy: false };
     const filt = el('div', 'lk-chips');
     const list = el('div', null, null, { id: 'lk-in-list' });
-    const msg = el('div', 'lk-sub', 'Đang tải…', { id: 'lk-in-msg' });
+    const msg = el('div', 'lk-sub', G.t('Đang tải…'), { id: 'lk-in-msg' });
     const more = btn('Tải thêm', '', 'in-more', () => load());
     function chipRow() {
       filt.textContent = '';
-      for (const [k, n] of [['all', 'Mọi loại']].concat(KINDS)) { const b = btn(n, 's' + (S.kind === k ? ' on' : ''), 'in-kind', () => { S.kind = k; chipRow(); render(); }); b.dataset.k = k; filt.appendChild(b); }
+      for (const [k, n] of [['all', 'Mọi loại']].concat(KINDS)) { const b = btn(G.tc('góp ý', n), 's' + (S.kind === k ? ' on' : ''), 'in-kind', () => { S.kind = k; chipRow(); render(); }); b.dataset.k = k; filt.appendChild(b); }
       filt.appendChild(el('span', 'lk-sub', ' · '));
       for (const [k, n] of [['all', 'Mọi trạng thái']].concat(ST)) { const b = btn(n, 's' + (S.st === k ? ' on' : ''), 'in-st', () => { S.st = k; chipRow(); render(); }); b.dataset.s = k; filt.appendChild(b); }
     }
     function bigView(src) {
-      const b = el('div', 'lk-big', null, { id: 'lk-big' }); b.appendChild(el('img', null, null, { src, alt: 'Ảnh chụp to' }));
+      const b = el('div', 'lk-big', null, { id: 'lk-big' }); b.appendChild(el('img', null, null, { src, alt: G.t('Ảnh chụp to') }));
       b.onclick = () => b.remove(); F.box.appendChild(b);
     }
     function item(x) {
       const st = x.status || 'new';
       const d = el('div', 'lk-item'); d.dataset.id = x.id; d.style.borderLeftColor = KIND_COL[x.kind] || '#a8752f';
       const top = el('div');
-      const k = el('span', 'k', KIND_NAME[x.kind] || x.kind); k.style.background = KIND_COL[x.kind] || '#555';
-      top.append(k, el('span', 'lk-sub', vnTime(x.at || 0) + ' · ' + (ST.find((s) => s[0] === st) || ST[0])[1]));
+      const k = el('span', 'k', KIND_NAME[x.kind] ? G.tc('góp ý', KIND_NAME[x.kind]) : x.kind); k.style.background = KIND_COL[x.kind] || '#555';
+      top.append(k, el('span', 'lk-sub', vnTime(x.at || 0) + ' · ' + G.t((ST.find((s) => s[0] === st) || ST[0])[1])));
       d.append(top, el('div', 't', x.text || ''));
-      if (x.contact) d.append(el('div', 'm', 'Liên hệ: ' + x.contact));
-      d.append(el('div', 'm', [x.ver, x.where, x.scr, x.ua, x.guest ? 'khách' : 'đã đăng nhập Google', 'uid ' + String(x.uid || '').slice(0, 8)].filter(Boolean).join(' · ')));
-      if (x.shot && /^data:image\/jpeg;base64,/.test(x.shot)) { const im = el('img', null, null, { src: x.shot, alt: 'Ảnh chụp trận', 'data-act': 'in-shot' }); im.onclick = () => bigView(x.shot); d.append(im); }
-      if (x.note) d.append(el('div', 'n', 'Ghi chú: ' + x.note));
+      if (x.contact) d.append(el('div', 'm', G.t('Liên hệ: {0}', G.kd(String(x.contact)))));
+      d.append(el('div', 'm', [x.ver, x.where, x.scr, x.ua, G.t(x.guest ? 'khách' : 'đã đăng nhập Google'), 'uid ' + String(x.uid || '').slice(0, 8)].filter(Boolean).join(' · ')));
+      if (x.shot && /^data:image\/jpeg;base64,/.test(x.shot)) { const im = el('img', null, null, { src: x.shot, alt: G.t('Ảnh chụp trận'), 'data-act': 'in-shot' }); im.onclick = () => bigView(x.shot); d.append(im); }
+      if (x.note) d.append(el('div', 'n', G.t('Ghi chú: {0}', G.kd(String(x.note)))));
       const row = el('div', 'lk-chips');
       for (const [s, n] of ST) {
         const b = btn(n, 's' + (st === s ? ' on' : ''), 'in-set', async () => {
-          try { await C.setFeedbackStatus(x.id, s); x.status = s; render(); C.countNew(); } catch (e) { msg.textContent = e.message; }
+          try { await C.setFeedbackStatus(x.id, s); x.status = s; render(); C.countNew(); } catch (e) { msg.textContent = G.tv(e.message); }
         });
         b.dataset.s = s; row.append(b);
       }
       row.append(btn('✎ Ghi chú', 's', 'in-note', () => {
         const ta = el('textarea', null, x.note || '', { maxlength: '300' }); ta.style.minHeight = '50px';
         const save = btn('Lưu ghi chú', 's p', 'in-note-save', async () => {
-          try { await C.setFeedbackStatus(x.id, x.status || 'seen', ta.value.slice(0, 300)); x.status = x.status || 'seen'; x.note = ta.value.slice(0, 300); render(); } catch (e) { msg.textContent = e.message; }
+          try { await C.setFeedbackStatus(x.id, x.status || 'seen', ta.value.slice(0, 300)); x.status = x.status || 'seen'; x.note = ta.value.slice(0, 300); render(); } catch (e) { msg.textContent = G.tv(e.message); }
         });
         row.replaceWith(ta); ta.after(save);
       }));
       row.append(btn('🗑 Xoá', 's d', 'in-del', () => {
         const ask = el('div', 'lk-row');
-        ask.append(el('span', 'lk-err', 'Xoá hẳn góp ý này? Không lấy lại được.'),
-          btn('Xoá', 's d', 'in-del-yes', async () => { try { await C.deleteFeedback(x.id); S.items = S.items.filter((y) => y !== x); render(); C.countNew(); } catch (e) { msg.textContent = e.message; } }),
+        ask.append(el('span', 'lk-err', G.t('Xoá hẳn góp ý này? Không lấy lại được.')),
+          btn('Xoá', 's d', 'in-del-yes', async () => { try { await C.deleteFeedback(x.id); S.items = S.items.filter((y) => y !== x); render(); C.countNew(); } catch (e) { msg.textContent = G.tv(e.message); } }),
           btn('Thôi', 's', 'in-del-no', () => render()));
         row.replaceWith(ask);
       }));
@@ -278,14 +280,14 @@
       list.textContent = '';
       const shown = S.items.filter((x) => (S.kind === 'all' || x.kind === S.kind) && (S.st === 'all' || (x.status || 'new') === S.st));
       for (const x of shown) list.append(item(x));
-      if (!S.busy) msg.textContent = S.items.length ? 'Đã tải ' + S.items.length + ' góp ý' + (shown.length < S.items.length ? ', đang hiện ' + shown.length + ' theo bộ lọc' : '') + (S.more ? '. Bấm Tải thêm để xem cũ hơn.' : '. Hết rồi.') : 'Chưa có góp ý nào.';
+      if (!S.busy) msg.textContent = S.items.length ? G.t('Đã tải {0} góp ý', S.items.length) + (shown.length < S.items.length ? G.t(', đang hiện {0} theo bộ lọc', shown.length) : '') + G.t(S.more ? '. Bấm Tải thêm để xem cũ hơn.' : '. Hết rồi.') : G.t('Chưa có góp ý nào.');
       more.disabled = !S.more || S.busy;
     }
     async function load() {
       if (S.busy || !S.more) return;
-      S.busy = true; msg.textContent = 'Đang tải…'; more.disabled = true;
+      S.busy = true; msg.textContent = G.t('Đang tải…'); more.disabled = true;
       try { const r = await C.listFeedback({ limit: 20, after: S.cursor }); S.items = S.items.concat(r.items); S.cursor = r.cursor; S.more = r.more; S.busy = false; render(); }
-      catch (e) { S.busy = false; msg.textContent = e.message; more.disabled = false; }
+      catch (e) { S.busy = false; msg.textContent = G.tv(e.message); more.disabled = false; }
     }
     chipRow();
     F.body.append(filt, msg, list);
@@ -299,10 +301,10 @@
     return new Promise((done) => {
       const F = frame('Chọn bản lưu');
       F.box.id = 'lk-conflict';
-      const card = (title, s, sub) => { const c = el('div', 'lk-card'); c.append(el('b', null, title), el('div', 'lk-sub', sub), el('div', null, s.stars + ' sao · xa nhất ' + s.farText), el('div', null, 'Cấp cao nhất ' + s.lvl + ' · ' + s.weapons + ' vũ khí · ' + s.gold + ' vàng')); return c; };
+      const card = (title, s, sub) => { const c = el('div', 'lk-card'); c.append(el('b', null, G.t(title)), el('div', 'lk-sub', sub), el('div', null, G.t('{0} sao · xa nhất {1}', s.stars, s.farText)), el('div', null, G.t('Cấp cao nhất {0} · {1} vũ khí · {2} vàng', s.lvl, s.weapons, s.gold))); return c; };
       const cards = el('div', 'lk-cards');
-      cards.append(card('Trên máy này', local, 'đi xa hơn'), card('Trên mây', cloud, 'lưu lúc ' + vnTime(at)));
-      F.body.append(el('div', null, 'Bản lưu trên mây mới hơn, nhưng bản trên máy này có nhiều tiến độ hơn. Bạn muốn giữ bản nào? Bản không chọn sẽ bị thay.'), cards);
+      cards.append(card('Trên máy này', local, G.t('đi xa hơn')), card('Trên mây', cloud, G.t('lưu lúc {0}', vnTime(at))));
+      F.body.append(el('div', null, G.t('Bản lưu trên mây mới hơn, nhưng bản trên máy này có nhiều tiến độ hơn. Bạn muốn giữ bản nào? Bản không chọn sẽ bị thay.')), cards);
       let picked = false;
       const pick = (v) => { picked = true; close(true); done(v); };
       F.foot.append(btn('Dùng bản trên mây', '', 'cf-cloud', () => pick('cloud')), btn('Giữ bản trên máy này', 'p', 'cf-local', () => pick('local')));
@@ -317,11 +319,11 @@
       F.box.id = 'lk-rename';
       const inp = el('input', null, null, { id: 'lk-name', type: 'text', maxlength: '16', value: cur || '' });
       const err = el('div', 'lk-err', '', { id: 'lk-name-err' });
-      F.body.append(el('div', 'lk-sub', 'Từ 2 đến 16 ký tự: chữ, số, dấu cách, gạch dưới, gạch ngang.'), inp, err);
+      F.body.append(el('div', 'lk-sub', G.t('Từ 2 đến 16 ký tự: chữ, số, dấu cách, gạch dưới, gạch ngang.')), inp, err);
       let res = null;
       const ok = btn('Lưu tên', 'p', 'name-ok', () => {
         const v = clean(inp.value);
-        if (!v) { err.textContent = 'Tên cần 2 đến 16 ký tự, chỉ gồm chữ, số, dấu cách, _ hoặc -.'; return; }
+        if (!v) { err.textContent = G.t('Tên cần 2 đến 16 ký tự, chỉ gồm chữ, số, dấu cách, _ hoặc -.'); return; }
         res = v; close();
       });
       inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') ok.click(); });

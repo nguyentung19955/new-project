@@ -28,10 +28,13 @@
     return '';
   }
 
+  // Chữ hiển thị theo ngôn ngữ (js/ngon_ngu.js); không có G.t (bài kiểm tra chạy riêng tệp này) thì chỉ điền {0}… vào chuỗi gốc.
+  function tr(s) { const a = arguments; return G.t ? G.t.apply(G, a) : String(s).replace(/\{(\d)\}/g, (m, i) => a[+i + 1]); }
+
   // ---------- đo tiến độ một bản lưu (để so khi hai bản lệch nhau) ----------
   function starSum(s) { let n = 0; for (const m of [s.stars || {}, s.stars2 || {}]) for (const k in m) n += Math.max(0, Math.min(3, m[k] | 0)); return n; }
   function far(s) { let f = 0; for (const k in s.stars || {}) { const [r, i] = k.split('-').map(Number); if (r >= 0 && i >= 0) f = Math.max(f, r * 5 + i + 1); } return f; }
-  function farText(f) { if (!f) return 'chưa qua ải nào'; const r = Math.floor((f - 1) / 5), i = (f - 1) % 5; return (G.REGIONS[r] ? G.REGIONS[r].name : 'Vùng ' + (r + 1)) + ' ' + (i + 1); }
+  function farText(f) { if (!f) return tr('chưa qua ải nào'); const r = Math.floor((f - 1) / 5), i = (f - 1) % 5; return tr('{0} {1}', G.REGIONS[r] ? G.REGIONS[r].name : tr('Vùng {0}', r + 1), i + 1); }
   function maxLvl(s) { let l = 1; for (const k in s.heroes || {}) l = Math.max(l, (s.heroes[k] && s.heroes[k].lvl) || 1); return l; }
   function progress(s) {
     if (!s) return 0;
@@ -51,9 +54,9 @@
       const box = document.getElementById('lk-conflict');
       if (box) {
         const msg = box.querySelector('.lk-body > div');
-        if (msg) msg.textContent = 'Bản lưu trên máy này mới hơn, nhưng bản trên mây có nhiều tiến độ hơn. Bạn muốn giữ bản nào? Bản không chọn sẽ bị thay.';
+        if (msg) msg.textContent = tr('Bản lưu trên máy này mới hơn, nhưng bản trên mây có nhiều tiến độ hơn. Bạn muốn giữ bản nào? Bản không chọn sẽ bị thay.');
         const sub = box.querySelector('.lk-card .lk-sub');
-        if (sub) sub.textContent = 'lưu sau, ít tiến độ hơn';
+        if (sub) sub.textContent = tr('lưu sau, ít tiến độ hơn');
         const b = box.querySelector('[data-act="cf-local"]');
         if (b) { watched = true; b.addEventListener('click', () => { choseLocal = true; }, true); }
       }
@@ -80,7 +83,7 @@
       if (this.why === 'offline' || this.status === 'error') return 'Đang ngoại tuyến: vẫn lưu trên máy, có mạng sẽ lưu lên mây';
       if (this.status === 'loading' || !this.user) return 'Đang kết nối mây…';
       if (this.dirty || this.status === 'saving') return 'Đang lưu lên mây…';
-      if (this.lastSync) { const d = new Date(this.lastSync); return 'Đã lưu lên mây lúc ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
+      if (this.lastSync) { const d = new Date(this.lastSync); return tr('Đã lưu lên mây lúc {0}', String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0')); }
       return 'Đã kết nối mây';
     },
     online() { return !!(this.ready && this.user && this.db); },

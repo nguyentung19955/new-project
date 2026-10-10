@@ -583,8 +583,8 @@
       if (VS.onTalk) VS.onTalk(g.id); else { S.bubble = { who: g.id, s: N.chao, t: 2.6 }; S.talk = null; }
     } else if (g.kind === 'kid') {
       const sv = G.save, hs = sv.heroes[g.id], Hh = G.HEROES[g.id];
-      if (hs && hs.unlocked) { sv.hero = g.id; G.persist(); G.sfx && G.sfx('pick'); say('Đã đổi sang ' + Hh.name); markSeen('tu'); }
-      else { say(Hh.name + ' chưa mở: ' + Hh.unlock); G.sfx && G.sfx('warn'); }
+      if (hs && hs.unlocked) { sv.hero = g.id; G.persist(); G.sfx && G.sfx('pick'); say(G.t('Đã đổi sang {0}', Hh.name)); markSeen('tu'); }
+      else { say(G.t('{0} chưa mở: {1}', Hh.name, Hh.unlock)); G.sfx && G.sfx('warn'); }
     } else if (g.kind === 'weapon') {
       G.sfx && G.sfx('ui');
       if (VS.onWeapon) VS.onWeapon(g.id); else { const w = G.weaponById(g.id); if (w) say(G.wName ? G.wName(w) : 'Vũ khí sống'); }
@@ -881,7 +881,7 @@
       ['shard0', sv.shards[0], '#c8e8a0'], ['shard1', sv.shards[1], '#a8d8ff'], ['shard2', sv.shards[2], '#ffc0a0']];
   };
   VS.drawTop = function () {
-    const sv = G.save, ui = G.ui, parts = VS.resParts(), right = G.HEROES[sv.hero].name + ' · cấp ' + sv.heroes[sv.hero].lvl + ' · sức mạnh ' + G.power();
+    const sv = G.save, ui = G.ui, parts = VS.resParts(), right = G.t('{0} · cấp {1} · sức mạnh {2}', G.HEROES[sv.hero].name, sv.heroes[sv.hero].lvl, G.power());
     if (G.theme && G.theme.topBar) { G.theme.topBar(parts, right); return; }
     ui.rect(0, 0, 480, 15, 'rgba(12,10,18,0.82)');
     let x = 6; for (const q of parts) { const t = String(q[1]); ui.text(t, x, 10.5, { size: 7, bold: true, color: q[2] }); ui.font(7, true); x += G.ux.measureText(t).width + 8; }
@@ -897,7 +897,7 @@
     VS.drawStrip(S.goal && S.goal.kind === 'npc' ? S.goal.id : S.near && S.near.kind === 'npc' ? S.near.id : null, false);
     c.restore();
     // bong bóng tên chức năng trên đầu người đang ở gần
-    if (S.near && S.near.kind === 'npc' && !S.bubble) { const N = NPCS[S.near.id]; VS.bubble(N.viec + (S.news[S.near.id] ? '  !' : ''), N.pos[0] - cam, N.pos[1] + N.top - 12 + OY, { bg: '#ffe9a8' }); }
+    if (S.near && S.near.kind === 'npc' && !S.bubble) { const N = NPCS[S.near.id]; VS.bubble(G.t(N.viec) + (S.news[S.near.id] ? '  !' : ''), N.pos[0] - cam, N.pos[1] + N.top - 12 + OY, { bg: '#ffe9a8' }); }
     if (S.near && S.near.kind === 'kid') { const st = seats().find((q) => q.key === S.near.id); if (st) VS.bubble(G.HEROES[st.key].name, st.x - cam, st.y - 30 + OY, { bg: '#ffe9a8', size: 7.5 }); }
     if (S.bubble) { const bq = S.bubble.who ? [NPCS[S.bubble.who].pos[0], NPCS[S.bubble.who].pos[1] + NPCS[S.bubble.who].top - 12] : S.bubble.at; VS.bubble(S.bubble.s, bq[0] - cam, bq[1] + OY, { maxW: 130 }); }
     // cần điều khiển

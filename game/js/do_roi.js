@@ -100,7 +100,7 @@
   }
   D.ten = function (o) {
     let s = o.kind === 'weapon' && o.w ? G.wName(o.w) : o.kind === 'outfit' && o.o && G.outfit ? G.outfit.name(o.o) : (o.s || '');
-    s = String(s).replace(/^Nhặt được /, '');
+    s = G.tv(String(s).replace(/^Nhặt được /, '')); // dịch trước rồi mới cắt theo ký tự
     return s.length > 18 ? s.slice(0, 17) + '…' : s;
   };
   const px = (c, x, y, col, w, h) => { c.fillStyle = col; c.fillRect(Math.round(x), Math.round(y), w || 1, h || 1); };

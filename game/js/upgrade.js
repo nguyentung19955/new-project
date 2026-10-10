@@ -28,7 +28,7 @@
     return any ? m : null;
   };
   // Tên ải để chơi lại: ải thường cao nhất đã qua (trong vùng r nếu có).
-  const stName = (r, i) => (i === 4 ? 'trùm ' + G.REGIONS[r].bossName : G.REGIONS[r].name + ' ' + (i + 1));
+  const stName = (r, i) => (i === 4 ? G.t('trùm {0}', G.REGIONS[r].bossName) : G.tv(G.REGIONS[r].name) + ' ' + (i + 1));
   U.grindStage = function (sv, r) {
     let best = null;
     for (let rr = 0; rr < 3; rr++) {
@@ -53,19 +53,19 @@
     const a = [];
     let where = null;
     for (let i = 0; i < 3; i++) {
-      if (m.shard[i]) { a.push(m.shard[i] + ' mảnh ' + G.REGIONS[i].bossName); where = where || (sv.stars[i + '-4'] ? 'đánh lại trùm ' + G.REGIONS[i].bossName : 'hạ trùm ' + G.REGIONS[i].bossName); }
+      if (m.shard[i]) { a.push(G.t('{0} mảnh {1}', m.shard[i], G.REGIONS[i].bossName)); where = where || G.t(sv.stars[i + '-4'] ? 'đánh lại trùm {0}' : 'hạ trùm {0}', G.REGIONS[i].bossName); }
     }
     for (let i = 0; i < 3; i++) {
       if (!m.mat[i]) continue;
-      a.push(m.mat[i] + ' ' + G.REGIONS[i].mat.toLowerCase());
+      a.push(m.mat[i] + ' ' + G.tv(G.REGIONS[i].mat.toLowerCase()));
       const g = U.grindStage(sv, i);
-      where = where || (g ? 'chơi lại ' + stName(g[0], g[1]) : 'vào vùng ' + G.REGIONS[i].name);
+      where = where || (g ? G.t('chơi lại {0}', stName(g[0], g[1])) : G.t('vào vùng {0}', G.REGIONS[i].name));
     }
-    if (m.gold) a.push(m.gold + ' vàng');
-    if (m.ore) a.push(m.ore + ' quặng');
-    if (m.stones) { a.push(m.stones + ' đá tôi'); where = where || 'đá tôi rơi từ rương, sao thứ ba lần đầu'; }
-    if (!where && (m.gold || m.ore)) { const g = U.grindStage(sv); if (g) where = 'chơi lại ' + stName(g[0], g[1]); }
-    return 'thiếu ' + a.join(', ') + (where ? ' — ' + where : '');
+    if (m.gold) a.push(G.t('{0} vàng', m.gold));
+    if (m.ore) a.push(G.t('{0} quặng', m.ore));
+    if (m.stones) { a.push(G.t('{0} đá tôi', m.stones)); where = where || G.t('đá tôi rơi từ rương, sao thứ ba lần đầu'); }
+    if (!where && (m.gold || m.ore)) { const g = U.grindStage(sv); if (g) where = G.t('chơi lại {0}', stName(g[0], g[1])); }
+    return G.t('thiếu {0}', a.join(', ')) + (where ? ' — ' + where : '');
   };
 
   // ---------- các đường nâng cấp ----------
@@ -83,12 +83,12 @@
     const out = [], hs = sv.heroes[sv.hero], O = G.outfit;
     // cây kỹ năng
     if (pts(hs) > 0) {
-      for (const b of G.SKEYS) if (hs.sk[b] < 5) out.push({ kind: 'skill', key: 'skill', br: b, title: 'Còn ' + pts(hs) + ' điểm kỹ năng chưa học (nhánh ' + G.SKILLS[b].name + ')', cost: {}, apply: (s) => { s.heroes[s.hero].sk[b]++; }, go: { who: 'do' } });
+      for (const b of G.SKEYS) if (hs.sk[b] < 5) out.push({ kind: 'skill', key: 'skill', br: b, title: G.t('Còn {0} điểm kỹ năng chưa học (nhánh {1})', pts(hs), G.SKILLS[b].name), cost: {}, apply: (s) => { s.heroes[s.hero].sk[b]++; }, go: { who: 'do' } });
     }
     // cây chưởng (js/chuong.js): điểm chưởng chưa học
     if (G.chuong) {
       const cp = G.chuong.pts(hs, sv.hero);
-      if (cp.left > 0) out.push({ kind: 'chuong', key: 'chuong', title: 'Còn ' + cp.left + ' điểm chưởng chưa học (' + G.CHUONG.trees[hs.ch.cay].name + ')', cost: {}, apply: (s) => { const h = s.heroes[s.hero]; G.chuong.autoLearn(h, s.hero); }, go: { who: 'do', tab: 'chuong' } });
+      if (cp.left > 0) out.push({ kind: 'chuong', key: 'chuong', title: G.t('Còn {0} điểm chưởng chưa học ({1})', cp.left, G.CHUONG.trees[hs.ch.cay].name), cost: {}, apply: (s) => { const h = s.heroes[s.hero]; G.chuong.autoLearn(h, s.hero); }, go: { who: 'do', tab: 'chuong' } });
     }
     // vũ khí đang mang: mài, nâng bậc, lên Vàng, nâng lò
     const cap = G.FORGE_CAP[sv.forge];
@@ -98,14 +98,14 @@
       if (!w) continue;
       const nm = wNameOf(w), r = G.wRar(w);
       if (w.sharpen < Math.min(cap, G.MAX_SHARPEN)) {
-        out.push({ kind: 'sharpen', key: 'sh' + id, title: 'Mài ' + nm + ' lên +' + (w.sharpen + 1), cost: G.sharpenFull(w.sharpen), apply: (s) => { wById(s, id).sharpen++; }, go: { who: 'ren', ftab: 'sharpen', sel: id } });
+        out.push({ kind: 'sharpen', key: 'sh' + id, title: G.t('Mài {0} lên +{1}', nm, w.sharpen + 1), cost: G.sharpenFull(w.sharpen), apply: (s) => { wById(s, id).sharpen++; }, go: { who: 'ren', ftab: 'sharpen', sel: id } });
       } else if (w.sharpen < G.MAX_SHARPEN) needForge = true;
-      if (r < 2) out.push({ kind: 'tier', key: 'ti' + id, title: 'Nâng ' + nm + ' lên ' + G.RARITY[r + 1].name, cost: G.TIER_UP[r + 1], apply: (s) => setRar(wById(s, id), r + 1, 0), go: { who: 'ren', ftab: 'tier', sel: id } });
+      if (r < 2) out.push({ kind: 'tier', key: 'ti' + id, title: G.t('Nâng {0} lên {1}', nm, G.RARITY[r + 1].name), cost: G.TIER_UP[r + 1], apply: (s) => setRar(wById(s, id), r + 1, 0), go: { who: 'ren', ftab: 'tier', sel: id } });
       else {
         // lên Vàng (hoặc Vàng mạnh hơn): mảnh trùm vùng cao nhất đã hạ, nếu chưa hạ trùm nào thì mảnh Mộc Tinh
         let k = 0;
         for (let q = 0; q < 3; q++) if (sv.stars[q + '-4']) k = q;
-        if (r < 3 || k > (w.gold | 0)) out.push({ kind: 'gold', key: 'go' + id, title: 'Nâng ' + nm + ' lên Vàng ' + G.REGIONS[k].bossName, cost: G.goldCost(k), apply: (s) => setRar(wById(s, id), 3, k), go: { who: 'ren', ftab: 'tier', sel: id } });
+        if (r < 3 || k > (w.gold | 0)) out.push({ kind: 'gold', key: 'go' + id, title: G.t('Nâng {0} lên Vàng {1}', nm, G.REGIONS[k].bossName), cost: G.goldCost(k), apply: (s) => setRar(wById(s, id), 3, k), go: { who: 'ren', ftab: 'tier', sel: id } });
       }
       // tiến hóa theo linh khí (dấu ấn): không mua được, phải chơi
       const st = G.wStage(w), maxSt = G.RARITY[r].maxStage;
@@ -113,14 +113,14 @@
         let el = w.branch;
         if (!el) { el = G.ELS[0]; for (const e of G.ELS) if ((w.marks[e] || 0) > (w.marks[el] || 0)) el = e; }
         const need = Math.ceil(G.MARKS[st] - (w.marks[el] || 0));
-        if (need > 0) out.push({ kind: 'evolve', key: 'ev' + id, title: 'Tiến hóa ' + nm + ' lên ' + G.STAGE_NAMES[st + 1], cost: {}, need: { lk: need, el },
+        if (need > 0) out.push({ kind: 'evolve', key: 'ev' + id, title: G.t('Tiến hóa {0} lên {1}', nm, G.STAGE_NAMES[st + 1]), cost: {}, need: { lk: need, el },
           sim: (s) => { const x = wById(s, id); x.marks[el] = G.MARKS[st]; if (!x.branch) x.branch = el; }, apply: null, go: { weapon: id } });
       }
     }
     const up = G.FORGE_UP[sv.forge];
     if (up && needForge) {
       const main = sv.carry.map((id) => wById(sv, id)).filter(Boolean).sort((a, b) => b.sharpen - a.sharpen)[0];
-      out.push({ kind: 'forge', key: 'forge', title: 'Nâng lò lên cấp ' + (sv.forge + 1) + ' (mài tới +' + G.FORGE_CAP[sv.forge + 1] + ')', cost: up,
+      out.push({ kind: 'forge', key: 'forge', title: G.t('Nâng lò lên cấp {0} (mài tới +{1})', sv.forge + 1, G.FORGE_CAP[sv.forge + 1]), cost: up,
         apply: (s) => { s.forge++; }, sim: (s) => { s.forge++; if (main) wById(s, main.id).sharpen++; }, extra: main ? G.sharpenFull(main.sharpen) : null, go: { who: 'ren', ftab: 'up' } });
     }
     // mang vũ khí tốt hơn trong rương
@@ -128,7 +128,7 @@
     const wq = (w) => G.wRarMult(w) * G.STAGE_MULT[G.wStage(w)] * (1 + 0.08 * w.sharpen) * G.WTYPES[w.type].dmg / (G.WTYPES[w.type].cd || 0.4);
     const stash = sv.weapons.filter((w) => !sv.carry.includes(w.id)).sort((a, b) => wq(b) - wq(a)).slice(0, 3);
     for (const w of stash) for (let slot = 0; slot < Math.max(1, sv.carry.length); slot++) {
-      out.push({ kind: 'carry', key: 'ca' + w.id + '-' + slot, title: 'Mang ' + G.wName(w), cost: {}, apply: (s) => { s.carry[slot] = w.id; }, go: { who: 'xen' } });
+      out.push({ kind: 'carry', key: 'ca' + w.id + '-' + slot, title: G.t('Mang {0}', G.wName(w)), cost: {}, apply: (s) => { s.carry[slot] = w.id; }, go: { who: 'xen' } });
     }
     // trang phục
     if (O && sv.outfit) {
@@ -137,33 +137,33 @@
         const it = O.worn(sv, slot);
         if (it) {
           const id = it.id;
-          if (slot === 'wing') { const c = O.wingCost(it); if (c) out.push({ kind: 'wing', key: 'wi' + id, title: 'Mở cấp ' + (it.lv + 1) + ' cho ' + O.ITEMS[it.k].name, cost: c, apply: (s) => { s.outfit.items.find((x) => x.id === id).lv++; }, go: { who: 'may', otab: 'wing', sel: id } }); }
+          if (slot === 'wing') { const c = O.wingCost(it); if (c) out.push({ kind: 'wing', key: 'wi' + id, title: G.t('Mở cấp {0} cho {1}', it.lv + 1, O.ITEMS[it.k].name), cost: c, apply: (s) => { s.outfit.items.find((x) => x.id === id).lv++; }, go: { who: 'may', otab: 'wing', sel: id } }); }
           const c = O.upCost(it);
-          if (c) out.push({ kind: 'oup', key: 'ou' + id, title: 'Nâng ' + O.ITEMS[it.k].name + ' lên ' + G.RARITY[it.r + 1].name, cost: c, apply: (s) => { s.outfit.items.find((x) => x.id === id).r++; }, go: { who: 'may', otab: 'wear', sel: id, oslot: slot } });
+          if (c) out.push({ kind: 'oup', key: 'ou' + id, title: G.t('Nâng {0} lên {1}', O.ITEMS[it.k].name, G.RARITY[it.r + 1].name), cost: c, apply: (s) => { s.outfit.items.find((x) => x.id === id).r++; }, go: { who: 'may', otab: 'wear', sel: id, oslot: slot } });
         }
         const qk = (x) => x.r * 10 + (x.lv || 0) * 5 + Object.values(O.stats(x)).reduce((a, b) => a + (b < 1 ? b * 100 : b), 0) / 10;
         const cands = sv.outfit.items.filter((x) => O.ITEMS[x.k].slot === slot && !(it && x.id === it.id)).sort((a, b) => qk(b) - qk(a)).slice(0, 2);
         for (const x of cands) {
           const id = x.id;
-          out.push({ kind: 'wear', key: 'we' + id, title: 'Mặc ' + O.name(x), cost: {}, apply: (s) => { O.wear(s, s.outfit.items.find((q) => q.id === id)); }, go: { who: 'may', otab: 'wear', sel: id, oslot: slot } });
+          out.push({ kind: 'wear', key: 'we' + id, title: G.t('Mặc {0}', O.name(x)), cost: {}, apply: (s) => { O.wear(s, s.outfit.items.find((q) => q.id === id)); }, go: { who: 'may', otab: 'wear', sel: id, oslot: slot } });
         }
       }
       if (!O.full(sv)) {
         const list = O.craftList();
         for (const k of list) {
           if (O.has(sv, k)) continue;
-          out.push({ kind: 'craft', key: 'cr' + k, title: 'May ' + O.ITEMS[k].name, cost: O.craftCost(k), apply: (s) => { const it = O.craft(s, k); if (it) O.wear(s, it); }, go: { who: 'may', otab: 'craft', sel: k, page: Math.floor(list.indexOf(k) / 4) } });
+          out.push({ kind: 'craft', key: 'cr' + k, title: G.t('May {0}', O.ITEMS[k].name), cost: O.craftCost(k), apply: (s) => { const it = O.craft(s, k); if (it) O.wear(s, it); }, go: { who: 'may', otab: 'craft', sel: k, page: Math.floor(list.indexOf(k) / 4) } });
         }
         for (const k of O.shopList()) {
           if (O.has(sv, k)) continue;
-          out.push({ kind: 'buy', key: 'bu' + k, title: 'Mua ' + O.ITEMS[k].name, cost: { gold: O.ITEMS[k].price }, apply: (s) => { const it = O.buy(s, k); if (it) O.wear(s, it); }, go: { who: 'xen', gtab: 'outfit' } });
+          out.push({ kind: 'buy', key: 'bu' + k, title: G.t('Mua {0}', O.ITEMS[k].name), cost: { gold: O.ITEMS[k].price }, apply: (s) => { const it = O.buy(s, k); if (it) O.wear(s, it); }, go: { who: 'xen', gtab: 'outfit' } });
         }
       }
     }
     // cấp hero: không mua được, phải chơi
     if (hs.lvl < G.MAX_LEVEL) {
       const g = U.grindStage(sv);
-      out.push({ kind: 'level', key: 'lvl', title: 'Lên cấp ' + (hs.lvl + 1), cost: {}, need: { xp: Math.max(1, Math.ceil(G.xpNeed(hs.lvl) - hs.xp)) },
+      out.push({ kind: 'level', key: 'lvl', title: G.t('Lên cấp {0}', hs.lvl + 1), cost: {}, need: { xp: Math.max(1, Math.ceil(G.xpNeed(hs.lvl) - hs.xp)) },
         sim: (s) => { s.heroes[s.hero].lvl++; }, apply: null, go: { who: 'lai', stage: g } });
     }
     return out;
@@ -265,10 +265,10 @@
       if (seen[grp]) continue;
       seen[grp] = true;
       let sub;
-      if (q.kind === 'level') { const g = q.go.stage; sub = 'còn thiếu ' + q.need.xp + ' kinh nghiệm' + (g ? ' — chơi lại ' + stName(g[0], g[1]) : ''); }
-      else if (q.kind === 'evolve') sub = 'còn thiếu ' + q.need.lk + ' linh khí ' + G.EL[q.need.el].name + ' — kết liễu quái đang dính ' + G.EL[q.need.el].name;
+      if (q.kind === 'level') { const g = q.go.stage; sub = G.t('còn thiếu {0} kinh nghiệm', q.need.xp) + (g ? ' — ' + G.t('chơi lại {0}', stName(g[0], g[1])) : ''); }
+      else if (q.kind === 'evolve') sub = G.t('còn thiếu {0} linh khí {1} — kết liễu quái đang dính {1}', q.need.lk, G.EL[q.need.el].name);
       else if (q.miss) sub = U.missText(sv, q.miss);
-      else sub = q.kind === 'skill' ? 'học ngay ở Cụ Đồ' : q.kind === 'chuong' ? 'học ngay ở Cụ Đồ, thẻ Cây chưởng' : q.kind === 'carry' ? 'đổi ngay ở Bà Hàng Xén' : q.kind === 'wear' ? 'mặc ngay ở Cô Thợ May' : 'đủ đồ rồi — tới ' + WHO_NAME[q.go.who] + ' làm ngay';
+      else sub = q.kind === 'skill' ? 'học ngay ở Cụ Đồ' : q.kind === 'chuong' ? 'học ngay ở Cụ Đồ, thẻ Cây chưởng' : q.kind === 'carry' ? 'đổi ngay ở Bà Hàng Xén' : q.kind === 'wear' ? 'mặc ngay ở Cô Thợ May' : G.t('đủ đồ rồi — tới {0} làm ngay', WHO_NAME[q.go.who]);
       tips.push({ text: q.title, sub, gain: Math.round(q.gain), ok: q.ok, go: q.go, kind: q.kind });
       if (tips.length >= (n || 3)) break;
     }
@@ -297,7 +297,7 @@
     return U.gainOf('sw' + w.id + '-' + slot + '-' + cur + '-' + (w.sharpen | 0) + '-' + G.wRar(w), (s) => { s.carry[slot] = w.id; }, sv);
   };
   // Chữ "+12 Sức mạnh" (hoặc "−5 Sức mạnh"); 0 thì trả chuỗi rỗng.
-  U.gainText = (v, short) => (v > 0 ? '+' + v : v < 0 ? '−' + -v : '') + (v ? (short ? ' SM' : ' Sức mạnh') : '');
+  U.gainText = (v, short) => (v ? G.t(short ? '{0} SM' : '{0} Sức mạnh', v > 0 ? '+' + v : '−' + -v) : '');
   const WHO_NAME = { ren: 'Ông Thợ Rèn', may: 'Cô Thợ May', xen: 'Bà Hàng Xén', do: 'Cụ Đồ', lai: 'Chú Lái Đò' };
   U.WHO_NAME = WHO_NAME;
 })();

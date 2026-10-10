@@ -18,6 +18,8 @@
     if (f) f(a, b, c, d, e);
   }
   const ZK = () => G.ZK || 0.85;
+  // Số lẻ trong chữ mô tả: tiếng Việt dùng dấu phẩy (1,3), tiếng Anh dùng dấu chấm (1.3).
+  const sole = (x, n) => { const s = x.toFixed(n); return G.LANG === 'en' ? s : s.replace('.', ','); };
 
   // ---------- số liệu ----------
   // r(id): bậc đang có của nút id. Mỗi cây 6 nút, 28 điểm để đầy. need: số điểm đã dồn vào cây này mới mở được nút.
@@ -41,36 +43,36 @@
         name: 'Hỏa chưởng', el: 'fire', short: 'Cầu lửa nổ lan khi trúng, gây cháy',
         speed: 250, hit: 1.4, blast: 0.6, blastR: 18, half: 6,
         nodes: [
-          { id: 'luc', name: 'Hỏa lực', max: 5, need: 0, desc: (r) => 'Sát thương chưởng +' + 10 * r + '%', d1: 'Mỗi bậc: sát thương +10%' },
-          { id: 'no', name: 'Nổ to', max: 5, need: 0, desc: (r) => 'Vùng nổ rộng thêm ' + 4 * r + ', nổ mạnh +' + 8 * r + '%', d1: 'Mỗi bậc: vùng nổ rộng hơn, nổ mạnh +8%' },
-          { id: 'vet', name: 'Vệt cháy', max: 5, need: 5, desc: (r) => 'Cầu lửa để lại vệt cháy trên sàn ' + (1 + 0.3 * r).toFixed(1).replace('.', ',') + ' giây', d1: 'Cầu lửa để lại vệt cháy đốt quái đi qua; mỗi bậc cháy lâu, mạnh hơn' },
-          { id: 'dai', name: 'Lửa dai', max: 5, need: 5, desc: (r) => 'Cháy lâu hơn ' + 20 * r + '%, đốt mạnh hơn ' + 10 * r + '%', d1: 'Mỗi bậc: cháy lâu hơn 20%, đốt mạnh hơn 10%' },
-          { id: 'tich', name: 'Tích lực', max: 5, need: 10, desc: (r) => 'Giữ nút Chưởng để tích, thả ra cầu lửa lớn x' + (1.8 + 0.2 * r).toFixed(1).replace('.', ','), d1: 'Giữ nút Chưởng rồi thả: cầu lửa lớn, nổ rộng; mỗi bậc mạnh hơn' },
-          { id: 'tan', name: 'Mưa tàn lửa', max: 3, need: 18, desc: (r) => 'Nổ xong văng ' + (1 + r) + ' tàn lửa vào quái gần', d1: 'Nổ xong văng tàn lửa trúng quái quanh đó; mỗi bậc thêm 1 tàn' },
+          { id: 'luc', name: 'Hỏa lực', max: 5, need: 0, desc: (r) => G.t('Sát thương chưởng +{0}%', 10 * r), d1: 'Mỗi bậc: sát thương +10%' },
+          { id: 'no', name: 'Nổ to', max: 5, need: 0, desc: (r) => G.t('Vùng nổ rộng thêm {0}, nổ mạnh +{1}%', 4 * r, 8 * r), d1: 'Mỗi bậc: vùng nổ rộng hơn, nổ mạnh +8%' },
+          { id: 'vet', name: 'Vệt cháy', max: 5, need: 5, desc: (r) => G.t('Cầu lửa để lại vệt cháy trên sàn {0} giây', sole(1 + 0.3 * r, 1)), d1: 'Cầu lửa để lại vệt cháy đốt quái đi qua; mỗi bậc cháy lâu, mạnh hơn' },
+          { id: 'dai', name: 'Lửa dai', max: 5, need: 5, desc: (r) => G.t('Cháy lâu hơn {0}%, đốt mạnh hơn {1}%', 20 * r, 10 * r), d1: 'Mỗi bậc: cháy lâu hơn 20%, đốt mạnh hơn 10%' },
+          { id: 'tich', name: 'Tích lực', max: 5, need: 10, desc: (r) => G.t('Giữ nút Chưởng để tích, thả ra cầu lửa lớn x{0}', sole(1.8 + 0.2 * r, 1)), d1: 'Giữ nút Chưởng rồi thả: cầu lửa lớn, nổ rộng; mỗi bậc mạnh hơn' },
+          { id: 'tan', name: 'Mưa tàn lửa', max: 3, need: 18, desc: (r) => G.t('Nổ xong văng {0} tàn lửa vào quái gần', 1 + r), d1: 'Nổ xong văng tàn lửa trúng quái quanh đó; mỗi bậc thêm 1 tàn' },
         ],
       },
       doc: {
         name: 'Độc chưởng', el: 'poison', short: 'Luồng độc, để lại đám mây độc',
         speed: 230, hit: 1.0, stacks: 2, cloudR: 20, cloudLife: 2.5, cloudEvery: 0.5, cloudSrc: 0.6, cloudDmg: 0.12, half: 6,
         nodes: [
-          { id: 'luc', name: 'Độc lực', max: 5, need: 0, desc: (r) => 'Sát thương chưởng +' + 10 * r + '%', d1: 'Mỗi bậc: sát thương +10%' },
-          { id: 'may', name: 'Mây dày', max: 5, need: 0, desc: (r) => 'Mây độc rộng thêm ' + 3 * r + ', lâu thêm ' + (0.4 * r).toFixed(1).replace('.', ',') + ' giây', d1: 'Mỗi bậc: mây độc to hơn, lâu hơn' },
-          { id: 'lay', name: 'Lây độc', max: 5, need: 5, desc: (r) => 'Quái dính độc chưởng chết: lây ' + (1 + Math.floor(r / 2)) + ' tầng độc sang quái gần', d1: 'Quái dính độc chưởng mà chết thì độc lây sang quái gần' },
-          { id: 'mon', name: 'Ăn mòn', max: 5, need: 5, desc: (r) => 'Quái dính độc chưởng mất ' + 6 * r + '% giáp, nhận thêm ' + 4 * r + '% sát thương', d1: 'Quái dính độc chưởng bị giảm giáp, nhận thêm sát thương' },
-          { id: 'tach', name: 'Tam xà', max: 5, need: 10, desc: (r) => 'Chưởng tách 3 luồng, hai luồng bên x' + (0.35 + 0.07 * r).toFixed(2).replace('.', ','), d1: 'Chưởng tách thành 3 luồng toả ra; mỗi bậc luồng bên mạnh hơn' },
-          { id: 'hut', name: 'Vạn độc', max: 3, need: 18, desc: (r) => 'Mây độc hút quái vào giữa, độc mây mạnh +' + 25 * r + '%', d1: 'Mây độc hút quái vào giữa và mạnh hơn' },
+          { id: 'luc', name: 'Độc lực', max: 5, need: 0, desc: (r) => G.t('Sát thương chưởng +{0}%', 10 * r), d1: 'Mỗi bậc: sát thương +10%' },
+          { id: 'may', name: 'Mây dày', max: 5, need: 0, desc: (r) => G.t('Mây độc rộng thêm {0}, lâu thêm {1} giây', 3 * r, sole(0.4 * r, 1)), d1: 'Mỗi bậc: mây độc to hơn, lâu hơn' },
+          { id: 'lay', name: 'Lây độc', max: 5, need: 5, desc: (r) => G.t('Quái dính độc chưởng chết: lây {0} tầng độc sang quái gần', 1 + Math.floor(r / 2)), d1: 'Quái dính độc chưởng mà chết thì độc lây sang quái gần' },
+          { id: 'mon', name: 'Ăn mòn', max: 5, need: 5, desc: (r) => G.t('Quái dính độc chưởng mất {0}% giáp, nhận thêm {1}% sát thương', 6 * r, 4 * r), d1: 'Quái dính độc chưởng bị giảm giáp, nhận thêm sát thương' },
+          { id: 'tach', name: 'Tam xà', max: 5, need: 10, desc: (r) => G.t('Chưởng tách 3 luồng, hai luồng bên x{0}', sole(0.35 + 0.07 * r, 2)), d1: 'Chưởng tách thành 3 luồng toả ra; mỗi bậc luồng bên mạnh hơn' },
+          { id: 'hut', name: 'Vạn độc', max: 3, need: 18, desc: (r) => G.t('Mây độc hút quái vào giữa, độc mây mạnh +{0}%', 25 * r), d1: 'Mây độc hút quái vào giữa và mạnh hơn' },
         ],
       },
       bang: {
         name: 'Băng chưởng', el: 'ice', short: 'Mũi băng xuyên nhiều quái, làm chậm',
         speed: 320, hit: 1.2, pierce: 2, fall: 0.85, stacks: 2, half: 5, range: 1.12,
         nodes: [
-          { id: 'luc', name: 'Hàn lực', max: 5, need: 0, desc: (r) => 'Sát thương chưởng +' + 10 * r + '%', d1: 'Mỗi bậc: sát thương +10%' },
-          { id: 'xa', name: 'Tầm xa', max: 5, need: 0, desc: (r) => 'Bay xa hơn ' + 12 * r + '%, nhanh hơn ' + 8 * r + '%', d1: 'Mỗi bậc: bay xa hơn 12%, nhanh hơn 8%' },
-          { id: 'xuyen', name: 'Xuyên băng', max: 5, need: 5, desc: (r) => 'Xuyên thêm ' + r + ' quái (tổng ' + (3 + r) + ')', d1: 'Mỗi bậc: xuyên thêm 1 quái' },
-          { id: 'dong', name: 'Đóng băng', max: 5, need: 5, desc: (r) => 'Mỗi lần trúng ' + (2 + Math.ceil(r / 2)) + ' tầng Băng, đóng băng lâu hơn ' + 10 * r + '%', d1: 'Trúng nhiều lần là đóng băng: thêm tầng Băng mỗi lần trúng' },
-          { id: 'vo', name: 'Băng vỡ', max: 5, need: 10, desc: (r) => 'Quái đóng băng chết thì vỡ, bắn ' + (2 + Math.ceil(r * 0.8)) + ' mảnh băng', d1: 'Quái đang đóng băng mà chết thì vỡ vụn, bắn mảnh băng làm chậm' },
-          { id: 'phong', name: 'Băng phong', max: 3, need: 18, desc: (r) => 'Mũi băng to hơn, cuối đường nổ vòng băng rộng ' + (16 + 6 * r), d1: 'Mũi băng to hơn, cuối đường bay nổ một vòng băng' },
+          { id: 'luc', name: 'Hàn lực', max: 5, need: 0, desc: (r) => G.t('Sát thương chưởng +{0}%', 10 * r), d1: 'Mỗi bậc: sát thương +10%' },
+          { id: 'xa', name: 'Tầm xa', max: 5, need: 0, desc: (r) => G.t('Bay xa hơn {0}%, nhanh hơn {1}%', 12 * r, 8 * r), d1: 'Mỗi bậc: bay xa hơn 12%, nhanh hơn 8%' },
+          { id: 'xuyen', name: 'Xuyên băng', max: 5, need: 5, desc: (r) => G.t('Xuyên thêm {0} quái (tổng {1})', r, 3 + r), d1: 'Mỗi bậc: xuyên thêm 1 quái' },
+          { id: 'dong', name: 'Đóng băng', max: 5, need: 5, desc: (r) => G.t('Mỗi lần trúng {0} tầng Băng, đóng băng lâu hơn {1}%', 2 + Math.ceil(r / 2), 10 * r), d1: 'Trúng nhiều lần là đóng băng: thêm tầng Băng mỗi lần trúng' },
+          { id: 'vo', name: 'Băng vỡ', max: 5, need: 10, desc: (r) => G.t('Quái đóng băng chết thì vỡ, bắn {0} mảnh băng', 2 + Math.ceil(r * 0.8)), d1: 'Quái đang đóng băng mà chết thì vỡ vụn, bắn mảnh băng làm chậm' },
+          { id: 'phong', name: 'Băng phong', max: 3, need: 18, desc: (r) => G.t('Mũi băng to hơn, cuối đường nổ vòng băng rộng {0}', 16 + 6 * r), d1: 'Mũi băng to hơn, cuối đường bay nổ một vòng băng' },
         ],
       },
     },
@@ -114,7 +116,7 @@
     const s = state(hs, key), nd = CH.node(s.cay, id);
     if (!nd) return 'Không có nút này';
     if ((s.n[id] | 0) >= nd.max) return 'Đã đủ bậc';
-    if (spentAll(s) < nd.need) return 'Cần dồn ' + nd.need + ' điểm vào cây';
+    if (spentAll(s) < nd.need) return G.t('Cần dồn {0} điểm vào cây', nd.need);
     if (CH.pts(hs, key).left <= 0) return 'Hết điểm chưởng (lên cấp để có thêm)';
     return '';
   };
@@ -447,5 +449,6 @@
   };
 
   // ---------- chữ hướng dẫn ----------
-  CH.tip = 'Nút Chưởng (nút tròn trên cùng): bắn chưởng linh khí theo hệ của cây chưởng đang dùng, tự ngắm quái gần nhất. Tốn ' + C.cost + ' mana.';
+  // (đọc lúc dùng, không tính sẵn lúc nạp tệp: ngôn ngữ đổi được khi đang chơi)
+  Object.defineProperty(CH, 'tip', { enumerable: true, get: () => G.t('Nút Chưởng (nút tròn trên cùng): bắn chưởng linh khí theo hệ của cây chưởng đang dùng, tự ngắm quái gần nhất. Tốn {0} mana.', C.cost) });
 })();

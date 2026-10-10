@@ -31,11 +31,12 @@
   G.layerText = function (l, i, all) {
     if (l.type === 'resist') {
       const weakOk = !Array.isArray(all) || !all.some((x) => x.type === 'resist' && x.el === G.WEAK[l.el]);
-      return 'Kháng ' + G.EL[l.el].name + (weakOk ? ', yếu ' + G.EL[G.WEAK[l.el]].name : '') + (l.scar ? ' (vết sẹo)' : '');
+      const s = weakOk ? G.t('Kháng {0}, yếu {1}', G.EL[l.el].name, G.EL[G.WEAK[l.el]].name) : G.t('Kháng {0}', G.EL[l.el].name);
+      return l.scar ? G.t('{0} (vết sẹo)', s) : s;
     }
-    if (l.type === 'antiRanged') return 'Chống đánh xa';
-    if (l.type === 'antiMelee') return 'Chống áp sát';
-    return 'Bắt bài lăn né';
+    if (l.type === 'antiRanged') return G.t('Chống đánh xa');
+    if (l.type === 'antiMelee') return G.t('Chống áp sát');
+    return G.t('Bắt bài lăn né');
   };
   function setWeak(b) {
     const res = b.layers.filter((l) => l.type === 'resist').map((l) => l.el);
@@ -372,7 +373,7 @@
         w.shake = Math.max(w.shake, 0.5);
       }
       b.roarT = 1.2; b.roarPh = ph;
-      w.banner = { s: b.name + (ph === 1 ? ' nổi giận!' : ' hóa cuồng!'), col: '#ff6a5a', t: 2 };
+      w.banner = { s: ph === 1 ? G.t('{0} nổi giận!', b.name) : G.t('{0} hóa cuồng!', b.name), col: '#ff6a5a', t: 2 };
       G.sfx('gong');
     }
     for (const s of b.seq) s.t -= dt;

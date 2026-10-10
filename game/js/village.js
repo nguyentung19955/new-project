@@ -16,6 +16,8 @@
   const SOFT = '#a9c2b4', TXT = '#f1e6c6', GOLD = '#f6dc92', GOOD = '#9be07a', WARN = '#ff9a5a';
 
   function say(s) { V.msg = s; V.msgT = 2.5; }
+  // Dấu thập phân trong con số hiển thị: tiếng Việt dùng dấu phẩy (x1,15), tiếng Anh dùng dấu chấm (x1.15)
+  const dp = () => (G.LANG === 'en' ? '.' : ',');
   // V25 (chữ to hơn): đoạn chữ trong khung cố định — vượt quá maxLines dòng thì vẽ cỡ nhỏ cũ để không lọt khỏi khung
   function fitPara(str, x, y, w, o, maxLines) { return ui.para(str, x, y, w, Object.assign({}, o, { tiny: ui.wrap(str, w, o.size, o.bold).length > maxLines })); }
   // Cắt một dòng cho vừa bề rộng, thêm "…"
@@ -38,11 +40,11 @@
   }
   function costText(c) {
     const a = [];
-    if (c.gold) a.push(c.gold + ' vàng');
-    if (c.ore) a.push(c.ore + ' quặng');
-    if (c.stones) a.push(c.stones + ' đá tôi');
-    if (c.mat) c.mat.forEach((n, i) => { if (n) a.push(n + ' ' + G.REGIONS[i].mat.toLowerCase()); });
-    if (c.shard) c.shard.forEach((n, i) => { if (n) a.push(n + ' mảnh ' + G.REGIONS[i].bossName); });
+    if (c.gold) a.push(G.t('{0} vàng', c.gold));
+    if (c.ore) a.push(G.t('{0} quặng', c.ore));
+    if (c.stones) a.push(G.t('{0} đá tôi', c.stones));
+    if (c.mat) c.mat.forEach((n, i) => { if (n) a.push(G.t('{0} {1}', n, G.REGIONS[i].mat.toLowerCase())); });
+    if (c.shard) c.shard.forEach((n, i) => { if (n) a.push(G.t('{0} mảnh {1}', n, G.REGIONS[i].bossName)); });
     return a.join(', ');
   }
   // Mở bảng của một người (k: lai, ren, xen, may, do, tu, mo)
@@ -84,7 +86,7 @@
     V.page = G.clamp(V.page, 0, pages - 1);
     if (pages > 1) {
       if (T.sbtn(x, y - 1, 26, 18, '‹', { size: 10, pad: 4 })) V.page = (V.page + pages - 1) % pages;
-      ui.text('Trang ' + (V.page + 1) + '/' + pages, x + 50, y + 11.5, { size: 7.5, align: 'center', color: SOFT });
+      ui.text(G.t('Trang {0}/{1}', V.page + 1, pages), x + 50, y + 11.5, { size: 7.5, align: 'center', color: SOFT });
       if (T.sbtn(x + 74, y - 1, 26, 18, '›', { size: 10, pad: 4 })) V.page = (V.page + 1) % pages;
     }
     return pages;
@@ -147,7 +149,7 @@
     for (const q of M.soon) {
       inkText(q[0], q[1], q[2], 8, night ? '#8a86a8' : '#8a7a58', halo);
       const px = q[3] || q[1], py = q[4] || q[2] + 12;
-      ui.font(6.5, true); ui.rect(px - 16, py - 7, 32, 10, 'rgba(74,54,38,0.85)'); ui.text('sắp có', px, py + 0.6, { size: 6.5, bold: true, align: 'center', color: '#f0e6c8', shadow: false });
+      ui.font(6.5, true); ui.rect(px - 16, py - 7, 32, 10, 'rgba(74,54,38,0.85)'); ui.text(G.tc('bản đồ', 'sắp có'), px, py + 0.6, { size: 6.5, bold: true, align: 'center', color: '#f0e6c8', shadow: false });
     }
     // 15 thẻ ải mặt trống; ải chưa qua ghi sức mạnh khuyên dùng, tô màu so với sức mạnh của bé (xanh đủ, vàng sát nút, đỏ thiếu)
     const pw = G.power();
@@ -165,7 +167,7 @@
     if (V.sel) {
       const q = M.nodes[V.sel[0]][V.sel[1]], rad = V.sel[1] === 4 ? 12 : 10;
       G.art.hero(G.ux, { x: q[0], y: q[1] - rad + 1, face: 1, key: sv.hero, move: false, t: G.time, atk: -1, dodge: -1, weapon: null, outfit: G.outfit ? G.outfit.look(sv) : null, noShadow: true });
-      VS.bubble(V.sel[1] === 4 ? 'Trùm ' + G.REGIONS[V.sel[0]].bossName : 'Ải ' + (V.sel[1] + 1), q[0], q[1] - rad - 26, { bg: '#ffe9a8', size: 7.5 });
+      VS.bubble(V.sel[1] === 4 ? G.t('Trùm {0}', G.REGIONS[V.sel[0]].bossName) : G.t('Ải {0}', V.sel[1] + 1), q[0], q[1] - rad - 26, { bg: '#ffe9a8', size: 7.5 });
     }
     VS.bubble(V.msgT > 0 && V.msg ? V.msg : V.sel ? 'Lên đò đi cháu, nước đang êm.' : 'Đi đâu hả cháu?', 40, 198, { maxW: 76, size: 7.5 });
     if (T.sbtn(404, 7, 68, 18, '✕ Về làng', { size: 8, pad: 4 })) { goHub(); return; }
@@ -176,15 +178,15 @@
     T.panel(248, 206, 226, 60, null, { plain: true, noBand: true });
     if (V.sel) {
       const r = V.sel[0], i = V.sel[1], R = G.REGIONS[r], b = G.stageStats(r, i, V.diff);
-      ui.text(R.name + ' · ' + (i === 4 ? 'Ải trùm' : 'Ải ' + (i + 1)) + (V.diff ? ' · khó 2' : ''), 256, 219, { size: 9.5, bold: true, color: GOLD });
-      const l2 = (i === 4 ? 'Trùm ' + R.bossName : 'Trùm nhỏ ' + R.mini) + ' · 8 phòng · ';
+      ui.text(G.t(V.diff ? '{0} · {1} · khó 2' : '{0} · {1}', R.name, i === 4 ? 'Ải trùm' : G.t('Ải {0}', i + 1)), 256, 219, { size: 9.5, bold: true, color: GOLD });
+      const l2 = G.t('{0} · 8 phòng · ', i === 4 ? G.t('Trùm {0}', R.bossName) : G.t('Trùm nhỏ {0}', R.mini));
       ui.text(l2, 256, 230, { size: 7, color: TXT });
-      ui.font(7); ui.text('hệ ' + G.EL[R.el].name, 256 + G.ux.measureText(l2).width, 230, { size: 7, color: G.EL[R.el].col });
+      ui.font(7); ui.text(G.t('hệ {0}', G.EL[R.el].name), 256 + G.ux.measureText(l2).width, 230, { size: 7, color: G.EL[R.el].col });
       // Sức mạnh khuyên dùng so với sức mạnh hiện tại của bé (G.power): xanh đủ, vàng sát nút, đỏ thiếu
       const need = G.stageRec(r, i, V.diff), col = G.powerCol(pw, need);
-      ui.text('Sức mạnh khuyên dùng ' + need + ' · bé ' + pw, 256, 240, { size: 7.5, bold: true, color: col });
+      ui.text(G.t('Sức mạnh khuyên dùng {0} · bé {1}', need, pw), 256, 240, { size: 7.5, bold: true, color: col });
       // V25: chữ to hơn; dòng thưởng dài quá 2 dòng (ải trùm) thì giữ cỡ nhỏ cũ để không lọt khỏi khung
-      const rw = 'Thưởng: ' + b.xp + ' kinh nghiệm, ~' + b.gold + ' vàng, ' + (5 + i) + ' ' + R.mat.toLowerCase() + (i === 4 ? ', ' + (V.diff ? 4 : 3) + ' mảnh ' + R.bossName + ', vũ khí quý' : '');
+      const rw = i === 4 ? G.t('Thưởng: {0} kinh nghiệm, ~{1} vàng, {2} {3}, {4} mảnh {5}, vũ khí quý', b.xp, b.gold, 5 + i, R.mat.toLowerCase(), V.diff ? 4 : 3, R.bossName) : G.t('Thưởng: {0} kinh nghiệm, ~{1} vàng, {2} {3}', b.xp, b.gold, 5 + i, R.mat.toLowerCase());
       ui.para(rw, 256, 250.5, 144, { size: 6.5, color: SOFT, tiny: ui.wrap(rw, 144, 6.5).length > 2 });
       if (T.btn(404, 217, 64, 38, 'Lên đò', { size: 11, primary: true })) G.startStage(r, i, V.diff);
     } else ui.text('Chạm một ải trên tranh để xem.', 256, 238, { size: 8, color: SOFT });
@@ -202,9 +204,9 @@
     T.slot(18, 56, 70, r);
     G.art.weaponIcon(G.ux, w, 53, 91, 54, 'idle');
     ui.text(G.wName(w), 96, 68, { size: 10.5, bold: true, color: rar.col });
-    ui.text('Bậc ' + rar.name + (fam ? ' · dòng ' + fam.name : ' · ' + G.WTYPES[w.type].name), 96, 80, { size: 7.5, color: SOFT });
-    if (fam && fam.nature) ui.text('Tính nết: ' + fam.nature, 96, 91, { size: 7.5, color: SOFT });
-    ui.text('Sát thương mỗi đòn ' + G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1) + ' · hệ số bậc x' + String(G.wRarMult(w)).replace('.', ','), 96, 102, { size: 7.5 });
+    ui.text(fam ? G.t('Bậc {0} · dòng {1}', rar.name, fam.name) : G.t('Bậc {0} · {1}', rar.name, G.WTYPES[w.type].name), 96, 80, { size: 7.5, color: SOFT });
+    if (fam && fam.nature) ui.text(G.t('Tính nết: {0}', fam.nature), 96, 91, { size: 7.5, color: SOFT });
+    ui.text(G.t('Sát thương mỗi đòn {0} · hệ số bậc x{1}', G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1), String(G.wRarMult(w)).replace('.', dp())), 96, 102, { size: 7.5 });
     // Hai thẻ ở cột trái: Linh khí (bảng dấu ấn ba hệ, js/linhkhi.js) và Dòng phụ (dòng phụ, dòng mạnh). Mặc định mở Linh khí.
     const lkTab = G.lk && V.wvTab !== 'aff';
     if (G.lk) {
@@ -216,16 +218,16 @@
     ui.bar(96, 117, 146, 4, mi.frac, mi.col);
     let y = 156;
     if (lkTab) G.lk.panel(w, 18, 140, 224);
-    else ui.text('Tiến hóa cao nhất của bậc này: ' + G.STAGE_NAMES[rar.maxStage], 18, 140, { size: 7, color: SOFT });
+    else ui.text(G.t('Tiến hóa cao nhất của bậc này: {0}', G.STAGE_NAMES[rar.maxStage]), 18, 140, { size: 7, color: SOFT });
     // dòng phụ và dòng mạnh
     if (!lkTab) {
     T.head('Dòng phụ', 18, y);
     y += 12;
     if (!w.affixes || !w.affixes.length) { ui.text(r === 0 ? 'Bậc Thường không có dòng phụ.' : 'Chưa có.', 18, y, { size: 7.5, color: SOFT }); y += 11; }
-    for (const k of w.affixes || []) { ui.text('• ' + G.AFFIX[k], 18, y, { size: 7.5 }); y += 11; }
+    for (const k of w.affixes || []) { ui.text(G.t('• {0}', G.AFFIX[k]), 18, y, { size: 7.5 }); y += 11; }
     if (w.power && G.POWER[w.power]) {
       y += 3;
-      ui.text('Dòng mạnh: ' + G.POWER[w.power].name, 18, y, { size: 8.5, bold: true, color: G.RARITY[3].col });
+      ui.text(G.t('Dòng mạnh: {0}', G.POWER[w.power].name), 18, y, { size: 8.5, bold: true, color: G.RARITY[3].col });
       y = ui.para(G.POWER[w.power].desc, 18, y + 11, 200, { size: 7.5 });
     }
     }
@@ -234,10 +236,10 @@
     const x0 = 250;
     T.head('Đặc trưng hệ theo cấp', x0, 68);
     const el = w.branch, E = el ? G.EL[el] : null;
-    if (!el) ui.para('Chưa khóa nhánh hệ. Kết liễu quái đang dính hiệu ứng để nhận dấu ấn; đủ ' + G.MARKS[0] + ' dấu ấn của một hệ thì vũ khí theo hệ đó.', x0, 80, 212, { size: 7, color: SOFT });
+    if (!el) ui.para(G.t('Chưa khóa nhánh hệ. Kết liễu quái đang dính hiệu ứng để nhận dấu ấn; đủ {0} dấu ấn của một hệ thì vũ khí theo hệ đó.', G.MARKS[0]), x0, 80, 212, { size: 7, color: SOFT });
     const rows = [
       ['Trắng', 'Chưa mang hệ. Hạ tinh anh, trùm hoặc nhặt viên linh khí quái thường rơi để có dấu ấn.'],
-      ['Mầm', 'Chỉ số tăng. ' + Math.round(G.PROC[1] * 100) + '% mỗi đòn gây ' + (el ? (el === 'fire' ? 'cháy' : el === 'poison' ? 'độc' : 'chậm') : 'hiệu ứng hệ') + ', vệt chém nhuốm màu hệ. Chưa có luật hệ.'],
+      ['Mầm', G.t('Chỉ số tăng. {0}% mỗi đòn gây {1}, vệt chém nhuốm màu hệ. Chưa có luật hệ.', Math.round(G.PROC[1] * 100), el ? (el === 'fire' ? 'cháy' : el === 'poison' ? 'độc' : 'chậm') : 'hiệu ứng hệ')],
       ['Thành hình', null, 0],
       ['Thức tỉnh', null, 1],
     ];
@@ -248,15 +250,15 @@
       if (!h) return;
       T.inset(x0, ry, 214, h - 2, false, { fill: got ? '#24484a' : '#17302f', col: got && E ? E.dark : T.C.brD });
       ui.text(q[0], x0 + 5, ry + 10, { size: 8, bold: true, color: got && E ? E.col : SOFT });
-      ui.text(locked ? 'Cần bậc Lam' : got ? 'Đã mở' : i === st + 1 ? 'Sắp mở: ' + G.MARKS[i - 1] + ' dấu ấn' : 'Chưa mở', x0 + 209, ry + 10, { size: 6.5, align: 'right', bold: got, tiny: true, color: locked ? WARN : got ? GOOD : SOFT });
+      ui.text(locked ? 'Cần bậc Lam' : got ? 'Đã mở' : i === st + 1 ? G.t('Sắp mở: {0} dấu ấn', G.MARKS[i - 1]) : 'Chưa mở', x0 + 209, ry + 10, { size: 6.5, align: 'right', bold: got, tiny: true, color: locked ? WARN : got ? GOOD : SOFT });
       if (q[1]) fitPara(q[1], x0 + 5, ry + 19, 204, { size: 6.5, color: TXT }, 2);
       else if (el) {
         const f = G.HE_FEATURES[el][q[2]];
-        ui.text('Đặc trưng ' + (q[2] + 1) + ': ' + f.name, x0 + 62, ry + 10, { size: 7.5, bold: true, color: got ? E.col2 : TXT });
+        ui.text(G.t('Đặc trưng {0}: {1}', q[2] + 1, f.name), x0 + 62, ry + 10, { size: 7.5, bold: true, color: got ? E.col2 : TXT });
         fitPara(f.desc, x0 + 5, ry + 20, 204, { size: 6.5, color: TXT }, 2);
       } else {
         ui.text(q[2] ? 'Đặc trưng 2: phản ứng dây chuyền' : 'Đặc trưng 1: thứ để lại trên sân', x0 + 5, ry + 21, { size: 7, color: TXT });
-        ui.text(G.ELS.map((e) => G.EL[e].name + ': ' + G.HE_FEATURES[e][q[2]].name).join(' · '), x0 + 5, ry + 31, { size: 7, color: TXT, tiny: ui.wrap(G.ELS.map((e) => G.EL[e].name + ': ' + G.HE_FEATURES[e][q[2]].name).join(' · '), 204, 7).length > 1 });
+        ui.text(G.ELS.map((e) => G.t('{0}: {1}', G.EL[e].name, G.HE_FEATURES[e][q[2]].name)).join(' · '), x0 + 5, ry + 31, { size: 7, color: TXT, tiny: ui.wrap(G.ELS.map((e) => G.t('{0}: {1}', G.EL[e].name, G.HE_FEATURES[e][q[2]].name)).join(' · '), 204, 7).length > 1 });
       }
       ry += h;
     });
@@ -274,7 +276,7 @@
       if (G.weaponLine(w, CX, y, CW, V.sel === w.id, carry.includes(w.id) ? 48 : 0)) { V.sel = w.id; G.click = null; G.sfx('ui'); }
       if (carry.includes(w.id)) ui.text('đang mang', CX + CW - 6, y + 9.5, { size: 6.5, align: 'right', color: GOOD });
     });
-    ui.text(list.length + ' vũ khí', CX + 2, 200.5, { size: 7, color: SOFT });
+    ui.text(G.t('{0} vũ khí', list.length), CX + 2, 200.5, { size: 7, color: SOFT });
     // xem bảng linh khí (dấu ấn hệ) và đặc trưng của món đang chọn
     const sw = V.sel != null && G.weaponById(V.sel);
     if (sw && list.includes(sw) && T.sbtn(CX + 52, 190, 88, 16, 'Xem linh khí', { size: 7.5, pad: 3 })) viewWeapon(sw.id, 'forge');
@@ -284,12 +286,12 @@
   function forge() {
     const sv = G.save;
     let line = null; // câu ông thợ rèn nói
-    frame('Lò rèn cấp ' + sv.forge);
+    frame(G.t('Lò rèn cấp {0}', sv.forge));
     const tabs = [['sharpen', 'Mài'], ['tier', 'Nâng bậc'], ['reforge', 'Tôi lại'], ['craft', 'Rèn đồ'], ['up', 'Nâng lò']];
     tabs.forEach((t, i) => {
       if (T.tab(CX + i * 61.5, PY + 23, 58, 22, t[1], V.ftab === t[0], { pad: 2 })) { V.ftab = t[0]; V.sel = null; V.page = 0; }
     });
-    const R4 = G.RARITY, xm = (m) => 'x' + String(m).replace('.', ',');
+    const R4 = G.RARITY, xm = (m) => 'x' + String(m).replace('.', dp());
     if (V.ftab !== 'up') T.inset(CX, DET_Y, CW, 52, false);
     if (V.ftab === 'sharpen') {
       weaponList();
@@ -301,18 +303,18 @@
         const cost = G.sharpenFull(w.sharpen);
         ui.text(G.wName(w), CX + 8, DET_Y + 14, { size: 8.5, bold: true, color: R4[G.wRar(w)].col });
         // V26: số trước → sau khi mài (mài thử trên chính món rồi trả lại ngay, không lưu)
-        const lvl = sv.heroes[sv.hero].lvl, f1 = (v) => v.toFixed(1).replace('.', ','), dNow = G.wBase(w, lvl);
+        const lvl = sv.heroes[sv.hero].lvl, f1 = (v) => v.toFixed(1).replace('.', dp()), dNow = G.wBase(w, lvl);
         let dAfter = null;
         if (w.sharpen < Math.min(cap, G.MAX_SHARPEN)) { w.sharpen++; try { dAfter = G.wBase(w, lvl); } finally { w.sharpen--; } }
-        ui.text('Sát thương mỗi đòn ' + f1(dNow) + (dAfter != null ? ' → ' + f1(dAfter) + ' sau khi mài' : ''), CX + 8, DET_Y + 26, { size: 7.5 });
+        ui.text(dAfter != null ? G.t('Sát thương mỗi đòn {0} → {1} sau khi mài', f1(dNow), f1(dAfter)) : G.t('Sát thương mỗi đòn {0}', f1(dNow)), CX + 8, DET_Y + 26, { size: 7.5 });
         if (w.sharpen >= G.MAX_SHARPEN) { ui.text('Đã mài tối đa.', CX + 8, DET_Y + 40, { size: 8, color: GOOD }); line = 'Lưỡi này bén hết cỡ rồi cháu ạ.'; }
-        else if (w.sharpen >= cap) { ui.para('Lò cấp ' + sv.forge + ' chỉ mài tới +' + cap + '. Hãy nâng lò.', CX + 8, DET_Y + 38, 290, { size: 7.5, color: WARN }); line = 'Lò còn yếu, phải nâng lò mới mài tiếp được.'; }
+        else if (w.sharpen >= cap) { ui.para(G.t('Lò cấp {0} chỉ mài tới +{1}. Hãy nâng lò.', sv.forge, cap), CX + 8, DET_Y + 38, 290, { size: 7.5, color: WARN }); line = 'Lò còn yếu, phải nâng lò mới mài tiếp được.'; }
         else {
-          ui.para('Lên +' + (w.sharpen + 1) + ' tốn: ' + costText(cost), CX + 8, DET_Y + 38, 198, { size: 7.5, color: canPay(cost) ? TXT : WARN });
+          ui.para(G.t('Lên +{0} tốn: {1}', w.sharpen + 1, costText(cost)), CX + 8, DET_Y + 38, 198, { size: 7.5, color: canPay(cost) ? TXT : WARN });
           if (!canPay(cost)) line = 'Chưa đủ nguyên liệu. Vào ải kiếm thêm rồi quay lại nhé.';
           // V21: mài món đang mang thì Sức mạnh tăng bao nhiêu (món trong rương không tính vào Sức mạnh)
           const gain = G.upg && G.upg.gainOf ? G.upg.gainOf('sh' + w.id + '-' + w.sharpen + '-' + sv.hero + '-' + lvl, (s) => { const x = s.weapons.find((q) => q.id === w.id); if (x) x.sharpen++; }) : 0;
-          if (actBtn('Mài', { disabled: !canPay(cost), sub: gain > 0 ? G.upg.gainText(gain) : '', subSize: 7.5 })) { pay(cost); w.sharpen++; G.persist(); G.sfx('evolve'); say('Đã mài ' + G.wName(w) + ' lên +' + w.sharpen + '!'); }
+          if (actBtn('Mài', { disabled: !canPay(cost), sub: gain > 0 ? G.upg.gainText(gain) : '', subSize: 7.5 })) { pay(cost); w.sharpen++; G.persist(); G.sfx('evolve'); say(G.t('Đã mài {0} lên +{1}!', G.wName(w), w.sharpen)); }
         }
       }
     } else if (V.ftab === 'tier') {
@@ -322,29 +324,29 @@
         w.rarity = to; if (to === 3) w.gold = gold;
         G.fitAffixes(w);
         if (G.wStage(w) === 3 && !w.named) G.addMarks(w, w.branch, 0.001);
-        G.persist(); G.sfx('evolve'); say('Đã nâng ' + G.wName(w) + ' lên bậc ' + R4[to].name + '!');
+        G.persist(); G.sfx('evolve'); say(G.t('Đã nâng {0} lên bậc {1}!', G.wName(w), R4[to].name));
       };
-      line = 'Bốn bậc: ' + R4.map((q) => q.name + ' ' + xm(q.mult)).join(', ') + '. Nâng bậc không mất dấu ấn và tiến hóa.';
+      line = G.t('Bốn bậc: {0}. Nâng bậc không mất dấu ấn và tiến hóa.', R4.map((q) => G.t('{0} {1}', q.name, xm(q.mult))).join(', '));
       if (!w) {
         ui.para('Thường chỉ tiến hóa tới Thành hình. Lam có 1 dòng phụ, Tím 2, Vàng 2 và 1 dòng mạnh. Lên Vàng cần mảnh trùm vùng.', CX + 8, DET_Y + 14, 288, { size: 7.5, color: SOFT });
       } else if (G.wRar(w) < 2) {
         const r = G.wRar(w), cost = G.TIER_UP[r + 1];
-        ui.text(G.wName(w) + ': ' + R4[r].name + ' lên ' + R4[r + 1].name, CX + 8, DET_Y + 14, { size: 8.5, bold: true, color: R4[r + 1].col });
-        ui.para('Sát thương gốc ' + xm(R4[r].mult) + ' lên ' + xm(R4[r + 1].mult) + ', thêm 1 dòng phụ' + (r === 0 ? ', tiến hóa được tới Thức tỉnh' : '') + '.', CX + 8, DET_Y + 25, 198, { size: 7, color: TXT });
-        ui.para('Tốn: ' + costText(cost), CX + 8, DET_Y + 46, 198, { size: 7, color: canPay(cost) ? TXT : WARN });
-        line = 'Dấu ấn và tiến hóa được giữ nguyên.' + (canPay(cost) ? '' : ' Nhưng cháu chưa đủ nguyên liệu.');
+        ui.text(G.t('{0}: {1} lên {2}', G.wName(w), R4[r].name, R4[r + 1].name), CX + 8, DET_Y + 14, { size: 8.5, bold: true, color: R4[r + 1].col });
+        ui.para(G.t(r === 0 ? 'Sát thương gốc {0} lên {1}, thêm 1 dòng phụ, tiến hóa được tới Thức tỉnh.' : 'Sát thương gốc {0} lên {1}, thêm 1 dòng phụ.', xm(R4[r].mult), xm(R4[r + 1].mult)), CX + 8, DET_Y + 25, 198, { size: 7, color: TXT });
+        ui.para(G.t('Tốn: {0}', costText(cost)), CX + 8, DET_Y + 46, 198, { size: 7, color: canPay(cost) ? TXT : WARN });
+        line = canPay(cost) ? 'Dấu ấn và tiến hóa được giữ nguyên.' : 'Dấu ấn và tiến hóa được giữ nguyên. Nhưng cháu chưa đủ nguyên liệu.';
         const gain = G.upg && G.upg.gainOf ? G.upg.gainOf('ti' + w.id + '-' + r + '-' + w.sharpen + '-' + sv.hero, (s) => { const x = s.weapons.find((q) => q.id === w.id); if (x) { x.rarity = r + 1; if (x.tier != null) x.tier = r + 1; if (G.fitAffixes) G.fitAffixes(x); } }) : 0; // V21
         if (actBtn('Nâng bậc', { size: 10, disabled: !canPay(cost), sub: gain > 0 ? G.upg.gainText(gain) : '', subSize: 7.5 })) raise(r + 1, 0);
       } else {
         // Nấc cuối lên Vàng: cần mảnh trùm (chỉ trùm vùng rơi). Dùng mảnh trùm vùng nào thì nhận hệ số Vàng của vùng đó.
         const isGold = G.wRar(w) === 3, opts = [0, 1, 2].filter((k) => !isGold || k > w.gold);
-        if (!opts.length) { ui.text(G.wName(w), CX + 8, DET_Y + 20, { size: 8.5, bold: true, color: R4[3].col }); ui.text('Đã ở bậc cao nhất (Vàng ' + xm(G.wRarMult(w)) + ').', CX + 8, DET_Y + 36, { size: 8 }); line = 'Món này quý nhất rồi, ông không làm hơn được nữa.'; }
+        if (!opts.length) { ui.text(G.wName(w), CX + 8, DET_Y + 20, { size: 8.5, bold: true, color: R4[3].col }); ui.text(G.t('Đã ở bậc cao nhất (Vàng {0}).', xm(G.wRarMult(w))), CX + 8, DET_Y + 36, { size: 8 }); line = 'Món này quý nhất rồi, ông không làm hơn được nữa.'; }
         else {
-          ui.text(G.wName(w) + (isGold ? ': luyện Vàng mạnh hơn' : ': Tím lên Vàng, thêm 1 dòng mạnh'), CX + 8, DET_Y + 12, { size: 7.5, bold: true, color: R4[3].col });
+          ui.text(G.t(isGold ? '{0}: luyện Vàng mạnh hơn' : '{0}: Tím lên Vàng, thêm 1 dòng mạnh', G.wName(w)), CX + 8, DET_Y + 12, { size: 7.5, bold: true, color: R4[3].col });
           line = 'Chọn mảnh trùm để luyện. Mỗi lần tốn 4 mảnh trùm và 2 đá tôi. Mảnh của vùng sau cho Vàng mạnh hơn.';
           opts.forEach((k, j) => {
             const cost = G.goldCost(k);
-            if (T.btn(CX + 4 + j * 99, DET_Y + 17, 96, 30, G.REGIONS[k].bossName + ' ' + xm(G.GOLD_MULT[k]), { size: 8.5, sub: costText(cost), subSize: 6.5, disabled: !canPay(cost), gold: true })) { pay(cost); raise(3, k); }
+            if (T.btn(CX + 4 + j * 99, DET_Y + 17, 96, 30, G.t('{0} {1}', G.REGIONS[k].bossName, xm(G.GOLD_MULT[k])), { size: 8.5, sub: costText(cost), subSize: 6.5, disabled: !canPay(cost), gold: true })) { pay(cost); raise(3, k); }
           });
         }
       }
@@ -356,35 +358,35 @@
       if (!w || !w.branch) ui.text('Chạm một vũ khí đã khóa nhánh để chọn.', CX + 8, DET_Y + 30, { size: 8.5, color: SOFT });
       else {
         ui.text(G.wName(w), CX + 8, DET_Y + 13, { size: 8.5, bold: true, color: R4[G.wRar(w)].col });
-        ui.text('Đang theo nhánh ' + G.EL[w.branch].name + ' (' + Math.floor(w.marks[w.branch]) + ' dấu ấn). Đổi sang:', CX + 8, DET_Y + 24, { size: 7.5 });
+        ui.text(G.t('Đang theo nhánh {0} ({1} dấu ấn). Đổi sang:', G.EL[w.branch].name, Math.floor(w.marks[w.branch])), CX + 8, DET_Y + 24, { size: 7.5 });
         if (sv.stones < 1) line = 'Cháu hết đá tôi rồi. Rương và trùm trong ải hay rơi đá tôi đấy.';
         G.ELS.filter((e) => e !== w.branch).forEach((e, k) => {
-          if (T.btn(CX + 8 + k * 148, DET_Y + 28, 140, 20, G.EL[e].name + ' (1 đá tôi)', { size: 8, disabled: sv.stones < 1, fill: G.EL[e].dark })) {
+          if (T.btn(CX + 8 + k * 148, DET_Y + 28, 140, 20, G.t('{0} (1 đá tôi)', G.EL[e].name), { size: 8, disabled: sv.stones < 1, fill: G.EL[e].dark })) {
             sv.stones--;
             const half = Math.floor(w.marks[w.branch] / 2);
             w.marks[w.branch] = 0;
             w.marks[e] = Math.max(w.marks[e], half);
             w.branch = w.marks[e] >= G.MARKS[0] ? e : null; // chưa đủ 30 dấu ấn thì mở khóa nhánh
             w.name = null;
-            G.persist(); G.sfx('evolve'); say('Đã tôi lại sang hệ ' + G.EL[e].name + '.');
+            G.persist(); G.sfx('evolve'); say(G.t('Đã tôi lại sang hệ {0}.', G.EL[e].name));
           }
         });
       }
     } else if (V.ftab === 'craft') {
       // Mũ, áo, bùa nay là trang phục: Cô Thợ May may, nâng bậc, mặc thử. Ông chỉ đường sang đó.
       ui.para('Mũ, áo, đồ đeo lưng, bùa và cánh giờ do Cô Thợ May may từ gỗ linh, vảy cá, đá lửa. Mũ áo ông rèn trước đây đã được chuyển sang kho trang phục, không mất món nào.', CX + 6, LIST_Y + 8, 292, { size: 8, color: TXT });
-      ui.text('Kho trang phục: ' + (G.outfit ? sv.outfit.items.length : 0) + ' món', CX + 6, LIST_Y + 62, { size: 8, bold: true, color: GOLD });
+      ui.text(G.t('Kho trang phục: {0} món', G.outfit ? sv.outfit.items.length : 0), CX + 6, LIST_Y + 62, { size: 8, bold: true, color: GOLD });
       line = 'Đồ vải vóc thì sang khung cửi của Cô Thợ May nhé cháu.';
       if (actBtn('Sang Cô Thợ May', { size: 7.5, disabled: !!(VS.shown && !VS.shown('may')) })) { VS.goNpc('may', true); return line; } // V53: cô chưa về thì nút mờ
     } else {
-      ui.para('Lò rèn cấp ' + sv.forge + ' mài được vũ khí tới +' + G.FORGE_CAP[sv.forge] + '.', CX + 4, 112, 296, { size: 9.5 });
+      ui.para(G.t('Lò rèn cấp {0} mài được vũ khí tới +{1}.', sv.forge, G.FORGE_CAP[sv.forge]), CX + 4, 112, 296, { size: 9.5 });
       const up = G.FORGE_UP[sv.forge];
       if (!up) { ui.text('Lò rèn đã ở cấp cao nhất.', CX + 4, 134, { size: 9.5, color: GOOD }); line = 'Lò của ông giờ nóng nhất vùng rồi!'; }
       else {
-        const y2 = ui.para('Nâng lên cấp ' + (sv.forge + 1) + ' để mài tới +' + G.FORGE_CAP[sv.forge + 1] + '.', CX + 4, 134, 296, { size: 9 });
-        ui.para('Tốn: ' + costText(up), CX + 4, y2 + 4, 296, { size: 9, color: canPay(up) ? TXT : WARN });
+        const y2 = ui.para(G.t('Nâng lên cấp {0} để mài tới +{1}.', sv.forge + 1, G.FORGE_CAP[sv.forge + 1]), CX + 4, 134, 296, { size: 9 });
+        ui.para(G.t('Tốn: {0}', costText(up)), CX + 4, y2 + 4, 296, { size: 9, color: canPay(up) ? TXT : WARN });
         line = canPay(up) ? 'Đủ đồ rồi đấy, nâng lò thôi cháu!' : 'Gom đủ nguyên liệu rồi ông nâng lò cho.';
-        if (T.btn(CX + 4, y2 + 24, 130, 34, 'Nâng lò', { size: 11, primary: true, disabled: !canPay(up) })) { pay(up); sv.forge++; G.persist(); G.sfx('evolve'); say('Lò rèn đã lên cấp ' + sv.forge + '!'); }
+        if (T.btn(CX + 4, y2 + 24, 130, 34, 'Nâng lò', { size: 11, primary: true, disabled: !canPay(up) })) { pay(up); sv.forge++; G.persist(); G.sfx('evolve'); say(G.t('Lò rèn đã lên cấp {0}!', sv.forge)); }
       }
     }
     return line;
@@ -419,7 +421,7 @@
     if (xenTabs()) return null;
     const multi = BD && BD.multi && BD.kind === 'w';
     // ổ khoá ở mép phải mỗi dòng: chạm để khoá hoặc mở khoá (món khoá không bán được)
-    const lockAt = (w, y) => BD && BD.lockBtn(CX + CW - 16, y + 3, 14, 16, !!w.lock) && (BD.toggleLock(w), BD.tell(w.lock ? 'Đã khoá ' + G.wName(w) + ', bà sẽ không mua món này.' : 'Đã mở khoá ' + G.wName(w) + '.'), true);
+    const lockAt = (w, y) => BD && BD.lockBtn(CX + CW - 16, y + 3, 14, 16, !!w.lock) && (BD.toggleLock(w), BD.tell(w.lock ? G.t('Đã khoá {0}, bà sẽ không mua món này.', G.wName(w)) : G.t('Đã mở khoá {0}.', G.wName(w))), true);
     ui.text('Đang mang', CX + 2, 77, { size: 7.5, color: SOFT });
     sv.carry.forEach((id, slot) => {
       const w = G.weaponById(id), y = 80 + slot * PITCH;
@@ -434,14 +436,14 @@
       }
     });
     const stash = sv.weapons.filter((w) => !sv.carry.includes(w.id));
-    ui.text('Rương đồ' + (stash.length ? ' (' + stash.length + ' món)' : ''), CX + 2, 138, { size: 7.5, color: SOFT });
+    ui.text(stash.length ? G.t('Rương đồ ({0} món)', stash.length) : 'Rương đồ', CX + 2, 138, { size: 7.5, color: SOFT });
     if (BD && stash.length) BD.quickBar(sv, 'w', CX + CW, 127, 12);
     if (!stash.length) ui.text('Trống. Vũ khí nhặt trong ải sẽ nằm ở đây.', CX + 2, 156, { size: 8 });
     pager(stash.length, ROWS, CX, 241);
     stash.slice(V.page * ROWS, V.page * ROWS + ROWS).forEach((w, k) => {
       const y = 141 + k * PITCH, picked = multi && BD.ids.has(w.id);
       const hit = G.weaponLine(w, CX, y, CW - 18, picked || (!multi && V.sel === w.id), BD ? 44 : 0);
-      if (BD) ui.text(BD.wPrice(w) + ' vàng', CX + CW - 22, y + 9.5, { size: 6.5, align: 'right', color: w.lock ? SOFT : GOLD });
+      if (BD) ui.text(G.t('{0} vàng', BD.wPrice(w)), CX + CW - 22, y + 9.5, { size: 6.5, align: 'right', color: w.lock ? SOFT : GOLD });
       if (lockAt(w, y)) return;
       if (hit) {
         G.click = null;
@@ -458,14 +460,14 @@
     if (selW && !sv.carry.includes(selW.id)) {
       const price = BD ? BD.wPrice(selW) : [20, 60, 150, 400][G.wRar(selW)] + selW.sharpen * 15;
       if (T.sbtn(CX + 112, 240, 56, 19, 'Xem', { size: 8.5, pad: 3 })) viewWeapon(selW.id, 'gear');
-      if (T.sbtn(CX + 176, 240, 128, 19, selW.lock ? 'Đã khoá' : 'Bán ' + price + ' vàng', { size: 8.5, pad: 3, danger: true, disabled: !!selW.lock })) {
+      if (T.sbtn(CX + 176, 240, 128, 19, selW.lock ? 'Đã khoá' : G.t('Bán {0} vàng', price), { size: 8.5, pad: 3, danger: true, disabled: !!selW.lock })) {
         if (BD) { if (BD.request(sv, 'w', [selW.id])) V.sel = null; }
-        else { sv.weapons = sv.weapons.filter((w) => w.id !== selW.id); sv.gold += price; V.sel = null; G.persist(); G.sfx('pick'); say('Bà mua rồi nhé, ' + price + ' vàng của cháu đây.'); }
+        else { sv.weapons = sv.weapons.filter((w) => w.id !== selW.id); sv.gold += price; V.sel = null; G.persist(); G.sfx('pick'); say(G.t('Bà mua rồi nhé, {0} vàng của cháu đây.', price)); }
       }
       if (selW.lock) return 'Món này cháu đã khoá. Chạm ổ khoá để mở nếu muốn bán.';
     }
     // bà chỉ cách đổi vũ khí đang mang
-    return !stash.length ? 'Chạm một vũ khí đang mang để xem bậc, dòng phụ và đặc trưng hệ.' : selW && !sv.carry.includes(selW.id) ? 'Đã chọn ' + G.wName(selW) + '. Giờ chạm một vũ khí đang mang để thay, hoặc bấm Xem, Bán.' : 'Chạm vũ khí đang mang để xem. Muốn đổi: chạm một món trong rương để chọn trước.';
+    return !stash.length ? 'Chạm một vũ khí đang mang để xem bậc, dòng phụ và đặc trưng hệ.' : selW && !sv.carry.includes(selW.id) ? G.t('Đã chọn {0}. Giờ chạm một vũ khí đang mang để thay, hoặc bấm Xem, Bán.', G.wName(selW)) : 'Chạm vũ khí đang mang để xem. Muốn đổi: chạm một món trong rương để chọn trước.';
   }
 
   // ---------- bán trang phục (Bà Hàng Xén mua lại) ----------
@@ -478,7 +480,7 @@
     const multi = BD.multi && BD.kind === 'o';
     const isWorn = (it) => sv.outfit.wear[O.ITEMS[it.k].slot] === it.id;
     const all = sv.outfit.items.slice().sort((a, b) => (isWorn(b) - isWorn(a)) || (b.r - a.r) || (O.SLOTS.indexOf(O.ITEMS[a.k].slot) - O.SLOTS.indexOf(O.ITEMS[b.k].slot)) || (a.id - b.id));
-    ui.text('Kho ' + all.length + '/' + O.MAX_ITEMS, CX + 2, 79, { size: 7.5, bold: true, color: all.length >= O.MAX_ITEMS ? WARN : SOFT });
+    ui.text(G.t('Kho {0}/{1}', all.length, O.MAX_ITEMS), CX + 2, 79, { size: 7.5, bold: true, color: all.length >= O.MAX_ITEMS ? WARN : SOFT });
     if (all.length) BD.quickBar(sv, 'o', CX + CW, 69, 13);
     const per = OCOLS * OROWS;
     pager(all.length, per, CX, 241);
@@ -501,30 +503,30 @@
     const it = !multi && O.byId(sv, V.sel);
     if (multi) {
       const t = BD.total(sv, 'o', BD.ids);
-      ui.text('Đã chọn ' + t.n + ' món', RX + 5, 98, { size: 8.5, bold: true, color: GOLD });
-      ui.text('Bà trả ' + t.gold + ' vàng', RX + 5, 110, { size: 8, color: TXT });
+      ui.text(G.t('Đã chọn {0} món', t.n), RX + 5, 98, { size: 8.5, bold: true, color: GOLD });
+      ui.text(G.t('Bà trả {0} vàng', t.gold), RX + 5, 110, { size: 8, color: TXT });
       ui.para('Chạm các ô bên trái để chọn hoặc bỏ. Món đang mặc (chấm xanh) và món khoá thì không chọn được.', RX + 5, 124, RW - 10, { size: 6.5, color: SOFT });
       BD.sellBtn(sv, 'o', CX + 108, 240, CW - 108, 19);
       return 'Chọn xong thì bấm Bán ở dưới, bà trả vàng ngay.';
     }
     if (!it) {
       ui.para('Chạm một món để xem giá bà trả. Chấm xanh: đang mặc. Ổ khoá: món đã khoá, bà không mua.', RX + 5, 98, RW - 10, { size: 7, color: SOFT });
-      ui.para('Giá bà trả: Thường ' + BD.O_PRICE[0] + ', Lam ' + BD.O_PRICE[1] + ', Tím ' + BD.O_PRICE[2] + ', Vàng ' + BD.O_PRICE[3] + ' vàng.', RX + 5, 160, RW - 10, { size: 6.5, color: TXT });
+      ui.para(G.t('Giá bà trả: Thường {0}, Lam {1}, Tím {2}, Vàng {3} vàng.', BD.O_PRICE[0], BD.O_PRICE[1], BD.O_PRICE[2], BD.O_PRICE[3]), RX + 5, 160, RW - 10, { size: 6.5, color: TXT });
       return all.length >= O.MAX_ITEMS ? 'Kho của cháu đầy rồi. Bán bớt cho bà đi, kẻo đồ rơi trong ải bị đổi ra vàng rẻ.' : 'Đồ mặc chật, cũ thì bán lại cho bà. Bà trả rẻ thôi nhé, món nào quý thì khoá lại kẻo bán nhầm.';
     }
     const Ti = O.ITEMS[it.k], R = G.RARITY[it.r], why = BD.why(sv, 'o', it), price = BD.oPrice(it);
     ui.text(BD.fit(O.name(it), RW - 10, 8), RX + 5, 98, { size: 8, bold: true, color: R.col });
-    let y = ui.para(O.SLOT_NAME[Ti.slot].split(',')[0] + ' · bậc ' + R.name + (isWorn(it) ? ' · đang mặc' : ''), RX + 5, 109, RW - 10, { size: 6.5, color: isWorn(it) ? GOOD : SOFT });
+    let y = ui.para(G.t(isWorn(it) ? '{0} · bậc {1} · đang mặc' : '{0} · bậc {1}', O.SLOT_NAME[Ti.slot].split(',')[0], R.name), RX + 5, 109, RW - 10, { size: 6.5, color: isWorn(it) ? GOOD : SOFT });
     const st = O.stats(it), ks = Object.keys(st);
     y = ui.para(ks.length ? ks.map((q) => O.statText(q, st[q])).join(', ') : 'Không tăng chỉ số', RX + 5, y + 1, RW - 10, { size: 6.5, color: TXT });
-    ui.text('Bà trả ' + price + ' vàng', RX + 5, 200, { size: 8, bold: true, color: why ? SOFT : GOLD });
+    ui.text(G.t('Bà trả {0} vàng', price), RX + 5, 200, { size: 8, bold: true, color: why ? SOFT : GOLD });
     if (T.sbtn(RX + 4, 210, 44, 19, it.lock ? 'Mở khoá' : 'Khoá', { size: 7, pad: 2, sel: !!it.lock })) {
-      BD.toggleLock(it); BD.tell(it.lock ? 'Đã khoá ' + O.name(it) + '.' : 'Đã mở khoá ' + O.name(it) + '.');
+      BD.toggleLock(it); BD.tell(it.lock ? G.t('Đã khoá {0}.', O.name(it)) : G.t('Đã mở khoá {0}.', O.name(it)));
     }
     if (T.sbtn(RX + 52, 210, RW - 56, 19, why ? 'Không bán' : 'Bán', { size: 8, pad: 2, danger: !why, disabled: !!why })) {
       if (BD.request(sv, 'o', [it.id])) V.sel = null;
     }
-    return why === 'đang mặc' ? 'Món cháu đang mặc thì bà không mua. Tháo ra ở Cô Thợ May trước đã.' : why ? 'Món này cháu khoá rồi. Bấm Mở khoá nếu thật muốn bán.' : 'Món này bà trả ' + price + ' vàng. Bán thì bấm nút đỏ nhé.';
+    return why === 'đang mặc' ? 'Món cháu đang mặc thì bà không mua. Tháo ra ở Cô Thợ May trước đã.' : why ? 'Món này cháu khoá rồi. Bấm Mở khoá nếu thật muốn bán.' : G.t('Món này bà trả {0} vàng. Bán thì bấm nút đỏ nhé.', price);
   }
 
   // ---------- trang phục thường (Bà Hàng Xén bán) ----------
@@ -540,12 +542,12 @@
       T.inset(CX, y, CW, 28, false);
       T.slot(CX + 3, y + 2, 24, 0);
       O.drawIcon(G.ux, k, CX + 15, y + 14, 20);
-      ui.text(Ti.name + ' · ' + O.SLOT_NAME[Ti.slot], CX + 32, y + 11, { size: 8, bold: true, color: TXT });
+      ui.text(G.t('{0} · {1}', Ti.name, O.SLOT_NAME[Ti.slot]), CX + 32, y + 11, { size: 8, bold: true, color: TXT });
       const st = O.stats({ k, r: 0 });
-      ui.text(cut1(Object.keys(st).map((q) => O.statText(q, st[q])).join(', ') + (own ? ' · đã có' : ''), CW - 120, 6.5), CX + 32, y + 22, { size: 6.5, color: own ? GOOD : SOFT });
-      if (T.sbtn(CX + CW - 84, y + 5, 78, 18, 'Mua ' + Ti.price + ' vàng', { size: 7.5, pad: 2, disabled: sv.gold < Ti.price || O.full(sv) })) {
+      ui.text(cut1(own ? G.t('{0} · đã có', Object.keys(st).map((q) => O.statText(q, st[q])).join(', ')) : Object.keys(st).map((q) => O.statText(q, st[q])).join(', '), CW - 120, 6.5), CX + 32, y + 22, { size: 6.5, color: own ? GOOD : SOFT });
+      if (T.sbtn(CX + CW - 84, y + 5, 78, 18, G.t('Mua {0} vàng', Ti.price), { size: 7.5, pad: 2, disabled: sv.gold < Ti.price || O.full(sv) })) {
         const it = O.buy(sv, k);
-        if (it) { G.persist(); G.sfx('pick'); VS.checkNews(); say('Của cháu đây, ' + Ti.name + '. Sang Cô Thợ May mà mặc thử.'); }
+        if (it) { G.persist(); G.sfx('pick'); VS.checkNews(); say(G.t('Của cháu đây, {0}. Sang Cô Thợ May mà mặc thử.', Ti.name)); }
       }
     });
     if (O.full(sv)) line = 'Kho trang phục của cháu đầy rồi. Sang thẻ Bán trang phục bán bớt cho bà nhé.';
@@ -567,22 +569,22 @@
       // chân dung em bé tinh linh của từng hero; hero đang chọn thì nhún nhảy, chưa mở thì mờ
       G.art.hero(G.ux, { x: x + 18, y: y + 32, face: 1, key: k, move: sv.hero === k, t: G.time, atk: -1, dodge: -1, weapon: null, noShadow: true, alpha: hs.unlocked ? null : 0.4, outfit: sv.hero === k && G.outfit ? G.outfit.look(sv) : null });
       ui.text(H.name, x + 88, y + 15, { size: 10, bold: true, align: 'center', color: hs.unlocked ? '#fff0c4' : '#8fa49e' });
-      ui.text(hs.unlocked ? 'Cấp ' + hs.lvl + (sv.hero === k ? ' · đang chọn' : '') : H.unlock, x + 88, y + 27, { size: 7, align: 'center', color: hs.unlocked ? '#e8d9a8' : '#8fa49e' });
+      ui.text(hs.unlocked ? G.t(sv.hero === k ? 'Cấp {0} · đang chọn' : 'Cấp {0}', hs.lvl) : H.unlock, x + 88, y + 27, { size: 7, align: 'center', color: hs.unlocked ? '#e8d9a8' : '#8fa49e' });
     });
     const k = sv.hero, H = G.HEROES[k], hs = sv.heroes[k];
-    ui.text(H.name + ' · cấp ' + hs.lvl, CX + 2, 164, { size: 10, bold: true, color: GOLD });
+    ui.text(G.t('{0} · cấp {1}', H.name, hs.lvl), CX + 2, 164, { size: 10, bold: true, color: GOLD });
     T.bar(CX + 110, 157, 192, 'xp', hs.lvl >= G.MAX_LEVEL ? 1 : hs.xp / G.xpNeed(hs.lvl), null, { h: 7 });
     let y = 178;
     // Sức mạnh: một con số tính từ cấp hero, vũ khí mạnh nhất đang mang (bậc, mài, tiến hóa), điểm kỹ năng, mũ và áo (G.power)
     const pw = G.power();
-    ui.text('Sức mạnh ' + pw, CX + 2, y, { size: 8.5, bold: true, color: GOLD });
-    ui.font(8.5, true); const sx = CX + 2 + G.ux.measureText('Sức mạnh ' + pw).width + 6;
-    ui.text('Máu gốc ' + H.hp + ' · Mana ' + H.mana + ' · Tốc độ ' + Math.round(H.speed * 100) + '%', sx, y, { size: 7.5 });
-    y = ui.para('Sở trường: ' + H.fav.map((f) => G.WTYPES[f].name).join(', ') + ' (+10% sát thương)', CX + 2, y + 11, 300, { size: 7.5 });
-    y = ui.para('Nội tại: ' + H.passive, CX + 2, y + 2, 300, { size: 7.5, color: SOFT });
-    ui.para('Chưởng (' + (G.CHUONG ? G.CHUONG.cost : 30) + ' mana). ' + H.skillDesc, CX + 2, y + 2, 300, { size: 7.5, color: SOFT });
+    ui.text(G.t('Sức mạnh {0}', pw), CX + 2, y, { size: 8.5, bold: true, color: GOLD });
+    ui.font(8.5, true); const sx = CX + 2 + G.ux.measureText(G.t('Sức mạnh {0}', pw)).width + 6;
+    ui.text(G.t('Máu gốc {0} · Mana {1} · Tốc độ {2}%', H.hp, H.mana, Math.round(H.speed * 100)), sx, y, { size: 7.5 });
+    y = ui.para(G.t('Sở trường: {0} (+10% sát thương)', H.fav.map((f) => G.tv(G.WTYPES[f].name)).join(', ')), CX + 2, y + 11, 300, { size: 7.5 });
+    y = ui.para(G.t('Nội tại: {0}', H.passive), CX + 2, y + 2, 300, { size: 7.5, color: SOFT });
+    ui.para(G.t('Chưởng ({0} mana). {1}', G.CHUONG ? G.CHUONG.cost : 30, H.skillDesc), CX + 2, y + 2, 300, { size: 7.5, color: SOFT });
     const lock = G.HKEYS.filter((q) => !sv.heroes[q].unlocked);
-    line = lock.length ? 'Khẽ thôi, các bé đang chơi trong sân. Còn ' + lock.length + ' bé chưa về làng: hạ trùm vùng để đón về.' : 'Khẽ thôi, các bé đang chơi trong sân. Chạm một bé để đổi.';
+    line = lock.length ? G.t('Khẽ thôi, các bé đang chơi trong sân. Còn {0} bé chưa về làng: hạ trùm vùng để đón về.', lock.length) : 'Khẽ thôi, các bé đang chơi trong sân. Chạm một bé để đổi.';
     return line;
   }
 
@@ -598,18 +600,18 @@
   }
   function skill() {
     const sv = G.save, k = sv.hero, H = G.HEROES[k], hs = sv.heroes[k];
-    frame('Gốc đa: ' + H.name);
+    frame(G.t('Gốc đa: {0}', H.name));
     doTabs();
     const spent = hs.sk.atk + hs.sk.def + hs.sk.elem;
     const pts = Math.floor(hs.lvl / 3) - spent;
-    ui.text('Còn ' + pts + ' điểm (mỗi 3 cấp nhận 1 điểm)', CX + 2, 104, { size: 8, bold: true, color: pts > 0 ? GOOD : SOFT });
+    ui.text(G.t('Còn {0} điểm (mỗi 3 cấp nhận 1 điểm)', pts), CX + 2, 104, { size: 8, bold: true, color: pts > 0 ? GOOD : SOFT });
     G.SKEYS.forEach((b, r) => {
       const y0 = 109 + r * 42, n = hs.sk[b], Bk = G.SKILLS[b];
       T.inset(CX, y0, CW, 39, false);
       ui.text(Bk.name, CX + 6, y0 + 12, { size: 9, bold: true, color: GOLD });
       for (let j = 0; j < 5; j++) { ui.rect(CX + 46 + j * 12, y0 + 5, 9, 8, j < n ? '#ffd23f' : '#0d1716', j < n ? '#fff0a8' : T.C.brD); }
       if (n < 5) {
-        ui.para('Tiếp: ' + Bk.nodes[n], CX + 6, y0 + 24, 236, { size: 7, color: TXT });
+        ui.para(G.t('Tiếp: {0}', Bk.nodes[n]), CX + 6, y0 + 24, 236, { size: 7, color: TXT });
         // V21: học thêm một điểm nhánh này thì Sức mạnh tăng bao nhiêu (nút như hồi máu mỗi phòng không đổi con số thì không ghi)
         const gain = G.upg && G.upg.gainOf ? G.upg.gainOf('sk' + k + '-' + b + '-' + n + '-' + hs.lvl, (s) => { s.heroes[s.hero].sk[b]++; }) : 0;
         if (gain > 0) ui.text(G.upg.gainText(gain), CX + CW - 60, y0 + 15, { size: 7.5, bold: true, align: 'right', color: GOOD });
@@ -619,12 +621,12 @@
     if (spent > 0 && T.sbtn(CX, 240, 170, 20, 'Đặt lại điểm (100 vàng)', { size: 8, pad: 3, disabled: sv.gold < 100 })) {
       sv.gold -= 100; hs.sk = { atk: 0, def: 0, elem: 0 }; G.persist(); VS.checkNews(); say('Lão xoá hết rồi, con học lại từ đầu nhé.');
     }
-    return pts > 0 ? 'Ngồi xuống đây, lão chỉ cho một chiêu. Con còn ' + pts + ' điểm chưa dùng đấy.' : 'Lên thêm cấp rồi quay lại, lão dạy tiếp. Cứ 3 cấp con được 1 điểm.';
+    return pts > 0 ? G.t('Ngồi xuống đây, lão chỉ cho một chiêu. Con còn {0} điểm chưa dùng đấy.', pts) : 'Lên thêm cấp rồi quay lại, lão dạy tiếp. Cứ 3 cấp con được 1 điểm.';
   }
   // ---------- cây chưởng (Cụ Đồ): bảng vẽ ở js/chuong_ui.js ----------
   function chuong() {
     const sv = G.save, H = G.HEROES[sv.hero];
-    frame('Gốc đa: chưởng của ' + H.name);
+    frame(G.t('Gốc đa: chưởng của {0}', H.name));
     doTabs();
     if (!sv.tut.chTip) { sv.tut.chTip = 1; G.persist(); } // đã xem thẻ Cây chưởng: thôi nhắc ở làng
     if (!G.chuongUI) return null;
@@ -633,7 +635,7 @@
   const HELP = () => [
     ['Đi lại trong làng', 'Kéo ở nửa trái màn hình để đi, hoặc chạm vào một người để em bé tự chạy tới. Dải khuôn mặt ở mép trên là lối tắt. Ai có việc mới thì có dấu chấm than vàng.'],
     ['Di chuyển và đánh', 'Cảm ứng: đặt ngón ở nửa trái màn hình rồi kéo để đi. Bên phải có các nút tròn: giữ Đánh để ra đòn liên tục, Né để lăn tránh, Đặc biệt để tung đòn mạnh (tốn mana), nút trên cùng là Chưởng.'],
-    ['Chưởng', 'Nút Chưởng bắn một luồng chưởng linh khí (tốn ' + (G.CHUONG ? G.CHUONG.cost : 30) + ' mana), tự ngắm quái gần nhất theo tám hướng. Hệ của chưởng theo cây chưởng đang dùng. Mỗi em bé có nét riêng: Cu Tí đẩy lùi mạnh, Cu Tèo bay xa và nhanh, Cái Bống trúng thì hồi chút máu, Cu Lì tầm gần mà to. Chưởng không cho linh khí cho vũ khí (linh khí chỉ đến từ vũ khí) và không kết hợp hệ với vũ khí.'],
+    ['Chưởng', G.t('Nút Chưởng bắn một luồng chưởng linh khí (tốn {0} mana), tự ngắm quái gần nhất theo tám hướng. Hệ của chưởng theo cây chưởng đang dùng. Mỗi em bé có nét riêng: Cu Tí đẩy lùi mạnh, Cu Tèo bay xa và nhanh, Cái Bống trúng thì hồi chút máu, Cu Lì tầm gần mà to. Chưởng không cho linh khí cho vũ khí (linh khí chỉ đến từ vũ khí) và không kết hợp hệ với vũ khí.', G.CHUONG ? G.CHUONG.cost : 30)],
     ['Ba cây chưởng', 'Hỏa chưởng: cầu lửa nổ lan, vệt cháy, giữ nút để tích lực. Độc chưởng: mây độc, lây độc, ăn mòn giáp, tách 3 luồng. Băng chưởng: mũi băng xuyên nhiều quái, làm chậm, đóng băng, băng vỡ. Mỗi cấp nhận 1 điểm chưởng (riêng với điểm kỹ năng). Mỗi lúc dùng một cây; ở làng đổi cây miễn phí ở Cụ Đồ (thẻ Cây chưởng) hoặc Hành trang, điểm đã học được trả lại hết.'],
     ['Đánh tám hướng', 'Mọi đòn tự quay về quái gần nhất trong tầm, theo cả tám hướng (lên, xuống, chéo). Không có quái gần thì đánh theo hướng đang kéo cần, hoặc hướng vừa đi.'],
     ['Chiêu Đặc biệt', 'Mỗi loại vũ khí một chiêu (tốn mana). Kiếm, Trảm Nguyệt: phóng vệt chém trăng khuyết bay xuyên mọi quái. Giáo, Phi Thương: ném giáo xuyên một hàng quái, ghim con cuối, giáo tự bay về tay (lúc giáo chưa về thì nút Đánh là cú đấm tay). Búa, Địa Chấn: nện ra vệt nứt đất hất tung quái, kèm vòng chấn quanh người. Cung, Mưa Tên: mưa tên rơi vào cụm quái gần nhất.'],
@@ -642,16 +644,16 @@
     ['Bàn phím', 'Mũi tên hoặc WASD để đi, J đánh (ở làng: nói chuyện), K né, L đặc biệt, I chưởng (giữ để tích lực), Q đổi vũ khí, E uống bình máu, M xem bản đồ, Esc tạm dừng hoặc đóng bảng.'],
     ['Ba sao', 'Sao 1: qua ải. Sao 2: không dùng bình máu. Sao 3: ra đòn kết liễu trùm bằng hệ khắc chế nó.'],
     G.lk ? ['Linh khí', '', G.lk.guide] : null, // trang vẽ hình về linh khí (dấu ấn hệ), js/linhkhi.js
-    ['Dấu ấn', G.HINTS[0] + ' ' + G.HINTS[1]],
-    ['Ba hệ', G.HINTS[4] + ' ' + G.HINTS[5]],
-    ['Trùm học theo bạn', G.HINTS[2] + ' ' + G.HINTS[3]],
+    ['Dấu ấn', G.t('{0} {1}', G.HINTS[0], G.HINTS[1])],
+    ['Ba hệ', G.t('{0} {1}', G.HINTS[4], G.HINTS[5])],
+    ['Trùm học theo bạn', G.t('{0} {1}', G.HINTS[2], G.HINTS[3])],
     ['Đọc đòn quái', 'Vùng đỏ trên sàn là chỗ đòn sắp rơi xuống, đầy dần rồi nổ: đi ra ngoài hoặc lộn qua. Quái đánh được mọi hướng, kể cả trên dưới và chéo. Vòng đỏ chỗ trống là quái sắp mọc lên.'],
     ['Các loại quái', 'Xông tới, bầy nhỏ, bắn xa (gọi thêm bầy), nhanh nhẹn (lặn rồi trồi sau lưng), giáp (che phía trước, hồi máu cho bạn: vòng ra sau hoặc đánh vỡ giáp), cảm tử (lao vào rồi nổ), đặt bom (bom có vòng đếm ngược), gai (đang dựng gai mà chém thì bị phản đòn). Nổ ở Hang biển làm đóng băng, ở Rừng già để vũng độc, ở Lâu đài cổ để vệt cháy.'],
     ['Tinh anh và trùm', 'Tinh anh có chiêu riêng và một dấu hiệu trên đầu: tia chớp là nhanh, khiên là bọc giáp, quả bom là nổ khi chết, giọt máu là hút máu. Trùm nhỏ có hai chiêu riêng. Trùm vùng có ba pha, đổi ở 2/3 và 1/3 máu, pha sau thêm chiêu và nhanh hơn; sau chiêu lớn trùm choáng một lúc, đó là lúc đánh mạnh nhất.'],
     ['Vật trong phòng', 'Chậu than, nấm độc và tinh thể băng phát nổ khi bị đánh, gây hiệu ứng lên quái đứng gần. Đây là cách gây hệ khi vũ khí còn trắng.'],
     ['Bốn bậc màu', 'Thường (sát thương x1, tiến hóa tới Thành hình), Lam (x1,15, có 1 dòng phụ), Tím (x1,3, có 2 dòng phụ), Vàng (x1,5 trở lên, 2 dòng phụ và 1 dòng mạnh riêng). Từ Lam trở lên tiến hóa được tới Thức tỉnh.'],
     ['Nguồn vũ khí', 'Rương và quái tinh anh rơi vũ khí bậc ngẫu nhiên, cao nhất là Tím; vùng sau dễ ra bậc cao hơn. Trùm vùng lần đầu bị hạ chắc chắn rơi một vũ khí Vàng. Ông Thợ Rèn nâng bậc từng nấc mà không mất tiến hóa; nấc lên Vàng cần mảnh trùm.'],
-    ['Đặc trưng hệ theo cấp', 'Trắng: chưa có hệ. Linh khí (dấu ấn) có từ: hạ tinh anh (' + G.LINHKHI.elite + '), trùm nhỏ (' + G.LINHKHI.mini + '), trùm vùng (' + G.LINHKHI.boss + '); quái thường ' + Math.round(G.LINHKHI.drop * 100) + '% rơi viên linh khí của vùng (' + G.LINHKHI.orb + '), đi lại gần để nhặt; kết liễu quái đang dính hệ (+1). Hệ theo hệ quái đang dính, không dính thì theo vùng. Mầm: có tỉ lệ gây cháy, độc, chậm nhưng chưa có luật hệ. Thành hình: mở đặc trưng 1, thứ để lại trên sân (vệt cháy, vũng độc, gai băng). Thức tỉnh: mở đặc trưng 2, phản ứng dây chuyền (nổ lan, lây độc, băng vỡ).'],
+    ['Đặc trưng hệ theo cấp', G.t('Trắng: chưa có hệ. Linh khí (dấu ấn) có từ: hạ tinh anh ({0}), trùm nhỏ ({1}), trùm vùng ({2}); quái thường {3}% rơi viên linh khí của vùng ({4}), đi lại gần để nhặt; kết liễu quái đang dính hệ (+1). Hệ theo hệ quái đang dính, không dính thì theo vùng. Mầm: có tỉ lệ gây cháy, độc, chậm nhưng chưa có luật hệ. Thành hình: mở đặc trưng 1, thứ để lại trên sân (vệt cháy, vũng độc, gai băng). Thức tỉnh: mở đặc trưng 2, phản ứng dây chuyền (nổ lan, lây độc, băng vỡ).', G.LINHKHI.elite, G.LINHKHI.mini, G.LINHKHI.boss, Math.round(G.LINHKHI.drop * 100), G.LINHKHI.orb)],
     ['Xem vũ khí', 'Ở làng, chạm vào vũ khí đang bay theo em bé để xem bậc, dòng phụ và các đặc trưng đã mở, sắp mở. Ở chỗ Bà Hàng Xén cũng có nút Xem cho món trong rương.'],
   ];
   function help() {
@@ -681,9 +683,9 @@
   function settings() {
     const sv = G.save, CL = G.cloud, CU = G.cloudUI;
     frame('Cổng làng: cài đặt');
-    if (T.btn(CX + 4, 72, 96, 26, 'Âm thanh: ' + (sv.sound ? 'bật' : 'tắt'), { size: 8.5 })) { sv.sound = !sv.sound; G.persist(); G.audioStart(); }
+    if (T.btn(CX + 4, 72, 96, 26, sv.sound ? 'Âm thanh: bật' : 'Âm thanh: tắt', { size: 8.5 })) { sv.sound = !sv.sound; G.persist(); G.audioStart(); }
     // Độ nét hình (js/engine.js G.NET): Cao = canvas thế giới gấp đôi điểm ảnh (ảnh AI rõ hơn), Thường = như cũ (nhẹ máy yếu)
-    if (T.btn(CX + 104, 72, 96, 26, 'Độ nét: ' + (sv.net === 'thuong' ? 'Thường' : 'Cao'), { size: 8.5 })) {
+    if (T.btn(CX + 104, 72, 96, 26, sv.net === 'thuong' ? 'Độ nét: Thường' : 'Độ nét: Cao', { size: 8.5 })) {
       if (sv.net === 'thuong') delete sv.net; else sv.net = 'thuong';
       G.persist(); say(sv.net === 'thuong' ? 'Độ nét Thường: nhẹ máy hơn, hình AI kém rõ hơn.' : 'Độ nét Cao: hình AI rõ gấp đôi.');
     }
@@ -694,19 +696,19 @@
     if (CL) {
       const on = CL.online();
       ui.text(CL.label(), CX + 4, 125, { size: 7.5, color: on && !CL.dirty ? GOOD : SOFT });
-      ui.text(on ? (CL.isGuest() ? 'Tài khoản: Khách. Đăng nhập Google để giữ tiến trình khi đổi máy.' : 'Tài khoản Google: ' + CL.who()) : 'Tiến trình luôn được lưu trong trình duyệt này.', CX + 4, 136, { size: 7, color: SOFT });
+      ui.text(on ? (CL.isGuest() ? 'Tài khoản: Khách. Đăng nhập Google để giữ tiến trình khi đổi máy.' : G.t('Tài khoản Google: {0}', G.kd(CL.who()))) : 'Tiến trình luôn được lưu trong trình duyệt này.', CX + 4, 136, { size: 7, color: SOFT });
       if (on && CL.isGuest()) {
         G.syncTaps.push({ x: CX + 4, y: 142, w: 146, h: 24, fn: () => titleLogin(CL) });
         if (T.btn(CX + 4, 142, 146, 24, 'Đăng nhập Google', { size: 8.5, primary: true }) && !V.gBusy) {
           V.gBusy = true; say('Đang mở cửa sổ đăng nhập Google…');
-          CL.google().then((r) => say(r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google. Tiến trình được giữ nguyên.' : 'Đã đăng nhập Google.'), (e) => say('Chưa đăng nhập được: ' + e.message)).then(() => { V.gBusy = false; });
+          CL.google().then((r) => say(r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google. Tiến trình được giữ nguyên.' : 'Đã đăng nhập Google.'), (e) => say(G.t('Chưa đăng nhập được: {0}', e.message))).then(() => { V.gBusy = false; });
         }
       } else T.btn(CX + 4, 142, 146, 24, on ? 'Đã đăng nhập Google' : 'Đăng nhập Google', { size: 8.5, disabled: true });
     } else ui.para('Tiến trình được lưu trong trình duyệt này. Đổi máy hoặc xoá dữ liệu trình duyệt sẽ mất tiến trình.', CX + 4, 125, 292, { size: 7.5, color: SOFT });
     if (CU && T.btn(CX + 154, 142, 146, 24, '✉ Góp ý', { size: 8.5 })) CU.feedback({});
     if (CL && CU && CL.isAdmin()) {
       const n = CL.adminNew;
-      if (T.btn(CX + 4, 170, 296, 22, '📥 Góp ý nhận được' + (n ? ' (' + n + ' mới)' : ''), { size: 8.5, gold: true, dot: !!n })) CU.inbox();
+      if (T.btn(CX + 4, 170, 296, 22, n ? G.t('📥 Góp ý nhận được ({0} mới)', n) : '📥 Góp ý nhận được', { size: 8.5, gold: true, dot: !!n })) CU.inbox();
     }
     if (!V.confirm) {
       if (T.btn(CX + 4, 200, 200, 26, 'Xoá tiến trình, chơi lại từ đầu', { size: 8, danger: true })) V.confirm = true;
@@ -720,7 +722,7 @@
       if (T.btn(CX + 4, 208, 120, 26, 'Thôi')) V.confirm = false;
       else if (T.btn(CX + 132, 208, 120, 26, 'Xoá hết', { danger: true })) { G.resetSave(); V.confirm = false; goHub(); VS.enter({}); VS.say('Đã xoá tiến trình.'); return null; }
     }
-    if (G.VERSION) ui.text('Phiên bản ' + G.VERSION, CX + CW - 2, 258, { size: 6.5, align: 'right', color: SOFT });
+    if (G.VERSION) ui.text(G.t('Phiên bản {0}', G.VERSION), CX + CW - 2, 258, { size: 6.5, align: 'right', color: SOFT });
     return V.confirm ? 'Ấy ấy! Xoá là mất hết đấy, nghĩ kỹ chưa?' : 'Cốc cốc cốc! Làng nước nghe đây! Cần chỉnh gì cứ bảo anh.';
   }
 
@@ -785,11 +787,13 @@
     const ok = !need || (CL.online() && !CL.isGuest());
     return { CL, need, ok };
   }
+  // Tiếng Anh: thông báo đăng nhập hỏng của js/cloud.js có thể đã được dịch sẵn, nên so thêm với bản dịch (tiếng Việt không đi qua đây)
+  function gMsgFail(m) { m = String(m); return m.indexOf(G.t('Chưa đăng nhập được: {0}', '')) === 0 || m === G.t('Google chưa trả kết quả đăng nhập về [no-redirect-result]'); }
   function titleLogin(CL) {
     if (V.gBusy) return;
     V.gBusy = true; V.tMsg = 'Đang mở trang đăng nhập Google…'; V.tMsgT = 30;
     // V1: đăng nhập thất bại (cửa sổ bị chặn, bị đóng, mở trong Zalo/Messenger/Facebook) → bật cờ V.loginFail để màn chào hiện nút "Chơi tạm"
-    CL.google().then((r) => { V.loginFail = false; V.tMsg = r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google, giữ nguyên tiến trình.' : 'Đã đăng nhập Google.'; }, (e) => { V.loginFail = true; V.tMsg = 'Chưa đăng nhập được: ' + e.message; })
+    CL.google().then((r) => { V.loginFail = false; V.tMsg = r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google, giữ nguyên tiến trình.' : 'Đã đăng nhập Google.'; }, (e) => { V.loginFail = true; V.tMsg = G.t('Chưa đăng nhập được: {0}', e.message); })
       .then(() => { V.gBusy = false; V.tMsgT = 8; say(V.tMsg); });
   }
   // Bố cục màn chào (toạ độ 480x270), Giai đoạn 4 yêu cầu 2: logo > nút chính > nút phụ > dòng thông tin.
@@ -884,19 +888,19 @@
       if (CL) {
         const on = CL.online(), guest = CL.isGuest();
         if (!need || ok) {
-          if (T.btn(R0[0], R0[1], R0[2], R0[3], on && !guest ? '✓ ' + String(CL.who()).slice(0, 14) : 'Đăng nhập Google', { size: 8, primary: on && guest, disabled: !on || !guest })) titleLogin(CL);
+          if (T.btn(R0[0], R0[1], R0[2], R0[3], on && !guest ? G.kd('✓ ' + String(CL.who()).slice(0, 14)) : 'Đăng nhập Google', { size: 8, primary: on && guest, disabled: !on || !guest })) titleLogin(CL);
           if (T.btn(R1[0], R1[1], R1[2], R1[3], '🏆 Bảng vàng', { size: 8, disabled: !G.bangVang })) { V.tRank = true; G.bangVang.reload && G.bangVang.reload(); }
         }
-        if (CL.gMsg) { if (/^Chưa đăng nhập|chưa trả kết quả/.test(CL.gMsg)) V.loginFail = true; V.tMsg = CL.gMsg; V.tMsgT = 8; CL.gMsg = ''; }
+        if (CL.gMsg) { if (/^Chưa đăng nhập|chưa trả kết quả/.test(CL.gMsg) || (G.LANG !== 'vi' && gMsgFail(CL.gMsg))) V.loginFail = true; V.tMsg = CL.gMsg; V.tMsgT = 8; CL.gMsg = ''; }
         if (V.tMsgT > 0) V.tMsgT -= 1 / 60;
-        const line = V.tMsgT > 0 && V.tMsg ? V.tMsg : need && !ok ? 'Đăng nhập Google để lưu tiến trình và lên Bảng vàng. ' + CL.label() : CL.label();
+        const line = V.tMsgT > 0 && V.tMsg ? V.tMsg : need && !ok ? G.t('Đăng nhập Google để lưu tiến trình và lên Bảng vàng. {0}', CL.label()) : CL.label();
         const lines = ui.wrap(line, 260, 7); // hẹp để không chạm hình em bé bên trái
         lines.slice(0, 2).forEach((l, i) => ui.text(l, 240, TL.info + i * 9, { size: 7, align: 'center', color: V.tMsgT > 0 && V.tMsg ? GOLD : '#c9bfa8' }));
       }
       // nút nhỏ đổi ngôn ngữ ngay ở màn mở đầu (chữ đang dùng sáng hơn); nhớ theo máy nên lần sau mở lại vẫn đúng
       if (G.ngonNgu && T.sbtn(TL.lang[0], TL.lang[1], TL.lang[2], TL.lang[3], 'EN / VI', { size: 7.5, sel: G.LANG === 'en' })) G.ngonNgu.doi();
       // thông tin phụ: nhỏ, góc dưới bên phải, không tranh chỗ với nút
-      ui.text('Phiên bản ' + (G.VERSION || '?'), 474, 264, { size: 7, align: 'right', color: 'rgba(232,222,196,0.85)', shadow: true });
+      ui.text(G.t('Phiên bản {0}', G.VERSION || '?'), 474, 264, { size: 7, align: 'right', color: 'rgba(232,222,196,0.85)', shadow: true });
     },
   };
   // Chữ G bốn màu nhỏ đầu nút Đăng nhập Google (vẽ điểm ảnh, không tải hình ngoài)

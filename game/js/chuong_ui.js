@@ -51,8 +51,8 @@
     U.texts = []; U.boxes = {};
     if (!U.sel || U.sel.cay !== st.cay && !C.trees[U.sel.cay]) U.sel = null;
     // ---- dòng trên: điểm
-    tx('Điểm chưởng: còn ' + pt.left, X + 2, Y + 8, 120, { size: 8.5, bold: true, color: pt.left > 0 ? GOOD : SOFT });
-    tx('Cấp ' + hs.lvl + ': mỗi cấp +1 điểm · đã học ' + pt.spent + (o.ro ? ' · về làng để học' : ' · đổi cây miễn phí'), X + 112, Y + 8, Wd - 114, { size: 6.5, color: o.ro ? WARN : SOFT });
+    tx(G.t('Điểm chưởng: còn {0}', pt.left), X + 2, Y + 8, 120, { size: 8.5, bold: true, color: pt.left > 0 ? GOOD : SOFT });
+    tx(G.t('Cấp {0}: mỗi cấp +1 điểm · đã học {1} · {2}', hs.lvl, pt.spent, o.ro ? 'về làng để học' : 'đổi cây miễn phí'), X + 112, Y + 8, Wd - 114, { size: 6.5, color: o.ro ? WARN : SOFT });
     // ---- ba cột cây
     const detailH = 31, top = Y + 13, colH = H - 13 - detailH - 2, cw = (Wd - 8) / 3;
     const titleH = 14, btnH = 15, rowH = Math.max(17, Math.floor((colH - titleH - btnH - 6) / 4));
@@ -76,7 +76,7 @@
           const low = bh < 18, pw = nd.max * 5, px0 = low ? bx + bw - pw - 3 : bx + 3, py = low ? ry + Math.round(bh / 2) - 1 : ry + bh - 5;
           tx(nd.name, bx + 3, low ? ry + bh / 2 + 2.5 : ry + 8.5, low ? (open ? bw - pw - (can ? 16 : 8) : bw - 34) : bw - 6, { size: 6.5, bold: true, color: r > 0 ? GOLD : open ? TXT : LOCK });
           if (open) for (let j = 0; j < nd.max; j++) { const c = G.ux; c.fillStyle = j < r ? '#ffd23f' : open ? '#0d1716' : '#1a2423'; c.fillRect(px0 + j * 5, py, 4, 3); }
-          if (!open && (on || nd.need > 0)) tx('cần ' + nd.need, bx + bw - 3, low ? ry + bh / 2 + 2.5 : ry + bh - 2, 26, { size: 6.5, align: 'right', color: LOCK });
+          if (!open && (on || nd.need > 0)) tx(G.t('cần {0}', nd.need), bx + bw - 3, low ? ry + bh / 2 + 2.5 : ry + bh - 2, 26, { size: 6.5, align: 'right', color: LOCK });
           else if (can) tx('+', low ? px0 - 7 : bx + bw - 6, low ? ry + bh / 2 + 3 : ry + bh - 2, 8, { size: 8, bold: true, color: GOOD });
           U.boxes[cay + '/' + nd.id] = [bx, ry, bw, bh];
           if (G.click && G.inRect(G.click, bx - 1, ry - 1, bw + 2, bh + 2)) {
@@ -92,13 +92,13 @@
       else if (o.ro) { tx('Về làng để đổi', x + w / 2, by + 10.5, w - 12, { size: 6.5, align: 'center', color: LOCK }); }
       else {
         const asking = U.ask === cay;
-        const lab = asking ? 'Trả ' + pt.spent + ' điểm, đổi?' : 'Dùng cây này';
+        const lab = asking ? G.t('Trả {0} điểm, đổi?', pt.spent) : 'Dùng cây này';
         U.boxes['use/' + cay] = [x + 4, by, w - 8, btnH];
         if (T.sbtn(x + 4, by, w - 8, btnH, fit(lab, w - 14, 7, true), { size: 7, pad: 1, primary: asking })) {
           if (pt.spent > 0 && !asking) U.ask = cay;
           else {
             CH.use(hs, cay, key); U.ask = null; U.sel = null; G.persist(); G.sfx && G.sfx('evolve');
-            if (G.villageApi && G.villageApi.say) G.villageApi.say('Đổi sang ' + Tr.name + '. Điểm đã trả lại hết, con học lại nhé.');
+            if (G.villageApi && G.villageApi.say) G.villageApi.say(G.t('Đổi sang {0}. Điểm đã trả lại hết, con học lại nhé.', Tr.name));
             if (G.villageScene) G.villageScene.checkNews();
           }
         }
@@ -111,15 +111,15 @@
     const dy = Y + H - detailH;
     T.inset(X, dy, Wd, detailH, false, { fill: '#10201f' });
     const can = on && !o.ro && !CH.why(hs, nd.id, key), bw = 54;
-    tx(nd.name + ' ' + r + '/' + nd.max + ' · ' + Tr.name, X + 4, dy + 9, Wd - bw - 12, { size: 7.5, bold: true, color: G.EL[Tr.el].col2 });
-    const why = !on ? 'Dùng ' + Tr.name + ' trước mới học được' : CH.why(hs, nd.id, key);
-    const line = (r >= nd.max ? 'Đã đủ bậc: ' + nd.desc(r) : r > 0 ? 'Bậc ' + (r + 1) + ': ' + nd.desc(r + 1) : nd.d1) + (why && why !== 'Đã đủ bậc' ? ' (' + why + ')' : '');
+    tx(G.tv(nd.name) + ' ' + r + '/' + nd.max + ' · ' + G.tv(Tr.name), X + 4, dy + 9, Wd - bw - 12, { size: 7.5, bold: true, color: G.EL[Tr.el].col2 });
+    const why = !on ? G.t('Dùng {0} trước mới học được', Tr.name) : CH.why(hs, nd.id, key);
+    const line = (r >= nd.max ? G.t('Đã đủ bậc: {0}', nd.desc(r)) : r > 0 ? G.t('Bậc {0}: {1}', r + 1, nd.desc(r + 1)) : G.tv(nd.d1)) + (why && why !== 'Đã đủ bậc' ? ' (' + G.tv(why) + ')' : '');
     para(line, X + 4, dy + 18, Wd - bw - 12, 2, { size: 6.5, color: why && why !== 'Đã đủ bậc' ? SOFT : TXT });
     if (!o.ro) {
       U.boxes.learn = [X + Wd - bw - 4, dy + 4, bw, 18];
       if (T.sbtn(X + Wd - bw - 4, dy + 4, bw, 18, 'Học', { size: 8, pad: 2, primary: can, disabled: !can })) learn(hs, nd, key);
     }
-    return pt.left > 0 ? 'Con còn ' + pt.left + ' điểm chưởng. Chạm một nút để xem, chạm lần nữa để học.' : 'Chưởng là linh khí trong lòng bàn tay. Lên cấp, lão dạy thêm.';
+    return pt.left > 0 ? G.t('Con còn {0} điểm chưởng. Chạm một nút để xem, chạm lần nữa để học.', pt.left) : 'Chưởng là linh khí trong lòng bàn tay. Lên cấp, lão dạy thêm.';
   };
   function learn(hs, nd, key) {
     if (!CH.learn(hs, nd.id, key)) return;

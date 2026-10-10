@@ -30,6 +30,7 @@
   }
   const tx = (s, x, y, w, o) => ui.text(fit(String(s), w, o.size || 9, o.bold), x, y, o);
   const pct = (v) => Math.round(v * 100) + '%';
+  const so1 = (v) => (G.LANG === 'en' ? v.toFixed(1) : v.toFixed(1).replace('.', ',')); // một số lẻ: tiếng Việt dùng dấu phẩy
   const HN = { fire: 'Lửa', poison: 'Độc', ice: 'Băng' };
   // Nút "Đến chỗ ...": sang người trong làng làm việc đó (chỉ ở làng)
   function goBtn(x, y, w, k, label) {
@@ -80,16 +81,16 @@
     const k = sv.hero, H = G.HEROES[k], hs = sv.heroes[k], P = G.buildPlayer(), pw = G.power();
     heroArt(sv, CX, CY + 2, 112, 96);
     tx(H.name, CX + 56, CY + 111, 112, { size: 10, bold: true, align: 'center', color: GOLD });
-    ui.text('Cấp ' + hs.lvl + (hs.lvl >= G.MAX_LEVEL ? ' (tối đa)' : ''), CX + 56, CY + 122, { size: 8, bold: true, align: 'center', color: TXT });
+    ui.text(hs.lvl >= G.MAX_LEVEL ? G.t('Cấp {0} (tối đa)', hs.lvl) : G.t('Cấp {0}', hs.lvl), CX + 56, CY + 122, { size: 8, bold: true, align: 'center', color: TXT });
     const xf = hs.lvl >= G.MAX_LEVEL ? 1 : hs.xp / G.xpNeed(hs.lvl);
     T.bar(CX + 4, CY + 127, 104, 'xp', xf, null, { h: 7 });
-    ui.text(hs.lvl >= G.MAX_LEVEL ? 'Đã tối đa' : Math.floor(hs.xp) + '/' + G.xpNeed(hs.lvl) + ' kinh nghiệm', CX + 56, CY + 144, { size: 6.5, align: 'center', color: SOFT });
+    ui.text(hs.lvl >= G.MAX_LEVEL ? 'Đã tối đa' : G.t('{0}/{1} kinh nghiệm', Math.floor(hs.xp), G.xpNeed(hs.lvl)), CX + 56, CY + 144, { size: 6.5, align: 'center', color: SOFT });
     if (!RO && T.sbtn(CX + 6, CY + 150, 100, 16, 'Đổi em bé: Ông Từ', { size: 7, pad: 2 })) { VS.goNpc('tu', true); return; }
     const x = CX + 122, w = CW - 128;
     region('hero', x, CY, w, CH, (y) => {
       y += 11;
-      ui.text('Sức mạnh ' + pw, x, y, { size: 11, bold: true, color: GOLD });
-      ui.font(11, true); const sx = x + G.ux.measureText('Sức mạnh ' + pw).width + 8;
+      ui.text(G.t('Sức mạnh {0}', pw), x, y, { size: 11, bold: true, color: GOLD });
+      ui.font(11, true); const sx = x + G.ux.measureText(G.t('Sức mạnh {0}', pw)).width + 8;
       tx('(số này so với Sức mạnh khuyên dùng ở thẻ ải)', sx, y, x + w - sx, { size: 6.5, color: SOFT });
       y += 6;
       // chỉ số chính: hai cột
@@ -109,9 +110,9 @@
       });
       y += Math.ceil(rows.length / 2) * 13 + 10;
       T.head('Em bé', x, y); y += 3;
-      y = ui.para('Sở trường: ' + H.fav.map((f) => G.WTYPES[f].name).join(', ') + ' (+10% sát thương)', x, y + 8, w, { size: 7 });
-      y = ui.para('Nội tại: ' + H.passive, x, y, w, { size: 7, color: SOFT });
-      y = ui.para('Chưởng (' + (G.CHUONG ? G.CHUONG.cost : 30) + ' mana, ' + (G.chuong ? G.CHUONG.trees[G.chuong.state(sv.heroes[sv.hero], sv.hero).cay].name : '') + '). ' + H.skillDesc, x, y, w, { size: 7, color: SOFT });
+      y = ui.para(G.t('Sở trường: {0} (+10% sát thương)', H.fav.map((f) => G.tv(G.WTYPES[f].name)).join(', ')), x, y + 8, w, { size: 7 });
+      y = ui.para(G.t('Nội tại: {0}', H.passive), x, y, w, { size: 7, color: SOFT });
+      y = ui.para(G.t('Chưởng ({0} mana, {1}). {2}', G.CHUONG ? G.CHUONG.cost : 30, G.chuong ? G.CHUONG.trees[G.chuong.state(sv.heroes[sv.hero], sv.hero).cay].name : '', H.skillDesc), x, y, w, { size: 7, color: SOFT });
       // trang phục
       y += 8; T.head('Trang phục đang mặc', x, y); y += 3;
       const O = G.outfit;
@@ -121,15 +122,15 @@
         for (const s in sm.sets) {
           const n = sm.sets[s], S = O.SETS[s];
           if (n < 2) continue;
-          y = ui.para(S.name + ' ' + n + '/5' + (n >= 3 ? ': +' + Math.round((sm.elBonus[S.el] || 0) * 100) + '% sát thương ' + HN[S.el] : ': mặc thêm 1 món của bộ để đủ bộ') + (sm.set2 && G.SETS[sm.set2] ? ' · ' + G.SETS[sm.set2] : ''), x, y + 1, w, { size: 7, bold: true, color: n >= 3 ? GOOD : SOFT });
+          y = ui.para((n >= 3 ? G.t('{0} {1}/5: +{2}% sát thương {3}', S.name, n, Math.round((sm.elBonus[S.el] || 0) * 100), HN[S.el]) : G.t('{0} {1}/5: mặc thêm 1 món của bộ để đủ bộ', S.name, n)) + (sm.set2 && G.SETS[sm.set2] ? ' · ' + G.tv(G.SETS[sm.set2]) : ''), x, y + 1, w, { size: 7, bold: true, color: n >= 3 ? GOOD : SOFT });
         }
-        for (const it of sm.items) { const sp = O.special(it); if (sp && sp.key !== 'none') y = ui.para('★ ' + sp.name + ': ' + sp.desc, x, y + 1, w, { size: 6.5, color: PURP }); }
+        for (const it of sm.items) { const sp = O.special(it); if (sp && sp.key !== 'none') y = ui.para('★ ' + G.tv(sp.name) + ': ' + G.tv(sp.desc), x, y + 1, w, { size: 6.5, color: PURP }); }
       }
       // vũ khí đang mang
       y += 8; T.head('Vũ khí đang mang', x, y); y += 4;
       sv.carry.forEach((id) => {
         const wp = G.weaponById(id); if (!wp) return;
-        tx('• ' + G.wName(wp) + ' · sát thương mỗi đòn ' + G.wBase(wp, hs.lvl).toFixed(1).replace('.', ','), x, y + 8, w, { size: 7, color: G.RARITY[G.wRar(wp)].col });
+        tx(G.t('• {0} · sát thương mỗi đòn {1}', G.wName(wp), so1(G.wBase(wp, hs.lvl))), x, y + 8, w, { size: 7, color: G.RARITY[G.wRar(wp)].col });
         y += 10;
       });
       return y + 4;
@@ -138,11 +139,11 @@
 
   // ---------- 2. Vũ khí ----------
   function featText(w) {
-    if (!w.branch) return 'Chưa có hệ: đủ ' + G.MARKS[0] + ' dấu ấn một hệ thì vũ khí theo hệ đó';
+    if (!w.branch) return G.t('Chưa có hệ: đủ {0} dấu ấn một hệ thì vũ khí theo hệ đó', G.MARKS[0]);
     const st = G.wStage(w), cap = G.RARITY[G.wRar(w)].maxStage, m = Math.floor(w.marks[w.branch]);
     return G.HE_FEATURES[w.branch].map((f, i) => {
       const need = G.MARKS[i + 1];
-      return f.name + ': ' + (st >= i + 2 ? 'đã mở' : i + 2 > cap ? 'cần bậc Lam' : 'còn ' + (need - m) + ' dấu ấn');
+      return G.tv(f.name) + ': ' + (st >= i + 2 ? G.t('đã mở') : i + 2 > cap ? G.t('cần bậc Lam') : G.t('còn {0} dấu ấn', need - m));
     }).join(' · ');
   }
   function compareText(sv, w) {
@@ -152,9 +153,9 @@
       const c = G.weaponById(id); if (!c) return;
       const dd = d - G.wBase(c, lvl), g = G.upg && G.upg.swapGain ? G.upg.swapGain(w, slot, sv) : 0;
       if (g > 0 || (!g && dd > 0)) up = true;
-      parts.push('ô ' + (slot + 1) + ': đòn ' + (dd >= 0 ? '+' : '−') + Math.abs(dd).toFixed(1).replace('.', ',') + (g ? ', ' + G.upg.gainText(g, true) : '') + (g > 0 || (!g && dd > 0) ? ' ▲' : g < 0 || dd < 0 ? ' ▼' : ''));
+      parts.push(G.t('ô {0}: đòn {1}', slot + 1, (dd >= 0 ? '+' : '−') + so1(Math.abs(dd))) + (g ? ', ' + G.upg.gainText(g, true) : '') + (g > 0 || (!g && dd > 0) ? ' ▲' : g < 0 || dd < 0 ? ' ▼' : ''));
     });
-    return parts.length ? { s: 'So với ' + parts.join(' · '), up } : null;
+    return parts.length ? { s: G.t('So với {0}', parts.join(' · ')), up } : null;
   }
   function weaponRow(sv, w, x, y, wd, carried) {
     const r = G.wRar(w), R = G.RARITY[r], BD = G.banDo, sell = !RO && BD, multi = sell && BD.multi && BD.kind === 'w';
@@ -166,8 +167,8 @@
     if (picked) BD.tick(x + 2, y + 2);
     const bw = sell ? 150 : 104, tw = wd - 44 - bw;
     tx(G.wName(w), x + 40, y + 10, tw, { size: 8, bold: true, color: R.col });
-    const aff = (w.affixes || []).map((k) => G.AFFIX[k]).concat(w.power && G.POWER[w.power] ? ['Dòng mạnh ' + G.POWER[w.power].name] : []);
-    tx('Bậc ' + R.name + ' · mài +' + (w.sharpen | 0) + ' · đòn ' + G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1).replace('.', ',') + (aff.length ? ' · ' + aff.join(', ') : ' · không dòng phụ'), x + 40, y + 19.5, tw, { size: 6.5, color: TXT });
+    const aff = (w.affixes || []).map((k) => G.tv(G.AFFIX[k])).concat(w.power && G.POWER[w.power] ? [G.t('Dòng mạnh {0}', G.POWER[w.power].name)] : []);
+    tx(G.t('Bậc {0} · mài +{1} · đòn {2}', R.name, w.sharpen | 0, so1(G.wBase(w, sv.heroes[sv.hero].lvl))) + ' · ' + (aff.length ? aff.join(', ') : G.t('không dòng phụ')), x + 40, y + 19.5, tw, { size: 6.5, color: TXT });
     tx(mi.txt, x + 40, y + 28.5, tw, { size: 6.5, color: mi.col === '#666' ? SOFT : mi.col });
     // V26: món trong rương đang được chọn: so với từng ô đang mang (đòn mỗi lần đánh và Sức mạnh), có dấu +/− và ▲/▼, không chỉ màu
     const cmp = sel && !carried && !multi ? compareText(sv, w) : null;
@@ -176,23 +177,23 @@
     // nút bên phải
     const bx = x + wd - bw - 2;
     if (multi) { // đang chọn nhiều: chạm cả dòng để chọn, bên phải ghi giá
-      ui.text(carried ? 'đang mang, không bán' : w.lock ? 'đã khóa, không bán' : 'Bà trả ' + BD.wPrice(w) + ' vàng', bx + bw / 2, y + 23, { size: 7.5, bold: true, align: 'center', color: carried || w.lock ? SOFT : GOLD });
+      ui.text(carried ? 'đang mang, không bán' : w.lock ? 'đã khóa, không bán' : G.tc('túi', 'Bà trả {0} vàng', BD.wPrice(w)), bx + bw / 2, y + 23, { size: 7.5, bold: true, align: 'center', color: carried || w.lock ? SOFT : GOLD });
       if (T.hit(x, y, wd, 40)) BD.togglePick(sv, 'w', w);
       return false;
     }
     if (sell) {
       const xw = carried ? 98 : 44;
       if (T.sbtn(bx, y + 3, xw, 15, carried ? 'Xem chi tiết' : 'Xem', { size: 7, pad: 1 })) { openWeapon(w.id); return true; }
-      if (T.sbtn(bx + xw + 3, y + 3, 49, 15, w.lock ? 'Mở khóa' : 'Khóa', { size: 7, pad: 1, sel: !!w.lock })) { BD.toggleLock(w); VA.say((w.lock ? 'Đã khóa ' : 'Đã mở khóa ') + G.wName(w) + '.'); return true; }
-      if (!carried && T.sbtn(bx + 99, y + 3, 51, 15, w.lock ? 'Đã khóa' : 'Bán ' + BD.wPrice(w) + ' vàng', { size: 7, pad: 1, danger: true, disabled: !!w.lock })) { BD.request(sv, 'w', [w.id], () => { B.sel = null; }); return true; }
+      if (T.sbtn(bx + xw + 3, y + 3, 49, 15, w.lock ? 'Mở khóa' : 'Khóa', { size: 7, pad: 1, sel: !!w.lock })) { BD.toggleLock(w); VA.say(G.t(w.lock ? 'Đã khóa {0}.' : 'Đã mở khóa {0}.', G.wName(w))); return true; }
+      if (!carried && T.sbtn(bx + 99, y + 3, 51, 15, w.lock ? 'Đã khóa' : G.t('Bán {0} vàng', BD.wPrice(w)), { size: 7, pad: 1, danger: true, disabled: !!w.lock })) { BD.request(sv, 'w', [w.id], () => { B.sel = null; }); return true; }
     } else if (T.sbtn(bx, y + 3, bw, 15, 'Xem chi tiết', { size: 7, pad: 1 })) { openWeapon(w.id); return true; }
     if (carried) {
-      ui.text('đang mang ô ' + (sv.carry.indexOf(w.id) + 1), bx + bw / 2, y + 30, { size: 7, bold: true, align: 'center', color: GOOD });
+      ui.text(G.t('đang mang ô {0}', sv.carry.indexOf(w.id) + 1), bx + bw / 2, y + 30, { size: 7, bold: true, align: 'center', color: GOOD });
     } else if (RO) roNote(bx + bw / 2, y + 30, 'center');
     else {
       for (let s = 0; s < sv.carry.length; s++) {
-        if (T.sbtn(bx + s * (bw / 2 + 1), y + 21, bw / 2 - 1, 15, 'Mang ô ' + (s + 1), { size: 7, pad: 1, primary: sel })) {
-          sv.carry[s] = w.id; B.sel = null; G.persist(); G.sfx('pick'); VS.checkNews(); VA.say('Đã mang ' + G.wName(w) + ' ở ô ' + (s + 1) + '.');
+        if (T.sbtn(bx + s * (bw / 2 + 1), y + 21, bw / 2 - 1, 15, G.t('Mang ô {0}', s + 1), { size: 7, pad: 1, primary: sel })) {
+          sv.carry[s] = w.id; B.sel = null; G.persist(); G.sfx('pick'); VS.checkNews(); VA.say(G.t('Đã mang {0} ở ô {1}.', G.wName(w), s + 1));
           return true;
         }
       }
@@ -209,10 +210,10 @@
     const stash = sv.weapons.filter((w) => !sv.carry.includes(w.id)).sort((a, b) => (G.wRar(b) - G.wRar(a)) || (b.sharpen - a.sharpen) || (a.id - b.id));
     const BD = G.banDo, sell = !RO && BD, multi = sell && BD.multi && BD.kind === 'w';
     region('weapon', CX, CY, CW - 4, multi ? CH - 22 : CH, (y) => {
-      T.head('Đang mang (' + carry.length + ')', CX, y + 9);
+      T.head(G.t('Đang mang ({0})', carry.length), CX, y + 9);
       y += 13;
       for (const w of carry) { weaponRow(sv, w, CX, y, CW - 6, true); y += 43; }
-      T.head('Trong rương (' + stash.length + ')', CX, y + 9);
+      T.head(G.t('Trong rương ({0})', stash.length), CX, y + 9);
       if (sell && stash.length) { const x0 = BD.quickBar(sv, 'w', CX + CW - 8, y, 12); tx('Chạm một món để chọn, rồi mang hoặc bán.', CX + 100, y + 9, x0 - CX - 104, { size: 6.5, color: SOFT }); }
       else tx(RO ? 'Trong ải chỉ xem được. Về làng để thay vũ khí.' : 'Chạm một món rồi bấm "Mang ô 1" hoặc "Mang ô 2" để thay.', CX + 120, y + 9, CW - 130, { size: 6.5, color: RO ? WARN : SOFT });
       y += 13;
@@ -258,7 +259,7 @@
       y += 48;
       const all = sv.outfit.items.filter((it) => !B.oslot || O.ITEMS[it.k].slot === B.oslot);
       all.sort((a, b) => (b.r - a.r) || (O.SLOTS.indexOf(O.ITEMS[a.k].slot) - O.SLOTS.indexOf(O.ITEMS[b.k].slot)) || (a.id - b.id));
-      T.head('Kho' + (B.oslot ? ' · ' + O.SLOT_NAME[B.oslot].split(',')[0] : '') + ' (' + all.length + (B.oslot ? '' : '/' + O.MAX_ITEMS) + ')', CX, y + 9);
+      T.head(B.oslot ? G.t('Kho · {0} ({1})', O.SLOT_NAME[B.oslot].split(',')[0], all.length) : G.t('Kho ({0}/{1})', all.length, O.MAX_ITEMS), CX, y + 9);
       if (B.oslot && T.sbtn(CX + LW - 48, y, 44, 13, 'Tất cả', { size: 6.5, pad: 2 })) B.oslot = null;
       y += 13;
       if (!all.length) { y = ui.para(B.oslot ? 'Chưa có món nào cho ô này.' : 'Kho trống. Quái và trùm rơi trang phục, Bà Hàng Xén bán đồ thường, Cô Thợ May may đồ bộ.', CX, y + 9, LW - 4, { size: 7, color: SOFT }); return y; }
@@ -278,7 +279,7 @@
       if (multi) {
         BD.quickBar(sv, 'o', RX + RW, y, 12); y += 16;
         const t = BD.total(sv, 'o', BD.ids);
-        ui.text('Đã chọn ' + t.n + ' món · Bà Hàng Xén trả ' + t.gold + ' vàng', RX, y + 9, { size: 8, bold: true, color: GOLD });
+        ui.text(G.t('Đã chọn {0} món · Bà Hàng Xén trả {1} vàng', t.n, t.gold), RX, y + 9, { size: 8, bold: true, color: GOLD });
         return ui.para('Chạm các ô bên trái để chọn hoặc bỏ. Món đang mặc (chấm xanh) và món khóa không chọn được.', RX, y + 20, RW, { size: 7, color: SOFT });
       }
       const it = O.byId(sv, B.osel);
@@ -288,22 +289,22 @@
         tx(O.name(it), RX, y + 9, RW - 70, { size: 8.5, bold: true, color: R.col });
         if (RO) roNote(RX + RW, y + 9, 'right');
         else if (T.sbtn(RX + RW - 64, y, 64, 15, on ? 'Tháo ra' : 'Mặc', { size: 7.5, pad: 2, primary: !on })) {
-          if (on) { O.unwear(sv, Ti.slot); VA.say('Đã tháo ' + O.name(it) + '.'); } else { O.wear(sv, it); VA.say('Đã mặc ' + O.name(it) + '.'); }
+          if (on) { O.unwear(sv, Ti.slot); VA.say(G.t('Đã tháo {0}.', O.name(it))); } else { O.wear(sv, it); VA.say(G.t('Đã mặc {0}.', O.name(it))); }
           G.persist(); G.sfx('pick'); VS.checkNews();
         }
         if (sell) { // khoá và bán món đang xem (chỉ ở làng)
           const why = BD.why(sv, 'o', it);
-          if (T.sbtn(RX, y + 18, 60, 15, it.lock ? 'Mở khóa' : 'Khóa', { size: 7, pad: 1, sel: !!it.lock })) { BD.toggleLock(it); VA.say((it.lock ? 'Đã khóa ' : 'Đã mở khóa ') + O.name(it) + '.'); }
-          if (T.sbtn(RX + 64, y + 18, 96, 15, why ? (why === 'đang mặc' ? 'Đang mặc' : 'Đã khóa') : 'Bán ' + BD.oPrice(it) + ' vàng', { size: 7, pad: 1, danger: !why, disabled: !!why })) BD.request(sv, 'o', [it.id], () => { B.osel = null; });
+          if (T.sbtn(RX, y + 18, 60, 15, it.lock ? 'Mở khóa' : 'Khóa', { size: 7, pad: 1, sel: !!it.lock })) { BD.toggleLock(it); VA.say(G.t(it.lock ? 'Đã khóa {0}.' : 'Đã mở khóa {0}.', O.name(it))); }
+          if (T.sbtn(RX + 64, y + 18, 96, 15, why ? (why === 'đang mặc' ? 'Đang mặc' : 'Đã khóa') : G.t('Bán {0} vàng', BD.oPrice(it)), { size: 7, pad: 1, danger: !why, disabled: !!why })) BD.request(sv, 'o', [it.id], () => { B.osel = null; });
           y += 18;
         }
-        const tags = [O.SLOT_NAME[Ti.slot], 'bậc ' + R.name]; if (Ti.el) tags.push('hệ ' + HN[Ti.el]); if (Ti.set) tags.push(O.SETS[Ti.set].name);
-        y = ui.para(tags.join(' · ') + (on ? ' · đang mặc' : ''), RX, y + 20, RW, { size: 6.5, color: on ? GOOD : SOFT });
+        const tags = [G.tv(O.SLOT_NAME[Ti.slot]), G.t('bậc {0}', R.name)]; if (Ti.el) tags.push(G.t('hệ {0}', HN[Ti.el])); if (Ti.set) tags.push(G.tv(O.SETS[Ti.set].name));
+        y = ui.para(tags.join(' · ') + (on ? ' · ' + G.t('đang mặc') : ''), RX, y + 20, RW, { size: 6.5, color: on ? GOOD : SOFT });
         const st = O.stats(it), ks = Object.keys(st);
         y = ui.para(ks.length ? ks.map((q) => O.statText(q, st[q])).join(', ') : 'Không tăng chỉ số', RX, y, RW, { size: 7, color: TXT });
         const sp = O.special(it);
-        if (sp) y = ui.para('★ ' + sp.name + ': ' + sp.desc, RX, y, RW, { size: 6.5, color: sp.key === 'none' ? SOFT : PURP });
-        else if (Ti.old) y = ui.para('Tác dụng cũ: ' + G.GEAR.charm[Ti.old].desc + ' (em bé từ cấp 5).', RX, y, RW, { size: 6.5, color: PURP });
+        if (sp) y = ui.para('★ ' + G.tv(sp.name) + ': ' + G.tv(sp.desc), RX, y, RW, { size: 6.5, color: sp.key === 'none' ? SOFT : PURP });
+        else if (Ti.old) y = ui.para(G.t('Tác dụng cũ: {0} (em bé từ cấp 5).', G.GEAR.charm[Ti.old].desc), RX, y, RW, { size: 6.5, color: PURP });
         else if (it.r < 2) y = ui.para('Lên bậc Tím ở Cô Thợ May để mở tác dụng đặc biệt.', RX, y, RW, { size: 6.5, color: SOFT });
       }
       if (sell && sv.outfit.items.length) { // bán nhiều món một lúc (js/ban_do.js)
@@ -316,9 +317,9 @@
       y = ui.para(ks.length ? ks.map((q) => O.statText(q, sm.stats[q])).join(', ') : 'Chưa có.', RX, y + 6, RW, { size: 6.5, color: ks.length ? TXT : SOFT });
       for (const s in sm.sets) {
         const n = sm.sets[s], S = O.SETS[s];
-        y = ui.para(S.name + ' ' + n + '/5' + (n >= 3 ? ': +' + Math.round((sm.elBonus[S.el] || 0) * 100) + '% sát thương ' + HN[S.el] : n >= 2 ? ': ' + (G.SETS[S.old] || 'thêm 1 món để đủ bộ') : ': mặc thêm món cùng bộ'), RX, y + 1, RW, { size: 6.5, bold: n >= 2, color: n >= 3 ? GOOD : SOFT });
+        y = ui.para(n >= 3 ? G.t('{0} {1}/5: +{2}% sát thương {3}', S.name, n, Math.round((sm.elBonus[S.el] || 0) * 100), HN[S.el]) : G.t('{0} {1}/5: {2}', S.name, n, n >= 2 ? G.SETS[S.old] || 'thêm 1 món để đủ bộ' : 'mặc thêm món cùng bộ'), RX, y + 1, RW, { size: 6.5, bold: n >= 2, color: n >= 3 ? GOOD : SOFT });
       }
-      for (const k in sm.specials) for (const q of sm.specials[k]) { const sp = O.special(q.it); if (sp) y = ui.para('★ ' + sp.name, RX, y + 1, RW, { size: 6.5, color: PURP }); }
+      for (const k in sm.specials) for (const q of sm.specials[k]) { const sp = O.special(q.it); if (sp) y = ui.para('★ ' + G.tv(sp.name), RX, y + 1, RW, { size: 6.5, color: PURP }); }
       if (!RO) {
         y += 4;
         if ((!VS.shown || VS.shown('may')) && goBtn(RX, y, RW, 'may', 'Đến Cô Thợ May: may, nâng bậc')) return y; // V53: cô chưa về thì không có nút
@@ -337,10 +338,10 @@
     const list = sv.carry.map((id) => G.weaponById(id)).filter(Boolean).concat(sv.weapons.filter((w) => !sv.carry.includes(w.id)));
     region('lk', CX, CY, CW - 4, CH, (y) => {
       T.head('Nguồn linh khí (dấu ấn hệ)', CX, y + 9);
-      const src = ['hạ tinh anh +' + L.elite, 'trùm nhỏ +' + L.mini, 'trùm vùng +' + L.boss, 'kết liễu quái thường đang dính hệ +1'];
-      if (L.drop > 0) src.push('quái thường ' + Math.round(L.drop * 100) + '% rơi viên linh khí, nhặt +' + L.orb);
-      y = ui.para(src.join(' · ') + '. Hệ nhận được: hệ quái đang dính lúc gục, không dính thì theo hệ của vùng.' + (sv.hero === 'smith' ? ' Cu Tí nhận dấu ấn nhanh hơn 20%.' : ''), CX, y + 20, CW - 8, { size: 7, color: TXT });
-      y = ui.para('Mốc tiến hóa: ' + G.MARKS.map((m, i) => m + ' ' + G.STAGE_NAMES[i + 1]).join(' · ') + '. Vũ khí Thường chỉ lên tới Thành hình.', CX, y + 1, CW - 8, { size: 6.5, color: SOFT });
+      const src = [G.t('hạ tinh anh +{0}', L.elite), G.t('trùm nhỏ +{0}', L.mini), G.t('trùm vùng +{0}', L.boss), G.t('kết liễu quái thường đang dính hệ +1')];
+      if (L.drop > 0) src.push(G.t('quái thường {0}% rơi viên linh khí, nhặt +{1}', Math.round(L.drop * 100), L.orb));
+      y = ui.para(G.t('{0}. Hệ nhận được: hệ quái đang dính lúc gục, không dính thì theo hệ của vùng.', src.join(' · ')) + (sv.hero === 'smith' ? ' ' + G.t('Cu Tí nhận dấu ấn nhanh hơn 20%.') : ''), CX, y + 20, CW - 8, { size: 7, color: TXT });
+      y = ui.para(G.t('Mốc tiến hóa: {0}. Vũ khí Thường chỉ lên tới Thành hình.', G.MARKS.map((m, i) => m + ' ' + G.tv(G.STAGE_NAMES[i + 1])).join(' · ')), CX, y + 1, CW - 8, { size: 6.5, color: SOFT });
       y += 5;
       const cw = (CW - 8 - 150) / 3;
       for (const w of list) {
@@ -349,15 +350,15 @@
         T.slot(CX + 3, y + 3, 28, r);
         G.art.weaponIcon(G.ux, w, CX + 17, y + 17, 22);
         tx(G.wName(w), CX + 35, y + 12, 112, { size: 7.5, bold: true, color: G.RARITY[r].col });
-        tx((on ? 'đang mang · ' : '') + (w.branch ? 'theo hệ ' + HN[w.branch] + ' · ' + G.STAGE_NAMES[G.wStage(w)] : 'chưa có hệ'), CX + 35, y + 22, 112, { size: 6.5, color: on ? GOOD : SOFT });
+        tx((on ? G.t('đang mang') + ' · ' : '') + (w.branch ? G.t('theo hệ {0} · {1}', HN[w.branch], G.STAGE_NAMES[G.wStage(w)]) : G.t('chưa có hệ')), CX + 35, y + 22, 112, { size: 6.5, color: on ? GOOD : SOFT });
         G.ELS.forEach((el, i) => {
           const I = LK ? LK.info(w, el) : null, E = G.EL[el], x = CX + 150 + i * cw;
           if (!I) return;
           if (I.main) ui.rect(x, y + 2, cw - 3, 30, 'rgba(255,220,140,0.08)', E.col);
           if (LK) LK.icon(el, x + 7, y + 9, 1, !I.active);
-          ui.text(E.name + ' ' + I.m, x + 14, y + 12, { size: 7.5, bold: I.main, color: I.active ? E.col : '#7f8f8a' });
+          ui.text(G.tv(E.name) + ' ' + I.m, x + 14, y + 12, { size: 7.5, bold: I.main, color: I.active ? E.col : '#7f8f8a' });
           T.bar(x + 4, y + 15, cw - 11, null, I.frac, null, { h: 4, col: I.active ? E.col : '#55625e' });
-          const nx = I.next == null ? 'đã đủ ' + G.MARKS[2] : !I.active ? 'đang theo hệ khác' : 'còn ' + I.left + ' tới ' + I.next + (I.idx > G.RARITY[r].maxStage ? ' (cần bậc Lam)' : '');
+          const nx = I.next == null ? G.t('đã đủ {0}', G.MARKS[2]) : !I.active ? G.t('đang theo hệ khác') : G.t('còn {0} tới {1}', I.left, I.next) + (I.idx > G.RARITY[r].maxStage ? ' ' + G.t('(cần bậc Lam)') : '');
           tx(nx, x + 4, y + 28, cw - 8, { size: 6.5, color: I.active ? TXT : SOFT });
         });
         y += 37;
@@ -373,7 +374,7 @@
     if (G.chuongUI) {
       const cp = G.chuong.pts(sv.heroes[sv.hero], sv.hero).left;
       if (T.tab(CX, CY - 1, 120, 16, 'Cây kỹ năng', B.ktab !== 'chuong', { pad: 1, size: 7.5 })) B.ktab = 'skill';
-      if (T.tab(CX + 124, CY - 1, 120, 16, 'Cây chưởng' + (cp > 0 ? ' (' + cp + ')' : ''), B.ktab === 'chuong', { pad: 1, size: 7.5, dot: cp > 0 && !RO })) B.ktab = 'chuong';
+      if (T.tab(CX + 124, CY - 1, 120, 16, G.t('Cây chưởng') + (cp > 0 ? ' (' + cp + ')' : ''), B.ktab === 'chuong', { pad: 1, size: 7.5, dot: cp > 0 && !RO })) B.ktab = 'chuong';
       if (B.ktab === 'chuong') { G.chuongUI.tree(CX, CY + 18, CW - 4, CH - 18, { ro: RO }); return; }
     }
     skillTree(sv);
@@ -382,8 +383,8 @@
     const k = sv.hero, H = G.HEROES[k], hs = sv.heroes[k];
     const spent = hs.sk.atk + hs.sk.def + hs.sk.elem, pts = Math.floor(hs.lvl / 3) - spent;
     region('skill', CX, CY + 18, CW - 4, CH - 18, (y) => {
-      ui.text('Còn ' + pts + ' điểm kỹ năng', CX, y + 10, { size: 9, bold: true, color: pts > 0 ? GOOD : SOFT });
-      tx('Mỗi 3 cấp nhận 1 điểm. Đã học ' + spent + ' nút. ' + (RO ? 'Về làng để học thêm.' : pts > 0 ? 'Bấm Học để học nút kế tiếp.' : ''), CX + 130, y + 10, CW - 140, { size: 7, color: RO ? WARN : SOFT });
+      ui.text(G.t('Còn {0} điểm kỹ năng', pts), CX, y + 10, { size: 9, bold: true, color: pts > 0 ? GOOD : SOFT });
+      tx(G.t('Mỗi 3 cấp nhận 1 điểm. Đã học {0} nút. {1}', spent, RO ? 'Về làng để học thêm.' : pts > 0 ? 'Bấm Học để học nút kế tiếp.' : ''), CX + 130, y + 10, CW - 140, { size: 7, color: RO ? WARN : SOFT });
       y += 16;
       const cw = (CW - 16) / 3;
       let bottom = y;
@@ -391,7 +392,7 @@
         const Bk = G.SKILLS[b], n = hs.sk[b], x = CX + i * (cw + 4);
         let yy = y;
         T.inset(x, yy, cw, 20, false);
-        ui.text(Bk.name + ' ' + n + '/5', x + 5, yy + 13, { size: 8.5, bold: true, color: GOLD });
+        ui.text(G.tv(Bk.name) + ' ' + n + '/5', x + 5, yy + 13, { size: 8.5, bold: true, color: GOLD });
         if (n < 5 && !RO) {
           if (T.sbtn(x + cw - 44, yy + 3, 40, 14, 'Học', { size: 7.5, pad: 2, primary: pts > 0, disabled: pts <= 0 })) { hs.sk[b]++; G.persist(); G.sfx('evolve'); VS.checkNews(); }
         }
@@ -404,8 +405,8 @@
         bottom = Math.max(bottom, yy);
       });
       y = bottom + 6;
-      T.head('Chưởng và nội tại của ' + H.name, CX, y + 6);
-      y = ui.para('Chưởng (' + (G.CHUONG ? G.CHUONG.cost : 30) + ' mana). ' + H.skillDesc + '. Nội tại: ' + H.passive + '.', CX, y + 16, CW - 8, { size: 7, color: TXT });
+      T.head(G.t('Chưởng và nội tại của {0}', H.name), CX, y + 6);
+      y = ui.para(G.t('Chưởng ({0} mana). {1}. Nội tại: {2}.', G.CHUONG ? G.CHUONG.cost : 30, H.skillDesc, H.passive), CX, y + 16, CW - 8, { size: 7, color: TXT });
       if (!RO) { y += 2; if (goBtn(CX, y, 220, 'do', 'Đến Cụ Đồ: cây kỹ năng, đặt lại điểm')) return y; y += 20; }
       return y;
     });
@@ -420,8 +421,8 @@
       ['stone', 'Tôi lại đổi hệ vũ khí, nâng lên Tím và Vàng, nâng bậc trang phục', 'Ba sao lần đầu, đôi khi sau ải, phòng thử thách'],
     ];
     const matUse = ['Nâng lò cấp 2, nâng vũ khí lên Lam, may và nâng đồ Bộ Rừng Già', 'Mài từ +5 tới +9, nâng vũ khí lên Tím, nâng lò cấp 3, may và nâng đồ Bộ Hang Biển', 'Mài từ +10, nâng lò cấp 4, may và nâng đồ Bộ Lâu Đài'];
-    R.forEach((r, i) => a.push(['mat' + i, matUse[i] || 'Nguyên liệu vùng', 'Qua ải ' + r.name]));
-    R.forEach((r, i) => a.push(['shard' + i, 'Nâng vũ khí lên Vàng (4 mảnh), may đồ bộ, mở cấp cánh', 'Hạ trùm vùng ' + r.bossName + ' (ải 5 ' + r.name + ')']));
+    R.forEach((r, i) => a.push(['mat' + i, matUse[i] || 'Nguyên liệu vùng', G.t('Qua ải {0}', r.name)]));
+    R.forEach((r, i) => a.push(['shard' + i, 'Nâng vũ khí lên Vàng (4 mảnh), may đồ bộ, mở cấp cánh', G.t('Hạ trùm vùng {0} (ải 5 {1})', r.bossName, r.name)]));
     return a;
   }
   function resTab(sv) {
@@ -433,8 +434,8 @@
         T.resIcon(q[0], CX + 4, y + 4, 16);
         tx(T.resName(q[0]), CX + 24, y + 10, 100, { size: 7.5, bold: true, color: GOLD });
         ui.text(String(val[q[0]] | 0), CX + 24, y + 20, { size: 8.5, bold: true, color: TXT });
-        tx('Dùng: ' + q[1], CX + 128, y + 10, CW - 142, { size: 6.5, color: TXT });
-        tx('Kiếm: ' + q[2], CX + 128, y + 20, CW - 142, { size: 6.5, color: SOFT });
+        tx(G.t('Dùng: {0}', q[1]), CX + 128, y + 10, CW - 142, { size: 6.5, color: TXT });
+        tx(G.t('Kiếm: {0}', q[2]), CX + 128, y + 20, CW - 142, { size: 6.5, color: SOFT });
         y += 26;
       }
       return y + 2;
@@ -465,7 +466,7 @@
     if (RO) ui.text(roTxt, X0 + PW - 72, Y0 + 15, { size: 6.5, align: 'right', color: WARN });
     const tw = (CW - 5 * 3) / 6;
     TABS.forEach((t, i) => {
-      if (T.tab(CX + i * (tw + 3), Y0 + 23, tw, 19, t[1], B.tab === t[0], { pad: 2 })) { B.tab = t[0]; B.sel = null; if (G.banDo) G.banDo.reset(); }
+      if (T.tab(CX + i * (tw + 3), Y0 + 23, tw, 19, G.tc('thẻ', t[1]), B.tab === t[0], { pad: 2 })) { B.tab = t[0]; B.sel = null; if (G.banDo) G.banDo.reset(); }
     });
     const fn = { hero: heroTab, weapon: weaponTab, outfit: outfitTab, lk: lkTab, skill: skillTab, res: resTab }[B.tab] || heroTab;
     fn(sv);

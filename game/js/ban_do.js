@@ -96,7 +96,7 @@
     G.persist();
     if (G.sfx) G.sfx('pick');
     if (G.villageScene && G.villageScene.checkNews) G.villageScene.checkNews();
-    S.tell(res.n === 1 ? 'Đã bán 1 món, +' + res.gold + ' vàng.' : 'Đã bán ' + res.n + ' món, +' + res.gold + ' vàng.');
+    S.tell(res.n === 1 ? G.t('Đã bán 1 món, +{0} vàng.', res.gold) : G.t('Đã bán {0} món, +{1} vàng.', res.n, res.gold));
     S.lastSold = res;
     if (done) done(res);
     return res;
@@ -110,7 +110,7 @@
   // Chạm một món khi đang chọn nhiều: đánh dấu hoặc bỏ. Món không bán được thì báo lý do.
   S.togglePick = function (sv, kind, x) {
     const why = S.why(sv, kind, x);
-    if (why) { S.tell(S.name(kind, x) + ' ' + why + ', không bán được.'); return; }
+    if (why) { S.tell(G.t('{0} {1}, không bán được.', S.name(kind, x), why)); return; }
     if (S.ids.has(x.id)) S.ids.delete(x.id); else S.ids.add(x.id);
     if (G.sfx) G.sfx('ui');
   };
@@ -148,7 +148,7 @@
   // Ba nút trên một hàng, canh phải tại xr: "Bán hết Thường", "Bán hết Lam", "Chọn nhiều" (đang chọn thì "Thôi chọn").
   S.quickBar = function (sv, kind, xr, y, h) {
     h = h || 13;
-    const labs = ['Bán hết ' + RN()[0].name, 'Bán hết ' + RN()[1].name, S.multi && S.kind === kind ? 'Thôi chọn' : 'Chọn nhiều'];
+    const labs = [G.t('Bán hết {0}', RN()[0].name), G.t('Bán hết {0}', RN()[1].name), S.multi && S.kind === kind ? 'Thôi chọn' : 'Chọn nhiều'];
     ui.font(7, true);
     const ws = labs.map((s) => Math.ceil(G.ux.measureText(s).width) + 10);
     let x = xr - ws.reduce((a, b) => a + b + 3, -3);
@@ -160,7 +160,7 @@
       if (T.sbtn(x, y, ws[i], h, labs[i], { size: 7, pad: 1, danger: i < 2, sel: on })) {
         if (i < 2) {
           const ids = S.quickIds(sv, kind, i);
-          if (!ids.length) S.tell('Không có đồ ' + RN()[i].name + ' nào bán được (món đang mang, đang mặc, đã khoá thì giữ lại).');
+          if (!ids.length) S.tell(G.t('Không có đồ {0} nào bán được (món đang mang, đang mặc, đã khoá thì giữ lại).', RN()[i].name));
           else S.request(sv, kind, ids);
         } else S.setMulti(!on, kind);
       }
@@ -171,7 +171,7 @@
   // Nút "Bán N món · X vàng" khi đang chọn nhiều
   S.sellBtn = function (sv, kind, x, y, w, h) {
     const t = S.total(sv, kind, S.ids);
-    const lab = t.n ? 'Bán ' + t.n + ' món · ' + t.gold + ' vàng' : 'Chạm các món để chọn';
+    const lab = t.n ? G.t('Bán {0} món · {1} vàng', t.n, t.gold) : 'Chạm các món để chọn';
     if (T.sbtn(x, y, w, h, lab, { size: 7.5, pad: 2, danger: t.n > 0, disabled: !t.n })) S.request(sv, kind, S.ids);
     return t;
   };
@@ -192,17 +192,17 @@
     T.dim(0.6);
     const w = 260, h = 124, x = mx == null ? 182 : mx, y = 74;
     T.panel(x, y, w, h, 'Bán thật không?', { plain: true });
-    ui.text('Bán ' + t.n + ' món, nhận ' + t.gold + ' vàng.', x + w / 2, y + 40, { size: 9.5, bold: true, align: 'center', color: GOLD });
+    ui.text(G.t('Bán {0} món, nhận {1} vàng.', t.n, t.gold), x + w / 2, y + 40, { size: 9.5, bold: true, align: 'center', color: GOLD });
     let yy = y + 54;
     if (t.hi) {
       const cnt = [0, 0, 0, 0];
       for (const q of t.items) cnt[S.rar(A.kind, q)]++;
-      const parts = [2, 3].filter((r) => cnt[r]).map((r) => cnt[r] + ' món ' + G.RARITY[r].name);
-      ui.text('Trong đó có ' + parts.join(' và ') + ' (đồ quý).', x + w / 2, yy, { size: 7.5, bold: true, align: 'center', color: WARN });
+      const parts = [2, 3].filter((r) => cnt[r]).map((r) => G.t('{0} món {1}', cnt[r], G.RARITY[r].name));
+      ui.text(G.t('Trong đó có {0} (đồ quý).', parts.join(G.t(' và '))), x + w / 2, yy, { size: 7.5, bold: true, align: 'center', color: WARN });
       yy += 11;
     }
     // vài tên món đầu tiên
-    const names = t.items.slice(0, 3).map((q) => S.name(A.kind, q)).join(', ') + (t.n > 3 ? ', …' : '');
+    const names = t.items.slice(0, 3).map((q) => G.tv(S.name(A.kind, q))).join(', ') + (t.n > 3 ? ', …' : '');
     ui.text(fit(names, w - 20, 7), x + w / 2, yy, { size: 7, align: 'center', color: TXT });
     ui.text('Bán rồi thì không lấy lại được.', x + w / 2, yy + 11, { size: 7, align: 'center', color: SOFT });
     if (T.btn(x + 14, y + h - 32, 110, 24, 'Thôi, giữ lại', { size: 9 }) || G.keyP.Escape) { S.ask = null; G.keyP.Escape = false; }

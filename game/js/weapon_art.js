@@ -2310,7 +2310,8 @@
   function name(opts) {
     const P = params(opts || {});
     if (!P.el) return P.F.name;
-    return P.F.short + ' ' + WORDS[P.el][P.st - 1];
+    // Bản tiếng Anh đảo trật tự (chữ hệ đứng trước tên dòng) qua mẫu có ngữ cảnh 'tên vũ khí'; tiếng Việt y như cũ.
+    return G.tc ? G.tc('tên vũ khí', '{0} {1}', P.F.short, WORDS[P.el][P.st - 1]) : P.F.short + ' ' + WORDS[P.el][P.st - 1];
   }
   // Tên đầy đủ kèm bậc, ví dụ "Lá Lúa Xích Diệm (Tím)".
   function fullName(opts) { const P = params(opts || {}); return name(opts) + (P.rar ? ' (' + RARITY[P.rar].name + ')' : ''); }

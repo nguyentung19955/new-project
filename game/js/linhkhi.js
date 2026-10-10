@@ -9,7 +9,7 @@
   const LK = (G.lk = {});
   const ELS = ['fire', 'poison', 'ice'];
   const VERB = { fire: 'đang cháy', poison: 'đang trúng độc', ice: 'đang bị lạnh hoặc đóng băng' };
-  LK.hint = (el) => 'Đánh quái ' + VERB[el] + ' rồi kết liễu để nhận dấu ấn ' + G.EL[el].name;
+  LK.hint = (el) => G.t('Đánh quái {0} rồi kết liễu để nhận dấu ấn {1}', VERB[el], G.EL[el].name);
 
   // ---------- tính tiến độ ----------
   // Mốc kế của một số dấu ấn (null khi đã qua 300), mốc vừa qua (0 nếu chưa qua mốc nào).
@@ -25,8 +25,8 @@
     const capped = main && (st >= cap);
     let unlock = null;
     if (nx != null && (main || free)) {
-      unlock = idx === 1 ? 'Mầm: vũ khí theo hệ ' + G.EL[el].name : idx === 2 ? 'Thành hình: mở ' + G.HE_FEATURES[el][0].name : 'Thức tỉnh: mở ' + G.HE_FEATURES[el][1].name;
-      if (idx > cap) unlock += ' (cần nâng bậc)';
+      unlock = idx === 1 ? G.t('Mầm: vũ khí theo hệ {0}', G.EL[el].name) : idx === 2 ? G.t('Thành hình: mở {0}', G.HE_FEATURES[el][0].name) : G.t('Thức tỉnh: mở {0}', G.HE_FEATURES[el][1].name);
+      if (idx > cap) unlock += ' ' + G.t('(cần nâng bậc)');
     }
     return {
       el, m, next: nx, prev: pv, left: nx == null ? 0 : nx - m, main, free, active: main || free, capped,
@@ -174,10 +174,10 @@
       const el = w.branch || ELS.slice().sort((a, b) => w.marks[b] - w.marks[a])[0];
       const I = LK.info(w, el);
       let prog;
-      if (!w.branch && I.m <= 0) prog = 'Chưa có dấu ấn. ' + 'Kết liễu quái đang dính hiệu ứng để nhận.';
-      else if (I.next == null) prog = G.EL[el].name + ' ' + I.m + ' · đã Thức tỉnh (tối đa)';
-      else if (I.capped) prog = G.EL[el].name + ' ' + I.m + '/' + I.next + ' · tối đa bậc ' + G.RARITY[G.wRar(w)].name + ', nâng bậc để lên tiếp';
-      else prog = G.EL[el].name + ' ' + I.m + '/' + I.next + ' · còn ' + I.left + ' nữa → ' + I.unlock;
+      if (!w.branch && I.m <= 0) prog = G.t('Chưa có dấu ấn. Kết liễu quái đang dính hiệu ứng để nhận.');
+      else if (I.next == null) prog = G.t('{0} {1} · đã Thức tỉnh (tối đa)', G.EL[el].name, I.m);
+      else if (I.capped) prog = G.t('{0} {1}/{2} · tối đa bậc {3}, nâng bậc để lên tiếp', G.EL[el].name, I.m, I.next, G.RARITY[G.wRar(w)].name);
+      else prog = G.t('{0} {1}/{2} · còn {3} nữa → {4}', G.EL[el].name, I.m, I.next, I.left, I.unlock);
       out.push({ w, got, el, prog, info: I });
     }
     return out;
@@ -193,7 +193,7 @@
       ui.rect(x, y, wd, 19, 'rgba(10,22,20,0.55)', 'rgba(255,220,160,0.14)');
       G.art.weaponIcon(G.ux, w, x + 9, y + 9.5, 13);
       let cx = x + 19;
-      const nm = G.wName(w);
+      const nm = G.tv(G.wName(w));
       ui.font(7, true);
       const nmW = Math.min(110, G.ux.measureText(nm).width);
       ui.text(nm.length > 26 ? nm.slice(0, 25) + '…' : nm, cx, y + 8, { size: 7, bold: true, color: rar.col });
@@ -201,7 +201,7 @@
       if (!r.got.length) ui.text('không nhận dấu ấn', cx, y + 8, { size: 6.5, color: '#9fb0aa' });
       for (const q of r.got) {
         LK.icon(q.el, cx + 3, y + 5.5, 0.8);
-        const s = '+' + q.n + ' ' + G.EL[q.el].name;
+        const s = '+' + q.n + ' ' + G.tv(G.EL[q.el].name);
         ui.text(s, cx + 8, y + 8, { size: 7, bold: true, color: G.EL[q.el].col });
         ui.font(7, true);
         cx += 12 + G.ux.measureText(s).width;
@@ -244,15 +244,15 @@
     y += 4;
     if (el) {
       const st = G.wStage(w), I = LK.info(w, el), E = G.EL[el];
-      ui.text('Hệ chính: ' + E.name + ' · ' + G.STAGE_NAMES[st] + (st >= rar.maxStage ? ' (tối đa bậc ' + rar.name + ')' : ''), x, y + 3, { size: 7.5, bold: true, color: E.col });
+      ui.text(st >= rar.maxStage ? G.t('Hệ chính: {0} · {1} (tối đa bậc {2})', E.name, G.STAGE_NAMES[st], rar.name) : G.t('Hệ chính: {0} · {1}', E.name, G.STAGE_NAMES[st]), x, y + 3, { size: 7.5, bold: true, color: E.col });
       y += 10;
-      const open = G.HE_FEATURES[el].slice(0, G.heFeatures(st)).map((f) => f.name);
-      ui.text('Đã mở: ' + (open.length ? open.join(', ') : 'chưa có đặc trưng (mốc Mầm chỉ tăng chỉ số)'), x, y + 3, { size: 6.5, color: '#cfe8c8' });
+      const open = G.HE_FEATURES[el].slice(0, G.heFeatures(st)).map((f) => G.tv(f.name));
+      ui.text(G.t('Đã mở: {0}', open.length ? open.join(', ') : 'chưa có đặc trưng (mốc Mầm chỉ tăng chỉ số)'), x, y + 3, { size: 6.5, color: '#cfe8c8' });
       y += 9;
-      if (I.next != null && I.unlock) { ui.text('Sắp mở: ' + I.unlock + ' (còn ' + I.left + ' dấu ấn)', x, y + 3, { size: 6.5, color: '#ffd27a' }); y += 9; }
-      y = ui.para('Cách cày: ' + LK.hint(el) + '.', x, y + 3, wd, { size: 6.5, color: '#d9cdb8' }) - 1;
+      if (I.next != null && I.unlock) { ui.text(G.t('Sắp mở: {0} (còn {1} dấu ấn)', I.unlock, I.left), x, y + 3, { size: 6.5, color: '#ffd27a' }); y += 9; }
+      y = ui.para(G.t('Cách cày: {0}.', LK.hint(el)), x, y + 3, wd, { size: 6.5, color: '#d9cdb8' }) - 1;
     } else {
-      ui.text('Chưa có hệ chính: hệ nào đủ ' + G.MARKS[0] + ' dấu ấn trước thì vũ khí theo hệ đó.', x, y + 3, { size: 6.5, bold: true, color: '#ffd27a' });
+      ui.text(G.t('Chưa có hệ chính: hệ nào đủ {0} dấu ấn trước thì vũ khí theo hệ đó.', G.MARKS[0]), x, y + 3, { size: 6.5, bold: true, color: '#ffd27a' });
       y += 9;
       y = ui.para('Cách cày: đánh quái đang cháy, trúng độc hoặc bị lạnh rồi kết liễu nó. Vật nổ trong phòng (chậu than, nấm, tinh thể băng) giúp gây hệ khi vũ khí còn trắng.', x, y + 3, wd, { size: 6.5, color: '#d9cdb8' }) - 1;
     }
@@ -310,8 +310,8 @@
       ELS.forEach((el) => {
         const E = G.EL[el], F = G.HE_FEATURES[el];
         LK.icon(el, x + 4, y3 - 2.5, 0.9);
-        ui.text(E.name + ': kết liễu quái ' + VERB[el], x + 11, y3, { size: 6.5, bold: true, color: E.col });
-        ui.text('120: ' + F[0].name + ' · 300: ' + F[1].name, x + wd, y3, { size: 6.5, align: 'right', color: '#e8dfcc' });
+        ui.text(G.t('{0}: kết liễu quái {1}', E.name, VERB[el]), x + 11, y3, { size: 6.5, bold: true, color: E.col });
+        ui.text('120: ' + G.tv(F[0].name) + ' · 300: ' + G.tv(F[1].name), x + wd, y3, { size: 6.5, align: 'right', color: '#e8dfcc' });
         y3 += 9;
       });
       ui.text('Kết hợp hai hệ: sắp có', x, y3 + 3, { size: 7, bold: true, color: '#9fb0aa' });

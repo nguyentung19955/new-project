@@ -107,7 +107,8 @@
   };
   O.statText = function (k, v) {
     const S = O.STATS[k];
-    return S.name + ' +' + (S.pct ? Math.round(v * 100) + '%' : v);
+    const so = S.pct ? Math.round(v * 100) + '%' : v;
+    return G.t ? G.t('{0} +{1}', S.name, so) : S.name + ' +' + so;
   };
   O.name = function (it) {
     const T = I[it.k];

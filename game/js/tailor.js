@@ -43,7 +43,7 @@
     for (const k in sm.sets) {
       const n = sm.sets[k], S = O.SETS[k];
       if (n < 2) continue;
-      y = ui.para(S.name + ' ' + n + '/5' + (n >= 3 ? ': +' + Math.round(sm.elBonus[S.el] * 100) + '% sát thương ' + HN[S.el] : ': thêm 1 món nữa để đủ bộ'), 14, y + 2, 128, { size: 6.5, bold: true, color: n >= 3 ? GOOD : SOFT });
+      y = ui.para(n >= 3 ? G.t('{0} {1}/5: +{2}% sát thương {3}', S.name, n, Math.round(sm.elBonus[S.el] * 100), HN[S.el]) : G.t('{0} {1}/5: thêm 1 món nữa để đủ bộ', S.name, n), 14, y + 2, 128, { size: 6.5, bold: true, color: n >= 3 ? GOOD : SOFT });
     }
     return y;
   }
@@ -68,16 +68,16 @@
   function details(it, x, y, w) {
     const Ti = O.ITEMS[it.k], R = G.RARITY[it.r];
     ui.text(O.name(it), x, y, { size: 8.5, bold: true, color: R.col });
-    const tags = [O.SLOT_NAME[Ti.slot], 'bậc ' + R.name];
-    if (Ti.el) tags.push('hệ ' + HN[Ti.el]);
-    if (Ti.set) tags.push(O.SETS[Ti.set].name);
+    const tags = [G.t(O.SLOT_NAME[Ti.slot]), G.t('bậc {0}', R.name)];
+    if (Ti.el) tags.push(G.t('hệ {0}', HN[Ti.el]));
+    if (Ti.set) tags.push(G.t(O.SETS[Ti.set].name));
     ui.text(tags.join(' · '), x, y + 10, { size: 6.5, color: SOFT });
     const st = O.stats(it);
     ui.text(Object.keys(st).map((k) => O.statText(k, st[k])).join(', '), x, y + 20, { size: 7, color: TXT });
     const sp = O.special(it);
-    if (sp) return ui.para('★ ' + sp.name + ': ' + sp.desc, x, y + 30, w, { size: 6.5, color: sp.key === 'none' ? SOFT : PURP });
-    if (Ti.old) return ui.para('Tác dụng cũ: ' + G.GEAR.charm[Ti.old].desc + ' (em bé từ cấp 5).', x, y + 30, w, { size: 6.5, color: PURP });
-    if (it.r < 2) return ui.para('Lên bậc Tím: mở tác dụng đặc biệt' + (Ti.el ? ' hệ ' + HN[Ti.el] : ' (khiên đầu phòng)') + '.', x, y + 30, w, { size: 6.5, color: SOFT });
+    if (sp) return ui.para(G.t('★ {0}: {1}', sp.name, sp.desc), x, y + 30, w, { size: 6.5, color: sp.key === 'none' ? SOFT : PURP });
+    if (Ti.old) return ui.para(G.t('Tác dụng cũ: {0} (em bé từ cấp 5).', G.GEAR.charm[Ti.old].desc), x, y + 30, w, { size: 6.5, color: PURP });
+    if (it.r < 2) return ui.para(Ti.el ? G.t('Lên bậc Tím: mở tác dụng đặc biệt hệ {0}.', HN[Ti.el]) : G.t('Lên bậc Tím: mở tác dụng đặc biệt (khiên đầu phòng).'), x, y + 30, w, { size: 6.5, color: SOFT });
     return y + 30;
   }
 
@@ -99,7 +99,7 @@
     const all = sv.outfit.items.filter((it) => !V.oslot || O.ITEMS[it.k].slot === V.oslot);
     const wearing = (it) => sv.outfit.wear[O.ITEMS[it.k].slot] === it.id;
     all.sort((a, b) => (b.n - a.n) || (b.r - a.r) || (O.SLOTS.indexOf(O.ITEMS[a.k].slot) - O.SLOTS.indexOf(O.ITEMS[b.k].slot)) || (a.id - b.id));
-    ui.text('Kho' + (V.oslot ? ' · ' + O.SLOT_NAME[V.oslot] : '') + ' (' + all.length + (V.oslot ? '' : '/' + O.MAX_ITEMS) + ')', 356, 98, { size: 7, bold: true, color: GOLD });
+    ui.text(V.oslot ? G.t('Kho · {0} ({1})', O.SLOT_NAME[V.oslot], all.length) : G.t('Kho ({0}/{1})', all.length, O.MAX_ITEMS), 356, 98, { size: 7, bold: true, color: GOLD });
     if (V.oslot) { if (T.sbtn(424, 88, 42, 13, 'Tất cả', { size: 6.5, pad: 2 })) { V.oslot = null; V.page = 0; } }
     const per = 14, cols = 7;
     VA.pager(all.length, per, 366, 175);
@@ -125,8 +125,8 @@
     const c = O.upCost(it);
     if (c) {
       const okp = O.canPay(sv, c);
-      if (T.sbtn(RX + 226, 230, 86, 18, 'Lên ' + G.RARITY[it.r + 1].name, { size: 8, pad: 2, disabled: !okp })) {
-        if (O.upgrade(sv, it)) { G.persist(); G.sfx('evolve'); say('Xong! ' + Ti.name + ' lên bậc ' + G.RARITY[it.r].name + '.' + (it.r === 2 ? ' Mở được tác dụng đặc biệt rồi đó.' : '')); }
+      if (T.sbtn(RX + 226, 230, 86, 18, G.t('Lên {0}', G.RARITY[it.r + 1].name), { size: 8, pad: 2, disabled: !okp })) {
+        if (O.upgrade(sv, it)) { G.persist(); G.sfx('evolve'); say(it.r === 2 ? G.t('Xong! {0} lên bậc {1}. Mở được tác dụng đặc biệt rồi đó.', Ti.name, G.RARITY[it.r].name) : G.t('Xong! {0} lên bậc {1}.', Ti.name, G.RARITY[it.r].name)); }
       }
       T.resRow(T.costItems(c), RX + 222, 258, { size: 6.5, gap: 4 });
       line = okp ? 'Đủ đồ để nâng bậc món này đấy.' : 'Nâng bậc cần nguyên liệu của vùng món đó.';
@@ -147,7 +147,7 @@
       T.slot(RX + 2, y + 1, 21, 0);
       O.drawIcon(G.ux, k, RX + 12, y + 11, 17);
       ui.text(Ti.name, RX + 28, y + 10, { size: 7.5, bold: true, color: Ti.set ? GOLD : TXT });
-      ui.text(O.SLOT_NAME[Ti.slot] + (Ti.el ? ' · ' + HN[Ti.el] : '') + (Ti.set ? ' · ' + O.SETS[Ti.set].name : ''), RX + 28, y + 19, { size: 6, color: SOFT });
+      ui.text([G.t(O.SLOT_NAME[Ti.slot])].concat(Ti.el ? [G.t(HN[Ti.el])] : [], Ti.set ? [G.t(O.SETS[Ti.set].name)] : []).join(' · '), RX + 28, y + 19, { size: 6, color: SOFT });
       T.resRow(T.costItems(c), RX + 150, y + 15, { size: 6.5, gap: 4 });
       ui.text(own ? 'đã có' : okp ? 'may được' : '', RX + 312, y + 9, { size: 6, align: 'right', color: own ? SOFT : GOOD });
     });
@@ -159,10 +159,10 @@
     const c = O.craftCost(k), okp = O.canPay(sv, c) && !O.full(sv);
     if (T.btn(RX + 226, 212, 86, 30, 'May', { size: 10, primary: true, disabled: !okp })) {
       const it = O.craft(sv, k);
-      if (it) { G.persist(); G.sfx('evolve'); V.sel = it.id; V.otab = 'wear'; V.oslot = O.ITEMS[k].slot; V.page = 0; say('May xong ' + O.name(it) + '! Bé mặc thử luôn đi.'); VS.checkNews(); }
+      if (it) { G.persist(); G.sfx('evolve'); V.sel = it.id; V.otab = 'wear'; V.oslot = O.ITEMS[k].slot; V.page = 0; say(G.t('May xong {0}! Bé mặc thử luôn đi.', O.name(it))); VS.checkNews(); }
     }
     T.resRow(T.costItems(c), RX + 222, 256, { size: 6.5, gap: 4 });
-    if (!okp) line = O.full(sv) ? 'Kho đầy rồi, cô không may thêm được.' : 'Còn thiếu nguyên liệu. Vào ải ' + G.REGIONS[O.ITEMS[k].reg].name + ' kiếm thêm nhé.';
+    if (!okp) line = O.full(sv) ? 'Kho đầy rồi, cô không may thêm được.' : G.t('Còn thiếu nguyên liệu. Vào ải {0} kiếm thêm nhé.', G.REGIONS[O.ITEMS[k].reg].name);
     return line;
   }
 
@@ -170,7 +170,7 @@
   function wingTab(sv) {
     const wings = sv.outfit.items.filter((it) => O.ITEMS[it.k].slot === 'wing');
     let line = 'Cánh lớn dần theo cấp: mầm cánh, cánh nhỏ, cánh lớn. Mở cấp bằng mảnh trùm.';
-    ui.text('Cánh của bé (' + wings.length + ')', RX + 2, 98, { size: 7, bold: true, color: GOLD });
+    ui.text(G.t('Cánh của bé ({0})', wings.length), RX + 2, 98, { size: 7, bold: true, color: GOLD });
     if (!wings.length) {
       ui.para('Chưa có cánh. Cô may được Cánh chuồn chuồn ở thẻ May đồ; trùm vùng có thể rơi Cánh lá, Cánh băng, Cánh lửa.', RX + 2, 112, 310, { size: 7.5, color: TXT });
       line = 'Bé chưa có cánh. Gom gỗ linh, vảy cá, đá lửa, cô may cho đôi cánh chuồn chuồn.';
@@ -193,11 +193,11 @@
     const c = O.wingCost(it);
     if (c) {
       const okp = O.canPay(sv, c);
-      if (T.btn(RX + 226, 222, 86, 28, 'Mở cấp ' + (it.lv + 1), { size: 9, gold: true, disabled: !okp })) {
-        if (O.wingUp(sv, it)) { G.persist(); G.sfx('evolve'); V.pv = 'lon'; say('Cánh lớn lên rồi! Giờ là ' + O.name(it) + '.'); }
+      if (T.btn(RX + 226, 222, 86, 28, G.t('Mở cấp {0}', it.lv + 1), { size: 9, gold: true, disabled: !okp })) {
+        if (O.wingUp(sv, it)) { G.persist(); G.sfx('evolve'); V.pv = 'lon'; say(G.t('Cánh lớn lên rồi! Giờ là {0}.', O.name(it))); }
       }
       T.resRow(T.costItems(c), RX + 6, 252, { size: 7, gap: 5 });
-      line = okp ? 'Đủ mảnh trùm rồi, mở cấp cánh thôi!' : 'Mở cấp cánh cần mảnh trùm' + (Ti.el ? ' ' + G.REGIONS[Ti.reg].bossName : ' của cả ba vùng') + '.';
+      line = okp ? 'Đủ mảnh trùm rồi, mở cấp cánh thôi!' : (Ti.el ? G.t('Mở cấp cánh cần mảnh trùm {0}.', G.REGIONS[Ti.reg].bossName) : G.t('Mở cấp cánh cần mảnh trùm của cả ba vùng.'));
     } else { ui.text('Cánh đã lớn hết cỡ.', RX + 6, 252, { size: 7.5, color: GOOD }); line = 'Đôi cánh đẹp nhất làng rồi đó!'; }
     return line;
   }
