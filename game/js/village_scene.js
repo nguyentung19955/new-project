@@ -143,13 +143,51 @@
     return NCACHE[id] || (NCACHE[id] = outlined(64, 64, 30, 50, (c) => drawNpc(c, kind, f, o)));
   }
   VS.npcCode = npcSprite; // hình vẽ bằng code (Xưởng Sprite dùng để so)
+  // Nhịp thở của từng người (chu kỳ giây, lệch pha, kiểu): mỗi người một nhịp để không ai giống ai.
+  // 'deu' thở đều; 'doi' hít hai nhịp ngắn (người hay nói); 'cham' rất chậm (cụ già ngồi).
+  const THO = { lai: [3.8, 0.3, 'deu'], ren: [2.4, 1.1, 'deu'], xen: [3.0, 2.2, 'doi'], may: [3.3, 0.7, 'deu'], do: [4.8, 1.9, 'cham'], tu: [3.6, 2.8, 'deu'], mo: [2.7, 0.2, 'doi'] };
+  function thoLen(kind, t) { // 1: ngực và đầu nhích lên 1 điểm ảnh; 0: nghỉ
+    const q = THO[kind]; if (!q) return 0;
+    const u = ((t / q[0] + q[1]) % 1 + 1) % 1;
+    if (q[2] === 'doi') return (u > 0.1 && u < 0.3) || (u > 0.4 && u < 0.62) ? 1 : 0;
+    if (q[2] === 'cham') return u > 0.25 && u < 0.7 ? 1 : 0;
+    return u > 0.2 && u < 0.62 ? 1 : 0;
+  }
+  // Chuyển động phụ vẽ thêm vài điểm lên hình đã nhớ: đuôi khăn, nơ tóc, quai nón, chòm râu lay theo gió.
+  function phu(c, kind, x, y, s, t, up) {
+    const N = NPCS[kind], top = N.top, M = G.VFX ? +G.VFX.moiTruong : 1;
+    if (!(M > 0)) return;
+    const w = Math.sin(t * 2.3 + kind.length * 1.7), d = w > 0.4 ? 1 : w < -0.6 ? -1 : 0;
+    const P = (lx, ly, ww, hh, col) => { c.fillStyle = col; c.fillRect(Math.round(x + lx * s), Math.round(y + ly * s), Math.round(ww * s), Math.round(hh * s)); };
+    if (kind === 'ren') { P(10, top + 4 - up + (d > 0 ? -1 : 0), 1, 2, '#b0341e'); if (d > 0) P(11, top + 3 - up, 1, 1, '#d8482e'); }
+    else if (kind === 'may') { if (d) P(8, top - 3 - up + (d > 0 ? 0 : 1), 1, 1, '#f08aa8'); }
+    else if (kind === 'lai') { P(-6 + d, top + 11 - up, 1, 1, '#a83a2e'); P(6 + d, top + 11 - up, 1, 1, '#a83a2e'); }
+    else if (kind === 'do') { if (d) P(d > 0 ? 1 : -1, top + 17 - up, 1, 1, '#e0d9c8'); }
+    else if (kind === 'mo') { if (d > 0) P(-9, top - 2 - up, 1, 2, '#3a4a8a'); }
+  }
   function putNpc(c, kind, x, y, f, o, s) {
     s = s || 1;
-    if (!(o && o.noShadow)) { c.fillStyle = 'rgba(10,8,20,0.35)'; c.fillRect(Math.round(x - 8 * s), Math.round(y - 1 * s), 16 * s, 3 * s); c.fillRect(Math.round(x - 6 * s), Math.round(y + 2 * s), 12 * s, s); }
+    if (!(o && o.noShadow)) { // bóng chân tròn, cùng kiểu với em bé và quái trong ải
+      const ga = c.globalAlpha; c.globalAlpha = ga * 0.3;
+      ell(c, x, y + 0.5 * s, (NPCS[kind] && NPCS[kind].sit ? 11 : 8) * s, 2.4 * s, '#000000');
+      c.globalAlpha = ga;
+    }
     // Hình tự vẽ (Xưởng Sprite, js/sprite_custom.js gắn VS.tuVe khi có tệp nl-<mã>.sprite.json). Không có tệp thì vẽ như cũ.
     if (VS.tuVe && VS.tuVe(c, kind, x, y, s, o)) return;
     const sp = npcSprite(kind, f || 0, o);
-    c.imageSmoothingEnabled = false; c.drawImage(sp.cv, Math.round(x - sp.ox * s), Math.round(y - sp.oy * s), 64 * s, 64 * s);
+    c.imageSmoothingEnabled = false;
+    const X = Math.round(x - sp.ox * s), Y = Math.round(y - sp.oy * s);
+    const breath = o && o.breath != null && NPCS[kind] && (G.VFX ? +G.VFX.nhun : 1) > 0;
+    const up = breath ? thoLen(kind, o.breath) : 0;
+    if (!up) c.drawImage(sp.cv, X, Y, 64 * s, 64 * s);
+    else {
+      // thở: phần ngực và đầu (trên dòng cắt) nhích lên 1 điểm ảnh, dòng ngay dưới chỗ cắt kéo dài ra để không hở
+      const cut = sp.oy + NPCS[kind].top + 14;
+      c.drawImage(sp.cv, 0, cut, 64, 64 - cut, X, Y + cut * s, 64 * s, (64 - cut) * s);
+      c.drawImage(sp.cv, 0, cut, 64, 1, X, Y + (cut - 1) * s, 64 * s, s);
+      c.drawImage(sp.cv, 0, 0, 64, cut, X, Y - s, 64 * s, cut * s);
+    }
+    if (o && o.breath != null && NPCS[kind]) phu(c, kind, x, y, s, o.breath, up);
   }
   // Dấu chấm than vàng "có việc mới"
   function bang(c, x, y) { x = Math.round(x); y = Math.round(y); p(c, x - 4, y - 11, 9, 11, INK); p(c, x - 3, y - 12, 7, 13, INK); p(c, x - 3, y - 10, 7, 9, '#ffd23f'); p(c, x - 2, y - 11, 5, 11, '#ffd23f'); p(c, x - 1, y - 9, 3, 5, '#7a2a12'); p(c, x - 1, y - 3, 3, 2, '#7a2a12'); }
@@ -168,7 +206,8 @@
     for (let i = 0; i < w; i += 3) p(c, x + i, y + h - 2 + ((i / 3) % 2), 2, 3, '#a07a30');
     p(c, x + 6, y, w - 12, 2, '#8a6628'); p(c, x, y + h + 1, w, 2, 'rgba(10,8,20,0.35)');
   }
-  function lantern(c, x, y) { p(c, x, y - 2, 1, 2, '#3a2a26'); p(c, x - 2, y, 5, 6, '#e8402e'); p(c, x - 1, y + 1, 3, 4, '#ffb040'); p(c, x - 2, y, 5, 1, '#8a2a1e'); p(c, x - 2, y + 5, 5, 1, '#8a2a1e'); p(c, x, y + 6, 1, 2, '#ffd23f'); }
+  let LREC = null; // lúc dựng làng: ghi chỗ từng đèn lồng để lúc chạy cho lửa chập chờn
+  function lantern(c, x, y) { if (LREC) LREC.push([x, y]); p(c, x, y - 2, 1, 2, '#3a2a26'); p(c, x - 2, y, 5, 6, '#e8402e'); p(c, x - 1, y + 1, 3, 4, '#ffb040'); p(c, x - 2, y, 5, 1, '#8a2a1e'); p(c, x - 2, y + 5, 5, 1, '#8a2a1e'); p(c, x, y + 6, 1, 2, '#ffd23f'); }
   function lampPost(c, x, y) { p(c, x, y - 26, 2, 26, '#4a3428'); p(c, x - 5, y - 26, 8, 2, '#4a3428'); lantern(c, x - 4, y - 23); }
   function dinh(c, x, y) {
     p(c, x - 56, y - 6, 112, 6, '#8e8a80'); p(c, x - 56, y - 6, 112, 1, '#b4b0a4'); p(c, x - 14, y - 3, 28, 3, '#a6a296'); p(c, x - 56, y - 1, 112, 1, '#5e5a58');
@@ -224,8 +263,9 @@
     p(c, x - 8, y - 9, 18, 6, '#f08aa8'); p(c, x - 8, y - 9, 18, 1, '#ffd0dc'); p(c, x - 8, y - 6, 18, 1, '#6fc0d0'); p(c, x - 6 + f * 5, y - 12, 5, 2, '#ffd23f');
     p(c, x + 12, y - 16, 4, 12, '#6fc0d0'); p(c, x + 12, y - 16, 4, 2, '#f4eee0');
   }
-  function dayPhoi(c, x, y, w) {
+  function dayPhoi(c, x, y, w, noClothes) {
     p(c, x, y - 26, 2, 26, '#b8a45a'); p(c, x + w, y - 26, 2, 26, '#b8a45a'); p(c, x, y - 24, w, 1, '#d9cdb8');
+    if (noClothes) return; // áo phơi vẽ động (lay trong gió) ở VS.drawWorld
     const cols = ['#d8482e', '#6fc0d0', '#ffd23f', '#9be07a']; const n = Math.floor((w - 6) / 10);
     for (let i = 0; i < n; i++) { const xx = x + 5 + i * 10; p(c, xx, y - 23, 7, 9, cols[i % 4]); p(c, xx - 2, y - 23, 11, 3, cols[i % 4]); p(c, xx + 2, y - 23, 3, 2, '#1a1420'); }
   }
@@ -250,7 +290,9 @@
   function thuyen(c, x, y) {
     ell(c, x, y + 1, 24, 5, '#16283a'); ell(c, x, y - 2, 23, 5, '#4a3020'); ell(c, x, y - 4, 21, 3, '#7a5234'); p(c, x - 24, y - 6, 4, 3, '#4a3020'); p(c, x + 21, y - 6, 4, 3, '#4a3020');
     for (let i = 0; i < 7; i++) { const hw = 4 + i; p(c, x - hw, y - 15 + i, hw * 2, 1, i % 2 ? '#b8923f' : '#d4ae56'); } p(c, x - 4, y - 9, 8, 4, '#2a1c18');
+    const keep = LREC; LREC = null; // đèn trên đò nhấp nhô theo đò: vẽ chập chờn riêng
     p(c, x + 18, y - 18, 1, 13, '#4a3020'); lantern(c, x + 16, y - 17);
+    LREC = keep;
   }
   function cau(c, x, y, w) { p(c, x, y - 4, w, 12, '#7a5a3c'); for (let i = 0; i < w; i += 6) p(c, x + i, y - 4, 1, 12, '#5a4028'); p(c, x, y - 4, w, 1, '#a07a50'); p(c, x, y + 8, w, 2, '#3a2a1e'); p(c, x + w - 3, y - 10, 3, 8, '#5a4028'); p(c, x + w - 3, y + 4, 3, 8, '#5a4028'); }
   function bangTranh(c, x, y) { p(c, x - 9, y - 22, 2, 22, '#5e4432'); p(c, x + 8, y - 22, 2, 22, '#5e4432'); p(c, x - 11, y - 24, 23, 16, '#8a5a34'); p(c, x - 9, y - 22, 19, 12, '#e8dcb8'); p(c, x - 6, y - 14, 2, 2, '#d8482e'); p(c, x - 2, y - 18, 2, 2, '#d8482e'); p(c, x + 3, y - 15, 2, 2, '#d8482e'); p(c, x + 6, y - 20, 2, 2, '#3a2a2e'); line(c, x - 5, y - 13, x - 1, y - 17, 1, '#8a6a48'); line(c, x - 1, y - 17, x + 4, y - 14, 1, '#8a6a48'); line(c, x + 4, y - 14, x + 7, y - 19, 1, '#8a6a48'); }
@@ -287,8 +329,10 @@
   function river(c) {
     for (let y = 0; y < H; y++) { const e = bo(y); p(c, e - 3, y, 3, 1, '#6a5a44'); p(c, e, y, W - e, 1, '#24465c'); p(c, e, y, 2, 1, '#3a6a8a'); }
     const rd = rng(5); for (let i = 0; i < 40; i++) { const x = B.song + 8 + rd() * (W - B.song - 12), y = rd() * H; p(c, x, y, 4 + rd() * 5, 1, rd() < 0.5 ? '#2e5870' : '#4a80a0'); }
-    for (let i = 0; i < 5; i++) { const y = 20 + i * 52 + rd() * 20, e = B.song + Math.round(Math.sin(y * 0.06) * 5); p(c, e - 5, y - 9, 1, 10, '#4f7a52'); p(c, e - 7, y - 7, 1, 8, '#3a6240'); p(c, e - 3, y - 6, 1, 7, '#4f7a52'); p(c, e - 5, y - 11, 1, 2, '#8a5a34'); }
+    REEDS.length = 0; // khóm sậy ven sông: vẽ động (ngọn lay theo gió) ở VS.drawWorld
+    for (let i = 0; i < 5; i++) { const y = 20 + i * 52 + rd() * 20, e = B.song + Math.round(Math.sin(y * 0.06) * 5); REEDS.push([e, Math.round(y)]); }
   }
+  const REEDS = [];
   const NIGHT = '#b6b0dc'; // trời chạng vạng: nhân màu này lên nền và công trình, người thì giữ sáng
   function tint(cv) {
     const [o, oc] = mk(cv.width, cv.height);
@@ -314,6 +358,7 @@
   function build() {
     if (BUILT) return BUILT;
     const [gcv, g] = mk(W, H);
+    LREC = [];
     grass(g); hedge(g); river(g);
     const yM = B.yM, dx = B.dinh[0], dy = B.dinh[1], rN = NPCS.ren.pos, xN = NPCS.xen.pos, mN = NPCS.may.pos;
     path(g, [[B.cong[0], 58], [B.cong[0] + 6, yM - 20], [B.cong[0] + 40, yM], [dx, yM + 6], [B.da[0], yM + 2], [B.ren[0], yM], [628, yM]], 9, 4);
@@ -337,7 +382,7 @@
     add(B.xen[1] - 2, (c) => hangXen(c, B.xen[0], B.xen[1]));
     add(B.may[1], (c) => nhaMay(c, B.may[0], B.may[1]));
     const cui = [0, 1, 2].map((f) => sprite(B.cui[1] + 1, (c) => khungCui(c, B.cui[0], B.cui[1] + 1, f)));
-    add(B.phoi[1], (c) => dayPhoi(c, B.phoi[0], B.phoi[1], B.phoi[2]));
+    add(B.phoi[1], (c) => dayPhoi(c, B.phoi[0], B.phoi[1], B.phoi[2], true));
     add(B.gieng[1], (c) => gieng(c, B.gieng[0], B.gieng[1]));
     const thuyenS = sprite(B.thuyen[1], (c) => thuyen(c, B.thuyen[0], B.thuyen[1]));
     add(B.tranh[1], (c) => bangTranh(c, B.tranh[0], B.tranh[1]));
@@ -351,7 +396,8 @@
     for (const q of B.den) glow(l, q[0] - 4, q[1] - 12, 30);
     const rd = rng(77), flies = [];
     for (let i = 0; i < W / 14; i++) flies.push([rd() * W, 40 + rd() * 220, rd() * 6.28, 0.5 + rd()]);
-    BUILT = { ground, objs, cui, thuyenS, light: lcv, flies };
+    const lants = LREC; LREC = null;
+    BUILT = { ground, objs, cui, thuyenS, light: lcv, flies, lants };
     return BUILT;
   }
 
@@ -625,7 +671,7 @@
   function drawWeapon(c, i) {
     const sv = G.save, w = G.weaponById(sv.carry[i]); if (!w) return;
     const q = S.wp[i], bob = Math.round(Math.sin(S.t * 3 + i * 1.7) * 1.5), x = Math.round(q.x - S.cam), y = Math.round(q.y);
-    c.fillStyle = 'rgba(10,8,20,0.3)'; c.fillRect(x - 4, y - 1, 9, 2);
+    { const ga = c.globalAlpha; c.globalAlpha = ga * (0.3 - bob * 0.03); ell(c, x, y, 4 - (bob > 0 ? 1 : 0), 1, '#000000'); c.globalAlpha = ga; } // bóng nhỏ lại khi vũ khí bay cao
     const WA = G.weaponArt;
     try {
       if (WA) { const o = WA.fromWeapon(w, { mood: S.near || S.talk ? 'calm' : 'idle', t: S.t + i }); WA.draw(c, o, x, y - 14 - bob - (w.type === 'bow' ? 8 : 0), WA.REST[w.type], 0); }
@@ -634,8 +680,76 @@
   }
   function drawKid(c, key, x, y, face, o) {
     const sv = G.save;
-    try { G.art.hero(c, Object.assign({ x: Math.round(x), y: Math.round(y), face, key, move: false, t: S.t, atk: -1, dodge: -1, weapon: null, helm: null, armor: null }, o || {})); } catch (e) { p(c, x - 4, y - 18, 9, 18, '#c8402e'); }
+    try { G.art.hero(c, Object.assign({ x: Math.round(x), y: Math.round(y), face, key, move: false, t: S.t, atk: -1, dodge: -1, weapon: null, helm: null, armor: null, roundShadow: true }, o || {})); } catch (e) { p(c, x - 4, y - 18, 9, 18, '#c8402e'); }
     void sv;
+  }
+  // ======================= chuyển động môi trường của làng (VFX Phase 4) =======================
+  // Sậy ven sông và áo phơi lay theo gió, mặt sông có vệt nước trôi hai tốc độ (xa chậm, gần nhanh) và vòng gợn cá đớp,
+  // ao sen gợn nhẹ, lá đa rụng chậm, đèn lồng và lò rèn chập chờn, bóng đèn trên đò in xuống nước. Cường độ G.VFX.moiTruong.
+  const TC = new Map();
+  function tc(hex) { // màu đã nhân sắc chạng vạng (giống tint() của nền) để vật vẽ động khớp màu với vật vẽ sẵn
+    let v = TC.get(hex); if (v) return v;
+    const n = parseInt(hex.slice(1), 16), m = parseInt(NIGHT.slice(1), 16);
+    const ch = (sh) => Math.round((((n >> sh) & 255) * ((m >> sh) & 255)) / 255);
+    v = 'rgb(' + ch(16) + ',' + ch(8) + ',' + ch(0) + ')'; TC.set(hex, v); return v;
+  }
+  const AC = new Map();
+  function ac(r, g, b, a) { const q = Math.max(0, Math.min(20, Math.round(a * 20))), k = r + ',' + g + ',' + b + ',' + q; let v = AC.get(k); if (!v) { v = 'rgba(' + k.slice(0, k.lastIndexOf(',')) + ',' + (q / 20).toFixed(2) + ')'; AC.set(k, v); } return v; }
+  const gio = (t, x) => Math.sin(t * 1.5 - x * 0.03) + 0.35 * Math.sin(t * 3.7 + x * 0.11); // làn gió chạy ngang làng
+  function ambGround(c, cam, t, M) {
+    // vệt nước trôi xuôi dòng: lớp xa mờ và chậm, lớp gần rõ và nhanh hơn
+    for (let i = 0; i < 12; i++) {
+      const near = i % 2, v = near ? 9 : 4, y = ((i * 71 + 13) + t * v * M) % H, x = bo(y) + 10 + ((i * 29) % 48) + Math.sin(t * 0.7 + i) * 2 - cam;
+      if (x < -8 || x > 488) continue;
+      p(c, x, y, near ? 6 : 4, 1, near ? ac(120, 170, 205, 0.5) : ac(90, 140, 175, 0.4));
+    }
+    // vòng gợn trên sông (cá đớp) và ao sen
+    const ring = (cx, cy, k, rmax, col) => { const rx = 1 + k * rmax, ry = Math.max(1, rx * 0.4), n = Math.max(8, Math.round(rx * 1.8)); for (let i = 0; i < n; i++) { const an = (i / n) * 6.2832; p(c, cx + Math.cos(an) * rx, cy + Math.sin(an) * ry, 1, 1, col); } };
+    for (let i = 0; i < 3; i++) {
+      const per = 4.5 + i * 1.3, u = (t + i * 2.1) % per; if (u > 1.4) continue;
+      const cyc = Math.floor((t + i * 2.1) / per), y = 30 + ((cyc * 97 + i * 61) % 220), x = bo(y) + 14 + ((cyc * 37 + i * 23) % 40) - cam;
+      if (x > -10 && x < 490) ring(x, y, u / 1.4, 7, ac(150, 200, 230, 0.55 * (1 - u / 1.4) * M));
+    }
+    { const per = 3.4, u = t % per, cyc = Math.floor(t / per); if (u < 1.2) { const a = cyc * 2.3, x = B.ao[0] + Math.cos(a) * B.ao[2] * 0.45 - cam, y = B.ao[1] + Math.sin(a) * B.ao[3] * 0.4; if (x > -10 && x < 490) ring(x, y, u / 1.2, 5, ac(150, 200, 220, 0.5 * (1 - u / 1.2) * M)); } }
+    // sậy: thân đứng yên, ngọn nghiêng theo gió
+    for (const q of REEDS) {
+      const e = q[0] - cam, y = q[1]; if (e < -10 || e > 490) continue;
+      const w = gio(t, q[0] + y) * M, d = w > 0.6 ? 1 : w < -0.8 ? -1 : 0;
+      p(c, e - 5, y - 8, 1, 9, tc('#4f7a52')); p(c, e - 5 + d, y - 9, 1, 1, tc('#4f7a52')); p(c, e - 5 + d, y - 11, 1, 2, tc('#8a5a34'));
+      p(c, e - 7, y - 6, 1, 7, tc('#3a6240')); p(c, e - 7 + d, y - 7, 1, 1, tc('#3a6240'));
+      p(c, e - 3, y - 5, 1, 6, tc('#4f7a52')); p(c, e - 3 + d, y - 6, 1, 1, tc('#4f7a52'));
+    }
+  }
+  function ambClothes(c, cam, t, M) { // áo phơi trên dây: vai cố định, vạt áo lay theo gió
+    const x0 = B.phoi[0] - cam, y = B.phoi[1], n = Math.floor((B.phoi[2] - 6) / 10), cols = ['#d8482e', '#6fc0d0', '#ffd23f', '#9be07a'];
+    if (x0 > 490 || x0 + B.phoi[2] < -10) return;
+    for (let i = 0; i < n; i++) {
+      const xx = x0 + 5 + i * 10, col = tc(cols[i % 4]), w = gio(t, B.phoi[0] + i * 10) * M, d = w > 0.5 ? 1 : w < -0.7 ? -1 : 0;
+      p(c, xx - 2, y - 23, 11, 3, col); p(c, xx, y - 20, 7, 3, col); p(c, xx + d, y - 17, 7, 3, col); p(c, xx + 2, y - 23, 3, 2, tc('#1a1420'));
+    }
+  }
+  function ambLight(c, Bt, cam, t, M, tb) {
+    // từng đèn lồng chập chờn một kiểu: quầng nhỏ sáng lên tối xuống không đều
+    for (let i = 0; i < Bt.lants.length; i++) {
+      const q = Bt.lants[i], x = q[0] - cam; if (x < -12 || x > 492) continue;
+      const f = 0.55 + 0.3 * Math.sin(t * 6.1 + i * 2.7) + 0.15 * Math.sin(t * 13.3 + i);
+      ell(c, x, q[1] + 3, 4 + f * 1.5, 4 + f, ac(255, 150, 60, (0.06 + 0.1 * f) * M));
+    }
+    // đèn trên đò in bóng xuống nước, vỡ ra theo gợn sóng
+    const bx = B.thuyen[0] + 16 - cam, by = B.thuyen[1] + 4 + tb;
+    if (bx > -10 && bx < 490) for (let j = 0; j < 4; j++) { const wv = Math.round(Math.sin(t * 2.6 + j * 1.3) * 1.5); p(c, bx - 1 + wv, by + j * 2, 3 - (j >> 1), 1, ac(255, 170, 70, (0.35 - j * 0.07) * M)); }
+    // lò rèn bập bùng: hắt sáng ra sân mạnh yếu theo ngọn lửa
+    const fr = 0.5 + 0.3 * Math.sin(t * 8.3) + 0.2 * Math.sin(t * 15.1), rx = B.ren[0] - 16 - cam;
+    if (rx > -60 && rx < 540) ell(c, rx, B.ren[1] - 2, 26 + fr * 6, 10 + fr * 2, ac(255, 120, 40, (0.03 + 0.05 * fr) * M));
+  }
+  function ambTop(c, cam, t, M) { // lá đa rụng chậm, xoay lật, nằm lại một chút rồi mờ
+    for (let i = 0; i < 3; i++) {
+      const per = 8 + i * 2.5, u = (t + i * 3.7) % per, cyc = Math.floor((t + i * 3.7) / per), fall = 5.5;
+      const sx = B.da[0] - 36 + ((cyc * 41 + i * 29) % 72), y0 = B.da[1] - 64 + ((cyc * 13) % 14), y1 = B.da[1] + 4 + ((cyc * 7 + i * 5) % 14);
+      const col = ['#58a05a', '#c8963a', '#44884f'][(cyc + i) % 3];
+      if (u < fall) { const k = u / fall, x = sx + Math.sin(u * 1.8 + i) * 7 * M - cam, y = y0 + (y1 - y0) * k, fl = Math.floor(u * 3 + i) % 2; p(c, x, y, fl ? 2 : 1, fl ? 1 : 2, tc(col)); }
+      else if (u < fall + 1.5) { const x = sx + Math.sin(fall * 1.8 + i) * 7 * M - cam; c.globalAlpha = 1 - (u - fall) / 1.5; p(c, x, y1, 2, 1, tc(col)); c.globalAlpha = 1; }
+    }
   }
   // dim: độ tối phủ lên cảnh (khi mở bảng). hideHero: không vẽ em bé (bản đồ, bảng lớn).
   VS.drawWorld = function (o) {
@@ -645,12 +759,15 @@
     c.fillStyle = '#101a1a'; c.fillRect(0, 0, 480, OY);
     c.translate(0, OY);
     c.drawImage(Bt.ground, -cam, 0);
+    const M = G.VFX ? Math.max(0, +G.VFX.moiTruong || 0) : 1;
+    ambGround(c, cam, t, M);
     // nước lấp lánh
     for (let i = 0; i < 10; i++) { const y = (i * 53 + 17) % H, x = bo(y) + 10 + ((i * 37) % 50) - cam, k = Math.sin(t * 1.4 + i * 2.1); if (k > 0.3 && x < 480) p(c, x + Math.round(k * 3), y, 5, 1, '#6a9ab8'); }
     const L = [];
     for (const ob of Bt.objs) if (ob.x - cam < 480 && ob.x + ob.cv.width - cam > 0) L.push([ob.y, () => c.drawImage(ob.cv, ob.x - cam, ob.y0)]);
     const cf = Bt.cui[Math.floor(t * 2.2) % 3]; L.push([cf.y, () => c.drawImage(cf.cv, cf.x - cam, cf.y0)]);
     const tb = Math.round(Math.sin(t * 1.3)); L.push([Bt.thuyenS.y, () => c.drawImage(Bt.thuyenS.cv, Bt.thuyenS.x - cam, Bt.thuyenS.y0 + tb)]);
+    L.push([B.phoi[1] + 0.01, () => ambClothes(c, cam, t, M)]);
     // lửa lò rèn bập bùng, khói bay
     L.push([B.ren[1] + 0.2, () => {
       const x = B.ren[0] - cam, y = B.ren[1], f = Math.floor(t * 7) % 3;
@@ -668,7 +785,7 @@
       const look = nearMe ? (S.x >= q[0] ? 1 : -1) : 0;
       const f = look ? 0 : Math.floor(t * 2.4 + k.length * 0.7) % 3, blink = !look && ((t * 0.31 + k.length * 0.37) % 1) > 0.95;
       L.push([q[1], () => {
-        putNpc(c, k, q[0] - cam, q[1], f, { look, blink });
+        putNpc(c, k, q[0] - cam, q[1], f, { look, blink, breath: t });
         if (S.news[k] && S.talk !== k) bang(c, q[0] - cam - (k === 'ren' ? 6 : 0), q[1] + N.top - 9 + Math.round(Math.sin(t * 4) * 1.2));
       }]);
     }
@@ -684,7 +801,8 @@
     L.sort((a, b) => a[0] - b[0]);
     for (const l of L) l[1]();
     // quầng sáng và đom đóm
-    c.globalCompositeOperation = 'lighter'; c.drawImage(Bt.light, -cam, 0); c.globalCompositeOperation = 'source-over';
+    ambTop(c, cam, t, M);
+    c.globalCompositeOperation = 'lighter'; c.drawImage(Bt.light, -cam, 0); if (M > 0) ambLight(c, Bt, cam, t, M, tb); c.globalCompositeOperation = 'source-over';
     for (const fl of Bt.flies) {
       const x = Math.round(fl[0] + Math.sin(t * 0.5 * fl[3] + fl[2]) * 8 - cam), y = Math.round(fl[1] + Math.cos(t * 0.37 * fl[3] + fl[2]) * 5);
       if (x < -2 || x > 482) continue;
@@ -778,7 +896,7 @@
       const s = 'Kéo bên trái để đi. Chạm vào một người để nói chuyện.';
       if (T && T.toast) T.toast(110, 236, 260, s, { size: 7.5 }); else { ui.rect(110, 238, 260, 16, 'rgba(10,8,6,0.82)', '#ffd27a'); ui.text(s, 240, 249, { size: 7.5, align: 'center', bold: true }); }
     }
-    if (S.msgT > 0 && S.msg) { if (T && T.toast) T.toast(130, 60, 220, S.msg); else { ui.rect(130, 60, 220, 16, 'rgba(10,8,6,0.9)', '#ffd27a'); ui.text(S.msg, 240, 71, { size: 8, align: 'center' }); } }
+    if (S.msgT > 0 && S.msg) { if (T && T.toast) T.toast(130, 60, 220, S.msg, { age: 2.4 - S.msgT, left: S.msgT }); else { ui.rect(130, 60, 220, 16, 'rgba(10,8,6,0.9)', '#ffd27a'); ui.text(S.msg, 240, 71, { size: 8, align: 'center' }); } }
     // Một lần chạm trọn vẹn (G.click) phải xử lý ngay lúc vẽ: bộ máy xoá nó sau mỗi khung hình, kể cả khung không chạy bước cập nhật nào.
     if (G.click) {
       const cl = G.click;

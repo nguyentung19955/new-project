@@ -97,6 +97,21 @@
     return false;
   }
   T.hit = clicked;
+  // Phản hồi chạm chung cho mọi nút (VFX Phase 5): đang giữ thì nút lún xuống (như cũ), thả tay thì nút nảy lên 1 điểm
+  // trong chốc lát rồi về chỗ. key: vị trí và cỡ nút. Theo G.VFX.giaoDien (0 = không nảy).
+  const PF = new Map();
+  function pressFx(key, held) {
+    const gd = G.VFX ? +G.VFX.giaoDien : 1;
+    if (!(gd > 0)) return 0;
+    const now = (window.performance && performance.now ? performance.now() : Date.now()) / 1000;
+    let s = PF.get(key);
+    if (!s) { if (PF.size > 300) PF.clear(); s = { h: held, up: -9 }; PF.set(key, s); }
+    if (s.h && !held) s.up = now;
+    s.h = held;
+    const q = (now - s.up) / 0.16;
+    return q >= 0 && q < 1 ? -1 : 0;
+  }
+  T.pressFx = pressFx;
   const txt = (s, x, y, o) => ui.text(s, x, y, o);
 
   // ---------- nút to ----------
@@ -121,8 +136,9 @@
       if (st === 1) R(2, y0 + (h >= 22 ? 5 : 3), w - 4, 1, 'rgba(0,0,0,0.45)');
       if (w >= 70 && h >= 16) for (const ex of [4, w - 9]) ring(ex + 2, y0 + (h >> 1), 2, 1, tooth); // đinh tán tròn hai đầu
     });
-    put(cv, x, y);
-    const y0 = y + (st === 1 ? 1 : 0), size = o.size || (h >= 26 ? 10 : 9), col = dis ? '#8fa49e' : C.ink;
+    const dy = pressFx('b' + x + '|' + y + '|' + w + '|' + h, st === 1);
+    put(cv, x, y + dy);
+    const y0 = y + dy + (st === 1 ? 1 : 0), size = o.size || (h >= 26 ? 10 : 9), col = dis ? '#8fa49e' : C.ink;
     if (label) txt(label, x + w / 2, y0 + h / 2 + size * 0.36 - (o.sub ? 3.5 : 0) - 0.3, { size, bold: true, align: 'center', color: col });
     if (o.sub) txt(o.sub, x + w / 2, y0 + h / 2 + 7.5, { size: o.subSize || 7, align: 'center', color: dis ? '#8fa49e' : '#e8d9a8' });
     if (o.dot) { const c = G.ux; c.beginPath(); c.arc(x + w - 3, y + 3, 3, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = C.dk; c.stroke(); }
@@ -143,9 +159,10 @@
       R(2, y0 + 3, w - 4, h - 6, dis ? '#333f3c' : base[st === 1 ? 1 : 0]);
       R(2, y0 + 3, 1, h - 6, dis ? '#56706a' : C.gold); R(w - 3, y0 + 3, 1, h - 6, dis ? '#56706a' : C.gold);
     });
-    put(cv, x, y);
+    const dy = pressFx('s' + x + '|' + y + '|' + w + '|' + h, st === 1);
+    put(cv, x, y + dy);
     const size = o.size || 8;
-    if (label) txt(label, x + w / 2, y + (st === 1 ? 1 : 0) + h / 2 + size * 0.36 - 0.3, { size, bold: true, align: 'center', color: dis ? '#8fa49e' : C.ink });
+    if (label) txt(label, x + w / 2, y + dy + (st === 1 ? 1 : 0) + h / 2 + size * 0.36 - 0.3, { size, bold: true, align: 'center', color: dis ? '#8fa49e' : C.ink });
     if (o.dot) { const c = G.ux; c.beginPath(); c.arc(x + w - 2, y + 2, 2.6, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.7; c.strokeStyle = C.dk; c.stroke(); }
     return !dis && clicked(x - pad, y - pad, w + pad * 2, h + pad * 2);
   };
@@ -169,10 +186,11 @@
       const s = r >= 22 ? 2 : 1, hasLab = !!o.label;
       icon(kind === 'atk' ? 'sword' : kind === 'skill' ? 'flame' : kind === 'sp' ? 'slash' : kind === 'talk' ? 'talk' : kind === 'boat' ? 'boat' : 'dash', c0, cyy - (hasLab ? 3 : 0), { a: dull ? '#7f948e' : '#fff0c4', b: dull ? '#7f948e' : '#ffb347', c: '#fff', s: '#fff6dc', d: '#c9b383', h: C.gold, w: '#fff', k: dull ? '#26403c' : '#3a1a12' }, hasLab ? 1 : s);
     });
-    put(cv, cx - r - 3, cy - r - 3, dull ? 0.5 : 1);
+    const dy = pressFx('r' + Math.round(cx) + '|' + Math.round(cy) + '|' + r, st === 1);
+    put(cv, cx - r - 3, cy - r - 3 + dy, dull ? 0.5 : 1);
     if (o.label) {
-      const c = G.ux; ui.font(8, true); c.textAlign = 'center'; c.lineWidth = 2.2; c.lineJoin = 'round'; c.strokeStyle = 'rgba(20,10,6,0.9)'; c.strokeText(o.label, cx, cy + st + 10.5);
-      txt(o.label, cx, cy + st + 10.5, { size: 8, bold: true, align: 'center', color: '#fff6dc', shadow: false });
+      const c = G.ux; ui.font(8, true); c.textAlign = 'center'; c.lineWidth = 2.2; c.lineJoin = 'round'; c.strokeStyle = 'rgba(20,10,6,0.9)'; c.strokeText(o.label, cx, cy + dy + st + 10.5);
+      txt(o.label, cx, cy + dy + st + 10.5, { size: 8, bold: true, align: 'center', color: '#fff6dc', shadow: false });
     }
   };
 
@@ -223,10 +241,33 @@
   // ---------- thanh máu, mana, kinh nghiệm, máu trùm ----------
   // kind: 'hp' | 'mana' | 'xp' | 'boss' (hoặc o.col, o.hi để tự chọn màu). label: chữ giữa thanh. o: { h, col, hi, marks: số vạch khắc }
   const BARC = { hp: ['#d0482f', '#f08a5a'], mana: ['#3f8fe0', '#8fc6ff'], xp: ['#d9a441', '#f6dc92'], boss: ['#b8452f', '#ff9a6a'] };
+  // Thanh máu tụt dần (VFX Phase 5): mất máu thì phần vừa mất còn hiện màu sáng một chút rồi rút theo sau;
+  // hồi máu thì phần được thêm hiện màu xanh lá rồi phần đỏ lấp dần vào, cả thanh sáng nhẹ lên.
+  // o.lag: khoá riêng của thanh (tên, hoặc chính đối tượng em bé / trùm / quái) để nhớ trạng thái giữa các khung hình. Cường độ theo G.VFX.giaoDien.
+  const LAG = new Map();
+  const nowS = () => (window.performance && performance.now ? performance.now() : Date.now()) / 1000;
+  function lagOf(id, frac) {
+    const now = nowS();
+    let st = LAG.get(id);
+    if (!st && LAG.size > 160) for (const [k, v] of LAG) if (now - v.last > 5) LAG.delete(k); // dọn thanh của quái đã chết
+    if (!st || now - st.last > 0.6) { st = { shown: frac, lag: frac, hold: 0, hit: 0, heal: 0, last: now }; LAG.set(id, st); return st; } // lâu không vẽ (thanh mới): không diễn
+    const dt = Math.min(0.1, Math.max(0, now - st.last)); st.last = now;
+    if (frac < st.shown - 1e-4) { st.lag = Math.max(st.lag, st.shown); st.shown = frac; st.hold = 0.42; st.hit = 0.14; }
+    else if (frac > st.shown + 1e-4) { st.heal = 0.7; st.shown = Math.min(frac, st.shown + Math.max(0.12 * dt, (frac - st.shown) * Math.min(1, dt * 4))); }
+    if (st.hold > 0) st.hold -= dt;
+    else if (st.lag > st.shown) st.lag = Math.max(st.shown, st.lag - Math.max(0.3 * dt, (st.lag - st.shown) * 2.6 * dt));
+    if (st.lag < st.shown) st.lag = st.shown;
+    if (st.hit > 0) st.hit -= dt;
+    if (st.heal > 0) st.heal -= dt;
+    return st;
+  }
   T.bar = function (x, y, w, kind, frac, label, o) {
     o = o || {};
     x = Math.round(x); y = Math.round(y); w = Math.round(w);
     const h = o.h || 9, cap = h >= 7 ? 7 : 2, inner = w - cap * 2;
+    const gd = G.VFX ? +G.VFX.giaoDien : 1, ls = o.lag && gd > 0 && h >= 6 ? lagOf(o.lag, G.clamp(frac || 0, 0, 1)) : null;
+    const trueFrac = frac;
+    if (ls) frac = ls.shown;
     const fw = Math.round(inner * G.clamp(frac || 0, 0, 1)), cols = o.col ? [o.col, o.hi || lighten(o.col, 0.35)] : BARC[kind] || BARC.hp;
     if (h < 6) { // thanh mỏng (dấu ấn, kinh nghiệm nhỏ): viền tối, hai đầu đồng
       const iw = Math.round((w - 2) * G.clamp(frac || 0, 0, 1));
@@ -243,8 +284,24 @@
       if (cap >= 7) for (const ex of [2, w - 6]) { R(ex, (h >> 1) - 1, 4, 3, C.dk); P(ex + 1, h >> 1, C.gold); P(ex + 2, h >> 1, C.gold); } // đinh tán hai đầu
     });
     put(cv, x, y);
+    if (ls) {
+      const c = G.ux, ga = c.globalAlpha, lw = Math.round(inner * G.clamp(ls.lag, 0, 1)), tw = Math.round(inner * G.clamp(trueFrac || 0, 0, 1));
+      if (lw > fw) { // phần vừa mất: chớp trắng rồi vàng nhạt, rút dần về
+        c.fillStyle = ls.hit > 0 ? '#fff6e0' : '#ffd98a'; c.globalAlpha = ga * Math.min(1, 0.9 * gd);
+        c.fillRect(x + cap + fw, y + 2, lw - fw, h - 4);
+        c.fillStyle = '#ffffff'; c.globalAlpha = ga * 0.5 * Math.min(1, gd); c.fillRect(x + cap + fw, y + 2, lw - fw, 1);
+      }
+      if (tw > fw) { // phần đang hồi: xanh lá, lấp dần
+        c.fillStyle = '#7fe060'; c.globalAlpha = ga * Math.min(1, 0.85 * gd); c.fillRect(x + cap + fw, y + 2, tw - fw, h - 4);
+        c.fillStyle = '#d8ffc0'; c.globalAlpha = ga * Math.min(1, gd); c.fillRect(x + cap + fw, y + 2, tw - fw, 1);
+      }
+      if (ls.heal > 0 && fw > 0) { c.fillStyle = '#c8ffb0'; c.globalAlpha = ga * 0.3 * Math.min(1, gd) * Math.sin((ls.heal / 0.7) * Math.PI); c.fillRect(x + cap, y + 2, fw, h - 4); }
+      if (ls.hit > 0 && fw > 0) { c.fillStyle = '#ffffff'; c.globalAlpha = ga * 0.35 * Math.min(1, gd) * (ls.hit / 0.14); c.fillRect(x + cap, y + 2, fw, h - 4); }
+      c.globalAlpha = ga;
+    }
     if (label) txt(label, x + w / 2, y + h / 2 + 2.6, { size: o.size || 6.5, bold: true, align: 'center', color: '#fff' });
   };
+  T.lagOf = lagOf; // thanh máu nhỏ trên đầu quái (js/stage.js) dùng chung cách tụt dần
 
   // ---------- ô đồ bốn bậc ----------
   // rar: 0 Thường, 1 Lam, 2 Tím, 3 Vàng. o: { sel, dim }. Hình món đồ do nơi gọi vẽ lên sau, tâm tại (x + s/2, y + s/2).
@@ -303,9 +360,19 @@
 
   // ---------- dải thông báo ----------
   // o: { size, center: chữ ở giữa, col: màu chữ }
+  // o.age, o.left (giây đã hiện, giây còn lại): dải nảy xuống một nhịp khi hiện, mờ dần khi sắp tắt (theo G.VFX.giaoDien).
   T.toast = function (x, y, w, text, o) {
     o = o || {};
     x = Math.round(x); y = Math.round(y); w = Math.round(w);
+    const gd = G.VFX ? +G.VFX.giaoDien : 1, c0 = G.ux, ga0 = c0.globalAlpha;
+    if (o.age != null && gd > 0) {
+      const a = o.age;
+      y += a < 0.14 ? -Math.round(5 * (1 - a / 0.14)) : a < 0.26 ? 1 : 0;
+      c0.globalAlpha = ga0 * Math.min(a < 0.12 ? 0.3 + (a / 0.12) * 0.7 : 1, o.left != null && o.left < 0.3 ? Math.max(0, o.left / 0.3) : 1);
+    }
+    try { toastBody(x, y, w, text, o); } finally { c0.globalAlpha = ga0; }
+  };
+  function toastBody(x, y, w, text, o) {
     const h = 18;
     const cv = layer('t|' + w, w, h + 2, () => {
       for (let j = 0; j < h; j++) { const d = Math.abs(j - (h - 1) / 2) | 0, ins = Math.max(0, d - 2); R(ins, j + 2, w - ins * 2, 1, 'rgba(0,0,0,0.4)'); }
@@ -317,7 +384,7 @@
     put(cv, x, y);
     const size = o.size || 8.5;
     txt(text, x + w / 2, y + 9 + size * 0.36, { size, bold: true, align: 'center', color: o.col || C.ink });
-  };
+  }
   // Rộng vừa đủ chữ, đặt giữa quanh cx
   T.toastFit = function (cx, y, text, o) {
     o = o || {};
@@ -513,8 +580,9 @@
       for (const k of ['primary', 'sel', 'danger', 'gold', 'purple', 'dot', 'pad']) if (o[k]) q[k] = o[k];
       if (h >= 40) { // nút to dạng thẻ (ô phần thưởng, món hàng)
         const held = !o.disabled && heldIn(x, y, w, h);
+        const dy = pressFx('c' + Math.round(x) + '|' + Math.round(y) + '|' + w + '|' + h, held);
         const c = G.ux, ga = c.globalAlpha; if (o.disabled) c.globalAlpha = ga * 0.55;
-        T.card(x, y + (held ? 1 : 0), w, h, { sel: held || q.sel });
+        T.card(x, y + dy + (held ? 1 : 0), w, h, { sel: held || q.sel });
         c.globalAlpha = ga;
         const size = o.size || 9, col = o.disabled ? '#8fa49e' : C.ink;
         if (label) txt(label, x + w / 2, y + h / 2 + size * 0.36 - (o.sub ? 4 : 0), { size, bold: true, align: 'center', color: col });

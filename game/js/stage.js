@@ -725,12 +725,44 @@
     return { frac: (m - (st ? G.MARKS[st - 1] : 0)) / (G.MARKS[st] - (st ? G.MARKS[st - 1] : 0)), col: G.EL[w.branch].col, txt: G.EL[w.branch].name + ' · ' + G.STAGE_NAMES[st] + ' ' + Math.floor(m) + '/' + G.MARKS[st] };
   }
   G.markInfo = markInfo;
+  // Gọi khi nhặt linh khí (js/combat.js): hẹn lúc viên linh khí bay tới ô vũ khí thì ô loé sáng.
+  G.flashMarks = function () { if (S) S.markFlashAt = (G.time || 0) + 0.45; };
 
+  // Thanh máu nhỏ trên đầu quái: chỉ hiện ít giây sau khi quái trúng đòn (tinh anh: hiện suốt khi đã mất máu), có phần tụt dần.
+  // Thanh mảnh (2 điểm ảnh) nằm trên đầu, không đè vùng báo nguy hiểm dưới sàn. Cường độ theo G.VFX.giaoDien.
+  const MOBHP = new WeakMap();
+  function mobBars(W) {
+    const gd = G.VFX ? +G.VFX.giaoDien : 1;
+    if (!(gd > 0) || !G.theme || !G.theme.lagOf) return;
+    const c = G.ux, ga = c.globalAlpha, now = G.time || 0, cam = W.cam || 0;
+    for (const e of W.ents) {
+      if (!e || e.dead || !(e.maxhp > 0)) continue;
+      let m = MOBHP.get(e);
+      if (!m) { m = { hp: e.hp, at: -9 }; MOBHP.set(e, m); }
+      if (e.hp < m.hp - 1e-6) m.at = now;
+      m.hp = e.hp;
+      const frac = G.clamp(e.hp / e.maxhp, 0, 1), st = G.theme.lagOf(e, frac); // gọi mỗi khung để phần tụt dần luôn theo kịp
+      const elite = e.role === 'elite', age = now - m.at;
+      if (!(age < 2.4 || (elite && e.hp < e.maxhp))) continue;
+      const a = elite && e.hp < e.maxhp ? 1 : age < 1.9 ? 1 : 1 - (age - 1.9) / 0.5;
+      if (a <= 0) continue;
+      const bw = elite ? 26 : 16, x = Math.round(e.x - cam - bw / 2), y = Math.round(e.y - (e.h || 24) * (e.art ? 1 : e.scale || 1) - 4); // giữa đỉnh đầu và biểu tượng hệ (js/linhkhi.js)
+      c.globalAlpha = ga * a * Math.min(1, gd);
+      c.fillStyle = 'rgba(14,8,8,0.85)'; c.fillRect(x - 1, y - 1, bw + 2, 4);
+      const fw = Math.round(bw * st.shown), lw = Math.round(bw * st.lag);
+      if (lw > fw) { c.fillStyle = st.hit > 0 ? '#fff6e0' : '#ffd98a'; c.fillRect(x + fw, y, lw - fw, 2); }
+      c.fillStyle = elite ? '#ff8a3a' : '#e8483a'; c.fillRect(x, y, fw, 2);
+      c.fillStyle = elite ? '#ffc890' : '#ff9a8a'; c.fillRect(x, y, fw, 1);
+    }
+    c.globalAlpha = ga;
+  }
   function drawHud() {
     const W = S.W, P = S.P, c = G.ux;
+    if (S.mode === 'play' && W.ents) mobBars(W);
+    if (G.doRoi && G.doRoi.veBay) G.doRoi.veBay(); // đồ vừa nhặt bay vào ô / hiện trên đầu (vẽ trước ô giao diện)
     // máu, mana
     const T = G.theme;
-    T.bar(6, 3, 112, 'hp', P.hp / P.maxhp, Math.ceil(P.hp) + '/' + P.maxhp, { h: 9 });
+    T.bar(6, 3, 112, 'hp', P.hp / P.maxhp, Math.ceil(P.hp) + '/' + P.maxhp, { h: 9, lag: P }); // lag: phần máu vừa mất tụt dần (js/ui_theme.js); khoá theo em bé của lượt chơi này
     T.bar(6, 13, 100, 'mana', P.mana / P.maxmana, null, { h: 7 });
     const canDrink = P.potions > 0 && !W.noPotion;
     const BA = G.btnArt; // bộ nút riêng (js/btn_art.js)
@@ -761,13 +793,22 @@
       ui.text(rar.name + (w.sharpen ? ' +' + w.sharpen : ''), x + 51, 14, { size: 7, align: 'right', bold: on, color: rar.col });
       ui.text(G.STAGE_NAMES[G.wStage(w)], x + 27, 29.5, { size: 6.5, align: 'center', color: w.branch ? G.EL[w.branch].col : '#b8b0a0' });
       ui.bar(x + 3, 32.5, 48, 3, mi.frac, mi.col);
+      // linh khí vừa bay tới ô vũ khí đang cầm: ô loé sáng màu hệ, viền sáng nở ra (VFX Phase 5)
+      const fa = on && S.markFlashAt != null ? G.time - S.markFlashAt : -1;
+      if (fa >= 0 && fa < 0.32) {
+        const q = fa / 0.32, ga = c.globalAlpha, col = (w.branch && G.EL[w.branch] && G.EL[w.branch].col) || '#fff3b0', gr = Math.round(q * 3);
+        c.globalAlpha = ga * 0.3 * (1 - q); c.fillStyle = '#fff8d8'; c.fillRect(x + 2, 5, 50, 31);
+        c.globalAlpha = ga * 0.8 * (1 - q); c.fillStyle = col;
+        c.fillRect(x - gr, 3 - gr, 54 + gr * 2, 1); c.fillRect(x - gr, 37 + gr, 54 + gr * 2, 1); c.fillRect(x - gr, 3 - gr, 1, 35 + gr * 2); c.fillRect(x + 53 + gr, 3 - gr, 1, 35 + gr * 2);
+        c.globalAlpha = ga;
+      }
     });
     if (G.lk) G.lk.hud(P, W); // ba vạch linh khí cạnh ô vũ khí, biểu tượng hệ trên đầu quái (js/linhkhi.js)
     if (P.weapons.length > 1 && S.tut && W.type === 'elite') ui.text('↑ Chạm để đổi vũ khí', 366, 24, { size: 7, align: 'right', bold: true, color: '#ffd27a' });
     // trùm: thanh máu và các lớp thích nghi nằm trên mặt tường sau, không che sàn
     const b = W.boss;
     if (b && !b.dead) {
-      T.bar(133, 7, 214, 'boss', b.hp / b.maxhp, null, { h: 9, marks: 1 });
+      T.bar(133, 7, 214, 'boss', b.hp / b.maxhp, null, { h: 9, marks: 1, lag: b });
       ui.rect(140 + 200 * 0.6, 9, 1, 5, '#fff0c4');
       ui.rect(140 + 200 * 0.3, 9, 1, 5, '#fff0c4');
       ui.text(b.name, 140, 24, { size: 7.5, bold: true, color: '#ffd9c8' });
@@ -814,8 +855,18 @@
       for (const l of lines) tw = Math.max(tw, G.ux.measureText(l).width);
       tw += 14;
       const lh = size + 3, bh = lines.length * lh + 5;
-      T.plate(Math.round(240 - tw / 2) - 2, by - 1, Math.round(tw) + 4, Math.round(bh) + 2);
-      lines.forEach((l, i) => ui.text(l, 240, by + size + 1.5 + i * lh, { size, align: 'center', bold: true, color: W.banner.col }));
+      // hiện ra: nảy từ trên xuống một nhịp; sắp hết: mờ dần (VFX Phase 5, theo G.VFX.giaoDien)
+      const gd = G.VFX ? +G.VFX.giaoDien : 1, bn = W.banner;
+      if (bn.t0 == null || bn.t > bn.t0) bn.t0 = bn.t;
+      const age = bn.t0 - bn.t, cx0 = G.ux, ga0 = cx0.globalAlpha;
+      let pdy = 0;
+      if (gd > 0) {
+        pdy = age < 0.14 ? -Math.round(5 * (1 - age / 0.14)) : age < 0.26 ? 1 : 0;
+        cx0.globalAlpha = ga0 * Math.min(1, age < 0.12 ? 0.3 + age / 0.12 * 0.7 : 1, bn.t < 0.3 ? Math.max(0, bn.t / 0.3) : 1);
+      }
+      T.plate(Math.round(240 - tw / 2) - 2, by - 1 + pdy, Math.round(tw) + 4, Math.round(bh) + 2);
+      lines.forEach((l, i) => ui.text(l, 240, by + pdy + size + 1.5 + i * lh, { size, align: 'center', bold: true, color: W.banner.col }));
+      cx0.globalAlpha = ga0;
     }
     // cửa dẫn tới Trùm còn khóa: ghi rõ còn thiếu gì, ngay cạnh cửa
     if (S.mode === 'play' && W.cleared && !S.trans) {
