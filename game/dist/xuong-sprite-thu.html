@@ -53,7 +53,7 @@
 </div><canvas id="ui"></canvas></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.10-2318";
+(window.G = window.G || {}).VERSION = "lk-2026.10.10-2320";
 
 // ===== js/data.js =====
 // Dữ liệu game: hệ, vũ khí, hero, quái, vùng, trang bị. Mọi con số cân bằng nằm ở đây.
@@ -8374,10 +8374,10 @@
 
   // Bộ khởi đầu của từng hero và màu áo.
   const HERO = {
-    smith: { name: 'Thợ Rèn', col: RED, outfit: { hat: 'trum_sung', robe: 'ao_trum', back: null, hand: 'bua_con', mask: 'lua' }, shadow: 7 },
-    hunter: { name: 'Thợ Săn', col: GRN, outfit: { hat: 'trum_nhon', robe: 'ao_trum', back: 'ong_ten', hand: null, mask: 'la' }, shadow: 7 },
-    healer: { name: 'Thầy Lang', col: BLU, outfit: { hat: 'trum_la', robe: 'ao_trum', back: 'ho_lo', hand: null, mask: 'xoay' }, shadow: 7 },
-    wrestler: { name: 'Đô Vật', col: ORG, outfit: { hat: 'trum_khan', robe: 'ao_trum', back: null, hand: 'gang_dong', mask: 'du' }, shadow: 7 },
+    smith: { name: 'Thợ Rèn', col: RED, outfit: { hat: 'trum_sung', robe: 'ao_trum', back: null, hand: 'bua_con', mask: null }, shadow: 7 },
+    hunter: { name: 'Thợ Săn', col: GRN, outfit: { hat: 'trum_nhon', robe: 'ao_trum', back: 'ong_ten', hand: null, mask: null }, shadow: 7 },
+    healer: { name: 'Thầy Lang', col: BLU, outfit: { hat: 'trum_la', robe: 'ao_trum', back: 'ho_lo', hand: null, mask: null }, shadow: 7 },
+    wrestler: { name: 'Đô Vật', col: ORG, outfit: { hat: 'trum_khan', robe: 'ao_trum', back: null, hand: 'gang_dong', mask: null }, shadow: 7 },
   };
   L.starter = {}; for (const k in HERO) L.starter[k] = HERO[k].outfit;
   // Nối món đồ đang có trong data.js (G.GEAR) sang các lớp mới.
