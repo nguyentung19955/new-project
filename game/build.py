@@ -56,7 +56,6 @@ def main():
         sys.exit('index.html không nạp tệp JS nào')
     parts = []
     custom = custom_sprites()
-    rigs = chibi_rigs()
     for src in srcs:
         if src.startswith(('http:', 'https:', '//')) or 'tests/' in src or 'bot' in os.path.basename(src):
             sys.exit('Không được đóng gói tệp này: ' + src)
@@ -64,9 +63,6 @@ def main():
         if src == 'js/sprite_custom.js' and custom:
             data = json.dumps(custom, ensure_ascii=False, separators=(',', ':'))
             parts.append('// ===== art/custom (hình tự vẽ, Xưởng Sprite) =====\n(window.G = window.G || {}).customSpriteData = ' + data + ';\n')
-        if src == 'js/chibi_rig.js' and rigs:
-            data = json.dumps(rigs, ensure_ascii=False, separators=(',', ':'))
-            parts.append('// ===== art/chibi (hình chibi khung xương) =====\n(window.G = window.G || {}).chibiRigData = ' + data + ';\n')
         parts.append('// ===== ' + src + ' =====\n' + code.rstrip() + '\n')
     js = '\n'.join(parts)
     # Không để chuỗi nào trong JS đóng thẻ script sớm.
@@ -85,8 +81,6 @@ def main():
         print('Đã ghi dist/%s (%d KB, %d tệp JS)' % (name, len(text.encode('utf-8')) // 1024, len(srcs)))
     if custom:
         print('Đã nhúng %d hình tự vẽ: %s' % (len(custom), ', '.join(t['ma'] for t in custom)))
-    if rigs:
-        print('Đã nhúng %d hình chibi khung xương: %s' % (len(rigs), ', '.join(t['ma'] for t in rigs)))
     build_tool(full)
 
 
@@ -136,37 +130,6 @@ def custom_sprites():
         if not isinstance(t.get('dong_tac'), dict) or 'idle' not in t['dong_tac']:
             sys.exit('art/custom/%s thiếu động tác đứng thở' % name)
         out.append({k: t[k] for k in RUNTIME_KEYS if k in t})
-    return out
-
-
-# ---------- Hình chibi khung xương (game/art/chibi/*.rig.json, js/chibi_rig.js đọc) ----------
-CHIBI = os.path.join(ROOT, 'art', 'chibi')
-RIG_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'thay_cho', 'khung', 'anh', 'cao', 'goc', 'manh', 'dong_tac')
-
-
-def chibi_rigs():
-    """Đọc game/art/chibi/*.rig.json, kiểm tra rồi giữ phần game cần."""
-    out = []
-    if not os.path.isdir(CHIBI):
-        return out
-    for name in sorted(os.listdir(CHIBI)):
-        if not name.endswith('.rig.json'):
-            continue
-        try:
-            with open(os.path.join(CHIBI, name), encoding='utf-8') as f:
-                t = json.load(f)
-        except Exception as e:
-            sys.exit('Tệp chibi hỏng: art/chibi/%s (%s)' % (name, e))
-        ma = t.get('ma')
-        if t.get('loai') != 'linh-khi-rig':
-            sys.exit('art/chibi/%s không phải tệp linh-khi-rig (thiếu loai)' % name)
-        if not isinstance(ma, str) or not re.match(r'^[A-Za-z0-9_-]{1,40}$', ma):
-            sys.exit('art/chibi/%s có mã sai (chỉ chữ, số, - _ ; tối đa 40 ký tự)' % name)
-        if not re.match(r'^data:image/png;base64,[A-Za-z0-9+/=]+$', str(t.get('anh', ''))):
-            sys.exit('art/chibi/%s thiếu ảnh PNG' % name)
-        if not isinstance(t.get('manh'), list) or not t['manh']:
-            sys.exit('art/chibi/%s thiếu danh sách mảnh' % name)
-        out.append({k: t[k] for k in RIG_KEYS if k in t})
     return out
 
 
@@ -265,53 +228,5 @@ def check(full, frag, js):
         sys.exit('Đóng gói thất bại:\n- ' + '\n- '.join(errs))
 
 
-# ---------- Xưởng Rối (tools/xuong-roi): ráp nhân vật chibi khung xương, xuất tệp linh-khi-rig ----------
-ROI = os.path.join(os.path.dirname(ROOT), 'tools', 'xuong-roi')
-
-
-def ds_quai_roi():
-    """Danh sách quái trong game (mã, tên, vùng) lấy từ js/monster_art.js, cho ô "thay cho quái nào"."""
-    try:
-        src = read('js/monster_art.js')
-    except OSError:
-        return []
-    out = []
-    for m in re.finditer(r"^def\('([A-Za-z0-9_]+)',\s*\{\s*ten:\s*'([^']+)',\s*vung:\s*'([^']+)'", src, re.M):
-        out.append({'id': m.group(1), 'ten': m.group(2), 'vung': m.group(3)})
-    return out
-
-
-def build_xuong_roi():
-    """dist/xuong-roi.html: một tệp tự chứa (giao diện + tools/xuong-roi/*.js + game/js/chibi_rig.js)."""
-    page_path = os.path.join(ROI, 'index.html')
-    if not os.path.isfile(page_path):
-        return
-    quai = ds_quai_roi()
-    write(os.path.join(ROI, 'ds-quai.js'), '// TỆP ĐƯỢC TẠO BỞI game/build.py: danh sách quái trong game cho Xưởng Rối.\nwindow.XR_QUAI = '
-          + json.dumps(quai, ensure_ascii=False, separators=(',', ':')) + ';\n')
-    with open(page_path, encoding='utf-8') as f:
-        page = f.read()
-    parts = []
-    for src in re.findall(r'<script src="([^"]+)"></script>', page):
-        path = os.path.normpath(os.path.join(ROI, src))
-        if src.endswith('chibi_rig.js') and not os.path.isfile(path):
-            path = os.path.join(ROI, 'chibi_tam.js')  # bản tạm khi game chưa có bộ vẽ chibi
-        if not os.path.isfile(path):
-            sys.exit('Xưởng Rối thiếu tệp: ' + src)
-        with open(path, encoding='utf-8') as f:
-            parts.append('// ===== ' + os.path.relpath(path, os.path.dirname(ROOT)) + ' =====\n' + f.read().rstrip() + '\n')
-    import hashlib
-    ma_ban = hashlib.sha1((page + ''.join(parts)).encode('utf-8')).hexdigest()[:6]  # đổi khi mã công cụ hoặc chibi_rig.js đổi
-    js = ('// Xưởng Rối (tools/xuong-roi). TỆP ĐƯỢC TẠO BỞI game/build.py, đừng sửa tay.\n'
-          + 'window.XR_MA_BAN = ' + json.dumps(ma_ban) + ';\n' + ''.join(parts))
-    html = re.sub(r'<script src="[^"]+"></script>\s*', '', page)
-    html = html.replace('</body>', '<script>\n' + safe_js(js) + '</script>\n</body>')
-    dest = os.path.join(DIST, 'xuong-roi.html')
-    check_tool(html, dest)
-    write(dest, html)
-    print('Đã ghi dist/xuong-roi.html (%d KB, %d quái)' % (len(html.encode('utf-8')) // 1024, len(quai)))
-
-
 if __name__ == '__main__':
     main()
-    build_xuong_roi()

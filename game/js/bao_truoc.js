@@ -255,10 +255,9 @@
       if (B[2] <= B[0]) return;
       need = true;
       // từ toạ độ thế giới sang điểm ảnh #world (đang có phép dời của khung)
-      // (SB tính theo đơn vị game; canvas nét cao có G.wk điểm ảnh cho mỗi đơn vị)
-      const m = c.getTransform(), w = c.canvas, K = G.wk || 1;
-      const x = clamp(Math.floor(B[0] + m.e) - 2, 0, G.W), y = clamp(Math.floor(B[1] + m.f) - 2, 0, G.H);
-      const x1 = clamp(Math.ceil(B[2] + m.e) + 2, 0, G.W), y1 = clamp(Math.ceil(B[3] + m.f) + 2, 0, G.H);
+      const m = c.getTransform(), w = c.canvas;
+      const x = clamp(Math.floor(B[0] + m.e) - 2, 0, w.width), y = clamp(Math.floor(B[1] + m.f) - 2, 0, w.height);
+      const x1 = clamp(Math.ceil(B[2] + m.e) + 2, 0, w.width), y1 = clamp(Math.ceil(B[3] + m.f) + 2, 0, w.height);
       if (x1 <= x || y1 <= y) { need = false; return; }
       SB[0] = x; SB[1] = y; SB[2] = x1 - x; SB[3] = y1 - y;
       if (filt == null) filt = makeFilter();
@@ -266,19 +265,14 @@
       if (!snapCv) snapCv = document.createElement('canvas');
       if (snapCv.width !== w.width || snapCv.height !== w.height) { snapCv.width = w.width; snapCv.height = w.height; }
       const s = snapCv.getContext('2d');
-      const X = Math.floor(x * K), Y = Math.floor(y * K), XW = Math.min(w.width, Math.ceil(x1 * K)) - X, YH = Math.min(w.height, Math.ceil(y1 * K)) - Y;
-      s.clearRect(X, Y, XW, YH);
-      s.drawImage(w, X, Y, XW, YH, X, Y, XW, YH);
+      s.clearRect(x, y, SB[2], SB[3]);
+      s.drawImage(w, x, y, SB[2], SB[3], x, y, SB[2], SB[3]);
       snapOk = true;
     } catch (e) { snapOk = false; need = false; }
   };
   // chỉ làm trong khung bao (x, y, w, h: điểm ảnh của #world) để nhẹ máy
   function maskOut(c, sc, x, y, w, h) {
     if (!filt || !snapOk) return false;
-    { // vào: đơn vị game -> điểm ảnh của #world (nét cao)
-      const K = G.wk || 1, X = Math.floor(x * K), Y = Math.floor(y * K);
-      w = Math.max(1, Math.ceil((x + w) * K) - X); h = Math.max(1, Math.ceil((y + h) * K) - Y); x = X; y = Y;
-    }
     const wv = G.wx.canvas, kx = c.canvas.width / wv.width, ky = c.canvas.height / wv.height;
     if (!mCv) { mCv = document.createElement('canvas'); mCx = mCv.getContext('2d'); aCv = document.createElement('canvas'); aCx = aCv.getContext('2d'); }
     if (mCv.width < w || mCv.height < h) { mCv.width = aCv.width = Math.max(w, mCv.width); mCv.height = aCv.height = Math.max(h, mCv.height); }

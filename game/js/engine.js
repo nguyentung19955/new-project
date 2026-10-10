@@ -10,48 +10,6 @@
   G.wx.imageSmoothingEnabled = false;
   G.scale = 1;
 
-  // ---------- MÀN CHƠI NÉT CAO ----------
-  // Trước đây canvas #world chỉ có 480×270 điểm ảnh rồi phóng to kiểu pixel, nên hình mượt (chibi khung xương) bị vỡ.
-  // Nay canvas có kích thước thật = 480×270 × G.wk (G.wk = số điểm ảnh thật cho một đơn vị game, theo cỡ khung và mật độ
-  // điểm ảnh của máy, tối đa rộng NET_MAX). Mọi code vẽ cũ vẫn tính theo đơn vị game: setTransform / resetTransform /
-  // getTransform của G.wx được bọc để tự nhân / chia G.wk. Hình pixel cũ vẫn nét vuông (imageSmoothingEnabled = false),
-  // chỉ chibi tự bật làm mượt khi vẽ. Tắt: G.netCao = false (quay về đường cũ 480×270).
-  if (G.netCao === undefined) G.netCao = true;
-  const NET_MAX = 1920;
-  G.wk = 1;
-  (function boc(c) {
-    if (c._bocNet) return;
-    c._bocNet = true;
-    const st = c.setTransform.bind(c), gt = c.getTransform ? c.getTransform.bind(c) : null;
-    c.setTransformGoc = st;
-    c.setTransform = function (a, b, cc, d, e, f) {
-      const K = G.wk || 1;
-      if (a === undefined) return st(K, 0, 0, K, 0, 0);
-      if (a && typeof a === 'object') return st((a.a != null ? a.a : a.m11 != null ? a.m11 : 1) * K, (a.b || a.m12 || 0) * K, (a.c || a.m21 || 0) * K, (a.d != null ? a.d : a.m22 != null ? a.m22 : 1) * K, (a.e || a.m41 || 0) * K, (a.f || a.m42 || 0) * K);
-      return st(a * K, b * K, cc * K, d * K, e * K, f * K);
-    };
-    c.resetTransform = function () { const K = G.wk || 1; st(K, 0, 0, K, 0, 0); };
-    if (gt) c.getTransform = function () {
-      const m = gt(), K = G.wk || 1;
-      if (K === 1) return m;
-      return new DOMMatrix([m.a / K, m.b / K, m.c / K, m.d / K, m.e / K, m.f / K]);
-    };
-  })(G.wx);
-  function datCoWorld(s, dpr) {
-    let K = 1;
-    if (G.netCao) K = Math.max(1, Math.min(NET_MAX / G.W, s * dpr));
-    const w = Math.max(G.W, Math.round(G.W * K)), h = Math.max(G.H, Math.round(G.H * K));
-    if (world.width !== w || world.height !== h) {
-      world.width = w; world.height = h; // đổi cỡ canvas thì mất trạng thái bút: đặt lại
-      G.wk = w / G.W;
-      G.wx.imageSmoothingEnabled = false;
-      G.wx.setTransform(1, 0, 0, 1, 0, 0);
-    }
-    G.wk = world.width / G.W;
-    world.style.imageRendering = G.wk > 1 ? 'auto' : '';
-  }
-  G.datCoWorld = () => resize();
-
   // Khoá ngang: cầm máy dọc thì xoay cả khung game 90 độ để game luôn nằm ngang kín màn hình.
   // Trình duyệt không cho trang web tắt tự xoay của máy, nên ta tự xoay hình và tự đổi toạ độ ngón tay.
   const shell = document.getElementById('shell');
@@ -84,7 +42,6 @@
     uiCv.height = Math.max(1, Math.round(box.height * dpr));
     G.scale = cw / G.W;
     G.uiScale = G.scale * dpr;
-    datCoWorld(G.scale, dpr);
     // Lề trống quanh khung game, tính theo đơn vị của game. Nút cảm ứng tận dụng phần lề này.
     G.ox = (box.width - cw) / 2; G.oy = (box.height - ch) / 2; G.dpr = dpr;
     G.mx = G.ox / G.scale; G.my = G.oy / G.scale;
