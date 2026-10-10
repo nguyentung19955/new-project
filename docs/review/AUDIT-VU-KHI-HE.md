@@ -78,7 +78,7 @@ Số "trên giấy" là sát thương gốc của loại vũ khí (chưa tính c
 | Lúc chạm trong động tác | 0,135 / 0,135 / 0,21 giây | tên rời dây 0,17 giây | 0,15–0,23 giây | **0,36 giây** |
 | Sát thương mỗi nhát (giấy) | 9 / 9,5 / 16,2 | 11,4 (tên xuyên: con sau 35%) | 11,8 ×3 / 19,8 | 21,3 |
 | Tầm (điểm ảnh) | 32–40 | 180 (tên mạnh 250) | 60–62, quét vòng 44 | 32 |
-| Khoá người khi ra đòn | Đi chậm còn 40% trong lúc vung (mọi vũ khí, `combat.js` dòng 640); **Né huỷ được mọi đòn bất cứ lúc nào** (dòng 648–650) | như trái | như trái | như trái; giữ lấy đà đi chậm còn 45% |
+| Khoá người khi ra đòn | Đi chậm còn 40% trong lúc vung (mọi vũ khí, `combat.js` dòng 640); **Né huỷ được mọi đòn thường bất cứ lúc nào**, trừ lúc đang lướt/lao (Nhát lướt, Xốc tới) (dòng 589–611, 648–650) | như trái | như trái | như trái; giữ lấy đà đi chậm còn 45% |
 | Đòn giữ rồi thả | không có (giữ = chuỗi liên tục) | Tên mạnh 34,2, xuyên 2 | Xốc tới 23,5, **bất tử 0,16 giây** | Nện đất nấc 1: 21,3 vòng 30 + sóng; nấc 2: 26,6 vòng 38, choáng 0,7 + sóng |
 | Đẩy lùi | Nhát kết 10 | không | Quét vòng 8 | không (thay bằng khựng 0,4 giây) |
 | Đòn Đặc biệt (25 mana) | Trảm Nguyệt: vệt xuyên mọi quái, 18 → mỗi con sau ×0,7 | Mưa Tên: 3,9 × ~6 đợt vòng 40 | Phi Thương: 17,1 xuyên hàng, ghim con cuối choáng 1 giây, giáo bay về trúng lần nữa (trong lúc đó nút Đánh là cú đấm yếu) | Địa Chấn: vòng chấn 21,3 + vệt nứt 44,7 choáng 0,9 |
