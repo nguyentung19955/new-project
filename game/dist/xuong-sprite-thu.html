@@ -53,7 +53,7 @@
 </div><canvas id="ui"></canvas></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.11-0012";
+(window.G = window.G || {}).VERSION = "lk-2026.10.11-0014";
 
 // ===== js/data.js =====
 // Dữ liệu game: hệ, vũ khí, hero, quái, vùng, trang bị. Mọi con số cân bằng nằm ở đây.
@@ -19645,7 +19645,8 @@ MA._xong();
   SC.timVuKhi = function (o) {
     if (!o) return null;
     const b = 'vk-' + o.type + '-' + (o.family | 0), st = o.stage | 0;
-    return (o.branch && st && doSan(b + '-' + o.branch + '-' + st)) || (o.branch && st && doSan(b + '-' + o.branch)) || doSan(b);
+    // Mầm (giai đoạn 1): vẫn hình thường + hạt hệ; Thành hình (2) trở lên mới đổi sang hình vẽ theo hệ → 3 mức khác nhau rõ.
+    return (o.branch && st && doSan(b + '-' + o.branch + '-' + st)) || (o.branch && st >= 2 && doSan(b + '-' + o.branch)) || doSan(b);
   };
   // ----- BIẾN ĐỔI THEO HỆ (Lửa, Độc, Băng) cho vũ khí ảnh AI -----
   // Bản vẽ code đổi hình theo nhánh và giai đoạn (js/weapon_art.js). Ảnh AI chỉ có một hình, nên game tự biến đổi:
@@ -19737,9 +19738,22 @@ MA._xong();
       const X = (x0 + (x + 0.5) / N) / K, Y = (y0 + (y + 0.5) / N) / K, u = X * c + Y * s + V.cam[0], v = -X * s + Y * c + V.cam[1], i = Math.floor(u * N), j = Math.floor(v * N);
       if (i < 0 || j < 0 || i >= pw || j >= ph) continue;
       let col = src[j * pw + i]; if (!col) continue;
-      if (vien && sp.px[j * pw + i] === INK) col = vien; // viền bậc Lam/Tím/Vàng luôn ở viền ngoài cùng
       const n = parseInt(col.slice(1), 16), o = (y * CW + x) * 4;
       d[o] = (n >> 16) & 255; d[o + 1] = (n >> 8) & 255; d[o + 2] = n & 255; d[o + 3] = 255;
+    }
+    // Viền bậc Lam/Tím/Vàng: một vòng màu bậc dày 1 điểm ảnh game bao ngoài hình (ảnh AI không có viền một màu cố định để đổi màu).
+    if (vien) {
+      const vc = rgb(vien), A = new Uint8Array(CW * CH);
+      for (let i = 0; i < CW * CH; i++) A[i] = d[i * 4 + 3] ? 1 : 0;
+      let cur = A;
+      for (let it = 0; it < N; it++) {
+        const nx = cur.slice();
+        for (let y = 0; y < CH; y++) for (let x = 0; x < CW; x++) {
+          const i = y * CW + x; if (cur[i]) continue;
+          if ((x > 0 && cur[i - 1]) || (x < CW - 1 && cur[i + 1]) || (y > 0 && cur[i - CW]) || (y < CH - 1 && cur[i + CW])) { nx[i] = 2; const o = i * 4; d[o] = vc[0]; d[o + 1] = vc[1]; d[o + 2] = vc[2]; d[o + 3] = 255; }
+        }
+        cur = nx;
+      }
     }
     g.putImageData(id, 0, 0);
     r = { cv, dx: x0, dy: y0, w: W, h: H, c, s, k: K, glow: null };
