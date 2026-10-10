@@ -456,6 +456,7 @@ function dangKyHet(bo) {
     }
     for (const key in THAN) {
       const t = THAN[key], ma = 'em-be-' + key, ky = 'than' + t.tam.length + JSON.stringify(t.neo || {});
+      if (key === S.key && S.than !== 'ai') { if (dk[ma]) { try { SC.remove(ma); } catch (e) { /* bỏ qua */ } delete dk[ma]; } continue; } // đang xem thân code: game không dùng thân AI
       if (dk[ma] === ky) continue;
       try { const c = sao(t); c.ma = ma; SC.add(c); dk[ma] = ky; } catch (e) { /* bỏ qua */ }
     }
@@ -554,12 +555,12 @@ function diemNhanVat(G) {
   const n = soKhung(G), i = clamp(S.khung, 0, n - 1);
   if (coAPI() && G === GAME.moi) {
     try {
-      const o = oVe(G, null, 0, 0), r = G.spriteCustom.diemNhanVat(S.key, o);
-      const d = r && (r.diem || r);
-      if (d && typeof d === 'object' && Object.keys(d).some((k) => so2(d[k]))) {
-        const kq = { diem: {}, uoc: Object.assign({}, r.uoc_luong || r.uocLuong || r.uoc || {}), gocThan: +r.gocThan || +r.goc || 0, gocDau: +r.gocDau || +r.gocThan || +r.goc || 0, api: true };
-        for (const k in d) if (so2(d[k])) kq.diem[k] = so2(d[k]);
-        if (Array.isArray(kq.uoc)) kq.uoc = Object.fromEntries(kq.uoc.map((k) => [k, 1]));
+      // API của game (js/sprite_custom.js): diemNhanVat(o) -> { diem, nguon: { tên: 'xuong' | 'tep' | 'uoc-luong' }, goc: { than, dau } }
+      const o = oVe(G, outfitMac(), 0, 0), r = G.spriteCustom.diemNhanVat(o);
+      if (r && r.diem) {
+        const kq = { diem: {}, uoc: {}, gocThan: (r.goc && +r.goc.than) || 0, gocDau: (r.goc && +r.goc.dau) || 0, api: true };
+        for (const k in r.diem) if (so2(r.diem[k])) kq.diem[k] = so2(r.diem[k]);
+        for (const k in r.nguon || {}) if (r.nguon[k] === 'uoc-luong') kq.uoc[k] = 1;
         return kq;
       }
     } catch (e) { /* API khác dạng: tự tính */ }
@@ -600,9 +601,24 @@ function datMonTuTinh(ma, DN) {
     }
     kq.a = ca; kq.p = cp; kq.goc = goc; kq.sx = k * cap.sx; kq.sy = k * cap.sy;
   }
-  // 4. cộng chỉnh theo cặp
-  kq.p = [kq.p[0] + cap.dx, kq.p[1] + cap.dy]; kq.goc += cap.xoay;
+  // 4. cộng chỉnh theo cặp (dời theo hướng thân, như game)
+  const rr = (goc0 * Math.PI) / 180, ddx = cap.dx * Math.cos(rr) - cap.dy * Math.sin(rr), ddy = cap.dx * Math.sin(rr) + cap.dy * Math.cos(rr);
+  kq.p = [kq.p[0] + ddx, kq.p[1] + ddy]; kq.goc += cap.xoay;
   return kq;
+}
+// Có API datDo của game: hỏi chính game chỗ đặt (giống hệt game). Trả về cách đặt cùng dạng datMonTuTinh.
+function datMon(G, ma, DN) {
+  const D = datMonTuTinh(ma, DN);
+  if (!(coAPI() && G === GAME.moi)) return D;
+  try {
+    const o = oVe(G, outfitMac(), 0, 0), r = G.spriteCustom.datDo(o, ma);
+    if (!r) return D;
+    D.api = r; D.an = !!r.an || r.hien === false; D.lop = r.lop || D.lop; D.chung = r.diem_chung || []; D.che = D.chung.length ? 'diem' : 'cu';
+    D.uocApi = !!r.uoc_luong; D.kep = false;
+    if (r.bien_the && MON[r.bien_the]) D.M = MON[r.bien_the];
+    if (r.x != null) { D.a = [0, 0]; D.p = [r.x, r.y]; D.goc = r.xoay || 0; D.sx = r.sx || 1; D.sy = r.sy || 1; }
+  } catch (e) { /* API lỗi: dùng cách tự tính */ }
+  return D;
 }
 // Chỉnh theo cặp có làm gì không (để món đặt kiểu cũ vẫn chỉnh được: vẽ riêng lớp đồ của game rồi dời/xoay)
 const capCoDoi = (c) => c && (c.dx || c.dy || c.xoay || c.sx !== 1 || c.sy !== 1 || c.an || c.lop);
@@ -658,7 +674,7 @@ function dungCanh(G, b, canh) {
   c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, b.width, b.height); c.setTransform(NB, 0, 0, NB, 0, 0); c.imageSmoothingEnabled = false;
   const hero = dangDungAI() && spAI(G) ? G.art.hero : G.art.heroCode || G.art.hero;
   const DN = diemNhanVat(G), ds = monDangMac().filter((ma) => !S.an[ma]);
-  const dat = ds.map((ma) => datMonTuTinh(ma, DN));
+  const dat = ds.map((ma) => datMon(G, ma, DN));
   const ve = (outfit, an) => { try { const o = oVe(G, outfit, FX, FY); if (an) o.noShadow = true; hero.call(G.art, c, o); } catch (e) { /* bỏ qua khung lỗi */ } };
   if (canh === 'goc') { ve(outfitMac(null, new Set(ds))); return { DN, dat }; }
   if (canh === 'truoc' || (canh === 'kq' && coAPI() && G === GAME.moi)) { ve(outfitMac()); return { DN, dat }; } // game tự đặt hết
@@ -751,7 +767,7 @@ function veDiemLen(g, kq, x0, Z) {
     }
   }
 }
-function sanSang(G) { let n = 0; try { for (const k in G.spriteCustom.do) if (G.spriteCustom.do[k].ready) n++; for (const k in G.spriteCustom.ds) if (G.spriteCustom.ds[k].ready) n += 100; } catch (e) { n = -1; } return n; }
+function sanSang(G) { let n = 0; try { for (const k in G.spriteCustom.do) if (G.spriteCustom.do[k].ready) n++; for (const k in G.spriteCustom.ds) if (G.spriteCustom.ds[k].ready) n += 100; n += ':' + (G.spriteCustom.ghepVer || 0); } catch (e) { n = -1; } return n; }
 function choAnh() { for (const ma in MON) if (!MON[ma].img) return true; return false; }
 let demDoi = 0; // tăng mỗi lần sửa để vẽ lại
 const doi = () => { demDoi++; luuNhap(); capNhatMoi(); veCap(); veMonB(); };
@@ -774,6 +790,7 @@ function canhBao(kq) {
         ds.push(['', ten + ': ' + (dm && Object.keys(dm).length ? 'điểm của món không trùng tên điểm nào của thân' : 'món chưa có điểm neo (đặt ở mục 3b)') + ' → đang đặt kiểu cũ. Món này chưa hiệu chỉnh cho ' + nv + '.']);
       } else if (!cap || !cap.da_chinh) ds.push(['', ten + ': khớp theo ' + D.chung.map((k) => TEN_DIEM[k]).join(', ') + '. Món này chưa hiệu chỉnh cho ' + nv + ' (bấm "Lưu cho cặp này" khi đã ưng).']);
       else ds.push(['ok', ten + ': đã chỉnh cho ' + nv + '.']);
+      if (D.uocApi && dangDungAI()) ds.push(['', ten + ': điểm đang ước lượng ở khung này.']);
       if (D.kep) ds.push(['', ten + ': phải co giãn hoặc xoay quá giới hạn (0,85–1,15, ±20°) mới khớp hết các điểm: nên vẽ lại món hoặc dùng ảnh riêng cho ' + nv + '.']);
     }
     if (coAPI()) ds.push(['ok', 'Kết quả do chính game vẽ (game đã có hệ ghép mới).']);
@@ -791,7 +808,7 @@ function nutNhom(id, ds, lay, dat) {
   danhDauNhom(id, lay());
 }
 function danhDauNhom(id, v) { for (const b of $(id).children) { b.classList.toggle('chon', b.dataset.k === String(v)); b.setAttribute('aria-pressed', b.dataset.k === String(v)); } }
-function chonNhanVat(k) { S.key = k; S.than = THAN[k] ? 'ai' : 'code'; DUNG = null; capNhatThan(); dungChep(); veCap(); veMonB(); luuNhap(); }
+function chonNhanVat(k) { S.key = k; S.than = THAN[k] ? 'ai' : 'code'; DUNG = null; capNhatMoi(); capNhatThan(); dungChep(); veCap(); veMonB(); luuNhap(); }
 nutNhom('dsNhanVat', NHAN_VAT, () => S.key, chonNhanVat);
 nutNhom('dsDongTac', DONG_TAC, () => S.dt, (k) => { S.dt = k; S.khung = 0; tChay = performance.now(); veCap(); });
 nutNhom('dsCanh', [['kq', 'Kết quả ghép'], ['goc', 'Nhân vật gốc'], ['lop', 'Chỉ lớp đồ'], ['ss', 'So sánh trước / sau']], () => S.canh, (k) => { S.canh = k; });
@@ -804,8 +821,8 @@ function capNhatThan() {
   $('ttThan').textContent = co ? 'Có thân AI (em-be-' + S.key + ')' : 'Chưa có thân AI cho ' + TEN_NV[S.key] + ' (thả tệp em-be-' + S.key + '.sprite.json)';
   $('ttCheA').textContent = dangDungAI() ? '' : 'Đang xem thân vẽ bằng code: điểm do game tự tính ở từng khung, không cần đặt. Chọn "Thân AI" để đặt điểm cho thân AI.';
 }
-$('nutThanCode').onclick = () => { S.than = 'code'; capNhatThan(); };
-$('nutThanAI').onclick = () => { if (THAN[S.key]) { S.than = 'ai'; capNhatThan(); } };
+$('nutThanCode').onclick = () => { S.than = 'code'; capNhatThan(); capNhatMoi(); };
+$('nutThanAI').onclick = () => { if (THAN[S.key]) { S.than = 'ai'; capNhatThan(); capNhatMoi(); } };
 $('nutKhungTruoc').onclick = () => { S.chay = false; S.khung = (S.khung - 1 + soKhung(GAME.moi)) % soKhung(GAME.moi); nutChay(); veCap(); };
 $('nutKhungSau').onclick = () => { S.chay = false; S.khung = (S.khung + 1) % soKhung(GAME.moi); nutChay(); veCap(); };
 $('nutChay').onclick = () => { S.chay = !S.chay; tChay = performance.now() - S.khung * 130; nutChay(); veCap(); };
@@ -1053,7 +1070,7 @@ S.than = THAN[S.key] ? 'ai' : 'code';
 capNhatThan(); dungOMac(); dungChep(); nutChay(); veDsTep(); veMonB();
 requestAnimationFrame(veXem);
 // Cho phép kiểm thử tự động đọc trạng thái (không ảnh hưởng người dùng)
-window.__ghep = { S, MON, THAN, GHEP, GAME, datMonTuTinh, diemNhanVat, coAPI, napTep, chuanGhep };
+window.__ghep = { S, MON, THAN, GHEP, GAME, datMonTuTinh, datMon, diemNhanVat, coAPI, napTep, chuanGhep };
 
 </script>
 </body>
