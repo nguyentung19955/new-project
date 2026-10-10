@@ -43,6 +43,15 @@ Trong lúc làm, một phiên khác thêm nút **tải 2 bản cùng lúc** (b�
 - Trang không báo lỗi nào khi chạy.
 - Các lần đẩy lên đều qua kiểm tra tự động (xanh).
 
+## Kiểm thêm: mọi phụ kiện đều có "net": 2
+
+Theo lời dặn "cả các phụ kiện khác cũng nên như thế", đã kiểm lại từng lô ở trang Đồ với ảnh mẫu. Cả 11 lô đều ra ĐẠT, **mọi món** đều có `"net": 2` và hình đúng gấp đôi cỡ trong game:
+- Vũ khí: Kiếm, Cung, Giáo, Búa (mỗi lô 10/10 món).
+- Trang phục, đủ 6 lô: Mũ (13), Áo (13), Đồ đeo lưng (6), Bùa và vật cầm tay (10), Dấu mặt nạ (5), Cánh (4).
+- Vật phẩm: 14/14 món.
+Trang Anh hùng: 4 em bé và cả 7 người làng đều ra `"net": 2`, cỡ đúng. Trang Quái và Hiệu ứng cũng vậy (đã thử ở trên).
+Khi bấm tải, tệp chính `<mã>.sprite.json` luôn là bản nét gấp đôi; tệp `<mã>.thuong.sprite.json` là bản thường để dự phòng. Không phải sửa thêm mã.
+
 ## Bạn cần làm gì
 
 Không cần làm gì thêm. Lần sau tách ảnh cứ để Độ nét là Gấp đôi, tải file và gửi cho Claude như thường lệ.
