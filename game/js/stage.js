@@ -726,11 +726,40 @@
   }
   G.markInfo = markInfo;
 
+  // Thanh máu nhỏ trên đầu quái: chỉ hiện ít giây sau khi quái trúng đòn (tinh anh: hiện suốt khi đã mất máu), có phần tụt dần.
+  // Thanh mảnh (2 điểm ảnh) nằm trên đầu, không đè vùng báo nguy hiểm dưới sàn. Cường độ theo G.VFX.giaoDien.
+  const MOBHP = new WeakMap();
+  function mobBars(W) {
+    const gd = G.VFX ? +G.VFX.giaoDien : 1;
+    if (!(gd > 0) || !G.theme || !G.theme.lagOf) return;
+    const c = G.ux, ga = c.globalAlpha, now = G.time || 0, cam = W.cam || 0;
+    for (const e of W.ents) {
+      if (!e || e.dead || !(e.maxhp > 0)) continue;
+      let m = MOBHP.get(e);
+      if (!m) { m = { hp: e.hp, at: -9, id: 'mob' + Math.random() }; MOBHP.set(e, m); }
+      if (e.hp < m.hp - 1e-6) m.at = now;
+      m.hp = e.hp;
+      const frac = G.clamp(e.hp / e.maxhp, 0, 1), st = G.theme.lagOf(m.id, frac); // gọi mỗi khung để phần tụt dần luôn theo kịp
+      const elite = e.role === 'elite', age = now - m.at;
+      if (!(age < 2.4 || (elite && e.hp < e.maxhp))) continue;
+      const a = elite && e.hp < e.maxhp ? 1 : age < 1.9 ? 1 : 1 - (age - 1.9) / 0.5;
+      if (a <= 0) continue;
+      const bw = elite ? 26 : 16, x = Math.round(e.x - cam - bw / 2), y = Math.round(e.y - (e.h || 24) * (e.art ? 1 : e.scale || 1) - 4); // giữa đỉnh đầu và biểu tượng hệ (js/linhkhi.js)
+      c.globalAlpha = ga * a * Math.min(1, gd);
+      c.fillStyle = 'rgba(14,8,8,0.85)'; c.fillRect(x - 1, y - 1, bw + 2, 4);
+      const fw = Math.round(bw * st.shown), lw = Math.round(bw * st.lag);
+      if (lw > fw) { c.fillStyle = st.hit > 0 ? '#fff6e0' : '#ffd98a'; c.fillRect(x + fw, y, lw - fw, 2); }
+      c.fillStyle = elite ? '#ff8a3a' : '#e8483a'; c.fillRect(x, y, fw, 2);
+      c.fillStyle = elite ? '#ffc890' : '#ff9a8a'; c.fillRect(x, y, fw, 1);
+    }
+    c.globalAlpha = ga;
+  }
   function drawHud() {
     const W = S.W, P = S.P, c = G.ux;
+    if (S.mode === 'play' && W.ents) mobBars(W);
     // máu, mana
     const T = G.theme;
-    T.bar(6, 3, 112, 'hp', P.hp / P.maxhp, Math.ceil(P.hp) + '/' + P.maxhp, { h: 9 });
+    T.bar(6, 3, 112, 'hp', P.hp / P.maxhp, Math.ceil(P.hp) + '/' + P.maxhp, { h: 9, lag: 'hp' }); // lag: phần máu vừa mất tụt dần (js/ui_theme.js)
     T.bar(6, 13, 100, 'mana', P.mana / P.maxmana, null, { h: 7 });
     const canDrink = P.potions > 0 && !W.noPotion;
     const BA = G.btnArt; // bộ nút riêng (js/btn_art.js)
@@ -767,7 +796,7 @@
     // trùm: thanh máu và các lớp thích nghi nằm trên mặt tường sau, không che sàn
     const b = W.boss;
     if (b && !b.dead) {
-      T.bar(133, 7, 214, 'boss', b.hp / b.maxhp, null, { h: 9, marks: 1 });
+      T.bar(133, 7, 214, 'boss', b.hp / b.maxhp, null, { h: 9, marks: 1, lag: 'boss' });
       ui.rect(140 + 200 * 0.6, 9, 1, 5, '#fff0c4');
       ui.rect(140 + 200 * 0.3, 9, 1, 5, '#fff0c4');
       ui.text(b.name, 140, 24, { size: 7.5, bold: true, color: '#ffd9c8' });

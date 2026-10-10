@@ -223,10 +223,33 @@
   // ---------- thanh máu, mana, kinh nghiệm, máu trùm ----------
   // kind: 'hp' | 'mana' | 'xp' | 'boss' (hoặc o.col, o.hi để tự chọn màu). label: chữ giữa thanh. o: { h, col, hi, marks: số vạch khắc }
   const BARC = { hp: ['#d0482f', '#f08a5a'], mana: ['#3f8fe0', '#8fc6ff'], xp: ['#d9a441', '#f6dc92'], boss: ['#b8452f', '#ff9a6a'] };
+  // Thanh máu tụt dần (VFX Phase 5): mất máu thì phần vừa mất còn hiện màu sáng một chút rồi rút theo sau;
+  // hồi máu thì phần được thêm hiện màu xanh lá rồi phần đỏ lấp dần vào, cả thanh sáng nhẹ lên.
+  // o.lag: tên riêng của thanh (vd 'hp', 'boss') để nhớ trạng thái giữa các khung hình. Cường độ theo G.VFX.giaoDien.
+  const LAG = new Map();
+  const nowS = () => (window.performance && performance.now ? performance.now() : Date.now()) / 1000;
+  function lagOf(id, frac) {
+    const now = nowS();
+    let st = LAG.get(id);
+    if (!st && LAG.size > 160) for (const [k, v] of LAG) if (now - v.last > 5) LAG.delete(k); // dọn thanh của quái đã chết
+    if (!st || now - st.last > 0.6) { st = { shown: frac, lag: frac, hold: 0, hit: 0, heal: 0, last: now }; LAG.set(id, st); return st; } // lâu không vẽ (thanh mới): không diễn
+    const dt = Math.min(0.1, Math.max(0, now - st.last)); st.last = now;
+    if (frac < st.shown - 1e-4) { st.lag = Math.max(st.lag, st.shown); st.shown = frac; st.hold = 0.42; st.hit = 0.14; }
+    else if (frac > st.shown + 1e-4) { st.heal = 0.7; st.shown = Math.min(frac, st.shown + Math.max(0.12 * dt, (frac - st.shown) * Math.min(1, dt * 4))); }
+    if (st.hold > 0) st.hold -= dt;
+    else if (st.lag > st.shown) st.lag = Math.max(st.shown, st.lag - Math.max(0.3 * dt, (st.lag - st.shown) * 2.6 * dt));
+    if (st.lag < st.shown) st.lag = st.shown;
+    if (st.hit > 0) st.hit -= dt;
+    if (st.heal > 0) st.heal -= dt;
+    return st;
+  }
   T.bar = function (x, y, w, kind, frac, label, o) {
     o = o || {};
     x = Math.round(x); y = Math.round(y); w = Math.round(w);
     const h = o.h || 9, cap = h >= 7 ? 7 : 2, inner = w - cap * 2;
+    const gd = G.VFX ? +G.VFX.giaoDien : 1, ls = o.lag && gd > 0 && h >= 6 ? lagOf(o.lag, G.clamp(frac || 0, 0, 1)) : null;
+    const trueFrac = frac;
+    if (ls) frac = ls.shown;
     const fw = Math.round(inner * G.clamp(frac || 0, 0, 1)), cols = o.col ? [o.col, o.hi || lighten(o.col, 0.35)] : BARC[kind] || BARC.hp;
     if (h < 6) { // thanh mỏng (dấu ấn, kinh nghiệm nhỏ): viền tối, hai đầu đồng
       const iw = Math.round((w - 2) * G.clamp(frac || 0, 0, 1));
@@ -243,8 +266,24 @@
       if (cap >= 7) for (const ex of [2, w - 6]) { R(ex, (h >> 1) - 1, 4, 3, C.dk); P(ex + 1, h >> 1, C.gold); P(ex + 2, h >> 1, C.gold); } // đinh tán hai đầu
     });
     put(cv, x, y);
+    if (ls) {
+      const c = G.ux, ga = c.globalAlpha, lw = Math.round(inner * G.clamp(ls.lag, 0, 1)), tw = Math.round(inner * G.clamp(trueFrac || 0, 0, 1));
+      if (lw > fw) { // phần vừa mất: chớp trắng rồi vàng nhạt, rút dần về
+        c.fillStyle = ls.hit > 0 ? '#fff6e0' : '#ffd98a'; c.globalAlpha = ga * Math.min(1, 0.9 * gd);
+        c.fillRect(x + cap + fw, y + 2, lw - fw, h - 4);
+        c.fillStyle = '#ffffff'; c.globalAlpha = ga * 0.5 * Math.min(1, gd); c.fillRect(x + cap + fw, y + 2, lw - fw, 1);
+      }
+      if (tw > fw) { // phần đang hồi: xanh lá, lấp dần
+        c.fillStyle = '#7fe060'; c.globalAlpha = ga * Math.min(1, 0.85 * gd); c.fillRect(x + cap + fw, y + 2, tw - fw, h - 4);
+        c.fillStyle = '#d8ffc0'; c.globalAlpha = ga * Math.min(1, gd); c.fillRect(x + cap + fw, y + 2, tw - fw, 1);
+      }
+      if (ls.heal > 0 && fw > 0) { c.fillStyle = '#c8ffb0'; c.globalAlpha = ga * 0.3 * Math.min(1, gd) * Math.sin((ls.heal / 0.7) * Math.PI); c.fillRect(x + cap, y + 2, fw, h - 4); }
+      if (ls.hit > 0 && fw > 0) { c.fillStyle = '#ffffff'; c.globalAlpha = ga * 0.35 * Math.min(1, gd) * (ls.hit / 0.14); c.fillRect(x + cap, y + 2, fw, h - 4); }
+      c.globalAlpha = ga;
+    }
     if (label) txt(label, x + w / 2, y + h / 2 + 2.6, { size: o.size || 6.5, bold: true, align: 'center', color: '#fff' });
   };
+  T.lagOf = lagOf; // thanh máu nhỏ trên đầu quái (js/stage.js) dùng chung cách tụt dần
 
   // ---------- ô đồ bốn bậc ----------
   // rar: 0 Thường, 1 Lam, 2 Tím, 3 Vàng. o: { sel, dim }. Hình món đồ do nơi gọi vẽ lên sau, tâm tại (x + s/2, y + s/2).

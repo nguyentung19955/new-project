@@ -98,11 +98,16 @@ def main():
             c.grab().save(os.path.join(OUT, name + '.png'))
             c.ev("() => T.thaw()")
             c.grab(500).save(os.path.join(OUT, name + '-2.png'))
-        # HUD mất máu: trúng đòn lớn rồi chụp ngay (phần tụt dần còn đang chạy)
-        c.ev("""() => { const S = T.start(0, 1, 'A', 3); G.sim(60); const P = S.P; P.hp = Math.round(P.maxhp * 0.9); G.sim(30);
-           P.hp = Math.round(P.maxhp * 0.45); const W = G.getWorld(); if (W.boss) {} }""")
-        c.grab(120).save(os.path.join(OUT, 'hud-mat-mau.png'))
-        c.grab(700).save(os.path.join(OUT, 'hud-mat-mau-2.png'))
+        # HUD mất máu: em bé và quái mất máu cùng lúc, chụp ngay (phần tụt dần còn đang chạy), rồi chụp lúc đã rút xong, rồi lúc hồi máu
+        c.ev("""() => { const S = T.start(0, 1, 'A', 3); const W = S.W;
+           W.waves = [['rusher', 'shield', 'swarm', 'archer', 'elite']]; W.waveI = -1; W.waveT = 0.1;
+           for (let k = 0; k < 400 && W.ents.length < 4; k++) { G.sim(1); for (const e of W.ents) if (!e.shot) { e.shot = 1; e.hp = e.maxhp = e.maxhp * 6; } }
+           G.sim(30); const P = S.P; P.hp = P.maxhp; G.sim(10); P.hp = Math.round(P.maxhp * 0.55);
+           T.freeze(); G.scene.draw(); for (const e of W.ents) e.hp = e.maxhp * 0.3; }""")
+        c.grab(60).save(os.path.join(OUT, 'hud-mat-mau.png'))
+        c.grab(900).save(os.path.join(OUT, 'hud-mat-mau-2.png'))
+        c.ev("() => { const S = G.getRun(); S.P.hp = S.P.maxhp * 0.9; }")
+        c.grab(150).save(os.path.join(OUT, 'hud-hoi-mau.png'))
         # làng
         c.ev("() => { G.testSave({ lvl: 8 }); G.save.tut && (G.save.tut.done = true); G.setScene(G.Village); }")
         c.grab(800).save(os.path.join(OUT, 'lang.png'))
