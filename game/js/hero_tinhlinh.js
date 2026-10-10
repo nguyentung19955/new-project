@@ -1067,7 +1067,24 @@
     const S = new Spr(120, 112, 60, 74);
     drawKid(S, key, of, ps, only);
     S.finish();
+    vanhBe(S);
     return S.toCanvas(TINT[tintK] || null);
+  }
+  // Vành sáng (rim light) phía nguồn sáng (trên – bên phải, như bóng sẵn có của từng miếng): điểm ngay trong viền ngoài ở mép phải
+  // sáng thêm một nấc, mép trên sáng nhẹ (mép trên các miếng đã tự sáng). Chỉ đường bao ngoài (ngoài viền là khoảng trống), không đụng
+  // nét trong. Làm một lần lúc dựng khung (khung được nhớ), không tốn gì lúc vẽ. Cường độ G.VFX.vien (0 = như cũ).
+  const RIM = new Map();
+  function rimOf(c, k) { const key = c + k; let r = RIM.get(key); if (!r) { r = mixHex(c, '#fff6de', k); RIM.set(key, r); } return r; }
+  function vanhBe(S) {
+    const v = G.VFX && G.VFX.vien != null ? +G.VFX.vien : 1;
+    if (!(v > 0)) return;
+    const W = S.w, M = S.main, n = W * S.h, kr = 0.22 * Math.min(1.5, v), kt = 0.1 * Math.min(1.5, v);
+    for (let i = 2 * W + 2; i < n - 2 * W - 2; i++) {
+      const c = M[i];
+      if (!c || c === INK || S.nol[i] || c[0] !== '#' || c.length !== 7) continue;
+      if (M[i + 1] === INK && !M[i + 2]) M[i] = rimOf(c, kr);
+      else if (M[i - W] === INK && !M[i - 2 * W]) M[i] = rimOf(c, kt);
+    }
   }
   const ofKey = (of) => [of.hat, of.robe, of.back, of.hand, of.mask, of.wing ? of.wing.kind + of.wing.level : '', of.rar ? [of.rar.hat, of.rar.robe, of.rar.back, of.rar.hand].join('') : ''].join(',');
   // Trả về mọi thứ cần để vẽ một khung: hình bé, chỗ đặt, và thông tin vũ khí.
