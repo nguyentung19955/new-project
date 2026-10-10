@@ -15,6 +15,10 @@
   // Trùm kháng hệ X thì yếu với WEAK[X]
   G.WEAK = { fire: 'ice', ice: 'poison', poison: 'fire' };
 
+  // LƯU Ý (V35): "cd" dưới đây KHÔNG phải nhịp đánh thật trong trận. Nó chỉ là số dự phòng cho lối đánh cũ
+  // (combat.js startAttack/doHit, chỉ chạy khi thiếu moves.js). Nhịp thật là thời gian từng nhát trong G.MOVES (moves.js):
+  // kiếm 0,30 + 0,30 + 0,46 giây; giáo 0,38/0,34/0,34 + quét 0,52; búa 0,8; cung 0,38 đứng yên / 0,45 vừa chạy.
+  // Tính sát thương mỗi giây (DPS) phải dùng G.MOVES, không dùng "cd". Không đổi số ở đây.
   G.WTYPES = {
     sword: { name: 'Kiếm', dmg: 9, cd: 0.36, reach: 32, depth: 17, special: 'Trảm Nguyệt' },
     // Sửa góp ý 3 (càng chậm hoặc càng phải áp sát thì mỗi đòn càng mạnh): cung 9 -> 11 mỗi phát (vẫn dưới kiếm) nhưng tên xuyên và
