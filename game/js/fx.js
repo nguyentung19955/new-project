@@ -814,9 +814,10 @@
   // Dính hiệu ứng mới: một nhúm hạt nhỏ báo hệ
   api('status', (t, el) => {
     const B = bodyOf(t), y = t.y - B.h * 0.5;
-    if (el === 'fire') for (let i = 0; i < 4; i++) emit(9, t.x + rr(-B.w, B.w), y + rr(-4, 6), rr(-10, 10), rr(-60, -30), rr(0.25, 0.4), RAMP.fire, 4, -20, 0, null, 1);
-    else if (el === 'poison') for (let i = 0; i < 4; i++) emit(5, t.x + rr(-B.w, B.w), y, rr(-30, 30), rr(-70, -20), rr(0.4, 0.6), RAMP.poison, 2, 300, 0, t.y + rr(-1, 3), 1);
-    else for (let i = 0; i < 3; i++) emit(6, t.x + rr(-B.w, B.w), y + rr(-8, 8), 0, 0, rr(0.2, 0.35), RAMP.ice, 3, 0, 0, null, 1);
+    const n = Math.round(4 * hatK());
+    if (el === 'fire') for (let i = 0; i < n; i++) emit(9, t.x + rr(-B.w, B.w), y + rr(-4, 6), rr(-10, 10), rr(-60, -30), rr(0.25, 0.4), RAMP.fire, 4, -20, 0, null, 1);
+    else if (el === 'poison') for (let i = 0; i < n; i++) emit(5, t.x + rr(-B.w, B.w), y, rr(-30, 30), rr(-70, -20), rr(0.4, 0.6), RAMP.poison, 2, 300, 0, t.y + rr(-1, 3), 1);
+    else for (let i = 0; i < n - 1; i++) emit(6, t.x + rr(-B.w, B.w), y + rr(-8, 8), 0, 0, rr(0.2, 0.35), RAMP.ice, 3, 0, 0, null, 1);
   });
 
   // ---------- vùng báo trước của quái và trùm khi phát nổ ----------

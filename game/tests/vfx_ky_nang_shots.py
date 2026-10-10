@@ -23,7 +23,7 @@ LIB = r"""
   T.room = function (o) {
     o = o || {};
     G.rnd = G.srand(o.seed || 5);
-    G.testSave({ hero: o.hero || 'smith', lvl: 30, tier: 2, branch: o.el || null, marks: o.el ? 130 : 0 });
+    G.testSave({ hero: o.hero || 'smith', melee: o.melee, lvl: 30, tier: 2, branch: o.el || null, marks: o.el ? 130 : 0 });
     const hs = G.save.heroes[o.hero || 'smith'];
     if (o.cay) hs.ch = { cay: o.cay, n: Object.assign({}, o.n || {}) };
     G.MOVE_TIPS = {};
@@ -82,6 +82,9 @@ SCENES = [
     ('nguoi-doc', 'Em bé trúng độc: nhịp mất máu',
      "() => { const r = T.room({ shift: 0 }); T.P.st.poison = 4; T.P.dot = 3; return [T.P.x, T.P.y - 10]; }",
      [("T.run({}, 10)", ''), ("T.run({}, 10)", ''), ("T.P.dotT = 0.001; T.run({}, 2)", 'nhịp'), ("T.run({}, 6)", ''), ("T.run({}, 10)", ''), ("T.run({}, 10)", '')]),
+    ('dia-chan', 'Địa Chấn (búa, chiêu đặc biệt) và Nổ lan (vòng phép lửa)',
+     "() => T.room({ melee: 'hammer', el: 'fire', dum: [[40, 0], [56, 12], [60, -10]], shift: 30 })",
+     [("T.run({ specialP: true }, 8)", 'nện'), ("T.run({}, 6)", 'đỉnh'), ("T.run({}, 10)", 'lan'), ("T.run({}, 14)", 'tan'), ("for (const e of T.dum) G.applyStatus(e, 'fire', 50, 1); T.dum[0].hp = 1; G.damage(T.dum[0], 99, { el: 'fire' }); T.run({}, 4)", 'nổ lan'), ("T.run({}, 10)", 'tan')]),
     ('bao-truoc', 'Báo trước đòn quái: lấp dần, sáng lên trước khi ra đòn, mũi chỉ hướng, chớp, huỷ thì mờ dần',
      "() => { T.room({ shift: 60 }); const P = T.P; T.mk = (dy) => { const z = { shape: 'cone', x: P.x + 20, y: P.y + dy, ang: 0, r: 80, span: 0.9, t: 1.2, t0: 1.2, dmg: 0, life: 0.12, el: null }; const l = { shape: 'line', x: P.x + 20, y: P.y + 26 + dy, ang: 0, len: 90, w: 14, t: 1.2, t0: 1.2, dmg: 0, life: 0.12, el: 'fire' }; T.W.zones.push(z, l); return [z, l]; }; T.zz = T.mk(-6); P.y += 40; return [P.x - 40 + 60, P.y - 40 - 6 + 4]; }",
      [("T.run({}, 20)", 'u = 0,28'), ("T.run({}, 30)", 'u = 0,7'), ("T.run({}, 16)", 'u = 0,92 sáng lên'), ("T.run({}, 7)", 'ra đòn: chớp'), ("T.run({}, 14)", 'đã tắt'), ("T.zz = T.mk(-6); T.run({}, 30); for (const z of T.zz) { z.src = { dead: true }; z.cancel = true; } T.run({}, 3)", 'quái chết: huỷ, mờ dần')]),

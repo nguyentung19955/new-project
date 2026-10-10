@@ -248,6 +248,24 @@
   };
 
   // ====================================================================
+  // VÒNG PHÉP CHO CÁC KỸ NĂNG VÙNG KHÁC (bọc thêm, không đổi hình cũ)
+  // ====================================================================
+  function wrap(name, f) {
+    const f0 = fx[name];
+    if (!f0) return;
+    fx[name] = function (a, b, c, d, e) {
+      const r = f0(a, b, c, d, e);
+      if (!G.noRender && K.S()) { try { f(a, b, c, d, e); } catch (err) { fail(err); } }
+      return r;
+    };
+  }
+  // (Địa Chấn của búa đã có vòng sóng và vết nứt riêng: không thêm vòng phép để màn hình khỏi rối)
+  // Nổ lan (quái đang cháy chết thì nổ): vòng phép lửa đúng bán kính hình nổ
+  wrap('heBoom', (e, r) => runeOf(e.x, e.y, r * 0.9, K.pal('fire'), 0.45, 6, 2.6));
+  // Kết hợp hệ: Nổ khói, Sốc nhiệt
+  wrap('combo', (kind, t) => runeOf(t.x, t.y, 32, K.pal(kind === 'smoke' ? 'fire' : 'ice'), 0.5, 8, kind === 'smoke' ? 2.4 : -3));
+
+  // ====================================================================
   // MỖI KHUNG
   // ====================================================================
   let seenW = null, pDot = 0;
