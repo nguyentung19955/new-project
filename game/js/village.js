@@ -681,35 +681,46 @@
   function settings() {
     const sv = G.save, CL = G.cloud, CU = G.cloudUI;
     frame('Cổng làng: cài đặt');
-    if (T.btn(CX + 4, 72, 146, 26, 'Âm thanh: ' + (sv.sound ? 'bật' : 'tắt'), { size: 9 })) { sv.sound = !sv.sound; G.persist(); G.audioStart(); }
-    if (T.btn(CX + 154, 72, 146, 26, 'Toàn màn hình', { size: 9 })) {
+    if (T.btn(CX + 4, 70, 96, 22, 'Âm thanh: ' + (sv.sound ? 'bật' : 'tắt'), { size: 8.5 })) { sv.sound = !sv.sound; G.persist(); G.audioStart(); }
+    // V72: âm lượng 3 nấc (nhỏ → vừa → to → nhỏ…), lưu trong bản lưu; bấm là nghe thử luôn
+    const vol = sv.vol == null ? 2 : sv.vol, VN = G.VOL_NAMES || ['nhỏ', 'vừa', 'to'];
+    if (T.btn(CX + 104, 70, 96, 22, 'Âm lượng: ' + VN[vol], { size: 8.5, disabled: !sv.sound })) { sv.vol = (vol + 1) % 3; G.persist(); G.audioStart(); G.sfx('pick'); }
+    // V41: "Giảm hiệu ứng" — ít rung, ít hạt, chớp màn hình nhạt (js/vfx_cfg.js G.applyLowFx); tín hiệu báo nguy hiểm giữ nguyên
+    if (T.btn(CX + 4, 94, 146, 19, 'Giảm hiệu ứng: ' + (sv.lowFx ? 'bật' : 'tắt'), { size: 8.5 })) {
+      sv.lowFx = !sv.lowFx; if (G.applyLowFx) G.applyLowFx(sv.lowFx); G.persist();
+      say(sv.lowFx ? 'Đã giảm rung, chớp và hạt. Vùng báo nguy hiểm vẫn như cũ.' : 'Hiệu ứng trở lại đầy đủ.');
+    }
+    // V65: ghi vào bộ nhớ máy bị lỗi (đầy, bị chặn, chế độ ẩn danh…): báo rõ thay vì im lặng; không lỗi thì ghi chú cho nút Giảm hiệu ứng
+    if (G.saveFail) ui.para('⚠ Không lưu được trên máy này: tắt trang sẽ mất phần chơi mới.', CX + 154, 102, 146, { color: WARN, bold: true });
+    else ui.text('Ít rung, ít chớp, ít hạt', CX + 154, 107, { size: 7.5, color: SOFT });
+    if (T.btn(CX + 204, 70, 96, 22, 'Toàn màn hình', { size: 8.5 })) {
       try { const el = document.documentElement; if (document.fullscreenElement) document.exitFullscreen(); else el.requestFullscreen().catch(() => say('Thiết bị này không cho bật toàn màn hình.')); } catch (e) { say('Thiết bị này không cho bật toàn màn hình.'); }
     }
-    T.head('Lưu tiến trình', CX + 4, 113);
+    T.head('Lưu tiến trình', CX + 4, 123);
     if (CL) {
       const on = CL.online();
-      ui.text(CL.label(), CX + 4, 125, { size: 7.5, color: on && !CL.dirty ? GOOD : SOFT });
-      ui.text(on ? (CL.isGuest() ? 'Tài khoản: Khách. Đăng nhập Google để giữ tiến trình khi đổi máy.' : 'Tài khoản Google: ' + CL.who()) : 'Tiến trình luôn được lưu trong trình duyệt này.', CX + 4, 136, { size: 7, color: SOFT });
+      ui.text(CL.label(), CX + 4, 135, { size: 7.5, color: on && !CL.dirty ? GOOD : SOFT });
+      ui.text(on ? (CL.isGuest() ? 'Tài khoản: Khách. Đăng nhập Google để giữ tiến trình khi đổi máy.' : 'Tài khoản Google: ' + CL.who()) : 'Tiến trình luôn được lưu trong trình duyệt này.', CX + 4, 146, { size: 7, color: SOFT });
       if (on && CL.isGuest()) {
-        G.syncTaps.push({ x: CX + 4, y: 142, w: 146, h: 24, fn: () => titleLogin(CL) });
-        if (T.btn(CX + 4, 142, 146, 24, 'Đăng nhập Google', { size: 8.5, primary: true }) && !V.gBusy) {
+        G.syncTaps.push({ x: CX + 4, y: 152, w: 146, h: 24, fn: () => titleLogin(CL) });
+        if (T.btn(CX + 4, 152, 146, 24, 'Đăng nhập Google', { size: 8.5, primary: true }) && !V.gBusy) {
           V.gBusy = true; say('Đang mở cửa sổ đăng nhập Google…');
           CL.google().then((r) => say(r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google. Tiến trình được giữ nguyên.' : 'Đã đăng nhập Google.'), (e) => say('Chưa đăng nhập được: ' + e.message)).then(() => { V.gBusy = false; });
         }
-      } else T.btn(CX + 4, 142, 146, 24, on ? 'Đã đăng nhập Google' : 'Đăng nhập Google', { size: 8.5, disabled: true });
-    } else ui.para('Tiến trình được lưu trong trình duyệt này. Đổi máy hoặc xoá dữ liệu trình duyệt sẽ mất tiến trình.', CX + 4, 125, 292, { size: 7.5, color: SOFT });
-    if (CU && T.btn(CX + 154, 142, 146, 24, '✉ Góp ý', { size: 8.5 })) CU.feedback({});
+      } else T.btn(CX + 4, 152, 146, 24, on ? 'Đã đăng nhập Google' : 'Đăng nhập Google', { size: 8.5, disabled: true });
+    } else ui.para('Tiến trình được lưu trong trình duyệt này. Đổi máy hoặc xoá dữ liệu trình duyệt sẽ mất tiến trình.', CX + 4, 135, 292, { size: 7.5, color: SOFT });
+    if (CU && T.btn(CX + 154, 152, 146, 24, '✉ Góp ý', { size: 8.5 })) CU.feedback({});
     if (CL && CU && CL.isAdmin()) {
       const n = CL.adminNew;
-      if (T.btn(CX + 4, 170, 296, 22, '📥 Góp ý nhận được' + (n ? ' (' + n + ' mới)' : ''), { size: 8.5, gold: true, dot: !!n })) CU.inbox();
+      if (T.btn(CX + 4, 180, 296, 22, '📥 Góp ý nhận được' + (n ? ' (' + n + ' mới)' : ''), { size: 8.5, gold: true, dot: !!n })) CU.inbox();
     }
     if (!V.confirm) {
-      if (T.btn(CX + 4, 200, 200, 26, 'Xoá tiến trình, chơi lại từ đầu', { size: 8, danger: true })) V.confirm = true;
+      if (T.btn(CX + 4, 208, 200, 26, 'Xoá tiến trình, chơi lại từ đầu', { size: 8, danger: true })) V.confirm = true;
     } else {
-      ui.text('Chắc chắn xoá hết? Không khôi phục được.', CX + 4, 204, { size: 8.5, color: WARN, bold: true });
+      ui.text('Chắc chắn xoá hết? Không khôi phục được.', CX + 4, 210, { size: 8.5, color: WARN, bold: true });
       // "Thôi" nằm đúng chỗ nút xoá vừa bấm, để bấm đúp nhầm cũng không mất tiến trình
-      if (T.btn(CX + 4, 208, 120, 26, 'Thôi')) V.confirm = false;
-      else if (T.btn(CX + 132, 208, 120, 26, 'Xoá hết', { danger: true })) { G.resetSave(); V.confirm = false; goHub(); VS.enter({}); VS.say('Đã xoá tiến trình.'); return null; }
+      if (T.btn(CX + 4, 214, 120, 26, 'Thôi')) V.confirm = false;
+      else if (T.btn(CX + 132, 214, 120, 26, 'Xoá hết', { danger: true })) { G.resetSave(); V.confirm = false; goHub(); VS.enter({}); VS.say('Đã xoá tiến trình.'); return null; }
     }
     if (G.VERSION) ui.text('Phiên bản ' + G.VERSION, CX + CW - 2, 258, { size: 6.5, align: 'right', color: SOFT });
     return V.confirm ? 'Ấy ấy! Xoá là mất hết đấy, nghĩ kỹ chưa?' : 'Cốc cốc cốc! Làng nước nghe đây! Cần chỉnh gì cứ bảo anh.';
@@ -750,6 +761,8 @@
       if (V.tab === 'hub') {
         VS.drawHud();
         if (G.hanhTrang) G.hanhTrang.hubButton(); // nút Hành trang (túi vải) góc trên bên phải, js/hanh_trang.js
+        // V65: bộ nhớ máy không ghi được: dòng đỏ nhỏ sát đáy màn hình làng (chi tiết ở bảng Anh Mõ)
+        if (G.saveFail) ui.text('⚠ Không lưu được trên máy này', 240, 262, { size: 7, align: 'center', color: WARN, bold: true });
         const S = VS.state;
         if (!Object.keys(G.save.stars).length && S.hintT <= 0 && !S.near && !S.path && S.msgT <= 0) T.toastFit(240, 244, 'Tới bến đò bên phải, gặp Chú Lái Đò để vào ải', { size: 7.5 });
         // mẹo lần đầu có điểm chưởng: tới Cụ Đồ, thẻ Cây chưởng (tắt khi đã mở thẻ đó)
