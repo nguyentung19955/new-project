@@ -257,6 +257,9 @@
     const score = (q) => q.kind === 'skill' ? 1e9 + q.gain : q.kind === 'chuong' ? 1e8 + q.gain : (q.gain / (25 + q.val * 0.15 + q.missVal)) * (q.ok ? 4 : 1) * (q.miss && !q.where ? 0.05 : 1);
     list.sort((a, b) => score(b) - score(a));
     const tips = [], seen = {};
+    // V53: người làng / thẻ chưa mở với người mới thì không gợi ý tới đó (bot cân bằng vẫn dùng U.list đầy đủ)
+    const nStar = Object.keys(sv.stars || {}).length, mayOpen = !!(sv.stars && sv.stars['0-1']) || nStar >= 2;
+    list = list.filter((q) => !(q.kind === 'chuong' && nStar < 1) && !(q.go && q.go.who === 'may' && !mayOpen));
     for (const q of list) {
       const grp = { skill: 'skill', chuong: 'chuong', carry: 'carry', wear: 'wear', buy: 'new', craft: 'new' }[q.kind] || q.key;
       if (seen[grp]) continue;

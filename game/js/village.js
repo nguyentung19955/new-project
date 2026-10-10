@@ -45,9 +45,18 @@
   function open(k) {
     V.who = k; V.tab = TAB_OF[k]; V.sel = null; V.page = 0; V.confirm = false; V.node = null; V.msgT = 0;
     if (G.banDo) G.banDo.reset();
-    if (k === 'do') V.tab = V.dtab === 'help' || V.dtab === 'chuong' || (V.dtab === 'rank' && PANELS.rank) ? V.dtab : 'skill';
+    if (k === 'do') {
+      V.tab = V.dtab === 'help' || (V.dtab === 'chuong' && chuongOpen()) || (V.dtab === 'rank' && PANELS.rank) ? V.dtab : 'skill';
+      // V29 (O7): thẻ Cây kỹ năng hết điểm mà còn điểm chưởng thì mở thẳng thẻ Cây chưởng, khỏi thấy "Còn 0 điểm"
+      if (V.tab === 'skill' && chuongOpen() && G.chuong) {
+        const sv = G.save, hs = sv.heroes[sv.hero];
+        if (Math.floor(hs.lvl / 3) - (hs.sk.atk + hs.sk.def + hs.sk.elem) <= 0 && G.chuong.pts(hs, sv.hero).left > 0) V.tab = 'chuong';
+      }
+    }
     if (k === 'lai') pickNext();
   }
+  // V53: thẻ Cây chưởng chỉ hiện sau khi qua ải đầu tiên (người mới làm quen Cây kỹ năng trước)
+  function chuongOpen() { return Object.keys(G.save.stars || {}).length >= 1; }
   function goHub() {
     const was = V.tab;
     V.tab = 'hub'; V.who = null; V.sel = null; V.node = null; V.confirm = false; V.page = 0;
@@ -164,7 +173,7 @@
     if (V.sel) {
       const r = V.sel[0], i = V.sel[1], R = G.REGIONS[r], b = G.stageStats(r, i, V.diff);
       ui.text(R.name + ' · ' + (i === 4 ? 'Ải trùm' : 'Ải ' + (i + 1)) + (V.diff ? ' · khó 2' : ''), 256, 219, { size: 9.5, bold: true, color: GOLD });
-      const l2 = (i === 4 ? 'Trùm vùng ' + R.bossName : 'Trùm nhỏ ' + R.mini) + ' · ' + (i < 2 ? 7 : 8) + ' phòng · ';
+      const l2 = (i === 4 ? 'Trùm vùng ' + R.bossName : 'Trùm nhỏ ' + R.mini) + ' · 8 phòng · ';
       ui.text(l2, 256, 230, { size: 7, color: TXT });
       ui.font(7); ui.text('hệ ' + G.EL[R.el].name, 256 + G.ux.measureText(l2).width, 230, { size: 7, color: G.EL[R.el].col });
       // Sức mạnh khuyên dùng so với sức mạnh hiện tại của bé (G.power): xanh đủ, vàng sát nút, đỏ thiếu
@@ -567,7 +576,7 @@
   // ---------- cây kỹ năng và hướng dẫn (Cụ Đồ) ----------
   function doTabs() {
     // thẻ Bảng vàng (js/bang_vang.js) chỉ có khi tệp đó được nạp
-    const tabs = [['skill', 'Cây kỹ năng'], ['chuong', 'Cây chưởng'], ['help', 'Hướng dẫn']].concat(PANELS.rank ? [['rank', 'Bảng vàng']] : []);
+    const tabs = [['skill', 'Cây kỹ năng']].concat(chuongOpen() ? [['chuong', 'Cây chưởng']] : [], [['help', 'Hướng dẫn']], PANELS.rank ? [['rank', 'Bảng vàng']] : []);
     const w = Math.floor((CW - (tabs.length - 1) * 4) / tabs.length);
     tabs.forEach((t, i) => {
       const dot = t[0] === 'chuong' && G.chuong && G.chuong.pts(G.save.heroes[G.save.hero], G.save.hero).left > 0;
@@ -705,7 +714,7 @@
       if (g.otab) V.otab = g.otab;
       if (g.oslot) V.oslot = g.oslot;
       if (g.who === 'xen') V.gtab = g.gtab || 'weapon';
-      if (g.who === 'do') { V.tab = g.tab === 'chuong' ? 'chuong' : 'skill'; V.dtab = V.tab; }
+      if (g.who === 'do') { V.tab = g.tab === 'chuong' && chuongOpen() ? 'chuong' : 'skill'; V.dtab = V.tab; }
       if (g.sel != null) V.sel = g.sel;
       if (g.page != null) V.page = g.page;
       if (g.stage) { V.diff = 0; V.sel = g.stage; }
@@ -734,7 +743,8 @@
       VS.drawTop();
       if (V.tab === 'weapon') { weaponView(); return; }
       const hit = VS.drawStrip(V.who || WHO_OF[V.tab], true, true);
-      if (hit) { VS.goNpc(hit, true); return; }
+      if (hit && VS.shown && !VS.shown(hit)) say('Cô Thợ May đi chợ xa. Qua ải Rừng già 2 rồi cô về may đồ cho bé.'); // V53
+      else if (hit) { VS.goNpc(hit, true); return; }
       const fn = PANELS[V.tab] || settings;
       const tab = V.tab, line = fn();
       if (fn.full) return; // bảng tự vẽ người nói (Cô Thợ May)
