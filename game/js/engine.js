@@ -39,7 +39,7 @@
     const cw = Math.floor(G.W * s), ch = Math.floor(G.H * s);
     wrap.style.width = cw + 'px';
     wrap.style.height = ch + 'px';
-    const dpr = Math.min(3, window.devicePixelRatio || 1);
+    const dpr = Math.min(2, window.devicePixelRatio || 1); // V27: lớp chữ #ui tối đa nét gấp 2 (gấp 3 tốn ~40% thời gian vẽ trên máy yếu, mắt gần như không thấy khác)
     uiCv.width = Math.max(1, Math.round(box.width * dpr));
     uiCv.height = Math.max(1, Math.round(box.height * dpr));
     G.scale = cw / G.W;
@@ -186,17 +186,29 @@
     fire: [300, 0.08, 'sawtooth', 0.03], poison: [180, 0.1, 'triangle', 0.04], ice: [1400, 0.06, 'sine', 0.04],
     boom: [70, 0.25, 'sawtooth', 0.1], ui: [600, 0.03, 'square', 0.03], win: [880, 0.5, 'triangle', 0.08],
   };
+  // V30: giới hạn tiếng cùng lúc để 20 quái chết một lúc không thành 20 tiếng chồng nhau (rè, to bất thường).
+  // Mỗi loại tối đa 2 tiếng đang kêu, tổng tối đa 8 tiếng, tổng âm lượng các tiếng đang kêu không quá 0,28.
+  // Hết "chỗ" âm lượng thì tiếng mới nhỏ lại cho vừa; còn quá ít thì bỏ qua.
+  const voices = [], MAX_SAME = 2, MAX_VOICES = 8, MAX_GAIN = 0.28;
   G.sfx = function (name, pitch) {
     if (!ac || !G.save.sound || G.noRender || ac.state !== 'running') return;
     const d = SFX[name];
     if (!d) return;
     try {
+      const now = ac.currentTime;
+      for (let i = voices.length - 1; i >= 0; i--) if (voices[i].end <= now) voices.splice(i, 1);
+      let same = 0, sum = 0;
+      for (const v of voices) { sum += v.g; if (v.name === name) same++; }
+      if (same >= MAX_SAME || voices.length >= MAX_VOICES) return;
+      const vol = Math.min(d[3], MAX_GAIN - sum);
+      if (vol < 0.01) return;
+      voices.push({ name, end: now + d[1] + 0.02, g: vol });
       const o = ac.createOscillator(), g = ac.createGain();
       o.type = d[2];
       o.frequency.value = d[0] * (pitch || 1);
       if (name === 'evolve' || name === 'win') o.frequency.exponentialRampToValueAtTime(d[0] * 2, ac.currentTime + d[1]);
       if (name === 'boom' || name === 'hurt') o.frequency.exponentialRampToValueAtTime(d[0] * 0.5, ac.currentTime + d[1]);
-      g.gain.value = d[3];
+      g.gain.value = vol;
       g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + d[1]);
       o.connect(g); g.connect(ac.destination);
       o.start(); o.stop(ac.currentTime + d[1] + 0.02);
@@ -247,19 +259,32 @@
     s.carry[1] = G.newWeapon(s, 'bow', 0, { family: 3 }).id;   // Cung Tre
     return s;
   };
+  // V3: bản lưu trên máy đọc không được (hỏng, sai phiên bản, phần sửa bản lưu gặp lỗi) thì trước khi chơi tiếp bằng bản trắng
+  // phải chép nguyên văn bản cũ sang khoá dự phòng linhkhi_save_v1_hong (giữ bản sao đầu tiên; lần sau nằm ở ..._hong2), để còn cứu lại được.
+  const KEY_HONG = KEY + '_hong';
+  let fixFailed = false; // fixSave vừa phải bỏ bản lưu đưa vào và trả bản mới
   G.loadSave = function () {
-    let s = null;
+    let s = null, raw = null, bad = false;
     try {
-      const raw = window.localStorage.getItem(KEY);
+      raw = window.localStorage.getItem(KEY);
       if (raw) s = JSON.parse(raw);
-    } catch (e) { s = null; }
+    } catch (e) { s = null; bad = !!raw; if (bad) console.error('Linh Khí: bản lưu trên máy không đọc được', e); }
     G.save = G.fixSave(s);
+    if (raw && (bad || fixFailed)) {
+      try {
+        const ls = window.localStorage, old = ls.getItem(KEY_HONG);
+        if (old === null || old === raw) ls.setItem(KEY_HONG, raw);
+        else ls.setItem(KEY_HONG + '2', raw);
+        console.error('Linh Khí: bản lưu cũ không dùng được, đã chép sang khoá dự phòng ' + KEY_HONG);
+      } catch (e) { /* bộ nhớ đầy: chơi tiếp */ }
+    }
   };
   // Kiểm tra bản lưu cũ hoặc hỏng: thiếu gì thì bù, sai gì thì sửa, hỏng nặng thì tạo mới.
   G.fixSave = function (s) {
     const base = G.newSave();
+    fixFailed = false;
     try {
-      if (!s || typeof s !== 'object' || Array.isArray(s) || s.v !== 1) return base;
+      if (!s || typeof s !== 'object' || Array.isArray(s) || s.v !== 1) { fixFailed = s != null; return base; }
       const num = (v, d) => (typeof v === 'number' && isFinite(v) ? v : d);
       const obj = (v) => (v && typeof v === 'object' && !Array.isArray(v) ? v : {});
       const arr3 = (v) => [0, 1, 2].map((i) => Math.max(0, num(Array.isArray(v) ? v[i] : 0, 0)));
@@ -339,7 +364,7 @@
       // trang phục (js/outfit.js): kiểm tra phần đã lưu, rồi chuyển mũ, áo, bùa kiểu cũ ở trên sang hệ mới
       if (G.outfit) G.outfit.fix(s);
       return s;
-    } catch (e) { return base; }
+    } catch (e) { fixFailed = true; console.error('Linh Khí: lỗi khi sửa bản lưu, dùng bản mới', e); return base; }
   };
   G.persist = function () {
     try { window.localStorage.setItem(KEY, JSON.stringify(G.save)); } catch (e) { /* chơi không lưu */ }
