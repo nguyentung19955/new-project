@@ -362,7 +362,7 @@
     const reach = reachOf(e);
     if (d > reach * 0.85) moveTo(e, P.x, P.y, sp, dt);
     else if (Math.abs(P.x - e.x) > 3) e.face = P.x > e.x ? 1 : -1;
-    if (e.cd <= 0 && d < reach + 6) melee(e, a, role === 'swarm' ? 0.42 : 0.58, role === 'swarm' ? 1.3 : 1.5);
+    if (e.cd <= 0 && d < reach + 6) melee(e, a, role === 'swarm' ? 0.5 : 0.58, role === 'swarm' ? 1.3 : 1.5); // GĐ2 (V8, Q4): bầy nhỏ báo trước 0,42 -> 0,5 s
   }
   function moveTo(e, tx, ty, sp, dt) {
     const dx = tx - e.x, dy = ty - e.y, d = Math.hypot(dx, dy);
@@ -681,7 +681,7 @@
     if (n === 'atk' && (k === 'ban' || k === 'nem')) o.fx = false; // đạn thật do luật chơi bắn, không vẽ thêm đạn giả
     const dir = e.act ? e.act.a : e.dirA != null ? e.dirA : e.face > 0 ? 0 : PI;
     // Lấy đà: cử động 'tele' trải đúng theo thời gian lấy đà thật (e.wind / e.act.T) nên tư thế co người đạt đỉnh và rung đúng lúc
-    // sắp ra đòn, dù đòn lấy đà ngắn (bầy nhỏ 0,42 giây) hay dài (tinh anh, bom 0,85 giây). Chỉ đổi hình, không đổi thời gian ra đòn.
+    // sắp ra đòn, dù đòn lấy đà ngắn (bầy nhỏ 0,5 giây) hay dài (tinh anh, bom 0,85 giây). Chỉ đổi hình, không đổi thời gian ra đòn.
     if (n === 'tele' && e.act && e.wind > 0 && e.act.T > 0) t = clamp(1 - e.wind / e.act.T, 0, 1) * dur(e.art, 'tele') * 0.999;
     // Ra đòn nặng (tinh anh, quái giáp): giữ khung vừa đánh ra lâu hơn một chút rồi thu đòn chậm (cảm giác có trọng lượng).
     else if (n === 'atk' && (e.role === 'elite' || e.role === 'shield') && e.dying == null) { const D = dur(e.art, 'atk'), a1 = D * 0.2; t = t < a1 ? t : t < a1 + 0.08 ? a1 : a1 + (t - a1 - 0.08) * 0.9; }
