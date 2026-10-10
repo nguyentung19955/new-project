@@ -147,6 +147,9 @@ def custom_sprites():
             sys.exit('art/custom/%s thiếu tấm sprite PNG' % name)
         if not isinstance(t.get('dong_tac'), dict) or 'idle' not in t['dong_tac']:
             sys.exit('art/custom/%s thiếu động tác đứng thở' % name)
+        # Em bé: em-be (cả bốn), em-be-<nhân vật> (thân thường) hoặc em-be-<nhân vật>-<bộ> (thân vẽ liền BỘ TRANG PHỤC: rung, bien, lau).
+        if t.get('doi_tuong') == 'em-be' and not re.match(r'^em-be(-(smith|hunter|healer|wrestler)(-(rung|bien|lau))?)?$', ma):
+            sys.exit('art/custom/%s: mã em bé phải là em-be, em-be-<smith|hunter|healer|wrestler> hoặc thêm đuôi bộ -rung, -bien, -lau' % name)
         out.append({k: t[k] for k in RUNTIME_KEYS if k in t})
     return out
 

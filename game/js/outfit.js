@@ -238,7 +238,9 @@
     else if (top === 1) L.fx.glow = null;
     L.fx.top = top;
     const sm = O.sum(sv);
-    for (const s in sm.sets) if (sm.sets[s] >= 3) L.fx.aura = O.SETS[s].el;
+    // bo: mã bộ đang mặc ĐỦ (từ 3 món, cùng ngưỡng với vầng sáng và thưởng hệ của bộ) → game đổi sang thân vẽ liền cả bộ
+    // em-be-<nhân vật>-<bộ> nếu có tệp (js/sprite_custom.js). Chỉ là hình, không đổi chỉ số.
+    for (const s in sm.sets) if (sm.sets[s] >= 3) { L.fx.aura = O.SETS[s].el; L.fx.bo = s; }
     L.fx.els = L.fx.els.slice(0, 2);
     return L;
   };

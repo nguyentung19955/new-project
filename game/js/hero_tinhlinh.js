@@ -589,7 +589,8 @@
   function outfitOf(key, o) {
     // Thân AI (em-be-<key>): không khoác bộ đồ khởi đầu mặc định (mũ trùm, áo trùm… che mặt và hình riêng của nhân vật);
     // chỉ hiện đồ người chơi thật sự đang mặc (o.outfit / o.p.outfit / mũ áo trang bị) và cánh.
-    const SCx = G.spriteCustom, coAI = !!(SCx && SCx.cuaEmBe && SCx.cuaEmBe(key));
+    // (thân theo BỘ TRANG PHỤC em-be-<key>-<bộ> cũng là thân AI: SC.cuaEmBe nhận thêm o để biết đang mặc đủ bộ nào)
+    const SCx = G.spriteCustom, coAI = !!(SCx && SCx.cuaEmBe && SCx.cuaEmBe(key, o));
     const st = coAI ? KHONG_DO : HERO[key].outfit, x = (o && o.outfit) || (o && o.p && o.p.outfit) || {};
     const pick = (k, gear) => (x[k] !== undefined ? x[k] : gear || st[k]);
     return {
@@ -1262,13 +1263,17 @@
     if (neo && neo.khung) { n2.khung = neo.khung; n2.diem = neo.diem || null; n2.nguon = neo.nguon || null; }
     return { quay, an, f, nd, nt, ps, n2 };
   }
-  function lopDo(fr, neo, khop) {
+  // ÁO (ô robes) KHÔNG khoác rời lên thân AI: ảnh áo rời không ôm khít thân vẽ sẵn, nên thân AI giữ áo riêng của nhân vật; bậc áo
+  // hiện bằng viền màu bậc quanh thân + dấu nhỏ trên ngực (js/sprite_custom.js). an: thêm các ô không khoác (thân theo bộ trang phục
+  // đã vẽ sẵn mũ, đồ lưng, bùa trong hình: ['hat', 'back', 'hand']). Thân vẽ code không đi qua đây nên vẫn mặc áo như cũ.
+  function lopDo(fr, neo, khop, an) {
     khop = khop || null;
     const D = dungLopDo(fr, neo, khop), quay = D.quay, ps = D.ps, n2 = D.n2;
     // Lăn: thân AI cuộn tròn thành cục nhỏ hơn hẳn lúc đứng, xoay đồ quanh chân thì mũ, cánh, đồ lưng văng ra ngoài thân
     // (trông như rụng). Các khung cuộn tròn (xoay 60°..300°) tạm ẩn mũ, cánh, đồ lưng; áo, bùa vẫn bám thân.
     const rq = quay ? ((((khop.rot | 0) % 360) + 360) % 360) : 0, cuon = quay && fr.anim === 'dodge' && rq >= 60 && rq <= 300;
-    const of = cuon ? Object.assign({}, fr.of, { hat: null, wing: null, back: null }) : fr.of;
+    const of = Object.assign({}, fr.of, { robe: null }, cuon ? { hat: null, wing: null, back: null } : null);
+    if (an) for (const k of an) of[k] = null;
     const N = fr.n || 1, id = [fr.key, ofKey(of), fr.tint, D.an + D.f, D.nd.join(','), D.nt.join(','), quay ? [khop.rot, khop.x, khop.y].join(',') : '', N].join('|') + ((neo && neo.khoa) || '');
     let r = LCACHE.get(id);
     if (r) return r;
