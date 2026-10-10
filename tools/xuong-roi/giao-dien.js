@@ -7,7 +7,7 @@
   const VUNG = { rung: 'Rừng già', bien: 'Hang biển', laudai: 'Lâu đài cổ' };
   const DOI = { 'em-be': 'Em bé', quai: 'Quái' };
   // PHIÊN BẢN: tăng số mỗi lần sửa công cụ, ghi ngày sửa. Mã bản (6 ký tự) do game/build.py tính từ nội dung mã nguồn.
-  const PHIEN_BAN = { so: '1.5', ngay: '10/10/2026' };
+  const PHIEN_BAN = { so: '1.6', ngay: '10/10/2026' };
   XR.PHIEN_BAN = PHIEN_BAN;
   const TEN_BUOC = ['Loại', 'Nạp ảnh', 'Gán vai', 'Ráp', 'Động tác', 'Xuất'];
   const dpr = () => Math.min(3, window.devicePixelRatio || 1);
@@ -272,7 +272,7 @@
     doiRig(); veBuoc2(); luu(); bao('Đã lật ngang.');
   };
   function latManh(p) {
-    p.cv = XR.latCanvas(p.cv); p.so = null; p._a = null; p.lat = !p.lat;
+    p.cv = XR.latCanvas(p.cv); p.so = null; p._a = null; p.lat = !p.lat; p.cv0 = null; p.a = 0; p.m = [0, 0];
     if (p.dat && p.truc) p.truc = [p.dat[0] + p.w - (p.truc[0] - p.dat[0]), p.truc[1]];
   }
   $('nutChonHet').onclick = () => { if (S.chon.size === S.manh.length) S.chon.clear(); else S.manh.forEach((p) => S.chon.add(p.id)); veBuoc2(); };
@@ -452,6 +452,8 @@
     const p = manhTheoId(S.chonRap), sel = $('chonCha');
     $('tenChon').textContent = p ? XR.tenVai(S.khung, p.vai) : '(chạm một mảnh)';
     sel.innerHTML = ''; sel.disabled = !p; $('nutLen').disabled = !p; $('nutXuong').disabled = !p;
+    ['nutXoayTrai', 'nutXoayPhai', 'nutXoayThang'].forEach((k) => ($(k).disabled = !p));
+    $('gtGoc').textContent = p ? XR.gocManh(p) + '°' : '';
     if (!p) return;
     sel.appendChild(el('option', { value: '', text: '(không có — đây là mảnh gốc)' }));
     for (const q of S.manh) {
@@ -475,9 +477,26 @@
     doiRig(); veRap(); luu();
     bao(d > 0 ? 'Đã đưa mảnh lên trước.' : 'Đã đưa mảnh ra sau.', 1200);
   }
+  XR.chonManh = (id) => { S.chonRap = id; veBenRap(); veRap(); }; // dùng khi thử tự động
+  function xoay(doXoay) {
+    const p = manhTheoId(S.chonRap); if (!p) return;
+    XR.xoayManh(S.manh, p, doXoay);
+    doiRig(); veBenRap(); veRap(); luu();
+  }
+  $('nutXoayTrai').onclick = () => xoay(-5);
+  $('nutXoayPhai').onclick = () => xoay(5);
+  $('nutXoayThang').onclick = () => { const p = manhTheoId(S.chonRap); if (p && p.a) xoay(-XR.gocManh(p)); };
   $('nutLen').onclick = () => doiLop(1);
   $('nutXuong').onclick = () => doiLop(-1);
-  $('nutVua').onclick = () => { S.view = null; veRap(); };
+  // Ra giữa khung: đưa cả nhân vật vào giữa vùng ráp, vừa cỡ màn
+  $('nutVua').onclick = () => { S.view = null; veRap(); bao('Đã đưa nhân vật ra giữa khung.', 1200); };
+  // Chấm xanh (điểm chân) về giữa nhân vật theo chiều ngang, nằm ở đáy chân thấp nhất: nhân vật đứng giữa chỗ đặt trong game
+  $('nutGiuaChan').onclick = () => {
+    if (!S.manh.length) return;
+    const ch = S.manh.filter((p) => /^chan/.test(p.vai)), ds = ch.length ? ch : S.manh, b = XR.khungRap(ds), tat = XR.khungRap(S.manh);
+    S.goc = [Math.round(ch.length ? (b.x0 + b.x1) / 2 : (tat.x0 + tat.x1) / 2), Math.round(b.y1)];
+    S.view = null; doiRig(); veRap(); luu(); bao('Chấm xanh đã về giữa chân.', 1500);
+  };
   $('nutRapLai').onclick = () => {
     const b = $('nutRapLai');
     if (!b.dataset.hoi) { b.dataset.hoi = '1'; b.textContent = 'Bấm lần nữa (mất phần đã chỉnh)'; setTimeout(() => { delete b.dataset.hoi; b.textContent = 'Ráp lại tự động'; }, 3000); return; }

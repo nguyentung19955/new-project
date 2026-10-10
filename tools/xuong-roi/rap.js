@@ -87,7 +87,7 @@
     nguoi: {
       // Prompt Gemini vẽ mọi chi có đầu khớp tròn "giấu dưới thân": tay, chân đều nằm sau thân để khớp không lộ.
       than: { lop: 4, khop: [0.5, 0.95] },
-      dau: { cha: 'than', lop: 6, khop: [0.5, 0.93], gan: [0.5, 0.1] },
+      dau: { cha: 'than', lop: 6, khop: [0.5, 0.97], gan: [0.5, 0.2] }, // cổ cắm sâu vào cổ áo: che lỗ cổ áo Gemini vẽ trên thân
       'tay-truoc': { cha: 'than', lop: 3, khop: [0.45, 0.16], gan: [0.76, 0.32] },
       'tay-sau': { cha: 'than', lop: 1, khop: [0.45, 0.16], gan: [0.26, 0.32] },
       'chan-truoc': { cha: 'than', lop: 2, khop: [0.5, 0.12], gan: [0.62, 0.86] },
@@ -160,6 +160,57 @@
     for (const p of ds) if (XR.laConChau(ds, p.cha, p.id)) p.cha = goc && goc !== p ? goc.id : null;
   };
   // a có phải là p hoặc con cháu của p không
+  // ---------- xoay mảnh trong tư thế ráp ----------
+  // Định dạng tệp không có góc nghỉ, nên góc được "nướng" vào ảnh mảnh: luôn xoay từ ảnh gốc cv0 (không mờ dần khi xoay nhiều lần).
+  // Toạ độ: điểm q trong ảnh gốc nằm ở  dat + R(a)·q − m  (m: góc trên trái của ảnh sau khi xoay).
+  function nuong(cv0, a) {
+    const w = cv0.width, h = cv0.height, c = Math.cos(a), s = Math.sin(a);
+    const xs = [0, w * c, -h * s, w * c - h * s], ys = [0, w * s, h * c, w * s + h * c];
+    const m = [Math.floor(Math.min(...xs)), Math.floor(Math.min(...ys))];
+    const W = Math.ceil(Math.max(...xs)) - m[0], H = Math.ceil(Math.max(...ys)) - m[1];
+    const cv = XR.taoCanvas(W, H), x = cv.getContext('2d');
+    x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high';
+    x.translate(-m[0], -m[1]); x.rotate(a); x.drawImage(cv0, 0, 0);
+    return { cv, m };
+  }
+  // Xoay mảnh p (và mọi mảnh con cháu) quanh khớp của p thêm `do` độ (dương = theo chiều kim đồng hồ).
+  XR.xoayManh = function (ds, p, doXoay) {
+    const d = doXoay * Math.PI / 180, cd = Math.cos(d), sd = Math.sin(d), T = p.truc.slice();
+    const quay = (v) => [T[0] + cd * (v[0] - T[0]) - sd * (v[1] - T[1]), T[1] + sd * (v[0] - T[0]) + cd * (v[1] - T[1])];
+    const nhom = [p];
+    const di = (id) => { for (const q of ds) if (q.cha === id && nhom.indexOf(q) < 0) { nhom.push(q); di(q.id); } };
+    di(p.id);
+    for (const q of nhom) {
+      if (!q.cv0) { q.cv0 = q.cv; q.a = 0; q.m = [0, 0]; }
+      const goc = quay([q.dat[0] - q.m[0], q.dat[1] - q.m[1]]); // vị trí điểm (0,0) của ảnh gốc sau khi xoay
+      q.a = (q.a || 0) + d;
+      if (Math.abs(q.a) < 1e-6) q.a = 0;
+      const r = q.a ? nuong(q.cv0, q.a) : { cv: q.cv0, m: [0, 0] };
+      q.cv = r.cv; q.m = r.m; q.w = r.cv.width; q.h = r.cv.height;
+      q.dat = [Math.round(goc[0] + r.m[0]), Math.round(goc[1] + r.m[1])];
+      q.truc = quay(q.truc).map((v) => Math.round(v));
+      q._a = null; q.so = null;
+    }
+  };
+  // Tâm đầu tròn trên cùng của một chi (toạ độ trong mảnh): đi từ hàng có hình đầu tiên xuống tới khi
+  // quãng đã đi bằng nửa bề ngang của chi ở hàng đó: đó là tâm hình tròn đầu khớp.
+  XR.tamDauTron = function (p) {
+    const w = p.w, h = p.h, d = p.cv.getContext('2d').getImageData(0, 0, w, h).data;
+    const nhip = (y) => { let a = -1, b = -1; for (let x = 0; x < w; x++) if (d[(y * w + x) * 4 + 3] > 128) { if (a < 0) a = x; b = x; } return a < 0 ? null : [a, b]; };
+    let y0 = -1;
+    for (let y = 0; y < h; y++) if (nhip(y)) { y0 = y; break; }
+    if (y0 < 0) return null;
+    let tot = null;
+    for (let y = y0; y < Math.min(h, y0 + h * 0.45); y++) {
+      const n = nhip(y); if (!n) continue;
+      const r = (n[1] - n[0]) / 2;
+      tot = [(n[0] + n[1]) / 2, y];
+      if (y - y0 >= r * 0.9) break;
+    }
+    return tot;
+  };
+  XR.gocManh = (p) => Math.round(((p.a || 0) * 180) / Math.PI);
+
   XR.laConChau = function (ds, a, p) {
     let k = a, buoc = 0;
     while (k != null && buoc++ < 50) { if (k === p) return true; const q = ds.find((x) => x.id === k); k = q ? q.cha : null; }
@@ -190,7 +241,10 @@
           const mep = mepNgang(cha, g[1], p.vai === 'tay-truoc');
           if (mep != null) gx = cha.dat[0] + (p.vai === 'tay-truoc' ? Math.min(mep - p.w * 0.3, cha.w * 0.92) : Math.max(mep + p.w * 0.3, cha.w * 0.08));
         }
-        p.dat = [Math.round(gx - p.w * c.khop[0]), Math.round(gy - p.h * c.khop[1])];
+        // Tay, chân, càng: khớp đặt ĐÚNG TÂM đầu tròn trên cùng của mảnh, nên xoay bao nhiêu thì đầu tròn vẫn nằm yên dưới thân, không lộ mép
+        const tam = /^(tay|chan|cang)/.test(p.vai) && !XR.laAoChoang(p, ds) ? XR.tamDauTron(p) : null;
+        const kx = tam ? tam[0] : p.w * c.khop[0], ky = tam ? tam[1] : p.h * c.khop[1];
+        p.dat = [Math.round(gx - kx), Math.round(gy - ky)];
         p.truc = [Math.round(gx), Math.round(gy)];
         xong.add(p.id);
       }
