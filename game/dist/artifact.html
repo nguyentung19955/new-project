@@ -27612,13 +27612,71 @@ MA._xong();
     }
   }
 
+  // ---------- Giai đoạn 2 (đấu trường): lưới chấm (dither), nhiễu mượt, tô theo dải màu ----------
+  // Mọi chuyển sáng tối trên nền đều làm bằng lưới chấm Bayer 4x4: điểm ảnh vẫn sắc, không mờ nhoè, không dải màu mịn.
+  const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map((v) => (v + 0.5) / 16);
+  const bay = (x, y) => BAYER[((y & 3) << 2) | (x & 3)];
+  const smooth = (a, b, v) => { const t = Math.max(0, Math.min(1, (v - a) / (b - a))); return t * t * (3 - 2 * t); };
+  // Nhiễu mượt (value noise): lưới số ngẫu nhiên cách nhau `cell` điểm ảnh, nội suy mượt. Dùng để chia sàn thành mảng lớn có chủ đích.
+  function vnoise(rn, cell, W, H) {
+    const gw = Math.ceil(W / cell) + 2, gh = Math.ceil(H / cell) + 2, v = new Float32Array(gw * gh);
+    for (let i = 0; i < v.length; i++) v[i] = rn();
+    return (x, y) => {
+      const fx = x / cell, fy = y / cell, ix = Math.floor(fx), iy = Math.floor(fy);
+      let tx = fx - ix, ty = fy - iy;
+      tx = tx * tx * (3 - 2 * tx); ty = ty * ty * (3 - 2 * ty);
+      const a = v[iy * gw + ix], b = v[iy * gw + ix + 1], c2 = v[(iy + 1) * gw + ix], d = v[(iy + 1) * gw + ix + 1];
+      return a + (b - a) * tx + (c2 - a) * ty + (a - b - c2 + d) * tx * ty;
+    };
+  }
+  // Tô hình chữ nhật theo dải màu: fn(x, y) trả về chỉ số (số thực) trong dải, hoặc SKIP để giữ nguyên điểm ảnh cũ.
+  // Lối mòn: 1 ở giữa lối nối tâm phòng với từng cửa (hơi uốn), 0 ở xa; có khoảng sân tròn ở giữa phòng.
+  function pathField(g, hw) {
+    const cx = (g.fx0 + g.fx1) / 2, cy = (g.fy0 + g.fy1) / 2;
+    const segs = g.doors.map((d) => [d.side === 'left' ? g.fx0 : d.side === 'right' ? g.fx1 : d.at, d.side === 'top' ? g.fy0 : d.side === 'bottom' ? g.fy1 : d.at]);
+    return (x, y) => {
+      let best = 1e9;
+      for (const [tx, ty] of segs) {
+        const vx = tx - cx, vy = ty - cy, L2 = vx * vx + vy * vy || 1;
+        const t = Math.max(0, Math.min(1, ((x - cx) * vx + (y - cy) * vy) / L2));
+        const wob = Math.sin(t * 7.5 + tx * 0.05) * 3;
+        const px = cx + vx * t + (Math.abs(vy) > Math.abs(vx) ? wob : 0), py = cy + vy * t + (Math.abs(vy) > Math.abs(vx) ? 0 : wob);
+        const dx = x - px, dy = y - py;
+        best = Math.min(best, Math.sqrt(dx * dx + dy * dy) - (1 - t) * 3);
+      }
+      const ex = (x - cx) / 30, ey = (y - cy) / 21, e = Math.sqrt(ex * ex + ey * ey);
+      return Math.max(1 - smooth(hw * 0.45, hw, best), 1 - smooth(0.7, 1.05, e));
+    };
+  }
+  // Làm gắt phần lẻ: chỉ chấm xen kẽ ở dải hẹp giữa hai nấc, còn lại là mảng màu phẳng (đúng kiểu pixel art, không rỗ khắp nơi).
+  const sharp = (f) => { const i = Math.floor(f), t = f - i; return i + (t < 0.32 ? 0 : t > 0.68 ? 0.999 : (t - 0.32) / 0.36); };
+  // Lấy mẫu trước một trường mượt trên lưới thưa 2 điểm ảnh trong khung sàn (dựng phòng nhanh hơn ~4 lần; trường mượt nên không thấy khác).
+  function grid2(g, fn) {
+    const x0 = g.fx0, y0 = g.fy0, gw = ((g.fx1 - x0) >> 1) + 2, gh = ((g.fy1 - y0) >> 1) + 2, v = new Float32Array(gw * gh);
+    for (let j = 0; j < gh; j++) for (let i = 0; i < gw; i++) v[j * gw + i] = fn(x0 + i * 2 + 1, y0 + j * 2 + 1);
+    return (x, y) => v[((y - y0) >> 1) * gw + ((x - x0) >> 1)];
+  }
+  const SKIP = -99;
+  function rampFill(x0, y0, w, h, ramp, fn) {
+    const cols = ramp.map(hex), n = cols.length - 1, id = c.getImageData(x0, y0, w, h), d = id.data;
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const gx = x0 + x, gy = y0 + y, f = fn(gx, gy);
+        if (f === SKIP) continue;
+        const k = Math.max(0, Math.min(n, Math.floor(sharp(f) + bay(gx, gy)))), cc = cols[k], o = (y * w + x) * 4;
+        d[o] = cc[0]; d[o + 1] = cc[1]; d[o + 2] = cc[2]; d[o + 3] = 255;
+      }
+    }
+    c.putImageData(id, x0, y0);
+  }
+
   // ====================================================================
   // CHỦ ĐỀ LÂU ĐÀI
   // ====================================================================
   const K = {
     void: '#120c0c', brick: '#4b3f3f', brickD: '#342a2b', brickL: '#5f504c', stone: '#6e5f58', stoneL: '#8a7a6e',
     wood: '#4a3020', woodD: '#2e1c12', woodL: '#6a4830', iron: '#55555e', ironL: '#8a8a96',
-    red: '#7a2a2a', redD: '#4e1c20', gold: '#c89a3a', floor: '#544b49', light: '#ffc878', cap: '#3a3031', capL: '#4c4041', capD: '#2a2223',
+    red: '#7a2a2a', redD: '#4e1c20', gold: '#c89a3a', floor: '#4f4745', light: '#ffc878', cap: '#3a3031', capL: '#4c4041', capD: '#2a2223',
   };
   function torch(x, y, g) {
     if (g && g.lights) g.lights.push({ k: 'torch', x, y });
@@ -27626,8 +27684,8 @@ MA._xong();
     r(x - 1, y, 2, 9, K.iron); r(x - 3, y, 6, 2, K.ironL); r(x - 2, y + 2, 4, 1, K.iron);
     r(x - 2, y - 5, 4, 5, '#ff7a2a'); r(x - 1, y - 8, 2, 4, '#ff7a2a'); r(x - 1, y - 4, 2, 4, '#ffd23f'); r(x, y - 6, 1, 2, '#ffd23f'); r(x, y - 2, 1, 2, '#fff3b0');
     r(x + 1, y - 10, 1, 1, '#ffd23f');
-    // quầng sáng ấm hắt xuống sàn
-    if (g) glow(x, g.fy0 + 12, 30, 16, '#ff9a40', 0.045, 4);
+    // quầng sáng ấm hắt xuống sàn: tô bằng lưới chấm ở lightPass
+    if (g && g.glows) g.glows.push({ x, y: g.fy0 + 10, rx: 44, ry: 26, a: 0.2, col: '#ffb060' });
   }
   function banner(x, y, col, colD) {
     r(x - 8, y - 1, 16, 2, K.gold);
@@ -27652,8 +27710,8 @@ MA._xong();
             const col = k < 0.14 ? lite(K.floor, 0.05) : k < 0.34 ? dim(K.floor, 0.09) : k < 0.42 ? mix(K.floor, '#6b4a38', 0.25) : K.floor;
             r(x, y, ts - 1, ts - 1, col);
             r(x, y, ts - 1, 1, lite(col, 0.07));
-            if (rn() < 0.16) { const cx = x + 3 + Math.floor(rn() * 6), cy = y + 4 + Math.floor(rn() * 7); r(cx, cy, 5, 1, dim(col, 0.3)); r(cx + 4, cy + 1, 3, 1, dim(col, 0.3)); r(cx + 2, cy - 1, 1, 1, dim(col, 0.3)); }
-            if (rn() < 0.05) r(x + 5, y + 6, 2, 2, dim(col, 0.22));
+            r(x, y + ts - 2, ts - 1, 1, dim(col, 0.1)); // mép dưới viên đá hơi tối: viên đá có khối
+            if (rn() < 0.07) { const cx = x + 3 + Math.floor(rn() * 6), cy = y + 4 + Math.floor(rn() * 7); r(cx, cy, 5, 1, dim(col, 0.3)); r(cx + 4, cy + 1, 3, 1, dim(col, 0.3)); r(cx + 2, cy - 1, 1, 1, dim(col, 0.3)); }
           }
         }
       });
@@ -27712,6 +27770,7 @@ MA._xong();
       for (const x of cols) {
         r(x, wy, 8, g.wh, K.stone); r(x, wy, 2, g.wh, K.stoneL); r(x + 6, wy, 2, g.wh, dim(K.stone, 0.3));
         r(x - 2, wy, 12, 3, K.stoneL); r(x - 2, wy + 3, 12, 1, dim(K.stone, 0.4)); r(x - 2, g.fy0 - 4, 12, 4, K.stone); r(x - 2, g.fy0 - 4, 12, 1, K.stoneL);
+        if (g.casts) g.casts.push({ x: x - 1, y: g.fy0, w: 11, len: 11, a: 0.34 }); // cột đổ bóng xuống sàn
       }
       // đuốc hai bên mỗi cửa, cờ xa hơn
       for (const t of tops) {
@@ -27735,10 +27794,6 @@ MA._xong();
         r(x, y0, 1, h, x < g.fx0 ? DARK : K.capL); r(x + g.sw - 1, y0, 1, h, x < g.fx0 ? K.capL : DARK);
         r(x + (x < g.fx0 ? 1 : g.sw - 2), y0, 1, h, x < g.fx0 ? K.capD : K.capD);
       }
-      // bóng tường đổ xuống sàn
-      r(g.fx0, g.fy0, g.fx1 - g.fx0, 3, 'rgba(0,0,0,0.34)'); r(g.fx0, g.fy0 + 3, g.fx1 - g.fx0, 2, 'rgba(0,0,0,0.16)');
-      r(g.fx0, g.fy0, 2, g.fy1 - g.fy0, 'rgba(0,0,0,0.25)'); r(g.fx1 - 2, g.fy0, 2, g.fy1 - g.fy0, 'rgba(0,0,0,0.25)');
-      r(g.fx0, g.fy1 - 2, g.fx1 - g.fx0, 2, 'rgba(0,0,0,0.2)');
     },
     front(g) {
       const x0 = g.fx0 - g.sw, w = g.fx1 - g.fx0 + g.sw * 2;
@@ -27841,7 +27896,9 @@ MA._xong();
   // ====================================================================
   const C = {
     void: '#0a121c', rock: '#22303f', rockD: '#141d29', rockL: '#34495c', wet: '#6f9ab8',
-    cry: '#58c8ea', cryL: '#d8f6ff', cryD: '#2a7fae', floor: '#3f4853', water: '#1b4a66', waterD: '#123650', waterL: '#8fd0ea', light: '#9fe0f4',
+    cry: '#58c8ea', cryL: '#d8f6ff', cryD: '#2a7fae', floor: '#39424d', water: '#1b4a66', waterD: '#123650', waterL: '#8fd0ea', light: '#9fe0f4',
+    // dải màu sàn đá (tối -> sáng). Xem docs/vfx/BANG-MAU.md
+    ground: ['#1b222b', '#29313b', '#333c47', '#3e4853', '#4a5560'],
   };
   function crystal(x, yb, s, glowOn) {
     if (glowOn !== false) glow(x, yb - s * 4, s * 7, s * 6, C.cry, 0.06, 4);
@@ -27883,22 +27940,33 @@ MA._xong();
       for (let i = 0; i < (g.W * g.H) / 1500; i++) ell(rn() * g.W, rn() * g.H, ri(rn, 8, 20), ri(rn, 3, 7), '#0d1622');
     },
     floor(g, rn) {
-      const w = g.fx1 - g.fx0, h = g.fy1 - g.fy0;
-      clipRect(g.fx0, g.fy0, w, h, () => {
-        r(g.fx0, g.fy0, w, h, dim(C.floor, 0.12));
-        // phiến đá phẳng xếp không đều
-        for (let i = 0, n = (w * h) / 170; i < n; i++) {
-          const cx = g.fx0 + rn() * w, cy = g.fy0 + rn() * h, rx = ri(rn, 8, 17), ry = ri(rn, 5, 10), k = rn();
-          const col = k < 0.2 ? lite(C.floor, 0.05) : k < 0.5 ? dim(C.floor, 0.06) : C.floor;
-          ell(cx, cy + 1, rx, ry, dim(C.floor, 0.3)); ell(cx, cy, rx, ry, col);
-          r(cx - rx * 0.5, cy - ry + 1, rx, 1, lite(col, 0.07));
+      // Sàn hang: phiến đá lớn xếp không đều (ô Voronoi), mỗi phiến một độ sáng, khe nứt tối, mép trên phiến có gờ sáng, mép dưới tối.
+      // Đá ướt loang thành mảng lớn (nhiễu mượt). Không rắc chấm lẻ; vũng nước ít, to, có viền.
+      const w = g.fx1 - g.fx0, h = g.fy1 - g.fy0, CS = 25;
+      const n1 = grid2(g, vnoise(rn, 34, g.W, g.H)), n2 = vnoise(rn, 7, g.W, g.H);
+      const gw = Math.ceil(g.W / CS) + 2, gh = Math.ceil(g.H / CS) + 2, sx = new Float32Array(gw * gh), sy = new Float32Array(gw * gh), tone = new Float32Array(gw * gh);
+      for (let j = 0; j < gh; j++) for (let i = 0; i < gw; i++) { const k = j * gw + i; sx[k] = (i - 1 + 0.2 + rn() * 0.6) * CS; sy[k] = (j - 1 + 0.2 + rn() * 0.6) * CS * 0.8; tone[k] = rn(); }
+      rampFill(g.fx0, g.fy0, w, h, C.ground, (x, y) => {
+        const ci = Math.floor(x / CS) + 1, cj = Math.floor(y / (CS * 0.8)) + 1;
+        let d1 = 1e9, d2 = 1e9, k1 = 0;
+        for (let j = cj - 1; j <= cj + 1; j++) for (let i = ci - 1; i <= ci + 1; i++) {
+          if (i < 0 || j < 0 || i >= gw || j >= gh) continue;
+          const k = j * gw + i, dx = x - sx[k], dy = (y - sy[k]) * 1.25, dd = dx * dx + dy * dy;
+          if (dd < d1) { d2 = d1; d1 = dd; k1 = k; } else if (dd < d2) d2 = dd;
         }
-        for (let i = 0, n = (w * h) / 900; i < n; i++) { const x = g.fx0 + rn() * w, y = g.fy0 + rn() * h; r(x, y, 5, 1, dim(C.floor, 0.35)); r(x + 4, y + 1, 3, 1, dim(C.floor, 0.35)); }
-        for (let i = 0, n = (w * h) / 1400; i < n; i++) { const x = g.fx0 + rn() * w, y = g.fy0 + rn() * h; r(x, y, 2, 1, C.rockL); r(x, y + 1, 2, 1, C.rockD); }
-        // vũng nước
-        for (let i = 0, n = Math.max(3, (w * h) / 9000); i < n; i++) {
-          const cx = g.fx0 + 24 + rn() * (w - 48), cy = g.fy0 + 24 + rn() * (h - 48), rx = ri(rn, 10, 18);
-          ell(cx, cy, rx, rx * 0.5, C.waterD); ell(cx, cy - 1, rx - 2, rx * 0.5 - 1, C.water);
+        const e = Math.sqrt(d2) - Math.sqrt(d1);
+        if (e < 1.1) return 0.6 + (tone[k1] - 0.5) * 0.6;
+        let f = 2.1 + (tone[k1] - 0.5) * 1.1 + (n1(x, y) - 0.5) * 1.3 + (n2(x, y) - 0.5) * 0.35;
+        if (e < 2.6) f += sy[k1] > y ? 0.9 : -0.6;
+        return Math.max(0, Math.min(3.999, f));
+      });
+      clipRect(g.fx0, g.fy0, w, h, () => {
+        // vài viên sỏi có bóng
+        for (let i = 0; i < 5; i++) { const x = g.fx0 + 10 + rn() * (w - 20), y = g.fy0 + 14 + rn() * (h - 22), sw = ri(rn, 2, 4); r(x - 1, y + 2, sw + 1, 1, C.ground[0]); r(x, y, sw, 2, '#55636f'); r(x, y, sw - 1, 1, '#71818d'); }
+        // vũng nước: ít mà to, viền đá tối, mặt nước có ánh
+        for (let i = 0, n = Math.max(2, Math.round((w * h) / 16000)); i < n; i++) {
+          const cx = g.fx0 + 26 + rn() * (w - 52), cy = g.fy0 + 28 + rn() * (h - 52), rx = ri(rn, 11, 17);
+          ell(cx, cy + 1, rx + 1, rx * 0.5 + 1, C.ground[0]); ell(cx, cy, rx, rx * 0.5, C.waterD); ell(cx, cy - 1, rx - 2, rx * 0.5 - 1, C.water);
           r(cx - rx * 0.4, cy - 2, rx * 0.5, 1, C.waterL); r(cx + 2, cy + 1, 3, 1, rgba(C.waterL, 0.5));
           if (g.amb) g.amb.push({ k: 'pud', x: Math.round(cx), y: Math.round(cy - 1), rx: rx - 2, ry: Math.round(rx * 0.5 - 1), ph: rn() * 9 });
         }
@@ -27926,7 +27994,7 @@ MA._xong();
       for (let x = g.fx0 + 22, i = 0; x < g.fx1 - 14; x += ri(rn, 34, 52), i++) {
         if (near(x, 30)) continue;
         crystal(x, g.fy0 + 1, i % 2 ? 1 : 2);
-        glow(x, g.fy0 + 10, 22, 10, C.cry, 0.05, 3);
+        if (g.glows) g.glows.push({ x, y: g.fy0 + 8, rx: 30, ry: 16, a: i % 2 ? 0.1 : 0.16, col: C.cry });
         if (g.amb) g.amb.push({ k: 'cry', x, y: g.fy0 - (i % 2 ? 4 : 8), s: i % 2 ? 1 : 2, ph: rn() * 9 });
       }
       // gờ đá chân vách
@@ -27939,8 +28007,6 @@ MA._xong();
         for (let y = y0 + 4; y < y0 + h; y += ri(rn, 8, 13)) { ell(x + g.sw / 2, y, g.sw / 2 - 1, 4, C.rock); r(x + 3, y - 3, g.sw - 7, 1, C.rockL); }
         r(x, y0, 1, h, x < g.fx0 ? DARK : C.rockL); r(x + g.sw - 1, y0, 1, h, x < g.fx0 ? C.rockL : DARK);
       }
-      r(g.fx0, g.fy0, g.fx1 - g.fx0, 3, 'rgba(0,0,0,0.34)'); r(g.fx0, g.fy0 + 3, g.fx1 - g.fx0, 2, 'rgba(0,0,0,0.16)');
-      r(g.fx0, g.fy0, 2, g.fy1 - g.fy0, 'rgba(0,0,0,0.25)'); r(g.fx1 - 2, g.fy0, 2, g.fy1 - g.fy0, 'rgba(0,0,0,0.25)');
       const skip = (y) => g.doors.some((d) => (d.side === 'left' || d.side === 'right') && Math.abs(d.at - y) < 26);
       for (let y = g.fy0 + 10; y < g.fy1 - 4; y += ri(rn, 9, 15)) {
         if (skip(y)) continue;
@@ -28022,7 +28088,10 @@ MA._xong();
   const F = {
     void: '#0b1610', leafD: '#13291a', leafM: '#1d3d25', leafL: '#2f5f34', leafH: '#4c8a3e',
     bark: '#3b2d20', barkD: '#261c14', barkL: '#57432e', moss: '#3d6a2e', mossL: '#69994a',
-    floor: '#4a4433', light: '#e4f0a0', thorn: '#8a6a44',
+    floor: '#3d402e', light: '#e4f0a0', thorn: '#8a6a44', mist: '#c8dcb0',
+    // dải màu sàn (tối -> sáng): 5 nấc đất nền rồi 4 nấc rêu. Xem docs/vfx/BANG-MAU.md
+    ground: ['#262a1d', '#313526', '#3d402e', '#4a4936', '#56523c', '#283620', '#314327', '#3b512d', '#466033'],
+    grassD: '#34502a', grassM: '#4a6c34', grassL: '#66894a',
   };
   function leafBlob(x, y, rx, ry, rn) {
     ell(x, y + 1, rx, ry, F.leafD); ell(x, y, rx, ry - 1, F.leafM); ell(x - 1, y - 1, rx * 0.65, ry * 0.55, F.leafL);
@@ -28053,7 +28122,8 @@ MA._xong();
       const vert = Math.abs(y1 - y0) > Math.abs(x1 - x0);
       const x = x0 + (x1 - x0) * t + (vert ? w : 0), y = y0 + (y1 - y0) * t + (vert ? 0 : w);
       r(x, y, 2, 2, '#5a3f26'); r(x, y, 1, 1, F.thorn);
-      if (i % 4 === 0) { const s = (i / 4) % 2 ? 1 : -1; if (vert) { r(x + s * 2, y, 2, 1, '#d8c090'); r(x + s * 3, y - 1, 1, 1, '#d8c090'); } else { r(x, y + s * 2, 1, 2, '#d8c090'); r(x + 1, y + s * 3, 1, 1, '#d8c090'); } }
+      // gai: thưa hơn và trầm hơn (trước là chấm sáng dày, nhìn rối)
+      if (i % 7 === 3) { const s = (i / 7) % 2 < 1 ? 1 : -1; if (vert) { r(x + s * 2, y, 2, 1, '#9a8460'); r(x + s * 3, y - 1, 1, 1, '#c0a87a'); } else { r(x, y + s * 2, 1, 2, '#9a8460'); r(x + 1, y + s * 3, 1, 1, '#c0a87a'); } }
     }
   }
   const Forest = {
@@ -28063,31 +28133,43 @@ MA._xong();
       for (let i = 0; i < (g.W * g.H) / 900; i++) ell(rn() * g.W, rn() * g.H, ri(rn, 8, 18), ri(rn, 4, 8), rn() < 0.5 ? '#0e1c13' : '#0d1911');
     },
     floor(g, rn) {
-      const w = g.fx1 - g.fx0, h = g.fy1 - g.fy0, cx = (g.fx0 + g.fx1) / 2, cy = (g.fy0 + g.fy1) / 2;
+      // Sàn nhiều lớp: đất nền chia mảng lớn (nhiễu mượt) – lối mòn đất nện nối các cửa – mảng rêu dày dần về phía tường.
+      // Chuyển giữa các nấc màu bằng lưới chấm; chi tiết nhỏ (khóm cỏ, lá, đá) ít và đi theo cụm, không rắc đều.
+      const w = g.fx1 - g.fx0, h = g.fy1 - g.fy0;
+      const n1 = grid2(g, vnoise(rn, 30, g.W, g.H)), n2 = vnoise(rn, 8, g.W, g.H), nm = grid2(g, vnoise(rn, 22, g.W, g.H)), pf = grid2(g, pathField(g, 9));
+      const edgeOf = (x, y) => 1 - smooth(0, 34, Math.min(x - g.fx0, g.fx1 - x, (y - g.fy0) * 1.3, g.fy1 - y));
+      const MOSS0 = 5; // các nấc rêu nằm sau các nấc đất trong dải màu
+      rampFill(g.fx0, g.fy0, w, h, F.ground, (x, y) => {
+        const p = pf(x, y), m = nm(x, y) + edgeOf(x, y) * 0.28 - p * 0.7;
+        if (m > 0.64 + (bay(x, y) - 0.5) * 0.04) return MOSS0 + Math.max(0, Math.min(2.6, (m - 0.64) * 8 + (n2(x, y) - 0.5) * 0.9 + 0.3));
+        return Math.max(0, Math.min(3.999, 1.7 + (n1(x, y) - 0.5) * 1.8 + (n2(x, y) - 0.5) * 0.6 + p * 1.5));
+      });
       clipRect(g.fx0, g.fy0, w, h, () => {
-        r(g.fx0, g.fy0, w, h, F.floor);
-        for (let i = 0, n = (w * h) / 260; i < n; i++) {
-          const x = g.fx0 + rn() * w, y = g.fy0 + rn() * h, k = rn();
-          ell(x, y, ri(rn, 6, 16), ri(rn, 3, 7), k < 0.4 ? dim(F.floor, 0.1) : k < 0.7 ? lite(F.floor, 0.05) : mix(F.floor, '#5a4a30', 0.4));
+        // khóm cỏ: chỉ mọc trong mảng rêu, mỗi khóm vài lá có gốc tối
+        const spot = (pred, tries) => { for (let k = 0; k < (tries || 30); k++) { const x = g.fx0 + 6 + rn() * (w - 12), y = g.fy0 + 10 + rn() * (h - 16); if (pred(x, y)) return [Math.round(x), Math.round(y)]; } return null; };
+        for (let i = 0; i < 16; i++) {
+          const s0 = spot((x, y) => nm(x, y) + edgeOf(x, y) * 0.28 - pf(x, y) * 0.7 > 0.68);
+          if (!s0) continue;
+          const [x, y] = s0, n = ri(rn, 3, 5);
+          r(x - 2, y + 1, n + 3, 1, F.grassD);
+          for (let k = 0; k < n; k++) { const hh = ri(rn, 2, 4), xx = x - 1 + k; r(xx, y + 1 - hh, 1, hh, k % 2 ? F.grassM : F.grassD); r(xx, y + 1 - hh, 1, 1, k % 2 ? F.grassL : F.grassM); }
         }
-        // lối mòn nối các cửa
-        for (const d of g.doors) {
-          const tx = d.side === 'left' ? g.fx0 : d.side === 'right' ? g.fx1 : d.at, ty = d.side === 'top' ? g.fy0 : d.side === 'bottom' ? g.fy1 : d.at;
-          for (let t = 0; t <= 1; t += 0.03) ell(cx + (tx - cx) * t + Math.sin(t * 7) * 3, cy + (ty - cy) * t + Math.cos(t * 6) * 3, 9, 6, mix(F.floor, '#6a5a3c', 0.5));
+        // lá rụng: vài cụm nhỏ trên đất
+        for (let i = 0; i < 5; i++) {
+          const s0 = spot((x, y) => pf(x, y) < 0.2);
+          if (!s0) continue;
+          for (let k = 0, n = ri(rn, 2, 3); k < n; k++) { const x = s0[0] + ri(rn, -5, 5), y = s0[1] + ri(rn, -3, 3), col = pick3(rn, '#6e5226', '#7a3c22', '#86682c'); r(x, y + 1, 3, 1, dim(col, 0.35)); r(x, y, 3, 1, col); r(x + 1, y, 1, 1, lite(col, 0.18)); }
         }
-        ell(cx, cy, 26, 18, mix(F.floor, '#6a5a3c', 0.5));
-        for (let i = 0, n = (w * h) / 500; i < n; i++) { const x = g.fx0 + rn() * w, y = g.fy0 + rn() * h; r(x, y, 2, 1, dim(F.floor, 0.3)); if (rn() < 0.4) r(x + 3, y + 1, 1, 1, lite(F.floor, 0.2)); }
-        // cỏ: dày ở sát tường, thưa dần vào giữa
-        for (let i = 0, n = (w * h) / 60; i < n; i++) {
-          const x = g.fx0 + rn() * w, y = g.fy0 + rn() * h;
-          const edge = Math.min(x - g.fx0, g.fx1 - x, y - g.fy0, g.fy1 - y);
-          if (rn() * 46 < edge) continue;
-          const col = rn() < 0.5 ? F.moss : F.leafL;
-          r(x, y, 1, 3, col); r(x + 2, y + 1, 1, 2, col); r(x - 2, y + 1, 1, 2, rn() < 0.4 ? F.mossL : col);
+        // đá nhỏ có bóng và cạnh sáng
+        for (let i = 0; i < 4; i++) {
+          const s0 = spot((x, y) => pf(x, y) < 0.3);
+          if (!s0) continue;
+          const [x, y] = s0, sw = ri(rn, 3, 5);
+          r(x - 1, y + 2, sw + 1, 1, F.ground[0]); r(x, y, sw, 2, '#5c5a4c'); r(x, y, sw - 1, 1, '#76735f');
         }
-        // lá rụng, hoa dại
-        for (let i = 0, n = (w * h) / 1500; i < n; i++) { const x = g.fx0 + rn() * w, y = g.fy0 + rn() * h; r(x, y, 3, 2, rn() < 0.5 ? '#8a6a2e' : '#a04a26'); r(x + 1, y, 1, 1, '#c8963a'); }
-        for (let i = 0, n = (w * h) / 2600; i < n; i++) { const x = g.fx0 + rn() * w, y = g.fy0 + rn() * h; r(x, y + 1, 1, 3, F.moss); r(x - 1, y, 3, 1, '#f0e8c0'); r(x, y - 1, 1, 3, '#f0e8c0'); r(x, y, 1, 1, '#f0b040'); }
+        // một cụm hoa dại nhỏ sát mép
+        const fl = spot((x, y) => edgeOf(x, y) > 0.6 && pf(x, y) < 0.1);
+        if (fl) for (let k = 0; k < 3; k++) { const x = fl[0] + ri(rn, -6, 6), y = fl[1] + ri(rn, -4, 4); r(x, y + 1, 1, 2, F.grassD); r(x - 1, y, 3, 1, '#d8cfa4'); r(x, y - 1, 1, 3, '#d8cfa4'); r(x, y, 1, 1, '#e0a440'); }
       });
     },
     back(g, rn) {
@@ -28130,17 +28212,14 @@ MA._xong();
       // nấm phát sáng ở gốc cây, đom đóm
       for (let x = g.fx0 + 18; x < g.fx1 - 10; x += ri(rn, 36, 60)) {
         if (tops.some((t) => Math.abs(t - x) < 34)) continue;
-        glow(x, g.fy0 + 1, 12, 7, '#b0f070', 0.07, 3);
+        if (g.glows) g.glows.push({ x, y: g.fy0 + 4, rx: 22, ry: 12, a: 0.13, col: '#b0f070' });
         if (g.amb) g.amb.push({ k: 'shroom', x, y: g.fy0 - 3, ph: rn() * 9 });
         r(x - 1, g.fy0 - 1, 2, 4, '#e8e0c0'); r(x - 3, g.fy0 - 4, 6, 3, '#9ad860'); r(x - 2, g.fy0 - 5, 4, 1, '#d0f8a0');
         r(x + 5, g.fy0 + 1, 1, 2, '#e8e0c0'); r(x + 4, g.fy0 - 1, 3, 2, '#9ad860');
       }
-      for (let i = 0; i < (g.fx1 - g.fx0) / 26; i++) { const x = g.fx0 + rn() * (g.fx1 - g.fx0), y = wy + 6 + rn() * (g.wh + 30); glow(x, y, 3, 3, '#e4f0a0', 0.12, 2); r(x, y, 1, 1, '#f8ffd0'); }
     },
     sides(g, rn) {
       const y0 = g.fy0 - g.wh - g.cap, h = g.fy1 + g.fw - y0;
-      r(g.fx0, g.fy0, g.fx1 - g.fx0, 3, 'rgba(0,0,0,0.3)'); r(g.fx0, g.fy0 + 3, g.fx1 - g.fx0, 2, 'rgba(0,0,0,0.14)');
-      r(g.fx0, g.fy0, 3, g.fy1 - g.fy0, 'rgba(0,0,0,0.22)'); r(g.fx1 - 3, g.fy0, 3, g.fy1 - g.fy0, 'rgba(0,0,0,0.22)');
       for (const x of [g.fx0 - g.sw, g.fx1]) {
         r(x, y0, g.sw, h, F.leafD);
         const skip = (y) => g.doors.some((d) => (d.side === (x < g.fx0 ? 'left' : 'right')) && Math.abs(d.at - y) < 17);
@@ -28246,7 +28325,7 @@ MA._xong();
           for (let x = g.fx0 - (j % 2 ? 14 : 0); x < g.fx1; x += 28) {
             const k = rn(), col = k < 0.2 ? lite(K.floor, 0.04) : k < 0.45 ? dim(K.floor, 0.1) : mix(K.floor, '#5a5560', 0.3);
             r(x, y, 27, 19, col); r(x, y, 27, 1, lite(col, 0.08)); r(x, y + 18, 27, 1, dim(col, 0.18));
-            if (rn() < 0.25) { r(x + 4 + rn() * 14, y + 5 + rn() * 8, 6, 1, dim(col, 0.3)); }
+            if (rn() < 0.12) { r(x + 4 + rn() * 14, y + 5 + rn() * 8, 6, 1, dim(col, 0.3)); }
             if (rn() < 0.22) { const mx = x + rn() * 20, my = y + 17; r(mx, my, 5, 2, '#3f5a34'); r(mx + 1, my, 2, 1, '#5f8046'); }
           }
         }
@@ -28262,7 +28341,7 @@ MA._xong();
           for (let x = g.fx0, i = 0; x < g.fx1; x += 16, i++) {
             const col = (i + j) % 2 ? dim(K.floor, 0.12 + rn() * 0.05) : lite(K.floor, 0.03 + rn() * 0.04);
             r(x, y, 15, 15, col); r(x, y, 15, 1, lite(col, 0.06));
-            if (rn() < 0.1) { r(x + 4, y + 6, 6, 1, dim(col, 0.3)); r(x + 9, y + 7, 2, 1, dim(col, 0.3)); }
+            if (rn() < 0.05) { r(x + 4, y + 6, 6, 1, dim(col, 0.3)); r(x + 9, y + 7, 2, 1, dim(col, 0.3)); }
           }
         }
       });
@@ -28283,18 +28362,18 @@ MA._xong();
         ell(cx, cy + 1, 30, 20, C.rockD); ell(cx, cy, 28, 18, C.waterD); ell(cx, cy - 1, 25, 15, C.water);
         if (g.amb) g.amb.push({ k: 'pud', x: cx, y: cy - 1, rx: 25, ry: 15, ph: rn() * 9, big: 1 });
         r(cx - 14, cy - 6, 10, 1, C.waterL); r(cx + 4, cy + 3, 7, 1, rgba(C.waterL, 0.6)); r(cx - 4, cy - 1, 4, 1, rgba(C.waterL, 0.5));
-        for (let i = 0; i < 9; i++) { const x = g.fx0 + 14 + rn() * (fw_(g) - 28), y = g.fy0 + 16 + rn() * (fh_(g) - 28); r(x, y, 2, 3, C.cry); r(x, y, 1, 1, C.cryL); r(x + 2, y + 1, 1, 2, C.cryD); }
+        for (let i = 0; i < 4; i++) { const x = g.fx0 + 14 + rn() * (fw_(g) - 28), y = g.fy0 + 16 + rn() * (fh_(g) - 28); r(x, y, 2, 3, C.cry); r(x, y, 1, 1, C.cryL); r(x + 2, y + 1, 1, 2, C.cryD); }
       });
     },
     // nền cát ẩm, vỏ sò và sao biển
     (g, rn) => {
       Cave.floor(g, rn);
       clipRect(g.fx0, g.fy0, fw_(g), fh_(g), () => {
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i < 4; i++) {
           const x = g.fx0 + rn() * fw_(g), y = g.fy0 + rn() * fh_(g), rx = ri(rn, 14, 28);
-          ell(x, y, rx, rx * 0.55, mix(C.floor, '#8a8266', 0.42)); ell(x - 2, y - 1, rx * 0.7, rx * 0.35, mix(C.floor, '#a09878', 0.4));
+          ell(x, y, rx, rx * 0.55, mix(C.floor, '#8a8266', 0.24)); ell(x - 2, y - 1, rx * 0.7, rx * 0.35, mix(C.floor, '#a09878', 0.22));
         }
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < 4; i++) {
           const x = g.fx0 + 12 + rn() * (fw_(g) - 24), y = g.fy0 + 14 + rn() * (fh_(g) - 24);
           if (rn() < 0.5) { r(x, y, 4, 3, '#d8c8b0'); r(x + 1, y, 2, 1, '#f0e8d8'); r(x, y + 2, 4, 1, '#9a8a74'); }
           else { r(x, y, 5, 1, '#c8684a'); r(x + 2, y - 2, 1, 5, '#c8684a'); r(x + 2, y, 1, 1, '#f0a080'); }
@@ -28309,8 +28388,10 @@ MA._xong();
       Forest.floor(g, rn);
       const cx = (g.fx0 + g.fx1) / 2, cy = (g.fy0 + g.fy1) / 2;
       clipRect(g.fx0, g.fy0, fw_(g), fh_(g), () => {
-        for (let i = 0; i < 46; i++) {
-          const x = g.fx0 + 6 + rn() * (fw_(g) - 12), y = g.fy0 + 10 + rn() * (fh_(g) - 16), col = pick3(rn, '#f0e8c0', '#e8a0c8', '#f0c860');
+        // bãi hoa mọc thành ba cụm (không rắc đều cả phòng)
+        const cl = [0, 1, 2].map(() => [g.fx0 + 20 + rn() * (fw_(g) - 40), g.fy0 + 24 + rn() * (fh_(g) - 40)]);
+        for (let i = 0; i < 21; i++) {
+          const q = cl[i % 3], x = q[0] + (rn() - 0.5) * 22, y = q[1] + (rn() - 0.5) * 14, col = pick3(rn, '#e0d8b0', '#d898b8', '#e0b858');
           r(x, y + 1, 1, 2, F.moss); r(x - 1, y, 3, 1, col); r(x, y - 1, 1, 3, col); r(x, y, 1, 1, '#f0b040');
         }
         for (let i = 0; i < 10; i++) { const a = (i / 10) * Math.PI * 2, x = cx + Math.cos(a) * 34, y = cy + Math.sin(a) * 24; r(x - 3, y - 1, 7, 5, DARK); r(x - 2, y - 2, 5, 5, '#8a8a80'); r(x - 2, y - 2, 4, 1, '#b8b8ac'); r(x + 1, y + 1, 2, 2, '#5a5a54'); }
@@ -28325,7 +28406,7 @@ MA._xong();
           const x0 = g.fx0 + rn() * fw_(g), y0 = g.fy0 + 10 + rn() * (fh_(g) - 20), len = ri(rn, 18, 40), dir = rn() < 0.5 ? 1 : -1;
           for (let k = 0; k < len; k++) { const y = y0 + Math.sin(k * 0.22) * 4; r(x0 + dir * k, y, 2, 2, k % 7 < 5 ? F.bark : F.barkD); if (k % 5 === 0) r(x0 + dir * k, y - 1, 1, 1, F.barkL); }
         }
-        for (let i = 0; i < 40; i++) { const x = g.fx0 + rn() * fw_(g), y = g.fy0 + rn() * fh_(g); r(x, y, 3, 2, pick3(rn, '#8a6a2e', '#a04a26', '#b88a34')); r(x + 1, y, 1, 1, '#d8a84a'); }
+        for (let i = 0; i < 14; i++) { const q = i % 2 ? [g.fx0 + 30, g.fy1 - 30] : [g.fx1 - 34, g.fy0 + 34], x = q[0] + (rn() - 0.5) * 40, y = q[1] + (rn() - 0.5) * 26, col = pick3(rn, '#7a5a2a', '#8a4426', '#9a7a30'); r(x, y + 1, 3, 1, dim(col, 0.4)); r(x, y, 3, 1, col); r(x + 1, y, 1, 1, lite(col, 0.2)); }
       });
     },
   ];
@@ -28363,7 +28444,7 @@ MA._xong();
       (x, y) => { ell(x, y + 1, 7, 3, 'rgba(0,0,0,0.3)'); r(x - 6, y - 11, 12, 12, DARK); r(x - 5, y - 10, 10, 10, K.wood); r(x - 5, y - 10, 2, 10, K.woodL); r(x - 5, y - 8, 10, 1, K.ironL); r(x - 5, y - 3, 10, 1, K.ironL); r(x - 4, y - 12, 8, 2, K.woodL); },
       (x, y) => { ell(x, y + 1, 8, 3, 'rgba(0,0,0,0.3)'); r(x - 7, y - 9, 14, 10, DARK); r(x - 6, y - 8, 12, 8, K.woodL); r(x - 6, y - 8, 12, 1, lite(K.woodL, 0.2)); r(x - 6, y - 4, 12, 1, K.woodD); r(x - 1, y - 8, 2, 8, K.woodD); },
       (x, y) => { r(x - 5, y - 1, 10, 2, '#d8d0bc'); r(x - 6, y - 2, 2, 4, '#d8d0bc'); r(x + 4, y - 2, 2, 4, '#d8d0bc'); r(x - 2, y - 6, 5, 4, '#d8d0bc'); r(x - 1, y - 5, 1, 1, DARK); r(x + 1, y - 5, 1, 1, DARK); },
-      (x, y, g) => { ell(x, y + 1, 5, 2, 'rgba(0,0,0,0.3)'); r(x - 1, y - 12, 2, 12, K.iron); r(x - 3, y - 1, 6, 2, K.ironL); r(x - 3, y - 13, 6, 2, K.ironL); g.lights.push({ k: 'candle', x, y: y - 15 }); },
+      (x, y, g) => { ell(x, y + 1, 5, 2, 'rgba(0,0,0,0.3)'); r(x - 1, y - 12, 2, 12, K.iron); r(x - 3, y - 1, 6, 2, K.ironL); r(x - 3, y - 13, 6, 2, K.ironL); g.lights.push({ k: 'candle', x, y: y - 15 }); g.glows.push({ x, y: y - 2, rx: 16, ry: 9, a: 0.14, col: '#ffc070' }); },
     ],
     1: [ // hang
       (x, y) => { ell(x, y + 1, 9, 4, 'rgba(0,0,0,0.3)'); ell(x - 3, y - 3, 6, 4, C.rock); ell(x + 4, y - 2, 5, 3, C.rockL); ell(x, y - 6, 4, 3, C.rockL); r(x - 2, y - 8, 4, 1, lite(C.rockL, 0.15)); },
@@ -28378,14 +28459,19 @@ MA._xong();
       (x, y) => { ell(x, y + 1, 12, 3, 'rgba(0,0,0,0.3)'); r(x - 11, y - 5, 22, 6, DARK); r(x - 10, y - 4, 20, 4, F.bark); r(x - 10, y - 4, 20, 1, F.barkL); r(x - 10, y - 4, 2, 4, '#8a6a44'); r(x - 4, y - 5, 6, 1, F.moss); r(x + 2, y - 3, 1, 3, F.barkD); },
     ],
   };
+  // Giai đoạn 2: ít vật hơn (2 món, phòng trùm 3), không đặt ở góc dành cho điểm nhấn và hai góc dưới (tiền cảnh che).
   function decor(T, g, rn) {
     const items = DECOR[T.reg];
-    const spots = [[g.fx0 + 20, g.fy0 + 26], [g.fx1 - 20, g.fy0 + 26], [g.fx0 + 20, g.fy1 - 14], [g.fx1 - 20, g.fy1 - 14]];
-    if (fw_(g) > 240) spots.push([g.fx0 + 70, g.fy0 + 22], [g.fx1 - 70, g.fy0 + 22]);
-    for (const s of spots) {
-      if (rn() < 0.3) continue;
-      const f = items[Math.floor(rn() * items.length)];
-      f(Math.round(s[0] + rn() * 16 - 8), Math.round(s[1] + rn() * 10 - 5), g, rn);
+    let spots = [[g.fx0 + 20, g.fy0 + 26, -1], [g.fx1 - 20, g.fy0 + 26, 1], [g.fx0 + 18, g.fy1 - 42, 0], [g.fx1 - 18, g.fy1 - 42, 0]];
+    if (fw_(g) > 240) spots.push([g.fx0 + 70, g.fy0 + 22, 0], [g.fx1 - 70, g.fy0 + 22, 0]);
+    spots = spots.filter((s) => s[2] !== g.accSide);
+    for (let i = spots.length - 1; i > 0; i--) { const j = Math.floor(rn() * (i + 1)), t = spots[i]; spots[i] = spots[j]; spots[j] = t; }
+    const used = [];
+    for (const s of spots.slice(0, g.big ? 3 : 2)) {
+      let k = Math.floor(rn() * items.length);
+      if (used.includes(k)) k = (k + 1) % items.length;
+      used.push(k);
+      items[k](Math.round(s[0] + rn() * 10 - 5), Math.round(s[1] + rn() * 8 - 4), g, rn);
     }
   }
   // Huy hiệu đầu lâu cạnh cửa dẫn tới Trùm; xích vàng trên cửa còn chờ điều kiện
@@ -28413,6 +28499,10 @@ MA._xong();
   // DỰNG PHÒNG
   // ====================================================================
   const THEMES = [Forest, Cave, Castle]; // theo số vùng: 0 Rừng già, 1 Hang biển, 2 Lâu đài cổ
+  // Ánh sáng từng vùng (Giai đoạn 2): bóng tường [trên, trái, phải, dưới] (điểm ảnh), độ đậm màu sàn, sáng giữa phòng, tối ở rìa.
+  Object.assign(Forest, { shade: [13, 8, 4, 5], voidCol: F.void, sat: 0.84, centerLight: 0.1, edgeDark: 0.17 });
+  Object.assign(Cave, { shade: [12, 7, 4, 5], voidCol: C.void, sat: 0.88, centerLight: 0.09, edgeDark: 0.15 });
+  Object.assign(Castle, { shade: [12, 7, 3, 4], voidCol: K.void, sat: 0.86, centerLight: 0.07, edgeDark: 0.15 });
   const SIDE_OF = { up: 'top', down: 'bottom', left: 'left', right: 'right' };
   const RA = (G.roomArt = { THEMES, SIDE_OF });
   // Khung phòng. big: phòng trùm rộng hơn. Sàn là hình chữ nhật fx0..fx1, fy0..fy1; nhân vật đứng trong bounds.
@@ -28433,10 +28523,17 @@ MA._xong();
   };
   let building = false; // khi dựng nền thì không vẽ mũi tên chỉ lối (mũi tên vẽ động ở lớp sống)
   const arrow0 = arrow;
-  function buildRoom(T, g, seed) {
-    const rn = G.srand(seed || 11);
-    const base = mk(g.W, g.H), fore = mk(g.W, g.H);
+  // Trộn số hạt giống: G.srand là LCG nên hai hạt giống liền nhau (các phòng trong một ải) cho số đầu gần như nhau.
+  const hs = (n) => { n = (n | 0) || 11; n = Math.imul(n ^ (n >>> 16), 0x45d9f3b); n = Math.imul(n ^ (n >>> 16), 0x45d9f3b); return (n ^ (n >>> 16)) >>> 0; };
+  // Phần vỏ phòng (sàn, ánh sáng, tường, trang trí, điểm nhấn) không phụ thuộc cửa đóng hay mở: dựng một lần, nhớ riêng.
+  // Khi dọn xong phòng, cửa mở ra thì chỉ vẽ lại cửa lên bản sao của vỏ (không tính lại lưới chấm), khỏi giật hình lúc hạ quái cuối.
+  function buildShell(T, g, seed) {
+    const rn = G.srand(hs(seed || 11));
+    const base = mk(g.W, g.H);
     g.lights = [];
+    g.glows = []; // quầng sáng hắt xuống sàn (đuốc, tinh thể, nấm...): tô một lần ở lightPass
+    g.casts = []; // bóng đổ hình bình hành (cột, gốc cây, tượng)
+    g.accSide = g.type === 'fountain' ? 1 : hs((seed || 11) + 101) & 1 ? -1 : 1; // góc trên đặt điểm nhấn (phòng suối: bên phải, bên trái có rương đồ)
     g.amb = []; // chỗ có chuyển động môi trường (vũng nước, giọt nhũ đá, nấm sáng...): ghi lại lúc dựng, vẽ động ở lớp sống
     c = base;
     T.paintVoid(g, rn);
@@ -28444,18 +28541,265 @@ MA._xong();
     mark(T, g);
     decor(T, g, rn);
     T.back(g, rn);
+    backPass(T, g);
     T.sides(g, rn);
     T.front(g, rn);
     T.backDeco(g, rn);
+    const acc = accentPlan(T, g, G.srand(hs((seed || 11) * 7 + 3)));
+    lightPass(T, g);
+    if (acc) acc();
+    return { cv: base.canvas, lights: g.lights, amb: g.amb, accSide: g.accSide };
+  }
+  function buildRoom(T, g, seed, shell) {
+    const base = mk(g.W, g.H), fore = mk(g.W, g.H);
+    base.drawImage(shell.cv, 0, 0);
+    g.lights = shell.lights.slice(); g.amb = shell.amb.slice(); g.accSide = shell.accSide;
+    c = base;
     const fores = [], rd = G.srand((seed || 11) + 5);
     for (const d of g.doors) { const f = T.door(g, d, rd); if (f) fores.push(f); emblem(g, d); }
     c = fore;
     for (const f of fores) f();
     if (T.fore) T.fore(g, G.srand((seed || 11) + 9));
     ambSetup(T, g, seed);
-    return { base: base.canvas, fore: fore.canvas, g, T };
+    const fgr = fgBuild(T, g, G.srand(hs((seed || 11) + 17)));
+    return { base: base.canvas, fore: fore.canvas, fg: fgr.cv, fgCl: fgr.cl, g, T };
   }
-  const cache = new Map();
+  // ---------- Giai đoạn 2: điểm nhấn thị giác của phòng (một món, ở một góc trên, không đụng lối cửa) ----------
+  // Lập kế hoạch trước lightPass (để quầng sáng của nó được tô xuống sàn), vẽ sau lightPass (để vật vẫn sáng rõ).
+  // Rừng già: cột nắng xuyên tán lá hoặc gốc cây cổ thụ phủ rêu. Hang biển: mỏ neo cũ hoặc tia sáng từ khe trần rọi xuống vũng nước.
+  // Lâu đài cổ: cửa sổ kính màu rọi nắng hoặc tượng đá vỡ có nến hai bên. Không vẽ thứ giống vật bấm được (nấm độc, tinh thể băng,
+  // lò lửa) để khỏi nhầm. Chỉ là hình vẽ: không va chạm, không đổi luật.
+  function shaftAt(g, rn) {
+    const tops = g.doors.filter((d) => d.side === 'top').map((d) => d.at);
+    for (let k = 0; k < 12; k++) {
+      const bx = Math.round(g.fx0 + 46 + rn() * (g.fx1 - g.fx0 - 70));
+      if (!tops.some((t) => Math.abs(t - bx) < 36 && Math.abs(t - (bx - 24)) < 40) && Math.abs(bx - 24 - g.cx) > 18) return bx;
+    }
+    return g.accSide < 0 ? g.fx0 + 52 : g.fx1 - 20;
+  }
+  // Cột sáng (nắng/ánh trần): hình thang từ nóc tường xuống một vệt trên sàn, làm sáng bằng lưới chấm (một nửa số điểm ảnh), cạnh sắc.
+  function shaft(g, bx, col, a) {
+    const yt = g.fy0 - g.wh - g.cap + 2, yb = g.fy0 + 44, lc = hex(col);
+    const y0 = Math.max(0, yt), id = c.getImageData(0, y0, g.W, yb - y0 + 1), d = id.data;
+    for (let y = y0; y <= yb; y++) {
+      const q = (y - yt) / (yb - yt), xl = Math.round(bx - 7 - q * 30), xr = Math.round(bx + 7 - q * 22);
+      const al = a * (0.55 + 0.45 * q) * (y > yb - 6 ? (yb - y) / 6 : 1);
+      for (let x = Math.max(0, xl); x <= Math.min(g.W - 1, xr); x++) {
+        const edge = Math.min(x - xl, xr - x), th = edge < 2 ? 0.25 : 0.62; // mép cột thưa chấm hơn
+        if (bay(x, y) > th) continue;
+        const o = ((y - y0) * g.W + x) * 4;
+        d[o] += (lc[0] - d[o]) * al; d[o + 1] += (lc[1] - d[o + 1]) * al; d[o + 2] += (lc[2] - d[o + 2]) * al;
+      }
+    }
+    c.putImageData(id, 0, y0);
+  }
+  function accentPlan(T, g, rn) {
+    const side = g.accSide, cx0 = side < 0 ? g.fx0 + 22 : g.fx1 - 22, cy0 = g.fy0 + 18, kind = rn() < 0.5 ? 0 : 1;
+    if (T.reg === 0) {
+      if (kind === 0) {
+        const bx = shaftAt(g, rn), sx = bx - 26, sy = g.fy0 + 44;
+        g.glows.push({ x: sx, y: sy, rx: 30, ry: 14, a: 0.22, col: '#f4f8b8' });
+        if (g.amb) for (let i = 0; i < 5; i++) g.amb.push({ k: 'beam', bx, y0: g.fy0 - g.wh, y1: sy, ph: rn() * 20, sp: 0.6 + rn() * 0.6 });
+        return () => {
+          shaft(g, bx, '#f0f4c0', 0.2);
+          for (let i = 0; i < 4; i++) { const x = sx + ri(rn, -12, 12), y = sy + ri(rn, -5, 5); r(x, y + 1, 1, 2, F.grassM); r(x - 1, y, 3, 1, '#f0ecd0'); r(x, y - 1, 1, 3, '#f0ecd0'); r(x, y, 1, 1, '#f0c050'); }
+        };
+      }
+      const x = cx0, y = cy0 + 4;
+      g.casts.push({ x: x - 10, y: y + 1, w: 20, len: 7, a: 0.36 });
+      return () => { // gốc cổ thụ: vòng tuổi, vỏ có khối sáng tối, rêu phủ, dương xỉ (không có nấm: khỏi lẫn với nấm độc bấm được)
+        ell(x, y + 2, 14, 4, 'rgba(0,0,0,0.35)');
+        r(x - 12, y - 10, 24, 13, DARK); r(x - 11, y - 9, 22, 11, F.bark); r(x - 11, y - 9, 4, 11, F.barkL); r(x + 6, y - 9, 5, 11, F.barkD);
+        for (let i = 0; i < 4; i++) r(x - 6 + i * 4, y - 6 + (i % 2) * 3, 1, 5, F.barkD);
+        r(x - 11, y - 13, 22, 4, '#8a6a44'); r(x - 10, y - 14, 20, 1, '#a8885a'); r(x - 6, y - 12, 12, 1, '#6a4e30'); r(x - 2, y - 12, 4, 1, '#c8a060');
+        r(x - 12, y - 14, 8, 3, F.moss); r(x - 11, y - 15, 5, 1, F.mossL); r(x - 13, y - 6, 3, 6, F.moss); r(x + 9, y - 3, 4, 4, F.moss);
+        for (const [dx, dy] of [[-15, 1], [14, 0], [-4, 3]]) { r(x + dx, y + dy - 1, 5, 2, F.barkD); r(x + dx, y + dy - 1, 3, 1, F.bark); }
+        for (const [dx, dir] of [[13, 1], [-15, -1]]) for (let k = 0; k < 8; k++) { const xx = x + dx + dir * Math.round(k * 0.5), yy = y + 1 - k; r(xx, yy, 1, 1, F.grassM); if (k % 2) r(xx + dir, yy, 1, 1, F.grassD); }
+        r(x - 3, y - 13, 1, 1, '#f0ecd0'); r(x - 4, y - 12, 3, 1, '#f0ecd0'); r(x - 3, y - 12, 1, 1, '#e0a440');
+      };
+    }
+    if (T.reg === 1) {
+      if (kind === 0) { // mỏ neo cũ cắm nghiêng xuống sàn, xích, rong biển, vỏ sò
+        const x = cx0, y = cy0 + 6;
+        g.casts.push({ x: x - 4, y: y + 1, w: 9, len: 9, a: 0.32 });
+        const IR = '#4a5560', IRL = '#7a8894', RU = '#7a4a2a';
+        return () => {
+          ell(x, y + 2, 12, 3, 'rgba(0,0,0,0.35)');
+          ell(x, y + 1, 9, 3, C.ground[0]); // chỗ đất lõm quanh neo
+          for (let k = 0; k < 20; k++) { const xx = x - 2 + Math.round(k * 0.2), yy = y - k; r(xx - 1, yy, 4, 1, DARK); r(xx, yy, 2, 1, k % 5 === 2 ? RU : IR); r(xx, yy, 1, 1, IRL); }
+          r(x - 7, y - 3, 15, 2, DARK); r(x - 6, y - 3, 13, 1, IR); r(x - 6, y - 3, 13, 1, IRL); r(x - 8, y - 6, 2, 4, IR); r(x + 7, y - 6, 2, 4, IR); r(x - 8, y - 7, 1, 1, IRL); r(x + 8, y - 7, 1, 1, IRL);
+          r(x + 1, y - 22, 5, 5, DARK); r(x + 2, y - 21, 3, 3, IR); r(x + 3, y - 20, 1, 1, DARK); r(x - 3, y - 17, 11, 2, IR); r(x - 3, y - 17, 11, 1, IRL);
+          for (let k = 0; k < 7; k++) { const xx = x + 6 + k * 2, yy = y - 18 + k * 3; r(xx, yy, 2, 2, k % 2 ? IR : IRL); }
+          for (let k = 0; k < 9; k++) { r(x - 9 + Math.round(Math.sin(k * 0.9)), y - k, 1, 1, '#2f6a50'); r(x + 10 + Math.round(Math.sin(k * 0.8 + 1)), y - k * 0.8, 1, 1, '#3a7a5a'); }
+          r(x + 12, y + 1, 4, 3, '#d8c8b0'); r(x + 13, y + 1, 2, 1, '#f0e8d8'); r(x + 12, y + 3, 4, 1, '#9a8a74');
+        };
+      }
+      const bx = shaftAt(g, rn), sx = bx - 26, sy = g.fy0 + 44;
+      g.glows.push({ x: sx, y: sy, rx: 28, ry: 13, a: 0.2, col: '#bfefff' });
+      if (g.amb) {
+        g.amb.push({ k: 'pud', x: sx, y: sy, rx: 12, ry: 5, ph: rn() * 9, big: 1 });
+        for (let i = 0; i < 4; i++) g.amb.push({ k: 'beam', bx, y0: g.fy0 - g.wh, y1: sy, ph: rn() * 20, sp: 0.5 + rn() * 0.5, col: '#d8f6ff' });
+      }
+      return () => {
+        shaft(g, bx, '#cfefff', 0.16);
+        ell(sx, sy + 1, 15, 7, C.ground[0]); ell(sx, sy, 14, 6, C.waterD); ell(sx, sy - 1, 12, 5, C.water); r(sx - 5, sy - 3, 6, 1, C.waterL); r(sx + 2, sy, 4, 1, rgba(C.waterL, 0.6));
+      };
+    }
+    if (kind === 0) { // cửa sổ kính màu trên cao rọi một cột nắng ấm xuống sàn, vệt sáng có ô màu của kính
+      const bx = shaftAt(g, rn), sx = bx - 26, sy = g.fy0 + 44, wy = g.fy0 - g.wh;
+      g.glows.push({ x: sx, y: sy, rx: 30, ry: 14, a: 0.22, col: '#ffd8a0' });
+      if (g.amb) {
+        g.amb.push({ k: 'win', x: bx, y: wy + 6, ph: rn() * 9 });
+        for (let i = 0; i < 5; i++) g.amb.push({ k: 'beam', bx, y0: wy + 10, y1: sy, ph: rn() * 20, sp: 0.5 + rn() * 0.5, col: '#ffe6b8' });
+      }
+      return () => {
+        r(bx - 7, wy + 4, 14, 22, DARK); r(bx - 6, wy + 5, 12, 20, '#2a3a5a');
+        for (let j = 0; j < 4; j++) for (let i = 0; i < 2; i++) r(bx - 5 + i * 6, wy + 6 + j * 5, 4, 4, ['#d8823a', '#a8402a', '#4a7ab0', '#c8a040'][(i + j) % 4]);
+        r(bx - 1, wy + 5, 1, 20, DARK); r(bx - 6, wy + 15, 12, 1, DARK); r(bx - 7, wy + 3, 14, 1, K.stoneL); r(bx - 8, wy + 26, 16, 2, K.stone); r(bx - 8, wy + 26, 16, 1, K.stoneL);
+        shaft(g, bx, '#ffe2b0', 0.17);
+        for (let j = -1; j <= 1; j++) for (let i = -2; i <= 1; i++) { const x = sx + i * 7 + j * 2, y = sy + j * 4; if ((i + j + 9) % 3 === 0) r(x, y, 3, 2, rgba(['#ffb060', '#ff8a6a', '#8ab8ff'][(i + 9) % 3], 0.18)); }
+      };
+    }
+    const x = cx0, y = cy0 + 8;
+    g.glows.push({ x: x - 10, y: y - 2, rx: 14, ry: 8, a: 0.14, col: '#ffc070' }, { x: x + 10, y: y - 2, rx: 14, ry: 8, a: 0.14, col: '#ffc070' });
+    g.lights.push({ k: 'candle', x: x - 10, y: y - 7 }, { k: 'candle', x: x + 10, y: y - 7 });
+    g.casts.push({ x: x - 6, y: y + 1, w: 12, len: 9, a: 0.38 });
+    return () => { // tượng hiệp sĩ đá đã vỡ trên bệ, rêu ở chân, hai cây nến
+      ell(x, y + 2, 11, 3, 'rgba(0,0,0,0.35)');
+      r(x - 8, y - 6, 16, 8, DARK); r(x - 7, y - 5, 14, 6, K.stone); r(x - 7, y - 5, 14, 1, K.stoneL); r(x + 4, y - 4, 3, 5, dim(K.stone, 0.3));
+      r(x - 5, y - 24, 10, 19, DARK); r(x - 4, y - 23, 8, 18, K.stone); r(x - 4, y - 23, 2, 18, K.stoneL); r(x + 2, y - 23, 2, 18, dim(K.stone, 0.3));
+      r(x - 3, y - 29, 6, 6, DARK); r(x - 2, y - 28, 4, 5, K.stone); r(x - 2, y - 28, 1, 5, K.stoneL); r(x + 1, y - 29, 2, 2, K.void); // đầu sứt một góc
+      r(x - 7, y - 21, 3, 9, K.stone); r(x - 7, y - 21, 1, 9, K.stoneL); r(x + 4, y - 18, 2, 10, dim(K.stone, 0.15)); r(x + 5, y - 26, 1, 16, K.ironL);
+      r(x - 7, y, 5, 2, '#3f5a34'); r(x - 6, y, 2, 1, '#5f8046'); r(x + 9, y + 1, 4, 1, '#d8d0bc');
+      for (const dx of [-10, 10]) { r(x + dx - 1, y - 6, 2, 6, '#e8e0c8'); r(x + dx - 2, y - 1, 4, 2, K.iron); }
+    };
+  }
+
+  // ---------- Giai đoạn 2: tiền cảnh mép dưới (gần người xem nhất, tối, che rất ít) ----------
+  // Hai cụm ở hai góc dưới, đè lên viền tường trước và lấn vào sàn vài điểm ảnh. Vẽ vào canvas riêng; khi em bé (hoặc quái)
+  // đi vào sau cụm thì cụm mờ dần còn khoảng 35% (xem roomFore).
+  const FG = {
+    0: { d: '#08130b', m: '#112317', l: '#1c3622', rim: '#335a36' },
+    1: { d: '#05090e', m: '#0e1823', l: '#182838', rim: '#36587a' },
+    2: { d: '#0c0809', m: '#1e1717', l: '#2c2322', rim: '#5a4840' },
+  };
+  function fgBuild(T, g, rn) {
+    const fg = mk(g.W, g.H), pv = c, P = FG[T.reg], cl = [];
+    c = fg;
+    for (const side of [-1, 1]) {
+      const bx = side < 0 ? g.fx0 - g.sw + 2 : g.fx1 + g.sw - 2, by = g.fy1 + g.fw;
+      const w = ri(rn, 30, 40), x0 = side < 0 ? bx - 4 : bx - w + 4;
+      if (T.reg === 0) { // bụi dương xỉ, lá to
+        for (let i = 0; i < 6; i++) {
+          const x = x0 + 4 + rn() * (w - 8), y = by - 5 - rn() * 14, rx = ri(rn, 6, 10), ry = ri(rn, 4, 7);
+          ell(x, y + 1, rx, ry, P.d); ell(x, y, rx - 1, ry - 1, P.m); ell(x - side * 1, y - 2, rx * 0.6, ry * 0.45, P.l); r(x - 2, y - ry + 1, 4, 1, P.rim);
+        }
+        for (let i = 0; i < 3; i++) { // lá dương xỉ chĩa lên
+          const x = x0 + w * (0.25 + 0.25 * i), len = ri(rn, 10, 16), dir = side * (i === 1 ? 0.2 : 0.5);
+          for (let k = 0; k < len; k++) { const xx = x + dir * k * 0.6, yy = by - 10 - k; r(xx, yy, 1, 1, P.l); if (k % 3 === 1) { r(xx - 2, yy + 1, 2, 1, P.m); r(xx + 1, yy + 1, 2, 1, P.m); } }
+          r(x + dir * len * 0.6, by - 10 - len, 1, 1, P.rim);
+        }
+      } else if (T.reg === 1) { // tảng đá tối và măng đá, chóp có ánh lam
+        for (let i = 0; i < 4; i++) {
+          const x = x0 + 5 + rn() * (w - 10), y = by - 4 - rn() * 10, rx = ri(rn, 6, 11), ry = ri(rn, 4, 7);
+          ell(x, y, rx, ry, P.d); ell(x - side, y - 1, rx - 2, ry - 2, P.m); r(x - rx * 0.5, y - ry + 1, rx * 0.8, 1, P.rim);
+        }
+        for (let i = 0; i < 2; i++) { const x = x0 + w * (0.3 + 0.35 * i), h = ri(rn, 12, 20); spike(x + 1, by - 4, 7, h + 1, -1, P.d); spike(x, by - 4, 5, h, -1, P.m, P.rim); }
+      } else { // chân cột gãy có rãnh, đá vụn tròn cạnh, một mảnh gạch nghiêng
+        const px = x0 + (side < 0 ? 8 : w - 22), ph = ri(rn, 22, 28);
+        r(px - 1, by - ph - 1, 16, ph + 1, P.d); r(px, by - ph, 14, ph, P.m); r(px, by - ph, 3, ph, P.l); r(px + 11, by - ph, 3, ph, P.d);
+        for (let k = 5; k < 11; k += 3) r(px + k, by - ph + 3, 1, ph - 4, P.d);
+        for (let k = 0; k < 14; k += 2) r(px + k, by - ph - 1 - (k * 7 % 4), 2, 2 + (k * 7 % 4), P.m); // mặt gãy lởm chởm
+        r(px + 1, by - ph - 2, 4, 1, P.rim); r(px + 8, by - ph - 3, 3, 1, P.rim);
+        for (let i = 0; i < 5; i++) { const x = x0 + 4 + rn() * (w - 10), y = by - 2 - rn() * 7, rx = ri(rn, 3, 6); ell(x, y + 1, rx + 1, rx * 0.7 + 1, P.d); ell(x, y, rx, rx * 0.7, P.m); r(x - rx * 0.5, y - rx * 0.7 + 1, rx, 1, P.rim); }
+      }
+      cl.push({ x0: Math.max(0, x0 - 4), x1: Math.min(g.W, x0 + w + 4), y0: by - 36, y1: g.H, a: 1 });
+    }
+    c = pv;
+    return { cv: fg.canvas, cl };
+  }
+
+  // ---------- Giai đoạn 2: ánh sáng sàn và hậu cảnh (vẽ một lần lúc dựng phòng, nằm trong nền đã nhớ) ----------
+  // Sàn: giữa phòng (khu đánh nhau) sáng nhẹ theo màu đèn của vùng, rìa trầm hơn nhưng không đen kịt; tường đổ bóng xuống sàn
+  // (ánh sáng chếch từ phía trên bên phải: bóng tường sau dày nhất, tường trái dày hơn tường phải); quầng đuốc/tinh thể/nấm
+  // hắt xuống sàn. Mọi nấc sáng tối tô bằng lưới chấm. Sàn được giảm độ đậm màu một chút để em bé và quái nổi lên.
+  function lightPass(T, g) {
+    const x0 = g.fx0, y0 = g.fy0, w = g.fx1 - g.fx0, h = g.fy1 - g.fy0;
+    const id = c.getImageData(x0, y0, w, h), d = id.data;
+    const cx = (g.fx0 + g.fx1) / 2, cy = (g.fy0 + g.fy1) / 2 + 6, rx = w * 0.5, ry = h * 0.5;
+    const LC = hex(T.light), glows = (g.glows || []).map((o) => Object.assign({ c: hex(o.col) }, o)), casts = g.casts || [];
+    const STEP = 0.05, SAT = T.sat || 0.86, sh = T.shade, CL = T.centerLight || 0.09, ED = T.edgeDark || 0.16;
+    // Ánh sáng thay đổi chậm nên tính trên lưới thưa 2 điểm ảnh (nhanh hơn ~4 lần), rồi tô từng điểm ảnh bằng lưới chấm.
+    const gw = (w >> 1) + 1, gh = (h >> 1) + 1, KK = new Float32Array(gw * gh), KP = new Float32Array(gw * gh), TC = new Float32Array(gw * gh * 3);
+    for (let j = 0; j < gh; j++) {
+      const gy = y0 + j * 2 + 0.5, dt = gy - g.fy0, db = g.fy1 - 1 - gy;
+      for (let i = 0; i < gw; i++) {
+        const gx = x0 + i * 2 + 0.5, n = j * gw + i;
+        const ex = (gx - cx) / rx, ey = (gy - cy) / ry, e = Math.sqrt(ex * ex + ey * ey);
+        const kc = CL * (1 - smooth(0.2, 1.0, e));
+        let k = kc - ED * smooth(0.6, 1.3, e), kp = kc, tr = LC[0] * kc, tg = LC[1] * kc, tb = LC[2] * kc;
+        const dl = gx - g.fx0, dr = g.fx1 - 1 - gx;
+        let s = 0;
+        if (dt < sh[0]) s = 0.55 * (1 - dt / sh[0]);
+        if (dl < sh[1]) s = Math.max(s, 0.42 * (1 - dl / sh[1]));
+        if (dr < sh[2]) s = Math.max(s, 0.36 * (1 - dr / sh[2]));
+        if (db < sh[3]) s = Math.max(s, 0.3 * (1 - db / sh[3]));
+        for (const q of casts) { // bóng đổ của cột, gốc cây, tượng: hình bình hành ngả về bên trái phía dưới
+          const u = gy - q.y;
+          if (u < 0 || u >= q.len) continue;
+          const xl = q.x - u * 0.6;
+          if (gx >= xl && gx < xl + q.w) s = Math.max(s, q.a * (1 - (u / q.len) * 0.5));
+        }
+        k -= s;
+        for (let t = 0; t < glows.length; t++) {
+          const L = glows[t], qx = (gx - L.x) / L.rx, qy = (gy - L.y) / L.ry;
+          if (qx >= 1 || qx <= -1 || qy >= 1 || qy <= -1) continue;
+          const q = Math.sqrt(qx * qx + qy * qy);
+          if (q >= 1) continue;
+          const a = L.a * (1 - q) * (1 - q * 0.5);
+          k += a; kp += a; tr += L.c[0] * a; tg += L.c[1] * a; tb += L.c[2] * a;
+        }
+        KK[n] = k; KP[n] = kp; TC[n * 3] = tr; TC[n * 3 + 1] = tg; TC[n * 3 + 2] = tb;
+      }
+    }
+    for (let y = 0; y < h; y++) {
+      const gy = y0 + y, row = (y >> 1) * gw;
+      for (let x = 0; x < w; x++) {
+        const gx = x0 + x, o = (y * w + x) * 4, n = row + (x >> 1), k = KK[n], kp = KP[n];
+        const qk = Math.floor(sharp(k / STEP) + bay(gx, gy)) * STEP;
+        let R = d[o], Gc = d[o + 1], B = d[o + 2];
+        const lum = R * 0.3 + Gc * 0.59 + B * 0.11;
+        R = lum + (R - lum) * SAT; Gc = lum + (Gc - lum) * SAT; B = lum + (B - lum) * SAT;
+        if (qk < 0) { const m = Math.max(0, 1 + qk); R *= m; Gc *= m; B *= m; }
+        else if (qk > 0 && kp > 0) {
+          const f = (qk / kp) * 0.55, t3 = n * 3;
+          R = R * (1 + qk * 0.35) + TC[t3] * f; Gc = Gc * (1 + qk * 0.35) + TC[t3 + 1] * f; B = B * (1 + qk * 0.35) + TC[t3 + 2] * f;
+        }
+        d[o] = R > 255 ? 255 : R; d[o + 1] = Gc > 255 ? 255 : Gc; d[o + 2] = B > 255 ? 255 : B;
+      }
+    }
+    c.putImageData(id, x0, y0);
+  }
+  // Hậu cảnh (tường sau, thân cây, vách hang): trầm dần lên phía trên và hơi ngả về màu khoảng tối của vùng,
+  // để mắt dồn vào sàn. Đồ sáng (đuốc, nấm, tinh thể, cửa sổ) vẽ sau lượt này nên vẫn là điểm nhấn.
+  function backPass(T, g) {
+    const x0 = Math.max(0, g.fx0 - g.sw), y0 = Math.max(0, g.fy0 - g.wh - g.cap), w = Math.min(g.W, g.fx1 + g.sw) - x0, h = g.fy0 - y0;
+    const id = c.getImageData(x0, y0, w, h), d = id.data, V = hex(T.voidCol || '#000000'), STEP = 0.06;
+    for (let y = 0; y < h; y++) {
+      const gy = y0 + y, up = 1 - smooth(0, 1, y / h); // 1 ở nóc tường, 0 ở chân tường
+      for (let x = 0; x < w; x++) {
+        const gx = x0 + x, o = (y * w + x) * 4;
+        const a = Math.floor(sharp((0.1 + 0.32 * up) / STEP) + bay(gx, gy)) * STEP;
+        let R = d[o], Gc = d[o + 1], B = d[o + 2];
+        const lum = R * 0.3 + Gc * 0.59 + B * 0.11;
+        R = lum + (R - lum) * 0.82; Gc = lum + (Gc - lum) * 0.82; B = lum + (B - lum) * 0.82;
+        d[o] = R + (V[0] - R) * a; d[o + 1] = Gc + (V[1] - Gc) * a; d[o + 2] = B + (V[2] - B) * a;
+      }
+    }
+    c.putImageData(id, x0, y0);
+  }
+
+  const cache = new Map(), shells = new Map();
   function get(W) {
     const doors = W.doors || [];
     const key = [W.uid, W.region, W.type, W.seed, doors.map((d) => d.dir + (d.open ? 1 : 0) + (d.gate ? 'g' : '') + (d.boss ? 'b' : '')).join(',')].join('|');
@@ -28463,8 +28807,17 @@ MA._xong();
     if (!room) {
       const g = Object.assign({}, W.geo, { type: W.type, variant: W.variant || 0 });
       g.doors = doors.map((d) => ({ side: SIDE_OF[d.dir], dir: d.dir, at: d.dir === 'up' || d.dir === 'down' ? g.cx : g.cy, state: d.open ? 'open' : 'locked', gate: !!d.gate, boss: !!d.boss }));
+      const T = THEMES[W.region] || Castle, skey = [W.uid, W.region, W.type, W.seed, W.variant || 0, doors.map((d) => d.dir).join(',')].join('|');
       building = true;
-      try { room = buildRoom(THEMES[W.region] || Castle, g, W.seed); } finally { building = false; }
+      try {
+        let shell = shells.get(skey);
+        if (!shell) {
+          shell = buildShell(T, Object.assign({}, g, { doors: g.doors }), W.seed);
+          if (shells.size >= 4) shells.delete(shells.keys().next().value);
+          shells.set(skey, shell);
+        }
+        room = buildRoom(T, g, W.seed, shell);
+      } finally { building = false; }
       if (cache.size >= 4) cache.delete(cache.keys().next().value);
       cache.set(key, room);
     }
@@ -28472,6 +28825,7 @@ MA._xong();
   }
   RA.get = get;
   RA.cache = cache;
+  RA.shells = shells;
 
   // ---------- chuyển động môi trường theo vùng (VFX Phase 4) ----------
   // Chỉ những thứ hợp vùng: Rừng già có đom đóm, phấn hoa, lá rơi, cỏ lay, nấm sáng thở; Hang biển có vũng nước gợn,
@@ -28493,6 +28847,9 @@ MA._xong();
       mote(0, 6, '#e8f0b0', wy + 6, g.fy0 + 26); // phấn hoa trôi chậm trước thân cây
       for (let i = 0; i < 6; i++) A2.push({ k: 'fly', x: g.fx0 + 10 + rn() * (fw - 20), y: g.fy0 + 16 + rn() * (fh - 40), ph: rn() * 20, sp: 0.7 + rn() * 0.6 });
       for (let i = 0; i < 3; i++) A2.push({ k: 'leaf', x: g.fx0 + 16 + rn() * (fw - 32), y1: g.fy0 + 14 + rn() * (fh - 30), ph: rn() * 30, per: 9 + rn() * 5, col: ['#a04a26', '#8a6a2e', '#b88a34'][i % 3] });
+      // sương rìa: sát tường sau và hai bên, nhạt, chậm
+      A2.push({ k: 'emist', y: g.fy0 + 3, h: 6, len: 60, sp: 3, ph: rn() * 90, col: F.mist }, { k: 'emist', y: g.fy1 - 9, h: 6, len: 54, sp: 2.4, ph: rn() * 90, col: F.mist });
+      A2.push({ k: 'emist', v: 1, x: g.fx0 + 1, w: 9, len: 50, sp: 2.2, ph: rn() * 90, col: F.mist }, { k: 'emist', v: 1, x: g.fx1 - 10, w: 9, len: 46, sp: 2.8, ph: rn() * 90, col: F.mist });
       for (let i = 0; i < 12; i++) { const left = i % 2 === 0; A2.push({ k: 'tuft', x: left ? g.fx0 + 3 + rn() * 12 : g.fx1 - 4 - rn() * 12, y: g.fy0 + 14 + rn() * (fh - 22), h: 3 + Math.floor(rn() * 3), ph: rn() * 6 }); }
     } else if (T.reg === 1) {
       mote(0, 5, '#bfe9f4', wy + 4, g.fy0 + 20); // hạt sáng li ti trong hơi ẩm
@@ -28500,6 +28857,7 @@ MA._xong();
       for (let i = 0; i < 3; i++) A2.push({ k: 'mist', y: g.fy0 + 24 + i * Math.round((fh - 40) / 3) + rn() * 10, h: 7 + Math.floor(rn() * 4), ph: rn() * 90, sp: 2 + rn() * 2.5 });
     } else {
       mote(0, 5, '#ffd9a0', wy + 2, g.fy0 + 16); // bụi bay trong ánh đuốc
+      A2.push({ k: 'emist', y: g.fy0 + 2, h: 7, len: 70, sp: 2, ph: rn() * 90, col: '#d8c0a0' }); // hơi khói mỏng sát chân tường sau
       mote(1, 6, '#ffe6b8', g.fy0 + 10, g.fy1 - 10);
     }
   }
@@ -28586,6 +28944,21 @@ MA._xong();
           const k = 0.5 + 0.5 * Math.sin(t * 0.8 + a.ph) * (0.8 + 0.2 * Math.sin(t * 5.3 + a.ph));
           r(a.x - 5, a.y, 10, 18, acol('#ffd08a', (0.04 + 0.08 * k) * M));
           ell(a.x, fy0 + 10, 14 + k * 2, 6, acol('#ffb060', (0.03 + 0.03 * k) * M));
+          break;
+        }
+        case 'beam': { // hạt bụi/phấn lấp lánh trôi chậm trong cột sáng
+          const P = 7 / a.sp, u = ((t + a.ph) % P) / P, y = a.y0 + (a.y1 - a.y0) * u;
+          const q = (y - (a.y0 - 7)) / (a.y1 - a.y0 + 7), x = a.bx - q * 26 + Math.sin(t * 0.8 + a.ph) * 4;
+          r(x, y, 1, 1, acol(a.col || '#fbffd8', 0.75 * Math.sin(u * 3.1416) * M));
+          break;
+        }
+        case 'emist': { // sương mỏng ở rìa phòng (Rừng già): dải ngắn trôi dọc theo tường, không đi qua giữa phòng
+          const per = a.len + 40, off = (t * a.sp + a.ph) % per;
+          if (a.v) { // dọc tường trái/phải
+            for (let y = fy0 - per + off; y < fy1; y += per) { const y0 = Math.max(fy0 + 4, y), y1 = Math.min(fy1 - 4, y + a.len); if (y1 > y0) { r(a.x, y0, a.w, y1 - y0, acol(a.col, 0.05 * M)); r(a.x + (a.x < (fx0 + fx1) / 2 ? 0 : a.w - 3), y0 + 4, 3, Math.max(0, y1 - y0 - 8), acol(a.col, 0.04 * M)); } }
+          } else {
+            for (let x = fx0 - per + off; x < fx1; x += per) { const x0 = Math.max(fx0 + 2, x), x1 = Math.min(fx1 - 2, x + a.len); if (x1 > x0) { r(x0, a.y, x1 - x0, a.h, acol(a.col, 0.05 * M)); r(x0 + 6, a.y + 1, Math.max(0, x1 - x0 - 12), a.h - 2, acol(a.col, 0.035 * M)); } }
+          }
           break;
         }
         case 'mist': { // dải sương mỏng trôi rất chậm sát mặt sàn
@@ -28679,7 +29052,24 @@ MA._xong();
     // lớp phủ trước của phòng (song cửa dưới, măng đá, cỏ cao): vẽ sau nhân vật
     roomFore(o) {
       const W = G.getWorld ? G.getWorld() : null;
-      if (W && W.geo) c.drawImage(get(W).fore, 0, 0);
+      if (!W || !W.geo) return;
+      const room = get(W);
+      c.drawImage(room.fore, 0, 0);
+      // tiền cảnh: cụm nào có em bé hoặc quái đứng sau thì mờ dần còn 35%, đi ra thì hiện lại (khoảng 0,25 giây)
+      const t = G.time || 0;
+      for (const q of room.fgCl) {
+        const hid = (e) => e && !e.dead && e.x > q.x0 - 6 && e.x < q.x1 + 6 && e.y > q.y0 - 2;
+        const want = hid(W.P) || W.ents.some(hid) || (W.boss && hid(W.boss)) ? 0.35 : 1;
+        const dt = Math.min(0.1, Math.max(0, t - (q.t || t)));
+        q.t = t;
+        q.a += Math.sign(want - q.a) * Math.min(Math.abs(want - q.a), dt * 2.6);
+        const a = Math.round(q.a * 8) / 8;
+        if (a <= 0) continue;
+        const ga = c.globalAlpha;
+        c.globalAlpha = ga * a;
+        c.drawImage(room.fg, q.x0, q.y0, q.x1 - q.x0, q.y1 - q.y0, q.x0, q.y0, q.x1 - q.x0, q.y1 - q.y0);
+        c.globalAlpha = ga;
+      }
     },
     // bệ thử thách: cột đá có đồng hồ cát
     pedestal(o, x, y, t) {
