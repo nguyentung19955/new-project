@@ -34,13 +34,16 @@ if '--so' in sys.argv:
 from playwright.sync_api import sync_playwright
 ROOT = os.path.abspath(arg('--root', os.path.dirname(HERE)))
 OUT = arg('--out'); LANG = arg('--lang', 'vi'); CHI = arg('--chi')
+VIEN = LANG == 'vien'  # mở game ở tiếng Anh, vẽ vài cảnh, đổi sang tiếng Việt rồi mới chụp: phải y hệt bản tiếng Việt
+VIVI = LANG == 'vivi'  # đối chứng: cũng vẽ trước 12 cảnh nhưng luôn ở tiếng Việt
+if VIEN or VIVI: LANG = 'vi'
 os.makedirs(OUT, exist_ok=True)
 
 INIT = r"""
 window.__raf = window.requestAnimationFrame; window.requestAnimationFrame = function () { return 0; };
 Date.now = () => 1760000000000; performance.now = () => 5000;
 try { localStorage.clear(); if ('%s' === 'en') localStorage.setItem('linhkhi_lang', 'en'); } catch (e) {}
-""" % LANG
+""" % ('en' if VIEN else LANG)
 
 HELP = r"""
 window.LK = {
@@ -73,15 +76,52 @@ CANH = [
     ('05-cai-dat', "LK.village('mo')", 5),
 ]
 CANH_EN = [
-    ('10-ren', "LK.village('ren')", 5),
-    ('11-ren-nang-bac', "LK.village('ren', (V) => { V.ftab = 'tier'; })", 5),
+    ('10-ren', "LK.village('ren', (V) => { V.sel = G.save.carry[0]; })", 5),
+    ('11-ren-nang-bac', "LK.village('ren', (V) => { V.ftab = 'tier'; V.sel = G.save.carry[0]; })", 5),
+    ('11b-ren-toi-lai', "LK.village('ren', (V) => { V.ftab = 'reforge'; V.sel = G.save.weapons[3].id; })", 5),
+    ('11c-ren-do', "LK.village('ren', (V) => { V.ftab = 'craft'; })", 5),
+    ('11d-nang-lo', "LK.village('ren', (V) => { V.ftab = 'up'; })", 5),
     ('12-shop', "LK.village('xen')", 5),
+    ('12b-shop-do', "LK.village('xen', (V) => { V.gtab = 'outfit'; })", 5),
+    ('12c-shop-ban', "LK.village('xen', (V) => { V.gtab = 'sell'; })", 5),
     ('13-may', "LK.village('may')", 5),
+    ('13b-may-do', "LK.village('may', (V) => { V.otab = 'craft'; })", 5),
+    ('13c-may-canh', "LK.village('may', (V) => { V.otab = 'wing'; })", 5),
     ('14-ky-nang', "LK.village('do')", 5),
     ('15-cay-chuong', "LK.village('do', (V) => { V.tab = 'chuong'; V.dtab = 'chuong'; })", 5),
+    ('15b-huong-dan-1', "LK.village('do', (V) => { V.tab = 'help'; V.dtab = 'help'; V.page = 0; })", 5),
+    ('15c-huong-dan-2', "LK.village('do', (V) => { V.tab = 'help'; V.dtab = 'help'; V.page = 1; })", 5),
+    ('15d-huong-dan-3', "LK.village('do', (V) => { V.tab = 'help'; V.dtab = 'help'; V.page = 2; })", 5),
+    ('15e-huong-dan-4', "LK.village('do', (V) => { V.tab = 'help'; V.dtab = 'help'; V.page = 3; })", 5),
+    ('15f-huong-dan-5', "LK.village('do', (V) => { V.tab = 'help'; V.dtab = 'help'; V.page = 4; })", 5),
+    ('15g-bang-vang', "LK.village('do', (V) => { V.tab = 'rank'; V.dtab = 'rank'; })", 5),
     ('16-anh-hung', "LK.village('tu')", 5),
+    ('16b-anh-hung-2', "LK.village('tu', (V) => { V.sel = 'wrestler'; })", 5),
     ('17-ban-do-vung', "LK.village('lai')", 5),
+    ('17b-ban-do-ai-trum', "LK.village('lai', (V) => { V.sel = [0, 4]; })", 5),
+    ('18-xem-vu-khi', "LK.village(null, (V, A) => { A.viewWeapon(G.save.carry[0], 'hub'); })", 5),
+    ('18b-xem-vu-khi-vang', "LK.village(null, (V, A) => { A.viewWeapon(G.save.weapons[3].id, 'hub'); })", 5),
+    ('19-tui-vu-khi', "LK.village(null, (V) => { V.tab = 'bag'; G.hanhTrang.tab = 'weapon'; })", 5),
+    ('19b-tui-trang-phuc', "LK.village(null, (V) => { V.tab = 'bag'; G.hanhTrang.tab = 'outfit'; })", 5),
+    ('19c-tui-linh-khi', "LK.village(null, (V) => { V.tab = 'bag'; G.hanhTrang.tab = 'lk'; })", 5),
+    ('19d-tui-ky-nang', "LK.village(null, (V) => { V.tab = 'bag'; G.hanhTrang.tab = 'skill'; })", 5),
+    ('19e-tui-tai-nguyen', "LK.village(null, (V) => { V.tab = 'bag'; G.hanhTrang.tab = 'res'; })", 5),
+    ('20-tam-dung', "LK.stage(0, 1).mode = 'paused'", 3),
+    ('21-ban-do-to', "LK.stage(0, 1).mode = 'map'", 3),
+    ('22-thua', "{ const S = LK.stage(0, 1); for (let i = 0; i < 200; i++) { G.tick(); } G.finishStage(false); }", 30),
+    ('23-thang', "{ const S = LK.stage(0, 4); G.gotoRoom(S.map.rooms.length - 1, 'boss'); for (let i = 0; i < 200; i++) { G.tick(); } S.loot.bossDown = true; S.loot.finalEl = 'fire'; G.winPortal(); G.finishStage(true); }", 30),
+    ('24-phong-trum', "{ const S = LK.stage(0, 4); G.gotoRoom(S.map.rooms.length - 1, 'boss'); }", 200),
+    ('25-phong-tinh-anh', "{ const S = LK.stage(1, 2); G.gotoRoom(2, 'elite'); }", 120),
+    ('26-phong-thuong-nhan', "{ const S = LK.stage(1, 2); G.gotoRoom(2, 'merchant'); }", 60),
+    ('27-phong-ruong', "{ const S = LK.stage(2, 2); G.gotoRoom(2, 'chest'); }", 60),
+    ('28-phong-nguyen', "{ const S = LK.stage(2, 2); G.gotoRoom(2, 'curse'); }", 60),
+    ('29-phong-suoi', "{ const S = LK.stage(2, 2); G.gotoRoom(2, 'fountain'); }", 60),
+    ('30-tui-trong-ai', "LK.stage(0, 1).mode = 'bag'", 3),
+    ('31-bang-vang-man-dau', "LK.seed(); G.resetSave(); LK.giuLang(); G.save.sound = false; G.time = 100; G.setScene(G.Title); G.villageApi.V.tRank = true", 5),
+    ('32-phong-danh-lau', "LK.stage(1, 3)", 700),
+    ('33-gop-y', "LK.village('mo'); if (G.cloudUI) G.cloudUI.feedback({})", 5),
 ]
+CANH = CANH + CANH_EN; CANH_EN = []
 
 
 def main():
@@ -97,7 +137,18 @@ def main():
         pg.wait_for_function('window.G && G.scene', timeout=20000)
         pg.add_script_tag(path=os.path.join(HERE, 'setup.js'))
         pg.evaluate(HELP)
+        if LANG == 'en':  # ghi mọi chuỗi vẽ ra mà KHÔNG đi qua bản dịch nào (để soát chữ Việt không dấu còn sót: "Kho", "Mua"…)
+            pg.evaluate(r"""(() => { const ok = new Set(), raw = LK.raw = new Set();
+              const note = (v) => { if (typeof v === 'string') { ok.add(v); ok.add(v.trim()); } return v; };
+              for (const k of ['t', 'tc', 'tv']) { const f = G[k]; G[k] = function () { return note(f.apply(this, arguments)); }; }
+              const w = G.ui.wrap; G.ui.wrap = function () { const a = w.apply(this, arguments); a.forEach(note); return a; };
+              const c = G.ux, f = c.fillText; c.fillText = function (t) { if (typeof t === 'string' && /[A-Za-z]{2}/.test(t) && !ok.has(t) && !ok.has(t.trim()) && !G.ngonNgu.D.has(t) && !G.ngonNgu.D.has(t.trim())) raw.add(t); return f.apply(this, arguments); };
+            })()""")
         pg.wait_for_timeout(1500)  # ảnh AI (dữ liệu nhúng) giải mã xong
+        if VIEN or VIVI:
+            for ten, js, n in CANH[:12]: pg.evaluate("LK.lang0 = '%s'" % ('en' if VIEN else 'vi')); pg.evaluate(js); pg.evaluate('LK.ve(%d)' % n)
+            pg.evaluate("LK.lang0 = 'vi'; G.ngonNgu.dat('vi')")
+            print('đã vẽ 12 cảnh ở tiếng Anh rồi đổi sang tiếng Việt; lang trong máy =', pg.evaluate("localStorage.getItem('linhkhi_lang')"))
         extra = []
         p2 = os.path.join(HERE, 'ngon_ngu_canh.json')
         ds = CANH + (CANH_EN if LANG == 'en' else [])
@@ -114,6 +165,9 @@ def main():
             th = pg.evaluate('[...G.ngonNgu.thieu]')
             print('--- G.ngonNgu.thieu: %d' % len(th))
             for s in th: print('  ' + json.dumps(s, ensure_ascii=False))
+            raw = pg.evaluate('[...LK.raw]')
+            print('--- chuỗi vẽ thẳng không qua bản dịch: %d' % len(raw))
+            for t in raw: print('  ' + json.dumps(t, ensure_ascii=False))
         print('--- lỗi console: %d' % len(errs))
         for e in errs[:40]: print('  ' + e[:300])
         br.close()

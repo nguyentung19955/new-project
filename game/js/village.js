@@ -203,7 +203,8 @@
     // ô hình lớn, viền màu bậc
     T.slot(18, 56, 70, r);
     G.art.weaponIcon(G.ux, w, 53, 91, 54, 'idle');
-    ui.text(G.wName(w), 96, 68, { size: 10.5, bold: true, color: rar.col });
+    if (G.LANG === 'vi') ui.text(G.wName(w), 96, 68, { size: 10.5, bold: true, color: rar.col });
+    else { const q = T.vua(G.wName(w), 150, 10.5, true); ui.text(q[0], 96, 68 + (q[1] - 10.5) * 0.36, { size: q[1], bold: true, color: rar.col }); } // tên tiếng Anh dài: thu cỡ chữ cho khỏi lấn cột bên phải
     ui.text(fam ? G.t('Bậc {0} · dòng {1}', rar.name, fam.name) : G.t('Bậc {0} · {1}', rar.name, G.WTYPES[w.type].name), 96, 80, { size: 7.5, color: SOFT });
     if (fam && fam.nature) ui.text(G.t('Tính nết: {0}', fam.nature), 96, 91, { size: 7.5, color: SOFT });
     ui.text(G.t('Sát thương mỗi đòn {0} · hệ số bậc x{1}', G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1), String(G.wRarMult(w)).replace('.', dp())), 96, 102, { size: 7.5 });

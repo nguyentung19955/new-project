@@ -100,6 +100,9 @@ def tu_dien():
     keys = set()
     for m in re.finditer(r'^\s*("(?:[^"\\]|\\.)*")\s*:', src, re.M):
         keys.add(json.loads(m.group(1)))
+    # chuỗi cố ý không dịch (console, khoá logic, chữ chỉ dùng trong công cụ): tools/ngon-ngu/tu-dien/*.boqua.json
+    for q in glob.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tu-dien', '*.boqua.json')):
+        with open(q, encoding='utf-8') as f: keys |= set(json.load(f))
     return keys
 
 

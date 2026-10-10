@@ -41,7 +41,7 @@
 </div><canvas id="ui"></canvas></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.11-0117";
+(window.G = window.G || {}).VERSION = "lk-2026.10.11-0123";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -265,7 +265,7 @@
 "Băng chưởng": "Ice Palm",
 "Băng phong": "Ice Seal",
 "Băng vỡ": "Shatter",
-"Băng Đế": "Ice Emperor",
+"Băng Đế": "Blizzard",
 "Bạn gặp lỗi gì, muốn thêm gì, chỗ nào quá khó hay quá dễ… (10 đến 1000 ký tự)": "Found a bug, want something added, too hard or too easy… (10 to 1000 characters)",
 "Bạn đang ở đây": "You are here",
 "Bạn đã gục ở phòng {0}": "You fell in the {0} room",
@@ -587,8 +587,8 @@
 "Hiệu ứng bạn gây ra kéo dài hơn 30%": "Effects you inflict last 30% longer",
 "Hoa Phun Bào Tử": "Spore Flower",
 "Huỷ": "Cancel",
-"Hàn Ngọc": "Cold Jade",
-"Hàn lực": "Frost Power",
+"Hàn Ngọc": "Glacier",
+"Hàn lực": "Frost",
 "Hàng nấm độc": "Toxic Shroom Row",
 "Hàng xén": "Peddler",
 "Hành trang": "Inventory",
@@ -616,10 +616,10 @@
 "Hệ nào đủ 30 trước thì vũ khí khoá theo hệ đó (hệ chính, vạch sáng); hai hệ kia mờ đi.": "The first element to reach 30 locks the weapon to it (main element, bright bar); the other two dim.",
 "Học": "Learn",
 "Học rồi nhớ luyện nghe con.": "Now go practice, child.",
-"Hỏa Thần": "Fire God",
+"Hỏa Thần": "Inferno",
 "Hỏa chưởng": "Fire Palm",
 "Hỏa chưởng: cầu lửa nổ lan, vệt cháy, giữ nút để tích lực. Độc chưởng: mây độc, lây độc, ăn mòn giáp, tách 3 luồng. Băng chưởng: mũi băng xuyên nhiều quái, làm chậm, đóng băng, băng vỡ. Mỗi cấp nhận 1 điểm chưởng (riêng với điểm kỹ năng). Mỗi lúc dùng một cây; ở làng đổi cây miễn phí ở Cụ Đồ (thẻ Cây chưởng) hoặc Hành trang, điểm đã học được trả lại hết.": "Fire Palm: exploding fireball, burn trail, hold the button to charge. Poison Palm: poison cloud, spreading poison, armor corrosion, splits in 3. Ice Palm: ice bolt piercing many monsters, slow, freeze, shatter. Each level gives 1 Palm point (separate from skill points). One tree at a time; in the village, swap trees for free at the Scholar (Palm tree tab) or in the Inventory, and all spent points are refunded.",
-"Hỏa lực": "Fire Power",
+"Hỏa lực": "Heat",
 "Hồ Lô": "Gourd Mace",
 "Hồ Tinh": "Ho Tinh",
 "Hồ hoả": "Foxfire",
@@ -753,7 +753,7 @@
 "Lộn để lại vệt Độc trên đất, quái đi qua bị trúng độc.": "Dodging leaves a Poison trail; monsters crossing it get poisoned.",
 "Lời nguyền": "Curse",
 "Lửa": "Fire",
-"Lửa dai": "Lasting Fire",
+"Lửa dai": "Long Burn",
 "Lửa gặp Độc gây Nổ khói. Lửa gặp Băng gây Sốc nhiệt. Độc gặp Băng không phản ứng, nhưng Băng làm Độc tan chậm một nửa. Phản ứng chỉ có giữa hai vũ khí khác hệ (đổi vũ khí khi quái còn dính hệ cũ); chưởng không gây phản ứng với vũ khí.": "Fire meets Poison: Smoke Blast. Fire meets Ice: Thermal Shock. Poison and Ice don't react, but Ice makes Poison fade half as fast. Reactions only happen between two weapons of different elements (swap while the old element is still on the monster); Palms don't react with weapons.",
 "Lửa đốt cháy; từ Thức tỉnh, quái đang cháy mà chết thì nổ lan sang con đứng gần. Độc cộng dồn tầng, mạnh với quái trâu, trùm và cả bầy đông. Băng làm chậm, đủ tầng thì đóng băng, hợp với quái nhanh.": "Fire burns; from Awakened, burning monsters explode on death and ignite those nearby. Poison builds stacks: strong against tanky monsters, bosses and big packs. Ice slows, then freezes at enough stacks: good against fast monsters.",
 "Mana tối đa +20": "+20 max mana",
@@ -784,7 +784,7 @@
 "Máu tối đa giảm 20% đến hết ải": "-20% max HP until the stage ends",
 "Máy chủ chưa có luật Bảng vàng": "Server has no Leaderboard rules yet",
 "Máy chủ chưa có luật mới (xem docs/firebase-linh-khi/HUONG-DAN.md)": "Server rules not updated (see docs/firebase-linh-khi/HUONG-DAN.md)",
-"Mây dày": "Thick Cloud",
+"Mây dày": "Dense Fog",
 "Mây độc hút quái vào giữa và mạnh hơn": "Poison cloud pulls monsters in and hits harder",
 "Mây độc hút quái vào giữa, độc mây mạnh +{0}%": "Poison cloud pulls monsters in, cloud poison +{0}%",
 "Mây độc rộng thêm {0}, lâu thêm {1} giây": "Poison cloud radius +{0}, lasts +{1}s",
@@ -927,7 +927,7 @@
 "Nện": "Smash",
 "Nện đất": "Ground Slam",
 "Nện đất mạnh": "Heavy Ground Slam",
-"Nọc Rừng": "Jungle Venom",
+"Nọc Rừng": "Venom",
 "Nỏ Thần": "Magic Crossbow",
 "Nổ băng": "Ice Burst",
 "Nổ khi chết": "Death Blast",
@@ -983,7 +983,7 @@
 "Quật cành": "Branch Lash",
 "Quặng": "Ore",
 "Rèn đồ": "Craft",
-"Rêu Xanh": "Green Moss",
+"Rêu Xanh": "Moss",
 "Rìu Xéo": "Slant Axe",
 "Rìu Xéo Đông Sơn": "Dong Son Slant Axe",
 "Rìu Đá": "Stone Axe",
@@ -1139,7 +1139,7 @@
 "Tải thêm": "Load more",
 "Tất cả": "All",
 "Tầm nhặt đồ": "Pickup range",
-"Tầm xa": "Long Range",
+"Tầm xa": "Range",
 "Tầm đánh xa hơn 15%": "+15% reach",
 "Tỉ lệ gây hiệu ứng hệ tăng thêm 25%": "+25% element effect chance",
 "Tốc chạy": "Speed",
@@ -1209,7 +1209,7 @@
 "Xuyên băng": "Ice Pierce",
 "Xuyên thêm {0} quái (tổng {1})": "Pierces {0} more monsters ({1} total)",
 "Xà Mâu": "Serpent Spear",
-"Xích Diệm": "Crimson Flame",
+"Xích Diệm": "Blaze",
 "Xông tới, bầy nhỏ, bắn xa (gọi thêm bầy), nhanh nhẹn (lặn rồi trồi sau lưng), giáp (che phía trước, hồi máu cho bạn: vòng ra sau hoặc đánh vỡ giáp), cảm tử (lao vào rồi nổ), đặt bom (bom có vòng đếm ngược), gai (đang dựng gai mà chém thì bị phản đòn). Nổ ở Hang biển làm đóng băng, ở Rừng già để vũng độc, ở Lâu đài cổ để vệt cháy.": "Chargers, small packs, shooters (call more packs), nimble (dive, then pop up behind you), armored (front shield, heal allies: get behind or break the armor), kamikazes (rush in and explode), bombers (bombs have a countdown ring), spiked (hit them with spikes up and you get hit back). Blasts freeze in the Sea Cave, leave poison pools in the Old Forest, burn trails in the Ancient Castle.",
 "Xương Cá": "Fishbone",
 "Xạ thủ": "Archer",
@@ -1533,9 +1533,9 @@
 "Độ nét: Cao": "Sharpness: High",
 "Độ nét: Thường": "Sharpness: Normal",
 "Độc": "Poison",
-"Độc Vương": "Poison King",
+"Độc Vương": "Plague",
 "Độc chưởng": "Poison Palm",
-"Độc lực": "Poison Power",
+"Độc lực": "Venom",
 "Độc!": "Poison!",
 "Đớp": "Chomp",
 "Đủ 3 mảnh chìa! Cửa phía trên sảnh đã mở": "All 3 key pieces! The door above the hall is open",
@@ -1564,7 +1564,7 @@
 "đã mở": "unlocked",
 "đã đăng nhập Google": "signed in with Google",
 "đã đủ {0}": "reached {0}",
-"đổi cây miễn phí": "tree swaps are free",
+"đổi cây miễn phí": "free swaps",
 "đổi ngay ở Bà Hàng Xén": "swap now at the Peddler",
 "độc": "poison",
 "đủ đồ rồi — tới {0} làm ngay": "all set — do it now at the {0}",
@@ -28691,7 +28691,8 @@ MA._xong();
     // ô hình lớn, viền màu bậc
     T.slot(18, 56, 70, r);
     G.art.weaponIcon(G.ux, w, 53, 91, 54, 'idle');
-    ui.text(G.wName(w), 96, 68, { size: 10.5, bold: true, color: rar.col });
+    if (G.LANG === 'vi') ui.text(G.wName(w), 96, 68, { size: 10.5, bold: true, color: rar.col });
+    else { const q = T.vua(G.wName(w), 150, 10.5, true); ui.text(q[0], 96, 68 + (q[1] - 10.5) * 0.36, { size: q[1], bold: true, color: rar.col }); } // tên tiếng Anh dài: thu cỡ chữ cho khỏi lấn cột bên phải
     ui.text(fam ? G.t('Bậc {0} · dòng {1}', rar.name, fam.name) : G.t('Bậc {0} · {1}', rar.name, G.WTYPES[w.type].name), 96, 80, { size: 7.5, color: SOFT });
     if (fam && fam.nature) ui.text(G.t('Tính nết: {0}', fam.nature), 96, 91, { size: 7.5, color: SOFT });
     ui.text(G.t('Sát thương mỗi đòn {0} · hệ số bậc x{1}', G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1), String(G.wRarMult(w)).replace('.', dp())), 96, 102, { size: 7.5 });

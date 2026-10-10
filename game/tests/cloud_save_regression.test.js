@@ -79,6 +79,7 @@ function assert(ok, message) { if (!ok) throw new Error(message); }
       G.fixSave = (x) => x; G.StageScene = { stage: true }; G.scene = null;
       G.save = { stars: { '0-0': 1 }, stars2: {}, heroes: {}, weapons: [], gold: 12, owner: 'u', savedAt: 5000, sound: false };
       let asked = 0; const sets = [];
+      G.LANG = 'en'; // máy này đang dùng tiếng Anh; bản trên mây không có trường lang
       G.cloudUI = { conflict() { asked++; return Promise.resolve(answer); } };
       C.db = { collection() { return { doc() { return {
         get: () => Promise.resolve({ exists: true, data: () => ({ save: JSON.stringify(rich), updatedAt: 1000 }) }),
@@ -90,6 +91,8 @@ function assert(ok, message) { if (!ok) throw new Error(message); }
       if (answer === 'cloud') {
         assert(G.save.gold === 5000 && sets.length === 0, 'V2: chọn bản trên mây → dùng bản mây, không ghi đè mây (vàng ' + G.save.gold + ', số lần ghi ' + sets.length + ')');
         assert(G.save.sound === false, 'V2: âm thanh vẫn giữ theo máy');
+        assert(G.save.lang === 'en', 'Ngôn ngữ vẫn giữ theo máy khi dùng bản trên mây');
+        assert(G.save.owner === 'u' && G.save.savedAt > 0, 'Dùng bản trên mây: bản lưu ghi đúng chủ và giờ lưu');
       } else {
         assert(G.save.gold === 12 && sets.length === 1 && JSON.parse(sets[0].save).gold === 12, 'V2: chọn giữ bản trên máy → đẩy bản máy lên (vàng ' + G.save.gold + ', ghi ' + sets.length + ')');
       }
