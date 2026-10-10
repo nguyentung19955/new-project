@@ -1,0 +1,1006 @@
+{
+ "so_chuoi_co_dau": 1851,
+ "kiem_tra_chu": {
+  "dat_dau": [
+   {
+    "kieu_cu": "hoá",
+    "so_cu": 4,
+    "cho_cu": [
+     "hanh_trang.js:328",
+     "monster_art.js:1915",
+     "monster_art.js:1977",
+     "monster_art.js:2043"
+    ],
+    "kieu_moi": "hóa",
+    "so_moi": 12,
+    "cho_moi": [
+     "boss.js:342",
+     "data.js:329",
+     "upgrade.js:116",
+     "village.js:204",
+     "village.js:217",
+     "village.js:306"
+    ]
+   },
+   {
+    "kieu_cu": "khoá",
+    "so_cu": 33,
+    "cho_cu": [
+     "ban_do.js:44",
+     "ban_do.js:86",
+     "ban_do.js:163",
+     "hanh_trang.js:164",
+     "hanh_trang.js:171",
+     "hanh_trang.js:171"
+    ],
+    "kieu_moi": "khóa",
+    "so_moi": 9,
+    "cho_moi": [
+     "data.js:329",
+     "mapgen.js:315",
+     "mapgen.js:316",
+     "mapgen.js:318",
+     "minimap.js:176",
+     "village.js:222"
+    ]
+   },
+   {
+    "chi_mot_kieu": "xoá",
+    "so": 10
+   },
+   {
+    "kieu_cu": "hoả",
+    "so_cu": 4,
+    "cho_cu": [
+     "boss.js:175",
+     "boss.js:203",
+     "monster_art.js:2026",
+     "monster_art.js:2041"
+    ],
+    "kieu_moi": "hỏa",
+    "so_moi": 5,
+    "cho_moi": [
+     "chuong.js:41",
+     "chuong.js:44",
+     "data.js:96",
+     "village.js:612",
+     "weapon_art.js:60"
+    ]
+   },
+   {
+    "chi_mot_kieu": "tuỳ",
+    "so": 1
+   },
+   {
+    "chi_mot_kieu": "toả",
+    "so": 1
+   }
+  ],
+  "tieng_anh": {
+   "Hero": {
+    "so": 2,
+    "cho": [
+     "bang_vang.js:156",
+     "stage.js:469"
+    ]
+   },
+   "mana": {
+    "so": 11,
+    "cho": [
+     "data.js:56",
+     "data.js:134",
+     "data.js:148",
+     "data.js:286",
+     "stage.js:64",
+     "stage.js:64",
+     "stage.js:66",
+     "stage.js:923"
+    ]
+   },
+   "Mana": {
+    "so": 1,
+    "cho": [
+     "data.js:148"
+    ]
+   },
+   "hero": {
+    "so": 10,
+    "cho": [
+     "hanh_trang.js:86",
+     "hanh_trang.js:291",
+     "hero_art.js:1162",
+     "hero_tinhlinh.js:1135",
+     "hero_tinhlinh.js:1234",
+     "hero_tinhlinh.js:1263",
+     "tailor.js:79",
+     "village.js:539"
+    ]
+   }
+  }
+ },
+ "so_phong": {
+  "village_ghi": [
+   "(i < 2 ? 7 : 8) + ' phòng"
+  ],
+  "minimap_ghi": [
+   "'Phòng ' + n + '/8'"
+  ],
+  "that": [
+   8,
+   8,
+   8,
+   8,
+   8,
+   8,
+   8,
+   8,
+   8,
+   8,
+   8,
+   8,
+   8,
+   8,
+   8
+  ]
+ },
+ "noi_dung": {
+  "regions": [
+   {
+    "name": "Rừng già",
+    "el": "poison",
+    "mini": "Nấm Chúa",
+    "boss": "Mộc Tinh",
+    "mat": "Gỗ linh"
+   },
+   {
+    "name": "Hang biển",
+    "el": "ice",
+    "mini": "Cua Đá",
+    "boss": "Ngư Tinh",
+    "mat": "Vảy cá"
+   },
+   {
+    "name": "Lâu đài cổ",
+    "el": "fire",
+    "mini": "Hổ Lửa",
+    "boss": "Hồ Tinh",
+    "mat": "Đá lửa"
+   }
+  ],
+  "stages": 15,
+  "roles": [
+   "rusher:Lính xông",
+   "swarm:Bầy nhỏ",
+   "shield:Khiên",
+   "archer:Xạ thủ",
+   "nimble:Nhanh nhẹn",
+   "elite:Tinh anh",
+   "kami:Cảm tử",
+   "bomber:Đặt bom",
+   "spiky:Gai"
+  ],
+  "mobs": [
+   {
+    "id": "cua",
+    "ten": "Cua Lính",
+    "vung": "bien",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "caCon",
+    "ten": "Bầy Cá Con",
+    "vung": "bien",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "oc",
+    "ten": "Ốc Mượn Hồn",
+    "vung": "bien",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "haiQuy",
+    "ten": "Hải Quỳ",
+    "vung": "bien",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "caChuon",
+    "ten": "Cá Chuồn",
+    "vung": "bien",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "caNoc",
+    "ten": "Cá Nóc",
+    "vung": "bien",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "sua",
+    "ten": "Sứa Bom",
+    "vung": "bien",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "nhim",
+    "ten": "Nhím Biển",
+    "vung": "bien",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "cuaTuong",
+    "ten": "Cua Tướng",
+    "vung": "bien",
+    "loai": "tinhanh",
+    "anims": 8
+   },
+   {
+    "id": "caNocChua",
+    "ten": "Cá Nóc Chúa",
+    "vung": "bien",
+    "loai": "tinhanh",
+    "anims": 8
+   },
+   {
+    "id": "cuaDa",
+    "ten": "Cua Đá",
+    "vung": "bien",
+    "loai": "trumnho",
+    "anims": 9
+   },
+   {
+    "id": "nguTinh",
+    "ten": "Ngư Tinh",
+    "vung": "bien",
+    "loai": "trum",
+    "anims": 16
+   },
+   {
+    "id": "heoCon",
+    "ten": "Heo Rừng Con",
+    "vung": "rung",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "ongVo",
+    "ten": "Bầy Ong Vò Vẽ",
+    "vung": "rung",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "boHung",
+    "ten": "Bọ Hung Mai Cứng",
+    "vung": "rung",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "hoaBaoTu",
+    "ten": "Hoa Phun Bào Tử",
+    "vung": "rung",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "chonBong",
+    "ten": "Chồn Bóng",
+    "vung": "rung",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "namPhong",
+    "ten": "Nấm Phồng",
+    "vung": "rung",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "socNo",
+    "ten": "Sóc Ném Quả Nổ",
+    "vung": "rung",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "nhimDoc",
+    "ten": "Nhím Gai Độc",
+    "vung": "rung",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "heoNanh",
+    "ten": "Heo Rừng Nanh Dài",
+    "vung": "rung",
+    "loai": "tinhanh",
+    "anims": 8
+   },
+   {
+    "id": "namPhongChua",
+    "ten": "Nấm Phồng Chúa",
+    "vung": "rung",
+    "loai": "tinhanh",
+    "anims": 8
+   },
+   {
+    "id": "namChua",
+    "ten": "Nấm Chúa",
+    "vung": "rung",
+    "loai": "trumnho",
+    "anims": 9
+   },
+   {
+    "id": "mocTinh",
+    "ten": "Mộc Tinh",
+    "vung": "rung",
+    "loai": "trum",
+    "anims": 16
+   },
+   {
+    "id": "linhMa",
+    "ten": "Lính Ma Giáp Gỉ",
+    "vung": "laudai",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "doiThan",
+    "ten": "Bầy Dơi Than",
+    "vung": "laudai",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "tuongDa",
+    "ten": "Tượng Đá Cầm Khiên",
+    "vung": "laudai",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "denLong",
+    "ten": "Đèn Lồng Ma",
+    "vung": "laudai",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "meoDen",
+    "ten": "Mèo Đen Hai Đuôi",
+    "vung": "laudai",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "huLua",
+    "ten": "Hũ Lửa Sống",
+    "vung": "laudai",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "tieuYeu",
+    "ten": "Tiểu Yêu Ném Pháo",
+    "vung": "laudai",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "nhimThan",
+    "ten": "Nhím Than Hồng",
+    "vung": "laudai",
+    "loai": "thuong",
+    "anims": 7
+   },
+   {
+    "id": "tuongMa",
+    "ten": "Tướng Ma",
+    "vung": "laudai",
+    "loai": "tinhanh",
+    "anims": 8
+   },
+   {
+    "id": "huChua",
+    "ten": "Hũ Lửa Chúa",
+    "vung": "laudai",
+    "loai": "tinhanh",
+    "anims": 8
+   },
+   {
+    "id": "hoLua",
+    "ten": "Hổ Lửa",
+    "vung": "laudai",
+    "loai": "trumnho",
+    "anims": 9
+   },
+   {
+    "id": "hoTinh",
+    "ten": "Hồ Tinh",
+    "vung": "laudai",
+    "loai": "trum",
+    "anims": 16
+   }
+  ],
+  "families": {
+   "sword": [
+    "Kiếm Rèn",
+    "Đao Lưỡi Liềm",
+    "Kiếm Lá Lúa",
+    "Gươm Rồng",
+    "Mã Tấu",
+    "Dao Rựa",
+    "Kiếm Tre",
+    "Đoản Kiếm Đông Sơn",
+    "Đao Cá Chép",
+    "Kiếm Sóng Nước"
+   ],
+   "bow": [
+    "Cung Rồng Rắn",
+    "Nỏ Thần",
+    "Cung Sừng Trâu",
+    "Cung Tre",
+    "Ná Thun",
+    "Cung Cánh Cò",
+    "Cung Trăng Khuyết",
+    "Cung Đàn Bầu",
+    "Cung Xương Cá",
+    "Cung Đèn Ông Sao"
+   ],
+   "spear": [
+    "Giáo Tre Vót",
+    "Đinh Ba",
+    "Câu Liêm",
+    "Mác",
+    "Lao Phóng",
+    "Giáo Đồng Đông Sơn",
+    "Xà Mâu",
+    "Mái Chèo",
+    "Cờ Lau",
+    "Bút Lông"
+   ],
+   "hammer": [
+    "Búa Lò Rèn",
+    "Chày Giã Gạo",
+    "Chùy Gai",
+    "Rìu Đá",
+    "Vồ Gỗ",
+    "Chiêng Đồng",
+    "Trống Đồng",
+    "Rìu Xéo Đông Sơn",
+    "Búa Đầu Trâu",
+    "Chùy Hồ Lô"
+   ]
+  },
+  "rarity": [
+   "Thường",
+   "Lam",
+   "Tím",
+   "Vàng"
+  ],
+  "stageNames": [
+   "Trắng",
+   "Mầm",
+   "Thành hình",
+   "Thức tỉnh"
+  ],
+  "items": [
+   {
+    "id": "mu_sung",
+    "slot": "hat",
+    "name": "Mũ sừng gỗ",
+    "set": "rung",
+    "src": [
+     "craft",
+     "boss",
+     "drop"
+    ]
+   },
+   {
+    "id": "ao_vo_cay",
+    "slot": "robe",
+    "name": "Áo vỏ cây",
+    "set": "rung",
+    "src": [
+     "craft",
+     "boss",
+     "drop"
+    ]
+   },
+   {
+    "id": "gui_tre",
+    "slot": "back",
+    "name": "Gùi tre độc",
+    "set": "rung",
+    "src": [
+     "craft",
+     "boss",
+     "drop"
+    ]
+   },
+   {
+    "id": "bua_nanh",
+    "slot": "hand",
+    "name": "Bùa nanh rắn",
+    "set": "rung",
+    "src": [
+     "craft",
+     "boss",
+     "drop"
+    ]
+   },
+   {
+    "id": "canh_la",
+    "slot": "wing",
+    "name": "Cánh lá",
+    "set": "rung",
+    "src": [
+     "boss"
+    ]
+   },
+   {
+    "id": "mu_vay_ca",
+    "slot": "hat",
+    "name": "Mũ vây cá",
+    "set": "bien",
+    "src": [
+     "craft",
+     "boss",
+     "drop"
+    ]
+   },
+   {
+    "id": "ao_vay",
+    "slot": "robe",
+    "name": "Áo vảy",
+    "set": "bien",
+    "src": [
+     "craft",
+     "boss",
+     "drop"
+    ]
+   },
+   {
+    "id": "khan_bang",
+    "slot": "back",
+    "name": "Khăn choàng sương",
+    "set": "bien",
+    "src": [
+     "craft",
+     "boss",
+     "drop"
+    ]
+   },
+   {
+    "id": "bua_oc",
+    "slot": "hand",
+    "name": "Bùa vỏ ốc",
+    "set": "bien",
+    "src": [
+     "craft",
+     "boss",
+     "drop"
+    ]
+   },
+   {
+    "id": "canh_bang",
+    "slot": "wing",
+    "name": "Cánh băng",
+    "set": "bien",
+    "src": [
+     "boss"
+    ]
+   },
+   {
+    "id": "mu_tai_cao",
+    "slot": "hat",
+    "name": "Mũ tai cáo",
+    "set": "lau",
+    "src": [
+     "craft",
+     "boss",
+     "drop"
+    ]
+   },
+   {
+    "id": "ao_long",
+    "slot": "robe",
+    "name": "Áo lông trắng",
+    "set": "lau",
+    "src": [
+     "craft",
+     "boss",
+     "drop"
+    ]
+   },
+   {
+    "id": "trong_nho",
+    "slot": "back",
+    "name": "Trống đồng nhỏ",
+    "set": "lau",
+    "src": [
+     "craft",
+     "boss",
+     "drop"
+    ]
+   },
+   {
+    "id": "bua_lua",
+    "slot": "hand",
+    "name": "Bùa đá lửa",
+    "set": "lau",
+    "src": [
+     "craft",
+     "boss",
+     "drop"
+    ]
+   },
+   {
+    "id": "canh_lua",
+    "slot": "wing",
+    "name": "Cánh lửa",
+    "set": "lau",
+    "src": [
+     "boss"
+    ]
+   },
+   {
+    "id": "non_la",
+    "slot": "hat",
+    "name": "Nón lá rừng",
+    "set": null,
+    "src": [
+     "craft"
+    ]
+   },
+   {
+    "id": "mu_da_ca",
+    "slot": "hat",
+    "name": "Mũ da cá",
+    "set": null,
+    "src": [
+     "craft"
+    ]
+   },
+   {
+    "id": "khan_lua",
+    "slot": "hat",
+    "name": "Khăn đá lửa",
+    "set": null,
+    "src": [
+     "craft",
+     "drop"
+    ]
+   },
+   {
+    "id": "mu_rom",
+    "slot": "hat",
+    "name": "Mũ rơm",
+    "set": null,
+    "src": [
+     "shop"
+    ]
+   },
+   {
+    "id": "khan_xep",
+    "slot": "hat",
+    "name": "Khăn xếp",
+    "set": null,
+    "src": [
+     "shop"
+    ]
+   },
+   {
+    "id": "vong_la",
+    "slot": "hat",
+    "name": "Vòng lá",
+    "set": null,
+    "src": [
+     "drop"
+    ]
+   },
+   {
+    "id": "ao_vai",
+    "slot": "robe",
+    "name": "Áo vải thô",
+    "set": null,
+    "src": [
+     "shop",
+     "craft"
+    ]
+   },
+   {
+    "id": "ao_da_bien",
+    "slot": "robe",
+    "name": "Áo da biển",
+    "set": null,
+    "src": [
+     "craft",
+     "drop"
+    ]
+   },
+   {
+    "id": "giap_da",
+    "slot": "robe",
+    "name": "Áo giáp đá",
+    "set": null,
+    "src": [
+     "craft",
+     "drop"
+    ]
+   },
+   {
+    "id": "ao_toi",
+    "slot": "robe",
+    "name": "Áo tơi lá",
+    "set": null,
+    "src": [
+     "shop"
+    ]
+   },
+   {
+    "id": "ao_the",
+    "slot": "robe",
+    "name": "Áo the",
+    "set": null,
+    "src": [
+     "shop"
+    ]
+   },
+   {
+    "id": "ao_la",
+    "slot": "robe",
+    "name": "Áo lá",
+    "set": null,
+    "src": [
+     "drop"
+    ]
+   },
+   {
+    "id": "giap_tre",
+    "slot": "robe",
+    "name": "Giáp tre",
+    "set": null,
+    "src": [
+     "drop"
+    ]
+   },
+   {
+    "id": "ao_choang",
+    "slot": "back",
+    "name": "Áo choàng đỏ",
+    "set": null,
+    "src": [
+     "shop"
+    ]
+   },
+   {
+    "id": "ong_ten",
+    "slot": "back",
+    "name": "Ống tên",
+    "set": null,
+    "src": [
+     "shop"
+    ]
+   },
+   {
+    "id": "ho_lo",
+    "slot": "back",
+    "name": "Bầu hồ lô",
+    "set": null,
+    "src": [
+     "drop"
+    ]
+   },
+   {
+    "id": "bua_hut",
+    "slot": "hand",
+    "name": "Bùa hút máu",
+    "set": null,
+    "src": [
+     "drop"
+    ]
+   },
+   {
+    "id": "bua_tan",
+    "slot": "hand",
+    "name": "Bùa tàn lửa",
+    "set": null,
+    "src": [
+     "drop"
+    ]
+   },
+   {
+    "id": "bua_suong",
+    "slot": "hand",
+    "name": "Bùa sương",
+    "set": null,
+    "src": [
+     "drop"
+    ]
+   },
+   {
+    "id": "bua_tham",
+    "slot": "hand",
+    "name": "Bùa tham",
+    "set": null,
+    "src": [
+     "drop"
+    ]
+   },
+   {
+    "id": "bua_linh",
+    "slot": "hand",
+    "name": "Bùa linh",
+    "set": null,
+    "src": [
+     "drop"
+    ]
+   },
+   {
+    "id": "canh_chuon",
+    "slot": "wing",
+    "name": "Cánh chuồn chuồn",
+    "set": null,
+    "src": [
+     "craft"
+    ]
+   }
+  ],
+  "skills": [
+   {
+    "k": "atk",
+    "name": "Công",
+    "nodes": [
+     "Sát thương +8%",
+     "Đòn đặc biệt tốn ít hơn 5 mana",
+     "Sát thương +15% lên quái đang dính hiệu ứng",
+     "Sát thương +8%",
+     "10% cơ hội chí mạng gấp đôi"
+    ]
+   },
+   {
+    "k": "def",
+    "name": "Thủ",
+    "nodes": [
+     "Máu tối đa +10%",
+     "Lăn né hồi nhanh hơn 25%",
+     "Hồi 8% máu mỗi khi qua phòng",
+     "Giảm 30% thời gian dính hiệu ứng",
+     "Giảm 10% sát thương nhận vào"
+    ]
+   },
+   {
+    "k": "elem",
+    "name": "Hệ",
+    "nodes": [
+     "Mana tối đa +20",
+     "Mỗi đòn trúng hồi thêm 1 mana",
+     "Nổ khói và Sốc nhiệt mạnh hơn 30%",
+     "Đòn đầu sau khi đổi vũ khí chắc chắn gây hiệu ứng",
+     "Hiệu ứng bạn gây ra kéo dài hơn 25%"
+    ]
+   }
+  ],
+  "trees": [
+   {
+    "k": "hoa",
+    "name": "Hỏa chưởng",
+    "nodes": [
+     "Hỏa lực (5)",
+     "Nổ to (5)",
+     "Vệt cháy (5)",
+     "Lửa dai (5)",
+     "Tích lực (5)",
+     "Mưa tàn lửa (3)"
+    ]
+   },
+   {
+    "k": "doc",
+    "name": "Độc chưởng",
+    "nodes": [
+     "Độc lực (5)",
+     "Mây dày (5)",
+     "Lây độc (5)",
+     "Ăn mòn (5)",
+     "Tam xà (5)",
+     "Vạn độc (3)"
+    ]
+   },
+   {
+    "k": "bang",
+    "name": "Băng chưởng",
+    "nodes": [
+     "Hàn lực (5)",
+     "Tầm xa (5)",
+     "Xuyên băng (5)",
+     "Đóng băng (5)",
+     "Băng vỡ (5)",
+     "Băng phong (3)"
+    ]
+   }
+  ],
+  "heroes": [
+   "Thợ Rèn",
+   "Thợ Săn",
+   "Thầy Lang",
+   "Đô Vật"
+  ],
+  "npcs": [
+   "Chú Lái Đò / Vào ải",
+   "Ông Thợ Rèn / Lò rèn",
+   "Bà Hàng Xén / Vũ khí",
+   "Cô Thợ May / Mũ áo",
+   "Cụ Đồ / Kỹ năng",
+   "Ông Từ / Hero",
+   "Anh Mõ / Cài đặt"
+  ],
+  "curses": [
+   "Máu tối đa giảm 20% đến hết ải",
+   "Không dùng được bình máu đến hết ải",
+   "Quái nhanh hơn 15% đến hết ải"
+  ],
+  "charms": [
+   "Bùa hút máu",
+   "Bùa tàn lửa",
+   "Bùa sương",
+   "Bùa tham",
+   "Bùa linh"
+  ],
+  "affix": [
+   "Mỗi đòn trúng hồi thêm 1 mana",
+   "10% cơ hội gây gấp đôi sát thương",
+   "Tầm đánh xa hơn 15%"
+  ],
+  "power": [
+   "Diệt yêu",
+   "Thấm hệ",
+   "Mở màn"
+  ],
+  "elite_traits": [
+   "Nhanh",
+   "Bọc giáp",
+   "Nổ khi chết",
+   "Hút máu"
+  ],
+  "hints": 10,
+  "move_tips": 4
+ },
+ "dem": {
+  "vung": 3,
+  "ai": 15,
+  "vai_quai": 9,
+  "quai_va_trum_co_hinh": 36,
+  "theo_loai": {
+   "thuong": 24,
+   "tinhanh": 6,
+   "trumnho": 3,
+   "trum": 3
+  },
+  "vu_khi_dong": 40,
+  "trang_phuc": 37,
+  "trang_phuc_theo_o": {
+   "hat": 9,
+   "robe": 10,
+   "back": 6,
+   "hand": 8,
+   "wing": 4
+  },
+  "nut_ky_nang": 15,
+  "cay_chuong": 3,
+  "nut_chuong": 18,
+  "nguoi_lang": 7,
+  "loi_nguyen": 3
+ }
+}

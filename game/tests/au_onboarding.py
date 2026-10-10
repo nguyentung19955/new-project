@@ -127,6 +127,30 @@ def main():
         step('%02d-lang-sau-ai1' % k, 'về làng sau ải 1'); k += 1
         pg.wait_for_timeout(9000)
         step('%02d-lang-sau-ai1-10s' % k, 'đứng 10 giây ở làng sau ải 1'); k += 1
+        # 6. Các bảng người mới sẽ mở sau ải 1 (theo dấu chấm đỏ): Kỹ năng (Cụ Đồ), Lò rèn, Hành trang
+        for nm, x in (('cu-do', 271), ('lo-ren', 178), ('hang-xen', 209), ('tho-may', 240)):
+            tap(x, 28, 300); pg.wait_for_timeout(2500)
+            if pg.evaluate('G.villageApi.V.tab') == 'hub':
+                tap(x, 28, 500)
+            pg.wait_for_timeout(400)
+            step('%02d-bang-%s' % (k, nm), 'mở bảng ' + nm + ' lần đầu'); k += 1
+            tap(436, 57, 500)
+        hub = pg.evaluate('G.hanhTrang && G.hanhTrang.HUB')
+        if hub:
+            tap(hub[0] + hub[2] / 2, hub[1] + hub[3] / 2, 600)
+            step('%02d-hanh-trang' % k, 'mở Hành trang lần đầu'); k += 1
+            pg.evaluate("G.keyP.Escape = true"); pg.wait_for_timeout(300)
+            pg.evaluate("G.villageApi.goHub()"); pg.wait_for_timeout(300)
+        # 7. Ải 2: mẹo nút Chưởng lần đầu
+        tap(147, 28, 300); pg.wait_for_timeout(2500)
+        if pg.evaluate('G.villageApi.V.tab') != 'map':
+            tap(147, 28, 400)
+        step('%02d-ban-do-ai2' % k, 'bản đồ, chọn sẵn ải 2'); k += 1
+        tap(436, 236, 800)
+        pg.wait_for_timeout(2500)
+        step('%02d-ai2-vao' % k, 'ải 2, 2,5 giây đầu: không còn chữ trên nút'); k += 1
+        pg.wait_for_timeout(2500)
+        step('%02d-ai2-5s' % k, 'ải 2, 5 giây'); k += 1
         log['sfx'] = pg.evaluate('window.__sfx')
         log['save_after'] = pg.evaluate("({ lvl: G.save.heroes.smith.lvl, gold: G.save.gold, ore: G.save.ore, stars: G.save.stars, tut: G.save.tut, weapons: G.save.weapons.length })")
         b.close()
