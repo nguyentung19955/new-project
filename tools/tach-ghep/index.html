@@ -1055,7 +1055,9 @@ function capNhatThan() {
   const co = !!THAN[S.key];
   $('nutThanAI').disabled = !co;
   $('nutThanCode').classList.toggle('chon', !dangDungAI()); $('nutThanAI').classList.toggle('chon', dangDungAI());
-  $('ttThan').textContent = co ? 'Có thân AI (em-be-' + S.key + ')' : 'Chưa có thân AI cho ' + TEN_NV[S.key] + ' (thả tệp em-be-' + S.key + '.sprite.json)';
+  // Game không khoác ÁO rời lên thân AI nữa (áo rời không ôm khít thân): bậc áo hiện bằng viền màu quanh thân + một dấu nhỏ trên ngực.
+  $('ttThan').textContent = (co ? 'Có thân AI (em-be-' + S.key + ')' : 'Chưa có thân AI cho ' + TEN_NV[S.key] + ' (thả tệp em-be-' + S.key + '.sprite.json)')
+    + (dangDungAI() ? ' · Lưu ý: trong game áo không khoác lên thân AI, hiện bằng viền + dấu ngực.' : '');
   $('ttCheA').textContent = dangDungAI() ? '' : 'Đang xem thân vẽ bằng code: điểm do game tự tính ở từng khung, không cần đặt. Chọn "Thân AI" để đặt điểm cho thân AI.';
 }
 $('nutThanCode').onclick = () => { S.than = 'code'; capNhatThan(); capNhatMoi(); dungDongTac(); };

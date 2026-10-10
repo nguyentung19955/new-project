@@ -161,7 +161,8 @@
             <label class="hang" style="gap:6px">Vũ khí <select id="vuKhi"><option value="">Không cầm</option><option value="sword">Kiếm</option><option value="bow">Cung</option><option value="spear">Giáo</option><option value="hammer">Búa</option></select></label>
             <label class="hang" style="gap:6px"><input type="checkbox" id="bongGoc"> Hiện bóng em bé gốc đè lên</label>
           </div>
-          <p class="chu-y">Nếu mũ, áo bị lệch khỏi đầu, thân: bấm mũi tên để dời (mỗi lần 1 điểm ảnh). <b>Vũ khí</b> không nằm trong nắm tay của thân AI: dời ô "Tay cầm vũ khí" — nên tích "Chỉ chỉnh cho động tác đang xem" và chỉnh từng động tác (đứng, chạy, đánh…). <b>Tự khớp</b> là công cụ tự đoán lại đầu và thân.</p>
+          <p class="chu-y" id="ghiBo" hidden><b>Bộ trang phục:</b> đang thử như lúc mặc đủ bộ trong game: thân này thay thân thường, game không khoác rời mũ, áo, đồ lưng, bùa nữa (đã vẽ trong hình), chỉ khoác cánh và vũ khí. Chỉ cần chỉnh ô "Tay cầm vũ khí" nếu vũ khí lệch khỏi nắm tay.</p>
+          <p class="chu-y">Áo không khoác lên thân AI: game hiện bậc áo bằng viền màu quanh thân và một dấu nhỏ trên ngực. Nếu mũ, áo bị lệch khỏi đầu, thân: bấm mũi tên để dời (mỗi lần 1 điểm ảnh). <b>Vũ khí</b> không nằm trong nắm tay của thân AI: dời ô "Tay cầm vũ khí" — nên tích "Chỉ chỉnh cho động tác đang xem" và chỉnh từng động tác (đứng, chạy, đánh…). <b>Tự khớp</b> là công cụ tự đoán lại đầu và thân.</p>
           <div class="neo">
             <div class="o" data-neo="dau"><b>Đầu (mũ, dấu mặt)</b>
               <span></span><button class="nut phu" data-d="0,-1" aria-label="Đầu lên">↑</button><span></span>
@@ -239,6 +240,22 @@ const NV = [
   { ma: 'nl-mo', loai: 'nguoi-lang', ten: 'Anh Mõ', rong: 25, cao: 31, vien: '#1a1420',
     hinh: 'anh rao làng, áo xanh ngọc (#3f9a8c, chỗ tối #2c7468), quần xanh chàm (#3a4a8a), đeo cái mõ tre và dùi gõ', la: 'cầm cái loa cuộn bằng nón lá để rao' },
 ];
+// BỘ TRANG PHỤC vẽ liền cả cử động (game/js/outfit.js O.SETS): ChatGPT vẽ lại ĐÚNG em bé đó nhưng mặc trọn bộ. Mã tệp em-be-<nhân vật>-<bộ>.
+// Trong game: mặc đủ bộ (từ 3 món) và có tệp này thì game dùng thân bộ thay thân thường, không khoác rời mũ, áo, đồ lưng, bùa nữa.
+const BO_TP = {
+  rung: { ten: 'Bộ Rừng Già', he: 'Độc', mau: 'nâu gỗ, xanh rêu, điểm vài chỗ xanh nõn chuối của chất độc', canh: 'la',
+    mu: 'mũ gỗ hai sừng cong đội trên đỉnh đầu, một sừng buộc lá cờ đuôi nheo nhỏ', ao: 'áo giáp vỏ cây phủ rêu ôm thân, trên vai mọc một cây nấm linh chi nhỏ',
+    lung: 'gùi đan tre nhỏ đeo sau lưng, trong gùi có bó rau rừng', bua: 'bùa nanh rắn tua đỏ đeo bên hông, nanh ngậm viên ngọc xanh',
+    o: { hat: 'mu_sung', robe: 'ao_vo_cay', back: 'gui_tre', hand: 'bua_nanh' } },
+  bien: { ten: 'Bộ Hang Biển', he: 'Băng', mau: 'xanh biển, xanh băng nhạt, trắng bạc, điểm vàng đồng', canh: 'bang',
+    mu: 'mũ xanh biển có vây cá dựng cao trên đỉnh như cánh buồm nhỏ', ao: 'áo giáp vảy cá xanh ôm thân, vảy xếp lớp như đồng xu, thắt lưng vàng',
+    lung: 'khăn choàng ngắn màu xanh sương buông sau lưng, mép khăn đọng giọt sương như chuỗi ngọc', bua: 'bùa vỏ ốc trắng tua đỏ đeo bên hông',
+    o: { hat: 'mu_vay_ca', robe: 'ao_vay', back: 'khan_bang', hand: 'bua_oc' } },
+  lau: { ten: 'Bộ Lâu Đài', he: 'Lửa', mau: 'cam, đỏ lửa, trắng ngà, điểm vàng đồng', canh: 'lua',
+    mu: 'mũ trùm màu cam có hai tai cáo dựng, một tai đeo khuyên bạc', ao: 'áo lông trắng ngắn ôm thân (lông như bông lau), thắt dải lưng đỏ',
+    lung: 'trống đồng nhỏ đeo sau lưng, mặt trống có con cóc đồng', bua: 'bùa đá lửa vuông đeo bên hông, đỏ rực như than hồng',
+    o: { hat: 'mu_tai_cao', robe: 'ao_long', back: 'trong_nho', hand: 'bua_lua' } },
+};
 // Bộ đồ mẫu để thử (đồ có sẵn trong game, G.heroLooks).
 const BO_DO = [
   { ten: 'Không mặc gì', o: { hat: null, robe: null, back: null, hand: null, mask: null } },
@@ -249,6 +266,10 @@ const BO_DO = [
   { ten: 'Mũ vây cá · áo vảy · khăn sương', o: { hat: 'mu_vay_ca', robe: 'ao_vay', back: 'khan_bang', hand: null, mask: 'xoay', wing: { kind: 'bang', level: 3 } } },
   { ten: 'Bộ khởi đầu (mũ trùm, áo trùm)', o: null },
 ];
+// 12 mục "Bộ trang phục" (4 em bé × 3 bộ): cùng lưới, cỡ khung, điểm chân, động tác như thân thường của em bé đó.
+// Thêm vào CUỐI danh sách để số thứ tự các mục cũ (đã nhớ trên máy) không đổi.
+for (const q of NV.filter((x) => x.loai === 'em-be')) for (const b of Object.keys(BO_TP))
+  NV.push({ ma: q.ma + '-' + b, key: q.key, loai: 'em-be', bo: b, goc: q.ma, ten: q.ten + ' · ' + BO_TP[b].ten, tenNV: q.ten, rong: q.rong, cao: q.cao, mau: q.mau, net: q.net });
 const VIEN0 = [0x14, 0x18, 0x2e];
 
 const $ = (id) => document.getElementById(id);
@@ -274,6 +295,15 @@ function taoPrompt(q) {
     const hang = ['đứng thở (nhún nhẹ, có một khung chớp mắt)', 'chạy sang phải (hai chân bước luân phiên, tay đánh đằng xa)', 'lấy đà (co người, hai tay kéo ra sau, mắt quyết tâm)', 'vung tay đánh về phía trước bằng tay không',
       'trúng đòn bật ngửa ra sau (nhăn mặt)', 'ngã ngửa ra sau rồi nằm bẹp trên đất (mắt dấu X ở cuối)', 'né: lộn tròn một vòng về phía trước, cuộn người như quả bóng']
       .map((h, i) => `hàng ${i + 1} ${h} ĐÚNG ${SO[i]} khung`).join(', ');
+    if (q.bo) {
+      const B = BO_TP[q.bo];
+      return `(GỬI KÈM tin nhắn này ẢNH TẤM THÂN THƯỜNG của em bé "${q.tenNV}": tấm sprite sheet 8 cột × ${NR} hàng đã vẽ trước đó, tệp ${q.goc}.png.) `
+        + `Dùng công cụ tạo ảnh vẽ LẠI tấm sprite sheet trong ảnh gửi kèm cho game Linh Khí, giữ ĐÚNG nhân vật đó: cùng khuôn mặt, kiểu tóc, màu da, dáng người, tỉ lệ đầu và thân, cùng ${NR} hàng động tác theo đúng thứ tự, cùng số khung mỗi hàng; mỗi khung giữ ĐÚNG tư thế, đúng cỡ và đúng vị trí trong ô như ảnh gửi kèm (hai bàn chân vẫn sát đáy ô, đầu vẫn to bằng nhau ở mọi khung). `
+        + `CHỈ KHÁC MỘT ĐIỀU: trong MỌI khung, em bé MẶC TRỌN "${B.ten}" (hệ ${B.he}) gồm 4 món: MŨ: ${B.mu}; ÁO: ${B.ao}; SAU LƯNG: ${B.lung}; BÊN HÔNG: ${B.bua}. Tông màu của bộ: ${B.mau}. Bốn món giống hệt nhau ở mọi khung (cùng hình, cùng màu, cùng chỗ trên người), đi theo cử động của thân: chạy thì đồ lưng và bùa lắc nhẹ, lộn tròn (hàng ${NR}) thì đồ cuộn theo người, ngã (hàng ${NR - 1}) thì mũ vẫn ở trên đầu. `
+        + `Đồ GỌN, ÔM SÁT người, chi tiết to khối và đơn giản (trong game em bé chỉ cao ${q.cao} điểm ảnh), không làm nhân vật to hơn ảnh gửi kèm quá một chút. KHÔNG che mặt: mũ đội trên tóc, lộ rõ hai mắt, mũi, miệng, má. KHÔNG vẽ cánh, KHÔNG cầm vũ khí hay bất cứ thứ gì trên tay: hai bàn tay vẫn NẮM CHẶT thành nắm đấm tròn như ảnh gửi kèm (game tự đặt vũ khí và cánh). Bàn chân giữ nguyên như ảnh gửi kèm. `
+        + `Nhìn chéo 3/4, QUAY MẶT SANG PHẢI trong MỌI khung như ảnh gửi kèm. Ánh sáng từ trên bên phải. `
+        + luoi + hang + '. ' + coO + 'Khi đánh hay lộn thì co người lại cho vừa ô, không phóng to. ' + cuoi;
+    }
     return `Dùng công cụ tạo ảnh vẽ MỘT tấm sprite sheet pixel art 2D cho game Linh Khí: em bé "${q.ten}", anh hùng chibi người Việt dân gian (giống concept: em bé người, mặt người dễ thương, tóc đen, da người), vẽ THÂN TRƠN để game tự mặc mũ, áo và đồ lên người. `
       + `THÂN TRƠN nghĩa là: KHÔNG mũ, không nón, không khăn trùm hay khăn quấn đầu, không áo choàng, không áo khoác ngoài, không đồ đeo sau lưng (ống tên, hồ lô, gùi, trống…), không đồ cầm tay, không bùa đeo, không mặt nạ, không vẽ dấu trên mặt, không cánh, KHÔNG vẽ vũ khí. NHƯNG hai bàn tay luôn NẮM CHẶT thành nắm đấm tròn rõ ràng như đang cầm cán vũ khí (game sẽ tự đặt vũ khí vào nắm tay): khi đứng và chạy, tay SAU (tay phía bên trái hình) nắm lại giơ cao ngang vai như đang vác cán búa/kiếm sau lưng; khi đánh, nắm tay vung mạnh từ sau ra trước về phía phải; tay trước nắm hờ ngang hông. `
       + `Hình dáng: chibi đứng thẳng, đầu tròn to khoảng 2/5 chiều cao cả người, thân ngắn tròn, chân ngắn, cả người cao gấp khoảng 1,8 lần bề ngang; MẶT NGƯỜI tròn dễ thương với mắt to đen bóng có điểm sáng, lông mày, mũi nhỏ, miệng, má hồng nhẹ, ${q.net}; da người màu bánh mật sáng (#f2c9a0, chỗ tối #c98f66); KHÔNG đội gì trên đầu, lộ tóc; mặc ${q.mau} ôm sát người, đơn giản, không hoa văn; hai tay và hai chân rõ ràng, tay tách khỏi thân, nắm tay to rõ (2–3 điểm ảnh trong game) để game đặt vũ khí vào đúng chỗ. Giữ đúng tỉ lệ và dáng đứng này trong mọi khung để mũ áo của game khoác lên khớp. `
@@ -288,7 +318,9 @@ function taoPrompt(q) {
 }
 
 function hienNV() {
-  $('ghiNV').textContent = Q.loai === 'em-be'
+  $('ghiNV').textContent = Q.bo
+    ? 'Bộ trang phục: ChatGPT vẽ lại ĐÚNG em bé ' + Q.tenNV + ' nhưng mặc trọn ' + BO_TP[Q.bo].ten + ' (mũ, áo, đồ lưng, bùa), không cánh, không vũ khí. KHI GỬI PROMPT PHẢI GỬI KÈM ẢNH TẤM THÂN THƯỜNG của ' + Q.tenNV + ' (' + Q.goc + '.png). Trong game: mặc đủ bộ (từ 3 món) thì em bé đổi sang thân này. Lưới 8 cột × 7 hàng.'
+    : Q.loai === 'em-be'
     ? 'Anh hùng: ChatGPT vẽ THÂN TRƠN (không mũ, áo choàng, đồ lưng, vũ khí). Game tự khoác đồ đang mặc lên thân này. Lưới 8 cột × 7 hàng.'
     : 'Người làng: vẽ đủ quần áo. Lưới 8 cột × 2 hàng (đứng thở, nói chuyện vẫy tay).';
   $('bangThongSo').innerHTML = [
@@ -304,12 +336,14 @@ function hienNV() {
   $('nutDongTac').innerHTML = L.ten.map((t, i) => `<button class="nut nho phu" data-i="${i}">${t}</button>`).join('');
   dtChon = 0; danhDau();
   $('thuDo').hidden = Q.loai !== 'em-be';
+  $('boDo').disabled = !!Q.bo; // mục bộ trang phục: thử với đúng bộ đó (đủ bộ + cánh của bộ), không chọn bộ đồ khác
+  $('ghiBo').hidden = !Q.bo;
 }
 
-const nhom = { 'em-be': 'Anh hùng (em bé, thân trơn)', 'nguoi-lang': 'Người làng' };
+const nhom = { 'em-be': 'Anh hùng (em bé, thân trơn)', 'bo': 'Bộ trang phục (em bé mặc trọn bộ, vẽ liền cử động)', 'nguoi-lang': 'Người làng' };
 for (const lo of Object.keys(nhom)) {
   const g = document.createElement('optgroup'); g.label = nhom[lo];
-  NV.forEach((q, i) => { if (q.loai !== lo) return; const o = document.createElement('option'); o.value = i; o.textContent = q.ten + ' (' + q.ma + ')'; g.appendChild(o); });
+  NV.forEach((q, i) => { if ((q.bo ? 'bo' : q.loai) !== lo) return; const o = document.createElement('option'); o.value = i; o.textContent = q.ten + ' (' + q.ma + ')'; g.appendChild(o); });
   $('chonNV').appendChild(g);
 }
 try { const i = localStorage.getItem('tah_nv'); if (i != null && NV[i]) $('chonNV').value = i; } catch (e) {}
@@ -320,7 +354,7 @@ $('nutChepPrompt').onclick = () => {
   const t = taoPrompt(Q);
   const loi = () => { const a = $('oPrompt'); a.closest('details').open = true; a.focus(); a.select(); bao('Hãy bôi đen và sao chép trong ô prompt'); };
   if (!navigator.clipboard) return loi();
-  navigator.clipboard.writeText(t).then(() => bao('Đã sao chép prompt vẽ ' + Q.ten), loi);
+  navigator.clipboard.writeText(t).then(() => bao('Đã sao chép prompt vẽ ' + Q.ten + (Q.bo ? '. Nhớ GỬI KÈM ảnh thân thường của ' + Q.tenNV : '')), loi);
 };
 
 // ===================== NHẬN ẢNH =====================
@@ -962,7 +996,10 @@ function veThuDo(g, cv, now) {
   const tt = (now - t0) / 1000, chu = lap ? gi : Math.max(gi * 1.8, 1), u = Math.min(1, (tt % chu) / gi);
   const bd = BO_DO[+$('boDo').value], vk = $('vuKhi').value;
   const o = { x: 28, y: 53, face: $('diTrai').checked ? -1 : 1, key: Q.key, t: tt, noShadow: false };
-  if (bd.o) o.outfit = Object.assign({ wing: null }, bd.o);
+  if (Q.bo) { // đủ bộ (bậc Tím) + cánh của bộ: game đổi sang thân bộ vừa tách (fx.bo), không khoác rời mũ, áo, đồ lưng, bùa
+    const B = BO_TP[Q.bo];
+    o.outfit = Object.assign({ mask: null, wing: { kind: B.canh, level: 2 }, rar: { hat: 2, robe: 2, back: 2, hand: 2, wing: 2 }, fx: { glow: null, els: [], aura: null, top: 2, bo: Q.bo } }, B.o);
+  } else if (bd.o) o.outfit = Object.assign({ wing: null }, bd.o);
   if (vk) o.weapon = { type: vk, family: 0, rarity: 0 };
   if (ten === 'move') o.move = true;
   else if (ten === 'tele') o.p = { mv: { holding: true, charge: 1 }, st: {} };
