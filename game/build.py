@@ -96,6 +96,7 @@ TOOL_GAME_JS = ['js/data.js', 'js/art.js', 'js/weapon_art.js', 'js/hero_art.js',
 TOOL_JS = ['xu-ly-anh.js', 'khung.js', 'tu-doan.js', 'do.js', 'giao-dien.js']
 RUNTIME_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'vung', 'thay_cho', 'tam', 'khung_rong', 'khung_cao', 'goc', 'rong', 'cao', 'bong', 'dong_tac',
                 'anh', 'vu_khi', 'trang_phuc', 'vat_pham', 'dung_yen', 'nhun')
+HU_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'tam', 'khung_rong', 'khung_cao', 'goc', 'so', 'giay', 'lap', 'xoay', 'co', 'tron')  # hiệu ứng ảnh AI (js/fx_anh.js)
 DO_LOAI = ('vu-khi', 'trang-phuc', 'vat-pham')  # đồ: một ảnh đứng yên, game tự xoay và đặt theo người
 SHIM = '''window.G = window.G || {};
 (function (G) {
@@ -122,6 +123,11 @@ def custom_sprites():
         ma = t.get('ma')
         if t.get('loai') != 'linh-khi-sprite' or not isinstance(ma, str) or not re.match(r'^[A-Za-z0-9_-]{1,40}$', ma):
             sys.exit('art/custom/%s không phải tệp của Xưởng Sprite (thiếu loai hoặc mã)' % name)
+        if t.get('doi_tuong') == 'hieu-ung':
+            if not ma.startswith('hu-') or not re.match(r'^data:image/png;base64,[A-Za-z0-9+/=]+$', str(t.get('tam', ''))):
+                sys.exit('art/custom/%s: hiệu ứng phải có mã hu-<tên> và dải khung PNG' % name)
+            out.append({k: t[k] for k in HU_KEYS if k in t})
+            continue
         if t.get('doi_tuong') in DO_LOAI:
             if not re.match(r'^data:image/png;base64,[A-Za-z0-9+/=]+$', str(t.get('anh', ''))):
                 sys.exit('art/custom/%s thiếu ảnh PNG của món đồ' % name)

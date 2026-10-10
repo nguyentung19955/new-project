@@ -208,7 +208,13 @@
 
   // ---------- vẽ: hình viên đạn ----------
   const art0 = A.proj;
+  // Ảnh AI (js/fx_anh.js): mũi tên của em bé (hu-dan-ten), viên bào tử (hu-dan-bao-tu). Không có tệp thì vẽ như cũ.
+  const FA = () => G.fxAnh;
   A.proj = function (c, o) {
+    if (o.team === 'player' && o.kind === 'arrow' && !G.noRender && FA() && FA().co('hu-dan-ten')) {
+      FA().ve(c, 'hu-dan-ten', o.x, o.y - (o.z || 10), o.fxT || 0, Math.atan2(o.vy, o.vx), o.big ? 1.5 : 1);
+      return;
+    }
     if (o.team === 'player') {
       art0(c, o);
       if (G.noRender || o.kind !== 'arrow') return;
@@ -231,7 +237,9 @@
       const sv = sprite(L, f, L === 'bua' || L === 'cannon' || L === 'fruit' ? ang + (o.vx < 0 ? Math.PI : 0) : ang, L === 'orb' || L === 'thorn' ? col : '', L === 'orb' ? o.col2 || '' : '', o.dBig);
       const x = Math.round(o.x), y = Math.round(o.y - (o.z || 10)), h = sv.width >> 1;
       c.fillStyle = 'rgba(0,0,0,0.3)'; c.fillRect(x - 3, Math.round(o.y), 6, 1);
-      c.drawImage(sv, x - h, y - h);
+      const baoTu = (L === 'spore' || (o.src && o.src.art === 'hoaBaoTu')) && FA() && FA().co('hu-dan-bao-tu');
+      if (baoTu) FA().ve(c, 'hu-dan-bao-tu', x, y, o.fxT || G.time, Math.atan2(o.vy, o.vx), o.dBig ? 1.6 : 1);
+      else c.drawImage(sv, x - h, y - h);
       // chấm đỏ nhấp nháy trên đầu đạn quái: nhìn là biết phải né
       if (((G.time * 8) | 0) % 2) { c.fillStyle = '#ff3a22'; c.fillRect(x - 1, y - h + (o.dBig ? 4 : 2), 2, 1); }
     } catch (e) { fail(e); art0(c, o); }

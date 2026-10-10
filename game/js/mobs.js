@@ -139,7 +139,7 @@
     // Giáp phía trước: đánh trúng giáp thì giáp mòn dần, mòn hết thì vỡ một lúc.
     if (e.role === 'shield' && !(e.brokeT > 0) && (P.x - e.x) * e.face > -4) {
       e.armorHp -= d;
-      if (e.armorHp <= 0) { e.brokeT = 6; FX('text', e.x, e.y - e.h - 8, 'Vỡ giáp!', '#ffd23f', 9); FX('burst', e.x + e.face * 8, e.y - e.h * 0.4, '#d0c8b8', 14, 70); G.sfx('boom', 1.4); }
+      if (e.armorHp <= 0) { e.brokeT = 6; FX('text', e.x, e.y - e.h - 8, 'Vỡ giáp!', '#ffd23f', 9); if (!(G.fx && G.fx.anh && G.fx.anh('hu-pha-giap', e.x + e.face * 8, e.y - e.h * 0.4, { f: e.face }))) FX('burst', e.x + e.face * 8, e.y - e.h * 0.4, '#d0c8b8', 14, 70); G.sfx('boom', 1.4); }
     }
   };
   G.mobOnKill = function (e) {
@@ -590,8 +590,12 @@
     const s = B.big ? 5 : 3;
     p(c, x - s, y - 1, s * 2, 2, 'rgba(0,0,0,0.3)');
     const by = y - s - lift - 1;
-    p(c, x - s, by - s + 1, s * 2, s * 2 - 2, '#14182e'); p(c, x - s + 1, by - s, s * 2 - 2, s * 2, '#14182e');
-    p(c, x - s + 1, by - s + 1, s * 2 - 2, s * 2 - 2, col[1]); p(c, x - s + 1, by - s + 1, 2, 2, col[2]);
+    // Ảnh AI quả nổ của Sóc Ném Quả Nổ (hu-dan-qua-no, js/fx_anh.js); không có tệp thì vẽ quả bom vuông như cũ
+    if (B.art === 'socNo' && G.fxAnh && G.fxAnh.co('hu-dan-qua-no')) G.fxAnh.ve(c, 'hu-dan-qua-no', x, by, gone, 0, 1);
+    else {
+      p(c, x - s, by - s + 1, s * 2, s * 2 - 2, '#14182e'); p(c, x - s + 1, by - s, s * 2 - 2, s * 2, '#14182e');
+      p(c, x - s + 1, by - s + 1, s * 2 - 2, s * 2 - 2, col[1]); p(c, x - s + 1, by - s + 1, 2, 2, col[2]);
+    }
     if (z.t > 0 && (gone >= B.fl)) {
       const k = 1 - z.t / Math.max(0.01, T0 - B.fl), fast = k > 0.7 ? 20 : 8;
       if (Math.floor(G.time * fast) % 2) p(c, x - 1, by - s - 3, 2, 3, '#ffd23c');

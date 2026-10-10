@@ -81,6 +81,16 @@
     p(c, x - 1, y - 1, 3, 3, '#e9f9ff'); p(c, x, y, 1, 1, '#ffffff');
   }
   const DRAW = { hoa: drawHoa, doc: drawDoc, bang: drawBang, tan: drawTan, manh: drawManh };
+  // Ảnh AI cho chưởng đang bay (js/fx_anh.js): hu-chuong-lua, hu-chuong-doc, hu-chuong-bang. Không có tệp thì vẽ bằng code như trên.
+  const CH_ANH = { hoa: 'hu-chuong-lua', doc: 'hu-chuong-doc', bang: 'hu-chuong-bang' };
+  function veAnh(c, q, ma) {
+    const A = G.fxAnh;
+    if (!A || !A.co(ma)) return false;
+    const v = scr(q), x = Math.round(q.x), big = q.big || 0;
+    p(c, x - 5, Math.round(q.y), 10, 1, 'rgba(0,0,0,0.25)'); // bóng trên sàn
+    q.fxAt = q.fxAt == null ? K.S().t : q.fxAt;
+    return A.ve(c, ma, x, Math.round(q.y - UP), K.S().t - q.fxAt, Math.atan2(v[1], v[0]), (q.kind === 'doc' && !q.main ? 0.8 : 1) * (1 + 0.35 * big));
+  }
 
   // ---------- vệt lửa và mây độc của chưởng trên sàn ----------
   function drawVet(c, z) {
@@ -138,8 +148,8 @@
     if (W.chs) for (const q of W.chs) {
       if (!q.fxOn) {
         q.fxOn = 1;
-        const f = DRAW[q.kind];
-        if (f) add({ ty: 'he', x: q.x, y: q.y, t: 30, ly: 1, draw: (c, o) => { if (o.q.done) { o.t = 0; return; } f(c, o.q); }, q });
+        const f = DRAW[q.kind], ma = CH_ANH[q.kind];
+        if (f) add({ ty: 'he', x: q.x, y: q.y, t: 30, ly: 1, draw: (c, o) => { if (o.q.done) { o.t = 0; return; } if (!(ma && veAnh(c, o.q, ma))) f(c, o.q); }, q });
       }
       if (!tick) continue;
       const y = q.y - UP, v = scr(q);
