@@ -205,9 +205,10 @@
   // quái gần nhất trong tầm của đòn, không có thì hướng đang kéo cần, không thì hướng đi cuối, cuối cùng mới là hướng mặt.
   // Hình em bé chỉ lật trái phải (P.face); vũ khí, vệt chém, vùng trúng xoay theo góc thật (P.aimRel, P.aimUx, P.aimUy trên màn hình).
   const ZK = () => G.ZK || 0.85;
-  // V6: đang đẩy cần thì tự ngắm chỉ chọn quái nằm trong nón ±60 độ quanh hướng cần (không lao ngược về sau lưng);
-  // không có con nào trong nón thì đánh theo hướng cần. Không đẩy cần thì như cũ: quái gần nhất mọi hướng.
-  const CONE = 0.5; // cos 60 độ
+  // V6: đang đẩy cần thì tự ngắm chỉ bỏ qua quái ở HẲN phía sau lưng (lệch quá ~100 độ so với hướng cần), để không lao ngược;
+  // quái ở trước mặt hoặc hai bên vẫn được ngắm như cũ. Không đẩy cần thì như cũ: quái gần nhất mọi hướng.
+  // (Hotfix 10/10: nón ±60 độ quá hẹp — giáo đâm theo hướng cần thay vì vào quái lệch bên.)
+  const CONE = -0.17; // cos 100 độ
   function inCone(P, e) {
     if (P.stickX == null) return true;
     const dx = e.x - P.x, dy = (e.y - P.y) / ZK(), d = Math.hypot(dx, dy);
