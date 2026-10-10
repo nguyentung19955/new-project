@@ -175,9 +175,8 @@
       theoVai(rig, P, 'phu-kien', (q) => dat(P, q.ten, 14 * D * k * Math.cos(u * 14) * B));
     } else if (n === 'roll') {
       // LỘN NHÀO tới trước một vòng quanh giữa người (ease-in-out bậc 3), co tay chân lại ở giữa vòng.
-      const e = eIO(u), th = TAU * e, co = bump(u) * B;
-      g.rot = th;
-      g.dx = -0.5 * Math.sin(th); g.dy = -0.5 * (1 - Math.cos(th)) - 0.18 * bump(u); // giữ tâm xoay ở giữa người, nảy lên một chút
+      const co = bump(u) * B;
+      lanTron(P, u, 0.18);
       g.sy = 1 - 0.12 * co; g.sx = 1 + 0.05 * co;
       v('chan-truoc', -55 * D * co); v('chan-sau', -40 * D * co);
       v('tay-truoc', -60 * D * co); v('tay-sau', -45 * D * co);
@@ -243,6 +242,14 @@
       v('dau', -14 * D * k * B); v('nguc', -6 * D * k * B); v('co', -8 * D * k * B);
       chan(-12 * D * k * B, -8 * D * k * B, 10 * D * k * B, 6 * D * k * B);
       v('duoi', 25 * D * k * Math.cos(u * 12) * B);
+    } else if (n === 'roll') {
+      // LĂN TRÒN: co bốn chân sát bụng, cúi đầu, cuộn đuôi, rồi lăn một vòng tới trước như quả bóng
+      const co = bump(u) * B;
+      lanTron(P, u, 0.12);
+      g.sy = 1 - 0.1 * co; g.sx = 1 - 0.06 * co;
+      chan(-70 * D * co, -60 * D * co, 70 * D * co, 60 * D * co); // chân trước gập ra sau, chân sau gập ra trước: ôm lấy bụng
+      v('dau', 30 * D * co); v('co', 15 * D * co); v('nguc', 6 * D * co);
+      v('duoi', -40 * D * co);
     } else if (n === 'die') {
       const f = eIn(seg(u, 0.05, 0.5)), nay = bump(seg(u, 0.5, 0.7)) * 0.1, k = Math.max(0, f - nay);
       g.sy = 1 - 0.38 * k * B; g.sx = 1 + 0.12 * k * B; g.rot = 8 * D * k * B; // xẹp xuống đất
@@ -295,11 +302,26 @@
     }
   }
 
-  const KHUNG_HAM = { nguoi, 'bon-chan': bonChan, cua };
+  // cua / bọ: rụt càng và chân rồi lăn
+  const cua0 = cua;
+  function cuaLan(rig, P, n, u, t, B) {
+    if (n !== 'roll') return cua0(rig, P, n, u, t, B);
+    const co = bump(u) * B;
+    lanTron(P, u, 0.1);
+    theoVai(rig, P, 'cang-*', (p) => dat(P, p.ten, 45 * D * co));
+    for (const p of rig.manh) { const m = /^chan-(gan|xa)-(\d)$/.exec(p.vai); if (m) dat(P, p.ten, (m[1] === 'gan' ? -1 : 1) * 40 * D * co); }
+  }
+  const KHUNG_HAM = { nguoi, 'bon-chan': bonChan, cua: cuaLan };
+  // LỘN / LĂN TRÒN dùng chung: cả người quay một vòng quanh GIỮA người (không quanh bàn chân), nhanh dần rồi chậm dần
+  // (ease-in-out bậc 3), nảy lên một chút. Từng khung chỉ thêm phần co tay chân của riêng nó.
+  function lanTron(P, u, nay) {
+    const g = P.g, th = TAU * eIO(u);
+    g.rot = th; g.dx = -0.5 * Math.sin(th); g.dy = -0.5 * (1 - Math.cos(th)) - nay * bump(u);
+  }
+  C.lanTron = lanTron;
   const GIOI_HAN_TAY = PI / 2; // tay xoay tối đa ±90° so với thân: không bao giờ bẻ ngược dị dạng
   function poseTho(rig, n, u, t, h) {
     const P = moi();
-    if (n === 'roll' && rig.khung !== 'nguoi') { (KHUNG_HAM[rig.khung])(rig, P, 'move', 0, u * 0.6, h.bien_do); return P; } // thú, cua: chạy nhanh thay lộn
     (KHUNG_HAM[rig.khung] || nguoi)(rig, P, n, u, t, h.bien_do);
     if (rig.khung === 'nguoi') for (const p of rig.manh) if (/^tay-/.test(p.vai) && P.m[p.ten]) P.m[p.ten].a = clamp(P.m[p.ten].a, -GIOI_HAN_TAY, GIOI_HAN_TAY);
     return P;
