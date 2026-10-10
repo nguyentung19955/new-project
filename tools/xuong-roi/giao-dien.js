@@ -7,7 +7,7 @@
   const VUNG = { rung: 'Rừng già', bien: 'Hang biển', laudai: 'Lâu đài cổ' };
   const DOI = { 'em-be': 'Em bé', quai: 'Quái' };
   // PHIÊN BẢN: tăng số mỗi lần sửa công cụ, ghi ngày sửa. Mã bản (6 ký tự) do game/build.py tính từ nội dung mã nguồn.
-  const PHIEN_BAN = { so: '1.7', ngay: '10/10/2026' };
+  const PHIEN_BAN = { so: '1.8', ngay: '10/10/2026' };
   XR.PHIEN_BAN = PHIEN_BAN;
   const TEN_BUOC = ['Loại', 'Nạp ảnh', 'Gán vai', 'Ráp', 'Động tác', 'Xuất'];
   const dpr = () => Math.min(3, window.devicePixelRatio || 1);
@@ -525,7 +525,51 @@
     $('gtMoCo').textContent = Math.round(+$('trMoCo').value * 100) + '%'; veRap();
   };
   $('trMoDo').oninput = () => { S.mo.do = +$('trMoDo').value; $('gtMoDo').textContent = Math.round(S.mo.do * 100) + '%'; veRap(); };
+  // ----- khung mẫu (lưu trên máy này) -----
+  const KHOA_MAU = 'xuong-roi-khung-mau-v1';
+  const docMau = () => { try { return JSON.parse(localStorage.getItem(KHOA_MAU) || '[]'); } catch (e) { return []; } };
+  const ghiMau = (ds) => { try { localStorage.setItem(KHOA_MAU, JSON.stringify(ds)); return true; } catch (e) { return false; } };
+  function veMau() {
+    const sel = $('chonMau'), ds = docMau().filter((m) => m.khung === S.khung);
+    const cu = sel.value; sel.innerHTML = '';
+    if (!ds.length) sel.appendChild(el('option', { value: '', text: '(chưa có mẫu cho khung ' + XR.KHUNG[S.khung] + ')' }));
+    ds.forEach((m) => sel.appendChild(el('option', { value: m.ten, text: m.ten + ' · ' + Object.keys(m.vai).length + ' mảnh' })));
+    if (ds.some((m) => m.ten === cu)) sel.value = cu;
+    $('nutRapMau').disabled = !ds.length; $('nutXoaMau').disabled = !ds.length;
+  }
+  function themMau(m) {
+    const ds = docMau().filter((x) => !(x.ten === m.ten && x.khung === m.khung)); ds.push(m);
+    if (!ghiMau(ds)) { bao('Máy này không cho lưu (bộ nhớ trình duyệt bị chặn).'); return; }
+    veMau(); $('chonMau').value = m.ten;
+  }
+  $('nutLuuMau').onclick = () => {
+    if (!S.manh.length) return;
+    themMau(XR.layKhungMau(S.khung, S.manh, S.goc, S.ten || 'Mẫu ' + XR.KHUNG[S.khung]));
+    bao('Đã lưu khung mẫu "' + (S.ten || 'Mẫu ' + XR.KHUNG[S.khung]) + '".');
+  };
+  $('nutRapMau').onclick = () => {
+    const m = docMau().find((x) => x.khung === S.khung && x.ten === $('chonMau').value); if (!m) return;
+    S.goc = XR.rapTheoMau(S.khung, S.manh, m); S.view = null; S.chonRap = null;
+    XR.tinhToi(S.manh, S.toiSau); doiRig(); veBenRap(); veRap(); luu();
+    const thieu = S.manh.filter((p) => !m.vai[p.ten]).length;
+    bao('Đã ráp theo mẫu "' + m.ten + '"' + (thieu ? ' (' + thieu + ' mảnh mẫu không có, máy tự đặt)' : '') + '.');
+  };
+  $('nutXoaMau').onclick = () => {
+    const ten = $('chonMau').value; if (!ten) return;
+    ghiMau(docMau().filter((x) => !(x.khung === S.khung && x.ten === ten))); veMau(); bao('Đã xoá mẫu.');
+  };
+  $('nutMauTep').onclick = () => $('tepMau').click();
+  $('tepMau').onchange = async () => {
+    const f = $('tepMau').files[0]; $('tepMau').value = ''; if (!f) return;
+    try {
+      const m = XR.mauTuTep(JSON.parse(await f.text()));
+      if (m.khung !== S.khung) { bao('Tệp này là khung ' + XR.KHUNG[m.khung] + ', con đang ráp là khung ' + XR.KHUNG[S.khung] + '.', 4000); return; }
+      themMau(m); bao('Đã lấy mẫu từ ' + f.name + '. Bấm "Ráp theo mẫu".');
+    } catch (e) { bao(e.message || 'Tệp hỏng.'); }
+  };
+
   function veBuoc4() {
+    veMau();
     S.mo.co0 = S.mo.co; $('trMoCo').value = 1; $('gtMoCo').textContent = '100%';
     $('trMoDo').value = S.mo.do; $('gtMoDo').textContent = Math.round(S.mo.do * 100) + '%';
     $('nutKeoMo').classList.toggle('on', S.keoMo);
@@ -571,6 +615,27 @@
     ['pointerup', 'pointercancel', 'lostpointercapture'].forEach((ev) => b.addEventListener(ev, () => diGiu.delete('nut' + k)));
     b.addEventListener('contextmenu', (e) => e.preventDefault());
   });
+  // Chuyển động tác mượt: trong 0,25 giây đầu sau khi đổi (đứng ↔ đi), trộn dần tư thế cũ sang tư thế mới (nội suy, có làm mềm),
+  // nên bấm/thả phím không bị giật cục.
+  const CHUYEN = 0.25;
+  const tron = { anim: null, tuThe: null, tu: null, k: 1 };
+  function tronTuThe(A, B, k) {
+    const e = k * k * (3 - 2 * k), P = { g: {}, m: {} };
+    for (const n in B.g) P.g[n] = (A.g[n] == null ? B.g[n] : A.g[n]) + (B.g[n] - (A.g[n] == null ? B.g[n] : A.g[n])) * e;
+    const ten = new Set(Object.keys(A.m).concat(Object.keys(B.m)));
+    for (const n of ten) {
+      const a = A.m[n] || { a: 0, dx: 0, dy: 0 }, b = B.m[n] || { a: 0, dx: 0, dy: 0 };
+      P.m[n] = { a: a.a + (b.a - a.a) * e, dx: a.dx + (b.dx - a.dx) * e, dy: a.dy + (b.dy - a.dy) * e };
+    }
+    return P;
+  }
+  function tuTheMuot(r, anim, u, t, dtg) {
+    const P = G.chibi.pose(r, anim, u, t);
+    if (tron.anim !== anim) { tron.tu = tron.tuThe || P; tron.anim = anim; tron.k = 0; }
+    if (tron.k < 1) { tron.k = Math.min(1, tron.k + dtg / CHUYEN); tron.tuThe = tronTuThe(tron.tu, P, tron.k); }
+    else tron.tuThe = P;
+    return tron.tuThe;
+  }
   function huongDi() { let h = 0; for (const k of diGiu) h += PHIM[k.replace(/^nut/, '')] || 0; return Math.sign(h); }
   function khungHinh(ts) {
     if (S.buoc !== 5) { dangChay = false; diGiu.clear(); return; }
@@ -592,6 +657,7 @@
     let u = 0;
     if (!XR.LAP[dtac]) { const [d, nghi] = THOI[dtac] || [0.6, 0.5], k = t % (d + nghi); u = Math.min(1, k / d); }
     const r = layRig();
+    const pose = r && r.ready && G.chibi.pose ? tuTheMuot(r, dtac, u, t, dtg) : undefined;
     // cỡ to
     const cv = $('cvTo'); coCanvas(cv);
     const c = cv.getContext('2d');
@@ -603,16 +669,16 @@
       c.fillText(G.chibi ? 'Chưa ráp xong (Bước 4)' : 'Thiếu bộ động tác chibi_rig.js', cv.width / 2, cv.height / 2); c.textAlign = 'left';
     } else if (r.ready) {
       const cao = cv.height * 0.62;
-      G.chibi.draw(c, r, di.coDi ? di.x * cv.width : cv.width / 2, nenY, { anim: dtac, u, t, cao, flip: quay, bong: true });
+      G.chibi.draw(c, r, di.coDi ? di.x * cv.width : cv.width / 2, nenY, { anim: dtac, u, t, cao, flip: quay, bong: true, pose });
     }
     // cỡ thật: canvas 480×270 = đúng một màn game
     const ct = $('cvThat'), x = ct.getContext('2d');
     x.setTransform(1, 0, 0, 1, 0, 0); x.fillStyle = '#2c5234'; x.fillRect(0, 0, 480, 270);
     x.fillStyle = '#3d5a2a'; x.fillRect(0, G.GY0 || 142, 480, (G.GY1 || 236) - (G.GY0 || 142));
     if (r && r.ready) {
-      if (di.coDi) G.chibi.draw(x, r, di.x * 480, 200, { anim: dtac, u, t, cao: +S.cao || 40, flip: quay, bong: true });
+      if (di.coDi) G.chibi.draw(x, r, di.x * 480, 200, { anim: dtac, u, t, cao: +S.cao || 40, flip: quay, bong: true, pose });
       else {
-        G.chibi.draw(x, r, 200, 200, { anim: dtac, u, t, cao: +S.cao || 40, flip: quay, bong: true });
+        G.chibi.draw(x, r, 200, 200, { anim: dtac, u, t, cao: +S.cao || 40, flip: quay, bong: true, pose });
         G.chibi.draw(x, r, 300, 200, { anim: 'idle', t, cao: +S.cao || 40, flip: true, bong: true });
       }
     }

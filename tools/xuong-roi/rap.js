@@ -220,6 +220,7 @@
   // Tự ráp: đặt dat, truc, lop cho mọi mảnh và trả về goc (điểm chân chạm đất)
   XR.tuRap = function (khung, ds) {
     if (!ds.length) return [0, 0];
+    ds.forEach(goXoay); // ráp lại từ đầu: mảnh đã xoay trở về thẳng
     XR.chaMacDinh(khung, ds);
     const byId = {}; ds.forEach((p) => (byId[p.id] = p));
     const xong = new Set();
@@ -261,6 +262,106 @@
     return null;
   }
   // Điểm chân: giữa thân theo chiều ngang, đáy thấp nhất của các chân (hoặc của cả con)
+  // ---------- KHUNG MẪU (cấu hình ráp có sẵn) ----------
+  // Ghi lại cách ráp của một con đã chỉnh tay để ráp con khác cùng khung y như vậy, không phải đoán.
+  // Mọi số là TỈ LỆ theo cỡ mảnh (không phải điểm ảnh), nên dùng được cho ảnh Gemini to nhỏ khác nhau.
+  //   vai[ten]: { cha: tên mảnh cha, khop: [fx, fy] khớp trên mảnh, gan: [fx, fy] chỗ gắn trên mảnh cha, lop, goc: độ }
+  //   goc: điểm chân, tỉ lệ theo khung bao của mảnh gốc (thân)
+  function goXoay(p) { // trả mảnh về góc 0 (ảnh gốc) mà giữ nguyên khớp
+    if (!p.a) return;
+    const T = p.truc.slice(), c = Math.cos(-p.a), s = Math.sin(-p.a);
+    const q0 = [p.dat[0] - p.m[0], p.dat[1] - p.m[1]]; // vị trí điểm (0,0) ảnh gốc
+    const lx = c * (T[0] - q0[0]) - s * (T[1] - q0[1]), ly = s * (T[0] - q0[0]) + c * (T[1] - q0[1]); // khớp trong ảnh gốc
+    p.cv = p.cv0; p.w = p.cv.width; p.h = p.cv.height; p.a = 0; p.m = [0, 0];
+    p.dat = [Math.round(T[0] - lx), Math.round(T[1] - ly)]; p._a = null; p.so = null;
+  }
+  // Điểm pt (toạ độ ráp) đổi sang toạ độ trong ẢNH GỐC (chưa xoay) của mảnh p
+  function vaoGoc(p, pt) {
+    if (!p.a) return [pt[0] - p.dat[0], pt[1] - p.dat[1]];
+    const q0 = [p.dat[0] - p.m[0], p.dat[1] - p.m[1]], c = Math.cos(-p.a), s = Math.sin(-p.a), dx = pt[0] - q0[0], dy = pt[1] - q0[1];
+    return [c * dx - s * dy, s * dx + c * dy];
+  }
+  XR.layKhungMau = function (khung, ds, goc, ten) {
+    XR.datTen(ds);
+    const byId = {}; ds.forEach((p) => (byId[p.id] = p));
+    const mau = { loai: 'xuong-roi-khung-mau', ten: ten || 'Khung mẫu', khung, vai: {}, goc: null };
+    for (const p of ds) {
+      // số đo ở góc 0: xoay ngược khớp về ảnh gốc
+      const a = p.a || 0, w0 = p.cv0 ? p.cv0.width : p.w, h0 = p.cv0 ? p.cv0.height : p.h;
+      const [lx, ly] = vaoGoc(p, p.truc);
+      const cha = p.cha ? byId[p.cha] : null;
+      const e = { cha: cha ? cha.ten : null, vaiCha: cha ? cha.vai : null, khop: [lx / w0, ly / h0], lop: p.lop, goc: Math.round((a * 180) / Math.PI) };
+      if (cha) { // chỗ gắn tính trong ảnh gốc của cha (cha chưa xoay)
+        const g = vaoGoc(cha, p.truc), cw = cha.cv0 ? cha.cv0.width : cha.w, chh = cha.cv0 ? cha.cv0.height : cha.h;
+        e.gan = [g[0] / cw, g[1] / chh];
+      }
+      mau.vai[p.ten] = e;
+    }
+    const goc0 = ds.find((p) => p.cha == null);
+    if (goc0) mau.goc = [(goc[0] - goc0.dat[0]) / goc0.w, (goc[1] - goc0.dat[1]) / goc0.h];
+    return mau;
+  };
+  // Ráp theo khung mẫu. Mảnh nào mẫu không có thì ráp như cũ (tự đoán). Trả về điểm chân.
+  XR.rapTheoMau = function (khung, ds, mau) {
+    ds.forEach(goXoay);
+    let goc = XR.tuRap(khung, ds); // nền: cách ráp tự đoán, rồi đè bằng mẫu
+    XR.datTen(ds);
+    const theoTen = {}; ds.forEach((p) => (theoTen[p.ten] = p));
+    for (const p of ds) {
+      const e = mau.vai[p.ten]; if (!e) continue;
+      p.lop = e.lop;
+      const cha = e.cha ? theoTen[e.cha] : null;
+      if (e.cha === null) p.cha = null; else if (cha && cha !== p && !XR.laConChau(ds, cha.id, p.id)) p.cha = cha.id;
+    }
+    // đặt lại vị trí: cha trước con
+    const da = new Set(), byId = {}, dich = {}; ds.forEach((p) => (byId[p.id] = p));
+    const dat = (p) => {
+      if (da.has(p.id)) return; da.add(p.id);
+      const cha = p.cha ? byId[p.cha] : null; if (cha) dat(cha);
+      const e = mau.vai[p.ten], d0 = p.dat.slice();
+      if (!e) { // mẫu không có mảnh này: đi theo cha
+        const d = (cha && dich[cha.id]) || [0, 0];
+        p.dat = [p.dat[0] + d[0], p.dat[1] + d[1]]; p.truc = [p.truc[0] + d[0], p.truc[1] + d[1]]; dich[p.id] = d; return;
+      }
+      const kx = p.w * e.khop[0], ky = p.h * e.khop[1];
+      if (cha && e.gan) {
+        const gx = cha.dat[0] + cha.w * e.gan[0], gy = cha.dat[1] + cha.h * e.gan[1];
+        const dx = Math.round(gx - kx) - p.dat[0], dy = Math.round(gy - ky) - p.dat[1];
+        p.dat = [p.dat[0] + dx, p.dat[1] + dy];
+      } else if (!cha) p.dat = [0, 0];
+      p.truc = [Math.round(p.dat[0] + kx), Math.round(p.dat[1] + ky)];
+      dich[p.id] = [p.dat[0] - d0[0], p.dat[1] - d0[1]];
+    };
+    ds.forEach(dat);
+    const goc0 = ds.find((p) => p.cha == null);
+    if (goc0 && mau.goc) goc = [Math.round(goc0.dat[0] + goc0.w * mau.goc[0]), Math.round(goc0.dat[1] + goc0.h * mau.goc[1])];
+    else goc = XR.tinhGoc(ds);
+    // góc xoay: cha trước con (mảnh con đã tính góc riêng nên trừ phần cha đã xoay)
+    const thuTu = []; const di = (p) => { if (thuTu.indexOf(p) >= 0) return; if (p.cha && byId[p.cha]) di(byId[p.cha]); thuTu.push(p); };
+    ds.forEach(di);
+    for (const p of thuTu) {
+      const e = mau.vai[p.ten]; if (!e || !e.goc) continue;
+      const can = e.goc - Math.round(((p.a || 0) * 180) / Math.PI);
+      if (can) XR.xoayManh(ds, p, can);
+    }
+    return goc;
+  };
+  // Lấy khung mẫu từ một tệp .rig.json đã xuất (không có góc xoay vì góc đã nướng vào ảnh)
+  XR.mauTuTep = function (tep) {
+    if (!tep || tep.loai !== 'linh-khi-rig' || !Array.isArray(tep.manh)) throw new Error('Đây không phải tệp .rig.json');
+    const theoTen = {}; tep.manh.forEach((m) => (theoTen[m.ten] = m));
+    const mau = { loai: 'xuong-roi-khung-mau', ten: tep.ten || tep.ma, khung: tep.khung || 'nguoi', vai: {}, goc: null };
+    for (const m of tep.manh) {
+      const w = m.o[2], h = m.o[3], cha = m.cha ? theoTen[m.cha] : null;
+      const e = { cha: m.cha || null, khop: [(m.truc[0] - m.dat[0]) / w, (m.truc[1] - m.dat[1]) / h], lop: m.lop, goc: 0 };
+      if (cha) e.gan = [(m.truc[0] - cha.dat[0]) / cha.o[2], (m.truc[1] - cha.dat[1]) / cha.o[3]];
+      mau.vai[m.ten] = e;
+    }
+    const g = tep.manh.find((m) => !m.cha);
+    if (g && tep.goc) mau.goc = [(tep.goc[0] - g.dat[0]) / g.o[2], (tep.goc[1] - g.dat[1]) / g.o[3]];
+    return mau;
+  };
+
   XR.tinhGoc = function (ds) {
     const than = ds.find((p) => p.cha == null) || ds[0];
     const chan = ds.filter((p) => /^chan/.test(p.vai));

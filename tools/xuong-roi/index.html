@@ -255,6 +255,19 @@
           </div>
         </div>
         <div class="hop">
+          <h3>Khung mẫu</h3>
+          <p class="nho">Ráp xong một con ưng ý thì lưu làm mẫu. Con sau cùng khung chỉ cần bấm "Ráp theo mẫu", khớp và lớp đặt y như con mẫu.</p>
+          <select id="chonMau"></select>
+          <div class="hang" style="margin-top:8px">
+            <button class="nut chinh" id="nutRapMau">Ráp theo mẫu</button>
+            <button class="nut" id="nutLuuMau">Lưu làm mẫu</button>
+          </div>
+          <div class="hang" style="margin-top:8px">
+            <button class="nut" id="nutMauTep">Lấy mẫu từ tệp .rig.json</button>
+            <button class="nut do" id="nutXoaMau">Xoá mẫu</button>
+          </div>
+        </div>
+        <div class="hop">
           <h3>Ảnh cả con (không bắt buộc)</h3>
           <p class="nho">Nạp ảnh Gemini lần A để làm hình mờ phía sau, ráp cho khớp.</p>
           <div class="hang">
@@ -344,6 +357,7 @@
 <input type="file" id="tepAnh" accept="image/*" class="an">
 <input type="file" id="tepAnhMo" accept="image/*" class="an">
 <input type="file" id="tepRig" accept=".json,application/json" class="an">
+<input type="file" id="tepMau" accept=".json,application/json" class="an">
 
 <script src="../../game/js/chibi_rig.js"></script>
 <script src="ds-quai.js"></script>
