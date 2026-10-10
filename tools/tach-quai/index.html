@@ -371,6 +371,16 @@ function tuTim(A, coAlpha) {
       da[j] = 1; const x = j % W, y = (j / W) | 0;
       if (x > 0) st.push(j - 1); if (x < W - 1) st.push(j + 1); if (y > 0) st.push(j - W); if (y < H - 1) st.push(j + W);
     }
+    // khoảng nền bị bao kín (khe giữa đuôi và thân…): cụm ≥ 12 điểm rất giống màu nền thì cũng là nền
+    const sat = (j) => { for (const c of nen) if (Math.abs(d[j*4] - c[0]) + Math.abs(d[j*4+1] - c[1]) + Math.abs(d[j*4+2] - c[2]) < 26) return true; return false; };
+    const xem = new Uint8Array(N);
+    for (let j0 = 0; j0 < N; j0++) {
+      if (da[j0] || xem[j0] || !sat(j0)) continue;
+      const st = [j0], cum = []; xem[j0] = 1;
+      while (st.length) { const j = st.pop(); cum.push(j); const x = j % W, y = (j / W) | 0;
+        for (const b of [x > 0 ? j - 1 : -1, x < W - 1 ? j + 1 : -1, y > 0 ? j - W : -1, y < H - 1 ? j + W : -1]) if (b >= 0 && !da[b] && !xem[b] && sat(b)) { xem[b] = 1; st.push(b); } }
+      if (cum.length >= 12) for (const j of cum) da[j] = 1;
+    }
     for (let j = 0; j < N; j++) fg[j] = da[j] ? 0 : 1;
     // đường kẻ cắt ngang thân: lấp lại bằng màu điểm bên cạnh
     for (let j = 0; j < N; j++) {
@@ -411,7 +421,7 @@ function tuTim(A, coAlpha) {
   const khe = lon.slice(1).map((c, i) => ({ i: i + 1, g: c.cy - lon[i].cy })).sort((a, b) => b.g - a.g).slice(0, 5).map(k => k.i).sort((a, b) => a - b);
   const hangs = []; let dau = 0;
   for (const k of [...khe, lon.length]) { hangs.push(lon.slice(dau, k)); dau = k; }
-  const khung = [], loi = [], ghi = [];
+  const khung = [], loi = [], ghi = [], gops = [];
   hangs.forEach((h, r) => {
     h.sort((a, b) => a.x0 - b.x0);
     const rongTB = h.map(c => c.x1 - c.x0).sort((a, b) => a - b)[h.length >> 1];
@@ -426,6 +436,30 @@ function tuTim(A, coAlpha) {
       const mx = 0.1 * (f.x1 - f.x0), my = 0.1 * (f.y1 - f.y0);
       if (c.cx >= f.x0 - mx && c.cx <= f.x1 + mx && c.cy >= f.y0 - my && c.cy <= f.y1 + my) { f.ds.push(c); f.x0 = Math.min(f.x0, c.x0); f.x1 = Math.max(f.x1, c.x1); f.y0 = Math.min(f.y0, c.y0); f.y1 = Math.max(f.y1, c.y1); break; }
     }
+    gops.push(gop);
+  });
+  // các con vẽ dính nhau thành một hình quá dài: cắt ra theo chỗ "eo" ít điểm nhất
+  const tatCa = gops.flat().map(f => f.x1 - f.x0 + 1).sort((a, b) => a - b), rongChuan = tatCa[tatCa.length >> 1];
+  gops.forEach((gop, r) => {
+    const moi = [];
+    for (const f of gop) {
+      const rong = f.x1 - f.x0 + 1, k = Math.round(rong / rongChuan);
+      if (rong < 1.6 * rongChuan || k < 2) { moi.push(f); continue; }
+      const ids = new Set(f.ds.map(x => x.id)), cot = new Array(rong).fill(0);
+      for (let y = f.y0; y <= f.y1; y++) for (let x = f.x0; x <= f.x1; x++) if (ids.has(nhan[y * W + x])) cot[x - f.x0]++;
+      const cat = [0];
+      for (let i = 1; i < k; i++) {
+        const g = Math.round(i * rong / k), r2 = Math.round(rong / k * 0.3);
+        let tot = g; for (let x = Math.max(1, g - r2); x < Math.min(rong - 1, g + r2); x++) if (cot[x] < cot[tot]) tot = x;
+        cat.push(tot);
+      }
+      cat.push(rong);
+      for (let i = 0; i < k; i++) moi.push({ ds: f.ds, x0: f.x0 + cat[i], x1: f.x0 + cat[i + 1] - 1, y0: f.y0, y1: f.y1, tach: true });
+      ghi.push(`Hàng ${r + 1}: ${k} con vẽ dính nhau, đã tự tách`);
+    }
+    gops[r] = moi;
+  });
+  gops.forEach((gop, r) => {
     let chon = gop;
     if (gop.length > SO[r]) { chon = []; for (let i = 0; i < SO[r]; i++) chon.push(gop[Math.round(i * (gop.length - 1) / (SO[r] - 1))]); ghi.push(`Hàng ${r + 1}: thấy ${gop.length} hình, lấy ${SO[r]} hình rải đều`); }
     if (gop.length < SO[r]) loi.push(`Hàng ${r + 1} (${TEN_DT[r].toLowerCase()}): chỉ thấy ${gop.length} hình, cần ${SO[r]}`);
@@ -433,9 +467,13 @@ function tuTim(A, coAlpha) {
   });
   const hinh = {};
   for (const { r, c, f } of khung) {
-    const ids = new Set(f.ds.map(x => x.id)), w = f.x1 - f.x0 + 1, h = f.y1 - f.y0 + 1, px = new Uint8ClampedArray(w * h * 4);
+    const ids = new Set(f.ds.map(x => x.id));
+    let x0 = W, y0 = H, x1 = -1, y1 = -1;
+    for (let y = f.y0; y <= f.y1; y++) for (let x = f.x0; x <= f.x1; x++) if (ids.has(nhan[y * W + x])) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    if (x1 < 0) continue;
+    const w = x1 - x0 + 1, h = y1 - y0 + 1, px = new Uint8ClampedArray(w * h * 4);
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-      const j = (y + f.y0) * W + x + f.x0;
+      const j = (y + y0) * W + x + x0;
       if (ids.has(nhan[j])) px.set(P.subarray(j * 4, j * 4 + 4), (y * w + x) * 4);
     }
     hinh[r + ',' + c] = { w, h, px };
@@ -503,11 +541,16 @@ function chay() {
   const caoMax = GY - 3, rongMax = FW - 6;
   let s = Infinity;
   if (!Object.keys(hinh).length) s = 1;
-  for (const k in hinh) s = Math.min(s, caoMax / hinh[k].h, rongMax / hinh[k].w);
+  // tỉ lệ chung theo các hình cỡ bình thường; hình to bất thường (dính nhau, vẽ phóng to) tự thu riêng cho vừa ô
+  const tiLe = Object.values(hinh).map(f => Math.min(caoMax / f.h, rongMax / f.w)).sort((a, b) => a - b);
+  const tlGiua = tiLe[tiLe.length >> 1] || 1;
+  for (const t of tiLe) if (t >= tlGiua / 1.5) { s = t; break; }
+  const nhoRieng = [];
   const TW = FW * 8, TH = FH * 6, tam = new Uint8ClampedArray(TW * TH * 4), lat = $('latNgang').checked;
   for (const k in hinh) {
     const [r, c] = k.split(',').map(Number), f = hinh[k];
-    const nw = Math.max(1, Math.round(f.w * s)), nh = Math.max(1, Math.round(f.h * s)), o = thuNho(f, nw, nh, lat);
+    const sf = Math.min(s, caoMax / f.h, rongMax / f.w); if (sf < s * 0.95) nhoRieng.push((r + 1) + '.' + (c + 1));
+    const nw = Math.max(1, Math.round(f.w * sf)), nh = Math.max(1, Math.round(f.h * sf)), o = thuNho(f, nw, nh, lat);
     const ox = c * FW + Math.max(3, Math.min(FW - 3 - nw, GX - (nw >> 1))), oy = r * FH + GY - nh;
     for (let y = 0; y < nh; y++) for (let x = 0; x < nw; x++) { const i = (y * nw + x) * 4; if (o[i+3]) tam.set(o.subarray(i, i + 4), ((oy + y) * TW + ox + x) * 4); }
   }
@@ -540,6 +583,7 @@ function chay() {
   muc.push(['Ô thừa để trống' + (thua.length ? ' (có hình: ' + thua.join(', ') + ')' : ''), !thua.length]);
   muc.push([`Chân đặt ở (${GX}, ${GY})`, true]);
   muc.push(['Nền trong suốt, mép sắc (chỉ trong suốt hoặc đặc)', true]);
+  if (nhoRieng.length) muc.push(['Hình to bất thường, đã thu nhỏ riêng: ' + nhoRieng.join(', ') + ' (xem lại có đúng không)', nhoRieng.length <= 3]);
   loi.forEach(t => muc.push([t, false]));
   ghi.forEach(t => muc.push([t, true]));
   KQ = { tam, TW, TH, FW, FH, dat: muc.every(m => m[1]) };
