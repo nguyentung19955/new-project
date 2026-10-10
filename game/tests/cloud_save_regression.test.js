@@ -91,7 +91,7 @@ function assert(ok, message) { if (!ok) throw new Error(message); }
         assert(G.save.gold === 5000 && sets.length === 0, 'V2: chọn bản trên mây → dùng bản mây, không ghi đè mây (vàng ' + G.save.gold + ', số lần ghi ' + sets.length + ')');
         assert(G.save.sound === false, 'V2: âm thanh vẫn giữ theo máy');
       } else {
-        assert(G.save.gold === 12 && sets.length === 1 && JSON.parse(sets[0].save).gold === 12, 'V2: chọn giữ bản trên máy → đẩy bản máy lên');
+        assert(G.save.gold === 12 && sets.length === 1 && JSON.parse(sets[0].save).gold === 12, 'V2: chọn giữ bản trên máy → đẩy bản máy lên (vàng ' + G.save.gold + ', ghi ' + sets.length + ')');
       }
     }
     // Chênh lệch nhỏ (dưới 8 điểm tiến độ): giữ hành vi cũ — máy mới hơn thì giữ máy và đẩy lên, không hỏi.

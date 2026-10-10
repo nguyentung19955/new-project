@@ -45,7 +45,7 @@
   // Dùng lại hộp hỏi có sẵn (G.cloudUI.conflict, vốn viết cho chiều ngược lại) và chỉ sửa lời cho đúng chiều này.
   // Đóng hộp bằng ✕/Esc thì giữ bản nhiều tiến độ hơn = bản trên mây (hộp gốc trả 'local' khi đóng).
   async function askCloudRicher(local, cloud, at) {
-    let choseLocal = false;
+    let choseLocal = false, watched = false;
     const pr = G.cloudUI.conflict(summary(local), summary(cloud), at);
     try {
       const box = document.getElementById('lk-conflict');
@@ -55,11 +55,11 @@
         const sub = box.querySelector('.lk-card .lk-sub');
         if (sub) sub.textContent = 'lưu sau, ít tiến độ hơn';
         const b = box.querySelector('[data-act="cf-local"]');
-        if (b) b.addEventListener('click', () => { choseLocal = true; }, true);
+        if (b) { watched = true; b.addEventListener('click', () => { choseLocal = true; }, true); }
       }
     } catch (e) { /* hộp hỏi khác cấu trúc: vẫn hỏi bình thường */ }
     const use = await pr;
-    return use === 'local' && !choseLocal ? 'cloud' : use;
+    return use === 'local' && watched && !choseLocal ? 'cloud' : use; // chỉ nghi ngờ khi đã gắn được theo dõi nút
   }
 
   const META = ['savedAt', 'owner', 'sound'];
