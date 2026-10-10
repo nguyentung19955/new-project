@@ -19071,15 +19071,66 @@ MA._xong();
   }
 
   const KHUNG_HAM = { nguoi, 'bon-chan': bonChan, cua };
-  C.pose = function (rig, anim, u, t) {
+  function poseTho(rig, n, u, t, h) {
     const P = moi();
-    if (!rig) return P;
+    (KHUNG_HAM[rig.khung] || nguoi)(rig, P, n, u, t, h.bien_do);
+    return P;
+  }
+  // QUÁN TÍNH TRỄ (follow-through): đầu, phụ kiện (ống tên, khăn, tóc) và đuôi không dính cứng vào thân mà đi trễ pha:
+  // lấy tư thế thân ở một chút trước đó (TRE giây) so với bây giờ; thân vừa nhún lên thì đầu gật xuống, vừa lao tới thì
+  // đầu ngả ra sau, vừa nghiêng thì đầu nghiêng ngược lại. Vì là dao động hình sin trễ pha nên mượt, không cần nhớ trạng thái.
+  const TRE = 0.12;
+  const QT = { dau: 1, 'phu-kien': 1.8, duoi: 1.5 };
+  function quanTinh(rig, P, Pt) {
+    const goc = rig.thuTu[0] && rig.thuTu[0].ten; // mảnh gốc (thân)
+    const gT = (Q) => Q.g.rot + (goc && Q.m[goc] ? Q.m[goc].a : 0);
+    const dY = P.g.dy - Pt.g.dy, dX = P.g.dx - Pt.g.dx, dR = gT(P) - gT(Pt);
+    const lech = -dY * 1.3 - dX * 1.1 - dR * 0.7;
+    if (Math.abs(lech) < 1e-5) return;
+    for (const p of rig.manh) {
+      const k = QT[p.vai]; if (!k) continue;
+      dat(P, p.ten, clamp(lech * k, -0.35, 0.35));
+    }
+  }
+  C.TRE = TRE;
+  C.pose = function (rig, anim, u, t) {
+    if (!rig) return moi();
     const n = ANIMS.indexOf(anim) >= 0 ? anim : 'idle', h = rig.dt[n] || { bien_do: 1, toc_do: 1 };
     t = (+t || 0) * (LOOP[n] ? h.toc_do : 1);
     // Động tác một lần: tốc độ > 1 thì làm xong sớm rồi giữ tư thế cuối (thời lượng do game quyết định).
     u = clamp((+u || 0) * (LOOP[n] ? 1 : h.toc_do), 0, 1);
-    (KHUNG_HAM[rig.khung] || nguoi)(rig, P, n, u, t, h.bien_do);
+    const P = poseTho(rig, n, u, t, h);
+    if (n !== 'die') quanTinh(rig, P, poseTho(rig, n, LOOP[n] ? u : clamp(u - 0.07, 0, 1), LOOP[n] ? t - TRE : t, h));
     return P;
+  };
+
+  // CHUYỂN ĐỘNG TÁC MƯỢT: đổi động tác (đứng → đi → đánh...) thì trộn dần tư thế cũ sang mới trong CHUYEN giây
+  // (nội suy làm mềm kiểu ease-in-out), không nhảy cóc. khoa: đối tượng riêng cho từng nhân vật (ví dụ người chơi).
+  const CHUYEN = 0.18, nhoTron = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  const eSmooth = (k) => k * k * (3 - 2 * k);
+  function tronTuThe(A, B, k) {
+    const e = eSmooth(k), P = moi();
+    for (const n in B.g) { const a = A.g[n] == null ? B.g[n] : A.g[n]; P.g[n] = a + (B.g[n] - a) * e; }
+    const ten = {}; for (const n in A.m) ten[n] = 1; for (const n in B.m) ten[n] = 1;
+    for (const n in ten) {
+      const a = A.m[n] || { a: 0, dx: 0, dy: 0 }, b = B.m[n] || { a: 0, dx: 0, dy: 0 };
+      P.m[n] = { a: a.a + (b.a - a.a) * e, dx: a.dx + (b.dx - a.dx) * e, dy: a.dy + (b.dy - a.dy) * e };
+    }
+    return P;
+  }
+  C.tronTuThe = tronTuThe;
+  C.poseMuot = function (khoa, rig, anim, u, t, now) {
+    const P = C.pose(rig, anim, u, t);
+    if (!nhoTron || !khoa || typeof khoa !== 'object') return P;
+    now = now != null ? now : (G.time || 0);
+    let st = nhoTron.get(khoa);
+    if (!st || st.rig !== rig || now < st.now || now - st.now > 0.5) { st = { rig, anim, tu: null, k: 1, cuoi: P, now }; nhoTron.set(khoa, st); }
+    const dtg = now - st.now; st.now = now;
+    if (anim !== st.anim) { st.tu = st.cuoi; st.anim = anim; st.k = 0; }
+    let ra = P;
+    if (st.k < 1 && st.tu) { st.k = Math.min(1, st.k + dtg / CHUYEN); ra = tronTuThe(st.tu, P, st.k); }
+    st.cuoi = ra;
+    return ra;
   };
 
   // ---------- vẽ ----------
@@ -19276,7 +19327,7 @@ MA._xong();
       if (!rig || !o) return hero0.call(A, c, o);
       let fr = null;
       try { fr = G.tinhLinh && G.tinhLinh.frame ? G.tinhLinh.frame(o) : null; } catch (e) { fr = null; }
-      const s = C.chonEmBe(o), P = C.pose(rig, s.anim, s.u, s.t);
+      const s = C.chonEmBe(o), P = s.anim === 'die' ? C.pose(rig, s.anim, s.u, s.t) : C.poseMuot(o.p || null, rig, s.anim, s.u, s.t);
       if (s.anim === 'die') P.g.alpha = 1; // em bé ngã thì nằm yên, không mờ biến mất
       const M = C.maTran(rig, P);
       const k = rig.cao / rig.H, f = o.face < 0 ? -1 : 1, x = o.x || 0, y = o.y || 0;

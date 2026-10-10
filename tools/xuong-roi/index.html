@@ -172,33 +172,41 @@
 
   <!-- BƯỚC 2 -->
   <section class="trang" data-buoc="2">
-    <p class="hd">Bước 2: Nạp ảnh tách bộ phận (ảnh Gemini lần B, nền trắng). Máy tự xoá nền và cắt từng mảnh. Chạm thẻ để chọn: gộp 2 mảnh bị vẽ rời, xoá mảnh thừa, lật mảnh quay trái.</p>
+    <p class="hd">Bước 2: Nạp ảnh tách bộ phận (ảnh Gemini lần B). Rồi dùng ngón tay/chuột KÉO KHUNG quanh từng bộ phận theo đúng tên máy nhắc bên phải (Thân, Đầu, Tay trước…). Máy cắt đúng khung đó và xoá nền trắng trong khung.</p>
     <div class="khu">
       <div class="chinh">
         <div class="tha" id="oTha"><span class="to">Chạm để chọn ảnh, hoặc kéo thả ảnh vào đây</span><span class="nho">Ảnh PNG hoặc JPG, nền trắng, các bộ phận vẽ rời nhau</span></div>
+        <div class="vung-ve an" id="khungTam" style="background:#fff"><canvas id="cvTam" style="cursor:crosshair"></canvas></div>
         <div class="luoi" id="luoiManh" style="margin-top:12px"></div>
       </div>
       <div class="ben">
         <div class="hop">
+          <h3>Khoanh tiếp: <span id="vaiCho" style="color:var(--gold)"></span></h3>
+          <p class="nho">Kéo khung sát quanh bộ phận đó trên ảnh. Muốn khoanh bộ phận khác thì chọn ở đây:</p>
+          <select id="chonVaiCho"></select>
+          <div class="hang" style="margin-top:8px">
+            <button class="nut" id="nutBoQua">Bỏ qua bộ phận này</button>
+            <button class="nut" id="nutAnhKhac">Đổi ảnh</button>
+          </div>
+          <p class="nho">Khoanh sai: chạm vào khung đó (hoặc thẻ bên dưới) rồi bấm Xoá, khoanh lại.</p>
+        </div>
+        <div class="hop">
           <h3>Mảnh đã chọn: <span id="soChon">0</span></h3>
           <div class="hang">
-            <button class="nut xanh" id="nutGop">Gộp các mảnh đã chọn</button>
             <button class="nut" id="nutLat">Lật ngang</button>
             <button class="nut do" id="nutXoa">Xoá mảnh</button>
+            <button class="nut xanh" id="nutGop">Gộp</button>
           </div>
-          <p class="nho">Mặt nhân vật phải quay sang PHẢI. Mảnh nào quay trái thì chọn rồi bấm "Lật ngang". Chọn hết rồi lật nếu cả bộ quay trái.</p>
+          <p class="nho">Mặt nhân vật phải quay sang PHẢI. Mảnh nào quay trái thì chọn rồi bấm "Lật ngang".</p>
           <button class="nut rong" id="nutChonHet">Chọn hết / bỏ chọn</button>
         </div>
         <div class="hop">
-          <h3>Xoá nền</h3>
+          <h3>Xoá nền trong khung</h3>
           <label class="dong">Ngưỡng nền trắng <span class="gt" id="gtNguong"></span></label>
           <input type="range" id="trNguong" min="10" max="140" step="1">
           <label class="dong">Xoá viền trắng lem <span class="gt" id="gtLem"></span></label>
           <input type="range" id="trLem" min="0" max="4" step="1">
-          <label class="dong">Bỏ vụn nhỏ hơn <span class="gt" id="gtVun"></span></label>
-          <input type="range" id="trVun" min="0" max="15" step="0.5">
-          <p class="nho">Kéo thanh trượt thì máy cắt lại từ ảnh gốc, vẫn giữ các mảnh đã gộp, xoá, lật.</p>
-          <img id="anhGoc" alt="" class="an">
+          <p class="nho">Kéo thanh trượt thì mọi khung cắt lại, khung giữ nguyên.</p>
         </div>
       </div>
     </div>
@@ -206,7 +214,7 @@
 
   <!-- BƯỚC 3 -->
   <section class="trang" data-buoc="3">
-    <p class="hd">Bước 3: Mỗi mảnh là bộ phận nào? Máy đã đoán sẵn. Sai thì chạm thẻ rồi chạm tên đúng bên phải (hoặc chọn trong ô dưới thẻ).</p>
+    <p class="hd">Bước 3: Xem lại tên từng mảnh (đã lấy theo thứ tự bạn khoanh). Sai thì chạm thẻ rồi chạm tên đúng bên phải.</p>
     <div class="khu">
       <div class="chinh"><div class="luoi" id="luoiVai"></div></div>
       <div class="ben">
@@ -215,7 +223,7 @@
           <div class="hang" id="nutVai"></div>
         </div>
         <div class="hop">
-          <button class="nut rong" id="nutDoanLai">Để máy đoán lại</button>
+          <button class="nut rong an" id="nutDoanLai">Để máy đoán lại</button>
           <button class="nut rong" id="nutToi" style="margin-top:8px"></button>
           <p class="nho">Ảnh Gemini vẽ hai tay (hai chân) giống hệt nhau: máy tự tô tối tay/chân phía sau cho có chiều sâu.</p>
           <p class="nho" id="thieuVai"></p>
@@ -332,6 +340,7 @@
         <div class="hang" style="margin-top:12px">
           <button class="nut chinh" id="nutXuat">Xuất tệp .rig.json</button>
           <button class="nut" id="nutTaiPng">Tải ảnh các mảnh (.png)</button>
+          <button class="nut" id="nutCauHinh">Xuất cấu hình JSON</button>
         </div>
         <p id="kqXuat" class="nho"></p>
         <img id="anhXuat" alt="" class="an" style="max-width:100%;border-radius:10px;background:repeating-conic-gradient(#2c4a4c 0 25%, #213b3d 0 50%) 0 0/16px 16px">

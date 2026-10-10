@@ -85,15 +85,18 @@
   // Mỗi vai: cha mặc định, lớp, điểm khớp trên mảnh [fx, fy] (tỉ lệ cỡ mảnh), điểm gắn trên cha [fx, fy] (tỉ lệ cỡ cha).
   const RAP = {
     nguoi: {
-      // Prompt Gemini vẽ mọi chi có đầu khớp tròn "giấu dưới thân": tay, chân đều nằm sau thân để khớp không lộ.
-      than: { lop: 4, khop: [0.5, 0.95] },
-      dau: { cha: 'than', lop: 6, khop: [0.5, 0.97], gan: [0.5, 0.2] }, // cổ cắm sâu vào cổ áo: che lỗ cổ áo Gemini vẽ trên thân
-      'tay-truoc': { cha: 'than', lop: 3, khop: [0.45, 0.16], gan: [0.76, 0.32] },
-      'tay-sau': { cha: 'than', lop: 1, khop: [0.45, 0.16], gan: [0.26, 0.32] },
-      'chan-truoc': { cha: 'than', lop: 2, khop: [0.5, 0.12], gan: [0.62, 0.86] },
-      'chan-sau': { cha: 'than', lop: 0, khop: [0.5, 0.12], gan: [0.38, 0.86] },
+      // CÂY XƯƠNG CỐ ĐỊNH: thân là gốc, mọi bộ phận gắn vào thân (vũ khí gắn vào tay trước).
+      // Điểm gắn nằm SÂU BÊN TRONG thân áo (không ở mép), xoay bao nhiêu cũng không lộ khoảng trống.
+      // Thứ tự vẽ cố định: chân sau → tay sau → thân → phụ kiện → đầu → chân trước → tay trước (→ vũ khí).
+      // Số đo là tỉ lệ theo khung bao phần CÓ HÌNH của mảnh (không tính lề trống của ô cắt).
+      'chan-sau': { cha: 'than', lop: 0, khop: [0.5, 0.12], gan: [0.4, 0.8] },
+      'tay-sau': { cha: 'than', lop: 1, khop: [0.45, 0.16], gan: [0.36, 0.26] },
+      than: { lop: 2, khop: [0.5, 0.95] },
+      'phu-kien': { cha: 'than', lop: 3, khop: [0.5, 0.35], gan: [0.3, 0.3] },
+      dau: { cha: 'than', lop: 4, khop: [0.5, 0.97], gan: [0.5, 0.2] }, // cổ cắm sâu vào cổ áo
+      'chan-truoc': { cha: 'than', lop: 5, khop: [0.5, 0.12], gan: [0.6, 0.8] },
+      'tay-truoc': { cha: 'than', lop: 6, khop: [0.45, 0.16], gan: [0.64, 0.26] },
       'vu-khi': { cha: 'tay-truoc', lop: 7, khop: [0.5, 0.75], gan: [0.62, 0.88] },
-      'phu-kien': { cha: 'dau', lop: 5, khop: [0.5, 0.2], gan: [0.2, 0.45] },
     },
     'bon-chan': {
       than: { lop: 2, khop: [0.5, 0.6] },
@@ -136,7 +139,8 @@
     const than = ds.find((q) => q.vai === 'than');
     return !!than && p.w * p.h >= than.w * than.h * 0.12;
   };
-  const cachRap = (khung, vai, p, ds) => (p && ds && XR.laAoChoang(p, ds) ? AO_CHOANG : p && ds && laDoDeoLung(khung, p, ds) ? DEO_LUNG : cachRap0(khung, vai));
+  const cachRap = (khung, vai, p, ds) => (p && ds && XR.laAoChoang(p, ds) ? AO_CHOANG : cachRap0(khung, vai));
+  void laDoDeoLung; void DEO_LUNG; // (bỏ: phụ kiện giờ luôn vẽ ngay sau thân theo thứ tự lớp cố định)
 
   // Đặt tên duy nhất theo vai (tên dùng trong tệp)
   XR.datTen = function (ds) {
@@ -194,6 +198,15 @@
   };
   // Tâm đầu tròn trên cùng của một chi (toạ độ trong mảnh): đi từ hàng có hình đầu tiên xuống tới khi
   // quãng đã đi bằng nửa bề ngang của chi ở hàng đó: đó là tâm hình tròn đầu khớp.
+  // Khung bao phần có hình (bỏ lề trong suốt của ô cắt), nhớ theo ảnh
+  XR.hopHinh = function (p) {
+    if (p._hop && p._hop.cv === p.cv) return p._hop;
+    const w = p.cv.width, h = p.cv.height, d = p.cv.getContext('2d').getImageData(0, 0, w, h).data;
+    let x0 = w, y0 = h, x1 = -1, y1 = -1;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (d[(y * w + x) * 4 + 3] > 100) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    if (x1 < 0) { x0 = 0; y0 = 0; x1 = w - 1; y1 = h - 1; }
+    return (p._hop = { cv: p.cv, x0, y0, w: x1 - x0 + 1, h: y1 - y0 + 1 });
+  };
   XR.tamDauTron = function (p) {
     const w = p.w, h = p.h, d = p.cv.getContext('2d').getImageData(0, 0, w, h).data;
     const nhip = (y) => { let a = -1, b = -1; for (let x = 0; x < w; x++) if (d[(y * w + x) * 4 + 3] > 128) { if (a < 0) a = x; b = x; } return a < 0 ? null : [a, b]; };
@@ -231,20 +244,18 @@
         const c = cachRap(khung, p.vai, p, ds);
         p.lop = c.lop;
         if (p.cha == null) {
-          p.dat = [0, 0]; p.truc = [p.w * c.khop[0], p.h * c.khop[1]]; xong.add(p.id); continue;
+          const hp = XR.hopHinh(p);
+          p.dat = [0, 0]; p.truc = [hp.x0 + hp.w * c.khop[0], hp.y0 + hp.h * c.khop[1]]; xong.add(p.id); continue;
         }
         const cha = byId[p.cha]; if (!cha || !xong.has(cha.id)) continue;
-        const g = c.gan || [0.5, 0.5];
-        let gx = cha.dat[0] + cha.w * g[0];
-        const gy = cha.dat[1] + cha.h * g[1];
-        // Tay người: treo ở mép vai thật của thân (thân có giáp vai to thì tay ra ngoài, không bị thân che hết)
-        if (khung === 'nguoi' && cha.vai === 'than' && (p.vai === 'tay-truoc' || p.vai === 'tay-sau')) {
-          const mep = mepNgang(cha, g[1], p.vai === 'tay-truoc');
-          if (mep != null) gx = cha.dat[0] + (p.vai === 'tay-truoc' ? Math.min(mep - p.w * 0.3, cha.w * 0.92) : Math.max(mep + p.w * 0.3, cha.w * 0.08));
-        }
+        const g = c.gan || [0.5, 0.5], hc = XR.hopHinh(cha);
+        const gx = cha.dat[0] + hc.x0 + hc.w * g[0];
+        const gy = cha.dat[1] + hc.y0 + hc.h * g[1];
+        void mepNgang;
         // Tay, chân, càng: khớp đặt ĐÚNG TÂM đầu tròn trên cùng của mảnh, nên xoay bao nhiêu thì đầu tròn vẫn nằm yên dưới thân, không lộ mép
         const tam = /^(tay|chan|cang)/.test(p.vai) && !XR.laAoChoang(p, ds) ? XR.tamDauTron(p) : null;
-        const kx = tam ? tam[0] : p.w * c.khop[0], ky = tam ? tam[1] : p.h * c.khop[1];
+        const hp = XR.hopHinh(p);
+        const kx = tam ? tam[0] : hp.x0 + hp.w * c.khop[0], ky = tam ? tam[1] : hp.y0 + hp.h * c.khop[1];
         p.dat = [Math.round(gx - kx), Math.round(gy - ky)];
         p.truc = [Math.round(gx), Math.round(gy)];
         xong.add(p.id);
@@ -281,6 +292,25 @@
     const q0 = [p.dat[0] - p.m[0], p.dat[1] - p.m[1]], c = Math.cos(-p.a), s = Math.sin(-p.a), dx = pt[0] - q0[0], dy = pt[1] - q0[1];
     return [c * dx - s * dy, s * dx + c * dy];
   }
+  XR.vaoGoc = (p, pt) => vaoGoc(p, pt);
+  // CẤU HÌNH KHUNG XƯƠNG dạng đơn giản (ô cắt tĩnh trên ảnh sheet + tâm xoay + điểm gắn), cho ai muốn tự viết bộ vẽ riêng.
+  // sourceRect: ô cắt trên ảnh sheet (điểm ảnh); pivot: tâm xoay trong ô cắt; attachTo: mảnh cha; offset: từ tâm xoay của cha
+  // tới tâm xoay của mảnh (tư thế đứng); rotation: góc nghỉ (độ); z: thứ tự vẽ (nhỏ vẽ trước).
+  XR.cauHinh = function (S) {
+    const ds = S.manh; XR.datTen(ds);
+    const byId = {}; ds.forEach((p) => (byId[p.id] = p));
+    const out = { loai: 'xuong-roi-cau-hinh', phien_ban: 1, ten: S.ten || '', khung: S.khung, anhSheet: S.coGoc ? S.coGoc[0] : null,
+      canvasWidth: S.coGoc ? S.coGoc[1] : null, canvasHeight: S.coGoc ? S.coGoc[2] : null, goc: S.goc.slice(), parts: {} };
+    for (const p of ds.slice().sort((a, b) => a.lop - b.lop)) {
+      const pv = vaoGoc(p, p.truc).map((v) => Math.round(v)), cha = p.cha ? byId[p.cha] : null;
+      const e = { vai: p.vai, z: p.lop, rotation: Math.round(((p.a || 0) * 180) / Math.PI), flipX: !!p.lat, pivot: { x: pv[0], y: pv[1] } };
+      if (p.rect) e.sourceRect = { x: p.rect[0], y: p.rect[1], w: p.rect[2], h: p.rect[3] };
+      if (cha) { e.attachTo = cha.ten; e.offset = { x: Math.round(p.truc[0] - cha.truc[0]), y: Math.round(p.truc[1] - cha.truc[1]) }; }
+      else e.isRoot = true;
+      out.parts[p.ten] = e;
+    }
+    return out;
+  };
   XR.layKhungMau = function (khung, ds, goc, ten) {
     XR.datTen(ds);
     const byId = {}; ds.forEach((p) => (byId[p.id] = p));
@@ -365,7 +395,7 @@
   XR.tinhGoc = function (ds) {
     const than = ds.find((p) => p.cha == null) || ds[0];
     const chan = ds.filter((p) => /^chan/.test(p.vai));
-    const day = Math.max(...(chan.length ? chan : ds).map((p) => p.dat[1] + p.h));
+    const day = Math.max(...(chan.length ? chan : ds).map((p) => { const b = XR.hopHinh(p); return p.dat[1] + b.y0 + b.h; }));
     return [Math.round(than.dat[0] + than.w / 2), Math.round(day)];
   };
 

@@ -12,10 +12,10 @@
   };
 
   // Tệp ảnh -> canvas (thu nhỏ nếu quá to)
-  XR.docTepAnh = function (file) {
+  XR.docTepAnh = function (file, max) {
     return new Promise((ok, bad) => {
       const url = URL.createObjectURL(file), img = new Image();
-      img.onload = () => { try { ok(XR.anhRaCanvas(img, MAX_ANH)); } catch (e) { bad(e); } URL.revokeObjectURL(url); };
+      img.onload = () => { try { ok(XR.anhRaCanvas(img, max || MAX_ANH)); } catch (e) { bad(e); } URL.revokeObjectURL(url); };
       img.onerror = () => { URL.revokeObjectURL(url); bad(new Error('Không đọc được ảnh này')); };
       img.src = url;
     });
@@ -157,6 +157,49 @@
     const hang = Math.max(40, h / 8);
     out.sort((a, b) => Math.floor(a.sy / hang) - Math.floor(b.sy / hang) || a.sx - b.sx);
     return out;
+  };
+
+  // CẮT THEO Ô TĨNH: người dùng khoanh ô chữ nhật trên ảnh sheet, cắt ĐÚNG ô đó (toạ độ điểm ảnh tuyệt đối, không tự dò vùng).
+  // Trong ô chỉ làm một việc: nền trắng nối với mép ô thì thành trong suốt (loang từ mép vào), phần trắng nằm lọt
+  // trong nét viền (lòng trắng mắt, răng) giữ nguyên. Viền mảnh mượt, bỏ màu trắng lem ở mép.
+  // r: {x, y, w, h} trong ảnh sheet. o: { nguong (mặc định 45), lem (0..4) }
+  XR.mauNenAnh = function (src) { const d = src.getContext('2d').getImageData(0, 0, src.width, src.height).data; return mauNen(d, src.width, src.height); };
+  XR.catO = function (src, r, o) {
+    o = o || {};
+    const T = o.nguong == null ? 45 : o.nguong, lem = o.lem == null ? 1 : o.lem;
+    const x0 = Math.max(0, Math.round(r.x)), y0 = Math.max(0, Math.round(r.y));
+    const w = Math.max(1, Math.min(src.width - x0, Math.round(r.w))), h = Math.max(1, Math.min(src.height - y0, Math.round(r.h))), n = w * h;
+    const nen = o.nen || XR.mauNenAnh(src);
+    const anh = src.getContext('2d').getImageData(x0, y0, w, h), d = anh.data;
+    const khac = new Float32Array(n);
+    for (let i = 0; i < n; i++) {
+      const p = i * 4;
+      khac[i] = d[p + 3] < 128 ? 0 : Math.abs(d[p] - nen[0]) + Math.abs(d[p + 1] - nen[1]) + Math.abs(d[p + 2] - nen[2]);
+    }
+    // loang nền từ mép ô
+    const ngoai = new Uint8Array(n), q = new Int32Array(n);
+    let a = 0, b = 0;
+    const vao = (i) => { if (!ngoai[i] && khac[i] <= T) { ngoai[i] = 1; q[b++] = i; } };
+    for (let x = 0; x < w; x++) { vao(x); vao((h - 1) * w + x); }
+    for (let y = 0; y < h; y++) { vao(y * w); vao(y * w + w - 1); }
+    while (a < b) {
+      const i = q[a++], x = i % w;
+      if (x > 0) vao(i - 1); if (x < w - 1) vao(i + 1); if (i >= w) vao(i - w); if (i < n - w) vao(i + w);
+    }
+    const hinh = new Uint8Array(n); for (let i = 0; i < n; i++) hinh[i] = ngoai[i] ? 0 : 1;
+    const loi = lem > 0 ? coLai(hinh, w, h, lem) : hinh;
+    const cv = XR.taoCanvas(w, h), cx = cv.getContext('2d'), od = cx.createImageData(w, h), out = od.data;
+    for (let i = 0; i < n; i++) {
+      if (!hinh[i]) continue;
+      const p = i * 4;
+      let al = 1;
+      if (!loi[i]) al = Math.max(0, Math.min(1, (khac[i] - T * 0.5) / Math.max(T * 2, 330)));
+      if (al <= 0.02) continue;
+      for (let k = 0; k < 3; k++) out[p + k] = al >= 1 ? d[p + k] : Math.max(0, Math.min(255, (d[p + k] - (1 - al) * nen[k]) / al));
+      out[p + 3] = Math.round(al * 255);
+    }
+    cx.putImageData(od, 0, 0);
+    return { cv, sx: x0, sy: y0, w, h, rect: [x0, y0, w, h] };
   };
 
   // Gộp nhiều mảnh (giữ đúng vị trí tương đối trong ảnh gốc)
