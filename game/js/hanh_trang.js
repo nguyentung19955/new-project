@@ -320,7 +320,7 @@
       for (const k in sm.specials) for (const q of sm.specials[k]) { const sp = O.special(q.it); if (sp) y = ui.para('★ ' + sp.name, RX, y + 1, RW, { size: 6.5, color: PURP }); }
       if (!RO) {
         y += 4;
-        if (goBtn(RX, y, RW, 'may', 'Đến Cô Thợ May: may, nâng bậc')) return y;
+        if ((!VS.shown || VS.shown('may')) && goBtn(RX, y, RW, 'may', 'Đến Cô Thợ May: may, nâng bậc')) return y; // V53: cô chưa về thì không có nút
         y += 20;
         if (goBtn(RX, y, RW, 'xen', 'Đến Bà Hàng Xén: mua, bán đồ')) return y;
         y += 20;

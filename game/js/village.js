@@ -375,7 +375,7 @@
       ui.para('Mũ, áo, đồ đeo lưng, bùa và cánh giờ do Cô Thợ May may từ gỗ linh, vảy cá, đá lửa. Mũ áo ông rèn trước đây đã được chuyển sang kho trang phục, không mất món nào.', CX + 6, LIST_Y + 8, 292, { size: 8, color: TXT });
       ui.text('Kho trang phục: ' + (G.outfit ? sv.outfit.items.length : 0) + ' món', CX + 6, LIST_Y + 62, { size: 8, bold: true, color: GOLD });
       line = 'Đồ vải vóc thì sang khung cửi của Cô Thợ May nhé cháu.';
-      if (actBtn('Sang Cô Thợ May', { size: 7.5 })) { VS.goNpc('may', true); return line; }
+      if (actBtn('Sang Cô Thợ May', { size: 7.5, disabled: !!(VS.shown && !VS.shown('may')) })) { VS.goNpc('may', true); return line; } // V53: cô chưa về thì nút mờ
     } else {
       ui.para('Lò rèn cấp ' + sv.forge + ' mài được vũ khí tới +' + G.FORGE_CAP[sv.forge] + '.', CX + 4, 112, 296, { size: 9.5 });
       const up = G.FORGE_UP[sv.forge];
