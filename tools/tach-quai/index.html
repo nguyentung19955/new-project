@@ -113,6 +113,7 @@
       </div>
       <div class="hang" style="margin-top:8px">
         <label class="hang" style="gap:6px"><input type="checkbox" id="latNgang"> Lật ngang. CHỈ tích khi đầu quái trong ảnh quay sang TRÁI</label>
+        <label class="hang" style="gap:6px"><input type="checkbox" id="locDom" checked> Lọc đốm màu nền</label>
         <label class="hang" style="gap:6px">Độ nét <select id="doNet" style="min-width:0"><option value="net">Sắc nét</option><option value="min">Mịn</option></select></label>
         <label class="hang" style="gap:6px">Số màu <select id="soMau" style="min-width:0"><option value="32">32</option><option value="24">24</option><option value="16">16</option></select></label>
         <button class="nut phu nho" id="nutLamLai">Tách lại</button>
@@ -164,7 +165,7 @@ const QUAI = [
   { ma:'socNo', ten:'Sóc Ném Quả Nổ', fw:60, fh:48, gx:30, gy:44, rong:49, cao:43, giay:[1.0,0.5,0.5,0.5],
     hinh:'sóc nâu cam, đuôi to cong vểnh, ôm một quả tròn sẫm có ngòi đang cháy (quả nổ), mặt tinh nghịch',
     hang:['ôm quả, đuôi phe phẩy','nhảy tưng tưng','giơ quả ra sau lấy đà','vung tay ném về phía trước, quả rời tay ở khung giữa, các khung sau tay trống','bị đánh bật lùi','ngã ra'] },
-  { ma:'nhimDoc', ten:'Nhím Gai Độc', fw:56, fh:36, gx:28, gy:32, rong:44, cao:32, giay:[1.2,0.6,0.5,0.5],
+  { ma:'nhimDoc', ten:'Nhím Gai Độc', nenXanh:true, fw:56, fh:36, gx:28, gy:32, rong:44, cao:32, giay:[1.2,0.6,0.5,0.5],
     hinh:'nhím tròn nhỏ, mặt và bụng nâu, lưng phủ gai dài màu tím, đầu gai xanh lá độc, mắt nhỏ gian',
     hang:['thở, gai rung nhẹ','lạch bạch bước','cuộn tròn, gai dựng đứng','bung gai bắn về phía trước','bị đánh bật lùi','nằm ngửa, gai xẹp'] },
   { ma:'ongVo', ten:'Bầy Ong Vò Vẽ', fw:56, fh:56, gx:28, gy:52, rong:43, cao:49, giay:[0.6,0.4,0.4,0.4],
@@ -173,7 +174,7 @@ const QUAI = [
   { ma:'namPhong', ten:'Nấm Phồng', fw:44, fh:44, gx:22, gy:40, rong:32, cao:37, giay:[1.2,0.6,0.6,0.5],
     hinh:'cây nấm nhỏ, mũ tròn phồng màu đỏ cam chấm trắng, thân trắng ngà, có mặt (mắt tròn, má phồng), hai chân rễ ngắn',
     hang:['phập phồng','nhún nhảy','mũ phồng to dần','xẹp mạnh, miệng phun về phía trước','bị đánh bật lùi','xẹp héo dần'] },
-  { ma:'hoaBaoTu', ten:'Hoa Phun Bào Tử', fw:64, fh:48, gx:32, gy:44, rong:53, cao:42, giay:[1.4,1.0,0.6,0.5],
+  { ma:'hoaBaoTu', ten:'Hoa Phun Bào Tử', nenXanh:true, fw:64, fh:48, gx:32, gy:44, rong:53, cao:42, giay:[1.4,1.0,0.6,0.5],
     hinh:'hoa ăn thịt mọc từ bụi rễ, thân dây leo xanh có lá, đầu hoa to cánh tím hồng, giữa là miệng tròn có răng nhỏ vàng',
     hang:['đung đưa','rễ trườn nhẹ, gốc gần như đứng yên','cánh hoa khép, đầu ngửa ra sau','bung cánh, miệng hoa phun về phía trước','ngả bật về sau','héo rũ xuống'] },
   { ma:'namPhongChua', ten:'Nấm Phồng Chúa', fw:96, fh:56, gx:48, gy:52, rong:83, cao:51, giay:[1.4,0.8,0.7,0.6],
@@ -192,7 +193,7 @@ function bao(t) { const b = $('thongBao'); b.textContent = t; b.hidden = false; 
 
 function taoPrompt(q) {
   const hang = q.hang.map((h, i) => `hàng ${i + 1} ${TEN_DT[i].toLowerCase()} (${h}) ${SO[i]} khung`).join(', ');
-  return `Dùng công cụ tạo ảnh vẽ MỘT tấm sprite sheet pixel art 2D nhìn ngang quái "${q.ten}" cho game Linh Khí, phong cách giống Heo Rừng Con (heoCon) đã làm: khối rõ, viền tối, màu tươi vừa phải. Hình dáng: ${q.hinh}. Bố cục lưới ĐỀU 8 cột × 6 hàng, mỗi hàng một động tác, các khung xếp từ cột trái sang, ô thừa để trống: ${hang}. Mọi khung cùng một con, cùng màu, cùng cỡ nhưng tư thế khác nhau thật. QUAY MẶT SANG PHẢI trong mọi khung: đầu bên phải, đuôi bên trái, chạy/lấy đà/tấn công hướng về phải, trúng đòn bật về trái, không con nào quay trái. Nền trơn MỘT MÀU HỒNG TÍM #FF00FF phủ kín (không ô cờ, không nền trắng, không chuyển màu), kẻ lưới mảnh màu tối giữa các ô, mỗi con nằm gọn giữa ô của nó, không chạm đường lưới, không bóng dưới chân, không chữ, không hiệu ứng rời khỏi thân. Chỉ cần gửi tấm ảnh, không cần code, không cần file json.`;
+  return `Dùng công cụ tạo ảnh vẽ MỘT tấm sprite sheet pixel art 2D nhìn ngang quái "${q.ten}" cho game Linh Khí, phong cách giống Heo Rừng Con (heoCon) đã làm: khối rõ, viền tối, màu tươi vừa phải. Hình dáng: ${q.hinh}. Bố cục lưới ĐỀU 8 cột × 6 hàng, mỗi hàng một động tác, các khung xếp từ cột trái sang, ô thừa để trống: ${hang}. Mọi khung cùng một con, cùng màu, cùng cỡ nhưng tư thế khác nhau thật. QUAY MẶT SANG PHẢI trong mọi khung: đầu bên phải, đuôi bên trái, chạy/lấy đà/tấn công hướng về phải, trúng đòn bật về trái, không con nào quay trái. Nền trơn MỘT MÀU ${q.nenXanh ? 'XANH LÁ #00FF00' : 'HỒNG TÍM #FF00FF'} phủ kín (không ô cờ, không nền trắng, không chuyển màu), kẻ lưới mảnh màu tối giữa các ô, mỗi con nằm gọn giữa ô của nó, không chạm đường lưới, không bóng dưới chân, không chữ, không hiệu ứng rời khỏi thân. Chỉ cần gửi tấm ảnh, không cần code, không cần file json.`;
 }
 
 function hienQuai() {
@@ -210,8 +211,8 @@ function hienQuai() {
 
 QUAI.forEach((q, i) => { const o = document.createElement('option'); o.value = i; o.textContent = q.ten + ' (' + q.ma + ')'; $('chonQuai').appendChild(o); });
 try { const i = localStorage.getItem('tq_quai'); if (i != null && QUAI[i]) $('chonQuai').value = i; } catch (e) {}
-Q = QUAI[+$('chonQuai').value];
-$('chonQuai').onchange = (e) => { Q = QUAI[+e.target.value]; try { localStorage.setItem('tq_quai', e.target.value); } catch (er) {} hienQuai(); if (ANH) chay(); };
+Q = QUAI[+$('chonQuai').value]; $('locDom').checked = !Q.nenXanh;
+$('chonQuai').onchange = (e) => { Q = QUAI[+e.target.value]; $('locDom').checked = !Q.nenXanh; try { localStorage.setItem('tq_quai', e.target.value); } catch (er) {} hienQuai(); if (ANH) chay(); };
 hienQuai();
 
 $('nutChepPrompt').onclick = () => {
@@ -240,6 +241,7 @@ document.addEventListener('paste', (e) => { const it = [...(e.clipboardData || {
 $('latNgang').onchange = () => ANH && chay();
 $('cachTach').onchange = () => ANH && chay();
 $('doNet').onchange = () => ANH && chay();
+$('locDom').onchange = () => ANH && chay();
 $('soMau').onchange = () => ANH && chay();
 $('nutLamLai').onclick = () => ANH && chay();
 
@@ -403,10 +405,10 @@ function tuTim(A, coAlpha) {
     const sacDo = (r, g, b) => { const mx = Math.max(r, g, b), mn = Math.min(r, g, b), c = mx - mn; if (!c) return [0, 0];
       let h = mx === r ? ((g - b) / c) % 6 : mx === g ? (b - r) / c + 2 : (r - g) / c + 4; return [(h * 60 + 360) % 360, c / mx]; };
     const tongNen = nenMau.map(c => sacDo(...c));
-    if (tongNen.length) for (let j = 0; j < N; j++) {
+    if (tongNen.length && $('locDom').checked) for (let j = 0; j < N; j++) {
       if (!fg[j] || duong[j]) continue;
       const [h, sat] = sacDo(d[j*4], d[j*4+1], d[j*4+2]);
-      if (sat > 0.45 && tongNen.some(([hn]) => Math.min(Math.abs(h - hn), 360 - Math.abs(h - hn)) < 22)) { fg[j] = 0; da[j] = 1; }
+      if (sat > 0.45 && Math.max(d[j*4], d[j*4+1], d[j*4+2]) > 115 && tongNen.some(([hn]) => Math.min(Math.abs(h - hn), 360 - Math.abs(h - hn)) < 22)) { fg[j] = 0; da[j] = 1; }
     }
     // đường kẻ cắt ngang thân: lấp lại bằng màu điểm bên cạnh
     for (let j = 0; j < N; j++) {
