@@ -21,6 +21,11 @@
     --fg: #f1ead9;
     --accent: #ffd27a;
     --frame: #3a2a22;
+    /* Vùng an toàn (tai thỏ, góc bo, thanh điều hướng). Cầm máy dọc thì khung game xoay 90 độ: engine.js đổi thứ tự các cạnh. */
+    --sa-t: env(safe-area-inset-top, 0px);
+    --sa-r: env(safe-area-inset-right, 0px);
+    --sa-b: env(safe-area-inset-bottom, 0px);
+    --sa-l: env(safe-area-inset-left, 0px);
   }
   /* Chiều cao luôn tính theo 100% của khung chứa (không dùng 100vh) để chạy đúng khi được nhúng. */
   html, body { height: 100%; overscroll-behavior: none; touch-action: none; }
@@ -37,6 +42,8 @@
     -webkit-tap-highlight-color: transparent;
   }
   #shell { height: 100%; box-sizing: border-box; padding-inline: 16px; padding-block: 0; }
+  /* Lề hai bên ít nhất 16px; trên điện thoại có tai thỏ / thanh điều hướng thì lề bằng vùng an toàn để nút và HUD không bị che. */
+  @supports (padding: max(0px, 1px)) { #shell { padding: var(--sa-t) max(16px, var(--sa-r)) var(--sa-b) max(16px, var(--sa-l)); } }
   #fit { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; touch-action: none; }
   #stage { position: relative; outline: 1px solid var(--frame); background: #000; max-width: 100%; }
   #world { position: absolute; inset: 0; width: 100%; height: 100%; display: block; image-rendering: pixelated; image-rendering: crisp-edges; }

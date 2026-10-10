@@ -232,10 +232,57 @@
     if (sel) { c.fillStyle = C.gold; c.fillRect(x + 1, y + 1, w - 2, 1); c.fillRect(x + 1, y + h - 2, w - 2, 1); c.fillRect(x + 1, y + 1, 1, h - 2); c.fillRect(x + w - 2, y + 1, 1, h - 2); }
   };
   T.dim = function (a) { ui.rect(-(G.mx || 0) - 2, -(G.my || 0) - 2, 484 + (G.mx || 0) * 2, 274 + (G.my || 0) * 2, 'rgba(6,14,14,' + (a == null ? 0.6 : a) + ')'); };
-  // Tấm nền nhỏ cho chữ nổi trên cảnh (tên phòng, thử thách...)
-  T.plate = function (x, y, w, h) {
+  // Tấm nền nhỏ cho chữ nổi trên cảnh (tên phòng, thử thách, bản đồ nhỏ, vạch linh khí, lời chỉ dẫn...).
+  // Giai đoạn 4 (yêu cầu 2): mọi khung nhỏ của HUD dùng chung một kiểu — viền mảnh 1 điểm (đồng, mép trên sáng hơn),
+  // lòng gỗ sẫm hơi trong để thấy cảnh phía sau, đinh vàng nhạt ở bốn góc. o: { a: độ đậm lòng (0..1), edge: màu viền riêng }
+  T.plate = function (x, y, w, h, o) {
+    o = o || {};
     x = Math.round(x); y = Math.round(y); w = Math.round(w); h = Math.round(h);
-    put(layer('pl|' + w + '|' + h, w, h, () => { rr(0, 0, w, h, C.dk, 2); rr(1, 1, w - 2, h - 2, C.br, 2); R(3, 1, w - 6, 1, C.hi); R(3, 3, w - 6, h - 6, C.bg); }), x, y);
+    const a = o.a == null ? 0.84 : o.a, edge = o.edge || C.br;
+    put(layer('pl2|' + w + '|' + h + '|' + a + '|' + edge, w, h, () => {
+      rr(0, 0, w, h, C.dk, 1);
+      rr(1, 1, w - 2, h - 2, edge, 1);
+      R(2, 1, w - 4, 1, lighten(edge, 0.35)); // mép trên sáng: như ánh đèn rọi xuống
+      R(2, 2, w - 4, h - 4, 'rgba(22,15,10,' + a + ')');
+      R(2, 2, w - 4, 1, 'rgba(0,0,0,0.35)');
+      if (w >= 24 && h >= 12) for (const q of [[2, 2], [w - 3, 2], [2, h - 3], [w - 3, h - 3]]) P(q[0], q[1], C.gold);
+    }), x, y);
+  };
+  T.UI = { wood: '#16100b', woodL: '#2a1d14', ink: C.ink, gold: C.gold, hi: C.hi, br: C.br, dk: C.dk, sub: '#cbbd9e' }; // màu HUD (docs/vfx/BANG-MAU.md mục 5)
+
+  // ---------- thanh máu trùm / tinh anh ----------
+  // Phân cấp: trùm vùng (big) khung to có hoa văn, tên chữ to; trùm nhỏ khung vừa; tinh anh khung nhỏ.
+  // o: { tier: 'big' | 'mini' | 'elite', name, frac, lag (khoá tụt dần), marks: [0.3, 0.6] vạch pha, sub: chữ nhỏ cạnh tên }
+  // Trả về đáy khung (y) để nơi gọi xếp chữ khác bên dưới.
+  T.bossBar = function (cx, y, o) {
+    const tier = o.tier || 'big', big = tier === 'big', elite = tier === 'elite';
+    const name = o.name || '';
+    const ns = big ? 9 : elite ? 7.5 : 8;
+    ui.font(6.5, true);
+    const sw = o.sub ? G.ux.measureText(o.sub).width + 12 : 0;
+    ui.font(ns, true);
+    const tw = G.ux.measureText(name).width;
+    // khung tinh anh rộng theo chữ (tên loài + dấu hiệu), trùm cố định
+    const w = big ? 226 : elite ? Math.round(G.clamp(tw + sw + 18, 150, 224)) : 196, bh = big ? 11 : elite ? 7 : 9, ph = big ? 30 : elite ? 22 : 26;
+    const x = Math.round(cx - w / 2);
+    T.plate(x, y, w, ph, { a: 0.8, edge: big ? C.gold : C.br });
+    const ny = y + (big ? 11 : elite ? 9 : 10);
+    // hoa văn hai bên tên trùm vùng: gạch đồng + chấm vàng (pixel, không chữ)
+    if (big) {
+      const c = G.ux, l = Math.round(cx - tw / 2 - 8), r = Math.round(cx + tw / 2 + 8);
+      c.fillStyle = C.br; c.fillRect(x + 8, ny - 4, l - x - 10, 1); c.fillRect(r + 2, ny - 4, x + w - 10 - r, 1);
+      c.fillStyle = C.hi; c.fillRect(l - 2, ny - 5, 3, 3); c.fillRect(r - 1, ny - 5, 3, 3);
+      c.fillStyle = C.dk; c.fillRect(l - 1, ny - 4, 1, 1); c.fillRect(r, ny - 4, 1, 1);
+    }
+    txt(name, o.sub ? x + 7 : cx, ny, { size: ns, bold: true, align: o.sub ? 'left' : 'center', color: big ? '#ffe2c8' : elite ? '#ffd0a8' : '#ffd9c8' });
+    if (o.sub) txt(o.sub, x + w - 6, ny, { size: 6.5, bold: true, align: 'right', color: '#ffb48a' });
+    const by = y + ph - bh - (big ? 5 : 4), bw = w - (big ? 12 : 10);
+    T.bar(x + (big ? 6 : 5), by, bw, elite ? 'hp' : 'boss', o.frac, null, { h: bh, marks: 1, lag: o.lag, col: elite ? '#ff8a3a' : null, hi: elite ? '#ffc890' : null });
+    // vạch pha (trùm đổi pha ở 60% và 30% máu)
+    const cap = bh >= 7 ? 7 : 2, inner = bw - cap * 2;
+    for (const m of o.marks || []) { const px = Math.round(x + (big ? 6 : 5) + cap + inner * m); ui.rect(px, by + 1, 1, bh - 2, '#fff0c4'); ui.rect(px + 1, by + 2, 1, bh - 4, 'rgba(0,0,0,0.5)'); }
+    if (big && o.frac != null) txt(Math.max(0, Math.ceil(o.frac * 100)) + '%', x + w / 2, by + bh / 2 + 2.6, { size: 6.5, bold: true, align: 'center', color: '#fff' });
+    return y + ph;
   };
 
   // ---------- thanh máu, mana, kinh nghiệm, máu trùm ----------
