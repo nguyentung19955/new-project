@@ -18,6 +18,11 @@
     --fg: #f1ead9;
     --accent: #ffd27a;
     --frame: #3a2a22;
+    /* Vùng an toàn (tai thỏ, góc bo, thanh điều hướng). Cầm máy dọc thì khung game xoay 90 độ: engine.js đổi thứ tự các cạnh. */
+    --sa-t: env(safe-area-inset-top, 0px);
+    --sa-r: env(safe-area-inset-right, 0px);
+    --sa-b: env(safe-area-inset-bottom, 0px);
+    --sa-l: env(safe-area-inset-left, 0px);
   }
   /* Chiều cao luôn tính theo 100% của khung chứa (không dùng 100vh) để chạy đúng khi được nhúng. */
   html, body { height: 100%; overscroll-behavior: none; touch-action: none; }
@@ -34,6 +39,8 @@
     -webkit-tap-highlight-color: transparent;
   }
   #shell { height: 100%; box-sizing: border-box; padding-inline: 16px; padding-block: 0; }
+  /* Lề hai bên ít nhất 16px; trên điện thoại có tai thỏ / thanh điều hướng thì lề bằng vùng an toàn để nút và HUD không bị che. */
+  @supports (padding: max(0px, 1px)) { #shell { padding: var(--sa-t) max(16px, var(--sa-r)) var(--sa-b) max(16px, var(--sa-l)); } }
   #fit { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; touch-action: none; }
   #stage { position: relative; outline: 1px solid var(--frame); background: #000; max-width: 100%; }
   #world { position: absolute; inset: 0; width: 100%; height: 100%; display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
@@ -414,8 +421,10 @@
       shell.style.width = vh + 'px'; shell.style.height = vw + 'px';
       shell.style.transformOrigin = '0 0';
       shell.style.transform = 'translate(' + vw + 'px,0) rotate(90deg)';
+      // Vùng an toàn khi xoay: mép trái của khung là mép trên màn hình (tai thỏ), mép phải là mép dưới (thanh điều hướng).
+      shell.style.padding = 'var(--sa-r) max(16px, var(--sa-b)) var(--sa-l) max(16px, var(--sa-t))';
     } else {
-      for (const k of ['position', 'left', 'top', 'width', 'height', 'transformOrigin', 'transform']) shell.style[k] = '';
+      for (const k of ['position', 'left', 'top', 'width', 'height', 'transformOrigin', 'transform', 'padding']) shell.style[k] = '';
     }
   }
   function resize() {
@@ -22311,10 +22320,57 @@ MA._xong();
     if (sel) { c.fillStyle = C.gold; c.fillRect(x + 1, y + 1, w - 2, 1); c.fillRect(x + 1, y + h - 2, w - 2, 1); c.fillRect(x + 1, y + 1, 1, h - 2); c.fillRect(x + w - 2, y + 1, 1, h - 2); }
   };
   T.dim = function (a) { ui.rect(-(G.mx || 0) - 2, -(G.my || 0) - 2, 484 + (G.mx || 0) * 2, 274 + (G.my || 0) * 2, 'rgba(6,14,14,' + (a == null ? 0.6 : a) + ')'); };
-  // Tấm nền nhỏ cho chữ nổi trên cảnh (tên phòng, thử thách...)
-  T.plate = function (x, y, w, h) {
+  // Tấm nền nhỏ cho chữ nổi trên cảnh (tên phòng, thử thách, bản đồ nhỏ, vạch linh khí, lời chỉ dẫn...).
+  // Giai đoạn 4 (yêu cầu 2): mọi khung nhỏ của HUD dùng chung một kiểu — viền mảnh 1 điểm (đồng, mép trên sáng hơn),
+  // lòng gỗ sẫm hơi trong để thấy cảnh phía sau, đinh vàng nhạt ở bốn góc. o: { a: độ đậm lòng (0..1), edge: màu viền riêng }
+  T.plate = function (x, y, w, h, o) {
+    o = o || {};
     x = Math.round(x); y = Math.round(y); w = Math.round(w); h = Math.round(h);
-    put(layer('pl|' + w + '|' + h, w, h, () => { rr(0, 0, w, h, C.dk, 2); rr(1, 1, w - 2, h - 2, C.br, 2); R(3, 1, w - 6, 1, C.hi); R(3, 3, w - 6, h - 6, C.bg); }), x, y);
+    const a = o.a == null ? 0.84 : o.a, edge = o.edge || C.br;
+    put(layer('pl2|' + w + '|' + h + '|' + a + '|' + edge, w, h, () => {
+      rr(0, 0, w, h, C.dk, 1);
+      rr(1, 1, w - 2, h - 2, edge, 1);
+      R(2, 1, w - 4, 1, lighten(edge, 0.35)); // mép trên sáng: như ánh đèn rọi xuống
+      R(2, 2, w - 4, h - 4, 'rgba(22,15,10,' + a + ')');
+      R(2, 2, w - 4, 1, 'rgba(0,0,0,0.35)');
+      if (w >= 24 && h >= 12) for (const q of [[2, 2], [w - 3, 2], [2, h - 3], [w - 3, h - 3]]) P(q[0], q[1], C.gold);
+    }), x, y);
+  };
+  T.UI = { wood: '#16100b', woodL: '#2a1d14', ink: C.ink, gold: C.gold, hi: C.hi, br: C.br, dk: C.dk, sub: '#cbbd9e' }; // màu HUD (docs/vfx/BANG-MAU.md mục 5)
+
+  // ---------- thanh máu trùm / tinh anh ----------
+  // Phân cấp: trùm vùng (big) khung to có hoa văn, tên chữ to; trùm nhỏ khung vừa; tinh anh khung nhỏ.
+  // o: { tier: 'big' | 'mini' | 'elite', name, frac, lag (khoá tụt dần), marks: [0.3, 0.6] vạch pha, sub: chữ nhỏ cạnh tên }
+  // Trả về đáy khung (y) để nơi gọi xếp chữ khác bên dưới.
+  T.bossBar = function (cx, y, o) {
+    const tier = o.tier || 'big', big = tier === 'big', elite = tier === 'elite';
+    const name = o.name || '';
+    const ns = big ? 9 : elite ? 7.5 : 8;
+    ui.font(6.5, true);
+    const sw = o.sub ? G.ux.measureText(o.sub).width + 12 : 0;
+    ui.font(ns, true);
+    const tw = G.ux.measureText(name).width;
+    // khung tinh anh rộng theo chữ (tên loài + dấu hiệu), trùm cố định
+    const w = big ? 226 : elite ? Math.round(G.clamp(tw + sw + 18, 150, 224)) : 196, bh = big ? 11 : elite ? 7 : 9, ph = big ? 30 : elite ? 22 : 26;
+    const x = Math.round(cx - w / 2);
+    T.plate(x, y, w, ph, { a: 0.8, edge: big ? C.gold : C.br });
+    const ny = y + (big ? 11 : elite ? 9 : 10);
+    // hoa văn hai bên tên trùm vùng: gạch đồng + chấm vàng (pixel, không chữ)
+    if (big) {
+      const c = G.ux, l = Math.round(cx - tw / 2 - 8), r = Math.round(cx + tw / 2 + 8);
+      c.fillStyle = C.br; c.fillRect(x + 8, ny - 4, l - x - 10, 1); c.fillRect(r + 2, ny - 4, x + w - 10 - r, 1);
+      c.fillStyle = C.hi; c.fillRect(l - 2, ny - 5, 3, 3); c.fillRect(r - 1, ny - 5, 3, 3);
+      c.fillStyle = C.dk; c.fillRect(l - 1, ny - 4, 1, 1); c.fillRect(r, ny - 4, 1, 1);
+    }
+    txt(name, o.sub ? x + 7 : cx, ny, { size: ns, bold: true, align: o.sub ? 'left' : 'center', color: big ? '#ffe2c8' : elite ? '#ffd0a8' : '#ffd9c8' });
+    if (o.sub) txt(o.sub, x + w - 6, ny, { size: 6.5, bold: true, align: 'right', color: '#ffb48a' });
+    const by = y + ph - bh - (big ? 5 : 4), bw = w - (big ? 12 : 10);
+    T.bar(x + (big ? 6 : 5), by, bw, elite ? 'hp' : 'boss', o.frac, null, { h: bh, marks: 1, lag: o.lag, col: elite ? '#ff8a3a' : null, hi: elite ? '#ffc890' : null });
+    // vạch pha (trùm đổi pha ở 60% và 30% máu)
+    const cap = bh >= 7 ? 7 : 2, inner = bw - cap * 2;
+    for (const m of o.marks || []) { const px = Math.round(x + (big ? 6 : 5) + cap + inner * m); ui.rect(px, by + 1, 1, bh - 2, '#fff0c4'); ui.rect(px + 1, by + 2, 1, bh - 4, 'rgba(0,0,0,0.5)'); }
+    if (big && o.frac != null) txt(Math.max(0, Math.ceil(o.frac * 100)) + '%', x + w / 2, by + bh / 2 + 2.6, { size: 6.5, bold: true, align: 'center', color: '#fff' });
+    return y + ph;
   };
 
   // ---------- thanh máu, mana, kinh nghiệm, máu trùm ----------
@@ -23694,8 +23750,8 @@ MA._xong();
   function stickPos() { return [(bigRoom() && G.cx < 30 ? 42 : 62) - G.cx * 0.6, 216 + G.cy, 24]; }
   const BTN = BTN0;
   // Ô bình máu và nút tạm dừng: [x, y, rộng, cao]. Vùng chạm rộng hơn hình vẽ 4 đơn vị mỗi phía.
-  const POT = [4, 23, 50, 21], PAU = [58, 23, 30, 21];
-  const hitBox = (d, b) => G.inRect(d, b[0] - 4, b[1] - 3, b[2] + 8, b[3] + 7);
+  const POT = [4, 26, 54, 24], PAU = [62, 26, 30, 24]; // cao 24 (+ vùng chạm nới 4) để vừa ngón tay trên điện thoại
+  const hitBox = (d, b) => G.inRect(d, b[0] - 4, b[1] - 4, b[2] + 8, b[3] + 9); // vùng chạm cao 33 (khoảng 44 điểm trên điện thoại)
   function setMode(m) { S.mode = m; S.sel = null; }
   G.stageUi = { btnPos, stickPos, POT, PAU }; // để bài kiểm tra biết nút nằm ở đâu
   function readInput() {
@@ -23899,22 +23955,26 @@ MA._xong();
     if (G.doRoi && G.doRoi.veBay) G.doRoi.veBay(); // đồ vừa nhặt bay vào ô / hiện trên đầu (vẽ trước ô giao diện)
     // máu, mana
     const T = G.theme;
-    T.bar(6, 3, 112, 'hp', P.hp / P.maxhp, Math.ceil(P.hp) + '/' + P.maxhp, { h: 9, lag: P }); // lag: phần máu vừa mất tụt dần (js/ui_theme.js); khoá theo em bé của lượt chơi này
-    T.bar(6, 13, 100, 'mana', P.mana / P.maxmana, null, { h: 7 });
+    // Giai đoạn 4 (yêu cầu 2): thanh máu to hơn, chữ số to; thanh năng lượng có số để biết đủ mana cho chiêu chưa.
+    T.bar(4, 3, 120, 'hp', P.hp / P.maxhp, Math.ceil(P.hp) + ' / ' + P.maxhp, { h: 11, lag: P, size: 7.5 }); // lag: phần máu vừa mất tụt dần (js/ui_theme.js); khoá theo em bé của lượt chơi này
+    T.bar(4, 15, 108, 'mana', P.mana / P.maxmana, Math.floor(P.mana) + ' / ' + P.maxmana, { h: 8, size: 6.5 });
     const canDrink = P.potions > 0 && !W.noPotion;
     const BA = G.btnArt; // bộ nút riêng (js/btn_art.js)
     const heldBox = (b) => [...G.pointers.values()].some((p) => p.role === 'ui' && hitBox({ x: p.sx, y: p.sy }, b));
-    BA.draw(c, 'potion', POT[0] + 13, POT[1] + 11, 11, { count: P.potions, disabled: !canDrink, pressed: heldBox(POT) });
-    ui.text(W.noPotion ? 'Cấm' : 'Bình máu', POT[0] + 28, POT[1] + 14, { size: 6.5, bold: true, color: canDrink ? '#fff3da' : '#a89c8c' });
-    BA.draw(c, 'pause', PAU[0] + PAU[2] / 2 + 6, PAU[1] + 11, 10, { pressed: heldBox(PAU) });
-    let sx = 6;
-    for (const k of G.ELS) if (P.st[k] > 0) { ui.rect(sx, 48, 10, 10, G.EL[k].col, '#000'); sx += 12; }
+    BA.draw(c, 'potion', POT[0] + 13, POT[1] + 12, 12, { count: P.potions, disabled: !canDrink, pressed: heldBox(POT) });
+    ui.text(W.noPotion ? 'Cấm' : 'Bình máu', POT[0] + 29, POT[1] + 15, { size: 7, bold: true, color: canDrink ? '#fff3da' : '#a89c8c' });
+    BA.draw(c, 'pause', PAU[0] + PAU[2] / 2, PAU[1] + 12, 11, { pressed: heldBox(PAU) });
+    let sx = 5;
+    for (const k of G.ELS) if (P.st[k] > 0) { if (G.lk && G.lk.icon) { ui.rect(sx, 54, 11, 11, 'rgba(14,10,8,0.85)', G.EL[k].col); G.lk.icon(k, sx + 5.5, 59.5, 0.9, false, 1); } else ui.rect(sx, 54, 10, 10, G.EL[k].col, '#000'); sx += 13; }
     const cw = G.curW(P), coat = P.coats[cw.id];
-    if (coat && coat.t > 0) ui.text('Bùa ' + G.EL[coat.el].name + ' ' + Math.ceil(coat.t) + ' giây', sx, 56.5, { size: 7.5, color: G.EL[coat.el].col, bold: true });
+    if (coat && coat.t > 0) ui.text('Bùa ' + G.EL[coat.el].name + ' ' + Math.ceil(coat.t) + ' giây', sx + 1, 62.5, { size: 7.5, color: G.EL[coat.el].col, bold: true });
     // tên vùng và loại phòng ở lề trái; bản đồ nhỏ ở lề phải (thay hàng chấm phòng trước đây)
-    ui.text(G.REGIONS[S.r].name + ' ' + (S.i + 1) + ' · ' + ROOM_NAME[W.type], 6, 69, { size: 7, color: '#d9cdb8' });
+    // Phòng trùm rộng (sàn từ x = 80): cột trái hẹp nên chữ sức mạnh xuống hai dòng, không tràn vào sàn.
+    const narrow = !!(W.geo && W.geo.big);
+    ui.text(G.REGIONS[S.r].name + ' ' + (S.i + 1) + ' · ' + ROOM_NAME[W.type], 5, 76, { size: 7, color: '#d9cdb8' });
     // sức mạnh của bé lúc vào ải so với sức mạnh khuyên dùng của ải (xanh đủ, vàng sát nút, đỏ thiếu)
-    ui.text('Sức mạnh ' + S.power + ' / khuyên ' + S.rec, 6, 79, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) });
+    if (narrow) { ui.text('Sức mạnh ' + S.power, 5, 85, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) }); ui.text('khuyên ' + S.rec, 5, 94, { size: 6.5, color: '#bfb39c' }); }
+    else ui.text('Sức mạnh ' + S.power + ' / khuyên ' + S.rec, 5, 86, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) });
     G.minimap.draw(S);
     // vũ khí: hình và bậc ở trên, mốc tiến hóa ở dưới, thanh dấu ấn sát đáy
     P.weapons.forEach((w, i) => {
@@ -23927,7 +23987,9 @@ MA._xong();
       });
       G.art.weaponIcon(c, Object.assign({}, w, { coat: P.coats[w.id] && P.coats[w.id].t > 0 ? P.coats[w.id].el : null }), x + 13, 13, 19, on ? (P.atkT > 0 ? 'attack' : 'idle') : 'sleep');
       const mi = markInfo(w);
-      ui.text(rar.name + (w.sharpen ? ' +' + w.sharpen : ''), x + 51, 14, { size: 7, align: 'right', bold: on, color: rar.col });
+      // bậc và độ mài nằm ở phần phải của ô, không chồng lên hình vũ khí (hình chiếm 26 điểm bên trái)
+      ui.text(rar.name, x + 51, 13, { size: 7, align: 'right', bold: true, color: rar.col });
+      if (w.sharpen) ui.text('+' + w.sharpen, x + 51, 22, { size: 7, align: 'right', bold: true, color: on ? '#fff3da' : '#cbbd9e' });
       ui.text(G.STAGE_NAMES[G.wStage(w)], x + 27, 29.5, { size: 6.5, align: 'center', color: w.branch ? G.EL[w.branch].col : '#b8b0a0' });
       ui.bar(x + 3, 32.5, 48, 3, mi.frac, mi.col);
       // linh khí vừa bay tới ô vũ khí đang cầm: ô loé sáng màu hệ, viền sáng nở ra (VFX Phase 5)
@@ -23942,26 +24004,38 @@ MA._xong();
     });
     if (G.lk) G.lk.hud(P, W); // ba vạch linh khí cạnh ô vũ khí, biểu tượng hệ trên đầu quái (js/linhkhi.js)
     if (P.weapons.length > 1 && S.tut && W.type === 'elite') ui.text('↑ Chạm để đổi vũ khí', 366, 24, { size: 7, align: 'right', bold: true, color: '#ffd27a' });
-    // trùm: thanh máu và các lớp thích nghi nằm trên mặt tường sau, không che sàn
+    // trùm: thanh máu và các lớp thích nghi nằm trên mặt tường sau, không che sàn.
+    // Phân cấp (Giai đoạn 4): trùm vùng khung to viền vàng, tên chữ to, số phần trăm; trùm nhỏ khung vừa; tinh anh khung nhỏ.
     const b = W.boss;
+    let topY = 0; // đáy của khối trên cùng giữa màn hình (để dòng báo xếp bên dưới)
     if (b && !b.dead) {
-      T.bar(133, 7, 214, 'boss', b.hp / b.maxhp, null, { h: 9, marks: 1, lag: b });
-      ui.rect(140 + 200 * 0.6, 9, 1, 5, '#fff0c4');
-      ui.rect(140 + 200 * 0.3, 9, 1, 5, '#fff0c4');
-      ui.text(b.name, 140, 24, { size: 7.5, bold: true, color: '#ffd9c8' });
-      let lx = 340;
-      for (const l of b.layers.slice().reverse()) {
-        const s = l.type === 'resist' ? 'Kháng ' + G.EL[l.el].name : G.layerText(l);
-        ui.font(6.5, true);
-        const tw = G.ux.measureText(s).width + 6;
-        lx -= tw + 2;
-        ui.rect(lx, 17, tw, 9, l.type === 'resist' ? G.EL[l.el].dark : '#1f4f4a', '#1a120a');
-        ui.text(s, lx + 3, 24, { size: 6.5, bold: true });
+      const big = b.kind !== 'mini';
+      topY = T.bossBar(240, 2, { tier: big ? 'big' : 'mini', name: b.name, frac: b.hp / b.maxhp, lag: b, marks: [0.3, 0.6] });
+      // các lớp thích nghi và điểm yếu: một hàng thẻ nhỏ ngay dưới khung, căn giữa
+      const chips = [];
+      for (const l of b.layers) chips.push([l.type === 'resist' ? 'Kháng ' + G.EL[l.el].name : G.layerText(l), l.type === 'resist' ? G.EL[l.el].dark : '#1f4f4a', '#f1e6c6']);
+      if (b.weak.length) chips.push(['Yếu ' + b.weak.map((e) => G.EL[e].name).join(', '), 'rgba(20,14,8,0.9)', G.EL[b.weak[0]].col]);
+      ui.font(6.5, true);
+      let tot = 0; for (const q of chips) { q[3] = Math.ceil(G.ux.measureText(q[0]).width) + 8; tot += q[3] + 3; }
+      let lx = Math.round(240 - (tot - 3) / 2);
+      for (const q of chips) {
+        ui.rect(lx, topY + 1, q[3], 10, q[1], '#1a120a');
+        ui.rect(lx + 1, topY + 1, q[3] - 2, 1, 'rgba(255,240,196,0.25)');
+        ui.text(q[0], lx + q[3] / 2, topY + 8.5, { size: 6.5, bold: true, align: 'center', color: q[2] });
+        lx += q[3] + 3;
       }
-      if (b.weak.length) ui.text('Yếu ' + b.weak.map((e) => G.EL[e].name).join(', '), 240, 35, { size: 7, align: 'center', color: G.EL[b.weak[0]].col, bold: true });
-      if (b.exposed > 0) ui.text('LỘ ĐIỂM YẾU!', 240, 46, { size: 8, align: 'center', color: '#ffd23f', bold: true });
+      if (chips.length) topY += 12;
+      if (b.exposed > 0) { ui.text('LỘ ĐIỂM YẾU!', 240, topY + 9, { size: 8.5, align: 'center', color: Math.floor(G.time * 8) % 2 ? '#ffd23f' : '#fff3b0', bold: true }); topY += 11; }
+    } else if (W.type === 'elite' && S.mode === 'play') {
+      // phòng tinh anh: khung nhỏ ở mép trên với tên loài và dấu hiệu (nhanh, bọc giáp...)
+      const el = W.ents.find((e) => e && !e.dead && e.role === 'elite');
+      if (el) {
+        const info = G.monsterArt && G.monsterArt.list ? G.monsterArt.list.find((q) => q.id === el.art) : null;
+        const tr = el.trait && G.ELITE_TRAITS ? G.ELITE_TRAITS[el.trait] : null;
+        topY = T.bossBar(240, 2, { tier: 'elite', name: 'Tinh anh' + (info && info.ten ? ' · ' + info.ten : ''), sub: tr ? tr.name : null, frac: el.hp / el.maxhp, lag: el });
+      }
     }
-    let by = b && !b.dead ? 58 : S.challenge ? 26 : 8;
+    let by = topY ? topY + 3 : S.challenge ? 26 : 8;
     if (W.type === 'fountain') {
       const t = S.preview.length ? 'Trùm đã học: ' + S.preview.map(G.layerText).join(' · ') : 'Trùm chưa học được gì từ bạn';
       const lines = ui.wrap(t, 228, 7, true);
@@ -23974,13 +24048,23 @@ MA._xong();
     let hint = S.hint;
     if (hint && W.cleared && W.hadWaves) hint = TUT.door;
     if (hint && W.type === 'boss' && S.roomT > 12) hint = null;
-    if (hint && S.mode === 'play') {
-      const hw = W.geo.big ? 62 : 116; // phòng trùm rộng hơn nên ô chữ hẹp lại, không đè lên sàn
-      const lines = ui.wrap(hint, hw - 8, 7);
-      T.plate(3, 85, hw, Math.round(lines.length * 9.5 + 8));
-      lines.forEach((l, i) => ui.text(l, 7, 95 + i * 9.5, { size: 7 }));
+    // Dòng mẹo (cách đánh của vũ khí, mẹo nút Chưởng: W.banner.tip) cũng nằm ở lề trái dưới lời chỉ dẫn, không đè tường và cửa phía trên.
+    const tipB = W.banner && W.banner.tip ? W.banner : null;
+    if (S.mode === 'play' && (hint || tipB)) {
+      const hw = W.geo.big ? 64 : 118; // phòng trùm rộng hơn nên ô chữ hẹp lại, không đè lên sàn
+      let hy = W.geo.big ? 100 : 93;
+      for (const q of [hint ? [hint, '#f1e6c6', 1] : null, tipB ? [tipB.s, tipB.col || '#ffd27a', tipB.t < 0.4 ? Math.max(0, tipB.t / 0.4) : 1] : null]) {
+        if (!q) continue;
+        const lines = ui.wrap(q[0], hw - 9, 7), ph = Math.round(lines.length * 9.5 + 7), ga = G.ux.globalAlpha;
+        if (hy + ph > 186) break; // không xuống tới cần điều khiển
+        G.ux.globalAlpha = ga * q[2];
+        T.plate(2, hy, hw, ph, { a: 0.78 });
+        lines.forEach((l, i) => ui.text(l, 7, hy + 10 + i * 9.5, { size: 7, color: q[1], bold: q[1] !== '#f1e6c6' }));
+        G.ux.globalAlpha = ga;
+        hy += ph + 3;
+      }
     }
-    if (W.banner) {
+    if (W.banner && !tipB) {
       // dòng báo nằm trên tường sau; dài quá thì thu chữ, vẫn dài thì xuống dòng
       const maxW = W.geo.big ? 290 : 228;
       let size = 10, lines = [W.banner.s];
@@ -26031,6 +26115,37 @@ MA._xong();
     CL.google().then((r) => { V.tMsg = r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google, giữ nguyên tiến trình.' : 'Đã đăng nhập Google.'; }, (e) => { V.tMsg = 'Chưa đăng nhập được: ' + e.message; })
       .then(() => { V.gBusy = false; V.tMsgT = 8; say(V.tMsg); });
   }
+  // Bố cục màn chào (toạ độ 480x270), Giai đoạn 4 yêu cầu 2: logo > nút chính > nút phụ > dòng thông tin.
+  // Nút nào chạy ngay trong lúc chạm (G.syncTaps) thì dùng đúng ô của nút vẽ.
+  const TL = { main: [140, 128, 200, 32], play: [160, 128, 160, 32], guest: [180, 168, 120, 20], row: [[128, 168, 108, 22], [244, 168, 108, 22]], info: 210 };
+  G.titleLayout = TL; // để bài kiểm tra biết nút nằm ở đâu
+  // Lớp tối dịu phía sau khối chữ và nút: hình elip tối dần ra mép (không phủ cả màn), để chữ không đè lên nhà cửa sáng.
+  function titleVeil() {
+    const c = G.ux; c.save();
+    c.translate(240, 128); c.scale(1, 0.62);
+    const gr = c.createRadialGradient(0, 0, 20, 0, 0, 190);
+    gr.addColorStop(0, 'rgba(8,6,10,0.78)'); gr.addColorStop(0.55, 'rgba(8,6,10,0.56)'); gr.addColorStop(1, 'rgba(8,6,10,0)');
+    c.fillStyle = gr; c.fillRect(-200, -210, 400, 420);
+    c.restore();
+  }
+  // Tiêu đề: chữ LINH KHÍ có viền tối dày + bóng đổ lệch xuống, dòng phụ SPIRITBLADE giãn chữ (tên miền spiritblade.web.app).
+  function titleLogo() {
+    const u = G.ux;
+    T.drum(240, 30, 20, 0.85); // mặt trống đồng nhỏ làm biểu tượng, nằm trên chữ (không còn nằm sau chữ)
+    ui.font(38, true); u.textAlign = 'center'; u.lineJoin = 'round';
+    u.fillStyle = 'rgba(0,0,0,0.55)'; u.fillText('LINH KHÍ', 240, 89);
+    u.lineWidth = 5; u.strokeStyle = '#1a120a'; u.strokeText('LINH KHÍ', 240, 86);
+    ui.text('LINH KHÍ', 240, 86, { size: 38, bold: true, align: 'center', color: GOLD, shadow: false });
+    // vệt sáng mảnh trên nửa trên mặt chữ (ánh kim loại), chỉ một dải, không phát sáng
+    u.save(); u.beginPath(); u.rect(120, 58, 240, 12); u.clip();
+    ui.text('LINH KHÍ', 240, 86, { size: 38, bold: true, align: 'center', color: '#fff6d8', shadow: false }); u.restore();
+    // dòng phụ: chữ giãn rộng, hai gạch đồng hai bên
+    ui.font(9, true);
+    const sub = 'S P I R I T B L A D E', sw = u.measureText(sub).width;
+    u.fillStyle = '#a8752f'; u.fillRect(Math.round(240 - sw / 2 - 26), 98, 18, 1); u.fillRect(Math.round(240 + sw / 2 + 8), 98, 18, 1);
+    ui.text(sub, 240, 101.5, { size: 9, bold: true, align: 'center', color: '#d9a441' });
+    ui.text('Vũ khí lớn lên theo bạn. Yêu tinh học theo bạn.', 240, 116, { size: 8, align: 'center', color: TXT });
+  }
   G.Title = {
     enter() { VS.enter({ from: 'keep' }); VS.state.x = 470; VS.state.cam = 230; },
     update(dt) {
@@ -26038,60 +26153,81 @@ MA._xong();
       const g = titleGate();
       if (V.tRank) { if (G.keyP.Escape) V.tRank = false; return; } // đang xem Bảng vàng
       if (g.need) { if (g.ok && (G.keyP.Enter || G.keyP.Space)) G.setScene(G.Village); return; } // vào bằng nút "Vào game"
-      // không có mây: chạm chỗ trống để vào; chạm dải nút thì không
-      const onBtns = G.downs.some((d) => d.y > 200 && d.y < 236 && d.x > 120 && d.x < 360);
+      // không có mây: chạm chỗ trống để vào; chạm dải nút phụ thì không
+      const r = TL.row, onBtns = G.downs.some((d) => d.y > r[0][1] - 4 && d.y < r[0][1] + r[0][3] + 4 && d.x > r[0][0] - 4 && d.x < r[1][0] + r[1][2] + 4);
       if ((G.downs.length && !onBtns) || G.keyP.Enter || G.keyP.Space || G.keyP.KeyJ) G.setScene(G.Village);
     },
     draw() {
       const c = G.wx, A = G.art;
       V.tab = 'title';
-      VS.drawWorld({ dim: 0.5, hideHero: true });
-      c.save(); c.translate(96, 250); c.scale(3, 3);
-      A.hero(c, { x: 0, y: 0, face: 1, key: 'smith', move: false, t: G.time, atk: (G.time % 1.6) < 0.4 ? (G.time % 1.6) / 0.4 : -1, dodge: -1, weapon: { type: 'sword', family: 0, rarity: 3, marks: { fire: 300, poison: 0, ice: 0 }, branch: 'fire', sharpen: 0 } });
+      VS.drawWorld({ dim: 0.42, hideHero: true }); // cảnh làng sống (đèn lồng chập chờn, khói lò rèn, đom đóm) dùng lại của village_scene.js
+      // em bé cầm kiếm lửa: phóng đúng 2 lần (điểm ảnh vuông, không vỡ), đứng góc dưới bên trái, không chạm nút
+      c.save(); c.translate(70, 252); c.scale(2, 2);
+      A.hero(c, { x: 0, y: 0, face: 1, key: 'smith', move: false, t: G.time, atk: (G.time % 2.4) < 0.4 ? (G.time % 2.4) / 0.4 : -1, dodge: -1, weapon: { type: 'sword', family: 0, rarity: 3, marks: { fire: 300, poison: 0, ice: 0 }, branch: 'fire', sharpen: 0 } });
       c.restore();
-      T.drum(240, 62, 50, 0.5);
-      const u = G.ux; ui.font(40, true); u.textAlign = 'center'; u.lineJoin = 'round'; u.lineWidth = 5; u.strokeStyle = '#1a120a'; u.strokeText('LINH KHÍ', 240, 78);
-      ui.text('LINH KHÍ', 240, 78, { size: 40, bold: true, align: 'center', color: GOLD });
-      ui.text('Vũ khí lớn lên theo bạn. Yêu tinh học theo bạn.', 240, 100, { size: 10, align: 'center', color: TXT });
+      titleVeil();
       G.syncTaps = [];
       // Bảng vàng mở ngay trên màn mở đầu (không vào làng), có nút đóng
-      if (V.tRank && G.bangVang) {
+      if (!(V.tRank && G.bangVang)) titleLogo();
+      else {
         const px = 80; // giữa màn hình
-        T.panel(px, PY, PW, PH, 'Bảng vàng', { rightPad: 74, noBand: true });
-        if (T.sbtn(px + PW - 66, PY + 3, 60, 17, '✕ Đóng', { size: 8, pad: 5 })) V.tRank = false;
+        T.dim(0.45);
+        const py = PY + 28; // không có hàng thẻ như ở làng: khung thấp xuống, nội dung bảng vàng nằm ngay dưới tiêu đề
+        T.panel(px, py, PW, PH - 28, 'Bảng vàng', { rightPad: 74, noBand: true });
+        if (T.sbtn(px + PW - 66, py + 3, 60, 17, '✕ Đóng', { size: 8, pad: 5 })) V.tRank = false;
         G.bangVang.panel(px + (CX - PX), CW);
         return;
       }
       const { CL, need, ok } = titleGate();
+      const M = TL.main, R0 = TL.row[0], R1 = TL.row[1];
       if (CL && CL.online() && CL.isGuest()) { // nút Đăng nhập chạy ngay trong lúc chạm để Safari không chặn cửa sổ Google
-        if (need && !ok) G.syncTaps.push({ x: 150, y: 150, w: 180, h: 30, fn: () => titleLogin(CL) });
-        if (!need || ok) G.syncTaps.push({ x: 126, y: 206, w: 112, h: 24, fn: () => titleLogin(CL) });
+        if (need && !ok) G.syncTaps.push({ x: M[0], y: M[1], w: M[2], h: M[3], fn: () => titleLogin(CL) });
+        if (!need || ok) G.syncTaps.push({ x: R0[0], y: R0[1], w: R0[2], h: R0[3], fn: () => titleLogin(CL) });
       }
       if (!need) {
-        if (Math.floor(G.time * 2) % 2) T.toastFit(240, 112, 'Chạm để bắt đầu', { size: 11 });
+        // không có mây: chạm đâu cũng vào. Dải chữ sáng lên tối đi nhẹ nhàng (không chớp tắt).
+        const ga = G.ux.globalAlpha; G.ux.globalAlpha = ga * (0.62 + 0.38 * (0.5 + 0.5 * Math.sin(G.time * 3.2)));
+        T.toastFit(240, M[1] + 7, 'Chạm để bắt đầu', { size: 11 });
+        G.ux.globalAlpha = ga;
       } else if (ok) {
-        if (T.btn(180, 150, 120, 30, 'Vào game ▶', { size: 11, primary: true })) G.setScene(G.Village);
+        const P = TL.play;
+        if (T.btn(P[0], P[1], P[2], P[3], 'Vào game ▶', { size: 12, primary: true })) G.setScene(G.Village);
       } else {
-        const loading = !CL.online();
-        if (T.btn(150, 150, 180, 30, loading ? 'Đang kết nối…' : 'Đăng nhập Google để vào', { size: 10, primary: !loading, disabled: loading || V.gBusy })) titleLogin(CL);
+        const loading = !CL.online(), busy = !!V.gBusy;
+        if (T.btn(M[0], M[1], M[2], M[3], loading ? (CL.status === 'error' ? 'Chưa kết nối được mây' : 'Đang kết nối…') : busy ? 'Đang mở Google…' : 'Đăng nhập Google để vào', { size: 11, primary: !loading && !busy, disabled: loading || busy })) titleLogin(CL);
+        if (!loading && !busy) googleMark(M[0] + 17, M[1] + M[3] / 2);
         // mây kết nối hỏng quá 10 giây: cho chơi tạm, chỉ lưu trên máy, để không ai bị kẹt ngoài cửa
         V.tWait = loading ? (V.tWait || 0) + 1 / 60 : 0;
-        if ((CL.status === 'error' || V.tWait > 10) && T.btn(180, 184, 120, 18, 'Chơi tạm (không lưu mây)', { size: 7.5 })) G.setScene(G.Village);
+        const Gs = TL.guest;
+        if ((CL.status === 'error' || V.tWait > 10) && T.btn(Gs[0], Gs[1], Gs[2], Gs[3], 'Chơi tạm (không lưu mây)', { size: 7.5 })) G.setScene(G.Village);
       }
       if (CL) {
         const on = CL.online(), guest = CL.isGuest();
         if (!need || ok) {
-          if (T.btn(126, 206, 112, 24, on && !guest ? '✓ ' + String(CL.who()).slice(0, 14) : 'Đăng nhập Google', { size: 8.5, primary: on && guest, disabled: !on || !guest })) titleLogin(CL);
-          if (T.btn(242, 206, 112, 24, '🏆 Bảng vàng', { size: 8.5, disabled: !G.bangVang })) { V.tRank = true; G.bangVang.reload && G.bangVang.reload(); }
+          if (T.btn(R0[0], R0[1], R0[2], R0[3], on && !guest ? '✓ ' + String(CL.who()).slice(0, 14) : 'Đăng nhập Google', { size: 8, primary: on && guest, disabled: !on || !guest })) titleLogin(CL);
+          if (T.btn(R1[0], R1[1], R1[2], R1[3], '🏆 Bảng vàng', { size: 8, disabled: !G.bangVang })) { V.tRank = true; G.bangVang.reload && G.bangVang.reload(); }
         }
         if (CL.gMsg) { V.tMsg = CL.gMsg; V.tMsgT = 8; CL.gMsg = ''; }
         if (V.tMsgT > 0) V.tMsgT -= 1 / 60;
         const line = V.tMsgT > 0 && V.tMsg ? V.tMsg : need && !ok ? 'Đăng nhập Google để lưu tiến trình và lên Bảng vàng. ' + CL.label() : CL.label();
-        ui.text(line, 240, 242, { size: 7, align: 'center', color: SOFT });
+        const lines = ui.wrap(line, 260, 7); // hẹp để không chạm hình em bé bên trái
+        lines.slice(0, 2).forEach((l, i) => ui.text(l, 240, TL.info + i * 9, { size: 7, align: 'center', color: V.tMsgT > 0 && V.tMsg ? GOLD : '#c9bfa8' }));
       }
-      ui.text('Bản thử · hình vẽ tạm', 240, 264, { size: 7, align: 'center', color: SOFT });
+      // thông tin phụ: nhỏ, góc dưới bên phải, không tranh chỗ với nút
+      ui.text('Bản thử' + (G.VERSION ? ' · ' + G.VERSION : ''), 474, 264, { size: 6.5, align: 'right', color: 'rgba(201,191,168,0.55)', shadow: false });
     },
   };
+  // Chữ G bốn màu nhỏ đầu nút Đăng nhập Google (vẽ điểm ảnh, không tải hình ngoài)
+  function googleMark(x, cy) {
+    const u = G.ux, k = 1, cols = ['#4285f4', '#ea4335', '#fbbc05', '#34a853'];
+    const R = [
+      '..rrrr..', '.rr..rr.', 'rr......', 'yy......', 'yy..bbbb', 'gg....bb', '.gg..bb.', '..gggg..'];
+    u.save();
+    u.fillStyle = '#fff6e8'; u.beginPath(); u.arc(x, cy, 6.5, 0, 7); u.fill();
+    const m = { r: cols[1], y: cols[2], g: cols[3], b: cols[0] };
+    R.forEach((row, j) => { for (let i = 0; i < row.length; i++) if (m[row[i]]) { u.fillStyle = m[row[i]]; u.fillRect(x - 4 + i * k, cy - 4 + j * k, k, k); } });
+    u.restore();
+  }
 })();
 
 // ===== js/tailor.js =====
@@ -26767,9 +26903,12 @@ MA._xong();
     }
     const BD = G.banDo, g = !RO && BD ? BD.guard() : undefined;
     if (RO && BD) BD.reset();
-    T.panel(X0, Y0, PW, PH, RO ? 'Hành trang (chỉ xem)' : 'Hành trang', { rightPad: 74, noBand: true });
+    // Trong ải: dòng nhắc nằm ở dải tiêu đề, hoa văn chim Lạc dừng trước dòng nhắc (không chữ nào đè hoa văn)
+    const roTxt = 'Trong ải chỉ xem. Về làng để thay đồ, học kỹ năng.';
+    let roW = 0; if (RO) { ui.font(6.5, false); roW = Math.ceil(G.ux.measureText(roTxt).width) + 10; }
+    T.panel(X0, Y0, PW, PH, RO ? 'Hành trang (chỉ xem)' : 'Hành trang', { rightPad: 74 + roW, noBand: true });
     if (T.sbtn(X0 + PW - 66, Y0 + 3, 60, 17, RO ? '← Quay lại' : '✕ Xong', { size: 8, pad: 5 })) { close(); return; }
-    if (RO) ui.text('Trong ải chỉ xem. Về làng để thay đồ, học kỹ năng.', X0 + PW - 72, Y0 + 15, { size: 6.5, align: 'right', color: WARN });
+    if (RO) ui.text(roTxt, X0 + PW - 72, Y0 + 15, { size: 6.5, align: 'right', color: WARN });
     const tw = (CW - 5 * 3) / 6;
     TABS.forEach((t, i) => {
       if (T.tab(CX + i * (tw + 3), Y0 + 23, tw, 19, t[1], B.tab === t[0], { pad: 2 })) { B.tab = t[0]; B.sel = null; if (G.banDo) G.banDo.reset(); }
@@ -30186,6 +30325,16 @@ window.FIREBASE_CONFIG = {
     const v = x[cat];
     return v ? secs(v) : '-';
   }
+  // Huy chương nhỏ (điểm ảnh) cho hạng 1, 2, 3; số hạng nằm giữa.
+  function medal(cx, cy, n) {
+    const c = G.ux, col = ['#ffd24a', '#d6d2c8', '#e09a5a'][n - 1], dk = ['#8a5a14', '#6b655c', '#7a3a14'][n - 1];
+    c.fillStyle = '#1a120a'; c.fillRect(Math.round(cx) - 4, Math.round(cy) - 5, 9, 10); c.fillRect(Math.round(cx) - 5, Math.round(cy) - 4, 11, 8);
+    c.fillStyle = col; c.fillRect(Math.round(cx) - 3, Math.round(cy) - 4, 7, 8); c.fillRect(Math.round(cx) - 4, Math.round(cy) - 3, 9, 6);
+    c.fillStyle = dk; c.fillRect(Math.round(cx) - 3, Math.round(cy) + 3, 7, 1);
+    ui.text(String(n), cx + 0.5, cy + 2.6, { size: 6.5, bold: true, align: 'center', color: '#1a120a', shadow: false });
+  }
+  // Cắt chữ cho vừa bề rộng (thêm dấu …)
+  function cutTo(s, wd, sz) { ui.font(sz, true); if (G.ux.measureText(s).width <= wd) return s; while (s.length > 1 && G.ux.measureText(s + '…').width > wd) s = s.slice(0, -1); return s + '…'; }
   function heroName(k) { return G.HEROES[k] ? G.HEROES[k].name : ''; }
 
   // ---------- bảng vẽ (Cụ Đồ, thẻ Bảng vàng). CX, CW: vùng nội dung của bảng làng ----------
@@ -30197,12 +30346,22 @@ window.FIREBASE_CONFIG = {
     if (list.length > 1) list.forEach(([k, n], i) => { if (T.sbtn(CX + i * (w + 3), 95, w, 18, n, { size: 7.5, pad: 2, sel: B.cat === k })) { B.cat = k; B.page = 0; } });
     else ui.text('Xếp hạng theo Sức mạnh', CX + 2, 108, { size: 9, bold: true, color: GOLD });
     if (!C.online()) {
+      // Không có mạng: chỉ hiện kỷ lục trên máy, xếp thành ba ô số + một hàng thời gian hạ trùm (Giai đoạn 4: căn thẳng hàng, chữ đều cỡ)
       const r = rec(), sv = G.save;
-      T.inset(CX, 120, CW, 92, false);
-      ui.para('Bảng vàng cần mạng. ' + C.label() + '.', CX + 6, 134, CW - 12, { size: 8, color: TXT });
-      ui.text('Kỷ lục của con (trên máy):', CX + 6, 162, { size: 8, bold: true, color: GOLD });
-      ui.text('Sức mạnh ' + (r.power || powerNow()) + ' · ' + C.starSum(sv) + ' sao · xa nhất ' + C.farText(C.far(sv)), CX + 6, 175, { size: 7.5, color: TXT });
-      ui.text(G.REGIONS.map((R) => R.bossName + ' ' + (r.b[R.boss] ? secs(r.b[R.boss]) : '-')).join(' · '), CX + 6, 188, { size: 7.5, color: TXT });
+      T.inset(CX, 116, CW, 104, false);
+      ui.para('Bảng vàng cần mạng. ' + C.label() + '.', CX + 7, 129, CW - 14, { size: 7.5, color: SOFT });
+      ui.text('Kỷ lục của con (trên máy)', CX + 7, 150, { size: 8, bold: true, color: GOLD });
+      const boxes = [['Sức mạnh', String(r.power || powerNow())], ['Tổng sao', '★ ' + C.starSum(sv)], ['Xa nhất', C.farText(C.far(sv))]];
+      const bw = Math.floor((CW - 14 - 2 * 4) / 3);
+      boxes.forEach((q, i) => {
+        const bx = CX + 7 + i * (bw + 4);
+        T.inset(bx, 156, bw, 28, false, { fill: 'rgba(0,0,0,0.22)' });
+        ui.text(q[0], bx + bw / 2, 166, { size: 6.5, align: 'center', color: SOFT });
+        ui.text(cutTo(q[1], bw - 6, 8.5), bx + bw / 2, 178.5, { size: 8.5, bold: true, align: 'center', color: TXT });
+      });
+      ui.text('Hạ trùm nhanh nhất', CX + 7, 197, { size: 7, bold: true, color: GOLD });
+      const tw = Math.floor((CW - 14) / 3);
+      G.REGIONS.forEach((R, i) => ui.text(R.bossName + '  ' + (r.b[R.boss] ? secs(r.b[R.boss]) : '–'), CX + 7 + i * tw, 210, { size: 7.5, color: r.b[R.boss] ? TXT : SOFT }));
       return 'Bảng vàng treo ở đình, phải có mạng mới xem được, con ạ.';
     }
     if (B.t && G.time - B.t > 120) B.reload(); // để lâu thì tải lại
@@ -30214,8 +30373,10 @@ window.FIREBASE_CONFIG = {
     // tiêu đề cột
     const cx = { rank: CX + 4, name: CX + 24, val: CX + 168, extra: CX + 214 };
     const colName = B.cat === 'power' ? 'Sức mạnh' : B.cat === 'stars' ? 'Tổng sao' : 'Thời gian';
-    ui.text('#', cx.rank, 125, { size: 7, color: SOFT }); ui.text('Tên', cx.name, 125, { size: 7, color: SOFT });
-    ui.text(colName, cx.val + 38, 125, { size: 7, color: SOFT, align: 'right' }); ui.text('Hero · xa nhất', cx.extra, 125, { size: 7, color: SOFT });
+    // hàng tiêu đề cột: dải tối mảnh có gạch đồng bên dưới
+    ui.rect(CX, 117, CW, 11, 'rgba(0,0,0,0.3)'); ui.rect(CX, 127, CW, 1, 'rgba(168,117,47,0.75)');
+    ui.text('#', cx.rank + 3, 125, { size: 7, bold: true, color: SOFT, align: 'center' }); ui.text('Tên', cx.name, 125, { size: 7, bold: true, color: SOFT });
+    ui.text(colName, cx.val + 38, 125, { size: 7, bold: true, color: SOFT, align: 'right' }); ui.text('Hero · xa nhất', cx.extra, 125, { size: 7, bold: true, color: SOFT });
     const me = C.user && C.user.uid;
     const rows = D.items.slice(B.page * PER, B.page * PER + PER);
     const cut = (s, wd, sz) => { const a = ui.wrap(s, wd, sz, true); return a.length > 1 ? a[0] + '…' : a[0] || ''; };
@@ -30224,7 +30385,8 @@ window.FIREBASE_CONFIG = {
       if (mine) ui.rect(CX, y, CW, 11, 'rgba(246,220,146,0.16)');
       else if (j % 2 === 0) ui.rect(CX, y, CW, 11, 'rgba(0,0,0,0.16)');
       const col = n === 1 ? '#ffd24a' : n === 2 ? '#d6d2c8' : n === 3 ? '#e09a5a' : TXT;
-      ui.text(String(n), cx.rank, y + 8.5, { size: 7.5, bold: n <= 3, color: col });
+      if (n <= 3) medal(cx.rank + 3, y + 5.5, n); // ba người đầu: huy chương vàng, bạc, đồng
+      else ui.text(String(n), cx.rank + 3, y + 8.5, { size: 7.5, align: 'center', color: col });
       ui.text(cut(x.name || 'Khách', 140, 7.5), cx.name, y + 8.5, { size: 7.5, bold: mine, color: mine ? GOLD : TXT });
       ui.text(fmt(B.cat, x), cx.val + 38, y + 8.5, { size: 7.5, bold: true, align: 'right', color: col });
       ui.text(cut(heroName(x.hero) + ' · ' + C.farText(x.far || 0), CW - 218, 7), cx.extra, y + 8.5, { size: 7, color: SOFT });
@@ -30238,7 +30400,7 @@ window.FIREBASE_CONFIG = {
     mine.name = E.name; mine.hero = mine.hero || E.hero;
     const at = D.items.findIndex((x) => x.uid === me);
     T.inset(CX, 224, CW, 15, true);
-    ui.text(at >= 0 ? String(at + 1) : '-', cx.rank, 234.5, { size: 7.5, bold: true, color: GOLD });
+    ui.text(at >= 0 ? String(at + 1) : '-', cx.rank + 3, 234.5, { size: 7.5, bold: true, align: 'center', color: GOLD });
     ui.text(cut('Con: ' + mine.name, 140, 7.5), cx.name, 234.5, { size: 7.5, bold: true, color: GOLD });
     ui.text(fmt(B.cat, mine), cx.val + 38, 234.5, { size: 7.5, bold: true, align: 'right', color: GOLD });
     ui.text(at >= 0 ? 'hạng ' + (at + 1) : D.more ? 'ngoài ' + D.items.length + ' dòng đã tải' : 'ngoài ' + MAX + ' người đầu', cx.extra, 234.5, { size: 7, color: SOFT });

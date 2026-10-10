@@ -25,8 +25,10 @@
       shell.style.width = vh + 'px'; shell.style.height = vw + 'px';
       shell.style.transformOrigin = '0 0';
       shell.style.transform = 'translate(' + vw + 'px,0) rotate(90deg)';
+      // Vùng an toàn khi xoay: mép trái của khung là mép trên màn hình (tai thỏ), mép phải là mép dưới (thanh điều hướng).
+      shell.style.padding = 'var(--sa-r) max(16px, var(--sa-b)) var(--sa-l) max(16px, var(--sa-t))';
     } else {
-      for (const k of ['position', 'left', 'top', 'width', 'height', 'transformOrigin', 'transform']) shell.style[k] = '';
+      for (const k of ['position', 'left', 'top', 'width', 'height', 'transformOrigin', 'transform', 'padding']) shell.style[k] = '';
     }
   }
   function resize() {

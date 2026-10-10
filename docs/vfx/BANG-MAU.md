@@ -140,6 +140,13 @@ Lấy từ: `game/js/ui_theme.js` bảng `C` (phiên `dt-hud-dang-nhap` có th�
 | Thanh kinh nghiệm | `#d9a441` → `#f6dc92` |
 | Thanh trùm | `#b8452f` → `#ff9a6a` |
 | Bậc đồ: Thường / Lam / Tím / Vàng | `#b9b1a2` `#4aa3ff` `#b36bff` `#ffc83d` |
+| Khung nhỏ HUD (`T.plate`): viền ngoài / viền đồng / mép trên sáng / lòng gỗ sẫm | `#1a120a` / `#a8752f` / `#cba06e` / `rgba(22,15,10,0.84)`, đinh góc `#d9a441` |
+| Khung trùm vùng (`T.bossBar`): viền vàng, tên | `#d9a441`, chữ `#ffe2c8`; trùm nhỏ viền `#a8752f` chữ `#ffd9c8` |
+| Khung tinh anh: thanh, tên, dấu hiệu | `#ff8a3a` → `#ffc890`, chữ `#ffd0a8`, dấu hiệu `#ffb48a` |
+| Màn đăng nhập: chữ LINH KHÍ / dòng SPIRITBLADE / lớp tối sau chữ | `#f6dc92` viền `#1a120a` / `#d9a441` / elip `rgba(8,6,10,0.78)` → trong suốt |
+
+Quy ước HUD (phiên `dt-hud-dang-nhap`): khung HUD trong ải là gỗ sẫm viền đồng mảnh 1 điểm (không viền dày, không màu cạnh tranh);
+bảng menu (Hành trang, bảng làng) giữ lòng lam ngọc sẫm của trống đồng. Màu theo bậc đồ và theo hệ chỉ dùng cho viền ô đồ, chữ bậc, thanh hệ.
 
 ## 6. Ánh sáng và sương (phiên dt-dau-truong)
 - Ánh sáng giữa phòng: hình elip lớn theo màu đèn vùng, tô bằng **lưới điểm ảnh (dither)** 2–3 nấc, độ trong ≤ 0,07; không gradient mịn, không blur.
