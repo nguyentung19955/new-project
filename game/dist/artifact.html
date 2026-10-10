@@ -14060,7 +14060,7 @@
     if (G.noRender || !S || !e || e.fxDotAt == null) return null;
     const age = S.t - e.fxDotAt;
     if (!(age >= 0 && age < 0.22)) return null;
-    DT[0] = e.fxDotEl ? pal(e.fxDotEl).c : '#ff5a40'; DT[1] = 0.45 * (1 - age / 0.22);
+    DT[0] = e.fxDotEl ? pal(e.fxDotEl).c : '#ff5a40'; DT[1] = 0.4 * (1 - age / 0.22);
     return DT;
   };
   fx.shakeOffset = function () {
@@ -14228,7 +14228,7 @@
     const tier = q.anim === 'spec' ? 3 : q.anim === 'sweep' || q.wt === 'hammer' || q.combo === 2 ? 2 : 1;
     o.gx = q.gx; o.gy = q.gy; o.a = Math.atan2(q.dy, q.dx); o.m = Math.hypot(q.dx, q.dy); o.L = q.L + 1;
     o.age = 0; o.life = [0, 0.085, 0.115, 0.12][tier] * (0.5 + 0.5 * Math.min(2, vet)); o.tier = tier;
-    o.r0 = tier === 3 ? 0.5 : R0F[q.wt] - (tier === 2 ? 0.1 : 0); o.brk = S.trBrk; // chiêu đặc biệt: dải hẹp và tắt nhanh hơn trước (0,36 / 0,15) để không lấn át em bé
+    o.r0 = tier === 3 ? 0.56 : R0F[q.wt] - (tier === 2 ? 0.1 : 0); o.brk = S.trBrk; // chiêu đặc biệt: dải hẹp và tắt nhanh hơn trước (0,36 / 0,15 trước đây) để không lấn át em bé
     const w = G.curW ? G.curW(P) : null;
     o.pl = pal(w && G.activeEl ? G.activeEl(P, w) : null);
     S.trBrk = false; S.trOk = 0.25;
