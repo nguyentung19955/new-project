@@ -188,7 +188,7 @@
         if (near(x, 82) || cols.some((cx) => Math.abs(cx + 4 - x) < 16)) continue;
         if (i % 3 === 0) torch(x, wy + 16, g);
         else if (i % 3 === 1) banner(x, wy + 6, '#3a4a6a', '#263248');
-        else { r(x - 6, wy + 8, 12, 20, DARK); r(x - 5, wy + 9, 10, 18, '#a8502a'); r(x - 5, wy + 9, 10, 6, '#d8823a'); r(x - 1, wy + 9, 1, 18, DARK); r(x - 5, wy + 17, 10, 1, DARK); r(x - 6, wy + 7, 12, 1, K.stoneL); }
+        else { r(x - 6, wy + 8, 12, 20, DARK); r(x - 5, wy + 9, 10, 18, '#a8502a'); r(x - 5, wy + 9, 10, 6, '#d8823a'); r(x - 1, wy + 9, 1, 18, DARK); r(x - 5, wy + 17, 10, 1, DARK); r(x - 6, wy + 7, 12, 1, K.stoneL); if (g.amb) g.amb.push({ k: 'win', x, y: wy + 9, ph: rn() * 9 }); }
       }
     },
     sides(g) {
@@ -364,6 +364,7 @@
           const cx = g.fx0 + 24 + rn() * (w - 48), cy = g.fy0 + 24 + rn() * (h - 48), rx = ri(rn, 10, 18);
           ell(cx, cy, rx, rx * 0.5, C.waterD); ell(cx, cy - 1, rx - 2, rx * 0.5 - 1, C.water);
           r(cx - rx * 0.4, cy - 2, rx * 0.5, 1, C.waterL); r(cx + 2, cy + 1, 3, 1, rgba(C.waterL, 0.5));
+          if (g.amb) g.amb.push({ k: 'pud', x: Math.round(cx), y: Math.round(cy - 1), rx: rx - 2, ry: Math.round(rx * 0.5 - 1), ph: rn() * 9 });
         }
       });
     },
@@ -383,13 +384,14 @@
         if (near(x, 18)) continue;
         const h = ri(rn, 6, 18), w = ri(rn, 4, 7);
         spike(x + 1, wy, w + 2, h + 1, 1, C.rockD); spike(x, wy, w, h, 1, rn() < 0.5 ? C.rockL : mix(C.rock, C.rockL, 0.6), lite(C.rockL, 0.15));
-        if (rn() < 0.3) r(x, wy + h + ri(rn, 2, 7), 1, 2, C.wet);
+        if (rn() < 0.3) { r(x, wy + h + ri(rn, 2, 7), 1, 2, C.wet); if (g.amb) g.amb.push({ k: 'drip', x, y: wy + h + 1, y1: g.fy0 + 3 + ri(rn, 0, 5), ph: rn() * 9, sp: 0.7 + rn() * 0.6 }); }
       }
       // tinh thể mọc ở chân vách
       for (let x = g.fx0 + 22, i = 0; x < g.fx1 - 14; x += ri(rn, 34, 52), i++) {
         if (near(x, 30)) continue;
         crystal(x, g.fy0 + 1, i % 2 ? 1 : 2);
         glow(x, g.fy0 + 10, 22, 10, C.cry, 0.05, 3);
+        if (g.amb) g.amb.push({ k: 'cry', x, y: g.fy0 - (i % 2 ? 4 : 8), s: i % 2 ? 1 : 2, ph: rn() * 9 });
       }
       // gờ đá chân vách
       bumps(g.fx0, g.fy0, g.fx1, g.fy0, true, rn, 0);
@@ -593,6 +595,7 @@
       for (let x = g.fx0 + 18; x < g.fx1 - 10; x += ri(rn, 36, 60)) {
         if (tops.some((t) => Math.abs(t - x) < 34)) continue;
         glow(x, g.fy0 + 1, 12, 7, '#b0f070', 0.07, 3);
+        if (g.amb) g.amb.push({ k: 'shroom', x, y: g.fy0 - 3, ph: rn() * 9 });
         r(x - 1, g.fy0 - 1, 2, 4, '#e8e0c0'); r(x - 3, g.fy0 - 4, 6, 3, '#9ad860'); r(x - 2, g.fy0 - 5, 4, 1, '#d0f8a0');
         r(x + 5, g.fy0 + 1, 1, 2, '#e8e0c0'); r(x + 4, g.fy0 - 1, 3, 2, '#9ad860');
       }
@@ -742,6 +745,7 @@
       const cx = left ? g.fx0 + 34 : g.fx1 - 34, cy = top ? g.fy0 + 40 : g.fy1 - 34;
       clipRect(g.fx0, g.fy0, fw_(g), fh_(g), () => {
         ell(cx, cy + 1, 30, 20, C.rockD); ell(cx, cy, 28, 18, C.waterD); ell(cx, cy - 1, 25, 15, C.water);
+        if (g.amb) g.amb.push({ k: 'pud', x: cx, y: cy - 1, rx: 25, ry: 15, ph: rn() * 9, big: 1 });
         r(cx - 14, cy - 6, 10, 1, C.waterL); r(cx + 4, cy + 3, 7, 1, rgba(C.waterL, 0.6)); r(cx - 4, cy - 1, 4, 1, rgba(C.waterL, 0.5));
         for (let i = 0; i < 9; i++) { const x = g.fx0 + 14 + rn() * (fw_(g) - 28), y = g.fy0 + 16 + rn() * (fh_(g) - 28); r(x, y, 2, 3, C.cry); r(x, y, 1, 1, C.cryL); r(x + 2, y + 1, 1, 2, C.cryD); }
       });
@@ -828,7 +832,7 @@
     1: [ // hang
       (x, y) => { ell(x, y + 1, 9, 4, 'rgba(0,0,0,0.3)'); ell(x - 3, y - 3, 6, 4, C.rock); ell(x + 4, y - 2, 5, 3, C.rockL); ell(x, y - 6, 4, 3, C.rockL); r(x - 2, y - 8, 4, 1, lite(C.rockL, 0.15)); },
       (x, y, g) => { crystal(x, y, 1); g.lights.push({ k: 'twinkle', x, y: y - 8 }); },
-      (x, y) => { ell(x, y, 10, 5, C.waterD); ell(x, y - 1, 8, 3, C.water); r(x - 4, y - 2, 5, 1, C.waterL); },
+      (x, y, g) => { ell(x, y, 10, 5, C.waterD); ell(x, y - 1, 8, 3, C.water); r(x - 4, y - 2, 5, 1, C.waterL); if (g && g.amb) g.amb.push({ k: 'pud', x, y: y - 1, rx: 8, ry: 3, ph: x * 0.13 }); },
       (x, y) => { r(x - 3, y - 2, 7, 4, DARK); r(x - 2, y - 2, 5, 3, '#d8c8b0'); r(x - 1, y - 2, 3, 1, '#f0e8d8'); r(x - 2, y, 1, 1, '#9a8a74'); r(x, y, 1, 1, '#9a8a74'); r(x + 2, y, 1, 1, '#9a8a74'); },
     ],
     0: [ // rừng
@@ -897,6 +901,7 @@
     const rn = G.srand(seed || 11);
     const base = mk(g.W, g.H), fore = mk(g.W, g.H);
     g.lights = [];
+    g.amb = []; // chỗ có chuyển động môi trường (vũng nước, giọt nhũ đá, nấm sáng...): ghi lại lúc dựng, vẽ động ở lớp sống
     c = base;
     T.paintVoid(g, rn);
     T.floors[g.variant % T.floors.length](g, rn);
@@ -911,6 +916,7 @@
     c = fore;
     for (const f of fores) f();
     if (T.fore) T.fore(g, G.srand((seed || 11) + 9));
+    ambSetup(T, g, seed);
     return { base: base.canvas, fore: fore.canvas, g, T };
   }
   const cache = new Map();
@@ -931,11 +937,150 @@
   RA.get = get;
   RA.cache = cache;
 
+  // ---------- chuyển động môi trường theo vùng (VFX Phase 4) ----------
+  // Chỉ những thứ hợp vùng: Rừng già có đom đóm, phấn hoa, lá rơi, cỏ lay, nấm sáng thở; Hang biển có vũng nước gợn,
+  // giọt nhũ đá rơi, sương mỏng trôi sát sàn, tinh thể sáng nhịp; Lâu đài cổ có quầng đuốc chập chờn và bụi bay trong ánh lửa.
+  // Hai lớp hạt khác tốc độ (xa chậm và mờ, gần nhanh hơn và rõ hơn) tạo chiều sâu. Mức chuyển động thấp để dành chú ý cho trận đánh.
+  // Phần tĩnh vẫn nằm trong nền vẽ sẵn; ở đây chỉ vài chục ô vuông nhỏ mỗi khung hình. Cường độ theo G.VFX.moiTruong (0 = tắt).
+  const ACOL = new Map();
+  function acol(hexCol, a) { // chuỗi màu rgba dùng lại (chia 24 nấc độ trong) để khỏi tạo chuỗi mới mỗi khung hình
+    const q = Math.max(0, Math.min(24, Math.round(a * 24))), key = hexCol + q;
+    let v = ACOL.get(key);
+    if (!v) { v = rgba(hexCol, (q / 24).toFixed(3)); ACOL.set(key, v); }
+    return v;
+  }
+  function ambSetup(T, g, seed) {
+    const rn = G.srand((seed || 11) * 31 + 23), A2 = (g.amb = g.amb || []);
+    const wy = g.fy0 - g.wh, fw = g.fx1 - g.fx0, fh = g.fy1 - g.fy0;
+    const mote = (layer, n, col, y0, y1) => { for (let i = 0; i < n; i++) A2.push({ k: 'mote', layer, x: g.fx0 + rn() * fw, y: y0 + rn() * (y1 - y0), ph: rn() * 20, sp: 0.6 + rn() * 0.8, col }); };
+    if (T.reg === 0) {
+      mote(0, 6, '#e8f0b0', wy + 6, g.fy0 + 26); // phấn hoa trôi chậm trước thân cây
+      for (let i = 0; i < 6; i++) A2.push({ k: 'fly', x: g.fx0 + 10 + rn() * (fw - 20), y: g.fy0 + 16 + rn() * (fh - 40), ph: rn() * 20, sp: 0.7 + rn() * 0.6 });
+      for (let i = 0; i < 3; i++) A2.push({ k: 'leaf', x: g.fx0 + 16 + rn() * (fw - 32), y1: g.fy0 + 14 + rn() * (fh - 30), ph: rn() * 30, per: 9 + rn() * 5, col: ['#a04a26', '#8a6a2e', '#b88a34'][i % 3] });
+      for (let i = 0; i < 12; i++) { const left = i % 2 === 0; A2.push({ k: 'tuft', x: left ? g.fx0 + 3 + rn() * 12 : g.fx1 - 4 - rn() * 12, y: g.fy0 + 14 + rn() * (fh - 22), h: 3 + Math.floor(rn() * 3), ph: rn() * 6 }); }
+    } else if (T.reg === 1) {
+      mote(0, 5, '#bfe9f4', wy + 4, g.fy0 + 20); // hạt sáng li ti trong hơi ẩm
+      mote(1, 5, '#d8f6ff', g.fy0 + 20, g.fy1 - 8);
+      for (let i = 0; i < 3; i++) A2.push({ k: 'mist', y: g.fy0 + 24 + i * Math.round((fh - 40) / 3) + rn() * 10, h: 7 + Math.floor(rn() * 4), ph: rn() * 90, sp: 2 + rn() * 2.5 });
+    } else {
+      mote(0, 5, '#ffd9a0', wy + 2, g.fy0 + 16); // bụi bay trong ánh đuốc
+      mote(1, 6, '#ffe6b8', g.fy0 + 10, g.fy1 - 10);
+    }
+  }
+  function ambLive(room, t) {
+    const M = G.VFX ? +G.VFX.moiTruong : 1;
+    if (!(M > 0)) return;
+    const g = room.g, list = g.amb;
+    if (!list) return;
+    const fx0 = g.fx0, fx1 = g.fx1, fy0 = g.fy0, fy1 = g.fy1, fw = fx1 - fx0;
+    for (const a of list) {
+      switch (a.k) {
+        case 'mote': { // lớp xa (0): chậm, mờ; lớp gần (1): nhanh hơn, rõ hơn
+          const v = a.layer ? 4.5 : 2.2, amp = a.layer ? 5 : 3;
+          let x = a.x + ((t * v * a.sp + a.ph * 13) % fw);
+          if (x > fx1) x -= fw;
+          const y = a.y + Math.sin(t * 0.6 * a.sp + a.ph) * amp, k = 0.5 + 0.5 * Math.sin(t * 1.1 * a.sp + a.ph * 2);
+          r(x, y, 1, 1, acol(a.col, (a.layer ? 0.55 : 0.32) * k * M));
+          break;
+        }
+        case 'fly': { // đom đóm: lượn chậm, sáng tắt theo nhịp riêng
+          const x = a.x + Math.sin(t * 0.45 * a.sp + a.ph) * 14, y = a.y + Math.sin(t * 0.7 * a.sp + a.ph * 1.7) * 7;
+          const k = Math.sin(t * 1.6 * a.sp + a.ph);
+          if (k < -0.2) break;
+          const b = (0.3 + 0.7 * Math.max(0, k)) * M;
+          r(x - 1, y - 1, 3, 3, acol('#d2ff78', 0.18 * b)); r(x, y, 1, 1, acol('#f4ffb0', 0.95 * b));
+          break;
+        }
+        case 'leaf': { // lá rơi từ tán xuống, đung đưa, nằm lại trên sàn rồi mờ đi
+          const u = (t + a.ph) % a.per, fall = 6.5;
+          const y0 = fy0 - g.wh - 2;
+          if (u < fall) {
+            const q = u / fall, y = y0 + (a.y1 - y0) * q, x = a.x + Math.sin(u * 1.9 + a.ph) * 6 * M;
+            const flip = Math.floor(u * 3 + a.ph) % 2;
+            r(x, y, flip ? 2 : 1, flip ? 1 : 2, a.col);
+          } else if (u < fall + 1.6) {
+            const q = (u - fall) / 1.6;
+            r(a.x + Math.sin(fall * 1.9 + a.ph) * 6 * M, a.y1, 2, 1, acol(a.col, 1 - q));
+          }
+          break;
+        }
+        case 'tuft': { // khóm cỏ sát tường lay theo một làn gió chạy ngang phòng
+          const wv = Math.sin(t * 1.4 - a.x * 0.045 + a.ph * 0.2) * M, dx = wv > 0.55 ? 1 : wv < -0.75 ? -1 : 0;
+          r(a.x, a.y - a.h + 1, 1, a.h - 1, F.moss); r(a.x + dx, a.y - a.h, 1, 1, F.mossL);
+          r(a.x + 2, a.y - a.h + 2, 1, a.h - 2, F.leafL); r(a.x + 2 + dx, a.y - a.h + 1, 1, 1, F.leafH);
+          r(a.x - 2, a.y - a.h + 3, 1, a.h - 3, F.moss); r(a.x - 2 + dx, a.y - a.h + 2, 1, 1, F.leafL);
+          break;
+        }
+        case 'shroom': { // nấm sáng "thở" chậm, thỉnh thoảng nhả một hạt bào tử
+          const k = 0.5 + 0.5 * Math.sin(t * 1.2 + a.ph);
+          ell(a.x, a.y + 3, 8 + k * 2, 4 + k, acol('#b0f070', (0.03 + 0.05 * k) * M));
+          const u = (t * 0.3 + a.ph) % 1;
+          if (u < 0.6) r(a.x + Math.sin(u * 9 + a.ph) * 2, a.y - 3 - u * 22, 1, 1, acol('#d0f8a0', 0.7 * (1 - u / 0.6) * M));
+          break;
+        }
+        case 'pud': { // vũng nước: thỉnh thoảng có vòng gợn lan ra, vệt sáng trên mặt nước khẽ trôi
+          const P = a.big ? 2.6 : 4 + (a.ph % 2), u = (t + a.ph) % P;
+          if (u < 1.3) {
+            const q = u / 1.3, rx = 1.5 + q * a.rx * 0.75, ry = Math.max(1, rx * (a.ry / a.rx)), col = acol('#8fd0ea', 0.55 * (1 - q) * M);
+            const n = Math.max(8, Math.round(rx * 1.6));
+            for (let i = 0; i < n; i++) { const an = (i / n) * 6.2832; r(a.x + Math.cos(an) * rx, a.y + Math.sin(an) * ry, 1, 1, col); }
+          }
+          const sx = Math.round(Math.sin(t * 0.5 + a.ph) * a.rx * 0.25);
+          r(a.x - a.rx * 0.35 + sx, a.y - Math.max(1, a.ry * 0.4), Math.max(2, a.rx * 0.3), 1, acol('#d8f6ff', 0.35 * M));
+          break;
+        }
+        case 'drip': { // giọt nước đọng ở chóp nhũ đá, rơi xuống chân vách và toé nhẹ
+          const P = 3.2 / a.sp, u = (t + a.ph) % P, fallT = 0.42;
+          if (u < P - fallT - 0.35) { if (u > P * 0.35) r(a.x, a.y, 1, u > P * 0.55 ? 2 : 1, acol('#9fdcff', 0.8)); }
+          else if (u < P - 0.35) { const q = (u - (P - fallT - 0.35)) / fallT; r(a.x, a.y + (a.y1 - a.y) * q * q, 1, 2, '#9fdcff'); }
+          else {
+            const q = (u - (P - 0.35)) / 0.35, col = acol('#bfe9ff', 0.7 * (1 - q) * M);
+            r(a.x - 1 - q * 3, a.y1 - 1 - (q < 0.5 ? q * 4 : (1 - q) * 4), 1, 1, col); r(a.x + 1 + q * 3, a.y1 - 1 - (q < 0.5 ? q * 4 : (1 - q) * 4), 1, 1, col);
+            r(a.x - 1 - q * 4, a.y1, 2 + q * 8, 1, acol('#8fd0ea', 0.4 * (1 - q) * M));
+          }
+          break;
+        }
+        case 'cry': { // tinh thể chân vách sáng lên tối xuống rất chậm, chóp loé sáng
+          const k = 0.5 + 0.5 * Math.sin(t * 0.9 + a.ph);
+          ell(a.x, a.y, 5 * a.s + 2, 4 * a.s + 1, acol('#58c8ea', (0.03 + 0.06 * k) * M));
+          if (((t * 0.5 + a.ph) % 4) < 0.18) { r(a.x, a.y - 4 * a.s - 3, 1, 3, '#ffffff'); r(a.x - 1, a.y - 4 * a.s - 2, 3, 1, '#ffffff'); }
+          break;
+        }
+        case 'win': { // cửa sổ kính màu sáng ấm nhè nhẹ, vệt sáng hắt xuống sàn
+          const k = 0.5 + 0.5 * Math.sin(t * 0.8 + a.ph) * (0.8 + 0.2 * Math.sin(t * 5.3 + a.ph));
+          r(a.x - 5, a.y, 10, 18, acol('#ffd08a', (0.04 + 0.08 * k) * M));
+          ell(a.x, fy0 + 10, 14 + k * 2, 6, acol('#ffb060', (0.03 + 0.03 * k) * M));
+          break;
+        }
+        case 'mist': { // dải sương mỏng trôi rất chậm sát mặt sàn
+          const segW = 46, gap = 34, per = segW + gap;
+          const off = (t * a.sp + a.ph) % per;
+          for (let x = fx0 - per + off; x < fx1; x += per) {
+            const x0 = Math.max(fx0 + 2, x), x1 = Math.min(fx1 - 2, x + segW);
+            if (x1 <= x0) continue;
+            r(x0, a.y, x1 - x0, a.h, acol('#cfe8f0', 0.05 * M));
+            const i0 = Math.max(fx0 + 2, x + 8), i1 = Math.min(fx1 - 2, x + segW - 8);
+            if (i1 > i0) r(i0, a.y + 2, i1 - i0, a.h - 4, acol('#e4f4f8', 0.045 * M));
+          }
+          break;
+        }
+      }
+    }
+    // quầng đuốc chập chờn (lâu đài): sáng tối không đều như lửa thật
+    for (const l of g.lights) {
+      if (l.k !== 'torch') continue;
+      const f = 0.5 + 0.3 * Math.sin(t * 7.3 + l.x) + 0.2 * Math.sin(t * 12.7 + l.x * 1.7);
+      ell(l.x, l.y - 5, 9 + f * 3, 8 + f * 2, acol('#ff9a40', (0.04 + 0.05 * f) * M));
+      ell(l.x, fy0 + 12, 22 + f * 4, 10 + f * 2, acol('#ff9a40', (0.015 + 0.025 * f) * M));
+    }
+  }
+
   // ---------- lớp sống: lửa đuốc, mũi tên cửa mở, chỗ quái sắp hiện, nước dâng ----------
   function live(cx, W, room) {
     const g = room.g, t = G.time || 0, pv = c;
     c = cx;
     try {
+      ambLive(room, t);
       for (const l of g.lights) {
         const f = Math.floor(t * 9 + l.x) % 3;
         if (l.k === 'torch') { r(l.x - 2 + (f === 1 ? 1 : 0), l.y - 9 - f, 3, 3, '#ff7a2a'); r(l.x - 1, l.y - 7 - (f === 2 ? 2 : 0), 2, 3, '#ffd23f'); r(l.x + (f - 1), l.y - 12 - f, 1, 1, '#ffd23f'); }
