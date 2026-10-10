@@ -12,6 +12,8 @@
   const SIDE = ['merchant', 'challenge', 'curse'];
   const KINDS = ['A', 'B', 'C'];
   const isFight = (t) => t === 'fight' || t === 'elite'; // phòng quái được tính vào điều kiện mở cửa Trùm
+  // V19: mục tiêu của phòng Thử thách. 'timed' = hạ hết quái trong 30 giây (như cũ); 'survive' = trụ được 30 giây (hết giờ là dọn phòng).
+  const GOALS = ['timed', 'survive'];
 
   function rng(seed) {
     // Trộn hạt giống trước để các hạt liền nhau không cho kết quả gần giống nhau.
@@ -198,8 +200,19 @@
     const rn = rng(seed + KINDS.indexOf(kind) * 7919);
     const m = kind === 'A' ? genA(seed, rn) : kind === 'B' ? genB(seed, rn) : genC(seed, rn);
     if (!m) throw new Error('Không sinh được bản đồ kiểu ' + kind + ' với hạt giống ' + seed);
+    addGoal(m, seed);
     return m;
   };
+  // V19: mỗi ải LUÔN có đúng một phòng mục tiêu (r.goal). Phòng phụ là Thử thách thì mục tiêu đặt ở đó; phòng phụ là Thương nhân
+  // hay Lời nguyền thì một phòng Đánh quái mang mục tiêu (vẫn là phòng quái, vẫn tính cho cửa Trùm, mảnh chìa và Suối hồi).
+  // Dùng dãy ngẫu nhiên riêng nên bố cục bản đồ của mỗi hạt giống không đổi so với trước.
+  function addGoal(m, seed) {
+    const rn = rng((seed ^ 0x5bd1e995) + KINDS.indexOf(m.kind) * 104729);
+    const ch = m.rooms.find((r) => r.type === 'challenge');
+    const host = ch || pick(rn, m.rooms.filter((r) => r.type === 'fight'));
+    if (host) host.goal = pick(rn, GOALS);
+  }
+  M.GOALS = GOALS;
   // Chọn kiểu cho một lần vào ải: ải cuối vùng luôn là C; ải khác ngẫu nhiên, tránh kiểu của lần chơi ngay trước.
   M.pickKind = function (i, last, rnd) {
     if (i === 4) return 'C';
@@ -289,6 +302,11 @@
     if (R[0] && R[0].type !== 'start') errs.push('phòng 0 không phải Bắt đầu');
     if (R[6] && R[6].type !== 'fountain') errs.push('phòng 6 không phải Suối hồi');
     if (R[7] && R[7].type !== 'boss') errs.push('phòng 7 không phải Trùm');
+    // V19: đúng một phòng mục tiêu, nằm ở phòng Thử thách hoặc phòng Đánh quái
+    const goals = R.filter((r) => r.goal);
+    if (goals.length !== 1) errs.push('phải có đúng một phòng mục tiêu: ' + goals.length);
+    else if (goals[0].type !== 'challenge' && goals[0].type !== 'fight') errs.push('phòng mục tiêu phải là Thử thách hoặc Đánh quái');
+    else if (GOALS.indexOf(goals[0].goal) < 0) errs.push('mục tiêu lạ: ' + goals[0].goal);
     if (errs.length) return errs;
     // cửa: phải nối hai ô kề nhau và có đủ hai chiều
     for (const r of R) {

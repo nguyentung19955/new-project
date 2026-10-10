@@ -33,7 +33,8 @@
   // Loại phòng phụ (merchant, challenge, curse) mà bản đồ không có thì đổi phòng phụ của bản đồ thành loại đó.
   G.testGoto = function (type) {
     const S = G.getRun(), M = G.mapgen;
-    let r = S.map.rooms.find((o) => o.type === type);
+    // V19: phòng Đánh quái mang mục tiêu (r.goal) chỉ được chọn khi không còn phòng cùng loại nào khác
+    let r = S.map.rooms.find((o) => o.type === type && !o.goal) || S.map.rooms.find((o) => o.type === type);
     // nhảy thẳng tới Suối hồi thì coi như đã dọn các phòng quái trên đường (như khi đi thật), để suối dùng được
     if (type === 'fountain') for (const o of S.map.rooms) if (o.type === 'fight' || o.type === 'elite') S.cleared[o.id] = true;
     if (r) { G.gotoRoom(r.id); return r.id; }
