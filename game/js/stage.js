@@ -558,7 +558,7 @@
   const BTN = BTN0;
   // Ô bình máu và nút tạm dừng: [x, y, rộng, cao]. Vùng chạm rộng hơn hình vẽ 4 đơn vị mỗi phía.
   const POT = [4, 26, 54, 24], PAU = [62, 26, 30, 24]; // cao 24 (+ vùng chạm nới 4) để vừa ngón tay trên điện thoại
-  const hitBox = (d, b) => G.inRect(d, b[0] - 4, b[1] - 3, b[2] + 8, b[3] + 7);
+  const hitBox = (d, b) => G.inRect(d, b[0] - 4, b[1] - 4, b[2] + 8, b[3] + 9); // vùng chạm cao 33 (khoảng 44 điểm trên điện thoại)
   function setMode(m) { S.mode = m; S.sel = null; }
   G.stageUi = { btnPos, stickPos, POT, PAU }; // để bài kiểm tra biết nút nằm ở đâu
   function readInput() {

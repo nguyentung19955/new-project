@@ -442,9 +442,12 @@
     }
     const BD = G.banDo, g = !RO && BD ? BD.guard() : undefined;
     if (RO && BD) BD.reset();
-    T.panel(X0, Y0, PW, PH, RO ? 'Hành trang (chỉ xem)' : 'Hành trang', { rightPad: 74, noBand: true });
+    // Trong ải: dòng nhắc nằm ở dải tiêu đề, hoa văn chim Lạc dừng trước dòng nhắc (không chữ nào đè hoa văn)
+    const roTxt = 'Trong ải chỉ xem. Về làng để thay đồ, học kỹ năng.';
+    let roW = 0; if (RO) { ui.font(6.5, false); roW = Math.ceil(G.ux.measureText(roTxt).width) + 10; }
+    T.panel(X0, Y0, PW, PH, RO ? 'Hành trang (chỉ xem)' : 'Hành trang', { rightPad: 74 + roW, noBand: true });
     if (T.sbtn(X0 + PW - 66, Y0 + 3, 60, 17, RO ? '← Quay lại' : '✕ Xong', { size: 8, pad: 5 })) { close(); return; }
-    if (RO) ui.text('Trong ải chỉ xem. Về làng để thay đồ, học kỹ năng.', X0 + PW - 72, Y0 + 15, { size: 6.5, align: 'right', color: WARN });
+    if (RO) ui.text(roTxt, X0 + PW - 72, Y0 + 15, { size: 6.5, align: 'right', color: WARN });
     const tw = (CW - 5 * 3) / 6;
     TABS.forEach((t, i) => {
       if (T.tab(CX + i * (tw + 3), Y0 + 23, tw, 19, t[1], B.tab === t[0], { pad: 2 })) { B.tab = t[0]; B.sel = null; if (G.banDo) G.banDo.reset(); }
