@@ -184,19 +184,19 @@ transparent background, no ground shadow, no weapon drawn.
 | Danh sách ✅ (lưới w×h) | **Rừng già:** Heo Rừng Con 56×32, Bầy Ong Vò Vẽ 44×39, Bọ Hung Mai Cứng 54×34, Hoa Phun Bào Tử 53×36, Chồn Bóng 63×28, Nấm Phồng 32×27, Sóc Ném Quả Nổ 49×37, Nhím Gai Độc 44×28 |
 | | **Hang biển:** Cua Lính 48×36, Bầy Cá Con 36×31, Ốc Mượn Hồn 52×41, Hải Quỳ 45×40, Cá Chuồn 53×34, Cá Nóc 32×26, Sứa Bom 39×37, Nhím Biển 29×24 |
 | | **Lâu đài cổ:** Lính Ma Giáp Gỉ 50×31, Bầy Dơi Than 46×31, Tượng Đá Cầm Khiên 50×32, Đèn Lồng Ma 44×34, Mèo Đen Hai Đuôi 58×32, Hũ Lửa Sống 30×30, Tiểu Yêu Ném Pháo 44×32, Nhím Than Hồng 30×27 |
-| Bóng dáng giữ | dáng loài và tư thế quay trái như trong ảnh tham chiếu. Phần thân thật khoảng 20–45 px |
+| Bóng dáng giữ | dáng loài và tư thế quay PHẢI (ảnh tham chiếu đang quay trái — lật lại) như trong ảnh tham chiếu. Phần thân thật khoảng 20–45 px |
 | Canvas ra | concept: 1 tấm/vùng, 8 con cùng tỉ lệ, 1536×1024 |
 | Cỡ khung đích | **bằng lưới của từng con +8 px mỗi chiều** (ví dụ Heo Rừng Con → 64×40). Gốc ở giữa đáy (chân) |
 | Số khung | Code ✅ chạy 12 khung/giây, thời lượng từng con nằm trong manifest. Ví dụ Heo Rừng Con: idle 1.2 s, move 0.45, tele 0.75, atk 0.6, hit 0.35, die 1.2. Đề xuất 💡 cho sheet: idle 6, move 6, tele 4, atk 6, hit 3, die 8; trong `.sprite.json` đặt `giay` đúng bằng thời lượng code |
 | Bảng màu | 2–4 màu chính + 1 màu nhấn (màu hiện tại trong `GAME_ASSET_MANIFEST.json` → `source_dimensions` / `generation_target`). Mẫu GPT: heo `#59402b #916344 #c99a63`, nanh `#f5e6c5`; sứa `#315d8a #4b8fc1 #9de8ef`, lõi `#e9f9ff`; giáp gỉ `#373d4b #697386 #aab3bc`, gỉ `#99513c`; nấm `#724332 #b76b48 #f0c89c`, bào tử `#c4ef85` |
 | Màu cấm | đỏ tươi chỉ được ở mắt hoặc điểm nhấn ≤ 4 px. Lâu đài: thân quái phải sáng hơn sàn `#514744` |
 | Nền | trong suốt, không bóng, **không** vẽ vòng nổ, tia gai hay đạn vào thân (code vẽ những thứ đó) |
-| Hướng | quay **trái**, nhìn chếch 3/4, ánh sáng trên-phải |
+| Hướng | quay **PHẢI** (game tự lật khi đi sang trái), nhìn chếch 3/4, ánh sáng trên-phải |
 | Tiêu chí nghiệm thu | mắt và điểm nhận diện vẫn đọc được khi thu 50%; 8 con trong vùng khác bóng dáng nhau |
 
 ```
 [0.1 style prompt] Monster lineup for the <Old Forest (poison) / Sea Cave (ice) / Ancient Castle (fire)> zone, 8 small creatures,
-same pixel scale, all facing LEFT, idle pose, each 20-45 px tall when downscaled: <list names in English, e.g. wild piglet, wasp swarm,
+same pixel scale, all facing RIGHT, idle pose, each 20-45 px tall when downscaled: <list names in English, e.g. wild piglet, wasp swarm,
 hard-shell beetle with shield, spore-spitting flower, shadow weasel, puffball mushroom, bomb-throwing squirrel, poison hedgehog>.
 2-4 main colors + 1 accent each, eyes readable, transparent background, no effects, no projectiles, no ground shadow.
 ```
@@ -211,7 +211,7 @@ hard-shell beetle with shield, spore-spitting flower, shadow weasel, puffball mu
 - Các mục khác như B5. Trùm nhỏ có thêm `skill1` và `skill2`; đường nạp gộp chúng thành tele + atk.
 
 ```
-[0.1 style prompt] Elite version of <base monster>, same species and silhouette, facing LEFT, add only 1-2 big rank marks
+[0.1 style prompt] Elite version of <base monster>, same species and silhouette, facing RIGHT, add only 1-2 big rank marks
 (shoulder armor / horns / glowing core / crown), 1.5x bulk, transparent background, no effects.
 ```
 
@@ -227,13 +227,13 @@ hard-shell beetle with shield, spore-spitting flower, shadow weasel, puffball mu
 | Động tác ✅ | intro 3.0, idle 2.4, move 1.4, c1–c5 2.0–2.6, phase2 2.4, phase3 2.6, stun 1.6, hit 0.4, die 3.4 (giây) | intro 2.8, idle 2.0, move 1.2, c1–c5 1.9–2.6, die 3.2 | intro 3.0, idle 2.4, move 1.1, c1–c5 2.0–2.5, die 3.4 |
 | Bóng dáng giữ | cây cổ thụ có mặt, rễ làm chân | cá lớn nằm ngang, hàm răng, vây lưng | cáo trắng ngà, 9 đuôi xoè |
 | Đề xuất 💡 | tán gom 3–5 khối; mặt là khối riêng; 2–3 rễ chính. Gỗ `#513725 #82583a #b18a57`, lá `#287444 #49a34f #a3d86c`, mắt `#e4f0a0` | vảy thành dải lớn. `#183c56 #2d6b88 #63b9cc`, lõi băng `#d8f6ff` | 9 đuôi tách hướng, chỉ 2–3 đuôi sáng cùng lúc. `#542b36 #9d4650 #e57a54`, lõi `#ffd23f`, điểm nóng `#fff3b0` |
-| Canvas ra | 1536×1024: 3 pha đứng cạnh nhau, quay trái | như trái | như trái |
+| Canvas ra | 1536×1024: 3 pha đứng cạnh nhau, quay phải | như trái | như trái |
 | Cỡ đích | giữ lưới ✅. Không phóng to trùm | giữ lưới ✅ | 174×115 (pha 1–2). Pha 3 💡 nên ≤ 202×125 để khỏi phải thu nhỏ |
 | Nghiệm thu | đọc được mặt và mắt ở ×1 trong phòng trùm 300×198; không che vùng báo trước | thân không biến thành một mảng trắng khi ra đòn băng | mặt cáo là điểm nhận diện chính |
 | Tích hợp | Đường nạp quái **dùng được nhưng không đổi hình theo pha** và không có hàng riêng cho từng chiêu. Muốn đủ thì **cần thêm code** | như trái | như trái |
 
 ```
-[0.1 style prompt, 32 colors max] Boss concept sheet, 3 phases side by side, facing LEFT, same scale:
+[0.1 style prompt, 32 colors max] Boss concept sheet, 3 phases side by side, facing RIGHT, same scale:
 Moc Tinh - ancient tree spirit, face carved in trunk as one clear block, canopy grouped in 3-5 big masses, 2-3 main roots as legs;
 phase 2 darker greens, phase 3 corrupted purple #8a3cc4 #4a1a78. Transparent background, no effects, no ground.
 ```
