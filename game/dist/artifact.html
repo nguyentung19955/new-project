@@ -41,7 +41,150 @@
 </div><canvas id="ui"></canvas></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.11-0048";
+(window.G = window.G || {}).VERSION = "lk-2026.10.11-0059";
+
+// ===== js/ngon_ngu.js =====
+// Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
+//
+//   G.LANG                       'vi' | 'en'
+//   G.t('Sức mạnh {0}', 12)      dịch một chuỗi, điền {0} {1}… bằng tham số. Tiếng Việt: trả đúng chuỗi gốc (đã điền số).
+//   G.tc('rèn', 'Mài')           như G.t nhưng có ngữ cảnh, dùng khi một chữ Việt cần hai nghĩa Anh khác nhau
+//                                (từ điển ghi khoá 'rèn::Mài'; không có thì dùng khoá 'Mài').
+//   G.tv(chuỗi)                  dịch NẾU chuỗi có trong từ điển, không thì trả nguyên (dùng ở điểm vẽ chữ).
+//   G.ngonNgu.dat('en')          đổi ngôn ngữ ngay, nhớ vào máy (localStorage) và vào bản lưu (trường lang).
+//   G.ngonNgu.thieu              các chuỗi còn dấu tiếng Việt đã được vẽ ra khi đang ở tiếng Anh mà chưa có bản dịch (để kiểm).
+//
+// Cách hoạt động: từ điển (js/ngon_ngu_en.js) có khoá là CHUỖI TIẾNG VIỆT GỐC, giá trị là tiếng Anh.
+// Khi ở tiếng Anh, mọi lệnh vẽ chữ và đo chữ của canvas (fillText, strokeText, measureText) tự tra từ điển, nên chữ viết
+// thẳng trong code ("Túi đồ", tên quái, tên vũ khí…) không phải sửa gì. Chỉ chuỗi GHÉP (chữ + số, chữ + tên) mới phải viết
+// G.t('… {0} …', x) ở chỗ ghép. Khi ở tiếng Việt, không lệnh vẽ nào bị đụng tới: game y hệt như trước.
+(function () {
+  'use strict';
+  const G = (window.G = window.G || {});
+  const KHOA = 'linhkhi_lang';
+  const D = new Map();   // từ điển: chuỗi Việt -> chuỗi Anh
+  const DL = new Map();  // như trên nhưng khoá viết thường (để nhận chữ IN HOA / viết thường)
+  const nho = new Map(); // kết quả tra ở điểm vẽ (chuỗi -> chuỗi), xoá khi đổi ngôn ngữ
+  const thieu = new Set();
+  const nguyen = new Set(); // chuỗi giữ nguyên, không dịch (tên người chơi…): G.kd
+  // Có dấu tiếng Việt?
+  const VI = /[àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ]/;
+  // Tên riêng giữ nguyên ở bản tiếng Anh (không tính là "thiếu").
+  const TEN_RIENG = /Cu Tí|Cu Tèo|Cái Bống|Cu Lì|Linh Khí|LINH KHÍ|CU TÍ|CU TÈO|CÁI BỐNG|CU LÌ/g;
+
+  function dien(s, a) { // điền {0} {1}… bằng tham số
+    return a && a.length ? String(s).replace(/\{(\d)\}/g, (m, i) => (a[+i] === undefined ? m : a[+i])) : s;
+  }
+  function docMay() { try { const v = window.localStorage.getItem(KHOA); return v === 'en' || v === 'vi' ? v : null; } catch (e) { return null; } }
+
+  const N = (G.ngonNgu = {
+    D, thieu,
+    DS: [['vi', 'Tiếng Việt'], ['en', 'English']],
+    // Nạp thêm bản dịch: { 'chuỗi Việt': 'chuỗi Anh', … }
+    them(o) {
+      for (const k in o) { D.set(k, o[k]); const l = k.toLowerCase(); if (!DL.has(l)) DL.set(l, o[k]); }
+      nho.clear();
+    },
+    // Ghi nhận một chuỗi chưa dịch (chỉ khi còn dấu tiếng Việt sau khi bỏ các tên riêng cố ý giữ).
+    ghiThieu(s) { if (thieu.size < 3000 && VI.test(s.replace(TEN_RIENG, ''))) thieu.add(s); },
+    // Đổi ngôn ngữ. nho = false: chỉ áp dụng, không ghi vào máy / bản lưu (dùng lúc khởi động).
+    dat(lang, luu) {
+      lang = lang === 'en' ? 'en' : 'vi';
+      G.LANG = lang;
+      nho.clear();
+      N.phien = (N.phien || 0) + 1; // nơi nào giữ sẵn hình có chữ thì so số này để vẽ lại
+      try { document.documentElement.lang = lang; } catch (e) { /* bỏ qua */ }
+      N.gan();
+      if (luu !== false) {
+        try { window.localStorage.setItem(KHOA, lang); } catch (e) { /* bỏ qua */ }
+        if (G.save) { if (lang === 'en') G.save.lang = 'en'; else delete G.save.lang; if (G.persist) G.persist(); }
+      }
+      if (N.khiDoi) for (const f of N.khiDoi) { try { f(lang); } catch (e) { /* bỏ qua */ } }
+    },
+    khiDoi: [],
+    doi() { N.dat(G.LANG === 'en' ? 'vi' : 'en'); },
+    // Sau khi đọc bản lưu: máy chưa từng chọn ngôn ngữ thì theo bản lưu (trường lang; không có = 'vi').
+    tuBanLuu() {
+      const may = docMay();
+      const lang = may || (G.save && G.save.lang === 'en' ? 'en' : 'vi');
+      if (lang !== G.LANG) N.dat(lang, false);
+      // bản lưu trên máy này luôn ghi đúng ngôn ngữ đang dùng
+      if (G.save) { if (G.LANG === 'en') G.save.lang = 'en'; else delete G.save.lang; }
+    },
+    // Gắn / gỡ phần tự dịch ở các lệnh vẽ chữ của canvas. Tiếng Việt: gỡ hết, canvas chạy lệnh gốc.
+    gan() {
+      for (const c of [G.ux, G.wx]) {
+        if (!c) continue;
+        if (G.LANG === 'vi') { if (c._lkNN) { delete c.fillText; delete c.strokeText; delete c.measureText; c._lkNN = false; } continue; }
+        if (c._lkNN) continue;
+        const P = Object.getPrototypeOf(c), f = P.fillText, s = P.strokeText, m = P.measureText;
+        c.fillText = function (t, x, y, w) { t = ve(t); return w === undefined ? f.call(this, t, x, y) : f.call(this, t, x, y, w); };
+        c.strokeText = function (t, x, y, w) { t = tra(t); return w === undefined ? s.call(this, t, x, y) : s.call(this, t, x, y, w); };
+        c.measureText = function (t) { return m.call(this, tra(t)); };
+        c._lkNN = true;
+      }
+    },
+  });
+
+  // Tra từ điển, không ghi "thiếu". Thử lần lượt: đúng nguyên văn; bỏ khoảng trắng hai đầu; không phân biệt hoa thường.
+  function tra(s) {
+    if (typeof s !== 'string' || s.length < 2 || nguyen.has(s)) return s;
+    let r = nho.get(s);
+    if (r !== undefined) return r;
+    r = D.get(s);
+    if (r === undefined) {
+      const t = s.trim();
+      if (t !== s && D.has(t)) r = s.replace(t, () => D.get(t));
+      else if (VI.test(s)) {
+        const e = DL.get(t.toLowerCase());
+        if (e !== undefined) { const up = t === t.toUpperCase() && t !== t.toLowerCase(); r = s.replace(t, () => (up ? e.toUpperCase() : e)); }
+      }
+    }
+    if (r === undefined) r = s;
+    if (nho.size > 6000) nho.clear();
+    nho.set(s, r);
+    return r;
+  }
+  // Như tra, dùng ở lệnh vẽ: chuỗi còn dấu tiếng Việt mà không có bản dịch thì ghi vào danh sách thiếu.
+  function ve(s) {
+    const r = tra(s);
+    if (r === s && typeof s === 'string' && VI.test(s) && !D.has(s) && !nguyen.has(s)) N.ghiThieu(s);
+    return r;
+  }
+
+  G.tv = function (s) { return G.LANG === 'vi' ? s : tra(s); };
+  // Không dịch: tên người chơi, tên tài khoản… (kẻo tên trùng một chữ trong từ điển bị đổi). Trả lại đúng chuỗi đưa vào.
+  G.kd = function (s) { if (G.LANG !== 'vi' && typeof s === 'string') { if (nguyen.size > 2000) nguyen.clear(); nguyen.add(s); } return s; };
+  G.t = function (s) {
+    const n = arguments.length;
+    if (G.LANG === 'vi') {
+      if (n < 2) return s;
+      const a = new Array(n - 1); for (let i = 1; i < n; i++) a[i - 1] = arguments[i];
+      return dien(s, a);
+    }
+    let r = D.get(s);
+    if (r === undefined) { r = tra(s); if (r === s && VI.test(String(s))) N.ghiThieu(String(s)); }
+    if (n < 2) return r;
+    const a = new Array(n - 1);
+    for (let i = 1; i < n; i++) { const v = arguments[i]; a[i - 1] = typeof v === 'string' ? tra(v) : v; } // tham số là tên (quái, vũ khí…) cũng được dịch
+    return dien(r, a);
+  };
+  G.tc = function (nguCanh, s) {
+    if (G.LANG === 'vi') return arguments.length > 2 ? dien(s, Array.prototype.slice.call(arguments, 2)) : s;
+    const k = nguCanh + '::' + s, r = D.has(k) ? D.get(k) : G.t(s);
+    return arguments.length > 2 ? dien(r, Array.prototype.slice.call(arguments, 2).map((v) => (typeof v === 'string' ? tra(v) : v))) : r;
+  };
+
+  G.LANG = docMay() || 'vi';
+  N.phien = 0;
+  try { if (G.LANG !== 'vi') document.documentElement.lang = G.LANG; } catch (e) { /* bỏ qua */ }
+})();
+
+// ===== js/ngon_ngu_en.js =====
+// Từ điển tiếng Anh (tệp này do tools/ngon-ngu/gop.py tạo từ tools/ngon-ngu/tu-dien/*.json — đừng sửa tay).
+(function () { if (window.G && G.ngonNgu) G.ngonNgu.them({
+"Ngôn ngữ": "Language"
+}); })();
 
 // ===== js/data.js =====
 // Dữ liệu game: hệ, vũ khí, hero, quái, vùng, trang bị. Mọi con số cân bằng nằm ở đây.
@@ -403,6 +546,7 @@
   const fit = document.getElementById('fit');
   G.wx = world.getContext('2d');
   G.ux = uiCv.getContext('2d');
+  if (G.ngonNgu) G.ngonNgu.gan(); // tiếng Anh: lệnh vẽ chữ tự tra từ điển (js/ngon_ngu.js); tiếng Việt: không đụng gì
   G.wx.imageSmoothingEnabled = false;
   G.scale = 1;
   // Độ nét gấp đôi: canvas thế giới có số điểm ảnh thật gấp G.NET lần (480x270 -> 960x540), nhưng mọi code vẫn vẽ theo
@@ -683,6 +827,7 @@
       if (raw) s = JSON.parse(raw);
     } catch (e) { s = null; bad = !!raw; if (bad) console.error('Linh Khí: bản lưu trên máy không đọc được', e); }
     G.save = G.fixSave(s);
+    if (G.ngonNgu) G.ngonNgu.tuBanLuu(); // ngôn ngữ theo máy; máy chưa chọn thì theo bản lưu
     if (raw && (bad || fixFailed)) {
       try {
         const ls = window.localStorage, old = ls.getItem(KEY_HONG);
@@ -706,6 +851,7 @@
       s.mats = arr3(s.mats); s.shards = arr3(s.shards);
       s.forge = G.clamp(Math.floor(num(s.forge, 1)), 1, G.FORGE_CAP.length - 1);
       s.sound = s.sound !== false;
+      if (s.lang !== 'en') delete s.lang; // ngôn ngữ: không có (mặc định) là tiếng Việt, 'en' là tiếng Anh (js/ngon_ngu.js)
       if (s.net !== 'thuong') delete s.net; // độ nét: không có (mặc định) là Cao, 'thuong' là Thường
       for (const k of ['stars', 'stars2', 'scars', 'tut']) s[k] = obj(s[k]);
       for (const k of ['stars', 'stars2']) for (const id in s[k]) s[k][id] = G.clamp(Math.floor(num(s[k][id], 1)), 1, 3);
@@ -821,7 +967,7 @@
   };
   ui.wrap = function (str, maxW, size, bold, tiny) {
     ui.font(size || 9, bold, tiny);
-    const words = String(str).split(' ');
+    const words = String(G.tv ? G.tv(str) : str).split(' ');
     const lines = [];
     let cur = '';
     for (const w of words) {
@@ -23549,6 +23695,25 @@ MA._xong();
   }
   T.pressFx = pressFx;
   const txt = (s, x, y, o) => ui.text(s, x, y, o);
+  // Chữ trên nút khi KHÔNG phải tiếng Việt: bản dịch dài hơn bề rộng nút thì thu cỡ chữ dần (không dưới 6,5), vẫn tràn thì cắt "…".
+  // Tiếng Việt không đi qua đây (nút y hệt như cũ). Trả về [chữ, cỡ].
+  function vua(label, w, size, bold) {
+    let s = G.tv(String(label)); const c = G.ux;
+    for (;;) {
+      ui.font(size, bold, true);
+      if (c.measureText(s).width <= w || size <= 6.5) break;
+      size = Math.max(6.5, size - 0.5);
+    }
+    if (c.measureText(s).width > w) { while (s.length > 2 && c.measureText(s + '…').width > w) s = s.slice(0, -1); s = s.trimEnd() + '…'; }
+    return [s, size];
+  }
+  T.vua = vua;
+  // Vẽ chữ nút: tiếng Việt vẽ thẳng, ngôn ngữ khác thì qua vua() để không tràn nút.
+  function nhan(label, cx, y, w, o) {
+    if (G.LANG === 'vi' || !G.tv) return txt(label, cx, y, o);
+    const q = vua(label, w, o.size, o.bold);
+    txt(q[0], cx, y + (q[1] - o.size) * 0.36, Object.assign({}, o, { size: q[1], tiny: true }));
+  }
 
   // ---------- nút to ----------
   // o: { primary: nút chính (đỏ đồng), sel: đang được chọn, danger: việc nguy hiểm, disabled, size, sub, subSize, pad: nới vùng chạm, color }
@@ -23575,8 +23740,8 @@ MA._xong();
     const dy = pressFx('b' + x + '|' + y + '|' + w + '|' + h, st === 1);
     put(cv, x, y + dy);
     const y0 = y + dy + (st === 1 ? 1 : 0), size = o.size || (h >= 26 ? 10 : 9), col = dis ? '#8fa49e' : C.ink;
-    if (label) txt(label, x + w / 2, y0 + h / 2 + size * 0.36 - (o.sub ? 3.5 : 0) - 0.3, { size, bold: true, align: 'center', color: col });
-    if (o.sub) txt(o.sub, x + w / 2, y0 + h / 2 + 7.5, { size: o.subSize || 7, align: 'center', color: dis ? '#8fa49e' : '#e8d9a8' });
+    if (label) nhan(label, x + w / 2, y0 + h / 2 + size * 0.36 - (o.sub ? 3.5 : 0) - 0.3, w - (w >= 70 && h >= 16 ? 16 : 6), { size, bold: true, align: 'center', color: col });
+    if (o.sub) nhan(o.sub, x + w / 2, y0 + h / 2 + 7.5, w - 6, { size: o.subSize || 7, bold: false, align: 'center', color: dis ? '#8fa49e' : '#e8d9a8' });
     if (o.dot) { const c = G.ux; c.beginPath(); c.arc(x + w - 3, y + 3, 3, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = C.dk; c.stroke(); }
     return !dis && clicked(x - pad, y - pad, w + pad * 2, h + pad * 2);
   };
@@ -23598,7 +23763,7 @@ MA._xong();
     const dy = pressFx('s' + x + '|' + y + '|' + w + '|' + h, st === 1);
     put(cv, x, y + dy);
     const size = o.size || 8;
-    if (label) txt(label, x + w / 2, y + dy + (st === 1 ? 1 : 0) + h / 2 + size * 0.36 - 0.3, { size, bold: true, align: 'center', color: dis ? '#8fa49e' : C.ink });
+    if (label) nhan(label, x + w / 2, y + dy + (st === 1 ? 1 : 0) + h / 2 + size * 0.36 - 0.3, w - 5, { size, bold: true, align: 'center', color: dis ? '#8fa49e' : C.ink });
     if (o.dot) { const c = G.ux; c.beginPath(); c.arc(x + w - 2, y + 2, 2.6, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.7; c.strokeStyle = C.dk; c.stroke(); }
     return !dis && clicked(x - pad, y - pad, w + pad * 2, h + pad * 2);
   };
@@ -23949,7 +24114,7 @@ MA._xong();
     if (kind === 'gold') return 'Vàng'; if (kind === 'ore') return 'Quặng'; if (kind === 'stone') return 'Đá tôi'; if (kind === 'xp') return 'Kinh nghiệm';
     const i = +kind.slice(-1);
     if (kind.indexOf('mat') === 0) return R[i] ? R[i].mat : 'Nguyên liệu';
-    return R[i] ? 'Mảnh trùm ' + R[i].bossName : 'Mảnh trùm';
+    return R[i] ? G.t('Mảnh trùm {0}', R[i].bossName) : 'Mảnh trùm';
   };
   // Vẽ biểu tượng tài nguyên, cao h (đơn vị giao diện), góc trên trái tại (x, y).
   T.resIcon = function (kind, x, y, h) {
@@ -23973,11 +24138,17 @@ MA._xong();
   };
   T.tipNow = () => (tip && G.time < tip.t ? tip.s : null);
   // Chữ có số lượng tài nguyên ("400 vàng", "+5 quặng", "2 mảnh Mộc Tinh"): thay tên tài nguyên bằng biểu tượng đứng sau con số.
-  let RES_RE = null, RES_MAP = null;
+  let RES_RE = null, RES_MAP = null, RES_LANG = null;
   function resRe() {
-    if (RES_RE) return RES_RE;
+    if (RES_RE && RES_LANG === G.LANG) return RES_RE;
+    RES_LANG = G.LANG; marked.clear();
     RES_MAP = { 'vàng': 'gold', 'quặng': 'ore', 'đá tôi': 'stone', 'kinh nghiệm': 'xp' };
     (G.REGIONS || []).forEach((r, i) => { RES_MAP[r.mat.toLowerCase()] = 'mat' + i; RES_MAP['mảnh ' + r.bossName.toLowerCase()] = 'shard' + i; });
+    if (G.LANG !== 'vi') {
+      // Ngôn ngữ khác: tên tài nguyên lấy từ từ điển (js/ngon_ngu.js), nhận cả dạng số nhiều có "s" ("3 whetstones").
+      const vi = RES_MAP; RES_MAP = {};
+      for (const k in vi) { const w = String(G.t(k)).toLowerCase(); RES_MAP[w] = vi[k]; RES_MAP[w + 's'] = vi[k]; }
+    }
     const words = Object.keys(RES_MAP).sort((a, b) => b.length - a.length).map((w) => w.replace(/ /g, '[ \\u00a0]'));
     RES_RE = new RegExp('([+~]?\\d[\\d.,]*)[ \\u00a0](' + words.join('|') + ')(?![\\wÀ-ỹ])', 'gi');
     return RES_RE;
@@ -23986,7 +24157,9 @@ MA._xong();
   // Đổi "số + tên tài nguyên" thành "số + một ký tự riêng" (mỗi loại tài nguyên một ký tự); lúc vẽ ký tự đó hiện thành biểu tượng.
   const KINDS = Object.keys(RES), PUA = 0xe000;
   const DIGIT = /\d/, marked = new Map();
+  if (G.ngonNgu) G.ngonNgu.khiDoi.push(() => { marked.clear(); RES_RE = null; }); // đổi ngôn ngữ: tên tài nguyên đổi theo
   function mark(str) {
+    if (G.LANG !== 'vi') { str = G.tv(str); if (RES_LANG !== G.LANG) resRe(); }
     if (!DIGIT.test(str)) return str; // không có số thì chắc chắn không có "số + tên tài nguyên"
     let out = marked.get(str);
     if (out === undefined) {
@@ -24068,8 +24241,8 @@ MA._xong();
         T.card(x, y + dy + (held ? 1 : 0), w, h, { sel: held || q.sel });
         c.globalAlpha = ga;
         const size = o.size || 9, col = o.disabled ? '#8fa49e' : C.ink;
-        if (label) txt(label, x + w / 2, y + h / 2 + size * 0.36 - (o.sub ? 4 : 0), { size, bold: true, align: 'center', color: col });
-        if (o.sub) txt(o.sub, x + w / 2, y + h / 2 + 8, { size: o.subSize || 7, align: 'center', color: o.disabled ? '#8fa49e' : '#e8d9a8' });
+        if (label) nhan(label, x + w / 2, y + h / 2 + size * 0.36 - (o.sub ? 4 : 0), w - 8, { size, bold: true, align: 'center', color: col });
+        if (o.sub) nhan(o.sub, x + w / 2, y + h / 2 + 8, w - 8, { size: o.subSize || 7, bold: false, align: 'center', color: o.disabled ? '#8fa49e' : '#e8d9a8' });
         return !o.disabled && clicked(x, y, w, h);
       }
       return T.btn(x, y, w, h, label, q);
@@ -24418,6 +24591,7 @@ MA._xong();
 
   // Cắt chữ cho vừa bề rộng (thêm "…"), ghi lại để bài kiểm tra xem có chữ nào tràn không
   function fit(s, w, size, bold) {
+    s = G.tv(s);
     ui.font(Math.max(6.5, size), bold);
     const c = G.ux;
     if (c.measureText(s).width > w) {
@@ -25557,6 +25731,7 @@ MA._xong();
   }
   // Cắt một dòng chữ cho vừa bề rộng wd (thêm "…"). Đo bằng ui.font nên theo đúng sàn cỡ chữ (V25).
   function cutLine(str, wd, size, bold) {
+    str = G.tv(str);
     str = String(str);
     ui.font(size, bold);
     const c = G.ux;
@@ -27586,6 +27761,10 @@ MA._xong();
     }
     if (!V.confirm) {
       if (T.btn(CX + 4, 200, 200, 26, 'Xoá tiến trình, chơi lại từ đầu', { size: 8, danger: true })) V.confirm = true;
+      // Ngôn ngữ (js/ngon_ngu.js): bấm là đổi ngay Tiếng Việt <-> English, nhớ theo máy và ghi vào bản lưu (trường lang)
+      if (G.ngonNgu && T.btn(CX + 208, 200, 92, 26, 'Ngôn ngữ', { size: 8, sub: G.LANG === 'en' ? 'English' : 'Tiếng Việt' })) {
+        G.ngonNgu.doi(); say(G.LANG === 'en' ? 'Language: English.' : 'Ngôn ngữ: Tiếng Việt.');
+      }
     } else {
       ui.text('Chắc chắn xoá hết? Không khôi phục được.', CX + 4, 204, { size: 8.5, color: WARN, bold: true });
       // "Thôi" nằm đúng chỗ nút xoá vừa bấm, để bấm đúp nhầm cũng không mất tiến trình
@@ -27666,7 +27845,7 @@ MA._xong();
   }
   // Bố cục màn chào (toạ độ 480x270), Giai đoạn 4 yêu cầu 2: logo > nút chính > nút phụ > dòng thông tin.
   // Nút nào chạy ngay trong lúc chạm (G.syncTaps) thì dùng đúng ô của nút vẽ.
-  const TL = { main: [140, 128, 200, 32], play: [160, 128, 160, 32], guest: [180, 168, 120, 20], row: [[128, 168, 108, 22], [244, 168, 108, 22]], info: 210 };
+  const TL = { main: [140, 128, 200, 32], play: [160, 128, 160, 32], guest: [180, 168, 120, 20], row: [[128, 168, 108, 22], [244, 168, 108, 22]], info: 210, lang: [430, 5, 44, 16] };
   G.titleLayout = TL; // để bài kiểm tra biết nút nằm ở đâu
   // Lớp tối dịu phía sau khối chữ và nút: hình elip tối dần ra mép (không phủ cả màn), để chữ không đè lên nhà cửa sáng.
   function titleVeil() {
@@ -27704,7 +27883,8 @@ MA._xong();
       if (g.need) { if (g.ok && (G.keyP.Enter || G.keyP.Space)) G.setScene(G.Village); return; } // vào bằng nút "Vào game"
       // không có mây: chạm chỗ trống để vào; chạm dải nút phụ thì không
       const r = TL.row, onBtns = G.downs.some((d) => d.y > r[0][1] - 4 && d.y < r[0][1] + r[0][3] + 4 && d.x > r[0][0] - 4 && d.x < r[1][0] + r[1][2] + 4);
-      if ((G.downs.length && !onBtns) || G.keyP.Enter || G.keyP.Space || G.keyP.KeyJ) G.setScene(G.Village);
+      const L = TL.lang, onLang = G.downs.some((d) => d.x > L[0] - 6 && d.y < L[1] + L[3] + 6); // nút EN / VI ở góc trên phải
+      if ((G.downs.length && !onBtns && !onLang) || G.keyP.Enter || G.keyP.Space || G.keyP.KeyJ) G.setScene(G.Village);
     },
     draw() {
       const c = G.wx, A = G.art;
@@ -27764,6 +27944,8 @@ MA._xong();
         const lines = ui.wrap(line, 260, 7); // hẹp để không chạm hình em bé bên trái
         lines.slice(0, 2).forEach((l, i) => ui.text(l, 240, TL.info + i * 9, { size: 7, align: 'center', color: V.tMsgT > 0 && V.tMsg ? GOLD : '#c9bfa8' }));
       }
+      // nút nhỏ đổi ngôn ngữ ngay ở màn mở đầu (chữ đang dùng sáng hơn); nhớ theo máy nên lần sau mở lại vẫn đúng
+      if (G.ngonNgu && T.sbtn(TL.lang[0], TL.lang[1], TL.lang[2], TL.lang[3], 'EN / VI', { size: 7.5, sel: G.LANG === 'en' })) G.ngonNgu.doi();
       // thông tin phụ: nhỏ, góc dưới bên phải, không tranh chỗ với nút
       ui.text('Phiên bản ' + (G.VERSION || '?'), 474, 264, { size: 7, align: 'right', color: 'rgba(232,222,196,0.85)', shadow: true });
     },
@@ -28032,6 +28214,7 @@ MA._xong();
   // ---------- tiện ích ----------
   // Cắt chữ cho vừa bề rộng, thêm dấu "…"
   function fit(s, w, size, bold) {
+    s = G.tv(s);
     ui.font(Math.max(6.5, size), bold);
     const c = G.ux;
     if (c.measureText(s).width <= w) return s;
@@ -28733,6 +28916,7 @@ MA._xong();
     return true;
   };
   function fit(s, w, size) {
+    s = G.tv(s);
     ui.font(size);
     const c = G.ux;
     if (c.measureText(s).width <= w) return s;
@@ -31765,7 +31949,9 @@ window.FIREBASE_CONFIG = {
     apply(s, at) {
       if (G.scene === G.StageScene) { this.pendingApply = { s, at }; return; }
       const snd = G.save ? G.save.sound : true, net = G.save ? G.save.net : undefined;
-      s.sound = snd; if (net) s.net = net; else delete s.net; // âm thanh, độ nét: giữ theo máy s.owner = this.user ? this.user.uid : s.owner; s.savedAt = at || s.savedAt || Date.now();
+      s.sound = snd; if (net) s.net = net; else delete s.net; // âm thanh, độ nét: giữ theo máy
+      if (G.LANG === 'en') s.lang = 'en'; else delete s.lang; // ngôn ngữ: giữ theo máy (js/ngon_ngu.js)
+      s.owner = this.user ? this.user.uid : s.owner; s.savedAt = at || s.savedAt || Date.now();
       G.save = s; lastBody = body(s); basePersist();
       this.pendingApply = null;
       try { if (G.villageScene && G.villageScene.checkNews) G.villageScene.checkNews(); } catch (e) { /* bỏ qua */ }

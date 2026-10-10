@@ -11,6 +11,7 @@
 
   // Cắt chữ cho vừa bề rộng (thêm "…"), ghi lại để bài kiểm tra xem có chữ nào tràn không
   function fit(s, w, size, bold) {
+    s = G.tv(s);
     ui.font(Math.max(6.5, size), bold);
     const c = G.ux;
     if (c.measureText(s).width > w) {

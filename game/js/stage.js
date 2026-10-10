@@ -1016,6 +1016,7 @@
   }
   // Cắt một dòng chữ cho vừa bề rộng wd (thêm "…"). Đo bằng ui.font nên theo đúng sàn cỡ chữ (V25).
   function cutLine(str, wd, size, bold) {
+    str = G.tv(str);
     str = String(str);
     ui.font(size, bold);
     const c = G.ux;

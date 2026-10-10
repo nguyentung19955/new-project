@@ -113,6 +113,25 @@
   }
   T.pressFx = pressFx;
   const txt = (s, x, y, o) => ui.text(s, x, y, o);
+  // Chữ trên nút khi KHÔNG phải tiếng Việt: bản dịch dài hơn bề rộng nút thì thu cỡ chữ dần (không dưới 6,5), vẫn tràn thì cắt "…".
+  // Tiếng Việt không đi qua đây (nút y hệt như cũ). Trả về [chữ, cỡ].
+  function vua(label, w, size, bold) {
+    let s = G.tv(String(label)); const c = G.ux;
+    for (;;) {
+      ui.font(size, bold, true);
+      if (c.measureText(s).width <= w || size <= 6.5) break;
+      size = Math.max(6.5, size - 0.5);
+    }
+    if (c.measureText(s).width > w) { while (s.length > 2 && c.measureText(s + '…').width > w) s = s.slice(0, -1); s = s.trimEnd() + '…'; }
+    return [s, size];
+  }
+  T.vua = vua;
+  // Vẽ chữ nút: tiếng Việt vẽ thẳng, ngôn ngữ khác thì qua vua() để không tràn nút.
+  function nhan(label, cx, y, w, o) {
+    if (G.LANG === 'vi' || !G.tv) return txt(label, cx, y, o);
+    const q = vua(label, w, o.size, o.bold);
+    txt(q[0], cx, y + (q[1] - o.size) * 0.36, Object.assign({}, o, { size: q[1], tiny: true }));
+  }
 
   // ---------- nút to ----------
   // o: { primary: nút chính (đỏ đồng), sel: đang được chọn, danger: việc nguy hiểm, disabled, size, sub, subSize, pad: nới vùng chạm, color }
@@ -139,8 +158,8 @@
     const dy = pressFx('b' + x + '|' + y + '|' + w + '|' + h, st === 1);
     put(cv, x, y + dy);
     const y0 = y + dy + (st === 1 ? 1 : 0), size = o.size || (h >= 26 ? 10 : 9), col = dis ? '#8fa49e' : C.ink;
-    if (label) txt(label, x + w / 2, y0 + h / 2 + size * 0.36 - (o.sub ? 3.5 : 0) - 0.3, { size, bold: true, align: 'center', color: col });
-    if (o.sub) txt(o.sub, x + w / 2, y0 + h / 2 + 7.5, { size: o.subSize || 7, align: 'center', color: dis ? '#8fa49e' : '#e8d9a8' });
+    if (label) nhan(label, x + w / 2, y0 + h / 2 + size * 0.36 - (o.sub ? 3.5 : 0) - 0.3, w - (w >= 70 && h >= 16 ? 16 : 6), { size, bold: true, align: 'center', color: col });
+    if (o.sub) nhan(o.sub, x + w / 2, y0 + h / 2 + 7.5, w - 6, { size: o.subSize || 7, bold: false, align: 'center', color: dis ? '#8fa49e' : '#e8d9a8' });
     if (o.dot) { const c = G.ux; c.beginPath(); c.arc(x + w - 3, y + 3, 3, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = C.dk; c.stroke(); }
     return !dis && clicked(x - pad, y - pad, w + pad * 2, h + pad * 2);
   };
@@ -162,7 +181,7 @@
     const dy = pressFx('s' + x + '|' + y + '|' + w + '|' + h, st === 1);
     put(cv, x, y + dy);
     const size = o.size || 8;
-    if (label) txt(label, x + w / 2, y + dy + (st === 1 ? 1 : 0) + h / 2 + size * 0.36 - 0.3, { size, bold: true, align: 'center', color: dis ? '#8fa49e' : C.ink });
+    if (label) nhan(label, x + w / 2, y + dy + (st === 1 ? 1 : 0) + h / 2 + size * 0.36 - 0.3, w - 5, { size, bold: true, align: 'center', color: dis ? '#8fa49e' : C.ink });
     if (o.dot) { const c = G.ux; c.beginPath(); c.arc(x + w - 2, y + 2, 2.6, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.7; c.strokeStyle = C.dk; c.stroke(); }
     return !dis && clicked(x - pad, y - pad, w + pad * 2, h + pad * 2);
   };
@@ -513,7 +532,7 @@
     if (kind === 'gold') return 'Vàng'; if (kind === 'ore') return 'Quặng'; if (kind === 'stone') return 'Đá tôi'; if (kind === 'xp') return 'Kinh nghiệm';
     const i = +kind.slice(-1);
     if (kind.indexOf('mat') === 0) return R[i] ? R[i].mat : 'Nguyên liệu';
-    return R[i] ? 'Mảnh trùm ' + R[i].bossName : 'Mảnh trùm';
+    return R[i] ? G.t('Mảnh trùm {0}', R[i].bossName) : 'Mảnh trùm';
   };
   // Vẽ biểu tượng tài nguyên, cao h (đơn vị giao diện), góc trên trái tại (x, y).
   T.resIcon = function (kind, x, y, h) {
@@ -537,11 +556,17 @@
   };
   T.tipNow = () => (tip && G.time < tip.t ? tip.s : null);
   // Chữ có số lượng tài nguyên ("400 vàng", "+5 quặng", "2 mảnh Mộc Tinh"): thay tên tài nguyên bằng biểu tượng đứng sau con số.
-  let RES_RE = null, RES_MAP = null;
+  let RES_RE = null, RES_MAP = null, RES_LANG = null;
   function resRe() {
-    if (RES_RE) return RES_RE;
+    if (RES_RE && RES_LANG === G.LANG) return RES_RE;
+    RES_LANG = G.LANG; marked.clear();
     RES_MAP = { 'vàng': 'gold', 'quặng': 'ore', 'đá tôi': 'stone', 'kinh nghiệm': 'xp' };
     (G.REGIONS || []).forEach((r, i) => { RES_MAP[r.mat.toLowerCase()] = 'mat' + i; RES_MAP['mảnh ' + r.bossName.toLowerCase()] = 'shard' + i; });
+    if (G.LANG !== 'vi') {
+      // Ngôn ngữ khác: tên tài nguyên lấy từ từ điển (js/ngon_ngu.js), nhận cả dạng số nhiều có "s" ("3 whetstones").
+      const vi = RES_MAP; RES_MAP = {};
+      for (const k in vi) { const w = String(G.t(k)).toLowerCase(); RES_MAP[w] = vi[k]; RES_MAP[w + 's'] = vi[k]; }
+    }
     const words = Object.keys(RES_MAP).sort((a, b) => b.length - a.length).map((w) => w.replace(/ /g, '[ \\u00a0]'));
     RES_RE = new RegExp('([+~]?\\d[\\d.,]*)[ \\u00a0](' + words.join('|') + ')(?![\\wÀ-ỹ])', 'gi');
     return RES_RE;
@@ -550,7 +575,9 @@
   // Đổi "số + tên tài nguyên" thành "số + một ký tự riêng" (mỗi loại tài nguyên một ký tự); lúc vẽ ký tự đó hiện thành biểu tượng.
   const KINDS = Object.keys(RES), PUA = 0xe000;
   const DIGIT = /\d/, marked = new Map();
+  if (G.ngonNgu) G.ngonNgu.khiDoi.push(() => { marked.clear(); RES_RE = null; }); // đổi ngôn ngữ: tên tài nguyên đổi theo
   function mark(str) {
+    if (G.LANG !== 'vi') { str = G.tv(str); if (RES_LANG !== G.LANG) resRe(); }
     if (!DIGIT.test(str)) return str; // không có số thì chắc chắn không có "số + tên tài nguyên"
     let out = marked.get(str);
     if (out === undefined) {
@@ -632,8 +659,8 @@
         T.card(x, y + dy + (held ? 1 : 0), w, h, { sel: held || q.sel });
         c.globalAlpha = ga;
         const size = o.size || 9, col = o.disabled ? '#8fa49e' : C.ink;
-        if (label) txt(label, x + w / 2, y + h / 2 + size * 0.36 - (o.sub ? 4 : 0), { size, bold: true, align: 'center', color: col });
-        if (o.sub) txt(o.sub, x + w / 2, y + h / 2 + 8, { size: o.subSize || 7, align: 'center', color: o.disabled ? '#8fa49e' : '#e8d9a8' });
+        if (label) nhan(label, x + w / 2, y + h / 2 + size * 0.36 - (o.sub ? 4 : 0), w - 8, { size, bold: true, align: 'center', color: col });
+        if (o.sub) nhan(o.sub, x + w / 2, y + h / 2 + 8, w - 8, { size: o.subSize || 7, bold: false, align: 'center', color: o.disabled ? '#8fa49e' : '#e8d9a8' });
         return !o.disabled && clicked(x, y, w, h);
       }
       return T.btn(x, y, w, h, label, q);

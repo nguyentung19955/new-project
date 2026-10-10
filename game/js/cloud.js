@@ -177,7 +177,9 @@
     apply(s, at) {
       if (G.scene === G.StageScene) { this.pendingApply = { s, at }; return; }
       const snd = G.save ? G.save.sound : true, net = G.save ? G.save.net : undefined;
-      s.sound = snd; if (net) s.net = net; else delete s.net; // âm thanh, độ nét: giữ theo máy s.owner = this.user ? this.user.uid : s.owner; s.savedAt = at || s.savedAt || Date.now();
+      s.sound = snd; if (net) s.net = net; else delete s.net; // âm thanh, độ nét: giữ theo máy
+      if (G.LANG === 'en') s.lang = 'en'; else delete s.lang; // ngôn ngữ: giữ theo máy (js/ngon_ngu.js)
+      s.owner = this.user ? this.user.uid : s.owner; s.savedAt = at || s.savedAt || Date.now();
       G.save = s; lastBody = body(s); basePersist();
       this.pendingApply = null;
       try { if (G.villageScene && G.villageScene.checkNews) G.villageScene.checkNews(); } catch (e) { /* bỏ qua */ }

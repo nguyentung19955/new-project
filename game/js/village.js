@@ -710,6 +710,10 @@
     }
     if (!V.confirm) {
       if (T.btn(CX + 4, 200, 200, 26, 'Xoá tiến trình, chơi lại từ đầu', { size: 8, danger: true })) V.confirm = true;
+      // Ngôn ngữ (js/ngon_ngu.js): bấm là đổi ngay Tiếng Việt <-> English, nhớ theo máy và ghi vào bản lưu (trường lang)
+      if (G.ngonNgu && T.btn(CX + 208, 200, 92, 26, 'Ngôn ngữ', { size: 8, sub: G.LANG === 'en' ? 'English' : 'Tiếng Việt' })) {
+        G.ngonNgu.doi(); say(G.LANG === 'en' ? 'Language: English.' : 'Ngôn ngữ: Tiếng Việt.');
+      }
     } else {
       ui.text('Chắc chắn xoá hết? Không khôi phục được.', CX + 4, 204, { size: 8.5, color: WARN, bold: true });
       // "Thôi" nằm đúng chỗ nút xoá vừa bấm, để bấm đúp nhầm cũng không mất tiến trình
@@ -790,7 +794,7 @@
   }
   // Bố cục màn chào (toạ độ 480x270), Giai đoạn 4 yêu cầu 2: logo > nút chính > nút phụ > dòng thông tin.
   // Nút nào chạy ngay trong lúc chạm (G.syncTaps) thì dùng đúng ô của nút vẽ.
-  const TL = { main: [140, 128, 200, 32], play: [160, 128, 160, 32], guest: [180, 168, 120, 20], row: [[128, 168, 108, 22], [244, 168, 108, 22]], info: 210 };
+  const TL = { main: [140, 128, 200, 32], play: [160, 128, 160, 32], guest: [180, 168, 120, 20], row: [[128, 168, 108, 22], [244, 168, 108, 22]], info: 210, lang: [430, 5, 44, 16] };
   G.titleLayout = TL; // để bài kiểm tra biết nút nằm ở đâu
   // Lớp tối dịu phía sau khối chữ và nút: hình elip tối dần ra mép (không phủ cả màn), để chữ không đè lên nhà cửa sáng.
   function titleVeil() {
@@ -828,7 +832,8 @@
       if (g.need) { if (g.ok && (G.keyP.Enter || G.keyP.Space)) G.setScene(G.Village); return; } // vào bằng nút "Vào game"
       // không có mây: chạm chỗ trống để vào; chạm dải nút phụ thì không
       const r = TL.row, onBtns = G.downs.some((d) => d.y > r[0][1] - 4 && d.y < r[0][1] + r[0][3] + 4 && d.x > r[0][0] - 4 && d.x < r[1][0] + r[1][2] + 4);
-      if ((G.downs.length && !onBtns) || G.keyP.Enter || G.keyP.Space || G.keyP.KeyJ) G.setScene(G.Village);
+      const L = TL.lang, onLang = G.downs.some((d) => d.x > L[0] - 6 && d.y < L[1] + L[3] + 6); // nút EN / VI ở góc trên phải
+      if ((G.downs.length && !onBtns && !onLang) || G.keyP.Enter || G.keyP.Space || G.keyP.KeyJ) G.setScene(G.Village);
     },
     draw() {
       const c = G.wx, A = G.art;
@@ -888,6 +893,8 @@
         const lines = ui.wrap(line, 260, 7); // hẹp để không chạm hình em bé bên trái
         lines.slice(0, 2).forEach((l, i) => ui.text(l, 240, TL.info + i * 9, { size: 7, align: 'center', color: V.tMsgT > 0 && V.tMsg ? GOLD : '#c9bfa8' }));
       }
+      // nút nhỏ đổi ngôn ngữ ngay ở màn mở đầu (chữ đang dùng sáng hơn); nhớ theo máy nên lần sau mở lại vẫn đúng
+      if (G.ngonNgu && T.sbtn(TL.lang[0], TL.lang[1], TL.lang[2], TL.lang[3], 'EN / VI', { size: 7.5, sel: G.LANG === 'en' })) G.ngonNgu.doi();
       // thông tin phụ: nhỏ, góc dưới bên phải, không tranh chỗ với nút
       ui.text('Phiên bản ' + (G.VERSION || '?'), 474, 264, { size: 7, align: 'right', color: 'rgba(232,222,196,0.85)', shadow: true });
     },

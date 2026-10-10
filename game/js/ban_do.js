@@ -211,6 +211,7 @@
     return true;
   };
   function fit(s, w, size) {
+    s = G.tv(s);
     ui.font(size);
     const c = G.ux;
     if (c.measureText(s).width <= w) return s;

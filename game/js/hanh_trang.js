@@ -20,6 +20,7 @@
   // ---------- tiện ích ----------
   // Cắt chữ cho vừa bề rộng, thêm dấu "…"
   function fit(s, w, size, bold) {
+    s = G.tv(s);
     ui.font(Math.max(6.5, size), bold);
     const c = G.ux;
     if (c.measureText(s).width <= w) return s;

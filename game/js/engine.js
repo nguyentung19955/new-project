@@ -7,6 +7,7 @@
   const fit = document.getElementById('fit');
   G.wx = world.getContext('2d');
   G.ux = uiCv.getContext('2d');
+  if (G.ngonNgu) G.ngonNgu.gan(); // tiếng Anh: lệnh vẽ chữ tự tra từ điển (js/ngon_ngu.js); tiếng Việt: không đụng gì
   G.wx.imageSmoothingEnabled = false;
   G.scale = 1;
   // Độ nét gấp đôi: canvas thế giới có số điểm ảnh thật gấp G.NET lần (480x270 -> 960x540), nhưng mọi code vẫn vẽ theo
@@ -287,6 +288,7 @@
       if (raw) s = JSON.parse(raw);
     } catch (e) { s = null; bad = !!raw; if (bad) console.error('Linh Khí: bản lưu trên máy không đọc được', e); }
     G.save = G.fixSave(s);
+    if (G.ngonNgu) G.ngonNgu.tuBanLuu(); // ngôn ngữ theo máy; máy chưa chọn thì theo bản lưu
     if (raw && (bad || fixFailed)) {
       try {
         const ls = window.localStorage, old = ls.getItem(KEY_HONG);
@@ -310,6 +312,7 @@
       s.mats = arr3(s.mats); s.shards = arr3(s.shards);
       s.forge = G.clamp(Math.floor(num(s.forge, 1)), 1, G.FORGE_CAP.length - 1);
       s.sound = s.sound !== false;
+      if (s.lang !== 'en') delete s.lang; // ngôn ngữ: không có (mặc định) là tiếng Việt, 'en' là tiếng Anh (js/ngon_ngu.js)
       if (s.net !== 'thuong') delete s.net; // độ nét: không có (mặc định) là Cao, 'thuong' là Thường
       for (const k of ['stars', 'stars2', 'scars', 'tut']) s[k] = obj(s[k]);
       for (const k of ['stars', 'stars2']) for (const id in s[k]) s[k][id] = G.clamp(Math.floor(num(s[k][id], 1)), 1, 3);
@@ -425,7 +428,7 @@
   };
   ui.wrap = function (str, maxW, size, bold, tiny) {
     ui.font(size || 9, bold, tiny);
-    const words = String(str).split(' ');
+    const words = String(G.tv ? G.tv(str) : str).split(' ');
     const lines = [];
     let cur = '';
     for (const w of words) {

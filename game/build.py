@@ -92,7 +92,7 @@ def main():
 CUSTOM = os.path.join(ROOT, 'art', 'custom')
 TOOL = os.path.join(os.path.dirname(ROOT), 'tools', 'xuong-sprite')
 # Mã game mà công cụ cần để vẽ hình gốc (quái, em bé, nền phòng) và vẽ hình tự làm giống hệt trong game.
-TOOL_GAME_JS = ['js/data.js', 'js/art.js', 'js/weapon_art.js', 'js/hero_art.js', 'js/hero_tinhlinh.js', 'js/monster_art.js', 'js/room_art.js', 'js/outfit.js', 'js/village_scene.js', 'js/sprite_custom.js', 'js/mapgen.js', 'js/minimap.js']  # mapgen + minimap: trang Tách Giao Diện vẽ thử bản đồ bằng đúng code game
+TOOL_GAME_JS = ['js/ngon_ngu.js', 'js/data.js', 'js/art.js', 'js/weapon_art.js', 'js/hero_art.js', 'js/hero_tinhlinh.js', 'js/monster_art.js', 'js/room_art.js', 'js/outfit.js', 'js/village_scene.js', 'js/sprite_custom.js', 'js/mapgen.js', 'js/minimap.js']  # mapgen + minimap: trang Tách Giao Diện vẽ thử bản đồ bằng đúng code game
 TOOL_JS = ['xu-ly-anh.js', 'khung.js', 'tu-doan.js', 'do.js', 'giao-dien.js']
 RUNTIME_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'vung', 'thay_cho', 'tam', 'khung_rong', 'khung_cao', 'goc', 'rong', 'cao', 'bong', 'dong_tac',
                 'anh', 'vu_khi', 'trang_phuc', 'vat_pham', 'dung_yen', 'nhun', 'neo', 'khoac_do',
@@ -186,7 +186,8 @@ def build_tool(game_full):
         with open(os.path.join(src, n), encoding='utf-8') as f:
             return f.read()
     page = rd('cong-cu.html')
-    game = ''.join('// ===== game/' + n + ' =====\n' + read(n).rstrip() + '\n' for n in TOOL_GAME_JS)
+    # js/ngon_ngu.js đi trước để mã game gọi được G.t; công cụ luôn dùng tiếng Việt (không kèm từ điển).
+    game = ''.join('// ===== game/' + n + ' =====\n' + read(n).rstrip() + '\n' + ("window.G.LANG = 'vi';\n" if n == 'js/ngon_ngu.js' else '') for n in TOOL_GAME_JS)
     tool = ''.join('// ===== ' + n + ' =====\n' + rd(n).rstrip() + '\n' for n in TOOL_JS)
     for thu, dest in (('thu.html', os.path.join(TOOL, 'index.html')), ('xuong-sprite-thu.html', os.path.join(DIST, 'xuong-sprite.html'))):
         js = ('// Xưởng Sprite (tools/xuong-sprite). TỆP ĐƯỢC TẠO BỞI game/build.py, đừng sửa tay: sửa ở tools/xuong-sprite/nguon/.\n'
