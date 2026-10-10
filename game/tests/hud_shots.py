@@ -32,7 +32,7 @@ window.T = {
   cloud(state) {
     const old = G.cloud || {};
     G.cloud = Object.assign(Object.create(old), {
-      why: '', status: 'ok', online: () => true, isGuest: () => state !== 'in', who: () => 'Tùng Nguyễn', isAdmin: () => false,
+      why: '', status: state === 'err' ? 'error' : 'ok', online: () => state !== 'err', isGuest: () => state !== 'in', who: () => 'Tùng Nguyễn', isAdmin: () => false,
       label: () => state === 'in' ? 'Đã lưu lên mây' : 'Đang kết nối lưu mây', gMsg: '', google: () => new Promise(() => {}),
     });
   },
@@ -63,6 +63,8 @@ def main():
             shot('dang-nhap-khong-may', 900)
             pg.evaluate("() => { T.cloud('need'); }")
             shot('dang-nhap-google')
+            pg.evaluate("() => { T.cloud('err'); }")
+            shot('dang-nhap-loi-may')
             pg.evaluate("() => { T.cloud('in'); }")
             shot('dang-nhap-da-vao')
             # trong ải: phòng quái thường

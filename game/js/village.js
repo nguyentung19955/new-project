@@ -835,7 +835,7 @@
         if (T.btn(P[0], P[1], P[2], P[3], 'Vào game ▶', { size: 12, primary: true })) G.setScene(G.Village);
       } else {
         const loading = !CL.online(), busy = !!V.gBusy;
-        if (T.btn(M[0], M[1], M[2], M[3], loading ? 'Đang kết nối…' : busy ? 'Đang mở Google…' : 'Đăng nhập Google để vào', { size: 11, primary: !loading && !busy, disabled: loading || busy })) titleLogin(CL);
+        if (T.btn(M[0], M[1], M[2], M[3], loading ? (CL.status === 'error' ? 'Chưa kết nối được mây' : 'Đang kết nối…') : busy ? 'Đang mở Google…' : 'Đăng nhập Google để vào', { size: 11, primary: !loading && !busy, disabled: loading || busy })) titleLogin(CL);
         if (!loading && !busy) googleMark(M[0] + 17, M[1] + M[3] / 2);
         // mây kết nối hỏng quá 10 giây: cho chơi tạm, chỉ lưu trên máy, để không ai bị kẹt ngoài cửa
         V.tWait = loading ? (V.tWait || 0) + 1 / 60 : 0;
@@ -851,7 +851,7 @@
         if (CL.gMsg) { V.tMsg = CL.gMsg; V.tMsgT = 8; CL.gMsg = ''; }
         if (V.tMsgT > 0) V.tMsgT -= 1 / 60;
         const line = V.tMsgT > 0 && V.tMsg ? V.tMsg : need && !ok ? 'Đăng nhập Google để lưu tiến trình và lên Bảng vàng. ' + CL.label() : CL.label();
-        const lines = ui.wrap(line, 300, 7);
+        const lines = ui.wrap(line, 260, 7); // hẹp để không chạm hình em bé bên trái
         lines.slice(0, 2).forEach((l, i) => ui.text(l, 240, TL.info + i * 9, { size: 7, align: 'center', color: V.tMsgT > 0 && V.tMsg ? GOLD : '#c9bfa8' }));
       }
       // thông tin phụ: nhỏ, góc dưới bên phải, không tranh chỗ với nút
