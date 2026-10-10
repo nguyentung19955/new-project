@@ -6468,7 +6468,7 @@ window.XS_THU_URL = "thu.html";
 
   G.weaponArt = {
     draw: draw, tipLen: tipLen, icon: icon, name: name, fullName: fullName, familyName: familyName, size: size, fromWeapon: fromWeapon,
-    FAMILIES: FAM, RARITY: RARITY, STAGES: STAGES, BRANCHES: BRANCHES, TYPES: TYPES, TYPE_NAMES: TYPE_NAMES, WORDS: WORDS, REST: REST,
+    FAMILIES: FAM, RARITY: RARITY, ELP: ELP, STAGES: STAGES, BRANCHES: BRANCHES, TYPES: TYPES, TYPE_NAMES: TYPE_NAMES, WORDS: WORDS, REST: REST,
     clearCache: function () { cache.clear(); },
     _Spr: Spr, _Frame: Frame, _pal: { INK: INK, RED: RED, GRN: GRN, BLU: BLU, ORG: ORG, GOLD: GOLD, WD: WD, STEEL: STEEL, WHT: WHT }, _tone: { Dk: Dk, Md: Md, Lt: Lt },
   };
@@ -14883,7 +14883,7 @@ MA._xong();
       const v = tep.vu_khi || {};
       if (!/^(sword|bow|spear|hammer)$/.test(v.loai)) throw new Error('loại vũ khí sai');
       sp.vk = { loai: v.loai, dong: Math.max(0, Math.min(9, v.dong | 0)), he: /^(fire|poison|ice)$/.test(v.he) ? v.he : null, gd: v.gd ? Math.max(1, Math.min(3, v.gd | 0)) : null,
-        cam: P2(v.cam) || [0, 0], mui: P2(v.mui) || [0, -1], day: Array.isArray(v.day) && P2(v.day[0]) && P2(v.day[1]) ? [P2(v.day[0]), P2(v.day[1])] : null };
+        bienThe: /^vk-[a-z]+-\d+-(fire|poison|ice)(-\d)?$/.test(tep.ma), cam: P2(v.cam) || [0, 0], mui: P2(v.mui) || [0, -1], day: Array.isArray(v.day) && P2(v.day[0]) && P2(v.day[1]) ? [P2(v.day[0]), P2(v.day[1])] : null };
     } else if (doi === 'trang-phuc') {
       const t = tep.trang_phuc || {};
       if (!/^(hats|robes|backs|hands|masks|wings)$/.test(t.o) || typeof t.look !== 'string') throw new Error('ô trang phục sai');
@@ -14927,56 +14927,185 @@ MA._xong();
     const b = 'vk-' + o.type + '-' + (o.family | 0), st = o.stage | 0;
     return (o.branch && st && doSan(b + '-' + o.branch + '-' + st)) || (o.branch && st && doSan(b + '-' + o.branch)) || doSan(b);
   };
-  // Hình vũ khí xoay góc a (độ, 0 chĩa về trước, -90 chĩa lên): điểm cầm ở gốc. Nhớ theo góc (bước 5 độ) và bậc.
-  // Trả về { cv, dx, dy, w, h, c, s }: dx, dy, w, h theo điểm ảnh GAME; cv có số điểm ảnh gấp net lần (vẽ bằng drawImage có cỡ đích).
-  function xoayVk(sp, a, rar) {
+  // ----- BIẾN ĐỔI THEO HỆ (Lửa, Độc, Băng) cho vũ khí ảnh AI -----
+  // Bản vẽ code đổi hình theo nhánh và giai đoạn (js/weapon_art.js). Ảnh AI chỉ có một hình, nên game tự biến đổi:
+  //  - Giai đoạn 1 (Mầm): giữ màu gốc, thêm hạt hiệu ứng nhẹ dọc thân (Lửa: tàn lửa bay lên; Độc: giọt nọc rơi, bọt; Băng: lấp lánh, hơi sương).
+  //  - Giai đoạn 2 (Thành hình): nhuộm lưỡi/thân theo bảng màu hệ (giữ sáng tối ảnh gốc, pha 45%, cán gần tay cầm không nhuộm), viền ngoài đổi màu hệ.
+  //  - Giai đoạn 3 (Thức tỉnh): nhuộm 70%, quầng sáng hệ, hạt dày; Lửa có ngọn lửa liếm dọc lưỡi.
+  // Có ảnh biến thể riêng (vk-<loại>-<dòng>-<nhánh>[-<gđ>]) thì không nhuộm, chỉ thêm hạt và quầng sáng.
+  const ELP_DU = { // bản dự phòng khi chưa có G.weaponArt.ELP (cùng màu weapon_art.js)
+    fire: { B: ['#8a1c12', '#e8492a', '#ffb347'], ol: '#4a1010', glow: '#ffc64c', hot: '#fff0b0', fx: ['#ffb347', '#ffd27a', '#ff8a3a'] },
+    poison: { B: ['#1d5a2a', '#49a83c', '#b5ea6a'], B2: ['#3d1d55', '#6b3a8f', '#a56fd0'], ol: '#12331a', glow: '#b5ea6a', hot: '#e6f58a', fx: ['#b5ea6a', '#a56fd0', '#8fd070'] },
+    ice: { B: ['#2f62ad', '#7fc4f2', '#eafcff'], ol: '#1c3a70', glow: '#bfe9ff', hot: '#ffffff', fx: ['#ffffff', '#bfe9ff', '#9fd0f5'] },
+  };
+  const elp = (el) => (G.weaponArt && G.weaponArt.ELP && G.weaponArt.ELP[el]) || ELP_DU[el];
+  const HE_T0 = { sword: 0.2, spear: 0.55, hammer: 0.45, bow: 0.16 }; // từ đâu (tỉ lệ dọc thân tính từ tay cầm) thì bắt đầu nhuộm
+  const HE_PHA = [0, 0, 0.45, 0.7], HE_K = [1, 1, 1.05, 1.1];
+  const rgb = (col) => { const n = parseInt(col.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+  // Hệ đang hiện của món (null: bản thường). nhuom: có nhuộm ảnh không (ảnh thường, giai đoạn >= 2).
+  function heCua(sp, o) {
+    const el = o && /^(fire|poison|ice)$/.test(o.branch) ? o.branch : null, st = el ? clamp(o.stage | 0, 0, 3) : 0;
+    if (!el || !st) return null;
+    return { el, st, nhuom: !sp.vk.bienThe && st >= 2 };
+  }
+  SC.heCua = heCua;
+  // Đo thân vũ khí một lần: độ nhuộm từng điểm ảnh thật (0 ở cán, 1 ở lưỡi), điểm viền ngoài, các điểm dọc lưỡi để rải hạt.
+  function hinhVk(sp) {
+    if (sp.hh) return sp.hh;
+    const V = sp.vk, N = sp.net || 1, pw = sp.pw, ph = sp.ph, px = sp.px, bow = V.loai === 'bow';
+    const th = Math.atan2(V.mui[1] - V.cam[1], V.mui[0] - V.cam[0]), ct = Math.cos(th), st = Math.sin(th);
+    const T = new Float32Array(pw * ph);
+    let mx = 1e-6;
+    for (let j = 0; j < ph; j++) for (let i = 0; i < pw; i++) {
+      if (!px[j * pw + i]) continue;
+      const u = (i + 0.5) / N - V.cam[0], v = (j + 0.5) / N - V.cam[1], a = bow ? Math.abs(-u * st + v * ct) : u * ct + v * st;
+      T[j * pw + i] = a; if (a > mx) mx = a;
+    }
+    const t0 = HE_T0[V.loai] || 0.2, w = new Float32Array(pw * ph), bien = new Uint8Array(pw * ph), ngan = [];
+    const rong = (i, j) => i < 0 || j < 0 || i >= pw || j >= ph || !px[j * pw + i];
+    const NB = 18, xo = new Array(NB).fill(null);
+    for (let j = 0; j < ph; j++) for (let i = 0; i < pw; i++) {
+      const k = j * pw + i; if (!px[k]) continue;
+      const a = T[k] / mx, q = clamp((a - t0) / 0.15, 0, 1);
+      w[k] = q * q * (3 - 2 * q);
+      if (rong(i - 1, j) || rong(i + 1, j) || rong(i, j - 1) || rong(i, j + 1)) {
+        bien[k] = 1;
+        if (w[k] > 0.5) { // điểm viền trên lưỡi: chia theo dọc thân, mỗi khúc giữ một điểm (xen kẽ hai mép)
+          const b = Math.min(NB - 1, Math.floor(((a - t0) / (1 - t0 + 1e-6)) * NB)), sc = ((i * 7 + j * 13) % 17) / 17;
+          if (b >= 0 && (!xo[b] || sc > xo[b][2])) xo[b] = [(i + 0.5) / N, (j + 0.5) / N, sc];
+        }
+      }
+    }
+    for (const p of xo) if (p) ngan.push([p[0], p[1]]);
+    if (!ngan.length) ngan.push([V.mui[0], V.mui[1]]);
+    return (sp.hh = { w, bien, pts: ngan });
+  }
+  // Màu từng điểm ảnh thật sau khi nhuộm theo hệ el, giai đoạn st (nhớ trên sp.mau).
+  function pxHe(sp, el, st) {
+    const key = 'he|' + el + st; if (sp.mau[key]) return sp.mau[key];
+    const H = hinhVk(sp), E = elp(el), B = E.B.map(rgb), OL = rgb(E.ol), pha = HE_PHA[st], src = sp.px, out = new Array(src.length);
+    for (let k = 0; k < src.length; k++) {
+      const col = src[k]; if (!col) { out[k] = null; continue; }
+      const a = pha * H.w[k]; if (a <= 0.01) { out[k] = col; continue; }
+      const o = rgb(col), L = (0.3 * o[0] + 0.59 * o[1] + 0.11 * o[2]) / 255;
+      let m;
+      if (H.bien[k] && L < 0.3) m = OL; // viền ngoài: màu viền của hệ
+      else {
+        const l = clamp((L - 0.08) / 0.8, 0, 1), A = l < 0.5 ? B[0] : B[1], C = l < 0.5 ? B[1] : B[2], f = l < 0.5 ? l * 2 : (l - 0.5) * 2;
+        m = [A[0] + (C[0] - A[0]) * f, A[1] + (C[1] - A[1]) * f, A[2] + (C[2] - A[2]) * f];
+      }
+      const b = H.bien[k] && L < 0.3 ? Math.min(1, H.w[k]) : a;
+      out[k] = hex2(Math.round(o[0] + (m[0] - o[0]) * b), Math.round(o[1] + (m[1] - o[1]) * b), Math.round(o[2] + (m[2] - o[2]) * b));
+    }
+    return (sp.mau[key] = out);
+  }
+  // Hình vũ khí xoay góc a (độ, 0 chĩa về trước, -90 chĩa lên): điểm cầm ở gốc. Nhớ theo góc (bước 5 độ), bậc, hệ và giai đoạn.
+  // Trả về { cv, dx, dy, w, h, c, s, k, glow }: dx, dy, w, h theo điểm ảnh GAME; cv có số điểm ảnh gấp net lần (vẽ bằng drawImage có cỡ đích).
+  // k: hệ số phóng (giai đoạn cao to hơn chút, như bản code); glow: quầng sáng hệ (giai đoạn 3).
+  function xoayVk(sp, a, rar, he) {
     a = Math.round(a / 5) * 5;
-    const k = a + '|' + rar; let r = sp.xoay.get(k); if (r) return r;
+    const k = a + '|' + rar + (he ? '|' + he.el + he.st : ''); let r = sp.xoay.get(k); if (r) return r;
     const V = sp.vk, N = sp.net || 1, w = sp.rong, h = sp.cao, pw = sp.pw || w, ph = sp.ph || h, th = Math.atan2(V.mui[1] - V.cam[1], V.mui[0] - V.cam[0]), q = a * D2R - th, c = Math.cos(q), s = Math.sin(q);
+    const nh = he && he.nhuom, K = nh ? HE_K[he.st] : 1, src = nh ? pxHe(sp, he.el, he.st) : sp.px;
     let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
-    for (const p of [[0, 0], [w, 0], [0, h], [w, h]]) { const u = p[0] - V.cam[0], v = p[1] - V.cam[1], X = u * c - v * s, Y = u * s + v * c; x0 = Math.min(x0, X); y0 = Math.min(y0, Y); x1 = Math.max(x1, X); y1 = Math.max(y1, Y); }
+    for (const p of [[0, 0], [w, 0], [0, h], [w, h]]) { const u = p[0] - V.cam[0], v = p[1] - V.cam[1], X = (u * c - v * s) * K, Y = (u * s + v * c) * K; x0 = Math.min(x0, X); y0 = Math.min(y0, Y); x1 = Math.max(x1, X); y1 = Math.max(y1, Y); }
     x0 = Math.floor(x0) - 1; y0 = Math.floor(y0) - 1; x1 = Math.ceil(x1) + 1; y1 = Math.ceil(y1) + 1;
     const W = x1 - x0, H = y1 - y0, CW = Math.max(1, W * N), CH = Math.max(1, H * N), cv = document.createElement('canvas'); cv.width = CW; cv.height = CH;
     const g = cv.getContext('2d'), vien = RAR_VIEN[rar] || null, id = g.createImageData(CW, CH), d = id.data;
     for (let y = 0; y < CH; y++) for (let x = 0; x < CW; x++) {
       // tâm điểm ảnh thật (x, y) theo toạ độ game -> điểm trên ảnh gốc (toạ độ game) -> điểm ảnh thật của ảnh gốc
-      const X = x0 + (x + 0.5) / N, Y = y0 + (y + 0.5) / N, u = X * c + Y * s + V.cam[0], v = -X * s + Y * c + V.cam[1], i = Math.floor(u * N), j = Math.floor(v * N);
+      const X = (x0 + (x + 0.5) / N) / K, Y = (y0 + (y + 0.5) / N) / K, u = X * c + Y * s + V.cam[0], v = -X * s + Y * c + V.cam[1], i = Math.floor(u * N), j = Math.floor(v * N);
       if (i < 0 || j < 0 || i >= pw || j >= ph) continue;
-      let col = sp.px[j * pw + i]; if (!col) continue;
-      if (vien && col === INK) col = vien;
+      let col = src[j * pw + i]; if (!col) continue;
+      if (vien && sp.px[j * pw + i] === INK) col = vien; // viền bậc Lam/Tím/Vàng luôn ở viền ngoài cùng
       const n = parseInt(col.slice(1), 16), o = (y * CW + x) * 4;
       d[o] = (n >> 16) & 255; d[o + 1] = (n >> 8) & 255; d[o + 2] = n & 255; d[o + 3] = 255;
     }
     g.putImageData(id, 0, 0);
-    r = { cv, dx: x0, dy: y0, w: W, h: H, c, s };
+    r = { cv, dx: x0, dy: y0, w: W, h: H, c, s, k: K, glow: null };
+    if (he && he.st >= 3) { // quầng sáng: hình bóng tô màu hệ, loang 1-2 điểm ảnh quanh thân
+      const P = 2, gv = document.createElement('canvas'); gv.width = CW + 2 * P * N; gv.height = CH + 2 * P * N;
+      const bo = document.createElement('canvas'); bo.width = CW; bo.height = CH;
+      const bx = bo.getContext('2d'); bx.drawImage(cv, 0, 0); bx.globalCompositeOperation = 'source-in'; bx.fillStyle = elp(he.el).glow; bx.fillRect(0, 0, CW, CH);
+      const gx = gv.getContext('2d');
+      for (const o of [[-2, 0, 0.35], [2, 0, 0.35], [0, -2, 0.35], [0, 2, 0.35], [-1, -1, 0.6], [1, -1, 0.6], [-1, 1, 0.6], [1, 1, 0.6]]) { gx.globalAlpha = o[2]; gx.drawImage(bo, (P + o[0]) * N, (P + o[1]) * N); }
+      r.glow = { cv: gv, dx: x0 - P, dy: y0 - P, w: W + 2 * P, h: H + 2 * P };
+    }
     if (sp.xoay.size > 400) sp.xoay.clear();
     sp.xoay.set(k, r);
     return r;
   }
   SC.xoayVk = xoayVk;
+  // Hạt hiệu ứng của hệ, vẽ mỗi khung (không tạo canvas): toạ độ theo điểm ảnh game, 1 điểm ảnh mỗi hạt.
+  const fr = (v) => v - Math.floor(v);
+  function hatHe(c, sp, R, he, T, t) {
+    const E = elp(he.el), pts = hinhVk(sp).pts, st = he.st, n = [0, 4, 7, 12][st], seed = (sp.vk.dong * 7 + sp.vk.loai.length * 3) * 0.37;
+    const a0 = c.globalAlpha, dot = (x, y, col, al, ww, hh) => { c.globalAlpha = a0 * clamp(al, 0, 1); c.fillStyle = col; c.fillRect(Math.round(x), Math.round(y), ww || 1, hh || 1); };
+    if (he.el === 'fire' && st >= 3) { // ngọn lửa liếm dọc lưỡi
+      for (let j = 0; j < pts.length; j += 2) {
+        const p = T(pts[j]), hgt = 2 + Math.round(3 * (0.5 + 0.5 * Math.sin(t * 11 + j * 1.7 + seed)));
+        for (let y = 0; y <= hgt; y++) {
+          const f = y / hgt, x = p[0] + Math.sin(t * 9 + j + y * 0.9) * f * 1.2, col = f < 0.34 ? E.B[1] : f < 0.7 ? E.glow : E.hot;
+          dot(x - (y === 0 ? 1 : 0), p[1] - y, col, 0.9 - f * 0.35, y === 0 ? 3 : 1, 1);
+        }
+      }
+    }
+    for (let i = 0; i < n; i++) {
+      const h = fr(Math.sin(i * 12.9898 + seed) * 43758.5453), p = T(pts[Math.floor(h * pts.length) % pts.length]);
+      if (he.el === 'fire') { // tàn lửa bay lên, lập loè
+        const ph = fr(t * (0.9 + h * 0.6) + h * 7);
+        if (fr(t * 9 + i * 0.37) < 0.15) continue;
+        dot(p[0] + Math.sin(ph * 6 + i) * 1.2, p[1] - ph * (5 + 3 * st), ph < 0.3 ? E.hot : ph < 0.6 ? E.fx[0] : E.fx[2], 1 - ph);
+      } else if (he.el === 'poison') {
+        const ph = fr(t * (0.6 + h * 0.5) + h * 5);
+        if (i % 3 === 2) { // bọt: phồng lên rồi vỡ
+          const x = p[0] + (h - 0.5) * 2, y = p[1] - ph * 3;
+          if (ph < 0.8) dot(x, y, E.fx[1], 0.85);
+          else { const k = 1; dot(x - k, y, E.fx[1], 0.6); dot(x + k, y, E.fx[1], 0.6); dot(x, y - k, E.fx[1], 0.6); dot(x, y + k, E.fx[1], 0.6); }
+        } else dot(p[0], p[1] + ph * ph * (6 + 2 * st), ph < 0.15 ? E.hot : E.fx[0], 1 - ph * 0.7, 1, ph > 0.2 && ph < 0.7 ? 2 : 1); // giọt nọc rơi
+      } else { // băng: lấp lánh hình chữ thập và hơi sương trôi
+        const ph = fr(t * (0.5 + h * 0.4) + h * 9);
+        if (i % 2 === 0) {
+          if (ph < 0.3) { const k = ph < 0.15 ? 1 : 2; dot(p[0], p[1], '#ffffff', 1); for (const q of [[k, 0], [-k, 0], [0, k], [0, -k]]) dot(p[0] + q[0], p[1] + q[1], E.fx[1], 0.9 - ph * 2); }
+        } else dot(p[0] + (h - 0.5) * 4 * ph, p[1] + ph * 4, E.fx[1], (1 - ph) * 0.55, 2, 1);
+      }
+    }
+    c.globalAlpha = a0;
+  }
+  SC.hatHe = hatHe;
   function chamDay(c, x0, y0, x1, y1, col) { c.fillStyle = col; const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0), 1); for (let i = 0; i <= n; i++) c.fillRect(Math.round(x0 + ((x1 - x0) * i) / n), Math.round(y0 + ((y1 - y0) * i) / n), 1, 1); }
   // Vẽ vũ khí tự vẽ (cùng cách gọi với G.weaponArt.draw).
   SC.veVuKhi = function (c, sp, opts, x0, y0, ang, pull) {
-    const rar = Math.max(0, Math.min(3, (opts && opts.rarity) | 0)), R = xoayVk(sp, ang || 0, rar), X = Math.round(x0), Y = Math.round(y0);
+    const rar = Math.max(0, Math.min(3, (opts && opts.rarity) | 0)), he = heCua(sp, opts), R = xoayVk(sp, ang || 0, rar, he), X = Math.round(x0), Y = Math.round(y0);
+    const t = (opts && opts.t != null ? +opts.t : G.time) || 0;
     const sm = c.imageSmoothingEnabled; c.imageSmoothingEnabled = false;
+    if (R.glow) {
+      const op = c.globalCompositeOperation, a0 = c.globalAlpha;
+      c.globalCompositeOperation = 'lighter'; c.globalAlpha = a0 * (0.3 + 0.12 * Math.sin(t * 5));
+      c.drawImage(R.glow.cv, X + R.glow.dx, Y + R.glow.dy, R.glow.w, R.glow.h);
+      c.globalCompositeOperation = op; c.globalAlpha = a0;
+    }
     c.drawImage(R.cv, X + R.dx, Y + R.dy, R.w, R.h);
     c.imageSmoothingEnabled = sm;
-    const V = sp.vk; if (!V.day) return;
-    // dây cung: hai đầu dây (chấm trong công cụ) nối qua điểm kéo; giương cung thì có mũi tên
-    const T = (p) => { const u = p[0] - V.cam[0], v = p[1] - V.cam[1]; return [X + u * R.c - v * R.s, Y + u * R.s + v * R.c]; };
-    const A = T(V.day[0]), B = T(V.day[1]), a = Math.round((ang || 0) / 5) * 5 * D2R, fx = Math.cos(a), fy = Math.sin(a);
-    const span = Math.hypot(B[0] - A[0], B[1] - A[1]), k = Math.max(0, Math.min(1, pull || 0)), M = [(A[0] + B[0]) / 2 - fx * k * span * 0.35, (A[1] + B[1]) / 2 - fy * k * span * 0.35];
-    if (k <= 0.02) chamDay(c, A[0], A[1], B[0], B[1], '#e8e2d0');
-    else {
-      chamDay(c, A[0], A[1], M[0], M[1], '#e8e2d0'); chamDay(c, M[0], M[1], B[0], B[1], '#e8e2d0');
-      const L = span * 0.55; chamDay(c, M[0], M[1], M[0] + fx * L, M[1] + fy * L, '#b78350');
-      c.fillStyle = '#f4f8ff'; c.fillRect(Math.round(M[0] + fx * (L + 1)), Math.round(M[1] + fy * (L + 1)), 1, 1);
-      c.fillStyle = '#d2362e'; c.fillRect(Math.round(M[0] + fx * 2 - fy), Math.round(M[1] + fy * 2 + fx), 1, 1);
+    const V = sp.vk, K = R.k || 1;
+    const T = (p) => { const u = p[0] - V.cam[0], v = p[1] - V.cam[1]; return [X + (u * R.c - v * R.s) * K, Y + (u * R.s + v * R.c) * K]; };
+    if (V.day) {
+      // dây cung: hai đầu dây (chấm trong công cụ) nối qua điểm kéo; giương cung thì có mũi tên
+      const A = T(V.day[0]), B = T(V.day[1]), a = Math.round((ang || 0) / 5) * 5 * D2R, fx = Math.cos(a), fy = Math.sin(a);
+      const span = Math.hypot(B[0] - A[0], B[1] - A[1]), k = Math.max(0, Math.min(1, pull || 0)), M = [(A[0] + B[0]) / 2 - fx * k * span * 0.35, (A[1] + B[1]) / 2 - fy * k * span * 0.35];
+      if (k <= 0.02) chamDay(c, A[0], A[1], B[0], B[1], '#e8e2d0');
+      else {
+        chamDay(c, A[0], A[1], M[0], M[1], '#e8e2d0'); chamDay(c, M[0], M[1], B[0], B[1], '#e8e2d0');
+        const L = span * 0.55; chamDay(c, M[0], M[1], M[0] + fx * L, M[1] + fy * L, '#b78350');
+        c.fillStyle = '#f4f8ff'; c.fillRect(Math.round(M[0] + fx * (L + 1)), Math.round(M[1] + fy * (L + 1)), 1, 1);
+        c.fillStyle = '#d2362e'; c.fillRect(Math.round(M[0] + fx * 2 - fy), Math.round(M[1] + fy * 2 + fx), 1, 1);
+      }
     }
+    if (he) hatHe(c, sp, R, he, T, t);
   };
-  // Ô đồ: vũ khí nằm chéo (cung đứng), vừa trong ô sz, tâm (x, y).
+  // Ô đồ: vũ khí nằm chéo (cung đứng), vừa trong ô sz, tâm (x, y). Có hệ thì nhuộm theo hệ (không có hạt).
   SC.iconVuKhi = function (c, sp, opts, x, y, sz) {
-    const ang = sp.vk.loai === 'bow' ? 0 : -45, R = xoayVk(sp, ang, Math.max(0, Math.min(3, (opts && opts.rarity) | 0)));
+    const he = heCua(sp, opts), ang = sp.vk.loai === 'bow' ? 0 : -45, R = xoayVk(sp, ang, Math.max(0, Math.min(3, (opts && opts.rarity) | 0)), he && he.nhuom ? he : null);
     sz = sz || 24; const m = Math.max(R.w, R.h); let k = sz / m; if (k >= 1) k = Math.max(1, Math.floor(k));
     const sm = c.imageSmoothingEnabled; c.imageSmoothingEnabled = false;
     c.drawImage(R.cv, Math.round(x - (R.w * k) / 2), Math.round(y - (R.h * k) / 2), Math.round(R.w * k), Math.round(R.h * k));
