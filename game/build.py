@@ -95,8 +95,9 @@ TOOL = os.path.join(os.path.dirname(ROOT), 'tools', 'xuong-sprite')
 TOOL_GAME_JS = ['js/data.js', 'js/art.js', 'js/weapon_art.js', 'js/hero_art.js', 'js/hero_tinhlinh.js', 'js/monster_art.js', 'js/room_art.js', 'js/outfit.js', 'js/village_scene.js', 'js/sprite_custom.js']
 TOOL_JS = ['xu-ly-anh.js', 'khung.js', 'tu-doan.js', 'do.js', 'giao-dien.js']
 RUNTIME_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'vung', 'thay_cho', 'tam', 'khung_rong', 'khung_cao', 'goc', 'rong', 'cao', 'bong', 'dong_tac',
-                'anh', 'vu_khi', 'trang_phuc', 'vat_pham', 'dung_yen', 'nhun', 'neo', 'khoac_do')
-HU_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'tam', 'khung_rong', 'khung_cao', 'goc', 'so', 'giay', 'lap', 'xoay', 'co', 'tron')  # hiệu ứng ảnh AI (js/fx_anh.js)
+                'anh', 'vu_khi', 'trang_phuc', 'vat_pham', 'dung_yen', 'nhun', 'neo', 'khoac_do',
+                'net', 'nhan_vat', 'diem', 'diem_theo', 'cap')  # net: ảnh gấp net lần (thiếu là game đọc thành 1 → hình to gấp đôi, khung bị cắt)
+HU_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'tam', 'khung_rong', 'khung_cao', 'goc', 'so', 'giay', 'lap', 'xoay', 'co', 'tron', 'net')  # hiệu ứng ảnh AI (js/fx_anh.js)
 DO_LOAI = ('vu-khi', 'trang-phuc', 'vat-pham')  # đồ: một ảnh đứng yên, game tự xoay và đặt theo người
 SHIM = '''window.G = window.G || {};
 (function (G) {
