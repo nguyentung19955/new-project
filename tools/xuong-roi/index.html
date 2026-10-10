@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Xưởng Rối · Linh Khí</title>
+<style>
+  /* Cùng bảng màu trống đồng với game và Xưởng Sprite. Chỉ có giao diện tối. */
+  :root {
+    color-scheme: dark;
+    --dk: #1a120a; --brD: #5a3d1a; --br: #a8752f; --gold: #d9a441; --hi: #f6dc92;
+    --pat: #3f8f7f; --patL: #6fc1a8; --patD: #1f4f4a; --bg: #12292a; --bg2: #17363a; --bg3: #1d4146;
+    --cop: #8a2f22; --copL: #b8452f; --ink: #fff0c4; --sub: #a9c2b4; --text: #f1e6c6;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: var(--bg); color: var(--text);
+    font: 500 17px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  button, input, select { font: inherit; color: inherit; }
+  header.dau {
+    position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 8px 12px; background: linear-gradient(#2a1d0f, var(--dk)); border-bottom: 2px solid var(--brD);
+  }
+  .ten-cc { font-weight: 700; font-size: 20px; color: var(--hi); white-space: nowrap; }
+  .ten-cc small { display: block; font-weight: 500; font-size: 13px; color: var(--sub); }
+  nav.buoc { display: flex; gap: 6px; overflow-x: auto; flex: 1; min-width: 0; scrollbar-width: thin; }
+  nav.buoc button {
+    flex: none; min-height: 48px; padding: 4px 12px; border-radius: 12px; border: 2px solid var(--brD);
+    background: #2a1d0f; color: var(--sub); font-weight: 700; font-size: 16px; cursor: pointer;
+  }
+  nav.buoc button b { display: inline-block; width: 26px; height: 26px; line-height: 26px; border-radius: 50%; background: var(--brD); color: var(--ink); margin-right: 6px; text-align: center; }
+  nav.buoc button.on { background: var(--gold); color: var(--dk); border-color: var(--hi); }
+  nav.buoc button.on b { background: var(--dk); color: var(--hi); }
+  main { padding: 12px; max-width: 1400px; margin: 0 auto; }
+  section.trang { display: none; }
+  section.trang.on { display: block; }
+  .hd { /* dòng hướng dẫn */
+    background: var(--patD); border-left: 6px solid var(--patL); border-radius: 10px; padding: 10px 14px; margin: 0 0 12px; color: var(--ink); font-size: 17px;
+  }
+  .khu { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; }
+  .khu > .chinh { flex: 3 1 420px; min-width: 0; }
+  .khu > .ben { flex: 1 1 280px; min-width: 260px; display: flex; flex-direction: column; gap: 10px; }
+  .hop { background: var(--bg2); border: 2px solid var(--brD); border-radius: 14px; padding: 12px; }
+  .hop h3 { margin: 0 0 8px; font-size: 18px; color: var(--hi); }
+  label.dong { display: block; margin: 10px 0 4px; color: var(--sub); font-size: 16px; }
+  input[type=text], input[type=number], select {
+    width: 100%; min-height: 50px; padding: 8px 12px; border-radius: 10px; border: 2px solid var(--br); background: #0e2122; font-size: 18px;
+  }
+  input[type=range] { width: 100%; height: 40px; accent-color: var(--gold); }
+  .nut {
+    min-height: 52px; padding: 8px 16px; border-radius: 12px; border: 2px solid var(--br); background: #3a2812; color: var(--ink);
+    font-weight: 700; font-size: 17px; cursor: pointer; touch-action: manipulation;
+  }
+  .nut:hover { filter: brightness(1.12); }
+  .nut:disabled { opacity: .45; cursor: default; filter: none; }
+  .nut.chinh { background: var(--gold); color: var(--dk); border-color: var(--hi); }
+  .nut.xanh { background: var(--pat); border-color: var(--patL); }
+  .nut.do { background: var(--cop); border-color: var(--copL); }
+  .nut.on { outline: 3px solid var(--hi); background: var(--pat); }
+  .nut.rong { width: 100%; }
+  .hang { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .hang > .nut { flex: 1 1 auto; }
+  .chon-to { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chon-to button { flex: 1 1 120px; min-height: 64px; font-size: 18px; }
+  .tha { /* ô kéo thả ảnh */
+    border: 3px dashed var(--br); border-radius: 16px; padding: 22px; text-align: center; color: var(--ink); background: #10262a; cursor: pointer;
+  }
+  .tha.vao { background: var(--patD); border-color: var(--hi); }
+  .tha .to { font-size: 20px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .luoi { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+  .the {
+    background: #0f2325; border: 3px solid var(--brD); border-radius: 14px; padding: 8px; cursor: pointer; display: flex; flex-direction: column; gap: 6px; align-items: stretch;
+    touch-action: manipulation;
+  }
+  .the.chon { border-color: var(--hi); background: #22413a; box-shadow: 0 0 0 2px var(--gold); }
+  .the canvas { width: 100%; height: 110px; object-fit: contain; background: repeating-conic-gradient(#2c4a4c 0 25%, #213b3d 0 50%) 0 0/16px 16px; border-radius: 8px; }
+  .the .nhan { font-weight: 700; color: var(--ink); text-align: center; font-size: 16px; }
+  .the select { min-height: 46px; font-size: 16px; }
+  .vung-ve { position: relative; width: 100%; background: #0c1d1f; border: 2px solid var(--brD); border-radius: 14px; overflow: hidden; }
+  .vung-ve canvas { display: block; width: 100%; touch-action: none; }
+  #cvRap { height: min(72vh, 680px); }
+  #cvTo { height: min(60vh, 560px); }
+  #cvThat { width: 100%; max-width: 480px; height: auto; aspect-ratio: 16 / 9; image-rendering: pixelated; }
+  #anhGoc { max-width: 100%; max-height: 260px; border-radius: 10px; background: #fff; display: block; margin: 8px auto 0; }
+  .nho { font-size: 15px; color: var(--sub); }
+  .gt { float: right; color: var(--hi); font-weight: 700; }
+  .bao { /* thông báo nổi */
+    position: fixed; left: 50%; bottom: 84px; transform: translateX(-50%); z-index: 50; max-width: 92vw;
+    background: var(--dk); border: 2px solid var(--gold); color: var(--ink); padding: 12px 18px; border-radius: 12px; font-size: 17px;
+    box-shadow: 0 6px 24px rgba(0,0,0,.5); display: none;
+  }
+  .bao.hien { display: block; }
+  .chan-trang { position: sticky; bottom: 0; z-index: 9; display: flex; gap: 10px; padding: 8px 12px; background: rgba(18,41,42,.96); border-top: 2px solid var(--brD); }
+  .chan-trang .nut { flex: 1; }
+  footer.huong { max-width: 1400px; margin: 10px auto 24px; padding: 14px; color: var(--sub); font-size: 16px; text-align: center; }
+  footer.huong b { color: var(--hi); }
+  .nhap-cu { background: #3a2812; border: 2px solid var(--gold); border-radius: 12px; padding: 12px; margin-bottom: 12px; }
+  .an { display: none !important; }
+  header.dau, nav.buoc, .nut, .the, .vung-ve, .chan-trang, .hd, h3, label { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  .bao { pointer-events: none; }
+  @media (max-width: 700px) {
+    body { font-size: 16px; }
+    .ten-cc small { display: none; }
+  }
+  @media (max-height: 520px) and (orientation: landscape) {
+    /* điện thoại ngang: thanh trên/dưới gọn, bảng điều khiển bên phải cuộn riêng, vùng vẽ cao hết cỡ */
+    header.dau { position: static; padding: 4px 10px; }
+    .ten-cc { font-size: 17px; }
+    .ten-cc small { display: none; }
+    nav.buoc button { min-height: 42px; font-size: 15px; padding: 2px 10px; }
+    main { padding: 8px 10px; }
+    .hd { font-size: 15px; padding: 6px 10px; margin-bottom: 8px; }
+    .khu { flex-wrap: nowrap; gap: 10px; }
+    .khu > .ben { flex: 0 0 300px; max-height: calc(100vh - 190px); overflow-y: auto; }
+    #cvRap { height: calc(100vh - 190px); min-height: 200px; }
+    #cvTo { height: calc(100vh - 190px); min-height: 180px; }
+    .chan-trang { padding: 4px 10px; }
+    .chan-trang .nut { min-height: 44px; }
+    .bao { top: 8px; bottom: auto; }
+  }
+</style>
+</head>
+<body>
+<header class="dau">
+  <div class="ten-cc">Xưởng Rối<small>Ráp nhân vật chibi từ ảnh tách bộ phận</small></div>
+  <nav class="buoc" id="thanhBuoc"></nav>
+</header>
+
+<main>
+  <!-- BƯỚC 1 -->
+  <section class="trang" data-buoc="1">
+    <p class="hd">Bước 1: Chọn kiểu nhân vật, đặt tên. Mã tự tạo từ tên (có thể sửa).</p>
+    <div id="nhapCu" class="nhap-cu an"></div>
+    <div class="khu">
+      <div class="chinh hop">
+        <h3>Khung xương</h3>
+        <div class="chon-to" id="chonKhung"></div>
+        <h3 style="margin-top:14px">Loại</h3>
+        <div class="chon-to" id="chonDoi"></div>
+        <label class="dong" for="oTen">Tên hiển thị</label>
+        <input type="text" id="oTen" placeholder="Ví dụ: Heo Rừng Con" autocomplete="off">
+        <label class="dong" for="oMa">Mã (không dấu, gạch nối)</label>
+        <input type="text" id="oMa" placeholder="heo-rung-con" autocomplete="off" spellcheck="false">
+        <div id="khuThay">
+          <label class="dong" for="chonQuai">Thay cho quái nào trong game</label>
+          <select id="chonQuai"></select>
+          <input type="text" id="oQuai" class="an" placeholder="Mã quái trong game, ví dụ heoCon">
+        </div>
+      </div>
+      <div class="ben">
+        <div class="hop">
+          <h3>Sửa tiếp tệp cũ</h3>
+          <p class="nho">Mở tệp .rig.json đã xuất trước đây để chỉnh tiếp.</p>
+          <button class="nut rong" id="nutMoTep1">Mở tệp đã xuất</button>
+        </div>
+        <div class="hop">
+          <h3>Làm con mới</h3>
+          <button class="nut do rong" id="nutMoi">Xoá hết, làm lại từ đầu</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BƯỚC 2 -->
+  <section class="trang" data-buoc="2">
+    <p class="hd">Bước 2: Nạp ảnh tách bộ phận (ảnh Gemini lần B, nền trắng). Máy tự xoá nền và cắt từng mảnh. Chạm thẻ để chọn: gộp 2 mảnh bị vẽ rời, xoá mảnh thừa, lật mảnh quay trái.</p>
+    <div class="khu">
+      <div class="chinh">
+        <div class="tha" id="oTha"><span class="to">Chạm để chọn ảnh, hoặc kéo thả ảnh vào đây</span><span class="nho">Ảnh PNG hoặc JPG, nền trắng, các bộ phận vẽ rời nhau</span></div>
+        <div class="luoi" id="luoiManh" style="margin-top:12px"></div>
+      </div>
+      <div class="ben">
+        <div class="hop">
+          <h3>Mảnh đã chọn: <span id="soChon">0</span></h3>
+          <div class="hang">
+            <button class="nut xanh" id="nutGop">Gộp các mảnh đã chọn</button>
+            <button class="nut" id="nutLat">Lật ngang</button>
+            <button class="nut do" id="nutXoa">Xoá mảnh</button>
+          </div>
+          <p class="nho">Mặt nhân vật phải quay sang PHẢI. Mảnh nào quay trái thì chọn rồi bấm "Lật ngang". Chọn hết rồi lật nếu cả bộ quay trái.</p>
+          <button class="nut rong" id="nutChonHet">Chọn hết / bỏ chọn</button>
+        </div>
+        <div class="hop">
+          <h3>Xoá nền</h3>
+          <label class="dong">Ngưỡng nền trắng <span class="gt" id="gtNguong"></span></label>
+          <input type="range" id="trNguong" min="10" max="140" step="1">
+          <label class="dong">Xoá viền trắng lem <span class="gt" id="gtLem"></span></label>
+          <input type="range" id="trLem" min="0" max="4" step="1">
+          <label class="dong">Bỏ vụn nhỏ hơn <span class="gt" id="gtVun"></span></label>
+          <input type="range" id="trVun" min="0" max="15" step="0.5">
+          <p class="nho">Kéo thanh trượt thì máy cắt lại từ ảnh gốc (mất phần gộp/xoá đã làm).</p>
+          <img id="anhGoc" alt="" class="an">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BƯỚC 3 -->
+  <section class="trang" data-buoc="3">
+    <p class="hd">Bước 3: Mỗi mảnh là bộ phận nào? Máy đã đoán sẵn. Sai thì chạm thẻ rồi chạm tên đúng bên phải (hoặc chọn trong ô dưới thẻ).</p>
+    <div class="khu">
+      <div class="chinh"><div class="luoi" id="luoiVai"></div></div>
+      <div class="ben">
+        <div class="hop">
+          <h3>Gán vai cho mảnh đang chọn</h3>
+          <div class="hang" id="nutVai"></div>
+        </div>
+        <div class="hop">
+          <button class="nut rong" id="nutDoanLai">Để máy đoán lại</button>
+          <p class="nho" id="thieuVai"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BƯỚC 4 -->
+  <section class="trang" data-buoc="4">
+    <p class="hd">Bước 4: Máy đã ráp sẵn. Kéo mảnh để dời, kéo chấm đỏ (khớp xoay) tới chỗ nối với mảnh cha. Chấm xanh lá là điểm chân chạm đất.</p>
+    <div class="khu">
+      <div class="chinh"><div class="vung-ve"><canvas id="cvRap"></canvas></div></div>
+      <div class="ben">
+        <div class="hop">
+          <h3>Mảnh: <span id="tenChon">(chạm một mảnh)</span></h3>
+          <label class="dong" for="chonCha">Gắn vào mảnh cha</label>
+          <select id="chonCha"></select>
+          <div class="hang" style="margin-top:8px">
+            <button class="nut" id="nutLen">Lên trước ▲</button>
+            <button class="nut" id="nutXuong">Ra sau ▼</button>
+          </div>
+        </div>
+        <div class="hop">
+          <div class="hang">
+            <button class="nut" id="nutVua">Vừa khung</button>
+            <button class="nut do" id="nutRapLai">Ráp lại tự động</button>
+          </div>
+        </div>
+        <div class="hop">
+          <h3>Ảnh cả con (không bắt buộc)</h3>
+          <p class="nho">Nạp ảnh Gemini lần A để làm hình mờ phía sau, ráp cho khớp.</p>
+          <div class="hang">
+            <button class="nut" id="nutAnhMo">Nạp ảnh cả con</button>
+            <button class="nut" id="nutKeoMo">Kéo ảnh mờ</button>
+            <button class="nut do" id="nutBoMo">Bỏ</button>
+          </div>
+          <label class="dong">Cỡ ảnh mờ <span class="gt" id="gtMoCo"></span></label>
+          <input type="range" id="trMoCo" min="0.3" max="2.5" step="0.01">
+          <label class="dong">Độ đậm <span class="gt" id="gtMoDo"></span></label>
+          <input type="range" id="trMoDo" min="0.1" max="0.9" step="0.05">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BƯỚC 5 -->
+  <section class="trang" data-buoc="5">
+    <p class="hd">Bước 5: Xem nhân vật cử động. Chọn động tác, kéo thanh trượt chỉnh độ mạnh và tốc độ. Thấy lệch thì quay lại Bước 4 sửa khớp.</p>
+    <div class="khu">
+      <div class="chinh">
+        <div class="vung-ve"><canvas id="cvTo"></canvas></div>
+      </div>
+      <div class="ben">
+        <div class="hop">
+          <h3>Động tác</h3>
+          <div class="hang" id="nutDongTac"></div>
+        </div>
+        <div class="hop">
+          <label class="dong">Độ mạnh <span class="gt" id="gtBienDo"></span></label>
+          <input type="range" id="trBienDo" min="0" max="2.5" step="0.05">
+          <label class="dong">Tốc độ <span class="gt" id="gtTocDo"></span></label>
+          <input type="range" id="trTocDo" min="0.3" max="3" step="0.05">
+          <button class="nut rong" id="nutDatLaiDT" style="margin-top:8px">Đặt lại động tác này</button>
+        </div>
+        <div class="hop">
+          <h3>Cỡ thật trong game</h3>
+          <canvas id="cvThat" width="480" height="270"></canvas>
+          <label class="dong" for="oCao">Chiều cao trong game (màn 480×270)</label>
+          <input type="number" id="oCao" min="10" max="200" step="1">
+          <div class="hang" style="margin-top:8px"><button class="nut" id="nutQuay">Quay mặt trái</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BƯỚC 6 -->
+  <section class="trang" data-buoc="6">
+    <p class="hd">Bước 6: Xuất tệp. Máy gom mọi mảnh vào một ảnh, tạo tệp .rig.json và tải về máy.</p>
+    <div class="khu">
+      <div class="chinh hop">
+        <h3>Tóm tắt</h3>
+        <div id="tomTat"></div>
+        <div class="hang" style="margin-top:12px">
+          <button class="nut chinh" id="nutXuat">Xuất tệp .rig.json</button>
+          <button class="nut" id="nutTaiPng">Tải ảnh các mảnh (.png)</button>
+        </div>
+        <p id="kqXuat" class="nho"></p>
+        <img id="anhXuat" alt="" class="an" style="max-width:100%;border-radius:10px;background:repeating-conic-gradient(#2c4a4c 0 25%, #213b3d 0 50%) 0 0/16px 16px">
+      </div>
+      <div class="ben">
+        <div class="hop">
+          <h3>Sửa tiếp</h3>
+          <button class="nut rong" id="nutMoTep6">Mở tệp đã xuất</button>
+          <p class="nho">Bản đang làm được tự lưu trên máy này, đóng trang mở lại vẫn còn.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="chan-trang">
+  <button class="nut" id="nutTruoc">‹ Bước trước</button>
+  <button class="nut chinh" id="nutTiep">Bước tiếp ›</button>
+</div>
+<footer class="huong">Xuất xong gửi tệp <b>.rig.json</b> cho Claude, hoặc đặt vào <b>game/art/chibi/</b>.</footer>
+<div class="bao" id="bao"></div>
+<input type="file" id="tepAnh" accept="image/*" class="an">
+<input type="file" id="tepAnhMo" accept="image/*" class="an">
+<input type="file" id="tepRig" accept=".json,application/json" class="an">
+
+<script src="../../game/js/chibi_rig.js"></script>
+<script src="ds-quai.js"></script>
+<script src="tach.js"></script>
+<script src="rap.js"></script>
+<script src="giao-dien.js"></script>
+</body>
+</html>
