@@ -69,7 +69,9 @@
       charge: { name: 'Xốc tới', time: 0.5, min: 0.3, slow: 0.6, len0: 30, len1: 58, t: 0.16, mult0: 1.0, mult1: 2.2, depth: 12 },
     },
     hammer: {
-      swing: { name: 'Nện', dur: 0.8, mult: 1, reach: 32, depth: 26 },
+      // V15 (Q5): nhát nện chạm ở 35% động tác (0,28 giây) thay vì 45% (0,36 giây): ít bị Né huỷ giữa chừng khi đánh đám.
+      // Thời lượng 0,8 giây và sức đánh giữ nguyên.
+      swing: { name: 'Nện', dur: 0.8, mult: 1, reach: 32, depth: 26, hitAt: 0.35 },
       // giữ để lấy đà 2 nấc; chưa tới nấc 1 mà thả thì chỉ là nhát thường
       charge: {
         name: 'Lấy đà', lv1: 0.5, time: 1.1, min: 0.45, slow: 0.45, recover: 0.7, ahead: 22, waveV: 200, waveDepth: 26, waveFrac: 0.45, // sóng chạy xa nhất 0,45 bề ngang phòng (phòng thường 85, phòng trùm đủ 96) và tan khi chạm tường
@@ -195,7 +197,7 @@
   // Đi chậm lại trong lúc lấy đà
   M.speed = function (P) {
     const mv = P.mv;
-    if (!mv || !mv.holding) return 1;
+    if (!mv || !mv.holding || mv.chargeT < 0) return 1; // V12: tư thế chờ lúc vừa chạm (chưa tới 0,16 giây) chưa đi chậm
     const cfg = C[G.curW(P).type];
     return cfg && cfg.charge ? cfg.charge.slow : 1;
   };
@@ -278,9 +280,11 @@
   const padOf = (e, ux, uy, half) => half + Math.abs(ux) * e.hr / ZK() + Math.abs(uy) * e.r;
   M.padOf = padOf;
   // Bắt đầu một nhát: phase > 0 là vào thẳng giữa động tác (dùng khi thả đòn đã lấy đà sẵn).
+  // V15: o.hitAt là lúc đòn chạm, tính theo tiến độ động tác 0..1 (mặc định 0,45 như cũ, tức còn 55% thời gian; combat.js đọc P.hitAt).
   function begin(P, w, o, dur, phase) {
     const mv = P.mv;
     P.atkDur = dur; P.atkT = dur * (1 - (phase || 0)); P.cdT = P.atkT; P.hitDone = false; P.lastAtk = G.time;
+    P.hitAt = o.hitAt != null ? o.hitAt : null;
     P.comboI = o.pose || 0;
     mv.name = o.name; mv.kind = o.kind; mv.step = o.step || 0; mv.cur = o; mv.lastT = G.time + P.atkT;
     G.sfx('swing', w.type === 'hammer' ? 0.6 : 1);
@@ -469,7 +473,7 @@
   function hammerTap(P, w) {
     const m = C.hammer.swing;
     aim(P, reachOf(w, m.reach));
-    begin(P, w, { kind: 'nen', name: m.name, pose: 0, m, reach: reachOf(w, m.reach), depth: m.depth }, m.dur);
+    begin(P, w, { kind: 'nen', name: m.name, pose: 0, m, reach: reachOf(w, m.reach), depth: m.depth, hitAt: m.hitAt }, m.dur);
   }
   function hammerRelease(P, w, c, lv) {
     const ch = C.hammer.charge, sl = ch.slam[lv];
@@ -536,14 +540,17 @@
       if (w.type === 'bow') bowAim(P, ch.range + 10, ch.speed); // đang giương: cung xoay theo quái gần nhất
       const lv0 = mv.level;
       mv.chargeT += dt;
-      mv.charge = Math.min(1, mv.chargeT / ch.time);
+      mv.charge = G.clamp(mv.chargeT / ch.time, 0, 1); // chargeT âm: còn ở tư thế chờ (V12), đà chưa tính
       mv.level = levelOf(ch, mv.chargeT);
       if (mv.level > lv0) { G.sfx('pick', 0.9 + 0.3 * mv.level); FX('mvCharge', P, mv.level); }
       if (mv.charge >= 1) { mv.fullT += dt; if (mv.fullT >= C.hold) release(P, w, cfg); }
       return;
     }
-    if (held && mv.holdT >= C.tap && can) {
-      mv.holding = true; mv.chargeT = 0; mv.charge = 0; mv.level = 0; mv.fullT = 0; mv.buf = 0;
+    // V12: cung, giáo, búa vào tư thế "giương / lấy đà" ngay khung chạm nút (trước đây phải đợi giữ đủ 0,16 giây hoặc nhấc ngón).
+    // Luật giữ-thả không đổi: đà chỉ bắt đầu tính sau C.tap giây (chargeT bắt đầu từ số âm), nên nhấc ngón trước 0,16 giây
+    // vẫn là đòn bấm (release() thấy đà dưới mức min), ra đúng lúc nhấc ngón như cũ; giữ lâu thì đà đầy đúng lúc như cũ.
+    if (held && can) {
+      mv.holding = true; mv.chargeT = Math.min(0, mv.holdT - C.tap); mv.charge = 0; mv.level = 0; mv.fullT = 0; mv.buf = 0;
       mv.name = ch.name; mv.kind = 'layDa';
     } else if (mv.buf > 0 && can) {
       mv.buf = 0;

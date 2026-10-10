@@ -85,7 +85,8 @@ JS = r"""
     ok('Cung: đòn tính vào thống kê đánh xa của trùm', S.stats.ranged > 0 && S.stats.melee === 0, S.stats.ranged);
     room('bow'); const a = dummy(280), b = dummy(310), c3 = dummy(340);
     sec(0.1, { atk: true });
-    ok('Cung: giữ dưới 0,16 giây thì chưa giương', !P.mv.holding);
+    // V12 (gd2-b): vừa chạm là vào tư thế giương ngay (holding), nhưng dưới 0,16 giây thì đà chưa tính và chưa đi chậm
+    ok('Cung: giữ dưới 0,16 giây thì đã vào tư thế nhưng chưa lấy đà', P.mv.holding && P.mv.charge === 0 && P.mv.chargeT < 0 && G.moves.speed(P) === 1, P.mv.charge);
     sec(0.3, { atk: true });
     ok('Cung: giữ nút thì giương cung, có tỉ lệ lấy đà', P.mv.holding && P.mv.charge > 0.2 && P.mv.charge < 1, P.mv.charge.toFixed(2));
     const xa = P.x; sec(0.3, { atk: true, mx: -1 });
