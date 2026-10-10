@@ -1,7 +1,7 @@
 // LƯU MÂY (Firebase, dự án dùng chung "sontinhthuytinh"; dữ liệu Linh Khí nằm riêng ở linhkhi_users, linhkhi_scores, linhkhi_feedback).
 //  - Vào game tự đăng nhập khách (ẩn danh). Máy vẫn lưu localStorage như cũ; có mạng thì đẩy bản lưu lên mây, gộp các lần lưu trong 4 giây.
 //  - Mở game: bản trên mây mới hơn thì dùng bản trên mây; nếu bản trên máy có tiến độ cao hơn rõ rệt thì hỏi lại (không mất tiến trình).
-//  - Âm thanh (cài đặt riêng của máy) giữ theo máy.
+//  - Âm thanh, âm lượng, "Giảm hiệu ứng" (cài đặt riêng của máy) giữ theo máy.
 //  - "Đăng nhập Google" ở Anh Mõ nối tài khoản khách vào Google (giữ nguyên tiến trình) để chơi tiếp trên máy khác.
 //  - Bảng vàng (xếp hạng) và hòm thư góp ý cũng đi qua đây.
 // Không có cấu hình, mở từ tệp trên máy, chạy trong khung xem trước (claude.ai), không có mạng hoặc không tải được thư viện:
@@ -62,7 +62,7 @@
     return use === 'local' && watched && !choseLocal ? 'cloud' : use; // chỉ nghi ngờ khi đã gắn được theo dõi nút
   }
 
-  const META = ['savedAt', 'owner', 'sound'];
+  const META = ['savedAt', 'owner', 'sound', 'vol', 'lowFx']; // vol, lowFx: V72, V41 — cài đặt của máy, đổi chúng không cần đẩy lên mây
   function body(s) { const o = Object.assign({}, s); for (const k of META) delete o[k]; return JSON.stringify(o); }
   let lastBody = null;
 
@@ -177,8 +177,10 @@
     apply(s, at) {
       if (G.scene === G.StageScene) { this.pendingApply = { s, at }; return; }
       const snd = G.save ? G.save.sound : true;
+      // V72, V41: âm lượng và "Giảm hiệu ứng" cũng giữ theo máy như âm thanh
+      if (G.save) { if (G.save.vol != null) s.vol = G.save.vol; s.lowFx = G.save.lowFx === true; }
       s.sound = snd; s.owner = this.user ? this.user.uid : s.owner; s.savedAt = at || s.savedAt || Date.now();
-      G.save = s; lastBody = body(s); basePersist();
+      G.save = s; lastBody = body(s); lastProg = progress(s); basePersist();
       this.pendingApply = null;
       try { if (G.villageScene && G.villageScene.checkNews) G.villageScene.checkNews(); } catch (e) { /* bỏ qua */ }
       try { if (G.villageScene && G.villageScene.say && G.scene === G.Village) G.villageScene.say('Đã tải tiến trình từ mây.'); } catch (e) { /* bỏ qua */ }
@@ -190,7 +192,7 @@
       clearTimeout(this._timer);
       this._timer = setTimeout(() => this.push(true), 4000);
     },
-    async push(now) {
+    async push(now, tokenRetried) {
       if (!now) { this.queue(); return; }
       clearTimeout(this._timer);
       if (!this.online()) { this.dirty = true; return; }
@@ -208,6 +210,12 @@
         if (seq === this._changeSeq) this.dirty = false;
         else { this.dirty = true; this.queue(); }
       } catch (e) {
+        // V64: token đăng nhập hết hạn (để tab mở qua đêm) → Firestore báo thiếu quyền. Xin token mới một lần rồi ghi lại ngay.
+        const code = String((e && e.code) || '').replace('firestore/', '');
+        if (!tokenRetried && (code === 'permission-denied' || code === 'unauthenticated') && this.user && this.user.getIdToken) {
+          try { await this.user.getIdToken(true); } catch (e2) { /* không làm mới được: rơi xuống xử lý lỗi bình thường ở lần sau */ }
+          return this.push(true, true);
+        }
         this._fail(e); this.dirty = true;
         // Lỗi mạng thoáng qua không nên khiến bản lưu mắc kẹt cho tới lần
         // thay đổi tiếp theo của người chơi hoặc một sự kiện 'online'.
@@ -339,20 +347,27 @@
 
   // ---------- móc vào bản lưu của game ----------
   const basePersist = G.persist, baseLoad = G.loadSave;
+  let lastProg = null; // V63: tiến độ lần lưu trước (progress), tăng lên = vừa qua ải / hạ trùm / lên cấp
   G.persist = function () {
     const s = G.save;
+    let now = false;
     if (s) {
       const b = body(s);
       if (b !== lastBody) {
         lastBody = b; s.savedAt = Date.now(); C._changeSeq++;
+        const p = progress(s);
+        now = lastProg != null && p > lastProg;
+        lastProg = p;
         if (C.enabled) C.queue();
       }
     }
     basePersist();
+    // V63: tiến độ vừa tăng thì đẩy lên mây ngay, không chờ gộp 4 giây (đóng tab ngay sau khi qua ải vẫn kịp lưu)
+    if (now && C.enabled && C.online()) C.push(true);
   };
   G.loadSave = function () {
     baseLoad();
-    lastBody = body(G.save);
+    lastBody = body(G.save); lastProg = progress(G.save);
     setTimeout(() => C.init(), 0);
   };
   // về làng: thay bản lưu đang chờ (tải từ mây lúc còn trong ải)
@@ -367,4 +382,8 @@
   addEventListener('online', () => { if (C.dirty && C.online()) C.push(true); });
   // rời trang: cố đẩy nốt
   addEventListener('pagehide', () => { if (C.dirty && C.online()) C.push(true); });
+  // V63: trên điện thoại, chuyển ứng dụng / tắt màn hình thường không có pagehide: trang bị ẩn là đẩy ngay phần còn chờ
+  if (typeof document !== 'undefined' && document.addEventListener) {
+    document.addEventListener('visibilitychange', () => { if (document.hidden && C.dirty && C.online()) C.push(true); });
+  }
 })();
