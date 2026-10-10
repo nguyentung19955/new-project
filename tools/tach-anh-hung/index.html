@@ -210,13 +210,13 @@ const LOAI = {
 // Em bé: cỡ thân trơn của em bé trong game (hero_tinhlinh.js, không mặc đồ) là 16 × 29 điểm ảnh, đầu tròn tâm ở 18 điểm trên chân.
 const NV = [
   { ma: 'em-be-smith', key: 'smith', loai: 'em-be', ten: 'Thợ Rèn', rong: 16, cao: 29,
-    mau: 'áo lót cộc tay và quần ngắn màu đỏ (#d2362e, chỗ tối #8c1c1f, chỗ sáng #f47a62)', net: 'mặt hiền, hai má hồng nhẹ, chỏm tóc nhỏ vểnh, dáng hăng hái' },
+    mau: 'áo lót cộc tay và quần ngắn màu đỏ (#d2362e, chỗ tối #8c1c1f, chỗ sáng #f47a62)', net: 'tóc đen ngắn bù xù, mắt to đen tròn, mặt hăng hái, người thấp chắc khoẻ, vai rộng' },
   { ma: 'em-be-hunter', key: 'hunter', loai: 'em-be', ten: 'Thợ Săn', rong: 16, cao: 29,
-    mau: 'áo lót cộc tay và quần ngắn màu xanh lá (#479544, chỗ tối #255a2c, chỗ sáng #8fd070)', net: 'mặt lanh lợi, mắt tinh, chỏm tóc nhỏ, dáng nhanh nhẹn' },
+    mau: 'áo lót cộc tay và quần ngắn màu xanh lá (#479544, chỗ tối #255a2c, chỗ sáng #8fd070)', net: 'tóc đen ngắn, mắt to tinh nhanh, mặt lanh lợi, dáng thon gọn nhanh nhẹn' },
   { ma: 'em-be-healer', key: 'healer', loai: 'em-be', ten: 'Thầy Lang', rong: 16, cao: 29,
-    mau: 'áo lót cộc tay và quần ngắn màu xanh lam (#4468c0, chỗ tối #27407f, chỗ sáng #86a8f0)', net: 'mặt hiền dịu, mắt cười, chỏm tóc nhỏ, dáng điềm đạm' },
+    mau: 'áo lót cộc tay màu trắng ngà (#eef0f4) và quần ngắn màu xanh lam (#4468c0, chỗ tối #27407f)', net: 'tóc đen ngắn, mắt to hiền, mặt dịu dàng, dáng mềm mại điềm đạm' },
   { ma: 'em-be-wrestler', key: 'wrestler', loai: 'em-be', ten: 'Đô Vật', rong: 16, cao: 29,
-    mau: 'áo lót cộc tay và quần ngắn màu cam (#dd7c2a, chỗ tối #9a4a16, chỗ sáng #f8b25c), người hơi chắc', net: 'mặt quyết tâm, lông mày rậm, chỏm tóc nhỏ, dáng vững chãi' },
+    mau: 'cởi trần, chỉ mặc quần đùi màu đỏ (#c83a2e, chỗ tối #7e1e1a), người bè ngang cơ bắp tròn, trọng tâm thấp', net: 'tóc đen dựng, lông mày rậm, mặt quyết tâm, dáng vững chãi' },
   { ma: 'nl-lai', loai: 'nguoi-lang', ten: 'Chú Lái Đò', rong: 29, cao: 40, vien: '#1a1420',
     hinh: 'người chèo đò thân thiện, đội nón lá, áo nâu nông dân (#8a5632), quần màu vàng đất (#b8a45a), một tay cầm cây sào tre dài', la: 'con chim cốc đen đậu trên vai, một chiếc đèn bão nhỏ treo ở đầu sào' },
   { ma: 'nl-ren', loai: 'nguoi-lang', ten: 'Ông Thợ Rèn', rong: 28, cao: 40, vien: '#1a1420',
@@ -267,15 +267,15 @@ function taoPrompt(q) {
     const hang = ['đứng thở (nhún nhẹ, có một khung chớp mắt)', 'chạy sang phải (hai chân bước luân phiên, tay đánh đằng xa)', 'lấy đà (co người, hai tay kéo ra sau, mắt quyết tâm)', 'vung tay đánh về phía trước bằng tay không',
       'trúng đòn bật ngửa ra sau (nhăn mặt)', 'ngã ngửa ra sau rồi nằm bẹp trên đất (mắt dấu X ở cuối)', 'né: lộn tròn một vòng về phía trước, cuộn người như quả bóng']
       .map((h, i) => `hàng ${i + 1} ${h} ĐÚNG ${SO[i]} khung`).join(', ');
-    return `Dùng công cụ tạo ảnh vẽ MỘT tấm sprite sheet pixel art 2D cho game Linh Khí: em bé tinh linh "${q.ten}", anh hùng chibi dân gian Việt Nam, vẽ THÂN TRƠN để game tự mặc mũ, áo và đồ lên người. `
+    return `Dùng công cụ tạo ảnh vẽ MỘT tấm sprite sheet pixel art 2D cho game Linh Khí: em bé "${q.ten}", anh hùng chibi người Việt dân gian (giống concept: em bé người, mặt người dễ thương, tóc đen, da người), vẽ THÂN TRƠN để game tự mặc mũ, áo và đồ lên người. `
       + `THÂN TRƠN nghĩa là: KHÔNG mũ, không nón, không khăn trùm hay khăn quấn đầu, không áo choàng, không áo khoác ngoài, không đồ đeo sau lưng (ống tên, hồ lô, gùi, trống…), không đồ cầm tay, không bùa đeo, không mặt nạ, không vẽ dấu trên mặt, không cánh, KHÔNG cầm vũ khí, hai bàn tay để trống. `
-      + `Hình dáng: chibi đứng thẳng, đầu tròn to khoảng 2/5 chiều cao cả người, thân ngắn tròn, chân ngắn, cả người cao gấp khoảng 1,8 lần bề ngang; mặt tròn trắng ngà kiểu mặt nạ tinh linh (#f6f0e2) chiếm gần hết phía trước đầu, mắt là hai chấm đen to, ${q.net}; da tay chân và quanh đầu màu tím nhạt tinh linh (#b7b1d8, chỗ tối #7f79a6); mặc ${q.mau} ôm sát người, đơn giản, không hoa văn; hai tay và hai chân rõ ràng, tay hơi tách khỏi thân để game đặt vũ khí và đồ vào. Giữ đúng tỉ lệ và dáng đứng này trong mọi khung để mũ áo của game khoác lên khớp. `
+      + `Hình dáng: chibi đứng thẳng, đầu tròn to khoảng 2/5 chiều cao cả người, thân ngắn tròn, chân ngắn, cả người cao gấp khoảng 1,8 lần bề ngang; MẶT NGƯỜI tròn dễ thương với mắt to đen bóng có điểm sáng, lông mày, mũi nhỏ, miệng, má hồng nhẹ, ${q.net}; da người màu bánh mật sáng (#f2c9a0, chỗ tối #c98f66); KHÔNG đội gì trên đầu, lộ tóc; mặc ${q.mau} ôm sát người, đơn giản, không hoa văn; hai tay và hai chân rõ ràng, tay hơi tách khỏi thân để game đặt vũ khí và đồ vào. Giữ đúng tỉ lệ và dáng đứng này trong mọi khung để mũ áo của game khoác lên khớp. `
       + `Nhìn chéo 3/4, QUAY MẶT SANG PHẢI trong MỌI khung: mặt và bụng hướng sang phải, chạy và đánh về phía phải, trúng đòn bật về trái, không khung nào quay trái. Ánh sáng từ trên bên phải. `
       + luoi + hang + '. ' + coO + 'Khi đánh hay lộn thì co người lại cho vừa ô, không phóng to. ' + cuoi;
   }
   const hang = `hàng 1 đứng thở (nhún nhẹ, có một khung chớp mắt) ĐÚNG ${SO[0]} khung, hàng 2 nói chuyện vui vẻ (miệng mở đóng, một tay vẫy chào lên xuống) ĐÚNG ${SO[1]} khung`;
   return `Dùng công cụ tạo ảnh vẽ MỘT tấm sprite sheet pixel art 2D cho game Linh Khí: người làng "${q.ten}", nhân vật chibi dễ thương dân gian Việt Nam (hoa văn trống đồng Đông Sơn). `
-    + `Hình dáng: ${q.hinh}. Nét lạ (vẽ TO, rõ): ${q.la}. Vẽ ĐẦY ĐỦ quần áo và đồ đặc trưng. Mặt tròn trắng ngà kiểu mặt nạ tinh linh (#f4eee0), mắt chấm đen nhỏ, má hồng. Đầu to khoảng 2/5 chiều cao cả người, cả người cao gấp khoảng 1,4 lần bề ngang, chi tiết to khối, đơn giản (trong game chỉ cao ${q.cao} điểm ảnh). `
+    + `Hình dáng: ${q.hinh}. Nét lạ (vẽ TO, rõ): ${q.la}. Vẽ ĐẦY ĐỦ quần áo và đồ đặc trưng. MẶT NGƯỜI dễ thương (mắt to đen, má hồng, da người bánh mật sáng #f2c9a0), cùng phong cách với 4 em bé anh hùng. Đầu to khoảng 2/5 chiều cao cả người, cả người cao gấp khoảng 1,4 lần bề ngang, chi tiết to khối, đơn giản (trong game chỉ cao ${q.cao} điểm ảnh). `
     + `Nhìn gần chính diện, hơi chếch sang PHẢI trong mọi khung, đứng trên hai chân, hai bàn chân cùng một đường đáy. Viền tối (#1a1420). Ánh sáng từ trên. `
     + luoi + hang + '. ' + coO + cuoi;
 }
