@@ -49,6 +49,7 @@
   #vungTha b { color: var(--ink); }
   .khung-xem { overflow: auto; background: #233a2e; border: 2px solid var(--dk); border-radius: 8px; margin-top: 10px; max-width: 100%; }
   .khung-xem canvas { display: block; }
+  #cvGoc { cursor: pointer; }
   .chu-y { font-size: 12.5px; color: var(--sub); margin: 6px 0 0; }
   .ket-qua { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 300px); gap: 14px; }
   @media (max-width: 760px) { .ket-qua { grid-template-columns: 1fr; } }
@@ -104,7 +105,7 @@
         <label for="cachTach">Cách tách:</label>
         <select id="cachTach"><option value="tu">Tự tìm từng con (khuyên dùng)</option><option value="luoi">Chia theo lưới 8×6</option></select>
       </div>
-      <p class="chu-y">Khung vàng là từng hình công cụ tìm được, số "hàng.khung" ở góc. Nếu ảnh có phần thừa (bảng chữ, khung giải thích) thì cắt bớt:</p>
+      <p class="chu-y">Khung vàng là từng hình công cụ tìm được, số "hàng.khung" ở góc. <b>Chạm vào khung nào để bỏ khung đó</b> (hiện khung đỏ gạch chéo, ví dụ khung chỉ có quả bom hay đám khói); chạm lại để lấy lại. Ảnh có phần thừa (bảng chữ, bảng phụ) thì cắt bớt:</p>
       <div class="cat">
         <label>Cắt trên (%)<input type="number" id="catTren" min="0" max="90" value="0"></label>
         <label>Cắt dưới (%)<input type="number" id="catDuoi" min="0" max="90" value="0"></label>
@@ -187,7 +188,7 @@ const TEN_DT = ['Đứng', 'Chạy', 'Lấy đà', 'Tấn công', 'Trúng đòn'
 const VIEN = [0x14, 0x18, 0x2e];
 
 const $ = (id) => document.getElementById(id);
-let Q = null, ANH = null, KQ = null;
+let Q = null, ANH = null, KQ = null, BO = [], LAST = null; // BO: các điểm (toạ độ ảnh) người dùng chạm để bỏ khung
 
 function bao(t) { const b = $('thongBao'); b.textContent = t; b.hidden = false; clearTimeout(bao.t); bao.t = setTimeout(() => b.hidden = true, 2600); }
 
@@ -226,7 +227,7 @@ $('nutChepPrompt').onclick = () => {
 function nhanAnh(file) {
   if (!file || !/^image\//.test(file.type)) { bao('Tệp này không phải ảnh'); return; }
   const url = URL.createObjectURL(file), img = new Image();
-  img.onload = () => { ANH = img; URL.revokeObjectURL(url); $('vungAnhGoc').hidden = false; chay(); };
+  img.onload = () => { ANH = img; BO = []; URL.revokeObjectURL(url); $('vungAnhGoc').hidden = false; chay(); };
   img.onerror = () => bao('Không mở được ảnh này');
   img.src = url;
 }
@@ -237,7 +238,7 @@ $('chonAnh').onchange = (e) => { nhanAnh(e.target.files[0]); e.target.value = ''
 ['dragleave', 'drop'].forEach(t => $('vungTha').addEventListener(t, () => $('vungTha').classList.remove('keo')));
 $('vungTha').addEventListener('drop', (e) => { e.preventDefault(); const f = e.dataTransfer.files && e.dataTransfer.files[0]; if (f) nhanAnh(f); });
 document.addEventListener('paste', (e) => { const it = [...(e.clipboardData || {}).items || []].find(x => x.type.startsWith('image/')); if (it) nhanAnh(it.getAsFile()); });
-['catTren', 'catDuoi', 'catTrai', 'catPhai'].forEach(id => $(id).onchange = () => ANH && chay());
+['catTren', 'catDuoi', 'catTrai', 'catPhai'].forEach(id => $(id).onchange = () => { BO = []; ANH && chay(); });
 $('latNgang').onchange = () => ANH && chay();
 $('cachTach').onchange = () => ANH && chay();
 $('doNet').onchange = () => ANH && chay();
@@ -451,7 +452,7 @@ function tuTim(A, coAlpha) {
   const khe = lon.slice(1).map((c, i) => ({ i: i + 1, g: c.cy - lon[i].cy })).sort((a, b) => b.g - a.g).slice(0, 5).map(k => k.i).sort((a, b) => a - b);
   const hangs = []; let dau = 0;
   for (const k of [...khe, lon.length]) { hangs.push(lon.slice(dau, k)); dau = k; }
-  const khung = [], loi = [], ghi = [], gops = [];
+  const khung = [], loi = [], ghi = [], gops = [], boRa = [];
   hangs.forEach((h, r) => {
     h.sort((a, b) => a.x0 - b.x0);
     const rongTB = h.map(c => c.x1 - c.x0).sort((a, b) => a - b)[h.length >> 1];
@@ -498,6 +499,9 @@ function tuTim(A, coAlpha) {
     if (bo) { gops[r] = giu; ghi.push(`Hàng ${r + 1}: bỏ ${bo} hình cụt/quá nhỏ`); }
   });
   gops.forEach((gop, r) => {
+    // khung người dùng chạm để bỏ
+    const conLai = gop.filter(f => !BO.some(([x, y]) => x >= f.x0 && x <= f.x1 && y >= f.y0 && y <= f.y1));
+    if (conLai.length < gop.length) { gop.filter(f => !conLai.includes(f)).forEach(f => boRa.push(f)); ghi.push(`Hàng ${r + 1}: bạn đã bỏ ${gop.length - conLai.length} khung`); gop = conLai; gops[r] = gop; }
     // thừa hình: bỏ trước những hình nhỏ hẳn so với cả hàng (đám khói, bào tử bay rời…)
     if (gop.length > SO[r]) {
       const ds = gop.map(soDiem).sort((a, b) => a - b), giua = ds[ds.length >> 1];
@@ -522,7 +526,7 @@ function tuTim(A, coAlpha) {
     }
     hinh[r + ',' + c] = { w, h, px };
   }
-  return { hinh, loi, ghi, khung };
+  return { hinh, loi, ghi, khung, boRa };
 }
 
 // Hàng thiếu hình: nếu còn ≥ một nửa thì lặp khung rải đều cho đủ (ghi chú); ít hơn thì báo lỗi.
@@ -557,9 +561,12 @@ function tachTheoLuoiKe(W, H, duong, nhan, cum, P) {
   }));
   const coHinh = o.map(c => c.lonNhat).filter(n => n > 0).sort((a, b) => a - b), ref = coHinh[coHinh.length >> 1] || 1;
   let catNgang = 0, tongKhung = 0;
+  const boRa = [];
   const khung = [], loi = [], ghi = ['Ảnh có kẻ lưới: ' + cot.length + ' cột × 6 hàng, tách theo từng ô'], hinh = {};
   for (let r = 0; r < 6; r++) {
     let ds = o.filter(c => c.r === r && c.lonNhat >= 0.15 * ref);
+    const conLai = ds.filter(c => !BO.some(([x, y]) => x >= c.x0 && x <= c.x1 && y >= c.y0 && y <= c.y1));
+    if (conLai.length < ds.length) { ds.filter(c => !conLai.includes(c)).forEach(c => boRa.push(c)); ghi.push(`Hàng ${r + 1}: bạn đã bỏ ${ds.length - conLai.length} khung`); ds = conLai; }
     // thừa ô: bỏ dần ô chỉ có vật nhỏ lạc (khói, bào tử tràn sang) trước khi chọn rải đều
     while (ds.length > SO[r]) {
       const n = ds.map(c => c.lonNhat), giua = [...n].sort((a, b) => a - b)[n.length >> 1], mn = Math.min(...n);
@@ -582,7 +589,7 @@ function tachTheoLuoiKe(W, H, duong, nhan, cum, P) {
   }
   // lưới không khớp hình (cắt ngang thân nhiều con) thì bỏ, chuyển sang tự tìm từng con
   if (catNgang > 0.3 * tongKhung) return null;
-  return { hinh, loi, ghi, khung };
+  return { hinh, loi, ghi, khung, boRa };
 }
 
 // Thu nhỏ. "Sắc nét": mỗi điểm mới lấy màu xuất hiện nhiều nhất trong vùng gốc (giữ nét viền, mắt, chấm sáng).
@@ -649,7 +656,7 @@ function chay() {
   } else {
     const k = tuTim(A, coAlpha);
     hinh = k.hinh || {}; loi = k.loi; ghi = k.ghi || [];
-    veGoc(A, null, null, k.khung || []);
+    veGoc(A, null, null, k.khung || [], k.boRa || []);
   }
   const { fw: FW, fh: FH, gx: GX, gy: GY } = Q;
   const caoMax = GY - 3, rongMax = FW - 6;
@@ -710,7 +717,7 @@ function chay() {
 }
 
 // ===================== VẼ XEM =====================
-function veGoc(A, cot, hang, khung) {
+function veGoc(A, cot, hang, khung, boRa) {
   const cv = $('cvGoc'), k = Math.min(1, 1000 / A.W);
   cv.width = Math.round(A.W * k); cv.height = Math.round(A.H * k); cv.style.width = '100%'; cv.style.maxWidth = cv.width + 'px';
   const g = cv.getContext('2d'), c = document.createElement('canvas'); c.width = A.W; c.height = A.H;
@@ -727,8 +734,25 @@ function veGoc(A, cot, hang, khung) {
       g.fillStyle = '#1a120a'; g.fillRect(f.x0 * k - 1, f.y0 * k - 1, 26, 14);
       g.fillStyle = '#f6dc92'; g.fillText((r + 1) + '.' + (c + 1), f.x0 * k + 1, f.y0 * k);
     }
+    g.strokeStyle = '#ff6b4a'; g.lineWidth = 3;
+    for (const f of boRa || []) {
+      const x0 = f.x0 * k, y0 = f.y0 * k, x1 = f.x1 * k, y1 = f.y1 * k;
+      g.strokeRect(x0, y0, x1 - x0, y1 - y0); g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.moveTo(x1, y0); g.lineTo(x0, y1); g.stroke();
+    }
   }
+  LAST = { A, khung: khung || [], boRa: boRa || [] };
 }
+// Chạm một khung trên ảnh gốc: bỏ khung đó (khung đỏ gạch chéo); chạm khung đỏ: lấy lại.
+$('cvGoc').addEventListener('click', (e) => {
+  if (!LAST || !LAST.khung.length && !LAST.boRa.length) return;
+  const cv = $('cvGoc'), r = cv.getBoundingClientRect();
+  const x = (e.clientX - r.left) / r.width * LAST.A.W, y = (e.clientY - r.top) / r.height * LAST.A.H;
+  const trong = (f) => x >= f.x0 && x <= f.x1 && y >= f.y0 && y <= f.y1;
+  const daBo = LAST.boRa.find(trong);
+  if (daBo) BO = BO.filter(([bx, by]) => !(bx >= daBo.x0 && bx <= daBo.x1 && by >= daBo.y0 && by <= daBo.y1));
+  else { const kh = LAST.khung.find(({ f }) => trong(f)); if (!kh) return; BO.push([(kh.f.x0 + kh.f.x1) / 2, (kh.f.y0 + kh.f.y1) / 2]); }
+  chay();
+});
 let canvasTam = null;
 function veTam() {
   const { tam, TW, TH, FW, FH } = KQ;
