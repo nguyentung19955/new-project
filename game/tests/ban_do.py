@@ -189,7 +189,7 @@ def run(p, size, shots):
     shot('6-hanh-trang-trang-phuc')
     o = over(8, 472); c.ok(not o, 'Hành trang thẻ Trang phục: không chữ tràn khung: ' + '; '.join(o[:3]))
     t = [x[0] for x in ev("window.__txt")]
-    c.ok('Khoá' in t and any(s.startswith('Bán ') and s.endswith(' vàng') for s in t), 'Hành trang ở làng có nút Khoá và Bán cho món đang xem')
+    c.ok(('Khóa' in t or 'Khoá' in t) and any(s.startswith('Bán ') and s.endswith(' vàng') for s in t), 'Hành trang ở làng có nút Khoá và Bán cho món đang xem')
     g0 = gold(); pr = ev("G.banDo.oPrice({k: 'ao_vai', r: 0})")
     g.tap(360, 117, 250)
     c.ok(gold() == g0 + pr and 'ao_vai' not in ev("G.save.outfit.items.map((x) => x.k)"), f'Hành trang: bấm Bán thì bán (+{pr})')
@@ -219,7 +219,7 @@ def run(p, size, shots):
         ev("G.hanhTrang.osel = G.save.outfit.items[0] && G.save.outfit.items[0].id"); g.wait(120)
         ev("window.__txt = []"); g.wait(100)
         t = [x[0] for x in ev("window.__txt")]
-        bad += [s for s in t if s.startswith('Bán') or s in ('Khoá', 'Mở khoá', 'Chọn nhiều')]
+        bad += [s for s in t if s.startswith('Bán') or s in ('Khóa', 'Mở khóa', 'Khoá', 'Mở khoá', 'Chọn nhiều')]
     c.ok(not bad, 'trong ải không thấy nút Bán, Khoá, Chọn nhiều: ' + ', '.join(bad[:4]))
     ev("G.getRun().quit = true; G.finishStage(false); G.setScene(G.Village)"); g.wait(300)
 

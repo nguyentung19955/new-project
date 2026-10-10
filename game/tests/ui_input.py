@@ -369,7 +369,8 @@ def run(p, size, url=None):
       sv.weapons.forEach((w) => { w.sharpen = 0; w.tier = 0; });
       const w = sv.weapons[0]; w.branch = 'fire'; w.marks.fire = 40;
       while (sv.weapons.length < 5) G.newWeapon(sv, 'hammer', 0);
-      sv.heroes.hunter.unlocked = true; sv.heroes.hunter.lvl = 6; sv.heroes.smith.lvl = 6; sv.owned.helm = ['h_r2']; sv.helm = null; })()""")
+      sv.heroes.hunter.unlocked = true; sv.heroes.hunter.lvl = 6; sv.heroes.smith.lvl = 6; sv.owned.helm = ['h_r2']; sv.helm = null;
+      if (Object.keys(sv.stars).length < 2) sv.stars = Object.assign({ '0-0': 3, '0-1': 3 }, sv.stars); })()""")  # qua 2 ải: mỗi người làng tự có chấm đỏ riêng
     FT = [189, 250, 312, 373, 435]  # tâm năm thẻ Mài, Nâng bậc, Tôi lại, Rèn đồ, Nâng lò
     c.ok(visit('ren') and tab() == 'forge', 'Ông Thợ Rèn mở lò rèn')
     c.ok(ev(f"{VS}.state.news.ren") is True, 'đủ nguyên liệu thì Ông Thợ Rèn có dấu chấm than báo việc mới')

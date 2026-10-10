@@ -76,7 +76,7 @@
     ui.text(Object.keys(st).map((k) => O.statText(k, st[k])).join(', '), x, y + 20, { size: 7, color: TXT });
     const sp = O.special(it);
     if (sp) return ui.para('★ ' + sp.name + ': ' + sp.desc, x, y + 30, w, { size: 6.5, color: sp.key === 'none' ? SOFT : PURP });
-    if (Ti.old) return ui.para('Tác dụng cũ: ' + G.GEAR.charm[Ti.old].desc + ' (hero từ cấp 5).', x, y + 30, w, { size: 6.5, color: PURP });
+    if (Ti.old) return ui.para('Tác dụng cũ: ' + G.GEAR.charm[Ti.old].desc + ' (em bé từ cấp 5).', x, y + 30, w, { size: 6.5, color: PURP });
     if (it.r < 2) return ui.para('Lên bậc Tím: mở tác dụng đặc biệt' + (Ti.el ? ' hệ ' + HN[Ti.el] : ' (khiên đầu phòng)') + '.', x, y + 30, w, { size: 6.5, color: SOFT });
     return y + 30;
   }

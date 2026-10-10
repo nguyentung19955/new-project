@@ -153,7 +153,7 @@
     // hàng tiêu đề cột: dải tối mảnh có gạch đồng bên dưới
     ui.rect(CX, 117, CW, 11, 'rgba(0,0,0,0.3)'); ui.rect(CX, 127, CW, 1, 'rgba(168,117,47,0.75)');
     ui.text('#', cx.rank + 3, 125, { size: 7, bold: true, color: SOFT, align: 'center' }); ui.text('Tên', cx.name, 125, { size: 7, bold: true, color: SOFT });
-    ui.text(colName, cx.val + 38, 125, { size: 7, bold: true, color: SOFT, align: 'right' }); ui.text('Hero · xa nhất', cx.extra, 125, { size: 7, bold: true, color: SOFT });
+    ui.text(colName, cx.val + 38, 125, { size: 7, bold: true, color: SOFT, align: 'right' }); ui.text('Em bé · xa nhất', cx.extra, 125, { size: 7, bold: true, color: SOFT });
     const me = C.user && C.user.uid;
     const rows = D.items.slice(B.page * PER, B.page * PER + PER);
     const cut = (s, wd, sz) => { const a = ui.wrap(s, wd, sz, true); return a.length > 1 ? a[0] + '…' : a[0] || ''; };

@@ -6,7 +6,7 @@
     o = o || {};
     G.resetSave();
     const sv = G.save;
-    sv.sound = false; sv.tut.done = true; sv.tut.chIn = 1; // chIn: đã xem mẹo nút Chưởng (js/chuong.js), để ảnh chụp không có dòng mẹo
+    sv.sound = false; sv.tut.done = true; sv.tut.chIn = 1; sv.tut.potion = 1; // chIn: đã xem mẹo nút Chưởng (js/chuong.js), potion: đã xem mẹo Bình máu (js/stage.js), để ảnh chụp không có dòng mẹo
     for (const k of G.HKEYS) sv.heroes[k].unlocked = true;
     sv.hero = o.hero || 'smith';
     const hs = sv.heroes[sv.hero];

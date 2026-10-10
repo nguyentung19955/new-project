@@ -83,7 +83,7 @@
     const xf = hs.lvl >= G.MAX_LEVEL ? 1 : hs.xp / G.xpNeed(hs.lvl);
     T.bar(CX + 4, CY + 127, 104, 'xp', xf, null, { h: 7 });
     ui.text(hs.lvl >= G.MAX_LEVEL ? 'Đã tối đa' : Math.floor(hs.xp) + '/' + G.xpNeed(hs.lvl) + ' kinh nghiệm', CX + 56, CY + 144, { size: 6.5, align: 'center', color: SOFT });
-    if (!RO && T.sbtn(CX + 6, CY + 150, 100, 16, 'Đổi hero: Ông Từ', { size: 7, pad: 2 })) { VS.goNpc('tu', true); return; }
+    if (!RO && T.sbtn(CX + 6, CY + 150, 100, 16, 'Đổi em bé: Ông Từ', { size: 7, pad: 2 })) { VS.goNpc('tu', true); return; }
     const x = CX + 122, w = CW - 128;
     region('hero', x, CY, w, CH, (y) => {
       y += 11;
@@ -107,7 +107,7 @@
         ui.text(String(r[1]), cx + cw - 4, cy + 9, { size: 7.5, bold: true, align: 'right', color: r[0] === 'Máu' ? '#ff9a7a' : r[0] === 'Mana' ? '#8fc6ff' : TXT });
       });
       y += Math.ceil(rows.length / 2) * 13 + 10;
-      T.head('Hero', x, y); y += 3;
+      T.head('Em bé', x, y); y += 3;
       y = ui.para('Sở trường: ' + H.fav.map((f) => G.WTYPES[f].name).join(', ') + ' (+10% sát thương)', x, y + 8, w, { size: 7 });
       y = ui.para('Nội tại: ' + H.passive, x, y, w, { size: 7, color: SOFT });
       y = ui.para('Chưởng (' + (G.CHUONG ? G.CHUONG.cost : 30) + ' mana, ' + (G.chuong ? G.CHUONG.trees[G.chuong.state(sv.heroes[sv.hero], sv.hero).cay].name : '') + '). ' + H.skillDesc, x, y, w, { size: 7, color: SOFT });
@@ -161,15 +161,15 @@
     // nút bên phải
     const bx = x + wd - bw - 2;
     if (multi) { // đang chọn nhiều: chạm cả dòng để chọn, bên phải ghi giá
-      ui.text(carried ? 'đang mang, không bán' : w.lock ? 'đã khoá, không bán' : 'Bà trả ' + BD.wPrice(w) + ' vàng', bx + bw / 2, y + 23, { size: 7.5, bold: true, align: 'center', color: carried || w.lock ? SOFT : GOLD });
+      ui.text(carried ? 'đang mang, không bán' : w.lock ? 'đã khóa, không bán' : 'Bà trả ' + BD.wPrice(w) + ' vàng', bx + bw / 2, y + 23, { size: 7.5, bold: true, align: 'center', color: carried || w.lock ? SOFT : GOLD });
       if (T.hit(x, y, wd, 40)) BD.togglePick(sv, 'w', w);
       return false;
     }
     if (sell) {
       const xw = carried ? 98 : 44;
       if (T.sbtn(bx, y + 3, xw, 15, carried ? 'Xem chi tiết' : 'Xem', { size: 7, pad: 1 })) { openWeapon(w.id); return true; }
-      if (T.sbtn(bx + xw + 3, y + 3, 49, 15, w.lock ? 'Mở khoá' : 'Khoá', { size: 7, pad: 1, sel: !!w.lock })) { BD.toggleLock(w); VA.say((w.lock ? 'Đã khoá ' : 'Đã mở khoá ') + G.wName(w) + '.'); return true; }
-      if (!carried && T.sbtn(bx + 99, y + 3, 51, 15, w.lock ? 'Đã khoá' : 'Bán ' + BD.wPrice(w) + ' vàng', { size: 7, pad: 1, danger: true, disabled: !!w.lock })) { BD.request(sv, 'w', [w.id], () => { B.sel = null; }); return true; }
+      if (T.sbtn(bx + xw + 3, y + 3, 49, 15, w.lock ? 'Mở khóa' : 'Khóa', { size: 7, pad: 1, sel: !!w.lock })) { BD.toggleLock(w); VA.say((w.lock ? 'Đã khóa ' : 'Đã mở khóa ') + G.wName(w) + '.'); return true; }
+      if (!carried && T.sbtn(bx + 99, y + 3, 51, 15, w.lock ? 'Đã khóa' : 'Bán ' + BD.wPrice(w) + ' vàng', { size: 7, pad: 1, danger: true, disabled: !!w.lock })) { BD.request(sv, 'w', [w.id], () => { B.sel = null; }); return true; }
     } else if (T.sbtn(bx, y + 3, bw, 15, 'Xem chi tiết', { size: 7, pad: 1 })) { openWeapon(w.id); return true; }
     if (carried) {
       ui.text('đang mang ô ' + (sv.carry.indexOf(w.id) + 1), bx + bw / 2, y + 30, { size: 7, bold: true, align: 'center', color: GOOD });
@@ -264,7 +264,7 @@
         BD.quickBar(sv, 'o', RX + RW, y, 12); y += 16;
         const t = BD.total(sv, 'o', BD.ids);
         ui.text('Đã chọn ' + t.n + ' món · Bà Hàng Xén trả ' + t.gold + ' vàng', RX, y + 9, { size: 8, bold: true, color: GOLD });
-        return ui.para('Chạm các ô bên trái để chọn hoặc bỏ. Món đang mặc (chấm xanh) và món khoá không chọn được.', RX, y + 20, RW, { size: 7, color: SOFT });
+        return ui.para('Chạm các ô bên trái để chọn hoặc bỏ. Món đang mặc (chấm xanh) và món khóa không chọn được.', RX, y + 20, RW, { size: 7, color: SOFT });
       }
       const it = O.byId(sv, B.osel);
       if (!it) { y = ui.para('Chạm một món để xem chỉ số, bộ và tác dụng. Món đang mặc có dấu xanh.', RX, y + 9, RW, { size: 7, color: SOFT }); }
@@ -278,8 +278,8 @@
         }
         if (sell) { // khoá và bán món đang xem (chỉ ở làng)
           const why = BD.why(sv, 'o', it);
-          if (T.sbtn(RX, y + 18, 60, 15, it.lock ? 'Mở khoá' : 'Khoá', { size: 7, pad: 1, sel: !!it.lock })) { BD.toggleLock(it); VA.say((it.lock ? 'Đã khoá ' : 'Đã mở khoá ') + O.name(it) + '.'); }
-          if (T.sbtn(RX + 64, y + 18, 96, 15, why ? (why === 'đang mặc' ? 'Đang mặc' : 'Đã khoá') : 'Bán ' + BD.oPrice(it) + ' vàng', { size: 7, pad: 1, danger: !why, disabled: !!why })) BD.request(sv, 'o', [it.id], () => { B.osel = null; });
+          if (T.sbtn(RX, y + 18, 60, 15, it.lock ? 'Mở khóa' : 'Khóa', { size: 7, pad: 1, sel: !!it.lock })) { BD.toggleLock(it); VA.say((it.lock ? 'Đã khóa ' : 'Đã mở khóa ') + O.name(it) + '.'); }
+          if (T.sbtn(RX + 64, y + 18, 96, 15, why ? (why === 'đang mặc' ? 'Đang mặc' : 'Đã khóa') : 'Bán ' + BD.oPrice(it) + ' vàng', { size: 7, pad: 1, danger: !why, disabled: !!why })) BD.request(sv, 'o', [it.id], () => { B.osel = null; });
           y += 18;
         }
         const tags = [O.SLOT_NAME[Ti.slot], 'bậc ' + R.name]; if (Ti.el) tags.push('hệ ' + HN[Ti.el]); if (Ti.set) tags.push(O.SETS[Ti.set].name);
@@ -288,7 +288,7 @@
         y = ui.para(ks.length ? ks.map((q) => O.statText(q, st[q])).join(', ') : 'Không tăng chỉ số', RX, y, RW, { size: 7, color: TXT });
         const sp = O.special(it);
         if (sp) y = ui.para('★ ' + sp.name + ': ' + sp.desc, RX, y, RW, { size: 6.5, color: sp.key === 'none' ? SOFT : PURP });
-        else if (Ti.old) y = ui.para('Tác dụng cũ: ' + G.GEAR.charm[Ti.old].desc + ' (hero từ cấp 5).', RX, y, RW, { size: 6.5, color: PURP });
+        else if (Ti.old) y = ui.para('Tác dụng cũ: ' + G.GEAR.charm[Ti.old].desc + ' (em bé từ cấp 5).', RX, y, RW, { size: 6.5, color: PURP });
         else if (it.r < 2) y = ui.para('Lên bậc Tím ở Cô Thợ May để mở tác dụng đặc biệt.', RX, y, RW, { size: 6.5, color: SOFT });
       }
       if (sell && sv.outfit.items.length) { // bán nhiều món một lúc (js/ban_do.js)
@@ -325,7 +325,7 @@
       const src = ['hạ tinh anh +' + L.elite, 'trùm nhỏ +' + L.mini, 'trùm vùng +' + L.boss, 'kết liễu quái thường đang dính hệ +1'];
       if (L.drop > 0) src.push('quái thường ' + Math.round(L.drop * 100) + '% rơi viên linh khí, nhặt +' + L.orb);
       y = ui.para(src.join(' · ') + '. Hệ nhận được: hệ quái đang dính lúc gục, không dính thì theo hệ của vùng.' + (sv.hero === 'smith' ? ' Thợ Rèn nhận dấu ấn nhanh hơn 20%.' : ''), CX, y + 20, CW - 8, { size: 7, color: TXT });
-      y = ui.para('Mốc tiến hoá: ' + G.MARKS.map((m, i) => m + ' ' + G.STAGE_NAMES[i + 1]).join(' · ') + '. Vũ khí Thường chỉ lên tới Thành hình.', CX, y + 1, CW - 8, { size: 6.5, color: SOFT });
+      y = ui.para('Mốc tiến hóa: ' + G.MARKS.map((m, i) => m + ' ' + G.STAGE_NAMES[i + 1]).join(' · ') + '. Vũ khí Thường chỉ lên tới Thành hình.', CX, y + 1, CW - 8, { size: 6.5, color: SOFT });
       y += 5;
       const cw = (CW - 8 - 150) / 3;
       for (const w of list) {
