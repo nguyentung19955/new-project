@@ -70,14 +70,15 @@
   // Mỗi vai: cha mặc định, lớp, điểm khớp trên mảnh [fx, fy] (tỉ lệ cỡ mảnh), điểm gắn trên cha [fx, fy] (tỉ lệ cỡ cha).
   const RAP = {
     nguoi: {
-      than: { lop: 3, khop: [0.5, 0.95] },
-      dau: { cha: 'than', lop: 5, khop: [0.5, 0.93], gan: [0.5, 0.1] },
-      'tay-truoc': { cha: 'than', lop: 7, khop: [0.3, 0.12], gan: [0.66, 0.2] },
-      'tay-sau': { cha: 'than', lop: 1, khop: [0.3, 0.12], gan: [0.38, 0.2] },
+      // Prompt Gemini vẽ mọi chi có đầu khớp tròn "giấu dưới thân": tay, chân đều nằm sau thân để khớp không lộ.
+      than: { lop: 4, khop: [0.5, 0.95] },
+      dau: { cha: 'than', lop: 6, khop: [0.5, 0.93], gan: [0.5, 0.1] },
+      'tay-truoc': { cha: 'than', lop: 3, khop: [0.3, 0.12], gan: [0.8, 0.22] },
+      'tay-sau': { cha: 'than', lop: 1, khop: [0.3, 0.12], gan: [0.24, 0.22] },
       'chan-truoc': { cha: 'than', lop: 2, khop: [0.5, 0.12], gan: [0.62, 0.86] },
       'chan-sau': { cha: 'than', lop: 0, khop: [0.5, 0.12], gan: [0.38, 0.86] },
-      'vu-khi': { cha: 'tay-truoc', lop: 6, khop: [0.5, 0.75], gan: [0.62, 0.88] },
-      'phu-kien': { cha: 'dau', lop: 4, khop: [0.5, 0.2], gan: [0.2, 0.45] },
+      'vu-khi': { cha: 'tay-truoc', lop: 7, khop: [0.5, 0.75], gan: [0.62, 0.88] },
+      'phu-kien': { cha: 'dau', lop: 5, khop: [0.5, 0.2], gan: [0.2, 0.45] },
     },
     'bon-chan': {
       than: { lop: 2, khop: [0.5, 0.6] },
@@ -91,7 +92,7 @@
     },
     cua: {
       than: { lop: 2, khop: [0.5, 0.7] },
-      'cang-truoc': { cha: 'than', lop: 5, khop: [0.2, 0.75], gan: [0.9, 0.55] },
+      'cang-truoc': { cha: 'than', lop: 1, khop: [0.2, 0.75], gan: [0.9, 0.55] },
       'cang-sau': { cha: 'than', lop: 0, khop: [0.2, 0.75], gan: [0.8, 0.42] },
       'chan-gan-1': { cha: 'than', lop: 1, khop: [0.5, 0.12], gan: [0.3, 0.8] },
       'chan-gan-2': { cha: 'than', lop: 1, khop: [0.5, 0.12], gan: [0.5, 0.82] },

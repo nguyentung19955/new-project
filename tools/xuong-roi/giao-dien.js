@@ -53,7 +53,8 @@
         const d = {
           khung: S.khung, doi_tuong: S.doi_tuong, ten: S.ten, ma: S.ma, maTay: S.maTay, thay_cho: S.thay_cho, nguong: S.nguong, lem: S.lem, vun: S.vun,
           goc: S.goc, cao: S.cao, dong_tac: S.dong_tac, khungDoan: S.khungDoan, canRap: S.canRap, buoc: S.buoc,
-          manh: S.manh.map((p) => ({ id: p.id, vai: p.vai, cha: p.cha, sx: p.sx, sy: p.sy, w: p.w, h: p.h, dat: p.dat, truc: p.truc, lop: p.lop, src: p.cv.toDataURL('image/png') })),
+          daXoa: S.daXoa || [],
+          manh: S.manh.map((p) => ({ id: p.id, lat: !!p.lat, vai: p.vai, cha: p.cha, sx: p.sx, sy: p.sy, w: p.w, h: p.h, dat: p.dat, truc: p.truc, lop: p.lop, src: p.cv.toDataURL('image/png') })),
         };
         localStorage.setItem(KHOA, JSON.stringify(d));
       } catch (e) { /* đầy bộ nhớ hoặc trình duyệt chặn: bỏ qua */ }
@@ -67,13 +68,13 @@
       try {
         const img = await XR.tuDataUrl(m.src), cv = XR.taoCanvas(img.width, img.height);
         cv.getContext('2d').drawImage(img, 0, 0);
-        ds.push({ id: m.id, vai: m.vai, cha: m.cha, sx: m.sx, sy: m.sy, w: cv.width, h: cv.height, dat: m.dat, truc: m.truc, lop: m.lop, cv });
+        ds.push({ id: m.id, lat: !!m.lat, vai: m.vai, cha: m.cha, sx: m.sx, sy: m.sy, w: cv.width, h: cv.height, dat: m.dat, truc: m.truc, lop: m.lop, cv });
       } catch (e) { /* mảnh hỏng: bỏ */ }
     }
     Object.assign(S, {
       khung: d.khung || 'nguoi', doi_tuong: d.doi_tuong || 'em-be', ten: d.ten || '', ma: d.ma || '', maTay: !!d.maTay, thay_cho: d.thay_cho || '',
       nguong: d.nguong || 45, lem: d.lem == null ? 1 : d.lem, vun: d.vun == null ? 3 : d.vun, goc: d.goc || [0, 0], cao: d.cao || 40,
-      dong_tac: d.dong_tac || {}, khungDoan: d.khungDoan || null, canRap: d.canRap !== false, manh: ds,
+      daXoa: d.daXoa || [], dong_tac: d.dong_tac || {}, khungDoan: d.khungDoan || null, canRap: d.canRap !== false, manh: ds,
     });
     S.chon.clear(); S.chonRap = null; S.view = null; doiRig();
   }
@@ -181,16 +182,50 @@
     try {
       S.anhGoc = await XR.docTepAnh(file);
       $('anhGoc').src = S.anhGoc.toDataURL('image/jpeg', 0.7); $('anhGoc').classList.remove('an');
+      S.manh = []; S.daXoa = [];
       catLai();
     } catch (e) { bao(e.message || 'Không đọc được ảnh.'); }
   }
+  // Phần chung của hai ô chữ nhật (toạ độ ảnh gốc) chia cho diện tích ô a
+  function phuLen(a, b) {
+    const w = Math.min(a.sx + a.w, b.sx + b.w) - Math.max(a.sx, b.sx), h = Math.min(a.sy + a.h, b.sy + b.h) - Math.max(a.sy, b.sy);
+    return w > 0 && h > 0 ? (w * h) / Math.max(1, a.w * a.h) : 0;
+  }
+  // Cắt lại từ ảnh gốc nhưng GIỮ phần đã làm: mảnh mới trùng chỗ mảnh cũ thì nhận lại vai, khớp, phép lật;
+  // các mảnh mới cùng nằm trong một mảnh đã gộp thì gộp lại; mảnh nằm ở chỗ đã xoá thì bỏ.
   function catLai() {
     if (!S.anhGoc) return;
     const ds = XR.tachManh(S.anhGoc, { nguong: S.nguong, lem: S.lem, vun: S.vun });
-    S.manh = ds.map((p) => Object.assign(p, { id: idMoi() }));
-    S.chon.clear(); S.khungDoan = null; S.canRap = true; S.view = null; doiRig();
-    veBuoc2(); luu();
-    bao(S.manh.length ? 'Đã tách được ' + S.manh.length + ' mảnh.' : 'Không thấy mảnh nào. Thử giảm ngưỡng nền trắng.');
+    const cu = S.manh, nhom = new Map(), moi = [];
+    let boDi = 0;
+    for (const n of ds) {
+      let tot = null, diem = 0.5;
+      for (const o of cu) { const d = phuLen(n, o); if (d > diem) { diem = d; tot = o; } }
+      if (!tot && (S.daXoa || []).some((r) => phuLen(n, r) > 0.5)) { boDi++; continue; }
+      if (tot) { if (!nhom.has(tot.id)) nhom.set(tot.id, []); nhom.get(tot.id).push(n); }
+      else moi.push(Object.assign(n, { id: idMoi() }));
+    }
+    const ra = [];
+    let doi = moi.length > 0;
+    for (const o of cu) {
+      const g = nhom.get(o.id);
+      if (!g) { doi = true; continue; }
+      const m = g.length > 1 ? XR.gopManh(g) : g[0];
+      const p = Object.assign(m, { id: o.id, vai: o.vai, cha: o.cha, lop: o.lop, lat: false, so: null, _a: null });
+      if (o.dat) { p.dat = o.dat.slice(); p.truc = o.truc.slice(); }
+      if (o.lat) { p.cv = XR.latCanvas(p.cv); p.lat = true; }
+      ra.push(p);
+    }
+    S.manh = ra.concat(moi);
+    const con = new Set(S.manh.map((p) => p.id));
+    for (const p of S.manh) if (p.cha && !con.has(p.cha)) p.cha = null;
+    for (const id of Array.from(S.chon)) if (!con.has(id)) S.chon.delete(id);
+    if (!cu.length || doi) { S.canRap = true; S.view = null; }
+    if (!cu.length) S.khungDoan = null;
+    doiRig(); veBuoc2(); luu();
+    bao(!S.manh.length ? 'Không thấy mảnh nào. Thử giảm ngưỡng nền trắng.'
+      : cu.length ? 'Đã cắt lại: ' + S.manh.length + ' mảnh, giữ phần đã gộp/xoá/lật' + (moi.length ? ' (có ' + moi.length + ' mảnh mới)' : '') + '.'
+        : 'Đã tách được ' + S.manh.length + ' mảnh.');
   }
   let henCat = 0;
   const catSau = () => { clearTimeout(henCat); henCat = setTimeout(catLai, 250); };
@@ -214,7 +249,9 @@
   });
   $('nutGop').onclick = () => {
     const ds = S.manh.filter((p) => S.chon.has(p.id)); if (ds.length < 2) return;
-    const m = Object.assign(XR.gopManh(ds), { id: idMoi() });
+    const latHet = ds.every((p) => p.lat);
+    const m = Object.assign(XR.gopManh(ds.map((p) => (p.lat ? Object.assign({}, p, { cv: XR.latCanvas(p.cv) }) : p))), { id: idMoi(), lat: false });
+    if (latHet) { m.cv = XR.latCanvas(m.cv); m.lat = true; }
     const i = S.manh.indexOf(ds[0]);
     S.manh = S.manh.filter((p) => !S.chon.has(p.id)); S.manh.splice(Math.min(i, S.manh.length), 0, m);
     for (const p of S.manh) if (S.chon.has(p.cha)) p.cha = null;
@@ -222,6 +259,7 @@
   };
   $('nutXoa').onclick = () => {
     const n = S.chon.size; if (!n) return;
+    S.daXoa = (S.daXoa || []).concat(S.manh.filter((p) => S.chon.has(p.id)).map((p) => ({ sx: p.sx, sy: p.sy, w: p.w, h: p.h })));
     S.manh = S.manh.filter((p) => !S.chon.has(p.id));
     for (const p of S.manh) if (S.chon.has(p.cha)) p.cha = null;
     S.chon.clear(); S.canRap = true; doiRig(); veBuoc2(); luu(); bao('Đã xoá ' + n + ' mảnh.');
@@ -231,7 +269,7 @@
     doiRig(); veBuoc2(); luu(); bao('Đã lật ngang.');
   };
   function latManh(p) {
-    p.cv = XR.latCanvas(p.cv); p.so = null; p._a = null;
+    p.cv = XR.latCanvas(p.cv); p.so = null; p._a = null; p.lat = !p.lat;
     if (p.dat && p.truc) p.truc = [p.dat[0] + p.w - (p.truc[0] - p.dat[0]), p.truc[1]];
   }
   $('nutChonHet').onclick = () => { if (S.chon.size === S.manh.length) S.chon.clear(); else S.manh.forEach((p) => S.chon.add(p.id)); veBuoc2(); };
