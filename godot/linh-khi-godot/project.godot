@@ -1,0 +1,22 @@
+; Dự án Godot mẫu của game Linh Khí: làm hình nhân vật, vũ khí, hiệu ứng rồi xuất ra tệp game đọc được.
+; Mở bằng Godot 4.4 trở lên: Import → chọn tệp này.
+
+config_version=5
+
+[application]
+
+config/name="Linh Khi - Xuong Godot"
+run/main_scene="res://em_be.tscn"
+config/features=PackedStringArray("4.5")
+
+[display]
+
+window/size/viewport_width=1024
+window/size/viewport_height=1024
+window/per_pixel_transparency/allowed=true
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+viewport/transparent_background=true

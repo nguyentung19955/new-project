@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://xuat_vu_khi.gd" id="1_qxiqx"]
+
+[sub_resource type="Gradient" id="Gradient_33nsu"]
+colors = PackedColorArray(0.75, 0.79, 0.8566667, 1, 0.6, 0.64000005, 0.7066667, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_6wm4l"]
+gradient = SubResource("Gradient_33nsu")
+width = 520
+height = 90
+fill_to = Vector2(1, 1)
+
+[node name="VuKhi" type="Node2D"]
+script = ExtResource("1_qxiqx")
+
+[node name="Anh" type="Sprite2D" parent="."]
+position = Vector2(512, 512)
+texture = SubResource("GradientTexture2D_6wm4l")
+
+[node name="Cam" type="Marker2D" parent="."]
+position = Vector2(300, 512)
+gizmo_extents = 30.0
+
+[node name="Mui" type="Marker2D" parent="."]
+position = Vector2(770, 512)
+gizmo_extents = 30.0
