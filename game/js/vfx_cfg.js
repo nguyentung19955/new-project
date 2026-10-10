@@ -10,5 +10,7 @@
     nhun: 1,        // nhún, co giãn (squash & stretch) của em bé và quái
     moiTruong: 1,   // chuyển động môi trường: cỏ lay, đèn chập chờn, nước gợn, đom đóm
     giaoDien: 1,    // hiệu ứng giao diện: thanh máu tụt dần, nút nảy, chữ thông báo
+    vien: 1,        // vành sáng mép trên của em bé, quái, trùm (tách hình khỏi nền trên điện thoại); đổi lúc đang chơi thì gọi G.monsterArt.xoaNho()
+    bui: 1,         // bụi bước chân, bụi chạm đất của em bé và quái
   }, G.VFX || {});
 })();

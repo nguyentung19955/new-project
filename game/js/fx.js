@@ -328,6 +328,7 @@
     try {
       if (!sync()) return false;
       if (S.stop > 0) {
+        S.stopAge = (S.stopAge || 0) + dt; // đã khựng bao lâu (fx.chop: chỉ chớp trắng khung đầu)
         S.stop -= dt;
         if (S.stop <= 0) S.stopGap = 0.07;
         if (inp) for (const k of PRESS) if (inp[k]) S.latch[k] = true;
@@ -335,8 +336,21 @@
         return true;
       }
       if (inp) for (const k of PRESS) if (S.latch[k]) { inp[k] = true; S.latch[k] = false; }
+      S.stopAge = 0;
       return false;
     } catch (e) { fail(e); if (S) S.stop = 0; return false; }
+  };
+  // Hệ số chớp trắng của quái/trùm khi vẽ: khựng hình (hit-stop) giữ nguyên khung trúng đòn, nếu cứ chớp trắng thì cả người trắng
+  // suốt 45–115 ms. Chỉ khung đầu tiên trắng hẳn, các khung khựng sau (và 0,07 giây ngay sau đó) nhạt còn 0,3: vẫn thấy đòn trúng, không thành bóng trắng.
+  fx.chop = function () { return S && ((S.stop > 0 && (S.stopAge || 0) > 0.01) || S.stopGap > 0) ? 0.3 : 1; }; // stopGap: 0,07 giây ngay sau khựng (không chớp lại lần hai)
+  // Nhuộm màu hệ cho nhịp độc/cháy (thay chớp trắng): trả [màu, độ phủ] hoặc null. Nhạt dần trong 0,22 giây.
+  const DT = ['', 0];
+  fx.dotTint = function (e) {
+    if (G.noRender || !S || !e || e.fxDotAt == null) return null;
+    const age = S.t - e.fxDotAt;
+    if (!(age >= 0 && age < 0.22)) return null;
+    DT[0] = e.fxDotEl ? pal(e.fxDotEl).c : '#ff5a40'; DT[1] = 0.45 * (1 - age / 0.22);
+    return DT;
   };
   fx.shakeOffset = function () {
     if (G.noRender || !S) return ZERO;
@@ -368,7 +382,12 @@
     const top = t.y - Math.min(60, (t.h || 24) * (t.scale || 1)) - 4;
     const s = String(Math.max(1, Math.round(d)));
     if (o.crit) num(t.x, top - 2, s + '!', { col: '#ffd23f', size: 13, pop: 1.2, t: 1, edge: 'rgba(90,30,0,0.95)', kind: 1 });
-    else if (o.dot) { if (S.N.length < 12) num(t.x + rr(-6, 6), top + 4, s, { col: o.el ? pal(o.el).c2 : '#ffffff', size: 6.5, pop: 0.2, t: 0.55, vy: -20 }); }
+    else if (o.dot) {
+      // nhịp sát thương độc/cháy: không chớp trắng cả người như trúng đòn (G.damage vừa đặt t.flash); thay bằng nhuộm nhẹ màu hệ
+      // trong 0,22 giây (js/mobs.js, js/boss.js đọc t.fxDotAt, t.fxDotEl). Có đòn thật trúng cùng lúc thì giữ chớp trắng.
+      if (!(S.t - (t.fxHitAt == null ? -9 : t.fxHitAt) < 0.1)) t.flash = 0;
+      t.fxDotAt = S.t; t.fxDotEl = o.el || null;
+      if (S.N.length < 12) num(t.x + rr(-6, 6), top + 4, s, { col: o.el ? pal(o.el).c2 : '#ffffff', size: 6.5, pop: 0.2, t: 0.55, vy: -20 }); }
     else if (o.m < 0.8) num(t.x, top, s, { col: '#9a9a9a', size: 7, pop: 0.3, t: 0.6 });
     else num(t.x, top, s, { col: o.el ? pal(o.el).c2 : '#ffffff', size: o.m > 1.25 ? 10 : 8, pop: o.m > 1.25 ? 1 : 0.7 });
   });
@@ -497,8 +516,8 @@
     S.trI = (S.trI + 1) % TRN; if (S.trN < TRN) S.trN++;
     const tier = q.anim === 'spec' ? 3 : q.anim === 'sweep' || q.wt === 'hammer' || q.combo === 2 ? 2 : 1;
     o.gx = q.gx; o.gy = q.gy; o.a = Math.atan2(q.dy, q.dx); o.m = Math.hypot(q.dx, q.dy); o.L = q.L + 1;
-    o.age = 0; o.life = [0, 0.085, 0.115, 0.15][tier] * (0.5 + 0.5 * Math.min(2, vet)); o.tier = tier;
-    o.r0 = tier === 3 ? 0.36 : R0F[q.wt] - (tier === 2 ? 0.1 : 0); o.brk = S.trBrk;
+    o.age = 0; o.life = [0, 0.085, 0.115, 0.12][tier] * (0.5 + 0.5 * Math.min(2, vet)); o.tier = tier;
+    o.r0 = tier === 3 ? 0.5 : R0F[q.wt] - (tier === 2 ? 0.1 : 0); o.brk = S.trBrk; // chiêu đặc biệt: dải hẹp và tắt nhanh hơn trước (0,36 / 0,15) để không lấn át em bé
     const w = G.curW ? G.curW(P) : null;
     o.pl = pal(w && G.activeEl ? G.activeEl(P, w) : null);
     S.trBrk = false; S.trOk = 0.25;
@@ -592,6 +611,7 @@
       spray(3, cx, cy, 2, Math.PI / 2, 0.9, 30, 70, 0.1, 0.18, PL.ramp, 1, 0, 4);
       return;
     }
+    e.fxHitAt = S.t; // nhịp độc/cháy cùng lúc với đòn thật thì vẫn chớp trắng (api dmg)
     // giật lùi nhẹ (chỉ là dời hình lúc vẽ)
     e.fxK = 0.13; e.fxD = dir * (e.isBoss ? 1 : o.heavy || o.crit ? 4 : 2);
     const big = o.heavy || o.crit || o.dead;
@@ -766,8 +786,29 @@
     if (e.fxRt && !rt && !e.dead) for (let i = 0; i < 4; i++) emit(8, e.x + rr(-6, 6), e.y - 2, rr(-50, 50), rr(-90, -40), 0.5, RAMP.steel, 2, 400, 0, e.y + 2, 1);
     e.fxRt = rt;
     if (e.fxK > 0) e.fxK -= 1 / 60;
+    buiBuoc(e);
     // quái kiểu cũ (không có cử động riêng) chưa tự co người khi lấy đà: nhún xuống nhẹ trong lúc báo trước đòn
     springStep(e, 1 / 60, !e.art && e.wind > 0 ? -0.06 : 0);
+  }
+  // ---------- bụi bước chân của quái (giai đoạn 3, dt-nhan-vat) ----------
+  // Đo quãng đường quái đi trên sàn (so vị trí với bước trước): mỗi sải (theo cỡ hình) nhả 1–2 hạt bụi sau gót, quái to bụi to hơn.
+  // Quái bay, đang lặn, đang chết thì không. Lao tới (quãng dài trong một bước) nhả thêm một vệt bụi. Hạt dùng chung kho MAXP.
+  function buiBuoc(e) {
+    const k = VX('bui');
+    if (!(k > 0) || !e.art || e.dying != null || e.hidden || e.dive) { e.fxBx = null; return; }
+    const D = G.monsterArt && G.monsterArt._defs[e.art];
+    if (!D || D.bay) return;
+    if (e.fxBx == null) { e.fxBx = e.x; e.fxBy = e.y; e.fxBd = 0; return; }
+    const dx = e.x - e.fxBx, dy = e.y - e.fxBy, d = Math.hypot(dx, dy);
+    e.fxBx = e.x; e.fxBy = e.y;
+    if (d < 0.05 || d > 30) return; // đứng yên, hoặc bị dời chỗ tức thì (dịch chuyển)
+    const big = e.isBoss || e.role === 'elite' || e.role === 'mini' || (e.w || 30) > 44;
+    e.fxBd = (e.fxBd || 0) + d;
+    const sai = big ? 15 : Math.max(9, Math.min(14, (e.w || 30) * 0.32));
+    if (e.fxBd < sai) return;
+    e.fxBd = 0;
+    const ux = dx / d, n = Math.max(1, Math.round((big ? 2 : 1) * Math.min(1.5, k) + (d > 2.5 ? 1 : 0)));
+    for (let i = 0; i < n; i++) emit(2, e.x - ux * rr(2, 6) + rr(-3, 3), e.y + rr(-1, 1), -ux * rr(6, 16), rr(-9, -3), rr(0.22, 0.38), RAMP.dust, big ? 3 : 2, 0, 2, null, 0);
   }
   // ---------- VFX chiến đấu: nhún, co giãn (squash & stretch) ----------
   // Mỗi nhân vật có một lò xo nhỏ: fxS (âm: bẹt xuống, bè ra; dương: cao lên, thon lại), fxL (nghiêng, độ), fxHop (nảy lên).
@@ -1060,6 +1101,23 @@
       if (hw > 0) c.fillRect(x - hw, y + dy, hw * 2, 2);
     }
   }
+  // VÙNG ĐANG GÂY SÁT THƯƠNG của địch (vũng lửa, vũng độc...): viền nóng LIỀN NÉT, đập theo đúng nhịp gây sát thương (z.tick, 0,5 giây),
+  // khác hẳn vùng BÁO TRƯỚC (đỏ trong mờ, đầy dần, vẽ mịn ở js/bao_truoc.js). Ba pha rõ ràng:
+  // xuất hiện — vòng sáng co về mép vũng; duy trì — viền đỏ cam 1 điểm + viền tối ngoài cho nổi trên nền, mỗi nhịp sát thương viền dày
+  // và sáng lên, một vòng mảnh toả ra; biến mất — viền thưa điểm ảnh và tối dần. Màu theo docs/vfx/BANG-MAU.md mục 4.
+  function vienNong(c, z, x, y, rx, ry, k, fade) {
+    const R0 = rx + 2, Q0 = ry + 1.5;
+    if (k < 1) { // xuất hiện
+      const e = 1 - (1 - k) * (1 - k);
+      ring(c, x, y, R0 * (1.35 - 0.35 * e), Q0 * (1.35 - 0.35 * e), 2, k < 0.5 ? '#fff6e2' : '#ffd0c0', false);
+      return;
+    }
+    const q = z.tick > 0 ? Math.max(0, Math.min(1, 1 - z.tick / 0.5)) : 0.5; // 0 = vừa gây sát thương
+    const end = fade < 1, beat = !end && q < 0.16;
+    ring(c, x, y, R0 + 1, Q0 + 1, 1, 'rgba(18,4,4,0.55)', end); // viền tối ngoài: đọc được trên nền sáng lẫn tối
+    ring(c, x, y, R0, Q0, beat ? 2 : 1, end ? '#8a1c12' : beat ? '#ffe0c8' : q < 0.4 ? '#ff7a52' : '#ff4a30', end);
+    if (beat) { const e = q / 0.16; ring(c, x, y, R0 + 1 + e * 6, Q0 + 1 + e * 4, 1, '#ff5a40', e > 0.5); }
+  }
   function pool(c, z) {
     const t = S.t, id = z.fxId || 1;
     const k = Math.max(0, Math.min(1, ((z.fxA || 0) - (z.fxD || 0)) / 0.22));
@@ -1081,11 +1139,7 @@
     const dth = fade < 0.5;
     blob(c, x, y, rx, ry, C.base, t, id, foe ? C.rim : C.rimP, dth);
     if (rx > 6) inner(c, x, y, rx - 4, ry - 2.4, C.mid, t, id);
-    if (foe) {
-      // vũng của địch có thêm viền đỏ nhấp nháy để không lẫn với vũng của mình
-      c.fillStyle = ((t * 6) | 0) % 2 ? 'rgba(255,58,34,0.9)' : 'rgba(255,58,34,0.5)';
-      for (let i = 0; i < 14; i++) { const a = (i / 14) * TAU + t * 0.8; c.fillRect(Math.round(x + Math.cos(a) * (rx + 3)) - 1, Math.round(y + Math.sin(a) * (ry + 2)), 2, 1); }
-    }
+    if (foe) vienNong(c, z, x, y, rx, ry, k, fade);
     if (rx < 8) return;
     const n = Math.max(3, Math.min(7, (rx / 6) | 0));
     for (let i = 0; i < n; i++) {
@@ -1342,6 +1396,9 @@
     for (let i = 0; i < 6; i++) emit(2, x + rr(-B.w, B.w), y - rr(2, B.h), rr(-24, 24), rr(-34, -8), rr(0.35, 0.65), el ? PL.puff : RAMP.dust, R() < 0.4 ? 5 : 4, 0, 2, null, 1);
     for (let i = 0; i < 6; i++) emit(8, x + rr(-B.w, B.w), y - rr(4, B.h), rr(-70, 70), rr(-130, -40), rr(0.5, 0.85), i % 2 ? skin : PL.ramp, R() < 0.4 ? 3 : 2, 420, 0, y + rr(-2, 5), 1);
     for (let i = 0; i < 4; i++) { const a = R() * TAU; streak(x, y - B.h * 0.5, Math.cos(a) * 140, Math.sin(a) * 100, 0.18, PL.ramp, 1, 7, 0, 3); }
+    // ngã xuống: bụi toé sát đất hai bên chân (quái bay thì không)
+    const DF = e.art && G.monsterArt && G.monsterArt._defs[e.art];
+    if (VX('bui') > 0 && !(DF && DF.bay)) for (let i = 0; i < 4; i++) { const sd = i % 2 ? 1 : -1; emit(2, x + sd * rr(2, B.w * 0.6), y + rr(-1, 2), sd * rr(16, 40), rr(-10, -3), rr(0.3, 0.5), RAMP.dust, R() < 0.5 ? 4 : 3, 0, 3, null, 0); }
     if (e.illusion) puffs(x, y - 14, 8, RAMP.steam, 50, 4, 10);
     if (e.role === 'elite') { addRing(x, y, 4, 28, 0.3, PL.c2, 3, 0); trauma(0.4); }
   });
@@ -1471,7 +1528,10 @@
     const pv = S.pv || (S.pv = { dodge: false, move: false, face: P.face, atk: 0 });
     const dodge = P.dodgeT > 0, move = !!P.moving && !dodge && !P.dead;
     if (dodge && !pv.dodge) { P.fxS = 0.09; P.fxSV = 0; } // bật người lộn: vươn cao
-    else if (!dodge && pv.dodge && !P.dead) { P.fxS = -0.12; P.fxSV = 0; P.fxL = 0; } // chạm đất sau lộn: bẹt xuống rồi nảy lại
+    else if (!dodge && pv.dodge && !P.dead) { // chạm đất sau lộn: bẹt xuống rồi nảy lại, bụi toé hai bên gót
+      P.fxS = -0.12; P.fxSV = 0; P.fxL = 0;
+      if (VX('bui') > 0) for (let i = 0, n = Math.round(4 * Math.min(1.5, VX('bui'))); i < n; i++) { const sd = i % 2 ? 1 : -1; emit(2, P.x + sd * rr(2, 5), P.y + rr(-1, 1), sd * rr(14, 34), rr(-12, -4), rr(0.25, 0.4), RAMP.dust, i < 2 ? 3 : 2, 0, 3, null, 0); }
+    }
     else if (pv.move && !move && !(P.atkT > 0) && !P.dead) { P.fxS = -0.06; P.fxSV = 0; P.fxL = P.face * 3; P.fxLV = 0; } // dừng chạy: chúi theo đà
     else if (move && pv.move && P.face !== pv.face) { P.fxS = -0.06; P.fxSV = 0; P.fxL = -P.face * 2; P.fxLV = 0; } // quay đầu
     if (P.atkT > pv.atk + 0.02 && !(P.dashT > 0)) { P.fxS = -0.05; P.fxSV = 0; P.fxL = -P.face * 1.5; P.fxLV = 0; } // bắt đầu đòn: thu người lấy đà
@@ -1481,7 +1541,7 @@
   function stepPlayer(W, P, dt, tick) {
     playerSquash(P, dt);
     trailStep(P, dt);
-    const moving = P.moving && !(P.dodgeT > 0) && !(P.dashT > 0) && !P.dead;
+    const moving = P.moving && !(P.dodgeT > 0) && !(P.dashT > 0) && !P.dead && VX('bui') > 0;
     if (moving) {
       S.stepT -= dt;
       if (S.stepT <= 0) {
@@ -1767,7 +1827,7 @@
     let a = S.hurt > 0 ? (S.hurt / 0.3) * 0.6 : 0;
     if (!P.dead && P.hp / P.maxhp < 0.3) a = Math.max(a, 0.2 + 0.14 * Math.sin(S.t * 5.5));
     if (a > 0.01) vignette(c, a);
-    if (S.flash > 0) { c.fillStyle = 'rgba(' + S.flashCol + ',' + (Math.min(1, S.flash / 0.45) * 0.38).toFixed(3) + ')'; c.fillRect(0, 0, G.W, G.H); }
+    if (S.flash > 0 && VX('rung') > 0) { c.fillStyle = 'rgba(' + S.flashCol + ',' + (Math.min(1, S.flash / 0.45) * 0.38 * Math.min(1, VX('rung'))).toFixed(3) + ')'; c.fillRect(0, 0, G.W, G.H); } // chớp cả màn hình đi cùng rung: G.VFX.rung = 0 thì tắt cả hai
     drawNums(cam);
   });
   // Viền đỏ quanh màn hình: vẽ sẵn một lần vào canvas nhỏ, mỗi khung chỉ dán lại với độ trong suốt
