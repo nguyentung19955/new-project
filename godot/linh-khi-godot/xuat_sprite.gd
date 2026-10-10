@@ -18,7 +18,11 @@ extends Node2D
 @export var co_xem_truoc := 256                 ## Chiều cao mỗi khung trong ảnh xem trước
 
 @export_group("Tự ráp từ ảnh Gemini")
+@export_enum("nguoi", "bon-chan") var khung := "nguoi"  ## nguoi: em bé, quái dáng người. bon-chan: thú bốn chân
 @export var anh_gemini: Texture2D                ## Kéo ảnh tách bộ phận của Gemini vào đây
+@export var anh_ca_con: Texture2D                ## Không bắt buộc: ảnh cả con của Gemini, hiện mờ phía sau để kéo các mảnh cho khớp
+@export var anh_duoi: Texture2D                  ## Bốn chân: ảnh các chùm đuôi (nếu vẽ riêng)
+@export_enum("tu-dong", "co", "khong") var lat_ngang := "tu-dong"  ## Lật hình khi Gemini vẽ quay sang trái
 @export_tool_button("Tự ráp từ ảnh Gemini") var nut_tu_rap = tu_rap
 
 var _chu: Label
@@ -33,6 +37,8 @@ func _ready() -> void:
 		var n := get_node_or_null(p)
 		if n is CanvasItem:
 			n.visible = false
+	if has_node("AnhMau"):
+		$AnhMau.visible = false
 	var ap: AnimationPlayer = get_node_or_null("AnimationPlayer")
 	if ap == null:
 		push_error("Thiếu nút AnimationPlayer")
@@ -139,6 +145,43 @@ func _hien(s: String) -> void:
 
 # ---------- TỰ RÁP (bấm nút trong Inspector) ----------
 func tu_rap() -> void:
+	if khung == "bon-chan":
+		tu_rap_bon_chan()
+	else:
+		tu_rap_nguoi()
+	_dat_anh_mau()
+
+
+## Ảnh cả con hiện mờ phía sau, chân chạm dấu gốc, cao bằng nhân vật vừa ráp: kéo các mảnh cho trùng lên nó.
+func _dat_anh_mau() -> void:
+	if has_node("AnhMau"):
+		var cu := $AnhMau
+		remove_child(cu)
+		cu.free()
+	if anh_ca_con == null:
+		return
+	var m := TuRap.tach(anh_ca_con.get_image(), 0.01)
+	if m.is_empty():
+		return
+	var img: Image = m[0]["anh"]
+	if khung == "bon-chan" and lat_ngang == "co":
+		img.flip_x()
+	var sp := Sprite2D.new()
+	sp.name = "AnhMau"
+	sp.texture = TuRap.luu_anh(img, "res://anh/tach/" + ma + "/ca_con.res")
+	sp.centered = true
+	sp.offset = Vector2(0, -img.get_height() / 2.0)
+	var cao_rap: float = get_meta("rap_H", 530.0) * $Hinh.scale.y
+	var k := cao_rap / img.get_height()
+	sp.scale = Vector2(k, k)
+	sp.modulate = Color(1, 1, 1, 0.35)
+	sp.z_index = -20
+	add_child(sp)
+	move_child(sp, 0)
+	sp.owner = self
+
+
+func tu_rap_nguoi() -> void:
 	if loai != "em-be":
 		push_warning("Tự ráp chỉ dùng cho em bé")
 		return
@@ -243,5 +286,142 @@ func tu_rap() -> void:
 	set_meta("rap_H", H)
 	var bao := "Tự ráp xong: %d mảnh (%s). Bấm ▶ ở AnimationPlayer để xem, F6 để xuất." % [manh.size(), "có vũ khí" if c["vu_khi"] != null else "không vũ khí"]
 	print(bao)
+	if Engine.is_editor_hint():
+		EditorInterface.mark_scene_as_unsaved()
+
+
+# ---------- TỰ RÁP BỐN CHÂN ----------
+## Đầu quay trái thì cổ (đáy ảnh đầu) lệch về bên phải.
+static func _quay_trai(img: Image) -> bool:
+	var w := img.get_width()
+	var h := img.get_height()
+	var tong := 0.0
+	var n := 0
+	for y in range(int(h * 0.85), h):
+		for x in w:
+			if img.get_pixel(x, y).a > 0.5:
+				tong += x
+				n += 1
+	return n > 0 and tong / n > w * 0.5
+
+
+## Trọng tâm các điểm có hình trong dải cột [x0, x1).
+static func _tam_dai(img: Image, x0: int, x1: int) -> Vector2:
+	var s := Vector2.ZERO
+	var n := 0
+	for x in range(maxi(0, x0), mini(img.get_width(), x1)):
+		for y in img.get_height():
+			if img.get_pixel(x, y).a > 0.5:
+				s += Vector2(x, y)
+				n += 1
+	return s / n if n > 0 else Vector2(img.get_size()) / 2.0
+
+
+func tu_rap_bon_chan() -> void:
+	if anh_gemini == null:
+		push_warning("Hãy kéo ảnh Gemini (đầu, thân, 4 chân) vào ô Anh Gemini trước")
+		return
+	var manh := TuRap.tach(anh_gemini.get_image())
+	var doc := manh.filter(func(m): return m["o"].size.y > m["o"].size.x * 1.25)
+	doc.sort_custom(func(a, b): return a["dt"] > b["dt"])
+	if doc.size() < 4:
+		push_warning("Tự ráp: chỉ thấy %d chân, cần 4 chân dựng đứng" % doc.size())
+		return
+	var chan := doc.slice(0, 4)
+	var con := manh.filter(func(m): return not chan.has(m))
+	if con.size() < 2:
+		push_warning("Tự ráp: thiếu đầu hoặc thân")
+		return
+	var hai := con.slice(0, 2)
+	hai.sort_custom(func(a, b): return a["o"].size.x > b["o"].size.x)
+	var than_m: Dictionary = hai[0]
+	var dau_m: Dictionary = hai[1]
+	chan.sort_custom(func(a, b): return a["o"].position.x < b["o"].position.x)
+	var lat := lat_ngang == "co" or (lat_ngang == "tu-dong" and _quay_trai(dau_m["anh"]))
+	var lay := func(m: Dictionary) -> Image:
+		var im: Image = m["anh"].duplicate()
+		if lat:
+			im.flip_x()
+		return im
+	var thu_muc := "res://anh/tach/" + ma + "/"
+	var hinh: Node2D = $Hinh
+	var than: Node2D = $Hinh/Than
+	var gan := func(khop: Node2D, im: Image, ten_tep: String, truc: Vector2) -> void:
+		var a: Sprite2D = khop.get_node("Anh")
+		a.texture = TuRap.luu_anh(im, thu_muc + ten_tep + ".res")
+		a.region_enabled = false
+		a.centered = true
+		a.offset = Vector2(im.get_size()) / 2.0 - truc
+	# Chân: thứ tự trong ảnh là trước-gần, trước-xa, sau-gần, sau-xa.
+	var ten_chan := ["ChanTruocGan", "ChanTruocXa", "ChanSauGan", "ChanSauXa"]
+	var L := 0.0
+	var anh_chan := []
+	for i in 4:
+		var im: Image = lay.call(chan[i])
+		anh_chan.append(im)
+		L = maxf(L, im.get_height() - minf(im.get_width() * 0.5, im.get_height() * 0.2))
+	var ti: Image = lay.call(than_m)
+	var bw := float(ti.get_width())
+	var bh := float(ti.get_height())
+	var x_chan := [bw * 0.30, bw * 0.22, -bw * 0.27, -bw * 0.20]
+	for i in 4:
+		var im: Image = anh_chan[i]
+		var k: Node2D = hinh.get_node(ten_chan[i])
+		k.position = Vector2(x_chan[i], -L)
+		gan.call(k, im, ten_chan[i], Vector2(im.get_width() / 2.0, minf(im.get_width() * 0.5, im.get_height() * 0.2)))
+		k.get_node("Anh").modulate = Color(0.8, 0.8, 0.8) if ten_chan[i].ends_with("Xa") else Color.WHITE
+	gan.call(than, ti, "than", Vector2(bw / 2, bh * 0.62))
+	# Đầu: cổ ở đáy ảnh, hơi lệch về phía sau.
+	var di: Image = lay.call(dau_m)
+	$Hinh/Than/Dau.position = Vector2(bw * 0.38, -bh * 0.32)
+	var co_dau := _tam_dai(di, 0, di.get_width())
+	gan.call($Hinh/Than/Dau, di, "dau", Vector2(clampf(co_dau.x * 0.8, 0, di.get_width()), di.get_height() * 0.85))
+	# Đuôi: gốc tròn nằm ở mép phải sau khi lật, gắn vào mông.
+	var duoi := []
+	if anh_duoi != null:
+		duoi = TuRap.tach(anh_duoi.get_image()).slice(0, 3)
+	for i in 3:
+		var k: Node2D = than.get_node("Duoi%d" % (i + 1))
+		k.position = Vector2(-bw * 0.40, -bh * 0.22)
+		if i < duoi.size():
+			var im: Image = duoi[i]["anh"].duplicate()
+			var tw := im.get_width()
+			var trai := _tam_dai(im, 0, int(tw * 0.15))
+			var phai := _tam_dai(im, int(tw * 0.85), tw)
+			# Gốc là phía có nhiều hình hơn ở mép (khối tròn), cần nằm bên phải để đuôi xoè ra sau lưng.
+			var dem := func(x0: int, x1: int) -> int:
+				var n := 0
+				for x in range(x0, x1):
+					for y in im.get_height():
+						if im.get_pixel(x, y).a > 0.5:
+							n += 1
+				return n
+			if dem.call(0, int(tw * 0.15)) > dem.call(int(tw * 0.85), tw):
+				im.flip_x()
+				phai = Vector2(tw - trai.x, trai.y)
+			gan.call(k, im, "duoi_%d" % (i + 1), phai)
+			k.visible = true
+		else:
+			k.visible = false
+	# Cỡ: vừa khung 1024.
+	var H := L + bh * 0.62 + di.get_height() * 0.5
+	var W: float = bw + di.get_width() * 0.6 + (duoi[0]["anh"].get_width() * 0.8 if duoi.size() > 0 else 0.0)
+	var S := minf(560.0 / H, 860.0 / W)
+	hinh.scale = Vector2(S, S)
+	var L_cu: float = get_meta("rap_L", 120.0)
+	var H_cu: float = get_meta("rap_H", 380.0)
+	var ap: AnimationPlayer = $AnimationPlayer
+	for ten_dt in ap.get_animation_list():
+		var a: Animation = ap.get_animation(ten_dt)
+		var tr := a.find_track(NodePath("Hinh/Than:position"), Animation.TYPE_VALUE)
+		if tr < 0:
+			continue
+		for kk in a.track_get_key_count(tr):
+			var v: Vector2 = a.track_get_key_value(tr, kk)
+			a.track_set_key_value(tr, kk, Vector2(0, -L) + (v - Vector2(0, -L_cu)) * (H / H_cu))
+	than.position = Vector2(0, -L)
+	set_meta("rap_L", L)
+	set_meta("rap_H", H)
+	print("Tự ráp bốn chân xong: đầu, thân, 4 chân, %d chùm đuôi%s." % [duoi.size(), " (đã lật cho quay phải)" if lat else ""])
 	if Engine.is_editor_hint():
 		EditorInterface.mark_scene_as_unsaved()

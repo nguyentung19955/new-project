@@ -10,6 +10,8 @@ func _init() -> void:
 	tao_em_be()
 	tao_vu_khi()
 	tao_hieu_ung()
+	tao_bon_chan()
+	tao_ao()
 	print("Đã dựng 3 cảnh mẫu")
 	quit()
 
@@ -320,3 +322,121 @@ func tao_hieu_ung() -> void:
 	lib.add_animation("trung_don", a)
 	ap.add_animation_library("", lib)
 	luu(r, "res://hieu_ung_kiem.tscn")
+
+
+# ---------- BỐN CHÂN ----------
+const MAC_DINH_4 := {
+	"Hinh:position": Vector2.ZERO, "Hinh:rotation": 0.0,
+	"Hinh/Than:position": Vector2(0, -120), "Hinh/Than:rotation": 0.0, "Hinh/Than/Dau:rotation": 0.0,
+	"Hinh/ChanTruocGan:rotation": 0.0, "Hinh/ChanTruocXa:rotation": 0.0, "Hinh/ChanSauGan:rotation": 0.0, "Hinh/ChanSauXa:rotation": 0.0,
+	"Hinh/Than/Duoi1:rotation": -0.35, "Hinh/Than/Duoi2:rotation": 0.0, "Hinh/Than/Duoi3:rotation": 0.35,
+}
+
+
+func tao_bon_chan() -> void:
+	var r := Node2D.new()
+	r.name = "BonChan"
+	r.position = GOC
+	r.set_script(load("res://xuat_sprite.gd"))
+	r.set("ma", "hoTinh")
+	r.set("ten", "Hồ Tinh")
+	r.set("doi_tuong", "quai")
+	r.set("khung", "bon-chan")
+	r.set("cao_trong_game", 119)
+	r.set("dong_tac", PackedStringArray(["idle", "move", "tele", "atk", "hit", "die"]))
+	var hinh := Node2D.new()
+	hinh.name = "Hinh"
+	r.add_child(hinh)
+	hinh.owner = r
+	var long := Color("f2e6cf")
+	for t in [["ChanSauXa", -40], ["ChanTruocXa", 66], ["ChanSauGan", -54], ["ChanTruocGan", 90]]:
+		var k := khop(t[0], hinh, r, Vector2(t[1], -120), 50, 150, long.darkened(0.2 if t[0].ends_with("Xa") else 0.05), Vector2(0, 62))
+	var than := khop("Than", hinh, r, Vector2(0, -120), 300, 190, long, Vector2(0, -24))
+	for i in 3:
+		var d := khop("Duoi%d" % (i + 1), than, r, Vector2(-120, -40), 220, 50, Color("e8442a"), Vector2(-100, 0))
+		d.show_behind_parent = true
+	khop("Dau", than, r, Vector2(115, -60), 170, 170, long.darkened(0.05), Vector2(40, -60), true)
+	var ap := AnimationPlayer.new()
+	ap.name = "AnimationPlayer"
+	r.add_child(ap)
+	ap.owner = r
+	var lib := AnimationLibrary.new()
+	var T := "Hinh/Than"
+	var D := [T + "/Duoi1:rotation", T + "/Duoi2:rotation", T + "/Duoi3:rotation"]
+	var goc_duoi := [-0.35, 0.0, 0.35]
+	var a := anim("idle", 1.2, true)
+	them(a, T + ":position", [[0.0, Vector2(0, -120)], [0.6, Vector2(0, -126)], [1.2, Vector2(0, -120)]])
+	them(a, T + "/Dau:rotation", [[0.0, 0.0], [0.6, 0.06], [1.2, 0.0]])
+	for i in 3:
+		them(a, D[i], [[0.0, goc_duoi[i]], [0.2 + i * 0.15, goc_duoi[i] - 0.15], [0.8 + i * 0.1, goc_duoi[i] + 0.08], [1.2, goc_duoi[i]]])
+	lib.add_animation("idle", a)
+	a = anim("move", 0.6, true)
+	them(a, T + ":position", [[0.0, Vector2(0, -120)], [0.15, Vector2(0, -130)], [0.3, Vector2(0, -120)], [0.45, Vector2(0, -130)], [0.6, Vector2(0, -120)]])
+	them(a, "Hinh/ChanTruocGan:rotation", [[0.0, 0.45], [0.3, -0.45], [0.6, 0.45]])
+	them(a, "Hinh/ChanSauXa:rotation", [[0.0, 0.45], [0.3, -0.45], [0.6, 0.45]])
+	them(a, "Hinh/ChanTruocXa:rotation", [[0.0, -0.45], [0.3, 0.45], [0.6, -0.45]])
+	them(a, "Hinh/ChanSauGan:rotation", [[0.0, -0.45], [0.3, 0.45], [0.6, -0.45]])
+	them(a, T + "/Dau:rotation", [[0.0, -0.04], [0.3, 0.04], [0.6, -0.04]])
+	for i in 3:
+		them(a, D[i], [[0.0, goc_duoi[i] - 0.1], [0.3, goc_duoi[i] + 0.12], [0.6, goc_duoi[i] - 0.1]])
+	lib.add_animation("move", a)
+	a = anim("tele", 0.7, false)
+	them(a, T + ":position", [[0.0, Vector2(0, -120)], [0.7, Vector2(-10, -104)]])
+	them(a, T + ":rotation", [[0.0, 0.0], [0.7, -0.08]])
+	them(a, T + "/Dau:rotation", [[0.0, 0.0], [0.7, 0.2]])
+	them(a, "Hinh/ChanTruocGan:rotation", [[0.0, 0.0], [0.7, -0.35]])
+	them(a, "Hinh/ChanTruocXa:rotation", [[0.0, 0.0], [0.7, -0.3]])
+	them(a, "Hinh/ChanSauGan:rotation", [[0.0, 0.0], [0.7, 0.4]])
+	them(a, "Hinh/ChanSauXa:rotation", [[0.0, 0.0], [0.7, 0.35]])
+	for i in 3:
+		them(a, D[i], [[0.0, goc_duoi[i]], [0.7, goc_duoi[i] - 0.35]])
+	lib.add_animation("tele", a)
+	a = anim("atk", 0.55, false)
+	them(a, "Hinh:position", [[0.0, Vector2.ZERO], [0.12, Vector2(60, 0)], [0.55, Vector2.ZERO]])
+	them(a, T + ":position", [[0.0, Vector2(-10, -104)], [0.12, Vector2(0, -132)], [0.55, Vector2(0, -120)]])
+	them(a, T + ":rotation", [[0.0, -0.08], [0.12, 0.12], [0.55, 0.0]])
+	them(a, T + "/Dau:rotation", [[0.0, 0.2], [0.12, -0.3], [0.3, -0.25], [0.55, 0.0]])
+	them(a, "Hinh/ChanTruocGan:rotation", [[0.0, -0.35], [0.12, -0.8], [0.55, 0.0]])
+	them(a, "Hinh/ChanTruocXa:rotation", [[0.0, -0.3], [0.12, -0.7], [0.55, 0.0]])
+	them(a, "Hinh/ChanSauGan:rotation", [[0.0, 0.4], [0.12, 0.5], [0.55, 0.0]])
+	them(a, "Hinh/ChanSauXa:rotation", [[0.0, 0.35], [0.12, 0.45], [0.55, 0.0]])
+	for i in 3:
+		them(a, D[i], [[0.0, goc_duoi[i] - 0.35], [0.12, goc_duoi[i] + 0.3], [0.55, goc_duoi[i]]])
+	lib.add_animation("atk", a)
+	a = anim("hit", 0.35, false)
+	them(a, "Hinh:position", [[0.0, Vector2.ZERO], [0.08, Vector2(-26, 0)], [0.35, Vector2.ZERO]])
+	them(a, T + ":rotation", [[0.0, 0.0], [0.08, -0.15], [0.35, 0.0]])
+	them(a, T + "/Dau:rotation", [[0.0, 0.0], [0.08, -0.3], [0.35, 0.0]])
+	lib.add_animation("hit", a)
+	a = anim("die", 1.1, false)
+	them(a, T + ":position", [[0.0, Vector2(0, -120)], [0.5, Vector2(0, -50)], [1.1, Vector2(0, -50)]])
+	them(a, T + "/Dau:rotation", [[0.0, 0.0], [0.5, 0.5], [1.1, 0.45]])
+	them(a, "Hinh/ChanTruocGan:rotation", [[0.0, 0.0], [0.5, -1.3]])
+	them(a, "Hinh/ChanTruocXa:rotation", [[0.0, 0.0], [0.5, -1.1]])
+	them(a, "Hinh/ChanSauGan:rotation", [[0.0, 0.0], [0.5, 1.3]])
+	them(a, "Hinh/ChanSauXa:rotation", [[0.0, 0.0], [0.5, 1.1]])
+	for i in 3:
+		them(a, D[i], [[0.0, goc_duoi[i]], [0.6, goc_duoi[i] + 0.7]])
+	lib.add_animation("die", a)
+	for ten in lib.get_animation_list():
+		var an := lib.get_animation(ten)
+		for duong in MAC_DINH_4:
+			if an.find_track(NodePath(duong), Animation.TYPE_VALUE) < 0:
+				them(an, duong, [[0.0, MAC_DINH_4[duong]]])
+	ap.add_animation_library("", lib)
+	ap.autoplay = "idle"
+	luu(r, "res://bon_chan.tscn")
+
+
+# ---------- ÁO (TRANG PHỤC) ----------
+func tao_ao() -> void:
+	var r := Node2D.new()
+	r.name = "Ao"
+	r.set_script(load("res://xuat_ao.gd"))
+	var s := Sprite2D.new()
+	s.name = "Anh"
+	s.texture = o_mau(300, 280, Color("d8b45c"))
+	s.position = Vector2(512, 512)
+	r.add_child(s)
+	s.owner = r
+	luu(r, "res://ao.tscn")
