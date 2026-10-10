@@ -139,7 +139,7 @@
     // Giáp phía trước: đánh trúng giáp thì giáp mòn dần, mòn hết thì vỡ một lúc.
     if (e.role === 'shield' && !(e.brokeT > 0) && (P.x - e.x) * e.face > -4) {
       e.armorHp -= d;
-      if (e.armorHp <= 0) { e.brokeT = 6; FX('text', e.x, e.y - e.h - 8, 'Vỡ giáp!', '#ffd23f', 9); if (!(G.fx && G.fx.anh && G.fx.anh('hu-pha-giap', e.x + e.face * 8, e.y - e.h * 0.4, { f: e.face }))) FX('burst', e.x + e.face * 8, e.y - e.h * 0.4, '#d0c8b8', 14, 70); G.sfx('boom', 1.4); }
+      if (e.armorHp <= 0) { e.brokeT = 6; FX('text', e.x, e.y - e.h - 8, 'Vỡ giáp!', '#ffd23f', 9); if (!(G.fx && G.fx.anh && G.fx.anh('hu-pha-giap', e.x, e.y - e.h - 6, { f: e.face, sc: 0.55 }))) FX('burst', e.x + e.face * 8, e.y - e.h * 0.4, '#d0c8b8', 14, 70); G.sfx('boom', 1.4); }
     }
   };
   G.mobOnKill = function (e) {
@@ -660,6 +660,10 @@
     else if (kind === 'no') { p(c, x - 2, y - 1, 5, 5, '#2a2a2a'); p(c, x - 1, y - 2, 3, 7, '#2a2a2a'); p(c, x - 1, y, 1, 1, '#8a8a8a'); p(c, x + 1, y - 3, 1, 2, '#c8a060'); p(c, x + 2, y - 4, 2, 1, Math.floor(G.time * 10) % 2 ? '#ff5a2a' : '#ffd23f'); }
     else if (kind === 'hut') { p(c, x, y - 3, 1, 2, '#e02a3a'); p(c, x - 1, y - 1, 3, 2, '#e02a3a'); p(c, x - 2, y + 1, 5, 2, '#e02a3a'); p(c, x - 1, y + 3, 3, 1, '#e02a3a'); p(c, x - 1, y, 1, 1, '#ffb0b8'); }
     else if (kind === 'gai') { const f = Math.floor(G.time * 12) % 2; p(c, x - 1, y - 3, 3, 5, f ? '#ff3a22' : '#ffffff'); p(c, x - 1, y + 3, 3, 1, f ? '#ff3a22' : '#ffffff'); }
+    else if (kind === 'vo' && G.fxAnh && G.fxAnh.co('hu-pha-giap')) { // biểu tượng vỡ giáp: khung đầu của ảnh AI thu nhỏ vào ô 9×9
+      const a = G.fxAnh.get('hu-pha-giap'), n = a.net, sw = a.fw * n, sh = a.fh * n, k = Math.min(9 / a.fw, 9 / a.fh);
+      c.save(); c.imageSmoothingEnabled = false; c.drawImage(a.img, (a.so - 2) * sw, 0, sw, sh, x - Math.round(a.fw * k / 2), y - Math.round(a.fh * k / 2), Math.round(a.fw * k), Math.round(a.fh * k)); c.restore();
+    }
     else if (kind === 'vo') { p(c, x - 3, y - 3, 7, 4, '#7a7a80'); p(c, x - 2, y + 1, 5, 2, '#7a7a80'); p(c, x, y - 3, 1, 6, '#14182e'); p(c, x - 1, y - 1, 1, 1, '#14182e'); }
   }
   G.mobIcon = icon;
