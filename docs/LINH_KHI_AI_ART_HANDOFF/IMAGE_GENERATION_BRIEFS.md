@@ -104,7 +104,7 @@ Negative: chung (0.2) và thêm `different art styles per character, weapons in 
 | Mục | Nội dung |
 |---|---|
 | Mục tiêu | Nhìn là biết bậc đòn: thường, nặng, chí mạng, vỡ giáp (lỗi H4). Cảnh 12 quái vẫn đọc được (lỗi H3) |
-| Tham chiếu | `anh/canh/hieu_ung_dong_1..3_480x270_x3.png`, `..._kem_giao_dien.png` |
+| Tham chiếu | `anh/canh/hieu_ung_dong_1_480x270_x3.png` (và _2, _3), `..._kem_giao_dien.png` |
 | Giữ | Bảng màu theo hệ (`ART_STYLE_GUIDE.md` 5.2). Vệt chém có đuôi kiểu ô cờ. Không dùng cộng sáng |
 | Canvas ra | 1536×512: 4 cột (4 bậc) × 4 khung thời gian, mỗi ô vẽ ở **cỡ 32×32 rồi phóng ×8** |
 | Cỡ khung đích | Hiện tại ✅: sao chớp bán kính 4–9; chí mạng r12, vòng tới 20 / 28 px. Đề xuất 💡 (theo GPT §9.2): thường 3–5 tia; nặng 5–8 tia; chí mạng 7–10 tia và vòng 8–14 px; vỡ giáp 4–7 mảnh `#aab3bc` |
