@@ -15,22 +15,26 @@
 
     // Bảng vàng: ai cũng xem được; mỗi người chỉ ghi dòng của mình, số chỉ được tốt lên (Sức mạnh, sao, ải xa nhất chỉ tăng;
     // thời gian hạ trùm chỉ giảm), giá trị phải nằm trong khoảng hợp lý.
+    // GĐ2 (V23, Q1) siết lại: khách ẩn danh không được ghi; Sức mạnh ≤ 1500; sao ≤ 3 x số ải đã qua (tối đa 45 ở độ khó thường,
+    // qua đủ 15 ải mới mở độ khó 2 nên lúc đó tối đa 90); hạ trùm vùng ≥ 20 giây và phải qua tới ải trùm đó mới có thời gian trùm.
     match /linhkhi_scores/{uid} {
-      function okBoss(d, k) { return !(k in d) || (d[k] is number && d[k] >= 5 && d[k] <= 3600); }
+      function okBoss(d, k, need) { return !(k in d) || (d[k] is number && d[k] >= 20 && d[k] <= 3600 && d.far >= need); }
       function notSlower(k) { return !(k in resource.data) || (k in request.resource.data && request.resource.data[k] <= resource.data[k]); }
+      function notGuest() { return request.auth.token.get('firebase', {}).get('sign_in_provider', '') != 'anonymous'; }
       allow read: if true;
       allow delete: if request.auth != null && request.auth.uid == uid;
-      allow create, update: if request.auth != null && request.auth.uid == uid
+      allow create, update: if request.auth != null && request.auth.uid == uid && notGuest()
         && request.resource.data.keys().hasOnly(['name', 'power', 'stars', 'far', 'hero', 'g', 'at', 'b_moc', 'b_ngu', 'b_ho'])
         && request.resource.data.keys().hasAll(['name', 'power', 'stars', 'far', 'hero', 'at'])
         && request.resource.data.name is string && request.resource.data.name.size() >= 2 && request.resource.data.name.size() <= 16
-        && request.resource.data.power is int && request.resource.data.power >= 0 && request.resource.data.power <= 1000000
-        && request.resource.data.stars is int && request.resource.data.stars >= 0 && request.resource.data.stars <= 90
+        && request.resource.data.power is int && request.resource.data.power >= 0 && request.resource.data.power <= 1500
         && request.resource.data.far is int && request.resource.data.far >= 0 && request.resource.data.far <= 15
+        && request.resource.data.stars is int && request.resource.data.stars >= 0
+        && (request.resource.data.stars <= request.resource.data.far * 3 || (request.resource.data.far >= 15 && request.resource.data.stars <= 90))
         && request.resource.data.hero in ['smith', 'hunter', 'healer', 'wrestler']
         && request.resource.data.get('g', false) is bool
         && request.resource.data.at is number
-        && okBoss(request.resource.data, 'b_moc') && okBoss(request.resource.data, 'b_ngu') && okBoss(request.resource.data, 'b_ho')
+        && okBoss(request.resource.data, 'b_moc', 5) && okBoss(request.resource.data, 'b_ngu', 10) && okBoss(request.resource.data, 'b_ho', 15)
         && (resource == null || (
           request.resource.data.power >= resource.data.power
           && request.resource.data.stars >= resource.data.stars

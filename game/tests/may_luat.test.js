@@ -1,5 +1,6 @@
 // Thử luật Firestore của Linh Khí trên Firestore emulator (cần Java + firebase-tools + @firebase/rules-unit-testing).
-// Thử trên bản luật ĐẦY ĐỦ game/firebase/firestore.rules.gop (luật Thần Thoại Việt + ba khối Linh Khí).
+// Thử trên bản luật ĐẦY ĐỦ game/firebase/firestore.rules.gop (luật Thần Thoại Việt + ba khối Linh Khí), trong đó khối Linh Khí
+// được thay bằng bản mới nhất ở game/firebase/linhkhi.rules (GĐ2: phần bảng vàng đã siết — V23), để thử đúng luật sẽ đưa lên.
 // Cài một lần ở thư mục tạm:  npm i firebase-tools @firebase/rules-unit-testing firebase
 // Chạy (từ thư mục gốc repo):
 //   NODE_PATH=<tạm>/node_modules <tạm>/node_modules/.bin/firebase emulators:exec --only firestore --project demo-lk "node game/tests/may_luat.test.js"
@@ -16,12 +17,23 @@ const ok = (m) => { n++; console.log('  ✓ ' + m); };
 const yes = async (p, m) => { await assertSucceeds(p); ok(m); };
 const no = async (p, m) => { await assertFails(p); ok(m); };
 
+// Ghép: luật đầy đủ (.gop) nhưng khối giữa hai dòng "LINH KHÍ (bắt đầu)" / "LINH KHÍ (hết)" lấy từ linhkhi.rules.
+function rulesGop() {
+  const gop = fs.readFileSync(path.join(__dirname, '../firebase/firestore.rules.gop'), 'utf8');
+  const lk = fs.readFileSync(path.join(__dirname, '../firebase/linhkhi.rules'), 'utf8').replace(/\s+$/, '');
+  const A = '    // ===================== LINH KHÍ (bắt đầu)', B = 'LINH KHÍ (hết) =====================';
+  const i = gop.indexOf(A), j = gop.indexOf(B);
+  if (i < 0 || j < 0) throw new Error('không thấy khối LINH KHÍ trong firestore.rules.gop');
+  return gop.slice(0, i) + lk + gop.slice(j + B.length);
+}
+
 (async () => {
   const [host, port] = process.env.FIRESTORE_EMULATOR_HOST.split(':');
   const env = await initializeTestEnvironment({ projectId: 'demo-lk',
-    firestore: { rules: fs.readFileSync(path.join(__dirname, '../firebase/firestore.rules.gop'), 'utf8'), host, port: +port } });
+    firestore: { rules: rulesGop(), host, port: +port } });
   const ctx = (uid, tok) => env.authenticatedContext(uid, tok).firestore();
   const g1 = ctx('u1'), g2 = ctx('u2'), anon = env.unauthenticatedContext().firestore();
+  const guest = ctx('k1', { firebase: { sign_in_provider: 'anonymous' } }); // khách ẩn danh (Chơi tạm)
   const admin = ctx('adm', { email: 'ly230595@gmail.com', email_verified: true });
   const adminUnv = ctx('adm2', { email: 'ly230595@gmail.com', email_verified: false });
   const other = ctx('o1', { email: 'khac@gmail.com', email_verified: true });
@@ -38,7 +50,7 @@ const no = async (p, m) => { await assertFails(p); ok(m); };
   await no(g1.doc('users/u1').set({ save: 1 }), 'khối users của Thần Thoại Việt vẫn giữ luật cũ (save phải là chuỗi)');
 
   console.log('• linhkhi_scores');
-  const sc = { name: 'Khách 1234', power: 500, stars: 12, far: 5, hero: 'smith', g: false, at: 1, b_moc: 60.5 };
+  const sc = { name: 'Bé Bin', power: 500, stars: 12, far: 10, hero: 'smith', g: true, at: 1, b_moc: 60.5 };
   await yes(g1.doc('linhkhi_scores/u1').set(sc), 'tạo dòng của mình');
   await yes(anon.collection('linhkhi_scores').orderBy('power', 'desc').limit(8).get(), 'ai cũng xem được bảng (kể cả chưa đăng nhập)');
   await no(g2.doc('linhkhi_scores/u1').set({ ...sc, power: 600 }), 'không ghi dòng người khác');
@@ -49,10 +61,19 @@ const no = async (p, m) => { await assertFails(p); ok(m); };
   await no(g1.doc('linhkhi_scores/u1').set({ ...sc, power: 520, b_moc: 50 }), 'xoá kỷ lục trùm đã có → từ chối');
   await yes(g1.doc('linhkhi_scores/u1').set({ ...sc, name: 'Bé Na', power: 520, b_moc: 50, b_ngu: 80 }), 'đổi tên → được');
   for (const [m, bad] of [['tên 1 ký tự', { name: 'a' }], ['tên 17 ký tự', { name: 'a'.repeat(17) }], ['Sức mạnh quá lớn', { power: 2000000 }], ['Sức mạnh số lẻ', { power: 600.5 }],
-    ['sao quá 90', { stars: 91 }], ['ải xa nhất quá 15', { far: 16 }], ['hero lạ', { hero: 'rong' }], ['hạ trùm dưới 5 giây', { b_ho: 2 }], ['trường lạ', { cheat: 1 }]]) {
+    ['sao quá 90', { stars: 91 }], ['ải xa nhất quá 15', { far: 16 }], ['hero lạ', { hero: 'rong' }], ['hạ trùm dưới 5 giây', { b_ho: 2 }], ['trường lạ', { cheat: 1 }],
+    // GĐ2 (V23): luật siết
+    ['Sức mạnh 2.000', { power: 2000 }], ['Sức mạnh 1.501', { power: 1501 }], ['sao nhiều hơn 3 x số ải đã qua (31 sao, qua 10 ải)', { stars: 31 }],
+    ['46 sao khi chưa qua đủ 15 ải', { far: 14, stars: 46 }], ['hạ Mộc Tinh 19 giây', { b_moc: 19 }], ['có thời gian Ngư Tinh khi chưa qua ải 2-5', { far: 9, b_ngu: 80 }],
+    ['có thời gian Hồ Tinh khi chưa qua ải 3-5', { b_ho: 90 }]]) {
     await no(g2.doc('linhkhi_scores/u2').set({ ...sc, ...bad }), m + ' → từ chối');
   }
   await no(g2.doc('linhkhi_scores/u2').set({ name: 'Khách', power: 1, stars: 0, far: 0, hero: 'smith' }), 'thiếu trường at → từ chối');
+  await yes(g2.doc('linhkhi_scores/u2').set({ ...sc, power: 1500, stars: 45, far: 15, b_moc: 20, b_ngu: 40, b_ho: 60 }), 'Sức mạnh 1.500, 45 sao, qua đủ 15 ải, hạ trùm đúng 20 giây → được');
+  await yes(g2.doc('linhkhi_scores/u2').set({ ...sc, power: 1500, stars: 90, far: 15, b_moc: 20, b_ngu: 40, b_ho: 60 }), 'qua đủ 15 ải (mở độ khó 2): 90 sao → được');
+  await no(guest.doc('linhkhi_scores/k1').set(sc), 'khách ẩn danh ghi bảng vàng → từ chối');
+  await yes(guest.collection('linhkhi_scores').orderBy('power', 'desc').limit(8).get(), 'khách ẩn danh vẫn xem được bảng');
+  await yes(guest.collection('linhkhi_feedback').add({ kind: 'bug', text: 'Khách gửi góp ý thử', ver: 'lk-1', at: 1, uid: 'k1', guest: true }), 'khách ẩn danh vẫn gửi góp ý được');
 
   console.log('• linhkhi_feedback');
   const fb = { kind: 'bug', text: 'Quái kẹt trong tường phòng đầu', contact: '', shot: '', ver: 'lk-1', where: 'Làng', scr: '844x390@3.0', ua: 'Android', at: 1, uid: 'u1', guest: true };
