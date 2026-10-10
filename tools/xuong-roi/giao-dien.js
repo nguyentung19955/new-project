@@ -231,7 +231,7 @@
     doiRig(); veBuoc2(); luu(); bao('Đã lật ngang.');
   };
   function latManh(p) {
-    p.cv = XR.latCanvas(p.cv); p.so = null;
+    p.cv = XR.latCanvas(p.cv); p.so = null; p._a = null;
     if (p.dat && p.truc) p.truc = [p.dat[0] + p.w - (p.truc[0] - p.dat[0]), p.truc[1]];
   }
   $('nutChonHet').onclick = () => { if (S.chon.size === S.manh.length) S.chon.clear(); else S.manh.forEach((p) => S.chon.add(p.id)); veBuoc2(); };
