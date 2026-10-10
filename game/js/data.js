@@ -217,7 +217,10 @@
   // mob: [máu, sát thương] quái thường; boss: [máu, sát thương] trùm nhỏ (ải 1-4) hoặc trùm vùng (ải 5).
   G.STAGE_K = {
     mob: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.66], [1.23, 1.66], [1.27, 1.81], [1.32, 2.95], [1.44, 2.32], [1.48, 2.49], [1.31, 2.91], [1.27, 3.02], [1.7, 4.54], [1.66, 4.28], [1.67, 4.43], [1.7, 4.74], [1.29, 3.11]],
-    boss: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.66], [1.23, 1.66], [1.27, 1.81], [1.32, 2.95], [1.44, 2.32], [1.48, 2.49], [1.31, 2.91], [1.27, 3.02], [1.7, 4.54], [1.66, 4.28], [1.67, 4.43], [1.7, 4.74], [1.29, 3.11]],
+    // Sát thương trùm = sát thương quái thường của ải (đã nhân cột mob) x cột boss (js/boss.js makeBoss), nên hệ số bị nhân hai lần.
+    // GĐ2 (V5, Q2): hạ riêng cột sát thương trùm nhỏ ải 2-1 (2,95 -> 2,0) và 3-1..3-4 (4,54/4,28/4,43/4,74 -> 2,0/2,1/2,0/1,8)
+    // để mỗi đòn gốc không mạnh hơn trùm vùng cùng vùng (Ngư Tinh ~155, Hồ Tinh ~232) và ~45% máu bé vừa đủ khuyên dùng. Cột máu giữ nguyên.
+    boss: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.66], [1.23, 1.66], [1.27, 1.81], [1.32, 2.0], [1.44, 2.32], [1.48, 2.49], [1.31, 2.91], [1.27, 3.02], [1.7, 2.0], [1.66, 2.1], [1.67, 2.0], [1.7, 1.8], [1.29, 3.11]],
   };
   // Độ khó thứ hai: [máu, sát thương] nhân thêm theo vùng. Trước là x2,2 máu, x1,5 sát thương cho mọi vùng; nay quái thường đã mạnh
   // theo ải, nên vùng sau nhân ít hơn để người chơi đã cày đầy (cấp 30, vũ khí Vàng) vẫn với tới được.
@@ -333,8 +336,10 @@
     'Đủ 30 dấu ấn của một hệ, vũ khí khóa theo nhánh hệ đó và bắt đầu tiến hóa.',
     'Trùm học theo bạn: dùng một hệ quá nhiều thì nó kháng hệ đó, nhưng yếu với hệ khắc chế.',
     'Kháng Lửa thì yếu Băng. Kháng Băng thì yếu Độc. Kháng Độc thì yếu Lửa.',
-    'Lửa hợp với bầy quái, Độc hợp với quái trâu và trùm, Băng hợp với quái nhanh.',
-    'Lửa gặp Độc gây Nổ khói. Lửa gặp Băng gây Sốc nhiệt.',
+    // GĐ2 (V16, Q8): câu cũ "Lửa hợp với bầy quái" sai số đo (đánh đám Độc vẫn mạnh hơn Lửa). Chỉ sửa câu, chưa đổi số Lửa.
+    'Lửa đốt cháy; từ Thức tỉnh, quái đang cháy mà chết thì nổ lan sang con đứng gần. Độc cộng dồn tầng, mạnh với quái trâu, trùm và cả bầy đông. Băng làm chậm, đủ tầng thì đóng băng, hợp với quái nhanh.',
+    // GĐ2 (V48): ghi rõ phản ứng chỉ có giữa hai vũ khí khác hệ, và tương tác ẩn Độc - Băng.
+    'Lửa gặp Độc gây Nổ khói. Lửa gặp Băng gây Sốc nhiệt. Độc gặp Băng không phản ứng, nhưng Băng làm Độc tan chậm một nửa. Phản ứng chỉ có giữa hai vũ khí khác hệ (đổi vũ khí khi quái còn dính hệ cũ); chưởng không gây phản ứng với vũ khí.',
     'Hạ trùm bằng hệ khắc chế nó để nhận sao thứ ba.',
     'Vũ khí có bốn bậc: Thường, Lam, Tím, Vàng. Trùm vùng lần đầu bị hạ chắc chắn rơi một vũ khí Vàng.',
     'Thành hình mở đặc trưng hệ thứ nhất, Thức tỉnh mở đặc trưng thứ hai. Bậc Thường chỉ lên tới Thành hình.',
