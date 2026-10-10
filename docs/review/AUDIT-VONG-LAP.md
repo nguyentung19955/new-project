@@ -206,3 +206,9 @@ Cách thử: `tests/au_tien_trien.py linhkhi --n=6` (đếm số chiến dịch 
 - Không chạy được Firebase thật hay trình giả lập luật Firestore trong phiên này: kết luận về Bảng vàng dựa trên đọc luật (`linhkhi.rules`) và code gửi điểm (`bang_vang.js`, `cloud.js`).
 - Bot dùng kiếm cho mọi em bé; chưa đo từng em bé với vũ khí sở trường.
 - Hiệu năng trên điện thoại, HUD, hình ảnh: thuộc các phiên khác, không đánh giá ở đây.
+
+## 6. Bài kiểm tra đã chạy (sau khi gộp `origin/khoi-tao-du-an` mới nhất)
+
+Bản gộp mới chỉ đổi hình vẽ (`room_art.js`, `fx.js`, `mobs.js` phần vẽ…), không đổi số cân bằng, nên số liệu ở trên vẫn đúng.
+`tests/rules.py` 82/82 đạt · `tests/ui_build.py` đạt · `tests/mapgen.py` đạt · `tests/doors.py` đạt · `tests/au_mapgen.py` chạy lại không lỗi trang.
+Phiên này không sửa code game nên không chạy lại `tests/cay.py` sau khi gộp.
