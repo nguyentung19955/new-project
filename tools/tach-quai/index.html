@@ -399,6 +399,15 @@ function tuTim(A, coAlpha) {
       }
       for (const j of bo) { fg[j] = 0; da[j] = 1; }
     }
+    // điểm cùng tông màu nền sặc sỡ còn sót trên thân (quầng sáng, chấm lem): bỏ. Lệch tông > 22° (tai hồng…) thì giữ.
+    const sacDo = (r, g, b) => { const mx = Math.max(r, g, b), mn = Math.min(r, g, b), c = mx - mn; if (!c) return [0, 0];
+      let h = mx === r ? ((g - b) / c) % 6 : mx === g ? (b - r) / c + 2 : (r - g) / c + 4; return [(h * 60 + 360) % 360, c / mx]; };
+    const tongNen = nenMau.map(c => sacDo(...c));
+    if (tongNen.length) for (let j = 0; j < N; j++) {
+      if (!fg[j] || duong[j]) continue;
+      const [h, sat] = sacDo(d[j*4], d[j*4+1], d[j*4+2]);
+      if (sat > 0.45 && tongNen.some(([hn]) => Math.min(Math.abs(h - hn), 360 - Math.abs(h - hn)) < 22)) { fg[j] = 0; da[j] = 1; }
+    }
     // đường kẻ cắt ngang thân: lấp lại bằng màu điểm bên cạnh
     for (let j = 0; j < N; j++) {
       if (!duong[j] || fg[j]) continue;
