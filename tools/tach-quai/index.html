@@ -114,7 +114,7 @@
       <div class="hang" style="margin-top:8px">
         <label class="hang" style="gap:6px"><input type="checkbox" id="latNgang"> Lật ngang. CHỈ tích khi đầu quái trong ảnh quay sang TRÁI</label>
         <label class="hang" style="gap:6px"><input type="checkbox" id="locDom" checked> Lọc đốm màu nền</label>
-        <label class="hang" style="gap:6px">Độ nét <select id="doNet" style="min-width:0"><option value="net">Sắc nét</option><option value="min">Mịn</option></select></label>
+        <label class="hang" style="gap:6px">Độ nét <select id="doNet" style="min-width:0"><option value="min">Mịn</option><option value="net">Sắc nét</option></select></label>
         <label class="hang" style="gap:6px">Số màu <select id="soMau" style="min-width:0"><option value="32">32</option><option value="24">24</option><option value="16">16</option></select></label>
         <button class="nut phu nho" id="nutLamLai">Tách lại</button>
       </div>
@@ -490,12 +490,20 @@ function tuTim(A, coAlpha) {
     gops[r] = moi;
   });
   // bỏ hình cụt (bị cắt mép ảnh, mẩu đuôi…): diện tích < 45% hình thường
-  const dienTich = gops.flat().map(f => (f.x1 - f.x0 + 1) * (f.y1 - f.y0 + 1)).sort((a, b) => a - b), dtGiua = dienTich[dienTich.length >> 1] || 1;
+  // đo bằng số điểm thật của hình (khung bị tách thì chia theo bề rộng)
+  const soDiem = (f) => { let n = 0; for (const c of f.ds) n += c.n; if (f.tach) { const tong = f.ds.reduce((m, c) => Math.max(m, c.x1), 0) - f.ds.reduce((m, c) => Math.min(m, c.x0), 1e9) + 1; n = n * (f.x1 - f.x0 + 1) / Math.max(1, tong); } return n; };
+  const dienTich = gops.flat().map(soDiem).sort((a, b) => a - b), dtGiua = dienTich[dienTich.length >> 1] || 1;
   gops.forEach((gop, r) => {
-    const bo = gop.filter(f => (f.x1 - f.x0 + 1) * (f.y1 - f.y0 + 1) < 0.45 * dtGiua).length;
-    if (bo) { gops[r] = gop.filter(f => (f.x1 - f.x0 + 1) * (f.y1 - f.y0 + 1) >= 0.45 * dtGiua); ghi.push(`Hàng ${r + 1}: bỏ ${bo} hình cụt/quá nhỏ`); }
+    const giu = gop.filter(f => soDiem(f) >= 0.4 * dtGiua), bo = gop.length - giu.length;
+    if (bo) { gops[r] = giu; ghi.push(`Hàng ${r + 1}: bỏ ${bo} hình cụt/quá nhỏ`); }
   });
   gops.forEach((gop, r) => {
+    // thừa hình: bỏ trước những hình nhỏ hẳn so với cả hàng (đám khói, bào tử bay rời…)
+    if (gop.length > SO[r]) {
+      const ds = gop.map(soDiem).sort((a, b) => a - b), giua = ds[ds.length >> 1];
+      while (gop.length > SO[r]) { let mi = -1; gop.forEach((f, i) => { if (soDiem(f) < 0.6 * giua && (mi < 0 || soDiem(f) < soDiem(gop[mi]))) mi = i; }); if (mi < 0) break; gop.splice(mi, 1); ghi.push(`Hàng ${r + 1}: bỏ 1 hình nhỏ lạc`); }
+      gops[r] = gop;
+    }
     let chon = gop;
     if (gop.length > SO[r]) { chon = []; for (let i = 0; i < SO[r]; i++) chon.push(gop[Math.round(i * (gop.length - 1) / (SO[r] - 1))]); ghi.push(`Hàng ${r + 1}: thấy ${gop.length} hình, lấy ${SO[r]} hình rải đều`); }
     if (gop.length < SO[r]) chon = duKhung(gop, r, loi, ghi);
@@ -551,7 +559,13 @@ function tachTheoLuoiKe(W, H, duong, nhan, cum, P) {
   let catNgang = 0, tongKhung = 0;
   const khung = [], loi = [], ghi = ['Ảnh có kẻ lưới: ' + cot.length + ' cột × 6 hàng, tách theo từng ô'], hinh = {};
   for (let r = 0; r < 6; r++) {
-    const ds = o.filter(c => c.r === r && c.lonNhat >= 0.15 * ref);
+    let ds = o.filter(c => c.r === r && c.lonNhat >= 0.15 * ref);
+    // thừa ô: bỏ dần ô chỉ có vật nhỏ lạc (khói, bào tử tràn sang) trước khi chọn rải đều
+    while (ds.length > SO[r]) {
+      const n = ds.map(c => c.lonNhat), giua = [...n].sort((a, b) => a - b)[n.length >> 1], mn = Math.min(...n);
+      if (mn >= 0.6 * giua) break;
+      ds = ds.filter((_, i) => i !== n.indexOf(mn)); ghi.push(`Hàng ${r + 1}: bỏ 1 ô chỉ có vật nhỏ lạc`);
+    }
     let chon = ds;
     if (ds.length > SO[r]) { chon = []; for (let i = 0; i < SO[r]; i++) chon.push(ds[Math.round(i * (ds.length - 1) / (SO[r] - 1))]); ghi.push(`Hàng ${r + 1}: thấy ${ds.length} hình, lấy ${SO[r]} hình rải đều`); }
     if (ds.length < SO[r]) chon = duKhung(ds, r, loi, ghi);
