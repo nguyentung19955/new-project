@@ -7,7 +7,7 @@
   const VUNG = { rung: 'Rừng già', bien: 'Hang biển', laudai: 'Lâu đài cổ' };
   const DOI = { 'em-be': 'Em bé', quai: 'Quái' };
   // PHIÊN BẢN: tăng số mỗi lần sửa công cụ, ghi ngày sửa. Mã bản (6 ký tự) do game/build.py tính từ nội dung mã nguồn.
-  const PHIEN_BAN = { so: '1.6', ngay: '10/10/2026' };
+  const PHIEN_BAN = { so: '1.7', ngay: '10/10/2026' };
   XR.PHIEN_BAN = PHIEN_BAN;
   const TEN_BUOC = ['Loại', 'Nạp ảnh', 'Gán vai', 'Ráp', 'Động tác', 'Xuất'];
   const dpr = () => Math.min(3, window.devicePixelRatio || 1);
@@ -556,12 +556,41 @@
   // thời lượng một lần chạy (giây) của động tác một lần, thêm lúc nghỉ
   const THOI = { tele: [0.7, 0.5], atk: [0.55, 0.6], hit: [0.4, 0.6], die: [1.3, 0.8] };
   let dangChay = false, t0 = 0;
+  // ĐI THỬ: giữ ←/→ hoặc A/D (hay nút trên màn) thì nhân vật đi qua lại, thả ra thì đứng thở.
+  // Giống trong game: game đọc cùng phím và gọi cùng G.chibi.draw với động tác 'move' / 'idle'.
+  const PHIM = { ArrowLeft: -1, KeyA: -1, ArrowRight: 1, KeyD: 1 };
+  const diGiu = new Set(); // phím / nút đang giữ
+  const di = { x: 0.5, huong: 1, tDi: 0, last: 0, coDi: false };
+  const laO = (e) => /^(INPUT|SELECT|TEXTAREA)$/.test((e.target && e.target.tagName) || '');
+  window.addEventListener('keydown', (e) => { if (S.buoc !== 5 || laO(e) || !(e.code in PHIM)) return; e.preventDefault(); diGiu.add(e.code); });
+  window.addEventListener('keyup', (e) => { if (e.code in PHIM) diGiu.delete(e.code); });
+  window.addEventListener('blur', () => diGiu.clear());
+  [['nutDiTrai', 'ArrowLeft'], ['nutDiPhai', 'ArrowRight']].forEach(([id, k]) => {
+    const b = $(id);
+    b.addEventListener('pointerdown', (e) => { e.preventDefault(); try { b.setPointerCapture(e.pointerId); } catch (er) { /* bỏ qua */ } diGiu.add('nut' + k); });
+    ['pointerup', 'pointercancel', 'lostpointercapture'].forEach((ev) => b.addEventListener(ev, () => diGiu.delete('nut' + k)));
+    b.addEventListener('contextmenu', (e) => e.preventDefault());
+  });
+  function huongDi() { let h = 0; for (const k of diGiu) h += PHIM[k.replace(/^nut/, '')] || 0; return Math.sign(h); }
   function khungHinh(ts) {
-    if (S.buoc !== 5) { dangChay = false; return; }
+    if (S.buoc !== 5) { dangChay = false; diGiu.clear(); return; }
     requestAnimationFrame(khungHinh);
-    const t = (ts - t0) / 1000;
+    let t = (ts - t0) / 1000;
+    const dtg = Math.min(0.05, di.last ? (ts - di.last) / 1000 : 0); di.last = ts;
+    const h = huongDi();
+    let dtac = S.dt, quay = S.quay;
+    if (h) {
+      // đang đi: động tác 'move', mặt quay theo hướng đi, chạy ngang qua màn rồi vòng lại
+      di.coDi = true; di.huong = h; di.tDi += dtg;
+      di.x += h * dtg * 0.22; if (di.x > 1.08) di.x = -0.08; if (di.x < -0.08) di.x = 1.08;
+      dtac = 'move'; t = di.tDi; quay = h < 0;
+    } else if (di.coDi) {
+      // vừa thả phím: đứng thở tại chỗ, giữ hướng mặt
+      if (S.dt === 'move' || S.dt === 'idle') dtac = 'idle';
+      quay = di.huong < 0;
+    }
     let u = 0;
-    if (!XR.LAP[S.dt]) { const [d, nghi] = THOI[S.dt] || [0.6, 0.5], k = t % (d + nghi); u = Math.min(1, k / d); }
+    if (!XR.LAP[dtac]) { const [d, nghi] = THOI[dtac] || [0.6, 0.5], k = t % (d + nghi); u = Math.min(1, k / d); }
     const r = layRig();
     // cỡ to
     const cv = $('cvTo'); coCanvas(cv);
@@ -574,20 +603,23 @@
       c.fillText(G.chibi ? 'Chưa ráp xong (Bước 4)' : 'Thiếu bộ động tác chibi_rig.js', cv.width / 2, cv.height / 2); c.textAlign = 'left';
     } else if (r.ready) {
       const cao = cv.height * 0.62;
-      G.chibi.draw(c, r, cv.width / 2, nenY, { anim: S.dt, u, t, cao, flip: S.quay, bong: true });
+      G.chibi.draw(c, r, di.coDi ? di.x * cv.width : cv.width / 2, nenY, { anim: dtac, u, t, cao, flip: quay, bong: true });
     }
     // cỡ thật: canvas 480×270 = đúng một màn game
     const ct = $('cvThat'), x = ct.getContext('2d');
     x.setTransform(1, 0, 0, 1, 0, 0); x.fillStyle = '#2c5234'; x.fillRect(0, 0, 480, 270);
     x.fillStyle = '#3d5a2a'; x.fillRect(0, G.GY0 || 142, 480, (G.GY1 || 236) - (G.GY0 || 142));
     if (r && r.ready) {
-      G.chibi.draw(x, r, 200, 200, { anim: S.dt, u, t, cao: +S.cao || 40, flip: S.quay, bong: true });
-      G.chibi.draw(x, r, 300, 200, { anim: 'idle', t, cao: +S.cao || 40, flip: true, bong: true });
+      if (di.coDi) G.chibi.draw(x, r, di.x * 480, 200, { anim: dtac, u, t, cao: +S.cao || 40, flip: quay, bong: true });
+      else {
+        G.chibi.draw(x, r, 200, 200, { anim: dtac, u, t, cao: +S.cao || 40, flip: quay, bong: true });
+        G.chibi.draw(x, r, 300, 200, { anim: 'idle', t, cao: +S.cao || 40, flip: true, bong: true });
+      }
     }
   }
   function veBuoc5() {
     const h = $('nutDongTac'); h.innerHTML = '';
-    for (const [k, ten] of XR.DONG_TAC) h.appendChild(el('button', { cls: 'nut' + (S.dt === k ? ' on' : ''), text: ten, onclick: () => { S.dt = k; t0 = performance.now(); veBuoc5(); } }));
+    for (const [k, ten] of XR.DONG_TAC) h.appendChild(el('button', { cls: 'nut' + (S.dt === k ? ' on' : ''), text: ten, onclick: () => { S.dt = k; t0 = performance.now(); di.coDi = false; di.x = 0.5; veBuoc5(); } }));
     const d = S.dong_tac[S.dt] || {};
     $('trBienDo').value = d.bien_do == null ? 1 : d.bien_do; $('trTocDo').value = d.toc_do == null ? 1 : d.toc_do;
     hienSo();
