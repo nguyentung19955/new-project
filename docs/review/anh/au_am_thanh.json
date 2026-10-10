@@ -1,0 +1,138 @@
+{
+ "bang_tieng": {
+  "hit": {
+   "tan_so": 220.0,
+   "dai_giay": 0.05,
+   "song": "square",
+   "am_luong": 0.05
+  },
+  "swing": {
+   "tan_so": 520.0,
+   "dai_giay": 0.04,
+   "song": "triangle",
+   "am_luong": 0.03
+  },
+  "hurt": {
+   "tan_so": 110.0,
+   "dai_giay": 0.12,
+   "song": "sawtooth",
+   "am_luong": 0.07
+  },
+  "mark": {
+   "tan_so": 1040.0,
+   "dai_giay": 0.09,
+   "song": "sine",
+   "am_luong": 0.06
+  },
+  "evolve": {
+   "tan_so": 660.0,
+   "dai_giay": 0.35,
+   "song": "triangle",
+   "am_luong": 0.08
+  },
+  "warn": {
+   "tan_so": 330.0,
+   "dai_giay": 0.1,
+   "song": "square",
+   "am_luong": 0.04
+  },
+  "gong": {
+   "tan_so": 98.0,
+   "dai_giay": 0.6,
+   "song": "sine",
+   "am_luong": 0.12
+  },
+  "pick": {
+   "tan_so": 780.0,
+   "dai_giay": 0.08,
+   "song": "sine",
+   "am_luong": 0.05
+  },
+  "die": {
+   "tan_so": 160.0,
+   "dai_giay": 0.1,
+   "song": "square",
+   "am_luong": 0.04
+  },
+  "fire": {
+   "tan_so": 300.0,
+   "dai_giay": 0.08,
+   "song": "sawtooth",
+   "am_luong": 0.03
+  },
+  "poison": {
+   "tan_so": 180.0,
+   "dai_giay": 0.1,
+   "song": "triangle",
+   "am_luong": 0.04
+  },
+  "ice": {
+   "tan_so": 1400.0,
+   "dai_giay": 0.06,
+   "song": "sine",
+   "am_luong": 0.04
+  },
+  "boom": {
+   "tan_so": 70.0,
+   "dai_giay": 0.25,
+   "song": "sawtooth",
+   "am_luong": 0.1
+  },
+  "ui": {
+   "tan_so": 600.0,
+   "dai_giay": 0.03,
+   "song": "square",
+   "am_luong": 0.03
+  },
+  "win": {
+   "tan_so": 880.0,
+   "dai_giay": 0.5,
+   "song": "triangle",
+   "am_luong": 0.08
+  }
+ },
+ "A": {
+  "kind": "A",
+  "state": "running",
+  "goi": 1,
+  "theoTen": {
+   "boom": 1
+  },
+  "nhieuNhatMotKhung": 1,
+  "daoDong": 1,
+  "cungLucNhieuNhat": 1,
+  "tongAmLuongDinh": 0.033,
+  "quaiTrung": 20,
+  "quaiChet": 0
+ },
+ "B": {
+  "kind": "B",
+  "state": "running",
+  "goi": 20,
+  "theoTen": {
+   "die": 20
+  },
+  "nhieuNhatMotKhung": 20,
+  "daoDong": 20,
+  "cungLucNhieuNhat": 20,
+  "tongAmLuongDinh": 0.8,
+  "quaiTrung": 20,
+  "quaiChet": 20
+ },
+ "C": {
+  "kind": "C",
+  "state": "running",
+  "goi": 16,
+  "theoTen": {
+   "boom": 2,
+   "fire": 14
+  },
+  "nhieuNhatMotKhung": 16,
+  "daoDong": 16,
+  "cungLucNhieuNhat": 16,
+  "tongAmLuongDinh": 0.213,
+  "quaiTrung": 14,
+  "quaiChet": 0
+ },
+ "loi_trang": []
+}
