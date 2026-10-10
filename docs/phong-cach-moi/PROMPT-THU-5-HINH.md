@@ -60,3 +60,9 @@ Soft chibi mobile RPG art style, smooth clean digital illustration (not pixel ar
 ## Kết quả lần thử 1 (10/10)
 Ảnh lưu ở `mau-thu5/`. Tách tự động: Thợ Săn đủ 6 mảnh, Tướng Ma đủ 8 mảnh (đao rời), Hồ Tinh lần B chỉ ra 4 mảnh (thân còn dính chân và đuôi) → đã sửa prompt B của Hồ Tinh.
 Đã sửa thêm: Tướng Ma lần A quay trái → nhấn mạnh quay phải; Gươm Rồng có chữ LEFT/RIGHT → cấm chữ mạnh hơn; đầu khớp tay chân bị tô trắng → yêu cầu cùng màu.
+
+## Lần thử 2 (10/10)
+- Gươm Rồng: đạt, hết chữ.
+- Hồ Tinh lần B (ho-tinh_parts2.png): đầu và 6 chân rời đã có, nhưng thân vẫn dính 3 chân và một chùm đuôi. Gemini hay "vẽ lại cả con" khi bảo tách thân, nên xin riêng từng mảnh khó bằng câu nhắn tiếp theo (cùng cuộc trò chuyện):
+  - `Now draw ONLY the body of this fox, with all four legs, the head and all tails removed: a plain rounded furry torso like a soft bean, the places where legs, neck and tails attach are smooth rounded fur. Nothing else in the image, plain pure white background, no text.`
+  - `Now draw ONLY the nine tails of this fox as three separate bundles of three ribbon tails with lanterns, far apart from each other, no body, plain pure white background, no text.`
