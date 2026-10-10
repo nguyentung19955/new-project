@@ -673,7 +673,10 @@ window.XS_THU_URL = "thu.html";
   // mob: [máu, sát thương] quái thường; boss: [máu, sát thương] trùm nhỏ (ải 1-4) hoặc trùm vùng (ải 5).
   G.STAGE_K = {
     mob: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.66], [1.23, 1.66], [1.27, 1.81], [1.32, 2.95], [1.44, 2.32], [1.48, 2.49], [1.31, 2.91], [1.27, 3.02], [1.7, 4.54], [1.66, 4.28], [1.67, 4.43], [1.7, 4.74], [1.29, 3.11]],
-    boss: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.66], [1.23, 1.66], [1.27, 1.81], [1.32, 2.95], [1.44, 2.32], [1.48, 2.49], [1.31, 2.91], [1.27, 3.02], [1.7, 4.54], [1.66, 4.28], [1.67, 4.43], [1.7, 4.74], [1.29, 3.11]],
+    // Sát thương trùm = sát thương quái thường của ải (đã nhân cột mob) x cột boss (js/boss.js makeBoss), nên hệ số bị nhân hai lần.
+    // GĐ2 (V5, Q2): hạ riêng cột sát thương trùm nhỏ ải 2-1 (2,95 -> 2,0) và 3-1..3-4 (4,54/4,28/4,43/4,74 -> 2,0/2,1/2,0/1,8)
+    // để mỗi đòn gốc không mạnh hơn trùm vùng cùng vùng (Ngư Tinh ~155, Hồ Tinh ~232) và ~45% máu bé vừa đủ khuyên dùng. Cột máu giữ nguyên.
+    boss: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.66], [1.23, 1.66], [1.27, 1.81], [1.32, 2.0], [1.44, 2.32], [1.48, 2.49], [1.31, 2.91], [1.27, 3.02], [1.7, 2.0], [1.66, 2.1], [1.67, 2.0], [1.7, 1.8], [1.29, 3.11]],
   };
   // Độ khó thứ hai: [máu, sát thương] nhân thêm theo vùng. Trước là x2,2 máu, x1,5 sát thương cho mọi vùng; nay quái thường đã mạnh
   // theo ải, nên vùng sau nhân ít hơn để người chơi đã cày đầy (cấp 30, vũ khí Vàng) vẫn với tới được.
@@ -789,8 +792,10 @@ window.XS_THU_URL = "thu.html";
     'Đủ 30 dấu ấn của một hệ, vũ khí khóa theo nhánh hệ đó và bắt đầu tiến hóa.',
     'Trùm học theo bạn: dùng một hệ quá nhiều thì nó kháng hệ đó, nhưng yếu với hệ khắc chế.',
     'Kháng Lửa thì yếu Băng. Kháng Băng thì yếu Độc. Kháng Độc thì yếu Lửa.',
-    'Lửa hợp với bầy quái, Độc hợp với quái trâu và trùm, Băng hợp với quái nhanh.',
-    'Lửa gặp Độc gây Nổ khói. Lửa gặp Băng gây Sốc nhiệt.',
+    // GĐ2 (V16, Q8): câu cũ "Lửa hợp với bầy quái" sai số đo (đánh đám Độc vẫn mạnh hơn Lửa). Chỉ sửa câu, chưa đổi số Lửa.
+    'Lửa đốt cháy; từ Thức tỉnh, quái đang cháy mà chết thì nổ lan sang con đứng gần. Độc cộng dồn tầng, mạnh với quái trâu, trùm và cả bầy đông. Băng làm chậm, đủ tầng thì đóng băng, hợp với quái nhanh.',
+    // GĐ2 (V48): ghi rõ phản ứng chỉ có giữa hai vũ khí khác hệ, và tương tác ẩn Độc - Băng.
+    'Lửa gặp Độc gây Nổ khói. Lửa gặp Băng gây Sốc nhiệt. Độc gặp Băng không phản ứng, nhưng Băng làm Độc tan chậm một nửa. Phản ứng chỉ có giữa hai vũ khí khác hệ (đổi vũ khí khi quái còn dính hệ cũ); chưởng không gây phản ứng với vũ khí.',
     'Hạ trùm bằng hệ khắc chế nó để nhận sao thứ ba.',
     'Vũ khí có bốn bậc: Thường, Lam, Tím, Vàng. Trùm vùng lần đầu bị hạ chắc chắn rơi một vũ khí Vàng.',
     'Thành hình mở đặc trưng hệ thứ nhất, Thức tỉnh mở đặc trưng thứ hai. Bậc Thường chỉ lên tới Thành hình.',
@@ -13382,6 +13387,11 @@ MA._xong();
   };
   const ORDER = ['lai', 'ren', 'xen', 'may', 'do', 'tu', 'mo']; // thứ tự trên dải lối tắt
   VS.NPCS = NPCS; VS.ORDER = ORDER;
+  // V53: người mới không thấy cả 7 bảng ngay. Cô Thợ May chỉ ra mặt sau khi qua ải 2 (Rừng già 2) hoặc đã qua từ 2 ải trở lên
+  // (bản lưu cũ đã chơi xa vẫn thấy cô như trước). Chưa mở: không vẽ cô, không chạm được, ô mặt trên dải lối tắt mờ đi.
+  const mayOpen = () => { const st = (G.save && G.save.stars) || {}; return !!st['0-1'] || Object.keys(st).length >= 2; };
+  const shown = (k) => k !== 'may' || mayOpen();
+  VS.shown = shown;
   function drawNpc(c, kind, f, o) {
     o = o || {}; const N = NPCS[kind], w = N.wide, y = N.top, look = o.look || 0;
     // chân
@@ -13858,6 +13868,7 @@ MA._xong();
     } catch (e) { /* thiếu số liệu thì coi như không có việc mới */ }
     // Người mới (chưa qua quá 1 ải): chỉ một người có chấm đỏ, người quan trọng nhất.
     // Chưa đánh ải nào: Lái Đò (đi đánh ải) trước. Sau ải 1: Cụ Đồ có điểm → Lò rèn → Thợ May → Lái Đò.
+    for (const k in n) if (!shown(k)) n[k] = false; // V53: người chưa ra mặt thì không có chấm
     const nStar = Object.keys(sv.stars || {}).length;
     if (nStar <= 1) {
       const order = nStar === 0 ? ['lai', 'do', 'ren', 'may'] : ['do', 'ren', 'may', 'lai'];
@@ -13897,6 +13908,7 @@ MA._xong();
   // Đi tới một người rồi mở bảng. now: tới ngay không cần chạy (bấm lần hai, hoặc đang mở bảng khác).
   VS.goNpc = function (k, now) {
     const N = NPCS[k];
+    if (!shown(k)) { interact({ kind: 'npc', id: k }); return; } // V53: chưa ra mặt thì chỉ báo, không chạy tới
     if (now) { S.x = N.den[0]; S.y = N.den[1]; S.path = null; S.goal = null; interact({ kind: 'npc', id: k }); return; }
     if (S.goal && S.goal.kind === 'npc' && S.goal.id === k) { VS.goNpc(k, true); return; } // chạm lần hai: tới luôn
     if (!goTo(N.den[0], N.den[1], { kind: 'npc', id: k }, true)) VS.goNpc(k, true);
@@ -13905,6 +13917,7 @@ MA._xong();
     S.path = null; S.goal = null;
     if (g.kind === 'npc') {
       const N = NPCS[g.id];
+      if (!shown(g.id)) { say('Cô Thợ May đi chợ xa. Qua ải Rừng già 2 rồi cô về may đồ cho bé.'); G.sfx && G.sfx('warn'); return; } // V53
       S.face = N.pos[0] >= S.x ? 1 : -1;
       S.talk = g.id; markSeen(g.id);
       if (!seen().hint) { seen().hint = 1; S.hintT = 0; G.persist(); }
@@ -13929,7 +13942,7 @@ MA._xong();
     const wx = sx + S.cam, wy = sy - OY;
     for (let i = 0; i < 2; i++) { const w = G.weaponById(G.save.carry[i]); if (w && Math.abs(wx - S.wp[i].x) < 13 && wy > S.wp[i].y - 50 && wy < S.wp[i].y + 6) return { kind: 'weapon', id: w.id }; }
     let best = null, bd = 1e9;
-    for (const k of ORDER) { const q = NPCS[k].pos; if (Math.abs(wx - q[0]) < 17 && wy > q[1] - 40 && wy < q[1] + 10) { const d = Math.hypot(wx - q[0], wy - q[1] + 14); if (d < bd) { bd = d; best = { kind: 'npc', id: k }; } } }
+    for (const k of ORDER) { if (!shown(k)) continue; const q = NPCS[k].pos; if (Math.abs(wx - q[0]) < 17 && wy > q[1] - 40 && wy < q[1] + 10) { const d = Math.hypot(wx - q[0], wy - q[1] + 14); if (d < bd) { bd = d; best = { kind: 'npc', id: k }; } } }
     for (const st of seats()) if (Math.abs(wx - st.x) < 14 && wy > st.y - 32 && wy < st.y + 8) { const d = Math.hypot(wx - st.x, wy - st.y + 12); if (d < bd) { bd = d; best = { kind: 'kid', id: st.key, x: st.x, y: st.y }; } }
     if (!best && S.frogT <= 0 && Math.abs(wx - (B.gieng[0] - 9)) < 9 && Math.abs(wy - (B.gieng[1] - 12)) < 9) return { kind: 'frog' };
     return best;
@@ -13999,7 +14012,7 @@ MA._xong();
     S.near = null;
     if (!locked && !S.path) {
       let bd = 30;
-      for (const k of ORDER) { const q = NPCS[k].pos, d = Math.hypot(S.x - q[0], (S.y - q[1]) * 1.6); if (d < bd) { bd = d; S.near = { kind: 'npc', id: k }; } }
+      for (const k of ORDER) { if (!shown(k)) continue; const q = NPCS[k].pos, d = Math.hypot(S.x - q[0], (S.y - q[1]) * 1.6); if (d < bd) { bd = d; S.near = { kind: 'npc', id: k }; } }
       for (const st of seats()) { const d = Math.hypot(S.x - st.x, (S.y - st.y) * 1.6) + 6; if (d < bd) { bd = d; S.near = { kind: 'kid', id: st.key }; } }
     }
     // vũ khí sống bay theo sau
@@ -14127,6 +14140,7 @@ MA._xong();
     if (S.frogT <= 0) L.push([B.gieng[1] + 0.1, () => coc(c, B.gieng[0] - 9 - cam, B.gieng[1] - 10 - (Math.sin(t * 0.9) > 0.96 ? 1 : 0))]);
     // người làng
     for (const k of ORDER) {
+      if (!shown(k)) continue; // V53: Cô Thợ May chưa về làng
       const N = NPCS[k], q = N.pos, nearMe = (S.near && S.near.kind === 'npc' && S.near.id === k) || S.talk === k || (S.bubble && S.bubble.who === k);
       const look = nearMe ? (S.x >= q[0] ? 1 : -1) : 0;
       const f = look ? 0 : Math.floor(t * 2.4 + k.length * 0.7) % 3, blink = !look && ((t * 0.31 + k.length * 0.37) % 1) > 0.95;
@@ -14191,11 +14205,12 @@ MA._xong();
     ORDER.forEach((k, i) => {
       const q = stripAt(i), cx = q[0], cy = q[1], on = sel === k;
       c.save();
+      if (!shown(k)) c.globalAlpha = 0.3; // V53: ô mặt mờ (chạm vào thì được báo khi nào cô về)
       c.beginPath(); c.arc(cx, cy, STRIP.r, 0, 7); c.fillStyle = on ? '#8a2f22' : '#1f4f4a'; c.fill(); c.lineWidth = on ? 1.6 : 1; c.strokeStyle = on ? '#f6dc92' : '#a8752f'; c.stroke();
       c.beginPath(); c.arc(cx, cy, STRIP.r - 1, 0, 7); c.clip(); VS.face(c, k, cx, cy + 1, 1);
       c.restore();
       if (S.news[k]) { c.save(); c.beginPath(); c.arc(cx + 7.5, cy - 7.5, 3, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = INK; c.stroke(); c.restore(); }
-      if (!compact) ui.text(NPCS[k].ngan, cx, 46.5, { size: 6.5, bold: true, align: 'center', color: on ? '#f6dc92' : '#e8dcc0' });
+      if (!compact) ui.text(NPCS[k].ngan, cx, 46.5, { size: 6.5, bold: true, tiny: true, align: 'center', color: on ? '#f6dc92' : '#e8dcc0' });
       if (clickable && G.click && Math.abs(G.click.x - cx) <= STRIP.gap / 2 && G.click.y >= 14 && G.click.y <= (compact ? 43 : 50)) { hit = k; G.click = null; G.sfx && G.sfx('ui'); }
     });
     return hit;

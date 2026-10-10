@@ -260,7 +260,10 @@
   // mob: [máu, sát thương] quái thường; boss: [máu, sát thương] trùm nhỏ (ải 1-4) hoặc trùm vùng (ải 5).
   G.STAGE_K = {
     mob: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.66], [1.23, 1.66], [1.27, 1.81], [1.32, 2.95], [1.44, 2.32], [1.48, 2.49], [1.31, 2.91], [1.27, 3.02], [1.7, 4.54], [1.66, 4.28], [1.67, 4.43], [1.7, 4.74], [1.29, 3.11]],
-    boss: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.66], [1.23, 1.66], [1.27, 1.81], [1.32, 2.95], [1.44, 2.32], [1.48, 2.49], [1.31, 2.91], [1.27, 3.02], [1.7, 4.54], [1.66, 4.28], [1.67, 4.43], [1.7, 4.74], [1.29, 3.11]],
+    // Sát thương trùm = sát thương quái thường của ải (đã nhân cột mob) x cột boss (js/boss.js makeBoss), nên hệ số bị nhân hai lần.
+    // GĐ2 (V5, Q2): hạ riêng cột sát thương trùm nhỏ ải 2-1 (2,95 -> 2,0) và 3-1..3-4 (4,54/4,28/4,43/4,74 -> 2,0/2,1/2,0/1,8)
+    // để mỗi đòn gốc không mạnh hơn trùm vùng cùng vùng (Ngư Tinh ~155, Hồ Tinh ~232) và ~45% máu bé vừa đủ khuyên dùng. Cột máu giữ nguyên.
+    boss: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.66], [1.23, 1.66], [1.27, 1.81], [1.32, 2.0], [1.44, 2.32], [1.48, 2.49], [1.31, 2.91], [1.27, 3.02], [1.7, 2.0], [1.66, 2.1], [1.67, 2.0], [1.7, 1.8], [1.29, 3.11]],
   };
   // Độ khó thứ hai: [máu, sát thương] nhân thêm theo vùng. Trước là x2,2 máu, x1,5 sát thương cho mọi vùng; nay quái thường đã mạnh
   // theo ải, nên vùng sau nhân ít hơn để người chơi đã cày đầy (cấp 30, vũ khí Vàng) vẫn với tới được.
@@ -376,8 +379,10 @@
     'Đủ 30 dấu ấn của một hệ, vũ khí khóa theo nhánh hệ đó và bắt đầu tiến hóa.',
     'Trùm học theo bạn: dùng một hệ quá nhiều thì nó kháng hệ đó, nhưng yếu với hệ khắc chế.',
     'Kháng Lửa thì yếu Băng. Kháng Băng thì yếu Độc. Kháng Độc thì yếu Lửa.',
-    'Lửa hợp với bầy quái, Độc hợp với quái trâu và trùm, Băng hợp với quái nhanh.',
-    'Lửa gặp Độc gây Nổ khói. Lửa gặp Băng gây Sốc nhiệt.',
+    // GĐ2 (V16, Q8): câu cũ "Lửa hợp với bầy quái" sai số đo (đánh đám Độc vẫn mạnh hơn Lửa). Chỉ sửa câu, chưa đổi số Lửa.
+    'Lửa đốt cháy; từ Thức tỉnh, quái đang cháy mà chết thì nổ lan sang con đứng gần. Độc cộng dồn tầng, mạnh với quái trâu, trùm và cả bầy đông. Băng làm chậm, đủ tầng thì đóng băng, hợp với quái nhanh.',
+    // GĐ2 (V48): ghi rõ phản ứng chỉ có giữa hai vũ khí khác hệ, và tương tác ẩn Độc - Băng.
+    'Lửa gặp Độc gây Nổ khói. Lửa gặp Băng gây Sốc nhiệt. Độc gặp Băng không phản ứng, nhưng Băng làm Độc tan chậm một nửa. Phản ứng chỉ có giữa hai vũ khí khác hệ (đổi vũ khí khi quái còn dính hệ cũ); chưởng không gây phản ứng với vũ khí.',
     'Hạ trùm bằng hệ khắc chế nó để nhận sao thứ ba.',
     'Vũ khí có bốn bậc: Thường, Lam, Tím, Vàng. Trùm vùng lần đầu bị hạ chắc chắn rơi một vũ khí Vàng.',
     'Thành hình mở đặc trưng hệ thứ nhất, Thức tỉnh mở đặc trưng thứ hai. Bậc Thường chỉ lên tới Thành hình.',
@@ -773,14 +778,18 @@
     c.setTransform(G.uiScale, 0, 0, G.uiScale, G.ox * G.dpr, G.oy * G.dpr);
     c.textBaseline = 'alphabetic';
   };
-  ui.font = function (size, bold) {
-    G.ux.font = (bold ? '700 ' : '500 ') + size + 'px ' + FONT;
+  // Sàn cỡ chữ (V25): chữ không nhỏ hơn 7,5 đơn vị (khoảng 11 px trên điện thoại cầm ngang; trước là 6,5 ≈ 9,4 px).
+  // Sàn nằm ngay trong ui.font nên mọi chỗ đo chữ (ui.wrap, measureText sau ui.font) cũng đo đúng cỡ sẽ vẽ, chữ xuống dòng không tràn.
+  // tiny = true: số nhỏ trên ô vũ khí, nhãn trong ô chật được giữ sàn cũ 6,5 (truyền { tiny: true } cho ui.text / ui.para).
+  ui.MIN = 7.5; ui.MIN_TINY = 6.5;
+  ui.fs = (size, tiny) => Math.max(tiny ? ui.MIN_TINY : ui.MIN, size || 9);
+  ui.font = function (size, bold, tiny) {
+    G.ux.font = (bold ? '700 ' : '500 ') + ui.fs(size, tiny) + 'px ' + FONT;
   };
   ui.text = function (str, x, y, o) {
     o = o || {};
     const c = G.ux;
-    // Chữ không nhỏ hơn 6,5 để còn đọc được trên điện thoại.
-    ui.font(Math.max(6.5, o.size || 9), o.bold);
+    ui.font(o.size || 9, o.bold, o.tiny); // sàn cỡ chữ: ui.fs ở trên
     c.textAlign = o.align || 'left';
     if (o.shadow !== false) {
       c.fillStyle = 'rgba(0,0,0,0.75)';
@@ -789,8 +798,8 @@
     c.fillStyle = o.color || '#f1ead9';
     c.fillText(str, x, y);
   };
-  ui.wrap = function (str, maxW, size, bold) {
-    ui.font(Math.max(6.5, size || 9), bold);
+  ui.wrap = function (str, maxW, size, bold, tiny) {
+    ui.font(size || 9, bold, tiny);
     const words = String(str).split(' ');
     const lines = [];
     let cur = '';
@@ -803,8 +812,8 @@
   };
   ui.para = function (str, x, y, maxW, o) {
     o = o || {};
-    const size = Math.max(6.5, o.size || 9);
-    const lines = ui.wrap(str, maxW, size, o.bold);
+    const size = ui.fs(o.size, o.tiny);
+    const lines = ui.wrap(str, maxW, size, o.bold, o.tiny);
     lines.forEach((l, i) => ui.text(l, x, y + i * (size + 3), o));
     return y + lines.length * (size + 3);
   };
@@ -10670,6 +10679,10 @@
       stats: o.stats, marksMult: o.marksMult || 1, haste: o.haste || 1, hpFloor: o.hpFloor || false,
       marksGained: 0, loot: o.loot, over: null, usedPotion: false, shrink: null, seed: o.seed || 1,
     };
+    // V17: sổ máu mất theo nguồn, dùng chung cả lượt (gắn vào o.stats của ải, mọi phòng cùng một sổ). Xem G.hurtPlayer.
+    const book = o.stats || {};
+    W.hurtBy = book.hurtBy || (book.hurtBy = {});
+    W.lastHurt = book.lastHurt || null;
     P.x = 50; P.y = (W.y0 + W.y1) / 2;
     P.inv = 0.6;
     P.spearOut = null; P.slideT = 0; // giáo Phi Thương đang bay ở phòng cũ thì coi như đã về tay
@@ -10748,7 +10761,15 @@
         if (l.type === 'resist' && o.el === l.el) m *= 1 - l.pct;
       }
       if (o.el && t.weak.includes(o.el)) { m *= 1.3; t.weakHits++; }
-      if (o.ranged && t.layers.some((l) => l.type === 'antiRanged') && t.rangedShield && t.rangedShield(W.P)) m *= 0.3;
+      // V13: "Chống đánh xa" giảm còn 50% (trước 30%) và có báo: số sát thương xám (fx.js tự làm xám khi hệ số < 0,8)
+      // kèm chữ "Xa quá!" trên đầu trùm lần đầu bị giảm, nhắc lại tối đa mỗi 6 giây.
+      if (o.ranged && t.layers.some((l) => l.type === 'antiRanged') && t.rangedShield && t.rangedShield(W.P)) {
+        m *= 0.5;
+        if (!(G.time - (t.farHintT == null ? -99 : t.farHintT) < 6)) {
+          t.farHintT = G.time;
+          FX('farHint', t);
+        }
+      }
       if (t.exposed > 0) m *= 1.5;
       if (t.onHit) t.onHit(o);
     }
@@ -10924,6 +10945,9 @@
       const coat = P.coats[w.id] && P.coats[w.id].t > 0;
       let chance = coat ? 1 : G.PROC[stage];
       if (w.power === 'proc') chance += 0.25;
+      // V46: tỉ lệ gây hệ tính theo nhịp vũ khí, để vũ khí chậm không tích dấu ấn chậm hơn hẳn (kiếm 0,36 giây là chuẩn):
+      // búa x2,2, cung x1,4, giáo x1,2, kiếm giữ nguyên; tối đa 100%.
+      chance = Math.min(1, chance * Math.max(1, (T.cd || 0.36) / 0.36));
       if (P.firstHit && P.swapProc) chance = 1;
       if (G.rnd() < chance) G.applyStatus(e, el, d, 1);
     }
@@ -10991,7 +11015,7 @@
     if (tgt && Math.abs(tgt.x - P.x) > 3) P.face = tgt.x > P.x ? 1 : -1;
     P.comboI = G.time - P.lastAtk < T.cd + 0.35 ? (P.comboI + 1) % 3 : 0;
     P.lastAtk = G.time;
-    P.atkDur = T.cd; P.atkT = T.cd; P.cdT = T.cd; P.hitDone = false;
+    P.atkDur = T.cd; P.atkT = T.cd; P.cdT = T.cd; P.hitDone = false; P.hitAt = null;
     G.sfx('swing', w.type === 'hammer' ? 0.6 : 1);
   }
   function doHit(P) {
@@ -11050,6 +11074,35 @@
     for (const w of P.weapons) P.coats[w.id] = { el, t };
   };
 
+  // V17: ghi máu bé mất theo nguồn trong lượt, để bảng thua (stage.js, phiên 2C) nói "mất máu nhiều nhất vì gì, gục vì đòn nào".
+  //   W.hurtBy[key] = { key, name, amt, n, boss }  (cộng dồn cả lượt; amt là máu thật sự mất)
+  //     key: vai quái ('archer', 'spiky', 'elite'...; name là tên vai ở G.ROLES), 'gaiPhan' (gai phản đòn),
+  //          'trum' (đòn trực tiếp/đạn của trùm), 'trumVung' (vùng đỏ, vũng, sóng, tường nước của trùm),
+  //          'vung' (vùng, vũng không rõ chủ ngoài phòng trùm), 'chay' / 'doc' (máu mất mỗi nhịp khi bé đang cháy / trúng độc).
+  //   W.lastHurt = { key, name, skill, boss, amt, el, t, fatal }  đòn cuối cùng làm bé mất máu (fatal: đòn này hạ bé).
+  //     skill: tên chiêu trùm đang ra (b.skillName, do boss.js đặt; chưa có thì null). boss: tên trùm.
+  let hurtKind = null; // 'vung' khi vết thương đến từ vùng/vũng/sóng/tường (đặt quanh lời gọi ở updateWorld)
+  function hurtKey(src, melee) {
+    const b = src && src.isBoss ? src : !src && W.boss && !W.boss.dead ? W.boss : null;
+    if (b) {
+      const zone = hurtKind === 'vung' && !melee; // vùng đỏ cận chiến (z.melee) tính là đòn trực tiếp
+      return { key: zone ? 'trumVung' : 'trum', name: zone ? 'Vùng đỏ của trùm' : 'Đòn của trùm', boss: b.name || null, skill: b.skillName || null };
+    }
+    if (src && src.role) {
+      if (src.spikeUp > 0 && !melee && !hurtKind) return { key: 'gaiPhan', name: 'Gai phản đòn' };
+      const R = G.ROLES && G.ROLES[src.role];
+      return { key: src.role, name: R ? R.name : 'Quái' };
+    }
+    return { key: 'vung', name: 'Vùng nguy hiểm' };
+  }
+  function noteHurt(info, lost, el) {
+    if (!(lost > 0) || !W.hurtBy) return;
+    const P = W.P, rec = W.hurtBy[info.key] || (W.hurtBy[info.key] = { key: info.key, name: info.name, amt: 0, n: 0, boss: null });
+    rec.amt += lost; rec.n++;
+    if (info.boss) rec.boss = info.boss;
+    W.lastHurt = { key: info.key, name: info.name, skill: info.skill || null, boss: info.boss || null, amt: lost, el: el || null, t: G.time, fatal: P.hp <= 0 };
+    if (W.stats) W.stats.lastHurt = W.lastHurt;
+  }
   G.hurtPlayer = function (amt, el, src, melee) {
     const P = W.P;
     if (P.inv > 0 || P.dead || W.over || W.safe) return false; // W.safe: đã hạ trùm, đang đi dạo chờ vào cổng
@@ -11057,6 +11110,7 @@
     const raw = amt;
     amt *= 1 - Math.min(0.75, P.dr);
     if (P.gongT > 0) amt *= 0.4;
+    const hp0 = P.hp;
     P.hp -= amt;
     if (src && src.trait === 'hut' && !src.dead) src.hp = Math.min(src.maxhp, src.hp + amt * 1.5); // tinh anh hút máu
     if (W.hpFloor && P.hp < 1) P.hp = 1;
@@ -11073,6 +11127,7 @@
       if (el === 'ice') P.st.ice = 2.5 * k;
     }
     if (P.hp <= 0) { P.dead = true; W.over = 'dead'; }
+    noteHurt(hurtKey(src, melee), hp0 - Math.max(0, P.hp), el); // V17
     return true;
   };
 
@@ -11090,8 +11145,11 @@
     if (P.dotT <= 0) {
       P.dotT = 0.5;
       if (!P.dead && (P.st.fire > 0 || P.st.poison > 0)) {
+        const hp0 = P.hp;
         P.hp -= P.dot;
         if (P.hp < 1) P.hp = 1;
+        const fire = P.st.fire > 0;
+        noteHurt({ key: fire ? 'chay' : 'doc', name: fire ? 'Cháy' : 'Trúng độc' }, hp0 - P.hp, fire ? 'fire' : 'poison'); // V17
       }
     }
     if (W.over) { P.moving = false; return; }
@@ -11175,7 +11233,9 @@
       }
       if ((inp.dodgeP || P.dodgeBuf > 0) && P.dodgeCd <= 0) {
         P.dodgeBuf = 0;
-        P.dodgeT = 0.27; P.dodgeCd = 1 * P.dodgeCdMax; P.inv = Math.max(P.inv, 0.32);
+        P.dodgeT = 0.27; P.dodgeCd = 1 * P.dodgeCdMax; P.inv = Math.max(P.inv, 0.32); // Q13: giữ bất tử 0,32 giây
+        // V15 (Q5): Né huỷ nhát đang vung thì không bắt chờ hết thời gian nhát đó (búa trước phải chờ thêm ~0,43 giây sau cú lộn)
+        if (P.atkT > 0) P.cdT = Math.min(P.cdT, 0.1);
         P.atkT = 0; P.chHold = false; P.chT = 0; // lộn thì bỏ phần chưởng đang tích
         // Không đẩy cần thì lộn theo hướng di chuyển gần nhất; chưa đi bước nào thì mới theo hướng mặt.
         // Hướng lộn luôn dài bằng 1: đẩy cần nhẹ hay mạnh thì quãng lộn vẫn như nhau.
@@ -11213,7 +11273,8 @@
         G.sfx('pick', 1.4);
       }
     }
-    if (P.atkT > 0 && !P.hitDone && P.atkT <= P.atkDur * 0.55) { if (MV) MV.hit(P); else doHit(P); }
+    // V15: đòn chạm khi đi được P.hitAt phần động tác (moves.js đặt; búa nện 0,35), mặc định 0,45 (còn 55% thời gian) như cũ.
+    if (P.atkT > 0 && !P.hitDone && P.atkT <= P.atkDur * (1 - (P.hitAt != null ? P.hitAt : 0.45))) { if (MV) MV.hit(P); else doHit(P); }
     P.x = G.clamp(P.x, W.x0, W.px1 != null ? W.px1 : W.x1);
     P.y = G.clamp(P.y, W.y0, W.y1);
     if (P.set === 'moc') {
@@ -11382,11 +11443,11 @@
     W.projs = W.projs.filter((o) => o.t > 0);
     // vùng nguy hiểm và vũng
     for (const z of W.zones) {
-      if (z.wall && G.mobWall) { G.mobWall(z, dt, P); continue; } // tường nước chạy (js/mobs.js)
+      if (z.wall && G.mobWall) { hurtKind = 'vung'; G.mobWall(z, dt, P); hurtKind = null; continue; } // tường nước chạy (js/mobs.js)
       if (z.wave) {
         if (z.wait > 0) { z.wait -= dt; continue; } // sóng đứng yên báo trước rồi mới tràn tới
         z.x += z.vx * dt;
-        if (!z.hit && Math.abs(P.x - z.x) < 6 && (P.y < z.g0 || P.y > z.g1)) { if (G.hurtPlayer(z.dmg, z.el, null, false)) z.hit = true; }
+        if (!z.hit && Math.abs(P.x - z.x) < 6 && (P.y < z.g0 || P.y > z.g1)) { hurtKind = 'vung'; if (G.hurtPlayer(z.dmg, z.el, null, false)) z.hit = true; hurtKind = null; }
         if (z.x < -20) z.dead = true;
         continue;
       }
@@ -11395,7 +11456,7 @@
       if (z.t > 0) {
         z.t -= dt;
         if (z.t <= 0) {
-          if (z.team !== 'player' && z.team !== 'fx' && z.dmg && G.inZone(z, P)) { if (G.hurtPlayer(z.dmg, z.el, z.src || null, !!z.melee) && z.onHit) z.onHit(z); }
+          if (z.team !== 'player' && z.team !== 'fx' && z.dmg && G.inZone(z, P)) { hurtKind = 'vung'; const hit = G.hurtPlayer(z.dmg, z.el, z.src || null, !!z.melee); hurtKind = null; if (hit && z.onHit) z.onHit(z); }
           if (z.onFire) z.onFire(z);
           if (z.then) { z.pool = true; z.life = z.then; z.tick = 0.4; }
           FX('zoneFire', z);
@@ -11419,7 +11480,7 @@
             }
           } else {
             z.tick = 0.5;
-            if (G.inZone(z, P)) G.hurtPlayer(z.dmg * 0.3, z.el, null, false);
+            if (G.inZone(z, P)) { hurtKind = 'vung'; G.hurtPlayer(z.dmg * 0.3, z.el, null, false); hurtKind = null; }
           }
         }
         if (z.heal && G.inZone(z, P)) P.hp = Math.min(P.maxhp, P.hp + P.maxhp * 0.03 * dt);
@@ -11631,7 +11692,9 @@
       charge: { name: 'Xốc tới', time: 0.5, min: 0.3, slow: 0.6, len0: 30, len1: 58, t: 0.16, mult0: 1.0, mult1: 2.2, depth: 12 },
     },
     hammer: {
-      swing: { name: 'Nện', dur: 0.8, mult: 1, reach: 32, depth: 26 },
+      // V15 (Q5): nhát nện chạm ở 35% động tác (0,28 giây) thay vì 45% (0,36 giây): ít bị Né huỷ giữa chừng khi đánh đám.
+      // Thời lượng 0,8 giây và sức đánh giữ nguyên.
+      swing: { name: 'Nện', dur: 0.8, mult: 1, reach: 32, depth: 26, hitAt: 0.35 },
       // giữ để lấy đà 2 nấc; chưa tới nấc 1 mà thả thì chỉ là nhát thường
       charge: {
         name: 'Lấy đà', lv1: 0.5, time: 1.1, min: 0.45, slow: 0.45, recover: 0.7, ahead: 22, waveV: 200, waveDepth: 26, waveFrac: 0.45, // sóng chạy xa nhất 0,45 bề ngang phòng (phòng thường 85, phòng trùm đủ 96) và tan khi chạm tường
@@ -11757,7 +11820,7 @@
   // Đi chậm lại trong lúc lấy đà
   M.speed = function (P) {
     const mv = P.mv;
-    if (!mv || !mv.holding) return 1;
+    if (!mv || !mv.holding || mv.chargeT < 0) return 1; // V12: tư thế chờ lúc vừa chạm (chưa tới 0,16 giây) chưa đi chậm
     const cfg = C[G.curW(P).type];
     return cfg && cfg.charge ? cfg.charge.slow : 1;
   };
@@ -11841,9 +11904,11 @@
   const padOf = (e, ux, uy, half) => half + Math.abs(ux) * e.hr / ZK() + Math.abs(uy) * e.r;
   M.padOf = padOf;
   // Bắt đầu một nhát: phase > 0 là vào thẳng giữa động tác (dùng khi thả đòn đã lấy đà sẵn).
+  // V15: o.hitAt là lúc đòn chạm, tính theo tiến độ động tác 0..1 (mặc định 0,45 như cũ, tức còn 55% thời gian; combat.js đọc P.hitAt).
   function begin(P, w, o, dur, phase) {
     const mv = P.mv;
     P.atkDur = dur; P.atkT = dur * (1 - (phase || 0)); P.cdT = P.atkT; P.hitDone = false; P.lastAtk = G.time;
+    P.hitAt = o.hitAt != null ? o.hitAt : null;
     P.comboI = o.pose || 0;
     mv.name = o.name; mv.kind = o.kind; mv.step = o.step || 0; mv.cur = o; mv.lastT = G.time + P.atkT;
     G.sfx('swing', w.type === 'hammer' ? 0.6 : 1);
@@ -12032,7 +12097,7 @@
   function hammerTap(P, w) {
     const m = C.hammer.swing;
     aim(P, reachOf(w, m.reach));
-    begin(P, w, { kind: 'nen', name: m.name, pose: 0, m, reach: reachOf(w, m.reach), depth: m.depth }, m.dur);
+    begin(P, w, { kind: 'nen', name: m.name, pose: 0, m, reach: reachOf(w, m.reach), depth: m.depth, hitAt: m.hitAt }, m.dur);
   }
   function hammerRelease(P, w, c, lv) {
     const ch = C.hammer.charge, sl = ch.slam[lv];
@@ -12099,14 +12164,17 @@
       if (w.type === 'bow') bowAim(P, ch.range + 10, ch.speed); // đang giương: cung xoay theo quái gần nhất
       const lv0 = mv.level;
       mv.chargeT += dt;
-      mv.charge = Math.min(1, mv.chargeT / ch.time);
+      mv.charge = G.clamp(mv.chargeT / ch.time, 0, 1); // chargeT âm: còn ở tư thế chờ (V12), đà chưa tính
       mv.level = levelOf(ch, mv.chargeT);
       if (mv.level > lv0) { G.sfx('pick', 0.9 + 0.3 * mv.level); FX('mvCharge', P, mv.level); }
       if (mv.charge >= 1) { mv.fullT += dt; if (mv.fullT >= C.hold) release(P, w, cfg); }
       return;
     }
-    if (held && mv.holdT >= C.tap && can) {
-      mv.holding = true; mv.chargeT = 0; mv.charge = 0; mv.level = 0; mv.fullT = 0; mv.buf = 0;
+    // V12: cung, giáo, búa vào tư thế "giương / lấy đà" ngay khung chạm nút (trước đây phải đợi giữ đủ 0,16 giây hoặc nhấc ngón).
+    // Luật giữ-thả không đổi: đà chỉ bắt đầu tính sau C.tap giây (chargeT bắt đầu từ số âm), nên nhấc ngón trước 0,16 giây
+    // vẫn là đòn bấm (release() thấy đà dưới mức min), ra đúng lúc nhấc ngón như cũ; giữ lâu thì đà đầy đúng lúc như cũ.
+    if (held && can) {
+      mv.holding = true; mv.chargeT = Math.min(0, mv.holdT - C.tap); mv.charge = 0; mv.level = 0; mv.fullT = 0; mv.buf = 0;
       mv.name = ch.name; mv.kind = 'layDa';
     } else if (mv.buf > 0 && can) {
       mv.buf = 0;
@@ -13473,10 +13541,11 @@
         if (hit.ranged && has(b, 'antiRanged') && b.tpCd <= 0 && b.busy <= 0 && !b.dead && !(b.invuln > 0)) {
           const P = w.P;
           b.tpCd = 4.5;
+          b.skillName = 'Biến ra sau lưng vồ';
           FX('burst', b.x, b.y - 30, '#ffffff', 12, 60);
           b.x = clamp(P.x - P.face * 40, w.x0 + 10, w.x1 - 10); b.y = clamp(P.y, w.y0, w.y1);
           b.face = P.x >= b.x ? 1 : -1;
-          G.zoneCircle(P.x, P.y, 24, 0.6, b.dmg, null, { src: b });
+          G.zoneCircle(P.x, P.y, 24, 0.6, b.dmg, null, { src: b, skill: b.skillName });
           G.sfx('warn', 1.5);
           b.busy = 0.8; b.cd = Math.max(b.cd, 0.6);
           play(b, 'idle');
@@ -13506,10 +13575,12 @@
   }
   const near = (x, y, dx, dy) => G.mobNear(x, y, dx, dy);
   const ang = (b, P) => Math.atan2(P.y - b.y, P.x - b.x);
-  const Z = (shape, geo, t, dmg, el, o) => G.mobZone(shape, geo, t, dmg, el, Object.assign({ src: W().boss }, o || {}));
-  function circle(x, y, r, t, dmg, el, o) { return G.zoneCircle(x, y, r, t, dmg, el, Object.assign({ src: W().boss }, o || {})); }
+  // Tên chiêu đang ra (b.skillName, đặt trong thinkBig/thinkMini) cũng gắn vào vùng đỏ/đạn (trường skill) để bảng thua biết bị gì đánh.
+  const skn = () => (W().boss && W().boss.skillName) || null;
+  const Z = (shape, geo, t, dmg, el, o) => G.mobZone(shape, geo, t, dmg, el, Object.assign({ src: W().boss, skill: skn() }, o || {}));
+  function circle(x, y, r, t, dmg, el, o) { return G.zoneCircle(x, y, r, t, dmg, el, Object.assign({ src: W().boss, skill: skn() }, o || {})); }
   function shot(b, a, sp, o) {
-    W().projs.push(Object.assign({ team: 'enemy', kind: 'orb', x: b.x + Math.cos(a) * 14, y: b.y + Math.sin(a) * 10, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, t: 3.2, dmg: b.dmg * 0.8, el: b.el, src: b, z: 22 }, o || {}));
+    W().projs.push(Object.assign({ team: 'enemy', kind: 'orb', x: b.x + Math.cos(a) * 14, y: b.y + Math.sin(a) * 10, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, t: 3.2, dmg: b.dmg * 0.8, el: b.el, src: b, skill: b.skillName || null, z: 22 }, o || {}));
   }
   function aimFace(b, a) { b.dirA = a; if (Math.abs(Math.cos(a)) > 0.15) b.face = Math.cos(a) > 0 ? 1 : -1; }
   // Lao thân: dời vị trí thật trong T giây theo góc a, quãng L (giữ trong sàn)
@@ -13528,10 +13599,11 @@
       c2: { name: 'Sóng thần', f(b, P, T, D, a, sp) { // tường nước chạy theo hướng em bé, chừa một khe
         const mk = (wait, off) => {
           const lat = G.rr(-70, 70) + off;
-          W().zones.push({ wall: true, x: b.x, y: b.y, ang: a, s: 10, v: 155, th: 14, half: 260, g: clamp(lat, -110, 110), gw: 26, wait, maxS: 340, dmg: b.dmg * 1.2, el: 'ice', src: b });
+          W().zones.push({ wall: true, x: b.x, y: b.y, ang: a, s: 10, v: 155, th: 14, half: 260, g: clamp(lat, -110, 110), gw: 26, wait, maxS: 340, dmg: b.dmg * 1.2, el: 'ice', src: b, skill: b.skillName });
         };
         mk(T, 0);
         if (b.phase >= 1) later(b, 0.7, () => mk(T - 0.2, G.rnd() < 0.5 ? 60 : -60));
+        later(b, D, () => tire(b, 1.0)); // GĐ2 (V14): mệt sau chiêu lớn ngay từ pha 1
       } },
       c3: { name: 'Phun băng', near: true, f(b, P, T, D, a) { // quạt băng, sàn mọc gai băng làm chậm
         Z('cone', { x: b.x, y: b.y, ang: a, r: 125, span: 1.0 }, T, b.dmg * 1.3, 'ice');
@@ -13561,6 +13633,7 @@
       c3: { name: 'Mưa quả độc', f(b, P, T, D) { // quả độc vỡ thành vũng độc
         const n = b.phase >= 2 ? 6 : 5;
         for (let i = 0; i < n; i++) { const q = i ? near(P.x, P.y, 70, 40) : [P.x, P.y]; circle(q[0], q[1], 18, T + i * 0.1, b.dmg * 0.8, 'poison', { then: 3.5, fxKind: 'fruit' }); }
+        later(b, D, () => tire(b, 1.0)); // GĐ2 (V14): mệt sau chiêu lớn ngay từ pha 1
       } },
       c4: { name: 'Bùa bay', f(b, P, T, D, a) { // năm lá bùa bay uốn lượn đuổi theo em bé rồi cháy nổ
         later(b, T, () => { for (let i = 0; i < 5; i++) shot(b, a + (i - 2) * 0.45, 62, { kind: 'bua', homing: 44, t: 3.6, dmg: b.dmg * 0.85, el: 'poison' }); });
@@ -13576,7 +13649,8 @@
         const n = [5, 6, 8][b.phase];
         for (let i = 0; i < n; i++) later(b, T + i * 0.05, () => shot(b, a + PI + (i / (n - 1) - 0.5) * 2.6, 72, { kind: 'fire', homing: 40, t: 3, dmg: b.dmg * 0.7, el: 'fire' }));
       } },
-      c2: { name: 'Vồ mồi', f(b, P, T, D, a) { // vồ hai lần, lần hai nhắm lại
+      // tele: báo trước tối thiểu (giây). GĐ2 (V8, Q4): Vồ mồi trước chỉ báo 0,44 s (pha 3 còn 0,37 s), không đi bộ ra kịp.
+      c2: { name: 'Vồ mồi', tele: 0.63, f(b, P, T, D, a) { // vồ hai lần, lần hai nhắm lại
         const L = clamp(Math.hypot(P.x - b.x, P.y - b.y) + 20, 70, 140);
         Z('line', { x: b.x, y: b.y, ang: a, len: L, w: 40 }, T, b.dmg * 1.25, null, { melee: true });
         later(b, T, () => { lunge(b, a, L - 26, 0.22); FX('burst', b.x, b.y, '#ffffff', 8, 60); });
@@ -13591,6 +13665,7 @@
       c3: { name: 'Quạt đuôi', near: true, f(b, P, T, D, a) { // ba lớp vệt lửa hình trăng khuyết, sàn cháy xanh
         [[0, 62], [56, 98], [92, 134]].forEach((r, i) => Z('donut', { x: b.x, y: b.y, r0: r[0], r1: r[1], gaps: [a + PI], gw: PI - 0.85 }, T + i * 0.12, b.dmg * 1.2, 'fire'));
         later(b, T + 0.3, () => { for (let i = 1; i <= 3; i++) G.zoneCircle(clamp(b.x + Math.cos(a) * i * 36, W().x0, W().x1), clamp(b.y + Math.sin(a) * i * 36, W().y0, W().y1), 16, 0, b.dmg * 0.5, 'fire', { pool: true, life: 2.5, tick: 0.3 }); });
+        later(b, D, () => tire(b, 1.0)); // GĐ2 (V14): Hồ Tinh pha 1 chỉ có c1-c3 (c4 mở từ pha 2) nên mệt cả sau Quạt đuôi
       } },
       c4: { name: 'Vòng lửa ma', f(b, P, T, D, a) { // hai vòng cột lửa lệch chỗ nhau (giữa hai cột là khe đứng được)
         const V = [[62, 8, 0, 0.3], [102, 12, PI / 12, 0.5]];
@@ -13599,6 +13674,7 @@
           if (x < W().x0 - 8 || x > W().x1 + 8 || y < W().y0 - 8 || y > W().y1 + 8) continue;
           circle(x, y, 12, (t0 + i * 0.015) * D, b.dmg * 1.1, 'fire', { fxKind: 'nova' });
         }
+        later(b, D, () => tire(b, 1.0)); // GĐ2 (V14): mệt sau chiêu lớn ngay từ pha 1
       } },
       c5: { name: 'Bão hồ hoả', f(b, P, T, D, a) { // ba đợt cầu lửa toả tròn, mỗi đợt lệch nhau để luồn qua khe
         for (let j = 0; j < 3; j++) later(b, T + j * 0.32, () => { for (let i = 0; i < 10; i++) shot(b, a + ((i + j * 0.5) / 10) * TAU, 82, { kind: 'fire', t: 2.6, dmg: b.dmg * 0.75, el: 'fire' }); });
@@ -13607,7 +13683,12 @@
     },
   };
   // Mệt sau chiêu lớn: choáng một lúc, nhận thêm sát thương (cơ hội phản công)
-  function tire(b, t) { if (b.dead) return; b.tired = t; b.exposed = Math.max(b.exposed, t); b.busy = Math.max(b.busy, t); }
+  // Trùm nhỏ không có hình 'stun' riêng: đặt thêm choáng thật (st.stun) để hình lảo đảo (js/mobs.js vẽ 'hit' khi choáng).
+  function tire(b, t) {
+    if (b.dead) return;
+    b.tired = t; b.exposed = Math.max(b.exposed, t); b.busy = Math.max(b.busy, t);
+    if (b.kind === 'mini' && b.st) b.st.stun = Math.max(b.st.stun || 0, t);
+  }
 
   function thinkBig(b) {
     const w = W(), P = w.P, ph = b.phase, S = SK[b.kind];
@@ -13617,9 +13698,17 @@
     // Chống áp sát: em bé đứng sát thì trùm hay dùng chiêu đánh quanh mình hơn
     if (has(b, 'antiMelee') && Math.hypot(P.x - b.x, P.y - b.y) < 75) for (const k of opts.slice()) if (S[k].near) opts.push(k, k);
     const k = choose(b, opts), sk = S[k] || S.c1;
-    const spd = [1, 1.1, 1.2][ph], D = dur(b.art, k) / spd, T = moc(b.art, k)[0] * D, a = ang(b, P);
+    const spd = [1, 1.1, 1.2][ph], a = ang(b, P);
+    let D = dur(b.art, k) / spd, T = moc(b.art, k)[0] * D, aspd = spd;
+    b.skillName = sk.name; // tên chiêu đang ra: bảng thua (js/stage.js) đọc
+    // Báo trước tối thiểu sk.tele: kéo dài phần lấy đà (hình chạy chậm lại tới lúc ra đòn, rồi về tốc độ thường) — mọi pha như nhau.
+    if (sk.tele && T < sk.tele) {
+      const T0 = T;
+      T = sk.tele; D += T - T0; aspd = spd * T0 / T;
+      later(b, T, () => { if (b.an && b.an.n === k) b.an.spd = spd; });
+    }
     aimFace(b, a);
-    play(b, k, spd);
+    play(b, k, aspd);
     sk.f(b, P, T, D, a, spd);
     b.busy = D; b.wind = T;
     G.sfx('warn', 1.1);
@@ -13629,12 +13718,21 @@
   }
 
   // ======================= TRÙM NHỎ =======================
+  // Tên chiêu trùm nhỏ (b.skillName) theo hình: atk đòn thường, chieu1, chieu2.
+  const MINI_SK = {
+    cuaDa: { atk: 'Kẹp càng', chieu1: 'Đập càng rung sàn', chieu2: 'Mưa tinh thể' },
+    namChua: { atk: 'Phun bào tử', chieu1: 'Hàng nấm độc', chieu2: 'Bão bào tử' },
+    hoLua: { atk: 'Cào', chieu1: 'Vồ lửa', chieu2: 'Gầm phun lửa' },
+  };
   function thinkMini(b) {
     const w = W(), P = w.P, ph = b.phase, id = b.art;
     const d = Math.hypot(P.x - b.x, P.y - b.y), a = ang(b, P);
     const opts = ['chieu1', 'chieu2'];
     if (d < 70) opts.push('atk', 'atk');
+    // GĐ2 (V38): Chống áp sát — em bé đứng gần thì trùm nhỏ hay ra chiêu 1 hơn (Cua Đá đập sàn quanh mình, Nấm Chúa hàng nấm, Hổ Lửa vồ)
+    if (has(b, 'antiMelee') && d < 75) opts.push('chieu1', 'chieu1');
     const k = choose(b, opts), spd = [1, 1.08, 1.16][ph];
+    b.skillName = (MINI_SK[id] && MINI_SK[id][k]) || (k === 'atk' ? 'Đòn thường' : k === 'chieu1' ? 'Chiêu 1' : 'Chiêu 2');
     aimFace(b, a);
     G.sfx('warn');
     if (k === 'atk') {
@@ -13676,6 +13774,8 @@
         // Gầm phun lửa: phun lửa hình quạt rộng
         Z('cone', { x: b.x, y: b.y, ang: a, r: 112, span: 1.5 }, T, b.dmg * 1.3, 'fire');
       }
+      // GĐ2 (V14, Q3): trùm nhỏ mệt ngắn sau chiêu 1
+      if (k === 'chieu1') later(b, D, () => tire(b, 0.8));
     }
     if (has(b, 'antiDodge')) later(b, b.wind + 0.3, () => { const P2 = W().P; circle(clamp(P2.x + (P2.ddx || 0) * 46, w.x0, w.x1), clamp(P2.y + (P2.ddy || 0) * 34, w.y0, w.y1), 18, 0.6, b.dmg, b.el); });
     b.cd = [1.4, 1.15, 0.9][ph];
@@ -13692,7 +13792,8 @@
     if (b.kind === 'ho' && has(b, 'antiMelee') && d < 46 && b.hopCd <= 0) {
       // Chống áp sát: Hồ Tinh bật lùi ra xa, để lại vũng lửa chỗ cũ
       b.hopCd = 3.5;
-      G.zoneCircle(b.x, b.y, 24, 0, b.dmg, 'fire', { pool: true, life: 3, tick: 0.3 });
+      b.skillName = 'Vũng lửa ma';
+      G.zoneCircle(b.x, b.y, 24, 0, b.dmg, 'fire', { pool: true, life: 3, tick: 0.3, skill: b.skillName });
       lunge(b, Math.atan2(-dy, -dx), 90, 0.25);
       return;
     }
@@ -15656,6 +15757,18 @@
   }
   // Bộ đồ nghề cho js/fx_he.js: dùng chung kho hạt, bảng màu và các hàm vẽ điểm ảnh ở trên.
   fx.kit = { aimed, S: () => S, api, layer, fail, emit, streak, spray, puffs, add, addRing, trauma, kick, stop, num, pal, PAL, RAMP, R, rr, hash, p, ell, ring, line, star, crescent, tongue, slam, blastFire, blastPoison, blastIce, elemBits, bodyOf, hand, A_ };
+})();
+
+// V13 (Giai đoạn 2, phiên gd2-b): trùm có "Chống đánh xa" vừa giảm sát thương một mũi tên thì hiện chữ "Xa quá!" trên đầu trùm
+// (combat.js G.damage gọi, lần đầu rồi tối đa mỗi 6 giây). Chỉ dùng hàm chữ sẵn có G.fx.text, không đổi phần nào khác của tệp này.
+(function () {
+  const G = window.G;
+  if (!G || !G.fx || G.fx.farHint) return;
+  G.fx.farHint = function (t) {
+    if (G.noRender || !t || !G.fx.text) return;
+    const top = t.y - Math.min(60, (t.h || 24) * (t.scale || 1)) - 16;
+    G.fx.text(t.x, top, 'Xa quá!', '#d6d6d6', 10);
+  };
 })();
 
 // ===== js/fx_he.js =====
@@ -19560,7 +19673,7 @@ MA._xong();
     const reach = reachOf(e);
     if (d > reach * 0.85) moveTo(e, P.x, P.y, sp, dt);
     else if (Math.abs(P.x - e.x) > 3) e.face = P.x > e.x ? 1 : -1;
-    if (e.cd <= 0 && d < reach + 6) melee(e, a, role === 'swarm' ? 0.42 : 0.58, role === 'swarm' ? 1.3 : 1.5);
+    if (e.cd <= 0 && d < reach + 6) melee(e, a, role === 'swarm' ? 0.5 : 0.58, role === 'swarm' ? 1.3 : 1.5); // GĐ2 (V8, Q4): bầy nhỏ báo trước 0,42 -> 0,5 s
   }
   function moveTo(e, tx, ty, sp, dt) {
     const dx = tx - e.x, dy = ty - e.y, d = Math.hypot(dx, dy);
@@ -19879,7 +19992,7 @@ MA._xong();
     if (n === 'atk' && (k === 'ban' || k === 'nem')) o.fx = false; // đạn thật do luật chơi bắn, không vẽ thêm đạn giả
     const dir = e.act ? e.act.a : e.dirA != null ? e.dirA : e.face > 0 ? 0 : PI;
     // Lấy đà: cử động 'tele' trải đúng theo thời gian lấy đà thật (e.wind / e.act.T) nên tư thế co người đạt đỉnh và rung đúng lúc
-    // sắp ra đòn, dù đòn lấy đà ngắn (bầy nhỏ 0,42 giây) hay dài (tinh anh, bom 0,85 giây). Chỉ đổi hình, không đổi thời gian ra đòn.
+    // sắp ra đòn, dù đòn lấy đà ngắn (bầy nhỏ 0,5 giây) hay dài (tinh anh, bom 0,85 giây). Chỉ đổi hình, không đổi thời gian ra đòn.
     if (n === 'tele' && e.act && e.wind > 0 && e.act.T > 0) t = clamp(1 - e.wind / e.act.T, 0, 1) * dur(e.art, 'tele') * 0.999;
     // Ra đòn nặng (tinh anh, quái giáp): giữ khung vừa đánh ra lâu hơn một chút rồi thu đòn chậm (cảm giác có trọng lượng).
     else if (n === 'atk' && (e.role === 'elite' || e.role === 'shield') && e.dying == null) { const D = dur(e.art, 'atk'), a1 = D * 0.2; t = t < a1 ? t : t < a1 + 0.08 ? a1 : a1 + (t - a1 - 0.08) * 0.9; }
@@ -19908,7 +20021,8 @@ MA._xong();
     if (e.spikeUp > 0) ic.push('gai');
     if (e.role === 'shield' && e.brokeT > 0) ic.push('vo');
     ic.forEach((k2, i) => icon(c, k2, e.x + (i - (ic.length - 1) / 2) * 11, top - 6));
-    if (e.wind > 0 && e.wind < 0.25 && !e.trait) { const cc = Math.floor(G.time * 10) & 1 ? '#fff3b0' : '#ff4030'; p(c, e.x - 1, top - 12, 2, 5, cc); p(c, e.x - 1, top - 6, 2, 2, cc); }
+    // V50 (gd2-b): dấu "!" báo sắp ra đòn nay hiện cả khi quái có biểu tượng (tinh anh luôn có dấu hiệu): đặt lệch sang phải hàng biểu tượng thay vì bỏ.
+    if (e.wind > 0 && e.wind < 0.25) { const cc = Math.floor(G.time * 10) & 1 ? '#fff3b0' : '#ff4030', bx = ic.length ? Math.round(e.x + ((ic.length - 1) / 2) * 11 + 8) : e.x - 1; p(c, bx, top - 12, 2, 5, cc); p(c, bx, top - 6, 2, 2, cc); }
     A.status(c, e, Math.round(e.x), Math.round(top));
   };
   // Đang đi ngầm dưới đất: chỉ thấy vệt đất gợn
@@ -24298,15 +24412,26 @@ MA._xong();
       ui.para(o.sub, x + 6, isW ? 162 : 160, 96, { size: 6.5, color: '#f0d9b0' });
     });
   }
-  function weaponLine(w, x, y, wd, sel) {
+  // Cắt một dòng chữ cho vừa bề rộng wd (thêm "…"). Đo bằng ui.font nên theo đúng sàn cỡ chữ (V25).
+  function cutLine(str, wd, size, bold) {
+    str = String(str);
+    ui.font(size, bold);
+    const c = G.ux;
+    if (c.measureText(str).width <= wd) return str;
+    let lo = 0, hi = str.length;
+    while (lo < hi) { const m = (lo + hi + 1) >> 1; if (c.measureText(str.slice(0, m) + '…').width <= wd) lo = m; else hi = m - 1; }
+    return str.slice(0, lo).trimEnd() + '…';
+  }
+  // rightPad: chừa chỗ bên phải dòng tên (lò rèn ghi "đang mang" ở đó)
+  function weaponLine(w, x, y, wd, sel, rightPad) {
     const mi = markInfo(w);
     const rar = G.RARITY[G.wRar(w)];
     G.theme.inset(x, y, wd, 22, sel);
     // ô hình vũ khí: viền mang màu bậc
     G.theme.slot(x + 2, y + 1, 20, G.wRar(w));
     G.art.weaponIcon(G.ux, w, x + 12, y + 11, 17);
-    ui.text(G.wName(w), x + 26, y + 9.5, { size: 7.5, bold: true, color: rar.col });
-    ui.text(mi.txt, x + 26, y + 18.5, { size: 6.5, color: mi.col === '#666' ? '#a9c2b4' : mi.col });
+    ui.text(cutLine(G.wName(w), wd - 30 - (rightPad || 0), 7.5, true), x + 26, y + 9.5, { size: 7.5, bold: true, color: rar.col });
+    ui.text(cutLine(mi.txt, wd - 30, 6.5), x + 26, y + 18.5, { size: 6.5, color: mi.col === '#666' ? '#a9c2b4' : mi.col });
     return G.click && G.inRect(G.click, x, y, wd, 22);
   }
   G.weaponLine = weaponLine;
@@ -24407,13 +24532,14 @@ MA._xong();
       y += 2;
     }
     if (!R.win && !S.quit && R.tips) { panelLose(R); return; }
+    if (R.v18 === undefined) goldKeepHint(R);
     // Phần thưởng: chữ ở cột trái; vũ khí nhận được thành thẻ viền màu bậc ở cột phải (khung thẻ của chủ đề trống đồng).
     const TH = G.theme, texts = R.lines.filter((l) => !l.w), weps = R.lines.filter((l) => l.w);
     // Khối linh khí (js/linhkhi.js) nằm sát trên hàng nút: mỗi vũ khí đang mang một dòng. Phần thưởng xếp phía trên khối này.
     const lkN = G.lk && S.P ? S.P.weapons.length : 0, lkTop = lkN ? (!R.win && !S.quit ? 186 : 213) - (11 + lkN * 21) : 0;
     const lim = lkN ? lkTop - 3 : 208;
     const rows = Math.max(1, Math.floor((lim - y) / 11.5));
-    const line = (l, cx, cy) => ui.text(l, cx, cy, { size: 7.5, color: l.includes('lên cấp') || l.includes('Cứu được') || l.includes('Kỷ lục') ? '#ffd27a' : '#e8dfcc' });
+    const line = (l, cx, cy) => ui.text(l, cx, cy, { size: 7.5, color: l.includes('lên cấp') || l.includes('Cứu được') || l.includes('Kỷ lục') || (R.v18 && R.v18.includes(l)) ? '#ffd27a' : '#e8dfcc' });
     texts.slice(0, rows).forEach((l, i) => line(l, 86, y + i * 11.5));
     let ry = y - 9;
     // ít vũ khí thì thẻ cao hai dòng; nhiều thì thẻ thấp lại một dòng để món nào cũng có hình
@@ -24426,11 +24552,18 @@ MA._xong();
       if (pitch >= 22) {
         TH.slot(247, ry + 2, 20, rar);
         G.art.weaponIcon(G.ux, l.w, 257, ry + 12, 16);
-        ui.text((k > 0 ? l.s.slice(0, k).trim().replace(/:$/, '') : 'Nhận được') + ' · bậc ' + G.RARITY[rar].name, 271, ry + 9.5, { size: 6.5, color: '#a9c2b4' });
+        // V26: ▲/▼ so với vũ khí đang mang (Sức mạnh nếu mang món này thay một ô; món đang mang rồi thì không ghi)
+        const cmp = cmpMark(l.w), cw = cmp ? cutLine(cmp.s, 50, 6.5, true) : '';
+        if (cmp) { ui.font(6.5, true); }
+        const cmpW = cmp ? G.ux.measureText(cw).width + 3 : 0;
+        ui.text(cutLine((k > 0 ? l.s.slice(0, k).trim().replace(/:$/, '') : 'Nhận được') + ' · bậc ' + G.RARITY[rar].name, 121 - cmpW, 6.5), 271, ry + 9.5, { size: 6.5, color: '#a9c2b4' });
+        if (cmp) ui.text(cw, 392, ry + 9.5, { size: 6.5, bold: true, align: 'right', color: cmp.up ? '#9be07a' : '#ff9a5a' });
         ui.text(cut(nm, 118, 7.5), 271, ry + 19.5, { size: 7.5, bold: true, color: G.RARITY[rar].col });
       } else {
         G.art.weaponIcon(G.ux, l.w, 254, ry + h / 2, Math.min(12, h - 2));
-        ui.text(cut(nm, 128, 7), 263, ry + h / 2 + 2.6, { size: 7, bold: true, color: G.RARITY[rar].col });
+        const cmp = cmpMark(l.w);
+        if (cmp) ui.text(cmp.up ? '▲' : '▼', 392, ry + h / 2 + 2.6, { size: 7, bold: true, align: 'right', color: cmp.up ? '#9be07a' : '#ff9a5a' });
+        ui.text(cut(nm, cmp ? 116 : 128, 7), 263, ry + h / 2 + 2.6, { size: 7, bold: true, color: G.RARITY[rar].col });
       }
       ry += pitch;
     });
@@ -24449,6 +24582,108 @@ MA._xong();
     if (ui.btn(86, 216, 140, 26, 'Về làng')) { S = null; G.setScene(G.Village); return; }
     if (ui.btn(254, 216, 140, 26, R.win ? 'Chơi lại ải này' : 'Thử lại')) G.startStage(S.r, S.i, S.diff);
   }
+  // V26: thẻ vũ khí ở màn kết quả: ▲ nếu mang món này thay một ô đang mang thì Sức mạnh tăng, ▼ nếu ô nào cũng giảm.
+  function cmpMark(w) {
+    const sv = G.save, U = G.upg;
+    if (!w || !U || !U.swapGain || !sv.carry || sv.carry.includes(w.id) || !G.weaponById(w.id)) return null;
+    let best = null;
+    for (let slot = 0; slot < sv.carry.length; slot++) { const g = U.swapGain(w, slot, sv); if (best == null || g > best) best = g; }
+    if (!best) return null;
+    return { up: best > 0, s: (best > 0 ? '▲ ' : '▼ ') + U.gainText(best, true) };
+  }
+  // V18 bước 1: trùm rơi món Vàng mà món đang mang (chưa Vàng) đã có linh khí → nhắc luyện món cũ lên Vàng ở Thợ Rèn để giữ linh khí.
+  // Tính một lần, thêm vài dòng lên đầu phần thưởng (R.v18 giữ các dòng đó để tô vàng).
+  function goldKeepHint(R) {
+    R.v18 = null;
+    try {
+      const sv = G.save;
+      if (!R.win || !R.lines.some((l) => l && l.w && G.wRar(l.w) === 3)) return;
+      let best = null, bm = 0;
+      for (const id of sv.carry) {
+        const w = G.weaponById(id);
+        if (!w || G.wRar(w) >= 3) continue;
+        const m = Object.values(w.marks || {}).reduce((a, b) => a + (+b || 0), 0);
+        if (m > bm) { bm = m; best = w; }
+      }
+      if (!best || bm < 1) return;
+      const msg = 'Món cũ ' + G.wName(best) + ' có ' + Math.floor(bm) + ' linh khí: luyện nó lên Vàng ở Thợ Rèn để giữ (đổi sang món mới thì linh khí không theo sang).';
+      R.v18 = ui.wrap(msg, 154, 7.5).slice(0, 3);
+      R.lines.unshift(...R.v18);
+    } catch (e) { R.v18 = null; }
+  }
+  // V17: VÌ SAO THUA. Đọc máu mất theo nguồn (W.hurtBy) và đòn cuối (W.lastHurt) do js/combat.js ghi; tên chiêu trùm b.skillName (js/boss.js).
+  // Chưa có số liệu (bản cũ, hay khoá khác tên) thì bỏ qua, bảng thua giữ như trước. Không bao giờ được làm lỗi bảng thua.
+  const HURT = { // tên nguồn và một mẹo cố định cho nguồn đó
+    spiky: ['Gai', 'Gai đang dựng gai thì đừng chém: đứng xa chờ gai bay qua rồi hãy đánh.'],
+    archer: ['Xạ thủ', 'Hạ Xạ thủ trước, và đi vòng chứ đừng đứng yên một chỗ.'],
+    kami: ['Cảm tử', 'Cảm tử lao tới rồi nổ: thấy vòng đỏ quanh nó là lăn né ra xa.'],
+    bomber: ['Đặt bom', 'Bom có vòng báo trước: bước ra khỏi vòng rồi mới đánh tiếp.'],
+    nimble: ['Nhanh nhẹn', 'Nhanh nhẹn lặn rồi trồi sau lưng: thấy vòng đỏ dưới chân thì né.'],
+    shield: ['Khiên', 'Khiên đỡ đòn phía trước: vòng ra sau lưng nó mà đánh.'],
+    swarm: ['Bầy nhỏ', 'Bầy nhỏ đông: vừa đánh vừa lùi, đừng để bị vây.'],
+    rusher: ['Lính xông', 'Lính xông lao thẳng tới: né sang bên rồi đánh vào lưng.'],
+    elite: ['Tinh anh', 'Tinh anh đánh đau: đánh vài đòn rồi lăn né, đừng đứng đỡ.'],
+    mini: ['Trùm nhỏ', 'Trùm nhỏ ra đòn có báo trước: thấy là lăn né rồi mới đánh.'],
+    boss: ['Đòn trùm', 'Trùm ra chiêu có báo trước: thấy là lăn né, đừng tham đánh thêm.'],
+    zone: ['Vùng đỏ của trùm', 'Vùng đỏ dưới đất sắp nổ: ra khỏi vùng đỏ trước rồi mới đánh.'],
+    dot: ['Cháy, độc', 'Đang cháy hay trúng độc thì đừng đứng yên, máu thấp thì uống bình máu sớm.'],
+    other: ['Đòn khác', 'Lăn né đúng lúc thì không bị trúng đòn: né khi thấy báo trước.'],
+  };
+  const HURT_ALIAS = { gai: 'spiky', xathu: 'archer', camtu: 'kami', datbom: 'bomber', bom: 'bomber', bomb: 'bomber', khien: 'shield', bay: 'swarm', bayn: 'swarm',
+    tinhanh: 'elite', trumnho: 'mini', minis: 'mini', trum: 'boss', bosshit: 'boss', bossskill: 'boss', bossmelee: 'boss', bossatk: 'boss', bossshot: 'boss',
+    bosszone: 'zone', bossarea: 'zone', bossvung: 'zone', area: 'zone', vung: 'zone', vungdo: 'zone', fire: 'dot', poison: 'dot', burn: 'dot', dots: 'dot', chay: 'dot', doc: 'dot' };
+  function hurtKey(k) {
+    const s = String(k);
+    if (HURT[s]) return s;
+    const lo = s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/[^a-z]/g, '');
+    if (HURT[lo]) return lo;
+    if (HURT_ALIAS[lo]) return HURT_ALIAS[lo];
+    if (G.ROLES && G.ROLES[s]) return s;
+    if (/zone|area|vung/.test(lo)) return 'zone';
+    if (/^boss|^trum/.test(lo)) return 'boss';
+    return s;
+  }
+  function hurtInfo(k) {
+    const key = hurtKey(k);
+    if (HURT[key]) return { key, name: HURT[key][0], tip: HURT[key][1] };
+    if (G.ROLES && G.ROLES[key]) return { key, name: G.ROLES[key].name, tip: HURT.other[1] };
+    if (/[^\x00-\x7f]| /.test(key)) return { key, name: key, tip: HURT.other[1] }; // khoá đã là tên tiếng Việt
+    return { key: 'other', name: HURT.other[0], tip: HURT.other[1] };
+  }
+  const hurtAmt = (v) => (typeof v === 'number' ? v : v && typeof v === 'object' ? +(v.amt != null ? v.amt : v.hp != null ? v.hp : v.dmg != null ? v.dmg : v.v != null ? v.v : v.n) || 0 : 0);
+  function loseWhy() {
+    const W = S.W, b = W && W.boss, out = { most: null, pct: 0, last: null, boss: null };
+    // 1. Máu mất theo nguồn: cộng ở phòng đang đứng và các phòng đã qua (mỗi bảng đếm chỉ cộng một lần)
+    const tot = {}, seen = new Set();
+    const add = (o) => {
+      if (!o || typeof o !== 'object' || seen.has(o)) return;
+      seen.add(o);
+      for (const k in o) { const a = hurtAmt(o[k]); if (a > 0 && isFinite(a)) { const q = hurtInfo(k).name; tot[q] = (tot[q] || 0) + a; tot['\u0000' + q] = hurtInfo(k).tip; } }
+    };
+    add(S.hurtBy);
+    if (W) add(W.hurtBy);
+    if (S.worlds) for (const id in S.worlds) add(S.worlds[id] && S.worlds[id].hurtBy);
+    let sum = 0;
+    for (const q in tot) if (q[0] !== '\u0000') { sum += tot[q]; if (!out.most || tot[q] > tot[out.most]) out.most = q; }
+    if (out.most && sum > 0) { out.pct = Math.round((tot[out.most] / sum) * 100); out.tip = tot['\u0000' + out.most]; } else out.most = null;
+    // 2. Đòn cuối hạ bé
+    const lh = (W && W.lastHurt) || S.lastHurt;
+    if (lh) {
+      let nm = null, key = null;
+      if (typeof lh === 'string') nm = lh;
+      else if (typeof lh === 'object') { nm = lh.name || lh.skill || lh.skillName || null; key = lh.src || lh.kind || lh.key || lh.role || lh.type || null; if (typeof key !== 'string') key = null; }
+      if (!nm && key) { const hi = hurtInfo(key); if ((hi.key === 'boss' || hi.key === 'zone') && b && b.skillName) nm = b.skillName; else nm = hi.name; }
+      if (typeof nm === 'string' && nm) out.last = nm;
+    }
+    // 3. Thua ở phòng trùm: trùm kháng gì, yếu gì, đã học gì (như hàng chip dưới tên trùm)
+    if (b && !b.dead) {
+      const parts = [];
+      for (const l of b.layers || []) parts.push(l.type === 'resist' ? 'kháng ' + G.EL[l.el].name : G.layerText(l));
+      if (b.weak && b.weak.length) parts.push('yếu ' + b.weak.map((e) => G.EL[e].name).join(', '));
+      if (parts.length) out.boss = (b.name ? b.name + ': ' : 'Trùm: ') + parts.join(', ');
+    }
+    return out.most || out.last || out.boss ? out : null;
+  }
   // BẢNG THUA: không có "thua nhiều thì mạnh thêm". Bảng chỉ rõ nên cày gì: Sức mạnh hiện tại so với khuyên dùng, rồi 2-3 gợi ý
   // nâng cấp cụ thể (G.upgradeTips, js/upgrade.js). Bấm một gợi ý thì về làng và mở thẳng bảng của người làng làm việc đó.
   function panelLose(R) {
@@ -24462,12 +24697,25 @@ MA._xong();
     const pw = T2.power, rec = T2.rec, col = G.powerCol(pw, rec);
     ui.text('Sức mạnh ' + pw + ' / khuyên dùng ' + rec + (pw < rec ? ' · còn thiếu ' + (rec - pw) : ' · đủ sức, thử lại né kỹ hơn nhé'), W0, 65, { size: 8, bold: true, color: col });
     ui.bar(W0, 69, 308, 3, G.clamp(pw / rec, 0, 1), col);
-    ui.text(T2.tips.length ? 'Nên cày gì (bấm để tới chỗ người làng):' : 'Đã nâng cấp hết mức hiện có: chơi lại ải cũ để lên cấp.', W0, 82, { size: 7, bold: true, color: '#f6dc92' });
-    T2.tips.forEach((t, k) => {
-      const y = 86 + k * 23, h = 21;
+    // V17: vì sao thua (tối đa 3 dòng); có thì bớt một gợi ý nâng cấp cho vừa bảng. Không có số liệu: bảng như cũ.
+    if (R.why === undefined) { try { R.why = loseWhy(); } catch (e) { R.why = null; } }
+    const why = R.why, wl = [];
+    if (why) {
+      const gv = why.last ? ' · gục vì: ' + why.last : '';
+      if (why.most) {
+        wl.push(['Mất máu nhiều nhất: ' + why.most + ' (' + why.pct + '%)' + gv, '#ff9a7a', true]);
+        wl.push(['Mẹo: ' + why.tip, '#d9cdb8', false]);
+      } else if (gv) wl.push(['Bé gục vì: ' + why.last, '#ff9a7a', true]);
+      if (why.boss) wl.push([why.boss, '#f6dc92', false]);
+    }
+    wl.forEach((q, i) => ui.text(cutLine(q[0], 308, 7.5, q[2]), W0, 78 + i * 10, { size: 7.5, bold: q[2], color: q[1] }));
+    const tips = wl.length ? T2.tips.slice(0, 2) : T2.tips, hy = wl.length ? 80 + wl.length * 10 : 82, ty = hy + 4;
+    ui.text(tips.length ? 'Nên cày gì (bấm để tới chỗ người làng):' : 'Đã nâng cấp hết mức hiện có: chơi lại ải cũ để lên cấp.', W0, hy, { size: 7, bold: true, color: '#f6dc92' });
+    tips.forEach((t, k) => {
+      const y = ty + k * 23, h = 21;
       ui.rect(W0, y, 308, h, t.ok ? 'rgba(60,110,60,0.45)' : 'rgba(30,48,46,0.85)', t.ok ? '#8fd07a' : '#5f7a74');
       const hit = G.click && G.inRect(G.click, W0, y, 308, h);
-      ui.text((k + 1) + '. ' + t.text, W0 + 5, y + 8.5, { size: 7.5, bold: true, color: '#fff0c4' });
+      ui.text(cutLine((k + 1) + '. ' + t.text, 236, 7.5, true), W0 + 5, y + 8.5, { size: 7.5, bold: true, color: '#fff0c4' });
       ui.text(t.gain > 0 ? '+' + t.gain + ' sức mạnh' : 'không tốn gì', W0 + 302, y + 8.5, { size: 7, bold: true, align: 'right', color: '#9be07a' });
       const sl = ui.wrap(t.sub, 270, 6.5, true);
       ui.text(sl[0] + (sl.length > 1 ? '…' : ''), W0 + 12, y + 17.5, { size: 6.5, color: t.ok ? '#c8f0b0' : '#d9cdb8' });
@@ -24477,7 +24725,7 @@ MA._xong();
     if (!S) return;
     // khối linh khí của từng vũ khí (js/linhkhi.js) nằm dưới các gợi ý
     const lkN = G.lk && S.P ? S.P.weapons.length : 0;
-    if (lkN) G.lk.resultBlock(S, 84, Math.max(86 + T2.tips.length * 23 + 2, 213 - (11 + lkN * 21)), 312);
+    if (lkN) G.lk.resultBlock(S, 84, Math.max(ty + tips.length * 23 + 2, 213 - (11 + lkN * 21)), 312);
     if (ui.btn(86, 216, 140, 26, 'Về làng')) { S = null; G.setScene(G.Village); return; }
     if (ui.btn(254, 216, 140, 26, 'Thử lại')) G.startStage(S.r, S.i, S.diff);
   }
@@ -24531,6 +24779,11 @@ MA._xong();
   };
   const ORDER = ['lai', 'ren', 'xen', 'may', 'do', 'tu', 'mo']; // thứ tự trên dải lối tắt
   VS.NPCS = NPCS; VS.ORDER = ORDER;
+  // V53: người mới không thấy cả 7 bảng ngay. Cô Thợ May chỉ ra mặt sau khi qua ải 2 (Rừng già 2) hoặc đã qua từ 2 ải trở lên
+  // (bản lưu cũ đã chơi xa vẫn thấy cô như trước). Chưa mở: không vẽ cô, không chạm được, ô mặt trên dải lối tắt mờ đi.
+  const mayOpen = () => { const st = (G.save && G.save.stars) || {}; return !!st['0-1'] || Object.keys(st).length >= 2; };
+  const shown = (k) => k !== 'may' || mayOpen();
+  VS.shown = shown;
   function drawNpc(c, kind, f, o) {
     o = o || {}; const N = NPCS[kind], w = N.wide, y = N.top, look = o.look || 0;
     // chân
@@ -25007,6 +25260,7 @@ MA._xong();
     } catch (e) { /* thiếu số liệu thì coi như không có việc mới */ }
     // Người mới (chưa qua quá 1 ải): chỉ một người có chấm đỏ, người quan trọng nhất.
     // Chưa đánh ải nào: Lái Đò (đi đánh ải) trước. Sau ải 1: Cụ Đồ có điểm → Lò rèn → Thợ May → Lái Đò.
+    for (const k in n) if (!shown(k)) n[k] = false; // V53: người chưa ra mặt thì không có chấm
     const nStar = Object.keys(sv.stars || {}).length;
     if (nStar <= 1) {
       const order = nStar === 0 ? ['lai', 'do', 'ren', 'may'] : ['do', 'ren', 'may', 'lai'];
@@ -25046,6 +25300,7 @@ MA._xong();
   // Đi tới một người rồi mở bảng. now: tới ngay không cần chạy (bấm lần hai, hoặc đang mở bảng khác).
   VS.goNpc = function (k, now) {
     const N = NPCS[k];
+    if (!shown(k)) { interact({ kind: 'npc', id: k }); return; } // V53: chưa ra mặt thì chỉ báo, không chạy tới
     if (now) { S.x = N.den[0]; S.y = N.den[1]; S.path = null; S.goal = null; interact({ kind: 'npc', id: k }); return; }
     if (S.goal && S.goal.kind === 'npc' && S.goal.id === k) { VS.goNpc(k, true); return; } // chạm lần hai: tới luôn
     if (!goTo(N.den[0], N.den[1], { kind: 'npc', id: k }, true)) VS.goNpc(k, true);
@@ -25054,6 +25309,7 @@ MA._xong();
     S.path = null; S.goal = null;
     if (g.kind === 'npc') {
       const N = NPCS[g.id];
+      if (!shown(g.id)) { say('Cô Thợ May đi chợ xa. Qua ải Rừng già 2 rồi cô về may đồ cho bé.'); G.sfx && G.sfx('warn'); return; } // V53
       S.face = N.pos[0] >= S.x ? 1 : -1;
       S.talk = g.id; markSeen(g.id);
       if (!seen().hint) { seen().hint = 1; S.hintT = 0; G.persist(); }
@@ -25078,7 +25334,7 @@ MA._xong();
     const wx = sx + S.cam, wy = sy - OY;
     for (let i = 0; i < 2; i++) { const w = G.weaponById(G.save.carry[i]); if (w && Math.abs(wx - S.wp[i].x) < 13 && wy > S.wp[i].y - 50 && wy < S.wp[i].y + 6) return { kind: 'weapon', id: w.id }; }
     let best = null, bd = 1e9;
-    for (const k of ORDER) { const q = NPCS[k].pos; if (Math.abs(wx - q[0]) < 17 && wy > q[1] - 40 && wy < q[1] + 10) { const d = Math.hypot(wx - q[0], wy - q[1] + 14); if (d < bd) { bd = d; best = { kind: 'npc', id: k }; } } }
+    for (const k of ORDER) { if (!shown(k)) continue; const q = NPCS[k].pos; if (Math.abs(wx - q[0]) < 17 && wy > q[1] - 40 && wy < q[1] + 10) { const d = Math.hypot(wx - q[0], wy - q[1] + 14); if (d < bd) { bd = d; best = { kind: 'npc', id: k }; } } }
     for (const st of seats()) if (Math.abs(wx - st.x) < 14 && wy > st.y - 32 && wy < st.y + 8) { const d = Math.hypot(wx - st.x, wy - st.y + 12); if (d < bd) { bd = d; best = { kind: 'kid', id: st.key, x: st.x, y: st.y }; } }
     if (!best && S.frogT <= 0 && Math.abs(wx - (B.gieng[0] - 9)) < 9 && Math.abs(wy - (B.gieng[1] - 12)) < 9) return { kind: 'frog' };
     return best;
@@ -25148,7 +25404,7 @@ MA._xong();
     S.near = null;
     if (!locked && !S.path) {
       let bd = 30;
-      for (const k of ORDER) { const q = NPCS[k].pos, d = Math.hypot(S.x - q[0], (S.y - q[1]) * 1.6); if (d < bd) { bd = d; S.near = { kind: 'npc', id: k }; } }
+      for (const k of ORDER) { if (!shown(k)) continue; const q = NPCS[k].pos, d = Math.hypot(S.x - q[0], (S.y - q[1]) * 1.6); if (d < bd) { bd = d; S.near = { kind: 'npc', id: k }; } }
       for (const st of seats()) { const d = Math.hypot(S.x - st.x, (S.y - st.y) * 1.6) + 6; if (d < bd) { bd = d; S.near = { kind: 'kid', id: st.key }; } }
     }
     // vũ khí sống bay theo sau
@@ -25276,6 +25532,7 @@ MA._xong();
     if (S.frogT <= 0) L.push([B.gieng[1] + 0.1, () => coc(c, B.gieng[0] - 9 - cam, B.gieng[1] - 10 - (Math.sin(t * 0.9) > 0.96 ? 1 : 0))]);
     // người làng
     for (const k of ORDER) {
+      if (!shown(k)) continue; // V53: Cô Thợ May chưa về làng
       const N = NPCS[k], q = N.pos, nearMe = (S.near && S.near.kind === 'npc' && S.near.id === k) || S.talk === k || (S.bubble && S.bubble.who === k);
       const look = nearMe ? (S.x >= q[0] ? 1 : -1) : 0;
       const f = look ? 0 : Math.floor(t * 2.4 + k.length * 0.7) % 3, blink = !look && ((t * 0.31 + k.length * 0.37) % 1) > 0.95;
@@ -25340,11 +25597,12 @@ MA._xong();
     ORDER.forEach((k, i) => {
       const q = stripAt(i), cx = q[0], cy = q[1], on = sel === k;
       c.save();
+      if (!shown(k)) c.globalAlpha = 0.3; // V53: ô mặt mờ (chạm vào thì được báo khi nào cô về)
       c.beginPath(); c.arc(cx, cy, STRIP.r, 0, 7); c.fillStyle = on ? '#8a2f22' : '#1f4f4a'; c.fill(); c.lineWidth = on ? 1.6 : 1; c.strokeStyle = on ? '#f6dc92' : '#a8752f'; c.stroke();
       c.beginPath(); c.arc(cx, cy, STRIP.r - 1, 0, 7); c.clip(); VS.face(c, k, cx, cy + 1, 1);
       c.restore();
       if (S.news[k]) { c.save(); c.beginPath(); c.arc(cx + 7.5, cy - 7.5, 3, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = INK; c.stroke(); c.restore(); }
-      if (!compact) ui.text(NPCS[k].ngan, cx, 46.5, { size: 6.5, bold: true, align: 'center', color: on ? '#f6dc92' : '#e8dcc0' });
+      if (!compact) ui.text(NPCS[k].ngan, cx, 46.5, { size: 6.5, bold: true, tiny: true, align: 'center', color: on ? '#f6dc92' : '#e8dcc0' });
       if (clickable && G.click && Math.abs(G.click.x - cx) <= STRIP.gap / 2 && G.click.y >= 14 && G.click.y <= (compact ? 43 : 50)) { hit = k; G.click = null; G.sfx && G.sfx('ui'); }
     });
     return hit;
@@ -25489,6 +25747,10 @@ MA._xong();
   const SOFT = '#a9c2b4', TXT = '#f1e6c6', GOLD = '#f6dc92', GOOD = '#9be07a', WARN = '#ff9a5a';
 
   function say(s) { V.msg = s; V.msgT = 2.5; }
+  // V25 (chữ to hơn): đoạn chữ trong khung cố định — vượt quá maxLines dòng thì vẽ cỡ nhỏ cũ để không lọt khỏi khung
+  function fitPara(str, x, y, w, o, maxLines) { return ui.para(str, x, y, w, Object.assign({}, o, { tiny: ui.wrap(str, w, o.size, o.bold).length > maxLines })); }
+  // Cắt một dòng cho vừa bề rộng, thêm "…"
+  function cut1(str, w, size, bold) { const a = ui.wrap(str, w, size, bold); return a.length > 1 ? a[0] + '…' : a[0] || ''; }
   function canPay(c) {
     const sv = G.save;
     if (!c) return true;
@@ -25518,9 +25780,18 @@ MA._xong();
   function open(k) {
     V.who = k; V.tab = TAB_OF[k]; V.sel = null; V.page = 0; V.confirm = false; V.node = null; V.msgT = 0;
     if (G.banDo) G.banDo.reset();
-    if (k === 'do') V.tab = V.dtab === 'help' || V.dtab === 'chuong' || (V.dtab === 'rank' && PANELS.rank) ? V.dtab : 'skill';
+    if (k === 'do') {
+      V.tab = V.dtab === 'help' || (V.dtab === 'chuong' && chuongOpen()) || (V.dtab === 'rank' && PANELS.rank) ? V.dtab : 'skill';
+      // V29 (O7): thẻ Cây kỹ năng hết điểm mà còn điểm chưởng thì mở thẳng thẻ Cây chưởng, khỏi thấy "Còn 0 điểm"
+      if (V.tab === 'skill' && chuongOpen() && G.chuong) {
+        const sv = G.save, hs = sv.heroes[sv.hero];
+        if (Math.floor(hs.lvl / 3) - (hs.sk.atk + hs.sk.def + hs.sk.elem) <= 0 && G.chuong.pts(hs, sv.hero).left > 0) V.tab = 'chuong';
+      }
+    }
     if (k === 'lai') pickNext();
   }
+  // V53: thẻ Cây chưởng chỉ hiện sau khi qua ải đầu tiên (người mới làm quen Cây kỹ năng trước)
+  function chuongOpen() { return Object.keys(G.save.stars || {}).length >= 1; }
   function goHub() {
     const was = V.tab;
     V.tab = 'hub'; V.who = null; V.sel = null; V.node = null; V.confirm = false; V.page = 0;
@@ -25637,13 +25908,15 @@ MA._xong();
     if (V.sel) {
       const r = V.sel[0], i = V.sel[1], R = G.REGIONS[r], b = G.stageStats(r, i, V.diff);
       ui.text(R.name + ' · ' + (i === 4 ? 'Ải trùm' : 'Ải ' + (i + 1)) + (V.diff ? ' · khó 2' : ''), 256, 219, { size: 9.5, bold: true, color: GOLD });
-      const l2 = (i === 4 ? 'Trùm vùng ' + R.bossName : 'Trùm nhỏ ' + R.mini) + ' · ' + (i < 2 ? 7 : 8) + ' phòng · ';
+      const l2 = (i === 4 ? 'Trùm ' + R.bossName : 'Trùm nhỏ ' + R.mini) + ' · 8 phòng · ';
       ui.text(l2, 256, 230, { size: 7, color: TXT });
       ui.font(7); ui.text('hệ ' + G.EL[R.el].name, 256 + G.ux.measureText(l2).width, 230, { size: 7, color: G.EL[R.el].col });
       // Sức mạnh khuyên dùng so với sức mạnh hiện tại của bé (G.power): xanh đủ, vàng sát nút, đỏ thiếu
       const need = G.stageRec(r, i, V.diff), col = G.powerCol(pw, need);
       ui.text('Sức mạnh khuyên dùng ' + need + ' · bé ' + pw, 256, 240, { size: 7.5, bold: true, color: col });
-      ui.para('Thưởng: ' + b.xp + ' kinh nghiệm, ~' + b.gold + ' vàng, ' + (5 + i) + ' ' + R.mat.toLowerCase() + (i === 4 ? ', ' + (V.diff ? 4 : 3) + ' mảnh ' + R.bossName + ', vũ khí quý' : ''), 256, 250.5, 144, { size: 6.5, color: SOFT });
+      // V25: chữ to hơn; dòng thưởng dài quá 2 dòng (ải trùm) thì giữ cỡ nhỏ cũ để không lọt khỏi khung
+      const rw = 'Thưởng: ' + b.xp + ' kinh nghiệm, ~' + b.gold + ' vàng, ' + (5 + i) + ' ' + R.mat.toLowerCase() + (i === 4 ? ', ' + (V.diff ? 4 : 3) + ' mảnh ' + R.bossName + ', vũ khí quý' : '');
+      ui.para(rw, 256, 250.5, 144, { size: 6.5, color: SOFT, tiny: ui.wrap(rw, 144, 6.5).length > 2 });
       if (T.btn(404, 217, 64, 38, 'Lên đò', { size: 11, primary: true })) G.startStage(r, i, V.diff);
     } else ui.text('Chạm một ải trên tranh để xem.', 256, 238, { size: 8, color: SOFT });
   }
@@ -25706,15 +25979,15 @@ MA._xong();
       if (!h) return;
       T.inset(x0, ry, 214, h - 2, false, { fill: got ? '#24484a' : '#17302f', col: got && E ? E.dark : T.C.brD });
       ui.text(q[0], x0 + 5, ry + 10, { size: 8, bold: true, color: got && E ? E.col : SOFT });
-      ui.text(locked ? 'Cần bậc Lam' : got ? 'Đã mở' : i === st + 1 ? 'Sắp mở: ' + G.MARKS[i - 1] + ' dấu ấn' : 'Chưa mở', x0 + 209, ry + 10, { size: 6.5, align: 'right', bold: got, color: locked ? WARN : got ? GOOD : SOFT });
-      if (q[1]) ui.para(q[1], x0 + 5, ry + 19, 204, { size: 6.5, color: TXT });
+      ui.text(locked ? 'Cần bậc Lam' : got ? 'Đã mở' : i === st + 1 ? 'Sắp mở: ' + G.MARKS[i - 1] + ' dấu ấn' : 'Chưa mở', x0 + 209, ry + 10, { size: 6.5, align: 'right', bold: got, tiny: true, color: locked ? WARN : got ? GOOD : SOFT });
+      if (q[1]) fitPara(q[1], x0 + 5, ry + 19, 204, { size: 6.5, color: TXT }, 2);
       else if (el) {
         const f = G.HE_FEATURES[el][q[2]];
         ui.text('Đặc trưng ' + (q[2] + 1) + ': ' + f.name, x0 + 62, ry + 10, { size: 7.5, bold: true, color: got ? E.col2 : TXT });
-        ui.para(f.desc, x0 + 5, ry + 20, 204, { size: 6.5, color: TXT });
+        fitPara(f.desc, x0 + 5, ry + 20, 204, { size: 6.5, color: TXT }, 2);
       } else {
         ui.text(q[2] ? 'Đặc trưng 2: phản ứng dây chuyền' : 'Đặc trưng 1: thứ để lại trên sân', x0 + 5, ry + 21, { size: 7, color: TXT });
-        ui.text(G.ELS.map((e) => G.EL[e].name + ': ' + G.HE_FEATURES[e][q[2]].name).join(' · '), x0 + 5, ry + 31, { size: 7, color: TXT });
+        ui.text(G.ELS.map((e) => G.EL[e].name + ': ' + G.HE_FEATURES[e][q[2]].name).join(' · '), x0 + 5, ry + 31, { size: 7, color: TXT, tiny: ui.wrap(G.ELS.map((e) => G.EL[e].name + ': ' + G.HE_FEATURES[e][q[2]].name).join(' · '), 204, 7).length > 1 });
       }
       ry += h;
     });
@@ -25729,7 +26002,7 @@ MA._xong();
     pager(list.length, ROWS, CX + CW - 100, 189);
     list.slice(V.page * ROWS, V.page * ROWS + ROWS).forEach((w, k) => {
       const y = LIST_Y + k * PITCH;
-      if (G.weaponLine(w, CX, y, CW, V.sel === w.id)) { V.sel = w.id; G.click = null; G.sfx('ui'); }
+      if (G.weaponLine(w, CX, y, CW, V.sel === w.id, carry.includes(w.id) ? 48 : 0)) { V.sel = w.id; G.click = null; G.sfx('ui'); }
       if (carry.includes(w.id)) ui.text('đang mang', CX + CW - 6, y + 9.5, { size: 6.5, align: 'right', color: GOOD });
     });
     ui.text(list.length + ' vũ khí', CX + 2, 200.5, { size: 7, color: SOFT });
@@ -25758,13 +26031,19 @@ MA._xong();
         const cap = G.FORGE_CAP[sv.forge];
         const cost = G.sharpenFull(w.sharpen);
         ui.text(G.wName(w), CX + 8, DET_Y + 14, { size: 8.5, bold: true, color: R4[G.wRar(w)].col });
-        ui.text('Sát thương mỗi đòn ' + G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1), CX + 8, DET_Y + 26, { size: 7.5 });
+        // V26: số trước → sau khi mài (mài thử trên chính món rồi trả lại ngay, không lưu)
+        const lvl = sv.heroes[sv.hero].lvl, f1 = (v) => v.toFixed(1).replace('.', ','), dNow = G.wBase(w, lvl);
+        let dAfter = null;
+        if (w.sharpen < Math.min(cap, G.MAX_SHARPEN)) { w.sharpen++; try { dAfter = G.wBase(w, lvl); } finally { w.sharpen--; } }
+        ui.text('Sát thương mỗi đòn ' + f1(dNow) + (dAfter != null ? ' → ' + f1(dAfter) + ' sau khi mài' : ''), CX + 8, DET_Y + 26, { size: 7.5 });
         if (w.sharpen >= G.MAX_SHARPEN) { ui.text('Đã mài tối đa.', CX + 8, DET_Y + 40, { size: 8, color: GOOD }); line = 'Lưỡi này bén hết cỡ rồi cháu ạ.'; }
         else if (w.sharpen >= cap) { ui.para('Lò cấp ' + sv.forge + ' chỉ mài tới +' + cap + '. Hãy nâng lò.', CX + 8, DET_Y + 38, 290, { size: 7.5, color: WARN }); line = 'Lò còn yếu, phải nâng lò mới mài tiếp được.'; }
         else {
           ui.para('Lên +' + (w.sharpen + 1) + ' tốn: ' + costText(cost), CX + 8, DET_Y + 38, 198, { size: 7.5, color: canPay(cost) ? TXT : WARN });
           if (!canPay(cost)) line = 'Chưa đủ nguyên liệu. Vào ải kiếm thêm rồi quay lại nhé.';
-          if (actBtn('Mài', { disabled: !canPay(cost) })) { pay(cost); w.sharpen++; G.persist(); G.sfx('evolve'); say('Đã mài ' + G.wName(w) + ' lên +' + w.sharpen + '!'); }
+          // V21: mài món đang mang thì Sức mạnh tăng bao nhiêu (món trong rương không tính vào Sức mạnh)
+          const gain = G.upg && G.upg.gainOf ? G.upg.gainOf('sh' + w.id + '-' + w.sharpen + '-' + sv.hero + '-' + lvl, (s) => { const x = s.weapons.find((q) => q.id === w.id); if (x) x.sharpen++; }) : 0;
+          if (actBtn('Mài', { disabled: !canPay(cost), sub: gain > 0 ? G.upg.gainText(gain) : '', subSize: 7.5 })) { pay(cost); w.sharpen++; G.persist(); G.sfx('evolve'); say('Đã mài ' + G.wName(w) + ' lên +' + w.sharpen + '!'); }
         }
       }
     } else if (V.ftab === 'tier') {
@@ -25785,7 +26064,8 @@ MA._xong();
         ui.para('Sát thương gốc ' + xm(R4[r].mult) + ' lên ' + xm(R4[r + 1].mult) + ', thêm 1 dòng phụ' + (r === 0 ? ', tiến hóa được tới Thức tỉnh' : '') + '.', CX + 8, DET_Y + 25, 198, { size: 7, color: TXT });
         ui.para('Tốn: ' + costText(cost), CX + 8, DET_Y + 46, 198, { size: 7, color: canPay(cost) ? TXT : WARN });
         line = 'Dấu ấn và tiến hóa được giữ nguyên.' + (canPay(cost) ? '' : ' Nhưng cháu chưa đủ nguyên liệu.');
-        if (actBtn('Nâng bậc', { size: 10, disabled: !canPay(cost) })) raise(r + 1, 0);
+        const gain = G.upg && G.upg.gainOf ? G.upg.gainOf('ti' + w.id + '-' + r + '-' + w.sharpen + '-' + sv.hero, (s) => { const x = s.weapons.find((q) => q.id === w.id); if (x) { x.rarity = r + 1; if (x.tier != null) x.tier = r + 1; if (G.fitAffixes) G.fitAffixes(x); } }) : 0; // V21
+        if (actBtn('Nâng bậc', { size: 10, disabled: !canPay(cost), sub: gain > 0 ? G.upg.gainText(gain) : '', subSize: 7.5 })) raise(r + 1, 0);
       } else {
         // Nấc cuối lên Vàng: cần mảnh trùm (chỉ trùm vùng rơi). Dùng mảnh trùm vùng nào thì nhận hệ số Vàng của vùng đó.
         const isGold = G.wRar(w) === 3, opts = [0, 1, 2].filter((k) => !isGold || k > w.gold);
@@ -25826,7 +26106,7 @@ MA._xong();
       ui.para('Mũ, áo, đồ đeo lưng, bùa và cánh giờ do Cô Thợ May may từ gỗ linh, vảy cá, đá lửa. Mũ áo ông rèn trước đây đã được chuyển sang kho trang phục, không mất món nào.', CX + 6, LIST_Y + 8, 292, { size: 8, color: TXT });
       ui.text('Kho trang phục: ' + (G.outfit ? sv.outfit.items.length : 0) + ' món', CX + 6, LIST_Y + 62, { size: 8, bold: true, color: GOLD });
       line = 'Đồ vải vóc thì sang khung cửi của Cô Thợ May nhé cháu.';
-      if (actBtn('Sang Cô Thợ May', { size: 7.5 })) { VS.goNpc('may', true); return line; }
+      if (actBtn('Sang Cô Thợ May', { size: 7.5, disabled: !!(VS.shown && !VS.shown('may')) })) { VS.goNpc('may', true); return line; } // V53: cô chưa về thì nút mờ
     } else {
       ui.para('Lò rèn cấp ' + sv.forge + ' mài được vũ khí tới +' + G.FORGE_CAP[sv.forge] + '.', CX + 4, 112, 296, { size: 9.5 });
       const up = G.FORGE_UP[sv.forge];
@@ -25891,7 +26171,7 @@ MA._xong();
     pager(stash.length, ROWS, CX, 241);
     stash.slice(V.page * ROWS, V.page * ROWS + ROWS).forEach((w, k) => {
       const y = 141 + k * PITCH, picked = multi && BD.ids.has(w.id);
-      const hit = G.weaponLine(w, CX, y, CW - 18, picked || (!multi && V.sel === w.id));
+      const hit = G.weaponLine(w, CX, y, CW - 18, picked || (!multi && V.sel === w.id), BD ? 44 : 0);
       if (BD) ui.text(BD.wPrice(w) + ' vàng', CX + CW - 22, y + 9.5, { size: 6.5, align: 'right', color: w.lock ? SOFT : GOLD });
       if (lockAt(w, y)) return;
       if (hit) {
@@ -25993,7 +26273,7 @@ MA._xong();
       O.drawIcon(G.ux, k, CX + 15, y + 14, 20);
       ui.text(Ti.name + ' · ' + O.SLOT_NAME[Ti.slot], CX + 32, y + 11, { size: 8, bold: true, color: TXT });
       const st = O.stats({ k, r: 0 });
-      ui.text(Object.keys(st).map((q) => O.statText(q, st[q])).join(', ') + (own ? ' · đã có' : ''), CX + 32, y + 22, { size: 6.5, color: own ? GOOD : SOFT });
+      ui.text(cut1(Object.keys(st).map((q) => O.statText(q, st[q])).join(', ') + (own ? ' · đã có' : ''), CW - 120, 6.5), CX + 32, y + 22, { size: 6.5, color: own ? GOOD : SOFT });
       if (T.sbtn(CX + CW - 84, y + 5, 78, 18, 'Mua ' + Ti.price + ' vàng', { size: 7.5, pad: 2, disabled: sv.gold < Ti.price || O.full(sv) })) {
         const it = O.buy(sv, k);
         if (it) { G.persist(); G.sfx('pick'); VS.checkNews(); say('Của cháu đây, ' + Ti.name + '. Sang Cô Thợ May mà mặc thử.'); }
@@ -26040,7 +26320,7 @@ MA._xong();
   // ---------- cây kỹ năng và hướng dẫn (Cụ Đồ) ----------
   function doTabs() {
     // thẻ Bảng vàng (js/bang_vang.js) chỉ có khi tệp đó được nạp
-    const tabs = [['skill', 'Cây kỹ năng'], ['chuong', 'Cây chưởng'], ['help', 'Hướng dẫn']].concat(PANELS.rank ? [['rank', 'Bảng vàng']] : []);
+    const tabs = [['skill', 'Cây kỹ năng']].concat(chuongOpen() ? [['chuong', 'Cây chưởng']] : [], [['help', 'Hướng dẫn']], PANELS.rank ? [['rank', 'Bảng vàng']] : []);
     const w = Math.floor((CW - (tabs.length - 1) * 4) / tabs.length);
     tabs.forEach((t, i) => {
       const dot = t[0] === 'chuong' && G.chuong && G.chuong.pts(G.save.heroes[G.save.hero], G.save.hero).left > 0;
@@ -26061,6 +26341,9 @@ MA._xong();
       for (let j = 0; j < 5; j++) { ui.rect(CX + 46 + j * 12, y0 + 5, 9, 8, j < n ? '#ffd23f' : '#0d1716', j < n ? '#fff0a8' : T.C.brD); }
       if (n < 5) {
         ui.para('Tiếp: ' + Bk.nodes[n], CX + 6, y0 + 24, 236, { size: 7, color: TXT });
+        // V21: học thêm một điểm nhánh này thì Sức mạnh tăng bao nhiêu (nút như hồi máu mỗi phòng không đổi con số thì không ghi)
+        const gain = G.upg && G.upg.gainOf ? G.upg.gainOf('sk' + k + '-' + b + '-' + n + '-' + hs.lvl, (s) => { s.heroes[s.hero].sk[b]++; }) : 0;
+        if (gain > 0) ui.text(G.upg.gainText(gain), CX + CW - 60, y0 + 15, { size: 7.5, bold: true, align: 'right', color: GOOD });
         if (T.sbtn(CX + CW - 54, y0 + 8, 48, 24, 'Học', { size: 9, pad: 4, primary: pts > 0, disabled: pts <= 0 })) { hs.sk[b]++; G.persist(); G.sfx('evolve'); VS.checkNews(); }
       } else ui.text('Đã học hết nhánh này.', CX + 6, y0 + 28, { size: 7.5, color: GOOD });
     });
@@ -26178,7 +26461,7 @@ MA._xong();
       if (g.otab) V.otab = g.otab;
       if (g.oslot) V.oslot = g.oslot;
       if (g.who === 'xen') V.gtab = g.gtab || 'weapon';
-      if (g.who === 'do') { V.tab = g.tab === 'chuong' ? 'chuong' : 'skill'; V.dtab = V.tab; }
+      if (g.who === 'do') { V.tab = g.tab === 'chuong' && chuongOpen() ? 'chuong' : 'skill'; V.dtab = V.tab; }
       if (g.sel != null) V.sel = g.sel;
       if (g.page != null) V.page = g.page;
       if (g.stage) { V.diff = 0; V.sel = g.stage; }
@@ -26207,7 +26490,8 @@ MA._xong();
       VS.drawTop();
       if (V.tab === 'weapon') { weaponView(); return; }
       const hit = VS.drawStrip(V.who || WHO_OF[V.tab], true, true);
-      if (hit) { VS.goNpc(hit, true); return; }
+      if (hit && VS.shown && !VS.shown(hit)) say('Cô Thợ May đi chợ xa. Qua ải Rừng già 2 rồi cô về may đồ cho bé.'); // V53
+      else if (hit) { VS.goNpc(hit, true); return; }
       const fn = PANELS[V.tab] || settings;
       const tab = V.tab, line = fn();
       if (fn.full) return; // bảng tự vẽ người nói (Cô Thợ May)
@@ -26722,6 +27006,17 @@ MA._xong();
       return f.name + ': ' + (st >= i + 2 ? 'đã mở' : i + 2 > cap ? 'cần bậc Lam' : 'còn ' + (need - m) + ' dấu ấn');
     }).join(' · ');
   }
+  function compareText(sv, w) {
+    const lvl = sv.heroes[sv.hero].lvl, d = G.wBase(w, lvl), parts = [];
+    let up = false;
+    sv.carry.forEach((id, slot) => {
+      const c = G.weaponById(id); if (!c) return;
+      const dd = d - G.wBase(c, lvl), g = G.upg && G.upg.swapGain ? G.upg.swapGain(w, slot, sv) : 0;
+      if (g > 0 || (!g && dd > 0)) up = true;
+      parts.push('ô ' + (slot + 1) + ': đòn ' + (dd >= 0 ? '+' : '−') + Math.abs(dd).toFixed(1).replace('.', ',') + (g ? ', ' + G.upg.gainText(g, true) : '') + (g > 0 || (!g && dd > 0) ? ' ▲' : g < 0 || dd < 0 ? ' ▼' : ''));
+    });
+    return parts.length ? { s: 'So với ' + parts.join(' · '), up } : null;
+  }
   function weaponRow(sv, w, x, y, wd, carried) {
     const r = G.wRar(w), R = G.RARITY[r], BD = G.banDo, sell = !RO && BD, multi = sell && BD.multi && BD.kind === 'w';
     const picked = multi && BD.ids.has(w.id), sel = picked || (!multi && B.sel === w.id), mi = G.markInfo(w);
@@ -26733,9 +27028,12 @@ MA._xong();
     const bw = sell ? 150 : 104, tw = wd - 44 - bw;
     tx(G.wName(w), x + 40, y + 10, tw, { size: 8, bold: true, color: R.col });
     const aff = (w.affixes || []).map((k) => G.AFFIX[k]).concat(w.power && G.POWER[w.power] ? ['Dòng mạnh ' + G.POWER[w.power].name] : []);
-    tx('Bậc ' + R.name + ' · mài +' + (w.sharpen | 0) + ' · đòn ' + G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1).replace('.', ',') + (aff.length ? ' · ' + aff.join(', ') : ' · không dòng phụ'), x + 40, y + 20, tw, { size: 6.5, color: TXT });
-    tx(mi.txt, x + 40, y + 29, tw, { size: 6.5, color: mi.col === '#666' ? SOFT : mi.col });
-    tx(featText(w), x + 40, y + 37.5, tw, { size: 6.5, color: SOFT });
+    tx('Bậc ' + R.name + ' · mài +' + (w.sharpen | 0) + ' · đòn ' + G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1).replace('.', ',') + (aff.length ? ' · ' + aff.join(', ') : ' · không dòng phụ'), x + 40, y + 19.5, tw, { size: 6.5, color: TXT });
+    tx(mi.txt, x + 40, y + 28.5, tw, { size: 6.5, color: mi.col === '#666' ? SOFT : mi.col });
+    // V26: món trong rương đang được chọn: so với từng ô đang mang (đòn mỗi lần đánh và Sức mạnh), có dấu +/− và ▲/▼, không chỉ màu
+    const cmp = sel && !carried && !multi ? compareText(sv, w) : null;
+    if (cmp) tx(cmp.s, x + 40, y + 37.5, tw, { size: 6.5, bold: true, color: cmp.up ? GOOD : WARN });
+    else tx(featText(w), x + 40, y + 37.5, tw, { size: 6.5, color: SOFT });
     // nút bên phải
     const bx = x + wd - bw - 2;
     if (multi) { // đang chọn nhiều: chạm cả dòng để chọn, bên phải ghi giá
@@ -26884,7 +27182,7 @@ MA._xong();
       for (const k in sm.specials) for (const q of sm.specials[k]) { const sp = O.special(q.it); if (sp) y = ui.para('★ ' + sp.name, RX, y + 1, RW, { size: 6.5, color: PURP }); }
       if (!RO) {
         y += 4;
-        if (goBtn(RX, y, RW, 'may', 'Đến Cô Thợ May: may, nâng bậc')) return y;
+        if ((!VS.shown || VS.shown('may')) && goBtn(RX, y, RW, 'may', 'Đến Cô Thợ May: may, nâng bậc')) return y; // V53: cô chưa về thì không có nút
         y += 20;
         if (goBtn(RX, y, RW, 'xen', 'Đến Bà Hàng Xén: mua, bán đồ')) return y;
         y += 20;
@@ -27065,7 +27363,7 @@ MA._xong();
     const r = B.HUB, held = [...G.pointers.values()].some((q) => !q.role && !q.stale && G.inRect(q, r[0], r[1], r[2], r[3]));
     T.plate(r[0], r[1] + (held ? 1 : 0), r[2], r[3]);
     bagIcon(r[0] + r[2] / 2, r[1] + 11 + (held ? 1 : 0), 1.25);
-    ui.text('Hành trang', r[0] + r[2] / 2, r[1] + 27 + (held ? 1 : 0), { size: 6.5, bold: true, align: 'center', color: GOLD });
+    ui.text('Hành trang', r[0] + r[2] / 2, r[1] + 27 + (held ? 1 : 0), { size: 6.5, bold: true, tiny: true, align: 'center', color: GOLD });
     if ((G.click && G.inRect(G.click, r[0] - 2, r[1] - 1, r[2] + 4, r[3] + 2)) || G.keyP.KeyB) { G.click = null; B.openVillage(); return true; }
     return false;
   };
@@ -27555,6 +27853,9 @@ MA._xong();
     const score = (q) => q.kind === 'skill' ? 1e9 + q.gain : q.kind === 'chuong' ? 1e8 + q.gain : (q.gain / (25 + q.val * 0.15 + q.missVal)) * (q.ok ? 4 : 1) * (q.miss && !q.where ? 0.05 : 1);
     list.sort((a, b) => score(b) - score(a));
     const tips = [], seen = {};
+    // V53: người làng / thẻ chưa mở với người mới thì không gợi ý tới đó (bot cân bằng vẫn dùng U.list đầy đủ)
+    const nStar = Object.keys(sv.stars || {}).length, mayOpen = !!(sv.stars && sv.stars['0-1']) || nStar >= 2;
+    list = list.filter((q) => !(q.kind === 'chuong' && nStar < 1) && !(q.go && q.go.who === 'may' && !mayOpen));
     for (const q of list) {
       const grp = { skill: 'skill', chuong: 'chuong', carry: 'carry', wear: 'wear', buy: 'new', craft: 'new' }[q.kind] || q.key;
       if (seen[grp]) continue;
@@ -27569,6 +27870,30 @@ MA._xong();
     }
     return { power: G.power(), rec, tips };
   };
+  // ---------- V21/V26: "+X Sức mạnh" cạnh nút nâng cấp, so món mới với món đang mang ----------
+  // Sức mạnh tăng thêm (làm tròn) nếu làm fn trên bản sao của bản lưu (bản lưu thật không đổi). Nhớ kết quả theo key trong 1 giây
+  // để không tính lại mỗi khung hình; key nên chứa trạng thái liên quan (ví dụ cấp mài) để đổi xong là tính lại ngay.
+  const GC = new Map();
+  U.gainOf = function (key, fn, sv) {
+    sv = sv || G.save;
+    const now = G.time || 0, hit = GC.get(key);
+    if (hit && hit.sv === sv && now - hit.t < 1 && now >= hit.t) return hit.v;
+    let v = 0;
+    try { v = Math.round(U.powerWith(sv, fn) - U.powerWith(sv)); } catch (e) { v = 0; }
+    if (!isFinite(v)) v = 0;
+    if (GC.size > 120) GC.clear();
+    GC.set(key, { v, t: now, sv });
+    return v;
+  };
+  // Mang món w thay ô slot thì Sức mạnh đổi bao nhiêu (âm: kém hơn món đang mang ở ô đó).
+  U.swapGain = function (w, slot, sv) {
+    sv = sv || G.save;
+    if (!w || !sv.carry || slot >= sv.carry.length || sv.carry.includes(w.id)) return 0;
+    const cur = sv.carry[slot];
+    return U.gainOf('sw' + w.id + '-' + slot + '-' + cur + '-' + (w.sharpen | 0) + '-' + G.wRar(w), (s) => { s.carry[slot] = w.id; }, sv);
+  };
+  // Chữ "+12 Sức mạnh" (hoặc "−5 Sức mạnh"); 0 thì trả chuỗi rỗng.
+  U.gainText = (v, short) => (v > 0 ? '+' + v : v < 0 ? '−' + -v : '') + (v ? (short ? ' SM' : ' Sức mạnh') : '');
   const WHO_NAME = { ren: 'Ông Thợ Rèn', may: 'Cô Thợ May', xen: 'Bà Hàng Xén', do: 'Cụ Đồ', lai: 'Chú Lái Đò' };
   U.WHO_NAME = WHO_NAME;
 })();
