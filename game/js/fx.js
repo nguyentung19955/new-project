@@ -1853,3 +1853,15 @@
   // Bộ đồ nghề cho js/fx_he.js: dùng chung kho hạt, bảng màu và các hàm vẽ điểm ảnh ở trên.
   fx.kit = { aimed, S: () => S, api, layer, fail, emit, streak, spray, puffs, add, addRing, trauma, kick, stop, num, pal, PAL, RAMP, R, rr, hash, p, ell, ring, line, star, crescent, tongue, slam, blastFire, blastPoison, blastIce, elemBits, bodyOf, hand, A_ };
 })();
+
+// V13 (Giai đoạn 2, phiên gd2-b): trùm có "Chống đánh xa" vừa giảm sát thương một mũi tên thì hiện chữ "Xa quá!" trên đầu trùm
+// (combat.js G.damage gọi, lần đầu rồi tối đa mỗi 6 giây). Chỉ dùng hàm chữ sẵn có G.fx.text, không đổi phần nào khác của tệp này.
+(function () {
+  const G = window.G;
+  if (!G || !G.fx || G.fx.farHint) return;
+  G.fx.farHint = function (t) {
+    if (G.noRender || !t || !G.fx.text) return;
+    const top = t.y - Math.min(60, (t.h || 24) * (t.scale || 1)) - 16;
+    G.fx.text(t.x, top, 'Xa quá!', '#d6d6d6', 10);
+  };
+})();

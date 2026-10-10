@@ -152,6 +152,10 @@
       stats: o.stats, marksMult: o.marksMult || 1, haste: o.haste || 1, hpFloor: o.hpFloor || false,
       marksGained: 0, loot: o.loot, over: null, usedPotion: false, shrink: null, seed: o.seed || 1,
     };
+    // V17: sổ máu mất theo nguồn, dùng chung cả lượt (gắn vào o.stats của ải, mọi phòng cùng một sổ). Xem G.hurtPlayer.
+    const book = o.stats || {};
+    W.hurtBy = book.hurtBy || (book.hurtBy = {});
+    W.lastHurt = book.lastHurt || null;
     P.x = 50; P.y = (W.y0 + W.y1) / 2;
     P.inv = 0.6;
     P.spearOut = null; P.slideT = 0; // giáo Phi Thương đang bay ở phòng cũ thì coi như đã về tay
@@ -230,7 +234,15 @@
         if (l.type === 'resist' && o.el === l.el) m *= 1 - l.pct;
       }
       if (o.el && t.weak.includes(o.el)) { m *= 1.3; t.weakHits++; }
-      if (o.ranged && t.layers.some((l) => l.type === 'antiRanged') && t.rangedShield && t.rangedShield(W.P)) m *= 0.3;
+      // V13: "Chống đánh xa" giảm còn 50% (trước 30%) và có báo: số sát thương xám (fx.js tự làm xám khi hệ số < 0,8)
+      // kèm chữ "Xa quá!" trên đầu trùm lần đầu bị giảm, nhắc lại tối đa mỗi 6 giây.
+      if (o.ranged && t.layers.some((l) => l.type === 'antiRanged') && t.rangedShield && t.rangedShield(W.P)) {
+        m *= 0.5;
+        if (!(G.time - (t.farHintT == null ? -99 : t.farHintT) < 6)) {
+          t.farHintT = G.time;
+          FX('farHint', t);
+        }
+      }
       if (t.exposed > 0) m *= 1.5;
       if (t.onHit) t.onHit(o);
     }
@@ -406,6 +418,9 @@
       const coat = P.coats[w.id] && P.coats[w.id].t > 0;
       let chance = coat ? 1 : G.PROC[stage];
       if (w.power === 'proc') chance += 0.25;
+      // V46: tỉ lệ gây hệ tính theo nhịp vũ khí, để vũ khí chậm không tích dấu ấn chậm hơn hẳn (kiếm 0,36 giây là chuẩn):
+      // búa x2,2, cung x1,4, giáo x1,2, kiếm giữ nguyên; tối đa 100%.
+      chance = Math.min(1, chance * Math.max(1, (T.cd || 0.36) / 0.36));
       if (P.firstHit && P.swapProc) chance = 1;
       if (G.rnd() < chance) G.applyStatus(e, el, d, 1);
     }
@@ -473,7 +488,7 @@
     if (tgt && Math.abs(tgt.x - P.x) > 3) P.face = tgt.x > P.x ? 1 : -1;
     P.comboI = G.time - P.lastAtk < T.cd + 0.35 ? (P.comboI + 1) % 3 : 0;
     P.lastAtk = G.time;
-    P.atkDur = T.cd; P.atkT = T.cd; P.cdT = T.cd; P.hitDone = false;
+    P.atkDur = T.cd; P.atkT = T.cd; P.cdT = T.cd; P.hitDone = false; P.hitAt = null;
     G.sfx('swing', w.type === 'hammer' ? 0.6 : 1);
   }
   function doHit(P) {
@@ -532,6 +547,35 @@
     for (const w of P.weapons) P.coats[w.id] = { el, t };
   };
 
+  // V17: ghi máu bé mất theo nguồn trong lượt, để bảng thua (stage.js, phiên 2C) nói "mất máu nhiều nhất vì gì, gục vì đòn nào".
+  //   W.hurtBy[key] = { key, name, amt, n, boss }  (cộng dồn cả lượt; amt là máu thật sự mất)
+  //     key: vai quái ('archer', 'spiky', 'elite'...; name là tên vai ở G.ROLES), 'gaiPhan' (gai phản đòn),
+  //          'trum' (đòn trực tiếp/đạn của trùm), 'trumVung' (vùng đỏ, vũng, sóng, tường nước của trùm),
+  //          'vung' (vùng, vũng không rõ chủ ngoài phòng trùm), 'chay' / 'doc' (máu mất mỗi nhịp khi bé đang cháy / trúng độc).
+  //   W.lastHurt = { key, name, skill, boss, amt, el, t, fatal }  đòn cuối cùng làm bé mất máu (fatal: đòn này hạ bé).
+  //     skill: tên chiêu trùm đang ra (b.skillName, do boss.js đặt; chưa có thì null). boss: tên trùm.
+  let hurtKind = null; // 'vung' khi vết thương đến từ vùng/vũng/sóng/tường (đặt quanh lời gọi ở updateWorld)
+  function hurtKey(src, melee) {
+    const b = src && src.isBoss ? src : !src && W.boss && !W.boss.dead ? W.boss : null;
+    if (b) {
+      const zone = hurtKind === 'vung' && !melee; // vùng đỏ cận chiến (z.melee) tính là đòn trực tiếp
+      return { key: zone ? 'trumVung' : 'trum', name: zone ? 'Vùng đỏ của trùm' : 'Đòn của trùm', boss: b.name || null, skill: b.skillName || null };
+    }
+    if (src && src.role) {
+      if (src.spikeUp > 0 && !melee && !hurtKind) return { key: 'gaiPhan', name: 'Gai phản đòn' };
+      const R = G.ROLES && G.ROLES[src.role];
+      return { key: src.role, name: R ? R.name : 'Quái' };
+    }
+    return { key: 'vung', name: 'Vùng nguy hiểm' };
+  }
+  function noteHurt(info, lost, el) {
+    if (!(lost > 0) || !W.hurtBy) return;
+    const P = W.P, rec = W.hurtBy[info.key] || (W.hurtBy[info.key] = { key: info.key, name: info.name, amt: 0, n: 0, boss: null });
+    rec.amt += lost; rec.n++;
+    if (info.boss) rec.boss = info.boss;
+    W.lastHurt = { key: info.key, name: info.name, skill: info.skill || null, boss: info.boss || null, amt: lost, el: el || null, t: G.time, fatal: P.hp <= 0 };
+    if (W.stats) W.stats.lastHurt = W.lastHurt;
+  }
   G.hurtPlayer = function (amt, el, src, melee) {
     const P = W.P;
     if (P.inv > 0 || P.dead || W.over || W.safe) return false; // W.safe: đã hạ trùm, đang đi dạo chờ vào cổng
@@ -539,6 +583,7 @@
     const raw = amt;
     amt *= 1 - Math.min(0.75, P.dr);
     if (P.gongT > 0) amt *= 0.4;
+    const hp0 = P.hp;
     P.hp -= amt;
     if (src && src.trait === 'hut' && !src.dead) src.hp = Math.min(src.maxhp, src.hp + amt * 1.5); // tinh anh hút máu
     if (W.hpFloor && P.hp < 1) P.hp = 1;
@@ -555,6 +600,7 @@
       if (el === 'ice') P.st.ice = 2.5 * k;
     }
     if (P.hp <= 0) { P.dead = true; W.over = 'dead'; }
+    noteHurt(hurtKey(src, melee), hp0 - Math.max(0, P.hp), el); // V17
     return true;
   };
 
@@ -572,8 +618,11 @@
     if (P.dotT <= 0) {
       P.dotT = 0.5;
       if (!P.dead && (P.st.fire > 0 || P.st.poison > 0)) {
+        const hp0 = P.hp;
         P.hp -= P.dot;
         if (P.hp < 1) P.hp = 1;
+        const fire = P.st.fire > 0;
+        noteHurt({ key: fire ? 'chay' : 'doc', name: fire ? 'Cháy' : 'Trúng độc' }, hp0 - P.hp, fire ? 'fire' : 'poison'); // V17
       }
     }
     if (W.over) { P.moving = false; return; }
@@ -657,7 +706,9 @@
       }
       if ((inp.dodgeP || P.dodgeBuf > 0) && P.dodgeCd <= 0) {
         P.dodgeBuf = 0;
-        P.dodgeT = 0.27; P.dodgeCd = 1 * P.dodgeCdMax; P.inv = Math.max(P.inv, 0.32);
+        P.dodgeT = 0.27; P.dodgeCd = 1 * P.dodgeCdMax; P.inv = Math.max(P.inv, 0.32); // Q13: giữ bất tử 0,32 giây
+        // V15 (Q5): Né huỷ nhát đang vung thì không bắt chờ hết thời gian nhát đó (búa trước phải chờ thêm ~0,43 giây sau cú lộn)
+        if (P.atkT > 0) P.cdT = Math.min(P.cdT, 0.1);
         P.atkT = 0; P.chHold = false; P.chT = 0; // lộn thì bỏ phần chưởng đang tích
         // Không đẩy cần thì lộn theo hướng di chuyển gần nhất; chưa đi bước nào thì mới theo hướng mặt.
         // Hướng lộn luôn dài bằng 1: đẩy cần nhẹ hay mạnh thì quãng lộn vẫn như nhau.
@@ -695,7 +746,8 @@
         G.sfx('pick', 1.4);
       }
     }
-    if (P.atkT > 0 && !P.hitDone && P.atkT <= P.atkDur * 0.55) { if (MV) MV.hit(P); else doHit(P); }
+    // V15: đòn chạm khi đi được P.hitAt phần động tác (moves.js đặt; búa nện 0,35), mặc định 0,45 (còn 55% thời gian) như cũ.
+    if (P.atkT > 0 && !P.hitDone && P.atkT <= P.atkDur * (1 - (P.hitAt != null ? P.hitAt : 0.45))) { if (MV) MV.hit(P); else doHit(P); }
     P.x = G.clamp(P.x, W.x0, W.px1 != null ? W.px1 : W.x1);
     P.y = G.clamp(P.y, W.y0, W.y1);
     if (P.set === 'moc') {
@@ -864,11 +916,11 @@
     W.projs = W.projs.filter((o) => o.t > 0);
     // vùng nguy hiểm và vũng
     for (const z of W.zones) {
-      if (z.wall && G.mobWall) { G.mobWall(z, dt, P); continue; } // tường nước chạy (js/mobs.js)
+      if (z.wall && G.mobWall) { hurtKind = 'vung'; G.mobWall(z, dt, P); hurtKind = null; continue; } // tường nước chạy (js/mobs.js)
       if (z.wave) {
         if (z.wait > 0) { z.wait -= dt; continue; } // sóng đứng yên báo trước rồi mới tràn tới
         z.x += z.vx * dt;
-        if (!z.hit && Math.abs(P.x - z.x) < 6 && (P.y < z.g0 || P.y > z.g1)) { if (G.hurtPlayer(z.dmg, z.el, null, false)) z.hit = true; }
+        if (!z.hit && Math.abs(P.x - z.x) < 6 && (P.y < z.g0 || P.y > z.g1)) { hurtKind = 'vung'; if (G.hurtPlayer(z.dmg, z.el, null, false)) z.hit = true; hurtKind = null; }
         if (z.x < -20) z.dead = true;
         continue;
       }
@@ -877,7 +929,7 @@
       if (z.t > 0) {
         z.t -= dt;
         if (z.t <= 0) {
-          if (z.team !== 'player' && z.team !== 'fx' && z.dmg && G.inZone(z, P)) { if (G.hurtPlayer(z.dmg, z.el, z.src || null, !!z.melee) && z.onHit) z.onHit(z); }
+          if (z.team !== 'player' && z.team !== 'fx' && z.dmg && G.inZone(z, P)) { hurtKind = 'vung'; const hit = G.hurtPlayer(z.dmg, z.el, z.src || null, !!z.melee); hurtKind = null; if (hit && z.onHit) z.onHit(z); }
           if (z.onFire) z.onFire(z);
           if (z.then) { z.pool = true; z.life = z.then; z.tick = 0.4; }
           FX('zoneFire', z);
@@ -901,7 +953,7 @@
             }
           } else {
             z.tick = 0.5;
-            if (G.inZone(z, P)) G.hurtPlayer(z.dmg * 0.3, z.el, null, false);
+            if (G.inZone(z, P)) { hurtKind = 'vung'; G.hurtPlayer(z.dmg * 0.3, z.el, null, false); hurtKind = null; }
           }
         }
         if (z.heal && G.inZone(z, P)) P.hp = Math.min(P.maxhp, P.hp + P.maxhp * 0.03 * dt);

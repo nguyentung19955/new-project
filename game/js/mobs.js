@@ -710,7 +710,8 @@
     if (e.spikeUp > 0) ic.push('gai');
     if (e.role === 'shield' && e.brokeT > 0) ic.push('vo');
     ic.forEach((k2, i) => icon(c, k2, e.x + (i - (ic.length - 1) / 2) * 11, top - 6));
-    if (e.wind > 0 && e.wind < 0.25 && !e.trait) { const cc = Math.floor(G.time * 10) & 1 ? '#fff3b0' : '#ff4030'; p(c, e.x - 1, top - 12, 2, 5, cc); p(c, e.x - 1, top - 6, 2, 2, cc); }
+    // V50 (gd2-b): dấu "!" báo sắp ra đòn nay hiện cả khi quái có biểu tượng (tinh anh luôn có dấu hiệu): đặt lệch sang phải hàng biểu tượng thay vì bỏ.
+    if (e.wind > 0 && e.wind < 0.25) { const cc = Math.floor(G.time * 10) & 1 ? '#fff3b0' : '#ff4030', bx = ic.length ? Math.round(e.x + ((ic.length - 1) / 2) * 11 + 8) : e.x - 1; p(c, bx, top - 12, 2, 5, cc); p(c, bx, top - 6, 2, 2, cc); }
     A.status(c, e, Math.round(e.x), Math.round(top));
   };
   // Đang đi ngầm dưới đất: chỉ thấy vệt đất gợn
