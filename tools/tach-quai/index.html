@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tách Sprite Quái · Linh Khí</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700&display=swap">
+<style>
+  /* Cùng bảng màu trống đồng với Xưởng Sprite. Chỉ có giao diện tối. Bố cục: 3 bước dọc, mỗi bước một khung đồng. */
+  :root {
+    color-scheme: dark;
+    --dk: #1a120a; --brD: #5a3d1a; --br: #a8752f; --gold: #d9a441; --hi: #f6dc92;
+    --pat: #3f8f7f; --patL: #6fc1a8; --patD: #1f4f4a; --bg: #12292a; --bg2: #17363a;
+    --cop: #8a2f22; --copL: #b8452f; --ink: #fff0c4; --sub: #a9c2b4; --text: #f1e6c6;
+    --ok: #7fd18b; --bad: #ff8a70;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 500 14px/1.5 "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  canvas { image-rendering: pixelated; image-rendering: crisp-edges; }
+  header { display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: linear-gradient(#2a1d0f, var(--dk)); border-bottom: 2px solid var(--brD); }
+  header h1 { margin: 0; font-size: 18px; color: var(--hi); }
+  header small { color: var(--sub); font-size: 12px; display: block; font-weight: 500; }
+  header a { margin-left: auto; color: var(--patL); font-size: 13px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 16px; display: grid; gap: 16px; }
+  .buoc { background: var(--bg2); border: 2px solid var(--brD); border-radius: 10px; padding: 14px; min-width: 0; }
+  .buoc h2 { margin: 0 0 10px; font-size: 16px; color: var(--hi); display: flex; gap: 8px; align-items: center; }
+  .so { width: 26px; height: 26px; border-radius: 50%; background: var(--gold); color: #2b1a08; display: grid; place-items: center; font-size: 14px; flex: none; }
+  .hang { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .nut { border: 2px solid var(--dk); border-radius: 7px; padding: 7px 14px; cursor: pointer; font-weight: 700; color: #2b1a08;
+    background: linear-gradient(var(--hi), var(--gold) 45%, var(--br)); box-shadow: inset 0 1px 0 #fff4c8, 0 2px 0 var(--dk); min-height: 38px; }
+  .nut:hover { filter: brightness(1.08); } .nut:active { transform: translateY(1px); }
+  .nut:disabled { filter: grayscale(.8) brightness(.7); cursor: not-allowed; }
+  .nut.phu { color: var(--ink); background: linear-gradient(var(--patL), var(--pat) 45%, var(--patD)); box-shadow: inset 0 1px 0 #b8f0de, 0 2px 0 var(--dk); }
+  .nut.nho { padding: 3px 10px; min-height: 30px; font-size: 13px; }
+  .nut.chon { outline: 3px solid var(--hi); outline-offset: 1px; }
+  .nut:focus-visible, select:focus-visible, input:focus-visible { outline: 3px solid var(--patL); outline-offset: 2px; }
+  select, input[type=number] { background: var(--dk); border: 2px solid var(--brD); border-radius: 7px; padding: 6px 8px; min-height: 38px; }
+  select { font-weight: 700; color: var(--ink); min-width: 220px; max-width: 100%; }
+  .bang { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 6px 12px; margin-top: 10px; font-size: 13px; color: var(--sub); }
+  .bang b { color: var(--ink); font-variant-numeric: tabular-nums; }
+  textarea { width: 100%; min-height: 110px; background: var(--dk); border: 2px solid var(--brD); border-radius: 7px; padding: 8px; color: var(--text); font-size: 12.5px; resize: vertical; }
+  details { margin-top: 10px; } summary { cursor: pointer; color: var(--patL); }
+  .sua { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; margin-top: 8px; }
+  .sua label { display: grid; gap: 2px; font-size: 12px; color: var(--sub); }
+  .sua input { width: 100%; }
+  #vungTha { border: 2px dashed var(--br); border-radius: 10px; padding: 22px 12px; text-align: center; color: var(--sub); cursor: pointer; background: rgba(0,0,0,.15); }
+  #vungTha.keo { border-color: var(--hi); background: rgba(246,220,146,.08); }
+  #vungTha b { color: var(--ink); }
+  .khung-xem { overflow: auto; background: #233a2e; border: 2px solid var(--dk); border-radius: 8px; margin-top: 10px; max-width: 100%; }
+  .khung-xem canvas { display: block; }
+  .chu-y { font-size: 12.5px; color: var(--sub); margin: 6px 0 0; }
+  .ket-qua { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 300px); gap: 14px; }
+  @media (max-width: 760px) { .ket-qua { grid-template-columns: 1fr; } }
+  .kiem { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; font-size: 13px; }
+  .kiem li::before { content: "✔ "; color: var(--ok); font-weight: 700; }
+  .kiem li.loi { color: var(--bad); } .kiem li.ghi { color: var(--sub); margin-top: 6px; } .kiem li.ghi::before { content: "👁 "; color: var(--sub); } .kiem li.loi::before { content: "✘ "; color: var(--bad); }
+  #huongDan { font-size: 13px; color: var(--sub); }
+  .the { display: inline-block; padding: 2px 10px; border-radius: 99px; font-weight: 700; font-size: 13px; }
+  .the.dat { background: #1f4f2e; color: var(--ok); } .the.hong { background: #4f1f1a; color: var(--bad); }
+  #thongBao { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); background: var(--dk); border: 2px solid var(--gold); color: var(--ink); padding: 8px 16px; border-radius: 8px; z-index: 9; max-width: calc(100% - 32px); }
+  .cat { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-top: 10px; }
+  .cat label { display: grid; gap: 2px; font-size: 12px; color: var(--sub); }
+  .cat input { width: 100%; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header>
+  <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="#a8752f" stroke="#1a120a" stroke-width="2"/><circle cx="15" cy="15" r="8" fill="none" stroke="#f6dc92" stroke-width="1.5"/><path d="M15 4 L17 13 L26 15 L17 17 L15 26 L13 17 L4 15 L13 13 Z" fill="#f6dc92"/></svg>
+  <div><h1>Tách Sprite Quái</h1><small>Ảnh ChatGPT vẽ → tệp .sprite.json cho game Linh Khí</small></div>
+  <a href="xuong-sprite.html">Xưởng Sprite</a>
+</header>
+
+<main>
+  <section class="buoc">
+    <h2><span class="so">1</span>Chọn quái và lấy prompt vẽ</h2>
+    <div class="hang">
+      <select id="chonQuai" aria-label="Chọn quái"></select>
+      <button class="nut" id="nutChepPrompt">Sao chép prompt vẽ</button>
+    </div>
+    <div class="bang" id="bangThongSo"></div>
+    <details>
+      <summary>Xem prompt</summary>
+      <textarea id="oPrompt" readonly></textarea>
+    </details>
+    <details>
+      <summary>Sửa thông số (chỉ khi Claude dặn)</summary>
+      <div class="sua" id="oSua"></div>
+    </details>
+    <p class="chu-y">Dán prompt vào ChatGPT. ChatGPT chỉ cần vẽ một tấm ảnh, rồi bạn lưu ảnh đó về máy.</p>
+  </section>
+
+  <section class="buoc">
+    <h2><span class="so">2</span>Đưa ảnh ChatGPT vẽ vào đây</h2>
+    <div id="vungTha" tabindex="0" role="button" aria-label="Chọn ảnh">
+      <b>Bấm để chọn ảnh</b>, kéo thả ảnh vào, hoặc dán (Ctrl+V)<br>
+      <span style="font-size:12px">Ảnh lưới 8 cột × 6 hàng như prompt. Nền ô cờ, nền trắng hay trong suốt đều được.</span>
+    </div>
+    <input type="file" id="chonAnh" accept="image/*" hidden>
+    <div id="vungAnhGoc" hidden>
+      <div class="khung-xem"><canvas id="cvGoc"></canvas></div>
+      <p class="chu-y">Đường vàng là lưới công cụ tự dò. Nếu ảnh có phần thừa (bảng chữ, khung giải thích) thì cắt bớt bên dưới:</p>
+      <div class="cat">
+        <label>Cắt trên (%)<input type="number" id="catTren" min="0" max="90" value="0"></label>
+        <label>Cắt dưới (%)<input type="number" id="catDuoi" min="0" max="90" value="0"></label>
+        <label>Cắt trái (%)<input type="number" id="catTrai" min="0" max="90" value="0"></label>
+        <label>Cắt phải (%)<input type="number" id="catPhai" min="0" max="90" value="0"></label>
+      </div>
+      <div class="hang" style="margin-top:8px">
+        <label class="hang" style="gap:6px"><input type="checkbox" id="latNgang"> Ảnh vẽ quay trái → lật lại cho quay phải</label>
+        <button class="nut phu nho" id="nutLamLai">Tách lại</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="buoc" id="buoc3" hidden>
+    <h2><span class="so">3</span>Kiểm tra và tải file <span id="theKq" class="the"></span></h2>
+    <div class="ket-qua">
+      <div style="min-width:0">
+        <div class="hang" id="nutDongTac"></div>
+        <div class="khung-xem" style="display:grid;place-items:center;padding:10px"><canvas id="cvChay" width="320" height="200"></canvas></div>
+        <div class="hang" style="margin-top:8px">
+          <label class="hang" style="gap:6px"><input type="checkbox" id="diTrai"> Xem khi quái đi sang trái (game tự lật)</label>
+        </div>
+        <div class="khung-xem"><canvas id="cvTam"></canvas></div>
+      </div>
+      <div>
+        <ul class="kiem" id="dsKiem"></ul>
+        <div class="hang" style="margin-top:14px">
+          <button class="nut" id="nutTaiJson">Tải file .sprite.json</button>
+          <button class="nut phu nho" id="nutTaiPng">Tải ảnh PNG</button>
+        </div>
+        <p id="huongDan" class="chu-y">Gửi file .sprite.json cho Claude để đưa vào game.</p>
+      </div>
+    </div>
+  </section>
+</main>
+<div id="thongBao" hidden></div>
+
+<script>
+'use strict';
+// ===================== THÔNG SỐ QUÁI (khớp game/art/custom) =====================
+// fw×fh: cỡ ô; gx,gy: điểm chân trong ô; rong×cao: cỡ hiển thị trong game; giay: thời gian mỗi động tác.
+const QUAI = [
+  { ma:'heoCon', ten:'Heo Rừng Con', fw:64, fh:40, gx:32, gy:36, rong:52, cao:37, giay:[1.2,0.6,0.5,0.5],
+    hinh:'heo rừng con lông nâu, mõm hồng, nanh trắng nhỏ, lưng có bờm',
+    hang:['đứng thở','chạy','cúi đầu cào chân lấy đà','húc lao tới','bị đánh bật lùi','ngã nằm'] },
+  { ma:'heoNanh', ten:'Heo Rừng Nanh Dài', fw:100, fh:56, gx:50, gy:52, rong:90, cao:52, giay:[1.2,0.6,0.5,0.5],
+    hinh:'bản tinh anh của Heo Rừng Con: to và nặng hơn, cặp nanh dài cong vểnh lên, bờm lông đỏ dựng, giáp gỗ trên vai, mắt đỏ',
+    hang:['đứng thở','chạy','hạ đầu cào chân lấy đà','húc lao tới','bị đánh bật lùi','ngã nằm'] },
+  { ma:'chonBong', ten:'Chồn Bóng', fw:76, fh:40, gx:38, gy:36, rong:63, cao:35, giay:[1.0,0.45,0.4,0.4],
+    hinh:'con chồn thân dài, lông nâu sẫm, ngực và mõm trắng kem, tai hồng nhỏ, mắt vàng cam, đuôi to xù màu nâu đầu kem',
+    hang:['đứng thở, đuôi phe phẩy','chạy uốn người','rạp thấp người chuẩn bị vồ','vồ cắn lao tới, há miệng','bị đánh bật lùi','ngã nằm xẹp xuống'] },
+  { ma:'boHung', ten:'Bọ Hung Mai Cứng', fw:64, fh:44, gx:32, gy:40, rong:54, cao:39, giay:[1.2,0.7,0.5,0.5],
+    hinh:'bọ hung to, mai cứng bóng như tấm khiên màu xanh đen ánh đồng, một sừng cong lớn phía trước đầu, 6 chân ngắn chắc',
+    hang:['đứng, râu động','bò, chân bước luân phiên','cúi sừng, co mai lấy đà','hất sừng lao tới','bị đánh bật lùi','lật ngửa, chân co lại'] },
+  { ma:'socNo', ten:'Sóc Ném Quả Nổ', fw:60, fh:48, gx:30, gy:44, rong:49, cao:43, giay:[1.0,0.5,0.5,0.5],
+    hinh:'sóc nâu cam, đuôi to cong vểnh, ôm một quả tròn sẫm có ngòi đang cháy (quả nổ), mặt tinh nghịch',
+    hang:['ôm quả, đuôi phe phẩy','nhảy tưng tưng','giơ quả ra sau lấy đà','vung tay ném về phía trước, quả rời tay ở khung giữa, các khung sau tay trống','bị đánh bật lùi','ngã ra'] },
+  { ma:'nhimDoc', ten:'Nhím Gai Độc', fw:56, fh:36, gx:28, gy:32, rong:44, cao:32, giay:[1.2,0.6,0.5,0.5],
+    hinh:'nhím tròn nhỏ, mặt và bụng nâu, lưng phủ gai dài màu tím, đầu gai xanh lá độc, mắt nhỏ gian',
+    hang:['thở, gai rung nhẹ','lạch bạch bước','cuộn tròn, gai dựng đứng','bung gai bắn về phía trước','bị đánh bật lùi','nằm ngửa, gai xẹp'] },
+  { ma:'ongVo', ten:'Bầy Ong Vò Vẽ', fw:56, fh:56, gx:28, gy:52, rong:43, cao:49, giay:[0.6,0.4,0.4,0.4],
+    hinh:'một bầy 3–4 con ong vò vẽ thân sọc vàng đen, cánh màu xanh nhạt đặc, ngòi nhọn, bay xếp lệch nhau sát nhau',
+    hang:['bay vo ve tại chỗ, cánh đập','cả bầy bay tới','cả bầy dồn lại, chĩa ngòi','cả bầy lao chích về phía trước','bầy tản ra','từng con rơi xuống'] },
+  { ma:'namPhong', ten:'Nấm Phồng', fw:44, fh:44, gx:22, gy:40, rong:32, cao:37, giay:[1.2,0.6,0.6,0.5],
+    hinh:'cây nấm nhỏ, mũ tròn phồng màu đỏ cam chấm trắng, thân trắng ngà, có mặt (mắt tròn, má phồng), hai chân rễ ngắn',
+    hang:['phập phồng','nhún nhảy','mũ phồng to dần','xẹp mạnh, miệng phun về phía trước','bị đánh bật lùi','xẹp héo dần'] },
+  { ma:'hoaBaoTu', ten:'Hoa Phun Bào Tử', fw:64, fh:48, gx:32, gy:44, rong:53, cao:42, giay:[1.4,1.0,0.6,0.5],
+    hinh:'hoa ăn thịt mọc từ bụi rễ, thân dây leo xanh có lá, đầu hoa to cánh tím hồng, giữa là miệng tròn có răng nhỏ vàng',
+    hang:['đung đưa','rễ trườn nhẹ, gốc gần như đứng yên','cánh hoa khép, đầu ngửa ra sau','bung cánh, miệng hoa phun về phía trước','ngả bật về sau','héo rũ xuống'] },
+  { ma:'namPhongChua', ten:'Nấm Phồng Chúa', fw:96, fh:56, gx:48, gy:52, rong:83, cao:51, giay:[1.4,0.8,0.7,0.6],
+    hinh:'bản tinh anh to của Nấm Phồng: mũ rất to đỏ thẫm chấm vàng, vài nấm nhỏ mọc trên mũ như vương miện, mặt cau có, thân to chắc có rễ bám đất',
+    hang:['phập phồng chậm','lạch bạch nặng nề','mũ phồng căng to','dậm xuống, xẹp mạnh phun về phía trước','bị đánh bật lùi','xẹp héo đổ xuống'] },
+];
+const SO = [6, 6, 4, 6, 4, 8];
+const DT = ['idle', 'move', 'tele', 'atk', 'hit', 'die'];
+const TEN_DT = ['Đứng', 'Chạy', 'Lấy đà', 'Tấn công', 'Trúng đòn', 'Chết'];
+const VIEN = [0x14, 0x18, 0x2e];
+
+const $ = (id) => document.getElementById(id);
+let Q = null, ANH = null, KQ = null;
+
+function bao(t) { const b = $('thongBao'); b.textContent = t; b.hidden = false; clearTimeout(bao.t); bao.t = setTimeout(() => b.hidden = true, 2600); }
+
+function taoPrompt(q) {
+  const hang = q.hang.map((h, i) => `hàng ${i + 1} ${TEN_DT[i].toLowerCase()} (${h}) ${SO[i]} khung`).join(', ');
+  return `Dùng công cụ tạo ảnh vẽ MỘT tấm sprite sheet pixel art 2D nhìn ngang quái "${q.ten}" cho game Linh Khí, phong cách giống Heo Rừng Con (heoCon) đã làm: khối rõ, viền tối, màu tươi vừa phải. Hình dáng: ${q.hinh}. Bố cục lưới ĐỀU 8 cột × 6 hàng, mỗi hàng một động tác, các khung xếp từ cột trái sang, ô thừa để trống: ${hang}. Mọi khung cùng một con, cùng màu, cùng cỡ nhưng tư thế khác nhau thật. QUAY MẶT SANG PHẢI trong mọi khung: đầu bên phải, đuôi bên trái, chạy/lấy đà/tấn công hướng về phải, trúng đòn bật về trái, không con nào quay trái. Nền trơn một màu sáng (hoặc ô cờ trong suốt), mỗi con nằm gọn giữa ô của nó, không chạm đường lưới, không bóng dưới chân, không chữ, không hiệu ứng rời khỏi thân. Chỉ cần gửi tấm ảnh, không cần code, không cần file json.`;
+}
+
+function hienQuai() {
+  $('bangThongSo').innerHTML = [
+    ['Mã', q => q.ma], ['Cỡ ô', q => q.fw + '×' + q.fh], ['Tấm ảnh', q => q.fw * 8 + '×' + q.fh * 6],
+    ['Điểm chân', q => `(${q.gx}, ${q.gy})`], ['Cỡ trong game', q => q.rong + '×' + q.cao], ['Số khung', () => SO.join('·')],
+  ].map(([k, f]) => `<div>${k}: <b>${f(Q)}</b></div>`).join('');
+  $('oPrompt').value = taoPrompt(Q);
+  const truong = [['fw', 'Rộng ô'], ['fh', 'Cao ô'], ['gx', 'Chân x'], ['gy', 'Chân y'], ['rong', 'Rộng trong game'], ['cao', 'Cao trong game']];
+  $('oSua').innerHTML = truong.map(([k, t]) => `<label>${t}<input type="number" id="sua_${k}" value="${Q[k]}"></label>`).join('')
+    + DT.slice(0, 4).map((d, i) => `<label>Giây ${TEN_DT[i].toLowerCase()}<input type="number" step="0.05" id="sua_g${i}" value="${Q.giay[i]}"></label>`).join('');
+  truong.forEach(([k]) => $('sua_' + k).onchange = (e) => { Q[k] = +e.target.value; hienQuai(); if (ANH) chay(); });
+  for (let i = 0; i < 4; i++) $('sua_g' + i).onchange = (e) => { Q.giay[i] = +e.target.value; if (ANH) chay(); };
+}
+
+QUAI.forEach((q, i) => { const o = document.createElement('option'); o.value = i; o.textContent = q.ten + ' (' + q.ma + ')'; $('chonQuai').appendChild(o); });
+try { const i = localStorage.getItem('tq_quai'); if (i != null && QUAI[i]) $('chonQuai').value = i; } catch (e) {}
+Q = QUAI[+$('chonQuai').value];
+$('chonQuai').onchange = (e) => { Q = QUAI[+e.target.value]; try { localStorage.setItem('tq_quai', e.target.value); } catch (er) {} hienQuai(); if (ANH) chay(); };
+hienQuai();
+
+$('nutChepPrompt').onclick = () => {
+  const t = taoPrompt(Q);
+  navigator.clipboard.writeText(t).then(() => bao('Đã sao chép prompt vẽ ' + Q.ten), () => {
+    const a = $('oPrompt'); a.closest('details').open = true; a.focus(); a.select(); bao('Hãy bôi đen và sao chép trong ô prompt');
+  });
+};
+
+// ===================== NHẬN ẢNH =====================
+function nhanAnh(file) {
+  if (!file || !/^image\//.test(file.type)) { bao('Tệp này không phải ảnh'); return; }
+  const url = URL.createObjectURL(file), img = new Image();
+  img.onload = () => { ANH = img; URL.revokeObjectURL(url); $('vungAnhGoc').hidden = false; chay(); };
+  img.onerror = () => bao('Không mở được ảnh này');
+  img.src = url;
+}
+$('vungTha').onclick = () => $('chonAnh').click();
+$('vungTha').onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('chonAnh').click(); } };
+$('chonAnh').onchange = (e) => { nhanAnh(e.target.files[0]); e.target.value = ''; };
+['dragenter', 'dragover'].forEach(t => $('vungTha').addEventListener(t, (e) => { e.preventDefault(); $('vungTha').classList.add('keo'); }));
+['dragleave', 'drop'].forEach(t => $('vungTha').addEventListener(t, () => $('vungTha').classList.remove('keo')));
+$('vungTha').addEventListener('drop', (e) => { e.preventDefault(); const f = e.dataTransfer.files && e.dataTransfer.files[0]; if (f) nhanAnh(f); });
+document.addEventListener('paste', (e) => { const it = [...(e.clipboardData || {}).items || []].find(x => x.type.startsWith('image/')); if (it) nhanAnh(it.getAsFile()); });
+['catTren', 'catDuoi', 'catTrai', 'catPhai'].forEach(id => $(id).onchange = () => ANH && chay());
+$('latNgang').onchange = () => ANH && chay();
+$('nutLamLai').onclick = () => ANH && chay();
+
+// ===================== XỬ LÝ =====================
+function layAnh() {
+  const ct = +$('catTren').value / 100, cd = +$('catDuoi').value / 100, cl = +$('catTrai').value / 100, cr = +$('catPhai').value / 100;
+  const sx = Math.round(ANH.naturalWidth * cl), sy = Math.round(ANH.naturalHeight * ct);
+  const W = Math.max(8, Math.round(ANH.naturalWidth * (1 - cl - cr))), H = Math.max(6, Math.round(ANH.naturalHeight * (1 - ct - cd)));
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const g = c.getContext('2d'); g.drawImage(ANH, sx, sy, W, H, 0, 0, W, H);
+  return { W, H, d: g.getImageData(0, 0, W, H).data };
+}
+
+function timLuoi(A, n, dai, laCot) {
+  const { W, H, d } = A, kq = [0];
+  for (let k = 1; k < n; k++) {
+    const g = Math.round(k * dai / n), r = Math.floor(dai / (n * 8));
+    let tot = g, diem = -1, tong = 0;
+    for (let v = Math.max(1, g - r); v < Math.min(dai - 1, g + r); v++) {
+      let toi = 0; tong = 0;
+      const dai2 = laCot ? H : W;
+      for (let t = 0; t < dai2; t += 3) {
+        const i = laCot ? (t * W + v) * 4 : (v * W + t) * 4; tong++;
+        if (d[i + 3] > 128 && d[i] + d[i + 1] + d[i + 2] < 450) toi++;
+      }
+      if (toi > diem) { diem = toi; tot = v; }
+    }
+    kq.push(diem > 0.5 * tong ? tot : g);
+  }
+  kq.push(dai); return kq;
+}
+
+// Tách một ô: trả về {w,h,px:Uint8ClampedArray RGBA} đã cắt sát, hoặc null nếu trống.
+function tachO(A, x0, y0, x1, y1, coAlpha) {
+  const m = Math.max(3, Math.floor((x1 - x0) / 40));
+  x0 += m; y0 += m; x1 -= m; y1 -= m;
+  const w = x1 - x0, h = y1 - y0, p = new Uint8ClampedArray(w * h * 4);
+  for (let y = 0; y < h; y++) p.set(A.d.subarray(((y + y0) * A.W + x0) * 4, ((y + y0) * A.W + x1) * 4), y * w * 4);
+  const xoa = (j) => { p[j * 4 + 3] = 0; };
+  if (coAlpha) {
+    for (let j = 0; j < w * h; j++) if (p[j * 4 + 3] < 128) xoa(j);
+  } else {
+    // màu nền = các màu hay gặp nhất ở mép ô; loang từ mép vào qua các điểm giống nền
+    const dem = new Map(), vien = [];
+    for (let x = 0; x < w; x++) vien.push(x, (h - 1) * w + x);
+    for (let y = 0; y < h; y++) vien.push(y * w, y * w + w - 1);
+    for (const j of vien) { const k = (p[j*4] >> 3) << 10 | (p[j*4+1] >> 3) << 5 | (p[j*4+2] >> 3); dem.set(k, (dem.get(k) || 0) + 1); }
+    const nen = [...dem.entries()].sort((a, b) => b[1] - a[1]).slice(0, 6).map(([k]) => [(k >> 10 & 31) << 3, (k >> 5 & 31) << 3, (k & 31) << 3]);
+    const giong = (j) => nen.some(c => Math.abs(p[j*4] - c[0]) + Math.abs(p[j*4+1] - c[1]) + Math.abs(p[j*4+2] - c[2]) < 34);
+    const da = new Uint8Array(w * h), st = [];
+    for (const j of vien) st.push(j);
+    while (st.length) {
+      const j = st.pop(); if (da[j]) continue; da[j] = 1;
+      if (!giong(j)) continue;
+      xoa(j); const x = j % w, y = (j / w) | 0;
+      if (x > 0) st.push(j - 1); if (x < w - 1) st.push(j + 1); if (y > 0) st.push(j - w); if (y < h - 1) st.push(j + w);
+    }
+  }
+  // giữ cụm lớn, bỏ vụn (< 8% cụm lớn nhất)
+  const nhan = new Int32Array(w * h).fill(-1), co = []; let lon = 0;
+  for (let j = 0; j < w * h; j++) {
+    if (!p[j*4+3] || nhan[j] >= 0) continue;
+    const id = co.length, st = [j]; let n = 0; nhan[j] = id;
+    while (st.length) {
+      const a = st.pop(); n++; const x = a % w, y = (a / w) | 0;
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+        const nx = x + dx, ny = y + dy; if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+        const b = ny * w + nx; if (p[b*4+3] && nhan[b] < 0) { nhan[b] = id; st.push(b); }
+      }
+    }
+    co.push(n); if (n > lon) lon = n;
+  }
+  if (!lon) return null;
+  let bx0 = w, by0 = h, bx1 = -1, by1 = -1;
+  for (let j = 0; j < w * h; j++) {
+    if (!p[j*4+3]) continue;
+    if (co[nhan[j]] < 0.08 * lon) { xoa(j); continue; }
+    const x = j % w, y = (j / w) | 0;
+    if (x < bx0) bx0 = x; if (x > bx1) bx1 = x; if (y < by0) by0 = y; if (y > by1) by1 = y;
+  }
+  const cw = bx1 - bx0 + 1, ch = by1 - by0 + 1, out = new Uint8ClampedArray(cw * ch * 4);
+  for (let y = 0; y < ch; y++) out.set(p.subarray(((y + by0) * w + bx0) * 4, ((y + by0) * w + bx1 + 1) * 4), y * cw * 4);
+  return { w: cw, h: ch, px: out };
+}
+
+// Thu nhỏ trung bình vùng (giữ màu sạch hơn kiểu "gần nhất" khi tỉ lệ lẻ), alpha cắt 0/255.
+function thuNho(f, nw, nh, lat) {
+  const o = new Uint8ClampedArray(nw * nh * 4), sx = f.w / nw, sy = f.h / nh;
+  for (let y = 0; y < nh; y++) for (let x = 0; x < nw; x++) {
+    let r = 0, g = 0, b = 0, a = 0, n = 0;
+    const xa = x * sx, xb = (x + 1) * sx, ya = y * sy, yb = (y + 1) * sy;
+    for (let yy = Math.floor(ya); yy < Math.ceil(yb); yy++) for (let xx = Math.floor(xa); xx < Math.ceil(xb); xx++) {
+      const wgt = (Math.min(xb, xx + 1) - Math.max(xa, xx)) * (Math.min(yb, yy + 1) - Math.max(ya, yy));
+      const i = (yy * f.w + xx) * 4, al = f.px[i + 3] / 255 * wgt;
+      r += f.px[i] * al; g += f.px[i+1] * al; b += f.px[i+2] * al; a += al; n += wgt;
+    }
+    const ox = lat ? nw - 1 - x : x, k = (y * nw + ox) * 4;
+    if (a / n >= 0.5) { o[k] = r / a; o[k+1] = g / a; o[k+2] = b / a; o[k+3] = 255; }
+  }
+  return o;
+}
+
+// Giảm màu kiểu median cut.
+function giamMau(px, soMau) {
+  const ds = [];
+  for (let i = 0; i < px.length; i += 4) if (px[i+3]) ds.push(i);
+  if (!ds.length) return [];
+  let hop = [ds];
+  while (hop.length < soMau) {
+    let tot = -1, kenh = 0, rongMax = -1;
+    hop.forEach((h, idx) => { if (h.length < 2) return; for (let c = 0; c < 3; c++) { let mi = 255, ma = 0; for (const i of h) { const v = px[i+c]; if (v < mi) mi = v; if (v > ma) ma = v; } if (ma - mi > rongMax) { rongMax = ma - mi; tot = idx; kenh = c; } } });
+    if (tot < 0 || rongMax <= 0) break;
+    const h = hop[tot].sort((a, b) => px[a+kenh] - px[b+kenh]), giua = h.length >> 1;
+    hop.splice(tot, 1, h.slice(0, giua), h.slice(giua));
+  }
+  const bang = hop.map(h => { let r = 0, g = 0, b = 0; for (const i of h) { r += px[i]; g += px[i+1]; b += px[i+2]; } return [r / h.length | 0, g / h.length | 0, b / h.length | 0]; });
+  for (const i of ds) {
+    let bi = 0, bd = 1e9;
+    for (let k = 0; k < bang.length; k++) { const c = bang[k], dd = (px[i]-c[0])**2 + (px[i+1]-c[1])**2 + (px[i+2]-c[2])**2; if (dd < bd) { bd = dd; bi = k; } }
+    px[i] = bang[bi][0]; px[i+1] = bang[bi][1]; px[i+2] = bang[bi][2];
+  }
+  return bang;
+}
+
+function chay() {
+  const A = layAnh(), { W, H, d } = A;
+  let trong = 0; for (let y = 0; y < H; y += 7) for (let x = 0; x < W; x += 7) if (d[(y * W + x) * 4 + 3] < 128) trong++;
+  const coAlpha = trong > 50;
+  const cot = timLuoi(A, 8, W, true), hang = timLuoi(A, 6, H, false);
+  veGoc(A, cot, hang);
+  const hinh = {}, loi = [];
+  for (let r = 0; r < 6; r++) for (let c = 0; c < SO[r]; c++) {
+    const f = tachO(A, cot[c], hang[r], cot[c + 1], hang[r + 1], coAlpha);
+    if (!f) loi.push(`Thiếu hình ở hàng ${r + 1}, cột ${c + 1}`); else hinh[r + ',' + c] = f;
+  }
+  const { fw: FW, fh: FH, gx: GX, gy: GY } = Q;
+  const caoMax = GY - 3, rongMax = FW - 6;
+  let s = Infinity;
+  for (const k in hinh) s = Math.min(s, caoMax / hinh[k].h, rongMax / hinh[k].w);
+  const TW = FW * 8, TH = FH * 6, tam = new Uint8ClampedArray(TW * TH * 4), lat = $('latNgang').checked;
+  for (const k in hinh) {
+    const [r, c] = k.split(',').map(Number), f = hinh[k];
+    const nw = Math.max(1, Math.round(f.w * s)), nh = Math.max(1, Math.round(f.h * s)), o = thuNho(f, nw, nh, lat);
+    const ox = c * FW + Math.max(3, Math.min(FW - 3 - nw, GX - (nw >> 1))), oy = r * FH + GY - nh;
+    for (let y = 0; y < nh; y++) for (let x = 0; x < nw; x++) { const i = (y * nw + x) * 4; if (o[i+3]) tam.set(o.subarray(i, i + 4), ((oy + y) * TW + ox + x) * 4); }
+  }
+  giamMau(tam, 15);
+  // viền ngoài 1 điểm ảnh, không lấn sang ô bên cạnh
+  const them = [];
+  for (let y = 0; y < TH; y++) for (let x = 0; x < TW; x++) {
+    if (tam[(y * TW + x) * 4 + 3]) continue;
+    for (const [dx, dy] of [[1,0],[-1,0],[0,1],[0,-1]]) {
+      const nx = x + dx, ny = y + dy;
+      if (nx < 0 || ny < 0 || nx >= TW || ny >= TH || (nx / FW | 0) !== (x / FW | 0) || (ny / FH | 0) !== (y / FH | 0)) continue;
+      if (tam[(ny * TW + nx) * 4 + 3]) { them.push(y * TW + x); break; }
+    }
+  }
+  for (const j of them) tam.set([...VIEN, 255], j * 4);
+  // ===== tự kiểm =====
+  const mau = new Set(); for (let i = 0; i < tam.length; i += 4) if (tam[i+3]) mau.add(tam[i] << 16 | tam[i+1] << 8 | tam[i+2]);
+  const muc = [];
+  muc.push([`Tấm ảnh ${TW}×${TH}, ô ${FW}×${FH}`, true]);
+  muc.push([`${mau.size} màu (tối đa 16)`, mau.size <= 16]);
+  let mep = [], thua = [];
+  for (let r = 0; r < 6; r++) for (let c = 0; c < 8; c++) {
+    let x0 = FW, y0 = FH, x1 = -1, y1 = -1;
+    for (let y = 0; y < FH; y++) for (let x = 0; x < FW; x++) if (tam[((r * FH + y) * TW + c * FW + x) * 4 + 3]) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    if (c >= SO[r]) { if (x1 >= 0) thua.push(`${r+1}.${c+1}`); continue; }
+    if (x1 >= 0 && (x0 < 2 || y0 < 2 || x1 > FW - 3)) mep.push(`${r+1}.${c+1}`);
+  }
+  muc.push([`Đủ khung: ${SO.join('·')}`, !loi.length]);
+  muc.push(['Hình nằm trọn trong ô, cách mép ≥ 2 điểm ảnh' + (mep.length ? ' (sát mép: ' + mep.join(', ') + ')' : ''), !mep.length]);
+  muc.push(['Ô thừa để trống' + (thua.length ? ' (có hình: ' + thua.join(', ') + ')' : ''), !thua.length]);
+  muc.push([`Chân đặt ở (${GX}, ${GY})`, true]);
+  muc.push(['Nền trong suốt, mép sắc (chỉ trong suốt hoặc đặc)', true]);
+  loi.forEach(t => muc.push([t, false]));
+  KQ = { tam, TW, TH, FW, FH, dat: muc.every(m => m[1]) };
+  $('dsKiem').innerHTML = muc.map(([t, ok]) => `<li class="${ok ? '' : 'loi'}">${t}</li>`).join('')
+    + '<li class="ghi">Tự nhìn: mặt quái quay sang PHẢI ở khung chạy và tấn công. Nếu quay trái, tích ô "lật lại" ở bước 2.</li>';
+  $('theKq').className = 'the ' + (KQ.dat ? 'dat' : 'hong'); $('theKq').textContent = KQ.dat ? 'ĐẠT' : 'CÓ LỖI';
+  $('huongDan').textContent = KQ.dat ? 'Gửi file ' + Q.ma + '.sprite.json cho Claude để đưa vào game.' : 'Còn lỗi: nhờ ChatGPT vẽ lại cho đúng lưới 8×6, hoặc chỉnh ô "Cắt" ở bước 2.';
+  $('nutTaiJson').textContent = 'Tải ' + Q.ma + '.sprite.json';
+  veTam(); $('buoc3').hidden = false; batDauChay();
+}
+
+// ===================== VẼ XEM =====================
+function veGoc(A, cot, hang) {
+  const cv = $('cvGoc'), k = Math.min(1, 1000 / A.W);
+  cv.width = Math.round(A.W * k); cv.height = Math.round(A.H * k); cv.style.width = '100%'; cv.style.maxWidth = cv.width + 'px';
+  const g = cv.getContext('2d'), c = document.createElement('canvas'); c.width = A.W; c.height = A.H;
+  c.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(A.d), A.W, A.H), 0, 0);
+  g.imageSmoothingEnabled = true; g.drawImage(c, 0, 0, cv.width, cv.height);
+  g.strokeStyle = '#f6dc92'; g.lineWidth = 2;
+  cot.forEach(x => { g.beginPath(); g.moveTo(x * k, 0); g.lineTo(x * k, cv.height); g.stroke(); });
+  hang.forEach(y => { g.beginPath(); g.moveTo(0, y * k); g.lineTo(cv.width, y * k); g.stroke(); });
+}
+let canvasTam = null;
+function veTam() {
+  const { tam, TW, TH, FW, FH } = KQ;
+  canvasTam = document.createElement('canvas'); canvasTam.width = TW; canvasTam.height = TH;
+  canvasTam.getContext('2d').putImageData(new ImageData(tam, TW, TH), 0, 0);
+  const k = Math.max(2, Math.floor(Math.min(3, 1000 / TW))), cv = $('cvTam');
+  cv.width = TW * k; cv.height = TH * k;
+  const g = cv.getContext('2d'); g.imageSmoothingEnabled = false; g.clearRect(0, 0, cv.width, cv.height);
+  g.drawImage(canvasTam, 0, 0, cv.width, cv.height);
+  g.strokeStyle = 'rgba(246,220,146,.45)'; g.lineWidth = 1;
+  for (let c = 0; c <= 8; c++) { g.beginPath(); g.moveTo(c * FW * k + .5, 0); g.lineTo(c * FW * k + .5, cv.height); g.stroke(); }
+  for (let r = 0; r <= 6; r++) { g.beginPath(); g.moveTo(0, r * FH * k + .5); g.lineTo(cv.width, r * FH * k + .5); g.stroke(); }
+  g.fillStyle = 'rgba(255,138,112,.9)';
+  for (let r = 0; r < 6; r++) for (let c = 0; c < 8; c++) g.fillRect((c * FW + Q.gx) * k - 1, (r * FH + Q.gy) * k - 1, 3, 3);
+}
+let dtChon = 1, t0 = performance.now(), hoat = false;
+$('nutDongTac').innerHTML = TEN_DT.map((t, i) => `<button class="nut nho phu" data-i="${i}">${t}</button>`).join('');
+$('nutDongTac').onclick = (e) => { const b = e.target.closest('button'); if (!b) return; dtChon = +b.dataset.i; t0 = performance.now(); danhDau(); };
+function danhDau() { [...$('nutDongTac').children].forEach((b, i) => b.classList.toggle('chon', i === dtChon)); }
+danhDau();
+function batDauChay() { if (!hoat) { hoat = true; requestAnimationFrame(khungChay); } }
+function khungChay(now) {
+  if (KQ && canvasTam) {
+    const cv = $('cvChay'), g = cv.getContext('2d'), { FW, FH } = KQ;
+    const k = Math.max(2, Math.floor(Math.min(300 / FW, 180 / FH)));
+    g.imageSmoothingEnabled = false; g.clearRect(0, 0, cv.width, cv.height);
+    const giay = dtChon < 4 ? Q.giay[dtChon] : (dtChon === 4 ? 0.3 : 1.2), lap = dtChon < 2, so = SO[dtChon];
+    let t = (now - t0) / 1000 / giay; if (!lap && t >= 1.6) { t0 = now; t = 0; }
+    const f = lap ? Math.floor(t * so) % so : Math.min(so - 1, Math.floor(t * so));
+    const x = (cv.width - FW * k) / 2, y = (cv.height - FH * k) / 2;
+    g.fillStyle = 'rgba(0,0,0,.28)'; g.beginPath(); g.ellipse(x + Q.gx * k, y + Q.gy * k, Q.rong * k * .38, 3 * k, 0, 0, Math.PI * 2); g.fill();
+    g.save();
+    if ($('diTrai').checked) { g.translate(x + Q.gx * k, 0); g.scale(-1, 1); g.translate(-(x + Q.gx * k), 0); }
+    if (dtChon === 5 && t > 1) g.globalAlpha = Math.max(0, 1 - (t - 1) / 0.6);
+    g.drawImage(canvasTam, f * FW, dtChon * FH, FW, FH, x, y, FW * k, FH * k);
+    g.restore();
+    g.strokeStyle = 'rgba(246,220,146,.5)'; g.beginPath(); g.moveTo(0, y + Q.gy * k + .5); g.lineTo(cv.width, y + Q.gy * k + .5); g.stroke();
+    g.fillStyle = '#a9c2b4'; g.font = '12px system-ui'; g.fillText(TEN_DT[dtChon] + ' · khung ' + (f + 1) + '/' + so, 8, 16);
+  }
+  requestAnimationFrame(khungChay);
+}
+
+// ===================== TẢI VỀ =====================
+function taiXuong(ten, blob) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = ten; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); }
+$('nutTaiPng').onclick = () => canvasTam && canvasTam.toBlob(b => taiXuong(Q.ma + '.png', b), 'image/png');
+$('nutTaiJson').onclick = () => {
+  if (!canvasTam) return;
+  const g = Q.giay, tep = {
+    loai: 'linh-khi-sprite', doi_tuong: 'quai', ma: Q.ma, ten: Q.ten, vung: 'rung',
+    tam: canvasTam.toDataURL('image/png'),
+    khung_rong: Q.fw, khung_cao: Q.fh, goc: [Q.gx, Q.gy], rong: Q.rong, cao: Q.cao,
+    dong_tac: { idle: { hang: 0, so: 6, giay: g[0], lap: true }, move: { hang: 1, so: 6, giay: g[1], lap: true },
+      tele: { hang: 2, so: 4, giay: g[2] }, atk: { hang: 3, so: 6, giay: g[3] }, hit: { hang: 4, so: 4, giay: 0.3 },
+      die: { hang: 5, so: 8, giay: 1.2, mo: 0.6 } },
+  };
+  taiXuong(Q.ma + '.sprite.json', new Blob([JSON.stringify(tep)], { type: 'application/json' }));
+  bao('Đã tải ' + Q.ma + '.sprite.json, gửi file này cho Claude');
+};
+</script>
+</body>
+</html>
