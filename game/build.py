@@ -228,5 +228,50 @@ def check(full, frag, js):
         sys.exit('Đóng gói thất bại:\n- ' + '\n- '.join(errs))
 
 
+# ---------- Xưởng Rối (tools/xuong-roi): ráp nhân vật chibi khung xương, xuất tệp linh-khi-rig ----------
+ROI = os.path.join(os.path.dirname(ROOT), 'tools', 'xuong-roi')
+
+
+def ds_quai_roi():
+    """Danh sách quái trong game (mã, tên, vùng) lấy từ js/monster_art.js, cho ô "thay cho quái nào"."""
+    try:
+        src = read('js/monster_art.js')
+    except OSError:
+        return []
+    out = []
+    for m in re.finditer(r"^def\('([A-Za-z0-9_]+)',\s*\{\s*ten:\s*'([^']+)',\s*vung:\s*'([^']+)'", src, re.M):
+        out.append({'id': m.group(1), 'ten': m.group(2), 'vung': m.group(3)})
+    return out
+
+
+def build_xuong_roi():
+    """dist/xuong-roi.html: một tệp tự chứa (giao diện + tools/xuong-roi/*.js + game/js/chibi_rig.js)."""
+    page_path = os.path.join(ROI, 'index.html')
+    if not os.path.isfile(page_path):
+        return
+    quai = ds_quai_roi()
+    write(os.path.join(ROI, 'ds-quai.js'), '// TỆP ĐƯỢC TẠO BỞI game/build.py: danh sách quái trong game cho Xưởng Rối.\nwindow.XR_QUAI = '
+          + json.dumps(quai, ensure_ascii=False, separators=(',', ':')) + ';\n')
+    with open(page_path, encoding='utf-8') as f:
+        page = f.read()
+    parts = []
+    for src in re.findall(r'<script src="([^"]+)"></script>', page):
+        path = os.path.normpath(os.path.join(ROI, src))
+        if src.endswith('chibi_rig.js') and not os.path.isfile(path):
+            path = os.path.join(ROI, 'chibi_tam.js')  # bản tạm khi game chưa có bộ vẽ chibi
+        if not os.path.isfile(path):
+            sys.exit('Xưởng Rối thiếu tệp: ' + src)
+        with open(path, encoding='utf-8') as f:
+            parts.append('// ===== ' + os.path.relpath(path, os.path.dirname(ROOT)) + ' =====\n' + f.read().rstrip() + '\n')
+    js = '// Xưởng Rối (tools/xuong-roi). TỆP ĐƯỢC TẠO BỞI game/build.py, đừng sửa tay.\n' + ''.join(parts)
+    html = re.sub(r'<script src="[^"]+"></script>\s*', '', page)
+    html = html.replace('</body>', '<script>\n' + safe_js(js) + '</script>\n</body>')
+    dest = os.path.join(DIST, 'xuong-roi.html')
+    check_tool(html, dest)
+    write(dest, html)
+    print('Đã ghi dist/xuong-roi.html (%d KB, %d quái)' % (len(html.encode('utf-8')) // 1024, len(quai)))
+
+
 if __name__ == '__main__':
     main()
+    build_xuong_roi()
