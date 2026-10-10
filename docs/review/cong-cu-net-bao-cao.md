@@ -34,7 +34,7 @@ Trang Đồ: chạm vào hình để đặt điểm cầm/mũi vẫn đúng; đ�
 
 ## Có phiên khác cùng sửa
 
-Trong lúc làm, một phiên khác thêm nút **tải 2 bản cùng lúc** (bản gấp đôi + bản thường) ở trang Quái, Anh hùng, Đồ. Phần đó hợp với phần của tôi nên giữ cả hai, không xung đột.
+Trong lúc làm, một phiên khác thêm nút **tải 2 bản cùng lúc** (bản gấp đôi + bản thường) ở cả 4 trang (Quái, Anh hùng, Đồ, Hiệu ứng). Phần đó hợp với phần của tôi nên giữ cả hai, không xung đột.
 
 ## Đã tự kiểm
 
