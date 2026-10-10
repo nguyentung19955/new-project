@@ -28,7 +28,9 @@
     for (const p of ds) { if (!p.so) p.so = XR.doManh(p.cv); p.vai = 'phu-kien'; }
     const theoCo = ds.slice().sort((a, b) => b.so.dt - a.so.dt);
     const lay = (n) => theoCo.splice(0, n);
-    const sangTruoc = (a, b) => b.so.sang - a.so.sang; // sáng hơn đứng trước = gần
+    // Mảnh "trước/gần" và "sau/xa": Gemini vẽ theo thứ tự đánh số trong prompt, từ trái sang phải (trước bên trái).
+    // Prompt cũ còn vẽ mảnh sau tối hơn: chỉ khi chênh sáng rõ (>30) mới dùng độ sáng.
+    const sangTruoc = (a, b) => (Math.abs(a.so.sang - b.so.sang) > 30 ? b.so.sang - a.so.sang : a.sx - b.sx);
     const cy = (p) => p.sy + p.h / 2;
     if (khung === 'nguoi') {
       const hai = lay(2);
@@ -70,7 +72,9 @@
       const than = lay(1)[0]; if (than) than.vai = 'than';
       const cang = lay(2).sort(sangTruoc);
       if (cang[0]) cang[0].vai = 'cang-truoc'; if (cang[1]) cang[1].vai = 'cang-sau';
-      const chan = lay(6).sort(sangTruoc);
+      // 6 chân: hàng trên là chân gần, hàng dưới là chân xa (prompt cũ: chân xa tối hơn)
+      const chan = lay(6), sangs = chan.map((p) => p.so.sang), lech = sangs.length ? Math.max(...sangs) - Math.min(...sangs) : 0;
+      chan.sort(lech > 30 ? (a, b) => b.so.sang - a.so.sang : (a, b) => (a.sy + a.h / 2) - (b.sy + b.h / 2));
       const gan = chan.slice(0, 3).sort((a, b) => a.sx - b.sx), xa = chan.slice(3).sort((a, b) => a.sx - b.sx);
       gan.forEach((p, i) => (p.vai = 'chan-gan-' + (i + 1)));
       xa.forEach((p, i) => (p.vai = 'chan-xa-' + (i + 1)));
@@ -124,7 +128,15 @@
     const than = ds.find((q) => q.vai === 'than');
     return !!than && p.w * p.h >= than.w * than.h * 0.45 && p.h >= p.w * 0.7;
   };
-  const cachRap = (khung, vai, p, ds) => (p && ds && XR.laAoChoang(p, ds) ? AO_CHOANG : cachRap0(khung, vai));
+  // Phụ kiện vừa (ống tên, túi, khiên đeo lưng: từ 1/8 thân trở lên) ở khung người: đeo sau lưng, nằm sau thân.
+  // Phụ kiện nhỏ hơn (chùm lông, chim nhỏ) vẫn gắn lên đầu.
+  const DEO_LUNG = { cha: 'than', lop: -0.5, khop: [0.5, 0.45], gan: [0.22, 0.35] };
+  const laDoDeoLung = (khung, p, ds) => {
+    if (khung !== 'nguoi' || p.vai !== 'phu-kien') return false;
+    const than = ds.find((q) => q.vai === 'than');
+    return !!than && p.w * p.h >= than.w * than.h * 0.12;
+  };
+  const cachRap = (khung, vai, p, ds) => (p && ds && XR.laAoChoang(p, ds) ? AO_CHOANG : p && ds && laDoDeoLung(khung, p, ds) ? DEO_LUNG : cachRap0(khung, vai));
 
   // Đặt tên duy nhất theo vai (tên dùng trong tệp)
   XR.datTen = function (ds) {
@@ -212,11 +224,41 @@
   };
 
   // Vẽ tĩnh tư thế ráp (không cần bộ động tác)
+  // ---------- tô tối mảnh phía sau ----------
+  // Prompt mới bảo Gemini vẽ hai tay (hai chân) GIỐNG HỆT nhau; công cụ tự tô tối mảnh phía sau cho có chiều sâu.
+  const CAP = { 'tay-sau': 'tay-truoc', 'chan-sau': 'chan-truoc', 'chan-truoc-xa': 'chan-truoc-gan', 'chan-sau-xa': 'chan-sau-gan',
+    'cang-sau': 'cang-truoc', 'chan-xa-1': 'chan-gan-1', 'chan-xa-2': 'chan-gan-2', 'chan-xa-3': 'chan-gan-3' };
+  XR.DO_TOI = 0.24;
+  XR.tinhToi = function (ds, bat) {
+    for (const p of ds) {
+      p.toi = 0;
+      if (!bat || !CAP[p.vai] || p.daToi) continue; // daToi: ảnh mở từ tệp đã xuất, đã tô tối sẵn
+      const truoc = ds.find((q) => q.vai === CAP[p.vai]);
+      if (!p.so) p.so = XR.doManh(p.cv);
+      if (truoc && !truoc.so) truoc.so = XR.doManh(truoc.cv);
+      // Gemini đã vẽ tối sẵn (tối hơn mảnh trước rõ rệt) thì thôi
+      if (truoc && p.so.sang < truoc.so.sang - 18) continue;
+      p.toi = XR.DO_TOI;
+    }
+  };
+  // Ảnh để vẽ/xuất của một mảnh (đã tô tối nếu cần)
+  XR.anhVe = function (p) {
+    if (!p.toi) return p.cv;
+    if (p._toi && p._toi.cv === p.cv && p._toi.k === p.toi) return p._toi.anh;
+    const c = XR.taoCanvas(p.cv.width, p.cv.height), x = c.getContext('2d');
+    x.drawImage(p.cv, 0, 0);
+    x.globalCompositeOperation = 'source-atop';
+    x.fillStyle = 'rgba(28,16,40,' + p.toi + ')';
+    x.fillRect(0, 0, c.width, c.height);
+    p._toi = { cv: p.cv, k: p.toi, anh: c };
+    return c;
+  };
+
   XR.veTinh = function (ctx, ds, chon) {
     const thuTu = ds.slice().sort((a, b) => a.lop - b.lop);
     for (const p of thuTu) {
       ctx.globalAlpha = chon && chon !== p.id && XR._mo ? 0.5 : 1;
-      ctx.drawImage(p.cv, p.dat[0], p.dat[1]);
+      ctx.drawImage(XR.anhVe(p), p.dat[0], p.dat[1]);
     }
     ctx.globalAlpha = 1;
   };
@@ -235,7 +277,7 @@
     }
     const cv = XR.taoCanvas(rong, y + cao + pad), cx = cv.getContext('2d'), o = {};
     for (const c of cac) {
-      const anh = k === 1 ? c.p.cv : XR.thuNho(c.p.cv, c.w, c.h);
+      const goc = XR.anhVe(c.p), anh = k === 1 ? goc : XR.thuNho(goc, c.w, c.h);
       cx.drawImage(anh, c.x, c.y, c.w, c.h);
       o[c.p.id] = [c.x, c.y, c.w, c.h];
     }
@@ -262,6 +304,7 @@
       manh: ds.slice().sort((a, b) => a.lop - b.lop).map((p) => ({
         ten: p.ten, vai: p.vai, cha: p.cha == null ? null : tenTheoId[p.cha] || null,
         o: o[p.id], dat: [r(p.dat[0]), r(p.dat[1])], truc: [r(p.truc[0]), r(p.truc[1])], lop: p.lop,
+        ...((p.toi || p.daToi) ? { da_to_toi: true } : {}), // công cụ đã tô tối sẵn trong ảnh (game bỏ qua khoá này)
       })),
     };
     if (S.dong_tac && Object.keys(S.dong_tac).length) tep.dong_tac = JSON.parse(JSON.stringify(S.dong_tac));
@@ -292,7 +335,7 @@
     const ds = tep.manh.map((m, i) => {
       const [x, y, w, h] = m.o, cv = XR.taoCanvas(w, h);
       cv.getContext('2d').drawImage(img, x, y, w, h, 0, 0, w, h);
-      return { id: 'm' + (i + 1) + '_' + Date.now().toString(36), ten: m.ten, vai: m.vai, chaTen: m.cha, cv, w, h, sx: m.dat[0], sy: m.dat[1], dat: m.dat.slice(), truc: m.truc.slice(), lop: m.lop };
+      return { id: 'm' + (i + 1) + '_' + Date.now().toString(36), ten: m.ten, vai: m.vai, chaTen: m.cha, cv, w, h, sx: m.dat[0], sy: m.dat[1], dat: m.dat.slice(), truc: m.truc.slice(), lop: m.lop, daToi: !!m.da_to_toi };
     });
     for (const p of ds) { const c = ds.find((q) => q.ten === p.chaTen); p.cha = c ? c.id : null; delete p.chaTen; }
     return {

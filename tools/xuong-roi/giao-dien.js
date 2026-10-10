@@ -7,7 +7,7 @@
   const VUNG = { rung: 'Rừng già', bien: 'Hang biển', laudai: 'Lâu đài cổ' };
   const DOI = { 'em-be': 'Em bé', quai: 'Quái' };
   // PHIÊN BẢN: tăng số mỗi lần sửa công cụ, ghi ngày sửa. Mã bản (6 ký tự) do game/build.py tính từ nội dung mã nguồn.
-  const PHIEN_BAN = { so: '1.4', ngay: '10/10/2026' };
+  const PHIEN_BAN = { so: '1.5', ngay: '10/10/2026' };
   XR.PHIEN_BAN = PHIEN_BAN;
   const TEN_BUOC = ['Loại', 'Nạp ảnh', 'Gán vai', 'Ráp', 'Động tác', 'Xuất'];
   const dpr = () => Math.min(3, window.devicePixelRatio || 1);
@@ -22,7 +22,7 @@
     goc: [0, 0], cao: 40, dong_tac: {},
     khungDoan: null, canRap: true,
     anhMo: null, mo: { co: 1, x: 0, y: 0, do: 0.35 }, keoMo: false,
-    view: null, dt: 'idle', quay: false,
+    view: null, dt: 'idle', quay: false, toiSau: true,
   };
   XR.S = S;
 
@@ -55,9 +55,9 @@
       try {
         const d = {
           khung: S.khung, doi_tuong: S.doi_tuong, ten: S.ten, ma: S.ma, maTay: S.maTay, thay_cho: S.thay_cho, nguong: S.nguong, lem: S.lem, vun: S.vun,
-          goc: S.goc, cao: S.cao, dong_tac: S.dong_tac, khungDoan: S.khungDoan, canRap: S.canRap, buoc: S.buoc,
+          goc: S.goc, cao: S.cao, toiSau: S.toiSau, dong_tac: S.dong_tac, khungDoan: S.khungDoan, canRap: S.canRap, buoc: S.buoc,
           daXoa: S.daXoa || [],
-          manh: S.manh.map((p) => ({ id: p.id, lat: !!p.lat, vai: p.vai, cha: p.cha, sx: p.sx, sy: p.sy, w: p.w, h: p.h, dat: p.dat, truc: p.truc, lop: p.lop, src: p.cv.toDataURL('image/png') })),
+          manh: S.manh.map((p) => ({ id: p.id, lat: !!p.lat, daToi: !!p.daToi, vai: p.vai, cha: p.cha, sx: p.sx, sy: p.sy, w: p.w, h: p.h, dat: p.dat, truc: p.truc, lop: p.lop, src: p.cv.toDataURL('image/png') })),
         };
         localStorage.setItem(KHOA, JSON.stringify(d));
       } catch (e) { /* đầy bộ nhớ hoặc trình duyệt chặn: bỏ qua */ }
@@ -71,15 +71,15 @@
       try {
         const img = await XR.tuDataUrl(m.src), cv = XR.taoCanvas(img.width, img.height);
         cv.getContext('2d').drawImage(img, 0, 0);
-        ds.push({ id: m.id, lat: !!m.lat, vai: m.vai, cha: m.cha, sx: m.sx, sy: m.sy, w: cv.width, h: cv.height, dat: m.dat, truc: m.truc, lop: m.lop, cv });
+        ds.push({ id: m.id, lat: !!m.lat, daToi: !!m.daToi, vai: m.vai, cha: m.cha, sx: m.sx, sy: m.sy, w: cv.width, h: cv.height, dat: m.dat, truc: m.truc, lop: m.lop, cv });
       } catch (e) { /* mảnh hỏng: bỏ */ }
     }
     Object.assign(S, {
       khung: d.khung || 'nguoi', doi_tuong: d.doi_tuong || 'em-be', ten: d.ten || '', ma: d.ma || '', maTay: !!d.maTay, thay_cho: d.thay_cho || '',
       nguong: d.nguong || 45, lem: d.lem == null ? 1 : d.lem, vun: d.vun == null ? 3 : d.vun, goc: d.goc || [0, 0], cao: d.cao || 40,
-      daXoa: d.daXoa || [], dong_tac: d.dong_tac || {}, khungDoan: d.khungDoan || null, canRap: d.canRap !== false, manh: ds,
+      toiSau: d.toiSau !== false, daXoa: d.daXoa || [], dong_tac: d.dong_tac || {}, khungDoan: d.khungDoan || null, canRap: d.canRap !== false, manh: ds,
     });
-    S.chon.clear(); S.chonRap = null; S.view = null; doiRig();
+    S.chon.clear(); S.chonRap = null; S.view = null; XR.tinhToi(S.manh, S.toiSau); doiRig();
   }
 
   // ---------- các bước ----------
@@ -285,6 +285,7 @@
     } else if (thieu.length) { thieu.forEach((p) => (p.vai = 'phu-kien')); S.canRap = true; }
     const ok = new Set((XR.VAI[S.khung] || []).map((v) => v[0]));
     for (const p of S.manh) if (!ok.has(p.vai)) { p.vai = 'phu-kien'; S.canRap = true; }
+    XR.tinhToi(S.manh, S.toiSau);
   }
   let chonVai = null;
   function veBuoc3() {
@@ -293,7 +294,7 @@
     if (!chonVai || !manhTheoId(chonVai)) chonVai = S.manh[0] && S.manh[0].id;
     for (const p of S.manh) {
       const t = el('div', { cls: 'the' + (p.id === chonVai ? ' chon' : '') });
-      t.appendChild(anhNho(p.cv));
+      t.appendChild(anhNho(XR.anhVe(p)));
       t.appendChild(el('div', { cls: 'nhan', text: XR.tenVai(S.khung, p.vai) }));
       const s = el('select');
       for (const [k, ten] of vai) s.appendChild(el('option', { value: k, text: ten }));
@@ -314,15 +315,18 @@
     for (const k of can) if (!dem[k]) loi.push('Chưa có ' + XR.tenVai(S.khung, k) + '.');
     for (const k in dem) if (dem[k] > 1 && k !== 'phu-kien') loi.push('Có ' + dem[k] + ' mảnh cùng là ' + XR.tenVai(S.khung, k) + '.');
     $('thieuVai').textContent = loi.join(' ') || 'Đủ các bộ phận chính.';
+    $('nutToi').classList.toggle('on', S.toiSau);
+    $('nutToi').textContent = S.toiSau ? 'Tô tối tay/chân phía sau: BẬT' : 'Tô tối tay/chân phía sau: TẮT';
   }
+  $('nutToi').onclick = () => { S.toiSau = !S.toiSau; XR.tinhToi(S.manh, S.toiSau); doiRig(); veBuoc3(); luu(); };
   function datVai(p, k) {
     if (p.vai === k) return;
-    p.vai = k; S.canRap = true; doiRig();
+    p.vai = k; S.canRap = true; XR.tinhToi(S.manh, S.toiSau); doiRig();
     // chọn sang mảnh kế tiếp cho nhanh
     const i = S.manh.indexOf(p); if (S.manh[i + 1]) chonVai = S.manh[i + 1].id;
     veBuoc3(); luu();
   }
-  $('nutDoanLai').onclick = () => { XR.doanVai(S.khung, S.manh); S.khungDoan = S.khung; S.canRap = true; doiRig(); veBuoc3(); luu(); bao('Máy đã đoán lại.'); };
+  $('nutDoanLai').onclick = () => { XR.doanVai(S.khung, S.manh); XR.tinhToi(S.manh, S.toiSau); S.khungDoan = S.khung; S.canRap = true; doiRig(); veBuoc3(); luu(); bao('Máy đã đoán lại.'); };
 
   // ===== BƯỚC 4: ráp =====
   function chuanBiRap() {
@@ -627,6 +631,7 @@
       const tep = JSON.parse(await f.text());
       const d = await XR.moTep(tep);
       Object.assign(S, d, { maTay: true, khungDoan: d.khung, canRap: false, view: null, chonRap: null, anhGoc: null });
+      XR.tinhToi(S.manh, S.toiSau);
       S.chon.clear(); doiRig(); luu();
       sangBuoc(4); bao('Đã mở ' + (d.ten || d.ma) + '. Sửa tiếp rồi xuất lại.');
     } catch (e) { bao(e.message || 'Tệp hỏng, không mở được.', 4000); }
