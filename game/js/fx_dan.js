@@ -240,11 +240,18 @@
   // ---------- mỗi khung: chớp lúc bắn, hạt rơi theo đường bay, trúng, đụng tường ----------
   let seenW = null, live = new Set();
   const HIT_RAMP = { fire: RAMP.fire, poison: RAMP.poison, ice: RAMP.ice };
-  function impact(x, y, el, big, col, team) {
+  // Hệ số số hạt G.VFX.hat (js/vfx_cfg.js)
+  const hatN = (n) => { const v = G.VFX && G.VFX.hat; return Math.round(n * (v == null ? 1 : v)); };
+  // Nổ ngắn đúng chỗ va chạm. ux, uy: hướng bay của viên đạn (nếu có): vài tia sáng văng tiếp theo hướng đó.
+  function impact(x, y, el, big, col, team, ux, uy) {
     const rp = el ? HIT_RAMP[el] : team === 'player' ? RAMP.steel : RAMP.hurt;
     addRing(x, y, 2, big ? 16 : 10, big ? 0.24 : 0.18, el ? EL_GLOW[el] : col || '#ffffff', big ? 2 : 1, 1);
     add({ ty: 'flash', x, y, r: big ? 7 : 4, t: 0.09, c: '#ffffff', c2: el ? EL_GLOW[el] : col || '#ffd9c8', ly: 1 });
-    const n = big ? 10 : 6;
+    if (ux != null) {
+      const m = hatN(big ? 4 : 2);
+      for (let i = 0; i < m; i++) { const a = Math.atan2(uy, ux) + rr(-0.5, 0.5), v = rr(110, 190); K.streak(x, y, Math.cos(a) * v, Math.sin(a) * v, rr(0.08, 0.14), el ? HIT_RAMP[el] : RAMP.white, 1, rr(4, 7), 0, 4); }
+    }
+    const n = hatN(big ? 10 : 6);
     for (let i = 0; i < n; i++) {
       const a = R() * TAU, v = rr(30, big ? 120 : 80);
       if (el === 'fire') emit(9, x, y, Math.cos(a) * v * 0.6, Math.sin(a) * v * 0.6 - 20, rr(0.2, 0.35), rp, 3, -20, 0, null, 1);
@@ -298,7 +305,8 @@
       }
       // tên xuyên qua quái: mỗi con trúng một lần toé hạt và vòng sóng tại chỗ
       if (o.seen && o.seen.length > (o.dSeen || 0)) {
-        for (let i = o.dSeen || 0; i < o.seen.length; i++) impact(o.x, py, el, o.big, '#ffffff', 'player');
+        const sp = Math.hypot(o.vx, o.vy) || 1;
+        for (let i = o.dSeen || 0; i < o.seen.length; i++) impact(o.x, py, el, o.big, '#ffffff', 'player', o.vx / sp, o.vy / sp);
         o.dSeen = o.seen.length;
         o.dHit = true;
       } else o.dHit = false;
@@ -324,7 +332,7 @@
         else { addRing(o.x, py, 1, 6, 0.15, el ? EL_GLOW[el] : '#e8e2d0', 1, 1); emit(1, o.x, py, o.vx * 0.05, 10, 0.2, el ? HIT_RAMP[el] : RAMP.steel, 2, 0, 0, null, 1); }
       } else {
         const hitP = P && !P.dead && Math.abs(P.x - o.x) < 10 && Math.abs(P.y - o.y) < 11;
-        if (hitP) { impact(o.x, py, el, o.dBig, o.col, 'enemy'); if (o.dBig) trauma(0.18); }
+        if (hitP) { const sp = Math.hypot(o.vx, o.vy) || 1; impact(o.x, py, el, o.dBig, o.col, 'enemy', o.vx / sp, o.vy / sp); if (o.dBig) trauma(0.18); }
         else if (out) wallHit(o, W);
         else { addRing(o.x, py, 1, o.dBig ? 9 : 6, 0.16, el ? EL_GLOW[el] : '#ffb09a', 1, 1); for (let i = 0; i < 3; i++) emit(1, o.x, py, rr(-30, 30), rr(-30, 10), 0.18, el ? HIT_RAMP[el] : RAMP.hurt, 2, 0, 2, null, 1); }
       }

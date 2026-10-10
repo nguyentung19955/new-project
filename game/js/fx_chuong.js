@@ -11,6 +11,12 @@
   const UP = 12; // chưởng bay cao ngang ngực em bé
   const scr = (q) => { const sy = q.uy * zk(), l = Math.hypot(q.ux, sy) || 1; return [q.ux / l, sy / l]; };
   const PURPLE = ['#e2c6ff', '#b98af0', '#9a5fd6', '#6a3fa0'];
+  // Hệ số cường độ, bậc đòn và vòng phép dùng chung (js/fx_ky_nang.js, nạp sau tệp này nên lấy lúc gọi)
+  const KN = () => fx.kyNang;
+  const nHat = (n) => (KN() ? KN().nHat(n) : n);
+  const rung = (a) => (KN() ? KN().rung(a) : trauma(a));
+  // Nhịp sát thương của vệt lửa và mây độc (luật: z.tick đếm ngược, đặt lại bằng z.every): 0..1, 1 = vừa gây sát thương
+  const beat = (z) => (z.every > 0 && z.tick > z.every - 0.16 ? (z.tick - (z.every - 0.16)) / 0.16 : 0);
 
   // ---------- chưởng đang bay ----------
   // Cầu lửa: lõi trắng vàng, vỏ cam, viền đỏ sẫm, lưỡi lửa kéo về sau theo hướng bay
@@ -79,10 +85,14 @@
   // ---------- vệt lửa và mây độc của chưởng trên sàn ----------
   function drawVet(c, z) {
     const t = K.S().t, x = Math.round(z.x), y = Math.round(z.y), k = Math.min(1, z.t / 0.15), id = z.id || 1;
-    if (z.life < 0.35 && ((t * 20) | 0) % 2) return;
-    const rx = Math.max(3, Math.round(z.r * (0.5 + 0.5 * k))), ry = Math.max(2, Math.round(rx * zk() * 0.7));
+    // tan: co lại và thưa dần thay vì tắt phụt; hai khung cuối nhấp nháy
+    const end = z.life < 0.35 ? z.life / 0.35 : 1;
+    if (end < 0.25 && ((t * 20) | 0) % 2) return;
+    const rx = Math.max(3, Math.round(z.r * (0.5 + 0.5 * k) * (0.7 + 0.3 * end))), ry = Math.max(2, Math.round(rx * zk() * 0.7));
     ell(c, x, y, rx, ry, 'rgba(110,34,10,0.55)');
     ell(c, x, y, rx - 2, Math.max(1, ry - 1), 'rgba(255,122,42,0.35)');
+    const b = beat(z);
+    if (b > 0) ring(c, x, y, rx + 1 + Math.round(2 * (1 - b)), ry + 1, 1, b > 0.5 ? '#ffd23f' : '#ff7a2a', b < 0.4);
     for (let i = 0; i < 3; i++) {
       const a = hash(id + i * 3.1) * TAU, d = hash(id * 2 + i) * 0.6;
       tongue(c, Math.round(x + Math.cos(a) * rx * d), Math.round(y + Math.sin(a) * ry * d), Math.round((3 + (Math.sin(t * 13 + i * 2 + id) * 0.5 + 0.5) * 5) * Math.min(1, z.life / 0.6 + 0.3)), 1);
@@ -90,11 +100,19 @@
   }
   function drawMay(c, z) {
     const t = K.S().t, x = Math.round(z.x), y = Math.round(z.y), k = Math.min(1, z.t / 0.2), id = z.id || 1;
-    if (z.life < 0.4 && ((t * 20) | 0) % 2) return;
-    const rx = Math.max(4, Math.round(z.r * (0.4 + 0.6 * k))), ry = Math.max(3, Math.round(rx * zk()));
+    // tan: co lại và thưa dần; hai khung cuối nhấp nháy
+    const end = z.life < 0.45 ? z.life / 0.45 : 1;
+    if (end < 0.25 && ((t * 20) | 0) % 2) return;
+    // mây "thở": bán kính phồng xẹp chậm, không đều
+    const br = 1 + 0.04 * Math.sin(t * 1.7 + id) + 0.03 * Math.sin(t * 2.9 + id * 2);
+    const rx = Math.max(4, Math.round(z.r * (0.4 + 0.6 * k) * (0.75 + 0.25 * end) * br)), ry = Math.max(3, Math.round(rx * zk()));
     // mặt sàn nhuộm độc, viền tím
     ell(c, x, y, rx, ry, 'rgba(40,110,26,0.42)');
     ring(c, x, y, rx, ry, 1, 'rgba(154,95,214,0.75)', true);
+    if (KN()) KN().organic(c, x, y, rx - 1, ry - 1, id * 7.1, end < 1);
+    // nhịp độc: vòng lục co về giữa đúng lúc mây gây sát thương
+    const b = beat(z);
+    if (b > 0) ring(c, x, y, Math.max(2, Math.round(rx * (0.55 + 0.45 * b))), Math.max(2, Math.round(ry * (0.55 + 0.45 * b))), 1, b > 0.5 ? '#c2f58a' : '#b98af0', b < 0.4);
     // màn khói lơ lửng trên mây: các vạch ngang so le trôi qua lại
     for (let j = 0; j < 4; j++) {
       const yy = y - 4 - j * 4, hw = Math.round(rx * (0.95 - j * 0.15)), sh = Math.round(Math.sin(t * (1.2 + j * 0.3) + id + j) * 3);
@@ -144,6 +162,15 @@
         const f = z.kind === 'may' ? drawMay : drawVet;
         add({ ty: 'he', x: z.x, y: z.y, t: z.life + 0.2, ly: 0, draw: (c, o) => { if (o.z.dead || o.z.life <= 0) { o.t = 0; return; } f(c, o.z); }, z });
       }
+      if (z.fxTk != null && z.tick > z.fxTk + 0.05) {
+        // vừa gây sát thương: vài hạt bật lên khắp vùng (giới hạn theo G.VFX.hat)
+        for (let i = 0; i < nHat(3); i++) {
+          const a = R() * TAU, d = Math.sqrt(R()) * z.r * 0.8, px = z.x + Math.cos(a) * d, py = z.y + Math.sin(a) * d * zk();
+          if (z.kind === 'may') emit(1, px, py - 2, rr(-6, 6), rr(-28, -12), rr(0.45, 0.7), R() < 0.4 ? PURPLE : RAMP.poison, 2, -4, 0.8, null, 1);
+          else emit(9, px, py, 0, rr(-50, -25), rr(0.25, 0.4), RAMP.fire, 4, -20, 0, null, 1);
+        }
+      }
+      z.fxTk = z.tick;
       if (!tick) continue;
       if (z.kind === 'may' && R() < 0.5) { const a = R() * TAU, d = Math.sqrt(R()) * z.r * 0.8; emit(2, z.x + Math.cos(a) * d, z.y - rr(4, 16) + Math.sin(a) * d * 0.3, rr(-6, 6), rr(-10, -3), rr(0.6, 1.1), R() < 0.3 ? PURPLE : RAMP.vapor, R() < 0.5 ? 5 : 3, 0, 0.6, null, 1); }
       else if (z.kind === 'vet' && R() < 0.35) emit(9, z.x + rr(-z.r, z.r) * 0.6, z.y + rr(-2, 2), 0, rr(-30, -10), rr(0.2, 0.4), RAMP.fire, 3, -20, 0, null, 1);
@@ -163,14 +190,26 @@
     add({ ty: 'flash', x, y, r: 8 + 6 * (big || 0), t: 0.12, c: '#ffffff', c2: PL.c2, ly: 1 });
     addRing(x, y, 2, 14 + 8 * (big || 0), 0.2, PL.c, 2, 1);
     // bàn tay đẩy ra: một vòng sóng nhỏ trước tay và hạt bắn theo hướng chưởng
-    for (let i = 0; i < 6 + 6 * (big || 0); i++) streak(x, y, v[0] * rr(90, 200) + v[1] * rr(-40, 40), v[1] * rr(90, 200) - v[0] * rr(-40, 40), rr(0.1, 0.2), PL.ramp, 1, rr(5, 10), 0, 3);
-    kick(-v[0] * (1 + 2 * (big || 0)), -v[1]); trauma(0.08 + 0.2 * (big || 0));
+    for (let i = 0; i < nHat(6 + 6 * (big || 0)); i++) streak(x, y, v[0] * rr(90, 200) + v[1] * rr(-40, 40), v[1] * rr(90, 200) - v[0] * rr(-40, 40), rr(0.1, 0.2), PL.ramp, 1, rr(5, 10), 0, 3);
+    kick(-v[0] * (1 + 2 * (big || 0)), -v[1]); rung(0.08 + 0.2 * (big || 0));
+    // vòng phép nhỏ dưới chân lúc ra tay (to và lâu hơn khi tích lực)
+    if (KN() && big > 0) KN().rune(P.x, P.y, 12 + 10 * big, PL, 0.3 + 0.15 * big, 4, 5);
   });
+  // Nổ của chưởng. Bậc cường độ (js/fx_ky_nang.js fx.capDo): chưởng thường là "kỹ năng" (rung vừa, không khựng),
+  // chưởng tích lực là "tối thượng" (rung mạnh, khựng ngắn, chớp màn hình nhẹ, nhiều hạt hơn), luồng phụ của Tam xà nhẹ hơn.
+  // Thêm một vòng phép trên sàn: xuất hiện, đỉnh, tan (chỉ là hình, không phải vùng trúng).
   api('chBoom', (cay, x, y, r, q) => {
-    const power = q && q.big ? 1.6 : 1;
-    if (cay === 'hoa') { blastFire(x, y, r, power); trauma(q && q.big ? 0.35 : 0.14); }
-    else if (cay === 'doc') { blastPoison(x, y, Math.max(16, r * 0.8), q && q.main ? 1 : 0.6); }
-    else blastIce(x, y, r, 1);
+    const big = q && q.big > 0, side = cay === 'doc' && q && !q.main, el = G.CHUONG.trees[cay].el;
+    const k = KN() ? KN().nhan(big ? 'toiThuong' : side ? 'thuong' : 'kyNang', el) : 1;
+    const power = Math.min(1.8, (big ? 1.1 : 1) * k); // số hạt của vụ nổ; js/fx.js còn nhân thêm G.VFX.hat
+    if (cay === 'hoa') blastFire(x, y, r, power);
+    else if (cay === 'doc') blastPoison(x, y, Math.max(16, r * 0.8), side ? 0.6 : power);
+    else blastIce(x, y, r, power);
+    if (KN() && !side) {
+      const PL = pal(el);
+      KN().rune(x, y, r * (big ? 1.05 : 0.95), PL, big ? 0.7 : 0.5, big ? 8 : 6, big ? 3.2 : 2.2);
+      if (big) KN().rune(x, y, r * 0.6, PL, 0.5, 4, -4, 0.06);
+    }
   });
   api('chHit', (kind, e, q) => {
     const y = e.y - Math.min(16, (e.h || 20) * 0.5), v = scr(q);
@@ -217,6 +256,30 @@
     ell(c, h.x + P.face * 4, h.y - 2, r + 1, r + 1, '#7a1e0a'); ell(c, h.x + P.face * 4, h.y - 2, r, r, '#ff7a2a'); ell(c, h.x + P.face * 4, h.y - 3, Math.max(1, r - 2), Math.max(1, r - 2), '#ffd23f');
     if (S && ((S.t * 30) | 0) % 2 && R() < 0.6) emit(1, h.x + P.face * 4 + rr(-12, 12), h.y - 2 + rr(-10, 10), 0, 0, 0.2, RAMP.fire, 2, 0, 0, null, 1);
   }
+  // Vòng phép tích lực dưới chân (lớp sàn): nở dần theo độ tích, xoay nhanh dần, đầy thì sáng trắng nhấp nháy.
+  // Đây là phần "báo trước" của chưởng tối thượng; màu vàng cam điểm ảnh, khác hẳn vùng báo đỏ mịn của quái.
+  function drawChargeGround(c) {
+    const W = G.getWorld(), P = W && W.P;
+    if (!P || !P.chHold || P.dead || !G.chuong) return;
+    const S = K.S();
+    if (!S) return;
+    const k = G.chuong.chargeOf(P), t = S.t, x = Math.round(P.x), y = Math.round(P.y);
+    const r = 9 + 15 * k, ky = zk(), full = k >= 1, blink = full && ((t * 12) | 0) % 2;
+    ring(c, x, y, r, r * ky, 1, full ? (blink ? '#ffffff' : '#ffd23f') : k > 0.5 ? '#ffa53a' : '#ff7a2a', k < 0.15);
+    const n = 6, rot = t * (1.5 + 5 * k);
+    c.fillStyle = full ? '#fff3b0' : '#ffd23f';
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * TAU + rot, px = Math.round(x + Math.cos(a) * r * 0.75), py = Math.round(y + Math.sin(a) * r * 0.75 * ky);
+      c.fillRect(px - 1, py, 3, 1); c.fillRect(px, py - 1, 1, 1);
+    }
+    if (k > 0.3) ring(c, x, y, r * 0.45, r * 0.45 * ky, 1, 'rgba(255,210,63,0.6)', true);
+  }
+  const ground0 = fx.drawGround;
+  fx.drawGround = function (c) {
+    if (ground0) ground0(c);
+    if (G.noRender) return;
+    try { drawChargeGround(c); } catch (e) { fail(e); }
+  };
   const over0 = fx.drawOver;
   fx.drawOver = function (c) {
     if (over0) over0(c);
