@@ -31,6 +31,9 @@ Ngày 10/10/2026.
 - Game cắt đúng vùng ảnh (gấp net lần) rồi vẽ ra đúng cỡ trong game. Trên màn 960×540, ảnh hiện đủ chi tiết gấp đôi.
 - Đã thử: phóng ảnh của cả 36 quái và 10 kiếm lên gấp đôi rồi ghi `"net": 2`. Kết quả hiện giống hệt bản cũ (khác 0,06%, do vũ khí xoay lấy mẫu mịn hơn). Nghĩa là đọc và vẽ đúng.
 - Các chỗ đã hỗ trợ "net": quái; em bé thân AI (kèm ánh viền bậc, chớp trắng hoặc nhuộm màu khi trúng đòn); người làng và vùng mặt ở khung nói chuyện; vũ khí (xoay theo góc, viền đổi màu theo bậc, dây cung); trang phục; vật phẩm (ô tài nguyên và đồ rơi trên sàn); hiệu ứng ảnh AI (`fx_anh.js`).
+- **"net" dùng được cho MỌI loại tệp**: quai, em-be, nguoi-lang, vu-khi, trang-phuc (đủ 6 ô: mũ, áo, đồ lưng, đồ tay, mặt nạ, cánh), vat-pham, hieu-ung.
+  Đã thử thêm từng ô trang phục và vật phẩm với ảnh `"net": 1` và cùng ảnh đó phóng gấp đôi với `"net": 2`. Em bé mặc đồ hiện giống hệt nhau, cỡ món đồ trong game không đổi.
+  Tệp không có "net" chạy y như trước.
 - Khi làm ảnh mới để có nét gấp đôi: dùng ảnh AI gấp 2 lần cỡ game và ghi `"net": 2`. Các trang công cụ `tools/tach-*` do phiên khác sửa. Ví dụ: trang Tách Hiệu ứng đã có lựa chọn "Độ nét Gấp đôi" và tự ghi `"net": 2`.
 
 ## 3. Chỗ nào còn 1× (chưa nét gấp đôi)
