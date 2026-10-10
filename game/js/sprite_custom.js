@@ -252,6 +252,84 @@
     }
     return cv;
   }
+  // ---------- ĐỒ BÁM THÂN AI ----------
+  // Đo xem thân AI ở khung (ten, i) dời / xoay bao nhiêu so với khung đứng thở đầu tiên (khung dùng để đặt neo), để đồ khoác lên
+  // đi theo đúng thân AI (không theo khung xương code). Đo trên hình bóng (điểm ảnh có màu) ở cỡ điểm ảnh game, một lần mỗi khung.
+  //  - Động tác đứng (đứng thở, chạy, lấy đà, đánh, trúng đòn): dò chỗ khớp nhất của vùng đầu và vùng thân (dời tối đa 8 điểm ảnh)
+  //    -> { dau: [dx, dy], than: [dx, dy] }.
+  //  - Lộn (ne) và chết (die): thân xoay cả người -> dò góc xoay (mỗi 15 độ) và chỗ đặt khớp nhất -> { rot, x, y }: đồ ghép lên thân
+  //    rồi xoay, dời cả khối như thân. Lộn ưu tiên góc lăn tới đều (360 độ chia đều các khung).
+  function matNa(sp) { // hình bóng từng khung theo điểm ảnh game: sp.mn[hang][i] = Uint8Array(fw*fh)
+    if (sp.mn) return sp.mn;
+    const N = sp.net || 1, W = sp.img.width, H = sp.img.height, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    const x = cv.getContext('2d', { willReadFrequently: true }); x.drawImage(sp.img, 0, 0);
+    const d = x.getImageData(0, 0, W, H).data, fw = sp.fw, fh = sp.fh, h = Math.floor(N / 2);
+    sp.mn = (ten, i) => {
+      const a = sp.dt[ten] || sp.dt.idle, k = a.hang + ':' + i;
+      sp.mn.c = sp.mn.c || {};
+      let m = sp.mn.c[k]; if (m) return m;
+      m = new Uint8Array(fw * fh);
+      for (let y = 0; y < fh; y++) for (let q = 0; q < fw; q++) {
+        const X = (i * fw + q) * N + h, Y = (a.hang * fh + y) * N + h;
+        if (X < W && Y < H && d[(Y * W + X) * 4 + 3] > 127) m[y * fw + q] = 1;
+      }
+      return (sp.mn.c[k] = m);
+    };
+    return sp.mn;
+  }
+  function tamMat(m, fw, fh) { let n = 0, sx = 0, sy = 0, y0 = -1; for (let y = 0; y < fh; y++) for (let x = 0; x < fw; x++) if (m[y * fw + x]) { n++; sx += x; sy += y; if (y0 < 0) y0 = y; } return n ? { n, x: sx / n, y: sy / n, y0 } : null; }
+  // Dò dời (dx, dy) để vùng hàng [r0, r1) của khung gốc A khớp nhất với khung B (đếm điểm giống nhau, kể cả chỗ trống).
+  function doDoi(A, B, fw, fh, r0, r1) {
+    let best = -1, bx = 0, by = 0;
+    r0 = Math.max(0, Math.floor(r0)); r1 = Math.min(fh, Math.ceil(r1));
+    for (let dy = -8; dy <= 8; dy++) for (let dx = -8; dx <= 8; dx++) {
+      let s = 0;
+      for (let y = r0; y < r1; y++) {
+        const yy = y + dy, inY = yy >= 0 && yy < fh;
+        for (let x = 0; x < fw; x++) { const xx = x + dx, b = inY && xx >= 0 && xx < fw ? B[yy * fw + xx] : 0; if (A[y * fw + x] === b) s++; }
+      }
+      s -= (Math.abs(dx) + Math.abs(dy)) * 0.01; // hoà thì chọn dời ít
+      if (s > best) { best = s; bx = dx; by = dy; }
+    }
+    return [bx, by];
+  }
+  SC.khopEmBe = function (sp, ten, i) {
+    if (!sp || !sp.img || !sp.dt[ten]) return null;
+    sp.khop = sp.khop || {};
+    const k = ten + ':' + i;
+    if (k in sp.khop) return sp.khop[k];
+    let r = null;
+    try {
+      const mn = matNa(sp), fw = sp.fw, fh = sp.fh, A = mn('idle', 0), B = mn(ten, i), a = tamMat(A, fw, fh), b = tamMat(B, fw, fh), lat = sp.lat ? -1 : 1;
+      if (a && b) {
+        if (ten === 'ne' || ten === 'die') {
+          const pts = []; for (let y = 0; y < fh; y++) for (let x = 0; x < fw; x++) if (A[y * fw + x]) pts.push(x - a.x, y - a.y);
+          const n = sp.dt[ten].so, goi = ten === 'ne' ? (360 * i) / n : 0;
+          let best = -1e9, bt = 0, bdx = 0, bdy = 0;
+          for (let t = ten === 'ne' ? 0 : -120; t <= (ten === 'ne' ? 345 : 120); t += 15) {
+            const c = Math.cos((t * Math.PI) / 180), s = Math.sin((t * Math.PI) / 180), q = new Int16Array(pts.length);
+            for (let j = 0; j < pts.length; j += 2) { q[j] = Math.round(pts[j] * c - pts[j + 1] * s + b.x); q[j + 1] = Math.round(pts[j] * s + pts[j + 1] * c + b.y); }
+            for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) {
+              let hit = 0;
+              for (let j = 0; j < q.length; j += 2) { const X = q[j] + dx, Y = q[j + 1] + dy; if (X >= 0 && Y >= 0 && X < fw && Y < fh && B[Y * fw + X]) hit++; }
+              const lech = Math.abs((((t - goi) % 360) + 540) % 360 - 180);
+              const sc = hit / (a.n + b.n - hit) - (ten === 'ne' ? 0.0015 * lech : 0.0004 * Math.abs(t)) - (Math.abs(dx) + Math.abs(dy)) * 0.002;
+              if (sc > best) { best = sc; bt = t; bdx = dx; bdy = dy; }
+            }
+          }
+          // thân gốc: điểm p (toạ độ chân) -> R(p - c0) + c1  =>  đồ dựng ở tư thế đứng, xoay rot quanh chân rồi dời (x, y) = c1 - R c0
+          const c0 = [a.x + 0.5 - sp.ax, a.y + 0.5 - sp.ay], c1 = [b.x + bdx + 0.5 - sp.ax, b.y + bdy + 0.5 - sp.ay], c = Math.cos((bt * Math.PI) / 180), s = Math.sin((bt * Math.PI) / 180);
+          const X = c1[0] - (c0[0] * c - c0[1] * s), Y = c1[1] - (c0[0] * s + c0[1] * c);
+          r = { rot: bt * lat, x: Math.round(X * lat), y: Math.round(Y) };
+        } else if (!(ten === 'idle' && i === 0)) {
+          const h = sp.ay - a.y0 + 1;
+          const dau = doDoi(A, B, fw, fh, a.y0 - 2, a.y0 + 0.44 * h), than = doDoi(A, B, fw, fh, a.y0 + 0.5 * h, a.y0 + 0.85 * h);
+          r = { dau: [dau[0] * lat, dau[1]], than: [than[0] * lat, than[1]] };
+        }
+      }
+    } catch (e) { r = null; }
+    return (sp.khop[k] = r);
+  };
   function noiEmBe() {
     const A = G.art;
     if (!A || !A.hero || A._spriteCustom || !SC.noi) return;
@@ -264,9 +342,9 @@
       try { fr = G.tinhLinh.frame(o); } catch (e) { fr = null; }
       if (!fr) return hero0.call(A, c, o);
       const s = SC.chonEmBe(sp, o), tint = emBeTint(o);
-      let lop = null; // đồ đang mặc khoác lên thân AI: lớp sau thân và lớp trước thân, vẽ theo khung xương của em bé gốc
+      let lop = null; // đồ đang mặc khoác lên thân AI: lớp sau thân và lớp trước thân, bám theo chính thân AI khung này
       const neo = SC.neoCua(sp, s.ten);
-      if (sp.khoacDo && G.tinhLinh.lopDo) { try { lop = G.tinhLinh.lopDo(fr, neo); } catch (e) { lop = null; } }
+      if (sp.khoacDo && G.tinhLinh.lopDo) { try { lop = G.tinhLinh.lopDo(fr, neo, SC.khopEmBe(sp, s.ten, s.i)); } catch (e) { lop = null; } }
       // Vũ khí và nắm tay dời theo "neo.tay" cho khớp bàn tay của thân AI.
       if (neo && neo.tay && (neo.tay[0] || neo.tay[1])) o = Object.assign({}, o, { neoTay: neo.tay });
       // Em bé gốc vẫn vẽ bóng, vũ khí, hào quang trang phục; chỗ vẽ thân thì vẽ hình tự vẽ.

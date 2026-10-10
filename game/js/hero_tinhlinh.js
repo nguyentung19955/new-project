@@ -205,7 +205,7 @@
   const def = (kind, id, name, o) => { L[kind][id] = Object.assign({ id, name }, o); };
 
   // ---------- ĐUNG ĐƯA ----------
-  // cx.tr: vải bay ra sau bao nhiêu (chạy 1, lộn 3); cx.sw: nhịp lắc theo bước (-1..1). Âm là phía sau lưng bé.
+  // cx.tr: vải bay ra sau bao nhiêu (chạy 1, lộn 1); cx.sw: nhịp lắc theo bước (-1..1). Âm là phía sau lưng bé.
   function hemOf(cx) { return -(cx.tr || 0) + (cx.sw || 0); }
   function hem(cx) { return Math.round(hemOf(cx) * 0.8); }
   // Tua rủ từ (x,y) trong hệ F, dài len, đầu tua lệch theo nhịp đung đưa. col: bộ ba sắc độ.
@@ -595,9 +595,10 @@
     const nt = (neo && neo.than) || [0, 0], nd = (neo && neo.dau) || [0, 0], q0 = rotv(nt[0], nt[1], ps.rot || 0);
     const B = S.fr(q0[0], q0[1], ps.rot || 0), H = B.sub((ps.hdx || 0) + nd[0] - nt[0], -18 + (ps.hdy || 0) + nd[1] - nt[1], ps.ha || 0);
     const cx = { S, B, H, C, f: ps.f | 0, ps, key, lv: of.wing ? of.wing.level : 0 };
-    // Nhịp đung đưa của vải và tua theo động tác: đứng thì lay nhẹ, chạy thì bay ra sau và lắc theo bước, lộn thì văng hẳn ra sau.
+    // Nhịp đung đưa của vải và tua theo động tác: đứng thì lay nhẹ, chạy thì bay ra sau và lắc theo bước, lộn thì bay nhẹ như chạy (đồ lăn liền khối với thân).
     const an = ps.anim, f8 = (ps.f | 0) & 7;
-    cx.tr = an === 'run' ? 1 : an === 'dodge' ? 3 : an === 'atk' || an === 'spec' || an === 'dash' || an === 'sweep' ? 1 : 0;
+    // lộn: vải chỉ bay nhẹ (1) để đồ lăn liền một khối với thân, không văng rời ra (trước là 3)
+    cx.tr = an === 'run' || an === 'dodge' || an === 'atk' || an === 'spec' || an === 'dash' || an === 'sweep' ? 1 : 0;
     cx.sw = an === 'run' ? [0, 1, 1, 0, 0, -1, -1, 0][f8] : an === 'dodge' ? [1, -1][f8 & 1] : an === 'idle' ? [0, 0, 0, 1, 1, 1, 0, 0][f8] : 0;
     const rar = of.rar || {}, rc = (k) => RAR_COL[rar[k] | 0];
     let pha = 'sau'; // thân AI: đồ vẽ trước khi tới thân trần là lớp sau, từ thân trần trở đi là lớp trước
@@ -823,11 +824,23 @@
   }
   // Đặt bé bám vào vũ khí. Với kiếm, giáo, búa: (k.x,k.y) là chỗ hai bàn tay bé. Với cung: là điểm cầm của cung, bé nắm chỗ lắp tên trên dây.
   // stand 0..1: 1 là bé đứng dưới đất (nghiêng lean độ), 0 là treo theo vũ khí.
-  function attach(wt, k0, ps) {
+  // yen: { x, y } (giữ yên): thân và đồ trên người ĐỨNG YÊN tại chỗ (chỉ dời cả khối x, y vài điểm ảnh), vũ khí sống tự bay và vung
+  // theo đúng quỹ đạo cũ; bé chỉ giơ tay ra lệnh. Bàn tay chỉ nắm chuôi khi chuôi ở trong tầm tay, xa hơn thì tay chỉ về phía vũ khí.
+  function attach(wt, k0, ps, yen) {
     const k = k0.dist == null || k0.rot == null ? kfill(k0, wt) : k0;
     let hold, grip;
     if (wt === 'bow') { grip = [k.x, k.y]; const q = rotv(-9 - 8 * k.pull, 0, k.ang); hold = [grip[0] + q[0], grip[1] + q[1]]; }
     else { hold = [k.x, k.y]; const q = rotv(HOLD[wt], 0, k.ang); grip = [hold[0] - q[0], hold[1] - q[1]]; }
+    ps.pv = hold; // điểm xoay khi đánh chếch (aimRot): chỗ nắm chuôi, như cũ
+    if (yen) {
+      ps.x = yen.x || 0; ps.y = yen.y || 0; ps.rot = 0;
+      const h = [hold[0] - ps.x, hold[1] - ps.y];
+      if (Math.hypot(h[0] - 0.5, h[1] + 10) <= 10.5) { ps.hn = [h[0], h[1]]; ps.hf = [h[0] - 1, h[1] + 1]; ps.grip = true; ps.hands = [hold]; }
+      else { ps.hn = [h[0], h[1]]; ps.hf = [-4, -7]; ps.grip = false; ps.hands = null; } // tay gần chỉ về vũ khí (reach tự thu ngắn)
+      ps.w = { x: grip[0], y: grip[1], ang: k.ang, pull: k.pull, front: wt !== 'bow', mood: k.mood || 'attack' };
+      ps.air = 0;
+      return ps;
+    }
     const d = rotv(0, 1, k.hang), sh = [hold[0] + d[0] * k.dist, hold[1] + d[1] * k.dist];
     const so = rotv(0.5, -10, k.rot);
     let rx = sh[0] - so[0], ry = sh[1] - so[1], rot = k.rot;
@@ -845,6 +858,7 @@
     ps.air = Math.min(1, Math.max(0, -ry / 14));
     return ps;
   }
+  const YEN0 = { x: 0, y: 0 };
   const S0 = { x: 3, y: -14, ang: -95, stand: 1 }, S1 = { x: 3, y: -14, ang: -75, stand: 1 };
   const P0 = { x: 2, y: -11, ang: -8, stand: 1 };
   const H0 = { x: 3, y: -14, ang: -85, stand: 1 };
@@ -909,7 +923,7 @@
   function aimRot(ps, rs) {
     const rel = rs == null ? 0 : bowRel(rs);
     if (!rel || !ps.w) return ps;
-    const pv = ps.hands && ps.hands[0] ? ps.hands[0] : [ps.w.x, ps.w.y];
+    const pv = ps.pv || (ps.hands && ps.hands[0] ? ps.hands[0] : [ps.w.x, ps.w.y]);
     const q = rotv(ps.w.x - pv[0], ps.w.y - pv[1], rel);
     ps.w.x = pv[0] + q[0]; ps.w.y = pv[1] + q[1]; ps.w.ang += rel;
     if (rel <= -45) ps.w.front = false; else if (rel >= 45) ps.w.front = true;
@@ -989,7 +1003,7 @@
         else if (wt === 'hammer') k = { x: 3 - 5 * c, y: -14 - 14 * c + wk - sh, ang: -85 - 55 * c, stand: 1, lean: -10 * c };
         else k = { x: 3, y: -14 + wk, ang: -95 - 30 * c, stand: 1 };
         k.mood = 'attack';
-        return attach(wt, k, ps);
+        return attach(wt, k, ps, YEN0);
       }
       // Ghép: giáo quét một vòng ngang quanh người (P.mv.kind === 'quet'). Vũ khí bẹt dần theo chiều ngang rồi vòng ra sau lưng.
       case 'sweep': {
@@ -1009,7 +1023,8 @@
         if (wt === 'bow') { ps.free = false; ps.eyes = EYE_ATK(u); const q = bowPull(anim === 'spec' ? u * 0.9 : u); return bowPose(ps, bowRel(v), q[0], q[1]); }
         const k = kf(anim === 'spec' ? SPEC[wt] : ATK[wt][v % 3], u, wt);
         ps.free = false; ps.eyes = EYE_ATK(u);
-        return aimRot(attach(wt, k, ps), rs);
+        // Thân + đồ đứng yên, chỉ nhún cả khối: nhấc lên 1 điểm ảnh lúc lấy đà, nhích tới 1 điểm ảnh lúc vũ khí chém xuống.
+        return aimRot(attach(wt, k, ps, { x: u >= 0.42 && u < 0.7 ? 1 : 0, y: u > 0.12 && u < 0.42 ? -1 : 0 }), rs);
       }
     }
     return ps;
@@ -1120,15 +1135,29 @@
     KCACHE.set(id, fr);
     return fr;
   }
-  // Thân AI: hai lớp đồ (sau thân, trước thân) của đúng khung fr, theo điểm neo. Nhớ theo khung và neo.
+  // Thân AI: hai lớp đồ (sau thân, trước thân) khoác lên đúng khung ảnh AI đang hiện. Đồ KHÔNG theo khung xương code (lúc chém,
+  // lộn khung xương nhảy, vươn người nên đồ bay lệch khỏi thân AI): đồ dựng ở tư thế ĐỨNG YÊN rồi bám theo chính thân AI:
+  // neo: { dau, than } chỗ đặt đồ (tệp em bé ghi, chỉnh trong công cụ); khop (js/sprite_custom.js tự đo trên từng khung ảnh AI):
+  //   { dau: [dx, dy], than: [dx, dy] } thân AI khung này dời bao nhiêu so với khung đứng thở đầu tiên (đầu, thân riêng), hoặc
+  //   { rot, x, y } (lộn, ngã) thân AI khung này xoay rot độ và dời: đồ ghép lên thân rồi xoay, dời CẢ KHỐI theo đúng như vậy.
+  // Nhớ theo khung ảnh AI, đồ đang mặc, nhịp đung đưa, neo.
   const LCACHE = new Map();
-  function lopDo(fr, neo) {
-    const nk = neo ? [neo.dau || '', neo.than || ''].join(';') : '';
-    const id = fr.id + '#' + nk;
+  const cong2 = (a, b) => [((a && a[0]) || 0) + ((b && b[0]) || 0), ((a && a[1]) || 0) + ((b && b[1]) || 0)];
+  function lopDo(fr, neo, khop) {
+    khop = khop || null;
+    const quay = !!(khop && khop.rot != null);
+    // nhịp đung đưa của vải: theo bước chạy khi chạy, lay nhẹ khi đứng; các động tác khác đứng yên
+    const an = fr.anim === 'run' ? 'run' : 'idle', f = an === 'run' || fr.anim === 'idle' ? fr.f | 0 : 0;
+    const nd = cong2(neo && neo.dau, !quay && khop && khop.dau), nt = cong2(neo && neo.than, !quay && khop && khop.than);
+    const id = [fr.key, ofKey(fr.of), fr.tint, an + f, nd.join(','), nt.join(','), quay ? [khop.rot, khop.x, khop.y].join(',') : ''].join('|');
     let r = LCACHE.get(id);
     if (r) return r;
     if (LCACHE.size >= 1400) LCACHE.clear();
-    const mk = (only) => { const sp = kidSprite(fr.key, fr.of, fr.ps, fr.tint, only, neo); return { cv: sp.cv, ox: fr.ps.x - sp.ox, oy: fr.ps.y - sp.oy, trong: sp.bb.x1 < sp.bb.x0 || (sp.cv.width <= 1 && sp.cv.height <= 1) }; };
+    const ps = finishPose(pose(fr.key, 'none', 'idle', 0, 0));
+    ps.anim = an; ps.f = f; ps.hdy = 0;
+    if (quay) { ps.rot = khop.rot; ps.x = khop.x; ps.y = khop.y; }
+    const n2 = { dau: nd, than: nt };
+    const mk = (only) => { const sp = kidSprite(fr.key, fr.of, ps, fr.tint, only, n2); return { cv: sp.cv, ox: ps.x - sp.ox, oy: ps.y - sp.oy, trong: sp.bb.x1 < sp.bb.x0 || (sp.cv.width <= 1 && sp.cv.height <= 1) }; };
     r = { sau: mk('aiSau'), truoc: mk('aiTruoc') };
     LCACHE.set(id, r);
     return r;
