@@ -1,6 +1,6 @@
 """AUDIT (phiên au-vu-khi-he): ba hệ Lửa, Độc, Băng ở các mốc Trắng / Mầm (30) / Thành hình (120) / Thức tỉnh (300).
 Chỉ đọc số, không đổi luật chơi. Chạy (từ thư mục game):  python3 tests/au_he.py [giây] [hạt giống]
-Bot đánh cụm 5 quái mới (máu x2,5) trong phòng thường, cả 4 vũ khí, lấy trung bình. Đo: st/giây (tách đòn trực tiếp, cháy/độc theo
+Bot đánh cụm 5 quái mới (đặt MOT=1 để đánh 1 quái máu dày) (máu x2,5) trong phòng thường, cả 4 vũ khí, lấy trung bình. Đo: st/giây (tách đòn trực tiếp, cháy/độc theo
 nhịp, phản ứng hệ), máu mất mỗi giây, % quái đang bị khống chế (chậm vì Băng, đóng băng, choáng, giữ chân), tốc độ trung bình của
 quái (1 = bình thường, 0 = đứng im), dấu ấn mỗi phút. Số này đo riêng cho phiên audit, không thay tests/dps.py.
 """
@@ -79,7 +79,7 @@ def main():
                 n = len(WT) * SEEDS
                 for wt in WT:
                     for s in range(SEEDS):
-                        r = pg.evaluate(JS, [wt, el, mk, SECS, 700 + s * 13, False])
+                        r = pg.evaluate(JS, [wt, el, mk, SECS, 700 + s * 13, bool(os.environ.get('MOT'))])
                         if r['bad'] or errs:
                             print('LỖI', wt, r['bad'], errs[:3]); sys.exit(1)
                         for k in cols: tot[k] += r[k] / n

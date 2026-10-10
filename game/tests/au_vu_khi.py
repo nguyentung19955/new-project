@@ -5,6 +5,7 @@ Phần 2 (bot chơi trong phòng thường, quái mới thật, giống tests/dp
   - st/giây vào cụm 5 quái và vào 1 quái máu dày (đo riêng, KHÔNG thay số của tests/dps.py hay phiên au-chien-dau)
   - số quái trúng trung bình mỗi nhịp đánh trúng (gom các lần G.damage nguồn 'hit' trong cùng một khung)
   - % thời gian đang ra đòn (bị chậm 60%), số lần né mỗi phút, máu mất mỗi giây
+  - % nhát đã vung mà bị huỷ trước lúc chạm (vì Né, bị đánh...), đo bằng nhát bắt đầu so với nhát gây sát thương
   - dấu ấn mỗi phút khi vũ khí ở mốc Mầm Lửa (tỉ lệ gây hệ 20%) và Trắng (không hệ) — chỉ từ quái thường bị kết liễu khi đang dính hệ
 """
 import os, sys, json
@@ -48,7 +49,7 @@ JS = r"""
   Object.assign(G.botCfg, { prefer: wtype, explore: false, props: false });
   if (G.curW(P).type !== wtype) P.cur = 1 - P.cur;
   P.markMult = 1;
-  let dealt = 0, hurt = 0, frameHits = 0, hitFrames = 0, hitEvents = 0, atkT = 0;
+  let starts = 0, landed = 0, dealt = 0, hurt = 0, frameHits = 0, hitFrames = 0, hitEvents = 0, atkT = 0;
   const dmg0 = G.damage, hurt0 = G.hurtPlayer;
   let seen = new Set();
   G.damage = function (t, amt, o) {
@@ -70,7 +71,10 @@ JS = r"""
         e.inside = true; spawned++;
       }
       seen = new Set();
+      const a0 = P.atkT, h0 = P.hitDone;
       G.sim(1);
+      if (P.atkT > a0 + 0.05 && !P.hitDone) starts++;
+      if (!h0 && P.hitDone && a0 > 0) landed++;
       if (seen.size) { hitFrames++; }
       if (P.atkT > 0 || P.dashT > 0 || (P.mv && P.mv.holding)) atkT++;
       if (S.mode !== 'play') { bad = 'thoát khỏi trận: ' + S.mode; break; }
@@ -78,7 +82,7 @@ JS = r"""
     }
   } finally { G.damage = dmg0; G.hurtPlayer = hurt0; G.rnd = Math.random; }
   return { dps: dealt / secs, hurt: hurt / secs, perHit: hitFrames ? frameHits / hitFrames : 0, kills: spawned - (one ? 1 : 5), dodgesMin: (S.stats.dodges - d0) / secs * 60,
-           busy: atkT / (secs * 60), marksMin: (W.marksGained - m0) / secs * 60, bad };
+           busy: atkT / (secs * 60), cancel: starts ? Math.max(0, 1 - landed / starts) : 0, marksMin: (W.marksGained - m0) / secs * 60, bad };
 }
 """
 
@@ -100,7 +104,7 @@ def main():
         for r in st:
             print('  ', json.dumps(r, ensure_ascii=False))
         print('\n== PHẦN 2: bot, phòng thường, quái mới (máu x2,5), %d giây x %d hạt giống' % (SECS, SEEDS))
-        print('%-7s %-10s %8s %8s %8s %8s %8s %8s %8s' % ('vũ khí', 'cảnh', 'st/giây', 'mất/giây', 'quái/nhịp', '%raĐòn', 'né/phút', 'hạ', 'ấn/phút'))
+        print('%-7s %-10s %8s %8s %8s %8s %8s %8s %8s %6s' % ('vũ khí', 'cảnh', 'st/giây', 'mất/giây', 'quái/nhịp', '%raĐòn', 'né/phút', 'hạ', 'ấn/phút', '%huỷ'))
         for wt in ['sword', 'bow', 'spear', 'hammer']:
             for name, el, mk, one in [('cụm 5', None, 0, False), ('1 quái', None, 0, True), ('cụm, Mầm Lửa', 'fire', 30, False)]:
                 tot = {}
@@ -111,7 +115,7 @@ def main():
                     for k, v in r.items():
                         if k != 'bad': tot[k] = tot.get(k, 0) + v / SEEDS
                 res[wt + '|' + name] = tot
-                print('%-7s %-10s %8.1f %8.2f %8.2f %7.0f%% %8.1f %8.1f %8.1f' % (wt, name[:10], tot['dps'], tot['hurt'], tot['perHit'], tot['busy'] * 100, tot['dodgesMin'], tot['kills'], tot['marksMin']))
+                print('%-7s %-10s %8.1f %8.2f %8.2f %7.0f%% %8.1f %8.1f %8.1f %5.0f%%' % (wt, name[:10], tot['dps'], tot['hurt'], tot['perHit'], tot['busy'] * 100, tot['dodgesMin'], tot['kills'], tot['marksMin'], tot['cancel'] * 100))
                 sys.stdout.flush()
         b.close()
     with open(os.path.join(ROOT, 'tests', 'au_vu_khi_ketqua.json'), 'w') as f:

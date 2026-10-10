@@ -66,7 +66,7 @@ JS = r"""
 
 SAVES = [{'k': 1.0}, {'k': 1.0}, {'k': 1.0}]  # hệ số so với Sức mạnh khuyên dùng (bản lưu dựng tự động trong JS)
 CASES = [('phòng quái 1-3', 0, 2, 'fight'), ('phòng quái 2-3', 1, 2, 'fight'), ('phòng quái 3-3', 2, 2, 'fight'),
-         ('trùm nhỏ Cua Đá 2-3', 1, 2, 'boss'), ('Mộc Tinh 1-5', 0, 4, 'boss'), ('Ngư Tinh 2-5', 1, 4, 'boss'), ('Hồ Tinh 3-5', 2, 4, 'boss')]
+         ('trùm nhỏ Cua Đá 2-3', 1, 2, 'boss'), ('trùm nhỏ Hổ Lửa 3-3', 2, 2, 'boss'), ('Mộc Tinh 1-5', 0, 4, 'boss'), ('Ngư Tinh 2-5', 1, 4, 'boss'), ('Hồ Tinh 3-5', 2, 4, 'boss')]
 
 
 def main():
