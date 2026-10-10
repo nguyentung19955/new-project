@@ -1,0 +1,3 @@
+So bản ngay trước khi sửa (gói lk-2026.10.10-2304) và bản mới, KHÔNG có tệp ghep-* và món đồ KHÔNG có diem:
+5964 khung (thân code smith/hunter + thân AI tạm; đứng, chạy, chém, lăn, ngã, trúng đòn, chiêu, gồng, lấy đà, quét; 4 vũ khí + tay không; đồ code, cánh AI, 6 món AI thử; độ nét 1x và 2x)
+Khác: 0 khung.

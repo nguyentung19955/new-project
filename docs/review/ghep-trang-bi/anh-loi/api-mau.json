@@ -1,0 +1,734 @@
+{
+ "apiCode": {
+  "diem_dung": {
+   "diem": {
+    "dinh_dau": [
+     0.5,
+     -24
+    ],
+    "tam_dau": [
+     0.5,
+     -18
+    ],
+    "gay": [
+     -6,
+     -18
+    ],
+    "mat": [
+     2.5,
+     -18
+    ],
+    "co": [
+     0,
+     -12
+    ],
+    "vai_sau": [
+     -3,
+     -11
+    ],
+    "vai_truoc": [
+     3,
+     -11
+    ],
+    "nguc": [
+     1,
+     -9
+    ],
+    "eo": [
+     0,
+     -7
+    ],
+    "hong": [
+     0,
+     -4
+    ],
+    "khuyu_sau": [
+     -4.5,
+     -9.5
+    ],
+    "khuyu_truoc": [
+     5.35,
+     -8.99
+    ],
+    "tay_sau": [
+     -7,
+     -9
+    ],
+    "tay_truoc": [
+     8.7,
+     -7.99
+    ],
+    "goi_sau": [
+     -2,
+     -3
+    ],
+    "goi_truoc": [
+     1.5,
+     -3
+    ],
+    "chan_sau": [
+     -2,
+     -1
+    ],
+    "chan_truoc": [
+     2,
+     -1
+    ],
+    "lung": [
+     -5,
+     -10
+    ],
+    "goc_canh": [
+     -4,
+     -10
+    ],
+    "cam": [
+     12,
+     -9
+    ]
+   },
+   "nguon": {
+    "dinh_dau": "xuong",
+    "tam_dau": "xuong",
+    "gay": "xuong",
+    "mat": "xuong",
+    "co": "xuong",
+    "vai_sau": "xuong",
+    "vai_truoc": "xuong",
+    "nguc": "xuong",
+    "eo": "xuong",
+    "hong": "xuong",
+    "khuyu_sau": "xuong",
+    "khuyu_truoc": "xuong",
+    "tay_sau": "xuong",
+    "tay_truoc": "xuong",
+    "goi_sau": "xuong",
+    "goi_truoc": "xuong",
+    "chan_sau": "xuong",
+    "chan_truoc": "xuong",
+    "lung": "xuong",
+    "goc_canh": "xuong",
+    "cam": "xuong"
+   },
+   "uoc_luong": [],
+   "than": "code",
+   "dong_tac": "idle",
+   "khung": 0,
+   "goc": {
+    "than": 0,
+    "dau": 0
+   },
+   "gocThan": 0,
+   "gocDau": 0
+  },
+  "dat_ao_dung": {
+   "ma": "tp-robes-thu",
+   "o": "robes",
+   "than": "code",
+   "dong_tac": "idle",
+   "khung": 0,
+   "lop": "than",
+   "da_chinh": true,
+   "an": false,
+   "hien": true,
+   "uoc_luong": false,
+   "chua_chinh": false,
+   "diem_chung": [
+    "co",
+    "vai_sau",
+    "vai_truoc",
+    "hong"
+   ],
+   "bien_the": null,
+   "rong": 12,
+   "cao": 12,
+   "net": 2,
+   "x": -5,
+   "y": -13,
+   "sx": 0.91,
+   "sy": 0.91,
+   "xoay": 0
+  },
+  "dat_canh_lan": {
+   "ma": "tp-wings-thu",
+   "o": "wings",
+   "than": "code",
+   "dong_tac": "dodge",
+   "khung": 3,
+   "lop": "sau",
+   "da_chinh": false,
+   "an": false,
+   "hien": true,
+   "uoc_luong": false,
+   "chua_chinh": false,
+   "diem_chung": [
+    "goc_canh"
+   ],
+   "bien_the": null,
+   "rong": 16,
+   "cao": 16,
+   "net": 2,
+   "x": -4.17,
+   "y": -34.28,
+   "sx": 1,
+   "sy": 1,
+   "xoay": 45,
+   "xa": {
+    "x": 2.36,
+    "y": -33.96,
+    "sx": 1,
+    "sy": 1,
+    "xoay": 61,
+    "toi": true
+   }
+  },
+  "dat_mu_chay": {
+   "ma": "tp-hats-thu",
+   "o": "hats",
+   "than": "code",
+   "dong_tac": "run",
+   "khung": 2,
+   "lop": "truoc",
+   "da_chinh": true,
+   "an": false,
+   "hien": true,
+   "uoc_luong": false,
+   "chua_chinh": false,
+   "diem_chung": [
+    "dinh_dau"
+   ],
+   "bien_the": null,
+   "rong": 16,
+   "cao": 9,
+   "net": 2,
+   "x": -0.89,
+   "y": -33.88,
+   "sx": 1,
+   "sy": 1,
+   "xoay": 12
+  }
+ },
+ "apiAI": {
+  "diem_chay2": {
+   "diem": {
+    "dinh_dau": [
+     5.48,
+     -23.37
+    ],
+    "tam_dau": [
+     4.23,
+     -17.5
+    ],
+    "gay": [
+     -2.13,
+     -18.85
+    ],
+    "mat": [
+     6.19,
+     -17.09
+    ],
+    "co": [
+     2.49,
+     -11.74
+    ],
+    "vai_sau": [
+     -0.65,
+     -11.38
+    ],
+    "vai_truoc": [
+     5.22,
+     -10.14
+    ],
+    "nguc": [
+     2.85,
+     -8.6
+    ],
+    "eo": [
+     1.46,
+     -6.85
+    ],
+    "hong": [
+     0.83,
+     -3.91
+    ],
+    "khuyu_sau": [
+     -2.53,
+     -9.74
+    ],
+    "khuyu_truoc": [
+     5.68,
+     -7.48
+    ],
+    "tay_sau": [
+     -5.18,
+     -9.28
+    ],
+    "tay_truoc": [
+     7.32,
+     -5.6
+    ],
+    "goi_sau": [
+     0.62,
+     -2.93
+    ],
+    "goi_truoc": [
+     0.13,
+     -3.04
+    ],
+    "chan_sau": [
+     2.16,
+     -0.56
+    ],
+    "chan_truoc": [
+     -1.75,
+     -1.39
+    ],
+    "lung": [
+     -2.81,
+     -10.82
+    ],
+    "goc_canh": [
+     -1.83,
+     -10.61
+    ]
+   },
+   "nguon": {
+    "dinh_dau": "tep",
+    "tam_dau": "tep",
+    "gay": "tep",
+    "mat": "tep",
+    "co": "tep",
+    "vai_sau": "tep",
+    "vai_truoc": "tep",
+    "nguc": "tep",
+    "eo": "tep",
+    "hong": "tep",
+    "khuyu_sau": "tep",
+    "khuyu_truoc": "tep",
+    "tay_sau": "tep",
+    "tay_truoc": "tep",
+    "goi_sau": "tep",
+    "goi_truoc": "tep",
+    "chan_sau": "tep",
+    "chan_truoc": "tep",
+    "lung": "tep",
+    "goc_canh": "tep"
+   },
+   "uoc_luong": [],
+   "than": "ai",
+   "dong_tac": "move",
+   "khung": 2,
+   "goc": {
+    "than": 0,
+    "dau": 0
+   },
+   "gocThan": 0,
+   "gocDau": 0
+  },
+  "diem_lan2": {
+   "diem": {
+    "dinh_dau": [
+     0.5,
+     -3
+    ],
+    "tam_dau": [
+     0.5,
+     -9
+    ],
+    "gay": [
+     7,
+     -9
+    ],
+    "mat": [
+     -1.5,
+     -9
+    ],
+    "co": [
+     1,
+     -15
+    ],
+    "vai_sau": [
+     4,
+     -16
+    ],
+    "vai_truoc": [
+     -2,
+     -16
+    ],
+    "nguc": [
+     0,
+     -18
+    ],
+    "eo": [
+     1,
+     -20
+    ],
+    "hong": [
+     1,
+     -23
+    ],
+    "khuyu_sau": [
+     4,
+     -18.5
+    ],
+    "khuyu_truoc": [
+     -2.5,
+     -18.5
+    ],
+    "tay_sau": [
+     5,
+     -20
+    ],
+    "tay_truoc": [
+     -4,
+     -20
+    ],
+    "goi_sau": [
+     3,
+     -24
+    ],
+    "goi_truoc": [
+     -0.5,
+     -24
+    ],
+    "chan_sau": [
+     3,
+     -26
+    ],
+    "chan_truoc": [
+     -1,
+     -26
+    ],
+    "lung": [
+     6,
+     -17
+    ],
+    "goc_canh": [
+     5,
+     -17
+    ]
+   },
+   "nguon": {
+    "dinh_dau": "uoc-luong",
+    "tam_dau": "uoc-luong",
+    "gay": "uoc-luong",
+    "mat": "uoc-luong",
+    "co": "uoc-luong",
+    "vai_sau": "uoc-luong",
+    "vai_truoc": "uoc-luong",
+    "nguc": "uoc-luong",
+    "eo": "uoc-luong",
+    "hong": "uoc-luong",
+    "khuyu_sau": "uoc-luong",
+    "khuyu_truoc": "uoc-luong",
+    "tay_sau": "uoc-luong",
+    "tay_truoc": "uoc-luong",
+    "goi_sau": "uoc-luong",
+    "goi_truoc": "uoc-luong",
+    "chan_sau": "uoc-luong",
+    "chan_truoc": "uoc-luong",
+    "lung": "uoc-luong",
+    "goc_canh": "uoc-luong"
+   },
+   "uoc_luong": [
+    "dinh_dau",
+    "tam_dau",
+    "gay",
+    "mat",
+    "co",
+    "vai_sau",
+    "vai_truoc",
+    "nguc",
+    "eo",
+    "hong",
+    "khuyu_sau",
+    "khuyu_truoc",
+    "tay_sau",
+    "tay_truoc",
+    "goi_sau",
+    "goi_truoc",
+    "chan_sau",
+    "chan_truoc",
+    "lung",
+    "goc_canh"
+   ],
+   "than": "ai",
+   "dong_tac": "ne",
+   "khung": 2,
+   "goc": {
+    "than": 180,
+    "dau": 180
+   },
+   "gocThan": 180,
+   "gocDau": 180
+  },
+  "dat_ao_chem": {
+   "ma": "tp-robes-thu",
+   "o": "robes",
+   "than": "ai",
+   "dong_tac": "atk",
+   "khung": 2,
+   "lop": "than",
+   "da_chinh": true,
+   "an": false,
+   "hien": true,
+   "uoc_luong": false,
+   "chua_chinh": false,
+   "diem_chung": [
+    "co",
+    "vai_sau",
+    "vai_truoc",
+    "hong"
+   ],
+   "bien_the": null,
+   "rong": 12,
+   "cao": 12,
+   "net": 2,
+   "x": -5,
+   "y": -15,
+   "sx": 0.91,
+   "sy": 0.91,
+   "xoay": 0
+  },
+  "dat_mu_nga": {
+   "ma": "tp-hats-thu",
+   "o": "hats",
+   "than": "ai",
+   "dong_tac": "die",
+   "khung": 3,
+   "lop": "truoc",
+   "da_chinh": true,
+   "an": true,
+   "hien": false,
+   "uoc_luong": false,
+   "chua_chinh": false,
+   "diem_chung": [],
+   "bien_the": null,
+   "rong": 16,
+   "cao": 9,
+   "net": 2,
+   "x": null,
+   "y": null,
+   "sx": 1,
+   "sy": 1,
+   "xoay": 0
+  },
+  "chua_chinh": [
+   {
+    "ma": "tp-backs-thu",
+    "o": "backs",
+    "look": "ong_ten",
+    "ly_do": [
+     "chua-duyet"
+    ]
+   },
+   {
+    "ma": "tp-hands-thu",
+    "o": "hands",
+    "look": "bua_lua",
+    "ly_do": [
+     "chua-duyet"
+    ]
+   },
+   {
+    "ma": "tp-masks-thu",
+    "o": "masks",
+    "look": "lua",
+    "ly_do": [
+     "chua-duyet"
+    ]
+   },
+   {
+    "ma": "tp-wings-thu",
+    "o": "wings",
+    "look": "la",
+    "ly_do": [
+     "chua-duyet"
+    ]
+   }
+  ],
+  "cap_vk": {
+   "dx": 1,
+   "dy": 1,
+   "xoay": 0
+  },
+  "kieu_cong_cu": {
+   "diem": {
+    "dinh_dau": [
+     5.48,
+     -23.37
+    ],
+    "tam_dau": [
+     4.23,
+     -17.5
+    ],
+    "gay": [
+     -2.13,
+     -18.85
+    ],
+    "mat": [
+     6.19,
+     -17.09
+    ],
+    "co": [
+     2.49,
+     -11.74
+    ],
+    "vai_sau": [
+     -0.65,
+     -11.38
+    ],
+    "vai_truoc": [
+     5.22,
+     -10.14
+    ],
+    "nguc": [
+     2.85,
+     -8.6
+    ],
+    "eo": [
+     1.46,
+     -6.85
+    ],
+    "hong": [
+     0.83,
+     -3.91
+    ],
+    "khuyu_sau": [
+     -2.53,
+     -9.74
+    ],
+    "khuyu_truoc": [
+     5.68,
+     -7.48
+    ],
+    "tay_sau": [
+     -5.18,
+     -9.28
+    ],
+    "tay_truoc": [
+     7.32,
+     -5.6
+    ],
+    "goi_sau": [
+     0.62,
+     -2.93
+    ],
+    "goi_truoc": [
+     0.13,
+     -3.04
+    ],
+    "chan_sau": [
+     2.16,
+     -0.56
+    ],
+    "chan_truoc": [
+     -1.75,
+     -1.39
+    ],
+    "lung": [
+     -2.81,
+     -10.82
+    ],
+    "goc_canh": [
+     -1.83,
+     -10.61
+    ]
+   },
+   "nguon": {
+    "dinh_dau": "tep",
+    "tam_dau": "tep",
+    "gay": "tep",
+    "mat": "tep",
+    "co": "tep",
+    "vai_sau": "tep",
+    "vai_truoc": "tep",
+    "nguc": "tep",
+    "eo": "tep",
+    "hong": "tep",
+    "khuyu_sau": "tep",
+    "khuyu_truoc": "tep",
+    "tay_sau": "tep",
+    "tay_truoc": "tep",
+    "goi_sau": "tep",
+    "goi_truoc": "tep",
+    "chan_sau": "tep",
+    "chan_truoc": "tep",
+    "lung": "tep",
+    "goc_canh": "tep"
+   },
+   "uoc_luong": [],
+   "than": "ai",
+   "dong_tac": "move",
+   "khung": 2,
+   "goc": {
+    "than": 0,
+    "dau": 0
+   },
+   "gocThan": 0,
+   "gocDau": 0
+  }
+ },
+ "chuaChinhCu": [
+  {
+   "ma": "tp-hats-thu",
+   "o": "hats",
+   "look": "non_la",
+   "ly_do": [
+    "mon-chua-co-diem",
+    "uoc-luong",
+    "chua-duyet"
+   ]
+  },
+  {
+   "ma": "tp-robes-thu",
+   "o": "robes",
+   "look": "ao_vai",
+   "ly_do": [
+    "mon-chua-co-diem",
+    "uoc-luong",
+    "chua-duyet"
+   ]
+  },
+  {
+   "ma": "tp-backs-thu",
+   "o": "backs",
+   "look": "ong_ten",
+   "ly_do": [
+    "mon-chua-co-diem",
+    "uoc-luong",
+    "chua-duyet"
+   ]
+  },
+  {
+   "ma": "tp-hands-thu",
+   "o": "hands",
+   "look": "bua_lua",
+   "ly_do": [
+    "mon-chua-co-diem",
+    "uoc-luong",
+    "chua-duyet"
+   ]
+  },
+  {
+   "ma": "tp-masks-thu",
+   "o": "masks",
+   "look": "lua",
+   "ly_do": [
+    "mon-chua-co-diem",
+    "uoc-luong",
+    "chua-duyet"
+   ]
+  },
+  {
+   "ma": "tp-wings-thu",
+   "o": "wings",
+   "look": "la",
+   "ly_do": [
+    "mon-chua-co-diem",
+    "uoc-luong",
+    "chua-duyet"
+   ]
+  }
+ ]
+}

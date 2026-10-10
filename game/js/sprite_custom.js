@@ -983,12 +983,15 @@
   SC.ngCanh = ngCanh;
   // Điểm neo nhân vật ở một khung. Gọi: diemNhanVat(o) hoặc diemNhanVat({ key, dong_tac, khung, vu_khi }) hoặc diemNhanVat(key, dong_tac, khung).
   // Trả về { diem: { tên: [x, y] tính từ chân }, nguon: { tên: 'xuong' | 'tep' | 'uoc-luong' }, than: 'code' | 'ai', dong_tac, khung, goc: { than, dau } }.
+  // Cũng nhận diemNhanVat(key, o) (o: đối tượng vẽ em bé hoặc { dong_tac, khung, ... }).
+  const thamSo = (a, b, c, tuy) => (typeof a !== 'string' ? a : b && typeof b === 'object' ? Object.assign({}, b, { key: a }) : Object.assign({ key: a, dong_tac: b == null ? 'idle' : b, khung: c }, tuy || {}));
   SC.diemNhanVat = function (a, dong_tac, khung) {
-    const ctx = ngCanh(typeof a === 'string' ? { key: a, dong_tac: dong_tac == null ? 'idle' : dong_tac, khung } : a);
+    const ctx = ngCanh(thamSo(a, dong_tac, khung));
     if (!ctx) return null;
-    const dm = ctx.cx.diemCua(), ps = ctx.cx.ps, diem = {};
-    for (const n in dm.d) diem[n] = [r2(dm.d[n][0] + (ps.x || 0)), r2(dm.d[n][1] + (ps.y || 0))];
-    return { diem, nguon: Object.assign({}, dm.ng), than: ctx.ai ? 'ai' : 'code', dong_tac: ctx.ten, khung: ctx.i, goc: { than: r2(ctx.cx.B.deg), dau: r2(ctx.cx.H.deg) } };
+    const dm = ctx.cx.diemCua(), ps = ctx.cx.ps, diem = {}, uoc = [];
+    for (const n in dm.d) { diem[n] = [r2(dm.d[n][0] + (ps.x || 0)), r2(dm.d[n][1] + (ps.y || 0))]; if (dm.ng[n] === 'uoc-luong') uoc.push(n); }
+    const gt = r2(ctx.cx.B.deg), gd = r2(ctx.cx.H.deg);
+    return { diem, nguon: Object.assign({}, dm.ng), uoc_luong: uoc, than: ctx.ai ? 'ai' : 'code', dong_tac: ctx.ten, khung: ctx.i, goc: { than: gt, dau: gd }, gocThan: gt, gocDau: gd };
   };
   // Một phần đã tính -> phép đặt ảnh tính từ chân: ảnh món đồ (rong x cao điểm ảnh game) vẽ bằng
   //   translate(x, y); rotate(xoay độ); scale(sx, sy); drawImage(ảnh, 0, 0, rong, cao)   (rồi lật theo hướng mặt như em bé).
@@ -1000,11 +1003,11 @@
     if (Math.abs(a) < 0.01) { x = Math.round(x); y = Math.round(y); a = 0; }
     return { x: r2(x), y: r2(y), sx: r2(sx), sy: r2(sy), xoay: r2(a) };
   }
-  // Chỗ đặt một món đồ: datDo(key, maDo, dong_tac, khung, tuyChon) hoặc datDo(o, maDo) (o: đối tượng vẽ em bé của game).
+  // Chỗ đặt một món đồ: datDo(key, maDo, dong_tac, khung, tuyChon), datDo(key, maDo, o) hoặc datDo(o, maDo) (o: đối tượng vẽ em bé của game).
   // Trả về { x, y, sx, sy, xoay, lop, da_chinh, uoc_luong, chua_chinh, an, hien, diem_chung, bien_the, ma, o, rong, cao, than, dong_tac, khung, xa }
   // (xa: lá cánh xa, vẽ tối hơn). null: không có món hoặc chưa nạp xong.
   SC.datDo = function (a, maDo, dong_tac, khung, tuy) {
-    const ctx = ngCanh(typeof a === 'string' ? Object.assign({ key: a, dong_tac: dong_tac == null ? 'idle' : dong_tac, khung }, tuy || {}) : a);
+    const ctx = ngCanh(thamSo(a, dong_tac, khung, tuy));
     const sp0 = doSan(maDo);
     if (!ctx || !sp0 || !sp0.tp) return null;
     const cx = ctx.cx, t0 = sp0.tp, ps = cx.ps;
