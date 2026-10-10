@@ -131,7 +131,8 @@
       <div class="tuy">
         <label><input type="checkbox" id="latNgang"> Lật ngang cả lô (chỉ khi ChatGPT vẽ ngược hướng)</label>
         <label><input type="checkbox" id="locDom" checked> Lọc đốm màu nền</label>
-        <label>Độ nét <select id="doNet"><option value="min">Mịn</option><option value="net">Sắc nét</option></select></label>
+        <label>Độ nét <select id="heNet"><option value="2">Gấp đôi (khuyên dùng)</option><option value="1">Thường</option></select></label>
+        <label>Nét vẽ <select id="doNet"><option value="min">Mịn</option><option value="net">Sắc nét</option></select></label>
         <label>Số màu <select id="soMau"><option value="24">24</option><option value="16">16</option><option value="12">12</option><option value="8">8</option><option value="6">6</option></select></label>
         <button class="nut phu nho" id="nutLamLai">Tách lại</button>
       </div>
@@ -390,7 +391,9 @@ document.addEventListener('paste', (e) => { const it = [...((e.clipboardData || 
 ['catTren', 'catDuoi', 'catTrai', 'catPhai'].forEach((id) => ($(id).onchange = () => { BO = []; if (ANH) chay(true); }));
 $('locDom').onchange = () => ANH && chay(true);
 $('nutLamLai').onclick = () => ANH && chay(true);
-['latNgang', 'doNet', 'soMau'].forEach((id) => ($(id).onchange = () => ANH && chay(false)));
+['latNgang', 'doNet', 'soMau', 'heNet'].forEach((id) => ($(id).onchange = () => ANH && chay(false)));
+// Độ nét gấp đôi: ảnh món đồ có số điểm ảnh gấp 2. Mọi số khác (rong, cao, cam, mui, day, lech) vẫn theo điểm ảnh game.
+const NET = () => (+$('heNet').value === 2 ? 2 : 1);
 
 // ===================== TÁCH NỀN, TÌM TỪNG MÓN =====================
 function layAnh() {
@@ -697,9 +700,10 @@ function lamMon(i) {
   let f = K.src;
   for (let k = 0; k < c.xoay; k++) f = xoay90(f);
   if (c.lat !== $('latNgang').checked) f = latNgang(f);
-  const vien = coVien(), bot = vien ? 2 : 0;
-  let tw = m.w - bot, th = m.h - bot, s;
-  if (L.doi === 'vat-pham') { const k = 18 / Math.max(m.w, m.h); tw = Math.round(m.w * k) - bot; th = Math.round(m.h * k) - bot; s = Math.min(tw / f.w, th / f.h); }
+  // N = độ nét: cỡ ảnh = cỡ game × N; viền ngoài luôn 1 điểm ảnh của ảnh (gọn hơn viền 2 điểm khi gấp đôi)
+  const N = NET(), vien = coVien(), bot = vien ? 2 : 0;
+  let tw = m.w * N - bot, th = m.h * N - bot, s;
+  if (L.doi === 'vat-pham') { const k = 18 / Math.max(m.w, m.h); tw = Math.round(m.w * k) * N - bot; th = Math.round(m.h * k) * N - bot; s = Math.min(tw / f.w, th / f.h); }
   else if (L.doi === 'vu-khi') s = laCung() ? Math.min((1.4 * tw) / f.w, th / f.h) : Math.min(tw / f.w, (1.4 * th) / f.h);
   else s = Math.min(tw / f.w, th / f.h);
   s *= c.co;
@@ -723,14 +727,22 @@ function lamMon(i) {
     }
     for (const j of them) px.set([col[0], col[1], col[2], 255], j * 4);
   }
+  // cỡ ảnh phải chia hết cho N để cỡ game (rong, cao) là số nguyên: thêm cột phải / hàng dưới trong suốt
+  if (W % N || H % N) {
+    const W2 = Math.ceil(W / N) * N, H2 = Math.ceil(H / N) * N, p2 = new Uint8ClampedArray(W2 * H2 * 4);
+    for (let y = 0; y < H; y++) p2.set(px.subarray(y * W * 4, (y + 1) * W * 4), y * W2 * 4);
+    W = W2; H = H2; px = p2;
+  }
   const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
   cv.getContext('2d').putImageData(new ImageData(px, W, H), 0, 0);
   const mau = new Set(); for (let j = 0; j < px.length; j += 4) if (px[j + 3]) mau.add((px[j] << 16) | (px[j + 1] << 8) | px[j + 2]);
-  K.out = { cv, w: W, h: H, px, soMau: mau.size };
+  K.out = { cv, w: W, h: H, px, soMau: mau.size, N }; // w, h: điểm ảnh của ảnh; cỡ game = w/N × h/N
   datDiem(i);
 }
+// Điểm vũ khí (cam, mui, day0, day1) tính theo điểm ảnh của ẢNH (để vẽ, chạm); khi ghi file mới chia N về điểm ảnh game.
+// lech của trang phục tính thẳng theo điểm ảnh game.
 function datDiem(i) { // điểm tự đặt theo quy ước; điểm người dùng chạm (lưu theo tỉ lệ) thì dùng điểm đó
-  const K = KQ[i], c = chinhCua(i), O = K.out, w = O.w, h = O.h, px = O.px, m = L.ds[i];
+  const K = KQ[i], c = chinhCua(i), O = K.out, w = O.w, h = O.h, px = O.px, m = L.ds[i], N = O.N || 1, wg = w / N, hg = h / N;
   const dac = (x, y) => px[(y * w + x) * 4 + 3] > 0;
   let x0 = w, y0 = h, x1 = -1, y1 = -1; for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (dac(x, y)) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
   if (x1 < 0) { x0 = 0; y0 = 0; x1 = w - 1; y1 = h - 1; }
@@ -749,18 +761,22 @@ function datDiem(i) { // điểm tự đặt theo quy ước; điểm người d
     for (const k in c.diem) if (D[k]) D[k] = [c.diem[k][0] * w, c.diem[k][1] * h];
   } else if (L.doi === 'trang-phuc') {
     const o = L.o, C0 = { hats: [0.5, -3.5], masks: [2.5, 0.5], robes: [0, -7], backs: [-5, -8], hands: [3, -2], wings: null }[o];
-    D.lech = o === 'hats' ? [Math.round(0.5 - w / 2), Math.round(2 - h)] : C0 ? [Math.round(C0[0] - w / 2), Math.round(C0[1] - h / 2)] : [-w + 2, -h + 3];
+    D.lech = o === 'hats' ? [Math.round(0.5 - wg / 2), Math.round(2 - hg)] : C0 ? [Math.round(C0[0] - wg / 2), Math.round(C0[1] - hg / 2)] : [-wg + 2, -hg + 3];
     D.lech = [D.lech[0] + c.dl[0], D.lech[1] + c.dl[1]];
     D.kieu = o === 'hands' && m.look === 'bua_con' ? 'cam' : 'bua';
   }
   K.D = D;
 }
 const r2 = (p) => [Math.round(p[0] * 100) / 100, Math.round(p[1] * 100) / 100];
-function phanTep(i, dungCanvas) {
-  const K = KQ[i], m = L.ds[i], c = chinhCua(i), D = K.D;
-  const t = { loai: 'linh-khi-sprite', phien_ban: 1, ma: m.ma, ten: m.ten, doi_tuong: L.doi, rong: K.out.w, cao: K.out.h };
-  if (dungCanvas) t.anhCanvas = K.out.cv; else t.anh = K.out.cv.toDataURL('image/png');
-  if (L.doi === 'vu-khi') t.vu_khi = { loai: L.loai, dong: m.dong, he: null, gd: null, cam: r2(D.cam), mui: r2(D.mui), day: laCung() ? [r2(D.day0), r2(D.day1)] : null };
+// thuong = true: bản độ nét thường (ảnh thu về cỡ game) cho game cũ chưa đọc được "net".
+function phanTep(i, dungCanvas, thuong) {
+  const K = KQ[i], m = L.ds[i], c = chinhCua(i), D = K.D, N = K.out.N || 1, G = (p) => r2([p[0] / N, p[1] / N]);
+  const t = { loai: 'linh-khi-sprite', phien_ban: 1, ma: m.ma, ten: m.ten, doi_tuong: L.doi, rong: K.out.w / N, cao: K.out.h / N };
+  let cv = K.out.cv;
+  if (thuong && N > 1) { cv = document.createElement('canvas'); cv.width = K.out.w / N; cv.height = K.out.h / N; const x = cv.getContext('2d'); x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high'; x.drawImage(K.out.cv, 0, 0, cv.width, cv.height); }
+  else if (N > 1) t.net = N;
+  if (dungCanvas) t.anhCanvas = cv; else t.anh = cv.toDataURL('image/png');
+  if (L.doi === 'vu-khi') t.vu_khi = { loai: L.loai, dong: m.dong, he: null, gd: null, cam: G(D.cam), mui: G(D.mui), day: laCung() ? [G(D.day0), G(D.day1)] : null };
   else if (L.doi === 'trang-phuc') t.trang_phuc = { o: L.o, look: m.look, lech: D.lech.slice(), lop: L.o === 'hats' ? c.lop : 'sau', kieu: D.kieu, tay_ao: L.o === 'robes' ? !!c.tayAo : true };
   else t.vat_pham = m.vp;
   return t;
@@ -815,7 +831,7 @@ function hienKetQua() {
     const K = KQ[i], c = CHINH[i];
     const b = document.createElement('button'); b.type = 'button'; b.className = 'mon' + (i === CHON ? ' chon' : '') + (!K ? ' thieu' : c && c.bo ? ' bo' : '');
     const cv = document.createElement('canvas'); cv.width = 72; cv.height = 72; veVuaO(cv, K && K.out.cv);
-    const tt = !K ? '<span class="tt loi">THIẾU</span>' : c.bo ? '<span class="tt loi">ĐÃ BỎ</span>' : `<span class="tt ok">${K.out.w}×${K.out.h}</span>`;
+    const tt = !K ? '<span class="tt loi">THIẾU</span>' : c.bo ? '<span class="tt loi">ĐÃ BỎ</span>' : `<span class="tt ok">${K.out.w / (K.out.N || 1)}×${K.out.h / (K.out.N || 1)}</span>`;
     b.innerHTML = `<b>${i + 1}. ${m.ten}</b>`; b.prepend(cv); b.insertAdjacentHTML('beforeend', `${tt}<small>${m.ma}</small>`);
     b.onclick = () => { if (!K) { bao('Ảnh không có món này: ' + m.ten); return; } chonMon(i); };
     box.appendChild(b);
@@ -827,10 +843,14 @@ function hienKetQua() {
   if (bo.length) muc.push(['Bạn đã bỏ: ' + bo.join(', ') + ' (không có trong tệp tải)', true, 1]);
   MAP.loi.forEach((t) => muc.push([t, false]));
   MAP.ghi.forEach((t) => muc.push([t, true, 1]));
-  const lech = []; L.ds.forEach((m, i) => { const K = KQ[i]; if (K && !CHINH[i].bo && (K.out.w > m.w * 1.5 || K.out.h > m.h * 1.5)) lech.push(m.ten); });
+  const lech = [], saiCo = []; L.ds.forEach((m, i) => { const K = KQ[i]; if (!K || CHINH[i].bo) return; const N = K.out.N || 1;
+    if (K.out.w / N > m.w * 1.5 || K.out.h / N > m.h * 1.5) lech.push(m.ten);
+    if (K.out.w % N || K.out.h % N || N !== NET()) saiCo.push(m.ten); });
+  const N0 = NET();
+  muc.splice(1, 0, [`Độ nét ${N0 === 2 ? 'gấp đôi: ảnh mỗi món có số điểm ảnh gấp 2 cỡ trong game, file ghi "net": 2' : 'thường'}` + (saiCo.length ? ' (sai cỡ: ' + saiCo.join(', ') + ')' : ''), !saiCo.length]);
   if (lech.length) muc.push(['To hơn nhiều so với hình gốc, nên xem lại: ' + lech.join(', '), true, 1]);
   muc.push([L.doi === 'vu-khi' ? (laCung() ? 'Tự nhìn: cung dựng đứng, bụng cung bên PHẢI' : 'Tự nhìn: chuôi bên TRÁI, mũi bên PHẢI (sai thì chạm món đó, bấm "Lật ngang")') : 'Tự nhìn: đúng món, đúng thứ tự', true, 1]);
-  const dat = !thieu.length && !MAP.loi.length;
+  const dat = !thieu.length && !MAP.loi.length && !saiCo.length;
   $('dsKiem').innerHTML = muc.map(([t, ok, ghi]) => `<li class="${ok ? (ghi ? 'ghi' : '') : 'loi'}">${t}</li>`).join('');
   $('theKq').className = 'the ' + (dat ? 'dat' : 'hong'); $('theKq').textContent = dat ? 'ĐẠT' : 'CÓ LỖI';
   $('dangCho').textContent = L.ten;
@@ -849,7 +869,8 @@ function chonMon(i, giu) {
   [...$('dsMon').children].forEach((b, k) => b.classList.toggle('chon', k === i));
   $('chiTiet').hidden = false;
   $('tenMon').textContent = (i + 1) + '. ' + m.ten;
-  $('thongSoMon').textContent = `Mã ${m.ma} · hình ${K.out.w}×${K.out.h} điểm ảnh (trong game gốc ${m.w}×${m.h}) · ${K.out.soMau} màu`;
+  const N = K.out.N || 1;
+  $('thongSoMon').textContent = `Mã ${m.ma} · trong game ${K.out.w / N}×${K.out.h / N} điểm ảnh (gốc ${m.w}×${m.h})` + (N > 1 ? ` · ảnh nét gấp đôi ${K.out.w}×${K.out.h}` : '') + ` · ${K.out.soMau} màu`;
   const cd = $('cheDo'); cd.innerHTML = '';
   if (L.doi === 'vu-khi') {
     const ds = [['cam', 'Điểm cầm (đỏ)'], ['mui', 'Mũi (vàng)']]; if (laCung()) ds.push(['day0', 'Đầu dây trên'], ['day1', 'Đầu dây dưới']);
@@ -928,8 +949,14 @@ async function napGame() {
 }
 function dangKy() {
   if (!GAME || CHON < 0 || !KQ[CHON]) return;
-  const SC = GAME.spriteCustom, t = phanTep(CHON, true);
+  // Game đã đọc "net" thì đưa ảnh gấp đôi; game cũ thì đưa bản thường để vẫn hiện đúng cỡ, không lỗi.
+  gNet = gameCoNet() ? NET() : 1;
+  const SC = GAME.spriteCustom, t = phanTep(CHON, true, gNet === 1);
   try { if (maDangKy) SC.remove(maDangKy); SC.add(t); maDangKy = t.ma; } catch (e) { maDangKy = null; }
+}
+let gNet = 1;
+function gameCoNet() {
+  try { const sc = GAME.spriteCustom; if (sc.net || sc.hoTroNet || sc.NET) return true; return /\.net\b/.test(String(sc.add)); } catch (e) { return false; }
 }
 function boDangKyCu() { if (GAME && maDangKy) { try { GAME.spriteCustom.remove(maDangKy); } catch (e) { /* bỏ qua */ } maDangKy = null; } }
 $('chonLo').addEventListener('change', boDangKyCu);
@@ -950,12 +977,22 @@ function xoayVk(O, D, a) {
   }
   return { cv, dx: x0, dy: y0, c, s };
 }
+// x, y: điểm cầm theo điểm ảnh game; vũ khí vẽ theo điểm ảnh của ảnh (gấp N) nên tạm bỏ phóng to của khung xem
 function veVk(g, O, D, x, y, a) {
-  const R = xoayVk(O, D, a); g.drawImage(R.cv, Math.round(x) + R.dx, Math.round(y) + R.dy);
-  if (!laCung()) return;
-  const T = (p) => { const u = p[0] - D.cam[0], v = p[1] - D.cam[1]; return [x + u * R.c - v * R.s, y + u * R.s + v * R.c]; };
-  const A = T(D.day0), B = T(D.day1), n = Math.max(Math.abs(B[0] - A[0]), Math.abs(B[1] - A[1]), 1);
-  g.fillStyle = '#e8e2d0'; for (let k = 0; k <= n; k++) g.fillRect(Math.round(A[0] + ((B[0] - A[0]) * k) / n), Math.round(A[1] + ((B[1] - A[1]) * k) / n), 1, 1);
+  const N = O.N || 1, R = xoayVk(O, D, a); x = Math.round(x) * N; y = Math.round(y) * N;
+  g.save(); g.setTransform(1, 0, 0, 1, 0, 0);
+  g.drawImage(R.cv, x + R.dx, y + R.dy);
+  if (laCung()) {
+    const T = (p) => { const u = p[0] - D.cam[0], v = p[1] - D.cam[1]; return [x + u * R.c - v * R.s, y + u * R.s + v * R.c]; };
+    const A = T(D.day0), B = T(D.day1), n = Math.max(Math.abs(B[0] - A[0]), Math.abs(B[1] - A[1]), 1);
+    g.fillStyle = '#e8e2d0'; for (let k = 0; k <= n; k++) g.fillRect(Math.round(A[0] + ((B[0] - A[0]) * k) / n), Math.round(A[1] + ((B[1] - A[1]) * k) / n), N, N);
+  }
+  g.restore();
+}
+// vẽ ảnh món (điểm ảnh của ảnh) với góc trên trái ở (x, y) điểm ảnh game, đúng độ nét thật
+function veAnh(g, O, x, y, k) {
+  const N = O.N || 1; k = k || 1; g.save(); g.setTransform(1, 0, 0, 1, 0, 0);
+  g.drawImage(O.cv, Math.round(x * N), Math.round(y * N), Math.round(O.w * k), Math.round(O.h * k)); g.restore();
 }
 function veBe(g, x, y) { // em bé đơn giản (quay phải), chân tại (x, y)
   const r = (a, b, w, h, col) => { g.fillStyle = col; g.fillRect(x + a, y + b, w, h); };
@@ -969,8 +1006,10 @@ function khungXem(now) {
   requestAnimationFrame(khungXem);
   if (CHON < 0 || $('chiTiet').hidden || !KQ[CHON]) return;
   const K = KQ[CHON], O = K.out, D = K.D, m = L.ds[CHON], t = (now - t0) / 1000;
-  const VW = 200, VH = 100, buf = khungXem.buf || (khungXem.buf = document.createElement('canvas')); buf.width = VW; buf.height = VH;
-  const g = buf.getContext('2d'); g.imageSmoothingEnabled = false;
+  // khung xem 200×100 điểm ảnh game, vẽ ở độ nét thật: mỗi điểm ảnh game = N điểm (game cũ không có "net" thì 1)
+  const N = O.N || 1, VW = 200, VH = 100, buf = khungXem.buf || (khungXem.buf = document.createElement('canvas'));
+  if (buf.width !== VW * N) { buf.width = VW * N; buf.height = VH * N; }
+  const g = buf.getContext('2d'); g.setTransform(N, 0, 0, N, 0, 0); g.imageSmoothingEnabled = false;
   g.fillStyle = '#17363a'; g.fillRect(0, 0, VW, VH); g.fillStyle = '#12292a'; g.fillRect(0, 70, VW, 30);
   let goiY = '';
   if (L.doi === 'vu-khi') {
@@ -995,18 +1034,19 @@ function khungXem(now) {
     } else {
       veBe(g, 60, 74);
       const at = { hats: [60, 74 - 22, 0.5, 1], robes: [60, 74 - 9, 0.5, 0.5], backs: [54, 74 - 13, 0.5, 0.5], hands: [67, 74 - 9, 0.5, 0.5], masks: [62, 74 - 21, 0.5, 0.5], wings: [58, 74 - 14, 1, 1] }[L.o];
-      g.drawImage(O.cv, Math.round(at[0] - O.w * at[2] + chinhCua(CHON).dl[0]), Math.round(at[1] - O.h * at[3] + chinhCua(CHON).dl[1]));
-      g.drawImage(O.cv, 140 - (O.w >> 1), 50 - (O.h >> 1));
+      const wg = O.w / N, hg = O.h / N;
+      veAnh(g, O, Math.round(at[0] - wg * at[2] + chinhCua(CHON).dl[0]), Math.round(at[1] - hg * at[3] + chinhCua(CHON).dl[1]));
+      veAnh(g, O, 140 - Math.floor(wg / 2), 50 - Math.floor(hg / 2));
       goiY = 'Xem gần đúng: món đồ đặt lên em bé đơn giản (trái) và đúng cỡ (phải). Chưa nạp được mã game để xem như thật.';
     }
   } else {
-    const o = (x, y, s) => { g.fillStyle = '#1a120a'; g.fillRect(x - s / 2 - 2, y - s / 2 - 2, s + 4, s + 4); let k = s / Math.max(O.w, O.h); if (k >= 1) k = Math.floor(k); g.drawImage(O.cv, Math.round(x - (O.w * k) / 2), Math.round(y - (O.h * k) / 2), Math.round(O.w * k), Math.round(O.h * k)); };
+    const o = (x, y, s) => { g.fillStyle = '#1a120a'; g.fillRect(x - s / 2 - 2, y - s / 2 - 2, s + 4, s + 4); let k = (s * N) / Math.max(O.w, O.h); if (k >= 1) k = Math.floor(k); veAnh(g, O, x - (O.w * k) / 2 / N, y - (O.h * k) / 2 / N, k); };
     o(30, 30, 7); o(52, 30, 10); o(80, 30, 18);
     const age = t % 2.4, q = Math.min(1, age / 0.55), lift = age < 0.55 ? Math.sin(q * Math.PI) * 20 : age < 0.8 ? Math.sin(((age - 0.55) / 0.25) * Math.PI) * 4 : 1.5 + Math.sin(t * 3.2) * 1.5;
-    g.fillStyle = 'rgba(0,0,0,.3)'; g.fillRect(144, 76, 12, 2); g.drawImage(O.cv, Math.round(150 - O.w / 2), Math.round(76 - O.h - lift));
+    g.fillStyle = 'rgba(0,0,0,.3)'; g.fillRect(144, 76, 12, 2); veAnh(g, O, 150 - O.w / N / 2, 76 - O.h / N - lift);
     goiY = 'Trái: biểu tượng cỡ 7, 10, 18 (dải tài nguyên, Hành trang). Phải: rơi trên sàn.';
   }
-  const cv = $('cvXem'), z = 3; if (cv.width !== VW * z) { cv.width = VW * z; cv.height = VH * z; }
+  const cv = $('cvXem'), z = N * Math.ceil(3 / N); if (cv.width !== VW * z) { cv.width = VW * z; cv.height = VH * z; } // z bội của N: hiện đúng từng điểm ảnh
   const c = cv.getContext('2d'); c.imageSmoothingEnabled = false; c.drawImage(buf, 0, 0, VW * z, VH * z);
   if ($('goiYXem').textContent !== goiY) $('goiYXem').textContent = goiY;
 }
