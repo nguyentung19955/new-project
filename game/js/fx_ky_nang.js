@@ -17,8 +17,9 @@
   const nHat = (n) => Math.max(0, Math.round(n * cfg('hat')));
   // xác suất sinh hạt theo hệ số hat
   const pHat = (q) => R() < q * cfg('hat');
-  const rung = (a) => { const k = cfg('rung'); if (k > 0) trauma(a * k); };
-  const khung = (ms) => { const k = cfg('khung'); if (k > 0) stop(ms * k); };
+  // trauma/stop của js/fx.js đã tự nhân G.VFX.rung / G.VFX.khung: không nhân thêm lần nữa ở đây
+  const rung = (a) => trauma(a);
+  const khung = (ms) => stop(ms);
 
   // ---------- BẬC CƯỜNG ĐỘ: đòn thường < chí mạng < kỹ năng < chưởng tối thượng ----------
   // Một chỗ để chỉnh. Đòn thường và chí mạng do js/fx.js (fx.hit) xử lý, ghi ở đây để so: rung 0,14 / 0,4; khựng 45 / 115 ms.

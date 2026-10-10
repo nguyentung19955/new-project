@@ -14382,7 +14382,11 @@
           seg(L * 0.5 + f * 4, 5, 1, PL[1]);
           pr(-(10 + f * 5), -3, 2, 1, PL[1]); pr(-(16 - f * 3), 3, 2, 1, PL[1]);
         } else {
-          seg(5, L, 1, 'rgba(255,255,255,0.55)'); seg(5, L * 0.55, 1, PL[1]);
+          // thân vệt sáng sát sau tên, đuôi mảnh dần rồi thành chấm thưa
+          seg(4, L * 0.3, 3, 'rgba(255,255,255,0.16)');
+          seg(4, L * 0.7, 1, 'rgba(255,255,255,0.55)'); seg(4, L * 0.45, 1, PL[1]);
+          c.fillStyle = 'rgba(255,255,255,0.3)';
+          for (let i = Math.round(4 + L * 0.7); i < 4 + L * 1.2; i += 2) c.fillRect(Math.floor(x - ux * (i + 0.5)), Math.floor(y - uy * (i + 0.5)), 1, 1);
           if (o.col && o.col !== '#f1ead9') seg(9, L * 0.5, 3, A_(o.col, 0.35));
         }
       } else if (o.team === 'enemy') {
@@ -14432,10 +14436,11 @@
       if (R() < 0.2) emit(0, x + rr(-B.w, B.w), y - rr(4, B.h), rr(-15, 15), rr(-70, -40), rr(0.3, 0.5), RAMP.ember, 1, 0, 0, null, 1);
     }
     if (v.pn > 0) {
-      const k = 0.25 + 0.12 * v.pn;
+      // bọt, giọt, hơi độc (thưa hơn trước: hạt nổi lên và hào quang độc nằm ở js/fx_ky_nang.js)
+      const k = (0.14 + 0.07 * v.pn) * hatK();
       if (R() < k) emit(11, x + rr(-B.w, B.w), y - rr(3, B.h * 0.9), rr(-4, 4), rr(-22, -10), rr(0.5, 0.85), RAMP.poison, 2, 0, 0, null, 1);
-      if (R() < k * 0.7) emit(5, x + rr(-B.w, B.w) * 0.8, y - rr(4, B.h * 0.6), 0, 5, 0.6, RAMP.poison, 1, 220, 0, y + rr(-1, 2), 1);
-      if (R() < 0.12 + 0.05 * v.pn) emit(2, x + rr(-B.w, B.w), y - rr(2, B.h * 0.7), rr(-5, 5), rr(-12, -5), rr(0.5, 0.8), RAMP.vapor, 3, 0, 0.5, null, 1);
+      if (R() < k * 0.6) emit(5, x + rr(-B.w, B.w) * 0.8, y - rr(4, B.h * 0.6), 0, 5, 0.6, RAMP.poison, 1, 220, 0, y + rr(-1, 2), 1);
+      if (R() < (0.08 + 0.03 * v.pn) * hatK()) emit(2, x + rr(-B.w, B.w), y - rr(2, B.h * 0.7), rr(-5, 5), rr(-12, -5), rr(0.5, 0.8), RAMP.vapor, 3, 0, 0.5, null, 1);
     }
     if (v.ice > 0 || v.frozen) {
       if (R() < 0.3) emit(2, x + rr(-B.w - 3, B.w + 3), y - rr(0, 4), rr(-10, 10), rr(-5, 0), rr(0.5, 0.9), RAMP.mist, 3, 0, 0.5, null, 0);
@@ -14578,31 +14583,34 @@
   };
 
   // ---------- kết hợp hệ và vụ nổ ----------
+  // Hệ số số hạt G.VFX.hat (js/vfx_cfg.js) cho phần kỹ năng: nổ, độc, đạn
+  function hatK() { const v = G.VFX && G.VFX.hat; return v == null ? 1 : v; }
   function blastFire(x, y, r, power) {
     add({ ty: 'scorch', x, y, r: r * 0.55, t: 2.2, ly: 0 });
     addRing(x, y, 5, r, 0.3, '#ffd23f', 4, 0);
     addRing(x, y, 2, r * 0.8, 0.26, '#ff7a2a', 3, 0, 0.05);
     add({ ty: 'flash', x, y: y - 8, r: 12 * power, t: 0.12, c: '#fff3b0', c2: '#ffa53a', ly: 1, sq: true });
-    const n = Math.round(16 * power);
+    const n = Math.round(16 * power * hatK());
     for (let i = 0; i < n; i++) { const a = R() * TAU, d = rr(0, r * 0.5), v = rr(20, 70); emit(9, x + Math.cos(a) * d, y - 4 + Math.sin(a) * d * 0.5, Math.cos(a) * v, Math.sin(a) * v * 0.4 - rr(30, 80), rr(0.3, 0.65), RAMP.fire, R() < 0.5 ? 6 : 4, -40, 1.5, null, 1); }
-    for (let i = 0; i < n * 0.6; i++) { const a = R() * TAU, v = rr(30, r * 1.6); emit(2, x + Math.cos(a) * 6, y - 8 + Math.sin(a) * 4, Math.cos(a) * v, Math.sin(a) * v * 0.5 - 16, rr(0.5, 1.0), R() < 0.5 ? RAMP.smoke : RAMP.dark, R() < 0.5 ? 6 : 4, -14, 2.2, null, 1); }
-    for (let i = 0; i < 8; i++) { const a = R() * TAU, v = rr(60, 150); emit(0, x, y - 6, Math.cos(a) * v, Math.sin(a) * v * 0.6 - 60, rr(0.4, 0.8), RAMP.ember, 1, 220, 0, y + rr(-4, 6), 1); }
+    // khói: ít và nhỏ hơn, toả ra mép và bốc lên nhanh để không che quái ở giữa vụ nổ
+    for (let i = 0; i < n * 0.4; i++) { const a = R() * TAU, v = rr(r * 0.8, r * 1.8); emit(2, x + Math.cos(a) * 8, y - 8 + Math.sin(a) * 4, Math.cos(a) * v, Math.sin(a) * v * 0.5 - 26, rr(0.4, 0.8), R() < 0.6 ? RAMP.smoke : RAMP.dark, R() < 0.4 ? 5 : 3, -18, 2.6, null, 1); }
+    for (let i = 0; i < Math.round(8 * hatK()); i++) { const a = R() * TAU, v = rr(60, 150); emit(0, x, y - 6, Math.cos(a) * v, Math.sin(a) * v * 0.6 - 60, rr(0.4, 0.8), RAMP.ember, 1, 220, 0, y + rr(-4, 6), 1); }
   }
   function blastPoison(x, y, r, power) {
     addRing(x, y, 5, r, 0.34, '#c2f58a', 3, 0);
     addRing(x, y, 2, r * 0.75, 0.3, '#6fcf3a', 2, 0, 0.06);
     add({ ty: 'flash', x, y: y - 8, r: 9 * power, t: 0.1, c: '#e6ffc0', c2: '#8fe04a', ly: 1, sq: true });
-    const n = Math.round(14 * power);
-    for (let i = 0; i < n; i++) { const a = R() * TAU, v = rr(20, r * 1.5); emit(2, x, y - 6, Math.cos(a) * v, Math.sin(a) * v * 0.5 - 6, rr(0.6, 1.2), RAMP.vapor, R() < 0.5 ? 6 : 4, -6, 2.2, null, 1); }
+    const n = Math.round(14 * power * hatK());
+    for (let i = 0; i < n * 0.7; i++) { const a = R() * TAU, v = rr(r * 0.5, r * 1.5); emit(2, x, y - 6, Math.cos(a) * v, Math.sin(a) * v * 0.5 - 6, rr(0.6, 1.1), RAMP.vapor, R() < 0.4 ? 5 : 3, -6, 2.2, null, 1); }
     for (let i = 0; i < n; i++) { const a = R() * TAU, v = rr(40, 130); emit(5, x, y - 8, Math.cos(a) * v, Math.sin(a) * v * 0.5 - rr(60, 140), rr(0.5, 0.9), RAMP.poison, 2, 380, 0, y + rr(-8, 10), 1); }
-    for (let i = 0; i < 7; i++) emit(11, x + rr(-r, r) * 0.6, y + rr(-r, r) * 0.3, 0, rr(-26, -10), rr(0.5, 1.0), RAMP.poison, 2, 0, 0, null, 1);
+    for (let i = 0; i < Math.round(7 * hatK()); i++) emit(11, x + rr(-r, r) * 0.6, y + rr(-r, r) * 0.3, 0, rr(-26, -10), rr(0.5, 1.0), RAMP.poison, 2, 0, 0, null, 1);
   }
   function blastIce(x, y, r, power) {
     addRing(x, y, 5, r, 0.26, '#ffffff', 3, 0);
     addRing(x, y, 2, r * 0.85, 0.3, '#7fd4ff', 2, 0, 0.05);
     add({ ty: 'flash', x, y: y - 8, r: 11 * power, t: 0.1, c: '#ffffff', c2: '#bfeaff', ly: 1 });
     add({ ty: 'spikes', x, y, r: r * 0.7, t: 0.55, ly: 1, sd: R() * 50 });
-    const n = Math.round(16 * power);
+    const n = Math.round(16 * power * hatK());
     for (let i = 0; i < n; i++) { const a = (i / n) * TAU + rr(-0.2, 0.2), v = rr(70, 190); emit(4, x, y - 8, Math.cos(a) * v, Math.sin(a) * v * 0.55 - 30, rr(0.35, 0.7), RAMP.ice, R() < 0.5 ? 2 : 1, 200, 1.5, y + rr(-6, 8), 1); }
     for (let i = 0; i < 8; i++) { const a = R() * TAU, v = rr(20, r); emit(2, x, y - 2, Math.cos(a) * v, Math.sin(a) * v * 0.4, rr(0.5, 0.9), RAMP.mist, 4, 0, 2, null, 0); }
     for (let i = 0; i < 6; i++) emit(6, x + rr(-r, r) * 0.7, y - rr(0, 26), 0, 0, rr(0.25, 0.6), RAMP.ice, 3, 0, 0, null, 1);
@@ -14649,9 +14657,10 @@
   // Dính hiệu ứng mới: một nhúm hạt nhỏ báo hệ
   api('status', (t, el) => {
     const B = bodyOf(t), y = t.y - B.h * 0.5;
-    if (el === 'fire') for (let i = 0; i < 4; i++) emit(9, t.x + rr(-B.w, B.w), y + rr(-4, 6), rr(-10, 10), rr(-60, -30), rr(0.25, 0.4), RAMP.fire, 4, -20, 0, null, 1);
-    else if (el === 'poison') for (let i = 0; i < 4; i++) emit(5, t.x + rr(-B.w, B.w), y, rr(-30, 30), rr(-70, -20), rr(0.4, 0.6), RAMP.poison, 2, 300, 0, t.y + rr(-1, 3), 1);
-    else for (let i = 0; i < 3; i++) emit(6, t.x + rr(-B.w, B.w), y + rr(-8, 8), 0, 0, rr(0.2, 0.35), RAMP.ice, 3, 0, 0, null, 1);
+    const n = Math.round(4 * hatK());
+    if (el === 'fire') for (let i = 0; i < n; i++) emit(9, t.x + rr(-B.w, B.w), y + rr(-4, 6), rr(-10, 10), rr(-60, -30), rr(0.25, 0.4), RAMP.fire, 4, -20, 0, null, 1);
+    else if (el === 'poison') for (let i = 0; i < n; i++) emit(5, t.x + rr(-B.w, B.w), y, rr(-30, 30), rr(-70, -20), rr(0.4, 0.6), RAMP.poison, 2, 300, 0, t.y + rr(-1, 3), 1);
+    else for (let i = 0; i < n - 1; i++) emit(6, t.x + rr(-B.w, B.w), y + rr(-8, 8), 0, 0, rr(0.2, 0.35), RAMP.ice, 3, 0, 0, null, 1);
   });
 
   // ---------- vùng báo trước của quái và trùm khi phát nổ ----------
@@ -19733,9 +19742,12 @@ MA._xong();
   if (!A) return;
   const TAU = Math.PI * 2;
   const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
-  const APPEAR = 0.15, FLASH = 0.22;
+  const APPEAR = 0.15, FLASH = 0.22, CANCEL = 0.16;
 
-  const BT = (G.baoTruoc = { q: [], ghosts: [], on: true, mask: true, errs: 0 });
+  const BT = (G.baoTruoc = { q: [], ghosts: [], gone: [], on: true, mask: true, errs: 0 });
+  // Vùng báo đang hiện ở khung trước / khung này (vật vùng -> hình đã vẽ). Vùng biến mất mà chưa nổ (quái chết, bị choáng
+  // nên đòn bị huỷ) thì mờ dần trong CANCEL giây thay vì tắt phụt.
+  let lastSeen = new Map(), nowSeen = new Map();
   const seen = new WeakMap(); // vật -> lúc thấy lần đầu (G.time), để làm hiện ra mượt cho vùng không có t0
   const fired = new WeakSet(); // vùng đã chớp nổ (khỏi chớp hai lần)
   let curW = null;
@@ -19793,6 +19805,7 @@ MA._xong();
       it.u = t0 ? clamp(1 - z.t / t0, 0, 1) : 0;
       if (z.bomb && z.bomb.fl > 0) { const gone = t0 - z.t, fl = z.bomb.fl; it.age = gone; it.u = gone < fl ? 0 : clamp((gone - fl) / Math.max(0.01, t0 - fl), 0, 1); }
       BT.add(it);
+      nowSeen.set(z, it);
     } else if (!fired.has(z)) {
       fired.add(z);
       const it = geo(z); it.at = G.time;
@@ -19884,7 +19897,33 @@ MA._xong();
     c.lineWidth = 3; c.stroke();
     c.strokeStyle = 'rgba(' + C.rim + ',' + (0.7 + 0.3 * beat * (0.4 + 0.6 * late)).toFixed(3) + ')';
     c.lineWidth = Math.max(1.4 / sc, 0.6); c.stroke();
+    // sắp ra đòn (15% cuối): lòng vùng sáng dần lên và viền trắng dày dần (lấy đà), để biết lúc nào phải né
+    const pre = u > 0.85 ? (u - 0.85) / 0.15 : 0;
+    if (pre > 0) {
+      path(c, it, 1);
+      c.fillStyle = 'rgba(255,236,214,' + (0.16 * pre).toFixed(3) + ')'; c.fill();
+      c.strokeStyle = 'rgba(255,248,236,' + (0.45 + 0.45 * pre).toFixed(3) + ')';
+      c.lineWidth = Math.max(1.4 / sc, 0.6) + 1.2 * pre; c.stroke();
+    }
+    // hướng đòn: các mũi chữ V chạy từ gốc ra ngoài (đường thẳng, hình quạt)
+    if ((it.k === 'line' || (it.k === 'cone' && it.span < TAU - 0.01)) && e > 0.5) chevrons(c, it, C, sc, late);
     c.restore();
+  }
+  function chevrons(c, it, C, sc, late) {
+    const L = it.k === 'line' ? it.len : it.r, sz = it.k === 'line' ? Math.min(7, it.w * 0.32) : Math.min(8, it.r * 0.12);
+    if (L < 24 || sz < 2.5) return;
+    const ph = (G.time * (1.2 + 1.6 * late)) % 1, ca = Math.cos(it.ang), sa = Math.sin(it.ang);
+    c.lineWidth = Math.max(1.2 / sc, 0.6); c.lineJoin = 'round'; c.lineCap = 'round';
+    for (let i = 0; i < 3; i++) {
+      const f = (i + ph) / 3, d = 6 + (L - 14) * f, a = Math.sin(f * Math.PI); // hiện ra ở gốc, tan ở mép
+      const x = it.x + ca * d, y = it.y + sa * d;
+      c.strokeStyle = 'rgba(' + C.rim + ',' + (0.7 * a).toFixed(3) + ')';
+      c.beginPath();
+      c.moveTo(x - ca * sz - sa * sz, y - sa * sz + ca * sz);
+      c.lineTo(x, y);
+      c.lineTo(x - ca * sz + sa * sz, y - sa * sz - ca * sz);
+      c.stroke();
+    }
   }
   // đòn ra: chớp sáng một nhịp rồi tan
   function drawFlash(c, it, f, sc) {
@@ -19953,6 +19992,7 @@ MA._xong();
         if (z.shape === 'circle' || z.shape === 'rect' || z.shape === 'line' || z.shape === 'cone' || z.shape === 'donut') one(geo(z));
       }
       for (const g of BT.ghosts) one(g);
+      for (const g of BT.gone) one(g);
       for (const it of BT.q) one(it); // vòng mọc quái (đã thêm lúc vẽ nền)
       for (const e of W.ents) {
         if (e.dead) continue;
@@ -20052,9 +20092,13 @@ MA._xong();
   BT.draw = function (cam, sx, sy) {
     const q = BT.q;
     const W = G.getWorld ? G.getWorld() : null;
-    if (W !== curW) { curW = W; BT.ghosts.length = 0; }
+    if (W !== curW) { curW = W; BT.ghosts.length = 0; BT.gone.length = 0; lastSeen.clear(); nowSeen.clear(); }
+    // vùng khung trước còn, khung này mất mà chưa nổ: đòn bị huỷ -> mờ dần
+    if (!G.noRender) for (const [z, it] of lastSeen) if (!nowSeen.has(z) && !fired.has(z) && z.dead && BT.gone.length < 40) { it.at = G.time; BT.gone.push(it); }
+    const tmp = lastSeen; lastSeen = nowSeen; nowSeen = tmp; nowSeen.clear();
     BT.ghosts = BT.ghosts.filter((g) => G.time - g.at >= 0 && G.time - g.at < FLASH);
-    if ((!q.length && !BT.ghosts.length) || G.noRender || !W) { q.length = 0; return; }
+    BT.gone = BT.gone.filter((g) => G.time - g.at >= 0 && G.time - g.at < CANCEL);
+    if ((!q.length && !BT.ghosts.length && !BT.gone.length) || G.noRender || !W) { q.length = 0; return; }
     try {
       const sc = G.uiScale || 1, cw = Math.max(1, Math.round(G.W * sc)), ch = Math.max(1, Math.round(G.H * sc));
       if (!cv) { cv = document.createElement('canvas'); cx = cv.getContext('2d'); }
@@ -20064,6 +20108,7 @@ MA._xong();
       const B = [1e9, 1e9, -1e9, -1e9];
       for (const it of q) box(it, B);
       for (const g of BT.ghosts) box(g, B);
+      for (const g of BT.gone) box(g, B);
       const ox = -cam + (sx || 0), oy = sy || 0;
       const bx = clamp(Math.floor(B[0] + ox), 0, G.W), by = clamp(Math.floor(B[1] + oy), 0, G.H);
       const bw = clamp(Math.ceil(B[2] + ox), 0, G.W) - bx, bh = clamp(Math.ceil(B[3] + oy), 0, G.H) - by;
@@ -20077,6 +20122,7 @@ MA._xong();
         drawTele(c, it, sc);
       }
       for (const g of BT.ghosts) drawFlash(c, g, (G.time - g.at) / FLASH, sc);
+      for (const g of BT.gone) { const f = (G.time - g.at) / CANCEL; g.dim = (1 - f) * (1 - f); g.age = 1; drawTele(c, g, sc); }
       if (need && BT.mask !== 0) {
         // xoá chỗ nhân vật: trong phần chung của khung bao lúc vẽ và phần nền đã chụp
         const mx = Math.max(bx, SB[0]), my = Math.max(by, SB[1]), mw = Math.min(bx + bw, SB[0] + SB[2]) - mx, mh = Math.min(by + bh, SB[1] + SB[3]) - my;
@@ -20351,11 +20397,18 @@ MA._xong();
   // ---------- mỗi khung: chớp lúc bắn, hạt rơi theo đường bay, trúng, đụng tường ----------
   let seenW = null, live = new Set();
   const HIT_RAMP = { fire: RAMP.fire, poison: RAMP.poison, ice: RAMP.ice };
-  function impact(x, y, el, big, col, team) {
+  // Hệ số số hạt G.VFX.hat (js/vfx_cfg.js)
+  const hatN = (n) => { const v = G.VFX && G.VFX.hat; return Math.round(n * (v == null ? 1 : v)); };
+  // Nổ ngắn đúng chỗ va chạm. ux, uy: hướng bay của viên đạn (nếu có): vài tia sáng văng tiếp theo hướng đó.
+  function impact(x, y, el, big, col, team, ux, uy) {
     const rp = el ? HIT_RAMP[el] : team === 'player' ? RAMP.steel : RAMP.hurt;
     addRing(x, y, 2, big ? 16 : 10, big ? 0.24 : 0.18, el ? EL_GLOW[el] : col || '#ffffff', big ? 2 : 1, 1);
     add({ ty: 'flash', x, y, r: big ? 7 : 4, t: 0.09, c: '#ffffff', c2: el ? EL_GLOW[el] : col || '#ffd9c8', ly: 1 });
-    const n = big ? 10 : 6;
+    if (ux != null) {
+      const m = hatN(big ? 4 : 2);
+      for (let i = 0; i < m; i++) { const a = Math.atan2(uy, ux) + rr(-0.5, 0.5), v = rr(110, 190); K.streak(x, y, Math.cos(a) * v, Math.sin(a) * v, rr(0.08, 0.14), el ? HIT_RAMP[el] : RAMP.white, 1, rr(4, 7), 0, 4); }
+    }
+    const n = hatN(big ? 10 : 6);
     for (let i = 0; i < n; i++) {
       const a = R() * TAU, v = rr(30, big ? 120 : 80);
       if (el === 'fire') emit(9, x, y, Math.cos(a) * v * 0.6, Math.sin(a) * v * 0.6 - 20, rr(0.2, 0.35), rp, 3, -20, 0, null, 1);
@@ -20409,7 +20462,8 @@ MA._xong();
       }
       // tên xuyên qua quái: mỗi con trúng một lần toé hạt và vòng sóng tại chỗ
       if (o.seen && o.seen.length > (o.dSeen || 0)) {
-        for (let i = o.dSeen || 0; i < o.seen.length; i++) impact(o.x, py, el, o.big, '#ffffff', 'player');
+        const sp = Math.hypot(o.vx, o.vy) || 1;
+        for (let i = o.dSeen || 0; i < o.seen.length; i++) impact(o.x, py, el, o.big, '#ffffff', 'player', o.vx / sp, o.vy / sp);
         o.dSeen = o.seen.length;
         o.dHit = true;
       } else o.dHit = false;
@@ -20435,7 +20489,7 @@ MA._xong();
         else { addRing(o.x, py, 1, 6, 0.15, el ? EL_GLOW[el] : '#e8e2d0', 1, 1); emit(1, o.x, py, o.vx * 0.05, 10, 0.2, el ? HIT_RAMP[el] : RAMP.steel, 2, 0, 0, null, 1); }
       } else {
         const hitP = P && !P.dead && Math.abs(P.x - o.x) < 10 && Math.abs(P.y - o.y) < 11;
-        if (hitP) { impact(o.x, py, el, o.dBig, o.col, 'enemy'); if (o.dBig) trauma(0.18); }
+        if (hitP) { const sp = Math.hypot(o.vx, o.vy) || 1; impact(o.x, py, el, o.dBig, o.col, 'enemy', o.vx / sp, o.vy / sp); if (o.dBig) trauma(0.18); }
         else if (out) wallHit(o, W);
         else { addRing(o.x, py, 1, o.dBig ? 9 : 6, 0.16, el ? EL_GLOW[el] : '#ffb09a', 1, 1); for (let i = 0; i < 3; i++) emit(1, o.x, py, rr(-30, 30), rr(-30, 10), 0.18, el ? HIT_RAMP[el] : RAMP.hurt, 2, 0, 2, null, 1); }
       }
@@ -20465,6 +20519,12 @@ MA._xong();
   const UP = 12; // chưởng bay cao ngang ngực em bé
   const scr = (q) => { const sy = q.uy * zk(), l = Math.hypot(q.ux, sy) || 1; return [q.ux / l, sy / l]; };
   const PURPLE = ['#e2c6ff', '#b98af0', '#9a5fd6', '#6a3fa0'];
+  // Hệ số cường độ, bậc đòn và vòng phép dùng chung (js/fx_ky_nang.js, nạp sau tệp này nên lấy lúc gọi)
+  const KN = () => fx.kyNang;
+  const nHat = (n) => (KN() ? KN().nHat(n) : n);
+  const rung = (a) => (KN() ? KN().rung(a) : trauma(a));
+  // Nhịp sát thương của vệt lửa và mây độc (luật: z.tick đếm ngược, đặt lại bằng z.every): 0..1, 1 = vừa gây sát thương
+  const beat = (z) => (z.every > 0 && z.tick > z.every - 0.16 ? (z.tick - (z.every - 0.16)) / 0.16 : 0);
 
   // ---------- chưởng đang bay ----------
   // Cầu lửa: lõi trắng vàng, vỏ cam, viền đỏ sẫm, lưỡi lửa kéo về sau theo hướng bay
@@ -20533,10 +20593,14 @@ MA._xong();
   // ---------- vệt lửa và mây độc của chưởng trên sàn ----------
   function drawVet(c, z) {
     const t = K.S().t, x = Math.round(z.x), y = Math.round(z.y), k = Math.min(1, z.t / 0.15), id = z.id || 1;
-    if (z.life < 0.35 && ((t * 20) | 0) % 2) return;
-    const rx = Math.max(3, Math.round(z.r * (0.5 + 0.5 * k))), ry = Math.max(2, Math.round(rx * zk() * 0.7));
+    // tan: co lại và thưa dần thay vì tắt phụt; hai khung cuối nhấp nháy
+    const end = z.life < 0.35 ? z.life / 0.35 : 1;
+    if (end < 0.25 && ((t * 20) | 0) % 2) return;
+    const rx = Math.max(3, Math.round(z.r * (0.5 + 0.5 * k) * (0.7 + 0.3 * end))), ry = Math.max(2, Math.round(rx * zk() * 0.7));
     ell(c, x, y, rx, ry, 'rgba(110,34,10,0.55)');
     ell(c, x, y, rx - 2, Math.max(1, ry - 1), 'rgba(255,122,42,0.35)');
+    const b = beat(z);
+    if (b > 0) ring(c, x, y, rx + 1 + Math.round(2 * (1 - b)), ry + 1, 1, b > 0.5 ? '#ffd23f' : '#ff7a2a', b < 0.4);
     for (let i = 0; i < 3; i++) {
       const a = hash(id + i * 3.1) * TAU, d = hash(id * 2 + i) * 0.6;
       tongue(c, Math.round(x + Math.cos(a) * rx * d), Math.round(y + Math.sin(a) * ry * d), Math.round((3 + (Math.sin(t * 13 + i * 2 + id) * 0.5 + 0.5) * 5) * Math.min(1, z.life / 0.6 + 0.3)), 1);
@@ -20544,11 +20608,19 @@ MA._xong();
   }
   function drawMay(c, z) {
     const t = K.S().t, x = Math.round(z.x), y = Math.round(z.y), k = Math.min(1, z.t / 0.2), id = z.id || 1;
-    if (z.life < 0.4 && ((t * 20) | 0) % 2) return;
-    const rx = Math.max(4, Math.round(z.r * (0.4 + 0.6 * k))), ry = Math.max(3, Math.round(rx * zk()));
+    // tan: co lại và thưa dần; hai khung cuối nhấp nháy
+    const end = z.life < 0.45 ? z.life / 0.45 : 1;
+    if (end < 0.25 && ((t * 20) | 0) % 2) return;
+    // mây "thở": bán kính phồng xẹp chậm, không đều
+    const br = 1 + 0.04 * Math.sin(t * 1.7 + id) + 0.03 * Math.sin(t * 2.9 + id * 2);
+    const rx = Math.max(4, Math.round(z.r * (0.4 + 0.6 * k) * (0.75 + 0.25 * end) * br)), ry = Math.max(3, Math.round(rx * zk()));
     // mặt sàn nhuộm độc, viền tím
     ell(c, x, y, rx, ry, 'rgba(40,110,26,0.42)');
     ring(c, x, y, rx, ry, 1, 'rgba(154,95,214,0.75)', true);
+    if (KN()) KN().organic(c, x, y, rx - 1, ry - 1, id * 7.1, end < 1);
+    // nhịp độc: vòng lục co về giữa đúng lúc mây gây sát thương
+    const b = beat(z);
+    if (b > 0) ring(c, x, y, Math.max(2, Math.round(rx * (0.55 + 0.45 * b))), Math.max(2, Math.round(ry * (0.55 + 0.45 * b))), 1, b > 0.5 ? '#c2f58a' : '#b98af0', b < 0.4);
     // màn khói lơ lửng trên mây: các vạch ngang so le trôi qua lại
     for (let j = 0; j < 4; j++) {
       const yy = y - 4 - j * 4, hw = Math.round(rx * (0.95 - j * 0.15)), sh = Math.round(Math.sin(t * (1.2 + j * 0.3) + id + j) * 3);
@@ -20598,6 +20670,15 @@ MA._xong();
         const f = z.kind === 'may' ? drawMay : drawVet;
         add({ ty: 'he', x: z.x, y: z.y, t: z.life + 0.2, ly: 0, draw: (c, o) => { if (o.z.dead || o.z.life <= 0) { o.t = 0; return; } f(c, o.z); }, z });
       }
+      if (z.fxTk != null && z.tick > z.fxTk + 0.05) {
+        // vừa gây sát thương: vài hạt bật lên khắp vùng (giới hạn theo G.VFX.hat)
+        for (let i = 0; i < nHat(3); i++) {
+          const a = R() * TAU, d = Math.sqrt(R()) * z.r * 0.8, px = z.x + Math.cos(a) * d, py = z.y + Math.sin(a) * d * zk();
+          if (z.kind === 'may') emit(1, px, py - 2, rr(-6, 6), rr(-28, -12), rr(0.45, 0.7), R() < 0.4 ? PURPLE : RAMP.poison, 2, -4, 0.8, null, 1);
+          else emit(9, px, py, 0, rr(-50, -25), rr(0.25, 0.4), RAMP.fire, 4, -20, 0, null, 1);
+        }
+      }
+      z.fxTk = z.tick;
       if (!tick) continue;
       if (z.kind === 'may' && R() < 0.5) { const a = R() * TAU, d = Math.sqrt(R()) * z.r * 0.8; emit(2, z.x + Math.cos(a) * d, z.y - rr(4, 16) + Math.sin(a) * d * 0.3, rr(-6, 6), rr(-10, -3), rr(0.6, 1.1), R() < 0.3 ? PURPLE : RAMP.vapor, R() < 0.5 ? 5 : 3, 0, 0.6, null, 1); }
       else if (z.kind === 'vet' && R() < 0.35) emit(9, z.x + rr(-z.r, z.r) * 0.6, z.y + rr(-2, 2), 0, rr(-30, -10), rr(0.2, 0.4), RAMP.fire, 3, -20, 0, null, 1);
@@ -20617,14 +20698,26 @@ MA._xong();
     add({ ty: 'flash', x, y, r: 8 + 6 * (big || 0), t: 0.12, c: '#ffffff', c2: PL.c2, ly: 1 });
     addRing(x, y, 2, 14 + 8 * (big || 0), 0.2, PL.c, 2, 1);
     // bàn tay đẩy ra: một vòng sóng nhỏ trước tay và hạt bắn theo hướng chưởng
-    for (let i = 0; i < 6 + 6 * (big || 0); i++) streak(x, y, v[0] * rr(90, 200) + v[1] * rr(-40, 40), v[1] * rr(90, 200) - v[0] * rr(-40, 40), rr(0.1, 0.2), PL.ramp, 1, rr(5, 10), 0, 3);
-    kick(-v[0] * (1 + 2 * (big || 0)), -v[1]); trauma(0.08 + 0.2 * (big || 0));
+    for (let i = 0; i < nHat(6 + 6 * (big || 0)); i++) streak(x, y, v[0] * rr(90, 200) + v[1] * rr(-40, 40), v[1] * rr(90, 200) - v[0] * rr(-40, 40), rr(0.1, 0.2), PL.ramp, 1, rr(5, 10), 0, 3);
+    kick(-v[0] * (1 + 2 * (big || 0)), -v[1]); rung(0.08 + 0.2 * (big || 0));
+    // vòng phép nhỏ dưới chân lúc ra tay (to và lâu hơn khi tích lực)
+    if (KN() && big > 0) KN().rune(P.x, P.y, 12 + 10 * big, PL, 0.3 + 0.15 * big, 4, 5);
   });
+  // Nổ của chưởng. Bậc cường độ (js/fx_ky_nang.js fx.capDo): chưởng thường là "kỹ năng" (rung vừa, không khựng),
+  // chưởng tích lực là "tối thượng" (rung mạnh, khựng ngắn, chớp màn hình nhẹ, nhiều hạt hơn), luồng phụ của Tam xà nhẹ hơn.
+  // Thêm một vòng phép trên sàn: xuất hiện, đỉnh, tan (chỉ là hình, không phải vùng trúng).
   api('chBoom', (cay, x, y, r, q) => {
-    const power = q && q.big ? 1.6 : 1;
-    if (cay === 'hoa') { blastFire(x, y, r, power); trauma(q && q.big ? 0.35 : 0.14); }
-    else if (cay === 'doc') { blastPoison(x, y, Math.max(16, r * 0.8), q && q.main ? 1 : 0.6); }
-    else blastIce(x, y, r, 1);
+    const big = q && q.big > 0, side = cay === 'doc' && q && !q.main, el = G.CHUONG.trees[cay].el;
+    const k = KN() ? KN().nhan(big ? 'toiThuong' : side ? 'thuong' : 'kyNang', el) : 1;
+    const power = Math.min(1.8, (big ? 1.1 : 1) * k); // số hạt của vụ nổ; js/fx.js còn nhân thêm G.VFX.hat
+    if (cay === 'hoa') blastFire(x, y, r, power);
+    else if (cay === 'doc') blastPoison(x, y, Math.max(16, r * 0.8), side ? 0.6 : power);
+    else blastIce(x, y, r, power);
+    if (KN() && !side) {
+      const PL = pal(el);
+      KN().rune(x, y, r * (big ? 1.05 : 0.95), PL, big ? 0.7 : 0.5, big ? 8 : 6, big ? 3.2 : 2.2);
+      if (big) KN().rune(x, y, r * 0.6, PL, 0.5, 4, -4, 0.06);
+    }
   });
   api('chHit', (kind, e, q) => {
     const y = e.y - Math.min(16, (e.h || 20) * 0.5), v = scr(q);
@@ -20671,12 +20764,341 @@ MA._xong();
     ell(c, h.x + P.face * 4, h.y - 2, r + 1, r + 1, '#7a1e0a'); ell(c, h.x + P.face * 4, h.y - 2, r, r, '#ff7a2a'); ell(c, h.x + P.face * 4, h.y - 3, Math.max(1, r - 2), Math.max(1, r - 2), '#ffd23f');
     if (S && ((S.t * 30) | 0) % 2 && R() < 0.6) emit(1, h.x + P.face * 4 + rr(-12, 12), h.y - 2 + rr(-10, 10), 0, 0, 0.2, RAMP.fire, 2, 0, 0, null, 1);
   }
+  // Vòng phép tích lực dưới chân (lớp sàn): nở dần theo độ tích, xoay nhanh dần, đầy thì sáng trắng nhấp nháy.
+  // Đây là phần "báo trước" của chưởng tối thượng; màu vàng cam điểm ảnh, khác hẳn vùng báo đỏ mịn của quái.
+  function drawChargeGround(c) {
+    const W = G.getWorld(), P = W && W.P;
+    if (!P || !P.chHold || P.dead || !G.chuong) return;
+    const S = K.S();
+    if (!S) return;
+    const k = G.chuong.chargeOf(P), t = S.t, x = Math.round(P.x), y = Math.round(P.y);
+    const r = 9 + 15 * k, ky = zk(), full = k >= 1, blink = full && ((t * 12) | 0) % 2;
+    ring(c, x, y, r, r * ky, 1, full ? (blink ? '#ffffff' : '#ffd23f') : k > 0.5 ? '#ffa53a' : '#ff7a2a', k < 0.15);
+    const n = 6, rot = t * (1.5 + 5 * k);
+    c.fillStyle = full ? '#fff3b0' : '#ffd23f';
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * TAU + rot, px = Math.round(x + Math.cos(a) * r * 0.75), py = Math.round(y + Math.sin(a) * r * 0.75 * ky);
+      c.fillRect(px - 1, py, 3, 1); c.fillRect(px, py - 1, 1, 1);
+    }
+    if (k > 0.3) ring(c, x, y, r * 0.45, r * 0.45 * ky, 1, 'rgba(255,210,63,0.6)', true);
+  }
+  const ground0 = fx.drawGround;
+  fx.drawGround = function (c) {
+    if (ground0) ground0(c);
+    if (G.noRender) return;
+    try { drawChargeGround(c); } catch (e) { fail(e); }
+  };
   const over0 = fx.drawOver;
   fx.drawOver = function (c) {
     if (over0) over0(c);
     if (G.noRender) return;
     try { drawCharge(c); } catch (e) { fail(e); }
   };
+})();
+
+// ===== js/fx_ky_nang.js =====
+// Hiệu ứng KỸ NĂNG (Phase 3 VFX): độc, vòng phép (AoE), tên bay, bậc cường độ đòn.
+// Chỉ là hình ảnh: đọc trạng thái game, không ghi trường nào của luật chơi (vùng trúng, thời gian, sát thương giữ nguyên).
+// Dùng chung kho hạt và kho hình của js/fx.js (emit/add), không tạo đối tượng hay dải màu mới cho từng hạt mỗi khung.
+// Mọi số lượng hạt nhân G.VFX.hat, mọi độ rung nhân G.VFX.rung, mọi khựng hình nhân G.VFX.khung (js/vfx_cfg.js).
+// Nạp sau js/fx_he.js, js/fx_dan.js, js/fx_chuong.js (bọc thêm lên các hàm của chúng).
+(function () {
+  const G = window.G, fx = G.fx;
+  if (!fx || !fx.kit) return;
+  const K = fx.kit;
+  const { api, fail, emit, add, addRing, trauma, stop, RAMP, R, rr, hash, p, star, ring, bodyOf, A_ } = K;
+  const TAU = Math.PI * 2;
+  const zk = () => G.ZK || 0.6;
+
+  // ---------- hệ số cường độ (G.VFX) ----------
+  const cfg = (k) => { const v = G.VFX && G.VFX[k]; return v == null ? 1 : v; };
+  // số hạt theo hệ số hat (làm tròn, có thể về 0 khi tắt)
+  const nHat = (n) => Math.max(0, Math.round(n * cfg('hat')));
+  // xác suất sinh hạt theo hệ số hat
+  const pHat = (q) => R() < q * cfg('hat');
+  // trauma/stop của js/fx.js đã tự nhân G.VFX.rung / G.VFX.khung: không nhân thêm lần nữa ở đây
+  const rung = (a) => trauma(a);
+  const khung = (ms) => stop(ms);
+
+  // ---------- BẬC CƯỜNG ĐỘ: đòn thường < chí mạng < kỹ năng < chưởng tối thượng ----------
+  // Một chỗ để chỉnh. Đòn thường và chí mạng do js/fx.js (fx.hit) xử lý, ghi ở đây để so: rung 0,14 / 0,4; khựng 45 / 115 ms.
+  // chop: chớp sáng cả màn hình (giây, tối đa 0,45 = mức tiến hoá vũ khí), mau: màu chớp. hat: nhân số hạt của vụ nổ.
+  const CAP = (fx.capDo = {
+    thuong: { rung: 0.14, khung: 45, hat: 1, chop: 0 },
+    chiMang: { rung: 0.4, khung: 115, hat: 1.4, chop: 0 },
+    kyNang: { rung: 0.28, khung: 0, hat: 1.15, chop: 0 },
+    toiThuong: { rung: 0.62, khung: 85, hat: 1.7, chop: 0.2 },
+  });
+  // Áp một bậc: rung, khựng, chớp (màu theo hệ). Trả về hệ số nhân số hạt.
+  function nhan(cap, el) {
+    const c = CAP[cap] || CAP.kyNang, S = K.S();
+    rung(c.rung);
+    if (c.khung) khung(c.khung);
+    if (c.chop && S && cfg('rung') > 0) {
+      S.flash = Math.max(S.flash, c.chop);
+      S.flashCol = el === 'fire' ? '255,190,110' : el === 'poison' ? '170,240,120' : el === 'ice' ? '190,230,255' : '255,255,255';
+    }
+    return c.hat;
+  }
+  fx.capNhan = nhan;
+
+  // ---------- VÒNG PHÉP (AoE): xuất hiện -> đỉnh -> tan, vòng ngoài, vòng chấm xoay, ký tự xoay ----------
+  // Chỉ là hình (nằm trên sàn, lớp 0). Bán kính hình có thể khác vùng trúng của luật: không đọc lại để tính trúng.
+  // o: { r, c (màu chính), c2 (màu sáng), d (màu tối), n (số ký tự), sp (tốc độ xoay, rad/giây) }
+  const ARC = new Float32Array(2);
+  function drawRune(c, o, k, x, y) {
+    // ba pha: nở nhanh 0..0,16 (lố một chút), đỉnh 0,16..0,4, tan 0,4..1 (nở thêm chút, thưa điểm ảnh, mảnh dần)
+    const A = 0.16, B = 0.4;
+    let s, th, dth = false, hot = 0;
+    if (k < A) { const u = k / A; s = 0.55 + 0.53 * (1 - (1 - u) * (1 - u)); th = 2; hot = 1; }
+    else if (k < B) { const u = (k - A) / (B - A); s = 1.08 - 0.08 * u; th = 2; hot = 1 - u; }
+    else { const u = (k - B) / (1 - B); s = 1 + 0.12 * u; th = u < 0.5 ? 2 : 1; dth = u > 0.35; if (u > 0.8 && ((K.S().t * 30) | 0) % 2) return; }
+    const r = o.r * s, ky = zk(), t = K.S().t, rot = o.a0 + t * o.sp;
+    // vòng ngoài
+    ring(c, x, y, r, r * ky, th, hot > 0.5 ? o.c2 : o.c, dth);
+    // vòng trong: nét đứt xoay ngược chiều
+    const ri = r * 0.68;
+    c.fillStyle = o.dk;
+    for (let i = 0; i < 16; i++) {
+      if (i & 1 || (dth && i % 4 === 0)) continue;
+      const a = (i / 16) * TAU - rot * 0.7;
+      c.fillRect(Math.round(x + Math.cos(a) * ri) - 1, Math.round(y + Math.sin(a) * ri * ky), 2, 1);
+    }
+    // ký tự xoay giữa hai vòng: mỗi ký tự một vạch ngang + vạch dọc ngắn (kiểu chữ triện)
+    const rm = r * 0.84;
+    c.fillStyle = hot > 0.3 ? '#ffffff' : o.c2;
+    for (let i = 0; i < o.n; i++) {
+      if (dth && i % 2) continue;
+      const a = (i / o.n) * TAU + rot;
+      ARC[0] = Math.round(x + Math.cos(a) * rm); ARC[1] = Math.round(y + Math.sin(a) * rm * ky);
+      c.fillRect(ARC[0] - 1, ARC[1], 3, 1);
+      c.fillRect(ARC[0] + ((i & 1) ? -1 : 1), ARC[1] - 1, 1, 1);
+    }
+    // lúc đỉnh: chấm sáng ở tâm và bốn tia ngắn trên sàn
+    if (hot > 0.2) {
+      const h = Math.round(3 + 4 * hot);
+      c.fillStyle = o.c2;
+      c.fillRect(x - h, y, h * 2 + 1, 1); c.fillRect(x, y - Math.round(h * ky), 1, Math.round(h * ky) * 2 + 1);
+    }
+  }
+  // Thêm một vòng phép. pl: bảng màu hệ (fx.pal). delay: chờ bao lâu mới hiện (giây). Trả về hình đã thêm.
+  // (o.d của js/fx.js là thời gian chờ, nên màu tối để ở o.dk)
+  function runeOf(x, y, r, pl, t, n, sp, delay) {
+    return add({ ty: 'he', x, y, t: t || 0.5, ly: 0, d: delay || 0, draw: drawRune, r, c: pl.c, c2: pl.c2, dk: pl.d, n: n || 6, sp: sp == null ? 2.2 : sp, a0: R() * TAU });
+  }
+  fx.rune = (x, y, r, el, t, n, sp, delay) => { if (G.noRender || !K.S()) return; try { runeOf(x, y, r, K.pal(el), t, n, sp, delay); } catch (e) { fail(e); } };
+
+  // ====================================================================
+  // ĐỘC
+  // ====================================================================
+  // Bảng màu hạt độc: xanh lục ngả tím khi tan (hồi máu thì xanh lục sáng ngả trắng, có dấu cộng: không lẫn).
+  const TOXIC = ['#e6ffc0', '#b6e85a', '#8fd03a', '#5f9a26', '#7a4fb0', '#4a2f78'];
+  const TOX_A = ['rgba(143,224,74,0.55)', 'rgba(111,190,50,0.45)', 'rgba(154,95,214,0.4)', 'rgba(106,63,160,0.25)'];
+  // Hào quang độc trên người: các dải sương mảnh bay vòng quanh thân, mỗi dải một tốc độ, một nhịp phồng xẹp riêng
+  // (chậm và không đều). Chỉ vẽ phần ở trước thân; phần sau thân bị thân che nên bỏ.
+  const WISP = ['#8fe04a', '#b98af0', '#6fcf3a', '#9a5fd6'];
+  function aura(c, e, pn) {
+    const B = bodyOf(e), t = K.S().t, id = e.fxId || 1;
+    const x = e.x, y = e.y, n = pn >= 3 ? 3 : 2;
+    for (let i = 0; i < n; i++) {
+      const sp = (0.55 + hash(id + i * 2.7) * 0.6) * (i & 1 ? -1 : 1), sg = i & 1 ? -1 : 1;
+      const a = hash(id * 1.3 + i) * TAU + t * sp + Math.sin(t * (0.7 + i * 0.23) + i) * 0.6;
+      const rx = B.w + 3 + Math.sin(t * (0.9 + i * 0.31) + id) * 2, ry = 3 + i;
+      const cy = y - B.h * (0.25 + 0.22 * i) + Math.sin(t * 0.8 + i * 1.7) * 2;
+      // một dải 5 điểm nối nhau theo cung: hai điểm đầu đậm (một màu), ba điểm đuôi nhạt (một màu) -> chỉ đổi màu vẽ hai lần
+      for (let h = 0; h < 2; h++) {
+        c.fillStyle = h ? TOX_A[i & 3] : WISP[i];
+        for (let j = h ? 2 : 0; j < (h ? 5 : 2); j++) {
+          const aj = a - j * 0.21 * sg, sn = Math.sin(aj);
+          if (sn < -0.25) continue; // sau thân
+          c.fillRect(Math.round(x + Math.cos(aj) * rx), Math.round(cy + sn * ry), h ? 1 : 2, j === 0 ? 2 : 1);
+        }
+      }
+    }
+    // vết loang mờ dưới chân, phồng xẹp chậm
+    const w = Math.round(B.w + 2 + Math.sin(t * 1.3 + id) * 1.5);
+    c.fillStyle = 'rgba(80,150,40,0.32)';
+    c.fillRect(Math.round(x) - w, Math.round(y), w * 2, 1);
+    c.fillStyle = 'rgba(154,95,214,0.3)';
+    c.fillRect(Math.round(x) - w + 2, Math.round(y) + 1, w * 2 - 4, 1);
+  }
+  const ent0 = fx.entity;
+  fx.entity = function (c, e) {
+    ent0(c, e);
+    if (G.noRender || !K.S() || !e || e.dead || e.hidden) return;
+    try {
+      const pn = e.isPlayer ? (e.st.poison > 0 ? 1 : 0) : e.st.poisonN;
+      if (pn > 0) aura(c, e, pn);
+    } catch (err) { fail(err); }
+  };
+  // Hạt nhỏ nổi lên rồi tan (lơ lửng chậm, hơi trôi ngang), số theo tầng độc
+  function motes(e, pn) {
+    const B = bodyOf(e);
+    if (!pHat(0.16 + 0.06 * pn)) return;
+    emit(1, e.x + rr(-B.w, B.w), e.y - rr(2, B.h * 0.8), rr(-6, 6), rr(-16, -7), rr(0.7, 1.1), TOXIC, R() < 0.3 ? 3 : 2, -4, 0.8, null, 1);
+  }
+  // Vừa dính độc: vòng tím lục quanh thân, giọt bắn lên, một làn hơi
+  const st0 = fx.status;
+  fx.status = function (t, el) {
+    st0(t, el);
+    if (G.noRender || el !== 'poison' || !t || !K.S()) return;
+    try {
+      const B = bodyOf(t), y = t.y - B.h * 0.5;
+      addRing(t.x, y, 3, B.w + 9, 0.22, '#b98af0', 1, 1);
+      addRing(t.x, t.y, 2, B.w + 7, 0.26, '#8fe04a', 1, 0);
+      add({ ty: 'flash', x: t.x, y, r: 5, t: 0.08, c: '#e6ffc0', c2: '#8fe04a', ly: 1 });
+      for (let i = 0; i < nHat(3); i++) emit(1, t.x + rr(-B.w, B.w), y + rr(-4, 4), rr(-10, 10), rr(-30, -14), rr(0.5, 0.8), TOXIC, 2, -6, 0.8, null, 1);
+    } catch (e) { fail(e); }
+  };
+  // Mỗi nhịp sát thương độc: thân "nhói" một nhịp: vòng lục co vào thân, vài bọt vỡ, hạt bay lên. Giới hạn số nhịp mỗi khung.
+  let tickT = -1, tickN = 0;
+  function pulse(e, big) {
+    if (G.time !== tickT) { tickT = G.time; tickN = 0; }
+    if (++tickN > 6) return;
+    const B = bodyOf(e), y = e.y - B.h * 0.45;
+    add({ ty: 'he', x: e.x, y, t: 0.22, ly: 1, draw: drawThrob, w: B.w + 7, h: B.h * 0.5 + 3 });
+    for (let i = 0; i < nHat(big ? 3 : 2); i++) emit(11, e.x + rr(-B.w, B.w), y + rr(-B.h * 0.3, B.h * 0.3), rr(-4, 4), rr(-20, -10), rr(0.3, 0.5), RAMP.poison, 2, 0, 0, null, 1);
+    for (let i = 0; i < nHat(2); i++) emit(1, e.x + rr(-B.w, B.w), y, rr(-8, 8), rr(-26, -12), rr(0.5, 0.8), TOXIC, 2, -4, 0.8, null, 1);
+  }
+  // vòng elip co dần về thân, hai màu xen nhau
+  function drawThrob(c, o, k, x, y) {
+    const s = 1 - 0.45 * k, rx = o.w * s, ry = o.h * s;
+    ring(c, x, y, rx, ry, 1, k < 0.5 ? '#c2f58a' : '#9a5fd6', k > 0.6);
+  }
+  const dmg0 = fx.dmg;
+  fx.dmg = function (t, d, o) {
+    const r = dmg0(t, d, o);
+    if (!G.noRender && o && o.dot && o.el === 'poison' && t && !t.dead && K.S()) { try { pulse(t, t.isBoss); } catch (e) { fail(e); } }
+    return r;
+  };
+
+  // Vũng độc trên đất (vũng của quái và vũng độc theo hệ của mình): vẽ thêm lên hình vũng có sẵn những mảng tối trôi
+  // chậm, mép bò ra bò vào, chấm tím lấm tấm. Vẫn là điểm ảnh, không mờ nhoè. Vũng hồi máu không đụng tới.
+  const OB = new Int16Array(15); // chỗ và cỡ các mảng (dùng lại mỗi khung, không tạo mảng mới)
+  function organic(c, x, y, rx, ry, id, fade) {
+    if (rx < 6) return;
+    const t = K.S().t, n = Math.max(2, Math.min(5, (rx / 7) | 0));
+    for (let i = 0; i < n; i++) {
+      const sp = (0.18 + hash(id + i * 1.9) * 0.22) * (i & 1 ? -1 : 1);
+      const a = hash(id * 2.1 + i * 3.3) * TAU + t * sp;
+      const d = 0.25 + 0.3 * (0.5 + 0.5 * Math.sin(t * (0.35 + i * 0.07) + i * 2 + id));
+      OB[i * 3] = Math.round(x + Math.cos(a) * rx * d); OB[i * 3 + 1] = Math.round(y + Math.sin(a) * ry * d);
+      OB[i * 3 + 2] = Math.round(2 + hash(id + i) * 3 + Math.sin(t * 0.9 + i) * 1);
+    }
+    // mảng tối hình bầu trôi chậm (mặt nhớt), rồi vạch sáng ở mép trên: tím và lục xen nhau
+    c.fillStyle = 'rgba(24,60,16,0.45)';
+    for (let i = 0; i < n; i++) { const bx = OB[i * 3], by = OB[i * 3 + 1], w = OB[i * 3 + 2]; c.fillRect(bx - w, by, w * 2, 2); c.fillRect(bx - w + 1, by - 1, w * 2 - 2, 1); c.fillRect(bx - w + 1, by + 2, w * 2 - 2, 1); }
+    for (let h = 0; h < 2; h++) {
+      c.fillStyle = h ? 'rgba(154,95,214,0.55)' : 'rgba(194,245,138,0.55)';
+      for (let i = h; i < n; i += 2) { const w = OB[i * 3 + 2]; c.fillRect(OB[i * 3] - w + 2, OB[i * 3 + 1] - 1, Math.max(1, w - 2), 1); }
+    }
+    // mép bò: các điểm sáng trên viền nhích ra nhích vào chậm, mỗi điểm một nhịp
+    if (fade || rx < 10) return;
+    const m = Math.min(7, (rx / 4) | 0);
+    for (let h = 0; h < 2; h++) {
+      c.fillStyle = h ? '#9a5fd6' : '#8fe04a';
+      for (let i = 0; i < m; i++) {
+        if ((i % 3 === 0) !== (h === 1)) continue;
+        const a = (i / m) * TAU + hash(id + i * 7) * 0.5 + t * 0.06;
+        const q = 1.02 + 0.07 * Math.sin(t * (0.6 + hash(id + i) * 0.5) + i * 1.3);
+        c.fillRect(Math.round(x + Math.cos(a) * rx * q), Math.round(y + Math.sin(a) * ry * q), 2, 1);
+      }
+    }
+  }
+  const zone0 = fx.zone;
+  fx.zone = function (c, z, W) {
+    const r = zone0(c, z, W);
+    if (!r || G.noRender || !K.S()) return r;
+    try {
+      if (z.pool && z.el === 'poison' && !z.heal && !z.rain && z.shape === 'circle' && !(z.t > 0)) {
+        if (z.he) {
+          // vũng độc theo hệ (js/fx_he.js): hình vẽ sẵn, nở trong 0,18 giây
+          const k = Math.min(1, (z.fxA || 0) / 0.18);
+          if (k <= 0 || (z.life < 0.4 && ((K.S().t * 20) | 0) % 2)) return r;
+          const rx = Math.max(6, Math.round(z.r / 2) * 2) * (0.4 + 0.6 * k);
+          organic(c, Math.round(z.x), Math.round(z.y), rx * 0.9, rx * zk() * 0.9, z.fxId || 1, z.life < 0.4);
+        } else {
+          // vũng của quái (js/fx.js pool): cùng công thức nở và co lại như hình vũng
+          const k = Math.max(0, Math.min(1, ((z.fxA || 0) - (z.fxD || 0)) / 0.22));
+          if (k <= 0) return r;
+          const fade = Math.min(1, z.life / 0.45), rx = z.r * (1 - (1 - k) * (1 - k)) * (0.75 + 0.25 * fade);
+          organic(c, Math.round(z.x), Math.round(z.y), rx - 2, (rx - 2) * zk(), z.fxId || 1, fade < 0.5);
+        }
+      }
+    } catch (e) { fail(e); }
+    return r;
+  };
+
+  // ====================================================================
+  // TÊN VÀ ĐẠN PHÉP CỦA MÌNH: lõi sáng ở mũi, vài hạt bám đường bay (có trần)
+  // ====================================================================
+  const proj0 = fx.proj;
+  fx.proj = function (c, o) {
+    proj0(c, o);
+    if (G.noRender || o.team !== 'player' || o.kind !== 'arrow' || !K.S()) return;
+    try {
+      const sp = Math.hypot(o.vx, o.vy) || 1, ux = o.vx / sp, uy = o.vy / sp;
+      const x = o.x + ux * 6, y = o.y - (o.z || 10) + uy * 6, t = K.S().t;
+      // lõi sáng ở mũi tên: chấm trắng, chớp tia chữ thập theo nhịp (to hơn với tên lớn)
+      const f = ((t * 20 + (o.x | 0) * 0.13) | 0) % 4;
+      p(c, Math.round(x), Math.round(y), 1, 1, '#ffffff');
+      if (o.big) star(c, x, y, f === 0 ? 3 : 2, 'rgba(255,255,255,0.85)', '#ffffff');
+      else if (f === 0) star(c, x, y, 2, 'rgba(255,255,255,0.7)');
+    } catch (e) { fail(e); }
+  };
+
+  // ====================================================================
+  // VÒNG PHÉP CHO CÁC KỸ NĂNG VÙNG KHÁC (bọc thêm, không đổi hình cũ)
+  // ====================================================================
+  function wrap(name, f) {
+    const f0 = fx[name];
+    if (!f0) return;
+    fx[name] = function (a, b, c, d, e) {
+      const r = f0(a, b, c, d, e);
+      if (!G.noRender && K.S()) { try { f(a, b, c, d, e); } catch (err) { fail(err); } }
+      return r;
+    };
+  }
+  // (Địa Chấn của búa đã có vòng sóng và vết nứt riêng: không thêm vòng phép để màn hình khỏi rối)
+  // Nổ lan (quái đang cháy chết thì nổ): vòng phép lửa đúng bán kính hình nổ
+  wrap('heBoom', (e, r) => runeOf(e.x, e.y, r * 0.9, K.pal('fire'), 0.45, 6, 2.6));
+  // Kết hợp hệ: Nổ khói, Sốc nhiệt
+  wrap('combo', (kind, t) => runeOf(t.x, t.y, 32, K.pal(kind === 'smoke' ? 'fire' : 'ice'), 0.5, 8, kind === 'smoke' ? 2.4 : -3));
+
+  // ====================================================================
+  // MỖI KHUNG
+  // ====================================================================
+  let seenW = null, pDot = 0;
+  function step(W, tick) {
+    if (seenW !== W) { seenW = W; pDot = 0; }
+    const P = W.P;
+    if (tick) {
+      // hạt độc nổi lên trên quái, trùm và em bé đang trúng độc
+      for (const e of W.ents) if (!e.dead && !e.hidden && e.st && e.st.poisonN > 0) motes(e, e.st.poisonN);
+      if (W.boss && !W.boss.dead && W.boss.st && W.boss.st.poisonN > 0) motes(W.boss, W.boss.st.poisonN);
+      if (P && !P.dead && P.st.poison > 0) motes(P, 1);
+      // tên của mình: một hạt nhỏ bám đường bay mỗi nhịp, mỗi mũi tên tối đa 6 hạt
+      for (const o of W.projs) {
+        if (o.team !== 'player' || o.kind !== 'arrow' || (o.kyN | 0) >= 6) continue;
+        o.kyN = (o.kyN | 0) + 1;
+        const sp = Math.hypot(o.vx, o.vy) || 1;
+        if (pHat(0.8)) emit(0, o.x - (o.vx / sp) * 8, o.y - (o.z || 10) + rr(-1, 1), -o.vx * 0.04, rr(-6, 6), rr(0.12, 0.2), o.he ? K.pal(o.he.el).ramp : RAMP.white, 1, 0, 0, null, 1);
+      }
+    }
+    // em bé mất máu vì độc: đồng hồ nhịp (P.dotT) vừa quay lại đầu là một nhịp
+    if (P && !P.dead) {
+      if (P.st.poison > 0 && P.dotT > pDot + 0.2) pulse(P, false);
+      pDot = P.dotT;
+    }
+  }
+  const he0 = fx.heStep;
+  fx.heStep = function (W, dt, tick) {
+    if (he0) he0(W, dt, tick);
+    if (G.noRender) return;
+    try { step(W, tick); } catch (e) { fail(e); }
+  };
+  fx.kyNang = { TOXIC, nHat, pHat, rung, khung, nhan, rune: runeOf, organic }; // cho js/fx_chuong.js và bài kiểm tra
+  void api;
 })();
 
 // ===== js/btn_art.js =====
