@@ -756,6 +756,37 @@
     CL.google().then((r) => { V.tMsg = r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google, giữ nguyên tiến trình.' : 'Đã đăng nhập Google.'; }, (e) => { V.tMsg = 'Chưa đăng nhập được: ' + e.message; })
       .then(() => { V.gBusy = false; V.tMsgT = 8; say(V.tMsg); });
   }
+  // Bố cục màn chào (toạ độ 480x270), Giai đoạn 4 yêu cầu 2: logo > nút chính > nút phụ > dòng thông tin.
+  // Nút nào chạy ngay trong lúc chạm (G.syncTaps) thì dùng đúng ô của nút vẽ.
+  const TL = { main: [140, 128, 200, 32], play: [160, 128, 160, 32], guest: [180, 168, 120, 20], row: [[128, 168, 108, 22], [244, 168, 108, 22]], info: 210 };
+  G.titleLayout = TL; // để bài kiểm tra biết nút nằm ở đâu
+  // Lớp tối dịu phía sau khối chữ và nút: hình elip tối dần ra mép (không phủ cả màn), để chữ không đè lên nhà cửa sáng.
+  function titleVeil() {
+    const c = G.ux; c.save();
+    c.translate(240, 128); c.scale(1, 0.62);
+    const gr = c.createRadialGradient(0, 0, 20, 0, 0, 190);
+    gr.addColorStop(0, 'rgba(8,6,10,0.78)'); gr.addColorStop(0.55, 'rgba(8,6,10,0.56)'); gr.addColorStop(1, 'rgba(8,6,10,0)');
+    c.fillStyle = gr; c.fillRect(-200, -210, 400, 420);
+    c.restore();
+  }
+  // Tiêu đề: chữ LINH KHÍ có viền tối dày + bóng đổ lệch xuống, dòng phụ SPIRITBLADE giãn chữ (tên miền spiritblade.web.app).
+  function titleLogo() {
+    const u = G.ux;
+    T.drum(240, 30, 20, 0.85); // mặt trống đồng nhỏ làm biểu tượng, nằm trên chữ (không còn nằm sau chữ)
+    ui.font(38, true); u.textAlign = 'center'; u.lineJoin = 'round';
+    u.fillStyle = 'rgba(0,0,0,0.55)'; u.fillText('LINH KHÍ', 240, 89);
+    u.lineWidth = 5; u.strokeStyle = '#1a120a'; u.strokeText('LINH KHÍ', 240, 86);
+    ui.text('LINH KHÍ', 240, 86, { size: 38, bold: true, align: 'center', color: GOLD, shadow: false });
+    // vệt sáng mảnh trên nửa trên mặt chữ (ánh kim loại), chỉ một dải, không phát sáng
+    u.save(); u.beginPath(); u.rect(120, 58, 240, 12); u.clip();
+    ui.text('LINH KHÍ', 240, 86, { size: 38, bold: true, align: 'center', color: '#fff6d8', shadow: false }); u.restore();
+    // dòng phụ: chữ giãn rộng, hai gạch đồng hai bên
+    ui.font(9, true);
+    const sub = 'S P I R I T B L A D E', sw = u.measureText(sub).width;
+    u.fillStyle = '#a8752f'; u.fillRect(Math.round(240 - sw / 2 - 26), 98, 18, 1); u.fillRect(Math.round(240 + sw / 2 + 8), 98, 18, 1);
+    ui.text(sub, 240, 101.5, { size: 9, bold: true, align: 'center', color: '#d9a441' });
+    ui.text('Vũ khí lớn lên theo bạn. Yêu tinh học theo bạn.', 240, 116, { size: 8, align: 'center', color: TXT });
+  }
   G.Title = {
     enter() { VS.enter({ from: 'keep' }); VS.state.x = 470; VS.state.cam = 230; },
     update(dt) {
@@ -763,58 +794,79 @@
       const g = titleGate();
       if (V.tRank) { if (G.keyP.Escape) V.tRank = false; return; } // đang xem Bảng vàng
       if (g.need) { if (g.ok && (G.keyP.Enter || G.keyP.Space)) G.setScene(G.Village); return; } // vào bằng nút "Vào game"
-      // không có mây: chạm chỗ trống để vào; chạm dải nút thì không
-      const onBtns = G.downs.some((d) => d.y > 200 && d.y < 236 && d.x > 120 && d.x < 360);
+      // không có mây: chạm chỗ trống để vào; chạm dải nút phụ thì không
+      const r = TL.row, onBtns = G.downs.some((d) => d.y > r[0][1] - 4 && d.y < r[0][1] + r[0][3] + 4 && d.x > r[0][0] - 4 && d.x < r[1][0] + r[1][2] + 4);
       if ((G.downs.length && !onBtns) || G.keyP.Enter || G.keyP.Space || G.keyP.KeyJ) G.setScene(G.Village);
     },
     draw() {
       const c = G.wx, A = G.art;
       V.tab = 'title';
-      VS.drawWorld({ dim: 0.5, hideHero: true });
-      c.save(); c.translate(96, 250); c.scale(3, 3);
-      A.hero(c, { x: 0, y: 0, face: 1, key: 'smith', move: false, t: G.time, atk: (G.time % 1.6) < 0.4 ? (G.time % 1.6) / 0.4 : -1, dodge: -1, weapon: { type: 'sword', family: 0, rarity: 3, marks: { fire: 300, poison: 0, ice: 0 }, branch: 'fire', sharpen: 0 } });
+      VS.drawWorld({ dim: 0.42, hideHero: true }); // cảnh làng sống (đèn lồng chập chờn, khói lò rèn, đom đóm) dùng lại của village_scene.js
+      // em bé cầm kiếm lửa: phóng đúng 2 lần (điểm ảnh vuông, không vỡ), đứng góc dưới bên trái, không chạm nút
+      c.save(); c.translate(70, 252); c.scale(2, 2);
+      A.hero(c, { x: 0, y: 0, face: 1, key: 'smith', move: false, t: G.time, atk: (G.time % 2.4) < 0.4 ? (G.time % 2.4) / 0.4 : -1, dodge: -1, weapon: { type: 'sword', family: 0, rarity: 3, marks: { fire: 300, poison: 0, ice: 0 }, branch: 'fire', sharpen: 0 } });
       c.restore();
-      T.drum(240, 62, 50, 0.5);
-      const u = G.ux; ui.font(40, true); u.textAlign = 'center'; u.lineJoin = 'round'; u.lineWidth = 5; u.strokeStyle = '#1a120a'; u.strokeText('LINH KHÍ', 240, 78);
-      ui.text('LINH KHÍ', 240, 78, { size: 40, bold: true, align: 'center', color: GOLD });
-      ui.text('Vũ khí lớn lên theo bạn. Yêu tinh học theo bạn.', 240, 100, { size: 10, align: 'center', color: TXT });
+      titleVeil();
       G.syncTaps = [];
       // Bảng vàng mở ngay trên màn mở đầu (không vào làng), có nút đóng
-      if (V.tRank && G.bangVang) {
+      if (!(V.tRank && G.bangVang)) titleLogo();
+      else {
         const px = 80; // giữa màn hình
-        T.panel(px, PY, PW, PH, 'Bảng vàng', { rightPad: 74, noBand: true });
-        if (T.sbtn(px + PW - 66, PY + 3, 60, 17, '✕ Đóng', { size: 8, pad: 5 })) V.tRank = false;
+        T.dim(0.45);
+        const py = PY + 28; // không có hàng thẻ như ở làng: khung thấp xuống, nội dung bảng vàng nằm ngay dưới tiêu đề
+        T.panel(px, py, PW, PH - 28, 'Bảng vàng', { rightPad: 74, noBand: true });
+        if (T.sbtn(px + PW - 66, py + 3, 60, 17, '✕ Đóng', { size: 8, pad: 5 })) V.tRank = false;
         G.bangVang.panel(px + (CX - PX), CW);
         return;
       }
       const { CL, need, ok } = titleGate();
+      const M = TL.main, R0 = TL.row[0], R1 = TL.row[1];
       if (CL && CL.online() && CL.isGuest()) { // nút Đăng nhập chạy ngay trong lúc chạm để Safari không chặn cửa sổ Google
-        if (need && !ok) G.syncTaps.push({ x: 150, y: 150, w: 180, h: 30, fn: () => titleLogin(CL) });
-        if (!need || ok) G.syncTaps.push({ x: 126, y: 206, w: 112, h: 24, fn: () => titleLogin(CL) });
+        if (need && !ok) G.syncTaps.push({ x: M[0], y: M[1], w: M[2], h: M[3], fn: () => titleLogin(CL) });
+        if (!need || ok) G.syncTaps.push({ x: R0[0], y: R0[1], w: R0[2], h: R0[3], fn: () => titleLogin(CL) });
       }
       if (!need) {
-        if (Math.floor(G.time * 2) % 2) T.toastFit(240, 112, 'Chạm để bắt đầu', { size: 11 });
+        // không có mây: chạm đâu cũng vào. Dải chữ sáng lên tối đi nhẹ nhàng (không chớp tắt).
+        const ga = G.ux.globalAlpha; G.ux.globalAlpha = ga * (0.62 + 0.38 * (0.5 + 0.5 * Math.sin(G.time * 3.2)));
+        T.toastFit(240, M[1] + 7, 'Chạm để bắt đầu', { size: 11 });
+        G.ux.globalAlpha = ga;
       } else if (ok) {
-        if (T.btn(180, 150, 120, 30, 'Vào game ▶', { size: 11, primary: true })) G.setScene(G.Village);
+        const P = TL.play;
+        if (T.btn(P[0], P[1], P[2], P[3], 'Vào game ▶', { size: 12, primary: true })) G.setScene(G.Village);
       } else {
-        const loading = !CL.online();
-        if (T.btn(150, 150, 180, 30, loading ? 'Đang kết nối…' : 'Đăng nhập Google để vào', { size: 10, primary: !loading, disabled: loading || V.gBusy })) titleLogin(CL);
+        const loading = !CL.online(), busy = !!V.gBusy;
+        if (T.btn(M[0], M[1], M[2], M[3], loading ? (CL.status === 'error' ? 'Chưa kết nối được mây' : 'Đang kết nối…') : busy ? 'Đang mở Google…' : 'Đăng nhập Google để vào', { size: 11, primary: !loading && !busy, disabled: loading || busy })) titleLogin(CL);
+        if (!loading && !busy) googleMark(M[0] + 17, M[1] + M[3] / 2);
         // mây kết nối hỏng quá 10 giây: cho chơi tạm, chỉ lưu trên máy, để không ai bị kẹt ngoài cửa
         V.tWait = loading ? (V.tWait || 0) + 1 / 60 : 0;
-        if ((CL.status === 'error' || V.tWait > 10) && T.btn(180, 184, 120, 18, 'Chơi tạm (không lưu mây)', { size: 7.5 })) G.setScene(G.Village);
+        const Gs = TL.guest;
+        if ((CL.status === 'error' || V.tWait > 10) && T.btn(Gs[0], Gs[1], Gs[2], Gs[3], 'Chơi tạm (không lưu mây)', { size: 7.5 })) G.setScene(G.Village);
       }
       if (CL) {
         const on = CL.online(), guest = CL.isGuest();
         if (!need || ok) {
-          if (T.btn(126, 206, 112, 24, on && !guest ? '✓ ' + String(CL.who()).slice(0, 14) : 'Đăng nhập Google', { size: 8.5, primary: on && guest, disabled: !on || !guest })) titleLogin(CL);
-          if (T.btn(242, 206, 112, 24, '🏆 Bảng vàng', { size: 8.5, disabled: !G.bangVang })) { V.tRank = true; G.bangVang.reload && G.bangVang.reload(); }
+          if (T.btn(R0[0], R0[1], R0[2], R0[3], on && !guest ? '✓ ' + String(CL.who()).slice(0, 14) : 'Đăng nhập Google', { size: 8, primary: on && guest, disabled: !on || !guest })) titleLogin(CL);
+          if (T.btn(R1[0], R1[1], R1[2], R1[3], '🏆 Bảng vàng', { size: 8, disabled: !G.bangVang })) { V.tRank = true; G.bangVang.reload && G.bangVang.reload(); }
         }
         if (CL.gMsg) { V.tMsg = CL.gMsg; V.tMsgT = 8; CL.gMsg = ''; }
         if (V.tMsgT > 0) V.tMsgT -= 1 / 60;
         const line = V.tMsgT > 0 && V.tMsg ? V.tMsg : need && !ok ? 'Đăng nhập Google để lưu tiến trình và lên Bảng vàng. ' + CL.label() : CL.label();
-        ui.text(line, 240, 242, { size: 7, align: 'center', color: SOFT });
+        const lines = ui.wrap(line, 260, 7); // hẹp để không chạm hình em bé bên trái
+        lines.slice(0, 2).forEach((l, i) => ui.text(l, 240, TL.info + i * 9, { size: 7, align: 'center', color: V.tMsgT > 0 && V.tMsg ? GOLD : '#c9bfa8' }));
       }
-      ui.text('Bản thử · hình vẽ tạm', 240, 264, { size: 7, align: 'center', color: SOFT });
+      // thông tin phụ: nhỏ, góc dưới bên phải, không tranh chỗ với nút
+      ui.text('Bản thử' + (G.VERSION ? ' · ' + G.VERSION : ''), 474, 264, { size: 6.5, align: 'right', color: 'rgba(201,191,168,0.55)', shadow: false });
     },
   };
+  // Chữ G bốn màu nhỏ đầu nút Đăng nhập Google (vẽ điểm ảnh, không tải hình ngoài)
+  function googleMark(x, cy) {
+    const u = G.ux, k = 1, cols = ['#4285f4', '#ea4335', '#fbbc05', '#34a853'];
+    const R = [
+      '..rrrr..', '.rr..rr.', 'rr......', 'yy......', 'yy..bbbb', 'gg....bb', '.gg..bb.', '..gggg..'];
+    u.save();
+    u.fillStyle = '#fff6e8'; u.beginPath(); u.arc(x, cy, 6.5, 0, 7); u.fill();
+    const m = { r: cols[1], y: cols[2], g: cols[3], b: cols[0] };
+    R.forEach((row, j) => { for (let i = 0; i < row.length; i++) if (m[row[i]]) { u.fillStyle = m[row[i]]; u.fillRect(x - 4 + i * k, cy - 4 + j * k, k, k); } });
+    u.restore();
+  }
 })();

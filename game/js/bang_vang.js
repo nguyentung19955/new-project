@@ -102,6 +102,16 @@
     const v = x[cat];
     return v ? secs(v) : '-';
   }
+  // Huy chương nhỏ (điểm ảnh) cho hạng 1, 2, 3; số hạng nằm giữa.
+  function medal(cx, cy, n) {
+    const c = G.ux, col = ['#ffd24a', '#d6d2c8', '#e09a5a'][n - 1], dk = ['#8a5a14', '#6b655c', '#7a3a14'][n - 1];
+    c.fillStyle = '#1a120a'; c.fillRect(Math.round(cx) - 4, Math.round(cy) - 5, 9, 10); c.fillRect(Math.round(cx) - 5, Math.round(cy) - 4, 11, 8);
+    c.fillStyle = col; c.fillRect(Math.round(cx) - 3, Math.round(cy) - 4, 7, 8); c.fillRect(Math.round(cx) - 4, Math.round(cy) - 3, 9, 6);
+    c.fillStyle = dk; c.fillRect(Math.round(cx) - 3, Math.round(cy) + 3, 7, 1);
+    ui.text(String(n), cx + 0.5, cy + 2.6, { size: 6.5, bold: true, align: 'center', color: '#1a120a', shadow: false });
+  }
+  // Cắt chữ cho vừa bề rộng (thêm dấu …)
+  function cutTo(s, wd, sz) { ui.font(sz, true); if (G.ux.measureText(s).width <= wd) return s; while (s.length > 1 && G.ux.measureText(s + '…').width > wd) s = s.slice(0, -1); return s + '…'; }
   function heroName(k) { return G.HEROES[k] ? G.HEROES[k].name : ''; }
 
   // ---------- bảng vẽ (Cụ Đồ, thẻ Bảng vàng). CX, CW: vùng nội dung của bảng làng ----------
@@ -113,12 +123,22 @@
     if (list.length > 1) list.forEach(([k, n], i) => { if (T.sbtn(CX + i * (w + 3), 95, w, 18, n, { size: 7.5, pad: 2, sel: B.cat === k })) { B.cat = k; B.page = 0; } });
     else ui.text('Xếp hạng theo Sức mạnh', CX + 2, 108, { size: 9, bold: true, color: GOLD });
     if (!C.online()) {
+      // Không có mạng: chỉ hiện kỷ lục trên máy, xếp thành ba ô số + một hàng thời gian hạ trùm (Giai đoạn 4: căn thẳng hàng, chữ đều cỡ)
       const r = rec(), sv = G.save;
-      T.inset(CX, 120, CW, 92, false);
-      ui.para('Bảng vàng cần mạng. ' + C.label() + '.', CX + 6, 134, CW - 12, { size: 8, color: TXT });
-      ui.text('Kỷ lục của con (trên máy):', CX + 6, 162, { size: 8, bold: true, color: GOLD });
-      ui.text('Sức mạnh ' + (r.power || powerNow()) + ' · ' + C.starSum(sv) + ' sao · xa nhất ' + C.farText(C.far(sv)), CX + 6, 175, { size: 7.5, color: TXT });
-      ui.text(G.REGIONS.map((R) => R.bossName + ' ' + (r.b[R.boss] ? secs(r.b[R.boss]) : '-')).join(' · '), CX + 6, 188, { size: 7.5, color: TXT });
+      T.inset(CX, 116, CW, 104, false);
+      ui.para('Bảng vàng cần mạng. ' + C.label() + '.', CX + 7, 129, CW - 14, { size: 7.5, color: SOFT });
+      ui.text('Kỷ lục của con (trên máy)', CX + 7, 150, { size: 8, bold: true, color: GOLD });
+      const boxes = [['Sức mạnh', String(r.power || powerNow())], ['Tổng sao', '★ ' + C.starSum(sv)], ['Xa nhất', C.farText(C.far(sv))]];
+      const bw = Math.floor((CW - 14 - 2 * 4) / 3);
+      boxes.forEach((q, i) => {
+        const bx = CX + 7 + i * (bw + 4);
+        T.inset(bx, 156, bw, 28, false, { fill: 'rgba(0,0,0,0.22)' });
+        ui.text(q[0], bx + bw / 2, 166, { size: 6.5, align: 'center', color: SOFT });
+        ui.text(cutTo(q[1], bw - 6, 8.5), bx + bw / 2, 178.5, { size: 8.5, bold: true, align: 'center', color: TXT });
+      });
+      ui.text('Hạ trùm nhanh nhất', CX + 7, 197, { size: 7, bold: true, color: GOLD });
+      const tw = Math.floor((CW - 14) / 3);
+      G.REGIONS.forEach((R, i) => ui.text(R.bossName + '  ' + (r.b[R.boss] ? secs(r.b[R.boss]) : '–'), CX + 7 + i * tw, 210, { size: 7.5, color: r.b[R.boss] ? TXT : SOFT }));
       return 'Bảng vàng treo ở đình, phải có mạng mới xem được, con ạ.';
     }
     if (B.t && G.time - B.t > 120) B.reload(); // để lâu thì tải lại
@@ -130,8 +150,10 @@
     // tiêu đề cột
     const cx = { rank: CX + 4, name: CX + 24, val: CX + 168, extra: CX + 214 };
     const colName = B.cat === 'power' ? 'Sức mạnh' : B.cat === 'stars' ? 'Tổng sao' : 'Thời gian';
-    ui.text('#', cx.rank, 125, { size: 7, color: SOFT }); ui.text('Tên', cx.name, 125, { size: 7, color: SOFT });
-    ui.text(colName, cx.val + 38, 125, { size: 7, color: SOFT, align: 'right' }); ui.text('Hero · xa nhất', cx.extra, 125, { size: 7, color: SOFT });
+    // hàng tiêu đề cột: dải tối mảnh có gạch đồng bên dưới
+    ui.rect(CX, 117, CW, 11, 'rgba(0,0,0,0.3)'); ui.rect(CX, 127, CW, 1, 'rgba(168,117,47,0.75)');
+    ui.text('#', cx.rank + 3, 125, { size: 7, bold: true, color: SOFT, align: 'center' }); ui.text('Tên', cx.name, 125, { size: 7, bold: true, color: SOFT });
+    ui.text(colName, cx.val + 38, 125, { size: 7, bold: true, color: SOFT, align: 'right' }); ui.text('Hero · xa nhất', cx.extra, 125, { size: 7, bold: true, color: SOFT });
     const me = C.user && C.user.uid;
     const rows = D.items.slice(B.page * PER, B.page * PER + PER);
     const cut = (s, wd, sz) => { const a = ui.wrap(s, wd, sz, true); return a.length > 1 ? a[0] + '…' : a[0] || ''; };
@@ -140,7 +162,8 @@
       if (mine) ui.rect(CX, y, CW, 11, 'rgba(246,220,146,0.16)');
       else if (j % 2 === 0) ui.rect(CX, y, CW, 11, 'rgba(0,0,0,0.16)');
       const col = n === 1 ? '#ffd24a' : n === 2 ? '#d6d2c8' : n === 3 ? '#e09a5a' : TXT;
-      ui.text(String(n), cx.rank, y + 8.5, { size: 7.5, bold: n <= 3, color: col });
+      if (n <= 3) medal(cx.rank + 3, y + 5.5, n); // ba người đầu: huy chương vàng, bạc, đồng
+      else ui.text(String(n), cx.rank + 3, y + 8.5, { size: 7.5, align: 'center', color: col });
       ui.text(cut(x.name || 'Khách', 140, 7.5), cx.name, y + 8.5, { size: 7.5, bold: mine, color: mine ? GOLD : TXT });
       ui.text(fmt(B.cat, x), cx.val + 38, y + 8.5, { size: 7.5, bold: true, align: 'right', color: col });
       ui.text(cut(heroName(x.hero) + ' · ' + C.farText(x.far || 0), CW - 218, 7), cx.extra, y + 8.5, { size: 7, color: SOFT });
@@ -154,7 +177,7 @@
     mine.name = E.name; mine.hero = mine.hero || E.hero;
     const at = D.items.findIndex((x) => x.uid === me);
     T.inset(CX, 224, CW, 15, true);
-    ui.text(at >= 0 ? String(at + 1) : '-', cx.rank, 234.5, { size: 7.5, bold: true, color: GOLD });
+    ui.text(at >= 0 ? String(at + 1) : '-', cx.rank + 3, 234.5, { size: 7.5, bold: true, align: 'center', color: GOLD });
     ui.text(cut('Con: ' + mine.name, 140, 7.5), cx.name, 234.5, { size: 7.5, bold: true, color: GOLD });
     ui.text(fmt(B.cat, mine), cx.val + 38, 234.5, { size: 7.5, bold: true, align: 'right', color: GOLD });
     ui.text(at >= 0 ? 'hạng ' + (at + 1) : D.more ? 'ngoài ' + D.items.length + ' dòng đã tải' : 'ngoài ' + MAX + ' người đầu', cx.extra, 234.5, { size: 7, color: SOFT });
