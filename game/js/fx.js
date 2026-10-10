@@ -48,6 +48,9 @@
   };
   const pal = (el) => PAL[el] || PAL.none;
   fx.pal = pal;
+  // Hệ số cường độ hiệu ứng (js/vfx_cfg.js): 1 mặc định, 0 tắt hẳn. Thiếu tệp cấu hình thì coi như 1.
+  const VX = (k) => { const v = G.VFX && G.VFX[k]; return typeof v === 'number' && v >= 0 ? v : 1; };
+  fx.vx = VX;
   // Đoán bảng màu từ một mã màu bất kỳ (để G.burst cũ vẫn dùng được).
   const RAMP_OF = new Map();
   function rampOf(col) {
@@ -76,6 +79,7 @@
       stop: 0, stopGap: 0, latch: {}, hurt: 0, flash: 0, flashCol: '255,255,255', lowT: 0,
       stepT: 0, auraT: 0, emT: 0, ghostT: 0, cleared: !!W.cleared, clearT: 0, hp: W.P ? W.P.hp : 0,
       gong: 0, dash: 0, dodge: 0,
+      trN: 0, trI: 0, trBrk: true, trOk: 0, trCrit: 0, hitN: 0, pv: null,
     };
   }
   function sync() {
@@ -303,9 +307,12 @@
   function addRing(x, y, r0, r1, t, col, th, ly, d) { return add({ ty: 'ring', x, y, r0, r1, t, c: col, th: th || 2, ly: ly == null ? 0 : ly, d: d || 0 }); }
 
   // ---------- rung màn hình và khựng hình ----------
-  function trauma(a) { S.trauma = Math.min(1, Math.max(S.trauma, a * 0.75) + a * 0.3); }
-  function kick(dx, dy) { S.kx = Math.max(-4, Math.min(4, S.kx + dx)); S.ky = Math.max(-3, Math.min(3, S.ky + dy)); }
+  // Cường độ chỉnh ở js/vfx_cfg.js (G.VFX): rung nhân vào độ rung và cú giật, khung nhân vào thời gian khựng.
+  function trauma(a) { a *= VX('rung'); if (!(a > 0)) return; S.trauma = Math.min(1, Math.max(S.trauma, a * 0.75) + a * 0.3); }
+  function kick(dx, dy) { const k = VX('rung'); S.kx = Math.max(-4, Math.min(4, S.kx + dx * k)); S.ky = Math.max(-3, Math.min(3, S.ky + dy * k)); }
   function stop(ms) {
+    ms *= VX('khung');
+    if (!(ms > 0)) return;
     const s = ms / 1000;
     if (S.stop > 0) { if (s > S.stop) S.stop = s; return; }
     if (S.stopGap > 0 && ms < 100) return; // không khựng liên tục khi đánh cả đám
@@ -347,7 +354,10 @@
       if (q.t0 - q.t < 0.3 && Math.abs(q.x0 - x) < 16 && Math.abs(q.y0 - (y - lift)) < 8) { lift += 8; side = side > 0 ? -side : -side + 5; if (lift >= 32) break; }
     }
     if (S.N.length >= MAXN) S.N.shift();
-    const n = { x: x + side + rr(-3, 3), y: y - lift, x0: x, y0: y - lift, vx: o.vx == null ? rr(-9, 9) + side * 1.5 : o.vx, vy: o.vy == null ? -34 : o.vy, s, col: o.col || '#ffffff', size: o.size || 8,
+    // VFX chiến đấu: số mặc định bật lên nhanh, chậm dần, rơi nhẹ (trọng lực g, rơi không quá 18 điểm ảnh/giây) rồi mờ đi.
+    // Chữ đặt sẵn vận tốc (tên đòn, thông báo) giữ kiểu trôi lên chậm như cũ.
+    const fall = o.vy == null;
+    const n = { x: x + side + rr(-3, 3), y: y - lift, x0: x, y0: y - lift, vx: o.vx == null ? rr(-9, 9) + side * 1.5 : o.vx, vy: fall ? -58 : o.vy, g: fall ? 150 : 46, hold: fall ? 0.03 : 0.1, s, col: o.col || '#ffffff', size: o.size || 8,
       t: o.t || 0.75, t0: o.t || 0.75, pop: o.pop == null ? 0.7 : o.pop, edge: o.edge || 'rgba(12,8,8,0.9)', kind: o.kind || 0, d: o.d || 0 };
     S.N.push(n);
     return n;
@@ -357,7 +367,7 @@
     o = o || {};
     const top = t.y - Math.min(60, (t.h || 24) * (t.scale || 1)) - 4;
     const s = String(Math.max(1, Math.round(d)));
-    if (o.crit) num(t.x, top - 2, s + '!', { col: '#ffd23f', size: 12, pop: 1.3, t: 0.95, edge: 'rgba(90,30,0,0.95)', kind: 1 });
+    if (o.crit) num(t.x, top - 2, s + '!', { col: '#ffd23f', size: 13, pop: 1.2, t: 1, edge: 'rgba(90,30,0,0.95)', kind: 1 });
     else if (o.dot) { if (S.N.length < 12) num(t.x + rr(-6, 6), top + 4, s, { col: o.el ? pal(o.el).c2 : '#ffffff', size: 6.5, pop: 0.2, t: 0.55, vy: -20 }); }
     else if (o.m < 0.8) num(t.x, top, s, { col: '#9a9a9a', size: 7, pop: 0.3, t: 0.6 });
     else num(t.x, top, s, { col: o.el ? pal(o.el).c2 : '#ffffff', size: o.m > 1.25 ? 10 : 8, pop: o.m > 1.25 ? 1 : 0.7 });
@@ -367,6 +377,7 @@
   api('comboName', (x, y, s, el) => {
     num(x, y, s, { col: el === 'ice' ? '#bfeaff' : '#ffd23f', size: 13, pop: 0.8, t: 1.15, vx: 0, vy: -12, edge: el === 'ice' ? 'rgba(20,50,90,0.95)' : 'rgba(120,30,0,0.95)', kind: 2 });
   });
+  const eio = (x) => (x < 0.5 ? 2 * x * x : 1 - 2 * (1 - x) * (1 - x));
   const FONTS = new Map();
   function fontOf(size) {
     const k = Math.round(size * 2);
@@ -381,21 +392,19 @@
     for (const n of S.N) {
       if (n.d > 0) continue;
       const age = n.t0 - n.t;
-      const sc = 1 + n.pop * Math.max(0, 1 - age / 0.13) - (age < 0.05 ? 0.25 : 0);
+      // bật to ra trong 0,07 giây (từ 0,55 lên 1 + pop), lắng về cỡ thật tới 0,24 giây; lúc mờ đi thì co lại chút
+      const a = n.t < n.t0 * 0.35 ? n.t / (n.t0 * 0.35) : 1;
+      let sc = age < 0.07 ? 0.55 + (0.45 + n.pop) * (1 - (1 - age / 0.07) * (1 - age / 0.07)) : age < 0.24 ? 1 + n.pop * (1 - eio((age - 0.07) / 0.17)) : 1;
+      sc *= 0.88 + 0.12 * a;
       const size = Math.max(6.5, n.size * sc);
-      const a = n.t < n.t0 * 0.3 ? n.t / (n.t0 * 0.3) : 1;
-      const x = n.x - cam, y = n.y + size * 0.35;
+      const jit = n.kind === 1 && age < 0.15 ? (((age * 60) | 0) % 2 ? 0.8 : -0.8) : 0; // chí mạng: rung nhẹ lúc mới bật
+      const x = n.x - cam + jit, y = n.y + size * 0.35;
       c.globalAlpha = a;
       c.font = fontOf(size);
-      if (n.kind) {
-        // chí mạng, tên đòn kết hợp, chữ quan trọng: viền dày
-        c.lineWidth = 2.2;
-        c.strokeStyle = n.edge;
-        c.strokeText(n.s, x, y);
-      } else {
-        c.fillStyle = n.edge;
-        c.fillText(n.s, x + 0.7, y + 0.7);
-      }
+      // viền tối quanh chữ (chí mạng, tên đòn dày hơn) để đọc rõ trên điện thoại, nền sáng hay tối đều thấy
+      c.lineWidth = n.kind ? 2.4 : 1.8;
+      c.strokeStyle = n.edge;
+      c.strokeText(n.s, x, y);
       c.fillStyle = n.kind === 1 && age < 0.07 ? '#ffffff' : n.col;
       c.fillText(n.s, x, y);
       if (n.kind === 2) {
@@ -427,21 +436,26 @@
   api('swing', (P, o) => {
     const f = P.face, el = o.el, st = o.stage || 0, PL = pal(el);
     const R0 = o.reach || 32;
+    // Đã có vệt bám mũi vũ khí thật (trailStep bên dưới) thì bỏ hình trăng khuyết vẽ sẵn; tắt vệt (G.VFX.vet = 0) thì dùng lại hình cũ.
+    const real = S.trOk > 0 && P === S.W.P;
+    if (P === S.W.P) { P.fxS = -0.08; P.fxSV = 0; P.fxL = f * 2.5; P.fxLV = 0; } // nhún: vươn người theo nhát chém
     if (o.type === 'sword') {
       const fin = o.combo === 2;
       if (fin) {
-        add({ ty: 'cres', x: P.x + f * 2, y: P.y - 12, f, ra: R0 * 1.12, rb: 12, off: 10, oy: 0, vert: false, rev: false, pl: PL, t: 0.24, big: true, st, ly: 1, back: R0 * 0.45 });
-        add({ ty: 'cres', x: P.x + f * 2, y: P.y - 13, f, ra: R0 * 0.8, rb: 20, off: 6, oy: -2, vert: true, rev: false, pl: PL, t: 0.18, big: false, st, ly: 1, d: 0.03 });
+        if (!real) {
+          add({ ty: 'cres', x: P.x + f * 2, y: P.y - 12, f, ra: R0 * 1.12, rb: 12, off: 10, oy: 0, vert: false, rev: false, pl: PL, t: 0.24, big: true, st, ly: 1, back: R0 * 0.45 });
+          add({ ty: 'cres', x: P.x + f * 2, y: P.y - 13, f, ra: R0 * 0.8, rb: 20, off: 6, oy: -2, vert: true, rev: false, pl: PL, t: 0.18, big: false, st, ly: 1, d: 0.03 });
+        }
         for (let i = 0; i < 6; i++) streak(P.x + f * rr(8, R0), P.y - 12 + rr(-8, 8), f * rr(90, 170), rr(-25, 25), rr(0.12, 0.22), PL.ramp, 1, rr(6, 12), 0, 3);
         kick(f * 1.5, 0); trauma(0.12);
-      } else {
+      } else if (!real) {
         const up = o.combo === 1;
         add({ ty: 'cres', x: P.x + f * 3, y: P.y - 15, f, ra: R0 * (up ? 0.92 : 0.86), rb: up ? 21 : 19, off: up ? 7 : 6, oy: up ? 4 : -4, vert: true, rev: up, pl: PL, t: 0.16, big: false, st, ly: 1 });
       }
       if (st >= 2 || el) elemBits(el, P.x + f * R0 * 0.7, P.y - 14, (st >= 3 ? 6 : st >= 2 ? 4 : 2) + (fin ? 3 : 0), f, 70);
     } else if (o.type === 'hammer') {
       const ix = P.x + f * R0 * 0.72, iy = P.y;
-      add({ ty: 'cres', x: P.x + f * 4, y: P.y - 17, f, ra: R0 * 0.9, rb: 27, off: 10, oy: -5, vert: true, rev: false, pl: PL, t: 0.2, big: true, st, ly: 1 });
+      if (!real) add({ ty: 'cres', x: P.x + f * 4, y: P.y - 17, f, ra: R0 * 0.9, rb: 27, off: 10, oy: -5, vert: true, rev: false, pl: PL, t: 0.2, big: true, st, ly: 1 });
       slam(ix, iy, 20, el, 0.7);
       kick(0, 2.5); trauma(0.3);
       if (st >= 2 || el) elemBits(el, ix, iy - 6, st >= 3 ? 8 : 5, f, 60);
@@ -452,6 +466,96 @@
       kick(f, 0);
     }
   });
+
+  // ---------- VFX chiến đấu: vệt vũ khí bám quỹ đạo mũi vũ khí thật ----------
+  // Mỗi bước cập nhật (khi đang ra đòn cận chiến) hỏi js/hero_tinhlinh.js chỗ cầm, hướng và độ dài vũ khí ở khung đang vẽ,
+  // nhớ vài điểm gần nhất trong một mảng vòng dùng lại (không tạo đối tượng mới). Vẽ dải giữa các điểm liên tiếp:
+  // đầu sáng (mới nhất), thân màu hệ, đuôi tối và thưa điểm ảnh rồi tắt nhanh. Cạnh tô bằng từng hàng điểm ảnh, không khử răng cưa.
+  // Chỉ ghi điểm trong đoạn vũ khí vung qua vùng đánh (WIN, tính theo thời điểm tư thế), nên lúc lấy đà và thu đòn không có vệt.
+  const TRN = 12, TR = [];
+  for (let i = 0; i < TRN; i++) TR.push({ gx: 0, gy: 0, a: 0, m: 1, L: 0, age: 0, life: 1, r0: 0.5, tier: 1, brk: false, pl: PAL.none });
+  const WIN = {
+    atk: { sword: [0.2, 0.66], hammer: [0.26, 0.64], spear: [0.42, 0.66] },
+    spec: { sword: [0.12, 0.8], hammer: [0, 0.32] },
+    sweep: { spear: [0, 1] },
+  };
+  const R0F = { sword: 0.58, hammer: 0.62, spear: 0.68 }; // mép trong của dải (phần thân vũ khí tính từ điểm cầm)
+  function trailAge(dt) {
+    for (let i = 0; i < S.trN; i++) TR[(S.trI - 1 - i + TRN * 2) % TRN].age += dt;
+    while (S.trN > 0 && TR[(S.trI - S.trN + TRN * 2) % TRN].age > TR[(S.trI - S.trN + TRN * 2) % TRN].life) S.trN--;
+  }
+  function trailStep(P, dt) {
+    trailAge(dt);
+    if (S.trOk > 0) S.trOk -= dt;
+    if (S.trCrit > 0) S.trCrit -= dt;
+    const vet = VX('vet'), TL = G.tinhLinh;
+    if (!(vet > 0) || P.dead || !TL || !TL.tip || !G.heroArgs || !(P.atkT > 0 || P.specT > 0) || P.dashT > 0) { S.trBrk = true; return; }
+    const q = TL.tip(G.heroArgs(P));
+    const win = q && WIN[q.anim] && WIN[q.anim][q.wt];
+    if (!win || q.u < win[0] || q.u > win[1]) { S.trBrk = true; return; }
+    const o = TR[S.trI];
+    S.trI = (S.trI + 1) % TRN; if (S.trN < TRN) S.trN++;
+    const tier = q.anim === 'spec' ? 3 : q.anim === 'sweep' || q.wt === 'hammer' || q.combo === 2 ? 2 : 1;
+    o.gx = q.gx; o.gy = q.gy; o.a = Math.atan2(q.dy, q.dx); o.m = Math.hypot(q.dx, q.dy); o.L = q.L + 1;
+    o.age = 0; o.life = [0, 0.085, 0.115, 0.15][tier] * (0.5 + 0.5 * Math.min(2, vet)); o.tier = tier;
+    o.r0 = tier === 3 ? 0.36 : R0F[q.wt] - (tier === 2 ? 0.1 : 0); o.brk = S.trBrk;
+    const w = G.curW ? G.curW(P) : null;
+    o.pl = pal(w && G.activeEl ? G.activeEl(P, w) : null);
+    S.trBrk = false; S.trOk = 0.25;
+  }
+  // Tô một tứ giác lồi (a-b-c-d) bằng các hàng điểm ảnh nguyên: cạnh sắc, không mờ. dith: chỉ tô ô bàn cờ (đuôi vệt thưa dần).
+  const QX = [0, 0, 0, 0], QY = [0, 0, 0, 0];
+  function quad(c, ax, ay, bx, by, cx, cy, dx, dy, dith) {
+    QX[0] = ax; QY[0] = ay; QX[1] = bx; QY[1] = by; QX[2] = cx; QY[2] = cy; QX[3] = dx; QY[3] = dy;
+    const y0 = Math.floor(Math.min(ay, by, cy, dy)), y1 = Math.ceil(Math.max(ay, by, cy, dy));
+    for (let y = y0; y < y1; y++) {
+      const yc = y + 0.5;
+      let lo = 1e9, hi = -1e9;
+      for (let i = 0; i < 4; i++) {
+        const j = (i + 1) & 3, ya = QY[i], yb = QY[j];
+        if ((ya <= yc && yb > yc) || (yb <= yc && ya > yc)) { const x = QX[i] + ((yc - ya) * (QX[j] - QX[i])) / (yb - ya); if (x < lo) lo = x; if (x > hi) hi = x; }
+      }
+      if (hi < lo) continue;
+      const xa = Math.round(lo), xb = Math.max(xa + 1, Math.round(hi));
+      if (dith) { for (let x = xa + ((xa + y) & 1); x < xb; x += 2) c.fillRect(x, y, 1, 1); }
+      else c.fillRect(xa, y, xb - xa, 1);
+    }
+  }
+  function trailDraw(c) {
+    if (S.trN < 2) return;
+    const crit = S.trCrit > 0, vet = Math.min(1.5, VX('vet'));
+    for (let i = S.trN - 1; i >= 1; i--) {
+      const A = TR[(S.trI - 1 - i + TRN * 2) % TRN], B = TR[(S.trI - i + TRN * 2) % TRN];
+      if (B.brk) continue;
+      let da = B.a - A.a;
+      if (da > Math.PI) da -= TAU; else if (da < -Math.PI) da += TAU;
+      const n = Math.max(1, Math.min(10, Math.ceil(Math.abs(da) / 0.16)));
+      const PL = crit ? PAL.gold : B.pl;
+      for (let j = 0; j < n; j++) {
+        const u0 = j / n, u1 = (j + 1) / n;
+        const age = A.age + (B.age - A.age) * u1, life = B.life, q = Math.min(1, age / life);
+        if (q >= 1) continue;
+        const r = Math.min(0.92, A.r0 + (1 - A.r0) * q * 0.75); // đuôi mỏng dần về phía mũi
+        // hai cạnh của một lát: góc, chỗ cầm, độ dài nội suy theo cung (không nối thẳng hai mũi cách xa nhau)
+        const a0 = A.a + da * u0, a1 = A.a + da * u1;
+        const gx0 = A.gx + (B.gx - A.gx) * u0, gy0 = A.gy + (B.gy - A.gy) * u0, gx1 = A.gx + (B.gx - A.gx) * u1, gy1 = A.gy + (B.gy - A.gy) * u1;
+        const L0 = (A.L + (B.L - A.L) * u0) * (A.m + (B.m - A.m) * u0), L1 = (A.L + (B.L - A.L) * u1) * (A.m + (B.m - A.m) * u1);
+        const c0 = Math.cos(a0), s0 = Math.sin(a0), c1 = Math.cos(a1), s1 = Math.sin(a1);
+        const ox0 = gx0 + c0 * L0, oy0 = gy0 + s0 * L0, ox1 = gx1 + c1 * L1, oy1 = gy1 + s1 * L1;
+        const ix0 = gx0 + c0 * L0 * r, iy0 = gy0 + s0 * L0 * r, ix1 = gx1 + c1 * L1 * r, iy1 = gy1 + s1 * L1 * r;
+        // viền tối bên ngoài cho nhát kết, búa, chiêu đặc biệt: tách vệt khỏi nền sáng
+        if (B.tier >= 2 && q < 0.6) { c.fillStyle = PL.d; quad(c, ix0, iy0, ox0 + c0 * 1.6, oy0 + s0 * 1.6, ox1 + c1 * 1.6, oy1 + s1 * 1.6, ix1, iy1, false); }
+        c.fillStyle = q < 0.3 * vet ? PL.c2 : q < 0.62 ? PL.c : PL.d;
+        quad(c, ix0, iy0, ox0, oy0, ox1, oy1, ix1, iy1, q >= 0.62);
+        // đầu vệt: dải sáng sát mũi, lõi trắng ở lát mới nhất
+        if (q < 0.3) {
+          const h = 0.76 + 0.12 * q;
+          c.fillStyle = q < 0.2 ? '#ffffff' : PL.hi;
+          quad(c, gx0 + c0 * L0 * h, gy0 + s0 * L0 * h, ox0, oy0, ox1, oy1, gx1 + c1 * L1 * h, gy1 + s1 * L1 * h, false);
+        }
+      }
+    }
+  }
   // Nện xuống đất: vòng sóng, bụi hai bên, mảnh vụn, vết nứt
   function slam(x, y, r, el, power) {
     const PL = pal(el);
@@ -491,36 +595,50 @@
     // giật lùi nhẹ (chỉ là dời hình lúc vẽ)
     e.fxK = 0.13; e.fxD = dir * (e.isBoss ? 1 : o.heavy || o.crit ? 4 : 2);
     const big = o.heavy || o.crit || o.dead;
+    // VFX chiến đấu: phản ứng phân cấp thường / nặng / chí mạng (chỉ đổi hình lúc vẽ, js/fx.js xf):
+    // bẹp theo hướng đánh, nghiêng người ra sau, nảy lên (nặng, chí mạng), chớp trắng mạnh dần theo cấp (js/mobs.js đọc e.fxHk).
+    const hk = o.crit ? 3 : o.heavy || o.dead || o.type === 'hammer' ? 2 : 1, bs = e.isBoss ? 0.35 : 1;
+    e.fxHk = hk;
+    e.fxS = Math.min(0.13, Math.max(e.fxS || 0, 0) + [0, 0.06, 0.1, 0.13][hk] * bs * (o.ranged ? 0.6 : 1)); e.fxSV = 0;
+    e.fxL = dir * [0, 1.5, 3.5, 5][hk] * bs; e.fxLV = 0;
+    if (hk >= 2 && !e.isBoss) { e.fxHop0 = e.fxHop = hk === 3 ? 0.2 : 0.16; e.fxHopH = hk === 3 ? 3 : 2; }
+    if (o.crit && !o.ranged) S.trCrit = 0.12; // vệt vũ khí đang tắt dần chuyển màu vàng
+    const dim = 1 / (1 + 1.5 * (S.hitN | 0)); // nhiều quái trúng cùng một nhịp: rung, giật không cộng dồn mạnh
+    const few = (S.hitN | 0) >= 3 ? 0.5 : 1; // đánh trúng cả đám: bớt hạt cho mỗi con
+    S.hitN = (S.hitN | 0) + 1;
+    const NH = (n) => Math.max(1, Math.round(n * few * VX('hat')));
     const blunt = o.type === 'hammer', pierce = o.type === 'spear' || o.ranged;
     if (blunt) {
       add({ ty: 'flash', x: cx, y: cy, r: big ? 9 : 7, t: 0.1, c: '#ffffff', c2: PL.c2, ly: 1, sq: true });
       addRing(cx, cy, 3, big ? 16 : 12, 0.16, PL.c2, 2, 1);
-      spray(8, cx, cy, big ? 7 : 5, ang, 2.6, 40, 110, 0.3, 0.55, PL.ramp, 2, 380, 0, e.y + 2);
+      spray(8, cx, cy, NH(big ? 7 : 5), ang, 2.6, 40, 110, 0.3, 0.55, PL.ramp, 2, 380, 0, e.y + 2);
     } else if (pierce) {
       add({ ty: 'flash', x: cx, y: cy, r: big ? 6 : 4, t: 0.08, c: '#ffffff', c2: PL.c2, ly: 1 });
       // tia xuyên ra sau lưng mục tiêu
-      for (let i = 0; i < (big ? 6 : 4); i++) streak(e.x + dir * rr(0, e.r), cy + rr(-3, 3), dir * rr(110, 220), rr(-30, 30), rr(0.1, 0.2), PL.ramp, 1, rr(6, 12), 0, 4);
+      for (let i = 0, n = NH(big ? 6 : 4); i < n; i++) streak(e.x + dir * rr(0, e.r), cy + rr(-3, 3), dir * rr(110, 220), rr(-30, 30), rr(0.1, 0.2), PL.ramp, 1, rr(6, 12), 0, 4);
       spray(1, cx, cy, 3, ang + Math.PI, 0.8, 30, 70, 0.12, 0.22, PL.ramp, 2, 0, 3);
     } else {
       add({ ty: 'flash', x: cx, y: cy, r: big ? 7 : 5, t: 0.08, c: '#ffffff', c2: PL.c2, ly: 1 });
       add({ ty: 'cut', x: cx + dir * 2, y: cy, f: dir, r: big ? 11 : 8, t: 0.12, c: PL.c2, up: (S.cutN = (S.cutN | 0) + 1) & 1, ly: 1 });
-      for (let i = 0; i < (big ? 8 : 5); i++) { const a = ang + rr(-0.9, 0.9), v = rr(70, 170); streak(cx, cy, Math.cos(a) * v, Math.sin(a) * v * 0.8 - 20, rr(0.12, 0.24), PL.ramp, 1, rr(4, 9), 200, 3); }
+      for (let i = 0, n = NH(big ? 8 : 5); i < n; i++) { const a = ang + rr(-0.9, 0.9), v = rr(70, 170); streak(cx, cy, Math.cos(a) * v, Math.sin(a) * v * 0.8 - 20, rr(0.12, 0.24), PL.ramp, 1, rr(4, 9), 200, 3); }
     }
     // chất liệu riêng của từng hệ
     if (el === 'fire') { for (let i = 0; i < (big ? 5 : 3); i++) emit(9, cx + rr(-4, 4), cy + rr(-4, 4), dir * rr(5, 40), rr(-60, -20), rr(0.25, 0.45), RAMP.fire, 3, -30, 2, null, 1); }
     else if (el === 'poison') { for (let i = 0; i < (big ? 6 : 4); i++) emit(5, cx, cy, dir * rr(10, 70), rr(-90, -20), rr(0.4, 0.7), RAMP.poison, 2, 320, 0, e.y + rr(-2, 4), 1); }
     else if (el === 'ice') { for (let i = 0; i < (big ? 6 : 4); i++) emit(4, cx, cy, dir * rr(10, 80), rr(-60, 30), rr(0.3, 0.5), RAMP.ice, R() < 0.4 ? 2 : 1, 120, 1.5, null, 1); emit(6, cx + rr(-5, 5), cy + rr(-6, 6), 0, 0, 0.25, RAMP.ice, 3, 0, 0, null, 1); }
     if (o.crit) {
+      // chí mạng: chớp vàng to, hai vòng sáng (vòng trắng mảnh nở sau), tia vàng toả đều
       add({ ty: 'flash', x: cx, y: cy, r: 12, t: 0.14, c: '#fff3b0', c2: '#ffd23f', ly: 1 });
       addRing(cx, cy, 4, 20, 0.2, '#ffd23f', 2, 1);
-      for (let i = 0; i < 6; i++) { const a = (i / 6) * TAU + 0.3; streak(cx, cy, Math.cos(a) * 150, Math.sin(a) * 110, 0.2, RAMP.gold, 1, 9, 0, 4); }
-    }
-    // khựng hình và rung
-    if (o.ranged) { if (big) { stop(50); trauma(0.15); } kick(dir * 0.8, 0); }
+      addRing(cx, cy, 6, 28, 0.22, '#ffffff', 1, 1, 0.05);
+      for (let i = 0, n = NH(6); i < n; i++) { const a = (i / n) * TAU + 0.3; streak(cx, cy, Math.cos(a) * 150, Math.sin(a) * 110, 0.2, RAMP.gold, 1, 9, 0, 4); }
+    } else if (hk === 2 && !o.ranged) addRing(cx, cy, 3, 14, 0.14, PL.hi, 1, 1); // đòn nặng: một vòng mảnh
+    // khựng hình và rung (nhiều mục tiêu cùng nhịp thì giảm dần theo dim; khựng hình đã tự không chồng nhau)
+    if (o.ranged) { if (big) { stop(50); trauma(0.15 * dim); } kick(dir * 0.8 * dim, 0); }
     else {
       stop(o.crit ? 115 : o.dead ? 100 : o.heavy ? 90 : blunt ? 70 : 45);
-      trauma(o.crit ? 0.4 : o.heavy || blunt ? 0.3 : 0.14);
-      kick(dir * (big ? 2.5 : 1.2), blunt ? 1.5 : 0);
+      trauma((o.crit ? 0.4 : o.heavy || blunt ? 0.3 : 0.14) * dim);
+      kick(dir * (big ? 2.5 : 1.2) * dim, (blunt ? 1.5 : 0) * dim);
     }
   });
 
@@ -643,7 +761,41 @@
     if (e.fxRt && !rt && !e.dead) for (let i = 0; i < 4; i++) emit(8, e.x + rr(-6, 6), e.y - 2, rr(-50, 50), rr(-90, -40), 0.5, RAMP.steel, 2, 400, 0, e.y + 2, 1);
     e.fxRt = rt;
     if (e.fxK > 0) e.fxK -= 1 / 60;
+    // quái kiểu cũ (không có cử động riêng) chưa tự co người khi lấy đà: nhún xuống nhẹ trong lúc báo trước đòn
+    springStep(e, 1 / 60, !e.art && e.wind > 0 ? -0.06 : 0);
   }
+  // ---------- VFX chiến đấu: nhún, co giãn (squash & stretch) ----------
+  // Mỗi nhân vật có một lò xo nhỏ: fxS (âm: bẹt xuống, bè ra; dương: cao lên, thon lại), fxL (nghiêng, độ), fxHop (nảy lên).
+  // Sự kiện đặt giá trị tức thì, lò xo kéo về 0 có nảy nhẹ qua mức. Chỉ đổi hình lúc vẽ (fx.xf), không đổi vị trí thật.
+  function springStep(e, dt, to) {
+    if (e.fxHop > 0) e.fxHop -= dt;
+    if (!e.fxS && !e.fxSV && !e.fxL && !e.fxLV && !to) return;
+    e.fxSV = (e.fxSV || 0) + (-300 * ((e.fxS || 0) - (to || 0)) - 16 * (e.fxSV || 0)) * dt;
+    e.fxS = Math.max(-0.13, Math.min(0.13, (e.fxS || 0) + e.fxSV * dt));
+    e.fxLV = (e.fxLV || 0) + (-260 * (e.fxL || 0) - 18 * (e.fxLV || 0)) * dt;
+    e.fxL = Math.max(-6, Math.min(6, (e.fxL || 0) + e.fxLV * dt));
+    if (!to && Math.abs(e.fxS) < 0.004 && Math.abs(e.fxSV) < 0.05) { e.fxS = 0; e.fxSV = 0; }
+    if (Math.abs(e.fxL) < 0.08 && Math.abs(e.fxLV) < 0.5) { e.fxL = 0; e.fxLV = 0; }
+  }
+  // Áp nhún, nghiêng, nảy và giật lùi vào bút vẽ quanh chân nhân vật. Trả về true nếu đã c.save() (nơi gọi phải c.restore()).
+  // up: số điểm ảnh nhấc lên thêm (bị hất tung). Không có gì để áp thì trả về false, nơi gọi vẽ như cũ.
+  const qz = (v) => Math.round(v * 32) / 32; // co giãn theo nấc 1/32 để hình nhảy theo điểm ảnh, không rung rinh
+  fx.xf = function (c, e, up) {
+    if (G.noRender || !S || !e) return false;
+    try {
+      const n = Math.min(1.5, VX('nhun'));
+      const sq = qz((e.fxS || 0) * n), ln = Math.round((e.fxL || 0) * n * 2) / 2;
+      const hop = e.fxHop > 0 && e.fxHop0 ? Math.round(Math.sin((Math.PI * e.fxHop) / e.fxHop0) * (e.fxHopH || 0) * n) : 0;
+      if (!sq && !ln && !hop) return false;
+      const k = fx.recoil(e), x = Math.round(e.x), y = Math.round(e.y);
+      c.save();
+      c.translate(x + k, y - (up || 0) - hop);
+      if (ln) c.rotate((ln * Math.PI) / 180);
+      if (sq) c.scale(1 - sq * 0.7, 1 + sq);
+      c.translate(-x, -y);
+      return true;
+    } catch (err) { fail(err); return false; }
+  };
   // Khối băng vỡ
   function shatter(e) {
     const B = bodyOf(e);
@@ -1105,6 +1257,7 @@
     for (let i = 0; i < 7; i++) { const a = R() * TAU, v = rr(60, 140); streak(P.x, P.y - 14, Math.cos(a) * v, Math.sin(a) * v * 0.7, rr(0.14, 0.26), i % 2 ? RAMP.hurt : PL.ramp, 1, 6, 150, 3); }
     if (blocked) { addRing(P.x, P.y - 14, 5, 18, 0.18, '#ffd23f', 2, 1); for (let i = 0; i < 5; i++) emit(6, P.x + rr(-10, 10), P.y - rr(4, 26), 0, 0, 0.25, RAMP.gold, 3, 0, 0, null, 1); }
     num(P.x, P.y - 38, '-' + Math.round(amt), { col: '#ff6a5a', size: 10, pop: 1, edge: 'rgba(60,0,0,0.95)', kind: 3 });
+    P.fxS = -0.1; P.fxSV = 0; P.fxL = -P.face * 4; P.fxLV = 0; // trúng đòn: bẹp người, ngửa ra sau
     trauma(0.45); kick(rr(-2, 2), 2); stop(60);
   });
 
@@ -1173,7 +1326,8 @@
       return;
     }
     if (S.dying.length >= 16) S.dying.shift();
-    S.dying.push({ e: snap, t: ad || 0.42, t0: ad || 0.42, boss: false, ill: !!e.illusion, pl: PL, art: !!ad });
+    snap.fxS = 0; snap.fxL = 0; snap.fxHop = 0;
+    S.dying.push({ e: snap, t: ad || 0.42, t0: ad || 0.42, boss: false, ill: !!e.illusion, pl: PL, art: !!ad, skin, w: B.w, hh: B.h, dis: false });
     if (e.st && e.st.frozen > 0) shatter(e);
     // khói theo hệ và mảnh vụn rơi
     for (let i = 0; i < 6; i++) emit(2, x + rr(-B.w, B.w), y - rr(2, B.h), rr(-24, 24), rr(-34, -8), rr(0.35, 0.65), el ? PL.puff : RAMP.dust, R() < 0.4 ? 5 : 4, 0, 2, null, 1);
@@ -1195,7 +1349,14 @@
       d.e.dying = k;
       d.e.t += dt * 0.3;
       if (d.e.flash > 0) d.e.flash -= dt;
-      if (!d.boss) continue;
+      if (!d.boss) {
+        // VFX chiến đấu: gần cuối thì thân tan thành vài hạt điểm ảnh nhẹ bay lên (màu da và màu hệ)
+        if (!d.dis && k > 0.6) {
+          d.dis = true;
+          for (let j = 0, n = Math.round(7 * VX('hat')); j < n; j++) emit(1, d.e.x + rr(-d.w, d.w), d.e.y - rr(2, d.hh * 0.9), rr(-12, 12), rr(-46, -18), rr(0.35, 0.6), j % 2 ? d.skin : d.pl.ramp, R() < 0.4 ? 3 : 2, -30, 2, null, 1);
+        }
+        continue;
+      }
       // chuỗi nổ nhỏ chạy khắp thân trùm, càng về cuối càng dồn dập
       d.nb -= dt;
       if (d.nb <= 0) {
@@ -1274,7 +1435,7 @@
       const n = N[i];
       if (n.d > 0) { n.d -= dt; N[w++] = n; continue; }
       n.t -= dt;
-      if (n.t0 - n.t > 0.1) { n.x += n.vx * dt; n.y += n.vy * dt; n.vy += 46 * dt; n.vx *= 1 - dt * 2; }
+      if (n.t0 - n.t > n.hold) { n.x += n.vx * dt; n.y += n.vy * dt; n.vy = Math.min(n.g > 100 ? 18 : 1e9, n.vy + n.g * dt); n.vx *= 1 - dt * 3; }
       if (n.t > 0) N[w++] = n;
     }
     N.length = w;
@@ -1296,7 +1457,21 @@
     if (W.texts.length) { for (const o of W.texts) num(o.x, o.y, o.s, { col: o.col, size: o.size }); W.texts.length = 0; }
     if (W.parts.length) { for (const o of W.parts) emit(0, o.x, o.y, o.vx, o.vy, o.t, rampOf(o.col), o.s, 90, 0, null, 1); W.parts.length = 0; }
   }
+  // Nhún của em bé theo các khoảnh khắc chuyển động (đọc trạng thái, so với bước trước)
+  function playerSquash(P, dt) {
+    const pv = S.pv || (S.pv = { dodge: false, move: false, face: P.face, atk: 0 });
+    const dodge = P.dodgeT > 0, move = !!P.moving && !dodge && !P.dead;
+    if (dodge && !pv.dodge) { P.fxS = 0.09; P.fxSV = 0; } // bật người lộn: vươn cao
+    else if (!dodge && pv.dodge && !P.dead) { P.fxS = -0.12; P.fxSV = 0; P.fxL = 0; } // chạm đất sau lộn: bẹt xuống rồi nảy lại
+    else if (pv.move && !move && !(P.atkT > 0) && !P.dead) { P.fxS = -0.06; P.fxSV = 0; P.fxL = P.face * 3; P.fxLV = 0; } // dừng chạy: chúi theo đà
+    else if (move && pv.move && P.face !== pv.face) { P.fxS = -0.06; P.fxSV = 0; P.fxL = -P.face * 2; P.fxLV = 0; } // quay đầu
+    if (P.atkT > pv.atk + 0.02 && !(P.dashT > 0)) { P.fxS = -0.05; P.fxSV = 0; P.fxL = -P.face * 1.5; P.fxLV = 0; } // bắt đầu đòn: thu người lấy đà
+    pv.dodge = dodge; pv.move = move; pv.face = P.face; pv.atk = P.atkT > 0 ? P.atkT : 0;
+    springStep(P, dt, 0);
+  }
   function stepPlayer(W, P, dt, tick) {
+    playerSquash(P, dt);
+    trailStep(P, dt);
     const moving = P.moving && !(P.dodgeT > 0) && !(P.dashT > 0) && !P.dead;
     if (moving) {
       S.stepT -= dt;
@@ -1364,13 +1539,14 @@
   }
   function step(dt, frozen) {
     const W = S.W, P = W.P;
+    S.hitN = 0;
     legacy(W);
     stepShake(dt, W);
     stepNums(dt);
     if (S.hurt > 0) S.hurt -= dt;
     if (S.flash > 0) S.flash -= dt;
     if (S.stopGap > 0 && !frozen) S.stopGap -= dt;
-    if (frozen) { updParts(dt * 0.3); return; }
+    if (frozen) { updParts(dt * 0.3); trailAge(dt * 0.5); return; } // vệt vũ khí vẫn tắt dần chậm trong lúc khựng hình
     S.t += dt;
     S.emT -= dt;
     const tick = S.emT <= 0;
@@ -1547,6 +1723,7 @@
   layer('sorted', (list, c) => {
     const A = G.art;
     for (const d of S.dying) list.push({ y: d.e.y - (d.boss && d.e.kind === 'moc' ? 30 : 0), f: () => dyingDraw(c, d, A) });
+    if (S.trN > 1) list.push({ y: S.W.P.y - 0.5, f: () => trailDraw(c) }); // vệt vũ khí: ngay sau lưng em bé, trên quái đứng xa hơn
     for (const g of S.ghosts) list.push({ y: g.a.y - 0.5, f: () => { const q = g.t / g.t0; g.a.alpha = q > 0.66 ? 0.45 : q > 0.33 ? 0.3 : 0.15; try { A.hero(c, g.a); } catch (e) { fail(e); } c.globalAlpha = 1; } });
   });
   function dyingDraw(c, d, A) {
@@ -1560,8 +1737,11 @@
         c.translate(Math.round((hash(k * 97) - 0.5) * 5 * (0.3 + k)), 0);
         if (d.mini) A.enemy(c, e); else A.boss(c, e);
       } else {
+        // quái kiểu cũ: chớp, phồng nhẹ rồi co lại về chân, mờ dần (hạt tan ở stepDying)
         c.globalAlpha = k < 0.3 ? 1 : k < 0.5 ? 0.75 : k < 0.7 ? 0.5 : 0.25;
         if (k > 0.7 && ((S.t * 30) | 0) % 2) c.globalAlpha = 0.1;
+        const n = Math.min(1.5, VX('nhun')), sc = 1 + n * (k < 0.12 ? 0.08 * (k / 0.12) : 0.08 - 0.4 * ((k - 0.12) / 0.88) * ((k - 0.12) / 0.88));
+        if (sc !== 1) { const x = Math.round(e.x), y = Math.round(e.y), q = Math.round(sc * 32) / 32; c.translate(x, y); c.scale(q, q); c.translate(-x, -y); }
         if (d.ill) A.boss(c, e); else A.enemy(c, e);
       }
     } catch (err) { fail(err); }

@@ -678,7 +678,7 @@
     const k = e.don && e.don.kieu;
     if (n === 'atk' && (k === 'ban' || k === 'nem')) o.fx = false; // đạn thật do luật chơi bắn, không vẽ thêm đạn giả
     const dir = e.act ? e.act.a : e.dirA != null ? e.dirA : e.face > 0 ? 0 : PI;
-    Object.assign(o, { anim: n, t, face: e.face, dir, hit: e.flash > 0 ? 0.55 : 0, bao: false });
+    Object.assign(o, { anim: n, t, face: e.face, dir, hit: e.flash > 0 ? (e.fxHk >= 3 ? 0.85 : e.fxHk === 2 ? 0.7 : 0.55) : 0, bao: false }); // chớp trắng mạnh dần: thường, nặng, chí mạng (js/fx.js đặt e.fxHk)
     if (e.role === 'shield' && !(e.brokeT > 0) && e.dying == null) shieldArc(c, e);
     if (e.spikeUp > 0 && e.dying == null) {
       // đang dựng gai: vòng đỏ nhấp nháy quanh chân
