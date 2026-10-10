@@ -33,6 +33,7 @@
       if (!dt.idle) throw new Error('thiếu động tác đứng thở');
       const sp = {
         ma: tep.ma, ten: String(tep.ten || tep.ma), doi: tep.doi_tuong === 'em-be' ? 'em-be' : tep.doi_tuong === 'nguoi-lang' ? 'nguoi-lang' : 'quai', fw, fh, ax: +goc[0] || 0, ay: +goc[1] || 0,
+        lat: /^(trai|trái|left)$/i.test(String(tep.huong || tep.quay || '')), // ảnh vẽ quay TRÁI thì ghi "huong":"trai" — game tự lật lại để đầu luôn hướng về phía đi
         rong: tep.rong | 0 || fw, cao: tep.cao | 0 || fh, bong: +tep.bong || Math.max(6, (tep.rong | 0) * 0.62), dt, img: null, ready: false, mau: {}, vung: tep.vung || 'moi',
       };
       // Bộ phận "Đứng yên" và độ nhún cả người chọn trong công cụ. Tấm sprite đã dựng sẵn theo lựa chọn này, nên game chỉ
@@ -85,7 +86,7 @@
     const a = sp.dt[ten] || sp.dt.idle, sx = i * sp.fw, sy = a.hang * sp.fh, ga = c.globalAlpha;
     c.save();
     c.imageSmoothingEnabled = false;
-    if (face < 0) c.scale(-1, 1);
+    if ((face < 0) !== !!sp.lat) c.scale(-1, 1);
     const dx = -sp.ax, dy = -sp.ay + (o.dy || 0);
     if (o.alpha != null) c.globalAlpha = ga * clamp(o.alpha, 0, 1);
     const a1 = c.globalAlpha;
