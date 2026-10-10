@@ -99,7 +99,7 @@
     e.art = id; e.don = DEF(id).don || {}; e.scale = 1;
     e.r = clamp(Math.round(I.w * (elite ? 0.2 : 0.24)), 6, elite ? 16 : 12);
     e.hr = clamp(Math.round(I.h * 0.18), 5, elite ? 11 : 8);
-    e.h = I.h; e.w = I.w;
+    e.h = MA().cao ? MA().cao(id) : I.h; e.w = I.w; // chiều cao hình thật (gồm độ bay, chừa nhịp thở): thanh máu mảnh, biểu tượng, số sát thương đặt trên đỉnh hình, không chạm hình. Chỉ để vẽ, không phải vùng va chạm (e.r, e.hr).
     e.dirA = e.face > 0 ? 0 : PI;
     e.act = null; e.hitT = 0; e.turnT = 0;
     play(e, 'spawn');
@@ -576,6 +576,8 @@
       if (Math.abs(b - z.g) <= z.gw) continue;
       const o = Math.sin(b * 0.2 + t * 12) * 2;
       for (let a = -z.th / 2; a <= z.th / 2; a += 2) { const q = at(z.s + a + o, b); p(c, q[0], q[1], 2, 2, a > z.th / 2 - 3 ? '#ffffff' : a > 0 ? '#9fd0e8' : '#4a80b0'); }
+      // mép trước đang gây sát thương: chấm đỏ cam chạy trước bọt (khác vệt báo trước nhấp nháy), màu vùng nguy hiểm docs/vfx/BANG-MAU.md
+      if (((b >> 1) + ((t * 16) | 0)) % 3) { const q = at(z.s + z.th / 2 + 3 + o, b); p(c, q[0], q[1], 1, 2, '#ff5a40'); }
     }
     for (const s of [-1, 1]) { const q = at(z.s, z.g + s * z.gw); p(c, q[0] - 1, q[1] - 1, 3, 3, '#ffffff'); }
   }
@@ -678,7 +680,13 @@
     const k = e.don && e.don.kieu;
     if (n === 'atk' && (k === 'ban' || k === 'nem')) o.fx = false; // đạn thật do luật chơi bắn, không vẽ thêm đạn giả
     const dir = e.act ? e.act.a : e.dirA != null ? e.dirA : e.face > 0 ? 0 : PI;
-    Object.assign(o, { anim: n, t, face: e.face, dir, hit: e.flash > 0 ? (e.fxHk >= 3 ? 0.85 : e.fxHk === 2 ? 0.7 : 0.55) : 0, bao: false }); // chớp trắng mạnh dần: thường, nặng, chí mạng (js/fx.js đặt e.fxHk)
+    // Lấy đà: cử động 'tele' trải đúng theo thời gian lấy đà thật (e.wind / e.act.T) nên tư thế co người đạt đỉnh và rung đúng lúc
+    // sắp ra đòn, dù đòn lấy đà ngắn (bầy nhỏ 0,42 giây) hay dài (tinh anh, bom 0,85 giây). Chỉ đổi hình, không đổi thời gian ra đòn.
+    if (n === 'tele' && e.act && e.wind > 0 && e.act.T > 0) t = clamp(1 - e.wind / e.act.T, 0, 1) * dur(e.art, 'tele') * 0.999;
+    // Ra đòn nặng (tinh anh, quái giáp): giữ khung vừa đánh ra lâu hơn một chút rồi thu đòn chậm (cảm giác có trọng lượng).
+    else if (n === 'atk' && (e.role === 'elite' || e.role === 'shield') && e.dying == null) { const D = dur(e.art, 'atk'), a1 = D * 0.2; t = t < a1 ? t : t < a1 + 0.08 ? a1 : a1 + (t - a1 - 0.08) * 0.9; }
+    const fk = G.fx && G.fx.chop ? G.fx.chop() : 1; // khựng hình: chỉ khung đầu chớp trắng hẳn
+    Object.assign(o, { anim: n, t, face: e.face, dir, hit: e.flash > 0 ? (e.fxHk >= 3 ? 0.85 : e.fxHk === 2 ? 0.7 : 0.55) * fk : 0, chop: fk, tint: G.fx && G.fx.dotTint ? G.fx.dotTint(e) : null, bao: false }); // chớp trắng mạnh dần: thường, nặng, chí mạng (js/fx.js đặt e.fxHk); nhịp độc/cháy: nhuộm màu hệ
     if (e.role === 'shield' && !(e.brokeT > 0) && e.dying == null) shieldArc(c, e);
     if (e.spikeUp > 0 && e.dying == null) {
       // đang dựng gai: vòng đỏ nhấp nháy quanh chân
