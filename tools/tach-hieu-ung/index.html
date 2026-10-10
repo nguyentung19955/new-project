@@ -1,0 +1,766 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tách Hiệu Ứng · Linh Khí</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700&display=swap">
+<style>
+  /* Cùng bảng màu trống đồng với Xưởng Sprite. Chỉ có giao diện tối. Bố cục: 3 bước dọc, mỗi bước một khung đồng. */
+  :root {
+    color-scheme: dark;
+    --dk: #1a120a; --brD: #5a3d1a; --br: #a8752f; --gold: #d9a441; --hi: #f6dc92;
+    --pat: #3f8f7f; --patL: #6fc1a8; --patD: #1f4f4a; --bg: #12292a; --bg2: #17363a;
+    --cop: #8a2f22; --copL: #b8452f; --ink: #fff0c4; --sub: #a9c2b4; --text: #f1e6c6;
+    --ok: #7fd18b; --bad: #ff8a70;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 500 14px/1.5 "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  canvas { image-rendering: pixelated; image-rendering: crisp-edges; }
+  header { display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: linear-gradient(#2a1d0f, var(--dk)); border-bottom: 2px solid var(--brD); }
+  header h1 { margin: 0; font-size: 18px; color: var(--hi); }
+  header small { color: var(--sub); font-size: 12px; display: block; font-weight: 500; }
+  .menu { margin-left: auto; display: flex; flex-wrap: wrap; gap: 6px 12px; justify-content: flex-end; }
+  .menu a { color: var(--patL); font-size: 13px; text-decoration: none; padding: 2px 6px; border-radius: 6px; }
+  .menu a[aria-current] { color: #2b1a08; background: var(--gold); font-weight: 700; }
+  main { max-width: 1100px; margin: 0 auto; padding: 16px; display: grid; gap: 16px; }
+  .buoc { background: var(--bg2); border: 2px solid var(--brD); border-radius: 10px; padding: 14px; min-width: 0; }
+  .buoc h2 { margin: 0 0 10px; font-size: 16px; color: var(--hi); display: flex; gap: 8px; align-items: center; }
+  .so { width: 26px; height: 26px; border-radius: 50%; background: var(--gold); color: #2b1a08; display: grid; place-items: center; font-size: 14px; flex: none; }
+  .hang { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .nut { border: 2px solid var(--dk); border-radius: 7px; padding: 7px 14px; cursor: pointer; font-weight: 700; color: #2b1a08;
+    background: linear-gradient(var(--hi), var(--gold) 45%, var(--br)); box-shadow: inset 0 1px 0 #fff4c8, 0 2px 0 var(--dk); min-height: 38px; }
+  .nut:hover { filter: brightness(1.08); } .nut:active { transform: translateY(1px); }
+  .nut:disabled { filter: grayscale(.8) brightness(.7); cursor: not-allowed; }
+  .nut.phu { color: var(--ink); background: linear-gradient(var(--patL), var(--pat) 45%, var(--patD)); box-shadow: inset 0 1px 0 #b8f0de, 0 2px 0 var(--dk); }
+  .nut.nho { padding: 3px 10px; min-height: 30px; font-size: 13px; }
+  .nut.chon { outline: 3px solid var(--hi); outline-offset: 1px; }
+  .nut:focus-visible, select:focus-visible, input:focus-visible { outline: 3px solid var(--patL); outline-offset: 2px; }
+  select, input[type=number] { background: var(--dk); border: 2px solid var(--brD); border-radius: 7px; padding: 6px 8px; min-height: 38px; }
+  select { font-weight: 700; color: var(--ink); min-width: 220px; max-width: 100%; }
+  .bang { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 6px 12px; margin-top: 10px; font-size: 13px; color: var(--sub); }
+  .bang b { color: var(--ink); font-variant-numeric: tabular-nums; }
+  textarea { width: 100%; min-height: 110px; background: var(--dk); border: 2px solid var(--brD); border-radius: 7px; padding: 8px; color: var(--text); font-size: 12.5px; resize: vertical; }
+  details { margin-top: 10px; } summary { cursor: pointer; color: var(--patL); }
+  .sua { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; margin-top: 8px; }
+  .sua label { display: grid; gap: 2px; font-size: 12px; color: var(--sub); }
+  .sua input { width: 100%; }
+  #vungTha { border: 2px dashed var(--br); border-radius: 10px; padding: 22px 12px; text-align: center; color: var(--sub); cursor: pointer; background: rgba(0,0,0,.15); }
+  #vungTha.keo { border-color: var(--hi); background: rgba(246,220,146,.08); }
+  #vungTha b { color: var(--ink); }
+  .khung-xem { overflow: auto; background: #233a2e; border: 2px solid var(--dk); border-radius: 8px; margin-top: 10px; max-width: 100%; }
+  .khung-xem canvas { display: block; }
+  #cvGoc { cursor: pointer; }
+  .chu-y { font-size: 12.5px; color: var(--sub); margin: 6px 0 0; }
+  .ket-qua { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 300px); gap: 14px; }
+  @media (max-width: 760px) { .ket-qua { grid-template-columns: 1fr; } }
+  .kiem { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; font-size: 13px; }
+  .kiem li::before { content: "✔ "; color: var(--ok); font-weight: 700; }
+  .kiem li.loi { color: var(--bad); } .kiem li.ghi { color: var(--sub); margin-top: 6px; } .kiem li.ghi::before { content: "👁 "; color: var(--sub); } .kiem li.loi::before { content: "✘ "; color: var(--bad); }
+  #huongDan { font-size: 13px; color: var(--sub); }
+  .the { display: inline-block; padding: 2px 10px; border-radius: 99px; font-weight: 700; font-size: 13px; }
+  .the.dat { background: #1f4f2e; color: var(--ok); } .the.hong { background: #4f1f1a; color: var(--bad); }
+  #thongBao { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); background: var(--dk); border: 2px solid var(--gold); color: var(--ink); padding: 8px 16px; border-radius: 8px; z-index: 9; max-width: calc(100% - 32px); }
+  .cat { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-top: 10px; }
+  .cat label { display: grid; gap: 2px; font-size: 12px; color: var(--sub); }
+  .cat input { width: 100%; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  /* Riêng trang Hiệu ứng: điện thoại (nút to, không cuộn ngang) */
+  .khung-xem canvas { max-width: 100%; height: auto; }
+  .chon-nen { display: flex; gap: 6px; flex-wrap: wrap; }
+  .o-mau { display: inline-block; width: 14px; height: 14px; border: 1px solid var(--dk); border-radius: 3px; vertical-align: -2px; }
+  @media (max-width: 560px) {
+    header { flex-wrap: wrap; }
+    .menu { margin-left: 0; justify-content: flex-start; }
+    .nut { min-height: 44px; } .nut.nho { min-height: 40px; }
+    select { width: 100%; min-width: 0; }
+    main { padding: 10px; }
+    .buoc { padding: 10px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="#a8752f" stroke="#1a120a" stroke-width="2"/><circle cx="15" cy="15" r="8" fill="none" stroke="#f6dc92" stroke-width="1.5"/><path d="M15 4 L17 13 L26 15 L17 17 L15 26 L13 17 L4 15 L13 13 Z" fill="#f6dc92"/></svg>
+  <div><h1>Tách Hiệu Ứng</h1><small>Ảnh ChatGPT vẽ (một hàng khung) → tệp hu-&lt;tên&gt;.sprite.json cho game Linh Khí</small></div>
+  <nav class="menu" aria-label="Các công cụ">
+    <a href="tach-quai.html">Quái</a>
+    <a href="tach-anh-hung.html">Anh hùng · Người làng</a>
+    <a href="tach-do.html">Vũ khí · Đồ · Vật phẩm</a>
+    <a href="tach-hieu-ung.html" aria-current="page">Hiệu ứng</a>
+  </nav>
+</header>
+
+<main>
+  <section class="buoc">
+    <h2><span class="so">1</span>Chọn hiệu ứng và lấy prompt vẽ</h2>
+    <div class="hang">
+      <select id="chonHu" aria-label="Chọn hiệu ứng"></select>
+      <button class="nut" id="nutChepPrompt">Sao chép prompt vẽ</button>
+    </div>
+    <p class="chu-y" id="noiDung"></p>
+    <div class="bang" id="bangThongSo"></div>
+    <details>
+      <summary>Xem prompt</summary>
+      <textarea id="oPrompt" readonly></textarea>
+    </details>
+    <details>
+      <summary>Sửa thông số (chỉ khi Claude dặn)</summary>
+      <div class="sua" id="oSua"></div>
+    </details>
+    <p class="chu-y">Dán prompt vào ChatGPT. ChatGPT chỉ cần vẽ một tấm ảnh (một hàng khung từ trái sang phải), rồi bạn lưu ảnh đó về máy.</p>
+  </section>
+
+  <section class="buoc">
+    <h2><span class="so">2</span>Đưa ảnh ChatGPT vẽ vào đây</h2>
+    <div id="vungTha" tabindex="0" role="button" aria-label="Chọn ảnh">
+      <b>Bấm để chọn ảnh</b>, kéo thả ảnh vào, hoặc dán (Ctrl+V)<br>
+      <span style="font-size:12px">Ảnh một hàng khung như prompt, nền một màu trơn (đúng màu prompt ghi).</span>
+    </div>
+    <input type="file" id="chonAnh" accept="image/*" hidden>
+    <div id="vungAnhGoc" hidden>
+      <div class="khung-xem"><canvas id="cvGoc"></canvas></div>
+      <div class="hang" style="margin-top:10px">
+        <label for="cachTach">Cách tách:</label>
+        <select id="cachTach"><option value="tu">Tự tìm (khuyên dùng)</option><option value="deu">Chia đều theo số cột</option></select>
+        <label class="hang" style="gap:6px">Số cột <input type="number" id="soCot" min="1" max="24" value="6" style="width:70px"></label>
+      </div>
+      <p class="chu-y">Khung vàng là từng khung công cụ tìm được, số ở góc là thứ tự. <b>Chạm vào khung nào để bỏ khung đó</b> (khung đỏ gạch chéo, ví dụ khung thừa, bảng phụ); chạm lại để lấy lại. Ảnh có phần thừa (chữ, bảng màu) thì cắt bớt:</p>
+      <div class="cat">
+        <label>Cắt trên (%)<input type="number" id="catTren" min="0" max="90" value="0"></label>
+        <label>Cắt dưới (%)<input type="number" id="catDuoi" min="0" max="90" value="0"></label>
+        <label>Cắt trái (%)<input type="number" id="catTrai" min="0" max="90" value="0"></label>
+        <label>Cắt phải (%)<input type="number" id="catPhai" min="0" max="90" value="0"></label>
+      </div>
+      <div class="hang" style="margin-top:8px">
+        <label class="hang" style="gap:6px">Mép <select id="kieuMep" style="min-width:0"><option value="mem">Mềm (giữ quầng sáng trong suốt)</option><option value="sac">Sắc (đặc hoặc trong suốt)</option></select></label>
+        <label class="hang" style="gap:6px">Độ nét <select id="doNet" style="min-width:0"><option value="min">Mịn</option><option value="net">Sắc nét</option></select></label>
+        <label class="hang" style="gap:6px">Số màu <select id="soMau" style="min-width:0"><option value="32">32</option><option value="24">24</option><option value="16">16</option></select></label>
+        <label class="hang" style="gap:6px">Cỡ <select id="coThem" style="min-width:0"><option value="0.7">70%</option><option value="0.85">85%</option><option value="1" selected>100%</option><option value="1.15">115%</option></select></label>
+        <label class="hang" style="gap:6px"><input type="checkbox" id="latNgang"> Lật ngang (CHỈ khi hiệu ứng trong ảnh hướng sang TRÁI)</label>
+        <label class="hang" style="gap:6px"><input type="checkbox" id="locDom" checked> Lọc đốm màu nền</label>
+        <label class="hang" style="gap:6px"><input type="checkbox" id="vienToi"> Viền tối</label>
+        <button class="nut phu nho" id="nutLamLai">Tách lại</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="buoc" id="buoc3" hidden>
+    <h2><span class="so">3</span>Kiểm tra và tải file <span id="theKq" class="the"></span></h2>
+    <p class="chu-y" style="margin-top:-4px">Đang tách cho: <b id="dangCho" style="color:var(--hi);font-size:15px"></b>. Xem hiệu ứng chạy trên nền game bên dưới, đúng ý thì mới tải.</p>
+    <div class="ket-qua">
+      <div style="min-width:0">
+        <div class="hang">
+          <span>Nền xem:</span>
+          <span class="chon-nen" id="chonNen"></span>
+          <label class="hang" style="gap:6px"><input type="checkbox" id="xemTrai"> Quay trái (game tự lật)</label>
+          <label class="hang" style="gap:6px"><input type="checkbox" id="xemCham"> Chậm 4 lần</label>
+        </div>
+        <div class="khung-xem" style="display:grid;place-items:center;padding:6px"><canvas id="cvChay" width="320" height="200"></canvas></div>
+        <div class="khung-xem"><canvas id="cvTam"></canvas></div>
+      </div>
+      <div>
+        <ul class="kiem" id="dsKiem"></ul>
+        <div class="hang" style="margin-top:14px">
+          <button class="nut" id="nutTaiJson">Tải file .sprite.json</button>
+          <button class="nut phu nho" id="nutTaiPng">Tải ảnh PNG</button>
+        </div>
+        <p id="huongDan" class="chu-y">Gửi file .sprite.json cho Claude để đưa vào game (thư mục game/art/custom).</p>
+      </div>
+    </div>
+  </section>
+</main>
+<div id="thongBao" hidden></div>
+
+<script>
+'use strict';
+// ===================== THÔNG SỐ HIỆU ỨNG (khớp game/js/fx_anh.js và chỗ móc trong fx.js, fx_dan.js, fx_chuong.js, mobs.js, stage.js) =====================
+// fw×fh: cỡ một khung (điểm ảnh game); gx,gy: điểm neo (chỗ game đặt hiệu ứng); so: số khung; giay: thời lượng; lap: chạy lặp;
+// xoay: xoay theo hướng bay; cong: vẽ kiểu cộng sáng (ánh sáng); canh: 'trai' (bám mép trái, như vệt vũ khí) hoặc 'giua';
+// doc: 'giua' hoặc 'day' (đáy hình chạm mặt đất); nen: màu nền vẽ; xem: kiểu xem thử; noi: hiện ở đâu trong game.
+// Cỡ đo theo hình vẽ bằng code hiện tại: vệt kiếm tầm ~32 điểm ảnh, nổ chuẩn bán kính 40, quái cao ~24, em bé cao ~28.
+const HU = [
+  { ma: 'hu-chem-kiem', ten: 'Vệt chém kiếm', nen: 'hong', fw: 56, fh: 48, gx: 8, gy: 24, so: 6, giay: 0.2, canh: 'trai', doc: 'giua', xem: 'vu-khi',
+    noi: 'Đòn thường của kiếm (thay vệt trăng khuyết vẽ bằng code). Điểm neo là tay em bé.',
+    mo: 'một vệt chém hình lưỡi liềm cong (trăng khuyết) màu trắng bạc ánh xanh nhạt, lõi trắng sáng, đuôi mờ dần thành các chấm thưa; vệt quét từ trên xuống dưới ở phía trước',
+    dat: 'điểm gốc (chỗ tay cầm kiếm) ở mép TRÁI, ngang giữa ô; vệt cong toả sang PHẢI như kiếm chém về phía trước', thoi: 'khung đầu vệt vừa mở, khung giữa vệt đầy và sáng nhất, các khung cuối vệt mỏng và tan dần' },
+  { ma: 'hu-chem-bua', ten: 'Vệt nện búa', nen: 'hong', fw: 56, fh: 56, gx: 10, gy: 30, so: 6, giay: 0.24, canh: 'trai', doc: 'giua', xem: 'vu-khi',
+    noi: 'Đòn thường của búa (vết nứt và bụi trên đất vẫn vẽ bằng code). Điểm neo là tay em bé.',
+    mo: 'một vệt cung dày, nặng, màu trắng ngà ánh vàng nhạt, bổ từ trên cao xuống mặt đất phía trước; khung cuối có chớp va chạm nhỏ ở chỗ chạm đất',
+    dat: 'điểm gốc (tay cầm búa) ở mép TRÁI, ngang giữa ô; vệt cung đi từ phía trên xuống góc dưới bên PHẢI', thoi: 'vệt bổ xuống dần, chạm đất, rồi tan' },
+  { ma: 'hu-dam-giao', ten: 'Vệt đâm giáo', nen: 'hong', fw: 56, fh: 20, gx: 2, gy: 10, so: 5, giay: 0.18, canh: 'trai', doc: 'giua', xem: 'vu-khi',
+    noi: 'Đòn thường của giáo (thay mũi đâm vẽ bằng code). Điểm neo trước tay em bé.',
+    mo: 'một tia đâm thẳng nằm ngang, mảnh và dài, lõi trắng, viền xanh bạc, mũi nhọn loé sáng ở đầu, vài vạch gió song song',
+    dat: 'tia bắt đầu ở mép TRÁI giữa ô và phóng thẳng sang PHẢI', thoi: 'tia phóng dài ra, loé ở mũi, rồi rút ngắn và tan' },
+  { ma: 'hu-trung', ten: 'Trúng đòn thường', nen: 'duong', fw: 32, fh: 32, gx: 16, gy: 16, so: 5, giay: 0.2, cong: true, canh: 'giua', doc: 'giua', xem: 'trung',
+    noi: 'Mỗi lần đánh trúng quái (hạt văng theo hệ vẫn vẽ bằng code). Đặt ở thân quái.',
+    mo: 'tia va chạm nhỏ: ngôi sao 4 cánh màu trắng và vàng nhạt loé lên, vài tia sáng ngắn bắn ra xung quanh rồi tắt',
+    dat: 'tâm va chạm ở CHÍNH GIỮA ô', thoi: 'loé to nhanh rồi nhỏ dần và tắt' },
+  { ma: 'hu-trung-nang', ten: 'Trúng đòn nặng', nen: 'duong', fw: 40, fh: 40, gx: 20, gy: 20, so: 6, giay: 0.24, cong: true, canh: 'giua', doc: 'giua', xem: 'trung',
+    noi: 'Đòn nặng, đòn búa, đòn kết liễu (không có tệp này thì dùng Trúng đòn thường).',
+    mo: 'va chạm mạnh: chớp trắng to hình sao, một vòng sóng tròn mảnh nở ra, vài mảnh sáng văng, màu trắng và vàng nhạt',
+    dat: 'tâm va chạm ở CHÍNH GIỮA ô', thoi: 'chớp sáng, vòng nở rộng dần, mảnh văng ra rồi tan' },
+  { ma: 'hu-chi-mang', ten: 'Chí mạng', nen: 'duong', fw: 56, fh: 56, gx: 28, gy: 28, so: 6, giay: 0.3, cong: true, canh: 'giua', doc: 'giua', xem: 'trung',
+    noi: 'Đòn chí mạng (thay chớp vàng và hai vòng sáng vẽ bằng code).',
+    mo: 'chí mạng: chớp VÀNG KIM rực hình ngôi sao 8 cánh, hai vòng sáng vàng và trắng nở ra, tia vàng toả đều, lấp lánh',
+    dat: 'tâm ở CHÍNH GIỮA ô', thoi: 'bùng sáng, các vòng nở rộng, tia toả ra rồi tan thành lấp lánh' },
+  { ma: 'hu-pha-giap', ten: 'Vỡ giáp', nen: 'xanh', fw: 48, fh: 48, gx: 24, gy: 24, so: 6, giay: 0.4, canh: 'giua', doc: 'giua', xem: 'trung',
+    noi: 'Khi đánh vỡ khiên của quái giáp (cùng lúc chữ "Vỡ giáp!").',
+    mo: 'một tấm giáp kim loại xám bạc vỡ tung thành nhiều mảnh văng ra, có chớp sáng vàng nhạt ở giữa lúc vỡ, các mảnh rơi xuống và tan dần',
+    dat: 'tâm ở CHÍNH GIỮA ô', thoi: 'tấm giáp nứt, vỡ bung, mảnh văng xa rồi rơi và mờ dần' },
+  { ma: 'hu-no-lua', ten: 'Nổ lửa', nen: 'xanh', fw: 96, fh: 80, gx: 48, gy: 60, so: 8, giay: 0.55, cong: true, canh: 'giua', doc: 'day', xem: 'no',
+    noi: 'Mọi vụ nổ lửa (chưởng lửa, lò than, bom quái vùng lửa). Cỡ tự co giãn theo vụ nổ; ảnh chuẩn cho bán kính 40.',
+    mo: 'vụ nổ lửa: quả cầu lửa vàng cam bùng lên, vòng lửa loang trên mặt đất (hình bầu dục dẹt), lưỡi lửa bốc lên, tàn lửa bắn ra, cuối cùng tan thành khói xám mỏng; dùng màu vàng và cam, tránh đỏ tươi',
+    dat: 'tâm vụ nổ ở GIỮA ô theo chiều ngang; mặt đất ở khoảng 3/4 chiều cao ô, vụ nổ bốc lên phía trên', thoi: 'chớp nhỏ, bùng to nhất ở khung 3–4, rồi tàn và tan thành khói' },
+  { ma: 'hu-no-doc', ten: 'Nổ độc', nen: 'hong', fw: 96, fh: 80, gx: 48, gy: 60, so: 8, giay: 0.55, cong: true, canh: 'giua', doc: 'day', xem: 'no',
+    noi: 'Mọi vụ nổ độc (chưởng độc, nấm độc, bom quái vùng độc). Ảnh chuẩn cho bán kính 40.',
+    mo: 'vụ nổ độc: bọt khí xanh lá chanh bùng lên, vòng chất độc xanh lá loang trên mặt đất (bầu dục dẹt), giọt độc bắn ra, bong bóng và hơi độc xanh nhạt bốc lên rồi tan',
+    dat: 'tâm vụ nổ ở GIỮA ô theo chiều ngang; mặt đất ở khoảng 3/4 chiều cao ô, vụ nổ bốc lên phía trên', thoi: 'bùng lên, loang rộng nhất ở khung 3–4, bong bóng bốc lên rồi tan' },
+  { ma: 'hu-no-bang', ten: 'Nổ băng', nen: 'hong', fw: 96, fh: 80, gx: 48, gy: 60, so: 8, giay: 0.55, cong: true, canh: 'giua', doc: 'day', xem: 'no',
+    noi: 'Mọi vụ nổ băng (chưởng băng, tinh thể băng, bom quái vùng băng). Ảnh chuẩn cho bán kính 40.',
+    mo: 'vụ nổ băng: chớp trắng xanh, vòng sương giá loang trên mặt đất (bầu dục dẹt), gai băng nhọn trồi lên từ đất rồi vỡ, mảnh băng lấp lánh văng ra, hơi lạnh tan; màu trắng và xanh băng',
+    dat: 'tâm vụ nổ ở GIỮA ô theo chiều ngang; mặt đất ở khoảng 3/4 chiều cao ô, gai băng mọc lên phía trên', thoi: 'chớp, gai băng mọc cao nhất ở khung 3–4, vỡ vụn rồi tan' },
+  { ma: 'hu-chuong-lua', ten: 'Chưởng lửa (đang bay)', nen: 'xanh', fw: 32, fh: 20, gx: 20, gy: 10, so: 4, giay: 0.4, lap: true, xoay: true, cong: true, canh: 'giua', doc: 'giua', xem: 'dan',
+    noi: 'Quả cầu lửa của Hỏa chưởng khi đang bay; game xoay theo hướng bay.',
+    mo: 'quả cầu lửa đang bay: lõi trắng vàng, vỏ cam, đuôi lửa kéo dài về phía sau, lưỡi lửa bập bùng',
+    dat: 'quả cầu ở nửa PHẢI ô, đuôi lửa kéo về bên TRÁI', huong: 'bay sang PHẢI', thoi: 'lửa bập bùng, khung cuối nối tiếp được khung đầu để chạy lặp' },
+  { ma: 'hu-chuong-doc', ten: 'Chưởng độc (đang bay)', nen: 'hong', fw: 32, fh: 20, gx: 20, gy: 10, so: 4, giay: 0.4, lap: true, xoay: true, canh: 'giua', doc: 'giua', xem: 'dan',
+    noi: 'Luồng độc của chưởng độc khi đang bay; game xoay theo hướng bay.',
+    mo: 'cục nhớt độc xanh lá đang bay, viền xanh sẫm, phồng xẹp, bong bóng nhỏ, đuôi giọt độc phía sau',
+    dat: 'cục nhớt ở nửa PHẢI ô, đuôi giọt kéo về bên TRÁI', huong: 'bay sang PHẢI', thoi: 'phồng xẹp nhịp nhàng, khung cuối nối tiếp được khung đầu' },
+  { ma: 'hu-chuong-bang', ten: 'Chưởng băng (đang bay)', nen: 'hong', fw: 32, fh: 16, gx: 20, gy: 8, so: 4, giay: 0.4, lap: true, xoay: true, cong: true, canh: 'giua', doc: 'giua', xem: 'dan',
+    noi: 'Mũi băng của chưởng băng khi đang bay; game xoay theo hướng bay.',
+    mo: 'mũi băng nhọn dài đang bay: tinh thể xanh trắng, cạnh sáng, đầu nhọn ở bên phải, đuôi sương lạnh phía sau',
+    dat: 'mũi băng nằm ngang giữa ô, đầu nhọn chĩa sang PHẢI', huong: 'bay sang PHẢI', thoi: 'cạnh băng lấp lánh, đuôi sương lay động, khung cuối nối tiếp được khung đầu' },
+  { ma: 'hu-dan-ten', ten: 'Mũi tên (em bé bắn)', nen: 'xanh', fw: 24, fh: 8, gx: 14, gy: 4, so: 4, giay: 0.3, lap: true, xoay: true, canh: 'giua', doc: 'giua', xem: 'dan',
+    noi: 'Mũi tên của cung khi đang bay (quầng sáng và vệt bay vẫn vẽ bằng code); game xoay theo hướng bay.',
+    mo: 'mũi tên gỗ nhỏ đang bay: thân gỗ nâu thẳng, mũi sắt bạc nhọn, lông đuôi trắng, một vệt gió trắng mảnh phía sau',
+    dat: 'mũi tên nằm ngang giữa ô, mũi nhọn ở bên PHẢI', huong: 'bay sang PHẢI', thoi: 'lông đuôi rung nhẹ, khung cuối nối tiếp được khung đầu' },
+  { ma: 'hu-dan-qua-no', ten: 'Quả nổ của sóc', nen: 'xanh', fw: 16, fh: 18, gx: 8, gy: 10, so: 4, giay: 0.4, lap: true, canh: 'giua', doc: 'giua', xem: 'dan',
+    noi: 'Quả nổ Sóc Ném Quả Nổ ném ra (lúc bay và lúc nằm chờ nổ; vòng đỏ báo trước vẫn vẽ bằng code).',
+    mo: 'quả nổ tròn màu tím sẫm có gai nhỏ, mặt dữ, ngòi trên đỉnh đang cháy toé tia lửa vàng; quả lăn xoay nhẹ',
+    dat: 'quả ở GIỮA ô, ngòi chĩa lên trên', thoi: 'ngòi lửa nhấp nháy, quả xoay nhẹ, khung cuối nối tiếp được khung đầu' },
+  { ma: 'hu-dan-bao-tu', ten: 'Viên bào tử', nen: 'hong', fw: 14, fh: 14, gx: 7, gy: 7, so: 4, giay: 0.4, lap: true, canh: 'giua', doc: 'giua', xem: 'dan',
+    noi: 'Viên bào tử Hoa Phun Bào Tử bắn ra (quầng đỏ báo nguy hiểm vẫn vẽ bằng code).',
+    mo: 'viên bào tử độc tròn nhỏ màu xanh lá chanh phát sáng, có chấm trắng, quầng xanh mờ, vài hạt li ti quanh',
+    dat: 'viên bào tử ở GIỮA ô', thoi: 'nhấp nháy, phồng xẹp nhẹ, khung cuối nối tiếp được khung đầu' },
+  { ma: 'hu-quai-chet', ten: 'Quái chết tan', nen: 'hong', fw: 48, fh: 48, gx: 24, gy: 44, so: 8, giay: 0.5, canh: 'giua', doc: 'day', xem: 'chet',
+    noi: 'Khi quái thường chết (thay khói và tia vẽ bằng code). Điểm neo ở chân quái; cỡ co giãn theo quái (ảnh chuẩn cho quái cao 24).',
+    mo: 'làn khói trắng xám phồng lên từ mặt đất rồi tan thành các hạt sáng li ti bay lên, vài ngôi sao nhỏ lấp lánh, như một con quái vừa bị đánh tan biến thành khói',
+    dat: 'khói bốc lên từ đáy GIỮA ô (mặt đất ở sát đáy ô)', thoi: 'phụt khói, phồng to nhất ở giữa, rồi tan thành hạt sáng bay lên' },
+  { ma: 'hu-len-cap', ten: 'Lên cấp (bảng kết quả)', nen: 'duong', fw: 160, fh: 40, gx: 80, gy: 20, so: 6, giay: 0.8, lap: true, cong: true, canh: 'giua', doc: 'giua', xem: 'chu',
+    noi: 'Quầng sáng chạy lặp sau dòng chữ "… lên cấp …!" ở bảng kết quả cuối ải.',
+    mo: 'một dải ánh sáng vàng kim nằm ngang, mềm, các ngôi sao lấp lánh và tia sáng chạy dọc dải',
+    dat: 'dải sáng nằm ngang giữa ô, rộng gần hết bề ngang ô', thoi: 'ngôi sao lấp lánh lần lượt chạy dọc dải, khung cuối nối tiếp được khung đầu để chạy lặp' },
+];
+const NEN = { xanh: ['XANH LÁ #00FF00', [0, 255, 0], 'xanh lá'], duong: ['XANH DƯƠNG #0000FF', [0, 0, 255], 'xanh dương'], hong: ['HỒNG TÍM #FF00FF', [255, 0, 255], 'hồng tím'] };
+const NEN_XEM = [['toi', '#141a1c', 'Tối'], ['co', '#3a4a30', 'Cỏ'], ['dat', '#6a5a46', 'Đất'], ['sang', '#c8c0a8', 'Sáng']];
+const VIEN = [0x14, 0x18, 0x2e];
+
+const $ = (id) => document.getElementById(id);
+let Q = null, ANH = null, KQ = null, BO = [], LAST = null, nenXem = '#141a1c';
+
+function bao(t) { const b = $('thongBao'); b.textContent = t; b.hidden = false; clearTimeout(bao.t); bao.t = setTimeout(() => b.hidden = true, 2600); }
+
+function taoPrompt(q) {
+  const n = NEN[q.nen], tl = q.fw + ':' + q.fh;
+  return `Dùng công cụ tạo ảnh vẽ MỘT tấm ảnh pixel art 2D: hiệu ứng "${q.ten}" cho game hành động Linh Khí (phong cách dân gian Việt, pixel art khối rõ, màu tươi sáng, nét gọn). Nội dung: ${q.mo}. `
+    + `BỐ CỤC: ảnh khổ ngang, MỘT HÀNG NGANG DUY NHẤT gồm ĐÚNG ${q.so} khung bằng nhau, xếp từ TRÁI sang PHẢI theo thời gian (khung 1 là lúc bắt đầu, khung ${q.so} là lúc kết thúc): ${q.thoi}. `
+    + `Mỗi khung là một ô tỉ lệ ngang:cao = ${tl}, giữa các ô có khoảng trống rộng hoặc đường kẻ mảnh màu đen. KHÔNG vẽ thêm khung thứ ${q.so + 1}, không xuống hàng, không vẽ hàng thứ hai. `
+    + `VỊ TRÍ TRONG Ô: ${q.dat}. Hiệu ứng chỉ chiếm khoảng 70% ô, nằm TRỌN trong ô của nó, cách mép ô ít nhất 1/10 ô, tuyệt đối không lấn sang ô bên cạnh; mọi khung cùng tỉ lệ, cùng điểm gốc, chỉ khác nhau theo thời gian. `
+    + `HƯỚNG: ${q.huong || 'hướng chuyển động (nếu có) sang PHẢI'}. KHÔNG vẽ nhân vật, quái, vũ khí, mặt đất, bóng đổ hay khung trang trí: chỉ vẽ hiệu ứng. Mỗi ô đều phải có hiệu ứng (không để ô trống). `
+    + `KHÔNG chữ, không số, không chú thích, không bảng màu, không bảng phụ, không ảnh mẫu thu nhỏ. `
+    + `Nền trơn MỘT MÀU ${n[0]} phủ kín toàn ảnh (không ô cờ, không nền trắng, không chuyển màu, không hoạ tiết), và KHÔNG dùng màu ${n[2]} hay màu gần giống nó trong hiệu ứng. Không dùng màu đỏ tươi (đỏ dành cho báo nguy hiểm). `
+    + `Chỉ cần gửi tấm ảnh, không cần code, không cần file.`;
+}
+
+function hienHu() {
+  $('noiDung').innerHTML = '<b style="color:var(--ink)">Trong game:</b> ' + Q.noi;
+  $('bangThongSo').innerHTML = [
+    ['Mã', q => q.ma], ['Cỡ khung', q => q.fw + '×' + q.fh], ['Số khung', q => q.so], ['Điểm neo', q => `(${q.gx}, ${q.gy})`],
+    ['Thời lượng', q => q.giay + ' giây' + (q.lap ? ', lặp' : '')], ['Nền vẽ', q => `<span class="o-mau" style="background:rgb(${NEN[q.nen][1]})"></span> ${NEN[q.nen][2]}`],
+    ['Kiểu vẽ', q => (q.cong ? 'cộng sáng' : 'thường') + (q.xoay ? ', xoay theo hướng bay' : '')],
+  ].map(([k, f]) => `<div>${k}: <b>${f(Q)}</b></div>`).join('');
+  $('oPrompt').value = taoPrompt(Q);
+  const truong = [['fw', 'Rộng khung'], ['fh', 'Cao khung'], ['gx', 'Neo x'], ['gy', 'Neo y'], ['so', 'Số khung'], ['giay', 'Thời lượng (giây)'], ['co', 'Cỡ trong game (hệ số)']];
+  $('oSua').innerHTML = truong.map(([k, t]) => `<label>${t}<input type="number" step="${k === 'giay' || k === 'co' ? 0.05 : 1}" id="sua_${k}" value="${Q[k] == null ? 1 : Q[k]}"></label>`).join('')
+    + `<label><span><input type="checkbox" id="sua_lap" ${Q.lap ? 'checked' : ''}> Chạy lặp</span></label>`
+    + `<label><span><input type="checkbox" id="sua_xoay" ${Q.xoay ? 'checked' : ''}> Xoay theo hướng bay</span></label>`
+    + `<label><span><input type="checkbox" id="sua_cong" ${Q.cong ? 'checked' : ''}> Cộng sáng (ánh sáng)</span></label>`;
+  truong.forEach(([k]) => $('sua_' + k).onchange = (e) => { const v = +e.target.value; if (v > 0) Q[k] = k === 'giay' || k === 'co' ? v : Math.round(v); if (k === 'so') $('soCot').value = Q.so; hienHu(); if (ANH) chay(); });
+  ['lap', 'xoay', 'cong'].forEach(k => $('sua_' + k).onchange = (e) => { Q[k] = e.target.checked; hienHu(); if (ANH) chay(); });
+}
+function chonHu(i) {
+  Q = Object.assign({ co: 1 }, HU[i]);
+  $('soCot').value = Q.so; $('kieuMep').value = Q.cong ? 'mem' : 'sac';
+  hienHu();
+}
+HU.forEach((q, i) => { const o = document.createElement('option'); o.value = i; o.textContent = q.ten + ' (' + q.ma + ')'; $('chonHu').appendChild(o); });
+try { const i = localStorage.getItem('thu_hu'); if (i != null && HU[i]) $('chonHu').value = i; } catch (e) {}
+chonHu(+$('chonHu').value);
+$('chonHu').onchange = (e) => { chonHu(+e.target.value); BO = []; try { localStorage.setItem('thu_hu', e.target.value); } catch (er) {} if (ANH) chay(); };
+
+$('nutChepPrompt').onclick = () => {
+  const t = taoPrompt(Q), loi = () => { const a = $('oPrompt'); a.closest('details').open = true; a.focus(); a.select(); bao('Hãy bôi đen và sao chép trong ô prompt'); };
+  try { navigator.clipboard.writeText(t).then(() => bao('Đã sao chép prompt vẽ ' + Q.ten), loi); } catch (e) { loi(); }
+};
+
+// ===================== NHẬN ẢNH =====================
+function nhanAnh(file) {
+  if (!file || !/^image\//.test(file.type)) { bao('Tệp này không phải ảnh'); return; }
+  const url = URL.createObjectURL(file), img = new Image();
+  img.onload = () => { ANH = img; BO = []; URL.revokeObjectURL(url); $('vungAnhGoc').hidden = false; chay(); };
+  img.onerror = () => bao('Không mở được ảnh này');
+  img.src = url;
+}
+$('vungTha').onclick = () => $('chonAnh').click();
+$('vungTha').onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('chonAnh').click(); } };
+$('chonAnh').onchange = (e) => { nhanAnh(e.target.files[0]); e.target.value = ''; };
+['dragenter', 'dragover'].forEach(t => $('vungTha').addEventListener(t, (e) => { e.preventDefault(); $('vungTha').classList.add('keo'); }));
+['dragleave', 'drop'].forEach(t => $('vungTha').addEventListener(t, () => $('vungTha').classList.remove('keo')));
+$('vungTha').addEventListener('drop', (e) => { e.preventDefault(); const f = e.dataTransfer.files && e.dataTransfer.files[0]; if (f) nhanAnh(f); });
+document.addEventListener('paste', (e) => { const it = [...(e.clipboardData || {}).items || []].find(x => x.type.startsWith('image/')); if (it) nhanAnh(it.getAsFile()); });
+['catTren', 'catDuoi', 'catTrai', 'catPhai', 'cachTach', 'soCot'].forEach(id => $(id).onchange = () => { BO = []; ANH && chay(); });
+['latNgang', 'doNet', 'locDom', 'soMau', 'kieuMep', 'coThem', 'vienToi'].forEach(id => $(id).onchange = () => ANH && chay());
+$('nutLamLai').onclick = () => ANH && chay();
+
+// ===================== XỬ LÝ =====================
+function layAnh() {
+  const ct = +$('catTren').value / 100, cd = +$('catDuoi').value / 100, cl = +$('catTrai').value / 100, cr = +$('catPhai').value / 100;
+  const sx = Math.round(ANH.naturalWidth * cl), sy = Math.round(ANH.naturalHeight * ct);
+  const W = Math.max(8, Math.round(ANH.naturalWidth * (1 - cl - cr))), H = Math.max(6, Math.round(ANH.naturalHeight * (1 - ct - cd)));
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const g = c.getContext('2d'); g.drawImage(ANH, sx, sy, W, H, 0, 0, W, H);
+  return { W, H, d: g.getImageData(0, 0, W, H).data };
+}
+const kc = (d, j, c) => Math.abs(d[j*4] - c[0]) + Math.abs(d[j*4+1] - c[1]) + Math.abs(d[j*4+2] - c[2]);
+const sacDo = (r, g, b) => { const mx = Math.max(r, g, b), mn = Math.min(r, g, b), c = mx - mn; if (!c) return [0, 0];
+  let h = mx === r ? ((g - b) / c) % 6 : mx === g ? (b - r) / c + 2 : (r - g) / c + 4; return [(h * 60 + 360) % 360, c / mx]; };
+
+// Tách nền cả ảnh. Trả về P (RGBA, alpha 0..255), duong (đường kẻ lưới), nen (màu nền chính).
+// "Mềm": độ trong suốt tính theo độ khác màu nền (kiểu "màu thành trong suốt"), giữ quầng sáng mờ.
+// "Sắc": loang nền từ mép ảnh như Tách Sprite Quái, mỗi điểm chỉ đặc hoặc trong suốt.
+function tachNen(A, coAlpha, mem) {
+  const { W, H, d } = A, N = W * H, P = new Uint8ClampedArray(d), duong = new Uint8Array(N);
+  if (coAlpha) { for (let j = 0; j < N; j++) if (!mem && P[j*4+3] < 128) P[j*4+3] = 0; else if (!mem) P[j*4+3] = 255; return { P, duong, nen: null }; }
+  // màu nền: màu hay gặp nhất cả ảnh, ưu tiên màu gần màu prompt đã dặn
+  const dem = new Map(); let tong = 0;
+  for (let y = 0; y < H; y += 2) for (let x = 0; x < W; x += 2) { const j = y * W + x, k = (d[j*4] >> 3) << 10 | (d[j*4+1] >> 3) << 5 | (d[j*4+2] >> 3); dem.set(k, (dem.get(k) || 0) + 1); tong++; }
+  const ds = [...dem.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12).map(([k, n]) => ({ c: [(k >> 10 & 31) << 3 | 4, (k >> 5 & 31) << 3 | 4, (k & 31) << 3 | 4], n }));
+  const muon = NEN[Q.nen][1], cach = (c) => Math.abs(c[0] - muon[0]) + Math.abs(c[1] - muon[1]) + Math.abs(c[2] - muon[2]);
+  const chinh = (ds.slice(0, 5).find(x => cach(x.c) < 260) || ds[0]).c;
+  // tinh chỉnh màu nền chính: trung bình các điểm rất gần
+  { let r = 0, g = 0, b = 0, n = 0; for (let j = 0; j < N; j += 3) if (kc(d, j, chinh) < 30) { r += d[j*4]; g += d[j*4+1]; b += d[j*4+2]; n++; } if (n) { chinh[0] = r / n; chinh[1] = g / n; chinh[2] = b / n; } }
+  const nen = [chinh, ...ds.filter(x => x.n >= 0.03 * tong && Math.abs(x.c[0] - chinh[0]) + Math.abs(x.c[1] - chinh[1]) + Math.abs(x.c[2] - chinh[2]) < 70).map(x => x.c)];
+  const laNen = new Uint8Array(N);
+  for (let j = 0; j < N; j++) { for (const c of nen) if (kc(d, j, c) < 44) { laNen[j] = 1; break; } }
+  // đường kẻ lưới: nét mảnh (≤ 4 điểm) chạy gần hết chiều ngang/dọc của ảnh. Vệt gió ngắn của hiệu ứng không bị tính.
+  const doc = new Uint16Array(N), ngang = new Uint16Array(N);
+  for (let y = 0; y < H; y++) { let x = 0; while (x < W) { if (laNen[y*W+x]) { x++; continue; } let e = x; while (e < W && !laNen[y*W+e]) e++; for (let t = x; t < e; t++) ngang[y*W+t] = Math.min(65535, e - x); x = e; } }
+  for (let x = 0; x < W; x++) { let y = 0; while (y < H) { if (laNen[y*W+x]) { y++; continue; } let e = y; while (e < H && !laNen[e*W+x]) e++; for (let t = y; t < e; t++) doc[t*W+x] = Math.min(65535, e - y); y = e; } }
+  // một hàng/cột là đường kẻ khi nét mảnh phủ ≥ 12% ảnh và có đoạn liền ≥ 6% (lưới chỉ kẻ quanh hàng khung, bị tia lửa chạm vẫn nhận ra)
+  const LH = Math.max(24, 0.06 * W), LD = Math.max(24, 0.06 * H);
+  for (let y = 0; y < H; y++) { let run = 0, best = 0, n = 0; for (let x = 0; x < W; x++) { if (!laNen[y*W+x] && doc[y*W+x] <= 6) { n++; run++; if (run > best) best = run; } else run = 0; }
+    if (best >= LH && n >= 2 * LH) for (let x = 0; x < W; x++) if (!laNen[y*W+x] && doc[y*W+x] <= 6) duong[y*W+x] = 1; }
+  for (let x = 0; x < W; x++) { let run = 0, best = 0, n = 0; for (let y = 0; y < H; y++) { if (!laNen[y*W+x] && ngang[y*W+x] <= 6) { n++; run++; if (run > best) best = run; } else run = 0; }
+    if (best >= LD && n >= 2 * LD) for (let y = 0; y < H; y++) if (!laNen[y*W+x] && ngang[y*W+x] <= 6) duong[y*W+x] = 1; }
+  // vùng sát đường kẻ (viền lem của nét kẻ khi ảnh nén): coi như đường kẻ
+  { const them = []; for (let j = 0; j < N; j++) { if (!duong[j]) continue; const x = j % W, y = (j / W) | 0;
+      for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) { const nx = x + dx, ny = y + dy; if (nx >= 0 && ny >= 0 && nx < W && ny < H && !duong[ny * W + nx] && kc(d, ny * W + nx, chinh) > 44) them.push(ny * W + nx); } }
+    for (const j of them) duong[j] = 1; }
+  if (mem) {
+    const B = chinh, locDom = $('locDom').checked && Math.max(...chinh) - Math.min(...chinh) > 60, hueNen = sacDo(...chinh)[0];
+    for (let j = 0; j < N; j++) {
+      if (duong[j]) { P[j*4+3] = 0; continue; }
+      let a = 0;
+      for (let k = 0; k < 3; k++) { const c = d[j*4+k], b = B[k]; const v = c > b ? (c - b) / Math.max(1, 255 - b) : (b - c) / Math.max(1, b); if (v > a) a = v; }
+      a = Math.min(1, a);
+      if (a < 0.12) { P[j*4+3] = 0; continue; }
+      // lọc đốm: điểm cùng tông màu nền (viền lem quanh nét kẻ, quầng nền) thì bỏ — prompt đã dặn không dùng màu nền trong hiệu ứng
+      if (locDom) { const [h, sd] = sacDo(d[j*4], d[j*4+1], d[j*4+2]); if (sd > 0.35 && Math.min(Math.abs(h - hueNen), 360 - Math.abs(h - hueNen)) < 25) { P[j*4+3] = 0; continue; } }
+      for (let k = 0; k < 3; k++) P[j*4+k] = Math.max(0, Math.min(255, B[k] + (d[j*4+k] - B[k]) / a));
+      P[j*4+3] = Math.round(a * 255);
+    }
+  } else {
+    const vien = [];
+    for (let x = 0; x < W; x++) vien.push(x, (H - 1) * W + x);
+    for (let y = 0; y < H; y++) vien.push(y * W, y * W + W - 1);
+    const da = new Uint8Array(N), st = [...vien];
+    for (let j = 0; j < N; j++) if (duong[j]) st.push(j);
+    while (st.length) {
+      const j = st.pop(); if (da[j]) continue;
+      if (!laNen[j] && !duong[j]) continue;
+      da[j] = 1; const x = j % W, y = (j / W) | 0;
+      if (x > 0) st.push(j - 1); if (x < W - 1) st.push(j + 1); if (y > 0) st.push(j - W); if (y < H - 1) st.push(j + W);
+    }
+    const nenMau = nen.filter(c => Math.max(...c) - Math.min(...c) > 60);
+    // khoảng nền bị bao kín (giữa các tia, trong vòng sóng): cụm ≥ 12 điểm rất giống màu nền cũng là nền
+    const xem = new Uint8Array(N), sat = (j) => nenMau.some(c => kc(d, j, c) < 30);
+    for (let j0 = 0; j0 < N; j0++) {
+      if (da[j0] || xem[j0] || !sat(j0)) continue;
+      const s2 = [j0], cum = []; xem[j0] = 1;
+      while (s2.length) { const j = s2.pop(); cum.push(j); const x = j % W, y = (j / W) | 0;
+        for (const b of [x > 0 ? j - 1 : -1, x < W - 1 ? j + 1 : -1, y > 0 ? j - W : -1, y < H - 1 ? j + W : -1]) if (b >= 0 && !da[b] && !xem[b] && sat(b)) { xem[b] = 1; s2.push(b); } }
+      if (cum.length >= 12) for (const j of cum) da[j] = 1;
+    }
+    // gọt viền lem màu nền ở mép (2 lượt)
+    const ganNen = (j) => nenMau.some(c => kc(d, j, c) < 110);
+    for (let luot = 0; luot < 2; luot++) {
+      const bo = [];
+      for (let j = 0; j < N; j++) {
+        if (da[j]) continue; const x = j % W, y = (j / W) | 0;
+        if (((x > 0 && da[j - 1]) || (x < W - 1 && da[j + 1]) || (y > 0 && da[j - W]) || (y < H - 1 && da[j + W])) && ganNen(j)) bo.push(j);
+      }
+      for (const j of bo) da[j] = 1;
+    }
+    // đốm cùng tông màu nền còn sót
+    const tongNen = nenMau.map(c => sacDo(...c));
+    if (tongNen.length && $('locDom').checked) for (let j = 0; j < N; j++) {
+      if (da[j]) continue;
+      const [h, s] = sacDo(d[j*4], d[j*4+1], d[j*4+2]);
+      if (s > 0.45 && Math.max(d[j*4], d[j*4+1], d[j*4+2]) > 115 && tongNen.some(([hn]) => Math.min(Math.abs(h - hn), 360 - Math.abs(h - hn)) < 22)) da[j] = 1;
+    }
+    for (let j = 0; j < N; j++) P[j*4+3] = da[j] ? 0 : 255;
+  }
+  // đường kẻ cắt ngang hình: lấp lại bằng điểm bên cạnh
+  for (let j = 0; j < N; j++) {
+    if (!duong[j]) continue;
+    const x = j % W, y = (j / W) | 0;
+    for (const [dx, dy] of [[0, 1], [1, 0]]) {
+      let a = -1, b = -1;
+      for (let k = 1; k <= 5; k++) { const xa = x - dx * k, ya = y - dy * k; if (xa >= 0 && ya >= 0 && !duong[ya * W + xa]) { a = ya * W + xa; break; } }
+      for (let k = 1; k <= 5; k++) { const xb = x + dx * k, yb = y + dy * k; if (xb < W && yb < H && !duong[yb * W + xb]) { b = yb * W + xb; break; } }
+      if (a >= 0 && b >= 0 && P[a*4+3] > 64 && P[b*4+3] > 64) { P.set(P.subarray(a * 4, a * 4 + 4), j * 4); break; }
+    }
+  }
+  return { P, duong, nen: chinh };
+}
+
+// ===== TÌM KHUNG =====
+// Có đường kẻ lưới thật: mỗi ô là một khung. Không có: chia dải ngang theo khoảng trống, trong dải chia cột theo khoảng trống.
+// Chịu được: thừa cột, xuống hai hàng, bảng phụ, khung dính nhau, ô trống.
+function timKhung(W, H, P, duong) {
+  const N = W * H, co = new Uint8Array(N);
+  for (let j = 0; j < N; j++) co[j] = P[j*4+3] >= 64 ? 1 : 0;
+  const ghi = [], SO = Q.so;
+  const khoi = (x0, y0, x1, y1) => { let m = 0; for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) m += co[y * W + x]; return m; };
+  let o = [];
+  if ($('cachTach').value === 'deu') {
+    const K = Math.max(1, +$('soCot').value | 0);
+    for (let i = 0; i < K; i++) { const x0 = Math.round(i * W / K), x1 = Math.round((i + 1) * W / K) - 1; o.push({ x0, y0: 0, x1, y1: H - 1 }); }
+    ghi.push('Chia đều ' + K + ' cột');
+  } else {
+    // 1) đường kẻ lưới
+    const vach = (laHang) => {
+      const n1 = laHang ? H : W, n2 = laHang ? W : H, vt = [];
+      for (let v = 0; v < n1; v++) { let n = 0; for (let t = 0; t < n2; t++) if (duong[laHang ? v * W + t : t * W + v]) n++; if (n >= Math.max(48, 0.12 * n2)) vt.push(v); }
+      const tam = []; for (const v of vt) { if (tam.length && v - tam[tam.length - 1].b <= 3) tam[tam.length - 1].b = v; else tam.push({ a: v, b: v }); }
+      const bien = [0, ...tam.map(t => (t.a + t.b) >> 1), n1], bang = [];
+      for (let i = 0; i + 1 < bien.length; i++) bang.push([bien[i] + 4, bien[i + 1] - 5]);
+      const rong = bang.map(b => b[1] - b[0]).sort((a, b) => a - b), giua = rong[rong.length >> 1] || 0;
+      return bang.filter(b => b[1] - b[0] >= 0.4 * giua);
+    };
+    const cot = vach(false), hang = vach(true);
+    if (cot.length >= 2) {
+      // mỗi hàng: số ô có hình; chọn hàng giống hàng khung nhất (bỏ bảng phụ), hoặc đọc nhiều hàng nếu khung bị xuống hàng
+      const H2 = hang.map(([y0, y1]) => { const m = cot.map(([x0, x1]) => khoi(x0, y0, x1, y1)), mm = m.filter(v => v > 0).sort((a, b) => a - b), g = mm[mm.length >> 1] || 0;
+        return { y0, y1, tong: m.reduce((a, b) => a + b, 0), n: m.filter(v => v > 0 && v >= 0.12 * g).length }; });
+      const mx = Math.max(...H2.map(h => h.tong)), lon = H2.filter(h => h.tong >= 0.05 * mx && h.n > 0);
+      const tot = [...lon].sort((a, b) => Math.abs(a.n - SO) - Math.abs(b.n - SO) || b.tong - a.tong)[0];
+      const chonH = tot && tot.n >= Math.ceil(SO * 0.75) ? [tot] : lon;
+      if (H2.filter(h => h.n > 0).length > chonH.length) ghi.push('Bỏ ' + (H2.filter(h => h.n > 0).length - chonH.length) + ' hàng không phải hàng khung (bảng phụ?)');
+      for (const h of chonH) cot.forEach(([x0, x1]) => o.push({ x0, y0: h.y0, x1, y1: h.y1 }));
+      ghi.push('Ảnh có kẻ lưới: ' + cot.length + ' cột × ' + hang.length + ' hàng');
+    } else {
+      // 2) dải ngang theo khoảng trống
+      const hy = new Uint32Array(H); for (let y = 0; y < H; y++) { let n = 0; for (let x = 0; x < W; x++) n += co[y * W + x]; hy[y] = n; }
+      const gapY = Math.max(2, Math.round(H * 0.012)), dai = [];
+      for (let y = 0; y < H; y++) { if (!hy[y]) continue; const cuoi = dai[dai.length - 1]; if (cuoi && y - cuoi.y1 <= gapY) cuoi.y1 = y; else dai.push({ y0: y, y1: y }); }
+      dai.forEach(b => { b.m = 0; for (let y = b.y0; y <= b.y1; y++) b.m += hy[y]; });
+      const mx = Math.max(0, ...dai.map(b => b.m));
+      const dung = dai.filter(b => b.m >= 0.03 * mx);
+      const nhom = dung.map(b => ({ b, g: chiaCot(W, co, b.y0, b.y1, SO) }));
+      let chon = [];
+      if (nhom.length === 1) chon = nhom;
+      else if (nhom.length > 1) {
+        const lon = nhom.filter(n => n.b.m >= 0.25 * mx);
+        const tot = [...lon].sort((a, b) => Math.abs(a.g.length - SO) - Math.abs(b.g.length - SO) || b.b.m - a.b.m)[0];
+        if (tot.g.length >= Math.ceil(SO * 0.75)) { chon = [tot]; if (nhom.length > 1) ghi.push('Ảnh có ' + nhom.length + ' dải, lấy dải giống hàng khung nhất (bỏ bảng phụ)'); }
+        else { chon = lon; ghi.push('Khung xếp thành ' + lon.length + ' hàng, đọc lần lượt từng hàng'); }
+      }
+      for (const n of chon) for (const g of n.g) o.push({ x0: g.x0, y0: n.b.y0, x1: g.x1, y1: n.b.y1 });
+    }
+  }
+  // bỏ ô trống
+  o.forEach(c => c.m = khoi(c.x0, c.y0, c.x1, c.y1));
+  const ms = o.map(c => c.m).filter(m => m > 0).sort((a, b) => a - b), mg = ms[ms.length >> 1] || 1;
+  const rong = o.filter(c => c.m < 0.12 * mg).length; if (rong) ghi.push('Bỏ ' + rong + ' ô trống');
+  o = o.filter(c => c.m >= 0.12 * mg);
+  // khung người dùng chạm để bỏ
+  const boRa = o.filter(c => BO.some(([x, y]) => x >= c.x0 && x <= c.x1 && y >= c.y0 && y <= c.y1));
+  if (boRa.length) { ghi.push('Bạn đã bỏ ' + boRa.length + ' khung'); o = o.filter(c => !boRa.includes(c)); }
+  const thay = o.slice(), loi = [];
+  // thừa: bỏ dần ô chỉ có vệt nhỏ lạc, rồi lấy rải đều
+  while (o.length > SO) {
+    const n = o.map(c => c.m), giua = [...n].sort((a, b) => a - b)[n.length >> 1], mn = Math.min(...n);
+    if (mn >= 0.3 * giua) break;
+    o.splice(n.indexOf(mn), 1); ghi.push('Bỏ 1 khung chỉ có vệt nhỏ lạc');
+  }
+  let chon = o;
+  if (o.length > SO) { chon = []; for (let i = 0; i < SO; i++) chon.push(o[Math.round(i * (o.length - 1) / (SO - 1 || 1))]); ghi.push(`Thấy ${o.length} khung (thừa), lấy ${SO} khung rải đều`); }
+  else if (o.length < SO) {
+    if (o.length >= Math.ceil(SO / 2)) { chon = []; for (let i = 0; i < SO; i++) chon.push(o[Math.min(o.length - 1, Math.floor(i * o.length / SO))]); ghi.push(`Chỉ có ${o.length} khung, lặp lại cho đủ ${SO}`); }
+    else loi.push(`Chỉ thấy ${o.length} khung, cần ít nhất ${Math.ceil(SO / 2)} (thử "Chia đều theo số cột" hoặc nhờ ChatGPT vẽ lại)`);
+  }
+  return { o: chon, thay, boRa, ghi, loi };
+}
+// Trong một dải ngang: chia cột theo khoảng trống, gộp khe nhỏ (tia lửa rời rạc của cùng một khung), tách khung dính nhau.
+function chiaCot(W, co, y0, y1, SO) {
+  const hx = new Uint32Array(W); for (let y = y0; y <= y1; y++) for (let x = 0; x < W; x++) hx[x] += co[y * W + x];
+  let g = [];
+  for (let x = 0; x < W; x++) { if (!hx[x]) continue; const cuoi = g[g.length - 1]; if (cuoi && x - cuoi.x1 <= 1) { cuoi.x1 = x; cuoi.m += hx[x]; } else g.push({ x0: x, x1: x, m: hx[x] }); }
+  if (!g.length) return g;
+  const E = (g[g.length - 1].x1 - g[0].x0 + 1) / SO;
+  const gop = (i) => { const a = g[i], b = g[i + 1]; g.splice(i, 2, { x0: a.x0, x1: b.x1, m: a.m + b.m }); };
+  for (let i = 0; i + 1 < g.length;) { if (g[i + 1].x0 - g[i].x1 < Math.max(3, 0.12 * E)) gop(i); else i++; }
+  while (g.length > SO) {
+    let tot = -1, kh = 1e9;
+    for (let i = 0; i + 1 < g.length; i++) { const k = g[i + 1].x0 - g[i].x1; if (g[i + 1].x1 - g[i].x0 + 1 <= 1.15 * E && k < kh) { kh = k; tot = i; } }
+    if (tot < 0) break; gop(tot);
+  }
+  // khung dính nhau: cắt ở chỗ "eo" ít điểm nhất
+  for (let lan = 0; lan < SO && g.length < SO; lan++) {
+    const rs = g.map(c => c.x1 - c.x0 + 1), giua = [...rs].sort((a, b) => a - b)[rs.length >> 1], chuan = Math.min(giua, E);
+    let i = rs.indexOf(Math.max(...rs)); const f = g[i], r = rs[i], k = Math.round(r / chuan);
+    if (r < 1.6 * chuan || k < 2) break;
+    const cat = [f.x0];
+    for (let q = 1; q < k; q++) { const m = Math.round(f.x0 + q * r / k), r2 = Math.round(r / k * 0.3); let tot = m; for (let x = Math.max(f.x0 + 1, m - r2); x < Math.min(f.x1, m + r2); x++) if (hx[x] < hx[tot]) tot = x; cat.push(tot); }
+    cat.push(f.x1 + 1);
+    const moi = []; for (let q = 0; q < k; q++) { let m = 0; for (let x = cat[q]; x < cat[q + 1]; x++) m += hx[x]; moi.push({ x0: cat[q], x1: cat[q + 1] - 1, m }); }
+    g.splice(i, 1, ...moi);
+  }
+  return g;
+}
+
+// Thu nhỏ một khung. "Mịn": trộn trung bình; "Sắc nét": màu xuất hiện nhiều nhất. Mép mềm: giữ alpha trung bình; mép sắc: đặc nếu ≥ nửa.
+function thuNho(f, nw, nh, lat, mem) {
+  const o = new Uint8ClampedArray(nw * nh * 4), sx = f.w / nw, sy = f.h / nh, net = $('doNet').value === 'net';
+  const dem = new Map();
+  for (let y = 0; y < nh; y++) for (let x = 0; x < nw; x++) {
+    let r = 0, g = 0, b = 0, a = 0, n = 0; dem.clear(); let tot = -1, totN = 0;
+    const xa = x * sx, xb = (x + 1) * sx, ya = y * sy, yb = (y + 1) * sy;
+    for (let yy = Math.floor(ya); yy < Math.ceil(yb); yy++) for (let xx = Math.floor(xa); xx < Math.ceil(xb); xx++) {
+      if (xx >= f.w || yy >= f.h) continue;
+      const wgt = (Math.min(xb, xx + 1) - Math.max(xa, xx)) * (Math.min(yb, yy + 1) - Math.max(ya, yy));
+      const i = (yy * f.w + xx) * 4, al = f.px[i + 3] / 255 * wgt;
+      r += f.px[i] * al; g += f.px[i+1] * al; b += f.px[i+2] * al; a += al; n += wgt;
+      if (net && f.px[i + 3] >= 128) { const k = (f.px[i] >> 3) << 10 | (f.px[i+1] >> 3) << 5 | (f.px[i+2] >> 3), v = (dem.get(k) || 0) + wgt; dem.set(k, v); if (v > totN) { totN = v; tot = i; } }
+    }
+    const ox = lat ? nw - 1 - x : x, k = (y * nw + ox) * 4, phu = n ? a / n : 0;
+    if (mem ? phu >= 0.06 : phu >= 0.5) {
+      if (net && tot >= 0) { o[k] = f.px[tot]; o[k+1] = f.px[tot+1]; o[k+2] = f.px[tot+2]; }
+      else { o[k] = r / a; o[k+1] = g / a; o[k+2] = b / a; }
+      o[k+3] = mem ? Math.min(255, Math.round(phu * 15) * 17) : 255;
+    }
+  }
+  return o;
+}
+
+// Giảm màu kiểu median cut (chỉ màu, giữ alpha).
+function giamMau(px, soMau) {
+  const ds = [];
+  for (let i = 0; i < px.length; i += 4) if (px[i+3]) ds.push(i);
+  if (!ds.length) return [];
+  let hop = [ds];
+  while (hop.length < soMau) {
+    let tot = -1, kenh = 0, rongMax = -1;
+    hop.forEach((h, idx) => { if (h.length < 2) return; for (let c = 0; c < 3; c++) { let mi = 255, ma = 0; for (const i of h) { const v = px[i+c]; if (v < mi) mi = v; if (v > ma) ma = v; } if (ma - mi > rongMax) { rongMax = ma - mi; tot = idx; kenh = c; } } });
+    if (tot < 0 || rongMax <= 0) break;
+    const h = hop[tot].sort((a, b) => px[a+kenh] - px[b+kenh]), giua = h.length >> 1;
+    hop.splice(tot, 1, h.slice(0, giua), h.slice(giua));
+  }
+  const bang = hop.map(h => { let r = 0, g = 0, b = 0; for (const i of h) { r += px[i]; g += px[i+1]; b += px[i+2]; } return [r / h.length | 0, g / h.length | 0, b / h.length | 0]; });
+  for (const i of ds) {
+    let bi = 0, bd = 1e9;
+    for (let k = 0; k < bang.length; k++) { const c = bang[k], dd = (px[i]-c[0])**2 + (px[i+1]-c[1])**2 + (px[i+2]-c[2])**2; if (dd < bd) { bd = dd; bi = k; } }
+    px[i] = bang[bi][0]; px[i+1] = bang[bi][1]; px[i+2] = bang[bi][2];
+  }
+  return bang;
+}
+
+function chay() {
+  const A = layAnh(), { W, H, d } = A;
+  let trong = 0; for (let y = 0; y < H; y += 7) for (let x = 0; x < W; x += 7) if (d[(y * W + x) * 4 + 3] < 128) trong++;
+  const coAlpha = trong > 50, mem = $('kieuMep').value === 'mem';
+  const { P, duong } = tachNen(A, coAlpha, mem);
+  const K = timKhung(W, H, P, duong);
+  veGoc(A, P, K.thay, K.boRa);
+  const { fw: FW, fh: FH, gx: GX, gy: GY, so: SO } = Q;
+  // nội dung từng khung (cắt sát) và vị trí dọc trong ô (giữ chuyển động lên xuống giữa các khung)
+  const ds = [];
+  for (const c of K.o) {
+    let x0 = W, y0 = H, x1 = -1, y1 = -1;
+    for (let y = c.y0; y <= c.y1; y++) for (let x = c.x0; x <= c.x1; x++) if (P[(y * W + x) * 4 + 3]) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    if (x1 < 0) continue;
+    const w = x1 - x0 + 1, h = y1 - y0 + 1, px = new Uint8ClampedArray(w * h * 4);
+    for (let y = 0; y < h; y++) px.set(P.subarray(((y + y0) * W + x0) * 4, ((y + y0) * W + x1 + 1) * 4), y * w * 4);
+    ds.push({ w, h, px, ry0: y0 - c.y0, ry1: y1 - c.y0 });
+  }
+  const TW = FW * SO, TH = FH, tam = new Uint8ClampedArray(TW * TH * 4), lat = $('latNgang').checked;
+  const loi = K.loi.slice(), ghi = K.ghi.slice();
+  if (ds.length) {
+    const U0 = Math.min(...ds.map(f => f.ry0)), U1 = Math.max(...ds.map(f => f.ry1)), UH = U1 - U0 + 1, maxW = Math.max(...ds.map(f => f.w));
+    const traiX = Q.canh === 'trai' ? Math.max(1, GX - 2) : 0; // vệt vũ khí: mép trái của hình bắt đầu ngay chỗ tay
+    const s = Math.min((FW - 2 - (traiX || 2)) / maxW, (FH - 4) / UH) * +$('coThem').value;
+    const caoU = UH * s, dinhU = Q.doc === 'day' ? FH - 2 - caoU : GY - caoU / 2;
+    ds.forEach((f, i) => {
+      const nw = Math.max(1, Math.round(f.w * s)), nh = Math.max(1, Math.round(f.h * s)), o = thuNho(f, nw, nh, lat, mem);
+      let ox = Q.canh === 'trai' ? traiX : Math.round(GX - nw / 2), oy = Math.round(dinhU + (f.ry0 - U0) * s);
+      ox = Math.max(0, Math.min(FW - nw, ox)); oy = Math.max(0, Math.min(FH - nh, oy));
+      for (let y = 0; y < nh; y++) for (let x = 0; x < nw; x++) { const k = (y * nw + x) * 4; if (o[k+3] && x + ox < FW && y + oy < FH) tam.set(o.subarray(k, k + 4), ((oy + y) * TW + i * FW + ox + x) * 4); }
+    });
+    if (ds.length < SO) for (let i = ds.length; i < SO; i++) loi.push('Thiếu khung ' + (i + 1));
+  } else loi.push('Không tìm thấy hiệu ứng nào trong ảnh (kiểm tra màu nền đúng như prompt)');
+  giamMau(tam, +$('soMau').value - 1);
+  if ($('vienToi').checked) {
+    const them = [];
+    for (let y = 0; y < TH; y++) for (let x = 0; x < TW; x++) {
+      if (tam[(y * TW + x) * 4 + 3]) continue;
+      for (const [dx, dy] of [[1,0],[-1,0],[0,1],[0,-1]]) { const nx = x + dx, ny = y + dy; if (nx < 0 || ny < 0 || nx >= TW || ny >= TH || (nx / FW | 0) !== (x / FW | 0)) continue; if (tam[(ny * TW + nx) * 4 + 3] >= 128) { them.push(y * TW + x); break; } }
+    }
+    for (const j of them) tam.set([...VIEN, 255], j * 4);
+  }
+  // ===== tự kiểm =====
+  const mau = new Set(); let nuaTrong = 0, dac = 0;
+  for (let i = 0; i < tam.length; i += 4) if (tam[i+3]) { mau.add(tam[i] << 16 | tam[i+1] << 8 | tam[i+2]); if (tam[i+3] < 255) nuaTrong++; else dac++; }
+  const muc = [];
+  muc.push([`Dải ${TW}×${TH}: ${SO} khung, mỗi khung ${FW}×${FH}`, true]);
+  muc.push([`${mau.size} màu (tối đa ${$('soMau').value})`, mau.size <= +$('soMau').value]);
+  const mep = [], trongK = [];
+  for (let c = 0; c < SO; c++) {
+    let x0 = FW, y0 = FH, x1 = -1, y1 = -1;
+    for (let y = 0; y < FH; y++) for (let x = 0; x < FW; x++) if (tam[(y * TW + c * FW + x) * 4 + 3] > 40) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    if (x1 < 0) trongK.push(c + 1); else if (x0 < 1 || y0 < 1 || x1 > FW - 2 || y1 > FH - 2) mep.push(c + 1);
+  }
+  muc.push([`Đủ ${SO} khung có hình` + (trongK.length ? ' (khung trống: ' + trongK.join(', ') + ')' : ''), !trongK.length && !loi.length]);
+  muc.push(['Hình nằm trong khung' + (mep.length ? ' (chạm mép: khung ' + mep.join(', ') + ', có thể bị cắt)' : ''), mep.length <= Math.ceil(SO / 2)]);
+  muc.push([`Điểm neo (${GX}, ${GY}), ${Q.canh === 'trai' ? 'hình bám mép trái (tay em bé)' : 'hình đặt giữa'}`, true]);
+  muc.push([mem ? `Mép mềm: ${nuaTrong} điểm nửa trong suốt (quầng sáng)` : 'Mép sắc: chỉ đặc hoặc trong suốt', true]);
+  loi.forEach(t => muc.push([t, false]));
+  ghi.forEach(t => muc.push([t, true]));
+  KQ = { tam, TW, TH, FW, FH, dat: muc.every(m => m[1]) };
+  $('dsKiem').innerHTML = muc.map(([t, ok]) => `<li class="${ok ? '' : 'loi'}">${t}</li>`).join('')
+    + `<li class="ghi">Tự nhìn: hiệu ứng chạy đúng thứ tự (bắt đầu → kết thúc), hướng sang PHẢI, cỡ vừa với hình em bé/quái mẫu. Hiệu ứng ngược hướng thì tích "Lật ngang" ở bước 2.</li>`;
+  $('theKq').className = 'the ' + (KQ.dat ? 'dat' : 'hong'); $('theKq').textContent = KQ.dat ? 'ĐẠT' : 'CÓ LỖI';
+  $('huongDan').textContent = KQ.dat ? 'Gửi file ' + Q.ma + '.sprite.json cho Claude để đưa vào game (thư mục game/art/custom).' : 'Còn lỗi: thử đổi "Cách tách" (Chia đều + đúng số cột), chỉnh ô "Cắt" ở bước 2, hoặc nhờ ChatGPT vẽ lại đúng một hàng ' + SO + ' khung.';
+  $('nutTaiJson').textContent = 'Tải ' + Q.ma + '.sprite.json';
+  $('dangCho').textContent = Q.ten + ' (' + Q.ma + ')';
+  veTam(); $('buoc3').hidden = false; t0 = performance.now(); batDauChay();
+}
+
+// ===================== VẼ XEM =====================
+function veGoc(A, P, khung, boRa) {
+  const cv = $('cvGoc'), k = Math.min(1, 1000 / A.W);
+  cv.width = Math.round(A.W * k); cv.height = Math.round(A.H * k); cv.style.width = '100%'; cv.style.maxWidth = cv.width + 'px';
+  const g = cv.getContext('2d'), c = document.createElement('canvas'); c.width = A.W; c.height = A.H;
+  c.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(A.d), A.W, A.H), 0, 0);
+  g.imageSmoothingEnabled = true; g.drawImage(c, 0, 0, cv.width, cv.height);
+  g.lineWidth = 2; g.font = 'bold 13px system-ui'; g.textBaseline = 'top';
+  khung.forEach((f, i) => {
+    g.strokeStyle = '#f6dc92'; g.strokeRect(f.x0 * k - 1, f.y0 * k - 1, (f.x1 - f.x0) * k + 2, (f.y1 - f.y0) * k + 2);
+    g.fillStyle = '#1a120a'; g.fillRect(f.x0 * k - 1, f.y0 * k - 1, 20, 16); g.fillStyle = '#f6dc92'; g.fillText(String(i + 1), f.x0 * k + 2, f.y0 * k);
+  });
+  g.strokeStyle = '#ff6b4a'; g.lineWidth = 3;
+  for (const f of boRa) { const x0 = f.x0 * k, y0 = f.y0 * k, x1 = f.x1 * k, y1 = f.y1 * k; g.strokeRect(x0, y0, x1 - x0, y1 - y0); g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.moveTo(x1, y0); g.lineTo(x0, y1); g.stroke(); }
+  LAST = { A, khung, boRa };
+}
+// Chạm một khung trên ảnh gốc: bỏ khung đó; chạm khung đỏ: lấy lại.
+$('cvGoc').addEventListener('click', (e) => {
+  if (!LAST) return;
+  const cv = $('cvGoc'), r = cv.getBoundingClientRect();
+  const x = (e.clientX - r.left) / r.width * LAST.A.W, y = (e.clientY - r.top) / r.height * LAST.A.H;
+  const trong = (f) => x >= f.x0 && x <= f.x1 && y >= f.y0 && y <= f.y1;
+  const daBo = LAST.boRa.find(trong);
+  if (daBo) BO = BO.filter(([bx, by]) => !(bx >= daBo.x0 && bx <= daBo.x1 && by >= daBo.y0 && by <= daBo.y1));
+  else { const kh = LAST.khung.find(trong); if (!kh) return; BO.push([(kh.x0 + kh.x1) / 2, (kh.y0 + kh.y1) / 2]); }
+  chay();
+});
+let canvasTam = null;
+function veTam() {
+  const { tam, TW, TH, FW } = KQ;
+  canvasTam = document.createElement('canvas'); canvasTam.width = TW; canvasTam.height = TH;
+  canvasTam.getContext('2d').putImageData(new ImageData(tam, TW, TH), 0, 0);
+  const k = Math.max(1, Math.min(4, Math.floor(1000 / TW))), cv = $('cvTam');
+  cv.width = TW * k; cv.height = TH * k; cv.style.width = '100%'; cv.style.maxWidth = cv.width + 'px';
+  const g = cv.getContext('2d'); g.imageSmoothingEnabled = false;
+  g.fillStyle = nenXem; g.fillRect(0, 0, cv.width, cv.height);
+  if (Q.cong) g.globalCompositeOperation = 'lighter';
+  g.drawImage(canvasTam, 0, 0, cv.width, cv.height); g.globalCompositeOperation = 'source-over';
+  g.strokeStyle = 'rgba(246,220,146,.45)'; g.lineWidth = 1;
+  for (let c = 0; c <= Q.so; c++) { g.beginPath(); g.moveTo(c * FW * k + .5, 0); g.lineTo(c * FW * k + .5, cv.height); g.stroke(); }
+  g.fillStyle = 'rgba(255,138,112,.9)';
+  for (let c = 0; c < Q.so; c++) g.fillRect((c * FW + Q.gx) * k - 1, Q.gy * k - 1, 3, 3);
+}
+$('chonNen').innerHTML = NEN_XEM.map(([id, col, t], i) => `<button class="nut nho phu${i ? '' : ' chon'}" data-c="${col}"><span class="o-mau" style="background:${col}"></span> ${t}</button>`).join('');
+$('chonNen').onclick = (e) => { const b = e.target.closest('button'); if (!b) return; nenXem = b.dataset.c; [...$('chonNen').children].forEach(x => x.classList.toggle('chon', x === b)); if (KQ) veTam(); };
+
+// Hình em bé / quái mẫu (khối tối cao 28 điểm ảnh) để so cỡ hiệu ứng như trong game.
+function nguoiMau(g, x, chan, k, cao, mau) {
+  g.fillStyle = mau; const w = Math.round(cao * 0.45);
+  g.fillRect(Math.round(x - w / 2) * k, (chan - cao) * k, w * k, cao * k);
+  g.fillStyle = 'rgba(255,255,255,.18)'; g.fillRect(Math.round(x - w / 2) * k, (chan - cao) * k, w * k, k);
+}
+let t0 = performance.now(), hoat = false;
+function batDauChay() { if (!hoat) { hoat = true; requestAnimationFrame(khungChay); } }
+function khungChay(now) {
+  if (KQ && canvasTam) {
+    const cv = $('cvChay'), g = cv.getContext('2d'), { FW, FH } = KQ, dan = Q.xem === 'dan';
+    const vw = dan ? 200 : Math.max(120, FW + 60), vh = Math.max(70, FH + 30);
+    const k = Math.max(2, Math.min(6, Math.floor(Math.min(640 / vw, 360 / vh))));
+    if (cv.width !== vw * k || cv.height !== vh * k) { cv.width = vw * k; cv.height = vh * k; cv.style.width = '100%'; cv.style.maxWidth = (vw * k) + 'px'; }
+    g.imageSmoothingEnabled = false; g.fillStyle = nenXem; g.fillRect(0, 0, cv.width, cv.height);
+    const cham = $('xemCham').checked ? 4 : 1, giay = Q.giay * cham, trai = $('xemTrai').checked;
+    let t = (now - t0) / 1000; const chu = Q.lap ? giay * 3 : giay + 0.6 * cham;
+    if (t > chu) { t0 = now; t = 0; }
+    const u = t / giay, f = Q.lap ? Math.floor(u * Q.so) % Q.so : Math.min(Q.so - 1, Math.floor(u * Q.so)), conVe = Q.lap || u < 1;
+    // vị trí điểm neo trong khung xem (đơn vị điểm ảnh game)
+    let ax = Math.round(vw / 2), ay = Math.round(vh / 2), goc = 0;
+    const san = Math.round(vh * 0.78);
+    if (Q.xem === 'vu-khi') { ax = 30; ay = san - 13; nguoiMau(g, 26, san, k, 28, '#2a3a5a'); nguoiMau(g, 26 + 44, san, k, 24, '#5a3a2a'); }
+    else if (Q.xem === 'trung') { ay = san - 14; nguoiMau(g, ax, san, k, 26, '#5a3a2a'); }
+    else if (Q.xem === 'no' || Q.xem === 'chet') { ay = Q.xem === 'chet' ? san : san; if (Q.xem === 'chet') nguoiMau(g, ax + 30, san, k, 24, '#5a3a2a'); else nguoiMau(g, ax + 46, san, k, 28, '#2a3a5a'); }
+    else if (dan) { const q = (t % 1.6) / 1.6; ax = Math.round(16 + q * (vw - 32)); ay = Math.round(vh / 2 + Math.sin(q * Math.PI * 2) * 6); goc = Math.atan2(Math.cos(q * Math.PI * 2) * 6 * Math.PI * 2, vw - 32); }
+    else if (Q.xem === 'chu') { g.fillStyle = '#ffd27a'; g.font = `${8 * k}px system-ui`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('Bé lên cấp 5!', ax * k, ay * k); }
+    if (Q.xem !== 'chu' && Q.xem !== 'dan') { g.fillStyle = 'rgba(246,220,146,.25)'; g.fillRect(0, san * k, cv.width, 1); }
+    if (conVe) {
+      g.save(); g.translate(ax * k, ay * k);
+      if (dan && Q.xoay) g.rotate(goc);
+      g.scale((trai ? -1 : 1) * (Q.co || 1), Q.co || 1);
+      if (Q.cong) g.globalCompositeOperation = 'lighter';
+      g.drawImage(canvasTam, f * FW, 0, FW, FH, -Q.gx * k, -Q.gy * k, FW * k, FH * k);
+      g.restore();
+      if (Q.xem === 'chu') { g.fillStyle = '#ffd27a'; g.fillText('Bé lên cấp 5!', ax * k, ay * k); }
+    }
+    g.fillStyle = '#a9c2b4'; g.font = '13px system-ui'; g.textAlign = 'left'; g.textBaseline = 'alphabetic';
+    g.fillText('khung ' + (f + 1) + '/' + Q.so + (cham > 1 ? ' · chậm' : ''), 8, 16);
+  }
+  requestAnimationFrame(khungChay);
+}
+
+// ===================== TẢI VỀ =====================
+function taiXuong(ten, blob) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = ten; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); }
+$('nutTaiPng').onclick = () => canvasTam && canvasTam.toBlob(b => taiXuong(Q.ma + '.png', b), 'image/png');
+$('nutTaiJson').onclick = () => {
+  if (!canvasTam) return;
+  const tep = {
+    loai: 'linh-khi-sprite', phien_ban: 1, doi_tuong: 'hieu-ung', ma: Q.ma, ten: Q.ten,
+    tam: canvasTam.toDataURL('image/png'), khung_rong: Q.fw, khung_cao: Q.fh, goc: [Q.gx, Q.gy],
+    so: Q.so, giay: Q.giay, lap: !!Q.lap, xoay: !!Q.xoay, co: Q.co || 1, tron: Q.cong ? 'cong' : 'thuong',
+  };
+  taiXuong(Q.ma + '.sprite.json', new Blob([JSON.stringify(tep)], { type: 'application/json' }));
+  bao('Đã tải ' + Q.ma + '.sprite.json, gửi file này cho Claude');
+};
+</script>
+</body>
+</html>
