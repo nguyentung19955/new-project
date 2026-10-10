@@ -1,0 +1,111 @@
+[
+ {
+  "tinh_huong": "Đăng nhập Google lỗi (cửa sổ bị chặn) mà mây vẫn kết nối: còn đường vào game không",
+  "on": false,
+  "chi_tiet": {
+   "nut_luc_dau": [
+    "Đăng nhập Google để vào",
+    "Đăng nhập Google để vào",
+    "Đăng nhập Google để vào",
+    "Đăng nhập Google để vào"
+   ],
+   "thong_bao": "Chưa đăng nhập được: Trình duyệt chặn cửa sổ đăng nhập [popup-blocked]",
+   "nut_sau_11_giay": [
+    "Đăng nhập Google để vào",
+    "Đăng nhập Google để vào",
+    "Đăng nhập Google để vào",
+    "Đăng nhập Google để vào"
+   ],
+   "co_nut_choi_tam": false,
+   "vao_duoc": false
+  }
+ },
+ {
+  "tinh_huong": "Không có mây (mở tệp/mất mạng): chạm là vào game, chỉ lưu trên máy",
+  "on": true,
+  "chi_tiet": {
+   "why": "file",
+   "nhan": "Mở từ tệp trên máy: chỉ lưu trên máy"
+  }
+ },
+ {
+  "tinh_huong": "Đăng nhập khách lỗi mạng: nút \"Chơi tạm\" hiện ra",
+  "on": true,
+  "chi_tiet": {
+   "giay_xap_xi": 0.65,
+   "status": "error",
+   "nhan": "Đang ngoại tuyến: vẫn lưu trên máy, có mạng sẽ lưu lên mây"
+  }
+ },
+ {
+  "tinh_huong": "Bản trên máy mới hơn theo giờ nhưng ít tiến độ hơn mây: mây có bị ghi đè không",
+  "on": false,
+  "chi_tiet": {
+   "vang_tren_may_sau_khi_mo": 12,
+   "sao_tren_may": 1,
+   "co_hoi_lai": false
+  }
+ },
+ {
+  "tinh_huong": "Lưu trong lúc đang đẩy lên mây: trạng thái còn biết là chưa lưu xong",
+  "on": false,
+  "chi_tiet": {
+   "dirty": false,
+   "label": "Đã lưu lên mây lúc 07:50",
+   "local": 77,
+   "cloud": 0
+  }
+ },
+ {
+  "tinh_huong": "…và 4,6 giây sau bản trên mây có bắt kịp không",
+  "on": true,
+  "chi_tiet": {
+   "cloud": 77,
+   "local": 77
+  }
+ },
+ {
+  "tinh_huong": "Ghi lỗi rồi mạng ổn lại (không có sự kiện online, không đổi gì thêm): tự thử lại trong 9 giây",
+  "on": false,
+  "chi_tiet": {
+   "luc_loi": {
+    "status": "error",
+    "dirty": true,
+    "label": "Đang ngoại tuyến: vẫn lưu trên máy, có mạng sẽ lưu lên mây"
+   },
+   "sau_9_giay": {
+    "cloud": 0,
+    "local": 5,
+    "status": "error"
+   }
+  }
+ },
+ {
+  "tinh_huong": "Tải lại trang giữa ải: không nhân đôi phần thưởng (thưởng chỉ cộng khi hết ải)",
+  "on": true,
+  "chi_tiet": {
+   "truoc_ai": {
+    "gold": 0,
+    "xp": 0
+   },
+   "giua_ai": {
+    "gold": 0,
+    "got": 0
+   },
+   "sau_tai_lai": {
+    "gold": 0,
+    "xp": 0,
+    "scene": true
+   }
+  }
+ },
+ {
+  "tinh_huong": "Âm thanh: chỉ bật/tắt, lưu trên máy (không theo tài khoản)",
+  "on": true,
+  "chi_tiet": {
+   "tren_may": false,
+   "trong_ban_may_chu_co_truong_sound": true,
+   "gia_tri_tren_mây": false
+  }
+ }
+]

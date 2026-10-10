@@ -1,0 +1,146 @@
+{
+ "may_nhanh": {
+  "khung": {
+   "khung": 1163,
+   "tb_ms": 17.22,
+   "fps_tb": 58.1,
+   "p50": 16.7,
+   "p95": 16.8,
+   "p99": 33.4,
+   "max": 33.5,
+   "cham20": 39,
+   "cham33": 9
+  },
+  "bo_nho": {
+   "giay": 19,
+   "rac_MB_moi_giay": 5.54,
+   "lan_don_rac_thay_duoc": 19,
+   "day_heap_dau_MB": 17.1,
+   "day_heap_cuoi_MB": 17.9,
+   "max_MB": 33.2
+  },
+  "luc_cuoi": {
+   "parts": {
+    "parts": 305,
+    "fx": 16,
+    "nums": 15,
+    "dying": 0
+   },
+   "ents": 14,
+   "ui": [
+    2436,
+    1170
+   ],
+   "mode": "play"
+  },
+  "loi": []
+ },
+ "cpu_cham_4x": {
+  "khung": {
+   "khung": 192,
+   "tb_ms": 104.68,
+   "fps_tb": 9.6,
+   "p50": 100,
+   "p95": 200,
+   "p99": 283.4,
+   "max": 333.4,
+   "cham20": 192,
+   "cham33": 181
+  },
+  "bo_nho": {
+   "giay": 20,
+   "rac_MB_moi_giay": 4.95,
+   "lan_don_rac_thay_duoc": 18,
+   "day_heap_dau_MB": 18.5,
+   "day_heap_cuoi_MB": 20.5,
+   "max_MB": 35.9
+  },
+  "luc_cuoi": {
+   "parts": {
+    "parts": 206,
+    "fx": 10,
+    "nums": 23,
+    "dying": 0
+   },
+   "ents": 14,
+   "ui": [
+    2436,
+    1170
+   ],
+   "mode": "play"
+  },
+  "loi": []
+ },
+ "cpu_cham_4x_dpr1": {
+  "khung": {
+   "khung": 313,
+   "tb_ms": 64.27,
+   "fps_tb": 15.6,
+   "p50": 49.9,
+   "p95": 166.8,
+   "p99": 200,
+   "max": 266.6,
+   "cham20": 257,
+   "cham33": 178
+  },
+  "bo_nho": {
+   "giay": 20,
+   "rac_MB_moi_giay": 4.82,
+   "lan_don_rac_thay_duoc": 15,
+   "day_heap_dau_MB": 18.8,
+   "day_heap_cuoi_MB": 17.9,
+   "max_MB": 33.9
+  },
+  "luc_cuoi": {
+   "parts": {
+    "parts": 164,
+    "fx": 2,
+    "nums": 5,
+    "dying": 0
+   },
+   "ents": 14,
+   "ui": [
+    812,
+    390
+   ],
+   "mode": "play"
+  },
+  "loi": []
+ },
+ "bo_nho_dai": {
+  "khung": {
+   "khung": 10612,
+   "tb_ms": 16.96,
+   "fps_tb": 58.9,
+   "p50": 16.7,
+   "p95": 16.8,
+   "p99": 33.3,
+   "max": 100,
+   "cham20": 162,
+   "cham33": 47
+  },
+  "bo_nho": {
+   "giay": 180,
+   "rac_MB_moi_giay": 6.9,
+   "lan_don_rac_thay_duoc": 118,
+   "day_heap_dau_MB": 17.0,
+   "day_heap_cuoi_MB": 18.2,
+   "max_MB": 44.2
+  },
+  "luc_cuoi": {
+   "parts": {
+    "parts": 251,
+    "fx": 8,
+    "nums": 21,
+    "dying": 0
+   },
+   "ents": 14,
+   "ui": [
+    2436,
+    1170
+   ],
+   "mode": "play"
+  },
+  "loi": []
+ }
+}

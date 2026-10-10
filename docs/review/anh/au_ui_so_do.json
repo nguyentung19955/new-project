@@ -1,0 +1,726 @@
+{
+ "iphone-ngang": {
+  "vw": 844,
+  "vh": 390,
+  "dpr": 3,
+  "rot": false,
+  "scale": 1.444,
+  "world": [
+   693,
+   390
+  ],
+  "devPxPerPixel": 4.331,
+  "integerScale": false,
+  "cx": 41.2,
+  "cy": 0,
+  "btn": {
+   "atk": {
+    "x": 471.2121212121212,
+    "y": 220,
+    "d": 80.9,
+    "hit": 98.2,
+    "edge": 31.9
+   },
+   "dodge": {
+    "x": 421.2121212121212,
+    "y": 246,
+    "d": 52,
+    "hit": 69.3,
+    "edge": 8.8
+   },
+   "special": {
+    "x": 425.2121212121212,
+    "y": 196,
+    "d": 52,
+    "hit": 69.3,
+    "edge": 81
+   },
+   "skill": {
+    "x": 475.2121212121212,
+    "y": 162,
+    "d": 52,
+    "hit": 69.3,
+    "edge": 56.4
+   }
+  },
+  "gap": {
+   "atk-dodge": 81.4,
+   "atk-special": 74.9,
+   "atk-skill": 83.9,
+   "dodge-special": 72.4,
+   "special-skill": 87.3
+  },
+  "stick": {
+   "d": 69.3,
+   "zoneW": 406,
+   "zoneH": 321,
+   "edge": 43.5
+  },
+  "pot": {
+   "w": 78,
+   "h": 34.7,
+   "hitH": 47.6
+  },
+  "pau": {
+   "w": 43.3,
+   "h": 34.7,
+   "hitH": 47.6
+  },
+  "potEdge": 37.5,
+  "text": {
+   "min": 9.4,
+   "hud7": 10.1,
+   "hp": 10.8,
+   "title11": 15.9
+  },
+  "imgRender": "pixelated",
+  "boss": {
+   "atk": 80.9,
+   "dodge": 52,
+   "atkEdge": 31.9,
+   "stickEdge": 43.5
+  },
+  "title": {
+   "main": [
+    289,
+    46
+   ],
+   "row": [
+    156,
+    32
+   ],
+   "guest": [
+    173,
+    29
+   ],
+   "info": 10.1
+  }
+ },
+ "iphone-ngang-taitho": {
+  "vw": 844,
+  "vh": 390,
+  "dpr": 3,
+  "rot": false,
+  "scale": 1.367,
+  "world": [
+   656,
+   369
+  ],
+  "devPxPerPixel": 4.1,
+  "integerScale": false,
+  "cx": 34.4,
+  "cy": 0,
+  "btn": {
+   "atk": {
+    "x": 464.390243902439,
+    "y": 220,
+    "d": 76.5,
+    "hit": 92.9,
+    "edge": 30.1
+   },
+   "dodge": {
+    "x": 414.390243902439,
+    "y": 246,
+    "d": 49.2,
+    "hit": 65.6,
+    "edge": 8.2
+   },
+   "special": {
+    "x": 418.390243902439,
+    "y": 196,
+    "d": 49.2,
+    "hit": 65.6,
+    "edge": 76.5
+   },
+   "skill": {
+    "x": 468.390243902439,
+    "y": 162,
+    "d": 49.2,
+    "hit": 65.6,
+    "edge": 38.3
+   }
+  },
+  "gap": {
+   "atk-dodge": 77,
+   "atk-special": 70.9,
+   "atk-skill": 79.5,
+   "dodge-special": 68.6,
+   "special-skill": 82.6
+  },
+  "stick": {
+   "d": 65.6,
+   "zoneW": 375,
+   "zoneH": 303,
+   "edge": 41
+  },
+  "pot": {
+   "w": 73.8,
+   "h": 32.8,
+   "hitH": 45.1
+  },
+  "pau": {
+   "w": 41,
+   "h": 32.8,
+   "hitH": 45.1
+  },
+  "potEdge": 35.5,
+  "text": {
+   "min": 8.9,
+   "hud7": 9.6,
+   "hp": 10.3,
+   "title11": 15
+  },
+  "imgRender": "pixelated",
+  "boss": {
+   "atk": 76.5,
+   "dodge": 49.2,
+   "atkEdge": 30.1,
+   "stickEdge": 41
+  },
+  "title": {
+   "main": [
+    273,
+    44
+   ],
+   "row": [
+    148,
+    30
+   ],
+   "guest": [
+    164,
+    27
+   ],
+   "info": 9.6
+  }
+ },
+ "iphone-doc": {
+  "vw": 390,
+  "vh": 844,
+  "dpr": 3,
+  "rot": true,
+  "scale": 1.444,
+  "world": [
+   693,
+   390
+  ],
+  "devPxPerPixel": 4.331,
+  "integerScale": false,
+  "cx": 41.2,
+  "cy": 0,
+  "btn": {
+   "atk": {
+    "x": 471.2121212121212,
+    "y": 220,
+    "d": 80.9,
+    "hit": 98.2,
+    "edge": 31.9
+   },
+   "dodge": {
+    "x": 421.2121212121212,
+    "y": 246,
+    "d": 52,
+    "hit": 69.3,
+    "edge": 8.8
+   },
+   "special": {
+    "x": 425.2121212121212,
+    "y": 196,
+    "d": 52,
+    "hit": 69.3,
+    "edge": 81
+   },
+   "skill": {
+    "x": 475.2121212121212,
+    "y": 162,
+    "d": 52,
+    "hit": 69.3,
+    "edge": 55.9
+   }
+  },
+  "gap": {
+   "atk-dodge": 81.4,
+   "atk-special": 74.9,
+   "atk-skill": 83.9,
+   "dodge-special": 72.4,
+   "special-skill": 87.3
+  },
+  "stick": {
+   "d": 69.3,
+   "zoneW": 406,
+   "zoneH": 321,
+   "edge": 43.5
+  },
+  "pot": {
+   "w": 78,
+   "h": 34.7,
+   "hitH": 47.6
+  },
+  "pau": {
+   "w": 43.3,
+   "h": 34.7,
+   "hitH": 47.6
+  },
+  "potEdge": 81.8,
+  "text": {
+   "min": 9.4,
+   "hud7": 10.1,
+   "hp": 10.8,
+   "title11": 15.9
+  },
+  "imgRender": "pixelated",
+  "boss": {
+   "atk": 80.9,
+   "dodge": 52,
+   "atkEdge": 31.9,
+   "stickEdge": 43.5
+  },
+  "title": {
+   "main": [
+    289,
+    46
+   ],
+   "row": [
+    156,
+    32
+   ],
+   "guest": [
+    173,
+    29
+   ],
+   "info": 10.1
+  }
+ },
+ "iphone-se": {
+  "vw": 667,
+  "vh": 375,
+  "dpr": 2,
+  "rot": false,
+  "scale": 1.323,
+  "world": [
+   635,
+   357
+  ],
+  "devPxPerPixel": 2.646,
+  "integerScale": false,
+  "cx": 0,
+  "cy": 0,
+  "btn": {
+   "atk": {
+    "x": 430,
+    "y": 220,
+    "d": 74.1,
+    "hit": 90,
+    "edge": 37.9
+   },
+   "dodge": {
+    "x": 380,
+    "y": 246,
+    "d": 47.6,
+    "hit": 63.5,
+    "edge": 16.8
+   },
+   "special": {
+    "x": 384,
+    "y": 196,
+    "d": 47.6,
+    "hit": 63.5,
+    "edge": 82.9
+   },
+   "skill": {
+    "x": 434,
+    "y": 162,
+    "d": 47.6,
+    "hit": 63.5,
+    "edge": 53
+   }
+  },
+  "gap": {
+   "atk-dodge": 74.6,
+   "atk-special": 68.6,
+   "atk-skill": 76.9,
+   "dodge-special": 66.4,
+   "special-skill": 80
+  },
+  "stick": {
+   "d": 63.5,
+   "zoneW": 318,
+   "zoneH": 303,
+   "edge": 48.5
+  },
+  "pot": {
+   "w": 71.4,
+   "h": 31.8,
+   "hitH": 43.7
+  },
+  "pau": {
+   "w": 39.7,
+   "h": 31.8,
+   "hitH": 43.7
+  },
+  "potEdge": 21.3,
+  "text": {
+   "min": 8.6,
+   "hud7": 9.3,
+   "hp": 9.9,
+   "title11": 14.6
+  },
+  "imgRender": "pixelated",
+  "boss": {
+   "atk": 68.8,
+   "dodge": 45,
+   "atkEdge": 21.3,
+   "stickEdge": 39.8
+  }
+ },
+ "android-nho": {
+  "vw": 800,
+  "vh": 360,
+  "dpr": 3,
+  "rot": false,
+  "scale": 1.333,
+  "world": [
+   640,
+   360
+  ],
+  "devPxPerPixel": 4,
+  "integerScale": true,
+  "cx": 48,
+  "cy": 0,
+  "btn": {
+   "atk": {
+    "x": 478,
+    "y": 220,
+    "d": 74.7,
+    "hit": 90.7,
+    "edge": 29.3
+   },
+   "dodge": {
+    "x": 428,
+    "y": 246,
+    "d": 48,
+    "hit": 64,
+    "edge": 8
+   },
+   "special": {
+    "x": 432,
+    "y": 196,
+    "d": 48,
+    "hit": 64,
+    "edge": 74.7
+   },
+   "skill": {
+    "x": 482,
+    "y": 162,
+    "d": 48,
+    "hit": 64,
+    "edge": 53.3
+   }
+  },
+  "gap": {
+   "atk-dodge": 75.1,
+   "atk-special": 69.2,
+   "atk-skill": 77.5,
+   "dodge-special": 66.9,
+   "special-skill": 80.6
+  },
+  "stick": {
+   "d": 64,
+   "zoneW": 384,
+   "zoneH": 296,
+   "edge": 40
+  },
+  "pot": {
+   "w": 72,
+   "h": 32,
+   "hitH": 44
+  },
+  "pau": {
+   "w": 40,
+   "h": 32,
+   "hitH": 44
+  },
+  "potEdge": 34.7,
+  "text": {
+   "min": 8.7,
+   "hud7": 9.3,
+   "hp": 10,
+   "title11": 14.7
+  },
+  "imgRender": "pixelated",
+  "boss": {
+   "atk": 74.7,
+   "dodge": 48,
+   "atkEdge": 29.3,
+   "stickEdge": 40
+  }
+ },
+ "android-lon": {
+  "vw": 915,
+  "vh": 412,
+  "dpr": 2.625,
+  "rot": false,
+  "scale": 1.525,
+  "world": [
+   732,
+   412
+  ],
+  "devPxPerPixel": 4.003,
+  "integerScale": true,
+  "cx": 49.5,
+  "cy": 0,
+  "btn": {
+   "atk": {
+    "x": 479.5081967213115,
+    "y": 220,
+    "d": 85.4,
+    "hit": 103.7,
+    "edge": 33.8
+   },
+   "dodge": {
+    "x": 429.5081967213115,
+    "y": 246,
+    "d": 54.9,
+    "hit": 73.2,
+    "edge": 9.4
+   },
+   "special": {
+    "x": 433.5081967213115,
+    "y": 196,
+    "d": 54.9,
+    "hit": 73.2,
+    "edge": 85.7
+   },
+   "skill": {
+    "x": 483.5081967213115,
+    "y": 162,
+    "d": 54.9,
+    "hit": 73.2,
+    "edge": 58.7
+   }
+  },
+  "gap": {
+   "atk-dodge": 85.9,
+   "atk-special": 79.1,
+   "atk-skill": 88.7,
+   "dodge-special": 76.5,
+   "special-skill": 92.2
+  },
+  "stick": {
+   "d": 73.2,
+   "zoneW": 442,
+   "zoneH": 339,
+   "edge": 46
+  },
+  "pot": {
+   "w": 82.3,
+   "h": 36.6,
+   "hitH": 50.3
+  },
+  "pau": {
+   "w": 45.8,
+   "h": 36.6,
+   "hitH": 50.3
+  },
+  "potEdge": 39.6,
+  "text": {
+   "min": 9.9,
+   "hud7": 10.7,
+   "hp": 11.4,
+   "title11": 16.8
+  },
+  "imgRender": "pixelated",
+  "boss": {
+   "atk": 85.4,
+   "dodge": 54.9,
+   "atkEdge": 33.8,
+   "stickEdge": 46
+  }
+ },
+ "ipad": {
+  "vw": 1024,
+  "vh": 768,
+  "dpr": 2,
+  "rot": false,
+  "scale": 2.067,
+  "world": [
+   992,
+   558
+  ],
+  "devPxPerPixel": 4.133,
+  "integerScale": false,
+  "cx": 0,
+  "cy": 44.8,
+  "btn": {
+   "atk": {
+    "x": 430,
+    "y": 264.80645161290323,
+    "d": 115.7,
+    "hit": 140.5,
+    "edge": 57.9
+   },
+   "dodge": {
+    "x": 380,
+    "y": 290.80645161290323,
+    "d": 74.4,
+    "hit": 99.2,
+    "edge": 24.8
+   },
+   "special": {
+    "x": 384,
+    "y": 240.80645161290323,
+    "d": 74.4,
+    "hit": 99.2,
+    "edge": 128.1
+   },
+   "skill": {
+    "x": 434,
+    "y": 206.80645161290323,
+    "d": 74.4,
+    "hit": 99.2,
+    "edge": 73.9
+   }
+  },
+  "gap": {
+   "atk-dodge": 116.5,
+   "atk-special": 107.2,
+   "atk-skill": 120.2,
+   "dodge-special": 103.7,
+   "special-skill": 125
+  },
+  "stick": {
+   "d": 99.2,
+   "zoneW": 496,
+   "zoneH": 564,
+   "edge": 74.4
+  },
+  "pot": {
+   "w": 111.6,
+   "h": 49.6,
+   "hitH": 68.2
+  },
+  "pau": {
+   "w": 62,
+   "h": 49.6,
+   "hitH": 68.2
+  },
+  "potEdge": 24.3,
+  "text": {
+   "min": 13.4,
+   "hud7": 14.5,
+   "hp": 15.5,
+   "title11": 22.7
+  },
+  "imgRender": "pixelated",
+  "boss": {
+   "atk": 107.5,
+   "dodge": 70.3,
+   "atkEdge": 24.3,
+   "stickEdge": 53.2
+  }
+ },
+ "may-tinh": {
+  "vw": 960,
+  "vh": 540,
+  "dpr": 1,
+  "rot": false,
+  "scale": 1.933,
+  "world": [
+   928,
+   522
+  ],
+  "devPxPerPixel": 1.933,
+  "integerScale": false,
+  "cx": 0,
+  "cy": 0,
+  "btn": {
+   "atk": {
+    "x": 430,
+    "y": 220,
+    "d": 108.3,
+    "hit": 131.5,
+    "edge": 51.5
+   },
+   "dodge": {
+    "x": 380,
+    "y": 246,
+    "d": 69.6,
+    "hit": 92.8,
+    "edge": 20.6
+   },
+   "special": {
+    "x": 384,
+    "y": 196,
+    "d": 69.6,
+    "hit": 92.8,
+    "edge": 117.3
+   },
+   "skill": {
+    "x": 434,
+    "y": 162,
+    "d": 69.6,
+    "hit": 92.8,
+    "edge": 70.1
+   }
+  },
+  "gap": {
+   "atk-dodge": 109,
+   "atk-special": 100.3,
+   "atk-skill": 112.4,
+   "dodge-special": 97,
+   "special-skill": 116.9
+  },
+  "stick": {
+   "d": 92.8,
+   "zoneW": 464,
+   "zoneH": 438,
+   "edge": 67
+  },
+  "pot": {
+   "w": 104.4,
+   "h": 46.4,
+   "hitH": 63.8
+  },
+  "pau": {
+   "w": 58,
+   "h": 46.4,
+   "hitH": 63.8
+  },
+  "potEdge": 23.7,
+  "text": {
+   "min": 12.6,
+   "hud7": 13.5,
+   "hp": 14.5,
+   "title11": 21.3
+  },
+  "imgRender": "pixelated",
+  "boss": {
+   "atk": 100.5,
+   "dodge": 65.7,
+   "atkEdge": 23.7,
+   "stickEdge": 50.8
+  }
+ },
+ "cham": {
+  "ba_ngon": {
+   "roles": "atk,dodge,joy",
+   "dodge": true,
+   "ok": true
+  },
+  "truot_ra_ngoai": {
+   "van_giu_khi_ra_ngoai": true,
+   "con_lai": 1,
+   "ok": true
+  },
+  "nua_phai_khong_di": {
+   "role": "none",
+   "dx": 0.0
+  },
+  "mep_tren_khong_nhan_can": {
+   "role": "ui"
+  },
+  "doi_co_khi_giu": {
+   "con_ngon": 1,
+   "scale_moi": 1.258
+  }
+ }
+}
