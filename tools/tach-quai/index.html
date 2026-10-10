@@ -21,7 +21,9 @@
   header { display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: linear-gradient(#2a1d0f, var(--dk)); border-bottom: 2px solid var(--brD); }
   header h1 { margin: 0; font-size: 18px; color: var(--hi); }
   header small { color: var(--sub); font-size: 12px; display: block; font-weight: 500; }
-  header a { margin-left: auto; color: var(--patL); font-size: 13px; }
+  .menu { margin-left: auto; display: flex; flex-wrap: wrap; gap: 6px 12px; justify-content: flex-end; }
+  .menu a { color: var(--patL); font-size: 13px; text-decoration: none; padding: 2px 6px; border-radius: 6px; }
+  .menu a[aria-current] { color: #2b1a08; background: var(--gold); font-weight: 700; }
   main { max-width: 1100px; margin: 0 auto; padding: 16px; display: grid; gap: 16px; }
   .buoc { background: var(--bg2); border: 2px solid var(--brD); border-radius: 10px; padding: 14px; min-width: 0; }
   .buoc h2 { margin: 0 0 10px; font-size: 16px; color: var(--hi); display: flex; gap: 8px; align-items: center; }
@@ -70,7 +72,12 @@
 <header>
   <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="#a8752f" stroke="#1a120a" stroke-width="2"/><circle cx="15" cy="15" r="8" fill="none" stroke="#f6dc92" stroke-width="1.5"/><path d="M15 4 L17 13 L26 15 L17 17 L15 26 L13 17 L4 15 L13 13 Z" fill="#f6dc92"/></svg>
   <div><h1>Tách Sprite Quái</h1><small>Ảnh ChatGPT vẽ → tệp .sprite.json cho game Linh Khí</small></div>
-  <a href="xuong-sprite.html">Xưởng Sprite</a>
+  <nav class="menu" aria-label="Các công cụ">
+    <a href="tach-quai.html" aria-current="page">Quái</a>
+    <a href="tach-anh-hung.html">Anh hùng · Người làng</a>
+    <a href="tach-do.html">Vũ khí · Đồ · Vật phẩm</a>
+    <a href="tach-hieu-ung.html">Hiệu ứng</a>
+  </nav>
 </header>
 
 <main>

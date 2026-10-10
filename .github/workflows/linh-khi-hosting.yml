@@ -6,7 +6,7 @@ name: Linh Khí lên spiritblade.web.app
 on:
   push:
     branches: [khoi-tao-du-an]
-    paths: ['game/**', 'tools/xuong-sprite/**', 'tools/tach-quai/**', '.github/workflows/linh-khi-hosting.yml']
+    paths: ['game/**', 'tools/xuong-sprite/**', 'tools/tach-*/**', '.github/workflows/linh-khi-hosting.yml']
   workflow_dispatch:
 
 permissions:
@@ -58,7 +58,8 @@ jobs:
           # Xưởng Sprite: công cụ tự vẽ sprite (https://spiritblade.web.app/xuong-sprite.html) và bản game thử nó mở bên trong
           cp game/dist/xuong-sprite.html game/dist/xuong-sprite-thu.html "$RUNNER_TEMP/web/site/"
           # Tách Sprite Quái: ảnh ChatGPT vẽ (lưới 8×6) → .sprite.json (https://spiritblade.web.app/tach-quai.html)
-          cp tools/tach-quai/index.html "$RUNNER_TEMP/web/site/tach-quai.html"
+          # Mọi trang công cụ tools/tach-<tên>/index.html → https://spiritblade.web.app/tach-<tên>.html
+          for d in tools/tach-*/; do n=$(basename "$d"); [ -f "$d/index.html" ] && cp "$d/index.html" "$RUNNER_TEMP/web/site/$n.html"; done
           cat > "$RUNNER_TEMP/web/firebase.json" <<EOF
           {
             "hosting": {
