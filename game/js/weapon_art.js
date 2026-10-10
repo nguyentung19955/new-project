@@ -2231,6 +2231,7 @@
     b = S.toCanvas(); b.fr = fr;
     // chiều dài thân: dọc trục t (cung thì dọc cánh cung), cộng 2 điểm viền
     b.len = Math.round((P.type === 'bow' ? S.q1 - S.q0 : S.t1 - S.t0) + 3);
+    b.tip = S.t1; // VFX chiến đấu: từ điểm cầm tới mũi (điểm ảnh), để vẽ vệt bám mũi vũ khí
     if (cache.size >= CACHE_MAX) { let n = 0; for (const k of cache.keys()) { cache.delete(k); if (++n > CACHE_MAX / 4) break; } }
     cache.set(key, b);
     return b;
@@ -2290,6 +2291,8 @@
     const P = params(opts || {}), b = body(P, qAng(REST[P.type]));
     return { len: b.len, w: b.w, h: b.h, box: { x0: b.dx, y0: b.dy, x1: b.dx + b.w - 1, y1: b.dy + b.h - 1 } };
   }
+  // VFX chiến đấu: khoảng cách từ điểm cầm tới mũi vũ khí (điểm ảnh, đã tính cỡ theo mốc), để js/fx.js vẽ vệt chém bám mũi.
+  function tipLen(opts) { const P = params(opts || {}), b = body(P, qAng(REST[P.type])); return b.tip; }
   // Vẽ vũ khí vào ô đồ vuông cạnh size, tâm ô tại (x, y). Kiếm, giáo, búa nằm chéo; cung đứng thẳng.
   function icon(c, opts, x, y, sz) {
     const P = params(opts || {}), ang = P.type === 'bow' ? 0 : -45, b = body(P, qAng(ang));
@@ -2321,7 +2324,7 @@
   }
 
   G.weaponArt = {
-    draw: draw, icon: icon, name: name, fullName: fullName, familyName: familyName, size: size, fromWeapon: fromWeapon,
+    draw: draw, tipLen: tipLen, icon: icon, name: name, fullName: fullName, familyName: familyName, size: size, fromWeapon: fromWeapon,
     FAMILIES: FAM, RARITY: RARITY, STAGES: STAGES, BRANCHES: BRANCHES, TYPES: TYPES, TYPE_NAMES: TYPE_NAMES, WORDS: WORDS, REST: REST,
     clearCache: function () { cache.clear(); },
     _Spr: Spr, _Frame: Frame, _pal: { INK: INK, RED: RED, GRN: GRN, BLU: BLU, ORG: ORG, GOLD: GOLD, WD: WD, STEEL: STEEL, WHT: WHT }, _tone: { Dk: Dk, Md: Md, Lt: Lt },
