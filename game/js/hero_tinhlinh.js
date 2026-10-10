@@ -612,16 +612,64 @@
     else { H.r(0, -1, 2, 3, INK); H.r(4, -1, 2, 3, INK); H.p(0, -1, SH); H.p(4, -1, SH); if (kind === 'wide') { H.r(0, -2, 2, 1, INK); H.r(4, -2, 2, 1, INK); } }
     if (kind === 'wide' || kind === 'hurt') H.r(2, 3, 2, 2, INK); else if (kind === 'x') H.r(2, 3, 2, 1, INK); else if (kind === 'shut') { H.p(2, 3, INK); H.p(3, 3, INK); H.p(2, 4, '#e86a6a'); H.p(3, 4, '#e86a6a'); } else { H.p(2, 3, INK); H.p(3, 3, INK); }
   }
-  function drawKid(S, key, of, ps, only, neo) {
-    const hero = HERO[key], C = hero.col, ai = only === 'aiSau' || only === 'aiTruoc';
+  // Khung xương của một tư thế: hệ thân B (gốc giữa hai chân, xoay theo thân) và hệ đầu H. S: tấm ghép (null: chỉ để tính điểm).
+  function xuong(S, ps, neo) {
     const nt = (neo && neo.than) || [0, 0], nd = (neo && neo.dau) || [0, 0], q0 = rotv(nt[0], nt[1], ps.rot || 0);
-    const B = S.fr(q0[0], q0[1], ps.rot || 0), H = B.sub((ps.hdx || 0) + nd[0] - nt[0], -18 + (ps.hdy || 0) + nd[1] - nt[1], ps.ha || 0);
-    const cx = { S, B, H, C, f: ps.f | 0, ps, key, lv: of.wing ? of.wing.level : 0 };
-    // Nhịp đung đưa của vải và tua theo động tác: đứng thì lay nhẹ, chạy thì bay ra sau và lắc theo bước, lộn thì bay nhẹ như chạy (đồ lăn liền khối với thân).
+    const B = new Fr(S, q0[0], q0[1], ps.rot || 0), H = B.sub((ps.hdx || 0) + nd[0] - nt[0], -18 + (ps.hdy || 0) + nd[1] - nt[1], ps.ha || 0);
+    return { B, H };
+  }
+  // Hai bàn tay (theo hệ thân B): hn tay gần, hf tay xa. Đồ cầm tay (prop) đang rảnh tay thì tay xa giơ ra cầm đồ.
+  function tayXuong(ps, hand) {
+    let hn = ps.hn || [5, -7], hf = ps.hf || [-4, -7];
+    if (hand && hand.prop && ps.free) hf = [-7, -9 + (ps.hdy || 0)];
+    hn = reach(SHN, hn, ps.grip ? 10 : 7); hf = reach(SHF, hf, ps.grip ? 11 : 7);
+    return { hn, hf };
+  }
+  // GHÉP TRANG BỊ: bộ điểm neo của thân (docs/review/ghep-trang-bi/DINH-DANG-GHEP.md mục 1) tính thẳng từ khung xương khung này.
+  // Toạ độ theo tấm ghép S (cộng ps.x, ps.y là ra toạ độ tính từ chân). Đơn vị: điểm ảnh game, cùng cách đếm với vị trí điểm ảnh.
+  function diemTuKhung(B, H, hn, hf, ps) {
+    const b = (u, v) => B.pt(u, v), h = (u, v) => H.pt(u, v), giua = (a, c) => [(a[0] + c[0]) / 2, (a[1] + c[1]) / 2];
+    const ff = ps.ff || [2, 0], fb = ps.fb || [-2, 0], ks = giua(SHF, hf), kn = giua(SHN, hn), gs = giua([-2, -4], [fb[0], fb[1] - 2]), gn = giua([1, -4], [ff[0], ff[1] - 2]);
+    const d = {
+      dinh_dau: h(0.5, -6), tam_dau: h(0.5, 0), gay: h(-6, 0), mat: h(2.5, 0),
+      co: b(0, -12), vai_sau: b(-3, -11), vai_truoc: b(3, -11), nguc: b(1, -9), eo: b(0, -7), hong: b(0, -4),
+      khuyu_sau: b(ks[0], ks[1]), khuyu_truoc: b(kn[0], kn[1]), tay_sau: b(hf[0], hf[1]), tay_truoc: b(hn[0], hn[1]),
+      goi_sau: b(gs[0], gs[1]), goi_truoc: b(gn[0], gn[1]), chan_sau: b(fb[0], fb[1] - 1), chan_truoc: b(ff[0], ff[1] - 1),
+      lung: b(-5, -10), goc_canh: b(-4, -10),
+    };
+    if (ps.w) d.cam = [ps.w.x - (ps.x || 0), ps.w.y - (ps.y || 0)];
+    return d;
+  }
+  // Nhịp đung đưa của vải và tua theo động tác: đứng thì lay nhẹ, chạy thì bay ra sau và lắc theo bước, lộn thì bay nhẹ như chạy (đồ lăn liền khối với thân).
+  function dongDua(cx, ps) {
     const an = ps.anim, f8 = (ps.f | 0) & 7;
     // lộn: vải chỉ bay nhẹ (1) để đồ lăn liền một khối với thân, không văng rời ra (trước là 3)
     cx.tr = an === 'run' || an === 'dodge' || an === 'atk' || an === 'spec' || an === 'dash' || an === 'sweep' ? 1 : 0;
     cx.sw = an === 'run' ? [0, 1, 1, 0, 0, -1, -1, 0][f8] : an === 'dodge' ? [1, -1][f8 & 1] : an === 'idle' ? [0, 0, 0, 1, 1, 1, 0, 0][f8] : 0;
+  }
+  // Bối cảnh vẽ đồ của một khung (drawKid và API ghép G.spriteCustom.datDo dùng chung, để công cụ ra y hệt game).
+  // fit: có áp ghép mới (điểm neo, cap) hay không: chỉ khi vẽ cả em bé (only rỗng) hoặc lớp đồ thân AI; ô đồ (only = một lớp) giữ như cũ.
+  function taoCx(S, key, of, ps, only, neo) {
+    const X = xuong(S, ps, neo), T = tayXuong(ps, L.hands[of.hand]);
+    const cx = { S, B: X.B, H: X.H, C: HERO[key].col, f: ps.f | 0, ps, key, lv: of.wing ? of.wing.level : 0, hn: T.hn, hf: T.hf };
+    dongDua(cx, ps);
+    const ai = only === 'aiSau' || only === 'aiTruoc';
+    cx.fit = !only || ai;
+    cx.dong = (neo && neo.khung) || { ten: ps.anim, i: ps.f | 0 };
+    let dm = null;
+    // điểm thân: khung xương (thân code: đúng tuyệt đối; thân AI: ước lượng), rồi điểm tệp ghep-<key> (thân AI) đè lên
+    cx.diemCua = () => {
+      if (dm) return dm;
+      const d = diemTuKhung(cx.B, cx.H, cx.hn, cx.hf, ps), ng = {};
+      for (const k in d) ng[k] = ai ? 'uoc-luong' : 'xuong';
+      if (neo && neo.diem) for (const k in neo.diem) { const p = neo.diem[k]; d[k] = [p[0] - (ps.x || 0), p[1] - (ps.y || 0)]; ng[k] = (neo.nguon && neo.nguon[k]) || 'tep'; }
+      return (dm = { d, ng });
+    };
+    return cx;
+  }
+  function drawKid(S, key, of, ps, only, neo) {
+    const hero = HERO[key], C = hero.col, ai = only === 'aiSau' || only === 'aiTruoc';
+    const cx = taoCx(S, key, of, ps, only, neo), B = cx.B, H = cx.H;
     const rar = of.rar || {}, rc = (k) => RAR_COL[rar[k] | 0];
     let pha = 'sau'; // thân AI: đồ vẽ trước khi tới thân trần là lớp sau, từ thân trần trở đi là lớp trước
     const lay = (name) => (opt, fn) => {
@@ -631,9 +679,14 @@
     };
     const Pb = lay('lung'), Pt = lay('than'), Pa = lay('ao'), Pm = lay('mu'), Pk = lay('mat'), Ph = lay('tay');
     const hat = L.hats[of.hat], robe = L.robes[of.robe], back = L.backs[of.back], hand = L.hands[of.hand], wing = of.wing && L.wings[of.wing.kind];
-    let hn = ps.hn || [5, -7], hf = ps.hf || [-4, -7];
-    if (hand && hand.prop && ps.free) hf = [-7, -9 + (ps.hdy || 0)];
-    hn = reach(SHN, hn, ps.grip ? 10 : 7); hf = reach(SHF, hf, ps.grip ? 11 : 7);
+    const hn = cx.hn, hf = cx.hf;
+    // Ghép: món đồ AI có "cap.lop" (tệp ghep-<key>) khác lớp vốn có thì dời sang lớp đó: sau (sau thân), than (sát thân, ngay sau áo),
+    // truoc (trước thân, sau mũ), truoc_tay (trước cả tay gần). Không có tệp ghép thì không dời gì.
+    const Q = cx.fit ? { sau: [], than: [], truoc: [], truoc_tay: [] } : null;
+    const hoan = (it) => { if (!Q || !it || !it.lopCap) return false; const lp = it.lopCap(cx); if (!lp || lp === it.lopGoc || !Q[lp]) return false; Q[lp].push(it); return true; };
+    const chay = (k) => { if (Q) for (const it of Q[k]) it.veLop(cx, k === 'sau' ? Pb : Pa); };
+    const mk = L.masks[of.mask];
+    const hBack = hoan(back), hWing = hoan(wing), hRobe = hoan(robe), hHand = hoan(hand), hHat = hoan(hat), hMask = hoan(mk);
     const glove = hand && hand.glove;
     const arm = (sh, h, near) => {
       Pt((s) => { B.l(sh[0], sh[1], h[0], h[1], 2, near ? SKIN : Dk(SKIN)); });
@@ -642,8 +695,9 @@
       else Pt((s) => { B.r(h[0] - 1, h[1] - 1, 2, 2, Md(MASK)); });
     };
     // 1. lớp lưng
-    if (back) back.draw(cx, Pb);
-    if (wing) wing.draw(cx, Pb); // cánh mọc từ vai nên nằm trước đồ đeo lưng
+    if (back && !hBack) back.draw(cx, Pb);
+    if (wing && !hWing) wing.draw(cx, Pb); // cánh mọc từ vai nên nằm trước đồ đeo lưng
+    chay('sau');
     pha = 'truoc';
     // 2. thân trần
     arm(SHF, hf, false);
@@ -652,29 +706,31 @@
     Pt((s) => { B.r(fb[0] - 1, fb[1] - 2, 3, 2, DARK); B.r(ff[0] - 1, ff[1] - 2, 3, 2, DARK); });
     Pt((s) => { B.e(0, -8, 3.6, 4.4, SKIN); s.in(() => { B.e(-2, -6, 2, 2.5, Dk(SKIN)); }); });
     // 3. áo
-    if (robe) robe.draw(cx, Pa);
+    if (robe && !hRobe) robe.draw(cx, Pa);
     if (robe && rc('robe')) { tua(cx, Pa, B, -4, -7, 4, rc('robe')); if (rar.robe >= 3) tua(cx, Pa, B, -3, -6, 5, rc('robe'), { k: 1.3 }); }
-    if (back && back.front) back.front(cx, Pb);
+    chay('than');
+    if (back && back.front && !hBack) back.front(cx, Pb);
     if (back && rc('back')) Pb({ ol: false, bevel: false }, (s) => { B.r(-2, -13, 2, 1, rc('back')[1]); B.p(-1, -12, rc('back')[2]); });
-    if (hand && hand.belt) hand.belt(cx, Ph);
+    if (hand && hand.belt && !hHand) hand.belt(cx, Ph);
     if (hand && hand.belt && rc('hand')) Ph({ ol: false, bevel: false }, (s) => { const d = Math.round(hemOf(cx) * 0.7); B.p(1 + d, -4, rc('hand')[2]); B.p(3 + d, -4, rc('hand')[2]); });
     // đầu trần: tròn, có chỏm tóc tinh linh
     Pt({ ol: SKIN[0] }, (s) => { H.l(0, -6, -1, -8, 1, Md(SKIN)); H.p(0, -9, Lt(SKIN)); });
     Pt((s) => { H.e(0.5, 0, 6.3, 5.8, SKIN); s.in(() => { H.e(-3.5, 2.5, 3, 2.5, Dk(SKIN)); }); });
     // 4. mũ
-    if (hat) hat.draw(cx, Pm);
+    if (hat && !hHat) hat.draw(cx, Pm);
     if (hat && rc('hat')) { tua(cx, Pm, H, -6, 0, 4, rc('hat')); if (rar.hat >= 3) tua(cx, Pm, H, -5, 1, 5, rc('hat'), { k: 1.3 }); }
     // mặt nạ trắng (thuộc thân trần) và dấu trên mặt nạ (lớp mặt)
     Pt({ ol: only === 'than' || !hat || !hat.tint ? SKIN[0] : C[0] }, (s) => {
       H.e(2.5, 0.5, 4.3, 4.3, Md(MASK));
       s.in(() => { H.r(0, 4, 5, 1, Dk(MASK)); H.p(-1, 3, '#f2b0a8'); H.p(6, 3, '#f2b0a8'); eyes(H, ps.eyes || 'open'); });
     });
-    const mk = L.masks[of.mask];
-    if (mk) Pk({ ol: false, bevel: false }, (s) => { const o = s.clip; s.clip = false; mk.draw(H); s.clip = o; });
-    if (hat && hat.front) hat.front(cx, Pm);
-    if (hand && hand.prop && ps.free) hand.prop(cx, Ph, Math.round(hf[0]), Math.round(hf[1]));
+    if (mk && !hMask) Pk({ ol: false, bevel: false }, (s) => { const o = s.clip; s.clip = false; mk.draw(H, cx); s.clip = o; });
+    if (hat && hat.front && !hHat) hat.front(cx, Pm);
+    if (hand && hand.prop && ps.free && !hHand) hand.prop(cx, Ph, Math.round(hf[0]), Math.round(hf[1]));
+    chay('truoc');
     // tay gần vẽ sau cùng
     arm(SHN, hn, true);
+    chay('truoc_tay');
   }
 
   // ====================================================================
@@ -1162,7 +1218,7 @@
     const sel = pick(o, wt), of = outfitOf(key, o);
     const p = o.p, st = p && p.st, flash = !!(o.flash || (p && p.hurtT > 0));
     const tintK = flash ? 'F' : st && st.ice > 0 ? 'I' : st && st.poison > 0 ? 'P' : '';
-    const id = key + '|' + ofKey(of) + '|' + wt + '|' + sel.join('|') + '|' + tintK + '|' + N;
+    const id = key + '|' + ofKey(of) + '|' + wt + '|' + sel.join('|') + '|' + tintK + '|' + N + khoaGhep(key);
     let fr = KCACHE.get(id);
     if (fr) return fr;
     if (KCACHE.size >= 1400) KCACHE.clear();
@@ -1186,20 +1242,29 @@
   // Nhớ theo khung ảnh AI, đồ đang mặc, nhịp đung đưa, neo.
   const LCACHE = new Map();
   const cong2 = (a, b) => [((a && a[0]) || 0) + ((b && b[0]) || 0), ((a && a[1]) || 0) + ((b && b[1]) || 0)];
-  function lopDo(fr, neo, khop) {
-    khop = khop || null;
+  // Khoá bộ nhớ đệm phần ghép (tệp ghep-<key> đổi thì khung cũ không dùng lại). Không có tệp ghép: chuỗi rỗng.
+  function khoaGhep(key) { const SCx = G.spriteCustom; return SCx && SCx.khoaGhep ? SCx.khoaGhep(key) : ''; }
+  // Tư thế đứng yên dùng để dựng lớp đồ của thân AI (lopDo), và neo đã cộng phần tự đo (khop).
+  function dungLopDo(fr, neo, khop) {
     const quay = !!(khop && khop.rot != null);
     // nhịp đung đưa của vải: theo bước chạy khi chạy, lay nhẹ khi đứng; các động tác khác đứng yên
     const an = fr.anim === 'run' ? 'run' : 'idle', f = an === 'run' || fr.anim === 'idle' ? fr.f | 0 : 0;
     const nd = cong2(neo && neo.dau, !quay && khop && khop.dau), nt = cong2(neo && neo.than, !quay && khop && khop.than);
-    const N = fr.n || 1, id = [fr.key, ofKey(fr.of), fr.tint, an + f, nd.join(','), nt.join(','), quay ? [khop.rot, khop.x, khop.y].join(',') : '', N].join('|');
-    let r = LCACHE.get(id);
-    if (r) return r;
-    if (LCACHE.size >= 1400) LCACHE.clear();
     const ps = finishPose(pose(fr.key, 'none', 'idle', 0, 0));
     ps.anim = an; ps.f = f; ps.hdy = 0;
     if (quay) { ps.rot = khop.rot; ps.x = khop.x; ps.y = khop.y; }
     const n2 = { dau: nd, than: nt };
+    // ghép: khung ảnh AI đang vẽ và điểm neo của nó (tệp ghep-<key>, js/sprite_custom.js tính), toạ độ tính từ chân
+    if (neo && neo.khung) { n2.khung = neo.khung; n2.diem = neo.diem || null; n2.nguon = neo.nguon || null; }
+    return { quay, an, f, nd, nt, ps, n2 };
+  }
+  function lopDo(fr, neo, khop) {
+    khop = khop || null;
+    const D = dungLopDo(fr, neo, khop), quay = D.quay, ps = D.ps, n2 = D.n2;
+    const N = fr.n || 1, id = [fr.key, ofKey(fr.of), fr.tint, D.an + D.f, D.nd.join(','), D.nt.join(','), quay ? [khop.rot, khop.x, khop.y].join(',') : '', N].join('|') + ((neo && neo.khoa) || '');
+    let r = LCACHE.get(id);
+    if (r) return r;
+    if (LCACHE.size >= 1400) LCACHE.clear();
     const mk = (only) => { const sp = kidSprite(fr.key, fr.of, ps, fr.tint, only, n2, N); return { cv: sp.cv, ox: ps.x - sp.ox, oy: ps.y - sp.oy, w: sp.w, h: sp.h, trong: sp.bb.x1 < sp.bb.x0 || (sp.cv.width <= 1 && sp.cv.height <= 1) }; };
     r = { sau: mk('aiSau'), truoc: mk('aiTruoc') };
     LCACHE.set(id, r);
@@ -1234,7 +1299,11 @@
   }
   // Vẽ một bé (kèm vũ khí) tại chỗ c đang đứng: gốc là chân bé, đã lật theo hướng mặt.
   function drawFrame(c, o, fr, t) {
-    const wp = fr.weapon;
+    let wp = fr.weapon;
+    // Ghép: tệp ghep-<key> có "cap" cho vũ khí (khoá "vk-sword", "vk-sword-3" hoặc mã tệp vũ khí) thì dời / xoay HÌNH vũ khí quanh
+    // điểm cầm cho khớp tay nhân vật. Chỉ là hình: đòn đánh, tầm, vệt chém vẫn như cũ. Không có tệp ghép: null, y hệt trước.
+    const SCx = G.spriteCustom, cv = wp && SCx && SCx.capVuKhi ? SCx.capVuKhi(o.key, o.weapon, wp.type, fr.anim, fr.f) : null;
+    if (cv) wp = Object.assign({}, wp, { x: wp.x + cv.dx, y: wp.y + cv.dy, ang: wp.ang + cv.xoay });
     // o.neoTay: [dx, dy] dời vũ khí và nắm tay tới đúng bàn tay của thân AI (sprite_custom.js, mục "neo.tay"). Không có thì như cũ.
     const nt = o.neoTay, doiTay = nt && (nt[0] || nt[1]);
     const veVk = () => { if (doiTay) { c.save(); c.translate(nt[0], nt[1]); } try { drawWeapon(c, o, wp, t); } finally { if (doiTay) c.restore(); } };
@@ -1422,6 +1491,11 @@
     // Xoá hình đã nhớ (Xưởng Sprite gọi khi vừa có hình tự vẽ cho đồ mặc).
     clearCache: () => { KCACHE.clear(); ICACHE.clear(); LCACHE.clear(); },
     lopDo, // thân AI: lớp đồ sau và trước thân của một khung (js/sprite_custom.js gọi)
+    // Ghép trang bị (js/sprite_custom.js dùng cho API diemNhanVat / datDo): bối cảnh vẽ đồ của thân code (ps: tư thế đã xong)
+    // và của lớp đồ thân AI (fr: { key, of, anim, f }, neo, khop như lopDo). Trả về cx giống hệt lúc vẽ (B, H, tay, điểm neo).
+    cxGia: (key, of, ps, neo) => taoCx(null, HERO[key] ? key : 'smith', of, ps, null, neo),
+    cxLopDo: (fr, neo, khop) => { const D = dungLopDo(fr, neo, khop || null); return taoCx(null, fr.key, fr.of, D.ps, 'aiTruoc', D.n2); },
+    poseRs: (key, wt, anim, f, v, rs) => finishPose(pose(key, wt, anim, f, v, rs)),
     itemIcon,
     palette: { MASK, SKIN, RED, GRN, BLU, ORG, GOLD, WD, STEEL, GOURD, BRZ },
   };

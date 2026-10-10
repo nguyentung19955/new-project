@@ -98,6 +98,7 @@ RUNTIME_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'vung', 'thay_cho
                 'anh', 'vu_khi', 'trang_phuc', 'vat_pham', 'dung_yen', 'nhun', 'neo', 'khoac_do',
                 'net', 'nhan_vat', 'diem', 'diem_theo', 'cap')  # net: ảnh gấp net lần (thiếu là game đọc thành 1 → hình to gấp đôi, khung bị cắt)
 HU_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'tam', 'khung_rong', 'khung_cao', 'goc', 'so', 'giay', 'lap', 'xoay', 'co', 'tron', 'net')  # hiệu ứng ảnh AI (js/fx_anh.js)
+GHEP_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'nhan_vat', 'diem', 'diem_theo', 'cap')  # tệp ghep-<key> (js/sprite_custom.js)
 DO_LOAI = ('vu-khi', 'trang-phuc', 'vat-pham')  # đồ: một ảnh đứng yên, game tự xoay và đặt theo người
 SHIM = '''window.G = window.G || {};
 (function (G) {
@@ -128,6 +129,12 @@ def custom_sprites():
             if not ma.startswith('hu-') or not re.match(r'^data:image/png;base64,[A-Za-z0-9+/=]+$', str(t.get('tam', ''))):
                 sys.exit('art/custom/%s: hiệu ứng phải có mã hu-<tên> và dải khung PNG' % name)
             out.append({k: t[k] for k in HU_KEYS if k in t})
+            continue
+        if t.get('doi_tuong') == 'ghep':
+            # hồ sơ ghép trang bị của một nhân vật (docs/review/ghep-trang-bi/DINH-DANG-GHEP.md): chỉ số liệu, không có ảnh
+            if not re.match(r'^ghep-(smith|hunter|healer|wrestler)$', ma):
+                sys.exit('art/custom/%s: tệp ghép phải có mã ghep-smith, ghep-hunter, ghep-healer hoặc ghep-wrestler' % name)
+            out.append({k: t[k] for k in GHEP_KEYS if k in t})
             continue
         if t.get('doi_tuong') in DO_LOAI:
             if not re.match(r'^data:image/png;base64,[A-Za-z0-9+/=]+$', str(t.get('anh', ''))):
