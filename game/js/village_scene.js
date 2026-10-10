@@ -519,6 +519,15 @@
         }
       }
     } catch (e) { /* thiếu số liệu thì coi như không có việc mới */ }
+    // Người mới (chưa qua quá 1 ải): chỉ một người có chấm đỏ, người quan trọng nhất.
+    // Chưa đánh ải nào: Lái Đò (đi đánh ải) trước. Sau ải 1: Cụ Đồ có điểm → Lò rèn → Thợ May → Lái Đò.
+    const nStar = Object.keys(sv.stars || {}).length;
+    if (nStar <= 1) {
+      const order = nStar === 0 ? ['lai', 'do', 'ren', 'may'] : ['do', 'ren', 'may', 'lai'];
+      const pick = order.find((k) => n[k]);
+      for (const k in n) n[k] = false;
+      if (pick) n[pick] = true;
+    }
     S.news = n;
   }
   VS.checkNews = checkNews;

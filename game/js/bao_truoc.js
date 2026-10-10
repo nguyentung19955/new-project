@@ -167,6 +167,9 @@
     c.lineWidth = 3; c.stroke();
     c.strokeStyle = 'rgba(' + C.rim + ',' + (0.7 + 0.3 * beat * (0.4 + 0.6 * late)).toFixed(3) + ')';
     c.lineWidth = Math.max(1.4 / sc, 0.6); c.stroke();
+    // Cho người mù màu đỏ–lục: vùng của quái khác vòng dưới chân em bé cả về HÌNH (vòng em bé nét liền, không sọc):
+    // sọc chéo tối trong lòng vùng + viền nét đứt tối chạy vòng quanh. Không đổi màu.
+    hatch(c, it, sc, late);
     // sắp ra đòn (15% cuối): lòng vùng sáng dần lên và viền trắng dày dần (lấy đà), để biết lúc nào phải né
     const pre = u > 0.85 ? (u - 0.85) / 0.15 : 0;
     if (pre > 0) {
@@ -177,6 +180,23 @@
     }
     // hướng đòn: các mũi chữ V chạy từ gốc ra ngoài (đường thẳng, hình quạt)
     if ((it.k === 'line' || (it.k === 'cone' && it.span < TAU - 0.01)) && e > 0.5) chevrons(c, it, C, sc, late);
+    c.restore();
+  }
+  // sọc chéo + viền nét đứt chạy (V31): tín hiệu bằng hình, không chỉ bằng màu
+  function hatch(c, it, sc, late) {
+    const E = Math.max(it.r || 0, it.r1 || 0, it.len || 0, it.w || 0, it.h || 0, it.k === 'wall' ? Math.abs(it.s || 0) + 44 + (it.half || 0) : 0) + 6;
+    c.save();
+    path(c, it, 1); c.clip();
+    c.beginPath();
+    const gap = 6, x0 = it.x - 3 * E, x1 = it.x + E;
+    for (let x = x0; x <= x1; x += gap) { c.moveTo(x, it.y - E); c.lineTo(x + 2 * E, it.y + E); }
+    c.strokeStyle = 'rgba(40,6,4,' + (0.26 + 0.08 * late).toFixed(3) + ')';
+    c.lineWidth = 1.5; c.lineCap = 'butt'; c.stroke();
+    c.restore();
+    path(c, it, 1);
+    c.save();
+    c.setLineDash([3, 3]); c.lineDashOffset = -(G.time * (8 + 10 * late)) % 6;
+    c.strokeStyle = 'rgba(30,4,2,0.6)'; c.lineWidth = Math.max(1.1 / sc, 0.6); c.stroke();
     c.restore();
   }
   function chevrons(c, it, C, sc, late) {
