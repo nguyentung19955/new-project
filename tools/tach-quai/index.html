@@ -433,7 +433,7 @@ function tuTim(A, coAlpha) {
   const maxN = Math.max(...cum.map(c => c.n));
   const vua = cum.filter(c => c.n >= 0.05 * maxN).map(c => c.n).sort((a, b) => a - b);
   const ref = vua[vua.length >> 1];
-  const lon = cum.filter(c => c.n >= 0.25 * ref), nho = cum.filter(c => c.n < 0.25 * ref && c.n >= 0.01 * ref);
+  const lon = cum.filter(c => c.n >= 0.25 * ref), nho = cum.filter(c => c.n < 0.25 * ref && c.n >= 0.03 * ref);
   if (lon.length < 6) return { loi: ['Chỉ tìm thấy ' + lon.length + ' hình, cần đủ 6 hàng'] };
   // chia 6 hàng ở 5 khoảng trống dọc lớn nhất
   lon.sort((a, b) => a.cy - b.cy);
@@ -478,10 +478,16 @@ function tuTim(A, coAlpha) {
     }
     gops[r] = moi;
   });
+  // bỏ hình cụt (bị cắt mép ảnh, mẩu đuôi…): diện tích < 45% hình thường
+  const dienTich = gops.flat().map(f => (f.x1 - f.x0 + 1) * (f.y1 - f.y0 + 1)).sort((a, b) => a - b), dtGiua = dienTich[dienTich.length >> 1] || 1;
+  gops.forEach((gop, r) => {
+    const bo = gop.filter(f => (f.x1 - f.x0 + 1) * (f.y1 - f.y0 + 1) < 0.45 * dtGiua).length;
+    if (bo) { gops[r] = gop.filter(f => (f.x1 - f.x0 + 1) * (f.y1 - f.y0 + 1) >= 0.45 * dtGiua); ghi.push(`Hàng ${r + 1}: bỏ ${bo} hình cụt/quá nhỏ`); }
+  });
   gops.forEach((gop, r) => {
     let chon = gop;
     if (gop.length > SO[r]) { chon = []; for (let i = 0; i < SO[r]; i++) chon.push(gop[Math.round(i * (gop.length - 1) / (SO[r] - 1))]); ghi.push(`Hàng ${r + 1}: thấy ${gop.length} hình, lấy ${SO[r]} hình rải đều`); }
-    if (gop.length < SO[r]) loi.push(`Hàng ${r + 1} (${TEN_DT[r].toLowerCase()}): chỉ thấy ${gop.length} hình, cần ${SO[r]}`);
+    if (gop.length < SO[r]) chon = duKhung(gop, r, loi, ghi);
     chon.forEach((f, c) => khung.push({ r, c, f }));
   });
   const hinh = {};
@@ -498,6 +504,16 @@ function tuTim(A, coAlpha) {
     hinh[r + ',' + c] = { w, h, px };
   }
   return { hinh, loi, ghi, khung };
+}
+
+// Hàng thiếu hình: nếu còn ≥ một nửa thì lặp khung rải đều cho đủ (ghi chú); ít hơn thì báo lỗi.
+function duKhung(ds, r, loi, ghi) {
+  if (ds.length >= Math.ceil(SO[r] / 2)) {
+    ghi.push(`Hàng ${r + 1} (${TEN_DT[r].toLowerCase()}): có ${ds.length} hình, lặp lại cho đủ ${SO[r]} khung`);
+    const kq = []; for (let i = 0; i < SO[r]; i++) kq.push(ds[Math.min(ds.length - 1, Math.floor(i * ds.length / SO[r]))]); return kq;
+  }
+  loi.push(`Hàng ${r + 1} (${TEN_DT[r].toLowerCase()}): chỉ thấy ${ds.length} hình, cần ít nhất ${Math.ceil(SO[r] / 2)}`);
+  return ds;
 }
 
 // Ảnh có kẻ lưới thật: dò đường kẻ (bao nhiêu cột cũng được), mỗi ô là một khung; phần lan sang ô khác bị cắt bỏ.
@@ -527,7 +543,7 @@ function tachTheoLuoiKe(W, H, duong, nhan, cum, P) {
     const ds = o.filter(c => c.r === r && c.lonNhat >= 0.15 * ref);
     let chon = ds;
     if (ds.length > SO[r]) { chon = []; for (let i = 0; i < SO[r]; i++) chon.push(ds[Math.round(i * (ds.length - 1) / (SO[r] - 1))]); ghi.push(`Hàng ${r + 1}: thấy ${ds.length} hình, lấy ${SO[r]} hình rải đều`); }
-    if (ds.length < SO[r]) loi.push(`Hàng ${r + 1} (${TEN_DT[r].toLowerCase()}): chỉ thấy ${ds.length} hình, cần ${SO[r]}`);
+    if (ds.length < SO[r]) chon = duKhung(ds, r, loi, ghi);
     chon.forEach((cell, c) => {
       const giu = new Set([...cell.dem].filter(([, n]) => n >= 0.15 * cell.lonNhat).map(([id]) => id));
       let x0 = W, y0 = H, x1 = -1, y1 = -1;
