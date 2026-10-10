@@ -36,6 +36,19 @@ jobs:
         with:
           node-version: 22
 
+      # V4 bước 1: kiểm tra nhanh (không cần trình duyệt) TRƯỚC khi đăng. Có lỗi thì dừng ở đây, bản đang chạy trên web giữ nguyên.
+      - name: Kiểm tra nhanh trước khi đăng
+        run: |
+          set -e
+          echo "1) Kiểm tra lỗi gõ (cú pháp) trong mọi tệp game/js/*.js"
+          for f in game/js/*.js; do
+            node --check "$f" || { echo "::error title=Lỗi cú pháp::$f"; exit 1; }
+          done
+          echo "2) Bài kiểm tra lưu mây"
+          node game/tests/cloud_save_regression.test.js || { echo "::error title=Bài kiểm tra lưu mây hỏng::game/tests/cloud_save_regression.test.js"; exit 1; }
+          echo "3) Thử gói game"
+          python3 game/build.py || { echo "::error title=Gói game hỏng::python3 game/build.py"; exit 1; }
+
       - name: Gói game
         run: |
           python3 game/build.py

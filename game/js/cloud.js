@@ -41,6 +41,27 @@
   function summary(s) { return { stars: starSum(s), far: far(s), farText: farText(far(s)), lvl: maxLvl(s), weapons: (s.weapons || []).length, gold: s.gold || 0 }; }
 
   // phần "nội dung" của bản lưu: bỏ mốc thời gian, chủ bản lưu và cài đặt riêng của máy
+  // V2: hỏi khi bản trên máy MỚI HƠN theo giờ nhưng bản trên mây có nhiều tiến độ hơn rõ rệt.
+  // Dùng lại hộp hỏi có sẵn (G.cloudUI.conflict, vốn viết cho chiều ngược lại) và chỉ sửa lời cho đúng chiều này.
+  // Đóng hộp bằng ✕/Esc thì giữ bản nhiều tiến độ hơn = bản trên mây (hộp gốc trả 'local' khi đóng).
+  async function askCloudRicher(local, cloud, at) {
+    let choseLocal = false;
+    const pr = G.cloudUI.conflict(summary(local), summary(cloud), at);
+    try {
+      const box = document.getElementById('lk-conflict');
+      if (box) {
+        const msg = box.querySelector('.lk-body > div');
+        if (msg) msg.textContent = 'Bản lưu trên máy này mới hơn, nhưng bản trên mây có nhiều tiến độ hơn. Bạn muốn giữ bản nào? Bản không chọn sẽ bị thay.';
+        const sub = box.querySelector('.lk-card .lk-sub');
+        if (sub) sub.textContent = 'lưu sau, ít tiến độ hơn';
+        const b = box.querySelector('[data-act="cf-local"]');
+        if (b) b.addEventListener('click', () => { choseLocal = true; }, true);
+      }
+    } catch (e) { /* hộp hỏi khác cấu trúc: vẫn hỏi bình thường */ }
+    const use = await pr;
+    return use === 'local' && !choseLocal ? 'cloud' : use;
+  }
+
   const META = ['savedAt', 'owner', 'sound'];
   function body(s) { const o = Object.assign({}, s); for (const k of META) delete o[k]; return JSON.stringify(o); }
   let lastBody = null;
@@ -141,6 +162,11 @@
             if (lp >= cp + 8 && G.cloudUI && G.cloudUI.conflict) use = await G.cloudUI.conflict(summary(local), summary(cloud), d.updatedAt || 0);
             if (use === 'cloud') { this.apply(cloud, d.updatedAt || Date.now()); this.lastSync = Date.now(); return; }
           } else if ((d.updatedAt || 0) === (local.savedAt || 0)) { this.lastSync = d.updatedAt || Date.now(); this._own(); return; }
+          else if (progress(cloud) >= progress(local) + 8 && G.cloudUI && G.cloudUI.conflict) {
+            // V2: bản trên máy mới hơn theo giờ (giờ mỗi máy một khác) nhưng bản trên mây đi xa hơn rõ rệt → hỏi, không ghi đè mây ngay
+            const use = await askCloudRicher(local, cloud, d.updatedAt || 0);
+            if (use === 'cloud') { this.apply(cloud, d.updatedAt || Date.now()); this.lastSync = Date.now(); return; }
+          }
         }
         this._own();
         await this.push(true);
