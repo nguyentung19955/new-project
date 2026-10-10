@@ -257,6 +257,7 @@
         </div>
         <div class="hop">
           <div class="hang">
+            <button class="nut" id="nutBanLe" title="Hình tròn cùng màu chi đè lên chỗ nối ở vai, hông, cổ để xoay mạnh không hở">Nắp che khớp: BẬT</button>
             <button class="nut chinh" id="nutVua">Ra giữa khung</button>
             <button class="nut" id="nutGiuaChan">Chấm xanh vào giữa</button>
             <button class="nut do" id="nutRapLai">Ráp lại tự động</button>
@@ -370,7 +371,7 @@
 
 <script>
 // Xưởng Rối (tools/xuong-roi). TỆP ĐƯỢC TẠO BỞI game/build.py, đừng sửa tay.
-window.XR_MA_BAN = "430e69";
+window.XR_MA_BAN = "4c7394";
 // ===== game/js/chibi_rig.js =====
 // HÌNH CHIBI KHUNG XƯƠNG (định dạng "linh-khi-rig", xem docs/phong-cach-moi/KE-HOACH-CHIBI.md).
 // Mỗi nhân vật là MỘT ảnh chứa các mảnh (đầu, thân, tay, chân, đuôi, vũ khí). Mỗi khung hình game xoay và nhún
@@ -396,7 +397,7 @@ window.XR_MA_BAN = "430e69";
   const eIn = (x) => x * x;                                       // chậm rồi nhanh
   const eIO = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
   const bump = (x) => Math.sin(clamp(x, 0, 1) * PI);              // 0 -> 1 -> 0 mượt
-  const ANIMS = ['idle', 'move', 'tele', 'atk', 'hit', 'die'];
+  const ANIMS = ['idle', 'move', 'tele', 'atk', 'hit', 'die', 'roll']; // roll: lộn nhào (né)
   const LOOP = { idle: true, move: true };
   const KHUNG = { nguoi: 1, 'bon-chan': 1, cua: 1 };
 
@@ -423,6 +424,8 @@ window.XR_MA_BAN = "430e69";
         if (!o || !(o[2] > 0 && o[3] > 0)) throw new Error('mảnh ' + m.ten + ' thiếu ô ảnh');
         const dat = P2(m.dat) || [0, 0], truc = P2(m.truc) || [dat[0] + o[2] / 2, dat[1] + o[3] / 2];
         const p = { ten: m.ten, vai: String(m.vai || 'phu-kien'), cha: m.cha || null, o, dat, truc, lop: +m.lop || 0, i, con: [] };
+        // nap: [bán kính, màu]: "bản lề ảo", hình tròn cùng màu chi vẽ ngay tại khớp để không bao giờ hở khoảng trống
+        if (Array.isArray(m.nap) && +m.nap[0] > 0 && /^#[0-9a-fA-F]{6}$/.test(String(m.nap[1]))) p.nap = [+m.nap[0], String(m.nap[1])];
         if (theoTen[p.ten]) throw new Error('trùng tên mảnh ' + p.ten);
         theoTen[p.ten] = p; manh.push(p);
       });
@@ -545,6 +548,15 @@ window.XR_MA_BAN = "430e69";
       v('dau', -12 * D * k * B); v('than', -6 * D * k * B);
       v('tay-truoc', 25 * D * k * B); v('tay-sau', 30 * D * k * B);
       theoVai(rig, P, 'phu-kien', (q) => dat(P, q.ten, 14 * D * k * Math.cos(u * 14) * B));
+    } else if (n === 'roll') {
+      // LỘN NHÀO tới trước một vòng quanh giữa người (ease-in-out bậc 3), co tay chân lại ở giữa vòng.
+      const e = eIO(u), th = TAU * e, co = bump(u) * B;
+      g.rot = th;
+      g.dx = -0.5 * Math.sin(th); g.dy = -0.5 * (1 - Math.cos(th)) - 0.18 * bump(u); // giữ tâm xoay ở giữa người, nảy lên một chút
+      g.sy = 1 - 0.12 * co; g.sx = 1 + 0.05 * co;
+      v('chan-truoc', -55 * D * co); v('chan-sau', -40 * D * co);
+      v('tay-truoc', -60 * D * co); v('tay-sau', -45 * D * co);
+      v('dau', 14 * D * co); v('vu-khi', 20 * D * co);
     } else if (n === 'die') {
       const f = eIn(seg(u, 0.05, 0.55)), nay = bump(seg(u, 0.55, 0.75)) * 0.12, k = Math.max(0, f - nay);
       g.rot = -84 * D * k * B; g.dx = -0.18 * k * B;                // ngã ngửa ra sau
@@ -558,6 +570,8 @@ window.XR_MA_BAN = "430e69";
   }
 
   // BỐN CHÂN (heo, sói, thú...). Mặt quay phải.
+  // Cây xương: thân (hông, gốc) mang chân sau, đuôi và NGỰC (không bắt buộc: khớp cột sống ở giữa lưng);
+  // ngực mang chân trước và CỔ (không bắt buộc), cổ mang đầu. Thiếu ngực/cổ thì các mảnh đó gắn thẳng vào thân.
   function bonChan(rig, P, n, u, t, B) {
     const g = P.g, v = (ten, a, dx, dy) => theoVai(rig, P, ten, (p) => dat(P, p.ten, a, dx, dy));
     const chan = (fg, fx, sg, sx) => { v('chan-truoc-gan', fg); v('chan-truoc-xa', fx); v('chan-sau-gan', sg); v('chan-sau-xa', sx); };
@@ -565,6 +579,7 @@ window.XR_MA_BAN = "430e69";
       const w = TAU * 0.8 * t, s = Math.sin(w);
       g.sy = 1 + 0.02 * s * B; g.sx = 1 - 0.01 * s * B;
       v('dau', 2.5 * D * Math.sin(w - 0.9) * B);
+      v('nguc', 1.2 * D * Math.sin(w - 0.4) * B); v('co', 2 * D * Math.sin(w - 0.7) * B); // ngực phồng, cổ gật theo nhịp thở
       v('duoi', 9 * D * Math.sin(TAU * 1.6 * t) * B);
       theoVai(rig, P, 'phu-kien', (p) => dat(P, p.ten, 4 * D * Math.sin(w - 1.3 - lech(p)) * B));
     } else if (n === 'move') {
@@ -572,7 +587,10 @@ window.XR_MA_BAN = "430e69";
       g.dy = -Math.abs(Math.sin(p)) * 0.05 * B;
       g.sy = 1 + 0.025 * Math.cos(2 * p) * B; g.sx = 1 - 0.012 * Math.cos(2 * p) * B;
       v('than', 1.5 * D * Math.sin(2 * p) * B);
-      chan(-A * s, A * s, A * s, -A * s);                            // bước chéo: trước-gần đi cùng sau-xa
+      // NHỊP CHẠY NƯỚC KIỆU (trot): cặp chéo trước-gần + sau-xa cùng pha, cặp trước-xa + sau-gan lệch pha π
+      chan(-A * s, A * s, A * s, -A * s);
+      v('nguc', 3 * D * Math.sin(2 * p + 0.4) * B);                  // cột sống uốn: ngực lắc nhẹ so với hông
+      v('co', 4 * D * Math.sin(2 * p + 0.6) * B);
       v('dau', 4 * D * Math.sin(2 * p + 0.8) * B);
       v('duoi', 16 * D * Math.sin(2 * p) * B);
       theoVai(rig, P, 'phu-kien', (q) => dat(P, q.ten, 8 * D * Math.sin(2 * p - 1 - lech(q)) * B));
@@ -580,6 +598,7 @@ window.XR_MA_BAN = "430e69";
       const e = eOut(u), r = Math.sin(TAU * 7 * t) * 0.7 * D * e;
       g.dx = -0.06 * e * B; g.sy = 1 - 0.08 * e * B; g.sx = 1 + 0.05 * e * B;
       v('than', -5 * D * e * B + r);                                 // lùi người, cúi đầu lấy đà
+      v('nguc', 6 * D * e * B); v('co', 8 * D * e * B);
       v('dau', 12 * D * e * B);
       chan(-14 * D * e * B, -10 * D * e * B, 16 * D * e * B, 12 * D * e * B);
       v('duoi', (20 * e + 10 * Math.sin(TAU * 4 * t) * e) * D * B);
@@ -588,6 +607,7 @@ window.XR_MA_BAN = "430e69";
       g.dx = (-0.06 + 0.24 * k) * keo * B; g.dy = -0.05 * bump(seg(u, 0, 0.3)) * B;
       g.sx = 1 + 0.06 * k * keo * B; g.sy = 1 - 0.04 * k * keo * B;
       v('than', (-5 + 13 * k) * keo * D * B);                        // lao tới, chúi người
+      v('nguc', (6 - 12 * k) * keo * D * B); v('co', (8 - 18 * k) * keo * D * B);
       v('dau', (12 - 34 * k) * keo * D * B);                         // húc hất đầu lên
       chan((-14 + 50 * k) * keo * D * B, (-10 + 40 * k) * keo * D * B, (16 - 40 * k) * keo * D * B, (12 - 34 * k) * keo * D * B);
       v('duoi', (20 + 15 * k) * keo * D * B);
@@ -595,7 +615,7 @@ window.XR_MA_BAN = "430e69";
       const k = Math.pow(1 - u, 2);
       g.dx = -0.07 * k * B; g.rot = -5 * D * k * B; g.sx = 1 - 0.05 * bump(u * 2) * B; g.sy = 1 + 0.04 * bump(u * 2) * B;
       g.flash = clamp(1 - u * 3.2, 0, 1);
-      v('dau', -14 * D * k * B);
+      v('dau', -14 * D * k * B); v('nguc', -6 * D * k * B); v('co', -8 * D * k * B);
       chan(-12 * D * k * B, -8 * D * k * B, 10 * D * k * B, 6 * D * k * B);
       v('duoi', 25 * D * k * Math.cos(u * 12) * B);
     } else if (n === 'die') {
@@ -604,7 +624,7 @@ window.XR_MA_BAN = "430e69";
       g.alpha = 1 - seg(u, 0.6, 1);
       g.flash = clamp(0.8 - u * 4, 0, 1);
       chan(-55 * D * f * B, -45 * D * f * B, 55 * D * f * B, 45 * D * f * B); // chân duỗi ra hai bên
-      v('dau', 18 * D * f * B); v('duoi', -30 * D * f * B);
+      v('dau', 18 * D * f * B); v('duoi', -30 * D * f * B); v('nguc', 8 * D * f * B); v('co', 10 * D * f * B);
     }
   }
 
@@ -651,16 +671,19 @@ window.XR_MA_BAN = "430e69";
   }
 
   const KHUNG_HAM = { nguoi, 'bon-chan': bonChan, cua };
+  const GIOI_HAN_TAY = PI / 2; // tay xoay tối đa ±90° so với thân: không bao giờ bẻ ngược dị dạng
   function poseTho(rig, n, u, t, h) {
     const P = moi();
+    if (n === 'roll' && rig.khung !== 'nguoi') { (KHUNG_HAM[rig.khung])(rig, P, 'move', 0, u * 0.6, h.bien_do); return P; } // thú, cua: chạy nhanh thay lộn
     (KHUNG_HAM[rig.khung] || nguoi)(rig, P, n, u, t, h.bien_do);
+    if (rig.khung === 'nguoi') for (const p of rig.manh) if (/^tay-/.test(p.vai) && P.m[p.ten]) P.m[p.ten].a = clamp(P.m[p.ten].a, -GIOI_HAN_TAY, GIOI_HAN_TAY);
     return P;
   }
   // QUÁN TÍNH TRỄ (follow-through): đầu, phụ kiện (ống tên, khăn, tóc) và đuôi không dính cứng vào thân mà đi trễ pha:
   // lấy tư thế thân ở một chút trước đó (TRE giây) so với bây giờ; thân vừa nhún lên thì đầu gật xuống, vừa lao tới thì
   // đầu ngả ra sau, vừa nghiêng thì đầu nghiêng ngược lại. Vì là dao động hình sin trễ pha nên mượt, không cần nhớ trạng thái.
   const TRE = 0.12;
-  const QT = { dau: 1, 'phu-kien': 1.8, duoi: 1.5 };
+  const QT = { dau: 1, co: 0.6, 'phu-kien': 1.8, duoi: 1.5 };
   function quanTinh(rig, P, Pt) {
     const goc = rig.thuTu[0] && rig.thuTu[0].ten; // mảnh gốc (thân)
     const gT = (Q) => Q.g.rot + (goc && Q.m[goc] ? Q.m[goc].a : 0);
@@ -680,7 +703,7 @@ window.XR_MA_BAN = "430e69";
     // Động tác một lần: tốc độ > 1 thì làm xong sớm rồi giữ tư thế cuối (thời lượng do game quyết định).
     u = clamp((+u || 0) * (LOOP[n] ? 1 : h.toc_do), 0, 1);
     const P = poseTho(rig, n, u, t, h);
-    if (n !== 'die') quanTinh(rig, P, poseTho(rig, n, LOOP[n] ? u : clamp(u - 0.07, 0, 1), LOOP[n] ? t - TRE : t, h));
+    if (n !== 'die') quanTinh(rig, P, poseTho(rig, n, LOOP[n] ? u : clamp(u - (n === 'roll' ? 0.12 : 0.07), 0, 1), LOOP[n] ? t - TRE : t, h)); // lộn nhào: đầu, ống tên chậm hơn thân 2-3 khung hình
     return P;
   };
 
@@ -781,6 +804,7 @@ window.XR_MA_BAN = "430e69";
       const o = p.o;
       ctx.globalAlpha = a0;
       ctx.drawImage(rig.img, o[0], o[1], o[2], o[3], p.dat[0], p.dat[1], o[2], o[3]);
+      if (p.nap && opts.banLe !== false) { ctx.beginPath(); ctx.arc(p.truc[0], p.truc[1], p.nap[0], 0, TAU); ctx.fillStyle = p.nap[1]; ctx.fill(); }
       if (mau) { ctx.globalAlpha = a0 * clamp(tint[1], 0, 1); ctx.drawImage(mau, o[0], o[1], o[2], o[3], p.dat[0], p.dat[1], o[2], o[3]); }
       if (trang) { ctx.globalAlpha = a0 * flash; ctx.drawImage(trang, o[0], o[1], o[2], o[3], p.dat[0], p.dat[1], o[2], o[3]); }
       ctx.restore();
@@ -880,7 +904,7 @@ window.XR_MA_BAN = "430e69";
   C.chonEmBe = function (o) {
     const p = o.p, t = (o.t != null ? o.t : G.time) || 0;
     if (p && p.dead) return { anim: 'die', u: (p.deadT || 0) / 0.9, t };
-    if (o.dodge >= 0) return { anim: 'move', u: 0, t: t * 2.2 };
+    if (o.dodge >= 0) return { anim: 'roll', u: o.dodge, t };
     if (p && p.dashT > 0) return { anim: 'move', u: 0, t: t * 2 };
     if (p && p.specT > 0) return { anim: 'atk', u: 1 - p.specT / 0.35, t };
     if (p && p.castT > 0) return { anim: 'atk', u: 1 - p.castT / 0.4, t };
@@ -1232,13 +1256,13 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
   XR.VAI = {
     nguoi: [['dau', 'Đầu'], ['than', 'Thân'], ['tay-truoc', 'Tay trước'], ['tay-sau', 'Tay sau'], ['chan-truoc', 'Chân trước'], ['chan-sau', 'Chân sau'],
       ['vu-khi', 'Vũ khí'], ['phu-kien', 'Phụ kiện (tóc, khăn…)']],
-    'bon-chan': [['dau', 'Đầu'], ['than', 'Thân'], ['chan-truoc-gan', 'Chân trước (gần)'], ['chan-truoc-xa', 'Chân trước (xa)'],
+    'bon-chan': [['dau', 'Đầu'], ['than', 'Thân / hông'], ['nguc', 'Ngực / vai (nếu tách)'], ['co', 'Cổ (nếu tách)'], ['chan-truoc-gan', 'Chân trước (gần)'], ['chan-truoc-xa', 'Chân trước (xa)'],
       ['chan-sau-gan', 'Chân sau (gần)'], ['chan-sau-xa', 'Chân sau (xa)'], ['duoi', 'Đuôi'], ['phu-kien', 'Phụ kiện']],
     cua: [['than', 'Thân / mai'], ['cang-truoc', 'Càng trước'], ['cang-sau', 'Càng sau'], ['chan-gan-1', 'Chân gần 1'], ['chan-gan-2', 'Chân gần 2'],
       ['chan-gan-3', 'Chân gần 3'], ['chan-xa-1', 'Chân xa 1'], ['chan-xa-2', 'Chân xa 2'], ['chan-xa-3', 'Chân xa 3'], ['phu-kien', 'Phụ kiện']],
   };
   XR.tenVai = function (khung, vai) { const v = (XR.VAI[khung] || []).find((a) => a[0] === vai); return v ? v[1] : vai || '?'; };
-  XR.DONG_TAC = [['idle', 'Đứng thở'], ['move', 'Đi'], ['tele', 'Chuẩn bị đánh'], ['atk', 'Đánh'], ['hit', 'Trúng đòn'], ['die', 'Chết']];
+  XR.DONG_TAC = [['idle', 'Đứng thở'], ['move', 'Đi'], ['roll', 'Lộn nhào'], ['tele', 'Chuẩn bị đánh'], ['atk', 'Đánh'], ['hit', 'Trúng đòn'], ['die', 'Chết']];
   XR.LAP = { idle: true, move: true }; // động tác lặp; còn lại chạy một lần (u 0..1)
 
   // Mã: bỏ dấu, chữ thường, gạch nối
@@ -1312,13 +1336,14 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
     nguoi: {
       // CÂY XƯƠNG CỐ ĐỊNH: thân là gốc, mọi bộ phận gắn vào thân (vũ khí gắn vào tay trước).
       // Điểm gắn nằm SÂU BÊN TRONG thân áo (không ở mép), xoay bao nhiêu cũng không lộ khoảng trống.
-      // Thứ tự vẽ cố định: chân sau → tay sau → thân → phụ kiện → đầu → chân trước → tay trước (→ vũ khí).
+      // Thứ tự vẽ cố định: chân sau → tay sau → đầu (cổ) → thân → phụ kiện → chân trước → tay trước (→ vũ khí).
       // Số đo là tỉ lệ theo khung bao phần CÓ HÌNH của mảnh (không tính lề trống của ô cắt).
+      // ĐẦU: tâm xoay ở GỐC đoạn cổ (đáy mảnh đầu), cắm sâu trong cổ áo; đầu vẽ SAU thân nên viền cổ áo che chỗ nối.
       'chan-sau': { cha: 'than', lop: 0, khop: [0.5, 0.12], gan: [0.4, 0.8] },
       'tay-sau': { cha: 'than', lop: 1, khop: [0.45, 0.16], gan: [0.36, 0.26] },
-      than: { lop: 2, khop: [0.5, 0.95] },
-      'phu-kien': { cha: 'than', lop: 3, khop: [0.5, 0.35], gan: [0.3, 0.3] },
-      dau: { cha: 'than', lop: 4, khop: [0.5, 0.97], gan: [0.5, 0.2] }, // cổ cắm sâu vào cổ áo
+      dau: { cha: 'than', lop: 2, khop: [0.5, 0.99], gan: [0.5, 0.17] },
+      than: { lop: 3, khop: [0.5, 0.95] },
+      'phu-kien': { cha: 'than', lop: 4, khop: [0.5, 0.35], gan: [0.3, 0.3] },
       'chan-truoc': { cha: 'than', lop: 5, khop: [0.5, 0.12], gan: [0.6, 0.8] },
       'tay-truoc': { cha: 'than', lop: 6, khop: [0.45, 0.16], gan: [0.64, 0.26] },
       'vu-khi': { cha: 'tay-truoc', lop: 7, khop: [0.5, 0.75], gan: [0.62, 0.88] },
@@ -1326,10 +1351,10 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
     'bon-chan': {
       than: { lop: 2, khop: [0.5, 0.6] },
       dau: { cha: 'than', lop: 5, khop: [0.3, 0.72], gan: [0.86, 0.35] },
-      'chan-truoc-gan': { cha: 'than', lop: 1, khop: [0.5, 0.15], gan: [0.74, 0.74] },
-      'chan-truoc-xa': { cha: 'than', lop: 0, khop: [0.5, 0.15], gan: [0.62, 0.7] },
-      'chan-sau-gan': { cha: 'than', lop: 1, khop: [0.5, 0.15], gan: [0.3, 0.74] },
-      'chan-sau-xa': { cha: 'than', lop: 0, khop: [0.5, 0.15], gan: [0.18, 0.7] },
+      'chan-truoc-gan': { cha: 'than', lop: 1, khop: [0.5, 0.15], gan: [0.72, 0.68] },
+      'chan-truoc-xa': { cha: 'than', lop: 0, khop: [0.5, 0.15], gan: [0.62, 0.64] },
+      'chan-sau-gan': { cha: 'than', lop: 1, khop: [0.5, 0.15], gan: [0.32, 0.68] },
+      'chan-sau-xa': { cha: 'than', lop: 0, khop: [0.5, 0.15], gan: [0.22, 0.64] },
       duoi: { cha: 'than', lop: 0, khop: [0.88, 0.5], gan: [0.05, 0.35] },
       'phu-kien': { cha: 'than', lop: 4, khop: [0.5, 0.6], gan: [0.5, 0.1] },
     },
@@ -1364,7 +1389,24 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
     const than = ds.find((q) => q.vai === 'than');
     return !!than && p.w * p.h >= than.w * than.h * 0.12;
   };
-  const cachRap = (khung, vai, p, ds) => (p && ds && XR.laAoChoang(p, ds) ? AO_CHOANG : cachRap0(khung, vai));
+  // Bốn chân có tách NGỰC / CỔ: hông (thân) → ngực → chân trước, cổ → đầu. Khớp đặt sâu bên trong mảnh cha.
+  const BON_CHAN_NGUC = {
+    nguc: { cha: 'than', lop: 3, khop: [0.22, 0.55], gan: [0.8, 0.5] },            // khớp cột sống ở giữa lưng
+    'chan-truoc-gan': { cha: 'nguc', lop: 1, khop: [0.5, 0.15], gan: [0.55, 0.7] },
+    'chan-truoc-xa': { cha: 'nguc', lop: 0, khop: [0.5, 0.15], gan: [0.42, 0.66] },
+    co: { cha: 'nguc', lop: 4, khop: [0.25, 0.8], gan: [0.75, 0.35] },
+    dau: { cha: 'co', lop: 5, khop: [0.3, 0.72], gan: [0.75, 0.3] },
+  };
+  function cachBonChan(vai, ds) {
+    const coNguc = ds.some((q) => q.vai === 'nguc'), coCo = ds.some((q) => q.vai === 'co');
+    if (vai === 'nguc') return BON_CHAN_NGUC.nguc;
+    if (vai === 'co') return Object.assign({}, BON_CHAN_NGUC.co, coNguc ? {} : { cha: 'than', gan: [0.86, 0.3] });
+    if (vai === 'dau' && coCo) return BON_CHAN_NGUC.dau;
+    if (vai === 'dau' && coNguc) return { cha: 'nguc', lop: 5, khop: [0.3, 0.72], gan: [0.82, 0.35] };
+    if (/^chan-truoc/.test(vai) && coNguc) return BON_CHAN_NGUC[vai];
+    return null;
+  }
+  const cachRap = (khung, vai, p, ds) => (p && ds && XR.laAoChoang(p, ds) ? AO_CHOANG : (khung === 'bon-chan' && ds && cachBonChan(vai, ds)) || cachRap0(khung, vai));
   void laDoDeoLung; void DEO_LUNG; // (bỏ: phụ kiện giờ luôn vẽ ngay sau thân theo thứ tự lớp cố định)
 
   // Đặt tên duy nhất theo vai (tên dùng trong tệp)
@@ -1446,6 +1488,30 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
       if (y - y0 >= r * 0.9) break;
     }
     return tot;
+  };
+  // NẮP KHỚP ("bản lề ảo"): hình tròn cùng màu chi, vẽ ngay tại tâm khớp, đè lên chỗ nối để xoay mạnh cũng không hở.
+  // Trả về [bán kính, '#màu'] (toạ độ mảnh) cho tay, chân, càng, đầu (gốc cổ), cổ; mảnh khác: null.
+  XR.napKhop = function (p, khung) {
+    // chỉ chi (tay, chân, càng) và đầu NGƯỜI (tâm ở gốc cổ); đầu thú tâm nằm giữa mặt nên không vẽ nắp
+    if (!/^(tay|chan|cang)/.test(p.vai || '') && !(p.vai === 'dau' && khung === 'nguoi')) return null;
+    const cv = p.cv0 || p.cv, w = cv.width, h = cv.height, d = cv.getContext('2d').getImageData(0, 0, w, h).data;
+    const l = XR.vaoGoc(p, p.truc), lx = Math.round(l[0]), ly = Math.round(l[1]);
+    const co = (x, y) => x >= 0 && y >= 0 && x < w && y < h && d[(y * w + x) * 4 + 3] > 200;
+    let y = Math.max(0, Math.min(h - 1, ly)); if (p.vai === 'dau') y = Math.max(0, y - Math.round(h * 0.03));
+    let a = lx, b = lx;
+    if (!co(lx, y)) return null;
+    while (co(a - 1, y)) a--; while (co(b + 1, y)) b++;
+    const r = Math.max(2, (b - a) * 0.36);
+    let sr = 0, sg = 0, sb = 0, n = 0;
+    for (let yy = Math.round(y - r * 0.6); yy <= y + r * 0.6; yy++) for (let xx = Math.round(lx - r * 0.6); xx <= lx + r * 0.6; xx++) {
+      if (!co(xx, yy)) continue;
+      const i = (yy * w + xx) * 4, sang = d[i] * 0.3 + d[i + 1] * 0.59 + d[i + 2] * 0.11;
+      if (sang < 70) continue; // bỏ nét viền tối
+      sr += d[i]; sg += d[i + 1]; sb += d[i + 2]; n++;
+    }
+    if (!n) return null;
+    const hx = (v) => Math.round(v / n).toString(16).padStart(2, '0');
+    return [Math.round(r * 10) / 10, '#' + hx(sr) + hx(sg) + hx(sb)];
   };
   XR.gocManh = (p) => Math.round(((p.a || 0) * 180) / Math.PI);
 
@@ -1715,6 +1781,7 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
         ten: p.ten, vai: p.vai, cha: p.cha == null ? null : tenTheoId[p.cha] || null,
         o: o[p.id], dat: [r(p.dat[0]), r(p.dat[1])], truc: [r(p.truc[0]), r(p.truc[1])], lop: p.lop,
         ...((p.toi || p.daToi) ? { da_to_toi: true } : {}), // công cụ đã tô tối sẵn trong ảnh (game bỏ qua khoá này)
+        ...(S.banLe !== false && XR.napKhop(p, S.khung) ? { nap: ((n) => [Math.round(n[0] * k * 10) / 10, n[1]])(XR.napKhop(p, S.khung)) } : {}),
       })),
     };
     if (S.dong_tac && Object.keys(S.dong_tac).length) tep.dong_tac = JSON.parse(JSON.stringify(S.dong_tac));
@@ -1764,7 +1831,7 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
   const VUNG = { rung: 'Rừng già', bien: 'Hang biển', laudai: 'Lâu đài cổ' };
   const DOI = { 'em-be': 'Em bé', quai: 'Quái' };
   // PHIÊN BẢN: tăng số mỗi lần sửa công cụ, ghi ngày sửa. Mã bản (6 ký tự) do game/build.py tính từ nội dung mã nguồn.
-  const PHIEN_BAN = { so: '2.0', ngay: '10/10/2026' };
+  const PHIEN_BAN = { so: '2.1', ngay: '10/10/2026' };
   XR.PHIEN_BAN = PHIEN_BAN;
   const TEN_BUOC = ['Loại', 'Nạp ảnh', 'Gán vai', 'Ráp', 'Động tác', 'Xuất'];
   const dpr = () => Math.min(3, window.devicePixelRatio || 1);
@@ -1779,7 +1846,7 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
     goc: [0, 0], cao: 40, dong_tac: {},
     khungDoan: null, canRap: true,
     anhMo: null, mo: { co: 1, x: 0, y: 0, do: 0.35 }, keoMo: false,
-    view: null, dt: 'idle', quay: false, toiSau: true,
+    view: null, dt: 'idle', quay: false, toiSau: true, banLe: true,
   };
   XR.S = S;
 
@@ -1812,7 +1879,7 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
       try {
         const d = {
           khung: S.khung, doi_tuong: S.doi_tuong, ten: S.ten, ma: S.ma, maTay: S.maTay, thay_cho: S.thay_cho, nguong: S.nguong, lem: S.lem, vun: S.vun,
-          goc: S.goc, cao: S.cao, toiSau: S.toiSau, dong_tac: S.dong_tac, khungDoan: S.khungDoan, canRap: S.canRap, buoc: S.buoc,
+          goc: S.goc, cao: S.cao, toiSau: S.toiSau, banLe: S.banLe, dong_tac: S.dong_tac, khungDoan: S.khungDoan, canRap: S.canRap, buoc: S.buoc,
           daXoa: S.daXoa || [],
           coGoc: S.coGoc || null,
           manh: S.manh.map((p) => ({ id: p.id, rect: p.rect || null, lat: !!p.lat, daToi: !!p.daToi, vai: p.vai, cha: p.cha, sx: p.sx, sy: p.sy, w: p.w, h: p.h, dat: p.dat, truc: p.truc, lop: p.lop, src: p.cv.toDataURL('image/png') })),
@@ -1835,7 +1902,7 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
     Object.assign(S, {
       khung: d.khung || 'nguoi', doi_tuong: d.doi_tuong || 'em-be', ten: d.ten || '', ma: d.ma || '', maTay: !!d.maTay, thay_cho: d.thay_cho || '',
       nguong: d.nguong || 45, lem: d.lem == null ? 1 : d.lem, vun: d.vun == null ? 3 : d.vun, goc: d.goc || [0, 0], cao: d.cao || 40,
-      toiSau: d.toiSau !== false, coGoc: d.coGoc || null, dong_tac: d.dong_tac || {}, khungDoan: d.khungDoan || null, canRap: d.canRap !== false, manh: ds,
+      toiSau: d.toiSau !== false, banLe: d.banLe !== false, coGoc: d.coGoc || null, dong_tac: d.dong_tac || {}, khungDoan: d.khungDoan || null, canRap: d.canRap !== false, manh: ds,
     });
     S.chon.clear(); S.chonRap = null; S.view = null; XR.tinhToi(S.manh, S.toiSau); doiRig();
   }
@@ -1923,14 +1990,15 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
   // Thứ tự máy nhắc khoanh: bộ phận nào khoanh xong thì nhận luôn vai đó (Bước 3 chỉ để xem lại).
   const THU_TU = {
     nguoi: ['than', 'dau', 'tay-truoc', 'tay-sau', 'chan-truoc', 'chan-sau', 'vu-khi'],
-    'bon-chan': ['than', 'dau', 'chan-truoc-gan', 'chan-truoc-xa', 'chan-sau-gan', 'chan-sau-xa', 'duoi'],
+    'bon-chan': ['than', 'nguc', 'co', 'dau', 'chan-truoc-gan', 'chan-truoc-xa', 'chan-sau-gan', 'chan-sau-xa', 'duoi'],
     cua: ['than', 'cang-truoc', 'cang-sau', 'chan-gan-1', 'chan-gan-2', 'chan-gan-3', 'chan-xa-1', 'chan-xa-2', 'chan-xa-3'],
   };
   let vaiTay = null; // vai người dùng tự chọn cho khung kế tiếp (null = theo thứ tự)
+  const boQua = new Set(); // bộ phận đã bấm "Bỏ qua" (ví dụ thú không tách ngực, cổ)
   function vaiKeTiep() {
     if (vaiTay) return vaiTay;
     const co = new Set(S.manh.map((p) => p.vai));
-    return (THU_TU[S.khung] || []).find((v) => !co.has(v)) || 'phu-kien';
+    return (THU_TU[S.khung] || []).find((v) => !co.has(v) && !boQua.has(v)) || 'phu-kien';
   }
   const cvTam = $('cvTam');
   let viewTam = null, keoO = null;
@@ -2022,9 +2090,9 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
   }
   $('chonVaiCho').onchange = () => { vaiTay = $('chonVaiCho').value; veBuoc2(); };
   $('nutBoQua').onclick = () => {
-    const ds = THU_TU[S.khung] || [], co = new Set(S.manh.map((p) => p.vai)), hien = vaiKeTiep();
-    const sau = ds.slice(ds.indexOf(hien) + 1).find((v) => !co.has(v));
-    vaiTay = sau || 'phu-kien'; veBuoc2();
+    const hien = vaiKeTiep();
+    if (hien !== 'phu-kien') boQua.add(hien);
+    vaiTay = null; veBuoc2();
   };
   $('nutAnhKhac').onclick = () => $('tepAnh').click();
   async function napAnhTach(file) {
@@ -2036,7 +2104,7 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
       S.coGoc = [file.name, S.anhGoc.width, S.anhGoc.height];
       if (!S.manh.length || !S.manh.some((p) => p.rect)) { S.manh = []; S.chon.clear(); }
       else catLaiO(); // nạp lại cùng ảnh: cắt lại các khung cũ
-      vaiTay = null; veBuoc2(); luu();
+      vaiTay = null; boQua.clear(); veBuoc2(); luu();
       bao('Kéo khung quanh: ' + XR.tenVai(S.khung, vaiKeTiep()) + '.', 3500);
     } catch (e) { bao(e.message || 'Không đọc được ảnh.'); }
   }
@@ -2308,6 +2376,7 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
   $('nutLen').onclick = () => doiLop(1);
   $('nutXuong').onclick = () => doiLop(-1);
   // Ra giữa khung: đưa cả nhân vật vào giữa vùng ráp, vừa cỡ màn
+  $('nutBanLe').onclick = () => { S.banLe = !S.banLe; $('nutBanLe').classList.toggle('on', S.banLe); $('nutBanLe').textContent = 'Nắp che khớp: ' + (S.banLe ? 'BẬT' : 'TẮT'); doiRig(); luu(); };
   $('nutVua').onclick = () => { S.view = null; veRap(); bao('Đã đưa nhân vật ra giữa khung.', 1200); };
   // Chấm xanh (điểm chân) về giữa nhân vật theo chiều ngang, nằm ở đáy chân thấp nhất: nhân vật đứng giữa chỗ đặt trong game
   $('nutGiuaChan').onclick = () => {
@@ -2388,6 +2457,7 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
   };
 
   function veBuoc4() {
+    $('nutBanLe').classList.toggle('on', S.banLe !== false); $('nutBanLe').textContent = 'Nắp che khớp: ' + (S.banLe !== false ? 'BẬT' : 'TẮT');
     veMau();
     S.mo.co0 = S.mo.co; $('trMoCo').value = 1; $('gtMoCo').textContent = '100%';
     $('trMoDo').value = S.mo.do; $('gtMoDo').textContent = Math.round(S.mo.do * 100) + '%';
@@ -2409,7 +2479,7 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
       const ten = {}; S.manh.forEach((p) => (ten[p.id] = p.ten));
       rig = G.chibi.add({
         loai: 'linh-khi-rig', phien_ban: 1, ma: MA_XEM, ten: S.ten || 'xem', doi_tuong: S.doi_tuong, khung: S.khung, anhCanvas: cv, cao: +S.cao || 40, goc: S.goc.slice(),
-        manh: S.manh.map((p) => ({ ten: p.ten, vai: p.vai, cha: p.cha ? ten[p.cha] : null, o: o[p.id], dat: p.dat, truc: p.truc, lop: p.lop })),
+        manh: S.manh.map((p) => ({ ten: p.ten, vai: p.vai, cha: p.cha ? ten[p.cha] : null, o: o[p.id], dat: p.dat, truc: p.truc, lop: p.lop, nap: S.banLe !== false ? XR.napKhop(p, S.khung) : null })),
         dong_tac: S.dong_tac,
       });
       rigCu = false;
@@ -2417,7 +2487,7 @@ window.XR_QUAI = [{"id":"cua","ten":"Cua Lính","vung":"bien"},{"id":"caCon","te
     return rig;
   }
   // thời lượng một lần chạy (giây) của động tác một lần, thêm lúc nghỉ
-  const THOI = { tele: [0.7, 0.5], atk: [0.55, 0.6], hit: [0.4, 0.6], die: [1.3, 0.8] };
+  const THOI = { roll: [0.5, 0.6], tele: [0.7, 0.5], atk: [0.55, 0.6], hit: [0.4, 0.6], die: [1.3, 0.8] };
   let dangChay = false, t0 = 0;
   // ĐI THỬ: giữ ←/→ hoặc A/D (hay nút trên màn) thì nhân vật đi qua lại, thả ra thì đứng thở.
   // Giống trong game: game đọc cùng phím và gọi cùng G.chibi.draw với động tác 'move' / 'idle'.

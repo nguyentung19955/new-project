@@ -22,7 +22,7 @@
   const eIn = (x) => x * x;                                       // chậm rồi nhanh
   const eIO = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
   const bump = (x) => Math.sin(clamp(x, 0, 1) * PI);              // 0 -> 1 -> 0 mượt
-  const ANIMS = ['idle', 'move', 'tele', 'atk', 'hit', 'die'];
+  const ANIMS = ['idle', 'move', 'tele', 'atk', 'hit', 'die', 'roll']; // roll: lộn nhào (né)
   const LOOP = { idle: true, move: true };
   const KHUNG = { nguoi: 1, 'bon-chan': 1, cua: 1 };
 
@@ -49,6 +49,8 @@
         if (!o || !(o[2] > 0 && o[3] > 0)) throw new Error('mảnh ' + m.ten + ' thiếu ô ảnh');
         const dat = P2(m.dat) || [0, 0], truc = P2(m.truc) || [dat[0] + o[2] / 2, dat[1] + o[3] / 2];
         const p = { ten: m.ten, vai: String(m.vai || 'phu-kien'), cha: m.cha || null, o, dat, truc, lop: +m.lop || 0, i, con: [] };
+        // nap: [bán kính, màu]: "bản lề ảo", hình tròn cùng màu chi vẽ ngay tại khớp để không bao giờ hở khoảng trống
+        if (Array.isArray(m.nap) && +m.nap[0] > 0 && /^#[0-9a-fA-F]{6}$/.test(String(m.nap[1]))) p.nap = [+m.nap[0], String(m.nap[1])];
         if (theoTen[p.ten]) throw new Error('trùng tên mảnh ' + p.ten);
         theoTen[p.ten] = p; manh.push(p);
       });
@@ -171,6 +173,15 @@
       v('dau', -12 * D * k * B); v('than', -6 * D * k * B);
       v('tay-truoc', 25 * D * k * B); v('tay-sau', 30 * D * k * B);
       theoVai(rig, P, 'phu-kien', (q) => dat(P, q.ten, 14 * D * k * Math.cos(u * 14) * B));
+    } else if (n === 'roll') {
+      // LỘN NHÀO tới trước một vòng quanh giữa người (ease-in-out bậc 3), co tay chân lại ở giữa vòng.
+      const e = eIO(u), th = TAU * e, co = bump(u) * B;
+      g.rot = th;
+      g.dx = -0.5 * Math.sin(th); g.dy = -0.5 * (1 - Math.cos(th)) - 0.18 * bump(u); // giữ tâm xoay ở giữa người, nảy lên một chút
+      g.sy = 1 - 0.12 * co; g.sx = 1 + 0.05 * co;
+      v('chan-truoc', -55 * D * co); v('chan-sau', -40 * D * co);
+      v('tay-truoc', -60 * D * co); v('tay-sau', -45 * D * co);
+      v('dau', 14 * D * co); v('vu-khi', 20 * D * co);
     } else if (n === 'die') {
       const f = eIn(seg(u, 0.05, 0.55)), nay = bump(seg(u, 0.55, 0.75)) * 0.12, k = Math.max(0, f - nay);
       g.rot = -84 * D * k * B; g.dx = -0.18 * k * B;                // ngã ngửa ra sau
@@ -184,6 +195,8 @@
   }
 
   // BỐN CHÂN (heo, sói, thú...). Mặt quay phải.
+  // Cây xương: thân (hông, gốc) mang chân sau, đuôi và NGỰC (không bắt buộc: khớp cột sống ở giữa lưng);
+  // ngực mang chân trước và CỔ (không bắt buộc), cổ mang đầu. Thiếu ngực/cổ thì các mảnh đó gắn thẳng vào thân.
   function bonChan(rig, P, n, u, t, B) {
     const g = P.g, v = (ten, a, dx, dy) => theoVai(rig, P, ten, (p) => dat(P, p.ten, a, dx, dy));
     const chan = (fg, fx, sg, sx) => { v('chan-truoc-gan', fg); v('chan-truoc-xa', fx); v('chan-sau-gan', sg); v('chan-sau-xa', sx); };
@@ -191,6 +204,7 @@
       const w = TAU * 0.8 * t, s = Math.sin(w);
       g.sy = 1 + 0.02 * s * B; g.sx = 1 - 0.01 * s * B;
       v('dau', 2.5 * D * Math.sin(w - 0.9) * B);
+      v('nguc', 1.2 * D * Math.sin(w - 0.4) * B); v('co', 2 * D * Math.sin(w - 0.7) * B); // ngực phồng, cổ gật theo nhịp thở
       v('duoi', 9 * D * Math.sin(TAU * 1.6 * t) * B);
       theoVai(rig, P, 'phu-kien', (p) => dat(P, p.ten, 4 * D * Math.sin(w - 1.3 - lech(p)) * B));
     } else if (n === 'move') {
@@ -198,7 +212,10 @@
       g.dy = -Math.abs(Math.sin(p)) * 0.05 * B;
       g.sy = 1 + 0.025 * Math.cos(2 * p) * B; g.sx = 1 - 0.012 * Math.cos(2 * p) * B;
       v('than', 1.5 * D * Math.sin(2 * p) * B);
-      chan(-A * s, A * s, A * s, -A * s);                            // bước chéo: trước-gần đi cùng sau-xa
+      // NHỊP CHẠY NƯỚC KIỆU (trot): cặp chéo trước-gần + sau-xa cùng pha, cặp trước-xa + sau-gan lệch pha π
+      chan(-A * s, A * s, A * s, -A * s);
+      v('nguc', 3 * D * Math.sin(2 * p + 0.4) * B);                  // cột sống uốn: ngực lắc nhẹ so với hông
+      v('co', 4 * D * Math.sin(2 * p + 0.6) * B);
       v('dau', 4 * D * Math.sin(2 * p + 0.8) * B);
       v('duoi', 16 * D * Math.sin(2 * p) * B);
       theoVai(rig, P, 'phu-kien', (q) => dat(P, q.ten, 8 * D * Math.sin(2 * p - 1 - lech(q)) * B));
@@ -206,6 +223,7 @@
       const e = eOut(u), r = Math.sin(TAU * 7 * t) * 0.7 * D * e;
       g.dx = -0.06 * e * B; g.sy = 1 - 0.08 * e * B; g.sx = 1 + 0.05 * e * B;
       v('than', -5 * D * e * B + r);                                 // lùi người, cúi đầu lấy đà
+      v('nguc', 6 * D * e * B); v('co', 8 * D * e * B);
       v('dau', 12 * D * e * B);
       chan(-14 * D * e * B, -10 * D * e * B, 16 * D * e * B, 12 * D * e * B);
       v('duoi', (20 * e + 10 * Math.sin(TAU * 4 * t) * e) * D * B);
@@ -214,6 +232,7 @@
       g.dx = (-0.06 + 0.24 * k) * keo * B; g.dy = -0.05 * bump(seg(u, 0, 0.3)) * B;
       g.sx = 1 + 0.06 * k * keo * B; g.sy = 1 - 0.04 * k * keo * B;
       v('than', (-5 + 13 * k) * keo * D * B);                        // lao tới, chúi người
+      v('nguc', (6 - 12 * k) * keo * D * B); v('co', (8 - 18 * k) * keo * D * B);
       v('dau', (12 - 34 * k) * keo * D * B);                         // húc hất đầu lên
       chan((-14 + 50 * k) * keo * D * B, (-10 + 40 * k) * keo * D * B, (16 - 40 * k) * keo * D * B, (12 - 34 * k) * keo * D * B);
       v('duoi', (20 + 15 * k) * keo * D * B);
@@ -221,7 +240,7 @@
       const k = Math.pow(1 - u, 2);
       g.dx = -0.07 * k * B; g.rot = -5 * D * k * B; g.sx = 1 - 0.05 * bump(u * 2) * B; g.sy = 1 + 0.04 * bump(u * 2) * B;
       g.flash = clamp(1 - u * 3.2, 0, 1);
-      v('dau', -14 * D * k * B);
+      v('dau', -14 * D * k * B); v('nguc', -6 * D * k * B); v('co', -8 * D * k * B);
       chan(-12 * D * k * B, -8 * D * k * B, 10 * D * k * B, 6 * D * k * B);
       v('duoi', 25 * D * k * Math.cos(u * 12) * B);
     } else if (n === 'die') {
@@ -230,7 +249,7 @@
       g.alpha = 1 - seg(u, 0.6, 1);
       g.flash = clamp(0.8 - u * 4, 0, 1);
       chan(-55 * D * f * B, -45 * D * f * B, 55 * D * f * B, 45 * D * f * B); // chân duỗi ra hai bên
-      v('dau', 18 * D * f * B); v('duoi', -30 * D * f * B);
+      v('dau', 18 * D * f * B); v('duoi', -30 * D * f * B); v('nguc', 8 * D * f * B); v('co', 10 * D * f * B);
     }
   }
 
@@ -277,16 +296,19 @@
   }
 
   const KHUNG_HAM = { nguoi, 'bon-chan': bonChan, cua };
+  const GIOI_HAN_TAY = PI / 2; // tay xoay tối đa ±90° so với thân: không bao giờ bẻ ngược dị dạng
   function poseTho(rig, n, u, t, h) {
     const P = moi();
+    if (n === 'roll' && rig.khung !== 'nguoi') { (KHUNG_HAM[rig.khung])(rig, P, 'move', 0, u * 0.6, h.bien_do); return P; } // thú, cua: chạy nhanh thay lộn
     (KHUNG_HAM[rig.khung] || nguoi)(rig, P, n, u, t, h.bien_do);
+    if (rig.khung === 'nguoi') for (const p of rig.manh) if (/^tay-/.test(p.vai) && P.m[p.ten]) P.m[p.ten].a = clamp(P.m[p.ten].a, -GIOI_HAN_TAY, GIOI_HAN_TAY);
     return P;
   }
   // QUÁN TÍNH TRỄ (follow-through): đầu, phụ kiện (ống tên, khăn, tóc) và đuôi không dính cứng vào thân mà đi trễ pha:
   // lấy tư thế thân ở một chút trước đó (TRE giây) so với bây giờ; thân vừa nhún lên thì đầu gật xuống, vừa lao tới thì
   // đầu ngả ra sau, vừa nghiêng thì đầu nghiêng ngược lại. Vì là dao động hình sin trễ pha nên mượt, không cần nhớ trạng thái.
   const TRE = 0.12;
-  const QT = { dau: 1, 'phu-kien': 1.8, duoi: 1.5 };
+  const QT = { dau: 1, co: 0.6, 'phu-kien': 1.8, duoi: 1.5 };
   function quanTinh(rig, P, Pt) {
     const goc = rig.thuTu[0] && rig.thuTu[0].ten; // mảnh gốc (thân)
     const gT = (Q) => Q.g.rot + (goc && Q.m[goc] ? Q.m[goc].a : 0);
@@ -306,7 +328,7 @@
     // Động tác một lần: tốc độ > 1 thì làm xong sớm rồi giữ tư thế cuối (thời lượng do game quyết định).
     u = clamp((+u || 0) * (LOOP[n] ? 1 : h.toc_do), 0, 1);
     const P = poseTho(rig, n, u, t, h);
-    if (n !== 'die') quanTinh(rig, P, poseTho(rig, n, LOOP[n] ? u : clamp(u - 0.07, 0, 1), LOOP[n] ? t - TRE : t, h));
+    if (n !== 'die') quanTinh(rig, P, poseTho(rig, n, LOOP[n] ? u : clamp(u - (n === 'roll' ? 0.12 : 0.07), 0, 1), LOOP[n] ? t - TRE : t, h)); // lộn nhào: đầu, ống tên chậm hơn thân 2-3 khung hình
     return P;
   };
 
@@ -407,6 +429,7 @@
       const o = p.o;
       ctx.globalAlpha = a0;
       ctx.drawImage(rig.img, o[0], o[1], o[2], o[3], p.dat[0], p.dat[1], o[2], o[3]);
+      if (p.nap && opts.banLe !== false) { ctx.beginPath(); ctx.arc(p.truc[0], p.truc[1], p.nap[0], 0, TAU); ctx.fillStyle = p.nap[1]; ctx.fill(); }
       if (mau) { ctx.globalAlpha = a0 * clamp(tint[1], 0, 1); ctx.drawImage(mau, o[0], o[1], o[2], o[3], p.dat[0], p.dat[1], o[2], o[3]); }
       if (trang) { ctx.globalAlpha = a0 * flash; ctx.drawImage(trang, o[0], o[1], o[2], o[3], p.dat[0], p.dat[1], o[2], o[3]); }
       ctx.restore();
@@ -506,7 +529,7 @@
   C.chonEmBe = function (o) {
     const p = o.p, t = (o.t != null ? o.t : G.time) || 0;
     if (p && p.dead) return { anim: 'die', u: (p.deadT || 0) / 0.9, t };
-    if (o.dodge >= 0) return { anim: 'move', u: 0, t: t * 2.2 };
+    if (o.dodge >= 0) return { anim: 'roll', u: o.dodge, t };
     if (p && p.dashT > 0) return { anim: 'move', u: 0, t: t * 2 };
     if (p && p.specT > 0) return { anim: 'atk', u: 1 - p.specT / 0.35, t };
     if (p && p.castT > 0) return { anim: 'atk', u: 1 - p.castT / 0.4, t };

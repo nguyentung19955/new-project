@@ -7,7 +7,7 @@
   const VUNG = { rung: 'Rừng già', bien: 'Hang biển', laudai: 'Lâu đài cổ' };
   const DOI = { 'em-be': 'Em bé', quai: 'Quái' };
   // PHIÊN BẢN: tăng số mỗi lần sửa công cụ, ghi ngày sửa. Mã bản (6 ký tự) do game/build.py tính từ nội dung mã nguồn.
-  const PHIEN_BAN = { so: '2.0', ngay: '10/10/2026' };
+  const PHIEN_BAN = { so: '2.1', ngay: '10/10/2026' };
   XR.PHIEN_BAN = PHIEN_BAN;
   const TEN_BUOC = ['Loại', 'Nạp ảnh', 'Gán vai', 'Ráp', 'Động tác', 'Xuất'];
   const dpr = () => Math.min(3, window.devicePixelRatio || 1);
@@ -22,7 +22,7 @@
     goc: [0, 0], cao: 40, dong_tac: {},
     khungDoan: null, canRap: true,
     anhMo: null, mo: { co: 1, x: 0, y: 0, do: 0.35 }, keoMo: false,
-    view: null, dt: 'idle', quay: false, toiSau: true,
+    view: null, dt: 'idle', quay: false, toiSau: true, banLe: true,
   };
   XR.S = S;
 
@@ -55,7 +55,7 @@
       try {
         const d = {
           khung: S.khung, doi_tuong: S.doi_tuong, ten: S.ten, ma: S.ma, maTay: S.maTay, thay_cho: S.thay_cho, nguong: S.nguong, lem: S.lem, vun: S.vun,
-          goc: S.goc, cao: S.cao, toiSau: S.toiSau, dong_tac: S.dong_tac, khungDoan: S.khungDoan, canRap: S.canRap, buoc: S.buoc,
+          goc: S.goc, cao: S.cao, toiSau: S.toiSau, banLe: S.banLe, dong_tac: S.dong_tac, khungDoan: S.khungDoan, canRap: S.canRap, buoc: S.buoc,
           daXoa: S.daXoa || [],
           coGoc: S.coGoc || null,
           manh: S.manh.map((p) => ({ id: p.id, rect: p.rect || null, lat: !!p.lat, daToi: !!p.daToi, vai: p.vai, cha: p.cha, sx: p.sx, sy: p.sy, w: p.w, h: p.h, dat: p.dat, truc: p.truc, lop: p.lop, src: p.cv.toDataURL('image/png') })),
@@ -78,7 +78,7 @@
     Object.assign(S, {
       khung: d.khung || 'nguoi', doi_tuong: d.doi_tuong || 'em-be', ten: d.ten || '', ma: d.ma || '', maTay: !!d.maTay, thay_cho: d.thay_cho || '',
       nguong: d.nguong || 45, lem: d.lem == null ? 1 : d.lem, vun: d.vun == null ? 3 : d.vun, goc: d.goc || [0, 0], cao: d.cao || 40,
-      toiSau: d.toiSau !== false, coGoc: d.coGoc || null, dong_tac: d.dong_tac || {}, khungDoan: d.khungDoan || null, canRap: d.canRap !== false, manh: ds,
+      toiSau: d.toiSau !== false, banLe: d.banLe !== false, coGoc: d.coGoc || null, dong_tac: d.dong_tac || {}, khungDoan: d.khungDoan || null, canRap: d.canRap !== false, manh: ds,
     });
     S.chon.clear(); S.chonRap = null; S.view = null; XR.tinhToi(S.manh, S.toiSau); doiRig();
   }
@@ -166,14 +166,15 @@
   // Thứ tự máy nhắc khoanh: bộ phận nào khoanh xong thì nhận luôn vai đó (Bước 3 chỉ để xem lại).
   const THU_TU = {
     nguoi: ['than', 'dau', 'tay-truoc', 'tay-sau', 'chan-truoc', 'chan-sau', 'vu-khi'],
-    'bon-chan': ['than', 'dau', 'chan-truoc-gan', 'chan-truoc-xa', 'chan-sau-gan', 'chan-sau-xa', 'duoi'],
+    'bon-chan': ['than', 'nguc', 'co', 'dau', 'chan-truoc-gan', 'chan-truoc-xa', 'chan-sau-gan', 'chan-sau-xa', 'duoi'],
     cua: ['than', 'cang-truoc', 'cang-sau', 'chan-gan-1', 'chan-gan-2', 'chan-gan-3', 'chan-xa-1', 'chan-xa-2', 'chan-xa-3'],
   };
   let vaiTay = null; // vai người dùng tự chọn cho khung kế tiếp (null = theo thứ tự)
+  const boQua = new Set(); // bộ phận đã bấm "Bỏ qua" (ví dụ thú không tách ngực, cổ)
   function vaiKeTiep() {
     if (vaiTay) return vaiTay;
     const co = new Set(S.manh.map((p) => p.vai));
-    return (THU_TU[S.khung] || []).find((v) => !co.has(v)) || 'phu-kien';
+    return (THU_TU[S.khung] || []).find((v) => !co.has(v) && !boQua.has(v)) || 'phu-kien';
   }
   const cvTam = $('cvTam');
   let viewTam = null, keoO = null;
@@ -265,9 +266,9 @@
   }
   $('chonVaiCho').onchange = () => { vaiTay = $('chonVaiCho').value; veBuoc2(); };
   $('nutBoQua').onclick = () => {
-    const ds = THU_TU[S.khung] || [], co = new Set(S.manh.map((p) => p.vai)), hien = vaiKeTiep();
-    const sau = ds.slice(ds.indexOf(hien) + 1).find((v) => !co.has(v));
-    vaiTay = sau || 'phu-kien'; veBuoc2();
+    const hien = vaiKeTiep();
+    if (hien !== 'phu-kien') boQua.add(hien);
+    vaiTay = null; veBuoc2();
   };
   $('nutAnhKhac').onclick = () => $('tepAnh').click();
   async function napAnhTach(file) {
@@ -279,7 +280,7 @@
       S.coGoc = [file.name, S.anhGoc.width, S.anhGoc.height];
       if (!S.manh.length || !S.manh.some((p) => p.rect)) { S.manh = []; S.chon.clear(); }
       else catLaiO(); // nạp lại cùng ảnh: cắt lại các khung cũ
-      vaiTay = null; veBuoc2(); luu();
+      vaiTay = null; boQua.clear(); veBuoc2(); luu();
       bao('Kéo khung quanh: ' + XR.tenVai(S.khung, vaiKeTiep()) + '.', 3500);
     } catch (e) { bao(e.message || 'Không đọc được ảnh.'); }
   }
@@ -551,6 +552,7 @@
   $('nutLen').onclick = () => doiLop(1);
   $('nutXuong').onclick = () => doiLop(-1);
   // Ra giữa khung: đưa cả nhân vật vào giữa vùng ráp, vừa cỡ màn
+  $('nutBanLe').onclick = () => { S.banLe = !S.banLe; $('nutBanLe').classList.toggle('on', S.banLe); $('nutBanLe').textContent = 'Nắp che khớp: ' + (S.banLe ? 'BẬT' : 'TẮT'); doiRig(); luu(); };
   $('nutVua').onclick = () => { S.view = null; veRap(); bao('Đã đưa nhân vật ra giữa khung.', 1200); };
   // Chấm xanh (điểm chân) về giữa nhân vật theo chiều ngang, nằm ở đáy chân thấp nhất: nhân vật đứng giữa chỗ đặt trong game
   $('nutGiuaChan').onclick = () => {
@@ -631,6 +633,7 @@
   };
 
   function veBuoc4() {
+    $('nutBanLe').classList.toggle('on', S.banLe !== false); $('nutBanLe').textContent = 'Nắp che khớp: ' + (S.banLe !== false ? 'BẬT' : 'TẮT');
     veMau();
     S.mo.co0 = S.mo.co; $('trMoCo').value = 1; $('gtMoCo').textContent = '100%';
     $('trMoDo').value = S.mo.do; $('gtMoDo').textContent = Math.round(S.mo.do * 100) + '%';
@@ -652,7 +655,7 @@
       const ten = {}; S.manh.forEach((p) => (ten[p.id] = p.ten));
       rig = G.chibi.add({
         loai: 'linh-khi-rig', phien_ban: 1, ma: MA_XEM, ten: S.ten || 'xem', doi_tuong: S.doi_tuong, khung: S.khung, anhCanvas: cv, cao: +S.cao || 40, goc: S.goc.slice(),
-        manh: S.manh.map((p) => ({ ten: p.ten, vai: p.vai, cha: p.cha ? ten[p.cha] : null, o: o[p.id], dat: p.dat, truc: p.truc, lop: p.lop })),
+        manh: S.manh.map((p) => ({ ten: p.ten, vai: p.vai, cha: p.cha ? ten[p.cha] : null, o: o[p.id], dat: p.dat, truc: p.truc, lop: p.lop, nap: S.banLe !== false ? XR.napKhop(p, S.khung) : null })),
         dong_tac: S.dong_tac,
       });
       rigCu = false;
@@ -660,7 +663,7 @@
     return rig;
   }
   // thời lượng một lần chạy (giây) của động tác một lần, thêm lúc nghỉ
-  const THOI = { tele: [0.7, 0.5], atk: [0.55, 0.6], hit: [0.4, 0.6], die: [1.3, 0.8] };
+  const THOI = { roll: [0.5, 0.6], tele: [0.7, 0.5], atk: [0.55, 0.6], hit: [0.4, 0.6], die: [1.3, 0.8] };
   let dangChay = false, t0 = 0;
   // ĐI THỬ: giữ ←/→ hoặc A/D (hay nút trên màn) thì nhân vật đi qua lại, thả ra thì đứng thở.
   // Giống trong game: game đọc cùng phím và gọi cùng G.chibi.draw với động tác 'move' / 'idle'.

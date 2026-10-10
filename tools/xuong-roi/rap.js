@@ -7,13 +7,13 @@
   XR.VAI = {
     nguoi: [['dau', 'Đầu'], ['than', 'Thân'], ['tay-truoc', 'Tay trước'], ['tay-sau', 'Tay sau'], ['chan-truoc', 'Chân trước'], ['chan-sau', 'Chân sau'],
       ['vu-khi', 'Vũ khí'], ['phu-kien', 'Phụ kiện (tóc, khăn…)']],
-    'bon-chan': [['dau', 'Đầu'], ['than', 'Thân'], ['chan-truoc-gan', 'Chân trước (gần)'], ['chan-truoc-xa', 'Chân trước (xa)'],
+    'bon-chan': [['dau', 'Đầu'], ['than', 'Thân / hông'], ['nguc', 'Ngực / vai (nếu tách)'], ['co', 'Cổ (nếu tách)'], ['chan-truoc-gan', 'Chân trước (gần)'], ['chan-truoc-xa', 'Chân trước (xa)'],
       ['chan-sau-gan', 'Chân sau (gần)'], ['chan-sau-xa', 'Chân sau (xa)'], ['duoi', 'Đuôi'], ['phu-kien', 'Phụ kiện']],
     cua: [['than', 'Thân / mai'], ['cang-truoc', 'Càng trước'], ['cang-sau', 'Càng sau'], ['chan-gan-1', 'Chân gần 1'], ['chan-gan-2', 'Chân gần 2'],
       ['chan-gan-3', 'Chân gần 3'], ['chan-xa-1', 'Chân xa 1'], ['chan-xa-2', 'Chân xa 2'], ['chan-xa-3', 'Chân xa 3'], ['phu-kien', 'Phụ kiện']],
   };
   XR.tenVai = function (khung, vai) { const v = (XR.VAI[khung] || []).find((a) => a[0] === vai); return v ? v[1] : vai || '?'; };
-  XR.DONG_TAC = [['idle', 'Đứng thở'], ['move', 'Đi'], ['tele', 'Chuẩn bị đánh'], ['atk', 'Đánh'], ['hit', 'Trúng đòn'], ['die', 'Chết']];
+  XR.DONG_TAC = [['idle', 'Đứng thở'], ['move', 'Đi'], ['roll', 'Lộn nhào'], ['tele', 'Chuẩn bị đánh'], ['atk', 'Đánh'], ['hit', 'Trúng đòn'], ['die', 'Chết']];
   XR.LAP = { idle: true, move: true }; // động tác lặp; còn lại chạy một lần (u 0..1)
 
   // Mã: bỏ dấu, chữ thường, gạch nối
@@ -87,13 +87,14 @@
     nguoi: {
       // CÂY XƯƠNG CỐ ĐỊNH: thân là gốc, mọi bộ phận gắn vào thân (vũ khí gắn vào tay trước).
       // Điểm gắn nằm SÂU BÊN TRONG thân áo (không ở mép), xoay bao nhiêu cũng không lộ khoảng trống.
-      // Thứ tự vẽ cố định: chân sau → tay sau → thân → phụ kiện → đầu → chân trước → tay trước (→ vũ khí).
+      // Thứ tự vẽ cố định: chân sau → tay sau → đầu (cổ) → thân → phụ kiện → chân trước → tay trước (→ vũ khí).
       // Số đo là tỉ lệ theo khung bao phần CÓ HÌNH của mảnh (không tính lề trống của ô cắt).
+      // ĐẦU: tâm xoay ở GỐC đoạn cổ (đáy mảnh đầu), cắm sâu trong cổ áo; đầu vẽ SAU thân nên viền cổ áo che chỗ nối.
       'chan-sau': { cha: 'than', lop: 0, khop: [0.5, 0.12], gan: [0.4, 0.8] },
       'tay-sau': { cha: 'than', lop: 1, khop: [0.45, 0.16], gan: [0.36, 0.26] },
-      than: { lop: 2, khop: [0.5, 0.95] },
-      'phu-kien': { cha: 'than', lop: 3, khop: [0.5, 0.35], gan: [0.3, 0.3] },
-      dau: { cha: 'than', lop: 4, khop: [0.5, 0.97], gan: [0.5, 0.2] }, // cổ cắm sâu vào cổ áo
+      dau: { cha: 'than', lop: 2, khop: [0.5, 0.99], gan: [0.5, 0.17] },
+      than: { lop: 3, khop: [0.5, 0.95] },
+      'phu-kien': { cha: 'than', lop: 4, khop: [0.5, 0.35], gan: [0.3, 0.3] },
       'chan-truoc': { cha: 'than', lop: 5, khop: [0.5, 0.12], gan: [0.6, 0.8] },
       'tay-truoc': { cha: 'than', lop: 6, khop: [0.45, 0.16], gan: [0.64, 0.26] },
       'vu-khi': { cha: 'tay-truoc', lop: 7, khop: [0.5, 0.75], gan: [0.62, 0.88] },
@@ -101,10 +102,10 @@
     'bon-chan': {
       than: { lop: 2, khop: [0.5, 0.6] },
       dau: { cha: 'than', lop: 5, khop: [0.3, 0.72], gan: [0.86, 0.35] },
-      'chan-truoc-gan': { cha: 'than', lop: 1, khop: [0.5, 0.15], gan: [0.74, 0.74] },
-      'chan-truoc-xa': { cha: 'than', lop: 0, khop: [0.5, 0.15], gan: [0.62, 0.7] },
-      'chan-sau-gan': { cha: 'than', lop: 1, khop: [0.5, 0.15], gan: [0.3, 0.74] },
-      'chan-sau-xa': { cha: 'than', lop: 0, khop: [0.5, 0.15], gan: [0.18, 0.7] },
+      'chan-truoc-gan': { cha: 'than', lop: 1, khop: [0.5, 0.15], gan: [0.72, 0.68] },
+      'chan-truoc-xa': { cha: 'than', lop: 0, khop: [0.5, 0.15], gan: [0.62, 0.64] },
+      'chan-sau-gan': { cha: 'than', lop: 1, khop: [0.5, 0.15], gan: [0.32, 0.68] },
+      'chan-sau-xa': { cha: 'than', lop: 0, khop: [0.5, 0.15], gan: [0.22, 0.64] },
       duoi: { cha: 'than', lop: 0, khop: [0.88, 0.5], gan: [0.05, 0.35] },
       'phu-kien': { cha: 'than', lop: 4, khop: [0.5, 0.6], gan: [0.5, 0.1] },
     },
@@ -139,7 +140,24 @@
     const than = ds.find((q) => q.vai === 'than');
     return !!than && p.w * p.h >= than.w * than.h * 0.12;
   };
-  const cachRap = (khung, vai, p, ds) => (p && ds && XR.laAoChoang(p, ds) ? AO_CHOANG : cachRap0(khung, vai));
+  // Bốn chân có tách NGỰC / CỔ: hông (thân) → ngực → chân trước, cổ → đầu. Khớp đặt sâu bên trong mảnh cha.
+  const BON_CHAN_NGUC = {
+    nguc: { cha: 'than', lop: 3, khop: [0.22, 0.55], gan: [0.8, 0.5] },            // khớp cột sống ở giữa lưng
+    'chan-truoc-gan': { cha: 'nguc', lop: 1, khop: [0.5, 0.15], gan: [0.55, 0.7] },
+    'chan-truoc-xa': { cha: 'nguc', lop: 0, khop: [0.5, 0.15], gan: [0.42, 0.66] },
+    co: { cha: 'nguc', lop: 4, khop: [0.25, 0.8], gan: [0.75, 0.35] },
+    dau: { cha: 'co', lop: 5, khop: [0.3, 0.72], gan: [0.75, 0.3] },
+  };
+  function cachBonChan(vai, ds) {
+    const coNguc = ds.some((q) => q.vai === 'nguc'), coCo = ds.some((q) => q.vai === 'co');
+    if (vai === 'nguc') return BON_CHAN_NGUC.nguc;
+    if (vai === 'co') return Object.assign({}, BON_CHAN_NGUC.co, coNguc ? {} : { cha: 'than', gan: [0.86, 0.3] });
+    if (vai === 'dau' && coCo) return BON_CHAN_NGUC.dau;
+    if (vai === 'dau' && coNguc) return { cha: 'nguc', lop: 5, khop: [0.3, 0.72], gan: [0.82, 0.35] };
+    if (/^chan-truoc/.test(vai) && coNguc) return BON_CHAN_NGUC[vai];
+    return null;
+  }
+  const cachRap = (khung, vai, p, ds) => (p && ds && XR.laAoChoang(p, ds) ? AO_CHOANG : (khung === 'bon-chan' && ds && cachBonChan(vai, ds)) || cachRap0(khung, vai));
   void laDoDeoLung; void DEO_LUNG; // (bỏ: phụ kiện giờ luôn vẽ ngay sau thân theo thứ tự lớp cố định)
 
   // Đặt tên duy nhất theo vai (tên dùng trong tệp)
@@ -221,6 +239,30 @@
       if (y - y0 >= r * 0.9) break;
     }
     return tot;
+  };
+  // NẮP KHỚP ("bản lề ảo"): hình tròn cùng màu chi, vẽ ngay tại tâm khớp, đè lên chỗ nối để xoay mạnh cũng không hở.
+  // Trả về [bán kính, '#màu'] (toạ độ mảnh) cho tay, chân, càng, đầu (gốc cổ), cổ; mảnh khác: null.
+  XR.napKhop = function (p, khung) {
+    // chỉ chi (tay, chân, càng) và đầu NGƯỜI (tâm ở gốc cổ); đầu thú tâm nằm giữa mặt nên không vẽ nắp
+    if (!/^(tay|chan|cang)/.test(p.vai || '') && !(p.vai === 'dau' && khung === 'nguoi')) return null;
+    const cv = p.cv0 || p.cv, w = cv.width, h = cv.height, d = cv.getContext('2d').getImageData(0, 0, w, h).data;
+    const l = XR.vaoGoc(p, p.truc), lx = Math.round(l[0]), ly = Math.round(l[1]);
+    const co = (x, y) => x >= 0 && y >= 0 && x < w && y < h && d[(y * w + x) * 4 + 3] > 200;
+    let y = Math.max(0, Math.min(h - 1, ly)); if (p.vai === 'dau') y = Math.max(0, y - Math.round(h * 0.03));
+    let a = lx, b = lx;
+    if (!co(lx, y)) return null;
+    while (co(a - 1, y)) a--; while (co(b + 1, y)) b++;
+    const r = Math.max(2, (b - a) * 0.36);
+    let sr = 0, sg = 0, sb = 0, n = 0;
+    for (let yy = Math.round(y - r * 0.6); yy <= y + r * 0.6; yy++) for (let xx = Math.round(lx - r * 0.6); xx <= lx + r * 0.6; xx++) {
+      if (!co(xx, yy)) continue;
+      const i = (yy * w + xx) * 4, sang = d[i] * 0.3 + d[i + 1] * 0.59 + d[i + 2] * 0.11;
+      if (sang < 70) continue; // bỏ nét viền tối
+      sr += d[i]; sg += d[i + 1]; sb += d[i + 2]; n++;
+    }
+    if (!n) return null;
+    const hx = (v) => Math.round(v / n).toString(16).padStart(2, '0');
+    return [Math.round(r * 10) / 10, '#' + hx(sr) + hx(sg) + hx(sb)];
   };
   XR.gocManh = (p) => Math.round(((p.a || 0) * 180) / Math.PI);
 
@@ -490,6 +532,7 @@
         ten: p.ten, vai: p.vai, cha: p.cha == null ? null : tenTheoId[p.cha] || null,
         o: o[p.id], dat: [r(p.dat[0]), r(p.dat[1])], truc: [r(p.truc[0]), r(p.truc[1])], lop: p.lop,
         ...((p.toi || p.daToi) ? { da_to_toi: true } : {}), // công cụ đã tô tối sẵn trong ảnh (game bỏ qua khoá này)
+        ...(S.banLe !== false && XR.napKhop(p, S.khung) ? { nap: ((n) => [Math.round(n[0] * k * 10) / 10, n[1]])(XR.napKhop(p, S.khung)) } : {}),
       })),
     };
     if (S.dong_tac && Object.keys(S.dong_tac).length) tep.dong_tac = JSON.parse(JSON.stringify(S.dong_tac));
