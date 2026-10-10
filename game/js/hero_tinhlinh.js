@@ -1011,6 +1011,20 @@
     return ps;
   }
 
+  // VFX chiến đấu: nhịp đòn có lấy đà. Đổi thời gian thật của đòn (a: 0..1, đòn chạm ở 0,45) sang thời điểm của tư thế (0..1):
+  // tới nhanh tư thế lấy đà rồi giữ ở đó lâu hơn chút, vung tới nhanh dần, giữ khung trúng thêm một nhịp, thu đòn chậm dần.
+  // Hai đầu giữ nguyên (0 -> 0, 1 -> 1) và lúc đòn chạm (a = 0,45) vẫn là khung trúng (tư thế 0,45..0,49):
+  // TỔNG thời gian đòn và thời điểm gây sát thương không đổi, chỉ đổi khung nào hiện ra lúc nào.
+  const DA = { sword: [0.22, 0.22, 0.2], hammer: [0.28, 0.28, 0.28], spear: [0.25, 0.25, 0.25] }; // tư thế lấy đà xa nhất của từng đòn
+  const eOut = (x) => 1 - (1 - x) * (1 - x), eIn = (x) => x * x;
+  function nhip(a, wt, combo) {
+    const d = DA[wt]; if (!d) return a;
+    const k = d[combo % 3], A1 = k + 0.08; // tới tư thế lấy đà ở a = k + 0,08 thay vì k
+    if (a <= A1) return k * eOut(a / A1);
+    if (a <= 0.43) return k + (0.45 - k) * eIn((a - A1) / (0.43 - A1));
+    if (a <= 0.53) return 0.45 + 0.04 * ((a - 0.43) / 0.1);
+    return 0.49 + 0.51 * eOut((a - 0.53) / 0.47);
+  }
   // Chọn hoạt ảnh và khung hình theo trạng thái (giống cách hero_art.js chọn, để khớp nhịp đánh của game).
   function pick(o, wt) {
     const p = o.p, t = (o.t != null ? o.t : G.time) || 0;
@@ -1036,7 +1050,7 @@
     if (o.atk >= 0) {
       const n = ATKN[wt] || 8, combo = p ? Math.max(0, p.comboI | 0) % 3 : Math.floor(t / 1.6) % 3;
       if (wt === 'bow') return ['atk', Math.min(n - 1, Math.floor(o.atk * n)), ai];
-      return ['atk', Math.min(n - 1, Math.floor(o.atk * n)), combo, ai];
+      return ['atk', Math.min(n - 1, Math.floor(nhip(o.atk, wt, combo) * n)), combo, ai];
     }
     if ((p && p.hurtT > 0) || (!p && o.flash)) return ['hurt', 0, 0];
     if (o.move) return ['run', Math.floor(t * 13) % 8, 0];
@@ -1258,6 +1272,24 @@
     return sp;
   }
 
+  // VFX chiến đấu: vị trí vũ khí trên màn hình ở khung đang vẽ, để js/fx.js vẽ vệt bám đúng quỹ đạo mũi vũ khí.
+  // Trả về null nếu không cầm vũ khí cận chiến. u: thời điểm của tư thế (0..1, đã qua nhịp lấy đà); (gx, gy): điểm cầm;
+  // (dx, dy): hướng thân vũ khí (đã lật theo mặt, đã ép bẹt khi quét vòng); L: dài từ điểm cầm tới mũi.
+  const TIP = { anim: '', u: 0, wt: '', gx: 0, gy: 0, dx: 0, dy: 0, L: 0, combo: 0 };
+  function tip(o) {
+    const fr = frame(o), w = fr.weapon;
+    if (!w || w.type === 'bow' || !REST[w.type]) return null;
+    let L = 0;
+    try { if (G.weaponArt && G.weaponArt.tipLen && !o.plainWeapon) L = G.weaponArt.tipLen(G.weaponArt.fromWeapon(o.weapon || {})); } catch (e) { L = 0; }
+    if (!(L > 4)) L = w.type === 'spear' ? 48 : w.type === 'hammer' ? 34 : 36;
+    const f = o.face < 0 ? -1 : 1, X0 = Math.round(o.x) + (f < 0 ? 1 : 0), Y0 = Math.round(o.y);
+    const r = (w.ang * Math.PI) / 180, sx = w.sx == null ? 1 : w.sx;
+    const n = fr.anim === 'spec' ? 7 : fr.anim === 'sweep' ? 10 : ATKN[w.type] || 8;
+    TIP.anim = fr.anim; TIP.u = (fr.f + 0.5) / n; TIP.wt = w.type; TIP.combo = fr.anim === 'atk' ? fr.v | 0 : 0;
+    TIP.gx = X0 + f * w.x; TIP.gy = Y0 + w.y; TIP.dx = f * Math.cos(r) * sx; TIP.dy = Math.sin(r); TIP.L = L;
+    return TIP;
+  }
+
   // ====================================================================
   // 8. XUẤT RA
   // ====================================================================
@@ -1265,6 +1297,7 @@
     hero, frame, pose: (key, wt, anim, f, v) => finishPose(pose(key, wt, anim, f, v)), outfitOf, HERO, ATKN,
     // info(o): thông tin vũ khí của khung hiện tại { type, x, y, ang, pull, front, mood } hoặc null
     info: (o) => { const fr = frame(o); return fr.weapon ? Object.assign({ anim: fr.anim, f: fr.f }, fr.weapon) : null; },
+    tip,
     // Dành cho tờ phác thảo và trang thử:
     kidSprite, weaponSprite, drawKid, Spr, layers: ['lung', 'than', 'ao', 'mu', 'mat', 'tay'],
     cacheSize: () => KCACHE.size + WCACHE.size,

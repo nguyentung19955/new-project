@@ -969,15 +969,20 @@
       else A.zone(c, z);
     }
     if (F && F.drawGround) F.drawGround(c);
-    const ent = F && F.entity, rec = F && F.recoil;
+    const ent = F && F.entity, rec = F && F.recoil, xf = F && F.xf; // xf: nhún, nghiêng, nảy khi trúng đòn (js/fx.js), chỉ đổi hình
     const list = [];
     for (const e of W.ents) {
       list.push({ y: e.y, f: () => {
-        const k = rec ? rec(e) : 0; // giật lùi khi trúng đòn: chỉ dời hình
         const up = e.mvLift > 0 ? Math.round(Math.sin((e.mvLift / 0.45) * Math.PI) * 10) : 0; // bị Địa Chấn hất tung
-        if (k || up) c.translate(k, -up);
-        if (e.illusion) A.boss(c, e); else A.enemy(c, e);
-        if (k || up) c.translate(-k, up);
+        if (xf && xf(c, e, up)) { // đã gồm giật lùi
+          if (e.illusion) A.boss(c, e); else A.enemy(c, e);
+          c.restore();
+        } else {
+          const k = rec ? rec(e) : 0; // giật lùi khi trúng đòn: chỉ dời hình
+          if (k || up) c.translate(k, -up);
+          if (e.illusion) A.boss(c, e); else A.enemy(c, e);
+          if (k || up) c.translate(-k, up);
+        }
         if (ent) ent(c, e);
       } });
     }
@@ -985,15 +990,16 @@
     if (W.boss && !W.boss.dead) {
       const b = W.boss;
       list.push({ y: b.y + (b.kind === 'moc' ? -30 : 0), f: () => {
-        const k = rec ? rec(b) : 0;
+        const on = xf && xf(c, b, 0), k = on ? 0 : rec ? rec(b) : 0;
         if (k) c.translate(k, 0);
         if (b.kind === 'mini') A.enemy(c, b); else A.boss(c, b);
         if (k) c.translate(-k, 0);
+        if (on) c.restore();
         if (!b.hidden) A.status(c, b, Math.round(b.x), Math.round(b.y - b.h - 6));
         if (ent) ent(c, b);
       } });
     }
-    list.push({ y: P.y, f: () => { A.hero(c, G.heroArgs(P)); if (ent) ent(c, P); } });
+    list.push({ y: P.y, f: () => { const on = xf && xf(c, P, 0); A.hero(c, G.heroArgs(P)); if (on) c.restore(); if (ent) ent(c, P); } });
     if (F && F.sorted) F.sorted(list, c);
     for (const pr of W.props) if (pr.type === 'loot') A.prop(c, pr); // đồ rơi nằm ở lớp sàn: không che quái, em bé, vùng báo trước (js/do_roi.js)
     if (G.baoTruoc) G.baoTruoc.snap(c); // chụp nền (đã có vũng, vết) trước khi vẽ nhân vật: để vùng báo trước nằm dưới nhân vật
