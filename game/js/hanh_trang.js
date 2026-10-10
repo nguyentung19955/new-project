@@ -144,6 +144,17 @@
       return f.name + ': ' + (st >= i + 2 ? 'đã mở' : i + 2 > cap ? 'cần bậc Lam' : 'còn ' + (need - m) + ' dấu ấn');
     }).join(' · ');
   }
+  function compareText(sv, w) {
+    const lvl = sv.heroes[sv.hero].lvl, d = G.wBase(w, lvl), parts = [];
+    let up = false;
+    sv.carry.forEach((id, slot) => {
+      const c = G.weaponById(id); if (!c) return;
+      const dd = d - G.wBase(c, lvl), g = G.upg && G.upg.swapGain ? G.upg.swapGain(w, slot, sv) : 0;
+      if (g > 0 || (!g && dd > 0)) up = true;
+      parts.push('ô ' + (slot + 1) + ': đòn ' + (dd >= 0 ? '+' : '−') + Math.abs(dd).toFixed(1).replace('.', ',') + (g ? ', ' + G.upg.gainText(g, true) : '') + (g > 0 || (!g && dd > 0) ? ' ▲' : g < 0 || dd < 0 ? ' ▼' : ''));
+    });
+    return parts.length ? { s: 'So với ' + parts.join(' · '), up } : null;
+  }
   function weaponRow(sv, w, x, y, wd, carried) {
     const r = G.wRar(w), R = G.RARITY[r], BD = G.banDo, sell = !RO && BD, multi = sell && BD.multi && BD.kind === 'w';
     const picked = multi && BD.ids.has(w.id), sel = picked || (!multi && B.sel === w.id), mi = G.markInfo(w);
@@ -155,9 +166,12 @@
     const bw = sell ? 150 : 104, tw = wd - 44 - bw;
     tx(G.wName(w), x + 40, y + 10, tw, { size: 8, bold: true, color: R.col });
     const aff = (w.affixes || []).map((k) => G.AFFIX[k]).concat(w.power && G.POWER[w.power] ? ['Dòng mạnh ' + G.POWER[w.power].name] : []);
-    tx('Bậc ' + R.name + ' · mài +' + (w.sharpen | 0) + ' · đòn ' + G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1).replace('.', ',') + (aff.length ? ' · ' + aff.join(', ') : ' · không dòng phụ'), x + 40, y + 20, tw, { size: 6.5, color: TXT });
-    tx(mi.txt, x + 40, y + 29, tw, { size: 6.5, color: mi.col === '#666' ? SOFT : mi.col });
-    tx(featText(w), x + 40, y + 37.5, tw, { size: 6.5, color: SOFT });
+    tx('Bậc ' + R.name + ' · mài +' + (w.sharpen | 0) + ' · đòn ' + G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1).replace('.', ',') + (aff.length ? ' · ' + aff.join(', ') : ' · không dòng phụ'), x + 40, y + 19.5, tw, { size: 6.5, color: TXT });
+    tx(mi.txt, x + 40, y + 28.5, tw, { size: 6.5, color: mi.col === '#666' ? SOFT : mi.col });
+    // V26: món trong rương đang được chọn: so với từng ô đang mang (đòn mỗi lần đánh và Sức mạnh), có dấu +/− và ▲/▼, không chỉ màu
+    const cmp = sel && !carried && !multi ? compareText(sv, w) : null;
+    if (cmp) tx(cmp.s, x + 40, y + 37.5, tw, { size: 6.5, bold: true, color: cmp.up ? GOOD : WARN });
+    else tx(featText(w), x + 40, y + 37.5, tw, { size: 6.5, color: SOFT });
     // nút bên phải
     const bx = x + wd - bw - 2;
     if (multi) { // đang chọn nhiều: chạm cả dòng để chọn, bên phải ghi giá
@@ -306,7 +320,7 @@
       for (const k in sm.specials) for (const q of sm.specials[k]) { const sp = O.special(q.it); if (sp) y = ui.para('★ ' + sp.name, RX, y + 1, RW, { size: 6.5, color: PURP }); }
       if (!RO) {
         y += 4;
-        if (goBtn(RX, y, RW, 'may', 'Đến Cô Thợ May: may, nâng bậc')) return y;
+        if ((!VS.shown || VS.shown('may')) && goBtn(RX, y, RW, 'may', 'Đến Cô Thợ May: may, nâng bậc')) return y; // V53: cô chưa về thì không có nút
         y += 20;
         if (goBtn(RX, y, RW, 'xen', 'Đến Bà Hàng Xén: mua, bán đồ')) return y;
         y += 20;
@@ -487,7 +501,7 @@
     const r = B.HUB, held = [...G.pointers.values()].some((q) => !q.role && !q.stale && G.inRect(q, r[0], r[1], r[2], r[3]));
     T.plate(r[0], r[1] + (held ? 1 : 0), r[2], r[3]);
     bagIcon(r[0] + r[2] / 2, r[1] + 11 + (held ? 1 : 0), 1.25);
-    ui.text('Hành trang', r[0] + r[2] / 2, r[1] + 27 + (held ? 1 : 0), { size: 6.5, bold: true, align: 'center', color: GOLD });
+    ui.text('Hành trang', r[0] + r[2] / 2, r[1] + 27 + (held ? 1 : 0), { size: 6.5, bold: true, tiny: true, align: 'center', color: GOLD });
     if ((G.click && G.inRect(G.click, r[0] - 2, r[1] - 1, r[2] + 4, r[3] + 2)) || G.keyP.KeyB) { G.click = null; B.openVillage(); return true; }
     return false;
   };
