@@ -39,7 +39,17 @@
         if (diemDau(b) > diemDau(a)) [a, b] = [b, a];
         a.vai = 'dau'; b.vai = 'than';
       } else if (hai.length) hai[0].vai = 'than';
-      // 4 chi: dài nhất trong phần còn lại
+      // Bỏ riêng trước khi chọn tay chân: áo choàng (mảnh to gần bằng thân, không daiNhat) và vũ khí (rất daiNhat, mảnh)
+      const than0 = ds.find((p) => p.vai === 'than'), dtThan = than0 ? than0.so.dt : 1;
+      const dai = (p) => Math.max(p.w, p.h) / Math.max(1, Math.min(p.w, p.h));
+      const daiNhat = (p) => Math.max(p.w, p.h);
+      for (const p of theoCo.slice()) {
+        // vũ khí: rất mảnh VÀ daiNhat hơn hẳn mọi mảnh còn lại (chân gầy cũng mảnh nhưng không daiNhat bằng)
+        const khac = theoCo.filter((q) => q !== p).map(daiNhat);
+        if (dai(p) >= 3 && daiNhat(p) > Math.max(1, ...khac) * 1.15 && !ds.some((q) => q.vai === 'vu-khi')) { p.vai = 'vu-khi'; theoCo.splice(theoCo.indexOf(p), 1); }
+        else if (p.so.dt >= dtThan * 0.45 && dai(p) < 1.6) { p.vai = 'phu-kien'; theoCo.splice(theoCo.indexOf(p), 1); }
+      }
+      // 4 chi: to nhất trong phần còn lại; tay ở hàng trên chân
       const chi = lay(4).sort((a, b) => cy(a) - cy(b));
       const tay = chi.slice(0, 2).sort(sangTruoc), chan = chi.slice(2).sort(sangTruoc);
       if (tay[0]) tay[0].vai = 'tay-truoc'; if (tay[1]) tay[1].vai = 'tay-sau';
@@ -47,6 +57,7 @@
       if (chan.length < 2 && tay.length === 2 && chan.length === 0) { tay[1].vai = 'chan-truoc'; }
       const daiTay = Math.max(1, ...chi.map((p) => Math.max(p.w, p.h)));
       for (const p of theoCo) if (Math.max(p.w, p.h) > daiTay * 1.2 && !ds.some((q) => q.vai === 'vu-khi')) p.vai = 'vu-khi';
+      for (const p of ds) if (p.vai === 'vu-khi' && p !== ds.find((q) => q.vai === 'vu-khi')) p.vai = 'phu-kien';
     } else if (khung === 'bon-chan') {
       const [than, dau] = lay(2);
       if (than) than.vai = 'than'; if (dau) dau.vai = 'dau';
@@ -73,8 +84,8 @@
       // Prompt Gemini vẽ mọi chi có đầu khớp tròn "giấu dưới thân": tay, chân đều nằm sau thân để khớp không lộ.
       than: { lop: 4, khop: [0.5, 0.95] },
       dau: { cha: 'than', lop: 6, khop: [0.5, 0.93], gan: [0.5, 0.1] },
-      'tay-truoc': { cha: 'than', lop: 3, khop: [0.3, 0.12], gan: [0.8, 0.22] },
-      'tay-sau': { cha: 'than', lop: 1, khop: [0.3, 0.12], gan: [0.24, 0.22] },
+      'tay-truoc': { cha: 'than', lop: 3, khop: [0.45, 0.16], gan: [0.76, 0.32] },
+      'tay-sau': { cha: 'than', lop: 1, khop: [0.45, 0.16], gan: [0.26, 0.32] },
       'chan-truoc': { cha: 'than', lop: 2, khop: [0.5, 0.12], gan: [0.62, 0.86] },
       'chan-sau': { cha: 'than', lop: 0, khop: [0.5, 0.12], gan: [0.38, 0.86] },
       'vu-khi': { cha: 'tay-truoc', lop: 7, khop: [0.5, 0.75], gan: [0.62, 0.88] },
@@ -104,7 +115,16 @@
     },
   };
   XR.RAP = RAP;
-  const cachRap = (khung, vai) => (RAP[khung] || RAP.nguoi)[vai] || { cha: 'than', lop: 3, khop: [0.5, 0.5], gan: [0.5, 0.5] };
+  const cachRap0 = (khung, vai) => (RAP[khung] || RAP.nguoi)[vai] || { cha: 'than', lop: 3, khop: [0.5, 0.5], gan: [0.5, 0.5] };
+  // Phụ kiện to (từ nửa thân trở lên, cao hơn rộng gần bằng): coi là ÁO CHOÀNG / ĐUÔI ÁO: treo ở cổ, nằm sau cùng, rủ ra sau lưng.
+  // Mặt quay phải nên mép trên bên phải của tấm áo là chỗ buộc ở cổ.
+  const AO_CHOANG = { cha: 'than', lop: -1, khop: [0.8, 0.04], gan: [0.48, 0.12] };
+  XR.laAoChoang = function (p, ds) {
+    if (p.vai !== 'phu-kien') return false;
+    const than = ds.find((q) => q.vai === 'than');
+    return !!than && p.w * p.h >= than.w * than.h * 0.45 && p.h >= p.w * 0.7;
+  };
+  const cachRap = (khung, vai, p, ds) => (p && ds && XR.laAoChoang(p, ds) ? AO_CHOANG : cachRap0(khung, vai));
 
   // Đặt tên duy nhất theo vai (tên dùng trong tệp)
   XR.datTen = function (ds) {
@@ -117,7 +137,7 @@
     const goc = ds.find((p) => p.vai === 'than') || ds.slice().sort((a, b) => b.w * b.h - a.w * a.h)[0];
     for (const p of ds) {
       if (p === goc) { p.cha = null; continue; }
-      const c = cachRap(khung, p.vai);
+      const c = cachRap(khung, p.vai, p, ds);
       let cha = ds.find((q) => q !== p && q.vai === c.cha);
       if (!cha && c.cha === 'tay-truoc') cha = ds.find((q) => q.vai === 'tay-sau');
       if (!cha && c.cha === 'dau') cha = goc;
@@ -144,14 +164,20 @@
     while (xong.size < ds.length && vong++ < 20) {
       for (const p of ds) {
         if (xong.has(p.id)) continue;
-        const c = cachRap(khung, p.vai);
+        const c = cachRap(khung, p.vai, p, ds);
         p.lop = c.lop;
         if (p.cha == null) {
           p.dat = [0, 0]; p.truc = [p.w * c.khop[0], p.h * c.khop[1]]; xong.add(p.id); continue;
         }
         const cha = byId[p.cha]; if (!cha || !xong.has(cha.id)) continue;
         const g = c.gan || [0.5, 0.5];
-        const gx = cha.dat[0] + cha.w * g[0], gy = cha.dat[1] + cha.h * g[1];
+        let gx = cha.dat[0] + cha.w * g[0];
+        const gy = cha.dat[1] + cha.h * g[1];
+        // Tay người: treo ở mép vai thật của thân (thân có giáp vai to thì tay ra ngoài, không bị thân che hết)
+        if (khung === 'nguoi' && cha.vai === 'than' && (p.vai === 'tay-truoc' || p.vai === 'tay-sau')) {
+          const mep = mepNgang(cha, g[1], p.vai === 'tay-truoc');
+          if (mep != null) gx = cha.dat[0] + (p.vai === 'tay-truoc' ? Math.min(mep - p.w * 0.3, cha.w * 0.92) : Math.max(mep + p.w * 0.3, cha.w * 0.08));
+        }
         p.dat = [Math.round(gx - p.w * c.khop[0]), Math.round(gy - p.h * c.khop[1])];
         p.truc = [Math.round(gx), Math.round(gy)];
         xong.add(p.id);
@@ -160,6 +186,14 @@
     for (const p of ds) if (!p.dat) { p.dat = [0, 0]; p.truc = [p.w / 2, p.h / 2]; p.lop = p.lop || 0; }
     return XR.tinhGoc(ds);
   };
+  // Điểm có hình xa nhất bên phải (phai) hoặc trái của mảnh ở độ cao fy (tỉ lệ), tính trong mảnh
+  function mepNgang(p, fy, phai) {
+    const y = Math.max(0, Math.min(p.h - 1, Math.round(p.h * fy)));
+    const d = p.cv.getContext('2d').getImageData(0, y, p.w, 1).data;
+    if (phai) { for (let x = p.w - 1; x >= 0; x--) if (d[x * 4 + 3] > 128) return x; }
+    else { for (let x = 0; x < p.w; x++) if (d[x * 4 + 3] > 128) return x; }
+    return null;
+  }
   // Điểm chân: giữa thân theo chiều ngang, đáy thấp nhất của các chân (hoặc của cả con)
   XR.tinhGoc = function (ds) {
     const than = ds.find((p) => p.cha == null) || ds[0];
