@@ -690,6 +690,165 @@
     return true;
   };
 
+  // ======================= NỐI VÀO GAME =======================
+  // Chỉ nối khi thật sự có rig (không có tệp nào thì game y hệt như cũ). Công cụ ngoài nhúng riêng tệp này thì không có
+  // G.monsterArt / G.art.hero nên phần này tự bỏ qua.
+  // Chỉ đổi HÌNH: luật chơi, thời gian ra đòn, vùng báo trước, vệt chém, đạn... vẫn của game.
+
+  // Điểm cầm vũ khí của mảnh tay trước (toạ độ tư thế ráp): mảnh có "cam" thì dùng, không thì lấy trung điểm cạnh xa trục nhất.
+  function diemCam(rig) {
+    const p = rig.tayTruoc; if (!p) return null;
+    if (p._cam) return p._cam;
+    const tm = P2(rig.tep && rig.tep.manh && rig.tep.manh[p.i] && rig.tep.manh[p.i].cam);
+    if (tm) return (p._cam = tm);
+    const x0 = p.dat[0], y0 = p.dat[1], w = p.o[2], h = p.o[3];
+    let best = null, d = -1;
+    for (const q of [[x0 + w / 2, y0 + h], [x0 + w / 2, y0], [x0, y0 + h / 2], [x0 + w, y0 + h / 2]]) {
+      const dd = Math.hypot(q[0] - p.truc[0], q[1] - p.truc[1]); if (dd > d) { d = dd; best = q; }
+    }
+    // lùi vào trong một chút để vũ khí nằm trong lòng bàn tay
+    return (p._cam = [p.truc[0] + (best[0] - p.truc[0]) * 0.85, p.truc[1] + (best[1] - p.truc[1]) * 0.85]);
+  }
+  C.diemCam = diemCam;
+
+  // ---------- QUÁI ----------
+  // Đổi tên cử động của game sang động tác chibi. D: thời lượng cử động trong game (giây).
+  C.chonQuai = function (n, t, D) {
+    D = D > 0 ? D : 0.6;
+    const u = clamp(t / D, 0, 1);
+    if (n === 'move') return { anim: 'move', u: 0, t: G.time || t };
+    if (n === 'tele' || n === 'phase2' || n === 'phase3') return { anim: 'tele', u, t };
+    if (n === 'atk') return { anim: 'atk', u, t };
+    if (n === 'hit') return { anim: 'hit', u, t };
+    if (n === 'stun') return { anim: 'hit', u: 0.35 + 0.12 * Math.sin(t * 9), t, flash: 0 };
+    if (n === 'die') return { anim: 'die', u, t };
+    if (n === 'spawn') { const k = seg(u, 0.1, 0.75); return { anim: 'idle', u: 0, t: G.time || t, alpha: k, dy: (1 - k) * 6 }; }
+    if (/^chieu|^c\d$/.test(n)) return u < 0.4 ? { anim: 'tele', u: u / 0.4, t } : { anim: 'atk', u: (u - 0.4) / 0.6, t };
+    return { anim: 'idle', u: 0, t: G.time || t };
+  };
+  let MA = null, maDraw0 = null;
+  function noiQuai() {
+    MA = G.monsterArt;
+    if (!MA || MA._chibi || typeof MA.draw !== 'function') return;
+    MA._chibi = true;
+    maDraw0 = MA.draw;
+    MA.drawTruocChibi = maDraw0;
+    MA.draw = function (c, id, x, y, o) {
+      const rig = C.choQuai(id);
+      if (!rig) return maDraw0.call(MA, c, id, x, y, o);
+      o = o || {};
+      const n = o.anim || 'idle', t = Math.max(0, o.t || 0), D = (MA.dur && MA.dur(id, n)) || 0;
+      let face = o.face || 0;
+      if (!face) { const dir = o.dir == null ? Math.PI : o.dir; face = Math.cos(dir) > 0.01 ? 1 : -1; }
+      const s = C.chonQuai(n, t, D);
+      const T0 = c.getTransform(), a0 = c.globalAlpha;
+      const ve = () => {
+        c.save(); c.setTransform(T0); c.globalAlpha = a0 * (s.alpha == null ? 1 : s.alpha);
+        try { C.draw(c, rig, x, y + (s.dy || 0), { anim: s.anim, u: s.u, t: s.t, flip: face < 0, flash: s.flash === 0 ? 0 : (o.hit || 0) }); } finally { c.restore(); }
+      };
+      // Hình gốc vẫn vẽ bóng và hiệu ứng riêng của quái; chỗ vẽ thân (drawImage 3 tham số của tấm khung) thì vẽ chibi.
+      let than = null;
+      const gia = butGia(c, function (img, a, b) {
+        if (arguments.length === 3 && img && img.width != null) {
+          if (!than) { than = [img.width, img.height]; ve(); return; }
+          if (img.width === than[0] && img.height === than[1]) return; // lớp nhuộm / chớp trắng của thân gốc
+        }
+        return c.drawImage.apply(c, arguments);
+      });
+      maDraw0.call(MA, gia, id, x, y, o);
+    };
+  }
+  // Bút giả: chuyển mọi lệnh vẽ sang bút thật, riêng drawImage thì hỏi hàm thay.
+  function butGia(c, thay) {
+    if (typeof Proxy === 'undefined') return c;
+    const nho = new Map();
+    return new Proxy(c, {
+      get(o, k) {
+        if (k === 'drawImage') return thay;
+        const v = o[k];
+        if (typeof v !== 'function') return v;
+        let f = nho.get(k);
+        if (!f) { f = v.bind(o); nho.set(k, f); }
+        return f;
+      },
+      set(o, k, v) { o[k] = v; return true; },
+    });
+  }
+
+  // ---------- EM BÉ ----------
+  C.chonEmBe = function (o) {
+    const p = o.p, t = (o.t != null ? o.t : G.time) || 0;
+    if (p && p.dead) return { anim: 'die', u: (p.deadT || 0) / 0.9, t };
+    if (o.dodge >= 0) return { anim: 'move', u: 0, t: t * 2.2 };
+    if (p && p.dashT > 0) return { anim: 'move', u: 0, t: t * 2 };
+    if (p && p.specT > 0) return { anim: 'atk', u: 1 - p.specT / 0.35, t };
+    if (p && p.castT > 0) return { anim: 'atk', u: 1 - p.castT / 0.4, t };
+    if (p && p.mv && p.mv.holding && !(o.atk >= 0)) return { anim: 'tele', u: 1, t };
+    if (o.atk >= 0) return { anim: 'atk', u: o.atk, t };
+    if ((p && p.hurtT > 0) || (!p && o.flash)) return { anim: 'hit', u: p ? 1 - p.hurtT / 0.2 : 0.3, t };
+    if (o.move) return { anim: 'move', u: 0, t };
+    return { anim: 'idle', u: 0, t };
+  };
+  function emBeTint(o) {
+    const p = o.p, st = p && p.st;
+    if (st && st.ice > 0) return ['#9fd8ff', 0.45];
+    if (st && st.poison > 0) return ['#7fd957', 0.4];
+    return null;
+  }
+  function noiEmBe() {
+    const A = G.art;
+    if (!A || !A.hero || A._chibi) return;
+    A._chibi = true;
+    const hero0 = A.hero;
+    A.heroTruocChibi = hero0;
+    A.hero = function (c, o) {
+      const rig = C.choEmBe(o && o.key);
+      if (!rig || !o) return hero0.call(A, c, o);
+      let fr = null;
+      try { fr = G.tinhLinh && G.tinhLinh.frame ? G.tinhLinh.frame(o) : null; } catch (e) { fr = null; }
+      const s = C.chonEmBe(o), P = C.pose(rig, s.anim, s.u, s.t);
+      if (s.anim === 'die') P.g.alpha = 1; // em bé ngã thì nằm yên, không mờ biến mất
+      const M = C.maTran(rig, P);
+      const k = rig.cao / rig.H, f = o.face < 0 ? -1 : 1, x = o.x || 0, y = o.y || 0;
+      const flash = (o.flash || (o.p && o.p.hurtT > 0)) ? 0.6 : 0;
+      c.save();
+      if (o.alpha != null) c.globalAlpha *= o.alpha;
+      if (!o.noShadow && !(o.p && o.p.dead)) {
+        const sw = rig.W * k * 0.34 * (P.g.sx || 1);
+        c.save(); c.globalAlpha *= 0.3; c.fillStyle = '#000'; c.beginPath(); c.ellipse(x, y, Math.max(3, sw), Math.max(1.5, sw * 0.35), 0, 0, TAU); c.fill(); c.restore();
+      }
+      c.translate(x, y);
+      c.scale(f, 1);
+      // Vũ khí của game gắn vào tay trước (rig không có mảnh vũ khí riêng)
+      const wp = fr && fr.weapon && !rig.coVuKhi && o.weapon ? fr.weapon : null;
+      let veVk = null;
+      if (wp) {
+        const cam = diemCam(rig);
+        let hx = wp.x, hy = wp.y;
+        if (cam) { const q = C.diem(M, rig.tayTruoc.ten, cam[0], cam[1]); hx = (q[0] - rig.goc[0]) * k; hy = (q[1] - rig.goc[1]) * k; }
+        veVk = () => {
+          try {
+            const WA = G.weaponArt; if (!WA || !WA.draw) return;
+            const wo = WA.fromWeapon ? WA.fromWeapon(o.weapon, { mood: o.wmood || wp.mood, t: s.t }) : o.weapon;
+            if (o.weapon.coat && !wo.branch) { wo.branch = o.weapon.coat; wo.stage = 1; }
+            if (wp.sx != null) { c.save(); c.translate(hx, hy); c.scale(wp.sx, 1); try { WA.draw(c, wo, 0, 0, wp.ang, wp.pull); } finally { c.restore(); } }
+            else WA.draw(c, wo, hx, hy, wp.ang, wp.pull);
+          } catch (e) { /* thiếu hình vũ khí thì bỏ qua */ }
+        };
+      }
+      if (veVk && !wp.front) veVk();
+      C.draw(c, rig, 0, 0, { pose: P, flash, tint: emBeTint(o) });
+      if (veVk && wp.front) veVk();
+      c.restore();
+    };
+  }
+
+  function noi(rig) {
+    if (!rig) return;
+    if (rig.doi === 'em-be') noiEmBe(); else noiQuai();
+  }
+  C.onAdd = noi;
+
   // Tệp do game/build.py nhúng vào bản đóng gói (mảng G.chibiRigData).
   C.napSan = function () {
     if (Array.isArray(G.chibiRigData)) { for (const t of G.chibiRigData) C.add(t); delete G.chibiRigData; }
