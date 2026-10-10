@@ -79,7 +79,7 @@
       speed: 72 * H.speed * (sv.armor === 'a_ho' ? 1.08 : 1),
       weapons: sv.carry.map((id) => G.weaponById(id)).filter(Boolean), cur: 0, coats: {},
       atkT: 0, atkDur: 0, cdT: 0, hitDone: true, comboI: -1, lastAtk: 0, hitCount: 0,
-      dodgeT: 0, dodgeCd: 0, ddx: 1, ddy: 0, inv: 0, hurtT: 0, dashT: 0, dashHit: null,
+      dodgeT: 0, dodgeCd: 0, dodgeBuf: 0, ddx: 1, ddy: 0, inv: 0, hurtT: 0, dashT: 0, dashHit: null,
       castT: 0, specT: 0, deadT: 0, // đồng hồ cho hoạt ảnh: dùng kỹ năng, tung đòn đặc biệt, gục
       st: { fire: 0, poison: 0, ice: 0 }, dot: 0, dotT: 0,
       potions: 2, skillCd: 0, specCd: 0, swapCd: 0, gongT: 0, firstHit: false, boost: false, stillT: 0, t: 0, moving: false,
@@ -558,6 +558,7 @@
     return true;
   };
 
+  const DODGE_BUF = 0.15; // V7: bấm Né sớm bấy nhiêu giây vẫn được nhớ
   G.updatePlayer = function (P, inp, dt) {
     P.t += dt;
     for (const k of ['atkT', 'cdT', 'dodgeCd', 'inv', 'hurtT', 'skillCd', 'specCd', 'swapCd', 'gongT', 'castT', 'specT']) if (P[k] > 0) P[k] -= dt;
@@ -576,6 +577,10 @@
       }
     }
     if (W.over) { P.moving = false; return; }
+    // V7: bộ nhớ nút Né. Bấm Né khi chưa lộn được (Né còn hồi, đang lướt, đang bị đóng băng) thì được nhớ DODGE_BUF giây,
+    // lộn ngay khi được phép. Trong lúc lướt hay đóng băng bộ nhớ không trôi (lướt chỉ 0,12–0,16 giây, đóng băng 0,65 giây).
+    if (inp.dodgeP) P.dodgeBuf = DODGE_BUF;
+    else if (P.dodgeBuf > 0 && !(P.frozenT > 0) && !(P.dashT > 0)) P.dodgeBuf -= dt;
     if (P.frozenT > 0) { P.frozenT -= dt; P.moving = false; P.atkT = 0; return; } // bị nổ băng: đóng băng ngắn
     const w = curW(P);
     const MV = G.moves; // lối đánh riêng của từng vũ khí; thiếu moves.js thì đánh kiểu cũ
@@ -586,6 +591,8 @@
     if (ml > 1) { mx /= ml; my /= ml; }
     P.moving = false;
 
+    // V33: Nhát lướt (P.dashNe) huỷ được bằng Né: dừng lướt ngay, xuống dưới lộn như thường
+    if (P.dashT > 0 && P.dashNe && P.dodgeBuf > 0 && P.dodgeCd <= 0) { P.dashT = 0; P.atkT = 0; P.dashNe = false; }
     if (P.dashT > 0) {
       // Lướt và lao đi theo hướng thật (P.dashVx, P.dashVy, tám hướng); chạm tường thì dừng ngay, không xuyên tường.
       const dd = Math.min(dt, P.dashT); // khung cuối chỉ đi nốt phần còn lại, để quãng lao đúng bằng con số đã định
@@ -593,6 +600,7 @@
       const vx = P.dashVx != null ? P.dashVx : P.dashV, vy = P.dashVy || 0;
       const nx = G.clamp(P.x + vx * dd, W.x0, W.px1 != null ? W.px1 : W.x1), ny = G.clamp(P.y + vy * dd, W.y0, W.y1);
       const K = G.ZK || 0.85, ux = P.dashUx != null ? P.dashUx : vx < 0 ? -1 : 1, uy = P.dashUy || 0;
+      let nDash = 0;
       for (const e of G.targets()) {
         if (P.dashHit.includes(e)) continue;
         // đoạn vừa lướt qua, đo trên sàn; nằm ngang thì đúng bằng hộp cũ (lệch dọc 12 + thân quái, hai đầu nới 6 + thân quái)
@@ -602,8 +610,10 @@
         if (a >= -e.r - 6 && a <= Ls + e.r + 6 && b <= Math.abs(ux) * (12 + e.hr) / K + Math.abs(uy) * (e.r + 8) && t >= 0) {
           P.dashHit.push(e);
           playerHit(e, P.dashMult, P.dashOpt ? Object.assign({ w }, P.dashOpt) : { w, stun: P.dashStun });
+          nDash++;
         }
       }
+      if (nDash > 0) G.sfx('hit'); // V10: Nhát lướt, Xốc tới trúng quái thì có tiếng trúng (một lần mỗi khung)
       hitProps(Math.min(P.x, nx) - 4, Math.max(P.x, nx) + 4, (P.y + ny) / 2, 14 + Math.abs(ny - P.y) / 2);
       // Chạm tường thì đòn lao dừng ngay tại đó (không chạy tại chỗ sát tường, không kẹt ở cửa): người chơi điều khiển lại được liền.
       if ((nx !== P.x + vx * dd || ny !== P.y + vy * dd) && P.dashT > 0) { P.dashT = 0; P.atkT = Math.min(P.atkT, 0.05); P.cdT = Math.min(P.cdT, 0.12); }
@@ -645,7 +655,8 @@
         if (P.atkT <= 0 && Math.abs(mx) > 0.2) P.face = mx > 0 ? 1 : -1;
         { const l1 = Math.hypot(mx, my); P.ldx = mx / l1; P.ldy = my / l1; } // nhớ hướng di chuyển gần nhất, để Né khi không đẩy cần
       }
-      if (inp.dodgeP && P.dodgeCd <= 0) {
+      if ((inp.dodgeP || P.dodgeBuf > 0) && P.dodgeCd <= 0) {
+        P.dodgeBuf = 0;
         P.dodgeT = 0.27; P.dodgeCd = 1 * P.dodgeCdMax; P.inv = Math.max(P.inv, 0.32);
         P.atkT = 0; P.chHold = false; P.chT = 0; // lộn thì bỏ phần chưởng đang tích
         // Không đẩy cần thì lộn theo hướng di chuyển gần nhất; chưa đi bước nào thì mới theo hướng mặt.
@@ -667,6 +678,10 @@
       if (inp.swapP && P.weapons.length > 1 && P.swapCd <= 0) {
         P.cur = 1 - P.cur;
         P.swapCd = 1.5;
+        // V34: đổi vũ khí giữa đòn thì huỷ sạch đòn đang vung (không gây sát thương bằng vũ khí mới, không chạy tiếp
+        // động tác cũ với hình vũ khí mới); combo và phần lấy đà về đầu ở moves.js (M.input thấy đổi vũ khí).
+        P.atkT = 0; P.hitDone = true; P.cdT = Math.min(P.cdT, 0.1);
+        if (P.mv) P.mv.cur = null;
         P.firstHit = true;
         P.comboI = -1;
         G.sfx('pick');
@@ -1017,10 +1032,11 @@
     for (const o of W.parts) A.p(c, Math.round(o.x), Math.round(o.y), o.s, o.s, o.col);
     if (F && F.drawOver) F.drawOver(c);
     c.setTransform(1, 0, 0, 1, 0, 0);
-    if (G.baoTruoc) G.baoTruoc.draw(cam, sx, sy); // vùng báo trước đòn: vẽ mịn ở lớp giao diện (js/bao_truoc.js)
     // chữ sát thương vẽ ở lớp giao diện cho nét
     for (const o of W.texts) G.ui.text(o.s, o.x - cam, o.y, { size: o.size, align: 'center', color: o.col, bold: true });
     if (G.doRoi && !P.dead) G.doRoi.nhan(W, P); // tên ngắn của đồ rơi khi lại gần
     if (F && F.drawUI) F.drawUI(cam);
+    // V9: vùng báo trước đòn vẽ SAU số sát thương, để số không che vùng nguy hiểm (vẽ mịn ở lớp giao diện, js/bao_truoc.js)
+    if (G.baoTruoc) G.baoTruoc.draw(cam, sx, sy);
   };
 })();

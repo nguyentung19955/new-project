@@ -144,10 +144,21 @@
   const has1 = (h) => !!h && h.lv >= HE.f1; // đã mở đặc trưng 1 (Thành hình)
   const has2 = (h) => !!h && h.lv >= HE.f2; // đã mở đặc trưng 2 (Thức tỉnh)
 
+  // V79 (O4): mỗi loại vũ khí chỉ nhắc một lần trong cả trò chơi (ghi vào bản lưu G.save.tut.mv), không lặp lại đầu mọi ải.
+  function tipSeen() {
+    const sv = G.save;
+    if (!sv) return null;
+    if (!sv.tut || typeof sv.tut !== 'object') sv.tut = {};
+    if (!sv.tut.mv || typeof sv.tut.mv !== 'object') sv.tut.mv = {};
+    return sv.tut.mv;
+  }
   function tip(P, mv, w, W) {
     if (mv.tips[w.type] || !G.MOVE_TIPS[w.type]) return;
+    const seen = tipSeen();
+    if (seen && seen[w.type]) { mv.tips[w.type] = true; if (mv.tipWait === w.type) mv.tipWait = null; return; } // đã xem ở ải trước
     if (W.banner && !W.banner.tip) { mv.tipWait = w.type; return; } // đang có thông báo khác: chờ nó tắt
     mv.tips[w.type] = true; mv.tipWait = null;
+    if (seen) seen[w.type] = 1;
     W.banner = { s: G.MOVE_TIPS[w.type], col: '#ffd27a', t: 5, tip: true };
   }
 
@@ -163,8 +174,10 @@
     if (held) mv.holdT += dt;
     if (mv.relP && !mv.holding) mv.buf = C.buffer;
     mv.wasHeld = held;
-    if (mv.buf > 0 && !mv.relP) mv.buf -= dt;
-    if (mv.pressBuf > 0 && !held) mv.pressBuf -= dt;
+    // V7: đang lộn thì bộ nhớ nút Đánh không trôi (bấm Đánh ngay đầu cú lộn vẫn ra đòn khi lộn xong, ví dụ Nhát lướt)
+    const rolling = P.dodgeT > 0;
+    if (mv.buf > 0 && !mv.relP && !rolling) mv.buf -= dt;
+    if (mv.pressBuf > 0 && !held && !rolling) mv.pressBuf -= dt;
     if (mv.afterDodge > 0) mv.afterDodge -= dt;
     if (P.dodgeT > 0) mv.wasDodge = true;
     else if (mv.wasDodge) { mv.wasDodge = false; mv.afterDodge = C.sword.glide.win; }
@@ -192,10 +205,21 @@
   // quái gần nhất trong tầm của đòn, không có thì hướng đang kéo cần, không thì hướng đi cuối, cuối cùng mới là hướng mặt.
   // Hình em bé chỉ lật trái phải (P.face); vũ khí, vệt chém, vùng trúng xoay theo góc thật (P.aimRel, P.aimUx, P.aimUy trên màn hình).
   const ZK = () => G.ZK || 0.85;
+  // V6: đang đẩy cần thì tự ngắm chỉ chọn quái nằm trong nón ±60 độ quanh hướng cần (không lao ngược về sau lưng);
+  // không có con nào trong nón thì đánh theo hướng cần. Không đẩy cần thì như cũ: quái gần nhất mọi hướng.
+  const CONE = 0.5; // cos 60 độ
+  function inCone(P, e) {
+    if (P.stickX == null) return true;
+    const dx = e.x - P.x, dy = (e.y - P.y) / ZK(), d = Math.hypot(dx, dy);
+    if (d < 1e-6) return false;
+    return (dx * P.stickX + dy * P.stickY) / d >= CONE;
+  }
+  M.inCone = inCone;
   function aimM(P, range) {
     const k = ZK();
     let best = null, bd = 1e9;
     for (const e of G.targets()) {
+      if (!inCone(P, e)) continue;
       const d = Math.hypot(e.x - P.x, (e.y - P.y) / k) - e.r;
       if (d < range && d < bd) { bd = d; best = e; }
     }
@@ -286,6 +310,7 @@
     const [ux, uy] = aimOf(P);
     P.dashT = t; P.dashVx = (len / t) * ux; P.dashVy = (len / t) * uy * ZK(); P.dashV = P.dashVx;
     P.dashUx = ux; P.dashUy = uy;
+    P.dashNe = false; // mặc định đòn lao không huỷ bằng Né được (Nhát lướt bật lại sau)
   }
   function swingFx(P, w, o, extra) {
     if (G.noRender) return;
@@ -306,6 +331,8 @@
     mv.afterDodge = 0;
     aimM(P, g.len + 30);
     dashGo(P, g.len, g.t); P.dashHit = []; P.dashMult = g.mult; P.dashStun = 0; P.dashOpt = { stun: 0 };
+    P.dashNe = true; // V33: Nhát lướt huỷ được bằng Né (combat.js, đoạn lướt)
+    P.inv = Math.max(P.inv, g.t); // V33: đang lướt thì không dính đòn, như Xốc tới
     P.atkT = g.t; P.atkDur = g.t; P.cdT = g.t + 0.08; P.hitDone = true; P.lastAtk = G.time; P.comboI = 0;
     mv.name = g.name; mv.kind = 'luot'; mv.step = 0; mv.cur = null; mv.dashDur = g.t;
     mv.chain = 1; mv.gap = C.sword.gap; mv.lastT = G.time + g.t; // nhát lướt thay cho nhát đầu của chuỗi
@@ -333,6 +360,7 @@
   function bowTarget(P, range) {
     let best = null, bd = 1e9;
     for (const e of G.targets()) {
+      if (!inCone(P, e)) continue; // V6: đang đẩy cần thì chỉ ngắm quái phía hướng cần
       const d = Math.hypot(e.x - P.x, e.y - P.y) - e.r;
       if (d < range && d < bd) { bd = d; best = e; }
     }
@@ -725,7 +753,8 @@
       G.sfx('swing', 1.6);
     } else {
       // Địa Chấn: vòng chấn nhỏ quanh người ngay lúc nện, rồi vệt nứt chạy theo hướng nhắm
-      circleHit(P.x, P.y, S0.ringR, (e) => G.cb.playerHit(e, S0.ringMult, { w, stun: S0.ringStun, heavy: true, dir: e.x >= P.x ? 1 : -1 }));
+      const nRing = circleHit(P.x, P.y, S0.ringR, (e) => G.cb.playerHit(e, S0.ringMult, { w, stun: S0.ringStun, heavy: true, dir: e.x >= P.x ? 1 : -1 }));
+      if (nRing > 0) G.sfx('hit', 0.8); // V10: vòng chấn trúng quái thì có tiếng trúng
       G.cb.hitProps(P.x - S0.ringR, P.x + S0.ringR, P.y, S0.ringR * ZK());
       const q = along(P.x, P.y, ux, uy, 8), L = wallLen(q[0], q[1], ux, uy, spanOf(S0));
       list.push({ kind: 'crack', x: q[0], y: q[1], x0: q[0], y0: q[1], ux, uy, len: L, at: 0, warn: S0.warn, t: 0, v: S0.speed, half: S0.half, mult: S0.mult, stun: S0.stun, w, seen: [], he: h });
@@ -755,10 +784,12 @@
     return out.map((a) => a[1]);
   }
   // Đòn Đặc biệt không hồi mana khi trúng (như đòn lao cũ), để không tung liên tiếp được.
+  // V10: trả về số quái trúng trong khung này (M.update phát tiếng "trúng" một lần mỗi khung).
   function stepSpecials(W, dt) {
     const list = W.mvSp;
-    if (!list || !list.length) return;
+    if (!list || !list.length) return 0;
     const P = W.P, k = ZK();
+    let nHit = 0;
     for (const q of list) {
       q.t = (q.t || 0) + dt;
       if (q.kind === 'cres') {
@@ -766,6 +797,7 @@
         q.x += q.ux * lim; q.y += q.uy * lim * k; q.left -= d; q.walked += lim;
         const got = [];
         for (const e of sweepSeg(q, ax, ay, q.seen, 0, null, true)) { G.cb.playerHit(e, q.mult, { w: q.w, heavy: true, dir: q.ux < 0 ? -1 : 1 }); q.mult *= C.special.sword.fall; got.push(e); }
+        nHit += got.length;
         propsBox({ x: ax, y: ay }, q.ux, q.uy, lim, q.half * 2);
         if (lim < d - 0.01) q.left = 0; // chạm tường
         if (q.left <= 0) {
@@ -779,6 +811,7 @@
           const ax = q.x, ay = q.y, d = Math.min(q.left, q.v * dt), lim = wallLen(ax, ay, q.ux, q.uy, d);
           q.x += q.ux * lim; q.y += q.uy * lim * k; q.left -= d;
           const got = sweepSeg(q, ax, ay, q.seen, q.mult, { heavy: true });
+          nHit += got.length;
           if (got.length) q.last = got[got.length - 1];
           propsBox({ x: ax, y: ay }, q.ux, q.uy, lim, q.half * 2);
           const hitT = q.target && got.includes(q.target);
@@ -791,7 +824,7 @@
             if (pin) {
               pin.st.stun = Math.max(pin.st.stun, pin.isBoss ? S0.pin * 0.4 : S0.pin);
               q.px = q.x - pin.x; q.py = q.y - pin.y;
-              if (!q.seen.includes(pin)) { q.seen.push(pin); G.cb.playerHit(pin, q.mult, { w: q.w, heavy: true, dir: q.ux < 0 ? -1 : 1 }); }
+              if (!q.seen.includes(pin)) { q.seen.push(pin); G.cb.playerHit(pin, q.mult, { w: q.w, heavy: true, dir: q.ux < 0 ? -1 : 1 }); nHit++; }
             }
             q.he && has1(q.he) && finish(P, q.w, { x: q.x0, y: q.y0, ux: q.ux, uy: q.uy, power: 1, line: Math.max(20, Math.hypot(q.x - q.x0, (q.y - q.y0) / k)) });
             FX('spPin', q);
@@ -814,6 +847,7 @@
           q.x += bx * m; q.y += by * m * k; q.bx = bx; q.by = by;
           const tmp = { x: q.x, y: q.y, ux: bx, uy: by, half: q.half, w: q.w };
           const got = sweepSeg(tmp, ax, ay, q.back, S0.backMult);
+          nHit += got.length;
           }
       } else if (q.kind === 'crack') {
         // vết nứt chạy trước (báo trước), rồi đất trồi lên đuổi theo: quái trên vệt bị hất tung, choáng
@@ -823,6 +857,7 @@
         const A = along(q.x0, q.y0, q.ux, q.uy, a0), B = along(q.x0, q.y0, q.ux, q.uy, a1);
         const seg = { x: B[0], y: B[1], ux: q.ux, uy: q.uy, half: q.half, w: q.w };
         const got = sweepSeg(seg, A[0], A[1], q.seen, q.mult, { stun: q.stun, heavy: true });
+        nHit += got.length;
         for (const e of got) if (!e.dead && !e.isBoss) e.mvLift = C.special.hammer.lift;
         propsBox({ x: A[0], y: A[1] }, q.ux, q.uy, a1 - a0, q.half * 2);
         if (q.at >= q.len) {
@@ -833,6 +868,7 @@
       }
     }
     W.mvSp = list.filter((q) => !q.done);
+    return nHit;
   }
   M.stepSpecials = stepSpecials;
   M.update = function (W, dt) {
@@ -853,11 +889,11 @@
       }
       W.mvShards = sh.filter((q) => q.left > 0);
     }
-    stepSpecials(W, dt);
+    let nHit = stepSpecials(W, dt);
     // quái bị Địa Chấn hất tung: chỉ là độ cao lúc vẽ
     for (const e of G.targets()) if (e.mvLift > 0) e.mvLift = Math.max(0, e.mvLift - dt);
     const ws = W.mvWaves;
-    if (!ws || !ws.length) return;
+    if (!ws || !ws.length) { if (nHit > 0) G.sfx('hit', 0.85); return; } // V10: một tiếng "trúng" mỗi khung
     for (const z of ws) {
       const x0 = z.x, y0 = z.y, ux = z.ux != null ? z.ux : z.dir, uy = z.uy || 0, d = Math.min(z.left, z.v * dt);
       z.x += ux * d; z.y += uy * d * ZK(); z.left -= d;
@@ -867,6 +903,7 @@
         if (onStrip(e, x0, y0, z.x, z.y, ux, uy, seg.half) > -1e8) {
           z.seen.push(e);
           G.cb.playerHit(e, z.mult, { w: z.w, stun: z.stun, dir: z.dir });
+          nHit++;
         }
       }
       propsBox({ x: x0, y: y0 }, ux, uy, d, z.depth);
@@ -877,5 +914,6 @@
       }
     }
     W.mvWaves = ws.filter((z) => z.left > 0.01);
+    if (nHit > 0) G.sfx('hit', 0.85); // V10: chiêu bay, vệt nứt, sóng búa trúng quái: một tiếng "trúng" mỗi khung
   };
 })();
