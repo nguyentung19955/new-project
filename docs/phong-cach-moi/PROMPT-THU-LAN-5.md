@@ -1,0 +1,55 @@
+# Thử lần 5: 1 người + 1 quái bốn chân, theo Xưởng Rối 2.1
+
+Gửi ở gemini.google.com. Mỗi nhân vật: gửi **A** (cả con) trước, ưng hình rồi gửi **B** (tách bộ phận) **trong cùng cuộc trò chuyện**.
+Chép nguyên khung, không sửa gì.
+
+Prompt B lần này gom mọi điều đã sửa:
+- Thân không dính phụ kiện hay tay áo.
+- Hai tay, hai chân (bốn chân) giống hệt nhau. Xưởng Rối tự tô tối chi phía sau.
+- Tay chân thẳng, dọc, đầu khớp tròn ở trên, mũi chân quay phải.
+- Đầu người có đoạn cổ ngắn để cắm vào cổ áo.
+- Quái bốn chân tách hông, ngực và cổ để cột sống uốn được.
+- Các mảnh xếp theo hàng, đúng thứ tự Xưởng Rối nhắc khoanh ở Bước 2.
+
+## 1. Người: Thợ Săn (khung Người)
+
+A:
+```
+Soft chibi mobile RPG art style, smooth clean digital illustration (not pixel art), medium dark brown outline, simple two-tone cel shading, rounded shapes, warm colors. One cute chibi child hunter, full body, 3/4 view turned to the RIGHT, relaxed ready pose: forest-green hooded cloak with two small pointed ear tips on the hood, round pale face, big dark eyes, small smile, short cloak ending above the knees, off-white tunic, off-white sleeves, brown boots. Twist: a big paper Mid-Autumn festival mask tilted on the side of the hood, a quiver on the back made from a bamboo tube with fresh green leaves sprouting from it, and a tiny round sparrow perched on top of the hood. Very big head (half of the total height), tiny body, short legs, arms hanging straight down a little away from the body with a clear white gap, legs straight with a small gap, empty hands. Low detail, big simple shapes. Main colors: forest green, dark green, off-white, light leaf green, brown. Plain pure white background, single character, no shadow, no text.
+```
+
+B:
+```
+Redraw exactly the same chibi hunter, same style, same colors, same size, as a paper-doll parts sheet for 2D bone animation, all parts facing RIGHT, on a plain pure white background, every part far apart from the others with wide white space, nothing touching, nothing overlapping, no text, no labels, no numbers, no shadow. Arrange the parts in rows exactly like this. ROW 1 (top): 1) on the left, the TORSO ONLY: the green cloak over the off-white tunic, with an open round collar at the top where the neck goes in, WITHOUT the quiver, without sleeves, without arms, without legs, no arm or leg stubs; 2) on the right, the HEAD with the hood, ear tips, mask and sparrow, with a short straight neck stub at the bottom in skin color that will slide inside the collar. ROW 2: 3) on the left, the FRONT ARM; 4) on the right, the BACK ARM, an exact copy of the front arm. ROW 3: 5) on the left, the FRONT LEG with boot; 6) on the right, the BACK LEG, an exact copy of the front leg. ROW 4 (bottom): 7) the bamboo quiver with its leaves, alone, as its own separate piece. Each arm is one piece: off-white sleeve and pale hand, hanging perfectly STRAIGHT and VERTICAL like a doll standing at attention, the rounded shoulder end at the TOP, the hand at the BOTTOM, thumb toward the right, no bend at the elbow, not tilted. Each leg is one piece: hanging perfectly STRAIGHT and VERTICAL, the rounded hip end at the TOP, the boot at the BOTTOM with the toes pointing to the RIGHT, no bend at the knee, not tilted. Both arms are identical twins and both legs are identical twins: same shape, same length, same colors; do NOT make one darker or a different color (the game shades the back ones by itself). Every arm and leg ends in a smooth rounded top that will hide under the torso, the rounded top is the same color as the limb (not white), no visible joint knobs or balls.
+```
+
+Khoanh ở Xưởng Rối (khung **Người**), máy nhắc đúng thứ tự này: Thân → Đầu → Tay trước → Tay sau → Chân trước → Chân sau → Vũ khí (bấm **Bỏ qua**) → ống tên (máy gọi là Phụ kiện).
+
+## 2. Quái bốn chân: Heo Rừng Con (khung Bốn chân, thay `heoCon`)
+
+A:
+```
+Soft chibi mobile RPG art style, smooth clean digital illustration (not pixel art), medium dark outline, simple two-tone cel shading, rounded shapes. One chibi monster for an action game, full body, side view facing RIGHT (the head at the right end, the tail at the left end), in a calm standing pose with all four legs straight and vertical: a small wild boar piglet with a round chubby body, brown fur, short white tusks, angry glowing green eyes with heavy frowning brows, bared teeth, four short stubby legs. Twist: its back is a little thatched straw roof with a small smoking chimney, and its tail is a curly spring. Cute but fierce and dangerous. Big head, four legs clearly separated with white gaps, tail separated from the body. Low detail, big simple shapes. Main colors: brown, dark brown, straw yellow, a touch of poison green glow in the eyes. Plain pure white background, single character, no shadow, no text.
+```
+
+B:
+```
+Redraw exactly the same boar, same style, same colors, same size, as a paper-doll parts sheet for 2D bone animation, all parts facing RIGHT, on a plain pure white background, every part far apart from the others with wide white space, nothing touching, nothing overlapping, no text, no labels, no numbers, no shadow. The body is cut into TWO pieces so the spine can bend. Arrange the parts in rows exactly like this. ROW 1 (top), from left to right: 1) the BACK HALF of the body: hips, rump and back belly with the back part of the straw roof, no legs, no tail; its front edge (right side) is a smooth rounded end that will slide under the chest; 2) the FRONT HALF of the body: chest, shoulders and front belly with the front part of the straw roof and the chimney, no legs, no head; its back edge (left side) is a smooth rounded end; 3) a short thick NECK piece with fur, rounded at both ends; 4) the HEAD with tusks, glowing eyes and ears, with a rounded neck end at its lower left. ROW 2, from left to right: 5) the front-near leg; 6) the front-far leg; 7) the back-near leg; 8) the back-far leg. ROW 3 (bottom): 9) the curly spring tail. Every leg is perfectly STRAIGHT and VERTICAL: the rounded hip or shoulder end at the TOP, the hoof at the BOTTOM pointing to the RIGHT, no bend, not tilted, not diagonal. All four legs are identical: same shape, same length, same colors; do NOT make any leg darker or a different color (the game shades the far legs by itself). The tail lies HORIZONTAL with its rounded joint end on the RIGHT and the curly tip on the LEFT. Every leg, the neck and the tail end in a smooth rounded joint that is the same color as the part (not white), no visible joint knobs or balls.
+```
+
+Khoanh ở Xưởng Rối (khung **Bốn chân**), máy nhắc đúng thứ tự này:
+1. **Thân / hông** = mảnh 1 (nửa sau).
+2. **Ngực / vai** = mảnh 2 (nửa trước).
+3. **Cổ** = mảnh 3.
+4. **Đầu** = mảnh 4.
+5. Chân trước gần → Chân trước xa → Chân sau gần → Chân sau xa (hàng 2).
+6. **Đuôi**.
+
+Ở Bước 1 chọn loại **Quái**, ô "Thay cho" chọn **Heo Rừng Con (heoCon)**.
+
+## Nếu Gemini vẽ chưa đúng, nhắn thêm (cùng cuộc trò chuyện)
+- Thân còn dính bộ phận khác: `The torso still has other parts attached. Draw the torso again ONLY, with nothing attached, and draw the other parts separately far away from it.`
+- Thú không chịu tách thân làm hai: `Now draw ONLY the body of this boar cut into two separate pieces far apart: the back half (hips) and the front half (chest and shoulders), each with a smooth rounded end where they meet. No legs, no head, no tail, plain pure white background, no text.`
+- Tay chân cong hoặc xiên: `Redraw all arms and legs perfectly straight and vertical, rounded joint end at the top, hand or hoof at the bottom pointing to the right, no bending, no tilt.`
+- Hai bên khác màu: `The two arms (and the legs) must be identical copies with exactly the same colors. Redraw the back ones as exact copies of the front ones.`
+- Có chữ hoặc số trên ảnh: `Same image again with absolutely no text, no numbers, no labels.`
