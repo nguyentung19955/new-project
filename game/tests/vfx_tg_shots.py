@@ -108,6 +108,25 @@ def main():
         c.grab(900).save(os.path.join(OUT, 'hud-mat-mau-2.png'))
         c.ev("() => { const S = G.getRun(); S.P.hp = S.P.maxhp * 0.9; }")
         c.grab(150).save(os.path.join(OUT, 'hud-hoi-mau.png'))
+        # nhặt đồ: linh khí bay vào ô vũ khí, vàng hiện trên đầu rồi tan
+        c.ev("""() => { const S = T.start(1, 1, 'A', 3); const W = S.W, P = S.P; W.ents.length = 0; W.waves = []; G.sim(30);
+           const a = G.doRoi.tha(W, P.x + 30, P.y, { kind: 'linhkhi', el: 'ice', s: 'Linh khí', onPick: () => G.flashMarks() });
+           const b = G.doRoi.tha(W, P.x - 30, P.y, { kind: 'gold', s: '20 vàng' });
+           a.born = b.born = G.time - 2; a.x = P.x + 8; b.x = P.x - 8; a.y = b.y = P.y - 4; }""")
+        c.grab(150).save(os.path.join(OUT, 'nhat-do.png'))
+        c.grab(200).save(os.path.join(OUT, 'nhat-do-2.png'))
+        # màn hình dọc: khung game xoay 90 độ
+        pg2 = c.b.new_page(viewport={'width': 390, 'height': 844}, is_mobile=True, has_touch=True, device_scale_factor=2)
+        pg2.on('pageerror', lambda e: errs.append(str(e)))
+        pg2.goto(URL); pg2.wait_for_function('window.G && G.scene'); pg2.wait_for_timeout(500)
+        pg2.add_script_tag(path=os.path.join(ROOT, 'tests', 'setup.js'))
+        pg2.evaluate("() => { G.testSave({ lvl: 8 }); G.save.tut.done = true; G.setScene(G.Village); }")
+        pg2.wait_for_timeout(700)
+        pg2.screenshot(path=os.path.join(OUT, 'doc-lang.png'))
+        pg2.evaluate("() => { G.startStage(2, 1, 0, { kind: 'A', seed: 3 }); G.getRun().fade = 0; }")
+        pg2.wait_for_timeout(1500)
+        pg2.screenshot(path=os.path.join(OUT, 'doc-ai.png'))
+        pg2.close()
         # làng
         c.ev("() => { G.testSave({ lvl: 8 }); G.save.tut && (G.save.tut.done = true); G.setScene(G.Village); }")
         c.grab(800).save(os.path.join(OUT, 'lang.png'))

@@ -618,6 +618,22 @@
     ctx.restore();
   }
 
+  // Nảy khi bấm (VFX Phase 5): lúc vừa chạm thì nút lún xuống kèm vòng sáng toả ra và chớp nhẹ; lúc thả tay nút bật lên
+  // 2 điểm rồi về chỗ. Độ lệch là số nguyên điểm vẽ nên hình vẫn sắc nét. Theo G.VFX.giaoDien (0 = như cũ).
+  const PRS = {};
+  const wall = () => (window.performance && performance.now ? performance.now() : Date.now()) / 1000;
+  function press(id, on) {
+    let s = PRS[id];
+    if (!s) s = PRS[id] = { on, down: -9, up: -9 };
+    const now = wall();
+    if (on && !s.on) s.down = now;
+    if (!on && s.on) s.up = now;
+    s.on = on;
+    const gd = G.VFX ? +G.VFX.giaoDien : 1;
+    if (!(gd > 0)) return { dy: 0, ring: -1 };
+    const qu = (now - s.up) / 0.2, qd = (now - s.down) / 0.22;
+    return { dy: qu >= 0 && qu < 1 ? -Math.round((qu < 0.45 ? 2 : 1) * Math.min(1, gd)) : 0, ring: qd >= 0 && qd < 1 ? qd : -1 };
+  }
   // Nhớ trạng thái lần vẽ trước của từng nút để tự biết lúc nào nút vừa dùng lại được.
   const seen = {};
   function readyAge(id, usable, t, given) {
@@ -675,9 +691,14 @@
       make = () => common({ ring: WOOD, face: pal3('#4a4038', '#342c26', '#201a16'), studs: true, icon: iconBuf('pause', Math.max(6, S - 4), '') });
     }
     const base = memo('b|' + key.join('|') + '|' + (pressed ? 1 : 0) + (dimmed ? 1 : 0), () => buildBase(make()));
-    const oy = pressed ? base.lip : 0;
+    const pf = press(st.id || kind, pressed && !disabled);
+    const oy = (pressed ? base.lip : 0) + pf.dy;
     const alpha = st.alpha != null ? st.alpha : 1;
-    blit(ctx, g, base, x, y, 0, 0, alpha);
+    blit(ctx, g, base, x, y, 0, pf.dy, alpha);
+    if (pf.ring >= 0) { // vừa chạm: vòng sáng toả ra, mặt nút chớp nhẹ
+      blit(ctx, g, ringSprite(shape, R, 1 + Math.floor(pf.ring * 4)), x, y, 0, oy, alpha * 0.7 * (1 - pf.ring));
+      if (pf.ring < 0.5) blit(ctx, g, flashSprite(shape, R), x, y, 0, oy, alpha * 0.22 * (1 - pf.ring * 2));
+    }
     // vòng nạp (chỉ có nghĩa với nút Đánh, nhưng nút nào truyền charge cũng vẽ)
     if (st.charge > 0) {
       const N = 48, q = clamp(Math.round(st.charge * N), 1, N);

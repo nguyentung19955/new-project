@@ -119,6 +119,7 @@
     let x = o.x, y = o.y;
     if (N.q < 1 && o.sx != null) { x = o.sx + (o.x - o.sx) * N.q; y = o.sy + (o.y - o.sy) * N.q; }
     let a = 1, lift = N.lift;
+    if (o.got && o.bay) return; // đã bay lên lớp giao diện (D.veBay)
     if (o.got) { const q = Math.min(1, (t - o.got) / 0.35); a = 1 - q; lift += q * 10; }
     if (a <= 0) return;
     const r = bac(o), col = mauBac(o), ga = c.globalAlpha;
@@ -194,7 +195,7 @@
       if (o.type !== 'loot' || o.got || G.time < (o.born || 0) + 0.8) continue;
       const dx = P.x - o.x, dy = P.y - 4 - o.y, d = Math.hypot(dx, dy * 1.3);
       const R = (NHAN[o.kind] ? 44 : 24) + (P.pickR || 0);
-      if (d < 9) { o.got = G.time; nhat = true; if (o.onPick) { try { o.onPick(); } catch (e) { /* bỏ qua */ } o.onPick = null; } continue; }
+      if (d < 9) { o.got = G.time; nhat = true; bayLen(W, P, o); if (o.onPick) { try { o.onPick(); } catch (e) { /* bỏ qua */ } o.onPick = null; } continue; }
       if (d < R) {
         const v = (60 + 220 * (1 - d / R)) * dt;
         o.x += (dx / (d || 1)) * Math.min(v, d); o.y += (dy / (d || 1)) * Math.min(v, d);
@@ -205,6 +206,58 @@
     for (const o of W.props) if (o.type === 'loot' && o.got && G.time - o.got > 0.4) o.dead = true;
     if (W.props.some((p) => p.dead && p.type === 'loot')) W.props = W.props.filter((p) => !(p.dead && p.type === 'loot'));
   };
+
+  // ---------- hoạt ảnh nhặt đồ ở lớp giao diện (VFX Phase 5) ----------
+  // Linh khí bay vòng lên ô vũ khí đang cầm (ô đó tự chớp khi nhận dấu ấn); bình máu bay vào nút Bình máu;
+  // vàng, nguyên liệu, vũ khí, trang phục hiện lên trên đầu em bé, nảy một nhịp rồi tan. Chỗ nhặt có vòng sáng nhỏ.
+  // Hình bay vẽ trước các ô giao diện nên chui "vào" ô; không che thanh máu và nút. Theo G.VFX.giaoDien (0 = như cũ).
+  const BAY = [];
+  function bayLen(W, P, o) {
+    const gd = G.VFX ? +G.VFX.giaoDien : 1;
+    if (!(gd > 0) || G.noRender) return;
+    const cam = W.cam || 0, N = nay(o, G.time);
+    let to = null;
+    if (o.kind === 'linhkhi') to = 'slot';
+    else if (o.kind === 'potion') to = 'pot';
+    BAY.push({ cv: hinh(o), col: mauBac(o), x: o.x - cam, y: o.y - 9 - N.lift, px: P.x - cam, py: P.y - 30, to, cur: P.cur | 0, t0: G.time });
+    if (BAY.length > 12) BAY.shift();
+    o.bay = true;
+  }
+  D.veBay = function () {
+    if (!BAY.length) return;
+    const c = G.ux, ga = c.globalAlpha, now = G.time, sm = c.imageSmoothingEnabled;
+    c.imageSmoothingEnabled = false;
+    for (let i = BAY.length - 1; i >= 0; i--) {
+      const b = BAY[i], age = now - b.t0;
+      if (age < 0 || age > 0.9) { BAY.splice(i, 1); continue; }
+      // vòng sáng nhỏ tại chỗ nhặt
+      if (age < 0.25) {
+        const q = age / 0.25, rx = 3 + q * 8;
+        c.globalAlpha = ga * 0.7 * (1 - q); c.fillStyle = b.col;
+        for (let k = 0; k < 12; k++) { const an = (k / 12) * TAU; c.fillRect(Math.round(b.x + Math.cos(an) * rx), Math.round(b.y + 6 + Math.sin(an) * rx * 0.45), 1, 1); }
+      }
+      let x, y, a = 1;
+      if (b.to) { // bay vòng lên ô giao diện
+        const T = 0.5; if (age > T) { BAY.splice(i, 1); continue; }
+        const q = age / T, e = q < 0.5 ? 2 * q * q : 1 - Math.pow(-2 * q + 2, 2) / 2;
+        const tx = b.to === 'slot' ? 368 + b.cur * 56 + 13 : 17, ty = b.to === 'slot' ? 13 : 34;
+        const mx = (b.x + tx) / 2, my = Math.min(b.y, ty) - 30; // điểm uốn phía trên: đường bay cong
+        x = (1 - e) * (1 - e) * b.x + 2 * (1 - e) * e * mx + e * e * tx; y = (1 - e) * (1 - e) * b.y + 2 * (1 - e) * e * my + e * e * ty;
+        a = q > 0.85 ? (1 - q) / 0.15 : 1;
+        // vệt sáng mảnh theo sau
+        c.globalAlpha = ga * 0.45 * a; c.fillStyle = b.col; c.fillRect(Math.round(x) - 1, Math.round(y) - 1, 3, 3);
+      } else { // hiện trên đầu em bé, nảy một nhịp, rồi tan
+        const q = age / 0.9;
+        const lift = q < 0.3 ? 16 * Math.sin((q / 0.3) * Math.PI / 2) : 16 + (q < 0.45 ? -2 * Math.sin(((q - 0.3) / 0.15) * Math.PI) : 0);
+        x = b.px; y = b.py - lift + 8;
+        a = q < 0.1 ? q / 0.1 : q > 0.65 ? Math.max(0, (1 - q) / 0.35) : 1;
+      }
+      c.globalAlpha = ga * a;
+      c.drawImage(b.cv, Math.round(x - (b.cv.width >> 1)), Math.round(y - (b.cv.height >> 1)));
+    }
+    c.globalAlpha = ga; c.imageSmoothingEnabled = sm;
+  };
+  D.bayList = BAY; // cho bài kiểm tra đọc
 
   // Thả một món đồ rơi trên sàn tại (x, y) (chỗ quái gục), nảy ra một khoảng ngẫu nhiên. Chỉ để nhìn và nhặt: thưởng đã cộng.
   D.tha = function (W, x, y, it) {
