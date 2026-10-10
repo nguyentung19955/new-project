@@ -128,7 +128,7 @@
     <div class="ket-qua">
       <div style="min-width:0">
         <div class="hang" id="nutDongTac"></div>
-        <div class="khung-xem" style="display:grid;place-items:center;padding:10px"><canvas id="cvChay" width="320" height="200"></canvas></div>
+        <div class="khung-xem" style="display:grid;place-items:center;padding:10px"><canvas id="cvChay" width="320" height="200" style="max-width:100%;height:auto"></canvas></div>
         <div class="hang" style="margin-top:8px">
           <label class="hang" style="gap:6px"><input type="checkbox" id="diTrai"> Xem khi quái đi sang trái (game tự lật)</label>
         </div>
@@ -220,8 +220,14 @@ let Q = null, ANH = null, KQ = null, BO = [], LAST = null; // BO: các điểm (
 function bao(t) { const b = $('thongBao'); b.textContent = t; b.hidden = false; clearTimeout(bao.t); bao.t = setTimeout(() => b.hidden = true, 2600); }
 
 function taoPrompt(q) {
-  const hang = q.hang.map((h, i) => `hàng ${i + 1} ${TEN_DT[i].toLowerCase()} (${h}) ${SO[i]} khung`).join(', ');
-  return `Dùng công cụ tạo ảnh vẽ MỘT tấm sprite sheet pixel art 2D nhìn ngang quái "${q.ten}" cho game Linh Khí, phong cách giống Heo Rừng Con (heoCon) đã làm: khối rõ, viền tối, màu tươi vừa phải. Hình dáng: ${q.hinh}. Bố cục lưới ĐỀU 8 cột × 6 hàng, mỗi hàng một động tác, các khung xếp từ cột trái sang, ô thừa để trống: ${hang}. Mọi khung cùng một con, cùng màu, cùng cỡ nhưng tư thế khác nhau thật. QUAY MẶT SANG PHẢI trong mọi khung: đầu bên phải, đuôi bên trái, chạy/lấy đà/tấn công hướng về phải, trúng đòn bật về trái, không con nào quay trái. Nền trơn MỘT MÀU ${q.nenXanh ? 'XANH LÁ #00FF00' : 'HỒNG TÍM #FF00FF'} phủ kín (không ô cờ, không nền trắng, không chuyển màu), kẻ lưới mảnh màu tối giữa các ô, mỗi con nằm gọn giữa ô của nó, không chạm đường lưới, không bóng dưới chân, không chữ, không hiệu ứng rời khỏi thân. Chỉ cần gửi tấm ảnh, không cần code, không cần file json.`;
+  const hang = q.hang.map((h, i) => `hàng ${i + 1} ${TEN_DT[i].toLowerCase()} (${h}) ĐÚNG ${SO[i]} khung`).join(', ');
+  const nen = q.nenXanh ? 'XANH LÁ #00FF00' : 'HỒNG TÍM #FF00FF';
+  return `Dùng công cụ tạo ảnh vẽ MỘT tấm sprite sheet pixel art 2D nhìn ngang quái "${q.ten}" cho game Linh Khí, phong cách giống Heo Rừng Con (heoCon) đã làm: khối rõ, viền tối, màu tươi vừa phải. Hình dáng: ${q.hinh}. `
+    + `BỐ CỤC: lưới ĐỀU đúng 8 cột × 6 hàng (KHÔNG thêm cột thứ 9, không thêm hàng), các ô bằng nhau, kẻ lưới mảnh màu tối. Mỗi hàng một động tác, các khung xếp từ cột trái sang, ô thừa để trống: ${hang}. `
+    + `KÍCH THƯỚC TRONG Ô: vẽ con quái chỉ chiếm khoảng 70% bề rộng và 75% chiều cao của ô, đứng giữa ô, chân sát đáy ô; mọi phần (tay vươn, đuôi, sừng, vũ khí, khói, bào tử, tia lửa) phải nằm TRỌN trong ô của nó, cách đường lưới ít nhất 1/10 ô, tuyệt đối không lấn sang ô bên cạnh. Khi tấn công thì co người lại cho vừa ô, không phóng to. `
+    + `Mọi khung cùng một con, cùng cỡ, cùng màu nhưng tư thế khác nhau thật. QUAY MẶT SANG PHẢI trong mọi khung: đầu bên phải, đuôi bên trái, chạy/lấy đà/tấn công hướng về phải, trúng đòn bật về trái, không con nào quay trái. `
+    + `Mỗi khung PHẢI có con quái (không có ô chỉ vẽ đạn, khói hay vụ nổ). KHÔNG vẽ thêm bảng phụ, đạn bay riêng, vụ nổ riêng, chữ, số, chú thích. `
+    + `Nền trơn MỘT MÀU ${nen} phủ kín (không ô cờ, không nền trắng, không chuyển màu, không bóng dưới chân). Chỉ cần gửi tấm ảnh, không cần code, không cần file json.`;
 }
 
 function hienQuai() {
@@ -604,12 +610,24 @@ function tachTheoLuoiKe(W, H, duong, nhan, cum, P) {
     if (ds.length > SO[r]) { chon = []; for (let i = 0; i < SO[r]; i++) chon.push(ds[Math.round(i * (ds.length - 1) / (SO[r] - 1))]); ghi.push(`Hàng ${r + 1}: thấy ${ds.length} hình, lấy ${SO[r]} hình rải đều`); }
     if (ds.length < SO[r]) chon = duKhung(ds, r, loi, ghi);
     chon.forEach((cell, c) => {
-      const giu = new Set([...cell.dem].filter(([, n]) => n >= 0.15 * cell.lonNhat).map(([id]) => id));
+      // Cụm nằm phần lớn (≥ 75%) trong ô: lấy TRỌN, kể cả phần lấn sang ô bên (tay vươn, đuôi dài).
+      // Cụm nằm một phần (25–75%, hai con dính nhau): cắt theo ô. Cụm chủ yếu ở ô khác (< 25%): bỏ, ô kia sẽ lấy.
+      const tron = new Set(), cat = new Set();
+      for (const [id, n] of cell.dem) {
+        if (n < 0.15 * cell.lonNhat) continue;
+        const tl = n / cum[id].n;
+        if (tl >= 0.75) tron.add(id); else if (tl >= 0.25) cat.add(id);
+      }
+      if (!tron.size && !cat.size) for (const [id, n] of cell.dem) if (n >= 0.15 * cell.lonNhat) cat.add(id);
+      const lay = (x, y) => { const id = nhan[y * W + x]; return tron.has(id) || (cat.has(id) && x >= cell.x0 && x <= cell.x1 && y >= cell.y0 && y <= cell.y1); };
+      let bx0 = cell.x0, by0 = cell.y0, bx1 = cell.x1, by1 = cell.y1;
+      for (const id of tron) { const c2 = cum[id]; bx0 = Math.min(bx0, c2.x0); by0 = Math.min(by0, c2.y0); bx1 = Math.max(bx1, c2.x1); by1 = Math.max(by1, c2.y1); }
       let x0 = W, y0 = H, x1 = -1, y1 = -1;
-      for (let y = cell.y0; y <= cell.y1; y++) for (let x = cell.x0; x <= cell.x1; x++) if (giu.has(nhan[y * W + x])) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
-      tongKhung++; if (x0 <= cell.x0 || x1 >= cell.x1) catNgang++;
+      for (let y = by0; y <= by1; y++) for (let x = bx0; x <= bx1; x++) if (lay(x, y)) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+      if (x1 < 0) return;
+      tongKhung++; if ([...cat].length && (x0 <= cell.x0 || x1 >= cell.x1)) catNgang++;
       const w = x1 - x0 + 1, h = y1 - y0 + 1, px = new Uint8ClampedArray(w * h * 4);
-      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const j = (y + y0) * W + x + x0; if (giu.has(nhan[j])) px.set(P.subarray(j * 4, j * 4 + 4), (y * w + x) * 4); }
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { if (lay(x + x0, y + y0)) { const j = (y + y0) * W + x + x0; px.set(P.subarray(j * 4, j * 4 + 4), (y * w + x) * 4); } }
       hinh[r + ',' + c] = { w, h, px };
       khung.push({ r, c, f: { x0, y0, x1, y1 } });
     });
@@ -806,6 +824,8 @@ function khungChay(now) {
   if (KQ && canvasTam) {
     const cv = $('cvChay'), g = cv.getContext('2d'), { FW, FH } = KQ;
     const k = Math.max(2, Math.floor(Math.min(300 / FW, 180 / FH)));
+    const cw = Math.max(320, FW * k + 40), ch = Math.max(200, FH * k + 30);
+    if (cv.width !== cw || cv.height !== ch) { cv.width = cw; cv.height = ch; }
     g.imageSmoothingEnabled = false; g.clearRect(0, 0, cv.width, cv.height);
     const giay = dtChon < 4 ? Q.giay[dtChon] : (dtChon === 4 ? 0.3 : 1.2), lap = dtChon < 2, so = SO[dtChon];
     let t = (now - t0) / 1000 / giay; if (!lap && t >= 1.6) { t0 = now; t = 0; }
