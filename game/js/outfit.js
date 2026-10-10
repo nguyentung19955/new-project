@@ -407,7 +407,7 @@
     const T = I[it.k];
     if (!T || !G.tinhLinh || !G.tinhLinh.itemIcon) return;
     try {
-      const sp = G.tinhLinh.itemIcon(T.slot, T.look, it.r, it.lv || 1), w = sp.cv.width, h = sp.cv.height;
+      const sp = G.tinhLinh.itemIcon(T.slot, T.look, it.r, it.lv || 1), w = sp.w || sp.cv.width, h = sp.h || sp.cv.height; // w, h: điểm ảnh game (ảnh có net thì cv gấp đôi)
       let k = Math.min(size / w, size / h);
       if (k >= 1) k = Math.min(3, Math.floor(k));
       const sm = c.imageSmoothingEnabled;

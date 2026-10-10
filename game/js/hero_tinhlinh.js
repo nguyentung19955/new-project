@@ -22,10 +22,16 @@
   const D2R = Math.PI / 180;
   function rotv(x, y, deg) { const r = deg * D2R, c = Math.cos(r), s = Math.sin(r); return [x * c - y * s, x * s + y * c]; }
 
+  // Độ nét gấp N (net, mặc định 1): khung vẫn ghép theo điểm ảnh GAME như cũ (viền, đổ bóng, che lớp đều tính theo điểm ảnh game),
+  // nhưng điểm nào lấy từ ảnh AI có "net" thì giữ thêm N x N điểm con (hi) đúng độ phân giải gốc của ảnh. Lúc ra canvas: điểm vẽ
+  // bằng code thành khối N x N một màu (trông y hệt bản cũ), điểm ảnh AI ra đủ N x N điểm con. N = 1 thì y hệt trước đây.
   class Spr {
-    constructor(w, h, ox, oy) {
+    constructor(w, h, ox, oy, N) {
       this.w = w; this.h = h; this.ox = ox; this.oy = oy;
       const n = w * h;
+      this.N = N > 1 ? N | 0 : 1;
+      this.hi = this.N > 1 ? new Array(n).fill(null) : null; // điểm con của điểm đã ghép (null: cả điểm một màu)
+      this.hbuf = this.N > 1 ? new Array(n).fill(null) : null; // điểm con của lớp nháp
       this.main = new Array(n).fill(null);
       this.olf = new Uint8Array(n); // điểm này là viền
       this.nol = new Uint8Array(n); // điểm này không cần viền ngoài (hiệu ứng)
@@ -33,12 +39,14 @@
       this.buf = new Array(n).fill(null); // lớp nháp dùng lại cho mọi miếng, chỉ quét trong khung bao của miếng cho nhanh
       this.bx0 = 0; this.bx1 = -1; this.by0 = 0; this.by1 = -1;
     }
-    p(x, y, c) {
+    // sub: (tuỳ chọn) mảng N*N màu điểm con lấy từ ảnh AI có net (null là trong suốt, lấy màu bên dưới)
+    p(x, y, c, sub) {
       x = Math.round(x) + this.ox; y = Math.round(y) + this.oy;
       if (x < 1 || y < 1 || x >= this.w - 1 || y >= this.h - 1) return;
       const i = y * this.w + x;
       if (this.clip && !this.lay[i]) return;
       this.lay[i] = c === 0 ? null : norm(c);
+      if (this.hbuf) this.hbuf[i] = c === 0 ? null : sub || null;
       if (x < this.bx0) this.bx0 = x; if (x > this.bx1) this.bx1 = x; if (y < this.by0) this.by0 = y; if (y > this.by1) this.by1 = y;
     }
     r(x, y, w, h, c) { for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) this.p(x + i, y + j, c); }
@@ -91,19 +99,29 @@
           q.t = !L[i - W] ? 2 : !L[i + W] || !L[i - 1] ? 0 : 1;
         }
       }
+      const HI = this.hi;
       if (ol) {
         for (let y = y0; y <= y1; y++) for (let x = x0, i = y * W + x0; x <= x1; x++, i++) {
           if (!L[i]) continue;
-          if (!L[i - 1]) { this.main[i - 1] = ol; this.olf[i - 1] = 1; this.nol[i - 1] = 0; }
-          if (!L[i + 1]) { this.main[i + 1] = ol; this.olf[i + 1] = 1; this.nol[i + 1] = 0; }
-          if (!L[i - W]) { this.main[i - W] = ol; this.olf[i - W] = 1; this.nol[i - W] = 0; }
-          if (!L[i + W]) { this.main[i + W] = ol; this.olf[i + W] = 1; this.nol[i + W] = 0; }
+          if (!L[i - 1]) { this.main[i - 1] = ol; this.olf[i - 1] = 1; this.nol[i - 1] = 0; if (HI) HI[i - 1] = null; }
+          if (!L[i + 1]) { this.main[i + 1] = ol; this.olf[i + 1] = 1; this.nol[i + 1] = 0; if (HI) HI[i + 1] = null; }
+          if (!L[i - W]) { this.main[i - W] = ol; this.olf[i - W] = 1; this.nol[i - W] = 0; if (HI) HI[i - W] = null; }
+          if (!L[i + W]) { this.main[i + W] = ol; this.olf[i + W] = 1; this.nol[i + W] = 0; if (HI) HI[i + W] = null; }
         }
       }
       const fx = opt.fx ? 1 : 0;
       for (let y = y0; y <= y1; y++) for (let x = x0, i = y * W + x0; x <= x1; x++, i++) {
         const q = L[i]; if (!q) continue;
-        this.main[i] = q.c[q.t]; this.olf[i] = 0; this.nol[i] = fx; L[i] = null;
+        const col = q.c[q.t];
+        if (HI) {
+          const sub = this.hbuf[i];
+          if (sub) { // điểm con trong suốt: lấy màu đã có bên dưới (hoặc màu chính của điểm này)
+            const du = HI[i], cu = this.main[i], o = new Array(sub.length);
+            for (let k = 0; k < sub.length; k++) o[k] = sub[k] || (du ? du[k] : cu) || col;
+            HI[i] = o; this.hbuf[i] = null;
+          } else HI[i] = null;
+        }
+        this.main[i] = col; this.olf[i] = 0; this.nol[i] = fx; L[i] = null;
       }
       this.lay = null;
     }
@@ -115,22 +133,26 @@
         for (const d of [-1, 1, -W, W]) if (!M[i + d] || this.nol[i + d]) { edge = true; if (!this.olf[i]) add.push(i + d); }
         if (edge && this.olf[i]) M[i] = INK;
       }
-      for (const k of add) { M[k] = INK; this.olf[k] = 1; this.nol[k] = 0; }
+      for (const k of add) { M[k] = INK; this.olf[k] = 1; this.nol[k] = 0; if (this.hi) this.hi[k] = null; }
+      if (this.hi) for (let i = 0; i < n; i++) if (this.hi[i] && M[i] === INK && this.olf[i]) this.hi[i] = null;
       return this;
     }
     // tint: [màu, độ pha] để nhuộm khi trúng đòn, dính băng, dính độc
+    // Trả về { cv, ox, oy, bb, n, w, h }: ox, oy, w, h theo điểm ảnh GAME; cv có số điểm ảnh gấp n lần (vẽ bằng drawImage có cỡ đích w, h).
     toCanvas(tint) {
       let x0 = this.w, x1 = -1, y0 = this.h, y1 = -1;
       for (let y = 0; y < this.h; y++) for (let x = 0; x < this.w; x++) if (this.main[y * this.w + x]) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
       if (x1 < 0) { x0 = y0 = 0; x1 = y1 = 0; }
-      const cv = document.createElement('canvas'); cv.width = x1 - x0 + 1; cv.height = y1 - y0 + 1;
+      const N = this.N, cv = document.createElement('canvas'); cv.width = (x1 - x0 + 1) * N; cv.height = (y1 - y0 + 1) * N;
       const c = cv.getContext('2d');
+      const mau = (q) => (tint && q[0] === '#' ? mixHex(q, tint[0], q === INK ? tint[1] * 0.5 : tint[1]) : q);
       for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
-        let q = this.main[y * this.w + x]; if (!q) continue;
-        if (tint && q[0] === '#') q = mixHex(q, tint[0], q === INK ? tint[1] * 0.5 : tint[1]);
-        c.fillStyle = q; c.fillRect(x - x0, y - y0, 1, 1);
+        const i = y * this.w + x, q = this.main[i]; if (!q) continue;
+        const sub = this.hi && this.hi[i];
+        if (sub) { for (let k = 0; k < sub.length; k++) { c.fillStyle = mau(sub[k]); c.fillRect((x - x0) * N + (k % N), (y - y0) * N + ((k / N) | 0), 1, 1); } }
+        else { c.fillStyle = mau(q); c.fillRect((x - x0) * N, (y - y0) * N, N, N); }
       }
-      return { cv, ox: this.ox - x0, oy: this.oy - y0, bb: { x0: x0 - this.ox, x1: x1 - this.ox, y0: y0 - this.oy, y1: y1 - this.oy } };
+      return { cv, ox: this.ox - x0, oy: this.oy - y0, n: N, w: x1 - x0 + 1, h: y1 - y0 + 1, bb: { x0: x0 - this.ox, x1: x1 - this.ox, y0: y0 - this.oy, y1: y1 - this.oy } };
     }
     // Hệ toạ độ con: gốc (ox,oy), xoay deg độ. Đồ vẽ qua hệ này sẽ bám theo thân khi thân nghiêng, lộn.
     fr(ox, oy, deg) { return new Fr(this, ox, oy, deg || 0); }
@@ -1088,8 +1110,8 @@
   // ====================================================================
   const KCACHE = new Map();
   const TINT = { F: ['#ffffff', 0.6], I: ['#9fdcff', 0.45], P: ['#8fe04a', 0.35] };
-  function kidSprite(key, of, ps, tintK, only, neo) {
-    const S = new Spr(120, 112, 60, 74);
+  function kidSprite(key, of, ps, tintK, only, neo, N) {
+    const S = new Spr(120, 112, 60, 74, N);
     drawKid(S, key, of, ps, only, neo);
     S.finish();
     vanhBe(S);
@@ -1107,26 +1129,47 @@
     for (let i = 2 * W + 2; i < n - 2 * W - 2; i++) {
       const c = M[i];
       if (!c || c === INK || S.nol[i] || c[0] !== '#' || c.length !== 7) continue;
-      if (M[i + 1] === INK && !M[i + 2]) M[i] = rimOf(c, kr);
-      else if (M[i - W] === INK && !M[i - 2 * W]) M[i] = rimOf(c, kt);
+      const k = M[i + 1] === INK && !M[i + 2] ? kr : M[i - W] === INK && !M[i - 2 * W] ? kt : 0;
+      if (!k) continue;
+      M[i] = rimOf(c, k);
+      const sub = S.hi && S.hi[i]; // điểm ảnh AI nét cao: sáng thêm cùng một nấc cho mọi điểm con
+      if (sub) S.hi[i] = sub.map((q) => (q && q[0] === '#' && q.length === 7 && q !== INK ? rimOf(q, k) : q));
     }
+  }
+  // Độ nét ghép em bé (VIỆC nét gấp đôi): chỉ ghép nét cao khi đồ đang mặc có ảnh AI "net" >= 2 VÀ canvas đang vẽ được phóng
+  // >= 2 lần (canvas thế giới ở độ nét Cao, hoặc lớp chữ). Còn lại N = 1: y hệt bản cũ.
+  let lastN = 1;
+  function netDo(of) {
+    let m = 1;
+    const xem = (o) => { if (o && o.net > m) m = o.net; };
+    xem(L.hats[of.hat]); xem(L.robes[of.robe]); xem(L.backs[of.back]); xem(L.hands[of.hand]); xem(L.masks[of.mask]); if (of.wing) xem(L.wings[of.wing.kind]);
+    return m;
+  }
+  function netCua(c, o) {
+    let k = 1;
+    try { const T = c && c.getTransform ? c.getTransform() : null; if (T) k = Math.hypot(T.a, T.b); } catch (e) { k = 1; }
+    if (!(k >= 1.5)) return 1;
+    const key = HERO[o && o.key] ? o.key : 'smith', m = netDo(outfitOf(key, o));
+    return m > 1 ? Math.max(1, Math.min(m, Math.floor(k + 0.25), 4)) : 1;
   }
   const ofKey = (of) => [of.hat, of.robe, of.back, of.hand, of.mask, of.wing ? of.wing.kind + of.wing.level : '', of.rar ? [of.rar.hat, of.rar.robe, of.rar.back, of.rar.hand].join('') : ''].join(',');
   // Trả về mọi thứ cần để vẽ một khung: hình bé, chỗ đặt, và thông tin vũ khí.
-  function frame(o) {
+  // N: độ nét ghép (netCua); không ghi thì dùng N của lần vẽ gần nhất (tip, info gọi không có canvas).
+  function frame(o, N) {
+    N = N > 1 ? N : N === 1 ? 1 : lastN;
     const key = HERO[o.key] ? o.key : 'smith';
     const wt = o.weapon && REST[o.weapon.type] ? o.weapon.type : 'none';
     const sel = pick(o, wt), of = outfitOf(key, o);
     const p = o.p, st = p && p.st, flash = !!(o.flash || (p && p.hurtT > 0));
     const tintK = flash ? 'F' : st && st.ice > 0 ? 'I' : st && st.poison > 0 ? 'P' : '';
-    const id = key + '|' + ofKey(of) + '|' + wt + '|' + sel.join('|') + '|' + tintK;
+    const id = key + '|' + ofKey(of) + '|' + wt + '|' + sel.join('|') + '|' + tintK + '|' + N;
     let fr = KCACHE.get(id);
     if (fr) return fr;
     if (KCACHE.size >= 1400) KCACHE.clear();
     const ps = finishPose(pose(key, wt, sel[0], sel[1], sel[2], sel[3]));
-    const sp = kidSprite(key, of, ps, tintK);
+    const sp = kidSprite(key, of, ps, tintK, null, null, N);
     fr = {
-      cv: sp.cv, ox: ps.x - sp.ox, oy: ps.y - sp.oy, sh: HERO[key].shadow, dead: !!ps.dead, air: ps.air || 0,
+      cv: sp.cv, ox: ps.x - sp.ox, oy: ps.y - sp.oy, w: sp.w, h: sp.h, n: N, sh: HERO[key].shadow, dead: !!ps.dead, air: ps.air || 0,
       anim: sel[0], f: sel[1], v: sel[2], hands: ps.hands || null, tint: tintK, id, key, of, ps,
       // Thông tin cho vũ khí: điểm cầm (x,y) tính từ chân bé lúc quay phải, góc (độ, 0 là chĩa về trước, âm là chĩa lên),
       // độ kéo dây, trước hay sau bé, tâm trạng.
@@ -1149,7 +1192,7 @@
     // nhịp đung đưa của vải: theo bước chạy khi chạy, lay nhẹ khi đứng; các động tác khác đứng yên
     const an = fr.anim === 'run' ? 'run' : 'idle', f = an === 'run' || fr.anim === 'idle' ? fr.f | 0 : 0;
     const nd = cong2(neo && neo.dau, !quay && khop && khop.dau), nt = cong2(neo && neo.than, !quay && khop && khop.than);
-    const id = [fr.key, ofKey(fr.of), fr.tint, an + f, nd.join(','), nt.join(','), quay ? [khop.rot, khop.x, khop.y].join(',') : ''].join('|');
+    const N = fr.n || 1, id = [fr.key, ofKey(fr.of), fr.tint, an + f, nd.join(','), nt.join(','), quay ? [khop.rot, khop.x, khop.y].join(',') : '', N].join('|');
     let r = LCACHE.get(id);
     if (r) return r;
     if (LCACHE.size >= 1400) LCACHE.clear();
@@ -1157,7 +1200,7 @@
     ps.anim = an; ps.f = f; ps.hdy = 0;
     if (quay) { ps.rot = khop.rot; ps.x = khop.x; ps.y = khop.y; }
     const n2 = { dau: nd, than: nt };
-    const mk = (only) => { const sp = kidSprite(fr.key, fr.of, ps, fr.tint, only, n2); return { cv: sp.cv, ox: ps.x - sp.ox, oy: ps.y - sp.oy, trong: sp.bb.x1 < sp.bb.x0 || (sp.cv.width <= 1 && sp.cv.height <= 1) }; };
+    const mk = (only) => { const sp = kidSprite(fr.key, fr.of, ps, fr.tint, only, n2, N); return { cv: sp.cv, ox: ps.x - sp.ox, oy: ps.y - sp.oy, w: sp.w, h: sp.h, trong: sp.bb.x1 < sp.bb.x0 || (sp.cv.width <= 1 && sp.cv.height <= 1) }; };
     r = { sau: mk('aiSau'), truoc: mk('aiTruoc') };
     LCACHE.set(id, r);
     return r;
@@ -1196,7 +1239,7 @@
     const nt = o.neoTay, doiTay = nt && (nt[0] || nt[1]);
     const veVk = () => { if (doiTay) { c.save(); c.translate(nt[0], nt[1]); } try { drawWeapon(c, o, wp, t); } finally { if (doiTay) c.restore(); } };
     if (wp && !wp.front) veVk();
-    c.drawImage(fr.cv, fr.ox, fr.oy);
+    c.drawImage(fr.cv, fr.ox, fr.oy, fr.w, fr.h);
     if (wp && wp.front) {
       veVk();
       if (doiTay) { c.save(); c.translate(nt[0], nt[1]); }
@@ -1287,7 +1330,7 @@
   const HURT = new WeakMap();
   function hero(c, o) {
     let fr = null;
-    try { fr = frame(o); } catch (e) {
+    try { lastN = netCua(c, o); fr = frame(o, lastN); } catch (e) {
       if (!warned) { warned = true; if (window.console) console.warn('hero_tinhlinh: dùng lại hình cũ', e); }
     }
     const A = G.art;
@@ -1314,7 +1357,8 @@
     if (ox && ox.glow && !fr.dead) { // ánh viền màu bậc (Tím, Vàng) quanh em bé, sáng tối theo nhịp
       const sil = silOf(fr, ox.glow);
       c.globalAlpha = a0 * (0.45 + 0.3 * Math.sin(t * 4));
-      for (const q of [[-1, 0], [1, 0], [0, -1], [0, 1]]) c.drawImage(sil, fr.ox + q[0], fr.oy + q[1]);
+      // viền dày 1 điểm ảnh GAME (= N điểm ảnh thật) như bản thường: ánh viền bậc không mảnh đi trên màn nét cao
+      for (const q of [[-1, 0], [1, 0], [0, -1], [0, 1]]) c.drawImage(sil, fr.ox + q[0], fr.oy + q[1], fr.w, fr.h);
       c.globalAlpha = a0;
     }
     try { drawFrame(c, o, fr, t); } catch (e) { if (!warned) { warned = true; if (window.console) console.warn('hero_tinhlinh: lỗi vẽ', e); } }
@@ -1341,7 +1385,7 @@
     if (slot === 'wing') of.wing = { kind: look, level: lv || 1 }; else of[slot] = look;
     of.rar[slot] = rar | 0;
     const ps = finishPose(pose('smith', 'none', 'idle', 0, 0));
-    sp = kidSprite('smith', of, ps, '', LAYER[slot]);
+    sp = kidSprite('smith', of, ps, '', LAYER[slot], null, Math.min(2, netDo(of))); // ảnh AI có net: hình ô đồ nét gấp đôi (sp.n)
     ICACHE.set(id, sp);
     return sp;
   }
@@ -1368,7 +1412,7 @@
   // 8. XUẤT RA
   // ====================================================================
   G.tinhLinh = {
-    hero, frame, pose: (key, wt, anim, f, v) => finishPose(pose(key, wt, anim, f, v)), outfitOf, HERO, ATKN,
+    hero, frame, netCua, pose: (key, wt, anim, f, v) => finishPose(pose(key, wt, anim, f, v)), outfitOf, HERO, ATKN,
     // info(o): thông tin vũ khí của khung hiện tại { type, x, y, ang, pull, front, mood } hoặc null
     info: (o) => { const fr = frame(o); return fr.weapon ? Object.assign({ anim: fr.anim, f: fr.f }, fr.weapon) : null; },
     tip,

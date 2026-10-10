@@ -338,8 +338,8 @@
     A.hero = function (c, o) {
       const sp = SC.cuaEmBe(o && o.key);
       if (!sp || !G.tinhLinh) return hero0.call(A, c, o);
-      let fr = null;
-      try { fr = G.tinhLinh.frame(o); } catch (e) { fr = null; }
+      let fr = null; // cùng độ nét ghép với em bé gốc (hero0 tính y như vậy) để nhận ra đúng chỗ vẽ thân
+      try { fr = G.tinhLinh.frame(o, G.tinhLinh.netCua ? G.tinhLinh.netCua(c, o) : 1); } catch (e) { fr = null; }
       if (!fr) return hero0.call(A, c, o);
       const s = SC.chonEmBe(sp, o), tint = emBeTint(o);
       let lop = null; // đồ đang mặc khoác lên thân AI: lớp sau thân và lớp trước thân, bám theo chính thân AI khung này
@@ -351,16 +351,16 @@
       const gia = butGia(c, function (img, x, y) {
         const than = img === fr.cv || (arguments.length === 3 && x === fr.ox && y === fr.oy && img && img.width === fr.cv.width && img.height === fr.cv.height);
         if (than) {
-          if (lop && !lop.sau.trong) c.drawImage(lop.sau.cv, lop.sau.ox, lop.sau.oy);
+          if (lop && !lop.sau.trong) c.drawImage(lop.sau.cv, lop.sau.ox, lop.sau.oy, lop.sau.w, lop.sau.h);
           SC.veKhung(c, sp, s.ten, s.i, 1, { tint });
-          if (lop && !lop.truoc.trong) c.drawImage(lop.truoc.cv, lop.truoc.ox, lop.truoc.oy);
+          if (lop && !lop.truoc.trong) c.drawImage(lop.truoc.cv, lop.truoc.ox, lop.truoc.oy, lop.truoc.w, lop.truoc.h);
           return;
         }
         if (fr.sil) for (const col in fr.sil) if (fr.sil[col] === img) { // ánh viền màu bậc quanh em bé
           c.save(); c.translate(x - fr.ox, y - fr.oy); c.globalCompositeOperation = 'source-over';
           const a = sp.dt[s.ten] || sp.dt.idle, n = sp.net || 1;
           c.drawImage(nhuom(sp, col), s.i * sp.fw * n, a.hang * sp.fh * n, sp.fw * n, sp.fh * n, -sp.ax, -sp.ay, sp.fw, sp.fh);
-          if (lop) for (const l of [lop.sau, lop.truoc]) if (!l.trong) c.drawImage(bongMau(l, col), l.ox, l.oy);
+          if (lop) for (const l of [lop.sau, lop.truoc]) if (!l.trong) c.drawImage(bongMau(l, col), l.ox, l.oy, l.w, l.h);
           c.restore();
           return;
         }
@@ -554,23 +554,38 @@
 
   // ---------- TRANG PHỤC ----------
   // Đặt ảnh vào hệ toạ độ F của em bé (F.ox, F.oy, góc xoay): điểm ảnh (i, j) nằm ở (lx + i, ly + j) trong hệ F.
-  // Khung em bé là hình 1 điểm ảnh game: ảnh có net > 1 thì lấy điểm ảnh thật ở giữa mỗi ô net x net (thu về đúng cỡ game).
+  // Khung em bé ghép theo điểm ảnh game: điểm nào có ảnh vẫn do điểm ảnh thật ở giữa ô net x net quyết định (hình bóng như bản thường).
+  // Khung ghép nét cao (F.S.N >= 2) và ảnh có net >= 2: mỗi điểm còn mang N x N điểm con lấy đúng chỗ trên ảnh gốc (đủ chi tiết gốc).
   function diemGame(sp, i, j) {
     const N = sp.net || 1;
     if (N === 1) return sp.px[j * sp.rong + i];
     const pw = sp.pw, x = Math.min(pw - 1, Math.floor((i + 0.5) * N)), y = Math.min(sp.ph - 1, Math.floor((j + 0.5) * N));
     return sp.px[y * pw + x];
   }
+  // Điểm ảnh thật của ảnh gốc tại toạ độ (u, v) theo điểm ảnh game của ảnh (null: trong suốt / ngoài ảnh).
+  function diemThat(sp, u, v) {
+    const N = sp.net || 1, x = Math.floor(u * N), y = Math.floor(v * N);
+    return x < 0 || y < 0 || x >= sp.pw || y >= sp.ph ? null : sp.px[y * sp.pw + x];
+  }
   function veVaoKhung(F, sp, lx, ly, doi) {
-    const S = F.S, w = sp.rong, h = sp.cao;
-    if (F.z) { for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) { const col = diemGame(sp, i, j); if (col) S.p(F.ox + lx + i, F.oy + ly + j, doi ? doi(col) : col); } return; }
+    const S = F.S, w = sp.rong, h = sp.cao, M = S.N > 1 && (sp.net || 1) > 1 ? S.N : 1, MM = M * M;
+    const con = (f) => { const o = new Array(MM); for (let k = 0; k < MM; k++) { const q = f(((k % M) + 0.5) / M, (((k / M) | 0) + 0.5) / M); o[k] = q && doi ? doi(q) : q; } return o; };
+    if (F.z) {
+      for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) {
+        const col = diemGame(sp, i, j); if (!col) continue;
+        S.p(F.ox + lx + i, F.oy + ly + j, doi ? doi(col) : col, M > 1 ? con((a, b) => diemThat(sp, i + a, j + b)) : null);
+      }
+      return;
+    }
     const cs = F.cs, sn = F.sn;
     let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
     for (const p of [[lx, ly], [lx + w, ly], [lx, ly + h], [lx + w, ly + h]]) { const q = F.pt(p[0], p[1]); x0 = Math.min(x0, q[0]); y0 = Math.min(y0, q[1]); x1 = Math.max(x1, q[0]); y1 = Math.max(y1, q[1]); }
     for (let y = Math.floor(y0) - 1; y <= Math.ceil(y1) + 1; y++) for (let x = Math.floor(x0) - 1; x <= Math.ceil(x1) + 1; x++) {
       const dx = x - F.ox, dy = y - F.oy, u = dx * cs + dy * sn, v = -dx * sn + dy * cs, i = Math.round(u - lx), j = Math.round(v - ly);
       if (i < 0 || j < 0 || i >= w || j >= h) continue;
-      const col = diemGame(sp, i, j); if (col) S.p(x, y, doi ? doi(col) : col);
+      const col = diemGame(sp, i, j); if (!col) continue;
+      // điểm con (a, b) của điểm (x, y): xoay ngược về ảnh; điểm (x, y) phủ ảnh từ u - lx - 0,5 tới u - lx + 0,5
+      S.p(x, y, doi ? doi(col) : col, M > 1 ? con((a, b) => { const X = dx + a - 0.5, Y = dy + b - 0.5; return diemThat(sp, X * cs + Y * sn - lx + 0.5, -X * sn + Y * cs - ly + 0.5); }) : null);
     }
   }
   SC.veVaoKhung = veVaoKhung;
@@ -586,7 +601,7 @@
   const PHANG = { ol: false, bevel: false };
   function dinhNghia(sp) {
     const t = sp.tp, L = t.lech, ve = (F, P, dx, dy, doi) => P(PHANG, () => veVaoKhung(F, sp, L[0] + (dx || 0), L[1] + (dy || 0), doi));
-    const o = { id: t.look, name: sp.ten, tuVe: true };
+    const o = { id: t.look, name: sp.ten, tuVe: true, net: sp.net || 1 }; // net: game ghép em bé nét cao khi mặc món này
     if (t.o === 'hats') { o.draw = (cx, P) => { if (t.lop !== 'truoc') ve(cx.H, P); }; if (t.lop === 'truoc') o.front = (cx, P) => ve(cx.H, P); }
     else if (t.o === 'robes') { o.draw = (cx, P) => ve(cx.B, P); if (t.tayAo) o.sleeve = () => mauTayAo(sp); }
     else if (t.o === 'backs') o.draw = (cx, P) => ve(cx.B, P);
