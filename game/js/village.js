@@ -884,7 +884,7 @@
         lines.slice(0, 2).forEach((l, i) => ui.text(l, 240, TL.info + i * 9, { size: 7, align: 'center', color: V.tMsgT > 0 && V.tMsg ? GOLD : '#c9bfa8' }));
       }
       // thông tin phụ: nhỏ, góc dưới bên phải, không tranh chỗ với nút
-      ui.text('Bản thử' + (G.VERSION ? ' · ' + G.VERSION : ''), 474, 264, { size: 6.5, align: 'right', color: 'rgba(201,191,168,0.55)', shadow: false });
+      ui.text('Phiên bản ' + (G.VERSION || '?'), 474, 264, { size: 7, align: 'right', color: 'rgba(232,222,196,0.85)', shadow: true });
     },
   };
   // Chữ G bốn màu nhỏ đầu nút Đăng nhập Google (vẽ điểm ảnh, không tải hình ngoài)

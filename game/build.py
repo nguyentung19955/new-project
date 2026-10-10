@@ -55,6 +55,10 @@ def main():
     if not srcs:
         sys.exit('index.html không nạp tệp JS nào')
     parts = []
+    # Phiên bản = giờ đóng gói (giờ Việt Nam), hiện ở góc màn đăng nhập để biết bản mới đã lên web chưa.
+    import datetime
+    ver = 'lk-' + (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=7)).strftime('%Y.%m.%d-%H%M')
+    parts.append('// ===== phiên bản đóng gói =====\n(window.G = window.G || {}).VERSION = ' + json.dumps(ver) + ';\n')
     custom = custom_sprites()
     for src in srcs:
         if src.startswith(('http:', 'https:', '//')) or 'tests/' in src or 'bot' in os.path.basename(src):
