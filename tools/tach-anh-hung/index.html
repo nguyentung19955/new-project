@@ -159,7 +159,7 @@
             <label class="hang" style="gap:6px">Vũ khí <select id="vuKhi"><option value="">Không cầm</option><option value="sword">Kiếm</option><option value="bow">Cung</option><option value="spear">Giáo</option><option value="hammer">Búa</option></select></label>
             <label class="hang" style="gap:6px"><input type="checkbox" id="bongGoc"> Hiện bóng em bé gốc đè lên</label>
           </div>
-          <p class="chu-y">Nếu mũ, áo bị lệch khỏi đầu, thân: bấm mũi tên để dời (mỗi lần 1 điểm ảnh). <b>Tự khớp</b> là công cụ tự đoán lại.</p>
+          <p class="chu-y">Nếu mũ, áo bị lệch khỏi đầu, thân: bấm mũi tên để dời (mỗi lần 1 điểm ảnh). <b>Vũ khí</b> không nằm trong nắm tay của thân AI: dời ô "Tay cầm vũ khí" — nên tích "Chỉ chỉnh cho động tác đang xem" và chỉnh từng động tác (đứng, chạy, đánh…). <b>Tự khớp</b> là công cụ tự đoán lại đầu và thân.</p>
           <div class="neo">
             <div class="o" data-neo="dau"><b>Đầu (mũ, dấu mặt)</b>
               <span></span><button class="nut phu" data-d="0,-1" aria-label="Đầu lên">↑</button><span></span>
@@ -170,6 +170,11 @@
               <span></span><button class="nut phu" data-d="0,-1" aria-label="Thân lên">↑</button><span></span>
               <button class="nut phu" data-d="-1,0" aria-label="Thân sang trái">←</button><span class="gt">0, 0</span><button class="nut phu" data-d="1,0" aria-label="Thân sang phải">→</button>
               <span></span><button class="nut phu" data-d="0,1" aria-label="Thân xuống">↓</button><span></span>
+            </div>
+            <div class="o" data-neo="tay"><b>Tay cầm vũ khí</b>
+              <span></span><button class="nut phu" data-d="0,-1" aria-label="Vũ khí lên">↑</button><span></span>
+              <button class="nut phu" data-d="-1,0" aria-label="Vũ khí sang trái">←</button><span class="gt">0, 0</span><button class="nut phu" data-d="1,0" aria-label="Vũ khí sang phải">→</button>
+              <span></span><button class="nut phu" data-d="0,1" aria-label="Vũ khí xuống">↓</button><span></span>
             </div>
           </div>
           <div class="hang" style="margin-top:8px">
@@ -246,7 +251,7 @@ const VIEN0 = [0x14, 0x18, 0x2e];
 
 const $ = (id) => document.getElementById(id);
 let Q = null, L = null, NR = 7, SO = [], ANH = null, KQ = null, BO = [], LAST = null;
-let NEO = { goc: { dau: [0, 0], than: [0, 0] }, theo: {} }, NEO_TAY = false;
+let NEO = { goc: { dau: [0, 0], than: [0, 0], tay: [0, 0] }, theo: {} }, NEO_TAY = false;
 
 function bao(t) { const b = $('thongBao'); b.textContent = t; b.hidden = false; clearTimeout(bao.t); bao.t = setTimeout(() => b.hidden = true, 2800); }
 
@@ -255,7 +260,7 @@ function datNV(q) {
   Q.fw = Q.fw || L.fw; Q.fh = Q.fh || L.fh; Q.gx = Q.gx != null ? Q.gx : L.gx; Q.gy = Q.gy != null ? Q.gy : L.gy;
   Q.giay = Q.giay || L.giay.slice();
   $('locDom').checked = !Q.nenXanh;
-  NEO = { goc: { dau: [0, 0], than: [0, 0] }, theo: {} }; NEO_TAY = false;
+  NEO = { goc: { dau: [0, 0], than: [0, 0], tay: [0, 0] }, theo: {} }; NEO_TAY = false;
 }
 
 function taoPrompt(q) {
@@ -268,8 +273,8 @@ function taoPrompt(q) {
       'trúng đòn bật ngửa ra sau (nhăn mặt)', 'ngã ngửa ra sau rồi nằm bẹp trên đất (mắt dấu X ở cuối)', 'né: lộn tròn một vòng về phía trước, cuộn người như quả bóng']
       .map((h, i) => `hàng ${i + 1} ${h} ĐÚNG ${SO[i]} khung`).join(', ');
     return `Dùng công cụ tạo ảnh vẽ MỘT tấm sprite sheet pixel art 2D cho game Linh Khí: em bé "${q.ten}", anh hùng chibi người Việt dân gian (giống concept: em bé người, mặt người dễ thương, tóc đen, da người), vẽ THÂN TRƠN để game tự mặc mũ, áo và đồ lên người. `
-      + `THÂN TRƠN nghĩa là: KHÔNG mũ, không nón, không khăn trùm hay khăn quấn đầu, không áo choàng, không áo khoác ngoài, không đồ đeo sau lưng (ống tên, hồ lô, gùi, trống…), không đồ cầm tay, không bùa đeo, không mặt nạ, không vẽ dấu trên mặt, không cánh, KHÔNG cầm vũ khí, hai bàn tay để trống. `
-      + `Hình dáng: chibi đứng thẳng, đầu tròn to khoảng 2/5 chiều cao cả người, thân ngắn tròn, chân ngắn, cả người cao gấp khoảng 1,8 lần bề ngang; MẶT NGƯỜI tròn dễ thương với mắt to đen bóng có điểm sáng, lông mày, mũi nhỏ, miệng, má hồng nhẹ, ${q.net}; da người màu bánh mật sáng (#f2c9a0, chỗ tối #c98f66); KHÔNG đội gì trên đầu, lộ tóc; mặc ${q.mau} ôm sát người, đơn giản, không hoa văn; hai tay và hai chân rõ ràng, tay hơi tách khỏi thân để game đặt vũ khí và đồ vào. Giữ đúng tỉ lệ và dáng đứng này trong mọi khung để mũ áo của game khoác lên khớp. `
+      + `THÂN TRƠN nghĩa là: KHÔNG mũ, không nón, không khăn trùm hay khăn quấn đầu, không áo choàng, không áo khoác ngoài, không đồ đeo sau lưng (ống tên, hồ lô, gùi, trống…), không đồ cầm tay, không bùa đeo, không mặt nạ, không vẽ dấu trên mặt, không cánh, KHÔNG vẽ vũ khí. NHƯNG hai bàn tay luôn NẮM CHẶT thành nắm đấm tròn rõ ràng như đang cầm cán vũ khí (game sẽ tự đặt vũ khí vào nắm tay): khi đứng và chạy, tay SAU (tay phía bên trái hình) nắm lại giơ cao ngang vai như đang vác cán búa/kiếm sau lưng; khi đánh, nắm tay vung mạnh từ sau ra trước về phía phải; tay trước nắm hờ ngang hông. `
+      + `Hình dáng: chibi đứng thẳng, đầu tròn to khoảng 2/5 chiều cao cả người, thân ngắn tròn, chân ngắn, cả người cao gấp khoảng 1,8 lần bề ngang; MẶT NGƯỜI tròn dễ thương với mắt to đen bóng có điểm sáng, lông mày, mũi nhỏ, miệng, má hồng nhẹ, ${q.net}; da người màu bánh mật sáng (#f2c9a0, chỗ tối #c98f66); KHÔNG đội gì trên đầu, lộ tóc; mặc ${q.mau} ôm sát người, đơn giản, không hoa văn; hai tay và hai chân rõ ràng, tay tách khỏi thân, nắm tay to rõ (2–3 điểm ảnh trong game) để game đặt vũ khí vào đúng chỗ. Giữ đúng tỉ lệ và dáng đứng này trong mọi khung để mũ áo của game khoác lên khớp. `
       + `Nhìn chéo 3/4, QUAY MẶT SANG PHẢI trong MỌI khung: mặt và bụng hướng sang phải, chạy và đánh về phía phải, trúng đòn bật về trái, không khung nào quay trái. Ánh sáng từ trên bên phải. `
       + luoi + hang + '. ' + coO + 'Khi đánh hay lộn thì co người lại cho vừa ô, không phóng to. ' + cuoi;
   }
@@ -869,25 +874,28 @@ function tuKhop() {
   const h = gy - y0 + 1, tamVung = (a, b) => { let n = 0, sx = 0, sy = 0; for (let y = Math.round(a); y < Math.round(b); y++) for (let x = 0; x < FW; x++) if (tam[(y * TW + x) * 4 + 3]) { n++; sx += x; sy += y; } return n ? [sx / n - gx, sy / n - gy] : null; };
   const dau = tamVung(y0 + 1, y0 + 0.44 * h), than = tamVung(y0 + 0.5 * h, y0 + 0.8 * h);
   const kep = (v) => Math.max(-8, Math.min(8, Math.round(v)));
-  NEO = { goc: { dau: dau ? [kep(dau[0] - 0.5), kep(dau[1] + 18)] : [0, 0], than: than ? [kep(than[0]), kep(than[1] + 8)] : [0, 0] }, theo: {} };
+  const tayCu = (NEO && NEO.goc && NEO.goc.tay) ? NEO.goc.tay.slice() : [0, 0], theoCu = {};
+  if (NEO && NEO.theo) for (const k in NEO.theo) if (NEO.theo[k].tay) theoCu[k] = NEO.theo[k].tay;
+  NEO = { goc: { dau: dau ? [kep(dau[0] - 0.5), kep(dau[1] + 18)] : [0, 0], than: than ? [kep(than[0]), kep(than[1] + 8)] : [0, 0], tay: tayCu }, theo: {} };
+  for (const k in theoCu) NEO.theo[k] = { dau: NEO.goc.dau.slice(), than: NEO.goc.than.slice(), tay: theoCu[k].slice() };
 }
-function neoDangChinh() { const ten = L.dt[dtChon]; return $('neoRieng').checked ? (NEO.theo[ten] || (NEO.theo[ten] = { dau: NEO.goc.dau.slice(), than: NEO.goc.than.slice() })) : NEO.goc; }
+function neoDangChinh() { const ten = L.dt[dtChon]; return $('neoRieng').checked ? (NEO.theo[ten] || (NEO.theo[ten] = { dau: NEO.goc.dau.slice(), than: NEO.goc.than.slice(), tay: NEO.goc.tay.slice() })) : NEO.goc; }
 function hienNeo() {
   const ten = L.dt[dtChon], n = NEO.theo[ten] || NEO.goc;
-  for (const el of document.querySelectorAll('.neo .o')) { const v = n[el.dataset.neo]; el.querySelector('.gt').textContent = v[0] + ', ' + v[1]; }
+  for (const el of document.querySelectorAll('.neo .o')) { const v = n[el.dataset.neo] || [0, 0]; el.querySelector('.gt').textContent = v[0] + ', ' + v[1]; }
 }
 document.querySelectorAll('.neo .o').forEach(el => el.addEventListener('click', (e) => {
   const b = e.target.closest('button'); if (!b) return;
-  const [dx, dy] = b.dataset.d.split(',').map(Number), n = neoDangChinh(), v = n[el.dataset.neo];
+  const [dx, dy] = b.dataset.d.split(',').map(Number), n = neoDangChinh(), v = n[el.dataset.neo] || (n[el.dataset.neo] = [0, 0]);
   v[0] = Math.max(-20, Math.min(20, v[0] + dx)); v[1] = Math.max(-20, Math.min(20, v[1] + dy));
   NEO_TAY = true; hienNeo(); capNeo();
 }));
 $('nutTuKhop').onclick = () => { if (!KQ) return; tuKhop(); NEO_TAY = false; hienNeo(); capNeo(); bao('Đã tự khớp lại điểm neo'); };
-$('nutNeo0').onclick = () => { NEO = { goc: { dau: [0, 0], than: [0, 0] }, theo: {} }; NEO_TAY = true; hienNeo(); capNeo(); };
+$('nutNeo0').onclick = () => { NEO = { goc: { dau: [0, 0], than: [0, 0], tay: [0, 0] }, theo: {} }; NEO_TAY = true; hienNeo(); capNeo(); };
 $('neoRieng').onchange = () => { if (!$('neoRieng').checked) delete NEO.theo[L.dt[dtChon]]; hienNeo(); capNeo(); };
 function neoJson() {
-  const o = { dau: NEO.goc.dau.slice(), than: NEO.goc.than.slice() };
-  for (const k in NEO.theo) o[k] = { dau: NEO.theo[k].dau.slice(), than: NEO.theo[k].than.slice() };
+  const o = { dau: NEO.goc.dau.slice(), than: NEO.goc.than.slice(), tay: NEO.goc.tay.slice() };
+  for (const k in NEO.theo) o[k] = { dau: NEO.theo[k].dau.slice(), than: NEO.theo[k].than.slice(), tay: (NEO.theo[k].tay || NEO.goc.tay).slice() };
   return o;
 }
 

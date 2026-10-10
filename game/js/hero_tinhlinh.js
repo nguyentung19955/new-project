@@ -1163,16 +1163,21 @@
   // Vẽ một bé (kèm vũ khí) tại chỗ c đang đứng: gốc là chân bé, đã lật theo hướng mặt.
   function drawFrame(c, o, fr, t) {
     const wp = fr.weapon;
-    if (wp && !wp.front) drawWeapon(c, o, wp, t);
+    // o.neoTay: [dx, dy] dời vũ khí và nắm tay tới đúng bàn tay của thân AI (sprite_custom.js, mục "neo.tay"). Không có thì như cũ.
+    const nt = o.neoTay, doiTay = nt && (nt[0] || nt[1]);
+    const veVk = () => { if (doiTay) { c.save(); c.translate(nt[0], nt[1]); } try { drawWeapon(c, o, wp, t); } finally { if (doiTay) c.restore(); } };
+    if (wp && !wp.front) veVk();
     c.drawImage(fr.cv, fr.ox, fr.oy);
     if (wp && wp.front) {
-      drawWeapon(c, o, wp, t);
+      veVk();
+      if (doiTay) { c.save(); c.translate(nt[0], nt[1]); }
       if (fr.hands) for (const h of fr.hands) { // bàn tay bé nắm đè lên chuôi
         const x = Math.round(h[0]), y = Math.round(h[1]), g = L.hands[outfitOf(HERO[o.key] ? o.key : 'smith', o).hand], gl = g && g.glove;
         c.fillStyle = INK; c.fillRect(x - 2, y - 1, 4, 2); c.fillRect(x - 1, y - 2, 2, 4);
         c.fillStyle = gl ? gl[1] : MASK[1]; c.fillRect(x - 1, y - 1, 2, 2);
         if (gl) { c.fillStyle = gl[2]; c.fillRect(x, y - 1, 1, 1); }
       }
+      if (doiTay) c.restore();
     }
   }
 

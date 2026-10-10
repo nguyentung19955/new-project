@@ -53,7 +53,7 @@
 </div><canvas id="ui"></canvas></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.10-2140";
+(window.G = window.G || {}).VERSION = "lk-2026.10.10-2156";
 
 // ===== js/data.js =====
 // Dữ liệu game: hệ, vũ khí, hero, quái, vùng, trang bị. Mọi con số cân bằng nằm ở đây.
@@ -8945,16 +8945,21 @@
   // Vẽ một bé (kèm vũ khí) tại chỗ c đang đứng: gốc là chân bé, đã lật theo hướng mặt.
   function drawFrame(c, o, fr, t) {
     const wp = fr.weapon;
-    if (wp && !wp.front) drawWeapon(c, o, wp, t);
+    // o.neoTay: [dx, dy] dời vũ khí và nắm tay tới đúng bàn tay của thân AI (sprite_custom.js, mục "neo.tay"). Không có thì như cũ.
+    const nt = o.neoTay, doiTay = nt && (nt[0] || nt[1]);
+    const veVk = () => { if (doiTay) { c.save(); c.translate(nt[0], nt[1]); } try { drawWeapon(c, o, wp, t); } finally { if (doiTay) c.restore(); } };
+    if (wp && !wp.front) veVk();
     c.drawImage(fr.cv, fr.ox, fr.oy);
     if (wp && wp.front) {
-      drawWeapon(c, o, wp, t);
+      veVk();
+      if (doiTay) { c.save(); c.translate(nt[0], nt[1]); }
       if (fr.hands) for (const h of fr.hands) { // bàn tay bé nắm đè lên chuôi
         const x = Math.round(h[0]), y = Math.round(h[1]), g = L.hands[outfitOf(HERO[o.key] ? o.key : 'smith', o).hand], gl = g && g.glove;
         c.fillStyle = INK; c.fillRect(x - 2, y - 1, 4, 2); c.fillRect(x - 1, y - 2, 2, 4);
         c.fillStyle = gl ? gl[1] : MASK[1]; c.fillRect(x - 1, y - 1, 2, 2);
         if (gl) { c.fillStyle = gl[2]; c.fillRect(x, y - 1, 1, 1); }
       }
+      if (doiTay) c.restore();
     }
   }
 
@@ -19016,7 +19021,8 @@ MA._xong();
       sp.dungYen = Array.isArray(tep.dung_yen) ? tep.dung_yen.filter((x) => typeof x === 'string' && /^[A-Za-z0-9_]{1,20}$/.test(x)).slice(0, 20) : null;
       sp.nhun = tep.nhun == null || !isFinite(+tep.nhun) ? null : clamp(+tep.nhun, 0, 200);
       // Em bé thân AI: đồ đang mặc (mũ, áo, đồ lưng, bùa, dấu mặt nạ, cánh) vẫn khoác lên thân AI, trừ khi tệp ghi "khoac_do": false.
-      // "neo": { "dau": [dx, dy], "than": [dx, dy], "<động tác>": { "dau": [..], "than": [..] } } dời chỗ đặt đồ (điểm ảnh) cho khớp hình AI.
+      // "neo": { "dau": [dx, dy], "than": [dx, dy], "tay": [dx, dy], "<động tác>": { "dau": [..], "than": [..], "tay": [..] } } dời chỗ đặt đồ
+      // (đầu, thân) và vũ khí + nắm tay (tay) theo điểm ảnh cho khớp hình AI.
       if (sp.doi === 'em-be') { sp.khoacDo = tep.khoac_do !== false; sp.neo = docNeo(tep.neo); }
       if (typeof Image !== 'undefined') {
         const img = new Image();
@@ -19173,10 +19179,10 @@ MA._xong();
   // ---------- EM BÉ ----------
   const so2 = (a) => (Array.isArray(a) && a.length === 2 && isFinite(a[0]) && isFinite(a[1]) ? [clamp(Math.round(+a[0]), -30, 30), clamp(Math.round(+a[1]), -30, 30)] : null);
   function docNeo(n) {
-    const goc = { dau: (n && so2(n.dau)) || [0, 0], than: (n && so2(n.than)) || [0, 0] }, kq = { goc, theo: {} };
+    const goc = { dau: (n && so2(n.dau)) || [0, 0], than: (n && so2(n.than)) || [0, 0], tay: (n && so2(n.tay)) || [0, 0] }, kq = { goc, theo: {} };
     if (n && typeof n === 'object') for (const k of ANIMS) {
       const m = n[k]; if (!m || typeof m !== 'object') continue;
-      kq.theo[k] = { dau: so2(m.dau) || goc.dau, than: so2(m.than) || goc.than };
+      kq.theo[k] = { dau: so2(m.dau) || goc.dau, than: so2(m.than) || goc.than, tay: so2(m.tay) || goc.tay };
     }
     return kq;
   }
@@ -19232,7 +19238,10 @@ MA._xong();
       if (!fr) return hero0.call(A, c, o);
       const s = SC.chonEmBe(sp, o), tint = emBeTint(o);
       let lop = null; // đồ đang mặc khoác lên thân AI: lớp sau thân và lớp trước thân, vẽ theo khung xương của em bé gốc
-      if (sp.khoacDo && G.tinhLinh.lopDo) { try { lop = G.tinhLinh.lopDo(fr, SC.neoCua(sp, s.ten)); } catch (e) { lop = null; } }
+      const neo = SC.neoCua(sp, s.ten);
+      if (sp.khoacDo && G.tinhLinh.lopDo) { try { lop = G.tinhLinh.lopDo(fr, neo); } catch (e) { lop = null; } }
+      // Vũ khí và nắm tay dời theo "neo.tay" cho khớp bàn tay của thân AI.
+      if (neo && neo.tay && (neo.tay[0] || neo.tay[1])) o = Object.assign({}, o, { neoTay: neo.tay });
       // Em bé gốc vẫn vẽ bóng, vũ khí, hào quang trang phục; chỗ vẽ thân thì vẽ hình tự vẽ.
       const gia = butGia(c, function (img, x, y) {
         const than = img === fr.cv || (arguments.length === 3 && x === fr.ox && y === fr.oy && img && img.width === fr.cv.width && img.height === fr.cv.height);
