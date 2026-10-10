@@ -28,6 +28,7 @@
       if (!tep || typeof tep !== 'object' || typeof tep.ma !== 'string' || !/^[A-Za-z0-9_-]{1,40}$/.test(tep.ma)) throw new Error('thiếu mã');
       if (DO_LOAI[tep.doi_tuong]) return themDo(tep); // vũ khí, trang phục, vật phẩm
       if (tep.doi_tuong === 'ghep') return themGhep(tep); // hồ sơ ghép trang bị của một nhân vật (ghep-<key>), không có ảnh
+      if (tep.doi_tuong === 'giao-dien') return themGd(tep); // ảnh giao diện (gd-<tên>): biểu tượng, ô phòng, khung bản đồ
       if (typeof tep.tam !== 'string' || tep.tam.indexOf('data:image/png;base64,') !== 0) throw new Error('thiếu tấm sprite');
       const fw = tep.khung_rong | 0, fh = tep.khung_cao | 0, goc = tep.goc || [0, 0];
       if (fw < 1 || fh < 1 || fw > 1024 || fh > 1024) throw new Error('cỡ khung sai');
@@ -72,8 +73,8 @@
       return null;
     }
   };
-  SC.remove = function (ma) { if (SC.do[ma]) boDo(ma); delete SC.ds[ma]; for (const k in SC.ghep) if (SC.ghep[k].ma === ma) boGhep(k); };
-  SC.clear = function () { for (const k of Object.keys(SC.ds)) delete SC.ds[k]; for (const k of Object.keys(SC.do)) boDo(k); for (const k of Object.keys(SC.ghep)) boGhep(k); };
+  SC.remove = function (ma) { if (SC.do[ma]) boDo(ma); delete SC.ds[ma]; if (SC.gd) delete SC.gd[ma]; for (const k in SC.ghep) if (SC.ghep[k].ma === ma) boGhep(k); };
+  SC.clear = function () { for (const k of Object.keys(SC.ds)) delete SC.ds[k]; for (const k of Object.keys(SC.do)) boDo(k); for (const k of Object.keys(SC.ghep)) boGhep(k); if (SC.gd) for (const k of Object.keys(SC.gd)) delete SC.gd[k]; };
   SC.get = function (ma) { const s = SC.ds[ma]; return s && s.ready ? s : null; };
   SC.has = (ma) => !!SC.ds[ma];
   SC.dungYen = (ma, bo) => { const s = SC.ds[ma]; return !!(s && s.dungYen && s.dungYen.indexOf(bo) >= 0); };
@@ -1208,6 +1209,62 @@
       h = h || 7; SC.veVatPham(G.ux, sp, x + h / 2, y + h / 2, h);
     };
   }
+
+  // ---------- GIAO DIỆN (ảnh AI cho bản đồ, nút…; tools/tach-giao-dien) ----------
+  // Tệp: { "doi_tuong": "giao-dien", "ma": "gd-<tên>", "anh": "data:image/png;base64,…", "net": 2, "vien": [trên, phải, dưới, trái] }
+  //   anh: MỘT ảnh tĩnh, số điểm ảnh gấp net lần cỡ game.   vien (tuỳ chọn, điểm ảnh GAME): cắt 9 mảnh, bốn góc giữ nguyên cỡ,
+  //   cạnh và ruột kéo giãn (khung bản đồ to).
+  // Mã đang dùng (js/minimap.js): gd-phong-<loại phòng> (12 biểu tượng), gd-o-phong, gd-o-phong-cur, gd-loi-noi, gd-khung-ban-do.
+  // Không có tệp gd-* nào thì game vẽ bằng code y như cũ.
+  SC.gd = {};
+  function themGd(tep) {
+    if (!/^gd-[a-z0-9_-]+$/.test(tep.ma)) throw new Error('mã giao diện phải là gd-<tên>');
+    const g = { ma: tep.ma, ten: String(tep.ten || tep.ma), doi: 'giao-dien', net: docNet(tep.net), rong: 0, cao: 0, pw: 0, ph: 0, img: null, ready: false, vien: null, ghep9: new Map() };
+    if (Array.isArray(tep.vien) && tep.vien.length === 4 && tep.vien.every((v) => isFinite(+v) && +v >= 0)) {
+      g.vien = tep.vien.map((v) => Math.min(400, Math.round(+v)));
+      if (!g.vien.some((v) => v > 0)) g.vien = null;
+    }
+    const xong = (src) => {
+      g.img = src; g.pw = src.width; g.ph = src.height; g.rong = Math.max(1, Math.round(src.width / g.net)); g.cao = Math.max(1, Math.round(src.height / g.net));
+      g.ghep9.clear(); g.ready = true;
+    };
+    SC.gd[g.ma] = g;
+    if (tep.anhCanvas && tep.anhCanvas.getContext) xong(tep.anhCanvas); // công cụ đưa thẳng canvas (vẽ ngay, không chờ)
+    else {
+      if (typeof tep.anh !== 'string' || tep.anh.indexOf('data:image/png;base64,') !== 0) { delete SC.gd[g.ma]; throw new Error('thiếu ảnh'); }
+      if (typeof Image !== 'undefined') { const img = new Image(); img.onload = () => xong(img); img.onerror = () => { SC.loi.push(g.ma + ': ảnh hỏng'); if (SC.gd[g.ma] === g) delete SC.gd[g.ma]; }; img.src = tep.anh; }
+    }
+    return g;
+  }
+  SC.gdSan = (ma) => { const g = SC.gd[ma]; return g && g.ready ? g : null; };
+  // Ảnh 9 mảnh dựng sẵn cho cỡ đích (w x h điểm ảnh game): một canvas w*net x h*net, nhớ lại để lần sau vẽ một phát.
+  function gdGhep9(g, w, h) {
+    const N = g.net, W = Math.max(1, Math.round(w * N)), H = Math.max(1, Math.round(h * N)), key = W + 'x' + H;
+    let cv = g.ghep9.get(key); if (cv) return cv;
+    if (g.ghep9.size > 6) g.ghep9.clear();
+    cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    const c = cv.getContext('2d'); c.imageSmoothingEnabled = false;
+    // viền theo điểm ảnh THẬT; chật quá thì thu viền cho vừa
+    let t = g.vien[0] * N, r = g.vien[1] * N, b = g.vien[2] * N, l = g.vien[3] * N;
+    const giu = (a, b2, max, src) => { const m = Math.min(max, src - 1); if (a + b2 > m) { const k = m / (a + b2); return [Math.floor(a * k), Math.floor(b2 * k)]; } return [a, b2]; };
+    [l, r] = giu(l, r, W, g.pw); [t, b] = giu(t, b, H, g.ph);
+    const sx = [0, l, g.pw - r], sw = [l, g.pw - l - r, r], dx = [0, l, W - r], dw = [l, W - l - r, r];
+    const sy = [0, t, g.ph - b], sh = [t, g.ph - t - b, b], dy = [0, t, H - b], dh = [t, H - t - b, b];
+    for (let j = 0; j < 3; j++) for (let i = 0; i < 3; i++) if (sw[i] > 0 && sh[j] > 0 && dw[i] > 0 && dh[j] > 0) c.drawImage(g.img, sx[i], sy[j], sw[i], sh[j], dx[i], dy[j], dw[i], dh[j]);
+    g.ghep9.set(key, cv);
+    return cv;
+  }
+  // Vẽ ảnh giao diện vào ô (x, y, w, h) theo toạ độ đang dùng của bút c. Có "vien" thì cắt 9 mảnh, không thì kéo giãn cả ảnh.
+  // Phóng to thì giữ điểm ảnh sắc cạnh; thu nhỏ hơn ảnh gốc thì làm mịn để không rụng nét.
+  SC.veGd = function (c, g, x, y, w, h) {
+    if (!g || !g.ready || w <= 0 || h <= 0) return false;
+    const src = g.vien && (Math.abs(w - g.rong) > 0.01 || Math.abs(h - g.cao) > 0.01) ? gdGhep9(g, w, h) : g.img;
+    const us = c === G.ux ? G.uiScale || 1 : c === G.wx ? G.NET || 1 : 1, sm = c.imageSmoothingEnabled;
+    c.imageSmoothingEnabled = w * us < src.width - 0.5 || h * us < src.height - 0.5;
+    c.drawImage(src, x, y, w, h);
+    c.imageSmoothingEnabled = sm;
+    return true;
+  };
 
   // Hàm vẽ bằng code (bỏ qua hình tự vẽ), cho công cụ so sánh.
   if (G.monsterArt && !G.monsterArt.drawCode) G.monsterArt.drawCode = G.monsterArt.draw;

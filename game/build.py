@@ -92,13 +92,14 @@ def main():
 CUSTOM = os.path.join(ROOT, 'art', 'custom')
 TOOL = os.path.join(os.path.dirname(ROOT), 'tools', 'xuong-sprite')
 # Mã game mà công cụ cần để vẽ hình gốc (quái, em bé, nền phòng) và vẽ hình tự làm giống hệt trong game.
-TOOL_GAME_JS = ['js/data.js', 'js/art.js', 'js/weapon_art.js', 'js/hero_art.js', 'js/hero_tinhlinh.js', 'js/monster_art.js', 'js/room_art.js', 'js/outfit.js', 'js/village_scene.js', 'js/sprite_custom.js']
+TOOL_GAME_JS = ['js/data.js', 'js/art.js', 'js/weapon_art.js', 'js/hero_art.js', 'js/hero_tinhlinh.js', 'js/monster_art.js', 'js/room_art.js', 'js/outfit.js', 'js/village_scene.js', 'js/sprite_custom.js', 'js/mapgen.js', 'js/minimap.js']  # mapgen + minimap: trang Tách Giao Diện vẽ thử bản đồ bằng đúng code game
 TOOL_JS = ['xu-ly-anh.js', 'khung.js', 'tu-doan.js', 'do.js', 'giao-dien.js']
 RUNTIME_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'vung', 'thay_cho', 'tam', 'khung_rong', 'khung_cao', 'goc', 'rong', 'cao', 'bong', 'dong_tac',
                 'anh', 'vu_khi', 'trang_phuc', 'vat_pham', 'dung_yen', 'nhun', 'neo', 'khoac_do',
                 'net', 'nhan_vat', 'diem', 'diem_theo', 'cap')  # net: ảnh gấp net lần (thiếu là game đọc thành 1 → hình to gấp đôi, khung bị cắt)
 HU_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'tam', 'khung_rong', 'khung_cao', 'goc', 'so', 'giay', 'lap', 'xoay', 'co', 'tron', 'net')  # hiệu ứng ảnh AI (js/fx_anh.js)
 GHEP_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'nhan_vat', 'diem', 'diem_theo', 'cap')  # tệp ghep-<key> (js/sprite_custom.js)
+GD_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'anh', 'net', 'vien')  # ảnh giao diện gd-<tên> (bản đồ, nút; js/sprite_custom.js → SC.gd, js/minimap.js)
 DO_LOAI = ('vu-khi', 'trang-phuc', 'vat-pham')  # đồ: một ảnh đứng yên, game tự xoay và đặt theo người
 SHIM = '''window.G = window.G || {};
 (function (G) {
@@ -135,6 +136,15 @@ def custom_sprites():
             if not re.match(r'^ghep-(smith|hunter|healer|wrestler)$', ma):
                 sys.exit('art/custom/%s: tệp ghép phải có mã ghep-smith, ghep-hunter, ghep-healer hoặc ghep-wrestler' % name)
             out.append({k: t[k] for k in GHEP_KEYS if k in t})
+            continue
+        if t.get('doi_tuong') == 'giao-dien':
+            # ảnh giao diện (tools/tach-giao-dien): một ảnh tĩnh, mã gd-<tên>; "vien" (tuỳ chọn) là 4 số cắt 9 mảnh
+            if not re.match(r'^gd-[a-z0-9_-]+$', ma) or not re.match(r'^data:image/png;base64,[A-Za-z0-9+/=]+$', str(t.get('anh', ''))):
+                sys.exit('art/custom/%s: ảnh giao diện phải có mã gd-<tên> (chữ thường, số, gạch) và một ảnh PNG' % name)
+            v = t.get('vien')
+            if v is not None and not (isinstance(v, list) and len(v) == 4 and all(isinstance(x, (int, float)) and not isinstance(x, bool) and 0 <= x <= 400 for x in v)):
+                sys.exit('art/custom/%s: "vien" phải là 4 số [trên, phải, dưới, trái]' % name)
+            out.append({k: t[k] for k in GD_KEYS if k in t})
             continue
         if t.get('doi_tuong') in DO_LOAI:
             if not re.match(r'^data:image/png;base64,[A-Za-z0-9+/=]+$', str(t.get('anh', ''))):

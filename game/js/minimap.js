@@ -35,7 +35,23 @@
     merchant: 'Thương nhân', challenge: 'Thử thách', curse: 'Lời nguyền', boss: 'Trùm', portal: 'Cổng dịch chuyển',
   };
   MM.NAME = NAME; MM.ICON = ICON;
+  // ẢNH GIAO DIỆN (tools/tach-giao-dien, tệp gd-*.sprite.json trong game/art/custom): có tệp nào thì vẽ ảnh thay phần code đó.
+  //   gd-phong-<loại>  12 biểu tượng phòng (start, fight, elite, chest, fountain, merchant, challenge, curse, boss, lock, key, portal)
+  //   gd-o-phong       nền một ô phòng        gd-o-phong-cur  ô đang đứng        gd-loi-noi  đoạn nối (vẽ nằm ngang, game tự xoay dọc)
+  //   gd-khung-ban-do  khung/nền bản đồ to (cắt 9 mảnh theo "vien")
+  // Không có tệp nào thì mọi thứ y hệt cũ.
+  function gd(ma) { const s = G.spriteCustom; return s && s.gdSan ? s.gdSan(ma) : null; }
+  MM.gd = gd;
   function icon(name, x, y, s, col) {
+    const g = gd('gd-phong-' + name);
+    if (g) {
+      // ảnh nằm gọn trong ô 7x7 (nhân s), giữ đúng tỉ lệ ảnh; cổng dịch chuyển nhấp nháy bằng độ đậm
+      const c = G.ux, k = Math.min((7 * s) / g.rong, (7 * s) / g.cao), w = g.rong * k, h = g.cao * k, ga = c.globalAlpha;
+      if (col && col !== PAL.icon) c.globalAlpha = ga * 0.65;
+      G.spriteCustom.veGd(c, g, x + (7 * s - w) / 2, y + (7 * s - h) / 2, w, h);
+      c.globalAlpha = ga;
+      return;
+    }
     const rows = ICON[name];
     if (!rows) return;
     const c = G.ux;
@@ -61,6 +77,7 @@
     if (s === 'cells') return map.rooms.map((r) => ({ id: r.id, type: r.type, st: stateOf(S, r.id), x: X(r.x), y: Y(r.y), w: cw, h: ch }));
     const open = M.gateOpen(map, S.cleared);
     const lw = Math.max(2, Math.round(s * 1.6));
+    const gNoi = gd('gd-loi-noi'), tn = gNoi ? Math.max(lw, (gp * gNoi.cao) / gNoi.rong) : 0; // ảnh lối nối: dài bằng khe, dày theo tỉ lệ ảnh
     // lối nối giữa các phòng đã biết
     for (const r of map.rooms) {
       for (const d of ['right', 'down']) {
@@ -69,13 +86,17 @@
         const sa = stateOf(S, r.id), sb = stateOf(S, n);
         if (!sa || !sb || (sa === 'known' && sb === 'known')) continue;
         const gate = M.isGate(map, r.id, n) && !open;
-        if (d === 'right') ui.rect(X(r.x) + cw, Y(r.y) + ch / 2 - lw / 2, gp, lw, PAL.edge);
+        if (gNoi) {
+          const c = G.ux;
+          if (d === 'right') G.spriteCustom.veGd(c, gNoi, X(r.x) + cw, Y(r.y) + ch / 2 - tn / 2, gp, tn);
+          else { c.save(); c.translate(X(r.x) + cw / 2, Y(r.y) + ch + gp / 2); c.rotate(Math.PI / 2); G.spriteCustom.veGd(c, gNoi, -gp / 2, -tn / 2, gp, tn); c.restore(); }
+        } else if (d === 'right') ui.rect(X(r.x) + cw, Y(r.y) + ch / 2 - lw / 2, gp, lw, PAL.edge);
         else ui.rect(X(r.x) + cw / 2 - lw / 2, Y(r.y) + ch, lw, gp, PAL.edge);
         if (gate) {
           // cửa Trùm còn khóa: ổ khóa nằm giữa lối vào (cùng màu với mọi biểu tượng)
           const lx = d === 'right' ? X(r.x) + cw + gp / 2 : X(r.x) + cw / 2, ly = d === 'right' ? Y(r.y) + ch / 2 : Y(r.y) + ch + gp / 2;
           const k = G.clamp(gp / 7, 0.7, s); // ổ khóa vừa khe giữa hai ô
-          ui.rect(lx - 3.5 * k - 1, ly - 3.5 * k - 1, 7 * k + 2, 7 * k + 2, '#1a120a');
+          if (!gd('gd-phong-lock')) ui.rect(lx - 3.5 * k - 1, ly - 3.5 * k - 1, 7 * k + 2, 7 * k + 2, '#1a120a');
           icon('lock', lx - 3.5 * k, ly - 3.5 * k, k, PAL.icon);
         }
       }
@@ -92,6 +113,22 @@
   }
   // Một ô phòng theo trạng thái: đang đứng (sáng, viền nổi, nhấp nháy nhẹ), đã qua (đậm), mới biết (nhạt).
   function cell(st, cx, cy, cw, ch) {
+    const gO = gd('gd-o-phong'), gC = st === 'cur' ? gd('gd-o-phong-cur') : null;
+    if (gC || gO) {
+      // ô bằng ảnh: đang đứng nhấp nháy sáng lên, mới biết (chưa vào) vẫn mờ 0,3
+      const c = G.ux, ga = c.globalAlpha, V = G.spriteCustom;
+      if (st === 'cur') {
+        const blink = Math.floor(G.time * 3) % 2;
+        V.veGd(c, gC || gO, cx, cy, cw, ch);
+        if (blink) { const op = c.globalCompositeOperation; c.globalCompositeOperation = 'lighter'; c.globalAlpha = ga * 0.3; V.veGd(c, gC || gO, cx, cy, cw, ch); c.globalCompositeOperation = op; c.globalAlpha = ga; }
+        if (!gC) ui.rect(cx - 1, cy - 1, cw + 2, ch + 2, null, blink ? PAL.curEdge : 'rgba(255,240,196,0.6)'); // chưa có ảnh ô đang đứng: thêm viền nổi
+      } else {
+        if (st !== 'seen') c.globalAlpha = ga * 0.3;
+        V.veGd(c, gO, cx, cy, cw, ch);
+        c.globalAlpha = ga;
+      }
+      return;
+    }
     if (st === 'cur') {
       const blink = Math.floor(G.time * 3) % 2;
       ui.rect(cx - 2, cy - 2, cw + 4, ch + 4, blink ? 'rgba(255,246,216,0.55)' : 'rgba(255,246,216,0.3)');
@@ -145,7 +182,13 @@
   MM.drawBig = function (S) {
     const reg = G.REGIONS[S.r];
     ui.rect(0, 0, G.W, G.H, 'rgba(0,0,0,0.72)');
-    ui.panel(50, 14, 380, 242, 'Bản đồ ải · ' + reg.name + ' ' + (S.i + 1));
+    const gK = gd('gd-khung-ban-do');
+    if (gK) {
+      // khung bằng ảnh: lót nền tối bên trong (phòng khi giữa ảnh để trống), vẽ khung, rồi tên ải như cũ
+      ui.rect(54, 18, 372, 234, 'rgba(20,16,14,0.94)');
+      G.spriteCustom.veGd(G.ux, gK, 50, 14, 380, 242);
+      ui.text('Bản đồ ải · ' + reg.name + ' ' + (S.i + 1), 58, 29, { size: 11, bold: true, color: '#ffd27a' });
+    } else ui.panel(50, 14, 380, 242, 'Bản đồ ải · ' + reg.name + ' ' + (S.i + 1));
     ui.rect(60, 36, 252, 172, 'rgba(8,16,16,0.6)', '#5a3d1a');
     grid(S, 64, 40, 244, 164, 36, 28, 12, 3);
     // chú giải: chỉ các loại phòng đã biết
@@ -171,7 +214,7 @@
       ky += st === 'cur' ? 15 : 13;
     }
     {
-      ui.rect(324, ky + 1, 9, 9, '#1a120a');
+      if (!gd('gd-phong-lock')) ui.rect(324, ky + 1, 9, 9, '#1a120a');
       icon('lock', 325, ky + 2, 1, PAL.icon);
       ui.text('Cửa Trùm còn khóa', 340, ky + 8.5, { size: 7, color: '#f1ead9' });
     }

@@ -14557,6 +14557,7 @@ MA._xong();
       if (!tep || typeof tep !== 'object' || typeof tep.ma !== 'string' || !/^[A-Za-z0-9_-]{1,40}$/.test(tep.ma)) throw new Error('thiếu mã');
       if (DO_LOAI[tep.doi_tuong]) return themDo(tep); // vũ khí, trang phục, vật phẩm
       if (tep.doi_tuong === 'ghep') return themGhep(tep); // hồ sơ ghép trang bị của một nhân vật (ghep-<key>), không có ảnh
+      if (tep.doi_tuong === 'giao-dien') return themGd(tep); // ảnh giao diện (gd-<tên>): biểu tượng, ô phòng, khung bản đồ
       if (typeof tep.tam !== 'string' || tep.tam.indexOf('data:image/png;base64,') !== 0) throw new Error('thiếu tấm sprite');
       const fw = tep.khung_rong | 0, fh = tep.khung_cao | 0, goc = tep.goc || [0, 0];
       if (fw < 1 || fh < 1 || fw > 1024 || fh > 1024) throw new Error('cỡ khung sai');
@@ -14601,8 +14602,8 @@ MA._xong();
       return null;
     }
   };
-  SC.remove = function (ma) { if (SC.do[ma]) boDo(ma); delete SC.ds[ma]; for (const k in SC.ghep) if (SC.ghep[k].ma === ma) boGhep(k); };
-  SC.clear = function () { for (const k of Object.keys(SC.ds)) delete SC.ds[k]; for (const k of Object.keys(SC.do)) boDo(k); for (const k of Object.keys(SC.ghep)) boGhep(k); };
+  SC.remove = function (ma) { if (SC.do[ma]) boDo(ma); delete SC.ds[ma]; if (SC.gd) delete SC.gd[ma]; for (const k in SC.ghep) if (SC.ghep[k].ma === ma) boGhep(k); };
+  SC.clear = function () { for (const k of Object.keys(SC.ds)) delete SC.ds[k]; for (const k of Object.keys(SC.do)) boDo(k); for (const k of Object.keys(SC.ghep)) boGhep(k); if (SC.gd) for (const k of Object.keys(SC.gd)) delete SC.gd[k]; };
   SC.get = function (ma) { const s = SC.ds[ma]; return s && s.ready ? s : null; };
   SC.has = (ma) => !!SC.ds[ma];
   SC.dungYen = (ma, bo) => { const s = SC.ds[ma]; return !!(s && s.dungYen && s.dungYen.indexOf(bo) >= 0); };
@@ -15738,12 +15739,638 @@ MA._xong();
     };
   }
 
+  // ---------- GIAO DIỆN (ảnh AI cho bản đồ, nút…; tools/tach-giao-dien) ----------
+  // Tệp: { "doi_tuong": "giao-dien", "ma": "gd-<tên>", "anh": "data:image/png;base64,…", "net": 2, "vien": [trên, phải, dưới, trái] }
+  //   anh: MỘT ảnh tĩnh, số điểm ảnh gấp net lần cỡ game.   vien (tuỳ chọn, điểm ảnh GAME): cắt 9 mảnh, bốn góc giữ nguyên cỡ,
+  //   cạnh và ruột kéo giãn (khung bản đồ to).
+  // Mã đang dùng (js/minimap.js): gd-phong-<loại phòng> (12 biểu tượng), gd-o-phong, gd-o-phong-cur, gd-loi-noi, gd-khung-ban-do.
+  // Không có tệp gd-* nào thì game vẽ bằng code y như cũ.
+  SC.gd = {};
+  function themGd(tep) {
+    if (!/^gd-[a-z0-9_-]+$/.test(tep.ma)) throw new Error('mã giao diện phải là gd-<tên>');
+    const g = { ma: tep.ma, ten: String(tep.ten || tep.ma), doi: 'giao-dien', net: docNet(tep.net), rong: 0, cao: 0, pw: 0, ph: 0, img: null, ready: false, vien: null, ghep9: new Map() };
+    if (Array.isArray(tep.vien) && tep.vien.length === 4 && tep.vien.every((v) => isFinite(+v) && +v >= 0)) {
+      g.vien = tep.vien.map((v) => Math.min(400, Math.round(+v)));
+      if (!g.vien.some((v) => v > 0)) g.vien = null;
+    }
+    const xong = (src) => {
+      g.img = src; g.pw = src.width; g.ph = src.height; g.rong = Math.max(1, Math.round(src.width / g.net)); g.cao = Math.max(1, Math.round(src.height / g.net));
+      g.ghep9.clear(); g.ready = true;
+    };
+    SC.gd[g.ma] = g;
+    if (tep.anhCanvas && tep.anhCanvas.getContext) xong(tep.anhCanvas); // công cụ đưa thẳng canvas (vẽ ngay, không chờ)
+    else {
+      if (typeof tep.anh !== 'string' || tep.anh.indexOf('data:image/png;base64,') !== 0) { delete SC.gd[g.ma]; throw new Error('thiếu ảnh'); }
+      if (typeof Image !== 'undefined') { const img = new Image(); img.onload = () => xong(img); img.onerror = () => { SC.loi.push(g.ma + ': ảnh hỏng'); if (SC.gd[g.ma] === g) delete SC.gd[g.ma]; }; img.src = tep.anh; }
+    }
+    return g;
+  }
+  SC.gdSan = (ma) => { const g = SC.gd[ma]; return g && g.ready ? g : null; };
+  // Ảnh 9 mảnh dựng sẵn cho cỡ đích (w x h điểm ảnh game): một canvas w*net x h*net, nhớ lại để lần sau vẽ một phát.
+  function gdGhep9(g, w, h) {
+    const N = g.net, W = Math.max(1, Math.round(w * N)), H = Math.max(1, Math.round(h * N)), key = W + 'x' + H;
+    let cv = g.ghep9.get(key); if (cv) return cv;
+    if (g.ghep9.size > 6) g.ghep9.clear();
+    cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    const c = cv.getContext('2d'); c.imageSmoothingEnabled = false;
+    // viền theo điểm ảnh THẬT; chật quá thì thu viền cho vừa
+    let t = g.vien[0] * N, r = g.vien[1] * N, b = g.vien[2] * N, l = g.vien[3] * N;
+    const giu = (a, b2, max, src) => { const m = Math.min(max, src - 1); if (a + b2 > m) { const k = m / (a + b2); return [Math.floor(a * k), Math.floor(b2 * k)]; } return [a, b2]; };
+    [l, r] = giu(l, r, W, g.pw); [t, b] = giu(t, b, H, g.ph);
+    const sx = [0, l, g.pw - r], sw = [l, g.pw - l - r, r], dx = [0, l, W - r], dw = [l, W - l - r, r];
+    const sy = [0, t, g.ph - b], sh = [t, g.ph - t - b, b], dy = [0, t, H - b], dh = [t, H - t - b, b];
+    for (let j = 0; j < 3; j++) for (let i = 0; i < 3; i++) if (sw[i] > 0 && sh[j] > 0 && dw[i] > 0 && dh[j] > 0) c.drawImage(g.img, sx[i], sy[j], sw[i], sh[j], dx[i], dy[j], dw[i], dh[j]);
+    g.ghep9.set(key, cv);
+    return cv;
+  }
+  // Vẽ ảnh giao diện vào ô (x, y, w, h) theo toạ độ đang dùng của bút c. Có "vien" thì cắt 9 mảnh, không thì kéo giãn cả ảnh.
+  // Phóng to thì giữ điểm ảnh sắc cạnh; thu nhỏ hơn ảnh gốc thì làm mịn để không rụng nét.
+  SC.veGd = function (c, g, x, y, w, h) {
+    if (!g || !g.ready || w <= 0 || h <= 0) return false;
+    const src = g.vien && (Math.abs(w - g.rong) > 0.01 || Math.abs(h - g.cao) > 0.01) ? gdGhep9(g, w, h) : g.img;
+    const us = c === G.ux ? G.uiScale || 1 : c === G.wx ? G.NET || 1 : 1, sm = c.imageSmoothingEnabled;
+    c.imageSmoothingEnabled = w * us < src.width - 0.5 || h * us < src.height - 0.5;
+    c.drawImage(src, x, y, w, h);
+    c.imageSmoothingEnabled = sm;
+    return true;
+  };
+
   // Hàm vẽ bằng code (bỏ qua hình tự vẽ), cho công cụ so sánh.
   if (G.monsterArt && !G.monsterArt.drawCode) G.monsterArt.drawCode = G.monsterArt.draw;
   if (G.art && G.art.hero && !G.art.heroCode) G.art.heroCode = G.art.hero;
   SC.noi = true;
   // Tệp do game/build.py nhúng vào bản đóng gói.
   if (Array.isArray(G.customSpriteData)) { for (const t of G.customSpriteData) SC.add(t); delete G.customSpriteData; }
+})();
+// ===== game/js/mapgen.js =====
+// Bản đồ một ải: 8 phòng vuông trên lưới, sinh ngẫu nhiên theo hạt giống, ba kiểu bố cục A, B, C.
+//   A: đường chính 6 phòng ngoằn ngoèo, thêm 2 phòng phụ bỏ qua được.
+//   B: mê cung nhỏ trong ô 3x3 có đường vòng; cửa Trùm nằm trong phòng Suối hồi, mở khi dọn xong 3 phòng quái.
+//   C: sảnh giữa là phòng Bắt đầu, ba cánh giữ ba mảnh chìa; đủ 3 mảnh thì cửa phía trên sảnh mở, qua Suối hồi tới Trùm.
+// Quy ước số phòng: 0 là Bắt đầu, 6 là Suối hồi, 7 là Trùm.
+(function () {
+  const G = window.G;
+  const DIRS = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
+  const DKEYS = ['up', 'down', 'left', 'right'];
+  const OPP = { up: 'down', down: 'up', left: 'right', right: 'left' };
+  const MAXW = 5, MAXH = 4; // bản đồ nhỏ vẽ vừa lưới 5 x 4
+  const SIDE = ['merchant', 'challenge', 'curse'];
+  const KINDS = ['A', 'B', 'C'];
+  const isFight = (t) => t === 'fight' || t === 'elite'; // phòng quái được tính vào điều kiện mở cửa Trùm
+
+  function rng(seed) {
+    // Trộn hạt giống trước để các hạt liền nhau không cho kết quả gần giống nhau.
+    let s = (seed >>> 0) ^ 0x9e3779b9;
+    s = Math.imul(s ^ (s >>> 15), 0x85ebca6b) >>> 0;
+    const f = G.srand(s || 1);
+    for (let i = 0; i < 4; i++) f();
+    return f;
+  }
+  const pick = (rn, a) => a[Math.floor(rn() * a.length)];
+  function shuffle(rn, a) {
+    a = a.slice();
+    for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rn() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; }
+    return a;
+  }
+  const key = (x, y) => x + ',' + y;
+  function room(id, x, y, type, main) { return { id, x, y, type, main: !!main, doors: {} }; }
+  function link(a, b) {
+    for (const d of DKEYS) if (a.x + DIRS[d][0] === b.x && a.y + DIRS[d][1] === b.y) { a.doors[d] = b.id; b.doors[OPP[d]] = a.id; return true; }
+    return false;
+  }
+  // Dời toạ độ về gốc 0 và xếp phòng theo số.
+  function finish(kind, seed, rooms, gate) {
+    const mx = Math.min(...rooms.map((r) => r.x)), my = Math.min(...rooms.map((r) => r.y));
+    for (const r of rooms) { r.x -= mx; r.y -= my; }
+    rooms.sort((a, b) => a.id - b.id);
+    return {
+      kind, seed, rooms, start: 0, fountain: 6, boss: 7, gate: gate || null,
+      w: Math.max(...rooms.map((r) => r.x)) + 1, h: Math.max(...rooms.map((r) => r.y)) + 1,
+    };
+  }
+  function bboxOk(cells) {
+    const xs = cells.map((c) => c[0]), ys = cells.map((c) => c[1]);
+    return Math.max(...xs) - Math.min(...xs) < MAXW && Math.max(...ys) - Math.min(...ys) < MAXH;
+  }
+
+  // ---------- Kiểu A: đường chính có nhánh phụ ----------
+  function genA(seed, rn) {
+    for (let guard = 0; guard < 400; guard++) {
+      // lối chính: đi ngẫu nhiên 6 ô không cắt chính mình, phải rẽ ít nhất 2 lần
+      const path = [[0, 0]];
+      const used = new Set([key(0, 0)]);
+      let turns = 0, last = null, ok = true;
+      while (path.length < 6) {
+        const [x, y] = path[path.length - 1];
+        const opts = shuffle(rn, DKEYS).filter((d) => {
+          const nx = x + DIRS[d][0], ny = y + DIRS[d][1];
+          return !used.has(key(nx, ny)) && bboxOk(path.concat([[nx, ny]]));
+        });
+        if (!opts.length) { ok = false; break; }
+        // hơi ưu tiên rẽ để lối đi ngoằn ngoèo
+        const d = last && opts.length > 1 && rn() < 0.45 ? opts.find((o) => o !== last) : opts[0];
+        if (last && d !== last) turns++;
+        last = d;
+        const c = [x + DIRS[d][0], y + DIRS[d][1]];
+        path.push(c); used.add(key(c[0], c[1]));
+      }
+      if (!ok || turns < 2) continue;
+      // Phòng Trùm chỉ được kề đúng một ô của lối chính là Suối hồi? Không cần: cửa mới quyết định, không phải ô kề.
+      // hai phòng phụ gắn vào bốn phòng đầu của lối chính (không gắn vào Suối hồi và Trùm)
+      const sideCells = [];
+      const parents = shuffle(rn, [0, 1, 2, 3]);
+      for (const pi of parents) {
+        if (sideCells.length >= 2) break;
+        const [x, y] = path[pi];
+        const free = shuffle(rn, DKEYS).map((d) => [x + DIRS[d][0], y + DIRS[d][1]]).filter((c) => !used.has(key(c[0], c[1])) && bboxOk(path.concat(sideCells.map((s) => s.c), [c])));
+        if (!free.length) continue;
+        used.add(key(free[0][0], free[0][1]));
+        sideCells.push({ c: free[0], parent: pi });
+      }
+      if (sideCells.length < 2) continue;
+      const types = ['start', 'fight', 'fight', 'elite'];
+      const rooms = [];
+      for (let i = 0; i < 4; i++) rooms.push(room(i, path[i][0], path[i][1], types[i], true));
+      const sideTypes = shuffle(rn, ['chest', pick(rn, SIDE)]);
+      sideCells.forEach((s, k) => rooms.push(room(4 + k, s.c[0], s.c[1], sideTypes[k], false)));
+      rooms.push(room(6, path[4][0], path[4][1], 'fountain', true));
+      rooms.push(room(7, path[5][0], path[5][1], 'boss', true));
+      const main = [0, 1, 2, 3, 6, 7];
+      for (let i = 0; i < 5; i++) link(rooms[main[i]], rooms[main[i + 1]]);
+      sideCells.forEach((s, k) => link(rooms[s.parent], rooms[4 + k]));
+      return finish('A', seed, rooms, null);
+    }
+    return null;
+  }
+
+  // ---------- Kiểu B: mê cung nhỏ 3x3 ----------
+  function genB(seed, rn) {
+    for (let guard = 0; guard < 400; guard++) {
+      const corners = [[0, 0], [2, 0], [0, 2], [2, 2]];
+      const bc = pick(rn, corners);
+      // Suối hồi là một trong hai ô kề góc của Trùm
+      const fc = pick(rn, [[bc[0] === 0 ? 1 : 1, bc[1]], [bc[0], 1]]);
+      // Bắt đầu ở xa Trùm: góc đối diện hoặc một ô cách Trùm ít nhất 3 bước
+      const far = [];
+      for (let x = 0; x < 3; x++) for (let y = 0; y < 3; y++) if (Math.abs(x - bc[0]) + Math.abs(y - bc[1]) >= 3) far.push([x, y]);
+      const sc = pick(rn, far);
+      // bỏ đi một ô trong 9 ô
+      const all = [];
+      for (let x = 0; x < 3; x++) for (let y = 0; y < 3; y++) all.push([x, y]);
+      const fixed = new Set([key(bc[0], bc[1]), key(fc[0], fc[1]), key(sc[0], sc[1])]);
+      const drop = pick(rn, all.filter((c) => !fixed.has(key(c[0], c[1]))));
+      const rest = shuffle(rn, all.filter((c) => !fixed.has(key(c[0], c[1])) && key(c[0], c[1]) !== key(drop[0], drop[1])));
+      const types = shuffle(rn, ['fight', 'fight', 'elite', 'chest', pick(rn, SIDE)]);
+      const rooms = [room(0, sc[0], sc[1], 'start', true)];
+      rest.forEach((c, k) => rooms.push(room(1 + k, c[0], c[1], types[k], isFight(types[k]))));
+      rooms.push(room(6, fc[0], fc[1], 'fountain', true));
+      rooms.push(room(7, bc[0], bc[1], 'boss', true));
+      const at = {};
+      for (const r of rooms) at[key(r.x, r.y)] = r;
+      // cây khung ngẫu nhiên trên 7 phòng không phải Trùm, rồi thêm cửa để có đường vòng
+      const inner = rooms.filter((r) => r.type !== 'boss');
+      const seen = new Set([0]);
+      const stack = [rooms[0]];
+      const edges = new Set();
+      const ek = (a, b) => (a.id < b.id ? a.id + '-' + b.id : b.id + '-' + a.id);
+      while (stack.length) {
+        const cur = stack[stack.length - 1];
+        const nb = shuffle(rn, DKEYS).map((d) => at[key(cur.x + DIRS[d][0], cur.y + DIRS[d][1])]).filter((n) => n && n.type !== 'boss' && !seen.has(n.id));
+        if (!nb.length) { stack.pop(); continue; }
+        seen.add(nb[0].id); edges.add(ek(cur, nb[0])); link(cur, nb[0]); stack.push(nb[0]);
+      }
+      if (seen.size !== inner.length) continue;
+      const extra = [];
+      for (const a of inner) for (const d of ['down', 'right']) {
+        const b = at[key(a.x + DIRS[d][0], a.y + DIRS[d][1])];
+        if (b && b.type !== 'boss' && !edges.has(ek(a, b))) extra.push([a, b]);
+      }
+      if (!extra.length) continue;
+      const add = shuffle(rn, extra).slice(0, 1 + (rn() < 0.6 && extra.length > 1 ? 1 : 0));
+      for (const [a, b] of add) link(a, b);
+      link(rooms[6], rooms[7]);
+      const need = rooms.filter((r) => isFight(r.type)).map((r) => r.id);
+      return finish('B', seed, rooms, { a: 6, b: 7, ids: need, need: need.length, rule: 'clear' });
+    }
+    return null;
+  }
+
+  // ---------- Kiểu C: sảnh trung tâm ----------
+  function genC(seed, rn) {
+    for (let guard = 0; guard < 400; guard++) {
+      const cells = { hub: [0, 0], fountain: [0, -1], boss: [0, -2] };
+      const wings = [[-1, 0], [1, 0], [0, 1]];
+      const keyTypes = shuffle(rn, ['fight', 'fight', 'elite']);
+      const rooms = [room(0, 0, 0, 'start', true)];
+      wings.forEach((c, k) => { const r = room(1 + k, c[0], c[1], keyTypes[k], true); r.key = true; rooms.push(r); });
+      const used = new Set([key(0, 0), key(0, -1), key(0, -2)].concat(wings.map((c) => key(c[0], c[1]))));
+      const sideTypes = shuffle(rn, ['chest', pick(rn, SIDE)]);
+      let ok = true;
+      const links = [];
+      for (let k = 0; k < 2; k++) {
+        // phòng phụ gắn vào cuối một cánh (phòng chìa hoặc phòng phụ đã gắn trước đó)
+        const hosts = shuffle(rn, rooms.filter((r) => r.id >= 1));
+        let done = false;
+        for (const h of hosts) {
+          const free = shuffle(rn, DKEYS).map((d) => [h.x + DIRS[d][0], h.y + DIRS[d][1]]).filter((c) => {
+            if (used.has(key(c[0], c[1]))) return false;
+            if (c[1] < 0 && c[0] === 0) return false;
+            return bboxOk(rooms.map((r) => [r.x, r.y]).concat([cells.fountain, cells.boss, c]));
+          });
+          if (!free.length) continue;
+          const r = room(4 + k, free[0][0], free[0][1], sideTypes[k], false);
+          used.add(key(r.x, r.y)); rooms.push(r); links.push([h.id, r.id]); done = true;
+          break;
+        }
+        if (!done) { ok = false; break; }
+      }
+      if (!ok) continue;
+      rooms.push(room(6, 0, -1, 'fountain', true));
+      rooms.push(room(7, 0, -2, 'boss', true));
+      rooms.sort((a, b) => a.id - b.id);
+      for (let k = 1; k <= 3; k++) link(rooms[0], rooms[k]);
+      for (const [a, b] of links) link(rooms[a], rooms[b]);
+      link(rooms[0], rooms[6]); link(rooms[6], rooms[7]);
+      return finish('C', seed, rooms, { a: 0, b: 6, ids: [1, 2, 3], need: 3, rule: 'keys' });
+    }
+    return null;
+  }
+
+  const M = (G.mapgen = { KINDS, SIDE, DIRS, OPP, DKEYS, isFight });
+  // Sinh bản đồ. kind: 'A' | 'B' | 'C'. Cùng kind và seed thì luôn ra cùng một bản đồ.
+  M.make = function (kind, seed) {
+    seed = (seed >>> 0) || 1;
+    const rn = rng(seed + KINDS.indexOf(kind) * 7919);
+    const m = kind === 'A' ? genA(seed, rn) : kind === 'B' ? genB(seed, rn) : genC(seed, rn);
+    if (!m) throw new Error('Không sinh được bản đồ kiểu ' + kind + ' với hạt giống ' + seed);
+    return m;
+  };
+  // Chọn kiểu cho một lần vào ải: ải cuối vùng luôn là C; ải khác ngẫu nhiên, tránh kiểu của lần chơi ngay trước.
+  M.pickKind = function (i, last, rnd) {
+    if (i === 4) return 'C';
+    const pool = KINDS.filter((k) => k !== last);
+    return pool[Math.floor((rnd || Math.random)() * pool.length)];
+  };
+  // Số phòng điều kiện đã dọn (mảnh chìa đã có ở Kiểu C).
+  M.gateCount = function (map, cleared) {
+    return map.gate ? map.gate.ids.filter((id) => cleared[id]).length : 0;
+  };
+  M.gateOpen = function (map, cleared) {
+    return !map.gate || M.gateCount(map, cleared) >= map.gate.need;
+  };
+  // Cửa nối a với b có phải cửa có điều kiện (cửa dẫn tới Trùm) không.
+  M.isGate = function (map, a, b) {
+    const g = map.gate;
+    return !!g && ((g.a === a && g.b === b) || (g.a === b && g.b === a));
+  };
+  // Đường đi ngắn nhất giữa hai phòng. pass(a, b) trả về false nếu cửa đang không qua được.
+  M.path = function (map, from, to, pass) {
+    const prev = { [from]: -1 };
+    const q = [from];
+    while (q.length) {
+      const cur = q.shift();
+      if (cur === to) { const out = []; for (let c = to; c !== -1; c = prev[c]) out.unshift(c); return out; }
+      const r = map.rooms[cur];
+      for (const d of DKEYS) {
+        const n = r.doors[d];
+        if (n == null || n in prev || (pass && !pass(cur, n))) continue;
+        prev[n] = cur; q.push(n);
+      }
+    }
+    return null;
+  };
+  M.dirTo = function (map, a, b) {
+    const r = map.rooms[a];
+    for (const d of DKEYS) if (r.doors[d] === b) return d;
+    return null;
+  };
+
+  // Đi thử cả ải theo đúng luật cửa: phòng có quái thì phải dọn mới ra được, cửa Trùm theo điều kiện.
+  // Trả về thứ tự vào phòng lần đầu và số phòng quái đã dọn lúc vào Trùm.
+  M.walk = function (map, greedy) {
+    const cleared = {}, seen = {}, order = [];
+    let cur = map.start, fights = 0, steps = 0, from = -1;
+    const hasMob = (t) => isFight(t) || t === 'start' || t === 'challenge';
+    const pass = (a, b) => !M.isGate(map, a, b) || M.gateOpen(map, cleared);
+    for (let guard = 0; guard < 200; guard++) {
+      if (!seen[cur]) { seen[cur] = true; order.push(cur); }
+      const r = map.rooms[cur];
+      if (r.type === 'boss') return { order, fights, steps, from, ok: true };
+      if (!cleared[cur]) { cleared[cur] = true; if (hasMob(r.type)) fights++; }
+      // mục tiêu: phòng chưa vào gần nhất (trừ Trùm, và trừ Suối hồi nếu còn phòng khác), sau cùng mới tới Suối hồi rồi Trùm
+      let goal = null, best = 1e9;
+      for (const o of map.rooms) {
+        if (seen[o.id] || o.type === 'boss') continue;
+        if (greedy && !o.main) continue; // người chơi vội: bỏ phòng phụ
+        const p = M.path(map, cur, o.id, pass);
+        if (!p) continue;
+        const cost = p.length + (o.type === 'fountain' ? 50 : 0);
+        if (cost < best) { best = cost; goal = p; }
+      }
+      if (!goal) goal = M.path(map, cur, map.boss, pass);
+      if (!goal || goal.length < 2) return { order, fights, steps, ok: false };
+      from = cur; cur = goal[1]; steps++;
+    }
+    return { order, fights, steps, ok: false };
+  };
+
+  // Kiểm tra một bản đồ. Trả về danh sách lỗi (rỗng là đạt).
+  M.check = function (map) {
+    const errs = [];
+    const R = map.rooms;
+    if (R.length !== 8) errs.push('không đủ 8 phòng: ' + R.length);
+    const cells = new Set();
+    R.forEach((r, i) => {
+      if (r.id !== i) errs.push('số phòng lệch ở vị trí ' + i);
+      if (cells.has(key(r.x, r.y))) errs.push('hai phòng trùng một ô ' + key(r.x, r.y));
+      cells.add(key(r.x, r.y));
+      if (r.x < 0 || r.y < 0 || r.x >= MAXW || r.y >= MAXH) errs.push('phòng ' + i + ' nằm ngoài lưới ' + MAXW + 'x' + MAXH);
+    });
+    if (map.w > MAXW || map.h > MAXH) errs.push('bản đồ rộng quá lưới');
+    const count = {};
+    for (const r of R) count[r.type] = (count[r.type] || 0) + 1;
+    const sides = SIDE.reduce((n, t) => n + (count[t] || 0), 0);
+    if (count.start !== 1 || count.fountain !== 1 || count.boss !== 1 || count.chest !== 1 || count.elite !== 1 || count.fight !== 2 || sides !== 1) errs.push('sai bộ loại phòng: ' + JSON.stringify(count));
+    if (R[0] && R[0].type !== 'start') errs.push('phòng 0 không phải Bắt đầu');
+    if (R[6] && R[6].type !== 'fountain') errs.push('phòng 6 không phải Suối hồi');
+    if (R[7] && R[7].type !== 'boss') errs.push('phòng 7 không phải Trùm');
+    if (errs.length) return errs;
+    // cửa: phải nối hai ô kề nhau và có đủ hai chiều
+    for (const r of R) {
+      for (const d of DKEYS) {
+        const n = r.doors[d];
+        if (n == null) continue;
+        const o = R[n];
+        if (!o) { errs.push('cửa dẫn tới phòng không có: ' + r.id + ' ' + d); continue; }
+        if (o.x !== r.x + DIRS[d][0] || o.y !== r.y + DIRS[d][1]) errs.push('cửa nối hai ô không kề: ' + r.id + '-' + n);
+        if (o.doors[OPP[d]] !== r.id) errs.push('cửa một chiều: ' + r.id + '-' + n);
+      }
+    }
+    // mọi phòng tới được (không tính khóa)
+    for (const r of R) if (!M.path(map, 0, r.id)) errs.push('phòng ' + r.id + ' không tới được');
+    // Trùm chỉ có một cửa và cửa đó thông với Suối hồi
+    const bd = DKEYS.filter((d) => R[7].doors[d] != null);
+    if (bd.length !== 1 || R[7].doors[bd[0]] !== 6) errs.push('Trùm phải có đúng một cửa, thông với Suối hồi');
+    const fights = R.filter((r) => isFight(r.type)).map((r) => r.id);
+    if (map.gate) {
+      const g = map.gate;
+      if (g.need !== 3 || g.ids.length !== 3 || !g.ids.every((id) => isFight(R[id].type))) errs.push('điều kiện mở cửa phải là 3 phòng quái');
+      // khi cửa còn khóa: không tới được Trùm, nhưng phải tới được mọi phòng điều kiện
+      const shut = (a, b) => !M.isGate(map, a, b);
+      if (M.path(map, 0, 7, shut)) errs.push('có lối tắt tới Trùm khi cửa còn khóa');
+      for (const id of g.ids) if (!M.path(map, 0, id, shut)) errs.push('phòng điều kiện ' + id + ' nằm sau cửa khóa');
+      if (map.kind === 'C' && M.path(map, 0, 6, shut)) errs.push('Kiểu C: tới được Suối hồi khi chưa đủ chìa');
+      if (map.kind === 'B' && !(g.a === 6 && g.b === 7)) errs.push('Kiểu B: cửa khóa phải nằm giữa Suối hồi và Trùm');
+    } else {
+      // không có cửa điều kiện: mỗi phòng quái của lối chính phải là chỗ bắt buộc đi qua
+      for (const id of fights) {
+        const p = M.path(map, 0, 7, (a, b) => a !== id && b !== id);
+        if (p) errs.push('bỏ qua được phòng quái ' + id + ' mà vẫn tới Trùm');
+      }
+    }
+    // đi thử: người chơi vội (bỏ phòng phụ) và người chơi đi hết đều phải tới Trùm sau ít nhất 3 phòng quái
+    for (const greedy of [true, false]) {
+      const w = M.walk(map, greedy);
+      if (!w.ok) errs.push('đi thử không tới được Trùm' + (greedy ? ' (bỏ phòng phụ)' : ''));
+      else {
+        if (w.fights < 4) errs.push('vào Trùm khi mới dọn ' + w.fights + ' phòng có quái');
+        if (w.from !== 6) errs.push('vào Trùm mà không đi từ Suối hồi');
+        // Kiểu A và C: Suối hồi còn là phòng mới cuối cùng trước Trùm. Kiểu B có thể ghé Suối hồi sớm rồi quay lại.
+        if (map.kind !== 'B' && w.order[w.order.length - 2] !== 6) errs.push('phòng mới ngay trước Trùm không phải Suối hồi');
+        if (!greedy && w.order.length !== 8) errs.push('đi hết mà không qua đủ 8 phòng');
+      }
+    }
+    return errs;
+  };
+  // Mô tả ngắn để so sánh hai bản đồ có giống nhau không.
+  M.sig = function (map) {
+    return map.rooms.map((r) => r.type[0] + r.x + r.y + DKEYS.map((d) => (r.doors[d] == null ? '-' : r.doors[d])).join('')).join('|');
+  };
+})();
+// ===== game/js/minimap.js =====
+// Bản đồ nhỏ ở góc trên bên phải (dưới hai ô vũ khí) và bản đồ to khi chạm vào.
+// Chỉ hiện phòng đã qua (đậm), phòng đang đứng (sáng, viền nổi) và phòng kề mới biết (nhạt). Mọi ô cùng một màu, loại phòng xem ở biểu tượng.
+(function () {
+  const G = window.G, ui = G.ui;
+  const MM = (G.minimap = {});
+  // Biểu tượng 7x7 cho từng loại phòng
+  const ICON = {
+    start: ['.#####.', '#.....#', '#.....#', '#.....#', '#...#.#', '#.....#', '#.....#'],
+    fight: ['...#...', '...#...', '...#...', '...#...', '.#####.', '...#...', '...#...'],
+    elite: ['#.....#', '##...##', '#######', '#.#.#.#', '#######', '.#.#.#.', '.......'],
+    chest: ['.#####.', '#######', '#######', '.......', '#######', '###.###', '#######'],
+    fountain: ['...#...', '..###..', '..###..', '.#####.', '.#####.', '.#####.', '..###..'],
+    merchant: ['..###..', '...#...', '..###..', '.#####.', '#######', '#######', '.#####.'],
+    challenge: ['#######', '.#####.', '..###..', '...#...', '..###..', '.#####.', '#######'],
+    curse: ['.......', '..###..', '.#####.', '##.#.##', '.#####.', '..###..', '.......'],
+    boss: ['.#####.', '#######', '#.###.#', '#######', '.#####.', '.#.#.#.', '.......'],
+    lock: ['..###..', '.#...#.', '.#...#.', '#######', '###.###', '###.###', '#######'],
+    key: ['.###...', '#...#..', '#...#..', '.###...', '..#....', '..##...', '..###..'],
+    portal: ['..###..', '.#...#.', '#..#..#', '#.#.#.#', '#..#..#', '.#...#.', '..###..'], // cổng dịch chuyển sau khi thắng
+  };
+  // MỘT MÀU cho mọi ô phòng (yêu cầu của chủ dự án): một màu nền, một màu viền, một màu biểu tượng.
+  // Loại phòng chỉ phân biệt bằng biểu tượng. Chỉ còn ba khác biệt:
+  //   1. ô đang đứng sáng hơn và có viền nổi;  2. ô đã qua đậm, ô mới biết (chưa vào) nhạt;  3. cửa Trùm còn khóa có ổ khóa.
+  const PAL = {
+    fill: '#1f5750',      // nền ô đã qua: xanh ngọc đậm của trống đồng
+    faint: 'rgba(31,87,80,0.3)', // cùng màu nền, nhạt hơn hẳn: ô mới biết (chưa vào)
+    edge: '#a8752f',      // viền ô và lối nối: màu đồng
+    icon: '#f6e6b8',      // mọi biểu tượng, kể cả ổ khóa
+    cur: '#3f9486',       // ô đang đứng: cùng tông, sáng hơn
+    curEdge: '#fff0c4',   // viền nổi của ô đang đứng
+  };
+  MM.PAL = PAL;
+  const NAME = {
+    start: 'Bắt đầu', fight: 'Đánh quái', elite: 'Tinh anh', chest: 'Rương báu', fountain: 'Suối hồi',
+    merchant: 'Thương nhân', challenge: 'Thử thách', curse: 'Lời nguyền', boss: 'Trùm', portal: 'Cổng dịch chuyển',
+  };
+  MM.NAME = NAME; MM.ICON = ICON;
+  // ẢNH GIAO DIỆN (tools/tach-giao-dien, tệp gd-*.sprite.json trong game/art/custom): có tệp nào thì vẽ ảnh thay phần code đó.
+  //   gd-phong-<loại>  12 biểu tượng phòng (start, fight, elite, chest, fountain, merchant, challenge, curse, boss, lock, key, portal)
+  //   gd-o-phong       nền một ô phòng        gd-o-phong-cur  ô đang đứng        gd-loi-noi  đoạn nối (vẽ nằm ngang, game tự xoay dọc)
+  //   gd-khung-ban-do  khung/nền bản đồ to (cắt 9 mảnh theo "vien")
+  // Không có tệp nào thì mọi thứ y hệt cũ.
+  function gd(ma) { const s = G.spriteCustom; return s && s.gdSan ? s.gdSan(ma) : null; }
+  MM.gd = gd;
+  function icon(name, x, y, s, col) {
+    const g = gd('gd-phong-' + name);
+    if (g) {
+      // ảnh nằm gọn trong ô 7x7 (nhân s), giữ đúng tỉ lệ ảnh; cổng dịch chuyển nhấp nháy bằng độ đậm
+      const c = G.ux, k = Math.min((7 * s) / g.rong, (7 * s) / g.cao), w = g.rong * k, h = g.cao * k, ga = c.globalAlpha;
+      if (col && col !== PAL.icon) c.globalAlpha = ga * 0.65;
+      G.spriteCustom.veGd(c, g, x + (7 * s - w) / 2, y + (7 * s - h) / 2, w, h);
+      c.globalAlpha = ga;
+      return;
+    }
+    const rows = ICON[name];
+    if (!rows) return;
+    const c = G.ux;
+    c.fillStyle = col;
+    for (let j = 0; j < 7; j++) for (let i = 0; i < 7; i++) if (rows[j][i] === '#') c.fillRect(x + i * s, y + j * s, s + 0.05, s + 0.05);
+  }
+  MM.icon = icon;
+  // Trạng thái hiển thị của một phòng: 'cur' đang đứng, 'seen' đã qua, 'known' kề phòng đã qua, null là chưa biết.
+  function stateOf(S, id) {
+    if (id === S.idx) return 'cur';
+    if (S.seen[id]) return 'seen';
+    if (S.known[id]) return 'known';
+    return null;
+  }
+  MM.stateOf = stateOf;
+
+  // Vẽ lưới phòng vào ô (x, y, w, h). cw, ch: cỡ ô phòng; gp: khe giữa hai ô; s: cỡ điểm của biểu tượng.
+  function grid(S, x, y, w, h, cw, ch, gp, s) {
+    const M = G.mapgen, map = S.map;
+    const gw = map.w * cw + (map.w - 1) * gp, gh = map.h * ch + (map.h - 1) * gp;
+    const x0 = x + (w - gw) / 2, y0 = y + (h - gh) / 2;
+    const X = (i) => x0 + i * (cw + gp), Y = (j) => y0 + j * (ch + gp);
+    if (s === 'cells') return map.rooms.map((r) => ({ id: r.id, type: r.type, st: stateOf(S, r.id), x: X(r.x), y: Y(r.y), w: cw, h: ch }));
+    const open = M.gateOpen(map, S.cleared);
+    const lw = Math.max(2, Math.round(s * 1.6));
+    const gNoi = gd('gd-loi-noi'), tn = gNoi ? Math.max(lw, (gp * gNoi.cao) / gNoi.rong) : 0; // ảnh lối nối: dài bằng khe, dày theo tỉ lệ ảnh
+    // lối nối giữa các phòng đã biết
+    for (const r of map.rooms) {
+      for (const d of ['right', 'down']) {
+        const n = r.doors[d];
+        if (n == null) continue;
+        const sa = stateOf(S, r.id), sb = stateOf(S, n);
+        if (!sa || !sb || (sa === 'known' && sb === 'known')) continue;
+        const gate = M.isGate(map, r.id, n) && !open;
+        if (gNoi) {
+          const c = G.ux;
+          if (d === 'right') G.spriteCustom.veGd(c, gNoi, X(r.x) + cw, Y(r.y) + ch / 2 - tn / 2, gp, tn);
+          else { c.save(); c.translate(X(r.x) + cw / 2, Y(r.y) + ch + gp / 2); c.rotate(Math.PI / 2); G.spriteCustom.veGd(c, gNoi, -gp / 2, -tn / 2, gp, tn); c.restore(); }
+        } else if (d === 'right') ui.rect(X(r.x) + cw, Y(r.y) + ch / 2 - lw / 2, gp, lw, PAL.edge);
+        else ui.rect(X(r.x) + cw / 2 - lw / 2, Y(r.y) + ch, lw, gp, PAL.edge);
+        if (gate) {
+          // cửa Trùm còn khóa: ổ khóa nằm giữa lối vào (cùng màu với mọi biểu tượng)
+          const lx = d === 'right' ? X(r.x) + cw + gp / 2 : X(r.x) + cw / 2, ly = d === 'right' ? Y(r.y) + ch / 2 : Y(r.y) + ch + gp / 2;
+          const k = G.clamp(gp / 7, 0.7, s); // ổ khóa vừa khe giữa hai ô
+          if (!gd('gd-phong-lock')) ui.rect(lx - 3.5 * k - 1, ly - 3.5 * k - 1, 7 * k + 2, 7 * k + 2, '#1a120a');
+          icon('lock', lx - 3.5 * k, ly - 3.5 * k, k, PAL.icon);
+        }
+      }
+    }
+    for (const r of map.rooms) {
+      const st = stateOf(S, r.id);
+      if (!st) continue;
+      const cx = X(r.x), cy = Y(r.y);
+      cell(st, cx, cy, cw, ch);
+      // đã thắng: phòng trùm hiện biểu tượng cổng dịch chuyển (nhấp nháy nhẹ cho dễ tìm)
+      const ic = S.portal && S.portal.room === r.id ? 'portal' : r.type;
+      icon(ic, cx + (cw - 7 * s) / 2, cy + (ch - 7 * s) / 2, s, ic === 'portal' && Math.floor(G.time * 2) % 2 ? '#8ff0d8' : PAL.icon);
+    }
+  }
+  // Một ô phòng theo trạng thái: đang đứng (sáng, viền nổi, nhấp nháy nhẹ), đã qua (đậm), mới biết (nhạt).
+  function cell(st, cx, cy, cw, ch) {
+    const gO = gd('gd-o-phong'), gC = st === 'cur' ? gd('gd-o-phong-cur') : null;
+    if (gC || gO) {
+      // ô bằng ảnh: đang đứng nhấp nháy sáng lên, mới biết (chưa vào) vẫn mờ 0,3
+      const c = G.ux, ga = c.globalAlpha, V = G.spriteCustom;
+      if (st === 'cur') {
+        const blink = Math.floor(G.time * 3) % 2;
+        V.veGd(c, gC || gO, cx, cy, cw, ch);
+        if (blink) { const op = c.globalCompositeOperation; c.globalCompositeOperation = 'lighter'; c.globalAlpha = ga * 0.3; V.veGd(c, gC || gO, cx, cy, cw, ch); c.globalCompositeOperation = op; c.globalAlpha = ga; }
+        if (!gC) ui.rect(cx - 1, cy - 1, cw + 2, ch + 2, null, blink ? PAL.curEdge : 'rgba(255,240,196,0.6)'); // chưa có ảnh ô đang đứng: thêm viền nổi
+      } else {
+        if (st !== 'seen') c.globalAlpha = ga * 0.3;
+        V.veGd(c, gO, cx, cy, cw, ch);
+        c.globalAlpha = ga;
+      }
+      return;
+    }
+    if (st === 'cur') {
+      const blink = Math.floor(G.time * 3) % 2;
+      ui.rect(cx - 2, cy - 2, cw + 4, ch + 4, blink ? 'rgba(255,246,216,0.55)' : 'rgba(255,246,216,0.3)');
+      ui.rect(cx, cy, cw, ch, PAL.cur, PAL.curEdge);
+    } else ui.rect(cx, cy, cw, ch, st === 'seen' ? PAL.fill : PAL.faint, PAL.edge);
+  }
+  MM.cell = cell;
+
+  // Số ghi ở góc bản đồ nhỏ: mảnh chìa (Kiểu C), phòng quái đã dọn (Kiểu B), số phòng đã qua (Kiểu A).
+  function gateInfo(S) {
+    const M = G.mapgen, map = S.map;
+    if (!map.gate) return null;
+    return { n: M.gateCount(map, S.cleared), need: map.gate.need, keys: map.gate.rule === 'keys', open: M.gateOpen(map, S.cleared) };
+  }
+  MM.gateInfo = gateInfo;
+  MM.gateText = function (S) {
+    const gi = gateInfo(S);
+    if (!gi) return 'Suối hồi nằm ngay trước phòng Trùm.';
+    if (gi.open) return gi.keys ? 'Đã đủ 3 mảnh chìa: cửa phía trên sảnh đã mở.' : 'Đã dọn đủ 3 phòng quái: cửa Trùm trong phòng Suối hồi đã mở.';
+    return gi.keys ? 'Mỗi cánh có một phòng quái giữ một mảnh chìa. Đã có ' + gi.n + '/3 mảnh.' : 'Cửa Trùm nằm trong phòng Suối hồi, mở khi dọn xong 3 phòng quái. Đã dọn ' + gi.n + '/3.';
+  };
+
+  // Ô bản đồ nhỏ: [x, y, rộng, cao]. Trong phòng trùm (sàn rộng) thì thu lại thành một nút nhỏ.
+  MM.rect = function (S) {
+    return S.W && S.W.geo && S.W.geo.big ? [424, 58, 52, 15] : [374, 58, 102, 68]; // dời xuống nhường chỗ cho ba vạch linh khí dưới ô vũ khí (js/linhkhi.js)
+  };
+  MM.draw = function (S) {
+    const b = MM.rect(S), x = b[0], y = b[1], w = b[2], h = b[3];
+    const small = h < 30;
+    if (G.theme) G.theme.plate(x, y, w, h); else ui.rect(x, y, w, h, 'rgba(14,10,10,0.88)', '#7a5a3a');
+    if (small) { ui.text('Bản đồ', x + w / 2, y + 10.5, { size: 7, bold: true, align: 'center', color: '#f6dc92' }); return; }
+    ui.text('Bản đồ', x + 6, y + 10.5, { size: 7, bold: true, color: '#f6dc92' });
+    const gi = gateInfo(S);
+    if (gi) {
+      ui.text(gi.n + '/' + gi.need, x + w - 6, y + 10.5, { size: 7, align: 'right', bold: true, color: PAL.icon });
+      icon(gi.keys ? 'key' : 'lock', x + w - 27, y + 4, 1, PAL.icon);
+    } else {
+      const n = S.map.rooms.filter((r) => S.seen[r.id]).length;
+      ui.text('Phòng ' + n + '/8', x + w - 6, y + 10.5, { size: 6.5, align: 'right', color: '#d9cdb8' });
+    }
+    grid(S, x + 4, y + 14, w - 8, h - 17, 13, 9, 4, 1);
+  };
+
+  // Chỗ đặt từng ô phòng trên bản đồ nhỏ (big = false) hoặc bản đồ to (big = true): để bài kiểm tra soi màu.
+  MM.cells = function (S, big) {
+    if (big) return grid(S, 64, 40, 244, 164, 36, 28, 12, 'cells');
+    const b = MM.rect(S);
+    return grid(S, b[0] + 4, b[1] + 14, b[2] - 8, b[3] - 17, 13, 9, 4, 'cells');
+  };
+  // Bản đồ to: hiện khi chạm vào bản đồ nhỏ, trò chơi tạm dừng.
+  MM.drawBig = function (S) {
+    const reg = G.REGIONS[S.r];
+    ui.rect(0, 0, G.W, G.H, 'rgba(0,0,0,0.72)');
+    const gK = gd('gd-khung-ban-do');
+    if (gK) {
+      // khung bằng ảnh: lót nền tối bên trong (phòng khi giữa ảnh để trống), vẽ khung, rồi tên ải như cũ
+      ui.rect(54, 18, 372, 234, 'rgba(20,16,14,0.94)');
+      G.spriteCustom.veGd(G.ux, gK, 50, 14, 380, 242);
+      ui.text('Bản đồ ải · ' + reg.name + ' ' + (S.i + 1), 58, 29, { size: 11, bold: true, color: '#ffd27a' });
+    } else ui.panel(50, 14, 380, 242, 'Bản đồ ải · ' + reg.name + ' ' + (S.i + 1));
+    ui.rect(60, 36, 252, 172, 'rgba(8,16,16,0.6)', '#5a3d1a');
+    grid(S, 64, 40, 244, 164, 36, 28, 12, 3);
+    // chú giải: chỉ các loại phòng đã biết
+    const types = [];
+    for (const r of S.map.rooms) if (stateOf(S, r.id) && !types.includes(r.type)) types.push(r.type);
+    const order = ['start', 'fight', 'elite', 'chest', 'fountain', 'merchant', 'challenge', 'curse', 'boss'].filter((t) => types.includes(t));
+    if (S.portal) { const bi = order.indexOf('boss'); if (bi >= 0 && !S.map.rooms.some((r) => r.type === 'boss' && r.id !== S.portal.room && stateOf(S, r.id))) order.splice(bi, 1); order.push('portal'); }
+    ui.text('Chú giải', 322, 45, { size: 8, bold: true, color: '#ffd27a' });
+    // mọi loại phòng cùng một màu ô, chỉ khác biểu tượng
+    order.forEach((t, k) => {
+      const y = 50 + k * 13;
+      cell('seen', 322, y, 13, 11);
+      icon(t, 325, y + 2, 1, PAL.icon);
+      ui.text(NAME[t], 340, y + 8.5, { size: 7.5, color: '#f1ead9' });
+    });
+    // ba khác biệt còn lại
+    let ky = 50 + order.length * 13 + 5;
+    ui.rect(322, ky - 3, 98, 1, 'rgba(168,117,47,0.6)');
+    const rows = [['cur', 'Bạn đang ở đây'], ['seen', 'Phòng đã qua'], ['known', 'Phòng mới biết']];
+    for (const [st, label] of rows) {
+      cell(st, 322, ky, 13, 11);
+      ui.text(label, 340, ky + 8.5, { size: 7, color: '#f1ead9' });
+      ky += st === 'cur' ? 15 : 13;
+    }
+    {
+      if (!gd('gd-phong-lock')) ui.rect(324, ky + 1, 9, 9, '#1a120a');
+      icon('lock', 325, ky + 2, 1, PAL.icon);
+      ui.text('Cửa Trùm còn khóa', 340, ky + 8.5, { size: 7, color: '#f1ead9' });
+    }
+    ui.para(MM.gateText(S), 62, 222, 250, { size: 7.5, color: '#ffd9c8' });
+    ui.text('Chạm để chơi tiếp', 420, 246, { size: 8, align: 'right', bold: true, color: Math.floor(G.time * 2.5) % 2 ? '#ffd27a' : '#fff3da' });
+  };
 })();
 // ===== xu-ly-anh.js =====
 // XƯỞNG SPRITE: xử lý ảnh. Nạp ảnh, tách nền, cắt sát, thu về cỡ pixel của game, giảm màu, viền tối.
