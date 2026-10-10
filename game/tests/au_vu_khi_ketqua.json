@@ -1,0 +1,306 @@
+{
+ "static": [
+  {
+   "w": "sword",
+   "name": "Chém ngang",
+   "dur": 0.3,
+   "hitAt": 0.135,
+   "dmg": 9,
+   "reach": 32,
+   "depth": 20,
+   "push": 0
+  },
+  {
+   "w": "sword",
+   "name": "Chém ngược",
+   "dur": 0.3,
+   "hitAt": 0.135,
+   "dmg": 9.5,
+   "reach": 34,
+   "depth": 20,
+   "push": 0
+  },
+  {
+   "w": "sword",
+   "name": "Nhát kết",
+   "dur": 0.46,
+   "hitAt": 0.207,
+   "dmg": 16.2,
+   "reach": 40,
+   "depth": 30,
+   "push": 10
+  },
+  {
+   "w": "sword",
+   "name": "Nhát lướt (sau né)",
+   "dur": 0.12,
+   "hitAt": 0.054,
+   "dmg": 12.6,
+   "reach": 30,
+   "depth": 24,
+   "win": 0.35
+  },
+  {
+   "w": "bow",
+   "name": "Bắn (đứng yên)",
+   "dur": 0.38,
+   "hitAt": 0.171,
+   "dmg": 11.4,
+   "reach": 180,
+   "depth": 0,
+   "pierce": 1,
+   "pierceMult": 0.35
+  },
+  {
+   "w": "bow",
+   "name": "Bắn (vừa chạy)",
+   "dur": 0.45,
+   "hitAt": 0.203,
+   "dmg": 11.4,
+   "reach": 180,
+   "depth": 0
+  },
+  {
+   "w": "bow",
+   "name": "Tên mạnh (đầy)",
+   "dur": 1.185,
+   "hitAt": 0.533,
+   "dmg": 34.2,
+   "reach": 250,
+   "depth": 0,
+   "pierce": 2
+  },
+  {
+   "w": "spear",
+   "name": "Đâm",
+   "dur": 0.38,
+   "hitAt": 0.171,
+   "dmg": 11.8,
+   "reach": 60,
+   "depth": 12,
+   "push": 0
+  },
+  {
+   "w": "spear",
+   "name": "Đâm",
+   "dur": 0.34,
+   "hitAt": 0.153,
+   "dmg": 11.8,
+   "reach": 60,
+   "depth": 12,
+   "push": 0
+  },
+  {
+   "w": "spear",
+   "name": "Đâm",
+   "dur": 0.34,
+   "hitAt": 0.153,
+   "dmg": 11.8,
+   "reach": 62,
+   "depth": 12,
+   "push": 0
+  },
+  {
+   "w": "spear",
+   "name": "Quét vòng",
+   "dur": 0.52,
+   "hitAt": 0.234,
+   "dmg": 19.8,
+   "reach": 44,
+   "depth": "vòng",
+   "push": 8
+  },
+  {
+   "w": "spear",
+   "name": "Xốc tới (đầy)",
+   "dur": 1.02,
+   "hitAt": 0.459,
+   "dmg": 23.5,
+   "reach": 58,
+   "depth": 12,
+   "iframe": 0.16
+  },
+  {
+   "w": "hammer",
+   "name": "Nện",
+   "dur": 0.8,
+   "hitAt": 0.36,
+   "dmg": 21.3,
+   "reach": 32,
+   "depth": 26,
+   "stagger": 0.4
+  },
+  {
+   "w": "hammer",
+   "name": "Nện đất (nấc 1)",
+   "dur": 1.108,
+   "hitAt": 0.499,
+   "dmg": 21.3,
+   "reach": 30,
+   "depth": "vòng",
+   "wave": 0.4
+  },
+  {
+   "w": "hammer",
+   "name": "Nện đất mạnh (nấc 2)",
+   "dur": 1.708,
+   "hitAt": 0.769,
+   "dmg": 26.6,
+   "reach": 38,
+   "depth": "vòng",
+   "stun": 0.7,
+   "wave": 0.5
+  },
+  {
+   "w": "sword",
+   "name": "Đặc biệt: Trảm Nguyệt",
+   "dmg": 18,
+   "reach": "110-170",
+   "stun": 0,
+   "special": true
+  },
+  {
+   "w": "spear",
+   "name": "Đặc biệt: Phi Thương",
+   "dmg": 17.1,
+   "reach": "110-165",
+   "stun": 1,
+   "special": true
+  },
+  {
+   "w": "hammer",
+   "name": "Đặc biệt: Địa Chấn",
+   "dmg": 44.7,
+   "reach": "90-140",
+   "stun": 0.9,
+   "special": true
+  },
+  {
+   "w": "bow",
+   "name": "Đặc biệt: Mưa Tên",
+   "dmg": "3.9 x ~6 đợt",
+   "reach": "vòng 40",
+   "special": true
+  }
+ ],
+ "sword|cụm 5": {
+  "dps": 80.0653658100092,
+  "hurt": 2.754562499999999,
+  "perHit": 1.6711820861698514,
+  "kills": 12.75,
+  "dodgesMin": 39.25,
+  "busy": 0.5691319444444445,
+  "cancel": 0.11423644953857598,
+  "marksMin": 0.0
+ },
+ "sword|1 quái": {
+  "dps": 43.51802492695833,
+  "hurt": 0.0,
+  "perHit": 1.0,
+  "kills": 2.75,
+  "dodgesMin": 23.0,
+  "busy": 0.6691319444444445,
+  "cancel": 0.09064418836695987,
+  "marksMin": 0.0
+ },
+ "sword|cụm, Mầm Lửa": {
+  "dps": 89.03065840572168,
+  "hurt": 2.528041666666666,
+  "perHit": 1.6565638180802793,
+  "kills": 15.625,
+  "dodgesMin": 39.25,
+  "busy": 0.5803472222222222,
+  "cancel": 0.10930274742267374,
+  "marksMin": 9.5
+ },
+ "bow|cụm 5": {
+  "dps": 55.71725827965951,
+  "hurt": 2.0559791666666665,
+  "perHit": 1.7694749350292147,
+  "kills": 7.375,
+  "dodgesMin": 39.625,
+  "busy": 0.6307986111111112,
+  "cancel": 0.18143458941858898,
+  "marksMin": 0.0
+ },
+ "bow|1 quái": {
+  "dps": 35.0384971007234,
+  "hurt": 0.0,
+  "perHit": 1.0,
+  "kills": 2.0,
+  "dodgesMin": 22.5,
+  "busy": 0.6412152777777779,
+  "cancel": 0.09828916762807875,
+  "marksMin": 0.0
+ },
+ "bow|cụm, Mầm Lửa": {
+  "dps": 61.561853760164865,
+  "hurt": 2.050791666666666,
+  "perHit": 1.755505638127666,
+  "kills": 8.875,
+  "dodgesMin": 39.25,
+  "busy": 0.6234722222222222,
+  "cancel": 0.18304509042712708,
+  "marksMin": 5.875
+ },
+ "spear|cụm 5": {
+  "dps": 72.50082863575484,
+  "hurt": 2.636979166666666,
+  "perHit": 1.7079319274402414,
+  "kills": 11.875,
+  "dodgesMin": 39.5,
+  "busy": 0.6232291666666667,
+  "cancel": 0.15481603280686146,
+  "marksMin": 0.0
+ },
+ "spear|1 quái": {
+  "dps": 41.036057467783316,
+  "hurt": 0.0,
+  "perHit": 1.0,
+  "kills": 2.0,
+  "dodgesMin": 20.125,
+  "busy": 0.6889583333333333,
+  "cancel": 0.07644329461872497,
+  "marksMin": 0.0
+ },
+ "spear|cụm, Mầm Lửa": {
+  "dps": 83.38599806110396,
+  "hurt": 2.5038333333333327,
+  "perHit": 1.6770423460081654,
+  "kills": 14.5,
+  "dodgesMin": 39.75,
+  "busy": 0.6378472222222222,
+  "cancel": 0.16018528783104408,
+  "marksMin": 7.75
+ },
+ "hammer|cụm 5": {
+  "dps": 56.05771854465933,
+  "hurt": 2.3239999999999994,
+  "perHit": 2.223548311783606,
+  "kills": 8.875,
+  "dodgesMin": 37.5,
+  "busy": 0.6083680555555556,
+  "cancel": 0.49200497901857526,
+  "marksMin": 0.0
+ },
+ "hammer|1 quái": {
+  "dps": 43.42796655002496,
+  "hurt": 0.0,
+  "perHit": 1.0,
+  "kills": 2.625,
+  "dodgesMin": 12.5,
+  "busy": 0.8054166666666666,
+  "cancel": 0.18370208463054544,
+  "marksMin": 0.0
+ },
+ "hammer|cụm, Mầm Lửa": {
+  "dps": 66.53420797538556,
+  "hurt": 2.3689583333333326,
+  "perHit": 1.9687421706429278,
+  "kills": 11.25,
+  "dodgesMin": 35.0,
+  "busy": 0.6409722222222223,
+  "cancel": 0.4309802369523332,
+  "marksMin": 4.125
+ }
+}
