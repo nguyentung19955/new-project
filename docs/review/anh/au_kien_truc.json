@@ -1,0 +1,3495 @@
+{
+ "thu_tu_nap": [
+  "data.js",
+  "engine.js",
+  "art.js",
+  "weapon_art.js",
+  "hero_art.js",
+  "hero_tinhlinh.js",
+  "env_art.js",
+  "combat.js",
+  "moves.js",
+  "chuong.js",
+  "outfit.js",
+  "boss.js",
+  "vfx_cfg.js",
+  "fx.js",
+  "fx_he.js",
+  "monster_art.js",
+  "sprite_custom.js",
+  "mobs.js",
+  "bao_truoc.js",
+  "fx_dan.js",
+  "fx_chuong.js",
+  "fx_ky_nang.js",
+  "btn_art.js",
+  "ui_theme.js",
+  "linhkhi.js",
+  "chuong_ui.js",
+  "stage.js",
+  "village_scene.js",
+  "village.js",
+  "tailor.js",
+  "hanh_trang.js",
+  "ban_do.js",
+  "upgrade.js",
+  "mapgen.js",
+  "room_art.js",
+  "minimap.js",
+  "portal.js",
+  "do_roi.js",
+  "firebase-config.js",
+  "cloud.js",
+  "cloud_ui.js",
+  "bang_vang.js",
+  "main.js"
+ ],
+ "tep": {
+  "art.js": {
+   "dong": 3338,
+   "dinh_nghia": [
+    "art"
+   ],
+   "dung": [
+    "EL",
+    "GY0",
+    "GY1",
+    "H",
+    "RARITY",
+    "REGIONS",
+    "W",
+    "ZK",
+    "getWorld",
+    "srand",
+    "time",
+    "wRar",
+    "wStage",
+    "weaponArt"
+   ],
+   "try": 0,
+   "catch_nuot_loi": 0,
+   "catch": 0,
+   "ham_dai_nhat": [
+    [
+     2,
+     3336,
+     "(vô danh)"
+    ],
+    [
+     2636,
+     190,
+     "hoDraw"
+    ],
+    [
+     2327,
+     177,
+     "nguDraw"
+    ]
+   ],
+   "G_dung_rieng": 14
+  },
+  "ban_do.js": {
+   "dong": 223,
+   "dinh_nghia": [
+    "banDo",
+    "click"
+   ],
+   "dung": [
+    "RARITY",
+    "clamp",
+    "keyP",
+    "outfit",
+    "persist",
+    "save",
+    "sfx",
+    "theme",
+    "ui",
+    "ux",
+    "villageApi",
+    "villageScene",
+    "wName",
+    "wRar"
+   ],
+   "try": 0,
+   "catch_nuot_loi": 0,
+   "catch": 0,
+   "ham_dai_nhat": [
+    [
+     8,
+     215,
+     "(vô danh)"
+    ],
+    [
+     186,
+     27,
+     "S.modal"
+    ],
+    [
+     149,
+     22,
+     "S.quickBar"
+    ]
+   ],
+   "G_dung_rieng": 14
+  },
+  "bang_vang.js": {
+   "dong": 205,
+   "dinh_nghia": [
+    "bangVang",
+    "onStageEnd"
+   ],
+   "dung": [
+    "HEROES",
+    "REGIONS",
+    "Village",
+    "clamp",
+    "cloud",
+    "cloudUI",
+    "persist",
+    "power",
+    "save",
+    "theme",
+    "time",
+    "ui",
+    "ux",
+    "villageApi"
+   ],
+   "try": 3,
+   "catch_nuot_loi": 1,
+   "catch": 3,
+   "ham_dai_nhat": [
+    [
+     6,
+     199,
+     "(vô danh)"
+    ],
+    [
+     118,
+     78,
+     "B.panel"
+    ],
+    [
+     52,
+     17,
+     "G.onStageEnd"
+    ]
+   ],
+   "G_dung_rieng": 14
+  },
+  "bao_truoc.js": {
+   "dong": 426,
+   "dinh_nghia": [
+    "baoTruoc"
+   ],
+   "dung": [
+    "H",
+    "W",
+    "ZK",
+    "art",
+    "dpr",
+    "getWorld",
+    "mobDrawBomb",
+    "noRender",
+    "ox",
+    "oy",
+    "time",
+    "uiScale",
+    "ux",
+    "wx"
+   ],
+   "try": 3,
+   "catch_nuot_loi": 0,
+   "catch": 3,
+   "ham_dai_nhat": [
+    [
+     9,
+     417,
+     "(vô danh)"
+    ],
+    [
+     251,
+     53,
+     "BT.snap"
+    ],
+    [
+     362,
+     52,
+     "BT.draw"
+    ]
+   ],
+   "G_dung_rieng": 14
+  },
+  "boss.js": {
+   "dong": 385,
+   "dinh_nghia": [
+    "bossDebug",
+    "computeLayers",
+    "layerText",
+    "makeBoss",
+    "updateBoss"
+   ],
+   "dung": [
+    "BOSS_HP",
+    "BOSS_HP_OF",
+    "EL",
+    "ELS",
+    "MINI_HP",
+    "MOB_ART",
+    "REGIONS",
+    "WEAK",
+    "art",
+    "fx",
+    "getWorld",
+    "mobNear",
+    "mobZone",
+    "monsterArt",
+    "noRender",
+    "pick",
+    "rnd",
+    "rr",
+    "sfx",
+    "st0",
+    "tickStatus",
+    "time",
+    "zoneCircle"
+   ],
+   "try": 0,
+   "catch_nuot_loi": 0,
+   "catch": 0,
+   "ham_dai_nhat": [
+    [
+     4,
+     381,
+     "(vô danh)"
+    ],
+    [
+     306,
+     55,
+     "G.updateBoss"
+    ],
+    [
+     232,
+     51,
+     "thinkMini"
+    ]
+   ],
+   "G_dung_rieng": 23
+  },
+  "btn_art.js": {
+   "dong": 844,
+   "dinh_nghia": [
+    "btnArt"
+   ],
+   "dung": [
+    "EL",
+    "VFX",
+    "time"
+   ],
+   "try": 0,
+   "catch_nuot_loi": 0,
+   "catch": 0,
+   "ham_dai_nhat": [
+    [
+     9,
+     835,
+     "(vô danh)"
+    ],
+    [
+     653,
+     78,
+     "B.draw"
+    ],
+    [
+     480,
+     48,
+     "buildBase"
+    ]
+   ],
+   "G_dung_rieng": 3
+  },
+  "chuong.js": {
+   "dong": 452,
+   "dinh_nghia": [
+    "CHUONG",
+    "chSrc",
+    "chuong"
+   ],
+   "dung": [
+    "LVL_DMG",
+    "WTYPES",
+    "ZK",
+    "applyStatus",
+    "clamp",
+    "damage",
+    "fx",
+    "getRun",
+    "getWorld",
+    "moves",
+    "noRender",
+    "pDamage",
+    "save",
+    "sfx",
+    "targets",
+    "triggerProp"
+   ],
+   "try": 1,
+   "catch_nuot_loi": 0,
+   "catch": 0,
+   "ham_dai_nhat": [
+    [
+     12,
+     440,
+     "(vô danh)"
+    ],
+    [
+     329,
+     48,
+     "step"
+    ],
+    [
+     138,
+     33,
+     "CH.stats"
+    ]
+   ],
+   "G_dung_rieng": 16
+  },
+  "chuong_ui.js": {
+   "dong": 133,
+   "dinh_nghia": [
+    "chuongUI",
+    "click"
+   ],
+   "dung": [
+    "CHUONG",
+    "EL",
+    "chuong",
+    "inRect",
+    "persist",
+    "save",
+    "sfx",
+    "theme",
+    "ui",
+    "ux",
+    "villageApi",
+    "villageScene"
+   ],
+   "try": 0,
+   "catch_nuot_loi": 0,
+   "catch": 0,
+   "ham_dai_nhat": [
+    [
+     5,
+     128,
+     "(vô danh)"
+    ],
+    [
+     47,
+     76,
+     "U.tree"
+    ],
+    [
+     13,
+     10,
+     "fit"
+    ]
+   ],
+   "G_dung_rieng": 12
+  },
+  "cloud.js": {
+   "dong": 328,
+   "dinh_nghia": [
+    "VERSION",
+    "cloud",
+    "loadSave",
+    "persist",
+    "save"
+   ],
+   "dung": [
+    "REGIONS",
+    "StageScene",
+    "Village",
+    "bangVang",
+    "cloudUI",
+    "fixSave",
+    "scene",
+    "villageScene"
+   ],
+   "try": 18,
+   "catch_nuot_loi": 4,
+   "catch": 17,
+   "ham_dai_nhat": [
+    [
+     9,
+     319,
+     "(vô danh)"
+    ],
+    [
+     19,
+     11,
+     "whyOff"
+    ],
+    [
+     302,
+     8,
+     "G.persist"
+    ]
+   ],
+   "G_dung_rieng": 8
+  },
+  "cloud_ui.js": {
+   "dong": 336,
+   "dinh_nghia": [
+    "cloudToast",
+    "cloudUI",
+    "overlayOpen"
+   ],
+   "dung": [
+    "REGIONS",
+    "StageScene",
+    "Title",
+    "VERSION",
+    "Village",
+    "cloud",
+    "dropPointers",
+    "getRun",
+    "keys",
+    "rot",
+    "scene",
+    "villageApi",
+    "villageScene"
+   ],
+   "try": 14,
+   "catch_nuot_loi": 6,
+   "catch": 13,
+   "ham_dai_nhat": [
+    [
+     4,
+     332,
+     "(vô danh)"
+    ],
+    [
+     223,
+     73,
+     "inbox"
+    ],
+    [
+     163,
+     49,
+     "feedback"
+    ]
+   ],
+   "G_dung_rieng": 13
+  },
+  "combat.js": {
+   "dong": 1027,
+   "dinh_nghia": [
+    "activeEl",
+    "addCoat",
+    "addMarks",
+    "applyStatus",
+    "buildPlayer",
+    "burst",
+    "cb",
+    "curW",
+    "damage",
+    "drawWorld",
+    "getWorld",
+    "hasStatus",
+    "heroArgs",
+    "hurtPlayer",
+    "inZone",
+    "kill",
+    "nearest",
+    "newWorld",
+    "pDamage",
+    "power",
+    "powerCol",
+    "powerParts",
+    "setWorld",
+    "spawnEnemy",
+    "st0",
+    "targets",
+    "tickStatus",
+    "triggerProp",
+    "updatePlayer",
+    "updateWorld",
+    "wBase",
+    "wHas",
+    "wName",
+    "wRar",
+    "wRarMult",
+    "wStage",
+    "zoneCircle",
+    "zoneRect"
+   ],
+   "dung": [
+    "DODGE",
+    "EL",
+    "ELS",
+    "GEAR",
+    "GOLD_MULT",
+    "GY0",
+    "GY1",
+    "H",
+    "HEROES",
+    "HE_FEATURES",
+    "LINHKHI",
+    "LVL_DMG",
+    "LVL_HP",
+    "MARKS",
+    "MOVES",
+    "NAME_WORDS",
+    "PROC",
+    "RARITY",
+    "REGIONS",
+    "ROLES",
+    "STAGE_MULT",
+    "STAGE_NAMES",
+    "W",
+    "WTYPES",
+    "ZK",
+    "art",
+    "baoTruoc",
+    "chSrc",
+    "chuong",
+    "clamp",
+    "doRoi",
+    "flashMarks",
+    "fx",
+    "inShape",
+    "lk",
+    "mob",
+    "mobArmor",
+    "mobHeroOver",
+    "mobInit",
+    "mobOnHit",
+    "mobOnKill",
+    "mobWall",
+    "moves",
+    "noRender",
+    "onEliteDown",
+    "onMobDown",
+    "outfit",
+    "rnd",
+    "rr",
+    "save",
+    "sfx",
+    "time",
+    "ui",
+    "updateBoss",
+    "weaponArt",
+    "weaponById",
+    "wx"
+   ],
+   "try": 0,
+   "catch_nuot_loi": 0,
+   "catch": 0,
+   "ham_dai_nhat": [
+    [
+     2,
+     1025,
+     "(vô danh)"
+    ],
+    [
+     796,
+     138,
+     "G.updateWorld"
+    ],
+    [
+     561,
+     130,
+     "G.updatePlayer"
+    ]
+   ],
+   "G_dung_rieng": 57
+  },
+  "data.js": {
+   "dong": 340,
+   "dinh_nghia": [
+    "AFFIX",
+    "BOSS_HP",
+    "BOSS_HP_OF",
+    "CURSES",
+    "DIFF2",
+    "DODGE",
+    "DROP",
+    "EL",
+    "ELITE_TRAITS",
+    "ELS",
+    "FAMILIES",
+    "FORGE_CAP",
+    "FORGE_UP",
+    "GEAR",
+    "GOLD_MULT",
+    "GY0",
+    "GY1",
+    "H",
+    "HEROES",
+    "HE_FEATURES",
+    "HINTS",
+    "HKEYS",
+    "LINHKHI",
+    "LVL_DMG",
+    "LVL_HP",
+    "MARKS",
+    "MAX_LEVEL",
+    "MAX_SHARPEN",
+    "MINI_HP",
+    "MOB_ART",
+    "NAME_WORDS",
+    "POWER",
+    "PROC",
+    "RARITY",
+    "REGIONS",
+    "ROLES",
+    "ROOM_WAVES",
+    "SETS",
+    "SKEYS",
+    "SKILLS",
+    "STAGE_K",
+    "STAGE_MULT",
+    "STAGE_NAMES",
+    "STAGE_REC",
+    "TIERS",
+    "TIER_UP",
+    "W",
+    "WEAK",
+    "WKEYS",
+    "WTYPES",
+    "ZK",
+    "goldCost",
+    "grindMult",
+    "heFeatures",
+    "sharpenCost",
+    "sharpenFull",
+    "stageRec",
+    "stageStats",
+    "xpNeed"
+   ],
+   "dung": [],
+   "try": 0,
+   "catch_nuot_loi": 0,
+   "catch": 0,
+   "ham_dai_nhat": [
+    [
+     2,
+     338,
+     "(vô danh)"
+    ],
+    [
+     221,
+     14,
+     "G.stageStats"
+    ],
+    [
+     312,
+     5,
+     "G.sharpenFull"
+    ]
+   ],
+   "G_dung_rieng": 0
+  },
+  "do_roi.js": {
+   "dong": 272,
+   "dinh_nghia": [
+    "doRoi"
+   ],
+   "dung": [
+    "EL",
+    "RARITY",
+    "VFX",
+    "art",
+    "clamp",
+    "noRender",
+    "outfit",
+    "sfx",
+    "spriteCustom",
+    "theme",
+    "time",
+    "ui",
+    "ux",
+    "wName",
+    "wRar",
+    "wStage",
+    "weaponArt"
+   ],
+   "try": 2,
+   "catch_nuot_loi": 2,
+   "catch": 2,
+   "ham_dai_nhat": [
+    [
+     8,
+     264,
+     "(vô danh)"
+    ],
+    [
+     115,
+     54,
+     "D.ve"
+    ],
+    [
+     226,
+     34,
+     "D.veBay"
+    ]
+   ],
+   "G_dung_rieng": 17
+  },
+  "engine.js": {
+   "dong": 481,
+   "dinh_nghia": [
+    "audioStart",
+    "clamp",
+    "click",
+    "cx",
+    "cy",
+    "dist",
+    "downs",
+    "dpr",
+    "dropPointers",
+    "fitAffixes",
+    "fixSave",
+    "inRect",
+    "keyP",
+    "keys",
+    "linkTier",
+    "loadSave",
+    "lockLandscape",
+    "mx",
+    "my",
+    "newSave",
+    "newWeapon",
+    "noRender",
+    "ox",
+    "oy",
+    "persist",
+    "pick",
+    "pointers",
+    "portrait",
+    "resetSave",
+    "ri",
+    "rnd",
+    "rot",
+    "rotW",
+    "rr",
+    "run",
+    "save",
+    "scale",
+    "scene",
+    "setScene",
+    "sfx",
+    "sim",
+    "srand",
+    "stalePointers",
+    "syncTaps",
+    "tick",
+    "tickDraw",
+    "time",
+    "ui",
+    "uiScale",
+    "ux",
+    "weaponById",
+    "wx"
+   ],
+   "dung": [
+    "AFFIX",
+    "CHUONG",
+    "ELS",
+    "FAMILIES",
+    "FORGE_CAP",
+    "GEAR",
+    "GOLD_MULT",
+    "H",
+    "HKEYS",
+    "MAX_LEVEL",
+    "MAX_SHARPEN",
+    "POWER",
+    "RARITY",
+    "SKEYS",
+    "W",
+    "WTYPES",
+    "chuong",
+    "noRotLock",
+    "outfit",
+    "theme"
+   ],
+   "try": 11,
+   "catch_nuot_loi": 8,
+   "catch": 10,
+   "ham_dai_nhat": [
+    [
+     2,
+     479,
+     "(vô danh)"
+    ],
+    [
+     259,
+     85,
+     "G.fixSave"
+    ],
+    [
+     34,
+     20,
+     "resize"
+    ]
+   ],
+   "G_dung_rieng": 20
+  },
+  "env_art.js": {
+   "dong": 1426,
+   "dinh_nghia": [],
+   "dung": [
+    "EL",
+    "GY0",
+    "H",
+    "REGIONS",
+    "W",
+    "art",
+    "clamp",
+    "getRun",
+    "getWorld",
+    "srand",
+    "time"
+   ],
+   "try": 3,
+   "catch_nuot_loi": 0,
+   "catch": 0,
+   "ham_dai_nhat": [
+    [
+     4,
+     1422,
+     "(vô danh)"
+    ],
+    [
+     1107,
+     72,
+     "live"
+    ],
+    [
+     1046,
+     59,
+     "build"
+    ]
+   ],
+   "G_dung_rieng": 11
+  },
+  "firebase-config.js": {
+   "dong": 12,
+   "dinh_nghia": [],
+   "dung": [],
+   "try": 0,
+   "catch_nuot_loi": 0,
+   "catch": 0,
+   "ham_dai_nhat": [],
+   "G_dung_rieng": 0
+  },
+  "fx.js": {
+   "dong": 1856,
+   "dinh_nghia": [
+    "fx"
+   ],
+   "dung": [
+    "EL",
+    "H",
+    "VFX",
+    "W",
+    "ZK",
+    "activeEl",
+    "art",
+    "curW",
+    "getWorld",
+    "heroArgs",
+    "lk",
+    "monsterArt",
+    "noRender",
+    "st0",
+    "tinhLinh",
+    "ux",
+    "wStage"
+   ],
+   "try": 11,
+   "catch_nuot_loi": 0,
+   "catch": 10,
+   "ham_dai_nhat": [
+    [
+     3,
+     1853,
+     "(vô danh)"
+    ],
+    [
+     1643,
+     139,
+     "drawFx"
+    ],
+    [
+     863,
+     66,
+     "fx.entity"
+    ]
+   ],
+   "G_dung_rieng": 17
+  },
+  "fx_chuong.js": {
+   "dong": 290,
+   "dinh_nghia": [],
+   "dung": [
+    "CHUONG",
+    "ZK",
+    "chuong",
+    "fx",
+    "getWorld",
+    "noRender"
+   ],
+   "try": 4,
+   "catch_nuot_loi": 0,
+   "catch": 3,
+   "ham_dai_nhat": [
+    [
+     4,
+     286,
+     "(vô danh)"
+    ],
+    [
+     137,
+     42,
+     "step"
+    ],
+    [
+     101,
+     33,
+     "drawMay"
+    ]
+   ],
+   "G_dung_rieng": 6
+  },
+  "fx_dan.js": {
+   "dong": 350,
+   "dinh_nghia": [],
+   "dung": [
+    "EL",
+    "RARITY",
+    "REGIONS",
+    "VFX",
+    "art",
+    "clamp",
+    "fx",
+    "getWorld",
+    "noRender",
+    "time",
+    "wRar"
+   ],
+   "try": 4,
+   "catch_nuot_loi": 0,
+   "catch": 4,
+   "ham_dai_nhat": [
+    [
+     5,
+     345,
+     "(vô danh)"
+    ],
+    [
+     288,
+     54,
+     "step"
+    ],
+    [
+     211,
+     28,
+     "A.proj"
+    ]
+   ],
+   "G_dung_rieng": 11
+  },
+  "fx_he.js": {
+   "dong": 708,
+   "dinh_nghia": [],
+   "dung": [
+    "MOVES",
+    "ZK",
+    "activeEl",
+    "curW",
+    "fx",
+    "getWorld",
+    "noRender",
+    "time",
+    "weaponArt"
+   ],
+   "try": 7,
+   "catch_nuot_loi": 0,
+   "catch": 4,
+   "ham_dai_nhat": [
+    [
+     5,
+     703,
+     "(vô danh)"
+    ],
+    [
+     162,
+     46,
+     "swing"
+    ],
+    [
+     493,
+     39,
+     "fx.heStep"
+    ]
+   ],
+   "G_dung_rieng": 9
+  },
+  "fx_ky_nang.js": {
+   "dong": 304,
+   "dinh_nghia": [],
+   "dung": [
+    "VFX",
+    "ZK",
+    "fx",
+    "noRender",
+    "time"
+   ],
+   "try": 8,
+   "catch_nuot_loi": 0,
+   "catch": 8,
+   "ham_dai_nhat": [
+    [
+     6,
+     298,
+     "(vô danh)"
+    ],
+    [
+     50,
+     35,
+     "drawRune"
+    ],
+    [
+     179,
+     30,
+     "organic"
+    ]
+   ],
+   "G_dung_rieng": 5
+  },
+  "hanh_trang.js": {
+   "dong": 495,
+   "dinh_nghia": [
+    "click",
+    "hanhTrang"
+   ],
+   "dung": [
+    "AFFIX",
+    "CHUONG",
+    "EL",
+    "ELS",
+    "GEAR",
+    "HEROES",
+    "HE_FEATURES",
+    "LINHKHI",
+    "MARKS",
+    "MAX_LEVEL",
+    "POWER",
+    "RARITY",
+    "REGIONS",
+    "SETS",
+    "SKEYS",
+    "SKILLS",
+    "STAGE_NAMES",
+    "WTYPES",
+    "art",
+    "banDo",
+    "buildPlayer",
+    "chuong",
+    "chuongUI",
+    "clamp",
+    "inRect",
+    "keyP",
+    "lk",
+    "markInfo",
+    "outfit",
+    "persist",
+    "pointers",
+    "power",
+    "save",
+    "sfx",
+    "theme",
+    "time",
+    "ui",
+    "ux",
+    "villageApi",
+    "villageScene",
+    "wBase",
+    "wName",
+    "wRar",
+    "wStage",
+    "weaponById",
+    "xpNeed"
+   ],
+   "try": 2,
+   "catch_nuot_loi": 1,
+   "catch": 1,
+   "ham_dai_nhat": [
+    [
+     9,
+     486,
+     "(vô danh)"
+    ],
+    [
+     224,
+     94,
+     "outfitTab"
+    ],
+    [
+     78,
+     59,
+     "heroTab"
+    ]
+   ],
+   "G_dung_rieng": 46
+  },
+  "hero_art.js": {
+   "dong": 1189,
+   "dinh_nghia": [],
+   "dung": [
+    "EL",
+    "art",
+    "time"
+   ],
+   "try": 1,
+   "catch_nuot_loi": 0,
+   "catch": 0,
+   "ham_dai_nhat": [
+    [
+     4,
+     1185,
+     "(vô danh)"
+    ],
+    [
+     610,
+     214,
+     "render"
+    ],
+    [
+     492,
+     105,
+     "drawWeapon"
+    ]
+   ],
+   "G_dung_rieng": 3
+  },
+  "hero_tinhlinh.js": {
+   "dong": 1332,
+   "dinh_nghia": [
+    "heroLooks",
+    "tinhLinh"
+   ],
+   "dung": [
+    "VFX",
+    "art",
+    "time",
+    "wStage",
+    "weaponArt"
+   ],
+   "try": 6,
+   "catch_nuot_loi": 0,
+   "catch": 2,
+   "ham_dai_nhat": [
+    [
+     5,
+     1327,
+     "(vô danh)"
+    ],
+    [
+     908,
+     99,
+     "pose"
+    ],
+    [
+     590,
+     56,
+     "drawKid"
+    ]
+   ],
+   "G_dung_rieng": 5
+  },
+  "linhkhi.js": {
+   "dong": 321,
+   "dinh_nghia": [
+    "lk"
+   ],
+   "dung": [
+    "EL",
+    "HE_FEATURES",
+    "MARKS",
+    "RARITY",
+    "STAGE_NAMES",
+    "art",
+    "clamp",
+    "curW",
+    "getRun",
+    "hasStatus",
+    "heFeatures",
+    "theme",
+    "time",
+    "ui",
+    "ux",
+    "wName",
+    "wRar",
+    "wStage"
+   ],
+   "try": 0,
+   "catch_nuot_loi": 0,
+   "catch": 0,
+   "ham_dai_nhat": [
+    [
+     7,
+     314,
+     "(vô danh)"
+    ],
+    [
+     220,
+     41,
+     "LK.panel"
+    ],
+    [
+     104,
+     36,
+     "LK.hud"
+    ]
+   ],
+   "G_dung_rieng": 18
+  },
+  "main.js": {
+   "dong": 31,
+   "dinh_nghia": [],
+   "dung": [
+    "Title",
+    "loadSave",
+    "run",
+    "setScene"
+   ],
+   "try": 2,
+   "catch_nuot_loi": 1,
+   "catch": 2,
+   "ham_dai_nhat": [
+    [
+     2,
+     20,
+     "(vô danh)"
+    ],
+    [
+     6,
+     6,
+     "start"
+    ],
+    [
+     25,
+     6,
+     "(vô danh)"
+    ]
+   ],
+   "G_dung_rieng": 4
+  },
+  "mapgen.js": {
+   "dong": 345,
+   "dinh_nghia": [
+    "mapgen"
+   ],
+   "dung": [
+    "srand"
+   ],
+   "try": 0,
+   "catch_nuot_loi": 0,
+   "catch": 0,
+   "ham_dai_nhat": [
+    [
+     6,
+     339,
+     "(vô danh)"
+    ],
+    [
+     273,
+     67,
+     "M.check"
+    ],
+    [
+     102,
+     50,
+     "genB"
+    ]
+   ],
+   "G_dung_rieng": 1
+  },
+  "minimap.js": {
+   "dong": 182,
+   "dinh_nghia": [
+    "minimap"
+   ],
+   "dung": [
+    "H",
+    "REGIONS",
+    "W",
+    "clamp",
+    "mapgen",
+    "theme",
+    "time",
+    "ui",
+    "ux"
+   ],
+   "try": 0,
+   "catch_nuot_loi": 0,
+   "catch": 0,
+   "ham_dai_nhat": [
+    [
+     3,
+     179,
+     "(vô danh)"
+    ],
+    [
+     56,
+     37,
+     "grid"
+    ],
+    [
+     145,
+     36,
+     "MM.drawBig"
+    ]
+   ],
+   "G_dung_rieng": 9
+  },
+  "mobs.js": {
+   "dong": 742,
+   "dinh_nghia": [
+    "inShape",
+    "later",
+    "mob",
+    "mobArmor",
+    "mobBlast",
+    "mobBomb",
+    "mobDrawBomb",
+    "mobHeroOver",
+    "mobIcon",
+    "mobInit",
+    "mobNear",
+    "mobOnHit",
+    "mobOnKill",
+    "mobShoot",
+    "mobSummonSpot",
+    "mobWall",
+    "mobZone",
+    "zoneEscape"
+   ],
+   "dung": [
+    "EL",
+    "ELITE_TRAITS",
+    "MOB_ART",
+    "REGIONS",
+    "ROLES",
+    "ZK",
+    "art",
+    "baoTruoc",
+    "fx",
+    "getWorld",
+    "heroArgs",
+    "hurtPlayer",
+    "monsterArt",
+    "noRender",
+    "rnd",
+    "rr",
+    "sfx",
+    "time"
+   ],
+   "try": 0,
+   "catch_nuot_loi": 0,
+   "catch": 0,
+   "ham_dai_nhat": [
+    [
+     8,
+     475,
+     "(vô danh)"
+    ],
+    [
+     485,
+     257,
+     "(vô danh)"
+    ],
+    [
+     275,
+     92,
+     "think"
+    ]
+   ],
+   "G_dung_rieng": 18
+  },
+  "monster_art.js": {
+   "dong": 2317,
+   "dinh_nghia": [
+    "monsterArt"
+   ],
+   "dung": [
+    "VFX"
+   ],
+   "try": 10,
+   "catch_nuot_loi": 0,
+   "catch": 10,
+   "ham_dai_nhat": [
+    [
+     4,
+     2313,
+     "(vô danh)"
+    ],
+    [
+     2055,
+     259,
+     "(vô danh)"
+    ],
+    [
+     1530,
+     127,
+     "(vô danh)"
+    ]
+   ],
+   "G_dung_rieng": 1
+  },
+  "moves.js": {
+   "dong": 882,
+   "dinh_nghia": [
+    "HE",
+    "MOVES",
+    "MOVE_TIPS",
+    "moves"
+   ],
+   "dung": [
+    "EL",
+    "ZK",
+    "activeEl",
+    "applyStatus",
+    "cb",
+    "clamp",
+    "curW",
+    "damage",
+    "fx",
+    "getWorld",
+    "noRender",
+    "pDamage",
+    "sfx",
+    "targets",
+    "time",
+    "triggerProp",
+    "wHas",
+    "wStage"
+   ],
+   "try": 0,
+   "catch_nuot_loi": 0,
+   "catch": 0,
+   "ham_dai_nhat": [
+    [
+     5,
+     877,
+     "(vô danh)"
+    ],
+    [
+     758,
+     79,
+     "stepSpecials"
+    ],
+    [
+     583,
+     45,
+     "finish"
+    ]
+   ],
+   "G_dung_rieng": 18
+  },
+  "outfit.js": {
+   "dong": 462,
+   "dinh_nghia": [
+    "outfit"
+   ],
+   "dung": [
+    "ELS",
+    "RARITY",
+    "WTYPES",
+    "ZK",
+    "applyStatus",
+    "clamp",
+    "curW",
+    "damage",
+    "fx",
+    "getWorld",
+    "noRender",
+    "pDamage",
+    "pick",
+    "rnd",
+    "save",
+    "sfx",
+    "targets",
+    "tinhLinh"
+   ],
+   "try": 1,
+   "catch_nuot_loi": 1,
+   "catch": 1,
+   "ham_dai_nhat": [
+    [
+     5,
+     457,
+     "(vô danh)"
+    ],
+    [
+     156,
+     28,
+     "O.fix"
+    ],
+    [
+     289,
+     28,
+     "O.tick"
+    ]
+   ],
+   "G_dung_rieng": 18
+  },
+  "portal.js": {
+   "dong": 105,
+   "dinh_nghia": [],
+   "dung": [
+    "RARITY",
+    "art",
+    "doRoi",
+    "getWorld",
+    "outfit",
+    "theme",
+    "time",
+    "ui"
+   ],
+   "try": 1,
+   "catch_nuot_loi": 0,
+   "catch": 0,
+   "ham_dai_nhat": [
+    [
+     4,
+     101,
+     "(vô danh)"
+    ],
+    [
+     17,
+     45,
+     "portal"
+    ],
+    [
+     64,
+     30,
+     "loot"
+    ]
+   ],
+   "G_dung_rieng": 8
+  },
+  "room_art.js": {
+   "dong": 1566,
+   "dinh_nghia": [
+    "roomArt"
+   ],
+   "dung": [
+    "H",
+    "VFX",
+    "W",
+    "art",
+    "baoTruoc",
+    "getWorld",
+    "noRender",
+    "srand",
+    "time"
+   ],
+   "try": 5,
+   "catch_nuot_loi": 0,
+   "catch": 0,
+   "ham_dai_nhat": [
+    [
+     4,
+     1562,
+     "(vô danh)"
+    ],
+    [
+     1328,
+     122,
+     "ambLive"
+    ],
+    [
+     1060,
+     81,
+     "accentPlan"
+    ]
+   ],
+   "G_dung_rieng": 9
+  },
+  "sprite_custom.js": {
+   "dong": 509,
+   "dinh_nghia": [
+    "spriteCustom"
+   ],
+   "dung": [
+    "art",
+    "customSpriteData",
+    "doRoi",
+    "heroLooks",
+    "monsterArt",
+    "theme",
+    "time",
+    "tinhLinh",
+    "ux",
+    "villageScene",
+    "weaponArt"
+   ],
+   "try": 5,
+   "catch_nuot_loi": 2,
+   "catch": 4,
+   "ham_dai_nhat": [
+    [
+     8,
+     501,
+     "(vô danh)"
+    ],
+    [
+     20,
+     39,
+     "SC.add"
+    ],
+    [
+     164,
+     30,
+     "noiQuai"
+    ]
+   ],
+   "G_dung_rieng": 11
+  },
+  "stage.js": {
+   "dong": 1187,
+   "dinh_nghia": [
+    "SPAWN_MODES",
+    "StageScene",
+    "addXp",
+    "bossDrop",
+    "click",
+    "finishStage",
+    "flashMarks",
+    "fountainLocked",
+    "getRun",
+    "giveWeapon",
+    "gotoRoom",
+    "markInfo",
+    "onEliteDown",
+    "onMobDown",
+    "rollRarity",
+    "stageUi",
+    "startStage",
+    "usePortal",
+    "villageGo",
+    "weaponLine",
+    "winPortal"
+   ],
+   "dung": [
+    "CURSES",
+    "DODGE",
+    "DROP",
+    "EL",
+    "ELITE_TRAITS",
+    "ELS",
+    "FAMILIES",
+    "H",
+    "HEROES",
+    "MARKS",
+    "MAX_LEVEL",
+    "MOVES",
+    "RARITY",
+    "REGIONS",
+    "ROOM_WAVES",
+    "STAGE_NAMES",
+    "VFX",
+    "Village",
+    "W",
+    "WEAK",
+    "WKEYS",
+    "WTYPES",
+    "activeEl",
+    "addCoat",
+    "art",
+    "audioStart",
+    "botInput",
+    "btnArt",
+    "buildPlayer",
+    "burst",
+    "chuong",
+    "clamp",
+    "cloudUI",
+    "computeLayers",
+    "curW",
+    "cx",
+    "cy",
+    "doRoi",
+    "downs",
+    "drawWorld",
+    "fx",
+    "grindMult",
+    "hanhTrang",
+    "inRect",
+    "keyP",
+    "keys",
+    "kill",
+    "layerText",
+    "lk",
+    "makeBoss",
+    "mapgen",
+    "minimap",
+    "monsterArt",
+    "newWeapon",
+    "newWorld",
+    "onStageEnd",
+    "outfit",
+    "persist",
+    "pick",
+    "pointers",
+    "power",
+    "powerCol",
+    "rnd",
+    "roomArt",
+    "rr",
+    "save",
+    "setScene",
+    "setWorld",
+    "sfx",
+    "spawnEnemy",
+    "stageRec",
+    "stageStats",
+    "stalePointers",
+    "theme",
+    "time",
+    "ui",
+    "updateWorld",
+    "upgradeTips",
+    "ux",
+    "wName",
+    "wRar",
+    "wStage",
+    "weaponById",
+    "wx",
+    "xpNeed"
+   ],
+   "try": 0,
+   "catch_nuot_loi": 0,
+   "catch": 0,
+   "ham_dai_nhat": [
+    [
+     2,
+     1185,
+     "(vô danh)"
+    ],
+    [
+     759,
+     219,
+     "drawHud"
+    ],
+    [
+     423,
+     69,
+     "settle"
+    ]
+   ],
+   "G_dung_rieng": 85
+  },
+  "tailor.js": {
+   "dong": 227,
+   "dinh_nghia": [
+    "tailor"
+   ],
+   "dung": [
+    "EL",
+    "GEAR",
+    "RARITY",
+    "REGIONS",
+    "art",
+    "outfit",
+    "persist",
+    "save",
+    "sfx",
+    "theme",
+    "time",
+    "ui",
+    "ux",
+    "villageApi",
+    "villageScene"
+   ],
+   "try": 1,
+   "catch_nuot_loi": 1,
+   "catch": 1,
+   "ham_dai_nhat": [
+    [
+     7,
+     220,
+     "(vô danh)"
+    ],
+    [
+     85,
+     51,
+     "wearTab"
+    ],
+    [
+     170,
+     34,
+     "wingTab"
+    ]
+   ],
+   "G_dung_rieng": 15
+  },
+  "ui_theme.js": {
+   "dong": 648,
+   "dinh_nghia": [
+    "click",
+    "theme"
+   ],
+   "dung": [
+    "REGIONS",
+    "VFX",
+    "clamp",
+    "inRect",
+    "mx",
+    "my",
+    "pointers",
+    "save",
+    "sfx",
+    "time",
+    "ui",
+    "ux"
+   ],
+   "try": 1,
+   "catch_nuot_loi": 0,
+   "catch": 0,
+   "ham_dai_nhat": [
+    [
+     10,
+     638,
+     "(vô danh)"
+    ],
+    [
+     311,
+     40,
+     "T.bar"
+    ],
+    [
+     257,
+     30,
+     "T.bossBar"
+    ]
+   ],
+   "G_dung_rieng": 12
+  },
+  "upgrade.js": {
+   "dong": 277,
+   "dinh_nghia": [
+    "save",
+    "upg",
+    "upgradeTips"
+   ],
+   "dung": [
+    "CHUONG",
+    "EL",
+    "ELS",
+    "FORGE_CAP",
+    "FORGE_UP",
+    "MARKS",
+    "MAX_LEVEL",
+    "MAX_SHARPEN",
+    "RARITY",
+    "REGIONS",
+    "SKEYS",
+    "SKILLS",
+    "STAGE_MULT",
+    "STAGE_NAMES",
+    "TIER_UP",
+    "WTYPES",
+    "chuong",
+    "fitAffixes",
+    "goldCost",
+    "outfit",
+    "power",
+    "sharpenFull",
+    "stageRec",
+    "wName",
+    "wRar",
+    "wRarMult",
+    "wStage",
+    "xpNeed"
+   ],
+   "try": 2,
+   "catch_nuot_loi": 0,
+   "catch": 2,
+   "ham_dai_nhat": [
+    [
+     7,
+     270,
+     "(vô danh)"
+    ],
+    [
+     81,
+     90,
+     "U.list"
+    ],
+    [
+     212,
+     25,
+     "U.auto"
+    ]
+   ],
+   "G_dung_rieng": 28
+  },
+  "vfx_cfg.js": {
+   "dong": 17,
+   "dinh_nghia": [
+    "VFX"
+   ],
+   "dung": [],
+   "try": 0,
+   "catch_nuot_loi": 0,
+   "catch": 0,
+   "ham_dai_nhat": [
+    [
+     3,
+     14,
+     "(vô danh)"
+    ]
+   ],
+   "G_dung_rieng": 0
+  },
+  "village.js": {
+   "dong": 873,
+   "dinh_nghia": [
+    "Title",
+    "Village",
+    "click",
+    "syncTaps",
+    "titleLayout",
+    "villageApi",
+    "villageGo"
+   ],
+   "dung": [
+    "AFFIX",
+    "CHUONG",
+    "EL",
+    "ELS",
+    "FORGE_CAP",
+    "FORGE_UP",
+    "GOLD_MULT",
+    "HEROES",
+    "HE_FEATURES",
+    "HINTS",
+    "HKEYS",
+    "LINHKHI",
+    "MARKS",
+    "MAX_LEVEL",
+    "MAX_SHARPEN",
+    "POWER",
+    "PROC",
+    "RARITY",
+    "REGIONS",
+    "SKEYS",
+    "SKILLS",
+    "STAGE_NAMES",
+    "TIER_UP",
+    "VERSION",
+    "WTYPES",
+    "addMarks",
+    "art",
+    "audioStart",
+    "banDo",
+    "bangVang",
+    "chuong",
+    "chuongUI",
+    "clamp",
+    "cloud",
+    "cloudUI",
+    "downs",
+    "fitAffixes",
+    "goldCost",
+    "hanhTrang",
+    "keyP",
+    "lk",
+    "markInfo",
+    "outfit",
+    "persist",
+    "power",
+    "powerCol",
+    "resetSave",
+    "save",
+    "setScene",
+    "sfx",
+    "sharpenFull",
+    "stageRec",
+    "stageStats",
+    "startStage",
+    "theme",
+    "time",
+    "ui",
+    "ux",
+    "villageScene",
+    "wBase",
+    "wName",
+    "wRar",
+    "wRarMult",
+    "wStage",
+    "weaponArt",
+    "weaponById",
+    "weaponLine",
+    "wx",
+    "xpNeed"
+   ],
+   "try": 1,
+   "catch_nuot_loi": 0,
+   "catch": 1,
+   "ham_dai_nhat": [
+    [
+     9,
+     864,
+     "(vô danh)"
+    ],
+    [
+     269,
+     101,
+     "forge"
+    ],
+    [
+     180,
+     69,
+     "weaponView"
+    ]
+   ],
+   "G_dung_rieng": 69
+  },
+  "village_scene.js": {
+   "dong": 977,
+   "dinh_nghia": [
+    "VillageDemo",
+    "click",
+    "villageScene"
+   ],
+   "dung": [
+    "FORGE_CAP",
+    "FORGE_UP",
+    "HEROES",
+    "HKEYS",
+    "MAX_SHARPEN",
+    "TIER_UP",
+    "VFX",
+    "art",
+    "btnArt",
+    "chuong",
+    "clamp",
+    "cx",
+    "cy",
+    "downs",
+    "keyP",
+    "keys",
+    "outfit",
+    "persist",
+    "pointers",
+    "power",
+    "save",
+    "sfx",
+    "sharpenFull",
+    "theme",
+    "tinhLinh",
+    "ui",
+    "ux",
+    "villageApi",
+    "wName",
+    "wRar",
+    "weaponArt",
+    "weaponById",
+    "wx"
+   ],
+   "try": 3,
+   "catch_nuot_loi": 2,
+   "catch": 3,
+   "ham_dai_nhat": [
+    [
+     5,
+     972,
+     "(vô danh)"
+    ],
+    [
+     48,
+     92,
+     "drawNpc"
+    ],
+    [
+     601,
+     68,
+     "VS.update"
+    ]
+   ],
+   "G_dung_rieng": 33
+  },
+  "weapon_art.js": {
+   "dong": 2333,
+   "dinh_nghia": [
+    "weaponArt"
+   ],
+   "dung": [
+    "wStage"
+   ],
+   "try": 0,
+   "catch_nuot_loi": 0,
+   "catch": 0,
+   "ham_dai_nhat": [
+    [
+     6,
+     2327,
+     "(vô danh)"
+    ],
+    [
+     751,
+     59,
+     "build"
+    ],
+    [
+     548,
+     53,
+     "Face.prototype.eye"
+    ]
+   ],
+   "G_dung_rieng": 1
+  }
+ },
+ "phu_thuoc": {
+  "art.js": {
+   "data.js": 8,
+   "combat.js": 3,
+   "engine.js": 2,
+   "weapon_art.js": 1
+  },
+  "ban_do.js": {
+   "engine.js": 7,
+   "cloud.js": 2,
+   "combat.js": 2,
+   "data.js": 1,
+   "outfit.js": 1,
+   "upgrade.js": 1,
+   "ui_theme.js": 1,
+   "village.js": 1,
+   "village_scene.js": 1
+  },
+  "bang_vang.js": {
+   "engine.js": 6,
+   "cloud.js": 3,
+   "data.js": 2,
+   "village.js": 2,
+   "cloud_ui.js": 1,
+   "combat.js": 1,
+   "upgrade.js": 1,
+   "ui_theme.js": 1
+  },
+  "bao_truoc.js": {
+   "engine.js": 8,
+   "data.js": 3,
+   "art.js": 1,
+   "combat.js": 1,
+   "mobs.js": 1
+  },
+  "boss.js": {
+   "data.js": 8,
+   "engine.js": 6,
+   "combat.js": 4,
+   "mobs.js": 2,
+   "art.js": 1,
+   "fx.js": 1,
+   "monster_art.js": 1
+  },
+  "btn_art.js": {
+   "data.js": 1,
+   "vfx_cfg.js": 1,
+   "engine.js": 1
+  },
+  "chuong.js": {
+   "combat.js": 6,
+   "engine.js": 4,
+   "data.js": 3,
+   "fx.js": 1,
+   "stage.js": 1,
+   "moves.js": 1,
+   "upgrade.js": 1,
+   "cloud.js": 1
+  },
+  "chuong_ui.js": {
+   "engine.js": 6,
+   "chuong.js": 2,
+   "cloud.js": 2,
+   "data.js": 1,
+   "upgrade.js": 1,
+   "ui_theme.js": 1,
+   "village.js": 1,
+   "village_scene.js": 1
+  },
+  "cloud.js": {
+   "engine.js": 2,
+   "data.js": 1,
+   "stage.js": 1,
+   "village.js": 1,
+   "bang_vang.js": 1,
+   "cloud_ui.js": 1,
+   "village_scene.js": 1
+  },
+  "cloud_ui.js": {
+   "engine.js": 4,
+   "village.js": 3,
+   "stage.js": 2,
+   "cloud.js": 2,
+   "data.js": 1,
+   "village_scene.js": 1
+  },
+  "combat.js": {
+   "data.js": 24,
+   "engine.js": 10,
+   "mobs.js": 8,
+   "stage.js": 3,
+   "moves.js": 2,
+   "chuong.js": 2,
+   "art.js": 1,
+   "bao_truoc.js": 1,
+   "do_roi.js": 1,
+   "fx.js": 1,
+   "linhkhi.js": 1,
+   "outfit.js": 1,
+   "upgrade.js": 1,
+   "cloud.js": 1,
+   "boss.js": 1,
+   "weapon_art.js": 1
+  },
+  "data.js": {},
+  "do_roi.js": {
+   "engine.js": 6,
+   "combat.js": 3,
+   "data.js": 2,
+   "vfx_cfg.js": 1,
+   "art.js": 1,
+   "outfit.js": 1,
+   "sprite_custom.js": 1,
+   "ui_theme.js": 1,
+   "weapon_art.js": 1
+  },
+  "engine.js": {
+   "data.js": 15,
+   "chuong.js": 2,
+   "outfit.js": 1,
+   "ui_theme.js": 1
+  },
+  "env_art.js": {
+   "data.js": 5,
+   "engine.js": 3,
+   "art.js": 1,
+   "stage.js": 1,
+   "combat.js": 1
+  },
+  "firebase-config.js": {},
+  "fx.js": {
+   "combat.js": 6,
+   "data.js": 4,
+   "engine.js": 2,
+   "vfx_cfg.js": 1,
+   "art.js": 1,
+   "linhkhi.js": 1,
+   "monster_art.js": 1,
+   "hero_tinhlinh.js": 1
+  },
+  "fx_chuong.js": {
+   "chuong.js": 2,
+   "data.js": 1,
+   "fx.js": 1,
+   "combat.js": 1,
+   "engine.js": 1
+  },
+  "fx_dan.js": {
+   "data.js": 3,
+   "engine.js": 3,
+   "combat.js": 2,
+   "vfx_cfg.js": 1,
+   "art.js": 1,
+   "fx.js": 1
+  },
+  "fx_he.js": {
+   "combat.js": 3,
+   "engine.js": 2,
+   "moves.js": 1,
+   "data.js": 1,
+   "fx.js": 1,
+   "weapon_art.js": 1
+  },
+  "fx_ky_nang.js": {
+   "engine.js": 2,
+   "vfx_cfg.js": 1,
+   "data.js": 1,
+   "fx.js": 1
+  },
+  "hanh_trang.js": {
+   "data.js": 18,
+   "engine.js": 11,
+   "combat.js": 6,
+   "chuong.js": 2,
+   "cloud.js": 2,
+   "art.js": 1,
+   "ban_do.js": 1,
+   "chuong_ui.js": 1,
+   "linhkhi.js": 1,
+   "stage.js": 1,
+   "outfit.js": 1,
+   "upgrade.js": 1,
+   "ui_theme.js": 1,
+   "village.js": 1,
+   "village_scene.js": 1
+  },
+  "hero_art.js": {
+   "data.js": 1,
+   "art.js": 1,
+   "engine.js": 1
+  },
+  "hero_tinhlinh.js": {
+   "vfx_cfg.js": 1,
+   "art.js": 1,
+   "engine.js": 1,
+   "combat.js": 1,
+   "weapon_art.js": 1
+  },
+  "linhkhi.js": {
+   "data.js": 6,
+   "combat.js": 5,
+   "engine.js": 4,
+   "art.js": 1,
+   "stage.js": 1,
+   "ui_theme.js": 1
+  },
+  "main.js": {
+   "engine.js": 3,
+   "village.js": 1,
+   "cloud.js": 1
+  },
+  "mapgen.js": {
+   "engine.js": 1
+  },
+  "minimap.js": {
+   "engine.js": 4,
+   "data.js": 3,
+   "mapgen.js": 1,
+   "ui_theme.js": 1
+  },
+  "mobs.js": {
+   "data.js": 6,
+   "engine.js": 5,
+   "combat.js": 3,
+   "art.js": 1,
+   "bao_truoc.js": 1,
+   "fx.js": 1,
+   "monster_art.js": 1
+  },
+  "monster_art.js": {
+   "vfx_cfg.js": 1
+  },
+  "moves.js": {
+   "combat.js": 11,
+   "engine.js": 4,
+   "data.js": 2,
+   "fx.js": 1
+  },
+  "outfit.js": {
+   "combat.js": 6,
+   "engine.js": 6,
+   "data.js": 4,
+   "fx.js": 1,
+   "upgrade.js": 1,
+   "cloud.js": 1,
+   "hero_tinhlinh.js": 1
+  },
+  "portal.js": {
+   "engine.js": 2,
+   "data.js": 1,
+   "art.js": 1,
+   "do_roi.js": 1,
+   "combat.js": 1,
+   "outfit.js": 1,
+   "ui_theme.js": 1
+  },
+  "room_art.js": {
+   "engine.js": 3,
+   "data.js": 2,
+   "vfx_cfg.js": 1,
+   "art.js": 1,
+   "bao_truoc.js": 1,
+   "combat.js": 1
+  },
+  "sprite_custom.js": {
+   "hero_tinhlinh.js": 2,
+   "engine.js": 2,
+   "art.js": 1,
+   "do_roi.js": 1,
+   "monster_art.js": 1,
+   "ui_theme.js": 1,
+   "village_scene.js": 1,
+   "weapon_art.js": 1
+  },
+  "stage.js": {
+   "data.js": 23,
+   "engine.js": 23,
+   "combat.js": 16,
+   "boss.js": 3,
+   "cloud.js": 2,
+   "upgrade.js": 2,
+   "moves.js": 1,
+   "vfx_cfg.js": 1,
+   "village.js": 1,
+   "art.js": 1,
+   "btn_art.js": 1,
+   "chuong.js": 1,
+   "cloud_ui.js": 1,
+   "do_roi.js": 1,
+   "fx.js": 1,
+   "hanh_trang.js": 1,
+   "linhkhi.js": 1,
+   "mapgen.js": 1,
+   "minimap.js": 1,
+   "monster_art.js": 1,
+   "bang_vang.js": 1,
+   "outfit.js": 1,
+   "room_art.js": 1,
+   "ui_theme.js": 1
+  },
+  "tailor.js": {
+   "engine.js": 6,
+   "data.js": 4,
+   "cloud.js": 2,
+   "art.js": 1,
+   "outfit.js": 1,
+   "upgrade.js": 1,
+   "ui_theme.js": 1,
+   "village.js": 1,
+   "village_scene.js": 1
+  },
+  "ui_theme.js": {
+   "engine.js": 10,
+   "data.js": 1,
+   "vfx_cfg.js": 1,
+   "upgrade.js": 1,
+   "cloud.js": 1
+  },
+  "upgrade.js": {
+   "data.js": 19,
+   "combat.js": 5,
+   "chuong.js": 2,
+   "engine.js": 1,
+   "outfit.js": 1
+  },
+  "vfx_cfg.js": {},
+  "village.js": {
+   "data.js": 28,
+   "engine.js": 15,
+   "combat.js": 8,
+   "cloud.js": 4,
+   "stage.js": 3,
+   "chuong.js": 2,
+   "art.js": 1,
+   "ban_do.js": 1,
+   "bang_vang.js": 1,
+   "chuong_ui.js": 1,
+   "cloud_ui.js": 1,
+   "hanh_trang.js": 1,
+   "linhkhi.js": 1,
+   "outfit.js": 1,
+   "upgrade.js": 1,
+   "ui_theme.js": 1,
+   "village_scene.js": 1,
+   "weapon_art.js": 1
+  },
+  "village_scene.js": {
+   "engine.js": 14,
+   "data.js": 7,
+   "combat.js": 3,
+   "cloud.js": 2,
+   "vfx_cfg.js": 1,
+   "art.js": 1,
+   "btn_art.js": 1,
+   "chuong.js": 1,
+   "outfit.js": 1,
+   "upgrade.js": 1,
+   "ui_theme.js": 1,
+   "hero_tinhlinh.js": 1,
+   "village.js": 1,
+   "weapon_art.js": 1
+  },
+  "weapon_art.js": {
+   "combat.js": 1
+  }
+ },
+ "duoc_dung_boi_bao_nhieu_tep": {
+  "engine.js": 37,
+  "data.js": 34,
+  "combat.js": 25,
+  "art.js": 19,
+  "cloud.js": 14,
+  "ui_theme.js": 14,
+  "upgrade.js": 12,
+  "outfit.js": 11,
+  "fx.js": 11,
+  "vfx_cfg.js": 11,
+  "village.js": 10,
+  "chuong.js": 9,
+  "weapon_art.js": 8,
+  "village_scene.js": 8,
+  "stage.js": 8,
+  "monster_art.js": 5,
+  "linhkhi.js": 5,
+  "cloud_ui.js": 4,
+  "moves.js": 4,
+  "do_roi.js": 4,
+  "hero_tinhlinh.js": 4,
+  "mobs.js": 3,
+  "bang_vang.js": 3,
+  "bao_truoc.js": 3,
+  "boss.js": 2,
+  "ban_do.js": 2,
+  "chuong_ui.js": 2,
+  "mapgen.js": 2,
+  "btn_art.js": 2,
+  "hanh_trang.js": 2,
+  "sprite_custom.js": 1,
+  "minimap.js": 1,
+  "room_art.js": 1
+ },
+ "G_dinh_nghia_o_nhieu_tep": {
+  "click": [
+   "ban_do.js",
+   "chuong_ui.js",
+   "engine.js",
+   "hanh_trang.js",
+   "stage.js",
+   "ui_theme.js",
+   "village.js",
+   "village_scene.js"
+  ],
+  "save": [
+   "cloud.js",
+   "engine.js",
+   "upgrade.js"
+  ],
+  "loadSave": [
+   "cloud.js",
+   "engine.js"
+  ],
+  "persist": [
+   "cloud.js",
+   "engine.js"
+  ],
+  "syncTaps": [
+   "engine.js",
+   "village.js"
+  ],
+  "villageGo": [
+   "stage.js",
+   "village.js"
+  ]
+ },
+ "ham_dai": [
+  [
+   3336,
+   "art.js",
+   2,
+   "(vô danh)"
+  ],
+  [
+   2327,
+   "weapon_art.js",
+   6,
+   "(vô danh)"
+  ],
+  [
+   2313,
+   "monster_art.js",
+   4,
+   "(vô danh)"
+  ],
+  [
+   1853,
+   "fx.js",
+   3,
+   "(vô danh)"
+  ],
+  [
+   1562,
+   "room_art.js",
+   4,
+   "(vô danh)"
+  ],
+  [
+   1422,
+   "env_art.js",
+   4,
+   "(vô danh)"
+  ],
+  [
+   1327,
+   "hero_tinhlinh.js",
+   5,
+   "(vô danh)"
+  ],
+  [
+   1185,
+   "stage.js",
+   2,
+   "(vô danh)"
+  ],
+  [
+   1185,
+   "hero_art.js",
+   4,
+   "(vô danh)"
+  ],
+  [
+   1025,
+   "combat.js",
+   2,
+   "(vô danh)"
+  ],
+  [
+   972,
+   "village_scene.js",
+   5,
+   "(vô danh)"
+  ],
+  [
+   877,
+   "moves.js",
+   5,
+   "(vô danh)"
+  ],
+  [
+   864,
+   "village.js",
+   9,
+   "(vô danh)"
+  ],
+  [
+   835,
+   "btn_art.js",
+   9,
+   "(vô danh)"
+  ],
+  [
+   703,
+   "fx_he.js",
+   5,
+   "(vô danh)"
+  ],
+  [
+   638,
+   "ui_theme.js",
+   10,
+   "(vô danh)"
+  ],
+  [
+   501,
+   "sprite_custom.js",
+   8,
+   "(vô danh)"
+  ],
+  [
+   486,
+   "hanh_trang.js",
+   9,
+   "(vô danh)"
+  ],
+  [
+   479,
+   "engine.js",
+   2,
+   "(vô danh)"
+  ],
+  [
+   475,
+   "mobs.js",
+   8,
+   "(vô danh)"
+  ]
+ ],
+ "bai_kiem_thu_nhac_toi": {
+  "art.js": 1,
+  "ban_do.js": 21,
+  "bang_vang.js": 2,
+  "bao_truoc.js": 4,
+  "boss.js": 9,
+  "btn_art.js": 2,
+  "chuong.js": 10,
+  "chuong_ui.js": 20,
+  "cloud.js": 51,
+  "cloud_ui.js": 1,
+  "combat.js": 65,
+  "data.js": 35,
+  "do_roi.js": 4,
+  "engine.js": 86,
+  "env_art.js": 0,
+  "firebase-config.js": 0,
+  "fx.js": 5,
+  "fx_chuong.js": 1,
+  "fx_dan.js": 2,
+  "fx_he.js": 1,
+  "fx_ky_nang.js": 1,
+  "hanh_trang.js": 27,
+  "hero_art.js": 0,
+  "hero_tinhlinh.js": 4,
+  "linhkhi.js": 1,
+  "main.js": 0,
+  "mapgen.js": 16,
+  "minimap.js": 6,
+  "mobs.js": 4,
+  "monster_art.js": 11,
+  "moves.js": 13,
+  "outfit.js": 10,
+  "portal.js": 0,
+  "room_art.js": 8,
+  "sprite_custom.js": 2,
+  "stage.js": 73,
+  "tailor.js": 0,
+  "ui_theme.js": 25,
+  "upgrade.js": 51,
+  "vfx_cfg.js": 0,
+  "village.js": 47,
+  "village_scene.js": 29,
+  "weapon_art.js": 4
+ },
+ "bai_kiem_thu_chi_tiet": {
+  "art.js": [
+   "ghep2_fgh.js"
+  ],
+  "ban_do.js": [
+   "anim_smoke.py",
+   "au_lib.js",
+   "au_onboarding.py",
+   "ban_do.py",
+   "bot.js",
+   "cay.py",
+   "chieu_shots.py",
+   "chuong_shots.py",
+   "cong.py",
+   "dan_linhkhi_shots.py",
+   "fx_check.py",
+   "ghep.py",
+   "ghep2.py",
+   "ghep2_fgh.js",
+   "ghep_shots.py",
+   "linhkhi.py",
+   "nhan_vat_shots.py",
+   "perf.py",
+   "quai_lib.py",
+   "tam_huong_shots.py",
+   "vfx_ky_nang_shots.py"
+  ],
+  "bang_vang.js": [
+   "hud_shots.py",
+   "may.py"
+  ],
+  "bao_truoc.js": [
+   "au_bao_truoc.py",
+   "bao_truoc.py",
+   "ghep2_fgh.js",
+   "vfx_ky_nang.py"
+  ],
+  "boss.js": [
+   "au_bao_truoc.py",
+   "au_trum_hoc.py",
+   "bao_truoc_shots.py",
+   "bot.js",
+   "ghep2_fgh.js",
+   "quai.py",
+   "quai_shots.py",
+   "rules.py",
+   "setup.js"
+  ],
+  "btn_art.js": [
+   "ghep.py",
+   "ghep2.py"
+  ],
+  "chuong.js": [
+   "au_noi_dung.py",
+   "au_tien_trien.py",
+   "bot.js",
+   "cay.py",
+   "chuong.py",
+   "chuong_ui.py",
+   "setup.js",
+   "tam_huong.py",
+   "trang_phuc.py",
+   "vfx_ky_nang.py"
+  ],
+  "chuong_ui.js": [
+   "anim_smoke.py",
+   "au_lib.js",
+   "au_onboarding.py",
+   "bot.js",
+   "chieu_shots.py",
+   "chuong_shots.py",
+   "chuong_ui.py",
+   "cong.py",
+   "dan_linhkhi_shots.py",
+   "fx_check.py",
+   "ghep.py",
+   "ghep2.py",
+   "ghep2_fgh.js",
+   "ghep_shots.py",
+   "linhkhi.py",
+   "nhan_vat_shots.py",
+   "perf.py",
+   "quai_lib.py",
+   "tam_huong_shots.py",
+   "vfx_ky_nang_shots.py"
+  ],
+  "cloud.js": [
+   "anim_smoke.py",
+   "au_am_thanh.py",
+   "au_bang.py",
+   "au_hinh.py",
+   "au_luu.py",
+   "au_mapgen.py",
+   "au_onboarding.py",
+   "au_tien_trien.py",
+   "au_truy_cap.py",
+   "au_ui.py",
+   "balance.py",
+   "ban_do.py",
+   "bot.js",
+   "campaign.py",
+   "cay.py",
+   "cay_nang_cap_shots.py",
+   "cay_shots.py",
+   "chitiet_shots.py",
+   "chuong.py",
+   "chuong_shots.py",
+   "chuong_ui.py",
+   "cong.py",
+   "dan_linhkhi_shots.py",
+   "diff2.sh",
+   "do_roi.py",
+   "doors.py",
+   "dps.py",
+   "env_rooms.py",
+   "fuzz.py",
+   "ghep.py",
+   "ghep2_fgh.js",
+   "ghep_shots.py",
+   "hanh_trang.py",
+   "hud_shots.py",
+   "lang_shots.py",
+   "linhkhi.py",
+   "may.py",
+   "perf.py",
+   "rules.py",
+   "setup.js",
+   "shots.py",
+   "trang_phuc.py",
+   "trangphuc_shots.py",
+   "ui_input.py",
+   "ui_lib.py",
+   "ui_robust.py",
+   "ui_shots.py",
+   "vfx_ky_nang_shots.py",
+   "vfx_tg_shots.py",
+   "xuong_sprite.py",
+   "xuong_sprite_them_shots.py"
+  ],
+  "cloud_ui.js": [
+   "may.py"
+  ],
+  "combat.js": [
+   "au_am_thanh.py",
+   "au_bao_truoc.py",
+   "au_dps.py",
+   "au_hieu_ung.py",
+   "au_hieunang.py",
+   "au_hinh.py",
+   "au_hitbox_shots.py",
+   "au_input.py",
+   "au_lib.js",
+   "au_luu.py",
+   "au_mapgen.py",
+   "au_ne.py",
+   "au_tien_trien.py",
+   "au_tu_ngam.py",
+   "ban_do.py",
+   "bao_truoc_shots.py",
+   "bot.js",
+   "campaign.py",
+   "cay.py",
+   "chieu_shots.py",
+   "chitiet_shots.py",
+   "chuong.py",
+   "chuong_shots.py",
+   "chuong_ui.py",
+   "cong.py",
+   "cong_shots.py",
+   "cung_lib.js",
+   "cung_shots.py",
+   "dan_linhkhi_shots.py",
+   "do_roi.py",
+   "doors.py",
+   "dps.py",
+   "env_rooms.py",
+   "fuzz.py",
+   "fx_check.py",
+   "ghep.py",
+   "ghep2.py",
+   "ghep2_c.js",
+   "ghep2_fgh.js",
+   "ghep2_shots.py",
+   "ghep_shots.py",
+   "hanh_trang.py",
+   "lang_shots.py",
+   "linhkhi.py",
+   "moves.py",
+   "nhan_vat.py",
+   "nhan_vat_shots.py",
+   "perf.py",
+   "quai.py",
+   "quai_lib.py",
+   "quai_shots.py",
+   "room_shots.py",
+   "rules.py",
+   "setup.js",
+   "tam_huong.py",
+   "tam_huong_shots.py",
+   "trang_phuc.py",
+   "trangphuc_shots.py",
+   "ui_input.py",
+   "ui_shots.py",
+   "vfx_ky_nang.py",
+   "vfx_ky_nang_shots.py",
+   "xuong_sprite.py",
+   "xuong_sprite_shots.py",
+   "xuong_sprite_them_shots.py"
+  ],
+  "data.js": [
+   "anim_smoke.py",
+   "au_bao_truoc.py",
+   "au_dps.py",
+   "au_hieu_ung.py",
+   "au_hinh.py",
+   "au_lib.js",
+   "au_noi_dung.py",
+   "au_tien_trien.py",
+   "campaign.py",
+   "cay.py",
+   "chitiet_shots.py",
+   "chuong.py",
+   "cung_lib.js",
+   "cung_shots.py",
+   "do_roi.py",
+   "dps.py",
+   "fuzz.py",
+   "fx_check.py",
+   "ghep.py",
+   "ghep2.py",
+   "ghep2_fgh.js",
+   "ghep_shots.py",
+   "hanh_trang.py",
+   "hud_shots.py",
+   "moves.py",
+   "perf.py",
+   "quai.py",
+   "quai_shots.py",
+   "room_shots.py",
+   "rules.py",
+   "setup.js",
+   "shots.py",
+   "tam_huong.py",
+   "trang_phuc.py",
+   "ui_shots.py"
+  ],
+  "do_roi.js": [
+   "au_hieu_ung.py",
+   "do_roi.py",
+   "vfx_tg_shots.py",
+   "xuong_sprite.py"
+  ],
+  "engine.js": [
+   "anim_smoke.py",
+   "au_am_thanh.py",
+   "au_bang.py",
+   "au_bao_truoc.py",
+   "au_dps.py",
+   "au_hieu_ung.py",
+   "au_hieunang.py",
+   "au_hinh.py",
+   "au_hitbox_shots.py",
+   "au_input.py",
+   "au_lib.js",
+   "au_luu.py",
+   "au_mapgen.py",
+   "au_ne.py",
+   "au_noi_dung.py",
+   "au_onboarding.py",
+   "au_tien_trien.py",
+   "au_trum_hoc.py",
+   "au_truy_cap.py",
+   "au_tu_ngam.py",
+   "au_ui.py",
+   "balance.py",
+   "ban_do.py",
+   "bao_truoc.py",
+   "bao_truoc_shots.py",
+   "bot.js",
+   "campaign.py",
+   "cay.py",
+   "cay_nang_cap_shots.py",
+   "cay_shots.py",
+   "chieu_shots.py",
+   "chitiet_shots.py",
+   "chuong.py",
+   "chuong_shots.py",
+   "chuong_ui.py",
+   "cong.py",
+   "cong_shots.py",
+   "cung.py",
+   "cung_lib.js",
+   "cung_shots.py",
+   "dan_linhkhi_shots.py",
+   "dau_truong_shots.py",
+   "diff2.sh",
+   "do_roi.py",
+   "doors.py",
+   "dps.py",
+   "env_rooms.py",
+   "fuzz.py",
+   "fx_check.py",
+   "ghep.py",
+   "ghep2.py",
+   "ghep2_c.js",
+   "ghep2_fgh.js",
+   "ghep2_shots.py",
+   "ghep_shots.py",
+   "hanh_trang.py",
+   "hud_shots.py",
+   "lang_shots.py",
+   "linhkhi.py",
+   "mapgen.py",
+   "may.py",
+   "moves.py",
+   "nhan_vat.py",
+   "nhan_vat_shots.py",
+   "perf.py",
+   "quai.py",
+   "quai_lib.py",
+   "room_shots.py",
+   "rules.py",
+   "setup.js",
+   "shots.py",
+   "tam_huong.py",
+   "tam_huong_shots.py",
+   "trang_phuc.py",
+   "trangphuc_shots.py",
+   "ui_input.py",
+   "ui_lib.py",
+   "ui_robust.py",
+   "ui_shots.py",
+   "vfx_ky_nang.py",
+   "vfx_ky_nang_shots.py",
+   "vfx_tg_shots.py",
+   "xuong_sprite.py",
+   "xuong_sprite_shots.py",
+   "xuong_sprite_them_shots.py",
+   "xuong_sprite_vo.py"
+  ],
+  "env_art.js": [],
+  "firebase-config.js": [],
+  "fx.js": [
+   "au_dps.py",
+   "au_lib.js",
+   "au_ne.py",
+   "fx_check.py",
+   "vfx_ky_nang.py"
+  ],
+  "fx_chuong.js": [
+   "vfx_ky_nang.py"
+  ],
+  "fx_dan.js": [
+   "linhkhi.py",
+   "vfx_ky_nang.py"
+  ],
+  "fx_he.js": [
+   "fx_check.py"
+  ],
+  "fx_ky_nang.js": [
+   "vfx_ky_nang.py"
+  ],
+  "hanh_trang.js": [
+   "anim_smoke.py",
+   "au_bang.py",
+   "au_lib.js",
+   "au_onboarding.py",
+   "au_truy_cap.py",
+   "ban_do.py",
+   "bot.js",
+   "chieu_shots.py",
+   "chuong_shots.py",
+   "chuong_ui.py",
+   "cong.py",
+   "dan_linhkhi_shots.py",
+   "fx_check.py",
+   "ghep.py",
+   "ghep2.py",
+   "ghep2_fgh.js",
+   "ghep_shots.py",
+   "hanh_trang.py",
+   "hud_shots.py",
+   "linhkhi.py",
+   "nhan_vat_shots.py",
+   "perf.py",
+   "quai_lib.py",
+   "tam_huong_shots.py",
+   "vfx_ky_nang_shots.py",
+   "xuong_sprite.py",
+   "xuong_sprite_them_shots.py"
+  ],
+  "hero_art.js": [],
+  "hero_tinhlinh.js": [
+   "ghep.py",
+   "nhan_vat.py",
+   "trang_phuc.py",
+   "xuong_sprite.py"
+  ],
+  "linhkhi.js": [
+   "linhkhi.py"
+  ],
+  "main.js": [],
+  "mapgen.js": [
+   "au_mapgen.py",
+   "bot.js",
+   "doors.py",
+   "fuzz.py",
+   "ghep2.py",
+   "ghep2_c.js",
+   "ghep2_d.js",
+   "ghep2_fgh.js",
+   "ghep2_shots.py",
+   "mapgen.py",
+   "room_shots.py",
+   "setup.js",
+   "shots.py",
+   "ui_input.py",
+   "ui_shots.py",
+   "vfx_tg_shots.py"
+  ],
+  "minimap.js": [
+   "au_noi_dung.py",
+   "ghep2.py",
+   "ghep2_d.js",
+   "lang_shots.py",
+   "ui_input.py",
+   "ui_shots.py"
+  ],
+  "mobs.js": [
+   "bao_truoc.py",
+   "bot.js",
+   "dps.py",
+   "quai.py"
+  ],
+  "monster_art.js": [
+   "au_noi_dung.py",
+   "bao_truoc_shots.py",
+   "do_roi.py",
+   "fx_check.py",
+   "ghep2_fgh.js",
+   "nhan_vat.py",
+   "quai.py",
+   "quai_shots.py",
+   "quai_tam.py",
+   "quai_truoc_sau.py",
+   "xuong_sprite.py"
+  ],
+  "moves.js": [
+   "au_hitbox_shots.py",
+   "au_noi_dung.py",
+   "bot.js",
+   "cong_shots.py",
+   "cung_shots.py",
+   "dps.py",
+   "ghep.py",
+   "ghep2_c.js",
+   "ghep2_shots.py",
+   "moves.py",
+   "tam_huong.py",
+   "ui_input.py",
+   "vfx_ky_nang_shots.py"
+  ],
+  "outfit.js": [
+   "au_noi_dung.py",
+   "balance.py",
+   "ban_do.py",
+   "cay.py",
+   "dps.py",
+   "hanh_trang.py",
+   "trang_phuc.py",
+   "trangphuc_shots.py",
+   "ui_input.py",
+   "xuong_sprite_them_shots.py"
+  ],
+  "portal.js": [],
+  "room_art.js": [
+   "au_mapgen.py",
+   "bot.js",
+   "dau_truong_nen.py",
+   "doors.py",
+   "env_rooms.py",
+   "ghep2.py",
+   "ghep2_c.js",
+   "ui_input.py"
+  ],
+  "sprite_custom.js": [
+   "xuong_sprite.py",
+   "xuong_sprite_vo.py"
+  ],
+  "stage.js": [
+   "anim_smoke.py",
+   "au_hieunang.py",
+   "au_hinh.py",
+   "au_input.py",
+   "au_lib.js",
+   "au_luu.py",
+   "au_mapgen.py",
+   "au_noi_dung.py",
+   "au_onboarding.py",
+   "au_tien_trien.py",
+   "au_trum_hoc.py",
+   "au_truy_cap.py",
+   "au_ui.py",
+   "balance.py",
+   "ban_do.py",
+   "bao_truoc_shots.py",
+   "bot.js",
+   "campaign.py",
+   "cay.py",
+   "cay_nang_cap_shots.py",
+   "cay_shots.py",
+   "chieu_shots.py",
+   "chitiet_shots.py",
+   "chuong.py",
+   "chuong_shots.py",
+   "chuong_ui.py",
+   "cong.py",
+   "cong_shots.py",
+   "cung_lib.js",
+   "cung_shots.py",
+   "dan_linhkhi_shots.py",
+   "dau_truong_shots.py",
+   "do_roi.py",
+   "doors.py",
+   "dps.py",
+   "env_rooms.py",
+   "fuzz.py",
+   "fx_check.py",
+   "ghep.py",
+   "ghep2.py",
+   "ghep2_c.js",
+   "ghep2_fgh.js",
+   "ghep2_shots.py",
+   "ghep_shots.py",
+   "hanh_trang.py",
+   "hud_shots.py",
+   "lang_shots.py",
+   "linhkhi.py",
+   "may.py",
+   "moves.py",
+   "nhan_vat_shots.py",
+   "perf.py",
+   "probe.py",
+   "quai.py",
+   "quai_lib.py",
+   "quai_shots.py",
+   "room_shots.py",
+   "rules.py",
+   "setup.js",
+   "shots.py",
+   "smoke.py",
+   "tam_huong.py",
+   "tam_huong_shots.py",
+   "trang_phuc.py",
+   "trangphuc_shots.py",
+   "ui_input.py",
+   "ui_robust.py",
+   "ui_shots.py",
+   "vfx_ky_nang_shots.py",
+   "vfx_tg_shots.py",
+   "xuong_sprite.py",
+   "xuong_sprite_shots.py",
+   "xuong_sprite_them_shots.py"
+  ],
+  "tailor.js": [],
+  "ui_theme.js": [
+   "anim_smoke.py",
+   "au_lib.js",
+   "au_luu.py",
+   "au_onboarding.py",
+   "ban_do.py",
+   "bot.js",
+   "chieu_shots.py",
+   "chuong_shots.py",
+   "cong.py",
+   "dan_linhkhi_shots.py",
+   "fx_check.py",
+   "ghep.py",
+   "ghep2.py",
+   "ghep2_fgh.js",
+   "ghep_shots.py",
+   "lang_shots.py",
+   "linhkhi.py",
+   "may.py",
+   "nhan_vat_shots.py",
+   "perf.py",
+   "quai_lib.py",
+   "tam_huong_shots.py",
+   "ui_input.py",
+   "vfx_ky_nang_shots.py",
+   "xuong_sprite.py"
+  ],
+  "upgrade.js": [
+   "anim_smoke.py",
+   "au_am_thanh.py",
+   "au_bang.py",
+   "au_hinh.py",
+   "au_luu.py",
+   "au_mapgen.py",
+   "au_onboarding.py",
+   "au_tien_trien.py",
+   "au_truy_cap.py",
+   "au_ui.py",
+   "balance.py",
+   "ban_do.py",
+   "bot.js",
+   "campaign.py",
+   "cay.py",
+   "cay_nang_cap_shots.py",
+   "cay_shots.py",
+   "chitiet_shots.py",
+   "chuong.py",
+   "chuong_shots.py",
+   "chuong_ui.py",
+   "cong.py",
+   "dan_linhkhi_shots.py",
+   "diff2.sh",
+   "do_roi.py",
+   "doors.py",
+   "dps.py",
+   "env_rooms.py",
+   "fuzz.py",
+   "ghep.py",
+   "ghep2_fgh.js",
+   "ghep_shots.py",
+   "hanh_trang.py",
+   "hud_shots.py",
+   "lang_shots.py",
+   "linhkhi.py",
+   "may.py",
+   "perf.py",
+   "rules.py",
+   "setup.js",
+   "shots.py",
+   "trang_phuc.py",
+   "trangphuc_shots.py",
+   "ui_input.py",
+   "ui_lib.py",
+   "ui_robust.py",
+   "ui_shots.py",
+   "vfx_ky_nang_shots.py",
+   "vfx_tg_shots.py",
+   "xuong_sprite.py",
+   "xuong_sprite_them_shots.py"
+  ],
+  "vfx_cfg.js": [],
+  "village.js": [
+   "anim_smoke.py",
+   "au_bang.py",
+   "au_lib.js",
+   "au_luu.py",
+   "au_noi_dung.py",
+   "au_onboarding.py",
+   "au_truy_cap.py",
+   "au_ui.py",
+   "ban_do.py",
+   "bot.js",
+   "campaign.py",
+   "cay.py",
+   "cay_nang_cap_shots.py",
+   "cay_shots.py",
+   "chieu_shots.py",
+   "chuong_shots.py",
+   "chuong_ui.py",
+   "cong.py",
+   "cung_lib.js",
+   "dan_linhkhi_shots.py",
+   "fx_check.py",
+   "ghep.py",
+   "ghep2.py",
+   "ghep2_fgh.js",
+   "ghep_shots.py",
+   "hanh_trang.py",
+   "hud_shots.py",
+   "lang_shots.py",
+   "linhkhi.py",
+   "may.py",
+   "moves.py",
+   "nhan_vat_shots.py",
+   "perf.py",
+   "quai_lib.py",
+   "rules.py",
+   "shots.py",
+   "tam_huong_shots.py",
+   "trang_phuc.py",
+   "trangphuc_shots.py",
+   "ui_input.py",
+   "ui_lib.py",
+   "ui_robust.py",
+   "ui_shots.py",
+   "vfx_ky_nang_shots.py",
+   "vfx_tg_shots.py",
+   "xuong_sprite.py",
+   "xuong_sprite_them_shots.py"
+  ],
+  "village_scene.js": [
+   "anim_smoke.py",
+   "au_lib.js",
+   "au_noi_dung.py",
+   "au_onboarding.py",
+   "ban_do.py",
+   "bot.js",
+   "cay_shots.py",
+   "chieu_shots.py",
+   "chuong_shots.py",
+   "chuong_ui.py",
+   "cong.py",
+   "dan_linhkhi_shots.py",
+   "fx_check.py",
+   "ghep.py",
+   "ghep2.py",
+   "ghep2_fgh.js",
+   "ghep_shots.py",
+   "lang_shots.py",
+   "linhkhi.py",
+   "nhan_vat_shots.py",
+   "perf.py",
+   "quai_lib.py",
+   "tam_huong_shots.py",
+   "trang_phuc.py",
+   "trangphuc_shots.py",
+   "ui_input.py",
+   "vfx_ky_nang_shots.py",
+   "xuong_sprite.py",
+   "xuong_sprite_them_shots.py"
+  ],
+  "weapon_art.js": [
+   "au_noi_dung.py",
+   "ghep.py",
+   "ghep2.py",
+   "xuong_sprite.py"
+  ]
+ },
+ "tong_dong": 30753,
+ "so_bai_kiem_thu": 103
+}

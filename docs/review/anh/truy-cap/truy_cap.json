@@ -1,0 +1,1181 @@
+{
+ "man": {
+  "lang": {
+   "so_dong_chu": 18,
+   "co_nho_nhat_px": 9.38,
+   "duoi_10px": 7,
+   "duoi_12px": 18,
+   "tuong_phan_duoi_4_5": 0,
+   "tuong_phan_duoi_3": 0,
+   "te_nhat": [
+    {
+     "s": "0",
+     "px": 10.83,
+     "mau": "#d48af5",
+     "nen": [
+      13,
+      25,
+      25
+     ],
+     "tuong_phan": 7.48,
+     "dam": false
+    },
+    {
+     "s": "Kéo bên trái để đi. Chạm vào một người đ",
+     "px": 10.83,
+     "mau": "#fff0c4",
+     "nen": [
+      31,
+      79,
+      74
+     ],
+     "tuong_phan": 8.14,
+     "dam": false
+    },
+    {
+     "s": "0",
+     "px": 10.83,
+     "mau": "#ff9a5a",
+     "nen": [
+      13,
+      25,
+      25
+     ],
+     "tuong_phan": 8.56,
+     "dam": false
+    },
+    {
+     "s": "0",
+     "px": 10.83,
+     "mau": "#9bd14a",
+     "nen": [
+      13,
+      25,
+      25
+     ],
+     "tuong_phan": 9.92,
+     "dam": false
+    },
+    {
+     "s": "0",
+     "px": 10.83,
+     "mau": "#7fd4ff",
+     "nen": [
+      13,
+      25,
+      25
+     ],
+     "tuong_phan": 10.91,
+     "dam": false
+    },
+    {
+     "s": "30",
+     "px": 10.83,
+     "mau": "#c9ccd2",
+     "nen": [
+      13,
+      25,
+      25
+     ],
+     "tuong_phan": 11.15,
+     "dam": false
+    },
+    {
+     "s": "0",
+     "px": 10.83,
+     "mau": "#ffc0a0",
+     "nen": [
+      13,
+      25,
+      25
+     ],
+     "tuong_phan": 11.37,
+     "dam": false
+    },
+    {
+     "s": "0",
+     "px": 10.83,
+     "mau": "#a8d8ff",
+     "nen": [
+      13,
+      25,
+      25
+     ],
+     "tuong_phan": 11.91,
+     "dam": false
+    }
+   ],
+   "nho_nhat": [
+    {
+     "s": "Vào ải",
+     "px": 9.38,
+     "mau": "#e8dcc0",
+     "nen": [
+      14,
+      30,
+      28
+     ],
+     "tuong_phan": 12.64,
+     "dam": false
+    },
+    {
+     "s": "Lò rèn",
+     "px": 9.38,
+     "mau": "#e8dcc0",
+     "nen": [
+      14,
+      30,
+      28
+     ],
+     "tuong_phan": 12.64,
+     "dam": false
+    },
+    {
+     "s": "Vũ khí",
+     "px": 9.38,
+     "mau": "#e8dcc0",
+     "nen": [
+      16,
+      33,
+      30
+     ],
+     "tuong_phan": 12.26,
+     "dam": false
+    },
+    {
+     "s": "Mũ áo",
+     "px": 9.38,
+     "mau": "#e8dcc0",
+     "nen": [
+      14,
+      30,
+      28
+     ],
+     "tuong_phan": 12.64,
+     "dam": false
+    },
+    {
+     "s": "Kỹ năng",
+     "px": 9.38,
+     "mau": "#e8dcc0",
+     "nen": [
+      16,
+      33,
+      30
+     ],
+     "tuong_phan": 12.26,
+     "dam": false
+    }
+   ]
+  },
+  "chon-ai": {
+   "so_dong_chu": 30,
+   "co_nho_nhat_px": 9.38,
+   "duoi_10px": 11,
+   "duoi_12px": 25,
+   "tuong_phan_duoi_4_5": 6,
+   "tuong_phan_duoi_3": 5,
+   "te_nhat": [
+    {
+     "s": "★★★",
+     "px": 9.38,
+     "mau": "#ffd23f",
+     "nen": [
+      230,
+      216,
+      176
+     ],
+     "tuong_phan": 1.02,
+     "dam": false
+    },
+    {
+     "s": "★★☆",
+     "px": 9.38,
+     "mau": "#ffd23f",
+     "nen": [
+      230,
+      216,
+      176
+     ],
+     "tuong_phan": 1.02,
+     "dam": false
+    },
+    {
+     "s": "Núi tuyết",
+     "px": 11.55,
+     "mau": "#8a7a58",
+     "nen": [
+      225,
+      210,
+      168
+     ],
+     "tuong_phan": 2.79,
+     "dam": false
+    },
+    {
+     "s": "Núi lửa",
+     "px": 11.55,
+     "mau": "#8a7a58",
+     "nen": [
+      230,
+      216,
+      176
+     ],
+     "tuong_phan": 2.96,
+     "dam": false
+    },
+    {
+     "s": "Đầm lầy",
+     "px": 11.55,
+     "mau": "#8a7a58",
+     "nen": [
+      230,
+      216,
+      176
+     ],
+     "tuong_phan": 2.96,
+     "dam": false
+    },
+    {
+     "s": "Hang biển",
+     "px": 14.44,
+     "mau": "#2a5a7a",
+     "nen": [
+      180,
+      202,
+      200
+     ],
+     "tuong_phan": 4.3,
+     "dam": false
+    },
+    {
+     "s": "Rừng già",
+     "px": 14.44,
+     "mau": "#2f5a3a",
+     "nen": [
+      230,
+      216,
+      176
+     ],
+     "tuong_phan": 5.6,
+     "dam": false
+    },
+    {
+     "s": "sắp có",
+     "px": 9.38,
+     "mau": "#f0e6c8",
+     "nen": [
+      98,
+      78,
+      58
+     ],
+     "tuong_phan": 6.31,
+     "dam": false
+    }
+   ],
+   "nho_nhat": [
+    {
+     "s": "Mộc Tinh",
+     "px": 9.38,
+     "mau": "#4a3626",
+     "nen": [
+      230,
+      216,
+      176
+     ],
+     "tuong_phan": 8.02,
+     "dam": false
+    },
+    {
+     "s": "Ngư Tinh",
+     "px": 9.38,
+     "mau": "#4a3626",
+     "nen": [
+      230,
+      216,
+      176
+     ],
+     "tuong_phan": 8.02,
+     "dam": false
+    },
+    {
+     "s": "Hồ Tinh",
+     "px": 9.38,
+     "mau": "#4a3626",
+     "nen": [
+      230,
+      216,
+      176
+     ],
+     "tuong_phan": 8.02,
+     "dam": false
+    },
+    {
+     "s": "sắp có",
+     "px": 9.38,
+     "mau": "#f0e6c8",
+     "nen": [
+      98,
+      78,
+      58
+     ],
+     "tuong_phan": 6.31,
+     "dam": false
+    },
+    {
+     "s": "sắp có",
+     "px": 9.38,
+     "mau": "#f0e6c8",
+     "nen": [
+      98,
+      78,
+      58
+     ],
+     "tuong_phan": 6.31,
+     "dam": false
+    }
+   ]
+  },
+  "lo-ren": {
+   "so_dong_chu": 36,
+   "co_nho_nhat_px": 9.38,
+   "duoi_10px": 6,
+   "duoi_12px": 32,
+   "tuong_phan_duoi_4_5": 0,
+   "tuong_phan_duoi_3": 0,
+   "te_nhat": [
+    {
+     "s": "Xà Mâu",
+     "px": 10.83,
+     "mau": "#c88cff",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 5.04,
+     "dam": false
+    },
+    {
+     "s": "Chưa có dấu ấn",
+     "px": 9.38,
+     "mau": "#a9c2b4",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 6.45,
+     "dam": false
+    },
+    {
+     "s": "Chưa có dấu ấn",
+     "px": 9.38,
+     "mau": "#a9c2b4",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 6.45,
+     "dam": false
+    },
+    {
+     "s": "Chưa có dấu ấn",
+     "px": 9.38,
+     "mau": "#a9c2b4",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 6.45,
+     "dam": false
+    },
+    {
+     "s": "Chưa có dấu ấn",
+     "px": 9.38,
+     "mau": "#a9c2b4",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 6.45,
+     "dam": false
+    },
+    {
+     "s": "Chạm một vũ khí ở trên để chọn.",
+     "px": 12.27,
+     "mau": "#a9c2b4",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 6.45,
+     "dam": false
+    },
+    {
+     "s": "Ông Thợ Rèn",
+     "px": 10.83,
+     "mau": "#f6dc92",
+     "nen": [
+      31,
+      79,
+      74
+     ],
+     "tuong_phan": 6.84,
+     "dam": false
+    },
+    {
+     "s": "Mài",
+     "px": 11.55,
+     "mau": "#fff0c4",
+     "nen": [
+      138,
+      47,
+      34
+     ],
+     "tuong_phan": 7.37,
+     "dam": false
+    }
+   ],
+   "nho_nhat": [
+    {
+     "s": "Chưa có dấu ấn",
+     "px": 9.38,
+     "mau": "#a9c2b4",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 6.45,
+     "dam": false
+    },
+    {
+     "s": "đang mang",
+     "px": 9.38,
+     "mau": "#9be07a",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 7.78,
+     "dam": false
+    },
+    {
+     "s": "Chưa có dấu ấn",
+     "px": 9.38,
+     "mau": "#a9c2b4",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 6.45,
+     "dam": false
+    },
+    {
+     "s": "đang mang",
+     "px": 9.38,
+     "mau": "#9be07a",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 7.78,
+     "dam": false
+    },
+    {
+     "s": "Chưa có dấu ấn",
+     "px": 9.38,
+     "mau": "#a9c2b4",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 6.45,
+     "dam": false
+    }
+   ]
+  },
+  "huong-dan": {
+   "so_dong_chu": 29,
+   "co_nho_nhat_px": 10.83,
+   "duoi_10px": 0,
+   "duoi_12px": 25,
+   "tuong_phan_duoi_4_5": 0,
+   "tuong_phan_duoi_3": 0,
+   "te_nhat": [
+    {
+     "s": "Cụ Đồ",
+     "px": 10.83,
+     "mau": "#f6dc92",
+     "nen": [
+      31,
+      79,
+      74
+     ],
+     "tuong_phan": 6.84,
+     "dam": false
+    },
+    {
+     "s": "Hướng dẫn",
+     "px": 10.83,
+     "mau": "#fff0c4",
+     "nen": [
+      138,
+      47,
+      34
+     ],
+     "tuong_phan": 7.37,
+     "dam": false
+    },
+    {
+     "s": "0",
+     "px": 10.83,
+     "mau": "#d48af5",
+     "nen": [
+      12,
+      25,
+      25
+     ],
+     "tuong_phan": 7.49,
+     "dam": false
+    },
+    {
+     "s": "Trang 2/11",
+     "px": 10.83,
+     "mau": "#a9c2b4",
+     "nen": [
+      18,
+      41,
+      42
+     ],
+     "tuong_phan": 8.04,
+     "dam": false
+    },
+    {
+     "s": "✕ Xong",
+     "px": 11.55,
+     "mau": "#fff0c4",
+     "nen": [
+      31,
+      79,
+      74
+     ],
+     "tuong_phan": 8.14,
+     "dam": false
+    },
+    {
+     "s": "Cây kỹ năng",
+     "px": 10.83,
+     "mau": "#fff0c4",
+     "nen": [
+      31,
+      79,
+      74
+     ],
+     "tuong_phan": 8.14,
+     "dam": false
+    },
+    {
+     "s": "Cây chưởng",
+     "px": 10.83,
+     "mau": "#fff0c4",
+     "nen": [
+      31,
+      79,
+      74
+     ],
+     "tuong_phan": 8.14,
+     "dam": false
+    },
+    {
+     "s": "Bảng vàng",
+     "px": 10.83,
+     "mau": "#fff0c4",
+     "nen": [
+      31,
+      79,
+      74
+     ],
+     "tuong_phan": 8.14,
+     "dam": false
+    }
+   ],
+   "nho_nhat": [
+    {
+     "s": "900",
+     "px": 10.83,
+     "mau": "#ffd23f",
+     "nen": [
+      12,
+      25,
+      25
+     ],
+     "tuong_phan": 12.44,
+     "dam": false
+    },
+    {
+     "s": "30",
+     "px": 10.83,
+     "mau": "#c9ccd2",
+     "nen": [
+      12,
+      25,
+      25
+     ],
+     "tuong_phan": 11.17,
+     "dam": false
+    },
+    {
+     "s": "0",
+     "px": 10.83,
+     "mau": "#d48af5",
+     "nen": [
+      12,
+      25,
+      25
+     ],
+     "tuong_phan": 7.49,
+     "dam": false
+    },
+    {
+     "s": "0",
+     "px": 10.83,
+     "mau": "#9bd14a",
+     "nen": [
+      12,
+      25,
+      25
+     ],
+     "tuong_phan": 9.94,
+     "dam": false
+    },
+    {
+     "s": "0",
+     "px": 10.83,
+     "mau": "#7fd4ff",
+     "nen": [
+      12,
+      25,
+      25
+     ],
+     "tuong_phan": 10.92,
+     "dam": false
+    }
+   ]
+  },
+  "hanh-trang": {
+   "so_dong_chu": 52,
+   "co_nho_nhat_px": 9.38,
+   "duoi_10px": 11,
+   "duoi_12px": 49,
+   "tuong_phan_duoi_4_5": 0,
+   "tuong_phan_duoi_3": 0,
+   "te_nhat": [
+    {
+     "s": "Xà Mâu",
+     "px": 11.55,
+     "mau": "#c88cff",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 5.04,
+     "dam": false
+    },
+    {
+     "s": "Chưa có dấu ấn",
+     "px": 9.38,
+     "mau": "#a9c2b4",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 6.45,
+     "dam": false
+    },
+    {
+     "s": "Chưa có hệ: đủ 30 dấu ấn một hệ thì vũ k",
+     "px": 9.38,
+     "mau": "#a9c2b4",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 6.45,
+     "dam": false
+    },
+    {
+     "s": "Chưa có dấu ấn",
+     "px": 9.38,
+     "mau": "#a9c2b4",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 6.45,
+     "dam": false
+    },
+    {
+     "s": "Chưa có hệ: đủ 30 dấu ấn một hệ thì vũ k",
+     "px": 9.38,
+     "mau": "#a9c2b4",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 6.45,
+     "dam": false
+    },
+    {
+     "s": "Chưa có dấu ấn",
+     "px": 9.38,
+     "mau": "#a9c2b4",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 6.45,
+     "dam": false
+    },
+    {
+     "s": "Chưa có hệ: đủ 30 dấu ấn một hệ thì vũ k",
+     "px": 9.38,
+     "mau": "#a9c2b4",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 6.45,
+     "dam": false
+    },
+    {
+     "s": "Vũ khí",
+     "px": 11.55,
+     "mau": "#fff0c4",
+     "nen": [
+      138,
+      47,
+      34
+     ],
+     "tuong_phan": 7.37,
+     "dam": false
+    }
+   ],
+   "nho_nhat": [
+    {
+     "s": "Bậc Thường · mài +0 · đòn 9,9 · không dò",
+     "px": 9.38,
+     "mau": "#f1e6c6",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 9.84,
+     "dam": false
+    },
+    {
+     "s": "Chưa có dấu ấn",
+     "px": 9.38,
+     "mau": "#a9c2b4",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 6.45,
+     "dam": false
+    },
+    {
+     "s": "Chưa có hệ: đủ 30 dấu ấn một hệ thì vũ k",
+     "px": 9.38,
+     "mau": "#a9c2b4",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 6.45,
+     "dam": false
+    },
+    {
+     "s": "Bậc Thường · mài +0 · đòn 12,6 · không d",
+     "px": 9.38,
+     "mau": "#f1e6c6",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 9.84,
+     "dam": false
+    },
+    {
+     "s": "Chưa có dấu ấn",
+     "px": 9.38,
+     "mau": "#a9c2b4",
+     "nen": [
+      27,
+      58,
+      59
+     ],
+     "tuong_phan": 6.45,
+     "dam": false
+    }
+   ]
+  },
+  "phong-danh": {
+   "so_dong_chu": 23,
+   "co_nho_nhat_px": 9.38,
+   "duoi_10px": 7,
+   "duoi_12px": 19,
+   "tuong_phan_duoi_4_5": 3,
+   "tuong_phan_duoi_3": 1,
+   "te_nhat": [
+    {
+     "s": "21",
+     "px": 10.83,
+     "mau": "#ffffff",
+     "nen": [
+      67,
+      61,
+      60
+     ],
+     "tuong_phan": 2.53,
+     "dam": false
+    },
+    {
+     "s": "76 / 137",
+     "px": 10.83,
+     "mau": "#ffffff",
+     "nen": [
+      205,
+      123,
+      83
+     ],
+     "tuong_phan": 3.2,
+     "dam": false
+    },
+    {
+     "s": "21",
+     "px": 10.83,
+     "mau": "#ffffff",
+     "nen": [
+      67,
+      61,
+      60
+     ],
+     "tuong_phan": 3.51,
+     "dam": false
+    },
+    {
+     "s": "Trắng",
+     "px": 9.38,
+     "mau": "#b8b0a0",
+     "nen": [
+      55,
+      54,
+      61
+     ],
+     "tuong_phan": 5.55,
+     "dam": false
+    },
+    {
+     "s": "Thường",
+     "px": 10.11,
+     "mau": "#d6d2c8",
+     "nen": [
+      69,
+      69,
+      76
+     ],
+     "tuong_phan": 6.3,
+     "dam": false
+    },
+    {
+     "s": "Sức mạnh 126 / khuyên 475",
+     "px": 10.11,
+     "mau": "#ff6a5a",
+     "nen": [
+      21,
+      14,
+      14
+     ],
+     "tuong_phan": 6.78,
+     "dam": false
+    },
+    {
+     "s": "Trắng",
+     "px": 9.38,
+     "mau": "#b8b0a0",
+     "nen": [
+      39,
+      36,
+      44
+     ],
+     "tuong_phan": 7.1,
+     "dam": false
+    },
+    {
+     "s": "Thường",
+     "px": 10.11,
+     "mau": "#d6d2c8",
+     "nen": [
+      46,
+      44,
+      51
+     ],
+     "tuong_phan": 9.13,
+     "dam": false
+    }
+   ],
+   "nho_nhat": [
+    {
+     "s": "1 / 100",
+     "px": 9.38,
+     "mau": "#ffffff",
+     "nen": [
+      13,
+      23,
+      22
+     ],
+     "tuong_phan": 18.24,
+     "dam": false
+    },
+    {
+     "s": "Phòng 1/8",
+     "px": 9.38,
+     "mau": "#d9cdb8",
+     "nen": [
+      45,
+      32,
+      15
+     ],
+     "tuong_phan": 10.09,
+     "dam": false
+    },
+    {
+     "s": "Trắng",
+     "px": 9.38,
+     "mau": "#b8b0a0",
+     "nen": [
+      55,
+      54,
+      61
+     ],
+     "tuong_phan": 5.55,
+     "dam": false
+    },
+    {
+     "s": "Trắng",
+     "px": 9.38,
+     "mau": "#b8b0a0",
+     "nen": [
+      39,
+      36,
+      44
+     ],
+     "tuong_phan": 7.1,
+     "dam": false
+    },
+    {
+     "s": "0/30",
+     "px": 9.38,
+     "mau": "#ffd23f",
+     "nen": [
+      45,
+      32,
+      15
+     ],
+     "tuong_phan": 10.97,
+     "dam": false
+    }
+   ]
+  },
+  "ket-qua": {
+   "so_dong_chu": 44,
+   "co_nho_nhat_px": 9.38,
+   "duoi_10px": 13,
+   "duoi_12px": 36,
+   "tuong_phan_duoi_4_5": 3,
+   "tuong_phan_duoi_3": 1,
+   "te_nhat": [
+    {
+     "s": "Thắng rồi! Nhặt đồ rơi, đi dạo tuỳ ý, xo",
+     "px": 12.27,
+     "mau": "#ffd23f",
+     "nen": [
+      11,
+      18,
+      10
+     ],
+     "tuong_phan": 2.19,
+     "dam": false
+    },
+    {
+     "s": "☆",
+     "px": 17.33,
+     "mau": "#5a7a72",
+     "nen": [
+      18,
+      41,
+      42
+     ],
+     "tuong_phan": 3.24,
+     "dam": false
+    },
+    {
+     "s": "Trắng",
+     "px": 9.38,
+     "mau": "#b8b0a0",
+     "nen": [
+      31,
+      79,
+      74
+     ],
+     "tuong_phan": 4.29,
+     "dam": false
+    },
+    {
+     "s": "Hạ trùm bằng hệ khắc chế",
+     "px": 11.55,
+     "mau": "#8fa49e",
+     "nen": [
+      18,
+      41,
+      42
+     ],
+     "tuong_phan": 5.79,
+     "dam": false
+    },
+    {
+     "s": "Nhặt được · bậc Thường",
+     "px": 9.38,
+     "mau": "#a9c2b4",
+     "nen": [
+      23,
+      54,
+      58
+     ],
+     "tuong_phan": 6.81,
+     "dam": false
+    },
+    {
+     "s": "Ải tiếp theo ▶",
+     "px": 13.72,
+     "mau": "#fff0c4",
+     "nen": [
+      138,
+      47,
+      34
+     ],
+     "tuong_phan": 7.37,
+     "dam": false
+    },
+    {
+     "s": "không nhận dấu ấn",
+     "px": 9.38,
+     "mau": "#9fb0aa",
+     "nen": [
+      13,
+      30,
+      30
+     ],
+     "tuong_phan": 7.58,
+     "dam": false
+    },
+    {
+     "s": "✉ Góp ý",
+     "px": 10.83,
+     "mau": "#fff0c4",
+     "nen": [
+      31,
+      79,
+      74
+     ],
+     "tuong_phan": 8.14,
+     "dam": false
+    }
+   ],
+   "nho_nhat": [
+    {
+     "s": "+158",
+     "px": 9.38,
+     "mau": "#fff3da",
+     "nen": [
+      18,
+      41,
+      42
+     ],
+     "tuong_phan": 13.87,
+     "dam": false
+    },
+    {
+     "s": "Lao Phóng",
+     "px": 9.38,
+     "mau": "#fff3da",
+     "nen": [
+      18,
+      41,
+      42
+     ],
+     "tuong_phan": 13.87,
+     "dam": false
+    },
+    {
+     "s": "21 / 120",
+     "px": 9.38,
+     "mau": "#ffffff",
+     "nen": [
+      4,
+      8,
+      7
+     ],
+     "tuong_phan": 20.13,
+     "dam": false
+    },
+    {
+     "s": "khuyên 110",
+     "px": 9.38,
+     "mau": "#bfb39c",
+     "nen": [
+      3,
+      7,
+      5
+     ],
+     "tuong_phan": 9.79,
+     "dam": false
+    },
+    {
+     "s": "Trắng",
+     "px": 9.38,
+     "mau": "#b8b0a0",
+     "nen": [
+      31,
+      79,
+      74
+     ],
+     "tuong_phan": 4.29,
+     "dam": false
+    }
+   ]
+  }
+ },
+ "loi_trang": []
+}
