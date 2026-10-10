@@ -106,6 +106,7 @@ SHIM = '''window.G = window.G || {};
   G.rnd = Math.random; G.rr = (a, b) => a + G.rnd() * (b - a); G.ri = (a, b) => Math.floor(G.rr(a, b + 1)); G.pick = (a) => a[Math.floor(G.rnd() * a.length)];
   G.clamp = (v, a, b) => (v < a ? a : v > b ? b : v); G.dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y); G.time = 0; G.W = 480; G.H = 270;
   G.srand = function (seed) { let s = seed >>> 0 || 1; return function () { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; };
+  G.ui = G.ui || {}; // lớp vẽ giao diện rỗng: js/minimap.js giữ đúng đối tượng này, trang Tách Giao Diện gắn hàm vẽ vào để xem thử bản đồ
 })(window.G);
 '''
 

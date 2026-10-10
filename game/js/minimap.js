@@ -184,9 +184,11 @@
     ui.rect(0, 0, G.W, G.H, 'rgba(0,0,0,0.72)');
     const gK = gd('gd-khung-ban-do');
     if (gK) {
-      // khung bằng ảnh: lót nền tối bên trong (phòng khi giữa ảnh để trống), vẽ khung, rồi tên ải như cũ
-      ui.rect(54, 18, 372, 234, 'rgba(20,16,14,0.94)');
-      G.spriteCustom.veGd(G.ux, gK, 50, 14, 380, 242);
+      // khung bằng ảnh: lót nền tối cho cả bảng (phòng khi giữa ảnh để trống), rồi vẽ khung ÔM NGOÀI bảng: viền nằm ở phần lề
+      // quanh bảng (lề trên dưới 13, trái phải 48 điểm ảnh) nên không đè lên tên ải, chú giải hay dòng chữ dưới cùng.
+      const v = gK.vien || [0, 0, 0, 0], t = Math.min(v[0], 13), r = Math.min(v[1], 48), b = Math.min(v[2], 13), l = Math.min(v[3], 48);
+      ui.rect(50, 14, 380, 242, 'rgba(20,16,14,0.94)');
+      G.spriteCustom.veGd(G.ux, gK, 50 - l, 14 - t, 380 + l + r, 242 + t + b);
       ui.text('Bản đồ ải · ' + reg.name + ' ' + (S.i + 1), 58, 29, { size: 11, bold: true, color: '#ffd27a' });
     } else ui.panel(50, 14, 380, 242, 'Bản đồ ải · ' + reg.name + ' ' + (S.i + 1));
     ui.rect(60, 36, 252, 172, 'rgba(8,16,16,0.6)', '#5a3d1a');
