@@ -176,43 +176,68 @@
     if (!G.save || !G.save.sound) return;
     try {
       if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)();
-      if (ac.state === 'suspended') ac.resume().catch(() => {});
+      // V73: iPhone sau cuộc gọi để trạng thái 'interrupted' (không phải 'suspended'): cứ khác 'running' là xin chạy lại
+      if (ac.state !== 'running' && ac.state !== 'closed') ac.resume().catch(() => {});
     } catch (e) { /* máy không có âm thanh */ }
   };
+  // V73: quay lại trang (sau cuộc gọi, đổi ứng dụng) thì thử bật lại âm thanh ngay, không chờ lần chạm tiếp theo
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && ac) G.audioStart(); });
+  // V72: âm lượng 3 nấc (G.save.vol: 0 nhỏ, 1 vừa, 2 to). Bản lưu cũ chưa có thì là 2 = to như trước đây.
+  G.VOL_NAMES = ['nhỏ', 'vừa', 'to'];
+  const VOL_K = [0.35, 0.65, 1];
+  // Mỗi tiếng: [tần số Hz, thời lượng giây, kiểu sóng, độ to, (tuỳ chọn) tần số cuối = tần số × số này]
   const SFX = {
-    hit: [220, 0.05, 'square', 0.05], swing: [520, 0.04, 'triangle', 0.03], hurt: [110, 0.12, 'sawtooth', 0.07],
-    mark: [1040, 0.09, 'sine', 0.06], evolve: [660, 0.35, 'triangle', 0.08], warn: [330, 0.1, 'square', 0.04],
+    hit: [220, 0.05, 'square', 0.05], swing: [520, 0.04, 'triangle', 0.03], hurt: [110, 0.12, 'sawtooth', 0.07, 0.5],
+    mark: [1040, 0.09, 'sine', 0.06], evolve: [660, 0.35, 'triangle', 0.08, 2], warn: [330, 0.1, 'square', 0.04],
     gong: [98, 0.6, 'sine', 0.12], pick: [780, 0.08, 'sine', 0.05], die: [160, 0.1, 'square', 0.04],
     fire: [300, 0.08, 'sawtooth', 0.03], poison: [180, 0.1, 'triangle', 0.04], ice: [1400, 0.06, 'sine', 0.04],
-    boom: [70, 0.25, 'sawtooth', 0.1], ui: [600, 0.03, 'square', 0.03], win: [880, 0.5, 'triangle', 0.08],
+    boom: [70, 0.25, 'sawtooth', 0.1, 0.5], ui: [600, 0.03, 'square', 0.03], win: [880, 0.5, 'triangle', 0.08, 2],
+    // V37: tiếng trúng phân cấp. hitHeavy = đòn nặng (nhát 3, giương đầy), crit = chí mạng (cao, sáng, trượt xuống),
+    // block = đánh vào khiên/giáp (tiếng "keng" kim loại ngắn). V40: hitHammer = búa (trầm, dài hơn).
+    hitHeavy: [150, 0.09, 'square', 0.065, 0.6], crit: [1250, 0.12, 'triangle', 0.07, 0.55], block: [1700, 0.06, 'square', 0.035, 0.85],
+    hitHammer: [85, 0.17, 'sawtooth', 0.075, 0.5],
+    // V81: tiếng riêng cho uống bình máu, qua cửa phòng, đổi vũ khí, lộn né
+    potion: [480, 0.18, 'sine', 0.05, 1.7], door: [140, 0.22, 'triangle', 0.06, 0.7], swap: [440, 0.06, 'triangle', 0.04, 1.5],
+    dodge: [760, 0.09, 'sine', 0.035, 0.45],
   };
+  G.SFX_NAMES = Object.keys(SFX); // để bài kiểm tra biết có những tiếng nào
   // V30: giới hạn tiếng cùng lúc để 20 quái chết một lúc không thành 20 tiếng chồng nhau (rè, to bất thường).
   // Mỗi loại tối đa 2 tiếng đang kêu, tổng tối đa 8 tiếng, tổng âm lượng các tiếng đang kêu không quá 0,28.
   // Hết "chỗ" âm lượng thì tiếng mới nhỏ lại cho vừa; còn quá ít thì bỏ qua.
+  // (Giới hạn tính trên độ to gốc, trước khi nhân nấc âm lượng V72, nên vặn nhỏ không làm đổi số tiếng được kêu.)
+  const OLD_RAMP = { evolve: 1, win: 1, boom: 1, hurt: 1 };
   const voices = [], MAX_SAME = 2, MAX_VOICES = 8, MAX_GAIN = 0.28;
-  G.sfx = function (name, pitch) {
+  // o (tuỳ chọn, V40): { delay: giây } — phát trễ (vd. tiếng vung ở ~35% động tác thay vì lúc bắt đầu lấy đà).
+  G.sfx = function (name, pitch, o) {
     if (!ac || !G.save.sound || G.noRender || ac.state !== 'running') return;
     const d = SFX[name];
     if (!d) return;
     try {
-      const now = ac.currentTime;
+      const now = ac.currentTime, at = now + Math.max(0, Math.min(0.5, (o && o.delay) || 0));
       for (let i = voices.length - 1; i >= 0; i--) if (voices[i].end <= now) voices.splice(i, 1);
       let same = 0, sum = 0;
       for (const v of voices) { sum += v.g; if (v.name === name) same++; }
       if (same >= MAX_SAME || voices.length >= MAX_VOICES) return;
       const vol = Math.min(d[3], MAX_GAIN - sum);
       if (vol < 0.01) return;
-      voices.push({ name, end: now + d[1] + 0.02, g: vol });
-      const o = ac.createOscillator(), g = ac.createGain();
-      o.type = d[2];
-      o.frequency.value = d[0] * (pitch || 1);
-      if (name === 'evolve' || name === 'win') o.frequency.exponentialRampToValueAtTime(d[0] * 2, ac.currentTime + d[1]);
-      if (name === 'boom' || name === 'hurt') o.frequency.exponentialRampToValueAtTime(d[0] * 0.5, ac.currentTime + d[1]);
-      g.gain.value = vol;
-      g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + d[1]);
-      o.connect(g); g.connect(ac.destination);
-      o.start(); o.stop(ac.currentTime + d[1] + 0.02);
+      voices.push({ name, end: at + d[1] + 0.02, g: vol });
+      const k = VOL_K[G.save.vol] != null ? VOL_K[G.save.vol] : 1;
+      const o2 = ac.createOscillator(), g = ac.createGain();
+      o2.type = d[2];
+      o2.frequency.setValueAtTime(d[0] * (pitch || 1), at);
+      // 4 tiếng cũ (evolve, win, boom, hurt) giữ đúng cách trượt như trước: tần số cuối không nhân pitch
+      if (d[4]) o2.frequency.exponentialRampToValueAtTime(d[0] * d[4] * (OLD_RAMP[name] ? 1 : pitch || 1), at + d[1]);
+      g.gain.setValueAtTime(vol * k, at);
+      g.gain.exponentialRampToValueAtTime(0.0001, at + d[1]);
+      o2.connect(g); g.connect(ac.destination);
+      o2.start(at); o2.stop(at + d[1] + 0.02);
     } catch (e) { /* bỏ qua lỗi âm thanh */ }
+  };
+  // V37/V40: chọn tiếng trúng theo loại đòn. h: { block, crit, heavy, hammer } (true/false). Ưu tiên: khiên > chí mạng > búa > nặng > thường.
+  // Chỗ gọi (combat.js, moves.js) chưa dùng hàm này: xem đề nghị trong docs/review/gd3/gd3-b.md.
+  G.sfxHit = function (h, pitch) {
+    h = h || {};
+    G.sfx(h.block ? 'block' : h.crit ? 'crit' : h.hammer ? 'hitHammer' : h.heavy ? 'hitHeavy' : 'hit', pitch);
   };
 
   // ---------- lưu game ----------
@@ -253,6 +278,7 @@
       heroes: {}, hero: 'smith', weapons: [], nextId: 1, carry: [null, null],
       owned: { helm: [], armor: [], charm: [] }, helm: null, armor: null, charm: null, outfit: G.outfit ? G.outfit.blank() : null,
       stars: {}, stars2: {}, scars: {}, tut: {}, sound: true, wins: 0, bossGold: {},
+      vol: 2, lowFx: false, // V72 nấc âm lượng (0 nhỏ, 1 vừa, 2 to); V41 "Giảm hiệu ứng" — cài đặt riêng của máy, không đẩy lên mây
     };
     for (const k of G.HKEYS) s.heroes[k] = { unlocked: k === 'smith', lvl: 1, xp: 0, sk: { atk: 0, def: 0, elem: 0 }, ch: { cay: G.CHUONG ? G.CHUONG.defTree[k] : 'hoa', n: {} } };
     s.carry[0] = G.newWeapon(s, 'sword', 0, { family: 0 }).id; // Kiếm Rèn
@@ -278,6 +304,7 @@
         console.error('Linh Khí: bản lưu cũ không dùng được, đã chép sang khoá dự phòng ' + KEY_HONG);
       } catch (e) { /* bộ nhớ đầy: chơi tiếp */ }
     }
+    if (G.applyLowFx) G.applyLowFx(G.save.lowFx); // V41: bật lại "Giảm hiệu ứng" đã chọn (js/vfx_cfg.js)
   };
   // Kiểm tra bản lưu cũ hoặc hỏng: thiếu gì thì bù, sai gì thì sửa, hỏng nặng thì tạo mới.
   G.fixSave = function (s) {
@@ -293,6 +320,8 @@
       s.mats = arr3(s.mats); s.shards = arr3(s.shards);
       s.forge = G.clamp(Math.floor(num(s.forge, 1)), 1, G.FORGE_CAP.length - 1);
       s.sound = s.sound !== false;
+      s.vol = G.clamp(Math.floor(num(s.vol, 2)), 0, 2); // bản cũ chưa có: to (như trước)
+      s.lowFx = s.lowFx === true; // bản cũ chưa có: tắt (hiệu ứng đầy đủ như trước)
       for (const k of ['stars', 'stars2', 'scars', 'tut']) s[k] = obj(s[k]);
       for (const k of ['stars', 'stars2']) for (const id in s[k]) s[k][id] = G.clamp(Math.floor(num(s[k][id], 1)), 1, 3);
       for (const id in s.scars) if (!G.ELS.includes(s.scars[id])) delete s.scars[id];
@@ -366,11 +395,17 @@
       return s;
     } catch (e) { fixFailed = true; console.error('Linh Khí: lỗi khi sửa bản lưu, dùng bản mới', e); return base; }
   };
+  // V65: ghi không được (bộ nhớ đầy, trình duyệt chặn lưu) thì bật cờ G.saveFail để làng báo "Không lưu được trên máy này".
+  G.saveFail = false;
   G.persist = function () {
-    try { window.localStorage.setItem(KEY, JSON.stringify(G.save)); } catch (e) { /* chơi không lưu */ }
+    try { window.localStorage.setItem(KEY, JSON.stringify(G.save)); G.saveFail = false; } catch (e) {
+      if (!G.saveFail) console.error('Linh Khí: không lưu được trên máy này', e);
+      G.saveFail = true;
+    }
   };
   G.resetSave = function () {
     G.save = G.newSave();
+    if (G.applyLowFx) G.applyLowFx(G.save.lowFx); // V41: bản mới thì hiệu ứng trở lại đầy đủ
     G.persist();
   };
   G.weaponById = (id) => G.save.weapons.find((w) => w.id === id) || null;
