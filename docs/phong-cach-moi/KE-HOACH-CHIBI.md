@@ -64,6 +64,21 @@ G.chibi.draw(ctx, rig, x, y, opts) // vẽ, (x,y) = điểm chân; opts: { anim,
 ```
 Không phụ thuộc phần nào khác của game ngoài `window.G`, để công cụ nhúng được riêng.
 
+## Đã làm (phiên chibi-game, 10/10/2026)
+
+- `game/js/chibi_rig.js`: `G.chibi.add / ds / pose / draw` (+ `G.chibi.get`, `choQuai`, `choEmBe`, `maTran`, `diem`). Động tác sinh tự động theo khung + vai, mượt (sin/easing).
+  Góc dương = xoay theo chiều kim đồng hồ (nhân vật quay phải): thân dương là cúi tới, tay/chân buông dương là đưa ra sau.
+  Mảnh `tay-truoc` có thể thêm `"cam": [x, y]` (điểm cầm vũ khí, toạ độ tư thế ráp); không có thì lấy đầu mảnh xa khớp nhất.
+- `game/build.py` nhúng `game/art/chibi/*.rig.json` thành `G.chibiRigData`; `chibi_rig.js` nằm sau `sprite_custom.js` trong `index.html`.
+- Màn chơi nét cao: canvas `#world` có kích thước thật 480×270 × `G.wk` (theo cỡ khung × mật độ điểm ảnh, tối đa rộng 1920).
+  `setTransform/resetTransform/getTransform` của `G.wx` tự nhân/chia `G.wk` nên code vẽ cũ không đổi. Tắt bằng `G.netCao = false`.
+- Nối vào game: quái có rig (`thay_cho` = mã quái) và em bé có rig vẽ bằng chibi; vũ khí game gắn vào tay trước của em bé.
+- 3 tệp mẫu (tạo bằng `docs/phong-cach-moi/ghep-thu/xuat_rig.py` từ ảnh trong `mau/`):
+  - `tho-ren.rig.json`: em bé (khung người), thay hình **cả bốn em bé** (thay_cho `hero`).
+  - `heo-rung-con.rig.json`: bốn chân, ảnh mẫu lật cho quay phải; **thay quái `heoCon` (Heo Con, lính xông vùng Rừng già, có ngay ở ải 1-1)**.
+  - `linh-ma-giap-gi.rig.json`: người, chổi dính tay; **thay quái `linhMa` (Linh Ma, lính xông vùng Lâu đài cổ, ải 3-x)**.
+  Muốn bỏ một hình chibi: xoá tệp trong `game/art/chibi/` rồi chạy `python3 game/build.py`.
+
 ## Thứ tự sau khi 3 phiên xong
 
 1. Người dùng vẽ bằng Gemini theo prompt mới (mỗi hình 1 dòng; bản miễn phí giới hạn số ảnh/ngày).
