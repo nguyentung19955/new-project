@@ -97,3 +97,51 @@ Không phải sửa JSON bằng tay: mọi thao tác đều bằng nút và ch�
 - Thân AI lúc "Lấy đà": trong game chỉ hiện khung cuối; trang cho xem mọi khung để đặt điểm.
 - **Cần vẽ lại ảnh**: trang báo khi phải co giãn ngoài 0,85–1,15 hoặc xoay quá 20° mới khớp (ví dụ áo thử rộng hơn vai thân code) — món như vậy nên vẽ lại cỡ nhỏ hơn hoặc dùng ảnh riêng cho nhân vật đó ("Dùng ảnh khác cho nhân vật này").
 - Trang chỉ chạy đầy đủ trên trang web đã đăng (hoặc máy chủ cục bộ); mở tệp trực tiếp thì không nạp được game, vẫn đặt điểm và tải tệp được.
+
+---
+
+# Cập nhật 10/10/2026: trang Ghép đồ có sẵn MỌI ĐỒ và MỌI ĐỘNG TÁC
+
+Ảnh: `anh-cong-cu-day-du.png` (cùng thư mục).
+
+## Cách dùng ngắn
+
+1. Mở https://spiritblade.web.app/tach-ghep.html, **chờ vài giây**: dòng "✔ Đã có sẵn 28 món trang phục ảnh AI và 40 vũ khí ảnh AI…" hiện ra là xong. Không cần thả tệp.
+2. Bấm nhân vật. Nhân vật mặc sẵn **bộ khởi đầu** (nút "Mặc bộ khởi đầu" để mặc lại).
+3. Phần "Đang mặc": mỗi ô (Mũ, Áo, Đồ lưng, Bùa / đồ cầm tay, Cánh) là một lưới hình nhỏ, **vuốt trong khung** để xem hết, **chạm để mặc**.
+   - Nhãn **ảnh AI**: đồ ảnh có trong game (hoặc tệp vừa thả). Đặt điểm neo được (mục 3b).
+   - Nhãn **vẽ code**: đồ vẽ bằng code. Không đặt điểm neo trên ảnh món được.
+   - Dòng nhỏ dưới hình: "⚠ chưa có điểm neo", "• chưa chỉnh cho Thợ Rèn", "✔ đã chỉnh".
+   - Cánh có thêm "Cấp 1 / 2 / 3". Ô Mặt nạ đã bỏ (game không còn mặt nạ).
+4. Vũ khí: chọn **Loại**, **Dòng 0–9** (hình nhỏ, nhãn ảnh AI / vẽ code), **Hệ** (Thường, Lửa, Độc, Băng), **Giai đoạn** 0–3, **Bậc** (Thường, Lam, Tím, Vàng). Game vẽ y như trong trận.
+5. Mục 2, chọn động tác theo nhóm:
+   - Đi lại: Đứng, Chạy, Lướt, Lăn (chọn thêm hướng lăn: lên hẳn, chếch lên, ngang, chếch xuống, xuống hẳn).
+   - Đánh: Đánh 1, 2, 3 (chuỗi), Đòn đặc biệt, Quét vòng (chỉ giáo), Lấy đà, Lấy đà vừa bước, Chưởng / phép, Gồng. Cầm cung thì là **Bắn tên**, **Giương cung** (chọn thêm hướng nhắm).
+   - Bị đánh: Trúng đòn, Ngã.
+   - Nút mờ là động tác không có với vũ khí đang cầm (ví dụ tay không thì không có Đòn đặc biệt).
+   - **Thanh "Khung"**: kéo để đứng ở một khung. **Thanh "Tốc độ"**: chạy chậm hay nhanh. "▶ Chạy liên tục": chạy đúng nhịp như game (đòn chuỗi có lấy đà).
+6. Mục 3, 4 dùng như cũ (đặt điểm, chỉnh theo cặp, lưu, chép, khôi phục, tải). Muốn thêm hay thay một món: thả tệp như trước, món thả vào thay món có sẵn cùng mã.
+
+## Khoá ghi vào tệp ghép
+
+- Thân code: "Chỉ động tác này" / "Chỉ khung này" ghi khoá riêng của động tác: `idle`, `run`, `atk` (ba đòn chuỗi dùng chung `atk:<khung>`), `spec`, `sweep`, `cast`, `tele` (lấy đà, giương cung), `dash`, `gong`, `hit`, `ne`, `die`.
+- Game **đã đọc sẵn** các khoá này (hàm `khoaTheo` của phiên ghep-loi): `spec`, `cast`, `sweep` thiếu thì lấy `atk`; `dash` thiếu thì lấy `run`; `gong` thiếu thì lấy `idle`. **Không thêm khoá mới, không sửa game.**
+- Thân AI chỉ có 7 động tác: chọn động tác không có (ví dụ Chưởng) thì trang hiện động tác AI gần nhất (Đánh) và ghi rõ trên trang; điểm và chỉnh ghi vào khoá AI đó.
+
+## Cách trang lấy đồ
+
+- Đồ ảnh AI: trang tải bản game đã gói (trang chủ spiritblade.web.app; trong repo là `game/dist/linh-khi.html`), đọc dòng `G.customSpriteData` (mọi tệp `game/art/custom` do `build.py` nhúng), lấy món trang phục và vũ khí: đủ ảnh gốc, `net` (nét gấp đôi), điểm neo, thông số. Nên "Tải lại món đồ đã thêm điểm" ra tệp giữ nguyên ảnh và `net`. Không sửa `build.py`.
+- Đồ vẽ code: lấy từ `G.heroLooks` của game trong khung ẩn (ghi lại trước khi đưa ảnh AI vào). Món code đã có ảnh AI cùng tên thì không hiện riêng (game dùng ảnh AI) — trang ghi số món như vậy cạnh tên ô.
+- Bản nháp chỉ lưu điểm neo **đã đổi** của món có sẵn. "Tải tất cả (.zip)" chỉ gồm món thả vào và món có sẵn đã đổi điểm.
+
+## Đã kiểm
+
+- Tách script + `new Function`: không lỗi. `python3 game/build.py`: chạy được. Workflow đăng web: **xanh, đã đăng** (lượt 38068693040).
+- Một lượt Playwright (iPhone giả lập 390×844, chạm), mở trang không thả tệp: có 28 trang phục + 40 vũ khí ảnh AI và đồ vẽ code (13 mũ, 1 áo, 3 đồ lưng, 1 găng); mặc áo lá, mũ code, cánh lửa, bầu hồ lô; kiếm dòng 3 hệ Lửa giai đoạn 2 bậc Tím; chọn Đánh 3, Đòn đặc biệt, Lăn, Chưởng, Lấy đà, Giương cung, Quét vòng (giáo), kéo thanh khung; chỉnh áo lá "chỉ động tác này" ở Đòn đặc biệt ghi đúng `cap.theo.spec`. Không có lỗi trang (chỉ báo thiếu phông chữ do máy thử không có mạng, và các địa chỉ thử dò không có).
+
+## Chưa trọn, chọn cách hợp lý
+
+- **Chỉnh theo cặp cho đồ vẽ code**: trang cho chỉnh và lưu vào tệp ghép (khoá `code-<ô>-<tên>`, ví dụ `code-hats-trum_sung`) và vẽ thử trên trang, nhưng **game chưa đọc** (game chỉ áp `cap` cho đồ ảnh AI). Trang ghi rõ điều này. **Đề xuất**: nếu cần thì thêm vào `drawKid` (hero_tinhlinh.js) sau.
+- Đánh chếch lên / xuống (8 hướng) của kiếm, giáo, búa: game có, nhưng khi xem theo động tác cố định thì game luôn đánh thẳng; trang chỉ cho chọn hướng nhắm với cung.
+- Chưa có tệp thân AI nào trong game, nên phần "thân AI chỉ có 7 động tác" chưa thử với tệp thật (mã dùng lại phần cũ đã thử).
+- Lần đầu mở trang phải tải bản game (~9 MB) để lấy ảnh đồ: trên điện thoại mạng chậm có thể chờ vài giây.
