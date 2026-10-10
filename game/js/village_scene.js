@@ -40,7 +40,7 @@
     xen: { ten: 'Bà Hàng Xén', viec: 'Hàng xén', ngan: 'Vũ khí', chao: 'Mua gì bán gì, vào đây với bà.', ve: 'Lần sau lại ghé bà nhé.', robe: '#8a5a38', robe2: '#6e4428', wide: 1, top: -23, pos: [540, 198], den: [540, 214] },
     may: { ten: 'Cô Thợ May', viec: 'Thợ may', ngan: 'Mũ áo', chao: 'Bé thử bộ đồ mới xem nào.', ve: 'Mặc đẹp lắm đó!', robe: '#d86a7a', robe2: '#b04a5e', wide: -1, top: -28, pos: [574, 132], den: [555, 141] },
     do: { ten: 'Cụ Đồ', viec: 'Kỹ năng', ngan: 'Kỹ năng', chao: 'Ngồi xuống đây, lão chỉ cho một chiêu.', ve: 'Học rồi nhớ luyện nghe con.', robe: '#4a548c', robe2: '#363e6c', wide: 0, top: -24, sit: true, pos: [364, 150], den: [342, 160] },
-    tu: { ten: 'Ông Từ', viec: 'Chọn hero', ngan: 'Hero', chao: 'Khẽ thôi, các bé đang chơi trong sân.', ve: 'Các bé chơi ngoan nhé.', robe: '#d0a440', robe2: '#a87e2a', wide: 0, top: -27, pos: [142, 140], den: [124, 151] },
+    tu: { ten: 'Ông Từ', viec: 'Chọn em bé', ngan: 'Em bé', chao: 'Khẽ thôi, các bé đang chơi trong sân.', ve: 'Các bé chơi ngoan nhé.', robe: '#d0a440', robe2: '#a87e2a', wide: 0, top: -27, pos: [142, 140], den: [124, 151] },
     mo: { ten: 'Anh Mõ', viec: 'Cài đặt', ngan: 'Cài đặt', chao: 'Cốc cốc cốc! Làng nước nghe đây!', ve: 'Có gì cứ gọi anh Mõ!', robe: '#3f9a8c', robe2: '#2c7468', wide: -1, top: -26, pos: [100, 92], den: [118, 102] },
   };
   const ORDER = ['lai', 'ren', 'xen', 'may', 'do', 'tu', 'mo']; // thứ tự trên dải lối tắt
@@ -888,7 +888,7 @@
       else BA.stick(c, 62 - (G.cx || 0) * 0.6, 216 + (G.cy || 0), 24, 0, 0, false);
     }
     // nút tròn: có người ở gần thì sáng lên thành "Nói chuyện"
-    const bt = btnAt(), lab = S.near ? (S.near.kind === 'npc' ? 'Nói chuyện' : 'Đổi hero') : null;
+    const bt = btnAt(), lab = S.near ? (S.near.kind === 'npc' ? 'Nói chuyện' : 'Đổi em bé') : null;
     const held = [...G.pointers.values()].some((q) => q.role === 'talk');
     if (T && T.round) T.round(bt[0], bt[1], bt[2], 'talk', { lit: !!S.near, pressed: held, dim: !S.near, label: lab });
     else { ui.circle(bt[0], bt[1], bt[2], S.near ? 'rgba(200,120,40,0.92)' : 'rgba(60,50,44,0.5)', S.near ? '#ffe9a8' : 'rgba(255,255,255,0.3)'); if (lab) ui.text(lab, bt[0], bt[1] + 3, { size: 8.5, bold: true, align: 'center' }); }

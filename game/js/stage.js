@@ -58,7 +58,7 @@
   };
   // Lời chỉ dẫn của ải đầu, theo loại phòng.
   const TUT = {
-    start: 'Kéo cần bên trái để di chuyển. Giữ nút Đánh để ra đòn, bấm Né để lăn tránh. Hết quái thì cửa mở.',
+    start: 'Kéo cần bên trái để đi. Bấm (hoặc giữ) nút Đánh để chém, bấm Né để lăn tránh.',
     fight1: 'Đánh vỡ chậu than để đốt quái. Kết liễu quái đang cháy thì kiếm nhận dấu ấn Lửa.',
     chest: 'Lại gần rương rồi bấm Đánh để mở. Bùa hệ phủ hệ đó lên vũ khí trong 60 giây.',
     fight2: 'Thanh xanh là mana. Đủ 25 mana thì bấm Đặc biệt để tung đòn mạnh.',
@@ -82,6 +82,8 @@
     const kind = o.kind || (tut ? 'A' : G.mapgen.pickKind(i, G.save.lastKind, G.rnd));
     const seed = o.seed || 1 + Math.floor(G.rnd() * 999999);
     const map = G.mapgen.make(kind, seed);
+    // Ải hướng dẫn: phòng phụ ngẫu nhiên (Thử thách, Lời nguyền) đổi thành Thương nhân cho người mới dễ hiểu.
+    if (tut) for (const R of map.rooms) if (R.type === 'challenge' || R.type === 'curse') R.type = 'merchant';
     G.save.lastKind = kind;
     S = {
       r, i, diff: diff ? 1 : 0, base: G.stageStats(r, i, diff), P: G.buildPlayer(), map, rooms: map.rooms.map((x) => x.type), idx: -1,
@@ -94,6 +96,7 @@
     };
     if (S.tut) S.marksMult = 2;
     enterRoom(map.start, null);
+    if (S.tut && S.W) S.W.waveT = 3.5; // phòng đầu ải hướng dẫn: quái ra sau 3,5 giây để người mới kịp đọc chỉ dẫn
     S.fade = 0.35;
     G.setScene(G.StageScene);
   };
@@ -222,7 +225,9 @@
     const W = G.newWorld(P, {
       w: G.W, base: S.base, region: S.r, stats: S.stats, marksMult: S.marksMult, haste: S.haste,
       hpFloor: S.tut && type !== 'boss', loot: S.loot, seed: (S.map.seed % 100000) * 10 + id + 1,
+      banner: S.heldTip || null, // mẹo vũ khí bị hoãn ở phòng đầu ải hướng dẫn thì hiện ở phòng kế
     });
+    S.heldTip = null;
     Object.assign(W, geo.bounds);
     W.geo = geo; W.room = id; W.uid = S.uid + ':' + id; W.variant = (S.map.seed + id * 7) % 3;
     W.type = type; W.cleared = false; W.waves = []; W.waveI = -1; W.waveT = 0.6; W.spawns = []; W.hadWaves = false;
@@ -466,7 +471,7 @@
       }
       if (big && !S.diff && !sv.heroes[reg.rescue].unlocked) {
         sv.heroes[reg.rescue].unlocked = true;
-        R.lines.push('Cứu được ' + G.HEROES[reg.rescue].name + '! Hero mới đã mở.');
+        R.lines.push('Cứu được ' + G.HEROES[reg.rescue].name + '! Em bé mới đã mở.');
       }
       if (big && S.loot.finalEl) sv.scars[reg.boss] = S.loot.finalEl;
       if (S.tut) sv.tut.done = true;
@@ -533,7 +538,7 @@
       if (Math.hypot(x - px, (y - py) * 1.3) < 30) x = G.clamp(x + (x < px ? -26 : 26), W.x0 + 8, W.x1 - 8); // không nằm đè lên cổng
       W.props.push(Object.assign({ type: 'loot', x, y, born: G.time + i * 0.08, sx: bx, sy: by - 10 }, it));
     });
-    W.banner = { s: 'Thắng rồi! Nhặt đồ rơi, đi dạo tuỳ ý, xong thì vào cổng dịch chuyển', col: '#ffd23f', t: 5 };
+    W.banner = { s: 'Thắng rồi! Nhặt đồ rơi, đi dạo tùy ý, xong thì vào cổng dịch chuyển', col: '#ffd23f', t: 5 };
     G.sfx('evolve', 0.8);
   }
   G.winPortal = () => { if (S && !S.won && S.loot.bossDown) winPortal(); };
@@ -665,6 +670,12 @@
       // trùm chết hoành tráng (cử động chết dài vài giây) rồi mới mọc cổng dịch chuyển
       if (W.type === 'boss' && S.loot.bossDown && !S.won) { S.endT += dt; if (S.endT > (W.bossDieT || 1.2)) winPortal(); return; }
       if (W.over === 'dead' && !S.won) { S.endT += dt; if (S.endT > 1.2) finish(false); return; }
+      // Mẹo bình máu: lần đầu máu xuống dưới 40% mà còn bình thì nhắc một lần (lưu ở G.save.tut.potion)
+      const sv = G.save;
+      if (sv.tut && !sv.tut.potion && !G.noRender && !W.banner && P.potions > 0 && !W.noPotion && !P.dead && P.hp < P.maxhp * 0.4) {
+        sv.tut.potion = 1;
+        W.banner = { s: 'Máu thấp! Chạm ô Bình máu (góc trên bên trái) để hồi 30% máu.', col: '#ffb0a0', t: 5, tip: true };
+      }
       pickLoot(W, P); // đồ rơi trên sàn (sau trùm, tinh anh, quái): đi lại gần là nhặt
       // bước vào cửa đang mở thì sang phòng kề (phòng trùm: chỉ sau khi đã thắng)
       if (W.cleared && (W.type !== 'boss' || S.won) && S.doorCd <= 0) {
@@ -856,7 +867,9 @@
     if (hint && W.cleared && W.hadWaves) hint = TUT.door;
     if (hint && W.type === 'boss' && S.roomT > 12) hint = null;
     // Dòng mẹo (cách đánh của vũ khí, mẹo nút Chưởng: W.banner.tip) cũng nằm ở lề trái dưới lời chỉ dẫn, không đè tường và cửa phía trên.
-    const tipB = W.banner && W.banner.tip ? W.banner : null;
+    let tipB = W.banner && W.banner.tip ? W.banner : null;
+    // Phòng đầu ải hướng dẫn chỉ một ô chữ: mẹo vũ khí chờ (không đếm giờ), sang phòng kế mới hiện.
+    if (tipB && hint && S.tut && W.type === 'start') { tipB.t = Math.max(tipB.t, 5); S.heldTip = tipB; tipB = null; }
     if (S.mode === 'play' && (hint || tipB)) {
       const hw = W.geo.big ? 64 : 118; // phòng trùm rộng hơn nên ô chữ hẹp lại, không đè lên sàn
       let hy = W.geo.big ? 100 : 93;
@@ -871,7 +884,7 @@
         hy += ph + 3;
       }
     }
-    if (W.banner && !tipB) {
+    if (W.banner && !W.banner.tip) {
       // dòng báo nằm trên tường sau; dài quá thì thu chữ, vẫn dài thì xuống dòng
       const maxW = W.geo.big ? 290 : 228;
       let size = 10, lines = [W.banner.s];
