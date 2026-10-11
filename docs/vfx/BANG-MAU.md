@@ -1,6 +1,7 @@
 # Bảng màu và hướng mỹ thuật — Linh Khí / Spiritblade
 
 Phiên `dt-dau-truong`, 10/10/2026. Ba phiên giai đoạn 2–4 (`dt-dau-truong`, `dt-nhan-vat`, `dt-hud-dang-nhap`) cùng dùng bảng này.
+Màu của vật thể, nhân vật và hiệu ứng cho các lô ảnh mới: xem `BANG-MAU-LOI.md` (32 màu lõi + 12 màu hệ, Đợt 4).
 Màu viết dạng `#rrggbb`. Ô "lấy từ" cho biết màu đang nằm ở tệp nào; đổi màu thì đổi ở đó, rồi sửa bảng này cho khớp.
 
 ## 0. Ba nguyên tắc (đọc trước)
