@@ -1,0 +1,500 @@
+{
+ "build_nhan_ma_moi": true,
+ "dung_luong_tam_mau_byte": {
+  "mocTinh-p2.sprite.json": 447585,
+  "mocTinh-p3.sprite.json": 481157,
+  "nguTinh-p2.sprite.json": 333789,
+  "nguTinh-p3.sprite.json": 358077,
+  "hoTinh-p2.sprite.json": 343682,
+  "hoTinh-p3.sprite.json": 370938
+ },
+ "xoa_het_tam_mau": true,
+ "goi_lai_giong_ban_khong_tep": true,
+ "de_san_hang_chay_trong_tep_pha": [
+  "nguTinh-p2:move"
+ ],
+ "khong_tep_so_voi_ban_truoc": {
+  "so_anh": 54,
+  "tong_diem_khac": 0,
+  "phong_that_pha2_diem_khac": {
+   "mocTinh": 0,
+   "nguTinh": 0,
+   "hoTinh": 0
+  }
+ },
+ "co_tep_mau": {
+  "sai": [],
+  "chi_tiet": {
+   "mocTinh pha 2 idle": {
+    "tam_da_ve": [
+     "mocTinh-p2:idle"
+    ],
+    "diem_khac_so_voi_khong_tep": 11474,
+    "dat": true
+   },
+   "mocTinh pha 2 tele": {
+    "tam_da_ve": [
+     "mocTinh-p2:tele"
+    ],
+    "diem_khac_so_voi_khong_tep": 11668,
+    "dat": true
+   },
+   "mocTinh pha 2 atk": {
+    "tam_da_ve": [
+     "mocTinh-p2:atk"
+    ],
+    "diem_khac_so_voi_khong_tep": 11500,
+    "dat": true
+   },
+   "mocTinh pha 2 hit": {
+    "tam_da_ve": [
+     "mocTinh-p2:hit"
+    ],
+    "diem_khac_so_voi_khong_tep": 10334,
+    "dat": true
+   },
+   "mocTinh pha 2 move": {
+    "tam_da_ve": [
+     "mocTinh:move"
+    ],
+    "diem_khac_so_voi_khong_tep": 0,
+    "dat": true
+   },
+   "mocTinh pha 2 die": {
+    "tam_da_ve": [
+     "mocTinh:die"
+    ],
+    "diem_khac_so_voi_khong_tep": 0,
+    "dat": true
+   },
+   "mocTinh pha 3 idle": {
+    "tam_da_ve": [
+     "mocTinh-p3:idle"
+    ],
+    "diem_khac_so_voi_khong_tep": 11474,
+    "dat": true
+   },
+   "mocTinh pha 3 tele": {
+    "tam_da_ve": [
+     "mocTinh-p3:tele"
+    ],
+    "diem_khac_so_voi_khong_tep": 11668,
+    "dat": true
+   },
+   "mocTinh pha 3 atk": {
+    "tam_da_ve": [
+     "mocTinh-p3:atk"
+    ],
+    "diem_khac_so_voi_khong_tep": 11499,
+    "dat": true
+   },
+   "mocTinh pha 3 hit": {
+    "tam_da_ve": [
+     "mocTinh-p3:hit"
+    ],
+    "diem_khac_so_voi_khong_tep": 10334,
+    "dat": true
+   },
+   "mocTinh pha 3 move": {
+    "tam_da_ve": [
+     "mocTinh:move"
+    ],
+    "diem_khac_so_voi_khong_tep": 0,
+    "dat": true
+   },
+   "mocTinh pha 3 die": {
+    "tam_da_ve": [
+     "mocTinh:die"
+    ],
+    "diem_khac_so_voi_khong_tep": 0,
+    "dat": true
+   },
+   "nguTinh pha 2 idle": {
+    "tam_da_ve": [
+     "nguTinh-p2:idle"
+    ],
+    "diem_khac_so_voi_khong_tep": 8020,
+    "dat": true
+   },
+   "nguTinh pha 2 tele": {
+    "tam_da_ve": [
+     "nguTinh-p2:tele"
+    ],
+    "diem_khac_so_voi_khong_tep": 7555,
+    "dat": true
+   },
+   "nguTinh pha 2 atk": {
+    "tam_da_ve": [
+     "nguTinh-p2:atk"
+    ],
+    "diem_khac_so_voi_khong_tep": 7825,
+    "dat": true
+   },
+   "nguTinh pha 2 hit": {
+    "tam_da_ve": [
+     "nguTinh-p2:hit"
+    ],
+    "diem_khac_so_voi_khong_tep": 7386,
+    "dat": true
+   },
+   "nguTinh pha 2 move": {
+    "tam_da_ve": [
+     "nguTinh:move"
+    ],
+    "diem_khac_so_voi_khong_tep": 0,
+    "dat": true
+   },
+   "nguTinh pha 2 die": {
+    "tam_da_ve": [
+     "nguTinh:die"
+    ],
+    "diem_khac_so_voi_khong_tep": 0,
+    "dat": true
+   },
+   "nguTinh pha 3 idle": {
+    "tam_da_ve": [
+     "nguTinh-p3:idle"
+    ],
+    "diem_khac_so_voi_khong_tep": 8020,
+    "dat": true
+   },
+   "nguTinh pha 3 tele": {
+    "tam_da_ve": [
+     "nguTinh-p3:tele"
+    ],
+    "diem_khac_so_voi_khong_tep": 7555,
+    "dat": true
+   },
+   "nguTinh pha 3 atk": {
+    "tam_da_ve": [
+     "nguTinh-p3:atk"
+    ],
+    "diem_khac_so_voi_khong_tep": 7826,
+    "dat": true
+   },
+   "nguTinh pha 3 hit": {
+    "tam_da_ve": [
+     "nguTinh-p3:hit"
+    ],
+    "diem_khac_so_voi_khong_tep": 7386,
+    "dat": true
+   },
+   "nguTinh pha 3 move": {
+    "tam_da_ve": [
+     "nguTinh:move"
+    ],
+    "diem_khac_so_voi_khong_tep": 0,
+    "dat": true
+   },
+   "nguTinh pha 3 die": {
+    "tam_da_ve": [
+     "nguTinh:die"
+    ],
+    "diem_khac_so_voi_khong_tep": 0,
+    "dat": true
+   },
+   "hoTinh pha 2 idle": {
+    "tam_da_ve": [
+     "hoTinh-p2:idle"
+    ],
+    "diem_khac_so_voi_khong_tep": 10112,
+    "dat": true
+   },
+   "hoTinh pha 2 tele": {
+    "tam_da_ve": [
+     "hoTinh-p2:tele"
+    ],
+    "diem_khac_so_voi_khong_tep": 9134,
+    "dat": true
+   },
+   "hoTinh pha 2 atk": {
+    "tam_da_ve": [
+     "hoTinh-p2:atk"
+    ],
+    "diem_khac_so_voi_khong_tep": 9194,
+    "dat": true
+   },
+   "hoTinh pha 2 hit": {
+    "tam_da_ve": [
+     "hoTinh-p2:hit"
+    ],
+    "diem_khac_so_voi_khong_tep": 9062,
+    "dat": true
+   },
+   "hoTinh pha 2 move": {
+    "tam_da_ve": [
+     "hoTinh:move"
+    ],
+    "diem_khac_so_voi_khong_tep": 0,
+    "dat": true
+   },
+   "hoTinh pha 2 die": {
+    "tam_da_ve": [
+     "hoTinh:die"
+    ],
+    "diem_khac_so_voi_khong_tep": 0,
+    "dat": true
+   },
+   "hoTinh pha 3 idle": {
+    "tam_da_ve": [
+     "hoTinh-p3:idle"
+    ],
+    "diem_khac_so_voi_khong_tep": 10101,
+    "dat": true
+   },
+   "hoTinh pha 3 tele": {
+    "tam_da_ve": [
+     "hoTinh-p3:tele"
+    ],
+    "diem_khac_so_voi_khong_tep": 9134,
+    "dat": true
+   },
+   "hoTinh pha 3 atk": {
+    "tam_da_ve": [
+     "hoTinh-p3:atk"
+    ],
+    "diem_khac_so_voi_khong_tep": 9186,
+    "dat": true
+   },
+   "hoTinh pha 3 hit": {
+    "tam_da_ve": [
+     "hoTinh-p3:hit"
+    ],
+    "diem_khac_so_voi_khong_tep": 9052,
+    "dat": true
+   },
+   "hoTinh pha 3 move": {
+    "tam_da_ve": [
+     "hoTinh:move"
+    ],
+    "diem_khac_so_voi_khong_tep": 0,
+    "dat": true
+   },
+   "hoTinh pha 3 die": {
+    "tam_da_ve": [
+     "hoTinh:die"
+    ],
+    "diem_khac_so_voi_khong_tep": 0,
+    "dat": true
+   }
+  },
+  "ep_pha_2_theo_luat_game": {
+   "mocTinh": {
+    "phase": 1,
+    "soKhungChuyenPha": 145
+   },
+   "nguTinh": {
+    "phase": 1,
+    "soKhungChuyenPha": 133
+   },
+   "hoTinh": {
+    "phase": 1,
+    "soKhungChuyenPha": 145
+   }
+  },
+  "co_trum_bang_nhau_pha1_pha3_hoTinh": true,
+  "danh_sach_quai_khong_them_muc": true
+ },
+ "chop_bao_don": {
+  "mocTinh": {
+   "nhip_sang_khac_nhip_tat": 11668,
+   "nhip_tat_khac_luc_khong_lay_da": 0
+  },
+  "nguTinh": {
+   "nhip_sang_khac_nhip_tat": 7555,
+   "nhip_tat_khac_luc_khong_lay_da": 0
+  },
+  "hoTinh": {
+   "nhip_sang_khac_nhip_tat": 9115,
+   "nhip_tat_khac_luc_khong_lay_da": 0
+  }
+ },
+ "loi_trang_game": {
+  "cu": [],
+  "moi": [],
+  "mau": []
+ },
+ "trang_tach_quai": {
+  "so_muc": [
+   36,
+   42
+  ],
+  "prompt_cu_khong_doi": true,
+  "6_muc_cuoi": [
+   "mocTinh-p2",
+   "mocTinh-p3",
+   "nguTinh-p2",
+   "nguTinh-p3",
+   "hoTinh-p2",
+   "hoTinh-p3"
+  ],
+  "tach_quai_thuong_khong_doi": true,
+  "prompt": {
+   "mocTinh-p2": "ẢNH GỬI KÈM là tấm sprite PHA 1 của trùm \"Mộc Tinh\" trong game Linh Khí (lưới 8 cột × 4 hàng, nền HỒNG TÍM #FF00FF, có kẻ lưới). Dùng công cụ tạo ảnh vẽ MỘT tấm sprite sheet pixel art 2D nhìn ngang: bản PHA 2 (nổi giận) của CHÍNH con trùm đó, lấy ảnh gửi kèm làm mẫu. GIỮ NGUYÊN so với ảnh gửi kèm: cùng một con vật, cùng hình khối và tỉ lệ, cùng cỡ trong ô, cùng vị trí chân, cùng tư thế ở từng khung, cùng số khung mỗi hàng, cùng kiểu nét (khối rõ, viền tối một nét, đổ bóng 3 sắc), nhìn vào vẫn nhận ra ngay là con trong ảnh. Hình dáng LẤY THEO ẢNH GỬI KÈM (mô tả lúc vẽ pha 1, chỉ để tham khảo: Thần cây khổng lồ mặt giận. Nét lạ: cành treo chuông gió và lồng đèn, giữa ngực là trống đồng; nếu mô tả và ảnh khác nhau thì theo ẢNH). CHỈ ĐỔI màu, chi tiết nhỏ và khí quanh thân để thành pha 2 (nổi giận): Thân gỗ nâu giữ như pha 1. Tán lá lục đậm hơn, mép lá sáng (#0e3018, #1c5c28, #3c9a34, #a8e060), lá XÙ DỰNG ra ngoài như lông dựng. Hai hốc mắt ĐỎ rực (#8a0e10, #ff3020, lõi #ffc080). Miệng (vết nứt đầy răng gỗ nhọn) há rộng hơn, trong họng sáng đỏ cam (#ff5a2a). Các vết nứt trên thân gỗ phát sáng đỏ cam (#ff5a2a). Hai tay cành nâng cao hơn, chĩa lên trời; rễ co lên bấu đất. Dây leo bị hất xiên ra hai bên. Lá bùa giấy vàng bung khỏi thân, bay quanh; vài chiếc lá vụn bay. Thay đổi này phải có ở MỌI khung. BỐ CỤC: lưới ĐỀU đúng 8 cột × 4 hàng như ảnh gửi kèm (KHÔNG thêm cột thứ 9, KHÔNG thêm hàng chạy hay hàng chết), các ô bằng nhau, kẻ lưới mảnh màu tối. Mỗi hàng một động tác, các khung xếp từ cột trái sang, ô thừa để trống: hàng 1 đứng (đứng thở uy nghi) ĐÚNG 6 khung, hàng 2 lấy đà (gồng mình lấy đà tung chiêu) ĐÚNG 4 khung, hàng 3 tấn công (tung chiêu mạnh về phía trước) ĐÚNG 6 khung, hàng 4 trúng đòn (bị đánh bật lùi) ĐÚNG 4 khung. KÍCH THƯỚC TRONG Ô: con trùm chỉ chiếm khoảng 70% bề rộng và 75% chiều cao của ô (trong game mỗi ô là 168×140 điểm ảnh, con trùm khoảng 140×131), đứng giữa ô, chân sát đáy ô; mọi phần (đuôi, vây, cành, lửa, khí, giọt, tàn lửa) phải nằm TRỌN trong ô của nó, cách đường lưới ít nhất 1/10 ô, tuyệt đối không lấn sang ô bên cạnh. QUAY MẶT SANG PHẢI trong mọi khung như ảnh gửi kèm: lấy đà và tấn công hướng về phải, trúng đòn bật về trái. Mỗi khung PHẢI có con trùm (không có ô chỉ vẽ khí, lửa hay vụ nổ). KHÔNG vẽ thêm bảng phụ, đạn bay riêng, vụ nổ riêng, chữ, số, chú thích. Khí và hiệu ứng quanh thân không dùng đỏ tươi (đỏ tươi trong game dành cho báo nguy hiểm); chi tiết trên thân đã tả ở trên thì giữ đúng màu đã ghi. BẢNG MÀU (bắt buộc bám theo; chỉ để chọn màu, KHÔNG vẽ ô màu mẫu vào ảnh): cỏ cây: đất rừng #3d402e, lá vừa #2f5f34, lá sáng #557521, ngọn lá nắng #d0cf64 | gỗ: tối #32180d, vừa #58371e, sáng #79451d; rơm, mép gỗ nắng #c98c34 | tóc, khăn, lông tối: #220f18, #3b3234 | hệ Độc: nhạt #c8f90b, chính #5aca02, đậm #277600, lõi sáng #fbfed0. Mỗi chất liệu trên một vật dùng tối đa 3 sắc lấy trong bảng này; viền ngoài một nét #14182e (thay cho mã viền khác nếu ở trên có ghi); mã màu đã ghi ở trên (của từng ô, của hệ) thì giữ nguyên, bảng này dùng cho các phần còn lại. Nền trơn MỘT MÀU HỒNG TÍM #FF00FF phủ kín (không ô cờ, không nền trắng, không chuyển màu, không bóng dưới chân). Chỉ cần gửi tấm ảnh, không cần code, không cần file json.",
+   "mocTinh-p3": "ẢNH GỬI KÈM là tấm sprite PHA 1 của trùm \"Mộc Tinh\" trong game Linh Khí (lưới 8 cột × 4 hàng, nền XANH DƯƠNG #0000FF, có kẻ lưới). Dùng công cụ tạo ảnh vẽ MỘT tấm sprite sheet pixel art 2D nhìn ngang: bản PHA 3 (hoá độc) của CHÍNH con trùm đó, lấy ảnh gửi kèm làm mẫu. GIỮ NGUYÊN so với ảnh gửi kèm: cùng một con vật, cùng hình khối và tỉ lệ, cùng cỡ trong ô, cùng vị trí chân, cùng tư thế ở từng khung, cùng số khung mỗi hàng, cùng kiểu nét (khối rõ, viền tối một nét, đổ bóng 3 sắc), nhìn vào vẫn nhận ra ngay là con trong ảnh. Hình dáng LẤY THEO ẢNH GỬI KÈM (mô tả lúc vẽ pha 1, chỉ để tham khảo: Thần cây khổng lồ mặt giận. Nét lạ: cành treo chuông gió và lồng đèn, giữa ngực là trống đồng; nếu mô tả và ảnh khác nhau thì theo ẢNH). CHỈ ĐỔI màu, chi tiết nhỏ và khí quanh thân để thành pha 3 (hoá độc): Thân gỗ nâu giữ như pha 1 nhưng tán lá đổi sang TÍM độc (#220a3a, #4a1a78, #8a3cc4, mép sáng #d894ff), trên tán có các đốm độc tròn nhỏ màu lục độc. Hai hốc mắt tím sáng (#4a1880, #d060ff, lõi #ffe8ff). Miệng há rộng, trong họng sáng tím (#c860ff). Vết nứt trên thân phát sáng tím (#c860ff); nhựa độc tím rỉ từ vết nứt và mép miệng, chảy thành giọt. Dây leo đổi sang tím, đầu dây có giọt độc màu lục. Hai tay cành dang ngang. Lá bùa rách, sạm màu. Quanh gốc rễ có làn khí độc tím mỏng là là; vài bào tử trắng tím lấp lánh quanh tán. Không còn chi tiết đỏ của pha 2. Thay đổi này phải có ở MỌI khung. BỐ CỤC: lưới ĐỀU đúng 8 cột × 4 hàng như ảnh gửi kèm (KHÔNG thêm cột thứ 9, KHÔNG thêm hàng chạy hay hàng chết), các ô bằng nhau, kẻ lưới mảnh màu tối. Mỗi hàng một động tác, các khung xếp từ cột trái sang, ô thừa để trống: hàng 1 đứng (đứng thở uy nghi) ĐÚNG 6 khung, hàng 2 lấy đà (gồng mình lấy đà tung chiêu) ĐÚNG 4 khung, hàng 3 tấn công (tung chiêu mạnh về phía trước) ĐÚNG 6 khung, hàng 4 trúng đòn (bị đánh bật lùi) ĐÚNG 4 khung. KÍCH THƯỚC TRONG Ô: con trùm chỉ chiếm khoảng 70% bề rộng và 75% chiều cao của ô (trong game mỗi ô là 168×140 điểm ảnh, con trùm khoảng 140×131), đứng giữa ô, chân sát đáy ô; mọi phần (đuôi, vây, cành, lửa, khí, giọt, tàn lửa) phải nằm TRỌN trong ô của nó, cách đường lưới ít nhất 1/10 ô, tuyệt đối không lấn sang ô bên cạnh. QUAY MẶT SANG PHẢI trong mọi khung như ảnh gửi kèm: lấy đà và tấn công hướng về phải, trúng đòn bật về trái. Mỗi khung PHẢI có con trùm (không có ô chỉ vẽ khí, lửa hay vụ nổ). KHÔNG vẽ thêm bảng phụ, đạn bay riêng, vụ nổ riêng, chữ, số, chú thích. Khí và hiệu ứng quanh thân không dùng đỏ tươi (đỏ tươi trong game dành cho báo nguy hiểm); chi tiết trên thân đã tả ở trên thì giữ đúng màu đã ghi. BẢNG MÀU (bắt buộc bám theo; chỉ để chọn màu, KHÔNG vẽ ô màu mẫu vào ảnh): cỏ cây: đất rừng #3d402e, lá vừa #2f5f34, lá sáng #557521, ngọn lá nắng #d0cf64 | gỗ: tối #32180d, vừa #58371e, sáng #79451d; rơm, mép gỗ nắng #c98c34 | vải: đỏ #c43b37, đỏ sáng #f66c52; lục #506f2a, lục sáng #95a53a; tím #7763ac | hệ Độc: nhạt #c8f90b, chính #5aca02, đậm #277600, lõi sáng #fbfed0. Mỗi chất liệu trên một vật dùng tối đa 3 sắc lấy trong bảng này; viền ngoài một nét #14182e (thay cho mã viền khác nếu ở trên có ghi); mã màu đã ghi ở trên (của từng ô, của hệ) thì giữ nguyên, bảng này dùng cho các phần còn lại. Nền trơn MỘT MÀU XANH DƯƠNG #0000FF phủ kín (không ô cờ, không nền trắng, không chuyển màu, không bóng dưới chân). Chỉ cần gửi tấm ảnh, không cần code, không cần file json.",
+   "nguTinh-p2": "ẢNH GỬI KÈM là tấm sprite PHA 1 của trùm \"Ngư Tinh\" trong game Linh Khí (lưới 8 cột × 4 hàng, nền HỒNG TÍM #FF00FF, có kẻ lưới). Dùng công cụ tạo ảnh vẽ MỘT tấm sprite sheet pixel art 2D nhìn ngang: bản PHA 2 (nổi giận) của CHÍNH con trùm đó, lấy ảnh gửi kèm làm mẫu. GIỮ NGUYÊN so với ảnh gửi kèm: cùng một con vật, cùng hình khối và tỉ lệ, cùng cỡ trong ô, cùng vị trí chân, cùng tư thế ở từng khung, cùng số khung mỗi hàng, cùng kiểu nét (khối rõ, viền tối một nét, đổ bóng 3 sắc), nhìn vào vẫn nhận ra ngay là con trong ảnh. Hình dáng LẤY THEO ẢNH GỬI KÈM (mô tả lúc vẽ pha 1, chỉ để tham khảo: Thủy quái rắn cá khổng lồ. Nét lạ: vảy là mảnh gốm men lam vỡ, râu là xích neo; nếu mô tả và ảnh khác nhau thì theo ẢNH). CHỈ ĐỔI màu, chi tiết nhỏ và khí quanh thân để thành pha 2 (nổi giận): Thân và vảy giữ màu lam đậm như pha 1. Mắt chuyển ĐỎ rực (#ff2a20, lõi cam #ff8a5a), quanh mắt có 6 tia sáng ngắn màu đỏ cam (#ff7a5c). Khe mang đỏ cam rực (#ff5a46). Hàng gai lưng đổi sang đỏ sẫm và cam (#a82a2c, #ff8a66, chóp #ffe3d0) và dựng cao hơn; vây lưng xoè dựng cao hơn. Râu vểnh ngược lên trên thay vì rủ xuống. Thêm vài đường gân nứt mảnh màu đỏ cam trên sườn và má. Vài giọt nước nhỏ xanh nhạt (#6fd0ee) bắn quanh thân. Thay đổi này phải có ở MỌI khung. BỐ CỤC: lưới ĐỀU đúng 8 cột × 4 hàng như ảnh gửi kèm (KHÔNG thêm cột thứ 9, KHÔNG thêm hàng chạy hay hàng chết), các ô bằng nhau, kẻ lưới mảnh màu tối. Mỗi hàng một động tác, các khung xếp từ cột trái sang, ô thừa để trống: hàng 1 đứng (đứng thở uy nghi) ĐÚNG 6 khung, hàng 2 lấy đà (gồng mình lấy đà tung chiêu) ĐÚNG 4 khung, hàng 3 tấn công (tung chiêu mạnh về phía trước) ĐÚNG 6 khung, hàng 4 trúng đòn (bị đánh bật lùi) ĐÚNG 4 khung. KÍCH THƯỚC TRONG Ô: con trùm chỉ chiếm khoảng 70% bề rộng và 75% chiều cao của ô (trong game mỗi ô là 180×116 điểm ảnh, con trùm khoảng 152×105), đứng giữa ô, chân sát đáy ô; mọi phần (đuôi, vây, cành, lửa, khí, giọt, tàn lửa) phải nằm TRỌN trong ô của nó, cách đường lưới ít nhất 1/10 ô, tuyệt đối không lấn sang ô bên cạnh. QUAY MẶT SANG PHẢI trong mọi khung như ảnh gửi kèm: lấy đà và tấn công hướng về phải, trúng đòn bật về trái. Mỗi khung PHẢI có con trùm (không có ô chỉ vẽ khí, lửa hay vụ nổ). KHÔNG vẽ thêm bảng phụ, đạn bay riêng, vụ nổ riêng, chữ, số, chú thích. Khí và hiệu ứng quanh thân không dùng đỏ tươi (đỏ tươi trong game dành cho báo nguy hiểm); chi tiết trên thân đã tả ở trên thì giữ đúng màu đã ghi. BẢNG MÀU (bắt buộc bám theo; chỉ để chọn màu, KHÔNG vẽ ô màu mẫu vào ảnh): nước: sâu #2a40a5, vừa #3d69cd, ánh nước #cedaea | đá: tối #29313b, vừa #333c47, sáng #4a5560 | kim loại: thép tối #5c5b73, thép sáng #cecdda, vàng kim (đồng) #f4bf4d | hệ Băng: nhạt #9cfefa, chính #32b0e9, đậm #217bc3, lõi sáng #eefffc. Mỗi chất liệu trên một vật dùng tối đa 3 sắc lấy trong bảng này; viền ngoài một nét #14182e (thay cho mã viền khác nếu ở trên có ghi); mã màu đã ghi ở trên (của từng ô, của hệ) thì giữ nguyên, bảng này dùng cho các phần còn lại. Nền trơn MỘT MÀU HỒNG TÍM #FF00FF phủ kín (không ô cờ, không nền trắng, không chuyển màu, không bóng dưới chân). Chỉ cần gửi tấm ảnh, không cần code, không cần file json.",
+   "nguTinh-p3": "ẢNH GỬI KÈM là tấm sprite PHA 1 của trùm \"Ngư Tinh\" trong game Linh Khí (lưới 8 cột × 4 hàng, nền HỒNG TÍM #FF00FF, có kẻ lưới). Dùng công cụ tạo ảnh vẽ MỘT tấm sprite sheet pixel art 2D nhìn ngang: bản PHA 3 (hoá băng) của CHÍNH con trùm đó, lấy ảnh gửi kèm làm mẫu. GIỮ NGUYÊN so với ảnh gửi kèm: cùng một con vật, cùng hình khối và tỉ lệ, cùng cỡ trong ô, cùng vị trí chân, cùng tư thế ở từng khung, cùng số khung mỗi hàng, cùng kiểu nét (khối rõ, viền tối một nét, đổ bóng 3 sắc), nhìn vào vẫn nhận ra ngay là con trong ảnh. Hình dáng LẤY THEO ẢNH GỬI KÈM (mô tả lúc vẽ pha 1, chỉ để tham khảo: Thủy quái rắn cá khổng lồ. Nét lạ: vảy là mảnh gốm men lam vỡ, râu là xích neo; nếu mô tả và ảnh khác nhau thì theo ẢNH). CHỈ ĐỔI màu, chi tiết nhỏ và khí quanh thân để thành pha 3 (hoá băng): Toàn thân như bị đóng băng: thân và vảy đổi sang xanh băng nhạt (tối #3f7fb5, vừa #9fd4f0, sáng trắng #ffffff), vây xanh băng (#4a96c2, #b0e2fa) viền trắng, bụng trắng. Mắt vàng sáng (#ffd84a, lõi #fff6a8, tâm trắng), quanh mắt có 6 tia sáng vàng nhạt. Râu phủ băng trắng xanh (#dff6ff), rủ xuống như pha 1. Ba nhũ băng nhọn treo dưới hàm. Trên lưng có vài mảng tuyết trắng và 3 tinh thể băng nhọn mọc lên; gai lưng dựng cao, màu băng. Vài mảnh băng nhỏ và bông tuyết lấp lánh quanh thân. Không còn chi tiết đỏ của pha 2. Thay đổi này phải có ở MỌI khung. BỐ CỤC: lưới ĐỀU đúng 8 cột × 4 hàng như ảnh gửi kèm (KHÔNG thêm cột thứ 9, KHÔNG thêm hàng chạy hay hàng chết), các ô bằng nhau, kẻ lưới mảnh màu tối. Mỗi hàng một động tác, các khung xếp từ cột trái sang, ô thừa để trống: hàng 1 đứng (đứng thở uy nghi) ĐÚNG 6 khung, hàng 2 lấy đà (gồng mình lấy đà tung chiêu) ĐÚNG 4 khung, hàng 3 tấn công (tung chiêu mạnh về phía trước) ĐÚNG 6 khung, hàng 4 trúng đòn (bị đánh bật lùi) ĐÚNG 4 khung. KÍCH THƯỚC TRONG Ô: con trùm chỉ chiếm khoảng 70% bề rộng và 75% chiều cao của ô (trong game mỗi ô là 180×116 điểm ảnh, con trùm khoảng 152×105), đứng giữa ô, chân sát đáy ô; mọi phần (đuôi, vây, cành, lửa, khí, giọt, tàn lửa) phải nằm TRỌN trong ô của nó, cách đường lưới ít nhất 1/10 ô, tuyệt đối không lấn sang ô bên cạnh. QUAY MẶT SANG PHẢI trong mọi khung như ảnh gửi kèm: lấy đà và tấn công hướng về phải, trúng đòn bật về trái. Mỗi khung PHẢI có con trùm (không có ô chỉ vẽ khí, lửa hay vụ nổ). KHÔNG vẽ thêm bảng phụ, đạn bay riêng, vụ nổ riêng, chữ, số, chú thích. Khí và hiệu ứng quanh thân không dùng đỏ tươi (đỏ tươi trong game dành cho báo nguy hiểm); chi tiết trên thân đã tả ở trên thì giữ đúng màu đã ghi. BẢNG MÀU (bắt buộc bám theo; chỉ để chọn màu, KHÔNG vẽ ô màu mẫu vào ảnh): nước: sâu #2a40a5, vừa #3d69cd, ánh nước #cedaea | đá: tối #29313b, vừa #333c47, sáng #4a5560 | kim loại: thép tối #5c5b73, thép sáng #cecdda, vàng kim (đồng) #f4bf4d | hệ Băng: nhạt #9cfefa, chính #32b0e9, đậm #217bc3, lõi sáng #eefffc. Mỗi chất liệu trên một vật dùng tối đa 3 sắc lấy trong bảng này; viền ngoài một nét #14182e (thay cho mã viền khác nếu ở trên có ghi); mã màu đã ghi ở trên (của từng ô, của hệ) thì giữ nguyên, bảng này dùng cho các phần còn lại. Nền trơn MỘT MÀU HỒNG TÍM #FF00FF phủ kín (không ô cờ, không nền trắng, không chuyển màu, không bóng dưới chân). Chỉ cần gửi tấm ảnh, không cần code, không cần file json.",
+   "hoTinh-p2": "ẢNH GỬI KÈM là tấm sprite PHA 1 của trùm \"Hồ Tinh\" trong game Linh Khí (lưới 8 cột × 4 hàng, nền XANH LÁ #00FF00, có kẻ lưới). Dùng công cụ tạo ảnh vẽ MỘT tấm sprite sheet pixel art 2D nhìn ngang: bản PHA 2 (mắt tím, phân thân) của CHÍNH con trùm đó, lấy ảnh gửi kèm làm mẫu. GIỮ NGUYÊN so với ảnh gửi kèm: cùng một con vật, cùng hình khối và tỉ lệ, cùng cỡ trong ô, cùng vị trí chân, cùng tư thế ở từng khung, cùng số khung mỗi hàng, cùng kiểu nét (khối rõ, viền tối một nét, đổ bóng 3 sắc), nhìn vào vẫn nhận ra ngay là con trong ảnh. Hình dáng LẤY THEO ẢNH GỬI KÈM (mô tả lúc vẽ pha 1, chỉ để tham khảo: Cáo chín đuôi rình mồi. Nét lạ: chín đuôi là dải lụa treo đèn lồng, mặt nạ hồ ly gỗ che nửa mặt; nếu mô tả và ảnh khác nhau thì theo ẢNH). CHỈ ĐỔI màu, chi tiết nhỏ và khí quanh thân để thành pha 2 (mắt tím, phân thân): Thân, lông, hoa văn, đuôi và mọi chi tiết khác giữ màu như pha 1. Mắt chuyển TÍM sáng (#d86cff, lõi #f6d0ff), quanh mắt có 6 tia sáng tím nhạt (#e08cff). Miệng hé rộng hơn một chút, lộ nanh. Một lớp khí mờ màu lam và tím (#3a7aff, #9a48d4) mỏng, bám sát viền lưng và đuôi, gợi bóng phân thân; KHÔNG vẽ thêm con thứ hai trong ô. Thay đổi này phải có ở MỌI khung. BỐ CỤC: lưới ĐỀU đúng 8 cột × 4 hàng như ảnh gửi kèm (KHÔNG thêm cột thứ 9, KHÔNG thêm hàng chạy hay hàng chết), các ô bằng nhau, kẻ lưới mảnh màu tối. Mỗi hàng một động tác, các khung xếp từ cột trái sang, ô thừa để trống: hàng 1 đứng (đứng thở uy nghi) ĐÚNG 6 khung, hàng 2 lấy đà (gồng mình lấy đà tung chiêu) ĐÚNG 4 khung, hàng 3 tấn công (tung chiêu mạnh về phía trước) ĐÚNG 6 khung, hàng 4 trúng đòn (bị đánh bật lùi) ĐÚNG 4 khung. KÍCH THƯỚC TRONG Ô: con trùm chỉ chiếm khoảng 70% bề rộng và 75% chiều cao của ô (trong game mỗi ô là 208×128 điểm ảnh, con trùm khoảng 177×119), đứng giữa ô, chân sát đáy ô; mọi phần (đuôi, vây, cành, lửa, khí, giọt, tàn lửa) phải nằm TRỌN trong ô của nó, cách đường lưới ít nhất 1/10 ô, tuyệt đối không lấn sang ô bên cạnh. QUAY MẶT SANG PHẢI trong mọi khung như ảnh gửi kèm: lấy đà và tấn công hướng về phải, trúng đòn bật về trái. Mỗi khung PHẢI có con trùm (không có ô chỉ vẽ khí, lửa hay vụ nổ). KHÔNG vẽ thêm bảng phụ, đạn bay riêng, vụ nổ riêng, chữ, số, chú thích. Khí và hiệu ứng quanh thân không dùng đỏ tươi (đỏ tươi trong game dành cho báo nguy hiểm); chi tiết trên thân đã tả ở trên thì giữ đúng màu đã ghi. BẢNG MÀU (bắt buộc bám theo; chỉ để chọn màu, KHÔNG vẽ ô màu mẫu vào ảnh): đá: tối #29313b, vừa #333c47, sáng #4a5560 | kim loại: thép tối #5c5b73, thép sáng #cecdda, vàng kim (đồng) #f4bf4d | lửa môi trường (đuốc, chậu than): than hồng #a03409, lửa #eb7e14 | vải: đỏ #c43b37, đỏ sáng #f66c52; lục #506f2a, lục sáng #95a53a; tím #7763ac | hệ Lửa: nhạt #ffc90e, chính #fe7d04, đậm #c9270c, lõi sáng #feec86. Mỗi chất liệu trên một vật dùng tối đa 3 sắc lấy trong bảng này; viền ngoài một nét #14182e (thay cho mã viền khác nếu ở trên có ghi); mã màu đã ghi ở trên (của từng ô, của hệ) thì giữ nguyên, bảng này dùng cho các phần còn lại. Nền trơn MỘT MÀU XANH LÁ #00FF00 phủ kín (không ô cờ, không nền trắng, không chuyển màu, không bóng dưới chân). Chỉ cần gửi tấm ảnh, không cần code, không cần file json.",
+   "hoTinh-p3": "ẢNH GỬI KÈM là tấm sprite PHA 1 của trùm \"Hồ Tinh\" trong game Linh Khí (lưới 8 cột × 4 hàng, nền HỒNG TÍM #FF00FF, có kẻ lưới). Dùng công cụ tạo ảnh vẽ MỘT tấm sprite sheet pixel art 2D nhìn ngang: bản PHA 3 (hoá cuồng) của CHÍNH con trùm đó, lấy ảnh gửi kèm làm mẫu. GIỮ NGUYÊN so với ảnh gửi kèm: cùng một con vật, cùng hình khối và tỉ lệ, cùng cỡ trong ô, cùng vị trí chân, cùng tư thế ở từng khung, cùng số khung mỗi hàng, cùng kiểu nét (khối rõ, viền tối một nét, đổ bóng 3 sắc), nhìn vào vẫn nhận ra ngay là con trong ảnh. Hình dáng LẤY THEO ẢNH GỬI KÈM (mô tả lúc vẽ pha 1, chỉ để tham khảo: Cáo chín đuôi rình mồi. Nét lạ: chín đuôi là dải lụa treo đèn lồng, mặt nạ hồ ly gỗ che nửa mặt; nếu mô tả và ảnh khác nhau thì theo ẢNH). CHỈ ĐỔI màu, chi tiết nhỏ và khí quanh thân để thành pha 3 (hoá cuồng): Cùng cỡ với pha 1 (KHÔNG vẽ to hơn). Hoá cuồng trong lửa: mắt TRẮNG rực viền hồng nhạt (#ffffff, #f0b0ff), quanh mắt có 6 tia sáng hồng nhạt (#ffd0ff). Miệng há to gầm, nanh dài hơn. Tai thêm chỏm lông nhọn; lông má dài và chĩa ra sau hơn; hàng lông gáy và sống lưng DỰNG ĐỨNG, dài gấp đôi; bờm ngực dài hơn; móng dài hơn. Lửa cam vàng (theo bảng hệ Lửa) cháy dọc sống lưng, quanh bàn chân và dọc đuôi; lửa ở chóp đuôi to hơn. Tàn lửa vàng cam nhỏ bay quanh thân. Thay đổi này phải có ở MỌI khung. BỐ CỤC: lưới ĐỀU đúng 8 cột × 4 hàng như ảnh gửi kèm (KHÔNG thêm cột thứ 9, KHÔNG thêm hàng chạy hay hàng chết), các ô bằng nhau, kẻ lưới mảnh màu tối. Mỗi hàng một động tác, các khung xếp từ cột trái sang, ô thừa để trống: hàng 1 đứng (đứng thở uy nghi) ĐÚNG 6 khung, hàng 2 lấy đà (gồng mình lấy đà tung chiêu) ĐÚNG 4 khung, hàng 3 tấn công (tung chiêu mạnh về phía trước) ĐÚNG 6 khung, hàng 4 trúng đòn (bị đánh bật lùi) ĐÚNG 4 khung. KÍCH THƯỚC TRONG Ô: con trùm chỉ chiếm khoảng 70% bề rộng và 75% chiều cao của ô (trong game mỗi ô là 208×128 điểm ảnh, con trùm khoảng 177×119), đứng giữa ô, chân sát đáy ô; mọi phần (đuôi, vây, cành, lửa, khí, giọt, tàn lửa) phải nằm TRỌN trong ô của nó, cách đường lưới ít nhất 1/10 ô, tuyệt đối không lấn sang ô bên cạnh. QUAY MẶT SANG PHẢI trong mọi khung như ảnh gửi kèm: lấy đà và tấn công hướng về phải, trúng đòn bật về trái. Mỗi khung PHẢI có con trùm (không có ô chỉ vẽ khí, lửa hay vụ nổ). KHÔNG vẽ thêm bảng phụ, đạn bay riêng, vụ nổ riêng, chữ, số, chú thích. Khí và hiệu ứng quanh thân không dùng đỏ tươi (đỏ tươi trong game dành cho báo nguy hiểm); chi tiết trên thân đã tả ở trên thì giữ đúng màu đã ghi. BẢNG MÀU (bắt buộc bám theo; chỉ để chọn màu, KHÔNG vẽ ô màu mẫu vào ảnh): đá: tối #29313b, vừa #333c47, sáng #4a5560 | kim loại: thép tối #5c5b73, thép sáng #cecdda, vàng kim (đồng) #f4bf4d | lửa môi trường (đuốc, chậu than): than hồng #a03409, lửa #eb7e14 | vải: đỏ #c43b37, đỏ sáng #f66c52; lục #506f2a, lục sáng #95a53a; tím #7763ac | hệ Lửa: nhạt #ffc90e, chính #fe7d04, đậm #c9270c, lõi sáng #feec86. Mỗi chất liệu trên một vật dùng tối đa 3 sắc lấy trong bảng này; viền ngoài một nét #14182e (thay cho mã viền khác nếu ở trên có ghi); mã màu đã ghi ở trên (của từng ô, của hệ) thì giữ nguyên, bảng này dùng cho các phần còn lại. Nền trơn MỘT MÀU HỒNG TÍM #FF00FF phủ kín (không ô cờ, không nền trắng, không chuyển màu, không bóng dưới chân). Chỉ cần gửi tấm ảnh, không cần code, không cần file json."
+  },
+  "tham_chieu": {
+   "mocTinh-p2": {
+    "ten_tep": "mocTinh-pha1-tham-chieu.png",
+    "co": [
+     2688,
+     1120
+    ],
+    "nen": "#FF00FF",
+    "so_khung": [
+     6,
+     4,
+     6,
+     4
+    ],
+    "o": [
+     168,
+     140
+    ]
+   },
+   "mocTinh-p3": {
+    "ten_tep": "mocTinh-pha1-tham-chieu.png",
+    "co": [
+     2688,
+     1120
+    ],
+    "nen": "#0000FF",
+    "so_khung": [
+     6,
+     4,
+     6,
+     4
+    ],
+    "o": [
+     168,
+     140
+    ]
+   },
+   "nguTinh-p2": {
+    "ten_tep": "nguTinh-pha1-tham-chieu.png",
+    "co": [
+     2880,
+     928
+    ],
+    "nen": "#FF00FF",
+    "so_khung": [
+     6,
+     4,
+     6,
+     4
+    ],
+    "o": [
+     180,
+     116
+    ]
+   },
+   "nguTinh-p3": {
+    "ten_tep": "nguTinh-pha1-tham-chieu.png",
+    "co": [
+     2880,
+     928
+    ],
+    "nen": "#FF00FF",
+    "so_khung": [
+     6,
+     4,
+     6,
+     4
+    ],
+    "o": [
+     180,
+     116
+    ]
+   },
+   "hoTinh-p2": {
+    "ten_tep": "hoTinh-pha1-tham-chieu.png",
+    "co": [
+     3328,
+     1024
+    ],
+    "nen": "#00FF00",
+    "so_khung": [
+     6,
+     4,
+     6,
+     4
+    ],
+    "o": [
+     208,
+     128
+    ]
+   },
+   "hoTinh-p3": {
+    "ten_tep": "hoTinh-pha1-tham-chieu.png",
+    "co": [
+     3328,
+     1024
+    ],
+    "nen": "#FF00FF",
+    "so_khung": [
+     6,
+     4,
+     6,
+     4
+    ],
+    "o": [
+     208,
+     128
+    ]
+   }
+  },
+  "tach_8x4": {
+   "dat": true,
+   "kiem": [
+    "Độ nét gấp đôi: tấm ảnh 2880×928 = (1440×464) × 2, ô 360×232",
+    "47 màu (tối đa 48)",
+    "Đủ khung: 6·4·6·4",
+    "Hình nằm trọn trong ô, cách mép ≥ 2 điểm ảnh",
+    "Ô thừa để trống",
+    "Chân đặt ở (90, 112) điểm ảnh game = (180, 224) trong ảnh",
+    "Nền trong suốt, mép sắc (chỉ trong suốt hoặc đặc)",
+    "Ảnh có kẻ lưới: 8 cột × 4 hàng, tách theo từng ô",
+    "Dáng pha 2 của Ngư Tinh: tấm 4 hàng (đứng, lấy đà, tấn công, trúng đòn). Hàng chạy và chết game mượn tấm pha 1",
+    "Tự nhìn: mặt quái quay sang PHẢI ở khung chạy và tấn công. Nếu ảnh gốc quay trái thì tích ô \"Lật ngang\" ở bước 2; nếu đã quay phải thì để trống."
+   ],
+   "ma": "nguTinh-p2",
+   "dong_tac": {
+    "idle": {
+     "hang": 0,
+     "so": 6,
+     "giay": 1.4,
+     "lap": true
+    },
+    "tele": {
+     "hang": 1,
+     "so": 4,
+     "giay": 0.7
+    },
+    "atk": {
+     "hang": 2,
+     "so": 6,
+     "giay": 0.6
+    },
+    "hit": {
+     "hang": 3,
+     "so": 4,
+     "giay": 0.3
+    }
+   },
+   "khung": [
+    180,
+    116
+   ],
+   "net": 2,
+   "co_tam": [
+    2880,
+    928
+   ]
+  },
+  "loi_trang": []
+ }
+}
