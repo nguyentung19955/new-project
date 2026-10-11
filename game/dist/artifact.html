@@ -53,7 +53,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.11-0953";
+(window.G = window.G || {}).VERSION = "lk-2026.10.11-1000";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -32409,7 +32409,7 @@ MA._xong();
   //   trên: giữa đáy ảnh = (giữa cửa, mép trên sàn fy0); ảnh mọc lên tường sau.
   //   dưới: giữa đáy ảnh = (giữa cửa, mép ngoài tường trước fy1 + fw). Phần ảnh nằm trong dải tường (cao fw + 4 tính từ đáy) vẽ ở lớp nền;
   //         phần nhô lên sàn (song chắn, đầu cột) vẽ ở lớp phủ trước để che chân nhân vật, đúng thứ tự lớp của bản code.
-  //   bên:  ảnh vẽ cho tường TRÁI (mặt hướng vào phòng ở bên phải ảnh); giữa đáy ảnh = (mép ngoài tường + 9, giữa cửa + 24). Tường phải: game lật ngang.
+  //   bên:  ảnh vẽ cho tường TRÁI (mặt hướng vào phòng ở bên phải ảnh); giữa đáy ảnh = (giữa bề dày tường, giữa cửa + 24). Tường phải: game lật ngang.
   // Vẫn do code vẽ: nền lối đi và ánh sáng tràn vào sàn (nằm dưới ảnh), vạch đỏ ở ngưỡng cửa khoá, ổ khoá, xích vàng, đầu lâu, mũi tên chỉ lối.
   const KHOA_Y = { rung: [12, 4, 3], bien: [10, 3, 4], lau: [14, 2, 3] }; // chỗ ổ khoá như bản code từng vùng: cửa trên, dưới, bên
   function cuaAnh(T, g, d, nen, truoc) {
@@ -32433,7 +32433,7 @@ MA._xong();
       if (cat > 0) truoc.push(() => veAnh(a, at - w / 2, y0, false, 0, cat));
       if (!open) { ghi = truoc; padlock(at, y + ky[1]); ghi = cu; }
     } else {
-      const lf = d.side === 'left', x = lf ? g.fx0 - g.sw : g.fx1, cx = x + (g.sw >> 1), xc = lf ? x + 9 : x + g.sw - 9;
+      const lf = d.side === 'left', x = lf ? g.fx0 - g.sw : g.fx1, cx = x + (g.sw >> 1), xc = x + g.sw / 2;
       r(x, at - 16, g.sw, 32, T.cuaNen);
       if (open) {
         r(x, at - 16, g.sw, 32, rgba(L, 0.7));
