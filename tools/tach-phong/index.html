@@ -296,9 +296,9 @@ function promptCua(L) {
     + `BỐ CỤC: lưới ĐỀU đúng 3 cột × 2 hàng = 6 ô vuông bằng nhau (KHÔNG thêm cột, KHÔNG thêm hàng), kẻ lưới mảnh màu tối. Cột 1 là cửa TRÊN, cột 2 là cửa DƯỚI, cột 3 là cửa BÊN; hàng trên là cửa MỞ, hàng dưới là ĐÚNG cái cửa đó khi KHOÁ. Thứ tự đọc từ trái sang phải, hết hàng trên mới xuống hàng dưới: `
     + L.ds.map((m, i) => `ô ${i + 1}: ${m.ten} (trong game ${m.w}×${m.h})`).join('; ') + '. '
     + `TỪNG HÌNH: ` + L.ds.map((m, i) => `Ô ${i + 1}: ${m.mo}.`).join(' ') + ' '
-    + `CỬA BÊN chỉ vẽ MỘT cái của tường TRÁI (phía ngoài phòng ở bên trái hình, phía trong phòng ở bên phải hình); game tự lật ngang để làm cửa tường phải, nên đừng vẽ gì chỉ đúng cho một phía (không chữ, không hoa văn lệch hẳn một bên). `
+    + `CỬA BÊN chỉ vẽ MỘT cái của tường TRÁI (phía ngoài phòng ở bên trái hình, phía trong phòng ở bên phải hình); game tự lật ngang để làm cửa tường phải, nên đừng vẽ chữ hay ký hiệu có chiều trái phải. `
     + `KIỂU VẼ: pixel art rõ từng điểm ảnh, màu phẳng, đổ bóng 3 sắc (tối, vừa, sáng), ánh sáng chiếu từ phía trên bên trái; viền ngoài tối MỘT nét màu #14182e quanh mép từng hình; không chuyển màu mượt, không nhoè, không khử răng cưa. Trong game mỗi cửa rất nhỏ (số trong ngoặc là cỡ rộng×cao tính bằng điểm ảnh), nên khối phải to, rõ, ít chi tiết vụn. `
-    + `BẢNG MÀU (bắt buộc bám theo, mỗi chất liệu tối đa 3 sắc): ${MAU_CUA}; ${V.mau}; ánh sáng trong lòng cửa mở: ${V.sang}. `
+    + `BẢNG MÀU (bắt buộc bám theo; mỗi hình chỉ dùng tối đa 3 sắc cho một chất liệu): ${MAU_CUA}; ${V.mau}; ánh sáng trong lòng cửa mở: ${V.sang}. `
     + `CỠ TRONG Ô: mỗi hình chiếm khoảng 70% ô (cửa bên cao khoảng 70% ô và hẹp; cửa dưới rộng khoảng 70% ô và dẹt), canh giữa theo chiều ngang, ĐÁY hình nằm gần đáy ô, hình nằm TRỌN trong ô, không chạm đường lưới. Hai ô trên dưới của cùng một cột phải vẽ ĐÚNG cùng một cái cửa, cùng cỡ, cùng chỗ đứng trong ô, chỉ khác mở hay khoá. `
     + `KHÔNG vẽ: ổ khoá, đầu lâu, dây xích (game tự vẽ đè lên cửa khoá), chữ, số, nhãn, tên, mũi tên, bảng màu, mảng tường hay sàn phòng quanh cửa, vệt sáng hắt xuống sàn, bóng đổ xuống đất, quầng sáng toả rộng, nhân vật. KHÔNG dùng màu đỏ tươi cho vật chắn (màu đỏ dành cho ổ khoá do game vẽ). `
     + cuoi(L);
@@ -892,6 +892,7 @@ function veXem() {
     GAME.art.bg(c, W.region, W.seed, 0);
     for (const o of W.props.slice().sort((a, b) => a.y - b.y)) GAME.art.prop(c, o);
     $('tenPhong').textContent = VUNG[MAU];
+    $('ttXem').textContent = cua && L.vung != null ? 'Bấm "Đổi cửa" để xem cửa mở, cửa khoá và cửa dẫn tới Trùm.' : 'Chạm "Đổi phòng mẫu" để xem trên nền Rừng già, Hang biển, Lâu đài cổ.';
   } catch (e) { $('ttXem').textContent = 'Không vẽ thử được: ' + e.message; }
   SC.gd = gdThat; GAME.getWorld = cu.getWorld; GAME.wx = cu.wx; GAME.NET = cu.NET; GAME.time = cu.time;
   $('nutSoCode').textContent = SO_CODE ? 'Xem lại ảnh của bạn' : 'Xem bản vẽ code (cũ)';
