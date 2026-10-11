@@ -1,8 +1,42 @@
-# Trang trạng thái dự án Linh Khí — cập nhật 11/10/2026 17:40
+# Trang trạng thái dự án Linh Khí — cập nhật 11/10/2026 18:25
 
-Một bảng duy nhất, thay cho mọi tổng hợp cũ (`docs/review/TONG-HOP.md` ngày 10/10 đã lỗi thời, chỉ giữ để tra cứu). Bản đang chạy trên https://spiritblade.web.app: **lk-2026.10.11-1637** (web dùng 2 tệp từ Đợt 10). Mọi mục đều có cờ tắt hoặc `git revert` theo báo cáo tương ứng.
+Một bảng duy nhất, thay cho mọi tổng hợp cũ (`docs/review/TONG-HOP.md` ngày 10/10 đã lỗi thời, chỉ giữ để tra cứu). Bản đang chạy trên https://spiritblade.web.app: **lk-2026.10.11-1817** (web dùng 2 tệp từ Đợt 10). Mọi mục đều có cờ tắt hoặc `git revert` theo báo cáo tương ứng.
 
 Trạng thái: **ĐÃ LÀM + ĐÃ KIỂM** (có báo cáo, ảnh, số đo, workflow xanh) · **ĐANG CHẠY** (phiên đang làm) · **CHỜ ẢNH** (code xong, cần ảnh ChatGPT/Pippit) · **ĐÃ QUYẾT, CHƯA LÀM** · **CHỜ DUYỆT**.
+
+## 0. TỔNG KẾT NGÀY 11/10/2026 (18:25)
+
+**Mọi làn code đã xong.** Đợt 1–11, 8b, D2b và 19 phiên làn A–E đều có báo cáo, workflow xanh; game không có ảnh mới thì y hệt cũ. Không mở phiên mới: A4 (tile Hang biển, Lâu đài) chờ ảnh tile Rừng thật; E3 không làm. Bản trên web: **lk-2026.10.11-1817** (2 tệp: trang chính + ảnh tải sau).
+
+Sửa công cụ chiều nay (theo ảnh thật của chủ dự án): nút sao chép chép đúng prompt lô gộp; báo chọn nhầm lô + nút chuyển lô; prompt mọi trang dặn không lấy lại bố cục ảnh trước, tấm kín dặn không kẻ lưới; lô gộp cắt theo vạch kẻ tối (10/10 tấm thật, 27/27 hàng đúng). Bộ 17 ảnh lưới trống + prompt kèm lưới: `luoi-trong-17-lo.zip` (đã gửi).
+
+### Ảnh còn phải gen (trang công cụ · có gửi kèm ảnh không)
+| Lô | Trang | Gửi kèm |
+|---|---|---|
+| B1 · 3 tấm (Đạn tròn và bom; Gai, hạt độc, tên Độc/Băng; Đạn cầu, bùa, pháo, lửa, tên Lửa) | tach-hieu-ung | lưới trống 01, 02, 03 |
+| B2 · Lướt chém + Nện đất; Ra chưởng Độc + Băng (không bắt buộc) | tach-hieu-ung | lưới 07, 06 |
+| B3 · Băng vỡ, Đóng băng, Cổng, Cột nước; Trùm nổ cuối (lẻ) | tach-hieu-ung | lưới 10 |
+| A1 · 18 đồ vật phòng | tach-phong | — |
+| A2 · Cửa gộp 3 vùng; ổ khoá + đầu lâu | tach-phong | lưới 17 |
+| A3 · Trang trí 3 vùng (3 tấm) + lửa đuốc | tach-phong | — |
+| C1 · 14 nút; C2 · 30 biểu tượng nhỏ | tach-giao-dien | — |
+| C3 · Hình lớn; Logo (tự đọc lại chữ LINH KHÍ) | tach-giao-dien | — |
+| C4 · Thân nút; Ô vũ khí (nền xanh lá) | tach-giao-dien | — |
+| C5 · Khung 9 mảnh | tach-giao-dien | — |
+| Bản đồ ải (3 lô) | tach-giao-dien | — |
+| D1 · 6 công trình làng | tach-lang | 2 ảnh tham chiếu trên trang |
+| D2 · 12 đạo cụ; Khung cửi + Lửa lò (gộp) | tach-lang | ảnh tham chiếu trên trang |
+| D3 · Nền làng; Tranh bản đồ vùng | tach-lang | 2 ảnh tham chiếu mỗi tấm (bắt buộc) |
+| Tile Rừng già (Đợt 6) | tach-phong | — |
+| 7 người làng | tach-anh-hung | — |
+| E2 · 6 dáng pha 2, 3 của 3 trùm | tach-quai | ảnh pha 1 (nút trên trang) |
+| 11 thân theo bộ trang phục | tach-anh-hung | 2 ảnh trong `bo-trang-phuc/anh-kem/` |
+
+### Mặc định đã áp (đổi ý thì báo)
+Web dùng 2 tệp (Đợt 10) · không làm E3 · 5 lô gộp lệch dáng vẫn gộp · D2 gộp khung cửi + lửa lò · bản Lửa đi kèm bản Chung ở lô Ra chưởng và Tiến hoá · hình lớn D3 để ở trang chính tới khi build.py báo trang chính > 5 MB · bảng màu lõi dùng từ lô mới · giữ bam/bam_vk · kiếm đi qua mặt 2 khung đầu (2a) · tile giữ vẽ đè · nút Đánh đồng vàng · 8b trùm giữ ô dấu.
+
+### Việc chỉ chủ dự án làm được
+Chơi thử trên iPhone bản 1817 (~10 phút): hiệu ứng mới có đẹp và đúng chỗ không, cột lửa có nhỏ quá không, viền hệ quanh thanh máu đủ rõ không, búa giữ nút, sân 300, chữ che quái. Gen các tấm ở bảng trên, gửi zip.
 
 ## 1. Kế hoạch cải thiện (Q1–Q6 + phát sinh)
 
@@ -32,9 +66,9 @@ Trạng thái: **ĐÃ LÀM + ĐÃ KIỂM** (có báo cáo, ảnh, số đo, work
 | A3 | Đồ trang trí 3 vùng | CHỜ ẢNH | `phong-a3/PROMPT.md` |
 | A4 | Sàn/tường Hang biển, Lâu đài | ĐÃ QUYẾT: chỉ sau khi Rừng có ảnh thật và duyệt | — |
 | B1 | 14 dải đạn/bom/tên | CHỜ ẢNH | `hieu-ung-b1/PROMPT.md` (cách nhanh: **3 tấm** thay 14) |
-| B2 | 8 dải đòn/chiêu (+ bản theo hệ) | CHỜ ẢNH | `hieu-ung-b2/PROMPT.md` (cách nhanh: **5 tấm** thay 11, trong đó 1 tấm chung với B3 và 1 tấm bản hệ không bắt buộc) |
-| B3 | 15 dải nổ/trạng thái/trùm/cổng | CHỜ ẢNH | `hieu-ung-b3/PROMPT.md` (cách nhanh: **7 tấm** thay 18, gồm Trùm nổ cuối gen lẻ và 1 tấm bản hệ không bắt buộc) |
-| B4 | 7 vũng trên sàn: vũng lửa, vũng độc, mây độc, 4 vũng của quái. 2 tấm ảnh | CHỜ ẢNH (code và công cụ đã kiểm bằng ảnh mẫu: không có tệp khác 0 điểm ảnh, bán kính vẽ = bán kính gây sát thương, nhật ký sát thương bot ải 1 trùng; báo cáo `hieu-ung-b4/bao-cao.md`, có 3 điểm chờ duyệt) | `hieu-ung-b4/PROMPT.md` (cách nhanh: **2 tấm** thay 7) |
+| B2 | 8 dải đòn/chiêu (+ bản theo hệ) | **ĐÃ NHẬP ẢNH** 18:17: Trảm Nguyệt, Vệt cào, Buông cung, Ra chiêu, Ra chưởng + bản Lửa, Giáo quét. Còn: Lướt chém, Nện đất (lô 6 khung), Ra chưởng Độc + Băng (không bắt buộc) | `hieu-ung-b2/PROMPT.md` |
+| B3 | 15 dải nổ/trạng thái/trùm/cổng | **ĐÃ NHẬP ẢNH** 18:17: Em bé trúng đòn, Nổ nhỏ, Vòng phép, Lấp lánh, Hồi máu, Sao choáng, Cột lửa (hơi nhỏ, có thể gen lẻ lại), Nổ khói, Sốc nhiệt, Tiến hoá + 3 bản hệ. Còn: lô hồng tím 6 khung (Băng vỡ, Đóng băng, Cổng, Cột nước), Trùm nổ cuối | `hieu-ung-b3/PROMPT.md` |
+| B4 | 7 vũng trên sàn | **ĐÃ NHẬP ẢNH** 18:17 (đủ 7) | `hieu-ung-b4/PROMPT.md` |
 | C1 | 14 biểu tượng nút | CHỜ ẢNH | `giao-dien-c1/PROMPT.md` |
 | C2 | 30 biểu tượng nhỏ; biểu tượng tinh anh 12×12 | CHỜ ẢNH (phóng to đã lên) | `giao-dien-c2/PROMPT.md` |
 | C3 | Hình cố định lớn: nút Nói chuyện, thẻ ải, thẻ ải trùm (mỗi thứ 3 trạng thái), mặt trống đồng, logo LINH KHÍ. 2 tấm ảnh | CHỜ ẢNH (code và công cụ đã kiểm bằng ảnh mẫu; báo cáo `giao-dien-c3/bao-cao.md`) | `giao-dien-c3/PROMPT.md` |
@@ -43,12 +77,12 @@ Trạng thái: **ĐÃ LÀM + ĐÃ KIỂM** (có báo cáo, ảnh, số đo, work
 | D1 | 6 công trình làng; trang Tách Làng | CHỜ ẢNH | `lang-d1/PROMPT.md` |
 | D2 | 12 đạo cụ + khung cửi, lửa lò. **2 tấm ảnh** (làn D2b: khung cửi và lửa lò vẽ chung 1 tấm 2 hàng × 3 khung, nền xanh dương; lô gộp nằm cuối danh sách trên trang Tách Làng) | CHỜ ẢNH (lô gộp đã kiểm bằng ảnh mẫu 25/25 mục: 2 tệp ra giống hai lô lẻ từng byte, xem thử trong làng hiện cả hai; **chưa thử ảnh ChatGPT thật**; có 3 điểm chờ duyệt; quay lui `git revert 4d81405`; báo cáo `lang-d2b/bao-cao.md`) | `lang-d2/PROMPT.md` (cách nhanh: **2 tấm** thay 3; hai lô lẻ giữ làm dự phòng) |
 | D3 | Nền làng 720×270 (`gd-lang-nen`) + tranh bản đồ vùng 480×270 (`gd-ban-do-vung`, một tranh cho cả 3 vùng). 2 tấm ảnh, mỗi tấm gửi kèm 2 ảnh tham chiếu | CHỜ ẢNH (code và công cụ đã kiểm bằng ảnh mẫu; không có tệp: khác bản cũ 0 điểm ảnh; workflow xanh; **chưa thử ảnh ChatGPT thật**; chờ duyệt 4 điểm, trong đó nét thường hay gấp đôi; quay lui: xoá tệp ảnh hoặc `git revert 5404783 5150b00`; báo cáo `lang-d3/bao-cao.md`) | `lang-d3/PROMPT.md` |
-| E1 | 3 đồ lưng vẽ lại + cánh theo cấp. Cánh: 1 tấm ảnh 8 chiếc (cấp 1 và cấp 3 của 4 loại), gửi kèm ảnh 4 cánh cấp 2 | 6 đồ lưng ĐÃ NHẬP; cánh theo cấp CHỜ ẢNH (code và lô "Cánh theo cấp" trên trang Tách Đồ đã kiểm bằng ảnh mẫu; không có tệp: khác bản cũ 0 điểm ảnh; gốc cánh lệch cấp 2 tối đa 0,5 điểm ảnh; **chưa thử ảnh ChatGPT thật**; cờ tắt `G.spriteCustom.CANH_THEO_CAP`; quay lui `git revert be9062c c8513a6`; chờ duyệt 3 điểm; báo cáo `trang-bi-e1/bao-cao.md`) | `trang-bi-e1/PROMPT.md` |
+| E1 | 3 đồ lưng vẽ lại + cánh theo cấp | **ĐÃ NHẬP ẢNH** (6 đồ lưng 11:25; 8 cánh cấp 1 và 3 lúc 18:17) | `trang-bi-e1/PROMPT.md` |
 | E2 | Trùm đổi hình theo pha | CHỜ ẢNH (6 prompt) | `quai-e2/PROMPT.md` |
-| E3 | Tách lại 36 quái nét gấp đôi | ĐÃ QUYẾT: sau khi chốt dung lượng | — |
+| E3 | Tách lại 36 quái nét gấp đôi | KHÔNG LÀM (Đợt 10: vượt trần 20 MB; mặc định đã áp) | — |
 | — | Bản đồ ải (tach-giao-dien) | CHỜ ẢNH | `giao-dien/PROMPT.md` |
 | — | 7 người làng | CHỜ ẢNH | `nguoi-lang`… |
-| — | 12 thân theo bộ trang phục | 3 tấm Cu Tí đã gen (Pippit), **chờ zip**; 9 tấm còn lại chưa gen | `bo-trang-phuc/PROMPT.md` + `anh-kem/` |
+| — | 12 thân theo bộ trang phục | Cu Tí · Rừng Già **ĐÃ NHẬP** 18:17 (tay khớp thân gốc; đầu lệch 2, thân lệch 1 điểm ảnh, trong mức cho phép). Còn 11 tấm (Cu Tí Hang Biển, Lâu Đài; 9 tấm 3 em bé kia) | `bo-trang-phuc/PROMPT.md` + `anh-kem/` |
 
 ## 3. Công cụ
 
