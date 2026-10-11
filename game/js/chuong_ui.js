@@ -39,6 +39,8 @@
   // Viên ngọc màu hệ nhỏ cạnh tên cây
   function orb(x, y, el, on) {
     const E = G.EL[el], c = G.ux;
+    const sc = G.spriteCustom, ga = sc && sc.gdSan ? sc.gdSan('gd-ngoc-' + el) : null; // ảnh AI (phiên C2); ngọc chưa bật: bản xám của chính ảnh đó
+    if (ga) { sc.veGd(c, on || !(G.lk && G.lk.gdMo) ? ga : G.lk.gdMo(ga), x - 4, y - 4, 9, 8); return; }
     c.fillStyle = '#140d0e'; c.fillRect(x - 3, y - 4, 7, 8); c.fillRect(x - 4, y - 3, 9, 6);
     c.fillStyle = on ? E.col : '#55625e'; c.fillRect(x - 3, y - 3, 7, 6); c.fillRect(x - 2, y - 4, 5, 8);
     c.fillStyle = on ? E.col2 : '#7f8f8a'; c.fillRect(x - 2, y - 3, 2, 2);

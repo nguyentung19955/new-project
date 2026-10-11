@@ -1676,7 +1676,9 @@
         p(c, x - 6 + i * 3, top + 6, 2, 2, '#bfeaff');
       }
     }
-    if (st.root > 0) {
+    const sc = G.spriteCustom, gTroi = st.root > 0 && sc && sc.gdSan ? sc.gdSan('gd-tt-troi') : null; // ảnh AI (phiên C2) 12×7 cho dấu trói
+    if (gTroi) sc.veGd(c, gTroi, x - 6, top + 6, 12, 7);
+    else if (st.root > 0) {
       p(c, x - 6, top + 10, 12, 1, '#caa15a');
       p(c, x - 6, top + 9, 1, 3, '#caa15a');
       p(c, x + 5, top + 9, 1, 3, '#caa15a');

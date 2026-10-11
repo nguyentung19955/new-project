@@ -195,7 +195,12 @@
     if (o && o.breath != null && NPCS[kind]) phu(c, kind, x, y, s, o.breath, up);
   }
   // Dấu chấm than vàng "có việc mới"
-  function bang(c, x, y) { x = Math.round(x); y = Math.round(y); p(c, x - 4, y - 11, 9, 11, INK); p(c, x - 3, y - 12, 7, 13, INK); p(c, x - 3, y - 10, 7, 9, '#ffd23f'); p(c, x - 2, y - 11, 5, 11, '#ffd23f'); p(c, x - 1, y - 9, 3, 5, '#7a2a12'); p(c, x - 1, y - 3, 3, 2, '#7a2a12'); }
+  function bang(c, x, y) {
+    x = Math.round(x); y = Math.round(y);
+    const sc = G.spriteCustom, ga = sc && sc.gdSan ? sc.gdSan('gd-cham-than') : null; // ảnh AI (phiên C2) 9×13, cùng chỗ với hình code
+    if (ga) { sc.veGd(c, ga, x - 4, y - 12, 9, 13); return; }
+    p(c, x - 4, y - 11, 9, 11, INK); p(c, x - 3, y - 12, 7, 13, INK); p(c, x - 3, y - 10, 7, 9, '#ffd23f'); p(c, x - 2, y - 11, 5, 11, '#ffd23f'); p(c, x - 1, y - 9, 3, 5, '#7a2a12'); p(c, x - 1, y - 3, 3, 2, '#7a2a12');
+  }
   // Khuôn mặt một người (dùng cho dải lối tắt và khung thoại). ctx bất kỳ, s: số lần phóng.
   VS.face = function (ctx, k, cx, cy, s) {
     if (VS.tuVeMat && VS.tuVeMat(ctx, k, cx, cy, s)) return;

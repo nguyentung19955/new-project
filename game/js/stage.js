@@ -21,6 +21,10 @@
     sv.bossGold[key] = true;
     return G.giveWeapon(G.pick(G.WKEYS), gold ? 3 : 2, { gold: r });
   };
+  // Ảnh AI giao diện (phiên C2): gd-tt-<chay|doc|bang> (trạng thái em bé trên HUD), gd-sao, gd-sao-rong (màn kết quả), gd-bua-<hệ> (rương báu, thương nhân).
+  // Chưa có tệp thì trả về null và mọi chỗ vẽ y như cũ.
+  const gdAnh = (ma) => { const s = G.spriteCustom; return s && s.gdSan ? s.gdSan(ma) : null; };
+  const TT_MA = { fire: 'chay', poison: 'doc', ice: 'bang' };
   const rarName = (w) => G.t('{0} ({1})', G.wName(w), G.RARITY[G.wRar(w)].name);
   // Các lớp thích nghi của trùm thành một dòng chữ (G.layerText của js/boss.js), theo ngôn ngữ đang dùng.
   const layerTexts = (ls, sep) => ls.map((l, i, all) => G.tv(G.layerText(l, i, all))).join(sep);
@@ -797,7 +801,7 @@
     ui.text(W.noPotion ? 'Cấm' : 'Bình máu', POT[0] + 29, POT[1] + 15, { size: 7, bold: true, color: canDrink ? '#fff3da' : '#a89c8c' });
     BA.draw(c, 'pause', PAU[0] + PAU[2] / 2, PAU[1] + 12, 11, { pressed: heldBox(PAU) });
     let sx = 5;
-    for (const k of G.ELS) if (P.st[k] > 0) { if (G.lk && G.lk.icon) { ui.rect(sx, 54, 11, 11, 'rgba(14,10,8,0.85)', G.EL[k].col); G.lk.icon(k, sx + 5.5, 59.5, 0.9, false, 1); } else ui.rect(sx, 54, 10, 10, G.EL[k].col, '#000'); sx += 13; }
+    for (const k of G.ELS) if (P.st[k] > 0) { const gt = gdAnh('gd-tt-' + TT_MA[k]); if (gt) { ui.rect(sx, 54, 11, 11, 'rgba(14,10,8,0.85)', G.EL[k].col); G.spriteCustom.veGd(G.ux, gt, sx + 1, 55, 9, 9); } else if (G.lk && G.lk.icon) { ui.rect(sx, 54, 11, 11, 'rgba(14,10,8,0.85)', G.EL[k].col); G.lk.icon(k, sx + 5.5, 59.5, 0.9, false, 1); } else ui.rect(sx, 54, 10, 10, G.EL[k].col, '#000'); sx += 13; }
     const cw = G.curW(P), coat = P.coats[cw.id];
     if (coat && coat.t > 0) ui.text(G.t('Bùa {0} {1} giây', G.EL[coat.el].name, Math.ceil(coat.t)), sx + 1, 62.5, { size: 7.5, color: G.EL[coat.el].col, bold: true });
     // tên vùng và loại phòng ở lề trái; bản đồ nhỏ ở lề phải (thay hàng chấm phòng trước đây)
@@ -1052,6 +1056,7 @@
         G.art.weaponIcon(G.ux, o.look, x + 54, 107, 30, 'idle');
         ui.wrap(o.label, 100, 8.5, true).slice(0, 2).forEach((l, k) => ui.text(l, x + 54, 137 + k * 10, { size: 8.5, bold: true, align: 'center', color: rar.col }));
       }
+      if (o.kind === 'charm') { const gb = gdAnh('gd-bua-' + o.el); if (gb) G.spriteCustom.veGd(G.ux, gb, x + 42, 97, 24, 24); } // hình lá bùa hệ (ảnh AI, phiên C2); chưa có tệp thì chỉ có chữ như cũ
       ui.para(o.sub, x + 6, isW ? 162 : 160, 96, { size: 6.5, color: '#f0d9b0' });
     });
   }
@@ -1120,6 +1125,7 @@
       if (ui.btn(x, 78, 100, 80, it.label, { sub: sh.bought[it.id] ? 'Đã mua' : G.t('{0} vàng', it.cost), size: 9.5, disabled: dis })) {
         sv.gold -= it.cost; sh.bought[it.id] = true; it.f(); G.sfx('pick');
       }
+      if (it.id === 'charm') { const gb = gdAnh('gd-bua-' + sh.el); if (gb) { const c = G.ux, ga = c.globalAlpha; if (dis) c.globalAlpha = ga * 0.5; G.spriteCustom.veGd(c, gb, x + 38, 83, 24, 24); c.globalAlpha = ga; } } // hình lá bùa hệ (ảnh AI, phiên C2)
       ui.text(it.sub, x + 50, 170, { size: 7, align: 'center', color: '#d9cdb8' });
     });
     if (ui.btn(82, 182, 90, 24, 'Đóng')) S.mode = 'play';
@@ -1169,7 +1175,9 @@
     if (R.win) {
       const notes = ['Qua ải', 'Không dùng bình máu', 'Hạ trùm bằng hệ khắc chế'];
       for (let i = 0; i < 3; i++) {
-        ui.text(R.starNote[i] ? '★' : '☆', 86, y, { size: 12, color: R.starNote[i] ? '#ffd23f' : '#5a7a72' });
+        const gs = gdAnh(R.starNote[i] ? 'gd-sao' : 'gd-sao-rong'); // ảnh AI 12×12 thay ký tự ★ ☆
+        if (gs) G.spriteCustom.veGd(G.ux, gs, 85, y - 10, 12, 12);
+        else ui.text(R.starNote[i] ? '★' : '☆', 86, y, { size: 12, color: R.starNote[i] ? '#ffd23f' : '#5a7a72' });
         ui.text(notes[i], 102, y - 1, { size: 8, color: R.starNote[i] ? '#f1ead9' : '#8fa49e' });
         y += 12;
       }

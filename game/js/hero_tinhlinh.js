@@ -1417,8 +1417,12 @@
     if (room) {
       c.globalAlpha = a0 * 0.9;
       const y = -38 + Math.round(Math.sin(t * 3)), K = [[1, 0, 5], [0, 1, 7], [0, 2, 7], [1, 3, 5], [2, 4, 3]];
-      for (const q of K) { c.fillStyle = '#1b1118'; c.fillRect(q[0] - 4, y + q[1], q[2], 1); }
-      for (const q of K) { c.fillStyle = '#bfe9ff'; c.fillRect(q[0] - 3, y + q[1], Math.max(1, q[2] - 2), 1); }
+      const sc = G.spriteCustom, ga = sc && sc.gdSan ? sc.gdSan('gd-khien') : null; // ảnh AI (phiên C2) 8×8, đáy trùng đáy hình code 7×5
+      if (ga) sc.veGd(c, ga, -5, y - 3, 8, 8);
+      else {
+        for (const q of K) { c.fillStyle = '#1b1118'; c.fillRect(q[0] - 4, y + q[1], q[2], 1); }
+        for (const q of K) { c.fillStyle = '#bfe9ff'; c.fillRect(q[0] - 3, y + q[1], Math.max(1, q[2] - 2), 1); }
+      }
       if (p.oShield > 1) { c.fillStyle = '#ffd24a'; c.fillRect(3, y, 1, 1); c.fillRect(4, y + 1, 1, 1); }
     }
     c.globalAlpha = a0;

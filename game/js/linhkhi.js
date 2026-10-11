@@ -73,10 +73,40 @@
     IC.set(key, cv);
     return cv;
   }
+  // Ảnh AI (phiên C2): có tệp gd-he-<hệ> (8×8) thì dùng ảnh thay hình vẽ code; chưa có tệp thì vẽ code y như cũ.
+  const gdAnh = (ma) => { const s = G.spriteCustom; return s && s.gdSan ? s.gdSan(ma) : null; };
+  LK.gdAnh = gdAnh;
+  // Bản xám mờ của một ảnh giao diện (cùng tông với PAL.dim), cho hệ chưa đạt mốc và ngọc cây chưởng chưa bật.
+  // Trả về vật giống ảnh gd để đưa cho SC.veGd. Nhớ theo từng ảnh; ảnh đổi thì tự làm lại.
+  const MO = new WeakMap();
+  LK.gdMo = function (g) {
+    let m = MO.get(g);
+    if (m && m.goc === g.img) return m;
+    const cv = document.createElement('canvas'); cv.width = g.pw; cv.height = g.ph;
+    const x = cv.getContext('2d'); x.drawImage(g.img, 0, 0);
+    try {
+      const d = x.getImageData(0, 0, cv.width, cv.height), q = d.data;
+      for (let i = 0; i < q.length; i += 4) {
+        const l = (q[i] * 0.299 + q[i + 1] * 0.587 + q[i + 2] * 0.114) / 255;
+        q[i] = 42 + 96 * l; q[i + 1] = 52 + 102 * l; q[i + 2] = 50 + 98 * l; // #2a3432 → #8a9a94
+      }
+      x.putImageData(d, 0, 0);
+    } catch (e) { /* không đọc được điểm ảnh: dùng ảnh gốc */ }
+    m = { ready: true, img: cv, goc: g.img, rong: g.rong, cao: g.cao, pw: g.pw, ph: g.ph, vien: null };
+    MO.set(g, m);
+    return m;
+  };
   // Vẽ biểu tượng hệ, tâm (cx, cy), cỡ 8*s đơn vị.
   LK.icon = function (el, cx, cy, s, dim, alpha) {
     s = s || 1;
     const c = G.ux, sm = c.imageSmoothingEnabled, ga = c.globalAlpha;
+    const g = gdAnh('gd-he-' + el);
+    if (g) {
+      if (alpha != null) c.globalAlpha = ga * alpha;
+      G.spriteCustom.veGd(c, dim ? LK.gdMo(g) : g, Math.round(cx - 4 * s), Math.round(cy - 4 * s), 8 * s, 8 * s);
+      c.globalAlpha = ga;
+      return;
+    }
     c.imageSmoothingEnabled = false;
     if (alpha != null) c.globalAlpha = ga * alpha;
     c.drawImage(iconCv(el, dim, 1), Math.round(cx - 4 * s), Math.round(cy - 4 * s), 8 * s, 8 * s);
@@ -157,7 +187,8 @@
       const el = LK.markEl(e);
       if (!el) continue;
       const hh = e.isBoss ? (e.h || 40) + 16 : (e.h || 24) * (e.art ? 1 : e.scale || 1) + 10; // ngay trên các dấu hiệu trạng thái
-      badge(e, Math.round(e.x - cam), Math.round(e.y - hh));
+      const nang = !e.isBoss && G.mobIconN && G.mobIconN(e) ? 8 : 0; // C2: biểu tượng đặc tính nay cao 13 (trước 9): huy hiệu hệ nhích lên trên hàng đó, không che nhau
+      badge(e, Math.round(e.x - cam), Math.round(e.y - hh - nang));
       LK.badgeList.push({ e, el });
     }
   }

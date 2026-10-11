@@ -105,6 +105,8 @@
   // Huy chương nhỏ (điểm ảnh) cho hạng 1, 2, 3; số hạng nằm giữa.
   function medal(cx, cy, n) {
     const c = G.ux, col = ['#ffd24a', '#d6d2c8', '#e09a5a'][n - 1], dk = ['#8a5a14', '#6b655c', '#7a3a14'][n - 1];
+    const sc = G.spriteCustom, ga = sc && sc.gdSan ? sc.gdSan('gd-huy-chuong-' + n) : null; // ảnh AI (phiên C2): mặt huy chương trơn, số hạng vẫn do game viết
+    if (ga) { sc.veGd(c, ga, Math.round(cx) - 5, Math.round(cy) - 5, 11, 10); ui.text(String(n), cx + 0.5, cy + 2.6, { size: 6.5, bold: true, align: 'center', color: '#1a120a', shadow: false }); return; }
     c.fillStyle = '#1a120a'; c.fillRect(Math.round(cx) - 4, Math.round(cy) - 5, 9, 10); c.fillRect(Math.round(cx) - 5, Math.round(cy) - 4, 11, 8);
     c.fillStyle = col; c.fillRect(Math.round(cx) - 3, Math.round(cy) - 4, 7, 8); c.fillRect(Math.round(cx) - 4, Math.round(cy) - 3, 9, 6);
     c.fillStyle = dk; c.fillRect(Math.round(cx) - 3, Math.round(cy) + 3, 7, 1);

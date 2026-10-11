@@ -487,7 +487,10 @@
   const BAG = ['....kk.kk....', '...kaakaak...', '....kaaak....', '.....kak.....', '...kkkakkk...', '..kbbbbbbbk..', '.kbbgbbbgbbk.', 'kbbbbbgbbbbbk', 'kbgbbbbbbbgbk', 'kbbbbgbgbbbbk', 'kbbbbbbbbbbbk', '.kbbbbbbbbbk.', '..kkkkkkkkk..'];
   const PAL = { k: '#2a1408', a: '#f6dc92', b: '#a8452a', g: '#ffd23f' };
   let bagCv = null;
+  const gdAnh = (ma) => { const s = G.spriteCustom; return s && s.gdSan ? s.gdSan(ma) : null; }; // ảnh AI giao diện (phiên C2): chưa có tệp thì trả về null, vẽ code y như cũ
   function bagIcon(cx, cy, s) {
+    const ga = gdAnh('gd-tui');
+    if (ga) { G.spriteCustom.veGd(G.ux, ga, Math.round(cx - 6.5 * s), Math.round(cy - 6.5 * s), 13 * s, 13 * s); return; }
     if (!bagCv) {
       bagCv = document.createElement('canvas'); bagCv.width = 13; bagCv.height = 13;
       const g = bagCv.getContext('2d');

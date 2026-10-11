@@ -659,20 +659,60 @@
   };
 
   // ---------- biểu tượng nhỏ trên đầu ----------
+  // Phiên C2 (chủ dự án: "9×9 quá bé"): biểu tượng đặc tính nay 12×12 trên ô nền 13×13 (trước là hình 5–7 điểm trên ô 9×9).
+  // Có tệp gd-quai-<nhanh|giap|no|hut|gai> thì dùng ảnh AI (thu vừa 12×12), chưa có thì vẽ bằng bảng điểm ảnh dưới đây.
+  const IC_CO = 13, IC_BUOC = IC_CO + 2; // cạnh ô nền; khoảng cách giữa hai tâm biểu tượng (giữ khe 2 điểm như cũ: 11 - 9)
+  const IC_BM = {
+    nhanh: ['......aaaa..', '.....aaab...', '....aaab....', '...aaab.....', '..aaaaaaaa..', '..bbbaaaab..', '.....aaab...', '....aaab....', '...aaab.....', '...aab......', '..aab.......', '..ab........'],
+    giap: ['.aaaaaaaaaa.', '.acaabbaaaa.', '.acaabbaaaa.', '.acaabbaaaa.', '.aaaabbaaaa.', '.aaaabbaaaa.', '.aaaabbaaaa.', '..aaabbaaa..', '..aaabbaaa..', '...aabbaa...', '....abba....', '.....aa.....'],
+    no: ['.........ss.', '........fs..', '.......f....', '....kkkf....', '..kkkkkkkk..', '.kkhhkkkkkk.', '.khhkkkkkkd.', '.khkkkkkkdd.', '.kkkkkkkkdd.', '.kkkkkkkddd.', '..kkkkdddd..', '....dddd....'],
+    hut: ['.....aa.....', '.....aa.....', '....aaaa....', '....aaaa....', '...aaaaaa...', '..aaaaaaaa..', '..ahaaaaaa..', '.aahaaaaaaa.', '.aahaaaaaaa.', '.aaahaaaaaa.', '..aaaaaaaa..', '...aaaaaa...'],
+    gai: ['.....aa.....', '.....aa.....', '....aaaa....', '.a..aaaa..a.', '.a..aaaa..a.', 'aaa.aaaa.aaa', 'aaa.aaaa.aaa', 'aaaaaaaaaaaa', 'aaaaaaaaaaaa', 'aaaaaaaaaaaa', 'bbbbbbbbbbbb', '............'], // ba mũi gai (bản 9×9 cũ là một vạch đứng, dễ lẫn với dấu "!" sắp ra đòn)
+    vo: ['.aaaaakaaaa.', '.aaaakkaaaa.', '.aaaakaaaaa.', '.aaaakkaaaa.', '.aaaaakaaaa.', '.aaaakkaaaa.', '.aaaakaaaaa.', '..aaakkaaa..', '..aaaakaaa..', '...aakkaa...', '....akaa....', '.....ka.....'],
+  };
+  const IC_PAL = {
+    nhanh: [{ a: '#ffd23f', b: '#c98c34' }],
+    giap: [{ a: '#c9ccd2', b: '#6a7080', c: '#ffffff' }],
+    no: [{ k: '#5a5d70', d: '#3a3c4e', h: '#c8ccd6', f: '#c8a060', s: '#ffd23f' }, { k: '#5a5d70', d: '#3a3c4e', h: '#c8ccd6', f: '#c8a060', s: '#ff5a2a' }], // thân bom xám sáng hơn bản cũ (#2a2a2a) để nổi trên ô nền tối
+    hut: [{ a: '#e02a3a', h: '#ffb0b8' }],
+    gai: [{ a: '#ffffff', b: '#c9270c' }, { a: '#ff3a22', b: '#7a1408' }],
+    vo: [{ a: '#7a7a80', k: '#14182e' }],
+  };
+  const IC_CV = new Map();
+  function iconCode(kind, f) {
+    const pal = IC_PAL[kind]; f = f % pal.length;
+    let cv = IC_CV.get(kind + f);
+    if (!cv) {
+      cv = document.createElement('canvas'); cv.width = 12; cv.height = 12;
+      const g = cv.getContext('2d');
+      IC_BM[kind].forEach((r, j) => { for (let i = 0; i < 12; i++) if (pal[f][r[i]]) { g.fillStyle = pal[f][r[i]]; g.fillRect(i, j, 1, 1); } });
+      IC_CV.set(kind + f, cv);
+    }
+    return cv;
+  }
+  const gdAnh = (ma) => { const s = G.spriteCustom; return s && s.gdSan ? s.gdSan(ma) : null; };
   function icon(c, kind, x, y) {
     x = Math.round(x); y = Math.round(y);
-    p(c, x - 4, y - 4, 9, 9, 'rgba(20,24,46,0.85)');
-    if (kind === 'nhanh') { p(c, x, y - 3, 2, 3, '#ffd23f'); p(c, x - 2, y - 1, 4, 2, '#ffd23f'); p(c, x - 1, y + 1, 2, 3, '#ffd23f'); }
-    else if (kind === 'giap') { p(c, x - 3, y - 3, 7, 4, '#c9ccd2'); p(c, x - 2, y + 1, 5, 2, '#c9ccd2'); p(c, x - 1, y + 3, 3, 1, '#c9ccd2'); p(c, x, y - 2, 1, 4, '#6a7080'); }
-    else if (kind === 'no') { p(c, x - 2, y - 1, 5, 5, '#2a2a2a'); p(c, x - 1, y - 2, 3, 7, '#2a2a2a'); p(c, x - 1, y, 1, 1, '#8a8a8a'); p(c, x + 1, y - 3, 1, 2, '#c8a060'); p(c, x + 2, y - 4, 2, 1, Math.floor(G.time * 10) % 2 ? '#ff5a2a' : '#ffd23f'); }
-    else if (kind === 'hut') { p(c, x, y - 3, 1, 2, '#e02a3a'); p(c, x - 1, y - 1, 3, 2, '#e02a3a'); p(c, x - 2, y + 1, 5, 2, '#e02a3a'); p(c, x - 1, y + 3, 3, 1, '#e02a3a'); p(c, x - 1, y, 1, 1, '#ffb0b8'); }
-    else if (kind === 'gai') { const f = Math.floor(G.time * 12) % 2; p(c, x - 1, y - 3, 3, 5, f ? '#ff3a22' : '#ffffff'); p(c, x - 1, y + 3, 3, 1, f ? '#ff3a22' : '#ffffff'); }
-    else if (kind === 'vo' && G.fxAnh && G.fxAnh.co('hu-pha-giap')) { // biểu tượng vỡ giáp: khung đầu của ảnh AI thu nhỏ vào ô 9×9
-      const a = G.fxAnh.get('hu-pha-giap'), n = a.net, sw = a.fw * n, sh = a.fh * n, k = Math.min(9 / a.fw, 9 / a.fh);
-      c.save(); c.imageSmoothingEnabled = false; c.drawImage(a.img, (a.so - 2) * sw, 0, sw, sh, x - Math.round(a.fw * k / 2), y - Math.round(a.fh * k / 2), Math.round(a.fw * k), Math.round(a.fh * k)); c.restore();
+    p(c, x - 6, y - 6, IC_CO, IC_CO, 'rgba(20,24,46,0.85)');
+    if (!IC_BM[kind]) return;
+    // hình 12×12 nằm giữa ô 13×13: lệch nửa điểm game (= 1 điểm thật khi màn nét gấp đôi) cho cân hai bên
+    const o = (G.NET || 1) >= 2 ? 5.5 : 6, g = gdAnh('gd-quai-' + kind), sm = c.imageSmoothingEnabled, ga = c.globalAlpha;
+    if (g) { // ảnh AI: đứng yên; riêng "gai" vẫn nhấp nháy (mờ/rõ) để báo nguy hiểm như bản code
+      if (kind === 'gai' && Math.floor(G.time * 12) % 2 === 0) c.globalAlpha = ga * 0.55;
+      G.spriteCustom.veGd(c, g, x - o, y - o, 12, 12);
+      c.globalAlpha = ga;
+      return;
     }
-    else if (kind === 'vo') { p(c, x - 3, y - 3, 7, 4, '#7a7a80'); p(c, x - 2, y + 1, 5, 2, '#7a7a80'); p(c, x, y - 3, 1, 6, '#14182e'); p(c, x - 1, y - 1, 1, 1, '#14182e'); }
+    c.imageSmoothingEnabled = false;
+    if (kind === 'vo' && G.fxAnh && G.fxAnh.co('hu-pha-giap')) { // biểu tượng vỡ giáp: khung đầu của ảnh AI thu nhỏ vào ô 12×12
+      const a = G.fxAnh.get('hu-pha-giap'), n = a.net, sw = a.fw * n, sh = a.fh * n, k = Math.min(12 / a.fw, 12 / a.fh);
+      c.drawImage(a.img, (a.so - 2) * sw, 0, sw, sh, x - Math.round(a.fw * k / 2), y - Math.round(a.fh * k / 2), Math.round(a.fw * k), Math.round(a.fh * k));
+    } else c.drawImage(iconCode(kind, kind === 'no' ? Math.floor(G.time * 10) : kind === 'gai' ? Math.floor(G.time * 12) : 0), x - o, y - o, 12, 12);
+    c.imageSmoothingEnabled = sm;
   }
+  G.mobIconCo = IC_CO; // cho bài kiểm tra
+  // Số biểu tượng đang hiện trên đầu một con quái (js/linhkhi.js dùng để nâng huy hiệu hệ lên trên hàng biểu tượng, khỏi che nhau).
+  G.mobIconN = (e) => (e && e.art && e.dying == null ? (e.trait ? 1 : 0) + (e.spikeUp > 0 ? 1 : 0) + (e.role === 'shield' && e.brokeT > 0 ? 1 : 0) : 0);
   G.mobIcon = icon;
   // Mặt khiên của quái giáp: vệt cong vàng ở phía trước (biết phải vòng ra sau)
   function shieldArc(c, e) {
@@ -844,9 +884,13 @@
     if (e.trait) ic.push(e.trait);
     if (e.spikeUp > 0) ic.push('gai');
     if (e.role === 'shield' && e.brokeT > 0) ic.push('vo');
-    ic.forEach((k2, i) => icon(c, k2, e.x + (i - (ic.length - 1) / 2) * 11, top - 6));
+    ic.forEach((k2, i) => icon(c, k2, e.x + (i - (ic.length - 1) / 2) * IC_BUOC, top - 8)); // C2: ô 13×13, mép dưới vẫn ở top - 2 như ô 9×9 cũ
     // V50 (gd2-b): dấu "!" báo sắp ra đòn nay hiện cả khi quái có biểu tượng (tinh anh luôn có dấu hiệu): đặt lệch sang phải hàng biểu tượng thay vì bỏ.
-    if (e.wind > 0 && e.wind < 0.25) { const cc = Math.floor(G.time * 10) & 1 ? '#fff3b0' : '#ff4030', bx = ic.length ? Math.round(e.x + ((ic.length - 1) / 2) * 11 + 8) : e.x - 1; p(c, bx, top - 12, 2, 5, cc); p(c, bx, top - 6, 2, 2, cc); }
+    if (e.wind > 0 && e.wind < 0.25) {
+      const sang = Math.floor(G.time * 10) & 1, cc = sang ? '#fff3b0' : '#ff4030', bx = ic.length ? Math.round(e.x + ((ic.length - 1) / 2) * IC_BUOC + 10) : e.x - 1, gs = gdAnh('gd-quai-sap-danh');
+      if (gs) { const ga = c.globalAlpha; if (!sang) c.globalAlpha = ga * 0.55; G.spriteCustom.veGd(c, gs, Math.round(bx) - 1, Math.round(top) - 13, 4, 10); c.globalAlpha = ga; } // ảnh AI 4×10, cùng tâm với dấu code 2×8
+      else { p(c, bx, top - 12, 2, 5, cc); p(c, bx, top - 6, 2, 2, cc); }
+    }
     if (!TR) A.status(c, e, Math.round(e.x), Math.round(top)); // Đợt 7: cờ bật thì bỏ biểu tượng trạng thái trên đầu (đã hiện trên thân); biểu tượng tinh anh, vỡ giáp, thanh máu giữ nguyên
   };
   // Đang đi ngầm dưới đất: chỉ thấy vệt đất gợn

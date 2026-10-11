@@ -119,8 +119,11 @@
   // Ổ khoá pixel, góc trên trái (x, y), rộng 7 cao 9 (s: phóng). on: đang khoá (vàng), không thì ổ mở màu nhạt.
   const LOCK = ['..kkk..', '.k...k.', '.k...k.', 'kkkkkkk', 'kaaaaak', 'kaakaak', 'kaakaak', 'kaaaaak', 'kkkkkkk'];
   const OPEN = ['....kkk', '...k...', '...k...', 'kkkkkkk', 'kaaaaak', 'kaakaak', 'kaakaak', 'kaaaaak', 'kkkkkkk'];
+  const gdAnh = (ma) => { const s = G.spriteCustom; return s && s.gdSan ? s.gdSan(ma) : null; }; // ảnh AI giao diện (phiên C2): chưa có tệp thì trả về null, vẽ code y như cũ
   S.lockIcon = function (x, y, on, s) {
     s = s || 1;
+    const ga = gdAnh(on ? 'gd-khoa' : 'gd-khoa-mo');
+    if (ga) { G.spriteCustom.veGd(G.ux, ga, x, y, 7 * s, 9 * s); return; }
     const c = G.ux, rows = on ? LOCK : OPEN, pal = on ? { k: '#2a1408', a: '#ffd24a' } : { k: '#203432', a: '#6f8a84' };
     for (let j = 0; j < rows.length; j++) for (let i = 0; i < 7; i++) {
       const ch = rows[j][i], col = pal[ch];
@@ -136,7 +139,8 @@
   };
   // Dấu đã chọn (ô vuông xanh có dấu tích) góc trên trái (x, y), cạnh 8
   S.tick = function (x, y) {
-    const c = G.ux;
+    const c = G.ux, ga = gdAnh('gd-tich');
+    if (ga) { G.spriteCustom.veGd(c, ga, x, y, 9, 9); return; }
     c.fillStyle = '#16301e'; c.fillRect(x, y, 9, 9);
     c.fillStyle = GOOD; c.fillRect(x + 1, y + 1, 7, 7);
     c.fillStyle = '#10301a';
