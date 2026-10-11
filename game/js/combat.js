@@ -1030,6 +1030,7 @@
     A.bg(c, reg, W.seed, cam, W.w, W.shrink);
     G.wxDat(c, -cam + sx, sy);
     for (const z of W.zones) {
+      if (z.oz) continue; // 11/10 (chủ dự án): vệt, vũng hệ do trang phục của bé rải ra vẫn gây hiệu ứng nhưng không vẽ vòng trên sàn
       if (F && F.zone && F.zone(c, z, W)) continue;
       if (z.wave) {
         // lúc còn báo trước thì sóng mờ và nhấp nháy, khe hở nhìn thấy ngay
