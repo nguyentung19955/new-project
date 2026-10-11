@@ -15726,7 +15726,8 @@ MA._xong();
     p(c, x + 6, y, w - 12, 2, '#8a6628'); p(c, x, y + h + 1, w, 2, 'rgba(10,8,20,0.35)');
   }
   let LREC = null; // lúc dựng làng: ghi chỗ từng đèn lồng để lúc chạy cho lửa chập chờn
-  function lantern(c, x, y) { if (LREC) LREC.push([x, y]); p(c, x, y - 2, 1, 2, '#3a2a26'); p(c, x - 2, y, 5, 6, '#e8402e'); p(c, x - 1, y + 1, 3, 4, '#ffb040'); p(c, x - 2, y, 5, 1, '#8a2a1e'); p(c, x - 2, y + 5, 5, 1, '#8a2a1e'); p(c, x, y + 6, 1, 2, '#ffd23f'); }
+  let DREC = null; // D2 · khi có ảnh đèn lồng rời gd-lang-den-long: một vật được vẽ thêm lượt hai, ở lượt này đèn code KHÔNG vẽ mà chỉ ghi chỗ, để game dán ảnh đèn vào đúng chỗ đó
+  function lantern(c, x, y) { if (LREC) LREC.push([x, y]); if (DREC) { DREC.push([x, y]); return; } p(c, x, y - 2, 1, 2, '#3a2a26'); p(c, x - 2, y, 5, 6, '#e8402e'); p(c, x - 1, y + 1, 3, 4, '#ffb040'); p(c, x - 2, y, 5, 1, '#8a2a1e'); p(c, x - 2, y + 5, 5, 1, '#8a2a1e'); p(c, x, y + 6, 1, 2, '#ffd23f'); }
   function lampPost(c, x, y) { p(c, x, y - 26, 2, 26, '#4a3428'); p(c, x - 5, y - 26, 8, 2, '#4a3428'); lantern(c, x - 4, y - 23); }
   function dinh(c, x, y) {
     p(c, x - 56, y - 6, 112, 6, '#8e8a80'); p(c, x - 56, y - 6, 112, 1, '#b4b0a4'); p(c, x - 14, y - 3, 28, 3, '#a6a296'); p(c, x - 56, y - 1, 112, 1, '#5e5a58');
@@ -15853,9 +15854,9 @@ MA._xong();
   }
   const REEDS = [];
   const NIGHT = '#b6b0dc'; // trời chạng vạng: nhân màu này lên nền và công trình, người thì giữ sáng
-  function tint(cv) {
+  function tint(cv, col) {
     const [o, oc] = mk(cv.width, cv.height);
-    oc.drawImage(cv, 0, 0); oc.globalCompositeOperation = 'multiply'; oc.fillStyle = NIGHT; oc.fillRect(0, 0, o.width, o.height);
+    oc.drawImage(cv, 0, 0); oc.globalCompositeOperation = 'multiply'; oc.fillStyle = col || NIGHT; oc.fillRect(0, 0, o.width, o.height);
     oc.globalCompositeOperation = 'destination-in'; oc.drawImage(cv, 0, 0);
     return o;
   }
@@ -15881,7 +15882,29 @@ MA._xong();
   const NHA = ['cong', 'dinh', 'cay-da', 'lo-ren', 'hang-xen', 'nha-may'];
   VS.NHA = NHA;
   const gdLang = (ten) => { const s = G.spriteCustom; return s && s.gdSan ? s.gdSan('gd-lang-' + ten) : null; };
-  // Ảnh nạp chậm hơn code (và công cụ có thể đổi ảnh bất cứ lúc nào): mỗi lần lấy cảnh làng thì soát lại 6 công trình,
+  // ---------- D2 · đạo cụ nhỏ và con vật bằng ảnh AI (cùng trang tools/tach-lang, lô "Đạo cụ" và 2 lô dải khung) ----------
+  // Đồ đứng yên (tệp gd-lang-<tên>, kiểu "giao-dien", giữa đáy ảnh = chân vật, như công trình lớn): de (cái đe), gieng, day-phoi (cọc và dây,
+  //   áo phơi vẫn do game vẽ lay theo gió), bang-tranh, cay-rom, chum (một ảnh dùng cho cả 2 chum), cot-den (một ảnh dùng cho cả 3 cột), do (con đò, vẫn nhấp nhô).
+  // den-long: MỘT chiếc đèn lồng rời, treo từ giữa ĐỈNH ảnh. Có tệp này thì mọi đèn lồng trên các vật CÒN VẼ BẰNG CODE (công trình, cột đèn, đò)
+  //   đổi sang ảnh; vật nào đã có ảnh AI riêng thì dùng đèn vẽ sẵn trong ảnh của nó.
+  // ga, ga-mo (gà đứng, gà mổ thóc; vẽ gà lông TRẮNG, game tự nhuộm nâu và vàng cho 2 con kia), coc: con vật giữ màu sáng như người, không nhân màu chạng vạng (y như hình code).
+  // Dải khung (tệp hu-lang-<tên>, kiểu "hieu-ung", điểm neo "goc" đặt vào chân vật): khung-cui (3 khung, có nhân màu chạng vạng), lua-lo (3 khung, giữ sáng).
+  // Không có tệp nào thì cảnh làng y như cũ. Vùng không đi được (RECTS), chỗ đèn chập chờn (LREC), quầng sáng, khói lò không đổi.
+  const VAT = ['de', 'gieng', 'day-phoi', 'bang-tranh', 'cay-rom', 'chum', 'cot-den', 'den-long', 'do', 'ga', 'ga-mo', 'coc'];
+  VS.VAT = VAT; VS.DAI = ['khung-cui', 'lua-lo'];
+  const huLang = (ten) => { const F = G.fxAnh; return F && F.get ? F.get('hu-lang-' + ten) : null; };
+  const NHUOM = new WeakMap(); // ảnh AI đã nhân một màu (chạng vạng cho dải khung cửi, nâu và vàng cho gà): làm một lần rồi nhớ theo ảnh
+  function nhuom(img, col) { let m = NHUOM.get(img); if (!m) NHUOM.set(img, (m = {})); return m[col] || (m[col] = tint(img, col)); }
+  // Vẽ khung thứ f của một dải hu-lang-* (a = G.fxAnh.get(mã)); điểm neo của dải đặt vào (x, y). img: ảnh dải (gốc hoặc đã nhân màu).
+  function veDai(c, a, img, f, x, y) {
+    const n = a.net, sw = a.fw * n, sh = a.fh * n, s = a.co, sm = c.imageSmoothingEnabled; f = ((f % a.so) + a.so) % a.so;
+    c.imageSmoothingEnabled = false;
+    c.drawImage(img, (f % a.cot) * sw, Math.floor(f / a.cot) * sh, sw, sh, Math.round(x - a.ax * s), Math.round(y - a.ay * s), a.fw * s, a.fh * s);
+    c.imageSmoothingEnabled = sm;
+  }
+  // Vẽ một con vật bằng ảnh gd-lang-*: giữa đáy ảnh đặt vào (x, y). col: màu nhuộm (gà nâu, gà vàng) hoặc null.
+  function veCon(c, g, x, y, col, k) { veAnh(c, { cv: col ? nhuom(g.img, col) : g.img, w: g.rong, h: g.cao }, Math.round(x - g.rong / 2), y - g.cao, k); }
+  // Ảnh nạp chậm hơn code (và công cụ có thể đổi ảnh bất cứ lúc nào): mỗi lần lấy cảnh làng thì soát lại 6 công trình (và các đạo cụ D2),
   // cái nào ảnh vừa có / vừa đổi / vừa gỡ thì thay ngay hình đã nhớ của riêng cái đó (không phải dựng lại cả làng).
   function anhNha(Bt) {
     for (const n of Bt.nha) {
@@ -15896,7 +15919,9 @@ MA._xong();
   // Dán ảnh AI của một công trình (ảnh có số điểm ảnh gấp net lần): k = số điểm ảnh thật trên một điểm ảnh làng của bút c.
   function veAnh(c, ob, x, y, k) { const sm = c.imageSmoothingEnabled; c.imageSmoothingEnabled = ob.w * k < ob.cv.width - 0.5; c.drawImage(ob.cv, x, y, ob.w, ob.h); c.imageSmoothingEnabled = sm; }
   let BUILT = null;
-  function build() { return anhNha(BUILT || (BUILT = dung())); }
+  // Ảnh đèn lồng rời vừa có / vừa đổi / vừa gỡ: phải dựng lại làng (hình code của các vật có đèn được vẽ lại không đèn, hoặc có đèn như cũ).
+  const conDung = (Bt) => (Bt && Bt.den === gdLang('den-long') ? Bt : null);
+  function build() { BUILT = conDung(BUILT); return anhNha(BUILT || (BUILT = dung())); }
   function dung() {
     const [gcv, g] = mk(W, H);
     LREC = [];
@@ -15916,23 +15941,43 @@ MA._xong();
     const objs = [];
     const add = (y, fn, bright) => { const s = sprite(y, fn, bright); if (s) objs.push(s); return s; };
     // công trình lớn: nhớ hình code và điểm giữa đáy (chân) để ảnh AI gd-lang-<tên> đặt đúng chỗ (xem anhNha)
+    // (D2: đạo cụ nhỏ cũng đi qua đây; lon = true là 6 công trình lớn của D1)
     const nha = [];
-    const addNha = (ten, y, fn) => { const s = add(y, fn); if (s) nha.push({ ten, ob: s, code: { cv: s.cv, x: s.x, y0: s.y0 }, ax: s.x + s.cv.width / 2, ay: s.y0 + s.cv.height, g: null }); };
-    addNha('cong', 58, (c) => cong(c, B.cong[0], B.cong[1]));
-    addNha('dinh', dy, (c) => dinh(c, dx, dy));
-    addNha('cay-da', B.da[1], (c) => cayDa(c, B.da[0], B.da[1]));
-    addNha('lo-ren', B.ren[1], (c) => loRen(c, B.ren[0], B.ren[1]));
-    add(rN[1] - 1, (c) => de(c, rN[0] + 20, rN[1] + 1));
-    addNha('hang-xen', B.xen[1] - 2, (c) => hangXen(c, B.xen[0], B.xen[1]));
-    addNha('nha-may', B.may[1], (c) => nhaMay(c, B.may[0], B.may[1]));
+    const den = gdLang('den-long'), denCv = den ? (NGAY ? den.img : tint(den.img)) : null;
+    const moi = (ten, s, lon) => { const n = { ten, lon: !!lon, ob: s, full: { cv: s.cv, x: s.x, y0: s.y0 }, code: { cv: s.cv, x: s.x, y0: s.y0 }, ax: s.x + s.cv.width / 2, ay: s.y0 + s.cv.height, g: null }; nha.push(n); return n; };
+    // Có ảnh đèn lồng rời: vẽ lại hình code của vật ở lượt hai, không đèn (chỗ đặt ảnh AI ax, ay vẫn tính theo hình đủ đèn),
+    // rồi trả về các chiếc đèn bằng ảnh, treo đúng chỗ đèn code (giữa đỉnh ảnh = đầu dây treo). Đèn chỉ hiện khi vật chủ chưa có ảnh AI riêng.
+    const denRoi = (n, y, fn) => {
+      if (!den) return [];
+      const keep = LREC; LREC = null; DREC = [];
+      let s2 = null, ds = [];
+      try { s2 = sprite(y, fn); ds = DREC; } finally { DREC = null; LREC = keep; }
+      if (!ds.length || !s2) return [];
+      n.code = { cv: s2.cv, x: s2.x, y0: s2.y0 }; n.ob.cv = s2.cv; n.ob.x = s2.x; n.ob.y0 = s2.y0;
+      return ds.map((q) => ({ cv: denCv, x: Math.round(q[0] + 0.5 - den.rong / 2), y0: q[1] - 2, y, w: den.rong, h: den.cao, chu: n }));
+    };
+    const addNha = (ten, y, fn, lon) => { const s = add(y, fn); if (!s) return; const n = moi(ten, s, lon); for (const d of denRoi(n, y, fn)) objs.push(d); };
+    addNha('cong', 58, (c) => cong(c, B.cong[0], B.cong[1]), true);
+    addNha('dinh', dy, (c) => dinh(c, dx, dy), true);
+    addNha('cay-da', B.da[1], (c) => cayDa(c, B.da[0], B.da[1]), true);
+    addNha('lo-ren', B.ren[1], (c) => loRen(c, B.ren[0], B.ren[1]), true);
+    addNha('de', rN[1] - 1, (c) => de(c, rN[0] + 20, rN[1] + 1));
+    addNha('hang-xen', B.xen[1] - 2, (c) => hangXen(c, B.xen[0], B.xen[1]), true);
+    addNha('nha-may', B.may[1], (c) => nhaMay(c, B.may[0], B.may[1]), true);
     const cui = [0, 1, 2].map((f) => sprite(B.cui[1] + 1, (c) => khungCui(c, B.cui[0], B.cui[1] + 1, f)));
-    add(B.phoi[1], (c) => dayPhoi(c, B.phoi[0], B.phoi[1], B.phoi[2], true));
-    add(B.gieng[1], (c) => gieng(c, B.gieng[0], B.gieng[1]));
-    const thuyenS = sprite(B.thuyen[1], (c) => thuyen(c, B.thuyen[0], B.thuyen[1]));
-    add(B.tranh[1], (c) => bangTranh(c, B.tranh[0], B.tranh[1]));
-    add(B.rom[1], (c) => cayRom(c, B.rom[0], B.rom[1]));
-    add(B.rom[1] + 2, (c) => { chum(c, B.rom[0] + 22, B.rom[1] + 2); chum(c, B.rom[0] + 32, B.rom[1] - 2); });
-    for (const q of B.den) add(q[1], (c) => lampPost(c, q[0], q[1]));
+    // chân khung cửi (giữa đáy của cả 3 khung): chỗ đặt điểm neo của dải hu-lang-khung-cui
+    const cuiA = [(Math.min(...cui.map((s) => s.x)) + Math.max(...cui.map((s) => s.x + s.cv.width))) / 2, Math.max(...cui.map((s) => s.y0 + s.cv.height))];
+    addNha('day-phoi', B.phoi[1], (c) => dayPhoi(c, B.phoi[0], B.phoi[1], B.phoi[2], true));
+    addNha('gieng', B.gieng[1], (c) => gieng(c, B.gieng[0], B.gieng[1]));
+    const veDo = (c) => thuyen(c, B.thuyen[0], B.thuyen[1]);
+    const thuyenS = sprite(B.thuyen[1], veDo), doN = moi('do', thuyenS); // con đò không nằm trong objs: vẽ riêng để nhấp nhô
+    doN.den = denRoi(doN, B.thuyen[1], veDo);
+    addNha('bang-tranh', B.tranh[1], (c) => bangTranh(c, B.tranh[0], B.tranh[1]));
+    addNha('cay-rom', B.rom[1], (c) => cayRom(c, B.rom[0], B.rom[1]));
+    // hai chum: hai hình riêng để một ảnh gd-lang-chum dùng cho cả hai (cùng số xếp lớp như lúc còn chung một hình)
+    addNha('chum', B.rom[1] + 2, (c) => chum(c, B.rom[0] + 22, B.rom[1] + 2));
+    addNha('chum', B.rom[1] + 2, (c) => chum(c, B.rom[0] + 32, B.rom[1] - 2));
+    for (const q of B.den) addNha('cot-den', q[1], (c) => lampPost(c, q[0], q[1]));
     // quầng sáng đèn lồng, lò rèn: vẽ sẵn một lớp, lúc chạy cộng sáng lên cảnh
     const [lcv, l] = mk(W, H);
     glow(l, B.ren[0] - 16, B.ren[1] - 6, 46, 'rgba(255,130,50,0.10)'); glow(l, dx, dy - 4, 60); glow(l, B.da[0], B.da[1] - 14, 54); glow(l, B.cong[0], 44, 40);
@@ -15941,7 +15986,7 @@ MA._xong();
     const rd = rng(77), flies = [];
     for (let i = 0; i < W / 14; i++) flies.push([rd() * W, 40 + rd() * 220, rd() * 6.28, 0.5 + rd()]);
     const lants = LREC; LREC = null;
-    return { ground, objs, cui, thuyenS, light: lcv, flies, lants, nha, ngay: NGAY };
+    return { ground, objs, cui, cuiA, thuyenS, doN, den, light: lcv, flies, lants, nha, ngay: NGAY };
   }
 
   // ======================= chỗ không đi được =======================
@@ -16306,19 +16351,56 @@ MA._xong();
       else if (u < fall + 1.5) { const x = sx + Math.sin(fall * 1.8 + i) * 7 * M - cam; c.globalAlpha = 1 - (u - fall) / 1.5; p(c, x, y1, 2, 1, tc(col)); c.globalAlpha = 1; }
     }
   }
+  function luaKhung(c, x, y, f) { p(c, x - 19 + f, y - 13 + (f % 2), 6 - f, 5, '#fff3b0'); p(c, x - 22 + f * 3, y - 21 - (f % 2), 2, 3, '#ffd23f'); p(c, x - 12 - f, y - 19, 2, 2 + f, '#ffb040'); }
+  const LUA = [-16, -7]; // chỗ đặt điểm neo của dải hu-lang-lua-lo so với chân lò: giữa đáy vùng ngọn lửa code (12 × 14)
   function luaLo(c, cam, t) { // lửa lò rèn bập bùng, khói bay (vẽ đè lên lò, cả khi lò là ảnh AI)
-    const x = B.ren[0] - cam, y = B.ren[1], f = Math.floor(t * 7) % 3;
-    p(c, x - 19 + f, y - 13 + (f % 2), 6 - f, 5, '#fff3b0'); p(c, x - 22 + f * 3, y - 21 - (f % 2), 2, 3, '#ffd23f'); p(c, x - 12 - f, y - 19, 2, 2 + f, '#ffb040');
+    const x = B.ren[0] - cam, y = B.ren[1], f = Math.floor(t * 7) % 3, a = huLang('lua-lo');
+    if (a) veDai(c, a, a.img, Math.floor(t * 7), x + LUA[0], y + LUA[1]); else luaKhung(c, x, y, f);
     for (let i = 0; i < 3; i++) { const ph = (t * 0.35 + i / 3) % 1; c.globalAlpha = 0.45 * (1 - ph); ell(c, x - 19 + Math.round(ph * 12 + Math.sin(ph * 6 + i) * 2), y - 74 - Math.round(ph * 22), 3 + Math.round(ph * 3), 2 + Math.round(ph), '#c8bec8'); }
     c.globalAlpha = 1;
   }
+  // ---------- D2 · vật có cử động: có ảnh AI thì vẽ ảnh, không thì vẽ code y như cũ. Mỗi hàm trả về một lớp [số xếp trước sau, hàm vẽ] ----------
+  // k: số điểm ảnh thật trên một điểm ảnh làng của bút c (để dán ảnh AI cho nét); tb: độ nhấp nhô của đò.
+  function lopCui(c, Bt, cam, t) {
+    return [Bt.cui[0].y, () => {
+      const a = huLang('khung-cui'), f = Math.floor(t * 2.2);
+      if (a) veDai(c, a, Bt.ngay ? a.img : nhuom(a.img, NIGHT), f, Bt.cuiA[0] - cam, Bt.cuiA[1]);
+      else { const cf = Bt.cui[f % 3]; c.drawImage(cf.cv, cf.x - cam, cf.y0); }
+    }];
+  }
+  function lopDo(c, Bt, cam, tb, k) {
+    const th = Bt.thuyenS;
+    return [th.y, () => {
+      if (th.w) { veAnh(c, th, th.x - cam, th.y0 + tb, k); return; }
+      c.drawImage(th.cv, th.x - cam, th.y0 + tb);
+      for (const d of Bt.doN.den) veAnh(c, d, d.x - cam, d.y0 + tb, k); // đèn lồng rời bằng ảnh trên con đò vẽ code
+    }];
+  }
+  const GA = [[-34, -18, null, 0], [-22, -8, '#c87050', 1.3], [-44, -4, '#ffd23f', 2.6]]; // đàn gà quanh cây rơm: lệch x, lệch y, màu lông, lệch nhịp
+  function lopGa(c, L, cam, t, k) {
+    const g0 = gdLang('ga'), g1 = (g0 && gdLang('ga-mo')) || g0;
+    for (const q of GA) L.push([B.rom[1] + q[1], () => {
+      const x = B.rom[0] + q[0] - cam + Math.round(Math.sin(t * 0.4 + q[3]) * 3), y = B.rom[1] + q[1], mo = Math.sin(t * 2.2 + q[3] * 2) > 0.55;
+      if (g0) veCon(c, mo ? g1 : g0, x + 0.5, y, q[2], k); else ga(c, x, y, q[2], mo);
+    }]);
+  }
+  function lopCoc(c, cam, t, k) {
+    return [B.gieng[1] + 0.1, () => {
+      const x = B.gieng[0] - 9 - cam, y = B.gieng[1] - 10 - (Math.sin(t * 0.9) > 0.96 ? 1 : 0), g = gdLang('coc');
+      if (g) veCon(c, g, x, y, null, k); else coc(c, x, y);
+    }];
+  }
+  // Các vật đứng của cảnh (công trình, đạo cụ, đèn lồng rời): đèn rời bỏ qua khi vật chủ đã có ảnh AI riêng.
+  const lopVat = (c, ob, cam, k) => [ob.y, ob.w ? () => veAnh(c, ob, ob.x - cam, ob.y0, k) : () => c.drawImage(ob.cv, ob.x - cam, ob.y0)];
   // ---------- cho công cụ tools/tach-lang (game không gọi) ----------
   // Vẽ cảnh làng đứng yên lên bút c bất kỳ (1 đơn vị = 1 điểm ảnh làng, cả làng 720×270, không dời OY): nền, công trình, đạo cụ,
   // lửa lò, 7 người làng, quầng đèn. o: { t: giây, k: số điểm ảnh thật trên một điểm ảnh làng (để dán ảnh AI cho nét),
-  //   ngay: true = màu ban ngày, không nhân màu chạng vạng, không quầng đèn (ảnh tham chiếu gửi ChatGPT), nguoi: false = không vẽ người }
+  //   ngay: true = màu ban ngày, không nhân màu chạng vạng, không quầng đèn (ảnh tham chiếu gửi ChatGPT), nguoi: false = không vẽ người,
+  //   conVat: false = không vẽ đàn gà và con cóc }
   let BUILT_NGAY = null;
   function canhCongCu(ngay) {
     if (!ngay) return build();
+    BUILT_NGAY = conDung(BUILT_NGAY);
     if (!BUILT_NGAY) { NGAY = true; try { BUILT_NGAY = dung(); } finally { NGAY = false; } }
     return anhNha(BUILT_NGAY);
   }
@@ -16326,11 +16408,11 @@ MA._xong();
     o = o || {};
     const Bt = canhCongCu(!!o.ngay), t = +o.t || 0, k = +o.k || 1, L = [];
     c.drawImage(Bt.ground, 0, 0);
-    for (const ob of Bt.objs) L.push([ob.y, ob.w ? () => veAnh(c, ob, ob.x, ob.y0, k) : () => c.drawImage(ob.cv, ob.x, ob.y0)]);
-    const cf = Bt.cui[Math.floor(t * 2.2) % 3]; L.push([cf.y, () => c.drawImage(cf.cv, cf.x, cf.y0)]);
-    L.push([Bt.thuyenS.y, () => c.drawImage(Bt.thuyenS.cv, Bt.thuyenS.x, Bt.thuyenS.y0)]);
+    for (const ob of Bt.objs) if (!(ob.chu && ob.chu.g)) L.push(lopVat(c, ob, 0, k));
+    L.push(lopCui(c, Bt, 0, t)); L.push(lopDo(c, Bt, 0, 0, k));
     if (!o.ngay) L.push([B.phoi[1] + 0.01, () => ambClothes(c, 0, t, 1)]);
     L.push([B.ren[1] + 0.2, () => luaLo(c, 0, t)]);
+    if (o.conVat !== false) { lopGa(c, L, 0, t, k); L.push(lopCoc(c, 0, t, k)); }
     if (o.nguoi !== false) for (const kk of ORDER) { const q = NPCS[kk].pos; L.push([q[1], () => { const sv = c.imageSmoothingEnabled; putNpc(c, kk, q[0], q[1], 0, {}); c.imageSmoothingEnabled = sv; }]); }
     L.sort((a, b) => a[0] - b[0]);
     for (const l of L) l[1]();
@@ -16338,7 +16420,29 @@ MA._xong();
   };
   // Sáu công trình lớn: mã tệp, hình code (cv, góc trên trái x, y, cỡ w × h), điểm chân (ax, ay = giữa đáy), anh = chỗ và cỡ ảnh AI đang dùng (không có ảnh: null).
   VS.nhaLang = function (o) {
-    return canhCongCu(!!(o && o.ngay)).nha.map((n) => ({ ten: n.ten, ma: 'gd-lang-' + n.ten, cv: n.code.cv, x: n.code.x, y: n.code.y0, w: n.code.cv.width, h: n.code.cv.height, ax: n.ax, ay: n.ay, anh: n.g ? { x: n.ob.x, y: n.ob.y0, w: n.ob.w, h: n.ob.h } : null }));
+    return canhCongCu(!!(o && o.ngay)).nha.filter((n) => n.lon).map((n) => ({ ten: n.ten, ma: 'gd-lang-' + n.ten, cv: n.full.cv, x: n.full.x, y: n.full.y0, w: n.full.cv.width, h: n.full.cv.height, ax: n.ax, ay: n.ay, anh: n.g ? { x: n.ob.x, y: n.ob.y0, w: n.ob.w, h: n.ob.h } : null }));
+  };
+  // D2 · đạo cụ, con vật và 2 dải khung: mã tệp, hình CODE cv (đồ đứng yên theo màu của o.ngay; đèn rời, con vật, lửa luôn màu gốc), chỗ hình code trong làng
+  // (x, y, w, h), điểm đặt ảnh AI (ax, ay: giữa đáy; riêng đèn lồng là giữa ĐỈNH, có tren: true), anh: đang dùng ảnh AI không.
+  // Vật có nhiều cái (chum, cột đèn, gà, đèn lồng) chỉ trả về cái đầu. Dải khung: dai: true, khung = các khung hình code cùng cỡ w × h, giay = thời lượng một vòng.
+  VS.vatLang = function (o) {
+    const Bt = canhCongCu(!!(o && o.ngay)), ra = [], da = {};
+    const them = (ten, s, ax, ay, co, tren) => ra.push({ ten, ma: 'gd-lang-' + ten, cv: s.cv, x: s.x, y: s.y0, w: s.cv.width, h: s.cv.height, ax, ay, anh: !!co, tren: !!tren });
+    for (const n of Bt.nha) if (!n.lon && !da[n.ten]) { da[n.ten] = 1; them(n.ten, n.full, n.ax, n.ay, n.g); }
+    const roi = (ten, fn, tren) => { const keep = LREC; LREC = null; let s = null; try { s = sprite(0, fn, true); } finally { LREC = keep; } if (s) them(ten, s, s.x + s.cv.width / 2, tren ? s.y0 : s.y0 + s.cv.height, gdLang(ten), tren); };
+    const d0 = B.den[0], g0 = GA[0];
+    roi('den-long', (c) => lantern(c, d0[0] - 4, d0[1] - 23), true);
+    roi('ga', (c) => ga(c, B.rom[0] + g0[0], B.rom[1] + g0[1], null, false));
+    roi('ga-mo', (c) => ga(c, B.rom[0] + g0[0], B.rom[1] + g0[1], null, true));
+    roi('coc', (c) => coc(c, B.gieng[0] - 9, B.gieng[1] - 10));
+    const dai = (ten, ss, ax, ay, giay) => {
+      const x0 = Math.min(...ss.map((s) => s.x)), y0 = Math.min(...ss.map((s) => s.y0)), x1 = Math.max(...ss.map((s) => s.x + s.cv.width)), y1 = Math.max(...ss.map((s) => s.y0 + s.cv.height));
+      const khung = ss.map((s) => { const [cv, cc] = mk(x1 - x0, y1 - y0); cc.drawImage(s.cv, s.x - x0, s.y0 - y0); return cv; });
+      ra.push({ ten, ma: 'hu-lang-' + ten, dai: true, khung, cv: khung[0], x: x0, y: y0, w: x1 - x0, h: y1 - y0, ax, ay, giay, anh: !!huLang(ten) });
+    };
+    dai('khung-cui', Bt.cui, Bt.cuiA[0], Bt.cuiA[1], 3 / 2.2);
+    dai('lua-lo', [0, 1, 2].map((f) => sprite(0, (c) => luaKhung(c, B.ren[0], B.ren[1], f), true)), B.ren[0] + LUA[0], B.ren[1] + LUA[1], 3 / 7);
+    return ra;
   };
   // dim: độ tối phủ lên cảnh (khi mở bảng). hideHero: không vẽ em bé (bản đồ, bảng lớn).
   VS.drawWorld = function (o) {
@@ -16353,16 +16457,16 @@ MA._xong();
     // nước lấp lánh
     for (let i = 0; i < 10; i++) { const y = (i * 53 + 17) % H, x = bo(y) + 10 + ((i * 37) % 50) - cam, k = Math.sin(t * 1.4 + i * 2.1); if (k > 0.3 && x < 480) p(c, x + Math.round(k * 3), y, 5, 1, '#6a9ab8'); }
     const L = [];
-    for (const ob of Bt.objs) if (ob.x - cam < 480 && ob.x + (ob.w || ob.cv.width) - cam > 0) L.push([ob.y, ob.w ? () => veAnh(c, ob, ob.x - cam, ob.y0, G.NET || 1) : () => c.drawImage(ob.cv, ob.x - cam, ob.y0)]);
-    const cf = Bt.cui[Math.floor(t * 2.2) % 3]; L.push([cf.y, () => c.drawImage(cf.cv, cf.x - cam, cf.y0)]);
-    const tb = Math.round(Math.sin(t * 1.3)); L.push([Bt.thuyenS.y, () => c.drawImage(Bt.thuyenS.cv, Bt.thuyenS.x - cam, Bt.thuyenS.y0 + tb)]);
+    const NK = G.NET || 1;
+    for (const ob of Bt.objs) if (ob.x - cam < 480 && ob.x + (ob.w || ob.cv.width) - cam > 0 && !(ob.chu && ob.chu.g)) L.push(lopVat(c, ob, cam, NK));
+    L.push(lopCui(c, Bt, cam, t));
+    const tb = Math.round(Math.sin(t * 1.3)); L.push(lopDo(c, Bt, cam, tb, NK));
     L.push([B.phoi[1] + 0.01, () => ambClothes(c, cam, t, M)]);
     // lửa lò rèn bập bùng, khói bay
     L.push([B.ren[1] + 0.2, () => luaLo(c, cam, t)]);
     // đàn gà, con cóc
-    const gp = [[-34, -18, null, 0], [-22, -8, '#c87050', 1.3], [-44, -4, '#ffd23f', 2.6]];
-    for (const q of gp) L.push([B.rom[1] + q[1], () => ga(c, B.rom[0] + q[0] - cam + Math.round(Math.sin(t * 0.4 + q[3]) * 3), B.rom[1] + q[1], q[2], Math.sin(t * 2.2 + q[3] * 2) > 0.55)]);
-    if (S.frogT <= 0) L.push([B.gieng[1] + 0.1, () => coc(c, B.gieng[0] - 9 - cam, B.gieng[1] - 10 - (Math.sin(t * 0.9) > 0.96 ? 1 : 0))]);
+    lopGa(c, L, cam, t, NK);
+    if (S.frogT <= 0) L.push(lopCoc(c, cam, t, NK));
     // người làng
     for (const k of ORDER) {
       if (!shown(k)) continue; // V53: Cô Thợ May chưa về làng
