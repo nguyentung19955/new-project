@@ -1,0 +1,321 @@
+{
+ "trang": "linh-khi-nhe.html",
+ "ban": "ba25561a",
+ "cach_do": "Chromium (Playwright) 844×390, ?cloud=0, tệp nén gzip -9 như Firebase Hosting, phông Google bị chặn, không bộ nhớ đệm; mốc tính bằng ms từ lúc bắt đầu mở trang",
+ "dung_luong": {
+  "linh-khi-nhe.html": {
+   "byte": 3584998,
+   "gzip9": 1555893,
+   "brotli11": 1364883
+  },
+  "phần mã JS (46 tệp, không kể ảnh)": {
+   "byte": 2490828,
+   "gzip9": 765910,
+   "brotli11": 590498
+  },
+  "phần khung trang (HTML, CSS)": {
+   "byte": 4683,
+   "gzip9": 2184,
+   "brotli11": 1789
+  },
+  "phần ảnh nhúng trong linh-khi-nhe.html": {
+   "byte": 1089435,
+   "gzip9": 785746,
+   "brotli11": 771752,
+   "so_tep": 83
+  },
+  "tệp ảnh tải sau (linh-khi-anh.a07e9686b4c1.json)": {
+   "byte": 7006661,
+   "gzip9": 5229402,
+   "brotli11": 5160394,
+   "so_tep": 197
+  },
+  "tổng hai tệp": {
+   "byte": 10591659,
+   "gzip9": 6785295,
+   "brotli11": 6525277
+  },
+  "ảnh theo nhóm": {
+   "trùm vùng (3 con + dáng pha)": {
+    "so_tep": 3,
+    "base64": 1942358,
+    "ca_muc": 1943642,
+    "noi": "tệp tải sau",
+    "gzip9": 1450241,
+    "brotli11": 1436043,
+    "tb_moi_tep": 647881
+   },
+   "quái vùng Hang biển": {
+    "so_tep": 11,
+    "base64": 1404278,
+    "ca_muc": 1408929,
+    "noi": "tệp tải sau",
+    "gzip9": 1059456,
+    "brotli11": 1046850,
+    "tb_moi_tep": 128084
+   },
+   "quái vùng Rừng già": {
+    "so_tep": 11,
+    "base64": 1153142,
+    "ca_muc": 1157865,
+    "noi": "tệp tải sau",
+    "gzip9": 868531,
+    "brotli11": 857177,
+    "tb_moi_tep": 105260
+   },
+   "hiệu ứng (hu-*)": {
+    "so_tep": 18,
+    "base64": 1039768,
+    "ca_muc": 1044028,
+    "noi": "linh-khi-nhe.html + tệp tải sau",
+    "gzip9": 785980,
+    "brotli11": 776253,
+    "tb_moi_tep": 58002
+   },
+   "quái vùng Lâu đài cổ": {
+    "so_tep": 11,
+    "base64": 979342,
+    "ca_muc": 984089,
+    "noi": "tệp tải sau",
+    "gzip9": 738557,
+    "brotli11": 728479,
+    "tb_moi_tep": 89463
+   },
+   "vũ khí dòng 1–9": {
+    "so_tep": 144,
+    "base64": 680192,
+    "ca_muc": 716870,
+    "noi": "linh-khi-nhe.html + tệp tải sau",
+    "gzip9": 515801,
+    "brotli11": 503998,
+    "tb_moi_tep": 4978
+   },
+   "em bé 4 thân gốc": {
+    "so_tep": 4,
+    "base64": 658692,
+    "ca_muc": 660670,
+    "noi": "linh-khi-nhe.html",
+    "gzip9": 487731,
+    "brotli11": 479993,
+    "tb_moi_tep": 165168
+   },
+   "vũ khí dòng 0": {
+    "so_tep": 16,
+    "base64": 72136,
+    "ca_muc": 76200,
+    "noi": "linh-khi-nhe.html + tệp tải sau",
+    "gzip9": 54681,
+    "brotli11": 53891,
+    "tb_moi_tep": 4762
+   },
+   "trang phục rời (tp-*)": {
+    "so_tep": 44,
+    "base64": 50156,
+    "ca_muc": 63423,
+    "noi": "linh-khi-nhe.html",
+    "gzip9": 37277,
+    "brotli11": 36004,
+    "tb_moi_tep": 1441
+   },
+   "vật phẩm (vp-*)": {
+    "so_tep": 14,
+    "base64": 20732,
+    "ca_muc": 22935,
+    "noi": "linh-khi-nhe.html",
+    "gzip9": 15404,
+    "brotli11": 15122,
+    "tb_moi_tep": 1638
+   },
+   "hồ sơ ghép (không ảnh)": {
+    "so_tep": 4,
+    "base64": 0,
+    "ca_muc": 16964,
+    "noi": "linh-khi-nhe.html",
+    "gzip9": 1343,
+    "brotli11": 1030,
+    "tb_moi_tep": 4241
+   }
+  },
+  "tổng ảnh (mọi nhóm)": {
+   "so_tep": 280,
+   "base64": 8000796,
+   "ca_muc": 8095615
+  },
+  "các tệp khác trong dist": {
+   "artifact.html": 10590710,
+   "linh-khi-anh.a07e9686b4c1.json": 7006661,
+   "linh-khi.html": 10591221,
+   "xuong-sprite-thu.html": 10601317,
+   "xuong-sprite.html": 1625497
+  }
+ },
+ "thoi_gian_tai": {
+  "1,5 Mbps (trễ 150 ms)": [
+   {
+    "ve": {
+     "first-paint": 328,
+     "first-contentful-paint": 328
+    },
+    "tai": 310,
+    "manChao": 9096,
+    "san": 258,
+    "sau": {
+     "tt": "xong",
+     "xong": 197,
+     "tong": 197,
+     "lan": 1
+    },
+    "lang": 9334,
+    "quaiRung": 11714,
+    "duAnh": 37418,
+    "dong_ho_ngoai_s": 37.43,
+    "loi_js": []
+   },
+   {
+    "ve": {
+     "first-paint": 200,
+     "first-contentful-paint": 200
+    },
+    "tai": 178,
+    "manChao": 8951,
+    "san": 258,
+    "sau": {
+     "tt": "tai",
+     "xong": 197,
+     "tong": 197,
+     "lan": 1
+    },
+    "lang": 9172,
+    "quaiRung": 11388,
+    "duAnh": 37067,
+    "dong_ho_ngoai_s": 37.08,
+    "loi_js": []
+   }
+  ],
+  "10 Mbps (trễ 40 ms)": [
+   {
+    "ve": {
+     "first-paint": 88,
+     "first-contentful-paint": 88
+    },
+    "tai": 75,
+    "manChao": 1918,
+    "san": 258,
+    "sau": {
+     "tt": "xong",
+     "xong": 197,
+     "tong": 197,
+     "lan": 1
+    },
+    "lang": 2153,
+    "quaiRung": 2305,
+    "duAnh": 6736,
+    "dong_ho_ngoai_s": 6.77,
+    "loi_js": []
+   },
+   {
+    "ve": {
+     "first-paint": 92,
+     "first-contentful-paint": 92
+    },
+    "tai": 83,
+    "manChao": 1880,
+    "san": 258,
+    "sau": {
+     "tt": "xong",
+     "xong": 197,
+     "tong": 197,
+     "lan": 1
+    },
+    "lang": 2142,
+    "quaiRung": 2344,
+    "duAnh": 6762,
+    "dong_ho_ngoai_s": 6.77,
+    "loi_js": []
+   }
+  ]
+ },
+ "ban_mot_tep_sau_thay_doi (linh-khi.html, vẫn xuất mặc định)": {
+  "dung_luong": {
+   "linh-khi.html": {
+    "byte": 10591221,
+    "gzip9": 6780511,
+    "brotli11": 6526698
+   },
+   "phần mã JS (46 tệp, không kể ảnh)": {
+    "byte": 2490593,
+    "gzip9": 765793,
+    "brotli11": 590212
+   },
+   "phần khung trang (HTML, CSS)": {
+    "byte": 4683,
+    "gzip9": 2184,
+    "brotli11": 1789
+   },
+   "phần ảnh nhúng trong linh-khi.html": {
+    "byte": 8095896,
+    "gzip9": 6010747,
+    "brotli11": 5931630,
+    "so_tep": 280
+   },
+   "tổng ảnh (mọi nhóm)": {
+    "so_tep": 280,
+    "base64": 8000796,
+    "ca_muc": 8095615
+   },
+   "các tệp khác trong dist": {
+    "artifact.html": 10590710,
+    "linh-khi-anh.a07e9686b4c1.json": 7006661,
+    "linh-khi-nhe.html": 3584998,
+    "xuong-sprite-thu.html": 10601317,
+    "xuong-sprite.html": 1625497
+   }
+  },
+  "thoi_gian_tai": {
+   "1,5 Mbps (trễ 150 ms)": [
+    {
+     "ve": {
+      "first-paint": 588,
+      "first-contentful-paint": 588
+     },
+     "tai": 564,
+     "manChao": 37550,
+     "san": 258,
+     "sau": {
+      "tt": "khong",
+      "xong": 0,
+      "tong": 0,
+      "lan": 0
+     },
+     "quaiRung": 37876,
+     "duAnh": 37876,
+     "lang": 38052,
+     "dong_ho_ngoai_s": 38.09,
+     "loi_js": []
+    }
+   ],
+   "10 Mbps (trễ 40 ms)": [
+    {
+     "ve": {
+      "first-paint": 108,
+      "first-contentful-paint": 108
+     },
+     "tai": 68,
+     "manChao": 6908,
+     "san": 258,
+     "sau": {
+      "tt": "khong",
+      "xong": 0,
+      "tong": 0,
+      "lan": 0
+     },
+     "quaiRung": 7273,
+     "duAnh": 7273,
+     "lang": 7383,
+     "dong_ho_ngoai_s": 7.4,
+     "loi_js": []
+    }
+   ]
+  }
+ }
+}

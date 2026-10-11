@@ -1,0 +1,421 @@
+{
+ "co": {
+  "trang": "linh-khi-nhe.html",
+  "tep_anh": "co",
+  "man_chao_s": 0.76,
+  "man_chao": true,
+  "vao_lang": true,
+  "nga_ngu_sau_s": 2.6,
+  "truoc_ai": {
+   "sau": {
+    "tt": "xong",
+    "xong": 197,
+    "tong": 197,
+    "lan": 1,
+    "loi": ""
+   },
+   "quai_embe": 40,
+   "do": 218,
+   "hieu_ung": 18,
+   "giao_dien": 0,
+   "heoCon": true,
+   "mocTinh": true,
+   "em_be": true,
+   "kiem_ren": true,
+   "bua_5": true,
+   "loi_sprite": [],
+   "phien_ban": "lk-2026.10.11-1530"
+  },
+  "ai_1": {
+   "win": true,
+   "stars": 2,
+   "t": 170,
+   "room": 8,
+   "rooms": 8,
+   "hp": 100,
+   "maxhp": 100,
+   "marks": 20,
+   "potions": 2
+  },
+  "sau_ai": {
+   "sau": {
+    "tt": "xong",
+    "xong": 197,
+    "tong": 197,
+    "lan": 1,
+    "loi": ""
+   },
+   "quai_embe": 40,
+   "do": 218,
+   "hieu_ung": 18,
+   "giao_dien": 0,
+   "heoCon": true,
+   "mocTinh": true,
+   "em_be": true,
+   "kiem_ren": true,
+   "bua_5": true,
+   "loi_sprite": [],
+   "phien_ban": "lk-2026.10.11-1530"
+  },
+  "loi_js": [],
+  "console_info": [
+   "[Linh Khí] Đã tải xong 197 ảnh tải sau (linh-khi-anh.a07e9686b4c1.json).",
+   "[Linh Khí] Tile Rừng già: thiếu tệp gd-nen-rung-san0, gd-nen-rung-san1, gd-nen-rung-san2, gd-nen-rung-tuong-sau, gd-nen-rung-tuong-ben, gd-nen-rung-tuong-truoc, gd-nen-rung-ngoai → sàn và tường Rừng già vẽ bằng code như cũ."
+  ],
+  "yeu_cau_hong": [
+   "css2?family=Be+Vietnam+Pro:wght@500;700&display=swap"
+  ],
+  "ai_1_giong_ban_mot_tep": true
+ },
+ "khong-co": {
+  "trang": "linh-khi-nhe.html",
+  "tep_anh": "404",
+  "man_chao_s": 0.68,
+  "man_chao": true,
+  "vao_lang": true,
+  "nga_ngu_sau_s": 13.7,
+  "truoc_ai": {
+   "sau": {
+    "tt": "loi",
+    "xong": 0,
+    "tong": 197,
+    "lan": 3,
+    "loi": "máy chủ trả 404"
+   },
+   "quai_embe": 4,
+   "do": 66,
+   "hieu_ung": 9,
+   "giao_dien": 0,
+   "heoCon": false,
+   "mocTinh": false,
+   "em_be": true,
+   "kiem_ren": true,
+   "bua_5": false,
+   "loi_sprite": [],
+   "phien_ban": "lk-2026.10.11-1530"
+  },
+  "ai_1": {
+   "win": true,
+   "stars": 2,
+   "t": 170,
+   "room": 8,
+   "rooms": 8,
+   "hp": 100,
+   "maxhp": 100,
+   "marks": 20,
+   "potions": 2
+  },
+  "sau_ai": {
+   "sau": {
+    "tt": "loi",
+    "xong": 0,
+    "tong": 197,
+    "lan": 3,
+    "loi": "máy chủ trả 404"
+   },
+   "quai_embe": 4,
+   "do": 66,
+   "hieu_ung": 9,
+   "giao_dien": 0,
+   "heoCon": false,
+   "mocTinh": false,
+   "em_be": true,
+   "kiem_ren": true,
+   "bua_5": false,
+   "loi_sprite": [],
+   "phien_ban": "lk-2026.10.11-1530"
+  },
+  "loi_js": [],
+  "console_info": [
+   "[Linh Khí] Chưa tải được tệp ảnh linh-khi-anh.a07e9686b4c1.json (lượt 1): máy chủ trả 404. Đã nhận 0/197 hình; game vẫn chạy, hình thiếu vẽ bằng code.",
+   "[Linh Khí] Chưa tải được tệp ảnh linh-khi-anh.a07e9686b4c1.json (lượt 2): máy chủ trả 404. Đã nhận 0/197 hình; game vẫn chạy, hình thiếu vẽ bằng code.",
+   "[Linh Khí] Chưa tải được tệp ảnh linh-khi-anh.a07e9686b4c1.json (lượt 3): máy chủ trả 404. Đã nhận 0/197 hình; game vẫn chạy, hình thiếu vẽ bằng code.",
+   "[Linh Khí] Thôi không tải tệp ảnh nữa (đã thử 3 lượt). Mở lại game khi mạng tốt hơn để có đủ ảnh.",
+   "[Linh Khí] Tile Rừng già: thiếu tệp gd-nen-rung-san0, gd-nen-rung-san1, gd-nen-rung-san2, gd-nen-rung-tuong-sau, gd-nen-rung-tuong-ben, gd-nen-rung-tuong-truoc, gd-nen-rung-ngoai → sàn và tường Rừng già vẽ bằng code như cũ."
+  ],
+  "yeu_cau_hong": [
+   "css2?family=Be+Vietnam+Pro:wght@500;700&display=swap"
+  ],
+  "ai_1_giong_ban_mot_tep": true
+ },
+ "bi-chan": {
+  "trang": "linh-khi-nhe.html",
+  "tep_anh": "bị chặn",
+  "man_chao_s": 0.74,
+  "man_chao": true,
+  "vao_lang": true,
+  "nga_ngu_sau_s": 13.7,
+  "truoc_ai": {
+   "sau": {
+    "tt": "loi",
+    "xong": 0,
+    "tong": 197,
+    "lan": 3,
+    "loi": "Failed to fetch"
+   },
+   "quai_embe": 4,
+   "do": 66,
+   "hieu_ung": 9,
+   "giao_dien": 0,
+   "heoCon": false,
+   "mocTinh": false,
+   "em_be": true,
+   "kiem_ren": true,
+   "bua_5": false,
+   "loi_sprite": [],
+   "phien_ban": "lk-2026.10.11-1530"
+  },
+  "ai_1": {
+   "win": true,
+   "stars": 2,
+   "t": 170,
+   "room": 8,
+   "rooms": 8,
+   "hp": 100,
+   "maxhp": 100,
+   "marks": 20,
+   "potions": 2
+  },
+  "sau_ai": {
+   "sau": {
+    "tt": "loi",
+    "xong": 0,
+    "tong": 197,
+    "lan": 3,
+    "loi": "Failed to fetch"
+   },
+   "quai_embe": 4,
+   "do": 66,
+   "hieu_ung": 9,
+   "giao_dien": 0,
+   "heoCon": false,
+   "mocTinh": false,
+   "em_be": true,
+   "kiem_ren": true,
+   "bua_5": false,
+   "loi_sprite": [],
+   "phien_ban": "lk-2026.10.11-1530"
+  },
+  "loi_js": [],
+  "console_info": [
+   "[Linh Khí] Chưa tải được tệp ảnh linh-khi-anh.a07e9686b4c1.json (lượt 1): Failed to fetch. Đã nhận 0/197 hình; game vẫn chạy, hình thiếu vẽ bằng code.",
+   "[Linh Khí] Chưa tải được tệp ảnh linh-khi-anh.a07e9686b4c1.json (lượt 2): Failed to fetch. Đã nhận 0/197 hình; game vẫn chạy, hình thiếu vẽ bằng code.",
+   "[Linh Khí] Chưa tải được tệp ảnh linh-khi-anh.a07e9686b4c1.json (lượt 3): Failed to fetch. Đã nhận 0/197 hình; game vẫn chạy, hình thiếu vẽ bằng code.",
+   "[Linh Khí] Thôi không tải tệp ảnh nữa (đã thử 3 lượt). Mở lại game khi mạng tốt hơn để có đủ ảnh.",
+   "[Linh Khí] Tile Rừng già: thiếu tệp gd-nen-rung-san0, gd-nen-rung-san1, gd-nen-rung-san2, gd-nen-rung-tuong-sau, gd-nen-rung-tuong-ben, gd-nen-rung-tuong-truoc, gd-nen-rung-ngoai → sàn và tường Rừng già vẽ bằng code như cũ."
+  ],
+  "yeu_cau_hong": [
+   "css2?family=Be+Vietnam+Pro:wght@500;700&display=swap",
+   "linh-khi-anh.a07e9686b4c1.json"
+  ],
+  "ai_1_giong_ban_mot_tep": true
+ },
+ "noi-dung-la": {
+  "trang": "linh-khi-nhe.html",
+  "tep_anh": "la",
+  "man_chao_s": 0.87,
+  "man_chao": true,
+  "vao_lang": true,
+  "nga_ngu_sau_s": 14.0,
+  "truoc_ai": {
+   "sau": {
+    "tt": "loi",
+    "xong": 0,
+    "tong": 197,
+    "lan": 3,
+    "loi": "nội dung không phải tệp ảnh"
+   },
+   "quai_embe": 4,
+   "do": 66,
+   "hieu_ung": 9,
+   "giao_dien": 0,
+   "heoCon": false,
+   "mocTinh": false,
+   "em_be": true,
+   "kiem_ren": true,
+   "bua_5": false,
+   "loi_sprite": [],
+   "phien_ban": "lk-2026.10.11-1530"
+  },
+  "ai_1": {
+   "win": true,
+   "stars": 2,
+   "t": 170,
+   "room": 8,
+   "rooms": 8,
+   "hp": 100,
+   "maxhp": 100,
+   "marks": 20,
+   "potions": 2
+  },
+  "sau_ai": {
+   "sau": {
+    "tt": "loi",
+    "xong": 0,
+    "tong": 197,
+    "lan": 3,
+    "loi": "nội dung không phải tệp ảnh"
+   },
+   "quai_embe": 4,
+   "do": 66,
+   "hieu_ung": 9,
+   "giao_dien": 0,
+   "heoCon": false,
+   "mocTinh": false,
+   "em_be": true,
+   "kiem_ren": true,
+   "bua_5": false,
+   "loi_sprite": [],
+   "phien_ban": "lk-2026.10.11-1530"
+  },
+  "loi_js": [],
+  "console_info": [
+   "[Linh Khí] Chưa tải được tệp ảnh linh-khi-anh.a07e9686b4c1.json (lượt 1): nội dung không phải tệp ảnh. Đã nhận 0/197 hình; game vẫn chạy, hình thiếu vẽ bằng code.",
+   "[Linh Khí] Chưa tải được tệp ảnh linh-khi-anh.a07e9686b4c1.json (lượt 2): nội dung không phải tệp ảnh. Đã nhận 0/197 hình; game vẫn chạy, hình thiếu vẽ bằng code.",
+   "[Linh Khí] Chưa tải được tệp ảnh linh-khi-anh.a07e9686b4c1.json (lượt 3): nội dung không phải tệp ảnh. Đã nhận 0/197 hình; game vẫn chạy, hình thiếu vẽ bằng code.",
+   "[Linh Khí] Thôi không tải tệp ảnh nữa (đã thử 3 lượt). Mở lại game khi mạng tốt hơn để có đủ ảnh.",
+   "[Linh Khí] Tile Rừng già: thiếu tệp gd-nen-rung-san0, gd-nen-rung-san1, gd-nen-rung-san2, gd-nen-rung-tuong-sau, gd-nen-rung-tuong-ben, gd-nen-rung-tuong-truoc, gd-nen-rung-ngoai → sàn và tường Rừng già vẽ bằng code như cũ."
+  ],
+  "yeu_cau_hong": [
+   "css2?family=Be+Vietnam+Pro:wght@500;700&display=swap"
+  ],
+  "ai_1_giong_ban_mot_tep": true
+ },
+ "cut": {
+  "trang": "linh-khi-nhe.html",
+  "tep_anh": "cut",
+  "man_chao_s": 0.87,
+  "man_chao": true,
+  "vao_lang": true,
+  "nga_ngu_sau_s": 14.1,
+  "truoc_ai": {
+   "sau": {
+    "tt": "loi",
+    "xong": 172,
+    "tong": 197,
+    "lan": 3,
+    "loi": "dòng hỏng hoặc tệp cụt"
+   },
+   "quai_embe": 15,
+   "do": 218,
+   "hieu_ung": 18,
+   "giao_dien": 0,
+   "heoCon": true,
+   "mocTinh": false,
+   "em_be": true,
+   "kiem_ren": true,
+   "bua_5": true,
+   "loi_sprite": [],
+   "phien_ban": "lk-2026.10.11-1530"
+  },
+  "ai_1": {
+   "win": true,
+   "stars": 2,
+   "t": 170,
+   "room": 8,
+   "rooms": 8,
+   "hp": 100,
+   "maxhp": 100,
+   "marks": 20,
+   "potions": 2
+  },
+  "sau_ai": {
+   "sau": {
+    "tt": "loi",
+    "xong": 172,
+    "tong": 197,
+    "lan": 3,
+    "loi": "dòng hỏng hoặc tệp cụt"
+   },
+   "quai_embe": 15,
+   "do": 218,
+   "hieu_ung": 18,
+   "giao_dien": 0,
+   "heoCon": true,
+   "mocTinh": false,
+   "em_be": true,
+   "kiem_ren": true,
+   "bua_5": true,
+   "loi_sprite": [],
+   "phien_ban": "lk-2026.10.11-1530"
+  },
+  "loi_js": [],
+  "console_info": [
+   "[Linh Khí] Chưa tải được tệp ảnh linh-khi-anh.a07e9686b4c1.json (lượt 1): dòng hỏng hoặc tệp cụt. Đã nhận 172/197 hình; game vẫn chạy, hình thiếu vẽ bằng code.",
+   "[Linh Khí] Chưa tải được tệp ảnh linh-khi-anh.a07e9686b4c1.json (lượt 2): dòng hỏng hoặc tệp cụt. Đã nhận 172/197 hình; game vẫn chạy, hình thiếu vẽ bằng code.",
+   "[Linh Khí] Chưa tải được tệp ảnh linh-khi-anh.a07e9686b4c1.json (lượt 3): dòng hỏng hoặc tệp cụt. Đã nhận 172/197 hình; game vẫn chạy, hình thiếu vẽ bằng code.",
+   "[Linh Khí] Thôi không tải tệp ảnh nữa (đã thử 3 lượt). Mở lại game khi mạng tốt hơn để có đủ ảnh.",
+   "[Linh Khí] Tile Rừng già: thiếu tệp gd-nen-rung-san0, gd-nen-rung-san1, gd-nen-rung-san2, gd-nen-rung-tuong-sau, gd-nen-rung-tuong-ben, gd-nen-rung-tuong-truoc, gd-nen-rung-ngoai → sàn và tường Rừng già vẽ bằng code như cũ."
+  ],
+  "yeu_cau_hong": [
+   "css2?family=Be+Vietnam+Pro:wght@500;700&display=swap"
+  ],
+  "ai_1_giong_ban_mot_tep": true
+ },
+ "mot-tep": {
+  "trang": "linh-khi.html",
+  "tep_anh": "co",
+  "man_chao_s": 1.42,
+  "man_chao": true,
+  "vao_lang": true,
+  "truoc_ai": {
+   "sau": {
+    "tt": "khong",
+    "xong": 0,
+    "tong": 0,
+    "lan": 0,
+    "loi": ""
+   },
+   "quai_embe": 40,
+   "do": 218,
+   "hieu_ung": 18,
+   "giao_dien": 0,
+   "heoCon": true,
+   "mocTinh": true,
+   "em_be": true,
+   "kiem_ren": true,
+   "bua_5": true,
+   "loi_sprite": [],
+   "phien_ban": "lk-2026.10.11-1530"
+  },
+  "ai_1": {
+   "win": true,
+   "stars": 2,
+   "t": 170,
+   "room": 8,
+   "rooms": 8,
+   "hp": 100,
+   "maxhp": 100,
+   "marks": 20,
+   "potions": 2
+  },
+  "sau_ai": {
+   "sau": {
+    "tt": "khong",
+    "xong": 0,
+    "tong": 0,
+    "lan": 0,
+    "loi": ""
+   },
+   "quai_embe": 40,
+   "do": 218,
+   "hieu_ung": 18,
+   "giao_dien": 0,
+   "heoCon": true,
+   "mocTinh": true,
+   "em_be": true,
+   "kiem_ren": true,
+   "bua_5": true,
+   "loi_sprite": [],
+   "phien_ban": "lk-2026.10.11-1530"
+  },
+  "loi_js": [],
+  "console_info": [
+   "[Linh Khí] Tile Rừng già: thiếu tệp gd-nen-rung-san0, gd-nen-rung-san1, gd-nen-rung-san2, gd-nen-rung-tuong-sau, gd-nen-rung-tuong-ben, gd-nen-rung-tuong-truoc, gd-nen-rung-ngoai → sàn và tường Rừng già vẽ bằng code như cũ."
+  ],
+  "yeu_cau_hong": [
+   "css2?family=Be+Vietnam+Pro:wght@500;700&display=swap"
+  ],
+  "ai_1_giong_ban_mot_tep": true
+ }
+}

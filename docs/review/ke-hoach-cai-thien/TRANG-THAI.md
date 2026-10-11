@@ -20,7 +20,7 @@ Trạng thái: **ĐÃ LÀM + ĐÃ KIỂM** (có báo cáo, ảnh, số đo, work
 | 8 | Độ đọc trận đấu: thứ bậc hình ảnh, đỏ chỉ cho nguy hiểm, số sát thương, vùng thông báo | ĐÃ LÀM + ĐÃ KIỂM | 1354 | `dot-8/bao-cao.md` | `G.DO_DOC_TRAN` |
 | 8b | Bỏ ô dấu Linh Khí trên đầu quái → viền hệ quanh thanh máu | ĐÃ LÀM + ĐÃ KIỂM (cờ tắt: 0 điểm ảnh khác; bot ải 1 thắng, nhật ký sát thương trùng) | 0a65ce59 | `dot-8/bao-cao.md` §8b | `G.DAU_LINH_KHI_VIEN=false` / `?dauvien=0` |
 | 9 | Trang trạng thái này + đồng bộ TONG-HOP | ĐÃ LÀM | — | tệp này | — |
-| 10 | Đo dung lượng, tách ảnh tải sau (Q5) | ĐANG CHẠY (từ 15:00) | — | `dot-10-dung-luong.md` | cờ build `--mot-tep` |
+| 10 | Đo dung lượng, tách ảnh tải sau (Q5): web dùng 2 tệp, tới màn chào ở 1,5 Mbps 37,4 → 9,0 giây; trần còn 9,9 MB / 20 MB | ĐÃ LÀM + ĐÃ KIỂM (6 kịch bản tệp ảnh có/thiếu/hỏng; chưa xem được dòng lưu đệm bằng `curl -I`); **chờ duyệt 5 quyết định, có E3** | 471c6c0d | `dot-10/bao-cao.md` | `HAI_TEP: '0'` trong workflow / revert 471c6c0d |
 | 11 | Gộp prompt hình nhỏ (B1/B2/B3/A2/D2) thành ít tấm hơn, lô gộp trên trang tách hiệu ứng | ĐANG CHẠY (từ 15:09, ưu tiên theo chủ dự án) | — | `dot-11-gop-prompt.md` | prompt lẻ cũ vẫn giữ |
 
 ## 2. Làn chuyển hình code → ảnh AI (19 phiên)

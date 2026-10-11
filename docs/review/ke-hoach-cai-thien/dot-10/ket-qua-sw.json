@@ -1,0 +1,34 @@
+{
+ "lan_2_co_mang": {
+  "tt": "xong",
+  "xong": 197,
+  "tong": 197,
+  "lan": 1,
+  "loi": ""
+ },
+ "bo_luu_sau_lan_2": [
+  "/",
+  "/linh-khi-anh.a07e9686b4c1.json"
+ ],
+ "lan_3_mat_mang": {
+  "sau": {
+   "tt": "xong",
+   "xong": 197,
+   "tong": 197,
+   "lan": 1,
+   "loi": ""
+  },
+  "quai_embe": 40,
+  "do": 218,
+  "hieu_ung": 18,
+  "giao_dien": 0,
+  "heoCon": true,
+  "mocTinh": true,
+  "em_be": true,
+  "kiem_ren": true,
+  "bua_5": true,
+  "loi_sprite": [],
+  "phien_ban": "lk-2026.10.11-1530"
+ },
+ "loi_js": []
+}
