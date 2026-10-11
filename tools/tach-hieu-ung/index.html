@@ -187,6 +187,7 @@
 // fw×fh: cỡ một khung (điểm ảnh game); gx,gy: điểm neo (chỗ game đặt hiệu ứng); so: số khung; giay: thời lượng; lap: chạy lặp;
 // xoay: xoay theo hướng bay; cong: vẽ kiểu cộng sáng (ánh sáng); canh: 'trai' (bám mép trái, như vệt vũ khí) hoặc 'giua';
 // doc: 'giua' hoặc 'day' (đáy hình chạm mặt đất); nen: màu nền vẽ; xem: kiểu xem thử; noi: hiện ở đâu trong game.
+// (khớp thêm js/fx_ky_nang.js và js/portal.js từ phiên hieu-ung-b3)
 // Cỡ đo theo hình vẽ bằng code hiện tại: vệt kiếm tầm ~32 điểm ảnh, nổ chuẩn bán kính 40, quái cao ~24, em bé cao ~28.
 const HU = [
   { ma: 'hu-chem-kiem', ten: 'Vệt chém kiếm', nen: 'hong', fw: 56, fh: 48, gx: 8, gy: 24, so: 6, giay: 0.2, canh: 'trai', doc: 'giua', xem: 'vu-khi',
@@ -384,6 +385,104 @@ const HU = [
     dat: 'điểm gốc (lòng bàn tay em bé, KHÔNG vẽ em bé) ở mép TRÁI, ngang giữa ô; dấu bàn tay sáng ở nửa trái ô, các vành sóng nằm bên PHẢI nó, đối xứng trên dưới', huong: 'đẩy sang PHẢI (game tự xoay theo 8 hướng)',
     thoi: 'khung 1 dấu bàn tay nhỏ và sáng rực sát gốc, khung 2 và 3 dấu bàn tay to ra, hai vành sóng lần lượt bung về bên phải, khung 4 dấu bàn tay mờ đi còn vành sóng rộng hết cỡ, khung 5 chỉ còn vành sóng mảnh đứt đoạn',
     la: 'giữa lòng dấu bàn tay có một xoáy tròn nhỏ, và các đầu ngón tay nhọn như ngọn lửa' },
+  // ===== Phiên hieu-ung-b3: nổ, trạng thái, trùm, cổng (15 mục). "phe" như B2. Thêm ba trường tuỳ chọn:
+  //   mau: 'fire' | 'ice' | 'poison' | ''  màu CỐ ĐỊNH của mục (băng vỡ luôn là băng…): không hiện ô "Bản màu", mã tệp không thêm đuôi;
+  //   mep: () => '…'  câu màu mép viết riêng cho mục (mã màu vẫn lấy từ khối BM bằng bmMa, không ghi mã riêng);
+  //   to: true  hiệu ứng TO: prompt ghi rõ cỡ ô so với màn hình và dặn "hình tự nhiên, không chạm mép ô, không bo vuông".
+  // Mục không có "phe" là hiệu ứng trung tính (vòng phép, sao choáng, lấp lánh, cổng). Chỗ game đọc: js/fx.js, js/fx_ky_nang.js (runeOf), js/portal.js. =====
+  { ma: 'hu-no-khoi', ten: 'Nổ khói (Lửa gặp Độc)', nen: 'hong', fw: 96, fh: 80, gx: 48, gy: 58, so: 8, giay: 0.6, canh: 'giua', doc: 'day', xem: 'no', phe: 'ta', mau: '', to: true,
+    mep: () => `các lưỡi lửa màu vàng ${bmMa('he_lua', 0)} chuyển ra cam ${bmMa('he_lua', 1)} (hệ Lửa); các cuộn khói màu xám đá ${bmMa('da_stone', 2)}, chỗ khuất ${bmMa('da_stone', 0)}; điểm vài bong bóng xanh lá ${bmMa('he_doc', 1)} (hệ Độc)`,
+    noi: 'Vụ nổ khi đòn Lửa của em bé đánh vào quái đang dính Độc (hoặc đòn Độc đánh vào quái đang cháy): mây khói lẫn lửa bung ra quanh quái, vùng nổ rộng khoảng 84 điểm ảnh game (thay hai vòng sóng và chớp vẽ bằng code; khói lửa bằng code bớt một nửa). Điểm neo là tâm vụ nổ trên sàn (chân quái). Vết cháy trên sàn, tàn lửa và dòng chữ "Nổ khói" vẫn vẽ bằng code. Vẽ kiểu thường (không cộng sáng) để khói tối không bị mất.',
+    mo: 'một vụ nổ khói lẫn lửa, nhìn chếch từ trên xuống: ở giữa là quả cầu lửa bùng lên, quanh nó các cuộn khói tròn ùn ra bốn phía và bốc lên trên, sát mặt đất có một vành lửa hình elip dẹt lan ra; vài tàn lửa nhỏ văng lên',
+    dat: 'tâm vụ nổ ở GIỮA ô theo chiều ngang và ở khoảng 3/4 chiều cao ô tính từ trên xuống (đó là mặt sàn); vành lửa elip dẹt nằm quanh tâm, mép dưới của vành sát gần mép dưới ô; cầu lửa và khói bốc lên phía trên', huong: 'đối xứng trái phải, không nghiêng về bên nào',
+    thoi: 'khung 1 một chớp lửa nhỏ dẹt ở tâm, khung 2 và 3 cầu lửa bùng to nhất và vành lửa lan nhanh, khung 4 và 5 lửa tắt dần còn khói ùn ra to nhất, khung 6 và 7 khói loãng dần và bốc lên cao, vành lửa đã tắt, khung 8 chỉ còn vài cụm khói mỏng thưa',
+    la: 'các cuộn khói cuộn tròn kiểu mây xoắn trong tranh dân gian (mỗi cuộn có một nét xoáy trôn ốc), trong khói lẫn vài bong bóng chất độc đang cháy' },
+  { ma: 'hu-soc-nhiet', ten: 'Sốc nhiệt (Lửa gặp Băng)', nen: 'hong', fw: 96, fh: 80, gx: 48, gy: 60, so: 8, giay: 0.5, cong: true, canh: 'giua', doc: 'day', xem: 'no', phe: 'ta', mau: '', to: true,
+    mep: () => `tia hơi nước, cụm hơi và mảnh băng màu xanh băng nhạt ${bmMa('he_bang', 0)} chuyển ra xanh lam ${bmMa('he_bang', 1)} (hệ Băng); thêm vài đốm than cam ${bmMa('he_lua', 1)} (hệ Lửa) sát tâm`,
+    noi: 'Cú nổ hơi nước khi đòn Lửa của em bé đánh vào quái đang dính Băng hoặc đang đóng băng (hoặc đòn Băng đánh vào quái đang cháy); thay hai vòng sóng và chớp vẽ bằng code, tia và hơi nước bằng code bớt một nửa. Điểm neo là chân quái. Mảnh băng văng và dòng chữ "Sốc nhiệt" vẫn vẽ bằng code.',
+    mo: 'một cú nổ hơi nước do nóng gặp lạnh, nhìn chếch từ trên xuống: ở giữa một chớp sáng hình sao nhiều cánh, từ đó các tia hơi nước bắn thẳng ra mọi phía như nan quạt, mấy cụm hơi nước cuộn bốc lên trên, sát mặt đất một vành sóng elip dẹt mảnh lan ra; lẫn vài mảnh băng nhọn văng ra',
+    dat: 'tâm cú nổ ở GIỮA ô theo chiều ngang, ở khoảng 2/3 chiều cao ô tính từ trên xuống; vành sóng elip nằm thấp hơn tâm một chút, mép dưới của vành sát gần mép dưới ô; tia và hơi nước toả đều', huong: 'đối xứng trái phải, không nghiêng về bên nào',
+    thoi: 'khung 1 chớp sáng nhỏ ở tâm, khung 2 và 3 chớp to nhất, các tia bắn ra dài hết cỡ, vành sóng lan nhanh, khung 4 và 5 tia đứt thành đoạn, hơi nước cuộn to nhất, khung 6 và 7 hơi nước loãng và bốc lên, khung 8 chỉ còn vài sợi hơi mỏng',
+    la: 'mỗi tia hơi nước kết thúc bằng một bông tuyết sáu cánh tí xíu đang tan, và trong chớp sáng ở tâm có một vệt nứt hình tia sét' },
+  { ma: 'hu-cot-lua', ten: 'Cột lửa (đòn quái phát nổ)', nen: 'duong', fw: 32, fh: 64, gx: 16, gy: 60, so: 6, giay: 0.34, canh: 'giua', doc: 'day', xem: 'san', phe: 'quai', mau: 'fire',
+    noi: 'Cột lửa phụt lên ở chỗ vùng đòn hệ Lửa của quái và trùm phát nổ. Chiêu Nung của em bé và vệt lửa nhát kết của vũ khí hệ Lửa cũng dùng chung hình này (thay cột lửa vẽ bằng code). Điểm neo là chân cột trên sàn; game co giãn theo chiều cao cột (khoảng 20 đến 80 điểm ảnh game) và phát đủ khung trong thời gian của cột. Vòng sóng, vết cháy, tàn lửa và vùng đỏ báo trước vẫn vẽ bằng code.',
+    mo: 'một cột lửa phụt thẳng từ mặt đất lên: chân cột loe rộng, thân thon dần lên ngọn, ngọn chẻ hai ba lưỡi lửa uốn lượn, quanh chân có vài tia lửa toé ngang',
+    dat: 'cột lửa dựng ĐỨNG ở GIỮA ô theo chiều ngang, CHÂN cột sát gần mép dưới ô, ngọn lửa vươn lên gần hết chiều cao ô ở khung cao nhất', huong: 'thẳng đứng, đối xứng trái phải',
+    thoi: 'khung 1 một bụm lửa thấp vừa phụt khỏi mặt đất, khung 2 và 3 cột vọt lên cao nhất và to nhất, khung 4 cột hẹp lại, khung 5 chân cột rời mặt đất, chỉ còn phần ngọn bay lên, khung 6 còn vài lưỡi lửa nhỏ rời rạc ở trên cao',
+    la: 'thân cột có các khoanh thắt như đốt tre, và lưỡi lửa trên cùng cong vút như đầu đao mái đình' },
+  { ma: 'hu-cot-nuoc', ten: 'Cột nước (đòn quái phát nổ)', nen: 'hong', fw: 32, fh: 64, gx: 16, gy: 60, so: 6, giay: 0.26, canh: 'giua', doc: 'day', xem: 'san', phe: 'quai', mau: 'ice',
+    noi: 'Cột nước bắn lên ở chỗ vùng đòn hệ Băng (nước) của quái và trùm phát nổ, gặp nhiều ở vùng Hang biển (thay cột nước vẽ bằng code). Điểm neo là chân cột trên sàn; game co giãn theo chiều cao cột và phát đủ khung trong thời gian của cột. Vành nước, giọt nước rơi, vụn băng và vùng đỏ báo trước vẫn vẽ bằng code.',
+    mo: 'một cột nước bắn thẳng từ mặt đất lên như sóng đập vào đá: chân cột loe rộng có vành bọt, thân thon dần, ngọn toé thành ba bốn giọt nước tròn',
+    dat: 'cột nước dựng ĐỨNG ở GIỮA ô theo chiều ngang, CHÂN cột sát gần mép dưới ô, ngọn nước vươn lên gần hết chiều cao ô ở khung cao nhất', huong: 'thẳng đứng, đối xứng trái phải',
+    thoi: 'khung 1 một ụ nước thấp vừa trồi lên, khung 2 và 3 cột vọt cao nhất, khung 4 cột mảnh lại và ngọn tách thành giọt, khung 5 chân cột rời mặt đất, khung 6 chỉ còn vài giọt nước rời rạc ở trên cao',
+    la: 'các ngọn sóng ở đỉnh cột cuộn móc câu như hoa văn sóng nước trên gốm cổ, giữa thân cột có hai vạch xoắn như dây thừng' },
+  { ma: 'hu-vong-phep', ten: 'Vòng phép trên sàn', nen: 'duong', fw: 96, fh: 64, gx: 48, gy: 32, so: 8, giay: 0.5, cong: true, canh: 'giua', doc: 'giua', xem: 'san', to: true, bm: ['kim_loai'],
+    noi: 'Vòng phép hiện trên sàn dưới chỗ chưởng nổ, chỗ nổ lan của vũ khí hệ Lửa, chỗ Nổ khói và Sốc nhiệt (thay vòng tròn, vòng chấm và các ký hiệu xoay vẽ bằng code). Nằm sát sàn, dưới chân nhân vật. Điểm neo là tâm vòng; game co giãn theo bán kính đòn (ảnh chuẩn cho bán kính 44 điểm ảnh game) và phát đủ khung trong thời gian của vòng. Trong code vòng đổi màu theo hệ; ảnh dùng MỘT màu trung tính.',
+    mo: 'một vòng phép nằm trên mặt đất, nhìn chếch từ trên xuống nên là hình elip dẹt nằm ngang: một vòng ngoài nét liền, một vòng trong nét đứt, giữa hai vòng là tám ký hiệu nhỏ kiểu hoa văn (vạch ngang có móc, KHÔNG phải chữ đọc được) xếp cách đều; ở tâm một chấm sáng với bốn tia ngắn. Màu trắng ngà và vàng kim nhạt, trung tính, không thuộc hệ nào',
+    dat: 'tâm vòng ở CHÍNH GIỮA ô; vòng elip rộng gần hết bề ngang ô, bề cao bằng khoảng 60% bề ngang của nó. QUAN TRỌNG: khung nào cũng vẽ ĐỦ CẢ VÒNG, cùng một tâm', huong: 'nằm yên trên sàn, đối xứng trái phải; các ký hiệu quay theo chiều kim đồng hồ',
+    thoi: 'khung 1 vòng còn nhỏ (khoảng 60% cỡ) và sáng rực, khung 2 và 3 vòng nở ra hết cỡ, chấm tâm và bốn tia sáng nhất, khung 4 và 5 vòng giữ cỡ, các ký hiệu quay đi một nấc mỗi khung, chấm tâm tắt, khung 6 đến 8 vòng nở thêm một chút, nét mảnh dần rồi đứt thành chấm thưa',
+    la: 'vòng ngoài có viền răng cưa tam giác nhỏ như vành tia mặt trời trên mặt trống đồng, và tám ký hiệu có dáng chim lạc cách điệu' },
+  { ma: 'hu-be-trung', ten: 'Em bé trúng đòn', nen: 'duong', fw: 40, fh: 40, gx: 20, gy: 20, so: 5, giay: 0.2, canh: 'giua', doc: 'giua', xem: 'be', phe: 'quai',
+    noi: 'Dấu va chạm trên người em bé mỗi lần bị quái đánh trúng (thay chớp sáng vẽ bằng code; tia văng bằng code bớt còn 3). Điểm neo là giữa thân em bé. Số máu mất, vòng vàng khi đỡ được đòn và viền đỏ màn hình vẫn vẽ bằng code. Có bản màu theo hệ của đòn đánh (Lửa, Độc, Băng); chưa có bản theo hệ thì game dùng bản Chung.',
+    mo: 'một dấu va chạm khi bị đánh trúng: một hình sao nổ sáu bảy cánh nhọn không đều, cánh dài cánh ngắn, giữa có một vết nứt chéo; vài mảnh vụn nhọn văng ra xung quanh',
+    dat: 'tâm va chạm ở CHÍNH GIỮA ô, hình sao toả ra bốn phía', huong: 'toả đều, không nghiêng về bên nào',
+    thoi: 'khung 1 hình sao nhỏ và đậm nhất ở tâm, khung 2 sao bung to hết cỡ, khung 3 sao rỗng giữa, các cánh tách rời nhau, khung 4 chỉ còn các mảnh nhọn bay ra xa, khung 5 vài chấm thưa',
+    la: 'các cánh sao cong nhẹ về một phía như vết móng vuốt quẹt, không thẳng như sao thường' },
+  { ma: 'hu-hoi-mau', ten: 'Uống thuốc, hồi máu', nen: 'duong', fw: 40, fh: 48, gx: 20, gy: 44, so: 6, giay: 0.5, cong: true, canh: 'giua', doc: 'day', xem: 'chan', phe: 'ta', mau: '',
+    mep: () => `hồng cam nhạt, dịu (lấy đỏ sáng ${bmMa('vai', 1)} pha với trắng ngà), KHÔNG đỏ tươi, KHÔNG xanh lá (xanh lá là màu của Độc)`,
+    noi: 'Hiện quanh em bé lúc uống Bình máu (thay vòng sóng hồng vẽ bằng code; dấu cộng nhỏ bay lên bằng code bớt một nửa). Điểm neo là chân em bé, hình bám theo em bé khi di chuyển.',
+    mo: 'hiệu ứng hồi máu: dưới chân một vành sáng elip dẹt, từ vành đó ba bốn dấu cộng (hình chữ thập bốn cánh bằng nhau) to nhỏ khác nhau và vài hạt sáng tròn bay thẳng lên, hai dải sáng mảnh uốn lượn quấn lên như khói hương',
+    dat: 'vành sáng elip ở GIỮA ô theo chiều ngang, sát gần mép dưới ô (đó là chỗ chân em bé, KHÔNG vẽ em bé); dấu cộng và hạt sáng bay lên phía trên, cao nhất tới gần mép trên ô', huong: 'bay thẳng lên trên, đối xứng trái phải',
+    thoi: 'khung 1 vành sáng dưới chân vừa loé, khung 2 và 3 vành nở rộng, các dấu cộng mọc lên từ vành, khung 4 và 5 dấu cộng bay lên nửa trên ô và to nhất, vành mờ dần, khung 6 chỉ còn một hai dấu cộng nhỏ và vài hạt sáng ở trên cao',
+    la: 'mỗi dấu cộng có bốn đầu tròn như bông hoa mai bốn cánh, và vành sáng dưới chân có hình cánh sen xoè' },
+  { ma: 'hu-choang', ten: 'Sao choáng trên đầu', nen: 'duong', fw: 20, fh: 10, gx: 10, gy: 5, so: 6, giay: 0.6, lap: true, canh: 'giua', doc: 'giua', xem: 'dau', bm: ['kim_loai'],
+    noi: 'Ba ngôi sao quay vòng trên đầu quái (hoặc em bé) đang bị choáng; chạy lặp suốt lúc choáng (thay ba ngôi sao vẽ bằng code). Điểm neo là tâm vòng sao, game đặt ngay trên đầu. Hình rất nhỏ. Vài quái hình mới tự vẽ sao choáng trong cử động riêng của nó, chỗ đó chưa thay.',
+    mo: 'ba ngôi sao bốn cánh nhỏ màu vàng kim lõi trắng chạy vòng quanh một quỹ đạo elip dẹt nằm ngang (như vòng sao quay trên đầu người bị choáng); ngôi sao ở phía trước to và sáng, ngôi ở phía sau nhỏ và sẫm hơn; quỹ đạo là một nét elip rất mảnh màu vàng sẫm',
+    dat: 'quỹ đạo elip ở CHÍNH GIỮA ô, rộng gần hết bề ngang ô. QUAN TRỌNG: khung nào cũng vẽ ĐỦ nét quỹ đạo elip, cùng chỗ, để mọi khung rộng bằng nhau', huong: 'ba ngôi sao chạy vòng theo chiều kim đồng hồ khi nhìn từ trên xuống',
+    thoi: 'qua 6 khung mỗi ngôi sao đi được đúng một phần ba vòng (mỗi khung nhích 20 độ), nên khung cuối nối tiếp được khung đầu để chạy lặp',
+    la: 'một trong ba ngôi sao được thay bằng một vòng xoáy trôn ốc nhỏ, như dấu chóng mặt' },
+  { ma: 'hu-bang-vo', ten: 'Băng vỡ', nen: 'hong', fw: 56, fh: 56, gx: 28, gy: 28, so: 6, giay: 0.3, cong: true, canh: 'giua', doc: 'giua', xem: 'trung', phe: 'ta', mau: 'ice',
+    noi: 'Khối băng bọc quái vỡ tung khi hết đóng băng, hoặc khi quái đang đóng băng bị hạ (thay vòng sóng và chớp vẽ bằng code; mảnh băng văng bằng code bớt một nửa). Điểm neo là giữa thân quái; game co giãn theo cỡ quái.',
+    mo: 'một khối băng vỡ tung: chớp sáng ở tâm, các mảnh băng hình tam giác và hình thoi sắc cạnh văng ra mọi phía, một vòng sương mỏng nở ra, vài hạt băng li ti',
+    dat: 'tâm vỡ ở CHÍNH GIỮA ô, mảnh băng văng đều ra bốn phía', huong: 'toả đều, không nghiêng về bên nào',
+    thoi: 'khung 1 khối băng nứt, chớp sáng loé ở tâm, khung 2 và 3 các mảnh to văng ra nửa đường, vòng sương nở, khung 4 và 5 mảnh bay ra xa, nhỏ dần và xoay, khung 6 chỉ còn vài hạt băng li ti',
+    la: 'các mảnh băng có dáng mảnh gương vỡ, mỗi mảnh có một vạch sáng chéo; mảnh to nhất còn in một nửa bông tuyết sáu cánh' },
+  { ma: 'hu-dong-bang', ten: 'Vừa đóng băng', nen: 'hong', fw: 48, fh: 48, gx: 24, gy: 40, so: 6, giay: 0.3, cong: true, canh: 'giua', doc: 'day', xem: 'chan-quai', phe: 'ta', mau: 'ice',
+    noi: 'Hiện đúng lúc quái vừa bị đóng băng (đủ tầng Băng): sương toả và tinh thể mọc quanh chân (thay vòng sóng và chớp vẽ bằng code; đốm băng bằng code bớt một nửa). Điểm neo là chân quái; game co giãn theo cỡ quái. Khối băng bọc quái suốt lúc đóng băng vẫn vẽ bằng code.',
+    mo: 'băng đông lại tức thì quanh một điểm trên mặt đất: một vành sương elip dẹt lan ra sát đất, từ vành đó năm sáu tinh thể băng nhọn mọc vọt lên, chụm về phía trên như hàm răng khép lại, vài ánh sao lấp lánh',
+    dat: 'vành sương ở GIỮA ô theo chiều ngang, sát gần mép dưới ô (đó là chân con quái, KHÔNG vẽ quái); các tinh thể băng mọc lên phía trên, cao nhất khoảng 3/4 ô; khoảng giữa các tinh thể để TRỐNG (chỗ thân quái)', huong: 'mọc thẳng lên, đối xứng trái phải',
+    thoi: 'khung 1 vành sương nhỏ vừa loé dưới đất, khung 2 và 3 vành lan rộng, các tinh thể mọc vọt lên cao nhất, khung 4 tinh thể loé sáng ở đỉnh, khung 5 tinh thể mờ dần, khung 6 chỉ còn vài ánh sao và sương mỏng',
+    la: 'các tinh thể cong nhẹ vào trong như cánh búp sen đang khép, không dựng thẳng như cọc' },
+  { ma: 'hu-no-nho', ten: 'Nổ nhỏ trên thân trùm', nen: 'duong', fw: 40, fh: 40, gx: 20, gy: 20, so: 5, giay: 0.22, canh: 'giua', doc: 'giua', xem: 'trung', phe: 'quai',
+    noi: 'Chuỗi vụ nổ nhỏ chạy khắp thân trùm trong lúc trùm đang gục (hơn một giây, càng về cuối càng dồn dập); thay chớp và vòng sóng vẽ bằng code. Điểm neo là tâm vụ nổ; game đổi cỡ nhẹ và lật ngẫu nhiên từng vụ. Mảnh văng và khói vẫn vẽ bằng code. Có bản màu theo hệ của đòn kết liễu; chưa có thì dùng bản Chung.',
+    mo: 'một vụ nổ nhỏ gọn: quả cầu nổ tròn hơi méo với năm múi phồng, một vòng sóng mảnh nở ra, vài tia ngắn và mảnh vụn văng',
+    dat: 'tâm vụ nổ ở CHÍNH GIỮA ô, toả ra bốn phía', huong: 'toả đều, không nghiêng về bên nào',
+    thoi: 'khung 1 một đốm nổ nhỏ đậm ở tâm, khung 2 cầu nổ phồng to nhất, khung 3 cầu nổ rỗng giữa thành vành, vòng sóng nở, khung 4 vành vỡ thành các cụm khói nhỏ, khung 5 vài chấm thưa',
+    la: 'cầu nổ có dáng bông hoa năm cánh tròn (như hoa mai), mỗi cánh là một múi nổ' },
+  { ma: 'hu-trum-no', ten: 'Trùm nổ cuối', nen: 'duong', fw: 192, fh: 160, gx: 96, gy: 80, so: 6, giay: 0.6, canh: 'giua', doc: 'giua', xem: 'trum', phe: 'quai', to: true,
+    noi: 'Vụ nổ lớn lúc trùm (trùm vùng và trùm nhỏ) tan biến, ngay sau chuỗi nổ nhỏ; thay ba vòng sóng lớn và chớp vẽ bằng code, tia và khói bằng code bớt hơn một nửa. Khung RẤT TO: 192×160 điểm ảnh game, gần nửa màn hình (màn game 480×270). Điểm neo là tâm vụ nổ (khoảng giữa thân trùm); với trùm nhỏ game thu còn 70%. Mảnh văng, đốm vàng và chớp trắng cả màn hình vẫn vẽ bằng code. Có bản màu theo hệ của đòn kết liễu. Vì khung to nên dải chỉ có 6 khung; nếu ChatGPT vẽ ra số khung khác thì đổi "Cách tách" sang Chia đều và gõ đúng số cột.',
+    mo: 'một vụ nổ lớn kết liễu trùm: tâm là một khối nổ tròn bùng to, từ đó nhiều tia nhọn dài ngắn xen kẽ bắn ra mọi phía, hai vành sóng tròn lồng nhau nở rộng, các cụm khói cuộn tròn và mảnh vụn văng ra xa',
+    dat: 'tâm vụ nổ ở CHÍNH GIỮA ô; vụ nổ toả ra mọi phía, lúc to nhất rộng khoảng 70% bề ngang ô (khung đầu nhỏ hơn nhiều)', huong: 'toả đều ra mọi phía, không nghiêng về bên nào',
+    thoi: 'khung 1 một khối nổ đặc, nhỏ (khoảng 1/4 ô) ở tâm, khung 2 khối nổ bùng to gấp đôi, các tia bắt đầu phóng ra, khung 3 to nhất: tia dài hết cỡ, hai vành sóng nở rộng, khung 4 khối nổ rỗng giữa, vỡ thành các cụm khói cuộn, tia đứt đoạn, khung 5 khói loãng dần và trôi ra xa, khung 6 chỉ còn vài cụm khói mỏng và chấm vụn thưa',
+    la: 'các tia xếp thành ngôi sao nhiều cánh như ngôi sao giữa mặt trống đồng (tia dài xen tia ngắn), và các cụm khói cuộn kiểu mây xoắn dân gian' },
+  { ma: 'hu-tien-hoa', ten: 'Tiến hoá vũ khí (cột sáng từ trời)', nen: 'duong', fw: 96, fh: 180, gx: 48, gy: 174, so: 8, giay: 0.9, cong: true, canh: 'giua', doc: 'day', xem: 'chan', phe: 'ta', to: true,
+    noi: 'Cột sáng từ trời rọi xuống em bé lúc vũ khí tiến hoá lên bậc mới ngay trong trận (thay cột sáng, bốn vòng sóng và chớp vẽ bằng code; tia văng bằng code bớt một nửa). Khung cao 180 điểm ảnh game, bằng hai phần ba chiều cao màn hình (màn game 480×270). Điểm neo là chân em bé, hình bám theo em bé và phát đủ khung trong 0,9 giây. Chớp màu cả màn hình và hạt bay lên sau đó vẫn vẽ bằng code. Vũ khí tiến hoá luôn theo một hệ: nên làm đủ ba bản màu Lửa, Độc, Băng; chưa có bản theo hệ thì game dùng bản Chung.',
+    mo: 'một cột sáng thẳng đứng từ trên trời rọi xuống một điểm trên mặt đất: thân cột là dải sáng thẳng, quanh chân cột một vành sáng elip dẹt lan ra trên mặt đất, dọc thân cột có các hạt sáng nhỏ và hai dải sáng mảnh xoắn quanh bay lên',
+    dat: 'cột sáng dựng ĐỨNG ở GIỮA ô theo chiều ngang, chạy từ gần mép trên ô xuống chân cột; chân cột và vành sáng elip sát gần mép dưới ô (đó là chỗ em bé đứng, KHÔNG vẽ em bé); lúc to nhất cột chỉ rộng khoảng 1/3 bề ngang ô, vành sáng dưới chân rộng gần hết bề ngang ô', huong: 'thẳng đứng, đối xứng trái phải',
+    thoi: 'khung 1 cột sáng rộng nhất và sáng rực vừa giáng xuống, chân cột loé mạnh, khung 2 và 3 vành sáng dưới chân lan rộng, cột vẫn to, khung 4 và 5 cột hẹp dần, hạt sáng và dải xoắn bay lên rõ nhất, khung 6 và 7 cột chỉ còn là một sợi sáng mảnh, vành dưới chân mờ, khung 8 còn vài hạt sáng thưa dọc đường cột',
+    la: 'vành sáng dưới chân là một vòng hoa văn mặt trống đồng (ngôi sao nhiều cánh ở giữa, vành răng cưa bên ngoài), và trên đỉnh cột có hình một con chim lạc nhỏ dang cánh' },
+  { ma: 'hu-lap-lanh', ten: 'Lấp lánh (mở rương, bàn thờ)', nen: 'duong', fw: 40, fh: 40, gx: 20, gy: 32, so: 6, giay: 0.5, cong: true, canh: 'giua', doc: 'day', xem: 'san', bm: ['kim_loai'],
+    noi: 'Ánh lấp lánh hiện một lần lúc mở rương báu và lúc dùng bàn thờ lời nguyền (thay vòng sóng vẽ bằng code; đốm sáng bằng code bớt một nửa và vẫn theo màu của vật: vàng cho rương, tím cho bàn thờ). Điểm neo là chân vật. Ảnh dùng MỘT màu vàng kim cho cả hai.',
+    mo: 'ánh lấp lánh mừng rỡ: năm sáu ngôi sao bốn cánh to nhỏ khác nhau loé lên so le, vài hạt sáng tròn bay lên, dưới cùng một vành sáng elip dẹt mảnh; màu vàng kim, lõi trắng ngà',
+    dat: 'vành sáng elip ở GIỮA ô theo chiều ngang, sát gần mép dưới ô (chỗ chân cái rương, KHÔNG vẽ rương); các ngôi sao rải ở giữa và nửa trên ô, không dồn vào một chỗ', huong: 'toả lên trên, đối xứng trái phải',
+    thoi: 'khung 1 vành sáng loé và một ngôi sao to bật ra ở giữa, khung 2 và 3 các ngôi sao khác lần lượt loé lên ở chỗ khác nhau, khung 4 và 5 sao cũ nhỏ lại, sao mới loé, hạt sáng bay lên cao, khung 6 chỉ còn hai ba chấm sáng nhỏ',
+    la: 'ngôi sao to nhất có tám cánh (bốn cánh dài, bốn cánh ngắn xen kẽ), và có một đồng tiền cổ lỗ vuông nhỏ xíu đang xoay giữa các ngôi sao' },
+  { ma: 'hu-cong', ten: 'Cổng dịch chuyển', nen: 'hong', fw: 56, fh: 40, gx: 28, gy: 20, so: 6, giay: 0.9, lap: true, canh: 'giua', doc: 'giua', xem: 'san', bm: ['kim_loai'],
+    noi: 'Cổng mọc lên giữa phòng trùm sau khi thắng; em bé bước vào để xem kết quả và về làng. Thay vành đồng, lòng cổng và xoáy vẽ bằng code; chạy lặp. Nằm sát sàn. Điểm neo là tâm cổng; lúc mới mọc game phóng to dần từ nhỏ. Cột sáng mờ, đốm sáng bay lên và vòng sáng lúc cổng xuất hiện vẫn vẽ bằng code. Vẽ kiểu thường (không cộng sáng) vì lòng cổng tối.',
+    mo: 'một cổng dịch chuyển nằm trên mặt đất, nhìn chếch từ trên xuống nên là hình elip dẹt nằm ngang: vành ngoài bằng đồng dày hai lớp (đồng nâu vàng, mép trong vàng kim) có mười đốm vàng sáng cách đều như đinh tán trên vành trống đồng; lòng cổng tối màu xanh ngọc sẫm, trong đó một xoáy nước ba cánh màu xanh ngọc sáng dần về tâm, chính giữa một đốm trắng',
+    dat: 'tâm cổng ở CHÍNH GIỮA ô; vành elip rộng gần hết bề ngang ô, bề cao bằng khoảng 55% bề ngang của nó. QUAN TRỌNG: vành đồng giống hệt nhau, cùng chỗ, cùng cỡ ở mọi khung; chỉ xoáy bên trong và các đốm vàng trên vành đổi chỗ', huong: 'nằm yên trên sàn; xoáy quay theo chiều kim đồng hồ',
+    thoi: 'qua 6 khung xoáy ba cánh quay được đúng một phần ba vòng (mỗi khung quay thêm 20 độ), các đốm vàng trên vành nhích đi một chút, đốm trắng ở tâm lúc to lúc nhỏ; khung cuối nối tiếp được khung đầu để chạy lặp',
+    la: 'mặt vành đồng khắc chìm một hàng chim lạc bay nối đuôi nhau (nét khắc đơn giản), và ba cánh xoáy có đầu cuộn tròn như sóng nước' },
 ];
 const NEN = { xanh: ['XANH LÁ #00FF00', [0, 255, 0], 'xanh lá'], duong: ['XANH DƯƠNG #0000FF', [0, 0, 255], 'xanh dương'], hong: ['HỒNG TÍM #FF00FF', [255, 0, 255], 'hồng tím'] };
 const NEN_XEM = [['toi', '#141a1c', 'Tối'], ['co', '#3a4a30', 'Cỏ'], ['dat', '#6a5a46', 'Đất'], ['sang', '#c8c0a8', 'Sáng']];
@@ -487,7 +586,9 @@ const BAN_MAU = [
 ];
 function cauMau(q) {
   if (!q.phe) return '';
-  const b = BAN_MAU.find(m => m.k === (q.he || '')) || BAN_MAU[0];
+  const b = BAN_MAU.find(m => m.k === (q.he || q.mau || '')) || BAN_MAU[0];
+  const rieng = typeof q.mep === 'function' ? q.mep() : ''; // phiên hieu-ung-b3: câu màu mép viết riêng cho mục
+  if (rieng) return `MÀU (theo bảng màu của game): đây là hiệu ứng CỦA NGƯỜI CHƠI nên LÕI (phần sáng nhất, ở giữa hình) phải là trắng ngà ${bmMa('he_doc', 3)}; màu khác chỉ dùng ở phần bao quanh: ${rieng}. `;
   if (q.phe === 'quai') return `MÀU (theo bảng màu của game): đây là hiệu ứng CỦA QUÁI nên dùng nấc ĐẬM, tối hơn hẳn hiệu ứng của người chơi: thân hình màu ${b.quai}, mép tối hơn một nấc, chỉ một sợi lõi thật mảnh màu ngà xỉn, KHÔNG có lõi trắng to, KHÔNG phát sáng; viền ngoài cùng một nét mực xanh đen ${BM.vien}. `;
   return `MÀU (theo bảng màu của game): đây là hiệu ứng CỦA NGƯỜI CHƠI nên LÕI (phần sáng nhất, chiếm phần lớn hình) phải là trắng ngà ${bmMa('he_doc', 3)}; màu khác chỉ được nhuốm ở MÉP NGOÀI: ${b.ta}${b.k ? ' (màu của ' + b.ten + ')' : ''}; không tô kín cả hình bằng màu mép. `;
 }
@@ -503,7 +604,8 @@ function taoPrompt(q) {
     + `BỐ CỤC: ảnh khổ ngang, MỘT HÀNG NGANG DUY NHẤT gồm ĐÚNG ${q.so} khung bằng nhau, xếp từ TRÁI sang PHẢI theo thời gian (khung 1 là lúc bắt đầu, khung ${q.so} là lúc kết thúc): ${q.thoi}. `
     + `Mỗi khung là một ô tỉ lệ ngang:cao = ${tl}, giữa các ô có khoảng trống rộng hoặc đường kẻ mảnh màu đen. KHÔNG vẽ thêm khung thứ ${q.so + 1}, không xuống hàng, không vẽ hàng thứ hai. `
     + `VỊ TRÍ TRONG Ô: ${q.dat}. Hiệu ứng chỉ chiếm khoảng 70% ô, nằm TRỌN trong ô của nó, cách mép ô ít nhất 1/10 ô, tuyệt đối không lấn sang ô bên cạnh; mọi khung cùng tỉ lệ, cùng điểm gốc, chỉ khác nhau theo thời gian. `
-    + (q.la ? `CỠ TRONG GAME: mỗi khung hiện rất nhỏ, chỉ ${q.fw}×${q.fh} điểm ảnh game (hình thật khoảng ${q.fw - 4}×${q.fh - 4}${q.phe ? '; để so: em bé trong game cao khoảng 28 điểm ảnh' : ''}), nên vẽ khối TO, RÕ, ít chi tiết vụn, nhìn ra ngay khi thu nhỏ; viền tối một nét quanh hình; đổ bóng 3 sắc (sáng, vừa, tối). NÉT LẠ của hình này: ${q.la}. ` : '')
+    + (q.la && q.to ? `CỠ TRONG GAME: đây là hiệu ứng TO. Mỗi khung là một ô ${q.fw}×${q.fh} điểm ảnh game (cả màn hình game là 480×270; để so: em bé cao khoảng 28 điểm ảnh), hình thật khoảng ${q.fw - 4}×${q.fh - 4}. Vẽ khối to, rõ, nhìn ra ngay khi thu nhỏ; viền tối một nét quanh hình; đổ bóng 3 sắc (sáng, vừa, tối). HÌNH TỰ NHIÊN: dáng toả, loang không đều như thật, mép ngoài lồi lõm và tan dần; KHÔNG chạm mép ô, KHÔNG bo theo hình vuông hay hình chữ nhật của ô, KHÔNG có cạnh thẳng bị cắt phẳng ở mép ô. NÉT LẠ của hình này: ${q.la}. `
+      : q.la ? `CỠ TRONG GAME: mỗi khung hiện rất nhỏ, chỉ ${q.fw}×${q.fh} điểm ảnh game (hình thật khoảng ${q.fw - 4}×${q.fh - 4}${q.phe ? '; để so: em bé trong game cao khoảng 28 điểm ảnh' : ''}), nên vẽ khối TO, RÕ, ít chi tiết vụn, nhìn ra ngay khi thu nhỏ; viền tối một nét quanh hình; đổ bóng 3 sắc (sáng, vừa, tối). NÉT LẠ của hình này: ${q.la}. ` : '')
     + cauMau(q)
     + `HƯỚNG: ${q.huong || 'hướng chuyển động (nếu có) sang PHẢI'}. ${q.la ? 'KHÔNG vẽ nhân vật, quái, bàn tay, mặt đất, bóng đổ hay khung trang trí: mỗi ô chỉ vẽ đúng MỘT hình đã tả.' : 'KHÔNG vẽ nhân vật, quái, vũ khí, mặt đất, bóng đổ hay khung trang trí: chỉ vẽ hiệu ứng.'} Mỗi ô đều phải có hiệu ứng (không để ô trống). `
     + `KHÔNG chữ, không số, không chú thích, không bảng màu, không bảng phụ, không ảnh mẫu thu nhỏ. `
@@ -535,8 +637,9 @@ function hienHu() {
 function chonHu(i, he) {
   Q = Object.assign({ co: 1 }, HU[i]);
   // mục có "phe": chọn thêm bản màu (Chung hoặc theo hệ); bản theo hệ đổi mã tệp, tên, nền vẽ và câu màu trong prompt
-  $('oBanMau').hidden = !Q.phe;
-  const b = Q.phe ? BAN_MAU.find(m => m.k === (he || '')) || BAN_MAU[0] : BAN_MAU[0];
+  const coBan = !!Q.phe && !('mau' in Q); // mục có màu cố định (mau, phiên hieu-ung-b3) thì không chọn bản màu
+  $('oBanMau').hidden = !coBan;
+  const b = coBan ? BAN_MAU.find(m => m.k === (he || '')) || BAN_MAU[0] : BAN_MAU[0];
   $('chonHe').value = b.k;
   if (b.k) { Q.he = b.k; Q.ma += b.duoi; Q.ten += ' · ' + b.ten; Q.nen = b.nen; }
   $('soCot').value = Q.so; $('kieuMep').value = Q.cong ? 'mem' : 'sac';
@@ -987,10 +1090,16 @@ function khungChay(now) {
     const u = t / giay, f = Q.lap ? Math.floor(u * Q.so) % Q.so : Math.min(Q.so - 1, Math.floor(u * Q.so)), conVe = Q.lap || u < 1;
     // vị trí điểm neo trong khung xem (đơn vị điểm ảnh game)
     let ax = Math.round(vw / 2), ay = Math.round(vh / 2), goc = 0;
-    const san = Math.round(vh * 0.78);
+    const chan = Q.xem === 'chan' || Q.xem === 'chan-quai'; // hình neo ở chân nhân vật: hình cao thì hạ sàn xuống cho khỏi bị cắt ngọn
+    const san = chan ? Math.max(Math.round(vh * 0.78), Math.min(vh - 6, Q.gy + 4)) : Math.round(vh * 0.78);
     if (Q.xem === 'vu-khi') { ax = 30; ay = san - 13; nguoiMau(g, 26, san, k, 28, '#2a3a5a'); nguoiMau(g, 26 + 44, san, k, 24, '#5a3a2a'); }
     else if (Q.xem === 'trung') { ay = san - 14; nguoiMau(g, ax, san, k, 26, '#5a3a2a'); }
     else if (Q.xem === 'no' || Q.xem === 'chet') { ay = Q.xem === 'chet' ? san : san; if (Q.xem === 'chet') nguoiMau(g, ax + 30, san, k, 24, '#5a3a2a'); else nguoiMau(g, ax + 46, san, k, 28, '#2a3a5a'); }
+    else if (chan) { ay = san; nguoiMau(g, ax, san, k, Q.xem === 'chan' ? 28 : 24, Q.xem === 'chan' ? '#2a3a5a' : '#5a3a2a'); } // phiên hieu-ung-b3
+    else if (Q.xem === 'be') { ay = san - 14; nguoiMau(g, ax, san, k, 28, '#2a3a5a'); }
+    else if (Q.xem === 'dau') { ay = san - 30; nguoiMau(g, ax, san, k, 24, '#5a3a2a'); }
+    else if (Q.xem === 'trum') { ay = san - 30; nguoiMau(g, ax, san, k, 60, '#5a3a2a'); nguoiMau(g, ax + 74, san, k, 28, '#2a3a5a'); }
+    else if (Q.xem === 'san') { ay = san - 4; nguoiMau(g, ax + 44, san, k, 28, '#2a3a5a'); }
     else if (dan) { const q = (t % 1.6) / 1.6; ax = Math.round(16 + q * (vw - 32)); ay = Math.round(vh / 2 + Math.sin(q * Math.PI * 2) * 6); goc = Math.atan2(Math.cos(q * Math.PI * 2) * 6 * Math.PI * 2, vw - 32); }
     else if (Q.xem === 'chu') { g.fillStyle = '#ffd27a'; g.font = `${8 * k}px system-ui`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('Bé lên cấp 5!', ax * k, ay * k); }
     if (Q.xem !== 'chu' && Q.xem !== 'dan') { g.fillStyle = 'rgba(246,220,146,.25)'; g.fillRect(0, san * k, cv.width, 1); }
