@@ -200,6 +200,7 @@
       <div id="xemNut" hidden>
       <p class="chu-y">Bên trái: cụm nút như trong trận (nút Né tự xoay để bạn xem đủ các hướng). Bên phải: mọi biểu tượng trên đúng nút của nó. Hai hàng dưới: nút Né ở 16 hướng.</p>
       <div class="khung-xem"><canvas id="cvNut"></canvas></div>
+      <p class="chu-y" id="ttThan" hidden>Hàng cuối: ô vũ khí bốn bậc (ô thứ hai đang cầm, ô cuối đang bấm) và cần điều khiển lúc nghỉ, lúc đang kéo. Với lô "Thân nút" và "Ô vũ khí", ảnh của bạn thay THÂN nút (vành, mặt nút, lửa quanh nút), khung ô và cần điều khiển; bề dày, bóng, hình ở giữa, số mana, hồi chiêu vẫn do game vẽ. Mặt nút Chiêu và Chưởng do game tô theo hệ. Ảnh của các lô nút đã tách trong lần mở trang này được giữ để xem chung.</p>
       <p class="chu-y">Vòng nút, màu hệ, lửa quanh nút, thẻ giá mana, màn hồi chiêu đều do chính code nút của game vẽ; ảnh của bạn chỉ thay hình ở giữa. Ô nào chưa có ảnh thì hiện hình vẽ code cũ. Bốn nút "Kỹ năng" hiện game chưa dùng (đã thay bằng nút Chưởng), vẽ hay bỏ đều được.</p>
       </div>
     </div>
@@ -296,6 +297,27 @@ const LON = [
   ['the-trum-khoa', 'Thẻ ải trùm · chưa mở (khoá)', 42, 34, 'trum', 'cùng chiếc trống ô 7, cùng cỡ, cùng vị trí trong ô, CHƯA MỞ: toàn bộ màu xám xanh xỉn như ô 6, đĩa giữa có MỘT Ổ KHOÁ nhỏ xám nhạt #7f948e. Nét lạ: ổ khoá ở giữa, to hơn ô 6 một chút'],
   ['trong-dong', 'Mặt trống đồng (màn chào)', 42, 42, null, `MỘT mặt trống đồng Đông Sơn nhìn thẳng từ trên, tròn đều, KHÔNG có quai, dùng làm biểu tượng phía trên tên game: ${TRONG_CHUNG} màu xanh ngọc đậm #1f4f4a; giữa mặt là ngôi sao 14 cánh nhọn vàng đồng #d9a441 với lõi tròn tối #1a120a ở tâm; quanh ngôi sao là một vòng tròn mảnh màu đồng #a8752f; ngoài vòng đó là MỘT VÀNH CHIM LẠC: sáu đến tám con chim Lạc cách điệu (mỏ dài, mào và đuôi dài, sải cánh) màu vàng đồng bay nối đuôi nhau ngược chiều kim đồng hồ, xen giữa các con chim là chấm tròn vàng #d9a441; sát mép trong của vành là một vòng chấm nhỏ. Mọi hoa văn nằm TRONG mặt trống. Nét lạ: vành chim Lạc bay vòng quanh ngôi sao`],
 ];
+// Phiên C4 · thân nút (hình vẽ code ở game/js/btn_art.js: buildBase, decor, buildStickBase, buildKnob, buildSlot).
+const NUT_CHUNG = 'viền tối một nét ở ngoài cùng; kế đó là VÀNH kim loại dày khoảng 1/7 bán kính, có gờ nổi (nửa ngoài của vành sáng ở phía trên bên trái và tối ở phía dưới bên phải, nửa trong đổi ngược lại); sát trong vành là một vòng viền tối mảnh; trong cùng là MẶT NÚT hơi lõm (nửa trên sáng hơn nửa dưới một nấc, chỗ giáp hai nấc lấm tấm so le như bàn cờ, mép trong phía trên bên trái có vệt bóng tối), phần giữa mặt nút để TRƠN';
+const THAN = [
+  ['vong-thuong', 'Vòng nút Đánh · chưa có hệ', 76, 76, `MỘT nút bấm tròn to, nhìn thẳng từ trên xuống, tròn đều: ${NUT_CHUNG} (game đặt hình vũ khí lên đó). Vành ĐỒNG THAU: sáng #f6d48a, vừa #c88a3a, tối #7a4a1e. Mặt nút ĐỒNG VÀNG: sáng #c98c34, vừa #a8752f, mép tối #79451d; có thể khắc chìm rất nhạt một vòng răng cưa trống đồng sát mép trong của vành. Trên vành có BỐN đinh tán nhỏ ở bốn góc chéo (thân tối #7a4a1e, chấm sáng #fff0c4). Nét lạ: toàn bộ màu đồng vàng ấm, không có gì thò ra ngoài vành`],
+  ['vong-fire', 'Vòng nút Đánh · hệ Lửa', 76, 76, 'CÙNG nút ô 1 (cùng cỡ, mặt nút vẫn ĐỒNG VÀNG y hệt ô 1, vẫn có bốn đinh tán), chỉ đổi vành sang màu hệ Lửa: sáng #ffc90e, chính #fe7d04, tối nâu cam #a03409 (KHÔNG dùng đỏ). Phía TRÊN vành có 4 đến 5 NGỌN LỬA nhỏ hình tam giác nhọn bốc lên (thân cam #fe7d04, lõi vàng #ffc90e), ngọn ở giữa cao nhất (cao khoảng 1/4 bán kính nút), các ngọn hai bên thấp dần và nghiêng nhẹ ra ngoài; chân mọi ngọn lửa DÍNH LIỀN vào vành; lửa chỉ có ở nửa trên. Nét lạ: lửa bốc trên đỉnh nút'],
+  ['vong-poison', 'Vòng nút Đánh · hệ Độc', 76, 76, 'CÙNG nút ô 1 (cùng cỡ, mặt nút vẫn ĐỒNG VÀNG, vẫn có bốn đinh tán), chỉ đổi vành sang màu hệ Độc: sáng #c8f90b, chính #5aca02, tối #277600. Phía DƯỚI vành có 3 đến 4 GIỌT ĐỘC chảy xuống: mỗi giọt là một vệt dọc ngắn, đầu dưới phình tròn, màu #5aca02, mép trái sáng #c8f90b, có một chấm trắng nhỏ, bên phải đầu giọt tối #277600; giọt ở giữa dài nhất (khoảng 1/4 bán kính nút), các giọt hai bên ngắn dần; mọi giọt DÍNH LIỀN vào vành; giọt chỉ có ở nửa dưới. Nét lạ: giọt độc nhỏ xuống dưới đáy nút'],
+  ['vong-ice', 'Vòng nút Đánh · hệ Băng', 76, 76, 'CÙNG nút ô 1 (cùng cỡ, mặt nút vẫn ĐỒNG VÀNG) nhưng KHÔNG có đinh tán, vành đổi sang màu hệ Băng: sáng #9cfefa, chính #32b0e9, tối #217bc3, điểm sáng nhất #eefffc. Từ vành mọc ra BỐN GAI BĂNG hình tam giác nhọn, chĩa ra bốn góc chéo (trên trái, trên phải, dưới trái, dưới phải), mỗi gai dài khoảng 1/5 bán kính nút, một nửa gai sáng #9cfefa, nửa kia #32b0e9; chân gai DÍNH LIỀN vào vành. Nét lạ: bốn gai băng ở bốn góc chéo'],
+  ['vong-ngoc', 'Vòng nút Chiêu · vành ngọc lam', 56, 56, `MỘT nút bấm tròn cùng kiểu với ô 1 nhưng dùng cho nút cỡ vừa: ${NUT_CHUNG}. Vành NGỌC LAM bóng (màu của mana): sáng #bfe3ff, vừa #3f8be0, tối #1d4a8a. Mặt nút nâu gỗ tối: #553c2c, #402c20, mép tối #2a1c14. KHÔNG đinh tán, không có gì thò ra ngoài vành. Nét lạ: vành xanh lam bóng như ngọc quanh mặt nút nâu tối`],
+  ['vong-sat', 'Vòng nút Né · vành sắt', 56, 56, `MỘT nút bấm tròn cùng kiểu với ô 5: ${NUT_CHUNG}. Vành SẮT: sáng #cecdda, vừa #928c82, tối #5c5b73. Mặt nút xám xanh tối: #4a5266, #343a4a, mép tối #20242e. KHÔNG đinh tán, không có gì thò ra ngoài vành. Nét lạ: màu thép lạnh, không có màu ấm`],
+  ['nut-vuong', 'Nút vuông · Bình máu và Tạm dừng', 42, 42, 'MỘT nút bấm VUÔNG VÁT BỐN GÓC nhìn thẳng từ trên xuống (bốn cạnh thẳng dài, bốn góc cắt chéo khoảng 1/3 nửa cạnh, thành hình tám cạnh gần vuông; KHÔNG bo tròn): viền tối một nét ở ngoài cùng; VÀNH GỖ dày khoảng 1/6 nửa cạnh, có gờ nổi (sáng ở trên bên trái, tối ở dưới bên phải): sáng #c98c34, vừa #79451d, tối #58371e; viền tối mảnh trong vành; MẶT NÚT nâu tối hơi lõm: #4a4038, #342c26, mép tối #201a16, nửa trên sáng hơn nửa dưới một nấc, giữa mặt để TRƠN (game đặt hình bình máu hoặc hai vạch tạm dừng lên đó). Trên vành có bốn đinh đồng nhỏ #c88a3a ở bốn góc vát. Nét lạ: hình vuông vát góc bằng gỗ'],
+  ['can-de', 'Cần điều khiển · đế', 66, 66, 'ĐẾ của cần điều khiển, nhìn thẳng từ trên xuống: MỘT vòng tròn to, tròn đều: viền tối một nét ở ngoài cùng; VÀNH GỖ mỏng, dày khoảng 1/8 bán kính (sáng #c98c34 ở trên bên trái, vừa #79451d, tối #58371e ở dưới bên phải); viền tối mảnh trong vành; LÒNG đế rộng, phẳng, tô kín MỘT màu nâu đen #1c1614, mép trong phía trên bên trái sẫm hơn #0c0a0a (game làm lòng đế trong mờ để vẫn nhìn thấy sân). Trong lòng đế, nằm sát mép trong của vành, có BỐN mũi tên tam giác nhỏ màu kem #e8d8b0 chỉ ra bốn hướng lên, phải, xuống, trái (mũi nhọn hướng ra ngoài). Trên vành có bốn đinh đồng nhỏ (#c88a3a, chấm sáng #f6d48a) ở bốn góc chéo. Phần GIỮA lòng đế để TRỐNG, chỉ có màu nâu đen (núm ô 9 nằm ở đó). Nét lạ: lòng tối rộng với bốn mũi tên nhỏ'],
+  ['can-num', 'Cần điều khiển · núm', 30, 30, 'NÚM của cần điều khiển, nhìn thẳng từ trên xuống: MỘT nút tròn nhỏ, tròn đều: viền tối một nét ở ngoài cùng; VÀNH ĐỒNG THAU dày khoảng 1/4 bán kính (sáng #f6d48a ở trên bên trái với một điểm sáng trắng, vừa #c88a3a, tối #7a4a1e ở dưới bên phải); viền tối mảnh trong vành; chính giữa là MỘT VIÊN NGỌC tròn màu xanh ngọc: thân #3fb0a0, đốm sáng #b8f0e0 ở phía trên bên trái, bóng tối #1a6a60 ở mép dưới bên phải. Nét lạ: viên ngọc xanh nằm giữa vành đồng'],
+];
+// Phiên C4 · ô vũ khí theo bậc (buildSlot). Màu vành = bảng bậc của game (Thường, Lam, Tím, Vàng); màu lòng = màu vành pha rất tối.
+const O_CHUNG = 'viền tối một nét ở ngoài cùng; VÀNH kim loại mỏng chạy kín bốn cạnh, dày khoảng 1/18 bề ngang ô, cạnh trên và cạnh trái sáng, cạnh dưới và cạnh phải tối; viền tối mảnh trong vành; LÒNG ô tối và phẳng, khoảng 2/5 phía trên sáng hơn phần dưới một nấc, chỗ giáp hai nấc lấm tấm so le như bàn cờ; lòng ô để TRƠN hoàn toàn (game vẽ hình vũ khí, ngọc hệ và dấu đổi vũ khí lên đó); ở bốn góc, nằm trên vành, mỗi góc MỘT đinh đồng nhỏ vuông (#c88a3a, chấm sáng #f6d48a)';
+const O_VK = [
+  ['Thường', `MỘT khung Ô VŨ KHÍ hình chữ nhật NẰM NGANG nhìn thẳng (rộng 54, cao 35, tức rộng gấp rưỡi cao), bốn cạnh thẳng, bốn góc vuông chỉ vát rất nhẹ: ${O_CHUNG}. Bậc THƯỜNG: vành xám thép: sáng #c8ccd4, vừa #8a8f98, tối #555a64; lòng ô xám tối: phần trên #45454c, phần dưới #37363d. Nét lạ: màu thép xám, trầm nhất trong bốn ô (trong game 54×35)`],
+  ['Lam', 'CÙNG khung ô 1 (cùng hình, cùng cỡ, cùng bốn đinh đồng), đổi màu sang bậc LAM: vành xanh lam: sáng #8ec8ff, vừa #3f8be0, tối #1d4a8a; lòng ô lam tối: phần trên #274369, phần dưới #223551. Nét lạ: vành xanh lam (trong game 54×35)'],
+  ['Tím', 'CÙNG khung ô 1, đổi màu sang bậc TÍM: vành tím: sáng #d0a8ff, vừa #9a5ae0, tối #5a2a9a; lòng ô tím tối: phần trên #4b2f69, phần dưới #3c2751. Nét lạ: vành tím (trong game 54×35)'],
+  ['Vàng', 'CÙNG khung ô 1, đổi màu sang bậc VÀNG (quý nhất): vành vàng kim: sáng #fff0a8, vừa #f0b840, tối #8a5a14; lòng ô nâu vàng tối: phần trên #6e5529, phần dưới #544125; được phép khắc thêm một đường chỉ mảnh hoa văn răng cưa trống đồng chạy dọc mặt vành cho sang hơn, nhưng không lấn vào lòng ô. Nét lạ: vành vàng kim sáng nhất trong bốn ô (trong game 54×35)'],
+];
 const LO = [
   { id: 'phong', ten: 'Bản đồ · 12 biểu tượng phòng', kieu: 'icon', cot: 4, hang: 3, mau: 6, net: 'net', xem: true,
     ds: PHONG.map(([k, ten, mo]) => ({ ma: 'gd-phong-' + k, ten, mo, w: 7, h: 7 })) },
@@ -317,6 +339,12 @@ const LO = [
     ds: LON.map(([k, ten, w, h, nhom, mo]) => ({ ma: 'gd-' + k, ten, w, h, nhom, mo: mo + ` (trong game ${w}×${h})` })) },
   { id: 'logo', ten: 'Logo · chữ LINH KHÍ (1 tấm riêng)', kieu: 'mot', cot: 1, hang: 1, mau: 32, net: 'min', xemLon: true, canh: 'chao',
     ds: [{ ma: 'gd-logo', ten: 'Logo chữ LINH KHÍ', w: 200, h: 40, mo: '' }] },
+  // Phiên C4: thân nút, đế và núm cần điều khiển (game/js/btn_art.js tự tìm đĩa tròn của nút trong ảnh nên hình không cần nằm đúng tâm ô);
+  // ô vũ khí theo bậc (kéo giãn kín đúng 54×35). xemThan: bước 4 vẽ thêm hàng ô vũ khí và cần điều khiển.
+  { id: 'than', ten: 'Thân nút · vòng nút, nút vuông, cần điều khiển (9 hình)', kieu: 'icon', cot: 4, hang: 3, mau: 24, net: 'min', xem: true, xemThan: true,
+    ds: THAN.map(([k, ten, w, h, mo]) => ({ ma: 'gd-' + k, ten, w, h, mo: mo + ` (trong game ${w}×${h})` })) },
+  { id: 'ovk', ten: 'Ô vũ khí · khung theo 4 bậc', kieu: 'gian', cot: 2, hang: 2, mau: 16, net: 'min', xem: true, xemThan: true,
+    ds: O_VK.map(([ten, mo], i) => ({ ma: 'gd-o-vk-' + i, ten: 'Ô vũ khí · bậc ' + ten, w: 54, h: 35, mo })) },
 ];
 
 const $ = (id) => document.getElementById(id);
@@ -426,6 +454,25 @@ function luoi(L) {
 // Bảng màu của bộ giao diện trống đồng (game/js/ui_theme.js, T.C): dùng cho lô Hình lớn và lô Logo.
 const MAU_LON = 'BẢNG MÀU (bắt buộc bám theo; mỗi chất liệu tối đa 3 sắc; chỉ để chọn màu, KHÔNG vẽ ô màu mẫu vào ảnh): đồng: tối #5a3d1a, vừa #a8752f, sáng #d9a441, ánh sáng nhất #f6dc92; xanh ngọc (mặt trống thường): đậm #1f4f4a, vừa #3f8f7f; đỏ đồng (mặt nút, mặt trống ải trùm, thẻ đang chọn): đậm #8a2f22, sáng #b8452f; xám xanh xỉn (nút lúc nghỉ, thẻ chưa mở): #1c2c2a, #26403c, #35524c, #4c6e66, chi tiết #7f948e; vàng kem (bong bóng lời nói): #fff0c4; viền ngoài và nét tối: #1a120a. ';
 function taoPrompt(L) {
+  if (L.id === 'than') return `Dùng công cụ tạo ảnh vẽ MỘT tấm ảnh pixel art 2D gồm ĐÚNG ${L.ds.length} hình THÂN NÚT BẤM cho ${GAME_LK}: sáu nút tròn (bốn nút Đánh theo hệ, một nút vành ngọc, một nút vành sắt), một nút vuông vát góc, và đế cùng núm của cần điều khiển. Đây chỉ là phần THÂN (vành và mặt nút), CHƯA có biểu tượng: game tự đặt hình kiếm, cung, mũi tên, bình máu lên giữa mặt nút. `
+    + luoi(L)
+    + `KIỂU VẼ: pixel art; mọi hình nhìn THẲNG TỪ TRÊN XUỐNG nên nút tròn phải tròn đều (không nghiêng, không bầu dục, không phối cảnh); ánh sáng từ phía trên bên trái; màu phẳng, đổ bóng 3 sắc (sáng, vừa, tối); viền ngoài một nét tối #140e0c quanh mép mọi hình; không chuyển màu, không phát sáng mờ, không nhoè. Trong game các nút này nhỏ (cỡ ghi trong ngoặc sau mỗi ô, tính bằng điểm ảnh) nên hoa văn phải to, ít và đơn giản. Mỗi hình có một "nét lạ" ghi ở trên, phải giữ. `
+    + `GIỮ ĐỒNG BỘ: sáu nút tròn (ô 1 đến ô 6) cùng một kiểu, vành dày như nhau; ô 1, 2, 3, 4 là CÙNG một nút, chỉ khác màu vành và hoạ tiết hệ. Mọi chi tiết (ngọn lửa, giọt độc, gai băng, đinh tán, mũi tên) phải DÍNH LIỀN với thân nút hoặc nằm TRONG thân nút: không có chấm, tia, mảnh nào rời ra ngoài. `
+    + `KHÔNG vẽ BỀ DÀY và BÓNG: không vẽ thành nút ở phía dưới, không vẽ bóng đổ xuống nền (game tự vẽ bề dày và bóng, tự cho nút lún xuống và sáng lên khi bấm, tự làm xám khi nút bị khoá). `
+    + `MÀU ĐỎ không dùng trên nút (trong game màu đỏ chỉ dành cho báo nguy hiểm): hệ Lửa dùng cam và vàng, chỗ tối dùng nâu cam #a03409. Mặt của bốn nút Đánh (ô 1 đến ô 4) phải đúng màu đồng vàng #c98c34 / #a8752f / #79451d. `
+    + `CỠ TRONG Ô: mỗi hình chiếm khoảng 70% ô, nằm giữa ô, nằm TRỌN trong ô (kể cả lửa, giọt độc, gai băng), không chạm đường lưới. `
+    + `KHÔNG vẽ: chữ, số, nhãn, tên, chú thích; biểu tượng vũ khí, bàn tay hay hình gì khác trên mặt nút (trừ bốn mũi tên nhỏ của ô 8 và viên ngọc của ô 9); ô nền hay tấm bảng phía sau nút; ô mẫu màu; màu hồng tím ở trong hình. `
+    + bmDoan(['kim_loai', 'go', 'he_lua', 'he_doc', 'he_bang'], { vien: 'viền ngoài một nét #140e0c như đã ghi', rieng: true, them: 'Riêng nấc đậm #c9270c của hệ Lửa KHÔNG dùng trên nút, thay bằng nâu cam #a03409. ' })
+    + CUOI;
+  if (L.id === 'ovk') return `Dùng công cụ tạo ảnh vẽ MỘT tấm ảnh pixel art 2D gồm ĐÚNG ${L.ds.length} khung Ô VŨ KHÍ cho ${GAME_LK}. Trên màn chơi, mỗi ô chứa một món vũ khí người chơi mang theo; màu vành của ô cho biết BẬC của vũ khí: Thường, Lam, Tím, Vàng. Đây chỉ là KHUNG RỖNG: game tự vẽ hình vũ khí vào lòng ô. `
+    + luoi(L)
+    + `KIỂU VẼ: pixel art, nhìn thẳng chính diện, ánh sáng từ phía trên bên trái; màu phẳng, đổ bóng 3 sắc (sáng, vừa, tối); viền ngoài một nét tối #140e0c quanh mép mọi khung; không chuyển màu, không phát sáng mờ, không nhoè. Trong game mỗi ô chỉ to 54×35 điểm ảnh nên vành phải đơn giản, rõ. `
+    + `GIỮ ĐỒNG BỘ: bốn khung phải CÙNG hình dáng, CÙNG cỡ, cùng độ dày vành, cùng chỗ đặt đinh; chỉ khác màu. Mỗi khung là hình chữ nhật NẰM NGANG rộng gấp rưỡi cao, bốn cạnh thẳng (game kéo hình cho vừa khít ô nên không vẽ méo, không bo tròn nhiều, không rách mép). Vẽ cả bốn ô ở dạng ĐANG CẦM, màu tươi đủ: với ô chưa cầm game tự làm trầm màu, với ô đang cầm game tự thêm một viền sáng bên ngoài, khi bấm game tự làm sáng. `
+    + `KHÔNG vẽ BỀ DÀY và BÓNG: không vẽ thành ô ở phía dưới, không vẽ bóng đổ (game tự vẽ). `
+    + `CỠ TRONG Ô: mỗi khung chiếm khoảng 70% bề ngang ô lưới, nằm giữa ô, nằm TRỌN trong ô, không chạm đường lưới. `
+    + `KHÔNG vẽ: chữ, số, nhãn, tên bậc, chú thích; hình vũ khí, ngọc, mũi tên hay bất cứ thứ gì trong lòng ô; viền sáng toả ra ngoài khung; ô mẫu màu; màu xanh lá ở trong hình. `
+    + bmDoan(['kim_loai', 'go'], { vien: 'viền ngoài một nét #140e0c như đã ghi', rieng: true })
+    + 'Nền trơn MỘT MÀU XANH LÁ #00FF00 (không ô cờ, không nền trắng, không chuyển màu; dùng xanh lá thay cho hồng tím vì ô bậc Tím có màu tím), không dùng màu xanh lá ở chỗ nào khác trong hình. Chỉ cần gửi tấm ảnh, không cần code, không cần file json.';
   if (L.id === 'lon') return `Dùng công cụ tạo ảnh vẽ MỘT tấm ảnh pixel art 2D gồm ĐÚNG ${L.ds.length} hình giao diện cho ${GAME_LK}: một nút tròn "Nói chuyện" ở 3 trạng thái, thẻ ải trên bản đồ ở 3 trạng thái, thẻ ải trùm ở 3 trạng thái, và một mặt trống đồng trang trí. Tất cả cùng một bộ: làm bằng đồng, theo hình mặt trống đồng Đông Sơn nhìn thẳng từ trên. `
     + luoi(L)
     + `KIỂU VẼ: pixel art, nhìn thẳng chính diện, khối rõ, hoa văn đơn giản vừa đủ nhận ra vì trong game các hình này nhỏ (cỡ ghi trong ngoặc sau mỗi ô, tính bằng điểm ảnh); màu phẳng, đổ bóng 3 sắc (tối, vừa, sáng), ánh sáng từ trên xuống; viền ngoài một nét tối #1a120a quanh mép mọi hình; không chuyển màu, không phát sáng mờ, không nhoè. `
@@ -478,6 +525,8 @@ function hienLo() {
   $('dsLo').innerHTML = L.ds.map((m) => `<li><b>${m.ten}</b> · ${m.w}×${m.h} · <span style="font-size:11px">${m.ma}</span></li>`).join('');
   $('moTaLo').textContent = L.kieu === 'khung' ? 'Một ảnh khung, giữa để trống (màu nền hồng tím). Trong game khung to 380×242 điểm ảnh.'
     : L.id === 'logo' ? 'MỘT tấm ảnh riêng: chữ LINH KHÍ kiểu khắc gỗ, có hoa văn trống đồng, nền hồng tím. Trong game logo to 200×40 điểm ảnh, nằm ở màn chào. Nhận ảnh xong bạn nhớ tự ĐỌC LẠI CHỮ: phải đúng "LINH KHÍ", có dấu sắc trên chữ I cuối; sai thì nhờ ChatGPT vẽ lại.'
+    : L.id === 'than' ? `${L.ds.length} hình, lưới ${L.cot} cột × ${L.hang} hàng (3 ô cuối để trống), nền hồng tím. Ảnh chỉ là THÂN nút nhìn từ trên xuống: vành, mặt nút, lửa / giọt độc / gai băng quanh vành. Game tự vẽ bề dày, bóng, hình ở giữa, số mana, hồi chiêu; tự làm sáng khi bấm, xám khi khoá. Nút Chưởng dùng chung ảnh vòng theo hệ (thu nhỏ). Hình không cần nằm đúng giữa ô: game tự tìm tâm nút. Thiếu hình nào thì nút đó vẽ như cũ.`
+    : L.id === 'ovk' ? `${L.ds.length} khung, lưới ${L.cot} cột × ${L.hang} hàng, nền XANH LÁ (vì có ô màu tím). Vẽ ô ở dạng đang cầm; game tự làm trầm ô chưa cầm, tự thêm viền sáng ô đang cầm. Hình vũ khí, ngọc hệ, dấu đổi vũ khí vẫn do game vẽ. Thiếu bậc nào thì ô bậc đó vẽ như cũ.`
     : L.id === 'lon' ? `${L.ds.length} hình, lưới ${L.cot} cột × ${L.hang} hàng (2 ô cuối để trống), nền hồng tím. Nút Nói chuyện, thẻ ải, thẻ ải trùm mỗi thứ có 3 trạng thái. Thiếu hình trạng thái nào thì game tự làm sáng hoặc làm tối từ hình "thường"; thiếu hình "thường" thì game vẽ hình cũ. Số ải, sao, chữ trên nút vẫn do game viết.`
     : `${L.ds.length} hình, lưới ${L.cot} cột × ${L.hang} hàng, nền hồng tím.` + (L.id === 'nut' ? ' Game chỉ lấy ảnh làm HÌNH Ở GIỮA nút; vòng nút, màu hệ, số mana, hồi chiêu vẫn do game vẽ. Nút Né: game tự xoay ảnh theo hướng né.' : '') + (L.id === 'nho' ? ' Mỗi hình có cỡ riêng trong game (ghi cạnh tên bên dưới); công cụ tự thu từng hình về đúng cỡ. Thiếu hình nào thì game vẫn vẽ hình cũ cho riêng hình đó.' : '');
   $('oPrompt').value = taoPrompt(L);
@@ -1157,8 +1206,8 @@ function aiMau(n) {
 // Toạ độ là toạ độ giao diện của game; mỗi điểm vẽ của nút = 3 điểm ảnh của canvas (cỡ nút bằng đúng số trong game/js/stage.js).
 const HE_NUT = ['none', 'fire', 'poison', 'ice'], TEN_HE = { none: 'chưa có hệ', fire: 'hệ Lửa', poison: 'hệ Độc', ice: 'hệ Băng' };
 function veXemNut() {
-  const BA = GAME.btnArt, cv = $('cvNut'), K = 3, W = 480, H = 282;
-  if (!BA || !BA.maAnh) { $('ttXem').textContent = 'Bản game trên mạng chưa có phần vẽ nút bằng ảnh (vừa đăng thì chờ vài phút rồi mở lại trang). Vẫn tách và tải tệp được.'; $('vungXem').hidden = true; return; }
+  const BA = GAME.btnArt, cv = $('cvNut'), K = 3, W = 480, H = 352;
+  if (!BA || !BA.maAnh || (L.xemThan && !BA.maThan)) { $('ttXem').textContent = 'Bản game trên mạng chưa có phần vẽ nút bằng ảnh (vừa đăng thì chờ vài phút rồi mở lại trang). Vẫn tách và tải tệp được.'; $('vungXem').hidden = true; return; }
   $('vungXem').hidden = false;
   $('ttXem').textContent = 'Nút Đánh đang xem: ' + VK[MAU % 4][1] + ', ' + TEN_HE[HE_NUT[(MAU + (MAU >> 2)) % 4]] + '. Chạm "Đổi vũ khí và hệ" để xem kiểu khác.';
   if (cv.width !== W * K) { cv.width = W * K; cv.height = H * K; }
@@ -1194,6 +1243,10 @@ function veXemNut() {
   BA.draw(c, 'pause', 50, 174, 11, { pressed: true, t, id: id('pp') });
   chu('Né · 16 hướng', 4, 212); chu('(game tự xoay ảnh)', 4, 222);
   for (let i = 0; i < 16; i++) BA.draw(c, 'dodge', 122 + (i % 8) * 46, 212 + Math.floor(i / 8) * 44, 18, { dir: (i / 16) * Math.PI * 2, t, id: id('n' + i) });
+  // phiên C4: ô vũ khí 4 bậc (cỡ 54×35 như game/js/stage.js) và cần điều khiển (bán kính 24)
+  chu('Ô vũ khí · 4 bậc', 4, 300); chu('(ô 2 đang cầm, ô 4 đang bấm)', 4, 310); chu('Cần: nghỉ · đang kéo', 392, 300);
+  VK.forEach(([k], i) => BA.slot(c, 122 + i * 62, 300, 54, 35, { weapon: { type: k, branch: el === 'none' ? null : el, stage: 1 + (i % 3), rarity: i }, active: i === 1, pressed: i === 3, swap: i !== 1, t, id: id('o' + i), ready: -9, flash: false }));
+  BA.stick(c, 404, 326, 24, 0, 0, false); BA.stick(c, 452, 326, 24, 9, -7, true);
 }
 // Lô "Biểu tượng nhỏ": trang tự vẽ từng hình đúng chỗ, đúng cỡ như game (số đo chép từ các tệp game ghi ở đầu mảng NHO). Không cần nạp game.
 function veXemNho() {
@@ -1382,13 +1435,16 @@ function veXem() {
   if (L.xemLon) { veXemLon(); return; } // lô Hình lớn và lô Logo: xem trên game đầy đủ (veXemLon)
   $('xemNho').hidden = true; $('xemLon').hidden = true; for (const id of ['nutDoiMau', 'nutSoCode', 'nutBoXem']) $(id).hidden = false;
   if (!GAME || $('buoc4').hidden) return;
-  const laNut = L.id === 'nut';
+  const laNut = L.id === 'nut' || !!L.xemThan;
+  $('ttThan').hidden = !L.xemThan;
   $('tdXem').textContent = laNut ? 'Xem thử trên nút của game' : 'Xem thử trên bản đồ của game';
   $('xemBanDo').hidden = laNut; $('xemNut').hidden = !laNut;
   $('nutDoiMau').textContent = laNut ? 'Đổi vũ khí và hệ' : 'Đổi bản đồ mẫu';
   if (laNut) {
     const SCn = GAME.spriteCustom, gdThat = SCn.gd;
     GAME.time = performance.now() / 1000;
+    // Màu nút của Đợt 8 (game/js/ui_theme.js, G.theme.DOC; bản game nạp ở đây không có tệp đó): mặt nút Đánh đồng vàng, không nút nào đỏ. Nhờ vậy nút xem thử giống nút trong game thật.
+    if (!GAME.theme) { GAME.theme = { DOC: { nutDanh: { l: '#c98c34', m: '#a8752f', d: '#79451d' }, matLua: { l: '#8a4a16', m: '#643410', d: '#3e1e08' }, thieuMana: '#b8c4d2' } }; GAME.DO_DOC_TRAN = true; }
     if (SO_CODE) SCn.gd = {};
     try { veXemNut(); } catch (e) { $('ttXem').textContent = 'Không vẽ thử được: ' + e.message; }
     SCn.gd = gdThat;
