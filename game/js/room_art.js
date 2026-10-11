@@ -41,8 +41,30 @@
       }
     });
   }
+  // ---------- Ảnh AI của cửa (tools/tach-phong, phiên A2): gd-cua-<rung|bien|lau>-<tren|duoi|ben>[-khoa], gd-cua-o-khoa, gd-cua-dau-lau ----------
+  // Nền phòng dựng sẵn ở cỡ 480x270, còn ảnh AI nét gấp đôi: nên ảnh KHÔNG vẽ vào nền dựng sẵn mà ghi thành lệnh, vẽ thẳng mỗi khung
+  // (nền: ngay sau nền phòng, dưới nhân vật; trước: ngay sau lớp phủ trước, đè lên nhân vật). Không có tệp thì không có lệnh nào.
+  const gdA = (ma) => { const s = G.spriteCustom; return s && s.gdSan ? s.gdSan(ma) : null; };
+  let ghi = null; // đang dựng phòng: danh sách lệnh vẽ sống của lớp hiện tại
+  const song = (f) => { if (ghi) ghi.push(f); else f(); };
+  const bam = (v) => { const n = G.NET || 1; return Math.round(v * n) / n; };
+  // Vẽ ảnh ở cỡ thật (điểm ảnh ảnh / net), góc trên trái tại (x, y). lat: lật ngang. h0..h1: chỉ vẽ dải ngang từ hàng h0 tới h1 (điểm ảnh game, tính từ mép trên ảnh).
+  function veAnh(a, x, y, lat, h0, h1) {
+    const n = a.net, w = a.pw / n, h = a.ph / n;
+    h0 = Math.max(0, h0 || 0); h1 = h1 == null ? h : Math.min(h, h1);
+    if (h1 <= h0) return;
+    x = bam(x); y = bam(y);
+    const m = c.getTransform ? c.getTransform() : null, k = m ? Math.hypot(m.a, m.b) : 1;
+    c.save();
+    c.imageSmoothingEnabled = k < n - 0.01; // thu nhỏ hơn ảnh gốc thì làm mịn để không rụng nét
+    if (lat) { c.translate(x + w, 0); c.scale(-1, 1); x = 0; }
+    c.drawImage(a.img, 0, h0 * n, a.pw, (h1 - h0) * n, x, y + h0, w, h1 - h0);
+    c.restore();
+  }
   // Ổ khóa đỏ: dấu hiệu cửa đang khóa.
   function padlock(x, y) {
+    const a = gdA('gd-cua-o-khoa'); // ảnh AI: giữa ảnh theo chiều ngang là x, đáy ảnh là đáy ổ khoá code (y + 5)
+    if (a) { song(() => veAnh(a, x - a.pw / a.net / 2, y + 5 - a.ph / a.net)); return; }
     r(x - 6, y - 5, 12, 10, DARK); r(x - 4, y - 10, 8, 6, DARK);
     r(x - 3, y - 9, 6, 1, '#d8d8e0'); r(x - 3, y - 9, 1, 4, '#d8d8e0'); r(x + 2, y - 9, 1, 4, '#d8d8e0');
     r(x - 5, y - 4, 10, 8, '#c8352a'); r(x - 5, y - 4, 10, 1, '#ff8a6a'); r(x - 5, y + 3, 10, 1, '#8a2018');
@@ -940,12 +962,56 @@
   }
   // Huy hiệu đầu lâu cạnh cửa dẫn tới Trùm; xích vàng trên cửa còn chờ điều kiện
   function skull(x, y) {
+    const a = gdA('gd-cua-dau-lau'); // ảnh AI: tâm ảnh trùng tâm đầu lâu code (ô 11x11 quanh x, y)
+    if (a) { song(() => veAnh(a, x + 0.5 - a.pw / a.net / 2, y + 0.5 - a.ph / a.net / 2)); return; }
     r(x - 5, y - 5, 11, 11, DARK); r(x - 4, y - 4, 9, 6, '#e8e0d0'); r(x - 3, y + 2, 7, 2, '#e8e0d0'); r(x - 4, y - 4, 9, 1, '#fffaf0');
     r(x - 3, y - 2, 2, 3, '#b01818'); r(x + 2, y - 2, 2, 3, '#b01818'); r(x - 2, y + 3, 1, 1, DARK); r(x, y + 3, 1, 1, DARK); r(x + 2, y + 3, 1, 1, DARK);
   }
   function chain(x0, y0, x1, y1) {
     const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0)) / 3;
     for (let i = 0; i <= n; i++) { const x = x0 + ((x1 - x0) * i) / n, y = y0 + ((y1 - y0) * i) / n; r(x - 1, y - 1, 3, 3, DARK); r(x, y, 2, 2, i % 2 ? '#e8c050' : '#a8842a'); }
+  }
+  // Cửa bằng ảnh AI. Có tệp của đúng vùng, đúng dạng, đúng trạng thái thì lo trọn cửa đó và trả về true; không thì false (vẽ code y cũ).
+  // Chỗ đặt (giữa đáy ảnh là điểm neo):
+  //   trên: giữa đáy ảnh = (giữa cửa, mép trên sàn fy0); ảnh mọc lên tường sau.
+  //   dưới: giữa đáy ảnh = (giữa cửa, mép ngoài tường trước fy1 + fw). Phần ảnh nằm trong dải tường (cao fw + 4 tính từ đáy) vẽ ở lớp nền;
+  //         phần nhô lên sàn (song chắn, đầu cột) vẽ ở lớp phủ trước để che chân nhân vật, đúng thứ tự lớp của bản code.
+  //   bên:  ảnh vẽ cho tường TRÁI (mặt hướng vào phòng ở bên phải ảnh); giữa đáy ảnh = (mép ngoài tường + 9, giữa cửa + 24). Tường phải: game lật ngang.
+  // Vẫn do code vẽ: nền lối đi và ánh sáng tràn vào sàn (nằm dưới ảnh), vạch đỏ ở ngưỡng cửa khoá, ổ khoá, xích vàng, đầu lâu, mũi tên chỉ lối.
+  const KHOA_Y = { rung: [12, 4, 3], bien: [10, 3, 4], lau: [14, 2, 3] }; // chỗ ổ khoá như bản code từng vùng: cửa trên, dưới, bên
+  function cuaAnh(T, g, d, nen, truoc) {
+    const open = d.state === 'open', dang = d.side === 'top' ? 'tren' : d.side === 'bottom' ? 'duoi' : 'ben';
+    const a = T.ma ? gdA('gd-cua-' + T.ma + '-' + dang + (open ? '' : '-khoa')) : null;
+    if (!a) return false;
+    const L = T.light, at = d.at, w = a.pw / a.net, h = a.ph / a.net, ky = KHOA_Y[T.ma], DO = 'rgba(255,60,40,0.42)', cu = ghi;
+    if (d.side === 'top') {
+      if (open) spill('top', at, g, L, 44);
+      nen.push(() => { veAnh(a, at - w / 2, g.fy0 - h); if (!open) r(at - 14, g.fy0 - 1, 28, 2, DO); });
+      if (!open) { ghi = nen; padlock(at, g.fy0 - ky[0]); ghi = cu; }
+    } else if (d.side === 'bottom') {
+      const y = g.fy1, y0 = y + g.fw - h, cat = h - (g.fw + 4); // cat: số hàng ảnh nhô lên khỏi dải tường
+      r(at - 16, y, 32, g.fw, T.cuaNen);
+      if (open) {
+        r(at - 16, y, 32, g.fw, rgba(L, 0.7));
+        for (let i = 0; i < g.H - y - g.fw; i++) r(at - 16, y + g.fw + i, 32, 1, rgba(L, Math.max(0, 0.5 - i * 0.09)));
+        spill('bottom', at, g, L, 44);
+      }
+      nen.push(() => { veAnh(a, at - w / 2, y0, false, cat); if (!open) r(at - 16, y - 1, 32, 2, DO); });
+      if (cat > 0) truoc.push(() => veAnh(a, at - w / 2, y0, false, 0, cat));
+      if (!open) { ghi = truoc; padlock(at, y + ky[1]); ghi = cu; }
+    } else {
+      const lf = d.side === 'left', x = lf ? g.fx0 - g.sw : g.fx1, cx = x + (g.sw >> 1), xc = lf ? x + 9 : x + g.sw - 9;
+      r(x, at - 16, g.sw, 32, T.cuaNen);
+      if (open) {
+        r(x, at - 16, g.sw, 32, rgba(L, 0.7));
+        for (let i = 0; i < 8; i++) r(lf ? x - 1 - i : x + g.sw + i, at - 16, 1, 32, rgba(L, Math.max(0, 0.5 - i * 0.07)));
+        spill(d.side, at, g, L, 44);
+      }
+      nen.push(() => { veAnh(a, xc - w / 2, at + 24 - h, !lf); if (!open) r(lf ? g.fx0 : g.fx1 - 2, at - 16, 2, 32, DO); });
+      if (!open) { ghi = nen; padlock(cx, at + ky[2]); ghi = cu; }
+    }
+    nen.push(() => emblem(g, d)); // xích vàng, đầu lâu: sau ảnh cửa
+    return true;
   }
   function emblem(g, d) {
     const at = d.at, sx = d.side === 'left' ? g.fx0 - g.sw : g.fx1;
@@ -967,6 +1033,10 @@
   Object.assign(Forest, { shade: [13, 8, 4, 5], voidCol: F.void, sat: 0.84, centerLight: 0.1, edgeDark: 0.17 });
   Object.assign(Cave, { shade: [12, 7, 4, 5], voidCol: C.void, sat: 0.88, centerLight: 0.09, edgeDark: 0.15 });
   Object.assign(Castle, { shade: [12, 7, 3, 4], voidCol: K.void, sat: 0.86, centerLight: 0.07, edgeDark: 0.15 });
+  // Phiên A2 (cửa bằng ảnh AI): mã vùng trong tên tệp gd-cua-<mã>-..., và màu nền lối đi nằm dưới ảnh cửa dưới / cửa bên (như bản code).
+  Object.assign(Forest, { ma: 'rung', cuaNen: mix(F.floor, '#6a5a3c', 0.4) });
+  Object.assign(Cave, { ma: 'bien', cuaNen: dim(C.floor, 0.25) });
+  Object.assign(Castle, { ma: 'lau', cuaNen: dim(K.floor, 0.22) });
   const SIDE_OF = { up: 'top', down: 'bottom', left: 'left', right: 'right' };
   const RA = (G.roomArt = { THEMES, SIDE_OF });
   // Khung phòng. big: phòng trùm rộng hơn. Sàn là hình chữ nhật fx0..fx1, fy0..fy1; nhân vật đứng trong bounds.
@@ -1026,13 +1096,22 @@
     g.lights = shell.lights.slice(); g.amb = shell.amb.slice(); g.accSide = shell.accSide;
     c = base;
     const fores = [], rd = G.srand((seed || 11) + 5);
-    for (const d of g.doors) { const f = T.door(g, d, rd); if (f) fores.push(f); emblem(g, d); }
-    c = fore;
-    for (const f of fores) f();
+    // cuaNen, cuaTruoc: lệnh vẽ sống của ảnh AI (cửa, ổ khoá, đầu lâu); rỗng khi không có tệp gd-cua-* nào
+    const cuaNen = [], cuaTruoc = [];
+    try {
+      ghi = cuaNen;
+      for (const d of g.doors) {
+        if (cuaAnh(T, g, d, cuaNen, cuaTruoc)) continue;
+        const f = T.door(g, d, rd); if (f) fores.push(f); emblem(g, d);
+      }
+      c = fore;
+      ghi = cuaTruoc;
+      for (const f of fores) f();
+    } finally { ghi = null; }
     if (T.fore) T.fore(g, G.srand((seed || 11) + 9));
     ambSetup(T, g, seed);
     const fgr = fgBuild(T, g, G.srand(hs((seed || 11) + 17)));
-    return { base: base.canvas, fore: fore.canvas, fg: fgr.cv, fgCl: fgr.cl, g, T };
+    return { base: base.canvas, fore: fore.canvas, fg: fgr.cv, fgCl: fgr.cl, g, T, cuaNen, cuaTruoc };
   }
   // ---------- Giai đoạn 2: điểm nhấn thị giác của phòng (một món, ở một góc trên, không đụng lối cửa) ----------
   // Lập kế hoạch trước lightPass (để quầng sáng của nó được tô xuống sàn), vẽ sau lightPass (để vật vẫn sáng rõ).
@@ -1470,6 +1549,7 @@
     const g = room.g, t = G.time || 0, pv = c;
     c = cx;
     try {
+      for (const f of room.cuaNen) f(); // ảnh AI của cửa (lớp nền)
       ambLive(room, t);
       for (const l of g.lights) {
         const f = Math.floor(t * 9 + l.x) % 3;
@@ -1536,6 +1616,7 @@
       if (!W || !W.geo) return;
       const room = get(W);
       c.drawImage(room.fore, 0, 0);
+      for (const f of room.cuaTruoc) f(); // ảnh AI của cửa dưới (phần che lên nhân vật), ổ khoá cửa dưới
       // tiền cảnh: cụm nào có em bé hoặc quái đứng sau thì mờ dần còn 35%, đi ra thì hiện lại (khoảng 0,25 giây)
       const t = G.time || 0;
       for (const q of room.fgCl) {
