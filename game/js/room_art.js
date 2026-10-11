@@ -970,9 +970,15 @@
   const SIDE_OF = { up: 'top', down: 'bottom', left: 'left', right: 'right' };
   const RA = (G.roomArt = { THEMES, SIDE_OF });
   // Khung phòng. big: phòng trùm rộng hơn. Sàn là hình chữ nhật fx0..fx1, fy0..fy1; nhân vật đứng trong bounds.
+  // Đợt 2 (mở rộng sân đấu, quyết định Q3): bề ngang sàn phòng thường, tính bằng điểm ảnh game. Trước là 208 (sàn x 136–344).
+  // Muốn quay về sàn cũ chỉ cần đổi số này về 208. Mép phải sàn không vượt x = 380 (như phòng trùm) để cột nút bên phải
+  // chỉ đè lên tường chứ không đè sàn khi màn hình không có lề (16:9); sàn 300 thì nằm x 80–380, đúng khung của phòng trùm.
+  RA.RONG_PHONG = 300;
   RA.geo = function (big) {
-    const g = big ? { fx0: 80, fy0: 56, fx1: 380, fy1: 254 } : { fx0: 136, fy0: 56, fx1: 344, fy1: 252 };
-    Object.assign(g, { W: 480, H: 270, wh: 42, cap: 7, sw: 14, fw: 12, big: !!big });
+    const R = G.clamp(2 * Math.round(RA.RONG_PHONG / 2) || 208, 208, 300), fx1 = Math.min(240 + R / 2, 380);
+    const g = big ? { fx0: 80, fy0: 56, fx1: 380, fy1: 254 } : { fx0: fx1 - R, fy0: 56, fx1, fy1: 252 };
+    // rong: sàn rộng (phòng trùm, và phòng thường sau khi mở rộng) thì cột trái hẹp: giao diện dùng bố cục gọn (nút sát mép, bản đồ thu hẹp, chữ chỉ dẫn xuống đáy).
+    Object.assign(g, { W: 480, H: 270, wh: 42, cap: 7, sw: 14, fw: 12, big: !!big, rong: g.fx0 < 112 });
     g.cx = (g.fx0 + g.fx1) / 2; g.cy = (g.fy0 + g.fy1) / 2;
     g.bounds = { x0: g.fx0 + 9, x1: g.fx1 - 9, y0: g.fy0 + 8, y1: g.fy1 - 4 };
     return g;

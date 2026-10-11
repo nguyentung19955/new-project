@@ -1400,6 +1400,7 @@
 "• {0} · sát thương mỗi đòn {1}": "• {0} · damage per hit {1}",
 "← Quay lại": "← Back",
 "↑ Chạm để đổi vũ khí": "↑ Tap to swap weapon",
+"Chạm để đổi vũ khí →": "Tap to swap weapon →",
 "★ Kỷ lục mới: Sức mạnh {0}": "★ New record: Power {0}",
 "★ Kỷ lục mới: {0} {1}": "★ New record: {0} {1}",
 "★ Kỷ lục đầu: {0} {1}": "★ First record: {0} {1}",

@@ -53,7 +53,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.11-0835";
+(window.G = window.G || {}).VERSION = "lk-2026.10.11-0848";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -1623,6 +1623,7 @@
 "• {0} · sát thương mỗi đòn {1}": "• {0} · damage per hit {1}",
 "← Quay lại": "← Back",
 "↑ Chạm để đổi vũ khí": "↑ Tap to swap weapon",
+"Chạm để đổi vũ khí →": "Tap to swap weapon →",
 "★ Kỷ lục mới: Sức mạnh {0}": "★ New record: Power {0}",
 "★ Kỷ lục mới: {0} {1}": "★ New record: {0} {1}",
 "★ Kỷ lục đầu: {0} {1}": "★ First record: {0} {1}",
@@ -26861,7 +26862,8 @@ MA._xong();
   // Có lề trống (màn hình dài hoặc đang cầm dọc) thì đẩy nút ra lề để không che trận đấu.
   // Phòng trùm rộng hơn (sàn tới x = 380): màn hình không đủ lề (16:9) thì dùng bộ nút thu nhỏ, nằm sát mép phải, không đè lên sàn.
   const BTN_BIG = { atk: [450, 222, 26], dodge: [400, 248, 17], special: [401, 200, 17], skill: [448, 167, 17] };
-  const bigRoom = () => !!(S && S.W && S.W.geo && S.W.geo.big);
+  // Đợt 2: phòng thường nay cũng rộng như phòng trùm (geo.rong), nên dùng chung bố cục nút này.
+  const bigRoom = () => !!(S && S.W && S.W.geo && S.W.geo.rong);
   function btnPos(name) { const b = (bigRoom() && G.cx < 20 ? BTN_BIG : BTN0)[name]; return [b[0] + G.cx, b[1] + G.cy, b[2]]; }
   // Cần điều khiển lúc chưa chạm: phòng trùm thì lùi sát mép trái để không đè tường.
   function stickPos() { return [(bigRoom() && G.cx < 30 ? 42 : 62) - G.cx * 0.6, 216 + G.cy, 24]; }
@@ -27094,10 +27096,14 @@ MA._xong();
     if (coat && coat.t > 0) ui.text(G.t('Bùa {0} {1} giây', G.EL[coat.el].name, Math.ceil(coat.t)), sx + 1, 62.5, { size: 7.5, color: G.EL[coat.el].col, bold: true });
     // tên vùng và loại phòng ở lề trái; bản đồ nhỏ ở lề phải (thay hàng chấm phòng trước đây)
     // Phòng trùm rộng (sàn từ x = 80): cột trái hẹp nên chữ sức mạnh xuống hai dòng, không tràn vào sàn.
-    const narrow = !!(W.geo && W.geo.big);
-    ui.text(G.t('{0} {1} · {2}', G.REGIONS[S.r].name, S.i + 1, ROOM_NAME[W.type]), 5, 76, { size: 7, color: '#d9cdb8' });
+    const narrow = !!(W.geo && W.geo.rong);
+    // Đợt 2: phòng thường sàn rộng thì tên vùng và loại phòng xuống hai dòng (tên dài như "Thương nhân" không tràn vào sàn).
+    const wide2 = narrow && !W.geo.big;
+    if (wide2) { ui.text(G.t('{0} {1}', G.REGIONS[S.r].name, S.i + 1), 5, 76, { size: 7, color: '#d9cdb8' }); ui.text(ROOM_NAME[W.type], 5, 85, { size: 7, color: '#d9cdb8' }); }
+    else ui.text(G.t('{0} {1} · {2}', G.REGIONS[S.r].name, S.i + 1, ROOM_NAME[W.type]), 5, 76, { size: 7, color: '#d9cdb8' });
     // sức mạnh của bé lúc vào ải so với sức mạnh khuyên dùng của ải (xanh đủ, vàng sát nút, đỏ thiếu)
-    if (narrow) { ui.text(G.t('Sức mạnh {0}', S.power), 5, 85, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) }); ui.text(G.t('khuyên {0}', S.rec), 5, 94, { size: 6.5, color: '#bfb39c' }); }
+    if (wide2) { ui.text(G.t('Sức mạnh {0}', S.power), 5, 95, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) }); ui.text(G.t('khuyên {0}', S.rec), 5, 104, { size: 6.5, color: '#bfb39c' }); }
+    else if (narrow) { ui.text(G.t('Sức mạnh {0}', S.power), 5, 85, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) }); ui.text(G.t('khuyên {0}', S.rec), 5, 94, { size: 6.5, color: '#bfb39c' }); }
     else ui.text(G.t('Sức mạnh {0} / khuyên {1}', S.power, S.rec), 5, 86, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) });
     G.minimap.draw(S);
     // vũ khí: hình và bậc ở trên, mốc tiến hóa ở dưới, thanh dấu ấn sát đáy
@@ -27127,7 +27133,13 @@ MA._xong();
       }
     });
     if (G.lk) G.lk.hud(P, W); // ba vạch linh khí cạnh ô vũ khí, biểu tượng hệ trên đầu quái (js/linhkhi.js)
-    if (P.weapons.length > 1 && S.tut && W.type === 'elite') ui.text('↑ Chạm để đổi vũ khí', 366, 24, { size: 7, align: 'right', bold: true, color: '#ffd27a' });
+    if (P.weapons.length > 1 && S.tut && W.type === 'elite') {
+      // Đợt 2: chữ nằm trong một ô nền riêng, cách ô vũ khí 5 điểm ảnh nên không còn bị ô vũ khí cắt mất chữ cuối.
+      const s0 = G.tv('Chạm để đổi vũ khí →'); ui.font(7, true);
+      const tw0 = Math.ceil(G.ux.measureText(s0).width) + 8;
+      T.plate(362 - tw0, 14, tw0, 12, { a: 0.78 });
+      ui.text(s0, 362 - 4, 23, { size: 7, align: 'right', bold: true, color: '#ffd27a' });
+    }
     // trùm: thanh máu và các lớp thích nghi nằm trên mặt tường sau, không che sàn.
     // Phân cấp (Giai đoạn 4): trùm vùng khung to viền vàng, tên chữ to, số phần trăm; trùm nhỏ khung vừa; tinh anh khung nhỏ.
     const b = W.boss;
@@ -27176,7 +27188,25 @@ MA._xong();
     let tipB = W.banner && W.banner.tip ? W.banner : null;
     // Phòng đầu ải hướng dẫn chỉ một ô chữ: mẹo vũ khí chờ (không đếm giờ), sang phòng kế mới hiện.
     if (tipB && !tipB.urgent && hint && S.tut && W.type === 'start') { tipB.t = Math.max(tipB.t, 5); S.heldTip = tipB; tipB = null; }
-    if (S.mode === 'play' && (hint || tipB)) {
+    if (S.mode === 'play' && (hint || tipB) && W.geo.rong && !W.geo.big) {
+      // Đợt 2 (sàn phòng thường rộng 300): cột trái chỉ còn 66 điểm ảnh nên lời chỉ dẫn dời xuống ĐÁY GIỮA, nằm trên dải tường trước
+      // (y 252–270). Một dòng thì không chạm sàn; câu dài hai dòng thì lấn mép dưới sàn chừng 9 điểm ảnh. Cỡ chữ giữ 7 như cũ.
+      // Chỉ hiện MỘT ô mỗi lúc để không che trận đánh: dòng mẹo (có đếm giờ) hiện trước, hết giờ thì lời chỉ dẫn hiện lại.
+      const q = tipB ? [tipB.s, tipB.col || '#ffd27a', tipB.t < 0.4 ? Math.max(0, tipB.t / 0.4) : 1] : [hint, '#f1e6c6', 1];
+      // Phòng có cửa dưới đang MỞ: ô chữ ở đáy sẽ che mất lối ra và mũi tên chỉ lối, nên lúc đó ô chữ lên mặt tường sau (dưới các khối trên cùng),
+      // nằm giữa nút tạm dừng (tới x = 96) và ô vũ khí (từ x = 366); phòng Suối hồi còn né thêm chữ "Rương đồ" ở góc trái.
+      const len = W.doors.some((d) => d.dir === 'down' && d.open), lx0 = len ? (W.type === 'fountain' ? 142 : 98) : 77, lx1 = len ? 364 : 383;
+      const bold = q[1] !== '#f1e6c6', lines = ui.wrap(q[0], lx1 - lx0 - 10, 7, bold).slice(0, 4);
+      let tw = 0; ui.font(7, bold);
+      for (const l of lines) tw = Math.max(tw, G.ux.measureText(l).width);
+      const pw = Math.min(lx1 - lx0, Math.ceil(tw) + 12), ph = Math.round(lines.length * 9.5 + 6), mid = (lx0 + lx1) / 2, px = Math.round(mid - pw / 2), ga = G.ux.globalAlpha;
+      const py = len ? by : 269 - ph;
+      if (len) by += ph + 2;
+      G.ux.globalAlpha = ga * q[2];
+      T.plate(px, py, pw, ph, { a: 0.78 });
+      lines.forEach((l, i) => ui.text(l, mid, py + 9.5 + i * 9.5, { size: 7, align: 'center', color: q[1], bold }));
+      G.ux.globalAlpha = ga;
+    } else if (S.mode === 'play' && (hint || tipB)) {
       const hw = W.geo.big ? 64 : 118; // phòng trùm rộng hơn nên ô chữ hẹp lại, không đè lên sàn
       let hy = W.geo.big ? 100 : 93;
       for (const q of [hint ? [hint, '#f1e6c6', 1] : null, tipB ? [tipB.s, tipB.col || '#ffd27a', tipB.t < 0.4 ? Math.max(0, tipB.t / 0.4) : 1] : null]) {
@@ -27192,7 +27222,7 @@ MA._xong();
     }
     if (W.banner && !W.banner.tip) {
       // dòng báo nằm trên tường sau; dài quá thì thu chữ, vẫn dài thì xuống dòng
-      const maxW = W.geo.big ? 290 : 228;
+      const maxW = W.geo.rong ? 290 : 228;
       let size = 10, lines = [W.banner.s];
       for (const sz of [10, 8.5, 7.5]) { size = sz; ui.font(sz, true); if (G.ux.measureText(W.banner.s).width <= maxW) break; }
       ui.font(size, true);
@@ -32286,9 +32316,15 @@ MA._xong();
   const SIDE_OF = { up: 'top', down: 'bottom', left: 'left', right: 'right' };
   const RA = (G.roomArt = { THEMES, SIDE_OF });
   // Khung phòng. big: phòng trùm rộng hơn. Sàn là hình chữ nhật fx0..fx1, fy0..fy1; nhân vật đứng trong bounds.
+  // Đợt 2 (mở rộng sân đấu, quyết định Q3): bề ngang sàn phòng thường, tính bằng điểm ảnh game. Trước là 208 (sàn x 136–344).
+  // Muốn quay về sàn cũ chỉ cần đổi số này về 208. Mép phải sàn không vượt x = 380 (như phòng trùm) để cột nút bên phải
+  // chỉ đè lên tường chứ không đè sàn khi màn hình không có lề (16:9); sàn 300 thì nằm x 80–380, đúng khung của phòng trùm.
+  RA.RONG_PHONG = 300;
   RA.geo = function (big) {
-    const g = big ? { fx0: 80, fy0: 56, fx1: 380, fy1: 254 } : { fx0: 136, fy0: 56, fx1: 344, fy1: 252 };
-    Object.assign(g, { W: 480, H: 270, wh: 42, cap: 7, sw: 14, fw: 12, big: !!big });
+    const R = G.clamp(2 * Math.round(RA.RONG_PHONG / 2) || 208, 208, 300), fx1 = Math.min(240 + R / 2, 380);
+    const g = big ? { fx0: 80, fy0: 56, fx1: 380, fy1: 254 } : { fx0: fx1 - R, fy0: 56, fx1, fy1: 252 };
+    // rong: sàn rộng (phòng trùm, và phòng thường sau khi mở rộng) thì cột trái hẹp: giao diện dùng bố cục gọn (nút sát mép, bản đồ thu hẹp, chữ chỉ dẫn xuống đáy).
+    Object.assign(g, { W: 480, H: 270, wh: 42, cap: 7, sw: 14, fw: 12, big: !!big, rong: g.fx0 < 112 });
     g.cx = (g.fx0 + g.fx1) / 2; g.cy = (g.fy0 + g.fy1) / 2;
     g.bounds = { x0: g.fx0 + 9, x1: g.fx1 - 9, y0: g.fy0 + 8, y1: g.fy1 - 4 };
     return g;
@@ -33056,7 +33092,10 @@ MA._xong();
 
   // Ô bản đồ nhỏ: [x, y, rộng, cao]. Trong phòng trùm (sàn rộng) thì thu lại thành một nút nhỏ.
   MM.rect = function (S) {
-    return S.W && S.W.geo && S.W.geo.big ? [424, 58, 52, 15] : [374, 58, 102, 68]; // dời xuống nhường chỗ cho ba vạch linh khí dưới ô vũ khí (js/linhkhi.js)
+    const g = S.W && S.W.geo;
+    // Đợt 2: phòng thường sàn rộng (tường phải tới x = 394) thì bản đồ nhỏ thu hẹp lại cho vừa cột phải, không đè sàn.
+    if (g && g.rong && !g.big) return [393, 58, 85, 68];
+    return g && g.big ? [424, 58, 52, 15] : [374, 58, 102, 68]; // dời xuống nhường chỗ cho ba vạch linh khí dưới ô vũ khí (js/linhkhi.js)
   };
   MM.draw = function (S) {
     const b = MM.rect(S), x = b[0], y = b[1], w = b[2], h = b[3];

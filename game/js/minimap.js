@@ -153,7 +153,10 @@
 
   // Ô bản đồ nhỏ: [x, y, rộng, cao]. Trong phòng trùm (sàn rộng) thì thu lại thành một nút nhỏ.
   MM.rect = function (S) {
-    return S.W && S.W.geo && S.W.geo.big ? [424, 58, 52, 15] : [374, 58, 102, 68]; // dời xuống nhường chỗ cho ba vạch linh khí dưới ô vũ khí (js/linhkhi.js)
+    const g = S.W && S.W.geo;
+    // Đợt 2: phòng thường sàn rộng (tường phải tới x = 394) thì bản đồ nhỏ thu hẹp lại cho vừa cột phải, không đè sàn.
+    if (g && g.rong && !g.big) return [393, 58, 85, 68];
+    return g && g.big ? [424, 58, 52, 15] : [374, 58, 102, 68]; // dời xuống nhường chỗ cho ba vạch linh khí dưới ô vũ khí (js/linhkhi.js)
   };
   MM.draw = function (S) {
     const b = MM.rect(S), x = b[0], y = b[1], w = b[2], h = b[3];
