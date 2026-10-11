@@ -784,13 +784,16 @@
       if (e.hp < m.hp - 1e-6) m.at = now;
       m.hp = e.hp;
       const frac = G.clamp(e.hp / e.maxhp, 0, 1), st = G.theme.lagOf(e, frac); // gọi mỗi khung để phần tụt dần luôn theo kịp
+      const he = G.lk && G.lk.vienHe ? G.lk.vienHe(e) : null; // Đợt 8b (cờ G.DAU_LINH_KHI_VIEN, js/linhkhi.js): hệ của dấu Linh Khí quái đang mang → viền thanh máu; null = vẽ y như cũ
+      if (he) m.at = Math.max(m.at, now - 1.9); // đang mang dấu thì thanh máu hiện suốt (thay ô dấu cũ); hết dấu thì mờ dần trong nửa giây như sau một đòn
       const elite = e.role === 'elite', age = now - m.at;
       if (!(age < 2.4 || (elite && e.hp < e.maxhp))) continue;
       const a = elite && e.hp < e.maxhp ? 1 : age < 1.9 ? 1 : 1 - (age - 1.9) / 0.5;
       if (a <= 0) continue;
       const bw = elite ? 26 : 16, x = Math.round(e.x - cam - bw / 2), y = Math.round(e.y - (e.h || 24) * (e.art ? 1 : e.scale || 1) - 4); // giữa đỉnh đầu và biểu tượng hệ (js/linhkhi.js)
       c.globalAlpha = ga * a * Math.min(1, gd);
-      c.fillStyle = 'rgba(14,8,8,0.85)'; c.fillRect(x - 1, y - 1, bw + 2, 4);
+      if (he) { c.fillStyle = G.lk.VIEN[he]; c.fillRect(x - 1, y - 1, bw + 2, 4); c.fillStyle = '#0e0808'; c.fillRect(x, y, bw, 2); } // viền 1 điểm ảnh màu hệ, lòng thanh vẫn tối
+      else { c.fillStyle = 'rgba(14,8,8,0.85)'; c.fillRect(x - 1, y - 1, bw + 2, 4); }
       const fw = Math.round(bw * st.shown), lw = Math.round(bw * st.lag);
       if (lw > fw) { c.fillStyle = st.hit > 0 ? '#fff6e0' : '#ffd98a'; c.fillRect(x + fw, y, lw - fw, 2); }
       c.fillStyle = elite ? '#ff8a3a' : '#e8483a'; c.fillRect(x, y, fw, 2);

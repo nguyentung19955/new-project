@@ -169,6 +169,20 @@
   };
 
   // ---------- biểu tượng hệ trên đầu quái ----------
+  // ĐỢT 8b: cờ G.DAU_LINH_KHI_VIEN = true thì quái thường / tinh anh KHÔNG còn ô vuông 9×9 trên đầu; hệ của dấu Linh Khí hiện thành
+  // viền 1 điểm ảnh màu hệ quanh thanh máu nhỏ (mobBars trong js/stage.js hỏi LK.vienHe). false: vẽ y như cũ.
+  // Chỉ đổi cách HIỆN; luật dấu ấn (LK.markEl, G.kill) không đổi. Muốn so trên máy thật: mở game với ?dauvien=0 ở cuối địa chỉ.
+  let tatVien = false;
+  try { tatVien = /[?&]dauvien=0\b/i.test(String(window.location && window.location.search)); } catch (e) { tatVien = false; }
+  if (G.DAU_LINH_KHI_VIEN == null) G.DAU_LINH_KHI_VIEN = !tatVien;
+  LK.VIEN = { fire: '#fe7d04', poison: '#5aca02', ice: '#32b0e9' };
+  // Hệ để tô viền thanh máu nhỏ của quái e, hoặc null (cờ tắt, trùm, quái không mang dấu, hay thanh máu nhỏ không được vẽ → khi đó ô dấu cũ vẫn hiện).
+  // Điều kiện "thanh máu nhỏ có được vẽ" phải khớp đầu hàm mobBars (js/stage.js).
+  LK.vienHe = function (e) {
+    if (G.DAU_LINH_KHI_VIEN !== true || !e || e.isBoss || e.dead || e.hidden || e.dying != null || !(e.maxhp > 0)) return null;
+    if (!((G.VFX ? +G.VFX.giaoDien : 1) > 0) || !G.theme || !G.theme.lagOf) return null;
+    return LK.markEl(e);
+  };
   function badge(e, x, top) {
     const el = LK.markEl(e);
     if (!el) return;
@@ -188,7 +202,7 @@
       if (!el) continue;
       const hh = e.isBoss ? (e.h || 40) + 16 : (e.h || 24) * (e.art ? 1 : e.scale || 1) + 10; // ngay trên các dấu hiệu trạng thái
       const nang = !e.isBoss && G.mobIconN && G.mobIconN(e) ? 8 : 0; // C2: biểu tượng đặc tính nay cao 13 (trước 9): huy hiệu hệ nhích lên trên hàng đó, không che nhau
-      badge(e, Math.round(e.x - cam), Math.round(e.y - hh - nang));
+      if (!(e !== W.boss && LK.vienHe(e))) badge(e, Math.round(e.x - cam), Math.round(e.y - hh - nang)); // Đợt 8b: quái đã có viền hệ quanh thanh máu thì thôi ô dấu (danh sách dưới vẫn ghi đủ)
       LK.badgeList.push({ e, el });
     }
   }

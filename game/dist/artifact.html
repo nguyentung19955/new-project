@@ -53,7 +53,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.11-1354";
+(window.G = window.G || {}).VERSION = "lk-2026.10.11-1502";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -26702,6 +26702,20 @@ MA._xong();
   };
 
   // ---------- biểu tượng hệ trên đầu quái ----------
+  // ĐỢT 8b: cờ G.DAU_LINH_KHI_VIEN = true thì quái thường / tinh anh KHÔNG còn ô vuông 9×9 trên đầu; hệ của dấu Linh Khí hiện thành
+  // viền 1 điểm ảnh màu hệ quanh thanh máu nhỏ (mobBars trong js/stage.js hỏi LK.vienHe). false: vẽ y như cũ.
+  // Chỉ đổi cách HIỆN; luật dấu ấn (LK.markEl, G.kill) không đổi. Muốn so trên máy thật: mở game với ?dauvien=0 ở cuối địa chỉ.
+  let tatVien = false;
+  try { tatVien = /[?&]dauvien=0\b/i.test(String(window.location && window.location.search)); } catch (e) { tatVien = false; }
+  if (G.DAU_LINH_KHI_VIEN == null) G.DAU_LINH_KHI_VIEN = !tatVien;
+  LK.VIEN = { fire: '#fe7d04', poison: '#5aca02', ice: '#32b0e9' };
+  // Hệ để tô viền thanh máu nhỏ của quái e, hoặc null (cờ tắt, trùm, quái không mang dấu, hay thanh máu nhỏ không được vẽ → khi đó ô dấu cũ vẫn hiện).
+  // Điều kiện "thanh máu nhỏ có được vẽ" phải khớp đầu hàm mobBars (js/stage.js).
+  LK.vienHe = function (e) {
+    if (G.DAU_LINH_KHI_VIEN !== true || !e || e.isBoss || e.dead || e.hidden || e.dying != null || !(e.maxhp > 0)) return null;
+    if (!((G.VFX ? +G.VFX.giaoDien : 1) > 0) || !G.theme || !G.theme.lagOf) return null;
+    return LK.markEl(e);
+  };
   function badge(e, x, top) {
     const el = LK.markEl(e);
     if (!el) return;
@@ -26721,7 +26735,7 @@ MA._xong();
       if (!el) continue;
       const hh = e.isBoss ? (e.h || 40) + 16 : (e.h || 24) * (e.art ? 1 : e.scale || 1) + 10; // ngay trên các dấu hiệu trạng thái
       const nang = !e.isBoss && G.mobIconN && G.mobIconN(e) ? 8 : 0; // C2: biểu tượng đặc tính nay cao 13 (trước 9): huy hiệu hệ nhích lên trên hàng đó, không che nhau
-      badge(e, Math.round(e.x - cam), Math.round(e.y - hh - nang));
+      if (!(e !== W.boss && LK.vienHe(e))) badge(e, Math.round(e.x - cam), Math.round(e.y - hh - nang)); // Đợt 8b: quái đã có viền hệ quanh thanh máu thì thôi ô dấu (danh sách dưới vẫn ghi đủ)
       LK.badgeList.push({ e, el });
     }
   }
@@ -27807,13 +27821,16 @@ MA._xong();
       if (e.hp < m.hp - 1e-6) m.at = now;
       m.hp = e.hp;
       const frac = G.clamp(e.hp / e.maxhp, 0, 1), st = G.theme.lagOf(e, frac); // gọi mỗi khung để phần tụt dần luôn theo kịp
+      const he = G.lk && G.lk.vienHe ? G.lk.vienHe(e) : null; // Đợt 8b (cờ G.DAU_LINH_KHI_VIEN, js/linhkhi.js): hệ của dấu Linh Khí quái đang mang → viền thanh máu; null = vẽ y như cũ
+      if (he) m.at = Math.max(m.at, now - 1.9); // đang mang dấu thì thanh máu hiện suốt (thay ô dấu cũ); hết dấu thì mờ dần trong nửa giây như sau một đòn
       const elite = e.role === 'elite', age = now - m.at;
       if (!(age < 2.4 || (elite && e.hp < e.maxhp))) continue;
       const a = elite && e.hp < e.maxhp ? 1 : age < 1.9 ? 1 : 1 - (age - 1.9) / 0.5;
       if (a <= 0) continue;
       const bw = elite ? 26 : 16, x = Math.round(e.x - cam - bw / 2), y = Math.round(e.y - (e.h || 24) * (e.art ? 1 : e.scale || 1) - 4); // giữa đỉnh đầu và biểu tượng hệ (js/linhkhi.js)
       c.globalAlpha = ga * a * Math.min(1, gd);
-      c.fillStyle = 'rgba(14,8,8,0.85)'; c.fillRect(x - 1, y - 1, bw + 2, 4);
+      if (he) { c.fillStyle = G.lk.VIEN[he]; c.fillRect(x - 1, y - 1, bw + 2, 4); c.fillStyle = '#0e0808'; c.fillRect(x, y, bw, 2); } // viền 1 điểm ảnh màu hệ, lòng thanh vẫn tối
+      else { c.fillStyle = 'rgba(14,8,8,0.85)'; c.fillRect(x - 1, y - 1, bw + 2, 4); }
       const fw = Math.round(bw * st.shown), lw = Math.round(bw * st.lag);
       if (lw > fw) { c.fillStyle = st.hit > 0 ? '#fff6e0' : '#ffd98a'; c.fillRect(x + fw, y, lw - fw, 2); }
       c.fillStyle = elite ? '#ff8a3a' : '#e8483a'; c.fillRect(x, y, fw, 2);
