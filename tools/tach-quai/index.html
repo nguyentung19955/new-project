@@ -101,6 +101,15 @@
       <div class="sua" id="oSua"></div>
     </details>
     <p class="chu-y">Dán prompt vào ChatGPT. ChatGPT chỉ cần vẽ một tấm ảnh, rồi bạn lưu ảnh đó về máy.</p>
+    <!-- Phiên E2: chỉ hiện khi chọn mục "pha 2" / "pha 3" của trùm vùng (6 mục ở cuối danh sách) -->
+    <div id="vungPha" hidden>
+      <p class="chu-y"><b>Dáng pha của trùm:</b> ChatGPT phải nhìn tấm pha 1 thì mới vẽ lại đúng con trùm đó. Bấm nút dưới để tải ảnh pha 1 về máy, rồi <b>gửi ảnh đó KÈM prompt</b> trong cùng một tin nhắn.</p>
+      <div class="hang">
+        <button class="nut" id="nutThamChieu">Tải ảnh tham chiếu pha 1</button>
+        <span id="ttThamChieu" class="chu-y" style="margin:0"></span>
+      </div>
+      <div class="khung-xem" id="khungThamChieu" hidden style="margin-top:8px"><canvas id="cvThamChieu" style="max-width:100%;height:auto"></canvas></div>
+    </div>
   </section>
 
   <section class="buoc">
@@ -114,7 +123,7 @@
       <div class="khung-xem"><canvas id="cvGoc"></canvas></div>
       <div class="hang" style="margin-top:10px">
         <label for="cachTach">Cách tách:</label>
-        <select id="cachTach"><option value="tu">Tự tìm từng con (khuyên dùng)</option><option value="luoi">Chia theo lưới 8×6</option></select>
+        <select id="cachTach"><option value="tu">Tự tìm từng con (khuyên dùng)</option><option value="luoi" id="chonLuoi">Chia theo lưới 8×6</option></select>
       </div>
       <p class="chu-y">Khung vàng là từng hình công cụ tìm được, số "hàng.khung" ở góc. <b>Chạm vào khung nào để bỏ khung đó</b> (hiện khung đỏ gạch chéo, ví dụ khung chỉ có quả bom hay đám khói); chạm lại để lấy lại. Ảnh có phần thừa (bảng chữ, bảng phụ) thì cắt bớt:</p>
       <div class="cat">
@@ -222,9 +231,34 @@ const QUAI = [
   {"ma": "hoLua", "ten": "Hổ Lửa", "vung": "laudai", "fw": 132, "fh": 72, "gx": 66, "gy": 68, "rong": 109, "cao": 64, "giay": [1.4, 0.8, 0.7, 0.6], "hinh": "Hổ lửa gầm. Nét lạ: vằn là chữ Nôm sáng, vòng cổ tiền xu", "hang": ["đứng thở uy nghi", "di chuyển nặng nề", "gồng mình lấy đà tung chiêu", "tung chiêu mạnh về phía trước", "bị đánh bật lùi", "gục ngã tan rã"]},
   {"ma": "hoTinh", "ten": "Hồ Tinh", "vung": "laudai", "fw": 208, "fh": 128, "gx": 104, "gy": 124, "rong": 177, "cao": 119, "giay": [1.4, 0.8, 0.7, 0.6], "hinh": "Cáo chín đuôi rình mồi. Nét lạ: chín đuôi là dải lụa treo đèn lồng, mặt nạ hồ ly gỗ che nửa mặt", "hang": ["đứng thở uy nghi", "di chuyển nặng nề", "gồng mình lấy đà tung chiêu", "tung chiêu mạnh về phía trước", "bị đánh bật lùi", "gục ngã tan rã"]}
 ];
-const SO = [6, 6, 4, 6, 4, 8];
-const DT = ['idle', 'move', 'tele', 'atk', 'hit', 'die'];
-const TEN_DT = ['Đứng', 'Chạy', 'Lấy đà', 'Tấn công', 'Trúng đòn', 'Chết'];
+// Các hàng của tấm ảnh. g: lấy giây ở Q.giay[g]; giay: giây cố định. Quái thường: đủ 6 hàng (lưới 8×6).
+const HANG_DU = [
+  { dt: 'idle', ten: 'Đứng', so: 6, g: 0, lap: true }, { dt: 'move', ten: 'Chạy', so: 6, g: 1, lap: true }, { dt: 'tele', ten: 'Lấy đà', so: 4, g: 2 },
+  { dt: 'atk', ten: 'Tấn công', so: 6, g: 3 }, { dt: 'hit', ten: 'Trúng đòn', so: 4, giay: 0.3 }, { dt: 'die', ten: 'Chết', so: 8, giay: 1.2, mo: 0.6 }];
+// Phiên E2 — DÁNG PHA của trùm vùng: lưới RÚT GỌN 8 cột × 4 hàng (đứng, lấy đà, tấn công, trúng đòn); hàng chạy và chết game mượn tấm pha 1.
+const HANG_PHA = ['idle', 'tele', 'atk', 'hit'];
+let HANG = HANG_DU, SO, DT, TEN_DT, SH; // SH: số hàng của lưới đang chọn (6, hoặc 4 với dáng pha)
+function datLuoi(q) {
+  HANG = q && q.pha ? HANG_PHA.map((k, i) => Object.assign({}, HANG_DU.find((h) => h.dt === k), { so: q.so[i] })) : HANG_DU;
+  SO = HANG.map((h) => h.so); DT = HANG.map((h) => h.dt); TEN_DT = HANG.map((h) => h.ten); SH = HANG.length;
+}
+datLuoi(null);
+
+// ===== Phiên E2: 6 mục DÁNG PHA của 3 trùm vùng (thêm vào CUỐI danh sách) =====
+// [mã trùm, pha, tên pha, thay đổi so với pha 1 (tả theo hình vẽ bằng code ở game/js/monster_art.js), nhóm bảng màu, màu nền khác hồng tím (khi hình có nhiều tím)]
+const PHA_TRUM = [
+  ['mocTinh', 2, 'nổi giận', 'Thân gỗ nâu giữ như pha 1. Tán lá lục đậm hơn, mép lá sáng (#0e3018, #1c5c28, #3c9a34, #a8e060), lá XÙ DỰNG ra ngoài như lông dựng. Hai hốc mắt ĐỎ rực (#8a0e10, #ff3020, lõi #ffc080). Miệng (vết nứt đầy răng gỗ nhọn) há rộng hơn, trong họng sáng đỏ cam (#ff5a2a). Các vết nứt trên thân gỗ phát sáng đỏ cam (#ff5a2a). Hai tay cành nâng cao hơn, chĩa lên trời; rễ co lên bấu đất. Dây leo bị hất xiên ra hai bên. Lá bùa giấy vàng bung khỏi thân, bay quanh; vài chiếc lá vụn bay.', ['co_cay', 'go', 'toc', 'he_doc'], null],
+  ['mocTinh', 3, 'hoá độc', 'Thân gỗ nâu giữ như pha 1 nhưng tán lá đổi sang TÍM độc (#220a3a, #4a1a78, #8a3cc4, mép sáng #d894ff), trên tán có các đốm độc tròn nhỏ màu lục độc. Hai hốc mắt tím sáng (#4a1880, #d060ff, lõi #ffe8ff). Miệng há rộng, trong họng sáng tím (#c860ff). Vết nứt trên thân phát sáng tím (#c860ff); nhựa độc tím rỉ từ vết nứt và mép miệng, chảy thành giọt. Dây leo đổi sang tím, đầu dây có giọt độc màu lục. Hai tay cành dang ngang. Lá bùa rách, sạm màu. Quanh gốc rễ có làn khí độc tím mỏng là là; vài bào tử trắng tím lấp lánh quanh tán. Không còn chi tiết đỏ của pha 2.', ['co_cay', 'go', 'vai', 'he_doc'], 'XANH DƯƠNG #0000FF'],
+  ['nguTinh', 2, 'nổi giận', 'Thân và vảy giữ màu lam đậm như pha 1. Mắt chuyển ĐỎ rực (#ff2a20, lõi cam #ff8a5a), quanh mắt có 6 tia sáng ngắn màu đỏ cam (#ff7a5c). Khe mang đỏ cam rực (#ff5a46). Hàng gai lưng đổi sang đỏ sẫm và cam (#a82a2c, #ff8a66, chóp #ffe3d0) và dựng cao hơn; vây lưng xoè dựng cao hơn. Râu vểnh ngược lên trên thay vì rủ xuống. Thêm vài đường gân nứt mảnh màu đỏ cam trên sườn và má. Vài giọt nước nhỏ xanh nhạt (#6fd0ee) bắn quanh thân.', ['nuoc', 'da_stone', 'kim_loai', 'he_bang'], null],
+  ['nguTinh', 3, 'hoá băng', 'Toàn thân như bị đóng băng: thân và vảy đổi sang xanh băng nhạt (tối #3f7fb5, vừa #9fd4f0, sáng trắng #ffffff), vây xanh băng (#4a96c2, #b0e2fa) viền trắng, bụng trắng. Mắt vàng sáng (#ffd84a, lõi #fff6a8, tâm trắng), quanh mắt có 6 tia sáng vàng nhạt. Râu phủ băng trắng xanh (#dff6ff), rủ xuống như pha 1. Ba nhũ băng nhọn treo dưới hàm. Trên lưng có vài mảng tuyết trắng và 3 tinh thể băng nhọn mọc lên; gai lưng dựng cao, màu băng. Vài mảnh băng nhỏ và bông tuyết lấp lánh quanh thân. Không còn chi tiết đỏ của pha 2.', ['nuoc', 'da_stone', 'kim_loai', 'he_bang'], null],
+  ['hoTinh', 2, 'mắt tím, phân thân', 'Thân, lông, hoa văn, đuôi và mọi chi tiết khác giữ màu như pha 1. Mắt chuyển TÍM sáng (#d86cff, lõi #f6d0ff), quanh mắt có 6 tia sáng tím nhạt (#e08cff). Miệng hé rộng hơn một chút, lộ nanh. Một lớp khí mờ màu lam và tím (#3a7aff, #9a48d4) mỏng, bám sát viền lưng và đuôi, gợi bóng phân thân; KHÔNG vẽ thêm con thứ hai trong ô.', ['da_stone', 'kim_loai', 'lua', 'vai', 'he_lua'], 'XANH LÁ #00FF00'],
+  ['hoTinh', 3, 'hoá cuồng', 'Cùng cỡ với pha 1 (KHÔNG vẽ to hơn). Hoá cuồng trong lửa: mắt TRẮNG rực viền hồng nhạt (#ffffff, #f0b0ff), quanh mắt có 6 tia sáng hồng nhạt (#ffd0ff). Miệng há to gầm, nanh dài hơn. Tai thêm chỏm lông nhọn; lông má dài và chĩa ra sau hơn; hàng lông gáy và sống lưng DỰNG ĐỨNG, dài gấp đôi; bờm ngực dài hơn; móng dài hơn. Lửa cam vàng (theo bảng hệ Lửa) cháy dọc sống lưng, quanh bàn chân và dọc đuôi; lửa ở chóp đuôi to hơn. Tàn lửa vàng cam nhỏ bay quanh thân.', ['da_stone', 'kim_loai', 'lua', 'vai', 'he_lua'], null],
+];
+for (const [goc, pha, tenPha, doi, bm, nen] of PHA_TRUM) {
+  const g = QUAI.find((q) => q.ma === goc);
+  // cùng cỡ ô, điểm chân, cỡ trong game với tấm pha 1; so: số khung 4 hàng đứng · lấy đà · tấn công · trúng đòn, đọc từ game/art/custom/<trùm>.sprite.json (cả ba trùm: 6 · 4 · 6 · 4)
+  QUAI.push(Object.assign({}, g, { ma: goc + '-p' + pha, ten: g.ten + ' · pha ' + pha + ' (' + tenPha + ')', giay: g.giay.slice(), goc, pha, tenPha, doi, bm, so: [6, 4, 6, 4], nenMau: nen, nenXanh: !!nen }));
+}
 const VIEN = [0x14, 0x18, 0x2e];
 
 const $ = (id) => document.getElementById(id);
@@ -322,7 +356,8 @@ function bmMuc(muc, ds, them) {
 // ===================== HẾT KHỐI BẢNG MÀU =====================
 
 function taoPrompt(q) {
-  const hang = q.hang.map((h, i) => `hàng ${i + 1} ${TEN_DT[i].toLowerCase()} (${h}) ĐÚNG ${SO[i]} khung`).join(', ');
+  if (q.pha) return taoPromptPha(q);
+  const hang = q.hang.map((h, i) => `hàng ${i + 1} ${HANG_DU[i].ten.toLowerCase()} (${h}) ĐÚNG ${HANG_DU[i].so} khung`).join(', ');
   const nen = q.nenXanh ? 'XANH LÁ #00FF00' : 'HỒNG TÍM #FF00FF';
   return `Dùng công cụ tạo ảnh vẽ MỘT tấm sprite sheet pixel art 2D nhìn ngang quái "${q.ten}" cho game Linh Khí, phong cách giống Heo Rừng Con (heoCon) đã làm: khối rõ, viền tối, màu tươi vừa phải. Hình dáng: ${q.hinh}. `
     + `BỐ CỤC: lưới ĐỀU đúng 8 cột × 6 hàng (KHÔNG thêm cột thứ 9, không thêm hàng), các ô bằng nhau, kẻ lưới mảnh màu tối. Mỗi hàng một động tác, các khung xếp từ cột trái sang, ô thừa để trống: ${hang}. `
@@ -332,26 +367,43 @@ function taoPrompt(q) {
     + `Nền trơn MỘT MÀU ${nen} phủ kín (không ô cờ, không nền trắng, không chuyển màu, không bóng dưới chân). Chỉ cần gửi tấm ảnh, không cần code, không cần file json.`;
 }
 
+// Phiên E2: prompt DÁNG PHA của trùm vùng. Người dùng gửi KÈM ảnh pha 1 (nút "Tải ảnh tham chiếu pha 1"): ChatGPT vẽ lại đúng con đó, chỉ đổi màu, chi tiết, khí.
+function taoPromptPha(q) {
+  const g = QUAI.find((x) => x.ma === q.goc), nen = q.nenMau || 'HỒNG TÍM #FF00FF';
+  const hang = HANG_PHA.map((k, i) => { const j = HANG_DU.findIndex((h) => h.dt === k); return `hàng ${i + 1} ${HANG_DU[j].ten.toLowerCase()} (${g.hang[j]}) ĐÚNG ${q.so[i]} khung`; }).join(', ');
+  return `ẢNH GỬI KÈM là tấm sprite PHA 1 của trùm "${g.ten}" trong game Linh Khí (lưới 8 cột × 4 hàng, nền ${nen}, có kẻ lưới). Dùng công cụ tạo ảnh vẽ MỘT tấm sprite sheet pixel art 2D nhìn ngang: bản PHA ${q.pha} (${q.tenPha}) của CHÍNH con trùm đó, lấy ảnh gửi kèm làm mẫu. `
+    + `GIỮ NGUYÊN so với ảnh gửi kèm: cùng một con vật, cùng hình khối và tỉ lệ, cùng cỡ trong ô, cùng vị trí chân, cùng tư thế ở từng khung, cùng số khung mỗi hàng, cùng kiểu nét (khối rõ, viền tối một nét, đổ bóng 3 sắc), nhìn vào vẫn nhận ra ngay là con trong ảnh. Hình dáng LẤY THEO ẢNH GỬI KÈM (mô tả lúc vẽ pha 1, chỉ để tham khảo: ${g.hinh}; nếu mô tả và ảnh khác nhau thì theo ẢNH). `
+    + `CHỈ ĐỔI màu, chi tiết nhỏ và khí quanh thân để thành pha ${q.pha} (${q.tenPha}): ${q.doi} Thay đổi này phải có ở MỌI khung. `
+    + `BỐ CỤC: lưới ĐỀU đúng 8 cột × 4 hàng như ảnh gửi kèm (KHÔNG thêm cột thứ 9, KHÔNG thêm hàng chạy hay hàng chết), các ô bằng nhau, kẻ lưới mảnh màu tối. Mỗi hàng một động tác, các khung xếp từ cột trái sang, ô thừa để trống: ${hang}. `
+    + `KÍCH THƯỚC TRONG Ô: con trùm chỉ chiếm khoảng 70% bề rộng và 75% chiều cao của ô (trong game mỗi ô là ${q.fw}×${q.fh} điểm ảnh, con trùm khoảng ${q.rong}×${q.cao}), đứng giữa ô, chân sát đáy ô; mọi phần (đuôi, vây, cành, lửa, khí, giọt, tàn lửa) phải nằm TRỌN trong ô của nó, cách đường lưới ít nhất 1/10 ô, tuyệt đối không lấn sang ô bên cạnh. `
+    + `QUAY MẶT SANG PHẢI trong mọi khung như ảnh gửi kèm: lấy đà và tấn công hướng về phải, trúng đòn bật về trái. `
+    + `Mỗi khung PHẢI có con trùm (không có ô chỉ vẽ khí, lửa hay vụ nổ). KHÔNG vẽ thêm bảng phụ, đạn bay riêng, vụ nổ riêng, chữ, số, chú thích. Khí và hiệu ứng quanh thân không dùng đỏ tươi (đỏ tươi trong game dành cho báo nguy hiểm); chi tiết trên thân đã tả ở trên thì giữ đúng màu đã ghi. `
+    + `Nền trơn MỘT MÀU ${nen} phủ kín (không ô cờ, không nền trắng, không chuyển màu, không bóng dưới chân). Chỉ cần gửi tấm ảnh, không cần code, không cần file json.`;
+}
+
 // Đợt 4 (Q6): mọi prompt của trang có thêm đoạn BẢNG MÀU, chỉ gồm các nhóm màu liên quan. Lô mới muốn nhóm khác thì khai thêm bm: ['go', 'da_stone', …] (tên nhóm trong BM.nhom).
 const taoPromptGoc = taoPrompt;
-taoPrompt = (q) => bmChen(taoPromptGoc(q), bmDoan(q.bm || ({ rung: ['co_cay', 'go', 'toc'], bien: ['nuoc', 'da_stone', 'kim_loai'], laudai: ['da_stone', 'kim_loai', 'lua'] }[q.vung] || ['toc', 'da_stone']).concat('quai')));
+taoPrompt = (q) => bmChen(taoPromptGoc(q), bmDoan(q.bm || ({ rung: ['co_cay', 'go', 'toc'], bien: ['nuoc', 'da_stone', 'kim_loai'], laudai: ['da_stone', 'kim_loai', 'lua'] }[q.vung] || ['toc', 'da_stone']).concat('quai'), q.pha ? { rieng: true } : undefined)); // dáng pha (Phiên E2): màu đổi theo pha đã ghi trong prompt thì giữ, bảng dùng cho phần còn lại
 function hienQuai() {
   $('bangThongSo').innerHTML = [
-    ['Mã', q => q.ma], ['Cỡ ô', q => q.fw + '×' + q.fh], ['Tấm ảnh', q => q.fw * 8 + '×' + q.fh * 6],
+    ['Mã', q => q.ma], ['Cỡ ô', q => q.fw + '×' + q.fh], ['Tấm ảnh', q => q.fw * 8 + '×' + q.fh * SH + (q.pha ? ' (8 cột × 4 hàng)' : '')],
     ['Điểm chân', q => `(${q.gx}, ${q.gy})`], ['Cỡ trong game', q => q.rong + '×' + q.cao], ['Số khung', () => SO.join('·')],
   ].map(([k, f]) => `<div>${k}: <b>${f(Q)}</b></div>`).join('');
   $('oPrompt').value = taoPrompt(Q);
   const truong = [['fw', 'Rộng ô'], ['fh', 'Cao ô'], ['gx', 'Chân x'], ['gy', 'Chân y'], ['rong', 'Rộng trong game'], ['cao', 'Cao trong game']];
   $('oSua').innerHTML = truong.map(([k, t]) => `<label>${t}<input type="number" id="sua_${k}" value="${Q[k]}"></label>`).join('')
-    + DT.slice(0, 4).map((d, i) => `<label>Giây ${TEN_DT[i].toLowerCase()}<input type="number" step="0.05" id="sua_g${i}" value="${Q.giay[i]}"></label>`).join('');
+    + HANG_DU.slice(0, 4).map((d, i) => `<label>Giây ${d.ten.toLowerCase()}<input type="number" step="0.05" id="sua_g${i}" value="${Q.giay[i]}"></label>`).join('');
   truong.forEach(([k]) => $('sua_' + k).onchange = (e) => { Q[k] = +e.target.value; hienQuai(); if (ANH) chay(); });
   for (let i = 0; i < 4; i++) $('sua_g' + i).onchange = (e) => { Q.giay[i] = +e.target.value; if (ANH) chay(); };
+  // Phiên E2: mục dáng pha thì hiện nút tải ảnh tham chiếu pha 1, và ghi đúng cỡ lưới ở ô "Cách tách"
+  $('vungPha').hidden = !Q.pha; $('khungThamChieu').hidden = true; $('ttThamChieu').textContent = '';
+  $('chonLuoi').textContent = 'Chia theo lưới 8×' + SH;
 }
 
 QUAI.forEach((q, i) => { const o = document.createElement('option'); o.value = i; o.textContent = q.ten + ' (' + q.ma + ')'; $('chonQuai').appendChild(o); });
 try { const i = localStorage.getItem('tq_quai'); if (i != null && QUAI[i]) $('chonQuai').value = i; } catch (e) {}
-Q = QUAI[+$('chonQuai').value]; $('locDom').checked = !Q.nenXanh;
-$('chonQuai').onchange = (e) => { Q = QUAI[+e.target.value]; $('locDom').checked = !Q.nenXanh; try { localStorage.setItem('tq_quai', e.target.value); } catch (er) {} hienQuai(); if (ANH) chay(); };
+Q = QUAI[+$('chonQuai').value]; $('locDom').checked = !Q.nenXanh; datLuoi(Q);
+$('chonQuai').onchange = (e) => { Q = QUAI[+e.target.value]; $('locDom').checked = !Q.nenXanh; try { localStorage.setItem('tq_quai', e.target.value); } catch (er) {} datLuoi(Q); veNutDongTac(); hienQuai(); if (ANH) chay(); };
 hienQuai();
 
 $('nutChepPrompt').onclick = () => {
@@ -553,10 +605,10 @@ function tuTim(A, coAlpha) {
     // màu nền: lấy mẫu ở 4 góc của mỗi ô lưới 8×6 (góc ô gần như luôn là nền), giữ các màu chiếm ≥ 3%
     // độ dày tối đa của nét kẻ lưới: 6 điểm, hoặc 1,5% cạnh dài của ảnh (ChatGPT hay kẻ nét đen dày 10–16 điểm ở ảnh 1024)
     const MONG = Math.max(6, Math.round(0.015 * Math.max(W, H)));
-    const L = Math.max(24, Math.round(Math.min(W / 8, H / 6) * 0.45));
+    const L = Math.max(24, Math.round(Math.min(W / 8, H / SH) * 0.45));
     let tong = 0;
-    for (let r = 0; r < 6; r++) for (let c = 0; c < 8; c++) {
-      const cw = W / 8, ch = H / 6;
+    for (let r = 0; r < SH; r++) for (let c = 0; c < 8; c++) {
+      const cw = W / 8, ch = H / SH;
       // lùi vào trong ô ít nhất MONG + 8 điểm để không lấy nhầm nét kẻ dày làm màu nền
       const lx = Math.max(0.07 * cw, MONG + 8), ly = Math.max(0.08 * ch, MONG + 8);
       for (const [fx, fy] of [[lx, ly], [cw - lx, ly], [lx, ch - ly], [cw - lx, ch - ly]])
@@ -577,7 +629,7 @@ function tuTim(A, coAlpha) {
     const nen0 = [...dem.entries()].filter(([, n]) => n >= 0.03 * tong).sort((a, b) => b[1] - a[1]).slice(0, 12).map(([k]) => [(k >> 10 & 31) << 3, (k >> 5 & 31) << 3, (k & 31) << 3]), nenLoc = nen0.filter((c) => !laMauKe(c));
     const nenChung = nenLoc.length ? nenLoc : nen0; // lọc hết thì giữ nguyên (ảnh lạ), không để trống
     // nền riêng từng ô (xem nenRiengO): RG = null khi mọi ô cùng một nền, lúc đó mọi bước dưới đây y như cũ
-    const RG = nenRiengO(A, 8, 6, MONG, 0.08, nenChung, laMauKe), nen = RG ? RG.nen : nenChung;
+    const RG = nenRiengO(A, 8, SH, MONG, 0.08, nenChung, laMauKe), nen = RG ? RG.nen : nenChung;
     if (RG) oRieng = RG.so;
     const giong = (j) => { for (const c of nen) if (Math.abs(d[j*4] - c[0]) + Math.abs(d[j*4+1] - c[1]) + Math.abs(d[j*4+2] - c[2]) < 40) return true; return false; };
     const laNen = new Uint8Array(N); for (let j = 0; j < N; j++) laNen[j] = giong(j) ? 1 : 0;
@@ -675,10 +727,10 @@ function tuTim(A, coAlpha) {
   const vua = cum.filter(c => c.n >= 0.05 * maxN).map(c => c.n).sort((a, b) => a - b);
   const ref = vua[vua.length >> 1];
   const lon = cum.filter(c => c.n >= 0.25 * ref), nho = cum.filter(c => c.n < 0.25 * ref && c.n >= 0.03 * ref);
-  if (lon.length < 6) return { loi: ['Chỉ tìm thấy ' + lon.length + ' hình, cần đủ 6 hàng'] };
+  if (lon.length < SH) return { loi: ['Chỉ tìm thấy ' + lon.length + ' hình, cần đủ ' + SH + ' hàng'] };
   // chia 6 hàng ở 5 khoảng trống dọc lớn nhất
   lon.sort((a, b) => a.cy - b.cy);
-  const khe = lon.slice(1).map((c, i) => ({ i: i + 1, g: c.cy - lon[i].cy })).sort((a, b) => b.g - a.g).slice(0, 5).map(k => k.i).sort((a, b) => a - b);
+  const khe = lon.slice(1).map((c, i) => ({ i: i + 1, g: c.cy - lon[i].cy })).sort((a, b) => b.g - a.g).slice(0, SH - 1).map(k => k.i).sort((a, b) => a - b);
   const hangs = []; let dau = 0;
   for (const k of [...khe, lon.length]) { hangs.push(lon.slice(dau, k)); dau = k; }
   const khung = [], loi = [], ghi = [], gops = [], boRa = [];
@@ -780,7 +832,7 @@ function tachTheoLuoiKe(W, H, duong, nhan, cum, P) {
     return bang.filter(b => b[1] - b[0] >= 0.4 * giua);
   };
   const hang = dai(true), cot = dai(false);
-  if (hang.length !== 6 || cot.length < Math.max(...SO)) return null;
+  if (hang.length !== SH || cot.length < Math.max(...SO)) return null;
   const o = [];
   hang.forEach(([y0, y1], r) => cot.forEach(([x0, x1], c) => {
     const dem = new Map(), m = 3;
@@ -791,8 +843,8 @@ function tachTheoLuoiKe(W, H, duong, nhan, cum, P) {
   const coHinh = o.map(c => c.lonNhat).filter(n => n > 0).sort((a, b) => a - b), ref = coHinh[coHinh.length >> 1] || 1;
   let catNgang = 0, tongKhung = 0;
   const boRa = [];
-  const khung = [], loi = [], ghi = ['Ảnh có kẻ lưới: ' + cot.length + ' cột × 6 hàng, tách theo từng ô'], hinh = {};
-  for (let r = 0; r < 6; r++) {
+  const khung = [], loi = [], ghi = ['Ảnh có kẻ lưới: ' + cot.length + ' cột × ' + SH + ' hàng, tách theo từng ô'], hinh = {};
+  for (let r = 0; r < SH; r++) {
     let ds = o.filter(c => c.r === r && c.lonNhat >= 0.15 * ref);
     const conLai = ds.filter(c => !BO.some(([x, y]) => x >= c.x0 && x <= c.x1 && y >= c.y0 && y <= c.y1));
     if (conLai.length < ds.length) { ds.filter(c => !conLai.includes(c)).forEach(c => boRa.push(c)); ghi.push(`Hàng ${r + 1}: bạn đã bỏ ${ds.length - conLai.length} khung`); ds = conLai; }
@@ -888,9 +940,9 @@ function chay() {
   const coAlpha = trong > 50;
   let hinh = {}, loi = [], ghi = [];
   if ($('cachTach').value === 'luoi') {
-    const cot = timLuoi(A, 8, W, true), hang = timLuoi(A, 6, H, false);
+    const cot = timLuoi(A, 8, W, true), hang = timLuoi(A, SH, H, false);
     veGoc(A, cot, hang, null);
-    for (let r = 0; r < 6; r++) for (let c = 0; c < SO[r]; c++) {
+    for (let r = 0; r < SH; r++) for (let c = 0; c < SO[r]; c++) {
       const f = tachO(A, cot[c], hang[r], cot[c + 1], hang[r + 1], coAlpha);
       if (!f) loi.push(`Thiếu hình ở hàng ${r + 1}, cột ${c + 1}`); else { hinh[r + ',' + c] = f; if (f.cham) loi.push(`Hình hàng ${r + 1}, cột ${c + 1} bị lưới cắt ngang: thử "Tự tìm từng con"`); }
     }
@@ -910,7 +962,7 @@ function chay() {
   const tlGiua = tiLe[tiLe.length >> 1] || 1;
   for (const t of tiLe) if (t >= tlGiua / 1.5) { s = t; break; }
   const nhoRieng = [];
-  const TW = FW * 8, TH = FH * 6, tam = new Uint8ClampedArray(TW * TH * 4), lat = $('latNgang').checked;
+  const TW = FW * 8, TH = FH * SH, tam = new Uint8ClampedArray(TW * TH * 4), lat = $('latNgang').checked;
   for (const k in hinh) {
     const [r, c] = k.split(',').map(Number), f = hinh[k];
     const sf = Math.min(s, caoMax / f.h, rongMax / f.w); if (sf < s * 0.95) nhoRieng.push((r + 1) + '.' + (c + 1));
@@ -925,12 +977,12 @@ function chay() {
   // ===== tự kiểm =====
   const mau = new Set(); for (let i = 0; i < tam.length; i += 4) if (tam[i+3]) mau.add(tam[i] << 16 | tam[i+1] << 8 | tam[i+2]);
   const muc = [];
-  const dungCo = TW === Q.fw * 8 * N && TH === Q.fh * 6 * N;
-  muc.push([`Độ nét ${N === 2 ? 'gấp đôi' : 'thường'}: tấm ảnh ${TW}×${TH} = (${Q.fw * 8}×${Q.fh * 6}) × ${N}, ô ${FW}×${FH}`, dungCo]);
+  const dungCo = TW === Q.fw * 8 * N && TH === Q.fh * SH * N;
+  muc.push([`Độ nét ${N === 2 ? 'gấp đôi' : 'thường'}: tấm ảnh ${TW}×${TH} = (${Q.fw * 8}×${Q.fh * SH}) × ${N}, ô ${FW}×${FH}`, dungCo]);
   if (s > 1.05) ghi.push('Ảnh gốc nhỏ hơn cỡ cần, hình được phóng to (không nét thêm). Nhờ ChatGPT vẽ ảnh to hơn sẽ đẹp hơn.');
   muc.push([`${mau.size} màu (tối đa ${$('soMau').value})`, mau.size <= +$('soMau').value]);
   let mep = [], thua = [];
-  for (let r = 0; r < 6; r++) for (let c = 0; c < 8; c++) {
+  for (let r = 0; r < SH; r++) for (let c = 0; c < 8; c++) {
     let x0 = FW, y0 = FH, x1 = -1, y1 = -1;
     for (let y = 0; y < FH; y++) for (let x = 0; x < FW; x++) if (tam[((r * FH + y) * TW + c * FW + x) * 4 + 3]) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
     if (c >= SO[r]) { if (x1 >= 0) thua.push(`${r+1}.${c+1}`); continue; }
@@ -943,13 +995,14 @@ function chay() {
   muc.push(['Nền trong suốt, mép sắc (chỉ trong suốt hoặc đặc)', true]);
   if (nhoRieng.length) muc.push(['Hình to bất thường, đã thu nhỏ riêng: ' + nhoRieng.join(', ') + ' (xem lại có đúng không)', nhoRieng.length <= 3]);
   bmMuc(muc, [bmKq]);
+  if (Q.pha) ghi.push('Dáng pha ' + Q.pha + ' của ' + QUAI.find((x) => x.ma === Q.goc).ten + ': tấm 4 hàng (đứng, lấy đà, tấn công, trúng đòn). Hàng chạy và chết game mượn tấm pha 1');
   loi.forEach(t => muc.push([t, false]));
   ghi.forEach(t => muc.push([t, true]));
   KQ = { tam, TW, TH, FW, FH, N, dat: muc.every(m => m[1]) };
   $('dsKiem').innerHTML = muc.map(([t, ok]) => `<li class="${ok ? '' : 'loi'}">${t}</li>`).join('')
     + '<li class="ghi">Tự nhìn: mặt quái quay sang PHẢI ở khung chạy và tấn công. Nếu ảnh gốc quay trái thì tích ô "Lật ngang" ở bước 2; nếu đã quay phải thì để trống.</li>';
   $('theKq').className = 'the ' + (KQ.dat ? 'dat' : 'hong'); $('theKq').textContent = KQ.dat ? 'ĐẠT' : 'CÓ LỖI';
-  $('huongDan').textContent = KQ.dat ? 'Gửi tệp ' + Q.ma + '_2-ban.zip cho Claude để đưa vào game.' : 'Còn lỗi: thử đổi "Cách tách", chỉnh ô "Cắt" ở bước 2, hoặc nhờ ChatGPT vẽ lại cho đủ số hình mỗi hàng.';
+  $('huongDan').textContent = KQ.dat ? 'Gửi tệp ' + Q.ma + '_2-ban.zip cho Claude để đưa vào game.' + (Q.pha ? ' Tấm pha 1 của trùm đang dùng bản nét thường, nên Claude sẽ lấy bản "thường" trong tệp .zip cho đều nét.' : '') : 'Còn lỗi: thử đổi "Cách tách", chỉnh ô "Cắt" ở bước 2, hoặc nhờ ChatGPT vẽ lại cho đủ số hình mỗi hàng.';
   $('nutTaiJson').textContent = 'Tải ' + Q.ma + ' (2 bản: gấp đôi + thường)';
   $('dangCho').textContent = Q.ten + ' (' + Q.ma + ')';
   veTam(); $('buoc3').hidden = false; batDauChay();
@@ -1019,11 +1072,13 @@ function veTam() {
   g.drawImage(canvasTam, 0, 0, cv.width, cv.height);
   g.strokeStyle = 'rgba(246,220,146,.45)'; g.lineWidth = 1;
   for (let c = 0; c <= 8; c++) { g.beginPath(); g.moveTo(c * FW * k + .5, 0); g.lineTo(c * FW * k + .5, cv.height); g.stroke(); }
-  for (let r = 0; r <= 6; r++) { g.beginPath(); g.moveTo(0, r * FH * k + .5); g.lineTo(cv.width, r * FH * k + .5); g.stroke(); }
+  for (let r = 0; r <= SH; r++) { g.beginPath(); g.moveTo(0, r * FH * k + .5); g.lineTo(cv.width, r * FH * k + .5); g.stroke(); }
   g.fillStyle = 'rgba(255,138,112,.9)';
-  for (let r = 0; r < 6; r++) for (let c = 0; c < 8; c++) g.fillRect((c * FW + Q.gx * KQ.N) * k - 1, (r * FH + Q.gy * KQ.N) * k - 1, 3, 3);
+  for (let r = 0; r < SH; r++) for (let c = 0; c < 8; c++) g.fillRect((c * FW + Q.gx * KQ.N) * k - 1, (r * FH + Q.gy * KQ.N) * k - 1, 3, 3);
 }
 let dtChon = 1, t0 = performance.now(), hoat = false;
+function veNutDongTac() { if (dtChon >= SH) dtChon = 0; $('nutDongTac').innerHTML = TEN_DT.map((t, i) => `<button class="nut nho phu" data-i="${i}">${t}</button>`).join(''); danhDau(); }
+if (dtChon >= SH) dtChon = 0;
 $('nutDongTac').innerHTML = TEN_DT.map((t, i) => `<button class="nut nho phu" data-i="${i}">${t}</button>`).join('');
 $('nutDongTac').onclick = (e) => { const b = e.target.closest('button'); if (!b) return; dtChon = +b.dataset.i; t0 = performance.now(); danhDau(); };
 function danhDau() { [...$('nutDongTac').children].forEach((b, i) => b.classList.toggle('chon', i === dtChon)); }
@@ -1037,18 +1092,18 @@ function khungChay(now) {
     const cw = Math.max(320, FW * k + 40), ch = Math.max(200, FH * k + 30);
     if (cv.width !== cw || cv.height !== ch) { cv.width = cw; cv.height = ch; }
     g.imageSmoothingEnabled = false; g.clearRect(0, 0, cv.width, cv.height);
-    const giay = dtChon < 4 ? Q.giay[dtChon] : (dtChon === 4 ? 0.3 : 1.2), lap = dtChon < 2, so = SO[dtChon];
+    const hg = HANG[dtChon] || HANG[0], giay = hg.giay || Q.giay[hg.g], lap = !!hg.lap, so = hg.so, hgI = HANG.indexOf(hg);
     let t = (now - t0) / 1000 / giay; if (!lap && t >= 1.6) { t0 = now; t = 0; }
     const f = lap ? Math.floor(t * so) % so : Math.min(so - 1, Math.floor(t * so));
     const x = (cv.width - FW * k) / 2, y = (cv.height - FH * k) / 2;
     g.fillStyle = 'rgba(0,0,0,.28)'; g.beginPath(); g.ellipse(x + Q.gx * k, y + Q.gy * k, Q.rong * k * .38, 3 * k, 0, 0, Math.PI * 2); g.fill();
     g.save();
     if ($('diTrai').checked) { g.translate(x + Q.gx * k, 0); g.scale(-1, 1); g.translate(-(x + Q.gx * k), 0); }
-    if (dtChon === 5 && t > 1) g.globalAlpha = Math.max(0, 1 - (t - 1) / 0.6);
-    g.drawImage(canvasTam, f * FW * N, dtChon * FH * N, FW * N, FH * N, x, y, FW * k, FH * k);
+    if (hg.dt === 'die' && t > 1) g.globalAlpha = Math.max(0, 1 - (t - 1) / 0.6);
+    g.drawImage(canvasTam, f * FW * N, hgI * FH * N, FW * N, FH * N, x, y, FW * k, FH * k);
     g.restore();
     g.strokeStyle = 'rgba(246,220,146,.5)'; g.beginPath(); g.moveTo(0, y + Q.gy * k + .5); g.lineTo(cv.width, y + Q.gy * k + .5); g.stroke();
-    g.fillStyle = '#a9c2b4'; g.font = '12px system-ui'; g.fillText(TEN_DT[dtChon] + ' · khung ' + (f + 1) + '/' + so, 8, 16);
+    g.fillStyle = '#a9c2b4'; g.font = '12px system-ui'; g.fillText(hg.ten + ' · khung ' + (f + 1) + '/' + so, 8, 16);
   }
   requestAnimationFrame(khungChay);
 }
@@ -1057,16 +1112,69 @@ function khungChay(now) {
 function taiXuong(ten, blob) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = ten; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); }
 $('nutTaiPng').onclick = () => canvasTam && canvasTam.toBlob(b => taiXuong(Q.ma + '.png', b), 'image/png');
 function taoTep() {
-  const g = Q.giay;
+  const g = Q.giay, dong_tac = {};
+  // quái thường: 6 hàng như cũ; dáng pha của trùm (Phiên E2): 4 hàng idle, tele, atk, hit
+  HANG.forEach((h, i) => { dong_tac[h.dt] = Object.assign({ hang: i, so: h.so, giay: h.giay || g[h.g] }, h.lap ? { lap: true } : {}, h.mo != null ? { mo: h.mo } : {}); });
   return {
     loai: 'linh-khi-sprite', doi_tuong: 'quai', ma: Q.ma, ten: Q.ten, vung: Q.vung || 'rung',
     tam: canvasTam.toDataURL('image/png'), ...(KQ.N > 1 ? { net: KQ.N } : {}),
     khung_rong: Q.fw, khung_cao: Q.fh, goc: [Q.gx, Q.gy], rong: Q.rong, cao: Q.cao,
-    dong_tac: { idle: { hang: 0, so: 6, giay: g[0], lap: true }, move: { hang: 1, so: 6, giay: g[1], lap: true },
-      tele: { hang: 2, so: 4, giay: g[2] }, atk: { hang: 3, so: 6, giay: g[3] }, hit: { hang: 4, so: 4, giay: 0.3 },
-      die: { hang: 5, so: 8, giay: 1.2, mo: 0.6 } },
+    dong_tac,
   };
 }
+
+// ===================== Phiên E2: ẢNH THAM CHIẾU PHA 1 =====================
+// Lấy tấm pha 1 của trùm từ bản game đã gói (cùng trang web: index.html; trong repo: game/dist/linh-khi.html), dựng lại đúng bố cục 8 cột × 4 hàng
+// (đứng, lấy đà, tấn công, trúng đòn) trên nền một màu, có kẻ lưới, để gửi kèm prompt.
+const NGUON_GAME = ['index.html', 'linh-khi.html', '../../game/dist/linh-khi.html'], TRUM_GOC = {};
+let napGame = null;
+function napTrum() {
+  if (napGame) return napGame;
+  napGame = (async () => {
+    for (const u of NGUON_GAME) {
+      try {
+        const r = await fetch(u, { cache: 'no-cache' }); if (!r.ok) continue;
+        const t = await r.text(), k = '.customSpriteData = ', a = t.indexOf(k); if (a < 0) continue;
+        const b0 = a + k.length; let b = t.indexOf(';\n// =====', b0); if (b < 0) b = t.indexOf(';\n', b0); if (b < 0) continue;
+        for (const d of JSON.parse(t.slice(b0, b).replace(/<\\!--/g, '<!--'))) if (d && /^(nguTinh|mocTinh|hoTinh)$/.test(d.ma) && d.tam && d.dong_tac) TRUM_GOC[d.ma] = d;
+        if (Object.keys(TRUM_GOC).length) break;
+      } catch (e) { /* thử nguồn kế */ }
+    }
+    // số khung, cỡ ô, điểm chân của mục dáng pha lấy đúng theo tệp pha 1 đang có trong game
+    for (const q of QUAI) {
+      const d = q.pha && TRUM_GOC[q.goc]; if (!d) continue;
+      q.so = HANG_PHA.map((k, i) => Math.max(1, Math.min(8, (d.dong_tac[k] && d.dong_tac[k].so) | 0 || q.so[i])));
+      q.fw = d.khung_rong | 0 || q.fw; q.fh = d.khung_cao | 0 || q.fh; if (Array.isArray(d.goc)) { q.gx = +d.goc[0] || q.gx; q.gy = +d.goc[1] || q.gy; } q.rong = d.rong | 0 || q.rong; q.cao = d.cao | 0 || q.cao;
+    }
+    if (Q && Q.pha && TRUM_GOC[Q.goc]) { const an = !$('khungThamChieu').hidden; datLuoi(Q); veNutDongTac(); hienQuai(); $('khungThamChieu').hidden = !an; if (ANH) chay(); }
+    if (!Object.keys(TRUM_GOC).length) napGame = null; // chưa lấy được: lần bấm sau thử lại
+  })();
+  return napGame;
+}
+async function dungThamChieu(q) {
+  await napTrum();
+  const d = TRUM_GOC[q.goc]; if (!d) return null;
+  const img = await new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = d.tam; });
+  const n = Math.max(1, Math.min(4, Math.round(+d.net || 1))), fw = d.khung_rong * n, fh = d.khung_cao * n, K = n > 1 ? 1 : 2; // ảnh nét thường thì phóng gấp đôi cho ChatGPT dễ nhìn
+  const cv = $('cvThamChieu'), W = 8 * fw * K, H = HANG_PHA.length * fh * K; cv.width = W; cv.height = H;
+  const g = cv.getContext('2d'); g.imageSmoothingEnabled = false;
+  g.fillStyle = (q.nenMau && (q.nenMau.match(/#[0-9A-Fa-f]{6}/) || [])[0]) || '#FF00FF'; g.fillRect(0, 0, W, H);
+  HANG_PHA.forEach((k, r) => { const a = d.dong_tac[k]; if (!a) return; for (let i = 0; i < Math.min(8, a.so | 0); i++) g.drawImage(img, i * fw, (a.hang | 0) * fh, fw, fh, i * fw * K, r * fh * K, fw * K, fh * K); });
+  g.fillStyle = '#14182e'; // kẻ lưới mảnh màu tối
+  for (let c = 0; c <= 8; c++) g.fillRect(Math.max(0, Math.min(W - 2, c * fw * K - 1)), 0, 2, H);
+  for (let r = 0; r <= HANG_PHA.length; r++) g.fillRect(0, Math.max(0, Math.min(H - 2, r * fh * K - 1)), W, 2);
+  return cv;
+}
+$('nutThamChieu').onclick = async () => {
+  const q = Q; if (!q || !q.pha) return;
+  const ten = QUAI.find((x) => x.ma === q.goc).ten;
+  $('ttThamChieu').textContent = 'Đang lấy ảnh pha 1 của ' + ten + ' từ game…';
+  let cv = null; try { cv = await dungThamChieu(q); } catch (e) { cv = null; }
+  if (Q !== q) return;
+  if (!cv) { $('ttThamChieu').textContent = 'Chưa lấy được ảnh pha 1 của ' + ten + '. Hãy mở trang này trên spiritblade.web.app (cần mạng) rồi bấm lại.'; return; }
+  $('khungThamChieu').hidden = false;
+  cv.toBlob((b) => { taiXuong(q.goc + '-pha1-tham-chieu.png', b); $('ttThamChieu').textContent = 'Đã tải ' + q.goc + '-pha1-tham-chieu.png (' + cv.width + '×' + cv.height + '). Gửi ảnh này KÈM prompt cho ChatGPT.'; bao('Đã tải ảnh tham chiếu pha 1 của ' + ten); }, 'image/png');
+};
 function napZip() {
   if (window.JSZip) return Promise.resolve(window.JSZip);
   return new Promise((ok, no) => { const s = document.createElement('script'); s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'; s.onload = () => (window.JSZip ? ok(window.JSZip) : no()); s.onerror = no; document.head.appendChild(s); });
