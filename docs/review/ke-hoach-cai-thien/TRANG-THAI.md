@@ -1,6 +1,6 @@
-# Trang trạng thái dự án Linh Khí — cập nhật 11/10/2026 15:15
+# Trang trạng thái dự án Linh Khí — cập nhật 11/10/2026 16:25
 
-Một bảng duy nhất, thay cho mọi tổng hợp cũ (`docs/review/TONG-HOP.md` ngày 10/10 đã lỗi thời, chỉ giữ để tra cứu). Bản đang chạy trên https://spiritblade.web.app: **lk-2026.10.11-1502**. Mọi mục đều có cờ tắt hoặc `git revert` theo báo cáo tương ứng.
+Một bảng duy nhất, thay cho mọi tổng hợp cũ (`docs/review/TONG-HOP.md` ngày 10/10 đã lỗi thời, chỉ giữ để tra cứu). Bản đang chạy trên https://spiritblade.web.app: **lk-2026.10.11-1532** (web dùng 2 tệp từ Đợt 10). Mọi mục đều có cờ tắt hoặc `git revert` theo báo cáo tương ứng.
 
 Trạng thái: **ĐÃ LÀM + ĐÃ KIỂM** (có báo cáo, ảnh, số đo, workflow xanh) · **ĐANG CHẠY** (phiên đang làm) · **CHỜ ẢNH** (code xong, cần ảnh ChatGPT/Pippit) · **ĐÃ QUYẾT, CHƯA LÀM** · **CHỜ DUYỆT**.
 
@@ -34,15 +34,15 @@ Trạng thái: **ĐÃ LÀM + ĐÃ KIỂM** (có báo cáo, ảnh, số đo, work
 | B1 | 14 dải đạn/bom/tên | CHỜ ẢNH | `hieu-ung-b1/PROMPT.md` (cách nhanh: **3 tấm** thay 14) |
 | B2 | 8 dải đòn/chiêu (+ bản theo hệ) | CHỜ ẢNH | `hieu-ung-b2/PROMPT.md` (cách nhanh: **5 tấm** thay 11, trong đó 1 tấm chung với B3 và 1 tấm bản hệ không bắt buộc) |
 | B3 | 15 dải nổ/trạng thái/trùm/cổng | CHỜ ẢNH | `hieu-ung-b3/PROMPT.md` (cách nhanh: **7 tấm** thay 18, gồm Trùm nổ cuối gen lẻ và 1 tấm bản hệ không bắt buộc) |
-| B4 | 7 vũng trên sàn | CHƯA LÀM | — |
+| B4 | 7 vũng trên sàn | ĐANG CHẠY (16:25) | `lan-b4-vung-san.md` |
 | C1 | 14 biểu tượng nút | CHỜ ẢNH | `giao-dien-c1/PROMPT.md` |
 | C2 | 30 biểu tượng nhỏ; biểu tượng tinh anh 12×12 | CHỜ ẢNH (phóng to đã lên) | `giao-dien-c2/PROMPT.md` |
 | C3 | Hình cố định lớn: nút Nói chuyện, thẻ ải, thẻ ải trùm (mỗi thứ 3 trạng thái), mặt trống đồng, logo LINH KHÍ. 2 tấm ảnh | CHỜ ẢNH (code và công cụ đã kiểm bằng ảnh mẫu; báo cáo `giao-dien-c3/bao-cao.md`) | `giao-dien-c3/PROMPT.md` |
-| C4 | Thân nút, ô vũ khí, cần điều khiển | CHƯA LÀM | — |
+| C4 | Thân nút, ô vũ khí, cần điều khiển | ĐANG CHẠY (16:25) | `lan-c4-than-nut.md` |
 | C5 | Khung 9 mảnh | CHƯA LÀM | — |
 | D1 | 6 công trình làng; trang Tách Làng | CHỜ ẢNH | `lang-d1/PROMPT.md` |
 | D2 | 12 đạo cụ + khung cửi, lửa lò | CHỜ ẢNH | `lang-d2/PROMPT.md` (vẫn **3 tấm**: Đợt 11 chưa gộp, chờ duyệt) |
-| D3 | Nền làng + tranh bản đồ vùng | CHƯA LÀM | — |
+| D3 | Nền làng + tranh bản đồ vùng | ĐANG CHẠY (16:25) | `lan-d3-nen-lang.md` |
 | E1 | 3 đồ lưng vẽ lại + cánh theo cấp | 6 đồ lưng ĐÃ NHẬP (11:25); cánh theo cấp CHƯA | — |
 | E2 | Trùm đổi hình theo pha | CHỜ ẢNH (6 prompt) | `quai-e2/PROMPT.md` |
 | E3 | Tách lại 36 quái nét gấp đôi | ĐÃ QUYẾT: sau khi chốt dung lượng | — |
