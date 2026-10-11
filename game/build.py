@@ -114,10 +114,14 @@ def main():
 TEN_NHE = 'linh-khi-nhe.html'
 TEN_ANH = 'linh-khi-anh.%s.json'
 # Trần dung lượng theo quyết định Q5: gói một tệp 15 MB; tách ảnh tải sau thì cả gói 20 MB. Tệp đầu (2 tệp) nên dưới 5 MB để tới màn chào nhanh.
-TRAN_MOT_TEP, TRAN_HAI_TEP, NEN_DUOI = 15 * 1024 * 1024, 20 * 1024 * 1024, 5 * 1024 * 1024
+# 11/10/2026 (chủ dự án duyệt): trần gói hai tệp nâng lên 25 MB vì phần ảnh tải sau không làm chậm màn chào; tệp đầu vẫn dưới 5 MB.
+TRAN_MOT_TEP, TRAN_HAI_TEP, NEN_DUOI = 15 * 1024 * 1024, 25 * 1024 * 1024, 5 * 1024 * 1024
 TRUM_VUNG = ('mocTinh', 'nguTinh', 'hoTinh')
 # Hiệu ứng cơ bản (đòn đánh thường nào cũng dùng): vệt chém / đâm, mũi tên của bé, trúng đòn, chí mạng, vỡ giáp, quái chết.
 HU_CO_BAN = re.compile(r'^hu-(chem|dam|trung|dan-ten|chi-mang|pha-giap|quai-chet)(-|$)')
+
+
+HINH_LON_SAU = {'gd-lang-nen', 'gd-ban-do-vung', 'gd-khung-ban-do'}
 
 
 def bat_buoc(t):
@@ -129,6 +133,8 @@ def bat_buoc(t):
       7. hiệu ứng cơ bản (HU_CO_BAN)
     Tải sau: mọi quái và trùm, thân theo bộ trang phục, vũ khí còn lại, hiệu ứng theo hệ / của quái / bảng kết quả, và mọi loại mới chưa có luật."""
     ma, d = t['ma'], t.get('doi_tuong')
+    if ma in HINH_LON_SAU:  # 11/10 (chủ dự án duyệt): hình lớn không cần ở màn chào → tải sau; game vẽ code cho tới khi ảnh về
+        return False
     if d in ('ghep', 'nguoi-lang', 'giao-dien', 'vat-pham', 'trang-phuc'):
         return True
     if d == 'em-be':
@@ -164,7 +170,7 @@ def hai_tep(custom, gom, trang, frag):
     """Ghi thêm cặp tệp của chế độ 2 tệp (khi có cờ), hoặc dọn cặp tệp cũ (khi xuất như cũ). Luôn in dung lượng so với trần Q5."""
     bat = ('--hai-tep' in sys.argv[1:] or os.environ.get('LK_HAI_TEP') == '1') and '--mot-tep' not in sys.argv[1:]
     mot = os.path.getsize(os.path.join(DIST, 'linh-khi.html'))
-    print('Dung lượng một tệp: %.2f MB / trần 15 MB (Q5), còn %.2f MB%s' % (mot / 1048576, (TRAN_MOT_TEP - mot) / 1048576, '  ← VƯỢT TRẦN' if mot > TRAN_MOT_TEP else ''))
+    print('Dung lượng một tệp: %.2f MB (bản một tệp nay chỉ dùng cho trang công cụ; web chạy bản hai tệp)' % (mot / 1048576))
     for p in glob.glob(os.path.join(DIST, TEN_ANH % '*')) + [os.path.join(DIST, TEN_NHE)]:
         if os.path.isfile(p):
             os.remove(p)  # tên tệp ảnh đổi theo nội dung: không để bản cũ nằm lại
@@ -192,7 +198,7 @@ def hai_tep(custom, gom, trang, frag):
     write(os.path.join(DIST, TEN_NHE), nhe)
     n1, n2 = len(nhe.encode('utf-8')), len(data)
     print('Chế độ 2 tệp: dist/%s (%d KB, %d hình bắt buộc) + dist/%s (%d KB, %d hình tải sau)' % (TEN_NHE, n1 // 1024, len(truoc), ten, n2 // 1024, len(sau)))
-    print('Dung lượng hai tệp: %.2f MB / trần 20 MB (Q5), còn %.2f MB%s; tệp đầu %.2f MB (nên dưới 5 MB)%s'
+    print('Dung lượng hai tệp: %.2f MB / trần 25 MB (Q5, nâng 11/10), còn %.2f MB%s; tệp đầu %.2f MB (nên dưới 5 MB)%s'
           % ((n1 + n2) / 1048576, (TRAN_HAI_TEP - n1 - n2) / 1048576, '  ← VƯỢT TRẦN' if n1 + n2 > TRAN_HAI_TEP else '', n1 / 1048576, '  ← TỆP ĐẦU QUÁ NẶNG, xem lại luật bat_buoc' if n1 > NEN_DUOI else ''))
 
 
