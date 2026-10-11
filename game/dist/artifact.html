@@ -41,7 +41,7 @@
 </div><canvas id="ui"></canvas></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.11-0753";
+(window.G = window.G || {}).VERSION = "lk-2026.10.11-0809";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -15743,7 +15743,9 @@
       else if ((b.st && b.st.stun > 0) || b.tired > 0) { n = 'stun'; t = G.time; }
       else if (b.hitT > 0 && (n === 'idle' || n === 'move')) { n = 'hit'; t = 0.4 - b.hitT; }
       const phase = (b.phase | 0) + 1;
-      const pha3 = b.kind === 'ho' && (phase >= 3 && !(n === 'phase3' && t < dur(b.art, 'phase3') * 0.5));
+      // Đợt 1: có ảnh AI (js/sprite_custom.js dùng cùng một ảnh cho mọi pha) thì KHÔNG co 72%, kẻo thân pha 3 nhỏ đi so với pha 1, 2.
+      const anhAI = !!(G.spriteCustom && G.spriteCustom.ds && G.spriteCustom.ds[b.art] && G.spriteCustom.ds[b.art].ready);
+      const pha3 = b.kind === 'ho' && !anhAI && (phase >= 3 && !(n === 'phase3' && t < dur(b.art, 'phase3') * 0.5));
       const s = pha3 ? 0.72 : 1; // Hồ Tinh pha 3 to gấp rưỡi: thu nhỏ cho vừa phòng
       b.drawW = (pha3 ? 281 : b.kind === 'ho' ? 174 : 150) * s; b.drawH = (pha3 ? 174 : b.h) * s;
       const fk = G.fx && G.fx.chop ? G.fx.chop() : 1; // khựng hình: chỉ khung đầu chớp trắng hẳn (js/fx.js)
