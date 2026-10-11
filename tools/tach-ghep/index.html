@@ -194,7 +194,7 @@
 
     <div id="cheC" style="margin-top:10px" class="an">
       <div class="hang"><label class="o-mac" style="margin:0;display:block;min-width:240px">Món đồ <select id="chonMonC"></select></label></div>
-      <p class="chu-y"><b>Kéo trên hình ở mục 2</b> để dời món đồ (hoặc bấm mũi tên). Chỉnh này chỉ dành cho <b>nhân vật đang chọn + món này</b>, không đổi món đồ gốc.</p>
+      <p class="chu-y"><b>Kéo trên hình ở mục 2</b> để dời món đồ (hoặc bấm mũi tên). Chỉnh này chỉ dành cho <b>nhân vật đang chọn + món này</b>, không đổi món đồ gốc. Cuối danh sách “Món đồ” có <b>4 loại vũ khí</b> để chỉnh vũ khí theo từng khung.</p>
       <div class="hang" role="radiogroup" aria-label="Dời và xoay áp cho">
         <label class="chk"><input type="radio" name="phamViC" value="tatca" checked> Mọi động tác</label>
         <label class="chk"><input type="radio" name="phamViC" value="dongtac"> Chỉ động tác này</label>
@@ -238,6 +238,14 @@
       </div>
       <div class="hang" style="margin-top:6px">
         <label class="o-mac" style="margin:0;display:block;min-width:240px">Dùng ảnh khác cho nhân vật này <select id="chonBienThe"></select></label>
+      </div>
+      <div id="khoiVk" class="an" style="margin-top:8px">
+        <h3 style="margin:0 0 4px">Vũ khí theo từng khung (thân AI)</h3>
+        <p class="chu-y" style="margin-top:0">Ở mục 1 chọn <b>Thân AI</b>, ở mục 2 chọn động tác <b>Lấy đà</b>, <b>Đánh</b> hoặc <b>Trúng đòn</b> rồi kéo thanh chọn <b>khung</b>. Bật ô dưới đây để vũ khí <b>nằm đúng trong bàn tay</b> của hình ở khung đó, rồi chọn “Chỉ khung này” và <b>kéo trên hình</b> (hoặc bấm mũi tên, nút Xoay) để nhích thêm. Muốn dời cả bàn tay: sang thẻ <b>a. Điểm của thân AI</b>, chọn điểm <b>tay trước</b> rồi chạm vào hình. Chỉ đổi <b>hình vẽ</b> vũ khí, không đổi đòn đánh.</p>
+        <div class="hang">
+          <label class="chk"><input type="checkbox" id="chkBam"> Vũ khí nằm trong bàn tay ở khung này</label>
+          <label class="chk">Chỗ của vũ khí đặt vào tay <select id="chonBamVk"><option value="">Tự chọn theo loại</option><option value="nam">Chỗ tay nắm chuôi</option><option value="cam">Điểm cầm của vũ khí</option><option value="day">Chỗ kéo dây cung</option></select></label>
+        </div>
       </div>
       <p class="so-lieu" id="ttCap"></p>
     </div>
@@ -352,7 +360,11 @@ const S = { key: 'smith', than: 'code', dc: 'idle', dt: 'idle', khung: 0, chay: 
 const MON = {};   // mã -> món đồ ảnh AI { ma, tep, doi, o, look, kieu, lop, N, w, h, img, vk, coSan (có sẵn trong game), diemGoc }
 const CODE = {};  // 'code-<ô>-<look>' -> đồ vẽ bằng code { ma, o, look, code: true, tep: { ten } } (lấy từ G.heroLooks của game)
 const mon = (id) => MON[id] || CODE[id] || null;
-const tenMon = (id) => { const M = mon(id); return M ? M.tep.ten || id : id; };
+// Đợt 5: VŨ KHÍ trong mục "chỉnh theo cặp". Khoá là LOẠI vũ khí ("vk-sword", "vk-bow", "vk-spear", "vk-hammer"): áp cho mọi dòng và
+// mọi hệ của loại đó (game: G.spriteCustom.capVuKhi). Chỉ dùng dời (dx, dy), xoay và "bám tay" (bam, bam_vk); không co giãn, không đổi lớp.
+const laVk = (ma) => /^vk-(sword|bow|spear|hammer)$/.test(ma || '');
+const TEN_VK = { sword: 'Kiếm', bow: 'Cung', spear: 'Giáo', hammer: 'Búa' };
+const tenMon = (id) => { if (laVk(id)) return 'Vũ khí: ' + TEN_VK[id.slice(3)] + ' (mọi dòng, mọi hệ)'; const M = mon(id); return M ? M.tep.ten || id : id; };
 const THAN = {};  // key -> tệp em-be (thân AI)
 const THAN_BO = {}; // key -> { rung | bien | lau: tệp em-be-<key>-<bộ> } (thân mặc sẵn cả bộ; game dùng khi đang mặc ÁO của bộ đó)
 const TEN_BO = { rung: 'Bộ Rừng Già', bien: 'Bộ Hang Biển', lau: 'Bộ Lâu Đài' };
@@ -1198,7 +1210,7 @@ function dungVuKhi() {
     for (const [v, t] of ds) { const c = document.createElement('button'); c.className = 'chip' + (lay() === v ? ' chon' : ''); c.textContent = t; c.disabled = !!(tat && tat(v)); c.onclick = () => { dat(v); S.khung = 0; DUNG = null; dungOMac(); dungDongTac(); luuNhap(); }; hg.appendChild(c); }
     box.appendChild(hg);
   };
-  nhom('Loại', VK_LOAI, () => S.vk || 'none', (v) => { S.vk = v; });
+  nhom('Loại', VK_LOAI, () => S.vk || 'none', (v) => { S.vk = v; if (laVk(S.monC) && v !== 'none') S.monC = 'vk-' + v; setTimeout(dungMonChon, 0); });
   if (wt !== 'none') {
     const lu = document.createElement('div'); lu.className = 'luoi-do'; lu.style.marginTop = '6px'; lu.style.maxHeight = '200px';
     for (let i = 0; i < 10; i++) {
@@ -1233,15 +1245,22 @@ function dungMonChon() {
     const macAI = mac.filter((m) => k === 'monC' || MON[m]);
     const list = macAI.concat(ds.filter((m) => !macAI.includes(m)));
     for (const ma of list) { const M = mon(ma), o = document.createElement('option'); o.value = ma; o.textContent = (tenO[M.o] || M.o) + ': ' + tenMon(ma) + (M.code ? ' (vẽ code)' : '') + (mac.includes(ma) ? ' (đang mặc)' : ''); s.appendChild(o); }
-    S[k] = list.includes(cu) ? cu : list[0] || null; s.value = S[k] || '';
+    // mục c: thêm 4 loại vũ khí (loại đang cầm đứng trước) để chỉnh hình vũ khí theo từng khung
+    const dsVk = k === 'monC' ? ['sword', 'bow', 'spear', 'hammer'].sort((x, y) => (y === S.vk) - (x === S.vk)).map((t) => 'vk-' + t) : [];
+    for (const ma of dsVk) { const o = document.createElement('option'); o.value = ma; o.textContent = tenMon(ma) + (ma === 'vk-' + S.vk ? ' (đang cầm)' : ''); s.appendChild(o); }
+    S[k] = list.includes(cu) || dsVk.includes(cu) ? cu : list[0] || dsVk[0] || null; s.value = S[k] || '';
   }
   const bt = $('chonBienThe'); bt.innerHTML = '<option value="">— dùng chính món này —</option>';
   bt.disabled = !(S.monC && MON[S.monC]);
   for (const ma of ds) if (ma !== S.monC && S.monC && MON[S.monC] && MON[ma].o === MON[S.monC].o) { const o = document.createElement('option'); o.value = ma; o.textContent = tenMon(ma) + ' · ' + ma; bt.appendChild(o); }
   dungChipDo(); veCap(); veMonB();
 }
-$('chonMonB').onchange = (e) => { S.monB = e.target.value; dungChipDo(); veMonB(); };
-$('chonMonC').onchange = (e) => { S.monC = e.target.value; dungMonChon(); };
+$('chonMonB').onchange = (e) => { S.monB = e.target.value; S.diemB = null; dungChipDo(); veMonB(); }; // đổi món: chọn sẵn điểm chính của món đó (mũ: đỉnh đầu)
+$('chonMonC').onchange = (e) => {
+  S.monC = e.target.value;
+  if (laVk(S.monC) && S.vk !== S.monC.slice(3)) { S.vk = S.monC.slice(3); S.khung = 0; DUNG = null; dungOMac(); dungDongTac(); luuNhap(); } // chọn chỉnh loại nào thì cầm loại đó
+  dungMonChon();
+};
 
 // ---------- 3a. điểm của thân AI ----------
 function dungChipNV() {
@@ -1364,23 +1383,45 @@ function doiCap(dx, dy) { if (!S.monC) return; const c = capCua(S.key, S.monC, t
 for (const b of document.querySelectorAll('[data-nhich]')) b.onclick = () => { const [x, y] = b.dataset.nhich.split(',').map(Number); doiCap(x, y); };
 for (const b of document.querySelectorAll('[data-xoay]')) b.onclick = () => { if (!S.monC) return; const c = capCua(S.key, S.monC, true), t = theoCan(c); t.xoay = (+t.xoay || 0) + +b.dataset.xoay; c.da_chinh = false; doi(); };
 for (const b of document.querySelectorAll('[data-co]')) b.onclick = () => {
-  if (!S.monC) return; const c = capCua(S.key, S.monC, true), [a, d] = b.dataset.co.split(',').map(Number);
+  if (!S.monC) return; if (laVk(S.monC)) { bao('Vũ khí chỉ dời, xoay và bám tay'); return; } const c = capCua(S.key, S.monC, true), [a, d] = b.dataset.co.split(',').map(Number);
   c.sx = Math.round(clamp((c.sx == null ? 1 : +c.sx) + a, 0.8, 1.25) * 100) / 100; c.sy = Math.round(clamp((c.sy == null ? 1 : +c.sy) + d, 0.8, 1.25) * 100) / 100; c.da_chinh = false; doi();
 };
-for (const b of document.querySelectorAll('[data-lop]')) b.onclick = () => { if (!S.monC) return; const c = capCua(S.key, S.monC, true); c.lop = b.dataset.lop || null; c.da_chinh = false; doi(); };
+for (const b of document.querySelectorAll('[data-lop]')) b.onclick = () => { if (!S.monC) return; if (laVk(S.monC)) { bao('Vũ khí chỉ dời, xoay và bám tay'); return; } const c = capCua(S.key, S.monC, true); c.lop = b.dataset.lop || null; c.da_chinh = false; doi(); };
 function anTheo(k, v) { const c = capCua(S.key, S.monC, true); c.theo = c.theo || {}; const t = c.theo[k] || (c.theo[k] = {}); if (v) t.an = true; else delete t.an; if (!Object.keys(t).length) delete c.theo[k]; c.da_chinh = false; doi(); }
 $('chkAnDT').onchange = (e) => { if (S.monC) anTheo(khoaDT(), e.target.checked); };
 $('chkAnKhung').onchange = (e) => { if (S.monC) anTheo(khoaDT() + ':' + S.khung, e.target.checked); };
 $('chkDaChinh').onchange = (e) => { if (!S.monC) return; capCua(S.key, S.monC, true).da_chinh = e.target.checked; doi(); };
 $('chonBienThe').onchange = (e) => { if (!S.monC) return; capCua(S.key, S.monC, true).bien_the = e.target.value || null; doi(); };
+// Đợt 5: "bám tay" của vũ khí ở khung đang xem (ghi vào cap["vk-<loại>"].theo["<động tác>:<khung>"]).
+function bamHieuLuc(cap) { let bam = null, kieu = ''; const th = (cap && cap.theo) || {}; for (const k of khoaHienTai()) { const t = th[k]; if (!t) continue; if ('bam' in t) bam = t.bam || null; if (t.bam_vk) kieu = t.bam_vk; } return { bam, kieu }; }
+function ghiBam(sua) {
+  if (!laVk(S.monC)) return;
+  const c = capCua(S.key, S.monC, true), k = khoaDT() + ':' + S.khung; c.theo = c.theo || {};
+  const t = c.theo[k] || (c.theo[k] = {}); sua(t, c);
+  if (!Object.keys(t).length) delete c.theo[k];
+  c.da_chinh = false; doi();
+}
+$('chkBam').onchange = (e) => ghiBam((t, c) => {
+  if (e.target.checked) t.bam = 'tay_truoc';
+  else { delete t.bam; delete t.bam_vk; if (bamHieuLuc(c).bam) t.bam = false; } // động tác đã bật bám chung: tắt riêng khung này
+});
+$('chonBamVk').onchange = (e) => ghiBam((t) => { if (e.target.value) t.bam_vk = e.target.value; else delete t.bam_vk; });
 function veCap() {
+  { const vk = laVk(S.monC), c = vk && GHEP[S.key] && GHEP[S.key].cap[S.monC], b = bamHieuLuc(c);
+    $('khoiVk').classList.toggle('an', !vk); $('chkBam').checked = !!b.bam; $('chonBamVk').value = b.kieu; $('chonBamVk').disabled = !b.bam; }
   const ma = S.monC, cap = ma && GHEP[S.key] && GHEP[S.key].cap[ma], th = (cap && cap.theo) || {};
   const kd = khoaDT(), kk = kd + ':' + S.khung;
   $('chkAnDT').checked = !!(th[kd] && th[kd].an); $('chkAnKhung').checked = !!(th[kk] && th[kk].an);
   $('chkDaChinh').checked = !!(cap && cap.da_chinh); $('chonBienThe').value = (cap && cap.bien_the) || '';
   for (const b of document.querySelectorAll('[data-lop]')) b.classList.toggle('chon', ((cap && cap.lop) || '') === b.dataset.lop);
   if (!ma) { $('ttCap').textContent = 'Chưa có món đồ.'; return; }
-  const h = capHieuLuc(cap, khoaHienTai()), M = mon(ma);
+  const h = capHieuLuc(cap, khoaHienTai()), M = mon(ma) || { tep: { ten: tenMon(ma) }, o: 'vk', vkLoai: true };
+  if (M.vkLoai) { // vũ khí: chỉ dời, xoay, bám tay
+    const b = bamHieuLuc(cap);
+    $('ttCap').innerHTML = tenMon(ma) + ' trên ' + TEN_NV[S.key] + ' · khung <b>' + khoaDT() + ':' + S.khung + '</b>: ' + (b.bam ? '<b>nằm trong bàn tay</b> (bám điểm “' + (TEN_DIEM[b.bam] || b.bam) + '”' + (dangDungAI() ? '' : ', chỉ có tác dụng với thân AI') + ')' : 'đi theo bộ cử động của game') +
+      ' · dời thêm <b>' + h.dx + ', ' + h.dy + '</b> · xoay thêm <b>' + h.xoay + '°</b>' + (cap ? (cap.da_chinh ? ' · <b style="color:var(--ok)">đã duyệt</b>' : ' · <b style="color:var(--warn)">chưa duyệt</b>') : '') + '<br>Co giãn, lớp và “dùng ảnh khác” không áp dụng cho vũ khí.';
+    return;
+  }
   $('ttCap').innerHTML = (M.tep.ten || ma) + ' trên ' + TEN_NV[S.key] + ': dời <b>' + h.dx + ', ' + h.dy + '</b> · xoay <b>' + h.xoay + '°</b> · co <b>' + h.sx.toFixed(2) + ' × ' + h.sy.toFixed(2) + '</b> · lớp <b>' + TEN_LOP[h.lop || LOP_MAC_DINH(M)] + (h.lop ? '' : ' (mặc định)') + '</b>' + (h.an ? ' · <b>đang ẩn ở đây</b>' : '') + (cap ? (cap.da_chinh ? ' · <b style="color:var(--ok)">đã chỉnh</b>' : ' · <b style="color:var(--warn)">chưa duyệt</b>') : ' · <b style="color:var(--warn)">chưa hiệu chỉnh cho ' + TEN_NV[S.key] + '</b>') + ' · khoá động tác: <b>' + khoaDT() + '</b>' + (M.code ? '<br>Đồ vẽ code: chỉnh này lưu vào tệp ghép (khoá ' + ma + ') và trang vẽ thử, nhưng game CHƯA đọc chỉnh theo cặp cho đồ vẽ code.' : '');
 }
 
@@ -1410,14 +1451,16 @@ function dungChep() {
   }
 }
 function taiXuong(ten, blob) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = ten; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000); }
-const jsonGhep = (key) => JSON.stringify(GHEP[key], null, 1);
+// Tệp ghép xuất ra gọn như tệp trong game: mỗi điểm [x, y] và mỗi mục chỉnh theo khung nằm trên một dòng.
+const jsonGhep = (key) => JSON.stringify(GHEP[key], null, 1).replace(/\[\s+(-?[\d.]+),\s+(-?[\d.]+)\s+\]/g, '[$1, $2]')
+  .replace(/\{\s+("(?:bam|bam_vk|dx|dy|xoay|an)": [^{}\[\]]*?)\s+\}/g, (m, a) => '{ ' + a.replace(/\s+/g, ' ') + ' }') + '\n';
 const jsonMon = (ma) => { const t = sao(MON[ma].tep); if (t.trang_phuc && t.trang_phuc.diem) t.trang_phuc.co_chuan = [MON[ma].w, MON[ma].h]; return JSON.stringify(t); };
 $('nutTaiGhep').onclick = () => {
   const g = ghepCua(S.key, true);
   taiXuong(g.ma + '.sprite.json', new Blob([jsonGhep(S.key)], { type: 'application/json' })); bao('Đã tải ' + g.ma + '.sprite.json');
 };
 $('nutTaiMon').onclick = () => {
-  const ma = S.che === 'b' ? S.monB : S.monC || S.monB; if (ma && CODE[ma]) { bao('Đồ vẽ code không có tệp ảnh để tải'); return; } if (!ma || !MON[ma]) { bao('Chưa có món đồ'); return; }
+  const ma = S.che === 'b' || laVk(S.monC) ? S.monB : S.monC || S.monB; if (ma && CODE[ma]) { bao('Đồ vẽ code không có tệp ảnh để tải'); return; } if (!ma || !MON[ma]) { bao('Chưa có món đồ'); return; }
   if (!MON[ma].tep.trang_phuc || !MON[ma].tep.trang_phuc.diem) bao('Món này chưa có điểm nào (đặt ở mục 3b). Vẫn tải bản gốc.');
   taiXuong(ma + '.sprite.json', new Blob([jsonMon(ma)], { type: 'application/json' }));
 };
