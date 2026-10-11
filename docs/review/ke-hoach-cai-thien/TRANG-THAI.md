@@ -1,6 +1,6 @@
-# Trang trạng thái dự án Linh Khí — cập nhật 11/10/2026 16:25
+# Trang trạng thái dự án Linh Khí — cập nhật 11/10/2026 17:25
 
-Một bảng duy nhất, thay cho mọi tổng hợp cũ (`docs/review/TONG-HOP.md` ngày 10/10 đã lỗi thời, chỉ giữ để tra cứu). Bản đang chạy trên https://spiritblade.web.app: **lk-2026.10.11-1532** (web dùng 2 tệp từ Đợt 10). Mọi mục đều có cờ tắt hoặc `git revert` theo báo cáo tương ứng.
+Một bảng duy nhất, thay cho mọi tổng hợp cũ (`docs/review/TONG-HOP.md` ngày 10/10 đã lỗi thời, chỉ giữ để tra cứu). Bản đang chạy trên https://spiritblade.web.app: **lk-2026.10.11-1637** (web dùng 2 tệp từ Đợt 10). Mọi mục đều có cờ tắt hoặc `git revert` theo báo cáo tương ứng.
 
 Trạng thái: **ĐÃ LÀM + ĐÃ KIỂM** (có báo cáo, ảnh, số đo, workflow xanh) · **ĐANG CHẠY** (phiên đang làm) · **CHỜ ẢNH** (code xong, cần ảnh ChatGPT/Pippit) · **ĐÃ QUYẾT, CHƯA LÀM** · **CHỜ DUYỆT**.
 
@@ -39,11 +39,11 @@ Trạng thái: **ĐÃ LÀM + ĐÃ KIỂM** (có báo cáo, ảnh, số đo, work
 | C2 | 30 biểu tượng nhỏ; biểu tượng tinh anh 12×12 | CHỜ ẢNH (phóng to đã lên) | `giao-dien-c2/PROMPT.md` |
 | C3 | Hình cố định lớn: nút Nói chuyện, thẻ ải, thẻ ải trùm (mỗi thứ 3 trạng thái), mặt trống đồng, logo LINH KHÍ. 2 tấm ảnh | CHỜ ẢNH (code và công cụ đã kiểm bằng ảnh mẫu; báo cáo `giao-dien-c3/bao-cao.md`) | `giao-dien-c3/PROMPT.md` |
 | C4 | Thân nút (6 vòng nút, nút vuông), đế và núm cần điều khiển, khung ô vũ khí 4 bậc. 2 tấm ảnh | CHỜ ẢNH (code và công cụ đã kiểm bằng ảnh mẫu, vị trí và cỡ nút trùng bản cũ; cờ tắt `G.THAN_NUT_ANH`; báo cáo `giao-dien-c4/bao-cao.md`, có 3 điểm chờ duyệt) | `giao-dien-c4/PROMPT.md` |
-| C5 | Khung 9 mảnh | CHƯA LÀM | — |
+| C5 | Khung 9 mảnh | ĐANG CHẠY (17:25) | `lan-c5-khung-9-manh.md` |
 | D1 | 6 công trình làng; trang Tách Làng | CHỜ ẢNH | `lang-d1/PROMPT.md` |
 | D2 | 12 đạo cụ + khung cửi, lửa lò | CHỜ ẢNH | `lang-d2/PROMPT.md` (vẫn **3 tấm**: Đợt 11 chưa gộp, chờ duyệt) |
 | D3 | Nền làng 720×270 (`gd-lang-nen`) + tranh bản đồ vùng 480×270 (`gd-ban-do-vung`, một tranh cho cả 3 vùng). 2 tấm ảnh, mỗi tấm gửi kèm 2 ảnh tham chiếu | CHỜ ẢNH (code và công cụ đã kiểm bằng ảnh mẫu; không có tệp: khác bản cũ 0 điểm ảnh; workflow xanh; **chưa thử ảnh ChatGPT thật**; chờ duyệt 4 điểm, trong đó nét thường hay gấp đôi; quay lui: xoá tệp ảnh hoặc `git revert 5404783 5150b00`; báo cáo `lang-d3/bao-cao.md`) | `lang-d3/PROMPT.md` |
-| E1 | 3 đồ lưng vẽ lại + cánh theo cấp | 6 đồ lưng ĐÃ NHẬP (11:25); cánh theo cấp CHƯA | — |
+| E1 | 3 đồ lưng vẽ lại + cánh theo cấp | 6 đồ lưng ĐÃ NHẬP; cánh theo cấp ĐANG CHẠY (17:25) | — |
 | E2 | Trùm đổi hình theo pha | CHỜ ẢNH (6 prompt) | `quai-e2/PROMPT.md` |
 | E3 | Tách lại 36 quái nét gấp đôi | ĐÃ QUYẾT: sau khi chốt dung lượng | — |
 | — | Bản đồ ải (tach-giao-dien) | CHỜ ẢNH | `giao-dien/PROMPT.md` |
