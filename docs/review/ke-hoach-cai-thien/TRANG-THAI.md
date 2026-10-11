@@ -1,0 +1,76 @@
+# Trang trạng thái dự án Linh Khí — cập nhật 11/10/2026 13:45
+
+Một bảng duy nhất, thay cho mọi tổng hợp cũ (`docs/review/TONG-HOP.md` ngày 10/10 đã lỗi thời, chỉ giữ để tra cứu). Bản đang chạy trên https://spiritblade.web.app: **lk-2026.10.11-1200** (+ commit 5633e605 bỏ khung khối băng). Mọi mục đều có cờ tắt hoặc `git revert` theo báo cáo tương ứng.
+
+Trạng thái: **ĐÃ LÀM + ĐÃ KIỂM** (có báo cáo, ảnh, số đo, workflow xanh) · **ĐANG CHẠY** (phiên đang làm) · **CHỜ ẢNH** (code xong, cần ảnh ChatGPT/Pippit) · **ĐÃ QUYẾT, CHƯA LÀM** · **CHỜ DUYỆT**.
+
+## 1. Kế hoạch cải thiện (Q1–Q6 + phát sinh)
+
+| Đợt | Việc | Trạng thái | Bản | Báo cáo | Quay lui |
+|---|---|---|---|---|---|
+| 1 | Chơi ngay không bắt đăng nhập; màn hình tải; sửa co Hồ Tinh pha 3 | ĐÃ LÀM + ĐÃ KIỂM (52/52) | 0822 | `dot-1/bao-cao.md` | revert từng commit |
+| 1-B | Khách đã qua ải liên kết Google có tiến trình → luôn hỏi chọn bản | ĐÃ LÀM + ĐÃ KIỂM (7/7 ca) | 0835 | `dot-1/bao-cao.md` §9 | revert 050f6efd |
+| 2 | Sân phòng thường 208 → 300 px | ĐÃ LÀM + ĐÃ KIỂM (bot 40/40, nhịp +4–9%) | 0854 | `dot-2/bao-cao.md` | `RA.RONG_PHONG` / revert |
+| 3 | Áo của bộ chọn thân; đồ lưng/cánh/bùa không nhảy lên đầu (Cu Tí) | ĐÃ LÀM + ĐÃ KIỂM | 0854 | `dot-3/bao-cao.md` | `O.THAN_THEO_AO=false` |
+| 4 | Bảng màu lõi 32 + 12; prompt; tuỳ chọn giảm màu theo bảng | ĐÃ LÀM + ĐÃ KIỂM; **chờ duyệt bảng màu** (mặc định: dùng) | 1001 | `dot-4/bao-cao.md` | tuỳ chọn mặc định Tự do |
+| 5 | Vũ khí khớp tay thân AI; neo đỉnh đầu 13 mũ; ghép 3 em bé | ĐÃ LÀM + ĐÃ KIỂM (lệch ≤ 0,7 px; nhật ký sát thương trùng) | 1118 | `dot-5/bao-cao.md` | xoá `ghep-*` / revert |
+| 6 | Tile sàn/tường Rừng già, cờ `G.TILE_RUNG` | CHỜ ẢNH (máy móc đã kiểm bằng tile mẫu) | 1118 | `dot-6/bao-cao.md` | cờ tắt |
+| 7 | Trạng thái độc/cháy/băng trên thân quái; bỏ biểu tượng trạng thái trên đầu | ĐÃ LÀM + ĐÃ KIỂM | 1200 | `dot-7/bao-cao.md` | `G.TRANG_THAI_TREN_THAN=false` |
+| 7+ | Bỏ khung khối băng quanh quái đóng băng | ĐÃ LÀM (chưa kiểm riêng) | 5633e605 | — | revert 5633e605 |
+| 8 | Độ đọc trận đấu: thứ bậc hình ảnh, đỏ chỉ cho nguy hiểm, số sát thương, vùng thông báo | ĐANG CHẠY (từ 13:05) | — | `dot-8-do-doc-tran.md` | `G.DO_DOC_TRAN` |
+| 8b | Bỏ ô dấu Linh Khí trên đầu quái → viền hệ quanh thanh máu | ĐÃ QUYẾT ("Ok" 13:21, chờ xác nhận lại), CHƯA LÀM | — | brief §Bổ sung | — |
+| 9 | Trang trạng thái này + đồng bộ TONG-HOP | ĐÃ LÀM | — | tệp này | — |
+| 10 | Đo dung lượng, tách ảnh tải sau (Q5) | ĐÃ QUYẾT, CHƯA LÀM | — | — | — |
+
+## 2. Làn chuyển hình code → ảnh AI (19 phiên)
+
+| Phiên | Việc | Trạng thái | Prompt |
+|---|---|---|---|
+| A1 | 18 đồ vật phòng; trang Tách Phòng | CHỜ ẢNH | `phong-a1/PROMPT.md` |
+| A2 | 18 cửa + ổ khoá + đầu lâu | CHỜ ẢNH | `phong-a2/PROMPT.md` |
+| A3 | Đồ trang trí 3 vùng | ĐANG CHẠY (13:43) | — |
+| A4 | Sàn/tường Hang biển, Lâu đài | ĐÃ QUYẾT: chỉ sau khi Rừng có ảnh thật và duyệt | — |
+| B1 | 14 dải đạn/bom/tên | CHỜ ẢNH | `hieu-ung-b1/PROMPT.md` |
+| B2 | 8 dải đòn/chiêu (+ bản theo hệ) | CHỜ ẢNH | `hieu-ung-b2/PROMPT.md` |
+| B3 | 15 dải nổ/trạng thái/trùm/cổng | CHỜ ẢNH | `hieu-ung-b3/PROMPT.md` |
+| B4 | 7 vũng trên sàn | CHƯA LÀM | — |
+| C1 | 14 biểu tượng nút | CHỜ ẢNH | `giao-dien-c1/PROMPT.md` |
+| C2 | 30 biểu tượng nhỏ; biểu tượng tinh anh 12×12 | CHỜ ẢNH (phóng to đã lên) | `giao-dien-c2/PROMPT.md` |
+| C3 | Hình cố định lớn (logo, thẻ ải, trống đồng) | CHƯA LÀM | — |
+| C4 | Thân nút, ô vũ khí, cần điều khiển | CHƯA LÀM | — |
+| C5 | Khung 9 mảnh | CHƯA LÀM | — |
+| D1 | 6 công trình làng; trang Tách Làng | CHỜ ẢNH | `lang-d1/PROMPT.md` |
+| D2 | 12 đạo cụ + khung cửi, lửa lò | CHỜ ẢNH | `lang-d2/PROMPT.md` |
+| D3 | Nền làng + tranh bản đồ vùng | CHƯA LÀM | — |
+| E1 | 3 đồ lưng vẽ lại + cánh theo cấp | 6 đồ lưng ĐÃ NHẬP (11:25); cánh theo cấp CHƯA | — |
+| E2 | Trùm đổi hình theo pha | ĐANG CHẠY (13:25) | — |
+| E3 | Tách lại 36 quái nét gấp đôi | ĐÃ QUYẾT: sau khi chốt dung lượng | — |
+| — | Bản đồ ải (tach-giao-dien) | CHỜ ẢNH | `giao-dien/PROMPT.md` |
+| — | 7 người làng | CHỜ ẢNH | `nguoi-lang`… |
+| — | 12 thân theo bộ trang phục | 3 tấm Cu Tí đã gen (Pippit), **chờ zip**; 9 tấm còn lại chưa gen | `bo-trang-phuc/PROMPT.md` + `anh-kem/` |
+
+## 3. Công cụ
+
+| Việc | Trạng thái |
+|---|---|
+| Nhận vạch kẻ dày (7 trang) | ĐÃ LÀM + ĐÃ KIỂM (sáng 11/10) |
+| Không lấy nhầm vạch dày/viền làm nền (6 trang) | ĐÃ LÀM + ĐÃ KIỂM |
+| Tự nhận ô có nền lệch màu (7 trang) | ĐÃ LÀM + ĐÃ KIỂM (`cong-cu-nen-o/bao-cao.md`) |
+| Ô Bản màu chỉ hiện ở 8 mục B2 | ĐÃ LÀM |
+| Prompt bộ trang phục đòi 2 ảnh kèm | ĐÃ LÀM |
+
+## 4. Quyết định đang chờ chủ dự án
+
+1. Bảng màu lõi dùng từ lô mới (Đợt 4) — mặc định: có.
+2. Giữ 2 trường `bam`/`bam_vk` (Đợt 5) — mặc định: giữ.
+3. Kiếm đi qua mặt ở 2 khung đầu đòn (Đợt 5) — mặc định: giữ (2a).
+4. Tile: giữ vẽ đè vòng đá/bãi hoa lên tile; màu sàn theo đặc tả (Đợt 6) — mặc định: có.
+5. Mở rộng tile sang 2 vùng kia — chỉ sau khi Rừng có ảnh thật.
+6. 8b bỏ ô dấu Linh Khí — "Ok" 13:21, chờ xác nhận lại vì có thể nhầm với khung khối băng.
+7. Màu nút Đánh mới (Đợt 8) — sẽ hỏi kèm ảnh.
+8. Hồ lô (19×28) và trống đồng (15×25) khá to so với em bé — xem trong game rồi quyết.
+
+## 5. Việc chỉ chủ dự án làm được
+
+- Chơi thử trên iPhone thật ~10 phút bản mới nhất: búa giữ nút có kẹt không; sân 300 đủ rộng chưa; chỗ nào chữ/số che quái.
+- Gen ảnh theo các prompt "CHỜ ẢNH" ở mục 2 (thứ tự gợi ý: 12 thân bộ → 8 đòn/chiêu bản Chung → 18 đồ vật + 18 cửa → 14 nút → 30 biểu tượng nhỏ → làng → tile Rừng).

@@ -1,3 +1,5 @@
+> **LỖI THỜI (11/10/2026):** tài liệu này tổng hợp bản ngày 10/10. Trạng thái hiện hành của mọi hạng mục xem **`ke-hoach-cai-thien/TRANG-THAI.md`**.
+
 # TỔNG HỢP RÀ SOÁT — Linh Khí (10/10/2026)
 
 Gộp 5 bản rà soát của các phiên Claude và bản thiết kế của ChatGPT thành **một danh sách việc**, **một kế hoạch** và **một checklist thử tay**.
