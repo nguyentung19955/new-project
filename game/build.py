@@ -114,8 +114,8 @@ def main():
 TEN_NHE = 'linh-khi-nhe.html'
 TEN_ANH = 'linh-khi-anh.%s.json'
 # Trần dung lượng theo quyết định Q5: gói một tệp 15 MB; tách ảnh tải sau thì cả gói 20 MB. Tệp đầu (2 tệp) nên dưới 5 MB để tới màn chào nhanh.
-# 11/10/2026 (chủ dự án duyệt): trần gói hai tệp nâng lên 25 MB vì phần ảnh tải sau không làm chậm màn chào; tệp đầu vẫn dưới 5 MB.
-TRAN_MOT_TEP, TRAN_HAI_TEP, NEN_DUOI = 15 * 1024 * 1024, 25 * 1024 * 1024, 5 * 1024 * 1024
+# 11/10/2026 (chủ dự án duyệt): trần gói hai tệp nâng lên 25 MB, rồi 26 MB (21:43) vì phần ảnh tải sau không làm chậm màn chào; tệp đầu vẫn dưới 5 MB.
+TRAN_MOT_TEP, TRAN_HAI_TEP, NEN_DUOI = 15 * 1024 * 1024, 26 * 1024 * 1024, 5 * 1024 * 1024
 TRUM_VUNG = ('mocTinh', 'nguTinh', 'hoTinh')
 # Hiệu ứng cơ bản (đòn đánh thường nào cũng dùng): vệt chém / đâm, mũi tên của bé, trúng đòn, chí mạng, vỡ giáp, quái chết.
 HU_CO_BAN = re.compile(r'^hu-(chem|dam|trung|dan-ten|chi-mang|pha-giap|quai-chet)(-|$)')
@@ -198,7 +198,7 @@ def hai_tep(custom, gom, trang, frag):
     write(os.path.join(DIST, TEN_NHE), nhe)
     n1, n2 = len(nhe.encode('utf-8')), len(data)
     print('Chế độ 2 tệp: dist/%s (%d KB, %d hình bắt buộc) + dist/%s (%d KB, %d hình tải sau)' % (TEN_NHE, n1 // 1024, len(truoc), ten, n2 // 1024, len(sau)))
-    print('Dung lượng hai tệp: %.2f MB / trần 25 MB (Q5, nâng 11/10), còn %.2f MB%s; tệp đầu %.2f MB (nên dưới 5 MB)%s'
+    print('Dung lượng hai tệp: %.2f MB / trần 26 MB (Q5, nâng 11/10), còn %.2f MB%s; tệp đầu %.2f MB (nên dưới 5 MB)%s'
           % ((n1 + n2) / 1048576, (TRAN_HAI_TEP - n1 - n2) / 1048576, '  ← VƯỢT TRẦN' if n1 + n2 > TRAN_HAI_TEP else '', n1 / 1048576, '  ← TỆP ĐẦU QUÁ NẶNG, xem lại luật bat_buoc' if n1 > NEN_DUOI else ''))
 
 
