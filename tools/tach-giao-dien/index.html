@@ -191,11 +191,11 @@
       <p class="chu-y">Hàng "mờ" là bản xám game tự làm từ chính ảnh của bạn (hệ chưa đạt mốc, ngọc chưa bật), bạn không cần vẽ thêm. Số 1, 2, 3 trên huy chương do game viết. Phần này do trang công cụ tự vẽ theo đúng số đo của game, không cần mạng.</p>
       </div>
       <div id="xemLon" hidden>
-      <p class="chu-y">Từng hình ở từng trạng thái, do chính code giao diện của game vẽ (phóng to 3 lần). Số ải, sao và chữ trên nút là game tự viết. Hình nào chưa có ảnh thì hiện hình vẽ code cũ; thiếu hình "sáng", "bấm", "chọn", "khoá" mà có hình thường thì game tự làm sáng hoặc làm tối từ hình thường.</p>
+      <p class="chu-y" id="ttLon">Từng hình ở từng trạng thái, do chính code giao diện của game vẽ (phóng to 3 lần). Số ải, sao và chữ trên nút là game tự viết. Hình nào chưa có ảnh thì hiện hình vẽ code cũ; thiếu hình "sáng", "bấm", "chọn", "khoá" mà có hình thường thì game tự làm sáng hoặc làm tối từ hình thường.</p>
       <div class="khung-xem"><canvas id="cvTT"></canvas></div>
       <p class="chu-y" id="ttCanh">Màn hình thật của game:</p>
-      <div class="khung-xem"><canvas id="cvCanh"></canvas></div>
-      <p class="chu-y">Hình dưới là một màn của game thật (bản đồ ải, làng, màn chào) chạy với một bản lưu thử; bản lưu của bạn không bị đụng tới. Ảnh của lô "Hình lớn" và lô "Logo" đã tách trong lần mở trang này được giữ để xem chung.</p>
+      <div class="khung-xem" id="khCanh"><canvas id="cvCanh"></canvas></div>
+      <p class="chu-y" id="ttCanhDuoi">Hình dưới là một màn của game thật (bản đồ ải, làng, màn chào) chạy với một bản lưu thử; bản lưu của bạn không bị đụng tới. Ảnh của lô "Hình lớn" và lô "Logo" đã tách trong lần mở trang này được giữ để xem chung.</p>
       </div>
       <div id="xemNut" hidden>
       <p class="chu-y">Bên trái: cụm nút như trong trận (nút Né tự xoay để bạn xem đủ các hướng). Bên phải: mọi biểu tượng trên đúng nút của nó. Hai hàng dưới: nút Né ở 16 hướng.</p>
@@ -318,6 +318,29 @@ const O_VK = [
   ['Tím', 'CÙNG khung ô 1, đổi màu sang bậc TÍM: vành tím: sáng #d0a8ff, vừa #9a5ae0, tối #5a2a9a; lòng ô tím tối: phần trên #4b2f69, phần dưới #3c2751. Nét lạ: vành tím (trong game 54×35)'],
   ['Vàng', 'CÙNG khung ô 1, đổi màu sang bậc VÀNG (quý nhất): vành vàng kim: sáng #fff0a8, vừa #f0b840, tối #8a5a14; lòng ô nâu vàng tối: phần trên #6e5529, phần dưới #544125; được phép khắc thêm một đường chỉ mảnh hoa văn răng cưa trống đồng chạy dọc mặt vành cho sang hơn, nhưng không lấn vào lòng ô. Nét lạ: vành vàng kim sáng nhất trong bốn ô (trong game 54×35)'],
 ];
+// Làn C5 · khung rỗng co giãn 9 mảnh. Màu theo game/js/ui_theme.js (T.C, T.RAR, T.RARD); viền ngoài theo bảng màu Linh Khí #14182e.
+// [mã, tên, rộng, cao, vien (trên, phải, dưới, trái), mô tả]
+const OD_CHUNG = 'viền ngoài một nét tối #14182e, bốn góc ngoài vát chéo rất nhẹ; kế đó là VÀNH ĐỒNG chạy kín bốn cạnh, dày khoảng 1/16 cạnh ô, màu #a8752f, riêng mép trên của vành có một đường sáng #f6dc92; sát trong vành đồng là VÀNH MÀU BẬC cũng dày khoảng 1/16 cạnh ô (mép ngoài của vành này màu sáng, phần còn lại màu tối); LÒNG ô (khoảng 2/3 cạnh, chính giữa) để TRỐNG; ở bốn góc, nằm trên vành đồng, mỗi góc MỘT đinh tán vuông nhỏ cùng màu sáng của bậc';
+const BAC_OD = [
+  ['Thường', 'gỗ mộc xám be: màu sáng #b9b1a2, màu tối #6b655c', 'màu xám be trầm nhất, mộc nhất trong bốn ô'],
+  ['Lam', 'ngọc lam: màu sáng #4aa3ff, màu tối #1f5fae', 'vành trong xanh lam như ngọc'],
+  ['Tím', 'ngọc tím: màu sáng #b36bff, màu tối #6a2fb0 (tím xanh, KHÁC hẳn màu nền hồng tím)', 'vành trong tím'],
+  ['Vàng', 'vàng kim (quý nhất): màu sáng #ffc83d, màu tối #a8741a', 'vành trong vàng kim sáng nhất, bốn đinh tán to hơn ba ô kia một chút'],
+];
+const VO_CHUNG = 'viền ngoài một nét tối #14182e; hai cạnh TRÊN và DƯỚI là hai thanh đồng mảnh #a8752f (mỗi thanh dày khoảng 1/6 chiều cao khung), mép trên cùng có một đường sáng #f6dc92; hai ĐẦU trái và phải là hai CHỤP ĐỒNG dày hơn nhiều (mỗi chụp rộng khoảng 1/5 bề ngang khung, màu #a8752f), chính giữa mỗi chụp có MỘT đinh tán nhỏ; LÒNG thanh (phần giữa hai chụp, giữa hai thanh trên dưới) để TRỐNG';
+const KHUNG9 = [
+  ...BAC_OD.map(([ten, mau, la], i) => ['o-do-' + i, 'Ô đồ · bậc ' + ten, 32, 32, [6, 6, 6, 6],
+    (i === 0 ? `MỘT khung Ô ĐỒ hình VUÔNG nhìn thẳng chính diện, RỖNG ở giữa (game đặt hình món đồ vào lòng ô): ${OD_CHUNG}. Bậc THƯỜNG: vành màu bậc bằng ${mau}` : `CÙNG khung ô 1 (cùng hình, cùng cỡ, cùng độ dày vành, cùng chỗ đặt đinh), chỉ đổi VÀNH MÀU BẬC và bốn đinh tán sang ${mau}`) + `. Nét lạ: ${la}`]),
+  ...BAC_OD.map(([ten], i) => ['o-do-' + i + '-chon', 'Ô đồ · bậc ' + ten + ' · đang chọn', 32, 32, [7, 7, 7, 7],
+    `CÙNG khung ô ${i + 1} (cùng màu bậc ${ten}, cùng hình), đang được CHỌN nên SÁNG hơn: vành đồng đổi sang đồng sáng #d9a441, và có thêm MỘT vòng viền vàng nhạt #f6dc92 dày một nét ôm LIỀN sát bên ngoài viền tối (vòng này là mép ngoài cùng của hình, chạy kín bốn cạnh, không toả sáng, không nhoè). Nét lạ: vòng viền vàng nhạt ngoài cùng`]),
+  ['khung-mau', 'Vỏ thanh máu', 33, 11, [2, 7, 2, 7], `VỎ của THANH MÁU: MỘT khung chữ nhật NẰM NGANG, dẹt, rộng gấp 3 lần cao, RỖNG ở giữa (game tự đổ màu máu vào lòng): ${VO_CHUNG}. Đinh tán: thân tối #1a120a, chấm vàng #d9a441. Nét lạ: hai chụp đồng có đinh vàng ở hai đầu`],
+  ['khung-mana', 'Vỏ thanh mana', 32, 8, [2, 7, 2, 7], 'CÙNG kiểu vỏ ô 9 nhưng DẸT hơn (rộng gấp 4 lần cao), dùng cho thanh mana: mọi phần như ô 9, riêng chấm đinh tán ở hai chụp màu ngọc lam #8fc6ff. Nét lạ: đinh tán ngọc lam'],
+  ['khung-xp', 'Vỏ thanh kinh nghiệm', 28, 7, [2, 7, 2, 7], 'CÙNG kiểu vỏ ô 9 nhưng MẢNH nhất (rộng gấp 4 lần cao), dùng cho thanh kinh nghiệm: mọi phần như ô 9, riêng hai chụp màu đồng sáng #d9a441, chấm đinh tán vàng nhạt #f6dc92. Nét lạ: hai chụp đồng sáng'],
+  ['khung-trum', 'Khung trùm vùng', 60, 30, [7, 10, 7, 10], 'KHUNG TÊN VÀ MÁU CỦA TRÙM VÙNG: MỘT khung chữ nhật NẰM NGANG rộng gấp đôi cao, RỖNG ở giữa (game viết tên trùm và vẽ thanh máu vào lòng): viền ngoài một nét tối #14182e; VÀNH VÀNG ĐỒNG mảnh chạy kín bốn cạnh (dày khoảng 1/12 chiều cao khung), màu #d9a441, mép trên có đường sáng #f6dc92, mép dưới tối #5a3d1a; viền tối mảnh ở mép trong của vành. Ở BỐN GÓC, mỗi góc MỘT hoa văn TRỐNG ĐỒNG Đông Sơn nhỏ: một ngôi sao nhiều cánh nằm trong vòng tròn (như tâm mặt trống đồng), màu vàng #d9a441 trên nền đồng tối #5a3d1a, to hơn độ dày vành một chút; hoa văn nằm GỌN trong góc (không rộng quá 1/6 bề ngang khung, không cao quá 1/4 chiều cao khung). Nét lạ: bốn ngôi sao trống đồng ở bốn góc, sang nhất trong ba khung'],
+  ['khung-trum-nho', 'Khung trùm nhỏ', 52, 26, [6, 9, 6, 9], 'KHUNG TÊN VÀ MÁU CỦA TRÙM NHỎ: cùng kiểu khung ô 12 (chữ nhật nằm ngang rộng gấp đôi cao, RỖNG ở giữa) nhưng giản dị hơn: vành ĐỒNG NÂU #a8752f (mép trên sáng #d9a441, mép dưới tối #5a3d1a); ở bốn góc mỗi góc chỉ có MỘT vòng tròn đồng tâm nhỏ (hai vòng lồng nhau, màu #d9a441), KHÔNG có ngôi sao. Nét lạ: vòng tròn đồng tâm ở bốn góc, màu đồng nâu'],
+  ['khung-tinh-anh', 'Khung tinh anh', 44, 22, [5, 8, 5, 8], 'KHUNG TÊN VÀ MÁU CỦA QUÁI TINH ANH: cùng kiểu khung ô 12 (chữ nhật nằm ngang rộng gấp đôi cao, RỖNG ở giữa) nhưng nhỏ và đơn giản nhất: vành đồng nâu #a8752f mảnh nhất trong ba khung (mép trên sáng #d9a441); ở bốn góc mỗi góc chỉ có MỘT đinh tán vuông nhỏ màu vàng nhạt #f6dc92, không hoa văn. Nét lạ: bốn đinh vuông vàng nhạt, vành mảnh nhất'],
+  ['the-thuong', 'Thẻ phần thưởng', 32, 32, [6, 6, 6, 6], 'KHUNG THẺ (thẻ phần thưởng, thẻ món hàng, thẻ vũ khí ở màn kết quả): MỘT khung hình VUÔNG, RỖNG ở giữa (game kéo khung rộng ra, cao lên tuỳ thẻ rồi viết chữ, đặt hình vào lòng): viền ngoài một nét tối #14182e, bốn góc ngoài vát chéo rất nhẹ; VÀNH ĐỒNG #a8752f chạy kín bốn cạnh, dày khoảng 1/12 cạnh, mép trên có đường sáng #f6dc92, mép dưới tối #5a3d1a; viền tối mảnh #1a120a ở mép trong của vành; ở bốn góc, sát trong vành, mỗi góc MỘT đinh tán vuông nhỏ màu đồng sáng #d9a441. Nét lạ: mỏng và trơn nhất, đinh tán nằm sát trong vành'],
+];
 const LO = [
   { id: 'phong', ten: 'Bản đồ · 12 biểu tượng phòng', kieu: 'icon', cot: 4, hang: 3, mau: 6, net: 'net', xem: true,
     ds: PHONG.map(([k, ten, mo]) => ({ ma: 'gd-phong-' + k, ten, mo, w: 7, h: 7 })) },
@@ -345,6 +368,10 @@ const LO = [
     ds: THAN.map(([k, ten, w, h, mo]) => ({ ma: 'gd-' + k, ten, w, h, mo: mo + ` (trong game ${w}×${h})` })) },
   { id: 'ovk', ten: 'Ô vũ khí · khung theo 4 bậc', kieu: 'gian', cot: 2, hang: 2, mau: 16, net: 'min', xem: true, xemThan: true,
     ds: O_VK.map(([ten, mo], i) => ({ ma: 'gd-o-vk-' + i, ten: 'Ô vũ khí · bậc ' + ten, w: 54, h: 35, mo })) },
+  // Làn C5: khung co giãn 9 mảnh (game/js/ui_theme.js: T.slot, T.bar phần vỏ, T.bossBar, T.card). Mỗi hình ghi sẵn "vien" [trên, phải, dưới, trái]
+  // (điểm ảnh game) vào tệp; game giữ nguyên bốn góc, kéo giãn cạnh. rong: hình RỖNG giữa (lúc tách không coi vành mảnh của khung là nét kẻ lưới).
+  { id: 'khung9', ten: 'Khung 9 mảnh · ô đồ, vỏ thanh máu, khung trùm, thẻ (15 hình)', kieu: 'gian', cot: 4, hang: 4, mau: 16, net: 'min', xemLon: true, xemKhung: true, rong: true, bm: ['kim_loai', 'go'],
+    ds: KHUNG9.map(([k, ten, w, h, vien, mo]) => ({ ma: 'gd-' + k, ten, w, h, vien, mo: mo + ` (trong game ${w}×${h})` })) },
 ];
 
 const $ = (id) => document.getElementById(id);
@@ -454,6 +481,17 @@ function luoi(L) {
 // Bảng màu của bộ giao diện trống đồng (game/js/ui_theme.js, T.C): dùng cho lô Hình lớn và lô Logo.
 const MAU_LON = 'BẢNG MÀU (bắt buộc bám theo; mỗi chất liệu tối đa 3 sắc; chỉ để chọn màu, KHÔNG vẽ ô màu mẫu vào ảnh): đồng: tối #5a3d1a, vừa #a8752f, sáng #d9a441, ánh sáng nhất #f6dc92; xanh ngọc (mặt trống thường): đậm #1f4f4a, vừa #3f8f7f; đỏ đồng (mặt nút, mặt trống ải trùm, thẻ đang chọn): đậm #8a2f22, sáng #b8452f; xám xanh xỉn (nút lúc nghỉ, thẻ chưa mở): #1c2c2a, #26403c, #35524c, #4c6e66, chi tiết #7f948e; vàng kem (bong bóng lời nói): #fff0c4; viền ngoài và nét tối: #1a120a. ';
 function taoPrompt(L) {
+  if (L.id === 'khung9') return `Dùng công cụ tạo ảnh vẽ MỘT tấm ảnh pixel art 2D gồm ĐÚNG ${L.ds.length} cái KHUNG RỖNG cho giao diện của ${GAME_LK}: tám khung ô đồ (bốn bậc Thường, Lam, Tím, Vàng, mỗi bậc một bản thường và một bản đang chọn), ba vỏ thanh (máu, mana, kinh nghiệm), ba khung tên và máu (trùm vùng, trùm nhỏ, quái tinh anh) và một khung thẻ. Tất cả cùng một bộ: làm bằng đồng, theo kiểu trống đồng Đông Sơn. `
+    + luoi(L)
+    + `ĐIỀU QUAN TRỌNG NHẤT · PHẦN GIỮA ĐỂ TRỐNG: mỗi hình chỉ là cái KHUNG (viền ngoài, vành, bốn góc). Phần GIỮA của mọi khung phải TRỐNG hoàn toàn: tô kín đúng màu nền hồng tím #FF00FF, không tô màu tối, không vẽ gì vào đó. Lý do: game KÉO GIÃN khung cho vừa từng chỗ (ô đồ to nhỏ khác nhau, thanh máu dài ngắn khác nhau) rồi tự vẽ lòng khung, màu máu, chữ và hình món đồ vào giữa. `
+    + `BỐN GÓC GIỮ NGUYÊN, BỐN CẠNH BỊ KÉO DÀI: hoa văn và đinh tán CHỈ được nằm ở bốn góc (riêng ba vỏ thanh thì nằm ở hai chụp hai đầu). Đoạn cạnh nằm giữa hai góc phải THẲNG, TRƠN, cùng một mặt cắt suốt chiều dài: không răng cưa, không chấm, không đinh, không hoa văn, không vết xước ở giữa cạnh, vì game kéo dài đoạn đó. Hoa văn ở góc phải nằm GỌN trong góc, không chạy lan dọc theo cạnh, không chạm sang đoạn cạnh trơn, không lấn vào phần giữa. `
+    + `KIỂU VẼ: pixel art, nhìn thẳng chính diện, ánh sáng từ phía trên; màu phẳng, đổ bóng 3 sắc (sáng, vừa, tối); viền ngoài một nét tối #14182e quanh mép ngoài mọi khung; bốn cạnh thẳng, góc vuông (chỉ vát rất nhẹ, không bo tròn); không chuyển màu, không phát sáng mờ, không nhoè. Trong game các khung này nhỏ (cỡ ghi trong ngoặc sau mỗi ô, tính bằng điểm ảnh; vành chỉ dày 1 đến 3 điểm ảnh) nên vành phải rõ, gọn, hoa văn góc to, ít và đơn giản. Mỗi hình có một "nét lạ" ghi ở trên, phải giữ. `
+    + `GIỮ ĐỒNG BỘ: ô 1 đến ô 4 là CÙNG một khung, chỉ khác màu vành trong và đinh tán; ô 5 đến ô 8 là bản đang chọn của ô 1 đến ô 4, cùng hình, cùng cỡ; ba vỏ thanh (ô 9, 10, 11) cùng một kiểu; ba khung ô 12, 13, 14 cùng một kiểu, sang dần từ ô 14 lên ô 12. Giữ đúng dáng từng hình: ô đồ và thẻ VUÔNG; vỏ thanh DẸT nằm ngang; khung trùm nằm ngang rộng gấp đôi cao. Không kéo cho vuông. `
+    + `KHÔNG vẽ BÓNG: không bóng đổ xuống nền, không bề dày phía dưới (game tự vẽ bóng). MÀU ĐỎ không dùng (trong game màu đỏ dành cho máu và báo nguy hiểm). `
+    + `CỠ TRONG Ô: mỗi khung chiếm khoảng 70% bề ngang ô lưới, nằm giữa ô, nằm TRỌN trong ô, không chạm đường lưới. `
+    + `KHÔNG vẽ: chữ, số, nhãn, tên bậc, chú thích; hình món đồ, vũ khí, màu máu, vạch chia hay bất cứ thứ gì ở phần giữa khung; ô mẫu màu; màu hồng tím ở trong thân khung. `
+    + bmDoan(['kim_loai', 'go'], { vien: 'viền ngoài một nét #14182e như đã ghi', rieng: true })
+    + CUOI;
   if (L.id === 'than') return `Dùng công cụ tạo ảnh vẽ MỘT tấm ảnh pixel art 2D gồm ĐÚNG ${L.ds.length} hình THÂN NÚT BẤM cho ${GAME_LK}: sáu nút tròn (bốn nút Đánh theo hệ, một nút vành ngọc, một nút vành sắt), một nút vuông vát góc, và đế cùng núm của cần điều khiển. Đây chỉ là phần THÂN (vành và mặt nút), CHƯA có biểu tượng: game tự đặt hình kiếm, cung, mũi tên, bình máu lên giữa mặt nút. `
     + luoi(L)
     + `KIỂU VẼ: pixel art; mọi hình nhìn THẲNG TỪ TRÊN XUỐNG nên nút tròn phải tròn đều (không nghiêng, không bầu dục, không phối cảnh); ánh sáng từ phía trên bên trái; màu phẳng, đổ bóng 3 sắc (sáng, vừa, tối); viền ngoài một nét tối #140e0c quanh mép mọi hình; không chuyển màu, không phát sáng mờ, không nhoè. Trong game các nút này nhỏ (cỡ ghi trong ngoặc sau mỗi ô, tính bằng điểm ảnh) nên hoa văn phải to, ít và đơn giản. Mỗi hình có một "nét lạ" ghi ở trên, phải giữ. `
@@ -526,6 +564,7 @@ function hienLo() {
   $('moTaLo').textContent = L.kieu === 'khung' ? 'Một ảnh khung, giữa để trống (màu nền hồng tím). Trong game khung to 380×242 điểm ảnh.'
     : L.id === 'logo' ? 'MỘT tấm ảnh riêng: chữ LINH KHÍ kiểu khắc gỗ, có hoa văn trống đồng, nền hồng tím. Trong game logo to 200×40 điểm ảnh, nằm ở màn chào. Nhận ảnh xong bạn nhớ tự ĐỌC LẠI CHỮ: phải đúng "LINH KHÍ", có dấu sắc trên chữ I cuối; sai thì nhờ ChatGPT vẽ lại.'
     : L.id === 'than' ? `${L.ds.length} hình, lưới ${L.cot} cột × ${L.hang} hàng (3 ô cuối để trống), nền hồng tím. Ảnh chỉ là THÂN nút nhìn từ trên xuống: vành, mặt nút, lửa / giọt độc / gai băng quanh vành. Game tự vẽ bề dày, bóng, hình ở giữa, số mana, hồi chiêu; tự làm sáng khi bấm, xám khi khoá. Nút Chưởng dùng chung ảnh vòng theo hệ (thu nhỏ). Hình không cần nằm đúng giữa ô: game tự tìm tâm nút. Thiếu hình nào thì nút đó vẽ như cũ.`
+    : L.id === 'khung9' ? `${L.ds.length} khung RỖNG giữa, lưới ${L.cot} cột × ${L.hang} hàng (ô cuối để trống), nền hồng tím. Game cắt mỗi khung thành 9 mảnh: bốn góc giữ nguyên, bốn cạnh kéo dài theo cỡ (ô đồ to nhỏ, thanh máu dài ngắn, thẻ rộng hẹp). Vì vậy hoa văn chỉ nằm ở góc, cạnh phải trơn. Lòng ô, màu máu, chữ, hình món đồ, bóng vẫn do game vẽ. Thiếu hình nào thì riêng khung đó vẽ như cũ; thiếu bản "đang chọn" thì game dùng bản thường và tự thêm vòng sáng.`
     : L.id === 'ovk' ? `${L.ds.length} khung, lưới ${L.cot} cột × ${L.hang} hàng, nền XANH LÁ (vì có ô màu tím). Vẽ ô ở dạng đang cầm; game tự làm trầm ô chưa cầm, tự thêm viền sáng ô đang cầm. Hình vũ khí, ngọc hệ, dấu đổi vũ khí vẫn do game vẽ. Thiếu bậc nào thì ô bậc đó vẽ như cũ.`
     : L.id === 'lon' ? `${L.ds.length} hình, lưới ${L.cot} cột × ${L.hang} hàng (2 ô cuối để trống), nền hồng tím. Nút Nói chuyện, thẻ ải, thẻ ải trùm mỗi thứ có 3 trạng thái. Thiếu hình trạng thái nào thì game tự làm sáng hoặc làm tối từ hình "thường"; thiếu hình "thường" thì game vẽ hình cũ. Số ải, sao, chữ trên nút vẫn do game viết.`
     : `${L.ds.length} hình, lưới ${L.cot} cột × ${L.hang} hàng, nền hồng tím.` + (L.id === 'nut' ? ' Game chỉ lấy ảnh làm HÌNH Ở GIỮA nút; vòng nút, màu hệ, số mana, hồi chiêu vẫn do game vẽ. Nút Né: game tự xoay ảnh theo hướng né.' : '') + (L.id === 'nho' ? ' Mỗi hình có cỡ riêng trong game (ghi cạnh tên bên dưới); công cụ tự thu từng hình về đúng cỡ. Thiếu hình nào thì game vẫn vẽ hình cũ cho riêng hình đó.' : '');
@@ -662,7 +701,8 @@ function tachNen(A, coAlpha, C, R) {
     // màu nền: lấy mẫu ở 4 góc mỗi ô lưới (góc ô gần như luôn là nền), giữ các màu chiếm ≥ 3%
     // độ dày tối đa của nét kẻ lưới: 6 điểm, hoặc 1,5% cạnh dài của ảnh (ChatGPT hay kẻ nét đen dày 10–16 điểm ở ảnh 1024)
     const T = Math.max(6, Math.round(0.015 * Math.max(W, H)));
-    const Lg = Math.max(24, Math.round(Math.min(W / C, H / R) * 0.45));
+    // lô khung rỗng (L.rong): vành khung mảnh và dài như nét kẻ, nên chỉ coi là nét kẻ lưới khi nét dài hơn hẳn một ô (nét kẻ thật chạy suốt tấm ảnh)
+    const Lg = L && L.rong ? Math.round(Math.max(W / C, H / R) * 1.15) : Math.max(24, Math.round(Math.min(W / C, H / R) * 0.45));
     const dem = new Map(); let tong = 0;
     for (let r = 0; r < R; r++) for (let c = 0; c < C; c++) {
       const cw = W / C, ch = H / R;
@@ -1018,6 +1058,7 @@ function phanTep(i, dungCanvas, thuong) {
   if (thuong && N > 1) { cv = document.createElement('canvas'); cv.width = m.w; cv.height = m.h; const x = cv.getContext('2d'); x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high'; x.drawImage(K.out.cv, 0, 0, cv.width, cv.height); }
   else if (N > 1) t.net = N;
   if (L.kieu === 'khung' && c.vien) t.vien = c.vien.slice();
+  else if (m.vien) t.vien = m.vien.slice(); // lô Khung 9 mảnh: viền ghi sẵn theo từng hình
   if (dungCanvas) t.anhCanvas = cv; else t.anh = cv.toDataURL('image/png');
   return t;
 }
@@ -1385,9 +1426,57 @@ function datCanh(ten) {
   for (let k = 0; k < 6; k++) g.tick();
   CANH_DANG = ten;
 }
+// Lô "Khung 9 mảnh" (làn C5): cùng một khung ở NHIỀU CỠ, do G.theme của game đầy đủ vẽ (T.slot, T.bar, T.bossBar, T.card), phóng to 3 lần.
+// Không có phần "màn hình thật". Chữ gốc của phần xem Hình lớn được cất lại để trả về khi đổi sang lô khác.
+const LOI_LON = { tt: null };
+function veXemKhung() {
+  if (LOI_LON.tt == null) LOI_LON.tt = $('ttLon').textContent;
+  $('ttLon').textContent = 'Cùng một khung ở nhiều cỡ, do chính code giao diện của game vẽ (phóng to 3 lần): bốn góc phải giữ nguyên dạng, chỉ cạnh dài ra. Lòng ô, màu máu, chữ, bóng là game tự vẽ. Khung nào chưa có ảnh thì hiện hình vẽ code cũ.';
+  for (const id of ['ttCanh', 'khCanh', 'ttCanhDuoi', 'nutDoiMau']) $(id).hidden = true;
+  $('tdXem').textContent = 'Xem thử khung ở nhiều cỡ';
+  $('nutSoCode').textContent = SO_CODE ? 'Xem lại ảnh của bạn' : 'Xem bản vẽ code (cũ)';
+  if ($('buoc4').hidden) return;
+  if (!GD) { if (!hetNguonDu) { $('ttXem').textContent = 'Đang nạp game để vẽ thử (bản game đầy đủ, lần đầu hơi lâu)…'; $('vungXem').hidden = true; } return; }
+  const g = GD, SC = g.spriteCustom, gdThat = SC.gd, T = g.theme;
+  if (!T.MA_KHUNG) { $('ttXem').textContent = 'Bản game trên mạng chưa có phần vẽ khung bằng ảnh (vừa đăng thì chờ vài phút rồi mở lại trang). Vẫn tách và tải tệp được.'; $('vungXem').hidden = true; return; }
+  $('vungXem').hidden = false;
+  $('ttXem').textContent = 'Chạm "Xem bản vẽ code (cũ)" để so với khung game đang vẽ.';
+  const ux0 = g.ux, us0 = g.uiScale;
+  if (SO_CODE) SC.gd = {};
+  try {
+    const cv = $('cvTT'), K = 3 * Math.min(2, window.devicePixelRatio || 1), W = 360, H = 286;
+    if (cv.width !== Math.round(W * K) || cv.height !== Math.round(H * K)) { cv.width = Math.round(W * K); cv.height = Math.round(H * K); }
+    const c = cv.getContext('2d'); c.setTransform(K, 0, 0, K, 0, 0); c.textBaseline = 'alphabetic';
+    c.fillStyle = '#12292a'; c.fillRect(0, 0, W, 118); c.fillStyle = '#3a5a44'; c.fillRect(0, 118, W, 100); c.fillStyle = '#17363a'; c.fillRect(0, 218, W, 68);
+    const chu = (t, x, y) => { g.ux = c; c.font = '600 6.5px ' + FONT; c.textAlign = 'left'; c.fillStyle = '#f1ead9'; c.fillText(t, x, y); };
+    g.ux = c; g.uiScale = K;
+    // 1) ô đồ: bốn bậc cỡ 32, bản đang chọn, ô mờ; rồi các cỡ khác trong game (20, 24, 28, 36, 70)
+    chu('Ô đồ 32 · bốn bậc', 4, 9); chu('đang chọn', 152, 9); chu('mờ', 296, 9);
+    for (let r = 0; r < 4; r++) { T.slot(4 + r * 36, 13, 32, r); T.slot(153 + r * 36, 14, 32, r, { sel: true }); }
+    T.slot(303, 20, 20, 1, { dim: true }); T.slot(329, 20, 20, 3, { dim: true });
+    chu('Các cỡ khác: 20 · 24 · 28 · 36 · 70', 4, 59);
+    T.slot(4, 64, 20, 0); T.slot(30, 64, 24, 1); T.slot(60, 64, 28, 2, { sel: true }); T.slot(96, 64, 36, 3); T.slot(140, 62, 20, 3, { sel: true }); T.slot(176, 48, 70, 2);
+    // 2) vỏ thanh: máu, mana, kinh nghiệm ở đúng cỡ trong trận và trong làng
+    chu('Vỏ thanh máu 120 · mana 108 · kinh nghiệm 104 và 192', 4, 127);
+    T.bar(4, 131, 120, 'hp', 0.62, '62 / 100', { h: 11, size: 7.5 }); T.bar(4, 144, 108, 'mana', 0.4, '20 / 50', { h: 8, size: 6.5 });
+    T.bar(134, 133, 104, 'xp', 0.55, null, { h: 7 }); T.bar(134, 145, 192, 'xp', 0.8, null, { h: 7 });
+    // 3) khung trùm vùng, trùm nhỏ, tinh anh (tên dài và tên ngắn)
+    T.bossBar(180, 158, { tier: 'big', name: 'Hổ Vằn Núi Tản', frac: 0.7, marks: [0.3, 0.6] });
+    T.bossBar(100, 191, { tier: 'mini', name: 'Cua Đá', frac: 0.45, marks: [0.3, 0.6] });
+    T.bossBar(280, 193, { tier: 'elite', name: 'Tinh anh · Nhện', sub: 'Giáp dày', frac: 0.85 });
+    // 4) thẻ: thẻ thường, thẻ đang bấm, thẻ thấp theo bậc ở màn kết quả
+    chu('Thẻ: thường · đang bấm · thẻ vũ khí theo bậc ở màn kết quả', 4, 227);
+    T.card(4, 232, 70, 46, {}); T.card(80, 232, 70, 46, { sel: true });
+    for (let r = 0; r < 4; r++) T.card(158 + (r % 2) * 100, 232 + (r >> 1) * 26, 96, r < 2 ? 22 : 16, { rar: r });
+  } catch (e) { $('ttXem').textContent = 'Không vẽ thử được: ' + e.message; }
+  g.ux = ux0; g.uiScale = us0; SC.gd = gdThat;
+}
 function veXemLon() {
   $('xemBanDo').hidden = true; $('xemNut').hidden = true; $('xemNho').hidden = true; $('xemLon').hidden = false;
   for (const id of ['nutDoiMau', 'nutSoCode', 'nutBoXem']) $(id).hidden = false;
+  if (L.xemKhung) { veXemKhung(); return; }
+  if (LOI_LON.tt != null) $('ttLon').textContent = LOI_LON.tt;
+  for (const id of ['ttCanh', 'khCanh', 'ttCanhDuoi']) $(id).hidden = false;
   $('tdXem').textContent = 'Xem thử trong game thật';
   $('nutDoiMau').textContent = 'Đổi cảnh';
   $('nutSoCode').textContent = SO_CODE ? 'Xem lại ảnh của bạn' : 'Xem bản vẽ code (cũ)';
