@@ -53,7 +53,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.11-1000";
+(window.G = window.G || {}).VERSION = "lk-2026.10.11-1001";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -24788,7 +24788,84 @@ MA._xong();
     return v;
   }
   B.clear = () => cache.clear();
+  // ---------- biểu tượng bằng ảnh AI (trang tools/tach-giao-dien, lô "Nút điều khiển") ----------
+  // Có tệp gd-nut-* (js/sprite_custom.js → SC.gd) thì ảnh thay cho HÌNH Ở GIỮA nút; vòng nút, màu hệ, trang trí hệ, thẻ giá mana,
+  // màn hồi chiêu, số, lún khi bấm, xám khi khoá vẫn do code ở dưới vẽ như cũ. Không có tệp thì mọi thứ y hệt cũ.
+  // Mã: gd-nut-danh-<sword|bow|spear|hammer>, gd-nut-dac-biet-<vũ khí>, gd-nut-ky-nang-<hero>, gd-nut-chuong-<fire|poison|ice>,
+  //     gd-nut-ne (vẽ hướng sang PHẢI, game tự xoay 16 hướng), gd-nut-binh-mau, gd-nut-tam-dung.
+  const GD_DAU = { w_: 'gd-nut-danh-', s_: 'gd-nut-dac-biet-', h_: 'gd-nut-ky-nang-', c_: 'gd-nut-chuong-' };
+  const GD_RIENG = { dodge: 'gd-nut-ne', potion: 'gd-nut-binh-mau', pause: 'gd-nut-tam-dung' };
+  function gdMa(name) { return GD_RIENG[name] || (GD_DAU[name.slice(0, 2)] ? GD_DAU[name.slice(0, 2)] + name.slice(2) : null); }
+  B.maAnh = gdMa; // cho công cụ và bài kiểm tra biết nút nào dùng mã nào
+  function gdIcon(name) {
+    const s = G.spriteCustom, ma = s && s.gdSan ? gdMa(name) : null;
+    return ma ? s.gdSan(ma) : null;
+  }
+  // Dấu riêng của từng ảnh, ghép vào khoá bộ nhớ đệm: ảnh nạp xong (hoặc bị đổi, bị gỡ) thì nút tự dựng lại, không cần ai gọi xoá.
+  const gdSo = new WeakMap(), gdDiem = new WeakMap();
+  let gdDem = 0;
+  function gdTag(name) {
+    const g = gdIcon(name);
+    if (!g) return '';
+    let n = gdSo.get(g);
+    if (!n) gdSo.set(g, (n = ++gdDem));
+    return '@' + n;
+  }
+  // Điểm ảnh gốc của ảnh (đọc một lần). Đọc không được thì nhớ là hỏng để quay về hình vẽ code.
+  function gdPix(g) {
+    if (gdDiem.has(g)) return gdDiem.get(g);
+    let v = null;
+    try {
+      const w = g.pw || g.img.width, h = g.ph || g.img.height;
+      if (w > 0 && h > 0 && w <= 1024 && h <= 1024) {
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        const x = c.getContext('2d');
+        x.drawImage(g.img, 0, 0);
+        v = { w, h, d: x.getImageData(0, 0, w, h).data, xa: 0 };
+        // xa: điểm đặc xa tâm nhất (1 = chạm mép ảnh, 1,41 = chạm góc), để thu hình cho gọn trong mặt nút tròn
+        const M = Math.max(w, h) / 2;
+        for (let py = 0; py < h; py++) for (let px = 0; px < w; px++) if (v.d[(py * w + px) * 4 + 3] >= 128) v.xa = Math.max(v.xa, Math.hypot(px + 0.5 - w / 2, py + 0.5 - h / 2) / M);
+      }
+    } catch (e) { v = null; }
+    gdDiem.set(g, v);
+    return v;
+  }
+  // Đưa ảnh về bảng pixel S x S của nút (cùng cỡ, cùng lề 1 với hình vẽ code), xoay deg độ theo chiều kim đồng hồ.
+  // Mỗi điểm của nút lấy trung bình nhiều điểm của ảnh (ảnh thường nét gấp đôi) rồi chốt đặc/trong để mép vẫn sắc như pixel.
+  // tron: nút tròn. Hình vươn ra góc ảnh (ví dụ thanh kiếm chéo) được thu lại vừa đủ để nằm trong mặt nút như hình vẽ code,
+  // không thò ra ngoài vòng nút; nhờ vậy nút Né xoay hướng nào cũng không bị cắt.
+  function gdBuf(g, S, deg, tron) {
+    const src = gdPix(g);
+    if (!src) return null;
+    const z = tron && src.xa > 1.06 ? 1.06 / src.xa : 1;
+    const b = new Buf(S + 2, S + 2), M = Math.max(src.w, src.h) / z, sc = M / S;
+    const n = clamp(Math.ceil(sc * 1.5), deg ? 3 : 1, 6), a = ((deg || 0) * Math.PI) / 180, co = Math.cos(a), si = Math.sin(a);
+    let co0 = 0;
+    for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
+      let r = 0, gg = 0, bl = 0, al = 0;
+      for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+        const u = ((x + (i + 0.5) / n) / S) * 2 - 1, v = ((y + (j + 0.5) / n) / S) * 2 - 1;
+        const sx = Math.floor(src.w / 2 + ((u * co + v * si) * M) / 2), sy = Math.floor(src.h / 2 + ((v * co - u * si) * M) / 2);
+        if (sx < 0 || sy < 0 || sx >= src.w || sy >= src.h) continue;
+        const k = (sy * src.w + sx) * 4, q = src.d[k + 3];
+        if (!q) continue;
+        r += src.d[k] * q; gg += src.d[k + 1] * q; bl += src.d[k + 2] * q; al += q;
+      }
+      if (al < n * n * 255 * 0.4) continue;
+      const k = ((y + 1) * b.w + x + 1) * 4;
+      b.d[k] = r / al; b.d[k + 1] = gg / al; b.d[k + 2] = bl / al; b.d[k + 3] = 255;
+      co0++;
+    }
+    return co0 ? b : null; // ảnh rỗng: dùng hình vẽ code
+  }
   function iconBuf(name, S, arg) {
+    const g = gdIcon(name);
+    if (g) {
+      const deg = name === 'dodge' ? +arg || 0 : 0;
+      const b = memo('g|' + name + '|' + S + '|' + deg + gdTag(name), () => gdBuf(g, S, deg, name !== 'potion' && name !== 'pause') || 'hong');
+      if (b !== 'hong') return b;
+    }
     return memo('i|' + name + '|' + S + '|' + arg, () => raster(S, ICON[name](arg)).outline(OUT, true));
   }
 
@@ -25063,37 +25140,37 @@ MA._xong();
     const shape = kind === 'potion' || kind === 'pause' ? 'sq' : 'round';
     const lack = st.lack != null ? !!st.lack : disabled && st.cost != null;
     const S = Math.max(8, 2 * faceR(R) - (kind === 'atk' ? 2 : 0));
-    let key, make;
+    let key, make, ic; // ic: tên biểu tượng giữa nút (có ảnh AI thì khoá bộ nhớ đệm mang thêm dấu của ảnh)
     const common = (o) => Object.assign({ shape, R, pressed, disabled: dimmed }, o);
     if (kind === 'atk') {
       const fr = el === 'none' ? 0 : Math.floor(t * 5) % 2;
-      key = [kind, R, wType(w), el, lv, fr];
+      key = [kind, R, wType(w), el, lv, fr]; ic = 'w_' + wType(w);
       make = () => common({ ring: EL_RING[el], face: EL_FACE[el], el, lv, fr, studs: el !== 'ice', icon: iconBuf('w_' + wType(w), S, el) });
     } else if (kind === 'special') {
-      key = [kind, R, wType(w), el, st.cost, lack];
+      key = [kind, R, wType(w), el, st.cost, lack]; ic = 's_' + wType(w);
       make = () => common({ ring: JADE, face: EL_FACE[el], icon: iconBuf('s_' + wType(w), S, el), iconDy: st.cost != null ? -1 : 0, badge: st.cost != null ? costBadge(st.cost, lack) : null });
     } else if (kind === 'skill') {
       const hero = HERO_FACE[st.hero] ? st.hero : 'smith';
-      key = [kind, R, hero, st.cost, lack];
+      key = [kind, R, hero, st.cost, lack]; ic = 'h_' + hero;
       make = () => common({ ring: GOLD, face: HERO_FACE[hero], icon: iconBuf('h_' + hero, S, ''), iconDy: st.cost != null ? -1 : 0, badge: st.cost != null ? costBadge(st.cost, lack) : null });
     } else if (kind === 'chuong') {
       // nút Chưởng: vòng và mặt nút theo hệ của cây chưởng đang dùng
       const ce = EL_RING[st.el] && st.el !== 'none' ? st.el : 'fire';
-      key = [kind, R, ce, st.cost, lack];
+      key = [kind, R, ce, st.cost, lack]; ic = 'c_' + ce;
       make = () => common({ ring: EL_RING[ce], face: EL_FACE[ce], el: ce, studs: ce !== 'ice', icon: iconBuf('c_' + ce, S, ''), iconDy: st.cost != null ? -1 : 0, badge: st.cost != null ? costBadge(st.cost, lack) : null });
     } else if (kind === 'dodge') {
       // 16 hướng. Không đẩy cần thì mũi tên chỉ sang phải.
       const di = st.dir == null || isNaN(st.dir) ? 0 : ((Math.round((st.dir / TAU) * 16) % 16) + 16) % 16;
-      key = [kind, R, di];
+      key = [kind, R, di]; ic = 'dodge';
       make = () => common({ ring: IRON, face: pal3('#4a5266', '#343a4a', '#20242e'), icon: iconBuf('dodge', S, di * 22.5) });
     } else if (kind === 'potion') {
-      key = [kind, R, st.count];
+      key = [kind, R, st.count]; ic = 'potion';
       make = () => common({ ring: WOOD, face: pal3('#6a2420', '#4a1614', '#2c0c0c'), studs: true, icon: iconBuf('potion', S, ''), badge: st.count != null ? numBuf('x' + st.count, 1, '#fff3da') : null, badgeAt: 'corner' });
     } else {
-      key = ['pause', R];
+      key = ['pause', R]; ic = 'pause';
       make = () => common({ ring: WOOD, face: pal3('#4a4038', '#342c26', '#201a16'), studs: true, icon: iconBuf('pause', Math.max(6, S - 4), '') });
     }
-    const base = memo('b|' + key.join('|') + '|' + (pressed ? 1 : 0) + (dimmed ? 1 : 0), () => buildBase(make()));
+    const base = memo('b|' + key.join('|') + gdTag(ic) + '|' + (pressed ? 1 : 0) + (dimmed ? 1 : 0), () => buildBase(make()));
     const pf = press(st.id || kind, pressed && !disabled);
     const oy = (pressed ? base.lip : 0) + pf.dy;
     const alpha = st.alpha != null ? st.alpha : 1;
@@ -25182,7 +25259,7 @@ MA._xong();
     const g = grid(ctx), W = Math.max(10, Math.round((w * g.a) / g.k)), H = Math.max(10, Math.round((h * g.a) / g.k));
     const wp = st.weapon || {}, el = elOf(wp), rar = clamp(Math.floor(wp.rarity || 0), 0, 3), lv = clamp(wp.stage || 1, 1, 3);
     const t = st.t != null ? st.t : G.time || 0;
-    const key = ['sl', W, H, wType(wp), el, rar, lv, st.active ? 1 : 0, st.pressed ? 1 : 0, st.disabled ? 1 : 0, st.swap ? 1 : 0, st.icon === false ? 0 : 1, st.gem === false ? 0 : 1].join('|');
+    const key = ['sl', W, H, wType(wp), el, rar, lv, st.active ? 1 : 0, st.pressed ? 1 : 0, st.disabled ? 1 : 0, st.swap ? 1 : 0, st.icon === false ? 0 : 1, st.gem === false ? 0 : 1].join('|') + (st.icon === false ? '' : gdTag('w_' + wType(wp)));
     const spr = memo(key, () => buildSlot(W, H, st, el, rar, lv));
     blit(ctx, g, spr, x, y, 0, 0, st.alpha);
     const oy = st.pressed ? spr.lip : 0, cd = clamp(st.cd || 0, 0, 1);
