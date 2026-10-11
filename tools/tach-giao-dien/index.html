@@ -90,7 +90,7 @@
 <body>
 <header>
   <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="#a8752f" stroke="#1a120a" stroke-width="2"/><circle cx="15" cy="15" r="8" fill="none" stroke="#f6dc92" stroke-width="1.5"/><path d="M15 4 L17 13 L26 15 L17 17 L15 26 L13 17 L4 15 L13 13 Z" fill="#f6dc92"/></svg>
-  <div><h1>Tách Giao Diện · Bản đồ</h1><small>Ảnh ChatGPT vẽ biểu tượng, ô phòng, khung bản đồ → mỗi hình một tệp .sprite.json</small></div>
+  <div><h1>Tách Giao Diện · Bản đồ</h1><small>Ảnh ChatGPT vẽ biểu tượng, ô phòng, khung bản đồ, nút, thẻ ải, logo → mỗi hình một tệp .sprite.json</small></div>
   <nav class="menu" aria-label="Các công cụ">
     <a href="tach-quai.html">Quái</a>
     <a href="tach-anh-hung.html">Anh hùng · Người làng</a>
@@ -190,6 +190,13 @@
       <div class="khung-xem"><canvas id="cvBieuTuong"></canvas></div>
       <p class="chu-y">Hàng "mờ" là bản xám game tự làm từ chính ảnh của bạn (hệ chưa đạt mốc, ngọc chưa bật), bạn không cần vẽ thêm. Số 1, 2, 3 trên huy chương do game viết. Phần này do trang công cụ tự vẽ theo đúng số đo của game, không cần mạng.</p>
       </div>
+      <div id="xemLon" hidden>
+      <p class="chu-y">Từng hình ở từng trạng thái, do chính code giao diện của game vẽ (phóng to 3 lần). Số ải, sao và chữ trên nút là game tự viết. Hình nào chưa có ảnh thì hiện hình vẽ code cũ; thiếu hình "sáng", "bấm", "chọn", "khoá" mà có hình thường thì game tự làm sáng hoặc làm tối từ hình thường.</p>
+      <div class="khung-xem"><canvas id="cvTT"></canvas></div>
+      <p class="chu-y" id="ttCanh">Màn hình thật của game:</p>
+      <div class="khung-xem"><canvas id="cvCanh"></canvas></div>
+      <p class="chu-y">Hình dưới là một màn của game thật (bản đồ ải, làng, màn chào) chạy với một bản lưu thử; bản lưu của bạn không bị đụng tới. Ảnh của lô "Hình lớn" và lô "Logo" đã tách trong lần mở trang này được giữ để xem chung.</p>
+      </div>
       <div id="xemNut" hidden>
       <p class="chu-y">Bên trái: cụm nút như trong trận (nút Né tự xoay để bạn xem đủ các hướng). Bên phải: mọi biểu tượng trên đúng nút của nó. Hai hàng dưới: nút Né ở 16 hướng.</p>
       <div class="khung-xem"><canvas id="cvNut"></canvas></div>
@@ -200,6 +207,7 @@
 </main>
 <div id="thongBao" hidden></div>
 <iframe class="game" id="khungGame" title="game" aria-hidden="true" tabindex="-1"></iframe>
+<iframe class="game" id="khungGameDu" title="game đầy đủ" aria-hidden="true" tabindex="-1" style="width:960px;height:540px"></iframe>
 
 <script>
 'use strict';
@@ -272,6 +280,22 @@ const NHO = [
   ['ngoc-poison', 'Ngọc Độc (cây chưởng)', 9, 8, 'cùng viên ngọc và cùng cỡ ô 28 nhưng màu xanh lá, đốm sáng vàng chanh'],
   ['ngoc-ice', 'Ngọc Băng (cây chưởng)', 9, 8, 'cùng viên ngọc và cùng cỡ ô 28 nhưng màu xanh lam, đốm sáng trắng'],
 ];
+// Lô "Hình lớn" (phiên C3): 10 hình, lưới 4×3 (2 ô cuối trống). Mỗi dòng: [mã sau "gd-", tên, rộng, cao (điểm ảnh GAME), nhóm trạng thái, mô tả].
+// Game đọc ở js/ui_theme.js: T.round (gd-nut-noi-chuyen*), T.stageCard (gd-the-ai*, gd-the-trum*), T.drum (gd-trong-dong). Cỡ = đúng cỡ hình vẽ code.
+// Các hình cùng "nhóm" (một vật ở nhiều trạng thái) được thu theo CÙNG một tỉ lệ để vào game không hình nào to nhỏ hơn hình nào.
+const TRONG_CHUNG = 'vành ngoài bằng đồng (thân #a8752f, mép sáng #d9a441, viền ngoài tối #1a120a), sát trong vành là một vòng hẹp tối #1a120a, trong cùng là mặt trống';
+const LON = [
+  ['nut-noi-chuyen', 'Nút Nói chuyện · lúc nghỉ', 64, 64, 'nut', `MỘT nút bấm tròn làm theo mặt trống đồng nhìn thẳng từ trên: ${TRONG_CHUNG}; trên mặt trống có ngôi sao 14 cánh nhọn toả từ tâm ra gần tới vành và một vòng 16 chấm nhỏ chạy sát mép trong của vành; CHÍNH GIỮA là một đĩa tròn viền tối, rộng khoảng một nửa nút, trên đĩa có biểu tượng BONG BÓNG LỜI NÓI: bong bóng chữ nhật bo góc, bên trong có ba vạch ngang ngắn (tượng trưng dòng chữ, KHÔNG phải chữ thật), đuôi nhọn chĩa xuống góc dưới bên trái. Bong bóng nằm hơi cao hơn tâm, nửa dưới của đĩa giữa để TRƠN (game viết chữ lên đó). Ô 1 là nút lúc NGHỈ, chưa có ai ở gần: toàn bộ màu trầm, xỉn, xám xanh (vành #35524c và #4c6e66, viền #1c2c2a, mặt trống và đĩa giữa #26403c, sao #4c6e66, bong bóng xám #7f948e, ba vạch #26403c). Nét lạ: màu nguội, không có chỗ nào sáng rực`],
+  ['nut-noi-chuyen-sang', 'Nút Nói chuyện · sáng (có người ở gần)', 64, 64, 'nut', 'cùng nút ô 1, cùng cỡ, cùng vị trí trong ô, nhưng đang SÁNG, mời bấm: vành đồng #a8752f với mép vàng sáng #f6dc92, mặt trống đỏ đồng #8a2f22, sao và vòng chấm vàng sáng #f6dc92, đĩa giữa đỏ đồng sáng #b8452f viền tối, bong bóng lời nói vàng kem #fff0c4 với ba vạch nâu sẫm #3a1a12. Ôm LIỀN sát ngoài vành có thêm một vòng sáng mảnh vàng nhạt #f6dc92 (liền nét, không có chấm rời, không toả rộng). Nét lạ: vòng sáng mảnh ngoài vành'],
+  ['nut-noi-chuyen-bam', 'Nút Nói chuyện · đang bấm', 64, 64, 'nut', 'cùng nút ô 2, cùng cỡ, cùng vị trí trong ô, lúc ngón tay đang ẤN: vành vẫn vàng sáng, mặt trống và đĩa giữa tối lại một nấc (đỏ đồng đậm #8a2f22, không dùng #b8452f), KHÔNG có vòng sáng ngoài vành. KHÔNG vẽ nút lệch xuống (game tự dịch nút xuống khi bấm). Nét lạ: như ô 2 nhưng mặt nút sẫm hơn, không vòng sáng'],
+  ['the-ai', 'Thẻ ải · thường', 38, 30, 'ai', `MỘT chiếc trống đồng nhỏ nhìn thẳng từ trên, dùng làm thẻ đánh dấu một ải trên bản đồ. Mặt trống tròn: ${TRONG_CHUNG} màu xanh ngọc đậm #1f4f4a, trên mặt có ngôi sao 12 cánh vàng đồng #d9a441; CHÍNH GIỮA là một đĩa tròn TỐI, trơn #1a120a, rộng khoảng một nửa mặt trống, để TRỐNG (game viết số ải lên đó). Ở giữa cạnh TRÁI và giữa cạnh PHẢI mỗi bên có MỘT QUAI trống: khối chữ nhật đứng nhỏ nhô ra khỏi vành (viền tối #1a120a, thân đồng #a8752f, lòng xanh ngọc đậm #1f4f4a), dính liền với vành. Vì có hai quai nên cả hình RỘNG hơn cao (rộng 38, cao 30). Nét lạ: hai quai hai bên, mặt xanh ngọc`],
+  ['the-ai-chon', 'Thẻ ải · đang chọn', 38, 30, 'ai', 'cùng chiếc trống ô 4, cùng cỡ, cùng vị trí trong ô, nhưng đang được CHỌN: mặt trống đổi sang đỏ đồng #8a2f22, mép vành và ngôi sao vàng sáng #f6dc92, đĩa giữa vẫn tối và trơn. Ôm LIỀN sát ngoài vành mặt trống có một vòng sáng mảnh vàng nhạt #f6dc92, mép ngoài vòng có răng cưa nhỏ như tia sáng (liền với vòng, không có chấm rời). Nét lạ: mặt đỏ, có vòng tia sáng'],
+  ['the-ai-khoa', 'Thẻ ải · chưa mở (khoá)', 38, 30, 'ai', 'cùng chiếc trống ô 4, cùng cỡ, cùng vị trí trong ô, nhưng CHƯA MỞ: toàn bộ màu xám xanh xỉn (vành #35524c và #4c6e66, viền #1c2c2a, mặt #26403c, sao #4c6e66, quai #35524c), đĩa giữa #1c2c2a và trên đĩa có MỘT Ổ KHOÁ nhỏ màu xám nhạt #7f948e (thân vuông, quai cong ở trên, lỗ khoá tối). Nét lạ: ổ khoá ở giữa, không có màu ấm'],
+  ['the-trum', 'Thẻ ải trùm · thường', 42, 34, 'trum', 'chiếc trống đồng của ẢI TRÙM, cùng kiểu với ô 4 (có hai quai hai bên, đĩa tối trơn ở giữa để game viết số) nhưng TO hơn một chút và dữ hơn: mặt trống đỏ đồng #8a2f22 (không phải xanh ngọc), ngôi sao 14 cánh vàng đồng #d9a441, vành đồng dày hơn. Rộng 42, cao 34. Nét lạ: mặt đỏ đồng, sao nhiều cánh hơn'],
+  ['the-trum-chon', 'Thẻ ải trùm · đang chọn', 42, 34, 'trum', 'cùng chiếc trống ô 7, cùng cỡ, cùng vị trí trong ô, đang được CHỌN: mép vành và ngôi sao vàng sáng #f6dc92, mặt đỏ đồng sáng #b8452f, đĩa giữa vẫn tối và trơn; ôm LIỀN sát ngoài vành có vòng sáng mảnh vàng nhạt với răng cưa nhỏ như ở ô 5 (không có chấm rời). Nét lạ: vòng tia sáng quanh trống đỏ'],
+  ['the-trum-khoa', 'Thẻ ải trùm · chưa mở (khoá)', 42, 34, 'trum', 'cùng chiếc trống ô 7, cùng cỡ, cùng vị trí trong ô, CHƯA MỞ: toàn bộ màu xám xanh xỉn như ô 6, đĩa giữa có MỘT Ổ KHOÁ nhỏ xám nhạt #7f948e. Nét lạ: ổ khoá ở giữa, to hơn ô 6 một chút'],
+  ['trong-dong', 'Mặt trống đồng (màn chào)', 42, 42, null, `MỘT mặt trống đồng Đông Sơn nhìn thẳng từ trên, tròn đều, KHÔNG có quai, dùng làm biểu tượng phía trên tên game: ${TRONG_CHUNG} màu xanh ngọc đậm #1f4f4a; giữa mặt là ngôi sao 14 cánh nhọn vàng đồng #d9a441 với lõi tròn tối #1a120a ở tâm; quanh ngôi sao là một vòng tròn mảnh màu đồng #a8752f; ngoài vòng đó là MỘT VÀNH CHIM LẠC: sáu đến tám con chim Lạc cách điệu (mỏ dài, mào và đuôi dài, sải cánh) màu vàng đồng bay nối đuôi nhau ngược chiều kim đồng hồ, xen giữa các con chim là chấm tròn vàng #d9a441; sát mép trong của vành là một vòng chấm nhỏ. Mọi hoa văn nằm TRONG mặt trống. Nét lạ: vành chim Lạc bay vòng quanh ngôi sao`],
+];
 const LO = [
   { id: 'phong', ten: 'Bản đồ · 12 biểu tượng phòng', kieu: 'icon', cot: 4, hang: 3, mau: 6, net: 'net', xem: true,
     ds: PHONG.map(([k, ten, mo]) => ({ ma: 'gd-phong-' + k, ten, mo, w: 7, h: 7 })) },
@@ -288,6 +312,11 @@ const LO = [
   { id: 'nho', ten: 'Biểu tượng nhỏ · 30 hình (hệ, trạng thái, tinh anh, túi, khoá, sao…)', kieu: 'icon', cot: 6, hang: 5, mau: 12, net: 'net', xemNho: true,
     bm: ['he_lua', 'he_doc', 'he_bang', 'kim_loai', 'vai', 'go'],
     ds: NHO.map(([k, ten, w, h, mo]) => ({ ma: 'gd-' + k, ten, w, h, mo: mo + ` (trong game ${w}×${h})` })) },
+  // Phiên C3. kieu 'mot': cả ảnh là MỘT hình (như lô khung) nhưng thu vừa ô và GIỮ tỉ lệ, không có viền 9 mảnh.
+  { id: 'lon', ten: 'Hình lớn · nút Nói chuyện, thẻ ải, mặt trống đồng (10 hình)', kieu: 'icon', cot: 4, hang: 3, mau: 32, net: 'min', xemLon: true, canh: 'bando',
+    ds: LON.map(([k, ten, w, h, nhom, mo]) => ({ ma: 'gd-' + k, ten, w, h, nhom, mo: mo + ` (trong game ${w}×${h})` })) },
+  { id: 'logo', ten: 'Logo · chữ LINH KHÍ (1 tấm riêng)', kieu: 'mot', cot: 1, hang: 1, mau: 32, net: 'min', xemLon: true, canh: 'chao',
+    ds: [{ ma: 'gd-logo', ten: 'Logo chữ LINH KHÍ', w: 200, h: 40, mo: '' }] },
 ];
 
 const $ = (id) => document.getElementById(id);
@@ -394,7 +423,25 @@ function luoi(L) {
   const trong = tong > n ? ` Ô ${n + 1}${tong - n > 1 ? ' đến ô ' + tong : ''} (cuối hàng dưới) để TRỐNG hoàn toàn.` : '';
   return `BỐ CỤC: lưới ĐỀU đúng ${L.cot} cột × ${L.hang} hàng = ${tong} ô (KHÔNG thêm cột, KHÔNG thêm hàng), các ô bằng nhau, kẻ lưới mảnh màu tối. Mỗi ô đúng MỘT hình, theo thứ tự đọc từ trái sang phải, hết hàng trên mới xuống hàng dưới: ${ds}.${trong} `;
 }
+// Bảng màu của bộ giao diện trống đồng (game/js/ui_theme.js, T.C): dùng cho lô Hình lớn và lô Logo.
+const MAU_LON = 'BẢNG MÀU (bắt buộc bám theo; mỗi chất liệu tối đa 3 sắc; chỉ để chọn màu, KHÔNG vẽ ô màu mẫu vào ảnh): đồng: tối #5a3d1a, vừa #a8752f, sáng #d9a441, ánh sáng nhất #f6dc92; xanh ngọc (mặt trống thường): đậm #1f4f4a, vừa #3f8f7f; đỏ đồng (mặt nút, mặt trống ải trùm, thẻ đang chọn): đậm #8a2f22, sáng #b8452f; xám xanh xỉn (nút lúc nghỉ, thẻ chưa mở): #1c2c2a, #26403c, #35524c, #4c6e66, chi tiết #7f948e; vàng kem (bong bóng lời nói): #fff0c4; viền ngoài và nét tối: #1a120a. ';
 function taoPrompt(L) {
+  if (L.id === 'lon') return `Dùng công cụ tạo ảnh vẽ MỘT tấm ảnh pixel art 2D gồm ĐÚNG ${L.ds.length} hình giao diện cho ${GAME_LK}: một nút tròn "Nói chuyện" ở 3 trạng thái, thẻ ải trên bản đồ ở 3 trạng thái, thẻ ải trùm ở 3 trạng thái, và một mặt trống đồng trang trí. Tất cả cùng một bộ: làm bằng đồng, theo hình mặt trống đồng Đông Sơn nhìn thẳng từ trên. `
+    + luoi(L)
+    + `KIỂU VẼ: pixel art, nhìn thẳng chính diện, khối rõ, hoa văn đơn giản vừa đủ nhận ra vì trong game các hình này nhỏ (cỡ ghi trong ngoặc sau mỗi ô, tính bằng điểm ảnh); màu phẳng, đổ bóng 3 sắc (tối, vừa, sáng), ánh sáng từ trên xuống; viền ngoài một nét tối #1a120a quanh mép mọi hình; không chuyển màu, không phát sáng mờ, không nhoè. `
+    + `GIỮ ĐỒNG BỘ: ba ô của cùng một vật (ô 1, 2, 3; ô 4, 5, 6; ô 7, 8, 9) phải CÙNG hình dáng, CÙNG cỡ, CÙNG vị trí trong ô, chỉ khác màu và chi tiết đã tả, vì game đổi qua lại giữa ba hình đó. Mọi chi tiết phải LIỀN với thân hình: không có chấm, tia, mảnh nào rời ra ngoài. `
+    + MAU_LON
+    + `CỠ TRONG Ô: mỗi hình chiếm khoảng 70% ô, nằm giữa ô, nằm TRỌN trong ô, không chạm đường lưới; ô 4 đến ô 9 rộng hơn cao (vì có hai quai), không kéo cho tròn. `
+    + `KHÔNG vẽ: chữ, số, nhãn, tên, chú thích (ba vạch trong bong bóng lời nói và ổ khoá là hình vẽ, được vẽ), số ải trên mặt trống, ngôi sao xếp hạng, ô nền hay tấm bảng phía sau hình, ô mẫu màu, bóng đổ xuống nền, màu hồng tím ở trong hình. ` + CUOI;
+  if (L.id === 'logo') return `Dùng công cụ tạo ảnh vẽ MỘT tấm ảnh pixel art 2D: LOGO CHỮ của ${GAME_LK}. `
+    + `NỘI DUNG CHỮ (quan trọng nhất): logo gồm đúng HAI từ tiếng Việt viết HOA, nằm trên MỘT hàng ngang: LINH KHÍ. Đánh vần từng chữ cái từ trái sang phải: L, I, N, H, rồi một khoảng trống, rồi K, H, Í. Tổng cộng đúng 7 chữ cái. Chữ cái CUỐI CÙNG là chữ I hoa có DẤU SẮC: một nét gạch nhỏ nghiêng, thấp bên trái cao bên phải, nằm ngay trên đầu chữ I và không dính vào chữ. Sáu chữ cái còn lại KHÔNG có dấu gì. `
+    + `KIỂU CHỮ: chữ dân gian khắc gỗ, như chữ trên bản khắc tranh Đông Hồ và hoành phi: nét dày, đậm, chắc, đầu nét vát góc như vết dao khắc, mép hơi mộc; các chữ cao bằng nhau, đứng thẳng, cách đều, dễ đọc ngay. Mặt chữ màu vàng đồng sáng #f6dc92, nửa trên mặt chữ có một vệt sáng hơn #fff6d8 (ánh kim loại), mép dưới mặt chữ ngả đồng #d9a441; quanh từng chữ có viền tối dày #1a120a; dưới mỗi chữ có một lớp bóng khối ĐẶC màu nâu đen #1a120a lệch thẳng xuống dưới (bóng đặc, không mờ, không nhoè). `
+    + `HOA VĂN TRỐNG ĐỒNG: ở đầu bên TRÁI và đầu bên PHẢI của hàng chữ, mỗi bên một hoa văn nhỏ bằng đồng (#a8752f, #d9a441): ngôi sao nhiều cánh của mặt trống đồng nằm trong một vòng tròn, cạnh đó là một con chim Lạc cách điệu bay hướng vào chữ; ngay dưới chân hàng chữ là một dải mảnh hoa văn răng cưa và vòng tròn tiếp tuyến chạy suốt bề ngang, nối hai hoa văn hai đầu. Hoa văn thấp hơn và nhạt hơn chữ, không che, không chạm làm khó đọc chữ. `
+    + `BỐ CỤC: ảnh nằm ngang. Cả logo (chữ và hoa văn) là một dải ngang dài, tỉ lệ rộng 5 phần, cao 1 phần (trong game logo to 200×40 điểm ảnh), nằm chính giữa ảnh, chiếm khoảng 90% bề ngang ảnh, xung quanh là nền trơn. Chỉ MỘT logo, không vẽ thêm bản thứ hai, không vẽ bản phác. `
+    + `KIỂU VẼ: pixel art, màu phẳng, đổ bóng 3 sắc (tối, vừa, sáng), không chuyển màu, không phát sáng mờ, không nhoè. `
+    + MAU_LON.replace('; vàng kem (bong bóng lời nói): #fff0c4', '; mặt chữ: #f6dc92, vệt sáng #fff6d8')
+    + `KIỂM CHÍNH TẢ TRƯỚC KHI GỬI: đọc lại từng chữ cái trên ảnh từ trái sang phải, phải ra đúng L, I, N, H, khoảng trống, K, H, Í. Đủ 7 chữ cái, không thừa, không thiếu, không lặp, không chữ nào bị méo thành chữ khác. Chỉ có đúng MỘT dấu, là dấu sắc trên chữ I cuối cùng. Các kiểu viết SAI, không được phép: LINH KHI (thiếu dấu), LINH KHÌ (dấu huyền), LÍNH KHÍ (thừa dấu), LINH KHỈ, LIHN KHÍ, LINH KHÍÍ. Nếu sai một chữ hay một dấu thì vẽ lại cho tới khi đúng. `
+    + `KHÔNG vẽ: bất cứ chữ hay số nào khác ngoài hai từ LINH KHÍ (không tên phụ, không khẩu hiệu, không chữ ký), khung chữ nhật hay tấm biển bao quanh logo, nhân vật, vũ khí, ô mẫu màu, màu hồng tím ở trong hình. ` + CUOI;
   if (L.id === 'phong') return `Dùng công cụ tạo ảnh vẽ MỘT tấm ảnh pixel art 2D gồm ĐÚNG 12 biểu tượng nhỏ cho BẢN ĐỒ của ${GAME_LK}. Mỗi biểu tượng báo một loại phòng trên bản đồ. `
     + luoi(L)
     + `KIỂU VẼ: trong game mỗi biểu tượng chỉ to 7×7 điểm ảnh nên phải CỰC KỲ đơn giản: một hình khối đặc, to, nhìn chính diện, nhận ra ngay từ hình bóng; chỉ dùng 1 đến 2 màu phẳng sáng (màu chính vàng kem #f6e6b8, thêm tối đa một màu nhấn) và viền tối một nét #1a120a quanh mép; không chi tiết nhỏ, không nét mảnh, không đổ bóng nhiều sắc, không chuyển màu, không phát sáng. Biểu tượng sẽ nằm trên ô phòng màu xanh ngọc đậm nên phải sáng và rõ. `
@@ -430,6 +477,8 @@ taoPrompt = (L) => bmChen(taoPromptGoc(L), bmDoan(L.bm || (L.id === 'phong' ? ['
 function hienLo() {
   $('dsLo').innerHTML = L.ds.map((m) => `<li><b>${m.ten}</b> · ${m.w}×${m.h} · <span style="font-size:11px">${m.ma}</span></li>`).join('');
   $('moTaLo').textContent = L.kieu === 'khung' ? 'Một ảnh khung, giữa để trống (màu nền hồng tím). Trong game khung to 380×242 điểm ảnh.'
+    : L.id === 'logo' ? 'MỘT tấm ảnh riêng: chữ LINH KHÍ kiểu khắc gỗ, có hoa văn trống đồng, nền hồng tím. Trong game logo to 200×40 điểm ảnh, nằm ở màn chào. Nhận ảnh xong bạn nhớ tự ĐỌC LẠI CHỮ: phải đúng "LINH KHÍ", có dấu sắc trên chữ I cuối; sai thì nhờ ChatGPT vẽ lại.'
+    : L.id === 'lon' ? `${L.ds.length} hình, lưới ${L.cot} cột × ${L.hang} hàng (2 ô cuối để trống), nền hồng tím. Nút Nói chuyện, thẻ ải, thẻ ải trùm mỗi thứ có 3 trạng thái. Thiếu hình trạng thái nào thì game tự làm sáng hoặc làm tối từ hình "thường"; thiếu hình "thường" thì game vẽ hình cũ. Số ải, sao, chữ trên nút vẫn do game viết.`
     : `${L.ds.length} hình, lưới ${L.cot} cột × ${L.hang} hàng, nền hồng tím.` + (L.id === 'nut' ? ' Game chỉ lấy ảnh làm HÌNH Ở GIỮA nút; vòng nút, màu hệ, số mana, hồi chiêu vẫn do game vẽ. Nút Né: game tự xoay ảnh theo hướng né.' : '') + (L.id === 'nho' ? ' Mỗi hình có cỡ riêng trong game (ghi cạnh tên bên dưới); công cụ tự thu từng hình về đúng cỡ. Thiếu hình nào thì game vẫn vẽ hình cũ cho riêng hình đó.' : '');
   $('oPrompt').value = taoPrompt(L);
   $('soMau').value = String(L.mau); $('doNet').value = L.net;
@@ -439,7 +488,7 @@ function hienLo() {
 LO.forEach((l, i) => { const o = document.createElement('option'); o.value = i; o.textContent = l.ten; $('chonLo').appendChild(o); });
 try { const i = localStorage.getItem('tgd_lo'); if (i != null && LO[i]) $('chonLo').value = i; } catch (e) { /* bỏ qua */ }
 L = LO[+$('chonLo').value];
-$('chonLo').onchange = (e) => { L = LO[+e.target.value]; try { localStorage.setItem('tgd_lo', e.target.value); } catch (er) { /* bỏ qua */ } hienLo(); CHINH = []; BO = []; CHON = -1; KQ = []; ANH = null; SEG = null; LAST = null; $('vungAnhGoc').hidden = true; $('buoc3').hidden = true; $('buoc4').hidden = true; if (L.xem && Object.keys(XEM).length) { $('buoc4').hidden = false; napGame(); veXem(); } }; // đổi lô: chờ ảnh của lô mới (ảnh lô cũ không dùng lại)
+$('chonLo').onchange = (e) => { L = LO[+e.target.value]; try { localStorage.setItem('tgd_lo', e.target.value); } catch (er) { /* bỏ qua */ } hienLo(); CHINH = []; BO = []; CHON = -1; KQ = []; ANH = null; SEG = null; LAST = null; $('vungAnhGoc').hidden = true; $('buoc3').hidden = true; $('buoc4').hidden = true; if (L.xem && Object.keys(XEM).length) { $('buoc4').hidden = false; napGame(); veXem(); } else if (L.xemLon && Object.keys(XEML).length) { $('buoc4').hidden = false; CANH_SO = -1; napGameDu(); veXemLon(); } }; // đổi lô: chờ ảnh của lô mới (ảnh lô cũ không dùng lại)
 hienLo();
 $('nutChepPrompt').onclick = () => {
   const t = taoPrompt(L);
@@ -840,8 +889,9 @@ function tachKhung(A) {
 }
 
 // ===================== CHẠY =====================
+const MOT_HINH = () => L.kieu === 'khung' || L.kieu === 'mot'; // cả ảnh là một hình
 function chay(tachMoi) {
-  if (L.kieu === 'khung') {
+  if (MOT_HINH()) {
     if (tachMoi || !SEG || !SEG.laKhung) { SEG = tachKhung(layAnh()); SEG.laKhung = true; }
     const g = SEG.khung, bo = g && BO.some(([x, y]) => x >= g.x0 && x <= g.x1 && y >= g.y0 && y <= g.y1);
     MAP = { theoMon: [g && !bo ? g : null], thua: [], boRa: g && bo ? [g] : [], ghi: [], loi: g ? [] : ['Không thấy khung trong ảnh (ảnh chỉ có màu nền?)'] };
@@ -878,7 +928,12 @@ function chinhCua(i) { if (!CHINH[i]) CHINH[i] = { co: 1, bo: false, vien: null 
 function lamMon(i) {
   const K = KQ[i], m = L.ds[i], c = chinhCua(i), N = NET(), f = K.src, TW = m.w * N, TH = m.h * N;
   let nw = TW, nh = TH;
-  if (L.kieu === 'icon') { const s = Math.min(TW / f.w, TH / f.h) * Math.min(1, c.co); nw = Math.max(1, Math.min(TW, Math.round(f.w * s))); nh = Math.max(1, Math.min(TH, Math.round(f.h * s))); }
+  if (L.kieu === 'icon' || L.kieu === 'mot') {
+    let s0 = Math.min(TW / f.w, TH / f.h);
+    // hình cùng nhóm trạng thái (lô Hình lớn): dùng chung tỉ lệ nhỏ nhất của nhóm, để hình có vòng sáng to hơn không làm các hình kia lệch cỡ
+    if (m.nhom) L.ds.forEach((q, j) => { if (j !== i && q.nhom === m.nhom && KQ[j]) s0 = Math.min(s0, (q.w * N) / KQ[j].src.w, (q.h * N) / KQ[j].src.h); });
+    const s = s0 * Math.min(1, c.co); nw = Math.max(1, Math.min(TW, Math.round(f.w * s))); nh = Math.max(1, Math.min(TH, Math.round(f.h * s)));
+  }
   const o = thuNho(f, nw, nh);
   giamMau(o, Math.max(2, +$('soMau').value));
   const bmKq = bmGiam(o); // null khi "Giảm màu: Tự do"
@@ -986,6 +1041,8 @@ function hienKetQua() {
   MAP.ghi.forEach((t) => muc.push([t, true, 1]));
   if (L.kieu === 'khung' && KQ[0]) { const v = chinhCua(0).vien; muc.push([`Viền 9 mảnh: trên ${v[0]}, phải ${v[1]}, dưới ${v[2]}, trái ${v[3]} (điểm ảnh game)`, true, 1]); }
   if (L.id === 'nut') muc.push(['Game chỉ lấy ảnh làm hình ở giữa nút (vòng nút, màu hệ, số vẫn do game vẽ); xem thử ở bước 4', true, 1]);
+  if (L.id === 'lon') muc.push(['Ba hình của cùng một vật (thường, sáng hoặc chọn, bấm hoặc khoá) được thu theo cùng một tỉ lệ. Thiếu hình trạng thái thì game tự làm sáng / làm tối từ hình thường', true, 1]);
+  if (L.id === 'logo' && KQ[0]) muc.push(['TỰ ĐỌC LẠI CHỮ trên logo: phải đúng "LINH KHÍ" (L, I, N, H, khoảng trống, K, H, Í), có đúng một dấu sắc trên chữ I cuối. Sai thì nhờ ChatGPT vẽ lại, đừng tải', true, 1]);
   bmMuc(muc, KQ.map((K, i) => K && !chinhCua(i).bo && K.out.bm), 1);
   muc.push(['Tự nhìn: đúng hình, đúng thứ tự', true, 1]);
   const dat = !thieu.length && !MAP.loi.length && !saiCo.length && !rong.length;
@@ -1000,16 +1057,17 @@ function hienKetQua() {
   if (CHON >= 0) {
     $('tenMon').textContent = (CHON + 1) + '. ' + L.ds[CHON].ten;
     $('nutBo').textContent = chinhCua(CHON).bo ? 'Lấy lại hình này' : 'Bỏ hình này';
-    $('nutNho').hidden = $('nutTo').hidden = L.kieu !== 'icon';
+    $('nutNho').hidden = $('nutTo').hidden = L.kieu !== 'icon' && L.kieu !== 'mot';
   }
   $('khoiVien').hidden = !(L.kieu === 'khung' && KQ[0]);
   if (!$('khoiVien').hidden) veVien();
-  $('buoc4').hidden = !(L.xem || L.xemNho);
+  $('buoc4').hidden = !(L.xem || L.xemNho || L.xemLon);
   if (L.xemNho) veXemNho();
+  else if (L.xemLon) { napGameDu(); dangKyLon(); veXemLon(); }
   else if (L.xem) { napGame(); dangKy(); veXem(); }
 }
 $('nutNho').onclick = () => { if (CHON < 0) return; const c = chinhCua(CHON); c.co = Math.max(0.4, c.co / 1.12); lamMon(CHON); hienKetQua(); };
-$('nutTo').onclick = () => { if (CHON < 0) return; const c = chinhCua(CHON); c.co = Math.min(1, c.co * 1.12); lamMon(CHON); hienKetQua(); if (c.co >= 1) bao('Hình đã to kín ô'); };
+$('nutTo').onclick = () => { if (CHON < 0) return; const c = chinhCua(CHON); c.co = Math.min(1, c.co * 1.12); lamMon(CHON); hienKetQua(); if (c.co >= 1) bao(L.ds[CHON].nhom ? 'Hình đã to hết cỡ (cùng tỉ lệ với các hình cùng nhóm)' : 'Hình đã to kín ô'); };
 $('nutBo').onclick = () => { if (CHON < 0) return; const c = chinhCua(CHON); c.bo = !c.bo; hienKetQua(); };
 
 // ----- viền 9 mảnh của khung: chọn cạnh rồi chạm lên ảnh -----
@@ -1141,7 +1199,7 @@ function veXemNut() {
 function veXemNho() {
   $('tdXem').textContent = 'Xem thử ở cỡ thật trong game';
   $('ttXem').textContent = 'Các hình vừa tách, đặt trên nền giống trong game.';
-  $('vungXem').hidden = false; $('xemBanDo').hidden = true; $('xemNut').hidden = true; $('xemNho').hidden = false;
+  $('vungXem').hidden = false; $('xemBanDo').hidden = true; $('xemNut').hidden = true; $('xemNho').hidden = false; $('xemLon').hidden = true;
   for (const id of ['nutDoiMau', 'nutSoCode', 'nutBoXem']) $(id).hidden = true;
   const cv = $('cvBieuTuong'), K = 4, W = 240, H = 232;
   cv.width = W * K; cv.height = H * K;
@@ -1199,9 +1257,130 @@ function veXemNho() {
   chu('Lá bùa trên nút ở Rương báu và Thương nhân (24×24)', 4, 192);
   HE.forEach((e, i) => { nen(4 + i * 44, 195, 40, 34, '#1f4f4a'); c.strokeStyle = '#a8752f'; c.lineWidth = 1; c.strokeRect(4.5 + i * 44, 195.5, 39, 33); dat('bua-' + e, 12 + i * 44, 200, 24, 24); });
 }
+// ===================== XEM THỬ lô "Hình lớn" và lô "Logo": trên GAME ĐẦY ĐỦ =====================
+// Bản gói cho công cụ (xuong-sprite.html) không có js/ui_theme.js và js/village.js, nên ở đây nạp bản game thử đầy đủ của Xưởng Sprite
+// (xuong-sprite-thu.html: toàn bộ game + G.persist bị tắt, kèm ?cloud=0 nên không đăng nhập, không lưu mây) trong một khung ẩn 960×540.
+// Trang này đặt một bản lưu THỬ vào game đó (không ghi ra máy), chọn cảnh, gọi game vẽ một khung hình rồi chép hình sang canvas của trang.
+const NGUON_GAME_DU = ['xuong-sprite-thu.html?cloud=0', '../../game/dist/xuong-sprite-thu.html?cloud=0'];
+const CANH_DS = [['bando', 'Bản đồ ải (thẻ ải)'], ['lang', 'Làng (nút Nói chuyện)'], ['chao', 'Màn chào (logo, mặt trống đồng)']];
+let GD = null, dangNapDu = false, hetNguonDu = false, CANH_SO = -1, CANH_DANG = '';
+const XEML = {}, DKL = {}; // hình đã tách của hai lô này chờ xem thử; hình đang đăng ký trong game đầy đủ
+function napGameDu() {
+  if (GD || dangNapDu || hetNguonDu) return; dangNapDu = true;
+  const f = $('khungGameDu'); let i = 0;
+  // Bản game thử tự vào trận nếu Xưởng Sprite còn để lại tệp đang làm trong bộ nhớ trình duyệt: tạm cất tệp đó đi lúc nạp, nạp xong trả lại nguyên vẹn.
+  let cat = null; const KHOA = 'xuongSprite.thu';
+  try { cat = localStorage.getItem(KHOA); if (cat != null) localStorage.removeItem(KHOA); } catch (e) { cat = null; }
+  const tra = () => { try { if (cat != null && localStorage.getItem(KHOA) == null) localStorage.setItem(KHOA, cat); } catch (e) { /* bỏ qua */ } cat = null; };
+  const het = () => { tra(); dangNapDu = false; hetNguonDu = true; if (L.xemLon) { $('ttXem').textContent = 'Không nạp được game để vẽ thử (chỉ chạy trên trang spiritblade.web.app hoặc máy chủ cục bộ). Vẫn tách và tải tệp được.'; $('vungXem').hidden = true; } };
+  const thu = () => {
+    if (i >= NGUON_GAME_DU.length) { het(); return; }
+    let lan = 0, xong = false;
+    const cho = () => {
+      if (xong) return;
+      let g = null; try { g = f.contentWindow && f.contentWindow.G; } catch (e) { g = null; }
+      if (g && g.scene && g.theme && g.theme.stageCard && g.Title && g.Village && g.villageApi && g.villageScene && g.spriteCustom && g.spriteCustom.veGd && g.newSave) {
+        xong = true; tra();
+        try { datGameDu(g); GD = g; } catch (e) { GD = null; }
+        dangNapDu = false;
+        if (!GD) { hetNguonDu = true; if (L.xemLon) $('ttXem').textContent = 'Không dựng được game để vẽ thử. Vẫn tách và tải tệp được.'; return; }
+        dongBoLon(); veXem(); return;
+      }
+      if (++lan > 150) { xong = true; i++; thu(); return; } // 150 × 100 ms: không thấy game (trang 404, bản cũ) thì thử nguồn kế
+      setTimeout(cho, 100);
+    };
+    f.onload = () => { lan = Math.max(lan, 100); cho(); }; // trang đã nạp xong: chờ thêm tối đa 5 giây cho game khởi động
+    f.onerror = () => { xong = true; i++; thu(); };
+    f.src = NGUON_GAME_DU[i]; setTimeout(cho, 300);
+  };
+  thu();
+}
+// Bản lưu thử: mở khoá em bé, qua hết Rừng già và ải 1 Hang biển (để bản đồ có đủ thẻ thường, đang chọn, khoá, trùm). Game thử không ghi bản lưu ra máy.
+function datGameDu(g) {
+  g.persist = function () { /* trang xem thử không ghi bản lưu */ };
+  const s = g.newSave();
+  s.sound = false; s.tut = Object.assign(s.tut || {}, { done: true });
+  for (const k of g.HKEYS) { s.heroes[k].unlocked = true; s.heroes[k].lvl = 12; }
+  s.stars = { '0-0': 3, '0-1': 2, '0-2': 1, '0-3': 3, '0-4': 2, '1-0': 1 };
+  g.save = s;
+  g.noRender = true; // game trong khung ẩn không cần tự vẽ liên tục; trang này gọi vẽ khi cần
+}
+function dangKyLon() {
+  if (!L.xemLon) return;
+  L.ds.forEach((m, i) => { if (KQ[i] && !chinhCua(i).bo) XEML[m.ma] = phanTep(i, true); else delete XEML[m.ma]; });
+  dongBoLon();
+}
+function dongBoLon() {
+  if (!GD) return;
+  const SC = GD.spriteCustom;
+  try {
+    for (const k of Object.keys(DKL)) if (!XEML[k]) { SC.remove(k); delete DKL[k]; }
+    for (const k in XEML) if (DKL[k] !== XEML[k]) { SC.add(XEML[k]); DKL[k] = XEML[k]; }
+  } catch (e) { /* bỏ qua */ }
+}
+// Đưa game tới cảnh cần xem. Chỉ đặt lại khi đổi cảnh, để cảnh không giật mỗi lần vẽ.
+function datCanh(ten) {
+  const g = GD, VS = g.villageScene, A = g.villageApi;
+  if (CANH_DANG === ten && (ten === 'chao' ? g.scene === g.Title : g.scene === g.Village && (ten !== 'bando' || A.V.tab === 'map'))) return;
+  if (g.pointers && g.pointers.clear) g.pointers.clear();
+  if (ten === 'chao') { g.setScene(g.Title); A.V.tRank = false; }
+  else {
+    g.setScene(g.Village);
+    if (ten === 'bando') A.open('lai'); // Chú Lái Đò: tranh bản đồ vùng; game tự chọn sẵn ải kế tiếp (thẻ "đang chọn")
+    else { const N = VS.NPCS.ren, S = VS.state; S.x = N.den[0]; S.y = N.den[1]; S.path = null; S.goal = null; S.face = N.pos[0] >= S.x ? 1 : -1; S.cam = Math.max(240, Math.min(VS.W - 240, S.x)); } // đứng cạnh Ông Thợ Rèn: nút sáng "Nói chuyện"
+  }
+  for (let k = 0; k < 6; k++) g.tick();
+  CANH_DANG = ten;
+}
+function veXemLon() {
+  $('xemBanDo').hidden = true; $('xemNut').hidden = true; $('xemNho').hidden = true; $('xemLon').hidden = false;
+  for (const id of ['nutDoiMau', 'nutSoCode', 'nutBoXem']) $(id).hidden = false;
+  $('tdXem').textContent = 'Xem thử trong game thật';
+  $('nutDoiMau').textContent = 'Đổi cảnh';
+  $('nutSoCode').textContent = SO_CODE ? 'Xem lại ảnh của bạn' : 'Xem bản vẽ code (cũ)';
+  if ($('buoc4').hidden) return;
+  if (!GD) { if (!hetNguonDu) { $('ttXem').textContent = 'Đang nạp game để vẽ thử (bản game đầy đủ, lần đầu hơi lâu)…'; $('vungXem').hidden = true; } return; }
+  $('vungXem').hidden = false;
+  if (CANH_SO < 0) CANH_SO = Math.max(0, CANH_DS.findIndex((q) => q[0] === L.canh));
+  const canh = CANH_DS[CANH_SO], g = GD, SC = g.spriteCustom, gdThat = SC.gd;
+  $('ttXem').textContent = 'Đang xem cảnh: ' + canh[1] + '. Chạm "Đổi cảnh" để xem cảnh khác.';
+  $('ttCanh').textContent = 'Màn hình thật của game · ' + canh[1] + ':';
+  const ux0 = g.ux, us0 = g.uiScale;
+  if (SO_CODE) SC.gd = {};
+  try {
+    // 1) từng hình ở từng trạng thái, do G.theme của game vẽ lên canvas của trang
+    const T = g.theme, cv = $('cvTT'), K = 3 * Math.min(2, window.devicePixelRatio || 1), W = 320, H = 160;
+    if (cv.width !== Math.round(W * K)) { cv.width = Math.round(W * K); cv.height = Math.round(H * K); }
+    const c = cv.getContext('2d'); c.setTransform(K, 0, 0, K, 0, 0); c.textBaseline = 'alphabetic';
+    c.fillStyle = '#2c4a36'; c.fillRect(0, 0, W, 78); c.fillStyle = '#d8c9a0'; c.fillRect(0, 78, 232, 82); c.fillStyle = '#12100e'; c.fillRect(232, 78, 88, 82);
+    const chu = (t, x, y, mau) => { c.font = '600 7px ' + FONT; c.textAlign = 'center'; c.fillStyle = mau || '#f1ead9'; c.fillText(t, x, y); };
+    g.ux = c; g.uiScale = K;
+    T.round(44, 36, 28, 'talk', { dim: true }); T.round(124, 36, 28, 'talk', { lit: true, label: 'Nói chuyện' }); T.round(204, 36, 28, 'talk', { lit: true, pressed: true, label: 'Nói chuyện' }); T.round(280, 36, 28, 'talk', { lit: true, label: 'Vào cổng' });
+    g.ux = c; chu('lúc nghỉ', 44, 75); chu('sáng', 124, 75); chu('đang bấm', 204, 75); chu('"Vào cổng" (trong ải)', 276, 75);
+    const the = (x, y, so, st, boss) => T.stageCard(x - 20, y, 40, 36, so, st, 0, { r: boss ? 12 : 10, boss, noClick: true, noStars: true });
+    the(28, 82, 3, 'done', false); the(76, 82, 4, 'sel', false); the(124, 82, 5, 'lock', false);
+    the(28, 114, 5, 'done', true); the(76, 114, 5, 'sel', true); the(124, 114, 5, 'lock', true);
+    chu('thường', 28, 155, '#4a3626'); chu('đang chọn', 76, 155, '#4a3626'); chu('chưa mở', 124, 155, '#4a3626');
+    c.textAlign = 'left'; c.font = '600 7px ' + FONT; c.fillStyle = '#4a3626'; c.fillText('← thẻ ải (38×30)', 150, 98); c.fillText('← thẻ ải trùm (42×34)', 150, 132);
+    T.drum(276, 108, 20, 0.85); chu('mặt trống đồng', 276, 142); chu('(màn chào)', 276, 150);
+    // 2) một màn thật của game: gọi game vẽ một khung hình vào canvas của chính nó rồi chép sang
+    g.ux = ux0; g.uiScale = us0;
+    datCanh(canh[0]);
+    const d = $('khungGameDu').contentWindow.document, wc = d.getElementById('world'), uc = d.getElementById('ui');
+    if (g.NET !== g.netMuon()) g.setNet(g.netMuon());
+    g.click = null; g.ui.begin(); g.scene.draw(); g.click = null;
+    const us = g.uiScale || 1, w = Math.max(1, Math.round(g.W * us)), h = Math.max(1, Math.round(g.H * us)), o = $('cvCanh');
+    if (o.width !== w || o.height !== h) { o.width = w; o.height = h; }
+    const oc = o.getContext('2d'); oc.imageSmoothingEnabled = false;
+    oc.drawImage(wc, 0, 0, w, h);
+    oc.drawImage(uc, Math.round((g.ox || 0) * (g.dpr || 1)), Math.round((g.oy || 0) * (g.dpr || 1)), w, h, 0, 0, w, h);
+  } catch (e) { $('ttXem').textContent = 'Không vẽ thử được: ' + e.message; }
+  g.ux = ux0; g.uiScale = us0; SC.gd = gdThat;
+}
 function veXem() {
   if (L.xemNho) return; // lô biểu tượng nhỏ có phần xem thử riêng (veXemNho), không dùng game
-  $('xemNho').hidden = true; for (const id of ['nutDoiMau', 'nutSoCode', 'nutBoXem']) $(id).hidden = false;
+  if (L.xemLon) { veXemLon(); return; } // lô Hình lớn và lô Logo: xem trên game đầy đủ (veXemLon)
+  $('xemNho').hidden = true; $('xemLon').hidden = true; for (const id of ['nutDoiMau', 'nutSoCode', 'nutBoXem']) $(id).hidden = false;
   if (!GAME || $('buoc4').hidden) return;
   const laNut = L.id === 'nut';
   $('tdXem').textContent = laNut ? 'Xem thử trên nút của game' : 'Xem thử trên bản đồ của game';
@@ -1234,11 +1413,11 @@ function veXem() {
   SC.gd = gdThat;
   $('nutSoCode').textContent = SO_CODE ? 'Xem lại ảnh của bạn' : 'Xem bản vẽ code (cũ)';
 }
-$('nutDoiMau').onclick = () => { MAU = (MAU + 1) % 16; veXem(); }; // bản đồ: 4 kiểu ải lặp lại; nút: 4 vũ khí × 4 hệ
+$('nutDoiMau').onclick = () => { if (L.xemLon) CANH_SO = ((CANH_SO < 0 ? CANH_DS.findIndex((q) => q[0] === L.canh) : CANH_SO) + 1) % CANH_DS.length; else MAU = (MAU + 1) % 16; veXem(); }; // bản đồ: 4 kiểu ải lặp lại; nút: 4 vũ khí × 4 hệ
 $('nutSoCode').onclick = () => { SO_CODE = !SO_CODE; veXem(); };
-$('nutBoXem').onclick = () => { for (const k of Object.keys(XEM)) delete XEM[k]; dongBo(); veXem(); bao('Đã bỏ hết ảnh xem thử (hình ở bước 3 vẫn còn, bấm "Tách lại" để xem lại)'); };
+$('nutBoXem').onclick = () => { for (const k of Object.keys(XEM)) delete XEM[k]; for (const k of Object.keys(XEML)) delete XEML[k]; dongBo(); dongBoLon(); veXem(); bao('Đã bỏ hết ảnh xem thử (hình ở bước 3 vẫn còn, bấm "Tách lại" để xem lại)'); };
 // ô đang đứng và cổng dịch chuyển nhấp nháy như trong game (tắt nếu máy đặt giảm chuyển động)
-if (!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) setInterval(() => { if (GAME && !$('buoc4').hidden && !document.hidden) veXem(); }, 350);
+if (!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) setInterval(() => { if ((L.xemLon ? GD : GAME) && !$('buoc4').hidden && !document.hidden) veXem(); }, 350);
 
 // ===================== TẢI VỀ =====================
 function taiXuong(ten, blob) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = ten; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000); }
