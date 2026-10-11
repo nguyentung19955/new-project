@@ -65,7 +65,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.11-1200";
+(window.G = window.G || {}).VERSION = "lk-2026.10.11-1354";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -15851,6 +15851,15 @@
       b.drawW = (pha3 ? 281 : b.kind === 'ho' ? 174 : 150) * s; b.drawH = (pha3 ? 174 : b.h) * s;
       const fk = G.fx && G.fx.chop ? G.fx.chop() : 1; // khựng hình: chỉ khung đầu chớp trắng hẳn (js/fx.js)
       const o = { anim: n, t, face: b.face, dir: b.dirA != null ? b.dirA : b.face > 0 ? 0 : PI, phase, hit: b.flash > 0 ? 0.7 * fk : 0, chop: fk, tint: G.fx && G.fx.dotTint ? G.fx.dotTint(b) : null, bao: false }; // nhịp độc/cháy: nhuộm màu hệ thay chớp trắng
+      // Phiên E2 (chỉ khi trùm dùng ảnh AI, chỉ là hình, không đổi luật): hình vẽ bằng code tự chớp trắng lúc sắp ra đòn và lúc đổi dáng giữa cảnh chuyển pha, ảnh AI thì mất.
+      // 1) 0,25 giây cuối trước khi đòn ra (b.wind, cùng mốc với dấu "!" của quái): thân nhấp nháy trắng. 2) Có tệp dáng pha (<mã>-p2 / -p3, js/sprite_custom.js): chớp trắng che lúc đổi dáng.
+      if (anhAI && b.dying == null) {
+        if (b.wind > 0 && b.wind < 0.25 && /^c\d$|^chieu|^atk|^tele/.test(n) && Math.floor(G.time * 20) % 2) o.baoDon = 0.35 * fk;
+        if ((n === 'phase2' || n === 'phase3') && G.spriteCustom.phaTrum && G.spriteCustom.phaTrum(G.spriteCustom.ds[b.art], phase, 'tele')) {
+          const u = t / (dur(b.art, n) || 1);
+          if (u >= 0.45 && u < 0.58) o.baoDon = Math.max(o.baoDon || 0, 1 - ((u - 0.45) / 0.13) * 0.5);
+        }
+      }
       if (s !== 1) { c.save(); c.translate(Math.round(b.x), Math.round(b.y)); c.scale(s, s); G.monsterArt.draw(c, b.art, 0, 0, o); c.restore(); }
       else G.monsterArt.draw(c, b.art, b.x, b.y, o);
       if (b.dying == null && b.invuln > 0 && b.intro == null) {} // (chỗ trống cho dấu hiệu miễn sát thương)
@@ -16279,7 +16288,59 @@
 
   // ---------- số sát thương và chữ nổi (vẽ ở lớp giao diện) ----------
   const FONT = '"Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+  // Đợt 8 (độ đọc trận đấu): G.DO_DOC_TRAN = true thì số sát thương đi theo luật mới ở khối "Đợt 8" ngay dưới; false thì y như cũ.
+  const DOC = () => G.DO_DOC_TRAN === true && !!(G.theme && G.theme.DOC);
+  const laSo = (n) => n.loai === 'dmg' || n.loai === 'be'; // số sát thương (gây ra / em bé nhận); còn lại là chữ nổi
+  function demSo(so) { let k = 0; for (const q of S.N) if (laSo(q) === so) k++; return k; }
+  // Tạo một số / chữ nổi theo luật Đợt 8. o thêm: { loai: 'dmg' | 'be' | 'chu', chu: mục tiêu, val: giá trị, dot, crit }
+  //  - tối đa D.soToiDa số sát thương (và D.chuToiDa chữ nổi) cùng lúc: đủ rồi thì cái cũ nhất tắt sớm (số nhịp độc/cháy nhường trước);
+  //  - không lệch ngẫu nhiên: số đứng ngay trên đầu mục tiêu, số nối tiếp của cùng mục tiêu lệch ngang so le D.soLe điểm ảnh;
+  //  - chuyện đè nhau do drawNumsDoc lo lúc vẽ (theo toạ độ thật của từng khung hình).
+  function numDoc(x, y, s, o) {
+    const D = G.theme.DOC, N = S.N, so = o.loai === 'dmg' || o.loai === 'be', max = so ? D.soToiDa : D.chuToiDa;
+    for (let dem = demSo(so); dem >= max; dem--) {
+      let k = -1;
+      if (so) for (let i = 0; i < N.length && k < 0; i++) if (laSo(N[i]) && N[i].dot) k = i;
+      for (let i = 0; i < N.length && k < 0; i++) if (laSo(N[i]) === so) k = i;
+      if (k < 0) break;
+      N.splice(k, 1);
+    }
+    let lan = 0;
+    if (o.chu) for (const q of N) if (q.chu === o.chu) lan++;
+    const side = lan ? (lan % 2 ? 1 : -1) * D.soLe * Math.ceil(lan / 2) : 0;
+    const fall = o.vy == null;
+    const n = { x: x + side, y, x0: x, y0: y, vx: o.vx == null ? 0 : o.vx, vy: fall ? -58 : o.vy, g: fall ? 150 : 46, hold: fall ? 0.03 : 0.1, s, col: o.col || '#ffffff', size: Math.max(D.coChu, o.size || 8),
+      t: o.t || 0.75, t0: o.t || 0.75, pop: o.pop == null ? 0.7 : o.pop, edge: o.edge || 'rgba(12,8,8,0.9)', kind: o.kind || 0, d: o.d || 0,
+      loai: o.loai || 'chu', chu: o.chu || null, val: o.val || 0, dot: !!o.dot, crit: !!o.crit, day: 0, hop: null, nay: null };
+    N.push(n);
+    return n;
+  }
+  // Số đang hiện của cùng mục tiêu, cùng loại, mới ra chưa quá D.gop giây: đòn kế tiếp cộng dồn vào đó thay vì ra số mới.
+  function gopSo(chu, loai, dot) {
+    const D = G.theme.DOC;
+    for (let i = S.N.length - 1; i >= 0; i--) { const q = S.N[i]; if (q.chu === chu && q.loai === loai && q.dot === dot && !(q.d > 0) && q.t0 - q.t < D.gop) return q; }
+    return null;
+  }
+  function congDon(q, v) { q.val += v; q.nay = S.t; q.t = Math.max(q.t, q.t0 * 0.7); }
+  function dmgDoc(t, d, o, top) {
+    const D = G.theme.DOC, dot = !!o.dot, v = Math.max(1, Math.round(d));
+    if (dot) { if (!(S.t - (t.fxHitAt == null ? -9 : t.fxHitAt) < 0.1)) t.flash = 0; t.fxDotAt = S.t; t.fxDotEl = o.el || null; } // như bản cũ: nhịp độc/cháy nhuộm màu hệ thay cho chớp trắng
+    const q = gopSo(t, 'dmg', dot);
+    if (q) {
+      congDon(q, v);
+      if (o.crit && !q.crit) { q.crit = true; q.col = '#ffd23f'; q.size = 13; q.edge = 'rgba(90,30,0,0.95)'; q.kind = 1; q.pop = 1.2; } // có đòn chí mạng trong lượt gộp: cả số thành chí mạng
+      q.s = q.val + (q.crit ? '!' : '');
+      return;
+    }
+    const c2 = o.el ? pal(o.el).c2 : '#ffffff';
+    top -= 5; // số mọc ngay TRÊN thanh máu nhỏ của quái (thanh máu thuộc lớp trên, vẽ sau số): số mới ra không bị thanh che
+    if (o.crit) num(t.x, top - 4, v + '!', { col: '#ffd23f', size: 13, pop: 1.2, t: 1, edge: 'rgba(90,30,0,0.95)', kind: 1, loai: 'dmg', chu: t, val: v, crit: true });
+    else if (dot) { if (demSo(true) <= D.soToiDa - 2) num(t.x, top + 4, String(v), { col: c2, size: 7, pop: 0.2, t: 0.55, vy: -20, loai: 'dmg', chu: t, val: v, dot: true }); } // số nhịp nhỏ: chỉ ra khi còn chỗ, không đẩy số đòn đánh đi
+    else if (o.m < 0.8) num(t.x, top, String(v), { col: '#9a9a9a', size: 7, pop: 0.3, t: 0.6, loai: 'dmg', chu: t, val: v });
+    else num(t.x, top, String(v), { col: c2, size: o.m > 1.25 ? 10 : 8, pop: o.m > 1.25 ? 1 : 0.7, loai: 'dmg', chu: t, val: v });
+  }
   function num(x, y, s, o) {
+    if (DOC()) return numDoc(x, y, s, o);
     // dời chỗ để các số ra cùng lúc không đè lên nhau
     let lift = 0, side = 0;
     for (const q of S.N) {
@@ -16298,6 +16359,7 @@
   api('dmg', (t, d, o) => {
     o = o || {};
     const top = t.y - Math.min(60, (t.h || 24) * (t.scale || 1)) - 4;
+    if (DOC()) { dmgDoc(t, d, o, top); return; }
     const s = String(Math.max(1, Math.round(d)));
     if (o.crit) num(t.x, top - 2, s + '!', { col: '#ffd23f', size: 13, pop: 1.2, t: 1, edge: 'rgba(90,30,0,0.95)', kind: 1 });
     else if (o.dot) {
@@ -16322,7 +16384,63 @@
     if (!f) { f = '700 ' + (k / 2) + 'px ' + FONT; FONTS.set(k, f); }
     return f;
   }
+  // Đợt 8: vẽ số sao cho KHÔNG số nào đè số khác. Xét từ số mới nhất về số cũ nhất: số mới đứng đúng chỗ của nó, số cũ hơn mà chạm
+  // hộp của số đã xếp thì nhích lên trên vừa đủ (độ nhích n.day được nhớ lại nên số không giật qua lại). Hết chỗ thì số cũ tắt sớm.
+  // n.hop = hộp [x0, y0, x1, y1] vừa vẽ ở khung này (toạ độ giao diện) — bài kiểm đọc để đếm và soi đè nhau.
+  const HOPS = [];
+  function drawNumsDoc(cam) {
+    const c = G.ux, D = G.theme.DOC, N = S.N;
+    HOPS.length = 0;
+    c.textAlign = 'center';
+    c.lineJoin = 'round';
+    for (let i = N.length - 1; i >= 0; i--) {
+      const n = N[i];
+      n.hop = null;
+      if (n.d > 0) continue;
+      const age = n.t0 - n.t, a = n.t < n.t0 * 0.35 ? Math.max(0, n.t / (n.t0 * 0.35)) : 1;
+      let sc = age < 0.07 ? 0.55 + (0.45 + n.pop) * (1 - (1 - age / 0.07) * (1 - age / 0.07)) : age < 0.24 ? 1 + n.pop * (1 - eio((age - 0.07) / 0.17)) : 1;
+      sc *= 0.88 + 0.12 * a;
+      if (n.nay != null && S.t - n.nay < 0.12) sc *= 1 + 0.18 * (1 - (S.t - n.nay) / 0.12); // vừa cộng dồn: nảy nhẹ một nhịp
+      const size = Math.max(D.coChu, n.size * sc), so = laSo(n);
+      c.font = fontOf(size);
+      const w = c.measureText(n.s).width + 2 + (n.kind === 2 ? 36 : 0), up = size * (so ? 0.8 : 1.02), dn = size * (so ? 0.12 : 0.3);
+      const x = n.x - cam;
+      let y = n.y + size * 0.35 - n.day, ok = false;
+      for (let g = 0; g < 12 && !ok; g++) {
+        let hit = null;
+        for (const h of HOPS) if (x - w / 2 < h[2] && x + w / 2 > h[0] && y - up < h[3] && y + dn > h[1]) { hit = h; break; }
+        if (!hit) ok = true;
+        else { const them = y + dn - hit[1] + 0.5; n.day += them; y -= them; }
+      }
+      if (!ok || y - up < 1) { n.t = Math.min(n.t, 0); continue; } // hết chỗ trên màn: số cũ tắt sớm
+      n.hop = [x - w / 2, y - up, x + w / 2, y + dn];
+      HOPS.push(n.hop);
+      n.ve = size; n.vy0 = y; n.va = a;
+    }
+    for (const n of N) {
+      if (!n.hop) continue;
+      const age = n.t0 - n.t, size = n.ve, y = n.vy0;
+      const jit = n.kind === 1 && age < 0.15 ? (((age * 60) | 0) % 2 ? 0.5 : -0.5) : 0;
+      const x = n.x - cam + jit;
+      c.globalAlpha = n.va;
+      c.font = fontOf(size);
+      c.lineWidth = n.kind ? 2.4 : 1.8;
+      c.strokeStyle = n.edge;
+      c.strokeText(n.s, x, y);
+      c.fillStyle = n.kind === 1 && age < 0.07 ? '#ffffff' : n.col;
+      c.fillText(n.s, x, y);
+      if (n.kind === 2) {
+        const w = c.measureText(n.s).width / 2 + 3, k = Math.min(1, age / 0.18), L = 12 * k;
+        c.fillStyle = n.col;
+        c.fillRect(x - w - L, y - size * 0.38, L, 1.4); c.fillRect(x + w, y - size * 0.38, L, 1.4);
+        c.fillStyle = '#ffffff';
+        c.fillRect(x - w - L - 2, y - size * 0.38 - 0.8, 2.6, 2.6); c.fillRect(x + w + L - 0.6, y - size * 0.38 - 0.8, 2.6, 2.6);
+      }
+    }
+    c.globalAlpha = 1;
+  }
   function drawNums(cam) {
+    if (DOC()) { drawNumsDoc(cam); return; }
     const c = G.ux;
     c.textAlign = 'center';
     c.lineJoin = 'round';
@@ -16812,7 +16930,9 @@
       const v = stView(e), B = bodyOf(e), x = Math.round(e.x), y = Math.round(e.y), t = S.t;
       const id = (e.fxId || (e.fxId = 1 + ((R() * 1000) | 0)));
       const top = y - Math.round((e.h || 24) * (e.scale || 1));
-      if (v.frozen) {
+      // Chủ dự án (11/10, 13:22): quái dùng trạng thái trên thân (Đợt 7) thì KHÔNG vẽ khung khối băng nữa — quái đã chậm lại, thân xanh và có mảnh băng ở chân là đủ.
+      const khoiBang = v.frozen && !(G.TRANG_THAI_TREN_THAN !== false && !e.isPlayer && e.ttR);
+      if (khoiBang) {
         // khối băng trong: viền, mặt bóng, vệt sáng chéo
         const w = Math.round(B.w + 4), h = Math.round(B.h + 5);
         p(c, x - w, y - h + 2, w * 2, h - 1, 'rgba(160,220,250,0.24)');
@@ -17293,7 +17413,12 @@
     if (!ai) add({ ty: 'flash', x: P.x, y: P.y - 14, r: 8, t: 0.1, c: '#ffffff', c2: '#ff6a5a', ly: 1 });
     for (let i = 0; i < (ai ? 3 : 7); i++) { const a = R() * TAU, v = rr(60, 140); streak(P.x, P.y - 14, Math.cos(a) * v, Math.sin(a) * v * 0.7, rr(0.14, 0.26), i % 2 ? RAMP.hurt : PL.ramp, 1, 6, 150, 3); }
     if (blocked) { addRing(P.x, P.y - 14, 5, 18, 0.18, '#ffd23f', 2, 1); for (let i = 0; i < 5; i++) emit(6, P.x + rr(-10, 10), P.y - rr(4, 26), 0, 0, 0.25, RAMP.gold, 3, 0, 0, null, 1); }
-    num(P.x, P.y - 38, '-' + Math.round(amt), { col: '#ff6a5a', size: 10, pop: 1, edge: 'rgba(60,0,0,0.95)', kind: 3 });
+    if (DOC()) {
+      // Đợt 8: số máu em bé mất màu đỏ, có dấu trừ (khác hẳn số gây ra cho quái); trúng liền nhau trong 0,25 giây thì cộng dồn.
+      const v = Math.round(amt), q = gopSo(P, 'be', false);
+      if (q) { congDon(q, v); q.s = '-' + q.val; }
+      else num(P.x, P.y - 38, '-' + v, { col: G.theme.DOC.soMat, size: 10, pop: 1, edge: 'rgba(60,0,0,0.95)', kind: 3, loai: 'be', chu: P, val: v });
+    } else num(P.x, P.y - 38, '-' + Math.round(amt), { col: '#ff6a5a', size: 10, pop: 1, edge: 'rgba(60,0,0,0.95)', kind: 3 });
     P.fxS = -0.1; P.fxSV = 0; P.fxL = -P.face * 4; P.fxLV = 0; // trúng đòn: bẹp người, ngửa ra sau
     trauma(0.45); kick(rr(-2, 2), 2); stop(60);
   });
@@ -17595,7 +17720,9 @@
       // dọn sạch phòng: lấp lánh vàng chạy khắp sân và một dòng chữ ngắn
       for (let i = 0; i < 26; i++) { const o = emit(6, rr(W.x0, W.x1), rr(W.y0, W.y1), 0, rr(-34, -12), rr(0.5, 1.1), RAMP.gold, R() < 0.4 ? 4 : 2, 0, 0, null, 1); o.t0 = o.t; }
       addRing(W.P.x, W.P.y, 6, 90, 0.6, 'rgba(255,210,63,0.8)', 3, 0);
-      num(W.cam + G.W / 2, 112, 'Sạch bóng quái!', { col: '#ffd23f', size: 12, pop: 1.4, t: 1.5, vx: 0, vy: -6, edge: 'rgba(90,40,0,0.95)', kind: 2 });
+      // Đợt 8: dòng này là thông báo chiến đấu → vào dải thông báo trên mặt tường sau (js/stage.js), không còn nổi giữa sàn.
+      if (DOC() && G.docTran && G.docTran.bao) G.docTran.bao('Sạch bóng quái!', '#ffd23f', 1.8);
+      else num(W.cam + G.W / 2, 112, 'Sạch bóng quái!', { col: '#ffd23f', size: 12, pop: 1.4, t: 1.5, vx: 0, vy: -6, edge: 'rgba(90,40,0,0.95)', kind: 2 });
     }
     S.cleared = !!W.cleared;
   }
@@ -17829,7 +17956,12 @@
     if (!P.dead && P.hp / P.maxhp < 0.3) a = Math.max(a, 0.2 + 0.14 * Math.sin(S.t * 5.5));
     if (a > 0.01) vignette(c, a);
     if (S.flash > 0 && VX('rung') > 0) { c.fillStyle = 'rgba(' + S.flashCol + ',' + (Math.min(1, S.flash / 0.45) * 0.38 * Math.min(1, VX('rung'))).toFixed(3) + ')'; c.fillRect(0, 0, G.W, G.H); } // chớp cả màn hình đi cùng rung: G.VFX.rung = 0 thì tắt cả hai
+    // Đợt 8 — thứ bậc hình ảnh (bảng G.theme.DOC.thuBac): chữ phụ và thông báo vẽ TRƯỚC số sát thương; thanh máu quái / trùm và trạng thái
+    // trên thân vẽ SAU số; vùng báo đòn (G.baoTruoc.draw, ngay sau hàm này trong G.drawWorld) vẽ sau cùng nên không gì che được nó.
+    const dt = DOC() ? G.docTran : null;
+    if (dt && dt.duoi) { try { dt.duoi(); } catch (e) { fail(e); } }
     drawNums(cam);
+    if (dt && dt.tren) { try { dt.tren(); } catch (e) { fail(e); } }
   });
   // Viền đỏ quanh màn hình: vẽ sẵn một lần vào canvas nhỏ, mỗi khung chỉ dán lại với độ trong suốt
   let VIG = null;
@@ -21025,6 +21157,10 @@ MA._xong();
   const seg = (u, a, b) => clamp((u - a) / (b - a), 0, 1);
   const ANIMS = ['idle', 'move', 'tele', 'atk', 'hit', 'die', 'ne', 'noi'];
   const LOOP = { idle: true, move: true, noi: true };
+  // Phiên E2 — DÁNG PHA của 3 trùm vùng: tệp có mã <trùm>-p2 hoặc <trùm>-p3 (ví dụ nguTinh-p2), lưới rút gọn 4 hàng idle / tele / atk / hit (tools/tach-quai).
+  // Trùm đang ở pha đó thì các hàng CÓ trong tệp pha lấy từ tệp pha; hàng không có (move, die với lưới 4 hàng) mượn tệp pha 1. Không có tệp pha: vẽ pha 1 như trước.
+  // Để sẵn: nếu sau này tệp pha có thêm hàng move hoặc die thì game dùng luôn, không phải sửa code (trang công cụ hiện chỉ xuất 4 hàng).
+  const PHA_MA = /^(nguTinh|mocTinh|hoTinh)-p([23])$/, PHA_HANG = { idle: 1, tele: 1, atk: 1, hit: 1, move: 1, die: 1 };
 
   const SC = (G.spriteCustom = { ds: {}, ANIMS, LOOP, loi: [] });
   // "net" (số nguyên 1..4, mặc định 1): ảnh trong tệp ("tam" hoặc "anh") có số điểm ảnh gấp net lần, còn MỌI số khác trong tệp
@@ -21078,7 +21214,10 @@ MA._xong();
       }
       SC.ds[sp.ma] = sp;
       // Chỉ nối vào game khi thật sự có hình tự vẽ: không có tệp nào thì game y hệt như chưa có tệp này.
-      if (sp.doi === 'quai') { noiQuai(); themVaoDanhSach(sp); } else if (sp.doi === 'nguoi-lang') noiNguoiLang(); else noiEmBe();
+      // Phiên E2: tệp <trùm>-p2 / <trùm>-p3 là DÁNG PHA của trùm vùng (lưới rút gọn 4 hàng), không phải một con quái mới: không thêm vào danh sách quái.
+      const mp = sp.doi === 'quai' ? PHA_MA.exec(sp.ma) : null;
+      if (mp) { sp.phaCua = mp[1]; sp.pha = +mp[2]; noiQuai(); }
+      else if (sp.doi === 'quai') { noiQuai(); themVaoDanhSach(sp); } else if (sp.doi === 'nguoi-lang') noiNguoiLang(); else noiEmBe();
       return sp;
     } catch (e) {
       SC.loi.push((tep && tep.ma) + ': ' + e.message);
@@ -21223,15 +21362,28 @@ MA._xong();
     if (/^chieu|^c\d$/.test(n)) return u < 0.4 ? mot('tele', u / 0.4) : mot('atk', (u - 0.4) / 0.6);
     return lap('idle');
   };
+  // Phiên E2: tệp dáng pha của trùm vùng. sp: tệp pha 1; pha: 2 hoặc 3; ten: hàng sắp vẽ. Trả về tệp pha nếu đã nạp xong và có hàng đó, không thì null (vẽ pha 1).
+  SC.phaTrum = function (sp, pha, ten) {
+    if (!sp || pha < 2 || !PHA_HANG[ten]) return null;
+    const p = SC.ds[sp.ma + '-p' + pha];
+    return p && p.ready && p.dt[ten] ? p : null;
+  };
   // Vẽ quái tự vẽ tại (x, y) với tuỳ chọn giống G.monsterArt.draw. bong: có vẽ bóng dưới chân không. D: thời lượng cử động trong game.
   SC.veQuai = function (c, sp, x, y, o, bong, D) {
     o = o || {};
     const n = o.anim || 'idle', t = Math.max(0, o.t || 0);
     let face = o.face || 0;
     if (!face) { const dir = o.dir == null ? Math.PI : o.dir; face = Math.cos(dir) > 0.01 ? 1 : -1; }
-    const s = SC.chonQuai(sp, n, t, D);
+    let s = SC.chonQuai(sp, n, t, D);
+    // Phiên E2: trùm vùng ở pha 2, 3 có tệp dáng pha thì các hàng có trong tệp đó (idle / tele / atk / hit) lấy từ tệp đó (xem SC.phaTrum). Cảnh chuyển pha: nửa đầu còn dáng cũ, như hình vẽ bằng code.
+    let pha = o.phase | 0;
+    if (pha >= 2 && (n === 'phase2' || n === 'phase3') && s.u < 0.5) pha--;
+    const sp2 = pha >= 2 ? SC.phaTrum(sp, pha, s.ten) : null;
+    let ve = sp; // tệp thật sự dùng để vẽ thân (bóng dưới chân vẫn theo tệp pha 1)
+    if (sp2) { const s2 = SC.chonQuai(sp2, n, t, D); if (s2.ten === s.ten) { s = s2; ve = sp2; } }
     let flash = o.hit || 0;
     if (s.ten === 'hit' && n === 'hit' && s.u < 0.3) flash = Math.max(flash, 0.75); // chớp trắng đầu cú trúng đòn
+    if (o.baoDon > 0) flash = Math.max(flash, o.baoDon); // Phiên E2: chớp trắng báo sắp ra đòn (js/boss.js truyền cho trùm vùng có ảnh AI); chỉ là hình
     c.save();
     c.translate(Math.round(x), Math.round(y));
     if (bong) {
@@ -21243,7 +21395,7 @@ MA._xong();
       c.restore();
     }
     // o.than (Đợt 7): màu nhuộm thân khi quái dính độc / cháy / đóng băng, do js/mobs.js truyền khi cờ G.TRANG_THAI_TREN_THAN bật. Không có thì vẽ y cũ.
-    SC.veKhung(c, sp, s.ten, s.i, face, { alpha: s.alpha, flash, dy: s.dy, than: o.than || null });
+    SC.veKhung(c, ve, s.ten, s.i, face, { alpha: s.alpha, flash, dy: s.dy, than: o.than || null });
     c.restore();
     return s;
   };
@@ -25241,16 +25393,21 @@ MA._xong();
     }
     return b.outline(OUT, true);
   }
-  // Thẻ giá mana: giọt nước xanh và con số. lack: đang thiếu mana thì số màu đỏ.
+  // Đợt 8 (độ đọc trận đấu): màu đỏ chỉ dành cho nguy hiểm, nên khi cờ G.DO_DOC_TRAN bật thì nút bấm không còn mảng đỏ:
+  // mặt nút Đánh thành đồng vàng (vòng nút vẫn mang màu hệ), mặt nút Chiêu / Chưởng hệ Lửa thành nâu than hồng, số mana đang thiếu thành xám thép.
+  // Màu lấy ở G.theme.DOC (js/ui_theme.js). Cờ tắt: mọi nút y như cũ.
+  const docTran = () => (G.DO_DOC_TRAN === true && G.theme && G.theme.DOC ? G.theme.DOC : null);
+  const matHe = (el) => { const D = docTran(); return D && el === 'fire' ? D.matLua : EL_FACE[el]; };
+  // Thẻ giá mana: giọt nước xanh và con số. lack: đang thiếu mana thì số màu đỏ (Đợt 8: xám thép, nền xám xanh).
   function costBadge(cost, lack) {
-    const str = String(cost), w = 5 + str.length * 4 + 4, b = new Buf(w, 9);
+    const str = String(cost), w = 5 + str.length * 4 + 4, b = new Buf(w, 9), D = docTran();
     b.rect(1, 0, w - 2, 9, OUT); b.rect(0, 1, w, 7, OUT);
-    b.rect(1, 1, w - 2, 7, lack ? '#3a1414' : '#10203a');
-    b.rect(1, 1, w - 2, 1, lack ? '#6a2420' : '#2a5a9a');
+    b.rect(1, 1, w - 2, 7, lack ? (D ? '#1c2230' : '#3a1414') : '#10203a');
+    b.rect(1, 1, w - 2, 1, lack ? (D ? '#3a4254' : '#6a2420') : '#2a5a9a');
     // giọt mana
     const dc = lack ? '#8a8f98' : '#7fd4ff';
     b.set(3, 2, dc); b.rect(2, 3, 3, 3, dc); b.set(3, 6, dc); b.set(2, 3, lack ? '#c8ccd4' : '#e9f9ff');
-    const col = lack ? '#ff6a5a' : '#e9f9ff';
+    const col = lack ? (D ? D.thieuMana : '#ff6a5a') : '#e9f9ff';
     for (let n = 0; n < str.length; n++) {
       const g = DIG[str[n]];
       if (g) for (let i = 0; i < 15; i++) if (g[i] === '1') b.set(6 + n * 4 + (i % 3), 2 + Math.floor(i / 3), col);
@@ -25500,10 +25657,10 @@ MA._xong();
     if (kind === 'atk') {
       const fr = el === 'none' ? 0 : Math.floor(t * 5) % 2;
       key = [kind, R, wType(w), el, lv, fr]; ic = 'w_' + wType(w);
-      make = () => common({ ring: EL_RING[el], face: EL_FACE[el], el, lv, fr, studs: el !== 'ice', icon: iconBuf('w_' + wType(w), S, el) });
+      make = () => common({ ring: EL_RING[el], face: docTran() ? docTran().nutDanh : EL_FACE[el], el, lv, fr, studs: el !== 'ice', icon: iconBuf('w_' + wType(w), S, el) });
     } else if (kind === 'special') {
       key = [kind, R, wType(w), el, st.cost, lack]; ic = 's_' + wType(w);
-      make = () => common({ ring: JADE, face: EL_FACE[el], icon: iconBuf('s_' + wType(w), S, el), iconDy: st.cost != null ? -1 : 0, badge: st.cost != null ? costBadge(st.cost, lack) : null });
+      make = () => common({ ring: JADE, face: matHe(el), icon: iconBuf('s_' + wType(w), S, el), iconDy: st.cost != null ? -1 : 0, badge: st.cost != null ? costBadge(st.cost, lack) : null });
     } else if (kind === 'skill') {
       const hero = HERO_FACE[st.hero] ? st.hero : 'smith';
       key = [kind, R, hero, st.cost, lack]; ic = 'h_' + hero;
@@ -25512,7 +25669,7 @@ MA._xong();
       // nút Chưởng: vòng và mặt nút theo hệ của cây chưởng đang dùng
       const ce = EL_RING[st.el] && st.el !== 'none' ? st.el : 'fire';
       key = [kind, R, ce, st.cost, lack]; ic = 'c_' + ce;
-      make = () => common({ ring: EL_RING[ce], face: EL_FACE[ce], el: ce, studs: ce !== 'ice', icon: iconBuf('c_' + ce, S, ''), iconDy: st.cost != null ? -1 : 0, badge: st.cost != null ? costBadge(st.cost, lack) : null });
+      make = () => common({ ring: EL_RING[ce], face: matHe(ce), el: ce, studs: ce !== 'ice', icon: iconBuf('c_' + ce, S, ''), iconDy: st.cost != null ? -1 : 0, badge: st.cost != null ? costBadge(st.cost, lack) : null });
     } else if (kind === 'dodge') {
       // 16 hướng. Không đẩy cần thì mũi tên chỉ sang phải.
       const di = st.dir == null || isNaN(st.dir) ? 0 : ((Math.round((st.dir / TAU) * 16) % 16) + 16) % 16;
@@ -25525,7 +25682,7 @@ MA._xong();
       key = ['pause', R]; ic = 'pause';
       make = () => common({ ring: WOOD, face: pal3('#4a4038', '#342c26', '#201a16'), studs: true, icon: iconBuf('pause', Math.max(6, S - 4), '') });
     }
-    const base = memo('b|' + key.join('|') + gdTag(ic) + '|' + (pressed ? 1 : 0) + (dimmed ? 1 : 0), () => buildBase(make()));
+    const base = memo('b|' + key.join('|') + gdTag(ic) + '|' + (pressed ? 1 : 0) + (dimmed ? 1 : 0) + (docTran() ? '|d8' : ''), () => buildBase(make()));
     const pf = press(st.id || kind, pressed && !disabled);
     const oy = (pressed ? base.lip : 0) + pf.dy;
     const alpha = st.alpha != null ? st.alpha : 1;
@@ -26351,6 +26508,38 @@ MA._xong();
   T.install();
   // Dòng tiêu đề nhỏ trong bảng
   T.head = function (s, x, y, o) { txt(s, x, y, Object.assign({ size: 8.5, bold: true, color: C.hi }, o || {})); };
+
+  // ---------- Đợt 8: độ đọc trận đấu trên điện thoại ----------
+  // CỜ TẮT: G.DO_DOC_TRAN = false thì mọi thứ dưới đây về đúng cách vẽ cũ (js/stage.js, js/fx.js, js/btn_art.js đều hỏi cờ này lúc vẽ).
+  // Muốn so trên máy thật: mở game với ?doctran=0 ở cuối địa chỉ.
+  let tat = false;
+  try { tat = /[?&]doctran=0\b/i.test(String(window.location && window.location.search)); } catch (e) { tat = false; }
+  if (G.DO_DOC_TRAN == null) G.DO_DOC_TRAN = !tat;
+  T.DOC = {
+    // THỨ BẬC HÌNH ẢNH CỐ ĐỊNH của một trận (bac 1 = quan trọng nhất). Lớp có bậc lớn hơn (kém quan trọng hơn) KHÔNG được vẽ đè lên
+    // lớp có bậc nhỏ hơn: trong một khung hình, lớp kém quan trọng vẽ trước, lớp quan trọng vẽ sau (cột "ve" = thứ tự vẽ, 1 là vẽ đầu tiên).
+    thuBac: [
+      { bac: 1, lop: 'baoDon', ten: 'Vùng báo đòn', ve: 7, noi: 'js/bao_truoc.js — G.baoTruoc.draw, cuối G.drawWorld' },
+      { bac: 2, lop: 'nhanVat', ten: 'Nhân vật và quái', ve: 1, noi: 'lớp #world; chữ và khung không được đặt lên giữa sàn; vùng báo đòn tự khoét chỗ thân nhân vật' },
+      { bac: 3, lop: 'mauTrum', ten: 'Thanh máu trùm / tinh anh, trạng thái trên thân', ve: 6, noi: 'js/stage.js drawHud("tren"): thanh máu quái, khung trùm, thẻ kháng/yếu, biểu tượng hệ' },
+      { bac: 4, lop: 'soSatThuong', ten: 'Số sát thương', ve: 5, noi: 'js/fx.js drawNums' },
+      { bac: 5, lop: 'thongBao', ten: 'Thông báo chiến đấu (tối đa 2 dòng)', ve: 4, noi: 'js/stage.js veThongBao: dải trên mặt tường sau, dưới thanh máu trùm' },
+      { bac: 6, lop: 'chuPhu', ten: 'Chữ phụ: tên phòng, sức mạnh, lời chỉ dẫn, mẹo, tên vật, đồ vừa nhặt', ve: 3, noi: 'js/stage.js drawHud("duoi")' },
+      // Viền màn hình (thanh máu em bé, ô vũ khí, bản đồ nhỏ, nút bấm) nằm ngoài sàn nên không tranh chỗ với các lớp trên; vẽ sau cùng.
+    ],
+    soToiDa: 6, // số sát thương cùng lúc trên màn; đủ rồi thì số cũ nhất tắt sớm
+    chuToiDa: 3, // chữ nổi khác (tên đòn, "Xa quá!", "+3 Lửa")
+    gop: 0.25, // giây: cùng một quái trúng thêm đòn trong khoảng này thì cộng dồn vào số đang hiện
+    soLe: 6, // điểm ảnh lệch ngang so le giữa các số nối nhau của cùng một quái
+    dongToiDa: 2, // dòng thông báo chiến đấu cùng lúc
+    coChu: 7, // cỡ chữ nhỏ nhất của số và chữ phải đọc trong trận (chữ giao diện đã có sàn 7,5 ở ui.fs)
+    nen: 0.7, // độ đậm tấm nền tối sau chữ phải đọc
+    // MÀU. Đỏ chỉ dành cho nguy hiểm (vùng báo đòn, máu em bé mất, trùm nổi giận, hết giờ). Nút bấm không dùng đỏ.
+    nutDanh: { l: '#c98c34', m: '#a8752f', d: '#79451d' }, // mặt nút Đánh: đồng vàng (bảng màu lõi: gỗ nắng #c98c34, gỗ sáng #79451d; đồng #a8752f của bộ giao diện)
+    matLua: { l: '#8a4a16', m: '#643410', d: '#3e1e08' }, // mặt nút Chiêu / Chưởng khi mang hệ Lửa: nâu than hồng thay cho đỏ sẫm #8a2a16
+    thieuMana: '#b8c4d2', // số mana trên thẻ giá khi chưa đủ (trước là đỏ #ff6a5a)
+    soMat: '#ff6a5a', // số máu EM BÉ mất: đỏ (nguy hiểm), có dấu trừ. Số gây ra cho quái: trắng / màu hệ / vàng chí mạng, không bao giờ đỏ.
+  };
 })();
 
 // ===== js/linhkhi.js =====
@@ -27514,6 +27703,7 @@ MA._xong();
       if (S.near && inp.atkP) { inp.atk = false; inp.atkP = false; interact(S.near); if (S.mode !== 'play' || S.W !== W) return; }
       else if (S.near) inp.atk = false;
       G.updateWorld(dt, inp);
+      if (DOC()) msgTick(W, dt); // Đợt 8: dải thông báo (dòng đã bị dòng mới đẩy lên thì tự đếm giờ ở đây)
       // đạn không bay xuyên tường ra lề màn hình
       if (W.projs.length) W.projs = W.projs.filter((o) => o.x > W.geo.fx0 - 2 && o.x < W.geo.fx1 + 2 && o.y > W.geo.fy0 - 26 && o.y < W.geo.fy1 + 8);
       for (const z of W.zones) if (z.wave && z.x < W.geo.fx0 + 3) z.dead = true; // sóng của Ngư Tinh tan khi chạm tường trái
@@ -27556,9 +27746,21 @@ MA._xong();
         // Bảng vừa mở hoặc đóng: ngón đang giữ không được bấm nhầm vào nút mới hiện.
         S.shownMode = S.mode; S.modeT = G.time; G.stalePointers(); G.click = null;
       }
-      G.drawWorld(S.r);
-      if (S.trans) slideWorld();
-      drawHud();
+      if (DOC()) {
+        // Đợt 8 — thứ bậc hình ảnh: G.drawWorld gọi lại G.docTran.duoi() (chữ phụ, thông báo) NGAY TRƯỚC số sát thương và G.docTran.tren()
+        // (thanh máu quái / trùm) NGAY SAU số, rồi mới vẽ vùng báo đòn. Phần nào chưa được gọi (đang chuyển phòng...) thì vẽ bù ở đây.
+        S.docN = (S.docN || 0) + 1;
+        veTran = true;
+        try { G.drawWorld(S.r); } finally { veTran = false; }
+        if (S.trans) slideWorld();
+        if (S.docTren !== S.docN) drawHud('tren');
+        if (S.docDuoi !== S.docN) drawHud('duoi');
+        drawHud('vien');
+      } else {
+        G.drawWorld(S.r);
+        if (S.trans) slideWorld();
+        drawHud();
+      }
       if (S.mode === 'map') { G.minimap.drawBig(S); if (G.click) { G.click = null; setMode('play'); G.sfx('ui'); } }
       else if (S.mode === 'chest') panelChest();
       else if (S.mode === 'swap') panelSwap();
@@ -27631,17 +27833,112 @@ MA._xong();
     }
     c.globalAlpha = ga;
   }
-  function drawHud() {
+  // ---------- Đợt 8: độ đọc trận đấu ----------
+  // Cờ tắt G.DO_DOC_TRAN (js/ui_theme.js). Bảng thứ bậc hình ảnh và các hằng số: G.theme.DOC.
+  const DOC = () => G.DO_DOC_TRAN === true && !!(G.theme && G.theme.DOC);
+  let veTran = false; // đang ở trong G.drawWorld của cảnh ải (để hai hàm gọi lại dưới đây không chạy nhầm ở cảnh khác)
+  const MSG = { khung: { dong: 0, hop: null } };
+  // DẢI THÔNG BÁO CHIẾN ĐẤU: một dải trên mặt tường sau, ngay dưới khối trên cùng (thanh máu trùm / tinh anh), giữa nút tạm dừng và ô vũ khí
+  // (x 126–364). Tối đa G.theme.DOC.dongToiDa (2) DÒNG cùng lúc; dòng mới đẩy dòng cũ lên, quá 2 thì dòng cũ nhất mất. Không bao giờ vẽ
+  // xuống giữa sàn. Nguồn: mọi chỗ trong game đặt W.banner (không phải mẹo .tip) và G.docTran.bao(...) ("Sạch bóng quái!" của js/fx.js).
+  function msgDong(W) {
+    if (S.msgW !== W) { S.msgW = W; S.msgs = []; S.msgB = null; }
+    const b = W.banner;
+    if (b && !b.tip) { if (b !== S.msgB) msgThem({ b, s: b.s, col: b.col }); S.msgB = b; } else if (!b) S.msgB = null;
+  }
+  function msgThem(e) {
+    const L = S.msgs, last = L[L.length - 1];
+    e.at = G.time;
+    if (last && last.s === e.s && last.b.t > 0) { e.at = last.at; e.y = last.y; L[L.length - 1] = e; } // cùng một câu báo lại: làm mới, không thêm dòng
+    else L.push(e);
+    while (L.length > G.theme.DOC.dongToiDa) L.shift();
+  }
+  function msgTick(W, dt) {
+    msgDong(W);
+    for (const e of S.msgs) if (e.b !== W.banner) e.b.t -= dt;
+    if (S.msgs.some((e) => !(e.b.t > 0))) S.msgs = S.msgs.filter((e) => e.b.t > 0);
+  }
+  // Vẽ dải thông báo từ y = by. Trả về y ngay dưới dải (để khối khác xếp tiếp bên dưới).
+  function veThongBao(W, by) {
+    const D = G.theme.DOC, T = G.theme, c = G.ux, X0 = 126, X1 = 364, mid = (X0 + X1) / 2, maxW = X1 - X0 - 14; // từ 126: né thanh máu, thanh mana của em bé (tới x = 124)
+    msgDong(W);
+    MSG.khung = { dong: 0, hop: null };
+    const list = S.msgs.filter((e) => e.b.t > 0);
+    if (!list.length) return by;
+    // Khối trên cùng đã cao (trùm có thẻ kháng/yếu và đang "LỘ ĐIỂM YẾU!") thì chỉ còn chỗ cho 1 dòng: dải không được xuống quá mép trên sàn 20 điểm ảnh.
+    let con = by + D.dongToiDa * 12 + 4 <= W.geo.fy0 + 20 ? D.dongToiDa : 1;
+    const rows = [];
+    for (let i = list.length - 1; i >= 0 && con > 0; i--) { // dòng mới nhất được chỗ trước
+      const e = list[i], str = G.tv ? G.tv(e.s) : e.s;
+      let size = 7.5, lines = null;
+      for (const sz of [9.5, 8.5, 7.5]) { ui.font(sz, true); if (c.measureText(str).width <= maxW) { size = sz; lines = [str]; break; } }
+      if (!lines) lines = ui.wrap(str, maxW, 7.5, true);
+      if (lines.length > con) {
+        if (rows.length) break; // dòng cũ không còn đủ chỗ: nhường hẳn cho dòng mới
+        lines = lines.slice(0, con);
+        ui.font(7.5, true);
+        let l = lines[con - 1];
+        while (l.length > 4 && c.measureText(l + '…').width > maxW) l = l.slice(0, -1);
+        lines[con - 1] = l + '…';
+      }
+      con -= lines.length;
+      rows.unshift({ e, size, lines });
+    }
+    const ga = c.globalAlpha, gd = G.VFX ? +G.VFX.giaoDien : 1;
+    let y = by, hop = null, dong = 0;
+    for (const r of rows) {
+      const e = r.e, lh = r.size + 2.5, bh = Math.round(r.lines.length * lh + 4);
+      let tw = 0;
+      ui.font(r.size, true);
+      for (const l of r.lines) tw = Math.max(tw, c.measureText(l).width);
+      const pw = Math.min(X1 - X0, Math.ceil(tw) + 14), px = Math.round(mid - pw / 2);
+      // dòng mới trượt vào từ trên một nhịp; dòng cũ bị đẩy thì trôi mượt về chỗ mới; sắp hết giờ thì mờ dần
+      if (e.y == null || !(gd > 0)) e.y = gd > 0 ? y - 4 : y;
+      else e.y += (y - e.y) * 0.35;
+      if (Math.abs(e.y - y) < 0.4) e.y = y;
+      const age = G.time - e.at, py = Math.round(e.y);
+      c.globalAlpha = ga * (gd > 0 ? Math.min(1, age < 0.12 ? 0.35 + (age / 0.12) * 0.65 : 1, e.b.t < 0.3 ? Math.max(0, e.b.t / 0.3) : 1) : 1);
+      T.plate(px, py, pw, bh, { a: D.nen });
+      r.lines.forEach((l, i) => ui.text(l, mid, py + r.size + 1 + i * lh, { size: r.size, align: 'center', bold: true, color: e.col || '#ffd27a' }));
+      hop = hop ? [Math.min(hop[0], px), Math.min(hop[1], py), Math.max(hop[2], px + pw), Math.max(hop[3], py + bh)] : [px, py, px + pw, py + bh];
+      dong += r.lines.length;
+      y += bh + 1;
+    }
+    c.globalAlpha = ga;
+    MSG.khung = { dong, hop };
+    return y + 1;
+  }
+  // Tấm nền tối (70%) sau một dòng chữ căn giữa phải đọc trong trận (đếm giờ thử thách, "Bấm Đánh", cửa còn khoá...).
+  function nenChu(lines, cx, y, size, lh) {
+    let tw = 0;
+    ui.font(size, true);
+    for (const l of lines) tw = Math.max(tw, G.ux.measureText(G.tv ? G.tv(l) : l).width);
+    G.theme.plate(Math.round(cx - tw / 2) - 5, Math.round(y - size - 1.5), Math.ceil(tw) + 10, Math.round(size + 5 + (lines.length - 1) * (lh || 9)), { a: G.theme.DOC.nen });
+  }
+  G.docTran = {
+    duoi() { if (veTran && S && S.W) { S.docDuoi = S.docN; drawHud('duoi'); } },
+    tren() { if (veTran && S && S.W) { S.docTren = S.docN; drawHud('tren'); } },
+    // Thêm một dòng vào dải thông báo (không qua W.banner). t: số giây hiện.
+    bao(s, col, t) { if (S && S.W) { msgDong(S.W); msgThem({ b: { s, col, t: t || 2 }, s, col }); } },
+    khung: () => MSG.khung, // cho bài kiểm tra: { dong: số dòng vừa vẽ, hop: [x0, y0, x1, y1] }
+  };
+
+  // part (Đợt 8, chỉ khi cờ G.DO_DOC_TRAN bật): vẽ riêng một lớp của bảng thứ bậc — 'duoi' (chữ phụ, lời chỉ dẫn, thông báo: trước số sát thương),
+  // 'tren' (thanh máu quái, khung trùm / tinh anh: sau số sát thương), 'vien' (thanh máu em bé, ô vũ khí, bản đồ nhỏ, nút: ngoài sàn, vẽ sau cùng).
+  // Không truyền part (cờ tắt): vẽ tất cả theo đúng thứ tự cũ.
+  function drawHud(part) {
     const W = S.W, P = S.P, c = G.ux;
-    if (S.mode === 'play' && W.ents) mobBars(W);
-    if (G.doRoi && G.doRoi.veBay) G.doRoi.veBay(); // đồ vừa nhặt bay vào ô / hiện trên đầu (vẽ trước ô giao diện)
+    const doc = !!part, on = (p) => !part || part === p;
+    if (on('tren') && S.mode === 'play' && W.ents) mobBars(W);
+    if (on('duoi') && G.doRoi && G.doRoi.veBay) G.doRoi.veBay(); // đồ vừa nhặt bay vào ô / hiện trên đầu (vẽ trước ô giao diện)
     // máu, mana
     const T = G.theme;
+    const BA = G.btnArt; // bộ nút riêng (js/btn_art.js)
+    if (on('vien')) {
     // Giai đoạn 4 (yêu cầu 2): thanh máu to hơn, chữ số to; thanh năng lượng có số để biết đủ mana cho chiêu chưa.
     T.bar(4, 3, 120, 'hp', P.hp / P.maxhp, Math.ceil(P.hp) + ' / ' + P.maxhp, { h: 11, lag: P, size: 7.5 }); // lag: phần máu vừa mất tụt dần (js/ui_theme.js); khoá theo em bé của lượt chơi này
     T.bar(4, 15, 108, 'mana', P.mana / P.maxmana, Math.floor(P.mana) + ' / ' + P.maxmana, { h: 8, size: 6.5 });
     const canDrink = P.potions > 0 && !W.noPotion;
-    const BA = G.btnArt; // bộ nút riêng (js/btn_art.js)
     const heldBox = (b) => [...G.pointers.values()].some((p) => p.role === 'ui' && hitBox({ x: p.sx, y: p.sy }, b));
     BA.draw(c, 'potion', POT[0] + 13, POT[1] + 12, 12, { count: P.potions, disabled: !canDrink, pressed: heldBox(POT) });
     ui.text(W.noPotion ? 'Cấm' : 'Bình máu', POT[0] + 29, POT[1] + 15, { size: 7, bold: true, color: canDrink ? '#fff3da' : '#a89c8c' });
@@ -27650,6 +27947,8 @@ MA._xong();
     for (const k of G.ELS) if (P.st[k] > 0) { const gt = gdAnh('gd-tt-' + TT_MA[k]); if (gt) { ui.rect(sx, 54, 11, 11, 'rgba(14,10,8,0.85)', G.EL[k].col); G.spriteCustom.veGd(G.ux, gt, sx + 1, 55, 9, 9); } else if (G.lk && G.lk.icon) { ui.rect(sx, 54, 11, 11, 'rgba(14,10,8,0.85)', G.EL[k].col); G.lk.icon(k, sx + 5.5, 59.5, 0.9, false, 1); } else ui.rect(sx, 54, 10, 10, G.EL[k].col, '#000'); sx += 13; }
     const cw = G.curW(P), coat = P.coats[cw.id];
     if (coat && coat.t > 0) ui.text(G.t('Bùa {0} {1} giây', G.EL[coat.el].name, Math.ceil(coat.t)), sx + 1, 62.5, { size: 7.5, color: G.EL[coat.el].col, bold: true });
+    }
+    if (on('duoi')) {
     // tên vùng và loại phòng ở lề trái; bản đồ nhỏ ở lề phải (thay hàng chấm phòng trước đây)
     // Phòng trùm rộng (sàn từ x = 80): cột trái hẹp nên chữ sức mạnh xuống hai dòng, không tràn vào sàn.
     const narrow = !!(W.geo && W.geo.rong);
@@ -27661,6 +27960,8 @@ MA._xong();
     if (wide2) { ui.text(G.t('Sức mạnh {0}', S.power), 5, 95, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) }); ui.text(G.t('khuyên {0}', S.rec), 5, 104, { size: 6.5, color: '#bfb39c' }); }
     else if (narrow) { ui.text(G.t('Sức mạnh {0}', S.power), 5, 85, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) }); ui.text(G.t('khuyên {0}', S.rec), 5, 94, { size: 6.5, color: '#bfb39c' }); }
     else ui.text(G.t('Sức mạnh {0} / khuyên {1}', S.power, S.rec), 5, 86, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) });
+    }
+    if (on('vien')) {
     G.minimap.draw(S);
     // vũ khí: hình và bậc ở trên, mốc tiến hóa ở dưới, thanh dấu ấn sát đáy
     P.weapons.forEach((w, i) => {
@@ -27689,7 +27990,8 @@ MA._xong();
       }
     });
     if (G.lk) G.lk.hud(P, W); // ba vạch linh khí cạnh ô vũ khí, biểu tượng hệ trên đầu quái (js/linhkhi.js)
-    if (P.weapons.length > 1 && S.tut && W.type === 'elite') {
+    }
+    if (!doc && P.weapons.length > 1 && S.tut && W.type === 'elite') {
       // Đợt 2: chữ nằm trong một ô nền riêng, cách ô vũ khí 5 điểm ảnh nên không còn bị ô vũ khí cắt mất chữ cuối.
       const s0 = G.tv('Chạm để đổi vũ khí →'); ui.font(7, true);
       const tw0 = Math.ceil(G.ux.measureText(s0).width) + 8;
@@ -27700,6 +28002,8 @@ MA._xong();
     // Phân cấp (Giai đoạn 4): trùm vùng khung to viền vàng, tên chữ to, số phần trăm; trùm nhỏ khung vừa; tinh anh khung nhỏ.
     const b = W.boss;
     let topY = 0; // đáy của khối trên cùng giữa màn hình (để dòng báo xếp bên dưới)
+    let by = doc ? S.docBy || 8 : 8;
+    if (on('tren')) {
     if (b && !b.dead) {
       const big = b.kind !== 'mini';
       topY = T.bossBar(240, 2, { tier: big ? 'big' : 'mini', name: b.name, frac: b.hp / b.maxhp, lag: b, marks: [0.3, 0.6] });
@@ -27707,17 +28011,17 @@ MA._xong();
       const chips = [];
       for (const l of b.layers) chips.push([l.type === 'resist' ? G.t('Kháng {0}', G.EL[l.el].name) : G.tv(G.layerText(l)), l.type === 'resist' ? G.EL[l.el].dark : '#1f4f4a', '#f1e6c6']);
       if (b.weak.length) chips.push([G.t('Yếu {0}', b.weak.map((e) => G.tv(G.EL[e].name)).join(', ')), 'rgba(20,14,8,0.9)', G.EL[b.weak[0]].col]);
-      ui.font(6.5, true);
+      ui.font(doc ? 7 : 6.5, true);
       let tot = 0; for (const q of chips) { q[3] = Math.ceil(G.ux.measureText(q[0]).width) + 8; tot += q[3] + 3; }
       let lx = Math.round(240 - (tot - 3) / 2);
       for (const q of chips) {
         ui.rect(lx, topY + 1, q[3], 10, q[1], '#1a120a');
         ui.rect(lx + 1, topY + 1, q[3] - 2, 1, 'rgba(255,240,196,0.25)');
-        ui.text(q[0], lx + q[3] / 2, topY + 8.5, { size: 6.5, bold: true, align: 'center', color: q[2] });
+        ui.text(q[0], lx + q[3] / 2, topY + 8.5, { size: doc ? 7 : 6.5, bold: true, align: 'center', color: q[2] });
         lx += q[3] + 3;
       }
       if (chips.length) topY += 12;
-      if (b.exposed > 0) { ui.text('LỘ ĐIỂM YẾU!', 240, topY + 9, { size: 8.5, align: 'center', color: Math.floor(G.time * 8) % 2 ? '#ffd23f' : '#fff3b0', bold: true }); topY += 11; }
+      if (b.exposed > 0) { if (doc) nenChu(['LỘ ĐIỂM YẾU!'], 240, topY + 9, 8.5); ui.text('LỘ ĐIỂM YẾU!', 240, topY + 9, { size: 8.5, align: 'center', color: Math.floor(G.time * 8) % 2 ? '#ffd23f' : '#fff3b0', bold: true }); topY += 11; }
     } else if (W.type === 'elite' && S.mode === 'play') {
       // phòng tinh anh: khung nhỏ ở mép trên với tên loài và dấu hiệu (nhanh, bọc giáp...)
       const el = W.ents.find((e) => e && !e.dead && e.role === 'elite');
@@ -27727,7 +28031,7 @@ MA._xong();
         topY = T.bossBar(240, 2, { tier: 'elite', name: info && info.ten ? G.t('Tinh anh · {0}', info.ten) : 'Tinh anh', sub: tr ? tr.name : null, frac: el.hp / el.maxhp, lag: el });
       }
     }
-    let by = topY ? topY + 3 : S.challenge ? 26 : 8;
+    by = topY ? topY + 3 : S.challenge ? 26 : 8;
     if (W.type === 'fountain') {
       const t = S.preview.length ? G.t('Trùm đã học: {0}', layerTexts(S.preview, ' · ')) : 'Trùm chưa học được gì từ bạn';
       const lines = ui.wrap(t, 228, 7, true);
@@ -27735,7 +28039,19 @@ MA._xong();
       lines.forEach((l, i) => ui.text(l, 240, 18 + i * 9, { size: 7, align: 'center', color: '#ffd9c8', bold: true }));
       by = 14 + lines.length * 9 + 4;
     }
-    if (S.challenge) { ui.text(G.t('Thử thách: hạ hết quái trong {0} giây', Math.max(0, Math.ceil(S.challenge.t))), 240, 20, { size: 8, align: 'center', color: S.challenge.t > 8 ? '#ffd27a' : '#ff6a5a', bold: true }); }
+    if (S.challenge) { const cs = G.t('Thử thách: hạ hết quái trong {0} giây', Math.max(0, Math.ceil(S.challenge.t))); if (doc) { nenChu([cs], 240, 20, 8); by = Math.max(by, 27); } ui.text(cs, 240, 20, { size: 8, align: 'center', color: S.challenge.t > 8 ? '#ffd27a' : '#ff6a5a', bold: true }); }
+    if (doc) S.docBy = by;
+    }
+    if (on('duoi')) {
+    if (doc && P.weapons.length > 1 && S.tut && W.type === 'elite') {
+      // Đợt 8: nhãn này trước nằm cùng hàng với khung tinh anh nên bị khung che mất nửa chữ. Nay xuống một hàng riêng ngay dưới khung, sát ô vũ khí.
+      const s0 = G.tv('Chạm để đổi vũ khí →'); ui.font(7, true);
+      const tw0 = Math.ceil(G.ux.measureText(s0).width) + 8;
+      T.plate(364 - tw0, by, tw0, 12, { a: 0.78 });
+      ui.text(s0, 364 - 4, by + 9, { size: 7, align: 'right', bold: true, color: '#ffd27a' });
+      by += 14;
+    }
+    if (doc) by = veThongBao(W, by);
     // Lời chỉ dẫn của ải đầu nằm ở lề trái, không che phòng. Ở phòng trùm tự ẩn sau 12 giây.
     let hint = S.hint;
     if (hint && W.cleared && W.hadWaves) hint = TUT.door;
@@ -27751,8 +28067,8 @@ MA._xong();
       const q = tipB ? [tipB.s, tipB.col || '#ffd27a', tipB.t < 0.4 ? Math.max(0, tipB.t / 0.4) : 1] : [hint, '#f1e6c6', 1];
       // Phòng có cửa dưới đang MỞ: ô chữ ở đáy sẽ che mất lối ra và mũi tên chỉ lối, nên lúc đó ô chữ lên mặt tường sau (dưới các khối trên cùng),
       // nằm giữa nút tạm dừng (tới x = 96) và ô vũ khí (từ x = 366); phòng Suối hồi còn né thêm chữ "Rương đồ" ở góc trái.
-      const len = W.doors.some((d) => d.dir === 'down' && d.open), lx0 = len ? (W.type === 'fountain' ? 142 : 98) : 77, lx1 = len ? 364 : 383;
-      const bold = q[1] !== '#f1e6c6', lines = ui.wrap(q[0], lx1 - lx0 - 10, 7, bold).slice(0, 4);
+      const len = W.doors.some((d) => d.dir === 'down' && d.open), lx0 = len ? (W.type === 'fountain' ? 142 : doc ? 126 : 98) : 77, lx1 = len ? 364 : 383; // Đợt 8: chữ đậm rộng hơn nên ô chữ bắt đầu từ 126, khỏi đè thanh máu / mana (tới x = 124)
+      const bold = doc || q[1] !== '#f1e6c6', lines = ui.wrap(q[0], lx1 - lx0 - 10, 7, bold).slice(0, 4); // Đợt 8: lời chỉ dẫn cũng chữ đậm
       let tw = 0; ui.font(7, bold);
       for (const l of lines) tw = Math.max(tw, G.ux.measureText(l).width);
       const pw = Math.min(lx1 - lx0, Math.ceil(tw) + 12), ph = Math.round(lines.length * 9.5 + 6), mid = (lx0 + lx1) / 2, px = Math.round(mid - pw / 2), ga = G.ux.globalAlpha;
@@ -27767,16 +28083,19 @@ MA._xong();
       let hy = W.geo.big ? 100 : 93;
       for (const q of [hint ? [hint, '#f1e6c6', 1] : null, tipB ? [tipB.s, tipB.col || '#ffd27a', tipB.t < 0.4 ? Math.max(0, tipB.t / 0.4) : 1] : null]) {
         if (!q) continue;
-        const lines = ui.wrap(q[0], hw - 9, 7), ph = Math.round(lines.length * 9.5 + 7), ga = G.ux.globalAlpha;
+        // Đợt 8: chữ đậm cho dễ đọc; cột trái phòng trùm hẹp, nếu chữ đậm làm ô quá cao (chạm cần điều khiển) thì giữ chữ thường như cũ
+        let dam = doc, lines = ui.wrap(q[0], hw - 9, 7, dam);
+        if (dam && hy + Math.round(lines.length * 9.5 + 7) > 186) { dam = false; lines = ui.wrap(q[0], hw - 9, 7); }
+        const ph = Math.round(lines.length * 9.5 + 7), ga = G.ux.globalAlpha;
         if (hy + ph > 186) break; // không xuống tới cần điều khiển
         G.ux.globalAlpha = ga * q[2];
         T.plate(2, hy, hw, ph, { a: 0.78 });
-        lines.forEach((l, i) => ui.text(l, 7, hy + 10 + i * 9.5, { size: 7, color: q[1], bold: q[1] !== '#f1e6c6' }));
+        lines.forEach((l, i) => ui.text(l, 7, hy + 10 + i * 9.5, { size: 7, color: q[1], bold: dam || q[1] !== '#f1e6c6' }));
         G.ux.globalAlpha = ga;
         hy += ph + 3;
       }
     }
-    if (W.banner && !W.banner.tip) {
+    if (!doc && W.banner && !W.banner.tip) {
       // dòng báo nằm trên tường sau; dài quá thì thu chữ, vẫn dài thì xuống dòng
       const maxW = W.geo.rong ? 290 : 228;
       let size = 10, lines = [W.banner.s];
@@ -27809,6 +28128,7 @@ MA._xong();
         const q = G.roomArt.doorPos(W.geo, d.dir), v = DIRV[d.dir];
         const tx = q.x - v[0] * 34, ty = q.y - v[1] * 22 + (v[1] < 0 ? 4 : 0);
         const hot = S.gateMsgT > 0 && Math.floor(G.time * 6) % 2;
+        if (doc) nenChu([gi.keys ? 'Cần 3 mảnh chìa' : 'Dọn 3 phòng quái', G.t('Đã có {0}/{1}', gi.n, gi.need)], tx, ty, 7, 9);
         ui.text(gi.keys ? 'Cần 3 mảnh chìa' : 'Dọn 3 phòng quái', tx, ty, { size: 7, align: 'center', bold: true, color: hot ? '#ffffff' : '#ff9a8a' });
         ui.text(G.t('Đã có {0}/{1}', gi.n, gi.need), tx, ty + 9, { size: 7, align: 'center', bold: true, color: '#ffd27a' });
       }
@@ -27820,19 +28140,22 @@ MA._xong();
       if (fLock && W.props.some((p) => p.type === 'fountain' && !p.used)) {
         // suối còn khóa: một dòng chữ mờ giữa hai suối, kèm số phòng quái đã dọn
         const fs = W.props.filter((p) => p.type === 'fountain'), fx = fs.reduce((a, p) => a + p.x, 0) / fs.length, fy = fs[0].y - 44;
-        ui.text('Dọn hết quái rồi quay lại', fx, fy, { size: 7.5, align: 'center', bold: true, color: '#b8b0a0' });
-        ui.text(G.t('Đã dọn {0}/{1} phòng quái', fightsCleared(), FOUNTAIN_NEED), fx, fy + 9, { size: 6.5, align: 'center', color: '#8f887c' });
+        if (doc) nenChu(['Dọn hết quái rồi quay lại', G.t('Đã dọn {0}/{1} phòng quái', fightsCleared(), FOUNTAIN_NEED)], fx, fy, 7.5, 9);
+        ui.text('Dọn hết quái rồi quay lại', fx, fy, { size: 7.5, align: 'center', bold: true, color: doc ? '#d9cdb8' : '#b8b0a0' });
+        ui.text(G.t('Đã dọn {0}/{1} phòng quái', fightsCleared(), FOUNTAIN_NEED), fx, fy + 9, { size: doc ? 7 : 6.5, align: 'center', bold: doc, color: doc ? '#bfb39c' : '#8f887c' });
       }
       for (const pr of W.props) {
         if (!pr.act || pr.used || (fLock && pr.act === 'fountain')) continue;
         const nm = pr.act === 'fountain' ? (pr.kind === 'hp' ? 'Hồi máu' : 'Hồi mana') : PNAME[pr.act];
         const py = pr.y - (pr.act === 'stash' ? 28 : pr.act === 'fountain' ? 40 : pr.act === 'portal' ? 44 : 36);
+        if (doc && pr === S.near) nenChu([pr.act === 'portal' ? 'Bấm Vào cổng' : 'Bấm Đánh'], pr.x - W.cam, py, 8);
         if (pr === S.near) ui.text(pr.act === 'portal' ? 'Bấm Vào cổng' : 'Bấm Đánh', pr.x - W.cam, py, { size: 8, align: 'center', bold: true, color: '#fff3b0' });
         else if (nm) ui.text(nm, pr.x - W.cam, py, { size: 7, align: 'center', bold: true, color: pr.act === 'fountain' ? (pr.kind === 'hp' ? '#ff9a8a' : '#9ac8ff') : '#f0d9b0' });
       }
     }
+    }
     // nút cảm ứng
-    if (S.mode === 'play') {
+    if (on('vien') && S.mode === 'play') {
       const joy = [...G.pointers.values()].find((p) => p.role === 'joy');
       let jdx = 0, jdy = 0;
       if (joy) {
@@ -32083,6 +32406,50 @@ MA._xong();
     c.drawImage(a.img, 0, h0 * n, a.pw, (h1 - h0) * n, x, y + h0, w, h1 - h0);
     c.restore();
   }
+  // ---------- Ảnh AI của đồ trang trí phòng (tools/tach-phong, phiên A3): gd-tt-<rung|bien|lau>-<tên>, và dải lửa hu-lua-duoc ----------
+  // Cũng như cửa: ảnh nét gấp đôi KHÔNG vẽ vào nền dựng sẵn mà ghi thành lệnh vẽ sống (vỏ phòng: shell.tt, chạy mỗi khung ngay sau nền phòng,
+  // dưới nhân vật). Riêng thảm (nằm phẳng trên sàn, dưới dấu sàn và ánh sáng) thì thu về cỡ game rồi vẽ vào nền như sàn.
+  // Bóng dưới chân, quầng sáng, bóng đổ, đom đóm, lấp lánh, gợn nước vẫn do code vẽ. Không có tệp thì mọi chỗ chạy code y như cũ.
+  // ttChon: lấy ảnh của một trong các biến thể (ưu tiên biến thể thứ i, thiếu thì lấy biến thể khác đang có); không có cái nào → null.
+  function ttChon(vung, ds, i) {
+    const n = ds.length; i = Math.abs(i | 0);
+    for (let k = 0; k < n; k++) { const a = gdA('gd-tt-' + vung + '-' + ds[(i + k) % n]); if (a) return a; }
+    return null;
+  }
+  // ttVe: vẽ ảnh với GIỮA ĐÁY ảnh đặt tại (x, yb). h0..h1: chỉ vẽ dải ngang (xem veAnh).
+  function ttVe(a, x, yb, lat, h0, h1) { song(() => veAnh(a, x - a.pw / a.net / 2, yb - a.ph / a.net, lat, h0, h1)); }
+  // ttMot: có ảnh gd-tt-<vùng>-<tên> (tên là mảng thì chọn biến thể theo i) thì vẽ giữa đáy tại (x, yb) và trả về ảnh; không có thì trả về null.
+  function ttMot(vung, ten, x, yb, i) {
+    const a = Array.isArray(ten) ? ttChon(vung, ten, i) : gdA('gd-tt-' + vung + '-' + ten);
+    if (a) ttVe(a, x, yb);
+    return a;
+  }
+  const ttNhoNho = new WeakMap(); // ảnh -> bản thu về cỡ game (để vẽ vào nền dựng sẵn)
+  function ttNho(a) {
+    let o = ttNhoNho.get(a);
+    if (!o || o.img !== a.img) {
+      const w = Math.max(1, Math.round(a.pw / a.net)), h = Math.max(1, Math.round(a.ph / a.net)), x = mk(w, h);
+      x.imageSmoothingEnabled = a.pw !== w || a.ph !== h;
+      x.drawImage(a.img, 0, 0, a.pw, a.ph, 0, 0, w, h);
+      o = { img: a.img, cv: x.canvas };
+      ttNhoNho.set(a, o);
+    }
+    return o.cv;
+  }
+  // Dải lửa đuốc/nến hu-lua-duoc (kiểu hieu-ung: 3 khung 8×12, neo giữa đáy). Trang công cụ đưa bản xem thử qua G.roomArt.luaThu.
+  function luaAnh() {
+    const F = G.fxAnh, a = F && F.get ? F.get('hu-lua-duoc') : null;
+    return a || (G.roomArt && G.roomArt.luaThu) || null;
+  }
+  // Vẽ một khung lửa: điểm neo của dải đặt tại (x, yb); co: hệ số cỡ (nến = 0,5); lech: lệch nhịp để các ngọn lửa không nháy cùng lúc.
+  function veLua(a, x, yb, co, t, lech) {
+    const so = a.so || 1, f = ((Math.floor((t / (a.giay || 0.33)) * so + lech) % so) + so) % so, n = a.net || 1, cot = a.cot || so;
+    const m = c.getTransform ? c.getTransform() : null, k = m ? Math.hypot(m.a, m.b) : 1;
+    c.save();
+    c.imageSmoothingEnabled = k * co < n - 0.01;
+    c.drawImage(a.img, (f % cot) * a.fw * n, Math.floor(f / cot) * a.fh * n, a.fw * n, a.fh * n, bam(x - a.ax * co), bam(yb - a.ay * co), a.fw * co, a.fh * co);
+    c.restore();
+  }
   // Ổ khóa đỏ: dấu hiệu cửa đang khóa.
   function padlock(x, y) {
     const a = gdA('gd-cua-o-khoa'); // ảnh AI: giữa ảnh theo chiều ngang là x, đáy ảnh là đáy ổ khoá code (y + 5)
@@ -32187,15 +32554,21 @@ MA._xong();
     red: '#7a2a2a', redD: '#4e1c20', gold: '#c89a3a', floor: '#4f4745', light: '#ffc878', cap: '#3a3031', capL: '#4c4041', capD: '#2a2223',
   };
   function torch(x, y, g) {
-    if (g && g.lights) g.lights.push({ k: 'torch', x, y });
+    // ảnh AI gd-tt-lau-duoc: giá đuốc KHÔNG có lửa, giữa đáy ảnh = đáy cán đuốc code (y + 9); ngọn lửa mọc từ đỉnh ảnh
+    const a = gdA('gd-tt-lau-duoc'), yl = a ? Math.round(y + 9 - a.ph / a.net) : y;
+    if (g && g.lights) g.lights.push({ k: 'torch', x, y: yl });
     glow(x, y - 4, 26, 20, '#ff9a40', 0.07, 4);
-    r(x - 1, y, 2, 9, K.iron); r(x - 3, y, 6, 2, K.ironL); r(x - 2, y + 2, 4, 1, K.iron);
-    r(x - 2, y - 5, 4, 5, '#ff7a2a'); r(x - 1, y - 8, 2, 4, '#ff7a2a'); r(x - 1, y - 4, 2, 4, '#ffd23f'); r(x, y - 6, 1, 2, '#ffd23f'); r(x, y - 2, 1, 2, '#fff3b0');
-    r(x + 1, y - 10, 1, 1, '#ffd23f');
+    if (a) ttVe(a, x, y + 9);
+    else { r(x - 1, y, 2, 9, K.iron); r(x - 3, y, 6, 2, K.ironL); r(x - 2, y + 2, 4, 1, K.iron); }
+    if (!luaAnh()) { // có dải lửa hu-lua-duoc thì lớp sống vẽ cả ngọn lửa, không cần phần lửa đứng yên này
+      r(x - 2, yl - 5, 4, 5, '#ff7a2a'); r(x - 1, yl - 8, 2, 4, '#ff7a2a'); r(x - 1, yl - 4, 2, 4, '#ffd23f'); r(x, yl - 6, 1, 2, '#ffd23f'); r(x, yl - 2, 1, 2, '#fff3b0');
+      r(x + 1, yl - 10, 1, 1, '#ffd23f');
+    }
     // quầng sáng ấm hắt xuống sàn: tô bằng lưới chấm ở lightPass
     if (g && g.glows) g.glows.push({ x, y: g.fy0 + 10, rx: 44, ry: 26, a: 0.2, col: '#ffb060' });
   }
-  function banner(x, y, col, colD) {
+  function banner(x, y, col, colD, ten) {
+    if (ttMot('lau', ten, x, y + 26)) return; // ảnh AI gd-tt-lau-co-do / co-xanh: giữa đáy ảnh = giữa đuôi cờ code
     r(x - 8, y - 1, 16, 2, K.gold);
     r(x - 7, y + 1, 14, 22, col); r(x - 7, y + 1, 2, 22, colD); r(x + 5, y + 1, 2, 22, colD);
     r(x - 7, y + 23, 4, 3, col); r(x + 3, y + 23, 4, 3, col); r(x - 2, y + 23, 4, 1, col);
@@ -32241,7 +32614,9 @@ MA._xong();
           for (let y = d.at - 11; y < d.at + 11; y += 3) r(xe, y, 2, 2, ed);
         }
       }
-      // hoa văn tròn
+      // hoa văn tròn (ảnh AI gd-tt-lau-tham-tron: tâm ảnh ở giữa phòng, thu về cỡ game và vẽ vào nền như sàn)
+      const at = gdA('gd-tt-lau-tham-tron');
+      if (at) { const cv = ttNho(at); c.drawImage(cv, cx - (cv.width >> 1), cy - (cv.height >> 1)); return; }
       const R1 = 30;
       for (let dy = -R1; dy <= R1; dy++) {
         const hw = Math.round(Math.sqrt(R1 * R1 - dy * dy));
@@ -32276,22 +32651,24 @@ MA._xong();
       const cols = [g.fx0 + 3, g.fx1 - 11];
       for (let x = g.fx0 + 3 + 98; x < g.fx1 - 60; x += 98) if (!near(x + 4, 40)) cols.push(x);
       for (const x of cols) {
-        r(x, wy, 8, g.wh, K.stone); r(x, wy, 2, g.wh, K.stoneL); r(x + 6, wy, 2, g.wh, dim(K.stone, 0.3));
-        r(x - 2, wy, 12, 3, K.stoneL); r(x - 2, wy + 3, 12, 1, dim(K.stone, 0.4)); r(x - 2, g.fy0 - 4, 12, 4, K.stone); r(x - 2, g.fy0 - 4, 12, 1, K.stoneL);
+        if (!ttMot('lau', 'cot-da', x + 4, g.fy0)) { // ảnh AI gd-tt-lau-cot-da: cột cao suốt tường sau, chân cột ở mép trên sàn
+          r(x, wy, 8, g.wh, K.stone); r(x, wy, 2, g.wh, K.stoneL); r(x + 6, wy, 2, g.wh, dim(K.stone, 0.3));
+          r(x - 2, wy, 12, 3, K.stoneL); r(x - 2, wy + 3, 12, 1, dim(K.stone, 0.4)); r(x - 2, g.fy0 - 4, 12, 4, K.stone); r(x - 2, g.fy0 - 4, 12, 1, K.stoneL);
+        }
         if (g.casts) g.casts.push({ x: x - 1, y: g.fy0, w: 11, len: 11, a: 0.34 }); // cột đổ bóng xuống sàn
       }
       // đuốc hai bên mỗi cửa, cờ xa hơn
       for (const t of tops) {
         torch(t - 30, wy + 16, g); torch(t + 30, wy + 16, g);
-        if (t - 62 > g.fx0 + 16) banner(t - 62, wy + 6, K.red, K.redD);
-        if (t + 62 < g.fx1 - 16) banner(t + 62, wy + 6, K.red, K.redD);
+        if (t - 62 > g.fx0 + 16) banner(t - 62, wy + 6, K.red, K.redD, 'co-do');
+        if (t + 62 < g.fx1 - 16) banner(t + 62, wy + 6, K.red, K.redD, 'co-do');
       }
       // phòng rộng: rải thêm đuốc, cờ, cửa sổ
       for (let x = g.fx0 + 52, i = 0; x < g.fx1 - 40; x += 49, i++) {
         if (near(x, 82) || cols.some((cx) => Math.abs(cx + 4 - x) < 16)) continue;
         if (i % 3 === 0) torch(x, wy + 16, g);
-        else if (i % 3 === 1) banner(x, wy + 6, '#3a4a6a', '#263248');
-        else { r(x - 6, wy + 8, 12, 20, DARK); r(x - 5, wy + 9, 10, 18, '#a8502a'); r(x - 5, wy + 9, 10, 6, '#d8823a'); r(x - 1, wy + 9, 1, 18, DARK); r(x - 5, wy + 17, 10, 1, DARK); r(x - 6, wy + 7, 12, 1, K.stoneL); if (g.amb) g.amb.push({ k: 'win', x, y: wy + 9, ph: rn() * 9 }); }
+        else if (i % 3 === 1) banner(x, wy + 6, '#3a4a6a', '#263248', 'co-xanh');
+        else { if (!ttMot('lau', 'cua-so', x, wy + 28)) { r(x - 6, wy + 8, 12, 20, DARK); r(x - 5, wy + 9, 10, 18, '#a8502a'); r(x - 5, wy + 9, 10, 6, '#d8823a'); r(x - 1, wy + 9, 1, 18, DARK); r(x - 5, wy + 17, 10, 1, DARK); r(x - 6, wy + 7, 12, 1, K.stoneL); } if (g.amb) g.amb.push({ k: 'win', x, y: wy + 9, ph: rn() * 9 }); }
       }
     },
     sides(g) {
@@ -32420,6 +32797,15 @@ MA._xong();
     };
     sh(-3 * s, 3 * s, 6 * s, C.cryD, C.cry); sh(3 * s, 3 * s, 5 * s, C.cryD, C.cry); sh(0, 4 * s, 9 * s, C.cry, C.cryL);
   }
+  // Tinh thể TRANG TRÍ (góc phòng, chân vách, mép trước): có ảnh gd-tt-bien-tinh-the[-2] (nhỏ) / tinh-the-to[-2] (to) thì vẽ ảnh,
+  // giữa đáy ảnh = gốc tinh thể; quầng sáng vẫn do code. Tinh thể chắn cửa thuộc ảnh cửa (phiên A2) nên không qua đây.
+  function crystalA(x, yb, s, i) {
+    const a = ttChon('bien', s > 1 ? ['tinh-the-to', 'tinh-the-to-2'] : ['tinh-the', 'tinh-the-2'], i);
+    if (!a) { crystal(x, yb, s); return; }
+    glow(x, yb - s * 4, s * 7, s * 6, C.cry, 0.06, 4);
+    ttVe(a, x, yb);
+  }
+  const NHU_DA = ['nhu-da', 'nhu-da-2', 'nhu-da-3', 'nhu-da-4']; // dài 8×18, vừa 7×13, ngắn 6×8, cặp đôi 10×14
   function rockFace(x, y, w, h, rn) {
     clipRect(x, y, w, h, () => {
       r(x, y, w, h, C.rock);
@@ -32494,14 +32880,18 @@ MA._xong();
       // nhũ đá rủ xuống
       for (let x = g.fx0 - 4; x < g.fx1 + 6; x += ri(rn, 7, 15)) {
         if (near(x, 18)) continue;
-        const h = ri(rn, 6, 18), w = ri(rn, 4, 7);
-        spike(x + 1, wy, w + 2, h + 1, 1, C.rockD); spike(x, wy, w, h, 1, rn() < 0.5 ? C.rockL : mix(C.rock, C.rockL, 0.6), lite(C.rockL, 0.15));
+        let h = ri(rn, 6, 18);
+        const w = ri(rn, 4, 7);
+        // ảnh AI nhũ đá: ĐỈNH ảnh bám nóc vách (wy), chọn ảnh theo độ dài code định vẽ; giọt nước đọng ở chóp ảnh
+        const an = ttChon('bien', NHU_DA, h >= 14 ? 0 : h >= 9 ? ((x >> 1) & 1 ? 3 : 1) : 2);
+        if (an) { h = Math.round(an.ph / an.net); rn(); song(() => veAnh(an, x - an.pw / an.net / 2, wy)); }
+        else { spike(x + 1, wy, w + 2, h + 1, 1, C.rockD); spike(x, wy, w, h, 1, rn() < 0.5 ? C.rockL : mix(C.rock, C.rockL, 0.6), lite(C.rockL, 0.15)); }
         if (rn() < 0.3) { r(x, wy + h + ri(rn, 2, 7), 1, 2, C.wet); if (g.amb) g.amb.push({ k: 'drip', x, y: wy + h + 1, y1: g.fy0 + 3 + ri(rn, 0, 5), ph: rn() * 9, sp: 0.7 + rn() * 0.6 }); }
       }
       // tinh thể mọc ở chân vách
       for (let x = g.fx0 + 22, i = 0; x < g.fx1 - 14; x += ri(rn, 34, 52), i++) {
         if (near(x, 30)) continue;
-        crystal(x, g.fy0 + 1, i % 2 ? 1 : 2);
+        crystalA(x, g.fy0 + 1, i % 2 ? 1 : 2, i >> 1);
         if (g.glows) g.glows.push({ x, y: g.fy0 + 8, rx: 30, ry: 16, a: i % 2 ? 0.1 : 0.16, col: C.cry });
         if (g.amb) g.amb.push({ k: 'cry', x, y: g.fy0 - (i % 2 ? 4 : 8), s: i % 2 ? 1 : 2, ph: rn() * 9 });
       }
@@ -32534,7 +32924,7 @@ MA._xong();
         const h = ri(rn, 5, 12), w = ri(rn, 5, 8);
         spike(x + 1, g.fy1 + 3, w + 2, h + 2, -1, DARK); spike(x, g.fy1 + 3, w, h, -1, C.rock, C.rockL);
       }
-      crystal(g.fx0 + 20, g.fy1 + 4, 1); crystal(g.fx1 - 30, g.fy1 + 4, 1);
+      crystalA(g.fx0 + 20, g.fy1 + 4, 1, 0); crystalA(g.fx1 - 30, g.fy1 + 4, 1, 1);
     },
     door(g, d, rn) {
       const open = d.state === 'open', L = C.light, at = d.at;
@@ -32634,6 +33024,7 @@ MA._xong();
       if (i % 7 === 3) { const s = (i / 7) % 2 < 1 ? 1 : -1; if (vert) { r(x + s * 2, y, 2, 1, '#9a8460'); r(x + s * 3, y - 1, 1, 1, '#c0a87a'); } else { r(x, y + s * 2, 1, 2, '#9a8460'); r(x + 1, y + s * 3, 1, 1, '#c0a87a'); } }
     }
   }
+  const TAN_LA = ['tan-la', 'tan-la-2', 'tan-la-3'], DAY_LEO = ['day-leo', 'day-leo-2', 'day-leo-3'], NAM_SANG = ['nam-sang', 'nam-sang-2']; // biến thể ảnh trang trí Rừng già (phiên A3)
   // ---------- ĐỢT 6 (quyết định Q2): TILE 16×16 CHO RIÊNG VÙNG RỪNG GIÀ — thử nghiệm, có cờ tắt ----------
   // Cờ: G.TILE_RUNG (js/data.js). false → mọi hàm của Forest chạy nhánh code cũ y hệt. Thiếu bất kỳ tệp BẮT BUỘC nào → cũng chạy code cũ.
   // Ảnh (tools/tach-phong, lô "Nền phòng · Rừng già"), cỡ theo điểm ảnh game:
@@ -32839,19 +33230,26 @@ MA._xong();
       // tán lá phủ nóc (dùng tile thì tán lá đã nằm trong ảnh tường sau)
       if (!tileRung()) {
         r(x0, wy - g.cap, w, g.cap, F.leafD);
-        for (let x = x0; x < x0 + w; x += 8) leafBlob(x + rn() * 5, wy - g.cap / 2 + rn() * 5, ri(rn, 7, 11), ri(rn, 5, 7), rn);
+        // ảnh AI gd-tt-rung-tan-la[-2|-3]: các chùm lá xếp nối nhau phủ kín nóc, đáy chùm rủ xuống tường 8 điểm ảnh
+        if (ttChon('rung', TAN_LA, 0)) {
+          for (let x = x0 + 6, i = 0; x < x0 + w + 4 && i < 60; i++) { const a = ttChon('rung', TAN_LA, ri(rn, 0, 2)); ttVe(a, x, wy + 6 + ri(rn, 0, 2)); x += Math.max(6, Math.round((a.pw / a.net) * 0.78)); }
+        } else for (let x = x0; x < x0 + w; x += 8) leafBlob(x + rn() * 5, wy - g.cap / 2 + rn() * 5, ri(rn, 7, 11), ri(rn, 5, 7), rn);
       }
       // dây leo rủ
-      for (let x = g.fx0 + 6; x < g.fx1; x += ri(rn, 16, 30)) {
+      for (let x = g.fx0 + 6, vi = 0; x < g.fx1; x += ri(rn, 16, 30), vi++) {
         if (tops.some((t) => Math.abs(t - x) < 18)) continue;
         const len = ri(rn, 8, 22);
+        // ảnh AI gd-tt-rung-day-leo[-2|-3]: dây rủ từ dưới tán lá; dây ngắn thì chỉ lộ phần ngọn (phần trên coi như khuất sau tán)
+        const ad = ttChon('rung', DAY_LEO, vi);
+        if (ad) { const ah = ad.ph / ad.net, lo = Math.min(ah, Math.max(10, len)); ttVe(ad, x + 0.5, wy + 4 + lo, false, ah - lo, ah); continue; }
         for (let i = 0; i < len; i++) { r(x + Math.round(Math.sin(i * 0.7)), wy + 4 + i, 1, 1, F.moss); if (i % 4 === 2) r(x + Math.round(Math.sin(i * 0.7)) + 1, wy + 4 + i, 2, 1, F.leafH); }
       }
       // nấm phát sáng ở gốc cây, đom đóm
-      for (let x = g.fx0 + 18; x < g.fx1 - 10; x += ri(rn, 36, 60)) {
+      for (let x = g.fx0 + 18, ni = 0; x < g.fx1 - 10; x += ri(rn, 36, 60), ni++) {
         if (tops.some((t) => Math.abs(t - x) < 34)) continue;
         if (g.glows) g.glows.push({ x, y: g.fy0 + 4, rx: 22, ry: 12, a: 0.13, col: '#b0f070' });
         if (g.amb) g.amb.push({ k: 'shroom', x, y: g.fy0 - 3, ph: rn() * 9 });
+        if (ttMot('rung', NAM_SANG, x + 1, g.fy0 + 3, ni)) continue; // ảnh AI gd-tt-rung-nam-sang[-2]: cụm nấm sáng ở chân tường, quầng sáng vẫn do code
         r(x - 1, g.fy0 - 1, 2, 4, '#e8e0c0'); r(x - 3, g.fy0 - 4, 6, 3, '#9ad860'); r(x - 2, g.fy0 - 5, 4, 1, '#d0f8a0');
         r(x + 5, g.fy0 + 1, 1, 2, '#e8e0c0'); r(x + 4, g.fy0 - 1, 3, 2, '#9ad860');
       }
@@ -33000,9 +33398,13 @@ MA._xong();
           }
         }
       });
-      r(cx - 34, cy - 24, 68, 48, '#77593a'); r(cx - 32, cy - 22, 64, 44, '#4e2a32'); r(cx - 28, cy - 18, 56, 36, '#5c3038');
-      for (let x = cx - 26; x < cx + 26; x += 6) { r(x, cy - 16, 3, 1, '#77593a'); r(x, cy + 15, 3, 1, '#77593a'); }
-      r(cx - 6, cy - 6, 12, 12, '#77593a'); r(cx - 4, cy - 4, 8, 8, '#4e2a32'); r(cx - 1, cy - 1, 2, 2, K.gold);
+      const av = gdA('gd-tt-lau-tham-vuong'); // ảnh AI: tấm thảm vuông, tâm ảnh ở giữa phòng (vẽ vào nền như sàn)
+      if (av) { const cv = ttNho(av); c.drawImage(cv, cx - (cv.width >> 1), cy - (cv.height >> 1)); }
+      else {
+        r(cx - 34, cy - 24, 68, 48, '#77593a'); r(cx - 32, cy - 22, 64, 44, '#4e2a32'); r(cx - 28, cy - 18, 56, 36, '#5c3038');
+        for (let x = cx - 26; x < cx + 26; x += 6) { r(x, cy - 16, 3, 1, '#77593a'); r(x, cy + 15, 3, 1, '#77593a'); }
+        r(cx - 6, cy - 6, 12, 12, '#77593a'); r(cx - 4, cy - 4, 8, 8, '#4e2a32'); r(cx - 1, cy - 1, 2, 2, K.gold);
+      }
       runners(g, '#4e2a32', '#77593a');
     },
   ];
@@ -33097,24 +33499,30 @@ MA._xong();
   }
 
   // Đồ trang trí nhỏ ở bốn góc phòng (không nằm trên lối vào cửa, không che đồ vật bấm được ở giữa)
+  // Ảnh AI (phiên A3): mỗi món hỏi gd-tt-<vùng>-<tên> trước; có thì vẽ ảnh (giữa đáy ảnh = chân vật), bóng dưới chân và ánh sáng vẫn do code.
   const DECOR = {
-    2: [ // lâu đài
-      (x, y) => { ell(x, y + 1, 7, 3, 'rgba(0,0,0,0.3)'); r(x - 6, y - 11, 12, 12, DARK); r(x - 5, y - 10, 10, 10, K.wood); r(x - 5, y - 10, 2, 10, K.woodL); r(x - 5, y - 8, 10, 1, K.ironL); r(x - 5, y - 3, 10, 1, K.ironL); r(x - 4, y - 12, 8, 2, K.woodL); },
-      (x, y) => { ell(x, y + 1, 8, 3, 'rgba(0,0,0,0.3)'); r(x - 7, y - 9, 14, 10, DARK); r(x - 6, y - 8, 12, 8, K.woodL); r(x - 6, y - 8, 12, 1, lite(K.woodL, 0.2)); r(x - 6, y - 4, 12, 1, K.woodD); r(x - 1, y - 8, 2, 8, K.woodD); },
-      (x, y) => { r(x - 5, y - 1, 10, 2, '#d8d0bc'); r(x - 6, y - 2, 2, 4, '#d8d0bc'); r(x + 4, y - 2, 2, 4, '#d8d0bc'); r(x - 2, y - 6, 5, 4, '#d8d0bc'); r(x - 1, y - 5, 1, 1, DARK); r(x + 1, y - 5, 1, 1, DARK); },
-      (x, y, g) => { ell(x, y + 1, 5, 2, 'rgba(0,0,0,0.3)'); r(x - 1, y - 12, 2, 12, K.iron); r(x - 3, y - 1, 6, 2, K.ironL); r(x - 3, y - 13, 6, 2, K.ironL); g.lights.push({ k: 'candle', x, y: y - 15 }); g.glows.push({ x, y: y - 2, rx: 16, ry: 9, a: 0.14, col: '#ffc070' }); },
+    2: [ // lâu đài: thùng gỗ, hòm gỗ, xương sọ, chân nến
+      (x, y) => { ell(x, y + 1, 7, 3, 'rgba(0,0,0,0.3)'); if (ttMot('lau', 'thung-go', x, y + 1)) return; r(x - 6, y - 11, 12, 12, DARK); r(x - 5, y - 10, 10, 10, K.wood); r(x - 5, y - 10, 2, 10, K.woodL); r(x - 5, y - 8, 10, 1, K.ironL); r(x - 5, y - 3, 10, 1, K.ironL); r(x - 4, y - 12, 8, 2, K.woodL); },
+      (x, y) => { ell(x, y + 1, 8, 3, 'rgba(0,0,0,0.3)'); if (ttMot('lau', 'hom-go', x, y + 1)) return; r(x - 7, y - 9, 14, 10, DARK); r(x - 6, y - 8, 12, 8, K.woodL); r(x - 6, y - 8, 12, 1, lite(K.woodL, 0.2)); r(x - 6, y - 4, 12, 1, K.woodD); r(x - 1, y - 8, 2, 8, K.woodD); },
+      (x, y) => { if (ttMot('lau', 'xuong-so', x, y + 2)) return; r(x - 5, y - 1, 10, 2, '#d8d0bc'); r(x - 6, y - 2, 2, 4, '#d8d0bc'); r(x + 4, y - 2, 2, 4, '#d8d0bc'); r(x - 2, y - 6, 5, 4, '#d8d0bc'); r(x - 1, y - 5, 1, 1, DARK); r(x + 1, y - 5, 1, 1, DARK); },
+      (x, y, g) => { // chân nến: ngọn lửa (lớp sống) mọc ngay trên đỉnh ảnh
+        ell(x, y + 1, 5, 2, 'rgba(0,0,0,0.3)');
+        const a = ttMot('lau', 'chan-nen', x, y + 1);
+        if (!a) { r(x - 1, y - 12, 2, 12, K.iron); r(x - 3, y - 1, 6, 2, K.ironL); r(x - 3, y - 13, 6, 2, K.ironL); }
+        g.lights.push({ k: 'candle', x, y: a ? Math.round(y + 1 - a.ph / a.net) - 2 : y - 15 }); g.glows.push({ x, y: y - 2, rx: 16, ry: 9, a: 0.14, col: '#ffc070' });
+      },
     ],
-    1: [ // hang
-      (x, y) => { ell(x, y + 1, 9, 4, 'rgba(0,0,0,0.3)'); ell(x - 3, y - 3, 6, 4, C.rock); ell(x + 4, y - 2, 5, 3, C.rockL); ell(x, y - 6, 4, 3, C.rockL); r(x - 2, y - 8, 4, 1, lite(C.rockL, 0.15)); },
-      (x, y, g) => { crystal(x, y, 1); g.lights.push({ k: 'twinkle', x, y: y - 8 }); },
-      (x, y, g) => { ell(x, y, 10, 5, C.waterD); ell(x, y - 1, 8, 3, C.water); r(x - 4, y - 2, 5, 1, C.waterL); if (g && g.amb) g.amb.push({ k: 'pud', x, y: y - 1, rx: 8, ry: 3, ph: x * 0.13 }); },
-      (x, y) => { r(x - 3, y - 2, 7, 4, DARK); r(x - 2, y - 2, 5, 3, '#d8c8b0'); r(x - 1, y - 2, 3, 1, '#f0e8d8'); r(x - 2, y, 1, 1, '#9a8a74'); r(x, y, 1, 1, '#9a8a74'); r(x + 2, y, 1, 1, '#9a8a74'); },
+    1: [ // hang: đống đá, cụm tinh thể nhỏ, vũng nước, vỏ sò
+      (x, y) => { ell(x, y + 1, 9, 4, 'rgba(0,0,0,0.3)'); if (ttMot('bien', ['dong-da', 'dong-da-2'], x, y + 1, x + y)) return; ell(x - 3, y - 3, 6, 4, C.rock); ell(x + 4, y - 2, 5, 3, C.rockL); ell(x, y - 6, 4, 3, C.rockL); r(x - 2, y - 8, 4, 1, lite(C.rockL, 0.15)); },
+      (x, y, g) => { crystalA(x, y, 1, x + y); g.lights.push({ k: 'twinkle', x, y: y - 8 }); },
+      (x, y, g) => { if (!ttMot('bien', 'vung-nuoc', x, y + 5)) { ell(x, y, 10, 5, C.waterD); ell(x, y - 1, 8, 3, C.water); r(x - 4, y - 2, 5, 1, C.waterL); } if (g && g.amb) g.amb.push({ k: 'pud', x, y: y - 1, rx: 8, ry: 3, ph: x * 0.13 }); },
+      (x, y) => { if (ttMot('bien', 'vo-so', x + 0.5, y + 2)) return; r(x - 3, y - 2, 7, 4, DARK); r(x - 2, y - 2, 5, 3, '#d8c8b0'); r(x - 1, y - 2, 3, 1, '#f0e8d8'); r(x - 2, y, 1, 1, '#9a8a74'); r(x, y, 1, 1, '#9a8a74'); r(x + 2, y, 1, 1, '#9a8a74'); },
     ],
-    0: [ // rừng
-      (x, y) => { ell(x, y + 1, 8, 3, 'rgba(0,0,0,0.3)'); r(x - 6, y - 8, 12, 9, DARK); r(x - 5, y - 5, 10, 6, F.bark); r(x - 5, y - 5, 2, 6, F.barkL); r(x - 5, y - 8, 10, 3, '#8a6a44'); r(x - 3, y - 7, 5, 1, '#5a3f26'); r(x - 1, y - 7, 1, 1, '#c8a060'); },
-      (x, y, g, rn) => { leafBlob(x - 4, y - 3, 7, 5, rn); leafBlob(x + 4, y - 2, 6, 4, rn); r(x - 2, y - 5, 2, 2, '#e85a5a'); r(x + 5, y - 3, 2, 2, '#e85a5a'); },
-      (x, y, g) => { r(x - 1, y - 4, 2, 5, '#e8e0c0'); r(x - 4, y - 7, 8, 3, '#c85a3a'); r(x - 3, y - 8, 6, 1, '#e88a5a'); r(x - 2, y - 6, 1, 1, '#fff0d0'); r(x + 1, y - 7, 1, 1, '#fff0d0'); r(x + 5, y - 1, 1, 3, '#e8e0c0'); r(x + 3, y - 3, 4, 2, '#c85a3a'); g.lights.push({ k: 'firefly', x, y: y - 14 }); },
-      (x, y) => { ell(x, y + 1, 12, 3, 'rgba(0,0,0,0.3)'); r(x - 11, y - 5, 22, 6, DARK); r(x - 10, y - 4, 20, 4, F.bark); r(x - 10, y - 4, 20, 1, F.barkL); r(x - 10, y - 4, 2, 4, '#8a6a44'); r(x - 4, y - 5, 6, 1, F.moss); r(x + 2, y - 3, 1, 3, F.barkD); },
+    0: [ // rừng: gốc cây cụt, bụi quả đỏ, nấm đỏ, khúc gỗ
+      (x, y) => { ell(x, y + 1, 8, 3, 'rgba(0,0,0,0.3)'); if (ttMot('rung', 'goc-cay', x, y + 1)) return; r(x - 6, y - 8, 12, 9, DARK); r(x - 5, y - 5, 10, 6, F.bark); r(x - 5, y - 5, 2, 6, F.barkL); r(x - 5, y - 8, 10, 3, '#8a6a44'); r(x - 3, y - 7, 5, 1, '#5a3f26'); r(x - 1, y - 7, 1, 1, '#c8a060'); },
+      (x, y, g, rn) => { if (ttMot('rung', 'bui-qua', x, y + 3)) { rn(); rn(); return; } leafBlob(x - 4, y - 3, 7, 5, rn); leafBlob(x + 4, y - 2, 6, 4, rn); r(x - 2, y - 5, 2, 2, '#e85a5a'); r(x + 5, y - 3, 2, 2, '#e85a5a'); },
+      (x, y, g) => { if (!ttMot('rung', 'nam-do', x + 1.5, y + 2)) { r(x - 1, y - 4, 2, 5, '#e8e0c0'); r(x - 4, y - 7, 8, 3, '#c85a3a'); r(x - 3, y - 8, 6, 1, '#e88a5a'); r(x - 2, y - 6, 1, 1, '#fff0d0'); r(x + 1, y - 7, 1, 1, '#fff0d0'); r(x + 5, y - 1, 1, 3, '#e8e0c0'); r(x + 3, y - 3, 4, 2, '#c85a3a'); } g.lights.push({ k: 'firefly', x, y: y - 14 }); },
+      (x, y) => { ell(x, y + 1, 12, 3, 'rgba(0,0,0,0.3)'); if (ttMot('rung', 'khuc-go', x, y + 1)) return; r(x - 11, y - 5, 22, 6, DARK); r(x - 10, y - 4, 20, 4, F.bark); r(x - 10, y - 4, 20, 1, F.barkL); r(x - 10, y - 4, 2, 4, '#8a6a44'); r(x - 4, y - 5, 6, 1, F.moss); r(x + 2, y - 3, 1, 3, F.barkD); },
     ],
   };
   // Giai đoạn 2: ít vật hơn (2 món, phòng trùm 3), không đặt ở góc dành cho điểm nhấn và hai góc dưới (tiền cảnh che).
@@ -33124,10 +33532,11 @@ MA._xong();
     if (fw_(g) > 240) spots.push([g.fx0 + 70, g.fy0 + 22, 0], [g.fx1 - 70, g.fy0 + 22, 0]);
     spots = spots.filter((s) => s[2] !== g.accSide);
     for (let i = spots.length - 1; i > 0; i--) { const j = Math.floor(rn() * (i + 1)), t = spots[i]; spots[i] = spots[j]; spots[j] = t; }
-    const used = [];
-    for (const s of spots.slice(0, g.big ? 3 : 2)) {
+    const used = [], thu = g.ttThu && g.ttThu.decor; // ttThu: chỉ trang công cụ Tách Phòng đặt, để phòng xem thử bày đủ mọi món; trong game luôn không có
+    for (const s of spots.slice(0, thu ? thu.length : g.big ? 3 : 2)) {
       let k = Math.floor(rn() * items.length);
       if (used.includes(k)) k = (k + 1) % items.length;
+      if (thu) k = thu[used.length] % items.length;
       used.push(k);
       items[k](Math.round(s[0] + rn() * 10 - 5), Math.round(s[1] + rn() * 8 - 4), g, rn);
     }
@@ -33248,19 +33657,23 @@ MA._xong();
     g.accSide = g.type === 'fountain' ? 1 : hs((seed || 11) + 101) & 1 ? -1 : 1; // góc trên đặt điểm nhấn (phòng suối: bên phải, bên trái có rương đồ)
     g.amb = []; // chỗ có chuyển động môi trường (vũng nước, giọt nhũ đá, nấm sáng...): ghi lại lúc dựng, vẽ động ở lớp sống
     c = base;
-    T.paintVoid(g, rn);
-    T.floors[g.variant % T.floors.length](g, rn);
-    mark(T, g);
-    decor(T, g, rn);
-    T.back(g, rn);
-    backPass(T, g);
-    T.sides(g, rn);
-    T.front(g, rn);
-    T.backDeco(g, rn);
-    const acc = accentPlan(T, g, G.srand(hs((seed || 11) * 7 + 3)));
-    lightPass(T, g);
-    if (acc) acc();
-    return { cv: base.canvas, lights: g.lights, amb: g.amb, accSide: g.accSide };
+    const tt = []; // lệnh vẽ sống của ảnh AI đồ trang trí (gd-tt-*); rỗng khi không có tệp nào
+    try {
+      ghi = tt;
+      T.paintVoid(g, rn);
+      T.floors[g.variant % T.floors.length](g, rn);
+      mark(T, g);
+      decor(T, g, rn);
+      T.back(g, rn);
+      backPass(T, g);
+      T.sides(g, rn);
+      T.front(g, rn);
+      T.backDeco(g, rn);
+      const acc = accentPlan(T, g, G.srand(hs((seed || 11) * 7 + 3)));
+      lightPass(T, g);
+      if (acc) acc();
+    } finally { ghi = null; }
+    return { cv: base.canvas, lights: g.lights, amb: g.amb, accSide: g.accSide, tt };
   }
   function buildRoom(T, g, seed, shell) {
     const base = mk(g.W, g.H), fore = mk(g.W, g.H);
@@ -33280,10 +33693,10 @@ MA._xong();
       ghi = cuaTruoc;
       for (const f of fores) f();
     } finally { ghi = null; }
-    if (T.fore) T.fore(g, G.srand((seed || 11) + 9));
+    if (T.fore) { try { ghi = cuaTruoc; T.fore(g, G.srand((seed || 11) + 9)); } finally { ghi = null; } } // ảnh AI ở mép trước (tinh thể Hang biển) vẽ sống, đè lên nhân vật
     ambSetup(T, g, seed);
     const fgr = fgBuild(T, g, G.srand(hs((seed || 11) + 17)));
-    return { base: base.canvas, fore: fore.canvas, fg: fgr.cv, fgCl: fgr.cl, g, T, cuaNen, cuaTruoc };
+    return { base: base.canvas, fore: fore.canvas, fg: fgr.cv, fgCl: fgr.cl, g, T, cuaNen, cuaTruoc, ttNen: shell.tt || [] };
   }
   // ---------- Giai đoạn 2: điểm nhấn thị giác của phòng (một món, ở một góc trên, không đụng lối cửa) ----------
   // Lập kế hoạch trước lightPass (để quầng sáng của nó được tô xuống sàn), vẽ sau lightPass (để vật vẫn sáng rõ).
@@ -33315,7 +33728,7 @@ MA._xong();
     c.putImageData(id, 0, y0);
   }
   function accentPlan(T, g, rn) {
-    const side = g.accSide, cx0 = side < 0 ? g.fx0 + 22 : g.fx1 - 22, cy0 = g.fy0 + 18, kind = rn() < 0.5 ? 0 : 1;
+    const side = g.accSide, cx0 = side < 0 ? g.fx0 + 22 : g.fx1 - 22, cy0 = g.fy0 + 18, kind0 = rn() < 0.5 ? 0 : 1, kind = g.ttThu && g.ttThu.kind != null ? g.ttThu.kind : kind0;
     if (T.reg === 0) {
       if (kind === 0) {
         const bx = shaftAt(g, rn), sx = bx - 26, sy = g.fy0 + 44;
@@ -33323,6 +33736,7 @@ MA._xong();
         if (g.amb) for (let i = 0; i < 5; i++) g.amb.push({ k: 'beam', bx, y0: g.fy0 - g.wh, y1: sy, ph: rn() * 20, sp: 0.6 + rn() * 0.6 });
         return () => {
           shaft(g, bx, '#f0f4c0', 0.2);
+          if (ttMot('rung', 'hoa-nang', sx, sy + 7)) return; // ảnh AI: khóm hoa dại dưới cột nắng
           for (let i = 0; i < 4; i++) { const x = sx + ri(rn, -12, 12), y = sy + ri(rn, -5, 5); r(x, y + 1, 1, 2, F.grassM); r(x - 1, y, 3, 1, '#f0ecd0'); r(x, y - 1, 1, 3, '#f0ecd0'); r(x, y, 1, 1, '#f0c050'); }
         };
       }
@@ -33330,6 +33744,7 @@ MA._xong();
       g.casts.push({ x: x - 10, y: y + 1, w: 20, len: 7, a: 0.36 });
       return () => { // gốc cổ thụ: vòng tuổi, vỏ có khối sáng tối, rêu phủ, dương xỉ (không có nấm: khỏi lẫn với nấm độc bấm được)
         ell(x, y + 2, 14, 4, 'rgba(0,0,0,0.35)');
+        if (ttMot('rung', 'co-thu', x, y + 4)) return; // ảnh AI: gốc cổ thụ
         r(x - 12, y - 10, 24, 13, DARK); r(x - 11, y - 9, 22, 11, F.bark); r(x - 11, y - 9, 4, 11, F.barkL); r(x + 6, y - 9, 5, 11, F.barkD);
         for (let i = 0; i < 4; i++) r(x - 6 + i * 4, y - 6 + (i % 2) * 3, 1, 5, F.barkD);
         r(x - 11, y - 13, 22, 4, '#8a6a44'); r(x - 10, y - 14, 20, 1, '#a8885a'); r(x - 6, y - 12, 12, 1, '#6a4e30'); r(x - 2, y - 12, 4, 1, '#c8a060');
@@ -33347,6 +33762,7 @@ MA._xong();
         return () => {
           ell(x, y + 2, 12, 3, 'rgba(0,0,0,0.35)');
           ell(x, y + 1, 9, 3, C.ground[0]); // chỗ đất lõm quanh neo
+          if (ttMot('bien', 'mo-neo', x + 3, y + 4)) return; // ảnh AI: mỏ neo cũ (xích và vỏ sò lệch về bên phải)
           for (let k = 0; k < 20; k++) { const xx = x - 2 + Math.round(k * 0.2), yy = y - k; r(xx - 1, yy, 4, 1, DARK); r(xx, yy, 2, 1, k % 5 === 2 ? RU : IR); r(xx, yy, 1, 1, IRL); }
           r(x - 7, y - 3, 15, 2, DARK); r(x - 6, y - 3, 13, 1, IR); r(x - 6, y - 3, 13, 1, IRL); r(x - 8, y - 6, 2, 4, IR); r(x + 7, y - 6, 2, 4, IR); r(x - 8, y - 7, 1, 1, IRL); r(x + 8, y - 7, 1, 1, IRL);
           r(x + 1, y - 22, 5, 5, DARK); r(x + 2, y - 21, 3, 3, IR); r(x + 3, y - 20, 1, 1, DARK); r(x - 3, y - 17, 11, 2, IR); r(x - 3, y - 17, 11, 1, IRL);
@@ -33363,6 +33779,7 @@ MA._xong();
       }
       return () => {
         shaft(g, bx, '#cfefff', 0.16);
+        if (ttMot('bien', 'vung-sang', sx, sy + 8)) return; // ảnh AI: vũng nước dưới tia sáng (gợn nước vẫn do code)
         ell(sx, sy + 1, 15, 7, C.ground[0]); ell(sx, sy, 14, 6, C.waterD); ell(sx, sy - 1, 12, 5, C.water); r(sx - 5, sy - 3, 6, 1, C.waterL); r(sx + 2, sy, 4, 1, rgba(C.waterL, 0.6));
       };
     }
@@ -33374,25 +33791,30 @@ MA._xong();
         for (let i = 0; i < 5; i++) g.amb.push({ k: 'beam', bx, y0: wy + 10, y1: sy, ph: rn() * 20, sp: 0.5 + rn() * 0.5, col: '#ffe6b8' });
       }
       return () => {
-        r(bx - 7, wy + 4, 14, 22, DARK); r(bx - 6, wy + 5, 12, 20, '#2a3a5a');
-        for (let j = 0; j < 4; j++) for (let i = 0; i < 2; i++) r(bx - 5 + i * 6, wy + 6 + j * 5, 4, 4, ['#d8823a', '#a8402a', '#4a7ab0', '#c8a040'][(i + j) % 4]);
-        r(bx - 1, wy + 5, 1, 20, DARK); r(bx - 6, wy + 15, 12, 1, DARK); r(bx - 7, wy + 3, 14, 1, K.stoneL); r(bx - 8, wy + 26, 16, 2, K.stone); r(bx - 8, wy + 26, 16, 1, K.stoneL);
+        if (!ttMot('lau', 'cua-so-kinh', bx, wy + 28)) { // ảnh AI: cửa sổ kính màu trên tường sau, đáy ảnh = đáy bệ cửa sổ
+          r(bx - 7, wy + 4, 14, 22, DARK); r(bx - 6, wy + 5, 12, 20, '#2a3a5a');
+          for (let j = 0; j < 4; j++) for (let i = 0; i < 2; i++) r(bx - 5 + i * 6, wy + 6 + j * 5, 4, 4, ['#d8823a', '#a8402a', '#4a7ab0', '#c8a040'][(i + j) % 4]);
+          r(bx - 1, wy + 5, 1, 20, DARK); r(bx - 6, wy + 15, 12, 1, DARK); r(bx - 7, wy + 3, 14, 1, K.stoneL); r(bx - 8, wy + 26, 16, 2, K.stone); r(bx - 8, wy + 26, 16, 1, K.stoneL);
+        }
         shaft(g, bx, '#ffe2b0', 0.17);
         for (let j = -1; j <= 1; j++) for (let i = -2; i <= 1; i++) { const x = sx + i * 7 + j * 2, y = sy + j * 4; if ((i + j + 9) % 3 === 0) r(x, y, 3, 2, rgba(['#ffb060', '#ff8a6a', '#8ab8ff'][(i + 9) % 3], 0.18)); }
       };
     }
     const x = cx0, y = cy0 + 8;
     g.glows.push({ x: x - 10, y: y - 2, rx: 14, ry: 8, a: 0.14, col: '#ffc070' }, { x: x + 10, y: y - 2, rx: 14, ry: 8, a: 0.14, col: '#ffc070' });
-    g.lights.push({ k: 'candle', x: x - 10, y: y - 7 }, { k: 'candle', x: x + 10, y: y - 7 });
+    const an = gdA('gd-tt-lau-nen'), ny = an ? Math.round(y + 1 - an.ph / an.net) - 1 : y - 7; // ảnh AI cây nến: lửa mọc ngay trên đỉnh ảnh
+    g.lights.push({ k: 'candle', x: x - 10, y: ny }, { k: 'candle', x: x + 10, y: ny });
     g.casts.push({ x: x - 6, y: y + 1, w: 12, len: 9, a: 0.38 });
     return () => { // tượng hiệp sĩ đá đã vỡ trên bệ, rêu ở chân, hai cây nến
       ell(x, y + 2, 11, 3, 'rgba(0,0,0,0.35)');
+      const nen = () => { for (const dx of [-10, 10]) { if (an) ttVe(an, x + dx, y + 1); else { r(x + dx - 1, y - 6, 2, 6, '#e8e0c8'); r(x + dx - 2, y - 1, 4, 2, K.iron); } } };
+      if (ttMot('lau', 'tuong-hiep-si', x, y + 2)) { nen(); return; } // ảnh AI: tượng hiệp sĩ đá (không gồm nến)
       r(x - 8, y - 6, 16, 8, DARK); r(x - 7, y - 5, 14, 6, K.stone); r(x - 7, y - 5, 14, 1, K.stoneL); r(x + 4, y - 4, 3, 5, dim(K.stone, 0.3));
       r(x - 5, y - 24, 10, 19, DARK); r(x - 4, y - 23, 8, 18, K.stone); r(x - 4, y - 23, 2, 18, K.stoneL); r(x + 2, y - 23, 2, 18, dim(K.stone, 0.3));
       r(x - 3, y - 29, 6, 6, DARK); r(x - 2, y - 28, 4, 5, K.stone); r(x - 2, y - 28, 1, 5, K.stoneL); r(x + 1, y - 29, 2, 2, K.void); // đầu sứt một góc
       r(x - 7, y - 21, 3, 9, K.stone); r(x - 7, y - 21, 1, 9, K.stoneL); r(x + 4, y - 18, 2, 10, dim(K.stone, 0.15)); r(x + 5, y - 26, 1, 16, K.ironL);
       r(x - 7, y, 5, 2, '#3f5a34'); r(x - 6, y, 2, 1, '#5f8046'); r(x + 9, y + 1, 4, 1, '#d8d0bc');
-      for (const dx of [-10, 10]) { r(x + dx - 1, y - 6, 2, 6, '#e8e0c8'); r(x + dx - 2, y - 1, 4, 2, K.iron); }
+      nen();
     };
   }
 
@@ -33410,6 +33832,14 @@ MA._xong();
     for (const side of [-1, 1]) {
       const bx = side < 0 ? g.fx0 - g.sw + 2 : g.fx1 + g.sw - 2, by = g.fy1 + g.fw;
       const w = ri(rn, 30, 40), x0 = side < 0 ? bx - 4 : bx - w + 4;
+      // ảnh AI gd-tt-<vùng>-tien-canh-trai / -phai (chỉ có một bên thì bên kia dùng ảnh đó lật ngang): mép ngoài ảnh nằm ở mép ngoài cụm code,
+      // đáy ảnh ở mép ngoài tường trước. Ảnh vẽ thẳng ở roomFore (nét gấp đôi), vẫn dùng đúng khung cắt này để mờ dần khi có người đứng sau.
+      const a0 = gdA('gd-tt-' + T.ma + '-tien-canh-' + (side < 0 ? 'trai' : 'phai')), a1 = a0 || gdA('gd-tt-' + T.ma + '-tien-canh-' + (side < 0 ? 'phai' : 'trai'));
+      if (a1) {
+        const aw = a1.pw / a1.net, ah = a1.ph / a1.net, ax = side < 0 ? bx - 4 : bx + 4 - aw;
+        cl.push({ x0: Math.max(0, Math.floor(ax) - 4), x1: Math.min(g.W, Math.ceil(ax + aw) + 4), y0: by - Math.ceil(ah), y1: g.H, a: 1, anh: a1, ax, ay: by - ah, lat: !a0 });
+        continue;
+      }
       if (T.reg === 0) { // bụi dương xỉ, lá to
         for (let i = 0; i < 6; i++) {
           const x = x0 + 4 + rn() * (w - 8), y = by - 5 - rn() * 14, rx = ri(rn, 6, 10), ry = ri(rn, 4, 7);
@@ -33527,6 +33957,7 @@ MA._xong();
   function demAnh() {
     const s = G.spriteCustom, d = s && s.gd; let n = 0;
     if (d) for (const k in d) if (d[k].ready && (k.startsWith('gd-vat-') || k.startsWith('gd-cua-') || k.startsWith('gd-tt-') || k.startsWith('gd-nen-'))) n++;
+    if (luaAnh()) n++; // dải lửa đuốc sẵn sàng: dựng lại để bỏ phần lửa đứng yên vẽ sẵn trong nền
     return n;
   }
   RA.xoaDem = function () { cache.clear(); shells.clear(); };
@@ -33538,6 +33969,7 @@ MA._xong();
     let room = cache.get(key);
     if (!room) {
       const g = Object.assign({}, W.geo, { type: W.type, variant: W.variant || 0 });
+      if (W.ttThu) g.ttThu = W.ttThu; // chỉ trang công cụ Tách Phòng đặt (phòng xem thử bày đủ đồ trang trí)
       g.doors = doors.map((d) => ({ side: SIDE_OF[d.dir], dir: d.dir, at: d.dir === 'up' || d.dir === 'down' ? g.cx : g.cy, state: d.open ? 'open' : 'locked', gate: !!d.gate, boss: !!d.boss }));
       const T = THEMES[W.region] || Castle, skey = [W.uid, W.region, W.type, W.seed, W.variant || 0, doors.map((d) => d.dir).join(',')].join('|');
       building = true;
@@ -33721,11 +34153,15 @@ MA._xong();
     const g = room.g, t = G.time || 0, pv = c;
     c = cx;
     try {
+      for (const f of room.ttNen) f(); // ảnh AI của đồ trang trí (phiên A3)
       for (const f of room.cuaNen) f(); // ảnh AI của cửa (lớp nền)
       ambLive(room, t);
+      const la = luaAnh(); // dải lửa hu-lua-duoc: thay ngọn lửa code của đuốc và nến
       for (const l of g.lights) {
         const f = Math.floor(t * 9 + l.x) % 3;
-        if (l.k === 'torch') { r(l.x - 2 + (f === 1 ? 1 : 0), l.y - 9 - f, 3, 3, '#ff7a2a'); r(l.x - 1, l.y - 7 - (f === 2 ? 2 : 0), 2, 3, '#ffd23f'); r(l.x + (f - 1), l.y - 12 - f, 1, 1, '#ffd23f'); }
+        if (la && l.k === 'torch') veLua(la, l.x, l.y + 1, 1, t, l.x);
+        else if (la && l.k === 'candle') { veLua(la, l.x, l.y + 2, 0.5, t, l.x); r(l.x - 3, l.y - 2, 6, 6, 'rgba(255,200,80,0.10)'); }
+        else if (l.k === 'torch') { r(l.x - 2 + (f === 1 ? 1 : 0), l.y - 9 - f, 3, 3, '#ff7a2a'); r(l.x - 1, l.y - 7 - (f === 2 ? 2 : 0), 2, 3, '#ffd23f'); r(l.x + (f - 1), l.y - 12 - f, 1, 1, '#ffd23f'); }
         else if (l.k === 'candle') { r(l.x - 1, l.y - (f === 0 ? 1 : 0), 2, 3, '#ffd23f'); r(l.x - 1, l.y + 1, 2, 1, '#ff7a2a'); r(l.x - 3, l.y - 2, 6, 6, 'rgba(255,200,80,0.10)'); }
         else if (l.k === 'twinkle') { if (Math.floor(t * 2 + l.x * 0.37) % 4 === 0) { r(l.x, l.y - 2, 1, 5, '#ffffff'); r(l.x - 2, l.y, 5, 1, '#ffffff'); } }
         else if (l.k === 'firefly') { const fx = l.x + Math.sin(t * 1.3 + l.x) * 7, fy = l.y + Math.cos(t * 1.7 + l.y) * 4; r(fx, fy, 1, 1, Math.floor(t * 3 + l.x) % 3 ? '#f8ffd0' : 'rgba(248,255,208,0.3)'); }
@@ -33801,7 +34237,8 @@ MA._xong();
         if (a <= 0) continue;
         const ga = c.globalAlpha;
         c.globalAlpha = ga * a;
-        c.drawImage(room.fg, q.x0, q.y0, q.x1 - q.x0, q.y1 - q.y0, q.x0, q.y0, q.x1 - q.x0, q.y1 - q.y0);
+        if (q.anh) veAnh(q.anh, q.ax, q.ay, q.lat); // cụm tiền cảnh bằng ảnh AI (phiên A3)
+        else c.drawImage(room.fg, q.x0, q.y0, q.x1 - q.x0, q.y1 - q.y0, q.x0, q.y0, q.x1 - q.x0, q.y1 - q.y0);
         c.globalAlpha = ga;
       }
     },
