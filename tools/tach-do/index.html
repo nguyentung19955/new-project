@@ -124,6 +124,14 @@
       <p class="chu-y" id="ttThuong"></p>
       <img id="anhThuong" alt="Ảnh bản thường của lô" hidden style="max-width:100%;image-rendering:pixelated;border-radius:8px;margin-top:6px">
     </div>
+    <div id="vungCanh" hidden style="margin-top:10px">
+      <p class="chu-y"><b>Lô cánh theo cấp:</b> khi dán prompt vào ChatGPT, nhớ <b>GỬI KÈM ảnh 4 cánh cấp 2 đang có trong game</b> để ChatGPT vẽ cấp 1 và cấp 3 cùng dáng, cùng màu. Bấm nút dưới, rồi chạm giữ ảnh hiện ra để lưu vào máy.</p>
+      <div class="hang">
+        <button class="nut phu" id="nutAnhCanh">Lấy ảnh 4 cánh cấp 2 (ảnh tham chiếu)</button>
+      </div>
+      <p class="chu-y" id="ttCanh"></p>
+      <img id="anhCanh" alt="Ảnh tham chiếu: 4 cánh cấp 2 đang có trong game" hidden style="max-width:100%;image-rendering:pixelated;border-radius:8px;margin-top:6px">
+    </div>
   </section>
 
   <section class="buoc">
@@ -347,6 +355,26 @@ for (const k in TEN_VK) {
   for (const he in HE_VK) LO.push({ id: 'vk-' + k + '-' + he, ten: 'Vũ khí · ' + TEN_VK[k] + ' · hệ ' + HE_VK[he][0] + ' (10 món)', doi: 'vu-khi', loai: k, he, cot: 5, hang: 2, mau: 16,
     nenXanh: he !== 'poison', xungDot: false, ds: B.ds.map((m) => Object.assign({}, m, { ma: m.ma + '-' + he, ten: m.ten + ' (' + HE_VK[he][0] + ')' })) });
 }
+// Lô "Cánh theo cấp" (làn E1): ảnh riêng cho cánh cấp 1 và cấp 3; cấp 2 là 4 ảnh tp-wings-<loại> đang có. Xuất tp-wings-<loại>-1 / -3
+// (ô wings, look = <loại>): game tìm ảnh theo cấp, không có thì dùng ảnh cấp 2 (js/sprite_custom.js, phần cánh của dinhNghia).
+// Cỡ từng ô đo từ cánh code cùng cấp (hero_tinhlinh.js WINGS). Hàng 1: cấp 1, hàng 2: cấp 3; cột: chuồn, lá, lửa, băng.
+const CANH_CAP = [
+  ['chuon', 'Cánh chuồn chuồn', ['#a8dcf0', '#5a8fb8', '#f0fcff', '#2c4a6a'], [13, 12], [23, 26],
+    'chỉ MỘT lá cánh ngắn, tròn đầu, kèm một lá con bé xíu phía dưới; mỏng, màu xanh nhạt, chỉ 2 đến 3 nan quạt giấy',
+    'BA lá cánh dài xoè như quạt giấy mở (hai lá to chĩa lên, một lá nhỏ chĩa ngang ra sau), nan quạt rõ, đầu mỗi lá có chấm trắng sáng như giọt sương'],
+  ['la', 'Cánh lá', ['#255a2c', '#479544', '#8fd070'], [13, 11], [24, 26],
+    'chỉ MỘT chiếc lá non nhỏ màu xanh, một đường gân giữa, chưa có lá đỏ',
+    'BA chiếc lá bàng to xếp lớp (lá trên cùng to nhất), xen một lá bàng đỏ mùa thu, gân lá vàng nhạt rõ, mép lá có răng cưa nhỏ'],
+  ['lua', 'Cánh lửa', ['#f2622a', '#a32418', '#ffc64c', '#7a1810'], [13, 13], [23, 28],
+    'chỉ MỘT ngọn lửa nhỏ như đốm lửa que diêm, lõi vàng bé, chưa có sao pháo bông',
+    'BỐN ngọn lửa dài xoè như đuôi phượng (ngọn giữa cao nhất), lõi vàng sáng chạy dọc từng ngọn, đầu ngọn nở sao pháo bông vàng dính liền vào lửa'],
+  ['bang', 'Cánh băng', ['#7fc4f2', '#2f62ad', '#ffffff', '#eafcff'], [14, 12], [25, 24],
+    'chỉ HAI mảnh băng ngắn như hai que kem cây nhỏ, mặt băng trơn',
+    'NĂM mảnh băng dài nhọn xoè như nan quạt (mảnh giữa dài nhất), mỗi mảnh vẫn là que kem cây, mặt băng có vệt trắng sáng, đầu mảnh nhọn lấp lánh'],
+];
+LO.push({ id: 'tp-wings-cap', ten: 'Trang phục · Cánh theo cấp (8 món: cấp 1 và cấp 3)', doi: 'trang-phuc', o: 'wings', cot: 4, hang: 2, mau: 12, nenXanh: false, xungDot: false, capCanh: true,
+  bm: ['co_cay', 'he_lua', 'he_bang'],
+  ds: [1, 3].flatMap((cap) => CANH_CAP.map((c) => ({ ma: 'tp-wings-' + c[0] + '-' + cap, ten: c[1] + ' cấp ' + cap, w: c[cap === 1 ? 3 : 4][0], h: c[cap === 1 ? 3 : 4][1], mau: c[2], mo: c[cap === 1 ? 5 : 6], look: c[0], cap }))) });
 function hex2rgb(h) { const v = parseInt(h.slice(1), 16); return [(v >> 16) & 255, (v >> 8) & 255, v & 255]; }
 function sacDo(r, g, b) { const mx = Math.max(r, g, b), mn = Math.min(r, g, b), c = mx - mn; if (!c) return [0, 0];
   const h = mx === r ? ((g - b) / c) % 6 : mx === g ? (b - r) / c + 2 : (r - g) / c + 4; return [(h * 60 + 360) % 360, c / mx]; }
@@ -449,6 +477,7 @@ function bmMuc(muc, ds, them) {
 // ===================== PROMPT =====================
 function taoPrompt(L) {
   if (L.he) return taoPromptHe(L);
+  if (L.capCanh) return taoPromptCanh(L);
   const n = L.ds.length, tong = L.cot * L.hang, nen = L.nenXanh ? 'XANH LÁ #00FF00' : 'HỒNG TÍM #FF00FF';
   const loai = L.doi === 'vu-khi' ? 'vũ khí loại ' + TEN_VK[L.loai].toLowerCase() : L.doi === 'trang-phuc' ? 'trang phục (' + O_TP[L.o][0].toLowerCase() + ')' : 'vật phẩm (biểu tượng đồ rơi, tài nguyên)';
   const ds = L.ds.map((m, i) => `ô ${i + 1}: ${m.ten}. ${m.mo.replace(/\.$/, '')} (màu chính ${m.mau.slice(0, 3).join(' ')}; trong game chỉ ${m.w}×${m.h} điểm ảnh${L.doi === 'trang-phuc' ? ', ' + dangMon(m) : ''})`).join('; ');
@@ -486,6 +515,22 @@ function taoPromptHe(L) {
     + `Nền trơn MỘT MÀU ${nen} phủ kín mọi ô (không ô cờ, không nền trắng, không chuyển màu), không dùng màu nền này trong món đồ. Chỉ cần gửi tấm ảnh, không cần code.`;
 }
 
+// Lô "Cánh theo cấp": gửi kèm ảnh 4 cánh cấp 2 đang có; hàng trên vẽ cấp 1 (nhỏ, mộc), hàng dưới vẽ cấp 3 (to, rực), cùng dáng với cấp 2.
+function taoPromptCanh(L) {
+  const o = (m, i) => `ô ${i + 1}: ${m.ten}: ${m.mo} (màu chính ${m.mau.slice(0, 3).join(' ')}; trong game chỉ ${m.w}×${m.h} điểm ảnh)`;
+  const h1 = L.ds.filter((m) => m.cap === 1), h3 = L.ds.filter((m) => m.cap === 3);
+  return `TÔI GỬI KÈM MỘT TẤM ẢNH: lưới 4 cột × 1 hàng gồm 4 chiếc cánh CẤP 2 đang dùng trong game Linh Khí (pixel art 2D, cảm hứng dân gian Việt Nam), theo thứ tự từ trái sang phải: cánh chuồn chuồn, cánh lá, cánh lửa, cánh băng. `
+    + `Hãy dùng công cụ tạo ảnh vẽ MỘT tấm ảnh pixel art mới gồm ĐÚNG 8 chiếc cánh: bản CẤP 1 và bản CẤP 3 của 4 loại cánh đó. Mỗi loại phải nhìn ra ngay là CÙNG MỘT LOẠI với cánh cấp 2 gửi kèm: cùng dáng, cùng hướng, cùng bảng màu, cùng kiểu viền, cùng nét lạ; chỉ khác độ lớn và độ lộng lẫy. `
+    + `BỐ CỤC: lưới ĐỀU đúng 4 cột × 2 hàng = 8 ô (KHÔNG thêm cột, KHÔNG thêm hàng), các ô bằng nhau, kẻ lưới mảnh màu tối; cột 1 chuồn chuồn, cột 2 lá, cột 3 lửa, cột 4 băng, đúng thứ tự như ảnh gửi kèm. `
+    + `HÀNG TRÊN là CẤP 1 (cánh mới nhú: NHỎ hơn, ÍT lá cánh hơn, mộc mạc, ít chi tiết hơn cấp 2), vẽ chỉ chiếm khoảng 45% ô: ${h1.map(o).join('; ')}. `
+    + `HÀNG DƯỚI là CẤP 3 (cánh trưởng thành: TO hơn, NHIỀU lá cánh hơn, rực rỡ hơn cấp 2, thêm điểm sáng), vẽ chiếm khoảng 80% ô: ${h3.map((m, i) => o(m, i + 4)).join('; ')}. `
+    + `HƯỚNG (như ảnh gửi kèm): chỉ MỘT bên cánh cho mỗi ô, GỐC CÁNH (chỗ cánh mọc ra từ lưng em bé) nằm ở góc DƯỚI BÊN PHẢI của hình, cánh xoè lên trên và sang trái (game tự vẽ cánh thứ hai và cho cánh vỗ). Mọi lá cánh của một chiếc đều chụm về đúng MỘT điểm gốc đó; ở cấp 3 lá thấp nhất chỉ được chĩa ngang sang trái, không rủ xuống thấp hơn gốc cánh quá một chút. Không vẽ em bé, không vẽ lưng, không dây đeo. `
+    + `CỠ TRONG Ô: mỗi chiếc nằm giữa ô, nằm TRỌN trong ô, cách đường lưới ít nhất 1/10 ô, tuyệt đối không lấn sang ô bên cạnh. `
+    + `KIỂU VẼ: mỗi chiếc cánh là MỘT khối liền (các lá cánh dính nhau ở gốc, không mảnh nào bay rời); khối to đơn giản, ít chi tiết nhỏ vì trong game cánh rất nhỏ; viền tối một nét màu tím than #1b1118 quanh mép; màu phẳng, đổ bóng 3 sắc (tối, vừa, sáng), sáng từ trên. Độ rực của cấp 3 thể hiện bằng màu sáng hơn và các chấm sáng ĐẶC dính liền vào cánh; không chuyển màu, không quầng sáng mờ, không nhoè. `
+    + `KHÔNG vẽ: chữ, số, nhãn, tên món, chú thích, bảng phụ, bảng màu, ô mẫu, khung trang trí, mặt đất, bóng dưới vật, tia lửa hay khói hay hạt sáng bay rời, ô chỉ có hiệu ứng. Không vẽ lại cánh cấp 2, không vẽ thêm chiếc nào ngoài 8 chiếc trên. `
+    + `Nền trơn MỘT MÀU HỒNG TÍM #FF00FF phủ kín mọi ô (không ô cờ, không nền trắng, không chuyển màu), không dùng màu hồng tím trong cánh. Chỉ cần gửi tấm ảnh, không cần code, không cần file json.`;
+}
+
 // Đợt 4 (Q6): mọi prompt của trang có thêm đoạn BẢNG MÀU, chỉ gồm các nhóm màu liên quan. Lô mới muốn nhóm khác thì khai thêm bm: ['go', 'da_stone', …] (tên nhóm trong BM.nhom).
 const taoPromptGoc = taoPrompt;
 taoPrompt = (L) => bmChen(taoPromptGoc(L), bmDoan(L.bm || (L.doi === 'trang-phuc' ? ['vai', 'kim_loai', 'go'] : ['go', 'kim_loai']), { vien: 'viền (nếu có) giữ đúng như đã ghi ở trên', rieng: true })); // đồ có viền riêng #1b1118 (game đổi màu viền này theo bậc) và màu chính riêng từng món
@@ -504,7 +549,59 @@ function hienLo() {
   $('locDom').checked = !L.xungDot;
   $('vungHe').hidden = !L.he; $('anhThuong').hidden = true;
   if (L.he) { hienTTThuong(); napBanThuong(); }
+  $('vungCanh').hidden = !L.capCanh; $('anhCanh').hidden = true;
+  if (L.capCanh) {
+    $('moTaLo').textContent = '8 món, lưới 4 cột × 2 hàng, nền hồng tím. Hàng trên: cánh cấp 1 (nhỏ, mộc). Hàng dưới: cánh cấp 3 (to, rực). Cánh cấp 2 giữ ảnh đang có. Nhớ gửi kèm ảnh tham chiếu.';
+    hienTTCanh(); napCanh2();
+  }
 }
+// ----- Lô "Cánh theo cấp": 4 ảnh cánh cấp 2 đang có trong game (để gửi kèm ChatGPT và để đặt gốc cánh trùng chỗ với cấp 2) -----
+const CANH2 = {}; // loại cánh (chuon, la, lua, bang) -> nội dung tệp tp-wings-<loại>.sprite.json
+let napC2 = null;
+function hienTTCanh() {
+  if (!L || !L.capCanh) return;
+  const co = CANH_CAP.filter((c) => CANH2[c[0]]).length;
+  $('ttCanh').textContent = co ? `Đã lấy được ${co}/4 ảnh cánh cấp 2 từ game: gốc cánh của ảnh mới sẽ đặt trùng chỗ với cấp 2.` : 'Chưa lấy được ảnh cánh cấp 2 từ game: gốc cánh đặt theo chỗ quen dùng; ảnh tham chiếu thì dùng tấm ChatGPT đã vẽ lô Cánh trước đây.';
+}
+function napCanh2() { // đọc bản game đã gói (trên web: linh-khi.html; trong repo: game/dist/linh-khi.html)
+  if (napC2) return napC2;
+  napC2 = (async () => {
+    for (const u of ['linh-khi.html', 'index.html', '../../game/dist/linh-khi.html']) {
+      try {
+        const r = await fetch(u); if (!r.ok) continue;
+        const t = await r.text(), k = '.customSpriteData = ', a = t.indexOf(k); if (a < 0) continue;
+        const b = t.indexOf(';\n', a); if (b < 0) continue; // JSON gọn một dòng
+        let n = 0;
+        for (const x of JSON.parse(t.slice(a + k.length, b))) {
+          const m = x && x.doi_tuong === 'trang-phuc' && x.trang_phuc && x.trang_phuc.o === 'wings' && /^tp-wings-[a-z_]+$/.test(x.ma || '') ? x.trang_phuc.look : null;
+          if (m && x.ma === 'tp-wings-' + m && typeof x.anh === 'string') { CANH2[m] = x; n++; }
+        }
+        if (n) break;
+      } catch (e) { /* bỏ qua */ }
+    }
+    hienTTCanh();
+    if (ANH && L.capCanh) chay(false);
+  })();
+  return napC2;
+}
+$('nutAnhCanh').onclick = async () => {
+  await napCanh2();
+  const ds = CANH_CAP.map((c) => CANH2[c[0]]);
+  if (!ds.some(Boolean)) { bao('Chưa lấy được ảnh cánh cấp 2 từ game: dùng tấm ảnh ChatGPT đã vẽ lô Cánh trước đây'); return; }
+  const O = 240, cv = document.createElement('canvas'); cv.width = O * 4; cv.height = O;
+  const g = cv.getContext('2d'); g.fillStyle = '#ff00ff'; g.fillRect(0, 0, cv.width, cv.height);
+  const anh = await Promise.all(ds.map((t) => t ? new Promise((ok) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ok(null); i.src = t.anh; }) : null));
+  // cùng một tỉ lệ phóng (nguyên lần) cho cả 4 cánh để ChatGPT thấy đúng cỡ so với nhau; cánh to nhất chiếm khoảng 70% ô
+  let to = 1; anh.forEach((im) => { if (im) to = Math.max(to, im.width, im.height); });
+  const k = Math.max(1, Math.floor((O * 0.7) / to));
+  g.imageSmoothingEnabled = false;
+  anh.forEach((im, i) => { if (im) g.drawImage(im, i * O + Math.round((O - im.width * k) / 2), Math.round((O - im.height * k) / 2), im.width * k, im.height * k); });
+  g.strokeStyle = '#222'; g.lineWidth = 2;
+  for (let x = 0; x <= 4; x++) { g.beginPath(); g.moveTo(x * O, 0); g.lineTo(x * O, O); g.stroke(); }
+  for (let y = 0; y <= 1; y++) { g.beginPath(); g.moveTo(0, y * O); g.lineTo(cv.width, y * O); g.stroke(); }
+  const im = $('anhCanh'); im.src = cv.toDataURL('image/png'); im.hidden = false;
+  bao('Chạm giữ ảnh để lưu vào máy, rồi gửi kèm prompt cho ChatGPT');
+};
 // ----- Bản thường cho lô hệ: điểm cầm/mũi/dây lấy theo bản thường cùng dòng; ảnh bản thường để gửi kèm ChatGPT -----
 const BAN_THUONG = {}; // mã vk-<loại>-<dòng> -> nội dung tệp .sprite.json
 let napBT = null;
@@ -1085,6 +1182,12 @@ function datDiem(i) { // điểm tự đặt theo quy ước; điểm người d
     else if (o === 'wings') { let bx = x1, by = y1, best = -1; for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (dac(x, y) && x + y > best) { best = x + y; bx = x; by = y; } const lui = Math.max(1, Math.round(Math.min(bw, bh) * 0.08)); P.goc_canh = [bx + 0.5 - lui, by + 0.5 - lui]; }
     else if (o === 'hands') { if (D.kieu === 'cam') { const yc = y0 + Math.round(bh * 0.78); P.tay_truoc = [hangTB(yc - 1, yc + 1), yc + 0.5]; } else P.eo = [hangTB(y0, y0 + dot), y0 + 0.5]; }
     for (const k in P) if (c.diem[k]) P[k] = [c.diem[k][0] * w, c.diem[k][1] * h];
+    // Lô "Cánh theo cấp": đặt sao cho GỐC CÁNH rơi đúng chỗ gốc cánh của ảnh cấp 2 cùng loại (chỗ đó = lech + goc_canh của tệp cấp 2;
+    // chưa lấy được tệp cấp 2 thì dùng chỗ quen dùng của 4 ảnh đang có: [0, -0,5]). Nút mũi tên vẫn dời thêm như các lô khác.
+    if (L.capCanh && P.goc_canh) {
+      const c2 = CANH2[m.look] && CANH2[m.look].trang_phuc, g2 = c2 && c2.diem && c2.diem.goc_canh, R = c2 && g2 && c2.lech ? [c2.lech[0] + g2[0], c2.lech[1] + g2[1]] : [0, -0.5];
+      D.lech = [Math.round(R[0] - P.goc_canh[0] / N) + c.dl[0], Math.round(R[1] - P.goc_canh[1] / N) + c.dl[1]];
+    }
     D.neo = P;
   }
   K.D = D;
@@ -1376,7 +1479,7 @@ function khungXem(now) {
   } else if (L.doi === 'trang-phuc') {
     if (GAME) {
       const x = { hat: null, robe: null, back: null, hand: null, mask: null, wing: null }, o = L.o;
-      if (o === 'hats') x.hat = m.look; else if (o === 'robes') x.robe = m.look; else if (o === 'backs') x.back = m.look; else if (o === 'hands') x.hand = m.look; else if (o === 'masks') x.mask = m.look; else x.wing = { kind: m.look, level: 2 };
+      if (o === 'hats') x.hat = m.look; else if (o === 'robes') x.robe = m.look; else if (o === 'backs') x.back = m.look; else if (o === 'hands') x.hand = m.look; else if (o === 'masks') x.mask = m.look; else x.wing = { kind: m.look, level: m.cap || 2 };
       const w0 = o === 'hands' && K.D.kieu === 'cam' ? undefined : { type: 'sword', family: 0, rarity: 0, marks: { fire: 0, poison: 0, ice: 0 }, sharpen: 0 };
       [{ move: false }, { move: true }, { atk: (t % 0.6) / 0.6 }].forEach((q, k) => { try { GAME.art.hero(g, Object.assign({ x: 50 + k * 50, y: 74, face: 1, key: 'smith', t, move: false, atk: -1, dodge: -1, weapon: w0, outfit: x }, q)); } catch (e) { /* bỏ qua */ } });
       goiY = 'Em bé trong game mặc món này: đứng, đi, đánh. Lệch chỗ thì dùng nút mũi tên.';
