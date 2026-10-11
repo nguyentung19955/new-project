@@ -65,7 +65,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.11-0854";
+(window.G = window.G || {}).VERSION = "lk-2026.10.11-0924";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -27232,13 +27232,8 @@ MA._xong();
       }
     });
     if (G.lk) G.lk.hud(P, W); // ba vạch linh khí cạnh ô vũ khí, biểu tượng hệ trên đầu quái (js/linhkhi.js)
-    if (P.weapons.length > 1 && S.tut && W.type === 'elite') {
-      // Đợt 2: chữ nằm trong một ô nền riêng, cách ô vũ khí 5 điểm ảnh nên không còn bị ô vũ khí cắt mất chữ cuối.
-      const s0 = G.tv('Chạm để đổi vũ khí →'); ui.font(7, true);
-      const tw0 = Math.ceil(G.ux.measureText(s0).width) + 8;
-      T.plate(362 - tw0, 14, tw0, 12, { a: 0.78 });
-      ui.text(s0, 362 - 4, 23, { size: 7, align: 'right', bold: true, color: '#ffd27a' });
-    }
+    const swapTip = P.weapons.length > 1 && !!S.tut && W.type === 'elite' && !W.cleared; // dọn xong phòng tinh anh thì thôi nhắc đổi vũ khí
+    let swapX0 = 0; // mép trái của ô chữ "Chạm để đổi vũ khí" (0 = không hiện), để lời chỉ dẫn né ra
     // trùm: thanh máu và các lớp thích nghi nằm trên mặt tường sau, không che sàn.
     // Phân cấp (Giai đoạn 4): trùm vùng khung to viền vàng, tên chữ to, số phần trăm; trùm nhỏ khung vừa; tinh anh khung nhỏ.
     const b = W.boss;
@@ -27271,6 +27266,15 @@ MA._xong();
       }
     }
     let by = topY ? topY + 3 : S.challenge ? 26 : 8;
+    if (swapTip) {
+      // Đợt 2: chữ nằm trong một ô nền riêng, cách ô vũ khí 4 điểm ảnh nên không còn bị ô vũ khí cắt mất chữ cuối;
+      // nằm dưới thanh máu tinh anh (khi có) để hai thứ không chồng nhau.
+      const s0 = G.tv('Chạm để đổi vũ khí →'); ui.font(7, true);
+      const tw0 = Math.ceil(G.ux.measureText(s0).width) + 8, ty0 = Math.max(14, topY ? topY + 2 : 0);
+      T.plate(362 - tw0, ty0, tw0, 12, { a: 0.78 });
+      swapX0 = 362 - tw0;
+      ui.text(s0, 362 - 4, ty0 + 9, { size: 7, align: 'right', bold: true, color: '#ffd27a' });
+    }
     if (W.type === 'fountain') {
       const t = S.preview.length ? G.t('Trùm đã học: {0}', layerTexts(S.preview, ' · ')) : 'Trùm chưa học được gì từ bạn';
       const lines = ui.wrap(t, 228, 7, true);
@@ -27287,24 +27291,53 @@ MA._xong();
     let tipB = W.banner && W.banner.tip ? W.banner : null;
     // Phòng đầu ải hướng dẫn chỉ một ô chữ: mẹo vũ khí chờ (không đếm giờ), sang phòng kế mới hiện.
     if (tipB && !tipB.urgent && hint && S.tut && W.type === 'start') { tipB.t = Math.max(tipB.t, 5); S.heldTip = tipB; tipB = null; }
+    S.hintBox = null;
     if (S.mode === 'play' && (hint || tipB) && W.geo.rong && !W.geo.big) {
-      // Đợt 2 (sàn phòng thường rộng 300): cột trái chỉ còn 66 điểm ảnh nên lời chỉ dẫn dời xuống ĐÁY GIỮA, nằm trên dải tường trước
-      // (y 252–270). Một dòng thì không chạm sàn; câu dài hai dòng thì lấn mép dưới sàn chừng 9 điểm ảnh. Cỡ chữ giữ 7 như cũ.
+      // Đợt 2 (sàn phòng thường rộng 300): cột trái chỉ còn 66 điểm ảnh nên lời chỉ dẫn không nằm ở đó nữa. Cỡ chữ giữ 7 như cũ.
       // Chỉ hiện MỘT ô mỗi lúc để không che trận đánh: dòng mẹo (có đếm giờ) hiện trước, hết giờ thì lời chỉ dẫn hiện lại.
-      const q = tipB ? [tipB.s, tipB.col || '#ffd27a', tipB.t < 0.4 ? Math.max(0, tipB.t / 0.4) : 1] : [hint, '#f1e6c6', 1];
-      // Phòng có cửa dưới đang MỞ: ô chữ ở đáy sẽ che mất lối ra và mũi tên chỉ lối, nên lúc đó ô chữ lên mặt tường sau (dưới các khối trên cùng),
-      // nằm giữa nút tạm dừng (tới x = 96) và ô vũ khí (từ x = 366); phòng Suối hồi còn né thêm chữ "Rương đồ" ở góc trái.
-      const len = W.doors.some((d) => d.dir === 'down' && d.open), lx0 = len ? (W.type === 'fountain' ? 142 : 98) : 77, lx1 = len ? 364 : 383;
-      const bold = q[1] !== '#f1e6c6', lines = ui.wrap(q[0], lx1 - lx0 - 10, 7, bold).slice(0, 4);
-      let tw = 0; ui.font(7, bold);
-      for (const l of lines) tw = Math.max(tw, G.ux.measureText(l).width);
-      const pw = Math.min(lx1 - lx0, Math.ceil(tw) + 12), ph = Math.round(lines.length * 9.5 + 6), mid = (lx0 + lx1) / 2, px = Math.round(mid - pw / 2), ga = G.ux.globalAlpha;
-      const py = len ? by : 269 - ph;
-      if (len) by += ph + 2;
-      G.ux.globalAlpha = ga * q[2];
-      T.plate(px, py, pw, ph, { a: 0.78 });
-      lines.forEach((l, i) => ui.text(l, mid, py + 9.5 + i * 9.5, { size: 7, align: 'center', color: q[1], bold }));
-      G.ux.globalAlpha = ga;
+      // Chỗ đặt chọn theo CỬA CỦA PHÒNG (có cửa là tránh, dù đang khoá hay mở, nên ô chữ không nhảy chỗ lúc cửa mở):
+      //   1. phòng không có cửa dưới: ĐÁY GIỮA, trên dải tường trước (câu hai dòng chỉ chạm 4 điểm ảnh mép sàn, chỗ không đứng được);
+      //   2. có cửa dưới, không có cửa trên: GIỮA TƯỜNG SAU, dưới các khối trên cùng (thanh máu tinh anh, đồng hồ thử thách, ô "Trùm đã học");
+      //   3. có cả hai cửa: trên tường sau, BÊN PHẢI cửa trên (bên trái nếu bên phải đang có chữ "Chạm để đổi vũ khí");
+      //   4. tường sau không đủ chỗ cho câu dài: cột trái, dưới dòng "khuyên" (kiểu phòng trùm).
+      // Ở tường sau, ô chữ nằm giữa thanh máu (tới x = 124) và ô vũ khí (từ x = 366); phòng Suối hồi né thêm chữ "Rương đồ" ở góc trái.
+      // Dòng báo (rơi đồ, tên trùm...) cũng nằm ở tường sau và chỉ hiện vài giây: lúc đó ô chữ ở tường sau tạm ẩn, khỏi chồng chữ.
+      const hasD = (dir) => W.doors.some((d) => d.dir === dir), cx0 = W.geo.cx;
+      const top = hasD('down'), side = top && hasD('up');
+      // Mỗi chỗ đặt: [mép trái, mép phải, y trên cùng (null = bám đáy), số vùng]. Thử lần lượt, lấy chỗ đầu tiên chứa vừa ô chữ.
+      const cand = [];
+      if (!top) cand.push([77, 383, null, 1]);
+      else if (!side) cand.push([W.type === 'fountain' ? 142 : 128, swapX0 ? swapX0 - 3 : 364, Math.max(by, 8), 2]);
+      else if (swapX0) cand.push([98, cx0 - 24, Math.max(by, 28), 3]);
+      else cand.push([cx0 + 24, 364, Math.max(by, 8), 3]);
+      // Dự phòng khi tường sau không đủ chỗ (câu dài mà phía trên đang có thanh máu tinh anh...): cột trái dưới dòng "khuyên", như phòng trùm.
+      if (top) cand.push([2, hasD('left') ? 64 : 76, 107, 4]); // tới x = 76 là còn nằm trên tường trái (sàn bắt đầu ở 80); phòng có cửa trái thì dừng ở 64, không chạm khung cửa
+      const place = (q) => {
+        const bold = q[1] !== '#f1e6c6';
+        let pick = null;
+        for (const z of cand) {
+          const left = z[3] === 4, lines = ui.wrap(q[0], z[1] - z[0] - (left ? 9 : 10), 7, bold), ph = lines.length * 9 + 4;
+          const py = z[2] == null ? 270 - ph : z[2], fit = z[2] == null || (left ? py + ph <= 192 : py + ph <= 60); // 192: không xuống tới cần điều khiển; 60: không xuống tới chỗ đứng được (y 64)
+          if (!pick || fit) pick = { q, z, lines, ph, py, left, fit, bold };
+          if (fit) break;
+        }
+        return pick;
+      };
+      let pick = place(tipB ? [tipB.s, tipB.col || '#ffd27a', tipB.t < 0.4 ? Math.max(0, tipB.t / 0.4) : 1] : [hint, '#f1e6c6', 1]);
+      // Dòng mẹo (không gấp) mà phòng này không còn chỗ nào không che cửa, không che sàn: cất sang phòng kế (S.heldTip, cùng đường với mẹo
+      // vũ khí bị hoãn ở phòng đầu ải hướng dẫn); bỏ khỏi phòng này để các dòng báo và mẹo khác (mẹo Bình máu) không bị chặn.
+      if (tipB && !pick.fit && !tipB.urgent) { tipB.t = Math.max(tipB.t, 5); S.heldTip = tipB; W.banner = null; pick = hint ? place([hint, '#f1e6c6', 1]) : null; }
+      if (pick && !(pick.z[3] !== 1 && pick.z[3] !== 4 && W.banner && !W.banner.tip)) {
+        const z = pick.z, lines = pick.lines, ph = pick.ph, py = pick.py, q = pick.q, bold = pick.bold, ga = G.ux.globalAlpha;
+        let tw = 0; ui.font(7, bold);
+        for (const l of lines) tw = Math.max(tw, G.ux.measureText(l).width);
+        const pw = pick.left ? z[1] - z[0] : Math.min(z[1] - z[0], Math.ceil(tw) + 12), mid = (z[0] + z[1]) / 2, px = pick.left ? z[0] : Math.round(mid - pw / 2);
+        G.ux.globalAlpha = ga * q[2];
+        T.plate(px, py, pw, ph, { a: 0.78 });
+        lines.forEach((l, i) => ui.text(l, pick.left ? px + 5 : mid, py + 8.5 + i * 9, { size: 7, align: pick.left ? 'left' : 'center', color: q[1], bold }));
+        G.ux.globalAlpha = ga;
+        S.hintBox = [px, py, pw, ph, z[3], pick.fit ? 1 : 0, tipB && q[0] === tipB.s ? 1 : 0]; // [x, y, rộng, cao, vùng, vừa chỗ, là dòng mẹo]: để bài kiểm tra biết ô chữ nằm đâu (docs/review/ke-hoach-cai-thien/dot-2/kiem_bo_cuc.py)
+      }
     } else if (S.mode === 'play' && (hint || tipB)) {
       const hw = W.geo.big ? 64 : 118; // phòng trùm rộng hơn nên ô chữ hẹp lại, không đè lên sàn
       let hy = W.geo.big ? 100 : 93;

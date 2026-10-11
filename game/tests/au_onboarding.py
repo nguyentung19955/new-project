@@ -33,8 +33,15 @@ STATE = r"""() => {
     o.mode = S.mode; o.room = S.idx; o.type = W.type; o.tut = !!S.tut; o.hint = S.hint; o.banner = W.banner ? W.banner.s : null;
     o.cleared = !!W.cleared; o.hp = Math.round(P.hp); o.maxhp = P.maxhp; o.mana = Math.round(P.mana); o.potions = P.potions;
     o.ents = W.ents.filter(e => !e.dead).length; o.roles = [...new Set(W.ents.filter(e => !e.dead).map(e => e.role))];
-    // lời chỉ dẫn có vẽ được hết không (theo đúng phép đo trong stage.js drawHud: rộng hw-9, cỡ 7, đáy 186)
-    if (S.hint) { const hw = W.geo.big ? 64 : 118, hy = W.geo.big ? 100 : 93; const L = G.ui.wrap(S.hint, hw - 9, 7); o.hintLines = L.length; o.hintBottom = Math.round(hy + L.length * 9.5 + 7); o.hintDrawn = o.hintBottom <= 186; }
+    // lời chỉ dẫn có vẽ được hết không.
+    // Phòng trùm: theo đúng phép đo trong stage.js drawHud (cột trái rộng hw-9, cỡ 7, đáy 186).
+    // Phòng thường (Đợt 2, sàn 300): đọc ô chữ game vừa vẽ thật (S.hintBox = [x, y, rộng, cao, vùng, vừa chỗ, là dòng mẹo]); vùng 1 đáy giữa,
+    // 2 giữa tường sau, 3 cạnh cửa trên, 4 cột trái. Không có ô (đang có dòng báo che tạm), hoặc ô đang hiện dòng mẹo, thì hintDrawn = false.
+    if (S.hint && W.geo.rong && !W.geo.big) {
+      const hb = S.hintBox;
+      if (hb) { o.hintLines = Math.round((hb[3] - 4) / 9); o.hintBottom = hb[1] + hb[3]; o.hintZone = hb[4]; o.hintBox = hb.slice(0, 4); }
+      o.hintDrawn = !!hb && !hb[6]; // hb[6] = 1: ô đang hiện là dòng mẹo, lời chỉ dẫn chờ mẹo hết giờ
+    } else if (S.hint) { const hw = W.geo.big ? 64 : 118, hy = W.geo.big ? 100 : 93; const L = G.ui.wrap(S.hint, hw - 9, 7); o.hintLines = L.length; o.hintBottom = Math.round(hy + L.length * 9.5 + 7); o.hintDrawn = o.hintBottom <= 186; }
   }
   return o;
 }"""

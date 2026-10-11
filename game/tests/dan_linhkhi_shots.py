@@ -74,6 +74,8 @@ def main():
             im.save(os.path.join(OUT, name)); print('đã lưu', name)
 
         # ---------- 1. mỗi loại đạn ở ba vùng (đạn đứng yên để nhìn rõ hình) ----------
+        # Đợt 2 (sàn phòng thường 300): khung cắt bám theo giữa phòng (trước ghi cứng x 136–344 của sàn cũ, giữa phòng là 240).
+        CX = ev("() => G.roomArt.geo(false).cx")
         rows = []
         for r in [0, 1, 2]:
             ev(ROOM, [r, {}])
@@ -84,7 +86,7 @@ def main():
               const P = G.getRun().P; P.x = g.cx; P.y = g.fy1 - 20;
               FR(30);
             }""")
-            rows.append(grab().crop(box(136, 22, 344, 52)))
+            rows.append(grab().crop(box(CX - 104, 22, CX + 104, 52)))
         # mũi tên của mình: thường, mang hệ Lửa/Độc/Băng, giữ rồi thả (to)
         ev(ROOM, [1, {}])
         ev(r"""() => {
@@ -94,7 +96,7 @@ def main():
           he.forEach((el, i) => W.projs.push({ team: 'player', kind: 'arrow', x: g.cx - 80 + i * 40, y: g.cy + 10, vx: 6, vy: -1.5, t: 99, w, mult: 0, pierce: 0, big: i === 4, col: el ? G.EL[el].col : '#f1ead9', seen: [], z: 11, he: el ? { el, lv: 2 } : null }));
           FR(30);
         }""")
-        rows.append(grab().crop(box(136, 50, 344, 80)))
+        rows.append(grab().crop(box(CX - 104, 50, CX + 104, 80)))
         wd = rows[0].width
         sheet = Image.new('RGB', (wd, sum(r.height for r in rows)))
         y = 0
