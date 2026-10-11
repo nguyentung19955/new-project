@@ -16032,6 +16032,7 @@ MA._xong();
   // Ảnh nạp chậm hơn code (và công cụ có thể đổi ảnh bất cứ lúc nào): mỗi lần lấy cảnh làng thì soát lại 6 công trình (và các đạo cụ D2),
   // cái nào ảnh vừa có / vừa đổi / vừa gỡ thì thay ngay hình đã nhớ của riêng cái đó (không phải dựng lại cả làng).
   function anhNha(Bt) {
+    anhNen(Bt);
     for (const n of Bt.nha) {
       const g = gdLang(n.ten); if (g === n.g) continue;
       n.g = g; const ob = n.ob;
@@ -16040,6 +16041,25 @@ MA._xong();
       ob.x = Math.round(n.ax - g.rong / 2); ob.y0 = Math.round(n.ay - g.cao);
     }
     return Bt;
+  }
+  // ---------- D3 · nền làng bằng ảnh AI (tools/tach-lang, lô "Nền làng"; tệp gd-lang-nen, kiểu "giao-dien") ----------
+  // MỘT tấm kín 720×270 (× net) thay cho lớp nền vẽ bằng code: cỏ, hàng cây mép trên, sông, đường đất, sân đình, ao sen, cầu bến đò, chiếu Cụ Đồ.
+  // Ảnh vẽ màu ban ngày, game nhân màu chạng vạng như nền code. Ảnh chỉ là LỚP NỀN: chỗ đi được (blocked, RECTS), mép sông bo(y), vị trí nhà,
+  // người, đạo cụ, sậy, vệt nước, quầng đèn KHÔNG đổi. Soát mỗi lần lấy cảnh (như anhNha): ảnh vừa có / vừa đổi / vừa gỡ thì đổi lớp nền ngay.
+  // Không có tệp thì Bt.ground là nền code y như cũ. Ảnh có chỗ trong suốt thì chỗ đó lộ nền code bên dưới.
+  function anhNen(Bt) {
+    const g = gdLang('nen'); if (g === Bt.nenG) return;
+    Bt.nenG = g;
+    if (!g) { Bt.ground = Bt.nenCode; Bt.nenAnh = false; return; }
+    const [cv, c] = mk(g.img.width, g.img.height);
+    c.drawImage(Bt.nenCode, 0, 0, cv.width, cv.height);
+    c.drawImage(Bt.ngay ? g.img : tint(g.img), 0, 0);
+    Bt.ground = cv; Bt.nenAnh = true;
+  }
+  // Vẽ lớp nền tại (x, 0). Nền code: dán thẳng như cũ. Nền ảnh: dán kín 720×270 (k = số điểm ảnh thật trên một điểm ảnh làng của bút c).
+  function veNen(c, Bt, x, k) {
+    if (!Bt.nenAnh) { c.drawImage(Bt.ground, x, 0); return; }
+    const sm = c.imageSmoothingEnabled; c.imageSmoothingEnabled = W * k < Bt.ground.width - 0.5; c.drawImage(Bt.ground, x, 0, W, H); c.imageSmoothingEnabled = sm;
   }
   // Dán ảnh AI của một công trình (ảnh có số điểm ảnh gấp net lần): k = số điểm ảnh thật trên một điểm ảnh làng của bút c.
   function veAnh(c, ob, x, y, k) { const sm = c.imageSmoothingEnabled; c.imageSmoothingEnabled = ob.w * k < ob.cv.width - 0.5; c.drawImage(ob.cv, x, y, ob.w, ob.h); c.imageSmoothingEnabled = sm; }
@@ -16111,7 +16131,7 @@ MA._xong();
     const rd = rng(77), flies = [];
     for (let i = 0; i < W / 14; i++) flies.push([rd() * W, 40 + rd() * 220, rd() * 6.28, 0.5 + rd()]);
     const lants = LREC; LREC = null;
-    return { ground, objs, cui, cuiA, thuyenS, doN, den, light: lcv, flies, lants, nha, ngay: NGAY };
+    return { ground, nenCode: ground, nenG: null, nenAnh: false, objs, cui, cuiA, thuyenS, doN, den, light: lcv, flies, lants, nha, ngay: NGAY };
   }
 
   // ======================= chỗ không đi được =======================
@@ -16521,7 +16541,7 @@ MA._xong();
   // Vẽ cảnh làng đứng yên lên bút c bất kỳ (1 đơn vị = 1 điểm ảnh làng, cả làng 720×270, không dời OY): nền, công trình, đạo cụ,
   // lửa lò, 7 người làng, quầng đèn. o: { t: giây, k: số điểm ảnh thật trên một điểm ảnh làng (để dán ảnh AI cho nét),
   //   ngay: true = màu ban ngày, không nhân màu chạng vạng, không quầng đèn (ảnh tham chiếu gửi ChatGPT), nguoi: false = không vẽ người,
-  //   conVat: false = không vẽ đàn gà và con cóc }
+  //   conVat: false = không vẽ đàn gà và con cóc, chiNen: true = chỉ vẽ lớp nền (D3: ảnh tham chiếu nền làng, soi lệch) }
   let BUILT_NGAY = null;
   function canhCongCu(ngay) {
     if (!ngay) return build();
@@ -16532,7 +16552,8 @@ MA._xong();
   VS.veTinh = function (c, o) {
     o = o || {};
     const Bt = canhCongCu(!!o.ngay), t = +o.t || 0, k = +o.k || 1, L = [];
-    c.drawImage(Bt.ground, 0, 0);
+    veNen(c, Bt, 0, k);
+    if (o.chiNen) return;
     for (const ob of Bt.objs) if (!(ob.chu && ob.chu.g)) L.push(lopVat(c, ob, 0, k));
     L.push(lopCui(c, Bt, 0, t)); L.push(lopDo(c, Bt, 0, 0, k));
     if (!o.ngay) L.push([B.phoi[1] + 0.01, () => ambClothes(c, 0, t, 1)]);
@@ -16576,7 +16597,7 @@ MA._xong();
     G.wxDat(c, 0, 0); c.globalAlpha = 1; c.globalCompositeOperation = 'source-over';
     c.fillStyle = '#101a1a'; c.fillRect(0, 0, 480, OY);
     c.translate(0, OY);
-    c.drawImage(Bt.ground, -cam, 0);
+    veNen(c, Bt, -cam, G.NET || 1);
     const M = G.VFX ? Math.max(0, +G.VFX.moiTruong || 0) : 1;
     ambGround(c, cam, t, M);
     // nước lấp lánh
@@ -16736,11 +16757,28 @@ MA._xong();
     names: [[126, 34, '#2f5a3a'], [150, 236, '#2a5a7a'], [300, 44, '#7a2a22']], // chỗ ghi tên vùng và màu chữ
     soon: [['Núi tuyết', 412, 34, 412, 92], ['Núi lửa', 436, 112, 436, 176], ['Đầm lầy', 372, 172, 0, 0]], // vùng sắp có
   });
-  const MCACHE = {};
+  // D3 · tranh bằng ảnh AI (tools/tach-lang, lô "Tranh bản đồ vùng"; tệp gd-ban-do-vung, kiểu "giao-dien"): MỘT tấm kín 480×270 cho cả 3 vùng.
+  // Có tệp thì dán ảnh thay tranh code (game vẫn kẻ viền tranh, vẫn nhân màu đêm cho độ khó 2); 15 thẻ ải, đường nét đứt, tên vùng do js/village.js vẽ đè
+  // lên theo MAP như cũ. Tranh luôn là canvas 480×270 (nơi dùng dán thẳng không ghi cỡ), nên ảnh nét gấp đôi cũng được thu về 480×270.
+  // Soát mỗi lần gọi: ảnh vừa có / vừa đổi / vừa gỡ thì xoá tranh đã nhớ. Không có tệp thì tranh code y như cũ.
+  const MCACHE = { g: null };
+  const gdBanDo = () => { const s = G.spriteCustom; return s && s.gdSan ? s.gdSan('gd-ban-do-vung') : null; };
   VS.mapArt = function (night) {
-    const id = night ? 'n' : 'd';
+    const id = night ? 'n' : 'd', g = gdBanDo();
+    if (g !== MCACHE.g) { MCACHE.g = g; MCACHE.n = MCACHE.d = null; }
     if (MCACHE[id]) return MCACHE[id];
-    const [cv, c] = mk(480, 270), rd = rng(11), INKB = '#4a3626';
+    const [cv, c] = mk(480, 270);
+    if (g) {
+      p(c, 0, 0, 480, 270, '#e6d8b0');
+      c.imageSmoothingEnabled = g.img.width > 480; c.drawImage(g.img, 0, 0, 480, 270); c.imageSmoothingEnabled = false;
+      vienTranh(c);
+    } else tranhCode(c);
+    if (night) { c.globalCompositeOperation = 'multiply'; c.fillStyle = '#8c88c4'; c.fillRect(0, 0, 480, 270); c.globalCompositeOperation = 'source-over'; } // độ khó 2: tranh màu đêm
+    return (MCACHE[id] = cv);
+  };
+  function vienTranh(c) { for (const k of [0, 1, 2]) { c.strokeStyle = ['#6a4a30', '#a88a58', '#6a4a30'][k]; c.lineWidth = 1; c.strokeRect(k * 2 + 0.5, k * 2 + 0.5, 479 - k * 4, 269 - k * 4); } }
+  function tranhCode(c) {
+    const rd = rng(11), INKB = '#4a3626';
     p(c, 0, 0, 480, 270, '#e6d8b0');
     for (let i = 0; i < 900; i++) p(c, rd() * 480, rd() * 270, 1 + (rd() < 0.2 ? 1 : 0), 1, rd() < 0.5 ? '#d8c898' : '#f0e6c8');
     for (let i = 0; i < 14; i++) ell(c, rd() * 480, rd() * 270, 10 + rd() * 26, 5 + rd() * 12, 'rgba(190,160,100,0.10)');
@@ -16778,10 +16816,8 @@ MA._xong();
     bs.forEach((fn, r) => { const q = MAP.nodes[r][4], sp = outlined(32, 32, 16, 28, fn); c.drawImage(sp.cv, q[0] - 16 + (r === 2 ? -22 : 0), q[1] - 28 - 13 + (r === 2 ? 12 : 0)); });
     // la bàn và viền tranh
     p(c, 22, 14, 1, 18, INKB); p(c, 14, 22, 17, 1, INKB); p(c, 21, 12, 3, 3, '#c8402e'); ell(c, 22, 22, 3, 3, '#e6d8b0'); ell(c, 22, 22, 1, 1, INKB);
-    for (const k of [0, 1, 2]) { c.strokeStyle = ['#6a4a30', '#a88a58', '#6a4a30'][k]; c.lineWidth = 1; c.strokeRect(k * 2 + 0.5, k * 2 + 0.5, 479 - k * 4, 269 - k * 4); }
-    if (night) { c.globalCompositeOperation = 'multiply'; c.fillStyle = '#8c88c4'; c.fillRect(0, 0, 480, 270); c.globalCompositeOperation = 'source-over'; } // độ khó 2: tranh màu đêm
-    return (MCACHE[id] = cv);
-  };
+    vienTranh(c);
+  }
   // Đường nét đứt nối hai điểm trên tranh
   VS.mapDash = function (c, a, b, col) { const n = Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / 4); for (let j = 1; j < n; j++) if (j % 2) p(c, a[0] + ((b[0] - a[0]) * j) / n, a[1] + ((b[1] - a[1]) * j) / n, 2, 2, col); };
   VS.putNpc = putNpc;
