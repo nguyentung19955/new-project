@@ -65,7 +65,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.11-1532";
+(window.G = window.G || {}).VERSION = "lk-2026.10.11-1637";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -17229,6 +17229,7 @@
     ring(c, x, y, R0, Q0, beat ? 2 : 1, end ? '#8a1c12' : beat ? '#ffe0c8' : q < 0.4 ? '#ff7a52' : '#ff4a30', end);
     if (beat) { const e = q / 0.16; ring(c, x, y, R0 + 1 + e * 6, Q0 + 1 + e * 4, 1, '#ff5a40', e > 0.5); }
   }
+  const VUNG_QUAI = { fire: 'hu-vung-quai-lua', poison: 'hu-vung-quai-doc', ice: 'hu-vung-quai-bang', none: 'hu-vung-quai-do' };
   function pool(c, z) {
     const t = S.t, id = z.fxId || 1;
     const k = Math.max(0, Math.min(1, ((z.fxA || 0) - (z.fxD || 0)) / 0.22));
@@ -17248,6 +17249,15 @@
     }
     const key = z.heal ? 'heal' : z.el || 'none', C = POOLC[key];
     const dth = fade < 0.5;
+    // Làn B4: vũng của quái có ảnh hu-vung-quai-<hệ> thì dán ảnh thay nền, lớp sáng, lưỡi lửa và bong bóng. Ảnh co theo đúng bán kính đang vẽ rx
+    // (= bán kính luật z.r khi vũng đã hiện xong; bề ngang vũng trong ảnh = khung − 4 điểm lề của trang tách). Lúc sắp tắt ảnh mờ đi thay cho kiểu tô thưa hàng.
+    // Viền nóng báo nguy hiểm vẫn vẽ bằng code đè lên trên.
+    const ma = foe && !z.heal ? VUNG_QUAI[key] : null, an = ma && G.fxAnh && G.fxAnh.get(ma);
+    if (an) {
+      G.fxAnh.ve(c, ma, x, y, t + id * 0.37, 0, (2 * rx) / Math.max(4, an.fw - 4), false, dth ? 0.55 : 1);
+      vienNong(c, z, x, y, rx, ry, k, fade);
+      return;
+    }
     blob(c, x, y, rx, ry, C.base, t, id, foe ? C.rim : C.rimP, dth);
     if (rx > 6) inner(c, x, y, rx - 4, ry - 2.4, C.mid, t, id);
     if (foe) vienNong(c, z, x, y, rx, ry, k, fade);
@@ -18387,6 +18397,7 @@
     ZSPR.set(key, sp);
     return sp;
   }
+  const VUNG_ANH = { fire: 'hu-vung-lua', poison: 'hu-vung-doc' };
   function drawHeZone(c, z) {
     const S = K.S(), t = S.t, id = z.fxId || 1;
     const k = Math.min(1, (z.fxA || 0) / 0.18);
@@ -18395,6 +18406,10 @@
     const w = Math.round(sp.w * (0.4 + 0.6 * k)), h = Math.round(sp.h * (0.4 + 0.6 * k));
     const fade = z.life < 0.4;
     if (fade && ((t * 20) | 0) % 2) return; // sắp tắt thì nhấp nháy
+    // Làn B4: có ảnh hu-vung-lua / hu-vung-doc thì dán ảnh thay nền vũng và lưỡi lửa, bong bóng. Ảnh co theo bán kính luật z.r
+    // (bề ngang vũng trong ảnh = khung − 4 điểm lề của trang tách); lớn dần lúc mới hiện và nhấp nháy lúc sắp tắt y như hình code.
+    const ma = VUNG_ANH[z.el], FA = G.fxAnh, an = ma && FA && FA.get(ma);
+    if (an) { FA.ve(c, ma, x, y, t + id * 0.37, 0, (2 * z.r * (0.4 + 0.6 * k)) / Math.max(4, an.fw - 4)); return; }
     c.drawImage(sp.cv, x - (w >> 1), y - (h >> 1), w, h);
     if (k < 1) return;
     for (let i = 0; i < 3; i++) {
@@ -18488,6 +18503,9 @@
     const t = K.S().t, id = z.fxId || 1;
     if (z.life < 0.4 && ((t * 20) | 0) % 2) return;
     const sp = hazeSprite(z.r), x = Math.round(z.x), y = Math.round(z.y) - 12;
+    // Làn B4: có ảnh hu-may-doc thì dán ảnh thay hai lớp sương và cụm khói; bề ngang = đường kính luật của vũng bên dưới, đậm 60% để còn thấy nhân vật.
+    const FA = G.fxAnh, an = FA && FA.get('hu-may-doc');
+    if (an) { FA.ve(c, 'hu-may-doc', x, y - 2, t + id * 0.37, 0, (2 * z.r) / Math.max(4, an.fw - 4), false, 0.6); return; }
     c.drawImage(sp.cv, x - (sp.w >> 1) + Math.round(Math.sin(t * 1.6 + id) * 3), y - (sp.h >> 1));
     c.drawImage(sp.cv, x - (sp.w >> 1) - Math.round(Math.sin(t * 1.1 + id * 2) * 4), y - (sp.h >> 1) - 5);
     c.fillStyle = 'rgba(154,95,214,0.3)';
@@ -24525,16 +24543,32 @@ MA._xong();
   }
 
   // ---------- vệt lửa và mây độc của chưởng trên sàn ----------
+  // Làn B4: dán ảnh vũng (js/fx_anh.js) tại (x, y), bề ngang vũng = 2 × rx (bề ngang vũng trong ảnh = khung − 4 điểm lề của trang tách), ép dẹt theo chiều dọc "dep".
+  // Chưa có tệp thì trả về false để nơi gọi vẽ bằng code như cũ.
+  function anhVung(c, ma, x, y, rx, dep, t, mo) {
+    const A = G.fxAnh, a = A && A.get(ma);
+    if (!a) return false;
+    const co = (2 * rx) / Math.max(4, a.fw - 4);
+    if (dep === 1) return A.ve(c, ma, x, y, t, 0, co, false, mo);
+    c.save();
+    try { c.translate(x, y); c.scale(1, dep); return A.ve(c, ma, 0, 0, t, 0, co, false, mo); } finally { c.restore(); }
+  }
   function drawVet(c, z) {
     const t = K.S().t, x = Math.round(z.x), y = Math.round(z.y), k = Math.min(1, z.t / 0.15), id = z.id || 1;
     // tan: co lại và thưa dần thay vì tắt phụt; hai khung cuối nhấp nháy
     const end = z.life < 0.35 ? z.life / 0.35 : 1;
     if (end < 0.25 && ((t * 20) | 0) % 2) return;
     const rx = Math.max(3, Math.round(z.r * (0.5 + 0.5 * k) * (0.7 + 0.3 * end))), ry = Math.max(2, Math.round(rx * zk() * 0.7));
-    ell(c, x, y, rx, ry, 'rgba(110,34,10,0.55)');
-    ell(c, x, y, rx - 2, Math.max(1, ry - 1), 'rgba(255,122,42,0.35)');
+    // Làn B4: có ảnh hu-vung-lua (dùng chung với vệt cháy của vũ khí hệ Lửa) thì dán ảnh thay nền vệt và lưỡi lửa; ảnh co theo bán kính đang vẽ rx
+    // và ép dẹt 0,7 như hình code của vệt. Vòng nhịp đốt vẫn vẽ bằng code.
+    const an = anhVung(c, 'hu-vung-lua', x, y, rx, 0.7, t + id * 0.37, 1);
+    if (!an) {
+      ell(c, x, y, rx, ry, 'rgba(110,34,10,0.55)');
+      ell(c, x, y, rx - 2, Math.max(1, ry - 1), 'rgba(255,122,42,0.35)');
+    }
     const b = beat(z);
     if (b > 0) ring(c, x, y, rx + 1 + Math.round(2 * (1 - b)), ry + 1, 1, b > 0.5 ? '#ffd23f' : '#ff7a2a', b < 0.4);
+    if (an) return;
     for (let i = 0; i < 3; i++) {
       const a = hash(id + i * 3.1) * TAU, d = hash(id * 2 + i) * 0.6;
       tongue(c, Math.round(x + Math.cos(a) * rx * d), Math.round(y + Math.sin(a) * ry * d), Math.round((3 + (Math.sin(t * 13 + i * 2 + id) * 0.5 + 0.5) * 5) * Math.min(1, z.life / 0.6 + 0.3)), 1);
@@ -24549,14 +24583,19 @@ MA._xong();
     const br = 1 + 0.04 * Math.sin(t * 1.7 + id) + 0.03 * Math.sin(t * 2.9 + id * 2);
     const rx = Math.max(4, Math.round(z.r * (0.4 + 0.6 * k) * (0.75 + 0.25 * end) * br)), ry = Math.max(3, Math.round(rx * zk()));
     // mặt sàn nhuộm độc, viền tím
-    ell(c, x, y, rx, ry, 'rgba(40,110,26,0.42)');
-    ring(c, x, y, rx, ry, 1, 'rgba(154,95,214,0.75)', true);
-    if (KN()) KN().organic(c, x, y, rx - 1, ry - 1, id * 7.1, end < 1);
+    // Làn B4: có ảnh hu-vung-doc (dùng chung với vũng độc của vũ khí hệ Độc) thì dán ảnh thay mặt sàn nhuộm độc và bong bóng; ảnh co theo bán kính đang vẽ rx.
+    const an = anhVung(c, 'hu-vung-doc', x, y, rx, 1, t + id * 0.37, 1);
+    if (!an) {
+      ell(c, x, y, rx, ry, 'rgba(40,110,26,0.42)');
+      ring(c, x, y, rx, ry, 1, 'rgba(154,95,214,0.75)', true);
+      if (KN()) KN().organic(c, x, y, rx - 1, ry - 1, id * 7.1, end < 1);
+    }
     // nhịp độc: vòng lục co về giữa đúng lúc mây gây sát thương
     const b = beat(z);
     if (b > 0) ring(c, x, y, Math.max(2, Math.round(rx * (0.55 + 0.45 * b))), Math.max(2, Math.round(ry * (0.55 + 0.45 * b))), 1, b > 0.5 ? '#c2f58a' : '#b98af0', b < 0.4);
     // màn khói lơ lửng trên mây: các vạch ngang so le trôi qua lại
-    for (let j = 0; j < 4; j++) {
+    // Làn B4: có ảnh hu-may-doc thì dán ảnh (đậm 60%, cao hơn mặt sàn 10 điểm) thay các vạch.
+    if (!anhVung(c, 'hu-may-doc', x, y - 10, rx, 1, t + id * 0.37, 0.6)) for (let j = 0; j < 4; j++) {
       const yy = y - 4 - j * 4, hw = Math.round(rx * (0.95 - j * 0.15)), sh = Math.round(Math.sin(t * (1.2 + j * 0.3) + id + j) * 3);
       if (hw < 2) continue;
       p(c, x - hw + sh, yy, hw * 2, 2, j % 2 ? 'rgba(154,95,214,0.22)' : 'rgba(143,224,74,0.24)');
@@ -24566,8 +24605,8 @@ MA._xong();
       const u = ((t * 0.9 + i / 6) % 1), a = i * 1.05 + t * 2.2, d = (1 - u) * rx;
       p(c, Math.round(x + Math.cos(a) * d), Math.round(y + Math.sin(a) * d * zk()) - 2, 2, 2, i % 2 ? '#c2f58a' : '#b98af0');
     }
-    // bong bóng sủi trên mặt mây
-    for (let i = 0; i < 3; i++) {
+    // bong bóng sủi trên mặt mây (ảnh hu-vung-doc đã có bong bóng riêng)
+    if (!an) for (let i = 0; i < 3; i++) {
       const u = (t * (0.7 + hash(i + id) * 0.6) + hash(id + i * 9.1)) % 1, a = hash(id + i * 4.3) * TAU, d = 0.2 + hash(id * 3 + i) * 0.6;
       const bx = Math.round(x + Math.cos(a) * rx * d), by = Math.round(y + Math.sin(a) * ry * d);
       if (u < 0.55) p(c, bx, by, 1, 1, '#c2f58a'); else if (u < 0.85) { p(c, bx - 1, by - 1, 3, 3, i % 2 ? '#b98af0' : '#8fe04a'); p(c, bx - 1, by - 1, 1, 1, '#ffffff'); }
@@ -25511,6 +25550,136 @@ MA._xong();
     return memo('i|' + name + '|' + S + '|' + arg, () => raster(S, ICON[name](arg)).outline(OUT, true));
   }
 
+  // ---------- thân nút bằng ảnh AI (phiên C4; trang tools/tach-giao-dien, lô "Thân nút" và lô "Ô vũ khí") ----------
+  // Có tệp thì ảnh thay cho THÂN: vành, mặt nút, hoạ tiết hệ quanh vành (nút tròn và nút vuông); khung ô vũ khí; đế và núm cần điều khiển.
+  // Bề dày dưới nút, bóng đổ, biểu tượng giữa nút (C1), thẻ giá mana, màn hồi chiêu, lún khi bấm, sáng khi bấm / đang cầm, xám khi khoá
+  // vẫn do code làm từ MỘT ảnh. Không có tệp (hoặc G.THAN_NUT_ANH === false) thì mọi thứ y hệt cũ.
+  // Mã: gd-vong-<thuong|fire|poison|ice> (nút Đánh theo hệ; nút Chưởng dùng chung, thu nhỏ), gd-vong-ngoc (Chiêu), gd-vong-sat (Né),
+  //     gd-nut-vuong (Bình máu, Tạm dừng), gd-can-de, gd-can-num (cần điều khiển), gd-o-vk-<0..3> (ô vũ khí theo bậc, vẽ ở dạng ĐANG CẦM).
+  // Ảnh vẽ nút nhìn thẳng từ trên, KHÔNG có bề dày, KHÔNG có bóng. Game tự tìm đĩa tròn to nhất nằm trọn trong hình (thân nút, không tính
+  // lửa / giọt độc / gai băng thò ra) rồi đặt tâm đĩa đúng tâm nút, bán kính đĩa đúng bán kính nút: vị trí và cỡ nút không đổi so với bản vẽ code.
+  const HE_MA = { none: 'thuong', fire: 'fire', poison: 'poison', ice: 'ice' };
+  function thanMa(kind, el) {
+    if (kind === 'atk' || kind === 'chuong') return 'gd-vong-' + (HE_MA[el] || 'thuong');
+    if (kind === 'special') return 'gd-vong-ngoc';
+    if (kind === 'dodge') return 'gd-vong-sat';
+    if (kind === 'potion' || kind === 'pause') return 'gd-nut-vuong';
+    return null; // nút Kỹ năng (game hiện không dùng): chưa có ảnh, vẽ code
+  }
+  B.maThan = thanMa; // cho công cụ và bài kiểm tra
+  B.MA_THAN = ['gd-vong-thuong', 'gd-vong-fire', 'gd-vong-poison', 'gd-vong-ice', 'gd-vong-ngoc', 'gd-vong-sat', 'gd-nut-vuong', 'gd-can-de', 'gd-can-num', 'gd-o-vk-0', 'gd-o-vk-1', 'gd-o-vk-2', 'gd-o-vk-3'];
+  const gdCo = (ma) => { if (G.THAN_NUT_ANH === false) return null; const s = G.spriteCustom; return ma && s && s.gdSan ? s.gdSan(ma) : null; };
+  // Dấu riêng của ảnh thân, ghép vào khoá bộ nhớ đệm: ảnh nạp xong, bị đổi hay bị gỡ thì nút tự dựng lại (như gdTag của biểu tượng).
+  function gdTagMa(ma) {
+    const g = gdCo(ma);
+    if (!g) return '';
+    let n = gdSo.get(g);
+    if (!n) gdSo.set(g, (n = ++gdDem));
+    return '#' + n;
+  }
+  // Đĩa tròn to nhất nằm trọn trong phần đặc của ảnh: { cx, cy, r } theo điểm ảnh của ảnh (r tính cả nét viền tối ngoài cùng).
+  const gdHinh = new WeakMap();
+  function gdTron(g) {
+    if (gdHinh.has(g)) return gdHinh.get(g);
+    const src = gdPix(g);
+    let v = null;
+    if (src) {
+      const w = src.w, h = src.h, W = w + 2, H = h + 2, D = new Float32Array(W * H), Q = 1.4142;
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (src.d[(y * w + x) * 4 + 3] >= 128) D[(y + 1) * W + x + 1] = 1e6;
+      // khoảng cách gần đúng tới điểm trong suốt gần nhất (hai lượt quét), mép ảnh coi như trong suốt
+      for (let y = 1; y <= h; y++) for (let x = 1; x <= w; x++) { const i = y * W + x; if (D[i]) D[i] = Math.min(D[i], D[i - 1] + 1, D[i - W] + 1, D[i - W - 1] + Q, D[i - W + 1] + Q); }
+      let best = 0, bx = 0, by = 0;
+      for (let y = h; y >= 1; y--) for (let x = w; x >= 1; x--) {
+        const i = y * W + x;
+        if (!D[i]) continue;
+        D[i] = Math.min(D[i], D[i + 1] + 1, D[i + W] + 1, D[i + W + 1] + Q, D[i + W - 1] + Q);
+        if (D[i] > best) { best = D[i]; bx = x - 1; by = y - 1; }
+      }
+      if (best >= 3) {
+        // chốt lại cho chính xác: thử các tâm quanh điểm vừa tìm (bước nửa điểm), đo khoảng cách thật tới các điểm trong suốt ở mép hình
+        const mep = [];
+        for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+          const i = y * W + x;
+          if (D[i]) continue;
+          if ((x > 0 && D[i - 1]) || (x < W - 1 && D[i + 1]) || (y > 0 && D[i - W]) || (y < H - 1 && D[i + W]) ||
+            (x > 0 && y > 0 && D[i - W - 1]) || (x < W - 1 && y > 0 && D[i - W + 1]) || (x > 0 && y < H - 1 && D[i + W - 1]) || (x < W - 1 && y < H - 1 && D[i + W + 1])) mep.push(x - 0.5, y - 0.5);
+        }
+        // vùng tâm có thể là cả một dải (hình bầu dục, hình vuông không đều): lấy điểm giữa của các tâm gần tốt nhất
+        let rBest = 0; const ung = [];
+        for (let j = -6; j <= 6; j++) for (let i = -6; i <= 6; i++) {
+          const cx = bx + 0.5 + i * 0.5, cy = by + 0.5 + j * 0.5;
+          let m = 1e9;
+          for (let k = 0; k < mep.length; k += 2) { const dx = mep[k] - cx, dy = mep[k + 1] - cy, q = dx * dx + dy * dy; if (q < m) m = q; }
+          const r = Math.sqrt(m) - 0.5;
+          ung.push([cx, cy, r]);
+          if (r > rBest) rBest = r;
+        }
+        let sx = 0, sy = 0, n = 0;
+        for (const u of ung) if (u[2] >= rBest - 0.26) { sx += u[0]; sy += u[1]; n++; }
+        if (n && rBest >= 3) v = { cx: sx / n, cy: sy / n, r: rBest };
+      }
+    }
+    gdHinh.set(g, v);
+    return v;
+  }
+  // Lấy mẫu ảnh vào bảng pixel bw x bh: điểm (x, y) của bảng ứng với ô [ax + x*sx, ax + (x+1)*sx) x [ay + y*sy, ...) của ảnh.
+  // Lấy trung bình nhiều điểm rồi chốt đặc / trong ở 50% để mép sắc như pixel.
+  function gdMau(src, bw, bh, ax, ay, sx, sy) {
+    const b = new Buf(bw, bh), n = clamp(Math.ceil(Math.max(sx, sy) * 1.5), 1, 6);
+    let co = 0;
+    for (let y = 0; y < bh; y++) for (let x = 0; x < bw; x++) {
+      let r = 0, gg = 0, bl = 0, al = 0;
+      for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+        const px = Math.floor(ax + (x + (i + 0.5) / n) * sx), py = Math.floor(ay + (y + (j + 0.5) / n) * sy);
+        if (px < 0 || py < 0 || px >= src.w || py >= src.h) continue;
+        const k = (py * src.w + px) * 4, q = src.d[k + 3];
+        if (!q) continue;
+        r += src.d[k] * q; gg += src.d[k + 1] * q; bl += src.d[k + 2] * q; al += q;
+      }
+      if (al < n * n * 255 * 0.5) continue;
+      const k = (y * bw + x) * 4;
+      b.d[k] = r / al; b.d[k + 1] = gg / al; b.d[k + 2] = bl / al; b.d[k + 3] = 255;
+      co++;
+    }
+    return co ? b : null;
+  }
+  // Thân tròn (hoặc vuông vát góc): bảng size x size, tâm đĩa của ảnh nằm đúng (c, c), bán kính đĩa của ảnh = R điểm vẽ.
+  function gdThanTron(g, R, size, c) {
+    const src = g ? gdPix(g) : null, t = src ? gdTron(g) : null;
+    if (!t) return null;
+    const s = t.r / R;
+    return gdMau(src, size, size, t.cx - c * s, t.cy - c * s, s, s);
+  }
+  // Khung chữ nhật (ô vũ khí): phần đặc của ảnh được kéo vừa khít bảng bw x bh.
+  function gdThanO(g, bw, bh) {
+    const src = g ? gdPix(g) : null;
+    if (!src) return null;
+    let k = gdHinh.get(g);
+    if (k === undefined) {
+      let x0 = 1e9, y0 = 1e9, x1 = -1, y1 = -1;
+      for (let y = 0; y < src.h; y++) for (let x = 0; x < src.w; x++) if (src.d[(y * src.w + x) * 4 + 3] >= 128) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+      k = x1 - x0 >= 5 && y1 - y0 >= 5 ? { x0, y0, w: x1 - x0 + 1, h: y1 - y0 + 1 } : null;
+      gdHinh.set(g, k);
+    }
+    return k ? gdMau(src, bw, bh, k.x0, k.y0, k.w / bw, k.h / bh) : null;
+  }
+  // Làm sáng (đang bấm, đang giữ cần): nét tối giữ gần như nguyên, màu sáng ngả về trắng.
+  Buf.prototype.sang = function (t) {
+    const d = this.d;
+    for (let i = 0; i < d.length; i += 4) {
+      if (!d[i + 3]) continue;
+      const f = t * Math.min(1, Math.max(d[i], d[i + 1], d[i + 2]) / 96);
+      d[i] += (255 - d[i]) * f; d[i + 1] += (255 - d[i + 1]) * f; d[i + 2] += (255 - d[i + 2]) * f;
+    }
+    return this;
+  };
+  // Ngả về một màu (ô vũ khí chưa cầm thì trầm xuống).
+  Buf.prototype.nga = function (col, t) {
+    const d = this.d, c = rgb(col);
+    for (let i = 0; i < d.length; i += 4) if (d[i + 3]) for (let k = 0; k < 3; k++) d[i + k] += (c[k] - d[i + k]) * t;
+    return this;
+  };
+
   // ---------- chữ số pixel 3x5 ----------
   const DIG = {
     0: '111101101101111', 1: '010110010010111', 2: '111001111100111', 3: '111001111001111', 4: '101101111001001',
@@ -25603,7 +25772,8 @@ MA._xong();
   }
 
   // Dựng thân nút: bóng đổ, bề dày, vòng kim loại, mặt nút lõm, biểu tượng, thẻ giá.
-  // o: { shape, R, ring, face, pressed, disabled, el, lv, fr, studs, icon, iconDy, badge, badgeAt }
+  // o: { shape, R, ring, face, pressed, disabled, el, lv, fr, studs, icon, iconDy, badge, badgeAt,
+  //      than: ảnh thân (phiên C4) hoặc null, matCode: có ảnh nhưng mặt nút vẫn do code tô (màu mặt mang nghĩa: hệ của Chiêu / Chưởng) }
   function buildBase(o) {
     const R = o.R, lip = lipOf(R), rw = ringOf(R), size = 2 * R + 2 * PAD;
     const c = PAD + R, oy = o.pressed ? lip : 0;
@@ -25611,13 +25781,18 @@ MA._xong();
     const Rb = R - 1, Rf = Rb - rw - 1;
     const ring = o.pressed ? bright(o.ring, 0.3) : o.ring, face = o.pressed ? bright(o.face, 0.16) : o.face;
     const lipCol = mix(o.ring.d, '#000000', 0.5);
+    const anh = o.than ? gdThanTron(o.than, R, size, c) : null; // thân bằng ảnh: thay vành, mặt, hoạ tiết hệ, đinh tán
     if (!o.pressed) for (let y = 0; y < b.h; y++) for (let x = 0; x < size; x++) {
       for (let k = 1; k <= lip; k++) if (m(x + 0.5 - c, y + 0.5 - c - k) <= Rb) { b.set(x, y, k === lip && m(x + 0.5 - c, y + 0.5 - c - k + 1) > Rb ? mix(lipCol, '#000000', 0.35) : lipCol); break; }
     }
-    if (o.el && o.el !== 'none') decor(b, o.el, c, c + oy, R, o.lv || 1, o.fr || 0, ring, o.pressed ? 0 : lip);
-    for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+    if (anh) {
+      if (o.pressed) anh.sang(0.22);
+      b.outline(OUT, false); // viền quanh bề dày (thân ảnh đã có viền riêng)
+      b.put(anh, 0, oy);
+    } else if (o.el && o.el !== 'none') decor(b, o.el, c, c + oy, R, o.lv || 1, o.fr || 0, ring, o.pressed ? 0 : lip);
+    if (!anh || o.matCode) for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
       const dx = x + 0.5 - c, dy = y + 0.5 - c, d = m(dx, dy);
-      if (d > Rb) continue;
+      if (d > (anh ? Rb - rw : Rb)) continue;
       const h = Math.hypot(dx, dy) || 1, light = (-dx - dy) / (h * 1.4142);
       let col;
       if (d > Rb - rw) {
@@ -25634,12 +25809,12 @@ MA._xong();
       b.set(x, y + oy, col);
     }
     // đinh tán bốn góc chéo trên vòng
-    if (o.studs) for (const [sx, sy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+    if (o.studs && !anh) for (const [sx, sy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
       const q = o.shape === 'sq' ? R - 1 - rw / 2 - Math.max(2, Math.round(R * 0.34)) / 2 : (Rb - rw / 2) * 0.7071;
       const px = Math.round(c + sx * q - 1), py = Math.round(c + sy * q - 1) + oy;
       b.rect(px, py, 2, 2, ring.d); b.set(px, py, mix(ring.l, '#ffffff', 0.5));
     }
-    b.outline(OUT, false);
+    if (!anh) b.outline(OUT, false);
     if (o.icon) b.put(o.icon, c - (o.icon.w >> 1), c + oy - (o.icon.h >> 1) + (o.iconDy || 0));
     if (o.badge) {
       if (o.badgeAt === 'corner') b.put(o.badge, c + Rb - o.badge.w + 3, c + oy + Rb - o.badge.h + 3);
@@ -25788,6 +25963,7 @@ MA._xong();
     const lack = st.lack != null ? !!st.lack : disabled && st.cost != null;
     const S = Math.max(8, 2 * faceR(R) - (kind === 'atk' ? 2 : 0));
     let key, make, ic; // ic: tên biểu tượng giữa nút (có ảnh AI thì khoá bộ nhớ đệm mang thêm dấu của ảnh)
+    let maT = thanMa(kind, el), matCode = kind === 'special' || (kind === 'atk' && !docTran()); // ảnh thân (C4); matCode: mặt nút vẫn do code tô
     const common = (o) => Object.assign({ shape, R, pressed, disabled: dimmed }, o);
     if (kind === 'atk') {
       const fr = el === 'none' ? 0 : Math.floor(t * 5) % 2;
@@ -25803,6 +25979,7 @@ MA._xong();
     } else if (kind === 'chuong') {
       // nút Chưởng: vòng và mặt nút theo hệ của cây chưởng đang dùng
       const ce = EL_RING[st.el] && st.el !== 'none' ? st.el : 'fire';
+      maT = thanMa(kind, ce); matCode = true;
       key = [kind, R, ce, st.cost, lack]; ic = 'c_' + ce;
       make = () => common({ ring: EL_RING[ce], face: matHe(ce), el: ce, studs: ce !== 'ice', icon: iconBuf('c_' + ce, S, ''), iconDy: st.cost != null ? -1 : 0, badge: st.cost != null ? costBadge(st.cost, lack) : null });
     } else if (kind === 'dodge') {
@@ -25817,7 +25994,7 @@ MA._xong();
       key = ['pause', R]; ic = 'pause';
       make = () => common({ ring: WOOD, face: pal3('#4a4038', '#342c26', '#201a16'), studs: true, icon: iconBuf('pause', Math.max(6, S - 4), '') });
     }
-    const base = memo('b|' + key.join('|') + gdTag(ic) + '|' + (pressed ? 1 : 0) + (dimmed ? 1 : 0) + (docTran() ? '|d8' : ''), () => buildBase(make()));
+    const base = memo('b|' + key.join('|') + gdTag(ic) + '|' + (pressed ? 1 : 0) + (dimmed ? 1 : 0) + (docTran() ? '|d8' : '') + gdTagMa(maT), () => buildBase(Object.assign(make(), { than: gdCo(maT), matCode })));
     const pf = press(st.id || kind, pressed && !disabled);
     const oy = (pressed ? base.lip : 0) + pf.dy;
     const alpha = st.alpha != null ? st.alpha : 1;
@@ -25859,7 +26036,7 @@ MA._xong();
   // ---------- ô vũ khí ----------
   // st: { weapon:{type,branch,stage,rarity}, active, pressed, disabled, cd, swap, t,
   //       icon: false (không vẽ hình vũ khí, để game tự vẽ), gem: false (không vẽ ngọc hệ) }
-  function buildSlot(W, H, st, el, rar, lv) {
+  function buildSlot(W, H, st, el, rar, lv, than) {
     const P = 4, lip = 2, b = new Buf(W + P * 2, H + P * 2 + lip), on = !!st.active, oy = st.pressed ? lip : 0;
     let ring = RARITY[rar];
     if (!on) ring = pal3(mix(ring.l, '#201a18', 0.35), mix(ring.m, '#201a18', 0.4), mix(ring.d, '#201a18', 0.4));
@@ -25867,7 +26044,15 @@ MA._xong();
     const fm = mix(RARITY[rar].m, '#17131a', on ? 0.72 : 0.86), fl = mix(RARITY[rar].m, '#17131a', on ? 0.6 : 0.8);
     const inside = (x, y, n) => x >= n && y >= n && x < W - n && y < H - n && !((x === n || x === W - n - 1) && (y === n || y === H - n - 1) && n < 2);
     if (!st.pressed) for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (inside(x, y, 0)) b.set(P + x, P + y + lip, mix(RARITY[rar].d, '#000000', 0.55));
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    // khung bằng ảnh (phiên C4): ảnh vẽ ô ĐANG CẦM; ô chưa cầm thì game làm trầm xuống, đang bấm thì làm sáng. Ảnh phủ đúng chỗ khung code kể cả nét viền.
+    const anh = than ? gdThanO(than, W + 2, H + 2) : null;
+    if (anh) {
+      if (!on) anh.nga('#201a18', 0.38);
+      if (st.pressed) anh.sang(0.22);
+      b.outline(OUT, false);
+      b.put(anh, P - 1, P - 1 + oy);
+    }
+    if (!anh) for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
       if (!inside(x, y, 0)) continue;
       let col;
       if (!inside(x, y, 2)) col = y < 2 || x < 2 ? (y < 1 || x < 1 ? ring.l : ring.m) : y >= H - 1 || x >= W - 1 ? ring.d : ring.m;
@@ -25876,8 +26061,8 @@ MA._xong();
       b.set(P + x, P + y + oy, col);
     }
     // đinh đồng ở bốn góc
-    for (const [cx, cy] of [[1, 1], [W - 3, 1], [1, H - 3], [W - 3, H - 3]]) { b.rect(P + cx, P + cy + oy, 2, 2, BRONZE.m); b.set(P + cx, P + cy + oy, BRONZE.l); }
-    b.outline(OUT, false);
+    if (!anh) for (const [cx, cy] of [[1, 1], [W - 3, 1], [1, H - 3], [W - 3, H - 3]]) { b.rect(P + cx, P + cy + oy, 2, 2, BRONZE.m); b.set(P + cx, P + cy + oy, BRONZE.l); }
+    if (!anh) b.outline(OUT, false);
     // ô đang cầm: thêm một viền sáng bên ngoài
     if (on) b.outline(mix(RARITY[rar].l, '#ffffff', 0.4), false);
     const wide = W > H * 1.35, S = Math.max(8, Math.min(H, W) - 9);
@@ -25906,8 +26091,8 @@ MA._xong();
     const g = grid(ctx), W = Math.max(10, Math.round((w * g.a) / g.k)), H = Math.max(10, Math.round((h * g.a) / g.k));
     const wp = st.weapon || {}, el = elOf(wp), rar = clamp(Math.floor(wp.rarity || 0), 0, 3), lv = clamp(wp.stage || 1, 1, 3);
     const t = st.t != null ? st.t : G.time || 0;
-    const key = ['sl', W, H, wType(wp), el, rar, lv, st.active ? 1 : 0, st.pressed ? 1 : 0, st.disabled ? 1 : 0, st.swap ? 1 : 0, st.icon === false ? 0 : 1, st.gem === false ? 0 : 1].join('|') + (st.icon === false ? '' : gdTag('w_' + wType(wp)));
-    const spr = memo(key, () => buildSlot(W, H, st, el, rar, lv));
+    const key = ['sl', W, H, wType(wp), el, rar, lv, st.active ? 1 : 0, st.pressed ? 1 : 0, st.disabled ? 1 : 0, st.swap ? 1 : 0, st.icon === false ? 0 : 1, st.gem === false ? 0 : 1].join('|') + (st.icon === false ? '' : gdTag('w_' + wType(wp))) + gdTagMa('gd-o-vk-' + rar);
+    const spr = memo(key, () => buildSlot(W, H, st, el, rar, lv, gdCo('gd-o-vk-' + rar)));
     blit(ctx, g, spr, x, y, 0, 0, st.alpha);
     const oy = st.pressed ? spr.lip : 0, cd = clamp(st.cd || 0, 0, 1);
     if (cd > 0) {
@@ -25924,8 +26109,18 @@ MA._xong();
   };
 
   // ---------- cần điều khiển ----------
-  function buildStickBase(R) {
+  function buildStickBase(R, than) {
     const size = 2 * R + 2 * PAD, c = PAD + R, b = new Buf(size, size), Rb = R - 1, rw = 3, Rf = Rb - rw - 1;
+    // đế bằng ảnh (phiên C4): các điểm TỐI nằm trong lòng đế được làm trong mờ như bản vẽ code, để vẫn nhìn thấy sân phía dưới
+    const anh = than ? gdThanTron(than, R, size, c) : null;
+    if (anh) {
+      const d = anh.d;
+      for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+        const i = (y * size + x) * 4;
+        if (d[i + 3] && Math.hypot(x + 0.5 - c, y + 0.5 - c) < Rf && Math.max(d[i], d[i + 1], d[i + 2]) < 72) d[i + 3] = 140;
+      }
+      return { c: anh.canvas(), ax: c, ay: c };
+    }
     for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
       const dx = x + 0.5 - c, dy = y + 0.5 - c, d = Math.hypot(dx, dy);
       if (d > Rb) continue;
@@ -25944,11 +26139,13 @@ MA._xong();
     b.outline(OUT, false);
     return { c: b.canvas(), ax: c, ay: c };
   }
-  function buildKnob(R, active) {
+  function buildKnob(R, active, than) {
     const size = 2 * R + 8, c = R + 4, b = new Buf(size, size + 3), ring = active ? bright(BRONZE, 0.25) : BRONZE;
+    const anh = than ? gdThanTron(than, R, size, c) : null; // núm bằng ảnh (phiên C4): bề dày và bóng vẫn do code
     const gem = active ? pal3('#d8fff0', '#5ad8b8', '#1e8a78') : pal3('#b8f0e0', '#3fb0a0', '#1a6a60');
     for (let y = 0; y < size + 3; y++) for (let x = 0; x < size; x++) if (Math.hypot(x + 0.5 - c, y + 0.5 - c - 2) <= R - 1) b.set(x, y, mix(BRONZE.d, '#000000', 0.5));
-    for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+    if (anh) { if (active) anh.sang(0.2); b.outline(OUT, false); b.put(anh, 0, 0); }
+    if (!anh) for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
       const dx = x + 0.5 - c, dy = y + 0.5 - c, d = Math.hypot(dx, dy);
       if (d > R - 1) continue;
       const light = (-dx - dy) / ((d || 1) * 1.4142);
@@ -25956,16 +26153,16 @@ MA._xong();
       else if (d > R - 5) b.set(x, y, OUT);
       else b.set(x, y, Math.hypot(dx + R * 0.22, dy + R * 0.22) < R * 0.2 ? gem.l : light < -0.35 && d > R - 7.5 ? gem.d : gem.m);
     }
-    b.outline(OUT, false);
+    if (!anh) b.outline(OUT, false);
     for (let y = 0; y < b.h; y++) for (let x = 0; x < size; x++) if (!b.alpha(x, y) && Math.hypot(x + 0.5 - c, y + 0.5 - c - 3) <= R + 1) b.set(x, y, '#000000', 0.35);
     return { c: b.canvas(), ax: c, ay: c };
   }
   // cx, cy: tâm đế. r: bán kính đế. dx, dy: độ lệch của núm (đơn vị giao diện). active: đang giữ ngón.
   B.stick = function (ctx, cx, cy, r, dx, dy, active) {
     const g = grid(ctx), R = Math.max(10, Math.round((r * g.a) / g.k)), Rk = Math.max(6, Math.round(R * 0.46));
-    blit(ctx, g, memo('st|' + R, () => buildStickBase(R)), cx, cy, 0, 0, active ? 0.95 : 0.6);
+    blit(ctx, g, memo('st|' + R + gdTagMa('gd-can-de'), () => buildStickBase(R, gdCo('gd-can-de'))), cx, cy, 0, 0, active ? 0.95 : 0.6);
     const ox = Math.round(((dx || 0) * g.a) / g.k), oy = Math.round(((dy || 0) * g.a) / g.k);
-    blit(ctx, g, memo('kn|' + Rk + '|' + (active ? 1 : 0), () => buildKnob(Rk, !!active)), cx, cy, ox, oy, active ? 1 : 0.75);
+    blit(ctx, g, memo('kn|' + Rk + '|' + (active ? 1 : 0) + gdTagMa('gd-can-num'), () => buildKnob(Rk, !!active, gdCo('gd-can-num'))), cx, cy, ox, oy, active ? 1 : 0.75);
   };
 })();
 
@@ -29160,6 +29357,7 @@ MA._xong();
   // Ảnh nạp chậm hơn code (và công cụ có thể đổi ảnh bất cứ lúc nào): mỗi lần lấy cảnh làng thì soát lại 6 công trình (và các đạo cụ D2),
   // cái nào ảnh vừa có / vừa đổi / vừa gỡ thì thay ngay hình đã nhớ của riêng cái đó (không phải dựng lại cả làng).
   function anhNha(Bt) {
+    anhNen(Bt);
     for (const n of Bt.nha) {
       const g = gdLang(n.ten); if (g === n.g) continue;
       n.g = g; const ob = n.ob;
@@ -29168,6 +29366,25 @@ MA._xong();
       ob.x = Math.round(n.ax - g.rong / 2); ob.y0 = Math.round(n.ay - g.cao);
     }
     return Bt;
+  }
+  // ---------- D3 · nền làng bằng ảnh AI (tools/tach-lang, lô "Nền làng"; tệp gd-lang-nen, kiểu "giao-dien") ----------
+  // MỘT tấm kín 720×270 (× net) thay cho lớp nền vẽ bằng code: cỏ, hàng cây mép trên, sông, đường đất, sân đình, ao sen, cầu bến đò, chiếu Cụ Đồ.
+  // Ảnh vẽ màu ban ngày, game nhân màu chạng vạng như nền code. Ảnh chỉ là LỚP NỀN: chỗ đi được (blocked, RECTS), mép sông bo(y), vị trí nhà,
+  // người, đạo cụ, sậy, vệt nước, quầng đèn KHÔNG đổi. Soát mỗi lần lấy cảnh (như anhNha): ảnh vừa có / vừa đổi / vừa gỡ thì đổi lớp nền ngay.
+  // Không có tệp thì Bt.ground là nền code y như cũ. Ảnh có chỗ trong suốt thì chỗ đó lộ nền code bên dưới.
+  function anhNen(Bt) {
+    const g = gdLang('nen'); if (g === Bt.nenG) return;
+    Bt.nenG = g;
+    if (!g) { Bt.ground = Bt.nenCode; Bt.nenAnh = false; return; }
+    const [cv, c] = mk(g.img.width, g.img.height);
+    c.drawImage(Bt.nenCode, 0, 0, cv.width, cv.height);
+    c.drawImage(Bt.ngay ? g.img : tint(g.img), 0, 0);
+    Bt.ground = cv; Bt.nenAnh = true;
+  }
+  // Vẽ lớp nền tại (x, 0). Nền code: dán thẳng như cũ. Nền ảnh: dán kín 720×270 (k = số điểm ảnh thật trên một điểm ảnh làng của bút c).
+  function veNen(c, Bt, x, k) {
+    if (!Bt.nenAnh) { c.drawImage(Bt.ground, x, 0); return; }
+    const sm = c.imageSmoothingEnabled; c.imageSmoothingEnabled = W * k < Bt.ground.width - 0.5; c.drawImage(Bt.ground, x, 0, W, H); c.imageSmoothingEnabled = sm;
   }
   // Dán ảnh AI của một công trình (ảnh có số điểm ảnh gấp net lần): k = số điểm ảnh thật trên một điểm ảnh làng của bút c.
   function veAnh(c, ob, x, y, k) { const sm = c.imageSmoothingEnabled; c.imageSmoothingEnabled = ob.w * k < ob.cv.width - 0.5; c.drawImage(ob.cv, x, y, ob.w, ob.h); c.imageSmoothingEnabled = sm; }
@@ -29239,7 +29456,7 @@ MA._xong();
     const rd = rng(77), flies = [];
     for (let i = 0; i < W / 14; i++) flies.push([rd() * W, 40 + rd() * 220, rd() * 6.28, 0.5 + rd()]);
     const lants = LREC; LREC = null;
-    return { ground, objs, cui, cuiA, thuyenS, doN, den, light: lcv, flies, lants, nha, ngay: NGAY };
+    return { ground, nenCode: ground, nenG: null, nenAnh: false, objs, cui, cuiA, thuyenS, doN, den, light: lcv, flies, lants, nha, ngay: NGAY };
   }
 
   // ======================= chỗ không đi được =======================
@@ -29649,7 +29866,7 @@ MA._xong();
   // Vẽ cảnh làng đứng yên lên bút c bất kỳ (1 đơn vị = 1 điểm ảnh làng, cả làng 720×270, không dời OY): nền, công trình, đạo cụ,
   // lửa lò, 7 người làng, quầng đèn. o: { t: giây, k: số điểm ảnh thật trên một điểm ảnh làng (để dán ảnh AI cho nét),
   //   ngay: true = màu ban ngày, không nhân màu chạng vạng, không quầng đèn (ảnh tham chiếu gửi ChatGPT), nguoi: false = không vẽ người,
-  //   conVat: false = không vẽ đàn gà và con cóc }
+  //   conVat: false = không vẽ đàn gà và con cóc, chiNen: true = chỉ vẽ lớp nền (D3: ảnh tham chiếu nền làng, soi lệch) }
   let BUILT_NGAY = null;
   function canhCongCu(ngay) {
     if (!ngay) return build();
@@ -29660,7 +29877,8 @@ MA._xong();
   VS.veTinh = function (c, o) {
     o = o || {};
     const Bt = canhCongCu(!!o.ngay), t = +o.t || 0, k = +o.k || 1, L = [];
-    c.drawImage(Bt.ground, 0, 0);
+    veNen(c, Bt, 0, k);
+    if (o.chiNen) return;
     for (const ob of Bt.objs) if (!(ob.chu && ob.chu.g)) L.push(lopVat(c, ob, 0, k));
     L.push(lopCui(c, Bt, 0, t)); L.push(lopDo(c, Bt, 0, 0, k));
     if (!o.ngay) L.push([B.phoi[1] + 0.01, () => ambClothes(c, 0, t, 1)]);
@@ -29704,7 +29922,7 @@ MA._xong();
     G.wxDat(c, 0, 0); c.globalAlpha = 1; c.globalCompositeOperation = 'source-over';
     c.fillStyle = '#101a1a'; c.fillRect(0, 0, 480, OY);
     c.translate(0, OY);
-    c.drawImage(Bt.ground, -cam, 0);
+    veNen(c, Bt, -cam, G.NET || 1);
     const M = G.VFX ? Math.max(0, +G.VFX.moiTruong || 0) : 1;
     ambGround(c, cam, t, M);
     // nước lấp lánh
@@ -29864,11 +30082,28 @@ MA._xong();
     names: [[126, 34, '#2f5a3a'], [150, 236, '#2a5a7a'], [300, 44, '#7a2a22']], // chỗ ghi tên vùng và màu chữ
     soon: [['Núi tuyết', 412, 34, 412, 92], ['Núi lửa', 436, 112, 436, 176], ['Đầm lầy', 372, 172, 0, 0]], // vùng sắp có
   });
-  const MCACHE = {};
+  // D3 · tranh bằng ảnh AI (tools/tach-lang, lô "Tranh bản đồ vùng"; tệp gd-ban-do-vung, kiểu "giao-dien"): MỘT tấm kín 480×270 cho cả 3 vùng.
+  // Có tệp thì dán ảnh thay tranh code (game vẫn kẻ viền tranh, vẫn nhân màu đêm cho độ khó 2); 15 thẻ ải, đường nét đứt, tên vùng do js/village.js vẽ đè
+  // lên theo MAP như cũ. Tranh luôn là canvas 480×270 (nơi dùng dán thẳng không ghi cỡ), nên ảnh nét gấp đôi cũng được thu về 480×270.
+  // Soát mỗi lần gọi: ảnh vừa có / vừa đổi / vừa gỡ thì xoá tranh đã nhớ. Không có tệp thì tranh code y như cũ.
+  const MCACHE = { g: null };
+  const gdBanDo = () => { const s = G.spriteCustom; return s && s.gdSan ? s.gdSan('gd-ban-do-vung') : null; };
   VS.mapArt = function (night) {
-    const id = night ? 'n' : 'd';
+    const id = night ? 'n' : 'd', g = gdBanDo();
+    if (g !== MCACHE.g) { MCACHE.g = g; MCACHE.n = MCACHE.d = null; }
     if (MCACHE[id]) return MCACHE[id];
-    const [cv, c] = mk(480, 270), rd = rng(11), INKB = '#4a3626';
+    const [cv, c] = mk(480, 270);
+    if (g) {
+      p(c, 0, 0, 480, 270, '#e6d8b0');
+      c.imageSmoothingEnabled = g.img.width > 480; c.drawImage(g.img, 0, 0, 480, 270); c.imageSmoothingEnabled = false;
+      vienTranh(c);
+    } else tranhCode(c);
+    if (night) { c.globalCompositeOperation = 'multiply'; c.fillStyle = '#8c88c4'; c.fillRect(0, 0, 480, 270); c.globalCompositeOperation = 'source-over'; } // độ khó 2: tranh màu đêm
+    return (MCACHE[id] = cv);
+  };
+  function vienTranh(c) { for (const k of [0, 1, 2]) { c.strokeStyle = ['#6a4a30', '#a88a58', '#6a4a30'][k]; c.lineWidth = 1; c.strokeRect(k * 2 + 0.5, k * 2 + 0.5, 479 - k * 4, 269 - k * 4); } }
+  function tranhCode(c) {
+    const rd = rng(11), INKB = '#4a3626';
     p(c, 0, 0, 480, 270, '#e6d8b0');
     for (let i = 0; i < 900; i++) p(c, rd() * 480, rd() * 270, 1 + (rd() < 0.2 ? 1 : 0), 1, rd() < 0.5 ? '#d8c898' : '#f0e6c8');
     for (let i = 0; i < 14; i++) ell(c, rd() * 480, rd() * 270, 10 + rd() * 26, 5 + rd() * 12, 'rgba(190,160,100,0.10)');
@@ -29906,10 +30141,8 @@ MA._xong();
     bs.forEach((fn, r) => { const q = MAP.nodes[r][4], sp = outlined(32, 32, 16, 28, fn); c.drawImage(sp.cv, q[0] - 16 + (r === 2 ? -22 : 0), q[1] - 28 - 13 + (r === 2 ? 12 : 0)); });
     // la bàn và viền tranh
     p(c, 22, 14, 1, 18, INKB); p(c, 14, 22, 17, 1, INKB); p(c, 21, 12, 3, 3, '#c8402e'); ell(c, 22, 22, 3, 3, '#e6d8b0'); ell(c, 22, 22, 1, 1, INKB);
-    for (const k of [0, 1, 2]) { c.strokeStyle = ['#6a4a30', '#a88a58', '#6a4a30'][k]; c.lineWidth = 1; c.strokeRect(k * 2 + 0.5, k * 2 + 0.5, 479 - k * 4, 269 - k * 4); }
-    if (night) { c.globalCompositeOperation = 'multiply'; c.fillStyle = '#8c88c4'; c.fillRect(0, 0, 480, 270); c.globalCompositeOperation = 'source-over'; } // độ khó 2: tranh màu đêm
-    return (MCACHE[id] = cv);
-  };
+    vienTranh(c);
+  }
   // Đường nét đứt nối hai điểm trên tranh
   VS.mapDash = function (c, a, b, col) { const n = Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / 4); for (let j = 1; j < n; j++) if (j % 2) p(c, a[0] + ((b[0] - a[0]) * j) / n, a[1] + ((b[1] - a[1]) * j) / n, 2, 2, col); };
   VS.putNpc = putNpc;
