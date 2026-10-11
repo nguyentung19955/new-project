@@ -129,6 +129,34 @@
     return arguments.length > 2 ? dien(r, Array.prototype.slice.call(arguments, 2).map((v) => (typeof v === 'string' ? tra(v) : v))) : r;
   };
 
+  // Đợt 1 (kế hoạch cải thiện, quyết định Q4): chữ tiếng Anh cho các chuỗi mới của màn chào "Chơi ngay", lời mời liên kết Google
+  // (js/village.js) và các lỗi liên kết (js/cloud.js). Đặt ở đây vì js/ngon_ngu_en.js là tệp do công cụ tạo ra, không sửa tay.
+  const LOI_GG = [
+    ['Tài khoản Google này đã được dùng cho một tiến trình khác', 'This Google account is already used by another save', ['credential-already-in-use', 'email-already-in-use']],
+    ['Tài khoản này đã liên kết Google rồi', 'This account is already linked to Google', ['provider-already-linked']],
+    ['Thử quá nhiều lần, chờ một lát rồi thử lại', 'Too many attempts, wait a moment and try again', ['too-many-requests']],
+    ['Đã huỷ đăng nhập', 'Sign-in was cancelled', ['user-cancelled']],
+    ['Máy chủ đăng nhập báo lỗi, thử lại sau', 'Sign-in server error, try again later', ['internal-error']],
+  ];
+  const DOT1 = {
+    'Chơi ngay ▶': 'Play now ▶',
+    'Đã có tài khoản? Bấm Đăng nhập Google để chơi tiếp tiến trình cũ. {0}': 'Already have an account? Tap Sign in with Google to continue your old progress. {0}',
+    'Giữ tiến trình': 'Keep your progress',
+    'Liên kết Google để giữ tiến trình trên mọi máy': 'Link Google to keep your progress on every device',
+    'Tiến trình đang chơi được giữ nguyên. Đổi máy hoặc xoá dữ liệu trình duyệt vẫn chơi tiếp được.': 'Your current progress is kept. You can keep playing after changing devices or clearing browser data.',
+    'Liên kết Google': 'Link Google',
+    'Để sau': 'Later',
+    'Chưa liên kết được: {0}': 'Could not link: {0}',
+    'Tiến trình của bạn vẫn còn nguyên. Có thể thử lại hoặc để sau.': 'Your progress is untouched. You can try again or do it later.',
+    'Đã liên kết Google. Tiến trình được giữ nguyên.': 'Google linked. Your progress is kept.',
+    'Lúc nào muốn liên kết, gặp Anh Mõ ở cổng làng.': 'To link later, see the Town Crier at the village gate.',
+  };
+  for (const [vi, en, ma] of LOI_GG) {
+    DOT1[vi] = en;
+    for (const m of ma) { DOT1[vi + ' [' + m + ']'] = en + ' [' + m + ']'; DOT1['Chưa đăng nhập được: ' + vi + ' [' + m + ']'] = 'Sign-in failed: ' + en + ' [' + m + ']'; }
+  }
+  N.them(DOT1);
+
   G.LANG = docMay() || 'vi';
   N.phien = 0;
   try { if (G.LANG !== 'vi') document.documentElement.lang = G.LANG; } catch (e) { /* bỏ qua */ }

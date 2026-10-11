@@ -227,7 +227,11 @@
     _err(e) {
       const m = { 'auth/popup-blocked': 'Trình duyệt chặn cửa sổ đăng nhập', 'auth/popup-closed-by-user': 'Đã đóng cửa sổ đăng nhập',
         'auth/cancelled-popup-request': 'Đã đóng cửa sổ đăng nhập', 'auth/network-request-failed': 'Mất mạng, thử lại sau',
-        'auth/unauthorized-domain': 'Tên miền này chưa được cho phép trong Firebase', 'auth/operation-not-supported-in-this-environment': 'Chỗ này không đăng nhập được' };
+        'auth/unauthorized-domain': 'Tên miền này chưa được cho phép trong Firebase', 'auth/operation-not-supported-in-this-environment': 'Chỗ này không đăng nhập được',
+        // Đợt 1: thêm lời tiếng Việt cho các lỗi liên kết hay gặp (trước đây hiện nguyên câu tiếng Anh của Firebase)
+        'auth/credential-already-in-use': 'Tài khoản Google này đã được dùng cho một tiến trình khác', 'auth/email-already-in-use': 'Tài khoản Google này đã được dùng cho một tiến trình khác',
+        'auth/provider-already-linked': 'Tài khoản này đã liên kết Google rồi', 'auth/too-many-requests': 'Thử quá nhiều lần, chờ một lát rồi thử lại',
+        'auth/user-cancelled': 'Đã huỷ đăng nhập', 'auth/internal-error': 'Máy chủ đăng nhập báo lỗi, thử lại sau' };
       const code = e && e.code ? String(e.code).replace('auth/', '') : '';
       return ((e && m[e.code]) || (e && e.message) || 'Lỗi') + (code ? ' [' + code + ']' : ''); // kèm mã lỗi để chủ dự án báo lại
     },

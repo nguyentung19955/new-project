@@ -65,7 +65,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.11-0810";
+(window.G = window.G || {}).VERSION = "lk-2026.10.11-0822";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -198,6 +198,34 @@
     const k = nguCanh + '::' + s, r = D.has(k) ? D.get(k) : G.t(s);
     return arguments.length > 2 ? dien(r, Array.prototype.slice.call(arguments, 2).map((v) => (typeof v === 'string' ? tra(v) : v))) : r;
   };
+
+  // Đợt 1 (kế hoạch cải thiện, quyết định Q4): chữ tiếng Anh cho các chuỗi mới của màn chào "Chơi ngay", lời mời liên kết Google
+  // (js/village.js) và các lỗi liên kết (js/cloud.js). Đặt ở đây vì js/ngon_ngu_en.js là tệp do công cụ tạo ra, không sửa tay.
+  const LOI_GG = [
+    ['Tài khoản Google này đã được dùng cho một tiến trình khác', 'This Google account is already used by another save', ['credential-already-in-use', 'email-already-in-use']],
+    ['Tài khoản này đã liên kết Google rồi', 'This account is already linked to Google', ['provider-already-linked']],
+    ['Thử quá nhiều lần, chờ một lát rồi thử lại', 'Too many attempts, wait a moment and try again', ['too-many-requests']],
+    ['Đã huỷ đăng nhập', 'Sign-in was cancelled', ['user-cancelled']],
+    ['Máy chủ đăng nhập báo lỗi, thử lại sau', 'Sign-in server error, try again later', ['internal-error']],
+  ];
+  const DOT1 = {
+    'Chơi ngay ▶': 'Play now ▶',
+    'Đã có tài khoản? Bấm Đăng nhập Google để chơi tiếp tiến trình cũ. {0}': 'Already have an account? Tap Sign in with Google to continue your old progress. {0}',
+    'Giữ tiến trình': 'Keep your progress',
+    'Liên kết Google để giữ tiến trình trên mọi máy': 'Link Google to keep your progress on every device',
+    'Tiến trình đang chơi được giữ nguyên. Đổi máy hoặc xoá dữ liệu trình duyệt vẫn chơi tiếp được.': 'Your current progress is kept. You can keep playing after changing devices or clearing browser data.',
+    'Liên kết Google': 'Link Google',
+    'Để sau': 'Later',
+    'Chưa liên kết được: {0}': 'Could not link: {0}',
+    'Tiến trình của bạn vẫn còn nguyên. Có thể thử lại hoặc để sau.': 'Your progress is untouched. You can try again or do it later.',
+    'Đã liên kết Google. Tiến trình được giữ nguyên.': 'Google linked. Your progress is kept.',
+    'Lúc nào muốn liên kết, gặp Anh Mõ ở cổng làng.': 'To link later, see the Town Crier at the village gate.',
+  };
+  for (const [vi, en, ma] of LOI_GG) {
+    DOT1[vi] = en;
+    for (const m of ma) { DOT1[vi + ' [' + m + ']'] = en + ' [' + m + ']'; DOT1['Chưa đăng nhập được: ' + vi + ' [' + m + ']'] = 'Sign-in failed: ' + en + ' [' + m + ']'; }
+  }
+  N.them(DOT1);
 
   G.LANG = docMay() || 'vi';
   N.phien = 0;
@@ -29374,6 +29402,7 @@ MA._xong();
       try { const el = document.documentElement; if (document.fullscreenElement) document.exitFullscreen(); else el.requestFullscreen().catch(() => say('Thiết bị này không cho bật toàn màn hình.')); } catch (e) { say('Thiết bị này không cho bật toàn màn hình.'); }
     }
     T.head('Lưu tiến trình', CX + 4, 113);
+    if (!V.moi && inviteWant('mo')) V.moi = { where: 'mo' }; // Đợt 1: lần trước bấm "Để sau" → Anh Mõ nhắc lại đúng một lần
     if (CL) {
       const on = CL.online();
       ui.text(CL.label(), CX + 4, 125, { size: 7.5, color: on && !CL.dirty ? GOOD : SOFT });
@@ -29382,7 +29411,8 @@ MA._xong();
         G.syncTaps.push({ x: CX + 4, y: 142, w: 146, h: 24, fn: () => titleLogin(CL) });
         if (T.btn(CX + 4, 142, 146, 24, 'Đăng nhập Google', { size: 8.5, primary: true }) && !V.gBusy) {
           V.gBusy = true; say('Đang mở cửa sổ đăng nhập Google…');
-          CL.google().then((r) => say(r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google. Tiến trình được giữ nguyên.' : 'Đã đăng nhập Google.'), (e) => say(G.t('Chưa đăng nhập được: {0}', e.message))).then(() => { V.gBusy = false; });
+          const snap = guestSnap();
+          CL.google().then((r) => { guestKeep(snap, r); return r; }).then((r) => say(r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google. Tiến trình được giữ nguyên.' : 'Đã đăng nhập Google.'), (e) => say(G.t('Chưa đăng nhập được: {0}', e.message))).then(() => { V.gBusy = false; });
         }
       } else T.btn(CX + 4, 142, 146, 24, on ? 'Đã đăng nhập Google' : 'Đăng nhập Google', { size: 8.5, disabled: true });
     } else ui.para('Tiến trình được lưu trong trình duyệt này. Đổi máy hoặc xoá dữ liệu trình duyệt sẽ mất tiến trình.', CX + 4, 125, 292, { size: 7.5, color: SOFT });
@@ -29430,12 +29460,21 @@ MA._xong();
     hide() { /* không có gì phải dừng */ },
     update(dt) {
       if (V.msgT > 0) V.msgT -= dt;
-      VS.update(dt, V.tab !== 'hub');
+      VS.update(dt, V.tab !== 'hub' || !!V.moi);
+      if (V.moi) { if (G.keyP.Escape && !V.gBusy) { inviteLater(); G.keyP.Escape = false; } return; } // đang hỏi liên kết Google: Esc = Để sau
       // Esc: huỷ câu hỏi xoá, hoặc đóng bảng quay về làng
       if (G.keyP.Escape) { if (G.banDo && G.banDo.ask) { G.banDo.ask = null; G.keyP.Escape = false; } else if (V.confirm) V.confirm = false; else if (V.tab === 'weapon' && V.back !== 'hub') V.tab = V.back; else if (V.tab !== 'hub') goHub(); }
     },
+    // Đợt 1 (Q4): vẽ làng như cũ (_draw), rồi nếu đang mời liên kết Google thì vẽ hộp mời đè lên trên.
     draw() {
       G.syncTaps = [];
+      const moi = V.moi, c = moi ? G.click : null;
+      if (moi) G.click = null; // lần chạm không lọt xuống bảng bên dưới
+      this._draw();
+      if (moi && V.moi === moi) inviteDraw(c);
+      else if (!V.moi && V.tab === 'hub' && inviteWant('hub')) V.moi = { where: 'hub' };
+    },
+    _draw() {
       if (V.tab === 'title') V.tab = 'hub';
       if (V.tab === 'map') { mapScreen(); return; }
       VS.drawWorld(V.tab === 'hub' ? null : { dim: 0.62, hideHero: true });
@@ -29460,7 +29499,79 @@ MA._xong();
     },
   };
 
-  // Màn mở đầu. Khi lưu mây dùng được (spiritblade.web.app, link GitHub): PHẢI đăng nhập Google mới vào game (chủ dự án yêu cầu).
+  // ---------- Đợt 1 (Q4): mời liên kết Google sau khi xong ải 1 ----------
+  // Chỉ mời người đang chơi bằng tài khoản khách (ẩn danh) đã qua ải 1 (stars['0-0']) và đang nối được mây.
+  // G.save.moiGoogle là trường MỚI, tuỳ chọn (bản lưu cũ không có): không có = chưa mời; 1 = đã bấm "Để sau" một lần;
+  // 2 = đã bấm "Để sau" cả ở lần Anh Mõ nhắc lại → không tự mời nữa (nút Đăng nhập Google ở Anh Mõ vẫn luôn còn).
+  // V.moiPhien: đã trả lời trong phiên chơi này → không hỏi lại cho tới lần mở game sau.
+  function inviteWant(where) {
+    const CL = G.cloud, sv = G.save;
+    if (V.moiPhien || V.gBusy || !CL || !CL.online() || !CL.isGuest() || !sv || !sv.stars || !sv.stars['0-0']) return false;
+    const n = sv.moiGoogle | 0;
+    return where === 'hub' ? n === 0 : n === 1;
+  }
+  // Cất bản lưu của khách trước khi đăng nhập / liên kết Google. Nếu Google chuyển sang một tài khoản ĐÃ CÓ tiến trình ('switched'),
+  // js/cloud.js có thể tự dùng bản trên mây mà không hỏi (khi bản của khách không hơn rõ rệt). Luồng đó giữ nguyên, không sửa ở đây;
+  // chỉ chép nguyên văn bản của khách sang khoá dự phòng linhkhi_save_v1_khach (đã có bản khác thì ghi vào ..._khach2) để còn cứu lại được.
+  function guestSnap() {
+    try { const CL = G.cloud; return CL && CL.isGuest() && Object.keys(G.save.stars || {}).length ? JSON.stringify(G.save) : null; } catch (e) { return null; }
+  }
+  function guestKeep(snap, r) {
+    if (!snap || r !== 'switched') return;
+    try { const ls = window.localStorage, K = 'linhkhi_save_v1_khach', old = ls.getItem(K); ls.setItem(old === null || old === snap ? K : K + '2', snap); } catch (e) { /* bộ nhớ đầy: bỏ qua */ }
+  }
+  function inviteLater() {
+    const M = V.moi;
+    if (!M) return;
+    V.moi = null; V.moiPhien = true;
+    G.save.moiGoogle = M.where === 'hub' ? 1 : 2; G.persist();
+    const m = 'Lúc nào muốn liên kết, gặp Anh Mõ ở cổng làng.';
+    if (V.tab === 'hub') VS.say(m); else say(m);
+  }
+  // Liên kết thất bại (đóng cửa sổ, bị chặn, mất mạng…): chỉ báo lỗi trong hộp, KHÔNG đụng tới bản lưu trên máy hay trên mây.
+  function inviteLink() {
+    const CL = G.cloud, M = V.moi;
+    if (!M || V.gBusy || !CL) return;
+    V.gBusy = true; M.err = '';
+    const snap = guestSnap();
+    CL.google().then((r) => {
+      guestKeep(snap, r);
+      V.moi = null; V.moiPhien = true;
+      const m = r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã liên kết Google. Tiến trình được giữ nguyên.' : 'Đã đăng nhập Google.';
+      if (V.tab === 'hub') VS.say(m); else say(m);
+    }, (e) => { M.err = (e && e.message) || 'Lỗi'; }).then(() => { V.gBusy = false; });
+  }
+  function inviteDraw(click) {
+    const CL = G.cloud, M = V.moi;
+    // đã liên kết xong ở chỗ khác, hoặc mất kết nối giữa chừng: đóng hộp, không ghi gì
+    if (!CL || !CL.isGuest() || (!CL.online() && !V.gBusy)) { V.moi = null; return; }
+    const w = 284, h = 132, x = 98, y = 66, busy = !!V.gBusy;
+    const bL = [x + 14, y + h - 34, 96, 24], bG = [x + w - 158, y + h - 34, 144, 24];
+    G.syncTaps = busy ? [] : [{ x: bG[0], y: bG[1], w: bG[2], h: bG[3], fn: inviteLink }]; // chạy ngay trong lúc chạm để Safari không chặn cửa sổ Google
+    G.click = click || null;
+    T.dim(0.6);
+    T.panel(x, y, w, h, 'Giữ tiến trình', { plain: true });
+    ui.text('Liên kết Google để giữ tiến trình trên mọi máy', x + w / 2, y + 40, { size: 9, bold: true, align: 'center', color: GOLD });
+    let yy = y + 54;
+    if (M.err) {
+      ui.wrap(G.t('Chưa liên kết được: {0}', M.err), w - 28, 7.5, true).slice(0, 2).forEach((l) => { ui.text(l, x + w / 2, yy, { size: 7.5, bold: true, align: 'center', color: WARN }); yy += 10; });
+      ui.text('Tiến trình của bạn vẫn còn nguyên. Có thể thử lại hoặc để sau.', x + w / 2, yy + 1, { size: 7, align: 'center', color: TXT });
+    } else {
+      const body = busy ? 'Đang mở cửa sổ đăng nhập Google…' : 'Tiến trình đang chơi được giữ nguyên. Đổi máy hoặc xoá dữ liệu trình duyệt vẫn chơi tiếp được.';
+      ui.wrap(body, w - 36, 7.5).slice(0, 3).forEach((l) => { ui.text(l, x + w / 2, yy, { size: 7.5, align: 'center', color: TXT }); yy += 10; });
+    }
+    if (T.btn(bL[0], bL[1], bL[2], bL[3], 'Để sau', { size: 9, disabled: busy })) inviteLater();
+    else {
+      if (T.btn(bG[0], bG[1], bG[2], bG[3], busy ? 'Đang mở Google…' : M.err ? 'Thử lại' : 'Liên kết Google', { size: 9, primary: !busy, disabled: busy })) inviteLink();
+      if (!busy) googleMark(bG[0] + 15, bG[1] + bG[3] / 2);
+    }
+    G.click = null;
+  }
+
+  // Màn mở đầu (Đợt 1, quyết định Q4). Khi lưu mây dùng được (spiritblade.web.app): KHÔNG bắt đăng nhập nữa.
+  //   - "Chơi ngay": vào luôn bằng tài khoản khách (ẩn danh Firebase, js/cloud.js tự đăng nhập và tự lưu mây). Mây chưa kịp nối
+  //     thì vẫn vào, chơi lưu trên máy; nối được là js/cloud.js tự đồng bộ như cũ.
+  //   - "Đăng nhập Google": cho người đã có tài khoản (chơi tiếp tiến trình cũ). Đã đăng nhập Google rồi thì nút chính là "Vào game".
   // Không có mây (bản xem trước trong Claude, mở tệp trên máy, mất mạng, ?cloud=0): chạm để chơi như cũ, chỉ lưu trên máy.
   function titleGate() {
     const CL = G.cloud;
@@ -29473,13 +29584,15 @@ MA._xong();
   function titleLogin(CL) {
     if (V.gBusy) return;
     V.gBusy = true; V.tMsg = 'Đang mở trang đăng nhập Google…'; V.tMsgT = 30;
-    // V1: đăng nhập thất bại (cửa sổ bị chặn, bị đóng, mở trong Zalo/Messenger/Facebook) → bật cờ V.loginFail để màn chào hiện nút "Chơi tạm"
-    CL.google().then((r) => { V.loginFail = false; V.tMsg = r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google, giữ nguyên tiến trình.' : 'Đã đăng nhập Google.'; }, (e) => { V.loginFail = true; V.tMsg = G.t('Chưa đăng nhập được: {0}', e.message); })
+    // V1: đăng nhập thất bại (cửa sổ bị chặn, bị đóng, mở trong Zalo/Messenger/Facebook) → bật cờ V.loginFail để màn chào hiện dòng gợi ý mở bằng trình duyệt thật
+    const snap = guestSnap();
+    CL.google().then((r) => { guestKeep(snap, r); V.loginFail = false; V.tMsg = r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google, giữ nguyên tiến trình.' : 'Đã đăng nhập Google.'; }, (e) => { V.loginFail = true; V.tMsg = G.t('Chưa đăng nhập được: {0}', e.message); })
       .then(() => { V.gBusy = false; V.tMsgT = 8; say(V.tMsg); });
   }
   // Bố cục màn chào (toạ độ 480x270), Giai đoạn 4 yêu cầu 2: logo > nút chính > nút phụ > dòng thông tin.
   // Nút nào chạy ngay trong lúc chạm (G.syncTaps) thì dùng đúng ô của nút vẽ.
-  const TL = { main: [140, 128, 200, 32], play: [160, 128, 160, 32], guest: [180, 168, 120, 20], row: [[128, 168, 108, 22], [244, 168, 108, 22]], info: 210, lang: [430, 5, 44, 16] };
+  // gg, bv (Đợt 1): hàng nút dưới "Chơi ngay" khi chưa đăng nhập Google: Đăng nhập Google | Bảng vàng. (guest: ô nút "Chơi tạm" cũ, nay không vẽ nữa.)
+  const TL = { main: [140, 128, 200, 32], play: [160, 128, 160, 32], guest: [180, 168, 120, 20], row: [[128, 168, 108, 22], [244, 168, 108, 22]], gg: [112, 166, 150, 24], bv: [268, 166, 100, 24], info: 210, lang: [430, 5, 44, 16] };
   G.titleLayout = TL; // để bài kiểm tra biết nút nằm ở đâu
   // Lớp tối dịu phía sau khối chữ và nút: hình elip tối dần ra mép (không phủ cả màn), để chữ không đè lên nhà cửa sáng.
   function titleVeil() {
@@ -29514,7 +29627,7 @@ MA._xong();
       VS.update(dt, true);
       const g = titleGate();
       if (V.tRank) { if (G.keyP.Escape) V.tRank = false; return; } // đang xem Bảng vàng
-      if (g.need) { if (g.ok && (G.keyP.Enter || G.keyP.Space)) G.setScene(G.Village); return; } // vào bằng nút "Vào game"
+      if (g.need) { if (G.keyP.Enter || G.keyP.Space) G.setScene(G.Village); return; } // vào bằng nút "Chơi ngay" / "Vào game"
       // không có mây: chạm chỗ trống để vào; chạm dải nút phụ thì không
       const r = TL.row, onBtns = G.downs.some((d) => d.y > r[0][1] - 4 && d.y < r[0][1] + r[0][3] + 4 && d.x > r[0][0] - 4 && d.x < r[1][0] + r[1][2] + 4);
       const L = TL.lang, onLang = G.downs.some((d) => d.x > L[0] - 6 && d.y < L[1] + L[3] + 6); // nút EN / VI ở góc trên phải
@@ -29544,7 +29657,7 @@ MA._xong();
       const { CL, need, ok } = titleGate();
       const M = TL.main, R0 = TL.row[0], R1 = TL.row[1];
       if (CL && CL.online() && CL.isGuest()) { // nút Đăng nhập chạy ngay trong lúc chạm để Safari không chặn cửa sổ Google
-        if (need && !ok) G.syncTaps.push({ x: M[0], y: M[1], w: M[2], h: M[3], fn: () => titleLogin(CL) });
+        if (need && !ok) G.syncTaps.push({ x: TL.gg[0], y: TL.gg[1], w: TL.gg[2], h: TL.gg[3], fn: () => titleLogin(CL) });
         if (!need || ok) G.syncTaps.push({ x: R0[0], y: R0[1], w: R0[2], h: R0[3], fn: () => titleLogin(CL) });
       }
       if (!need) {
@@ -29556,15 +29669,14 @@ MA._xong();
         const P = TL.play;
         if (T.btn(P[0], P[1], P[2], P[3], 'Vào game ▶', { size: 12, primary: true })) G.setScene(G.Village);
       } else {
-        const loading = !CL.online(), busy = !!V.gBusy;
-        if (T.btn(M[0], M[1], M[2], M[3], loading ? (CL.status === 'error' ? 'Chưa kết nối được mây' : 'Đang kết nối…') : busy ? 'Đang mở Google…' : 'Đăng nhập Google để vào', { size: 11, primary: !loading && !busy, disabled: loading || busy })) titleLogin(CL);
-        if (!loading && !busy) googleMark(M[0] + 17, M[1] + M[3] / 2);
-        // mây kết nối hỏng quá 10 giây: cho chơi tạm, chỉ lưu trên máy, để không ai bị kẹt ngoài cửa
-        V.tWait = loading ? (V.tWait || 0) + 1 / 60 : 0;
-        const Gs = TL.guest;
-        // V1: đăng nhập Google vừa thất bại cũng cho chơi tạm ngay (không phải chờ 10 giây), kèm dòng gợi ý mở bằng trình duyệt thật
-        if ((CL.status === 'error' || V.tWait > 10 || V.loginFail) && T.btn(Gs[0], Gs[1], Gs[2], Gs[3], 'Chơi tạm (chưa lưu mây)', { size: 7.5 })) G.setScene(G.Village);
-        if (V.loginFail && !busy) ui.text('Mở bằng Chrome/Safari để đăng nhập Google', 240, Gs[1] + Gs[3] + 11, { size: 7, align: 'center', color: '#e8d7b0' });
+        // Đợt 1 (Q4): hai nút rõ. "Chơi ngay" luôn bấm được (kể cả khi mây chưa kịp nối); "Đăng nhập Google" cho người đã có tài khoản.
+        const loading = !CL.online(), busy = !!V.gBusy, Gg = TL.gg, Bv = TL.bv;
+        if (T.btn(M[0], M[1], M[2], M[3], 'Chơi ngay ▶', { size: 12, primary: true })) G.setScene(G.Village);
+        if (T.btn(Gg[0], Gg[1], Gg[2], Gg[3], loading ? (CL.status === 'error' ? 'Chưa kết nối được mây' : 'Đang kết nối…') : busy ? 'Đang mở Google…' : 'Đăng nhập Google', { size: 8.5, disabled: loading || busy })) titleLogin(CL);
+        if (!loading && !busy) googleMark(Gg[0] + 15, Gg[1] + Gg[3] / 2);
+        if (T.btn(Bv[0], Bv[1], Bv[2], Bv[3], '🏆 Bảng vàng', { size: 8, disabled: !G.bangVang })) { V.tRank = true; G.bangVang.reload && G.bangVang.reload(); }
+        // V1: đăng nhập Google vừa thất bại → dòng gợi ý mở bằng trình duyệt thật (vẫn chơi được bằng "Chơi ngay")
+        if (V.loginFail && !busy) ui.text('Mở bằng Chrome/Safari để đăng nhập Google', 240, Gg[1] + Gg[3] + 10, { size: 7, align: 'center', color: '#e8d7b0' });
       }
       if (CL) {
         const on = CL.online(), guest = CL.isGuest();
@@ -29574,7 +29686,7 @@ MA._xong();
         }
         if (CL.gMsg) { if (/^Chưa đăng nhập|chưa trả kết quả/.test(CL.gMsg) || (G.LANG !== 'vi' && gMsgFail(CL.gMsg))) V.loginFail = true; V.tMsg = CL.gMsg; V.tMsgT = 8; CL.gMsg = ''; }
         if (V.tMsgT > 0) V.tMsgT -= 1 / 60;
-        const line = V.tMsgT > 0 && V.tMsg ? V.tMsg : need && !ok ? G.t('Đăng nhập Google để lưu tiến trình và lên Bảng vàng. {0}', CL.label()) : CL.label();
+        const line = V.tMsgT > 0 && V.tMsg ? V.tMsg : need && !ok ? G.t('Đã có tài khoản? Bấm Đăng nhập Google để chơi tiếp tiến trình cũ. {0}', CL.label()) : CL.label();
         const lines = ui.wrap(line, 260, 7); // hẹp để không chạm hình em bé bên trái
         lines.slice(0, 2).forEach((l, i) => ui.text(l, 240, TL.info + i * 9, { size: 7, align: 'center', color: V.tMsgT > 0 && V.tMsg ? GOLD : '#c9bfa8' }));
       }
@@ -33654,7 +33766,11 @@ window.FIREBASE_CONFIG = {
     _err(e) {
       const m = { 'auth/popup-blocked': 'Trình duyệt chặn cửa sổ đăng nhập', 'auth/popup-closed-by-user': 'Đã đóng cửa sổ đăng nhập',
         'auth/cancelled-popup-request': 'Đã đóng cửa sổ đăng nhập', 'auth/network-request-failed': 'Mất mạng, thử lại sau',
-        'auth/unauthorized-domain': 'Tên miền này chưa được cho phép trong Firebase', 'auth/operation-not-supported-in-this-environment': 'Chỗ này không đăng nhập được' };
+        'auth/unauthorized-domain': 'Tên miền này chưa được cho phép trong Firebase', 'auth/operation-not-supported-in-this-environment': 'Chỗ này không đăng nhập được',
+        // Đợt 1: thêm lời tiếng Việt cho các lỗi liên kết hay gặp (trước đây hiện nguyên câu tiếng Anh của Firebase)
+        'auth/credential-already-in-use': 'Tài khoản Google này đã được dùng cho một tiến trình khác', 'auth/email-already-in-use': 'Tài khoản Google này đã được dùng cho một tiến trình khác',
+        'auth/provider-already-linked': 'Tài khoản này đã liên kết Google rồi', 'auth/too-many-requests': 'Thử quá nhiều lần, chờ một lát rồi thử lại',
+        'auth/user-cancelled': 'Đã huỷ đăng nhập', 'auth/internal-error': 'Máy chủ đăng nhập báo lỗi, thử lại sau' };
       const code = e && e.code ? String(e.code).replace('auth/', '') : '';
       return ((e && m[e.code]) || (e && e.message) || 'Lỗi') + (code ? ' [' + code + ']' : ''); // kèm mã lỗi để chủ dự án báo lại
     },
