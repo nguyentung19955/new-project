@@ -1,0 +1,98 @@
+{
+ "smith|sword": {
+  "tele": 0.65,
+  "atk01": 0.71,
+  "atk25": 0.71,
+  "hit": 0.6
+ },
+ "smith|bow": {
+  "tele": 0.54,
+  "atk01": 0.71,
+  "atk25": 0.71,
+  "hit": 0.71
+ },
+ "smith|spear": {
+  "tele": 0.33,
+  "atk01": 0.64,
+  "atk25": 0.71,
+  "hit": 0.51
+ },
+ "smith|hammer": {
+  "tele": 0.65,
+  "atk01": 0.65,
+  "atk25": 0.71,
+  "hit": 0.6
+ },
+ "hunter|sword": {
+  "tele": 0.53,
+  "atk01": 0.67,
+  "atk25": 0.71,
+  "hit": 0.6
+ },
+ "hunter|bow": {
+  "tele": 0.2,
+  "atk01": 0.71,
+  "atk25": 0.71,
+  "hit": 0.71
+ },
+ "hunter|spear": {
+  "tele": 0.35,
+  "atk01": 0.68,
+  "atk25": 0.71,
+  "hit": 0.51
+ },
+ "hunter|hammer": {
+  "tele": 0.44,
+  "atk01": 0.65,
+  "atk25": 0.65,
+  "hit": 0.6
+ },
+ "healer|sword": {
+  "tele": 0.65,
+  "atk01": 0.71,
+  "atk25": 0.71,
+  "hit": 0.6
+ },
+ "healer|bow": {
+  "tele": 0.54,
+  "atk01": 0.71,
+  "atk25": 0.71,
+  "hit": 0.71
+ },
+ "healer|spear": {
+  "tele": 0.33,
+  "atk01": 0.64,
+  "atk25": 0.71,
+  "hit": 0.51
+ },
+ "healer|hammer": {
+  "tele": 0.65,
+  "atk01": 0.65,
+  "atk25": 0.65,
+  "hit": 0.6
+ },
+ "wrestler|sword": {
+  "tele": 0.51,
+  "atk01": 0.71,
+  "atk25": 0.71,
+  "hit": 0.6
+ },
+ "wrestler|bow": {
+  "tele": 0.5,
+  "atk01": 0.71,
+  "atk25": 0.71,
+  "hit": 0.71
+ },
+ "wrestler|spear": {
+  "tele": 0.6,
+  "atk01": 0.64,
+  "atk25": 0.71,
+  "hit": 0.51
+ },
+ "wrestler|hammer": {
+  "tele": 0.52,
+  "atk01": 0.65,
+  "atk25": 0.65,
+  "hit": 0.6
+ }
+}

@@ -1,0 +1,170 @@
+{
+ "a_than_ai": {
+  "so_o": 3040,
+  "o_khac": 0,
+  "vi_du": []
+ },
+ "a_than_code": {
+  "so_o": 5168,
+  "o_khac": 0,
+  "vi_du": []
+ },
+ "b_mu": {
+  "khan_lua": {
+   "idle0_giong_het": true,
+   "lech_lon_nhat": 0,
+   "so_khung": 40,
+   "khung_khac_diem_anh": 0
+  },
+  "khan_xep": {
+   "idle0_giong_het": true,
+   "lech_lon_nhat": 0,
+   "so_khung": 40,
+   "khung_khac_diem_anh": 0
+  },
+  "mu_da_ca": {
+   "idle0_giong_het": true,
+   "lech_lon_nhat": 0,
+   "so_khung": 40,
+   "khung_khac_diem_anh": 0
+  },
+  "mu_rom": {
+   "idle0_giong_het": true,
+   "lech_lon_nhat": 0,
+   "so_khung": 40,
+   "khung_khac_diem_anh": 0
+  },
+  "mu_sung": {
+   "idle0_giong_het": true,
+   "lech_lon_nhat": 0,
+   "so_khung": 40,
+   "khung_khac_diem_anh": 0
+  },
+  "mu_tai_cao": {
+   "idle0_giong_het": true,
+   "lech_lon_nhat": 0,
+   "so_khung": 40,
+   "khung_khac_diem_anh": 0
+  },
+  "mu_vay_ca": {
+   "idle0_giong_het": true,
+   "lech_lon_nhat": 0,
+   "so_khung": 40,
+   "khung_khac_diem_anh": 0
+  },
+  "non_la": {
+   "idle0_giong_het": true,
+   "lech_lon_nhat": 0,
+   "so_khung": 40,
+   "khung_khac_diem_anh": 0
+  },
+  "trum_khan": {
+   "idle0_giong_het": true,
+   "lech_lon_nhat": 0,
+   "so_khung": 40,
+   "khung_khac_diem_anh": 0
+  },
+  "trum_la": {
+   "idle0_giong_het": true,
+   "lech_lon_nhat": 0,
+   "so_khung": 40,
+   "khung_khac_diem_anh": 0
+  },
+  "trum_nhon": {
+   "idle0_giong_het": true,
+   "lech_lon_nhat": 0,
+   "so_khung": 40,
+   "khung_khac_diem_anh": 0
+  },
+  "trum_sung": {
+   "idle0_giong_het": true,
+   "lech_lon_nhat": 0,
+   "so_khung": 40,
+   "khung_khac_diem_anh": 0
+  },
+  "vong_la": {
+   "idle0_giong_het": true,
+   "lech_lon_nhat": 0,
+   "so_khung": 40,
+   "khung_khac_diem_anh": 0
+  }
+ },
+ "c_chi_so": {
+  "so_cau_hinh": 16,
+  "khac": []
+ },
+ "c_bot": {
+  "smith": {
+   "vu_khi": "sword",
+   "truoc": {
+    "thang": true,
+    "giay": 162,
+    "so_don": 159,
+    "ma": "3bc0be6c93db"
+   },
+   "moi": {
+    "thang": true,
+    "giay": 162,
+    "so_don": 159,
+    "ma": "3bc0be6c93db"
+   },
+   "nhat_ky_trung": true,
+   "dong_khac_dau": null,
+   "loi_so": []
+  },
+  "hunter": {
+   "vu_khi": "bow",
+   "truoc": {
+    "thang": true,
+    "giay": 145,
+    "so_don": 198,
+    "ma": "8e6af273337e"
+   },
+   "moi": {
+    "thang": true,
+    "giay": 145,
+    "so_don": 198,
+    "ma": "8e6af273337e"
+   },
+   "nhat_ky_trung": true,
+   "dong_khac_dau": null,
+   "loi_so": []
+  },
+  "healer": {
+   "vu_khi": "spear",
+   "truoc": {
+    "thang": true,
+    "giay": 150,
+    "so_don": 155,
+    "ma": "fd01f732509d"
+   },
+   "moi": {
+    "thang": true,
+    "giay": 150,
+    "so_don": 155,
+    "ma": "fd01f732509d"
+   },
+   "nhat_ky_trung": true,
+   "dong_khac_dau": null,
+   "loi_so": []
+  },
+  "wrestler": {
+   "vu_khi": "hammer",
+   "truoc": {
+    "thang": true,
+    "giay": 168,
+    "so_don": 100,
+    "ma": "edce184b0955"
+   },
+   "moi": {
+    "thang": true,
+    "giay": 168,
+    "so_don": 100,
+    "ma": "edce184b0955"
+   },
+   "nhat_ky_trung": true,
+   "dong_khac_dau": null,
+   "loi_so": []
+  }
+ }
+}

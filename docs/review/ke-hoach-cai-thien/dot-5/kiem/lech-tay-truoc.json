@@ -1,0 +1,98 @@
+{
+ "smith|sword": {
+  "tele": 8.8,
+  "atk01": 20.95,
+  "atk25": 20.92,
+  "hit": 13.37
+ },
+ "smith|bow": {
+  "tele": 11.7,
+  "atk01": 13.51,
+  "atk25": 14.01,
+  "hit": 18.12
+ },
+ "smith|spear": {
+  "tele": 7.07,
+  "atk01": 19.48,
+  "atk25": 19.48,
+  "hit": 11.05
+ },
+ "smith|hammer": {
+  "tele": 16.53,
+  "atk01": 24.23,
+  "atk25": 24.23,
+  "hit": 12.89
+ },
+ "hunter|sword": {
+  "tele": 9.34,
+  "atk01": 20.21,
+  "atk25": 19.88,
+  "hit": 12.66
+ },
+ "hunter|bow": {
+  "tele": 12.35,
+  "atk01": 13.51,
+  "atk25": 13.51,
+  "hit": 18.56
+ },
+ "hunter|spear": {
+  "tele": 7.39,
+  "atk01": 18.48,
+  "atk25": 18.48,
+  "hit": 10.35
+ },
+ "hunter|hammer": {
+  "tele": 18.01,
+  "atk01": 23.21,
+  "atk25": 23.21,
+  "hit": 12.27
+ },
+ "healer|sword": {
+  "tele": 9.14,
+  "atk01": 19.54,
+  "atk25": 19.51,
+  "hit": 13.58
+ },
+ "healer|bow": {
+  "tele": 12.12,
+  "atk01": 12.51,
+  "atk25": 13.01,
+  "hit": 19.68
+ },
+ "healer|spear": {
+  "tele": 7.25,
+  "atk01": 18.49,
+  "atk25": 18.49,
+  "hit": 11.27
+ },
+ "healer|hammer": {
+  "tele": 17.52,
+  "atk01": 22.82,
+  "atk25": 22.82,
+  "hit": 13.21
+ },
+ "wrestler|sword": {
+  "tele": 8.02,
+  "atk01": 20.95,
+  "atk25": 20.55,
+  "hit": 12.66
+ },
+ "wrestler|bow": {
+  "tele": 11.07,
+  "atk01": 13.51,
+  "atk25": 13.51,
+  "hit": 18.79
+ },
+ "wrestler|spear": {
+  "tele": 5.98,
+  "atk01": 19.48,
+  "atk25": 19.48,
+  "hit": 10.35
+ },
+ "wrestler|hammer": {
+  "tele": 17.84,
+  "atk01": 24.23,
+  "atk25": 23.84,
+  "hit": 12.27
+ }
+}
