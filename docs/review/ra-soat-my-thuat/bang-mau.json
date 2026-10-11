@@ -1,0 +1,57 @@
+{
+  "ghi_chu": "nguon: A = lay mau truc tiep tu PNG trong game/art/custom/<asset>.sprite.json; M = hang so trong ma ve (room_art.js/ui_theme.js/data.js); S = uoc luong tu anh chup docs/review/trai-nghiem/anh/; N = mau moi de xuat. Lay mau ngay 11/10/2026, bo diem alpha < 200.",
+  "core": [
+    {"hex": "#f9b788", "ten": "Da sáng", "nhom": "da", "vai_tro": "mép sáng tay/chân em bé", "nguon": "A:em-be-smith"},
+    {"hex": "#eeac6d", "ten": "Da vừa", "nhom": "da", "vai_tro": "da em bé, dân làng", "nguon": "A:em-be-hunter"},
+    {"hex": "#a86a49", "ten": "Da tối", "nhom": "da", "vai_tro": "bóng da, cổ", "nguon": "A:em-be-smith"},
+    {"hex": "#efe2d1", "ten": "Mặt nạ", "nhom": "da", "vai_tro": "mặt nạ em bé, vành sáng viền em bé", "nguon": "A:em-be-smith"},
+    {"hex": "#220f18", "ten": "Tóc / khăn tối", "nhom": "toc", "vai_tro": "khăn trùm, tóc, lòng mũ", "nguon": "A:em-be-smith"},
+    {"hex": "#3b3234", "ten": "Tóc vừa", "nhom": "toc", "vai_tro": "mảng tóc, lông thú tối", "nguon": "A:em-be-smith"},
+    {"hex": "#32180d", "ten": "Gỗ tối", "nhom": "go", "vai_tro": "thân Mộc Tinh, gốc cây, khe gỗ", "nguon": "A:mocTinh"},
+    {"hex": "#58371e", "ten": "Gỗ vừa", "nhom": "go", "vai_tro": "thân cây, rương, cột nhà", "nguon": "A:mocTinh"},
+    {"hex": "#79451d", "ten": "Gỗ sáng", "nhom": "go", "vai_tro": "mặt gỗ được chiếu", "nguon": "A:mocTinh"},
+    {"hex": "#c98c34", "ten": "Gỗ nắng / rơm", "nhom": "go", "vai_tro": "mái tranh, mép gỗ sáng", "nguon": "A:mocTinh"},
+    {"hex": "#29313b", "ten": "Đá tối", "nhom": "da_stone", "vai_tro": "khe đá Hang biển", "nguon": "M:room_art.js C.ground"},
+    {"hex": "#333c47", "ten": "Đá vừa", "nhom": "da_stone", "vai_tro": "sàn đá", "nguon": "M:room_art.js C.ground"},
+    {"hex": "#4a5560", "ten": "Đá sáng", "nhom": "da_stone", "vai_tro": "gờ đá, lối mòn", "nguon": "M:room_art.js C.ground"},
+    {"hex": "#5c5b73", "ten": "Thép tối", "nhom": "kim_loai", "vai_tro": "lưỡi kiếm phần tối", "nguon": "A:vk-sword-0"},
+    {"hex": "#cecdda", "ten": "Thép sáng", "nhom": "kim_loai", "vai_tro": "lưỡi kiếm, rìu", "nguon": "A:vk-sword-0"},
+    {"hex": "#f4bf4d", "ten": "Vàng kim", "nhom": "kim_loai", "vai_tro": "đèn lồng, trang sức, viền đồng", "nguon": "A:denLong"},
+    {"hex": "#c43b37", "ten": "Đỏ Thợ Rèn", "nhom": "vai", "vai_tro": "áo Thợ Rèn (giữ nguyên)", "nguon": "A:em-be-smith"},
+    {"hex": "#f66c52", "ten": "Đỏ sáng", "nhom": "vai", "vai_tro": "nếp áo được chiếu", "nguon": "A:em-be-smith"},
+    {"hex": "#506f2a", "ten": "Lục Thợ Săn", "nhom": "vai", "vai_tro": "áo Thợ Săn", "nguon": "A:em-be-hunter"},
+    {"hex": "#95a53a", "ten": "Lục sáng", "nhom": "vai", "vai_tro": "nếp áo Thợ Săn", "nguon": "A:em-be-hunter"},
+    {"hex": "#7763ac", "ten": "Tím Đô Vật", "nhom": "vai", "vai_tro": "áo Đô Vật, bùa", "nguon": "A:em-be-wrestler"},
+    {"hex": "#3d402e", "ten": "Đất sàn rừng", "nhom": "co_cay", "vai_tro": "nấc giữa dải sàn Rừng già", "nguon": "M:room_art.js F.floor"},
+    {"hex": "#2f5f34", "ten": "Lá vừa", "nhom": "co_cay", "vai_tro": "tán cây, rào lá", "nguon": "M:room_art.js F.leafL"},
+    {"hex": "#557521", "ten": "Lá sáng", "nhom": "co_cay", "vai_tro": "tán Mộc Tinh, bụi cỏ", "nguon": "A:mocTinh"},
+    {"hex": "#d0cf64", "ten": "Lá điểm sáng", "nhom": "co_cay", "vai_tro": "ngọn lá nắng, đom đóm", "nguon": "A:mocTinh"},
+    {"hex": "#2a40a5", "ten": "Nước sâu", "nhom": "nuoc", "vai_tro": "thân Ngư Tinh, vũng sâu", "nguon": "A:nguTinh"},
+    {"hex": "#3d69cd", "ten": "Nước vừa", "nhom": "nuoc", "vai_tro": "sông, bến đò", "nguon": "A:nguTinh"},
+    {"hex": "#cedaea", "ten": "Ánh nước", "nhom": "nuoc", "vai_tro": "gợn sóng, bọt", "nguon": "A:nguTinh"},
+    {"hex": "#a03409", "ten": "Than hồng", "nhom": "lua", "vai_tro": "lõi than, bóng lửa", "nguon": "A:hoTinh"},
+    {"hex": "#eb7e14", "ten": "Lửa môi trường", "nhom": "lua", "vai_tro": "chậu than, đuốc, lò rèn", "nguon": "A:hoTinh"},
+    {"hex": "#14182e", "ten": "Mực viền", "nhom": "bong", "vai_tro": "viền ngoài mọi sprite", "nguon": "A:tat-ca-asset-da-lay-mau"},
+    {"hex": "#120d11", "ten": "Khoảng tối ngoài phòng", "nhom": "bong", "vai_tro": "dải hai bên sân, nóc tường", "nguon": "S:05-ai1-huong-dan-phong-dau.jpg (60,300)"}
+  ],
+  "he": {
+    "lua": [
+      {"hex": "#ffc90e", "nac": "nhat", "vai_tro": "mép vệt chém, chữ hệ, thanh Lửa", "nguon": "A:hu-no-lua"},
+      {"hex": "#fe7d04", "nac": "chinh", "vai_tro": "thân hiệu ứng, nút Đánh khi mang Lửa (mã đang dùng #ff7a2a)", "nguon": "A:hu-no-lua"},
+      {"hex": "#c9270c", "nac": "dam", "vai_tro": "hiệu ứng của quái, bóng lửa, vệt cháy", "nguon": "A:vk-sword-0-fire"},
+      {"hex": "#feec86", "nac": "loi_sang", "vai_tro": "lõi hiệu ứng người chơi, số chí mạng", "nguon": "A:hu-no-lua"}
+    ],
+    "doc": [
+      {"hex": "#c8f90b", "nac": "nhat", "vai_tro": "mép mây độc, chữ hệ", "nguon": "A:hu-no-doc"},
+      {"hex": "#5aca02", "nac": "chinh", "vai_tro": "thân hiệu ứng, nút Đánh khi mang Độc (mã đang dùng #6fcf3a)", "nguon": "A:hu-no-doc"},
+      {"hex": "#277600", "nac": "dam", "vai_tro": "vũng/mây độc của quái + viền đỏ", "nguon": "A:hu-no-doc"},
+      {"hex": "#fbfed0", "nac": "loi_sang", "vai_tro": "lõi hiệu ứng người chơi", "nguon": "A:hu-no-doc"}
+    ],
+    "bang": [
+      {"hex": "#9cfefa", "nac": "nhat", "vai_tro": "mép vệt băng, chữ hệ", "nguon": "A:hu-no-bang"},
+      {"hex": "#32b0e9", "nac": "chinh", "vai_tro": "thân hiệu ứng, nút Đánh khi mang Băng (đề xuất thay #7fd4ff trong mã)", "nguon": "A:vk-sword-0-ice"},
+      {"hex": "#217bc3", "nac": "dam", "vai_tro": "hiệu ứng của quái, gai băng", "nguon": "A:vk-sword-0-ice"},
+      {"hex": "#eefffc", "nac": "loi_sang", "vai_tro": "lõi hiệu ứng người chơi", "nguon": "A:hu-no-bang"}
+    ]
+  }
+}
