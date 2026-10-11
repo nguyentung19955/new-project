@@ -347,6 +347,7 @@
   }
   // Vẽ một vật vào canvas tạm cỡ cả làng rồi cắt sát hình. Trả về { cv, x, y0, y } với y là chân vật (để xếp trước sau).
   let TMP = null;
+  let NGAY = false; // chỉ công cụ tools/tach-lang bật (ảnh tham chiếu màu ban ngày): dựng làng không nhân màu chạng vạng
   function sprite(baseY, draw, bright) {
     if (!TMP) TMP = mk(W, H);
     const cv = TMP[0], c = TMP[1];
@@ -357,11 +358,32 @@
     if (x1 < 0) return null;
     const [o, oc] = mk(x1 - x0 + 1, y1 - y0 + 1);
     oc.drawImage(cv, -x0, -y0);
-    return { cv: bright ? o : tint(o), x: x0, y0, y: baseY };
+    return { cv: bright || NGAY ? o : tint(o), x: x0, y0, y: baseY };
   }
+  // ---------- công trình lớn bằng ảnh AI (tools/tach-lang, tệp gd-lang-<tên>.sprite.json, kiểu "giao-dien") ----------
+  // Có ảnh thì dùng ảnh thay hình code: GIỮA ĐÁY ảnh đặt đúng giữa đáy hình code (chân công trình), cỡ vẽ = cỡ ảnh / net.
+  // Ảnh vẽ màu ban ngày, game nhân màu chạng vạng như hình code. Vùng không đi được (RECTS), chỗ đèn lồng chập chờn (LREC),
+  // quầng sáng, lửa lò, khói vẫn theo hình code. Không có tệp gd-lang-* thì cảnh làng y như cũ.
+  const NHA = ['cong', 'dinh', 'cay-da', 'lo-ren', 'hang-xen', 'nha-may'];
+  VS.NHA = NHA;
+  const gdLang = (ten) => { const s = G.spriteCustom; return s && s.gdSan ? s.gdSan('gd-lang-' + ten) : null; };
+  // Ảnh nạp chậm hơn code (và công cụ có thể đổi ảnh bất cứ lúc nào): mỗi lần lấy cảnh làng thì soát lại 6 công trình,
+  // cái nào ảnh vừa có / vừa đổi / vừa gỡ thì thay ngay hình đã nhớ của riêng cái đó (không phải dựng lại cả làng).
+  function anhNha(Bt) {
+    for (const n of Bt.nha) {
+      const g = gdLang(n.ten); if (g === n.g) continue;
+      n.g = g; const ob = n.ob;
+      if (!g) { ob.cv = n.code.cv; ob.x = n.code.x; ob.y0 = n.code.y0; ob.w = 0; ob.h = 0; continue; }
+      ob.cv = Bt.ngay ? g.img : tint(g.img); ob.w = g.rong; ob.h = g.cao;
+      ob.x = Math.round(n.ax - g.rong / 2); ob.y0 = Math.round(n.ay - g.cao);
+    }
+    return Bt;
+  }
+  // Dán ảnh AI của một công trình (ảnh có số điểm ảnh gấp net lần): k = số điểm ảnh thật trên một điểm ảnh làng của bút c.
+  function veAnh(c, ob, x, y, k) { const sm = c.imageSmoothingEnabled; c.imageSmoothingEnabled = ob.w * k < ob.cv.width - 0.5; c.drawImage(ob.cv, x, y, ob.w, ob.h); c.imageSmoothingEnabled = sm; }
   let BUILT = null;
-  function build() {
-    if (BUILT) return BUILT;
+  function build() { return anhNha(BUILT || (BUILT = dung())); }
+  function dung() {
     const [gcv, g] = mk(W, H);
     LREC = [];
     grass(g); hedge(g); river(g);
@@ -375,17 +397,20 @@
     aoSen(g, B.ao[0], B.ao[1], B.ao[2], B.ao[3]);
     cau(g, B.cau[0], B.cau[1], B.cau[2]); // cầu bến đò nằm sát đất, em bé đứng lên trên
     chieu(g, NPCS.do.pos[0] + 4, NPCS.do.pos[1]);
-    const ground = tint(gcv);
+    const ground = NGAY ? gcv : tint(gcv);
     // các vật đứng: xếp trước sau với người theo chân vật
     const objs = [];
     const add = (y, fn, bright) => { const s = sprite(y, fn, bright); if (s) objs.push(s); return s; };
-    add(58, (c) => cong(c, B.cong[0], B.cong[1]));
-    add(dy, (c) => dinh(c, dx, dy));
-    add(B.da[1], (c) => cayDa(c, B.da[0], B.da[1]));
-    add(B.ren[1], (c) => loRen(c, B.ren[0], B.ren[1]));
+    // công trình lớn: nhớ hình code và điểm giữa đáy (chân) để ảnh AI gd-lang-<tên> đặt đúng chỗ (xem anhNha)
+    const nha = [];
+    const addNha = (ten, y, fn) => { const s = add(y, fn); if (s) nha.push({ ten, ob: s, code: { cv: s.cv, x: s.x, y0: s.y0 }, ax: s.x + s.cv.width / 2, ay: s.y0 + s.cv.height, g: null }); };
+    addNha('cong', 58, (c) => cong(c, B.cong[0], B.cong[1]));
+    addNha('dinh', dy, (c) => dinh(c, dx, dy));
+    addNha('cay-da', B.da[1], (c) => cayDa(c, B.da[0], B.da[1]));
+    addNha('lo-ren', B.ren[1], (c) => loRen(c, B.ren[0], B.ren[1]));
     add(rN[1] - 1, (c) => de(c, rN[0] + 20, rN[1] + 1));
-    add(B.xen[1] - 2, (c) => hangXen(c, B.xen[0], B.xen[1]));
-    add(B.may[1], (c) => nhaMay(c, B.may[0], B.may[1]));
+    addNha('hang-xen', B.xen[1] - 2, (c) => hangXen(c, B.xen[0], B.xen[1]));
+    addNha('nha-may', B.may[1], (c) => nhaMay(c, B.may[0], B.may[1]));
     const cui = [0, 1, 2].map((f) => sprite(B.cui[1] + 1, (c) => khungCui(c, B.cui[0], B.cui[1] + 1, f)));
     add(B.phoi[1], (c) => dayPhoi(c, B.phoi[0], B.phoi[1], B.phoi[2], true));
     add(B.gieng[1], (c) => gieng(c, B.gieng[0], B.gieng[1]));
@@ -402,8 +427,7 @@
     const rd = rng(77), flies = [];
     for (let i = 0; i < W / 14; i++) flies.push([rd() * W, 40 + rd() * 220, rd() * 6.28, 0.5 + rd()]);
     const lants = LREC; LREC = null;
-    BUILT = { ground, objs, cui, thuyenS, light: lcv, flies, lants };
-    return BUILT;
+    return { ground, objs, cui, thuyenS, light: lcv, flies, lants, nha, ngay: NGAY };
   }
 
   // ======================= chỗ không đi được =======================
@@ -768,6 +792,40 @@
       else if (u < fall + 1.5) { const x = sx + Math.sin(fall * 1.8 + i) * 7 * M - cam; c.globalAlpha = 1 - (u - fall) / 1.5; p(c, x, y1, 2, 1, tc(col)); c.globalAlpha = 1; }
     }
   }
+  function luaLo(c, cam, t) { // lửa lò rèn bập bùng, khói bay (vẽ đè lên lò, cả khi lò là ảnh AI)
+    const x = B.ren[0] - cam, y = B.ren[1], f = Math.floor(t * 7) % 3;
+    p(c, x - 19 + f, y - 13 + (f % 2), 6 - f, 5, '#fff3b0'); p(c, x - 22 + f * 3, y - 21 - (f % 2), 2, 3, '#ffd23f'); p(c, x - 12 - f, y - 19, 2, 2 + f, '#ffb040');
+    for (let i = 0; i < 3; i++) { const ph = (t * 0.35 + i / 3) % 1; c.globalAlpha = 0.45 * (1 - ph); ell(c, x - 19 + Math.round(ph * 12 + Math.sin(ph * 6 + i) * 2), y - 74 - Math.round(ph * 22), 3 + Math.round(ph * 3), 2 + Math.round(ph), '#c8bec8'); }
+    c.globalAlpha = 1;
+  }
+  // ---------- cho công cụ tools/tach-lang (game không gọi) ----------
+  // Vẽ cảnh làng đứng yên lên bút c bất kỳ (1 đơn vị = 1 điểm ảnh làng, cả làng 720×270, không dời OY): nền, công trình, đạo cụ,
+  // lửa lò, 7 người làng, quầng đèn. o: { t: giây, k: số điểm ảnh thật trên một điểm ảnh làng (để dán ảnh AI cho nét),
+  //   ngay: true = màu ban ngày, không nhân màu chạng vạng, không quầng đèn (ảnh tham chiếu gửi ChatGPT), nguoi: false = không vẽ người }
+  let BUILT_NGAY = null;
+  function canhCongCu(ngay) {
+    if (!ngay) return build();
+    if (!BUILT_NGAY) { NGAY = true; try { BUILT_NGAY = dung(); } finally { NGAY = false; } }
+    return anhNha(BUILT_NGAY);
+  }
+  VS.veTinh = function (c, o) {
+    o = o || {};
+    const Bt = canhCongCu(!!o.ngay), t = +o.t || 0, k = +o.k || 1, L = [];
+    c.drawImage(Bt.ground, 0, 0);
+    for (const ob of Bt.objs) L.push([ob.y, ob.w ? () => veAnh(c, ob, ob.x, ob.y0, k) : () => c.drawImage(ob.cv, ob.x, ob.y0)]);
+    const cf = Bt.cui[Math.floor(t * 2.2) % 3]; L.push([cf.y, () => c.drawImage(cf.cv, cf.x, cf.y0)]);
+    L.push([Bt.thuyenS.y, () => c.drawImage(Bt.thuyenS.cv, Bt.thuyenS.x, Bt.thuyenS.y0)]);
+    if (!o.ngay) L.push([B.phoi[1] + 0.01, () => ambClothes(c, 0, t, 1)]);
+    L.push([B.ren[1] + 0.2, () => luaLo(c, 0, t)]);
+    if (o.nguoi !== false) for (const kk of ORDER) { const q = NPCS[kk].pos; L.push([q[1], () => { const sv = c.imageSmoothingEnabled; putNpc(c, kk, q[0], q[1], 0, {}); c.imageSmoothingEnabled = sv; }]); }
+    L.sort((a, b) => a[0] - b[0]);
+    for (const l of L) l[1]();
+    if (!o.ngay) { c.globalCompositeOperation = 'lighter'; c.drawImage(Bt.light, 0, 0); ambLight(c, Bt, 0, t, 1, 0); c.globalCompositeOperation = 'source-over'; }
+  };
+  // Sáu công trình lớn: mã tệp, hình code (cv, góc trên trái x, y, cỡ w × h), điểm chân (ax, ay = giữa đáy), anh = chỗ và cỡ ảnh AI đang dùng (không có ảnh: null).
+  VS.nhaLang = function (o) {
+    return canhCongCu(!!(o && o.ngay)).nha.map((n) => ({ ten: n.ten, ma: 'gd-lang-' + n.ten, cv: n.code.cv, x: n.code.x, y: n.code.y0, w: n.code.cv.width, h: n.code.cv.height, ax: n.ax, ay: n.ay, anh: n.g ? { x: n.ob.x, y: n.ob.y0, w: n.ob.w, h: n.ob.h } : null }));
+  };
   // dim: độ tối phủ lên cảnh (khi mở bảng). hideHero: không vẽ em bé (bản đồ, bảng lớn).
   VS.drawWorld = function (o) {
     o = o || {};
@@ -781,17 +839,12 @@
     // nước lấp lánh
     for (let i = 0; i < 10; i++) { const y = (i * 53 + 17) % H, x = bo(y) + 10 + ((i * 37) % 50) - cam, k = Math.sin(t * 1.4 + i * 2.1); if (k > 0.3 && x < 480) p(c, x + Math.round(k * 3), y, 5, 1, '#6a9ab8'); }
     const L = [];
-    for (const ob of Bt.objs) if (ob.x - cam < 480 && ob.x + ob.cv.width - cam > 0) L.push([ob.y, () => c.drawImage(ob.cv, ob.x - cam, ob.y0)]);
+    for (const ob of Bt.objs) if (ob.x - cam < 480 && ob.x + (ob.w || ob.cv.width) - cam > 0) L.push([ob.y, ob.w ? () => veAnh(c, ob, ob.x - cam, ob.y0, G.NET || 1) : () => c.drawImage(ob.cv, ob.x - cam, ob.y0)]);
     const cf = Bt.cui[Math.floor(t * 2.2) % 3]; L.push([cf.y, () => c.drawImage(cf.cv, cf.x - cam, cf.y0)]);
     const tb = Math.round(Math.sin(t * 1.3)); L.push([Bt.thuyenS.y, () => c.drawImage(Bt.thuyenS.cv, Bt.thuyenS.x - cam, Bt.thuyenS.y0 + tb)]);
     L.push([B.phoi[1] + 0.01, () => ambClothes(c, cam, t, M)]);
     // lửa lò rèn bập bùng, khói bay
-    L.push([B.ren[1] + 0.2, () => {
-      const x = B.ren[0] - cam, y = B.ren[1], f = Math.floor(t * 7) % 3;
-      p(c, x - 19 + f, y - 13 + (f % 2), 6 - f, 5, '#fff3b0'); p(c, x - 22 + f * 3, y - 21 - (f % 2), 2, 3, '#ffd23f'); p(c, x - 12 - f, y - 19, 2, 2 + f, '#ffb040');
-      for (let i = 0; i < 3; i++) { const ph = (t * 0.35 + i / 3) % 1; c.globalAlpha = 0.45 * (1 - ph); ell(c, x - 19 + Math.round(ph * 12 + Math.sin(ph * 6 + i) * 2), y - 74 - Math.round(ph * 22), 3 + Math.round(ph * 3), 2 + Math.round(ph), '#c8bec8'); }
-      c.globalAlpha = 1;
-    }]);
+    L.push([B.ren[1] + 0.2, () => luaLo(c, cam, t)]);
     // đàn gà, con cóc
     const gp = [[-34, -18, null, 0], [-22, -8, '#c87050', 1.3], [-44, -4, '#ffd23f', 2.6]];
     for (const q of gp) L.push([B.rom[1] + q[1], () => ga(c, B.rom[0] + q[0] - cam + Math.round(Math.sin(t * 0.4 + q[3]) * 3), B.rom[1] + q[1], q[2], Math.sin(t * 2.2 + q[3] * 2) > 0.55)]);
