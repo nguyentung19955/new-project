@@ -1,0 +1,130 @@
+{
+ "ba_he": {
+  "truoc": {
+   "quai": [
+    {
+     "vai": "rusher",
+     "x": 134,
+     "y": 130,
+     "dau": "fire"
+    },
+    {
+     "vai": "rusher",
+     "x": 198,
+     "y": 130,
+     "dau": "poison"
+    },
+    {
+     "vai": "rusher",
+     "x": 262,
+     "y": 130,
+     "dau": "ice"
+    },
+    {
+     "vai": "rusher",
+     "x": 326,
+     "y": 130,
+     "dau": null
+    },
+    {
+     "vai": "swarm",
+     "x": 120,
+     "y": 180,
+     "dau": null
+    },
+    {
+     "vai": "shield",
+     "x": 340,
+     "y": 180,
+     "dau": "ice"
+    }
+   ],
+   "oDau": 4,
+   "co": null
+  },
+  "sau": {
+   "quai": [
+    {
+     "vai": "rusher",
+     "x": 134,
+     "y": 130,
+     "dau": "fire"
+    },
+    {
+     "vai": "rusher",
+     "x": 198,
+     "y": 130,
+     "dau": "poison"
+    },
+    {
+     "vai": "rusher",
+     "x": 262,
+     "y": 130,
+     "dau": "ice"
+    },
+    {
+     "vai": "rusher",
+     "x": 326,
+     "y": 130,
+     "dau": null
+    },
+    {
+     "vai": "swarm",
+     "x": 120,
+     "y": 180,
+     "dau": null
+    },
+    {
+     "vai": "shield",
+     "x": 340,
+     "y": 180,
+     "dau": "ice"
+    }
+   ],
+   "oDau": 4,
+   "co": true
+  },
+  "loi_js": [],
+  "diem_anh_khac_truoc_sau": 1540,
+  "diem_mau_vien": {
+   "truoc": {
+    "lua": 36,
+    "doc": 0,
+    "bang": 0
+   },
+   "sau": {
+    "lua": 65,
+    "doc": 29,
+    "bang": 59
+   }
+  }
+ },
+ "co_tat_diem_anh_khac": {
+  "ba-he": 0,
+  "dong": 0,
+  "tinh-anh": 0,
+  "trum": 0,
+  "huong-dan": 0
+ },
+ "bot_ai1": {
+  "truoc": {
+   "thang": true,
+   "giay": 182.2,
+   "mau": "100/100",
+   "soDong": 195,
+   "loiFx": 0,
+   "co": true,
+   "bamNhatKy": "5f5f38c467443b05"
+  },
+  "sau": {
+   "thang": true,
+   "giay": 182.2,
+   "mau": "100/100",
+   "soDong": 195,
+   "loiFx": 0,
+   "co": true,
+   "bamNhatKy": "5f5f38c467443b05"
+  },
+  "nhat_ky_trung": true
+ }
+}

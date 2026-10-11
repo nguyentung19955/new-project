@@ -184,3 +184,62 @@ Trong lúc phiên này đang chạy, brief được thêm đoạn 8b: bỏ ô d�
 - 8b dùng chung cờ `G.DO_DOC_TRAN`, nên nếu làm nhầm ý thì muốn bỏ riêng 8b phải tắt cả Đợt 8.
 
 Khi chủ dự án xác nhận, việc còn lại gọn: thanh máu nhỏ của quái vẽ ở `mobBars` trong `stage.js` (thêm viền màu hệ ở đó), ô dấu vẽ ở hàm `badges` trong `linhkhi.js` (bỏ khi cờ bật).
+
+## 8b. Bỏ ô dấu Linh Khí trên đầu quái, chuyển thành viền hệ quanh thanh máu (phiên riêng, 11/10/2026)
+
+**Tóm tắt một dòng:** quái thường và tinh anh không còn ô vuông 9×9 (lửa / giọt độc / bông tuyết) trên đầu; quái đang mang dấu hệ nào thì thanh máu nhỏ của nó có viền 1 điểm ảnh màu hệ đó. Luật chơi không đổi. Commit game: `0a65ce59`.
+
+### Tệp đã đổi
+
+| Tệp | Đổi gì |
+|---|---|
+| `game/js/linhkhi.js` | Thêm cờ `G.DAU_LINH_KHI_VIEN` (mặc định bật), bảng màu viền `G.lk.VIEN` (lửa `#fe7d04`, độc `#5aca02`, băng `#32b0e9`), hàm `G.lk.vienHe(e)`. Hàm `badges`: quái đã có viền hệ thì không vẽ ô dấu nữa. |
+| `game/js/stage.js` | Hàm `mobBars`: quái mang dấu thì viền thanh máu tô màu hệ (thay viền tối), và thanh máu hiện suốt lúc còn mang dấu. |
+| `game/dist/*` | Gói lại bằng `python3 game/build.py`. |
+| `docs/.../dot-8/kiem-8b.py`, `ket-qua-8b.json`, `anh/8b-truoc-sau.png` | Bài kiểm, kết quả, ảnh. |
+
+Không có chữ mới nên không đụng `ngon_ngu*.js`. Không đụng ô dấu ở bảng xem vũ khí, màn kết quả, ba vạch linh khí cạnh ô vũ khí.
+
+### Đã làm gì và vì sao
+
+1. **Viền hệ.** Thanh máu nhỏ vốn có viền tối 1 điểm ảnh. Quái mang dấu thì viền đó đổi sang màu hệ, lòng thanh vẫn tối, phần máu đỏ như cũ. Quái không mang dấu: viền y cũ.
+2. **Thanh máu hiện suốt khi quái mang dấu.** Trước đây thanh máu nhỏ chỉ hiện 2,4 giây sau khi quái trúng đòn, còn ô dấu thì hiện suốt. Nếu chỉ tô viền mà giữ luật 2,4 giây thì có lúc quái còn mang dấu nhưng không thấy gì. Nên tôi cho thanh máu hiện suốt lúc quái còn mang dấu; hết dấu thì mờ dần trong nửa giây như sau một đòn đánh. Đây là lựa chọn của tôi, xem "Quyết định cần duyệt" bên dưới.
+3. **Hệ nào được tô** vẫn do đúng hàm cũ `LK.markEl` quyết định (cùng luật với lúc kết liễu), nên viền luôn khớp với dấu sẽ nhận.
+4. **Cờ riêng** `G.DAU_LINH_KHI_VIEN`, không dùng chung `G.DO_DOC_TRAN`: tắt 8b không ảnh hưởng Đợt 8 và ngược lại.
+5. **Trùm giữ ô dấu.** Trùm không có thanh máu nhỏ trên đầu (máu trùm nằm ở thanh lớn phía trên màn hình, thuộc HUD khác mà brief cấm đụng). Bỏ ô dấu của trùm thì mất hẳn thông tin, nên tôi giữ nguyên.
+6. **Dự phòng:** nếu thanh máu nhỏ không được vẽ (người chơi tắt hiệu ứng giao diện `G.VFX.giaoDien = 0`) thì ô dấu cũ vẫn hiện, không mất thông tin.
+7. Danh sách `G.lk.badgeList` (bài kiểm `game/tests/linhkhi.py` đọc) vẫn ghi đủ quái mang dấu như trước.
+
+### Kiểm thử (chạy `python3 docs/review/ke-hoach-cai-thien/dot-8/kiem-8b.py <thư mục game bản trước>`, kết quả ở `ket-qua-8b.json`)
+
+| Tiêu chí | Kết quả |
+|---|---|
+| Ảnh 844×390 phòng có 3 quái mang dấu 3 hệ, trước / sau | ĐẠT. `anh/8b-truoc-sau.png`: trước có 4 ô dấu, sau không còn ô nào, 4 thanh máu có viền cam / xanh lá / xanh dương (3 heo + 1 quái giáp mang dấu Băng). Quái không mang dấu không có viền màu. Không lỗi JS. |
+| Cờ `G.DAU_LINH_KHI_VIEN = false` → như cũ | ĐẠT. So ảnh bản mới (cờ tắt) với bản trước 8b ở 5 cảnh 844×390 (3 hệ, đông quái, tinh anh, trùm, hướng dẫn): **0 điểm ảnh khác** ở cả 5. |
+| Bot ải 1 vẫn thắng | ĐẠT. Thắng sau 182,2 giây, máu 100/100; nhật ký 195 dòng sát thương **trùng từng dòng** với bản trước (cùng mã băm `5f5f38c467443b05`), tức luật chơi không đổi. |
+| `node --check game/js/*.js`, `python3 game/build.py`, `cloud_save_regression.test.js` | ĐẠT. |
+
+Chưa làm: chưa thử trên iPhone thật; không chạy các bộ test dài (theo lời dặn), kể cả `game/tests/linhkhi.py`.
+
+### Ảnh
+
+`anh/8b-truoc-sau.png`: hàng trên là toàn màn hình trước | sau; bên dưới phóng to 3 lần vùng quái (trên = trước, dưới = sau; quái từ trái sang: Lửa, Độc, Băng, không dấu; góc phải dưới là quái giáp mang dấu Băng).
+
+### Rủi ro còn lại
+
+1. Viền chỉ dày 1 điểm ảnh quanh thanh cao 2 điểm ảnh: trên ảnh chụp 844×390 đọc được cả ba màu, nhưng trên iPhone thật ngoài nắng có thể khó thấy hơn ô 9×9 cũ. Cần chủ dự án xem trên máy.
+2. Quái mang dấu nay luôn có thanh máu, nên phòng đông quái dính hiệu ứng sẽ có nhiều thanh máu cùng lúc hơn trước (đổi lại bớt đúng chừng đó ô dấu).
+3. Màu viền lửa `#fe7d04` gần màu máu tinh anh (cam `#ff8a3a`): tinh anh đang cháy có viền và phần máu cùng tông cam, vẫn phân biệt nhờ lòng thanh tối ở phần máu đã mất.
+4. Phiên Đợt 10 và làn C3 chạy song song: lúc đẩy không có xung đột.
+
+### Cách quay lui
+
+- Nhanh nhất, không sửa mã: mở game với `?dauvien=0` ở cuối địa chỉ.
+- Tắt hẳn: trong `game/js/linhkhi.js` đổi `G.DAU_LINH_KHI_VIEN = !tatVien` thành `G.DAU_LINH_KHI_VIEN = false`, rồi `python3 game/build.py`.
+- Gỡ toàn bộ: `git revert 0a65ce59`, rồi `python3 game/build.py` nếu `game/dist` xung đột.
+
+### Quyết định cần chủ dự án duyệt
+
+1. **Thanh máu hiện suốt khi quái mang dấu** (mục 2 ở trên). Mặc định: có. Nếu muốn thanh máu vẫn chỉ hiện 2,4 giây sau đòn đánh thì xoá một dòng trong `mobBars` (dòng có chú thích "đang mang dấu thì thanh máu hiện suốt"), khi đó có lúc không thấy dấu.
+2. **Trùm vẫn giữ ô dấu trên đầu** vì không có thanh máu nhỏ. Nếu muốn bỏ cả ở trùm thì cần cho phép đổi thanh máu lớn của trùm (viền hệ ở đó), việc này ngoài phạm vi 8b.
+

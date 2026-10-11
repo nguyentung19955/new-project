@@ -18,7 +18,7 @@ Trạng thái: **ĐÃ LÀM + ĐÃ KIỂM** (có báo cáo, ảnh, số đo, work
 | 7 | Trạng thái độc/cháy/băng trên thân quái; bỏ biểu tượng trạng thái trên đầu | ĐÃ LÀM + ĐÃ KIỂM | 1200 | `dot-7/bao-cao.md` | `G.TRANG_THAI_TREN_THAN=false` |
 | 7+ | Bỏ khung khối băng quanh quái đóng băng | ĐÃ LÀM (chưa kiểm riêng) | 5633e605 | — | revert 5633e605 |
 | 8 | Độ đọc trận đấu: thứ bậc hình ảnh, đỏ chỉ cho nguy hiểm, số sát thương, vùng thông báo | ĐANG CHẠY (từ 13:05) | — | `dot-8-do-doc-tran.md` | `G.DO_DOC_TRAN` |
-| 8b | Bỏ ô dấu Linh Khí trên đầu quái → viền hệ quanh thanh máu | ĐÃ QUYẾT ("Ok" 13:21, chờ xác nhận lại), CHƯA LÀM | — | brief §Bổ sung | — |
+| 8b | Bỏ ô dấu Linh Khí trên đầu quái → viền hệ quanh thanh máu | ĐÃ LÀM + ĐÃ KIỂM (cờ tắt: 0 điểm ảnh khác; bot ải 1 thắng, nhật ký sát thương trùng) | 0a65ce59 | `dot-8/bao-cao.md` §8b | `G.DAU_LINH_KHI_VIEN=false` / `?dauvien=0` |
 | 9 | Trang trạng thái này + đồng bộ TONG-HOP | ĐÃ LÀM | — | tệp này | — |
 | 10 | Đo dung lượng, tách ảnh tải sau (Q5) | ĐÃ QUYẾT, CHƯA LÀM | — | — | — |
 
@@ -66,7 +66,7 @@ Trạng thái: **ĐÃ LÀM + ĐÃ KIỂM** (có báo cáo, ảnh, số đo, work
 3. Kiếm đi qua mặt ở 2 khung đầu đòn (Đợt 5) — mặc định: giữ (2a).
 4. Tile: giữ vẽ đè vòng đá/bãi hoa lên tile; màu sàn theo đặc tả (Đợt 6) — mặc định: có.
 5. Mở rộng tile sang 2 vùng kia — chỉ sau khi Rừng có ảnh thật.
-6. 8b bỏ ô dấu Linh Khí — "Ok" 13:21, chờ xác nhận lại vì có thể nhầm với khung khối băng.
+6. 8b bỏ ô dấu Linh Khí — ĐÃ LÀM (cờ riêng `G.DAU_LINH_KHI_VIEN`). Còn chờ duyệt 2 lựa chọn: thanh máu hiện suốt khi quái mang dấu (mặc định: có); trùm vẫn giữ ô dấu vì không có thanh máu nhỏ (mặc định: giữ). Xem `dot-8/bao-cao.md` §8b.
 7. Màu nút Đánh mới (Đợt 8) — sẽ hỏi kèm ảnh.
 8. Hồ lô (19×28) và trống đồng (15×25) khá to so với em bé — xem trong game rồi quyết.
 
