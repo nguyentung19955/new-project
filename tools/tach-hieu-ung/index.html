@@ -101,6 +101,7 @@
     <h2><span class="so">1</span>Chọn hiệu ứng và lấy prompt vẽ</h2>
     <div class="hang">
       <select id="chonHu" aria-label="Chọn hiệu ứng"></select>
+      <label id="oBanMau" class="hang" style="gap:6px" hidden>Bản màu: <select id="chonHe" aria-label="Chọn bản màu theo hệ"></select></label>
       <button class="nut" id="nutChepPrompt">Sao chép prompt vẽ</button>
     </div>
     <p class="chu-y" id="noiDung"></p>
@@ -180,7 +181,7 @@
 
 <script>
 'use strict';
-// ===================== THÔNG SỐ HIỆU ỨNG (khớp game/js/fx_anh.js và chỗ móc trong fx.js, fx_dan.js, fx_chuong.js, mobs.js, stage.js) =====================
+// ===================== THÔNG SỐ HIỆU ỨNG (khớp game/js/fx_anh.js và chỗ móc trong fx.js, fx_he.js, fx_dan.js, fx_chuong.js, mobs.js, stage.js) =====================
 // fw×fh: cỡ một khung (điểm ảnh game); gx,gy: điểm neo (chỗ game đặt hiệu ứng); so: số khung; giay: thời lượng; lap: chạy lặp;
 // xoay: xoay theo hướng bay; cong: vẽ kiểu cộng sáng (ánh sáng); canh: 'trai' (bám mép trái, như vệt vũ khí) hoặc 'giua';
 // doc: 'giua' hoặc 'day' (đáy hình chạm mặt đất); nen: màu nền vẽ; xem: kiểu xem thử; noi: hiện ở đâu trong game.
@@ -329,10 +330,76 @@ const HU = [
     mo: 'một mũi tên gỗ đang bay đóng băng: thân gỗ nâu thẳng, lông đuôi trắng ngà, đầu tên là một tinh thể băng nhọn xanh băng nhạt lõi trắng, hai ngạnh băng xuôi về phía sau như đầu mũi lao, viền băng xanh đen sẫm; vài hạt sương trắng li ti dọc thân',
     dat: 'mũi tên nằm NGANG giữa ô, tinh thể băng nhọn ở bên PHẢI, lông đuôi ở bên TRÁI', huong: 'bay sang PHẢI', thoi: 'một ánh sao trắng loé ở mũi băng rồi tắt, hạt sương dọc thân lấp lánh lần lượt; khung cuối nối tiếp được khung đầu để chạy lặp',
     la: 'hai ngạnh băng xoè như cánh hoa tuyết sáu cánh bị cắt đôi, lông đuôi phủ một lớp sương trắng' },
+  // ===== Phiên hieu-ung-b2: đòn cận chiến và chiêu (8 mục). "phe": 'ta' = hiệu ứng của người chơi (lõi trắng ngà #fbfed0, chỉ nhuốm màu ở mép),
+  // 'quai' = hiệu ứng của quái (nấc đậm). Mục có "phe" hiện thêm ô "Bản màu": Chung, Lửa, Độc, Băng; bản theo hệ có mã thêm đuôi -fire / -poison / -ice,
+  // game có bản theo hệ thì dùng, không thì dùng bản chung (js/fx.js anhHe). Màu lấy từ docs/review/ra-soat-my-thuat/bao-cao.md mục 6. =====
+  { ma: 'hu-tram-nguyet', ten: 'Trảm Nguyệt (chiêu đặc biệt của kiếm)', nen: 'duong', fw: 48, fh: 48, gx: 24, gy: 24, so: 4, giay: 0.32, lap: true, xoay: true, cong: true, canh: 'giua', doc: 'giua', xem: 'dan', phe: 'ta',
+    noi: 'Vầng trăng lưỡi liềm bay ra khi kiếm tung chiêu đặc biệt Trảm Nguyệt (thay hình trăng vẽ bằng code). Game xoay theo 8 hướng bay, bay sang trái thì tự lật (không lộn ngược) và cho hình lớn dần khi bay xa. Vệt gió bay theo sau vẫn vẽ bằng code.',
+    mo: 'một vầng trăng lưỡi liềm bằng linh khí đang bay, đứng dọc, lưng cong (phần dày nhất) hướng về bên PHẢI, hai đầu nhọn chĩa về bên TRÁI; phía sau nó (bên trái) có hai bóng lưỡi liềm mờ dần đuổi theo',
+    dat: 'lưỡi liềm ở GIỮA ô, cao gần hết ô, lưng cong ở bên PHẢI; hai bóng mờ lệch dần sang TRÁI', huong: 'bay sang PHẢI (game tự xoay theo 8 hướng)',
+    thoi: 'một ánh sáng chạy dọc lưỡi liềm từ đầu trên xuống đầu dưới, hai bóng mờ phía sau nhấp nháy đậm nhạt; hình dáng và vị trí lưỡi liềm giữ nguyên ở mọi khung; khung cuối nối tiếp được khung đầu để chạy lặp',
+    la: 'mép trong của lưỡi liềm có một hàng răng cưa nhỏ đều như vành tia mặt trời trên trống đồng, nhìn là biết trăng của kiếm khí chứ không phải trăng trên trời' },
+  { ma: 'hu-chem-luot', ten: 'Lướt chém (kiếm, sau khi né)', nen: 'duong', fw: 64, fh: 28, gx: 8, gy: 14, so: 6, giay: 0.2, canh: 'trai', doc: 'giua', xem: 'vu-khi', phe: 'ta',
+    noi: 'Nhát chém ngang rộng của kiếm ngay sau khi lăn né (thay lưỡi liềm nằm vẽ bằng code). Điểm neo là tay em bé; game tự xoay theo 8 hướng đánh và co giãn theo tầm đánh. Vệt gió vẫn vẽ bằng code.',
+    mo: 'một vệt chém ngang rất rộng và dẹt, hình lưỡi liềm nằm (vòng cung mở về bên trái), quét ngang trước mặt như nhát kiếm lướt qua; kèm ba bốn vạch gió mảnh nằm ngang ở phía đuôi',
+    dat: 'điểm gốc (tay cầm kiếm, KHÔNG vẽ tay) ở mép TRÁI, ngang giữa ô; vệt chém toả dài sang PHẢI gần hết bề ngang ô', huong: 'chém sang PHẢI (game tự xoay theo 8 hướng)',
+    thoi: 'khung 1 vệt vừa loé ngắn ở gần tay, khung 2 và 3 vệt vươn dài hết cỡ và sáng nhất, khung 4 đến 6 vệt mỏng dần rồi tan thành các chấm thưa',
+    la: 'đầu vệt (mép phải) chẻ làm hai ngạnh như đuôi chim én, vì đây là nhát chém khi đang lướt' },
+  { ma: 'hu-quet-giao', ten: 'Giáo quét vòng', nen: 'duong', fw: 104, fh: 36, gx: 52, gy: 18, so: 8, giay: 0.3, canh: 'giua', doc: 'giua', xem: 'trung', phe: 'ta',
+    noi: 'Đòn giữ nút của giáo: quét một vòng quanh người (thay hai lưỡi liềm trước và sau vẽ bằng code). Điểm neo là thân em bé (giữa ảnh); game co giãn theo tầm giáo. Vòng bụi dưới chân vẫn vẽ bằng code.',
+    mo: 'một vòng quét tròn của cây giáo, nhìn chếch từ trên xuống nên thành hình elip dẹt nằm ngang: một dải sáng cong chạy trọn một vòng quanh tâm ô, đầu dải (chỗ mũi giáo) sáng và dày nhất, đuôi dải mỏng và mờ dần',
+    dat: 'tâm vòng quét ở CHÍNH GIỮA ô (chỗ em bé đứng, KHÔNG vẽ em bé); vòng elip rộng gần hết bề ngang ô và cao gần hết ô. QUAN TRỌNG: khung nào cũng phải vẽ ĐỦ CẢ VÒNG elip, chạm tới hai mép trái và phải như nhau (chỗ mũi giáo chưa quét tới thì vẽ nét mảnh mờ), để mọi khung rộng bằng nhau',
+    huong: 'nhát quét bắt đầu từ bên PHẢI (trước mặt em bé) rồi quay đủ một vòng',
+    thoi: 'đầu sáng của dải bắt đầu ở bên PHẢI (trước mặt), chạy xuống nửa dưới, vòng sang bên TRÁI (sau lưng), lên nửa trên rồi về lại bên PHẢI trong 6 khung đầu; 2 khung cuối cả vòng mỏng dần và tan thành chấm thưa',
+    la: 'ngay sau đầu sáng có một túm tua giáo (ngù) kéo thành ba sợi cong ngắn bay theo' },
+  { ma: 'hu-nen-dat', ten: 'Nện đất (búa)', nen: 'duong', fw: 80, fh: 48, gx: 40, gy: 36, so: 6, giay: 0.36, canh: 'giua', doc: 'day', xem: 'no', phe: 'ta',
+    noi: 'Chỗ búa nện xuống đất: đòn thường của búa, đòn giữ nút "nện đất", chiêu đặc biệt của búa (thay hai vòng sóng và chớp sáng vẽ bằng code; game co giãn theo vùng nện). Vết nứt trên sàn, vài hạt bụi và đá vẫn vẽ bằng code. Riêng vệt búa bổ xuống của đòn giữ nút dùng lại ảnh "Vệt nện búa" (hu-chem-bua) đã có.',
+    mo: 'một cú nện búa xuống đất, nhìn chếch từ trên xuống: một vòng sóng bụi hình elip dẹt lan ra sát mặt đất, ở giữa bụi và đá vụn bắn vọt lên cao, vài mảnh đá văng ra hai bên; bụi màu ngà xám, đá vụn màu xám đá',
+    dat: 'tâm cú nện ở GIỮA ô theo chiều ngang và ở khoảng 3/4 chiều cao ô tính từ trên xuống; vòng sóng bụi đối xứng trái phải, mép dưới của vòng sóng sát gần mép dưới ô; bụi và đá bắn lên phía trên', huong: 'đối xứng trái phải, không nghiêng về bên nào',
+    thoi: 'khung 1 một chớp sáng nhỏ dẹt ở tâm, khung 2 và 3 vòng sóng bụi mở rộng nhanh và đá vụn bắn lên cao nhất, khung 4 và 5 vòng sóng rộng hết cỡ và mỏng dần, đá rơi xuống, khung 6 chỉ còn vài chấm bụi thưa',
+    la: 'các mảnh đá văng có góc vuông như gạch vỡ, và sát tâm có ba nét nứt ngắn toả hình chân chim' },
+  { ma: 'hu-quai-cao', ten: 'Vệt cào của quái', nen: 'duong', fw: 40, fh: 32, gx: 6, gy: 16, so: 4, giay: 0.16, canh: 'trai', doc: 'giua', xem: 'vu-khi', phe: 'quai',
+    noi: 'Vệt cào hiện lúc quái đánh gần tung đòn (thay vệt cào vẽ bằng code). Điểm neo là mặt trước thân quái; game lật theo hướng quái quay và co giãn theo cỡ quái. Vùng đỏ báo trước vẫn vẽ bằng code.',
+    mo: 'ba vết vuốt cào song song, cong nhẹ như ba lưỡi liềm mảnh xếp chồng từ trên xuống, hai đầu nhọn, giữa phình, cào chéo từ trên xuống',
+    dat: 'điểm gốc (thân con quái, KHÔNG vẽ quái) ở mép TRÁI, ngang giữa ô; ba vết vuốt trải sang PHẢI, lưng cong hướng sang PHẢI', huong: 'cào sang PHẢI (game tự lật khi quái quay trái)',
+    thoi: 'khung 1 ba vết vừa hé ở phía trên, khung 2 ba vết dài hết cỡ và đậm nhất, khung 3 vết mỏng lại, khung 4 chỉ còn các chấm thưa',
+    la: 'vết giữa dài hơn hai vết bên, và cuối mỗi vết có một móc nhỏ quặp xuống như vuốt hổ' },
+  { ma: 'hu-ban-cung', ten: 'Buông cung (tên mạnh)', nen: 'duong', fw: 32, fh: 32, gx: 4, gy: 16, so: 4, giay: 0.16, xoay: true, cong: true, canh: 'trai', doc: 'giua', xem: 'vu-khi', phe: 'ta',
+    noi: 'Luồng gió bật ra ở cây cung lúc buông dây đã căng (đòn giữ nút của cung; thay chớp sáng và vòng gió vẽ bằng code). Điểm neo là tay cầm cung; game xoay theo 8 hướng ngắm, căng càng đầy hình càng to. Vệt gió và mũi tên không đổi.',
+    mo: 'luồng gió bật ra khi buông dây cung đã căng: một chớp sáng nhỏ hình thoi sát gốc và một vòng gió hình cánh cung (vòng cung mở về bên trái) bung ra phía PHẢI, kèm hai ba vạch gió ngắn',
+    dat: 'điểm gốc (tay cầm cung, KHÔNG vẽ cung, KHÔNG vẽ mũi tên) ở mép TRÁI, ngang giữa ô; luồng gió bung sang PHẢI, đối xứng trên dưới', huong: 'bung sang PHẢI (game tự xoay theo 8 hướng)',
+    thoi: 'khung 1 chớp sáng to nhất và vòng gió còn nhỏ sát chớp, khung 2 và 3 vòng gió nở to dần và trôi sang phải còn chớp nhỏ lại, khung 4 vòng gió mỏng, đứt đoạn rồi tan',
+    la: 'vòng gió có đúng dáng một cây cung nhỏ với hai đầu cung cong ngược ra ngoài, như bóng của chính cây cung vừa bật' },
+  { ma: 'hu-ra-chieu', ten: 'Ra chiêu đặc biệt (kiếm, giáo)', nen: 'duong', fw: 48, fh: 48, gx: 4, gy: 24, so: 5, giay: 0.2, xoay: true, cong: true, canh: 'trai', doc: 'giua', xem: 'vu-khi', phe: 'ta',
+    noi: 'Chớp linh khí ở tay em bé đúng lúc tung chiêu đặc biệt của kiếm (Trảm Nguyệt) và giáo (Phi Thương); thay chớp sáng và vòng sóng vẽ bằng code. Điểm neo là tay; game xoay theo 8 hướng chiêu. Chiêu của búa dùng ảnh "Nện đất".',
+    mo: 'một chớp linh khí bùng ra lúc tung chiêu: một ngôi sao bốn cánh sáng ở sát gốc, từ đó toả ra phía PHẢI một vành sóng hình quạt (nửa vòng tròn) và năm sáu tia nhọn dài ngắn khác nhau',
+    dat: 'điểm gốc (bàn tay cầm vũ khí, KHÔNG vẽ tay, KHÔNG vẽ vũ khí) ở mép TRÁI, ngang giữa ô; chớp sáng toả hình quạt sang PHẢI, đối xứng trên dưới, rộng gần hết ô', huong: 'toả sang PHẢI (game tự xoay theo 8 hướng)',
+    thoi: 'khung 1 ngôi sao loé to sát gốc, khung 2 và 3 vành quạt và các tia phóng ra xa hết cỡ, khung 4 vành quạt mỏng đi và ngôi sao tắt, khung 5 chỉ còn vài tia đứt đoạn',
+    la: 'vành quạt có viền răng cưa đều như vành hoa văn mặt trời trên trống đồng' },
+  { ma: 'hu-ra-chuong', ten: 'Ra chưởng', nen: 'duong', fw: 48, fh: 48, gx: 4, gy: 24, so: 5, giay: 0.2, xoay: true, cong: true, canh: 'trai', doc: 'giua', xem: 'vu-khi', phe: 'ta',
+    noi: 'Sóng chưởng ở tay em bé đúng lúc bấm nút Chưởng (thay chớp sáng và vòng sóng vẽ bằng code). Điểm neo là lòng bàn tay; game xoay theo 8 hướng chưởng, chưởng tích lực thì to hơn. Chưởng luôn mang hệ: nên làm đủ ba bản màu Lửa, Độc, Băng; chưa có bản theo hệ thì game dùng bản Chung.',
+    mo: 'một luồng sóng chưởng đẩy ra từ lòng bàn tay: sát gốc là dấu một bàn tay xoè năm ngón bằng ánh sáng (chỉ là dấu sáng, không phải bàn tay thật), trước nó hai vành sóng hình vòng cung bị đẩy về phía PHẢI',
+    dat: 'điểm gốc (lòng bàn tay em bé, KHÔNG vẽ em bé) ở mép TRÁI, ngang giữa ô; dấu bàn tay sáng ở nửa trái ô, các vành sóng nằm bên PHẢI nó, đối xứng trên dưới', huong: 'đẩy sang PHẢI (game tự xoay theo 8 hướng)',
+    thoi: 'khung 1 dấu bàn tay nhỏ và sáng rực sát gốc, khung 2 và 3 dấu bàn tay to ra, hai vành sóng lần lượt bung về bên phải, khung 4 dấu bàn tay mờ đi còn vành sóng rộng hết cỡ, khung 5 chỉ còn vành sóng mảnh đứt đoạn',
+    la: 'giữa lòng dấu bàn tay có một xoáy tròn nhỏ, và các đầu ngón tay nhọn như ngọn lửa' },
 ];
 const NEN = { xanh: ['XANH LÁ #00FF00', [0, 255, 0], 'xanh lá'], duong: ['XANH DƯƠNG #0000FF', [0, 0, 255], 'xanh dương'], hong: ['HỒNG TÍM #FF00FF', [255, 0, 255], 'hồng tím'] };
 const NEN_XEM = [['toi', '#141a1c', 'Tối'], ['co', '#3a4a30', 'Cỏ'], ['dat', '#6a5a46', 'Đất'], ['sang', '#c8c0a8', 'Sáng']];
 const VIEN = [0x14, 0x18, 0x2e];
+// Bản màu theo hệ cho mục có "phe" (phiên hieu-ung-b2). Mã màu lấy mẫu từ ảnh gốc của game (docs/review/ra-soat-my-thuat/bao-cao.md mục 6).
+// duoi: đuôi mã tệp; nen: nền vẽ (băng và độc dùng hồng tím vì xanh băng gần màu nền xanh dương); ta: màu MÉP cho hiệu ứng của người chơi; quai: nấc đậm cho hiệu ứng của quái.
+const BAN_MAU = [
+  { k: '', ten: 'Chung (mọi hệ)', duoi: '', nen: null, ta: 'bạc sáng #cecdda, bóng mép thép tối #5c5b73', quai: 'nâu đỏ than hồng #a03409' },
+  { k: 'fire', ten: 'Hệ Lửa', duoi: '-fire', nen: 'duong', ta: 'vàng #ffc90e chuyển ra cam #fe7d04', quai: 'đỏ cam sẫm #c9270c' },
+  { k: 'poison', ten: 'Hệ Độc', duoi: '-poison', nen: 'hong', ta: 'vàng chanh #c8f90b chuyển ra xanh lá #5aca02', quai: 'xanh lá sẫm #277600' },
+  { k: 'ice', ten: 'Hệ Băng', duoi: '-ice', nen: 'hong', ta: 'xanh băng nhạt #9cfefa chuyển ra xanh lam #32b0e9', quai: 'xanh lam sẫm #217bc3' },
+];
+function cauMau(q) {
+  if (!q.phe) return '';
+  const b = BAN_MAU.find(m => m.k === (q.he || '')) || BAN_MAU[0];
+  if (q.phe === 'quai') return `MÀU (theo bảng màu của game): đây là hiệu ứng CỦA QUÁI nên dùng nấc ĐẬM, tối hơn hẳn hiệu ứng của người chơi: thân hình màu ${b.quai}, mép tối hơn một nấc, chỉ một sợi lõi thật mảnh màu ngà xỉn, KHÔNG có lõi trắng to, KHÔNG phát sáng; viền ngoài cùng một nét mực xanh đen #14182e. `;
+  return `MÀU (theo bảng màu của game): đây là hiệu ứng CỦA NGƯỜI CHƠI nên LÕI (phần sáng nhất, chiếm phần lớn hình) phải là trắng ngà #fbfed0; màu khác chỉ được nhuốm ở MÉP NGOÀI: ${b.ta}${b.k ? ' (màu của ' + b.ten + ')' : ''}; không tô kín cả hình bằng màu mép. `;
+}
 
 const $ = (id) => document.getElementById(id);
 let Q = null, ANH = null, KQ = null, BO = [], LAST = null, nenXem = '#141a1c';
@@ -345,7 +412,8 @@ function taoPrompt(q) {
     + `BỐ CỤC: ảnh khổ ngang, MỘT HÀNG NGANG DUY NHẤT gồm ĐÚNG ${q.so} khung bằng nhau, xếp từ TRÁI sang PHẢI theo thời gian (khung 1 là lúc bắt đầu, khung ${q.so} là lúc kết thúc): ${q.thoi}. `
     + `Mỗi khung là một ô tỉ lệ ngang:cao = ${tl}, giữa các ô có khoảng trống rộng hoặc đường kẻ mảnh màu đen. KHÔNG vẽ thêm khung thứ ${q.so + 1}, không xuống hàng, không vẽ hàng thứ hai. `
     + `VỊ TRÍ TRONG Ô: ${q.dat}. Hiệu ứng chỉ chiếm khoảng 70% ô, nằm TRỌN trong ô của nó, cách mép ô ít nhất 1/10 ô, tuyệt đối không lấn sang ô bên cạnh; mọi khung cùng tỉ lệ, cùng điểm gốc, chỉ khác nhau theo thời gian. `
-    + (q.la ? `CỠ TRONG GAME: mỗi khung hiện rất nhỏ, chỉ ${q.fw}×${q.fh} điểm ảnh game (hình thật khoảng ${q.fw - 4}×${q.fh - 4}), nên vẽ khối TO, RÕ, ít chi tiết vụn, nhìn ra ngay khi thu nhỏ; viền tối một nét quanh hình; đổ bóng 3 sắc (sáng, vừa, tối). NÉT LẠ của hình này: ${q.la}. ` : '')
+    + (q.la ? `CỠ TRONG GAME: mỗi khung hiện rất nhỏ, chỉ ${q.fw}×${q.fh} điểm ảnh game (hình thật khoảng ${q.fw - 4}×${q.fh - 4}${q.phe ? '; để so: em bé trong game cao khoảng 28 điểm ảnh' : ''}), nên vẽ khối TO, RÕ, ít chi tiết vụn, nhìn ra ngay khi thu nhỏ; viền tối một nét quanh hình; đổ bóng 3 sắc (sáng, vừa, tối). NÉT LẠ của hình này: ${q.la}. ` : '')
+    + cauMau(q)
     + `HƯỚNG: ${q.huong || 'hướng chuyển động (nếu có) sang PHẢI'}. ${q.la ? 'KHÔNG vẽ nhân vật, quái, bàn tay, mặt đất, bóng đổ hay khung trang trí: mỗi ô chỉ vẽ đúng MỘT hình đã tả.' : 'KHÔNG vẽ nhân vật, quái, vũ khí, mặt đất, bóng đổ hay khung trang trí: chỉ vẽ hiệu ứng.'} Mỗi ô đều phải có hiệu ứng (không để ô trống). `
     + `KHÔNG chữ, không số, không chú thích, không bảng màu, không bảng phụ, không ảnh mẫu thu nhỏ. `
     + `Nền trơn MỘT MÀU ${n[0]} phủ kín toàn ảnh (không ô cờ, không nền trắng, không chuyển màu, không hoạ tiết), và KHÔNG dùng màu ${n[2]} hay màu gần giống nó trong hiệu ứng. Không dùng màu đỏ tươi (đỏ dành cho báo nguy hiểm). `
@@ -368,13 +436,20 @@ function hienHu() {
   truong.forEach(([k]) => $('sua_' + k).onchange = (e) => { const v = +e.target.value; if (v > 0) Q[k] = k === 'giay' || k === 'co' ? v : Math.round(v); if (k === 'so') $('soCot').value = Q.so; hienHu(); if (ANH) chay(); });
   ['lap', 'xoay', 'cong'].forEach(k => $('sua_' + k).onchange = (e) => { Q[k] = e.target.checked; hienHu(); if (ANH) chay(); });
 }
-function chonHu(i) {
+function chonHu(i, he) {
   Q = Object.assign({ co: 1 }, HU[i]);
+  // mục có "phe": chọn thêm bản màu (Chung hoặc theo hệ); bản theo hệ đổi mã tệp, tên, nền vẽ và câu màu trong prompt
+  $('oBanMau').hidden = !Q.phe;
+  const b = Q.phe ? BAN_MAU.find(m => m.k === (he || '')) || BAN_MAU[0] : BAN_MAU[0];
+  $('chonHe').value = b.k;
+  if (b.k) { Q.he = b.k; Q.ma += b.duoi; Q.ten += ' · ' + b.ten; Q.nen = b.nen; }
   $('soCot').value = Q.so; $('kieuMep').value = Q.cong ? 'mem' : 'sac';
   hienHu();
 }
 HU.forEach((q, i) => { const o = document.createElement('option'); o.value = i; o.textContent = q.ten + ' (' + q.ma + ')'; $('chonHu').appendChild(o); });
 try { const i = localStorage.getItem('thu_hu'); if (i != null && HU[i]) $('chonHu').value = i; } catch (e) {}
+BAN_MAU.forEach(b => { const o = document.createElement('option'); o.value = b.k; o.textContent = b.ten; $('chonHe').appendChild(o); });
+$('chonHe').onchange = (e) => { chonHu(+$('chonHu').value, e.target.value); BO = []; if (ANH) chay(); };
 chonHu(+$('chonHu').value);
 $('chonHu').onchange = (e) => { chonHu(+e.target.value); BO = []; try { localStorage.setItem('thu_hu', e.target.value); } catch (er) {} if (ANH) chay(); };
 
