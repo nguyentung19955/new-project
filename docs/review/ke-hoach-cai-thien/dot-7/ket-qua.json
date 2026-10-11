@@ -1,0 +1,406 @@
+{
+ "vien_mat_hat": {
+  "nhimDoc": {
+   "H": 30,
+   "hat": 3,
+   "vien": 14520,
+   "mat": 0,
+   "khacVien": 0,
+   "khacMat": 0,
+   "nhuom": 82680,
+   "hatNgoai": 0,
+   "hatMat": 0,
+   "hatMax": 91,
+   "matGiu": 0,
+   "matGiuKhac": 0,
+   "vienKhung": 2220,
+   "vienKhungKhac": 0
+  },
+  "heoNanh": {
+   "H": 51,
+   "hat": 4,
+   "vien": 30480,
+   "mat": 0,
+   "khacVien": 0,
+   "khacMat": 0,
+   "nhuom": 254160,
+   "hatNgoai": 0,
+   "hatMat": 0,
+   "hatMax": 124,
+   "matGiu": 37,
+   "matGiuKhac": 0,
+   "vienKhung": 4467,
+   "vienKhungKhac": 0
+  },
+  "namChua": {
+   "H": 64,
+   "hat": 5,
+   "vien": 34920,
+   "mat": 0,
+   "khacVien": 0,
+   "khacMat": 0,
+   "nhuom": 302640,
+   "hatNgoai": 0,
+   "hatMat": 0,
+   "hatMax": 207,
+   "matGiu": 76,
+   "matGiuKhac": 0,
+   "vienKhung": 5379,
+   "vienKhungKhac": 0
+  },
+  "heoCon": {
+   "H": 36,
+   "hat": 3,
+   "vien": 39840,
+   "mat": 0,
+   "khacVien": 0,
+   "khacMat": 0,
+   "nhuom": 91440,
+   "hatNgoai": 0,
+   "hatMat": 0,
+   "hatMax": 91,
+   "matGiu": 4,
+   "matGiuKhac": 0,
+   "vienKhung": 6090,
+   "vienKhungKhac": 0
+  },
+  "boHung": {
+   "H": 31,
+   "hat": 3,
+   "vien": 18720,
+   "mat": 0,
+   "khacVien": 0,
+   "khacMat": 0,
+   "nhuom": 104880,
+   "hatNgoai": 0,
+   "hatMat": 0,
+   "hatMax": 89,
+   "matGiu": 0,
+   "matGiuKhac": 0,
+   "vienKhung": 2904,
+   "vienKhungKhac": 0
+  },
+  "ongVo": {
+   "H": 27,
+   "hat": 2,
+   "vien": 25680,
+   "mat": 0,
+   "khacVien": 0,
+   "khacMat": 0,
+   "nhuom": 68280,
+   "hatNgoai": 0,
+   "hatMat": 0,
+   "hatMax": 45,
+   "matGiu": 31,
+   "matGiuKhac": 0,
+   "vienKhung": 3687,
+   "vienKhungKhac": 0
+  }
+ },
+ "so_hat": {
+  "nhimDoc doc": {
+   "bang": 0,
+   "chay": 0,
+   "doc": 3,
+   "tong": 3,
+   "nhuom": "#5aca02",
+   "nhuom6KhungDau": "#5aca02"
+  },
+  "nhimDoc chay": {
+   "bang": 0,
+   "chay": 3,
+   "doc": 0,
+   "tong": 3,
+   "nhuom": "#fe7d04",
+   "nhuom6KhungDau": "#fe7d04"
+  },
+  "nhimDoc lanh": {
+   "bang": 3,
+   "chay": 0,
+   "doc": 0,
+   "tong": 3,
+   "nhuom": "#9cfefa",
+   "nhuom6KhungDau": "#9cfefa"
+  },
+  "nhimDoc bang": {
+   "bang": 4,
+   "chay": 0,
+   "doc": 0,
+   "tong": 4,
+   "nhuom": "#9cfefa",
+   "nhuom6KhungDau": "#9cfefa"
+  },
+  "nhimDoc bang+chay": {
+   "bang": 3,
+   "chay": 3,
+   "doc": 0,
+   "tong": 6,
+   "nhuom": "#9cfefa",
+   "nhuom6KhungDau": "#fe7d04"
+  },
+  "nhimDoc bang+doc": {
+   "bang": 3,
+   "chay": 0,
+   "doc": 3,
+   "tong": 6,
+   "nhuom": "#9cfefa",
+   "nhuom6KhungDau": "#5aca02"
+  },
+  "nhimDoc chay+doc": {
+   "bang": 0,
+   "chay": 3,
+   "doc": 3,
+   "tong": 6,
+   "nhuom": "#fe7d04",
+   "nhuom6KhungDau": "#5aca02"
+  },
+  "nhimDoc bang+chay+doc": {
+   "bang": 3,
+   "chay": 2,
+   "doc": 1,
+   "tong": 6,
+   "nhuom": "#9cfefa",
+   "nhuom6KhungDau": "#fe7d04"
+  },
+  "heoNanh doc": {
+   "bang": 0,
+   "chay": 0,
+   "doc": 4,
+   "tong": 4,
+   "nhuom": "#5aca02",
+   "nhuom6KhungDau": "#5aca02"
+  },
+  "heoNanh chay": {
+   "bang": 0,
+   "chay": 4,
+   "doc": 0,
+   "tong": 4,
+   "nhuom": "#fe7d04",
+   "nhuom6KhungDau": "#fe7d04"
+  },
+  "heoNanh lanh": {
+   "bang": 3,
+   "chay": 0,
+   "doc": 0,
+   "tong": 3,
+   "nhuom": "#9cfefa",
+   "nhuom6KhungDau": "#9cfefa"
+  },
+  "heoNanh bang": {
+   "bang": 4,
+   "chay": 0,
+   "doc": 0,
+   "tong": 4,
+   "nhuom": "#9cfefa",
+   "nhuom6KhungDau": "#9cfefa"
+  },
+  "heoNanh bang+chay": {
+   "bang": 3,
+   "chay": 3,
+   "doc": 0,
+   "tong": 6,
+   "nhuom": "#9cfefa",
+   "nhuom6KhungDau": "#fe7d04"
+  },
+  "heoNanh bang+doc": {
+   "bang": 3,
+   "chay": 0,
+   "doc": 3,
+   "tong": 6,
+   "nhuom": "#9cfefa",
+   "nhuom6KhungDau": "#5aca02"
+  },
+  "heoNanh chay+doc": {
+   "bang": 0,
+   "chay": 2,
+   "doc": 4,
+   "tong": 6,
+   "nhuom": "#fe7d04",
+   "nhuom6KhungDau": "#5aca02"
+  },
+  "heoNanh bang+chay+doc": {
+   "bang": 3,
+   "chay": 2,
+   "doc": 1,
+   "tong": 6,
+   "nhuom": "#9cfefa",
+   "nhuom6KhungDau": "#fe7d04"
+  },
+  "namChua doc": {
+   "bang": 0,
+   "chay": 0,
+   "doc": 5,
+   "tong": 5,
+   "nhuom": "#5aca02",
+   "nhuom6KhungDau": "#5aca02"
+  },
+  "namChua chay": {
+   "bang": 0,
+   "chay": 4,
+   "doc": 0,
+   "tong": 4,
+   "nhuom": "#fe7d04",
+   "nhuom6KhungDau": "#fe7d04"
+  },
+  "namChua lanh": {
+   "bang": 3,
+   "chay": 0,
+   "doc": 0,
+   "tong": 3,
+   "nhuom": "#9cfefa",
+   "nhuom6KhungDau": "#9cfefa"
+  },
+  "namChua bang": {
+   "bang": 5,
+   "chay": 0,
+   "doc": 0,
+   "tong": 5,
+   "nhuom": "#9cfefa",
+   "nhuom6KhungDau": "#9cfefa"
+  },
+  "namChua bang+chay": {
+   "bang": 3,
+   "chay": 3,
+   "doc": 0,
+   "tong": 6,
+   "nhuom": "#9cfefa",
+   "nhuom6KhungDau": "#fe7d04"
+  },
+  "namChua bang+doc": {
+   "bang": 3,
+   "chay": 0,
+   "doc": 3,
+   "tong": 6,
+   "nhuom": "#9cfefa",
+   "nhuom6KhungDau": "#5aca02"
+  },
+  "namChua chay+doc": {
+   "bang": 0,
+   "chay": 2,
+   "doc": 4,
+   "tong": 6,
+   "nhuom": "#fe7d04",
+   "nhuom6KhungDau": "#5aca02"
+  },
+  "namChua bang+chay+doc": {
+   "bang": 3,
+   "chay": 2,
+   "doc": 1,
+   "tong": 6,
+   "nhuom": "#9cfefa",
+   "nhuom6KhungDau": "#fe7d04"
+  }
+ },
+ "do_sang": {
+  "san": 0.186,
+  "heoCon thường": 0.243,
+  "heoCon dính độc": 0.337,
+  "nhimDoc thường": 0.284,
+  "nhimDoc dính độc": 0.394,
+  "heoNanh thường": 0.311,
+  "heoNanh dính độc": 0.423,
+  "boHung thường": 0.211,
+  "boHung dính độc": 0.351,
+  "namChua thường": 0.332,
+  "namChua dính độc": 0.437
+ },
+ "fps_sau": {
+  "msMoiKhung5Luot": [
+   3.283,
+   2.693,
+   2.662,
+   2.828,
+   3.008
+  ],
+  "msTotNhat": 2.662,
+  "msGiua": 1.3,
+  "ms95": 5.6,
+  "fps": 60,
+  "soQuaiDinhDoc": 6
+ },
+ "luc_chet": {
+  "nhuomLucSong": "#fe7d04",
+  "soHatLucSong": [
+   0,
+   3,
+   3
+  ],
+  "coHatTheoKhungSauKhiChet": [
+   [
+    1,
+    "hết nhuộm"
+   ],
+   [
+    0.83,
+    "hết nhuộm"
+   ],
+   [
+    0.67,
+    "hết nhuộm"
+   ],
+   [
+    0.5,
+    "hết nhuộm"
+   ],
+   [
+    0.33,
+    "hết nhuộm"
+   ],
+   [
+    0.17,
+    "hết nhuộm"
+   ],
+   [
+    -0.0,
+    "hết nhuộm"
+   ],
+   [
+    -0.17,
+    "hết nhuộm"
+   ]
+  ]
+ },
+ "chay_that": {
+  "khungCoQuaiDinh": 1261,
+  "soQuaiTungDinh": 6,
+  "khungQuaiChetKhiDangDinh": 0,
+  "soHatNhieuNhat": 6,
+  "loiThu": []
+ },
+ "loi_trang": [],
+ "co_tat_gia_tri": false,
+ "fps_co_tat": {
+  "msMoiKhung5Luot": [
+   3.19,
+   2.655,
+   2.512,
+   2.631,
+   2.935
+  ],
+  "msTotNhat": 2.512,
+  "msGiua": 1.2,
+  "ms95": 5.2,
+  "fps": 60,
+  "soQuaiDinhDoc": 6
+ },
+ "fps_truoc": {
+  "msMoiKhung5Luot": [
+   3.236,
+   2.701,
+   2.528,
+   2.781,
+   2.97
+  ],
+  "msTotNhat": 2.528,
+  "msGiua": 1.3,
+  "ms95": 5.2,
+  "fps": 59.8,
+  "soQuaiDinhDoc": 6
+ },
+ "loi_trang_truoc": [],
+ "so_anh_phong_844x390": {
+  "truoc_voi_truoc_lan_hai (độ nhiễu của phép so)": 0,
+  "co_tat_voi_truoc": 0,
+  "co_bat_voi_truoc": 12865
+ }
+}

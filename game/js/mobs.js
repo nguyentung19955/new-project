@@ -680,6 +680,123 @@
     for (let i = -4; i <= 4; i++) { const a = (i / 4) * 0.9, x = e.x + f * Math.cos(a) * r, y = e.y - 4 + Math.sin(a) * r * 0.7; p(c, x, y, 2, 2, e.hitT > 0.2 ? '#ffffff' : 'rgba(255,214,90,0.85)'); }
   }
 
+  // ---------- Đợt 7: trạng thái dính độc / cháy / đóng băng hiện TRÊN THÂN quái ----------
+  // Cờ tắt một chỗ: G.TRANG_THAI_TREN_THAN = false (hoặc mở trang với ?than=0) → vẽ y cũ: biểu tượng trạng thái trên đầu, không nhuộm thân, không hạt.
+  // Chỉ là hình: không đọc, không đổi sát thương theo thời gian hay thời lượng trạng thái (e.st do js/combat.js quản).
+  // Số liệu theo docs/review/ke-hoach-cai-thien/dac-ta-trang-thai-va-tile.md mục 1, 2.
+  if (G.TRANG_THAI_TREN_THAN == null) G.TRANG_THAI_TREN_THAN = !(typeof location !== 'undefined' && /[?&]than=0(&|$)/.test(location.search || ''));
+  const TT_MAU = ['#9cfefa', '#fe7d04', '#5aca02'], TT_MUC = [0.45, 0.35, 0.4], TT_IT = [3, 2, 1]; // thứ tự ưu tiên nhuộm: 0 băng > 1 cháy > 2 độc (độc: thử 35% thì Heo Rừng Con và Bọ Hung chênh sáng với sàn rừng chưa tới 0,15 nên lấy 40%); TT_IT: số hạt ít nhất khi phải nhường chỗ (tổng ≤ 6)
+  const TT_ST0 = { fire: 0, poisonN: 0, iceN: 0, frozen: 0 }, TT_THU = [0, 1, 2];
+  let ttSo = 0;
+  const ttRnd = (a) => { a = (a ^ 61) ^ (a >>> 16); a = (a + (a << 3)) | 0; a ^= a >>> 4; a = Math.imul(a, 0x27d4eb2d); a ^= a >>> 15; return (a >>> 0) / 4294967296; };
+  // Tính trạng thái hiển thị của một con quái trong khung này. Trả null nếu quái không có ảnh AI sẵn sàng (khi đó vẽ y cũ).
+  function ttQuai(e) {
+    const SC = G.spriteCustom, sp = SC && SC.get && SC.get(e.art);
+    if (!sp) return null;
+    // Sổ nhỏ gắn trên quái (chỉ để vẽ, như e.fxId của js/fx.js). Lúc chết js/fx.js chép quái sang bản "đang chết" nên sổ đi theo: hạt tan dần chứ không tắt phụt.
+    let R = e.ttR;
+    if (!R) R = e.ttR = { id: ++ttSo, tu: [-1, -1, -1], n: [0, 0, 0], cung: false, chet: -1, nhuom: null, than: { mau: '', muc: 0, suong: 0 }, D: null, s: 2, k: 1 };
+    const now = G.time, st = e.st || TT_ST0;
+    let D = SC.dangQuai ? SC.dangQuai(sp) : null;
+    if (!D) { const q = info(e.art), w = q.w || 30, h = q.h || 24; D = R.D || { x0: -w / 2, x1: w / 2, y0: -h, y1: 0, w, h, tren: null, sau: null, cx0: 0, cy0: 0, chan: [-w * 0.35, w * 0.35] }; }
+    R.D = D; R.s = Math.max(2, Math.round(D.h / 12)); R.nhuom = null; R.k = 1;
+    if (e.dying != null) { // chết: tắt nhuộm, hạt tan trong 6 khung
+      if (R.chet < 0) R.chet = now;
+      R.k = 1 - (now - R.chet) * 60 / 6;
+      return R;
+    }
+    const on0 = st.iceN > 0 || st.frozen > 0, on1 = st.fire > 0, on2 = st.poisonN > 0;
+    R.tu[0] = on0 ? (R.tu[0] < 0 ? now : R.tu[0]) : -1; R.tu[1] = on1 ? (R.tu[1] < 0 ? now : R.tu[1]) : -1; R.tu[2] = on2 ? (R.tu[2] < 0 ? now : R.tu[2]) : -1;
+    R.cung = st.frozen > 0;
+    // số hạt: theo cỡ thân, tổng không quá 6; phải bớt thì bớt của trạng thái dính lâu nhất trước
+    const nb = clamp(Math.round(D.h / 12), 2, 5), n = R.n;
+    n[0] = on0 ? (R.cung ? 3 + (nb >= 5 ? 2 : 1) : 3) : 0; n[1] = on1 ? clamp(nb, 2, 4) : 0; n[2] = on2 ? nb : 0;
+    let tong = n[0] + n[1] + n[2];
+    if (tong > 6) {
+      TT_THU.sort((a, b) => R.tu[a] - R.tu[b]);
+      for (let i = 0; i < 3 && tong > 6; i++) { const k = TT_THU[i]; if (R.tu[k] < 0) continue; const bo = Math.min(tong - 6, n[k] - TT_IT[k]); if (bo > 0) { n[k] -= bo; tong -= bo; } }
+    }
+    // màu nhuộm: chỉ MỘT màu. Trạng thái vừa dính đè trong 6 khung đầu, sau đó băng > cháy > độc. Hai khung đầu của chớp trắng trúng đòn thì tắt nhuộm.
+    let m = on0 ? 0 : on1 ? 1 : on2 ? 2 : -1;
+    if (m >= 0) {
+      let moi = m;
+      for (let k = 0; k < 3; k++) if (R.tu[k] > R.tu[moi]) moi = k;
+      if (now - R.tu[moi] < 0.1) m = moi;
+      if (!(e.flash > 0.037)) {
+        const T = R.than;
+        T.mau = TT_MAU[m]; T.suong = m === 0 ? 0.2 : 0;
+        T.muc = m === 1 ? 0.35 + 0.05 * Math.round(Math.sin(now * 60 / 12 * TAU)) : TT_MUC[m]; // cháy: dao động 30–40% chu kỳ 12 khung
+        R.nhuom = T;
+      }
+    }
+    return R;
+  }
+  // Bong bóng độc: thân s×s màu #c8f90b, viền ngoài #277600 (bo góc), lõi 1 px #fbfed0.
+  function ttBong(c, x, y, s) {
+    x = Math.round(x); y = Math.round(y);
+    if (s < 2) { p(c, x, y, 1, 1, '#c8f90b'); return; }
+    p(c, x, y - 1, s, s + 2, '#277600'); p(c, x - 1, y, s + 2, s, '#277600');
+    p(c, x, y, s, s, '#c8f90b'); p(c, x + ((s - 1) >> 1), y + ((s - 1) >> 1), 1, 1, '#fbfed0');
+  }
+  // Lưỡi lửa 3 nấc: chân #c9270c, thân #fe7d04, ngọn #ffc90e + 1 px #feec86. (x, y) = giữa chân lửa; rộng s, cao h; kieu: 0 thấp, 1 cao, 2 nghiêng về phía lưng (lech).
+  function ttLua(c, x, y, s, h, kieu, lech) {
+    x = Math.round(x - s / 2); y = Math.round(y);
+    const hc = Math.max(1, Math.round(h * 0.25)), hn = Math.max(1, Math.round(h * 0.4)), ht = Math.max(1, h - hc - hn), wn = Math.max(1, s - 1), xn = x + (kieu === 2 ? lech : 0) + ((s - wn + (lech > 0 ? 1 : 0)) >> 1);
+    p(c, x, y - hc, s, hc, '#c9270c');
+    p(c, x, y - hc - ht, s, ht, '#fe7d04');
+    p(c, xn, y - h, wn, hn, '#ffc90e');
+    p(c, xn + (kieu === 2 && lech > 0 ? wn - 1 : 0), y - h, 1, 1, '#feec86');
+  }
+  // Mảnh băng góc cạnh: thân #9cfefa, viền ngoài #217bc3, điểm sáng 1 px trắng. (x, y) = mép trái chân mảnh; rộng s, cao h; dinh: cột nào cao nhất.
+  function ttBang(c, x, y, s, h, dinh, nhay) {
+    x = Math.round(x); y = Math.round(y);
+    for (let i = 0; i < s; i++) { const hi = Math.max(1, h - Math.abs(i - dinh) * Math.max(1, Math.round(h / (s + 1)))); p(c, x + i - 1, y - hi - 1, 3, hi + 1, '#217bc3'); }
+    for (let i = 0; i < s; i++) { const hi = Math.max(1, h - Math.abs(i - dinh) * Math.max(1, Math.round(h / (s + 1)))); p(c, x + i, y - hi, 1, hi, '#9cfefa'); }
+    p(c, x + dinh, y - h + (h > 2 ? 1 : 0), 1, 1, '#ffffff');
+    if (nhay && h > 2) p(c, x + dinh, y - h, 1, 1, '#ffffff'); // nhấp sáng một lần mỗi 40 khung
+  }
+  // Vẽ hạt bám thân. lop: 0 = sau thân (gọi trước khi vẽ quái), 1 = trước thân (gọi sau).
+  function ttHat(c, e, R, lop) {
+    const k = R.k;
+    if (!(k > 0) || G.ttTatHat) return; // G.ttTatHat: chỉ bài kiểm dùng (so ảnh riêng phần nhuộm)
+    const n = R.n;
+    if (!n[0] && !n[1] && !n[2]) return;
+    const D = R.D, f = e.face < 0 ? -1 : 1, F = Math.floor(G.time * 60), s = Math.max(1, Math.round(R.s * k)), ex = Math.round(e.x), ey = Math.round(e.y);
+    const tren = (xr) => { if (!D.tren) return D.y0; const i = clamp(Math.round(xr - D.cx0), 0, D.tren.length - 1), v = D.tren[i]; return v > 9999 ? D.y0 : v; };
+    const lung = (yr) => { if (!D.sau) return D.x0; const i = clamp(Math.round(yr - D.cy0), 0, D.sau.length - 1), v = D.sau[i]; return v > 9999 ? D.x0 : v; };
+    const wx = (xr, rong) => (f > 0 ? ex + xr : ex - xr - rong); // xr: toạ độ khi quái quay phải; quay trái thì lật quanh tâm
+    // --- băng: 3 mảnh ở chân (trước thân), khi đông cứng thêm 1–2 mảnh ở vai phía lưng (sau thân). Đứng yên.
+    if (n[0]) {
+      const h = Math.max(2, Math.round(R.s * 1.5 * k)), nhay = F % 40 < 3;
+      if (lop === 1) for (let j = 0; j < 3 && j < n[0]; j++) {
+        const xr = D.chan[0] + (D.chan[1] - D.chan[0] - s) * (0.06 + 0.44 * j);
+        ttBang(c, wx(xr, s), ey + D.y1, s, h - (j === 1 ? 0 : 1), j === 0 ? 0 : j === 1 ? (s >> 1) : s - 1, nhay && j === 1);
+      }
+      else for (let j = 3; j < n[0]; j++) {
+        const yr = D.y0 + D.h * (j === 3 ? 0.3 : 0.42), xr = Math.max(D.x0 - 1, lung(yr) - Math.round(s * 0.6)); // bám sát viền lưng, không ló quá hộp thân 2 px
+        ttBang(c, wx(xr, s), ey + yr + Math.round(h / 2), s, h, f > 0 ? 0 : s - 1, nhay && j === 3);
+      }
+    }
+    // --- độc: bong bóng nổi lên 1 px mỗi 4 khung, sống 24 khung rồi co về 1 px, sinh so le. Trên thân: vẽ trước; ở mép lưng: vẽ sau thân (ló ra ngoài viền).
+    if (n[2]) for (let j = 0; j < n[2]; j++) {
+      const sau = n[2] >= 3 && j === n[2] - 1;
+      if ((lop === 0) !== sau) continue;
+      const ph = F + Math.round(j * 30 / n[2]) + R.id * 7, a = ph % 30, g = (R.id * 131 + j * 17 + Math.floor(ph / 30) * 7919) | 0;
+      const sz = a < 24 ? s : Math.max(1, Math.round(s * (1 - (a - 23) / 6)));
+      const y0 = D.y0 + D.h * (0.55 + 0.33 * ttRnd(g + 1)) - Math.floor(a / 4);
+      const xr = sau ? Math.max(D.x0 - 1, lung(Math.round(y0)) - Math.min(2, Math.round(s * 0.5))) : D.x0 + D.w * 0.2 + Math.max(0, D.w * 0.42 - s - 2) * ttRnd(g); // trên thân: tránh 1/3 phía mặt (kể cả viền bong bóng)
+      ttBong(c, wx(xr, sz), ey + y0 - sz, sz);
+    }
+    // --- cháy: lưỡi lửa ở vai và lưng (nửa trên, phía lưng), 3 khung lặp thấp–cao–nghiêng, 6 khung mỗi ảnh. Luôn trước thân.
+    if (n[1] && lop === 1) for (let j = 0; j < n[1]; j++) {
+      const xr = D.x0 + D.w * (0.14 + (n[1] > 1 ? 0.34 * j / (n[1] - 1) : 0.15)), kh = Math.floor((F + j * 5) / 6) % 3;
+      const h = Math.max(2, Math.round((kh === 0 ? 1.5 : 2) * s));
+      const yb = clamp(tren(xr) + s, D.y0 + 2 * s - 2, D.y0 + D.h * 0.45);
+      ttLua(c, wx(xr, 0) + (kh === 2 ? -f : kh === 1 ? 0 : f) * (j & 1 ? 1 : 0), ey + yb, s, h, kh, -f);
+    }
+  }
+  G.ttQuai = ttQuai; // cho bài kiểm và công cụ xem thử
+
   // ---------- vẽ quái thường và tinh anh ----------
   const enemy0 = A.enemy;
   A.enemy = function (c, e) {
@@ -716,7 +833,10 @@
       if (BT && BT.on && !G.noRender) BT.add({ k: 'aim', x: e.x + Math.cos(a) * 10, y: e.y - 6 + Math.sin(a) * 10, ang: a, len: Math.max(0, L - 10), w: 3, el: null, u: clamp(1 - e.wind / (e.act.T || 0.6), 0, 1), age: (e.act.T || 0.6) - e.wind }); // vẽ mịn ở js/bao_truoc.js
       else for (let i = 10; i < L; i += 4) p(c, e.x + Math.cos(a) * i, e.y - 6 + Math.sin(a) * i, 2, 1, bl ? 'rgba(255,58,34,0.8)' : 'rgba(255,200,180,0.6)');
     }
+    const TR = G.TRANG_THAI_TREN_THAN !== false ? ttQuai(e) : null; // Đợt 7: trạng thái trên thân (null = cờ tắt hoặc quái chưa có ảnh AI → vẽ y cũ)
+    if (TR) { o.than = TR.nhuom; ttHat(c, e, TR, 0); }
     G.monsterArt.draw(c, e.art, e.x, e.y, o);
+    if (TR) ttHat(c, e, TR, 1);
     if (e.healFx > 0) { e.healFx -= 1 / 60; A.ellipse(c, e.x, e.y, 90 * (1 - e.healFx / 0.6), 90 * 0.6 * (1 - e.healFx / 0.6), 'rgba(143,232,106,0.18)'); }
     if (e.dying != null) return;
     const top = e.y - e.h - 2;
@@ -727,7 +847,7 @@
     ic.forEach((k2, i) => icon(c, k2, e.x + (i - (ic.length - 1) / 2) * 11, top - 6));
     // V50 (gd2-b): dấu "!" báo sắp ra đòn nay hiện cả khi quái có biểu tượng (tinh anh luôn có dấu hiệu): đặt lệch sang phải hàng biểu tượng thay vì bỏ.
     if (e.wind > 0 && e.wind < 0.25) { const cc = Math.floor(G.time * 10) & 1 ? '#fff3b0' : '#ff4030', bx = ic.length ? Math.round(e.x + ((ic.length - 1) / 2) * 11 + 8) : e.x - 1; p(c, bx, top - 12, 2, 5, cc); p(c, bx, top - 6, 2, 2, cc); }
-    A.status(c, e, Math.round(e.x), Math.round(top));
+    if (!TR) A.status(c, e, Math.round(e.x), Math.round(top)); // Đợt 7: cờ bật thì bỏ biểu tượng trạng thái trên đầu (đã hiện trên thân); biểu tượng tinh anh, vỡ giáp, thanh máu giữ nguyên
   };
   // Đang đi ngầm dưới đất: chỉ thấy vệt đất gợn
   function drawUnder(c, e) {

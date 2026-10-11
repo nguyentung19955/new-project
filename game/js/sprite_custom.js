@@ -95,8 +95,86 @@
     return cv;
   }
   SC.nhuom = nhuom;
+  // ---------- Đợt 7: nhuộm THÂN theo trạng thái (dính độc / cháy / đóng băng) ----------
+  // Khác tấm một màu ở trên: giữ nguyên viền #14182e và các cụm sáng nhỏ (mắt, răng, nanh), chỉ hoà màu vào phần thân còn lại.
+  // than: { mau: '#rrggbb', muc: 0..1 (mức hoà), suong: 0..1 (phủ trắng 1/3 trên thân, dùng cho băng) }.
+  // Nhớ theo mã + khung + màu + mức hoà: mỗi khung chỉ tính một lần; lúc vẽ dán đúng một tấm, không thêm lệnh vẽ nào.
+  // Ảnh không đọc được điểm ảnh (hiếm): trả null, người gọi vẽ thân thường như cũ.
+  const VIEN = [0x14, 0x18, 0x2e], SANG = 0xc8; // SANG: mọi kênh màu ≥ mức này thì coi là "sáng" (mắt, răng, nanh của ảnh AI thường ngả kem chứ không trắng tinh)
+  function naGiu(sp, d, w, h) { // 1 = giữ nguyên (viền, cụm sáng nhỏ), 0 = được nhuộm
+    const giu = new Uint8Array(w * h), n = sp.net || 1, tran = Math.max(6, Math.round(0.015 * sp.rong * sp.cao)) * n * n, nhan = new Uint8Array(w * h), xep = [];
+    for (let q = 0, j = 0; q < giu.length; q++, j += 4) {
+      if (!d[j + 3]) continue;
+      if (Math.abs(d[j] - VIEN[0]) <= 6 && Math.abs(d[j + 1] - VIEN[1]) <= 6 && Math.abs(d[j + 2] - VIEN[2]) <= 6) giu[q] = 1;
+      else if (d[j] >= SANG && d[j + 1] >= SANG && d[j + 2] >= SANG) nhan[q] = 1; // sáng, chưa biết cụm to hay nhỏ
+    }
+    for (let q0 = 0; q0 < nhan.length; q0++) { // gom cụm sáng liền nhau; cụm nhỏ (mắt, răng) thì giữ, mảng sáng to (bụng trắng, thân băng) vẫn nhuộm
+      if (nhan[q0] !== 1) continue;
+      xep.length = 0; xep.push(q0); nhan[q0] = 2;
+      for (let k = 0; k < xep.length; k++) {
+        const q = xep[k], x = q % w;
+        if (x > 0 && nhan[q - 1] === 1) { nhan[q - 1] = 2; xep.push(q - 1); }
+        if (x < w - 1 && nhan[q + 1] === 1) { nhan[q + 1] = 2; xep.push(q + 1); }
+        if (q >= w && nhan[q - w] === 1) { nhan[q - w] = 2; xep.push(q - w); }
+        if (q + w < nhan.length && nhan[q + w] === 1) { nhan[q + w] = 2; xep.push(q + w); }
+      }
+      if (xep.length <= tran) for (let k = 0; k < xep.length; k++) giu[xep[k]] = 1;
+    }
+    return giu;
+  }
+  function khungThan(sp, hang, i, than) {
+    if (sp.thanHong || !than || !(than.muc > 0)) return null;
+    const muc = Math.round(clamp(than.muc, 0, 1) * 20), su = Math.round(clamp(than.suong || 0, 0, 1) * 20), key = hang + '|' + i + '|' + than.mau + '|' + muc + '|' + su, kho = sp.than || (sp.than = {});
+    let cv = kho[key];
+    if (cv) return cv;
+    try {
+      const n = sp.net || 1, w = sp.fw * n, h = sp.fh * n, R = parseInt(than.mau.slice(1, 3), 16), Gm = parseInt(than.mau.slice(3, 5), 16), B = parseInt(than.mau.slice(5, 7), 16), k = muc / 20, ks = su / 20;
+      cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+      const x = cv.getContext('2d'); x.drawImage(sp.img, i * w, hang * h, w, h, 0, 0, w, h);
+      const im = x.getImageData(0, 0, w, h), d = im.data, kg = sp.giu || (sp.giu = {}), giu = kg[hang + '|' + i] || (kg[hang + '|' + i] = naGiu(sp, d, w, h));
+      let y0 = h, y1 = -1; // hộp thân của khung này, để phủ sương 1/3 trên
+      if (ks > 0) for (let y = 0; y < h; y++) for (let q = y * w * 4 + 3, e = q + w * 4; q < e; q += 4) if (d[q]) { if (y < y0) y0 = y; y1 = y; break; }
+      const qs = ks > 0 && y1 >= y0 ? Math.round(y0 + (y1 - y0 + 1) / 3) * w : -1; // điểm ảnh trước mốc này thuộc 1/3 trên thân
+      for (let q = 0, j = 0; q < giu.length; q++, j += 4) {
+        if (!d[j + 3] || giu[q]) continue;
+        let r = d[j] + (R - d[j]) * k, g = d[j + 1] + (Gm - d[j + 1]) * k, b = d[j + 2] + (B - d[j + 2]) * k;
+        if (q < qs) { r += (255 - r) * ks; g += (255 - g) * ks; b += (255 - b) * ks; }
+        d[j] = Math.round(r); d[j + 1] = Math.round(g); d[j + 2] = Math.round(b);
+      }
+      x.putImageData(im, 0, 0);
+      kho[key] = cv;
+      return cv;
+    } catch (e) { sp.thanHong = true; return null; }
+  }
+  SC.khungThan = khungThan;
+  // Dáng thân của quái (khung đứng thở đầu tiên), tính theo px game so với điểm neo chân, hình quay sang PHẢI (x âm = phía lưng):
+  // { x0, x1, y0, y1 (hộp thân), w, h, tren[cột] (y điểm ảnh trên cùng của cột), sau[hàng] (x điểm ảnh ngoài cùng phía lưng), cx0 (cột 0 ứng với x nào), chan: [x trái, x phải] của phần chân }
+  // Dùng để đặt hạt trạng thái bám đúng lưng, vai, chân. Không đọc được ảnh: null.
+  SC.dangQuai = function (sp) {
+    if (sp.dang !== undefined) return sp.dang;
+    sp.dang = null;
+    try {
+      const n = sp.net || 1, w = sp.fw * n, h = sp.fh * n, a = sp.dt.idle, cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+      const x = cv.getContext('2d'); x.drawImage(sp.img, 0, a.hang * h, w, h, 0, 0, w, h);
+      const d = x.getImageData(0, 0, w, h).data, fw = sp.fw, fh = sp.fh, ax = sp.lat ? fw - sp.ax : sp.ax, tren = new Int16Array(fw).fill(32767), sau = new Int16Array(fh).fill(32767), truoc = new Int16Array(fh).fill(-32767);
+      let x0 = 32767, x1 = -32767, y0 = 32767, y1 = -32767;
+      for (let Y = 0; Y < h; Y++) for (let X = 0; X < w; X++) {
+        if (d[(Y * w + X) * 4 + 3] < 128) continue;
+        const gy = Math.floor(Y / n), gx0 = Math.floor(X / n), gx = sp.lat ? fw - 1 - gx0 : gx0, rx = gx - ax, ry = gy - sp.ay;
+        if (ry < tren[gx]) tren[gx] = ry;
+        if (rx < sau[gy]) sau[gy] = rx;
+        if (rx > truoc[gy]) truoc[gy] = rx;
+        if (rx < x0) x0 = rx; if (rx > x1) x1 = rx; if (ry < y0) y0 = ry; if (ry > y1) y1 = ry;
+      }
+      if (x1 < x0) return null;
+      const H = y1 - y0 + 1; let c0 = 32767, c1 = -32767;
+      for (let gy = 0; gy < fh; gy++) { const ry = gy - sp.ay; if (ry >= y1 - Math.max(1, Math.round(H * 0.15)) && ry <= y1 && sau[gy] < 32767) { c0 = Math.min(c0, sau[gy]); c1 = Math.max(c1, truoc[gy]); } }
+      sp.dang = { x0, x1: x1 + 1, y0, y1: y1 + 1, w: x1 - x0 + 1, h: H, tren, sau, cx0: -ax, cy0: -sp.ay, chan: [c0, c1 + 1] };
+    } catch (e) { sp.dang = null; }
+    return sp.dang;
+  };
   // Vẽ một khung tại gốc toạ độ hiện tại (gốc = điểm giữa chân). face < 0: lật sang trái (hình gốc quay sang phải).
-  // o: { alpha, flash (0..1 chớp trắng), tint: [màu, độ đậm], dy }
+  // o: { alpha, flash (0..1 chớp trắng), tint: [màu, độ đậm], dy, than: { mau, muc, suong } (nhuộm thân theo trạng thái, Đợt 7) }
   SC.veKhung = function (c, sp, ten, i, face, o) {
     o = o || {};
     const a = sp.dt[ten] || sp.dt.idle, n = sp.net || 1, sx = i * sp.fw * n, sy = a.hang * sp.fh * n, sw = sp.fw * n, sh = sp.fh * n, ga = c.globalAlpha;
@@ -106,7 +184,9 @@
     const dx = -sp.ax, dy = -sp.ay + (o.dy || 0);
     if (o.alpha != null) c.globalAlpha = ga * clamp(o.alpha, 0, 1);
     const a1 = c.globalAlpha;
-    c.drawImage(sp.img, sx, sy, sw, sh, dx, dy, sp.fw, sp.fh);
+    const th = o.than ? khungThan(sp, a.hang, i, o.than) : null; // Đợt 7: thân đã nhuộm theo trạng thái (giữ viền, mắt), không có thì vẽ thân thường
+    if (th) c.drawImage(th, 0, 0, sw, sh, dx, dy, sp.fw, sp.fh);
+    else c.drawImage(sp.img, sx, sy, sw, sh, dx, dy, sp.fw, sp.fh);
     if (o.tint && o.tint[1] > 0) { c.globalAlpha = a1 * clamp(o.tint[1], 0, 1); c.drawImage(nhuom(sp, o.tint[0]), sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); }
     if (o.flash > 0) { c.globalAlpha = a1 * clamp(o.flash, 0, 1); c.drawImage(nhuom(sp, '#ffffff'), sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); }
     c.restore();
@@ -149,7 +229,8 @@
       else { c.fillStyle = '#000'; c.beginPath(); c.ellipse(0, 0, w / 2, Math.max(1.5, w * 0.14), 0, 0, Math.PI * 2); c.fill(); }
       c.restore();
     }
-    SC.veKhung(c, sp, s.ten, s.i, face, { alpha: s.alpha, flash, dy: s.dy });
+    // o.than (Đợt 7): màu nhuộm thân khi quái dính độc / cháy / đóng băng, do js/mobs.js truyền khi cờ G.TRANG_THAI_TREN_THAN bật. Không có thì vẽ y cũ.
+    SC.veKhung(c, sp, s.ten, s.i, face, { alpha: s.alpha, flash, dy: s.dy, than: o.than || null });
     c.restore();
     return s;
   };
