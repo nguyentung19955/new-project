@@ -834,14 +834,16 @@ function chonHu(i, he) {
 const laLo = (v) => /^lo:\d+$/.test(String(v)) && !!LO_DS[+String(v).slice(3)];
 try { const i = localStorage.getItem('thu_hu'); if (i != null && (HU[i] || laLo(i))) $('chonHu').value = i; } catch (e) {}
 BAN_MAU.forEach(b => { const o = document.createElement('option'); o.value = b.k; o.textContent = b.ten; $('chonHe').appendChild(o); });
-$('chonHe').onchange = (e) => { chonHu(+$('chonHu').value, e.target.value); BO = []; if (ANH) chay(); };
+$('chonHe').onchange = (e) => { if (LO) return; chonHu(+$('chonHu').value, e.target.value); BO = []; if (ANH) chay(); };
 const chonMuc = (v) => (laLo(v) ? chonLo(+String(v).slice(3)) : chonHu(+v));
 chonMuc($('chonHu').value);
 $('chonHu').onchange = (e) => { chonMuc(e.target.value); BO = []; try { localStorage.setItem('thu_hu', e.target.value); } catch (er) {} if (ANH) chay(); };
 
 $('nutChepPrompt').onclick = () => {
-  const t = taoPrompt(Q), loi = () => { const a = $('oPrompt'); a.closest('details').open = true; a.focus(); a.select(); bao('Hãy bôi đen và sao chép trong ô prompt'); };
-  try { navigator.clipboard.writeText(t).then(() => bao('Đã sao chép prompt vẽ ' + Q.ten), loi); } catch (e) { loi(); }
+  // Đang chọn lô gộp thì chép prompt CỦA LÔ (nhiều hàng), không chép prompt lẻ của hàng 1 (lỗi 11/10 17:26: chủ dự án nhận nhầm prompt một hàng).
+  const t = LO ? taoPromptLo(LO) : taoPrompt(Q), ten = LO ? 'lô "' + LO.ten + '" (' + LO.q.length + ' hàng)' : Q.ten;
+  const loi = () => { const a = $('oPrompt'); a.closest('details').open = true; a.focus(); a.select(); bao('Hãy bôi đen và sao chép trong ô prompt'); };
+  try { navigator.clipboard.writeText(t).then(() => bao('Đã sao chép prompt vẽ ' + ten), loi); } catch (e) { loi(); }
 };
 
 // ===================== NHẬN ẢNH =====================
