@@ -1319,6 +1319,7 @@
     ring(c, x, y, R0, Q0, beat ? 2 : 1, end ? '#8a1c12' : beat ? '#ffe0c8' : q < 0.4 ? '#ff7a52' : '#ff4a30', end);
     if (beat) { const e = q / 0.16; ring(c, x, y, R0 + 1 + e * 6, Q0 + 1 + e * 4, 1, '#ff5a40', e > 0.5); }
   }
+  const VUNG_QUAI = { fire: 'hu-vung-quai-lua', poison: 'hu-vung-quai-doc', ice: 'hu-vung-quai-bang', none: 'hu-vung-quai-do' };
   function pool(c, z) {
     const t = S.t, id = z.fxId || 1;
     const k = Math.max(0, Math.min(1, ((z.fxA || 0) - (z.fxD || 0)) / 0.22));
@@ -1338,6 +1339,15 @@
     }
     const key = z.heal ? 'heal' : z.el || 'none', C = POOLC[key];
     const dth = fade < 0.5;
+    // Làn B4: vũng của quái có ảnh hu-vung-quai-<hệ> thì dán ảnh thay nền, lớp sáng, lưỡi lửa và bong bóng. Ảnh co theo đúng bán kính đang vẽ rx
+    // (= bán kính luật z.r khi vũng đã hiện xong; bề ngang vũng trong ảnh = khung − 4 điểm lề của trang tách). Lúc sắp tắt ảnh mờ đi thay cho kiểu tô thưa hàng.
+    // Viền nóng báo nguy hiểm vẫn vẽ bằng code đè lên trên.
+    const ma = foe && !z.heal ? VUNG_QUAI[key] : null, an = ma && G.fxAnh && G.fxAnh.get(ma);
+    if (an) {
+      G.fxAnh.ve(c, ma, x, y, t + id * 0.37, 0, (2 * rx) / Math.max(4, an.fw - 4), false, dth ? 0.55 : 1);
+      vienNong(c, z, x, y, rx, ry, k, fade);
+      return;
+    }
     blob(c, x, y, rx, ry, C.base, t, id, foe ? C.rim : C.rimP, dth);
     if (rx > 6) inner(c, x, y, rx - 4, ry - 2.4, C.mid, t, id);
     if (foe) vienNong(c, z, x, y, rx, ry, k, fade);

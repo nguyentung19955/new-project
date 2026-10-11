@@ -93,16 +93,32 @@
   }
 
   // ---------- vệt lửa và mây độc của chưởng trên sàn ----------
+  // Làn B4: dán ảnh vũng (js/fx_anh.js) tại (x, y), bề ngang vũng = 2 × rx (bề ngang vũng trong ảnh = khung − 4 điểm lề của trang tách), ép dẹt theo chiều dọc "dep".
+  // Chưa có tệp thì trả về false để nơi gọi vẽ bằng code như cũ.
+  function anhVung(c, ma, x, y, rx, dep, t, mo) {
+    const A = G.fxAnh, a = A && A.get(ma);
+    if (!a) return false;
+    const co = (2 * rx) / Math.max(4, a.fw - 4);
+    if (dep === 1) return A.ve(c, ma, x, y, t, 0, co, false, mo);
+    c.save();
+    try { c.translate(x, y); c.scale(1, dep); return A.ve(c, ma, 0, 0, t, 0, co, false, mo); } finally { c.restore(); }
+  }
   function drawVet(c, z) {
     const t = K.S().t, x = Math.round(z.x), y = Math.round(z.y), k = Math.min(1, z.t / 0.15), id = z.id || 1;
     // tan: co lại và thưa dần thay vì tắt phụt; hai khung cuối nhấp nháy
     const end = z.life < 0.35 ? z.life / 0.35 : 1;
     if (end < 0.25 && ((t * 20) | 0) % 2) return;
     const rx = Math.max(3, Math.round(z.r * (0.5 + 0.5 * k) * (0.7 + 0.3 * end))), ry = Math.max(2, Math.round(rx * zk() * 0.7));
-    ell(c, x, y, rx, ry, 'rgba(110,34,10,0.55)');
-    ell(c, x, y, rx - 2, Math.max(1, ry - 1), 'rgba(255,122,42,0.35)');
+    // Làn B4: có ảnh hu-vung-lua (dùng chung với vệt cháy của vũ khí hệ Lửa) thì dán ảnh thay nền vệt và lưỡi lửa; ảnh co theo bán kính đang vẽ rx
+    // và ép dẹt 0,7 như hình code của vệt. Vòng nhịp đốt vẫn vẽ bằng code.
+    const an = anhVung(c, 'hu-vung-lua', x, y, rx, 0.7, t + id * 0.37, 1);
+    if (!an) {
+      ell(c, x, y, rx, ry, 'rgba(110,34,10,0.55)');
+      ell(c, x, y, rx - 2, Math.max(1, ry - 1), 'rgba(255,122,42,0.35)');
+    }
     const b = beat(z);
     if (b > 0) ring(c, x, y, rx + 1 + Math.round(2 * (1 - b)), ry + 1, 1, b > 0.5 ? '#ffd23f' : '#ff7a2a', b < 0.4);
+    if (an) return;
     for (let i = 0; i < 3; i++) {
       const a = hash(id + i * 3.1) * TAU, d = hash(id * 2 + i) * 0.6;
       tongue(c, Math.round(x + Math.cos(a) * rx * d), Math.round(y + Math.sin(a) * ry * d), Math.round((3 + (Math.sin(t * 13 + i * 2 + id) * 0.5 + 0.5) * 5) * Math.min(1, z.life / 0.6 + 0.3)), 1);
@@ -117,14 +133,19 @@
     const br = 1 + 0.04 * Math.sin(t * 1.7 + id) + 0.03 * Math.sin(t * 2.9 + id * 2);
     const rx = Math.max(4, Math.round(z.r * (0.4 + 0.6 * k) * (0.75 + 0.25 * end) * br)), ry = Math.max(3, Math.round(rx * zk()));
     // mặt sàn nhuộm độc, viền tím
-    ell(c, x, y, rx, ry, 'rgba(40,110,26,0.42)');
-    ring(c, x, y, rx, ry, 1, 'rgba(154,95,214,0.75)', true);
-    if (KN()) KN().organic(c, x, y, rx - 1, ry - 1, id * 7.1, end < 1);
+    // Làn B4: có ảnh hu-vung-doc (dùng chung với vũng độc của vũ khí hệ Độc) thì dán ảnh thay mặt sàn nhuộm độc và bong bóng; ảnh co theo bán kính đang vẽ rx.
+    const an = anhVung(c, 'hu-vung-doc', x, y, rx, 1, t + id * 0.37, 1);
+    if (!an) {
+      ell(c, x, y, rx, ry, 'rgba(40,110,26,0.42)');
+      ring(c, x, y, rx, ry, 1, 'rgba(154,95,214,0.75)', true);
+      if (KN()) KN().organic(c, x, y, rx - 1, ry - 1, id * 7.1, end < 1);
+    }
     // nhịp độc: vòng lục co về giữa đúng lúc mây gây sát thương
     const b = beat(z);
     if (b > 0) ring(c, x, y, Math.max(2, Math.round(rx * (0.55 + 0.45 * b))), Math.max(2, Math.round(ry * (0.55 + 0.45 * b))), 1, b > 0.5 ? '#c2f58a' : '#b98af0', b < 0.4);
     // màn khói lơ lửng trên mây: các vạch ngang so le trôi qua lại
-    for (let j = 0; j < 4; j++) {
+    // Làn B4: có ảnh hu-may-doc thì dán ảnh (đậm 60%, cao hơn mặt sàn 10 điểm) thay các vạch.
+    if (!anhVung(c, 'hu-may-doc', x, y - 10, rx, 1, t + id * 0.37, 0.6)) for (let j = 0; j < 4; j++) {
       const yy = y - 4 - j * 4, hw = Math.round(rx * (0.95 - j * 0.15)), sh = Math.round(Math.sin(t * (1.2 + j * 0.3) + id + j) * 3);
       if (hw < 2) continue;
       p(c, x - hw + sh, yy, hw * 2, 2, j % 2 ? 'rgba(154,95,214,0.22)' : 'rgba(143,224,74,0.24)');
@@ -134,8 +155,8 @@
       const u = ((t * 0.9 + i / 6) % 1), a = i * 1.05 + t * 2.2, d = (1 - u) * rx;
       p(c, Math.round(x + Math.cos(a) * d), Math.round(y + Math.sin(a) * d * zk()) - 2, 2, 2, i % 2 ? '#c2f58a' : '#b98af0');
     }
-    // bong bóng sủi trên mặt mây
-    for (let i = 0; i < 3; i++) {
+    // bong bóng sủi trên mặt mây (ảnh hu-vung-doc đã có bong bóng riêng)
+    if (!an) for (let i = 0; i < 3; i++) {
       const u = (t * (0.7 + hash(i + id) * 0.6) + hash(id + i * 9.1)) % 1, a = hash(id + i * 4.3) * TAU, d = 0.2 + hash(id * 3 + i) * 0.6;
       const bx = Math.round(x + Math.cos(a) * rx * d), by = Math.round(y + Math.sin(a) * ry * d);
       if (u < 0.55) p(c, bx, by, 1, 1, '#c2f58a'); else if (u < 0.85) { p(c, bx - 1, by - 1, 3, 3, i % 2 ? '#b98af0' : '#8fe04a'); p(c, bx - 1, by - 1, 1, 1, '#ffffff'); }

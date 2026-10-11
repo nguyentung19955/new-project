@@ -364,6 +364,7 @@
     ZSPR.set(key, sp);
     return sp;
   }
+  const VUNG_ANH = { fire: 'hu-vung-lua', poison: 'hu-vung-doc' };
   function drawHeZone(c, z) {
     const S = K.S(), t = S.t, id = z.fxId || 1;
     const k = Math.min(1, (z.fxA || 0) / 0.18);
@@ -372,6 +373,10 @@
     const w = Math.round(sp.w * (0.4 + 0.6 * k)), h = Math.round(sp.h * (0.4 + 0.6 * k));
     const fade = z.life < 0.4;
     if (fade && ((t * 20) | 0) % 2) return; // sắp tắt thì nhấp nháy
+    // Làn B4: có ảnh hu-vung-lua / hu-vung-doc thì dán ảnh thay nền vũng và lưỡi lửa, bong bóng. Ảnh co theo bán kính luật z.r
+    // (bề ngang vũng trong ảnh = khung − 4 điểm lề của trang tách); lớn dần lúc mới hiện và nhấp nháy lúc sắp tắt y như hình code.
+    const ma = VUNG_ANH[z.el], FA = G.fxAnh, an = ma && FA && FA.get(ma);
+    if (an) { FA.ve(c, ma, x, y, t + id * 0.37, 0, (2 * z.r * (0.4 + 0.6 * k)) / Math.max(4, an.fw - 4)); return; }
     c.drawImage(sp.cv, x - (w >> 1), y - (h >> 1), w, h);
     if (k < 1) return;
     for (let i = 0; i < 3; i++) {
@@ -465,6 +470,9 @@
     const t = K.S().t, id = z.fxId || 1;
     if (z.life < 0.4 && ((t * 20) | 0) % 2) return;
     const sp = hazeSprite(z.r), x = Math.round(z.x), y = Math.round(z.y) - 12;
+    // Làn B4: có ảnh hu-may-doc thì dán ảnh thay hai lớp sương và cụm khói; bề ngang = đường kính luật của vũng bên dưới, đậm 60% để còn thấy nhân vật.
+    const FA = G.fxAnh, an = FA && FA.get('hu-may-doc');
+    if (an) { FA.ve(c, 'hu-may-doc', x, y - 2, t + id * 0.37, 0, (2 * z.r) / Math.max(4, an.fw - 4), false, 0.6); return; }
     c.drawImage(sp.cv, x - (sp.w >> 1) + Math.round(Math.sin(t * 1.6 + id) * 3), y - (sp.h >> 1));
     c.drawImage(sp.cv, x - (sp.w >> 1) - Math.round(Math.sin(t * 1.1 + id * 2) * 4), y - (sp.h >> 1) - 5);
     c.fillStyle = 'rgba(154,95,214,0.3)';
