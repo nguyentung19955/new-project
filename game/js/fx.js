@@ -933,7 +933,9 @@
       const v = stView(e), B = bodyOf(e), x = Math.round(e.x), y = Math.round(e.y), t = S.t;
       const id = (e.fxId || (e.fxId = 1 + ((R() * 1000) | 0)));
       const top = y - Math.round((e.h || 24) * (e.scale || 1));
-      if (v.frozen) {
+      // Chủ dự án (11/10, 13:22): quái dùng trạng thái trên thân (Đợt 7) thì KHÔNG vẽ khung khối băng nữa — quái đã chậm lại, thân xanh và có mảnh băng ở chân là đủ.
+      const khoiBang = v.frozen && !(G.TRANG_THAI_TREN_THAN !== false && !e.isPlayer && e.ttR);
+      if (khoiBang) {
         // khối băng trong: viền, mặt bóng, vệt sáng chéo
         const w = Math.round(B.w + 4), h = Math.round(B.h + 5);
         p(c, x - w, y - h + 2, w * 2, h - 1, 'rgba(160,220,250,0.24)');
