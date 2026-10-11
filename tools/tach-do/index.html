@@ -533,7 +533,9 @@ function taoPromptCanh(L) {
 
 // Đợt 4 (Q6): mọi prompt của trang có thêm đoạn BẢNG MÀU, chỉ gồm các nhóm màu liên quan. Lô mới muốn nhóm khác thì khai thêm bm: ['go', 'da_stone', …] (tên nhóm trong BM.nhom).
 const taoPromptGoc = taoPrompt;
-taoPrompt = (L) => bmChen(taoPromptGoc(L), bmDoan(L.bm || (L.doi === 'trang-phuc' ? ['vai', 'kim_loai', 'go'] : ['go', 'kim_loai']), { vien: 'viền (nếu có) giữ đúng như đã ghi ở trên', rieng: true })); // đồ có viền riêng #1b1118 (game đổi màu viền này theo bậc) và màu chính riêng từng món
+const CAU_BO_CUC = " BỐ CỤC CHỈ THEO ĐÚNG PROMPT NÀY: KHÔNG lấy lại lưới, số ô, số khung, cách chia hàng hay hình của bất kỳ ảnh nào đã vẽ trước đó trong cuộc trò chuyện; mỗi lần vẽ coi như bắt đầu mới."; // 11/10 17:41
+const taoPromptGoc1 = (L) => taoPromptGoc(L) + CAU_BO_CUC;
+taoPrompt = (L) => bmChen(taoPromptGoc1(L), bmDoan(L.bm || (L.doi === 'trang-phuc' ? ['vai', 'kim_loai', 'go'] : ['go', 'kim_loai']), { vien: 'viền (nếu có) giữ đúng như đã ghi ở trên', rieng: true })); // đồ có viền riêng #1b1118 (game đổi màu viền này theo bậc) và màu chính riêng từng món
 // Dáng món theo cỡ trong game (ChatGPT hay vẽ sai dáng: dấu mặt nạ ngang thành vuông, bùa dài thành tròn, trống đứng thành nằm)
 function dangMon(m) {
   const r = m.w / m.h, k = (v) => String(Math.round(v * 10) / 10).replace('.', ',');

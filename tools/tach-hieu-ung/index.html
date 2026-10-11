@@ -680,7 +680,8 @@ function taoPrompt(q) {
 }
 
 // Đợt 4 (Q6): mọi prompt của trang có thêm đoạn BẢNG MÀU, chỉ gồm các nhóm màu liên quan. Lô mới muốn nhóm khác thì khai thêm bm: ['go', 'da_stone', …] (tên nhóm trong BM.nhom).
-const taoPromptGoc = taoPrompt;
+const CAU_BO_CUC = " BỐ CỤC CHỈ THEO ĐÚNG PROMPT NÀY: KHÔNG lấy lại lưới, số ô, số khung, cách chia hàng hay hình của bất kỳ ảnh nào đã vẽ trước đó trong cuộc trò chuyện; mỗi lần vẽ coi như bắt đầu mới."; // 11/10 17:41 (chủ dự án): dặn ChatGPT không lấy lại bố cục ảnh trước trong cùng cuộc trò chuyện
+const taoPromptGoc0 = taoPrompt, taoPromptGoc = (q) => taoPromptGoc0(q) + CAU_BO_CUC;
 // Mục có "phe" đã có câu MÀU riêng (cauMau, cùng nguồn BM) nên không thêm đoạn này. Mục khác: chỉ hệ của hiệu ứng đó (đoán theo mã tệp); không thuộc hệ nào thì thép + cả ba hệ.
 const bmNhomHu = (q) => { const m = /(lua|fire)|(doc|poison|bao-tu)|(bang|ice)/.exec(q.ma); return m ? [m[1] ? 'he_lua' : m[2] ? 'he_doc' : 'he_bang'] : ['kim_loai', 'he_lua', 'he_doc', 'he_bang']; };
 taoPrompt = (q) => (q.phe ? taoPromptGoc(q) : bmChen(taoPromptGoc(q), bmDoan(q.bm || bmNhomHu(q), { vien: `viền (nếu có) một nét ${BM.vien}`, them: `Chỉ dùng hệ khớp với nội dung hiệu ứng. Hiệu ứng của NGƯỜI CHƠI: lõi sáng nhất là trắng ngà ${bmMa('he_doc', 3)} hoặc lõi sáng của hệ; đạn và đòn của QUÁI: dùng nấc đậm của hệ, không lõi trắng to. ` })));
@@ -772,7 +773,7 @@ function taoPromptLo(L) {
     const can = new Set(khongPhe.flatMap(q => q.bm || bmNhomHu(q))), nhom = Object.keys(BM.nhom).filter(k => can.has(k));
     p = bmChen(p, bmDoan(nhom, { vien: `viền (nếu có) một nét ${BM.vien}`, them: (khongPhe.length < M ? 'Bảng này dùng cho các hàng không ghi câu MÀU riêng. ' : '') + `Mỗi hàng chỉ dùng hệ khớp với nội dung hiệu ứng của hàng đó. Hiệu ứng của NGƯỜI CHƠI: lõi sáng nhất là trắng ngà ${bmMa('he_doc', 3)} hoặc lõi sáng của hệ; đạn và đòn của QUÁI: dùng nấc đậm của hệ, không lõi trắng to. ` }));
   }
-  return p;
+  return p + CAU_BO_CUC;
 }
 let LO = null, KQL = [], HANG_I = 0, TICH = {}; // LO: lô gộp đang chọn (null = gen lẻ); KQL: kết quả từng hàng; HANG_I: hàng đang xem; TICH[mã]: người dùng tự tích / bỏ tích đưa vào zip
 function hienLoGop() {

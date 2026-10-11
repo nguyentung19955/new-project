@@ -556,7 +556,9 @@ function taoPrompt(L) {
 }
 // Đợt 4 (Q6): mọi prompt của trang có thêm đoạn BẢNG MÀU, chỉ gồm các nhóm màu liên quan. Lô mới muốn nhóm khác thì khai thêm bm: ['go', 'da_stone', …] (tên nhóm trong BM.nhom).
 const taoPromptGoc = taoPrompt;
-taoPrompt = (L) => bmChen(taoPromptGoc(L), bmDoan(L.bm || ['go', 'da_stone', 'co_cay', 'kim_loai', 'bong'], L.bmTuy));
+const CAU_BO_CUC = " BỐ CỤC CHỈ THEO ĐÚNG PROMPT NÀY: KHÔNG lấy lại lưới, số ô, số khung, cách chia hàng hay hình của bất kỳ ảnh nào đã vẽ trước đó trong cuộc trò chuyện; mỗi lần vẽ coi như bắt đầu mới.", CAU_KIN = " ẢNH NÀY LÀ MỘT TẤM DUY NHẤT: KHÔNG kẻ lưới, KHÔNG chia ô, KHÔNG chia khung chuyển động, KHÔNG xếp nhiều hình; cả ảnh là một hình liền."; // 11/10 17:41
+const taoPromptGoc1 = (L) => taoPromptGoc(L) + (L.kieu === 'nen' ? CAU_KIN : '') + CAU_BO_CUC;
+taoPrompt = (L) => bmChen(taoPromptGoc1(L), bmDoan(L.bm || ['go', 'da_stone', 'co_cay', 'kim_loai', 'bong'], L.bmTuy));
 function hienLo() {
   $('dsLo').innerHTML = L.ds.map((m, i) => `<li><b>${m.ten}</b> · ${m.w}×${m.h} · <span style="font-size:11px">${m.ma || (laGop() ? L.phan[Math.floor(i / L.cot)].ma : L.ma)}</span></li>`).join('');
   $('chuTha').textContent = laNen() ? 'Tấm ảnh ChatGPT vẽ theo prompt (có hai dải hồng tím trên dưới hay không đều được).' : 'Ảnh đúng như prompt, nền màu trơn hồng tím.';

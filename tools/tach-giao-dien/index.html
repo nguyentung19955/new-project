@@ -558,7 +558,10 @@ function taoPrompt(L) {
 }
 // Đợt 4 (Q6): mọi prompt của trang có thêm đoạn BẢNG MÀU, chỉ gồm các nhóm màu liên quan. Lô mới muốn nhóm khác thì khai thêm bm: ['go', 'da_stone', …] (tên nhóm trong BM.nhom).
 const taoPromptGoc = taoPrompt;
-taoPrompt = (L) => bmChen(taoPromptGoc(L), bmDoan(L.bm || (L.id === 'phong' ? ['kim_loai'] : ['kim_loai', 'go', 'bong']), L.id === 'nho' ? {} : { vien: 'viền (nếu có) giữ đúng như đã ghi ở trên', rieng: true })); // giao diện có mã viền và mã màu riêng (nâu tối, vàng kem), không ép theo sprite
+// 11/10 17:41 (chủ dự án): dặn ChatGPT không lấy lại bố cục ảnh trước trong cùng cuộc trò chuyện; tấm kín thì dặn không kẻ lưới.
+const CAU_BO_CUC = " BỐ CỤC CHỈ THEO ĐÚNG PROMPT NÀY: KHÔNG lấy lại lưới, số ô, số khung, cách chia hàng hay hình của bất kỳ ảnh nào đã vẽ trước đó trong cuộc trò chuyện; mỗi lần vẽ coi như bắt đầu mới.", CAU_KIN = " ẢNH NÀY LÀ MỘT TẤM DUY NHẤT: KHÔNG kẻ lưới, KHÔNG chia ô, KHÔNG chia khung chuyển động, KHÔNG xếp nhiều hình; cả ảnh là một hình liền.";
+const taoPromptGoc1 = (L) => taoPromptGoc(L) + (L.kieu === 'mot' ? CAU_KIN : '') + CAU_BO_CUC;
+taoPrompt = (L) => bmChen(taoPromptGoc1(L), bmDoan(L.bm || (L.id === 'phong' ? ['kim_loai'] : ['kim_loai', 'go', 'bong']), L.id === 'nho' ? {} : { vien: 'viền (nếu có) giữ đúng như đã ghi ở trên', rieng: true })); // giao diện có mã viền và mã màu riêng (nâu tối, vàng kem), không ép theo sprite
 function hienLo() {
   $('dsLo').innerHTML = L.ds.map((m) => `<li><b>${m.ten}</b> · ${m.w}×${m.h} · <span style="font-size:11px">${m.ma}</span></li>`).join('');
   $('moTaLo').textContent = L.kieu === 'khung' ? 'Một ảnh khung, giữa để trống (màu nền hồng tím). Trong game khung to 380×242 điểm ảnh.'

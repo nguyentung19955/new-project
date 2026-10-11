@@ -383,7 +383,9 @@ function taoPromptPha(q) {
 
 // Đợt 4 (Q6): mọi prompt của trang có thêm đoạn BẢNG MÀU, chỉ gồm các nhóm màu liên quan. Lô mới muốn nhóm khác thì khai thêm bm: ['go', 'da_stone', …] (tên nhóm trong BM.nhom).
 const taoPromptGoc = taoPrompt;
-taoPrompt = (q) => bmChen(taoPromptGoc(q), bmDoan(q.bm || ({ rung: ['co_cay', 'go', 'toc'], bien: ['nuoc', 'da_stone', 'kim_loai'], laudai: ['da_stone', 'kim_loai', 'lua'] }[q.vung] || ['toc', 'da_stone']).concat('quai'), q.pha ? { rieng: true } : undefined)); // dáng pha (Phiên E2): màu đổi theo pha đã ghi trong prompt thì giữ, bảng dùng cho phần còn lại
+const CAU_BO_CUC = " BỐ CỤC CHỈ THEO ĐÚNG PROMPT NÀY: KHÔNG lấy lại lưới, số ô, số khung, cách chia hàng hay hình của bất kỳ ảnh nào đã vẽ trước đó trong cuộc trò chuyện; mỗi lần vẽ coi như bắt đầu mới."; // 11/10 17:41
+const taoPromptGoc1 = (q) => taoPromptGoc(q) + CAU_BO_CUC;
+taoPrompt = (q) => bmChen(taoPromptGoc1(q), bmDoan(q.bm || ({ rung: ['co_cay', 'go', 'toc'], bien: ['nuoc', 'da_stone', 'kim_loai'], laudai: ['da_stone', 'kim_loai', 'lua'] }[q.vung] || ['toc', 'da_stone']).concat('quai'), q.pha ? { rieng: true } : undefined)); // dáng pha (Phiên E2): màu đổi theo pha đã ghi trong prompt thì giữ, bảng dùng cho phần còn lại
 function hienQuai() {
   $('bangThongSo').innerHTML = [
     ['Mã', q => q.ma], ['Cỡ ô', q => q.fw + '×' + q.fh], ['Tấm ảnh', q => q.fw * 8 + '×' + q.fh * SH + (q.pha ? ' (8 cột × 4 hàng)' : '')],

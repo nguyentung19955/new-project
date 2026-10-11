@@ -624,7 +624,9 @@ function taoPrompt(L) {
 }
 // Đợt 4 (Q6): mọi prompt của trang có thêm đoạn BẢNG MÀU, chỉ gồm các nhóm màu liên quan. Lô mới muốn nhóm khác thì khai thêm bm: ['go', 'da_stone', …] (tên nhóm trong BM.nhom).
 const taoPromptGoc = taoPrompt;
-taoPrompt = (L) => bmChen(taoPromptGoc(L), bmDoan(L.bm || (L.id === 'vat' ? ['go', 'da_stone', 'kim_loai', 'lua', 'bong'] : ['go', 'da_stone', 'kim_loai', 'bong']), L.bmTuy)); // bmTuy (phiên A3): lô trang trí giữ màu riêng của vùng đã ghi trong prompt
+const CAU_BO_CUC = " BỐ CỤC CHỈ THEO ĐÚNG PROMPT NÀY: KHÔNG lấy lại lưới, số ô, số khung, cách chia hàng hay hình của bất kỳ ảnh nào đã vẽ trước đó trong cuộc trò chuyện; mỗi lần vẽ coi như bắt đầu mới."; // 11/10 17:41
+const taoPromptGoc1 = (L) => taoPromptGoc(L) + CAU_BO_CUC;
+taoPrompt = (L) => bmChen(taoPromptGoc1(L), bmDoan(L.bm || (L.id === 'vat' ? ['go', 'da_stone', 'kim_loai', 'lua', 'bong'] : ['go', 'da_stone', 'kim_loai', 'bong']), L.bmTuy)); // bmTuy (phiên A3): lô trang trí giữ màu riêng của vùng đã ghi trong prompt
 function hienLo() {
   $('dsLo').innerHTML = L.ds.map((m) => `<li><b>${m.ten}</b> · ${m.w}×${m.h} · <span style="font-size:11px">${m.ma}</span></li>`).join('');
   $('moTaLo').textContent = `${L.ds.length} hình, lưới ${L.cot} cột × ${L.hang} hàng, nền ${NEN[L.nen || 'hong'][1]}.` + (L.kieu === 'vat' ? ' Số sau tên là cỡ lớn nhất trong game (điểm ảnh); mỗi hình được thu vừa cỡ đó và đặt chân ở giữa đáy.' : '')
