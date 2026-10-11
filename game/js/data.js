@@ -6,6 +6,12 @@
   G.GY0 = 142; // mép trên của dải mặt đất
   G.GY1 = 236; // mép dưới của dải mặt đất
 
+  // Đợt 6 (quyết định Q2): sàn, tường, nền ngoài và cỏ mép của vùng RỪNG GIÀ lát bằng tile 16×16 (ảnh gd-nen-rung-*; js/room_art.js).
+  // ĐÂY LÀ CHỖ DUY NHẤT để tắt: đổi true thành false là Rừng già vẽ bằng code y như trước. Thiếu tệp ảnh thì game cũng tự vẽ bằng code.
+  // Thử nhanh không cần sửa code: thêm ?tile=0 vào cuối địa chỉ trang.
+  G.TILE_RUNG = true;
+  if (typeof location !== 'undefined' && /[?&]tile=0(&|$)/.test(location.search || '')) G.TILE_RUNG = false;
+
   G.EL = {
     fire: { name: 'Lửa', col: '#ff7a2a', col2: '#ffd23f', dark: '#a8320a' },
     poison: { name: 'Độc', col: '#6fcf3a', col2: '#c2f58a', dark: '#2f6b1a' },

@@ -628,6 +628,12 @@ window.G.LANG = 'vi';
   G.GY0 = 142; // mép trên của dải mặt đất
   G.GY1 = 236; // mép dưới của dải mặt đất
 
+  // Đợt 6 (quyết định Q2): sàn, tường, nền ngoài và cỏ mép của vùng RỪNG GIÀ lát bằng tile 16×16 (ảnh gd-nen-rung-*; js/room_art.js).
+  // ĐÂY LÀ CHỖ DUY NHẤT để tắt: đổi true thành false là Rừng già vẽ bằng code y như trước. Thiếu tệp ảnh thì game cũng tự vẽ bằng code.
+  // Thử nhanh không cần sửa code: thêm ?tile=0 vào cuối địa chỉ trang.
+  G.TILE_RUNG = true;
+  if (typeof location !== 'undefined' && /[?&]tile=0(&|$)/.test(location.search || '')) G.TILE_RUNG = false;
+
   G.EL = {
     fire: { name: 'Lửa', col: '#ff7a2a', col2: '#ffd23f', dark: '#a8320a' },
     poison: { name: 'Độc', col: '#6fcf3a', col2: '#c2f58a', dark: '#2f6b1a' },
@@ -13815,9 +13821,135 @@ MA._xong();
       if (i % 7 === 3) { const s = (i / 7) % 2 < 1 ? 1 : -1; if (vert) { r(x + s * 2, y, 2, 1, '#9a8460'); r(x + s * 3, y - 1, 1, 1, '#c0a87a'); } else { r(x, y + s * 2, 1, 2, '#9a8460'); r(x + 1, y + s * 3, 1, 1, '#c0a87a'); } }
     }
   }
+  // ---------- ĐỢT 6 (quyết định Q2): TILE 16×16 CHO RIÊNG VÙNG RỪNG GIÀ — thử nghiệm, có cờ tắt ----------
+  // Cờ: G.TILE_RUNG (js/data.js). false → mọi hàm của Forest chạy nhánh code cũ y hệt. Thiếu bất kỳ tệp BẮT BUỘC nào → cũng chạy code cũ.
+  // Ảnh (tools/tach-phong, lô "Nền phòng · Rừng già"), cỡ theo điểm ảnh game:
+  //   gd-nen-rung-san0/1/2  64×64  ba mảng sàn, mỗi mảng = 4×4 ô 16×16, lặp được cả 4 mép          (bắt buộc)
+  //   gd-nen-rung-san-nhan  64×64  mảng điểm nhấn (rễ nổi, vũng rêu, đá lộ), rải thưa               (không có thì không rải)
+  //   gd-nen-rung-tuong-sau 64×49  tường sau kể cả nóc tán lá (cap 7 + wh 42), lặp ngang             (bắt buộc)
+  //   gd-nen-rung-tuong-ben 14×64  tường bên TRÁI, lặp dọc; tường phải là ảnh này lật ngang          (bắt buộc)
+  //   gd-nen-rung-tuong-truoc 64×12 tường trước, lặp ngang                                           (bắt buộc)
+  //   gd-nen-rung-ngoai     64×64  nền tối ngoài phòng, lặp cả hai chiều                             (bắt buộc)
+  //   gd-nen-rung-mep       64×12  cỏ cao phủ mép dưới sàn (nền trong suốt), thay fore                (không có thì cỏ vẽ bằng code)
+  // Lưới ô 16×16 bắt đầu ở góc trên trái của sàn (fx0, fy0); cột và hàng cuối bị cắt ở mép sàn (tường trước và tường phải che).
+  // Không đổi hình học phòng. Tile vẽ MỘT lần vào vỏ phòng dựng sẵn (cỡ game 480×270, như sàn code), nên ảnh nét gấp đôi được thu về
+  // cỡ game trước khi lát: mọi ô nằm ở toạ độ nguyên, không thể hở khe ở bất kỳ cỡ cửa sổ nào. lightPass, backPass, bóng tường,
+  // cột nắng, dấu sàn, đồ trang trí vẫn chạy đè lên như cũ; lối mòn nối các cửa là một lớp nâu nhạt mờ phủ lên tile.
+  const TR = {
+    o: 16,        // cạnh một ô (điểm ảnh game)
+    khoi: 4,      // số ô mỗi chiều của một khối cùng chọn chung mảng và phép lật (4 = cả mảng 64×64 liền hoa văn; 1 = từng ô 16×16 chọn riêng)
+    nhan: 0.06,   // tỉ lệ khối điểm nhấn tối đa (≤ 6%), không hai khối nhấn kề nhau
+    latDoc: false, // true: cho lật cả chiều dọc (12 biến thể mỗi khối thay vì 6); chỉ bật khi mảng không có bóng đổ theo hướng
+    duong: 0.42,  // độ đậm lớp lối mòn (0 = không vẽ)
+  };
+  const TR_CO = { san0: [64, 64], san1: [64, 64], san2: [64, 64], 'san-nhan': [64, 64], 'tuong-sau': [64, 49], 'tuong-ben': [14, 64], 'tuong-truoc': [64, 12], ngoai: [64, 64], mep: [64, 12] };
+  const TR_BAT_BUOC = ['san0', 'san1', 'san2', 'tuong-sau', 'tuong-ben', 'tuong-truoc', 'ngoai'];
+  const trNho = new WeakMap(); // ảnh đã nạp -> bản thu về cỡ game (1 điểm ảnh game = 1 điểm ảnh)
+  let trBao = false;
+  function trAnh(k) {
+    const a = gdA('gd-nen-rung-' + k);
+    if (!a) return null;
+    let o = trNho.get(a);
+    if (!o || o.img !== a.img) {
+      const co = TR_CO[k], x = mk(co[0], co[1]);
+      x.imageSmoothingEnabled = a.pw !== co[0] || a.ph !== co[1];
+      x.drawImage(a.img, 0, 0, a.pw, a.ph, 0, 0, co[0], co[1]);
+      o = { img: a.img, cv: x.canvas };
+      trNho.set(a, o);
+    }
+    return o.cv;
+  }
+  // Bộ tile Rừng già sẵn dùng, hoặc null (cờ tắt, hay thiếu tệp bắt buộc) → gọi nơi nào cũng rẽ về code cũ.
+  function tileRung() {
+    if (G.TILE_RUNG === false) return null;
+    const t = {};
+    for (const k in TR_CO) t[k] = trAnh(k);
+    const thieu = TR_BAT_BUOC.filter((k) => !t[k]);
+    if (!thieu.length) return t;
+    if (!trBao) {
+      const d = (G.spriteCustom && G.spriteCustom.gd) || {};
+      if (thieu.some((k) => !d['gd-nen-rung-' + k])) { // tệp không có thật (không phải đang nạp dở)
+        trBao = true;
+        if (window.console && console.info) console.info('[Linh Khí] Tile Rừng già: thiếu tệp gd-nen-rung-' + thieu.join(', gd-nen-rung-') + ' → sàn và tường Rừng già vẽ bằng code như cũ.');
+      }
+    }
+    return null;
+  }
+  // Một ô 16×16 lấy từ (su, sv) của mảng, đặt ở (dx, dy), có lật ngang / lật dọc. Toạ độ nguyên, không làm mịn.
+  function trO(src, su, sv, dx, dy, lx, ly) {
+    const O = TR.o;
+    if (!lx && !ly) { c.drawImage(src, su, sv, O, O, dx, dy, O, O); return; }
+    c.save(); c.translate(dx + (lx ? O : 0), dy + (ly ? O : 0)); c.scale(lx ? -1 : 1, ly ? -1 : 1);
+    c.drawImage(src, su, sv, O, O, 0, 0, O, O);
+    c.restore();
+  }
+  // Dải lặp một chiều (tường sau, tường trước, tường bên, cỏ mép): lát kín khung (x, y, w, h), lệch đầu `lech` điểm ảnh; lat: lật ngang.
+  function trDai(src, x, y, w, h, doc, lech, lat) {
+    clipRect(x, y, w, h, () => {
+      const L = doc ? src.height : src.width;
+      for (let p = -(lech % L); p < (doc ? h : w); p += L) {
+        if (lat) { c.save(); c.translate(x + src.width + (doc ? 0 : p), y + (doc ? p : 0)); c.scale(-1, 1); c.drawImage(src, 0, 0); c.restore(); }
+        else c.drawImage(src, x + (doc ? 0 : p), y + (doc ? p : 0));
+      }
+    });
+  }
+  // Sàn: rải theo hạt giống của phòng. Mỗi khối chọn 1 trong 3 mảng (kiểu phòng `variant` quyết định mảng nào chiếm nhiều) × lật.
+  function trSan(t, g, rn, variant) {
+    const O = TR.o, fx = g.fx0, fy = g.fy0, w = g.fx1 - fx, h = g.fy1 - fy, B = Math.max(1, TR.khoi | 0);
+    const nc = Math.ceil(w / O), nr = Math.ceil(h / O), bc = Math.ceil(nc / B), br = Math.ceil(nr / B), chon = [];
+    for (let j = 0; j < br; j++) for (let i = 0; i < bc; i++) {
+      const trai = i ? chon[j * bc + i - 1] : null, tren = j ? chon[(j - 1) * bc + i] : null;
+      let b = null;
+      for (let lan = 0; lan < 4; lan++) { // tránh giống hệt khối bên trái và khối bên trên (đỡ thấy lặp)
+        const q = rn(), k = (variant + (q < 0.5 ? 0 : q < 0.75 ? 1 : 2)) % 3, lx = rn() < 0.5, ly = rn() < 0.5 && TR.latDoc;
+        b = { k, lx, ly, nhan: false };
+        if (!((trai && trai.k === k && trai.lx === lx && trai.ly === ly) || (tren && tren.k === k && tren.lx === lx && tren.ly === ly))) break;
+      }
+      chon.push(b);
+    }
+    // điểm nhấn: chỉ ở khối nằm trọn trong sàn, không đè lối mòn và sân giữa phòng, không hai khối kề nhau (kể cả chéo)
+    const pf0 = pathField(g, 9), toiDa = t['san-nhan'] ? Math.floor(TR.nhan * bc * br + 1e-6) : 0, ung = [], da = [];
+    for (let j = 0; j < br; j++) for (let i = 0; i < bc; i++) {
+      const x0 = fx + i * B * O, y0 = fy + j * B * O, s = B * O;
+      if (x0 + s > g.fx1 || y0 + s > g.fy1) continue;
+      if (Math.max(pf0(x0 + s / 2, y0 + s / 2), pf0(x0 + s / 4, y0 + s / 2), pf0(x0 + s * 0.75, y0 + s / 2), pf0(x0 + s / 2, y0 + s / 4), pf0(x0 + s / 2, y0 + s * 0.75)) > 0.3) continue;
+      ung.push([i, j]);
+    }
+    for (let i = ung.length - 1; i > 0; i--) { const j = Math.floor(rn() * (i + 1)), q = ung[i]; ung[i] = ung[j]; ung[j] = q; }
+    for (const [i, j] of ung) {
+      if (da.length >= toiDa) break;
+      if (da.some((q) => Math.abs(q[0] - i) <= 1 && Math.abs(q[1] - j) <= 1)) continue;
+      da.push([i, j]); chon[j * bc + i].nhan = true;
+    }
+    clipRect(fx, fy, w, h, () => {
+      for (let j = 0; j < nr; j++) for (let i = 0; i < nc; i++) {
+        const b = chon[((j / B) | 0) * bc + ((i / B) | 0)], src = b.nhan ? t['san-nhan'] : t['san' + b.k], u = i & 3, v = j & 3;
+        trO(src, (b.lx ? 3 - u : u) * O, (b.ly ? 3 - v : v) * O, fx + i * O, fy + j * O, b.lx, b.ly);
+      }
+    });
+    // lối mòn nối tâm phòng với từng cửa (đúng trường pathField của sàn code): lớp nâu nhạt mờ, 3 nấc, chuyển nấc bằng lưới chấm
+    if (TR.duong > 0) {
+      const pf = grid2(g, pf0), id = c.getImageData(fx, fy, w, h), d = id.data, P = hex('#7a6a48'), NAC = 3;
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+        const gx = fx + x, gy = fy + y, p = pf(gx, gy);
+        if (p <= 0.02) continue;
+        const a = (Math.min(NAC, Math.floor(sharp(p * NAC) + bay(gx, gy))) / NAC) * TR.duong;
+        if (a <= 0) continue;
+        const o = (y * w + x) * 4;
+        d[o] += (P[0] - d[o]) * a; d[o + 1] += (P[1] - d[o + 1]) * a; d[o + 2] += (P[2] - d[o + 2]) * a;
+      }
+      c.putImageData(id, fx, fy);
+    }
+  }
   const Forest = {
     name: 'Rừng già', reg: 0, light: F.light,
     paintVoid(g, rn) {
+      const t = tileRung();
+      if (t) { // tile: nền tối ngoài phòng lát kín cả màn
+        r(0, 0, g.W, g.H, F.void);
+        for (let y = 0; y < g.H; y += t.ngoai.height) for (let x = 0; x < g.W; x += t.ngoai.width) c.drawImage(t.ngoai, x, y);
+        return;
+      }
       r(0, 0, g.W, g.H, F.void);
       for (let i = 0; i < (g.W * g.H) / 900; i++) ell(rn() * g.W, rn() * g.H, ri(rn, 8, 18), ri(rn, 4, 8), rn() < 0.5 ? '#0e1c13' : '#0d1911');
     },
@@ -13863,6 +13995,8 @@ MA._xong();
     },
     back(g, rn) {
       const x0 = g.fx0 - g.sw, w = g.fx1 - g.fx0 + g.sw * 2, wy = g.fy0 - g.wh;
+      const t = tileRung();
+      if (t) { trDai(t['tuong-sau'], x0, wy - g.cap, w, g.wh + g.cap, false, ri(rn, 0, 3) * TR.o); return; } // tile: dải tường sau (kể cả nóc tán lá) lặp ngang; cửa trên vẽ đè lên sau
       // khe tối giữa các thân cây, có lá phía sau
       r(x0, wy, w, g.wh, '#07100b');
       for (let x = x0; x < x0 + w; x += 9) leafBlob(x + rn() * 6, wy + 8 + rn() * (g.wh - 14), ri(rn, 6, 9), ri(rn, 4, 6), rn);
@@ -13889,9 +14023,11 @@ MA._xong();
     backDeco(g, rn) {
       const x0 = g.fx0 - g.sw, w = g.fx1 - g.fx0 + g.sw * 2, wy = g.fy0 - g.wh;
       const tops = g.doors.filter((d) => d.side === 'top').map((d) => d.at);
-      // tán lá phủ nóc
-      r(x0, wy - g.cap, w, g.cap, F.leafD);
-      for (let x = x0; x < x0 + w; x += 8) leafBlob(x + rn() * 5, wy - g.cap / 2 + rn() * 5, ri(rn, 7, 11), ri(rn, 5, 7), rn);
+      // tán lá phủ nóc (dùng tile thì tán lá đã nằm trong ảnh tường sau)
+      if (!tileRung()) {
+        r(x0, wy - g.cap, w, g.cap, F.leafD);
+        for (let x = x0; x < x0 + w; x += 8) leafBlob(x + rn() * 5, wy - g.cap / 2 + rn() * 5, ri(rn, 7, 11), ri(rn, 5, 7), rn);
+      }
       // dây leo rủ
       for (let x = g.fx0 + 6; x < g.fx1; x += ri(rn, 16, 30)) {
         if (tops.some((t) => Math.abs(t - x) < 18)) continue;
@@ -13909,6 +14045,13 @@ MA._xong();
     },
     sides(g, rn) {
       const y0 = g.fy0 - g.wh - g.cap, h = g.fy1 + g.fw - y0;
+      const t = tileRung();
+      if (t) { // tile: dải tường bên lặp dọc; tường phải là ảnh lật ngang. Lối cửa bên do phần vẽ cửa đè lên sau
+        const lech = ri(rn, 0, 3) * TR.o;
+        trDai(t['tuong-ben'], g.fx0 - g.sw, y0, g.sw, h, true, lech, false);
+        trDai(t['tuong-ben'], g.fx1, y0, g.sw, h, true, lech + 2 * TR.o, true);
+        return;
+      }
       for (const x of [g.fx0 - g.sw, g.fx1]) {
         r(x, y0, g.sw, h, F.leafD);
         const skip = (y) => g.doors.some((d) => (d.side === (x < g.fx0 ? 'left' : 'right')) && Math.abs(d.at - y) < 17);
@@ -13922,6 +14065,8 @@ MA._xong();
     },
     front(g, rn) {
       const x0 = g.fx0 - g.sw, w = g.fx1 - g.fx0 + g.sw * 2;
+      const t = tileRung();
+      if (t) { trDai(t['tuong-truoc'], x0, g.fy1, w, g.fw, false, ri(rn, 0, 3) * TR.o); return; } // tile: dải tường trước lặp ngang
       r(x0, g.fy1, w, g.fw, F.leafD);
       const skip = (x) => g.doors.some((d) => d.side === 'bottom' && Math.abs(d.at - x) < 17);
       for (let x = x0 + 3; x < x0 + w; x += 6) { if (skip(x)) continue; leafBlob(x + rn() * 3, g.fy1 + g.fw / 2 + 1, 6, g.fw / 2, rn); }
@@ -13931,6 +14076,14 @@ MA._xong();
     },
     fore(g, rn) {
       // cỏ cao ở mép trước
+      const t = tileRung();
+      if (t && t.mep) { // tile: dải cỏ 64×12 lặp ngang, đáy dải ở fy1 + 2 (như ngọn cỏ code), chừa lối cửa dưới
+        const lech = ri(rn, 0, 3) * TR.o, y = g.fy1 + 2 - t.mep.height;
+        let segs = [[g.fx0, g.fx1]];
+        for (const d of g.doors) if (d.side === 'bottom') segs = segs.flatMap(([a, b]) => [[a, Math.min(b, d.at - 17)], [Math.max(a, d.at + 17), b]]);
+        for (const [a, b] of segs) if (b > a) clipRect(a, y, b - a, t.mep.height, () => trDai(t.mep, g.fx0, y, g.fx1 - g.fx0, t.mep.height, false, lech));
+        return;
+      }
       const skip = (x) => g.doors.some((d) => d.side === 'bottom' && Math.abs(d.at - x) < 17);
       for (let x = g.fx0; x < g.fx1; x += ri(rn, 3, 6)) { if (skip(x)) continue; const h = ri(rn, 3, 7); r(x, g.fy1 - h + 2, 1, h, rn() < 0.5 ? F.leafL : F.moss); if (rn() < 0.3) r(x, g.fy1 - h + 2, 1, 1, F.leafH); }
     },
@@ -14099,6 +14252,9 @@ MA._xong();
       });
     },
   ];
+  // Đợt 6: có đủ tile (và cờ G.TILE_RUNG bật) thì cả ba kiểu sàn Rừng già lát bằng tile; kiểu phòng chỉ quyết định mảng nào chiếm nhiều.
+  Forest.floors = Forest.floors.map((ve, kieu) => (g, rn) => { const t = tileRung(); if (t) trSan(t, g, rn, kieu); else ve(g, rn); });
+  Forest.tile = TR; // cho công cụ và bài kiểm chỉnh thử (khoi, nhan, latDoc, duong)
   function pick3(rn, a, b, d) { const k = rn(); return k < 0.34 ? a : k < 0.67 ? b : d; }
 
   // Dấu trên sàn theo loại phòng: nhìn sàn là biết phòng gì
@@ -14554,7 +14710,7 @@ MA._xong();
   const cache = new Map(), shells = new Map();
   // Ảnh AI của phòng (tools/tach-phong; mã gd-vat-*, gd-cua-*, gd-tt-*, gd-nen-*) nạp chậm hơn code vài phần giây:
   // số ảnh đã sẵn sàng đổi thì xoá bộ nhớ đệm để phòng được dựng lại với ảnh. Không có tệp nào thì số luôn là 0, không xoá gì.
-  let soAnh = 0;
+  let soAnh = 0, coTile = null; // coTile: giá trị cờ G.TILE_RUNG lần dựng trước (đổi cờ lúc đang chơi thì dựng lại phòng)
   function demAnh() {
     const s = G.spriteCustom, d = s && s.gd; let n = 0;
     if (d) for (const k in d) if (d[k].ready && (k.startsWith('gd-vat-') || k.startsWith('gd-cua-') || k.startsWith('gd-tt-') || k.startsWith('gd-nen-'))) n++;
@@ -14562,8 +14718,8 @@ MA._xong();
   }
   RA.xoaDem = function () { cache.clear(); shells.clear(); };
   function get(W) {
-    const n = demAnh();
-    if (n !== soAnh) { soAnh = n; RA.xoaDem(); }
+    const n = demAnh(), ct = G.TILE_RUNG !== false;
+    if (n !== soAnh || ct !== coTile) { soAnh = n; coTile = ct; RA.xoaDem(); }
     const doors = W.doors || [];
     const key = [W.uid, W.region, W.type, W.seed, doors.map((d) => d.dir + (d.open ? 1 : 0) + (d.gate ? 'g' : '') + (d.boss ? 'b' : '')).join(',')].join('|');
     let room = cache.get(key);

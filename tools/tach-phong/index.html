@@ -89,7 +89,7 @@
 <body>
 <header>
   <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="#a8752f" stroke="#1a120a" stroke-width="2"/><circle cx="15" cy="15" r="8" fill="none" stroke="#f6dc92" stroke-width="1.5"/><path d="M15 4 L17 13 L26 15 L17 17 L15 26 L13 17 L4 15 L13 13 Z" fill="#f6dc92"/></svg>
-  <div><h1>Tách Phòng · Phòng chơi</h1><small>Ảnh ChatGPT vẽ đồ vật trong phòng (rương, suối, bàn thờ…) và cửa phòng → mỗi hình một tệp .sprite.json</small></div>
+  <div><h1>Tách Phòng · Phòng chơi</h1><small>Ảnh ChatGPT vẽ đồ vật trong phòng (rương, suối, bàn thờ…), cửa phòng và mảng nền lát sàn, tường → mỗi hình một tệp .sprite.json</small></div>
   <nav class="menu" aria-label="Các công cụ">
     <a href="tach-quai.html">Quái</a>
     <a href="tach-anh-hung.html">Anh hùng · Người làng</a>
@@ -140,6 +140,7 @@
         <label>Nét vẽ <select id="doNet"><option value="min">Mịn</option><option value="net">Sắc nét</option></select></label>
         <label>Số màu <select id="soMau"><option value="48">48</option><option value="32">32</option><option value="24">24</option><option value="16">16</option><option value="12">12</option><option value="8">8</option><option value="6">6</option><option value="4">4</option></select></label>
         <label>Giảm màu <select id="kieuGiam"><option value="tu-do">Tự do (như cũ)</option><option value="bang">Theo bảng màu Linh Khí</option></select></label>
+        <label id="oLienMep" hidden><input type="checkbox" id="lienMep" checked> Làm liền mép (mảng lặp)</label>
         <button class="nut phu nho" id="nutLamLai">Tách lại</button>
       </div>
     </div>
@@ -158,6 +159,17 @@
       <button class="nut phu nho" id="nutPhai" aria-label="Dịch hình sang phải">Sang phải ▶</button>
       <button class="nut do nho" id="nutBo">Bỏ hình này</button>
       <button class="nut phu nho" id="nutTaiMot">Tải file này</button>
+    </div>
+    <div id="khoiLap" hidden style="margin-top:14px;border-top:2px solid var(--brD);padding-top:12px">
+      <h3 style="margin:0 0 6px;color:var(--hi);font-size:16px">Xem lát lặp: soi đường nối</h3>
+      <p class="chu-y" style="margin-top:0">Đang xem: <b id="tenLap" style="color:var(--hi)"></b>. <span id="ghiLap"></span></p>
+      <div class="hang" style="margin-top:8px">
+        <button class="nut phu nho" id="nutLapTruoc" aria-label="Xem mảng trước">◀ Mảng trước</button>
+        <button class="nut phu nho" id="nutLapSau" aria-label="Xem mảng sau">Mảng sau ▶</button>
+        <button class="nut phu nho" id="nutVach">Ẩn vạch chỗ nối</button>
+      </div>
+      <div class="khung-xem" style="max-width:420px"><canvas id="cvLap"></canvas></div>
+      <p class="chu-y">Mảng được xếp lặp lại cạnh nhau như trong game. Chỗ nối nằm đúng ở các vạch vàng ngoài rìa. Nhìn dọc theo vạch: nếu thấy một đường thẳng, hoặc hình bị cắt ngang ở đó, thì mảng chưa liền mép. Khi ấy thử bật <b>Làm liền mép</b> ở bước 2, hoặc nhờ ChatGPT vẽ lại mảng đó.</p>
     </div>
     <div class="hang" style="margin-top:12px">
       <button class="nut" id="nutTaiZip">Tải tất cả (.zip)</button>
@@ -196,6 +208,8 @@
 // locHue: độ rộng (độ màu) của bộ "Lọc đốm màu nền"; lô có hình màu tím thì để hẹp (12) cho khỏi ăn vào hình. Mặc định 22.
 // hinhNho: lô có hình rất nhỏ, dẹt, nhiều mảnh rời (vật đã vỡ): không coi hình nhỏ là vụn.
 // xem: 'vat' = bước 4 vẽ phòng mẫu với các đồ vật.   PHIÊN SAU (A2 cửa, A3 trang trí, A4 nền): thêm lô mới vào CUỐI mảng LO.
+// Đợt 6 (tile): lô 'nen-<vùng>' kiểu 'gian', mỗi hình có lap: 'xy' (lặp cả bốn mép), 'x' (lặp ngang), 'y' (lặp dọc), 'quanh' (điểm nhấn: nằm giữa các mảng sàn);
+//   dac: true = mảng phải kín đặc (lỗ thủng được lấp bằng màu bên cạnh). xem: 'nen' = bước 3 có "Xem lát lặp", bước 4 vẽ cả phòng bằng tile.
 const VAT = [
   // [mã, tên, rộng, cao, mô tả cho prompt]
   ['ruong', 'Rương báu', 28, 21, 'rương gỗ nâu ĐÓNG kín, nắp vòm thấp, hai đai sắt xám chạy dọc, bốn góc bịt đồng vàng, ổ khoá vàng ở giữa mặt trước, khe nắp hé một vệt ánh vàng'],
@@ -273,6 +287,25 @@ LO.push({ id: 'cua-nho', ten: 'Cửa · ổ khoá và đầu lâu · 2 hình', k
     { ma: 'gd-cua-o-khoa', ten: 'Ổ khoá đỏ', w: 12, h: 15, mo: 'ổ khoá móc màu ĐỎ: thân vuông đỏ đậm #c43b37 có mép trên sáng #f66c52 và mép dưới sẫm, quai khoá hình chữ U bằng thép sáng #cecdda ở trên, lỗ khoá tối ở giữa thân; hình cao hơn rộng một chút' },
     { ma: 'gd-cua-dau-lau', ten: 'Đầu lâu cửa Trùm', w: 11, h: 11, mo: 'huy hiệu ĐẦU LÂU nhìn thẳng: sọ tròn màu trắng ngà #efe2d1, hai hốc mắt ĐỎ sẫm #c9270c, hàm ngắn có ba khe răng tối; hình gần vuông' },
   ] });
+
+// ---------- Đợt 6 (quyết định Q2): nền phòng bằng tile 16×16, thử ở RIÊNG vùng Rừng già ----------
+// Một tấm ảnh lưới 3×3 = 9 mảng. Mỗi mảng sàn 64×64 = 4×4 ô 16×16; game (js/room_art.js, trSan) rải theo hạt giống của phòng, cắt ở mép sàn.
+// Mã: gd-nen-rung-san0|san1|san2|san-nhan|ngoai|tuong-sau|tuong-truoc|mep|tuong-ben. Game chỉ dùng tile khi cờ G.TILE_RUNG bật VÀ đủ 7 tệp bắt buộc
+// (3 sàn, 3 tường, nền ngoài); thiếu san-nhan thì không rải điểm nhấn, thiếu mep thì cỏ mép vẽ bằng code.
+const NEN_RUNG = [
+  // [mã, tên, rộng, cao, kiểu lặp, kín đặc, mô tả cho prompt]
+  ['san0', 'Sàn A · đất và rêu', 64, 64, 'xy', 1, 'MẢNG SÀN nhìn thẳng từ trên xuống: nền đất rừng màu nâu rêu trầm có hạt lốm đốm nhẹ, điểm vài đám rêu xanh sẫm nhỏ và hai ba khóm cỏ thấp; hình VUÔNG; LẶP ĐƯỢC CẢ BỐN MÉP (mép trái khớp mép phải, mép trên khớp mép dưới)'],
+  ['san1', 'Sàn B · rêu và hoa dại', 64, 64, 'xy', 1, 'ĐÚNG nền đất của ô 1 (cùng màu, cùng kiểu hạt) nhưng nhiều đám rêu xanh sẫm hơn và năm bảy bông hoa dại nhỏ xíu màu vàng nhạt; hình VUÔNG; LẶP ĐƯỢC CẢ BỐN MÉP (mép trái khớp mép phải, mép trên khớp mép dưới)'],
+  ['san2', 'Sàn C · đất ẩm, lá rụng', 64, 64, 'xy', 1, 'ĐÚNG nền đất của ô 1 (cùng màu, cùng kiểu hạt) nhưng có vài vệt đất ẩm sẫm hơn, lá rụng nhỏ màu nâu cam trầm và mấy viên sỏi xám; hình VUÔNG; LẶP ĐƯỢC CẢ BỐN MÉP (mép trái khớp mép phải, mép trên khớp mép dưới)'],
+  ['san-nhan', 'Sàn điểm nhấn', 64, 64, 'quanh', 1, 'ĐÚNG nền đất của ô 1, chính giữa có MỘT cụm điểm nhấn: một vũng rêu xanh to, một tảng đá xám lộ lên khỏi đất và một đoạn rễ cây nâu nổi ngoằn ngoèo; cả cụm nằm gọn ở giữa mảng, sát bốn mép vẫn là nền đất trơn y như ô 1 (game đặt mảng này xen giữa các mảng sàn khác); hình VUÔNG'],
+  ['ngoai', 'Nền ngoài phòng', 64, 64, 'xy', 1, 'MẢNG RỪNG TỐI bên ngoài phòng nhìn từ trên xuống: gần như đen xanh #0b1610, chỉ có vài bóng tán lá tròn mờ nhạt sáng hơn nền một chút (#0e1c13); rất tối, rất ít chi tiết; hình VUÔNG; LẶP ĐƯỢC CẢ BỐN MÉP (mép trái khớp mép phải, mép trên khớp mép dưới)'],
+  ['tuong-sau', 'Tường sau', 64, 49, 'x', 1, 'MẢNG TƯỜNG SAU nhìn thẳng mặt: một hàng THÂN CÂY CỔ THỤ to đứng sát nhau (hai hoặc ba thân; vỏ nâu sẫm có khe nứt dọc, mép trái mỗi thân sáng hơn, vài mảng rêu), giữa các thân là khe tối gần đen; dải trên cùng (khoảng 1/7 chiều cao) là TÁN LÁ xanh sẫm phủ kín nóc; chân mỗi thân có rễ xoè nằm sát mép dưới; hình chữ nhật NGANG, rộng gấp khoảng 1,3 lần cao; LẶP NGANG: mép trái khớp mép phải (thân cây hay khe tối bị cắt ở mép phải thì nối tiếp đúng ở mép trái)'],
+  ['tuong-truoc', 'Tường trước', 64, 12, 'x', 1, 'DẢI RÀO LÁ của tường trước nhìn từ trên xuống: bụi lá xanh sẫm dày kín, một sợi dây gai nâu chạy ngang uốn nhẹ; dải NGANG rất DẸT, rộng gấp khoảng 5 lần cao; LẶP NGANG: mép trái khớp mép phải'],
+  ['mep', 'Cỏ mép dưới', 64, 12, 'x', 0, 'DẢI CỎ CAO: một hàng lá cỏ xanh mọc từ đáy dải chĩa lên, cao thấp so le, gốc các lá cỏ dính liền nhau thành một dải liền ở đáy; phía trên và giữa các ngọn cỏ để hở thấy NỀN HỒNG TÍM (đây là mảng DUY NHẤT không kín đặc); dải NGANG rất DẸT, rộng gấp khoảng 5 lần cao; LẶP NGANG: mép trái khớp mép phải'],
+  ['tuong-ben', 'Tường bên (trái)', 14, 64, 'y', 1, 'DẢI RÀO LÁ của tường TRÁI nhìn từ trên xuống: bụi lá xanh sẫm dày kín, một sợi dây gai nâu chạy dọc uốn nhẹ; dải DỌC rất HẸP, cao gấp khoảng 4,5 lần rộng; LẶP DỌC: mép trên khớp mép dưới (game tự lật ngang để làm tường phải)'],
+];
+LO.push({ id: 'nen-rung', ten: 'Nền phòng · Rừng già · 9 mảng (tile)', kieu: 'gian', cot: 3, hang: 3, mau: 48, net: 'net', xem: 'nen', nen: 'hong', vung: 0, hinhNho: true, tile: true,
+  ds: NEN_RUNG.map(([k, ten, w, h, lap, dac, mo]) => ({ ma: 'gd-nen-rung-' + k, ten, mo, w, h, lap, dac: !!dac })) });
 
 const $ = (id) => document.getElementById(id);
 let L = null, ANH = null, SEG = null, MAP = null, BO = [], KQ = [], CHINH = [], CHON = -1, LAST = null;
@@ -403,7 +436,24 @@ function promptCuaNho(L) {
     + `KHÔNG vẽ: chữ, số, nhãn, tên, dây xích, cánh cửa, nền gỗ hay đá phía sau, bóng đổ, quầng sáng, tia lấp lánh. `
     + cuoi(L);
 }
+// Đợt 6: lô nền phòng (tile). Tự ghi đoạn BẢNG MÀU của mình (nhóm cỏ cây, gỗ, đá, bóng + màu riêng của Rừng già trong docs/vfx/BANG-MAU.md) nên bmChen không chèn lần hai.
+function promptNen(L) {
+  return `Dùng công cụ tạo ảnh vẽ MỘT tấm ảnh pixel art 2D nằm ngang (tỉ lệ 3:2) gồm ĐÚNG ${L.ds.length} MẢNG NỀN (mảng lát, "tile") dùng để lát sàn và tường cho phòng chơi vùng Rừng già trong ${GAME_LK}. Phòng hình chữ nhật nhìn từ trên xuống chếch: sàn đất rừng ở giữa; tường sau (phía trên) là hàng thân cây cổ thụ thấy mặt đứng; tường hai bên và tường trước (phía dưới) là dải rào lá hẹp; ngoài phòng là rừng tối. Game cắt mỗi mảng thành các ô 16×16 điểm ảnh rồi XẾP LẶP LẠI rất nhiều lần sát cạnh nhau, nên điều quan trọng nhất của tấm ảnh này là MÉP CÁC MẢNG PHẢI LIỀN NHAU khi xếp lặp. `
+    + `BỐ CỤC: lưới ĐỀU đúng ${L.cot} cột × ${L.hang} hàng = ${L.cot * L.hang} ô bằng nhau (KHÔNG thêm cột, KHÔNG thêm hàng), kẻ lưới mảnh màu tối. Mỗi ô đúng MỘT mảng hình chữ nhật, nằm chính giữa ô, bề dài của mảng chiếm khoảng 70% ô; bốn cạnh của mảng THẲNG và vuông góc (không bo góc, không nghiêng, không kẻ khung quanh mảng, không đổ bóng ra ngoài mảng), quanh mảng là nền trơn. Thứ tự đọc từ trái sang phải, hết hàng trên mới xuống hàng dưới: `
+    + L.ds.map((m, i) => `ô ${i + 1}: ${m.ten} (trong game ${m.w}×${m.h})`).join('; ') + '. '
+    + `TỪNG MẢNG: ` + L.ds.map((m, i) => `Ô ${i + 1}: ${m.mo}.`).join(' ') + ' '
+    + `QUY TẮC LIỀN MÉP (bắt buộc): mảng nào ghi LẶP ĐƯỢC CẢ BỐN MÉP thì mép trái khớp mép phải VÀ mép trên khớp mép dưới: đặt hai bản của mảng sát nhau (cạnh nhau hoặc chồng lên nhau) thì hoa văn chạy tiếp liền mạch, không thấy đường nối, không có hình bị cắt cụt. Mảng ghi LẶP NGANG thì mép trái khớp mép phải; mảng ghi LẶP DỌC thì mép trên khớp mép dưới. Bốn mảng sàn ở ô 1, 2, 3, 4 dùng CHUNG một nền đất (cùng màu, cùng kiểu hạt); mọi chi tiết to (đám rêu, khóm cỏ, hoa, lá rụng, sỏi, đá, rễ) nằm cách mép mảng ít nhất 1/10 cạnh, sát mép chỉ là nền đất trơn: nhờ vậy mảng sàn nào đặt cạnh mảng sàn nào, kể cả khi bị lật ngang, cũng liền. `
+    + `KIỂU VẼ: pixel art rõ từng điểm ảnh, màu phẳng, khối to, ít chi tiết vụn; không chuyển màu mượt, không nhoè, không khử răng cưa. Ánh sáng ĐỀU khắp mảng: KHÔNG vẽ bóng đổ dài, KHÔNG vệt nắng, KHÔNG để một góc mảng sáng hơn góc kia (game tự phủ ánh sáng, bóng tường và lối mòn lên trên). Sàn phải TRẦM và ít rực để nhân vật nổi lên: trên bốn mảng sàn không có mảng màu nào sáng hơn #56523c, trừ vài chấm hoa nhỏ. `
+    + bmDoan(['co_cay', 'go', 'da_stone', 'bong'], {
+      vien: `KHÔNG kẻ viền quanh mép mảng; chỉ vật nhỏ nằm trong mảng (tảng đá, rễ cây) mới có viền tối một nét ${BM.vien}`,
+      rieng: true,
+      them: `Màu riêng của Rừng già: nền đất sàn #3d402e là màu chiếm nhiều nhất, hạt tối #313526 và #262a1d, hạt sáng #4a4936; rêu trên sàn #283620, #314327, #3b512d (sáng nhất #466033); lá rào và tán lá #13291a (tối), #1d3d25 (vừa), #2f5f34 (sáng), điểm sáng #4c8a3e; vỏ thân cây #261c14 (tối), #3b2d20 (vừa), #57432e (sáng); khe tối giữa các thân cây #07100b; nền ngoài phòng #0b1610. `,
+    })
+    + `KHÔNG vẽ: nhân vật, quái, cửa, rương, đuốc, nấm phát sáng, chữ, số, nhãn, tên, mũi tên, bảng màu, khung viền quanh mảng, bóng đổ ra ngoài mảng. Không dùng màu hồng, tím, đỏ tươi, cam sáng trong các mảng. `
+    + cuoi(L);
+}
 function taoPrompt(L) {
+  if (L.tile) return promptNen(L);
   if (L.cua) return promptCua(L);
   if (L.id === 'cua-nho') return promptCuaNho(L);
   // lô 'vat' (và các lô vật đứng trên sàn về sau): mỗi ô một vật, đáy vật là chân
@@ -420,7 +470,9 @@ taoPrompt = (L) => bmChen(taoPromptGoc(L), bmDoan(L.bm || (L.id === 'vat' ? ['go
 function hienLo() {
   $('dsLo').innerHTML = L.ds.map((m) => `<li><b>${m.ten}</b> · ${m.w}×${m.h} · <span style="font-size:11px">${m.ma}</span></li>`).join('');
   $('moTaLo').textContent = `${L.ds.length} hình, lưới ${L.cot} cột × ${L.hang} hàng, nền ${NEN[L.nen || 'hong'][1]}.` + (L.kieu === 'vat' ? ' Số sau tên là cỡ lớn nhất trong game (điểm ảnh); mỗi hình được thu vừa cỡ đó và đặt chân ở giữa đáy.' : '')
-    + (L.cua ? ' Hàng trên là cửa mở, hàng dưới là cửa khoá. Cửa bên chỉ vẽ cho tường trái, game tự lật cho tường phải. Ổ khoá và đầu lâu nằm ở lô riêng.' : '');
+    + (L.cua ? ' Hàng trên là cửa mở, hàng dưới là cửa khoá. Cửa bên chỉ vẽ cho tường trái, game tự lật cho tường phải. Ổ khoá và đầu lâu nằm ở lô riêng.' : '')
+    + (L.tile ? ' Số sau tên là cỡ của mảng trong game (điểm ảnh); mỗi mảng được kéo vừa khít cỡ đó. Game cắt mảng thành các ô 16×16 rồi xếp lặp lại, nên mép mảng phải liền: bước 3 có phần "Xem lát lặp" để soi đường nối, bước 4 xem cả phòng. Đây là bản THỬ cho riêng vùng Rừng già.' : '');
+  $('oLienMep').hidden = !L.tile;
   $('oPrompt').value = taoPrompt(L);
   $('soMau').value = String(L.mau); $('doNet').value = L.net;
   if (L.kieu !== 'icon' && $('heNet').value === '4') $('heNet').value = '2';
@@ -429,7 +481,7 @@ function hienLo() {
 LO.forEach((l, i) => { const o = document.createElement('option'); o.value = i; o.textContent = l.ten; $('chonLo').appendChild(o); });
 try { const i = localStorage.getItem('tph_lo'); if (i != null && LO[i]) $('chonLo').value = i; } catch (e) { /* bỏ qua */ }
 L = LO[+$('chonLo').value];
-$('chonLo').onchange = (e) => { L = LO[+e.target.value]; if (L.xem === 'cua') CUA_TT = L.id === 'cua-nho' ? 2 : 0; try { localStorage.setItem('tph_lo', e.target.value); } catch (er) { /* bỏ qua */ } hienLo(); CHINH = []; BO = []; CHON = -1; KQ = []; ANH = null; SEG = null; LAST = null; $('vungAnhGoc').hidden = true; $('buoc3').hidden = true; if (L.xem && Object.keys(XEM).length) { $('buoc4').hidden = false; napGame(); veXem(); } else $('buoc4').hidden = true; }; // đổi lô: chờ ảnh của lô mới (ảnh lô cũ không dùng lại)
+$('chonLo').onchange = (e) => { L = LO[+e.target.value]; LAP_I = 0; HAT = 1; if (L.xem === 'cua') CUA_TT = L.id === 'cua-nho' ? 2 : 0; try { localStorage.setItem('tph_lo', e.target.value); } catch (er) { /* bỏ qua */ } hienLo(); CHINH = []; BO = []; CHON = -1; KQ = []; ANH = null; SEG = null; LAST = null; $('vungAnhGoc').hidden = true; $('buoc3').hidden = true; if (L.xem && Object.keys(XEM).length) { $('buoc4').hidden = false; napGame(); veXem(); } else $('buoc4').hidden = true; }; // đổi lô: chờ ảnh của lô mới (ảnh lô cũ không dùng lại)
 hienLo();
 $('nutChepPrompt').onclick = () => {
   const t = taoPrompt(L);
@@ -457,6 +509,7 @@ $('locDom').onchange = () => ANH && chay(true);
 $('nutLamLai').onclick = () => ANH && chay(true);
 ['doNet', 'soMau', 'heNet'].forEach((id) => ($(id).onchange = () => ANH && chay(false)));
 $('kieuGiam').onchange = () => ANH && chay(false);
+$('lienMep').onchange = () => ANH && chay(false);
 // Độ nét: ảnh trong tệp có số điểm ảnh gấp N lần cỡ game ("net": N). rong, cao vẫn theo điểm ảnh game.
 const NET = () => { const v = +$('heNet').value; return v === 4 && L.kieu === 'icon' ? 4 : v >= 2 ? 2 : 1; };
 
@@ -784,6 +837,11 @@ function lamMon(i) {
     ox = (TW - nw) >> 1; oy = (TH - nh) >> 1;
   }
   const o = thuNho(f, nw, nh);
+  let lo = 0;
+  if (L.tile) { // mảng lát: lấp lỗ thủng (mảng kín đặc), rồi làm liền mép theo kiểu lặp của mảng, TRƯỚC khi giảm màu (để không sinh màu mới)
+    if (m.dac) lo = lapLo(o, nw, nh);
+    if ($('lienMep').checked && (m.lap === 'xy' || m.lap === 'x' || m.lap === 'y')) lienMep(o, nw, nh, m.lap, m.dac);
+  }
   giamMau(o, Math.max(2, +$('soMau').value));
   const bmKq = bmGiam(o); // null khi "Giảm màu: Tự do"
   const px = new Uint8ClampedArray(TW * TH * 4);
@@ -791,8 +849,38 @@ function lamMon(i) {
   const cv = document.createElement('canvas'); cv.width = TW; cv.height = TH;
   cv.getContext('2d').putImageData(new ImageData(px, TW, TH), 0, 0);
   const mau = new Set(); let dac = 0; for (let j = 0; j < px.length; j += 4) if (px[j + 3]) { dac++; mau.add((px[j] << 16) | (px[j + 1] << 8) | px[j + 2]); }
-  K.out = { cv, w: TW, h: TH, px, soMau: mau.size, N, dac, gw: nw / N, gh: nh / N };
+  K.out = { cv, w: TW, h: TH, px, soMau: mau.size, N, dac, gw: nw / N, gh: nh / N, lo, hong: m.dac ? TW * TH - dac : 0 };
   K.out.bm = bmKq;
+}
+// ----- Đợt 6: mảng lát (tile) -----
+// Lấp lỗ thủng trong mảng phải kín đặc: điểm trong suốt lấy màu của điểm đặc kề bên, lặp tới khi kín. Trả về số điểm đã lấp.
+function lapLo(o, w, h) {
+  let tong = 0;
+  for (let luot = 0; luot < w + h; luot++) {
+    const them = [];
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const k = (y * w + x) * 4; if (o[k + 3]) continue;
+      for (const [dx, dy] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) { const xx = x + dx, yy = y + dy; if (xx < 0 || yy < 0 || xx >= w || yy >= h) continue; const j = (yy * w + xx) * 4; if (o[j + 3]) { them.push(k, j); break; } }
+    }
+    if (!them.length) break;
+    const cu = o.slice();
+    for (let i = 0; i < them.length; i += 2) { const k = them[i], j = them[i + 1]; o[k] = cu[j]; o[k + 1] = cu[j + 1]; o[k + 2] = cu[j + 2]; o[k + 3] = 255; }
+    tong += them.length / 2;
+  }
+  return tong;
+}
+// Làm liền mép: trong một dải rộng 1/8 cạnh ở hai mép đối nhau, trộn dần mỗi điểm với điểm đối xứng bên mép kia (sát mép: trộn nửa nọ nửa kia),
+// nên hai mép trở thành giống nhau và xếp lặp không còn đường nối. lap: 'x' (trái–phải), 'y' (trên–dưới), 'xy' (cả hai). Phần giữa mảng giữ nguyên.
+function lienMep(o, w, h, lap, dac) {
+  const tron = (a, b, t) => { // a, b: vị trí trong o; t: phần lấy từ b (0..0,5). Trộn theo độ đặc để màu nền trong suốt không lem vào.
+    const A = o[a + 3] / 255, B = o[b + 3] / 255, wa = A * (1 - t), wb = B * t, s = wa + wb;
+    return s > 0 ? [(o[a] * wa + o[b] * wb) / s, (o[a + 1] * wa + o[b + 1] * wb) / s, (o[a + 2] * wa + o[b + 2] * wb) / s, A * (1 - t) + B * t] : [0, 0, 0, 0];
+  };
+  const dat = (k, v) => { o[k] = v[0]; o[k + 1] = v[1]; o[k + 2] = v[2]; o[k + 3] = dac ? 255 : v[3] >= 0.5 ? 255 : 0; };
+  if (lap.indexOf('x') >= 0) { const b = Math.max(2, Math.round(w / 8));
+    for (let y = 0; y < h; y++) for (let i = 0; i < b && i < w >> 1; i++) { const t = 0.5 * (1 - i / b), l = (y * w + i) * 4, r = (y * w + w - 1 - i) * 4, vl = tron(l, r, t), vr = tron(r, l, t); dat(l, vl); dat(r, vr); } }
+  if (lap.indexOf('y') >= 0) { const b = Math.max(2, Math.round(h / 8));
+    for (let x = 0; x < w; x++) for (let i = 0; i < b && i < h >> 1; i++) { const t = 0.5 * (1 - i / b), u = (i * w + x) * 4, d = ((h - 1 - i) * w + x) * 4, vu = tron(u, d, t), vd = tron(d, u, t); dat(u, vu); dat(d, vd); } }
 }
 // thuong = true: bản độ nét thường (ảnh thu về cỡ game), không ghi "net".
 function phanTep(i, dungCanvas, thuong) {
@@ -873,9 +961,17 @@ function hienKetQua() {
   MAP.loi.forEach((t) => muc.push([t, false]));
   MAP.ghi.forEach((t) => muc.push([t, true, 1]));
   if (L.kieu === 'vat') muc.push(['Mỗi hình được cắt sát; giữa đáy ảnh là chân vật. Xem bước 4 để biết vật đứng đúng chỗ, đúng cỡ chưa', true, 1]);
+  if (L.tile) {
+    const thung = L.ds.filter((m, i) => KQ[i] && KQ[i].out.hong > 0).map((m) => m.ten);
+    if (thung.length) muc.push(['Mảng còn chỗ thủng (phải kín đặc): ' + thung.join(', '), false]);
+    const daLap = L.ds.map((m, i) => (KQ[i] && KQ[i].out.lo ? m.ten : null)).filter(Boolean);
+    if (daLap.length) muc.push(['Đã tự lấp vài chỗ thủng nhỏ ở: ' + daLap.join(', '), true, 1]);
+    muc.push([$('lienMep').checked ? 'Đang bật "Làm liền mép": hai mép đối nhau của mảng lặp được trộn cho khớp. Soi lại ở phần "Xem lát lặp" bên dưới' : 'Đang tắt "Làm liền mép": mép giữ nguyên như ảnh ChatGPT vẽ. Soi đường nối ở phần "Xem lát lặp" bên dưới', true, 1]);
+    muc.push(['Mỗi mảng được kéo vừa khít cỡ trong game; game cắt thành ô 16×16 và xếp lặp. Xem bước 4 để thấy cả phòng', true, 1]);
+  }
   bmMuc(muc, KQ.map((K, i) => K && !chinhCua(i).bo && K.out.bm), 1);
   muc.push(['Tự nhìn: đúng hình, đúng thứ tự', true, 1]);
-  const dat = !thieu.length && !MAP.loi.length && !saiCo.length && !rong.length;
+  const dat = !thieu.length && !MAP.loi.length && !saiCo.length && !rong.length && !(L.tile && L.ds.some((m, i) => KQ[i] && KQ[i].out.hong > 0));
   $('dsKiem').innerHTML = muc.map(([t, ok, ghi]) => `<li class="${ok ? (ghi ? 'ghi' : '') : 'loi'}">${t}</li>`).join('');
   $('theKq').className = 'the ' + (dat ? 'dat' : 'hong'); $('theKq').textContent = dat ? 'ĐẠT' : 'CÓ LỖI';
   $('dangCho').textContent = L.ten;
@@ -890,9 +986,38 @@ function hienKetQua() {
     $('nutNho').hidden = $('nutTo').hidden = L.kieu === 'gian';
     $('nutTrai').hidden = $('nutPhai').hidden = L.kieu !== 'vat';
   }
+  $('khoiLap').hidden = !L.tile;
+  if (L.tile) { if (CHON >= 0) LAP_I = CHON; veLap(); }
   $('buoc4').hidden = !L.xem;
   if (L.xem) { napGame(); dangKy(); veXem(); }
 }
+// ===================== XEM LÁT LẶP (Đợt 6): xếp mảng lặp lại như trong game để lộ đường nối =====================
+// lap 'xy': 3×3 bản của chính mảng;  'x': 3 bản nối ngang;  'y': 3 bản nối dọc;  'quanh' (điểm nhấn): mảng ở giữa, 8 ô quanh là Sàn A.
+let LAP_I = 0, VACH = true;
+function veLap() {
+  if (!L.tile) return;
+  const n = L.ds.length; LAP_I = ((LAP_I % n) + n) % n;
+  const m = L.ds[LAP_I], K = KQ[LAP_I], cv = $('cvLap'), g = cv.getContext('2d');
+  $('tenLap').textContent = (LAP_I + 1) + '. ' + m.ten;
+  $('nutVach').textContent = VACH ? 'Ẩn vạch chỗ nối' : 'Hiện vạch chỗ nối';
+  if (!K) { cv.width = 240; cv.height = 60; g.clearRect(0, 0, 240, 60); $('ghiLap').textContent = 'Ảnh chưa có mảng này.'; return; }
+  const src = K.out.cv, quanh = m.lap === 'quanh', K0 = quanh ? KQ[0] : null, nen = K0 && K0.out.cv.width === src.width && K0.out.cv.height === src.height ? K0.out.cv : null;
+  const nx = m.lap === 'y' ? 1 : 3, ny = m.lap === 'x' ? 1 : 3, M = 10, z = Math.max(1, Math.floor(360 / (src.width * nx)));
+  const tw = src.width * z, th = src.height * z;
+  cv.width = tw * nx + 2 * M; cv.height = th * ny + 2 * M;
+  g.fillStyle = '#233a2e'; g.fillRect(0, 0, cv.width, cv.height); g.imageSmoothingEnabled = false;
+  for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) g.drawImage(quanh && !(i === 1 && j === 1) ? nen || src : src, M + i * tw, M + j * th, tw, th);
+  if (VACH) {
+    g.fillStyle = '#f6dc92';
+    for (let i = 1; i < nx; i++) { g.fillRect(M + i * tw - 1, 0, 2, M - 2); g.fillRect(M + i * tw - 1, cv.height - M + 2, 2, M - 2); }
+    for (let j = 1; j < ny; j++) { g.fillRect(0, M + j * th - 1, M - 2, 2); g.fillRect(cv.width - M + 2, M + j * th - 1, M - 2, 2); }
+  }
+  $('ghiLap').textContent = quanh ? (nen ? 'Mảng điểm nhấn nằm giữa, 8 ô quanh là Sàn A: mép của nó phải lẫn vào nền đất xung quanh.' : 'Mảng điểm nhấn (chưa có Sàn A để đặt quanh nên đang xếp chính nó).')
+    : m.lap === 'x' ? 'Ba bản nối tiếp theo chiều ngang.' : m.lap === 'y' ? 'Ba bản nối tiếp theo chiều dọc.' : 'Chín bản xếp 3 × 3.';
+}
+$('nutLapTruoc').onclick = () => { LAP_I--; CHON = -1; hienKetQua(); };
+$('nutLapSau').onclick = () => { LAP_I++; CHON = -1; hienKetQua(); };
+$('nutVach').onclick = () => { VACH = !VACH; veLap(); };
 $('nutNho').onclick = () => { if (CHON < 0) return; const c = chinhCua(CHON); c.co = Math.max(CO_MIN, c.co / 1.12); lamMon(CHON); hienKetQua(); };
 $('nutTo').onclick = () => { if (CHON < 0) return; const c = chinhCua(CHON), max = L.kieu === 'vat' ? CO_MAX : 1; c.co = Math.min(max, c.co * 1.12); lamMon(CHON); hienKetQua(); if (c.co >= max) bao(L.kieu === 'vat' ? 'Hình đã to hết mức' : 'Hình đã to kín ô'); };
 const dich = (d) => { if (CHON < 0 || L.kieu !== 'vat') return; const c = chinhCua(CHON); c.dx = Math.max(-8, Math.min(8, c.dx + d)); lamMon(CHON); hienKetQua(); bao(c.dx ? 'Hình lệch ' + Math.abs(c.dx) + ' điểm ảnh sang ' + (c.dx > 0 ? 'phải' : 'trái') : 'Hình về giữa'); };
@@ -957,7 +1082,17 @@ const VAT_MAU = [['chest'], ['chest', 1], ['fountain', 0, 'hp'], ['fountain', 1,
 // Lô cửa (xem: 'cua'): phòng trống có đủ 4 cửa. CUA_TT: 0 = cả 4 cửa mở, 1 = cả 4 cửa khoá, 2 = khoá + cửa Trùm (đầu lâu, xích vàng).
 let CUA_TT = L && L.id === 'cua-nho' ? 2 : 0;
 const CUA_TEN = ['4 cửa đang MỞ', '4 cửa đang KHOÁ', 'cửa KHOÁ dẫn tới Trùm (có đầu lâu, xích vàng)'];
+// Lô nền (xem: 'nen'): phòng Rừng già trống có 4 cửa (trên và trái mở, dưới và phải khoá). HAT: hạt giống 1..5, mỗi hạt giống là một phòng khác (kiểu sàn đổi theo).
+let HAT = 1;
+function phongNen() {
+  const geo = GAME.roomArt.geo(false);
+  const W = { uid: 'tach-phong:nen:' + HAT, region: L.vung || 0, type: 'fight', seed: HAT, variant: (HAT - 1) % 3, geo, doors: ['up', 'down', 'left', 'right'].map((dir, i) => ({ dir, open: i % 2 === 0 })), P: null, ents: [], boss: null, props: [], zones: [], projs: [], spawns: [] };
+  Object.assign(W, geo.bounds);
+  W.props.push({ type: 'roomFore', x: 0, y: 9999 });
+  return W;
+}
 function phongMau(r) {
+  if (L.xem === 'nen') return phongNen();
   const geo = GAME.roomArt.geo(false), cua = L.xem === 'cua';
   const doors = cua ? ['up', 'down', 'left', 'right'].map((dir) => ({ dir, open: CUA_TT === 0, boss: CUA_TT === 2, gate: CUA_TT === 2 })) : [{ dir: 'up', open: false }];
   const W = { uid: 'tach-phong:' + r + (cua ? ':cua' + CUA_TT : ''), region: r, type: 'fight', seed: 4321 + r * 17, variant: r, geo, doors, P: null, ents: [], boss: null, props: [], zones: [], projs: [], spawns: [] };
@@ -971,14 +1106,18 @@ function veXem() {
   if (!GAME || $('buoc4').hidden) return;
   const SC = GAME.spriteCustom, gdThat = SC.gd, cv = $('cvPhong'), dpr = Math.min(2, window.devicePixelRatio || 1), k = 2 * dpr;
   // vùng phòng thường trên màn 480×270, tính theo khung phòng của game (sàn rộng 300 từ Đợt 2: x 80–380, cả tường 66–394)
-  const g0 = GAME.roomArt.geo(false), X0 = Math.max(0, g0.fx0 - g0.sw - 8), Y0 = 4, RW = Math.min(480, g0.fx1 + g0.sw + 8) - X0, RH = 264;
+  const nen = L.xem === 'nen'; // lô nền: xem cả màn 480×270 để thấy luôn nền ngoài phòng
+  const g0 = GAME.roomArt.geo(false), X0 = nen ? 0 : Math.max(0, g0.fx0 - g0.sw - 8), Y0 = nen ? 0 : 4, RW = nen ? 480 : Math.min(480, g0.fx1 + g0.sw + 8) - X0, RH = nen ? 270 : 264;
   const cu = { getWorld: GAME.getWorld, wx: GAME.wx, NET: GAME.NET, time: GAME.time };
   const cua = L.xem === 'cua';
-  if (cua && L.vung != null) MAU = L.vung; // lô cửa của vùng nào thì xem trên phòng vùng đó
+  if ((cua || nen) && L.vung != null) MAU = L.vung; // lô cửa, lô nền của vùng nào thì xem trên phòng vùng đó
   $('nutDoiMau').hidden = cua && L.vung != null; $('nutDoiCua').hidden = !cua;
+  $('nutDoiMau').textContent = nen ? 'Đổi phòng (' + HAT + '/5)' : 'Đổi phòng mẫu';
   $('nutDoiCua').textContent = 'Đổi cửa: ' + ['mở', 'khoá', 'cửa Trùm'][(CUA_TT + 1) % 3];
-  $('ghiXem1').textContent = cua ? 'Đang xem: ' + CUA_TEN[CUA_TT] + '. Bấm "Đổi cửa" để xem lần lượt mở, khoá, cửa Trùm.' : 'Đồ vật xếp đúng thứ tự như tấm ảnh (6 cột × 3 hàng).';
-  $('ghiXem2').textContent = cua ? 'Phòng do chính code của game vẽ, dùng ảnh cửa bạn vừa tách: thấy sao thì vào game y vậy. Cửa tường phải là ảnh cửa bên được game lật ngang. Ổ khoá đỏ, đầu lâu, xích vàng, vạch đỏ ở ngưỡng, ánh sáng tràn vào sàn và mũi tên chỉ lối là game tự vẽ thêm. Cửa nào chưa có ảnh thì vẫn là hình vẽ code cũ.'
+  $('ghiXem1').textContent = nen ? 'Phòng số ' + HAT + ' trong 5 phòng mẫu. Mỗi phòng game rải các mảng sàn một kiểu khác nhau: bấm "Đổi phòng" xem đủ 5 phòng, không nên có hai phòng trông giống hệt nhau.'
+    : cua ? 'Đang xem: ' + CUA_TEN[CUA_TT] + '. Bấm "Đổi cửa" để xem lần lượt mở, khoá, cửa Trùm.' : 'Đồ vật xếp đúng thứ tự như tấm ảnh (6 cột × 3 hàng).';
+  $('ghiXem2').textContent = nen ? 'Phòng do chính code của game vẽ, lát bằng các mảng bạn vừa tách: thấy sao thì vào game y vậy. Game chỉ lát khi đã có đủ 7 mảng chính (3 sàn, tường sau, tường trước, tường bên, nền ngoài); thiếu một mảng thì cả phòng vẫn vẽ bằng code cũ. Ánh sáng giữa phòng, bóng tường, lối mòn nối các cửa, cửa, nấm sáng, dây leo, đồ trang trí và bụi cây hai góc dưới là game tự vẽ thêm lên trên.'
+    : cua ? 'Phòng do chính code của game vẽ, dùng ảnh cửa bạn vừa tách: thấy sao thì vào game y vậy. Cửa tường phải là ảnh cửa bên được game lật ngang. Ổ khoá đỏ, đầu lâu, xích vàng, vạch đỏ ở ngưỡng, ánh sáng tràn vào sàn và mũi tên chỉ lối là game tự vẽ thêm. Cửa nào chưa có ảnh thì vẫn là hình vẽ code cũ.'
     : 'Phòng và đồ vật do chính code của game vẽ, dùng ảnh bạn vừa tách: thấy sao thì vào game y vậy. Bóng dưới chân, quầng sáng mời gọi, tia lấp lánh, ánh lửa và biểu tượng nổi trên suối là game tự vẽ thêm. Hình nào chưa có ảnh thì vẫn là hình vẽ code cũ.';
   if (SO_CODE) SC.gd = {};
   try {
@@ -989,12 +1128,13 @@ function veXem() {
     GAME.art.bg(c, W.region, W.seed, 0);
     for (const o of W.props.slice().sort((a, b) => a.y - b.y)) GAME.art.prop(c, o);
     $('tenPhong').textContent = VUNG[MAU];
-    $('ttXem').textContent = cua && L.vung != null ? 'Bấm "Đổi cửa" để xem cửa mở, cửa khoá và cửa dẫn tới Trùm.' : 'Chạm "Đổi phòng mẫu" để xem trên nền Rừng già, Hang biển, Lâu đài cổ.';
+    $('ttXem').textContent = nen ? (L.ds.filter((m) => m.dac && m.lap !== 'quanh').every((m) => XEM[m.ma]) ? 'Đã đủ mảng: phòng đang lát bằng tile. Bấm "Đổi phòng" để xem 5 phòng khác nhau.' : 'Chưa đủ 7 mảng chính nên phòng đang vẽ bằng code cũ.')
+      : cua && L.vung != null ? 'Bấm "Đổi cửa" để xem cửa mở, cửa khoá và cửa dẫn tới Trùm.' : 'Chạm "Đổi phòng mẫu" để xem trên nền Rừng già, Hang biển, Lâu đài cổ.';
   } catch (e) { $('ttXem').textContent = 'Không vẽ thử được: ' + e.message; }
   SC.gd = gdThat; GAME.getWorld = cu.getWorld; GAME.wx = cu.wx; GAME.NET = cu.NET; GAME.time = cu.time;
   $('nutSoCode').textContent = SO_CODE ? 'Xem lại ảnh của bạn' : 'Xem bản vẽ code (cũ)';
 }
-$('nutDoiMau').onclick = () => { MAU = (MAU + 1) % 3; veXem(); };
+$('nutDoiMau').onclick = () => { if (L.xem === 'nen') HAT = (HAT % 5) + 1; else MAU = (MAU + 1) % 3; veXem(); };
 $('nutDoiCua').onclick = () => { CUA_TT = (CUA_TT + 1) % 3; veXem(); };
 $('nutSoCode').onclick = () => { SO_CODE = !SO_CODE; veXem(); };
 $('nutBoXem').onclick = () => { for (const k of Object.keys(XEM)) delete XEM[k]; dongBo(); veXem(); bao('Đã bỏ hết ảnh xem thử (hình ở bước 3 vẫn còn, bấm "Tách lại" để xem lại)'); };
