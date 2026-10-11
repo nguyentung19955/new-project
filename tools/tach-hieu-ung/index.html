@@ -1062,7 +1062,7 @@ function tachNen(A, coAlpha, mem, soHang) { // soHang: số hàng của lưới 
 // ===== TÌM KHUNG =====
 // Có đường kẻ lưới thật: mỗi ô là một khung. Không có: chia dải ngang theo khoảng trống, trong dải chia cột theo khoảng trống.
 // Chịu được: thừa cột, xuống hai hàng, bảng phụ, khung dính nhau, ô trống.
-function timKhung(W, H, P, duong) {
+function timKhung(W, H, P, duong, goc) { // goc: điểm ảnh gốc (chưa tách nền), dùng dò vạch kẻ TỐI ở lô gộp
   const N = W * H, co = new Uint8Array(N);
   for (let j = 0; j < N; j++) co[j] = P[j*4+3] >= 64 ? 1 : 0;
   const ghi = [], SO = Q.so;
@@ -1075,15 +1075,29 @@ function timKhung(W, H, P, duong) {
   } else {
     // 1) đường kẻ lưới
     const vach = (laHang) => {
-      const n1 = laHang ? H : W, n2 = laHang ? W : H, vt = [];
-      for (let v = 0; v < n1; v++) { let n = 0; for (let t = 0; t < n2; t++) if (duong[laHang ? v * W + t : t * W + v]) n++; if (n >= Math.max(48, 0.12 * n2)) vt.push(v); }
-      const tam = []; for (const v of vt) { if (tam.length && v - tam[tam.length - 1].b <= 3) tam[tam.length - 1].b = v; else tam.push({ a: v, b: v }); }
+      const n1 = laHang ? H : W, n2 = laHang ? W : H, vt = [], phu = new Float32Array(n1);
+      for (let v = 0; v < n1; v++) { let n = 0; for (let t = 0; t < n2; t++) if (duong[laHang ? v * W + t : t * W + v]) n++; phu[v] = n / n2; if (n >= Math.max(48, 0.12 * n2)) vt.push(v); }
+      let tam = []; for (const v of vt) { if (tam.length && v - tam[tam.length - 1].b <= 3) { tam[tam.length - 1].b = v; tam[tam.length - 1].p = Math.max(tam[tam.length - 1].p, phu[v]); } else tam.push({ a: v, b: v, p: phu[v] }); }
+      // 11/10 18:05 (sửa theo ảnh thật của chủ dự án): nét mảnh của HÌNH (rìa trăng, vuốt, tia) cũng bị coi là vạch kẻ → chia thừa cột.
+      // Vạch lưới thật chạy gần hết chiều cao (phủ ≥ 75 %); nếu các vạch "mạnh" tạo đúng SO cột (± viền ảnh) thì chỉ dùng chúng.
+      // Không đủ thì tìm bộ vạch cách đều nhau khớp SO cột (sai số 8 % một ô) trong mọi ứng viên; vẫn không được mới dùng cả như cũ.
+      if (!laHang && SO >= 2 && tam.length > SO - 1) {
+        const o = Math.min(n1 - 1, 4), trong = (t) => t.a > o && t.b < n1 - 1 - o; // bỏ vạch sát mép ảnh (viền lưới)
+        const manh = tam.filter(t => t.p >= 0.75 && trong(t));
+        if (manh.length === SO - 1) { tam = tam.filter(t => t.p >= 0.75); ghi.push('Giữ ' + (SO - 1) + ' vạch dọc chạy suốt, bỏ ' + (vt.length ? '' : '') + 'nét mảnh của hình'); }
+        else {
+          const buoc = n1 / SO, dung = Math.max(3, 0.08 * buoc), chon = [];
+          for (let k = 1; k < SO; k++) { const x = k * buoc; const ung = tam.filter(t => trong(t) && Math.abs((t.a + t.b) / 2 - x) <= dung).sort((u, v) => v.p - u.p)[0]; if (ung) chon.push(ung); }
+          if (chon.length === SO - 1) { tam = [...tam.filter(t => !trong(t)), ...chon].sort((u, v) => u.a - v.a); ghi.push('Chọn ' + (SO - 1) + ' vạch dọc cách đều khớp ' + SO + ' cột, bỏ nét mảnh của hình'); }
+        }
+      }
       const bien = [0, ...tam.map(t => (t.a + t.b) >> 1), n1], bang = [];
       for (let i = 0; i + 1 < bien.length; i++) bang.push([bien[i] + 4, bien[i + 1] - 5]);
       const rong = bang.map(b => b[1] - b[0]).sort((a, b) => a - b), giua = rong[rong.length >> 1] || 0;
       return bang.filter(b => b[1] - b[0] >= 0.4 * giua);
     };
-    const cot = vach(false), hang = vach(true);
+    // lô gộp: mỗi lần gọi là MỘT hàng của lưới (đã cắt sẵn) → không chia ngang thêm (11/10: tia sáng ngang của Ra chiêu bị nhận là vạch, mất nửa dưới hình)
+    const cot = vach(false), hang = LO ? [[0, H - 1]] : vach(true);
     if (cot.length >= 2) {
       // mỗi hàng: số ô có hình; chọn hàng giống hàng khung nhất (bỏ bảng phụ), hoặc đọc nhiều hàng nếu khung bị xuống hàng
       const H2 = hang.map(([y0, y1]) => { const m = cot.map(([x0, x1]) => khoi(x0, y0, x1, y1)), mm = m.filter(v => v > 0).sort((a, b) => a - b), g = mm[mm.length >> 1] || 0;
@@ -1114,11 +1128,35 @@ function timKhung(W, H, P, duong) {
       for (const n of chon) for (const g of n.g) o.push({ x0: g.x0, y0: n.b.y0, x1: g.x1, y1: n.b.y1 });
     }
   }
+  // Lô gộp: lưới trong prompt phủ kín ảnh, mỗi hàng đúng SO ô bằng nhau. Tự tìm ra số ô khác SO (vạch trắng mảnh, tia sáng bị nhận là vạch,
+  // thiếu vạch…) thì chia đều SO cột — cách này khớp mọi tấm thật của chủ dự án ngày 11/10 (10/10 tấm), còn tự tìm chia sai 4/10 tấm.
+  if (LO && $('cachTach').value !== 'deu') {
+    const n0 = o.length, oTu = o; o = [];
+    // a) vạch kẻ TỐI chạy dọc gần hết hàng (ChatGPT kẻ cột không đều nhau, chia đều sẽ dính mép khung bên cạnh)
+    let vt = [];
+    if (goc) {
+      const fr = new Float32Array(W);
+      for (let x = 0; x < W; x++) { let n = 0; for (let y = 0; y < H; y++) { const j = (y * W + x) * 4; if (Math.max(goc[j], goc[j + 1], goc[j + 2]) < 80) n++; /* tối thật ở cả 3 kênh: nền xanh dương độ sáng thấp nhưng kênh B = 255 */ } fr[x] = n / H; }
+      for (let x = 7; x < W - 7; x++) if (fr[x] >= 0.6) { const t = vt[vt.length - 1]; if (t && x - t.b <= 3) t.b = x; else vt.push({ a: x, b: x }); }
+    }
+    if (vt.length === SO - 1) {
+      const bien = [0, ...vt.map(t => (t.a + t.b) >> 1), W];
+      for (let i = 0; i < SO; i++) o.push({ x0: bien[i] + (i ? 6 : 3), y0: 0, x1: bien[i + 1] - (i + 1 < SO ? 7 : 4), y1: H - 1 });
+      ghi.push('Cắt theo ' + (SO - 1) + ' vạch kẻ tối của lưới' + (n0 !== SO ? ' (tự tìm ra ' + n0 + ' ô, lô cần ' + SO + ')' : ''));
+    } else if (n0 === SO) { o = oTu; // tự tìm đã ra đúng số ô: giữ
+    } else {
+      // b) không thấy đủ vạch tối: chia đều
+      for (let i = 0; i < SO; i++) o.push({ x0: Math.round(i * W / SO) + 3, y0: 0, x1: Math.round((i + 1) * W / SO) - 4, y1: H - 1 });
+      ghi.push('Tự tìm ra ' + n0 + ' ô (lô cần ' + SO + '), đã chia đều ' + SO + ' cột');
+    }
+  }
   // bỏ ô trống
   o.forEach(c => c.m = khoi(c.x0, c.y0, c.x1, c.y1));
   const ms = o.map(c => c.m).filter(m => m > 0).sort((a, b) => a - b), mg = ms[ms.length >> 1] || 1;
-  const rong = o.filter(c => c.m < 0.12 * mg).length; if (rong) ghi.push('Bỏ ' + rong + ' ô trống');
-  o = o.filter(c => c.m >= 0.12 * mg);
+  // lô gộp: khung cuối của hiệu ứng tan dần chỉ còn vài chấm, vẫn là khung thật → chỉ bỏ ô gần như rỗng
+  const nguongTrong = LO ? 0.005 : 0.12;
+  const rong = o.filter(c => c.m < nguongTrong * mg).length; if (rong) ghi.push('Bỏ ' + rong + ' ô trống');
+  o = o.filter(c => c.m >= nguongTrong * mg);
   // khung người dùng chạm để bỏ
   const boRa = o.filter(c => BO.some(([x, y]) => x >= c.x0 && x <= c.x1 && y >= c.y0 && y <= c.y1));
   if (boRa.length) { ghi.push('Bạn đã bỏ ' + boRa.length + ' khung'); o = o.filter(c => !boRa.includes(c)); }
@@ -1220,7 +1258,7 @@ const mepMem = () => { const v = $('kieuMep').value; return v === 'tu' ? !!Q.con
 function tinh(A, coAlpha) {
   const { W, H } = A, mem = mepMem();
   const { P, duong, oRieng } = tachNen(A, coAlpha, mem);
-  const K = timKhung(W, H, P, duong);
+  const K = timKhung(W, H, P, duong, A.d);
   // N = độ nét: cỡ khung và điểm neo trong ảnh = số game × N. Số ghi vào file vẫn theo game.
   const N = NET(), FW = Q.fw * N, FH = Q.fh * N, GX = Q.gx * N, GY = Q.gy * N, SO = Q.so;
   // nội dung từng khung (cắt sát) và vị trí dọc trong ô (giữ chuyển động lên xuống giữa các khung)
