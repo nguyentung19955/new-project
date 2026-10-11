@@ -1,5 +1,7 @@
 # 12 prompt vẽ "Bộ trang phục" cho 4 em bé
 
+> **Cập nhật 11/10 11:15:** mỗi lần gen phải gửi kèm **2 ảnh** trong `anh-kem/`: tấm thân em bé (`em-be-<key>.png`) **và** tấm đồ của bộ (`do-rung.png` / `do-bien.png` / `do-lau.png`, là 4 món đang có trong game). Lần thử đầu ChatGPT vẽ mũ sai kiểu và rụng mũ ở nhiều khung vì chỉ tả bằng chữ. Prompt trên trang công cụ đã có câu bắt mặc đúng đồ trong ảnh 2 và đủ đồ ở mọi khung.
+
 Mỗi prompt dưới đây dùng để nhờ ChatGPT vẽ lại **đúng em bé đó** nhưng **mặc trọn một bộ** (mũ, áo, đồ lưng, bùa), đủ 7 hàng cử động.
 
 ## Cách làm (4 bước)
