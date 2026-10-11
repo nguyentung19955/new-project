@@ -1,0 +1,850 @@
+{
+ "trang": {
+  "tach-quai": {
+   "lo": "quái đầu danh sách, lưới 8 × 6",
+   "odd": {
+    "4": "#FA8FAD",
+    "47": "#F2E9E2"
+   },
+   "luoi": "8×6",
+   "cu-deu0": {
+    "co": 34,
+    "tong": 34,
+    "the": "ĐẠT",
+    "sha": "8f82b16b1a966e9b",
+    "dai": 157186,
+    "hong": [],
+    "ghi": []
+   },
+   "cu-deu": {
+    "co": 34,
+    "tong": 34,
+    "the": "ĐẠT",
+    "sha": "3f00c6cdba9042b8",
+    "dai": 218198,
+    "hong": [],
+    "ghi": []
+   },
+   "cu-la": {
+    "co": 34,
+    "tong": 34,
+    "the": "ĐẠT",
+    "sha": "1c6407e896113535",
+    "dai": 201434,
+    "hong": [
+     {
+      "o": 5,
+      "trongO": true,
+      "lech": 53,
+      "tl": 4.019
+     },
+     {
+      "o": 48,
+      "trongO": true,
+      "lech": 43,
+      "tl": 3.591
+     }
+    ],
+    "ghi": []
+   },
+   "moi-deu0": {
+    "co": 34,
+    "tong": 34,
+    "the": "ĐẠT",
+    "sha": "8f82b16b1a966e9b",
+    "dai": 157186,
+    "hong": [],
+    "ghi": []
+   },
+   "moi-deu": {
+    "co": 34,
+    "tong": 34,
+    "the": "ĐẠT",
+    "sha": "3f00c6cdba9042b8",
+    "dai": 218198,
+    "hong": [],
+    "ghi": []
+   },
+   "moi-la": {
+    "co": 34,
+    "tong": 34,
+    "the": "ĐẠT",
+    "sha": "715349e3c55fa9ca",
+    "dai": 218722,
+    "hong": [],
+    "ghi": [
+     "Ô 1.5, 6.8 (hàng.cột) có nền khác màu, đã tự nhận"
+    ]
+   },
+   "giong-deu0": true,
+   "giong-deu": true
+  },
+  "tach-anh-hung": {
+   "lo": "em bé đầu danh sách, lưới 8 × 7",
+   "odd": {
+    "4": "#FA8FAD",
+    "47": "#F2E9E2"
+   },
+   "luoi": "8×7",
+   "cu-deu0": {
+    "co": 40,
+    "tong": 40,
+    "the": "ĐẠT",
+    "sha": "947e073799ff246a",
+    "dai": 160374,
+    "hong": [],
+    "ghi": []
+   },
+   "cu-deu": {
+    "co": 40,
+    "tong": 40,
+    "the": "ĐẠT",
+    "sha": "ae1607124f7f60de",
+    "dai": 202938,
+    "hong": [],
+    "ghi": []
+   },
+   "cu-la": {
+    "co": 40,
+    "tong": 40,
+    "the": "ĐẠT",
+    "sha": "cc944cc0da3530b9",
+    "dai": 181738,
+    "hong": [
+     {
+      "o": 5,
+      "trongO": true,
+      "lech": 53,
+      "tl": 4.104
+     },
+     {
+      "o": 48,
+      "trongO": true,
+      "lech": 43,
+      "tl": 3.802
+     }
+    ],
+    "ghi": []
+   },
+   "moi-deu0": {
+    "co": 40,
+    "tong": 40,
+    "the": "ĐẠT",
+    "sha": "947e073799ff246a",
+    "dai": 160374,
+    "hong": [],
+    "ghi": []
+   },
+   "moi-deu": {
+    "co": 40,
+    "tong": 40,
+    "the": "ĐẠT",
+    "sha": "ae1607124f7f60de",
+    "dai": 202938,
+    "hong": [],
+    "ghi": []
+   },
+   "moi-la": {
+    "co": 40,
+    "tong": 40,
+    "the": "ĐẠT",
+    "sha": "4156b355e5935826",
+    "dai": 198770,
+    "hong": [],
+    "ghi": [
+     "Ô 1.5, 6.8 (hàng.cột) có nền khác màu, đã tự nhận"
+    ]
+   },
+   "giong-deu0": true,
+   "giong-deu": true
+  },
+  "tach-do": {
+   "lo": "tp-hats",
+   "odd": {
+    "4": "#FA8FAD",
+    "12": "#F2E9E2"
+   },
+   "luoi": "5×3",
+   "cu-deu0": {
+    "co": 13,
+    "tong": 13,
+    "the": "ĐẠT",
+    "sha": "dcc259574a695a0e",
+    "dai": 30710,
+    "hong": [],
+    "ghi": []
+   },
+   "cu-deu": {
+    "co": 13,
+    "tong": 13,
+    "the": "ĐẠT",
+    "sha": "049001d6d62f741b",
+    "dai": 33482,
+    "hong": [],
+    "ghi": []
+   },
+   "cu-la": {
+    "co": 13,
+    "tong": 13,
+    "the": "ĐẠT",
+    "sha": "fc53a0dbc7ffd56a",
+    "dai": 34032,
+    "hong": [
+     {
+      "o": 5,
+      "trongO": true,
+      "lech": 85,
+      "tl": 4.552
+     },
+     {
+      "o": 13,
+      "trongO": true,
+      "lech": 89,
+      "tl": 4.654
+     }
+    ],
+    "ghi": []
+   },
+   "moi-deu0": {
+    "co": 13,
+    "tong": 13,
+    "the": "ĐẠT",
+    "sha": "dcc259574a695a0e",
+    "dai": 30710,
+    "hong": [],
+    "ghi": []
+   },
+   "moi-deu": {
+    "co": 13,
+    "tong": 13,
+    "the": "ĐẠT",
+    "sha": "049001d6d62f741b",
+    "dai": 33482,
+    "hong": [],
+    "ghi": []
+   },
+   "moi-la": {
+    "co": 13,
+    "tong": 13,
+    "the": "ĐẠT",
+    "sha": "14e3867efb847e3f",
+    "dai": 33530,
+    "hong": [],
+    "ghi": [
+     "Ô 5, 13 có nền khác màu, đã tự nhận"
+    ]
+   },
+   "giong-deu0": true,
+   "giong-deu": true
+  },
+  "tach-giao-dien": {
+   "lo": "nut",
+   "odd": {
+    "4": "#FA8FAD",
+    "12": "#F2E9E2"
+   },
+   "luoi": "5×4",
+   "cu-deu0": {
+    "co": 18,
+    "tong": 18,
+    "the": "ĐẠT",
+    "sha": "7144bbfc65ea70eb",
+    "dai": 55816,
+    "hong": [],
+    "ghi": []
+   },
+   "cu-deu": {
+    "co": 18,
+    "tong": 18,
+    "the": "ĐẠT",
+    "sha": "03a05befed2a0138",
+    "dai": 75524,
+    "hong": [],
+    "ghi": []
+   },
+   "cu-la": {
+    "co": 18,
+    "tong": 18,
+    "the": "ĐẠT",
+    "sha": "c7146d89c2bb7e3b",
+    "dai": 76380,
+    "hong": [
+     {
+      "o": 5,
+      "trongO": true,
+      "lech": 85,
+      "tl": 4.372
+     },
+     {
+      "o": 13,
+      "trongO": true,
+      "lech": 75,
+      "tl": 4.677
+     }
+    ],
+    "ghi": []
+   },
+   "moi-deu0": {
+    "co": 18,
+    "tong": 18,
+    "the": "ĐẠT",
+    "sha": "7144bbfc65ea70eb",
+    "dai": 55816,
+    "hong": [],
+    "ghi": []
+   },
+   "moi-deu": {
+    "co": 18,
+    "tong": 18,
+    "the": "ĐẠT",
+    "sha": "03a05befed2a0138",
+    "dai": 75524,
+    "hong": [],
+    "ghi": []
+   },
+   "moi-la": {
+    "co": 18,
+    "tong": 18,
+    "the": "ĐẠT",
+    "sha": "7d793d921ad1b270",
+    "dai": 75548,
+    "hong": [],
+    "ghi": [
+     "Ô 5, 13 có nền khác màu, đã tự nhận"
+    ]
+   },
+   "giong-deu0": true,
+   "giong-deu": true
+  },
+  "tach-lang": {
+   "lo": "dao-cu",
+   "odd": {
+    "4": "#FA8FAD",
+    "10": "#F2E9E2"
+   },
+   "luoi": "5×3",
+   "cu-deu0": {
+    "co": 12,
+    "tong": 12,
+    "the": "ĐẠT",
+    "sha": "b7c629fa3af40710",
+    "dai": 29052,
+    "hong": [],
+    "ghi": []
+   },
+   "cu-deu": {
+    "co": 12,
+    "tong": 12,
+    "the": "ĐẠT",
+    "sha": "1949ab6daa77ba5c",
+    "dai": 36260,
+    "hong": [],
+    "ghi": []
+   },
+   "cu-la": {
+    "co": 12,
+    "tong": 12,
+    "the": "ĐẠT",
+    "sha": "88bf8a7d7fa2e041",
+    "dai": 38056,
+    "hong": [
+     {
+      "o": 5,
+      "trongO": true,
+      "lech": 85,
+      "tl": 4.552
+     },
+     {
+      "o": 11,
+      "trongO": true,
+      "lech": 91,
+      "tl": 4.744
+     }
+    ],
+    "ghi": []
+   },
+   "moi-deu0": {
+    "co": 12,
+    "tong": 12,
+    "the": "ĐẠT",
+    "sha": "b7c629fa3af40710",
+    "dai": 29052,
+    "hong": [],
+    "ghi": []
+   },
+   "moi-deu": {
+    "co": 12,
+    "tong": 12,
+    "the": "ĐẠT",
+    "sha": "1949ab6daa77ba5c",
+    "dai": 36260,
+    "hong": [],
+    "ghi": []
+   },
+   "moi-la": {
+    "co": 12,
+    "tong": 12,
+    "the": "ĐẠT",
+    "sha": "fc7f9fc88309e2db",
+    "dai": 36452,
+    "hong": [],
+    "ghi": [
+     "Ô 5, 11 có nền khác màu, đã tự nhận"
+    ]
+   },
+   "giong-deu0": true,
+   "giong-deu": true
+  },
+  "tach-phong": {
+   "lo": "vat",
+   "odd": {
+    "4": "#FA8FAD",
+    "12": "#F2E9E2"
+   },
+   "luoi": "6×3",
+   "cu-deu0": {
+    "co": 18,
+    "tong": 18,
+    "the": "ĐẠT",
+    "sha": "25a1807094fda046",
+    "dai": 63620,
+    "hong": [],
+    "ghi": []
+   },
+   "cu-deu": {
+    "co": 18,
+    "tong": 18,
+    "the": "ĐẠT",
+    "sha": "e7d7a49c1d1d82c9",
+    "dai": 94800,
+    "hong": [],
+    "ghi": []
+   },
+   "cu-la": {
+    "co": 18,
+    "tong": 18,
+    "the": "ĐẠT",
+    "sha": "8c834285d9d90d35",
+    "dai": 93768,
+    "hong": [
+     {
+      "o": 5,
+      "trongO": true,
+      "lech": 74,
+      "tl": 4.596
+     },
+     {
+      "o": 13,
+      "trongO": true,
+      "lech": 89,
+      "tl": 4.43
+     }
+    ],
+    "ghi": []
+   },
+   "moi-deu0": {
+    "co": 18,
+    "tong": 18,
+    "the": "ĐẠT",
+    "sha": "25a1807094fda046",
+    "dai": 63620,
+    "hong": [],
+    "ghi": []
+   },
+   "moi-deu": {
+    "co": 18,
+    "tong": 18,
+    "the": "ĐẠT",
+    "sha": "e7d7a49c1d1d82c9",
+    "dai": 94800,
+    "hong": [],
+    "ghi": []
+   },
+   "moi-la": {
+    "co": 18,
+    "tong": 18,
+    "the": "ĐẠT",
+    "sha": "f623dca813cd1dff",
+    "dai": 94516,
+    "hong": [],
+    "ghi": [
+     "Ô 5, 13 có nền khác màu, đã tự nhận"
+    ]
+   },
+   "giong-deu0": true,
+   "giong-deu": true
+  },
+  "tach-hieu-ung": {
+   "lo": "hiệu ứng đầu danh sách, 1 hàng 6 khung, mép Mềm",
+   "odd": {
+    "1": "#FA8FAD",
+    "3": "#F2E9E2"
+   },
+   "luoi": "6×1",
+   "cu-deu0": {
+    "co": 6,
+    "tong": 6,
+    "the": "ĐẠT",
+    "sha": "3a85f75ec7b334e2",
+    "dai": 26182,
+    "hong": [],
+    "ghi": []
+   },
+   "cu-deu": {
+    "co": 6,
+    "tong": 6,
+    "the": "ĐẠT",
+    "sha": "157cedbbdb2dc6db",
+    "dai": 33994,
+    "hong": [],
+    "ghi": []
+   },
+   "cu-la": {
+    "co": 1,
+    "tong": 6,
+    "the": "CÓ LỖI",
+    "sha": "eb3a1378c2b03228",
+    "dai": 8622,
+    "hong": [
+     {
+      "o": 3,
+      "trongO": false,
+      "lech": 513,
+      "tl": 11.987
+     }
+    ],
+    "ghi": []
+   },
+   "moi-deu0": {
+    "co": 6,
+    "tong": 6,
+    "the": "ĐẠT",
+    "sha": "3a85f75ec7b334e2",
+    "dai": 26182,
+    "hong": [],
+    "ghi": []
+   },
+   "moi-deu": {
+    "co": 6,
+    "tong": 6,
+    "the": "ĐẠT",
+    "sha": "157cedbbdb2dc6db",
+    "dai": 33994,
+    "hong": [],
+    "ghi": []
+   },
+   "moi-la": {
+    "co": 6,
+    "tong": 6,
+    "the": "ĐẠT",
+    "sha": "7d0c15bd6f41b469",
+    "dai": 48626,
+    "hong": [],
+    "ghi": [
+     "Ô 2, 4 có nền khác màu, đã tự nhận"
+    ]
+   },
+   "giong-deu0": true,
+   "giong-deu": true
+  },
+  "tach-hieu-ung-sac": {
+   "lo": "hiệu ứng đầu danh sách, 1 hàng 6 khung, mép Sắc",
+   "odd": {
+    "1": "#FA8FAD",
+    "3": "#F2E9E2"
+   },
+   "luoi": "6×1",
+   "cu-deu0": {
+    "co": 6,
+    "tong": 6,
+    "the": "ĐẠT",
+    "sha": "aa91976d20efeddc",
+    "dai": 20058,
+    "hong": [],
+    "ghi": []
+   },
+   "cu-deu": {
+    "co": 6,
+    "tong": 6,
+    "the": "ĐẠT",
+    "sha": "19fffccde5b2ac42",
+    "dai": 27990,
+    "hong": [],
+    "ghi": []
+   },
+   "cu-la": {
+    "co": 1,
+    "tong": 6,
+    "the": "CÓ LỖI",
+    "sha": "44603b448ae933ce",
+    "dai": 7270,
+    "hong": [
+     {
+      "o": 3,
+      "trongO": false,
+      "lech": 513,
+      "tl": 12.06
+     }
+    ],
+    "ghi": []
+   },
+   "moi-deu0": {
+    "co": 6,
+    "tong": 6,
+    "the": "ĐẠT",
+    "sha": "aa91976d20efeddc",
+    "dai": 20058,
+    "hong": [],
+    "ghi": []
+   },
+   "moi-deu": {
+    "co": 6,
+    "tong": 6,
+    "the": "ĐẠT",
+    "sha": "19fffccde5b2ac42",
+    "dai": 27990,
+    "hong": [],
+    "ghi": []
+   },
+   "moi-la": {
+    "co": 6,
+    "tong": 6,
+    "the": "ĐẠT",
+    "sha": "667f90308201c987",
+    "dai": 41062,
+    "hong": [],
+    "ghi": [
+     "Ô 2, 4 có nền khác màu, đã tự nhận"
+    ]
+   },
+   "giong-deu0": true,
+   "giong-deu": true
+  },
+  "tach-giao-dien-nho": {
+   "lo": "nho",
+   "odd": {
+    "4": "#FA8FAD",
+    "12": "#F2E9E2"
+   },
+   "luoi": "6×5",
+   "cu-deu0": {
+    "co": 30,
+    "tong": 30,
+    "the": "ĐẠT",
+    "sha": "af782047091058c1",
+    "dai": 36716,
+    "hong": [],
+    "ghi": []
+   },
+   "cu-deu": {
+    "co": 30,
+    "tong": 30,
+    "the": "ĐẠT",
+    "sha": "d0f39b19adf0c04c",
+    "dai": 56836,
+    "hong": [],
+    "ghi": []
+   },
+   "cu-la": {
+    "co": 30,
+    "tong": 30,
+    "the": "ĐẠT",
+    "sha": "e2905e22d933667c",
+    "dai": 56772,
+    "hong": [
+     {
+      "o": 5,
+      "trongO": true,
+      "lech": 74,
+      "tl": 4.265
+     },
+     {
+      "o": 13,
+      "trongO": true,
+      "lech": 60,
+      "tl": 4.343
+     }
+    ],
+    "ghi": []
+   },
+   "moi-deu0": {
+    "co": 30,
+    "tong": 30,
+    "the": "ĐẠT",
+    "sha": "af782047091058c1",
+    "dai": 36716,
+    "hong": [],
+    "ghi": []
+   },
+   "moi-deu": {
+    "co": 30,
+    "tong": 30,
+    "the": "ĐẠT",
+    "sha": "d0f39b19adf0c04c",
+    "dai": 56836,
+    "hong": [],
+    "ghi": []
+   },
+   "moi-la": {
+    "co": 30,
+    "tong": 30,
+    "the": "ĐẠT",
+    "sha": "a199175bb408aaa2",
+    "dai": 56832,
+    "hong": [],
+    "ghi": [
+     "Ô 5, 13 có nền khác màu, đã tự nhận"
+    ]
+   },
+   "giong-deu0": true,
+   "giong-deu": true
+  }
+ },
+ "them": [
+  {
+   "ten": "Lưới kẻ lệch 14 điểm so với lưới đều",
+   "giong": true,
+   "deu": "13/13",
+   "cuLa": "13/13, hỏng 2",
+   "la": "13/13",
+   "hong": [],
+   "ghi": "Ô 5, 13 có nền khác màu, đã tự nhận",
+   "the": "ĐẠT",
+   "loi": 0
+  },
+  {
+   "ten": "Hình cùng màu với nền ô (mũ hồng trên ô hồng, mũ trắng trên ô trắng ngà)",
+   "giong": true,
+   "deu": "13/13",
+   "cuLa": "13/13, hỏng 2",
+   "la": "13/13",
+   "hong": [],
+   "ghi": "Ô 5, 13 có nền khác màu, đã tự nhận",
+   "the": "ĐẠT",
+   "loi": 0
+  },
+  {
+   "ten": "Nền chung xanh lá #00FF00",
+   "giong": true,
+   "deu": "13/13",
+   "cuLa": "13/13, hỏng 2",
+   "la": "13/13",
+   "hong": [],
+   "ghi": "Ô 5, 13 có nền khác màu, đã tự nhận",
+   "the": "ĐẠT",
+   "loi": 0
+  },
+  {
+   "ten": "Nền chung xanh dương #0000FF",
+   "giong": true,
+   "deu": "13/13",
+   "cuLa": "13/13, hỏng 4",
+   "la": "13/13",
+   "hong": [
+    {
+     "o": 6,
+     "trongO": true,
+     "lech": 1,
+     "tl": 0.906
+    },
+    {
+     "o": 7,
+     "trongO": true,
+     "lech": 3,
+     "tl": 0.361
+    }
+   ],
+   "ghi": "Ô 5, 13 có nền khác màu, đã tự nhận",
+   "the": "ĐẠT",
+   "loi": 0
+  },
+  {
+   "ten": "Nét kẻ mảnh 4 điểm",
+   "giong": true,
+   "deu": "13/13",
+   "cuLa": "13/13, hỏng 2",
+   "la": "13/13",
+   "hong": [],
+   "ghi": "Ô 5, 13 có nền khác màu, đã tự nhận",
+   "the": "ĐẠT",
+   "loi": 0
+  },
+  {
+   "ten": "Không có khung viền ngoài",
+   "giong": true,
+   "deu": "13/13",
+   "cuLa": "13/13, hỏng 2",
+   "la": "13/13",
+   "hong": [],
+   "ghi": "Ô 5, 13 có nền khác màu, đã tự nhận",
+   "the": "ĐẠT",
+   "loi": 0
+  },
+  {
+   "ten": "Ô nền lạ là ô trống (ô 14) và ô góc (ô 1)",
+   "giong": true,
+   "deu": "13/13",
+   "cuLa": "13/13, hỏng 1",
+   "la": "13/13",
+   "hong": [],
+   "ghi": "Ô 1, 14 có nền khác màu, đã tự nhận",
+   "the": "ĐẠT",
+   "loi": 0
+  },
+  {
+   "ten": "Bốn ô nền lạ, hai ô cùng màu",
+   "giong": true,
+   "deu": "13/13",
+   "cuLa": "13/13, hỏng 3",
+   "la": "13/13",
+   "hong": [],
+   "ghi": "Ô 2, 8, 10, 12 có nền khác màu, đã tự nhận",
+   "the": "ĐẠT",
+   "loi": 0
+  },
+  {
+   "ten": "Ảnh không nhiễu (màu phẳng tuyệt đối)",
+   "giong": true,
+   "deu": "13/13",
+   "cuLa": "13/13, hỏng 3",
+   "la": "13/13",
+   "hong": [],
+   "ghi": "Ô 5, 13 có nền khác màu, đã tự nhận",
+   "the": "ĐẠT",
+   "loi": 0
+  },
+  {
+   "ten": "Ảnh nhiễu mạnh (±10)",
+   "giong": true,
+   "deu": "13/13",
+   "cuLa": "13/13, hỏng 2",
+   "la": "13/13",
+   "hong": [],
+   "ghi": "Ô 5, 13 có nền khác màu, đã tự nhận",
+   "the": "ĐẠT",
+   "loi": 0
+  },
+  {
+   "ten": "Hình to gần kín ô (chạm gần góc ô)",
+   "giong": true,
+   "deu": "13/13",
+   "cuLa": "13/13, hỏng 2",
+   "la": "13/13",
+   "hong": [],
+   "ghi": "Ô 5, 13 có nền khác màu, đã tự nhận",
+   "the": "ĐẠT",
+   "loi": 0
+  },
+  {
+   "ten": "Ảnh nhỏ 1024 × 683",
+   "giong": true,
+   "deu": "13/13",
+   "cuLa": "13/13, hỏng 2",
+   "la": "13/13",
+   "hong": [],
+   "ghi": "Ô 5, 13 có nền khác màu, đã tự nhận",
+   "the": "ĐẠT",
+   "loi": 0
+  }
+ ]
+}
