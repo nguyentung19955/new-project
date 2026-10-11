@@ -1,0 +1,436 @@
+{
+ "trang_tach": [
+  {
+   "kieu": "lẻ",
+   "ma": "hu-vung-lua",
+   "the": "ĐẠT",
+   "dung_co": true,
+   "cuon_ngang": false,
+   "loi": [],
+   "rong_vung": 40.0,
+   "khung": 44,
+   "kb": 9.5,
+   "dat": true
+  },
+  {
+   "kieu": "lẻ",
+   "ma": "hu-vung-doc",
+   "the": "ĐẠT",
+   "dung_co": true,
+   "cuon_ngang": false,
+   "loi": [],
+   "rong_vung": 92.0,
+   "khung": 96,
+   "kb": 22.6,
+   "dat": true
+  },
+  {
+   "kieu": "lẻ",
+   "ma": "hu-may-doc",
+   "the": "ĐẠT",
+   "dung_co": true,
+   "cuon_ngang": false,
+   "loi": [],
+   "rong_vung": 92.0,
+   "khung": 96,
+   "kb": 15.3,
+   "dat": true
+  },
+  {
+   "kieu": "lẻ",
+   "ma": "hu-vung-quai-lua",
+   "the": "ĐẠT",
+   "dung_co": true,
+   "cuon_ngang": false,
+   "loi": [],
+   "rong_vung": 48.0,
+   "khung": 52,
+   "kb": 11.7,
+   "dat": true
+  },
+  {
+   "kieu": "lẻ",
+   "ma": "hu-vung-quai-doc",
+   "the": "ĐẠT",
+   "dung_co": true,
+   "cuon_ngang": false,
+   "loi": [],
+   "rong_vung": 68.0,
+   "khung": 72,
+   "kb": 17.2,
+   "dat": true
+  },
+  {
+   "kieu": "lẻ",
+   "ma": "hu-vung-quai-bang",
+   "the": "ĐẠT",
+   "dung_co": true,
+   "cuon_ngang": false,
+   "loi": [],
+   "rong_vung": 30.0,
+   "khung": 34,
+   "kb": 7.0,
+   "dat": true
+  },
+  {
+   "kieu": "lẻ",
+   "ma": "hu-vung-quai-do",
+   "the": "ĐẠT",
+   "dung_co": true,
+   "cuon_ngang": false,
+   "loi": [],
+   "rong_vung": 48.0,
+   "khung": 52,
+   "kb": 11.5,
+   "dat": true
+  },
+  {
+   "kieu": "lô b4-duong",
+   "ma": "hu-vung-lua",
+   "the": "ĐẠT",
+   "dung_co": true,
+   "cuon_ngang": false,
+   "loi": [],
+   "rong_vung": 40.0,
+   "khung": 44,
+   "kb": 9.6,
+   "dat": true
+  },
+  {
+   "kieu": "lô b4-duong",
+   "ma": "hu-vung-quai-lua",
+   "the": "ĐẠT",
+   "dung_co": true,
+   "cuon_ngang": false,
+   "loi": [],
+   "rong_vung": 48.0,
+   "khung": 52,
+   "kb": 11.7,
+   "dat": true
+  },
+  {
+   "kieu": "lô b4-duong",
+   "ma": "hu-vung-quai-do",
+   "the": "ĐẠT",
+   "dung_co": true,
+   "cuon_ngang": false,
+   "loi": [],
+   "rong_vung": 48.0,
+   "khung": 52,
+   "kb": 11.4,
+   "dat": true
+  },
+  {
+   "kieu": "lô b4-hong",
+   "ma": "hu-vung-doc",
+   "the": "ĐẠT",
+   "dung_co": true,
+   "cuon_ngang": false,
+   "loi": [],
+   "rong_vung": 92.0,
+   "khung": 96,
+   "kb": 22.6,
+   "dat": true
+  },
+  {
+   "kieu": "lô b4-hong",
+   "ma": "hu-may-doc",
+   "the": "ĐẠT",
+   "dung_co": true,
+   "cuon_ngang": false,
+   "loi": [],
+   "rong_vung": 92.0,
+   "khung": 96,
+   "kb": 15.3,
+   "dat": true
+  },
+  {
+   "kieu": "lô b4-hong",
+   "ma": "hu-vung-quai-doc",
+   "the": "ĐẠT",
+   "dung_co": true,
+   "cuon_ngang": false,
+   "loi": [],
+   "rong_vung": 68.0,
+   "khung": 72,
+   "kb": 17.2,
+   "dat": true
+  },
+  {
+   "kieu": "lô b4-hong",
+   "ma": "hu-vung-quai-bang",
+   "the": "ĐẠT",
+   "dung_co": true,
+   "cuon_ngang": false,
+   "loi": [],
+   "rong_vung": 30.0,
+   "khung": 34,
+   "kb": 7.0,
+   "dat": true
+  }
+ ],
+ "lo": [
+  {
+   "k": 14,
+   "id": "b4-duong",
+   "ten": "B4 · Vũng lửa, Vũng lửa của quái, Vũng đỏ của quái",
+   "hang": [
+    "hu-vung-lua",
+    "hu-vung-quai-lua",
+    "hu-vung-quai-do"
+   ],
+   "so": 6,
+   "nen": "duong",
+   "w": 1536,
+   "h": 1024,
+   "kho": "khổ ngang (tỉ lệ 3:2)",
+   "phong": 4.923076923076923
+  },
+  {
+   "k": 15,
+   "id": "b4-hong",
+   "ten": "B4 · Vũng độc, Mây độc, Vũng độc của quái, Vũng nước lạnh của quái",
+   "hang": [
+    "hu-vung-doc",
+    "hu-may-doc",
+    "hu-vung-quai-doc",
+    "hu-vung-quai-bang"
+   ],
+   "so": 6,
+   "nen": "hong",
+   "w": 1536,
+   "h": 1024,
+   "kho": "khổ ngang (tỉ lệ 3:2)",
+   "phong": 2.6666666666666665
+  }
+ ],
+ "muc": [
+  {
+   "i": 55,
+   "ma": "hu-vung-lua",
+   "ten": "Vũng lửa (vệt cháy của em bé)",
+   "nen": "duong",
+   "fw": 44,
+   "fh": 44,
+   "gx": 22,
+   "gy": 22,
+   "so": 6,
+   "giay": 0.6,
+   "lap": true,
+   "phe": "ta",
+   "to": false
+  },
+  {
+   "i": 56,
+   "ma": "hu-vung-doc",
+   "ten": "Vũng độc (của em bé)",
+   "nen": "hong",
+   "fw": 96,
+   "fh": 96,
+   "gx": 48,
+   "gy": 48,
+   "so": 6,
+   "giay": 0.9,
+   "lap": true,
+   "phe": "ta",
+   "to": true
+  },
+  {
+   "i": 57,
+   "ma": "hu-may-doc",
+   "ten": "Mây độc lơ lửng (trên vũng độc)",
+   "nen": "hong",
+   "fw": 96,
+   "fh": 96,
+   "gx": 48,
+   "gy": 48,
+   "so": 6,
+   "giay": 1.2,
+   "lap": true,
+   "phe": "ta",
+   "to": true
+  },
+  {
+   "i": 58,
+   "ma": "hu-vung-quai-lua",
+   "ten": "Vũng lửa của quái",
+   "nen": "duong",
+   "fw": 52,
+   "fh": 52,
+   "gx": 26,
+   "gy": 26,
+   "so": 6,
+   "giay": 0.6,
+   "lap": true,
+   "phe": "quai",
+   "to": false
+  },
+  {
+   "i": 59,
+   "ma": "hu-vung-quai-doc",
+   "ten": "Vũng độc của quái",
+   "nen": "hong",
+   "fw": 72,
+   "fh": 72,
+   "gx": 36,
+   "gy": 36,
+   "so": 6,
+   "giay": 0.9,
+   "lap": true,
+   "phe": "quai",
+   "to": true
+  },
+  {
+   "i": 60,
+   "ma": "hu-vung-quai-bang",
+   "ten": "Vũng nước lạnh của quái",
+   "nen": "hong",
+   "fw": 34,
+   "fh": 34,
+   "gx": 17,
+   "gy": 17,
+   "so": 6,
+   "giay": 0.9,
+   "lap": true,
+   "phe": "quai",
+   "to": false
+  },
+  {
+   "i": 61,
+   "ma": "hu-vung-quai-do",
+   "ten": "Vũng đỏ của quái (không hệ)",
+   "nen": "duong",
+   "fw": 52,
+   "fh": 52,
+   "gx": 26,
+   "gy": 26,
+   "so": 6,
+   "giay": 0.9,
+   "lap": true,
+   "phe": "quai",
+   "to": false
+  }
+ ],
+ "kb_mau": {
+  "hu-vung-lua": 9.6,
+  "hu-vung-quai-lua": 11.7,
+  "hu-vung-quai-do": 11.4,
+  "hu-vung-doc": 22.6,
+  "hu-may-doc": 15.3,
+  "hu-vung-quai-doc": 17.2,
+  "hu-vung-quai-bang": 7.0
+ },
+ "prompt_cu": {
+  "so_ban": 105,
+  "doi_chu": [],
+  "them": [
+   "hu-may-doc",
+   "hu-vung-doc",
+   "hu-vung-lua",
+   "hu-vung-quai-bang",
+   "hu-vung-quai-do",
+   "hu-vung-quai-doc",
+   "hu-vung-quai-lua",
+   "lo:b4-duong",
+   "lo:b4-hong"
+  ]
+ },
+ "khong_tep_khac": 0,
+ "do": [
+  {
+   "ten": "Vũng lửa em bé",
+   "ma": "hu-vung-lua",
+   "ban_kinh_luat": 18,
+   "ban_kinh_ve": 18.0,
+   "lech": 0.0,
+   "dat": true
+  },
+  {
+   "ten": "Vũng độc em bé",
+   "ma": "hu-vung-doc",
+   "ban_kinh_luat": 25,
+   "ban_kinh_ve": 25.0,
+   "lech": 0.0,
+   "dat": true
+  },
+  {
+   "ten": "Mây độc (trên vũng độc)",
+   "ma": "hu-may-doc",
+   "ban_kinh_luat": 25,
+   "ban_kinh_ve": 25.0,
+   "lech": 0.0,
+   "dat": true
+  },
+  {
+   "ten": "Vệt cháy của chưởng",
+   "ma": "hu-vung-lua",
+   "ban_kinh_luat": 13,
+   "ban_kinh_ve": 13.0,
+   "lech": 0.0,
+   "dat": true
+  },
+  {
+   "ten": "Mây độc của chưởng (mặt sàn)",
+   "ma": "hu-vung-doc",
+   "ban_kinh_luat": 35,
+   "ban_kinh_ve": 35.0,
+   "lech": 0.0,
+   "dat": true
+  },
+  {
+   "ten": "Vũng lửa của quái",
+   "ma": "hu-vung-quai-lua",
+   "ban_kinh_luat": 24,
+   "ban_kinh_ve": 24.0,
+   "lech": 0.0,
+   "dat": true
+  },
+  {
+   "ten": "Vũng độc của quái",
+   "ma": "hu-vung-quai-doc",
+   "ban_kinh_luat": 34,
+   "ban_kinh_ve": 34.0,
+   "lech": 0.0,
+   "dat": true
+  },
+  {
+   "ten": "Vũng nước lạnh của quái",
+   "ma": "hu-vung-quai-bang",
+   "ban_kinh_luat": 15,
+   "ban_kinh_ve": 15.0,
+   "lech": 0.0,
+   "dat": true
+  },
+  {
+   "ten": "Vũng đỏ của quái",
+   "ma": "hu-vung-quai-do",
+   "ban_kinh_luat": 24,
+   "ban_kinh_ve": 24.0,
+   "lech": 0.0,
+   "dat": true
+  }
+ ],
+ "ti_le_anh_chup": 2.0,
+ "bot_ai1": {
+  "sau": {
+   "thang": true,
+   "giay": 182.2,
+   "mau": "100/100",
+   "soDong": 195,
+   "loiFx": 0,
+   "bamNhatKy": "5f5f38c467443b05",
+   "loiJS": []
+  },
+  "truoc": {
+   "thang": true,
+   "giay": 182.2,
+   "mau": "100/100",
+   "soDong": 195,
+   "loiFx": 0,
+   "bamNhatKy": "5f5f38c467443b05",
+   "loiJS": []
+  },
+  "nhat_ky_trung": true
+ },
+ "dat_tat_ca": true
+}

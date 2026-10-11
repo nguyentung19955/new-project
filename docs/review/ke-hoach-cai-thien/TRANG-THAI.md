@@ -34,7 +34,7 @@ Trạng thái: **ĐÃ LÀM + ĐÃ KIỂM** (có báo cáo, ảnh, số đo, work
 | B1 | 14 dải đạn/bom/tên | CHỜ ẢNH | `hieu-ung-b1/PROMPT.md` (cách nhanh: **3 tấm** thay 14) |
 | B2 | 8 dải đòn/chiêu (+ bản theo hệ) | CHỜ ẢNH | `hieu-ung-b2/PROMPT.md` (cách nhanh: **5 tấm** thay 11, trong đó 1 tấm chung với B3 và 1 tấm bản hệ không bắt buộc) |
 | B3 | 15 dải nổ/trạng thái/trùm/cổng | CHỜ ẢNH | `hieu-ung-b3/PROMPT.md` (cách nhanh: **7 tấm** thay 18, gồm Trùm nổ cuối gen lẻ và 1 tấm bản hệ không bắt buộc) |
-| B4 | 7 vũng trên sàn | ĐANG CHẠY (16:25) | `lan-b4-vung-san.md` |
+| B4 | 7 vũng trên sàn: vũng lửa, vũng độc, mây độc, 4 vũng của quái. 2 tấm ảnh | CHỜ ẢNH (code và công cụ đã kiểm bằng ảnh mẫu: không có tệp khác 0 điểm ảnh, bán kính vẽ = bán kính gây sát thương, nhật ký sát thương bot ải 1 trùng; báo cáo `hieu-ung-b4/bao-cao.md`, có 3 điểm chờ duyệt) | `hieu-ung-b4/PROMPT.md` (cách nhanh: **2 tấm** thay 7) |
 | C1 | 14 biểu tượng nút | CHỜ ẢNH | `giao-dien-c1/PROMPT.md` |
 | C2 | 30 biểu tượng nhỏ; biểu tượng tinh anh 12×12 | CHỜ ẢNH (phóng to đã lên) | `giao-dien-c2/PROMPT.md` |
 | C3 | Hình cố định lớn: nút Nói chuyện, thẻ ải, thẻ ải trùm (mỗi thứ 3 trạng thái), mặt trống đồng, logo LINH KHÍ. 2 tấm ảnh | CHỜ ẢNH (code và công cụ đã kiểm bằng ảnh mẫu; báo cáo `giao-dien-c3/bao-cao.md`) | `giao-dien-c3/PROMPT.md` |
