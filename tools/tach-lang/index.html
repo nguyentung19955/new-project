@@ -95,7 +95,7 @@
 <body>
 <header>
   <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="#a8752f" stroke="#1a120a" stroke-width="2"/><circle cx="15" cy="15" r="8" fill="none" stroke="#f6dc92" stroke-width="1.5"/><path d="M15 4 L17 13 L26 15 L17 17 L15 26 L13 17 L4 15 L13 13 Z" fill="#f6dc92"/></svg>
-  <div><h1>Tách Làng</h1><small>Ảnh ChatGPT vẽ công trình, đạo cụ, con vật của làng → mỗi hình một tệp .sprite.json</small></div>
+  <div><h1>Tách Làng</h1><small>Ảnh ChatGPT vẽ công trình, đạo cụ, con vật, nền làng, tranh bản đồ → mỗi hình một tệp .sprite.json</small></div>
   <nav class="menu" aria-label="Các công cụ">
     <a href="tach-quai.html">Quái</a>
     <a href="tach-anh-hung.html">Anh hùng · Người làng</a>
@@ -145,12 +145,12 @@
     <h2><span class="so">2</span>Đưa ảnh ChatGPT vẽ vào đây</h2>
     <div id="vungTha" tabindex="0" role="button" aria-label="Chọn ảnh">
       <b>Bấm để chọn ảnh</b>, kéo thả ảnh vào, hoặc dán<br>
-      <span style="font-size:12px">Ảnh đúng như prompt, nền màu trơn hồng tím.</span>
+      <span style="font-size:12px" id="chuTha">Ảnh đúng như prompt, nền màu trơn hồng tím.</span>
     </div>
     <input type="file" id="chonAnh" accept="image/*" hidden>
     <div id="vungAnhGoc" hidden>
       <div class="khung-xem"><canvas id="cvGoc"></canvas></div>
-      <p class="chu-y">Khung vàng là từng hình công cụ tìm được, số ở góc là thứ tự (khớp danh sách ở bước 1). <b>Chạm vào khung nào để bỏ khung đó</b> (khung đỏ gạch chéo: hình thừa, bảng phụ); chạm lại để lấy lại. Ảnh có phần thừa thì cắt bớt:</p>
+      <p class="chu-y" id="chuGoc">Khung vàng là từng hình công cụ tìm được, số ở góc là thứ tự (khớp danh sách ở bước 1). <b>Chạm vào khung nào để bỏ khung đó</b> (khung đỏ gạch chéo: hình thừa, bảng phụ); chạm lại để lấy lại. Ảnh có phần thừa thì cắt bớt:</p>
       <div class="cat">
         <label>Cắt trên (%)<input type="number" id="catTren" min="0" max="90" value="0" inputmode="numeric"></label>
         <label>Cắt dưới (%)<input type="number" id="catDuoi" min="0" max="90" value="0" inputmode="numeric"></label>
@@ -161,7 +161,7 @@
         <label><input type="checkbox" id="locDom" checked> Lọc đốm màu nền</label>
         <label>Độ nét <select id="heNet"><option value="2">Gấp đôi (khuyên dùng)</option><option value="1">Thường</option></select></label>
         <label>Nét vẽ <select id="doNet"><option value="min">Mịn</option><option value="net">Sắc nét</option></select></label>
-        <label>Số màu <select id="soMau"><option value="64">64</option><option value="48">48</option><option value="32">32</option><option value="24">24</option><option value="16">16</option><option value="12">12</option><option value="8">8</option></select></label>
+        <label>Số màu <select id="soMau"><option value="128">128</option><option value="64">64</option><option value="48">48</option><option value="32">32</option><option value="24">24</option><option value="16">16</option><option value="12">12</option><option value="8">8</option></select></label>
         <label>Giảm màu <select id="kieuGiam"><option value="tu-do">Tự do (như cũ)</option><option value="bang">Theo bảng màu Linh Khí</option></select></label>
         <button class="nut phu nho" id="nutLamLai">Tách lại</button>
       </div>
@@ -180,6 +180,18 @@
       <button class="nut do nho" id="nutBo">Bỏ hình này</button>
       <button class="nut phu nho" id="nutTaiMot">Tải file này</button>
     </div>
+    <div id="khoiNen" hidden style="margin-top:10px">
+      <div class="hang">
+        <button class="nut phu nho" id="nutKieuVua">Kéo giãn cho kín</button>
+        <span class="chu-y" style="margin:0">Dịch phần được lấy:</span>
+        <button class="nut phu nho" id="nutNenTrai" aria-label="Dịch sang trái">◀</button>
+        <button class="nut phu nho" id="nutNenLen" aria-label="Dịch lên">▲</button>
+        <button class="nut phu nho" id="nutNenXuong" aria-label="Dịch xuống">▼</button>
+        <button class="nut phu nho" id="nutNenPhai" aria-label="Dịch sang phải">▶</button>
+        <button class="nut phu nho" id="nutNenGiua">Về giữa</button>
+      </div>
+      <p class="chu-y">Cả tấm ảnh là MỘT hình, không tách nền. Công cụ tự bỏ hai dải hồng tím trên dưới (nếu có), rồi đưa phần còn lại về đúng cỡ của game. Ảnh không đúng tỉ lệ thì chọn: <b>cắt bớt</b> (giữ tỉ lệ, khung vàng ở bước 2 là phần được lấy) hay <b>kéo giãn cho kín</b> (lấy hết ảnh, hình hơi bẹt).</p>
+    </div>
     <div class="hang" style="margin-top:12px">
       <button class="nut" id="nutTaiZip">Tải tất cả (.zip)</button>
     </div>
@@ -187,21 +199,33 @@
   </section>
 
   <section class="buoc xem-thu" id="buoc4" hidden>
-    <h2><span class="so">4</span>Xem thử trong cảnh làng của game</h2>
+    <h2><span class="so">4</span><span id="tieuDe4">Xem thử trong cảnh làng của game</span></h2>
     <p class="chu-y" id="ttXem" style="margin-top:-4px">Đang nạp game để vẽ thử…</p>
     <div id="vungXem" hidden>
       <div class="hang">
         <button class="nut phu nho" id="nutSoCode">Xem bản vẽ code (cũ)</button>
         <button class="nut phu nho" id="nutNgay">Xem màu ban ngày</button>
         <button class="nut phu nho" id="nutVung">Hiện chỗ không đi được</button>
+        <button class="nut phu nho" id="nutChiNen" hidden>Chỉ xem nền (ẩn nhà, người)</button>
+        <button class="nut phu nho" id="nutChong" hidden>Chồng mờ nền cũ để soi lệch</button>
+        <button class="nut phu nho" id="nutDem" hidden>Xem màu đêm (độ khó 2)</button>
+        <button class="nut phu nho" id="nutAi" hidden>Hiện vị trí 15 ải</button>
         <button class="nut do nho" id="nutBoXem">Bỏ hết ảnh đang xem thử</button>
       </div>
+      <div id="khoiXemBanDo" hidden>
+        <p class="chu-y">Tranh bản đồ do chính code của game dựng từ ảnh bạn vừa đưa vào (game tự kẻ viền tranh, tự phủ màu đêm cho độ khó 2):</p>
+        <div class="khung-xem" style="max-width:960px"><canvas id="cvBanDo"></canvas></div>
+        <p class="chu-y">Bật "Hiện vị trí 15 ải" để soi: vòng tròn là chỗ game đặt 15 thẻ ải (vòng cam là ải trùm), đường nét đứt là lối nối các ải, khung nét đứt là chỗ game phủ bảng thông tin, tên vùng, người lái đò. Rừng, hang biển, lâu đài phải nằm đúng dưới các ải của vùng mình; nếu lệch thì nhờ ChatGPT vẽ lại, nhớ gửi kèm 2 ảnh tham chiếu.</p>
+      </div>
+      <div id="khoiXemLang">
       <p class="chu-y" id="chuGan">Xem gần từng hình. Chọn hình:</p>
       <div class="hang" id="nutGan"></div>
       <div class="khung-xem" style="max-width:640px"><canvas id="cvGan"></canvas></div>
       <p class="chu-y">Cả làng (vuốt ngang để xem hết):</p>
       <div class="khung-xem cuon" id="cuonLang"><canvas id="cvLang"></canvas></div>
-      <p class="chu-y">Hai hình trên do chính code cảnh làng của game vẽ, dùng ảnh bạn vừa tách: game tự phủ màu chạng vạng, tự vẽ lửa lò, khói và quầng đèn như trong game. Giữa đáy mỗi ảnh được đặt đúng chân hình cũ (đèn lồng rời thì treo từ đỉnh ảnh). Con vật giữ màu sáng như người, không bị phủ tối. Thấy hình to hay nhỏ quá thì chọn hình ở bước 3 rồi bấm "Nhỏ hơn" / "To hơn". Bật "Hiện chỗ không đi được" để soi: vùng đỏ là chỗ em bé không đi vào được, khung nét đứt là chỗ hình cũ.</p>
+      <p class="chu-y" id="chuNenLang" hidden>Hai hình trên do chính code cảnh làng của game vẽ, dùng ảnh nền bạn vừa đưa vào: game tự phủ màu chạng vạng, tự đặt nhà, người, đồ vật, sậy, vệt nước và quầng đèn lên trên. Ảnh chỉ là lớp nền: chỗ em bé đi được KHÔNG đổi theo ảnh. Vì vậy hãy soi: bật "Hiện chỗ không đi được" (vùng đỏ là sông, ao, hàng cây, chân nhà: nước và bờ trong ảnh phải trùng mép vùng đỏ; cây cầu bến đò phải nằm đúng khe hở của vùng đỏ ở bờ sông), và bật "Chồng mờ nền cũ" để thấy đường đất, sân đình, ao, chiếu lệch bao nhiêu so với nền cũ. Lệch nhiều thì nhờ ChatGPT vẽ lại, nhớ gửi kèm 2 ảnh tham chiếu.</p>
+      <p class="chu-y" id="chuXemVat">Hai hình trên do chính code cảnh làng của game vẽ, dùng ảnh bạn vừa tách: game tự phủ màu chạng vạng, tự vẽ lửa lò, khói và quầng đèn như trong game. Giữa đáy mỗi ảnh được đặt đúng chân hình cũ (đèn lồng rời thì treo từ đỉnh ảnh). Con vật giữ màu sáng như người, không bị phủ tối. Thấy hình to hay nhỏ quá thì chọn hình ở bước 3 rồi bấm "Nhỏ hơn" / "To hơn". Bật "Hiện chỗ không đi được" để soi: vùng đỏ là chỗ em bé không đi vào được, khung nét đứt là chỗ hình cũ.</p>
+      </div>
     </div>
   </section>
 </main>
@@ -218,7 +242,10 @@
 //   'icon' = thu vừa ô, giữ tỉ lệ, đặt giữa ô đúng cỡ w×h;   'gian' = kéo giãn kín đúng cỡ w×h.
 //   'dai'  = D2: dải khung có cử động (khung cửi, lửa lò). Mỗi ô lưới là một KHUNG của cùng một hình; cả lô xuất ra MỘT tệp kiểu 'hieu-ung'
 //            { doi_tuong: 'hieu-ung', ma: 'hu-lang-<tên>', tam (dải khung ngang), khung_rong, khung_cao, goc: [giữa, đáy], so, giay, lap, net } (game/js/fx_anh.js đọc).
-// THÊM LÔ MỚI (D3): thêm một mục vào CUỐI mảng LO (id, ten, kieu, cot, hang, mau, net, xem, ds) và một nhánh trong taoPrompt.
+//   'nen'  = D3: CẢ ẢNH LÀ MỘT HÌNH KÍN, KHÔNG tách nền, không dò lưới (nền làng 720×270, tranh bản đồ vùng 480×270). Bỏ hai dải hồng tím ở mép (nếu có),
+//            rồi cắt giữ tỉ lệ (hoặc kéo giãn kín) về đúng cỡ w×h. Tệp tải: <mã>.sprite.json là bản NÉT THƯỜNG (khuyên dùng cho nền, nhẹ);
+//            lô không ghi chiThuong có thêm <mã>.net2.sprite.json (nét gấp đôi). chiThuong: game chỉ dùng được nét thường (tranh bản đồ).
+// THÊM LÔ MỚI: thêm một mục vào CUỐI mảng LO (id, ten, kieu, cot, hang, mau, net, xem, ds) và một nhánh trong taoPrompt.
 // Xem thử (bước 4) vẽ bằng G.villageScene.veTinh của game nên hình nào game đã móc thì tự hiện, không phải sửa phần xem thử.
 const LO = [
   { id: 'cong-trinh', ten: 'Làng · 6 công trình lớn', kieu: 'vat', cot: 3, hang: 2, mau: 48, net: 'min', xem: true,
@@ -284,8 +311,16 @@ const LO = [
       { ten: 'Lửa lò · khung 2', w: 12, h: 15, mo: 'vẫn ngọn lửa đó ở nhịp kế tiếp: thấp hơn một chút, lưỡi lửa ở GIỮA cao nhất và đứng thẳng, hai lưỡi hai bên thấp, toả đều' },
       { ten: 'Lửa lò · khung 3', w: 12, h: 15, mo: 'vẫn ngọn lửa đó ở nhịp cuối: lưỡi bên PHẢI cao nhất và hơi nghiêng sang phải, có MỘT tàn lửa nhỏ vừa tách khỏi ngọn, bay lên ngay phía trên' },
     ] },
+  // ----- D3: 2 tấm kín (kieu 'nen'): cả ảnh là một hình, không tách nền. Game: js/village_scene.js (anhNen → lớp nền làng; VS.mapArt → tranh bản đồ ải). -----
+  { id: 'nen-lang', ten: 'Làng · Nền làng (1 tấm kín)', kieu: 'nen', cot: 1, hang: 1, mau: 128, net: 'min', xem: true,
+    loiTC: '<b>Ảnh tham chiếu (BẮT BUỘC gửi kèm prompt):</b> hai ảnh dưới đây chụp từ nền làng hiện tại của game. Ảnh 1 là nền cần vẽ lại; ảnh 2 cho ChatGPT biết nhà cửa đặt ở đâu và chỗ nào không đi được. Không gửi kèm thì đường, sông, ao sẽ sai chỗ.',
+    ds: [{ ma: 'gd-lang-nen', ten: 'Nền làng', w: 720, h: 270 }] },
+  { id: 'ban-do-vung', ten: 'Làng · Tranh bản đồ vùng (1 tấm kín)', kieu: 'nen', cot: 1, hang: 1, mau: 64, net: 'min', xem: true, chiThuong: true,
+    loiTC: '<b>Ảnh tham chiếu (BẮT BUỘC gửi kèm prompt):</b> hai ảnh dưới đây chụp từ tranh bản đồ hiện tại của game. Ảnh 1 là tranh cần vẽ lại; ảnh 2 có thêm 15 chấm ải để ChatGPT giữ đúng chỗ rừng, hang biển, lâu đài. Không gửi kèm thì địa hình sẽ sai chỗ so với các thẻ ải.',
+    ds: [{ ma: 'gd-ban-do-vung', ten: 'Tranh bản đồ vùng', w: 480, h: 270 }] },
 ];
 const laDai = () => L.kieu === 'dai';
+const laNen = () => L.kieu === 'nen';
 
 const $ = (id) => document.getElementById(id);
 let L = null, ANH = null, SEG = null, MAP = null, BO = [], KQ = [], CHINH = [], CHON = -1, LAST = null;
@@ -425,7 +460,53 @@ function promptDai(L) {
     + `CỠ TRONG Ô: hình nằm giữa ô theo chiều ngang, to khoảng 70% bề ngang ô, nằm TRỌN trong ô, không chạm đường lưới; ĐÁY hình (${lua ? 'gốc lửa' : 'thanh đế sát đất'}) nằm trên cùng một đường ngang trong cả ${n} ô (game đặt điểm giữa đáy hình vào đúng chỗ trong làng). `
     + khong + (L.nen === 'xanh' ? CUOI_XANH : CUOI);
 }
+// D3 · hai tấm kín. Ảnh tham chiếu và ảnh ra đều là 3:2 (cỡ ChatGPT hay vẽ), phần cảnh là dải ở giữa, hai dải hồng tím trên dưới để công cụ biết chỗ cắt.
+const HAI_DAI = (tl) => `BỐ CỤC ẢNH RA: ảnh nằm ngang tỉ lệ 3:2 và GIỐNG HỆT ảnh 1 về bố cục: phần tranh là DẢI NGANG Ở GIỮA (${tl}), đúng cỡ và đúng chỗ như trong ảnh 1; dải phía trên và dải phía dưới giữ nguyên MỘT MÀU HỒNG TÍM #FF00FF trơn, không vẽ gì lên hai dải đó (công cụ dựa vào hai dải này để cắt ảnh), không dùng màu hồng tím ở chỗ nào khác. Phần tranh vẽ KÍN từ mép trái tới mép phải, không khung viền, không bo góc, không chừa chỗ trống. `;
+function promptNenLang(L) {
+  const m = L.ds[0];
+  return `Dùng công cụ tạo ảnh vẽ MỘT tấm ảnh pixel art 2D: MẶT ĐẤT (lớp nền) của một ngôi làng Bắc Bộ Việt Nam xưa, nhìn chếch từ trên cao xuống, dùng làm nền cho cảnh làng của ${GAME_LK}. Game sẽ tự đặt nhà cửa, cây, đồ vật và nhân vật lên trên tấm nền này. `
+    + `ẢNH THAM CHIẾU (bắt buộc xem kỹ): tôi gửi kèm 2 ảnh chụp từ game. Cả hai đều nằm ngang tỉ lệ 3:2; phần cảnh là dải ngang ở giữa, phía trên và phía dưới là hai dải màu hồng tím. Ảnh 1 là NỀN LÀNG HIỆN TẠI, không có nhà, người, đồ vật: đây là thứ cần VẼ LẠI cho đẹp hơn. Ảnh 2 là đúng cảnh đó khi game đã đặt nhà cửa và đồ vật lên, có phủ ĐỎ MỜ lên những chỗ nhân vật KHÔNG đi vào được (sông, ao, hàng cây mép trên, chân nhà, đồ vật); ảnh 2 chỉ để hiểu bố cục, KHÔNG vẽ lại nhà cửa, đồ vật hay màu đỏ của ảnh 2. `
+    + HAI_DAI('rộng gấp khoảng 2,7 lần cao')
+    + `GIỮ ĐÚNG VỊ TRÍ (quan trọng nhất): game đặt nhà, người và vùng đi được theo toạ độ cố định, nên các thứ sau phải nằm ĐÚNG chỗ, đúng cỡ, đúng hình dáng như trong ảnh 1 (hãy vẽ đè lên đúng bố cục của ảnh 1, không dời, không xoay, không phóng to thu nhỏ): `
+    + `(1) HÀNG CÂY RẬM tối màu chạy suốt mép TRÊN của cảnh, cao khoảng một phần năm chiều cao cảnh, chân hàng cây là một đường thẳng nằm ngang; `
+    + `(2) CON SÔNG chạy dọc sát mép PHẢI, rộng khoảng một phần mười bề ngang cảnh, bờ sông (bên trái dòng nước) uốn lượn nhẹ đúng như ảnh 1; `
+    + `(3) ĐƯỜNG ĐẤT chính chạy ngang qua giữa cảnh, từ bên trái sang tới bến đò ở bờ sông; đầu bên trái của đường cong lên tới chỗ cổng làng ở mép trên bên trái; từ đường chính có các lối đất nhánh rẽ LÊN (tới sân đình, tới lò rèn, tới nhà thợ may) và rẽ XUỐNG (tới giếng, tới sạp hàng), đúng chỗ và đúng bề rộng như ảnh 1; `
+    + `(4) SÂN ĐÌNH lát gạch hình chữ nhật nằm ngang, ở phía trên đường chính, lệch về bên trái; `
+    + `(5) AO SEN hình bầu dục nằm ngang ở góc dưới bên TRÁI; `
+    + `(6) CẦU BẾN ĐÒ bằng gỗ, ngắn, nằm ngang, nhô từ bờ ra mặt sông ở cuối đường chính bên phải; `
+    + `(7) một tấm CHIẾU CÓI nhỏ màu vàng rơm trải trên cỏ ngay phía trên đường chính, gần giữa cảnh, trên chiếu có một quyển sách bìa đỏ, một nghiên mực và một tờ giấy. Chỗ nào trong ảnh 1 là cỏ thì vẫn là cỏ. `
+    + `CHỖ ĐI LẠI PHẢI THOÁNG: những chỗ KHÔNG phủ đỏ trong ảnh 2 là nơi nhân vật đi lại và nơi game đặt nhà cửa lên: ở đó chỉ vẽ cỏ thấp, đất, gạch sân bằng phẳng; KHÔNG vẽ tảng đá to, bụi cây, gốc cây, hàng rào, vũng nước, hố, khúc gỗ ở đó. `
+    + `CHẤT LIỆU: cỏ là thảm cỏ thấp nhiều mảng đậm nhạt, điểm vài búi cỏ và vài bông hoa dại trắng, vàng rất nhỏ; đường đất là đất nện, mép đường lượn tự nhiên lẫn vào cỏ, lác đác sỏi nhỏ; nước sông và nước ao màu thẫm, có vài vệt sóng ngang sáng màu, mép nước có bờ đất hoặc đá kè thấp; ao có lá sen xanh và vài bông sen hồng nhạt; sân đình là gạch đỏ nâu xếp so le, có viền đá quanh mép sân; cầu là ván gỗ xếp sát nhau, có hai cọc gỗ ở đầu cầu phía sông; hàng cây mép trên là tre và bụi rậm xanh sẫm, chân tối. `
+    + `GÓC NHÌN: giống hệt ảnh 1: nhìn chếch từ trên cao xuống (kiểu game nhập vai 2D), không phối cảnh xa gần, không đường chân trời, không bầu trời. `
+    + `ÁNH SÁNG VÀ MÀU: nắng chiều dịu từ phía trên bên trái, nhưng màu vẫn SÁNG RÕ như ban ngày; KHÔNG vẽ trời tối, KHÔNG nhuộm cam đỏ hoàng hôn, KHÔNG vẽ bóng đổ dài, KHÔNG quầng sáng (game tự phủ màu chạng vạng, tự vẽ đèn và bóng). `
+    + `BẢNG MÀU (bắt buộc bám theo; chỉ để chọn màu, KHÔNG vẽ ô màu mẫu vào ảnh): ${BM.nhom.co_cay} | ${BM.nhom.nuoc} | ${BM.nhom.da_stone} | ${BM.nhom.go} | đường đất: tối #5a4a3c, vừa #8a705a, sáng #a08670 | gạch sân đình: tối #7a5e52, vừa #96705e, sáng #a47c68 | hoa sen hồng nhạt #f08aa8. Mỗi chất liệu dùng tối đa 3 sắc lấy trong bảng này; nét viền quanh mép nước, mép sân, mép cầu dùng sắc tối của chính chất liệu đó, không dùng đen. `
+    + `KIỂU VẼ: pixel art, màu phẳng, mỗi chất liệu 3 sắc (tối, vừa, sáng), không chuyển màu mượt, không nhoè, không phát sáng; cỡ điểm ảnh đều nhau khắp ảnh. Tấm nền phải DỊU, ít tương phản và ít chi tiết hơn nhà cửa và nhân vật, để chúng nổi rõ khi đặt lên trên. Trong game cả phần cảnh chỉ rộng ${m.w} × cao ${m.h} điểm ảnh, nên chi tiết phải TO và RÕ, không vẽ chi tiết li ti. `
+    + `KHÔNG vẽ: chữ, số, nhãn, chú thích; người, con vật; nhà, cổng làng, đình, cây to, lò rèn, sạp hàng, giếng, cây rơm, chum, cột đèn, đèn lồng, con đò, khung cửi, dây phơi, bảng gỗ (game tự đặt các thứ này lên); lớp phủ đỏ của ảnh 2; khung viền quanh cảnh. Chỉ cần gửi tấm ảnh, không cần code, không cần file json.`;
+}
+function promptBanDo(L) {
+  const m = L.ds[0];
+  return `Dùng công cụ tạo ảnh vẽ MỘT tấm TRANH BẢN ĐỒ kiểu bản đồ cổ vẽ tay bằng mực nâu và màu nước nhạt trên giấy dó ngả vàng, phong cách pixel art 2D, dùng làm bản đồ chọn ải của ${GAME_LK}. Game sẽ tự vẽ 15 thẻ ải, đường nối các ải và tên vùng đè lên tranh này. `
+    + `ẢNH THAM CHIẾU (bắt buộc xem kỹ): tôi gửi kèm 2 ảnh chụp từ game. Cả hai đều nằm ngang tỉ lệ 3:2; phần tranh là dải ở giữa, phía trên và phía dưới là hai dải mỏng màu hồng tím. Ảnh 1 là TRANH HIỆN TẠI: đây là thứ cần VẼ LẠI cho đẹp hơn, nhiều chi tiết hơn. Ảnh 2 là tranh đó có thêm 15 CHẤM TRÒN đánh số (vị trí 15 ải; mỗi vùng 5 ải đánh số 1 đến 5, chấm số 5 màu cam to hơn là ải trùm) và đường nét đứt nối các ải; ảnh 2 chỉ để biết vị trí, KHÔNG vẽ chấm, số hay đường nét đứt vào tranh. `
+    + HAI_DAI('tỉ lệ 16:9')
+    + `GIỮ ĐÚNG VỊ TRÍ (quan trọng nhất): game đặt 15 thẻ ải theo toạ độ cố định, nên địa hình phải nằm ĐÚNG chỗ như trong ảnh 1 (vẽ đè lên đúng bố cục của ảnh 1, không dời, không xoay, không phóng to thu nhỏ): `
+    + `(1) NGÔI LÀNG nhỏ (một mái nhà ngói đỏ, một cây xanh) sát mép TRÁI, ngang giữa tranh; từ làng có một CON SÔNG nhỏ chảy xuống phía dưới rồi ra biển, trên sông có một con đò nhỏ; `
+    + `(2) vùng RỪNG GIÀ: một cụm rừng cây rậm ở phía TRÊN BÊN TRÁI, 5 ải của vùng nằm trong rừng, đi chéo dần lên bên phải; `
+    + `(3) vùng HANG BIỂN: dải bờ đá xám có cửa hang tối và nhũ đá, ở phía DƯỚI, từ trái tới giữa tranh, ngay trên mép biển; `
+    + `(4) BIỂN chạy suốt mép DƯỚI tranh, có các vệt sóng ngắn; `
+    + `(5) vùng LÂU ĐÀI CỔ: toà thành đá xám có tường răng cưa, hai tháp mái nhọn đỏ có cắm cờ và một cổng vòm tối, ở GIỮA tranh hơi lệch phải; `
+    + `(6) dãy NÚI mờ xa ở mép trên, giữa tranh; `
+    + `(7) ba vùng CHƯA MỞ ở khoảng một phần tư bên PHẢI tranh, vẽ NHẠT màu như bị sương che, có vài đám MÂY trắng phủ lên: núi tuyết đỉnh trắng (trên cùng bên phải), núi lửa có dung nham cam (giữa bên phải), đầm lầy có cây khô (phía dưới, lệch phải); `
+    + `(8) một LA BÀN nhỏ ở góc trên bên trái; `
+    + `(9) ba HÌNH QUÁI TRÙM nhỏ, vẽ như hình minh hoạ trên bản đồ cổ, đứng ngay cạnh chấm số 5 của mỗi vùng, đúng chỗ như ảnh 1: quái gốc cây mắt đỏ (Rừng già), quái cá xanh lam (Hang biển), cáo tinh lông cam đuôi trắng (Lâu đài cổ). `
+    + `CHỖ PHẢI ĐỂ THOÁNG: ngay dưới mỗi chấm ải trong ảnh 2 (một vòng tròn to bằng chấm) chỉ vẽ nền giấy hoặc địa hình nhạt, ít chi tiết, để thẻ ải đè lên vẫn rõ; góc DƯỚI BÊN PHẢI (nửa bên phải, một phần tư phía dưới) game phủ một bảng thông tin nên ở đó chỉ vẽ biển; góc dưới bên trái game vẽ người lái đò nên ở đó chỉ vẽ nền giấy và mép nước; khoảng trống phía trên rừng, phía trên lâu đài và ngay trên mép biển (chỗ game viết tên vùng) để nền giấy phẳng. `
+    + `ÁNH SÁNG VÀ MÀU: màu ban ngày, phẳng, nhạt và ấm như tranh trên giấy cũ; KHÔNG vẽ trời tối (game tự phủ màu đêm khi chơi độ khó 2). `
+    + `BẢNG MÀU (bắt buộc bám theo; chỉ để chọn màu, KHÔNG vẽ ô màu mẫu vào ảnh): giấy #e6d8b0, đốm giấy sáng #f0e6c8, đốm giấy tối #d8c898 | mực nâu (nét viền) #4a3626 | nước #b4cac8, mép nước và sóng #7a9aa4 | cây: tối #2f5a3a, vừa #4a7a4a, sáng #6a9a5a | đá: tối #6a7a84, sáng #8a9aa0, cửa hang #2a3440 | tường thành: tối #6a606a, vừa #8a8088 | mái ngói và cờ: tối #8a3a2e, sáng #c8402e | vùng chưa mở: #c4b48c, #b0a078 | mây #f6f0dc. Mỗi chất liệu dùng tối đa 3 sắc; nét viền dùng mực nâu, không dùng đen. `
+    + `KIỂU VẼ: pixel art, màu phẳng, nét mực nâu một nét quanh núi, cây, thành, bờ đá; không chuyển màu mượt, không nhoè, không phát sáng; cỡ điểm ảnh đều nhau khắp tranh. Trong game cả tranh chỉ rộng ${m.w} × cao ${m.h} điểm ảnh, nên chi tiết phải TO và RÕ. `
+    + `KHÔNG vẽ: chữ, số, tên vùng, nhãn, chú thích; chấm ải, thẻ ải, đường nét đứt nối ải; khung viền quanh tranh (game tự kẻ viền); người, thuyền lớn; bảng màu. Chỉ cần gửi tấm ảnh, không cần code, không cần file json.`;
+}
 function taoPrompt(L) {
+  if (L.id === 'nen-lang') return promptNenLang(L);
+  if (L.id === 'ban-do-vung') return promptBanDo(L);
   if (L.id === 'dao-cu') return promptDaoCu(L);
   if (L.kieu === 'dai') return promptDai(L);
   // lô 'cong-trinh' (D1). Lô mới (D3): thêm nhánh if (L.id === '…') ở trên dòng này.
@@ -443,7 +524,13 @@ const taoPromptGoc = taoPrompt;
 taoPrompt = (L) => bmChen(taoPromptGoc(L), bmDoan(L.bm || ['go', 'da_stone', 'co_cay', 'kim_loai', 'bong'], L.bmTuy));
 function hienLo() {
   $('dsLo').innerHTML = L.ds.map((m) => `<li><b>${m.ten}</b> · ${m.w}×${m.h} · <span style="font-size:11px">${m.ma || L.ma}</span></li>`).join('');
-  $('moTaLo').textContent = laDai()
+  $('chuTha').textContent = laNen() ? 'Tấm ảnh ChatGPT vẽ theo prompt (có hai dải hồng tím trên dưới hay không đều được).' : 'Ảnh đúng như prompt, nền màu trơn hồng tím.';
+  $('chuGoc').innerHTML = laNen() ? '<b>Khung vàng là phần ảnh được lấy</b> (ngoài khung là dải hồng tím hoặc phần bị cắt bớt cho đúng tỉ lệ). Muốn tự cắt thêm thì điền số bên dưới:' : CHU_GOC;
+  if (laNen()) $('heNet').value = '1'; else if (LO_TRUOC_NEN) $('heNet').value = '2'; // nền: mặc định nét thường (nhẹ); rời lô nền thì về nét gấp đôi như cũ
+  LO_TRUOC_NEN = laNen(); $('heNet').disabled = !!L.chiThuong;
+  $('moTaLo').textContent = laNen()
+    ? `MỘT tấm kín ${L.ds[0].w}×${L.ds[0].h} điểm ảnh game, cả ảnh là một hình, không tách nền. Nhớ gửi kèm 2 ảnh tham chiếu bên dưới. ` + (L.chiThuong ? 'Tệp ra nét thường (game dán thẳng tranh này ở cỡ 480×270).' : 'Tệp ra có 2 bản: nét thường (khuyên dùng cho nền, nhẹ) và nét gấp đôi.')
+    : laDai()
     ? `${L.ds.length} khung của cùng một hình, lưới ${L.cot} cột × ${L.hang} hàng, nền ${L.nen === 'xanh' ? 'xanh dương' : 'hồng tím'}. Cả ${L.ds.length} khung ghép thành MỘT tệp ${L.ma}; mỗi khung ${L.w}×${L.h} điểm ảnh game, ảnh tách ra nét gấp đôi.`
     : `${L.ds.length} hình, lưới ${L.cot} cột × ${L.hang} hàng, nền hồng tím. Cỡ ghi bên dưới là cỡ trong game (điểm ảnh); ảnh tách ra nét gấp đôi.`;
   $('oPrompt').value = taoPrompt(L);
@@ -452,13 +539,15 @@ function hienLo() {
 }
 // Ảnh tham chiếu của lô đang chọn (dựng trong taoThamChieu khi game nạp xong): TC[id lô] = [{ cv, url, chu, tep }, …] (1 hoặc 2 ảnh).
 const TC = {};
+const CHU_GOC = $('chuGoc').innerHTML;
+let LO_TRUOC_NEN = false;
 const soTC = () => (L.id === 'khung-cui' || L.id === 'lua-lo' ? 1 : 2);
 function hienThamChieu() {
   const n = soTC(), ds = TC[L.id];
-  $('loiTC').innerHTML = n > 1
+  $('loiTC').innerHTML = L.loiTC ? L.loiTC : n > 1
     ? '<b>Ảnh tham chiếu (gửi kèm prompt):</b> hai ảnh dưới đây chụp từ hình làng hiện tại của game. Gửi cả hai cho ChatGPT cùng với prompt để nó vẽ đúng góc nhìn, đúng dáng, đúng thứ tự.'
     : '<b>Ảnh tham chiếu (gửi kèm prompt):</b> ảnh dưới đây là các khung hình hiện tại của game, đã phóng to. Gửi cho ChatGPT cùng với prompt để nó vẽ đúng dáng, đúng thứ tự.';
-  $('loiDan').textContent = `Dán prompt vào ChatGPT kèm ${n > 1 ? '2 ảnh' : 'ảnh'} tham chiếu. ChatGPT chỉ cần vẽ MỘT tấm ảnh, rồi bạn lưu ảnh đó về máy.`;
+  $('loiDan').textContent = laNen() ? 'Dán prompt vào ChatGPT kèm 2 ảnh tham chiếu. ChatGPT vẽ MỘT tấm ảnh (ngang, 3:2, có hai dải hồng tím trên dưới), rồi bạn lưu ảnh đó về máy.' : `Dán prompt vào ChatGPT kèm ${n > 1 ? '2 ảnh' : 'ảnh'} tham chiếu. ChatGPT chỉ cần vẽ MỘT tấm ảnh, rồi bạn lưu ảnh đó về máy.`;
   $('vungThamChieu').hidden = !ds; if (!hetNguon) $('ttThamChieu').hidden = !!ds;
   if (!ds) return;
   [1, 2].forEach((i) => {
@@ -470,7 +559,7 @@ function hienThamChieu() {
 LO.forEach((l, i) => { const o = document.createElement('option'); o.value = i; o.textContent = l.ten; $('chonLo').appendChild(o); });
 try { const i = localStorage.getItem('tlang_lo'); if (i != null && LO[i]) $('chonLo').value = i; } catch (e) { /* bỏ qua */ }
 L = LO[+$('chonLo').value];
-$('chonLo').onchange = (e) => { L = LO[+e.target.value]; try { localStorage.setItem('tlang_lo', e.target.value); } catch (er) { /* bỏ qua */ } hienLo(); CHINH = []; BO = []; CHON = -1; KQ = []; ANH = null; SEG = null; LAST = null; DAI = null; $('vungAnhGoc').hidden = true; $('buoc3').hidden = true; ganDau(); if (L.xem && Object.keys(XEM).length) { $('buoc4').hidden = false; napGame(); veNutGan(); veXem(); } }; // đổi lô: chờ ảnh của lô mới (ảnh lô cũ không dùng lại)
+$('chonLo').onchange = (e) => { L = LO[+e.target.value]; try { localStorage.setItem('tlang_lo', e.target.value); } catch (er) { /* bỏ qua */ } hienLo(); CHINH = []; BO = []; CHON = -1; KQ = []; ANH = null; SEG = null; LAST = null; DAI = null; $('vungAnhGoc').hidden = true; $('buoc3').hidden = true; ganDau(); if (L.xem && (laNen() || Object.keys(XEM).length)) { $('buoc4').hidden = false; napGame(); veNutGan(); veXem(); } else $('buoc4').hidden = true; }; // đổi lô: chờ ảnh của lô mới (ảnh lô cũ không dùng lại)
 $('nutChepPrompt').onclick = () => {
   const t = taoPrompt(L);
   const loi = () => { const a = $('oPrompt'); a.closest('details').open = true; a.focus(); a.select(); bao('Hãy bôi đen và sao chép trong ô prompt'); };
@@ -498,7 +587,7 @@ $('nutLamLai').onclick = () => ANH && chay(true);
 ['doNet', 'soMau', 'heNet'].forEach((id) => ($(id).onchange = () => ANH && chay(false)));
 $('kieuGiam').onchange = () => ANH && chay(false);
 // Độ nét: ảnh trong tệp có số điểm ảnh gấp N lần cỡ game ("net": N). rong, cao vẫn theo điểm ảnh game.
-const NET = () => (+$('heNet').value >= 2 ? 2 : 1);
+const NET = () => (L && L.chiThuong ? 1 : +$('heNet').value >= 2 ? 2 : 1);
 
 // ===================== TÁCH NỀN, TÌM TỪNG HÌNH (chép từ trang Tách Giao Diện; riêng theoLuoiKe giữ thêm mảnh nhỏ sát thân cho lô 'vat') =====================
 function hex2rgb(h) { const v = parseInt(h.slice(1), 16); return [(v >> 16) & 255, (v >> 8) & 255, v & 255]; }
@@ -857,9 +946,95 @@ function giamMau(px, soMau) {
   return bang;
 }
 
+// ===================== D3 · KIỂU 'nen': cả ảnh là MỘT hình kín, không tách nền =====================
+// Tìm hai dải màu nền (hồng tím hoặc trong suốt) ở bốn mép: một hàng / cột là "dải" khi từ một nửa số điểm trở lên là màu nền. Trả về khung phần tranh còn lại.
+function vienNen(A) {
+  const { W, H, d } = A;
+  const nen = (j) => { if (d[j * 4 + 3] < 128) return true; const r = d[j * 4], g = d[j * 4 + 1], b = d[j * 4 + 2], hs = sacDo(r, g, b); return hs[1] > 0.5 && Math.max(r, g, b) > 140 && Math.abs(hs[0] - 300) < 30; };
+  const hang = (y) => { let n = 0, t = 0; for (let x = 0; x < W; x += 3) { t++; if (nen(y * W + x)) n++; } return n * 2 >= t; };
+  let y0 = 0, y1 = H - 1; while (y0 < H && hang(y0)) y0++; while (y1 > y0 && hang(y1)) y1--;
+  if (y0 >= y1) return null;
+  const cot = (x) => { let n = 0, t = 0; for (let y = y0; y <= y1; y += 3) { t++; if (nen(y * W + x)) n++; } return n * 2 >= t; };
+  let x0 = 0, x1 = W - 1; while (x0 < W && cot(x0)) x0++; while (x1 > x0 && cot(x1)) x1--;
+  if (x0 >= x1) return null;
+  const lui = Math.max(2, Math.round(Math.max(W, H) * 0.002)); // mép dải thường lem một hai điểm: lùi vào
+  const v = { tren: y0, duoi: H - 1 - y1, trai: x0, phai: W - 1 - x1 };
+  if (v.tren) y0 = Math.min(y1 - 1, y0 + lui); if (v.duoi) y1 = Math.max(y0 + 1, y1 - lui); if (v.trai) x0 = Math.min(x1 - 1, x0 + lui); if (v.phai) x1 = Math.max(x0 + 1, x1 - lui);
+  return Object.assign(v, { x0, y0, x1, y1, co: !!(v.tren || v.duoi || v.trai || v.phai) });
+}
+// Làm tấm nền ở độ nét N từ phần ảnh đã lấy f = { w, h, px }: thu về đúng (w × h) × N, giảm màu. Không đụng alpha: ảnh kín thì ra kín.
+function nenRa(f, N) {
+  const m = L.ds[0], TW = m.w * N, TH = m.h * N, o = thuNho(f, TW, TH);
+  giamMau(o, Math.max(2, +$('soMau').value));
+  const bm = bmGiam(o);
+  const cv = document.createElement('canvas'); cv.width = TW; cv.height = TH; cv.getContext('2d').putImageData(new ImageData(o, TW, TH), 0, 0);
+  const mau = new Set(); let dac = 0; for (let j = 0; j < o.length; j += 4) if (o[j + 3]) { dac++; mau.add((o[j] << 16) | (o[j + 1] << 8) | o[j + 2]); }
+  return { cv, w: TW, h: TH, px: o, soMau: mau.size, N, dac, rong: m.w, cao: m.h, bm };
+}
+function tepNen(O) { const m = L.ds[0], t = { loai: 'linh-khi-sprite', phien_ban: 1, ma: m.ma, ten: m.ten, doi_tuong: 'giao-dien', rong: m.w, cao: m.h }; if (O.N > 1) t.net = O.N; t.anh = O.cv.toDataURL('image/png'); return t; }
+function chayNen(tachMoi) {
+  if (tachMoi || !SEG || !SEG.laNen) { const A = layAnh(); SEG = { A, W: A.W, H: A.H, laNen: true, vien: vienNen(A) }; }
+  const A = SEG.A, v = SEG.vien, m = L.ds[0], c = chinhCua(0);
+  MAP = { theoMon: [null], thua: [], boRa: [], ghi: [], loi: [] }; KQ = [null];
+  if (!v || (v.x1 - v.x0) < A.W * 0.2 || (v.y1 - v.y0) < A.H * 0.1) MAP.loi.push('Không thấy phần tranh trong ảnh (ảnh gần như chỉ có màu hồng tím?)');
+  else {
+    // phần được lấy: 'cắt' = khung đúng tỉ lệ đích nằm trong phần tranh (dịch được bằng c.dx, c.dy ∈ [-0.5, 0.5]); 'kéo giãn' = cả phần tranh
+    const bw = v.x1 - v.x0 + 1, bh = v.y1 - v.y0 + 1, tl = m.w / m.h;
+    let sw = bw, sh = bh;
+    const sat = Math.abs(bw / bh / tl - 1) < 0.03; // tỉ lệ đã sát khung đích (ChatGPT giữ đúng hai dải): lấy hết phần tranh, không cắt, để vị trí không xê dịch
+    if (!c.gian && !sat) { if (bw / bh > tl) sw = Math.max(1, Math.round(bh * tl)); else sh = Math.max(1, Math.round(bw / tl)); }
+    const sx = v.x0 + Math.round((bw - sw) * (0.5 + (c.dx || 0))), sy = v.y0 + Math.round((bh - sh) * (0.5 + (c.dy || 0)));
+    const px = new Uint8ClampedArray(sw * sh * 4);
+    for (let y = 0; y < sh; y++) px.set(A.d.subarray(((sy + y) * A.W + sx) * 4, ((sy + y) * A.W + sx + sw) * 4), y * sw * 4);
+    const g = { x0: sx, y0: sy, x1: sx + sw - 1, y1: sy + sh - 1 };
+    MAP.theoMon = [g];
+    KQ = [{ g, src: { w: sw, h: sh, px }, hop: { bw, bh, sw, sh } }];
+    KQ[0].out = nenRa(KQ[0].src, NET());
+  }
+  veGoc(); hienKetQuaNen();
+}
+function hienKetQuaNen() {
+  const box = $('dsMon'); box.innerHTML = '';
+  const m = L.ds[0], K = KQ[0], O = K && K.out, N0 = NET(), c = chinhCua(0), v = SEG.vien, A = SEG.A, muc = [];
+  const b = document.createElement('div'); b.className = 'mon' + (K ? '' : ' thieu'); b.style.gridColumn = '1 / -1'; b.style.cursor = 'default'; b.style.minHeight = '0';
+  const cv = document.createElement('canvas'); cv.width = m.w; cv.height = m.h; cv.style.maxWidth = '720px'; if (O) { const x = cv.getContext('2d'); x.imageSmoothingEnabled = O.N > 1; x.drawImage(O.cv, 0, 0, m.w, m.h); }
+  b.innerHTML = `<b>${m.ten}</b>${O ? `<span class="tt ok">${O.rong}×${O.cao}${O.N > 1 ? ' · nét ×' + O.N : ' · nét thường'}</span>` : '<span class="tt loi">CHƯA CÓ</span>'}<small>${m.ma}</small>`; b.prepend(cv); box.appendChild(b);
+  MAP.loi.forEach((t) => muc.push([t, false]));
+  if (O) {
+    const dungCo = O.w === m.w * N0 && O.h === m.h * N0 && O.N === N0;
+    muc.push([`Ảnh ra đúng cỡ của game: ${m.w}×${m.h} điểm ảnh` + (N0 > 1 ? `, nét gấp đôi (ảnh ${O.w}×${O.h}, file ghi "net": 2)` : ', nét thường'), dungCo]);
+    const ho = O.w * O.h - O.dac;
+    muc.push([ho ? `Ảnh có ${ho} điểm trong suốt (trong game chỗ đó sẽ lộ ${L.id === 'nen-lang' ? 'nền cũ' : 'màu giấy'}). Cắt bớt mép hoặc nhờ ChatGPT vẽ kín` : 'Ảnh kín, không có chỗ trong suốt', !ho]);
+    const pt = (n, t) => Math.round((100 * n) / t);
+    muc.push([v.co ? `Đã tự bỏ dải hồng tím ở mép: trên ${pt(v.tren, A.H)}%, dưới ${pt(v.duoi, A.H)}%` + (v.trai || v.phai ? `, trái ${pt(v.trai, A.W)}%, phải ${pt(v.phai, A.W)}%` : '') + ' của ảnh' : 'Ảnh không có dải hồng tím ở mép: lấy cả tấm ảnh', true, 1]);
+    const h = K.hop, lech = (h.bw / h.bh) / (m.w / m.h), nhieu = lech > 1.06 || lech < 1 / 1.06;
+    if (c.gian) muc.push([`Đang KÉO GIÃN cho kín: lấy hết phần tranh` + (nhieu ? `, hình bị ${lech > 1 ? 'ép hẹp bề ngang' : 'ép thấp chiều cao'} khoảng ${Math.round((lech > 1 ? 1 - 1 / lech : 1 - lech) * 100)}%` : ', gần như không méo'), true, 1]);
+    else muc.push([`Đang CẮT giữ tỉ lệ: ` + (h.sw < h.bw ? `bỏ ${pt(h.bw - h.sw, h.bw)}% bề ngang phần tranh` : h.sh < h.bh ? `bỏ ${pt(h.bh - h.sh, h.bh)}% chiều cao phần tranh` : 'phần tranh đã đúng tỉ lệ, lấy hết, không bỏ gì') + (nhieu ? '. Phần bị bỏ khá nhiều: ChatGPT có thể đã không giữ đúng bố cục ảnh tham chiếu; soát kỹ ở bước 4, thử "Kéo giãn cho kín" hoặc nhờ vẽ lại' : ''), true, 1]);
+    muc.push([`Số màu sau khi giảm: ${O.soMau}`, true, 1]);
+    try { muc.push([`Tệp nặng khoảng ${Math.round(JSON.stringify(tepNen(O)).length / 1024)} KB (${N0 > 1 ? 'nét gấp đôi' : 'nét thường'})` + (L.chiThuong ? '' : '. Nền nên dùng bản nét thường cho nhẹ'), true, 1]); } catch (e) { /* bỏ qua */ }
+    bmMuc(muc, [O.bm], 1);
+    muc.push([L.id === 'nen-lang' ? 'Tự soát ở bước 4: bật "Hiện chỗ không đi được" và "Chồng mờ nền cũ" xem sông, ao, đường, sân đình, cầu có đúng chỗ không' : 'Tự soát ở bước 4: bật "Hiện vị trí 15 ải" xem rừng, hang biển, lâu đài có nằm đúng dưới các ải không', true, 1]);
+  }
+  const dat = !!O && !muc.some((q) => !q[1]);
+  $('dsKiem').innerHTML = muc.map(([t, ok, ghi]) => `<li class="${ok ? (ghi ? 'ghi' : '') : 'loi'}">${t}</li>`).join('');
+  $('theKq').className = 'the ' + (dat ? 'dat' : 'hong'); $('theKq').textContent = dat ? 'ĐẠT' : 'CÓ LỖI';
+  $('dangCho').textContent = L.ten;
+  $('nutTaiZip').textContent = `Tải tệp ${m.ma} (.zip)`; $('nutTaiZip').disabled = !O;
+  $('huongDan').textContent = L.chiThuong ? 'Trong .zip có 1 tệp nét thường. Gửi tệp .zip cho Claude để đưa vào game.' : 'Trong .zip có 2 tệp: ' + m.ma + '.sprite.json (nét thường, KHUYÊN DÙNG cho nền vì nhẹ) và ' + m.ma + '.net2.sprite.json (nét gấp đôi, nặng gấp ba bốn lần). Gửi tệp .zip cho Claude để đưa vào game.';
+  CHON = -1; $('khoiMon').classList.add('an'); $('khoiNen').hidden = !O;
+  $('nutKieuVua').textContent = c.gian ? 'Cắt bớt, giữ tỉ lệ' : 'Kéo giãn cho kín';
+  $('buoc3').hidden = false; $('buoc4').hidden = false;
+  napGame(); dangKy(); veXem();
+}
+$('nutKieuVua').onclick = () => { const c = chinhCua(0); c.gian = !c.gian; chayNen(false); };
+const dichNen = (dx, dy) => { const c = chinhCua(0), K = KQ[0]; if (!K || c.gian) { bao('Đang kéo giãn cho kín: không có gì để dịch'); return; } if ((dx && K.hop.sw >= K.hop.bw) || (dy && K.hop.sh >= K.hop.bh)) { bao('Chiều này không bị cắt nên không dịch được'); return; } c.dx = Math.max(-0.5, Math.min(0.5, (c.dx || 0) + dx * 0.1)); c.dy = Math.max(-0.5, Math.min(0.5, (c.dy || 0) + dy * 0.1)); chayNen(false); };
+$('nutNenTrai').onclick = () => dichNen(-1, 0); $('nutNenPhai').onclick = () => dichNen(1, 0); $('nutNenLen').onclick = () => dichNen(0, -1); $('nutNenXuong').onclick = () => dichNen(0, 1);
+$('nutNenGiua').onclick = () => { const c = chinhCua(0); c.dx = c.dy = 0; chayNen(false); };
+
 // ===================== CHẠY =====================
 function chay(tachMoi) {
-  if (tachMoi || !SEG) {
+  if (laNen()) { chayNen(tachMoi); return; }
+  if (tachMoi || !SEG || SEG.laNen) {
     const A = layAnh();
     let trong = 0; for (let y = 0; y < A.H; y += 7) for (let x = 0; x < A.W; x += 7) if (A.d[(y * A.W + x) * 4 + 3] < 128) trong++;
     const S = tachNen(A, trong > 50, L.cot, L.hang);
@@ -974,7 +1149,7 @@ function veGoc() {
   LAST = { W: A.W, H: A.H, ds: [...MAP.theoMon.filter(Boolean), ...MAP.thua], boRa: MAP.boRa };
 }
 $('cvGoc').addEventListener('click', (e) => {
-  if (!LAST) return;
+  if (!LAST || laNen()) return;
   const r = $('cvGoc').getBoundingClientRect(), x = ((e.clientX - r.left) / r.width) * LAST.W, y = ((e.clientY - r.top) / r.height) * LAST.H;
   const trong = (f) => x >= f.x0 && x <= f.x1 && y >= f.y0 && y <= f.y1;
   const daBo = LAST.boRa.find(trong);
@@ -993,7 +1168,7 @@ function veVuaO(cv, src, nen) { // vẽ hình vừa trong canvas; phóng to thì
   g.imageSmoothingEnabled = k < 1; g.drawImage(src, Math.round((w - src.width * k) / 2), Math.round((h - src.height * k) / 2), Math.round(src.width * k), Math.round(src.height * k));
 }
 function hienKetQua() {
-  const box = $('dsMon'); box.innerHTML = '';
+  const box = $('dsMon'); box.innerHTML = ''; $('khoiNen').hidden = true; $('huongDan').textContent = HUONG_DAN;
   const thieu = [], bo = [], muc = [], N0 = NET(), vat = L.kieu === 'vat';
   L.ds.forEach((m, i) => {
     const K = KQ[i], c = chinhCua(i);
@@ -1042,6 +1217,7 @@ function hienKetQua() {
   $('buoc4').hidden = !L.xem;
   if (L.xem) { napGame(); dangKy(); veXem(); }
 }
+const HUONG_DAN = $('huongDan').textContent;
 const coToiDa = () => (L.kieu === 'vat' ? CO_MAX : 1), coToiThieu = () => (L.kieu === 'vat' ? CO_MIN : 0.4);
 // làm lại hình đang chọn sau khi đổi cỡ; hình nào "theo" nó (gà mổ theo gà đứng) cũng làm lại; lô dải khung thì cả 3 khung đổi cùng lúc
 const lamLai = () => { if (laDai()) { lamDai(); return; } lamMon(CHON); L.ds.forEach((m, i) => { if (m.theo === L.ds[CHON].ma && KQ[i]) lamMon(i); }); };
@@ -1054,6 +1230,7 @@ $('nutBo').onclick = () => { if (CHON < 0) return; const c = chinhCua(CHON); c.b
 // G.villageScene.veTinh(bút, { t, k, ngay, nguoi }) vẽ cả cảnh làng 720×270 đứng yên; G.villageScene.nhaLang() cho biết chỗ 6 công trình.
 const NGUON_GAME = ['xuong-sprite.html', '../xuong-sprite/index.html', '../../game/dist/xuong-sprite.html'];
 let GAME = null, dangNap = false, hetNguon = false, SO_CODE = false, XEM_NGAY = false, XEM_VUNG = false, GAN = 'dinh', NHA = [], VAT = [];
+let XEM_CHINEN = false, XEM_CHONG = false, XEM_DEM = false, XEM_AI = false; // D3: chỉ xem nền, chồng mờ nền cũ (lô nền làng); màu đêm, vị trí 15 ải (lô tranh bản đồ)
 const DK = {}; // mã -> tệp đang đăng ký trong game xem thử
 function napGame() {
   if (GAME || dangNap || hetNguon) return; dangNap = true;
@@ -1132,7 +1309,11 @@ function dongBo() {
 }
 const TEN_NHA = { cong: 'Cổng làng', dinh: 'Đình', 'cay-da': 'Cây đa', 'lo-ren': 'Lò rèn', 'hang-xen': 'Hàng xén', 'nha-may': 'Nhà may' };
 // Các hình xem gần được của lô đang chọn: lô công trình = 6 công trình; lô đạo cụ = 12 hình; lô dải khung = chính hình đó.
+// D3 · lô nền làng: các góc làng để xem gần (tâm vùng xem, theo điểm ảnh làng)
+const DIEM_NEN = [['cong', 'Cổng làng', 64, 86], ['san-dinh', 'Sân đình', 196, 133], ['ao-sen', 'Ao sen', 92, 220], ['gieng', 'Giếng', 296, 190], ['duong-chinh', 'Đường chính', 410, 160], ['ben-do', 'Bến đò', 640, 160], ['bo-song', 'Bờ sông dưới', 640, 222]];
 function dsGan() {
+  if (L.id === 'nen-lang') return DIEM_NEN.map((q) => ({ ten: q[0], nhan: q[1], ax: q[2], ay: q[3] + 38, x: q[2], y: q[3], w: 0, h: 0, goc: true }));
+  if (L.id === 'ban-do-vung') return [];
   if (L.id === 'cong-trinh') return NHA.map((n) => Object.assign({ nhan: TEN_NHA[n.ten] || n.ten }, n));
   if (laDai()) return VAT.filter((v) => v.ten === L.vat).map((v) => Object.assign({ nhan: L.tenTep, nho: true }, v));
   return L.ds.map((m) => { const v = VAT.find((q) => q.ten === m.vat); return v ? Object.assign({ nhan: m.ten, nho: true }, v) : null; }).filter(Boolean);
@@ -1141,7 +1322,8 @@ function ganDau() { const ds = dsGan(); if (ds.length && !ds.some((n) => n.ten =
 function veNutGan() {
   const box = $('nutGan'); box.innerHTML = '';
   const ds = dsGan();
-  $('chuGan').textContent = !ds.length ? (GAME ? 'Bản game trên mạng chưa có phần này (chờ vài phút cho bản mới đăng xong rồi tải lại trang).' : 'Đang nạp game…') : ds[0].nho ? 'Xem gần từng hình (phóng to 8 lần). Chọn hình:' : 'Xem gần từng công trình (phóng to 4 lần). Chọn công trình:';
+  if (L.id === 'ban-do-vung') { $('chuGan').textContent = ''; return; }
+  $('chuGan').textContent = ds.length && ds[0].goc ? 'Xem gần một góc làng (phóng to 4 lần). Chọn chỗ:' : !ds.length ? (GAME ? 'Bản game trên mạng chưa có phần này (chờ vài phút cho bản mới đăng xong rồi tải lại trang).' : 'Đang nạp game…') : ds[0].nho ? 'Xem gần từng hình (phóng to 8 lần). Chọn hình:' : 'Xem gần từng công trình (phóng to 4 lần). Chọn công trình:';
   for (const n of ds) {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'nut phu nho' + (n.ten === GAN ? ' chon' : ''); b.textContent = n.nhan; b.setAttribute('aria-pressed', n.ten === GAN);
     b.onclick = () => { GAN = n.ten; veNutGan(); veXem(); const cu = $('cuonLang'), cv = $('cvLang'); cu.scrollLeft = Math.max(0, (n.ax / 720) * cv.clientWidth - cu.clientWidth / 2); };
@@ -1154,31 +1336,81 @@ function veVungLang(cv, x, y, w, h, k, o) {
   if (cv.width !== w * k) cv.width = w * k; if (cv.height !== h * k) cv.height = h * k;
   const c = cv.getContext('2d'); c.setTransform(k, 0, 0, k, -x * k, -y * k); c.imageSmoothingEnabled = false; c.globalAlpha = 1; c.globalCompositeOperation = 'source-over';
   VS.veTinh(c, Object.assign({ k }, o));
+  if (o && o.chong) { // D3: dán mờ nền CODE lên trên ảnh nền đang xem để thấy đường, sân, ao, sông lệch bao nhiêu
+    const SC = GAME.spriteCustom, gd = SC.gd; SC.gd = {};
+    try { c.globalAlpha = 0.5; VS.veTinh(c, { k, ngay: o.ngay, chiNen: true }); } finally { SC.gd = gd; c.globalAlpha = 1; }
+  }
   if (o && o.vung) {
     c.fillStyle = 'rgba(255,60,40,0.38)';
     for (let yy = Math.floor(y / 2) * 2; yy < y + h; yy += 2) for (let xx = Math.floor(x / 2) * 2; xx < x + w; xx += 2) if (VS.blocked(xx + 1, yy + 1)) c.fillRect(xx, yy, 2, 2);
-    c.strokeStyle = '#fff0c4'; c.lineWidth = 1 / k * 2; c.setLineDash([3, 2]);
-    for (const n of NHA.concat(VAT)) c.strokeRect(n.x, n.y, n.w, n.h);
-    c.setLineDash([]);
+    if (o.vung !== 'do') {
+      c.strokeStyle = '#fff0c4'; c.lineWidth = 1 / k * 2; c.setLineDash([3, 2]);
+      for (const n of NHA.concat(VAT)) c.strokeRect(n.x, n.y, n.w, n.h);
+      c.setLineDash([]);
+    }
   }
+  c.setTransform(1, 0, 0, 1, 0, 0);
+}
+// D3 · vị trí 15 ải trên tranh bản đồ (toạ độ tranh 480×270, lấy từ G.villageScene.MAP của game). day = true: thêm các chỗ game phủ lên tranh.
+function veAi(c, VS, day) {
+  const M = VS.MAP, muc = '#4a2a18';
+  for (let r = 0; r < 3; r++) { // đường nét đứt nối các ải, y như js/village.js
+    const n = M.nodes[r];
+    VS.mapDash(c, M.from[r], n[0], muc); if (r === 2) VS.mapDash(c, M.nodes[1][4], n[0], muc);
+    for (let i = 0; i < 4; i++) VS.mapDash(c, n[i], n[i + 1], muc);
+  }
+  c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineWidth = 1;
+  for (let r = 0; r < 3; r++) for (let i = 0; i < 5; i++) {
+    const q = M.nodes[r][i], trum = i === 4, rad = trum ? 12 : 10;
+    c.beginPath(); c.arc(q[0], q[1], rad, 0, 6.2832); c.fillStyle = day ? (trum ? 'rgba(255,150,50,0.6)' : 'rgba(255,240,196,0.6)') : (trum ? '#ff9632' : '#fff0c4'); c.fill(); c.strokeStyle = '#1a120a'; c.stroke();
+    c.fillStyle = '#1a120a'; c.font = 'bold ' + (trum ? 12 : 10) + 'px system-ui, sans-serif'; c.fillText(String(i + 1), q[0], q[1] + 0.5);
+  }
+  if (!day) return;
+  c.setLineDash([3, 2]); c.strokeStyle = '#1a120a'; c.fillStyle = '#1a120a'; c.font = 'bold 7px system-ui, sans-serif';
+  const o = (x, y, w, h, t) => { c.strokeRect(x + 0.5, y + 0.5, w, h); c.fillText(t, x + w / 2, y + h / 2); };
+  o(248, 206, 226, 60, 'bảng thông tin ải'); o(4, 190, 76, 76, 'người lái đò'); o(404, 7, 68, 18, 'nút Về làng');
+  for (const q of M.names) o(q[0] - 26, q[1] - 10, 52, 13, 'tên vùng');
+  for (const q of M.soon) o(q[1] - 20, q[2] - 9, 40, 12, 'tên vùng');
+  c.setLineDash([]);
+}
+function veBanDo() {
+  const VS = GAME.villageScene, cv = $('cvBanDo'), k = 2;
+  if (!VS.mapArt || !VS.MAP) { $('ttXem').textContent = 'Bản game trên mạng chưa có phần này (chờ vài phút cho bản mới đăng xong rồi tải lại trang).'; return; }
+  if (cv.width !== 480 * k) { cv.width = 480 * k; cv.height = 270 * k; }
+  const c = cv.getContext('2d'); c.setTransform(k, 0, 0, k, 0, 0); c.imageSmoothingEnabled = false; c.globalAlpha = 1;
+  c.drawImage(VS.mapArt(XEM_DEM), 0, 0);
+  if (XEM_AI) veAi(c, VS, true);
   c.setTransform(1, 0, 0, 1, 0, 0);
 }
 function veXem() {
   if (!GAME || $('buoc4').hidden) return;
-  const SC = GAME.spriteCustom, FA = GAME.fxAnh, gdThat = SC.gd, huThat = FA && FA.ds, o = { t: performance.now() / 1000, ngay: XEM_NGAY, vung: XEM_VUNG };
+  const banDo = L.id === 'ban-do-vung', nenLang = L.id === 'nen-lang';
+  $('khoiXemLang').hidden = banDo; $('khoiXemBanDo').hidden = !banDo; $('nutNgay').hidden = $('nutVung').hidden = banDo; $('nutDem').hidden = $('nutAi').hidden = !banDo;
+  $('nutChiNen').hidden = $('nutChong').hidden = !nenLang; $('chuNenLang').hidden = !nenLang; $('chuXemVat').hidden = nenLang;
+  $('tieuDe4').textContent = banDo ? 'Xem thử trên tranh bản đồ ải của game' : 'Xem thử trong cảnh làng của game';
+  const SC = GAME.spriteCustom, FA = GAME.fxAnh, gdThat = SC.gd, huThat = FA && FA.ds, o = { t: performance.now() / 1000, ngay: XEM_NGAY, vung: XEM_VUNG, chiNen: nenLang && (XEM_CHINEN || XEM_CHONG), chong: nenLang && XEM_CHONG && !SO_CODE };
   if (SO_CODE) { SC.gd = {}; if (FA) FA.ds = {}; }
   try {
-    const ds = dsGan(), n = ds.find((q) => q.ten === GAN) || ds[0];
+    if (banDo) veBanDo();
+    const ds = banDo ? [] : dsGan(), n = ds.find((q) => q.ten === GAN) || ds[0];
     // công trình: vùng 180×120 phóng 4 lần; đạo cụ nhỏ: vùng 90×60 phóng 8 lần, hình nằm giữa
     if (n && n.nho) { const gw = 90, gh = 60, cy = n.y + n.h / 2; veVungLang($('cvGan'), Math.round(Math.max(0, Math.min(720 - gw, n.ax - gw / 2))), Math.round(Math.max(0, Math.min(270 - gh, cy - gh / 2))), gw, gh, 8, o); }
     else if (n) { const gw = 180, gh = 120; veVungLang($('cvGan'), Math.round(Math.max(0, Math.min(720 - gw, n.ax - gw / 2))), Math.round(Math.max(0, Math.min(270 - gh, n.ay - gh + 22))), gw, gh, 4, o); }
-    veVungLang($('cvLang'), 0, 0, 720, 270, 2, o);
+    if (!banDo) veVungLang($('cvLang'), 0, 0, 720, 270, 2, o);
   } catch (e) { $('ttXem').textContent = 'Không vẽ thử được: ' + e.message; }
   SC.gd = gdThat; if (FA) FA.ds = huThat;
   $('nutSoCode').textContent = SO_CODE ? 'Xem lại ảnh của bạn' : 'Xem bản vẽ code (cũ)';
   $('nutNgay').textContent = XEM_NGAY ? 'Xem màu chạng vạng (như trong game)' : 'Xem màu ban ngày';
   $('nutVung').textContent = XEM_VUNG ? 'Ẩn chỗ không đi được' : 'Hiện chỗ không đi được';
+  $('nutChiNen').textContent = XEM_CHINEN || XEM_CHONG ? 'Hiện lại nhà, người' : 'Chỉ xem nền (ẩn nhà, người)'; $('nutChiNen').disabled = XEM_CHONG;
+  $('nutChong').textContent = XEM_CHONG ? 'Thôi chồng nền cũ' : 'Chồng mờ nền cũ để soi lệch';
+  $('nutDem').textContent = XEM_DEM ? 'Xem màu ngày (độ khó thường)' : 'Xem màu đêm (độ khó 2)';
+  $('nutAi').textContent = XEM_AI ? 'Ẩn vị trí 15 ải' : 'Hiện vị trí 15 ải';
 }
+$('nutChiNen').onclick = () => { XEM_CHINEN = !XEM_CHINEN; veXem(); };
+$('nutChong').onclick = () => { XEM_CHONG = !XEM_CHONG; veXem(); };
+$('nutDem').onclick = () => { XEM_DEM = !XEM_DEM; veXem(); };
+$('nutAi').onclick = () => { XEM_AI = !XEM_AI; veXem(); };
 $('nutSoCode').onclick = () => { SO_CODE = !SO_CODE; veXem(); };
 $('nutNgay').onclick = () => { XEM_NGAY = !XEM_NGAY; veXem(); };
 $('nutVung').onclick = () => { XEM_VUNG = !XEM_VUNG; veXem(); };
@@ -1231,6 +1463,16 @@ function taoThamChieu() {
           TC[l.id] = [anh(luoiThamChieu(l, v.khung, l.nen === 'xanh' ? '#0000ff' : ''), `${v.khung.length} khung hình hiện tại của ${l.tenTep.toLowerCase()} (đã phóng to), đúng thứ tự`, 'lang-' + l.id + '-tham-chieu.png')];
         }
       }
+    }
+    // D3 · hai tấm kín: ảnh tham chiếu 3:2 (1440×960), phần tranh là dải giữa, hai dải hồng tím trên dưới (ChatGPT vẽ ảnh 3:2; công cụ dựa vào hai dải để cắt).
+    const hop = (src) => { const cc = document.createElement('canvas'); cc.width = 1440; cc.height = 960; const gg = cc.getContext('2d'); gg.imageSmoothingEnabled = false; gg.fillStyle = '#ff00ff'; gg.fillRect(0, 0, 1440, 960); const hh = Math.round((1440 * src.height) / src.width); gg.drawImage(src, 0, Math.round((960 - hh) / 2), 1440, hh); return cc; };
+    const n1 = document.createElement('canvas'); veVungLang(n1, 0, 0, 720, 270, 2, { ngay: true, chiNen: true, t: 0 });
+    const n2 = document.createElement('canvas'); veVungLang(n2, 0, 0, 720, 270, 2, { ngay: true, nguoi: false, conVat: false, t: 0, vung: 'do' });
+    TC['nen-lang'] = [anh(hop(n1), 'nền làng hiện tại, không nhà, không người: thứ cần vẽ lại', 'lang-nen-tham-chieu-1-nen.png'), anh(hop(n2), 'cùng cảnh khi game đã đặt nhà; phủ đỏ mờ là chỗ không đi được (chỉ để hiểu bố cục)', 'lang-nen-tham-chieu-2-bo-cuc.png')];
+    if (VS.mapArt && VS.MAP) {
+      const t = VS.mapArt(false), b1 = document.createElement('canvas'), b2 = document.createElement('canvas');
+      for (const b of [b1, b2]) { b.width = 1440; b.height = 810; const x = b.getContext('2d'); x.imageSmoothingEnabled = false; x.setTransform(3, 0, 0, 3, 0, 0); x.drawImage(t, 0, 0); if (b === b2) veAi(x, VS, false); }
+      TC['ban-do-vung'] = [anh(hop(b1), 'tranh bản đồ hiện tại: thứ cần vẽ lại', 'ban-do-vung-tham-chieu-1-tranh.png'), anh(hop(b2), 'tranh đó có thêm 15 chấm ải và đường nối (chỉ để biết vị trí)', 'ban-do-vung-tham-chieu-2-vi-tri-ai.png')];
     }
   } catch (e) { $('ttThamChieu').textContent = 'Không dựng được ảnh tham chiếu: ' + e.message; }
   SC.gd = gdThat; if (FA) FA.ds = huThat;
@@ -1302,7 +1544,25 @@ async function taiDai() {
     bao('Đã tải 2 tệp: ' + L.ma + '.sprite.json (nét cao) và ' + L.ma + '.thuong.sprite.json (thường)');
   }
 }
+// D3 · lô 'nen': <mã>.sprite.json = nét THƯỜNG (khuyên dùng cho nền); lô không ghi chiThuong có thêm <mã>.net2.sprite.json (nét gấp đôi, khi ảnh gốc đủ to).
+async function taiNen() {
+  const K = KQ[0]; if (!K || !K.out) return;
+  const m = L.ds[0], lam = (N) => JSON.stringify(tepNen(K.out.N === N ? K.out : nenRa(K.src, N)));
+  const thuong = lam(1), duTo = K.src.w >= m.w * 1.8, gap = L.chiThuong || !duTo ? '' : lam(2);
+  const ghi = gap ? ' (bản nét thường + bản nét gấp đôi)' : L.chiThuong ? '' : ' (chỉ có bản nét thường: ảnh gốc không đủ to để làm nét gấp đôi)';
+  try {
+    const JSZip = await napJSZip(), z = new JSZip();
+    z.file(m.ma + '.sprite.json', thuong); if (gap) z.file(m.ma + '.net2.sprite.json', gap);
+    taiXuong(m.ma + '.zip', await z.generateAsync({ type: 'blob', compression: 'DEFLATE' }));
+    bao('Đã tải ' + m.ma + '.zip' + ghi);
+  } catch (e) {
+    taiXuong(m.ma + '.sprite.json', new Blob([thuong], { type: 'application/json' }));
+    if (gap) setTimeout(() => taiXuong(m.ma + '.net2.sprite.json', new Blob([gap], { type: 'application/json' })), 800);
+    bao('Đã tải ' + m.ma + '.sprite.json' + ghi);
+  }
+}
 $('nutTaiZip').onclick = async () => {
+  if (laNen()) { $('nutTaiZip').disabled = true; try { await taiNen(); } finally { $('nutTaiZip').disabled = false; } return; }
   if (laDai()) { $('nutTaiZip').disabled = true; try { await taiDai(); } finally { $('nutTaiZip').disabled = !DAI; } return; }
   const ds = L.ds.map((m, i) => i).filter((i) => KQ[i] && !chinhCua(i).bo);
   if (!ds.length) return;
