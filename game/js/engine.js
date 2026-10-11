@@ -496,7 +496,7 @@
   };
   G.time = 0;
   const STEP = 1 / 60;
-  let last = 0, acc = 0;
+  let last = 0, acc = 0, daVe = false;
   G.tick = function () {
     G.time += STEP;
     if (G.scene) G.scene.update(STEP);
@@ -516,6 +516,7 @@
       ui.begin();
       G.scene.draw();
       if (G.theme && G.theme.endFrame) G.theme.endFrame(); // tên biểu tượng tài nguyên khi chạm vào
+      if (!daVe) { daVe = true; try { const el = document.getElementById('lk-tai'); if (el) el.remove(); } catch (e) { /* bỏ qua */ } } // Đợt 1: khung hình đầu đã vẽ xong → gỡ màn hình tải (index.html)
       if (G.portrait) {
         ui.text('Xoay ngang điện thoại để hình to và dễ chơi hơn', 240, -10, { size: 13, align: 'center', color: '#ffd27a' });
       }

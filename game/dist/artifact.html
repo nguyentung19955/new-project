@@ -35,13 +35,25 @@
   #stage { position: relative; outline: 1px solid var(--frame); background: #000; max-width: 100%; }
   #world { position: absolute; inset: 0; width: 100%; height: 100%; display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
   #ui { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+  /* Màn hình tải (Đợt 1): khối tĩnh hiện ngay khi trang vừa về, trước cả khi mã game tải xong. Chỉ CSS, không ảnh.
+     Bản gom một tệp không đo được tiến độ thật nên vạch chỉ chạy qua lại. js/engine.js gỡ khối này khi vẽ xong khung hình đầu. */
+  #lk-tai { position: fixed; inset: 0; z-index: 5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: var(--bg); pointer-events: none; }
+  #lk-tai b { font-size: 34px; font-weight: 700; letter-spacing: 0.14em; color: var(--accent); text-shadow: 0 3px 0 #1a120a; }
+  #lk-tai span { font-size: 14px; font-weight: 500; color: var(--fg); opacity: 0.85; }
+  #lk-tai .en, #lk-tai.en .vi { display: none; }
+  #lk-tai.en .en { display: inline; }
+  #lk-tai i { display: block; width: 180px; max-width: 60%; height: 6px; border: 1px solid var(--frame); border-radius: 4px; background: #1d1518; overflow: hidden; position: relative; }
+  #lk-tai i::after { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 36%; border-radius: 3px; background: var(--accent); animation: lk-tai-chay 1.1s ease-in-out infinite alternate; }
+  @keyframes lk-tai-chay { from { transform: translateX(-20%); } to { transform: translateX(198%); } }
 </style>
 <div id="shell"><div id="fit"><div id="stage">
   <canvas id="world" width="480" height="270" aria-label="Màn hình game Linh Khí"></canvas>
 </div><canvas id="ui"></canvas></div></div>
+<!-- Màn hình tải: nằm TRƯỚC mọi thẻ script nên hiện ngay. Chữ theo ngôn ngữ đã chọn trong game (linhkhi_lang), chưa chọn thì theo máy; mặc định tiếng Việt. -->
+<div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.11-0809";
+(window.G = window.G || {}).VERSION = "lk-2026.10.11-0810";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -2448,7 +2460,7 @@
   };
   G.time = 0;
   const STEP = 1 / 60;
-  let last = 0, acc = 0;
+  let last = 0, acc = 0, daVe = false;
   G.tick = function () {
     G.time += STEP;
     if (G.scene) G.scene.update(STEP);
@@ -2468,6 +2480,7 @@
       ui.begin();
       G.scene.draw();
       if (G.theme && G.theme.endFrame) G.theme.endFrame(); // tên biểu tượng tài nguyên khi chạm vào
+      if (!daVe) { daVe = true; try { const el = document.getElementById('lk-tai'); if (el) el.remove(); } catch (e) { /* bỏ qua */ } } // Đợt 1: khung hình đầu đã vẽ xong → gỡ màn hình tải (index.html)
       if (G.portrait) {
         ui.text('Xoay ngang điện thoại để hình to và dễ chơi hơn', 240, -10, { size: 13, align: 'center', color: '#ffd27a' });
       }

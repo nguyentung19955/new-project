@@ -1,0 +1,40 @@
+{
+ "truoc": {
+  "first-paint": 184,
+  "game": 37126,
+  "first-contentful-paint": 37032,
+  "commit_s": 0.18,
+  "wall_s": 37.26,
+  "conTai": false
+ },
+ "sau": {
+  "tai": 175,
+  "first-paint": 192,
+  "first-contentful-paint": 192,
+  "game": 37367,
+  "taiXong": 37367,
+  "commit_s": 0.17,
+  "wall_s": 37.37,
+  "conTai": false
+ },
+ "sau-en": {
+  "tai": 177,
+  "first-paint": 192,
+  "first-contentful-paint": 192,
+  "game": 37099,
+  "taiXong": 37099,
+  "commit_s": 0.17,
+  "wall_s": 37.17,
+  "conTai": false
+ },
+ "sau-khong-nen": {
+  "tai": 184,
+  "first-paint": 196,
+  "first-contentful-paint": 196,
+  "game": 56759,
+  "taiXong": 56760,
+  "commit_s": 0.17,
+  "wall_s": 56.78,
+  "conTai": false
+ }
+}
