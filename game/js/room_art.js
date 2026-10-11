@@ -61,6 +61,50 @@
     c.drawImage(a.img, 0, h0 * n, a.pw, (h1 - h0) * n, x, y + h0, w, h1 - h0);
     c.restore();
   }
+  // ---------- Ảnh AI của đồ trang trí phòng (tools/tach-phong, phiên A3): gd-tt-<rung|bien|lau>-<tên>, và dải lửa hu-lua-duoc ----------
+  // Cũng như cửa: ảnh nét gấp đôi KHÔNG vẽ vào nền dựng sẵn mà ghi thành lệnh vẽ sống (vỏ phòng: shell.tt, chạy mỗi khung ngay sau nền phòng,
+  // dưới nhân vật). Riêng thảm (nằm phẳng trên sàn, dưới dấu sàn và ánh sáng) thì thu về cỡ game rồi vẽ vào nền như sàn.
+  // Bóng dưới chân, quầng sáng, bóng đổ, đom đóm, lấp lánh, gợn nước vẫn do code vẽ. Không có tệp thì mọi chỗ chạy code y như cũ.
+  // ttChon: lấy ảnh của một trong các biến thể (ưu tiên biến thể thứ i, thiếu thì lấy biến thể khác đang có); không có cái nào → null.
+  function ttChon(vung, ds, i) {
+    const n = ds.length; i = Math.abs(i | 0);
+    for (let k = 0; k < n; k++) { const a = gdA('gd-tt-' + vung + '-' + ds[(i + k) % n]); if (a) return a; }
+    return null;
+  }
+  // ttVe: vẽ ảnh với GIỮA ĐÁY ảnh đặt tại (x, yb). h0..h1: chỉ vẽ dải ngang (xem veAnh).
+  function ttVe(a, x, yb, lat, h0, h1) { song(() => veAnh(a, x - a.pw / a.net / 2, yb - a.ph / a.net, lat, h0, h1)); }
+  // ttMot: có ảnh gd-tt-<vùng>-<tên> (tên là mảng thì chọn biến thể theo i) thì vẽ giữa đáy tại (x, yb) và trả về ảnh; không có thì trả về null.
+  function ttMot(vung, ten, x, yb, i) {
+    const a = Array.isArray(ten) ? ttChon(vung, ten, i) : gdA('gd-tt-' + vung + '-' + ten);
+    if (a) ttVe(a, x, yb);
+    return a;
+  }
+  const ttNhoNho = new WeakMap(); // ảnh -> bản thu về cỡ game (để vẽ vào nền dựng sẵn)
+  function ttNho(a) {
+    let o = ttNhoNho.get(a);
+    if (!o || o.img !== a.img) {
+      const w = Math.max(1, Math.round(a.pw / a.net)), h = Math.max(1, Math.round(a.ph / a.net)), x = mk(w, h);
+      x.imageSmoothingEnabled = a.pw !== w || a.ph !== h;
+      x.drawImage(a.img, 0, 0, a.pw, a.ph, 0, 0, w, h);
+      o = { img: a.img, cv: x.canvas };
+      ttNhoNho.set(a, o);
+    }
+    return o.cv;
+  }
+  // Dải lửa đuốc/nến hu-lua-duoc (kiểu hieu-ung: 3 khung 8×12, neo giữa đáy). Trang công cụ đưa bản xem thử qua G.roomArt.luaThu.
+  function luaAnh() {
+    const F = G.fxAnh, a = F && F.get ? F.get('hu-lua-duoc') : null;
+    return a || (G.roomArt && G.roomArt.luaThu) || null;
+  }
+  // Vẽ một khung lửa: điểm neo của dải đặt tại (x, yb); co: hệ số cỡ (nến = 0,5); lech: lệch nhịp để các ngọn lửa không nháy cùng lúc.
+  function veLua(a, x, yb, co, t, lech) {
+    const so = a.so || 1, f = ((Math.floor((t / (a.giay || 0.33)) * so + lech) % so) + so) % so, n = a.net || 1, cot = a.cot || so;
+    const m = c.getTransform ? c.getTransform() : null, k = m ? Math.hypot(m.a, m.b) : 1;
+    c.save();
+    c.imageSmoothingEnabled = k * co < n - 0.01;
+    c.drawImage(a.img, (f % cot) * a.fw * n, Math.floor(f / cot) * a.fh * n, a.fw * n, a.fh * n, bam(x - a.ax * co), bam(yb - a.ay * co), a.fw * co, a.fh * co);
+    c.restore();
+  }
   // Ổ khóa đỏ: dấu hiệu cửa đang khóa.
   function padlock(x, y) {
     const a = gdA('gd-cua-o-khoa'); // ảnh AI: giữa ảnh theo chiều ngang là x, đáy ảnh là đáy ổ khoá code (y + 5)
@@ -165,15 +209,21 @@
     red: '#7a2a2a', redD: '#4e1c20', gold: '#c89a3a', floor: '#4f4745', light: '#ffc878', cap: '#3a3031', capL: '#4c4041', capD: '#2a2223',
   };
   function torch(x, y, g) {
-    if (g && g.lights) g.lights.push({ k: 'torch', x, y });
+    // ảnh AI gd-tt-lau-duoc: giá đuốc KHÔNG có lửa, giữa đáy ảnh = đáy cán đuốc code (y + 9); ngọn lửa mọc từ đỉnh ảnh
+    const a = gdA('gd-tt-lau-duoc'), yl = a ? Math.round(y + 9 - a.ph / a.net) : y;
+    if (g && g.lights) g.lights.push({ k: 'torch', x, y: yl });
     glow(x, y - 4, 26, 20, '#ff9a40', 0.07, 4);
-    r(x - 1, y, 2, 9, K.iron); r(x - 3, y, 6, 2, K.ironL); r(x - 2, y + 2, 4, 1, K.iron);
-    r(x - 2, y - 5, 4, 5, '#ff7a2a'); r(x - 1, y - 8, 2, 4, '#ff7a2a'); r(x - 1, y - 4, 2, 4, '#ffd23f'); r(x, y - 6, 1, 2, '#ffd23f'); r(x, y - 2, 1, 2, '#fff3b0');
-    r(x + 1, y - 10, 1, 1, '#ffd23f');
+    if (a) ttVe(a, x, y + 9);
+    else { r(x - 1, y, 2, 9, K.iron); r(x - 3, y, 6, 2, K.ironL); r(x - 2, y + 2, 4, 1, K.iron); }
+    if (!luaAnh()) { // có dải lửa hu-lua-duoc thì lớp sống vẽ cả ngọn lửa, không cần phần lửa đứng yên này
+      r(x - 2, yl - 5, 4, 5, '#ff7a2a'); r(x - 1, yl - 8, 2, 4, '#ff7a2a'); r(x - 1, yl - 4, 2, 4, '#ffd23f'); r(x, yl - 6, 1, 2, '#ffd23f'); r(x, yl - 2, 1, 2, '#fff3b0');
+      r(x + 1, yl - 10, 1, 1, '#ffd23f');
+    }
     // quầng sáng ấm hắt xuống sàn: tô bằng lưới chấm ở lightPass
     if (g && g.glows) g.glows.push({ x, y: g.fy0 + 10, rx: 44, ry: 26, a: 0.2, col: '#ffb060' });
   }
-  function banner(x, y, col, colD) {
+  function banner(x, y, col, colD, ten) {
+    if (ttMot('lau', ten, x, y + 26)) return; // ảnh AI gd-tt-lau-co-do / co-xanh: giữa đáy ảnh = giữa đuôi cờ code
     r(x - 8, y - 1, 16, 2, K.gold);
     r(x - 7, y + 1, 14, 22, col); r(x - 7, y + 1, 2, 22, colD); r(x + 5, y + 1, 2, 22, colD);
     r(x - 7, y + 23, 4, 3, col); r(x + 3, y + 23, 4, 3, col); r(x - 2, y + 23, 4, 1, col);
@@ -219,7 +269,9 @@
           for (let y = d.at - 11; y < d.at + 11; y += 3) r(xe, y, 2, 2, ed);
         }
       }
-      // hoa văn tròn
+      // hoa văn tròn (ảnh AI gd-tt-lau-tham-tron: tâm ảnh ở giữa phòng, thu về cỡ game và vẽ vào nền như sàn)
+      const at = gdA('gd-tt-lau-tham-tron');
+      if (at) { const cv = ttNho(at); c.drawImage(cv, cx - (cv.width >> 1), cy - (cv.height >> 1)); return; }
       const R1 = 30;
       for (let dy = -R1; dy <= R1; dy++) {
         const hw = Math.round(Math.sqrt(R1 * R1 - dy * dy));
@@ -254,22 +306,24 @@
       const cols = [g.fx0 + 3, g.fx1 - 11];
       for (let x = g.fx0 + 3 + 98; x < g.fx1 - 60; x += 98) if (!near(x + 4, 40)) cols.push(x);
       for (const x of cols) {
-        r(x, wy, 8, g.wh, K.stone); r(x, wy, 2, g.wh, K.stoneL); r(x + 6, wy, 2, g.wh, dim(K.stone, 0.3));
-        r(x - 2, wy, 12, 3, K.stoneL); r(x - 2, wy + 3, 12, 1, dim(K.stone, 0.4)); r(x - 2, g.fy0 - 4, 12, 4, K.stone); r(x - 2, g.fy0 - 4, 12, 1, K.stoneL);
+        if (!ttMot('lau', 'cot-da', x + 4, g.fy0)) { // ảnh AI gd-tt-lau-cot-da: cột cao suốt tường sau, chân cột ở mép trên sàn
+          r(x, wy, 8, g.wh, K.stone); r(x, wy, 2, g.wh, K.stoneL); r(x + 6, wy, 2, g.wh, dim(K.stone, 0.3));
+          r(x - 2, wy, 12, 3, K.stoneL); r(x - 2, wy + 3, 12, 1, dim(K.stone, 0.4)); r(x - 2, g.fy0 - 4, 12, 4, K.stone); r(x - 2, g.fy0 - 4, 12, 1, K.stoneL);
+        }
         if (g.casts) g.casts.push({ x: x - 1, y: g.fy0, w: 11, len: 11, a: 0.34 }); // cột đổ bóng xuống sàn
       }
       // đuốc hai bên mỗi cửa, cờ xa hơn
       for (const t of tops) {
         torch(t - 30, wy + 16, g); torch(t + 30, wy + 16, g);
-        if (t - 62 > g.fx0 + 16) banner(t - 62, wy + 6, K.red, K.redD);
-        if (t + 62 < g.fx1 - 16) banner(t + 62, wy + 6, K.red, K.redD);
+        if (t - 62 > g.fx0 + 16) banner(t - 62, wy + 6, K.red, K.redD, 'co-do');
+        if (t + 62 < g.fx1 - 16) banner(t + 62, wy + 6, K.red, K.redD, 'co-do');
       }
       // phòng rộng: rải thêm đuốc, cờ, cửa sổ
       for (let x = g.fx0 + 52, i = 0; x < g.fx1 - 40; x += 49, i++) {
         if (near(x, 82) || cols.some((cx) => Math.abs(cx + 4 - x) < 16)) continue;
         if (i % 3 === 0) torch(x, wy + 16, g);
-        else if (i % 3 === 1) banner(x, wy + 6, '#3a4a6a', '#263248');
-        else { r(x - 6, wy + 8, 12, 20, DARK); r(x - 5, wy + 9, 10, 18, '#a8502a'); r(x - 5, wy + 9, 10, 6, '#d8823a'); r(x - 1, wy + 9, 1, 18, DARK); r(x - 5, wy + 17, 10, 1, DARK); r(x - 6, wy + 7, 12, 1, K.stoneL); if (g.amb) g.amb.push({ k: 'win', x, y: wy + 9, ph: rn() * 9 }); }
+        else if (i % 3 === 1) banner(x, wy + 6, '#3a4a6a', '#263248', 'co-xanh');
+        else { if (!ttMot('lau', 'cua-so', x, wy + 28)) { r(x - 6, wy + 8, 12, 20, DARK); r(x - 5, wy + 9, 10, 18, '#a8502a'); r(x - 5, wy + 9, 10, 6, '#d8823a'); r(x - 1, wy + 9, 1, 18, DARK); r(x - 5, wy + 17, 10, 1, DARK); r(x - 6, wy + 7, 12, 1, K.stoneL); } if (g.amb) g.amb.push({ k: 'win', x, y: wy + 9, ph: rn() * 9 }); }
       }
     },
     sides(g) {
@@ -398,6 +452,15 @@
     };
     sh(-3 * s, 3 * s, 6 * s, C.cryD, C.cry); sh(3 * s, 3 * s, 5 * s, C.cryD, C.cry); sh(0, 4 * s, 9 * s, C.cry, C.cryL);
   }
+  // Tinh thể TRANG TRÍ (góc phòng, chân vách, mép trước): có ảnh gd-tt-bien-tinh-the[-2] (nhỏ) / tinh-the-to[-2] (to) thì vẽ ảnh,
+  // giữa đáy ảnh = gốc tinh thể; quầng sáng vẫn do code. Tinh thể chắn cửa thuộc ảnh cửa (phiên A2) nên không qua đây.
+  function crystalA(x, yb, s, i) {
+    const a = ttChon('bien', s > 1 ? ['tinh-the-to', 'tinh-the-to-2'] : ['tinh-the', 'tinh-the-2'], i);
+    if (!a) { crystal(x, yb, s); return; }
+    glow(x, yb - s * 4, s * 7, s * 6, C.cry, 0.06, 4);
+    ttVe(a, x, yb);
+  }
+  const NHU_DA = ['nhu-da', 'nhu-da-2', 'nhu-da-3', 'nhu-da-4']; // dài 8×18, vừa 7×13, ngắn 6×8, cặp đôi 10×14
   function rockFace(x, y, w, h, rn) {
     clipRect(x, y, w, h, () => {
       r(x, y, w, h, C.rock);
@@ -472,14 +535,18 @@
       // nhũ đá rủ xuống
       for (let x = g.fx0 - 4; x < g.fx1 + 6; x += ri(rn, 7, 15)) {
         if (near(x, 18)) continue;
-        const h = ri(rn, 6, 18), w = ri(rn, 4, 7);
-        spike(x + 1, wy, w + 2, h + 1, 1, C.rockD); spike(x, wy, w, h, 1, rn() < 0.5 ? C.rockL : mix(C.rock, C.rockL, 0.6), lite(C.rockL, 0.15));
+        let h = ri(rn, 6, 18);
+        const w = ri(rn, 4, 7);
+        // ảnh AI nhũ đá: ĐỈNH ảnh bám nóc vách (wy), chọn ảnh theo độ dài code định vẽ; giọt nước đọng ở chóp ảnh
+        const an = ttChon('bien', NHU_DA, h >= 14 ? 0 : h >= 9 ? ((x >> 1) & 1 ? 3 : 1) : 2);
+        if (an) { h = Math.round(an.ph / an.net); rn(); song(() => veAnh(an, x - an.pw / an.net / 2, wy)); }
+        else { spike(x + 1, wy, w + 2, h + 1, 1, C.rockD); spike(x, wy, w, h, 1, rn() < 0.5 ? C.rockL : mix(C.rock, C.rockL, 0.6), lite(C.rockL, 0.15)); }
         if (rn() < 0.3) { r(x, wy + h + ri(rn, 2, 7), 1, 2, C.wet); if (g.amb) g.amb.push({ k: 'drip', x, y: wy + h + 1, y1: g.fy0 + 3 + ri(rn, 0, 5), ph: rn() * 9, sp: 0.7 + rn() * 0.6 }); }
       }
       // tinh thể mọc ở chân vách
       for (let x = g.fx0 + 22, i = 0; x < g.fx1 - 14; x += ri(rn, 34, 52), i++) {
         if (near(x, 30)) continue;
-        crystal(x, g.fy0 + 1, i % 2 ? 1 : 2);
+        crystalA(x, g.fy0 + 1, i % 2 ? 1 : 2, i >> 1);
         if (g.glows) g.glows.push({ x, y: g.fy0 + 8, rx: 30, ry: 16, a: i % 2 ? 0.1 : 0.16, col: C.cry });
         if (g.amb) g.amb.push({ k: 'cry', x, y: g.fy0 - (i % 2 ? 4 : 8), s: i % 2 ? 1 : 2, ph: rn() * 9 });
       }
@@ -512,7 +579,7 @@
         const h = ri(rn, 5, 12), w = ri(rn, 5, 8);
         spike(x + 1, g.fy1 + 3, w + 2, h + 2, -1, DARK); spike(x, g.fy1 + 3, w, h, -1, C.rock, C.rockL);
       }
-      crystal(g.fx0 + 20, g.fy1 + 4, 1); crystal(g.fx1 - 30, g.fy1 + 4, 1);
+      crystalA(g.fx0 + 20, g.fy1 + 4, 1, 0); crystalA(g.fx1 - 30, g.fy1 + 4, 1, 1);
     },
     door(g, d, rn) {
       const open = d.state === 'open', L = C.light, at = d.at;
@@ -612,6 +679,7 @@
       if (i % 7 === 3) { const s = (i / 7) % 2 < 1 ? 1 : -1; if (vert) { r(x + s * 2, y, 2, 1, '#9a8460'); r(x + s * 3, y - 1, 1, 1, '#c0a87a'); } else { r(x, y + s * 2, 1, 2, '#9a8460'); r(x + 1, y + s * 3, 1, 1, '#c0a87a'); } }
     }
   }
+  const TAN_LA = ['tan-la', 'tan-la-2', 'tan-la-3'], DAY_LEO = ['day-leo', 'day-leo-2', 'day-leo-3'], NAM_SANG = ['nam-sang', 'nam-sang-2']; // biến thể ảnh trang trí Rừng già (phiên A3)
   // ---------- ĐỢT 6 (quyết định Q2): TILE 16×16 CHO RIÊNG VÙNG RỪNG GIÀ — thử nghiệm, có cờ tắt ----------
   // Cờ: G.TILE_RUNG (js/data.js). false → mọi hàm của Forest chạy nhánh code cũ y hệt. Thiếu bất kỳ tệp BẮT BUỘC nào → cũng chạy code cũ.
   // Ảnh (tools/tach-phong, lô "Nền phòng · Rừng già"), cỡ theo điểm ảnh game:
@@ -817,19 +885,26 @@
       // tán lá phủ nóc (dùng tile thì tán lá đã nằm trong ảnh tường sau)
       if (!tileRung()) {
         r(x0, wy - g.cap, w, g.cap, F.leafD);
-        for (let x = x0; x < x0 + w; x += 8) leafBlob(x + rn() * 5, wy - g.cap / 2 + rn() * 5, ri(rn, 7, 11), ri(rn, 5, 7), rn);
+        // ảnh AI gd-tt-rung-tan-la[-2|-3]: các chùm lá xếp nối nhau phủ kín nóc, đáy chùm rủ xuống tường 8 điểm ảnh
+        if (ttChon('rung', TAN_LA, 0)) {
+          for (let x = x0 + 6, i = 0; x < x0 + w + 4 && i < 60; i++) { const a = ttChon('rung', TAN_LA, ri(rn, 0, 2)); ttVe(a, x, wy + 6 + ri(rn, 0, 2)); x += Math.max(6, Math.round((a.pw / a.net) * 0.78)); }
+        } else for (let x = x0; x < x0 + w; x += 8) leafBlob(x + rn() * 5, wy - g.cap / 2 + rn() * 5, ri(rn, 7, 11), ri(rn, 5, 7), rn);
       }
       // dây leo rủ
-      for (let x = g.fx0 + 6; x < g.fx1; x += ri(rn, 16, 30)) {
+      for (let x = g.fx0 + 6, vi = 0; x < g.fx1; x += ri(rn, 16, 30), vi++) {
         if (tops.some((t) => Math.abs(t - x) < 18)) continue;
         const len = ri(rn, 8, 22);
+        // ảnh AI gd-tt-rung-day-leo[-2|-3]: dây rủ từ dưới tán lá; dây ngắn thì chỉ lộ phần ngọn (phần trên coi như khuất sau tán)
+        const ad = ttChon('rung', DAY_LEO, vi);
+        if (ad) { const ah = ad.ph / ad.net, lo = Math.min(ah, Math.max(10, len)); ttVe(ad, x + 0.5, wy + 4 + lo, false, ah - lo, ah); continue; }
         for (let i = 0; i < len; i++) { r(x + Math.round(Math.sin(i * 0.7)), wy + 4 + i, 1, 1, F.moss); if (i % 4 === 2) r(x + Math.round(Math.sin(i * 0.7)) + 1, wy + 4 + i, 2, 1, F.leafH); }
       }
       // nấm phát sáng ở gốc cây, đom đóm
-      for (let x = g.fx0 + 18; x < g.fx1 - 10; x += ri(rn, 36, 60)) {
+      for (let x = g.fx0 + 18, ni = 0; x < g.fx1 - 10; x += ri(rn, 36, 60), ni++) {
         if (tops.some((t) => Math.abs(t - x) < 34)) continue;
         if (g.glows) g.glows.push({ x, y: g.fy0 + 4, rx: 22, ry: 12, a: 0.13, col: '#b0f070' });
         if (g.amb) g.amb.push({ k: 'shroom', x, y: g.fy0 - 3, ph: rn() * 9 });
+        if (ttMot('rung', NAM_SANG, x + 1, g.fy0 + 3, ni)) continue; // ảnh AI gd-tt-rung-nam-sang[-2]: cụm nấm sáng ở chân tường, quầng sáng vẫn do code
         r(x - 1, g.fy0 - 1, 2, 4, '#e8e0c0'); r(x - 3, g.fy0 - 4, 6, 3, '#9ad860'); r(x - 2, g.fy0 - 5, 4, 1, '#d0f8a0');
         r(x + 5, g.fy0 + 1, 1, 2, '#e8e0c0'); r(x + 4, g.fy0 - 1, 3, 2, '#9ad860');
       }
@@ -978,9 +1053,13 @@
           }
         }
       });
-      r(cx - 34, cy - 24, 68, 48, '#77593a'); r(cx - 32, cy - 22, 64, 44, '#4e2a32'); r(cx - 28, cy - 18, 56, 36, '#5c3038');
-      for (let x = cx - 26; x < cx + 26; x += 6) { r(x, cy - 16, 3, 1, '#77593a'); r(x, cy + 15, 3, 1, '#77593a'); }
-      r(cx - 6, cy - 6, 12, 12, '#77593a'); r(cx - 4, cy - 4, 8, 8, '#4e2a32'); r(cx - 1, cy - 1, 2, 2, K.gold);
+      const av = gdA('gd-tt-lau-tham-vuong'); // ảnh AI: tấm thảm vuông, tâm ảnh ở giữa phòng (vẽ vào nền như sàn)
+      if (av) { const cv = ttNho(av); c.drawImage(cv, cx - (cv.width >> 1), cy - (cv.height >> 1)); }
+      else {
+        r(cx - 34, cy - 24, 68, 48, '#77593a'); r(cx - 32, cy - 22, 64, 44, '#4e2a32'); r(cx - 28, cy - 18, 56, 36, '#5c3038');
+        for (let x = cx - 26; x < cx + 26; x += 6) { r(x, cy - 16, 3, 1, '#77593a'); r(x, cy + 15, 3, 1, '#77593a'); }
+        r(cx - 6, cy - 6, 12, 12, '#77593a'); r(cx - 4, cy - 4, 8, 8, '#4e2a32'); r(cx - 1, cy - 1, 2, 2, K.gold);
+      }
       runners(g, '#4e2a32', '#77593a');
     },
   ];
@@ -1075,24 +1154,30 @@
   }
 
   // Đồ trang trí nhỏ ở bốn góc phòng (không nằm trên lối vào cửa, không che đồ vật bấm được ở giữa)
+  // Ảnh AI (phiên A3): mỗi món hỏi gd-tt-<vùng>-<tên> trước; có thì vẽ ảnh (giữa đáy ảnh = chân vật), bóng dưới chân và ánh sáng vẫn do code.
   const DECOR = {
-    2: [ // lâu đài
-      (x, y) => { ell(x, y + 1, 7, 3, 'rgba(0,0,0,0.3)'); r(x - 6, y - 11, 12, 12, DARK); r(x - 5, y - 10, 10, 10, K.wood); r(x - 5, y - 10, 2, 10, K.woodL); r(x - 5, y - 8, 10, 1, K.ironL); r(x - 5, y - 3, 10, 1, K.ironL); r(x - 4, y - 12, 8, 2, K.woodL); },
-      (x, y) => { ell(x, y + 1, 8, 3, 'rgba(0,0,0,0.3)'); r(x - 7, y - 9, 14, 10, DARK); r(x - 6, y - 8, 12, 8, K.woodL); r(x - 6, y - 8, 12, 1, lite(K.woodL, 0.2)); r(x - 6, y - 4, 12, 1, K.woodD); r(x - 1, y - 8, 2, 8, K.woodD); },
-      (x, y) => { r(x - 5, y - 1, 10, 2, '#d8d0bc'); r(x - 6, y - 2, 2, 4, '#d8d0bc'); r(x + 4, y - 2, 2, 4, '#d8d0bc'); r(x - 2, y - 6, 5, 4, '#d8d0bc'); r(x - 1, y - 5, 1, 1, DARK); r(x + 1, y - 5, 1, 1, DARK); },
-      (x, y, g) => { ell(x, y + 1, 5, 2, 'rgba(0,0,0,0.3)'); r(x - 1, y - 12, 2, 12, K.iron); r(x - 3, y - 1, 6, 2, K.ironL); r(x - 3, y - 13, 6, 2, K.ironL); g.lights.push({ k: 'candle', x, y: y - 15 }); g.glows.push({ x, y: y - 2, rx: 16, ry: 9, a: 0.14, col: '#ffc070' }); },
+    2: [ // lâu đài: thùng gỗ, hòm gỗ, xương sọ, chân nến
+      (x, y) => { ell(x, y + 1, 7, 3, 'rgba(0,0,0,0.3)'); if (ttMot('lau', 'thung-go', x, y + 1)) return; r(x - 6, y - 11, 12, 12, DARK); r(x - 5, y - 10, 10, 10, K.wood); r(x - 5, y - 10, 2, 10, K.woodL); r(x - 5, y - 8, 10, 1, K.ironL); r(x - 5, y - 3, 10, 1, K.ironL); r(x - 4, y - 12, 8, 2, K.woodL); },
+      (x, y) => { ell(x, y + 1, 8, 3, 'rgba(0,0,0,0.3)'); if (ttMot('lau', 'hom-go', x, y + 1)) return; r(x - 7, y - 9, 14, 10, DARK); r(x - 6, y - 8, 12, 8, K.woodL); r(x - 6, y - 8, 12, 1, lite(K.woodL, 0.2)); r(x - 6, y - 4, 12, 1, K.woodD); r(x - 1, y - 8, 2, 8, K.woodD); },
+      (x, y) => { if (ttMot('lau', 'xuong-so', x, y + 2)) return; r(x - 5, y - 1, 10, 2, '#d8d0bc'); r(x - 6, y - 2, 2, 4, '#d8d0bc'); r(x + 4, y - 2, 2, 4, '#d8d0bc'); r(x - 2, y - 6, 5, 4, '#d8d0bc'); r(x - 1, y - 5, 1, 1, DARK); r(x + 1, y - 5, 1, 1, DARK); },
+      (x, y, g) => { // chân nến: ngọn lửa (lớp sống) mọc ngay trên đỉnh ảnh
+        ell(x, y + 1, 5, 2, 'rgba(0,0,0,0.3)');
+        const a = ttMot('lau', 'chan-nen', x, y + 1);
+        if (!a) { r(x - 1, y - 12, 2, 12, K.iron); r(x - 3, y - 1, 6, 2, K.ironL); r(x - 3, y - 13, 6, 2, K.ironL); }
+        g.lights.push({ k: 'candle', x, y: a ? Math.round(y + 1 - a.ph / a.net) - 2 : y - 15 }); g.glows.push({ x, y: y - 2, rx: 16, ry: 9, a: 0.14, col: '#ffc070' });
+      },
     ],
-    1: [ // hang
-      (x, y) => { ell(x, y + 1, 9, 4, 'rgba(0,0,0,0.3)'); ell(x - 3, y - 3, 6, 4, C.rock); ell(x + 4, y - 2, 5, 3, C.rockL); ell(x, y - 6, 4, 3, C.rockL); r(x - 2, y - 8, 4, 1, lite(C.rockL, 0.15)); },
-      (x, y, g) => { crystal(x, y, 1); g.lights.push({ k: 'twinkle', x, y: y - 8 }); },
-      (x, y, g) => { ell(x, y, 10, 5, C.waterD); ell(x, y - 1, 8, 3, C.water); r(x - 4, y - 2, 5, 1, C.waterL); if (g && g.amb) g.amb.push({ k: 'pud', x, y: y - 1, rx: 8, ry: 3, ph: x * 0.13 }); },
-      (x, y) => { r(x - 3, y - 2, 7, 4, DARK); r(x - 2, y - 2, 5, 3, '#d8c8b0'); r(x - 1, y - 2, 3, 1, '#f0e8d8'); r(x - 2, y, 1, 1, '#9a8a74'); r(x, y, 1, 1, '#9a8a74'); r(x + 2, y, 1, 1, '#9a8a74'); },
+    1: [ // hang: đống đá, cụm tinh thể nhỏ, vũng nước, vỏ sò
+      (x, y) => { ell(x, y + 1, 9, 4, 'rgba(0,0,0,0.3)'); if (ttMot('bien', ['dong-da', 'dong-da-2'], x, y + 1, x + y)) return; ell(x - 3, y - 3, 6, 4, C.rock); ell(x + 4, y - 2, 5, 3, C.rockL); ell(x, y - 6, 4, 3, C.rockL); r(x - 2, y - 8, 4, 1, lite(C.rockL, 0.15)); },
+      (x, y, g) => { crystalA(x, y, 1, x + y); g.lights.push({ k: 'twinkle', x, y: y - 8 }); },
+      (x, y, g) => { if (!ttMot('bien', 'vung-nuoc', x, y + 5)) { ell(x, y, 10, 5, C.waterD); ell(x, y - 1, 8, 3, C.water); r(x - 4, y - 2, 5, 1, C.waterL); } if (g && g.amb) g.amb.push({ k: 'pud', x, y: y - 1, rx: 8, ry: 3, ph: x * 0.13 }); },
+      (x, y) => { if (ttMot('bien', 'vo-so', x + 0.5, y + 2)) return; r(x - 3, y - 2, 7, 4, DARK); r(x - 2, y - 2, 5, 3, '#d8c8b0'); r(x - 1, y - 2, 3, 1, '#f0e8d8'); r(x - 2, y, 1, 1, '#9a8a74'); r(x, y, 1, 1, '#9a8a74'); r(x + 2, y, 1, 1, '#9a8a74'); },
     ],
-    0: [ // rừng
-      (x, y) => { ell(x, y + 1, 8, 3, 'rgba(0,0,0,0.3)'); r(x - 6, y - 8, 12, 9, DARK); r(x - 5, y - 5, 10, 6, F.bark); r(x - 5, y - 5, 2, 6, F.barkL); r(x - 5, y - 8, 10, 3, '#8a6a44'); r(x - 3, y - 7, 5, 1, '#5a3f26'); r(x - 1, y - 7, 1, 1, '#c8a060'); },
-      (x, y, g, rn) => { leafBlob(x - 4, y - 3, 7, 5, rn); leafBlob(x + 4, y - 2, 6, 4, rn); r(x - 2, y - 5, 2, 2, '#e85a5a'); r(x + 5, y - 3, 2, 2, '#e85a5a'); },
-      (x, y, g) => { r(x - 1, y - 4, 2, 5, '#e8e0c0'); r(x - 4, y - 7, 8, 3, '#c85a3a'); r(x - 3, y - 8, 6, 1, '#e88a5a'); r(x - 2, y - 6, 1, 1, '#fff0d0'); r(x + 1, y - 7, 1, 1, '#fff0d0'); r(x + 5, y - 1, 1, 3, '#e8e0c0'); r(x + 3, y - 3, 4, 2, '#c85a3a'); g.lights.push({ k: 'firefly', x, y: y - 14 }); },
-      (x, y) => { ell(x, y + 1, 12, 3, 'rgba(0,0,0,0.3)'); r(x - 11, y - 5, 22, 6, DARK); r(x - 10, y - 4, 20, 4, F.bark); r(x - 10, y - 4, 20, 1, F.barkL); r(x - 10, y - 4, 2, 4, '#8a6a44'); r(x - 4, y - 5, 6, 1, F.moss); r(x + 2, y - 3, 1, 3, F.barkD); },
+    0: [ // rừng: gốc cây cụt, bụi quả đỏ, nấm đỏ, khúc gỗ
+      (x, y) => { ell(x, y + 1, 8, 3, 'rgba(0,0,0,0.3)'); if (ttMot('rung', 'goc-cay', x, y + 1)) return; r(x - 6, y - 8, 12, 9, DARK); r(x - 5, y - 5, 10, 6, F.bark); r(x - 5, y - 5, 2, 6, F.barkL); r(x - 5, y - 8, 10, 3, '#8a6a44'); r(x - 3, y - 7, 5, 1, '#5a3f26'); r(x - 1, y - 7, 1, 1, '#c8a060'); },
+      (x, y, g, rn) => { if (ttMot('rung', 'bui-qua', x, y + 3)) { rn(); rn(); return; } leafBlob(x - 4, y - 3, 7, 5, rn); leafBlob(x + 4, y - 2, 6, 4, rn); r(x - 2, y - 5, 2, 2, '#e85a5a'); r(x + 5, y - 3, 2, 2, '#e85a5a'); },
+      (x, y, g) => { if (!ttMot('rung', 'nam-do', x + 1.5, y + 2)) { r(x - 1, y - 4, 2, 5, '#e8e0c0'); r(x - 4, y - 7, 8, 3, '#c85a3a'); r(x - 3, y - 8, 6, 1, '#e88a5a'); r(x - 2, y - 6, 1, 1, '#fff0d0'); r(x + 1, y - 7, 1, 1, '#fff0d0'); r(x + 5, y - 1, 1, 3, '#e8e0c0'); r(x + 3, y - 3, 4, 2, '#c85a3a'); } g.lights.push({ k: 'firefly', x, y: y - 14 }); },
+      (x, y) => { ell(x, y + 1, 12, 3, 'rgba(0,0,0,0.3)'); if (ttMot('rung', 'khuc-go', x, y + 1)) return; r(x - 11, y - 5, 22, 6, DARK); r(x - 10, y - 4, 20, 4, F.bark); r(x - 10, y - 4, 20, 1, F.barkL); r(x - 10, y - 4, 2, 4, '#8a6a44'); r(x - 4, y - 5, 6, 1, F.moss); r(x + 2, y - 3, 1, 3, F.barkD); },
     ],
   };
   // Giai đoạn 2: ít vật hơn (2 món, phòng trùm 3), không đặt ở góc dành cho điểm nhấn và hai góc dưới (tiền cảnh che).
@@ -1102,10 +1187,11 @@
     if (fw_(g) > 240) spots.push([g.fx0 + 70, g.fy0 + 22, 0], [g.fx1 - 70, g.fy0 + 22, 0]);
     spots = spots.filter((s) => s[2] !== g.accSide);
     for (let i = spots.length - 1; i > 0; i--) { const j = Math.floor(rn() * (i + 1)), t = spots[i]; spots[i] = spots[j]; spots[j] = t; }
-    const used = [];
-    for (const s of spots.slice(0, g.big ? 3 : 2)) {
+    const used = [], thu = g.ttThu && g.ttThu.decor; // ttThu: chỉ trang công cụ Tách Phòng đặt, để phòng xem thử bày đủ mọi món; trong game luôn không có
+    for (const s of spots.slice(0, thu ? thu.length : g.big ? 3 : 2)) {
       let k = Math.floor(rn() * items.length);
       if (used.includes(k)) k = (k + 1) % items.length;
+      if (thu) k = thu[used.length] % items.length;
       used.push(k);
       items[k](Math.round(s[0] + rn() * 10 - 5), Math.round(s[1] + rn() * 8 - 4), g, rn);
     }
@@ -1226,19 +1312,23 @@
     g.accSide = g.type === 'fountain' ? 1 : hs((seed || 11) + 101) & 1 ? -1 : 1; // góc trên đặt điểm nhấn (phòng suối: bên phải, bên trái có rương đồ)
     g.amb = []; // chỗ có chuyển động môi trường (vũng nước, giọt nhũ đá, nấm sáng...): ghi lại lúc dựng, vẽ động ở lớp sống
     c = base;
-    T.paintVoid(g, rn);
-    T.floors[g.variant % T.floors.length](g, rn);
-    mark(T, g);
-    decor(T, g, rn);
-    T.back(g, rn);
-    backPass(T, g);
-    T.sides(g, rn);
-    T.front(g, rn);
-    T.backDeco(g, rn);
-    const acc = accentPlan(T, g, G.srand(hs((seed || 11) * 7 + 3)));
-    lightPass(T, g);
-    if (acc) acc();
-    return { cv: base.canvas, lights: g.lights, amb: g.amb, accSide: g.accSide };
+    const tt = []; // lệnh vẽ sống của ảnh AI đồ trang trí (gd-tt-*); rỗng khi không có tệp nào
+    try {
+      ghi = tt;
+      T.paintVoid(g, rn);
+      T.floors[g.variant % T.floors.length](g, rn);
+      mark(T, g);
+      decor(T, g, rn);
+      T.back(g, rn);
+      backPass(T, g);
+      T.sides(g, rn);
+      T.front(g, rn);
+      T.backDeco(g, rn);
+      const acc = accentPlan(T, g, G.srand(hs((seed || 11) * 7 + 3)));
+      lightPass(T, g);
+      if (acc) acc();
+    } finally { ghi = null; }
+    return { cv: base.canvas, lights: g.lights, amb: g.amb, accSide: g.accSide, tt };
   }
   function buildRoom(T, g, seed, shell) {
     const base = mk(g.W, g.H), fore = mk(g.W, g.H);
@@ -1258,10 +1348,10 @@
       ghi = cuaTruoc;
       for (const f of fores) f();
     } finally { ghi = null; }
-    if (T.fore) T.fore(g, G.srand((seed || 11) + 9));
+    if (T.fore) { try { ghi = cuaTruoc; T.fore(g, G.srand((seed || 11) + 9)); } finally { ghi = null; } } // ảnh AI ở mép trước (tinh thể Hang biển) vẽ sống, đè lên nhân vật
     ambSetup(T, g, seed);
     const fgr = fgBuild(T, g, G.srand(hs((seed || 11) + 17)));
-    return { base: base.canvas, fore: fore.canvas, fg: fgr.cv, fgCl: fgr.cl, g, T, cuaNen, cuaTruoc };
+    return { base: base.canvas, fore: fore.canvas, fg: fgr.cv, fgCl: fgr.cl, g, T, cuaNen, cuaTruoc, ttNen: shell.tt || [] };
   }
   // ---------- Giai đoạn 2: điểm nhấn thị giác của phòng (một món, ở một góc trên, không đụng lối cửa) ----------
   // Lập kế hoạch trước lightPass (để quầng sáng của nó được tô xuống sàn), vẽ sau lightPass (để vật vẫn sáng rõ).
@@ -1293,7 +1383,7 @@
     c.putImageData(id, 0, y0);
   }
   function accentPlan(T, g, rn) {
-    const side = g.accSide, cx0 = side < 0 ? g.fx0 + 22 : g.fx1 - 22, cy0 = g.fy0 + 18, kind = rn() < 0.5 ? 0 : 1;
+    const side = g.accSide, cx0 = side < 0 ? g.fx0 + 22 : g.fx1 - 22, cy0 = g.fy0 + 18, kind0 = rn() < 0.5 ? 0 : 1, kind = g.ttThu && g.ttThu.kind != null ? g.ttThu.kind : kind0;
     if (T.reg === 0) {
       if (kind === 0) {
         const bx = shaftAt(g, rn), sx = bx - 26, sy = g.fy0 + 44;
@@ -1301,6 +1391,7 @@
         if (g.amb) for (let i = 0; i < 5; i++) g.amb.push({ k: 'beam', bx, y0: g.fy0 - g.wh, y1: sy, ph: rn() * 20, sp: 0.6 + rn() * 0.6 });
         return () => {
           shaft(g, bx, '#f0f4c0', 0.2);
+          if (ttMot('rung', 'hoa-nang', sx, sy + 7)) return; // ảnh AI: khóm hoa dại dưới cột nắng
           for (let i = 0; i < 4; i++) { const x = sx + ri(rn, -12, 12), y = sy + ri(rn, -5, 5); r(x, y + 1, 1, 2, F.grassM); r(x - 1, y, 3, 1, '#f0ecd0'); r(x, y - 1, 1, 3, '#f0ecd0'); r(x, y, 1, 1, '#f0c050'); }
         };
       }
@@ -1308,6 +1399,7 @@
       g.casts.push({ x: x - 10, y: y + 1, w: 20, len: 7, a: 0.36 });
       return () => { // gốc cổ thụ: vòng tuổi, vỏ có khối sáng tối, rêu phủ, dương xỉ (không có nấm: khỏi lẫn với nấm độc bấm được)
         ell(x, y + 2, 14, 4, 'rgba(0,0,0,0.35)');
+        if (ttMot('rung', 'co-thu', x, y + 4)) return; // ảnh AI: gốc cổ thụ
         r(x - 12, y - 10, 24, 13, DARK); r(x - 11, y - 9, 22, 11, F.bark); r(x - 11, y - 9, 4, 11, F.barkL); r(x + 6, y - 9, 5, 11, F.barkD);
         for (let i = 0; i < 4; i++) r(x - 6 + i * 4, y - 6 + (i % 2) * 3, 1, 5, F.barkD);
         r(x - 11, y - 13, 22, 4, '#8a6a44'); r(x - 10, y - 14, 20, 1, '#a8885a'); r(x - 6, y - 12, 12, 1, '#6a4e30'); r(x - 2, y - 12, 4, 1, '#c8a060');
@@ -1325,6 +1417,7 @@
         return () => {
           ell(x, y + 2, 12, 3, 'rgba(0,0,0,0.35)');
           ell(x, y + 1, 9, 3, C.ground[0]); // chỗ đất lõm quanh neo
+          if (ttMot('bien', 'mo-neo', x + 3, y + 4)) return; // ảnh AI: mỏ neo cũ (xích và vỏ sò lệch về bên phải)
           for (let k = 0; k < 20; k++) { const xx = x - 2 + Math.round(k * 0.2), yy = y - k; r(xx - 1, yy, 4, 1, DARK); r(xx, yy, 2, 1, k % 5 === 2 ? RU : IR); r(xx, yy, 1, 1, IRL); }
           r(x - 7, y - 3, 15, 2, DARK); r(x - 6, y - 3, 13, 1, IR); r(x - 6, y - 3, 13, 1, IRL); r(x - 8, y - 6, 2, 4, IR); r(x + 7, y - 6, 2, 4, IR); r(x - 8, y - 7, 1, 1, IRL); r(x + 8, y - 7, 1, 1, IRL);
           r(x + 1, y - 22, 5, 5, DARK); r(x + 2, y - 21, 3, 3, IR); r(x + 3, y - 20, 1, 1, DARK); r(x - 3, y - 17, 11, 2, IR); r(x - 3, y - 17, 11, 1, IRL);
@@ -1341,6 +1434,7 @@
       }
       return () => {
         shaft(g, bx, '#cfefff', 0.16);
+        if (ttMot('bien', 'vung-sang', sx, sy + 8)) return; // ảnh AI: vũng nước dưới tia sáng (gợn nước vẫn do code)
         ell(sx, sy + 1, 15, 7, C.ground[0]); ell(sx, sy, 14, 6, C.waterD); ell(sx, sy - 1, 12, 5, C.water); r(sx - 5, sy - 3, 6, 1, C.waterL); r(sx + 2, sy, 4, 1, rgba(C.waterL, 0.6));
       };
     }
@@ -1352,25 +1446,30 @@
         for (let i = 0; i < 5; i++) g.amb.push({ k: 'beam', bx, y0: wy + 10, y1: sy, ph: rn() * 20, sp: 0.5 + rn() * 0.5, col: '#ffe6b8' });
       }
       return () => {
-        r(bx - 7, wy + 4, 14, 22, DARK); r(bx - 6, wy + 5, 12, 20, '#2a3a5a');
-        for (let j = 0; j < 4; j++) for (let i = 0; i < 2; i++) r(bx - 5 + i * 6, wy + 6 + j * 5, 4, 4, ['#d8823a', '#a8402a', '#4a7ab0', '#c8a040'][(i + j) % 4]);
-        r(bx - 1, wy + 5, 1, 20, DARK); r(bx - 6, wy + 15, 12, 1, DARK); r(bx - 7, wy + 3, 14, 1, K.stoneL); r(bx - 8, wy + 26, 16, 2, K.stone); r(bx - 8, wy + 26, 16, 1, K.stoneL);
+        if (!ttMot('lau', 'cua-so-kinh', bx, wy + 28)) { // ảnh AI: cửa sổ kính màu trên tường sau, đáy ảnh = đáy bệ cửa sổ
+          r(bx - 7, wy + 4, 14, 22, DARK); r(bx - 6, wy + 5, 12, 20, '#2a3a5a');
+          for (let j = 0; j < 4; j++) for (let i = 0; i < 2; i++) r(bx - 5 + i * 6, wy + 6 + j * 5, 4, 4, ['#d8823a', '#a8402a', '#4a7ab0', '#c8a040'][(i + j) % 4]);
+          r(bx - 1, wy + 5, 1, 20, DARK); r(bx - 6, wy + 15, 12, 1, DARK); r(bx - 7, wy + 3, 14, 1, K.stoneL); r(bx - 8, wy + 26, 16, 2, K.stone); r(bx - 8, wy + 26, 16, 1, K.stoneL);
+        }
         shaft(g, bx, '#ffe2b0', 0.17);
         for (let j = -1; j <= 1; j++) for (let i = -2; i <= 1; i++) { const x = sx + i * 7 + j * 2, y = sy + j * 4; if ((i + j + 9) % 3 === 0) r(x, y, 3, 2, rgba(['#ffb060', '#ff8a6a', '#8ab8ff'][(i + 9) % 3], 0.18)); }
       };
     }
     const x = cx0, y = cy0 + 8;
     g.glows.push({ x: x - 10, y: y - 2, rx: 14, ry: 8, a: 0.14, col: '#ffc070' }, { x: x + 10, y: y - 2, rx: 14, ry: 8, a: 0.14, col: '#ffc070' });
-    g.lights.push({ k: 'candle', x: x - 10, y: y - 7 }, { k: 'candle', x: x + 10, y: y - 7 });
+    const an = gdA('gd-tt-lau-nen'), ny = an ? Math.round(y + 1 - an.ph / an.net) - 1 : y - 7; // ảnh AI cây nến: lửa mọc ngay trên đỉnh ảnh
+    g.lights.push({ k: 'candle', x: x - 10, y: ny }, { k: 'candle', x: x + 10, y: ny });
     g.casts.push({ x: x - 6, y: y + 1, w: 12, len: 9, a: 0.38 });
     return () => { // tượng hiệp sĩ đá đã vỡ trên bệ, rêu ở chân, hai cây nến
       ell(x, y + 2, 11, 3, 'rgba(0,0,0,0.35)');
+      const nen = () => { for (const dx of [-10, 10]) { if (an) ttVe(an, x + dx, y + 1); else { r(x + dx - 1, y - 6, 2, 6, '#e8e0c8'); r(x + dx - 2, y - 1, 4, 2, K.iron); } } };
+      if (ttMot('lau', 'tuong-hiep-si', x, y + 2)) { nen(); return; } // ảnh AI: tượng hiệp sĩ đá (không gồm nến)
       r(x - 8, y - 6, 16, 8, DARK); r(x - 7, y - 5, 14, 6, K.stone); r(x - 7, y - 5, 14, 1, K.stoneL); r(x + 4, y - 4, 3, 5, dim(K.stone, 0.3));
       r(x - 5, y - 24, 10, 19, DARK); r(x - 4, y - 23, 8, 18, K.stone); r(x - 4, y - 23, 2, 18, K.stoneL); r(x + 2, y - 23, 2, 18, dim(K.stone, 0.3));
       r(x - 3, y - 29, 6, 6, DARK); r(x - 2, y - 28, 4, 5, K.stone); r(x - 2, y - 28, 1, 5, K.stoneL); r(x + 1, y - 29, 2, 2, K.void); // đầu sứt một góc
       r(x - 7, y - 21, 3, 9, K.stone); r(x - 7, y - 21, 1, 9, K.stoneL); r(x + 4, y - 18, 2, 10, dim(K.stone, 0.15)); r(x + 5, y - 26, 1, 16, K.ironL);
       r(x - 7, y, 5, 2, '#3f5a34'); r(x - 6, y, 2, 1, '#5f8046'); r(x + 9, y + 1, 4, 1, '#d8d0bc');
-      for (const dx of [-10, 10]) { r(x + dx - 1, y - 6, 2, 6, '#e8e0c8'); r(x + dx - 2, y - 1, 4, 2, K.iron); }
+      nen();
     };
   }
 
@@ -1388,6 +1487,14 @@
     for (const side of [-1, 1]) {
       const bx = side < 0 ? g.fx0 - g.sw + 2 : g.fx1 + g.sw - 2, by = g.fy1 + g.fw;
       const w = ri(rn, 30, 40), x0 = side < 0 ? bx - 4 : bx - w + 4;
+      // ảnh AI gd-tt-<vùng>-tien-canh-trai / -phai (chỉ có một bên thì bên kia dùng ảnh đó lật ngang): mép ngoài ảnh nằm ở mép ngoài cụm code,
+      // đáy ảnh ở mép ngoài tường trước. Ảnh vẽ thẳng ở roomFore (nét gấp đôi), vẫn dùng đúng khung cắt này để mờ dần khi có người đứng sau.
+      const a0 = gdA('gd-tt-' + T.ma + '-tien-canh-' + (side < 0 ? 'trai' : 'phai')), a1 = a0 || gdA('gd-tt-' + T.ma + '-tien-canh-' + (side < 0 ? 'phai' : 'trai'));
+      if (a1) {
+        const aw = a1.pw / a1.net, ah = a1.ph / a1.net, ax = side < 0 ? bx - 4 : bx + 4 - aw;
+        cl.push({ x0: Math.max(0, Math.floor(ax) - 4), x1: Math.min(g.W, Math.ceil(ax + aw) + 4), y0: by - Math.ceil(ah), y1: g.H, a: 1, anh: a1, ax, ay: by - ah, lat: !a0 });
+        continue;
+      }
       if (T.reg === 0) { // bụi dương xỉ, lá to
         for (let i = 0; i < 6; i++) {
           const x = x0 + 4 + rn() * (w - 8), y = by - 5 - rn() * 14, rx = ri(rn, 6, 10), ry = ri(rn, 4, 7);
@@ -1505,6 +1612,7 @@
   function demAnh() {
     const s = G.spriteCustom, d = s && s.gd; let n = 0;
     if (d) for (const k in d) if (d[k].ready && (k.startsWith('gd-vat-') || k.startsWith('gd-cua-') || k.startsWith('gd-tt-') || k.startsWith('gd-nen-'))) n++;
+    if (luaAnh()) n++; // dải lửa đuốc sẵn sàng: dựng lại để bỏ phần lửa đứng yên vẽ sẵn trong nền
     return n;
   }
   RA.xoaDem = function () { cache.clear(); shells.clear(); };
@@ -1516,6 +1624,7 @@
     let room = cache.get(key);
     if (!room) {
       const g = Object.assign({}, W.geo, { type: W.type, variant: W.variant || 0 });
+      if (W.ttThu) g.ttThu = W.ttThu; // chỉ trang công cụ Tách Phòng đặt (phòng xem thử bày đủ đồ trang trí)
       g.doors = doors.map((d) => ({ side: SIDE_OF[d.dir], dir: d.dir, at: d.dir === 'up' || d.dir === 'down' ? g.cx : g.cy, state: d.open ? 'open' : 'locked', gate: !!d.gate, boss: !!d.boss }));
       const T = THEMES[W.region] || Castle, skey = [W.uid, W.region, W.type, W.seed, W.variant || 0, doors.map((d) => d.dir).join(',')].join('|');
       building = true;
@@ -1699,11 +1808,15 @@
     const g = room.g, t = G.time || 0, pv = c;
     c = cx;
     try {
+      for (const f of room.ttNen) f(); // ảnh AI của đồ trang trí (phiên A3)
       for (const f of room.cuaNen) f(); // ảnh AI của cửa (lớp nền)
       ambLive(room, t);
+      const la = luaAnh(); // dải lửa hu-lua-duoc: thay ngọn lửa code của đuốc và nến
       for (const l of g.lights) {
         const f = Math.floor(t * 9 + l.x) % 3;
-        if (l.k === 'torch') { r(l.x - 2 + (f === 1 ? 1 : 0), l.y - 9 - f, 3, 3, '#ff7a2a'); r(l.x - 1, l.y - 7 - (f === 2 ? 2 : 0), 2, 3, '#ffd23f'); r(l.x + (f - 1), l.y - 12 - f, 1, 1, '#ffd23f'); }
+        if (la && l.k === 'torch') veLua(la, l.x, l.y + 1, 1, t, l.x);
+        else if (la && l.k === 'candle') { veLua(la, l.x, l.y + 2, 0.5, t, l.x); r(l.x - 3, l.y - 2, 6, 6, 'rgba(255,200,80,0.10)'); }
+        else if (l.k === 'torch') { r(l.x - 2 + (f === 1 ? 1 : 0), l.y - 9 - f, 3, 3, '#ff7a2a'); r(l.x - 1, l.y - 7 - (f === 2 ? 2 : 0), 2, 3, '#ffd23f'); r(l.x + (f - 1), l.y - 12 - f, 1, 1, '#ffd23f'); }
         else if (l.k === 'candle') { r(l.x - 1, l.y - (f === 0 ? 1 : 0), 2, 3, '#ffd23f'); r(l.x - 1, l.y + 1, 2, 1, '#ff7a2a'); r(l.x - 3, l.y - 2, 6, 6, 'rgba(255,200,80,0.10)'); }
         else if (l.k === 'twinkle') { if (Math.floor(t * 2 + l.x * 0.37) % 4 === 0) { r(l.x, l.y - 2, 1, 5, '#ffffff'); r(l.x - 2, l.y, 5, 1, '#ffffff'); } }
         else if (l.k === 'firefly') { const fx = l.x + Math.sin(t * 1.3 + l.x) * 7, fy = l.y + Math.cos(t * 1.7 + l.y) * 4; r(fx, fy, 1, 1, Math.floor(t * 3 + l.x) % 3 ? '#f8ffd0' : 'rgba(248,255,208,0.3)'); }
@@ -1779,7 +1892,8 @@
         if (a <= 0) continue;
         const ga = c.globalAlpha;
         c.globalAlpha = ga * a;
-        c.drawImage(room.fg, q.x0, q.y0, q.x1 - q.x0, q.y1 - q.y0, q.x0, q.y0, q.x1 - q.x0, q.y1 - q.y0);
+        if (q.anh) veAnh(q.anh, q.ax, q.ay, q.lat); // cụm tiền cảnh bằng ảnh AI (phiên A3)
+        else c.drawImage(room.fg, q.x0, q.y0, q.x1 - q.x0, q.y1 - q.y0, q.x0, q.y0, q.x1 - q.x0, q.y1 - q.y0);
         c.globalAlpha = ga;
       }
     },
