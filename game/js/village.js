@@ -884,7 +884,7 @@
   // Bố cục màn chào (toạ độ 480x270), Giai đoạn 4 yêu cầu 2: logo > nút chính > nút phụ > dòng thông tin.
   // Nút nào chạy ngay trong lúc chạm (G.syncTaps) thì dùng đúng ô của nút vẽ.
   // gg, bv (Đợt 1): hàng nút dưới "Chơi ngay" khi chưa đăng nhập Google: Đăng nhập Google | Bảng vàng. (guest: ô nút "Chơi tạm" cũ, nay không vẽ nữa.)
-  const TL = { main: [140, 128, 200, 32], play: [160, 128, 160, 32], guest: [180, 168, 120, 20], row: [[128, 168, 108, 22], [244, 168, 108, 22]], gg: [112, 166, 150, 24], bv: [268, 166, 100, 24], info: 210, lang: [430, 5, 44, 16] };
+  const TL = { main: [140, 128, 200, 32], play: [160, 128, 160, 32], guest: [180, 168, 120, 20], row: [[128, 168, 108, 22], [244, 168, 108, 22]], gg: [112, 166, 150, 24], bv: [268, 166, 100, 24], info: 210, lang: [430, 5, 44, 16], logo: [140, 52, 200, 40] }; // logo: ô của ảnh gd-logo (phiên C3), trùm đúng chỗ chữ LINH KHÍ
   G.titleLayout = TL; // để bài kiểm tra biết nút nằm ở đâu
   // Lớp tối dịu phía sau khối chữ và nút: hình elip tối dần ra mép (không phủ cả màn), để chữ không đè lên nhà cửa sáng.
   function titleVeil() {
@@ -899,13 +899,19 @@
   function titleLogo() {
     const u = G.ux;
     T.drum(240, 30, 20, 0.85); // mặt trống đồng nhỏ làm biểu tượng, nằm trên chữ (không còn nằm sau chữ)
-    ui.font(38, true); u.textAlign = 'center'; u.lineJoin = 'round';
-    u.fillStyle = 'rgba(0,0,0,0.55)'; u.fillText('LINH KHÍ', 240, 89);
-    u.lineWidth = 5; u.strokeStyle = '#1a120a'; u.strokeText('LINH KHÍ', 240, 86);
-    ui.text('LINH KHÍ', 240, 86, { size: 38, bold: true, align: 'center', color: GOLD, shadow: false });
-    // vệt sáng mảnh trên nửa trên mặt chữ (ánh kim loại), chỉ một dải, không phát sáng
-    u.save(); u.beginPath(); u.rect(120, 58, 240, 12); u.clip();
-    ui.text('LINH KHÍ', 240, 86, { size: 38, bold: true, align: 'center', color: '#fff6d8', shadow: false }); u.restore();
+    // Phiên C3: có tệp gd-logo (ảnh AI 200×40, chữ LINH KHÍ khắc gỗ; trang tools/tach-giao-dien, lô "Logo") thì vẽ ảnh vào đúng chỗ của chữ;
+    // không có thì vẽ chữ phông y như cũ. Dòng phụ và câu giới thiệu bên dưới vẫn là chữ của game.
+    const SC = G.spriteCustom, logo = SC && SC.gdSan && SC.veGd ? SC.gdSan('gd-logo') : null;
+    if (logo) SC.veGd(u, logo, TL.logo[0], TL.logo[1], TL.logo[2], TL.logo[3]);
+    else {
+      ui.font(38, true); u.textAlign = 'center'; u.lineJoin = 'round';
+      u.fillStyle = 'rgba(0,0,0,0.55)'; u.fillText('LINH KHÍ', 240, 89);
+      u.lineWidth = 5; u.strokeStyle = '#1a120a'; u.strokeText('LINH KHÍ', 240, 86);
+      ui.text('LINH KHÍ', 240, 86, { size: 38, bold: true, align: 'center', color: GOLD, shadow: false });
+      // vệt sáng mảnh trên nửa trên mặt chữ (ánh kim loại), chỉ một dải, không phát sáng
+      u.save(); u.beginPath(); u.rect(120, 58, 240, 12); u.clip();
+      ui.text('LINH KHÍ', 240, 86, { size: 38, bold: true, align: 'center', color: '#fff6d8', shadow: false }); u.restore();
+    }
     // dòng phụ: chữ giãn rộng, hai gạch đồng hai bên
     ui.font(9, true);
     const sub = 'S P I R I T B L A D E', sw = u.measureText(sub).width;

@@ -39,6 +39,40 @@
     c.imageSmoothingEnabled = sm; c.globalAlpha = ga;
   }
   T.clearCache = () => cache.clear();
+  // ---------- ảnh AI cho hình lớn (phiên C3; trang tools/tach-giao-dien, lô "Hình lớn") ----------
+  // Mã tệp: gd-nut-noi-chuyen, -sang, -bam (64×64) · gd-the-ai, -chon, -khoa (38×30) · gd-the-trum, -chon, -khoa (42×34) · gd-trong-dong (42×42).
+  // Có tệp thì vẽ ảnh; không có thì vẽ code y như cũ (không đổi một điểm ảnh). Thiếu tệp trạng thái (-sang, -bam, -chon, -khoa) mà có tệp thường
+  // thì game tự làm sáng / làm tối từ tệp thường. Ảnh KHÔNG đi qua bộ nhớ đệm `cache` ở trên: mỗi lần vẽ đều hỏi SC.gdSan,
+  // nên ảnh nạp xong lúc nào hiện lúc đó, gỡ tệp ra thì về hình code ngay.
+  const gdCo = (ma) => { const SC = G.spriteCustom; return SC && SC.gdSan && SC.veGd ? SC.gdSan(ma) : null; };
+  const GD_BIEN = typeof WeakMap !== 'undefined' ? new WeakMap() : null; // ảnh thường -> { sang, toi } (bản game tự làm, nhớ theo từng ảnh)
+  function gdBien(g0, kieu) {
+    if (!g0 || !GD_BIEN) return null;
+    let b = GD_BIEN.get(g0); if (!b) { b = {}; GD_BIEN.set(g0, b); }
+    if (b[kieu] !== undefined) return b[kieu];
+    let kq = null;
+    try {
+      const cv = document.createElement('canvas'); cv.width = g0.pw; cv.height = g0.ph;
+      const x = cv.getContext('2d'); x.drawImage(g0.img, 0, 0);
+      const d = x.getImageData(0, 0, cv.width, cv.height), q = d.data;
+      for (let i = 0; i < q.length; i += 4) {
+        if (!q[i + 3]) continue;
+        if (kieu === 'toi') { const l = (q[i] * 0.299 + q[i + 1] * 0.587 + q[i + 2] * 0.114) / 255; q[i] = 28 + 48 * l; q[i + 1] = 44 + 66 * l; q[i + 2] = 42 + 60 * l; } // xám xanh như thẻ "chưa mở" vẽ code (#1c2c2a → #4c6e66)
+        else { q[i] += (255 - q[i]) * 0.28; q[i + 1] += (240 - q[i + 1]) * 0.28; q[i + 2] += (196 - q[i + 2]) * 0.28; } // sáng lên, ngả vàng nhạt (#fff0c4)
+      }
+      x.putImageData(d, 0, 0);
+      kq = Object.assign({}, g0, { img: cv, ghep9: new Map() });
+    } catch (e) { kq = null; }
+    b[kieu] = kq;
+    return kq;
+  }
+  function gdVe(ga, x, y, w, h, alpha) {
+    const c = G.ux, a0 = c.globalAlpha;
+    if (alpha != null) c.globalAlpha = a0 * alpha;
+    G.spriteCustom.veGd(c, ga, x, y, w, h);
+    c.globalAlpha = a0;
+  }
+  T.gdHinhLon = { co: gdCo, bien: gdBien }; // cho công cụ và bài kiểm tra
   const R = (x, y, w, h, c) => { g.fillStyle = c; g.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); };
   const P = (x, y, c) => R(x, y, 1, 1, c);
   function hash(x, y) { let n = (Math.imul(x | 0, 374761393) + Math.imul(y | 0, 668265263)) | 0; n = Math.imul(n ^ (n >>> 13), 1274126177); return ((n ^ (n >>> 16)) >>> 0) / 4294967296; }
@@ -87,7 +121,11 @@
   }
 
   // Mặt trống lớn làm hình trang trí (màn tiêu đề). alpha: độ đậm.
-  T.drum = function (cx, cy, r, alpha) { put(layer('drum|' + r, r * 2 + 2, r * 2 + 2, () => { drum(r + 1, r + 1, r, { n: 14 }); ring(r + 1, r + 1, Math.round(r * 0.8), 1, C.br); for (let k = 0; k < 24; k++) { const an = (k * Math.PI) / 12; disc(r + 1 + Math.round(Math.cos(an) * r * 0.72), r + 1 + Math.round(Math.sin(an) * r * 0.72), 1, C.gold); } }), cx - r - 1, cy - r - 1, alpha); };
+  T.drum = function (cx, cy, r, alpha) {
+    const ga = gdCo('gd-trong-dong'); // phiên C3: có ảnh thì vẽ ảnh vào đúng ô của hình code (42×42 khi r = 20)
+    if (ga) { gdVe(ga, Math.round(cx - r - 1), Math.round(cy - r - 1), r * 2 + 2, r * 2 + 2, alpha); return; }
+    put(layer('drum|' + r, r * 2 + 2, r * 2 + 2, () => { drum(r + 1, r + 1, r, { n: 14 }); ring(r + 1, r + 1, Math.round(r * 0.8), 1, C.br); for (let k = 0; k < 24; k++) { const an = (k * Math.PI) / 12; disc(r + 1 + Math.round(Math.cos(an) * r * 0.72), r + 1 + Math.round(Math.sin(an) * r * 0.72), 1, C.gold); } }), cx - r - 1, cy - r - 1, alpha); 
+  };
 
   // ---------- chạm ----------
   function lighten(col, k) { const n = parseInt(String(col).slice(1), 16); if (isNaN(n)) return col; const f = (v) => ('0' + Math.round(v + (255 - v) * k).toString(16)).slice(-2); return '#' + f((n >> 16) & 255) + f((n >> 8) & 255) + f(n & 255); }
@@ -194,7 +232,11 @@
     o = o || {}; r = Math.round(r);
     const st = o.pressed ? 1 : 0, lit = !!o.lit, dull = !!o.dim && !lit;
     const sz = r * 2 + 8;
-    const cv = layer('r|' + r + '|' + kind + '|' + st + '|' + (lit ? 1 : 0) + (dull ? 1 : 0), sz, sz, () => {
+    // Phiên C3: nút "Nói chuyện" / "Vào cổng" bằng ảnh. Tệp thường = nút lúc nghỉ; -sang = có người ở gần; -bam = đang bấm.
+    // Thiếu -bam thì dùng ảnh sáng; thiếu -sang thì game tự làm sáng tệp thường. Game tự dịch nút xuống 1 điểm khi bấm và tự viết chữ.
+    const tenGd = 'gd-nut-noi-chuyen';
+    const ga = kind !== 'talk' ? null : dull || !(lit || st) ? gdCo(tenGd) : (st ? gdCo(tenGd + '-bam') : null) || gdCo(tenGd + '-sang') || gdBien(gdCo(tenGd), 'sang');
+    const cv = ga ? null : layer('r|' + r + '|' + kind + '|' + st + '|' + (lit ? 1 : 0) + (dull ? 1 : 0), sz, sz, () => {
       const c0 = r + 3, cyy = r + 3 + st;
       if (!st) disc(c0 + 1, cyy + 2, r, 'rgba(0,0,0,0.5)');
       const mid = kind === 'atk' || kind === 'talk' || kind === 'boat' ? C.cop : kind === 'skill' ? '#7a5a14' : kind === 'sp' ? '#1f4f7a' : C.patD;
@@ -206,7 +248,8 @@
       icon(kind === 'atk' ? 'sword' : kind === 'skill' ? 'flame' : kind === 'sp' ? 'slash' : kind === 'talk' ? 'talk' : kind === 'boat' ? 'boat' : 'dash', c0, cyy - (hasLab ? 3 : 0), { a: dull ? '#7f948e' : '#fff0c4', b: dull ? '#7f948e' : '#ffb347', c: '#fff', s: '#fff6dc', d: '#c9b383', h: C.gold, w: '#fff', k: dull ? '#26403c' : '#3a1a12' }, hasLab ? 1 : s);
     });
     const dy = pressFx('r' + Math.round(cx) + '|' + Math.round(cy) + '|' + r, st === 1);
-    put(cv, cx - r - 3, cy - r - 3 + dy, dull ? 0.5 : 1);
+    if (ga) gdVe(ga, Math.round(cx - r - 3), Math.round(cy - r - 3 + dy) + st, sz, sz, dull ? 0.5 : 1);
+    else put(cv, cx - r - 3, cy - r - 3 + dy, dull ? 0.5 : 1);
     if (o.label) {
       const c = G.ux; ui.font(8, true); c.textAlign = 'center'; c.lineWidth = 2.2; c.lineJoin = 'round'; c.strokeStyle = 'rgba(20,10,6,0.9)'; c.strokeText(o.label, cx, cy + dy + st + 10.5);
       txt(o.label, cx, cy + dy + st + 10.5, { size: 8, bold: true, align: 'center', color: '#fff6dc', shadow: false });
@@ -402,7 +445,12 @@
     x = Math.round(x); y = Math.round(y);
     const r = o.r || (o.boss ? 17 : 15), sel = st === 'sel', lock = st === 'lock';
     const cw = r * 2 + 18, chh = r * 2 + 10;
-    const cv = layer('sc|' + r + '|' + st + '|' + (o.boss ? 1 : 0), cw, chh, () => {
+    // Phiên C3: thẻ ải bằng ảnh. Tệp thường = ải đã mở / đã qua; -chon = đang chọn; -khoa = chưa mở.
+    // Thiếu -chon / -khoa thì game tự làm sáng / làm tối tệp thường (thẻ khoá tự làm có thêm ổ khoá nhỏ vẽ code). Số ải và sao vẫn do game viết.
+    const tenGd = o.boss ? 'gd-the-trum' : 'gd-the-ai';
+    let khoaCode = false;
+    const ga = lock ? gdCo(tenGd + '-khoa') || ((khoaCode = true) && gdBien(gdCo(tenGd), 'toi')) : sel ? gdCo(tenGd + '-chon') || gdBien(gdCo(tenGd), 'sang') : gdCo(tenGd);
+    const cv = ga ? null : layer('sc|' + r + '|' + st + '|' + (o.boss ? 1 : 0), cw, chh, () => {
       const cx = cw >> 1, cy = r + 4;
       disc(cx + 1, cy + 2, r, 'rgba(0,0,0,0.5)');
       if (sel) { for (let k = 0; k < 24; k++) { const an = (k * Math.PI) / 12; P(cx + Math.round(Math.cos(an) * (r + 3)), cy + Math.round(Math.sin(an) * (r + 3)), C.hi); } ring(cx, cy, r + 1, 1, C.hi); }
@@ -412,8 +460,11 @@
       if (lock) bmp(cx - 2, cy - 3, BM.lock, { a: '#7f948e' });
     });
     const cx = x + w / 2, top = y + (o.top || 0);
-    put(cv, Math.round(cx - cw / 2), top);
     const cy = top + r + 4;
+    if (ga) { // ảnh đặt sao cho tâm ảnh trùng tâm mặt trống của hình code (chỗ game viết số ải)
+      gdVe(ga, Math.round(cx - cw / 2), top - 1, cw, chh);
+      if (lock && khoaCode) put(layer('sc|khoa', 5, 7, () => bmp(0, 0, BM.lock, { a: '#7f948e' })), Math.round(cx - cw / 2) + (cw >> 1) - 2, cy - 3);
+    } else put(cv, Math.round(cx - cw / 2), top);
     if (!lock) {
       const big = r >= 14, ls = big ? (String(label).length > 1 ? 9 : 11) : 8;
       txt(String(label), cx, cy + ls * 0.35, { size: ls, bold: true, align: 'center', color: C.ink });
