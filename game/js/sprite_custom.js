@@ -973,6 +973,15 @@
   const PHANG = { ol: false, bevel: false };
   // Lớp vốn có của món đồ (để biết cap.lop có dời lớp hay không).
   const lopGoc = (t) => (t.o === 'hats' ? (t.lop === 'truoc' ? 'truoc' : 'than') : t.o === 'backs' || t.o === 'wings' ? 'sau' : t.o === 'masks' ? 'truoc' : t.o === 'hands' ? (t.kieu === 'cam' ? 'truoc' : 'than') : 'than');
+  // CÁNH THEO CẤP (làn E1). Mã tp-wings-<loại>-1 và tp-wings-<loại>-3 (ô wings, look = <loại>) là ảnh riêng của cánh cấp 1 và cấp 3;
+  // tp-wings-<loại> vẫn là ảnh cấp 2 và là ảnh dự phòng cho cấp chưa có ảnh riêng. Cờ tắt: G.spriteCustom.CANH_THEO_CAP = false
+  // (mọi cấp lại dùng ảnh cấp 2 như trước; gọi G.tinhLinh.clearCache() để hình đổi ngay).
+  const MA_CANH_CAP = /^tp-wings-([a-z0-9_]+)-([13])$/;
+  SC.CANH_THEO_CAP = true;
+  const capCanh = (sp) => { const m = sp && sp.tp && sp.tp.o === 'wings' ? MA_CANH_CAP.exec(sp.ma) : null; return m && m[1] === sp.tp.look ? +m[2] : 0; }; // 1 | 3 | 0 (không phải ảnh theo cấp)
+  const anhCanh = (look, lv) => { if (lv === 2 || SC.CANH_THEO_CAP === false) return null; const a = doSan('tp-wings-' + look + '-' + lv); return a && capCanh(a) === lv ? a : null; };
+  // Cùng ảnh đó nhưng mang mã của ảnh cấp 2, để tinhDatMon lấy đúng mục chỉnh (cap) của ảnh cấp 2.
+  const muonCap = (a, ma) => (a.muon && a.muon.ma === ma ? a.muon : (a.muon = Object.create(a, { ma: { value: ma } })));
   function dinhNghia(sp) {
     const t = sp.tp, L = t.lech, ve = (F, P, dx, dy, doi) => P(PHANG, () => veVaoKhung(F, sp, L[0] + (dx || 0), L[1] + (dy || 0), doi));
     const o = { id: t.look, name: sp.ten, tuVe: true, net: sp.net || 1, ma: sp.ma, lopGoc: lopGoc(t) }; // net: game ghép em bé nét cao khi mặc món này
@@ -1002,12 +1011,22 @@
       o.draw = (H, cx) => { if (!moi(cx, null)) veVaoKhung(H, sp, L[0], L[1]); };
       o.veLop = (cx, P) => P(PHANG, (s) => { const c0 = s.clip; s.clip = false; o.draw(cx.H, cx); s.clip = c0; });
     } else if (t.o === 'wings') {
+      // CÁNH THEO CẤP (làn E1): cấp 1 và cấp 3 có ảnh riêng (tp-wings-<loại>-1, tp-wings-<loại>-3) thì vẽ ảnh đó; không có thì vẽ ảnh
+      // cấp 2 (tệp tp-wings-<loại>, y hệt trước); ảnh cấp 2 cũng không có thì vẽ code như cũ (t.cu). Ảnh theo cấp đặt như ảnh cấp 2:
+      // điểm goc_canh của ảnh trùng điểm goc_canh của thân; chỉnh theo cặp (cap) ghi cho ảnh cấp 2 trong tệp ghép cũng áp cho ảnh theo cấp.
+      const goc = capCanh(sp) ? null : sp, maGoc = goc ? goc.ma : 'tp-wings-' + t.look; // goc: ảnh cấp 2 (null: tệp này là ảnh riêng của một cấp)
       o.levels = 3;
       o.draw = (cx, P) => {
-        if (moi(cx, P)) return;
-        const lv = Math.max(1, Math.min(3, cx.lv | 0)), flap = [-14, 0, 18, 0][(cx.f | 0) % 4] * (lv === 1 ? 0.6 : 1) * (cx.ps && cx.ps.anim === 'dodge' ? 1.5 : 1);
-        ve(cx.B.sub(-3, -11, flap * 0.7 + 16), P, 0, 0, toiDi); // cánh xa: tối hơn
-        ve(cx.B.sub(-4, -10, flap), P);
+        const lv = Math.max(1, Math.min(3, cx.lv | 0)), a = anhCanh(t.look, lv) || goc;
+        if (!a) { if (t.cu && t.cu.draw) t.cu.draw(cx, P); return; } // cấp này chưa có ảnh nào: code cũ
+        if (cx && cx.fit && (a.tp.diem || coCap(cx.key, a.ma) || coCap(cx.key, maGoc))) {
+          const r = SC.tinhDatMon(cx, coCap(cx.key, a.ma) || !coCap(cx.key, maGoc) ? a : muonCap(a, maGoc), null);
+          if (!r.an) P(PHANG, () => { for (const d of r.ds) veDat(cx, r.sp, d); });
+          return;
+        }
+        const La = a.tp.lech, flap = [-14, 0, 18, 0][(cx.f | 0) % 4] * (lv === 1 ? 0.6 : 1) * (cx.ps && cx.ps.anim === 'dodge' ? 1.5 : 1);
+        P(PHANG, () => veVaoKhung(cx.B.sub(-3, -11, flap * 0.7 + 16), a, La[0], La[1], toiDi)); // cánh xa: tối hơn
+        P(PHANG, () => veVaoKhung(cx.B.sub(-4, -10, flap), a, La[0], La[1]));
       };
       o.veLop = o.draw;
     }
@@ -1314,6 +1333,9 @@
   function noiTrangPhuc(sp) {
     const L = G.heroLooks, t = sp.tp; if (!L || !L[t.o]) return;
     const cu = L[t.o][t.look];
+    // Ảnh riêng của cánh cấp 1 / cấp 3 KHÔNG thay ảnh cấp 2: đã có ảnh đứng tên loại cánh này thì thôi (lúc vẽ nó tự tìm ảnh theo cấp).
+    // Chưa có ảnh nào thì tệp này đứng tên: cấp có ảnh vẽ ảnh, cấp còn lại vẽ code như cũ.
+    if (capCanh(sp) && cu && cu.tuVe) return;
     if (t.cu === undefined) t.cu = cu && cu.tuVe ? cu.cuGoc || null : cu || null;
     const o = dinhNghia(sp); o.cuGoc = t.cu;
     L[t.o][t.look] = o;
