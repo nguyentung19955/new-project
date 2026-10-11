@@ -400,7 +400,59 @@
 
   // ---------- số sát thương và chữ nổi (vẽ ở lớp giao diện) ----------
   const FONT = '"Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+  // Đợt 8 (độ đọc trận đấu): G.DO_DOC_TRAN = true thì số sát thương đi theo luật mới ở khối "Đợt 8" ngay dưới; false thì y như cũ.
+  const DOC = () => G.DO_DOC_TRAN === true && !!(G.theme && G.theme.DOC);
+  const laSo = (n) => n.loai === 'dmg' || n.loai === 'be'; // số sát thương (gây ra / em bé nhận); còn lại là chữ nổi
+  function demSo(so) { let k = 0; for (const q of S.N) if (laSo(q) === so) k++; return k; }
+  // Tạo một số / chữ nổi theo luật Đợt 8. o thêm: { loai: 'dmg' | 'be' | 'chu', chu: mục tiêu, val: giá trị, dot, crit }
+  //  - tối đa D.soToiDa số sát thương (và D.chuToiDa chữ nổi) cùng lúc: đủ rồi thì cái cũ nhất tắt sớm (số nhịp độc/cháy nhường trước);
+  //  - không lệch ngẫu nhiên: số đứng ngay trên đầu mục tiêu, số nối tiếp của cùng mục tiêu lệch ngang so le D.soLe điểm ảnh;
+  //  - chuyện đè nhau do drawNumsDoc lo lúc vẽ (theo toạ độ thật của từng khung hình).
+  function numDoc(x, y, s, o) {
+    const D = G.theme.DOC, N = S.N, so = o.loai === 'dmg' || o.loai === 'be', max = so ? D.soToiDa : D.chuToiDa;
+    for (let dem = demSo(so); dem >= max; dem--) {
+      let k = -1;
+      if (so) for (let i = 0; i < N.length && k < 0; i++) if (laSo(N[i]) && N[i].dot) k = i;
+      for (let i = 0; i < N.length && k < 0; i++) if (laSo(N[i]) === so) k = i;
+      if (k < 0) break;
+      N.splice(k, 1);
+    }
+    let lan = 0;
+    if (o.chu) for (const q of N) if (q.chu === o.chu) lan++;
+    const side = lan ? (lan % 2 ? 1 : -1) * D.soLe * Math.ceil(lan / 2) : 0;
+    const fall = o.vy == null;
+    const n = { x: x + side, y, x0: x, y0: y, vx: o.vx == null ? 0 : o.vx, vy: fall ? -58 : o.vy, g: fall ? 150 : 46, hold: fall ? 0.03 : 0.1, s, col: o.col || '#ffffff', size: Math.max(D.coChu, o.size || 8),
+      t: o.t || 0.75, t0: o.t || 0.75, pop: o.pop == null ? 0.7 : o.pop, edge: o.edge || 'rgba(12,8,8,0.9)', kind: o.kind || 0, d: o.d || 0,
+      loai: o.loai || 'chu', chu: o.chu || null, val: o.val || 0, dot: !!o.dot, crit: !!o.crit, day: 0, hop: null, nay: null };
+    N.push(n);
+    return n;
+  }
+  // Số đang hiện của cùng mục tiêu, cùng loại, mới ra chưa quá D.gop giây: đòn kế tiếp cộng dồn vào đó thay vì ra số mới.
+  function gopSo(chu, loai, dot) {
+    const D = G.theme.DOC;
+    for (let i = S.N.length - 1; i >= 0; i--) { const q = S.N[i]; if (q.chu === chu && q.loai === loai && q.dot === dot && !(q.d > 0) && q.t0 - q.t < D.gop) return q; }
+    return null;
+  }
+  function congDon(q, v) { q.val += v; q.nay = S.t; q.t = Math.max(q.t, q.t0 * 0.7); }
+  function dmgDoc(t, d, o, top) {
+    const D = G.theme.DOC, dot = !!o.dot, v = Math.max(1, Math.round(d));
+    if (dot) { if (!(S.t - (t.fxHitAt == null ? -9 : t.fxHitAt) < 0.1)) t.flash = 0; t.fxDotAt = S.t; t.fxDotEl = o.el || null; } // như bản cũ: nhịp độc/cháy nhuộm màu hệ thay cho chớp trắng
+    const q = gopSo(t, 'dmg', dot);
+    if (q) {
+      congDon(q, v);
+      if (o.crit && !q.crit) { q.crit = true; q.col = '#ffd23f'; q.size = 13; q.edge = 'rgba(90,30,0,0.95)'; q.kind = 1; q.pop = 1.2; } // có đòn chí mạng trong lượt gộp: cả số thành chí mạng
+      q.s = q.val + (q.crit ? '!' : '');
+      return;
+    }
+    const c2 = o.el ? pal(o.el).c2 : '#ffffff';
+    top -= 5; // số mọc ngay TRÊN thanh máu nhỏ của quái (thanh máu thuộc lớp trên, vẽ sau số): số mới ra không bị thanh che
+    if (o.crit) num(t.x, top - 4, v + '!', { col: '#ffd23f', size: 13, pop: 1.2, t: 1, edge: 'rgba(90,30,0,0.95)', kind: 1, loai: 'dmg', chu: t, val: v, crit: true });
+    else if (dot) { if (demSo(true) <= D.soToiDa - 2) num(t.x, top + 4, String(v), { col: c2, size: 7, pop: 0.2, t: 0.55, vy: -20, loai: 'dmg', chu: t, val: v, dot: true }); } // số nhịp nhỏ: chỉ ra khi còn chỗ, không đẩy số đòn đánh đi
+    else if (o.m < 0.8) num(t.x, top, String(v), { col: '#9a9a9a', size: 7, pop: 0.3, t: 0.6, loai: 'dmg', chu: t, val: v });
+    else num(t.x, top, String(v), { col: c2, size: o.m > 1.25 ? 10 : 8, pop: o.m > 1.25 ? 1 : 0.7, loai: 'dmg', chu: t, val: v });
+  }
   function num(x, y, s, o) {
+    if (DOC()) return numDoc(x, y, s, o);
     // dời chỗ để các số ra cùng lúc không đè lên nhau
     let lift = 0, side = 0;
     for (const q of S.N) {
@@ -419,6 +471,7 @@
   api('dmg', (t, d, o) => {
     o = o || {};
     const top = t.y - Math.min(60, (t.h || 24) * (t.scale || 1)) - 4;
+    if (DOC()) { dmgDoc(t, d, o, top); return; }
     const s = String(Math.max(1, Math.round(d)));
     if (o.crit) num(t.x, top - 2, s + '!', { col: '#ffd23f', size: 13, pop: 1.2, t: 1, edge: 'rgba(90,30,0,0.95)', kind: 1 });
     else if (o.dot) {
@@ -443,7 +496,63 @@
     if (!f) { f = '700 ' + (k / 2) + 'px ' + FONT; FONTS.set(k, f); }
     return f;
   }
+  // Đợt 8: vẽ số sao cho KHÔNG số nào đè số khác. Xét từ số mới nhất về số cũ nhất: số mới đứng đúng chỗ của nó, số cũ hơn mà chạm
+  // hộp của số đã xếp thì nhích lên trên vừa đủ (độ nhích n.day được nhớ lại nên số không giật qua lại). Hết chỗ thì số cũ tắt sớm.
+  // n.hop = hộp [x0, y0, x1, y1] vừa vẽ ở khung này (toạ độ giao diện) — bài kiểm đọc để đếm và soi đè nhau.
+  const HOPS = [];
+  function drawNumsDoc(cam) {
+    const c = G.ux, D = G.theme.DOC, N = S.N;
+    HOPS.length = 0;
+    c.textAlign = 'center';
+    c.lineJoin = 'round';
+    for (let i = N.length - 1; i >= 0; i--) {
+      const n = N[i];
+      n.hop = null;
+      if (n.d > 0) continue;
+      const age = n.t0 - n.t, a = n.t < n.t0 * 0.35 ? Math.max(0, n.t / (n.t0 * 0.35)) : 1;
+      let sc = age < 0.07 ? 0.55 + (0.45 + n.pop) * (1 - (1 - age / 0.07) * (1 - age / 0.07)) : age < 0.24 ? 1 + n.pop * (1 - eio((age - 0.07) / 0.17)) : 1;
+      sc *= 0.88 + 0.12 * a;
+      if (n.nay != null && S.t - n.nay < 0.12) sc *= 1 + 0.18 * (1 - (S.t - n.nay) / 0.12); // vừa cộng dồn: nảy nhẹ một nhịp
+      const size = Math.max(D.coChu, n.size * sc), so = laSo(n);
+      c.font = fontOf(size);
+      const w = c.measureText(n.s).width + 2 + (n.kind === 2 ? 36 : 0), up = size * (so ? 0.8 : 1.02), dn = size * (so ? 0.12 : 0.3);
+      const x = n.x - cam;
+      let y = n.y + size * 0.35 - n.day, ok = false;
+      for (let g = 0; g < 12 && !ok; g++) {
+        let hit = null;
+        for (const h of HOPS) if (x - w / 2 < h[2] && x + w / 2 > h[0] && y - up < h[3] && y + dn > h[1]) { hit = h; break; }
+        if (!hit) ok = true;
+        else { const them = y + dn - hit[1] + 0.5; n.day += them; y -= them; }
+      }
+      if (!ok || y - up < 1) { n.t = Math.min(n.t, 0); continue; } // hết chỗ trên màn: số cũ tắt sớm
+      n.hop = [x - w / 2, y - up, x + w / 2, y + dn];
+      HOPS.push(n.hop);
+      n.ve = size; n.vy0 = y; n.va = a;
+    }
+    for (const n of N) {
+      if (!n.hop) continue;
+      const age = n.t0 - n.t, size = n.ve, y = n.vy0;
+      const jit = n.kind === 1 && age < 0.15 ? (((age * 60) | 0) % 2 ? 0.5 : -0.5) : 0;
+      const x = n.x - cam + jit;
+      c.globalAlpha = n.va;
+      c.font = fontOf(size);
+      c.lineWidth = n.kind ? 2.4 : 1.8;
+      c.strokeStyle = n.edge;
+      c.strokeText(n.s, x, y);
+      c.fillStyle = n.kind === 1 && age < 0.07 ? '#ffffff' : n.col;
+      c.fillText(n.s, x, y);
+      if (n.kind === 2) {
+        const w = c.measureText(n.s).width / 2 + 3, k = Math.min(1, age / 0.18), L = 12 * k;
+        c.fillStyle = n.col;
+        c.fillRect(x - w - L, y - size * 0.38, L, 1.4); c.fillRect(x + w, y - size * 0.38, L, 1.4);
+        c.fillStyle = '#ffffff';
+        c.fillRect(x - w - L - 2, y - size * 0.38 - 0.8, 2.6, 2.6); c.fillRect(x + w + L - 0.6, y - size * 0.38 - 0.8, 2.6, 2.6);
+      }
+    }
+    c.globalAlpha = 1;
+  }
   function drawNums(cam) {
+    if (DOC()) { drawNumsDoc(cam); return; }
     const c = G.ux;
     c.textAlign = 'center';
     c.lineJoin = 'round';
@@ -1416,7 +1525,12 @@
     if (!ai) add({ ty: 'flash', x: P.x, y: P.y - 14, r: 8, t: 0.1, c: '#ffffff', c2: '#ff6a5a', ly: 1 });
     for (let i = 0; i < (ai ? 3 : 7); i++) { const a = R() * TAU, v = rr(60, 140); streak(P.x, P.y - 14, Math.cos(a) * v, Math.sin(a) * v * 0.7, rr(0.14, 0.26), i % 2 ? RAMP.hurt : PL.ramp, 1, 6, 150, 3); }
     if (blocked) { addRing(P.x, P.y - 14, 5, 18, 0.18, '#ffd23f', 2, 1); for (let i = 0; i < 5; i++) emit(6, P.x + rr(-10, 10), P.y - rr(4, 26), 0, 0, 0.25, RAMP.gold, 3, 0, 0, null, 1); }
-    num(P.x, P.y - 38, '-' + Math.round(amt), { col: '#ff6a5a', size: 10, pop: 1, edge: 'rgba(60,0,0,0.95)', kind: 3 });
+    if (DOC()) {
+      // Đợt 8: số máu em bé mất màu đỏ, có dấu trừ (khác hẳn số gây ra cho quái); trúng liền nhau trong 0,25 giây thì cộng dồn.
+      const v = Math.round(amt), q = gopSo(P, 'be', false);
+      if (q) { congDon(q, v); q.s = '-' + q.val; }
+      else num(P.x, P.y - 38, '-' + v, { col: G.theme.DOC.soMat, size: 10, pop: 1, edge: 'rgba(60,0,0,0.95)', kind: 3, loai: 'be', chu: P, val: v });
+    } else num(P.x, P.y - 38, '-' + Math.round(amt), { col: '#ff6a5a', size: 10, pop: 1, edge: 'rgba(60,0,0,0.95)', kind: 3 });
     P.fxS = -0.1; P.fxSV = 0; P.fxL = -P.face * 4; P.fxLV = 0; // trúng đòn: bẹp người, ngửa ra sau
     trauma(0.45); kick(rr(-2, 2), 2); stop(60);
   });
@@ -1718,7 +1832,9 @@
       // dọn sạch phòng: lấp lánh vàng chạy khắp sân và một dòng chữ ngắn
       for (let i = 0; i < 26; i++) { const o = emit(6, rr(W.x0, W.x1), rr(W.y0, W.y1), 0, rr(-34, -12), rr(0.5, 1.1), RAMP.gold, R() < 0.4 ? 4 : 2, 0, 0, null, 1); o.t0 = o.t; }
       addRing(W.P.x, W.P.y, 6, 90, 0.6, 'rgba(255,210,63,0.8)', 3, 0);
-      num(W.cam + G.W / 2, 112, 'Sạch bóng quái!', { col: '#ffd23f', size: 12, pop: 1.4, t: 1.5, vx: 0, vy: -6, edge: 'rgba(90,40,0,0.95)', kind: 2 });
+      // Đợt 8: dòng này là thông báo chiến đấu → vào dải thông báo trên mặt tường sau (js/stage.js), không còn nổi giữa sàn.
+      if (DOC() && G.docTran && G.docTran.bao) G.docTran.bao('Sạch bóng quái!', '#ffd23f', 1.8);
+      else num(W.cam + G.W / 2, 112, 'Sạch bóng quái!', { col: '#ffd23f', size: 12, pop: 1.4, t: 1.5, vx: 0, vy: -6, edge: 'rgba(90,40,0,0.95)', kind: 2 });
     }
     S.cleared = !!W.cleared;
   }
@@ -1952,7 +2068,12 @@
     if (!P.dead && P.hp / P.maxhp < 0.3) a = Math.max(a, 0.2 + 0.14 * Math.sin(S.t * 5.5));
     if (a > 0.01) vignette(c, a);
     if (S.flash > 0 && VX('rung') > 0) { c.fillStyle = 'rgba(' + S.flashCol + ',' + (Math.min(1, S.flash / 0.45) * 0.38 * Math.min(1, VX('rung'))).toFixed(3) + ')'; c.fillRect(0, 0, G.W, G.H); } // chớp cả màn hình đi cùng rung: G.VFX.rung = 0 thì tắt cả hai
+    // Đợt 8 — thứ bậc hình ảnh (bảng G.theme.DOC.thuBac): chữ phụ và thông báo vẽ TRƯỚC số sát thương; thanh máu quái / trùm và trạng thái
+    // trên thân vẽ SAU số; vùng báo đòn (G.baoTruoc.draw, ngay sau hàm này trong G.drawWorld) vẽ sau cùng nên không gì che được nó.
+    const dt = DOC() ? G.docTran : null;
+    if (dt && dt.duoi) { try { dt.duoi(); } catch (e) { fail(e); } }
     drawNums(cam);
+    if (dt && dt.tren) { try { dt.tren(); } catch (e) { fail(e); } }
   });
   // Viền đỏ quanh màn hình: vẽ sẵn một lần vào canvas nhỏ, mỗi khung chỉ dán lại với độ trong suốt
   let VIG = null;

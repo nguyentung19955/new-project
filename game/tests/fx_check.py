@@ -117,7 +117,9 @@ UNIT = r"""
     W = room(); const e5 = dummy(260);
     for (let i = 0; i < 4; i++) G.damage(e5, 10, {});
     const ys = G.fx.state().N.map((n) => Math.round(n.y));
-    ok('bốn số cùng lúc nằm ở bốn độ cao khác nhau', new Set(ys).size === 4, ys.join(','));
+    // Đợt 8 (G.DO_DOC_TRAN): bốn đòn lên cùng một quái trong 0,25 giây cộng dồn thành MỘT số (40); cờ tắt thì như cũ, bốn số ở bốn độ cao
+    if (G.DO_DOC_TRAN === true) ok('bốn đòn cùng lúc lên một quái gộp thành một số 40', G.fx.state().N.length === 1 && G.fx.state().N[0].s === '40', G.fx.state().N.map((n) => n.s).join(','));
+    else ok('bốn số cùng lúc nằm ở bốn độ cao khác nhau', new Set(ys).size === 4, ys.join(','));
 
     // 6. Quái chết: có xác tan dần rồi biến mất, không còn trong danh sách quái
     W = room(); const e6 = dummy(260, 1); G.applyStatus(e6, 'fire', 1);

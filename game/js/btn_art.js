@@ -483,16 +483,21 @@
     }
     return b.outline(OUT, true);
   }
-  // Thẻ giá mana: giọt nước xanh và con số. lack: đang thiếu mana thì số màu đỏ.
+  // Đợt 8 (độ đọc trận đấu): màu đỏ chỉ dành cho nguy hiểm, nên khi cờ G.DO_DOC_TRAN bật thì nút bấm không còn mảng đỏ:
+  // mặt nút Đánh thành đồng vàng (vòng nút vẫn mang màu hệ), mặt nút Chiêu / Chưởng hệ Lửa thành nâu than hồng, số mana đang thiếu thành xám thép.
+  // Màu lấy ở G.theme.DOC (js/ui_theme.js). Cờ tắt: mọi nút y như cũ.
+  const docTran = () => (G.DO_DOC_TRAN === true && G.theme && G.theme.DOC ? G.theme.DOC : null);
+  const matHe = (el) => { const D = docTran(); return D && el === 'fire' ? D.matLua : EL_FACE[el]; };
+  // Thẻ giá mana: giọt nước xanh và con số. lack: đang thiếu mana thì số màu đỏ (Đợt 8: xám thép, nền xám xanh).
   function costBadge(cost, lack) {
-    const str = String(cost), w = 5 + str.length * 4 + 4, b = new Buf(w, 9);
+    const str = String(cost), w = 5 + str.length * 4 + 4, b = new Buf(w, 9), D = docTran();
     b.rect(1, 0, w - 2, 9, OUT); b.rect(0, 1, w, 7, OUT);
-    b.rect(1, 1, w - 2, 7, lack ? '#3a1414' : '#10203a');
-    b.rect(1, 1, w - 2, 1, lack ? '#6a2420' : '#2a5a9a');
+    b.rect(1, 1, w - 2, 7, lack ? (D ? '#1c2230' : '#3a1414') : '#10203a');
+    b.rect(1, 1, w - 2, 1, lack ? (D ? '#3a4254' : '#6a2420') : '#2a5a9a');
     // giọt mana
     const dc = lack ? '#8a8f98' : '#7fd4ff';
     b.set(3, 2, dc); b.rect(2, 3, 3, 3, dc); b.set(3, 6, dc); b.set(2, 3, lack ? '#c8ccd4' : '#e9f9ff');
-    const col = lack ? '#ff6a5a' : '#e9f9ff';
+    const col = lack ? (D ? D.thieuMana : '#ff6a5a') : '#e9f9ff';
     for (let n = 0; n < str.length; n++) {
       const g = DIG[str[n]];
       if (g) for (let i = 0; i < 15; i++) if (g[i] === '1') b.set(6 + n * 4 + (i % 3), 2 + Math.floor(i / 3), col);
@@ -742,10 +747,10 @@
     if (kind === 'atk') {
       const fr = el === 'none' ? 0 : Math.floor(t * 5) % 2;
       key = [kind, R, wType(w), el, lv, fr]; ic = 'w_' + wType(w);
-      make = () => common({ ring: EL_RING[el], face: EL_FACE[el], el, lv, fr, studs: el !== 'ice', icon: iconBuf('w_' + wType(w), S, el) });
+      make = () => common({ ring: EL_RING[el], face: docTran() ? docTran().nutDanh : EL_FACE[el], el, lv, fr, studs: el !== 'ice', icon: iconBuf('w_' + wType(w), S, el) });
     } else if (kind === 'special') {
       key = [kind, R, wType(w), el, st.cost, lack]; ic = 's_' + wType(w);
-      make = () => common({ ring: JADE, face: EL_FACE[el], icon: iconBuf('s_' + wType(w), S, el), iconDy: st.cost != null ? -1 : 0, badge: st.cost != null ? costBadge(st.cost, lack) : null });
+      make = () => common({ ring: JADE, face: matHe(el), icon: iconBuf('s_' + wType(w), S, el), iconDy: st.cost != null ? -1 : 0, badge: st.cost != null ? costBadge(st.cost, lack) : null });
     } else if (kind === 'skill') {
       const hero = HERO_FACE[st.hero] ? st.hero : 'smith';
       key = [kind, R, hero, st.cost, lack]; ic = 'h_' + hero;
@@ -754,7 +759,7 @@
       // nút Chưởng: vòng và mặt nút theo hệ của cây chưởng đang dùng
       const ce = EL_RING[st.el] && st.el !== 'none' ? st.el : 'fire';
       key = [kind, R, ce, st.cost, lack]; ic = 'c_' + ce;
-      make = () => common({ ring: EL_RING[ce], face: EL_FACE[ce], el: ce, studs: ce !== 'ice', icon: iconBuf('c_' + ce, S, ''), iconDy: st.cost != null ? -1 : 0, badge: st.cost != null ? costBadge(st.cost, lack) : null });
+      make = () => common({ ring: EL_RING[ce], face: matHe(ce), el: ce, studs: ce !== 'ice', icon: iconBuf('c_' + ce, S, ''), iconDy: st.cost != null ? -1 : 0, badge: st.cost != null ? costBadge(st.cost, lack) : null });
     } else if (kind === 'dodge') {
       // 16 hướng. Không đẩy cần thì mũi tên chỉ sang phải.
       const di = st.dir == null || isNaN(st.dir) ? 0 : ((Math.round((st.dir / TAU) * 16) % 16) + 16) % 16;
@@ -767,7 +772,7 @@
       key = ['pause', R]; ic = 'pause';
       make = () => common({ ring: WOOD, face: pal3('#4a4038', '#342c26', '#201a16'), studs: true, icon: iconBuf('pause', Math.max(6, S - 4), '') });
     }
-    const base = memo('b|' + key.join('|') + gdTag(ic) + '|' + (pressed ? 1 : 0) + (dimmed ? 1 : 0), () => buildBase(make()));
+    const base = memo('b|' + key.join('|') + gdTag(ic) + '|' + (pressed ? 1 : 0) + (dimmed ? 1 : 0) + (docTran() ? '|d8' : ''), () => buildBase(make()));
     const pf = press(st.id || kind, pressed && !disabled);
     const oy = (pressed ? base.lip : 0) + pf.dy;
     const alpha = st.alpha != null ? st.alpha : 1;

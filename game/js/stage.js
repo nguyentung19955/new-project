@@ -668,6 +668,7 @@
       if (S.near && inp.atkP) { inp.atk = false; inp.atkP = false; interact(S.near); if (S.mode !== 'play' || S.W !== W) return; }
       else if (S.near) inp.atk = false;
       G.updateWorld(dt, inp);
+      if (DOC()) msgTick(W, dt); // Đợt 8: dải thông báo (dòng đã bị dòng mới đẩy lên thì tự đếm giờ ở đây)
       // đạn không bay xuyên tường ra lề màn hình
       if (W.projs.length) W.projs = W.projs.filter((o) => o.x > W.geo.fx0 - 2 && o.x < W.geo.fx1 + 2 && o.y > W.geo.fy0 - 26 && o.y < W.geo.fy1 + 8);
       for (const z of W.zones) if (z.wave && z.x < W.geo.fx0 + 3) z.dead = true; // sóng của Ngư Tinh tan khi chạm tường trái
@@ -710,9 +711,21 @@
         // Bảng vừa mở hoặc đóng: ngón đang giữ không được bấm nhầm vào nút mới hiện.
         S.shownMode = S.mode; S.modeT = G.time; G.stalePointers(); G.click = null;
       }
-      G.drawWorld(S.r);
-      if (S.trans) slideWorld();
-      drawHud();
+      if (DOC()) {
+        // Đợt 8 — thứ bậc hình ảnh: G.drawWorld gọi lại G.docTran.duoi() (chữ phụ, thông báo) NGAY TRƯỚC số sát thương và G.docTran.tren()
+        // (thanh máu quái / trùm) NGAY SAU số, rồi mới vẽ vùng báo đòn. Phần nào chưa được gọi (đang chuyển phòng...) thì vẽ bù ở đây.
+        S.docN = (S.docN || 0) + 1;
+        veTran = true;
+        try { G.drawWorld(S.r); } finally { veTran = false; }
+        if (S.trans) slideWorld();
+        if (S.docTren !== S.docN) drawHud('tren');
+        if (S.docDuoi !== S.docN) drawHud('duoi');
+        drawHud('vien');
+      } else {
+        G.drawWorld(S.r);
+        if (S.trans) slideWorld();
+        drawHud();
+      }
       if (S.mode === 'map') { G.minimap.drawBig(S); if (G.click) { G.click = null; setMode('play'); G.sfx('ui'); } }
       else if (S.mode === 'chest') panelChest();
       else if (S.mode === 'swap') panelSwap();
@@ -785,17 +798,112 @@
     }
     c.globalAlpha = ga;
   }
-  function drawHud() {
+  // ---------- Đợt 8: độ đọc trận đấu ----------
+  // Cờ tắt G.DO_DOC_TRAN (js/ui_theme.js). Bảng thứ bậc hình ảnh và các hằng số: G.theme.DOC.
+  const DOC = () => G.DO_DOC_TRAN === true && !!(G.theme && G.theme.DOC);
+  let veTran = false; // đang ở trong G.drawWorld của cảnh ải (để hai hàm gọi lại dưới đây không chạy nhầm ở cảnh khác)
+  const MSG = { khung: { dong: 0, hop: null } };
+  // DẢI THÔNG BÁO CHIẾN ĐẤU: một dải trên mặt tường sau, ngay dưới khối trên cùng (thanh máu trùm / tinh anh), giữa nút tạm dừng và ô vũ khí
+  // (x 126–364). Tối đa G.theme.DOC.dongToiDa (2) DÒNG cùng lúc; dòng mới đẩy dòng cũ lên, quá 2 thì dòng cũ nhất mất. Không bao giờ vẽ
+  // xuống giữa sàn. Nguồn: mọi chỗ trong game đặt W.banner (không phải mẹo .tip) và G.docTran.bao(...) ("Sạch bóng quái!" của js/fx.js).
+  function msgDong(W) {
+    if (S.msgW !== W) { S.msgW = W; S.msgs = []; S.msgB = null; }
+    const b = W.banner;
+    if (b && !b.tip) { if (b !== S.msgB) msgThem({ b, s: b.s, col: b.col }); S.msgB = b; } else if (!b) S.msgB = null;
+  }
+  function msgThem(e) {
+    const L = S.msgs, last = L[L.length - 1];
+    e.at = G.time;
+    if (last && last.s === e.s && last.b.t > 0) { e.at = last.at; e.y = last.y; L[L.length - 1] = e; } // cùng một câu báo lại: làm mới, không thêm dòng
+    else L.push(e);
+    while (L.length > G.theme.DOC.dongToiDa) L.shift();
+  }
+  function msgTick(W, dt) {
+    msgDong(W);
+    for (const e of S.msgs) if (e.b !== W.banner) e.b.t -= dt;
+    if (S.msgs.some((e) => !(e.b.t > 0))) S.msgs = S.msgs.filter((e) => e.b.t > 0);
+  }
+  // Vẽ dải thông báo từ y = by. Trả về y ngay dưới dải (để khối khác xếp tiếp bên dưới).
+  function veThongBao(W, by) {
+    const D = G.theme.DOC, T = G.theme, c = G.ux, X0 = 126, X1 = 364, mid = (X0 + X1) / 2, maxW = X1 - X0 - 14; // từ 126: né thanh máu, thanh mana của em bé (tới x = 124)
+    msgDong(W);
+    MSG.khung = { dong: 0, hop: null };
+    const list = S.msgs.filter((e) => e.b.t > 0);
+    if (!list.length) return by;
+    // Khối trên cùng đã cao (trùm có thẻ kháng/yếu và đang "LỘ ĐIỂM YẾU!") thì chỉ còn chỗ cho 1 dòng: dải không được xuống quá mép trên sàn 20 điểm ảnh.
+    let con = by + D.dongToiDa * 12 + 4 <= W.geo.fy0 + 20 ? D.dongToiDa : 1;
+    const rows = [];
+    for (let i = list.length - 1; i >= 0 && con > 0; i--) { // dòng mới nhất được chỗ trước
+      const e = list[i], str = G.tv ? G.tv(e.s) : e.s;
+      let size = 7.5, lines = null;
+      for (const sz of [9.5, 8.5, 7.5]) { ui.font(sz, true); if (c.measureText(str).width <= maxW) { size = sz; lines = [str]; break; } }
+      if (!lines) lines = ui.wrap(str, maxW, 7.5, true);
+      if (lines.length > con) {
+        if (rows.length) break; // dòng cũ không còn đủ chỗ: nhường hẳn cho dòng mới
+        lines = lines.slice(0, con);
+        ui.font(7.5, true);
+        let l = lines[con - 1];
+        while (l.length > 4 && c.measureText(l + '…').width > maxW) l = l.slice(0, -1);
+        lines[con - 1] = l + '…';
+      }
+      con -= lines.length;
+      rows.unshift({ e, size, lines });
+    }
+    const ga = c.globalAlpha, gd = G.VFX ? +G.VFX.giaoDien : 1;
+    let y = by, hop = null, dong = 0;
+    for (const r of rows) {
+      const e = r.e, lh = r.size + 2.5, bh = Math.round(r.lines.length * lh + 4);
+      let tw = 0;
+      ui.font(r.size, true);
+      for (const l of r.lines) tw = Math.max(tw, c.measureText(l).width);
+      const pw = Math.min(X1 - X0, Math.ceil(tw) + 14), px = Math.round(mid - pw / 2);
+      // dòng mới trượt vào từ trên một nhịp; dòng cũ bị đẩy thì trôi mượt về chỗ mới; sắp hết giờ thì mờ dần
+      if (e.y == null || !(gd > 0)) e.y = gd > 0 ? y - 4 : y;
+      else e.y += (y - e.y) * 0.35;
+      if (Math.abs(e.y - y) < 0.4) e.y = y;
+      const age = G.time - e.at, py = Math.round(e.y);
+      c.globalAlpha = ga * (gd > 0 ? Math.min(1, age < 0.12 ? 0.35 + (age / 0.12) * 0.65 : 1, e.b.t < 0.3 ? Math.max(0, e.b.t / 0.3) : 1) : 1);
+      T.plate(px, py, pw, bh, { a: D.nen });
+      r.lines.forEach((l, i) => ui.text(l, mid, py + r.size + 1 + i * lh, { size: r.size, align: 'center', bold: true, color: e.col || '#ffd27a' }));
+      hop = hop ? [Math.min(hop[0], px), Math.min(hop[1], py), Math.max(hop[2], px + pw), Math.max(hop[3], py + bh)] : [px, py, px + pw, py + bh];
+      dong += r.lines.length;
+      y += bh + 1;
+    }
+    c.globalAlpha = ga;
+    MSG.khung = { dong, hop };
+    return y + 1;
+  }
+  // Tấm nền tối (70%) sau một dòng chữ căn giữa phải đọc trong trận (đếm giờ thử thách, "Bấm Đánh", cửa còn khoá...).
+  function nenChu(lines, cx, y, size, lh) {
+    let tw = 0;
+    ui.font(size, true);
+    for (const l of lines) tw = Math.max(tw, G.ux.measureText(G.tv ? G.tv(l) : l).width);
+    G.theme.plate(Math.round(cx - tw / 2) - 5, Math.round(y - size - 1.5), Math.ceil(tw) + 10, Math.round(size + 5 + (lines.length - 1) * (lh || 9)), { a: G.theme.DOC.nen });
+  }
+  G.docTran = {
+    duoi() { if (veTran && S && S.W) { S.docDuoi = S.docN; drawHud('duoi'); } },
+    tren() { if (veTran && S && S.W) { S.docTren = S.docN; drawHud('tren'); } },
+    // Thêm một dòng vào dải thông báo (không qua W.banner). t: số giây hiện.
+    bao(s, col, t) { if (S && S.W) { msgDong(S.W); msgThem({ b: { s, col, t: t || 2 }, s, col }); } },
+    khung: () => MSG.khung, // cho bài kiểm tra: { dong: số dòng vừa vẽ, hop: [x0, y0, x1, y1] }
+  };
+
+  // part (Đợt 8, chỉ khi cờ G.DO_DOC_TRAN bật): vẽ riêng một lớp của bảng thứ bậc — 'duoi' (chữ phụ, lời chỉ dẫn, thông báo: trước số sát thương),
+  // 'tren' (thanh máu quái, khung trùm / tinh anh: sau số sát thương), 'vien' (thanh máu em bé, ô vũ khí, bản đồ nhỏ, nút: ngoài sàn, vẽ sau cùng).
+  // Không truyền part (cờ tắt): vẽ tất cả theo đúng thứ tự cũ.
+  function drawHud(part) {
     const W = S.W, P = S.P, c = G.ux;
-    if (S.mode === 'play' && W.ents) mobBars(W);
-    if (G.doRoi && G.doRoi.veBay) G.doRoi.veBay(); // đồ vừa nhặt bay vào ô / hiện trên đầu (vẽ trước ô giao diện)
+    const doc = !!part, on = (p) => !part || part === p;
+    if (on('tren') && S.mode === 'play' && W.ents) mobBars(W);
+    if (on('duoi') && G.doRoi && G.doRoi.veBay) G.doRoi.veBay(); // đồ vừa nhặt bay vào ô / hiện trên đầu (vẽ trước ô giao diện)
     // máu, mana
     const T = G.theme;
+    const BA = G.btnArt; // bộ nút riêng (js/btn_art.js)
+    if (on('vien')) {
     // Giai đoạn 4 (yêu cầu 2): thanh máu to hơn, chữ số to; thanh năng lượng có số để biết đủ mana cho chiêu chưa.
     T.bar(4, 3, 120, 'hp', P.hp / P.maxhp, Math.ceil(P.hp) + ' / ' + P.maxhp, { h: 11, lag: P, size: 7.5 }); // lag: phần máu vừa mất tụt dần (js/ui_theme.js); khoá theo em bé của lượt chơi này
     T.bar(4, 15, 108, 'mana', P.mana / P.maxmana, Math.floor(P.mana) + ' / ' + P.maxmana, { h: 8, size: 6.5 });
     const canDrink = P.potions > 0 && !W.noPotion;
-    const BA = G.btnArt; // bộ nút riêng (js/btn_art.js)
     const heldBox = (b) => [...G.pointers.values()].some((p) => p.role === 'ui' && hitBox({ x: p.sx, y: p.sy }, b));
     BA.draw(c, 'potion', POT[0] + 13, POT[1] + 12, 12, { count: P.potions, disabled: !canDrink, pressed: heldBox(POT) });
     ui.text(W.noPotion ? 'Cấm' : 'Bình máu', POT[0] + 29, POT[1] + 15, { size: 7, bold: true, color: canDrink ? '#fff3da' : '#a89c8c' });
@@ -804,6 +912,8 @@
     for (const k of G.ELS) if (P.st[k] > 0) { const gt = gdAnh('gd-tt-' + TT_MA[k]); if (gt) { ui.rect(sx, 54, 11, 11, 'rgba(14,10,8,0.85)', G.EL[k].col); G.spriteCustom.veGd(G.ux, gt, sx + 1, 55, 9, 9); } else if (G.lk && G.lk.icon) { ui.rect(sx, 54, 11, 11, 'rgba(14,10,8,0.85)', G.EL[k].col); G.lk.icon(k, sx + 5.5, 59.5, 0.9, false, 1); } else ui.rect(sx, 54, 10, 10, G.EL[k].col, '#000'); sx += 13; }
     const cw = G.curW(P), coat = P.coats[cw.id];
     if (coat && coat.t > 0) ui.text(G.t('Bùa {0} {1} giây', G.EL[coat.el].name, Math.ceil(coat.t)), sx + 1, 62.5, { size: 7.5, color: G.EL[coat.el].col, bold: true });
+    }
+    if (on('duoi')) {
     // tên vùng và loại phòng ở lề trái; bản đồ nhỏ ở lề phải (thay hàng chấm phòng trước đây)
     // Phòng trùm rộng (sàn từ x = 80): cột trái hẹp nên chữ sức mạnh xuống hai dòng, không tràn vào sàn.
     const narrow = !!(W.geo && W.geo.rong);
@@ -815,6 +925,8 @@
     if (wide2) { ui.text(G.t('Sức mạnh {0}', S.power), 5, 95, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) }); ui.text(G.t('khuyên {0}', S.rec), 5, 104, { size: 6.5, color: '#bfb39c' }); }
     else if (narrow) { ui.text(G.t('Sức mạnh {0}', S.power), 5, 85, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) }); ui.text(G.t('khuyên {0}', S.rec), 5, 94, { size: 6.5, color: '#bfb39c' }); }
     else ui.text(G.t('Sức mạnh {0} / khuyên {1}', S.power, S.rec), 5, 86, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) });
+    }
+    if (on('vien')) {
     G.minimap.draw(S);
     // vũ khí: hình và bậc ở trên, mốc tiến hóa ở dưới, thanh dấu ấn sát đáy
     P.weapons.forEach((w, i) => {
@@ -843,7 +955,8 @@
       }
     });
     if (G.lk) G.lk.hud(P, W); // ba vạch linh khí cạnh ô vũ khí, biểu tượng hệ trên đầu quái (js/linhkhi.js)
-    if (P.weapons.length > 1 && S.tut && W.type === 'elite') {
+    }
+    if (!doc && P.weapons.length > 1 && S.tut && W.type === 'elite') {
       // Đợt 2: chữ nằm trong một ô nền riêng, cách ô vũ khí 5 điểm ảnh nên không còn bị ô vũ khí cắt mất chữ cuối.
       const s0 = G.tv('Chạm để đổi vũ khí →'); ui.font(7, true);
       const tw0 = Math.ceil(G.ux.measureText(s0).width) + 8;
@@ -854,6 +967,8 @@
     // Phân cấp (Giai đoạn 4): trùm vùng khung to viền vàng, tên chữ to, số phần trăm; trùm nhỏ khung vừa; tinh anh khung nhỏ.
     const b = W.boss;
     let topY = 0; // đáy của khối trên cùng giữa màn hình (để dòng báo xếp bên dưới)
+    let by = doc ? S.docBy || 8 : 8;
+    if (on('tren')) {
     if (b && !b.dead) {
       const big = b.kind !== 'mini';
       topY = T.bossBar(240, 2, { tier: big ? 'big' : 'mini', name: b.name, frac: b.hp / b.maxhp, lag: b, marks: [0.3, 0.6] });
@@ -861,17 +976,17 @@
       const chips = [];
       for (const l of b.layers) chips.push([l.type === 'resist' ? G.t('Kháng {0}', G.EL[l.el].name) : G.tv(G.layerText(l)), l.type === 'resist' ? G.EL[l.el].dark : '#1f4f4a', '#f1e6c6']);
       if (b.weak.length) chips.push([G.t('Yếu {0}', b.weak.map((e) => G.tv(G.EL[e].name)).join(', ')), 'rgba(20,14,8,0.9)', G.EL[b.weak[0]].col]);
-      ui.font(6.5, true);
+      ui.font(doc ? 7 : 6.5, true);
       let tot = 0; for (const q of chips) { q[3] = Math.ceil(G.ux.measureText(q[0]).width) + 8; tot += q[3] + 3; }
       let lx = Math.round(240 - (tot - 3) / 2);
       for (const q of chips) {
         ui.rect(lx, topY + 1, q[3], 10, q[1], '#1a120a');
         ui.rect(lx + 1, topY + 1, q[3] - 2, 1, 'rgba(255,240,196,0.25)');
-        ui.text(q[0], lx + q[3] / 2, topY + 8.5, { size: 6.5, bold: true, align: 'center', color: q[2] });
+        ui.text(q[0], lx + q[3] / 2, topY + 8.5, { size: doc ? 7 : 6.5, bold: true, align: 'center', color: q[2] });
         lx += q[3] + 3;
       }
       if (chips.length) topY += 12;
-      if (b.exposed > 0) { ui.text('LỘ ĐIỂM YẾU!', 240, topY + 9, { size: 8.5, align: 'center', color: Math.floor(G.time * 8) % 2 ? '#ffd23f' : '#fff3b0', bold: true }); topY += 11; }
+      if (b.exposed > 0) { if (doc) nenChu(['LỘ ĐIỂM YẾU!'], 240, topY + 9, 8.5); ui.text('LỘ ĐIỂM YẾU!', 240, topY + 9, { size: 8.5, align: 'center', color: Math.floor(G.time * 8) % 2 ? '#ffd23f' : '#fff3b0', bold: true }); topY += 11; }
     } else if (W.type === 'elite' && S.mode === 'play') {
       // phòng tinh anh: khung nhỏ ở mép trên với tên loài và dấu hiệu (nhanh, bọc giáp...)
       const el = W.ents.find((e) => e && !e.dead && e.role === 'elite');
@@ -881,7 +996,7 @@
         topY = T.bossBar(240, 2, { tier: 'elite', name: info && info.ten ? G.t('Tinh anh · {0}', info.ten) : 'Tinh anh', sub: tr ? tr.name : null, frac: el.hp / el.maxhp, lag: el });
       }
     }
-    let by = topY ? topY + 3 : S.challenge ? 26 : 8;
+    by = topY ? topY + 3 : S.challenge ? 26 : 8;
     if (W.type === 'fountain') {
       const t = S.preview.length ? G.t('Trùm đã học: {0}', layerTexts(S.preview, ' · ')) : 'Trùm chưa học được gì từ bạn';
       const lines = ui.wrap(t, 228, 7, true);
@@ -889,7 +1004,19 @@
       lines.forEach((l, i) => ui.text(l, 240, 18 + i * 9, { size: 7, align: 'center', color: '#ffd9c8', bold: true }));
       by = 14 + lines.length * 9 + 4;
     }
-    if (S.challenge) { ui.text(G.t('Thử thách: hạ hết quái trong {0} giây', Math.max(0, Math.ceil(S.challenge.t))), 240, 20, { size: 8, align: 'center', color: S.challenge.t > 8 ? '#ffd27a' : '#ff6a5a', bold: true }); }
+    if (S.challenge) { const cs = G.t('Thử thách: hạ hết quái trong {0} giây', Math.max(0, Math.ceil(S.challenge.t))); if (doc) { nenChu([cs], 240, 20, 8); by = Math.max(by, 27); } ui.text(cs, 240, 20, { size: 8, align: 'center', color: S.challenge.t > 8 ? '#ffd27a' : '#ff6a5a', bold: true }); }
+    if (doc) S.docBy = by;
+    }
+    if (on('duoi')) {
+    if (doc && P.weapons.length > 1 && S.tut && W.type === 'elite') {
+      // Đợt 8: nhãn này trước nằm cùng hàng với khung tinh anh nên bị khung che mất nửa chữ. Nay xuống một hàng riêng ngay dưới khung, sát ô vũ khí.
+      const s0 = G.tv('Chạm để đổi vũ khí →'); ui.font(7, true);
+      const tw0 = Math.ceil(G.ux.measureText(s0).width) + 8;
+      T.plate(364 - tw0, by, tw0, 12, { a: 0.78 });
+      ui.text(s0, 364 - 4, by + 9, { size: 7, align: 'right', bold: true, color: '#ffd27a' });
+      by += 14;
+    }
+    if (doc) by = veThongBao(W, by);
     // Lời chỉ dẫn của ải đầu nằm ở lề trái, không che phòng. Ở phòng trùm tự ẩn sau 12 giây.
     let hint = S.hint;
     if (hint && W.cleared && W.hadWaves) hint = TUT.door;
@@ -905,8 +1032,8 @@
       const q = tipB ? [tipB.s, tipB.col || '#ffd27a', tipB.t < 0.4 ? Math.max(0, tipB.t / 0.4) : 1] : [hint, '#f1e6c6', 1];
       // Phòng có cửa dưới đang MỞ: ô chữ ở đáy sẽ che mất lối ra và mũi tên chỉ lối, nên lúc đó ô chữ lên mặt tường sau (dưới các khối trên cùng),
       // nằm giữa nút tạm dừng (tới x = 96) và ô vũ khí (từ x = 366); phòng Suối hồi còn né thêm chữ "Rương đồ" ở góc trái.
-      const len = W.doors.some((d) => d.dir === 'down' && d.open), lx0 = len ? (W.type === 'fountain' ? 142 : 98) : 77, lx1 = len ? 364 : 383;
-      const bold = q[1] !== '#f1e6c6', lines = ui.wrap(q[0], lx1 - lx0 - 10, 7, bold).slice(0, 4);
+      const len = W.doors.some((d) => d.dir === 'down' && d.open), lx0 = len ? (W.type === 'fountain' ? 142 : doc ? 126 : 98) : 77, lx1 = len ? 364 : 383; // Đợt 8: chữ đậm rộng hơn nên ô chữ bắt đầu từ 126, khỏi đè thanh máu / mana (tới x = 124)
+      const bold = doc || q[1] !== '#f1e6c6', lines = ui.wrap(q[0], lx1 - lx0 - 10, 7, bold).slice(0, 4); // Đợt 8: lời chỉ dẫn cũng chữ đậm
       let tw = 0; ui.font(7, bold);
       for (const l of lines) tw = Math.max(tw, G.ux.measureText(l).width);
       const pw = Math.min(lx1 - lx0, Math.ceil(tw) + 12), ph = Math.round(lines.length * 9.5 + 6), mid = (lx0 + lx1) / 2, px = Math.round(mid - pw / 2), ga = G.ux.globalAlpha;
@@ -921,16 +1048,19 @@
       let hy = W.geo.big ? 100 : 93;
       for (const q of [hint ? [hint, '#f1e6c6', 1] : null, tipB ? [tipB.s, tipB.col || '#ffd27a', tipB.t < 0.4 ? Math.max(0, tipB.t / 0.4) : 1] : null]) {
         if (!q) continue;
-        const lines = ui.wrap(q[0], hw - 9, 7), ph = Math.round(lines.length * 9.5 + 7), ga = G.ux.globalAlpha;
+        // Đợt 8: chữ đậm cho dễ đọc; cột trái phòng trùm hẹp, nếu chữ đậm làm ô quá cao (chạm cần điều khiển) thì giữ chữ thường như cũ
+        let dam = doc, lines = ui.wrap(q[0], hw - 9, 7, dam);
+        if (dam && hy + Math.round(lines.length * 9.5 + 7) > 186) { dam = false; lines = ui.wrap(q[0], hw - 9, 7); }
+        const ph = Math.round(lines.length * 9.5 + 7), ga = G.ux.globalAlpha;
         if (hy + ph > 186) break; // không xuống tới cần điều khiển
         G.ux.globalAlpha = ga * q[2];
         T.plate(2, hy, hw, ph, { a: 0.78 });
-        lines.forEach((l, i) => ui.text(l, 7, hy + 10 + i * 9.5, { size: 7, color: q[1], bold: q[1] !== '#f1e6c6' }));
+        lines.forEach((l, i) => ui.text(l, 7, hy + 10 + i * 9.5, { size: 7, color: q[1], bold: dam || q[1] !== '#f1e6c6' }));
         G.ux.globalAlpha = ga;
         hy += ph + 3;
       }
     }
-    if (W.banner && !W.banner.tip) {
+    if (!doc && W.banner && !W.banner.tip) {
       // dòng báo nằm trên tường sau; dài quá thì thu chữ, vẫn dài thì xuống dòng
       const maxW = W.geo.rong ? 290 : 228;
       let size = 10, lines = [W.banner.s];
@@ -963,6 +1093,7 @@
         const q = G.roomArt.doorPos(W.geo, d.dir), v = DIRV[d.dir];
         const tx = q.x - v[0] * 34, ty = q.y - v[1] * 22 + (v[1] < 0 ? 4 : 0);
         const hot = S.gateMsgT > 0 && Math.floor(G.time * 6) % 2;
+        if (doc) nenChu([gi.keys ? 'Cần 3 mảnh chìa' : 'Dọn 3 phòng quái', G.t('Đã có {0}/{1}', gi.n, gi.need)], tx, ty, 7, 9);
         ui.text(gi.keys ? 'Cần 3 mảnh chìa' : 'Dọn 3 phòng quái', tx, ty, { size: 7, align: 'center', bold: true, color: hot ? '#ffffff' : '#ff9a8a' });
         ui.text(G.t('Đã có {0}/{1}', gi.n, gi.need), tx, ty + 9, { size: 7, align: 'center', bold: true, color: '#ffd27a' });
       }
@@ -974,19 +1105,22 @@
       if (fLock && W.props.some((p) => p.type === 'fountain' && !p.used)) {
         // suối còn khóa: một dòng chữ mờ giữa hai suối, kèm số phòng quái đã dọn
         const fs = W.props.filter((p) => p.type === 'fountain'), fx = fs.reduce((a, p) => a + p.x, 0) / fs.length, fy = fs[0].y - 44;
-        ui.text('Dọn hết quái rồi quay lại', fx, fy, { size: 7.5, align: 'center', bold: true, color: '#b8b0a0' });
-        ui.text(G.t('Đã dọn {0}/{1} phòng quái', fightsCleared(), FOUNTAIN_NEED), fx, fy + 9, { size: 6.5, align: 'center', color: '#8f887c' });
+        if (doc) nenChu(['Dọn hết quái rồi quay lại', G.t('Đã dọn {0}/{1} phòng quái', fightsCleared(), FOUNTAIN_NEED)], fx, fy, 7.5, 9);
+        ui.text('Dọn hết quái rồi quay lại', fx, fy, { size: 7.5, align: 'center', bold: true, color: doc ? '#d9cdb8' : '#b8b0a0' });
+        ui.text(G.t('Đã dọn {0}/{1} phòng quái', fightsCleared(), FOUNTAIN_NEED), fx, fy + 9, { size: doc ? 7 : 6.5, align: 'center', bold: doc, color: doc ? '#bfb39c' : '#8f887c' });
       }
       for (const pr of W.props) {
         if (!pr.act || pr.used || (fLock && pr.act === 'fountain')) continue;
         const nm = pr.act === 'fountain' ? (pr.kind === 'hp' ? 'Hồi máu' : 'Hồi mana') : PNAME[pr.act];
         const py = pr.y - (pr.act === 'stash' ? 28 : pr.act === 'fountain' ? 40 : pr.act === 'portal' ? 44 : 36);
+        if (doc && pr === S.near) nenChu([pr.act === 'portal' ? 'Bấm Vào cổng' : 'Bấm Đánh'], pr.x - W.cam, py, 8);
         if (pr === S.near) ui.text(pr.act === 'portal' ? 'Bấm Vào cổng' : 'Bấm Đánh', pr.x - W.cam, py, { size: 8, align: 'center', bold: true, color: '#fff3b0' });
         else if (nm) ui.text(nm, pr.x - W.cam, py, { size: 7, align: 'center', bold: true, color: pr.act === 'fountain' ? (pr.kind === 'hp' ? '#ff9a8a' : '#9ac8ff') : '#f0d9b0' });
       }
     }
+    }
     // nút cảm ứng
-    if (S.mode === 'play') {
+    if (on('vien') && S.mode === 'play') {
       const joy = [...G.pointers.values()].find((p) => p.role === 'joy');
       let jdx = 0, jdy = 0;
       if (joy) {

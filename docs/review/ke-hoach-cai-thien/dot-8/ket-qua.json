@@ -1,0 +1,317 @@
+{
+ "do_truoc": {
+  "khung": 600,
+  "soToiDa": 14,
+  "khungQua6": 112,
+  "capDe": 607,
+  "khungCoDe": 288,
+  "tongSo": 2723,
+  "dongToiDa": 0,
+  "thongBaoVaoGiuaSan": 0,
+  "viDu": [
+   [
+    13,
+    "25",
+    [
+     182,
+     118,
+     197,
+     129
+    ],
+    "13",
+    [
+     188,
+     118,
+     198,
+     125
+    ]
+   ],
+   [
+    14,
+    "25",
+    [
+     182,
+     118,
+     196,
+     127
+    ],
+    "13",
+    [
+     187,
+     116,
+     199,
+     125
+    ]
+   ],
+   [
+    15,
+    "25",
+    [
+     183,
+     118,
+     196,
+     126
+    ],
+    "13",
+    [
+     186,
+     114,
+     200,
+     125
+    ]
+   ],
+   [
+    16,
+    "25",
+    [
+     184,
+     118,
+     195,
+     125
+    ],
+    "13",
+    [
+     186,
+     113,
+     200,
+     124
+    ]
+   ]
+  ],
+  "sanGiua": [
+   100,
+   88,
+   360,
+   228
+  ],
+  "loiFx": 0,
+  "co": null
+ },
+ "do_sau": {
+  "khung": 600,
+  "soToiDa": 6,
+  "khungQua6": 0,
+  "capDe": 0,
+  "khungCoDe": 0,
+  "tongSo": 2043,
+  "dongToiDa": 2,
+  "thongBaoVaoGiuaSan": 0,
+  "viDu": [],
+  "sanGiua": [
+   100,
+   88,
+   360,
+   228
+  ],
+  "loiFx": 0,
+  "co": true
+ },
+ "bot_ai1": {
+  "truoc": {
+   "thang": true,
+   "giay": 182.2,
+   "mau": "100/100",
+   "soDong": 195,
+   "loiFx": 0,
+   "co": null,
+   "bamNhatKy": "5f5f38c467443b05"
+  },
+  "sau": {
+   "thang": true,
+   "giay": 182.2,
+   "mau": "100/100",
+   "soDong": 195,
+   "loiFx": 0,
+   "co": true,
+   "bamNhatKy": "5f5f38c467443b05"
+  },
+  "nhat_ky_trung": true
+ },
+ "co_tat_so_voi_ban_truoc_diem_anh_khac": {
+  "dt844-dong": 0,
+  "dt844-tinh-anh": 0,
+  "dt844-trum": 0,
+  "dt844-huong-dan": 0,
+  "may1280-dong": 0,
+  "may1280-tinh-anh": 0,
+  "may1280-trum": 0,
+  "may1280-huong-dan": 0
+ },
+ "nut_do_canh_bao": {
+  "co_tat": [
+   [
+    "Đánh none",
+    0,
+    0
+   ],
+   [
+    "Đánh fire",
+    2115,
+    15.1
+   ],
+   [
+    "Đánh poison",
+    0,
+    0
+   ],
+   [
+    "Đánh ice",
+    0,
+    0
+   ],
+   [
+    "Chiêu none",
+    0,
+    0
+   ],
+   [
+    "Chiêu fire",
+    675,
+    8.1
+   ],
+   [
+    "Chiêu poison",
+    0,
+    0
+   ],
+   [
+    "Chiêu ice",
+    0,
+    0
+   ],
+   [
+    "Chiêu thiếu mana",
+    0,
+    0
+   ],
+   [
+    "Chưởng fire",
+    153,
+    1.8
+   ],
+   [
+    "Chưởng poison",
+    0,
+    0
+   ],
+   [
+    "Chưởng ice",
+    0,
+    0
+   ],
+   [
+    "Chưởng thiếu mana",
+    0,
+    0
+   ],
+   [
+    "Né",
+    27,
+    0.3
+   ],
+   [
+    "Bình máu",
+    288,
+    6.4
+   ],
+   [
+    "Tạm dừng",
+    0,
+    0
+   ]
+  ],
+  "co_bat": [
+   [
+    "Đánh none",
+    0,
+    0
+   ],
+   [
+    "Đánh fire",
+    0,
+    0
+   ],
+   [
+    "Đánh poison",
+    0,
+    0
+   ],
+   [
+    "Đánh ice",
+    0,
+    0
+   ],
+   [
+    "Chiêu none",
+    0,
+    0
+   ],
+   [
+    "Chiêu fire",
+    0,
+    0
+   ],
+   [
+    "Chiêu poison",
+    0,
+    0
+   ],
+   [
+    "Chiêu ice",
+    0,
+    0
+   ],
+   [
+    "Chiêu thiếu mana",
+    0,
+    0
+   ],
+   [
+    "Chưởng fire",
+    0,
+    0
+   ],
+   [
+    "Chưởng poison",
+    0,
+    0
+   ],
+   [
+    "Chưởng ice",
+    0,
+    0
+   ],
+   [
+    "Chưởng thiếu mana",
+    0,
+    0
+   ],
+   [
+    "Né",
+    27,
+    0.3
+   ],
+   [
+    "Bình máu",
+    288,
+    6.4
+   ],
+   [
+    "Tạm dừng",
+    0,
+    0
+   ]
+  ]
+ },
+ "thu_tu_ve_mot_khung": [
+  "3-4. chữ phụ + thông báo (drawHud duoi)",
+  "5. số sát thương (drawNums)",
+  "6. thanh máu quái / trùm (drawHud tren)",
+  "7. vùng báo đòn (G.baoTruoc.draw)",
+  "8. viền màn hình: bản đồ nhỏ, ô vũ khí, nút (drawHud vien)"
+ ],
+ "vung_bao_don_diem_do_trong_san": {
+  "truoc": 3491,
+  "sau": 3491
+ }
+}

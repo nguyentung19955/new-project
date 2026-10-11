@@ -671,4 +671,36 @@
   T.install();
   // Dòng tiêu đề nhỏ trong bảng
   T.head = function (s, x, y, o) { txt(s, x, y, Object.assign({ size: 8.5, bold: true, color: C.hi }, o || {})); };
+
+  // ---------- Đợt 8: độ đọc trận đấu trên điện thoại ----------
+  // CỜ TẮT: G.DO_DOC_TRAN = false thì mọi thứ dưới đây về đúng cách vẽ cũ (js/stage.js, js/fx.js, js/btn_art.js đều hỏi cờ này lúc vẽ).
+  // Muốn so trên máy thật: mở game với ?doctran=0 ở cuối địa chỉ.
+  let tat = false;
+  try { tat = /[?&]doctran=0\b/i.test(String(window.location && window.location.search)); } catch (e) { tat = false; }
+  if (G.DO_DOC_TRAN == null) G.DO_DOC_TRAN = !tat;
+  T.DOC = {
+    // THỨ BẬC HÌNH ẢNH CỐ ĐỊNH của một trận (bac 1 = quan trọng nhất). Lớp có bậc lớn hơn (kém quan trọng hơn) KHÔNG được vẽ đè lên
+    // lớp có bậc nhỏ hơn: trong một khung hình, lớp kém quan trọng vẽ trước, lớp quan trọng vẽ sau (cột "ve" = thứ tự vẽ, 1 là vẽ đầu tiên).
+    thuBac: [
+      { bac: 1, lop: 'baoDon', ten: 'Vùng báo đòn', ve: 7, noi: 'js/bao_truoc.js — G.baoTruoc.draw, cuối G.drawWorld' },
+      { bac: 2, lop: 'nhanVat', ten: 'Nhân vật và quái', ve: 1, noi: 'lớp #world; chữ và khung không được đặt lên giữa sàn; vùng báo đòn tự khoét chỗ thân nhân vật' },
+      { bac: 3, lop: 'mauTrum', ten: 'Thanh máu trùm / tinh anh, trạng thái trên thân', ve: 6, noi: 'js/stage.js drawHud("tren"): thanh máu quái, khung trùm, thẻ kháng/yếu, biểu tượng hệ' },
+      { bac: 4, lop: 'soSatThuong', ten: 'Số sát thương', ve: 5, noi: 'js/fx.js drawNums' },
+      { bac: 5, lop: 'thongBao', ten: 'Thông báo chiến đấu (tối đa 2 dòng)', ve: 4, noi: 'js/stage.js veThongBao: dải trên mặt tường sau, dưới thanh máu trùm' },
+      { bac: 6, lop: 'chuPhu', ten: 'Chữ phụ: tên phòng, sức mạnh, lời chỉ dẫn, mẹo, tên vật, đồ vừa nhặt', ve: 3, noi: 'js/stage.js drawHud("duoi")' },
+      // Viền màn hình (thanh máu em bé, ô vũ khí, bản đồ nhỏ, nút bấm) nằm ngoài sàn nên không tranh chỗ với các lớp trên; vẽ sau cùng.
+    ],
+    soToiDa: 6, // số sát thương cùng lúc trên màn; đủ rồi thì số cũ nhất tắt sớm
+    chuToiDa: 3, // chữ nổi khác (tên đòn, "Xa quá!", "+3 Lửa")
+    gop: 0.25, // giây: cùng một quái trúng thêm đòn trong khoảng này thì cộng dồn vào số đang hiện
+    soLe: 6, // điểm ảnh lệch ngang so le giữa các số nối nhau của cùng một quái
+    dongToiDa: 2, // dòng thông báo chiến đấu cùng lúc
+    coChu: 7, // cỡ chữ nhỏ nhất của số và chữ phải đọc trong trận (chữ giao diện đã có sàn 7,5 ở ui.fs)
+    nen: 0.7, // độ đậm tấm nền tối sau chữ phải đọc
+    // MÀU. Đỏ chỉ dành cho nguy hiểm (vùng báo đòn, máu em bé mất, trùm nổi giận, hết giờ). Nút bấm không dùng đỏ.
+    nutDanh: { l: '#c98c34', m: '#a8752f', d: '#79451d' }, // mặt nút Đánh: đồng vàng (bảng màu lõi: gỗ nắng #c98c34, gỗ sáng #79451d; đồng #a8752f của bộ giao diện)
+    matLua: { l: '#8a4a16', m: '#643410', d: '#3e1e08' }, // mặt nút Chiêu / Chưởng khi mang hệ Lửa: nâu than hồng thay cho đỏ sẫm #8a2a16
+    thieuMana: '#b8c4d2', // số mana trên thẻ giá khi chưa đủ (trước là đỏ #ff6a5a)
+    soMat: '#ff6a5a', // số máu EM BÉ mất: đỏ (nguy hiểm), có dấu trừ. Số gây ra cho quái: trắng / màu hệ / vàng chí mạng, không bao giờ đỏ.
+  };
 })();
