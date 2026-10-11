@@ -1,5 +1,18 @@
 # Prompt vẽ: Làng · đạo cụ, con vật, khung cửi, lửa lò (phiên D2)
 
+<!-- dot-11: bắt đầu ghi chú Đợt 11 -->
+## Đợt 11: đã xét gộp, CHƯA gộp (vẫn 3 tấm)
+
+Đợt 11 có xét gộp lô Khung cửi và lô Lửa lò rèn thành một tấm 2 hàng × 3 cột, nhưng **chưa làm**. Phiên D2 vẫn gen **3 tấm** như hướng dẫn bên dưới. Lý do ngắn gọn:
+
+- Hai lô vẽ trên hai màu nền khác nhau (khung cửi nền hồng tím, lửa lò nền xanh dương) và hình dáng khác hẳn nhau (khung cửi 28×22 bè ngang, lửa 12×15 đứng).
+- Trang Tách Làng làm mỗi lô dải khung ra đúng MỘT tệp. Muốn một tấm ra hai tệp thì phải sửa cả phần ghép dải, xem thử và tải về của trang, vượt quá phạm vi được giao (chỉ thêm định nghĩa lô).
+- Lợi ích chỉ là bớt 1 tấm.
+
+Chi tiết và các lựa chọn chờ duyệt: `docs/review/ke-hoach-cai-thien/dot-11/bao-cao.md`, mục 3 và mục 9.
+
+<!-- dot-11: hết ghi chú Đợt 11 -->
+
 Chép nguyên từ trang công cụ https://spiritblade.web.app/tach-lang.html (bước 1, chọn lô rồi bấm "Sao chép prompt vẽ"). Nếu trang và tệp này khác nhau thì lấy theo trang.
 
 Có 3 lô, mỗi lô vẽ MỘT tấm ảnh:

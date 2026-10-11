@@ -1327,7 +1327,12 @@ function chonHang(i) {
   HANG_I = i; const h = KQL[i]; if (!h) return;
   [...$('dsHang').children].forEach((e, k) => e.classList.toggle('chon', k === i));
   Q = h.q;
-  if (h.R) return hienKq(h.R);
+  if (h.R) {
+    hienKq(h.R);
+    $('huongDan').textContent = KQ.dat ? 'Hàng này ĐẠT. Bấm "Tải tất cả (.zip)" ở trên để lấy mọi hàng đang tích, rồi gửi tệp zip cho Claude. Nút bên trên chỉ tải riêng hàng này.'
+      : 'Hàng này còn lỗi: thử đổi "Cách tách" (Chia đều + đúng số cột), chỉnh ô "Cắt" ở bước 2, hoặc gen riêng hiệu ứng này bằng mục lẻ (nhóm "Từng hiệu ứng" trong ô chọn ở bước 1). Các hàng khác vẫn tải được.';
+    return;
+  }
   KQ = null; canvasTam = null;
   $('dsKiem').innerHTML = `<li class="loi">Không thấy hàng ${i + 1} trong ảnh (ảnh thiếu hàng?). Thử "Chia đều theo số cột", chỉnh ô "Cắt", hoặc gen riêng hiệu ứng này bằng mục lẻ.</li>`;
   $('theKq').className = 'the hong'; $('theKq').textContent = 'CÓ LỖI'; $('dangCho').textContent = Q.ten + ' (' + Q.ma + ')';
