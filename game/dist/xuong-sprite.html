@@ -18196,6 +18196,119 @@ MA._xong();
   SC.noi = true;
   // Tệp do game/build.py nhúng vào bản đóng gói.
   if (Array.isArray(G.customSpriteData)) { for (const t of G.customSpriteData) SC.add(t); delete G.customSpriteData; }
+
+  // ---------- ẢNH TẢI SAU (Đợt 10, quyết định Q5) ----------
+  // Bản đóng gói 2 tệp (python3 game/build.py --hai-tep): trang chỉ nhúng phần ảnh BẮT BUỘC cho màn chào / làng / ải 1; phần còn lại
+  // (quái, trùm, vũ khí các dòng, hiệu ứng theo hệ…) nằm trong tệp linh-khi-anh.<mã>.json đặt cạnh trang. build.py ghi G.ANH_SAU = { tep, so, byte }.
+  // - js/engine.js gọi SC.napSau() ngay sau khi khung hình đầu (màn chào) đã vẽ, rồi vẽ một chỉ báo nhỏ ở góc trong lúc tải (SC.sau).
+  // - Tệp là mảng JSON MỖI HÌNH MỘT DÒNG: dòng nào về tới thì nhận hình đó luôn (SC.add như hình nhúng), không chờ cả tệp.
+  // - Tải hỏng (mất mạng, 404, tệp cụt, nội dung lạ): GIỮ phần đã nhận, không báo lỗi lên màn chơi, ghi console.info, thử lại 2 lần (sau 3 giây và 10 giây).
+  //   Vẫn không được thì thôi: hình thiếu vẽ bằng code như khi chưa có ảnh AI. Có mạng trở lại thì thử thêm một lượt.
+  // - Bản một tệp, công cụ Xưởng Sprite, bản thử: không có G.ANH_SAU → không làm gì (SC.sau.tt = 'khong').
+  // SC.sau.tt: 'khong' không có tệp phụ · 'cho' chưa bắt đầu · 'tai' đang tải · 'thu-lai' đang chờ thử lại · 'xong' · 'loi' (đã thôi).
+  const KS = G.ANH_SAU && typeof G.ANH_SAU.tep === 'string' && /^[A-Za-z0-9._-]{1,80}$/.test(G.ANH_SAU.tep) ? G.ANH_SAU : null;
+  const AS = (SC.sau = { tt: KS ? 'cho' : 'khong', tep: KS ? KS.tep : '', xong: 0, tong: KS ? KS.so | 0 : 0, lan: 0, loi: '', hetLuc: 0 });
+  const CHO_THU = [3000, 10000], IM_LANG = 30000; // IM_LANG: quá 30 giây không thêm byte nào thì coi lượt đó hỏng
+  if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({ 'Đang tải thêm ảnh… {0}%': 'Loading more art… {0}%', 'Mạng yếu: thiếu vài ảnh, game vẫn chơi bình thường': 'Weak network: some art is missing, the game still plays fine' });
+  const ghi = (s) => { try { if (typeof console !== 'undefined' && console.info) console.info('[Linh Khí] ' + s); } catch (e) { /* bỏ qua */ } };
+  const nghi = (ms) => new Promise((r) => setTimeout(r, ms));
+  const daNhan = new Set();
+  // Hình tải sau sẵn sàng muộn hơn lúc game đã vẽ: xoá các hình đã nhớ (em bé + đồ, vật rơi, vỏ phòng, mảnh giao diện) để dựng lại với ảnh mới.
+  function xoaNhoSau(het) {
+    xoaNhoDo();
+    if (!het) return;
+    try { if (G.roomArt && G.roomArt.xoaDem) G.roomArt.xoaDem(); } catch (e) { /* bỏ qua */ }
+    try { if (G.theme && G.theme.clearCache) G.theme.clearCache(); } catch (e) { /* bỏ qua */ }
+  }
+  function demSan() { let n = 0; for (const k in SC.ds) if (SC.ds[k].ready) n++; for (const k in SC.do) if (SC.do[k].ready) n++; return n; }
+  function nhanDong(s) {
+    s = s.trim();
+    if (!s || s === '[' || s === ']') return;
+    if (s.charCodeAt(s.length - 1) === 44) s = s.slice(0, -1); // dấu phẩy cuối dòng
+    let t; try { t = JSON.parse(s); } catch (e) { throw new Error('dòng hỏng hoặc tệp cụt'); } // dòng hỏng: cả lượt tải coi như hỏng (phần đã nhận vẫn giữ)
+    if (!t || typeof t !== 'object' || typeof t.ma !== 'string') throw new Error('dòng không phải hình');
+    if (daNhan.has(t.ma)) return; // lượt thử lại: hình đã nhận rồi thì bỏ qua
+    daNhan.add(t.ma); SC.add(t); AS.xong = daNhan.size;
+  }
+  async function taiMotLuot() {
+    const ngat = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    let hen = 0;
+    const canh = () => { clearTimeout(hen); if (ngat) hen = setTimeout(() => ngat.abort(), IM_LANG); };
+    try {
+      canh();
+      const res = await fetch(AS.tep, ngat ? { signal: ngat.signal } : undefined);
+      if (!res.ok) throw new Error('máy chủ trả ' + res.status);
+      let du = '', dau = false, moc = Date.now();
+      const nhan = async (chu, het) => {
+        du += chu;
+        const ds = du.split('\n'); du = het ? '' : ds.pop();
+        for (const d of ds) {
+          if (!dau && d.trim()) { dau = true; if (d.trim() !== '[') throw new Error('nội dung không phải tệp ảnh'); } // ví dụ sw.js trả trang HTML khi mất mạng
+          nhanDong(d);
+          if (Date.now() - moc > 6) { await nghi(0); moc = Date.now(); } // nhường khung hình: không làm giật game đang chạy
+        }
+      };
+      if (res.body && res.body.getReader && typeof TextDecoder !== 'undefined') {
+        const doc = res.body.getReader(), giai = new TextDecoder();
+        for (;;) { const { done, value } = await doc.read(); if (done) break; canh(); await nhan(giai.decode(value, { stream: true }), false); }
+        await nhan(giai.decode(), true);
+      } else await nhan(await res.text(), true);
+      if (daNhan.size < AS.tong) throw new Error('tệp cụt: mới có ' + daNhan.size + '/' + AS.tong + ' hình');
+    } finally { clearTimeout(hen); }
+  }
+  // Máy đã lưu tệp ảnh của bản cũ (sw.js lưu mọi tệp để chơi khi mất mạng): xoá để không đầy máy. Chỉ đụng tệp linh-khi-anh.* khác tên hiện tại.
+  function donBanCu() {
+    try {
+      if (typeof caches === 'undefined' || !caches.keys) return;
+      caches.keys().then((ten) => ten.forEach((n) => caches.open(n).then((c) => c.keys().then((ks) => ks.forEach((k) => {
+        if (/\/linh-khi-anh\.[0-9a-f]+\.json(\?|$)/.test(k.url) && k.url.indexOf('/' + AS.tep) < 0) c.delete(k);
+      }))))).catch(() => {});
+    } catch (e) { /* bỏ qua */ }
+  }
+  let dangChay = false;
+  async function chayNapSau() {
+    if (dangChay) return;
+    dangChay = true;
+    let san = -1;
+    const theoDoi = setInterval(() => { const n = demSan(); if (n !== san) { san = n; xoaNhoSau(false); } }, 400);
+    try {
+      for (let lan = 0; lan <= CHO_THU.length; lan++) {
+        AS.lan++; AS.tt = 'tai';
+        try {
+          await taiMotLuot();
+          AS.tt = 'xong'; AS.loi = '';
+          ghi('Đã tải xong ' + AS.tong + ' ảnh tải sau (' + AS.tep + ').');
+          donBanCu();
+          break;
+        } catch (e) {
+          AS.loi = String((e && e.message) || e);
+          ghi('Chưa tải được tệp ảnh ' + AS.tep + ' (lượt ' + AS.lan + '): ' + AS.loi + '. Đã nhận ' + daNhan.size + '/' + AS.tong + ' hình; game vẫn chạy, hình thiếu vẽ bằng code.');
+        }
+        if (lan < CHO_THU.length) { AS.tt = 'thu-lai'; await nghi(CHO_THU[lan]); }
+      }
+      if (AS.tt !== 'xong') {
+        AS.tt = 'loi'; AS.hetLuc = Date.now();
+        ghi('Thôi không tải tệp ảnh nữa (đã thử ' + AS.lan + ' lượt). Mở lại game khi mạng tốt hơn để có đủ ảnh.');
+        try { window.addEventListener('online', () => { chayNapSau(); }, { once: true }); } catch (e) { /* bỏ qua */ }
+      }
+    } finally {
+      dangChay = false;
+      // ảnh còn giải mã thêm vài nhịp sau khi dòng cuối về: theo dõi thêm 3 giây rồi xoá hình đã nhớ một lần cuối
+      setTimeout(() => { clearInterval(theoDoi); xoaNhoSau(true); }, 3000);
+    }
+  }
+  // Gọi nhiều lần cũng chỉ chạy một lần. Không có tệp phụ, hoặc trình duyệt không có fetch (rất cũ): không làm gì.
+  SC.napSau = function () {
+    if (!KS || AS.tt !== 'cho') return;
+    if (typeof fetch !== 'function' || typeof Promise === 'undefined') { AS.tt = 'loi'; AS.loi = 'trình duyệt không có fetch'; AS.hetLuc = Date.now(); ghi('Trình duyệt không tải được tệp ảnh rời: hình thiếu vẽ bằng code.'); return; }
+    chayNapSau().catch((e) => { AS.tt = 'loi'; AS.loi = String((e && e.message) || e); AS.hetLuc = Date.now(); });
+  };
+  // Chỉ báo nhỏ ở góc (js/engine.js gọi sau khi vẽ xong cảnh): { pct } đang tải; { loi: true } vừa thôi (hiện 6 giây); null: không vẽ gì.
+  SC.sauChiBao = function () {
+    if (AS.tt === 'tai' || AS.tt === 'thu-lai') return { pct: AS.tong > 0 ? Math.min(99, Math.floor(AS.xong / AS.tong * 100)) : 0 };
+    if (AS.tt === 'loi' && AS.hetLuc && Date.now() - AS.hetLuc < 6000) return { loi: true };
+    return null;
+  };
 })();
 // ===== game/js/mapgen.js =====
 // Bản đồ một ải: 8 phòng vuông trên lưới, sinh ngẫu nhiên theo hạt giống, ba kiểu bố cục A, B, C.

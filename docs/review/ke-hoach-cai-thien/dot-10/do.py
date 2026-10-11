@@ -3,6 +3,7 @@ Chạy từ thư mục gốc repo:
   python3 docs/review/ke-hoach-cai-thien/dot-10/do.py cỡ  [THƯ_MỤC_GAME]            bảng dung lượng: tệp, JS, ảnh nhúng theo nhóm, gzip -9, brotli 11
   python3 docs/review/ke-hoach-cai-thien/dot-10/do.py tải [THƯ_MỤC_GAME] [lần=2]    thời gian tải ở 1,5 Mbps và 10 Mbps (Chromium giả lập mạng, tệp nén gzip như Firebase Hosting)
   python3 docs/review/ke-hoach-cai-thien/dot-10/do.py tất-cả <tệp ra .json> [THƯ_MỤC_GAME] [lần=2]
+Thêm trang=linh-khi-nhe.html để đo bản 2 tệp (python3 game/build.py --hai-tep); mặc định đo linh-khi.html (bản một tệp).
 THƯ_MỤC_GAME: thư mục game/ cần đo (mặc định bản đang có; bản trước khi sửa thì dùng một git worktree). Đo trên game/dist đã đóng gói sẵn.
 Chỉ đọc tệp, không ghi gì vào game/. Trình duyệt tạm, chơi ?cloud=0, không đụng dữ liệu thật."""
 import glob, gzip, http.server, importlib.util, json, os, re, subprocess, sys, threading, time
@@ -11,6 +12,7 @@ DAY = os.path.dirname(os.path.abspath(__file__))
 GAME = os.path.normpath(os.path.join(DAY, '..', '..', '..', '..', 'game'))
 TRUM = ('mocTinh', 'nguTinh', 'hoTinh')
 RUNG_AI1 = ['heoCon', 'ongVo', 'boHung', 'hoaBaoTu', 'chonBong', 'namPhong', 'socNo', 'nhimDoc']  # 8 quái thường vùng Rừng già (G.MOB_ART cột 0)
+TRANG = ([x[6:] for x in sys.argv if x.startswith('trang=')] or ['linh-khi.html'])[0]
 B64 = re.compile(r'data:image/png;base64,[A-Za-z0-9+/=]+')
 
 
@@ -41,25 +43,25 @@ def nen(data):
 
 
 def tep_phu(dist):
-    """Tệp ảnh tải sau trong dist (chế độ 2 tệp), theo đúng tên ghi trong linh-khi.html. Không có: None."""
-    with open(os.path.join(dist, 'linh-khi.html'), encoding='utf-8') as f:
+    """Tệp ảnh tải sau trong dist (chế độ 2 tệp), theo đúng tên ghi trong trang. Không có: None."""
+    with open(os.path.join(dist, TRANG), encoding='utf-8') as f:
         m = re.search(r'\)\.ANH_SAU = (\{.*?\});', f.read())
     return json.loads(m.group(1)) if m else None
 
 
 def co(game):
     dist = os.path.join(game, 'dist')
-    with open(os.path.join(dist, 'linh-khi.html'), 'rb') as f:
+    with open(os.path.join(dist, TRANG), 'rb') as f:
         html = f.read()
     txt = html.decode('utf-8')
-    kq = {'linh-khi.html': nen(html)}
+    kq = {TRANG: nen(html)}
     js = re.search(r'<script>\n(.*)</script>', txt, re.S).group(1)
-    m = re.search(r'\(window\.G = window\.G \|\| \{\}\)\.customSpriteData = (\[.*?\]);\n', js, re.S)
+    m = re.search(r'''\(window\.G = window\.G \|\| \{\}\)(?:\.customSpriteData|\['customSpriteData'\]) = (\[.*?\]);\n''', js, re.S)
     nhung = json.loads(m.group(1)) if m else []
     ma_js = js.replace(m.group(0), '') if m else js
     kq['phần mã JS (46 tệp, không kể ảnh)'] = nen(ma_js.encode('utf-8'))
     kq['phần khung trang (HTML, CSS)'] = nen(txt.replace(js, '').encode('utf-8'))
-    kq['phần ảnh nhúng trong linh-khi.html'] = dict(nen((m.group(1) if m else '').encode('utf-8')), so_tep=len(nhung))
+    kq['phần ảnh nhúng trong ' + TRANG] = dict(nen((m.group(1) if m else '').encode('utf-8')), so_tep=len(nhung))
     sau = tep_phu(dist)
     phu = []
     if sau:
@@ -67,10 +69,10 @@ def co(game):
             raw = f.read()
         phu = json.loads(raw)
         kq['tệp ảnh tải sau (' + sau['tep'] + ')'] = dict(nen(raw), so_tep=len(phu))
-        kq['tổng hai tệp'] = {k: kq['linh-khi.html'][k] + kq['tệp ảnh tải sau (' + sau['tep'] + ')'][k] for k in ('byte', 'gzip9', 'brotli11')}
+        kq['tổng hai tệp'] = {k: kq[TRANG][k] + kq['tệp ảnh tải sau (' + sau['tep'] + ')'][k] for k in ('byte', 'gzip9', 'brotli11')}
     # theo nhóm: số tệp, cỡ ảnh (chuỗi base64), cỡ cả mục (ảnh + số liệu) như nằm trong bản đóng gói, gzip riêng của nhóm, nằm ở tệp nào
     nh = {}
-    for o, noi in [(t, 'linh-khi.html') for t in nhung] + [(t, 'tệp tải sau') for t in phu]:
+    for o, noi in [(t, TRANG) for t in nhung] + [(t, 'tệp tải sau') for t in phu]:
         s = json.dumps(o, ensure_ascii=False, separators=(',', ':'))
         g = nh.setdefault(nhom(o), {'so_tep': 0, 'base64': 0, 'ca_muc': 0, '_gop': [], 'noi': set()})
         g['so_tep'] += 1; g['base64'] += sum(len(x) for x in B64.findall(s)); g['ca_muc'] += len(s.encode('utf-8')); g['_gop'].append(s); g['noi'].add(noi)
@@ -79,7 +81,7 @@ def co(game):
         g['tb_moi_tep'] = round(g['ca_muc'] / g['so_tep']); g['noi'] = ' + '.join(sorted(g['noi']))
     kq['ảnh theo nhóm'] = dict(sorted(nh.items(), key=lambda kv: -kv[1]['ca_muc']))
     kq['tổng ảnh (mọi nhóm)'] = {k: sum(g[k] for g in nh.values()) for k in ('so_tep', 'base64', 'ca_muc')}
-    kq['các tệp khác trong dist'] = {os.path.basename(p): os.path.getsize(p) for p in sorted(glob.glob(os.path.join(dist, '*'))) if os.path.basename(p) != 'linh-khi.html'}
+    kq['các tệp khác trong dist'] = {os.path.basename(p): os.path.getsize(p) for p in sorted(glob.glob(os.path.join(dist, '*'))) if os.path.basename(p) != TRANG}
     return kq
 
 
@@ -91,7 +93,7 @@ class May(http.server.BaseHTTPRequestHandler):
     def log_message(self, *a): pass
 
     def do_GET(self):
-        ten = self.path.split('?')[0].lstrip('/') or 'linh-khi.html'
+        ten = self.path.split('?')[0].lstrip('/') or TRANG
         p = os.path.join(self.goc, os.path.basename(ten))
         if (self.chan and re.search(self.chan, ten)) or not os.path.isfile(p):
             self.send_response(404); self.send_header('Content-Length', '0'); self.end_headers(); return
@@ -142,7 +144,7 @@ def tai_mot(pw, cong, mbps, tre, cho, cho_du=True):
     cdp.send('Network.emulateNetworkConditions', {'offline': False, 'latency': tre, 'downloadThroughput': mbps * 1e6 / 8, 'uploadThroughput': mbps * 1e6 / 16})
     pg.add_init_script(MOC % json.dumps(cho))
     t0 = time.time()
-    pg.goto('http://127.0.0.1:%d/linh-khi.html?cloud=0' % cong, wait_until='commit', timeout=180000)
+    pg.goto('http://127.0.0.1:%d/%s?cloud=0' % (cong, TRANG), wait_until='commit', timeout=180000)
     pg.wait_for_function('window.__m && __m.manChao != null', timeout=180000)
     pg.wait_for_timeout(120)
     pg.mouse.click(422, 120)  # chạm chỗ trống ở màn chào → vào làng (thao tác đầu tiên của người chơi)
@@ -175,7 +177,7 @@ def tai(game, lan=2, chan=None, cong=8870):
 
 if __name__ == '__main__':
     lenh = sys.argv[1] if len(sys.argv) > 1 else ''
-    a = [x for x in sys.argv[2:] if not x.startswith('lần=')]
+    a = [x for x in sys.argv[2:] if not x.startswith('lần=') and not x.startswith('trang=')]
     lan = ([int(x[4:]) for x in sys.argv if x.startswith('lần=')] or [2])[0]
     if lenh == 'cỡ':
         print(json.dumps(co(a[0] if a else GAME), ensure_ascii=False, indent=1))
@@ -183,7 +185,7 @@ if __name__ == '__main__':
         tai(a[0] if a else GAME, lan)
     elif lenh == 'tất-cả':
         game = a[1] if len(a) > 1 else GAME
-        kq = {'ban': subprocess.run(['git', 'rev-parse', '--short', 'HEAD'], cwd=game, capture_output=True, text=True).stdout.strip(),
+        kq = {'trang': TRANG, 'ban': subprocess.run(['git', 'rev-parse', '--short', 'HEAD'], cwd=game, capture_output=True, text=True).stdout.strip(),
               'cach_do': 'Chromium (Playwright) 844×390, ?cloud=0, tệp nén gzip -9 như Firebase Hosting, phông Google bị chặn, không bộ nhớ đệm; mốc tính bằng ms từ lúc bắt đầu mở trang',
               'dung_luong': co(game), 'thoi_gian_tai': tai(game, lan)}
         with open(a[0], 'w', encoding='utf-8') as f:

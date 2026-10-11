@@ -2,3 +2,7 @@ __pycache__/
 *.pyc
 .venv/
 .DS_Store
+
+# Đợt 10 (Q5): cặp tệp của chế độ 2 tệp (python3 game/build.py --hai-tep) do workflow tạo lúc đăng, không lưu trong repo
+game/dist/linh-khi-nhe.html
+game/dist/linh-khi-anh.*.json

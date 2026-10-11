@@ -503,6 +503,26 @@
     G.keyP = {};
     G.downs.length = 0;
   };
+  // Đợt 10 (Q5): chỉ báo nhỏ ở góc dưới trái trong lúc tải phần ảnh tải sau (js/sprite_custom.js: SC.sauChiBao). Chỉ là chữ nhỏ và một chấm nháy,
+  // không che nút, không nhận chạm; tải xong thì tự mất. Bản một tệp không có gì để tải nên không bao giờ vẽ.
+  let daGoiSau = false;
+  function veTaiSau() {
+    try {
+      const SC = G.spriteCustom, b = SC && SC.sauChiBao ? SC.sauChiBao() : null;
+      if (!b) return;
+      const c = G.ux, ga = c.globalAlpha, x = 5, y = 266;
+      c.globalAlpha = ga * 0.92;
+      if (b.loi) ui.text(G.t('Mạng yếu: thiếu vài ảnh, game vẫn chơi bình thường'), x, y, { size: 7.5, color: '#e8d7b0' });
+      else {
+        c.fillStyle = 'rgba(0,0,0,0.6)'; c.fillRect(x - 1, y - 6, 5, 5);
+        c.globalAlpha = ga * (0.45 + 0.55 * (0.5 + 0.5 * Math.sin(Date.now() / 220)));
+        c.fillStyle = '#ffd27a'; c.fillRect(x, y - 5, 3, 3);
+        c.globalAlpha = ga * 0.92;
+        ui.text(G.t('Đang tải thêm ảnh… {0}%', b.pct), x + 7, y, { size: 7.5, color: '#e8d7b0' });
+      }
+      c.globalAlpha = ga;
+    } catch (e) { /* chỉ báo hỏng thì bỏ qua, không được làm đứng game */ }
+  }
   function frame(ts) {
     requestAnimationFrame(frame); // đặt trước để một lỗi lẻ không làm đứng game
     const now = ts / 1000;
@@ -517,6 +537,8 @@
       G.scene.draw();
       if (G.theme && G.theme.endFrame) G.theme.endFrame(); // tên biểu tượng tài nguyên khi chạm vào
       if (!daVe) { daVe = true; try { const el = document.getElementById('lk-tai'); if (el) el.remove(); } catch (e) { /* bỏ qua */ } } // Đợt 1: khung hình đầu đã vẽ xong → gỡ màn hình tải (index.html)
+      if (!daGoiSau) { daGoiSau = true; try { if (G.spriteCustom && G.spriteCustom.napSau) G.spriteCustom.napSau(); } catch (e) { /* bỏ qua */ } } // Đợt 10: màn chào đã vẽ → mới bắt đầu tải phần ảnh tải sau (bản 2 tệp)
+      veTaiSau();
       if (G.portrait) {
         ui.text('Xoay ngang điện thoại để hình to và dễ chơi hơn', 240, -10, { size: 13, align: 'center', color: '#ffd27a' });
       }

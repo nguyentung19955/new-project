@@ -13,8 +13,19 @@ Thêm (Xưởng Sprite, tools/xuong-sprite):
   - dist/xuong-sprite-thu.html  bản game thử mà công cụ mở bên trong để xem quái mới đánh nhau thật
   - tools/xuong-sprite/index.html và thu.html: cùng công cụ để mở ngay trong thư mục repo
 
-Cách dùng:  python3 build.py
+Đợt 10 (Q5) — chế độ 2 TỆP, ảnh tải sau (thêm, không đổi các tệp ở trên):
+  python3 build.py --hai-tep   (hoặc biến môi trường LK_HAI_TEP=1) ghi THÊM hai tệp:
+  - dist/linh-khi-nhe.html           cùng game, chỉ nhúng phần ảnh BẮT BUỘC cho màn chào / làng / ải 1 (hàm bat_buoc bên dưới)
+  - dist/linh-khi-anh.<mã>.json      phần ảnh còn lại, js/sprite_custom.js tải sau khi màn chào đã vẽ (tên có mã nội dung để lưu đệm lâu).
+                                     Thiếu hoặc lỗi tệp này: game vẫn chạy, phần ảnh thiếu vẽ bằng code như khi chưa có ảnh AI.
+  Workflow đăng web dùng cặp tệp này. Không có cờ (hoặc có --mot-tep): xuất đúng như cũ, dist/linh-khi.html vẫn là MỘT tệp đủ ảnh, mở là chơi
+  (các bài kiểm mở tệp trên máy, bản thử Xưởng Sprite và artifact.html luôn dùng bản một tệp).
+  Số đo và lý do: docs/review/ke-hoach-cai-thien/dot-10/bao-cao.md
+
+Cách dùng:  python3 build.py [--hai-tep | --mot-tep]
 """
+import glob
+import hashlib
 import json
 import os
 import re
@@ -60,21 +71,31 @@ def main():
     ver = 'lk-' + (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=7)).strftime('%Y.%m.%d-%H%M')
     parts.append('// ===== phiên bản đóng gói =====\n(window.G = window.G || {}).VERSION = ' + json.dumps(ver) + ';\n')
     custom = custom_sprites()
-    for src in srcs:
-        if src.startswith(('http:', 'https:', '//')) or 'tests/' in src or 'bot' in os.path.basename(src):
-            sys.exit('Không được đóng gói tệp này: ' + src)
-        code = read(src)
-        if src == 'js/sprite_custom.js' and custom:
-            data = json.dumps(custom, ensure_ascii=False, separators=(',', ':'))
-            parts.append('// ===== art/custom (hình tự vẽ, Xưởng Sprite) =====\n(window.G = window.G || {}).customSpriteData = ' + data + ';\n')
-        parts.append('// ===== ' + src + ' =====\n' + code.rstrip() + '\n')
-    js = '\n'.join(parts)
-    # Không để chuỗi nào trong JS đóng thẻ script sớm.
-    js = re.sub(r'</(script)', r'<\\/\1', js, flags=re.I).replace('<!--', '<\\!--')
-    script = '<script>\n' + js + '</script>'
 
-    full = ('<!doctype html>\n<html lang="' + lang + '">\n<head>\n' + '\n'.join(metas) + '\n' + title + '\n' + link + '\n'
-            + style + '\n</head>\n<body>\n' + markup + '\n' + script + '\n</body>\n</html>\n')
+    def gom(nhung, dau='', gan='.customSpriteData = '):
+        """Gom mọi tệp JS thành một thẻ script; nhung: các hình nhúng thẳng vào trang; dau: mã chèn ngay trước js/sprite_custom.js;
+        gan: cách viết phép gán dữ liệu nhúng (trang nhẹ của chế độ 2 tệp viết khác đi, xem hai_tep)."""
+        ps = list(parts)
+        for src in srcs:
+            if src.startswith(('http:', 'https:', '//')) or 'tests/' in src or 'bot' in os.path.basename(src):
+                sys.exit('Không được đóng gói tệp này: ' + src)
+            code = read(src)
+            if src == 'js/sprite_custom.js' and nhung:
+                data = json.dumps(nhung, ensure_ascii=False, separators=(',', ':'))
+                ps.append('// ===== art/custom (hình tự vẽ, Xưởng Sprite) =====\n(window.G = window.G || {})' + gan + data + ';\n')
+            if src == 'js/sprite_custom.js' and dau:
+                ps.append(dau)
+            ps.append('// ===== ' + src + ' =====\n' + code.rstrip() + '\n')
+        # Không để chuỗi nào trong JS đóng thẻ script sớm.
+        return safe_js('\n'.join(ps))
+
+    def trang(js):
+        return ('<!doctype html>\n<html lang="' + lang + '">\n<head>\n' + '\n'.join(metas) + '\n' + title + '\n' + link + '\n'
+                + style + '\n</head>\n<body>\n' + markup + '\n<script>\n' + js + '</script>\n</body>\n</html>\n')
+
+    js = gom(custom)
+    script = '<script>\n' + js + '</script>'
+    full = trang(js)
     frag = title + '\n' + link + '\n' + style + '\n' + markup + '\n' + script + '\n'
 
     check(full, frag, js)
@@ -85,7 +106,94 @@ def main():
         print('Đã ghi dist/%s (%d KB, %d tệp JS)' % (name, len(text.encode('utf-8')) // 1024, len(srcs)))
     if custom:
         print('Đã nhúng %d hình tự vẽ: %s' % (len(custom), ', '.join(t['ma'] for t in custom)))
+    hai_tep(custom, gom, trang, frag)
     build_tool(full)
+
+
+# ---------- Đợt 10 (Q5): chế độ 2 tệp, ảnh tải sau ----------
+TEN_NHE = 'linh-khi-nhe.html'
+TEN_ANH = 'linh-khi-anh.%s.json'
+# Trần dung lượng theo quyết định Q5: gói một tệp 15 MB; tách ảnh tải sau thì cả gói 20 MB. Tệp đầu (2 tệp) nên dưới 5 MB để tới màn chào nhanh.
+TRAN_MOT_TEP, TRAN_HAI_TEP, NEN_DUOI = 15 * 1024 * 1024, 20 * 1024 * 1024, 5 * 1024 * 1024
+TRUM_VUNG = ('mocTinh', 'nguTinh', 'hoTinh')
+# Hiệu ứng cơ bản (đòn đánh thường nào cũng dùng): vệt chém / đâm, mũi tên của bé, trúng đòn, chí mạng, vỡ giáp, quái chết.
+HU_CO_BAN = re.compile(r'^hu-(chem|dam|trung|dan-ten|chi-mang|pha-giap|quai-chet)(-|$)')
+
+
+def bat_buoc(t):
+    """Hình phải nằm sẵn trong trang (màn chào, làng, ải 1 cần ngay). LUẬT ĐƠN GIẢN, mọi thứ không khớp đều là ẢNH TẢI SAU:
+      1. hồ sơ ghép (ghep-*: chỉ số liệu)             2. em bé 4 thân gốc (không phải thân theo bộ trang phục)
+      3. người làng (nl-*)                             4. ảnh giao diện, làng, phòng (gd-*)
+      5. vật phẩm (vp-*) và trang phục rời (tp-*): rất nhỏ, có ngay để em bé trong làng không đổi hình giữa chừng
+      6. vũ khí khởi đầu: Kiếm Rèn (vk-sword-0*) và Cung Tre (vk-bow-3*), kể cả bản theo hệ (màn chào vẽ kiếm lửa)
+      7. hiệu ứng cơ bản (HU_CO_BAN)
+    Tải sau: mọi quái và trùm, thân theo bộ trang phục, vũ khí còn lại, hiệu ứng theo hệ / của quái / bảng kết quả, và mọi loại mới chưa có luật."""
+    ma, d = t['ma'], t.get('doi_tuong')
+    if d in ('ghep', 'nguoi-lang', 'giao-dien', 'vat-pham', 'trang-phuc'):
+        return True
+    if d == 'em-be':
+        return not re.search(r'-(rung|bien|lau)$', ma)
+    if d == 'vu-khi':
+        return bool(re.match(r'^vk-(sword-0|bow-3)(-|$)', ma))
+    if d == 'hieu-ung':
+        return bool(HU_CO_BAN.match(ma))
+    return False
+
+
+def thu_tu_sau(t):
+    """Thứ tự trong tệp tải sau (game nhận từng hình ngay khi dòng của nó về tới): thứ người mới chơi gặp trước thì đứng trước.
+    0 quái Rừng già (nhỏ trước: quái thường rồi tinh anh, trùm nhỏ) · 1 hiệu ứng còn lại · 2 vũ khí còn lại · 3 trùm Rừng già ·
+    4 Hang biển · 5 Lâu đài cổ · 6 mọi thứ khác. Cùng bậc: tệp nhỏ trước."""
+    ma, d = t['ma'], t.get('doi_tuong')
+    co = len(str(t.get('tam') or t.get('anh') or ''))
+    quai = d not in ('hieu-ung', 'ghep', 'giao-dien', 'nguoi-lang', 'em-be') and d not in DO_LOAI
+    trum = quai and ma.split('-')[0] in TRUM_VUNG
+    vung = t.get('vung') if quai else None
+    if vung == 'rung':
+        bac = 3 if trum else 0
+    elif d == 'hieu-ung':
+        bac = 1
+    elif d == 'vu-khi':
+        bac = 2
+    else:
+        bac = {'bien': 4, 'laudai': 5}.get(vung, 6)
+    return (bac, co, ma)
+
+
+def hai_tep(custom, gom, trang, frag):
+    """Ghi thêm cặp tệp của chế độ 2 tệp (khi có cờ), hoặc dọn cặp tệp cũ (khi xuất như cũ). Luôn in dung lượng so với trần Q5."""
+    bat = ('--hai-tep' in sys.argv[1:] or os.environ.get('LK_HAI_TEP') == '1') and '--mot-tep' not in sys.argv[1:]
+    mot = os.path.getsize(os.path.join(DIST, 'linh-khi.html'))
+    print('Dung lượng một tệp: %.2f MB / trần 15 MB (Q5), còn %.2f MB%s' % (mot / 1048576, (TRAN_MOT_TEP - mot) / 1048576, '  ← VƯỢT TRẦN' if mot > TRAN_MOT_TEP else ''))
+    for p in glob.glob(os.path.join(DIST, TEN_ANH % '*')) + [os.path.join(DIST, TEN_NHE)]:
+        if os.path.isfile(p):
+            os.remove(p)  # tên tệp ảnh đổi theo nội dung: không để bản cũ nằm lại
+    if not bat or not custom:
+        return
+    truoc = [t for t in custom if bat_buoc(t)]
+    sau = sorted((t for t in custom if not bat_buoc(t)), key=thu_tu_sau)
+    if not sau:
+        return
+    # Tệp ảnh tải sau: một mảng JSON hợp lệ, MỖI HÌNH MỘT DÒNG, để game đọc dần từng dòng khi tệp đang về (js/sprite_custom.js).
+    data = ('[\n' + ',\n'.join(json.dumps(t, ensure_ascii=False, separators=(',', ':')) for t in sau) + '\n]\n').encode('utf-8')
+    ten = TEN_ANH % hashlib.sha256(data).hexdigest()[:12]
+    khai = ('// ===== ảnh tải sau (Đợt 10): tệp nằm cạnh trang, js/sprite_custom.js tải sau khi màn chào đã vẽ =====\n'
+            '(window.G = window.G || {}).ANH_SAU = ' + json.dumps({'tep': ten, 'so': len(sau), 'byte': len(data)}) + ';\n')
+    # Trang nhẹ CỐ Ý không chứa chuỗi ".customSpriteData = ": các trang công cụ (tools/tach-quai, tach-ghep, tach-do) tìm đúng chuỗi đó trong
+    # index.html để lấy MỌI hình đang có trong game. Trang nhẹ chỉ có một phần hình, nên để công cụ bỏ qua nó và đọc bản một tệp đủ ảnh
+    # (linh-khi.html, workflow đăng kèm) như trước. Với game hai cách viết là một.
+    js = gom(truoc, khai, "['customSpriteData'] = ")
+    if '.customSpriteData = ' in js:
+        sys.exit('Trang nhẹ còn chuỗi ".customSpriteData = ": công cụ sẽ đọc nhầm trang thiếu ảnh')
+    nhe = trang(js)
+    check(nhe, frag, js)
+    with open(os.path.join(DIST, ten), 'wb') as f:
+        f.write(data)
+    write(os.path.join(DIST, TEN_NHE), nhe)
+    n1, n2 = len(nhe.encode('utf-8')), len(data)
+    print('Chế độ 2 tệp: dist/%s (%d KB, %d hình bắt buộc) + dist/%s (%d KB, %d hình tải sau)' % (TEN_NHE, n1 // 1024, len(truoc), ten, n2 // 1024, len(sau)))
+    print('Dung lượng hai tệp: %.2f MB / trần 20 MB (Q5), còn %.2f MB%s; tệp đầu %.2f MB (nên dưới 5 MB)%s'
+          % ((n1 + n2) / 1048576, (TRAN_HAI_TEP - n1 - n2) / 1048576, '  ← VƯỢT TRẦN' if n1 + n2 > TRAN_HAI_TEP else '', n1 / 1048576, '  ← TỆP ĐẦU QUÁ NẶNG, xem lại luật bat_buoc' if n1 > NEN_DUOI else ''))
 
 
 # ---------- Xưởng Sprite ----------

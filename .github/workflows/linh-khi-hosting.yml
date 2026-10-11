@@ -22,6 +22,9 @@ jobs:
     env:
       FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH }}
       SITE: spiritblade
+      # Đợt 10 (Q5): '1' = đăng bản 2 TỆP (trang nhẹ + tệp ảnh tải sau linh-khi-anh.<mã>.json; tới màn chào nhanh hơn ~4 lần ở mạng 1,5 Mbps,
+      # số đo ở docs/review/ke-hoach-cai-thien/dot-10/bao-cao.md). Đổi thành '0' để đăng bản MỘT tệp như trước (cờ quay lui, không cần sửa code game).
+      HAI_TEP: '1'
     steps:
       - name: Kiểm tra secret
         run: |
@@ -51,9 +54,20 @@ jobs:
 
       - name: Gói game
         run: |
-          python3 game/build.py
           mkdir -p "$RUNNER_TEMP/web/site"
-          cp game/dist/linh-khi.html "$RUNNER_TEMP/web/site/index.html"
+          if [ "$HAI_TEP" = "1" ]; then python3 game/build.py --hai-tep; else python3 game/build.py --mot-tep; fi
+          if [ "$HAI_TEP" = "1" ] && [ -f game/dist/linh-khi-nhe.html ] && ls game/dist/linh-khi-anh.*.json > /dev/null 2>&1; then
+            # Bản 2 tệp: trang nhẹ làm trang chính, tệp ảnh tải sau nằm cạnh trang (tên có mã nội dung, lưu đệm lâu ở firebase.json bên dưới)
+            cp game/dist/linh-khi-nhe.html "$RUNNER_TEMP/web/site/index.html"
+            cp game/dist/linh-khi-anh.*.json "$RUNNER_TEMP/web/site/"
+            # Bản một tệp đủ ảnh vẫn đăng kèm ở /linh-khi.html: các trang công cụ (tach-quai, tach-ghep, tach-do) đọc mọi hình đang có trong game từ đó
+            # (trang nhẹ chỉ có một phần hình), và là lối dự phòng để chơi bản một tệp.
+            cp game/dist/linh-khi.html "$RUNNER_TEMP/web/site/linh-khi.html"
+            echo "- Bản 2 tệp: index.html $(stat -c %s game/dist/linh-khi-nhe.html) byte + $(basename game/dist/linh-khi-anh.*.json) $(stat -c %s game/dist/linh-khi-anh.*.json) byte" >> "$GITHUB_STEP_SUMMARY"
+          else
+            cp game/dist/linh-khi.html "$RUNNER_TEMP/web/site/index.html"
+            echo "- Bản một tệp: index.html $(stat -c %s game/dist/linh-khi.html) byte" >> "$GITHUB_STEP_SUMMARY"
+          fi
           cp game/web/* "$RUNNER_TEMP/web/site/"
           # Xưởng Sprite: công cụ tự vẽ sprite (https://spiritblade.web.app/xuong-sprite.html) và bản game thử nó mở bên trong
           cp game/dist/xuong-sprite.html game/dist/xuong-sprite-thu.html "$RUNNER_TEMP/web/site/"
@@ -65,7 +79,11 @@ jobs:
             "hosting": {
               "site": "$SITE",
               "public": "site",
-              "headers": [ { "source": "**", "headers": [ { "key": "Cache-Control", "value": "no-cache" } ] } ]
+              "rewrites": [ { "source": "/game/dist/linh-khi.html", "destination": "/linh-khi.html" } ],
+              "headers": [
+                { "source": "**", "headers": [ { "key": "Cache-Control", "value": "no-cache" } ] },
+                { "source": "/linh-khi-anh.*.json", "headers": [ { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" } ] }
+              ]
             }
           }
           EOF
