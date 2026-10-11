@@ -518,10 +518,12 @@ function tachNen(A, coAlpha, mem) {
   for (let x = 0; x < W; x++) { let y = 0; while (y < H) { if (laNen[y*W+x]) { y++; continue; } let e = y; while (e < H && !laNen[e*W+x]) e++; for (let t = y; t < e; t++) doc[t*W+x] = Math.min(65535, e - y); y = e; } }
   // một hàng/cột là đường kẻ khi nét mảnh phủ ≥ 12% ảnh và có đoạn liền ≥ 6% (lưới chỉ kẻ quanh hàng khung, bị tia lửa chạm vẫn nhận ra)
   const LH = Math.max(24, 0.06 * W), LD = Math.max(24, 0.06 * H);
-  for (let y = 0; y < H; y++) { let run = 0, best = 0, n = 0; for (let x = 0; x < W; x++) { if (!laNen[y*W+x] && doc[y*W+x] <= 6) { n++; run++; if (run > best) best = run; } else run = 0; }
-    if (best >= LH && n >= 2 * LH) for (let x = 0; x < W; x++) if (!laNen[y*W+x] && doc[y*W+x] <= 6) duong[y*W+x] = 1; }
-  for (let x = 0; x < W; x++) { let run = 0, best = 0, n = 0; for (let y = 0; y < H; y++) { if (!laNen[y*W+x] && ngang[y*W+x] <= 6) { n++; run++; if (run > best) best = run; } else run = 0; }
-    if (best >= LD && n >= 2 * LD) for (let y = 0; y < H; y++) if (!laNen[y*W+x] && ngang[y*W+x] <= 6) duong[y*W+x] = 1; }
+  // độ dày tối đa của nét kẻ: 6 điểm, hoặc 1,5% cạnh dài của ảnh (ChatGPT hay kẻ nét đen dày 10–16 điểm ở ảnh 1024)
+  const MONG = Math.max(6, Math.round(0.015 * Math.max(W, H)));
+  for (let y = 0; y < H; y++) { let run = 0, best = 0, n = 0; for (let x = 0; x < W; x++) { if (!laNen[y*W+x] && doc[y*W+x] <= MONG) { n++; run++; if (run > best) best = run; } else run = 0; }
+    if (best >= LH && n >= 2 * LH) for (let x = 0; x < W; x++) if (!laNen[y*W+x] && doc[y*W+x] <= MONG) duong[y*W+x] = 1; }
+  for (let x = 0; x < W; x++) { let run = 0, best = 0, n = 0; for (let y = 0; y < H; y++) { if (!laNen[y*W+x] && ngang[y*W+x] <= MONG) { n++; run++; if (run > best) best = run; } else run = 0; }
+    if (best >= LD && n >= 2 * LD) for (let y = 0; y < H; y++) if (!laNen[y*W+x] && ngang[y*W+x] <= MONG) duong[y*W+x] = 1; }
   // vùng sát đường kẻ (viền lem của nét kẻ khi ảnh nén): coi như đường kẻ
   { const them = []; for (let j = 0; j < N; j++) { if (!duong[j]) continue; const x = j % W, y = (j / W) | 0;
       for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) { const nx = x + dx, ny = y + dy; if (nx >= 0 && ny >= 0 && nx < W && ny < H && !duong[ny * W + nx] && kc(d, ny * W + nx, chinh) > 44) them.push(ny * W + nx); } }
