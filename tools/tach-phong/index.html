@@ -502,6 +502,11 @@ const NEN = { hong: ['HỒNG TÍM #FF00FF', 'hồng tím'], 'xanh-la': ['XANH L�
 const cuoi = (L) => `Nền trơn MỘT MÀU ${NEN[L.nen || 'hong'][0]} (không ô cờ, không nền trắng, không chuyển màu), không dùng màu ${NEN[L.nen || 'hong'][1]} ở chỗ nào khác trong hình. Chỉ cần gửi tấm ảnh, không cần code, không cần file json.`;
 const GAME_LK = 'game Linh Khí (game hành động pixel art nhìn từ trên xuống chếch, lấy cảm hứng dân gian Việt Nam)';
 // cỡ = true: ghi kèm cỡ trong game (rộng×cao điểm ảnh) sau tên từng hình
+// ---------- Đợt 11: lô GỘP cửa 3 vùng (một tấm thay 3 tấm của ba lô 'cua-<vùng>') ----------
+// Lưới 6 cột × 3 hàng = 18 ô: mỗi HÀNG là một vùng (Rừng già, Hang biển, Lâu đài cổ); trong hàng: cột 1, 2, 3 = cửa trên, dưới, bên khi MỞ; cột 4, 5, 6 = đúng ba cửa đó khi KHOÁ.
+// Mã tệp, tên, cỡ, mô tả lấy nguyên từ CUA (chỉ đổi số ô trong câu "ở ô 1 / 2 / 3" cho khớp lưới 18 ô) nên tệp tải ra giống hệt tệp của ba lô lẻ. Cách cắt và kiểu 'vat' y như ba lô lẻ; ba lô lẻ vẫn giữ để gen lại riêng một vùng.
+LO.push({ id: 'cua-gop', ten: 'Cửa · GỘP cả 3 vùng · 18 hình (một tấm thay 3 tấm)', kieu: 'vat', cot: 6, hang: 3, mau: 48, net: 'min', xem: 'cua', nen: 'hong', cuaGop: true,
+  ds: CUA.flatMap((V, r) => ['', '-khoa'].flatMap((kh) => CUA_DANG.map(([d, ten]) => ({ ma: 'gd-cua-' + V.k + '-' + d + kh, ten: ten + (kh ? ' · khoá' : ' · mở'), vungTen: V.ten, mo: V.mo[d + kh].replace(/ở ô ([123])(?!\d)/g, (_, n) => 'ở ô ' + (6 * r + +n)), w: CUA_CO[d][0], h: CUA_CO[d][1] })))) });
 function luoi(L, co) {
   const n = L.ds.length, tong = L.cot * L.hang;
   const ds = L.ds.map((m, i) => `ô ${i + 1}: ${m.ten}${co ? ` (trong game ${m.w}×${m.h})` : ''}: ${m.mo}`).join('; ');
@@ -521,6 +526,20 @@ function promptCua(L) {
     + `BẢNG MÀU (bắt buộc bám theo; mỗi hình chỉ dùng tối đa 3 sắc cho một chất liệu): ${MAU_CUA}; ${V.mau}; ánh sáng trong lòng cửa mở: ${V.sang}. `
     + `CỠ TRONG Ô: mỗi hình chiếm khoảng 70% ô (cửa bên cao khoảng 70% ô và hẹp; cửa dưới rộng khoảng 70% ô và dẹt), canh giữa theo chiều ngang, ĐÁY hình nằm gần đáy ô, hình nằm TRỌN trong ô, không chạm đường lưới. Hai ô trên dưới của cùng một cột phải vẽ ĐÚNG cùng một cái cửa, cùng cỡ, cùng chỗ đứng trong ô, chỉ khác mở hay khoá. `
     + `KHÔNG vẽ: ổ khoá, đầu lâu, dây xích (game tự vẽ đè lên cửa khoá), chữ, số, nhãn, tên, mũi tên, bảng màu, mảng tường hay sàn phòng quanh cửa, vệt sáng hắt xuống sàn, bóng đổ xuống đất, quầng sáng toả rộng, nhân vật. KHÔNG dùng màu đỏ tươi cho vật chắn (màu đỏ dành cho ổ khoá do game vẽ). `
+    + cuoi(L);
+}
+// Đợt 11: prompt của lô gộp cửa 3 vùng. Ghép từ chính các đoạn của promptCua (chung, mau, sang, mo của từng vùng), không viết lại nội dung.
+function promptCuaGop(L) {
+  return `Dùng công cụ tạo ảnh vẽ MỘT tấm ảnh pixel art 2D nằm ngang (tỉ lệ 3:2) gồm ĐÚNG ${L.ds.length} hình CỬA PHÒNG của ba vùng (${CUA.map((V) => V.ten).join(', ')}) trong ${GAME_LK}. Phòng chơi hình chữ nhật nhìn từ trên xuống chếch: tường sau (phía trên) thấy mặt đứng, tường hai bên và tường trước (phía dưới) chỉ là dải viền hẹp. Mỗi phòng có cửa ở tường trên, tường dưới và hai tường bên; mỗi cửa có hai trạng thái MỞ và KHOÁ. Mỗi vùng một kiểu cửa: `
+    + CUA.map((V, r) => `HÀNG ${r + 1} là vùng ${V.ten}: ${V.chung}`).join('; ') + '. '
+    + `BỐ CỤC: lưới ĐỀU đúng 6 cột × 3 hàng = 18 ô bằng nhau (KHÔNG thêm cột, KHÔNG thêm hàng), kẻ lưới mảnh màu tối. Mỗi HÀNG là MỘT vùng. Trong mỗi hàng: cột 1 là cửa TRÊN, cột 2 là cửa DƯỚI, cột 3 là cửa BÊN, cả ba đang MỞ; cột 4, cột 5, cột 6 là ĐÚNG ba cái cửa đó khi KHOÁ (cột 4 là cửa của cột 1, cột 5 là cửa của cột 2, cột 6 là cửa của cột 3). Thứ tự đọc từ trái sang phải, hết hàng trên mới xuống hàng dưới: `
+    + L.ds.map((m, i) => `ô ${i + 1}: ${m.vungTen} · ${m.ten} (trong game ${m.w}×${m.h})`).join('; ') + '. '
+    + `TỪNG HÌNH: ` + L.ds.map((m, i) => `Ô ${i + 1}: ${m.mo}.`).join(' ') + ' '
+    + `CỬA BÊN chỉ vẽ MỘT cái của tường TRÁI (phía ngoài phòng ở bên trái hình, phía trong phòng ở bên phải hình); game tự lật ngang để làm cửa tường phải, nên đừng vẽ chữ hay ký hiệu có chiều trái phải. `
+    + `KIỂU VẼ: pixel art rõ từng điểm ảnh, màu phẳng, đổ bóng 3 sắc (tối, vừa, sáng), ánh sáng chiếu từ phía trên bên trái; viền ngoài tối MỘT nét màu #14182e quanh mép từng hình; không chuyển màu mượt, không nhoè, không khử răng cưa. Trong game mỗi cửa rất nhỏ (số trong ngoặc là cỡ rộng×cao tính bằng điểm ảnh), nên khối phải to, rõ, ít chi tiết vụn. Cả ba hàng cùng một kiểu vẽ, cùng cỡ điểm ảnh; mỗi hàng chỉ dùng chất liệu và màu của vùng đó, không lẫn sang hàng khác. `
+    + `BẢNG MÀU (bắt buộc bám theo; mỗi hình chỉ dùng tối đa 3 sắc cho một chất liệu): ${MAU_CUA}; ` + CUA.map((V, r) => `hàng ${r + 1} (${V.ten}): ${V.mau}; ánh sáng trong lòng cửa mở: ${V.sang}`).join('; ') + '. '
+    + `CỠ TRONG Ô: mỗi hình chiếm khoảng 70% ô (cửa bên cao khoảng 70% ô và hẹp; cửa dưới rộng khoảng 70% ô và dẹt), canh giữa theo chiều ngang, ĐÁY hình nằm gần đáy ô, hình nằm TRỌN trong ô, không chạm đường lưới. Trong cùng một hàng, cửa khoá phải vẽ ĐÚNG cùng một cái cửa với cửa mở tương ứng (cột 4 với cột 1, cột 5 với cột 2, cột 6 với cột 3), cùng cỡ, cùng chỗ đứng trong ô, chỉ khác mở hay khoá. `
+    + `KHÔNG vẽ: ổ khoá, đầu lâu, dây xích (game tự vẽ đè lên cửa khoá), chữ, số, nhãn, tên vùng, mũi tên, bảng màu, mảng tường hay sàn phòng quanh cửa, vệt sáng hắt xuống sàn, bóng đổ xuống đất, quầng sáng toả rộng, nhân vật. KHÔNG dùng màu đỏ tươi cho vật chắn (màu đỏ dành cho ổ khoá do game vẽ). `
     + cuoi(L);
 }
 function promptCuaNho(L) {
@@ -592,6 +611,7 @@ function taoPrompt(L) {
   if (L.tt) return promptTT(L);
   if (L.dai) return promptLua(L);
   if (L.tile) return promptNen(L);
+  if (L.cuaGop) return promptCuaGop(L);
   if (L.cua) return promptCua(L);
   if (L.id === 'cua-nho') return promptCuaNho(L);
   // lô 'vat' (và các lô vật đứng trên sàn về sau): mỗi ô một vật, đáy vật là chân
