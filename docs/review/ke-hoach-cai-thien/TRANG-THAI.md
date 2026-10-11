@@ -1,6 +1,6 @@
-# Trang trạng thái dự án Linh Khí — cập nhật 11/10/2026 13:45
+# Trang trạng thái dự án Linh Khí — cập nhật 11/10/2026 15:15
 
-Một bảng duy nhất, thay cho mọi tổng hợp cũ (`docs/review/TONG-HOP.md` ngày 10/10 đã lỗi thời, chỉ giữ để tra cứu). Bản đang chạy trên https://spiritblade.web.app: **lk-2026.10.11-1200** (+ commit 5633e605 bỏ khung khối băng). Mọi mục đều có cờ tắt hoặc `git revert` theo báo cáo tương ứng.
+Một bảng duy nhất, thay cho mọi tổng hợp cũ (`docs/review/TONG-HOP.md` ngày 10/10 đã lỗi thời, chỉ giữ để tra cứu). Bản đang chạy trên https://spiritblade.web.app: **lk-2026.10.11-1502**. Mọi mục đều có cờ tắt hoặc `git revert` theo báo cáo tương ứng.
 
 Trạng thái: **ĐÃ LÀM + ĐÃ KIỂM** (có báo cáo, ảnh, số đo, workflow xanh) · **ĐANG CHẠY** (phiên đang làm) · **CHỜ ẢNH** (code xong, cần ảnh ChatGPT/Pippit) · **ĐÃ QUYẾT, CHƯA LÀM** · **CHỜ DUYỆT**.
 
@@ -17,10 +17,11 @@ Trạng thái: **ĐÃ LÀM + ĐÃ KIỂM** (có báo cáo, ảnh, số đo, work
 | 6 | Tile sàn/tường Rừng già, cờ `G.TILE_RUNG` | CHỜ ẢNH (máy móc đã kiểm bằng tile mẫu) | 1118 | `dot-6/bao-cao.md` | cờ tắt |
 | 7 | Trạng thái độc/cháy/băng trên thân quái; bỏ biểu tượng trạng thái trên đầu | ĐÃ LÀM + ĐÃ KIỂM | 1200 | `dot-7/bao-cao.md` | `G.TRANG_THAI_TREN_THAN=false` |
 | 7+ | Bỏ khung khối băng quanh quái đóng băng | ĐÃ LÀM (chưa kiểm riêng) | 5633e605 | — | revert 5633e605 |
-| 8 | Độ đọc trận đấu: thứ bậc hình ảnh, đỏ chỉ cho nguy hiểm, số sát thương, vùng thông báo | ĐANG CHẠY (từ 13:05) | — | `dot-8-do-doc-tran.md` | `G.DO_DOC_TRAN` |
+| 8 | Độ đọc trận đấu: thứ bậc hình ảnh, đỏ chỉ cho nguy hiểm, số sát thương, vùng thông báo | ĐÃ LÀM + ĐÃ KIỂM | 1354 | `dot-8/bao-cao.md` | `G.DO_DOC_TRAN` |
 | 8b | Bỏ ô dấu Linh Khí trên đầu quái → viền hệ quanh thanh máu | ĐÃ LÀM + ĐÃ KIỂM (cờ tắt: 0 điểm ảnh khác; bot ải 1 thắng, nhật ký sát thương trùng) | 0a65ce59 | `dot-8/bao-cao.md` §8b | `G.DAU_LINH_KHI_VIEN=false` / `?dauvien=0` |
 | 9 | Trang trạng thái này + đồng bộ TONG-HOP | ĐÃ LÀM | — | tệp này | — |
-| 10 | Đo dung lượng, tách ảnh tải sau (Q5) | ĐÃ QUYẾT, CHƯA LÀM | — | — | — |
+| 10 | Đo dung lượng, tách ảnh tải sau (Q5) | ĐANG CHẠY (từ 15:00) | — | `dot-10-dung-luong.md` | cờ build `--mot-tep` |
+| 11 | Gộp prompt hình nhỏ (B1/B2/B3/A2/D2) thành ít tấm hơn, lô gộp trên trang tách hiệu ứng | ĐANG CHẠY (từ 15:09, ưu tiên theo chủ dự án) | — | `dot-11-gop-prompt.md` | prompt lẻ cũ vẫn giữ |
 
 ## 2. Làn chuyển hình code → ảnh AI (19 phiên)
 
@@ -28,7 +29,7 @@ Trạng thái: **ĐÃ LÀM + ĐÃ KIỂM** (có báo cáo, ảnh, số đo, work
 |---|---|---|---|
 | A1 | 18 đồ vật phòng; trang Tách Phòng | CHỜ ẢNH | `phong-a1/PROMPT.md` |
 | A2 | 18 cửa + ổ khoá + đầu lâu | CHỜ ẢNH | `phong-a2/PROMPT.md` |
-| A3 | Đồ trang trí 3 vùng | ĐANG CHẠY (13:43) | — |
+| A3 | Đồ trang trí 3 vùng | CHỜ ẢNH | `phong-a3/PROMPT.md` |
 | A4 | Sàn/tường Hang biển, Lâu đài | ĐÃ QUYẾT: chỉ sau khi Rừng có ảnh thật và duyệt | — |
 | B1 | 14 dải đạn/bom/tên | CHỜ ẢNH | `hieu-ung-b1/PROMPT.md` |
 | B2 | 8 dải đòn/chiêu (+ bản theo hệ) | CHỜ ẢNH | `hieu-ung-b2/PROMPT.md` |
@@ -36,14 +37,14 @@ Trạng thái: **ĐÃ LÀM + ĐÃ KIỂM** (có báo cáo, ảnh, số đo, work
 | B4 | 7 vũng trên sàn | CHƯA LÀM | — |
 | C1 | 14 biểu tượng nút | CHỜ ẢNH | `giao-dien-c1/PROMPT.md` |
 | C2 | 30 biểu tượng nhỏ; biểu tượng tinh anh 12×12 | CHỜ ẢNH (phóng to đã lên) | `giao-dien-c2/PROMPT.md` |
-| C3 | Hình cố định lớn (logo, thẻ ải, trống đồng) | CHƯA LÀM | — |
+| C3 | Hình cố định lớn (logo, thẻ ải, trống đồng, nút nói chuyện) | ĐANG CHẠY (15:02) | — |
 | C4 | Thân nút, ô vũ khí, cần điều khiển | CHƯA LÀM | — |
 | C5 | Khung 9 mảnh | CHƯA LÀM | — |
 | D1 | 6 công trình làng; trang Tách Làng | CHỜ ẢNH | `lang-d1/PROMPT.md` |
 | D2 | 12 đạo cụ + khung cửi, lửa lò | CHỜ ẢNH | `lang-d2/PROMPT.md` |
 | D3 | Nền làng + tranh bản đồ vùng | CHƯA LÀM | — |
 | E1 | 3 đồ lưng vẽ lại + cánh theo cấp | 6 đồ lưng ĐÃ NHẬP (11:25); cánh theo cấp CHƯA | — |
-| E2 | Trùm đổi hình theo pha | ĐANG CHẠY (13:25) | — |
+| E2 | Trùm đổi hình theo pha | CHỜ ẢNH (6 prompt) | `quai-e2/PROMPT.md` |
 | E3 | Tách lại 36 quái nét gấp đôi | ĐÃ QUYẾT: sau khi chốt dung lượng | — |
 | — | Bản đồ ải (tach-giao-dien) | CHỜ ẢNH | `giao-dien/PROMPT.md` |
 | — | 7 người làng | CHỜ ẢNH | `nguoi-lang`… |
