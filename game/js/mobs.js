@@ -591,15 +591,22 @@
     p(c, x - s, y - 1, s * 2, 2, 'rgba(0,0,0,0.3)');
     const by = y - s - lift - 1;
     // Ảnh AI quả nổ của Sóc Ném Quả Nổ (hu-dan-qua-no, js/fx_anh.js); không có tệp thì vẽ quả bom vuông như cũ
-    if (B.art === 'socNo' && G.fxAnh && G.fxAnh.co('hu-dan-qua-no')) G.fxAnh.ve(c, 'hu-dan-qua-no', x, by, gone, 0, 1);
+    // Phiên hieu-ung-b1: thêm bom to của tinh anh (hu-bom-to), bó pháo của Tiểu Yêu và bom vùng lửa (hu-bom-phao), bom băng của Sứa, Hải Quỳ và vùng băng (hu-bom-bang).
+    // Ảnh bom neo ở ĐÁY (đáy quả bom chạm đất). Chưa có tệp thì vẽ quả bom vuông như cũ.
+    const FA = G.fxAnh;
+    const maBom = !FA ? null : B.big ? 'hu-bom-to' : B.art === 'tieuYeu' ? 'hu-bom-phao' : B.art === 'sua' || B.art === 'haiQuy' ? 'hu-bom-bang' : el === 'ice' ? 'hu-bom-bang' : el === 'fire' ? 'hu-bom-phao' : null;
+    const anhBom = maBom ? FA.get(maBom) : null;
+    let dinh = by - s; // mép trên của quả bom: ngòi nhấp nháy vẽ ngay trên đó
+    if (B.art === 'socNo' && FA && FA.co('hu-dan-qua-no')) FA.ve(c, 'hu-dan-qua-no', x, by, gone, 0, 1);
+    else if (anhBom) { FA.ve(c, maBom, x, y - lift, gone, 0, 1); dinh = Math.round(y - lift - (anhBom.ay - 2) * anhBom.co); }
     else {
       p(c, x - s, by - s + 1, s * 2, s * 2 - 2, '#14182e'); p(c, x - s + 1, by - s, s * 2 - 2, s * 2, '#14182e');
       p(c, x - s + 1, by - s + 1, s * 2 - 2, s * 2 - 2, col[1]); p(c, x - s + 1, by - s + 1, 2, 2, col[2]);
     }
     if (z.t > 0 && (gone >= B.fl)) {
       const k = 1 - z.t / Math.max(0.01, T0 - B.fl), fast = k > 0.7 ? 20 : 8;
-      if (Math.floor(G.time * fast) % 2) p(c, x - 1, by - s - 3, 2, 3, '#ffd23c');
-      p(c, x, by - s - 4, 1, 1, '#ffffff');
+      if (Math.floor(G.time * fast) % 2) p(c, x - 1, dinh - 3, 2, 3, '#ffd23c');
+      p(c, x, dinh - 4, 1, 1, '#ffffff');
     }
   }
   G.mobDrawBomb = drawBomb; // js/bao_truoc.js vẽ vòng đỏ, quả bom vẫn vẽ ở đây

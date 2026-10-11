@@ -53,7 +53,7 @@
 </div><canvas id="ui"></canvas></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.11-0744";
+(window.G = window.G || {}).VERSION = "lk-2026.10.11-0751";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -18091,6 +18091,8 @@
   fx.proj = function (c, o) {
     proj0(c, o);
     if (G.noRender || !o.he || o.kind !== 'arrow') return;
+    // Đã có ảnh AI mũi tên mang hệ (hu-dan-ten-<hệ>, vẽ ở js/fx_dan.js) thì thôi vẽ lửa/nhớt/băng bằng code quanh tên. Không có tệp: y như cũ.
+    if (G.fxAnh && G.fxAnh.co('hu-dan-ten-' + o.he.el)) return;
     try {
       const S = K.S();
       if (!S) return;
@@ -22688,15 +22690,22 @@ MA._xong();
     p(c, x - s, y - 1, s * 2, 2, 'rgba(0,0,0,0.3)');
     const by = y - s - lift - 1;
     // Ảnh AI quả nổ của Sóc Ném Quả Nổ (hu-dan-qua-no, js/fx_anh.js); không có tệp thì vẽ quả bom vuông như cũ
-    if (B.art === 'socNo' && G.fxAnh && G.fxAnh.co('hu-dan-qua-no')) G.fxAnh.ve(c, 'hu-dan-qua-no', x, by, gone, 0, 1);
+    // Phiên hieu-ung-b1: thêm bom to của tinh anh (hu-bom-to), bó pháo của Tiểu Yêu và bom vùng lửa (hu-bom-phao), bom băng của Sứa, Hải Quỳ và vùng băng (hu-bom-bang).
+    // Ảnh bom neo ở ĐÁY (đáy quả bom chạm đất). Chưa có tệp thì vẽ quả bom vuông như cũ.
+    const FA = G.fxAnh;
+    const maBom = !FA ? null : B.big ? 'hu-bom-to' : B.art === 'tieuYeu' ? 'hu-bom-phao' : B.art === 'sua' || B.art === 'haiQuy' ? 'hu-bom-bang' : el === 'ice' ? 'hu-bom-bang' : el === 'fire' ? 'hu-bom-phao' : null;
+    const anhBom = maBom ? FA.get(maBom) : null;
+    let dinh = by - s; // mép trên của quả bom: ngòi nhấp nháy vẽ ngay trên đó
+    if (B.art === 'socNo' && FA && FA.co('hu-dan-qua-no')) FA.ve(c, 'hu-dan-qua-no', x, by, gone, 0, 1);
+    else if (anhBom) { FA.ve(c, maBom, x, y - lift, gone, 0, 1); dinh = Math.round(y - lift - (anhBom.ay - 2) * anhBom.co); }
     else {
       p(c, x - s, by - s + 1, s * 2, s * 2 - 2, '#14182e'); p(c, x - s + 1, by - s, s * 2 - 2, s * 2, '#14182e');
       p(c, x - s + 1, by - s + 1, s * 2 - 2, s * 2 - 2, col[1]); p(c, x - s + 1, by - s + 1, 2, 2, col[2]);
     }
     if (z.t > 0 && (gone >= B.fl)) {
       const k = 1 - z.t / Math.max(0.01, T0 - B.fl), fast = k > 0.7 ? 20 : 8;
-      if (Math.floor(G.time * fast) % 2) p(c, x - 1, by - s - 3, 2, 3, '#ffd23c');
-      p(c, x, by - s - 4, 1, 1, '#ffffff');
+      if (Math.floor(G.time * fast) % 2) p(c, x - 1, dinh - 3, 2, 3, '#ffd23c');
+      p(c, x, dinh - 4, 1, 1, '#ffffff');
     }
   }
   G.mobDrawBomb = drawBomb; // js/bao_truoc.js vẽ vòng đỏ, quả bom vẫn vẽ ở đây
@@ -23506,9 +23515,21 @@ MA._xong();
   const art0 = A.proj;
   // Ảnh AI (js/fx_anh.js): mũi tên của em bé (hu-dan-ten), viên bào tử (hu-dan-bao-tu). Không có tệp thì vẽ như cũ.
   const FA = () => G.fxAnh;
+  // Phiên hieu-ung-b1: mỗi kiểu đạn quái có một mã ảnh riêng (trang tools/tach-hieu-ung). Chưa có tệp của mã nào thì kiểu đó vẽ bằng code y như cũ.
+  // Quả nổ của quái khác (không phải Sóc) dùng lại hu-dan-qua-no. Đạn cầu và đạn gai thường: ảnh một màu trung tính (quầng và vệt bay vẫn theo màu quái).
+  const DAN_MA = { bubble: 'hu-dan-bot', icespike: 'hu-dan-gai-bang', toxseed: 'hu-dan-hat-doc', ember: 'hu-dan-lua', bua: 'hu-dan-bua', cannon: 'hu-dan-phao', orb: 'hu-dan-cau', thorn: 'hu-dan-gai', fruit: 'hu-dan-qua-no' };
+  const DAN_TRON = { bubble: 1, orb: 1 }; // hình tròn không có hướng: không lật khi bay sang trái (trừ khi tệp bật "xoay")
+  // Mũi tên mang hệ: hu-dan-ten-fire / -poison / -ice (cả mũi tên lẫn lửa, nhớt độc, băng bọc quanh); chưa có thì dùng hu-dan-ten hoặc code.
+  function maTen(o) {
+    const F = FA();
+    if (!F) return null;
+    const he = o.he && o.he.el ? 'hu-dan-ten-' + o.he.el : null;
+    return he && F.co(he) ? he : F.co('hu-dan-ten') ? 'hu-dan-ten' : null;
+  }
   A.proj = function (c, o) {
-    if (o.team === 'player' && o.kind === 'arrow' && !G.noRender && FA() && FA().co('hu-dan-ten')) {
-      FA().ve(c, 'hu-dan-ten', o.x, o.y - (o.z || 10), o.fxT || 0, Math.atan2(o.vy, o.vx), o.big ? 1.5 : 1);
+    const ten = o.team === 'player' && o.kind === 'arrow' && !G.noRender ? maTen(o) : null;
+    if (ten) {
+      FA().ve(c, ten, o.x, o.y - (o.z || 10), o.fxT || 0, Math.atan2(o.vy, o.vx), o.big ? 1.5 : 1);
       return;
     }
     if (o.team === 'player') {
@@ -23534,7 +23555,9 @@ MA._xong();
       const x = Math.round(o.x), y = Math.round(o.y - (o.z || 10)), h = sv.width >> 1;
       c.fillStyle = 'rgba(0,0,0,0.3)'; c.fillRect(x - 3, Math.round(o.y), 6, 1);
       const baoTu = (L === 'spore' || (o.src && o.src.art === 'hoaBaoTu')) && FA() && FA().co('hu-dan-bao-tu');
+      const ma = baoTu ? null : DAN_MA[L], anh = ma && FA() ? FA().get(ma) : null;
       if (baoTu) FA().ve(c, 'hu-dan-bao-tu', x, y, o.fxT || G.time, Math.atan2(o.vy, o.vx), o.dBig ? 1.6 : 1);
+      else if (anh) FA().ve(c, ma, x, y, o.fxT || G.time, DAN_TRON[L] && !anh.xoay ? 0 : Math.atan2(o.vy, o.vx), o.dBig ? 2 : 1);
       else c.drawImage(sv, x - h, y - h);
       // chấm đỏ nhấp nháy trên đầu đạn quái: nhìn là biết phải né
       if (((G.time * 8) | 0) % 2) { c.fillStyle = '#ff3a22'; c.fillRect(x - 1, y - h + (o.dBig ? 4 : 2), 2, 1); }

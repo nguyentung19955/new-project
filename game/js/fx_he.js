@@ -386,6 +386,8 @@
   fx.proj = function (c, o) {
     proj0(c, o);
     if (G.noRender || !o.he || o.kind !== 'arrow') return;
+    // Đã có ảnh AI mũi tên mang hệ (hu-dan-ten-<hệ>, vẽ ở js/fx_dan.js) thì thôi vẽ lửa/nhớt/băng bằng code quanh tên. Không có tệp: y như cũ.
+    if (G.fxAnh && G.fxAnh.co('hu-dan-ten-' + o.he.el)) return;
     try {
       const S = K.S();
       if (!S) return;
