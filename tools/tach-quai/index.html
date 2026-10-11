@@ -385,8 +385,10 @@ function taoPromptPha(q) {
 const taoPromptGoc = taoPrompt;
 const CAU_NEN = " MÀU NỀN CHỈ Ở NỀN: trên con vật KHÔNG dùng màu gần màu nền (nền hồng tím thì thân không có ánh hồng tím, tím hồng; nền xanh lá thì thân không có xanh lá), KHÔNG vẽ quầng sáng, bóng hay khói màu nền dưới chân; chân, móng, đuôi vẽ rõ, viền tối một nét tách khỏi nền."; // 11/10 21:55: nền ăn mất chân Hồ Tinh
 const CAU_BO_CUC = " BỐ CỤC CHỈ THEO ĐÚNG PROMPT NÀY: KHÔNG lấy lại lưới, số ô, số khung, cách chia hàng hay hình của bất kỳ ảnh nào đã vẽ trước đó trong cuộc trò chuyện; mỗi lần vẽ coi như bắt đầu mới."; // 11/10 17:41
+/* 12/10 (kiểm tra mỹ thuật): LUẬT VẼ CHUNG nối vào cuối MỌI prompt, ngay trước CAU_BO_CUC; cùng nội dung ở cả 7 trang tach-*, xem docs/LUAT-VE-CHUNG.md. Sửa ở đây thì sửa cả 6 trang kia. */
+const CAU_PHONG_CACH = ` LUẬT VẼ CHUNG CỦA GAME (bắt buộc): pixel art sắc nét, KHÔNG làm mịn mép, KHÔNG khử răng cưa, KHÔNG chuyển màu mượt, KHÔNG nhiễu hạt; ánh sáng chiếu từ TRÊN BÊN TRÁI: mặt dưới và bên phải tối hơn, mỗi khối chỉ một điểm sáng nhấn nhỏ; viền ngoài một nét tối ${BM.vien} liền mạch, không viền sáng quanh mép (mã viền hay mã màu đã ghi riêng ở trên thì giữ); mỗi hình tối đa khoảng 16 màu (không tính màu nền); khối lớn rõ ràng, ít chi tiết vụn: chi tiết nhỏ hơn 2 điểm ảnh trong game thì bỏ; độ chi tiết và độ bóng ngang với nhân vật em bé chibi của game, không bóng bẩy hơn.`;
 const CAU_BO_CUC_PHA = " BỐ CỤC CHỈ THEO ĐÚNG PROMPT NÀY (8 cột × 4 hàng): từ ảnh mẫu chỉ lấy HÌNH con trùm, KHÔNG lấy lại số hàng của bất kỳ ảnh nào khác đã vẽ trước đó."; // 11/10 21:53
-const taoPromptGoc1 = (q) => taoPromptGoc(q) + CAU_NEN + (q.pha ? CAU_BO_CUC_PHA : CAU_BO_CUC);
+const taoPromptGoc1 = (q) => taoPromptGoc(q) + CAU_NEN + CAU_PHONG_CACH + (q.pha ? CAU_BO_CUC_PHA : CAU_BO_CUC);
 taoPrompt = (q) => bmChen(taoPromptGoc1(q), bmDoan(q.bm || ({ rung: ['co_cay', 'go', 'toc'], bien: ['nuoc', 'da_stone', 'kim_loai'], laudai: ['da_stone', 'kim_loai', 'lua'] }[q.vung] || ['toc', 'da_stone']).concat('quai'), q.pha ? { rieng: true } : undefined)); // dáng pha (Phiên E2): màu đổi theo pha đã ghi trong prompt thì giữ, bảng dùng cho phần còn lại
 function hienQuai() {
   $('bangThongSo').innerHTML = [

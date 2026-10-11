@@ -534,7 +534,9 @@ function taoPromptCanh(L) {
 // Đợt 4 (Q6): mọi prompt của trang có thêm đoạn BẢNG MÀU, chỉ gồm các nhóm màu liên quan. Lô mới muốn nhóm khác thì khai thêm bm: ['go', 'da_stone', …] (tên nhóm trong BM.nhom).
 const taoPromptGoc = taoPrompt;
 const CAU_BO_CUC = " BỐ CỤC CHỈ THEO ĐÚNG PROMPT NÀY: KHÔNG lấy lại lưới, số ô, số khung, cách chia hàng hay hình của bất kỳ ảnh nào đã vẽ trước đó trong cuộc trò chuyện; mỗi lần vẽ coi như bắt đầu mới."; // 11/10 17:41
-const taoPromptGoc1 = (L) => taoPromptGoc(L) + CAU_BO_CUC;
+/* 12/10 (kiểm tra mỹ thuật): LUẬT VẼ CHUNG nối vào cuối MỌI prompt, ngay trước CAU_BO_CUC; cùng nội dung ở cả 7 trang tach-*, xem docs/LUAT-VE-CHUNG.md. Sửa ở đây thì sửa cả 6 trang kia. */
+const CAU_PHONG_CACH = ` LUẬT VẼ CHUNG CỦA GAME (bắt buộc): pixel art sắc nét, KHÔNG làm mịn mép, KHÔNG khử răng cưa, KHÔNG chuyển màu mượt, KHÔNG nhiễu hạt; ánh sáng chiếu từ TRÊN BÊN TRÁI: mặt dưới và bên phải tối hơn, mỗi khối chỉ một điểm sáng nhấn nhỏ; viền ngoài một nét tối ${BM.vien} liền mạch, không viền sáng quanh mép (mã viền hay mã màu đã ghi riêng ở trên thì giữ); mỗi hình tối đa khoảng 16 màu (không tính màu nền); khối lớn rõ ràng, ít chi tiết vụn: chi tiết nhỏ hơn 2 điểm ảnh trong game thì bỏ; độ chi tiết và độ bóng ngang với nhân vật em bé chibi của game, không bóng bẩy hơn.`;
+const taoPromptGoc1 = (L) => taoPromptGoc(L) + CAU_PHONG_CACH + CAU_BO_CUC;
 taoPrompt = (L) => bmChen(taoPromptGoc1(L), bmDoan(L.bm || (L.doi === 'trang-phuc' ? ['vai', 'kim_loai', 'go'] : ['go', 'kim_loai']), { vien: 'viền (nếu có) giữ đúng như đã ghi ở trên', rieng: true })); // đồ có viền riêng #1b1118 (game đổi màu viền này theo bậc) và màu chính riêng từng món
 // Dáng món theo cỡ trong game (ChatGPT hay vẽ sai dáng: dấu mặt nạ ngang thành vuông, bùa dài thành tròn, trống đứng thành nằm)
 function dangMon(m) {
