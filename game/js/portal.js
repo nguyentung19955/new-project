@@ -19,28 +19,34 @@
     const k = Math.min(1, age / 0.9), e = 1 - Math.pow(1 - k, 3); // mọc lên trong 0,9 giây
     const x = Math.round(o.x), y = Math.round(o.y), R = 24 * e;
     if (R < 1) return;
-    // bóng và nền tối của lòng cổng
-    c.fillStyle = 'rgba(8,24,24,0.55)';
-    c.beginPath(); c.ellipse(x, y, R + 2, (R + 2) * RY, 0, 0, Math.PI * 2); c.fill();
-    c.fillStyle = K.patD;
-    if (R > 2) { c.beginPath(); c.ellipse(x, y, R - 2, (R - 2) * RY, 0, 0, Math.PI * 2); c.fill(); } // lúc cổng vừa nhú (bán kính dưới 2) thì bỏ qua lòng cổng
-    // xoáy xanh ngọc: ba cánh xoắn quay quanh tâm
-    for (let arm = 0; arm < 3; arm++) {
-      for (let j = 0; j < 16; j++) {
-        const u = j / 16, a = t * 2.6 + arm * 2.094 + u * 4.2, r = (R - 3) * (1 - u * 0.85);
-        px(x + Math.cos(a) * r, y + Math.sin(a) * r * RY, u < 0.4 ? K.pat : u < 0.8 ? K.patL : '#d8fff2', u > 0.6 ? 2 : 1, 1);
+    // Ảnh AI cổng dịch chuyển (hu-cong, phiên hieu-ung-b3; dải khung chạy lặp): thay bóng, lòng cổng, xoáy và vành đồng. Điểm neo là tâm cổng trên sàn,
+    // cỡ lớn dần theo lúc mọc. Cột sáng mờ, đốm sáng bay lên và hiệu ứng xuất hiện vẫn vẽ bằng code. Chưa có tệp thì vẽ bằng code y như cũ.
+    const FA = G.fxAnh;
+    if (FA && FA.co('hu-cong')) FA.ve(c, 'hu-cong', x, y, t, 0, e);
+    else {
+      // bóng và nền tối của lòng cổng
+      c.fillStyle = 'rgba(8,24,24,0.55)';
+      c.beginPath(); c.ellipse(x, y, R + 2, (R + 2) * RY, 0, 0, Math.PI * 2); c.fill();
+      c.fillStyle = K.patD;
+      if (R > 2) { c.beginPath(); c.ellipse(x, y, R - 2, (R - 2) * RY, 0, 0, Math.PI * 2); c.fill(); } // lúc cổng vừa nhú (bán kính dưới 2) thì bỏ qua lòng cổng
+      // xoáy xanh ngọc: ba cánh xoắn quay quanh tâm
+      for (let arm = 0; arm < 3; arm++) {
+        for (let j = 0; j < 16; j++) {
+          const u = j / 16, a = t * 2.6 + arm * 2.094 + u * 4.2, r = (R - 3) * (1 - u * 0.85);
+          px(x + Math.cos(a) * r, y + Math.sin(a) * r * RY, u < 0.4 ? K.pat : u < 0.8 ? K.patL : '#d8fff2', u > 0.6 ? 2 : 1, 1);
+        }
       }
+      // tâm sáng nhấp nháy
+      const pulse = 0.6 + 0.4 * Math.sin(t * 5);
+      c.fillStyle = 'rgba(216,255,242,' + (0.5 * pulse).toFixed(2) + ')';
+      c.beginPath(); c.ellipse(x, y, 5 * e, 3 * e, 0, 0, Math.PI * 2); c.fill();
+      px(x - 1, y - 1, '#ffffff', 2, 2);
+      // vành đồng hai lớp, hoa văn vàng (như vành mặt trống) quay chậm
+      ring(x, y, R + 1, K.dk, 1, 1);
+      ring(x, y, R, K.br, 1, 2);
+      ring(x, y, R - 1, K.gold, 2, 1);
+      for (let i = 0; i < 10; i++) { const a = t * 0.6 + (i / 10) * Math.PI * 2; px(x + Math.cos(a) * (R + 0.5) - 1, y + Math.sin(a) * (R + 0.5) * RY - 1, K.hi, 2, 2); }
     }
-    // tâm sáng nhấp nháy
-    const pulse = 0.6 + 0.4 * Math.sin(t * 5);
-    c.fillStyle = 'rgba(216,255,242,' + (0.5 * pulse).toFixed(2) + ')';
-    c.beginPath(); c.ellipse(x, y, 5 * e, 3 * e, 0, 0, Math.PI * 2); c.fill();
-    px(x - 1, y - 1, '#ffffff', 2, 2);
-    // vành đồng hai lớp, hoa văn vàng (như vành mặt trống) quay chậm
-    ring(x, y, R + 1, K.dk, 1, 1);
-    ring(x, y, R, K.br, 1, 2);
-    ring(x, y, R - 1, K.gold, 2, 1);
-    for (let i = 0; i < 10; i++) { const a = t * 0.6 + (i / 10) * Math.PI * 2; px(x + Math.cos(a) * (R + 0.5) - 1, y + Math.sin(a) * (R + 0.5) * RY - 1, K.hi, 2, 2); }
     // cột sáng mờ và đốm sáng bay lên
     if (e > 0.5) {
       c.fillStyle = 'rgba(111,193,168,0.10)'; c.fillRect(x - Math.round(R * 0.6), y - 34, Math.round(R * 1.2), 34);

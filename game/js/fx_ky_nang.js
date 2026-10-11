@@ -85,6 +85,9 @@
   // Thêm một vòng phép. pl: bảng màu hệ (fx.pal). delay: chờ bao lâu mới hiện (giây). Trả về hình đã thêm.
   // (o.d của js/fx.js là thời gian chờ, nên màu tối để ở o.dk)
   function runeOf(x, y, r, pl, t, n, sp, delay) {
+    // Ảnh AI vòng phép (hu-vong-phep, phiên hieu-ung-b3): nằm trên sàn (lớp 0), điểm neo là tâm vòng, cỡ theo bán kính (ảnh chuẩn: vòng rộng hết khung 96 cho r = 44),
+    // phát đủ các khung trong đúng thời gian của vòng phép. Chưa có tệp thì vẽ bằng code y như cũ.
+    if (K.coAnh('hu-vong-phep') && K.anh('hu-vong-phep', x, y, { ly: 0, t: t || 0.5, d: delay || 0, sc: Math.max(0.3, Math.min(2.4, r / 44)), gian: true })) { const E = K.S().E; return E[E.length - 1]; }
     return add({ ty: 'he', x, y, t: t || 0.5, ly: 0, d: delay || 0, draw: drawRune, r, c: pl.c, c2: pl.c2, dk: pl.d, n: n || 6, sp: sp == null ? 2.2 : sp, a0: R() * TAU });
   }
   fx.rune = (x, y, r, el, t, n, sp, delay) => { if (G.noRender || !K.S()) return; try { runeOf(x, y, r, K.pal(el), t, n, sp, delay); } catch (e) { fail(e); } };
