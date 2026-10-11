@@ -82,7 +82,7 @@ Kết quả thấy rõ nhất trên Cu Lì: trước đây cánh và gùi nhảy
 | `node --check` mọi tệp `game/js` | **Đạt** | |
 | `python3 game/build.py` | **Đạt** | |
 | `game/tests/cloud_save_regression.test.js` | **Đạt** | Đợt này không đụng bản lưu; chạy vì workflow có chạy |
-| Workflow sau khi đẩy | Xem dòng cuối mục 9 | |
+| Workflow sau khi đẩy | **Đạt** (xanh) | Lượt chạy số 173, xem dòng cuối mục 9 |
 
 **Chưa kiểm:**
 - Không chạy bộ kiểm dài (theo lời dặn). Chưa xem trên iPhone thật.
@@ -168,7 +168,7 @@ Mỗi phần một commit riêng, quay lui độc lập được (theo thứ t�
 - Sau mỗi lệnh `git revert` hoặc sau khi xoá tệp: chạy `python3 game/build.py`, rồi `git add game/dist tools/xuong-sprite/index.html` (nếu `git revert` báo xung đột ở `game/dist` thì cũng làm vậy rồi tiếp tục).
 - Không có gì trong bản lưu phải quay lui.
 
-Workflow sau khi đẩy: ghi ở cuối tệp này sau khi chạy xong.
+**Workflow sau khi đẩy:** lượt chạy số 173 (commit `1fecbdb9`) **xanh**, đã đăng lên https://spiritblade.web.app lúc 04:07 giờ quốc tế ngày 11/10/2026.
 
 ## 10. Chạy lại phần kiểm
 
