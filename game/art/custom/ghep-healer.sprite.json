@@ -1,0 +1,235 @@
+{
+ "loai": "linh-khi-sprite",
+ "phien_ban": 1,
+ "doi_tuong": "ghep",
+ "ma": "ghep-healer",
+ "nhan_vat": "healer",
+ "ten": "Ghép trang bị · Cái Bống",
+ "diem": {
+  "lung": [-5, -12],
+  "goc_canh": [-4, -12],
+  "eo": [0, -9],
+  "dinh_dau": [-1.5, -27],
+  "tay_truoc": [4.5, -8.5]
+ },
+ "diem_theo": {
+  "run:0": {
+   "lung": [-3, -12],
+   "goc_canh": [-2, -12],
+   "eo": [-0.5, -10],
+   "dinh_dau": [2.5, -26],
+   "tay_truoc": [8.5, -11.5]
+  },
+  "run:1": {
+   "lung": [-3.5, -12],
+   "goc_canh": [-2.5, -12],
+   "eo": [-0.5, -10],
+   "dinh_dau": [1.5, -26],
+   "tay_truoc": [7.5, -11.5]
+  },
+  "run:2": {
+   "lung": [-3.5, -12.5],
+   "goc_canh": [-2.5, -12.5],
+   "eo": [0.5, -10],
+   "dinh_dau": [0.5, -27],
+   "tay_truoc": [7.5, -12]
+  },
+  "run:3": {
+   "lung": [-3.5, -12.5],
+   "goc_canh": [-2.5, -12.5],
+   "eo": [0, -10],
+   "dinh_dau": [0.5, -27],
+   "tay_truoc": [6.5, -11.5]
+  },
+  "run:4": {
+   "lung": [-3, -12.5],
+   "goc_canh": [-2, -12.5],
+   "eo": [0, -10],
+   "dinh_dau": [1.5, -27],
+   "tay_truoc": [6.5, -11.5]
+  },
+  "run:5": {
+   "lung": [-3, -12.5],
+   "goc_canh": [-2, -12.5],
+   "eo": [0, -10],
+   "dinh_dau": [1.5, -27],
+   "tay_truoc": [6.5, -11.5]
+  },
+  "tele:0": {
+   "lung": [-3, -9.5],
+   "goc_canh": [-2, -9.5],
+   "eo": [-0.5, -8.5],
+   "dinh_dau": [2.5, -23],
+   "tay_truoc": [-5, -10.5]
+  },
+  "tele:1": {
+   "lung": [-3, -9.5],
+   "goc_canh": [-2, -9.5],
+   "eo": [-0.5, -8.5],
+   "dinh_dau": [2.5, -23],
+   "tay_truoc": [-5, -10.5]
+  },
+  "tele:2": {
+   "lung": [-2.5, -9],
+   "goc_canh": [-1.5, -9],
+   "eo": [-0.5, -8.5],
+   "dinh_dau": [2.5, -22],
+   "tay_truoc": [-5, -10.5]
+  },
+  "tele:3": {
+   "lung": [-3, -9.5],
+   "goc_canh": [-2, -9.5],
+   "eo": [-1, -8.5],
+   "dinh_dau": [2.5, -23],
+   "tay_truoc": [-5, -10.5]
+  },
+  "atk:0": {
+   "lung": [-4, -11],
+   "goc_canh": [-3, -11],
+   "eo": [-1, -8],
+   "dinh_dau": [0.5, -26],
+   "tay_truoc": [11.5, -12.5]
+  },
+  "atk:1": {
+   "lung": [-4, -10.5],
+   "goc_canh": [-3, -10.5],
+   "eo": [0, -8.5],
+   "dinh_dau": [0.5, -25],
+   "tay_truoc": [11.5, -12.5]
+  },
+  "atk:2": {
+   "lung": [-4, -10.5],
+   "goc_canh": [-3, -10.5],
+   "eo": [-0.5, -8],
+   "dinh_dau": [0.5, -25],
+   "tay_truoc": [11.5, -12.5]
+  },
+  "atk:3": {
+   "lung": [-4.5, -11],
+   "goc_canh": [-3.5, -11],
+   "eo": [-1, -8],
+   "dinh_dau": [0.5, -26],
+   "tay_truoc": [11.5, -12.5]
+  },
+  "atk:4": {
+   "lung": [-3.5, -10.5],
+   "goc_canh": [-2.5, -10.5],
+   "eo": [0.5, -8],
+   "dinh_dau": [0.5, -25],
+   "tay_truoc": [11.5, -12]
+  },
+  "atk:5": {
+   "lung": [-3, -10.5],
+   "goc_canh": [-2, -10.5],
+   "eo": [0.5, -8],
+   "dinh_dau": [1.5, -25],
+   "tay_truoc": [12.5, -12]
+  },
+  "hit:0": {
+   "lung": [-9, -9.5],
+   "goc_canh": [-8, -9.5],
+   "eo": [0.5, -10],
+   "dinh_dau": [-8.5, -22],
+   "tay_truoc": [0.5, -12.5]
+  },
+  "hit:1": {
+   "lung": [-10, -10],
+   "goc_canh": [-9, -10],
+   "eo": [0, -10],
+   "dinh_dau": [-9.5, -23],
+   "tay_truoc": [1.5, -12]
+  },
+  "hit:2": {
+   "lung": [-10, -9.5],
+   "goc_canh": [-9, -9.5],
+   "eo": [0, -10],
+   "dinh_dau": [-9.5, -22],
+   "tay_truoc": [0.5, -12]
+  },
+  "hit:3": {
+   "lung": [-9, -9.5],
+   "goc_canh": [-8, -9.5],
+   "eo": [0, -10],
+   "dinh_dau": [-8.5, -22],
+   "tay_truoc": [1.5, -12]
+  }
+ },
+ "cap": {
+  "vk-sword": {
+   "theo": {
+    "tele:0": { "bam": "tay_truoc" },
+    "tele:1": { "bam": "tay_truoc" },
+    "tele:2": { "bam": "tay_truoc" },
+    "tele:3": { "bam": "tay_truoc" },
+    "atk:0": { "bam": "tay_truoc" },
+    "atk:1": { "bam": "tay_truoc" },
+    "atk:2": { "bam": "tay_truoc" },
+    "atk:3": { "bam": "tay_truoc" },
+    "atk:4": { "bam": "tay_truoc" },
+    "atk:5": { "bam": "tay_truoc" },
+    "hit:0": { "bam": "tay_truoc" },
+    "hit:1": { "bam": "tay_truoc" },
+    "hit:2": { "bam": "tay_truoc" },
+    "hit:3": { "bam": "tay_truoc" }
+   },
+   "da_chinh": false
+  },
+  "vk-bow": {
+   "theo": {
+    "tele:0": { "bam": "tay_truoc", "bam_vk": "day" },
+    "tele:1": { "bam": "tay_truoc", "bam_vk": "day" },
+    "tele:2": { "bam": "tay_truoc", "bam_vk": "day" },
+    "tele:3": { "bam": "tay_truoc", "bam_vk": "day" },
+    "atk:0": { "bam": "tay_truoc" },
+    "atk:1": { "bam": "tay_truoc" },
+    "atk:2": { "bam": "tay_truoc" },
+    "atk:3": { "bam": "tay_truoc" },
+    "atk:4": { "bam": "tay_truoc" },
+    "atk:5": { "bam": "tay_truoc" },
+    "hit:0": { "bam": "tay_truoc" },
+    "hit:1": { "bam": "tay_truoc" },
+    "hit:2": { "bam": "tay_truoc" },
+    "hit:3": { "bam": "tay_truoc" }
+   },
+   "da_chinh": false
+  },
+  "vk-spear": {
+   "theo": {
+    "tele:0": { "bam": "tay_truoc" },
+    "tele:1": { "bam": "tay_truoc" },
+    "tele:2": { "bam": "tay_truoc" },
+    "tele:3": { "bam": "tay_truoc" },
+    "atk:0": { "bam": "tay_truoc" },
+    "atk:1": { "bam": "tay_truoc" },
+    "atk:2": { "bam": "tay_truoc" },
+    "atk:3": { "bam": "tay_truoc" },
+    "atk:4": { "bam": "tay_truoc" },
+    "atk:5": { "bam": "tay_truoc" },
+    "hit:0": { "bam": "tay_truoc" },
+    "hit:1": { "bam": "tay_truoc" },
+    "hit:2": { "bam": "tay_truoc" },
+    "hit:3": { "bam": "tay_truoc" }
+   },
+   "da_chinh": false
+  },
+  "vk-hammer": {
+   "theo": {
+    "tele:0": { "bam": "tay_truoc" },
+    "tele:1": { "bam": "tay_truoc" },
+    "tele:2": { "bam": "tay_truoc" },
+    "tele:3": { "bam": "tay_truoc" },
+    "atk:0": { "bam": "tay_truoc" },
+    "atk:1": { "bam": "tay_truoc" },
+    "atk:2": { "bam": "tay_truoc" },
+    "atk:3": { "bam": "tay_truoc" },
+    "atk:4": { "bam": "tay_truoc" },
+    "atk:5": { "bam": "tay_truoc" },
+    "hit:0": { "bam": "tay_truoc" },
+    "hit:1": { "bam": "tay_truoc" },
+    "hit:2": { "bam": "tay_truoc" },
+    "hit:3": { "bam": "tay_truoc" }
+   },
+   "da_chinh": false
+  }
+ }
+}
