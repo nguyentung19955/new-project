@@ -83,7 +83,7 @@ Chạy một lượt: `python3 docs/review/ke-hoach-cai-thien/dot-7/kiem.py <th�
 | `game/tests/cloud_save_regression.test.js` | **Đạt** (đợt này không đụng bản lưu; chạy vì workflow có chạy). |
 | Chạy thử thật: bot đánh 900 khung ở ải Rừng, quái dính trạng thái theo luật chơi | **Đạt.** 0 lỗi trang, nhiều nhất 6 hạt một con. |
 | Quái chết khi đang dính: nhuộm tắt, hạt tan trong 6 khung | **Đạt** (`luc_chet` trong `ket-qua.json`). |
-| Workflow trên GitHub | Xem dòng cuối báo cáo. |
+| Workflow trên GitHub | **Đạt** (lượt 179, xanh). |
 
 Không chạy bộ test dài, đúng lời dặn.
 
@@ -142,4 +142,4 @@ Dung lượng: không thêm ảnh nào vào game.
 
 ---
 
-Workflow: xem cập nhật ở cuối tệp sau khi đẩy.
+Workflow: lượt chạy số 179 trên GitHub (commit `9ecfb568`, gồm cả code Đợt 7) **xanh**, game đã lên spiritblade.web.app. Dòng này được thêm bằng một commit chỉ sửa báo cáo.
