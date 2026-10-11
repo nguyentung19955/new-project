@@ -1,0 +1,200 @@
+{
+ "ban": "f113c0e7",
+ "cach_do": "Chromium (Playwright) 844×390, ?cloud=0, tệp nén gzip -9 như Firebase Hosting, phông Google bị chặn, không bộ nhớ đệm; mốc tính bằng ms từ lúc bắt đầu mở trang",
+ "dung_luong": {
+  "linh-khi.html": {
+   "byte": 10574623,
+   "gzip9": 6774587,
+   "brotli11": 6522957
+  },
+  "phần mã JS (46 tệp, không kể ảnh)": {
+   "byte": 2473995,
+   "gzip9": 759873,
+   "brotli11": 585875
+  },
+  "phần khung trang (HTML, CSS)": {
+   "byte": 4683,
+   "gzip9": 2184,
+   "brotli11": 1789
+  },
+  "phần ảnh nhúng trong linh-khi.html": {
+   "byte": 8095896,
+   "gzip9": 6010747,
+   "brotli11": 5931630,
+   "so_tep": 280
+  },
+  "ảnh theo nhóm": {
+   "trùm vùng (3 con + dáng pha)": {
+    "so_tep": 3,
+    "base64": 1942358,
+    "ca_muc": 1943642,
+    "noi": "linh-khi.html",
+    "gzip9": 1450272,
+    "brotli11": 1435998,
+    "tb_moi_tep": 647881
+   },
+   "quái vùng Hang biển": {
+    "so_tep": 11,
+    "base64": 1404278,
+    "ca_muc": 1408929,
+    "noi": "linh-khi.html",
+    "gzip9": 1059428,
+    "brotli11": 1046530,
+    "tb_moi_tep": 128084
+   },
+   "quái vùng Rừng già": {
+    "so_tep": 11,
+    "base64": 1153142,
+    "ca_muc": 1157865,
+    "noi": "linh-khi.html",
+    "gzip9": 868546,
+    "brotli11": 857538,
+    "tb_moi_tep": 105260
+   },
+   "hiệu ứng (hu-*)": {
+    "so_tep": 18,
+    "base64": 1039768,
+    "ca_muc": 1044028,
+    "noi": "linh-khi.html",
+    "gzip9": 786093,
+    "brotli11": 777291,
+    "tb_moi_tep": 58002
+   },
+   "quái vùng Lâu đài cổ": {
+    "so_tep": 11,
+    "base64": 979342,
+    "ca_muc": 984089,
+    "noi": "linh-khi.html",
+    "gzip9": 738527,
+    "brotli11": 728344,
+    "tb_moi_tep": 89463
+   },
+   "vũ khí dòng 1–9": {
+    "so_tep": 144,
+    "base64": 680192,
+    "ca_muc": 716870,
+    "noi": "linh-khi.html",
+    "gzip9": 512472,
+    "brotli11": 503630,
+    "tb_moi_tep": 4978
+   },
+   "em bé 4 thân gốc": {
+    "so_tep": 4,
+    "base64": 658692,
+    "ca_muc": 660670,
+    "noi": "linh-khi.html",
+    "gzip9": 487731,
+    "brotli11": 479993,
+    "tb_moi_tep": 165168
+   },
+   "vũ khí dòng 0": {
+    "so_tep": 16,
+    "base64": 72136,
+    "ca_muc": 76200,
+    "noi": "linh-khi.html",
+    "gzip9": 54662,
+    "brotli11": 53891,
+    "tb_moi_tep": 4762
+   },
+   "trang phục rời (tp-*)": {
+    "so_tep": 44,
+    "base64": 50156,
+    "ca_muc": 63423,
+    "noi": "linh-khi.html",
+    "gzip9": 37277,
+    "brotli11": 36004,
+    "tb_moi_tep": 1441
+   },
+   "vật phẩm (vp-*)": {
+    "so_tep": 14,
+    "base64": 20732,
+    "ca_muc": 22935,
+    "noi": "linh-khi.html",
+    "gzip9": 15404,
+    "brotli11": 15122,
+    "tb_moi_tep": 1638
+   },
+   "hồ sơ ghép (không ảnh)": {
+    "so_tep": 4,
+    "base64": 0,
+    "ca_muc": 16964,
+    "noi": "linh-khi.html",
+    "gzip9": 1343,
+    "brotli11": 1030,
+    "tb_moi_tep": 4241
+   }
+  },
+  "tổng ảnh (mọi nhóm)": {
+   "so_tep": 280,
+   "base64": 8000796,
+   "ca_muc": 8095615
+  },
+  "các tệp khác trong dist": {
+   "artifact.html": 10574112,
+   "xuong-sprite-thu.html": 10584719,
+   "xuong-sprite.html": 1617269
+  }
+ },
+ "thoi_gian_tai": {
+  "1,5 Mbps (trễ 150 ms)": [
+   {
+    "ve": {
+     "first-paint": 588,
+     "first-contentful-paint": 588
+    },
+    "tai": 560,
+    "manChao": 37564,
+    "san": 258,
+    "quaiRung": 37864,
+    "duAnh": 37864,
+    "lang": 37982,
+    "dong_ho_ngoai_s": 38.0,
+    "loi_js": []
+   },
+   {
+    "ve": {
+     "first-paint": 200,
+     "first-contentful-paint": 200
+    },
+    "tai": 195,
+    "manChao": 37242,
+    "san": 258,
+    "lang": 37745,
+    "quaiRung": 37745,
+    "duAnh": 37745,
+    "dong_ho_ngoai_s": 37.79,
+    "loi_js": []
+   }
+  ],
+  "10 Mbps (trễ 40 ms)": [
+   {
+    "ve": {
+     "first-paint": 92,
+     "first-contentful-paint": 92
+    },
+    "tai": 65,
+    "manChao": 7247,
+    "quaiRung": 7247,
+    "duAnh": 7247,
+    "san": 258,
+    "lang": 7458,
+    "dong_ho_ngoai_s": 7.47,
+    "loi_js": []
+   },
+   {
+    "ve": {
+     "first-paint": 108,
+     "first-contentful-paint": 108
+    },
+    "tai": 85,
+    "manChao": 6753,
+    "san": 258,
+    "quaiRung": 7096,
+    "duAnh": 7096,
+    "lang": 7321,
+    "dong_ho_ngoai_s": 7.33,
+    "loi_js": []
+   }
+  ]
+ }
+}
