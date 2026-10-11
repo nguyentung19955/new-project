@@ -412,6 +412,15 @@
       b.drawW = (pha3 ? 281 : b.kind === 'ho' ? 174 : 150) * s; b.drawH = (pha3 ? 174 : b.h) * s;
       const fk = G.fx && G.fx.chop ? G.fx.chop() : 1; // khựng hình: chỉ khung đầu chớp trắng hẳn (js/fx.js)
       const o = { anim: n, t, face: b.face, dir: b.dirA != null ? b.dirA : b.face > 0 ? 0 : PI, phase, hit: b.flash > 0 ? 0.7 * fk : 0, chop: fk, tint: G.fx && G.fx.dotTint ? G.fx.dotTint(b) : null, bao: false }; // nhịp độc/cháy: nhuộm màu hệ thay chớp trắng
+      // Phiên E2 (chỉ khi trùm dùng ảnh AI, chỉ là hình, không đổi luật): hình vẽ bằng code tự chớp trắng lúc sắp ra đòn và lúc đổi dáng giữa cảnh chuyển pha, ảnh AI thì mất.
+      // 1) 0,25 giây cuối trước khi đòn ra (b.wind, cùng mốc với dấu "!" của quái): thân nhấp nháy trắng. 2) Có tệp dáng pha (<mã>-p2 / -p3, js/sprite_custom.js): chớp trắng che lúc đổi dáng.
+      if (anhAI && b.dying == null) {
+        if (b.wind > 0 && b.wind < 0.25 && /^c\d$|^chieu|^atk|^tele/.test(n) && Math.floor(G.time * 20) % 2) o.baoDon = 0.35 * fk;
+        if ((n === 'phase2' || n === 'phase3') && G.spriteCustom.phaTrum && G.spriteCustom.phaTrum(G.spriteCustom.ds[b.art], phase, 'tele')) {
+          const u = t / (dur(b.art, n) || 1);
+          if (u >= 0.45 && u < 0.58) o.baoDon = Math.max(o.baoDon || 0, 1 - ((u - 0.45) / 0.13) * 0.5);
+        }
+      }
       if (s !== 1) { c.save(); c.translate(Math.round(b.x), Math.round(b.y)); c.scale(s, s); G.monsterArt.draw(c, b.art, 0, 0, o); c.restore(); }
       else G.monsterArt.draw(c, b.art, b.x, b.y, o);
       if (b.dying == null && b.invuln > 0 && b.intro == null) {} // (chỗ trống cho dấu hiệu miễn sát thương)

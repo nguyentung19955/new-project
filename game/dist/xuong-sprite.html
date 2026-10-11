@@ -16690,6 +16690,10 @@ MA._xong();
   const seg = (u, a, b) => clamp((u - a) / (b - a), 0, 1);
   const ANIMS = ['idle', 'move', 'tele', 'atk', 'hit', 'die', 'ne', 'noi'];
   const LOOP = { idle: true, move: true, noi: true };
+  // Phiên E2 — DÁNG PHA của 3 trùm vùng: tệp có mã <trùm>-p2 hoặc <trùm>-p3 (ví dụ nguTinh-p2), lưới rút gọn 4 hàng idle / tele / atk / hit (tools/tach-quai).
+  // Trùm đang ở pha đó thì các hàng CÓ trong tệp pha lấy từ tệp pha; hàng không có (move, die với lưới 4 hàng) mượn tệp pha 1. Không có tệp pha: vẽ pha 1 như trước.
+  // Để sẵn: nếu sau này tệp pha có thêm hàng move hoặc die thì game dùng luôn, không phải sửa code (trang công cụ hiện chỉ xuất 4 hàng).
+  const PHA_MA = /^(nguTinh|mocTinh|hoTinh)-p([23])$/, PHA_HANG = { idle: 1, tele: 1, atk: 1, hit: 1, move: 1, die: 1 };
 
   const SC = (G.spriteCustom = { ds: {}, ANIMS, LOOP, loi: [] });
   // "net" (số nguyên 1..4, mặc định 1): ảnh trong tệp ("tam" hoặc "anh") có số điểm ảnh gấp net lần, còn MỌI số khác trong tệp
@@ -16743,7 +16747,10 @@ MA._xong();
       }
       SC.ds[sp.ma] = sp;
       // Chỉ nối vào game khi thật sự có hình tự vẽ: không có tệp nào thì game y hệt như chưa có tệp này.
-      if (sp.doi === 'quai') { noiQuai(); themVaoDanhSach(sp); } else if (sp.doi === 'nguoi-lang') noiNguoiLang(); else noiEmBe();
+      // Phiên E2: tệp <trùm>-p2 / <trùm>-p3 là DÁNG PHA của trùm vùng (lưới rút gọn 4 hàng), không phải một con quái mới: không thêm vào danh sách quái.
+      const mp = sp.doi === 'quai' ? PHA_MA.exec(sp.ma) : null;
+      if (mp) { sp.phaCua = mp[1]; sp.pha = +mp[2]; noiQuai(); }
+      else if (sp.doi === 'quai') { noiQuai(); themVaoDanhSach(sp); } else if (sp.doi === 'nguoi-lang') noiNguoiLang(); else noiEmBe();
       return sp;
     } catch (e) {
       SC.loi.push((tep && tep.ma) + ': ' + e.message);
@@ -16888,15 +16895,28 @@ MA._xong();
     if (/^chieu|^c\d$/.test(n)) return u < 0.4 ? mot('tele', u / 0.4) : mot('atk', (u - 0.4) / 0.6);
     return lap('idle');
   };
+  // Phiên E2: tệp dáng pha của trùm vùng. sp: tệp pha 1; pha: 2 hoặc 3; ten: hàng sắp vẽ. Trả về tệp pha nếu đã nạp xong và có hàng đó, không thì null (vẽ pha 1).
+  SC.phaTrum = function (sp, pha, ten) {
+    if (!sp || pha < 2 || !PHA_HANG[ten]) return null;
+    const p = SC.ds[sp.ma + '-p' + pha];
+    return p && p.ready && p.dt[ten] ? p : null;
+  };
   // Vẽ quái tự vẽ tại (x, y) với tuỳ chọn giống G.monsterArt.draw. bong: có vẽ bóng dưới chân không. D: thời lượng cử động trong game.
   SC.veQuai = function (c, sp, x, y, o, bong, D) {
     o = o || {};
     const n = o.anim || 'idle', t = Math.max(0, o.t || 0);
     let face = o.face || 0;
     if (!face) { const dir = o.dir == null ? Math.PI : o.dir; face = Math.cos(dir) > 0.01 ? 1 : -1; }
-    const s = SC.chonQuai(sp, n, t, D);
+    let s = SC.chonQuai(sp, n, t, D);
+    // Phiên E2: trùm vùng ở pha 2, 3 có tệp dáng pha thì các hàng có trong tệp đó (idle / tele / atk / hit) lấy từ tệp đó (xem SC.phaTrum). Cảnh chuyển pha: nửa đầu còn dáng cũ, như hình vẽ bằng code.
+    let pha = o.phase | 0;
+    if (pha >= 2 && (n === 'phase2' || n === 'phase3') && s.u < 0.5) pha--;
+    const sp2 = pha >= 2 ? SC.phaTrum(sp, pha, s.ten) : null;
+    let ve = sp; // tệp thật sự dùng để vẽ thân (bóng dưới chân vẫn theo tệp pha 1)
+    if (sp2) { const s2 = SC.chonQuai(sp2, n, t, D); if (s2.ten === s.ten) { s = s2; ve = sp2; } }
     let flash = o.hit || 0;
     if (s.ten === 'hit' && n === 'hit' && s.u < 0.3) flash = Math.max(flash, 0.75); // chớp trắng đầu cú trúng đòn
+    if (o.baoDon > 0) flash = Math.max(flash, o.baoDon); // Phiên E2: chớp trắng báo sắp ra đòn (js/boss.js truyền cho trùm vùng có ảnh AI); chỉ là hình
     c.save();
     c.translate(Math.round(x), Math.round(y));
     if (bong) {
@@ -16908,7 +16928,7 @@ MA._xong();
       c.restore();
     }
     // o.than (Đợt 7): màu nhuộm thân khi quái dính độc / cháy / đóng băng, do js/mobs.js truyền khi cờ G.TRANG_THAI_TREN_THAN bật. Không có thì vẽ y cũ.
-    SC.veKhung(c, sp, s.ten, s.i, face, { alpha: s.alpha, flash, dy: s.dy, than: o.than || null });
+    SC.veKhung(c, ve, s.ten, s.i, face, { alpha: s.alpha, flash, dy: s.dy, than: o.than || null });
     c.restore();
     return s;
   };
