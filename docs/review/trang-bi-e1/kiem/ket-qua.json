@@ -1,0 +1,399 @@
+{
+ "ngay": "2026-10-11T10:29:25.019Z",
+ "khong_co_tep": {
+  "so_o_so_sanh": 144,
+  "so_o_khac": 0
+ },
+ "lo": {
+  "ten": "Trang phục · Cánh theo cấp (8 món: cấp 1 và cấp 3)",
+  "cuoi": true,
+  "so_lo": 24,
+  "ds": [
+   [
+    "tp-wings-chuon-1",
+    13,
+    12
+   ],
+   [
+    "tp-wings-la-1",
+    13,
+    11
+   ],
+   [
+    "tp-wings-lua-1",
+    13,
+    13
+   ],
+   [
+    "tp-wings-bang-1",
+    14,
+    12
+   ],
+   [
+    "tp-wings-chuon-3",
+    23,
+    26
+   ],
+   [
+    "tp-wings-la-3",
+    24,
+    26
+   ],
+   [
+    "tp-wings-lua-3",
+    23,
+    28
+   ],
+   [
+    "tp-wings-bang-3",
+    25,
+    24
+   ]
+  ]
+ },
+ "tham_chieu": "Đã lấy được 4/4 ảnh cánh cấp 2 từ game: gốc cánh của ảnh mới sẽ đặt trùng chỗ với cấp 2.",
+ "tach": {
+  "the": "ĐẠT",
+  "kiem": [
+   "✔ Tìm được 8/8 món",
+   "✔ Độ nét gấp đôi: ảnh mỗi món có số điểm ảnh gấp 2 cỡ trong game, file ghi \"net\": 2",
+   "✔ Ảnh có kẻ lưới: 4 cột × 2 hàng, tách theo từng ô",
+   "✔ Tự nhìn: đúng món, đúng thứ tự"
+  ]
+ },
+ "tep": [
+  {
+   "ma": "tp-wings-chuon-1",
+   "rong": 13,
+   "cao": 12,
+   "net": 2,
+   "trang_phuc": {
+    "o": "wings",
+    "look": "chuon",
+    "lech": [
+     -11,
+     -9
+    ],
+    "lop": "sau",
+    "kieu": "bua",
+    "tay_ao": true,
+    "diem": {
+     "goc_canh": [
+      11,
+      10
+     ]
+    },
+    "co_chuan": [
+     13,
+     12
+    ]
+   },
+   "byte": 1374
+  },
+  {
+   "ma": "tp-wings-la-1",
+   "rong": 12,
+   "cao": 11,
+   "net": 2,
+   "trang_phuc": {
+    "o": "wings",
+    "look": "la",
+    "lech": [
+     -10,
+     -9
+    ],
+    "lop": "sau",
+    "kieu": "bua",
+    "tay_ao": true,
+    "diem": {
+     "goc_canh": [
+      11,
+      8
+     ]
+    },
+    "co_chuan": [
+     12,
+     11
+    ]
+   },
+   "byte": 1266
+  },
+  {
+   "ma": "tp-wings-lua-1",
+   "rong": 13,
+   "cao": 13,
+   "net": 2,
+   "trang_phuc": {
+    "o": "wings",
+    "look": "lua",
+    "lech": [
+     -11,
+     -10
+    ],
+    "lop": "sau",
+    "kieu": "bua",
+    "tay_ao": true,
+    "diem": {
+     "goc_canh": [
+      11.5,
+      10
+     ]
+    },
+    "co_chuan": [
+     13,
+     13
+    ]
+   },
+   "byte": 1569
+  },
+  {
+   "ma": "tp-wings-bang-1",
+   "rong": 13,
+   "cao": 12,
+   "net": 2,
+   "trang_phuc": {
+    "o": "wings",
+    "look": "bang",
+    "lech": [
+     -11,
+     -10
+    ],
+    "lop": "sau",
+    "kieu": "bua",
+    "tay_ao": true,
+    "diem": {
+     "goc_canh": [
+      11.5,
+      9
+     ]
+    },
+    "co_chuan": [
+     13,
+     12
+    ]
+   },
+   "byte": 1507
+  },
+  {
+   "ma": "tp-wings-chuon-3",
+   "rong": 23,
+   "cao": 25,
+   "net": 2,
+   "trang_phuc": {
+    "o": "wings",
+    "look": "chuon",
+    "lech": [
+     -20,
+     -20
+    ],
+    "lop": "sau",
+    "kieu": "bua",
+    "tay_ao": true,
+    "diem": {
+     "goc_canh": [
+      20.5,
+      21
+     ]
+    },
+    "co_chuan": [
+     23,
+     25
+    ]
+   },
+   "byte": 3369
+  },
+  {
+   "ma": "tp-wings-la-3",
+   "rong": 24,
+   "cao": 26,
+   "net": 2,
+   "trang_phuc": {
+    "o": "wings",
+    "look": "la",
+    "lech": [
+     -19,
+     -22
+    ],
+    "lop": "sau",
+    "kieu": "bua",
+    "tay_ao": true,
+    "diem": {
+     "goc_canh": [
+      20.5,
+      21
+     ]
+    },
+    "co_chuan": [
+     24,
+     26
+    ]
+   },
+   "byte": 3234
+  },
+  {
+   "ma": "tp-wings-lua-3",
+   "rong": 23,
+   "cao": 24,
+   "net": 2,
+   "trang_phuc": {
+    "o": "wings",
+    "look": "lua",
+    "lech": [
+     -19,
+     -21
+    ],
+    "lop": "sau",
+    "kieu": "bua",
+    "tay_ao": true,
+    "diem": {
+     "goc_canh": [
+      19.5,
+      21
+     ]
+    },
+    "co_chuan": [
+     23,
+     24
+    ]
+   },
+   "byte": 3245
+  },
+  {
+   "ma": "tp-wings-bang-3",
+   "rong": 22,
+   "cao": 24,
+   "net": 2,
+   "trang_phuc": {
+    "o": "wings",
+    "look": "bang",
+    "lech": [
+     -18,
+     -21
+    ],
+    "lop": "sau",
+    "kieu": "bua",
+    "tay_ao": true,
+    "diem": {
+     "goc_canh": [
+      18,
+      20.5
+     ]
+    },
+    "co_chuan": [
+     22,
+     24
+    ]
+   },
+   "byte": 3196
+  }
+ ],
+ "co_tep": {
+  "o_doi_theo_cap": {
+   "cap1": 48,
+   "cap2": 0,
+   "cap3": 48
+  },
+  "ghi": "cấp 1 và cấp 3 phải đổi (48 ô mỗi cấp = 4 bé × 4 loại cánh × 3 động tác), cấp 2 phải 0"
+ },
+ "goc_canh": {
+  "so_phep_do": 960,
+  "lech_lon_nhat_px": 0.5,
+  "than": {
+   "smith": "ai",
+   "hunter": "ai",
+   "healer": "ai",
+   "wrestler": "ai"
+  },
+  "vi_du_cu_ti_canh_lua": [
+   {
+    "dong_tac": "idle",
+    "cap": 1,
+    "goc_cap_2": [
+     -3.9993227889885414,
+     -12.001758024868733
+    ],
+    "goc_cap_nay": [
+     -4.002537885301518,
+     -11.99723149883785
+    ]
+   },
+   {
+    "dong_tac": "idle",
+    "cap": 3,
+    "goc_cap_2": [
+     -3.9993227889885414,
+     -12.001758024868733
+    ],
+    "goc_cap_nay": [
+     -3.998873530025045,
+     -12.001266712397594
+    ]
+   },
+   {
+    "dong_tac": "run",
+    "cap": 1,
+    "goc_cap_2": [
+     -2.4993227889885414,
+     -13.001758024868733
+    ],
+    "goc_cap_nay": [
+     -2.5025378853015177,
+     -12.99723149883785
+    ]
+   },
+   {
+    "dong_tac": "run",
+    "cap": 3,
+    "goc_cap_2": [
+     -2.4993227889885414,
+     -13.001758024868733
+    ],
+    "goc_cap_nay": [
+     -2.498873530025045,
+     -13.001266712397594
+    ]
+   },
+   {
+    "dong_tac": "atk",
+    "cap": 1,
+    "goc_cap_2": [
+     -2.9993227889885414,
+     -10.501758024868733
+    ],
+    "goc_cap_nay": [
+     -3.0025378853015177,
+     -10.49723149883785
+    ]
+   },
+   {
+    "dong_tac": "atk",
+    "cap": 3,
+    "goc_cap_2": [
+     -2.9993227889885414,
+     -10.501758024868733
+    ],
+    "goc_cap_nay": [
+     -2.998873530025045,
+     -10.501266712397594
+    ]
+   }
+  ]
+ },
+ "cap_cua_cap_2": {
+  "hinh_cap_1_doi_khi_cap_2_co_chinh": true,
+  "tra_lai_nhu_cu": true
+ },
+ "co_tat": {
+  "so_o_khac_so_voi_chua_co_tep": 0
+ },
+ "go_tep": {
+  "so_o_khac_so_voi_chua_co_tep": 0
+ },
+ "khong_co_cap_2": {
+  "cap_1_ve_anh": true,
+  "cap_2_van_ve_code": true,
+  "cap_3_ve_anh": true,
+  "go_het_ve_code": true
+ },
+ "loi_trang": []
+}

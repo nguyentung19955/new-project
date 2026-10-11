@@ -43,7 +43,7 @@ Trạng thái: **ĐÃ LÀM + ĐÃ KIỂM** (có báo cáo, ảnh, số đo, work
 | D1 | 6 công trình làng; trang Tách Làng | CHỜ ẢNH | `lang-d1/PROMPT.md` |
 | D2 | 12 đạo cụ + khung cửi, lửa lò | CHỜ ẢNH | `lang-d2/PROMPT.md` (vẫn **3 tấm**: Đợt 11 chưa gộp, chờ duyệt) |
 | D3 | Nền làng 720×270 (`gd-lang-nen`) + tranh bản đồ vùng 480×270 (`gd-ban-do-vung`, một tranh cho cả 3 vùng). 2 tấm ảnh, mỗi tấm gửi kèm 2 ảnh tham chiếu | CHỜ ẢNH (code và công cụ đã kiểm bằng ảnh mẫu; không có tệp: khác bản cũ 0 điểm ảnh; workflow xanh; **chưa thử ảnh ChatGPT thật**; chờ duyệt 4 điểm, trong đó nét thường hay gấp đôi; quay lui: xoá tệp ảnh hoặc `git revert 5404783 5150b00`; báo cáo `lang-d3/bao-cao.md`) | `lang-d3/PROMPT.md` |
-| E1 | 3 đồ lưng vẽ lại + cánh theo cấp | 6 đồ lưng ĐÃ NHẬP; cánh theo cấp ĐANG CHẠY (17:25) | — |
+| E1 | 3 đồ lưng vẽ lại + cánh theo cấp. Cánh: 1 tấm ảnh 8 chiếc (cấp 1 và cấp 3 của 4 loại), gửi kèm ảnh 4 cánh cấp 2 | 6 đồ lưng ĐÃ NHẬP; cánh theo cấp CHỜ ẢNH (code và lô "Cánh theo cấp" trên trang Tách Đồ đã kiểm bằng ảnh mẫu; không có tệp: khác bản cũ 0 điểm ảnh; gốc cánh lệch cấp 2 tối đa 0,5 điểm ảnh; **chưa thử ảnh ChatGPT thật**; cờ tắt `G.spriteCustom.CANH_THEO_CAP`; quay lui `git revert be9062c c8513a6`; chờ duyệt 3 điểm; báo cáo `trang-bi-e1/bao-cao.md`) | `trang-bi-e1/PROMPT.md` |
 | E2 | Trùm đổi hình theo pha | CHỜ ẢNH (6 prompt) | `quai-e2/PROMPT.md` |
 | E3 | Tách lại 36 quái nét gấp đôi | ĐÃ QUYẾT: sau khi chốt dung lượng | — |
 | — | Bản đồ ải (tach-giao-dien) | CHỜ ẢNH | `giao-dien/PROMPT.md` |
