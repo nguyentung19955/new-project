@@ -1,0 +1,100 @@
+{
+ "lo": [
+  "cong-trinh",
+  "dao-cu",
+  "khung-cui",
+  "lua-lo",
+  "nen-lang",
+  "ban-do-vung"
+ ],
+ "nen-lang": {
+  "32": {
+   "thuong": 264,
+   "gap": 741
+  },
+  "64": {
+   "thuong": 344,
+   "gap": 918
+  },
+  "128": {
+   "thuong": 408,
+   "gap": 1159
+  },
+  "mau-phang-kb": 93
+ },
+ "ban-do-vung": {
+  "32": {
+   "thuong": 206,
+   "gap": 612
+  },
+  "64": {
+   "thuong": 226,
+   "gap": 719
+  },
+  "128": {
+   "thuong": 276,
+   "gap": 962
+  },
+  "mau-phang-kb": 47
+ },
+ "khac-ban-cu-khi-khong-co-tep": {
+  "lang-trai": 0,
+  "lang-giua": 0,
+  "lang-phai": 0,
+  "ban-do": 0,
+  "ban-do-dem": 0
+ },
+ "khac-khi-co-tep": {
+  "lang-trai": 765187,
+  "lang-giua": 741829,
+  "lang-phai": 777455,
+  "ban-do": 802336,
+  "ban-do-dem": 782802
+ },
+ "khac-sau-khi-go": {
+  "lang-trai": 0,
+  "lang-giua": 0,
+  "lang-phai": 0,
+  "ban-do": 0,
+  "ban-do-dem": 0
+ },
+ "loi-js": [],
+ "kiem-trang": {
+  "nen-lang": [
+   "ok: Ảnh ra đúng cỡ của game: 720×270 điểm ảnh, nét thường",
+   "ok: Ảnh kín, không có chỗ trong suốt",
+   "ghi: Đã tự bỏ dải hồng tím ở mép: trên 22%, dưới 22% của ảnh",
+   "ghi: Đang CẮT giữ tỉ lệ: phần tranh đã đúng tỉ lệ, lấy hết, không bỏ gì",
+   "ghi: Số màu sau khi giảm: 104",
+   "ghi: Tệp nặng khoảng 93 KB (nét thường). Nền nên dùng bản nét thường cho nhẹ",
+   "ghi: Tự soát ở bước 4: bật \"Hiện chỗ không đi được\" và \"Chồng mờ nền cũ\" xem sông, ao, đường, sân đình, cầu có đúng chỗ không"
+  ],
+  "ban-do-vung": [
+   "ok: Ảnh ra đúng cỡ của game: 480×270 điểm ảnh, nét thường",
+   "ok: Ảnh kín, không có chỗ trong suốt",
+   "ghi: Đã tự bỏ dải hồng tím ở mép: trên 8%, dưới 8% của ảnh",
+   "ghi: Đang CẮT giữ tỉ lệ: phần tranh đã đúng tỉ lệ, lấy hết, không bỏ gì",
+   "ghi: Số màu sau khi giảm: 52",
+   "ghi: Tệp nặng khoảng 47 KB (nét thường)",
+   "ghi: Tự soát ở bước 4: bật \"Hiện vị trí 15 ải\" xem rừng, hang biển, lâu đài có nằm đúng dưới các ải không"
+  ]
+ },
+ "anh-khong-co-dai": {
+  "nen-lang": [
+   [
+    "Đang CẮT giữ tỉ lệ: bỏ 44% chiều cao phần tranh. Phần bị bỏ khá nhiều: ChatGPT có thể đã không giữ đúng bố cục ảnh tham chiếu; soát kỹ ở bước 4, thử \"Kéo giãn cho kín\" hoặc nhờ vẽ lại"
+   ],
+   [
+    "Đang KÉO GIÃN cho kín: lấy hết phần tranh, hình bị ép thấp chiều cao khoảng 44%"
+   ]
+  ],
+  "ban-do-vung": [
+   [
+    "Đang CẮT giữ tỉ lệ: bỏ 16% chiều cao phần tranh. Phần bị bỏ khá nhiều: ChatGPT có thể đã không giữ đúng bố cục ảnh tham chiếu; soát kỹ ở bước 4, thử \"Kéo giãn cho kín\" hoặc nhờ vẽ lại"
+   ],
+   [
+    "Đang KÉO GIÃN cho kín: lấy hết phần tranh, hình bị ép thấp chiều cao khoảng 16%"
+   ]
+  ]
+ }
+}
