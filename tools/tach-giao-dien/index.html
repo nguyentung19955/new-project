@@ -169,7 +169,7 @@
   </section>
 
   <section class="buoc xem-thu" id="buoc4" hidden>
-    <h2><span class="so">4</span>Xem thử trên bản đồ của game</h2>
+    <h2><span class="so">4</span><span id="tdXem">Xem thử trên bản đồ của game</span></h2>
     <p class="chu-y" id="ttXem" style="margin-top:-4px">Đang nạp game để vẽ thử…</p>
     <div id="vungXem" hidden>
       <div class="hang">
@@ -177,11 +177,18 @@
         <button class="nut phu nho" id="nutSoCode">Xem bản vẽ code (cũ)</button>
         <button class="nut do nho" id="nutBoXem">Bỏ hết ảnh đang xem thử</button>
       </div>
+      <div id="xemBanDo">
       <p class="chu-y">Bản đồ nhỏ (góc trên bên phải màn chơi), phóng to cho dễ nhìn:</p>
       <div class="khung-xem" style="max-width:520px"><canvas id="cvNho"></canvas></div>
       <p class="chu-y">Bản đồ to (hiện khi chạm vào bản đồ nhỏ):</p>
       <div class="khung-xem"><canvas id="cvTo"></canvas></div>
       <p class="chu-y">Hai hình trên do chính code bản đồ của game vẽ, dùng ảnh bạn vừa tách. Ảnh của các lô khác đã tách trong lần mở trang này vẫn được giữ để xem chung.</p>
+      </div>
+      <div id="xemNut" hidden>
+      <p class="chu-y">Bên trái: cụm nút như trong trận (nút Né tự xoay để bạn xem đủ các hướng). Bên phải: mọi biểu tượng trên đúng nút của nó. Hai hàng dưới: nút Né ở 16 hướng.</p>
+      <div class="khung-xem"><canvas id="cvNut"></canvas></div>
+      <p class="chu-y">Vòng nút, màu hệ, lửa quanh nút, thẻ giá mana, màn hồi chiêu đều do chính code nút của game vẽ; ảnh của bạn chỉ thay hình ở giữa. Ô nào chưa có ảnh thì hiện hình vẽ code cũ. Bốn nút "Kỹ năng" hiện game chưa dùng (đã thay bằng nút Chưởng), vẽ hay bỏ đều được.</p>
+      </div>
     </div>
   </section>
 </main>
@@ -219,7 +226,7 @@ const NUT = [
   ['chuong-fire', 'Chưởng · Lửa', 'quả cầu lửa cam bay sang phải, đuôi lửa kéo về sau'],
   ['chuong-poison', 'Chưởng · Độc', 'cục độc xanh lá bay sang phải, nhỏ giọt'],
   ['chuong-ice', 'Chưởng · Băng', 'mũi băng nhọn xanh nhạt bay sang phải'],
-  ['ne', 'Né', 'mũi tên to chỉ sang phải kèm ba vệt gió phía sau'],
+  ['ne', 'Né', 'mũi tên to chỉ thẳng sang PHẢI (nằm ngang, không chéo) kèm ba vệt gió phía sau; hình gọn trong một vòng tròn vì game sẽ xoay hình này theo hướng né'],
   ['binh-mau', 'Bình máu', 'bầu hồ lô đựng thuốc đỏ, nút lá'],
   ['tam-dung', 'Tạm dừng', 'hai thanh dọc song song'],
 ];
@@ -234,7 +241,7 @@ const LO = [
     ] },
   { id: 'khung', ten: 'Bản đồ · khung bản đồ to', kieu: 'khung', cot: 1, hang: 1, mau: 24, net: 'min', xem: true,
     ds: [{ ma: 'gd-khung-ban-do', ten: 'Khung bản đồ to', w: 380, h: 242, mo: '' }] },
-  { id: 'nut', ten: 'Nút điều khiển · 18 biểu tượng (chỉ xuất tệp, game chưa dùng)', kieu: 'icon', cot: 5, hang: 4, mau: 16, net: 'min', xem: false,
+  { id: 'nut', ten: 'Nút điều khiển · 18 biểu tượng', kieu: 'icon', cot: 5, hang: 4, mau: 16, net: 'min', xem: true,
     ds: NUT.map(([k, ten, mo]) => ({ ma: 'gd-nut-' + k, ten, mo, w: 24, h: 24 })) },
 ];
 
@@ -244,6 +251,8 @@ function bao(t) { const b = $('thongBao'); b.textContent = t; b.hidden = false; 
 
 // ===================== PROMPT =====================
 const CUOI = 'Nền trơn MỘT MÀU HỒNG TÍM #FF00FF (không ô cờ, không nền trắng, không chuyển màu), không dùng màu hồng tím ở chỗ nào khác trong hình. Chỉ cần gửi tấm ảnh, không cần code, không cần file json.';
+// Bảng màu cho lô nút (docs/review/ra-soat-my-thuat/bang-mau.json): chỉ nhóm liên quan = kim loại, gỗ cán, vải, da tay, 3 hệ.
+const MAU_NUT = 'BẢNG MÀU (bắt buộc bám theo, mỗi chất liệu tối đa 3 sắc): kim loại: thép tối #5c5b73, thép sáng #cecdda, vàng kim #f4bf4d; gỗ cán: #58371e, #79451d, #c98c34; vải và dây buộc: đỏ #c43b37, đỏ sáng #f66c52, lục #506f2a, lục sáng #95a53a, tím #7763ac; da tay (chỉ ô Gồng): #f9b788, #eeac6d, #a86a49; hệ Lửa (ô Chưởng Lửa, ô Nung): #ffc90e, #fe7d04, #c9270c, lõi sáng #feec86; hệ Độc (ô Chưởng Độc, thuốc xanh): #c8f90b, #5aca02, #277600, lõi sáng #fbfed0; hệ Băng (ô Chưởng Băng): #9cfefa, #32b0e9, #217bc3, lõi sáng #eefffc. Viền ngoài mọi hình một nét #14182e. ';
 const GAME_LK = 'game Linh Khí (game hành động pixel art lấy cảm hứng dân gian Việt Nam và hoa văn trống đồng Đông Sơn)';
 function luoi(L) {
   const n = L.ds.length, tong = L.cot * L.hang;
@@ -269,14 +278,16 @@ function taoPrompt(L) {
     + `KHÔNG vẽ: chữ, số, tiêu đề, bản đồ, biểu tượng, dây treo, bóng đổ, bất cứ thứ gì ở phần giữa. ` + CUOI;
   return `Dùng công cụ tạo ảnh vẽ MỘT tấm ảnh pixel art 2D gồm ĐÚNG ${L.ds.length} biểu tượng cho các NÚT ĐIỀU KHIỂN của ${GAME_LK}. Mỗi biểu tượng nằm trên mặt một nút tròn trong trận đánh. `
     + luoi(L)
-    + `KIỂU VẼ: trong game mỗi biểu tượng chỉ to khoảng 24×24 điểm ảnh: khối to, đậm, đơn giản, nhìn là hiểu ngay; màu phẳng, đổ bóng 3 sắc (tối, vừa, sáng), viền tối một nét #140e0c quanh mép; không chuyển màu, không phát sáng, không nhoè. `
+    + `KIỂU VẼ: trong game mỗi biểu tượng chỉ to khoảng 24×24 điểm ảnh (nút Đánh to nhất, nút Tạm dừng nhỏ nhất chỉ khoảng 8×8): khối to, đậm, đơn giản, nhìn là hiểu ngay; màu phẳng, đổ bóng 3 sắc (tối, vừa, sáng), viền tối một nét #14182e quanh mép; không chuyển màu, không phát sáng, không nhoè. Biểu tượng nằm trên mặt nút màu TỐI (nâu, đỏ sẫm, lục sẫm, lam sẫm) nên phần chính phải SÁNG. `
+    + MAU_NUT
+    + `LƯU Ý RIÊNG: 4 ô Đánh và 4 ô Đặc biệt dùng màu trung tính (thép, gỗ, vàng kim; vệt chém, vệt gió, đất nứt màu trắng kem #efe2d1), KHÔNG tô màu hệ, vì game tự đổi màu vòng nút theo hệ Lửa, Độc, Băng. Ô Né: mũi tên chỉ thẳng sang PHẢI, game tự xoay hình theo 16 hướng. `
     + `CỠ TRONG Ô: mỗi biểu tượng gần vuông, chiếm khoảng 70% ô, nằm giữa ô, nằm TRỌN trong ô, không chạm đường lưới. `
-    + `KHÔNG vẽ: chữ, số, nhãn, tên, vòng tròn hay mặt nút phía sau biểu tượng (game tự vẽ nút), tay người, bảng màu, bóng đổ. ` + CUOI;
+    + `KHÔNG vẽ: chữ, số, nhãn, tên, vòng tròn hay mặt nút phía sau biểu tượng (game tự vẽ nút), bàn tay ở ba ô Chưởng, ô mẫu màu, bóng đổ. ` + CUOI;
 }
 function hienLo() {
   $('dsLo').innerHTML = L.ds.map((m) => `<li><b>${m.ten}</b> · ${m.w}×${m.h} · <span style="font-size:11px">${m.ma}</span></li>`).join('');
   $('moTaLo').textContent = L.kieu === 'khung' ? 'Một ảnh khung, giữa để trống (màu nền hồng tím). Trong game khung to 380×242 điểm ảnh.'
-    : `${L.ds.length} hình, lưới ${L.cot} cột × ${L.hang} hàng, nền hồng tím.` + (L.id === 'nut' ? ' Lô này chỉ để xuất tệp sẵn: game chưa dùng ảnh cho nút điều khiển.' : '');
+    : `${L.ds.length} hình, lưới ${L.cot} cột × ${L.hang} hàng, nền hồng tím.` + (L.id === 'nut' ? ' Game chỉ lấy ảnh làm HÌNH Ở GIỮA nút; vòng nút, màu hệ, số mana, hồi chiêu vẫn do game vẽ. Nút Né: game tự xoay ảnh theo hướng né.' : '');
   $('oPrompt').value = taoPrompt(L);
   $('soMau').value = String(L.mau); $('doNet').value = L.net;
   if (L.kieu !== 'icon' && $('heNet').value === '4') $('heNet').value = '2';
@@ -757,7 +768,7 @@ function hienKetQua() {
   MAP.loi.forEach((t) => muc.push([t, false]));
   MAP.ghi.forEach((t) => muc.push([t, true, 1]));
   if (L.kieu === 'khung' && KQ[0]) { const v = chinhCua(0).vien; muc.push([`Viền 9 mảnh: trên ${v[0]}, phải ${v[1]}, dưới ${v[2]}, trái ${v[3]} (điểm ảnh game)`, true, 1]); }
-  if (L.id === 'nut') muc.push(['Lô nút điều khiển chỉ để xuất tệp sẵn, game chưa dùng', true, 1]);
+  if (L.id === 'nut') muc.push(['Game chỉ lấy ảnh làm hình ở giữa nút (vòng nút, màu hệ, số vẫn do game vẽ); xem thử ở bước 4', true, 1]);
   muc.push(['Tự nhìn: đúng hình, đúng thứ tự', true, 1]);
   const dat = !thieu.length && !MAP.loi.length && !saiCo.length && !rong.length;
   $('dsKiem').innerHTML = muc.map(([t, ok, ghi]) => `<li class="${ok ? (ghi ? 'ghi' : '') : 'loi'}">${t}</li>`).join('');
@@ -865,8 +876,64 @@ function aiMau(n) {
   if (n % 4 === 3) { for (const r of map.rooms) S.cleared[r.id] = true; S.portal = { room: map.boss }; S.idx = map.boss; }
   return S;
 }
+// Lô "Nút điều khiển": nút do chính G.btnArt của game vẽ (game/js/btn_art.js), ảnh vừa tách thay hình ở giữa.
+// Toạ độ là toạ độ giao diện của game; mỗi điểm vẽ của nút = 3 điểm ảnh của canvas (cỡ nút bằng đúng số trong game/js/stage.js).
+const HE_NUT = ['none', 'fire', 'poison', 'ice'], TEN_HE = { none: 'chưa có hệ', fire: 'hệ Lửa', poison: 'hệ Độc', ice: 'hệ Băng' };
+function veXemNut() {
+  const BA = GAME.btnArt, cv = $('cvNut'), K = 3, W = 480, H = 282;
+  if (!BA || !BA.maAnh) { $('ttXem').textContent = 'Bản game trên mạng chưa có phần vẽ nút bằng ảnh (vừa đăng thì chờ vài phút rồi mở lại trang). Vẫn tách và tải tệp được.'; $('vungXem').hidden = true; return; }
+  $('vungXem').hidden = false;
+  $('ttXem').textContent = 'Nút Đánh đang xem: ' + VK[MAU % 4][1] + ', ' + TEN_HE[HE_NUT[(MAU + (MAU >> 2)) % 4]] + '. Chạm "Đổi vũ khí và hệ" để xem kiểu khác.';
+  if (cv.width !== W * K) { cv.width = W * K; cv.height = H * K; }
+  const c = cv.getContext('2d'), t = GAME.time, el = HE_NUT[(MAU + (MAU >> 2)) % 4], vk = VK[MAU % 4][0];
+  c.setTransform(K, 0, 0, K, 0, 0); c.textBaseline = 'alphabetic';
+  c.fillStyle = '#2c4a36'; c.fillRect(0, 0, W, H);
+  c.fillStyle = '#3a3026'; c.fillRect(0, 0, 150, 142); // mảng tường tối như mép phải màn chơi
+  const chu = (s, x, y) => { c.font = '600 7px ' + FONT; c.textAlign = 'left'; c.fillStyle = 'rgba(0,0,0,0.7)'; c.fillText(s, x + 0.5, y + 0.5); c.fillStyle = '#f1ead9'; c.fillText(s, x, y); };
+  const w = (k) => ({ type: k, branch: el === 'none' ? null : el, stage: 2, rarity: 1 });
+  const id = (s) => 'xem-' + s;
+  // cụm nút trong trận (bố cục nút gọn của phòng thường và phòng trùm, dời về góc trái)
+  chu('Trong trận', 62, 10);
+  BA.draw(c, 'potion', 17, 14, 12, { count: 2, t, id: id('pot') });
+  BA.draw(c, 'pause', 46, 14, 11, { t, id: id('pau') });
+  const huong = Math.floor(t / 0.7) % 16;
+  BA.draw(c, 'atk', 104, 96, 27, { weapon: w(vk), t, id: id('atk') });
+  BA.draw(c, 'special', 55, 74, 18, { weapon: w(vk), cost: 20, t, id: id('sp') });
+  BA.draw(c, 'chuong', 102, 41, 18, { el: el === 'none' ? 'fire' : el, cost: 30, t, id: id('ch') });
+  BA.draw(c, 'dodge', 54, 122, 18, { dir: (huong / 16) * Math.PI * 2, t, id: id('ne') });
+  // mọi biểu tượng
+  chu('Đánh (4 vũ khí) · cái cuối: đang bấm', 160, 9);
+  VK.forEach(([k], i) => BA.draw(c, 'atk', 192 + i * 62, 42, 27, { weapon: w(k), t, id: id('a' + i) }));
+  BA.draw(c, 'atk', 446, 42, 27, { weapon: w(vk), pressed: true, t, id: id('ap') });
+  chu('Đặc biệt (4 vũ khí)', 160, 84); chu('Chưởng (3 hệ)', 346, 84);
+  VK.forEach(([k], i) => BA.draw(c, 'special', 182 + i * 42, 106, 18, { weapon: w(k), cost: 20, t, id: id('s' + i) }));
+  ['fire', 'poison', 'ice'].forEach((e, i) => BA.draw(c, 'chuong', 366 + i * 42, 106, 18, { el: e, cost: 30, t, id: id('c' + i) }));
+  chu('Kỹ năng (game chưa dùng)', 160, 138); chu('Thiếu mana · hồi', 346, 138); chu('Hết bình · bấm Dừng', 4, 154);
+  ['smith', 'hunter', 'healer', 'wrestler'].forEach((h, i) => BA.draw(c, 'skill', 182 + i * 42, 160, 18, { hero: h, cost: 30, t, id: id('h' + i) }));
+  BA.draw(c, 'special', 366, 160, 18, { weapon: w(vk), cost: 20, disabled: true, t, id: id('sd') });
+  BA.draw(c, 'special', 408, 160, 18, { weapon: w(vk), cost: 20, cd: 0.6, cdSec: 3, disabled: true, t, id: id('sc') });
+  BA.draw(c, 'dodge', 450, 160, 18, { dir: 0, cd: 0.35, t, id: id('nc') });
+  BA.draw(c, 'potion', 20, 174, 12, { count: 0, disabled: true, t, id: id('p0') });
+  BA.draw(c, 'pause', 50, 174, 11, { pressed: true, t, id: id('pp') });
+  chu('Né · 16 hướng', 4, 212); chu('(game tự xoay ảnh)', 4, 222);
+  for (let i = 0; i < 16; i++) BA.draw(c, 'dodge', 122 + (i % 8) * 46, 212 + Math.floor(i / 8) * 44, 18, { dir: (i / 16) * Math.PI * 2, t, id: id('n' + i) });
+}
 function veXem() {
   if (!GAME || $('buoc4').hidden) return;
+  const laNut = L.id === 'nut';
+  $('tdXem').textContent = laNut ? 'Xem thử trên nút của game' : 'Xem thử trên bản đồ của game';
+  $('xemBanDo').hidden = laNut; $('xemNut').hidden = !laNut;
+  $('nutDoiMau').textContent = laNut ? 'Đổi vũ khí và hệ' : 'Đổi bản đồ mẫu';
+  if (laNut) {
+    const SCn = GAME.spriteCustom, gdThat = SCn.gd;
+    GAME.time = performance.now() / 1000;
+    if (SO_CODE) SCn.gd = {};
+    try { veXemNut(); } catch (e) { $('ttXem').textContent = 'Không vẽ thử được: ' + e.message; }
+    SCn.gd = gdThat;
+    $('nutSoCode').textContent = SO_CODE ? 'Xem lại ảnh của bạn' : 'Xem bản vẽ code (cũ)';
+    return;
+  }
+  if ($('ttXem').textContent.indexOf('Nút Đánh đang xem') === 0 || $('vungXem').hidden) { $('ttXem').textContent = 'Chạm "Đổi bản đồ mẫu" để xem các kiểu ải khác nhau.'; $('vungXem').hidden = false; }
   const SC = GAME.spriteCustom, gdThat = SC.gd, S = aiMau(MAU), dpr = Math.min(2, window.devicePixelRatio || 1);
   GAME.time = performance.now() / 1000;
   if (SO_CODE) SC.gd = {};
@@ -884,7 +951,7 @@ function veXem() {
   SC.gd = gdThat;
   $('nutSoCode').textContent = SO_CODE ? 'Xem lại ảnh của bạn' : 'Xem bản vẽ code (cũ)';
 }
-$('nutDoiMau').onclick = () => { MAU = (MAU + 1) % 4; veXem(); };
+$('nutDoiMau').onclick = () => { MAU = (MAU + 1) % 16; veXem(); }; // bản đồ: 4 kiểu ải lặp lại; nút: 4 vũ khí × 4 hệ
 $('nutSoCode').onclick = () => { SO_CODE = !SO_CODE; veXem(); };
 $('nutBoXem').onclick = () => { for (const k of Object.keys(XEM)) delete XEM[k]; dongBo(); veXem(); bao('Đã bỏ hết ảnh xem thử (hình ở bước 3 vẫn còn, bấm "Tách lại" để xem lại)'); };
 // ô đang đứng và cổng dịch chuyển nhấp nháy như trong game (tắt nếu máy đặt giảm chuyển động)
