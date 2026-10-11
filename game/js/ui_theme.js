@@ -312,6 +312,39 @@
   };
   T.UI = { wood: '#16100b', woodL: '#2a1d14', ink: C.ink, gold: C.gold, hi: C.hi, br: C.br, dk: C.dk, sub: '#cbbd9e' }; // màu HUD (docs/vfx/BANG-MAU.md mục 5)
 
+  // ---------- Làn C5: khung co giãn 9 mảnh bằng ảnh AI (trang tools/tach-giao-dien, lô "Khung 9 mảnh") ----------
+  // Mã tệp: gd-o-do-0..3 và gd-o-do-0..3-chon (ô đồ theo bậc) · gd-khung-mau, gd-khung-mana, gd-khung-xp (vỏ thanh) ·
+  // gd-khung-trum, gd-khung-trum-nho, gd-khung-tinh-anh (tấm khung tên + máu của trùm vùng, trùm nhỏ, tinh anh) · gd-the-thuong (thẻ).
+  // Mỗi tệp có "vien" [trên, phải, dưới, trái] (điểm ảnh game): SC.veGd cắt 9 mảnh, bốn góc giữ nguyên cỡ, cạnh và ruột co giãn theo cỡ đích.
+  // Ảnh chỉ là VIỀN KHUNG, giữa để trống. Game vẫn tự vẽ: bóng đổ, màu lót trong lòng khung, lòng thanh (phần đổ màu, vạch khắc, phần tụt dần),
+  // chữ, hình món đồ. Không có tệp, hoặc G.KHUNG_ANH === false (cờ tắt): vẽ code y như cũ, không đổi một điểm ảnh.
+  // Lớp ghép (bóng + lót + ảnh) nhớ THEO TỪNG ẢNH (WeakMap): ảnh nạp xong, đổi hay gỡ thì lớp cũ tự bỏ theo, không cần xoá bộ nhớ đệm bằng tay.
+  const KHUNG_LOP = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  const khungCo = (ma) => (G.KHUNG_ANH === false || !KHUNG_LOP ? null : gdCo(ma));
+  T.MA_KHUNG = ['gd-o-do-0', 'gd-o-do-1', 'gd-o-do-2', 'gd-o-do-3', 'gd-o-do-0-chon', 'gd-o-do-1-chon', 'gd-o-do-2-chon', 'gd-o-do-3-chon',
+    'gd-khung-mau', 'gd-khung-mana', 'gd-khung-xp', 'gd-khung-trum', 'gd-khung-trum-nho', 'gd-khung-tinh-anh', 'gd-the-thuong']; // cho công cụ và bài kiểm tra
+  // Dựng một lớp w × h (điểm ảnh game) ở đúng độ nét của ảnh ga; ve() vẽ bằng R, rr, frame (toạ độ game) và khungVe.
+  function khungLop(ga, key, w, h, ve) {
+    let m = KHUNG_LOP.get(ga); if (!m) { m = new Map(); KHUNG_LOP.set(ga, m); }
+    let cv = m.get(key);
+    if (!cv) {
+      if (m.size > 24) m.clear();
+      const N = ga.net || 1;
+      cv = document.createElement('canvas'); cv.width = Math.max(1, Math.round(w * N)); cv.height = Math.max(1, Math.round(h * N));
+      g = cv.getContext('2d'); g.imageSmoothingEnabled = false; g.setTransform(N, 0, 0, N, 0, 0);
+      ve(); m.set(key, cv);
+    }
+    return cv;
+  }
+  const khungVe = (ga, x, y, w, h) => G.spriteCustom.veGd(g, ga, x, y, w, h); // dán ảnh 9 mảnh vào lớp đang dựng
+  function khungDat(cv, x, y, w, h, alpha) {
+    const c = G.ux, sm = c.imageSmoothingEnabled, a0 = c.globalAlpha;
+    c.imageSmoothingEnabled = w * (G.uiScale || 1) < cv.width - 0.5; // như SC.veGd: phóng to giữ điểm ảnh sắc cạnh, thu nhỏ thì làm mịn
+    if (alpha != null && alpha !== 1) c.globalAlpha = a0 * alpha;
+    c.drawImage(cv, x, y, w, h);
+    c.imageSmoothingEnabled = sm; c.globalAlpha = a0;
+  }
+
   // ---------- thanh máu trùm / tinh anh ----------
   // Phân cấp: trùm vùng (big) khung to có hoa văn, tên chữ to; trùm nhỏ khung vừa; tinh anh khung nhỏ.
   // o: { tier: 'big' | 'mini' | 'elite', name, frac, lag (khoá tụt dần), marks: [0.3, 0.6] vạch pha, sub: chữ nhỏ cạnh tên }
@@ -327,7 +360,10 @@
     // khung tinh anh rộng theo chữ (tên loài + dấu hiệu), trùm cố định
     const w = big ? 226 : elite ? Math.round(G.clamp(tw + sw + 18, 150, 224)) : 196, bh = big ? 11 : elite ? 7 : 9, ph = big ? 30 : elite ? 22 : 26;
     const x = Math.round(cx - w / 2);
-    T.plate(x, y, w, ph, { a: 0.8, edge: big ? C.gold : C.br });
+    // Làn C5: có ảnh thì tấm khung là ảnh 9 mảnh co theo bề ngang (lòng khung vẫn lót gỗ sẫm hơi trong như T.plate); tên, vạch pha, thanh máu vẽ như cũ
+    const gkt = khungCo(big ? 'gd-khung-trum' : elite ? 'gd-khung-tinh-anh' : 'gd-khung-trum-nho');
+    if (gkt) khungDat(khungLop(gkt, 'bb|' + w + '|' + ph, w, ph, () => { R(2, 2, w - 4, ph - 4, 'rgba(22,15,10,0.8)'); khungVe(gkt, 0, 0, w, ph); }), x, y, w, ph);
+    else T.plate(x, y, w, ph, { a: 0.8, edge: big ? C.gold : C.br });
     const ny = y + (big ? 11 : elite ? 9 : 10);
     // hoa văn hai bên tên trùm vùng: gạch đồng + chấm vàng (pixel, không chữ)
     if (big) {
@@ -383,6 +419,18 @@
       put(layer('barS|' + w + '|' + h + '|' + cols[0] + '|' + iw, w, h, () => { R(0, 0, w, h, C.dk); R(1, 1, w - 2, h - 2, '#0d1716'); R(1, 1, iw, h - 2, cols[0]); if (h >= 4) R(1, 1, iw, 1, cols[1]); R(0, 0, 1, h, C.br); R(w - 1, 0, 1, h, C.br); }), x, y);
       return;
     }
+    // Làn C5: có ảnh thì VỎ thanh (viền, hai đầu, đinh tán) là ảnh 9 mảnh co theo bề ngang; LÒNG thanh (nền tối, phần đổ màu, vạch khắc)
+    // vẫn do code vẽ đè lên đúng chỗ cũ, nên máu / mana hiện y như trước. Thanh máu trùm và tinh anh dùng chung vỏ gd-khung-mau.
+    const gkh = khungCo(kind === 'mana' ? 'gd-khung-mana' : kind === 'xp' ? 'gd-khung-xp' : 'gd-khung-mau');
+    if (gkh) {
+      khungDat(khungLop(gkh, 'bar|' + w + '|' + h, w, h + 1, () => { rr(0, 1, w, h, 'rgba(0,0,0,0.5)', 1); khungVe(gkh, 0, 0, w, h); }), x, y, w, h + 1);
+      put(layer('barL|' + w + '|' + h + '|' + cols[0] + '|' + fw + '|' + (o.marks || 10), inner, h - 4, () => {
+        R(0, 0, inner, h - 4, '#0d1716');
+        R(0, 0, fw, h - 4, cols[0]); R(0, 0, fw, 1, cols[1]);
+        const n = o.marks || 10;
+        for (let k = 1; k < n; k++) { const px = Math.round((inner * k) / n); P(px, 0, C.dk); P(px, h - 5, C.dk); if (k * 2 === n) R(px, 0, 1, h - 4, 'rgba(0,0,0,0.5)'); }
+      }), x + cap, y + 2);
+    } else {
     const cv = layer('bar|' + w + '|' + h + '|' + cols[0] + '|' + fw + '|' + (o.marks || 10), w, h + 1, () => {
       rr(0, 1, w, h, 'rgba(0,0,0,0.5)', 1);
       rr(0, 0, w, h, C.dk, 1); rr(1, 1, w - 2, h - 2, C.br, 1); R(2, 1, w - 4, 1, C.hi);
@@ -393,6 +441,7 @@
       if (cap >= 7) for (const ex of [2, w - 6]) { R(ex, (h >> 1) - 1, 4, 3, C.dk); P(ex + 1, h >> 1, C.gold); P(ex + 2, h >> 1, C.gold); } // đinh tán hai đầu
     });
     put(cv, x, y);
+    }
     if (ls) {
       const c = G.ux, ga = c.globalAlpha, lw = Math.round(inner * G.clamp(ls.lag, 0, 1)), tw = Math.round(inner * G.clamp(trueFrac || 0, 0, 1));
       if (lw > fw) { // phần vừa mất: chớp trắng rồi vàng nhạt, rút dần về
@@ -417,6 +466,20 @@
   T.slot = function (x, y, s, rar, o) {
     o = o || {};
     x = Math.round(x); y = Math.round(y); s = Math.round(s); rar = G.clamp(rar | 0, 0, 3);
+    // Làn C5: có ảnh thì khung ô là ảnh 9 mảnh co theo cỡ ô (20 đến 70). Ô đang chọn dùng tệp -chon, phủ rộng hơn 1 điểm mỗi bên như vòng sáng của hình code;
+    // thiếu tệp -chon thì dùng tệp thường và game tự vẽ vòng sáng. Bóng và màu lót lòng ô (xanh ngọc tối, đặc như hình code) do game vẽ dưới ảnh.
+    const gkc = o.sel ? khungCo('gd-o-do-' + rar + '-chon') : null, gko = gkc || khungCo('gd-o-do-' + rar);
+    if (gko) {
+      const vong = !gkc && !!o.sel;
+      khungDat(khungLop(gko, 'sl|' + s + '|' + (vong ? 1 : 0), s + 2, s + 3, () => {
+        const X = 1, Y = 1;
+        rr(X, Y + 1, s, s, 'rgba(0,0,0,0.5)', 2);
+        R(X + 2, Y + 2, s - 4, s - 4, C.bg);
+        if (vong) frame(X - 1, Y - 1, s + 2, s + 2, C.hi);
+        if (gkc) khungVe(gko, 0, 0, s + 2, s + 2); else khungVe(gko, X, Y, s, s);
+      }), x - 1, y - 1, s + 2, s + 3, o.dim ? 0.5 : 1);
+      return;
+    }
     const cv = layer('sl|' + s + '|' + rar + '|' + (o.sel ? 1 : 0), s + 2, s + 3, () => {
       const X = 1, Y = 1;
       rr(X, Y + 1, s, s, 'rgba(0,0,0,0.5)', 2);
@@ -552,6 +615,20 @@
     o = o || {};
     x = Math.round(x); y = Math.round(y); w = Math.round(w); h = Math.round(h);
     const rar = o.rar == null ? -1 : G.clamp(o.rar | 0, 0, 3), st = o.sel ? 1 : 0;
+    // Làn C5: có ảnh thì viền thẻ là ảnh 9 mảnh co cả hai chiều. Thẻ đang bấm / đang chọn: game tự làm sáng ảnh và lót lòng sáng hơn (như hình code).
+    // Thẻ theo bậc (màn kết quả): game kẻ thêm một đường chỉ màu bậc đè lên vành ảnh, sát trong viền ngoài. Bóng và màu lót lòng thẻ do game vẽ.
+    const gk0 = khungCo('gd-the-thuong'), gkd = gk0 && st ? gdBien(gk0, 'sang') || gk0 : gk0;
+    if (gkd) {
+      khungDat(khungLop(gkd, 'cd|' + w + '|' + h + '|' + rar + '|' + st, w + 2, h + 3, () => {
+        const X = 1, Y = 1;
+        rr(X, Y + 2, w, h, 'rgba(0,0,0,0.5)', 2);
+        R(X + 2, Y + 2, w - 4, h - 4, C.dk); R(X + 3, Y + 3, w - 6, h - 6, st ? '#2f6a60' : rar >= 0 ? C.bg2 : '#1b3a3b');
+        khungVe(gkd, X, Y, w, h);
+        if (rar >= 0) { const e = RAR[rar]; R(X + 3, Y + 1, w - 6, 1, e); R(X + 3, Y + h - 2, w - 6, 1, e); R(X + 1, Y + 3, 1, h - 6, e); R(X + w - 2, Y + 3, 1, h - 6, e); } // đường chỉ màu bậc, đúng chỗ vành màu bậc của hình code (không lấn vào chữ)
+      }), x - 1, y - 1, w + 2, h + 3);
+      if (o.title) txt(o.title, x + 7, y + 12, { size: 6.5, color: C.sub });
+      return;
+    }
     put(layer('cd|' + w + '|' + h + '|' + rar + '|' + st, w + 2, h + 3, () => {
       const X = 1, Y = 1, edge = rar >= 0 ? RAR[rar] : st ? C.hi : C.br;
       rr(X, Y + 2, w, h, 'rgba(0,0,0,0.5)', 2);
