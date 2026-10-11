@@ -660,6 +660,7 @@ function cauMau(q) {
 }
 
 const $ = (id) => document.getElementById(id);
+let GOI_Y_LO = -1; // lô gợi ý khi số hàng trong ảnh khác số hàng của lô đang chọn
 let Q = null, ANH = null, KQ = null, BO = [], LAST = null, nenXem = '#141a1c';
 
 function bao(t) { const b = $('thongBao'); b.textContent = t; b.hidden = false; clearTimeout(bao.t); bao.t = setTimeout(() => b.hidden = true, 2600); }
@@ -1309,6 +1310,7 @@ function chay() {
 //  3) Vẫn không ra đủ M hàng: chia đều chiều cao ảnh (lưới trong prompt phủ kín ảnh); lệch thì chỉnh ô "Cắt" ở bước 2.
 function timHang(A, coAlpha) {
   const { W, H } = A, M = LO.q.length, ghi = [];
+  GOI_Y_LO = -1;
   const deu = (ly) => { const o = []; for (let i = 0; i < M; i++) o.push({ y0: Math.round(i * H / M), y1: Math.round((i + 1) * H / M) - 1 }); ghi.push(ly); return { o, ghi }; };
   if ($('cachTach').value === 'deu') return deu('Chia đều ' + M + ' hàng');
   Q = LO.q[0];
@@ -1329,6 +1331,12 @@ function timHang(A, coAlpha) {
     bang.forEach(b => b.m = khoi(b));
     const mx = Math.max(1, ...bang.map(b => b.m)), co = bang.filter(b => b.m >= 0.03 * mx);
     const loi = 'Ảnh có vạch kẻ ngang: ' + bang.length + ' khoảng';
+    // Lưới trong ảnh có số hàng khác số hàng của lô → rất có thể chọn nhầm lô (lỗi 11/10 17:43: tấm 4 hàng đưa vào lô 5 hàng, trang chia đều 5 nên lệch). Gợi ý lô có đúng số hàng, cùng màu nền.
+    if (co.length !== M && co.length >= 2) {
+      const ung = LO_DS.map((L, k) => ({ L, k })).filter(({ L }) => L.q.length === co.length && L.nen === LO.nen);
+      GOI_Y_LO = ung.length ? ung[0].k : -1;
+      ghi.push('CHÚ Ý: ảnh có ' + co.length + ' hàng kẻ lưới nhưng lô "' + LO.ten + '" cần ' + M + ' hàng' + (ung.length ? ' — có phải bạn chọn nhầm lô? Lô ' + co.length + ' hàng cùng nền: ' + ung.map(u => '"' + u.L.ten + '"').join(', ') : ''));
+    }
     if (co.length === M) { if (bang.length > M) ghi.push('Bỏ ' + (bang.length - M) + ' khoảng trống ngoài lưới'); return { o: co, ghi }; }
     if (bang.length === M) { ghi.push(loi + ', có hàng bị để trống'); return { o: bang, ghi }; }
     if (co.length > M) { // thừa (bảng phụ, dòng chữ): giữ M khoảng nhiều hình nhất, vẫn theo thứ tự trên xuống
@@ -1373,6 +1381,11 @@ function chayLo() {
     return `<div class="the-hang" data-i="${i}" role="button" tabindex="0"><input type="checkbox" data-i="${i}" aria-label="Đưa ${h.q.ma} vào zip" ${tich ? 'checked' : ''} ${h.R ? '' : 'disabled'}><canvas width="64" height="48" data-i="${i}"></canvas>`
       + `<span><b>Hàng ${i + 1}: ${h.q.ten}</b><small>${h.q.ma} · ${h.q.fw}×${h.q.fh}</small><span class="the ${ok ? 'dat' : 'hong'}">${ok ? 'ĐẠT' : h.R ? 'CÓ LỖI' : 'KHÔNG THẤY HÀNG'}</span></span></div>`; }).join('');
   $('ttLo').textContent = `${dat}/${KQL.length} hàng ĐẠT. ` + HG.ghi.join('. ') + (HG.ghi.length ? '.' : '');
+  if (GOI_Y_LO >= 0) { // nút chuyển sang lô có đúng số hàng của ảnh, giữ nguyên ảnh đang đưa vào
+    const k = GOI_Y_LO, nut = document.createElement('button'); nut.className = 'nut'; nut.style.marginLeft = '8px'; nut.textContent = 'Chuyển sang lô "' + LO_DS[k].ten + '" và cắt lại';
+    nut.onclick = () => { $('chonHu').value = 'lo:' + k; chonLo(k); try { localStorage.setItem('thu_hu', 'lo:' + k); } catch (e) {} BO = []; chay(); };
+    $('ttLo').appendChild(nut);
+  }
   $('buoc3').hidden = false;
   chonHang(Math.min(HANG_I, KQL.length - 1));
   batDauChay();
