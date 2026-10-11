@@ -113,6 +113,7 @@
       <select id="chonHu" aria-label="Chọn hiệu ứng"></select>
       <label id="oBanMau" class="hang" style="gap:6px" hidden>Bản màu: <select id="chonHe" aria-label="Chọn bản màu theo hệ"></select></label>
       <button class="nut" id="nutChepPrompt">Sao chép prompt vẽ</button>
+      <button class="nut" id="nutLuoi" hidden>Tải lưới trống (gửi kèm prompt)</button>
     </div>
     <p class="chu-y" id="noiDung"></p>
     <div class="bang" id="bangThongSo"></div>
@@ -710,6 +711,18 @@ const LO_GOP = [
   { id: 'b3-tien-hoa-he', ten: 'B3 · Tiến hoá Độc và Băng (bản theo hệ)', hang: ['hu-tien-hoa-poison', 'hu-tien-hoa-ice'] },
   { id: 'b4-duong', ten: 'B4 · Vũng lửa, Vũng lửa của quái, Vũng đỏ của quái', hang: ['hu-vung-lua', 'hu-vung-quai-lua', 'hu-vung-quai-do'] },
   { id: 'b4-hong', ten: 'B4 · Vũng độc, Mây độc, Vũng độc của quái, Vũng nước lạnh của quái', hang: ['hu-vung-doc', 'hu-may-doc', 'hu-vung-quai-doc', 'hu-vung-quai-bang'] },
+  // 11/10 19:10 (chủ dự án): gộp mọi BẢN THEO HỆ còn thiếu. Bản Lửa vẽ nền xanh dương, bản Độc và Băng nền hồng tím (giữ quy tắc nền theo màu hình), nhóm theo số khung.
+  // Trùm nổ cuối 192×160: ảnh 1536 rộng chia 6 khung đã chỉ to gấp 1,33 khi gen lẻ, xếp 2 hàng không thu nhỏ thêm → gộp được.
+  { id: 'he-lua-4', ten: 'Bản Lửa · Trảm Nguyệt, Vệt cào, Buông cung', hang: ['hu-tram-nguyet-fire', 'hu-quai-cao-fire', 'hu-ban-cung-fire'] },
+  { id: 'he-lua-5', ten: 'Bản Lửa · Ra chiêu, Em bé trúng đòn, Nổ nhỏ', hang: ['hu-ra-chieu-fire', 'hu-be-trung-fire', 'hu-no-nho-fire'] },
+  { id: 'he-lua-6', ten: 'Bản Lửa · Lướt chém, Nện đất', hang: ['hu-chem-luot-fire', 'hu-nen-dat-fire'] },
+  { id: 'he-doc-bang-4', ten: 'Bản Độc + Băng · Trảm Nguyệt, Vệt cào, Buông cung', hang: ['hu-tram-nguyet-poison', 'hu-tram-nguyet-ice', 'hu-quai-cao-poison', 'hu-quai-cao-ice', 'hu-ban-cung-poison', 'hu-ban-cung-ice'] },
+  { id: 'he-doc-bang-5', ten: 'Bản Độc + Băng · Ra chiêu, Em bé trúng đòn, Nổ nhỏ', hang: ['hu-ra-chieu-poison', 'hu-ra-chieu-ice', 'hu-be-trung-poison', 'hu-be-trung-ice', 'hu-no-nho-poison', 'hu-no-nho-ice'] },
+  { id: 'he-doc-bang-6', ten: 'Bản Độc + Băng · Lướt chém, Nện đất', hang: ['hu-chem-luot-poison', 'hu-chem-luot-ice', 'hu-nen-dat-poison', 'hu-nen-dat-ice'] },
+  { id: 'he-lua-8', ten: 'Bản Lửa · Giáo quét vòng (1 hàng)', hang: ['hu-quet-giao-fire'] },
+  { id: 'he-8-giao', ten: 'Bản Độc + Băng · Giáo quét vòng', hang: ['hu-quet-giao-poison', 'hu-quet-giao-ice'] },
+  { id: 'trum-no-chung-lua', ten: 'Trùm nổ cuối · bản Chung + bản Lửa', hang: ['hu-trum-no', 'hu-trum-no-fire'] },
+  { id: 'trum-no-doc-bang', ten: 'Trùm nổ cuối · bản Độc + bản Băng', hang: ['hu-trum-no-poison', 'hu-trum-no-ice'] },
 ];
 // Dựng mục đang chọn từ bảng HU (i: thứ tự trong HU; he: '' | 'fire' | 'poison' | 'ice' cho mục có "phe"). Dùng chung cho gen lẻ và lô gộp.
 function taoQ(i, he) {
@@ -749,6 +762,15 @@ function khoLo(L) {
   }
   return tot;
 }
+// Lưới trống của lô: đúng khổ ảnh, số cột × hàng, màu nền; vạch tối #14182e dày 8 (trang cắt theo vạch tối này).
+const tenLuoi = (L) => `luoi-${L.id}-${L.so}cot-x-${L.q.length}hang.png`;
+function veLuoi(L) {
+  const K = khoLo(L), c = document.createElement('canvas'); c.width = K.w; c.height = K.h;
+  const g = c.getContext('2d'), n = NEN[L.nen][1]; g.fillStyle = `rgb(${n})`; g.fillRect(0, 0, K.w, K.h); g.fillStyle = '#14182e';
+  for (let i = 0; i <= L.so; i++) g.fillRect(Math.min(K.w - 4, Math.max(0, Math.round(i * K.w / L.so) - 4)), 0, 8, K.h);
+  for (let j = 0; j <= L.q.length; j++) g.fillRect(0, Math.min(K.h - 4, Math.max(0, Math.round(j * K.h / L.q.length) - 4)), K.w, 8);
+  return c;
+}
 function taoPromptLo(L) {
   const n = NEN[L.nen], M = L.q.length, C = L.so, K = khoLo(L), r = K.cw / K.ch, so1 = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
   const dangO = r > 1.25 ? `mỗi ô nằm ngang, rộng gấp khoảng ${so1(r)} lần cao` : r < 0.8 ? `mỗi ô đứng, cao gấp khoảng ${so1(1 / r)} lần rộng` : 'mỗi ô gần vuông';
@@ -756,7 +778,8 @@ function taoPromptLo(L) {
   const mau = L.q.map(cauMau), mauChung = mau[0] && mau.every(m => m === mau[0]); // mọi hàng cùng một câu MÀU thì ghi một lần
   const hang = L.q.map((q, i) => `HÀNG ${i + 1}, hiệu ứng "${q.ten}" (trong game mỗi khung ${q.fw}×${q.fh} điểm ảnh${q.to ? '; đây là hiệu ứng TO' : ''}; hình trong ô có tỉ lệ ngang:cao khoảng ${q.fw}:${q.fh}). Nội dung: ${q.mo}. Theo thời gian (ô 1 đến ô ${C}): ${q.thoi}. Vị trí trong ô: ${q.dat}. `
     + (q.la ? `Nét lạ của hình này: ${q.la}. ` : '') + (mauChung ? '' : mau[i]) + `Hướng: ${q.huong || 'hướng chuyển động (nếu có) sang PHẢI'}.`).join(' ');
-  let p = `Dùng công cụ tạo ảnh vẽ MỘT tấm ảnh pixel art 2D gồm ${M} hiệu ứng khác nhau, mỗi hiệu ứng một hàng khung, cho game hành động Linh Khí (phong cách dân gian Việt, pixel art khối rõ, màu tươi sáng, nét gọn). `
+  let p = `(GỬI KÈM ảnh lưới trống ${tenLuoi(L)} — nút "Tải lưới trống" trên trang.) Vẽ ĐÈ LÊN ĐÚNG tấm lưới gửi kèm: giữ nguyên màu nền, giữ nguyên các vạch kẻ và đúng ${C} cột × ${M} hàng của lưới, mỗi ô của lưới là một khung; không thêm, không bớt, không dịch vạch. `
+    + `Dùng công cụ tạo ảnh vẽ MỘT tấm ảnh pixel art 2D gồm ${M} hiệu ứng khác nhau, mỗi hiệu ứng một hàng khung, cho game hành động Linh Khí (phong cách dân gian Việt, pixel art khối rõ, màu tươi sáng, nét gọn). `
     + `BỐ CỤC: ảnh ${K.ten}, lưới ĐỀU đúng ${C} cột × ${M} hàng = ${C * M} ô bằng nhau phủ kín ảnh (${dangO}; KHÔNG thêm cột, KHÔNG thêm hàng), kẻ lưới mảnh màu tối giữa các ô. Mỗi HÀNG là MỘT hiệu ứng riêng; ${C} ô trong một hàng là ${C} khung của hiệu ứng đó theo thời gian, xếp từ TRÁI sang PHẢI (ô 1 là lúc bắt đầu, ô ${C} là lúc kết thúc). Thứ tự hàng từ trên xuống: `
     + L.q.map((q, i) => `hàng ${i + 1}: "${q.ten}"`).join('; ') + '. '
     + `TỪNG HÀNG: ${hang} `
@@ -788,7 +811,7 @@ function hienLoGop() {
 // Đổi giữa gen lẻ và lô gộp: chỉ ẩn / hiện phần riêng của từng kiểu.
 function datCheDo() {
   const lo = !!LO, tu = $('kieuMep').querySelector('option[value="tu"]');
-  $('vungLo').hidden = !lo; $('oSuaThongSo').hidden = lo; if (lo) $('oBanMau').hidden = true;
+  $('vungLo').hidden = !lo; $('oSuaThongSo').hidden = lo; if (lo) $('oBanMau').hidden = true; $('nutLuoi').hidden = !lo;
   tu.hidden = !lo; tu.disabled = !lo;
   $('loiDan').textContent = lo ? `Dán prompt vào ChatGPT. ChatGPT chỉ cần vẽ MỘT tấm ảnh (lưới ${LO.so} cột × ${LO.q.length} hàng, mỗi hàng một hiệu ứng), rồi bạn lưu ảnh đó về máy.` : 'Dán prompt vào ChatGPT. ChatGPT chỉ cần vẽ một tấm ảnh (một hàng khung từ trái sang phải), rồi bạn lưu ảnh đó về máy.';
   $('loiAnh').textContent = lo ? `Ảnh lưới ${LO.so} cột × ${LO.q.length} hàng như prompt của lô, nền một màu trơn (đúng màu prompt ghi).` : 'Ảnh một hàng khung như prompt, nền một màu trơn (đúng màu prompt ghi).';
@@ -841,6 +864,7 @@ const chonMuc = (v) => (laLo(v) ? chonLo(+String(v).slice(3)) : chonHu(+v));
 chonMuc($('chonHu').value);
 $('chonHu').onchange = (e) => { chonMuc(e.target.value); BO = []; try { localStorage.setItem('thu_hu', e.target.value); } catch (er) {} if (ANH) chay(); };
 
+$('nutLuoi').onclick = () => { if (LO) veLuoi(LO).toBlob(bl => { taiXuong(tenLuoi(LO), bl); bao('Đã tải ' + tenLuoi(LO) + ': gửi kèm ảnh này cùng prompt'); }, 'image/png'); };
 $('nutChepPrompt').onclick = () => {
   // Đang chọn lô gộp thì chép prompt CỦA LÔ (nhiều hàng), không chép prompt lẻ của hàng 1 (lỗi 11/10 17:26: chủ dự án nhận nhầm prompt một hàng).
   const t = LO ? taoPromptLo(LO) : taoPrompt(Q), ten = LO ? 'lô "' + LO.ten + '" (' + LO.q.length + ' hàng)' : Q.ten;
