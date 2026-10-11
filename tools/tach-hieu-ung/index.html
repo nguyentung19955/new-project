@@ -694,6 +694,72 @@ const kc = (d, j, c) => Math.abs(d[j*4] - c[0]) + Math.abs(d[j*4+1] - c[1]) + Ma
 const sacDo = (r, g, b) => { const mx = Math.max(r, g, b), mn = Math.min(r, g, b), c = mx - mn; if (!c) return [0, 0];
   let h = mx === r ? ((g - b) / c) % 6 : mx === g ? (b - r) / c + 2 : (r - g) / c + 4; return [(h * 60 + 360) % 360, c / mx]; };
 
+// ===== NỀN RIÊNG TỪNG Ô (11/10) =====
+// ChatGPT đôi khi tô nền một vài ô khác màu nền chung (ví dụ một ô hồng nhạt, một ô trắng ngà giữa tấm nền hồng tím).
+// Xem màu ở 4 góc trong của từng ô lưới C × R (lùi vào ≥ độ dày nét kẻ + 8 điểm): ô có ≥ 3 góc phẳng màu và giống nhau,
+// không góc nào là nền chung, màu đó cách nền chung > 60 (khoảng cách RGB) thì ô đó có NỀN RIÊNG.
+// Trả về null khi không có ô nào như vậy (ảnh nền một màu: mọi bước sau chạy y như cũ).
+// Có thì trả về { vung, mau, so, nen }: vung[j] = k + 1 nếu điểm j nằm trong vùng nền riêng thứ k; mau[k] = màu nền của vùng đó;
+// so = số thứ tự các ô đó (đếm từ 1, trái sang phải, trên xuống dưới); nen = nền chung đã rút các màu riêng ra (màu riêng chỉ là nền TRONG ô của nó).
+function nenRiengO(A, C, R, T, tyY, nen, laMauKe) {
+  const { W, H, d } = A, N = W * H, soO = C * R;
+  if (soO < 3 || !nen.length) return null;
+  const cw = W / C, ch = H / R, lx = Math.max(0.07 * cw, T + 8), ly = Math.max(tyY * ch, T + 8);
+  const kc = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+  const gan = (j, c) => Math.abs(d[j * 4] - c[0]) + Math.abs(d[j * 4 + 1] - c[1]) + Math.abs(d[j * 4 + 2] - c[2]);
+  // màu từng góc = trung vị của 7 × 7 điểm; góc "phẳng" khi ≥ 80% số điểm sát màu trung vị (góc dính hình vẽ thì không phẳng, bỏ)
+  const o = [];
+  for (let r = 0; r < R; r++) for (let c = 0; c < C; c++) {
+    const goc = [];
+    for (const [fx, fy] of [[lx, ly], [cw - lx, ly], [lx, ch - ly], [cw - lx, ch - ly]]) {
+      const gx = Math.round(c * cw + fx), gy = Math.round(r * ch + fy), ds = [];
+      for (let dy = -3; dy <= 3; dy++) for (let dx = -3; dx <= 3; dx++) { const x = gx + dx, y = gy + dy; if (x >= 0 && y >= 0 && x < W && y < H) ds.push(y * W + x); }
+      if (ds.length < 25) continue;
+      const m = [0, 1, 2].map((k) => ds.map((j) => d[j * 4 + k]).sort((a, b) => a - b)[ds.length >> 1]);
+      let n = 0; for (const j of ds) if (gan(j, m) < 40) n++;
+      if (n >= 0.8 * ds.length) goc.push({ m, j: ds[ds.length >> 1] });
+    }
+    let nhom = [];
+    for (const a of goc) { const g = goc.filter((b) => kc(a.m, b.m) <= 30); if (g.length > nhom.length) nhom = g; }
+    o.push({ goc, nhom, mau: nhom.length >= 3 ? [0, 1, 2].map((k) => nhom.reduce((s, g) => s + g.m[k], 0) / nhom.length) : null });
+  }
+  // nền chung = màu góc có nhiều ô giống nhất; phải chiếm ít nhất nửa số ô và đúng là một màu nền đã tìm được
+  let chung = null, soChung = 0;
+  for (const a of o) { if (!a.mau) continue; const n = o.filter((b) => b.mau && kc(a.mau, b.mau) <= 60).length; if (n > soChung) { soChung = n; chung = a.mau; } }
+  if (!chung || soChung * 2 < soO || !nen.some((c) => kc(c, chung) <= 60)) return null;
+  const la = [];
+  o.forEach((a, i) => { if (a.mau && kc(a.mau, chung) > 60 && !a.goc.some((g) => kc(g.m, chung) <= 60)) la.push({ i, mau: a.mau, nhom: a.nhom }); });
+  if (!la.length) return null;
+  // một màu lạ có ở hơn 1/3 số ô thì không phải "vài ô lạc màu"; màu của nét kẻ lưới cũng không phải nền: để nguyên như cũ
+  const ds = la.filter((a) => la.filter((b) => kc(a.mau, b.mau) <= 60).length <= Math.max(1, Math.floor(soO / 3)) && !(laMauKe && laMauKe(a.mau)));
+  const vung = new Uint8Array(N), tham = new Uint8Array(N), mau = [], so = [];
+  for (const a of ds) {
+    if (mau.length >= 250) break;
+    // vùng nền riêng: loang từ các góc qua điểm giống màu đó, không đi xa quá nửa ô ra ngoài ô (lưới ChatGPT kẻ hay lệch một chút); lấy khung bao
+    const c = a.mau, k = mau.length + 1, oc = a.i % C, or = (a.i / C) | 0;
+    const mx0 = Math.max(0, Math.floor((oc - 0.5) * cw)), mx1 = Math.min(W - 1, Math.ceil((oc + 1.5) * cw)), my0 = Math.max(0, Math.floor((or - 0.5) * ch)), my1 = Math.min(H - 1, Math.ceil((or + 1.5) * ch));
+    const st = a.nhom.map((g) => g.j); let x0 = W, y0 = H, x1 = -1, y1 = -1;
+    while (st.length) {
+      const j = st.pop(); if (tham[j] === k) continue; const x = j % W, y = (j / W) | 0;
+      if (x < mx0 || x > mx1 || y < my0 || y > my1 || gan(j, c) >= 40) continue;
+      tham[j] = k; if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+      if (x > 0) st.push(j - 1); if (x < W - 1) st.push(j + 1); if (y > 0) st.push(j - W); if (y < H - 1) st.push(j + W);
+    }
+    if (x1 < 0) continue;
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (!vung[y * W + x]) vung[y * W + x] = k;
+    mau.push(c); so.push(a.i + 1);
+  }
+  if (!mau.length) return null;
+  const nenCon = nen.filter((c) => !mau.some((m) => kc(c, m) <= 60 && kc(c, m) < kc(c, chung)));
+  // nền riêng sặc sỡ (hồng, xanh…) mới được gọt viền lem và lấp khe kín như nền chung; nền riêng rất đậm màu mới lọc đốm cùng tông (nền nhạt, trắng, xám thì dễ ăn nhầm vào hình)
+  const sac = mau.map((c) => Math.max(...c) - Math.min(...c) > 60);
+  const tong = mau.map((c, k) => { const mx = Math.max(...c), mn = Math.min(...c), q = mx - mn; if (!sac[k] || q / mx <= 0.45 || mx <= 115) return -1;
+    const t = mx === c[0] ? ((c[1] - c[2]) / q) % 6 : mx === c[1] ? (c[2] - c[0]) / q + 2 : (c[0] - c[1]) / q + 4; return (t * 60 + 360) % 360; });
+  return { vung, mau, so, nen: nenCon.length ? nenCon : nen, coTong: tong.some((t) => t >= 0),
+    giong: (j, s) => vung[j] > 0 && gan(j, mau[vung[j] - 1]) < s, // điểm j nằm trong một ô nền riêng và cách màu nền của ô đó dưới s
+    giongSac: (j, s) => vung[j] > 0 && sac[vung[j] - 1] && gan(j, mau[vung[j] - 1]) < s, // như trên, chỉ với nền riêng sặc sỡ
+    tongGan: (j, h, lech) => { const t = vung[j] ? tong[vung[j] - 1] : -1; return t >= 0 && Math.min(Math.abs(h - t), 360 - Math.abs(h - t)) < lech; } }; // tông màu h (độ) sát tông nền riêng của ô chứa điểm j
+}
 // Tách nền cả ảnh. Trả về P (RGBA, alpha 0..255), duong (đường kẻ lưới), nen (màu nền chính).
 // "Mềm": độ trong suốt tính theo độ khác màu nền (kiểu "màu thành trong suốt"), giữ quầng sáng mờ.
 // "Sắc": loang nền từ mép ảnh như Tách Sprite Quái, mỗi điểm chỉ đặc hoặc trong suốt.
@@ -709,8 +775,11 @@ function tachNen(A, coAlpha, mem) {
   // tinh chỉnh màu nền chính: trung bình các điểm rất gần
   { let r = 0, g = 0, b = 0, n = 0; for (let j = 0; j < N; j += 3) if (kc(d, j, chinh) < 30) { r += d[j*4]; g += d[j*4+1]; b += d[j*4+2]; n++; } if (n) { chinh[0] = r / n; chinh[1] = g / n; chinh[2] = b / n; } }
   const nen = [chinh, ...ds.filter(x => x.n >= 0.03 * tong && Math.abs(x.c[0] - chinh[0]) + Math.abs(x.c[1] - chinh[1]) + Math.abs(x.c[2] - chinh[2]) < 70).map(x => x.c)];
+  // nền riêng từng ô (xem nenRiengO), tính trên một hàng Q.so khung: RG = null khi mọi ô cùng một nền, lúc đó mọi bước dưới đây y như cũ
+  const RG = nenRiengO(A, Q.so, 1, Math.max(6, Math.round(0.015 * Math.max(W, H))), 0.08, nen, null);
   const laNen = new Uint8Array(N);
   for (let j = 0; j < N; j++) { for (const c of nen) if (kc(d, j, c) < 44) { laNen[j] = 1; break; } }
+  if (RG) for (let j = 0; j < N; j++) if (RG.giong(j, 44)) laNen[j] = 1; // trong ô nền riêng: màu nền của ô đó cũng là nền (nhờ vậy nét kẻ quanh ô vẫn dò ra như mọi ô khác)
   // đường kẻ lưới: nét mảnh (≤ 4 điểm) chạy gần hết chiều ngang/dọc của ảnh. Vệt gió ngắn của hiệu ứng không bị tính.
   const doc = new Uint16Array(N), ngang = new Uint16Array(N);
   for (let y = 0; y < H; y++) { let x = 0; while (x < W) { if (laNen[y*W+x]) { x++; continue; } let e = x; while (e < W && !laNen[y*W+e]) e++; for (let t = x; t < e; t++) ngang[y*W+t] = Math.min(65535, e - x); x = e; } }
@@ -728,15 +797,19 @@ function tachNen(A, coAlpha, mem) {
       for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) { const nx = x + dx, ny = y + dy; if (nx >= 0 && ny >= 0 && nx < W && ny < H && !duong[ny * W + nx] && kc(d, ny * W + nx, chinh) > 44) them.push(ny * W + nx); } }
     for (const j of them) duong[j] = 1; }
   if (mem) {
-    const B = chinh, locDom = $('locDom').checked && Math.max(...chinh) - Math.min(...chinh) > 60, hueNen = sacDo(...chinh)[0];
+    const locDom = $('locDom').checked && Math.max(...chinh) - Math.min(...chinh) > 60, hueNen = sacDo(...chinh)[0], locO = !!RG && RG.coTong && $('locDom').checked;
     for (let j = 0; j < N; j++) {
       if (duong[j]) { P[j*4+3] = 0; continue; }
+      // ô nền riêng: độ trong suốt tính theo màu nền của chính ô đó. Nền riêng thường nhạt (hồng nhạt, trắng ngà), sát mức 255 nên hạt nhiễu nhỏ cũng bị tính thành điểm đặc:
+      // điểm sát màu nền của ô thì bỏ hẳn, và mẫu số không nhỏ hơn 64. Ngoài ô nền riêng (rieng = null) công thức y như cũ.
+      const rieng = RG && RG.vung[j] ? RG.mau[RG.vung[j] - 1] : null, B = rieng || chinh, mauSo = rieng ? 64 : 1;
+      if (rieng && RG.giong(j, 44)) { P[j*4+3] = 0; continue; }
       let a = 0;
-      for (let k = 0; k < 3; k++) { const c = d[j*4+k], b = B[k]; const v = c > b ? (c - b) / Math.max(1, 255 - b) : (b - c) / Math.max(1, b); if (v > a) a = v; }
+      for (let k = 0; k < 3; k++) { const c = d[j*4+k], b = B[k]; const v = c > b ? (c - b) / Math.max(mauSo, 255 - b) : (b - c) / Math.max(mauSo, b); if (v > a) a = v; }
       a = Math.min(1, a);
       if (a < 0.12) { P[j*4+3] = 0; continue; }
       // lọc đốm: điểm cùng tông màu nền (viền lem quanh nét kẻ, quầng nền) thì bỏ — prompt đã dặn không dùng màu nền trong hiệu ứng
-      if (locDom) { const [h, sd] = sacDo(d[j*4], d[j*4+1], d[j*4+2]); if (sd > 0.35 && Math.min(Math.abs(h - hueNen), 360 - Math.abs(h - hueNen)) < 25) { P[j*4+3] = 0; continue; } }
+      if (locDom || locO) { const [h, sd] = sacDo(d[j*4], d[j*4+1], d[j*4+2]); if (sd > 0.35 && ((locDom && Math.min(Math.abs(h - hueNen), 360 - Math.abs(h - hueNen)) < 25) || (locO && RG.tongGan(j, h, 25)))) { P[j*4+3] = 0; continue; } }
       for (let k = 0; k < 3; k++) P[j*4+k] = Math.max(0, Math.min(255, B[k] + (d[j*4+k] - B[k]) / a));
       P[j*4+3] = Math.round(a * 255);
     }
@@ -754,7 +827,7 @@ function tachNen(A, coAlpha, mem) {
     }
     const nenMau = nen.filter(c => Math.max(...c) - Math.min(...c) > 60);
     // khoảng nền bị bao kín (giữa các tia, trong vòng sóng): cụm ≥ 12 điểm rất giống màu nền cũng là nền
-    const xem = new Uint8Array(N), sat = (j) => nenMau.some(c => kc(d, j, c) < 30);
+    const xem = new Uint8Array(N), sat = (j) => nenMau.some(c => kc(d, j, c) < 30) || (!!RG && RG.giongSac(j, 30));
     for (let j0 = 0; j0 < N; j0++) {
       if (da[j0] || xem[j0] || !sat(j0)) continue;
       const s2 = [j0], cum = []; xem[j0] = 1;
@@ -763,7 +836,7 @@ function tachNen(A, coAlpha, mem) {
       if (cum.length >= 12) for (const j of cum) da[j] = 1;
     }
     // gọt viền lem màu nền ở mép (2 lượt)
-    const ganNen = (j) => nenMau.some(c => kc(d, j, c) < 110);
+    const ganNen = (j) => nenMau.some(c => kc(d, j, c) < 110) || (!!RG && RG.giongSac(j, 110));
     for (let luot = 0; luot < 2; luot++) {
       const bo = [];
       for (let j = 0; j < N; j++) {
@@ -774,10 +847,10 @@ function tachNen(A, coAlpha, mem) {
     }
     // đốm cùng tông màu nền còn sót
     const tongNen = nenMau.map(c => sacDo(...c));
-    if (tongNen.length && $('locDom').checked) for (let j = 0; j < N; j++) {
+    if ((tongNen.length || (RG && RG.coTong)) && $('locDom').checked) for (let j = 0; j < N; j++) {
       if (da[j]) continue;
       const [h, s] = sacDo(d[j*4], d[j*4+1], d[j*4+2]);
-      if (s > 0.45 && Math.max(d[j*4], d[j*4+1], d[j*4+2]) > 115 && tongNen.some(([hn]) => Math.min(Math.abs(h - hn), 360 - Math.abs(h - hn)) < 22)) da[j] = 1;
+      if (s > 0.45 && Math.max(d[j*4], d[j*4+1], d[j*4+2]) > 115 && (tongNen.some(([hn]) => Math.min(Math.abs(h - hn), 360 - Math.abs(h - hn)) < 22) || (RG && RG.tongGan(j, h, 22)))) da[j] = 1;
     }
     for (let j = 0; j < N; j++) P[j*4+3] = da[j] ? 0 : 255;
   }
@@ -792,7 +865,7 @@ function tachNen(A, coAlpha, mem) {
       if (a >= 0 && b >= 0 && P[a*4+3] > 64 && P[b*4+3] > 64) { P.set(P.subarray(a * 4, a * 4 + 4), j * 4); break; }
     }
   }
-  return { P, duong, nen: chinh };
+  return { P, duong, nen: chinh, oRieng: RG ? RG.so : null };
 }
 
 // ===== TÌM KHUNG =====
@@ -951,7 +1024,7 @@ function chay() {
   const A = layAnh(), { W, H, d } = A;
   let trong = 0; for (let y = 0; y < H; y += 7) for (let x = 0; x < W; x += 7) if (d[(y * W + x) * 4 + 3] < 128) trong++;
   const coAlpha = trong > 50, mem = $('kieuMep').value === 'mem';
-  const { P, duong } = tachNen(A, coAlpha, mem);
+  const { P, duong, oRieng } = tachNen(A, coAlpha, mem);
   const K = timKhung(W, H, P, duong);
   veGoc(A, P, K.thay, K.boRa);
   // N = độ nét: cỡ khung và điểm neo trong ảnh = số game × N. Số ghi vào file vẫn theo game.
@@ -968,6 +1041,7 @@ function chay() {
   }
   const TW = FW * SO, TH = FH, tam = new Uint8ClampedArray(TW * TH * 4), lat = $('latNgang').checked;
   const loi = K.loi.slice(), ghi = K.ghi.slice();
+  if (oRieng) ghi.push('Ô ' + oRieng.join(', ') + ' có nền khác màu, đã tự nhận');
   if (ds.length) {
     const U0 = Math.min(...ds.map(f => f.ry0)), U1 = Math.max(...ds.map(f => f.ry1)), UH = U1 - U0 + 1, maxW = Math.max(...ds.map(f => f.w));
     const traiX = Q.canh === 'trai' ? Math.max(N, GX - 2 * N) : 0; // vệt vũ khí: mép trái của hình bắt đầu ngay chỗ tay
