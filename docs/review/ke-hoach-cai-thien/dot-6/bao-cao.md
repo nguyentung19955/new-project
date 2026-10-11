@@ -73,6 +73,7 @@ Chạy lại được bằng `python3 docs/review/ke-hoach-cai-thien/dot-6/kiem/
 | FPS không giảm | **Đạt trên máy thử** | Bảng ở mục 4. Đo trên máy chủ, không phải điện thoại tầm trung. |
 | Công cụ: tách đúng, xem lát lặp, xem cả phòng | **Đạt** (ảnh lưới mẫu) | 9/9 mảng, đúng cỡ, "net": 2. Một tấm ảnh cố ý xấu (Sàn A có dải sáng ở mép) bị báo **CÓ LỖI** khi tắt Làm liền mép, bật lại thì ĐẠT. Trang vừa màn điện thoại rộng 390, không cuộn ngang. Ảnh `anh/cong-cu-*.png`. |
 | Kiểm lỗi gõ, bài kiểm lưu mây, gói game | **Đạt** | `node --check` mọi tệp, `cloud_save_regression` 7/7, `build.py` chạy xong. |
+| Đẩy lên, workflow đăng web | **Đạt** | Lượt chạy số 174 cho commit `bdeb2b88`: xanh. Bản trên web đã có trang công cụ mới. |
 | Liền mép với ảnh ChatGPT thật | **Chưa kiểm** | Chưa có ảnh thật. |
 | Kiểm trên điện thoại thật | **Chưa kiểm** | Phiên này chỉ có trình duyệt máy chủ. |
 
