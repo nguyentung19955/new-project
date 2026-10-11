@@ -38,7 +38,7 @@ Trạng thái: **ĐÃ LÀM + ĐÃ KIỂM** (có báo cáo, ảnh, số đo, work
 | C1 | 14 biểu tượng nút | CHỜ ẢNH | `giao-dien-c1/PROMPT.md` |
 | C2 | 30 biểu tượng nhỏ; biểu tượng tinh anh 12×12 | CHỜ ẢNH (phóng to đã lên) | `giao-dien-c2/PROMPT.md` |
 | C3 | Hình cố định lớn: nút Nói chuyện, thẻ ải, thẻ ải trùm (mỗi thứ 3 trạng thái), mặt trống đồng, logo LINH KHÍ. 2 tấm ảnh | CHỜ ẢNH (code và công cụ đã kiểm bằng ảnh mẫu; báo cáo `giao-dien-c3/bao-cao.md`) | `giao-dien-c3/PROMPT.md` |
-| C4 | Thân nút, ô vũ khí, cần điều khiển | ĐANG CHẠY (16:25) | `lan-c4-than-nut.md` |
+| C4 | Thân nút (6 vòng nút, nút vuông), đế và núm cần điều khiển, khung ô vũ khí 4 bậc. 2 tấm ảnh | CHỜ ẢNH (code và công cụ đã kiểm bằng ảnh mẫu, vị trí và cỡ nút trùng bản cũ; cờ tắt `G.THAN_NUT_ANH`; báo cáo `giao-dien-c4/bao-cao.md`, có 3 điểm chờ duyệt) | `giao-dien-c4/PROMPT.md` |
 | C5 | Khung 9 mảnh | CHƯA LÀM | — |
 | D1 | 6 công trình làng; trang Tách Làng | CHỜ ẢNH | `lang-d1/PROMPT.md` |
 | D2 | 12 đạo cụ + khung cửi, lửa lò | CHỜ ẢNH | `lang-d2/PROMPT.md` (vẫn **3 tấm**: Đợt 11 chưa gộp, chờ duyệt) |
