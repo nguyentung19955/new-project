@@ -1,0 +1,170 @@
+{
+ "prompt_gop_ky_tu": 6312,
+ "kiem_lo_gop": [
+  "Tìm được 6/6 hình",
+  "Độ nét gấp đôi: ảnh mỗi hình có số điểm ảnh gấp 2 cỡ trong game (ví dụ Khung cửi · khung 1 28×22 → ảnh 56×44), file ghi \"net\": 2",
+  "Ảnh có kẻ lưới: 3 cột × 2 hàng, tách theo từng ô",
+  "Hàng 1 · Khung cửi: 3 khung ghép thành tệp dải hu-lang-khung-cui (mỗi khung 28×22, 32 màu), làm đúng như lô lẻ \"Làng · Khung cửi (dải 3 khung)\"",
+  "Hàng 2 · Lửa lò rèn: 3 khung ghép thành tệp dải hu-lang-lua-lo (mỗi khung 12×15, 16 màu), làm đúng như lô lẻ \"Làng · Lửa lò rèn (dải 3 khung)\"",
+  "Mỗi hàng: các khung thu chung một tỉ lệ, đặt sát đáy; game đặt giữa đáy khung vào chân hình cũ (khung cửi trước nhà thợ may, lửa trong miệng lò rèn)",
+  "Tự nhìn: đúng hình, đúng thứ tự"
+ ],
+ "hu-lang-khung-cui": {
+  "anh_net_doi": [
+   168,
+   44
+  ],
+  "anh_thuong": [
+   84,
+   22
+  ],
+  "byte_net_doi": 1355,
+  "byte_thuong": 923,
+  "sha256_net_doi": "08f2fb79ff8398c9",
+  "so_mau": 8
+ },
+ "hu-lang-lua-lo": {
+  "anh_net_doi": [
+   72,
+   30
+  ],
+  "anh_thuong": [
+   36,
+   15
+  ],
+  "byte_net_doi": 674,
+  "byte_thuong": 574,
+  "sha256_net_doi": "6ace4ce5f339b011",
+  "so_mau": 3
+ },
+ "lua_lo_anh_phong_29_giong_byte": true,
+ "lua_lo_anh_phong_29_so_diem_khac": 0,
+ "kiem": [
+  {
+   "ten": "6 lô cũ: prompt ở trang mới giống hệt trang cũ",
+   "dat": true,
+   "ghi": ""
+  },
+  {
+   "ten": "6 lô cũ: ảnh tham chiếu ở trang mới giống hệt trang cũ",
+   "dat": true,
+   "ghi": ""
+  },
+  {
+   "ten": "Lô gộp nằm CUỐI danh sách lô",
+   "dat": true,
+   "ghi": ""
+  },
+  {
+   "ten": "Lô gộp có đúng 1 ảnh tham chiếu",
+   "dat": true,
+   "ghi": "lang-khung-cui-lua-lo-tham-chieu.png"
+  },
+  {
+   "ten": "Ảnh tham chiếu lô gộp 1500×1000, nền xanh dương",
+   "dat": true,
+   "ghi": ""
+  },
+  {
+   "ten": "Hình khung cửi không có điểm nào gần màu xanh dương của nền",
+   "dat": true,
+   "ghi": "0 điểm"
+  },
+  {
+   "ten": "Lô gộp: ô \"Số màu\" chọn sẵn \"Theo từng dải (32 / 16)\"",
+   "dat": true,
+   "ghi": ""
+  },
+  {
+   "ten": "Lô gộp: ĐẠT, tìm được 6/6 khung",
+   "dat": true,
+   "ghi": "ĐẠT"
+  },
+  {
+   "ten": "Lô gộp: nút \"Tải tất cả (.zip, 2 tệp dải)\"",
+   "dat": true,
+   "ghi": "Tải tất cả (.zip, 2 tệp dải)"
+  },
+  {
+   "ten": "Lô gộp: .zip có đúng 4 tệp với mã cũ",
+   "dat": true,
+   "ghi": "hu-lang-khung-cui-lua-lo_2-ban.zip: hu-lang-khung-cui.sprite.json, hu-lang-khung-cui.thuong.sprite.json, hu-lang-lua-lo.sprite.json, hu-lang-lua-lo.thuong.sprite.json"
+  },
+  {
+   "ten": "hu-lang-khung-cui: dải 168×44 nét gấp đôi (\"net\": 2), bản thường 84×22, 3 khung 28×22",
+   "dat": true,
+   "ghi": "ảnh (168, 44), bản thường (84, 22)"
+  },
+  {
+   "ten": "hu-lang-lua-lo: dải 72×30 nét gấp đôi (\"net\": 2), bản thường 36×15, 3 khung 12×15",
+   "dat": true,
+   "ghi": "ảnh (72, 30), bản thường (36, 15)"
+  },
+  {
+   "ten": "hu-lang-khung-cui: lô lẻ trang mới (ĐẠT) ra 2 tệp GIỐNG TỪNG BYTE tệp của lô gộp",
+   "dat": true,
+   "ghi": ""
+  },
+  {
+   "ten": "hu-lang-lua-lo: lô lẻ trang mới (ĐẠT) ra 2 tệp GIỐNG TỪNG BYTE tệp của lô gộp",
+   "dat": true,
+   "ghi": ""
+  },
+  {
+   "ten": "hu-lang-khung-cui: lô lẻ trang cũ (ĐẠT) ra 2 tệp GIỐNG TỪNG BYTE tệp của lô gộp",
+   "dat": true,
+   "ghi": ""
+  },
+  {
+   "ten": "hu-lang-lua-lo: lô lẻ trang cũ (ĐẠT) ra 2 tệp GIỐNG TỪNG BYTE tệp của lô gộp",
+   "dat": true,
+   "ghi": ""
+  },
+  {
+   "ten": "Rời lô gộp: ô \"Số màu\" không còn mục \"Theo từng dải\"",
+   "dat": true,
+   "ghi": ""
+  },
+  {
+   "ten": "Xem thử: game xem thử nhận cả 2 dải từ một tấm",
+   "dat": true,
+   "ghi": "hu-lang-khung-cui, hu-lang-lua-lo"
+  },
+  {
+   "ten": "Xem thử: có nút xem gần cho cả hai hình",
+   "dat": true,
+   "ghi": "Khung cửi, Lửa lò rèn"
+  },
+  {
+   "ten": "Xem thử: khung-cui trong làng dùng ẢNH (khác hình code, vì ảnh mẫu đã lật ngang)",
+   "dat": true,
+   "ghi": "24896 điểm ảnh khác hình code"
+  },
+  {
+   "ten": "Xem thử: lua-lo trong làng dùng ẢNH (khác hình code, vì ảnh mẫu đã lật ngang)",
+   "dat": true,
+   "ghi": "1344 điểm ảnh khác hình code"
+  },
+  {
+   "ten": "Ca hỏng (thiếu 1 khung lửa): báo CÓ LỖI, vẫn tải được riêng khung cửi và tệp giống hệt",
+   "dat": true,
+   "ghi": "Tải tất cả (.zip, 1 tệp dải)"
+  },
+  {
+   "ten": "Ca hỏng: xem thử giữ khung cửi, lửa lò về hình code",
+   "dat": true,
+   "ghi": "[True, False]"
+  },
+  {
+   "ten": "Trang không tràn ngang ở bề rộng 390",
+   "dat": true,
+   "ghi": "thừa 0"
+  },
+  {
+   "ten": "Không có lỗi JavaScript ở cả hai trang",
+   "dat": true,
+   "ghi": ""
+  }
+ ],
+ "tong": "25/25"
+}

@@ -7,7 +7,7 @@ Ngày 11/10/2026. Brief: `docs/review/ke-hoach-cai-thien/dot-11-gop-prompt.md`.
 Ba điều cần biết trước khi đọc tiếp:
 
 1. Mọi kiểm thử dùng **ảnh lưới tự dựng bằng máy**. Chưa có tấm ảnh gộp nào do ChatGPT vẽ thật, nên chưa biết ChatGPT vẽ lưới nhiều hàng đúng tới đâu.
-2. **D2 (khung cửi + lửa lò) chưa gộp**, vẫn 3 tấm. Lý do ở mục 3.3, lựa chọn chờ duyệt ở mục 9.
+2. **D2 (khung cửi + lửa lò) chưa gộp**, vẫn 3 tấm. Lý do ở mục 3.3, lựa chọn chờ duyệt ở mục 9. *(Bổ sung 11/10, làn D2b: **đã gộp** theo phương án (b), D2 còn 2 tấm, tổng còn 19. Xem ghi bổ sung ở mục 9.2.)*
 3. Năm trong 14 lô gộp xếp chung các hình **lệch tỉ lệ nhiều hơn mức ±25 %** mà brief nêu. Tôi vẫn gộp vì hình không bị vẽ nhỏ đi tới mức mất nét (số đo ở mục 3.1), nhưng đây là chỗ tôi làm khác nguyên tắc của brief, cần duyệt (mục 9).
 
 ## 1. Danh sách tệp đổi
@@ -202,5 +202,12 @@ Trang Tách Phòng, lô gộp cửa 3 vùng: [anh/sau-6-tach-phong-cua-gop.png](
    - (a) Giữ 2 tấm như hiện nay. Mặc định, không rủi ro.
    - (b) Cho phép một phiên sửa phần dải khung của trang Tách Làng để một tấm ra hai tệp, và đổi nền khung cửi sang xanh dương. Bớt 1 tấm; phải kiểm lại cả hai dải và phần xem thử trong làng.
    - (c) Bỏ ý này.
+
+   **Ghi bổ sung 11/10/2026 (làn D2b): đã làm phương án (b).**
+   - Trang Tách Làng có thêm lô "Làng · Khung cửi + Lửa lò (1 tấm, 2 hàng × 3 khung)" ở cuối danh sách, nền xanh dương cho cả tấm. Một tấm ảnh ra 2 tệp với mã cũ (`hu-lang-khung-cui`, `hu-lang-lua-lo`). Hai lô lẻ giữ nguyên làm dự phòng.
+   - Ba lý do ở mục 3.3 đã xử lý thế nào: (1) hai màu nền: cả tấm dùng xanh dương, đã kiểm hình khung cửi không mất điểm nào trên nền này; (2) lệch dáng 37 %: ô của tấm gộp vuông, khung cửi vẫn được vẽ to như lô lẻ, lửa lò nhỏ hơn lô lẻ khoảng một phần năm nhưng vẫn to gấp khoảng 24 lần cỡ trong game; (3) một lô ra một tệp: phần ghép dải, xem thử, ảnh tham chiếu và nút tải của trang đã nhận lô nhiều hàng.
+   - Đã kiểm bằng ảnh mẫu máy dựng: 25/25 mục đạt, 2 tệp ra giống tệp của hai lô lẻ từng byte, ở cả trang mới và trang cũ. Chưa thử với ảnh ChatGPT thật.
+   - Số tấm: D2 từ 3 xuống **2**; tổng của bảng 3.4 từ 20 xuống **19**.
+   - Chi tiết, rủi ro và cách quay lui: `docs/review/lang-d2b/bao-cao.md`. Commit trang: `4d81405`.
 3. **Tấm chung B2 + B3** (Giáo quét + Vòng phép): giữ gộp chéo hai phiên (mặc định, nhờ đó tổng là 20), hay tách thành hai tấm lẻ cho dễ theo dõi (tổng 21).
 4. **Bản Lửa đi kèm bản Chung** ở lô 5 và lô 13: giữ (mặc định), hay chỉ để bản Chung trong hai lô đó và gen bản Lửa lẻ khi cần.
