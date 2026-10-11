@@ -45,15 +45,27 @@
   #stage { position: relative; outline: 1px solid var(--frame); background: #000; max-width: 100%; }
   #world { position: absolute; inset: 0; width: 100%; height: 100%; display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
   #ui { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+  /* Màn hình tải (Đợt 1): khối tĩnh hiện ngay khi trang vừa về, trước cả khi mã game tải xong. Chỉ CSS, không ảnh.
+     Bản gom một tệp không đo được tiến độ thật nên vạch chỉ chạy qua lại. js/engine.js gỡ khối này khi vẽ xong khung hình đầu. */
+  #lk-tai { position: fixed; inset: 0; z-index: 5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: var(--bg); pointer-events: none; }
+  #lk-tai b { font-size: 34px; font-weight: 700; letter-spacing: 0.14em; color: var(--accent); text-shadow: 0 3px 0 #1a120a; }
+  #lk-tai span { font-size: 14px; font-weight: 500; color: var(--fg); opacity: 0.85; }
+  #lk-tai .en, #lk-tai.en .vi { display: none; }
+  #lk-tai.en .en { display: inline; }
+  #lk-tai i { display: block; width: 180px; max-width: 60%; height: 6px; border: 1px solid var(--frame); border-radius: 4px; background: #1d1518; overflow: hidden; position: relative; }
+  #lk-tai i::after { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 36%; border-radius: 3px; background: var(--accent); animation: lk-tai-chay 1.1s ease-in-out infinite alternate; }
+  @keyframes lk-tai-chay { from { transform: translateX(-20%); } to { transform: translateX(198%); } }
 </style>
 </head>
 <body>
 <div id="shell"><div id="fit"><div id="stage">
   <canvas id="world" width="480" height="270" aria-label="Màn hình game Linh Khí"></canvas>
 </div><canvas id="ui"></canvas></div></div>
+<!-- Màn hình tải: nằm TRƯỚC mọi thẻ script nên hiện ngay. Chữ theo ngôn ngữ đã chọn trong game (linhkhi_lang), chưa chọn thì theo máy; mặc định tiếng Việt. -->
+<div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.11-0737";
+(window.G = window.G || {}).VERSION = "lk-2026.10.11-0822";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -186,6 +198,34 @@
     const k = nguCanh + '::' + s, r = D.has(k) ? D.get(k) : G.t(s);
     return arguments.length > 2 ? dien(r, Array.prototype.slice.call(arguments, 2).map((v) => (typeof v === 'string' ? tra(v) : v))) : r;
   };
+
+  // Đợt 1 (kế hoạch cải thiện, quyết định Q4): chữ tiếng Anh cho các chuỗi mới của màn chào "Chơi ngay", lời mời liên kết Google
+  // (js/village.js) và các lỗi liên kết (js/cloud.js). Đặt ở đây vì js/ngon_ngu_en.js là tệp do công cụ tạo ra, không sửa tay.
+  const LOI_GG = [
+    ['Tài khoản Google này đã được dùng cho một tiến trình khác', 'This Google account is already used by another save', ['credential-already-in-use', 'email-already-in-use']],
+    ['Tài khoản này đã liên kết Google rồi', 'This account is already linked to Google', ['provider-already-linked']],
+    ['Thử quá nhiều lần, chờ một lát rồi thử lại', 'Too many attempts, wait a moment and try again', ['too-many-requests']],
+    ['Đã huỷ đăng nhập', 'Sign-in was cancelled', ['user-cancelled']],
+    ['Máy chủ đăng nhập báo lỗi, thử lại sau', 'Sign-in server error, try again later', ['internal-error']],
+  ];
+  const DOT1 = {
+    'Chơi ngay ▶': 'Play now ▶',
+    'Đã có tài khoản? Bấm Đăng nhập Google để chơi tiếp tiến trình cũ. {0}': 'Already have an account? Tap Sign in with Google to continue your old progress. {0}',
+    'Giữ tiến trình': 'Keep your progress',
+    'Liên kết Google để giữ tiến trình trên mọi máy': 'Link Google to keep your progress on every device',
+    'Tiến trình đang chơi được giữ nguyên. Đổi máy hoặc xoá dữ liệu trình duyệt vẫn chơi tiếp được.': 'Your current progress is kept. You can keep playing after changing devices or clearing browser data.',
+    'Liên kết Google': 'Link Google',
+    'Để sau': 'Later',
+    'Chưa liên kết được: {0}': 'Could not link: {0}',
+    'Tiến trình của bạn vẫn còn nguyên. Có thể thử lại hoặc để sau.': 'Your progress is untouched. You can try again or do it later.',
+    'Đã liên kết Google. Tiến trình được giữ nguyên.': 'Google linked. Your progress is kept.',
+    'Lúc nào muốn liên kết, gặp Anh Mõ ở cổng làng.': 'To link later, see the Town Crier at the village gate.',
+  };
+  for (const [vi, en, ma] of LOI_GG) {
+    DOT1[vi] = en;
+    for (const m of ma) { DOT1[vi + ' [' + m + ']'] = en + ' [' + m + ']'; DOT1['Chưa đăng nhập được: ' + vi + ' [' + m + ']'] = 'Sign-in failed: ' + en + ' [' + m + ']'; }
+  }
+  N.them(DOT1);
 
   G.LANG = docMay() || 'vi';
   N.phien = 0;
@@ -2460,7 +2500,7 @@
   };
   G.time = 0;
   const STEP = 1 / 60;
-  let last = 0, acc = 0;
+  let last = 0, acc = 0, daVe = false;
   G.tick = function () {
     G.time += STEP;
     if (G.scene) G.scene.update(STEP);
@@ -2480,6 +2520,7 @@
       ui.begin();
       G.scene.draw();
       if (G.theme && G.theme.endFrame) G.theme.endFrame(); // tên biểu tượng tài nguyên khi chạm vào
+      if (!daVe) { daVe = true; try { const el = document.getElementById('lk-tai'); if (el) el.remove(); } catch (e) { /* bỏ qua */ } } // Đợt 1: khung hình đầu đã vẽ xong → gỡ màn hình tải (index.html)
       if (G.portrait) {
         ui.text('Xoay ngang điện thoại để hình to và dễ chơi hơn', 240, -10, { size: 13, align: 'center', color: '#ffd27a' });
       }
@@ -12109,8 +12150,34 @@
     if (k > 0.6) { q(x - 15, y, 2, 1, rgba(col, 0.6)); q(x + 14, y, 2, 1, rgba(col, 0.6)); }
   }
   function spark(x, y, col) { q(x, y - 2, 1, 5, col); q(x - 2, y, 5, 1, col); }
+  // ----- ảnh AI cho đồ vật trong phòng (tools/tach-phong; tệp gd-vat-<tên>, kiểu "giao-dien") -----
+  // Có tệp thì vẽ ảnh thay hình code: GIỮA ĐÁY ảnh là chân vật (x, y). Bóng, quầng mời gọi, tia lấp lánh, ánh lửa vẫn do code vẽ.
+  // Mỗi trạng thái của vật là một mã riêng (vd gd-vat-ruong, gd-vat-ruong-mo); mã nào chưa có tệp thì trạng thái đó vẽ code y như cũ.
+  function vat(ten) { const s = G.spriteCustom; return s && s.gdSan ? s.gdSan('gd-vat-' + ten) : null; }
+  // Vẽ ảnh, trả về hàm đổi toạ độ: P(dx, dy, rộng code, cao code) = điểm (x + dx, y + dy) của hình code, co theo cỡ thật của ảnh.
+  function veVat(g, x, y) {
+    const n = G.NET || 1, w = g.pw / g.net, h = g.ph / g.net;
+    G.spriteCustom.veGd(pc, g, Math.round((x - w / 2) * n) / n, y - h, w, h);
+    const P = (dx, dy, cw, ch) => [x + Math.round((dx * w) / cw), y + Math.round((dy * h) / ch)];
+    P.w = w; P.h = h; P.dinh = y - Math.round(h); // dinh: mép trên của ảnh
+    return P;
+  }
+  // Biểu tượng nổi trên suối: chữ thập là máu, giọt là mana.
+  function dauSuoi(hp, x, iy, col, colL) {
+    if (hp) { q(x - 2, iy - 1, 5, 7, DARK); q(x - 4, iy + 1, 9, 3, DARK); q(x - 1, iy, 3, 5, col); q(x - 3, iy + 2, 7, 1, col); q(x - 1, iy, 1, 2, colL); } else { q(x - 3, iy + 1, 7, 5, DARK); q(x - 2, iy - 1, 5, 3, DARK); q(x - 1, iy - 2, 3, 2, DARK); q(x - 2, iy + 2, 5, 3, col); q(x - 1, iy, 3, 2, col); q(x, iy - 1, 1, 1, col); q(x - 1, iy + 2, 1, 2, colL); }
+  }
   const PROPS = {
     chest(o, x, y, t) {
+      const g = vat(o.used ? 'ruong-mo' : 'ruong');
+      if (g) {
+        shadow(x, y, 14);
+        const P = veVat(g, x, y);
+        if (o.used) { if ((t * 1.3) % 2 < 0.3) spark(...P(4, -14, 26, 26), '#fff3b0'); } else {
+          const k = (t * 1.2) % 2.4;
+          if (k < 0.3) spark(...P(8, -22, 28, 21), '#fff3b0'); else if (k > 1.2 && k < 1.5) spark(...P(-9, -20, 28, 21), '#fff3b0');
+        }
+        return;
+      }
       shadow(x, y, 14);
       q(x - 13, y - 12, 26, 12, DARK);
       q(x - 12, y - 11, 24, 10, '#7a4a22'); q(x - 12, y - 7, 24, 1, '#5a3418'); q(x - 12, y - 3, 24, 2, '#4e2e14');
@@ -12137,6 +12204,13 @@
     fountain(o, x, y, t) {
       const hp = o.kind === 'hp';
       const col = hp ? '#e8483a' : '#3a8ef0', colL = hp ? '#ffa89a' : '#a8d4ff', colD = hp ? '#8a2a22' : '#22508a';
+      const g = vat((hp ? 'suoi-mau' : 'suoi-mana') + (o.used ? '-het' : ''));
+      if (g) {
+        shadow(x, y, 16);
+        const P = veVat(g, x, y);
+        if (!o.used) dauSuoi(hp, x, P.dinh - 5 + Math.round(Math.sin(t * 3)), col, colL); // biểu tượng nổi nhấp nhô phía trên ảnh
+        return;
+      }
       shadow(x, y, 16);
       q(x - 9, y - 5, 18, 5, DARK); q(x - 15, y - 12, 30, 8, DARK);
       q(x - 8, y - 4, 16, 4, '#6f727a'); q(x - 8, y - 4, 16, 1, '#8d8f96');
@@ -12153,11 +12227,18 @@
         q(x - 9, y - 13, 2, 1, colL); q(x + 7, y - 13, 2, 1, colL);
         // biểu tượng: chữ thập là máu, giọt là mana
         const iy = y - 36 + Math.round(Math.sin(t * 3));
-        if (hp) { q(x - 2, iy - 1, 5, 7, DARK); q(x - 4, iy + 1, 9, 3, DARK); q(x - 1, iy, 3, 5, col); q(x - 3, iy + 2, 7, 1, col); q(x - 1, iy, 1, 2, colL); } else { q(x - 3, iy + 1, 7, 5, DARK); q(x - 2, iy - 1, 5, 3, DARK); q(x - 1, iy - 2, 3, 2, DARK); q(x - 2, iy + 2, 5, 3, col); q(x - 1, iy, 3, 2, col); q(x, iy - 1, 1, 1, col); q(x - 1, iy + 2, 1, 2, colL); }
+        dauSuoi(hp, x, iy, col, colL);
       } else { q(x - 13, y - 12, 26, 2, '#3a3d46'); q(x - 9, y - 11, 8, 1, colD); q(x + 3, y - 11, 5, 1, colD); }
     },
     stash(o, x, y, t) {
       // rương đồ: giá vũ khí dựa tường và thùng gỗ
+      const g = vat('ruong-do');
+      if (g) {
+        shadow(x, y, 14);
+        const P = veVat(g, x, y);
+        if ((t * 0.8) % 3 < 0.25) spark(...P(-5, -22, 26, 28), '#ffffff');
+        return;
+      }
       shadow(x, y, 14);
       q(x - 12, y - 25, 1, 13, '#8a6a44'); q(x - 13, y - 27, 3, 3, '#c9ccd2'); q(x - 12, y - 28, 1, 1, '#e8eef5');
       q(x - 6, y - 24, 2, 12, '#b9c0c9'); q(x - 6, y - 24, 1, 12, '#e8eef5'); q(x - 8, y - 14, 6, 1, '#caa15a'); q(x - 6, y - 13, 2, 2, '#5a4030');
@@ -12170,6 +12251,17 @@
       if ((t * 0.8) % 3 < 0.25) spark(x - 5, y - 22, '#ffffff');
     },
     altar(o, x, y, t) {
+      const g = vat(o.used ? 'ban-tho-het' : 'ban-tho');
+      if (g) {
+        shadow(x, y, 14);
+        const P = veVat(g, x, y);
+        if (!o.used) { // ảnh đã có ngọn lửa tím; code giữ quầng sáng thở và hai tàn lửa bay
+          const f = Math.floor(t * 5) % 2, k = 0.5 + 0.5 * Math.sin(t * 3);
+          A.ellipse(pc, x, P.dinh + 6, 7, 6, 'rgba(192,90,240,' + (0.1 + 0.1 * k).toFixed(3) + ')');
+          q(x - 6 + f * 11, P.dinh + 3 + f * 2, 1, 1, '#f0c0ff'); q(x + 4 - f * 9, P.dinh, 1, 1, '#c05af0');
+        }
+        return;
+      }
       shadow(x, y, 14);
       q(x - 13, y - 6, 26, 6, DARK); q(x - 11, y - 16, 22, 11, DARK);
       q(x - 12, y - 5, 24, 5, '#3e3040'); q(x - 12, y - 5, 24, 1, '#5e4c62');
@@ -12190,6 +12282,13 @@
       } else { q(x - 3, y - 14, 1, 4, '#1a1014'); q(x - 2, y - 11, 3, 1, '#1a1014'); }
     },
     merchant(o, x, y, t) {
+      const g = vat('thuong-nhan');
+      if (g) {
+        shadow(x, y, 17);
+        const P = veVat(g, x, y), a = P(11, -26, 36, 35);
+        q(a[0], a[1], 7, 8, Math.floor(t * 4) % 2 ? 'rgba(255,200,80,0.16)' : 'rgba(255,200,80,0.08)'); // đèn lồng bên phải sạp chập chờn
+        return;
+      }
       shadow(x, y, 17);
       // sạp hàng mái sọc, ông lái buôn đội nón lá
       q(x - 15, y - 30, 2, 30, '#5a4030'); q(x + 13, y - 30, 2, 30, '#5a4030'); q(x - 15, y - 30, 1, 30, '#7a5a40');
@@ -12209,6 +12308,18 @@
       q(x + 14, y - 28, 1, 3, '#3a2c20'); q(x + 12, y - 25, 5, 6, DARK); q(x + 13, y - 24, 3, 4, f ? '#ffd23f' : '#ffb030'); q(x + 11, y - 26, 7, 8, 'rgba(255,200,80,0.12)');
     },
     brazier(o, x, y, t) {
+      const g = vat(o.used ? 'chau-than-tat' : 'chau-than');
+      if (g) {
+        shadow(x, y, 11);
+        if (!o.used) halo(x, y, '#ff9a40', t);
+        const P = veVat(g, x, y);
+        if (!o.used) { // ảnh đã có ngọn lửa; code giữ ánh lửa chập chờn và tàn lửa bay
+          const f = Math.floor(t * 10) % 3, a = P(-8, -26, 18, 28);
+          q(a[0], a[1], Math.round((16 * P.w) / 18), Math.round((14 * P.h) / 28), 'rgba(255,122,42,' + (0.08 + 0.04 * f).toFixed(2) + ')');
+          q(x - 5 + f * 4, P.dinh - f, 1, 1, '#ffd23f'); q(x + 4 - f * 2, P.dinh + 4 - f * 2, 1, 1, '#ff7a2a');
+        }
+        return;
+      }
       shadow(x, y, 11);
       q(x - 6, y - 7, 2, 7, DARK); q(x + 4, y - 7, 2, 7, DARK); q(x - 1, y - 7, 2, 7, DARK);
       q(x - 5, y - 6, 1, 6, '#55504a'); q(x + 4, y - 6, 1, 6, '#55504a'); q(x - 1, y - 6, 1, 6, '#6a645e');
@@ -12223,6 +12334,16 @@
       } else { q(x - 6, y - 13, 12, 1, '#2a2422'); q(x - 2, y - 13, 2, 1, '#a8320a'); q(x + 2, y - 14, 1, 1, '#55504a'); }
     },
     mushroom(o, x, y, t) {
+      const g = vat(o.used ? 'nam-doc-vo' : 'nam-doc');
+      if (g) {
+        if (o.used) { veVat(g, x, y); return; }
+        const f = Math.floor(t * 4) % 3;
+        halo(x, y, '#8fe04a', t);
+        shadow(x, y, 9);
+        const P = veVat(g, x, y), a = P(-10, 0, 24, 21)[0], b = P(8, 0, 24, 21)[0]; // bào tử bay lên phía trên mũ nấm
+        q(a + f * 2, P.dinh - 2 - f, 1, 1, '#c2f58a'); q(b - f, P.dinh - 1 - f * 2, 1, 1, '#c2f58a'); q(x - 2 + f, P.dinh - 4 - f, 1, 1, '#e9ffd0');
+        return;
+      }
       if (!o.used) {
         const f = Math.floor(t * 4) % 3;
         halo(x, y, '#8fe04a', t);
@@ -12237,6 +12358,15 @@
       } else { q(x - 2, y - 4, 4, 4, '#b8b0a0'); q(x - 6, y - 1, 4, 1, '#2f6b1a'); q(x + 3, y - 2, 4, 1, '#2f6b1a'); q(x - 1, y - 5, 3, 1, '#4fae28'); }
     },
     crystal(o, x, y, t) {
+      const g = vat(o.used ? 'tinh-the-vo' : 'tinh-the');
+      if (g) {
+        if (o.used) { veVat(g, x, y); return; }
+        halo(x, y, '#7fd4ff', t);
+        shadow(x, y, 10);
+        const P = veVat(g, x, y), k = (t * 1.4) % 2;
+        if (k < 0.35) spark(...P(6, -19, 23, 26), '#ffffff'); else if (k > 1 && k < 1.3) spark(...P(-6, -13, 23, 26), '#ffffff');
+        return;
+      }
       if (!o.used) {
         halo(x, y, '#7fd4ff', t);
         shadow(x, y, 10);
@@ -15666,7 +15796,9 @@
       else if ((b.st && b.st.stun > 0) || b.tired > 0) { n = 'stun'; t = G.time; }
       else if (b.hitT > 0 && (n === 'idle' || n === 'move')) { n = 'hit'; t = 0.4 - b.hitT; }
       const phase = (b.phase | 0) + 1;
-      const pha3 = b.kind === 'ho' && (phase >= 3 && !(n === 'phase3' && t < dur(b.art, 'phase3') * 0.5));
+      // Đợt 1: có ảnh AI (js/sprite_custom.js dùng cùng một ảnh cho mọi pha) thì KHÔNG co 72%, kẻo thân pha 3 nhỏ đi so với pha 1, 2.
+      const anhAI = !!(G.spriteCustom && G.spriteCustom.ds && G.spriteCustom.ds[b.art] && G.spriteCustom.ds[b.art].ready);
+      const pha3 = b.kind === 'ho' && !anhAI && (phase >= 3 && !(n === 'phase3' && t < dur(b.art, 'phase3') * 0.5));
       const s = pha3 ? 0.72 : 1; // Hồ Tinh pha 3 to gấp rưỡi: thu nhỏ cho vừa phòng
       b.drawW = (pha3 ? 281 : b.kind === 'ho' ? 174 : 150) * s; b.drawH = (pha3 ? 174 : b.h) * s;
       const fk = G.fx && G.fx.chop ? G.fx.chop() : 1; // khựng hình: chỉ khung đầu chớp trắng hẳn (js/fx.js)
@@ -18002,6 +18134,8 @@
   fx.proj = function (c, o) {
     proj0(c, o);
     if (G.noRender || !o.he || o.kind !== 'arrow') return;
+    // Đã có ảnh AI mũi tên mang hệ (hu-dan-ten-<hệ>, vẽ ở js/fx_dan.js) thì thôi vẽ lửa/nhớt/băng bằng code quanh tên. Không có tệp: y như cũ.
+    if (G.fxAnh && G.fxAnh.co('hu-dan-ten-' + o.he.el)) return;
     try {
       const S = K.S();
       if (!S) return;
@@ -22599,15 +22733,22 @@ MA._xong();
     p(c, x - s, y - 1, s * 2, 2, 'rgba(0,0,0,0.3)');
     const by = y - s - lift - 1;
     // Ảnh AI quả nổ của Sóc Ném Quả Nổ (hu-dan-qua-no, js/fx_anh.js); không có tệp thì vẽ quả bom vuông như cũ
-    if (B.art === 'socNo' && G.fxAnh && G.fxAnh.co('hu-dan-qua-no')) G.fxAnh.ve(c, 'hu-dan-qua-no', x, by, gone, 0, 1);
+    // Phiên hieu-ung-b1: thêm bom to của tinh anh (hu-bom-to), bó pháo của Tiểu Yêu và bom vùng lửa (hu-bom-phao), bom băng của Sứa, Hải Quỳ và vùng băng (hu-bom-bang).
+    // Ảnh bom neo ở ĐÁY (đáy quả bom chạm đất). Chưa có tệp thì vẽ quả bom vuông như cũ.
+    const FA = G.fxAnh;
+    const maBom = !FA ? null : B.big ? 'hu-bom-to' : B.art === 'tieuYeu' ? 'hu-bom-phao' : B.art === 'sua' || B.art === 'haiQuy' ? 'hu-bom-bang' : el === 'ice' ? 'hu-bom-bang' : el === 'fire' ? 'hu-bom-phao' : null;
+    const anhBom = maBom ? FA.get(maBom) : null;
+    let dinh = by - s; // mép trên của quả bom: ngòi nhấp nháy vẽ ngay trên đó
+    if (B.art === 'socNo' && FA && FA.co('hu-dan-qua-no')) FA.ve(c, 'hu-dan-qua-no', x, by, gone, 0, 1);
+    else if (anhBom) { FA.ve(c, maBom, x, y - lift, gone, 0, 1); dinh = Math.round(y - lift - (anhBom.ay - 2) * anhBom.co); }
     else {
       p(c, x - s, by - s + 1, s * 2, s * 2 - 2, '#14182e'); p(c, x - s + 1, by - s, s * 2 - 2, s * 2, '#14182e');
       p(c, x - s + 1, by - s + 1, s * 2 - 2, s * 2 - 2, col[1]); p(c, x - s + 1, by - s + 1, 2, 2, col[2]);
     }
     if (z.t > 0 && (gone >= B.fl)) {
       const k = 1 - z.t / Math.max(0.01, T0 - B.fl), fast = k > 0.7 ? 20 : 8;
-      if (Math.floor(G.time * fast) % 2) p(c, x - 1, by - s - 3, 2, 3, '#ffd23c');
-      p(c, x, by - s - 4, 1, 1, '#ffffff');
+      if (Math.floor(G.time * fast) % 2) p(c, x - 1, dinh - 3, 2, 3, '#ffd23c');
+      p(c, x, dinh - 4, 1, 1, '#ffffff');
     }
   }
   G.mobDrawBomb = drawBomb; // js/bao_truoc.js vẽ vòng đỏ, quả bom vẫn vẽ ở đây
@@ -23417,9 +23558,21 @@ MA._xong();
   const art0 = A.proj;
   // Ảnh AI (js/fx_anh.js): mũi tên của em bé (hu-dan-ten), viên bào tử (hu-dan-bao-tu). Không có tệp thì vẽ như cũ.
   const FA = () => G.fxAnh;
+  // Phiên hieu-ung-b1: mỗi kiểu đạn quái có một mã ảnh riêng (trang tools/tach-hieu-ung). Chưa có tệp của mã nào thì kiểu đó vẽ bằng code y như cũ.
+  // Quả nổ của quái khác (không phải Sóc) dùng lại hu-dan-qua-no. Đạn cầu và đạn gai thường: ảnh một màu trung tính (quầng và vệt bay vẫn theo màu quái).
+  const DAN_MA = { bubble: 'hu-dan-bot', icespike: 'hu-dan-gai-bang', toxseed: 'hu-dan-hat-doc', ember: 'hu-dan-lua', bua: 'hu-dan-bua', cannon: 'hu-dan-phao', orb: 'hu-dan-cau', thorn: 'hu-dan-gai', fruit: 'hu-dan-qua-no' };
+  const DAN_TRON = { bubble: 1, orb: 1 }; // hình tròn không có hướng: không lật khi bay sang trái (trừ khi tệp bật "xoay")
+  // Mũi tên mang hệ: hu-dan-ten-fire / -poison / -ice (cả mũi tên lẫn lửa, nhớt độc, băng bọc quanh); chưa có thì dùng hu-dan-ten hoặc code.
+  function maTen(o) {
+    const F = FA();
+    if (!F) return null;
+    const he = o.he && o.he.el ? 'hu-dan-ten-' + o.he.el : null;
+    return he && F.co(he) ? he : F.co('hu-dan-ten') ? 'hu-dan-ten' : null;
+  }
   A.proj = function (c, o) {
-    if (o.team === 'player' && o.kind === 'arrow' && !G.noRender && FA() && FA().co('hu-dan-ten')) {
-      FA().ve(c, 'hu-dan-ten', o.x, o.y - (o.z || 10), o.fxT || 0, Math.atan2(o.vy, o.vx), o.big ? 1.5 : 1);
+    const ten = o.team === 'player' && o.kind === 'arrow' && !G.noRender ? maTen(o) : null;
+    if (ten) {
+      FA().ve(c, ten, o.x, o.y - (o.z || 10), o.fxT || 0, Math.atan2(o.vy, o.vx), o.big ? 1.5 : 1);
       return;
     }
     if (o.team === 'player') {
@@ -23445,7 +23598,9 @@ MA._xong();
       const x = Math.round(o.x), y = Math.round(o.y - (o.z || 10)), h = sv.width >> 1;
       c.fillStyle = 'rgba(0,0,0,0.3)'; c.fillRect(x - 3, Math.round(o.y), 6, 1);
       const baoTu = (L === 'spore' || (o.src && o.src.art === 'hoaBaoTu')) && FA() && FA().co('hu-dan-bao-tu');
+      const ma = baoTu ? null : DAN_MA[L], anh = ma && FA() ? FA().get(ma) : null;
       if (baoTu) FA().ve(c, 'hu-dan-bao-tu', x, y, o.fxT || G.time, Math.atan2(o.vy, o.vx), o.dBig ? 1.6 : 1);
+      else if (anh) FA().ve(c, ma, x, y, o.fxT || G.time, DAN_TRON[L] && !anh.xoay ? 0 : Math.atan2(o.vy, o.vx), o.dBig ? 2 : 1);
       else c.drawImage(sv, x - h, y - h);
       // chấm đỏ nhấp nháy trên đầu đạn quái: nhìn là biết phải né
       if (((G.time * 8) | 0) % 2) { c.fillStyle = '#ff3a22'; c.fillRect(x - 1, y - h + (o.dBig ? 4 : 2), 2, 1); }
@@ -27850,6 +28005,7 @@ MA._xong();
   }
   // Vẽ một vật vào canvas tạm cỡ cả làng rồi cắt sát hình. Trả về { cv, x, y0, y } với y là chân vật (để xếp trước sau).
   let TMP = null;
+  let NGAY = false; // chỉ công cụ tools/tach-lang bật (ảnh tham chiếu màu ban ngày): dựng làng không nhân màu chạng vạng
   function sprite(baseY, draw, bright) {
     if (!TMP) TMP = mk(W, H);
     const cv = TMP[0], c = TMP[1];
@@ -27860,11 +28016,32 @@ MA._xong();
     if (x1 < 0) return null;
     const [o, oc] = mk(x1 - x0 + 1, y1 - y0 + 1);
     oc.drawImage(cv, -x0, -y0);
-    return { cv: bright ? o : tint(o), x: x0, y0, y: baseY };
+    return { cv: bright || NGAY ? o : tint(o), x: x0, y0, y: baseY };
   }
+  // ---------- công trình lớn bằng ảnh AI (tools/tach-lang, tệp gd-lang-<tên>.sprite.json, kiểu "giao-dien") ----------
+  // Có ảnh thì dùng ảnh thay hình code: GIỮA ĐÁY ảnh đặt đúng giữa đáy hình code (chân công trình), cỡ vẽ = cỡ ảnh / net.
+  // Ảnh vẽ màu ban ngày, game nhân màu chạng vạng như hình code. Vùng không đi được (RECTS), chỗ đèn lồng chập chờn (LREC),
+  // quầng sáng, lửa lò, khói vẫn theo hình code. Không có tệp gd-lang-* thì cảnh làng y như cũ.
+  const NHA = ['cong', 'dinh', 'cay-da', 'lo-ren', 'hang-xen', 'nha-may'];
+  VS.NHA = NHA;
+  const gdLang = (ten) => { const s = G.spriteCustom; return s && s.gdSan ? s.gdSan('gd-lang-' + ten) : null; };
+  // Ảnh nạp chậm hơn code (và công cụ có thể đổi ảnh bất cứ lúc nào): mỗi lần lấy cảnh làng thì soát lại 6 công trình,
+  // cái nào ảnh vừa có / vừa đổi / vừa gỡ thì thay ngay hình đã nhớ của riêng cái đó (không phải dựng lại cả làng).
+  function anhNha(Bt) {
+    for (const n of Bt.nha) {
+      const g = gdLang(n.ten); if (g === n.g) continue;
+      n.g = g; const ob = n.ob;
+      if (!g) { ob.cv = n.code.cv; ob.x = n.code.x; ob.y0 = n.code.y0; ob.w = 0; ob.h = 0; continue; }
+      ob.cv = Bt.ngay ? g.img : tint(g.img); ob.w = g.rong; ob.h = g.cao;
+      ob.x = Math.round(n.ax - g.rong / 2); ob.y0 = Math.round(n.ay - g.cao);
+    }
+    return Bt;
+  }
+  // Dán ảnh AI của một công trình (ảnh có số điểm ảnh gấp net lần): k = số điểm ảnh thật trên một điểm ảnh làng của bút c.
+  function veAnh(c, ob, x, y, k) { const sm = c.imageSmoothingEnabled; c.imageSmoothingEnabled = ob.w * k < ob.cv.width - 0.5; c.drawImage(ob.cv, x, y, ob.w, ob.h); c.imageSmoothingEnabled = sm; }
   let BUILT = null;
-  function build() {
-    if (BUILT) return BUILT;
+  function build() { return anhNha(BUILT || (BUILT = dung())); }
+  function dung() {
     const [gcv, g] = mk(W, H);
     LREC = [];
     grass(g); hedge(g); river(g);
@@ -27878,17 +28055,20 @@ MA._xong();
     aoSen(g, B.ao[0], B.ao[1], B.ao[2], B.ao[3]);
     cau(g, B.cau[0], B.cau[1], B.cau[2]); // cầu bến đò nằm sát đất, em bé đứng lên trên
     chieu(g, NPCS.do.pos[0] + 4, NPCS.do.pos[1]);
-    const ground = tint(gcv);
+    const ground = NGAY ? gcv : tint(gcv);
     // các vật đứng: xếp trước sau với người theo chân vật
     const objs = [];
     const add = (y, fn, bright) => { const s = sprite(y, fn, bright); if (s) objs.push(s); return s; };
-    add(58, (c) => cong(c, B.cong[0], B.cong[1]));
-    add(dy, (c) => dinh(c, dx, dy));
-    add(B.da[1], (c) => cayDa(c, B.da[0], B.da[1]));
-    add(B.ren[1], (c) => loRen(c, B.ren[0], B.ren[1]));
+    // công trình lớn: nhớ hình code và điểm giữa đáy (chân) để ảnh AI gd-lang-<tên> đặt đúng chỗ (xem anhNha)
+    const nha = [];
+    const addNha = (ten, y, fn) => { const s = add(y, fn); if (s) nha.push({ ten, ob: s, code: { cv: s.cv, x: s.x, y0: s.y0 }, ax: s.x + s.cv.width / 2, ay: s.y0 + s.cv.height, g: null }); };
+    addNha('cong', 58, (c) => cong(c, B.cong[0], B.cong[1]));
+    addNha('dinh', dy, (c) => dinh(c, dx, dy));
+    addNha('cay-da', B.da[1], (c) => cayDa(c, B.da[0], B.da[1]));
+    addNha('lo-ren', B.ren[1], (c) => loRen(c, B.ren[0], B.ren[1]));
     add(rN[1] - 1, (c) => de(c, rN[0] + 20, rN[1] + 1));
-    add(B.xen[1] - 2, (c) => hangXen(c, B.xen[0], B.xen[1]));
-    add(B.may[1], (c) => nhaMay(c, B.may[0], B.may[1]));
+    addNha('hang-xen', B.xen[1] - 2, (c) => hangXen(c, B.xen[0], B.xen[1]));
+    addNha('nha-may', B.may[1], (c) => nhaMay(c, B.may[0], B.may[1]));
     const cui = [0, 1, 2].map((f) => sprite(B.cui[1] + 1, (c) => khungCui(c, B.cui[0], B.cui[1] + 1, f)));
     add(B.phoi[1], (c) => dayPhoi(c, B.phoi[0], B.phoi[1], B.phoi[2], true));
     add(B.gieng[1], (c) => gieng(c, B.gieng[0], B.gieng[1]));
@@ -27905,8 +28085,7 @@ MA._xong();
     const rd = rng(77), flies = [];
     for (let i = 0; i < W / 14; i++) flies.push([rd() * W, 40 + rd() * 220, rd() * 6.28, 0.5 + rd()]);
     const lants = LREC; LREC = null;
-    BUILT = { ground, objs, cui, thuyenS, light: lcv, flies, lants };
-    return BUILT;
+    return { ground, objs, cui, thuyenS, light: lcv, flies, lants, nha, ngay: NGAY };
   }
 
   // ======================= chỗ không đi được =======================
@@ -28271,6 +28450,40 @@ MA._xong();
       else if (u < fall + 1.5) { const x = sx + Math.sin(fall * 1.8 + i) * 7 * M - cam; c.globalAlpha = 1 - (u - fall) / 1.5; p(c, x, y1, 2, 1, tc(col)); c.globalAlpha = 1; }
     }
   }
+  function luaLo(c, cam, t) { // lửa lò rèn bập bùng, khói bay (vẽ đè lên lò, cả khi lò là ảnh AI)
+    const x = B.ren[0] - cam, y = B.ren[1], f = Math.floor(t * 7) % 3;
+    p(c, x - 19 + f, y - 13 + (f % 2), 6 - f, 5, '#fff3b0'); p(c, x - 22 + f * 3, y - 21 - (f % 2), 2, 3, '#ffd23f'); p(c, x - 12 - f, y - 19, 2, 2 + f, '#ffb040');
+    for (let i = 0; i < 3; i++) { const ph = (t * 0.35 + i / 3) % 1; c.globalAlpha = 0.45 * (1 - ph); ell(c, x - 19 + Math.round(ph * 12 + Math.sin(ph * 6 + i) * 2), y - 74 - Math.round(ph * 22), 3 + Math.round(ph * 3), 2 + Math.round(ph), '#c8bec8'); }
+    c.globalAlpha = 1;
+  }
+  // ---------- cho công cụ tools/tach-lang (game không gọi) ----------
+  // Vẽ cảnh làng đứng yên lên bút c bất kỳ (1 đơn vị = 1 điểm ảnh làng, cả làng 720×270, không dời OY): nền, công trình, đạo cụ,
+  // lửa lò, 7 người làng, quầng đèn. o: { t: giây, k: số điểm ảnh thật trên một điểm ảnh làng (để dán ảnh AI cho nét),
+  //   ngay: true = màu ban ngày, không nhân màu chạng vạng, không quầng đèn (ảnh tham chiếu gửi ChatGPT), nguoi: false = không vẽ người }
+  let BUILT_NGAY = null;
+  function canhCongCu(ngay) {
+    if (!ngay) return build();
+    if (!BUILT_NGAY) { NGAY = true; try { BUILT_NGAY = dung(); } finally { NGAY = false; } }
+    return anhNha(BUILT_NGAY);
+  }
+  VS.veTinh = function (c, o) {
+    o = o || {};
+    const Bt = canhCongCu(!!o.ngay), t = +o.t || 0, k = +o.k || 1, L = [];
+    c.drawImage(Bt.ground, 0, 0);
+    for (const ob of Bt.objs) L.push([ob.y, ob.w ? () => veAnh(c, ob, ob.x, ob.y0, k) : () => c.drawImage(ob.cv, ob.x, ob.y0)]);
+    const cf = Bt.cui[Math.floor(t * 2.2) % 3]; L.push([cf.y, () => c.drawImage(cf.cv, cf.x, cf.y0)]);
+    L.push([Bt.thuyenS.y, () => c.drawImage(Bt.thuyenS.cv, Bt.thuyenS.x, Bt.thuyenS.y0)]);
+    if (!o.ngay) L.push([B.phoi[1] + 0.01, () => ambClothes(c, 0, t, 1)]);
+    L.push([B.ren[1] + 0.2, () => luaLo(c, 0, t)]);
+    if (o.nguoi !== false) for (const kk of ORDER) { const q = NPCS[kk].pos; L.push([q[1], () => { const sv = c.imageSmoothingEnabled; putNpc(c, kk, q[0], q[1], 0, {}); c.imageSmoothingEnabled = sv; }]); }
+    L.sort((a, b) => a[0] - b[0]);
+    for (const l of L) l[1]();
+    if (!o.ngay) { c.globalCompositeOperation = 'lighter'; c.drawImage(Bt.light, 0, 0); ambLight(c, Bt, 0, t, 1, 0); c.globalCompositeOperation = 'source-over'; }
+  };
+  // Sáu công trình lớn: mã tệp, hình code (cv, góc trên trái x, y, cỡ w × h), điểm chân (ax, ay = giữa đáy), anh = chỗ và cỡ ảnh AI đang dùng (không có ảnh: null).
+  VS.nhaLang = function (o) {
+    return canhCongCu(!!(o && o.ngay)).nha.map((n) => ({ ten: n.ten, ma: 'gd-lang-' + n.ten, cv: n.code.cv, x: n.code.x, y: n.code.y0, w: n.code.cv.width, h: n.code.cv.height, ax: n.ax, ay: n.ay, anh: n.g ? { x: n.ob.x, y: n.ob.y0, w: n.ob.w, h: n.ob.h } : null }));
+  };
   // dim: độ tối phủ lên cảnh (khi mở bảng). hideHero: không vẽ em bé (bản đồ, bảng lớn).
   VS.drawWorld = function (o) {
     o = o || {};
@@ -28284,17 +28497,12 @@ MA._xong();
     // nước lấp lánh
     for (let i = 0; i < 10; i++) { const y = (i * 53 + 17) % H, x = bo(y) + 10 + ((i * 37) % 50) - cam, k = Math.sin(t * 1.4 + i * 2.1); if (k > 0.3 && x < 480) p(c, x + Math.round(k * 3), y, 5, 1, '#6a9ab8'); }
     const L = [];
-    for (const ob of Bt.objs) if (ob.x - cam < 480 && ob.x + ob.cv.width - cam > 0) L.push([ob.y, () => c.drawImage(ob.cv, ob.x - cam, ob.y0)]);
+    for (const ob of Bt.objs) if (ob.x - cam < 480 && ob.x + (ob.w || ob.cv.width) - cam > 0) L.push([ob.y, ob.w ? () => veAnh(c, ob, ob.x - cam, ob.y0, G.NET || 1) : () => c.drawImage(ob.cv, ob.x - cam, ob.y0)]);
     const cf = Bt.cui[Math.floor(t * 2.2) % 3]; L.push([cf.y, () => c.drawImage(cf.cv, cf.x - cam, cf.y0)]);
     const tb = Math.round(Math.sin(t * 1.3)); L.push([Bt.thuyenS.y, () => c.drawImage(Bt.thuyenS.cv, Bt.thuyenS.x - cam, Bt.thuyenS.y0 + tb)]);
     L.push([B.phoi[1] + 0.01, () => ambClothes(c, cam, t, M)]);
     // lửa lò rèn bập bùng, khói bay
-    L.push([B.ren[1] + 0.2, () => {
-      const x = B.ren[0] - cam, y = B.ren[1], f = Math.floor(t * 7) % 3;
-      p(c, x - 19 + f, y - 13 + (f % 2), 6 - f, 5, '#fff3b0'); p(c, x - 22 + f * 3, y - 21 - (f % 2), 2, 3, '#ffd23f'); p(c, x - 12 - f, y - 19, 2, 2 + f, '#ffb040');
-      for (let i = 0; i < 3; i++) { const ph = (t * 0.35 + i / 3) % 1; c.globalAlpha = 0.45 * (1 - ph); ell(c, x - 19 + Math.round(ph * 12 + Math.sin(ph * 6 + i) * 2), y - 74 - Math.round(ph * 22), 3 + Math.round(ph * 3), 2 + Math.round(ph), '#c8bec8'); }
-      c.globalAlpha = 1;
-    }]);
+    L.push([B.ren[1] + 0.2, () => luaLo(c, cam, t)]);
     // đàn gà, con cóc
     const gp = [[-34, -18, null, 0], [-22, -8, '#c87050', 1.3], [-44, -4, '#ffd23f', 2.6]];
     for (const q of gp) L.push([B.rom[1] + q[1], () => ga(c, B.rom[0] + q[0] - cam + Math.round(Math.sin(t * 0.4 + q[3]) * 3), B.rom[1] + q[1], q[2], Math.sin(t * 2.2 + q[3] * 2) > 0.55)]);
@@ -29194,6 +29402,7 @@ MA._xong();
       try { const el = document.documentElement; if (document.fullscreenElement) document.exitFullscreen(); else el.requestFullscreen().catch(() => say('Thiết bị này không cho bật toàn màn hình.')); } catch (e) { say('Thiết bị này không cho bật toàn màn hình.'); }
     }
     T.head('Lưu tiến trình', CX + 4, 113);
+    if (!V.moi && inviteWant('mo')) V.moi = { where: 'mo' }; // Đợt 1: lần trước bấm "Để sau" → Anh Mõ nhắc lại đúng một lần
     if (CL) {
       const on = CL.online();
       ui.text(CL.label(), CX + 4, 125, { size: 7.5, color: on && !CL.dirty ? GOOD : SOFT });
@@ -29202,7 +29411,8 @@ MA._xong();
         G.syncTaps.push({ x: CX + 4, y: 142, w: 146, h: 24, fn: () => titleLogin(CL) });
         if (T.btn(CX + 4, 142, 146, 24, 'Đăng nhập Google', { size: 8.5, primary: true }) && !V.gBusy) {
           V.gBusy = true; say('Đang mở cửa sổ đăng nhập Google…');
-          CL.google().then((r) => say(r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google. Tiến trình được giữ nguyên.' : 'Đã đăng nhập Google.'), (e) => say(G.t('Chưa đăng nhập được: {0}', e.message))).then(() => { V.gBusy = false; });
+          const snap = guestSnap();
+          CL.google().then((r) => { guestKeep(snap, r); return r; }).then((r) => say(r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google. Tiến trình được giữ nguyên.' : 'Đã đăng nhập Google.'), (e) => say(G.t('Chưa đăng nhập được: {0}', e.message))).then(() => { V.gBusy = false; });
         }
       } else T.btn(CX + 4, 142, 146, 24, on ? 'Đã đăng nhập Google' : 'Đăng nhập Google', { size: 8.5, disabled: true });
     } else ui.para('Tiến trình được lưu trong trình duyệt này. Đổi máy hoặc xoá dữ liệu trình duyệt sẽ mất tiến trình.', CX + 4, 125, 292, { size: 7.5, color: SOFT });
@@ -29250,12 +29460,21 @@ MA._xong();
     hide() { /* không có gì phải dừng */ },
     update(dt) {
       if (V.msgT > 0) V.msgT -= dt;
-      VS.update(dt, V.tab !== 'hub');
+      VS.update(dt, V.tab !== 'hub' || !!V.moi);
+      if (V.moi) { if (G.keyP.Escape && !V.gBusy) { inviteLater(); G.keyP.Escape = false; } return; } // đang hỏi liên kết Google: Esc = Để sau
       // Esc: huỷ câu hỏi xoá, hoặc đóng bảng quay về làng
       if (G.keyP.Escape) { if (G.banDo && G.banDo.ask) { G.banDo.ask = null; G.keyP.Escape = false; } else if (V.confirm) V.confirm = false; else if (V.tab === 'weapon' && V.back !== 'hub') V.tab = V.back; else if (V.tab !== 'hub') goHub(); }
     },
+    // Đợt 1 (Q4): vẽ làng như cũ (_draw), rồi nếu đang mời liên kết Google thì vẽ hộp mời đè lên trên.
     draw() {
       G.syncTaps = [];
+      const moi = V.moi, c = moi ? G.click : null;
+      if (moi) G.click = null; // lần chạm không lọt xuống bảng bên dưới
+      this._draw();
+      if (moi && V.moi === moi) inviteDraw(c);
+      else if (!V.moi && V.tab === 'hub' && inviteWant('hub')) V.moi = { where: 'hub' };
+    },
+    _draw() {
       if (V.tab === 'title') V.tab = 'hub';
       if (V.tab === 'map') { mapScreen(); return; }
       VS.drawWorld(V.tab === 'hub' ? null : { dim: 0.62, hideHero: true });
@@ -29280,7 +29499,79 @@ MA._xong();
     },
   };
 
-  // Màn mở đầu. Khi lưu mây dùng được (spiritblade.web.app, link GitHub): PHẢI đăng nhập Google mới vào game (chủ dự án yêu cầu).
+  // ---------- Đợt 1 (Q4): mời liên kết Google sau khi xong ải 1 ----------
+  // Chỉ mời người đang chơi bằng tài khoản khách (ẩn danh) đã qua ải 1 (stars['0-0']) và đang nối được mây.
+  // G.save.moiGoogle là trường MỚI, tuỳ chọn (bản lưu cũ không có): không có = chưa mời; 1 = đã bấm "Để sau" một lần;
+  // 2 = đã bấm "Để sau" cả ở lần Anh Mõ nhắc lại → không tự mời nữa (nút Đăng nhập Google ở Anh Mõ vẫn luôn còn).
+  // V.moiPhien: đã trả lời trong phiên chơi này → không hỏi lại cho tới lần mở game sau.
+  function inviteWant(where) {
+    const CL = G.cloud, sv = G.save;
+    if (V.moiPhien || V.gBusy || !CL || !CL.online() || !CL.isGuest() || !sv || !sv.stars || !sv.stars['0-0']) return false;
+    const n = sv.moiGoogle | 0;
+    return where === 'hub' ? n === 0 : n === 1;
+  }
+  // Cất bản lưu của khách trước khi đăng nhập / liên kết Google. Nếu Google chuyển sang một tài khoản ĐÃ CÓ tiến trình ('switched'),
+  // js/cloud.js có thể tự dùng bản trên mây mà không hỏi (khi bản của khách không hơn rõ rệt). Luồng đó giữ nguyên, không sửa ở đây;
+  // chỉ chép nguyên văn bản của khách sang khoá dự phòng linhkhi_save_v1_khach (đã có bản khác thì ghi vào ..._khach2) để còn cứu lại được.
+  function guestSnap() {
+    try { const CL = G.cloud; return CL && CL.isGuest() && Object.keys(G.save.stars || {}).length ? JSON.stringify(G.save) : null; } catch (e) { return null; }
+  }
+  function guestKeep(snap, r) {
+    if (!snap || r !== 'switched') return;
+    try { const ls = window.localStorage, K = 'linhkhi_save_v1_khach', old = ls.getItem(K); ls.setItem(old === null || old === snap ? K : K + '2', snap); } catch (e) { /* bộ nhớ đầy: bỏ qua */ }
+  }
+  function inviteLater() {
+    const M = V.moi;
+    if (!M) return;
+    V.moi = null; V.moiPhien = true;
+    G.save.moiGoogle = M.where === 'hub' ? 1 : 2; G.persist();
+    const m = 'Lúc nào muốn liên kết, gặp Anh Mõ ở cổng làng.';
+    if (V.tab === 'hub') VS.say(m); else say(m);
+  }
+  // Liên kết thất bại (đóng cửa sổ, bị chặn, mất mạng…): chỉ báo lỗi trong hộp, KHÔNG đụng tới bản lưu trên máy hay trên mây.
+  function inviteLink() {
+    const CL = G.cloud, M = V.moi;
+    if (!M || V.gBusy || !CL) return;
+    V.gBusy = true; M.err = '';
+    const snap = guestSnap();
+    CL.google().then((r) => {
+      guestKeep(snap, r);
+      V.moi = null; V.moiPhien = true;
+      const m = r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã liên kết Google. Tiến trình được giữ nguyên.' : 'Đã đăng nhập Google.';
+      if (V.tab === 'hub') VS.say(m); else say(m);
+    }, (e) => { M.err = (e && e.message) || 'Lỗi'; }).then(() => { V.gBusy = false; });
+  }
+  function inviteDraw(click) {
+    const CL = G.cloud, M = V.moi;
+    // đã liên kết xong ở chỗ khác, hoặc mất kết nối giữa chừng: đóng hộp, không ghi gì
+    if (!CL || !CL.isGuest() || (!CL.online() && !V.gBusy)) { V.moi = null; return; }
+    const w = 284, h = 132, x = 98, y = 66, busy = !!V.gBusy;
+    const bL = [x + 14, y + h - 34, 96, 24], bG = [x + w - 158, y + h - 34, 144, 24];
+    G.syncTaps = busy ? [] : [{ x: bG[0], y: bG[1], w: bG[2], h: bG[3], fn: inviteLink }]; // chạy ngay trong lúc chạm để Safari không chặn cửa sổ Google
+    G.click = click || null;
+    T.dim(0.6);
+    T.panel(x, y, w, h, 'Giữ tiến trình', { plain: true });
+    ui.text('Liên kết Google để giữ tiến trình trên mọi máy', x + w / 2, y + 40, { size: 9, bold: true, align: 'center', color: GOLD });
+    let yy = y + 54;
+    if (M.err) {
+      ui.wrap(G.t('Chưa liên kết được: {0}', M.err), w - 28, 7.5, true).slice(0, 2).forEach((l) => { ui.text(l, x + w / 2, yy, { size: 7.5, bold: true, align: 'center', color: WARN }); yy += 10; });
+      ui.text('Tiến trình của bạn vẫn còn nguyên. Có thể thử lại hoặc để sau.', x + w / 2, yy + 1, { size: 7, align: 'center', color: TXT });
+    } else {
+      const body = busy ? 'Đang mở cửa sổ đăng nhập Google…' : 'Tiến trình đang chơi được giữ nguyên. Đổi máy hoặc xoá dữ liệu trình duyệt vẫn chơi tiếp được.';
+      ui.wrap(body, w - 36, 7.5).slice(0, 3).forEach((l) => { ui.text(l, x + w / 2, yy, { size: 7.5, align: 'center', color: TXT }); yy += 10; });
+    }
+    if (T.btn(bL[0], bL[1], bL[2], bL[3], 'Để sau', { size: 9, disabled: busy })) inviteLater();
+    else {
+      if (T.btn(bG[0], bG[1], bG[2], bG[3], busy ? 'Đang mở Google…' : M.err ? 'Thử lại' : 'Liên kết Google', { size: 9, primary: !busy, disabled: busy })) inviteLink();
+      if (!busy) googleMark(bG[0] + 15, bG[1] + bG[3] / 2);
+    }
+    G.click = null;
+  }
+
+  // Màn mở đầu (Đợt 1, quyết định Q4). Khi lưu mây dùng được (spiritblade.web.app): KHÔNG bắt đăng nhập nữa.
+  //   - "Chơi ngay": vào luôn bằng tài khoản khách (ẩn danh Firebase, js/cloud.js tự đăng nhập và tự lưu mây). Mây chưa kịp nối
+  //     thì vẫn vào, chơi lưu trên máy; nối được là js/cloud.js tự đồng bộ như cũ.
+  //   - "Đăng nhập Google": cho người đã có tài khoản (chơi tiếp tiến trình cũ). Đã đăng nhập Google rồi thì nút chính là "Vào game".
   // Không có mây (bản xem trước trong Claude, mở tệp trên máy, mất mạng, ?cloud=0): chạm để chơi như cũ, chỉ lưu trên máy.
   function titleGate() {
     const CL = G.cloud;
@@ -29293,13 +29584,15 @@ MA._xong();
   function titleLogin(CL) {
     if (V.gBusy) return;
     V.gBusy = true; V.tMsg = 'Đang mở trang đăng nhập Google…'; V.tMsgT = 30;
-    // V1: đăng nhập thất bại (cửa sổ bị chặn, bị đóng, mở trong Zalo/Messenger/Facebook) → bật cờ V.loginFail để màn chào hiện nút "Chơi tạm"
-    CL.google().then((r) => { V.loginFail = false; V.tMsg = r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google, giữ nguyên tiến trình.' : 'Đã đăng nhập Google.'; }, (e) => { V.loginFail = true; V.tMsg = G.t('Chưa đăng nhập được: {0}', e.message); })
+    // V1: đăng nhập thất bại (cửa sổ bị chặn, bị đóng, mở trong Zalo/Messenger/Facebook) → bật cờ V.loginFail để màn chào hiện dòng gợi ý mở bằng trình duyệt thật
+    const snap = guestSnap();
+    CL.google().then((r) => { guestKeep(snap, r); V.loginFail = false; V.tMsg = r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google, giữ nguyên tiến trình.' : 'Đã đăng nhập Google.'; }, (e) => { V.loginFail = true; V.tMsg = G.t('Chưa đăng nhập được: {0}', e.message); })
       .then(() => { V.gBusy = false; V.tMsgT = 8; say(V.tMsg); });
   }
   // Bố cục màn chào (toạ độ 480x270), Giai đoạn 4 yêu cầu 2: logo > nút chính > nút phụ > dòng thông tin.
   // Nút nào chạy ngay trong lúc chạm (G.syncTaps) thì dùng đúng ô của nút vẽ.
-  const TL = { main: [140, 128, 200, 32], play: [160, 128, 160, 32], guest: [180, 168, 120, 20], row: [[128, 168, 108, 22], [244, 168, 108, 22]], info: 210, lang: [430, 5, 44, 16] };
+  // gg, bv (Đợt 1): hàng nút dưới "Chơi ngay" khi chưa đăng nhập Google: Đăng nhập Google | Bảng vàng. (guest: ô nút "Chơi tạm" cũ, nay không vẽ nữa.)
+  const TL = { main: [140, 128, 200, 32], play: [160, 128, 160, 32], guest: [180, 168, 120, 20], row: [[128, 168, 108, 22], [244, 168, 108, 22]], gg: [112, 166, 150, 24], bv: [268, 166, 100, 24], info: 210, lang: [430, 5, 44, 16] };
   G.titleLayout = TL; // để bài kiểm tra biết nút nằm ở đâu
   // Lớp tối dịu phía sau khối chữ và nút: hình elip tối dần ra mép (không phủ cả màn), để chữ không đè lên nhà cửa sáng.
   function titleVeil() {
@@ -29334,7 +29627,7 @@ MA._xong();
       VS.update(dt, true);
       const g = titleGate();
       if (V.tRank) { if (G.keyP.Escape) V.tRank = false; return; } // đang xem Bảng vàng
-      if (g.need) { if (g.ok && (G.keyP.Enter || G.keyP.Space)) G.setScene(G.Village); return; } // vào bằng nút "Vào game"
+      if (g.need) { if (G.keyP.Enter || G.keyP.Space) G.setScene(G.Village); return; } // vào bằng nút "Chơi ngay" / "Vào game"
       // không có mây: chạm chỗ trống để vào; chạm dải nút phụ thì không
       const r = TL.row, onBtns = G.downs.some((d) => d.y > r[0][1] - 4 && d.y < r[0][1] + r[0][3] + 4 && d.x > r[0][0] - 4 && d.x < r[1][0] + r[1][2] + 4);
       const L = TL.lang, onLang = G.downs.some((d) => d.x > L[0] - 6 && d.y < L[1] + L[3] + 6); // nút EN / VI ở góc trên phải
@@ -29364,7 +29657,7 @@ MA._xong();
       const { CL, need, ok } = titleGate();
       const M = TL.main, R0 = TL.row[0], R1 = TL.row[1];
       if (CL && CL.online() && CL.isGuest()) { // nút Đăng nhập chạy ngay trong lúc chạm để Safari không chặn cửa sổ Google
-        if (need && !ok) G.syncTaps.push({ x: M[0], y: M[1], w: M[2], h: M[3], fn: () => titleLogin(CL) });
+        if (need && !ok) G.syncTaps.push({ x: TL.gg[0], y: TL.gg[1], w: TL.gg[2], h: TL.gg[3], fn: () => titleLogin(CL) });
         if (!need || ok) G.syncTaps.push({ x: R0[0], y: R0[1], w: R0[2], h: R0[3], fn: () => titleLogin(CL) });
       }
       if (!need) {
@@ -29376,15 +29669,14 @@ MA._xong();
         const P = TL.play;
         if (T.btn(P[0], P[1], P[2], P[3], 'Vào game ▶', { size: 12, primary: true })) G.setScene(G.Village);
       } else {
-        const loading = !CL.online(), busy = !!V.gBusy;
-        if (T.btn(M[0], M[1], M[2], M[3], loading ? (CL.status === 'error' ? 'Chưa kết nối được mây' : 'Đang kết nối…') : busy ? 'Đang mở Google…' : 'Đăng nhập Google để vào', { size: 11, primary: !loading && !busy, disabled: loading || busy })) titleLogin(CL);
-        if (!loading && !busy) googleMark(M[0] + 17, M[1] + M[3] / 2);
-        // mây kết nối hỏng quá 10 giây: cho chơi tạm, chỉ lưu trên máy, để không ai bị kẹt ngoài cửa
-        V.tWait = loading ? (V.tWait || 0) + 1 / 60 : 0;
-        const Gs = TL.guest;
-        // V1: đăng nhập Google vừa thất bại cũng cho chơi tạm ngay (không phải chờ 10 giây), kèm dòng gợi ý mở bằng trình duyệt thật
-        if ((CL.status === 'error' || V.tWait > 10 || V.loginFail) && T.btn(Gs[0], Gs[1], Gs[2], Gs[3], 'Chơi tạm (chưa lưu mây)', { size: 7.5 })) G.setScene(G.Village);
-        if (V.loginFail && !busy) ui.text('Mở bằng Chrome/Safari để đăng nhập Google', 240, Gs[1] + Gs[3] + 11, { size: 7, align: 'center', color: '#e8d7b0' });
+        // Đợt 1 (Q4): hai nút rõ. "Chơi ngay" luôn bấm được (kể cả khi mây chưa kịp nối); "Đăng nhập Google" cho người đã có tài khoản.
+        const loading = !CL.online(), busy = !!V.gBusy, Gg = TL.gg, Bv = TL.bv;
+        if (T.btn(M[0], M[1], M[2], M[3], 'Chơi ngay ▶', { size: 12, primary: true })) G.setScene(G.Village);
+        if (T.btn(Gg[0], Gg[1], Gg[2], Gg[3], loading ? (CL.status === 'error' ? 'Chưa kết nối được mây' : 'Đang kết nối…') : busy ? 'Đang mở Google…' : 'Đăng nhập Google', { size: 8.5, disabled: loading || busy })) titleLogin(CL);
+        if (!loading && !busy) googleMark(Gg[0] + 15, Gg[1] + Gg[3] / 2);
+        if (T.btn(Bv[0], Bv[1], Bv[2], Bv[3], '🏆 Bảng vàng', { size: 8, disabled: !G.bangVang })) { V.tRank = true; G.bangVang.reload && G.bangVang.reload(); }
+        // V1: đăng nhập Google vừa thất bại → dòng gợi ý mở bằng trình duyệt thật (vẫn chơi được bằng "Chơi ngay")
+        if (V.loginFail && !busy) ui.text('Mở bằng Chrome/Safari để đăng nhập Google', 240, Gg[1] + Gg[3] + 10, { size: 7, align: 'center', color: '#e8d7b0' });
       }
       if (CL) {
         const on = CL.online(), guest = CL.isGuest();
@@ -29394,7 +29686,7 @@ MA._xong();
         }
         if (CL.gMsg) { if (/^Chưa đăng nhập|chưa trả kết quả/.test(CL.gMsg) || (G.LANG !== 'vi' && gMsgFail(CL.gMsg))) V.loginFail = true; V.tMsg = CL.gMsg; V.tMsgT = 8; CL.gMsg = ''; }
         if (V.tMsgT > 0) V.tMsgT -= 1 / 60;
-        const line = V.tMsgT > 0 && V.tMsg ? V.tMsg : need && !ok ? G.t('Đăng nhập Google để lưu tiến trình và lên Bảng vàng. {0}', CL.label()) : CL.label();
+        const line = V.tMsgT > 0 && V.tMsg ? V.tMsg : need && !ok ? G.t('Đã có tài khoản? Bấm Đăng nhập Google để chơi tiếp tiến trình cũ. {0}', CL.label()) : CL.label();
         const lines = ui.wrap(line, 260, 7); // hẹp để không chạm hình em bé bên trái
         lines.slice(0, 2).forEach((l, i) => ui.text(l, 240, TL.info + i * 9, { size: 7, align: 'center', color: V.tMsgT > 0 && V.tMsg ? GOLD : '#c9bfa8' }));
       }
@@ -32300,7 +32592,18 @@ MA._xong();
   }
 
   const cache = new Map(), shells = new Map();
+  // Ảnh AI của phòng (tools/tach-phong; mã gd-vat-*, gd-cua-*, gd-tt-*, gd-nen-*) nạp chậm hơn code vài phần giây:
+  // số ảnh đã sẵn sàng đổi thì xoá bộ nhớ đệm để phòng được dựng lại với ảnh. Không có tệp nào thì số luôn là 0, không xoá gì.
+  let soAnh = 0;
+  function demAnh() {
+    const s = G.spriteCustom, d = s && s.gd; let n = 0;
+    if (d) for (const k in d) if (d[k].ready && (k.startsWith('gd-vat-') || k.startsWith('gd-cua-') || k.startsWith('gd-tt-') || k.startsWith('gd-nen-'))) n++;
+    return n;
+  }
+  RA.xoaDem = function () { cache.clear(); shells.clear(); };
   function get(W) {
+    const n = demAnh();
+    if (n !== soAnh) { soAnh = n; RA.xoaDem(); }
     const doors = W.doors || [];
     const key = [W.uid, W.region, W.type, W.seed, doors.map((d) => d.dir + (d.open ? 1 : 0) + (d.gate ? 'g' : '') + (d.boss ? 'b' : '')).join(',')].join('|');
     let room = cache.get(key);
@@ -32573,6 +32876,15 @@ MA._xong();
     },
     // bệ thử thách: cột đá có đồng hồ cát
     pedestal(o, x, y, t) {
+      // ảnh AI (tools/tach-phong): gd-vat-be-thu-thach / gd-vat-be-thu-thach-het, giữa đáy ảnh là chân bệ; bóng và quầng sáng vẫn do code vẽ
+      const SC = G.spriteCustom, g = SC && SC.gdSan ? SC.gdSan(o.used ? 'gd-vat-be-thu-thach-het' : 'gd-vat-be-thu-thach') : null;
+      if (g) {
+        const n = G.NET || 1, w = g.pw / g.net, h = g.ph / g.net;
+        ell(x, y + 1, 12, 4, 'rgba(0,0,0,0.3)');
+        SC.veGd(c, g, Math.round((x - w / 2) * n) / n, y - h, w, h);
+        if (!o.used) ell(x, y - Math.round((26 * h) / 33), 9, 9, 'rgba(74,208,192,0.10)');
+        return;
+      }
       ell(x, y + 1, 12, 4, 'rgba(0,0,0,0.3)');
       r(x - 10, y - 5, 20, 6, DARK); r(x - 9, y - 4, 18, 4, '#5a6a70'); r(x - 9, y - 4, 18, 1, '#8aa0a4');
       r(x - 7, y - 16, 14, 12, DARK); r(x - 6, y - 15, 12, 11, '#6a7c82'); r(x - 6, y - 15, 2, 11, '#9ab0b4'); r(x + 4, y - 15, 2, 11, '#465458');
@@ -33454,7 +33766,11 @@ window.FIREBASE_CONFIG = {
     _err(e) {
       const m = { 'auth/popup-blocked': 'Trình duyệt chặn cửa sổ đăng nhập', 'auth/popup-closed-by-user': 'Đã đóng cửa sổ đăng nhập',
         'auth/cancelled-popup-request': 'Đã đóng cửa sổ đăng nhập', 'auth/network-request-failed': 'Mất mạng, thử lại sau',
-        'auth/unauthorized-domain': 'Tên miền này chưa được cho phép trong Firebase', 'auth/operation-not-supported-in-this-environment': 'Chỗ này không đăng nhập được' };
+        'auth/unauthorized-domain': 'Tên miền này chưa được cho phép trong Firebase', 'auth/operation-not-supported-in-this-environment': 'Chỗ này không đăng nhập được',
+        // Đợt 1: thêm lời tiếng Việt cho các lỗi liên kết hay gặp (trước đây hiện nguyên câu tiếng Anh của Firebase)
+        'auth/credential-already-in-use': 'Tài khoản Google này đã được dùng cho một tiến trình khác', 'auth/email-already-in-use': 'Tài khoản Google này đã được dùng cho một tiến trình khác',
+        'auth/provider-already-linked': 'Tài khoản này đã liên kết Google rồi', 'auth/too-many-requests': 'Thử quá nhiều lần, chờ một lát rồi thử lại',
+        'auth/user-cancelled': 'Đã huỷ đăng nhập', 'auth/internal-error': 'Máy chủ đăng nhập báo lỗi, thử lại sau' };
       const code = e && e.code ? String(e.code).replace('auth/', '') : '';
       return ((e && m[e.code]) || (e && e.message) || 'Lỗi') + (code ? ' [' + code + ']' : ''); // kèm mã lỗi để chủ dự án báo lại
     },
