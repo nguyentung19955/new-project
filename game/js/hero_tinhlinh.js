@@ -589,7 +589,7 @@
   function outfitOf(key, o) {
     // Thân AI (em-be-<key>): không khoác bộ đồ khởi đầu mặc định (mũ trùm, áo trùm… che mặt và hình riêng của nhân vật);
     // chỉ hiện đồ người chơi thật sự đang mặc (o.outfit / o.p.outfit / mũ áo trang bị) và cánh.
-    // (thân theo BỘ TRANG PHỤC em-be-<key>-<bộ> cũng là thân AI: SC.cuaEmBe nhận thêm o để biết đang mặc đủ bộ nào)
+    // (thân theo BỘ TRANG PHỤC em-be-<key>-<bộ> cũng là thân AI: SC.cuaEmBe nhận thêm o để biết đang mặc ÁO của bộ nào)
     const SCx = G.spriteCustom, coAI = !!(SCx && SCx.cuaEmBe && SCx.cuaEmBe(key, o));
     const st = coAI ? KHONG_DO : HERO[key].outfit, x = (o && o.outfit) || (o && o.p && o.p.outfit) || {};
     const pick = (k, gear) => (x[k] !== undefined ? x[k] : gear || st[k]);
@@ -1265,7 +1265,7 @@
   }
   // ÁO (ô robes) KHÔNG khoác rời lên thân AI: ảnh áo rời không ôm khít thân vẽ sẵn, nên thân AI giữ áo riêng của nhân vật; bậc áo
   // hiện bằng viền màu bậc quanh thân + dấu nhỏ trên ngực (js/sprite_custom.js). an: thêm các ô không khoác (thân theo bộ trang phục
-  // đã vẽ sẵn mũ, đồ lưng, bùa trong hình: ['hat', 'back', 'hand']). Thân vẽ code không đi qua đây nên vẫn mặc áo như cũ.
+  // đã vẽ sẵn mũ, đồ lưng, bùa trong hình: chỉ ẩn món CÙNG BỘ với áo, SC.anBo). Thân vẽ code không đi qua đây nên vẫn mặc áo như cũ.
   function lopDo(fr, neo, khop, an) {
     khop = khop || null;
     const D = dungLopDo(fr, neo, khop), quay = D.quay, ps = D.ps, n2 = D.n2;

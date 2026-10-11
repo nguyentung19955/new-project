@@ -65,7 +65,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.11-0850";
+(window.G = window.G || {}).VERSION = "lk-2026.10.11-0852";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -9992,7 +9992,7 @@
   function outfitOf(key, o) {
     // Thân AI (em-be-<key>): không khoác bộ đồ khởi đầu mặc định (mũ trùm, áo trùm… che mặt và hình riêng của nhân vật);
     // chỉ hiện đồ người chơi thật sự đang mặc (o.outfit / o.p.outfit / mũ áo trang bị) và cánh.
-    // (thân theo BỘ TRANG PHỤC em-be-<key>-<bộ> cũng là thân AI: SC.cuaEmBe nhận thêm o để biết đang mặc đủ bộ nào)
+    // (thân theo BỘ TRANG PHỤC em-be-<key>-<bộ> cũng là thân AI: SC.cuaEmBe nhận thêm o để biết đang mặc ÁO của bộ nào)
     const SCx = G.spriteCustom, coAI = !!(SCx && SCx.cuaEmBe && SCx.cuaEmBe(key, o));
     const st = coAI ? KHONG_DO : HERO[key].outfit, x = (o && o.outfit) || (o && o.p && o.p.outfit) || {};
     const pick = (k, gear) => (x[k] !== undefined ? x[k] : gear || st[k]);
@@ -10668,7 +10668,7 @@
   }
   // ÁO (ô robes) KHÔNG khoác rời lên thân AI: ảnh áo rời không ôm khít thân vẽ sẵn, nên thân AI giữ áo riêng của nhân vật; bậc áo
   // hiện bằng viền màu bậc quanh thân + dấu nhỏ trên ngực (js/sprite_custom.js). an: thêm các ô không khoác (thân theo bộ trang phục
-  // đã vẽ sẵn mũ, đồ lưng, bùa trong hình: ['hat', 'back', 'hand']). Thân vẽ code không đi qua đây nên vẫn mặc áo như cũ.
+  // đã vẽ sẵn mũ, đồ lưng, bùa trong hình: chỉ ẩn món CÙNG BỘ với áo, SC.anBo). Thân vẽ code không đi qua đây nên vẫn mặc áo như cũ.
   function lopDo(fr, neo, khop, an) {
     khop = khop || null;
     const D = dungLopDo(fr, neo, khop), quay = D.quay, ps = D.ps, n2 = D.n2;
@@ -15165,11 +15165,28 @@
     else if (top === 1) L.fx.glow = null;
     L.fx.top = top;
     const sm = O.sum(sv);
-    // bo: mã bộ đang mặc ĐỦ (từ 3 món, cùng ngưỡng với vầng sáng và thưởng hệ của bộ) → game đổi sang thân vẽ liền cả bộ
-    // em-be-<nhân vật>-<bộ> nếu có tệp (js/sprite_custom.js). Chỉ là hình, không đổi chỉ số.
-    for (const s in sm.sets) if (sm.sets[s] >= 3) { L.fx.aura = O.SETS[s].el; L.fx.bo = s; }
+    // du_bo: mã bộ đang mặc ĐỦ (từ 3 món): chỉ dùng cho vầng sáng "đủ bộ" (aura) và thưởng hệ của bộ, KHÔNG đổi. bo: tên cũ của du_bo.
+    for (const s in sm.sets) if (sm.sets[s] >= 3) { L.fx.aura = O.SETS[s].el; L.fx.du_bo = s; L.fx.bo = s; }
+    // bo_than (Q1, 11/10/2026): bộ của ÁO đang mặc → game đổi sang thân vẽ liền cả bộ em-be-<nhân vật>-<bộ> nếu có tệp
+    // (js/sprite_custom.js); không cần đủ 3 món. Không mặc áo hoặc áo lẻ → null (thân gốc). Chỉ là hình, không đổi chỉ số.
+    // an_bo: các ô đang mặc món CÙNG BỘ với áo (thân bộ đã vẽ sẵn nên không khoác rời nữa); món khác bộ và cánh vẫn khoác rời.
+    if (O.THAN_THEO_AO) {
+      const ao = O.worn(sv, 'robe'), bo = (ao && I[ao.k] && I[ao.k].set) || null;
+      L.fx.bo_than = bo && O.SETS[bo] ? bo : null;
+      L.fx.an_bo = L.fx.bo_than ? O.AN_THAN_BO.filter((slot) => { const it = O.worn(sv, slot); return !!(it && I[it.k] && I[it.k].set === L.fx.bo_than); }) : [];
+    }
     L.fx.els = L.fx.els.slice(0, 2);
     return L;
+  };
+  // Cờ tắt của Q1: false → như bản trước (thân bộ chỉ khi đủ 3 món, ẩn cả mũ, đồ lưng, bùa rời).
+  O.THAN_THEO_AO = true;
+  O.AN_THAN_BO = ['hat', 'back', 'hand']; // các món thân bộ vẽ sẵn trong hình (cánh, vũ khí luôn rời)
+  // Bộ của một món theo ô và hình (look): cho công cụ xem thử (tools/tach-ghep) dựng fx.bo_than, fx.an_bo đúng luật của O.look.
+  O.boCuaLook = function (slot, look) { for (const id in I) if (I[id].slot === slot && I[id].look === look) return I[id].set || null; return null; };
+  O.fxThanBo = function (of) { // of: { hat, robe, back, hand } là tên hình đang mặc
+    const bo = of && of.robe ? O.boCuaLook('robe', of.robe) : null;
+    if (!O.THAN_THEO_AO || !bo) return { bo_than: null, an_bo: [] };
+    return { bo_than: bo, an_bo: O.AN_THAN_BO.filter((slot) => of[slot] && O.boCuaLook(slot, of[slot]) === bo) };
   };
 
   // ---------- áp vào người chơi (combat.js gọi trong G.buildPlayer) ----------
@@ -21146,11 +21163,13 @@ MA._xong();
   SC.neoCua = (sp, ten) => (sp.neo ? sp.neo.theo[ten] || sp.neo.goc : null);
   // Mã tệp: "em-be" cho cả bốn em bé, hoặc "em-be-smith", "em-be-hunter", "em-be-healer", "em-be-wrestler" cho từng bé.
   // BỘ TRANG PHỤC vẽ liền cả cử động: "em-be-<nhân vật>-<bộ>" (bộ: rung Rừng Già, bien Hang Biển, lau Lâu Đài), cùng định dạng tệp em bé.
-  // Khi đồ đang mặc đủ bộ (o.outfit.fx.bo do js/outfit.js O.look ghi: từ 3 món của bộ) và có tệp thân bộ của nhân vật đó thì dùng thân
-  // bộ thay thân thường; không có tệp thì như cũ. o: đối tượng vẽ em bé (có outfit hoặc p.outfit); không đưa o thì chỉ tìm thân thường.
+  // Khi đang mặc ÁO của một bộ (o.outfit.fx.bo_than do js/outfit.js O.look ghi: bộ của áo, không cần đủ 3 món; quyết định Q1) và có tệp
+  // thân bộ của nhân vật đó thì dùng thân bộ thay thân thường; không có tệp thì về thân gốc như cũ. o: đối tượng vẽ em bé (có outfit
+  // hoặc p.outfit); không đưa o thì chỉ tìm thân thường. Đồ tự dựng không có bo_than (trang công cụ cũ) thì đọc fx.bo như trước.
   const BO_TP = { rung: 1, bien: 1, lau: 1 };
   SC.BO_TP = ['rung', 'bien', 'lau'];
-  SC.boCua = (o) => { const x = o && (o.outfit || (o.p && o.p.outfit)), b = x && x.fx && x.fx.bo; return typeof b === 'string' && BO_TP[b] ? b : null; };
+  const fxCua = (o) => { const x = o && (o.outfit || (o.p && o.p.outfit)); return (x && x.fx) || null; };
+  SC.boCua = (o) => { const f = fxCua(o), b = f && (f.bo_than !== undefined ? f.bo_than : f.bo); return typeof b === 'string' && BO_TP[b] ? b : null; };
   SC.thanBo = (key, o) => { const b = SC.boCua(o); return b ? SC.get('em-be-' + (key || 'smith') + '-' + b) : null; };
   SC.cuaEmBe = (key, o) => (o && SC.thanBo(key, o)) || SC.get('em-be-' + (key || 'smith')) || SC.get('em-be');
   SC.chonEmBe = function (sp, o) {
@@ -21347,6 +21366,14 @@ MA._xong();
     c.fillStyle = ao.he ? MAU_HE[ao.he] : '#ffffff'; c.fillRect(X, Y, 1, 1);
   };
   const AN_BO = ['hat', 'back', 'hand']; // thân theo bộ đã vẽ sẵn mũ, đồ lưng, bùa (áo thì thân AI nào cũng không khoác)
+  // Các ô KHÔNG khoác rời khi đang vẽ thân bộ sp: chỉ những món CÙNG BỘ với áo (fx.an_bo của O.look); mũ, đồ lưng, bùa khác bộ và
+  // cánh vẫn khoác rời theo điểm neo. Đồ tự dựng không ghi an_bo (kiểu cũ: đủ bộ) thì ẩn cả ba như trước. null: không ẩn gì.
+  SC.anBo = function (o, sp) {
+    if (!sp || !sp.bo) return null;
+    const f = fxCua(o);
+    const a = f && f.bo_than === sp.bo && Array.isArray(f.an_bo) ? AN_BO.filter((k) => f.an_bo.indexOf(k) >= 0) : AN_BO;
+    return a.length ? a : null;
+  };
   function noiEmBe() {
     const A = G.art;
     if (!A || !A.hero || A._spriteCustom || !SC.noi) return;
@@ -21362,7 +21389,7 @@ MA._xong();
       let lop = null; // đồ đang mặc khoác lên thân AI: lớp sau thân và lớp trước thân, bám theo chính thân AI khung này
       const neo = SC.neoCua(sp, s.ten);
       if (sp.khoacDo && G.tinhLinh.lopDo) {
-        try { const kh = SC.khopEmBe(sp, s.ten, s.i); lop = G.tinhLinh.lopDo(fr, neoGhep(fr.key, s, neo, kh), kh, sp.bo ? AN_BO : null); } catch (e) { lop = null; }
+        try { const kh = SC.khopEmBe(sp, s.ten, s.i); lop = G.tinhLinh.lopDo(fr, neoGhep(fr.key, s, neo, kh), kh, SC.anBo(o, sp)); } catch (e) { lop = null; }
       }
       // Áo không khoác lên thân AI: viền màu bậc áo + dấu ngực.
       let ao = null, nguc = null, daVien = false;

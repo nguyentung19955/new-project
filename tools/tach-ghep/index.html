@@ -118,7 +118,7 @@
     </div>
     <div id="vungTha" tabindex="0" role="button" aria-label="Chọn tệp" style="margin-top:10px">
       <b>Bấm để chọn tệp</b> hoặc kéo thả vào đây<br>
-      <span style="font-size:12px">Nhận nhiều tệp cùng lúc: món đồ <b>tp-*.sprite.json</b>, <b>vk-*.sprite.json</b>, tệp <b>.zip</b> của trang Tách Đồ (kể cả <b>_2-ban.zip</b>, tự lấy bản nét gấp đôi), thân AI <b>em-be-&lt;tên&gt;.sprite.json</b>, và tệp đã lưu <b>ghep-&lt;tên&gt;.sprite.json</b>.</span>
+      <span style="font-size:12px">Nhận nhiều tệp cùng lúc: món đồ <b>tp-*.sprite.json</b>, <b>vk-*.sprite.json</b>, tệp <b>.zip</b> của trang Tách Đồ (kể cả <b>_2-ban.zip</b>, tự lấy bản nét gấp đôi), thân AI <b>em-be-&lt;tên&gt;.sprite.json</b>, thân mặc sẵn theo bộ <b>em-be-&lt;tên&gt;-&lt;rung|bien|lau&gt;.sprite.json</b>, và tệp đã lưu <b>ghep-&lt;tên&gt;.sprite.json</b>.</span>
     </div>
     <input type="file" id="chonTep" accept=".json,.zip,application/json,application/zip" multiple hidden>
     <ul class="ds-tep" id="dsTep"></ul>
@@ -354,6 +354,8 @@ const CODE = {};  // 'code-<ô>-<look>' -> đồ vẽ bằng code { ma, o, look,
 const mon = (id) => MON[id] || CODE[id] || null;
 const tenMon = (id) => { const M = mon(id); return M ? M.tep.ten || id : id; };
 const THAN = {};  // key -> tệp em-be (thân AI)
+const THAN_BO = {}; // key -> { rung | bien | lau: tệp em-be-<key>-<bộ> } (thân mặc sẵn cả bộ; game dùng khi đang mặc ÁO của bộ đó)
+const TEN_BO = { rung: 'Bộ Rừng Già', bien: 'Bộ Hang Biển', lau: 'Bộ Lâu Đài' };
 const GHEP = {};  // key -> tệp ghep-<key> (định dạng chốt)
 const DIEM_NHAP = {}; // mã món -> diem lấy từ bản nháp (áp khi thả lại món chưa có diem)
 
@@ -461,9 +463,18 @@ function nhanTep(t, ten, coSan) {
   if (dt === 'ghep') {
     const g = chuanGhep(t, (String(t.ma || '').match(/^ghep-(\w+)/) || [])[1]);
     if (!g) { ghiTep.push(['loi', ten + ': tệp ghép thiếu tên nhân vật']); return; }
-    GHEP[g.nhan_vat] = g; ghiTep.push(['ok', 'Cấu hình ghép cho ' + TEN_NV[g.nhan_vat]]); return;
+    if (coSan && GHEP[g.nhan_vat]) return; // tệp ghép có sẵn trong game không đè lên bản đang chỉnh (bản nháp hoặc tệp vừa thả)
+    GHEP[g.nhan_vat] = g; if (!coSan) ghiTep.push(['ok', 'Cấu hình ghép cho ' + TEN_NV[g.nhan_vat]]); return;
   }
   if (dt === 'em-be') {
+    const mb = String(t.ma || '').match(/^em-be-(smith|hunter|healer|wrestler)-(rung|bien|lau)$/);
+    if (mb && typeof t.tam === 'string') { // thân mặc sẵn theo bộ: game đổi sang thân này khi đang mặc ÁO của bộ (không cần đủ 3 món)
+      const cu = THAN_BO[mb[1]] && THAN_BO[mb[1]][mb[2]];
+      if (cu && (cu.net || 1) > (t.net || 1)) { if (!coSan) ghiTep.push(['ok', ten + ': đã có bản nét cao hơn, giữ bản cũ']); return; }
+      (THAN_BO[mb[1]] = THAN_BO[mb[1]] || {})[mb[2]] = t;
+      if (!coSan) ghiTep.push(['ok', 'Thân ' + TEN_BO[mb[2]] + ' cho ' + TEN_NV[mb[1]] + ': mặc áo của bộ này để xem']);
+      return;
+    }
     const m = String(t.ma || '').match(/^em-be(?:-(smith|hunter|healer|wrestler))?$/);
     if (!m || typeof t.tam !== 'string') { ghiTep.push(['loi', ten + ': tệp em bé lạ']); return; }
     const key = m[1] || S.key;
@@ -530,6 +541,10 @@ async function napCoSan() {
       // Thân em bé AI đang có trong game (em-be-<key>): nạp sẵn như thả tệp, trừ khi người dùng đã thả bản khác
       const keyCu = S.key, thanCu = S.than;
       for (const d of ds) if (d && d.doi_tuong === 'em-be') { const m = String(d.ma || '').match(/^em-be-(smith|hunter|healer|wrestler)$/); if (m && !THAN[m[1]]) { nhanTep(d, d.ma, true); th++; } }
+      // Tệp ghép đã có trong game (ghep-<key>, ví dụ điểm neo theo khung của Cu Tí): nạp sẵn để xem thử giống game và tải về không mất số cũ
+      for (const d of ds) if (d && d.doi_tuong === 'ghep') nhanTep(d, d.ma, true);
+      // Thân mặc sẵn theo bộ đang có trong game (em-be-<key>-<bộ>): nạp sẵn, trừ khi người dùng đã thả bản khác
+      for (const d of ds) if (d && d.doi_tuong === 'em-be') { const m = String(d.ma || '').match(/^em-be-(smith|hunter|healer|wrestler)-(rung|bien|lau)$/); if (m && !(THAN_BO[m[1]] && THAN_BO[m[1]][m[2]])) nhanTep(d, d.ma, true); }
       S.key = keyCu; S.than = THAN[keyCu] ? (thanCu === 'code' && th === 0 ? 'code' : 'ai') : 'code';
       coSanXong = true;
       $('ttCoSan').innerHTML = '✔ Đã có sẵn <b>' + th + '</b> thân em bé AI, <b>' + n + '</b> món trang phục ảnh AI và <b>' + v + '</b> vũ khí ảnh AI của game, cùng mọi đồ vẽ bằng code. Thả tệp ở trên để thêm món mới hoặc thay món có sẵn.';
@@ -619,6 +634,12 @@ function dangKyHet(bo) {
       if (dk[ma] === ky) continue;
       try { const c = sao(t); c.ma = ma; SC.add(c); dk[ma] = ky; } catch (e) { /* bỏ qua */ }
     }
+    for (const key in THAN_BO) for (const bo in THAN_BO[key]) { // thân mặc sẵn theo bộ (game tự chọn theo áo đang mặc)
+      const t = THAN_BO[key][bo], ma = 'em-be-' + key + '-' + bo, ky = 'than' + t.tam.length + JSON.stringify(t.neo || {});
+      if (key === S.key && S.than !== 'ai') { if (dk[ma]) { try { SC.remove(ma); } catch (e) { /* bỏ qua */ } delete dk[ma]; } continue; }
+      if (dk[ma] === ky) continue;
+      try { const c = sao(t); c.ma = ma; SC.add(c); dk[ma] = ky; } catch (e) { /* bỏ qua */ }
+    }
     if (ten === 'moi' && coAPI()) for (const key in GHEP) {
       const ky = JSON.stringify(GHEP[key]); if (dk[GHEP[key].ma] === ky) continue;
       try { SC.add(sao(GHEP[key])); dk[GHEP[key].ma] = ky; } catch (e) { /* bỏ qua */ }
@@ -630,7 +651,15 @@ let hDK = 0;
 function capNhatMoi() { clearTimeout(hDK); hDK = setTimeout(() => dangKyHet(false), 120); }
 
 // ---------- thân AI ----------
-const spAI = (G) => (G && S.than === 'ai' && THAN[S.key] ? G.spriteCustom.get('em-be-' + S.key) : null);
+// Thân AI game đang dùng: thân mặc sẵn theo bộ của ÁO đang mặc nếu có tệp (luật của game: G.spriteCustom.cuaEmBe), không thì thân gốc.
+const spAI = (G) => {
+  if (!(G && S.than === 'ai' && THAN[S.key])) return null;
+  const SC = G.spriteCustom; let sp = null;
+  try { const b = SC.thanBo ? SC.thanBo(S.key, { key: S.key, outfit: outfitMac() }) : null; sp = b && b.img ? b : null; } catch (e) { sp = null; }
+  return sp || SC.get('em-be-' + S.key);
+};
+// Bộ của áo đang mặc và các món cùng bộ (game ẩn lớp rời của các món này khi đã có thân bộ). Dùng đúng hàm của game (G.outfit.fxThanBo).
+function fxBo(o) { const Og = GAME.moi && GAME.moi.outfit; try { return Og && Og.fxThanBo ? Og.fxThanBo(o) : null; } catch (e) { return null; } }
 const dangDungAI = () => S.than === 'ai' && !!THAN[S.key];
 // Số khung của động tác đang xem
 function soKhung(G) {
@@ -817,6 +846,8 @@ function outfitMac(chiCu, boQua) { // đồ đưa cho game vẽ. chiCu: chỉ c�
     if (chiCu && chiCu.has(ma)) continue;
     o[k] = od === 'wings' ? { kind: M.look, level: S.canhLv } : M.look;
   }
+  // Luật Q1 như trong game: ÁO của bộ chọn thân mặc sẵn em-be-<tên>-<bộ> (nếu có tệp); chỉ lớp rời CÙNG BỘ với áo bị ẩn.
+  const f = fxBo(o); if (f && f.bo_than) o.fx = { bo_than: f.bo_than, an_bo: f.an_bo };
   return o;
 }
 function monDangMac() { return O_DO.map(([od]) => S.mac[od]).filter((ma) => ma && MON[ma]); } // chỉ đồ ảnh AI
@@ -1060,8 +1091,16 @@ function capNhatThan() {
   $('nutThanCode').classList.toggle('chon', !dangDungAI()); $('nutThanAI').classList.toggle('chon', dangDungAI());
   // Game không khoác ÁO rời lên thân AI nữa (áo rời không ôm khít thân): bậc áo hiện bằng viền màu quanh thân + một dấu nhỏ trên ngực.
   $('ttThan').textContent = (co ? 'Có thân AI (em-be-' + S.key + ')' : 'Chưa có thân AI cho ' + TEN_NV[S.key] + ' (thả tệp em-be-' + S.key + '.sprite.json)')
-    + (dangDungAI() ? ' · Lưu ý: trong game áo không khoác lên thân AI, hiện bằng viền + dấu ngực.' : '');
+    + (dangDungAI() ? ' · Lưu ý: trong game áo không khoác lên thân AI, hiện bằng viền + dấu ngực.' : '') + (dangDungAI() ? ghiThanBo() : '');
   $('ttCheA').textContent = dangDungAI() ? '' : 'Đang xem thân vẽ bằng code: điểm do game tự tính ở từng khung, không cần đặt. Chọn "Thân AI" để đặt điểm cho thân AI.';
+}
+// Dòng nhắc luật "áo chọn thân" theo áo đang mặc ở ô Áo.
+function ghiThanBo() {
+  const f = fxBo(outfitMac()), bo = f && f.bo_than;
+  if (!bo) return ' Mặc ÁO của một bộ (Rừng Già, Hang Biển, Lâu Đài) thì game đổi sang thân mặc sẵn của bộ đó nếu đã có tệp em-be-' + S.key + '-<bộ>; không cần đủ 3 món.';
+  const co = !!(THAN_BO[S.key] && THAN_BO[S.key][bo]), an = (f.an_bo || []).map((k) => ({ hat: 'mũ', back: 'đồ lưng', hand: 'bùa' })[k]).join(', ');
+  return ' Đang mặc áo ' + TEN_BO[bo] + ': ' + (co ? 'game dùng thân mặc sẵn em-be-' + S.key + '-' + bo + (an ? '; ' + an + ' cùng bộ không khoác rời nữa (đã vẽ trong thân)' : '') + '; món khác bộ và cánh vẫn khoác rời.'
+    : 'chưa có tệp em-be-' + S.key + '-' + bo + ' nên game vẫn dùng thân gốc và khoác đồ rời như cũ (áo chỉ hiện viền + dấu ngực).');
 }
 $('nutThanCode').onclick = () => { S.than = 'code'; capNhatThan(); capNhatMoi(); dungDongTac(); };
 $('nutThanAI').onclick = () => { if (THAN[S.key]) { S.than = 'ai'; capNhatThan(); capNhatMoi(); dungDongTac(); } };
@@ -1119,6 +1158,7 @@ function dungOMac() {
   capNhatOMac(); veHinhNho(); dungMonChon(); dungLop();
 }
 function capNhatOMac() {
+  try { capNhatThan(); } catch (e) { /* chưa dựng xong */ } // dòng nhắc thân theo bộ đổi theo áo đang mặc
   for (const b of document.querySelectorAll('#oMac .the-do[data-o]')) {
     const id = b.dataset.id || null, vk = b.dataset.o === 'vk', chon = vk ? String(S.vkDong) === id : (S.mac[b.dataset.o] || null) === id;
     b.classList.toggle('chon', chon); b.setAttribute('aria-selected', chon);

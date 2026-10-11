@@ -239,11 +239,28 @@
     else if (top === 1) L.fx.glow = null;
     L.fx.top = top;
     const sm = O.sum(sv);
-    // bo: mã bộ đang mặc ĐỦ (từ 3 món, cùng ngưỡng với vầng sáng và thưởng hệ của bộ) → game đổi sang thân vẽ liền cả bộ
-    // em-be-<nhân vật>-<bộ> nếu có tệp (js/sprite_custom.js). Chỉ là hình, không đổi chỉ số.
-    for (const s in sm.sets) if (sm.sets[s] >= 3) { L.fx.aura = O.SETS[s].el; L.fx.bo = s; }
+    // du_bo: mã bộ đang mặc ĐỦ (từ 3 món): chỉ dùng cho vầng sáng "đủ bộ" (aura) và thưởng hệ của bộ, KHÔNG đổi. bo: tên cũ của du_bo.
+    for (const s in sm.sets) if (sm.sets[s] >= 3) { L.fx.aura = O.SETS[s].el; L.fx.du_bo = s; L.fx.bo = s; }
+    // bo_than (Q1, 11/10/2026): bộ của ÁO đang mặc → game đổi sang thân vẽ liền cả bộ em-be-<nhân vật>-<bộ> nếu có tệp
+    // (js/sprite_custom.js); không cần đủ 3 món. Không mặc áo hoặc áo lẻ → null (thân gốc). Chỉ là hình, không đổi chỉ số.
+    // an_bo: các ô đang mặc món CÙNG BỘ với áo (thân bộ đã vẽ sẵn nên không khoác rời nữa); món khác bộ và cánh vẫn khoác rời.
+    if (O.THAN_THEO_AO) {
+      const ao = O.worn(sv, 'robe'), bo = (ao && I[ao.k] && I[ao.k].set) || null;
+      L.fx.bo_than = bo && O.SETS[bo] ? bo : null;
+      L.fx.an_bo = L.fx.bo_than ? O.AN_THAN_BO.filter((slot) => { const it = O.worn(sv, slot); return !!(it && I[it.k] && I[it.k].set === L.fx.bo_than); }) : [];
+    }
     L.fx.els = L.fx.els.slice(0, 2);
     return L;
+  };
+  // Cờ tắt của Q1: false → như bản trước (thân bộ chỉ khi đủ 3 món, ẩn cả mũ, đồ lưng, bùa rời).
+  O.THAN_THEO_AO = true;
+  O.AN_THAN_BO = ['hat', 'back', 'hand']; // các món thân bộ vẽ sẵn trong hình (cánh, vũ khí luôn rời)
+  // Bộ của một món theo ô và hình (look): cho công cụ xem thử (tools/tach-ghep) dựng fx.bo_than, fx.an_bo đúng luật của O.look.
+  O.boCuaLook = function (slot, look) { for (const id in I) if (I[id].slot === slot && I[id].look === look) return I[id].set || null; return null; };
+  O.fxThanBo = function (of) { // of: { hat, robe, back, hand } là tên hình đang mặc
+    const bo = of && of.robe ? O.boCuaLook('robe', of.robe) : null;
+    if (!O.THAN_THEO_AO || !bo) return { bo_than: null, an_bo: [] };
+    return { bo_than: bo, an_bo: O.AN_THAN_BO.filter((slot) => of[slot] && O.boCuaLook(slot, of[slot]) === bo) };
   };
 
   // ---------- áp vào người chơi (combat.js gọi trong G.buildPlayer) ----------

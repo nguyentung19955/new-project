@@ -224,11 +224,13 @@
   SC.neoCua = (sp, ten) => (sp.neo ? sp.neo.theo[ten] || sp.neo.goc : null);
   // Mã tệp: "em-be" cho cả bốn em bé, hoặc "em-be-smith", "em-be-hunter", "em-be-healer", "em-be-wrestler" cho từng bé.
   // BỘ TRANG PHỤC vẽ liền cả cử động: "em-be-<nhân vật>-<bộ>" (bộ: rung Rừng Già, bien Hang Biển, lau Lâu Đài), cùng định dạng tệp em bé.
-  // Khi đồ đang mặc đủ bộ (o.outfit.fx.bo do js/outfit.js O.look ghi: từ 3 món của bộ) và có tệp thân bộ của nhân vật đó thì dùng thân
-  // bộ thay thân thường; không có tệp thì như cũ. o: đối tượng vẽ em bé (có outfit hoặc p.outfit); không đưa o thì chỉ tìm thân thường.
+  // Khi đang mặc ÁO của một bộ (o.outfit.fx.bo_than do js/outfit.js O.look ghi: bộ của áo, không cần đủ 3 món; quyết định Q1) và có tệp
+  // thân bộ của nhân vật đó thì dùng thân bộ thay thân thường; không có tệp thì về thân gốc như cũ. o: đối tượng vẽ em bé (có outfit
+  // hoặc p.outfit); không đưa o thì chỉ tìm thân thường. Đồ tự dựng không có bo_than (trang công cụ cũ) thì đọc fx.bo như trước.
   const BO_TP = { rung: 1, bien: 1, lau: 1 };
   SC.BO_TP = ['rung', 'bien', 'lau'];
-  SC.boCua = (o) => { const x = o && (o.outfit || (o.p && o.p.outfit)), b = x && x.fx && x.fx.bo; return typeof b === 'string' && BO_TP[b] ? b : null; };
+  const fxCua = (o) => { const x = o && (o.outfit || (o.p && o.p.outfit)); return (x && x.fx) || null; };
+  SC.boCua = (o) => { const f = fxCua(o), b = f && (f.bo_than !== undefined ? f.bo_than : f.bo); return typeof b === 'string' && BO_TP[b] ? b : null; };
   SC.thanBo = (key, o) => { const b = SC.boCua(o); return b ? SC.get('em-be-' + (key || 'smith') + '-' + b) : null; };
   SC.cuaEmBe = (key, o) => (o && SC.thanBo(key, o)) || SC.get('em-be-' + (key || 'smith')) || SC.get('em-be');
   SC.chonEmBe = function (sp, o) {
@@ -425,6 +427,14 @@
     c.fillStyle = ao.he ? MAU_HE[ao.he] : '#ffffff'; c.fillRect(X, Y, 1, 1);
   };
   const AN_BO = ['hat', 'back', 'hand']; // thân theo bộ đã vẽ sẵn mũ, đồ lưng, bùa (áo thì thân AI nào cũng không khoác)
+  // Các ô KHÔNG khoác rời khi đang vẽ thân bộ sp: chỉ những món CÙNG BỘ với áo (fx.an_bo của O.look); mũ, đồ lưng, bùa khác bộ và
+  // cánh vẫn khoác rời theo điểm neo. Đồ tự dựng không ghi an_bo (kiểu cũ: đủ bộ) thì ẩn cả ba như trước. null: không ẩn gì.
+  SC.anBo = function (o, sp) {
+    if (!sp || !sp.bo) return null;
+    const f = fxCua(o);
+    const a = f && f.bo_than === sp.bo && Array.isArray(f.an_bo) ? AN_BO.filter((k) => f.an_bo.indexOf(k) >= 0) : AN_BO;
+    return a.length ? a : null;
+  };
   function noiEmBe() {
     const A = G.art;
     if (!A || !A.hero || A._spriteCustom || !SC.noi) return;
@@ -440,7 +450,7 @@
       let lop = null; // đồ đang mặc khoác lên thân AI: lớp sau thân và lớp trước thân, bám theo chính thân AI khung này
       const neo = SC.neoCua(sp, s.ten);
       if (sp.khoacDo && G.tinhLinh.lopDo) {
-        try { const kh = SC.khopEmBe(sp, s.ten, s.i); lop = G.tinhLinh.lopDo(fr, neoGhep(fr.key, s, neo, kh), kh, sp.bo ? AN_BO : null); } catch (e) { lop = null; }
+        try { const kh = SC.khopEmBe(sp, s.ten, s.i); lop = G.tinhLinh.lopDo(fr, neoGhep(fr.key, s, neo, kh), kh, SC.anBo(o, sp)); } catch (e) { lop = null; }
       }
       // Áo không khoác lên thân AI: viền màu bậc áo + dấu ngực.
       let ao = null, nguc = null, daVien = false;
