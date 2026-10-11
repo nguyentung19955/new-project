@@ -340,20 +340,33 @@ function tachNen(A, coAlpha, C, R) {
     for (let x = 0; x < W; x++) vien.push(x, (H - 1) * W + x);
     for (let y = 0; y < H; y++) vien.push(y * W, y * W + W - 1);
     // màu nền: lấy mẫu ở 4 góc mỗi ô lưới (góc ô gần như luôn là nền), giữ các màu chiếm ≥ 3%
+    // độ dày tối đa của nét kẻ lưới: 6 điểm, hoặc 1,5% cạnh dài của ảnh (ChatGPT hay kẻ nét đen dày 10–16 điểm ở ảnh 1024)
+    const T = Math.max(6, Math.round(0.015 * Math.max(W, H)));
+    const Lg = Math.max(24, Math.round(Math.min(W / C, H / R) * 0.45));
     const dem = new Map(); let tong = 0;
     for (let r = 0; r < R; r++) for (let c = 0; c < C; c++) {
       const cw = W / C, ch = H / R;
-      for (const [fx, fy] of [[0.07, 0.08], [0.93, 0.08], [0.07, 0.92], [0.93, 0.92]])
+      // lùi vào trong ô ít nhất T + 8 điểm để không lấy nhầm nét kẻ dày làm màu nền
+      const lx = Math.max(0.07 * cw, T + 8), ly = Math.max(0.08 * ch, T + 8);
+      for (const [fx, fy] of [[lx, ly], [cw - lx, ly], [lx, ch - ly], [cw - lx, ch - ly]])
         for (let dy = -3; dy <= 3; dy++) for (let dx = -3; dx <= 3; dx++) {
-          const x = Math.round((c + fx) * cw) + dx, y = Math.round((r + fy) * ch) + dy; if (x < 0 || y < 0 || x >= W || y >= H) continue;
+          const x = Math.round(c * cw + fx) + dx, y = Math.round(r * ch + fy) + dy; if (x < 0 || y < 0 || x >= W || y >= H) continue;
           const j = y * W + x, k = ((d[j * 4] >> 3) << 10) | ((d[j * 4 + 1] >> 3) << 5) | (d[j * 4 + 2] >> 3); dem.set(k, (dem.get(k) || 0) + 1); tong++;
         }
     }
-    const nen = [...dem.entries()].filter(([, n]) => n >= 0.03 * tong).sort((a, b) => b[1] - a[1]).slice(0, 12).map(([k]) => [((k >> 10) & 31) << 3, ((k >> 5) & 31) << 3, (k & 31) << 3]);
+    // màu lấy mẫu trúng nét kẻ dày (viền ngoài, lưới kẻ dày): nếu phần lớn điểm của màu đó nằm trong nét mỏng ≤ T mà dài ≥ Lg thì đó là màu đường kẻ, không phải nền
+    const chayN = new Uint16Array(N), chayD = new Uint16Array(N);
+    const laMauKe = (c) => {
+      const g = (j) => Math.abs(d[j * 4] - c[0]) + Math.abs(d[j * 4 + 1] - c[1]) + Math.abs(d[j * 4 + 2] - c[2]) < 40;
+      for (let y = 0; y < H; y++) { let x = 0; while (x < W) { if (!g(y * W + x)) { chayN[y * W + x] = 0; x++; continue; } let e = x; while (e < W && g(y * W + e)) e++; for (let t = x; t < e; t++) chayN[y * W + t] = Math.min(65535, e - x); x = e; } }
+      for (let x = 0; x < W; x++) { let y = 0; while (y < H) { if (!g(y * W + x)) { chayD[y * W + x] = 0; y++; continue; } let e = y; while (e < H && g(e * W + x)) e++; for (let t = y; t < e; t++) chayD[t * W + x] = Math.min(65535, e - y); y = e; } }
+      let n = 0, ke = 0; for (let j = 0; j < N; j++) if (chayN[j]) { n++; if ((chayN[j] <= T && chayD[j] >= Lg) || (chayD[j] <= T && chayN[j] >= Lg)) ke++; }
+      return n > 0 && ke > 0.6 * n;
+    };
+    const nen0 = [...dem.entries()].filter(([, n]) => n >= 0.03 * tong).sort((a, b) => b[1] - a[1]).slice(0, 12).map(([k]) => [((k >> 10) & 31) << 3, ((k >> 5) & 31) << 3, (k & 31) << 3]), nenLoc = nen0.filter((c) => !laMauKe(c));
+    const nen = nenLoc.length ? nenLoc : nen0; // lọc hết thì giữ nguyên (ảnh lạ), không để trống
     const giong = (j) => { for (const c of nen) if (Math.abs(d[j * 4] - c[0]) + Math.abs(d[j * 4 + 1] - c[1]) + Math.abs(d[j * 4 + 2] - c[2]) < 40) return true; return false; };
     const laNen = new Uint8Array(N); for (let j = 0; j < N; j++) laNen[j] = giong(j) ? 1 : 0;
-    const Lg = Math.max(24, Math.round(Math.min(W / C, H / R) * 0.45));
-    const T = Math.max(5, Math.round(Math.min(W, H) / 150)); // bề dày tối đa của nét kẻ lưới
     const doc = new Uint16Array(N), ngang = new Uint16Array(N);
     for (let y = 0; y < H; y++) { let x = 0; while (x < W) { if (laNen[y * W + x]) { x++; continue; } let e = x; while (e < W && !laNen[y * W + e]) e++; for (let t = x; t < e; t++) ngang[y * W + t] = Math.min(65535, e - x); x = e; } }
     for (let x = 0; x < W; x++) { let y = 0; while (y < H) { if (laNen[y * W + x]) { y++; continue; } let e = y; while (e < H && !laNen[e * W + x]) e++; for (let t = y; t < e; t++) doc[t * W + x] = Math.min(65535, e - y); y = e; } }
