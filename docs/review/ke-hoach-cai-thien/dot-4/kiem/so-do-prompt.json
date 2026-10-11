@@ -1,0 +1,97 @@
+{
+ "tach-phong": {
+  "so_lo": 5,
+  "co_doan_bang_mau": 5,
+  "trong_do_lo_tu_co_san_tu_phien_khac": 4,
+  "hai_doan_trung": 0,
+  "loi_console_ban_moi": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+  ],
+  "loi_console_ban_truoc": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+  ],
+  "mac_dinh_o_giam_mau": "tu-do"
+ },
+ "tach-lang": {
+  "so_lo": 1,
+  "co_doan_bang_mau": 1,
+  "trong_do_lo_tu_co_san_tu_phien_khac": 0,
+  "hai_doan_trung": 0,
+  "loi_console_ban_moi": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+   "Failed to load resource: the server responded with a status of 404 (File not found)",
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+  ],
+  "loi_console_ban_truoc": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+   "Failed to load resource: the server responded with a status of 404 (File not found)",
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+  ],
+  "mac_dinh_o_giam_mau": "tu-do"
+ },
+ "tach-giao-dien": {
+  "so_lo": 4,
+  "co_doan_bang_mau": 4,
+  "trong_do_lo_tu_co_san_tu_phien_khac": 1,
+  "hai_doan_trung": 0,
+  "loi_console_ban_moi": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+  ],
+  "loi_console_ban_truoc": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+  ],
+  "mac_dinh_o_giam_mau": "tu-do"
+ },
+ "tach-do": {
+  "so_lo": 23,
+  "co_doan_bang_mau": 23,
+  "trong_do_lo_tu_co_san_tu_phien_khac": 0,
+  "hai_doan_trung": 0,
+  "loi_console_ban_moi": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+  ],
+  "loi_console_ban_truoc": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+  ],
+  "mac_dinh_o_giam_mau": "tu-do"
+ },
+ "tach-quai": {
+  "so_lo": 36,
+  "co_doan_bang_mau": 36,
+  "trong_do_lo_tu_co_san_tu_phien_khac": 0,
+  "hai_doan_trung": 0,
+  "loi_console_ban_moi": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+  ],
+  "loi_console_ban_truoc": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+  ],
+  "mac_dinh_o_giam_mau": "tu-do"
+ },
+ "tach-anh-hung": {
+  "so_lo": 23,
+  "co_doan_bang_mau": 23,
+  "trong_do_lo_tu_co_san_tu_phien_khac": 0,
+  "hai_doan_trung": 0,
+  "loi_console_ban_moi": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+  ],
+  "loi_console_ban_truoc": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+  ],
+  "mac_dinh_o_giam_mau": "tu-do"
+ },
+ "tach-hieu-ung": {
+  "so_lo": 64,
+  "co_doan_bang_mau": 32,
+  "trong_do_lo_tu_co_san_tu_phien_khac": 0,
+  "hai_doan_trung": 0,
+  "loi_console_ban_moi": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+  ],
+  "loi_console_ban_truoc": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+  ],
+  "mac_dinh_o_giam_mau": "tu-do"
+ }
+}
