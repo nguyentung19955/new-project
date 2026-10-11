@@ -192,4 +192,26 @@ function assert(ok, message) { if (!ok) throw new Error(message); }
     assert(G.save.owner === 'google-cu', 'Q4: bản lưu trên máy ghi đúng chủ là tài khoản Google');
     console.log('PASS — Q4: tài khoản Google đã có tiến trình, mở máy mới → dùng tiến trình trên mây, không tạo bản mới');
   }
+  // (3) Quyết định B: khách ĐÃ QUA ≥ 1 ải, liên kết vào Google đã có tiến trình (chênh lệch nhỏ) → phải HỎI, và chọn bản nào thì giữ bản đó.
+  {
+    const cloudSave = { stars: { '0-0': 3, '0-1': 2 }, stars2: {}, heroes: { smith: { unlocked: true, lvl: 3 } }, weapons: [{}, {}], gold: 300, owner: 'google-cu', savedAt: 1000, sound: true };
+    for (const answer of ['cloud', 'local']) {
+      const { G, C } = makeGame();
+      G.fixSave = (x) => x; G.StageScene = { stage: true }; G.scene = null;
+      G.save = { stars: { '0-0': 2 }, stars2: {}, heroes: { smith: { unlocked: true, lvl: 2 } }, weapons: [{}], gold: 80, owner: 'khach1', savedAt: 9000, sound: true }; // khách qua 1 ải
+      let asked = 0; const sets = [];
+      G.cloudUI = { conflict() { asked++; return Promise.resolve(answer); } };
+      C.user = { uid: 'google-cu', isAnonymous: false };
+      C.db = { collection() { return { doc() { return {
+        get: () => Promise.resolve({ exists: true, data: () => ({ save: JSON.stringify(cloudSave), updatedAt: 1000 }) }),
+        set: (p) => { sets.push(p); return Promise.resolve(); },
+      }; } }; } };
+      await C.pull();
+      clearTimeout(C._timer);
+      assert(asked === 1, 'B: khách đã qua ải liên kết vào Google có tiến trình → phải hỏi chọn bản (hỏi ' + asked + ')');
+      if (answer === 'cloud') assert(G.save.gold === 300 && sets.length === 0, 'B: chọn bản mây → dùng bản mây, không ghi đè mây');
+      else assert(G.save.gold === 80 && sets.length === 1 && JSON.parse(sets[0].save).gold === 80, 'B: chọn bản khách → đẩy bản khách lên tài khoản Google');
+    }
+    console.log('PASS — B: khách đã qua ải chuyển sang Google có tiến trình → luôn hỏi, giữ đúng bản đã chọn');
+  }
 })().catch((err) => { console.error('FAIL —', err.message); process.exit(1); });

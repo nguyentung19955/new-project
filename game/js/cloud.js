@@ -162,7 +162,10 @@
             const lp = progress(local), cp = progress(cloud);
             let use = 'cloud';
             // bản trên máy tiến xa hơn rõ rệt: hỏi lại, mặc định giữ bản nhiều tiến độ hơn
-            if (lp >= cp + 8 && G.cloudUI && G.cloudUI.conflict) use = await G.cloudUI.conflict(summary(local), summary(cloud), d.updatedAt || 0);
+            // Đợt 1 (quyết định B): bản trên máy thuộc tài khoản khác (khách vừa liên kết/đổi sang Google đã có tiến trình)
+            // và đã qua ít nhất 1 ải → LUÔN hỏi chọn bản, không tự lấy bản mây dù chênh lệch nhỏ. Bản trắng (chưa qua ải) thì không hỏi.
+            const hoiKhach = other && far(local) >= 1;
+            if ((lp >= cp + 8 || hoiKhach) && G.cloudUI && G.cloudUI.conflict) use = await G.cloudUI.conflict(summary(local), summary(cloud), d.updatedAt || 0);
             if (use === 'cloud') { this.apply(cloud, d.updatedAt || Date.now()); this.lastSync = Date.now(); return; }
           } else if ((d.updatedAt || 0) === (local.savedAt || 0)) { this.lastSync = d.updatedAt || Date.now(); this._own(); return; }
           else if (progress(cloud) >= progress(local) + 8 && G.cloudUI && G.cloudUI.conflict) {

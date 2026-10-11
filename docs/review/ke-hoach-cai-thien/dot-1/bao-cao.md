@@ -185,3 +185,8 @@ Quyết định Q4 ghi: gặp hai bản tiến trình khác nhau thì phải gi�
 | C | Như B, thêm nút "Lấy lại bản khách đã cất" ở Anh Mõ | An toàn nhất | Thêm giao diện và kiểm thử |
 
 Trong lúc chờ, bản đang chạy là lựa chọn A cộng với việc cất bản khách.
+
+
+## 9. Quyết định mục 8 — chủ dự án chọn B (08:34, 11/10)
+
+Đã sửa `cloud.js` `pull()`: bản trên máy thuộc tài khoản khác **và đã qua ≥ 1 ải** → luôn hiện hộp hỏi chọn bản (dùng hộp sẵn có), không còn ngưỡng 8 điểm. Bản trắng (chưa qua ải) vẫn tự lấy bản mây như cũ, không hỏi. Thêm ca kiểm (3) vào `cloud_save_regression.test.js`: 7/7 ca qua. Quay lui: `git revert` commit "Quyết định B".
