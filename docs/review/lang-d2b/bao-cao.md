@@ -124,7 +124,7 @@ Không có ảnh "trước / sau" trong game, vì game không đổi.
 
 - Bỏ lô gộp, trang về như trước: `git revert 4d81405`. Commit này chỉ đụng `tools/tach-lang/index.html`, không đụng game.
 - Chỉ ẩn lô gộp mà giữ code: xoá mục `{ id: 'khung-cui-lua-lo', … }` ở cuối mảng `LO` trong `tools/tach-lang/index.html`. Hai lô lẻ không phụ thuộc gì vào mục đó.
-- Tài liệu: `git revert` commit báo cáo (commit ngay sau `4d81405`, có chữ "Báo cáo làn D2b").
+- Tài liệu: `git revert 510ec8e` (commit "Báo cáo làn D2b").
 - Không quay lui gì thì hai lô lẻ và hai prompt lẻ vẫn dùng được như cũ.
 
 ## 8. Quyết định mới cần duyệt
@@ -136,4 +136,4 @@ Không có ảnh "trước / sau" trong game, vì game không đổi.
 ## 9. Commit và kiểm tra tự động
 
 - `4d81405`: trang Tách Làng (lô gộp). Workflow: xanh.
-- Commit báo cáo và tài liệu (ngay sau `4d81405` trong lịch sử nhánh): chỉ đổi `docs/`, không kích hoạt workflow, không đổi gì trên web.
+- `510ec8e`: báo cáo và tài liệu. Chỉ đổi `docs/`, không kích hoạt workflow, không đổi gì trên web.
