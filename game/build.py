@@ -126,7 +126,7 @@ HINH_LON_SAU = {'gd-lang-nen', 'gd-ban-do-vung', 'gd-khung-ban-do'}
 
 def bat_buoc(t):
     """Hình phải nằm sẵn trong trang (màn chào, làng, ải 1 cần ngay). LUẬT ĐƠN GIẢN, mọi thứ không khớp đều là ẢNH TẢI SAU:
-      1. hồ sơ ghép (ghep-*: chỉ số liệu)             2. em bé 4 thân gốc (không phải thân theo bộ trang phục)
+      1. hồ sơ ghép (ghep-*: chỉ số liệu)             2. em bé 4 thân gốc (không phải thân theo bộ trang phục, không phải tệp đòn theo vũ khí -don)
       3. người làng (nl-*)                             4. ảnh giao diện, làng, phòng (gd-*)
       5. vật phẩm (vp-*) và trang phục rời (tp-*): rất nhỏ, có ngay để em bé trong làng không đổi hình giữa chừng
       6. vũ khí khởi đầu: Kiếm Rèn (vk-sword-0*) và Cung Tre (vk-bow-3*), kể cả bản theo hệ (màn chào vẽ kiếm lửa)
@@ -137,8 +137,8 @@ def bat_buoc(t):
         return False
     if d in ('ghep', 'nguoi-lang', 'giao-dien', 'vat-pham', 'trang-phuc'):
         return True
-    if d == 'em-be':
-        return not re.search(r'-(rung|bien|lau)$', ma)
+    if d == 'em-be':  # tệp đòn theo vũ khí (-don) tải sau: game ghép vào thân khi về tới, chưa về thì đánh bằng hàng atk như cũ
+        return not re.search(r'-(rung|bien|lau|don)$', ma)
     if d == 'vu-khi':
         return bool(re.match(r'^vk-(sword-0|bow-3)(-|$)', ma))
     if d == 'hieu-ung':
@@ -270,6 +270,15 @@ def custom_sprites():
             continue
         if not re.match(r'^data:image/png;base64,[A-Za-z0-9+/=]+$', str(t.get('tam', ''))):
             sys.exit('art/custom/%s thiếu tấm sprite PNG' % name)
+        # Phiên 3: tệp ĐÒN THEO VŨ KHÍ em-be-<nhân vật>[-<bộ>]-don chỉ có các hàng atk_sword, atk_bow, atk_spear, atk_hammer, cast (không có idle);
+        # js/sprite_custom.js ghép nó xuống dưới tấm thân cùng mã gốc khi nạp.
+        if t.get('doi_tuong') == 'em-be' and ma.endswith('-don'):
+            if not re.match(r'^em-be-(smith|hunter|healer|wrestler)(-(rung|bien|lau))?-don$', ma):
+                sys.exit('art/custom/%s: mã tệp đòn phải là em-be-<smith|hunter|healer|wrestler>[-rung|-bien|-lau]-don' % name)
+            if not isinstance(t.get('dong_tac'), dict) or not any(k in t['dong_tac'] for k in ('atk_sword', 'atk_bow', 'atk_spear', 'atk_hammer', 'cast')):
+                sys.exit('art/custom/%s: tệp đòn thiếu hàng (atk_sword, atk_bow, atk_spear, atk_hammer, cast)' % name)
+            out.append({k: t[k] for k in RUNTIME_KEYS if k in t})
+            continue
         if not isinstance(t.get('dong_tac'), dict) or 'idle' not in t['dong_tac']:
             sys.exit('art/custom/%s thiếu động tác đứng thở' % name)
         # Em bé: em-be (cả bốn), em-be-<nhân vật> (thân thường) hoặc em-be-<nhân vật>-<bộ> (thân vẽ liền BỘ TRANG PHỤC: rung, bien, lau).

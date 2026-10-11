@@ -100,6 +100,10 @@
       <button class="nut" id="nutChepPrompt">Sao chép prompt vẽ</button>
     </div>
     <p class="chu-y" id="ghiNV"></p>
+    <div id="vungThamChieu" hidden style="margin-top:8px">
+      <div class="hang"><button class="nut phu" id="nutThamChieu">Tải ảnh tham chiếu thân</button><span class="chu-y" id="ttThamChieu" style="margin:0"></span></div>
+      <div class="khung-xem" id="khungThamChieu" hidden><canvas id="cvThamChieu"></canvas></div>
+    </div>
     <div class="bang" id="bangThongSo"></div>
     <details>
       <summary>Xem prompt</summary>
@@ -166,8 +170,9 @@
             <label class="hang" style="gap:6px"><input type="checkbox" id="bongGoc"> Hiện bóng em bé gốc đè lên</label>
           </div>
           <p class="chu-y" id="ghiBo" hidden><b>Bộ trang phục:</b> đang thử như lúc mặc đủ bộ trong game: thân này thay thân thường, game không khoác rời mũ, áo, đồ lưng, bùa nữa (đã vẽ trong hình), chỉ khoác cánh và vũ khí. Chỉ cần chỉnh ô "Tay cầm vũ khí" nếu vũ khí lệch khỏi nắm tay.</p>
-          <p class="chu-y">Áo không khoác lên thân AI: game hiện bậc áo bằng viền màu quanh thân và một dấu nhỏ trên ngực. Nếu mũ, áo bị lệch khỏi đầu, thân: bấm mũi tên để dời (mỗi lần 1 điểm ảnh). <b>Vũ khí</b> không nằm trong nắm tay của thân AI: dời ô "Tay cầm vũ khí" — nên tích "Chỉ chỉnh cho động tác đang xem" và chỉnh từng động tác (đứng, chạy, đánh…). <b>Tự khớp</b> là công cụ tự đoán lại đầu và thân.</p>
-          <div class="neo">
+          <p class="chu-y" id="ghiDon" hidden><b>Đòn theo vũ khí:</b> trái là thân AI trong game ghép thêm hàng đòn vừa tách (cầm đúng loại vũ khí của hàng đang xem), phải là em bé gốc. Game tự đo bàn tay từng khung để đặt vũ khí, không cần chỉnh tay. Nếu vũ khí lệch xa khỏi nắm tay ở nhiều khung: nhờ ChatGPT vẽ lại nắm tay to, rõ, tách khỏi thân.</p>
+          <p class="chu-y" id="ghiNeo">Áo không khoác lên thân AI: game hiện bậc áo bằng viền màu quanh thân và một dấu nhỏ trên ngực. Nếu mũ, áo bị lệch khỏi đầu, thân: bấm mũi tên để dời (mỗi lần 1 điểm ảnh). <b>Vũ khí</b> không nằm trong nắm tay của thân AI: dời ô "Tay cầm vũ khí" — nên tích "Chỉ chỉnh cho động tác đang xem" và chỉnh từng động tác (đứng, chạy, đánh…). <b>Tự khớp</b> là công cụ tự đoán lại đầu và thân.</p>
+          <div class="neo" id="vungNeo">
             <div class="o" data-neo="dau"><b>Đầu (mũ, dấu mặt)</b>
               <span></span><button class="nut phu" data-d="0,-1" aria-label="Đầu lên">↑</button><span></span>
               <button class="nut phu" data-d="-1,0" aria-label="Đầu sang trái">←</button><span class="gt">0, 0</span><button class="nut phu" data-d="1,0" aria-label="Đầu sang phải">→</button>
@@ -184,7 +189,7 @@
               <span></span><button class="nut phu" data-d="0,1" aria-label="Vũ khí xuống">↓</button><span></span>
             </div>
           </div>
-          <div class="hang" style="margin-top:8px">
+          <div class="hang" style="margin-top:8px" id="hangNeo">
             <label class="hang" style="gap:6px"><input type="checkbox" id="neoRieng"> Chỉ chỉnh cho động tác đang xem</label>
             <button class="nut phu nho" id="nutTuKhop">Tự khớp</button>
             <button class="nut phu nho" id="nutNeo0">Về 0</button>
@@ -215,6 +220,11 @@ const LOAI = {
   'em-be': { dt: ['idle', 'move', 'tele', 'atk', 'hit', 'die', 'ne'], so: [6, 6, 4, 6, 4, 8, 6],
     ten: ['Đứng', 'Chạy', 'Lấy đà', 'Đánh', 'Trúng đòn', 'Chết', 'Né lăn'],
     giay: [1.0, 0.6, 0.4, 0.4, 0.2, 0.6, 0.4], lap: [true, true, false, false, false, false, false],
+    fw: 48, fh: 48, gx: 24, gy: 45 },
+  // Phiên 3: ĐÒN THEO VŨ KHÍ (tệp em-be-<key>-don, game ghép xuống dưới thân em-be-<key>): 5 hàng × 6 khung, cùng ô, cùng điểm chân với thân.
+  'em-be-don': { dt: ['atk_sword', 'atk_bow', 'atk_spear', 'atk_hammer', 'cast'], so: [6, 6, 6, 6, 6],
+    ten: ['Đòn kiếm', 'Đòn cung', 'Đòn giáo', 'Đòn búa', 'Ra chưởng'],
+    giay: [0.45, 0.45, 0.45, 0.55, 0.4], lap: [false, false, false, false, false],
     fw: 48, fh: 48, gx: 24, gy: 45 },
   'nguoi-lang': { dt: ['idle', 'noi'], so: [6, 6], ten: ['Đứng thở', 'Nói chuyện'], giay: [1.2, 0.9], lap: [true, true],
     fw: 56, fh: 52, gx: 28, gy: 49 },
@@ -274,6 +284,11 @@ const BO_DO = [
 // Thêm vào CUỐI danh sách để số thứ tự các mục cũ (đã nhớ trên máy) không đổi.
 for (const q of NV.filter((x) => x.loai === 'em-be')) for (const b of Object.keys(BO_TP))
   NV.push({ ma: q.ma + '-' + b, key: q.key, loai: 'em-be', bo: b, goc: q.ma, ten: q.ten + ' · ' + BO_TP[b].ten, tenNV: q.ten, rong: q.rong, cao: q.cao, mau: q.mau, net: q.net });
+// Phiên 3: lô "Đòn theo vũ khí" — 4 mục cho thân thường, rồi (không bắt buộc) 12 mục cho thân theo bộ. Thêm vào CUỐI để số thứ tự cũ không đổi.
+for (const q of NV.filter((x) => x.loai === 'em-be' && !x.bo))
+  NV.push({ ma: q.ma + '-don', key: q.key, loai: 'em-be-don', don: true, goc: q.ma, ten: q.ten + ' · Đòn theo vũ khí', tenNV: q.ten, rong: q.rong, cao: q.cao, mau: q.mau, net: q.net, nenXanh: true });
+for (const q of NV.filter((x) => x.loai === 'em-be' && x.bo))
+  NV.push({ ma: q.ma + '-don', key: q.key, loai: 'em-be-don', don: true, bo: q.bo, goc: q.ma, ten: q.ten + ' · Đòn theo vũ khí', tenNV: q.ten, rong: q.rong, cao: q.cao, mau: q.mau, net: q.net, nenXanh: true });
 const VIEN0 = [0x14, 0x18, 0x2e];
 
 const $ = (id) => document.getElementById(id);
@@ -380,6 +395,7 @@ function bmMuc(muc, ds, them) {
 // ===================== HẾT KHỐI BẢNG MÀU =====================
 
 function taoPrompt(q) {
+  if (q.loai === 'em-be-don') return taoPromptDon(q);
   const nen = q.nenXanh ? 'XANH LÁ #00FF00' : 'HỒNG TÍM #FF00FF';
   const luoi = `BỐ CỤC: lưới ĐỀU đúng 8 cột × ${NR} hàng (KHÔNG thêm cột thứ 9, KHÔNG thêm hàng), các ô bằng nhau, kẻ lưới mảnh màu tối. Mỗi hàng một động tác, các khung xếp từ cột trái sang, ô thừa ở cuối hàng để trống: `;
   const coO = `KÍCH THƯỚC TRONG Ô: nhân vật chỉ chiếm khoảng 70% chiều cao và 60% bề rộng của ô, đứng giữa ô, hai bàn chân sát đáy ô; mọi phần (tay vung, chân, tóc, đồ vật, bụi) phải nằm TRỌN trong ô của nó, cách đường lưới ít nhất 1/10 ô, tuyệt đối không lấn sang ô bên cạnh. Mọi khung cùng một nhân vật, cùng cỡ (đầu luôn to bằng nhau), cùng màu nhưng tư thế khác nhau thật. `;
@@ -411,6 +427,30 @@ function taoPrompt(q) {
     + luoi + hang + '. ' + coO + cuoi;
 }
 
+// Phiên 3: lô ĐÒN THEO VŨ KHÍ (em-be-<key>[-<bộ>]-don). 5 hàng × 6 khung; em bé KHÔNG cầm vũ khí (game gắn vào nắm tay, tự đo bàn tay
+// từng khung), nhưng tay ở đúng thế cầm. Thứ tự khung khớp cách game chọn khung (js/sprite_custom.js khungDon): kiếm 3 nhát × (lấy đà, chém);
+// cung khung 3 là kéo căng (giữ nút dừng ở đây), khung 4 buông; giáo khung 2 thu sâu (giữ nút), khung 3 đâm; búa khung 2 giơ cao nhất (giữ nút),
+// khung 4 nện; chưởng khung 4 đẩy hai tay. Nền xanh lá (em bé có màu đỏ, hồng).
+function taoPromptDon(q) {
+  const tenAnh = 'tham-chieu-' + q.goc.replace(/^em-be-/, '') + '.png';
+  const hang = [
+    'KIẾM, 3 nhát chém nối nhau, nắm tay trước cầm chuôi kiếm vô hình: (1) lấy đà chém ngang: xoay vai, nắm tay kéo ra sau ngang hông phía trái; (2) chém ngang: tay vung ngang ra trước, duỗi thẳng ngang ngực về phía phải; (3) lấy đà chém ngược: nắm tay vắt chéo xuống thấp trước bụng; (4) chém ngược hất lên: tay vung chéo từ dưới lên, nắm tay cao phía trước trên vai phải; (5) giơ kiếm qua đầu: hai nắm tay chụm trên đỉnh đầu, hơi ngả ra sau; (6) bổ xuống: hai nắm tay chụm đập xuống trước mặt ngang đầu gối, người cúi tới',
+    'CUNG, tay trước duỗi thẳng ra trước như nắm thân cung vô hình dựng đứng, tay sau kéo dây vô hình: (1) giương: tay trước đưa ra trước ngang ngực, tay sau chạm chỗ dây; (2) kéo nửa: tay sau kéo về tới vai; (3) kéo căng: tay sau kéo tới sau má, khuỷu tay sau giơ cao, người hơi ngả ra sau (khung này game giữ lâu khi lấy đà); (4) buông: bàn tay sau bung xoè ra sau; (5) dư chấn: tay trước vẫn đưa ra trước, tay sau còn mở; (6) hạ hai tay về thủ thế',
+    'GIÁO, hai nắm tay cùng nắm một cán dài vô hình nằm ngang ngang hông, tay trước ở trước, tay sau ở sau cách nhau một khoảng: (1) thu về: hai nắm tay kéo lùi ra sau hông, người ngả ra sau; (2) thu sâu nhất, gối khuỵu (khung này game giữ lâu khi lấy đà); (3) đâm thẳng: hai tay đẩy mạnh ra trước ngang ngực, chân trước bước tới; (4) duỗi hết: tay trước duỗi thẳng xa nhất về phía phải; (5) rút về ngang hông; (6) về thủ thế',
+    'BÚA, hai nắm tay chụm sát nhau cùng nắm cán búa vô hình: (1) nhấc búa lên ngang vai sau; (2) giơ cao nhất qua đầu ra sau lưng, người ngả ra sau (khung này game giữ lâu khi lấy đà); (3) vung qua đầu về trước; (4) nện: hai nắm tay đập xuống trước mặt gần sát đất, người cúi gập, gối khuỵu; (5) rung: người còn cúi, vai và tay rung nảy; (6) đứng dậy thủ thế',
+    'RA CHƯỞNG bằng tay không (hai bàn tay MỞ, không nắm): (1) vận khí: hai tay thu về bên hông; (2) vận khí mạnh: hai lòng bàn tay chụm trước bụng, tóc hơi bay; (3) tụ lực: kéo hai tay ra sau hông; (4) đẩy chưởng: hai lòng bàn tay đẩy thẳng ra trước ngang ngực, chân trước bước tới; (5) duỗi hết hai tay về phía phải; (6) thu tay về thủ thế. KHÔNG vẽ tia, quả cầu, ánh sáng hay hiệu ứng chưởng nào (game tự vẽ)',
+  ].map((h, i) => `hàng ${i + 1} ${h} — ĐÚNG ${SO[i]} khung theo đúng thứ tự trên`).join('; ');
+  const luoi = `BỐ CỤC: lưới ĐỀU đúng 8 cột × ${NR} hàng (KHÔNG thêm cột thứ 9, KHÔNG thêm hàng), các ô bằng nhau, kẻ lưới mảnh màu tối. Mỗi hàng một loại đòn, các khung xếp từ cột trái sang, 2 ô cuối mỗi hàng để TRỐNG: `;
+  const coO = `KÍCH THƯỚC TRONG Ô: em bé CÙNG CỠ với ảnh gửi kèm (đầu to bằng nhau, cao bằng nhau), chỉ chiếm khoảng 70% chiều cao và 60% bề rộng của ô, đứng giữa ô, hai bàn chân sát đáy ô ở cùng một đường như ảnh gửi kèm (không nhảy lên); tay vung, chân bước phải nằm TRỌN trong ô của nó, cách đường lưới ít nhất 1/10 ô. Khi đánh thì co người cho vừa ô, không phóng to. `;
+  const cuoi = `Pixel art game 2D: viền tối đúng một nét quanh hình, màu phẳng, đổ bóng 3 sắc độ, không chuyển màu, không phát sáng, không nhoè. Mỗi ô có hình PHẢI có em bé (không có ô chỉ vẽ bụi, khói, vệt chém hay hiệu ứng). KHÔNG vẽ thêm bảng phụ, bảng màu, hình phóng to, chữ, số, chú thích, khung tên. Nền trơn MỘT MÀU XANH LÁ #00FF00 phủ kín cả tấm (không ô cờ, không nền trắng, không chuyển màu, không mặt đất, KHÔNG bóng dưới chân; em bé có màu đỏ, hồng nên nền phải là xanh lá). Chỉ cần gửi tấm ảnh, không cần code, không cần file json.`;
+  const bo = q.bo ? ` Em bé đang MẶC TRỌN ${BO_TP[q.bo].ten} như trong ảnh gửi kèm: mũ, áo, đồ sau lưng, bùa bên hông giữ GIỐNG HỆT ảnh gửi kèm ở mọi khung, đi theo cử động của thân.` : ' Em bé là THÂN TRƠN như ảnh gửi kèm: không mũ, không áo choàng, không đồ đeo sau lưng, không bùa (game tự khoác đồ).';
+  return `(GỬI KÈM tin nhắn này 1 ẢNH: tệp ${tenAnh} — ảnh tham chiếu thân của em bé "${q.tenNV}" lấy từ nút "Tải ảnh tham chiếu thân" trên trang công cụ; hàng 1 là dáng đứng thở, hàng 2 là cú đấm đang có trong game.) `
+    + `Dùng công cụ tạo ảnh vẽ MỘT tấm sprite sheet pixel art 2D cho game Linh Khí: ĐÚNG em bé trong ảnh gửi kèm (cùng khuôn mặt, kiểu tóc, màu da, quần áo, dáng người, tỉ lệ đầu và thân, cùng cỡ), làm ĐỘNG TÁC ĐÁNH RIÊNG cho từng loại vũ khí.${bo} `
+    + `EM BÉ KHÔNG CẦM VŨ KHÍ: không vẽ kiếm, cung, dây cung, mũi tên, giáo, búa hay bất cứ vật gì trong tay (game tự gắn vũ khí vào nắm tay). NHƯNG bàn tay phải ở ĐÚNG THẾ CẦM của từng loại vũ khí như tả dưới đây: nắm tay TO, tròn, rõ (2–3 điểm ảnh trong game), tách hẳn khỏi thân và đầu như đang nắm cán vũ khí vô hình; tay cầm vũ khí là tay ở phía TRƯỚC (bên phải hình) trừ khi tả khác; nắm tay không che mặt. `
+    + `Nhìn chéo 3/4, QUAY MẶT SANG PHẢI trong MỌI khung, đánh về phía phải, không khung nào quay trái. Ánh sáng từ trên. `
+    + luoi + hang + '. ' + coO + cuoi;
+}
+
 // Đợt 4 (Q6): mọi prompt của trang có thêm đoạn BẢNG MÀU, chỉ gồm các nhóm màu liên quan. Lô mới muốn nhóm khác thì khai thêm bm: ['go', 'da_stone', …] (tên nhóm trong BM.nhom).
 const taoPromptGoc = taoPrompt;
 const CAU_BO_CUC = " BỐ CỤC CHỈ THEO ĐÚNG PROMPT NÀY: KHÔNG lấy lại lưới, số ô, số khung, cách chia hàng hay hình của bất kỳ ảnh nào đã vẽ trước đó trong cuộc trò chuyện; mỗi lần vẽ coi như bắt đầu mới."; // 11/10 17:41
@@ -419,7 +459,9 @@ const CAU_PHONG_CACH = ` LUẬT VẼ CHUNG CỦA GAME (bắt buộc): pixel art 
 const taoPromptGoc1 = (q) => taoPromptGoc(q) + CAU_PHONG_CACH + CAU_BO_CUC;
 taoPrompt = (q) => bmChen(taoPromptGoc1(q), bmDoan(q.bm || (q.bo ? ['da', 'toc', 'vai', 'kim_loai'] : ['da', 'toc', 'vai'])));
 function hienNV() {
-  $('ghiNV').textContent = Q.bo
+  $('ghiNV').textContent = Q.don
+    ? 'Đòn theo vũ khí: ChatGPT vẽ ĐÚNG em bé ' + Q.tenNV + (Q.bo ? ' (mặc ' + BO_TP[Q.bo].ten + ')' : '') + ' làm 5 động tác đánh riêng: kiếm, cung, giáo, búa, ra chưởng (mỗi hàng 6 khung), KHÔNG cầm vũ khí (game tự gắn vào nắm tay). KHI GỬI PROMPT PHẢI GỬI KÈM ẢNH THAM CHIẾU THÂN: bấm nút "Tải ảnh tham chiếu thân" bên dưới. Lưới 8 cột × 5 hàng, nền xanh lá. Không có tệp này thì game vẫn đánh như cũ.'
+    : Q.bo
     ? 'Bộ trang phục: ChatGPT vẽ lại ĐÚNG em bé ' + Q.tenNV + ' nhưng mặc trọn ' + BO_TP[Q.bo].ten + ' (mũ, áo, đồ lưng, bùa), không cánh, không vũ khí. KHI GỬI PROMPT PHẢI GỬI KÈM ẢNH TẤM THÂN THƯỜNG của ' + Q.tenNV + ' (' + Q.goc + '.png). Trong game: mặc đủ bộ (từ 3 món) thì em bé đổi sang thân này. Lưới 8 cột × 7 hàng.'
     : Q.loai === 'em-be'
     ? 'Anh hùng: ChatGPT vẽ THÂN TRƠN (không mũ, áo choàng, đồ lưng, vũ khí). Game tự khoác đồ đang mặc lên thân này. Lưới 8 cột × 7 hàng.'
@@ -436,15 +478,18 @@ function hienNV() {
   L.dt.forEach((d, i) => $('sua_g' + i).onchange = (e) => { Q.giay[i] = +e.target.value || L.giay[i]; });
   $('nutDongTac').innerHTML = L.ten.map((t, i) => `<button class="nut nho phu" data-i="${i}">${t}</button>`).join('');
   dtChon = 0; danhDau();
-  $('thuDo').hidden = Q.loai !== 'em-be';
+  $('thuDo').hidden = Q.loai !== 'em-be' && !Q.don;
   $('boDo').disabled = !!Q.bo; // mục bộ trang phục: thử với đúng bộ đó (đủ bộ + cánh của bộ), không chọn bộ đồ khác
-  $('ghiBo').hidden = !Q.bo;
+  $('ghiBo').hidden = !Q.bo || !!Q.don;
+  $('ghiDon').hidden = !Q.don; $('vuKhi').disabled = !!Q.don; // lô đòn: vũ khí theo hàng đang xem
+  for (const id of ['ghiNeo', 'vungNeo', 'hangNeo']) $(id).hidden = !!Q.don; // lô đòn: game tự đo tay, không có điểm neo để chỉnh
+  $('vungThamChieu').hidden = !Q.don; $('khungThamChieu').hidden = true; $('ttThamChieu').textContent = '';
 }
 
-const nhom = { 'em-be': 'Anh hùng (em bé, thân trơn)', 'bo': 'Bộ trang phục (em bé mặc trọn bộ, vẽ liền cử động)', 'nguoi-lang': 'Người làng' };
+const nhom = { 'em-be': 'Anh hùng (em bé, thân trơn)', 'bo': 'Bộ trang phục (em bé mặc trọn bộ, vẽ liền cử động)', 'nguoi-lang': 'Người làng', 'don': 'Đòn theo vũ khí (thêm hàng đánh riêng kiếm, cung, giáo, búa, chưởng)' };
 for (const lo of Object.keys(nhom)) {
   const g = document.createElement('optgroup'); g.label = nhom[lo];
-  NV.forEach((q, i) => { if ((q.bo ? 'bo' : q.loai) !== lo) return; const o = document.createElement('option'); o.value = i; o.textContent = q.ten + ' (' + q.ma + ')'; g.appendChild(o); });
+  NV.forEach((q, i) => { if ((q.don ? 'don' : q.bo ? 'bo' : q.loai) !== lo) return; const o = document.createElement('option'); o.value = i; o.textContent = q.ten + ' (' + q.ma + ')'; g.appendChild(o); });
   $('chonNV').appendChild(g);
 }
 try { const i = localStorage.getItem('tah_nv'); if (i != null && NV[i]) $('chonNV').value = i; } catch (e) {}
@@ -455,7 +500,7 @@ $('nutChepPrompt').onclick = () => {
   const t = taoPrompt(Q);
   const loi = () => { const a = $('oPrompt'); a.closest('details').open = true; a.focus(); a.select(); bao('Hãy bôi đen và sao chép trong ô prompt'); };
   if (!navigator.clipboard) return loi();
-  navigator.clipboard.writeText(t).then(() => bao('Đã sao chép prompt vẽ ' + Q.ten + (Q.bo ? '. Nhớ GỬI KÈM ảnh thân thường của ' + Q.tenNV : '')), loi);
+  navigator.clipboard.writeText(t).then(() => bao('Đã sao chép prompt vẽ ' + Q.ten + (Q.don ? '. Nhớ GỬI KÈM ảnh tham chiếu thân (nút "Tải ảnh tham chiếu thân")' : Q.bo ? '. Nhớ GỬI KÈM ảnh thân thường của ' + Q.tenNV : '')), loi);
 };
 
 // ===================== NHẬN ẢNH =====================
@@ -980,7 +1025,8 @@ function chay() {
   const caoMuc = Math.max(4, Q.cao * N - 2); // trừ viền 1 điểm (của ảnh) ở trên và dưới mà công cụ thêm vào
   const caoDung = Object.keys(hinh).filter(k => k.startsWith('0,')).map(k => hinh[k].h).sort((a, b) => a - b);
   const caoTat = Object.values(hinh).map(f => f.h).sort((a, b) => a - b);
-  const caoGoc = caoDung.length ? caoDung[caoDung.length >> 1] : caoTat[caoTat.length >> 1] || 1;
+  // lô đòn (không có hàng đứng): lấy chiều cao trung vị của mọi khung
+  const caoGoc = caoDung.length && !Q.don ? caoDung[caoDung.length >> 1] : caoTat[caoTat.length >> 1] || 1;
   const s = caoMuc / caoGoc;
   const nhoRieng = [];
   const TW = FW * 8, TH = FH * NR, tam = new Uint8ClampedArray(TW * TH * 4), lat = $('latNgang').checked;
@@ -1020,11 +1066,12 @@ function chay() {
     for (let y = 0; y < FH; y++) for (let x = 0; x < FW; x++) if (tam[((r * FH + y) * TW + c * FW + x) * 4 + 3]) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
     if (c >= SO[r]) { if (x1 >= 0) thua.push(`${r+1}.${c+1}`); continue; }
     if (x1 >= 0 && (x0 < 2 * N || y0 < 2 * N || x1 > FW - 1 - 2 * N)) mep.push(`${r+1}.${c+1}`);
-    if (r === 0 && x1 >= 0) caoDo.push(y1 - y0 + 1);
+    if ((r === 0 || Q.don) && x1 >= 0) caoDo.push(y1 - y0 + 1);
   }
   const caoThat = (caoDo.length ? caoDo.sort((a, b) => a - b)[caoDo.length >> 1] : 0) / N; // đổi về điểm ảnh game
   muc.push([`Đủ khung: ${SO.join('·')}`, !loi.length]);
-  muc.push([`Cao khi đứng: ${caoThat} điểm ảnh game (cần ${Q.cao})`, Math.abs(caoThat - Q.cao) <= 1]);
+  if (Q.don) muc.push([`Cao trung bình các khung đòn: ${caoThat} điểm ảnh game (thân đứng cao ${Q.cao})`, Math.abs(caoThat - Q.cao) <= 3]);
+  else muc.push([`Cao khi đứng: ${caoThat} điểm ảnh game (cần ${Q.cao})`, Math.abs(caoThat - Q.cao) <= 1]);
   muc.push(['Mọi khung cùng một tỉ lệ, chân đặt ở (' + Q.gx + ', ' + Q.gy + ') điểm ảnh game' + (N > 1 ? ' = (' + GX + ', ' + GY + ') trong ảnh' : ''), true]);
   muc.push(['Hình nằm trọn trong ô, cách mép ≥ 2 điểm ảnh' + (mep.length ? ' (sát mép: ' + mep.join(', ') + ')' : ''), !mep.length]);
   muc.push(['Ô thừa để trống' + (thua.length ? ' (có hình: ' + thua.join(', ') + ')' : ''), !thua.length]);
@@ -1033,7 +1080,9 @@ function chay() {
   loi.forEach(t => muc.push([t, false]));
   ghi.forEach(t => muc.push([t, true]));
   KQ = { tam, TW, TH, FW, FH, N, dat: muc.every(m => m[1]), ma: Q.ma, dong: Date.now() };
-  const nhin = Q.loai === 'em-be'
+  const nhin = Q.don
+    ? 'Tự nhìn: em bé quay mặt sang PHẢI, KHÔNG cầm vũ khí, nắm tay rõ; mỗi hàng đúng loại đòn (kiếm, cung, giáo, búa, chưởng). Thử ở dưới: vũ khí phải nằm trong nắm tay.'
+    : Q.loai === 'em-be'
     ? 'Tự nhìn: em bé quay mặt sang PHẢI, không đội mũ, không cầm vũ khí. Thử khoác đồ ở dưới: mũ phải nằm trên đầu, áo nằm trên thân.'
     : 'Tự nhìn: người làng quay mặt sang PHẢI (hoặc nhìn thẳng), đủ hai động tác đứng thở và nói chuyện.';
   $('dsKiem').innerHTML = muc.map(([t, ok]) => `<li class="${ok ? '' : 'loi'}">${t}</li>`).join('') + `<li class="ghi">${nhin} Nếu ảnh gốc quay trái thì tích ô "Lật ngang" ở bước 2.</li>`;
@@ -1134,6 +1183,60 @@ function neoJson() {
   return o;
 }
 
+// ===================== Phiên 3: ẢNH THAM CHIẾU THÂN (lô đòn theo vũ khí) =====================
+// Lấy tấm thân đang có trong game (cùng trang web: linh-khi.html / index.html; trong repo: game/dist/linh-khi.html). Thân gốc nằm sẵn trong
+// trang; thân theo bộ có thể nằm ở tệp ảnh tải sau linh-khi-anh.<mã>.json (như tools/tach-quai napTrum) → đọc cả tệp đó.
+const NGUON_THAN = ['linh-khi.html', 'index.html', '../../game/dist/linh-khi.html'], THAN_GOC = {};
+let napThanP = null;
+function napThan() {
+  if (napThanP) return napThanP;
+  napThanP = (async () => {
+    const lay = (ds) => { for (const d of ds || []) if (d && d.doi_tuong === 'em-be' && /^em-be(-[a-z]+)*$/.test(d.ma || '') && !/-don$/.test(d.ma) && d.tam && d.dong_tac) THAN_GOC[d.ma] = d; };
+    for (const u of NGUON_THAN) {
+      try {
+        const r = await fetch(u, { cache: 'no-cache' }); if (!r.ok) continue;
+        const t = await r.text();
+        for (const k of ['.customSpriteData = ', "['customSpriteData'] = "]) {
+          const a = t.indexOf(k); if (a < 0) continue;
+          const b0 = a + k.length; let b = t.indexOf(';\n// =====', b0); if (b < 0) b = t.indexOf(';\n', b0); if (b < 0) continue;
+          try { lay(JSON.parse(t.slice(b0, b).replace(/<\\!--/g, '<!--'))); } catch (e) { /* thử cách khác */ }
+        }
+        const m = t.match(/linh-khi-anh\.[0-9a-f]+\.json/);
+        if (m) { try { const r2 = await fetch(new URL(m[0], new URL(u, location.href)).href); if (r2.ok) { const ds = await r2.json(); lay(Array.isArray(ds) ? ds : ds.ds); } } catch (e) { /* thử tiếp */ } }
+        if (THAN_GOC['em-be-smith']) break;
+      } catch (e) { /* thử nguồn kế */ }
+    }
+    if (!Object.keys(THAN_GOC).length) napThanP = null; // chưa lấy được: lần bấm sau thử lại
+  })();
+  return napThanP;
+}
+// Ảnh tham chiếu: lưới 8 cột × 2 hàng (hàng 1 đứng thở, hàng 2 đánh) của thân Q.goc trên nền xanh lá, ô 96 × 96 (thân nét ×2) có kẻ lưới.
+async function dungThamChieu(q) {
+  await napThan();
+  const d = THAN_GOC[q.goc]; if (!d) return null;
+  const img = await new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = d.tam; });
+  const n = Math.max(1, Math.min(4, Math.round(+d.net || 1))), fw = d.khung_rong * n, fh = d.khung_cao * n, K = Math.max(1, Math.round(4 / n)); // ô 192 điểm ảnh cho ChatGPT dễ nhìn
+  const HANG = ['idle', 'atk'], cv = $('cvThamChieu'), W = 8 * fw * K, H = HANG.length * fh * K; cv.width = W; cv.height = H;
+  const g = cv.getContext('2d'); g.imageSmoothingEnabled = false;
+  g.fillStyle = '#00FF00'; g.fillRect(0, 0, W, H);
+  HANG.forEach((k, r) => { const a = d.dong_tac[k]; if (!a) return; for (let i = 0; i < Math.min(8, a.so | 0); i++) g.drawImage(img, i * fw, (a.hang | 0) * fh, fw, fh, i * fw * K, r * fh * K, fw * K, fh * K); });
+  g.fillStyle = '#14182e';
+  for (let c = 0; c <= 8; c++) g.fillRect(Math.max(0, Math.min(W - 2, c * fw * K - 1)), 0, 2, H);
+  for (let r = 0; r <= HANG.length; r++) g.fillRect(0, Math.max(0, Math.min(H - 2, r * fh * K - 1)), W, 2);
+  return cv;
+}
+$('nutThamChieu').onclick = async () => {
+  const q = Q; if (!q || !q.don) return;
+  const ten = 'tham-chieu-' + q.goc.replace(/^em-be-/, '') + '.png';
+  $('ttThamChieu').textContent = 'Đang lấy thân ' + q.goc + ' từ game…';
+  let cv = null; try { cv = await dungThamChieu(q); } catch (e) { cv = null; }
+  if (q !== Q) return;
+  if (!cv) { $('ttThamChieu').textContent = 'Không lấy được thân ' + q.goc + ' từ game (chỉ lấy được trên trang spiritblade.web.app' + (q.bo ? ', và thân theo bộ phải có trong game' : '') + ').'; return; }
+  $('khungThamChieu').hidden = false;
+  $('ttThamChieu').textContent = 'Đã tải ' + ten + ': gửi ảnh này KÈM prompt cho ChatGPT.';
+  cv.toBlob((b) => taiXuong(ten, b), 'image/png');
+};
+
 // ===================== THỬ KHOÁC ĐỒ (nạp game thật trong khung ẩn: xuong-sprite.html có sẵn mã vẽ em bé và đồ) =====================
 BO_DO.forEach((b, i) => { const o = document.createElement('option'); o.value = i; o.textContent = b.ten; $('boDo').appendChild(o); });
 $('boDo').value = 1;
@@ -1156,13 +1259,14 @@ function tepEmBe(thuong) {
   L.dt.forEach((k, i) => { dt[k] = { hang: i, so: SO[i], giay: g[i] }; if (L.lap[i]) dt[k].lap = true; });
   let cv = canvasTam, net = KQ.N;
   if (thuong && net > 1) { cv = document.createElement('canvas'); cv.width = KQ.TW / net; cv.height = KQ.TH / net; const x = cv.getContext('2d'); x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high'; x.drawImage(canvasTam, 0, 0, cv.width, cv.height); net = 1; }
-  return { loai: 'linh-khi-sprite', doi_tuong: Q.loai, ma: Q.ma, ten: Q.ten, tam: cv.toDataURL('image/png'), ...(net > 1 ? { net } : {}), khung_rong: Q.fw, khung_cao: Q.fh, goc: [Q.gx, Q.gy], rong: Q.rong, cao: Q.cao, dong_tac: dt };
+  return { loai: 'linh-khi-sprite', doi_tuong: Q.don ? 'em-be' : Q.loai, ma: Q.ma, ten: Q.ten, tam: cv.toDataURL('image/png'), ...(net > 1 ? { net } : {}), khung_rong: Q.fw, khung_cao: Q.fh, goc: [Q.gx, Q.gy], rong: Q.rong, cao: Q.cao, dong_tac: dt };
 }
 // Ảnh vừa tách xong: đưa vào game thử (thay hình cũ).
 function thuDoMoi() {
-  if (Q.loai !== 'em-be' || !canvasTam) return;
+  if ((Q.loai !== 'em-be' && !Q.don) || !canvasTam) return;
   napGame();
   if (!GG) return;
+  if (Q.don) return thuDon();
   try {
     for (const k of Object.keys(GG.spriteCustom.ds)) if (/^em-be/.test(k)) GG.spriteCustom.remove(k);
     // Game đã đọc "net" thì đưa ảnh gấp đôi; game cũ (chưa có "net") thì đưa bản thường để vẫn hiện đúng, không lỗi.
@@ -1170,6 +1274,29 @@ function thuDoMoi() {
     const t = tepEmBe(gNet === 1); t.neo = neoJson();
     gTep = GG.spriteCustom.add(t);
   } catch (e) { $('ttThu').textContent = 'Lỗi khi thử đồ: ' + e.message; }
+}
+// Lô đòn: nạp thân đang có trong game (Q.goc, lấy từ bản game đã gói) vào khung thử rồi thêm tệp đòn vừa tách: game ghép hàng đòn vào thân.
+let donDangNap = 0;
+async function thuDon() {
+  const lan = ++donDangNap;
+  $('ttThu').textContent = 'Đang lấy thân ' + Q.goc + ' từ game để thử…';
+  await napThan();
+  if (lan !== donDangNap || !GG) return;
+  const goc = THAN_GOC[Q.goc];
+  if (!goc) { gTep = null; $('ttThu').textContent = 'Chưa lấy được thân ' + Q.goc + ' từ game nên chưa thử được (chỉ thử được trên trang spiritblade.web.app). Vẫn tải file bình thường.'; return; }
+  try {
+    const SCg = GG.spriteCustom;
+    for (const k of Object.keys(SCg.ds)) if (/^em-be/.test(k)) SCg.remove(k);
+    for (const k of Object.keys(SCg.don || {})) SCg.remove(SCg.don[k].ma);
+    gNet = gameCoNet() ? KQ.N : 1;
+    const base = JSON.parse(JSON.stringify(goc));
+    gTep = SCg.add(base);
+    if (Q.bo) { const t0 = THAN_GOC['em-be-' + Q.key]; if (t0) SCg.add(JSON.parse(JSON.stringify(t0))); } // thân thường để game so (bên phải vẫn là em bé gốc)
+    const t = tepEmBe(gNet === 1);
+    if (!SCg.laHangDon) { $('ttThu').textContent = 'Bản game trong khung thử chưa có phần đòn theo vũ khí (cần bản mới). Vẫn tải file bình thường.'; return; }
+    SCg.add(t);
+    $('ttThu').textContent = 'Trái: thân AI cầm đúng vũ khí của hàng đang xem, đánh bằng hàng vừa tách. Phải: em bé gốc trong game (để so).';
+  } catch (e) { $('ttThu').textContent = 'Lỗi khi thử đòn: ' + e.message; }
 }
 let gNet = 1;
 function gameCoNet() {
@@ -1192,7 +1319,14 @@ function veThuDo(g, cv, now) {
     o.outfit = Object.assign({ mask: null, wing: { kind: B.canh, level: 2 }, rar: { hat: 2, robe: 2, back: 2, hand: 2, wing: 2 }, fx: { glow: null, els: [], aura: null, top: 2, bo: Q.bo } }, B.o);
   } else if (bd.o) o.outfit = Object.assign({ wing: null }, bd.o);
   if (vk) o.weapon = { type: vk, family: 0, rarity: 0 };
-  if (ten === 'move') o.move = true;
+  if (Q.don) { // lô đòn: vũ khí theo hàng, chạy cả đòn (kiếm: 3 nhát nối nhau)
+    const VK = { atk_sword: 'sword', atk_bow: 'bow', atk_spear: 'spear', atk_hammer: 'hammer', cast: 'sword' };
+    o.weapon = { type: VK[ten], family: 0, rarity: 0 };
+    if (ten === 'cast') o.p = { castT: 0.4 * (1 - u) + 0.0001, st: {} };
+    else if (ten === 'atk_sword') { const k = Math.min(2.999, ((tt % (gi * 3)) / gi)); o.atk = (k % 1) * 0.999; o.p = { comboI: Math.floor(k), mv: {}, st: {} }; }
+    else o.atk = u * 0.999;
+  }
+  else if (ten === 'move') o.move = true;
   else if (ten === 'tele') o.p = { mv: { holding: true, charge: 1 }, st: {} };
   else if (ten === 'atk') o.atk = u * 0.999;
   else if (ten === 'hit') o.p = { hurtT: 0.2 * (1 - u) + 0.001, st: {} };
@@ -1220,7 +1354,7 @@ function khungChay(now) {
     const cv = $('cvChay'), g = cv.getContext('2d'), N = KQ.N, FW = Q.fw, FH = Q.fh; // FW, FH: điểm ảnh game
     if (cv.width !== 360 || cv.height !== 220) { cv.width = 360; cv.height = 220; }
     g.imageSmoothingEnabled = false; g.clearRect(0, 0, cv.width, cv.height);
-    if (!(Q.loai === 'em-be' && veThuDo(g, cv, now))) {
+    if (!((Q.loai === 'em-be' || Q.don) && veThuDo(g, cv, now))) {
       const k = Math.max(2, N * Math.floor(Math.min(320 / FW, 190 / FH) / N) || N); // bội của N: ảnh gấp đôi hiện đúng độ nét thật
       const giay = Q.giay[dtChon] || 0.5, lap = L.lap[dtChon], so = SO[dtChon];
       let t = (now - t0) / 1000 / giay; if (!lap && t >= 1.8) { t0 = now; t = 0; }

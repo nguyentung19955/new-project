@@ -1341,6 +1341,10 @@
       cv = Object.assign({ dx: 0, dy: 0, xoay: 0, bam_vk: null }, cv || {}, { bam: 'tay_truoc', truoc: wp.type !== 'bow' },
         wp.type === 'hammer' && gv.ten === 'idle' && !(cv && cv.xoay) ? { xoay: 65 - wp.ang } : null, wp.type === 'bow' && !(cv && cv.dx) ? { dx: 2 } : null);
     // (kiếm, giáo, búa cầm ở tay trước: vẽ trước thân; đứng yên thì búa chúc đầu xuống đất phía trước cho đầu búa khỏi che mặt; cung để sau thân, nhích ra 2 điểm ảnh cho dây cung khỏi cắt ngang người)
+    // Phiên 3: hàng đòn theo vũ khí của thân AI (atk_sword, atk_bow, atk_spear, atk_hammer, cast; tệp em-be-<key>-don): tay luôn bám
+    // điểm "tay_truoc" game tự đo trên từng khung ảnh (SC.diemKhung), góc vũ khí vẫn là góc vung của đòn. Không có hàng đòn: như cũ.
+    if (gv && SCx.laHangDon && SCx.laHangDon(gv.ten) && gv.diem && gv.diem.tay_truoc && (!cv || !cv.bam) && wp.sx == null)
+      cv = Object.assign({ dx: 0, dy: 0, xoay: 0, bam_vk: null }, cv || {}, { bam: 'tay_truoc', truoc: wp.type !== 'bow' });
     if (!cv) return { wp, tay: null, bam: false };
     const P = cv.bam && gv && gv.diem && wp.sx == null ? gv.diem[cv.bam] : null;
     if (!P) return { wp: Object.assign({}, wp, { x: wp.x + cv.dx, y: wp.y + cv.dy, ang: wp.ang + cv.xoay }), tay: null, bam: false };

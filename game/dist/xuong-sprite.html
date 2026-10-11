@@ -9181,6 +9181,10 @@ window.G.LANG = 'vi';
       cv = Object.assign({ dx: 0, dy: 0, xoay: 0, bam_vk: null }, cv || {}, { bam: 'tay_truoc', truoc: wp.type !== 'bow' },
         wp.type === 'hammer' && gv.ten === 'idle' && !(cv && cv.xoay) ? { xoay: 65 - wp.ang } : null, wp.type === 'bow' && !(cv && cv.dx) ? { dx: 2 } : null);
     // (kiếm, giáo, búa cầm ở tay trước: vẽ trước thân; đứng yên thì búa chúc đầu xuống đất phía trước cho đầu búa khỏi che mặt; cung để sau thân, nhích ra 2 điểm ảnh cho dây cung khỏi cắt ngang người)
+    // Phiên 3: hàng đòn theo vũ khí của thân AI (atk_sword, atk_bow, atk_spear, atk_hammer, cast; tệp em-be-<key>-don): tay luôn bám
+    // điểm "tay_truoc" game tự đo trên từng khung ảnh (SC.diemKhung), góc vũ khí vẫn là góc vung của đòn. Không có hàng đòn: như cũ.
+    if (gv && SCx.laHangDon && SCx.laHangDon(gv.ten) && gv.diem && gv.diem.tay_truoc && (!cv || !cv.bam) && wp.sx == null)
+      cv = Object.assign({ dx: 0, dy: 0, xoay: 0, bam_vk: null }, cv || {}, { bam: 'tay_truoc', truoc: wp.type !== 'bow' });
     if (!cv) return { wp, tay: null, bam: false };
     const P = cv.bam && gv && gv.diem && wp.sx == null ? gv.diem[cv.bam] : null;
     if (!P) return { wp: Object.assign({}, wp, { x: wp.x + cv.dx, y: wp.y + cv.dy, ang: wp.ang + cv.xoay }), tay: null, bam: false };
@@ -16870,7 +16874,18 @@ MA._xong();
   // Để sẵn: nếu sau này tệp pha có thêm hàng move hoặc die thì game dùng luôn, không phải sửa code (trang công cụ hiện chỉ xuất 4 hàng).
   const PHA_MA = /^(nguTinh|mocTinh|hoTinh)-p([23])$/, PHA_HANG = { idle: 1, tele: 1, atk: 1, hit: 1, move: 1, die: 1 };
 
-  const SC = (G.spriteCustom = { ds: {}, ANIMS, LOOP, loi: [] });
+  // Phiên 3 — ĐÒN THEO VŨ KHÍ của thân em bé AI: các hàng TUỲ CHỌN, thường nằm ở tệp riêng em-be-<key>-don (hoặc em-be-<key>-<bộ>-don)
+  // ghép vào thân gốc khi nạp; ghi thẳng trong tệp thân cũng được. Không có hàng nào: game dùng hàng "atk" như trước.
+  // Tắt: G.DON_VK = false, hoặc mở game với ?donvk=0.
+  const HANG_DON = ['atk_sword', 'atk_bow', 'atk_spear', 'atk_hammer', 'cast'], LA_DON = { atk_sword: 1, atk_bow: 1, atk_spear: 1, atk_hammer: 1, cast: 1 };
+  if (G.DON_VK === undefined) {
+    let tat = false;
+    try { tat = typeof location !== 'undefined' && /[?&]donvk=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
+    G.DON_VK = !tat;
+  }
+
+  const SC = (G.spriteCustom = { ds: {}, ANIMS, LOOP, loi: [], HANG_DON, don: {} });
+  SC.laHangDon = (ten) => !!LA_DON[ten];
   // "net" (số nguyên 1..4, mặc định 1): ảnh trong tệp ("tam" hoặc "anh") có số điểm ảnh gấp net lần, còn MỌI số khác trong tệp
   // (khung_rong, khung_cao, goc, rong, cao, neo, vu_khi.cam/mui/day, trang_phuc.lech...) vẫn tính theo điểm ảnh GAME.
   // Game cắt vùng ảnh gấp net lần rồi vẽ ra đúng cỡ game: trên canvas thế giới nét gấp đôi (G.NET = 2) hiện đủ chi tiết.
@@ -16884,13 +16899,14 @@ MA._xong();
     try {
       if (!tep || typeof tep !== 'object' || typeof tep.ma !== 'string' || !/^[A-Za-z0-9_-]{1,40}$/.test(tep.ma)) throw new Error('thiếu mã');
       if (DO_LOAI[tep.doi_tuong]) return themDo(tep); // vũ khí, trang phục, vật phẩm
+      if (tep.doi_tuong === 'em-be' && /-don$/.test(tep.ma)) return themDon(tep); // đòn theo vũ khí của một thân em bé (Phiên 3)
       if (tep.doi_tuong === 'ghep') return themGhep(tep); // hồ sơ ghép trang bị của một nhân vật (ghep-<key>), không có ảnh
       if (tep.doi_tuong === 'giao-dien') return themGd(tep); // ảnh giao diện (gd-<tên>): biểu tượng, ô phòng, khung bản đồ
       if (typeof tep.tam !== 'string' || tep.tam.indexOf('data:image/png;base64,') !== 0) throw new Error('thiếu tấm sprite');
       const fw = tep.khung_rong | 0, fh = tep.khung_cao | 0, goc = tep.goc || [0, 0];
       if (fw < 1 || fh < 1 || fw > 1024 || fh > 1024) throw new Error('cỡ khung sai');
       const dt = {};
-      for (const k of ANIMS) {
+      for (const k of tep.doi_tuong === 'em-be' ? ANIMS.concat(HANG_DON) : ANIMS) {
         const a = tep.dong_tac && tep.dong_tac[k];
         if (!a) continue;
         dt[k] = { hang: a.hang | 0, so: Math.max(1, a.so | 0), giay: +a.giay > 0 ? +a.giay : 0.6, lap: !!a.lap, mo: a.mo != null ? +a.mo : null };
@@ -16916,7 +16932,7 @@ MA._xong();
       }
       if (typeof Image !== 'undefined') {
         const img = new Image();
-        img.onload = () => { sp.img = img; sp.ready = true; };
+        img.onload = () => { sp.img = img; sp.img0 = null; sp.donMa = null; sp.ready = true; if (sp.doi === 'em-be') ghepDon(sp.ma); };
         img.onerror = () => { SC.loi.push(sp.ma + ': ảnh hỏng'); };
         img.src = tep.tam;
       }
@@ -16933,8 +16949,8 @@ MA._xong();
       return null;
     }
   };
-  SC.remove = function (ma) { if (SC.do[ma]) boDo(ma); delete SC.ds[ma]; if (SC.gd) delete SC.gd[ma]; for (const k in SC.ghep) if (SC.ghep[k].ma === ma) boGhep(k); };
-  SC.clear = function () { for (const k of Object.keys(SC.ds)) delete SC.ds[k]; for (const k of Object.keys(SC.do)) boDo(k); for (const k of Object.keys(SC.ghep)) boGhep(k); if (SC.gd) for (const k of Object.keys(SC.gd)) delete SC.gd[k]; };
+  SC.remove = function (ma) { for (const k in SC.don) if (SC.don[k].ma === ma) boDon(k); if (SC.do[ma]) boDo(ma); delete SC.ds[ma]; if (SC.gd) delete SC.gd[ma]; for (const k in SC.ghep) if (SC.ghep[k].ma === ma) boGhep(k); };
+  SC.clear = function () { for (const k of Object.keys(SC.don)) boDon(k); for (const k of Object.keys(SC.ds)) delete SC.ds[k]; for (const k of Object.keys(SC.do)) boDo(k); for (const k of Object.keys(SC.ghep)) boGhep(k); if (SC.gd) for (const k of Object.keys(SC.gd)) delete SC.gd[k]; };
   SC.get = function (ma) { const s = SC.ds[ma]; return s && s.ready ? s : null; };
   SC.has = (ma) => !!SC.ds[ma];
   SC.dungYen = (ma, bo) => { const s = SC.ds[ma]; return !!(s && s.dungYen && s.dungYen.indexOf(bo) >= 0); };
@@ -17187,17 +17203,101 @@ MA._xong();
   SC.boCua = (o) => { const f = fxCua(o), b = f && (f.bo_than !== undefined ? f.bo_than : f.bo); return typeof b === 'string' && BO_TP[b] ? b : null; };
   SC.thanBo = (key, o) => { const b = SC.boCua(o); return b ? SC.get('em-be-' + (key || 'smith') + '-' + b) : null; };
   SC.cuaEmBe = (key, o) => (o && SC.thanBo(key, o)) || SC.get('em-be-' + (key || 'smith')) || SC.get('em-be');
+  // ---------- ĐÒN THEO VŨ KHÍ (Phiên 3) ----------
+  // Tệp em-be-<key>-don (hoặc em-be-<key>-<bộ>-don): "doi_tuong": "em-be", khung 48×48, nét ×2, cùng điểm chân với thân; "dong_tac" chỉ
+  // gồm các hàng atk_sword, atk_bow, atk_spear, atk_hammer, cast (mỗi hàng 6 khung, thiếu hàng nào thì hàng đó dùng "atk" như cũ).
+  // Khi cả hai ảnh đã nạp xong, game dán các hàng của tệp đòn xuống DƯỚI tấm thân (canh theo điểm chân) thành một tấm, rồi thêm hàng vào
+  // sp.dt: mọi phần đo tự động (đồ bám thân khopEmBe, dấu ngực, nhuộm) chạy trên hàng mới như hàng cũ. Thân theo bộ chỉ nhận tệp đòn
+  // của đúng bộ đó (em-be-<key>-<bộ>-don); không có thì thân bộ đánh bằng hàng "atk" như cũ, không mượn đòn của thân gốc.
+  function themDon(tep) {
+    const m = /^(em-be(?:-(?:smith|hunter|healer|wrestler)(?:-(?:rung|bien|lau))?)?)-don$/.exec(tep.ma);
+    if (!m) throw new Error('mã tệp đòn phải là em-be-<nhân vật>-don hoặc em-be-<nhân vật>-<bộ>-don');
+    if (typeof tep.tam !== 'string' || tep.tam.indexOf('data:image/png;base64,') !== 0) throw new Error('thiếu tấm sprite');
+    const fw = tep.khung_rong | 0, fh = tep.khung_cao | 0, goc = tep.goc || [0, 0];
+    if (fw < 1 || fh < 1 || fw > 1024 || fh > 1024) throw new Error('cỡ khung sai');
+    const dt = {};
+    for (const k of HANG_DON) {
+      const a = tep.dong_tac && tep.dong_tac[k];
+      if (a) dt[k] = { hang: a.hang | 0, so: clamp(a.so | 0, 1, 16), giay: +a.giay > 0 ? +a.giay : 0.4, lap: false, mo: null };
+    }
+    if (!Object.keys(dt).length) throw new Error('tệp đòn không có hàng nào (atk_sword, atk_bow, atk_spear, atk_hammer, cast)');
+    const goc0 = m[1], d = { ma: tep.ma, goc: goc0, fw, fh, ax: +goc[0] || 0, ay: +goc[1] || 0, net: docNet(tep.net), dt, img: null };
+    if (SC.don[goc0]) boDon(goc0);
+    SC.don[goc0] = d;
+    if (typeof Image !== 'undefined') {
+      const img = new Image();
+      img.onload = () => { if (SC.don[goc0] !== d) return; d.img = img; ghepDon(goc0); };
+      img.onerror = () => { SC.loi.push(d.ma + ': ảnh hỏng'); };
+      img.src = tep.tam;
+    }
+    return d;
+  }
+  function xoaDoDem(sp) { delete sp.mn; sp.khop = {}; sp.mau = {}; sp.than = {}; sp.giu = {}; sp.ngucC = {}; sp.tayC = {}; }
+  function ghepDon(goc) {
+    const sp = SC.ds[goc], d = SC.don[goc];
+    if (!sp || !sp.ready || sp.doi !== 'em-be' || !d || !d.img || sp.donMa === d.ma || typeof document === 'undefined') return;
+    try {
+      const base = sp.img0 || sp.img, N = sp.net || 1, cw = sp.fw * N, ch = sp.fh * N, dn = d.net || 1;
+      const r0 = Math.max(1, Math.round(base.height / ch));
+      let nr = 0, so = 0; for (const k in d.dt) { nr = Math.max(nr, d.dt[k].hang + 1); so = Math.max(so, d.dt[k].so); }
+      const cv = document.createElement('canvas'); cv.width = Math.max(base.width, so * cw); cv.height = (r0 + nr) * ch;
+      const x = cv.getContext('2d'); x.imageSmoothingEnabled = false;
+      x.drawImage(base, 0, 0);
+      const ox = Math.round((sp.ax - d.ax) * N), oy = Math.round((sp.ay - d.ay) * N); // canh điểm chân của tệp đòn vào điểm chân của thân
+      for (const k in d.dt) {
+        const a = d.dt[k];
+        for (let i = 0; i < a.so; i++) {
+          x.save(); x.beginPath(); x.rect(i * cw, (r0 + a.hang) * ch, cw, ch); x.clip();
+          x.drawImage(d.img, i * d.fw * dn, a.hang * d.fh * dn, d.fw * dn, d.fh * dn, i * cw + ox, (r0 + a.hang) * ch + oy, d.fw * N, d.fh * N);
+          x.restore();
+        }
+      }
+      for (const k of HANG_DON) if (sp.donHang && sp.donHang[k]) delete sp.dt[k];
+      sp.donHang = {};
+      for (const k in d.dt) { sp.dt[k] = Object.assign({}, d.dt[k], { hang: r0 + d.dt[k].hang }); sp.donHang[k] = 1; }
+      sp.img0 = base; sp.img = cv; sp.donMa = d.ma;
+      xoaDoDem(sp);
+    } catch (e) { SC.loi.push(d.ma + ': không ghép được (' + e.message + ')'); }
+  }
+  function boDon(goc) {
+    const d = SC.don[goc]; delete SC.don[goc];
+    const sp = SC.ds[goc];
+    if (!d || !sp || sp.donMa !== d.ma) return;
+    if (sp.img0) sp.img = sp.img0;
+    for (const k in sp.donHang || {}) delete sp.dt[k];
+    sp.img0 = null; sp.donMa = null; sp.donHang = null;
+    xoaDoDem(sp);
+  }
+  SC.ghepDon = ghepDon;
+  // Khung của một hàng đòn: chọn trên nền 6 khung (như prompt) rồi đổi theo số khung thật của hàng.
+  //  - Kiếm (6 khung = 3 nhát × 2: lấy đà, chém): nhát 1 chém ngang = khung 0 → 1, nhát 2 chém ngược = 2 → 3, nhát 3 bổ xuống = 4 → 5;
+  //    khung lấy đà tới u = 0,4 (đòn chạm ở 0,45), sau đó khung chém giữ tới hết đòn.
+  //  - Cung, giáo, búa, chưởng: mốc tiến độ của từng khung (MOC_DON), khung chạm (buông tên, đâm, nện) rơi đúng lúc đòn chạm 0,45.
+  //  - Giữ nút lấy đà: cung kéo dây theo độ căng rồi dừng ở khung kéo căng (2); giáo, búa: khung lấy đà (0 rồi 1 khi đà đủ 40%); kiếm: khung giơ cao (4).
+  const MOC_DON = { atk_bow: [0, 0.15, 0.3, 0.45, 0.62, 0.8], atk_spear: [0, 0.22, 0.45, 0.55, 0.7, 0.85], atk_hammer: [0, 0.2, 0.38, 0.45, 0.6, 0.8], cast: [0, 0.12, 0.25, 0.4, 0.6, 0.8] };
+  function khungDon(a, ten, u, combo) {
+    let i6 = 0;
+    if (ten === 'atk_sword') i6 = 2 * (((combo | 0) % 3 + 3) % 3) + (u >= 0.4 ? 1 : 0);
+    else { const m = MOC_DON[ten]; while (i6 < 5 && u >= m[i6 + 1]) i6++; }
+    return doi6(a, i6);
+  }
+  const doi6 = (a, i6) => (a.so === 6 ? i6 : Math.min(a.so - 1, Math.round((i6 * (a.so - 1)) / 5)));
+  SC.khungDon = khungDon;
+  const giuDon = (ten, charge) => (ten === 'atk_bow' ? Math.min(2, Math.floor(clamp(charge || 0, 0, 1) * 3)) : ten === 'atk_sword' ? 4 : charge >= 0.4 ? 1 : 0);
   SC.chonEmBe = function (sp, o) {
     const p = o.p, t = (o.t != null ? o.t : G.time) || 0, dt = sp.dt;
     const mot = (ten, u) => { const k = dt[ten] ? ten : 'idle'; return { ten: k, i: dt[ten] ? khungMot(dt[k], u) : khungLap(dt.idle, t), u }; };
     const lap = (ten, tt) => { const k = dt[ten] ? ten : 'idle'; return { ten: k, i: khungLap(dt[k], tt), u: 0 }; };
+    // hàng đòn theo vũ khí đang cầm (Phiên 3); null: không có hàng hoặc đang tắt cờ -> như cũ
+    const don = (ten) => (G.DON_VK && dt[ten] ? ten : null), wt = o.weapon && o.weapon.type, hv = wt ? don('atk_' + wt) : null;
+    const theoDon = (ten, u, combo) => ({ ten, i: khungDon(dt[ten], ten, clamp(u, 0, 1), combo), u });
     if (p && p.dead) { const u = (p.deadT || 0) / ((dt.die && dt.die.giay) || 0.6); return mot('die', u); }
     if (o.dodge >= 0) return dt.ne ? mot('ne', o.dodge) : lap('move', t);
     if (p && p.dashT > 0) return lap('move', t * 2);
-    if (p && p.specT > 0) return mot('atk', 1 - p.specT / 0.35);
-    if (p && p.castT > 0) return mot('atk', 1 - p.castT / 0.4);
-    if (p && p.mv && p.mv.holding && !(o.atk >= 0)) return mot('tele', 0.99);
-    if (o.atk >= 0) return mot('atk', o.atk);
+    if (p && p.specT > 0) return don('cast') ? theoDon('cast', 1 - p.specT / 0.35) : mot('atk', 1 - p.specT / 0.35);
+    if (p && p.castT > 0) return don('cast') ? theoDon('cast', 1 - p.castT / 0.4) : mot('atk', 1 - p.castT / 0.4);
+    if (p && p.mv && p.mv.holding && !(o.atk >= 0)) return hv ? { ten: hv, i: doi6(dt[hv], giuDon(hv, p.mv.charge)), u: 0.99 } : mot('tele', 0.99);
+    if (o.atk >= 0) return hv ? theoDon(hv, o.atk, p ? p.comboI : Math.floor(t / 1.6)) : mot('atk', o.atk);
     if ((p && p.hurtT > 0) || (!p && o.flash)) return mot('hit', p ? 1 - p.hurtT / 0.2 : 0.3);
     if (o.move) return lap('move', t);
     return lap('idle', t);
@@ -17373,6 +17473,94 @@ MA._xong();
     }
     return null;
   }
+  // ---------- BÀN TAY TRƯỚC TỰ ĐO (Phiên 3, hàng đòn theo vũ khí) ----------
+  // Ảnh đòn không có vũ khí (game gắn), nên bàn tay nắm cán là đầu mút xa nhất của cánh tay. Đo trên hình bóng một khung:
+  // đầu = khối tròn dày nhất nửa trên (như doNguc), thân = trọng tâm phần còn lại, vai = mép đầu về phía thân. Bàn tay = điểm mảnh
+  // (không phải khối thân dày) xa vai nhất, ưu tiên phía trước mặt; bỏ vùng đầu và vùng chân (1/4 dưới; 1/4..2/5 dưới chỉ nhận khi
+  // vươn hẳn ra trước). Lùi vào trong nắm tay 1 điểm ảnh. Trả về [x, y] tính từ chân (x về trước mặt), null: không đo được.
+  function khoangCach(M, fw, fh) {
+    const D = new Float32Array(fw * fh);
+    for (let y = 0; y < fh; y++) for (let x = 0; x < fw; x++) {
+      const j = y * fw + x; if (!M[j]) continue;
+      D[j] = x === 0 || y === 0 ? 1 : Math.min(D[j - 1] + 1, D[j - fw] + 1, D[j - fw - 1] + 1.4, x < fw - 1 ? D[j - fw + 1] + 1.4 : 1);
+    }
+    for (let y = fh - 1; y >= 0; y--) for (let x = fw - 1; x >= 0; x--) {
+      const j = y * fw + x; if (!M[j]) continue;
+      D[j] = x === fw - 1 || y === fh - 1 ? 1 : Math.min(D[j], D[j + 1] + 1, D[j + fw] + 1, D[j + fw + 1] + 1.4, x > 0 ? D[j + fw - 1] + 1.4 : 1);
+    }
+    return D;
+  }
+  function doTay(sp, M) {
+    const fw = sp.fw, fh = sp.fh, a = tamMat(M, fw, fh), dir = sp.lat ? -1 : 1;
+    if (!a || a.n < 30) return null;
+    const D = khoangCach(M, fw, fh);
+    let y1 = 0; for (let j = 0; j < M.length; j++) if (M[j]) y1 = Math.max(y1, (j / fw) | 0);
+    const H = y1 - a.y0 + 1, yc = a.y0 + 0.6 * H;
+    let R = 0; for (let y = a.y0; y < yc; y++) for (let x = 0; x < fw; x++) if (D[y * fw + x] > R) R = D[y * fw + x];
+    if (R < 2.5) return null;
+    let n = 0, hx = 0, hy = 0;
+    for (let y = a.y0; y < yc; y++) for (let x = 0; x < fw; x++) if (D[y * fw + x] >= R - 0.5) { n++; hx += x + 0.5; hy += y + 0.5; }
+    hx /= n; hy /= n;
+    let w = 0, bx = 0, by = 0;
+    for (let y = 0; y < fh; y++) for (let x = 0; x < fw; x++) {
+      const d = D[y * fw + x]; if (!d || Math.hypot(x + 0.5 - hx, y + 0.5 - hy) <= R + 1.5) continue;
+      const q = d * d; w += q; bx += q * (x + 0.5); by += q * (y + 0.5);
+    }
+    if (!w) return null;
+    bx /= w; by /= w;
+    const L0 = Math.hypot(bx - hx, by - hy) || 1, sx = hx + ((bx - hx) / L0) * (R + 1), sy = hy + ((by - hy) / L0) * (R + 1);
+    // Bỏ đĩa đầu rồi chỉ giữ phần còn LIỀN với thân (loang từ chỗ dày nhất của thân): tóc, sừng, tai mọc trên đầu bị tách rời nên
+    // không bị nhận nhầm là bàn tay; cánh tay nối với thân qua vai nên vẫn còn.
+    const RD = R + 2, lien = new Uint8Array(fw * fh), hang = [];
+    let j0 = -1, dmax = 0;
+    for (let j = 0; j < M.length; j++) if (M[j] && Math.hypot((j % fw) + 0.5 - hx, ((j / fw) | 0) + 0.5 - hy) > RD && D[j] > dmax) { dmax = D[j]; j0 = j; }
+    if (j0 < 0) return null;
+    lien[j0] = 1; hang.push(j0);
+    for (let k = 0; k < hang.length; k++) {
+      const j = hang[k], x = j % fw;
+      for (const q of [x > 0 ? j - 1 : -1, x < fw - 1 ? j + 1 : -1, j - fw, j + fw]) {
+        if (q < 0 || q >= M.length || lien[q] || !M[q] || Math.hypot((q % fw) + 0.5 - hx, ((q / fw) | 0) + 0.5 - hy) <= RD) continue;
+        lien[q] = 1; hang.push(q);
+      }
+    }
+    let best = -1e9, tx = -1, ty = -1;
+    for (let y = a.y0; y <= y1; y++) for (let x = 0; x < fw; x++) {
+      const j = y * fw + x; if (!M[j]) continue;
+      const X = x + 0.5, Y = y + 0.5, truoc = (X - bx) * dir;
+      // phần không liền thân (do cánh tay đi ngang qua đĩa đầu, ví dụ đấm ngang cằm) chỉ nhận khi ở phía trước, thấp hơn tâm đầu, ngoài đầu
+      if (!lien[j] && !(truoc > 0 && Y >= hy + 1 && Math.hypot(X - hx, Y - hy) > R + 3)) continue;
+      if (Y > y1 + 1 - 0.25 * H) continue; // bàn chân, ống chân
+      if (Y > y1 + 1 - 0.4 * H && truoc < 4) continue; // đùi, hông (trừ khi tay vươn hẳn ra trước, ví dụ búa nện sát đất)
+      const sc = Math.hypot(X - sx, Y - sy) + 0.35 * truoc - 0.8 * Math.max(0, D[j] - 1.5);
+      if (sc > best) { best = sc; tx = X; ty = Y; }
+    }
+    if (tx < 0) return null;
+    const L1 = Math.hypot(sx - tx, sy - ty) || 1, ux = (sx - tx) / L1, uy = (sy - ty) / L1; // lùi vào giữa nắm tay
+    let px = tx, py = ty;
+    for (let k = 1; k <= 2; k++) { const X = Math.floor(tx + ux * k), Y = Math.floor(ty + uy * k); if (X >= 0 && Y >= 0 && X < fw && Y < fh && M[Y * fw + X]) { px = X + 0.5; py = Y + 0.5; } else break; }
+    const r = (v) => Math.round(v * 2) / 2;
+    return [r(sp.lat ? sp.ax - px : px - sp.ax), r(py - sp.ay)];
+  }
+  SC.tayAI = function (sp, ten, i) {
+    if (!sp || !sp.img || !sp.dt[ten]) return null;
+    sp.tayC = sp.tayC || {};
+    const k = ten + ':' + i;
+    if (k in sp.tayC) return sp.tayC[k];
+    let r = null;
+    try { r = doTay(sp, matNa(sp)(ten, i)); } catch (e) { r = null; }
+    return (sp.tayC[k] = r);
+  };
+  // Điểm neo của khung (ten, i) cho thân AI: diemAI (tệp ghép) và, ở hàng đòn theo vũ khí, bàn tay trước tự đo (trừ khi tệp ghép ghi
+  // đúng khung đó). null: không có gì.
+  SC.diemKhung = function (sp, key, ten, i, kh) {
+    const da = SC.ghep[key] ? SC.diemAI(key, ten, i, kh) : null;
+    if (!LA_DON[ten]) return da;
+    const tay = SC.tayAI(sp, ten, i);
+    if (!tay || (da && da.nguon.tay_truoc === 'tep')) return da;
+    const kq = da ? { diem: Object.assign({}, da.diem), nguon: Object.assign({}, da.nguon) } : { diem: {}, nguon: {} };
+    kq.diem.tay_truoc = tay; kq.nguon.tay_truoc = 'do-tu-dong';
+    return kq;
+  };
   // Vẽ dấu ngực 3 × 3 tại p (tâm), trong hệ đã dời về chân bé.
   SC.veDauNguc = function (c, p, ao) {
     const X = p[0], Y = p[1];
@@ -17404,7 +17592,7 @@ MA._xong();
       let lop = null; // đồ đang mặc khoác lên thân AI: lớp sau thân và lớp trước thân, bám theo chính thân AI khung này
       const neo = SC.neoCua(sp, s.ten);
       if (sp.khoacDo && G.tinhLinh.lopDo) {
-        try { const kh = SC.khopEmBe(sp, s.ten, s.i); lop = G.tinhLinh.lopDo(fr, neoGhep(fr.key, s, neo, kh), kh, SC.anBo(o, sp)); } catch (e) { lop = null; }
+        try { const kh = SC.khopEmBe(sp, s.ten, s.i); lop = G.tinhLinh.lopDo(fr, neoGhep(fr.key, s, neo, kh, sp), kh, SC.anBo(o, sp)); } catch (e) { lop = null; }
       }
       // Áo không khoác lên thân AI: viền màu bậc áo + dấu ngực.
       let ao = null, nguc = null, daVien = false;
@@ -18013,9 +18201,9 @@ MA._xong();
     return { diem: d, nguon: ng };
   };
   // neo truyền cho lopDo: có tệp ghép thì thêm khung đang vẽ, điểm của khung và khoá bộ nhớ đệm. Không có: trả lại neo cũ (y hệt trước).
-  function neoGhep(key, s, neo, kh) {
+  function neoGhep(key, s, neo, kh, sp) {
     if (!SC.ghep[key]) return neo;
-    const da = SC.diemAI(key, s.ten, s.i, kh), n = Object.assign({}, neo || {});
+    const da = sp ? SC.diemKhung(sp, key, s.ten, s.i, kh) : SC.diemAI(key, s.ten, s.i, kh), n = Object.assign({}, neo || {});
     n.khung = { ten: s.ten, i: s.i }; n.diem = da ? da.diem : null; n.nguon = da ? da.nguon : null;
     n.khoa = '|g' + SC.ghepVer + ':' + s.ten + ':' + s.i;
     return n;
@@ -18104,9 +18292,9 @@ MA._xong();
       let s;
       if (a.dong_tac != null) { const ten0 = String(a.dong_tac), ten = sp.dt[ten0] ? ten0 : SC.TEN_AI[ten0] || ten0, k = sp.dt[ten] ? ten : 'idle'; s = { ten: k, i: clamp(a.khung | 0, 0, sp.dt[k].so - 1) }; }
       else s = SC.chonEmBe(sp, a);
-      const kh = SC.khopEmBe(sp, s.ten, s.i), neo = neoGhep(key, s, SC.neoCua(sp, s.ten), kh);
-      // nhịp đung đưa: trong game theo động tác của thân code cùng lúc; ở đây suy từ động tác AI (move = chạy)
-      const fr = a.dong_tac != null ? { key, of, anim: s.ten === 'move' ? 'run' : s.ten === 'idle' ? 'idle' : s.ten, f: s.i } : TL.frame(a, 1);
+      const kh = SC.khopEmBe(sp, s.ten, s.i), neo = neoGhep(key, s, SC.neoCua(sp, s.ten), kh, sp);
+      // nhịp đung đưa: trong game theo động tác của thân code cùng lúc; ở đây suy từ động tác AI (move = chạy; hàng đòn theo vũ khí = đánh, chưởng)
+      const fr = a.dong_tac != null ? { key, of, anim: s.ten === 'move' ? 'run' : s.ten === 'idle' ? 'idle' : s.ten === 'cast' ? 'cast' : LA_DON[s.ten] ? 'atk' : s.ten, f: s.i } : TL.frame(a, 1);
       return { ai: true, cx: TL.cxLopDo({ key, of, anim: fr.anim, f: fr.f }, neo, kh), ten: s.ten, i: s.i, key, of };
     }
     let ps;
@@ -18195,13 +18383,16 @@ MA._xong();
   };
   // Thân AI đang vẽ cho đối tượng o (như khi vẽ em bé): hàng, khung ảnh AI và điểm neo của khung đó (toạ độ tính từ chân), để vũ khí
   // chỉnh theo đúng khung ảnh AI. null: nhân vật chưa có tệp ghép chỉnh vũ khí, hoặc không dùng thân AI (khi đó game làm y như cũ).
+  // Phiên 3: đang ở hàng đòn theo vũ khí thì luôn trả về (kể cả khi chưa có tệp ghép), kèm bàn tay trước tự đo (SC.diemKhung).
   SC.khungVk = function (o) {
-    const key = o && o.key, g = SC.ghep[key];
-    if (!g || !g.coVk || !G.tinhLinh) return null;
+    const key = o && o.key, g = SC.ghep[key], coVk = !!(g && g.coVk);
+    if (!G.tinhLinh || (!coVk && !G.DON_VK)) return null;
     const sp = SC.cuaEmBe(key, o);
     if (!sp || !sp.img) return null;
     try {
-      const s = SC.chonEmBe(sp, o), da = SC.diemAI(key, s.ten, s.i, SC.khopEmBe(sp, s.ten, s.i));
+      const s = SC.chonEmBe(sp, o);
+      if (!coVk && !LA_DON[s.ten]) return null;
+      const da = SC.diemKhung(sp, key, s.ten, s.i, SC.khopEmBe(sp, s.ten, s.i));
       return { ten: s.ten, i: s.i, diem: da ? da.diem : null };
     } catch (e) { return null; }
   };
