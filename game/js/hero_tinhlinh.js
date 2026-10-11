@@ -1291,6 +1291,17 @@
     }
     return { el, stage, kind: KIND[el] || 'thuong' };
   }
+  // Vũ khí ảnh AI đang co theo G.CO_VK (js/sprite_custom.js): [dx, dy] dời điểm cầm khi vẽ (chưa ép bẹt), để điểm "nam" trên ảnh
+  // (gần đuôi chuôi) rơi đúng chỗ bàn tay bé (điểm cầm + lh dọc thân, lh = HOLD hoặc số vkGhep ghi). Cung: co quanh điểm cầm, không dời.
+  // Không có ảnh AI hoặc tắt cờ: null (y hệt trước).
+  function lechCo(wo, wp) {
+    const SCx = G.spriteCustom;
+    if (!G.CO_VK || !SCx || !SCx.timVuKhi || !SCx.namVk || !wp || wp.type === 'bow') return null;
+    const sp = SCx.timVuKhi(wo); if (!sp || !sp.vk) return null;
+    const n = SCx.namVk(sp.vk.loai, wo); if (n == null) return null;
+    const lh = wp.lh != null ? wp.lh : HOLD[wp.type] || 0;
+    return rotv(lh - n, 0, wp.ang);
+  }
   let warnedW = false;
   // Hàm trung gian vẽ vũ khí: có G.weaponArt thì gọi nó, chưa có thì vẽ hình tạm.
   function drawWeapon(c, o, wp, t) {
@@ -1300,10 +1311,11 @@
         // Ghép: lấy đúng dòng, nhánh, mốc, bậc của món vũ khí. Đang phủ hệ (bùa, Nung) mà chưa có nhánh thì hiện như mốc Mầm của hệ đó.
         const wo = G.weaponArt.fromWeapon(w, { mood: o.wmood || wp.mood, t });
         if (w.coat && !wo.branch) { wo.branch = w.coat; wo.stage = 1; }
+        const lc = lechCo(wo, wp); // ảnh AI co nhỏ (G.CO_VK): dời điểm cầm để chỗ nắm trên ảnh vẫn ở đúng bàn tay
         if (wp.sx != null) { // quét vòng: ép bẹt theo chiều ngang quanh điểm cầm
           c.save(); c.translate(wp.x, wp.y); c.scale(wp.sx, 1);
-          try { G.weaponArt.draw(c, wo, 0, 0, wp.ang, wp.pull); } finally { c.restore(); }
-        } else G.weaponArt.draw(c, wo, wp.x, wp.y, wp.ang, wp.pull);
+          try { G.weaponArt.draw(c, wo, lc ? lc[0] : 0, lc ? lc[1] : 0, wp.ang, wp.pull); } finally { c.restore(); }
+        } else G.weaponArt.draw(c, wo, wp.x + (lc ? lc[0] : 0), wp.y + (lc ? lc[1] : 0), wp.ang, wp.pull);
         return;
       } catch (e) { if (!warnedW) { warnedW = true; if (window.console) console.warn('hero_tinhlinh: G.weaponArt lỗi, dùng hình tạm', e); } }
     }
@@ -1322,7 +1334,13 @@
     const SCx = G.spriteCustom;
     if (!wp || !SCx || !SCx.capVuKhi) return { wp, tay: null, bam: false };
     const gv = SCx.khungVk ? SCx.khungVk(o) : null;
-    const cv = SCx.capVuKhi(o.key, o.weapon, wp.type, gv ? gv.ten : fr.anim, gv ? gv.i : fr.f);
+    let cv = SCx.capVuKhi(o.key, o.weapon, wp.type, gv ? gv.ten : fr.anim, gv ? gv.i : fr.f);
+    // G.CO_VK bật (vũ khí ảnh AI co nhỏ): khung đứng, chạy của thân AI chưa có mục "cap" thì tay vẫn bám điểm "tay_truoc" của khung
+    // đó (trước đây vũ khí theo bàn tay khung xương code, lệch khỏi bàn tay ảnh AI). Tắt cờ: như cũ.
+    if (G.CO_VK && gv && gv.diem && gv.diem.tay_truoc && (gv.ten === 'idle' || gv.ten === 'move') && (!cv || !cv.bam) && wp.sx == null)
+      cv = Object.assign({ dx: 0, dy: 0, xoay: 0, bam_vk: null }, cv || {}, { bam: 'tay_truoc', truoc: wp.type !== 'bow' },
+        wp.type === 'hammer' && gv.ten === 'idle' && !(cv && cv.xoay) ? { xoay: 65 - wp.ang } : null, wp.type === 'bow' && !(cv && cv.dx) ? { dx: 2 } : null);
+    // (kiếm, giáo, búa cầm ở tay trước: vẽ trước thân; đứng yên thì búa chúc đầu xuống đất phía trước cho đầu búa khỏi che mặt; cung để sau thân, nhích ra 2 điểm ảnh cho dây cung khỏi cắt ngang người)
     if (!cv) return { wp, tay: null, bam: false };
     const P = cv.bam && gv && gv.diem && wp.sx == null ? gv.diem[cv.bam] : null;
     if (!P) return { wp: Object.assign({}, wp, { x: wp.x + cv.dx, y: wp.y + cv.dy, ang: wp.ang + cv.xoay }), tay: null, bam: false };
@@ -1330,7 +1348,7 @@
     const kieu = cv.bam_vk || (wp.type === 'bow' ? 'cam' : 'nam');
     const Lh = kieu === 'cam' ? 0 : wp.type === 'bow' ? -9 - 8 * (wp.pull || 0) : HOLD[wp.type] || 0, h0 = rotv(Lh, 0, wp.ang), a1 = wp.ang + cv.xoay, h1 = rotv(Lh, 0, a1), nt = o.neoTay || [0, 0];
     const tx = P[0] + cv.dx - nt[0], ty = P[1] + cv.dy - nt[1]; // chỗ bàn tay của thân AI (vũ khí còn được dời thêm neoTay lúc vẽ)
-    return { wp: Object.assign({}, wp, { x: Math.round(tx - h1[0]), y: Math.round(ty - h1[1]), ang: a1 }), tay: [tx - (wp.x + h0[0]), ty - (wp.y + h0[1])], bam: true };
+    return { wp: Object.assign({}, wp, { x: Math.round(tx - h1[0]), y: Math.round(ty - h1[1]), ang: a1, lh: Lh }, cv.truoc ? { front: true } : null), tay: [tx - (wp.x + h0[0]), ty - (wp.y + h0[1])], bam: true };
   }
   // Vẽ một bé (kèm vũ khí) tại chỗ c đang đứng: gốc là chân bé, đã lật theo hướng mặt.
   function drawFrame(c, o, fr, t) {
@@ -1506,9 +1524,16 @@
     if (!(L > 4)) L = w.type === 'spear' ? 48 : w.type === 'hammer' ? 34 : 36;
     const f = o.face < 0 ? -1 : 1, X0 = Math.round(o.x) + (f < 0 ? 1 : 0), Y0 = Math.round(o.y);
     const r = (w.ang * Math.PI) / 180, sx = w.sx == null ? 1 : w.sx;
+    let gx = w.x, gy = w.y;
+    if (G.CO_VK && !o.plainWeapon) { // ảnh AI co nhỏ: vệt bám đúng mũi của hình đang vẽ (điểm cầm đã dời, dài = dài ảnh x hệ số co)
+      try {
+        const wo = G.weaponArt.fromWeapon(o.weapon || {}), sp = G.spriteCustom && G.spriteCustom.timVuKhi(wo), lc = sp && lechCo(wo, w);
+        if (sp && lc) { gx += lc[0] * sx; gy += lc[1]; L = Math.hypot(sp.vk.mui[0] - sp.vk.cam[0], sp.vk.mui[1] - sp.vk.cam[1]) * G.spriteCustom.coVk(sp.vk.loai, wo); }
+      } catch (e) { /* giữ như cũ */ }
+    }
     const n = fr.anim === 'spec' ? 7 : fr.anim === 'sweep' ? 10 : ATKN[w.type] || 8;
     TIP.anim = fr.anim; TIP.u = (fr.f + 0.5) / n; TIP.wt = w.type; TIP.combo = fr.anim === 'atk' ? fr.v | 0 : 0;
-    TIP.gx = X0 + f * w.x; TIP.gy = Y0 + w.y; TIP.dx = f * Math.cos(r) * sx; TIP.dy = Math.sin(r); TIP.L = L;
+    TIP.gx = X0 + f * gx; TIP.gy = Y0 + gy; TIP.dx = f * Math.cos(r) * sx; TIP.dy = Math.sin(r); TIP.L = L;
     return TIP;
   }
 

@@ -785,7 +785,7 @@
     { const ga = c.globalAlpha; c.globalAlpha = ga * (0.3 - bob * 0.03); ell(c, x, y, 4 - (bob > 0 ? 1 : 0), 1, '#000000'); c.globalAlpha = ga; } // bóng nhỏ lại khi vũ khí bay cao
     const WA = G.weaponArt;
     try {
-      if (WA) { const o = WA.fromWeapon(w, { mood: S.near || S.talk ? 'calm' : 'idle', t: S.t + i }); WA.draw(c, o, x, y - 14 - bob - (w.type === 'bow' ? 8 : 0), WA.REST[w.type], 0); }
+      if (WA) { const o = WA.fromWeapon(w, { mood: S.near || S.talk ? 'calm' : 'idle', t: S.t + i }); o.lang = true; /* vũ khí bay theo ở làng: co thêm G.CO_VK.lang */ WA.draw(c, o, x, y - 14 - bob - (w.type === 'bow' ? 8 : 0), WA.REST[w.type], 0); }
       else if (G.tinhLinh) { const sp = G.tinhLinh.weaponSprite(w.type, 'thuong', 'idle', -90, 0); c.drawImage(sp.cv, x - sp.ox, y - 14 - bob - sp.oy); }
     } catch (e) { /* thiếu hình vũ khí thì bỏ qua */ }
   }

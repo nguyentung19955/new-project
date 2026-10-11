@@ -708,6 +708,29 @@
   const doSan = (ma) => { const s = SC.do[ma]; return s && s.ready ? s : null; };
 
   // ---------- VŨ KHÍ ----------
+  // ----- CỠ VŨ KHÍ ẢNH AI KHI VẼ (chỉ đổi HÌNH, không đổi tầm đánh, vùng trúng, sát thương) -----
+  // Ảnh AI vẽ to (kiếm ~46 điểm ảnh, gấp rưỡi thân em bé 29). G.CO_VK: hệ số co theo loại, co quanh điểm cầm (cam); mũi, dây cung,
+  // hạt hệ co theo. "lang": nhân thêm cho vũ khí bay theo em bé ở làng. "nam": chỗ bàn tay nắm trên ảnh AI, tính từ điểm cầm dọc
+  // thân về phía mũi (điểm ảnh game của ảnh gốc), để chuôi nằm đúng trong tay (js/hero_tinhlinh.js).
+  // Tắt: G.CO_VK = null, hoặc mở game với ?covk=0  -> vẽ y hệt bản cũ.
+  if (G.CO_VK === undefined) {
+    let tat = false;
+    try { tat = typeof location !== 'undefined' && /[?&]covk=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
+    G.CO_VK = tat ? null : { sword: 0.54, bow: 0.52, spear: 0.59, hammer: 0.48, lang: 0.9, nam: 1.5 };
+  }
+  // Hệ số co của một món: opts.lang (vũ khí bay ở làng) nhân thêm hệ số làng. Tắt cờ: 1.
+  SC.coVk = function (loai, opts) {
+    const C = G.CO_VK; if (!C || typeof C !== 'object') return 1;
+    let k = +C[loai]; if (!(k > 0.05 && k <= 4)) k = 1;
+    if (opts && opts.lang) { const l = +C.lang; if (l > 0.05 && l <= 4) k *= l; }
+    return k;
+  };
+  // Chỗ tay nắm trên ảnh AI (đã co): khoảng cách từ điểm cầm dọc thân. Tắt cờ: null (giữ cách cũ).
+  SC.namVk = function (loai, opts) {
+    const C = G.CO_VK; if (!C || typeof C !== 'object' || loai === 'bow') return null;
+    const n = isFinite(+C.nam) ? +C.nam : 0;
+    return n * SC.coVk(loai, opts);
+  };
   SC.timVuKhi = function (o) {
     if (!o) return null;
     const b = 'vk-' + o.type + '-' + (o.family | 0), st = o.stage | 0;
@@ -789,11 +812,11 @@
   // Hình vũ khí xoay góc a (độ, 0 chĩa về trước, -90 chĩa lên): điểm cầm ở gốc. Nhớ theo góc (bước 5 độ), bậc, hệ và giai đoạn.
   // Trả về { cv, dx, dy, w, h, c, s, k, glow }: dx, dy, w, h theo điểm ảnh GAME; cv có số điểm ảnh gấp net lần (vẽ bằng drawImage có cỡ đích).
   // k: hệ số phóng (giai đoạn cao to hơn chút, như bản code); glow: quầng sáng hệ (giai đoạn 3).
-  function xoayVk(sp, a, rar, he) {
-    a = Math.round(a / 5) * 5;
-    const k = a + '|' + rar + (he ? '|' + he.el + he.st : ''); let r = sp.xoay.get(k); if (r) return r;
+  function xoayVk(sp, a, rar, he, co) {
+    a = Math.round(a / 5) * 5; co = co > 0 && co !== 1 ? Math.round(co * 1000) / 1000 : 1;
+    const k = a + '|' + rar + (he ? '|' + he.el + he.st : '') + (co !== 1 ? '|c' + co : ''); let r = sp.xoay.get(k); if (r) return r;
     const V = sp.vk, N = sp.net || 1, w = sp.rong, h = sp.cao, pw = sp.pw || w, ph = sp.ph || h, th = Math.atan2(V.mui[1] - V.cam[1], V.mui[0] - V.cam[0]), q = a * D2R - th, c = Math.cos(q), s = Math.sin(q);
-    const nh = he && he.nhuom, K = nh ? HE_K[he.st] : 1, src = nh ? pxHe(sp, he.el, he.st) : sp.px;
+    const nh = he && he.nhuom, K = (nh ? HE_K[he.st] : 1) * co, src = nh ? pxHe(sp, he.el, he.st) : sp.px;
     let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
     for (const p of [[0, 0], [w, 0], [0, h], [w, h]]) { const u = p[0] - V.cam[0], v = p[1] - V.cam[1], X = (u * c - v * s) * K, Y = (u * s + v * c) * K; x0 = Math.min(x0, X); y0 = Math.min(y0, Y); x1 = Math.max(x1, X); y1 = Math.max(y1, Y); }
     x0 = Math.floor(x0) - 1; y0 = Math.floor(y0) - 1; x1 = Math.ceil(x1) + 1; y1 = Math.ceil(y1) + 1;
@@ -876,7 +899,7 @@
   function chamDay(c, x0, y0, x1, y1, col) { c.fillStyle = col; const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0), 1); for (let i = 0; i <= n; i++) c.fillRect(Math.round(x0 + ((x1 - x0) * i) / n), Math.round(y0 + ((y1 - y0) * i) / n), 1, 1); }
   // Vẽ vũ khí tự vẽ (cùng cách gọi với G.weaponArt.draw).
   SC.veVuKhi = function (c, sp, opts, x0, y0, ang, pull) {
-    const rar = Math.max(0, Math.min(3, (opts && opts.rarity) | 0)), he = heCua(sp, opts), R = xoayVk(sp, ang || 0, rar, he), X = Math.round(x0), Y = Math.round(y0);
+    const rar = Math.max(0, Math.min(3, (opts && opts.rarity) | 0)), he = heCua(sp, opts), R = xoayVk(sp, ang || 0, rar, he, SC.coVk(sp.vk.loai, opts)), X = Math.round(x0), Y = Math.round(y0);
     const t = (opts && opts.t != null ? +opts.t : G.time) || 0;
     const sm = c.imageSmoothingEnabled; c.imageSmoothingEnabled = false;
     if (R.glow) {
