@@ -1226,8 +1226,34 @@
     if (k > 0.6) { q(x - 15, y, 2, 1, rgba(col, 0.6)); q(x + 14, y, 2, 1, rgba(col, 0.6)); }
   }
   function spark(x, y, col) { q(x, y - 2, 1, 5, col); q(x - 2, y, 5, 1, col); }
+  // ----- ảnh AI cho đồ vật trong phòng (tools/tach-phong; tệp gd-vat-<tên>, kiểu "giao-dien") -----
+  // Có tệp thì vẽ ảnh thay hình code: GIỮA ĐÁY ảnh là chân vật (x, y). Bóng, quầng mời gọi, tia lấp lánh, ánh lửa vẫn do code vẽ.
+  // Mỗi trạng thái của vật là một mã riêng (vd gd-vat-ruong, gd-vat-ruong-mo); mã nào chưa có tệp thì trạng thái đó vẽ code y như cũ.
+  function vat(ten) { const s = G.spriteCustom; return s && s.gdSan ? s.gdSan('gd-vat-' + ten) : null; }
+  // Vẽ ảnh, trả về hàm đổi toạ độ: P(dx, dy, rộng code, cao code) = điểm (x + dx, y + dy) của hình code, co theo cỡ thật của ảnh.
+  function veVat(g, x, y) {
+    const n = G.NET || 1, w = g.pw / g.net, h = g.ph / g.net;
+    G.spriteCustom.veGd(pc, g, Math.round((x - w / 2) * n) / n, y - h, w, h);
+    const P = (dx, dy, cw, ch) => [x + Math.round((dx * w) / cw), y + Math.round((dy * h) / ch)];
+    P.w = w; P.h = h; P.dinh = y - Math.round(h); // dinh: mép trên của ảnh
+    return P;
+  }
+  // Biểu tượng nổi trên suối: chữ thập là máu, giọt là mana.
+  function dauSuoi(hp, x, iy, col, colL) {
+    if (hp) { q(x - 2, iy - 1, 5, 7, DARK); q(x - 4, iy + 1, 9, 3, DARK); q(x - 1, iy, 3, 5, col); q(x - 3, iy + 2, 7, 1, col); q(x - 1, iy, 1, 2, colL); } else { q(x - 3, iy + 1, 7, 5, DARK); q(x - 2, iy - 1, 5, 3, DARK); q(x - 1, iy - 2, 3, 2, DARK); q(x - 2, iy + 2, 5, 3, col); q(x - 1, iy, 3, 2, col); q(x, iy - 1, 1, 1, col); q(x - 1, iy + 2, 1, 2, colL); }
+  }
   const PROPS = {
     chest(o, x, y, t) {
+      const g = vat(o.used ? 'ruong-mo' : 'ruong');
+      if (g) {
+        shadow(x, y, 14);
+        const P = veVat(g, x, y);
+        if (o.used) { if ((t * 1.3) % 2 < 0.3) spark(...P(4, -14, 26, 26), '#fff3b0'); } else {
+          const k = (t * 1.2) % 2.4;
+          if (k < 0.3) spark(...P(8, -22, 28, 21), '#fff3b0'); else if (k > 1.2 && k < 1.5) spark(...P(-9, -20, 28, 21), '#fff3b0');
+        }
+        return;
+      }
       shadow(x, y, 14);
       q(x - 13, y - 12, 26, 12, DARK);
       q(x - 12, y - 11, 24, 10, '#7a4a22'); q(x - 12, y - 7, 24, 1, '#5a3418'); q(x - 12, y - 3, 24, 2, '#4e2e14');
@@ -1254,6 +1280,13 @@
     fountain(o, x, y, t) {
       const hp = o.kind === 'hp';
       const col = hp ? '#e8483a' : '#3a8ef0', colL = hp ? '#ffa89a' : '#a8d4ff', colD = hp ? '#8a2a22' : '#22508a';
+      const g = vat((hp ? 'suoi-mau' : 'suoi-mana') + (o.used ? '-het' : ''));
+      if (g) {
+        shadow(x, y, 16);
+        const P = veVat(g, x, y);
+        if (!o.used) dauSuoi(hp, x, P.dinh - 5 + Math.round(Math.sin(t * 3)), col, colL); // biểu tượng nổi nhấp nhô phía trên ảnh
+        return;
+      }
       shadow(x, y, 16);
       q(x - 9, y - 5, 18, 5, DARK); q(x - 15, y - 12, 30, 8, DARK);
       q(x - 8, y - 4, 16, 4, '#6f727a'); q(x - 8, y - 4, 16, 1, '#8d8f96');
@@ -1270,11 +1303,18 @@
         q(x - 9, y - 13, 2, 1, colL); q(x + 7, y - 13, 2, 1, colL);
         // biểu tượng: chữ thập là máu, giọt là mana
         const iy = y - 36 + Math.round(Math.sin(t * 3));
-        if (hp) { q(x - 2, iy - 1, 5, 7, DARK); q(x - 4, iy + 1, 9, 3, DARK); q(x - 1, iy, 3, 5, col); q(x - 3, iy + 2, 7, 1, col); q(x - 1, iy, 1, 2, colL); } else { q(x - 3, iy + 1, 7, 5, DARK); q(x - 2, iy - 1, 5, 3, DARK); q(x - 1, iy - 2, 3, 2, DARK); q(x - 2, iy + 2, 5, 3, col); q(x - 1, iy, 3, 2, col); q(x, iy - 1, 1, 1, col); q(x - 1, iy + 2, 1, 2, colL); }
+        dauSuoi(hp, x, iy, col, colL);
       } else { q(x - 13, y - 12, 26, 2, '#3a3d46'); q(x - 9, y - 11, 8, 1, colD); q(x + 3, y - 11, 5, 1, colD); }
     },
     stash(o, x, y, t) {
       // rương đồ: giá vũ khí dựa tường và thùng gỗ
+      const g = vat('ruong-do');
+      if (g) {
+        shadow(x, y, 14);
+        const P = veVat(g, x, y);
+        if ((t * 0.8) % 3 < 0.25) spark(...P(-5, -22, 26, 28), '#ffffff');
+        return;
+      }
       shadow(x, y, 14);
       q(x - 12, y - 25, 1, 13, '#8a6a44'); q(x - 13, y - 27, 3, 3, '#c9ccd2'); q(x - 12, y - 28, 1, 1, '#e8eef5');
       q(x - 6, y - 24, 2, 12, '#b9c0c9'); q(x - 6, y - 24, 1, 12, '#e8eef5'); q(x - 8, y - 14, 6, 1, '#caa15a'); q(x - 6, y - 13, 2, 2, '#5a4030');
@@ -1287,6 +1327,17 @@
       if ((t * 0.8) % 3 < 0.25) spark(x - 5, y - 22, '#ffffff');
     },
     altar(o, x, y, t) {
+      const g = vat(o.used ? 'ban-tho-het' : 'ban-tho');
+      if (g) {
+        shadow(x, y, 14);
+        const P = veVat(g, x, y);
+        if (!o.used) { // ảnh đã có ngọn lửa tím; code giữ quầng sáng thở và hai tàn lửa bay
+          const f = Math.floor(t * 5) % 2, k = 0.5 + 0.5 * Math.sin(t * 3);
+          A.ellipse(pc, x, P.dinh + 6, 7, 6, 'rgba(192,90,240,' + (0.1 + 0.1 * k).toFixed(3) + ')');
+          q(x - 6 + f * 11, P.dinh + 3 + f * 2, 1, 1, '#f0c0ff'); q(x + 4 - f * 9, P.dinh, 1, 1, '#c05af0');
+        }
+        return;
+      }
       shadow(x, y, 14);
       q(x - 13, y - 6, 26, 6, DARK); q(x - 11, y - 16, 22, 11, DARK);
       q(x - 12, y - 5, 24, 5, '#3e3040'); q(x - 12, y - 5, 24, 1, '#5e4c62');
@@ -1307,6 +1358,13 @@
       } else { q(x - 3, y - 14, 1, 4, '#1a1014'); q(x - 2, y - 11, 3, 1, '#1a1014'); }
     },
     merchant(o, x, y, t) {
+      const g = vat('thuong-nhan');
+      if (g) {
+        shadow(x, y, 17);
+        const P = veVat(g, x, y), a = P(11, -26, 36, 35);
+        q(a[0], a[1], 7, 8, Math.floor(t * 4) % 2 ? 'rgba(255,200,80,0.16)' : 'rgba(255,200,80,0.08)'); // đèn lồng bên phải sạp chập chờn
+        return;
+      }
       shadow(x, y, 17);
       // sạp hàng mái sọc, ông lái buôn đội nón lá
       q(x - 15, y - 30, 2, 30, '#5a4030'); q(x + 13, y - 30, 2, 30, '#5a4030'); q(x - 15, y - 30, 1, 30, '#7a5a40');
@@ -1326,6 +1384,18 @@
       q(x + 14, y - 28, 1, 3, '#3a2c20'); q(x + 12, y - 25, 5, 6, DARK); q(x + 13, y - 24, 3, 4, f ? '#ffd23f' : '#ffb030'); q(x + 11, y - 26, 7, 8, 'rgba(255,200,80,0.12)');
     },
     brazier(o, x, y, t) {
+      const g = vat(o.used ? 'chau-than-tat' : 'chau-than');
+      if (g) {
+        shadow(x, y, 11);
+        if (!o.used) halo(x, y, '#ff9a40', t);
+        const P = veVat(g, x, y);
+        if (!o.used) { // ảnh đã có ngọn lửa; code giữ ánh lửa chập chờn và tàn lửa bay
+          const f = Math.floor(t * 10) % 3, a = P(-8, -26, 18, 28);
+          q(a[0], a[1], Math.round((16 * P.w) / 18), Math.round((14 * P.h) / 28), 'rgba(255,122,42,' + (0.08 + 0.04 * f).toFixed(2) + ')');
+          q(x - 5 + f * 4, P.dinh - f, 1, 1, '#ffd23f'); q(x + 4 - f * 2, P.dinh + 4 - f * 2, 1, 1, '#ff7a2a');
+        }
+        return;
+      }
       shadow(x, y, 11);
       q(x - 6, y - 7, 2, 7, DARK); q(x + 4, y - 7, 2, 7, DARK); q(x - 1, y - 7, 2, 7, DARK);
       q(x - 5, y - 6, 1, 6, '#55504a'); q(x + 4, y - 6, 1, 6, '#55504a'); q(x - 1, y - 6, 1, 6, '#6a645e');
@@ -1340,6 +1410,16 @@
       } else { q(x - 6, y - 13, 12, 1, '#2a2422'); q(x - 2, y - 13, 2, 1, '#a8320a'); q(x + 2, y - 14, 1, 1, '#55504a'); }
     },
     mushroom(o, x, y, t) {
+      const g = vat(o.used ? 'nam-doc-vo' : 'nam-doc');
+      if (g) {
+        if (o.used) { veVat(g, x, y); return; }
+        const f = Math.floor(t * 4) % 3;
+        halo(x, y, '#8fe04a', t);
+        shadow(x, y, 9);
+        const P = veVat(g, x, y), a = P(-10, 0, 24, 21)[0], b = P(8, 0, 24, 21)[0]; // bào tử bay lên phía trên mũ nấm
+        q(a + f * 2, P.dinh - 2 - f, 1, 1, '#c2f58a'); q(b - f, P.dinh - 1 - f * 2, 1, 1, '#c2f58a'); q(x - 2 + f, P.dinh - 4 - f, 1, 1, '#e9ffd0');
+        return;
+      }
       if (!o.used) {
         const f = Math.floor(t * 4) % 3;
         halo(x, y, '#8fe04a', t);
@@ -1354,6 +1434,15 @@
       } else { q(x - 2, y - 4, 4, 4, '#b8b0a0'); q(x - 6, y - 1, 4, 1, '#2f6b1a'); q(x + 3, y - 2, 4, 1, '#2f6b1a'); q(x - 1, y - 5, 3, 1, '#4fae28'); }
     },
     crystal(o, x, y, t) {
+      const g = vat(o.used ? 'tinh-the-vo' : 'tinh-the');
+      if (g) {
+        if (o.used) { veVat(g, x, y); return; }
+        halo(x, y, '#7fd4ff', t);
+        shadow(x, y, 10);
+        const P = veVat(g, x, y), k = (t * 1.4) % 2;
+        if (k < 0.35) spark(...P(6, -19, 23, 26), '#ffffff'); else if (k > 1 && k < 1.3) spark(...P(-6, -13, 23, 26), '#ffffff');
+        return;
+      }
       if (!o.used) {
         halo(x, y, '#7fd4ff', t);
         shadow(x, y, 10);

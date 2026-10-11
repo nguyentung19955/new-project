@@ -1264,7 +1264,18 @@
   }
 
   const cache = new Map(), shells = new Map();
+  // Ảnh AI của phòng (tools/tach-phong; mã gd-vat-*, gd-cua-*, gd-tt-*, gd-nen-*) nạp chậm hơn code vài phần giây:
+  // số ảnh đã sẵn sàng đổi thì xoá bộ nhớ đệm để phòng được dựng lại với ảnh. Không có tệp nào thì số luôn là 0, không xoá gì.
+  let soAnh = 0;
+  function demAnh() {
+    const s = G.spriteCustom, d = s && s.gd; let n = 0;
+    if (d) for (const k in d) if (d[k].ready && (k.startsWith('gd-vat-') || k.startsWith('gd-cua-') || k.startsWith('gd-tt-') || k.startsWith('gd-nen-'))) n++;
+    return n;
+  }
+  RA.xoaDem = function () { cache.clear(); shells.clear(); };
   function get(W) {
+    const n = demAnh();
+    if (n !== soAnh) { soAnh = n; RA.xoaDem(); }
     const doors = W.doors || [];
     const key = [W.uid, W.region, W.type, W.seed, doors.map((d) => d.dir + (d.open ? 1 : 0) + (d.gate ? 'g' : '') + (d.boss ? 'b' : '')).join(',')].join('|');
     let room = cache.get(key);
@@ -1537,6 +1548,15 @@
     },
     // bệ thử thách: cột đá có đồng hồ cát
     pedestal(o, x, y, t) {
+      // ảnh AI (tools/tach-phong): gd-vat-be-thu-thach / gd-vat-be-thu-thach-het, giữa đáy ảnh là chân bệ; bóng và quầng sáng vẫn do code vẽ
+      const SC = G.spriteCustom, g = SC && SC.gdSan ? SC.gdSan(o.used ? 'gd-vat-be-thu-thach-het' : 'gd-vat-be-thu-thach') : null;
+      if (g) {
+        const n = G.NET || 1, w = g.pw / g.net, h = g.ph / g.net;
+        ell(x, y + 1, 12, 4, 'rgba(0,0,0,0.3)');
+        SC.veGd(c, g, Math.round((x - w / 2) * n) / n, y - h, w, h);
+        if (!o.used) ell(x, y - Math.round((26 * h) / 33), 9, 9, 'rgba(74,208,192,0.10)');
+        return;
+      }
       ell(x, y + 1, 12, 4, 'rgba(0,0,0,0.3)');
       r(x - 10, y - 5, 20, 6, DARK); r(x - 9, y - 4, 18, 4, '#5a6a70'); r(x - 9, y - 4, 18, 1, '#8aa0a4');
       r(x - 7, y - 16, 14, 12, DARK); r(x - 6, y - 15, 12, 11, '#6a7c82'); r(x - 6, y - 15, 2, 11, '#9ab0b4'); r(x + 4, y - 15, 2, 11, '#465458');
