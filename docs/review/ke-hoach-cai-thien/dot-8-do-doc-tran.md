@@ -18,3 +18,6 @@
 - Bot ải 1 vẫn thắng; nhật ký sát thương trùng bản trước (chỉ đổi cách vẽ).
 - Cờ false → so ảnh = 0 khác.
 - Báo cáo `docs/review/ke-hoach-cai-thien/dot-8/bao-cao.md` theo mục IV; chỗ nào đổi màu/cỡ là lựa chọn thẩm mỹ thì ghi vào "quyết định cần duyệt" kèm ảnh.
+
+## Bổ sung 13:21 (chủ dự án duyệt) — Đợt 8b, làm NGAY SAU Đợt 8 (cùng tệp HUD)
+Bỏ **ô vuông "dấu Linh Khí"** (hình lửa / giọt độc / bông tuyết) trên đầu quái (`linhkhi.js` `iconCv` và chỗ vẽ trên đầu quái trong `mobs.js`/`stage.js`). Thông tin đó chuyển thành **viền 1 px màu hệ quanh thanh máu nhỏ của quái** (lửa `#fe7d04`, độc `#5aca02`, băng `#32b0e9`); quái không có dấu thì viền như cũ. Trên đầu quái sau đợt này chỉ còn: thanh máu (có viền hệ), biểu tượng đặc tính tinh anh (12×12), biểu tượng vỡ giáp. Cờ tắt dùng chung `G.DO_DOC_TRAN`. Kiểm: ảnh 844×390 phòng có 3 quái mang dấu 3 hệ, trước/sau; bot ải 1 vẫn thắng; cờ false → như cũ. Báo cáo ghi vào `dot-8/bao-cao.md` mục riêng "8b".
