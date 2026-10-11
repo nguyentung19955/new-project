@@ -197,8 +197,12 @@
   api('chCast', (P, cay, A, big) => {
     const h = hand(P), PL = pal(G.CHUONG.trees[cay].el), v = A ? scr(A) : [P.face, 0];
     const x = h.x + v[0] * 8, y = h.y + v[1] * 8;
-    add({ ty: 'flash', x, y, r: 8 + 6 * (big || 0), t: 0.12, c: '#ffffff', c2: PL.c2, ly: 1 });
-    addRing(x, y, 2, 14 + 8 * (big || 0), 0.2, PL.c, 2, 1);
+    // Ảnh AI hu-ra-chuong (sóng chưởng lúc ra tay; mép trái của hình là lòng bàn tay, chĩa theo hướng chưởng; có bản riêng theo hệ của cây chưởng thì dùng): thay chớp sáng và vòng sóng trước tay
+    const maR = K.anhHe ? K.anhHe('hu-ra-chuong', G.CHUONG.trees[cay].el) : null;
+    if (!maR || !K.anhHuong(maR, h.x, h.y, v[0], v[1], { sc: (26 + 10 * (big || 0)) / 44 })) {
+      add({ ty: 'flash', x, y, r: 8 + 6 * (big || 0), t: 0.12, c: '#ffffff', c2: PL.c2, ly: 1 });
+      addRing(x, y, 2, 14 + 8 * (big || 0), 0.2, PL.c, 2, 1);
+    }
     // bàn tay đẩy ra: một vòng sóng nhỏ trước tay và hạt bắn theo hướng chưởng
     for (let i = 0; i < nHat(6 + 6 * (big || 0)); i++) streak(x, y, v[0] * rr(90, 200) + v[1] * rr(-40, 40), v[1] * rr(90, 200) - v[0] * rr(-40, 40), rr(0.1, 0.2), PL.ramp, 1, rr(5, 10), 0, 3);
     kick(-v[0] * (1 + 2 * (big || 0)), -v[1]); rung(0.08 + 0.2 * (big || 0));

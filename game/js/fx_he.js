@@ -163,7 +163,10 @@
     const f = P.face, PL = pal(o.el);
     if (o.move === 'luot') {
       // nhát lướt sau khi né: lưỡi liềm rộng quét ngang và vệt gió
-      add({ ty: 'cres', x: P.x + f * 6, y: P.y - 12, f, ra: o.reach * 0.9, rb: 11, off: 9, oy: 0, vert: false, rev: false, pl: PL, t: 0.2, big: true, st: o.stage, ly: 1, back: o.reach * 0.5 });
+      // Ảnh AI hu-chem-luot (mép trái của hình là tay em bé; K.aimed xoay theo 8 hướng như vệt code): thay lưỡi liềm, vệt gió giữ nguyên
+      const maL = K.anhHe('hu-chem-luot', o.el);
+      if (!maL || !K.anh(maL, P.x - f, P.y - 12, { f, sc: Math.max(0.5, Math.min(2, (o.reach * 0.9 + 11) / 56)) }))
+        add({ ty: 'cres', x: P.x + f * 6, y: P.y - 12, f, ra: o.reach * 0.9, rb: 11, off: 9, oy: 0, vert: false, rev: false, pl: PL, t: 0.2, big: true, st: o.stage, ly: 1, back: o.reach * 0.5 });
       for (let i = 0; i < 6; i++) streak(P.x - f * rr(0, 10), P.y - rr(4, 22), -f * rr(60, 140), 0, rr(0.12, 0.2), PL.ramp, 1, rr(8, 14), 0, 2);
       kick(f * 1.5, 0);
       return;
@@ -172,8 +175,12 @@
       // buông dây cung đã căng: chớp sáng ở cung, vòng gió, giật lùi
       // Sửa góp ý 1: chớp sáng, vòng gió và vệt gió đi theo hướng ngắm thật (P.aimUx, P.aimUy), không chỉ nằm ngang.
       const h = hand(P), c = o.charge || 0, ux = P.aimUx != null ? P.aimUx : f, uy = P.aimUy || 0;
-      add({ ty: 'flash', x: h.x + ux * 6, y: h.y + uy * 6, r: 6 + 4 * c, t: 0.1, c: '#ffffff', c2: PL.c2, ly: 1 });
-      addRing(h.x + ux * 4, h.y + uy * 4, 2, 10 + 8 * c, 0.18, PL.c2, 2, 1);
+      // Ảnh AI hu-ban-cung (mép trái của hình là tay cầm cung, luồng gió chĩa theo hướng ngắm thật): thay chớp sáng và vòng gió, vệt gió giữ nguyên
+      const maB = K.anhHe('hu-ban-cung', o.el);
+      if (!maB || !K.anhHuong(maB, h.x, h.y, ux, uy, { sc: (12 + 8 * c) / 20 })) {
+        add({ ty: 'flash', x: h.x + ux * 6, y: h.y + uy * 6, r: 6 + 4 * c, t: 0.1, c: '#ffffff', c2: PL.c2, ly: 1 });
+        addRing(h.x + ux * 4, h.y + uy * 4, 2, 10 + 8 * c, 0.18, PL.c2, 2, 1);
+      }
       for (let i = 0; i < 4 + 4 * c; i++) { const v = rr(120, 240), q = rr(-20, 20), j = rr(-5, 5); streak(h.x - uy * j, h.y + ux * j, ux * v - uy * q, uy * v + ux * q, rr(0.1, 0.2), PL.ramp, 1, rr(6, 12), 0, 3); }
       kick(-ux * (1 + 1.5 * c), -uy * (1 + 1.5 * c));
       if (c >= 1) trauma(0.15);
@@ -182,8 +189,12 @@
     if (o.move === 'quet') {
       // giáo quét một vòng: lưỡi liềm lớn phía trước, một vệt phía sau, vòng bụi dưới chân
       const R0 = o.reach;
-      add({ ty: 'cres', x: P.x + f * 2, y: P.y - 11, f, ra: R0 * 1.05, rb: 13, off: 12, oy: 0, vert: false, rev: false, pl: PL, t: 0.26, big: true, st: o.stage, ly: 1, back: R0 * 0.3 });
-      add({ ty: 'cres', x: P.x - f * 2, y: P.y - 9, f: -f, ra: R0 * 0.95, rb: 10, off: 11, oy: 0, vert: false, rev: true, pl: PL, t: 0.22, big: false, st: o.stage, ly: 1, back: R0 * 0.3, d: 0.05 });
+      // Ảnh AI hu-quet-giao (cả vòng quét quanh người, tâm ảnh là thân em bé): thay hai lưỡi liềm trước và sau; vòng bụi dưới chân giữ nguyên
+      const maQ = K.anhHe('hu-quet-giao', o.el);
+      if (!maQ || !K.anh(maQ, P.x, P.y - 10, { f, sc: Math.max(0.5, Math.min(2, (R0 * 2.05 + 4) / 100)) })) {
+        add({ ty: 'cres', x: P.x + f * 2, y: P.y - 11, f, ra: R0 * 1.05, rb: 13, off: 12, oy: 0, vert: false, rev: false, pl: PL, t: 0.26, big: true, st: o.stage, ly: 1, back: R0 * 0.3 });
+        add({ ty: 'cres', x: P.x - f * 2, y: P.y - 9, f: -f, ra: R0 * 0.95, rb: 10, off: 11, oy: 0, vert: false, rev: true, pl: PL, t: 0.22, big: false, st: o.stage, ly: 1, back: R0 * 0.3, d: 0.05 });
+      }
       addRing(P.x, P.y, 6, R0, 0.26, PL.c2, 2, 0);
       for (let i = 0; i < 5; i++) { const a = (i / 5) * 6.283 + rr(-0.2, 0.2); emit(2, P.x + Math.cos(a) * R0 * 0.6, P.y + Math.sin(a) * R0 * 0.36, Math.cos(a) * 40, Math.sin(a) * 20 - 6, rr(0.25, 0.45), RAMP.dust, 3, 0, 3, null, 0); }
       kick(f * 1.5, 0); trauma(0.14);
@@ -193,7 +204,9 @@
     if (o.move === 'nenDat') {
       // búa nện sau khi lấy đà: vệt bổ xuống, đất nứt, vòng sóng; nấc 2 to và rung mạnh hơn
       const big = o.level >= 2;
-      add({ ty: 'cres', x: P.x + f * 4, y: P.y - 17, f, ra: 30, rb: 28, off: 10, oy: -5, vert: true, rev: false, pl: PL, t: 0.2, big: true, st: o.stage, ly: 1 });
+      // Vệt bổ xuống: đã có ảnh AI vệt nện búa (hu-chem-bua, dùng chung với đòn thường) thì vẽ ảnh, nấc 2 to hơn
+      if (!K.anh('hu-chem-bua', P.x + f * 4, P.y - 17, { f, sc: big ? 1.2 : 1.04 }))
+        add({ ty: 'cres', x: P.x + f * 4, y: P.y - 17, f, ra: 30, rb: 28, off: 10, oy: -5, vert: true, rev: false, pl: PL, t: 0.2, big: true, st: o.stage, ly: 1 });
       K.slam(o.x, o.y, o.r * 0.8, o.el, big ? 1.5 : 1);
       addRing(o.x, o.y, 6, o.r, 0.28, PL.c, big ? 4 : 3, 0);
       if (big) {
@@ -546,6 +559,13 @@
     if (q.done) { q.gone = true; return; }
     const PL = pal(q.he ? q.he.el : null), th = angOf(q), g = Math.min(0.85, 0.62 + q.walked / 220); // nhỏ hơn trước (0,75 → 1) để vệt không che quái và em bé
     const X = Math.round(q.x), Y = Math.round(q.y - 12);
+    // Ảnh AI hu-tram-nguyet (vầng trăng lưỡi liềm đang bay, chạy lặp): xoay theo hướng bay thật, bay sang trái thì lật chứ không lộn ngược; lớn dần như hình code
+    const maT = K.anhHe('hu-tram-nguyet', q.he ? q.he.el : null);
+    if (maT) {
+      const v = scr(q), hg = K.huongAnh(v[0], v[1]), t = K.S().t;
+      if (q.fxAt == null) q.fxAt = t;
+      if (G.fxAnh.ve(c, maT, X, Y, t - q.fxAt, hg.goc, (g * 42) / 44, hg.f < 0)) return;
+    }
     c.save(); c.translate(X, Y); c.rotate(th);
     try {
       for (let i = 2; i >= 1; i--) { c.globalAlpha = 0.15 * (3 - i); crescent(c, -i * 9, 0, 17 * g, 19 * g, -8, 0, 1, PL.c, 0, 1, true, true, 1, 0); }
@@ -632,14 +652,21 @@
   api('spCast', (P, type, q, el) => {
     const PL = pal(el), h = hand(P), v = q ? scr(q) : [P.face, 0];
     if (type === 'sword') {
-      add({ ty: 'flash', x: h.x + v[0] * 10, y: h.y + v[1] * 10, r: 10, t: 0.12, c: '#ffffff', c2: PL.c2, ly: 1 });
-      addRing(h.x + v[0] * 6, h.y + v[1] * 6, 3, 20, 0.2, PL.c2, 2, 1);
+      // Ảnh AI hu-ra-chieu (chớp linh khí lúc tung chiêu; mép trái của hình là tay, chĩa theo hướng chiêu): thay chớp sáng và vòng sóng ở tay; vệt gió, bụi giữ nguyên
+      const maC = K.anhHe('hu-ra-chieu', el);
+      if (!maC || !K.anhHuong(maC, h.x - v[0] * 4, h.y - v[1] * 4, v[0], v[1], { sc: 0.85 })) {
+        add({ ty: 'flash', x: h.x + v[0] * 10, y: h.y + v[1] * 10, r: 10, t: 0.12, c: '#ffffff', c2: PL.c2, ly: 1 });
+        addRing(h.x + v[0] * 6, h.y + v[1] * 6, 3, 20, 0.2, PL.c2, 2, 1);
+      }
       for (let i = 0; i < 6; i++) streak(h.x, h.y, v[0] * rr(140, 240) + v[1] * rr(-30, 30), v[1] * rr(140, 240) - v[0] * rr(-30, 30), rr(0.12, 0.2), PL.ramp, 1, rr(8, 14), 0, 3);
       for (let i = 0; i < 4; i++) emit(2, P.x - v[0] * rr(2, 8), P.y + rr(-2, 2), -v[0] * rr(30, 70), rr(-14, -4), rr(0.3, 0.5), RAMP.dust, 3, 0, 3, null, 1);
       kick(-v[0] * 2, -v[1] * 2); trauma(0.2); K.stop(40);
     } else if (type === 'spear') {
-      add({ ty: 'flash', x: h.x + v[0] * 8, y: h.y + v[1] * 8, r: 8, t: 0.1, c: '#ffffff', c2: PL.c2, ly: 1 });
-      addRing(h.x, h.y, 2, 16, 0.18, PL.c2, 2, 1);
+      const maC = K.anhHe('hu-ra-chieu', el); // giáo: cùng ảnh ra chiêu, nhỏ hơn kiếm một chút như hình code
+      if (!maC || !K.anhHuong(maC, h.x - v[0] * 4, h.y - v[1] * 4, v[0], v[1], { sc: 0.7 })) {
+        add({ ty: 'flash', x: h.x + v[0] * 8, y: h.y + v[1] * 8, r: 8, t: 0.1, c: '#ffffff', c2: PL.c2, ly: 1 });
+        addRing(h.x, h.y, 2, 16, 0.18, PL.c2, 2, 1);
+      }
       for (let i = 0; i < 5; i++) streak(h.x, h.y, v[0] * rr(160, 260), v[1] * rr(160, 260), rr(0.1, 0.18), PL.ramp, 1, rr(8, 12), 0, 3);
       kick(v[0] * 1.5, v[1] * 1.5); trauma(0.14);
     } else if (type === 'hammer') {

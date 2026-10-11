@@ -211,7 +211,8 @@
       if (o.fy < 1e8) o.fy += o.y - y0;
     }
     for (const o of cap.e) {
-      if (o.ly === 0) { if (ground) rot(o, P.x, P.y); continue; }
+      if (o.neo === 'khoa') continue; // ảnh AI đã tự đặt theo hướng nhắm thật (buông cung): không xoay thêm
+      if (o.ly === 0 || o.neo === 'san') { if (ground) rot(o, P.x, P.y); continue; } // 'san': ảnh AI nằm trên sàn (nện đất) chỉ dời chỗ như hình sát đất
       if (o.ty === 'ring' || o.ty === 'flash') { rot(o, px, py); continue; }
       o.rot = th; o.px = px; o.py = py;
       if (o.ty === 'dashline') { o.sx = P.x; o.sy = P.y; }
@@ -313,8 +314,24 @@
     const A = G.fxAnh;
     if (!A || !A.co(ma)) return false;
     o = o || {};
-    add({ ty: 'anh', ma, x, y, t: o.t || A.giay(ma) || 0.4, f: o.f || 1, sc: o.sc || 1, goc: o.goc || 0, ly: o.ly == null ? 1 : o.ly, d: o.d || 0 });
+    add({ ty: 'anh', ma, x, y, t: o.t || A.giay(ma) || 0.4, f: o.f || 1, sc: o.sc || 1, goc: o.goc || 0, ly: o.ly == null ? 1 : o.ly, d: o.d || 0, neo: o.neo });
     return true;
+  }
+  // Phiên hieu-ung-b2 (đòn cận chiến và chiêu): hu-tram-nguyet, hu-chem-luot, hu-quet-giao, hu-nen-dat, hu-quai-cao, hu-ban-cung, hu-ra-chieu, hu-ra-chuong.
+  // anhHe(mã, hệ): có bản riêng cho hệ (mã thêm đuôi -fire / -poison / -ice) thì dùng bản đó, không thì bản chung; chưa có ảnh nào thì null (vẽ code như cũ).
+  const anhHe = (ma, el) => (el && coAnh(ma + '-' + el) ? ma + '-' + el : coAnh(ma) ? ma : null);
+  // huongAnh(ux, uy): cách đặt một ảnh vẽ quay sang PHẢI cho nó chĩa theo hướng (ux, uy) trên màn hình. Hướng sang trái thì lật ngang
+  // rồi mới xoay, nên hình không bao giờ bị lộn ngược. Tệp không bật "xoay" thì chỉ lật trái/phải.
+  const HG = { f: 1, goc: 0 };
+  function huongAnh(ux, uy) {
+    const a = Math.atan2(uy, ux);
+    if (ux < 0) { HG.f = -1; HG.goc = a + Math.PI; } else { HG.f = 1; HG.goc = a; }
+    return HG;
+  }
+  // anhHuong: thêm một ảnh chĩa theo hướng (ux, uy); đã tự đặt đúng hướng thật nên aimed() không xoay thêm (neo 'khoa').
+  function anhHuong(ma, x, y, ux, uy, o) {
+    const h = huongAnh(ux, uy);
+    return anh(ma, x, y, Object.assign({ f: h.f, goc: h.goc, neo: 'khoa' }, o));
   }
   fx.coAnh = coAnh;
   fx.anh = function (ma, x, y, o) {
@@ -600,6 +617,15 @@
   function slam(x, y, r, el, power) {
     const PL = pal(el);
     add({ ty: 'crack', x, y, r: r * 0.8, t: 1.6, c: el ? PL.d : '#3a2e26', ly: 0, sd: R() * 100 });
+    // Ảnh AI hu-nen-dat (bụi tung, đá văng, sóng dẹt sát đất): thay hai vòng sóng, chớp sáng và bớt nửa số hạt; vết nứt trên sàn vẫn vẽ bằng code.
+    const maNen = anhHe('hu-nen-dat', el);
+    if (maNen && anh(maNen, x, y, { sc: Math.max(0.5, Math.min(2.2, r / 30)), neo: 'san' })) {
+      const n2 = Math.round(4 * power) + 1;
+      for (let i = 0; i < n2; i++) { const sd = i % 2 ? 1 : -1; emit(2, x + sd * rr(2, r * 0.5), y + rr(-2, 3), sd * rr(25, 70) * power, rr(-22, -4), rr(0.3, 0.6), RAMP.dust, R() < 0.4 ? 4 : 3, 0, 3, null, 1); }
+      const m2 = Math.round(3 * power) + 1;
+      for (let i = 0; i < m2; i++) emit(8, x + rr(-r * 0.4, r * 0.4), y - 1, rr(-60, 60) * power, rr(-150, -70) * (0.6 + power * 0.5), rr(0.5, 0.9), el && R() < 0.4 ? PL.ramp : RAMP.rock, R() < 0.35 ? 3 : 2, 420, 0, y + rr(-2, 5), 1);
+      return;
+    }
     addRing(x, y, 4, r * 1.25, 0.28, PL.c2, 3, 0);
     addRing(x, y, 2, r * 0.9, 0.22, '#ffffff', 2, 0, 0.04);
     const n = Math.round(8 * power) + 3;
@@ -614,6 +640,9 @@
   // Đòn vung của quái: vệt cào đỏ nhỏ để thấy rõ lúc đòn tung ra
   api('enemySwing', (e) => {
     const sc = e.scale || 1;
+    // Ảnh AI hu-quai-cao (ba vết vuốt; có bản riêng theo hệ của quái thì dùng): thay vệt cào vẽ bằng code, cỡ theo thân quái
+    const maCao = anhHe('hu-quai-cao', e.el);
+    if (maCao && anh(maCao, e.x + e.face * 4, e.y - Math.min(20, (e.h || 20) * sc * 0.55), { f: e.face, sc: Math.max(0.6, Math.min(2.2, (9 + e.r * 0.5) / 14)) })) return;
     add({ ty: 'cres', x: e.x + e.face * 4, y: e.y - Math.min(20, (e.h || 20) * sc * 0.55), f: e.face, ra: (22 + e.r) * 0.8, rb: 9 + e.r * 0.5, off: 5, oy: 2, vert: true, rev: false, pl: e.el ? pal(e.el) : PAL.foe, t: 0.14, big: false, st: 0, ly: 1 });
   });
   api('lunge', (e) => {
@@ -1899,7 +1928,7 @@
     c.globalAlpha = 1;
   }
   // Bộ đồ nghề cho js/fx_he.js: dùng chung kho hạt, bảng màu và các hàm vẽ điểm ảnh ở trên.
-  fx.kit = { aimed, S: () => S, api, layer, fail, emit, streak, spray, puffs, add, addRing, trauma, kick, stop, num, pal, PAL, RAMP, R, rr, hash, p, ell, ring, line, star, crescent, tongue, slam, blastFire, blastPoison, blastIce, elemBits, bodyOf, hand, A_ };
+  fx.kit = { coAnh, anh, anhHe, anhHuong, huongAnh, aimed, S: () => S, api, layer, fail, emit, streak, spray, puffs, add, addRing, trauma, kick, stop, num, pal, PAL, RAMP, R, rr, hash, p, ell, ring, line, star, crescent, tongue, slam, blastFire, blastPoison, blastIce, elemBits, bodyOf, hand, A_ };
 })();
 
 // V13 (Giai đoạn 2, phiên gd2-b): trùm có "Chống đánh xa" vừa giảm sát thương một mũi tên thì hiện chữ "Xa quá!" trên đầu trùm
