@@ -1310,13 +1310,31 @@
     const sp = weaponSprite(wp.type, lk.kind, wp.mood, wp.ang, wp.pull);
     c.drawImage(sp.cv, wp.x - sp.ox, wp.y - sp.oy);
   }
+  // Ghép: tệp ghep-<key> có "cap" cho vũ khí (khoá "vk-sword", "vk-sword-3" hoặc mã tệp vũ khí) thì dời / xoay HÌNH vũ khí quanh
+  // điểm cầm cho khớp tay nhân vật. Chỉ là hình: đòn đánh, tầm, thời điểm gây sát thương vẫn như cũ. Không có tệp ghép: y hệt trước.
+  // Đợt 5: trên thân AI, số chỉnh tra theo đúng hàng và khung ẢNH AI đang vẽ (SC.khungVk). Mục chỉnh có "bam" (tên điểm neo của
+  // thân, thường "tay_truoc"): chỗ bàn tay nắm vũ khí (kiếm, giáo, búa: đuôi chuôi, cách điểm cầm HOLD dọc thân vũ khí; cung: điểm
+  // cầm; đổi được bằng "bam_vk": "nam" | "cam" | "day") đặt đúng vào điểm đó của thân ở khung đang vẽ rồi cộng dx, dy; góc vẫn là
+  // góc của đòn (cộng xoay), xoay quanh bàn tay.
+  // Quét vòng (giáo, hình ép bẹt) không bám. Trả về { wp, tay: [dx, dy] độ dời nắm tay vẽ đè lên chuôi, bam: có bám hay không }.
+  function vkGhep(o, fr) {
+    let wp = fr.weapon;
+    const SCx = G.spriteCustom;
+    if (!wp || !SCx || !SCx.capVuKhi) return { wp, tay: null, bam: false };
+    const gv = SCx.khungVk ? SCx.khungVk(o) : null;
+    const cv = SCx.capVuKhi(o.key, o.weapon, wp.type, gv ? gv.ten : fr.anim, gv ? gv.i : fr.f);
+    if (!cv) return { wp, tay: null, bam: false };
+    const P = cv.bam && gv && gv.diem && wp.sx == null ? gv.diem[cv.bam] : null;
+    if (!P) return { wp: Object.assign({}, wp, { x: wp.x + cv.dx, y: wp.y + cv.dy, ang: wp.ang + cv.xoay }), tay: null, bam: false };
+    // khoảng cách (dọc thân vũ khí, âm là về phía đuôi) từ điểm cầm tới điểm bám: tay nắm chuôi, điểm cầm, hoặc chỗ kéo dây cung
+    const kieu = cv.bam_vk || (wp.type === 'bow' ? 'cam' : 'nam');
+    const Lh = kieu === 'cam' ? 0 : wp.type === 'bow' ? -9 - 8 * (wp.pull || 0) : HOLD[wp.type] || 0, h0 = rotv(Lh, 0, wp.ang), a1 = wp.ang + cv.xoay, h1 = rotv(Lh, 0, a1), nt = o.neoTay || [0, 0];
+    const tx = P[0] + cv.dx - nt[0], ty = P[1] + cv.dy - nt[1]; // chỗ bàn tay của thân AI (vũ khí còn được dời thêm neoTay lúc vẽ)
+    return { wp: Object.assign({}, wp, { x: Math.round(tx - h1[0]), y: Math.round(ty - h1[1]), ang: a1 }), tay: [tx - (wp.x + h0[0]), ty - (wp.y + h0[1])], bam: true };
+  }
   // Vẽ một bé (kèm vũ khí) tại chỗ c đang đứng: gốc là chân bé, đã lật theo hướng mặt.
   function drawFrame(c, o, fr, t) {
-    let wp = fr.weapon;
-    // Ghép: tệp ghep-<key> có "cap" cho vũ khí (khoá "vk-sword", "vk-sword-3" hoặc mã tệp vũ khí) thì dời / xoay HÌNH vũ khí quanh
-    // điểm cầm cho khớp tay nhân vật. Chỉ là hình: đòn đánh, tầm, vệt chém vẫn như cũ. Không có tệp ghép: null, y hệt trước.
-    const SCx = G.spriteCustom, cv = wp && SCx && SCx.capVuKhi ? SCx.capVuKhi(o.key, o.weapon, wp.type, fr.anim, fr.f) : null;
-    if (cv) wp = Object.assign({}, wp, { x: wp.x + cv.dx, y: wp.y + cv.dy, ang: wp.ang + cv.xoay });
+    const vg = vkGhep(o, fr), wp = vg.wp, dh = vg.tay;
     // o.neoTay: [dx, dy] dời vũ khí và nắm tay tới đúng bàn tay của thân AI (sprite_custom.js, mục "neo.tay"). Không có thì như cũ.
     const nt = o.neoTay, doiTay = nt && (nt[0] || nt[1]);
     const veVk = () => { if (doiTay) { c.save(); c.translate(nt[0], nt[1]); } try { drawWeapon(c, o, wp, t); } finally { if (doiTay) c.restore(); } };
@@ -1326,7 +1344,7 @@
       veVk();
       if (doiTay) { c.save(); c.translate(nt[0], nt[1]); }
       if (fr.hands) for (const h of fr.hands) { // bàn tay bé nắm đè lên chuôi
-        const x = Math.round(h[0]), y = Math.round(h[1]), g = L.hands[outfitOf(HERO[o.key] ? o.key : 'smith', o).hand], gl = g && g.glove;
+        const x = Math.round(h[0] + (dh ? dh[0] : 0)), y = Math.round(h[1] + (dh ? dh[1] : 0)), g = L.hands[outfitOf(HERO[o.key] ? o.key : 'smith', o).hand], gl = g && g.glove;
         c.fillStyle = INK; c.fillRect(x - 2, y - 1, 4, 2); c.fillRect(x - 1, y - 2, 2, 4);
         c.fillStyle = gl ? gl[1] : MASK[1]; c.fillRect(x - 1, y - 1, 2, 2);
         if (gl) { c.fillStyle = gl[2]; c.fillRect(x, y - 1, 1, 1); }
@@ -1477,7 +1495,7 @@
   // (dx, dy): hướng thân vũ khí (đã lật theo mặt, đã ép bẹt khi quét vòng); L: dài từ điểm cầm tới mũi.
   const TIP = { anim: '', u: 0, wt: '', gx: 0, gy: 0, dx: 0, dy: 0, L: 0, combo: 0 };
   function tip(o) {
-    const fr = frame(o), w = fr.weapon;
+    const fr = frame(o), w = vkGhep(o, fr).wp; // vệt chém đi theo đúng hình vũ khí đang vẽ (kể cả khi tệp ghép dời vũ khí vào tay thân AI)
     if (!w || w.type === 'bow' || !REST[w.type]) return null;
     let L = 0;
     try { if (G.weaponArt && G.weaponArt.tipLen && !o.plainWeapon) L = G.weaponArt.tipLen(G.weaponArt.fromWeapon(o.weapon || {})); } catch (e) { L = 0; }

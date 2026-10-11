@@ -94,3 +94,28 @@ Quy ước chung:
 4. Sau cùng cộng thêm `cap` (`dx`, `dy`, `sx`, `sy`, `xoay`, `lop`, `theo`).
 5. Khi lăn hoặc ngã: đồ ghép lên thân rồi xoay và dời **cả khối** như hiện nay (bản 2240).
 6. Không có tệp `ghep-*` và món đồ không có `diem` thì game phải **y hệt** bản `lk-2026.10.10-2249`.
+
+## 5. Bổ sung Đợt 5 (11/10/2026): vũ khí theo khung trên thân AI — chỉ THÊM trường tuỳ chọn
+
+Không đổi tên, không đổi nghĩa trường nào ở trên. Tệp cũ không có các trường này thì game làm y như trước.
+
+**a. Khoá của vũ khí trong `cap`** (đã có từ bản ghep-loi, nay ghi rõ): khoá là mã tệp vũ khí (`vk-sword-3-fire`), hoặc `vk-<loại>-<dòng>` (`vk-sword-3`), hoặc chỉ **loại** (`vk-sword`, `vk-bow`, `vk-spear`, `vk-hammer`: áp cho mọi dòng, mọi hệ của loại đó). Khoá cụ thể nhất thắng.
+
+**b. `theo` của vũ khí trên thân AI tra theo khung ẢNH AI đang vẽ.** `"tele:3"`, `"atk:0"`, `"hit:2"` là hàng và khung của tấm ảnh thân AI (lấy đà 4 khung, đánh 6 khung, trúng đòn 4 khung), đúng khung người chơi đang thấy. Với thân vẽ code thì vẫn là động tác và khung của khung xương như cũ.
+
+**c. Hai trường tuỳ chọn mới** trong một mục chỉnh của vũ khí (ở `cap[vk]` hoặc trong `cap[vk].theo[...]`):
+
+```json
+"cap": { "vk-sword": { "theo": { "atk:0": { "bam": "tay_truoc", "dx": 0, "dy": 0, "xoay": 0 } } },
+         "vk-bow":   { "theo": { "tele:3": { "bam": "tay_truoc", "bam_vk": "day" } } } }
+```
+
+- `bam`: tên một điểm neo của thân (mục 1; thường là `tay_truoc`). Ở khung đó, **chỗ bàn tay nắm vũ khí** được đặt đúng vào điểm ấy của thân (điểm lấy từ `diem` / `diem_theo` của chính tệp ghép), rồi mới cộng `dx`, `dy`. Góc vũ khí vẫn là góc của đòn đang đánh (cộng `xoay`), xoay quanh bàn tay. Nhờ vậy 3 kiểu chém và 8 hướng đánh đều giữ vũ khí trong tay mà không cần số riêng cho từng kiểu. `false`: tắt bám ở khung này. Thân không có điểm đó (hoặc thân vẽ code) thì bỏ qua `bam`, chỉ còn `dx`, `dy`, `xoay` như cũ.
+- `bam_vk`: điểm nào của vũ khí được đặt vào tay. `"nam"`: chỗ tay nắm chuôi (mặc định của kiếm, giáo, búa). `"cam"`: điểm cầm `vu_khi.cam` (mặc định của cung). `"day"`: chỗ tay kéo dây cung, lùi theo độ căng dây (dùng cho cung lúc lấy đà).
+- Đòn quét vòng của giáo (hình vũ khí bị ép bẹt) không bám.
+
+**d. Chỉ là hình vẽ.** Các trường này chỉ đổi chỗ và góc VẼ vũ khí (và vệt chém đi theo hình vũ khí). Tầm đòn, hitbox, thời điểm gây sát thương không đọc các trường này.
+
+**e. Điểm `tay_truoc` của thân AI** trong tệp ghép: bàn tay cầm vũ khí ở khung đó. Hàng đánh và trúng đòn: nắm tay phía trước mặt. Hàng lấy đà: em bé chúi người, tay phía trước bị đầu che, nên lấy bàn tay đang kéo ra sau (tay còn thấy trên hình).
+
+**f. Mũ (`tp-hats-*`) đã có `trang_phuc.diem.dinh_dau` và `co_chuan`** (13 tệp). Số `dinh_dau` suy ra từ chính cách đặt đã duyệt: `dinh_dau = [0,5 − lech_x, −6 − lech_y]`, tức điểm của ảnh mũ mà cách đặt cũ vẫn để trùng đỉnh đầu. Vì thế chỗ đặt mũ không đổi; từ nay chỉnh mũ theo từng khung bằng `diem_theo[...].dinh_dau` của thân.

@@ -946,6 +946,12 @@
     gan('dx', soKep(c.dx, -60, 60)); gan('dy', soKep(c.dy, -60, 60)); gan('sx', soKep(c.sx, 0.8, 1.25)); gan('sy', soKep(c.sy, 0.8, 1.25)); gan('xoay', soKep(c.xoay, -180, 180));
     if (LOP_CAP[c.lop]) o.lop = c.lop;
     if (typeof c.an === 'boolean') o.an = c.an;
+    // Đợt 5 (trường tuỳ chọn, chỉ vũ khí trên thân AI dùng): "bam": tên một điểm neo của thân (thường là "tay_truoc"): chỗ bàn tay NẮM
+    // vũ khí được đặt đúng vào điểm đó của thân ở khung đang vẽ. false: bỏ bám ở khung này. Không ghi: như cũ.
+    // "bam_vk": điểm nào của vũ khí bám vào đó: "nam" (chỗ tay nắm chuôi; mặc định của kiếm, giáo, búa), "cam" (điểm cầm vu_khi.cam;
+    // mặc định của cung), "day" (cung: chỗ tay kéo dây, lùi theo độ căng dây).
+    if (c.bam === false) o.bam = false; else if (typeof c.bam === 'string' && TEN_DIEM.indexOf(c.bam) >= 0) o.bam = c.bam;
+    if (c.bam_vk === 'nam' || c.bam_vk === 'cam' || c.bam_vk === 'day') o.bam_vk = c.bam_vk;
     return o;
   }
   function docCap(c) {
@@ -1175,7 +1181,10 @@
     return ds;
   };
   // Vũ khí: chỉnh theo cặp nhân vật + vũ khí (khoá: mã tệp vũ khí, "vk-<loại>-<dòng>", "vk-<loại>"; cụ thể nhất thắng), gộp "theo".
-  // Trả về { dx, dy, xoay } hoặc null. Chỉ dời / xoay hình vũ khí quanh điểm cầm, không đổi đòn đánh.
+  // Trả về { dx, dy, xoay, bam } hoặc null. Chỉ dời / xoay hình vũ khí quanh điểm cầm, không đổi đòn đánh.
+  // (anim, f): thân code thì là động tác và khung của khung xương; thân AI thì là hàng và khung ẢNH AI đang vẽ (SC.khungVk), để
+  // "tele:3", "atk:0", "hit:2" trong tệp ghép chỉ đúng khung hình người chơi đang thấy.
+  // bam (Đợt 5, tuỳ chọn): tên điểm neo của thân mà bàn tay nắm vũ khí bám vào (js/hero_tinhlinh.js vkGhep); null: chỉ dời / xoay như cũ.
   SC.capVuKhi = function (key, w, type, anim, f) {
     const g = SC.ghep[key];
     if (!g || !g.coVk || !type) return null;
@@ -1185,8 +1194,20 @@
     let k = null; for (const q of ks) if (q && g.cap[q]) { k = q; break; }
     if (!k) return null;
     const c = SC.capTheo(key, k, { ten: anim, i: f });
-    if (!c || (!c.dx && !c.dy && !c.xoay)) return null;
-    return { dx: c.dx || 0, dy: c.dy || 0, xoay: c.xoay || 0 };
+    if (!c || (!c.dx && !c.dy && !c.xoay && !c.bam)) return null;
+    return { dx: c.dx || 0, dy: c.dy || 0, xoay: c.xoay || 0, bam: c.bam || null, bam_vk: c.bam_vk || null, khoa: k };
+  };
+  // Thân AI đang vẽ cho đối tượng o (như khi vẽ em bé): hàng, khung ảnh AI và điểm neo của khung đó (toạ độ tính từ chân), để vũ khí
+  // chỉnh theo đúng khung ảnh AI. null: nhân vật chưa có tệp ghép chỉnh vũ khí, hoặc không dùng thân AI (khi đó game làm y như cũ).
+  SC.khungVk = function (o) {
+    const key = o && o.key, g = SC.ghep[key];
+    if (!g || !g.coVk || !G.tinhLinh) return null;
+    const sp = SC.cuaEmBe(key, o);
+    if (!sp || !sp.img) return null;
+    try {
+      const s = SC.chonEmBe(sp, o), da = SC.diemAI(key, s.ten, s.i, SC.khopEmBe(sp, s.ten, s.i));
+      return { ten: s.ten, i: s.i, diem: da ? da.diem : null };
+    } catch (e) { return null; }
   };
   SC.MOC_TRANG_PHUC = { hats: 'H', masks: 'H', robes: 'B', backs: 'B', hands: 'B', wings: 'vai' };
   function noiTrangPhuc(sp) {
