@@ -229,7 +229,7 @@ const QUAI = [
   {"ma": "tuongMa", "ten": "Tướng Ma", "vung": "laudai", "fw": 80, "fh": 52, "gx": 40, "gy": 48, "rong": 64, "cao": 43, "giay": [1.2, 0.6, 0.5, 0.5], "hinh": "Tướng ma giáp tối cầm đại đao. Nét lạ: mặt là mặt nạ tuồng đỏ trắng, áo choàng là cờ rách", "hang": ["đứng thở", "di chuyển", "lấy đà chuẩn bị đánh", "tấn công mạnh về phía trước", "bị đánh bật lùi", "ngã gục"]},
   {"ma": "huChua", "ten": "Hũ Lửa Chúa", "vung": "laudai", "fw": 72, "fh": 52, "gx": 36, "gy": 48, "rong": 59, "cao": 42, "giay": [1.2, 0.6, 0.5, 0.5], "hinh": "Hũ đồng lớn phun lửa. Nét lạ: là lư hương ba chân, khói thành mặt quỷ", "hang": ["đứng thở", "di chuyển", "lấy đà chuẩn bị đánh", "tấn công mạnh về phía trước", "bị đánh bật lùi", "ngã gục"]},
   {"ma": "hoLua", "ten": "Hổ Lửa", "vung": "laudai", "fw": 132, "fh": 72, "gx": 66, "gy": 68, "rong": 109, "cao": 64, "giay": [1.4, 0.8, 0.7, 0.6], "hinh": "Hổ lửa gầm. Nét lạ: vằn là chữ Nôm sáng, vòng cổ tiền xu", "hang": ["đứng thở uy nghi", "di chuyển nặng nề", "gồng mình lấy đà tung chiêu", "tung chiêu mạnh về phía trước", "bị đánh bật lùi", "gục ngã tan rã"]},
-  {"ma": "hoTinh", "ten": "Hồ Tinh", "vung": "laudai", "fw": 208, "fh": 128, "gx": 104, "gy": 124, "rong": 177, "cao": 119, "giay": [1.4, 0.8, 0.7, 0.6], "hinh": "Cáo chín đuôi rình mồi. Nét lạ: chín đuôi là dải lụa treo đèn lồng, mặt nạ hồ ly gỗ che nửa mặt", "hang": ["đứng thở uy nghi", "di chuyển nặng nề", "gồng mình lấy đà tung chiêu", "tung chiêu mạnh về phía trước", "bị đánh bật lùi", "gục ngã tan rã"]}
+  {"ma": "hoTinh", "ten": "Hồ Tinh", "vung": "laudai", "fw": 208, "fh": 128, "gx": 104, "gy": 124, "rong": 177, "cao": 119, "giay": [1.4, 0.8, 0.7, 0.6], "hinh": "Cáo chín đuôi lông TRẮNG rình mồi, bốn chân trắng thon thấy rõ tới móng. Nét lạ: chín đuôi là dải lụa đỏ treo đèn lồng, mặt nạ hồ ly gỗ nâu che nửa mặt", "nenXanh": true, "hang": ["đứng thở uy nghi", "di chuyển nặng nề", "gồng mình lấy đà tung chiêu", "tung chiêu mạnh về phía trước", "bị đánh bật lùi", "gục ngã tan rã"]}
 ];
 // Các hàng của tấm ảnh. g: lấy giây ở Q.giay[g]; giay: giây cố định. Quái thường: đủ 6 hàng (lưới 8×6).
 const HANG_DU = [
@@ -383,8 +383,9 @@ function taoPromptPha(q) {
 
 // Đợt 4 (Q6): mọi prompt của trang có thêm đoạn BẢNG MÀU, chỉ gồm các nhóm màu liên quan. Lô mới muốn nhóm khác thì khai thêm bm: ['go', 'da_stone', …] (tên nhóm trong BM.nhom).
 const taoPromptGoc = taoPrompt;
+const CAU_NEN = " MÀU NỀN CHỈ Ở NỀN: trên con vật KHÔNG dùng màu gần màu nền (nền hồng tím thì thân không có ánh hồng tím, tím hồng; nền xanh lá thì thân không có xanh lá), KHÔNG vẽ quầng sáng, bóng hay khói màu nền dưới chân; chân, móng, đuôi vẽ rõ, viền tối một nét tách khỏi nền."; // 11/10 21:55: nền ăn mất chân Hồ Tinh
 const CAU_BO_CUC = " BỐ CỤC CHỈ THEO ĐÚNG PROMPT NÀY: KHÔNG lấy lại lưới, số ô, số khung, cách chia hàng hay hình của bất kỳ ảnh nào đã vẽ trước đó trong cuộc trò chuyện; mỗi lần vẽ coi như bắt đầu mới."; // 11/10 17:41
-const taoPromptGoc1 = (q) => taoPromptGoc(q) + CAU_BO_CUC;
+const taoPromptGoc1 = (q) => taoPromptGoc(q) + CAU_NEN + CAU_BO_CUC;
 taoPrompt = (q) => bmChen(taoPromptGoc1(q), bmDoan(q.bm || ({ rung: ['co_cay', 'go', 'toc'], bien: ['nuoc', 'da_stone', 'kim_loai'], laudai: ['da_stone', 'kim_loai', 'lua'] }[q.vung] || ['toc', 'da_stone']).concat('quai'), q.pha ? { rieng: true } : undefined)); // dáng pha (Phiên E2): màu đổi theo pha đã ghi trong prompt thì giữ, bảng dùng cho phần còn lại
 function hienQuai() {
   $('bangThongSo').innerHTML = [
