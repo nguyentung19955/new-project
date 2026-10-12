@@ -2206,7 +2206,7 @@
       const g = VB.getContext('2d'), g2 = VB2.getContext('2d'), g3 = VB3.getContext('2d'), X = Math.round(P.x) - VBX, Y = Math.round(P.y) - VBY;
       const sach = (q) => { q.setTransform(1, 0, 0, 1, 0, 0); q.globalAlpha = 1; q.globalCompositeOperation = 'source-over'; q.clearRect(0, 0, w, h); };
       sach(g); g.setTransform(n, 0, 0, n, -X * n, -Y * n); g.imageSmoothingEnabled = false;
-      const a = G.heroArgs(P); a.noShadow = true;
+      const a = G.heroArgs(P); a.noShadow = true; a.alpha = 1; a.flash = false; // hình bóng đặc (lúc lăn né thân bé mờ: viền vẫn đủ nét, không loang vào thân)
       const on = fx.xf && fx.xf(g, P, 0);
       G.art.hero(g, a);
       if (on) g.restore();

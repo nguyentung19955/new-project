@@ -890,7 +890,7 @@
     lopPhu: false, // true: hiệu ứng của em bé vẽ qua lớp phụ rồi dán nhạt một lần (đều màu hơn, tốn hơn ~15% khung hình khi máy yếu); false: nhạt từng hình
     fxBe: 0.62, // độ đậm hiệu ứng của em bé (lửa nổ, mây độc, tia sáng, hạt) — hiệu ứng của QUÁI và vùng báo đòn giữ nguyên
     vienBe: '#fff4c0', vienA: 0.8, vienToi: '#1a0e08', vienToiA: 0.6, // viền sáng ấm 1 điểm ảnh (+ viền tối mảnh bên ngoài cho nổi trên lửa) // viền sáng ấm 1 điểm ảnh quanh em bé, vẽ trên mọi hiệu ứng
-    bongBe: 0.38, // bóng mờ của em bé vẽ thêm trên hiệu ứng (để thấy thân ngay cả khi lửa phủ kín)
+    bongBe: 0.32, // bóng mờ của em bé vẽ thêm trên hiệu ứng (để thấy thân ngay cả khi lửa phủ kín)
     soMoiChu: 3, // mỗi mục tiêu tối đa 3 số cùng lúc
     soDotCo: 6, soDotA: 0.7, // số nhịp độc/cháy: nhỏ hơn và mờ hơn
     mayDocR: 24, // bán kính HÌNH mây độc của bé (điểm ảnh thế giới); vùng gây sát thương giữ z.r như cũ
