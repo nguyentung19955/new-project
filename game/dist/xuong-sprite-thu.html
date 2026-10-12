@@ -65,7 +65,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.12-0811";
+(window.G = window.G || {}).VERSION = "lk-2026.10.12-0848";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -17535,6 +17535,7 @@
   // xuất hiện — vòng sáng co về mép vũng; duy trì — viền đỏ cam 1 điểm + viền tối ngoài cho nổi trên nền, mỗi nhịp sát thương viền dày
   // và sáng lên, một vòng mảnh toả ra; biến mất — viền thưa điểm ảnh và tối dần. Màu theo docs/vfx/BANG-MAU.md mục 4.
   function vienNong(c, z, x, y, rx, ry, k, fade) {
+    if (!G.VIEN_VUNG) return; // 12/10 (chủ dự án): bỏ vòng viền quanh vũng lửa, độc, băng, đỏ của quái; bật lại: G.VIEN_VUNG = true
     const R0 = rx + 2, Q0 = ry + 1.5;
     if (k < 1) { // xuất hiện
       const e = 1 - (1 - k) * (1 - k);
@@ -22376,7 +22377,8 @@ MA._xong();
     o = o || {};
     const ten = o.anim === 'noi' && sp.dt.noi ? 'noi' : 'idle', a = sp.dt[ten], s = o.s || 1;
     c.save(); c.translate(Math.round(x), Math.round(y)); if (s !== 1) c.scale(s, s);
-    SC.veKhung(c, sp, ten, khungLap(a, Math.max(0, o.t || 0)), o.face < 0 ? -1 : 1, {});
+    // 12/10 (chủ dự án): người làng chỉ đứng yên, không nhún nhảy theo khung; bật lại hoạt ảnh: G.NL_DONG = true
+    SC.veKhung(c, sp, G.NL_DONG ? ten : 'idle', G.NL_DONG ? khungLap(a, Math.max(0, o.t || 0)) : 0, o.face < 0 ? -1 : 1, {});
     c.restore();
   };
   // Vùng khuôn mặt (phần đầu) của khung đứng thở đầu tiên: [x, y, rộng, cao] theo điểm ảnh THẬT của tấm sprite (gấp net lần).
@@ -22389,10 +22391,13 @@ MA._xong();
     let y0 = -1, y1 = -1; for (let y = 0; y < fh && y0 < 0; y++) for (let i = 0; i < fw; i++) if (d[(y * fw + i) * 4 + 3] > 127) { y0 = y; break; }
     for (let y = fh - 1; y >= 0 && y1 < 0; y--) for (let i = 0; i < fw; i++) if (d[(y * fw + i) * 4 + 3] > 127) { y1 = y; break; }
     if (y0 < 0) return (sp.mat = [0, a.hang * fh, fw, fh]);
-    const hh = Math.max(6 * N, Math.round((y1 - y0 + 1) * 0.42)), ww = Math.round(hh * 1.15);
-    let n = 0, sx = 0; for (let y = y0; y < y0 + hh; y++) for (let i = 0; i < fw; i++) if (d[(y * fw + i) * 4 + 3] > 127) { n++; sx += i; }
-    const cx = n ? sx / n : sp.ax * N;
-    return (sp.mat = [Math.round(cx - ww / 2), a.hang * fh + y0, ww, hh]);
+    // 12/10: khung mặt là hình vuông bao trọn phần đầu (mũ + mặt), tâm ở giữa hộp bao của phần đầu, để mặt nằm giữa vòng tròn
+    const hh = Math.max(6 * N, Math.round((y1 - y0 + 1) * 0.45));
+    let x0 = fw, x1 = -1; for (let y = y0; y < y0 + hh && y < fh; y++) for (let i = 0; i < fw; i++) if (d[(y * fw + i) * 4 + 3] > 127) { if (i < x0) x0 = i; if (i > x1) x1 = i; }
+    if (x1 < 0) { x0 = 0; x1 = fw - 1; }
+    const sz = Math.max(hh, x1 - x0 + 1), cx = (x0 + x1 + 1) / 2, cy = y0 + hh / 2;
+    const s2 = Math.min(sz, fw, fh), mx = Math.max(0, Math.min(fw - s2, Math.round(cx - s2 / 2))), my = Math.max(0, Math.min(fh - s2, Math.round(cy - s2 / 2))); // không vượt khung (Safari không vẽ nếu vùng cắt lòi ra ngoài ảnh)
+    return (sp.mat = [mx, a.hang * fh + my, s2, s2]);
   }
   SC.vungMat = vungMat;
   let lanNL = 0;
@@ -22409,7 +22414,7 @@ MA._xong();
     };
     VS.tuVeMat = function (ctx, k, cx, cy, s) {
       const sp = SC.cuaNguoiLang(k); if (!sp) return false;
-      const m = vungMat(sp), k2 = Math.min((23 * s) / m[2], (20 * s) / m[3]), w = m[2] * k2, h = m[3] * k2, sm = ctx.imageSmoothingEnabled;
+      const m = vungMat(sp), k2 = Math.min((22 * s) / m[2], (22 * s) / m[3]), w = m[2] * k2, h = m[3] * k2, sm = ctx.imageSmoothingEnabled;
       ctx.imageSmoothingEnabled = false; ctx.drawImage(sp.img, m[0], m[1], m[2], m[3], cx - w / 2, cy - h / 2, w, h); ctx.imageSmoothingEnabled = sm;
       return true;
     };

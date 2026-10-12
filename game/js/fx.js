@@ -1307,6 +1307,7 @@
   // xuất hiện — vòng sáng co về mép vũng; duy trì — viền đỏ cam 1 điểm + viền tối ngoài cho nổi trên nền, mỗi nhịp sát thương viền dày
   // và sáng lên, một vòng mảnh toả ra; biến mất — viền thưa điểm ảnh và tối dần. Màu theo docs/vfx/BANG-MAU.md mục 4.
   function vienNong(c, z, x, y, rx, ry, k, fade) {
+    if (!G.VIEN_VUNG) return; // 12/10 (chủ dự án): bỏ vòng viền quanh vũng lửa, độc, băng, đỏ của quái; bật lại: G.VIEN_VUNG = true
     const R0 = rx + 2, Q0 = ry + 1.5;
     if (k < 1) { // xuất hiện
       const e = 1 - (1 - k) * (1 - k);
