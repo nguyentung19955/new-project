@@ -126,3 +126,8 @@ nhích lên. Giáo: đứng→đi 102° → 5°, vào chém 88° → 29°; búa:
 Chạy lại đo: `LK_HAI_TEP=1 python3 game/build.py --hai-tep`, phục vụ `game/dist` bằng `full-audit/A-nhan-vat/kiem/srv2.py game/dist 8790`, rồi
 `python3 kiem/do_mat.py "http://localhost:8790/linh-khi-nhe.html?cloud=0[&kiemsau=0]" ra.json [thư mục dải ảnh] [sword|spear|hammer|bow]`,
 `python3 kiem/tong.py ra.json`, `python3 kiem/goc.py ra.json …`.
+
+## Kiểm chéo (phiên thứ hai)
+
+Một phiên khác cùng yêu cầu đã đo lại bản này bằng bộ đo riêng và sửa 2 chỗ nhỏ (Cu Tí bộ Lâu Đài đứng: núm chuôi đè miệng vì mượn
+nhầm mặt thân gốc; mép lưỡi lấn 1–3 điểm ảnh màn hình khi chạy chém quay trái): [`kiem-cheo/bao-cao.md`](kiem-cheo/bao-cao.md).

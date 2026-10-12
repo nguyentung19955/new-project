@@ -1110,6 +1110,11 @@
     const n = sp.dt[ten].so || 1;
     for (let d = 1; d < n; d++) for (const j of [i - d, i + d]) if (j >= 0 && j < n) { const q = SC.matKhung(sp, ten, j); if (q) return q; }
     for (let j = 0; j < ((sp.dt.idle && sp.dt.idle.so) || 0); j++) { const q = SC.matKhung(sp, 'idle', j); if (q) return q; }
+    // Kiểm chéo (phiên kiem-khong-che-mat thứ hai): Cu Tí bộ Lâu Đài KHÔNG khung đứng nào đo được mặt (mũ trùm cáo) nên trước đây mượn
+    // mặt thân gốc — cao hơn mặt thật ~4 điểm ảnh (thân bộ đầu to, mặt thấp) → núm chuôi lúc đứng vẽ đè lên miệng. Nay mượn trước các
+    // khung đo được của CHÍNH tấm này (chạy, rồi mọi hàng khác), thân gốc chỉ là cách cuối. Tắt cùng ?kiemsau=0 (chỉ G.KIEM_SAU gọi hàm này).
+    for (const h of ['move'].concat(Object.keys(sp.dt).filter((x) => x !== 'idle' && x !== 'move' && x !== 'ne' && x !== 'die' && x !== ten)))
+      for (let j = 0; j < ((sp.dt[h] && sp.dt[h].so) || 0); j++) { const q = SC.matKhung(sp, h, j); if (q) return q; }
     const g = /^em-be-(smith|hunter|healer|wrestler)-(rung|bien|lau)$/.exec(sp.ma || ''), s0 = g && SC.get('em-be-' + g[1]); // thân bộ: mượn thân gốc
     return s0 && s0 !== sp && s0.ready ? SC.matKhungGan(s0, s0.dt[ten] ? ten : 'idle', s0.dt[ten] ? Math.min(i, s0.dt[ten].so - 1) : 0) : null;
   };

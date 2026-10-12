@@ -1403,7 +1403,8 @@
   const KS = { loai: { sword: 1, spear: 1, hammer: 1 }, mui: { sword: -1, spear: -1, hammer: -3 }, min: 140, max: 170, tau: 0.05, toc: 1500, vao: 6, lon: 0, chuoi: [-8, 3.5], rong: 5 };
   const dangDanh = (o) => { const p = o.p; return o.atk >= 0 || !!(p && (p.specT > 0 || p.castT > 0 || p.dashT > 0 || (p.mv && p.mv.holding))); };
   // đĩa đầu từ đĩa mặt (SC.matKhung: tâm đầu dời 0,3·R về trước + xuống, r = 0,5·R)
-  const dauTu = (m) => (m ? { x: m.x - 0.6 * m.r, y: m.y - 0.6 * m.r, R: 2 * m.r + 0.5 } : null);
+  // + 1,2 (kiểm chéo, phiên thứ hai): +0,5 còn để lọt 1–3 điểm ảnh màn hình mép lưỡi lên mép mặt khi thân ở toạ độ lẻ (chạy chém quay trái)
+  const dauTu = (m) => (m ? { x: m.x - 0.6 * m.r, y: m.y - 0.6 * m.r, R: 2 * m.r + 1.2 } : null);
   function kiemSau(o, fr, res) {
     const wp = res.wp;
     if (!G.KIEM_SAU || !wp || !KS.loai[wp.type] || wp.sx != null || o.plainWeapon) return res;

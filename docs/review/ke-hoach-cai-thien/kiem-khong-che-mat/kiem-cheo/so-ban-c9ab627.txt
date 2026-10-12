@@ -1,0 +1,353 @@
+dung       smith|goc|1            đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung       smith|goc|-1           đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung       smith|rung|1           đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung       smith|rung|-1          đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung       smith|bien|1           đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung       smith|bien|-1          đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  48
+dung       smith|lau|1            đè mặt  48/ 48 khung | lớn nhất  119 điểm ảnh (20.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  48 | 48 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+dung       smith|lau|-1           đè mặt  48/ 48 khung | lớn nhất  164 điểm ảnh (27.5% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  48 | 48 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+dung       hunter|goc|1           đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung       hunter|goc|-1          đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  20
+dung       hunter|rung|1          đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung       hunter|rung|-1         đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  48
+dung       hunter|bien|1          đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung       hunter|bien|-1         đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  48
+dung       hunter|lau|1           đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   8 | 10 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+dung       hunter|lau|-1          đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  28 | 10 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+dung       wrestler|goc|1         đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung       wrestler|goc|-1        đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   3
+dung       wrestler|rung|1        đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung       wrestler|rung|-1       đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  40
+dung       wrestler|bien|1        đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung       wrestler|bien|-1       đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  20
+dung       wrestler|lau|1         đè mặt  10/ 48 khung | lớn nhất    7 điểm ảnh ( 1.2% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  10 | 38 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+dung       wrestler|lau|-1        đè mặt  10/ 48 khung | lớn nhất   28 điểm ảnh ( 4.7% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  48 | 38 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+dung       healer|goc|1           đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung       healer|goc|-1          đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung       healer|rung|1          đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung       healer|rung|-1         đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung       healer|bien|1          đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung       healer|bien|-1         đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung       healer|lau|1           đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung       healer|lau|-1          đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay       smith|goc|1            đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay       smith|goc|-1           đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay       smith|rung|1           đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay       smith|rung|-1          đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay       smith|bien|1           đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay       smith|bien|-1          đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  24
+chay       smith|lau|1            đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  12 | 30 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chay       smith|lau|-1           đè mặt  24/ 48 khung | lớn nhất    2 điểm ảnh ( 0.3% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  30 | 30 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chay       hunter|goc|1           đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay       hunter|goc|-1          đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   5
+chay       hunter|rung|1          đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0 | 42 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chay       hunter|rung|-1         đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0 | 42 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chay       hunter|bien|1          đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay       hunter|bien|-1         đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay       hunter|lau|1           đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0 | 12 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chay       hunter|lau|-1          đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0 | 12 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chay       wrestler|goc|1         đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay       wrestler|goc|-1        đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   4
+chay       wrestler|rung|1        đè mặt  18/ 48 khung | lớn nhất    2 điểm ảnh ( 0.3% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  18 | 30 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chay       wrestler|rung|-1       đè mặt  18/ 48 khung | lớn nhất   29 điểm ảnh ( 4.9% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  18 | 30 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chay       wrestler|bien|1        đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay       wrestler|bien|-1       đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay       wrestler|lau|1         đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay       wrestler|lau|-1        đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay       healer|goc|1           đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay       healer|goc|-1          đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  24
+chay       healer|rung|1          đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay       healer|rung|-1         đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  24
+chay       healer|bien|1          đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay       healer|bien|-1         đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  24
+chay       healer|lau|1           đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay       healer|lau|-1          đè mặt   0/ 48 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  24
+dung_chay  smith|goc|1            đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung_chay  smith|goc|-1           đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   1
+dung_chay  smith|rung|1           đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung_chay  smith|rung|-1          đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung_chay  smith|bien|1           đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung_chay  smith|bien|-1          đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  32
+dung_chay  smith|lau|1            đè mặt  30/ 54 khung | lớn nhất  119 điểm ảnh (20.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  30 | 48 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+dung_chay  smith|lau|-1           đè mặt  33/ 54 khung | lớn nhất  164 điểm ảnh (27.5% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  33 | 48 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+dung_chay  hunter|goc|1           đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung_chay  hunter|goc|-1          đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  19
+dung_chay  hunter|rung|1          đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0 | 18 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+dung_chay  hunter|rung|-1         đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  30 | 18 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+dung_chay  hunter|bien|1          đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung_chay  hunter|bien|-1         đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  29
+dung_chay  hunter|lau|1           đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  10 | 2 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+dung_chay  hunter|lau|-1          đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  28 | 2 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+dung_chay  wrestler|goc|1         đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung_chay  wrestler|goc|-1        đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   8
+dung_chay  wrestler|rung|1        đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0 | 6 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+dung_chay  wrestler|rung|-1       đè mặt   6/ 54 khung | lớn nhất    1 điểm ảnh ( 0.2% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  26 | 6 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+dung_chay  wrestler|bien|1        đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung_chay  wrestler|bien|-1       đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   9
+dung_chay  wrestler|lau|1         đè mặt   8/ 54 khung | lớn nhất   21 điểm ảnh ( 3.5% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   8 | 20 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+dung_chay  wrestler|lau|-1        đè mặt   8/ 54 khung | lớn nhất   52 điểm ảnh ( 8.7% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  30 | 20 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+dung_chay  healer|goc|1           đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung_chay  healer|goc|-1          đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   6
+dung_chay  healer|rung|1          đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung_chay  healer|rung|-1         đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   6
+dung_chay  healer|bien|1          đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung_chay  healer|bien|-1         đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   6
+dung_chay  healer|lau|1           đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+dung_chay  healer|lau|-1          đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   6
+lon        smith|goc|1            đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+lon        smith|goc|-1           đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   5
+lon        smith|rung|1           đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0 | 4 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        smith|rung|-1          đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0 | 4 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        smith|bien|1           đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0 | 4 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        smith|bien|-1          đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  18 | 4 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        smith|lau|1            đè mặt  12/ 36 khung | lớn nhất  157 điểm ảnh (26.3% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  18 | 36 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        smith|lau|-1           đè mặt  12/ 36 khung | lớn nhất  206 điểm ảnh (34.6% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  18 | 36 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        hunter|goc|1           đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+lon        hunter|goc|-1          đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   8
+lon        hunter|rung|1          đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+lon        hunter|rung|-1         đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  10
+lon        hunter|bien|1          đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0 | 4 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        hunter|bien|-1         đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  10 | 4 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        hunter|lau|1           đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   8 | 20 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        hunter|lau|-1          đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  16 | 20 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        wrestler|goc|1         đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0 | 4 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        wrestler|goc|-1        đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   7 | 4 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        wrestler|rung|1        đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   4 | 16 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        wrestler|rung|-1       đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  17 | 16 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        wrestler|bien|1        đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+lon        wrestler|bien|-1       đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   4
+lon        wrestler|lau|1         đè mặt   6/ 36 khung | lớn nhất   26 điểm ảnh ( 4.4% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   9 | 32 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        wrestler|lau|-1        đè mặt   6/ 36 khung | lớn nhất   51 điểm ảnh ( 8.6% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  17 | 32 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        healer|goc|1           đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0 | 4 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        healer|goc|-1          đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   5 | 4 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        healer|rung|1          đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0 | 4 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        healer|rung|-1         đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   5 | 4 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        healer|bien|1          đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0 | 4 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        healer|bien|-1         đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   5 | 4 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        healer|lau|1           đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0 | 4 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+lon        healer|lau|-1          đè mặt   0/ 36 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   5 | 4 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+trung      smith|goc|1            đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+trung      smith|goc|-1           đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   1
+trung      smith|rung|1           đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+trung      smith|rung|-1          đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+trung      smith|bien|1           đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+trung      smith|bien|-1          đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  14
+trung      smith|lau|1            đè mặt  14/ 32 khung | lớn nhất  124 điểm ảnh (20.8% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  14 | 32 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+trung      smith|lau|-1           đè mặt  14/ 32 khung | lớn nhất  165 điểm ảnh (27.7% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  14 | 32 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+trung      hunter|goc|1           đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+trung      hunter|goc|-1          đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  12
+trung      hunter|rung|1          đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+trung      hunter|rung|-1         đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  14
+trung      hunter|bien|1          đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+trung      hunter|bien|-1         đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  12
+trung      hunter|lau|1           đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+trung      hunter|lau|-1          đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   6
+trung      wrestler|goc|1         đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   1
+trung      wrestler|goc|-1        đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   3
+trung      wrestler|rung|1        đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+trung      wrestler|rung|-1       đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  14
+trung      wrestler|bien|1        đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0 | 18 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+trung      wrestler|bien|-1       đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  10 | 18 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+trung      wrestler|lau|1         đè mặt   2/ 32 khung | lớn nhất    5 điểm ảnh ( 0.8% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   2 | 10 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+trung      wrestler|lau|-1        đè mặt   2/ 32 khung | lớn nhất   26 điểm ảnh ( 4.4% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  14 | 10 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+trung      healer|goc|1           đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+trung      healer|goc|-1          đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+trung      healer|rung|1          đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+trung      healer|rung|-1         đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+trung      healer|bien|1          đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+trung      healer|bien|-1         đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+trung      healer|lau|1           đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+trung      healer|lau|-1          đè mặt   0/ 32 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chem3      smith|goc|1            đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chem3      smith|goc|-1           đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  11
+chem3      smith|rung|1           đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chem3      smith|rung|-1          đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  13
+chem3      smith|bien|1           đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chem3      smith|bien|-1          đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  59
+chem3      smith|lau|1            đè mặt  10/ 74 khung | lớn nhất  162 điểm ảnh (27.2% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  10 | 10 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chem3      smith|lau|-1           đè mặt  10/ 74 khung | lớn nhất  196 điểm ảnh (32.9% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  30 | 10 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chem3      hunter|goc|1           đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chem3      hunter|goc|-1          đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   6
+chem3      hunter|rung|1          đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chem3      hunter|rung|-1         đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  32
+chem3      hunter|bien|1          đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chem3      hunter|bien|-1         đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  40
+chem3      hunter|lau|1           đè mặt  16/ 74 khung | lớn nhất   94 điểm ảnh (15.8% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  16 | 16 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chem3      hunter|lau|-1          đè mặt  16/ 74 khung | lớn nhất   95 điểm ảnh (15.9% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  32 | 16 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chem3      wrestler|goc|1         đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chem3      wrestler|goc|-1        đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chem3      wrestler|rung|1        đè mặt   6/ 74 khung | lớn nhất    5 điểm ảnh ( 0.8% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  16 | 48 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chem3      wrestler|rung|-1       đè mặt  21/ 74 khung | lớn nhất   41 điểm ảnh ( 6.9% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  49 | 48 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chem3      wrestler|bien|1        đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  12
+chem3      wrestler|bien|-1       đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  24
+chem3      wrestler|lau|1         đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0 | 4 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chem3      wrestler|lau|-1        đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  38 | 4 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chem3      healer|goc|1           đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chem3      healer|goc|-1          đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   5
+chem3      healer|rung|1          đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chem3      healer|rung|-1         đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   5
+chem3      healer|bien|1          đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chem3      healer|bien|-1         đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   5
+chem3      healer|lau|1           đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chem3      healer|lau|-1          đè mặt   0/ 74 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   5
+sau_don    smith|goc|1            đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+sau_don    smith|goc|-1           đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   2
+sau_don    smith|rung|1           đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+sau_don    smith|rung|-1          đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   3
+sau_don    smith|bien|1           đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+sau_don    smith|bien|-1          đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  46
+sau_don    smith|lau|1            đè mặt  24/ 52 khung | lớn nhất  173 điểm ảnh (29.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  24 | 24 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+sau_don    smith|lau|-1           đè mặt  24/ 52 khung | lớn nhất  196 điểm ảnh (32.9% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  25 | 24 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+sau_don    hunter|goc|1           đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+sau_don    hunter|goc|-1          đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   2
+sau_don    hunter|rung|1          đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+sau_don    hunter|rung|-1         đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  31
+sau_don    hunter|bien|1          đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+sau_don    hunter|bien|-1         đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  23
+sau_don    hunter|lau|1           đè mặt  16/ 52 khung | lớn nhất   94 điểm ảnh (15.8% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  26 | 16 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+sau_don    hunter|lau|-1          đè mặt  16/ 52 khung | lớn nhất   95 điểm ảnh (15.9% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  36 | 16 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+sau_don    wrestler|goc|1         đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+sau_don    wrestler|goc|-1        đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   7
+sau_don    wrestler|rung|1        đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0 | 28 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+sau_don    wrestler|rung|-1       đè mặt  11/ 52 khung | lớn nhất   16 điểm ảnh ( 2.7% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  34 | 28 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+sau_don    wrestler|bien|1        đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  12
+sau_don    wrestler|bien|-1       đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  17
+sau_don    wrestler|lau|1         đè mặt  12/ 52 khung | lớn nhất   26 điểm ảnh ( 4.4% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  12 | 24 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+sau_don    wrestler|lau|-1        đè mặt  12/ 52 khung | lớn nhất   52 điểm ảnh ( 8.7% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  28 | 24 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+sau_don    healer|goc|1           đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+sau_don    healer|goc|-1          đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   2
+sau_don    healer|rung|1          đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+sau_don    healer|rung|-1         đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   2
+sau_don    healer|bien|1          đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+sau_don    healer|bien|-1         đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   2
+sau_don    healer|lau|1           đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+sau_don    healer|lau|-1          đè mặt   0/ 52 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   2
+chay_chem  smith|goc|1            đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay_chem  smith|goc|-1           đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   2
+chay_chem  smith|rung|1           đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay_chem  smith|rung|-1          đè mặt   1/ 86 khung | lớn nhất    2 điểm ảnh ( 0.3% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  29
+chay_chem  smith|bien|1           đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  18
+chay_chem  smith|bien|-1          đè mặt   1/ 86 khung | lớn nhất    1 điểm ảnh ( 0.2% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  70
+chay_chem  smith|lau|1            đè mặt  12/ 86 khung | lớn nhất    8 điểm ảnh ( 1.3% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  28 | 56 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chay_chem  smith|lau|-1           đè mặt  32/ 86 khung | lớn nhất   32 điểm ảnh ( 5.4% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  73 | 56 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chay_chem  hunter|goc|1           đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay_chem  hunter|goc|-1          đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  19
+chay_chem  hunter|rung|1          đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  13 | 74 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chay_chem  hunter|rung|-1         đè mặt   6/ 86 khung | lớn nhất    4 điểm ảnh ( 0.7% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  20 | 74 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chay_chem  hunter|bien|1          đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   7
+chay_chem  hunter|bien|-1         đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   7
+chay_chem  hunter|lau|1           đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  14 | 18 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chay_chem  hunter|lau|-1          đè mặt   6/ 86 khung | lớn nhất    6 điểm ảnh ( 1.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  48 | 18 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chay_chem  wrestler|goc|1         đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay_chem  wrestler|goc|-1        đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   4
+chay_chem  wrestler|rung|1        đè mặt  18/ 86 khung | lớn nhất    3 điểm ảnh ( 0.5% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  18 | 50 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chay_chem  wrestler|rung|-1       đè mặt  22/ 86 khung | lớn nhất   34 điểm ảnh ( 5.7% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  71 | 50 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chay_chem  wrestler|bien|1        đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay_chem  wrestler|bien|-1       đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  31
+chay_chem  wrestler|lau|1         đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay_chem  wrestler|lau|-1        đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  38
+chay_chem  healer|goc|1           đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay_chem  healer|goc|-1          đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  28
+chay_chem  healer|rung|1          đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay_chem  healer|rung|-1         đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  28
+chay_chem  healer|bien|1          đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay_chem  healer|bien|-1         đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  28
+chay_chem  healer|lau|1           đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chay_chem  healer|lau|-1          đè mặt   0/ 86 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  28
+giu        smith|goc|1            đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+giu        smith|goc|-1           đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+giu        smith|rung|1           đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+giu        smith|rung|-1          đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+giu        smith|bien|1           đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+giu        smith|bien|-1          đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  38
+giu        smith|lau|1            đè mặt  14/ 54 khung | lớn nhất  129 điểm ảnh (21.6% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  14 | 14 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+giu        smith|lau|-1           đè mặt  14/ 54 khung | lớn nhất  167 điểm ảnh (28.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  40 | 14 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+giu        hunter|goc|1           đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+giu        hunter|goc|-1          đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   7
+giu        hunter|rung|1          đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+giu        hunter|rung|-1         đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  14
+giu        hunter|bien|1          đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+giu        hunter|bien|-1         đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  15
+giu        hunter|lau|1           đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   6
+giu        hunter|lau|-1          đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  14
+giu        wrestler|goc|1         đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+giu        wrestler|goc|-1        đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   2
+giu        wrestler|rung|1        đè mặt   8/ 54 khung | lớn nhất    4 điểm ảnh ( 0.7% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   8 | 40 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+giu        wrestler|rung|-1       đè mặt   8/ 54 khung | lớn nhất    8 điểm ảnh ( 1.3% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  13 | 40 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+giu        wrestler|bien|1        đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  13
+giu        wrestler|bien|-1       đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  37
+giu        wrestler|lau|1         đè mặt   4/ 54 khung | lớn nhất    8 điểm ảnh ( 1.3% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   4 | 10 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+giu        wrestler|lau|-1        đè mặt   4/ 54 khung | lớn nhất   28 điểm ảnh ( 4.7% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  11 | 10 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+giu        healer|goc|1           đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+giu        healer|goc|-1          đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+giu        healer|rung|1          đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+giu        healer|rung|-1         đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+giu        healer|bien|1          đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+giu        healer|bien|-1         đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+giu        healer|lau|1           đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+giu        healer|lau|-1          đè mặt   0/ 54 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chieu      smith|goc|1            đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chieu      smith|goc|-1           đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   2
+chieu      smith|rung|1           đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chieu      smith|rung|-1          đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chieu      smith|bien|1           đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chieu      smith|bien|-1          đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  30
+chieu      smith|lau|1            đè mặt  20/ 41 khung | lớn nhất  149 điểm ảnh (25.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  21 | 20 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chieu      smith|lau|-1           đè mặt  20/ 41 khung | lớn nhất  196 điểm ảnh (32.9% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  30 | 20 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chieu      hunter|goc|1           đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chieu      hunter|goc|-1          đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  11
+chieu      hunter|rung|1          đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chieu      hunter|rung|-1         đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  28
+chieu      hunter|bien|1          đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chieu      hunter|bien|-1         đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  20
+chieu      hunter|lau|1           đè mặt   6/ 41 khung | lớn nhất  128 điểm ảnh (21.5% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   7 | 6 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chieu      hunter|lau|-1          đè mặt   6/ 41 khung | lớn nhất  160 điểm ảnh (26.8% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  23 | 6 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chieu      wrestler|goc|1         đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chieu      wrestler|goc|-1        đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   6
+chieu      wrestler|rung|1        đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chieu      wrestler|rung|-1       đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  26
+chieu      wrestler|bien|1        đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chieu      wrestler|bien|-1       đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  16
+chieu      wrestler|lau|1         đè mặt  10/ 41 khung | lớn nhất   26 điểm ảnh ( 4.4% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  10 | 16 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chieu      wrestler|lau|-1        đè mặt  10/ 41 khung | lớn nhất   52 điểm ảnh ( 8.7% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  22 | 16 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+chieu      healer|goc|1           đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chieu      healer|goc|-1          đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   3
+chieu      healer|rung|1          đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chieu      healer|rung|-1         đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   3
+chieu      healer|bien|1          đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chieu      healer|bien|-1         đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   3
+chieu      healer|lau|1           đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+chieu      healer|lau|-1          đè mặt   0/ 41 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   3
+luot       smith|goc|1            đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+luot       smith|goc|-1           đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   1
+luot       smith|rung|1           đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+luot       smith|rung|-1          đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   1
+luot       smith|bien|1           đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+luot       smith|bien|-1          đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  21
+luot       smith|lau|1            đè mặt  20/ 28 khung | lớn nhất  156 điểm ảnh (26.2% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  26 | 25 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+luot       smith|lau|-1           đè mặt  25/ 28 khung | lớn nhất  203 điểm ảnh (34.1% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  28 | 25 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+luot       hunter|goc|1           đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+luot       hunter|goc|-1          đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  12
+luot       hunter|rung|1          đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0 | 8 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+luot       hunter|rung|-1         đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  18 | 8 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+luot       hunter|bien|1          đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+luot       hunter|bien|-1         đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  12
+luot       hunter|lau|1           đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0 | 11 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+luot       hunter|lau|-1          đè mặt   1/ 28 khung | lớn nhất    5 điểm ảnh ( 0.8% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  10 | 11 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+luot       wrestler|goc|1         đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+luot       wrestler|goc|-1        đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   3
+luot       wrestler|rung|1        đè mặt   4/ 28 khung | lớn nhất    3 điểm ảnh ( 0.5% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   4 | 6 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+luot       wrestler|rung|-1       đè mặt   5/ 28 khung | lớn nhất   43 điểm ảnh ( 7.2% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  23 | 6 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+luot       wrestler|bien|1        đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+luot       wrestler|bien|-1       đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   9
+luot       wrestler|lau|1         đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0 | 16 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+luot       wrestler|lau|-1        đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)  14 | 16 khung máy không đo được đĩa mặt (ước từ đỉnh đầu)
+luot       healer|goc|1           đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+luot       healer|goc|-1          đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   1
+luot       healer|rung|1          đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+luot       healer|rung|-1         đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   1
+luot       healer|bien|1          đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+luot       healer|bien|-1         đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   1
+luot       healer|lau|1           đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   0
+luot       healer|lau|-1          đè mặt   0/ 28 khung | lớn nhất    0 điểm ảnh ( 0.0% đĩa mặt) | có vũ khí trong đĩa (kể cả chỗ trống)   1
+pageerror: không có
