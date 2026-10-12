@@ -12,6 +12,8 @@ Chạy (từ bất kỳ thư mục nào):
     --tim              đổi da hồng/đào -> tím hoa cà (nếu thân bộ của Cu Lì có da tím)
     --thu              chỉ nhập ra thư mục tam/ cạnh script (không ghi vào game), để xem trước
     --vung y0,y1[,x0,x1]  chỉ cắt lưới trong vùng này của ảnh gốc (điểm ảnh gốc), bỏ dải hình tham chiếu / dải thừa ngoài lưới
+    --cot N            số cột của lưới đều trong vùng cắt (mặc định 8; ví dụ lưới 7 cột có cột cuối trống: cắt --vung bỏ cột
+                       trống rồi --cot 6)
     --tu-do            lưới kẻ KHÔNG đều: lấy mọi vạch hàng tìm được trong vùng làm biên hàng, và mỗi hàng tự dò vạch cột của
                        riêng hàng đó (ô rộng hẹp khác nhau); cắt các ô đầu hàng theo số khung
 
@@ -225,7 +227,7 @@ def main():
         v = [int(x) for x in ar[ar.index('--vung') + 1].split(',')]
         A = A[v[0]:v[1], (v[2] if len(v) > 2 else 0):(v[3] if len(v) > 3 else A.shape[1])]
         print('vùng lưới', v, '->', A.shape[1], '×', A.shape[0])
-    rows = cat_o(A, 8, len(thu_tu), [dt[k]['so'] for k in thu_tu], '--tu-do' in ar)
+    rows = cat_o(A, int(ar[ar.index('--cot') + 1]) if '--cot' in ar else 8, len(thu_tu), [dt[k]['so'] for k in thu_tu], '--tu-do' in ar)
     if '--xoa-cung' in ar and 'atk_bow' in thu_tu:
         print('xoá nét cung vẽ sẵn (điểm ảnh gốc bỏ đi):', [xoa_net_manh(c) for c in rows[thu_tu.index('atk_bow')]])
     if '--xoa-cau' in ar and 'cast' in thu_tu:

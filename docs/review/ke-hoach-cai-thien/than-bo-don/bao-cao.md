@@ -167,3 +167,38 @@ giơ tay qua đầu nên kiếm ra sau đầu (như hàng chém thân gốc).
   [hunter-lau](tay-don/tay-hunter-lau.png) · [wrestler-rung](tay-don/tay-wrestler-rung.png) · [wrestler-lau](tay-don/tay-wrestler-lau.png)
 
 Còn thiếu ảnh: 4/12 Cu Tèo Rừng, 8/12 Cu Lì Biển, 10–12 thân bộ Cái Bống.
+
+## Đợt 3 — Cu Lì Hang Biển (12/10)
+
+Khi chạy, thư mục `docs/anh-goc/2026-10-12/than-bo/` chỉ có thêm **8/12 Cu Lì Hang Biển** (`em-be-wrestler-bien-don.png`); 4/12 Cu Tèo
+Rừng và 10–12 thân bộ Cái Bống vẫn chưa có ảnh → chưa nhập, dấu tạm tắt thân bộ Cái Bống (404b935) giữ nguyên. Cu Lì mặc đủ bộ Hang Biển
+nay đánh bằng 5 hàng đòn riêng. Code game chỉ thêm khoá `wrestler-bien` vào `SC.TAY_KIEM` và `SC.TAY_DON`; không đụng đường vung kiếm
+(`G.KIEM_MUOT`, `G.KIEM_SAU`), trường `khung`. Không đổi gameplay.
+
+**`nhap.py` thêm `--cot N`** (số cột lưới đều, mặc định 8). Tấm này lưới 7 cột (6 khung + 1 cột trống rộng hơn) × 5 hàng, dải xanh trống
+ở đáy → `nhap.py wrestler bien --vung 0,985,0,1251 --cot 6` (cắt đúng trên vạch kẻ: bỏ cột trống từ vạch x = 1251, bỏ dải đáy dưới vạch y = 985).
+
+- **Thứ tự hàng** soát bằng mắt: kiếm, cung, giáo, búa, chưởng (đúng ghi chú). Không vẽ sẵn vũ khí / cầu lửa → không xoá gì.
+  Hàng chưởng khung 1–2 và búa khung 1–2 tay giơ thẳng lên cạnh đầu; cung khung 6 cũng giơ tay — giữ như ảnh.
+- **Màu**: tóc trắng còn nguyên (chỉ xoá xanh lá rực nối mép ô), mũ / áo xanh biển giữ; da đào (không `--tim`); bảng 48 màu của thân bộ.
+- **Cỡ / chân**: tỉ lệ 0,352; khung đầu các hàng đòn cao 56–60 (thân bộ đứng 58), đáy chân 89–91 mọi khung; búa nện khung 5 thấp 37
+  (thế cúi rạp), khung 4, 6 51–52 — như tệp đòn thân gốc. Không nhảy cỡ khi đổi trạng thái.
+- **Nắm tay kiếm** (`SC.TAY_KIEM['wrestler-bien']`): máy đo của `nhap.py` khớp cả 6 khung (soát ảnh lưới), dùng nguyên số.
+- **Nắm tay cung, giáo, búa** (`SC.TAY_DON['wrestler-bien']`, `tay-don/tay_don.py wrestler bien`): sửa bằng mắt 3 khung tay giơ qua đầu
+  mà máy bắt nhầm hông / chân — cung 6 → [−3; −26], búa 1 → [0,5; −26,5], búa 2 → [0; −27,5]. Trong trang: **24/24 khung lấy tay từ
+  bảng** (`nguon = 'bang-do'`).
+
+Kiểm bản HAI TỆP (`LK_HAI_TEP=1 python3 game/build.py --hai-tep`, `srv2.py` cổng 8790, `linh-khi-nhe.html?cloud=0`,
+`kiem/kiem.py <ảnh> wrestler bien`): thân bộ ghép đủ 12 hàng, `donMa = em-be-wrestler-bien-don`; 4 vũ khí × 14 tư thế + chưởng: 0 lỗi vẽ,
+vũ khí ở nắm tay đúng tay, không che mặt (búa lấy đà giơ qua đầu, kiếm lấy đà ra sau thân); chơi thật ải 1-1 mặc đủ 4 món bộ Hang Biển
+(`mu_vay_ca`, `ao_vay`, `khan_bang`, `bua_oc`) × 4 vũ khí, bot đánh: thân `em-be-wrestler-bien`, tệp đòn đã ghép; **0 pageerror**.
+`cloud_save_regression` đạt; `python3 game/build.py` dưới trần (trang 0,87 / 1,5 MB nén, ảnh 20,97 / 26 MB).
+
+Lưu ý hình: cung khung 6 (nhịp cuối, 0,85) Cu Lì giơ tay lên nên cây cung vẽ ở tay giơ, nhỏ, trên đầu — đúng theo ảnh; muốn hạ tay thì gen lại khung đó.
+
+Ảnh: [sau (hàng kiếm, cung, giáo, búa × đứng, chạy, 6 khung đòn, chạy + đánh, giữ 3 mức, chưởng 2)](anh/wrestler-bien-sau-x3.png) ·
+[tấm đã nhập](anh/wrestler-bien-don-tam.png) · [nắm tay kiếm](anh/wrestler-bien-tay-kiem.png) ·
+[nắm tay cung / giáo / búa (vòng đỏ = số máy đo, trước khi sửa 3 khung kể trên)](tay-don/tay-wrestler-bien.png) ·
+[trong trận (búa)](anh/tran-wrestler-bien-bua.png)
+
+Còn thiếu ảnh: 4/12 Cu Tèo Rừng, 10–12 thân bộ Cái Bống.
