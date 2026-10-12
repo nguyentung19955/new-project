@@ -613,8 +613,11 @@
       const cat = G.THE_EM_BE_CAT !== false && G.ux.save; if (cat) { G.ux.save(); G.ux.beginPath(); G.ux.rect(x + 2, y + 2, 146, 32); G.ux.clip(); }
       G.art.hero(G.ux, { x: x + 18, y: y + 32, face: 1, key: k, move: sv.hero === k, t: G.time, atk: -1, dodge: -1, weapon: null, noShadow: true, alpha: hs.unlocked ? null : 0.4, outfit: sv.hero === k && G.outfit ? G.outfit.look(sv) : null });
       if (cat) G.ux.restore();
-      ui.text(H.name, x + 88, y + 15, { size: 10, bold: true, align: 'center', color: hs.unlocked ? '#fff0c4' : '#8fa49e' });
-      ui.text(hs.unlocked ? G.t(sv.hero === k ? 'Cấp {0} · đang chọn' : 'Cấp {0}', hs.lvl) : H.unlock, x + 88, y + 27, { size: 7, align: 'center', color: hs.unlocked ? '#e8d9a8' : '#8fa49e' });
+      // Lực chiến của từng bé nếu mang đúng vũ khí, trang phục đang có (js/luc_chien.js): thẻ thêm một dòng
+      const lcOn = hs.unlocked && G.lucChienUI && G.lucChienUI.on();
+      ui.text(H.name, x + 88, y + (lcOn ? 10.5 : 15), { size: lcOn ? 9 : 10, bold: true, align: 'center', color: hs.unlocked ? '#fff0c4' : '#8fa49e' });
+      ui.text(hs.unlocked ? G.t(sv.hero === k ? 'Cấp {0} · đang chọn' : 'Cấp {0}', hs.lvl) : H.unlock, x + 88, y + (lcOn ? 20 : 27), { size: 7, align: 'center', color: hs.unlocked ? '#e8d9a8' : '#8fa49e' });
+      if (lcOn) ui.text(G.lucChienUI.chu(G.lucChien(sv, k)), x + 88, y + 29.5, { size: 7.5, bold: true, align: 'center', color: '#ffe9a8' });
     });
     const k = sv.hero, H = G.HEROES[k], hs = sv.heroes[k];
     ui.text(G.t('{0} · cấp {1}', H.name, hs.lvl), CX + 2, 164, { size: 10, bold: true, color: GOLD });

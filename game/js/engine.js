@@ -599,6 +599,7 @@
   function canhYen(now) { // trả về số khung/giây tối đa khi cảnh đứng yên, 0 = vẽ đủ
     try {
       const sc = G.scene; let man = '', fps = 0;
+      if (G.lucChienUI && G.lucChienUI.dangHien && G.lucChienUI.dangHien()) return 0; // dải "Lực chiến ▲" đang chạy số (js/luc_chien.js): vẽ đủ khung
       if (G.truyen && G.truyen.dang) return 0; // đang chiếu truyện (js/truyen.js): vẽ đủ khung cho chữ, hình chuyển mượt
       if (sc && sc === G.StageScene && G.getRun) { const S = G.getRun(); if (S && YEN_AI[S.mode]) { man = 'ai:' + S.mode; fps = 10; } }
       else if (sc && sc === G.Village) {

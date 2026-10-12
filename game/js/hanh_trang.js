@@ -89,9 +89,20 @@
     const x = CX + 122, w = CW - 128;
     region('hero', x, CY, w, CH, (y) => {
       y += 11;
-      ui.text(G.t('Sức mạnh {0}', pw), x, y, { size: 11, bold: true, color: GOLD });
-      ui.font(11, true); const sx = x + G.ux.measureText(G.t('Sức mạnh {0}', pw)).width + 8;
-      tx('(số này so với Sức mạnh khuyên dùng ở thẻ ải)', sx, y, x + w - sx, { size: 6.5, color: SOFT });
+      // Lực chiến (js/luc_chien.js): con số to nhất của bảng, đổi theo mọi món đồ; Sức mạnh (so với khuyên dùng của ải) ở dòng dưới
+      const LCU = G.lucChienUI;
+      if (LCU && LCU.on()) {
+        const lcs = LCU.chu(G.lucChien(sv));
+        ui.text(lcs, x, y, { size: 11, bold: true, color: '#ffe9a8' });
+        y += 12;
+        ui.text(G.t('Sức mạnh {0}', pw), x, y, { size: 8, bold: true, color: GOLD });
+        ui.font(8, true); const sx = x + G.ux.measureText(G.t('Sức mạnh {0}', pw)).width + 6;
+        tx('(số này so với Sức mạnh khuyên dùng ở thẻ ải)', sx, y, x + w - sx, { size: 6.5, color: SOFT });
+      } else {
+        ui.text(G.t('Sức mạnh {0}', pw), x, y, { size: 11, bold: true, color: GOLD });
+        ui.font(11, true); const sx = x + G.ux.measureText(G.t('Sức mạnh {0}', pw)).width + 8;
+        tx('(số này so với Sức mạnh khuyên dùng ở thẻ ải)', sx, y, x + w - sx, { size: 6.5, color: SOFT });
+      }
       y += 6;
       // chỉ số chính: hai cột
       const rows = [
@@ -166,7 +177,15 @@
     if (w.lock && BD) BD.lockIcon(x + 27, y + 26, true);
     if (picked) BD.tick(x + 2, y + 2);
     const bw = sell ? 150 : 104, tw = wd - 44 - bw;
-    tx(G.wName(w), x + 40, y + 10, tw, { size: 8, bold: true, color: R.col });
+    // Lực chiến nếu mang món này (ô có lợi nhất), tính thử trên bản sao: chỉ cho món trong rương đang chọn
+    const LCU = G.lucChienUI, lcOn = LCU && LCU.on() && sel && !carried && !multi && sv.carry.length;
+    let lcd = null, lcw = 0;
+    if (lcOn) {
+      for (let s = 0; s < sv.carry.length; s++) { const g = LCU.thuVuKhi(w, s, sv); if (lcd == null || g > lcd.g) lcd = { g, s }; }
+      if (lcd && lcd.g) { lcd.txt = G.t('Lực chiến {0}', (lcd.g > 0 ? '▲ +' : '▼ −') + G.soNghin(Math.abs(lcd.g))) + (sv.carry.length > 1 ? ' ' + G.t('(ô {0})', lcd.s + 1) : ''); ui.font(8, true); lcw = G.ux.measureText(lcd.txt).width + 6; } else lcd = null;
+    }
+    tx(G.wName(w), x + 40, y + 10, tw - lcw, { size: 8, bold: true, color: R.col });
+    if (lcd) ui.text(lcd.txt, x + 40 + tw, y + 10, { size: 8, bold: true, align: 'right', color: lcd.g > 0 ? GOOD : '#ff8f7f' });
     const aff = (w.affixes || []).map((k) => G.tv(G.AFFIX[k])).concat(w.power && G.POWER[w.power] ? [G.t('Dòng mạnh {0}', G.POWER[w.power].name)] : []);
     tx(G.t('Bậc {0} · mài +{1} · đòn {2}', R.name, w.sharpen | 0, so1(G.wBase(w, sv.heroes[sv.hero].lvl))) + ' · ' + (aff.length ? aff.join(', ') : G.t('không dòng phụ')), x + 40, y + 19.5, tw, { size: 6.5, color: TXT });
     tx(mi.txt, x + 40, y + 28.5, tw, { size: 6.5, color: mi.col === '#666' ? SOFT : mi.col });
@@ -302,6 +321,12 @@
         y = ui.para(tags.join(' · ') + (on ? ' · ' + G.t('đang mặc') : ''), RX, y + 20, RW, { size: 6.5, color: on ? GOOD : SOFT });
         const st = O.stats(it), ks = Object.keys(st);
         y = ui.para(ks.length ? ks.map((q) => O.statText(q, st[q])).join(', ') : 'Không tăng chỉ số', RX, y, RW, { size: 7, color: TXT });
+        // Lực chiến nếu mặc (hoặc tháo) món này, tính thử trên bản sao (js/luc_chien.js)
+        const LCU = G.lucChienUI;
+        if (LCU && LCU.on()) {
+          const g = LCU.thuTrangPhuc(it, on, sv);
+          if (g) { ui.text(G.t(on ? 'Tháo ra: Lực chiến {0}' : 'Mặc vào: Lực chiến {0}', (g > 0 ? '▲ +' : '▼ −') + G.soNghin(Math.abs(g))), RX, y + 1, { size: 8, bold: true, color: g > 0 ? GOOD : '#ff8f7f' }); y += 12; }
+        }
         const sp = O.special(it);
         if (sp) y = ui.para('★ ' + G.tv(sp.name) + ': ' + G.tv(sp.desc), RX, y, RW, { size: 6.5, color: sp.key === 'none' ? SOFT : PURP });
         else if (Ti.old) y = ui.para(G.t('Tác dụng cũ: {0} (em bé từ cấp 5).', G.GEAR.charm[Ti.old].desc), RX, y, RW, { size: 6.5, color: PURP });

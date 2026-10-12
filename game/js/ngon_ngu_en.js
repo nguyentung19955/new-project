@@ -1523,5 +1523,10 @@
 "🏆 Bảng vàng": "🏆 Leaderboard",
 "📥 Góp ý nhận được": "📥 Feedback inbox",
 "📥 Góp ý nhận được ({0} mới)": "📥 Feedback inbox ({0} new)",
+"(ô {0})": "(slot {0})",
+"Lực chiến {0}": "Combat Power {0}",
+"lực chiến {0}": "CP {0}",
+"Tháo ra: Lực chiến {0}": "Unequip: Combat Power {0}",
+"Mặc vào: Lực chiến {0}": "Equip: Combat Power {0}",
 "🗑 Xoá": "🗑 Delete"
 }); })();
