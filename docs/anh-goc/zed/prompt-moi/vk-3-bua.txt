@@ -1,5 +1,7 @@
-# Búa (ảnh riêng)
+# Búa – 4 cấp
 # Gửi kèm: ảnh mẫu Zed đã duyệt
 
-Một cây BÚA hợp với Zed: [GHI MÔ TẢ — vd: đầu búa sắt bọc đồng, cán gỗ quấn vải đỏ]. Dài khoảng 0,9 lần chiều cao Zed, đầu búa to bằng đầu Zed.
-Cùng phong cách pixel art, độ to điểm ảnh, viền tối 1 nét như ẢNH MẪU Zed gửi kèm. Vũ khí nằm NGANG, mũi/đầu chỉ sang PHẢI, chuôi/cán bên trái, nằm giữa ảnh, chừa lề rộng. Chỉ có vũ khí, không tay, không người, không vệt chém. Nền xanh lá thuần #00FF00, không chữ, không bóng, không quầng sáng, không dùng màu xanh lá trên vũ khí.
+BÚA của Zed: [mô tả — vd: đầu búa sắt vuông, cán gỗ ngắn]. Dài khoảng 0,9 lần chiều cao Zed, đầu búa to cỡ đầu Zed.
+Một hàng 4 khung đều nhau, không chạm nhau = 4 cấp tiến hoá của CÙNG một món, từ trái sang phải: 1 TRẮNG (đơn sơ, kim loại xám, gỗ mộc); 2 MẦM (thêm chi tiết nhỏ như mầm lá, dây quấn, vân khắc mảnh); 3 THÀNH HÌNH (to và sắc hơn, thêm gờ, đai, hoa văn rõ); 4 THỨC TỈNH (dáng hoàn chỉnh uy nghi nhất, nhiều chi tiết nhất).
+Cả 4 cấp: cùng kiểu dáng gốc, cùng chiều dài, chuôi/cán ở ĐÚNG cùng vị trí và cùng cỡ (để tay cầm khớp mọi cấp). Màu trung tính (thép, gỗ, đồng) — game tự nhuộm theo hệ Lửa/Độc/Băng.
+Cùng phong cách pixel art, độ to điểm ảnh, viền tối 1 nét như ẢNH MẪU Zed gửi kèm. Mỗi món nằm NGANG, mũi/đầu chỉ sang PHẢI, chuôi/cán bên trái. Chỉ có vũ khí, không tay, không người, không vệt chém, không phát sáng. Nền xanh lá thuần #00FF00, không chữ, không số, không bóng, không dùng màu xanh lá trên vũ khí.

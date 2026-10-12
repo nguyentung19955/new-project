@@ -5,4 +5,4 @@ Thứ tự: 00 ảnh mẫu (duyệt) → 01–07 → 08–27. Mỗi prompt = 1 �
 Bộ trang phục thứ hai trở đi: dùng y nguyên 01–27, ảnh mẫu thay bằng ảnh Zed mặc bộ đó (gen bằng 00 với mô tả bộ mới).
 Vũ khí (160 ảnh vk-*) và hiệu ứng hu-* giữ nguyên; prompt hiệu ứng riêng khi cần.
 
-Vũ khí MỚI (thay bộ cũ): vk-1-kiem, vk-2-thuong, vk-3-bua, vk-4-phi-tieu — gen sau khi ảnh mẫu 00 đạt, kèm ảnh mẫu. Bộ cũ có 40 món × 4 loại + màu theo bậc; bộ mới cần chốt số món mỗi loại.
+Vũ khí MỚI: mỗi loại 1 món × 4 cấp (Trắng, Mầm, Thành hình, Thức tỉnh = G.STAGE_NAMES), hệ do game nhuộm: vk-1-kiem, vk-2-thuong, vk-3-bua, vk-4-phi-tieu. Thay 160 ảnh vk-* cũ ở bước tích hợp.
