@@ -53,7 +53,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.12-0807";
+(window.G = window.G || {}).VERSION = "lk-2026.10.12-0811";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -1725,13 +1725,14 @@
   // Vũ khí Vàng của vùng sau có sát thương gốc cao hơn: vùng 1 x1,5; vùng 2 x1,6; vùng 3 x1,7 (w.gold = 0, 1, 2).
   G.GOLD_MULT = [1.5, 1.6, 1.7];
   G.FAMILIES = 10; // mỗi loại vũ khí có 10 dòng (hình và tên do js/weapon_art.js giữ)
-  // Phiên cân bằng (báo cáo tester mục 2): mốc cũ 30/120/300 làm vũ khí Thức tỉnh ngay ải 1-5, 85% dấu ấn về sau bỏ phí.
-  // Mốc mới 60/400/1.200: Mầm ở ải 1-2..1-3, Thành hình khoảng vùng 2, Thức tỉnh khoảng vùng 3 (đo bằng tests/campaign.py).
+  // Phiên cân bằng (báo cáo tester mục 2): mốc cũ 30/120/300 làm vũ khí Thức tỉnh ngay ải 1-5 (bot: Thức tỉnh ở 2-2..2-4), dấu ấn
+  // về sau bỏ phí. Đề xuất của tester là 60/400/1.200, nhưng đo 8 lượt tests/campaign.py thì lúc vào 3-5 kiếm mới có ~740-1.020
+  // dấu ấn (Thức tỉnh rơi ra sau cả chiến dịch), nên mốc cuối 900: Mầm ở 1-1..1-2, Thành hình quanh 2-5..3-2, Thức tỉnh quanh 3-4..3-5.
   // Bản lưu cũ được chuyển đổi khi nạp (js/linhkhi.js, LK.chuyenBanLuu): dấu ấn kéo giãn theo từng đoạn, không vũ khí nào tụt bậc.
-  G.MARKS = [60, 400, 1200];
+  G.MARKS = [60, 400, 900];
   G.MARKS_CU = [30, 120, 300]; // mốc của bản lưu cũ (chỉ dùng để chuyển đổi)
   G.STAGE_NAMES = ['Trắng', 'Mầm', 'Thành hình', 'Thức tỉnh'];
-  // Mỗi mốc tiến hóa tăng sát thương gốc. Trước là +4/+8/+12% (bỏ cả lớp tiến hoá chỉ mất 5% Sức mạnh); nay +8/+18/+30%.
+  // Mỗi mốc tiến hóa tăng sát thương gốc. Trước là +4/+8/+12% (bỏ cả lớp tiến hoá chỉ mất 5% Sức mạnh); nay +8/+18/+30% (~10-11%).
   G.STAGE_MULT = [1, 1.08, 1.18, 1.3];
   // Dấu ấn thừa: vũ khí đã Thức tỉnh, cứ mỗi bấy nhiêu dấu ấn của hệ chính vượt mốc cuối thì đổi ra 1 nguyên liệu vùng
   // (Độc ra Gỗ linh, Băng ra Vảy cá, Lửa ra Đá lửa), tự động, ghi ở màn kết quả.
@@ -27671,7 +27672,7 @@ MA._xong();
 //   - Trong trận: ba vạch Lửa/Độc/Băng cạnh hai ô vũ khí, hạt sáng bay vào vạch, chữ "+1 Lửa", vạch hệ chính nổi bật,
 //     sắp đạt mốc thì nhấp nháy; biểu tượng hệ nhỏ trên đầu quái đang dính hiệu ứng (kết liễu nó sẽ được dấu ấn hệ đó).
 //   - Màn kết quả: mỗi vũ khí một dòng (nhận bao nhiêu dấu ấn từng hệ, tổng/mốc kế, còn bao nhiêu, mốc kế mở gì).
-//   - Xem vũ khí: bảng linh khí ba hệ có mốc G.MARKS (60/400/1.200), hệ chính, đặc trưng đã mở và sắp mở, gợi ý cách cày.
+//   - Xem vũ khí: bảng linh khí ba hệ có mốc G.MARKS (60/400/900), hệ chính, đặc trưng đã mở và sắp mở, gợi ý cách cày.
 //   - Trang "Linh khí" trong hướng dẫn của Cụ Đồ.
 (function () {
   const G = window.G, ui = G.ui;
@@ -27681,8 +27682,8 @@ MA._xong();
   LK.hint = (el) => G.t('Đánh quái {0} rồi kết liễu để nhận dấu ấn {1}', VERB[el], G.EL[el].name);
 
   // ---------- chuyển đổi bản lưu cũ (mốc 30/120/300 → G.MARKS) ----------
-  // Dấu ấn mỗi hệ kéo giãn theo từng đoạn: [0,30) → [0,60), [30,120) → [60,400), [120,300) → [400,1200), phần vượt 300 giữ
-  // nguyên số (cộng vào 1.200). Vậy vũ khí giữ đúng mốc đã đạt và đúng tỉ lệ đường tới mốc kế; không vũ khí nào tụt bậc.
+  // Dấu ấn mỗi hệ kéo giãn theo từng đoạn: [0,30) → [0,60), [30,120) → [60,400), [120,300) → [400,900), phần vượt 300 giữ
+  // nguyên số (cộng vào 900). Vậy vũ khí giữ đúng mốc đã đạt và đúng tỉ lệ đường tới mốc kế; không vũ khí nào tụt bậc.
   // Phần vượt mốc cuối của vũ khí đã Thức tỉnh đổi luôn ra nguyên liệu (G.lkDoiThua). Đánh dấu sv.lkMoc = 2 để không đổi hai lần.
   LK.MOC_BAN = 2;
   LK.doiSo = function (m) {
@@ -27981,7 +27982,7 @@ MA._xong();
   };
 
   // ---------- bảng linh khí trong màn Xem vũ khí ----------
-  // Ba hàng (Lửa, Độc, Băng), mỗi hàng một vạch chia ba đoạn bằng nhau: 0-60, 60-400, 400-1.200 (G.MARKS).
+  // Ba hàng (Lửa, Độc, Băng), mỗi hàng một vạch chia ba đoạn bằng nhau: 0-60, 60-400, 400-900 (G.MARKS).
   LK.panel = function (w, x, y, wd) {
     const T = G.theme;
     if (T && T.head) T.head('Linh khí (dấu ấn hệ)', x, y); else ui.text('Linh khí (dấu ấn hệ)', x, y, { size: 8.5, bold: true });
