@@ -17533,6 +17533,7 @@ MA._xong();
   const giuDon = (ten, charge) => (ten === 'atk_bow' ? Math.min(2, Math.floor(clamp(charge || 0, 0, 1) * 3)) : ten === 'atk_sword' ? 4 : charge >= 0.4 ? 1 : 0);
   SC.chonEmBe = function (sp, o) {
     const p = o.p, t = (o.t != null ? o.t : G.time) || 0, dt = sp.dt;
+    const tc = o.tc != null && isFinite(o.tc) ? o.tc : t; // nhịp chân: thời gian chạy theo tốc độ đi thật (js/combat.js P.chayT), thiếu thì như cũ
     const mot = (ten, u) => { const k = dt[ten] ? ten : 'idle'; return { ten: k, i: dt[ten] ? khungMot(dt[k], u) : khungLap(dt.idle, t), u }; };
     const lap = (ten, tt) => { const k = dt[ten] ? ten : 'idle'; return { ten: k, i: khungLap(dt[k], tt), u: 0 }; };
     // hàng đòn theo vũ khí đang cầm (Phiên 3); null: không có hàng hoặc đang tắt cờ -> như cũ
@@ -17546,11 +17547,11 @@ MA._xong();
     if (p && p.mv && p.mv.holding && !(o.atk >= 0)) return hv ? { ten: hv, i: doi6(dt[hv], giuDon(hv, p.mv.charge)), u: 0.99 } : mot('tele', 0.99);
     if (o.atk >= 0) {
       const cd = G.CHAY_DANH; // chạy mà đánh: chân vẫn bước (xem G.CHAY_DANH ở đầu tệp)
-      if (o.move && (cd === 'than' || (cd === 'lai' && !(o.atk >= 0.2 && o.atk < 0.65)))) { const r = lap('move', t); r.danh = true; return r; }
+      if (o.move && (cd === 'than' || (cd === 'lai' && !(o.atk >= 0.2 && o.atk < 0.65)))) { const r = lap('move', tc); r.danh = true; return r; }
       return hv ? theoDon(hv, o.atk, p ? p.comboI : Math.floor(t / 1.6)) : mot('atk', o.atk);
     }
     if ((p && p.hurtT > 0) || (!p && o.flash)) return mot('hit', p ? 1 - p.hurtT / 0.2 : 0.3);
-    if (o.move) return lap('move', t);
+    if (o.move) return lap('move', tc);
     return lap('idle', t);
   };
   // Nhún theo bước (G.NHUN_BUOC): số điểm ảnh dời thân lên (âm) ở khung này. Chỉ khi thân AI đang chạy (hàng chạy, hoặc chạy mà đánh
@@ -17561,7 +17562,7 @@ MA._xong();
     if (!sp || !sp.img || !sp.dt.move || sp.nhunBuoc === false) return 0;
     let s = null;
     try { s = SC.chonEmBe(sp, o); } catch (e) { return 0; }
-    const t = (o.t != null ? o.t : G.time) || 0, i = s.ten === 'move' ? s.i : G.CHAY_DANH === 'nhun' && o.atk >= 0 ? khungLap(sp.dt.move, t) : -1;
+    const t = o.tc != null && isFinite(o.tc) ? o.tc : (o.t != null ? o.t : G.time) || 0, i = s.ten === 'move' ? s.i : G.CHAY_DANH === 'nhun' && o.atk >= 0 ? khungLap(sp.dt.move, t) : -1;
     return i >= 0 && i % 3 === 1 ? -1 : 0;
   };
   function emBeTint(o) {
@@ -17687,7 +17688,7 @@ MA._xong();
   SC.diemNguc = function (sp, key, ten, i, kh) {
     const quay = !!(kh && kh.rot != null);
     if (quay) { const rq = (((kh.rot | 0) % 360) + 360) % 360; if (rq >= 60 && rq <= 300) return null; }
-    const da = SC.ghep[key] ? SC.diemAI(key, ten, i, kh) : null;
+    const da = SC.ghep[key] ? SC.diemAI(key, ten, i, kh, sp) : null;
     if (da && (da.diem.nguc || da.diem.co)) { const p = da.diem.nguc || [da.diem.co[0] + 1, da.diem.co[1] + 3]; return [Math.round(p[0]), Math.round(p[1])]; }
     sp.ngucC = sp.ngucC || {};
     const k = ten + ':' + i;
@@ -17815,7 +17816,7 @@ MA._xong();
   // Điểm neo của khung (ten, i) cho thân AI: diemAI (tệp ghép) và, ở hàng đòn theo vũ khí, bàn tay trước tự đo (trừ khi tệp ghép ghi
   // đúng khung đó). null: không có gì.
   SC.diemKhung = function (sp, key, ten, i, kh) {
-    const da = SC.ghep[key] ? SC.diemAI(key, ten, i, kh) : null;
+    const da = SC.ghep[key] ? SC.diemAI(key, ten, i, kh, sp) : null;
     if (!LA_DON[ten]) return da;
     const tay = SC.tayAI(sp, ten, i);
     if (!tay || (da && da.nguon.tay_truoc === 'tep')) return da;
@@ -18579,6 +18580,15 @@ MA._xong();
     const g = { ma: tep.ma, key, diem: docBoDiem(tep.diem, 200) || {}, theo: {}, cap: {}, coVk: false };
     if (tep.diem_theo && typeof tep.diem_theo === 'object') for (const k in tep.diem_theo) if (/^[a-z]{2,8}(:\d{1,2})?$/.test(k)) { const d = docBoDiem(tep.diem_theo[k], 200); if (d) g.theo[k] = d; }
     if (tep.cap && typeof tep.cap === 'object') for (const k in tep.cap) if (/^[A-Za-z0-9_-]{1,40}$/.test(k)) { const c = docCap(tep.cap[k]); if (c) { g.cap[k] = c; if (k.indexOf('vk-') === 0) g.coVk = true; } }
+    // "diem_theo_than" (tuỳ chọn, phiên sửa dáng chạy 12/10): { "<mã tấm thân>": { "run:0": {...}, ... } } — điểm theo khung RIÊNG cho một
+    // tấm thân (thân gốc em-be-<key> có hàng chạy mới 8 khung, còn thân theo bộ em-be-<key>-rung/bien/lau vẫn hàng chạy cũ 6 khung):
+    // khung nào có ở đây thì dùng thay "diem_theo" khi vẽ đúng tấm thân đó. Không ghi: như cũ.
+    if (tep.diem_theo_than && typeof tep.diem_theo_than === 'object') for (const ma in tep.diem_theo_than) {
+      if (!/^em-be-(smith|hunter|healer|wrestler)(-(rung|bien|lau))?$/.test(ma) || !tep.diem_theo_than[ma] || typeof tep.diem_theo_than[ma] !== 'object') continue;
+      const o = {}; let n = 0;
+      for (const k in tep.diem_theo_than[ma]) if (/^[a-z]{2,8}(:\d{1,2})?$/.test(k)) { const d = docBoDiem(tep.diem_theo_than[ma][k], 200); if (d) { o[k] = d; n++; } }
+      if (n) (g.theoThan = g.theoThan || {})[ma] = o;
+    }
     SC.ghep[key] = g; SC.ghepVer++;
     xoaNhoDo();
     return g;
@@ -18608,11 +18618,11 @@ MA._xong();
   // Thân AI: điểm neo khung (ten, i), toạ độ tính từ chân. Lấy diem_theo (khung thắng động tác), thiếu thì lấy "diem" (khung đứng
   // đầu tiên) rồi dời theo phần game tự đo (SC.khopEmBe): đầu dời theo dau, còn lại theo than; lăn/ngã: xoay, dời cả khối.
   // null: chưa có tệp ghép cho nhân vật này (game ước lượng từ khung xương như cũ).
-  SC.diemAI = function (key, ten, i, khop) {
+  SC.diemAI = function (key, ten, i, khop, sp) {
     const g = SC.ghep[key];
     if (!g) return null;
-    const th = {};
-    for (const k of khoaTheo(ten, i)) if (g.theo[k]) Object.assign(th, g.theo[k]);
+    const th = {}, tt = sp && sp.ma && g.theoThan ? g.theoThan[sp.ma] : null; // tt: điểm riêng của tấm thân đang vẽ (diem_theo_than)
+    for (const k of khoaTheo(ten, i)) { const q = (tt && tt[k]) || g.theo[k]; if (q) Object.assign(th, q); }
     const quay = !!(khop && khop.rot != null), d = {}, ng = {};
     const c = quay ? Math.cos(khop.rot * D2R) : 1, s = quay ? Math.sin(khop.rot * D2R) : 0;
     for (const n of TEN_DIEM) {
@@ -18631,7 +18641,7 @@ MA._xong();
     if (!SC.ghep[key]) return neo;
     const da = sp ? SC.diemKhung(sp, key, s.ten, s.i, kh) : SC.diemAI(key, s.ten, s.i, kh), n = Object.assign({}, neo || {});
     n.khung = { ten: s.ten, i: s.i }; n.diem = da ? da.diem : null; n.nguon = da ? da.nguon : null;
-    n.khoa = '|g' + SC.ghepVer + ':' + s.ten + ':' + s.i;
+    n.khoa = '|g' + SC.ghepVer + ':' + ((sp && sp.ma) || '') + ':' + s.ten + ':' + s.i; // mã tấm thân: thân gốc và thân theo bộ có điểm riêng (diem_theo_than)
     return n;
   }
   const xoay2 = (x, y, a) => { const r = a * D2R, c = Math.cos(r), s = Math.sin(r); return [x * c - y * s, x * s + y * c]; };
