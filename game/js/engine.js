@@ -525,6 +525,37 @@
       c.globalAlpha = ga;
     } catch (e) { /* chỉ báo hỏng thì bỏ qua, không được làm đứng game */ }
   }
+  // ---------- Phiên hiệu năng (V6): bớt vẽ khi màn hình đứng yên, tuỳ chọn tiết kiệm pin ----------
+  // Đang tạm dừng / mở bản đồ, túi đồ / màn kết quả trong ải, đang mở bảng ở làng, hoặc đứng yên ở làng không chạm gì 5 giây:
+  // chỉ vẽ lại 10 khung/giây (cảnh gần như không đổi), vẽ đủ ngay khi có chạm / phím và trong 1,5 giây đầu sau khi đổi màn (hiệu ứng mở bảng).
+  // Logic game (G.tick) vẫn chạy đủ nhịp như cũ. Tắt: G.TIET_KIEM_VE = false hoặc ?vechan=0.
+  // Tiết kiệm pin: G.save.pin = true (hoặc ?fps=30) → vẽ nhiều nhất 30 khung/giây (logic vẫn 60 nhịp/giây).
+  if (G.TIET_KIEM_VE === undefined) { let tat = false; try { tat = /[?&]vechan=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.TIET_KIEM_VE = !tat; }
+  let fps30 = false; try { fps30 = /[?&]fps=30(&|$)/.test(location.search || ''); } catch (e) { fps30 = false; }
+  let veCuoi = -1, lanCham = 0, manCu = '', doiMan = 0;
+  const danhDauCham = () => { lanCham = performance.now() / 1000; };
+  try { for (const ev of ['pointerdown', 'pointermove', 'pointerup', 'keydown', 'wheel']) window.addEventListener(ev, danhDauCham, { passive: true, capture: true }); } catch (e) { /* bỏ qua */ }
+  const YEN_AI = { paused: 1, map: 1, bag: 1, result: 1 };
+  function canhYen(now) { // trả về số khung/giây tối đa khi cảnh đứng yên, 0 = vẽ đủ
+    try {
+      const sc = G.scene; let man = '', fps = 0;
+      if (sc && sc === G.StageScene && G.getRun) { const S = G.getRun(); if (S && YEN_AI[S.mode]) { man = 'ai:' + S.mode; fps = 10; } }
+      else if (sc && sc === G.Village) {
+        const V = G.villageApi && G.villageApi.V, VS = G.villageScene && G.villageScene.state;
+        if (V && V.tab !== 'hub' && V.tab !== 'title') { man = 'lang:' + V.tab; fps = 10; }
+        else if (V && V.tab === 'hub' && VS && !VS.moving && !VS.path && !VS.joy && !VS.talk && now - lanCham > 5) { man = 'lang:yen'; fps = 10; }
+      }
+      if (man !== manCu) { manCu = man; doiMan = now; }
+      return fps && now - doiMan > 1.5 ? fps : 0;
+    } catch (e) { return 0; }
+  }
+  function nenVe(now) {
+    if (veCuoi < 0 || G.click || G.downs.length || G.pointers.size || now - lanCham < 0.4) return true;
+    let fps = G.TIET_KIEM_VE ? canhYen(now) : 0;
+    if ((fps30 || (G.save && G.save.pin)) && (!fps || fps > 30)) fps = 30;
+    return !fps || now - veCuoi >= 1 / fps - 0.004;
+  }
+  G.veYen = { canhYen: (t) => canhYen(t == null ? performance.now() / 1000 : t) }; // cho kiểm thử
   function frame(ts) {
     requestAnimationFrame(frame); // đặt trước để một lỗi lẻ không làm đứng game
     const now = ts / 1000;
@@ -533,6 +564,8 @@
     let n = 0;
     while (acc >= STEP && n < 5) { G.tickDraw = n === 0; G.tick(); acc -= STEP; n++; }
     if (acc > STEP) acc = 0; // khung hình quá chậm: bỏ phần dư, không chạy bù dồn
+    if (G.scene && !G.noRender && !nenVe(performance.now() / 1000)) { G.click = null; return; } // V6: khung này không vẽ lại (hình cũ vẫn trên màn)
+    veCuoi = performance.now() / 1000;
     if (G.scene && !G.noRender) {
       if (G.NET !== G.netMuon()) G.setNet(G.netMuon());
       ui.begin();
