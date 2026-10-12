@@ -36,9 +36,9 @@ Hậu kỳ (`cong-cu/sau.py`): xếp lại khung tấn công pha 2; ~350 điểm
 
 ## Kiểm
 - `kiem.py` (cạnh tệp này): vào phòng trùm Lâu đài cổ (Hồ Tinh), pha 1 → hạ máu → game tự chuyển pha 2, pha 3 (b.phase 1, 2). Pha 2, 3 vẽ đứng / lấy đà / tấn công / trúng đòn từ `hoTinh-p2` / `hoTinh-p3`; chạy, chết mượn `hoTinh` (đúng thiết kế phiên E2). **0 pageerror**, 0 lỗi trang. Kết quả: `ket-qua.json`.
-- `python3 game/build.py` và `LK_HAI_TEP=1 python3 game/build.py --hai-tep` chạy được. Sau khi gộp các phiên song song: **hai tệp 25,94 MB / trần 26 MB** (hai tệp mới của phiên này +0,79 MB; nếu để PNG RGBA như trang xuất thì +2,2 MB và vượt trần). Tệp đầu 5,06 MB (cảnh báo "nên dưới 5 MB" có từ trước, ảnh trùm nằm ở tệp tải sau nên phiên này không làm tệp đầu nặng thêm).
+- `python3 game/build.py` và `LK_HAI_TEP=1 python3 game/build.py --hai-tep` chạy được. Sau khi gộp các phiên song song: **hai tệp 25,93 MB / trần 26 MB** (hai tệp mới của phiên này +0,79 MB; nếu để PNG RGBA như trang xuất thì +2,2 MB và vượt trần). Tệp đầu 5,06 MB (cảnh báo "nên dưới 5 MB" có từ trước, ảnh trùm nằm ở tệp tải sau nên phiên này không làm tệp đầu nặng thêm).
 
 ## Còn lại / gợi ý
-- **Gần chạm trần dung lượng (còn 0,06 MB).** Ảnh gốc Mộc Tinh pha 2, 3 mới đã nằm chờ nhập; phiên nhập đó sẽ vượt trần nếu giữ PNG RGBA. Cách rẻ nhất: lưu các tấm trùm/quái hiện có sang PNG bảng màu (không mất điểm nào, như `cong-cu/sau.py`), riêng pha 1 Hồ Tinh (1,3 MB) và 4 tệp pha của Ngư Tinh, Mộc Tinh (~1,1 MB mỗi tệp) sẽ bớt được ~3–4 MB. Việc này thuộc phiên Tải nhanh / đóng gói.
+- **Gần chạm trần dung lượng (còn 0,07 MB).** Ảnh gốc Mộc Tinh pha 2, 3 mới đã nằm chờ nhập; phiên nhập đó sẽ vượt trần nếu giữ PNG RGBA. Cách rẻ nhất: lưu các tấm trùm/quái hiện có sang PNG bảng màu (không mất điểm nào, như `cong-cu/sau.py`), riêng pha 1 Hồ Tinh (1,3 MB) và 4 tệp pha của Ngư Tinh, Mộc Tinh (~1,1 MB mỗi tệp) sẽ bớt được ~3–4 MB. Việc này thuộc phiên Tải nhanh / đóng gói.
 - Pha 3 lúc chạy vẫn mượn hình chạy pha 1 (cáo trắng không lửa). Muốn đều hơn: nhờ ChatGPT vẽ thêm hàng chạy pha 3; game đã đọc sẵn hàng `move` trong tệp pha, không phải sửa code.
 - Trang `tools/tach-quai`: nên sửa hẳn MONG (mục 1 ở trên) và cho chọn "giữ hình cuối" khi thiếu khung tấn công.
