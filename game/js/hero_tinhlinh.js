@@ -1404,7 +1404,18 @@
     if (!m) return { ang, front };
     let L = 24;
     try { const SCx = G.spriteCustom, wo = G.weaponArt.fromWeapon(o.weapon || {}), sp = SCx.timVuKhi(wo); if (sp && sp.vk) L = Math.hypot(sp.vk.mui[0] - sp.vk.cam[0], sp.vk.mui[1] - sp.vk.cam[1]) * SCx.coVk(wt, wo) - (HOLD[wt] || 0); } catch (e) { L = 24; }
-    const day = G.VK_NE_MAT ? NE_MAT_DAY[wt] || 1.5 : 1.5;
+    let day = G.VK_NE_MAT ? NE_MAT_DAY[wt] || 1.5 : 1.5;
+    // G.VK_KHOP (rà soát A lần 2, 12/10; tắt ?vkkhop=0): lưỡi bản to (kiếm gỗ, đao cong, đại đao dòng 1, 3, 5–9) dày hơn 3 điểm ảnh
+    // -> ước bề dày từ ảnh (diện tích / chiều dài, lấy 60% vì còn chuôi, chắn tay), tối đa 3. Trước: đứng cầm đao to vẫn che nửa mặt.
+    if (G.VK_NE_MAT && G.VK_KHOP !== false) {
+      try {
+        const SCx = G.spriteCustom, wo = G.weaponArt.fromWeapon(o.weapon || {}), sp = SCx.timVuKhi(wo), dai = sp && sp.vk ? Math.hypot(sp.vk.mui[0] - sp.vk.cam[0], sp.vk.mui[1] - sp.vk.cam[1]) : 0;
+        if (dai > 4) {
+          if (sp._dayVk == null) { let n = 0; try { const px = sp.px; for (let i = 0; i < px.length; i++) if (px[i]) n++; } catch (e) { n = 0; } sp._dayVk = n / ((sp.net || 1) * (sp.net || 1)) / dai / 2; }
+          day = Math.max(day, Math.min(3, 0.6 * sp._dayVk * SCx.coVk(wt, wo)));
+        }
+      } catch (e) { /* giữ bề dày cũ */ }
+    }
     // khoảng cách từ tâm mặt tới đoạn chuôi -> mũi (bắt đầu sau nắm tay và chắn tay; lưỡi dày chừng 3 điểm ảnh)
     const cham = (a) => {
       const dx = Math.cos(ra(a)), dy = Math.sin(ra(a)), x0 = hx + dx * 2.5, y0 = hy + dy * 2.5;
@@ -1415,6 +1426,9 @@
     const huong = Math.sin(ra(ang)) < 0 ? 1 : -1; // chĩa lên: xoay xuống phía trước; chĩa xuống: xoay lên phía trước
     if (danh && wt !== 'sword') { // giáo, búa đang đánh (lấy đà giơ qua đầu): ngả ra sau đầu tối đa 45 độ, vẫn thấy vũ khí; không được thì vẽ sau thân
       for (let d = 5; d <= 60; d += 5) { const a = ang - huong * d; if (!cham(a)) return { ang: a, front }; }
+      // G.VK_KHOP: búa ngả ra sau không khỏi mặt (lấy đà, giữ lấy đà của Cu Tí, Cu Tèo, Cái Bống: đầu búa vẫn đè mặt) -> thử nghiêng
+      // về phía trước (tối đa 70 độ), vẫn vẽ trước thân nên thấy rõ búa. Không áp ở hàng "tele" (thân bộ cuộn người, vùng mặt đo không tin được)
+      if (G.VK_KHOP !== false && wt === 'hammer' && gv.ten !== 'tele') for (let d = 5; d <= 70; d += 5) { const a = ang + huong * d; if (!cham(a)) return { ang: a, front }; }
       return { ang, front: wt === 'hammer' ? front : false }; // búa: vẽ sau thân thì khuất hẳn sau đầu (cả lúc giữ lấy đà lâu) -> giữ như cũ
     }
     const toiDa = danh ? 70 : 50;

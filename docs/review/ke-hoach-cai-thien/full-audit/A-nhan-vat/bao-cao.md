@@ -153,3 +153,84 @@ Kiểm thử:
 - `game/art/custom/heoCon.sprite.json` — cắt lại hàng.
 - `game/dist/*` gói lại.
 - Thư mục này: báo cáo, `anh/`, `tham-chieu-khung-can-ve-lai.png`, `kiem/` (công cụ đo + số đo).
+
+## 8. Bổ sung — lần chạy thứ hai (cùng nhiệm vụ A, chạy song song; 12/10 chiều)
+
+Một phiên thứ hai được giao cùng phần A và chạy song song với lần đầu. Khi lần đầu đã đẩy lên (13554f6, 33cabf2), lần hai **bỏ phần trùng**
+(né mặt giáo/kiếm lúc đứng–chạy, Heo Rừng Con) và chỉ giữ những gì lần đầu chưa có, viết đè lên code của lần đầu. Công cụ: `kiem/lan2/`.
+
+### 8.1 Cách kiểm thêm
+- `kiem/lan2/em_be.py`: 4 em × 4 thân × **86 tư thế** (đứng 6, chạy 8, lộn 8, kiếm 3 nhát × 4 thời điểm, cung/giáo/búa × 6, giữ lấy đà 4 vũ khí × 3 mức,
+  chiêu, chưởng, trúng, chết 6, chạy+chém) × 2 hướng = 1 376 khung; mỗi khung vẽ thân trần / có vũ khí / **từng món** đồ (13 mũ, 6 đồ lưng, 8 bùa,
+  4 cánh × 3 cấp). Đo: lật trái/phải, vũ khí đè vùng đầu, **đồ thấp hơn mặt đất**, đồ lệch so với đầu/mình. Kết quả `ket-qua-em-be-truoc.json.gz`
+  (= bản hiện tại với 3 cờ mới tắt) và `-sau.json.gz`.
+- `chup.py`: ảnh trước/sau trên cùng tấm (trên = SAU, dưới = TRƯỚC). `quai.py`: vẽ quái bằng `SC.veQuai` có bóng.
+- `do_tinh.py`, `manh_mep.py`, `do_than.py`: đo tĩnh 69 tấm (đối chiếu với `kiem/khung-quai-em-be.txt` của lần đầu: khớp).
+- Kiểm **10 dòng** mỗi loại vũ khí lúc đứng (lần đầu chỉ dùng 1 dòng mỗi loại) → ra lỗi A15, A16.
+
+### 8.2 Lỗi thêm (lần đầu chưa có)
+| # | Lỗi | Nhóm | Tệp | Nguyên nhân gốc | Trạng thái |
+|---|---|---|---|---|---|
+| A15 | **Bùa đeo hông cắm xuống đất** giữa hai chân 2–4 điểm ảnh khi ngồi thụp (giương cung, nện búa, giữ lấy đà, chiêu, chưởng): **76 khung** (bùa hút, linh, đá lửa, nanh rắn, vỏ ốc, tàn lửa… × 4 em bé) | render | `js/sprite_custom.js` (`tinhDatMon`) | bùa treo từ điểm eo với chiều dài cố định, eo hạ thấp khi ngồi thụp mà không có giới hạn mặt đất | **Đã sửa** (`G.BUA_TREN_DAT`) |
+| A16 | **Bút Lông (giáo dòng 9) bé tí** (ảnh dài 27, giáo khác 37–52: co xong chỉ thò khỏi nắm tay ~6 điểm ảnh, như tay không); cung dòng 7 nhỏ (dài 9, cung khác 11–20) | sprite (tỉ lệ) | `js/sprite_custom.js` (`coVk`) | mọi món cùng loại co chung một hệ số | **Đã sửa** (`G.CO_VK_DONG`) |
+| A17 | Đao/kiếm **bản to** (dòng 1, 3, 5, 6, 7, 8, 9) lúc đứng vẫn che nửa mặt sau lần đầu: bề dày lưỡi tính cố định 1,5 điểm ảnh nên máy cho là "không chạm" | render | `js/hero_tinhlinh.js` (`kiemKhop`) | bề dày cố định | **Đã sửa** (`G.VK_KHOP`) |
+| A7′ | Búa lấy đà / giữ lấy đà (A7 của lần đầu, "sửa một phần"): Cu Tí, Cu Tèo, Cái Bống đầu búa vẫn đè mặt vì ngả ra sau 60° vẫn chạm | render | như trên | chỉ thử một phía | **Đã sửa thêm** cho thân gốc (`G.VK_KHOP`); thân bộ còn (A18) |
+| A18 | Thân bộ (nhất là **Lầu**, mũ trùm cáo): búa lấy đà, giáo đứng vẫn qua mặt | render | `js/sprite_custom.js` (`SC.matKhung`) | vùng mặt máy tự đo trên thân bộ (mũ trùm to, hàng "atk"/"tele" chung) lệch | **Chưa sửa** — cần bảng đo tay vùng mặt cho 12 thân bộ (như `SC.TAY_KIEM`); hoặc có hàng đòn riêng (A8) |
+| A19 | **Cua Đá** (trùm nhỏ) đứng thở: khung 1 vẽ khác 5 khung còn lại (đỉnh mai lệch 4–5 điểm ảnh) → mỗi vòng thở giật một cái | animation (ảnh) | `cuaDa` hàng đứng | ảnh AI | Cần gen lại 1 khung |
+| A20 | **Ngư Tinh** (trùm vùng) đi: khung 1 khác hẳn (đầu thấp, mất mỏ neo, tâm lệch 5,6) → mỗi vòng đi giật | animation (ảnh) | `nguTinh` hàng đi | ảnh AI | Cần gen lại 1 khung |
+| A21 | Heo Rừng Con sau khi lần đầu cắt lại: hàng chạy khung 3 chạm mép trên ô, 2 mẩu bụi rời ở khung 3–4 (≤ 15 điểm ảnh nét) | sprite | `heoCon` | — | Rất nhẹ, bỏ qua |
+| A22 | Hồ Tinh pha 1 (= A12): đỉnh đèn lồng / ngọn lửa chạm mép trên ở 14 khung | sprite | `hoTinh` | ô 208×128 thấp hơn hình sau khi phóng ×1,6 | Đề xuất: **cắt lại** (không cần gen) từ `docs/anh-goc/2026-10-12/hoTinh-pha1.png` với ô cao 136, gốc y 132 (cả pha 2, 3); ảnh đánh dấu `anh/tham-chieu-hoTinh-cat-dinh.png` |
+
+### 8.3 Đã sửa thêm (3 cờ, mỗi cờ tắt riêng; tắt cả 3 = đúng bản lần đầu)
+| Cờ | Sửa | Tệp |
+|---|---|---|
+| `G.VK_KHOP` (`?vkkhop=0`) | (1) bề dày lưỡi khi xét chạm mặt ước từ ảnh = diện tích / chiều dài × 60%, tối đa 3 điểm ảnh (chỉ khi `G.VK_NE_MAT` bật); (2) **búa** đang đánh / giữ lấy đà: ngả ra sau không khỏi mặt thì thử nghiêng về phía trước (tối đa 70°), vẫn vẽ trước thân nên thấy rõ búa; không áp ở hàng "tele" (thân bộ cuộn người — bản thử đầu áp cho cả giáo ở hàng này làm giáo xoay ngang qua mặt thân bộ, đã chặn) | `js/hero_tinhlinh.js` (`kiemKhop`), khai báo cờ ở `js/sprite_custom.js` |
+| `G.BUA_TREN_DAT` (`= false` để tắt) | bùa hông trên thân AI: đáy bùa (sau co, xoay) thấp hơn mặt đất thì nâng lên cho đáy ở y = −1 | `js/sprite_custom.js` (`tinhDatMon`) |
+| `G.CO_VK_DONG` (`= null` để tắt) | hệ số co thêm theo dòng: `{ 'spear-9': 1.45, 'bow-7': 1.35 }` (ngang món nhỏ nhất còn lại cùng loại). Chỉ là hình | `js/sprite_custom.js` (`coVk`) |
+
+Không đổi cơ chế, sát thương, tốc độ, hitbox, tầm, thời điểm đòn; không đụng đăng nhập Google, lưu mây, `?cloud=0`; thân vẽ code (không ảnh AI) không qua các nhánh này.
+Vệt chém (`js/fx.js`) không sửa: vệt đọc vị trí vũ khí qua `tip()` → `vkGhep` nên đi theo hình mới.
+
+### 8.4 Trước / sau (bản hai tệp `linh-khi-nhe.html?cloud=0`, cùng bản, "trước" = tắt 3 cờ mới)
+| Chỉ số (1 376 khung × 2 hướng, vũ khí dòng 0) | Trước | Sau |
+|---|---|---|
+| Khung đồ thấp hơn mặt đất | **76** | **0** |
+| Khung vũ khí đè vùng đầu > 15 điểm ảnh | 144 | 118 |
+| — búa đánh + giữ lấy đà, **thân gốc** | 13 | 6 |
+| — búa đánh + giữ lấy đà, thân bộ | 58 | 50 (A18) |
+| — đứng / chạy | 27 | 21 |
+| Tổng điểm ảnh vũ khí đè vùng đầu | 7 881 | 6 572 |
+| Hình quay trái lật lại lệch hình quay phải | 0 | 0 |
+| pageerror (chụp 2 × 16 lượt) | 0 | 0 |
+
+"Vùng đầu" của số đo = 42% trên của hộp thân, gồm cả tóc/mũ và (khi ngồi thụp) một phần ngực — nên số còn lại không phải đều là che mặt;
+nhìn ảnh phóng to để kết luận. Ảnh:
+- `anh/lan2-1-vu-khi-sau-tren-truoc-duoi.png` — 4 em bé: đứng kiếm/giáo/búa, búa lấy đà 2 thời điểm, giữ lấy đà búa (Cu Tí, Cu Tèo búa hết đè mặt).
+- `anh/lan2-2-bua-dao-to-but-long-sau-tren-truoc-duoi.png` — bùa lúc giương cung / nện búa (không còn cắm đất), Bút Lông, đao bản to dòng 7, 1, 8,
+  thân Rừng giữ giáo (không đổi — đúng), thân Rừng búa lấy đà.
+
+Kiểm thử lần hai: `kiem/lan2/choi.py` chơi thật bản hai tệp 4 em × 4 vũ khí × 900 nhịp (đánh, giữ lấy đà, chiêu, lộn, chạy; vẽ 300 cảnh mỗi lượt):
+**0 pageerror, 0 lỗi vẽ**, `G.spriteCustom.loi` rỗng. `node --check` mọi `js/*.js`, `node tests/cloud_save_regression.test.js` PASS,
+`tests/anim_smoke.py` errors [], `python3 game/build.py` và `LK_HAI_TEP=1 python3 game/build.py --hai-tep` chạy được.
+
+### 8.5 Prompt gen lại thêm (ảnh đánh dấu đỏ trong `anh/`)
+**Cua Đá — đứng thở, khung 1** (`anh/tham-chieu-cuaDa-idle-khung1.png`):
+> Ảnh kèm là hàng đứng thở 6 khung của trùm Cua Đá (pixel art, nhìn nghiêng sang phải). Chỉ vẽ lại khung 1 (viền đỏ) cho giống khung 2–6:
+> cùng cỡ mai đá, cùng chỗ cây và ngôi nhà nhỏ trên mai, chỉ khác nhịp thở rất nhẹ. Chân, càng, đáy chân đúng vị trí như khung 2.
+> Giữ nguyên nét, màu, viền đen, cỡ ô 140×80. Nền xanh lá trơn #00ff00, xuất riêng khung đó.
+
+**Ngư Tinh — đi, khung 1** (`anh/tham-chieu-nguTinh-move-khung1.png`):
+> Ảnh kèm là hàng đi 6 khung của trùm Ngư Tinh (pixel art, quay phải). Vẽ lại khung 1 (viền đỏ) nối tiếp khung 6 và dẫn sang khung 2:
+> đầu cùng độ cao, mỏ neo và xích treo bên phải như các khung còn lại, thân uốn ở giữa nhịp. Giữ cỡ, màu, viền, đường đáy như khung 2.
+> Ô 180×116, nền xanh lá trơn #00ff00.
+
+### 8.6 Vùng chưa kiểm đủ (thêm)
+- Vũ khí bậc hệ (lửa/băng/độc giai đoạn 2–3) trên tay: chỉ chụp dòng thường; biến thể hệ dùng cùng điểm cầm.
+- Quái trong trận thật cạnh nhau (lớp trước/sau giữa quái) — thuộc phần C bản đồ.
+- Áo, mặt nạ không có trong vòng đo từng khung của `lan2/em_be.py` (lần đầu và phiên trang-phuc đã kiểm).
+- Chưa kiểm trên iPhone thật (Chromium không màn hình 844×390).
+
+Chạy lại: `LK_HAI_TEP=1 python3 game/build.py --hai-tep`, `python3 kiem/lan2/srv.py game/dist 8791 &`, rồi trong `kiem/lan2/`:
+`python3 em_be.py http://localhost:8791/linh-khi-nhe.html?cloud=0 <ra>` (KEYS=smith để chạy một em; thêm đối số JS
+`"() => { G.VK_KHOP = false; G.CO_VK_DONG = null; G.BUA_TREN_DAT = false; G.tinhLinh.clearCache(); }"` cho bản trước), `python3 phan_tich.py <ra>/em-be-so.json`,
+`python3 choi.py http://localhost:8791/linh-khi-nhe.html?cloud=0`.

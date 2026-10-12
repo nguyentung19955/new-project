@@ -854,6 +854,13 @@
     try { tat = typeof location !== 'undefined' && /[?&]kiemkhop=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
     G.KIEM_KHOP = !tat;
   }
+  // Rà soát A lần 2 (12/10): bề dày lưỡi theo ảnh + búa/giáo lấy đà nghiêng về trước khi ngả sau không khỏi mặt (js/hero_tinhlinh.js kiemKhop).
+  // Tắt: G.VK_KHOP = false hoặc ?vkkhop=0 (giữ nguyên G.VK_NE_MAT của lần 1).
+  if (G.VK_KHOP === undefined) {
+    let tat = false;
+    try { tat = typeof location !== 'undefined' && /[?&]vkkhop=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
+    G.VK_KHOP = !tat;
+  }
   // Bàn tay trước (giữa nắm tay) từng khung atk_sword, điểm ảnh game tính từ chân, x về trước mặt; so: số điểm ảnh có màu của khung
   // (ảnh nhập lại khác đi thì không khớp -> quay về máy tự đo như cũ).
   SC.TAY_KIEM = {
@@ -1259,8 +1266,14 @@
     const C = G.CO_VK; if (!C || typeof C !== 'object') return 1;
     let k = +C[loai]; if (!(k > 0.05 && k <= 4)) k = 1;
     if (opts && opts.lang) { const l = +C.lang; if (l > 0.05 && l <= 4) k *= l; }
+    // Rà soát A lần 2 (12/10): vài ảnh vũ khí AI vẽ nhỏ hơn hẳn món cùng loại (Bút Lông vk-spear-9 dài 27 trong khi giáo khác 37–52: co
+    // xong chỉ thò khỏi nắm tay ~6 điểm ảnh, như tay không; cung vk-bow-7 dài 9, cung khác 11–20). Nhân thêm cho ngang món nhỏ nhất còn lại.
+    // Chỉ là HÌNH (tầm đánh, vùng trúng không đổi). Tắt: G.CO_VK_DONG = null.
+    const D = G.CO_VK_DONG, kd = D && opts && opts.family != null ? +D[loai + '-' + (opts.family | 0)] : 0;
+    if (kd > 0.5 && kd <= 3) k *= kd;
     return k;
   };
+  if (G.CO_VK_DONG === undefined) G.CO_VK_DONG = { 'spear-9': 1.45, 'bow-7': 1.35 };
   // Chỗ tay nắm trên ảnh AI (đã co): khoảng cách từ điểm cầm dọc thân. Tắt cờ: null (giữ cách cũ).
   SC.namVk = function (loai, opts) {
     const C = G.CO_VK; if (!C || typeof C !== 'object' || loai === 'bow') return null;
@@ -1806,6 +1819,14 @@
       d.a = fit.a + (cc.xoay || 0); d.sx = fit.k * (cc.sx || 1) * tl; d.sy = fit.k * (cc.sy || 1) * tl;
       const r = xoay2(d.sx * fit.Pm[0], d.sy * fit.Pm[1], d.a);
       d.O = [fit.T[0] + dd[0] - r[0], fit.T[1] + dd[1] - r[1]];
+      // Rà soát A lần 2 (12/10): bùa treo hông (ô hands, không phải đồ cầm) trên thân AI lúc ngồi thụp (giương cung, nện búa, giữ lấy đà,
+      // chiêu, chưởng) thõng xuống quá mặt đất 2–4 điểm ảnh, như que cắm đất giữa hai chân (76 khung) -> nâng lên cho đáy bùa ở y = -1
+      // (toạ độ tính từ chân). Tắt: G.BUA_TREN_DAT = false.
+      if (G.BUA_TREN_DAT !== false && cx.ai && t.o === 'hands' && t.kieu !== 'cam') {
+        let y1 = -1e9;
+        for (const q of [[0, 0], [sp.rong, 0], [0, sp.cao], [sp.rong, sp.cao]]) { const v = xoay2(d.sx * q[0], d.sy * q[1], d.a); if (d.O[1] + v[1] > y1) y1 = d.O[1] + v[1]; }
+        if (y1 > -1) d.O[1] -= y1 + 1;
+      }
     }
     kq.ds = ds;
     return kq;

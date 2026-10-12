@@ -1,0 +1,405 @@
+boHung | atk | 4 | mảnh rời 20 đpx ở (54.9,32.8) cách thân 6.4
+boHung | tele | 1 | chuyển từ đứng sang: tâm -5.2, đáy +0.0
+boHung | atk | 1 | chuyển từ đứng sang: tâm +3.5, đáy +0.0
+caChuon | atk | 1 | chuyển từ đứng sang: tâm -3.7, đáy +0.0
+caCon | hit | 1->2 | tâm thân nhảy -2.7
+caNocChua | hit | 1 | chuyển từ đứng sang: tâm -4.1, đáy +0.0
+chonBong | tele | 1 | chuyển từ đứng sang: tâm -9.0, đáy +0.0
+cuaDa | idle | 1->2 | tâm thân nhảy -4.7
+cuaDa | idle | 6->1 | vòng lặp nhảy tâm 4.1
+cuaDa | atk | 1 | chuyển từ đứng sang: tâm -8.4, đáy +0.0
+cuaDa | hit | 1 | chuyển từ đứng sang: tâm -3.4, đáy +0.0
+cuaTuong | move | 1 | chuyển từ đứng sang: tâm +3.7, đáy +0.0
+cuaTuong | atk | 1 | chuyển từ đứng sang: tâm +5.7, đáy +0.0
+cuaTuong | hit | 1 | chuyển từ đứng sang: tâm +6.9, đáy +0.0
+doiThan | hit | 2->3 | tâm thân nhảy -3.6
+em-be-healer-bien | move | 4->5 | tâm thân nhảy -2.7
+em-be-healer-bien | move | 6->1 | vòng lặp nhảy tâm 2.5
+em-be-healer-bien | hit | 1 | chuyển từ đứng sang: tâm -10.6, đáy +0.0
+em-be-healer-lau | tele | 1 | chuyển từ đứng sang: tâm +5.8, đáy +0.0
+em-be-healer-lau | hit | 1 | chuyển từ đứng sang: tâm -5.3, đáy +0.0
+em-be-healer-rung | tele | 1 | chuyển từ đứng sang: tâm +6.2, đáy +0.5
+em-be-healer-rung | hit | 1 | chuyển từ đứng sang: tâm -5.0, đáy +0.5
+em-be-healer | move | 4 | đáy chân lệch gốc -2.0
+em-be-healer | move | 8 | đáy chân lệch gốc -1.5
+em-be-healer | hit | 4 | ô có hình nhưng không dùng (so=3)
+em-be-healer | tele | 1 | chuyển từ đứng sang: tâm +3.3, đáy +0.0
+em-be-healer | hit | 1 | chuyển từ đứng sang: tâm -8.8, đáy +0.0
+em-be-hunter-bien | move | 1 | chuyển từ đứng sang: tâm +5.1, đáy -0.5
+em-be-hunter-bien | tele | 1 | chuyển từ đứng sang: tâm +4.1, đáy -0.5
+em-be-hunter-bien | hit | 1 | chuyển từ đứng sang: tâm -6.3, đáy +0.0
+em-be-hunter-lau | move | 1 | chuyển từ đứng sang: tâm +4.0, đáy +0.0
+em-be-hunter-lau | tele | 1 | chuyển từ đứng sang: tâm +3.2, đáy +0.0
+em-be-hunter-lau | hit | 1 | chuyển từ đứng sang: tâm -6.4, đáy -0.5
+em-be-hunter-rung | move | 1 | chuyển từ đứng sang: tâm +5.5, đáy +0.0
+em-be-hunter-rung | tele | 1 | chuyển từ đứng sang: tâm +5.5, đáy +0.0
+em-be-hunter-rung | hit | 1 | chuyển từ đứng sang: tâm -8.2, đáy +0.0
+em-be-hunter | move | 3 | đáy chân lệch gốc -3.5
+em-be-hunter | move | 7 | đáy chân lệch gốc -3.5
+em-be-hunter | move | 4=8 | hai khung TRÙNG hệt
+em-be-hunter | tele | 1 | chuyển từ đứng sang: tâm +6.8, đáy +0.0
+em-be-hunter | atk | 1 | chuyển từ đứng sang: tâm +3.4, đáy +0.0
+em-be-hunter | hit | 1 | chuyển từ đứng sang: tâm -7.1, đáy +0.0
+em-be-smith-bien | tele | 1 | chuyển từ đứng sang: tâm +3.2, đáy +0.0
+em-be-smith-bien | hit | 1 | chuyển từ đứng sang: tâm -7.6, đáy +0.0
+em-be-smith-lau | tele | 1 | chuyển từ đứng sang: tâm +3.3, đáy +0.0
+em-be-smith-lau | hit | 1 | chuyển từ đứng sang: tâm -6.0, đáy -0.5
+em-be-smith-rung | hit | 1 | chuyển từ đứng sang: tâm -8.6, đáy +0.0
+em-be-smith | move | 4 | đáy chân lệch gốc -3.0
+em-be-smith | move | 8 | đáy chân lệch gốc -3.0
+em-be-smith | tele | 1 | chuyển từ đứng sang: tâm +6.6, đáy +0.0
+em-be-smith | hit | 1 | chuyển từ đứng sang: tâm -7.3, đáy +0.0
+em-be-wrestler-bien | atk | 1=2 | hai khung TRÙNG hệt
+em-be-wrestler-bien | hit | 1 | chuyển từ đứng sang: tâm -6.5, đáy +0.0
+em-be-wrestler-lau | tele | 1 | chuyển từ đứng sang: tâm +3.2, đáy +0.0
+em-be-wrestler-lau | hit | 1 | chuyển từ đứng sang: tâm -8.5, đáy -0.5
+em-be-wrestler-rung | tele | 1 | chuyển từ đứng sang: tâm +4.8, đáy +0.0
+em-be-wrestler-rung | hit | 1 | chuyển từ đứng sang: tâm -8.0, đáy +0.0
+em-be-wrestler | move | 3 | đáy chân lệch gốc -4.0
+em-be-wrestler | move | 7 | đáy chân lệch gốc -4.0
+em-be-wrestler | move | 4=8 | hai khung TRÙNG hệt
+em-be-wrestler | tele | 1 | chuyển từ đứng sang: tâm +5.2, đáy +0.0
+em-be-wrestler | atk | 1 | chuyển từ đứng sang: tâm +3.3, đáy +0.0
+em-be-wrestler | hit | 1 | chuyển từ đứng sang: tâm -8.2, đáy +0.0
+heoCon | move | 3 | chạm mép ô (cụt?): tren
+heoCon | move | 3 | mảnh rời 6 đpx ở (50.5,35.0) cách thân 4.0
+heoCon | move | 4 | mảnh rời 15 đpx ở (56.8,35.4) cách thân 6.0
+heoCon | hit | 2->3 | tâm thân nhảy -2.7
+heoCon | hit | 1 | chuyển từ đứng sang: tâm +3.6, đáy +0.0
+hoLua | tele | 1 | chuyển từ đứng sang: tâm -3.9, đáy +0.0
+hoLua | hit | 1 | chuyển từ đứng sang: tâm -4.0, đáy +0.0
+hoTinh-p2 | atk | 5=6 | hai khung TRÙNG hệt
+hoTinh-p2 | hit | 1->2 | tâm thân nhảy 3.7
+hoTinh-p2 | hit | 2->3 | tâm thân nhảy -5.4
+hoTinh-p2 | tele | 1 | chuyển từ đứng sang: tâm -4.2, đáy +0.0
+hoTinh-p2 | atk | 1 | chuyển từ đứng sang: tâm -5.4, đáy +0.0
+hoTinh-p2 | hit | 1 | chuyển từ đứng sang: tâm -4.7, đáy +0.0
+hoTinh-p3 | idle | 6->1 | vòng lặp nhảy tâm 2.7
+hoTinh-p3 | atk | 1 | chuyển từ đứng sang: tâm -3.9, đáy +0.0
+hoTinh-p3 | hit | 1 | chuyển từ đứng sang: tâm -4.0, đáy +0.0
+hoTinh | idle | 1->2 | tâm thân nhảy -3.0
+hoTinh | idle | 6->1 | vòng lặp nhảy tâm 3.1
+hoTinh | move | 1 | chạm mép ô (cụt?): tren
+hoTinh | move | 5 | đáy chân lệch gốc -2.0
+hoTinh | move | 4->5 | tâm thân nhảy -3.7
+hoTinh | tele | 1 | chạm mép ô (cụt?): tren
+hoTinh | tele | 3 | chạm mép ô (cụt?): tren
+hoTinh | tele | 4 | chạm mép ô (cụt?): tren
+hoTinh | atk | 2 | chạm mép ô (cụt?): tren
+hoTinh | atk | 3 | mảnh rời 554 đpx ở (61.9,26.4) cách thân 6.7
+hoTinh | atk | 4 | chạm mép ô (cụt?): tren
+hoTinh | atk | 5 | chạm mép ô (cụt?): tren
+hoTinh | atk | 6 | chạm mép ô (cụt?): tren
+hoTinh | hit | 1 | chạm mép ô (cụt?): tren
+hoTinh | hit | 2 | chạm mép ô (cụt?): tren
+hoTinh | hit | 2 | mảnh rời 544 đpx ở (148.9,20.5) cách thân 3.8
+hoTinh | hit | 2 | đáy chân lệch gốc -7.0
+hoTinh | hit | 3 | chạm mép ô (cụt?): tren
+hoTinh | hit | 3 | mảnh rời 489 đpx ở (153.4,24.6) cách thân 4.7
+hoTinh | hit | 3 | đáy chân lệch gốc -4.5
+hoTinh | hit | 4 | mảnh rời 509 đpx ở (150.0,25.7) cách thân 7.1
+hoTinh | hit | 4 | đáy chân lệch gốc -4.5
+hoTinh | tele | 1 | chuyển từ đứng sang: tâm -4.6, đáy -1.0
+hoTinh | hit | 1 | chuyển từ đứng sang: tâm -3.2, đáy +0.0
+hoaBaoTu | atk | 1 | chuyển từ đứng sang: tâm -4.7, đáy +0.0
+huLua | hit | 1->2 | tâm thân nhảy -2.7
+linhMa | hit | 1->2 | tâm thân nhảy -3.1
+mocTinh-p2 | idle | 1 | mảnh rời 259 đpx ở (28.7,113.3) cách thân 5.7
+mocTinh-p2 | idle | 2 | mảnh rời 211 đpx ở (33.8,115.2) cách thân 6.4
+mocTinh-p2 | idle | 3 | mảnh rời 220 đpx ở (33.6,114.9) cách thân 6.1
+mocTinh-p2 | idle | 1->2 | tâm thân nhảy 3.8
+mocTinh-p2 | idle | 6->1 | vòng lặp nhảy tâm -2.6
+mocTinh-p2 | tele | 1 | mảnh rời 244 đpx ở (24.0,84.5) cách thân 4.6
+mocTinh-p2 | tele | 1 | mảnh rời 161 đpx ở (141.8,99.6) cách thân 3.5
+mocTinh-p2 | tele | 2 | mảnh rời 211 đpx ở (26.6,40.6) cách thân 3.2
+mocTinh-p2 | tele | 2 | mảnh rời 271 đpx ở (26.2,109.3) cách thân 7.6
+mocTinh-p2 | tele | 3 | mảnh rời 235 đpx ở (30.3,36.5) cách thân 4.9
+mocTinh-p2 | tele | 3 | mảnh rời 261 đpx ở (26.2,107.6) cách thân 9.2
+mocTinh-p2 | atk | 1 | mảnh rời 199 đpx ở (22.8,103.0) cách thân 3.2
+mocTinh-p2 | atk | 1 | mảnh rời 259 đpx ở (128.8,115.7) cách thân 7.8
+mocTinh-p2 | atk | 2 | mảnh rời 300 đpx ở (24.6,108.9) cách thân 4.3
+mocTinh-p2 | atk | 2 | mảnh rời 200 đpx ở (136.4,120.0) cách thân 9.0
+mocTinh-p2 | atk | 3 | mảnh rời 247 đpx ở (23.3,103.2) cách thân 3.9
+mocTinh-p2 | atk | 3 | mảnh rời 178 đpx ở (135.4,120.0) cách thân 8.8
+mocTinh-p2 | atk | 4 | mảnh rời 283 đpx ở (31.3,43.6) cách thân 3.5
+mocTinh-p2 | atk | 4 | mảnh rời 282 đpx ở (130.6,116.3) cách thân 8.5
+mocTinh-p2 | atk | 5 | mảnh rời 286 đpx ở (26.2,43.7) cách thân 3.2
+mocTinh-p2 | atk | 5 | mảnh rời 264 đpx ở (25.7,114.7) cách thân 3.5
+mocTinh-p2 | atk | 5 | mảnh rời 256 đpx ở (130.4,115.6) cách thân 7.6
+mocTinh-p2 | atk | 6 | mảnh rời 286 đpx ở (26.2,44.1) cách thân 6.0
+mocTinh-p2 | atk | 6 | mảnh rời 263 đpx ở (25.8,114.7) cách thân 3.5
+mocTinh-p2 | atk | 6 | mảnh rời 262 đpx ở (130.1,116.2) cách thân 8.0
+mocTinh-p2 | hit | 1 | mảnh rời 283 đpx ở (124.9,48.4) cách thân 5.1
+mocTinh-p2 | hit | 1 | mảnh rời 281 đpx ở (50.3,118.5) cách thân 4.7
+mocTinh-p2 | hit | 2 | mảnh rời 191 đpx ở (48.2,116.5) cách thân 4.3
+mocTinh-p2 | hit | 3 | mảnh rời 378 đpx ở (48.7,121.1) cách thân 4.6
+mocTinh-p2 | hit | 3 | đáy chân lệch gốc -1.5
+mocTinh-p2 | hit | 4 | mảnh rời 362 đpx ở (53.4,121.2) cách thân 3.5
+mocTinh-p2 | hit | 4 | đáy chân lệch gốc +1.5
+mocTinh-p2 | hit | 1->2 | tâm thân nhảy 2.6
+mocTinh-p2 | hit | 1 | chuyển từ đứng sang: tâm -5.4, đáy +0.0
+mocTinh-p3 | atk | 3 | mảnh rời 72 đpx ở (140.8,116.4) cách thân 10.5
+mocTinh-p3 | atk | 6 | mảnh rời 226 đpx ở (130.2,116.1) cách thân 3.6
+mocTinh-p3 | hit | 1 | mảnh rời 91 đpx ở (27.5,27.8) cách thân 4.5
+mocTinh-p3 | hit | 1 | đáy chân lệch gốc +1.5
+mocTinh-p3 | hit | 2 | đáy chân lệch gốc +1.5
+mocTinh-p3 | hit | 3 | đáy chân lệch gốc +1.5
+mocTinh-p3 | hit | 4 | đáy chân lệch gốc +1.5
+mocTinh-p3 | atk | 1 | chuyển từ đứng sang: tâm +3.2, đáy +0.0
+mocTinh-p3 | hit | 1 | chuyển từ đứng sang: tâm -6.2, đáy +0.5
+mocTinh | hit | 3->4 | tâm thân nhảy -4.0
+mocTinh | hit | 1 | chuyển từ đứng sang: tâm -8.0, đáy +0.0
+namPhongChua | move | 1 | chuyển từ đứng sang: tâm +3.3, đáy +0.0
+nguTinh-p2 | idle | 1 | mảnh rời 20 đpx ở (153.4,43.4) cách thân 4.3
+nguTinh-p2 | idle | 1 | mảnh rời 4 đpx ở (56.2,49.2) cách thân 3.5
+nguTinh-p2 | idle | 2 | mảnh rời 24 đpx ở (151.8,43.8) cách thân 4.5
+nguTinh-p2 | idle | 2 | mảnh rời 8 đpx ở (52.8,49.2) cách thân 4.3
+nguTinh-p2 | idle | 2 | mảnh rời 16 đpx ở (119.2,99.8) cách thân 5.7
+nguTinh-p2 | idle | 2 | mảnh rời 24 đpx ở (115.1,102.4) cách thân 3.5
+nguTinh-p2 | idle | 3 | mảnh rời 12 đpx ở (141.9,68.6) cách thân 4.3
+nguTinh-p2 | idle | 5 | mảnh rời 8 đpx ở (51.8,49.2) cách thân 3.5
+nguTinh-p2 | idle | 5 | mảnh rời 24 đpx ở (141.2,68.4) cách thân 3.5
+nguTinh-p2 | idle | 5 | mảnh rời 24 đpx ở (114.4,102.2) cách thân 3.5
+nguTinh-p2 | idle | 6 | mảnh rời 28 đpx ở (151.0,43.7) cách thân 3.5
+nguTinh-p2 | idle | 6 | mảnh rời 56 đpx ở (115.6,101.5) cách thân 4.3
+nguTinh-p2 | idle | 6->1 | vòng lặp nhảy tâm 3.7
+nguTinh-p2 | tele | 1 | chạm mép ô (cụt?): tren
+nguTinh-p2 | tele | 1 | mảnh rời 8 đpx ở (40.8,45.8) cách thân 5.7
+nguTinh-p2 | tele | 1 | mảnh rời 32 đpx ở (143.8,76.8) cách thân 3.5
+nguTinh-p2 | tele | 1 | mảnh rời 16 đpx ở (119.8,97.8) cách thân 4.5
+nguTinh-p2 | tele | 1 | mảnh rời 20 đpx ở (43.0,99.4) cách thân 3.5
+nguTinh-p2 | tele | 1 | mảnh rời 8 đpx ở (116.2,102.8) cách thân 3.5
+nguTinh-p2 | tele | 2 | mảnh rời 8 đpx ở (143.2,42.8) cách thân 3.5
+nguTinh-p2 | tele | 2 | mảnh rời 16 đpx ở (35.8,45.2) cách thân 7.5
+nguTinh-p2 | tele | 2 | mảnh rời 12 đpx ở (39.2,49.2) cách thân 4.7
+nguTinh-p2 | tele | 2 | mảnh rời 72 đpx ở (142.0,77.6) cách thân 3.5
+nguTinh-p2 | tele | 2 | mảnh rời 8 đpx ở (110.2,97.8) cách thân 3.5
+nguTinh-p2 | tele | 3 | chạm mép ô (cụt?): tren
+nguTinh-p2 | tele | 3 | mảnh rời 20 đpx ở (38.0,45.4) cách thân 6.0
+nguTinh-p2 | tele | 3 | mảnh rời 12 đpx ở (141.9,77.6) cách thân 3.5
+nguTinh-p2 | tele | 3 | mảnh rời 24 đpx ở (40.2,99.4) cách thân 3.5
+nguTinh-p2 | tele | 3 | mảnh rời 24 đpx ở (113.8,99.8) cách thân 4.3
+nguTinh-p2 | tele | 4 | mảnh rời 16 đpx ở (37.0,45.0) cách thân 6.5
+nguTinh-p2 | tele | 4 | mảnh rời 16 đpx ở (40.0,49.0) cách thân 4.9
+nguTinh-p2 | tele | 4 | mảnh rời 16 đpx ở (142.8,76.8) cách thân 4.7
+nguTinh-p2 | tele | 4 | mảnh rời 36 đpx ở (113.1,99.6) cách thân 3.5
+nguTinh-p2 | atk | 1 | mảnh rời 160 đpx ở (139.1,13.4) cách thân 5.1
+nguTinh-p2 | atk | 1 | mảnh rời 68 đpx ở (60.2,17.5) cách thân 4.9
+nguTinh-p2 | atk | 1 | mảnh rời 44 đpx ở (145.3,23.0) cách thân 3.5
+nguTinh-p2 | atk | 1 | mảnh rời 36 đpx ở (37.9,43.4) cách thân 3.5
+nguTinh-p2 | atk | 1 | mảnh rời 44 đpx ở (147.2,70.2) cách thân 7.0
+nguTinh-p2 | atk | 1 | mảnh rời 252 đpx ở (32.7,92.3) cách thân 4.3
+nguTinh-p2 | atk | 1 | mảnh rời 24 đpx ở (119.9,89.6) cách thân 4.9
+nguTinh-p2 | atk | 1 | mảnh rời 252 đpx ở (39.2,102.7) cách thân 3.5
+nguTinh-p2 | atk | 1 | mảnh rời 40 đpx ở (115.8,105.2) cách thân 7.0
+nguTinh-p2 | atk | 2 | chạm mép ô (cụt?): tren
+nguTinh-p2 | atk | 2 | mảnh rời 184 đpx ở (138.0,12.9) cách thân 5.7
+nguTinh-p2 | atk | 2 | mảnh rời 64 đpx ở (58.4,18.1) cách thân 3.5
+nguTinh-p2 | atk | 2 | mảnh rời 4 đpx ở (37.2,43.2) cách thân 7.0
+nguTinh-p2 | atk | 2 | mảnh rời 24 đpx ở (147.9,69.4) cách thân 7.4
+nguTinh-p2 | atk | 2 | mảnh rời 272 đpx ở (31.4,92.5) cách thân 3.5
+nguTinh-p2 | atk | 2 | mảnh rời 68 đpx ở (115.4,105.1) cách thân 7.0
+nguTinh-p2 | atk | 3 | chạm mép ô (cụt?): tren
+nguTinh-p2 | atk | 3 | mảnh rời 180 đpx ở (137.5,13.0) cách thân 5.7
+nguTinh-p2 | atk | 3 | mảnh rời 56 đpx ở (58.1,17.3) cách thân 3.5
+nguTinh-p2 | atk | 3 | mảnh rời 28 đpx ở (38.5,42.8) cách thân 4.7
+nguTinh-p2 | atk | 3 | mảnh rời 48 đpx ở (145.6,71.8) cách thân 6.4
+nguTinh-p2 | atk | 3 | mảnh rời 108 đpx ở (32.8,92.2) cách thân 4.5
+nguTinh-p2 | atk | 3 | mảnh rời 76 đpx ở (35.7,102.1) cách thân 7.4
+nguTinh-p2 | atk | 3 | mảnh rời 32 đpx ở (43.9,105.0) cách thân 3.8
+nguTinh-p2 | atk | 3 | mảnh rời 40 đpx ở (114.6,105.0) cách thân 6.4
+nguTinh-p2 | atk | 4 | chạm mép ô (cụt?): tren
+nguTinh-p2 | atk | 4 | mảnh rời 216 đpx ở (137.8,13.3) cách thân 4.5
+nguTinh-p2 | atk | 4 | mảnh rời 80 đpx ở (58.8,17.9) cách thân 3.5
+nguTinh-p2 | atk | 4 | mảnh rời 28 đpx ở (144.7,23.0) cách thân 4.5
+nguTinh-p2 | atk | 4 | mảnh rời 36 đpx ở (35.6,43.1) cách thân 3.5
+nguTinh-p2 | atk | 4 | mảnh rời 40 đpx ở (46.6,46.8) cách thân 3.5
+nguTinh-p2 | atk | 4 | mảnh rời 28 đpx ở (148.7,69.0) cách thân 7.9
+nguTinh-p2 | atk | 4 | mảnh rời 32 đpx ở (144.9,72.0) cách thân 5.7
+nguTinh-p2 | atk | 4 | mảnh rời 240 đpx ở (33.1,92.1) cách thân 4.3
+nguTinh-p2 | atk | 4 | mảnh rời 292 đpx ở (39.5,102.5) cách thân 3.5
+nguTinh-p2 | atk | 4 | mảnh rời 56 đpx ở (116.2,105.5) cách thân 6.4
+nguTinh-p2 | atk | 5 | chạm mép ô (cụt?): tren
+nguTinh-p2 | atk | 5 | mảnh rời 4 đpx ở (124.2,8.2) cách thân 5.7
+nguTinh-p2 | atk | 5 | mảnh rời 240 đpx ở (136.1,13.8) cách thân 5.7
+nguTinh-p2 | atk | 5 | mảnh rời 24 đpx ở (57.2,18.8) cách thân 5.7
+nguTinh-p2 | atk | 5 | mảnh rời 88 đpx ở (41.8,40.8) cách thân 4.3
+nguTinh-p2 | atk | 5 | mảnh rời 60 đpx ở (143.1,70.4) cách thân 6.5
+nguTinh-p2 | atk | 5 | mảnh rời 12 đpx ở (137.2,71.2) cách thân 3.5
+nguTinh-p2 | atk | 5 | mảnh rời 136 đpx ở (29.4,92.3) cách thân 4.3
+nguTinh-p2 | atk | 5 | mảnh rời 52 đpx ở (32.6,102.8) cách thân 8.3
+nguTinh-p2 | atk | 5 | mảnh rời 44 đpx ở (111.6,105.4) cách thân 7.1
+nguTinh-p2 | atk | 5 | mảnh rời 4 đpx ở (40.2,105.2) cách thân 4.3
+nguTinh-p2 | atk | 6 | mảnh rời 216 đpx ở (137.1,13.7) cách thân 5.1
+nguTinh-p2 | atk | 6 | mảnh rời 40 đpx ở (59.0,20.0) cách thân 4.3
+nguTinh-p2 | atk | 6 | mảnh rời 24 đpx ở (142.8,24.2) cách thân 4.9
+nguTinh-p2 | atk | 6 | mảnh rời 32 đpx ở (41.4,42.4) cách thân 7.8
+nguTinh-p2 | atk | 6 | mảnh rời 48 đpx ở (145.3,70.4) cách thân 7.6
+nguTinh-p2 | atk | 6 | mảnh rời 232 đpx ở (32.0,92.4) cách thân 4.3
+nguTinh-p2 | atk | 6 | mảnh rời 124 đpx ở (38.7,103.5) cách thân 5.7
+nguTinh-p2 | atk | 6 | mảnh rời 44 đpx ở (114.3,105.2) cách thân 6.5
+nguTinh-p2 | atk | 6 | mảnh rời 12 đpx ở (51.2,108.6) cách thân 3.5
+nguTinh-p2 | hit | 1 | mảnh rời 72 đpx ở (127.4,11.5) cách thân 8.5
+nguTinh-p2 | hit | 1 | mảnh rời 24 đpx ở (53.8,43.2) cách thân 4.3
+nguTinh-p2 | hit | 1 | mảnh rời 44 đpx ở (46.5,49.3) cách thân 5.7
+nguTinh-p2 | hit | 1 | mảnh rời 48 đpx ở (145.9,63.6) cách thân 7.4
+nguTinh-p2 | hit | 1 | mảnh rời 52 đpx ở (146.2,74.2) cách thân 10.5
+nguTinh-p2 | hit | 1 | mảnh rời 32 đpx ở (139.1,85.4) cách thân 6.5
+nguTinh-p2 | hit | 1 | mảnh rời 192 đpx ở (53.1,107.1) cách thân 4.3
+nguTinh-p2 | hit | 1 | mảnh rời 64 đpx ở (127.2,106.5) cách thân 6.0
+nguTinh-p2 | hit | 2 | mảnh rời 12 đpx ở (45.9,30.9) cách thân 4.3
+nguTinh-p2 | hit | 2 | mảnh rời 108 đpx ở (41.4,36.0) cách thân 4.5
+nguTinh-p2 | hit | 2 | mảnh rời 20 đpx ở (37.2,43.2) cách thân 11.1
+nguTinh-p2 | hit | 2 | mảnh rời 28 đpx ở (47.2,44.1) cách thân 3.8
+nguTinh-p2 | hit | 2 | mảnh rời 8 đpx ở (46.2,53.8) cách thân 4.5
+nguTinh-p2 | hit | 2 | mảnh rời 100 đpx ở (140.4,59.9) cách thân 6.5
+nguTinh-p2 | hit | 2 | mảnh rời 12 đpx ở (140.9,75.9) cách thân 11.5
+nguTinh-p2 | hit | 2 | mảnh rời 24 đpx ở (137.6,80.9) cách thân 8.5
+nguTinh-p2 | hit | 2 | mảnh rời 12 đpx ở (134.6,85.9) cách thân 6.7
+nguTinh-p2 | hit | 2 | mảnh rời 136 đpx ở (49.8,107.8) cách thân 4.7
+nguTinh-p2 | hit | 2 | mảnh rời 72 đpx ở (124.5,106.5) cách thân 6.4
+nguTinh-p2 | hit | 2 | mảnh rời 4 đpx ở (59.2,110.2) cách thân 4.3
+nguTinh-p2 | hit | 3 | mảnh rời 100 đpx ở (125.9,12.2) cách thân 4.5
+nguTinh-p2 | hit | 3 | mảnh rời 40 đpx ở (49.8,46.2) cách thân 3.5
+nguTinh-p2 | hit | 3 | mảnh rời 12 đpx ở (43.2,46.2) cách thân 9.3
+nguTinh-p2 | hit | 3 | mảnh rời 116 đpx ở (142.0,60.2) cách thân 6.5
+nguTinh-p2 | hit | 3 | mảnh rời 12 đpx ở (61.9,56.6) cách thân 3.5
+nguTinh-p2 | hit | 3 | mảnh rời 28 đpx ở (139.2,81.0) cách thân 6.5
+nguTinh-p2 | hit | 3 | mảnh rời 8 đpx ở (137.8,86.2) cách thân 6.5
+nguTinh-p2 | hit | 3 | mảnh rời 220 đpx ở (51.8,106.9) cách thân 4.9
+nguTinh-p2 | hit | 3 | mảnh rời 64 đpx ở (125.8,107.0) cách thân 5.7
+nguTinh-p2 | hit | 4 | mảnh rời 120 đpx ở (123.9,13.8) cách thân 3.5
+nguTinh-p2 | hit | 4 | mảnh rời 8 đpx ở (128.8,11.2) cách thân 12.7
+nguTinh-p2 | hit | 4 | mảnh rời 8 đpx ở (47.2,43.8) cách thân 4.5
+nguTinh-p2 | hit | 4 | mảnh rời 4 đpx ở (44.2,49.2) cách thân 5.1
+nguTinh-p2 | hit | 4 | mảnh rời 32 đpx ở (136.2,53.4) cách thân 3.5
+nguTinh-p2 | hit | 4 | mảnh rời 36 đpx ở (144.5,62.4) cách thân 12.7
+nguTinh-p2 | hit | 4 | mảnh rời 344 đpx ở (140.8,69.9) cách thân 7.8
+nguTinh-p2 | hit | 4 | mảnh rời 28 đpx ở (136.7,85.0) cách thân 8.5
+nguTinh-p2 | hit | 4 | mảnh rời 24 đpx ở (46.2,102.8) cách thân 5.7
+nguTinh-p2 | hit | 4 | mảnh rời 68 đpx ở (123.6,107.0) cách thân 6.4
+nguTinh-p2 | hit | 4 | mảnh rời 100 đpx ở (50.8,108.8) cách thân 6.0
+nguTinh-p2 | hit | 4 | mảnh rời 8 đpx ở (58.8,110.2) cách thân 4.3
+nguTinh-p2 | hit | 1->2 | tâm thân nhảy -5.0
+nguTinh-p2 | hit | 2->3 | tâm thân nhảy 2.8
+nguTinh-p2 | hit | 3->4 | tâm thân nhảy -3.9
+nguTinh-p2 | atk | 1 | chuyển từ đứng sang: tâm -3.2, đáy +1.0
+nguTinh-p2 | hit | 1 | chuyển từ đứng sang: tâm -6.8, đáy +1.0
+nguTinh-p3 | idle | 1 | mảnh rời 44 đpx ở (80.6,14.9) cách thân 3.5
+nguTinh-p3 | idle | 1 | mảnh rời 40 đpx ở (49.4,52.4) cách thân 7.1
+nguTinh-p3 | idle | 1 | mảnh rời 16 đpx ở (44.0,55.2) cách thân 4.5
+nguTinh-p3 | idle | 1 | mảnh rời 4 đpx ở (48.2,57.2) cách thân 4.3
+nguTinh-p3 | idle | 1 | mảnh rời 60 đpx ở (34.7,66.0) cách thân 3.5
+nguTinh-p3 | idle | 1 | mảnh rời 8 đpx ở (30.8,64.2) cách thân 10.6
+nguTinh-p3 | idle | 1 | mảnh rời 4 đpx ở (37.2,64.2) cách thân 5.5
+nguTinh-p3 | idle | 1 | mảnh rời 4 đpx ở (64.2,71.2) cách thân 3.8
+nguTinh-p3 | idle | 2 | mảnh rời 28 đpx ở (60.7,29.4) cách thân 3.8
+nguTinh-p3 | idle | 2 | mảnh rời 4 đpx ở (42.2,45.2) cách thân 11.5
+nguTinh-p3 | idle | 2 | mảnh rời 4 đpx ở (47.2,45.2) cách thân 10.1
+nguTinh-p3 | idle | 2 | mảnh rời 8 đpx ở (43.8,47.2) cách thân 9.5
+nguTinh-p3 | idle | 2 | mảnh rời 8 đpx ở (51.8,47.2) cách thân 7.1
+nguTinh-p3 | idle | 2 | mảnh rời 56 đpx ở (47.9,51.0) cách thân 4.5
+nguTinh-p3 | idle | 2 | mảnh rời 76 đpx ở (33.3,62.5) cách thân 4.3
+nguTinh-p3 | idle | 2 | mảnh rời 4 đpx ở (36.2,64.2) cách thân 4.3
+nguTinh-p3 | idle | 3 | mảnh rời 8 đpx ở (76.2,10.8) cách thân 5.5
+nguTinh-p3 | idle | 3 | mảnh rời 4 đpx ở (41.2,45.2) cách thân 10.6
+nguTinh-p3 | idle | 3 | mảnh rời 36 đpx ở (46.0,47.9) cách thân 7.0
+nguTinh-p3 | idle | 3 | mảnh rời 4 đpx ở (43.2,50.2) cách thân 5.5
+nguTinh-p3 | idle | 3 | mảnh rời 4 đpx ở (41.2,51.2) cách thân 4.7
+nguTinh-p3 | idle | 3 | mảnh rời 76 đpx ở (34.2,62.1) cách thân 3.5
+nguTinh-p3 | idle | 3 | mảnh rời 4 đpx ở (33.2,67.2) cách thân 4.3
+nguTinh-p3 | idle | 4 | mảnh rời 12 đpx ở (45.6,44.9) cách thân 7.1
+nguTinh-p3 | idle | 4 | mảnh rời 12 đpx ở (41.9,46.9) cách thân 7.6
+nguTinh-p3 | idle | 5 | mảnh rời 4 đpx ở (57.2,29.2) cách thân 4.9
+nguTinh-p3 | idle | 5 | mảnh rời 108 đpx ở (45.7,47.8) cách thân 3.5
+nguTinh-p3 | idle | 6 | mảnh rời 80 đpx ở (77.4,11.8) cách thân 3.8
+nguTinh-p3 | idle | 6 | mảnh rời 24 đpx ở (57.6,31.4) cách thân 3.5
+nguTinh-p3 | idle | 6 | mảnh rời 72 đpx ở (45.6,49.8) cách thân 3.5
+nguTinh-p3 | idle | 6 | mảnh rời 4 đpx ở (123.2,63.2) cách thân 3.5
+nguTinh-p3 | idle | 3->4 | tâm thân nhảy -3.1
+nguTinh-p3 | idle | 6->1 | vòng lặp nhảy tâm 5.2
+nguTinh-p3 | tele | 1 | mảnh rời 8 đpx ở (33.8,78.2) cách thân 3.8
+nguTinh-p3 | tele | 1 | mảnh rời 12 đpx ở (153.9,96.9) cách thân 3.5
+nguTinh-p3 | tele | 2 | mảnh rời 104 đpx ở (44.8,55.8) cách thân 3.5
+nguTinh-p3 | tele | 2 | mảnh rời 12 đpx ở (43.6,60.6) cách thân 3.5
+nguTinh-p3 | tele | 2 | mảnh rời 28 đpx ở (151.7,70.1) cách thân 3.5
+nguTinh-p3 | tele | 2 | mảnh rời 4 đpx ở (154.2,71.2) cách thân 6.0
+nguTinh-p3 | tele | 3 | mảnh rời 160 đpx ở (45.5,54.6) cách thân 5.1
+nguTinh-p3 | tele | 3 | mảnh rời 4 đpx ở (40.2,56.2) cách thân 4.9
+nguTinh-p3 | tele | 3 | mảnh rời 8 đpx ở (44.2,59.8) cách thân 4.9
+nguTinh-p3 | tele | 4 | mảnh rời 52 đpx ở (43.2,53.6) cách thân 4.9
+nguTinh-p3 | tele | 4 | mảnh rời 4 đpx ở (39.2,53.2) cách thân 5.7
+nguTinh-p3 | tele | 4 | mảnh rời 4 đpx ở (39.2,56.2) cách thân 3.5
+nguTinh-p3 | tele | 4 | mảnh rời 12 đpx ở (151.6,70.9) cách thân 4.5
+nguTinh-p3 | atk | 1 | mảnh rời 28 đpx ở (65.7,22.5) cách thân 7.0
+nguTinh-p3 | atk | 1 | mảnh rời 4 đpx ở (48.2,46.2) cách thân 3.5
+nguTinh-p3 | atk | 1 | mảnh rời 8 đpx ở (46.8,49.2) cách thân 3.5
+nguTinh-p3 | atk | 1 | mảnh rời 4 đpx ở (150.2,66.2) cách thân 6.5
+nguTinh-p3 | atk | 1 | mảnh rời 4 đpx ở (25.2,68.2) cách thân 6.0
+nguTinh-p3 | atk | 1 | mảnh rời 12 đpx ở (25.2,71.2) cách thân 6.5
+nguTinh-p3 | atk | 1 | mảnh rời 132 đpx ở (148.8,79.9) cách thân 4.7
+nguTinh-p3 | atk | 2 | mảnh rời 36 đpx ở (64.2,23.0) cách thân 5.7
+nguTinh-p3 | atk | 2 | mảnh rời 8 đpx ở (47.2,46.8) cách thân 3.5
+nguTinh-p3 | atk | 2 | mảnh rời 232 đpx ở (146.4,80.7) cách thân 5.7
+nguTinh-p3 | atk | 3 | mảnh rời 32 đpx ở (61.8,26.0) cách thân 6.5
+nguTinh-p3 | atk | 3 | mảnh rời 28 đpx ở (69.0,27.7) cách thân 3.5
+nguTinh-p3 | atk | 3 | mảnh rời 32 đpx ở (54.2,38.4) cách thân 6.7
+nguTinh-p3 | atk | 4 | mảnh rời 24 đpx ở (107.6,14.2) cách thân 3.5
+nguTinh-p3 | atk | 4 | mảnh rời 4 đpx ở (138.2,27.2) cách thân 3.5
+nguTinh-p3 | atk | 4 | mảnh rời 8 đpx ở (52.8,37.2) cách thân 8.3
+nguTinh-p3 | atk | 4 | mảnh rời 12 đpx ở (55.9,38.6) cách thân 5.5
+nguTinh-p3 | atk | 4 | mảnh rời 24 đpx ở (148.8,65.2) cách thân 3.5
+nguTinh-p3 | atk | 4 | mảnh rời 212 đpx ở (146.8,80.5) cách thân 4.3
+nguTinh-p3 | atk | 5 | mảnh rời 8 đpx ở (75.8,23.8) cách thân 3.5
+nguTinh-p3 | atk | 5 | mảnh rời 264 đpx ở (144.1,79.7) cách thân 4.3
+nguTinh-p3 | atk | 6 | mảnh rời 52 đpx ở (74.8,23.2) cách thân 4.3
+nguTinh-p3 | atk | 6 | mảnh rời 28 đpx ở (51.0,37.8) cách thân 3.5
+nguTinh-p3 | atk | 6 | mảnh rời 32 đpx ở (140.6,58.1) cách thân 3.5
+nguTinh-p3 | atk | 6 | mảnh rời 32 đpx ở (144.1,64.2) cách thân 4.5
+nguTinh-p3 | atk | 6 | mảnh rời 244 đpx ở (141.5,81.4) cách thân 4.7
+nguTinh-p3 | hit | 1 | mảnh rời 8 đpx ở (44.2,41.8) cách thân 7.9
+nguTinh-p3 | hit | 1 | mảnh rời 68 đpx ở (43.7,46.0) cách thân 4.7
+nguTinh-p3 | hit | 1 | mảnh rời 12 đpx ở (48.6,43.9) cách thân 5.1
+nguTinh-p3 | hit | 1 | mảnh rời 8 đpx ở (39.8,48.2) cách thân 9.2
+nguTinh-p3 | hit | 1 | mảnh rời 64 đpx ở (138.8,64.3) cách thân 6.7
+nguTinh-p3 | hit | 1 | mảnh rời 8 đpx ở (134.8,63.2) cách thân 3.8
+nguTinh-p3 | hit | 1 | mảnh rời 8 đpx ở (141.2,67.8) cách thân 10.5
+nguTinh-p3 | hit | 2 | mảnh rời 4 đpx ở (44.2,42.2) cách thân 7.9
+nguTinh-p3 | hit | 2 | mảnh rời 8 đpx ở (39.8,48.8) cách thân 8.9
+nguTinh-p3 | hit | 2 | mảnh rời 8 đpx ở (44.2,50.8) cách thân 4.5
+nguTinh-p3 | hit | 2 | mảnh rời 76 đpx ở (137.4,65.2) cách thân 4.7
+nguTinh-p3 | hit | 2 | mảnh rời 4 đpx ở (140.2,63.2) cách thân 10.6
+nguTinh-p3 | hit | 3 | mảnh rời 76 đpx ở (44.6,45.8) cách thân 3.8
+nguTinh-p3 | hit | 3 | mảnh rời 12 đpx ở (39.6,49.6) cách thân 10.7
+nguTinh-p3 | hit | 3 | mảnh rời 4 đpx ở (47.2,49.2) cách thân 5.7
+nguTinh-p3 | hit | 3 | mảnh rời 8 đpx ở (43.8,52.2) cách thân 5.7
+nguTinh-p3 | hit | 3 | mảnh rời 12 đpx ở (134.9,88.6) cách thân 4.3
+nguTinh-p3 | hit | 4 | mảnh rời 36 đpx ở (42.9,46.8) cách thân 5.1
+nguTinh-p3 | hit | 4 | mảnh rời 36 đpx ở (38.6,49.4) cách thân 8.5
+nguTinh-p3 | hit | 4 | mảnh rời 4 đpx ở (46.2,49.2) cách thân 4.3
+nguTinh-p3 | hit | 4 | mảnh rời 8 đpx ở (42.8,51.8) cách thân 4.9
+nguTinh-p3 | hit | 3->4 | tâm thân nhảy -2.6
+nguTinh-p3 | hit | 1 | chuyển từ đứng sang: tâm -8.4, đáy -1.0
+nguTinh | move | 1->2 | tâm thân nhảy 5.6
+nguTinh | move | 6->1 | vòng lặp nhảy tâm -5.6
+nguTinh | hit | 1->2 | tâm thân nhảy 2.7
+nguTinh | hit | 3->4 | tâm thân nhảy -3.9
+nguTinh | hit | 1 | chuyển từ đứng sang: tâm -5.8, đáy +0.0
+nl-ren | noi | 1 | đáy chân lệch gốc -3.0
+nl-ren | noi | 1 | chuyển từ đứng sang: tâm +0.4, đáy -3.5
+nl-tu | idle | 2->3 | tâm thân nhảy -9.6
+nl-tu | idle | 3->4 | tâm thân nhảy 10.8
+nl-tu | noi | 1 | chuyển từ đứng sang: tâm -11.0, đáy +0.0
+nl-xen | noi | 1 | đáy chân lệch gốc -1.5
+nl-xen | noi | 2 | đáy chân lệch gốc -1.5
+nl-xen | noi | 3 | đáy chân lệch gốc -1.5
+nl-xen | noi | 4 | đáy chân lệch gốc -1.5
+nl-xen | noi | 5 | đáy chân lệch gốc -1.5
+oc | hit | 2->3 | tâm thân nhảy 2.7
+oc | tele | 1 | chuyển từ đứng sang: tâm +3.3, đáy +0.0
+socNo | atk | 1=2 | hai khung TRÙNG hệt
+socNo | die | 1=2 | hai khung TRÙNG hệt
+socNo | die | 5=6 | hai khung TRÙNG hệt
+sua | move | 1 | chuyển từ đứng sang: tâm +4.0, đáy +0.0
+sua | tele | 1 | chuyển từ đứng sang: tâm +4.0, đáy +0.0
+Tổng 404 điểm cần xem,  69 tấm
