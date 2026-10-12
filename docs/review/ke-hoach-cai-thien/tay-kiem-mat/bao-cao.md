@@ -90,3 +90,8 @@ chém, hàng 5: đứng / chạy không đánh (để thấy không hỏng).
 - 0 pageerror (chụp cận cảnh, chụp trận, `tests/anim_smoke.py`).
 
 Công cụ: `kiem/chup.py <url> <thư mục>` (cận cảnh từng khung), `kiem/tran.py <url> <tệp>` (trong trận, có vệt).
+
+## 6. Nhập hàng chém mới 12/10
+
+Đã nhập ảnh vẽ lại hàng chém của Cu Tí, Cu Tèo, Cu Lì (đề xuất ở mục 3) và đo lại bảng `SC.TAY_KIEM` cho 18 khung mới.
+Chi tiết, ảnh trước/sau, việc còn lại: [`nhap-chem-moi.md`](nhap-chem-moi.md).
