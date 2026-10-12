@@ -25,8 +25,12 @@ def chinh_nam(im, x, y, r=28):
     return float(xx[vung].mean()), float(yy[vung].mean())
 
 
-def chuoi(vk):  # tâm phần quấn đỏ của chuôi
-    a = np.array(vk); r, g, b = a[..., 0].astype(int), a[..., 1].astype(int), a[..., 2].astype(int)
+def chuoi(vk, cam=None):  # tâm phần quấn đỏ của chuôi (hoặc điểm cầm theo tỉ lệ chiều dài)
+    a = np.array(vk)
+    if cam is not None:
+        x = int(a.shape[1] * cam); ys = np.nonzero(a[:, x, 3] > 0)[0]
+        return float(x), float(ys.mean() if len(ys) else a.shape[0] / 2)
+    r, g, b = a[..., 0].astype(int), a[..., 1].astype(int), a[..., 2].astype(int)
     m = (r > 110) & (g < 70) & (b < 70) & (a[..., 3] > 0)
     m[:, int(a.shape[1] * 0.35):] = False
     ys, xs = np.nonzero(m)
@@ -35,8 +39,8 @@ def chuoi(vk):  # tâm phần quấn đỏ của chuôi
     return float(np.median(xs)), float(np.median(ys))
 
 
-def ghep(nguoi, vk, sc, x, y, goc, sau=0):
-    gx, gy = chuoi(vk)
+def ghep(nguoi, vk, sc, x, y, goc, sau=0, cam=None, tay2=None):
+    gx, gy = chuoi(vk, cam)
     v = vk.resize((max(1, round(vk.width * sc)), max(1, round(vk.height * sc))), Image.NEAREST)
     gx, gy = gx * sc, gy * sc
     # đặt chuôi vào giữa ảnh vuông rồi xoay quanh chuôi
@@ -56,6 +60,8 @@ def ghep(nguoi, vk, sc, x, y, goc, sau=0):
     a = np.array(nguoi); m = da(a)
     yy, xx = np.mgrid[:a.shape[0], :a.shape[1]]
     tay = m & ((xx - x) ** 2 + (yy - y) ** 2 < 26 ** 2)
+    if tay2:
+        tay |= m & ((xx - tay2[0]) ** 2 + (yy - tay2[1]) ** 2 < 26 ** 2)
     lop = a.copy(); lop[..., 3] = np.where(tay, a[..., 3], 0)
     out.alpha_composite(Image.fromarray(lop), (pad, pad))
     return out.crop(out.getbbox()), (pad - out.getbbox()[0], pad - out.getbbox()[1])
@@ -66,13 +72,14 @@ def main(ten, neo, cap_list=(1, 4)):
     ng = [Image.open(f).convert('RGBA') for f in fs]
     vks = [Image.open(f).convert('RGBA') for f in sorted(glob.glob(f'{MOI}/{neo["vk"]}-gif/{neo["vk"]}/khung-*.png'))]
     cao = max(i.height for i in ng)
-    sc = DAI_CAP1 * cao / vks[0].width
+    sc = neo.get('dai', DAI_CAP1) * cao / vks[0].width
     hang = []
     for cap in cap_list:
         o = []
         for im, k in zip(ng, neo['khung']):
             x, y = chinh_nam(im, k[0], k[1])
-            o.append(ghep(im, vks[cap - 1], sc, x, y, k[2], k[3] if len(k) > 3 else 0)[0])
+            t2 = chinh_nam(im, *k[4]) if len(k) > 4 else None
+            o.append(ghep(im, vks[cap - 1], sc, x, y, k[2], k[3] if len(k) > 3 else 0, neo.get('cam'), t2)[0])
         hang.append(o)
     H = max(i.height for r in hang for i in r) + 20
     W = max(sum(i.width + 30 for i in r) for r in hang)
