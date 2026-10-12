@@ -53,19 +53,23 @@
       },
       doc: {
         name: 'Độc chưởng', el: 'poison', short: 'Luồng độc, để lại đám mây độc',
-        speed: 230, hit: 1.0, stacks: 2, cloudR: 20, cloudLife: 2.5, cloudEvery: 0.5, cloudSrc: 0.6, cloudDmg: 0.12, half: 6,
+        // Phiên cân bằng (báo cáo tester mục 1): Độc vào 1 quái 268 → 160, vào cụm 5 quái 1.934 → ~780 (≤ 1,6 lần Hỏa 561).
+        // hit 1,0 → 0,8; mây độc 0,12 → 0,04 D mỗi nhịp; Vạn độc +25%/bậc → +12%/bậc (đo: tests chuong_real, Thợ Rèn cấp 30 đầy cây).
+        speed: 230, hit: 0.8, stacks: 2, cloudR: 20, cloudLife: 2.5, cloudEvery: 0.5, cloudSrc: 0.6, cloudDmg: 0.04, hutK: 0.12, half: 6,
         nodes: [
           { id: 'luc', name: 'Độc lực', max: 5, need: 0, desc: (r) => G.t('Sát thương chưởng +{0}%', 10 * r), d1: 'Mỗi bậc: sát thương +10%' },
           { id: 'may', name: 'Mây dày', max: 5, need: 0, desc: (r) => G.t('Mây độc rộng thêm {0}, lâu thêm {1} giây', 3 * r, sole(0.4 * r, 1)), d1: 'Mỗi bậc: mây độc to hơn, lâu hơn' },
           { id: 'lay', name: 'Lây độc', max: 5, need: 5, desc: (r) => G.t('Quái dính độc chưởng chết: lây {0} tầng độc sang quái gần', 1 + Math.floor(r / 2)), d1: 'Quái dính độc chưởng mà chết thì độc lây sang quái gần' },
           { id: 'mon', name: 'Ăn mòn', max: 5, need: 5, desc: (r) => G.t('Quái dính độc chưởng mất {0}% giáp, nhận thêm {1}% sát thương', 6 * r, 4 * r), d1: 'Quái dính độc chưởng bị giảm giáp, nhận thêm sát thương' },
           { id: 'tach', name: 'Tam xà', max: 5, need: 10, desc: (r) => G.t('Chưởng tách 3 luồng, hai luồng bên x{0}', sole(0.35 + 0.07 * r, 2)), d1: 'Chưởng tách thành 3 luồng toả ra; mỗi bậc luồng bên mạnh hơn' },
-          { id: 'hut', name: 'Vạn độc', max: 3, need: 18, desc: (r) => G.t('Mây độc hút quái vào giữa, độc mây mạnh +{0}%', 25 * r), d1: 'Mây độc hút quái vào giữa và mạnh hơn' },
+          { id: 'hut', name: 'Vạn độc', max: 3, need: 18, desc: (r) => G.t('Mây độc hút quái vào giữa, độc mây mạnh +{0}%', Math.round(100 * C.trees.doc.hutK * r)), d1: 'Mây độc hút quái vào giữa và mạnh hơn' },
         ],
       },
       bang: {
         name: 'Băng chưởng', el: 'ice', short: 'Mũi băng xuyên nhiều quái, làm chậm',
-        speed: 320, hit: 1.2, pierce: 2, fall: 0.85, stacks: 2, half: 5, range: 1.12,
+        // Phiên cân bằng (mục 1): Băng vào 1 quái 58 → ~120 (hit 1,2 → 2,5). Ba cây vào 1 quái nay lệch nhau trong ±25%
+        // (Hỏa 138, Độc 160, Băng ~120); Băng thấp nhất nhưng bù bằng làm chậm, đóng băng và xuyên nhiều quái.
+        speed: 320, hit: 2.5, pierce: 2, fall: 0.85, stacks: 2, half: 5, range: 1.12,
         nodes: [
           { id: 'luc', name: 'Hàn lực', max: 5, need: 0, desc: (r) => G.t('Sát thương chưởng +{0}%', 10 * r), d1: 'Mỗi bậc: sát thương +10%' },
           { id: 'xa', name: 'Tầm xa', max: 5, need: 0, desc: (r) => G.t('Bay xa hơn {0}%, nhanh hơn {1}%', 12 * r, 8 * r), d1: 'Mỗi bậc: bay xa hơn 12%, nhanh hơn 8%' },
@@ -155,7 +159,7 @@
     } else if (s.cay === 'doc') {
       Object.assign(o, {
         stacks: T.stacks, cloudR: (T.cloudR + 3 * r('may')) * o.area, cloudLife: T.cloudLife + 0.4 * r('may'), cloudEvery: T.cloudEvery,
-        cloudSrc: T.cloudSrc, cloudDmg: T.cloudDmg * (1 + 0.25 * r('hut')),
+        cloudSrc: T.cloudSrc, cloudDmg: T.cloudDmg * (1 + T.hutK * r('hut')),
         spread: r('lay') ? 1 + Math.floor(r('lay') / 2) : 0, spreadR: 26 + 4 * r('lay'), corrode: r('mon'),
         split: r('tach'), side: 0.35 + 0.07 * r('tach'), pull: r('hut') ? 6 + 6 * r('hut') : 0,
       });
