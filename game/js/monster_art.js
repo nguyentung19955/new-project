@@ -1422,6 +1422,7 @@ MA._xong = function () { MA.list.length = 0; const TT = ['bien', 'rung', 'laudai
 // dir (góc radian của đòn: 0 = phải, PI/2 = xuống), phase (1..3, chỉ trùm vùng), hit (0..1 chớp trắng), bao: false để tắt vùng báo trước, fx: false để tắt hết hiệu ứng rời,
 // tint: [màu, độ phủ] nhuộm cả hình (nhịp độc, cháy), chop: hệ số 0..1 nhân vào chớp trắng của chính cử động (lúc khựng hình)}
 MA.draw = function (c, id, x, y, o) {
+  const bo = !!MA._boThan; MA._boThan = false; // cờ dùng một lần cho đúng lần vẽ này (xem chú thích V1 bên dưới)
   const d = DEFS[id]; if (!d) return; o = o || {};
   let ph = d.pha ? clamp(o.phase || 1, 1, d.pha) : 1; const nm = d.anims[o.anim] ? o.anim : 'idle', an = d.anims[nm];
   const t = Math.max(0, o.t || 0), nf = Math.max(1, Math.round(an.d * MA.fps)); let fi = Math.floor(t * MA.fps + 1e-6); fi = an.lap ? fi % nf : Math.min(fi, nf - 1);
@@ -1430,16 +1431,19 @@ MA.draw = function (c, id, x, y, o) {
   const ph0 = ph; if (an.pha) ph = clamp(an.pha(u, ph) || ph, 1, d.pha || 1); // cử động chuyển pha tự đổi hình giữa chừng
   const hv = an.hinh ? an.hinh(u, ph) : 0, B = goc(d, ph, hv), P = new Pose(d, B, nm, u, fi / MA.fps, o, dir, face, ph); P.pha0 = ph0;
   MA._tatBao = o.bao === false; an.f(P);
-  const key = P.khongNho ? null : id + '|' + ph + '|' + (hv || '') + '|' + nm + '|' + fi + '|' + P.aim + (P.khoa || ''), fr = veKhung(B, P, key);
+  // Phiên hiệu năng (V1): MA._boThan do js/sprite_custom.js bật khi quái đã có ảnh AI. Thân vẽ bằng code khi đó không bao giờ hiện ra
+  // (bút giả chỉ lấy lệnh drawImage đầu tiên để dán ảnh AI), nên bỏ hẳn bước dựng khung (veKhung/ghepHinh) — chỉ còn Pose, bóng, hiệu ứng.
+  const key = bo || P.khongNho ? null : id + '|' + ph + '|' + (hv || '') + '|' + nm + '|' + fi + '|' + P.aim + (P.khoa || ''), fr = bo ? null : veKhung(B, P, key);
   c.save(); c.translate(Math.round(x), Math.round(y)); c.imageSmoothingEnabled = false; const ga = c.globalAlpha;
   if (P.bong > 0 && d.bong !== 0) { const bw = (d.bong || B.bw * .62) * (1 - Math.min(.5, P.h / 80)) * Math.min(1, P.bong + .3); c.globalAlpha = ga * .28 * Math.min(1, P.bong); F.elip(c, P.x, P.y, bw / 2, Math.max(1.5, bw * .14), '#000000'); c.globalAlpha = ga; }
   if (o.fx !== false) for (const f of P._u) { c.save(); f(c, P); c.restore(); }
   const sx = Math.round(P.x), sy = Math.round(P.y - P.h);
-  const ve = (img, dx, dy, a) => { c.save(); c.globalAlpha = ga * a; c.translate(sx + dx, sy + dy); if (face > 0) c.scale(-1, 1); c.drawImage(img, -fr.ox, -fr.oy); c.restore(); };
-  if (P.bongMa) for (const m of P.bongMa) { ve(fr.cv, m.x || 0, m.y || 0, (m.a == null ? .3 : m.a) * P.a); if (m.mau) ve(bongHinh(fr, m.mau), m.x || 0, m.y || 0, (m.a == null ? .3 : m.a) * .7 * P.a); }
-  if (P.a > 0) { ve(fr.cv, 0, 0, P.a); if (P.tint && P.tint[1] > 0) ve(bongHinh(fr, P.tint[0]), 0, 0, P.a * clamp(P.tint[1], 0, 1));
-    if (o.tint && o.tint[1] > 0) ve(bongHinh(fr, o.tint[0]), 0, 0, P.a * clamp(o.tint[1], 0, 1)); // nhuộm màu hệ (nhịp độc / cháy) do game truyền vào
-    const fl = Math.max((P.flash || 0) * (o.chop == null ? 1 : o.chop), o.hit || 0); if (fl > 0) ve(bongHinh(fr, '#ffffff'), 0, 0, P.a * clamp(fl, 0, 1)); } // o.chop: hệ số chớp trắng của cử động (khựng hình thì nhạt đi)
+  const ve = (img, dx, dy, a) => { c.save(); c.globalAlpha = ga * a; c.translate(sx + dx, sy + dy); if (face > 0) c.scale(-1, 1); if (bo) c.drawImage(); else c.drawImage(img, -fr.ox, -fr.oy); c.restore(); };
+  const bh = (col) => (bo ? null : bongHinh(fr, col)), cv0 = bo ? null : fr.cv;
+  if (P.bongMa) for (const m of P.bongMa) { ve(cv0, m.x || 0, m.y || 0, (m.a == null ? .3 : m.a) * P.a); if (m.mau) ve(bh(m.mau), m.x || 0, m.y || 0, (m.a == null ? .3 : m.a) * .7 * P.a); }
+  if (P.a > 0) { ve(cv0, 0, 0, P.a); if (P.tint && P.tint[1] > 0) ve(bh(P.tint[0]), 0, 0, P.a * clamp(P.tint[1], 0, 1));
+    if (o.tint && o.tint[1] > 0) ve(bh(o.tint[0]), 0, 0, P.a * clamp(o.tint[1], 0, 1)); // nhuộm màu hệ (nhịp độc / cháy) do game truyền vào
+    const fl = Math.max((P.flash || 0) * (o.chop == null ? 1 : o.chop), o.hit || 0); if (fl > 0) ve(bh('#ffffff'), 0, 0, P.a * clamp(fl, 0, 1)); } // o.chop: hệ số chớp trắng của cử động (khựng hình thì nhạt đi)
   if (o.fx !== false) for (const f of P._o) { c.save(); f(c, P); c.restore(); }
   c.restore();
 };

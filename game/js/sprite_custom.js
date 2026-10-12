@@ -283,6 +283,36 @@
     });
   }
   SC.butGia = butGia;
+  // Phiên hiệu năng (V1): bút giả DÙNG LẠI — mỗi bút thật giữ sẵn vài bút giả (Proxy tạo một lần), mượn rồi trả sau mỗi lần vẽ,
+  // thay cho tạo Proxy + Map mới mỗi khung. Mượn lồng nhau (vẽ trong lúc đang vẽ) thì lấy bút giả khác còn rảnh.
+  const BUT = new WeakMap();
+  function muonBut(c, thay) {
+    let ds = BUT.get(c);
+    if (!ds) { ds = []; BUT.set(c, ds); }
+    for (const b of ds) if (!b.ban) { b.ban = true; b.thay = thay; return b; }
+    const b = { ban: true, thay, p: null }, nho = new Map();
+    b.p = new Proxy(c, {
+      get(o, k) {
+        if (k === 'drawImage') return b.thay;
+        const v = o[k];
+        if (typeof v !== 'function') return v;
+        let f = nho.get(k);
+        if (!f) { f = v.bind(o); nho.set(k, f); }
+        return f;
+      },
+      set(o, k, v) { o[k] = v; return true; },
+    });
+    ds.push(b);
+    return b;
+  }
+  function traBut(b) { b.ban = false; b.thay = null; }
+  SC.muonBut = muonBut; SC.traBut = traBut;
+  // Cờ tắt V1: G.BO_THAN = false hoặc ?bothan=0 → như cũ (dựng thân bằng code rồi bỏ đi, bút giả mới mỗi lần vẽ).
+  if (G.BO_THAN === undefined) {
+    let tat = false;
+    try { tat = typeof location !== 'undefined' && /[?&]bothan=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
+    G.BO_THAN = !tat;
+  }
 
   let MA = null, draw0 = null, dur0 = null;
   function themVaoDanhSach(sp) {
@@ -306,13 +336,16 @@
       // Quái có sẵn: để hình gốc vẽ bóng và hiệu ứng (vệt chém, tia lửa...), chỉ thay phần thân bằng hình tự vẽ.
       const T0 = c.getTransform(), a0 = c.globalAlpha, D = dur0.call(MA, id, o.anim) || 0;
       let xong = false;
-      const gia = butGia(c, function () {
+      const thay = function () {
         if (xong) return;
         xong = true;
         c.save(); c.setTransform(T0); c.globalAlpha = a0;
         try { SC.veQuai(c, sp, x, y, o, false, D); } finally { c.restore(); }
-      });
-      draw0.call(MA, gia, id, x, y, o);
+      };
+      if (G.BO_THAN === false) { draw0.call(MA, butGia(c, thay), id, x, y, o); return; }
+      const b = muonBut(c, thay);
+      MA._boThan = true; // V1: monster_art.js bỏ bước dựng thân bằng code (không bao giờ hiện ra), chỉ chạy Pose, bóng, hiệu ứng
+      try { draw0.call(MA, b.p, id, x, y, o); } finally { MA._boThan = false; traBut(b); }
     };
     MA.dur = function (id, anim) {
       const d = dur0.call(MA, id, anim);
@@ -748,7 +781,7 @@
       // Vũ khí và nắm tay dời theo "neo.tay" cho khớp bàn tay của thân AI.
       if (neo && neo.tay && (neo.tay[0] || neo.tay[1])) o = Object.assign({}, o, { neoTay: neo.tay });
       // Em bé gốc vẫn vẽ bóng, vũ khí, hào quang trang phục; chỗ vẽ thân thì vẽ hình tự vẽ.
-      const gia = butGia(c, function (img, x, y) {
+      const thay = function (img, x, y) {
         const than = img === fr.cv || (arguments.length === 3 && x === fr.ox && y === fr.oy && img && img.width === fr.cv.width && img.height === fr.cv.height);
         if (than) {
           if (ao && ao.vien && !daVien && !fr.dead) { // viền bậc áo (bậc Lam game gốc không vẽ viền: vẽ ở đây, ngay sau thân)
@@ -773,8 +806,10 @@
           return;
         }
         return c.drawImage.apply(c, arguments);
-      });
-      return hero0.call(A, gia, o);
+      };
+      if (G.BO_THAN === false) return hero0.call(A, butGia(c, thay), o);
+      const b = muonBut(c, thay); // V1: bút giả dùng lại, không tạo Proxy mỗi khung
+      try { return hero0.call(A, b.p, o); } finally { traBut(b); }
     };
   }
 
