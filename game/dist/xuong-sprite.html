@@ -8951,7 +8951,9 @@ window.G.LANG = 'vi';
         const k = Math.min(1, f / 4), e = k * k;
         ps.rot = -90 * e - (f === 3 ? 8 : 0); ps.x = -2 * k; ps.y = f < 4 ? -[0, 3, 4, 2][f] : -3; ps.eyes = f < 2 ? 'hurt' : 'x';
         ps.hn = f < 4 ? [6, -14] : [4, -12]; ps.hf = f < 4 ? [-6, -13] : [-3, -13]; ps.free = false; ps.dead = f >= 4;
-        if (R) { const q = Math.min(1, f / 5); ps.w = { x: R.x + 2 * q, y: R.y + ((wt === 'bow' ? -3 : wt === 'hammer' ? -10 : -7) - R.y) * q * q, ang: R.ang + (wt === 'bow' ? 90 : 92) * q * q, pull: 0, front: false, mood: 'hurt' }; }
+        // Rà soát A9: thân AI (ảnh) đã nằm sẵn từ khung chết đầu, nên vũ khí cũng nằm theo thân ngay (rs 'nga', js/sprite_custom.js truyền
+        // o.vkNga khi vẽ thân AI); thân vẽ code ngã dần thì như cũ. Tắt: G.VK_NGA = false hoặc ?vknga=0.
+        if (R) { const q = rs === 'nga' ? 1 : Math.min(1, f / 5); ps.w = { x: R.x + 2 * q, y: R.y + ((wt === 'bow' ? -3 : wt === 'hammer' ? -10 : -7) - R.y) * q * q, ang: R.ang + (wt === 'bow' ? 90 : 92) * q * q, pull: 0, front: false, mood: 'hurt' }; }
         return ps;
       }
       case 'cast': {
@@ -9037,7 +9039,7 @@ window.G.LANG = 'vi';
   function pick(o, wt) {
     const p = o.p, t = (o.t != null ? o.t : G.time) || 0;
     if (o.anim) return [o.anim, o.f | 0, o.v | 0];
-    if (p && p.dead) return ['die', Math.min(7, Math.floor((p.deadT || 0) / 0.075)), 0];
+    if (p && p.dead) return o.vkNga && G.VK_NGA ? ['die', Math.min(7, Math.floor((p.deadT || 0) / 0.075)), 0, 'nga'] : ['die', Math.min(7, Math.floor((p.deadT || 0) / 0.075)), 0];
     if (o.dodge >= 0) {
       // hướng lộn: lấy từ người chơi (ddx, ddy), không có thì lộn ngang
       let dv = 2;
@@ -9165,6 +9167,8 @@ window.G.LANG = 'vi';
   // ÁO (ô robes) KHÔNG khoác rời lên thân AI: ảnh áo rời không ôm khít thân vẽ sẵn, nên thân AI giữ áo riêng của nhân vật; bậc áo
   // hiện bằng viền màu bậc quanh thân + dấu nhỏ trên ngực (js/sprite_custom.js). an: thêm các ô không khoác (thân theo bộ trang phục
   // đã vẽ sẵn mũ, đồ lưng, bùa trong hình: chỉ ẩn món CÙNG BỘ với áo, SC.anBo). Thân vẽ code không đi qua đây nên vẫn mặc áo như cũ.
+  if (G.VK_NGA === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]vknga=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.VK_NGA = !tat; } // A9, xem pose 'die'
+  if (G.BUA_LON === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]bualon=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.BUA_LON = !tat; } // A13, xem lopDo
   function lopDo(fr, neo, khop, an) {
     khop = khop || null;
     const D = dungLopDo(fr, neo, khop), quay = D.quay, ps = D.ps, n2 = D.n2;
@@ -9172,6 +9176,9 @@ window.G.LANG = 'vi';
     // (trông như rụng). Các khung cuộn tròn (xoay 60°..300°) tạm ẩn mũ, cánh, đồ lưng; áo, bùa vẫn bám thân.
     const rq = quay ? ((((khop.rot | 0) % 360) + 360) % 360) : 0, cuon = quay && fr.anim === 'dodge' && rq >= 60 && rq <= 300;
     const of = Object.assign({}, fr.of, { robe: null }, cuon ? { hat: null, wing: null, back: null } : null);
+    // Rà soát A13 (phiên bỏ khung trùng): bùa đeo hông xoay theo khung lộn thì dây + mặt bùa chĩa ra khỏi quả bóng như cái râu: các khung
+    // cuộn tròn cũng tạm ẩn bùa (ô hand mã bua_*; găng không vẽ lên thân AI). Tắt: G.BUA_LON = false hoặc ?bualon=0.
+    if (cuon && G.BUA_LON && /^bua_/.test(String(of.hand || ''))) of.hand = null;
     if (an) for (const k of an) of[k] = null;
     const N = fr.n || 1, id = [fr.key, ofKey(of), fr.tint, D.an + D.f, D.nd.join(','), D.nt.join(','), quay ? [khop.rot, khop.x, khop.y].join(',') : '', N].join('|') + ((neo && neo.khoa) || '');
     let r = LCACHE.get(id);
@@ -17232,6 +17239,15 @@ MA._xong();
     try { tat = typeof location !== 'undefined' && /[?&]phatrum=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
     G.PHA_TRUM_DU = !tat;
   }
+  // Phiên bỏ khung trùng (12/10, rà soát A10): hàng có "khung": [0, 2, 3, 4, 5] (danh sách cột phát, bỏ cột ảnh AI trùng cột trước)
+  // và tuỳ chọn "cham": <cột> (cột giữ nguyên mốc bắt đầu cũ = cột / so, ví dụ khung chạm đòn) thì phát theo danh sách đó: các cột trước
+  // "cham" chia đều quãng trước mốc, các cột từ "cham" chia đều quãng sau; tổng thời lượng (giay) giữ nguyên. Hàng không có "khung": như cũ.
+  // Tắt: G.KHUNG_TRUNG = false hoặc ?khungtrung=0.
+  if (G.KHUNG_TRUNG === undefined) {
+    let tat = false;
+    try { tat = typeof location !== 'undefined' && /[?&]khungtrung=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
+    G.KHUNG_TRUNG = !tat;
+  }
   let napSauDangChay = false, trongNapSau = false;
   // Tải nhanh (12/10): ảnh rời. roiNhan(img, src) nhận ảnh anh/<mã>.<mã nội dung>.png vào hàng chờ; roiCan(ma) báo game đang cần hình ma
   // (chưa có thì tải ngay). Chỉ có ở bản 2 tệp ảnh rời (G.ANH_ROI); bản một tệp, công cụ: null, như cũ.
@@ -17279,6 +17295,7 @@ MA._xong();
         const a = tep.dong_tac && tep.dong_tac[k];
         if (!a) continue;
         dt[k] = { hang: a.hang | 0, so: Math.max(1, a.so | 0), giay: +a.giay > 0 ? +a.giay : 0.6, lap: !!a.lap, mo: a.mo != null ? +a.mo : null };
+        const bg = docBang(a, dt[k].so); if (bg) dt[k].bang = bg; // "khung" / "cham" (bỏ khung trùng); không có thì không thêm gì
       }
       if (!dt.idle) throw new Error('thiếu động tác đứng thở');
       const sp = {
@@ -17328,8 +17345,30 @@ MA._xong();
 
   // ---------- chọn khung ----------
   // Động tác lặp: theo thời gian t (giây). Động tác một lần: theo tiến độ u (0..1).
-  function khungLap(a, t) { return Math.floor(Math.max(0, t) / (a.giay / a.so) + 1e-6) % a.so; }
-  function khungMot(a, u) { return Math.min(a.so - 1, Math.floor(clamp(u, 0, 1) * a.so)); }
+  function khungLap(a, t) {
+    if (a.bang && G.KHUNG_TRUNG) { const f = Math.max(0, t) / a.giay; return theoBang(a.bang, f - Math.floor(f + 1e-6)); }
+    return Math.floor(Math.max(0, t) / (a.giay / a.so) + 1e-6) % a.so;
+  }
+  function khungMot(a, u) {
+    if (a.bang && G.KHUNG_TRUNG) return theoBang(a.bang, clamp(u, 0, 1));
+    return Math.min(a.so - 1, Math.floor(clamp(u, 0, 1) * a.so));
+  }
+  // Bảng phát (bỏ khung trùng): [{ s: mốc bắt đầu 0..1, i: cột ảnh }], xem G.KHUNG_TRUNG ở đầu tệp.
+  function theoBang(b, u) { let k = 0; for (let j = 1; j < b.length; j++) if (u + 1e-6 >= b[j].s) k = j; return b[k].i; }
+  function docBang(a, so) {
+    if (!Array.isArray(a.khung)) return null;
+    const ds = [];
+    for (const x of a.khung) { const i = x | 0; if (i === +x && i >= 0 && i < so && ds.indexOf(i) < 0) ds.push(i); }
+    if (!ds.length) return null;
+    const n = ds.length, jc = a.cham != null ? ds.indexOf(+a.cham) : -1, b = [];
+    if (jc < 0) { for (let j = 0; j < n; j++) b.push({ s: j / n, i: ds[j] }); return b; }
+    const t0 = ds[jc] / so;
+    for (let j = 0; j < jc; j++) b.push({ s: (j * t0) / jc, i: ds[j] });
+    for (let j = jc; j < n; j++) b.push({ s: t0 + ((j - jc) * (1 - t0)) / (n - jc), i: ds[j] });
+    if (b.length) b[0].s = 0;
+    return b;
+  }
+  SC.docBang = docBang;
   SC.khungLap = khungLap; SC.khungMot = khungMot;
   // Phiên hiệu năng (V2): bộ nhớ đệm hình dùng chung một ngân sách điểm ảnh (js/bo_nho.js). Trang công cụ không nạp bo_nho.js:
   // dùng bản đơn giản (trần đếm số tấm, đầy thì xoá sạch như cũ).
@@ -18203,6 +18242,7 @@ MA._xong();
     A.hero = function (c, o) {
       const sp = SC.cuaEmBe(o && o.key, o);
       if (!sp || !G.tinhLinh) return hero0.call(A, c, o);
+      if (G.VK_NGA && o && o.p && o.p.dead) o = Object.assign({}, o, { vkNga: true }); // rà soát A9: vũ khí nằm theo thân AI ngay khung chết đầu (js/hero_tinhlinh.js)
       let fr = null; // cùng độ nét ghép với em bé gốc (hero0 tính y như vậy) để nhận ra đúng chỗ vẽ thân
       try { fr = G.tinhLinh.frame(o, G.tinhLinh.netCua ? G.tinhLinh.netCua(c, o) : 1); } catch (e) { fr = null; }
       if (!fr) return hero0.call(A, c, o);

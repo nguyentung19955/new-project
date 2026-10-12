@@ -33,15 +33,15 @@ pha-trum, ho-tinh-pha, don-cu-ti-cu-teo); phiên này kiểm lại kết quả c
 | A6 | Mũ sừng, mũ vây cá, mũ tai cáo, mũ da cá, khăn đá lửa, vòng lá, khăn xếp **ngồi trên đỉnh tóc** (chỉ phủ 1–2,5 điểm ảnh đầu) | `tp-hats-*.sprite.json` | cùng nguyên nhân A3: điểm `dinh_dau` sát mép dưới mũ | **Đã sửa** (độ lún 2,5–4,5, mép dưới mũ vẫn trên mắt) |
 | A7 | Búa lúc lấy đà / giữ lấy đà giơ qua đầu đè lên đầu | `hero_tinhlinh.js` | như A1 | **Sửa một phần**: búa ngả ra sau đầu tối đa 60°; khung mà ngả cũng chạm mặt thì giữ như cũ (vẽ sau thân thì búa khuất hẳn sau đầu lúc giữ lấy đà lâu — tệ hơn) |
 | A8 | Thân theo bộ (Rừng/Biển/Lầu, 12 tấm) **không có hàng đòn theo vũ khí** (atk_sword/bow/spear/hammer, cast): mặc áo bộ thì 4 vũ khí cùng một động tác vung chung; giữ lấy đà cung dùng hàng `tele` (ngồi thụp) nên **cung khuất sau người** (Cu Tí, Cu Tèo thân Lầu) | asset thiếu | `em-be-*-{rung,bien,lau}` | thiếu ảnh | **Chưa xử lý** — cần ảnh mới (mục 6) |
-| A9 | Lúc chết, khung đầu (0,2 s) vũ khí còn dựng đứng trên tay khi thân đã ngã | `hero_tinhlinh.js` (khung xương code `die`) | góc vũ khí theo khung xương code, thân AI ngã nhanh hơn | **Chưa xử lý** (thấy 0,2 s; sửa cần đổi đường vũ khí lúc chết, để phiên sau) |
+| A9 | Lúc chết, khung đầu (0,2 s) vũ khí còn dựng đứng trên tay khi thân đã ngã | `hero_tinhlinh.js` (khung xương code `die`) | góc vũ khí theo khung xương code, thân AI ngã nhanh hơn | **Đã sửa** — vũ khí nằm theo thân AI ngay khung chết đầu (G.VK_NGA, ?vknga=0), xem [khung-trung](../../khung-trung/bao-cao.md) |
 
 ### Nhẹ
 | # | Lỗi | Tệp | Trạng thái |
 |---|---|---|---|
-| A10 | Khung trùng khung trước (đứng hình 1 nhịp): Cu Lì thân Biển hàng đánh khung 2; Sóc Nổ đánh khung 2, chết khung 2 và 6; Hồ Tinh pha 2 đánh khung 6 | ảnh AI | **Chưa xử lý** — prompt mục 6 |
+| A10 | Khung trùng khung trước (đứng hình 1 nhịp): Cu Lì thân Biển hàng đánh khung 2; Sóc Nổ đánh khung 2, chết khung 2 và 6; Hồ Tinh pha 2 đánh khung 6 | ảnh AI | **Đã sửa bằng dữ liệu** — trường `khung`/`cham` bỏ khung trùng, giữ mốc đòn (G.KHUNG_TRUNG, ?khungtrung=0), xem [khung-trung](../../khung-trung/bao-cao.md) |
 | A11 | Ông Từ (`nl-tu`) hàng đứng khung 3 lật chổi sang bên kia, thân lệch 8 điểm ảnh | ảnh AI | **Không ảnh hưởng hiện tại**: người làng đang đứng yên một khung (`G.NL_DONG` tắt). Bật lại hoạt ảnh thì phải gen lại khung này |
-| A12 | Chóp ngọn (đèn lồng Hồ Tinh pha 1, vây đầu Ngư Tinh pha 2) chạm mép trên ô ở vài khung — có thể cụt ≤ 1 điểm ảnh | ảnh AI | **Chưa xử lý** (gần như không thấy) |
-| A13 | Lúc lộn, bùa đeo hông (bùa hút máu) chĩa ra khỏi quả bóng như cái râu | `hero_tinhlinh.js` / `tinhDatMon` | **Chưa xử lý** (0,4 s, nhỏ) |
+| A12 | Chóp ngọn (đèn lồng Hồ Tinh pha 1, vây đầu Ngư Tinh pha 2) chạm mép trên ô ở vài khung — có thể cụt ≤ 1 điểm ảnh | ảnh AI | **Không sửa được bằng code** (ảnh cắt sẵn, ô trên trống; ≤ 0,5 điểm ảnh game), xem [khung-trung](../../khung-trung/bao-cao.md) |
+| A13 | Lúc lộn, bùa đeo hông (bùa hút máu) chĩa ra khỏi quả bóng như cái râu | `hero_tinhlinh.js` / `tinhDatMon` | **Đã sửa** — ẩn bùa ở khung cuộn tròn (G.BUA_LON, ?bualon=0), xem [khung-trung](../../khung-trung/bao-cao.md) |
 | A14 | Cái Bống hàng chạy: khung bật bước A cao hơn bước B 0,5 điểm ảnh (phiên dang-chay đã chỉnh, còn dư) | ảnh | Bỏ qua (dưới 1 điểm ảnh game) |
 
 ### Đã kiểm, KHÔNG có lỗi

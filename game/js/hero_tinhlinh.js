@@ -1073,7 +1073,9 @@
         const k = Math.min(1, f / 4), e = k * k;
         ps.rot = -90 * e - (f === 3 ? 8 : 0); ps.x = -2 * k; ps.y = f < 4 ? -[0, 3, 4, 2][f] : -3; ps.eyes = f < 2 ? 'hurt' : 'x';
         ps.hn = f < 4 ? [6, -14] : [4, -12]; ps.hf = f < 4 ? [-6, -13] : [-3, -13]; ps.free = false; ps.dead = f >= 4;
-        if (R) { const q = Math.min(1, f / 5); ps.w = { x: R.x + 2 * q, y: R.y + ((wt === 'bow' ? -3 : wt === 'hammer' ? -10 : -7) - R.y) * q * q, ang: R.ang + (wt === 'bow' ? 90 : 92) * q * q, pull: 0, front: false, mood: 'hurt' }; }
+        // Rà soát A9: thân AI (ảnh) đã nằm sẵn từ khung chết đầu, nên vũ khí cũng nằm theo thân ngay (rs 'nga', js/sprite_custom.js truyền
+        // o.vkNga khi vẽ thân AI); thân vẽ code ngã dần thì như cũ. Tắt: G.VK_NGA = false hoặc ?vknga=0.
+        if (R) { const q = rs === 'nga' ? 1 : Math.min(1, f / 5); ps.w = { x: R.x + 2 * q, y: R.y + ((wt === 'bow' ? -3 : wt === 'hammer' ? -10 : -7) - R.y) * q * q, ang: R.ang + (wt === 'bow' ? 90 : 92) * q * q, pull: 0, front: false, mood: 'hurt' }; }
         return ps;
       }
       case 'cast': {
@@ -1159,7 +1161,7 @@
   function pick(o, wt) {
     const p = o.p, t = (o.t != null ? o.t : G.time) || 0;
     if (o.anim) return [o.anim, o.f | 0, o.v | 0];
-    if (p && p.dead) return ['die', Math.min(7, Math.floor((p.deadT || 0) / 0.075)), 0];
+    if (p && p.dead) return o.vkNga && G.VK_NGA ? ['die', Math.min(7, Math.floor((p.deadT || 0) / 0.075)), 0, 'nga'] : ['die', Math.min(7, Math.floor((p.deadT || 0) / 0.075)), 0];
     if (o.dodge >= 0) {
       // hướng lộn: lấy từ người chơi (ddx, ddy), không có thì lộn ngang
       let dv = 2;
@@ -1287,6 +1289,8 @@
   // ÁO (ô robes) KHÔNG khoác rời lên thân AI: ảnh áo rời không ôm khít thân vẽ sẵn, nên thân AI giữ áo riêng của nhân vật; bậc áo
   // hiện bằng viền màu bậc quanh thân + dấu nhỏ trên ngực (js/sprite_custom.js). an: thêm các ô không khoác (thân theo bộ trang phục
   // đã vẽ sẵn mũ, đồ lưng, bùa trong hình: chỉ ẩn món CÙNG BỘ với áo, SC.anBo). Thân vẽ code không đi qua đây nên vẫn mặc áo như cũ.
+  if (G.VK_NGA === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]vknga=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.VK_NGA = !tat; } // A9, xem pose 'die'
+  if (G.BUA_LON === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]bualon=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.BUA_LON = !tat; } // A13, xem lopDo
   function lopDo(fr, neo, khop, an) {
     khop = khop || null;
     const D = dungLopDo(fr, neo, khop), quay = D.quay, ps = D.ps, n2 = D.n2;
@@ -1294,6 +1298,9 @@
     // (trông như rụng). Các khung cuộn tròn (xoay 60°..300°) tạm ẩn mũ, cánh, đồ lưng; áo, bùa vẫn bám thân.
     const rq = quay ? ((((khop.rot | 0) % 360) + 360) % 360) : 0, cuon = quay && fr.anim === 'dodge' && rq >= 60 && rq <= 300;
     const of = Object.assign({}, fr.of, { robe: null }, cuon ? { hat: null, wing: null, back: null } : null);
+    // Rà soát A13 (phiên bỏ khung trùng): bùa đeo hông xoay theo khung lộn thì dây + mặt bùa chĩa ra khỏi quả bóng như cái râu: các khung
+    // cuộn tròn cũng tạm ẩn bùa (ô hand mã bua_*; găng không vẽ lên thân AI). Tắt: G.BUA_LON = false hoặc ?bualon=0.
+    if (cuon && G.BUA_LON && /^bua_/.test(String(of.hand || ''))) of.hand = null;
     if (an) for (const k of an) of[k] = null;
     const N = fr.n || 1, id = [fr.key, ofKey(of), fr.tint, D.an + D.f, D.nd.join(','), D.nt.join(','), quay ? [khop.rot, khop.x, khop.y].join(',') : '', N].join('|') + ((neo && neo.khoa) || '');
     let r = LCACHE.get(id);

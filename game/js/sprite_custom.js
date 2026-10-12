@@ -55,6 +55,15 @@
     try { tat = typeof location !== 'undefined' && /[?&]phatrum=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
     G.PHA_TRUM_DU = !tat;
   }
+  // Phiên bỏ khung trùng (12/10, rà soát A10): hàng có "khung": [0, 2, 3, 4, 5] (danh sách cột phát, bỏ cột ảnh AI trùng cột trước)
+  // và tuỳ chọn "cham": <cột> (cột giữ nguyên mốc bắt đầu cũ = cột / so, ví dụ khung chạm đòn) thì phát theo danh sách đó: các cột trước
+  // "cham" chia đều quãng trước mốc, các cột từ "cham" chia đều quãng sau; tổng thời lượng (giay) giữ nguyên. Hàng không có "khung": như cũ.
+  // Tắt: G.KHUNG_TRUNG = false hoặc ?khungtrung=0.
+  if (G.KHUNG_TRUNG === undefined) {
+    let tat = false;
+    try { tat = typeof location !== 'undefined' && /[?&]khungtrung=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
+    G.KHUNG_TRUNG = !tat;
+  }
   let napSauDangChay = false, trongNapSau = false;
   // Tải nhanh (12/10): ảnh rời. roiNhan(img, src) nhận ảnh anh/<mã>.<mã nội dung>.png vào hàng chờ; roiCan(ma) báo game đang cần hình ma
   // (chưa có thì tải ngay). Chỉ có ở bản 2 tệp ảnh rời (G.ANH_ROI); bản một tệp, công cụ: null, như cũ.
@@ -102,6 +111,7 @@
         const a = tep.dong_tac && tep.dong_tac[k];
         if (!a) continue;
         dt[k] = { hang: a.hang | 0, so: Math.max(1, a.so | 0), giay: +a.giay > 0 ? +a.giay : 0.6, lap: !!a.lap, mo: a.mo != null ? +a.mo : null };
+        const bg = docBang(a, dt[k].so); if (bg) dt[k].bang = bg; // "khung" / "cham" (bỏ khung trùng); không có thì không thêm gì
       }
       if (!dt.idle) throw new Error('thiếu động tác đứng thở');
       const sp = {
@@ -151,8 +161,30 @@
 
   // ---------- chọn khung ----------
   // Động tác lặp: theo thời gian t (giây). Động tác một lần: theo tiến độ u (0..1).
-  function khungLap(a, t) { return Math.floor(Math.max(0, t) / (a.giay / a.so) + 1e-6) % a.so; }
-  function khungMot(a, u) { return Math.min(a.so - 1, Math.floor(clamp(u, 0, 1) * a.so)); }
+  function khungLap(a, t) {
+    if (a.bang && G.KHUNG_TRUNG) { const f = Math.max(0, t) / a.giay; return theoBang(a.bang, f - Math.floor(f + 1e-6)); }
+    return Math.floor(Math.max(0, t) / (a.giay / a.so) + 1e-6) % a.so;
+  }
+  function khungMot(a, u) {
+    if (a.bang && G.KHUNG_TRUNG) return theoBang(a.bang, clamp(u, 0, 1));
+    return Math.min(a.so - 1, Math.floor(clamp(u, 0, 1) * a.so));
+  }
+  // Bảng phát (bỏ khung trùng): [{ s: mốc bắt đầu 0..1, i: cột ảnh }], xem G.KHUNG_TRUNG ở đầu tệp.
+  function theoBang(b, u) { let k = 0; for (let j = 1; j < b.length; j++) if (u + 1e-6 >= b[j].s) k = j; return b[k].i; }
+  function docBang(a, so) {
+    if (!Array.isArray(a.khung)) return null;
+    const ds = [];
+    for (const x of a.khung) { const i = x | 0; if (i === +x && i >= 0 && i < so && ds.indexOf(i) < 0) ds.push(i); }
+    if (!ds.length) return null;
+    const n = ds.length, jc = a.cham != null ? ds.indexOf(+a.cham) : -1, b = [];
+    if (jc < 0) { for (let j = 0; j < n; j++) b.push({ s: j / n, i: ds[j] }); return b; }
+    const t0 = ds[jc] / so;
+    for (let j = 0; j < jc; j++) b.push({ s: (j * t0) / jc, i: ds[j] });
+    for (let j = jc; j < n; j++) b.push({ s: t0 + ((j - jc) * (1 - t0)) / (n - jc), i: ds[j] });
+    if (b.length) b[0].s = 0;
+    return b;
+  }
+  SC.docBang = docBang;
   SC.khungLap = khungLap; SC.khungMot = khungMot;
   // Phiên hiệu năng (V2): bộ nhớ đệm hình dùng chung một ngân sách điểm ảnh (js/bo_nho.js). Trang công cụ không nạp bo_nho.js:
   // dùng bản đơn giản (trần đếm số tấm, đầy thì xoá sạch như cũ).
@@ -1026,6 +1058,7 @@
     A.hero = function (c, o) {
       const sp = SC.cuaEmBe(o && o.key, o);
       if (!sp || !G.tinhLinh) return hero0.call(A, c, o);
+      if (G.VK_NGA && o && o.p && o.p.dead) o = Object.assign({}, o, { vkNga: true }); // rà soát A9: vũ khí nằm theo thân AI ngay khung chết đầu (js/hero_tinhlinh.js)
       let fr = null; // cùng độ nét ghép với em bé gốc (hero0 tính y như vậy) để nhận ra đúng chỗ vẽ thân
       try { fr = G.tinhLinh.frame(o, G.tinhLinh.netCua ? G.tinhLinh.netCua(c, o) : 1); } catch (e) { fr = null; }
       if (!fr) return hero0.call(A, c, o);
