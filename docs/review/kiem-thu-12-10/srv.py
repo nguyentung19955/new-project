@@ -4,7 +4,7 @@ import gzip, hashlib, http.server, os, re, sys, threading
 GOC = sys.argv[1]; CONG = int(sys.argv[2]); CHAN = sys.argv[3] if len(sys.argv) > 3 else None
 NHO = {}
 LOCK = threading.Lock()
-TYPES = {'.html': 'text/html; charset=utf-8', '.json': 'application/json', '.js': 'text/javascript', '.png': 'image/png', '.webmanifest': 'application/manifest+json'}
+TYPES = {'.html': 'text/html; charset=utf-8', '.json': 'application/json', '.js': 'text/javascript', '.png': 'image/png', '.webp': 'image/webp', '.webmanifest': 'application/manifest+json'}
 
 
 class H(http.server.BaseHTTPRequestHandler):
@@ -15,7 +15,8 @@ class H(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         sys.stderr.write('%.2f GET %s inm=%s\n' % (__import__('time').time(), self.path[:60], bool(self.headers.get('If-None-Match')))); sys.stderr.flush()
         ten = self.path.split('?')[0].lstrip('/') or 'index.html'
-        p = os.path.join(GOC, os.path.basename(ten))
+        # Ảnh rời (Tải nhanh 12/10) nằm trong thư mục con anh/: giữ một cấp thư mục, chặn '..'
+        p = os.path.join(GOC, *[x for x in ten.split('/') if x not in ('', '.', '..')][-2:])
         if (CHAN and re.search(CHAN, ten)) or not os.path.isfile(p):
             self.send_response(404); self.send_header('Content-Length', '0'); self.end_headers(); return
         with LOCK:

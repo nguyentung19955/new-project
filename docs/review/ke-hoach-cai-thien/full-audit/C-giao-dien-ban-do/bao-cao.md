@@ -133,3 +133,65 @@ Không có asset nào **bắt buộc** vẽ lại cho phần C. Một món tuỳ
 Thư mục `anh/` (JPEG nén):
 - `sau-se.jpg`, `sau-ip14.jpg`, `sau-promax.jpg`, `sau-ipad.jpg`: 9 cảnh sau sửa ở mỗi cỡ (màn chào, truyện, làng, Hàng Xén, Anh Mõ, Hành trang, trận Rừng, trùm Rừng, thắng). `sau-doc.jpg`: cầm dọc.
 - `truoc-sau-*.jpg`: so trước/sau từng mục ở trên.
+
+---
+
+## Bổ sung: lần chạy thứ hai của việc Rà soát C (12/10, khoảng 06:00–07:10)
+
+Việc Rà soát C được chạy hai lần song song. Lần này làm độc lập và tìm ra gần như đúng các lỗi ở trên: vùng chạm 41–42 pt trên SE và máy có tai thỏ, thẻ Hàng Xén tràn chữ, đồ trang trí đứng không che người đứng sau, em bé mất hút sau cây dù và cây đa. Khi gộp, lần chạy kia đã đẩy lên trước, nên **bỏ phần sửa code trùng của lần này**, không chồng hai cách sửa lên nhau. Ở đây chỉ thêm phần kiểm độc lập, bài kiểm và các phát hiện mà báo cáo trên chưa có.
+
+### Kiểm độc lập bản đã gộp (acb5dd6, bản hai tệp)
+
+**Vùng chạm**
+- Dùng bài đo riêng của lần này: 26 màn ở các cỡ SE 667×375, iPhone 14 có tai thỏ (47/47/21), và cầm dọc.
+- Vùng chạm nhỏ nhất: **44,3 pt** (SE), 44,4 pt (tai thỏ), 44,8 pt (cầm dọc).
+- 0 nút dưới 44 pt, 0 pageerror. Kết quả này xác nhận C-1 ở trên.
+
+**Bài kiểm mới `game/tests/au_c_ban_do.py`**
+- Xét 720 phòng (3 vùng × 30 hạt × 8 phòng, kiểu A/B/C), khoảng 1.090 đồ vật.
+- 0 vật ngoài sàn, 0 vật đè nhau, 0 vật chắn lối cửa (cách điểm cửa dưới 22 đơn vị).
+- Chạy: `python3 game/tests/au_c_ban_do.py [số hạt]`, cần srv.py chạy ở cổng 8765.
+
+**Bài cũ chạy lại trên bản đã gộp**
+- `ban_do.py all`: 48/48 + 48/48 đạt.
+- `au_mapgen.py 200 4`: thoát mã 0.
+- `doors.py`: đạt. (Báo cáo trên ghi chưa chạy `au_mapgen`.)
+- `env_rooms.py`: hỏng 96/108 phòng, cả trước lẫn sau phiên. Bài này còn đòi sàn phòng thường 208×196, trong khi Đợt 2 đã mở rộng sàn lên 300. Lỗi nằm ở bài kiểm cũ, không phải ở game. Chưa sửa bài này.
+
+**Máy chủ thử `docs/review/kiem-thu-12-10/srv.py`**
+- Đã sửa ngay trong repo: phục vụ thêm thư mục con `anh/` (chặn `..`) và kiểu `image/webp`.
+- Trước đây ảnh rời WebP của phiên Tải nhanh bị 404. Báo cáo trên phải dùng một bản chép tạm.
+- Lưu ý: srv.py nhớ tệp trong bộ nhớ, nên mỗi lần dựng lại game phải khởi động lại srv.py.
+
+### Phát hiện thêm (báo cáo trên chưa có)
+
+**B-1. Lâu đài cổ trên tranh chọn ải của Chú Lái Đò vẫn kiểu châu Âu.** Nhóm sprite/asset, mức VỪA. Chưa sửa, cần vẽ lại.
+- Tệp ảnh: `game/art/custom/gd-ban-do-vung.sprite.json`.
+- Trang trí trong phòng Lâu đài đã đổi sang kiểu Việt (9a6015ca). Nhưng trên tranh bản đồ vùng, Lâu đài cổ vẫn là thành đá có tháp nón đỏ kiểu châu Âu, lệch với chủ đề dân gian.
+- Ảnh tham chiếu: `anh/tham-chieu-lau-dai-ban-do.jpg`.
+- PROMPT (gửi kèm ảnh tranh bản đồ hiện tại):
+  > Vẽ lại đúng tranh bản đồ vùng này, giữ nguyên bố cục, khung, cỡ ảnh, bảng màu và nét pixel art. Chỉ thay cụm "Lâu đài cổ" ở giữa phía trên. Thay tòa thành châu Âu tháp nón đỏ bằng một thành cổ Việt Nam: cổng thành vòm gạch, lầu mái ngói cong đỏ sẫm hai tầng kiểu Ngọ Môn hoặc thành Cổ Loa, tường đá ong, cờ đuôi nheo. Giữ các ô tròn đánh số ải và nhãn chữ ở đúng chỗ cũ, không vẽ chữ mới. Nền giấy cũ màu be như phần còn lại của tranh. Điểm ảnh vuông sắc nét, không viền mờ, không đổ bóng mềm.
+
+**B-2. Ô bấm dày đặc vẫn dưới 44 pt.** Nhóm giao diện, mức THẤP. Chưa sửa: các ô sát nhau nên không nới vùng chạm được, muốn đủ 44 pt phải đổi bố cục.
+- Không đi qua bộ nút chung nên `T.chamMin` không áp dụng.
+- Đo được:
+  - Ô chiêu ở Cây chưởng: 44×18 đơn vị, cao **24 pt** (SE) đến **26 pt** (iPhone 14). Hàng cách nhau 21 đơn vị.
+  - Hàng vũ khí ở Lò rèn, Hàng Xén, đổi vũ khí trong ải: cao 22 đơn vị, **29–32 pt**.
+  - Thẻ gợi ý ở màn thua: cao 21 đơn vị.
+- Rủi ro bấm nhầm thấp:
+  - Ở Cây chưởng, chạm lần đầu chỉ chọn, chạm lần nữa mới học.
+  - Hàng vũ khí rất rộng (180–300 đơn vị).
+- Đề xuất cho phiên bố cục: Cây chưởng 3 hàng thay 4 (hoặc hai trang); danh sách vũ khí 3 hàng mỗi trang.
+
+**B-3. Vật mang hệ đôi khi chồng lên đồ trang trí.** Mức THẤP.
+- Khoảng 10–15 trên khoảng 1.080 vật mang hệ (nấm độc, lò lửa, tinh thể bấm được) rơi vào một trong các chỗ có thể đặt đồ trang trí.
+- `propSpot` trong `stage.js` không biết chỗ đặt đồ trang trí của `room_art.js`.
+- Hai hình chỉ chồng nhau khi chỗ đó đúng là có đồ. Không ảnh hưởng luật chơi.
+
+**B-4. Nút Đánh có vùng chạm lấn 2 đơn vị ra ngoài mép phải màn** (SE, iPad). Hình nút nằm trọn trong màn, phần chạm còn lại rất rộng. Không cần sửa.
+
+### Chuyển phiên khác (thêm)
+
+- **(A) Ông Từ trong bảng Sân đình** trông như một cậu bé đội nón cầm chổi, chưa ra dáng ông giữ đình. Cần kiểm lại hình NPC.
+- **(A) Vũ khí bay theo em bé ở làng** vẫn to và có viền xanh (như N2 của tester 2).
+- **(A) Dáng đứng cầm kiếm trong trận:** lưỡi kiếm dựng che ngang mặt em bé (thấy khi chụp em bé đứng yên ở góc phòng).
