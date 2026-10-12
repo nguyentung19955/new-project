@@ -19,7 +19,12 @@
       // Dòng phụ và dòng mạnh chọn ngẫu nhiên sẽ làm số đo lệch: bài kiểm tra chỉ có khi tự yêu cầu (o.affixes, o.power).
       w.affixes = (o.affixes || []).slice(); w.power = o.power || null; w.family = o.family || 0;
       w.sharpen = o.sharpen || 0;
-      if (o.branch) { w.marks[o.branch] = o.marks == null ? 30 : o.marks; if (w.marks[o.branch] >= G.MARKS[0]) w.branch = o.branch; }
+      // Phiên cân bằng: mốc linh khí đổi 30/120/300 → G.MARKS (60/400/1.200). Số dấu ấn trong các bài kiểm tra cũ viết theo mốc cũ,
+      // nên o.marks được đổi sang mốc mới (G.lk.doiSo, như bản lưu cũ) để giữ đúng bậc tiến hoá bài muốn; o.marksMoi: số theo mốc mới.
+      if (o.branch) {
+        w.marks[o.branch] = o.marksMoi != null ? o.marksMoi : o.marks == null ? G.MARKS[0] : G.lk && G.lk.doiSo ? G.lk.doiSo(o.marks) : o.marks;
+        if (w.marks[o.branch] >= G.MARKS[0]) w.branch = o.branch;
+      }
     }
     sv.carry = [a.id, b.id];
     if (o.armor) { sv.owned.armor.push(o.armor); sv.armor = o.armor; }

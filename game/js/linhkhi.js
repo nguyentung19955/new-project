@@ -2,7 +2,7 @@
 //   - Trong trận: ba vạch Lửa/Độc/Băng cạnh hai ô vũ khí, hạt sáng bay vào vạch, chữ "+1 Lửa", vạch hệ chính nổi bật,
 //     sắp đạt mốc thì nhấp nháy; biểu tượng hệ nhỏ trên đầu quái đang dính hiệu ứng (kết liễu nó sẽ được dấu ấn hệ đó).
 //   - Màn kết quả: mỗi vũ khí một dòng (nhận bao nhiêu dấu ấn từng hệ, tổng/mốc kế, còn bao nhiêu, mốc kế mở gì).
-//   - Xem vũ khí: bảng linh khí ba hệ có mốc 30/120/300, hệ chính, đặc trưng đã mở và sắp mở, gợi ý cách cày.
+//   - Xem vũ khí: bảng linh khí ba hệ có mốc G.MARKS (60/400/1.200), hệ chính, đặc trưng đã mở và sắp mở, gợi ý cách cày.
 //   - Trang "Linh khí" trong hướng dẫn của Cụ Đồ.
 (function () {
   const G = window.G, ui = G.ui;
@@ -11,8 +11,59 @@
   const VERB = { fire: 'đang cháy', poison: 'đang trúng độc', ice: 'đang bị lạnh hoặc đóng băng' };
   LK.hint = (el) => G.t('Đánh quái {0} rồi kết liễu để nhận dấu ấn {1}', VERB[el], G.EL[el].name);
 
+  // ---------- chuyển đổi bản lưu cũ (mốc 30/120/300 → G.MARKS) ----------
+  // Dấu ấn mỗi hệ kéo giãn theo từng đoạn: [0,30) → [0,60), [30,120) → [60,400), [120,300) → [400,1200), phần vượt 300 giữ
+  // nguyên số (cộng vào 1.200). Vậy vũ khí giữ đúng mốc đã đạt và đúng tỉ lệ đường tới mốc kế; không vũ khí nào tụt bậc.
+  // Phần vượt mốc cuối của vũ khí đã Thức tỉnh đổi luôn ra nguyên liệu (G.lkDoiThua). Đánh dấu sv.lkMoc = 2 để không đổi hai lần.
+  LK.MOC_BAN = 2;
+  LK.doiSo = function (m) {
+    const A = [0].concat(G.MARKS_CU || [30, 120, 300]), B = [0].concat(G.MARKS);
+    if (!(m > 0)) return 0;
+    for (let k = 1; k < A.length; k++) if (m < A[k]) return B[k - 1] + ((m - A[k - 1]) / (A[k] - A[k - 1])) * (B[k] - B[k - 1]);
+    return B[B.length - 1] + (m - A[A.length - 1]);
+  };
+  // sv: bản lưu đã qua G.fixSave; cu: bản lưu ĐƯA VÀO chưa có dấu lkMoc (bản cũ). coDoi: bản đưa vào đã có kho đổi nguyên liệu.
+  LK.chuyenBanLuu = function (sv, cu, coDoi) {
+    if (!sv || typeof sv !== 'object') return sv;
+    if (cu) {
+      for (const w of sv.weapons || []) {
+        if (!w || !w.marks) continue;
+        for (const e of ELS) w.marks[e] = Math.round(LK.doiSo(+w.marks[e] || 0) * 10) / 10;
+        if (w.branch && G.wStage(w) === 3 && G.lkDoiThua && Array.isArray(sv.mats)) G.lkDoiThua(w, sv);
+      }
+    }
+    // kho hàng đổi vàng lấy nguyên liệu (G.DOI_NL): bản cũ đã có tiến trình thì nhận sẵn một ít
+    if (!coDoi && G.DOI_NL) sv.doiNL = cu && Object.keys(sv.stars || {}).length ? G.DOI_NL.batDau : 0;
+    sv.doiNL = Math.max(0, Math.min(G.DOI_NL ? G.DOI_NL.max : 10, Math.floor(+sv.doiNL || 0)));
+    sv.lkMoc = LK.MOC_BAN;
+    return sv;
+  };
+  // Gắn vào G.fixSave (js/engine.js không phải sửa): mọi đường nạp bản lưu (máy, mây) đều đi qua đây.
+  if (G.fixSave && !G.fixSave.lkBoc) {
+    const goc = G.fixSave;
+    G.fixSave = function (s) {
+      const vao = s && typeof s === 'object' && !Array.isArray(s);
+      const cu = vao && s.lkMoc !== LK.MOC_BAN, coDoi = vao && typeof s.doiNL === 'number' && s.doiNL >= 0;
+      const r = goc.apply(this, arguments);
+      // fixSave trả bản mới (bản đưa vào hỏng) thì không có gì để chuyển
+      try { LK.chuyenBanLuu(r, cu && r === s, coDoi && r === s); } catch (e) { console.error('Linh Khí: lỗi khi chuyển mốc linh khí của bản lưu (giữ nguyên dấu ấn)', e); }
+      return r;
+    };
+    G.fixSave.lkBoc = true;
+  }
+  // Bản lưu mới tạo (chơi mới, xoá bản lưu) đã theo mốc mới: đánh dấu luôn để lần nạp sau không chuyển đổi nhầm.
+  if (G.newSave && !G.newSave.lkBoc) {
+    const goc = G.newSave;
+    G.newSave = function () {
+      const s = goc.apply(this, arguments);
+      if (s && typeof s === 'object') { s.lkMoc = LK.MOC_BAN; if (!(s.doiNL >= 0)) s.doiNL = 0; }
+      return s;
+    };
+    G.newSave.lkBoc = true;
+  }
+
   // ---------- tính tiến độ ----------
-  // Mốc kế của một số dấu ấn (null khi đã qua 300), mốc vừa qua (0 nếu chưa qua mốc nào).
+  // Mốc kế của một số dấu ấn (null khi đã qua mốc cuối), mốc vừa qua (0 nếu chưa qua mốc nào).
   LK.next = (m) => { for (const v of G.MARKS) if (m < v) return v; return null; };
   LK.prev = (m) => { let p = 0; for (const v of G.MARKS) if (m >= v) p = v; return p; };
   // Thông tin một hệ của một vũ khí.
@@ -220,7 +271,7 @@
       const I = LK.info(w, el);
       let prog;
       if (!w.branch && I.m <= 0) prog = G.t('Chưa có dấu ấn. Kết liễu quái đang dính hiệu ứng để nhận.');
-      else if (I.next == null) prog = G.t('{0} {1} · đã Thức tỉnh (tối đa)', G.EL[el].name, I.m);
+      else if (I.next == null) prog = G.t('{0} {1} · đã Thức tỉnh: mỗi {2} dấu ấn thừa đổi 1 nguyên liệu', G.EL[el].name, I.m, G.LK_THUA);
       else if (I.capped) prog = G.t('{0} {1}/{2} · tối đa bậc {3}, nâng bậc để lên tiếp', G.EL[el].name, I.m, I.next, G.RARITY[G.wRar(w)].name);
       else prog = G.t('{0} {1}/{2} · còn {3} nữa → {4}', G.EL[el].name, I.m, I.next, I.left, I.unlock);
       out.push({ w, got, el, prog, info: I });
@@ -261,11 +312,11 @@
   };
 
   // ---------- bảng linh khí trong màn Xem vũ khí ----------
-  // Ba hàng (Lửa, Độc, Băng), mỗi hàng một vạch chia ba đoạn bằng nhau: 0-30, 30-120, 120-300.
+  // Ba hàng (Lửa, Độc, Băng), mỗi hàng một vạch chia ba đoạn bằng nhau: 0-60, 60-400, 400-1.200 (G.MARKS).
   LK.panel = function (w, x, y, wd) {
     const T = G.theme;
     if (T && T.head) T.head('Linh khí (dấu ấn hệ)', x, y); else ui.text('Linh khí (dấu ấn hệ)', x, y, { size: 8.5, bold: true });
-    ui.text('mốc 30 · 120 · 300', x + wd, y, { size: 6.5, align: 'right', color: '#9fb0aa' });
+    ui.text(G.t('mốc {0} · {1} · {2}', G.MARKS[0], G.MARKS[1], G.MARKS[2]), x + wd, y, { size: 6.5, align: 'right', color: '#9fb0aa' });
     y += 5;
     const bx = x + 40, bw = wd - 66, seg = bw / 3;
     ELS.forEach((el) => {
@@ -338,12 +389,12 @@
         ui.rect(px + 9, cy, 46, 3, '#13201e');
         ui.rect(px + 9, cy, 46 * [0.7, 0.25, 0.15][i], 3, i ? '#4f5f5a' : G.EL[el].col);
       });
-      ui.para('Hệ nào đủ 30 trước thì vũ khí khoá theo hệ đó (hệ chính, vạch sáng); hai hệ kia mờ đi.', x + 190, y1 - 9, wd - 190, { size: 6.5, color: '#d9cdb8' });
+      ui.para(G.t('Hệ nào đủ {0} trước thì vũ khí khoá theo hệ đó (hệ chính, vạch sáng); hai hệ kia mờ đi.', G.MARKS[0]), x + 190, y1 - 9, wd - 190, { size: 6.5, color: '#d9cdb8' });
       // ba mốc
       const y2 = y1 + 24, bw = wd - 4, seg = bw / 3;
       ui.rect(x + 2, y2, bw, 5, '#13201e', '#0b0a0a');
       ui.rect(x + 2, y2, seg * 1.6, 5, G.EL.fire.col);
-      const names = ['30 · Mầm', '120 · Thành hình', '300 · Thức tỉnh'], what = ['khoá hệ, tăng chỉ số', 'mở đặc trưng 1', 'mở đặc trưng 2'];
+      const names = [1, 2, 3].map((k) => G.t('{0} · {1}', G.MARKS[k - 1], G.tv(G.STAGE_NAMES[k]))), what = ['khoá hệ, tăng chỉ số', 'mở đặc trưng 1', 'mở đặc trưng 2'];
       for (let k = 0; k < 3; k++) {
         const mx = x + 2 + seg * (k + 1);
         ui.rect(mx - 1, y2 - 2, 2, 9, '#ffd23f');
@@ -356,7 +407,7 @@
         const E = G.EL[el], F = G.HE_FEATURES[el];
         LK.icon(el, x + 4, y3 - 2.5, 0.9);
         ui.text(G.t('{0}: kết liễu quái {1}', E.name, VERB[el]), x + 11, y3, { size: 6.5, bold: true, color: E.col });
-        ui.text('120: ' + G.tv(F[0].name) + ' · 300: ' + G.tv(F[1].name), x + wd, y3, { size: 6.5, align: 'right', color: '#e8dfcc' });
+        ui.text(G.MARKS[1] + ': ' + G.tv(F[0].name) + ' · ' + G.MARKS[2] + ': ' + G.tv(F[1].name), x + wd, y3, { size: 6.5, align: 'right', color: '#e8dfcc' });
         y3 += 9;
       });
       ui.text('Kết hợp hai hệ: sắp có', x, y3 + 3, { size: 7, bold: true, color: '#9fb0aa' });

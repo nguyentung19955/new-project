@@ -89,15 +89,15 @@ JS = r"""
   ok('60 viên đạn bay cùng lúc: mỗi khung dưới 8 ms', ms < 8, ms.toFixed(2) + ' ms');
 
   // ================= LINH KHÍ =================
-  // vũ khí đã khoá Lửa, 110 dấu ấn
-  room(1, { branch: 'fire', marks: 110 });
+  // vũ khí đã khoá Lửa, 390 dấu ấn (phiên cân bằng: mốc 60/400/1.200)
+  room(1, { branch: 'fire', marksMoi: 390 });
   let w = G.curW(P);
-  ok('Vạch trong trận: Lửa 110/120 là hệ chính, hai hệ kia mờ', row('fire').m === 110 && row('fire').next === 120 && row('fire').main && row('poison').dim && row('ice').dim, JSON.stringify(row('fire')));
+  ok('Vạch trong trận: Lửa 390/400 là hệ chính, hai hệ kia mờ', row('fire').m === 390 && row('fire').next === 400 && row('fire').main && row('poison').dim && row('ice').dim, JSON.stringify(row('fire')));
   const fr0 = row('fire').frac;
   let e = mob('fire');
   G.kill(e, {}); FR(1);
-  ok('Nhận 1 dấu ấn Lửa: số trên vạch tăng đúng 111/120', row('fire').m === 111 && row('fire').text === '111/120' && Math.floor(w.marks.fire) === 111, row('fire').text);
-  ok('Nhận dấu ấn: phần đầy của vạch dài thêm', row('fire').frac > fr0 && Math.abs(row('fire').frac - (111 - 30) / 90) < 1e-6, row('fire').frac);
+  ok('Nhận 1 dấu ấn Lửa: số trên vạch tăng đúng 391/400', row('fire').m === 391 && row('fire').text === '391/400' && Math.floor(w.marks.fire) === 391, row('fire').text);
+  ok('Nhận dấu ấn: phần đầy của vạch dài thêm', row('fire').frac > fr0 && Math.abs(row('fire').frac - (391 - 60) / 340) < 1e-6, row('fire').frac);
   const orbs = G.fx.state().E.filter((o) => o.ty === 'orb');
   const bp = G.lk.barPos('fire');
   ok('Hạt sáng bay ra từ quái', orbs.length >= 1, orbs.length);
@@ -109,10 +109,10 @@ JS = r"""
   for (let i = 0; i < 90; i++) { FR(1); for (const n of G.fx.state().N || []) if (!nums.includes(n.s)) nums.push(n.s); }
   ok('Chữ nổi "+1 Lửa" hiện cạnh vạch', nums.some((s) => s === '+1 Lửa'), nums.join(','));
   // sắp đạt mốc thì nhấp nháy
-  w.marks.fire = 117; FR(1);
-  ok('Còn 3 dấu ấn tới mốc 120: vạch Lửa nhấp nháy', row('fire').near, JSON.stringify(row('fire')));
-  w.marks.fire = 100; FR(1);
-  ok('Còn 20 dấu ấn: chưa nhấp nháy', !row('fire').near);
+  w.marks.fire = 397; FR(1);
+  ok('Còn 3 dấu ấn tới mốc 400: vạch Lửa nhấp nháy', row('fire').near, JSON.stringify(row('fire')));
+  w.marks.fire = 340; FR(1);
+  ok('Còn 60 dấu ấn: chưa nhấp nháy', !row('fire').near);
   // đổi vũ khí: vạch theo vũ khí đang cầm
   w.marks.poison = 7;
   P.cur = 1 - P.cur; FR(1);
@@ -127,17 +127,17 @@ JS = r"""
   a1.st.fire = 2; a1.st.last = 'fire'; FR(1);
   ok('Biểu tượng theo hiệu ứng gây sau cùng (giống luật dấu ấn)', G.lk.badgeList.some((b) => b.e === a1 && b.el === 'fire') && G.lk.markEl(a1) === 'fire');
 
-  // chưa khoá hệ: ba vạch đều sáng, hệ nào đủ 30 trước thì khoá
+  // chưa khoá hệ: ba vạch đều sáng, hệ nào đủ 60 trước thì khoá
   room(0, {});
   w = G.curW(P);
-  w.marks.fire = 20; w.marks.poison = 29;
+  w.marks.fire = 40; w.marks.poison = 59;
   FR(1);
-  ok('Chưa khoá hệ: ba vạch đều sáng, mốc kế là 30', ['fire', 'poison', 'ice'].every((el) => !row(el).dim && row(el).next === 30), JSON.stringify(G.lk.state.last.rows.map((r) => [r.el, r.m, r.dim])));
+  ok('Chưa khoá hệ: ba vạch đều sáng, mốc kế là 60', ['fire', 'poison', 'ice'].every((el) => !row(el).dim && row(el).next === 60), JSON.stringify(G.lk.state.last.rows.map((r) => [r.el, r.m, r.dim])));
   G.kill(mob('poison'), {}); FR(1);
-  ok('Độc đủ 30 trước: vũ khí khoá Độc, vạch Độc thành hệ chính, Lửa mờ đi', w.branch === 'poison' && row('poison').main && row('fire').dim && row('poison').text === '30/120', JSON.stringify(row('poison')));
+  ok('Độc đủ 60 trước: vũ khí khoá Độc, vạch Độc thành hệ chính, Lửa mờ đi', w.branch === 'poison' && row('poison').main && row('fire').dim && row('poison').text === '60/400', JSON.stringify(row('poison')));
 
   // ================= MÀN KẾT QUẢ =================
-  room(1, { branch: 'fire', marks: 100 });
+  room(1, { branch: 'fire', marksMoi: 300 });
   const ws = P.weapons, wa = ws[0], wb = ws[1];
   P.cur = 0;
   for (let i = 0; i < 5; i++) G.kill(mob('fire'), {});
@@ -145,16 +145,17 @@ JS = r"""
   G.kill(mob('ice'), { w: wb });
   G.kill(mob(null), {}); // quái không dính hiệu ứng: không có dấu ấn
   FR(5);
-  const k = P.markMult * W.marksMult, n5 = Math.round(5 * k), n2 = Math.round(2 * k), n1 = Math.round(k), tot = Math.floor(100 + 5 * k);
+  // Vũ khí thứ hai nhận một nửa dấu ấn vào hệ chính của nó (G.LK_PHU): cả hai món đều khoá Lửa.
+  const k = P.markMult * W.marksMult, h = G.LK_PHU, n5 = Math.round((5 + 1 * h) * k), n2 = Math.round(2 * k), n1 = Math.round(k), n7 = Math.round(7 * h * k), tot = Math.floor(300 + (5 + 1 * h) * k);
   G.finishStage(false); FR(30);
   const rows = G.lk.resultRows(S);
   const ra = rows.find((r) => r.w === wa), rb = rows.find((r) => r.w === wb);
   const got = (r) => r.got.map((q) => q.n + ' ' + q.el).join(', ');
-  ok('Kết quả: vũ khí 1 nhận ' + n5 + ' Lửa, ' + n2 + ' Độc (5 và 2 con, nhân hệ số dấu ấn ' + k + ')', got(ra) === n5 + ' fire, ' + n2 + ' poison', got(ra));
-  ok('Kết quả: vũ khí 2 nhận ' + n1 + ' Băng', got(rb) === n1 + ' ice', got(rb));
-  ok('Kết quả: ghi tổng hiện tại/mốc kế, còn bao nhiêu, mốc kế mở gì', ra.prog === 'Lửa ' + tot + '/120 · còn ' + (120 - tot) + ' nữa → Thành hình: mở Vệt cháy', ra.prog);
+  ok('Kết quả: vũ khí 1 nhận ' + n5 + ' Lửa (5 con + nửa con của vũ khí 2), ' + n2 + ' Độc (nhân hệ số dấu ấn ' + k + ')', got(ra) === n5 + ' fire, ' + n2 + ' poison', got(ra));
+  ok('Kết quả: vũ khí 2 nhận ' + n1 + ' Băng và ' + n7 + ' Lửa (nửa phần của 7 con vũ khí 1 hạ)', got(rb) === n7 + ' fire, ' + n1 + ' ice', got(rb));
+  ok('Kết quả: ghi tổng hiện tại/mốc kế, còn bao nhiêu, mốc kế mở gì', ra.prog === 'Lửa ' + tot + '/400 · còn ' + (400 - tot) + ' nữa → Thành hình: mở Vệt cháy', ra.prog);
   const shown = texts(() => G.scene.draw());
-  ok('Màn kết quả vẽ đủ chữ: số dấu ấn từng hệ và tổng/mốc kế', shown.includes('+' + n5 + ' Lửa') && shown.includes('+' + n2 + ' Độc') && shown.includes('Lửa ' + tot + '/120') && shown.includes('Linh khí của vũ khí'), shown.slice(-300));
+  ok('Màn kết quả vẽ đủ chữ: số dấu ấn từng hệ và tổng/mốc kế', shown.includes('+' + n5 + ' Lửa') && shown.includes('+' + n2 + ' Độc') && shown.includes('Lửa ' + tot + '/400') && shown.includes('Linh khí của vũ khí'), shown.slice(-300));
   // ải hướng dẫn: dấu ấn nhân đôi, sổ ghi vẫn khớp với số thật
   G.testSave({ hero: 'smith' }); G.save.tut.done = false; G.startStage(0, 0, 0);
   S = G.getRun(); W = G.getWorld(); P = S.P; W.waves = []; W.spawns = []; W.ents.length = 0; P.inv = 1e9;
@@ -163,19 +164,19 @@ JS = r"""
   ok('Ải đầu (dấu ấn x2): số ghi ở màn kết quả khớp số dấu ấn thật', Math.abs(S.lkGain[G.curW(P).id].fire - (G.curW(P).marks.fire - m0)) < 1e-9, S.lkGain[G.curW(P).id].fire + ' / ' + (G.curW(P).marks.fire - m0));
   // tối đa bậc và đã Thức tỉnh
   const cw = G.curW(P);
-  cw.rarity = 0; cw.branch = 'ice'; cw.marks = { fire: 0, poison: 0, ice: 150 };
+  cw.rarity = 0; cw.branch = 'ice'; cw.marks = { fire: 0, poison: 0, ice: 500 };
   ok('Vũ khí Thường đã Thành hình: báo tối đa bậc, cần nâng bậc', G.lk.resultRows(S).find((r) => r.w === cw).prog.includes('tối đa bậc Thường'), G.lk.resultRows(S).find((r) => r.w === cw).prog);
-  cw.rarity = 3; cw.marks.ice = 320;
-  ok('Vũ khí đã qua 300: báo đã Thức tỉnh', G.lk.resultRows(S).find((r) => r.w === cw).prog.includes('đã Thức tỉnh'), G.lk.resultRows(S).find((r) => r.w === cw).prog);
+  cw.rarity = 3; cw.marks.ice = 1250;
+  ok('Vũ khí đã qua 1.200: báo đã Thức tỉnh', G.lk.resultRows(S).find((r) => r.w === cw).prog.includes('đã Thức tỉnh'), G.lk.resultRows(S).find((r) => r.w === cw).prog);
 
   // ================= XEM VŨ KHÍ và CỤ ĐỒ =================
-  G.testSave({ hero: 'smith', tier: 2, branch: 'fire', marks: 140 });
+  G.testSave({ hero: 'smith', tier: 2, branch: 'fire', marksMoi: 560 });
   G.setScene(G.Village); FR(5);
   const V = G.villageApi.V;
   V.tab = 'weapon'; V.wid = G.save.carry[0]; V.back = 'hub'; V.wvTab = 'lk';
   let s = texts(() => { G.ui.begin(); G.scene.draw(); });
-  ok('Xem vũ khí: bảng linh khí ba hệ có số và mốc', s.includes('Linh khí (dấu ấn hệ)') && s.includes('140/300') && s.includes('mốc 30 · 120 · 300') && s.includes('Băng'), s.slice(0, 160));
-  ok('Xem vũ khí: hệ chính, đã mở, sắp mở, cách cày', s.includes('Hệ chính: Lửa') && s.includes('Đã mở: Vệt cháy') && s.includes('Sắp mở: Thức tỉnh: mở Nổ lan (còn 160') && s.includes('Đánh quái đang cháy rồi kết liễu để nhận dấu ấn Lửa'));
+  ok('Xem vũ khí: bảng linh khí ba hệ có số và mốc', s.includes('Linh khí (dấu ấn hệ)') && s.includes('560/1200') && s.includes('mốc 60 · 400 · 1200') && s.includes('Băng'), s.slice(0, 160));
+  ok('Xem vũ khí: hệ chính, đã mở, sắp mở, cách cày', s.includes('Hệ chính: Lửa') && s.includes('Đã mở: Vệt cháy') && s.includes('Sắp mở: Thức tỉnh: mở Nổ lan (còn 640') && s.includes('Đánh quái đang cháy rồi kết liễu để nhận dấu ấn'));
   V.wvTab = 'aff';
   s = texts(() => { G.ui.begin(); G.scene.draw(); });
   ok('Xem vũ khí: thẻ Dòng phụ vẫn còn', s.includes('Dòng phụ') && !s.includes('Linh khí (dấu ấn hệ)'));
@@ -183,7 +184,7 @@ JS = r"""
   V.tab = 'help'; V.page = 0;
   let found = false;
   for (let i = 0; i < 12 && !found; i++) { V.page = i; s = texts(() => { G.ui.begin(); G.scene.draw(); }); found = s.includes('Linh khí: dấu ấn hệ của vũ khí'); }
-  ok('Cụ Đồ: có trang Linh khí vẽ bằng hình, ghi "Kết hợp hai hệ: sắp có"', found && s.includes('Kết hợp hai hệ: sắp có') && s.includes('30 · Mầm') && s.includes('300 · Thức tỉnh'));
+  ok('Cụ Đồ: có trang Linh khí vẽ bằng hình, ghi "Kết hợp hai hệ: sắp có"', found && s.includes('Kết hợp hai hệ: sắp có') && s.includes('60 · Mầm') && s.includes('1200 · Thức tỉnh'));
   V.tab = 'forge'; V.ftab = 'sharpen'; V.sel = G.save.carry[0];
   s = texts(() => { G.ui.begin(); G.scene.draw(); });
   ok('Ông Thợ Rèn: có nút Xem linh khí cho món đang chọn', s.includes('Xem linh khí'));
