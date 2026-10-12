@@ -10,10 +10,14 @@
     G.run();
   }
   // Chờ phông chữ một chút cho đẹp, nhưng không chờ quá 1,2 giây.
+  // Phiên hiệu năng (V11): thẻ phông chữ Google không chặn vẽ nữa (media="print", tải xong mới bật): mạng chặn Google thì game không phải
+  // chờ hết thời gian chờ mới chạy. Ở đây chờ tệp CSS phông về (hoặc lỗi) rồi mới nạp phông, trong cùng hạn 1,2 giây như cũ.
   try {
     if (document.fonts && document.fonts.load) {
+      const lk = document.querySelector('link[href*="fonts.googleapis.com"]');
+      const cho = lk && lk.media === 'print' ? new Promise((r) => { lk.addEventListener('load', r); lk.addEventListener('error', r); }) : Promise.resolve();
       Promise.race([
-        document.fonts.load('700 12px "Be Vietnam Pro"'),
+        cho.then(() => document.fonts.load('700 12px "Be Vietnam Pro"')),
         new Promise((r) => setTimeout(r, 1200)),
       ]).then(start, start);
     } else start();
