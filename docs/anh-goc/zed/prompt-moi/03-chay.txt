@@ -1,7 +1,7 @@
 # Chạy
 # Gửi kèm: mẫu + mau-chay-v2.png
 
-Nhân vật như ẢNH MẪU gửi kèm (giữ y hệt mặt, tóc, sừng, đồ, màu, tỉ lệ đầu/thân). Pixel art chibi, viền tối 1 nét, quay mặt PHẢI, cùng cỡ người ở mọi khung, chân trụ chạm cùng một đường đất.
+Nhân vật như ẢNH MẪU gửi kèm (giữ y hệt mặt, tóc, đồ, đai đỏ, màu, tỉ lệ đầu/thân). Pixel art chibi, viền tối 1 nét, quay mặt PHẢI, cùng cỡ người ở mọi khung, chân trụ chạm cùng một đường đất.
 Ảnh 2 là khung xương 8 tư thế (đỏ = gần, xanh = xa): vẽ ĐÚNG tư thế từng khung.
-Chạy, LẶP, người nghiêng tới: 1 chạm đất, 2 dồn lực (thấp nhất), 3 đạp, 4 BAY hai chân rời đất; 5–8 như 1–4 ĐỔI chân. Khuỷu gập vuông, tay vung mạnh ngược chân. Tóc, khăn bay ra sau. Khung 8 nối khung 1.
+Chạy, LẶP, người nghiêng tới: 1 chạm đất, 2 dồn lực (thấp nhất), 3 đạp, 4 BAY hai chân rời đất; 5–8 như 1–4 ĐỔI chân. Khuỷu gập vuông, tay vung mạnh ngược chân. Tóc, đuôi đai bay ra sau. Khung 8 nối khung 1.
 1 hàng 8 khung đều nhau, đọc trái sang phải; các hình không chạm nhau, không chạm mép ảnh. Nền xanh lá thuần #00FF00, không lưới, không chữ, không số, không bóng, không hiệu ứng.

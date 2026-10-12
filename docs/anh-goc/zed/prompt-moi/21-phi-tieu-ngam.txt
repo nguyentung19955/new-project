@@ -1,7 +1,7 @@
 # Phi tiêu giữ ngắm (3 nấc)
 # Gửi kèm: mẫu
 
-Nhân vật như ẢNH MẪU gửi kèm (giữ y hệt mặt, tóc, sừng, đồ, màu, tỉ lệ đầu/thân). Pixel art chibi, viền tối 1 nét, quay mặt PHẢI, cùng cỡ người ở mọi khung, chân trụ chạm cùng một đường đất.
+Nhân vật như ẢNH MẪU gửi kèm (giữ y hệt mặt, tóc, đồ, đai đỏ, màu, tỉ lệ đầu/thân). Pixel art chibi, viền tối 1 nét, quay mặt PHẢI, cùng cỡ người ở mọi khung, chân trụ chạm cùng một đường đất.
 Tay phải cầm phi tiêu (không vẽ), tay trái chĩa ra trước ngắm.
 Giữ ngắm: 1 kéo tay ra sau một chút, 2 kéo xa hơn ngả người, 3 kéo căng nhất người ngả ra sau nhất.
 1 hàng 3 khung đều nhau, đọc trái sang phải; các hình không chạm nhau, không chạm mép ảnh. Nền xanh lá thuần #00FF00, không lưới, không chữ, không số, không bóng, không hiệu ứng.

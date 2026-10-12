@@ -1,6 +1,6 @@
 # Đứng thở
 # Gửi kèm: mẫu
 
-Nhân vật như ẢNH MẪU gửi kèm (giữ y hệt mặt, tóc, sừng, đồ, màu, tỉ lệ đầu/thân). Pixel art chibi, viền tối 1 nét, quay mặt PHẢI, cùng cỡ người ở mọi khung, chân trụ chạm cùng một đường đất.
-Đứng thở, LẶP: ngực phồng nhẹ khung 1–4, xẹp 5–8; chân đứng yên; tóc, khăn nhích nhẹ. Khung 8 nối liền khung 1.
+Nhân vật như ẢNH MẪU gửi kèm (giữ y hệt mặt, tóc, đồ, đai đỏ, màu, tỉ lệ đầu/thân). Pixel art chibi, viền tối 1 nét, quay mặt PHẢI, cùng cỡ người ở mọi khung, chân trụ chạm cùng một đường đất.
+Đứng thở, LẶP: ngực phồng nhẹ khung 1–4, xẹp 5–8; chân đứng yên; tóc, đuôi đai nhích nhẹ. Khung 8 nối liền khung 1.
 1 hàng 8 khung đều nhau, đọc trái sang phải; các hình không chạm nhau, không chạm mép ảnh. Nền xanh lá thuần #00FF00, không lưới, không chữ, không số, không bóng, không hiệu ứng.
