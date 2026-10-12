@@ -136,7 +136,7 @@ JS = r"""
   // ----- khóa nhánh và mốc tiến hóa -----
   room('hunter');
   let w = P.weapons[0];
-  // phiên cân bằng: mốc 60/400/1.200 (trước 30/120/300)
+  // phiên cân bằng: mốc 60/400/900 (trước 30/120/300)
   G.addMarks(w, 'fire', 59);
   ok('Nhánh: 59 dấu ấn chưa khóa', w.branch === null && G.wStage(w) === 0);
   G.addMarks(w, 'fire', 1);
@@ -150,13 +150,13 @@ JS = r"""
   G.addMarks(w, 'fire', 1000);
   ok('Mốc: bậc Sắt dừng ở Thành hình (dấu ấn vẫn giữ, không đổi ra nguyên liệu)', G.wStage(w) === 2 && w.name === null && w.marks.fire === 1400, G.wStage(w));
   w.tier = 1;
-  ok('Mốc: bậc Bạc với 1.200 dấu ấn là Thức tỉnh', G.wStage(w) === 3);
-  w.marks.fire = 1199;
-  ok('Mốc: 1.199 chưa Thức tỉnh', G.wStage(w) === 2);
-  ok('Cơ hội gây hiệu ứng theo mốc 0/20/50/100%', G.PROC.join() === '0,0.2,0.5,1' && G.MARKS.join() === '60,400,1200');
-  const mat0 = G.save.mats[2]; w.marks.fire = 1250; G.addMarks(w, 'fire', 60);
-  ok('Dấu ấn thừa: Thức tỉnh rồi, mỗi 100 dấu ấn vượt 1.200 đổi ra 1 đá lửa', G.save.mats[2] === mat0 + 1 && near(w.marks.fire, 1210, 1e-9), G.save.mats[2] - mat0 + ' / ' + w.marks.fire);
-  w.marks.fire = 1199;
+  ok('Mốc: bậc Bạc với 900 dấu ấn trở lên là Thức tỉnh', G.wStage(w) === 3);
+  w.marks.fire = 899;
+  ok('Mốc: 899 chưa Thức tỉnh', G.wStage(w) === 2);
+  ok('Cơ hội gây hiệu ứng theo mốc 0/20/50/100%', G.PROC.join() === '0,0.2,0.5,1' && G.MARKS.join() === '60,400,900');
+  const mat0 = G.save.mats[2]; w.marks.fire = 950; G.addMarks(w, 'fire', 60);
+  ok('Dấu ấn thừa: Thức tỉnh rồi, mỗi 100 dấu ấn vượt 900 đổi ra 1 đá lửa', G.save.mats[2] === mat0 + 1 && near(w.marks.fire, 910, 1e-9), G.save.mats[2] - mat0 + ' / ' + w.marks.fire);
+  w.marks.fire = 899;
   ok('activeEl: vũ khí Mầm trở lên đánh ra hệ của nhánh', G.activeEl(P, w) === 'fire' && G.activeEl(P, P.weapons[1]) === null);
   G.addCoat('ice', 5);
   ok('Bùa hệ phủ đè lên hệ của nhánh', G.activeEl(P, w) === 'ice' && G.activeEl(P, P.weapons[1]) === 'ice');

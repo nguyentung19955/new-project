@@ -2,7 +2,7 @@
 //   - Trong trận: ba vạch Lửa/Độc/Băng cạnh hai ô vũ khí, hạt sáng bay vào vạch, chữ "+1 Lửa", vạch hệ chính nổi bật,
 //     sắp đạt mốc thì nhấp nháy; biểu tượng hệ nhỏ trên đầu quái đang dính hiệu ứng (kết liễu nó sẽ được dấu ấn hệ đó).
 //   - Màn kết quả: mỗi vũ khí một dòng (nhận bao nhiêu dấu ấn từng hệ, tổng/mốc kế, còn bao nhiêu, mốc kế mở gì).
-//   - Xem vũ khí: bảng linh khí ba hệ có mốc G.MARKS (60/400/1.200), hệ chính, đặc trưng đã mở và sắp mở, gợi ý cách cày.
+//   - Xem vũ khí: bảng linh khí ba hệ có mốc G.MARKS (60/400/900), hệ chính, đặc trưng đã mở và sắp mở, gợi ý cách cày.
 //   - Trang "Linh khí" trong hướng dẫn của Cụ Đồ.
 (function () {
   const G = window.G, ui = G.ui;
@@ -12,8 +12,8 @@
   LK.hint = (el) => G.t('Đánh quái {0} rồi kết liễu để nhận dấu ấn {1}', VERB[el], G.EL[el].name);
 
   // ---------- chuyển đổi bản lưu cũ (mốc 30/120/300 → G.MARKS) ----------
-  // Dấu ấn mỗi hệ kéo giãn theo từng đoạn: [0,30) → [0,60), [30,120) → [60,400), [120,300) → [400,1200), phần vượt 300 giữ
-  // nguyên số (cộng vào 1.200). Vậy vũ khí giữ đúng mốc đã đạt và đúng tỉ lệ đường tới mốc kế; không vũ khí nào tụt bậc.
+  // Dấu ấn mỗi hệ kéo giãn theo từng đoạn: [0,30) → [0,60), [30,120) → [60,400), [120,300) → [400,900), phần vượt 300 giữ
+  // nguyên số (cộng vào 900). Vậy vũ khí giữ đúng mốc đã đạt và đúng tỉ lệ đường tới mốc kế; không vũ khí nào tụt bậc.
   // Phần vượt mốc cuối của vũ khí đã Thức tỉnh đổi luôn ra nguyên liệu (G.lkDoiThua). Đánh dấu sv.lkMoc = 2 để không đổi hai lần.
   LK.MOC_BAN = 2;
   LK.doiSo = function (m) {
@@ -312,7 +312,7 @@
   };
 
   // ---------- bảng linh khí trong màn Xem vũ khí ----------
-  // Ba hàng (Lửa, Độc, Băng), mỗi hàng một vạch chia ba đoạn bằng nhau: 0-60, 60-400, 400-1.200 (G.MARKS).
+  // Ba hàng (Lửa, Độc, Băng), mỗi hàng một vạch chia ba đoạn bằng nhau: 0-60, 60-400, 400-900 (G.MARKS).
   LK.panel = function (w, x, y, wd) {
     const T = G.theme;
     if (T && T.head) T.head('Linh khí (dấu ấn hệ)', x, y); else ui.text('Linh khí (dấu ấn hệ)', x, y, { size: 8.5, bold: true });

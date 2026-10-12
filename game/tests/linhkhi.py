@@ -89,7 +89,7 @@ JS = r"""
   ok('60 viên đạn bay cùng lúc: mỗi khung dưới 8 ms', ms < 8, ms.toFixed(2) + ' ms');
 
   // ================= LINH KHÍ =================
-  // vũ khí đã khoá Lửa, 390 dấu ấn (phiên cân bằng: mốc 60/400/1.200)
+  // vũ khí đã khoá Lửa, 390 dấu ấn (phiên cân bằng: mốc 60/400/900)
   room(1, { branch: 'fire', marksMoi: 390 });
   let w = G.curW(P);
   ok('Vạch trong trận: Lửa 390/400 là hệ chính, hai hệ kia mờ', row('fire').m === 390 && row('fire').next === 400 && row('fire').main && row('poison').dim && row('ice').dim, JSON.stringify(row('fire')));
@@ -166,8 +166,8 @@ JS = r"""
   const cw = G.curW(P);
   cw.rarity = 0; cw.branch = 'ice'; cw.marks = { fire: 0, poison: 0, ice: 500 };
   ok('Vũ khí Thường đã Thành hình: báo tối đa bậc, cần nâng bậc', G.lk.resultRows(S).find((r) => r.w === cw).prog.includes('tối đa bậc Thường'), G.lk.resultRows(S).find((r) => r.w === cw).prog);
-  cw.rarity = 3; cw.marks.ice = 1250;
-  ok('Vũ khí đã qua 1.200: báo đã Thức tỉnh', G.lk.resultRows(S).find((r) => r.w === cw).prog.includes('đã Thức tỉnh'), G.lk.resultRows(S).find((r) => r.w === cw).prog);
+  cw.rarity = 3; cw.marks.ice = 950;
+  ok('Vũ khí đã qua 900: báo đã Thức tỉnh', G.lk.resultRows(S).find((r) => r.w === cw).prog.includes('đã Thức tỉnh'), G.lk.resultRows(S).find((r) => r.w === cw).prog);
 
   // ================= XEM VŨ KHÍ và CỤ ĐỒ =================
   G.testSave({ hero: 'smith', tier: 2, branch: 'fire', marksMoi: 560 });
@@ -175,8 +175,8 @@ JS = r"""
   const V = G.villageApi.V;
   V.tab = 'weapon'; V.wid = G.save.carry[0]; V.back = 'hub'; V.wvTab = 'lk';
   let s = texts(() => { G.ui.begin(); G.scene.draw(); });
-  ok('Xem vũ khí: bảng linh khí ba hệ có số và mốc', s.includes('Linh khí (dấu ấn hệ)') && s.includes('560/1200') && s.includes('mốc 60 · 400 · 1200') && s.includes('Băng'), s.slice(0, 160));
-  ok('Xem vũ khí: hệ chính, đã mở, sắp mở, cách cày', s.includes('Hệ chính: Lửa') && s.includes('Đã mở: Vệt cháy') && s.includes('Sắp mở: Thức tỉnh: mở Nổ lan (còn 640') && s.includes('Đánh quái đang cháy rồi kết liễu để nhận dấu ấn'));
+  ok('Xem vũ khí: bảng linh khí ba hệ có số và mốc', s.includes('Linh khí (dấu ấn hệ)') && s.includes('560/900') && s.includes('mốc 60 · 400 · 900') && s.includes('Băng'), s.slice(0, 160));
+  ok('Xem vũ khí: hệ chính, đã mở, sắp mở, cách cày', s.includes('Hệ chính: Lửa') && s.includes('Đã mở: Vệt cháy') && s.includes('Sắp mở: Thức tỉnh: mở Nổ lan (còn 340') && s.includes('Đánh quái đang cháy rồi kết liễu để nhận dấu ấn'));
   V.wvTab = 'aff';
   s = texts(() => { G.ui.begin(); G.scene.draw(); });
   ok('Xem vũ khí: thẻ Dòng phụ vẫn còn', s.includes('Dòng phụ') && !s.includes('Linh khí (dấu ấn hệ)'));
@@ -184,7 +184,7 @@ JS = r"""
   V.tab = 'help'; V.page = 0;
   let found = false;
   for (let i = 0; i < 12 && !found; i++) { V.page = i; s = texts(() => { G.ui.begin(); G.scene.draw(); }); found = s.includes('Linh khí: dấu ấn hệ của vũ khí'); }
-  ok('Cụ Đồ: có trang Linh khí vẽ bằng hình, ghi "Kết hợp hai hệ: sắp có"', found && s.includes('Kết hợp hai hệ: sắp có') && s.includes('60 · Mầm') && s.includes('1200 · Thức tỉnh'));
+  ok('Cụ Đồ: có trang Linh khí vẽ bằng hình, ghi "Kết hợp hai hệ: sắp có"', found && s.includes('Kết hợp hai hệ: sắp có') && s.includes('60 · Mầm') && s.includes('900 · Thức tỉnh'));
   V.tab = 'forge'; V.ftab = 'sharpen'; V.sel = G.save.carry[0];
   s = texts(() => { G.ui.begin(); G.scene.draw(); });
   ok('Ông Thợ Rèn: có nút Xem linh khí cho món đang chọn', s.includes('Xem linh khí'));
