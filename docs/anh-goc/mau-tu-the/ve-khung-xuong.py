@@ -48,8 +48,8 @@ def khung(d, ox, nghieng, nhap, chan_gan, chan_xa, tay_gan, tay_xa, bay=0):
             thap = max(thap, y2)
         return thap
     hy = DAT - (day(0)) - bay
-    vai = diem(180 + nghieng, THAN, hx, hy)
-    dau = diem(180 + nghieng, THAN + 22, hx, hy)
+    vai = diem(180 - nghieng, THAN, hx, hy)
+    dau = diem(180 - nghieng, THAN + 22, hx, hy)
     # chi xa vẽ trước (nằm sau), chi gần vẽ sau
     ve_tay(d, vai, *tay_xa, XANH)
     ve_chi(d, (hx, hy), *chan_xa, XANH)
@@ -90,5 +90,5 @@ chay_nua = [
 chay = chay_nua + [(cx, cg, tx, tg, b) for (cg, cx, tg, tx, b) in chay_nua]
 
 if __name__ == '__main__':
-    ve('mau-di-bo-v2.png', di, 4)
-    ve('mau-chay-v2.png', chay, 14)
+    ve("mau-di-bo-v2.png", di, 3)
+    ve("mau-chay-v2.png", chay, 20)
