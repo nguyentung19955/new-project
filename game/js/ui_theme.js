@@ -138,14 +138,25 @@
   try { tat44 = /[?&]cham44=0\b/i.test(String(window.location && window.location.search)); } catch (e) { tat44 = false; }
   if (G.CHAM44 == null) G.CHAM44 = !tat44;
   T.CHAM_MIN = 31;
+  // Rà soát C (12/10): 31 đơn vị chỉ đủ 44 pt khi 1 đơn vị ≥ 1,42 pt. Trên iPhone thật có vùng an toàn (tai thỏ 47 pt mỗi bên, thanh Home 21 pt)
+  // hoặc iPhone SE thì khung game nhỏ lại (1 đơn vị ≈ 1,32–1,37 pt) nên 31 đơn vị chỉ còn 41–42 pt. Nay vùng chạm tối thiểu tính theo cỡ
+  // khung thật: đủ 44 pt ở mọi máy (không dưới 31, không quá 40 đơn vị). Hình nút giữ nguyên. Tắt cùng cờ G.CHAM44.
+  T.chamMin = () => { const s = G.scale || 0; return G.RSC !== false && s > 0 ? G.clamp(Math.ceil((44 / s) * 2) / 2, T.CHAM_MIN, 40) : T.CHAM_MIN; };
   // Cờ CHỮ RÕ (phiên 12/10): chữ tràn / nhỏ / thuật ngữ khó hiểu (số linh khí vừa ô, "chọn em bé", "trận này chưa nhận linh khí",
   // dòng thưởng có tên, xưng "cháu" ở màn thua, dấu phẩy thập phân, máu không âm, ẩn thẻ "Rèn đồ" cũ, dấu báo ở làng chỉ khi làm được...).
   // Tắt: G.CHU_RO = false hoặc ?churo=0 (về chữ cũ).
   let tatChu = false;
   try { tatChu = /[?&]churo=0\b/i.test(String(window.location && window.location.search)); } catch (e) { tatChu = false; }
   if (G.CHU_RO == null) G.CHU_RO = !tatChu;
+  // Cờ RÀ SOÁT C (phiên Rà soát toàn bộ, phần C — giao diện điện thoại + bản đồ, 12/10): vùng chạm 44 pt theo cỡ khung thật,
+  // chữ tiếng Việt trên nút tự thu cho vừa nút, cặp chữ hai dòng trên nút cao canh giữa, các thẻ Bà Hàng Xén rộng theo chữ,
+  // ô mẹo đáy phòng mờ đi khi có người/quái/vùng báo đòn bên dưới, bóng mờ em bé khi đứng sau vật che ở làng.
+  // Tắt: G.RSC = false hoặc ?rsc=0 (về như trước phiên).
+  let tatRsc = false;
+  try { tatRsc = /[?&]rsc=0\b/i.test(String(window.location && window.location.search)); } catch (e) { tatRsc = false; }
+  if (G.RSC == null) G.RSC = !tatRsc;
   let NUT = [], NUT0 = [];
-  const no = (r) => { const m = T.CHAM_MIN, dw = Math.max(0, m - r[2]) / 2, dh = Math.max(0, m - r[3]) / 2; return [r[0] - dw, r[1] - dh, r[2] + dw * 2, r[3] + dh * 2]; };
+  const no = (r) => { const m = T.chamMin(), dw = Math.max(0, m - r[2]) / 2, dh = Math.max(0, m - r[3]) / 2; return [r[0] - dw, r[1] - dh, r[2] + dw * 2, r[3] + dh * 2]; };
   const xa = (p, r) => Math.hypot(Math.max(r[0] - p.x, 0, p.x - r[0] - r[2]), Math.max(r[1] - p.y, 0, p.y - r[1] - r[3]));
   const cung = (a, b) => Math.abs(a[0] - b[0]) < 0.5 && Math.abs(a[1] - b[1]) < 0.5 && Math.abs(a[2] - b[2]) < 0.5 && Math.abs(a[3] - b[3]) < 0.5;
   // r: vùng chạm cũ (đã gồm lề pad), v: hình thật của nút. Mỗi mục trong NUT0: [hình thật, vùng chạm đã nới].
@@ -213,7 +224,20 @@
   T.vua = vua;
   // Vẽ chữ nút: tiếng Việt vẽ thẳng, ngôn ngữ khác thì qua vua() để không tràn nút.
   function nhan(label, cx, y, w, o) {
-    if (G.LANG === 'vi' || !G.tv) return txt(label, cx, y, o);
+    if (G.LANG === 'vi' || !G.tv) {
+      // Rà soát C: tiếng Việt cũng thu chữ khi chữ dài hơn nút (máy thật dùng phông Be Vietnam Pro rộng hơn phông dự phòng,
+      // nên chữ vừa khít trên máy thử có thể lòi ra ngoài nút trên iPhone). Vừa thì vẽ y như cũ. Bỏ qua chữ có số (có thể là
+      // "số + tài nguyên" được vẽ thành biểu tượng, đo bằng chữ sẽ dài hơn thật).
+      if (G.RSC !== false && w > 0 && !/\d/.test(String(label))) {
+        ui.font(o.size, o.bold, o.tiny);
+        if (G.ux.measureText(String(label)).width > w + 0.5) {
+          let size = o.size || 9;
+          for (;;) { ui.font(size, o.bold, true); if (G.ux.measureText(String(label)).width <= w || size <= 6.5) break; size = Math.max(6.5, size - 0.5); }
+          return txt(label, cx, y + (size - (o.size || 9)) * 0.36, Object.assign({}, o, { size, tiny: true }));
+        }
+      }
+      return txt(label, cx, y, o);
+    }
     const q = vua(label, w, o.size, o.bold);
     txt(q[0], cx, y + (q[1] - o.size) * 0.36, Object.assign({}, o, { size: q[1], tiny: true }));
   }
@@ -242,7 +266,7 @@
     });
     const dy = pressFx('b' + x + '|' + y + '|' + w + '|' + h, st === 1);
     put(cv, x, y + dy);
-    const y0 = y + dy + (st === 1 ? 1 : 0), size = o.size || (h >= 26 ? 10 : 9), col = dis ? '#8fa49e' : C.ink;
+    const y0 = y + dy + (st === 1 ? 1 : 0) - (o.sub && h >= 28 && G.RSC !== false ? 1 : 0), size = o.size || (h >= 26 ? 10 : 9), col = dis ? '#8fa49e' : C.ink; // Rà soát C: nút cao có hai dòng chữ: nâng 1 để dòng dưới không chạm răng cưa
     if (label) nhan(label, x + w / 2, y0 + h / 2 + size * 0.36 - (o.sub ? 3.5 : 0) - 0.3, w - (w >= 70 && h >= 16 ? 16 : 6), { size, bold: true, align: 'center', color: col });
     if (o.sub) nhan(o.sub, x + w / 2, y0 + h / 2 + 7.5, w - 6, { size: o.subSize || 7, bold: false, align: 'center', color: dis ? '#8fa49e' : '#e8d9a8' });
     if (o.dot) { const c = G.ux; c.beginPath(); c.arc(x + w - 3, y + 3, 3, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = C.dk; c.stroke(); }

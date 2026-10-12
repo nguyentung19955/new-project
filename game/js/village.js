@@ -403,6 +403,15 @@
   function xenTabs() {
     // Phiên cân bằng (mục 3): thêm thẻ Nguyên liệu (đổi vàng lấy nguyên liệu vùng đã qua, js/upgrade.js U.doi).
     const BD = G.banDo, tabs = [['weapon', 'Vũ khí', 36], ['nl', 'Nguyên liệu', 48], ['outfit', 'Mua đồ mặc', 46], ['sell', 'Bán đồ mặc', 46]];
+    // Rà soát C: thẻ rộng theo chữ (phông thật trên iPhone rộng hơn, "Nguyên liệu" chạm viền thẻ) nếu băng tiêu đề còn chỗ
+    if (G.RSC !== false) {
+      ui.font(7.5, true);
+      const rong = tabs.map((t) => Math.max(t[2], Math.ceil(G.ux.measureText(G.tv ? G.tv(t[1]) : t[1]).width) + 9));
+      ui.font(11, true);
+      const tit = Math.ceil(G.ux.measureText(G.tv ? G.tv('Hàng xén') : 'Hàng xén').width) + 16;
+      const du = PW - 70 - tit - tabs.reduce((a, t) => a + t[2] + 2, 0), thieu = rong.map((w, i) => w - tabs[i][2]), tong = thieu.reduce((a, b) => a + b, 0);
+      if (du > 0 && tong > 0) { const k = Math.min(1, du / tong); tabs.forEach((t, i) => { t[2] = Math.floor(t[2] + thieu[i] * k); }); } // thiếu chỗ thì chia phần còn trống theo độ thiếu
+    }
     let x = PX + PW - 70 - tabs.reduce((a, t) => a + t[2] + 2, 0);
     const cur = V.gtab === 'outfit' || V.gtab === 'sell' || V.gtab === 'nl' ? V.gtab : 'weapon';
     for (const t of tabs) {

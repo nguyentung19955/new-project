@@ -608,7 +608,7 @@
   const BTN = BTN0;
   // Ô bình máu và nút tạm dừng: [x, y, rộng, cao]. Vùng chạm rộng hơn hình vẽ 4 đơn vị mỗi phía.
   const POT = [4, 26, 54, 24], PAU = [G.CHU_RO !== false ? 70 : 62, 26, 30, 24]; // 12/10 (cờ G.CHU_RO): nút Dừng dời phải 8 để không che chữ "Bình máu"; vùng chạm hai nút không chồng nhau // cao 24 (+ vùng chạm nới 4) để vừa ngón tay trên điện thoại
-  const hitBox = (d, b) => G.inRect(d, b[0] - 4, b[1] - 4, b[2] + 8, b[3] + 9); // vùng chạm cao 33 (khoảng 44 điểm trên điện thoại)
+  const hitBox = (d, b) => G.inRect(d, b[0] - 4, b[1] - 4, b[2] + 8, G.CHAM44 && G.theme.chamMin ? Math.max(b[3] + 9, G.theme.chamMin()) : b[3] + 9); // Rà soát C: cao đủ 44 pt cả khi khung nhỏ (iPhone SE, có tai thỏ) // vùng chạm cao 33 (khoảng 44 điểm trên điện thoại)
   function setMode(m) { S.mode = m; S.sel = null; }
   G.stageUi = { btnPos, stickPos, POT, PAU }; // để bài kiểm tra biết nút nằm ở đâu
   function readInput() {
@@ -624,7 +624,7 @@
     for (const d of G.downs) {
       if (G.inRect(d, 368, 0, 112, 38)) { inp.swapP = true; d.role = 'ui'; continue; }
       // 12/10 (cờ G.CHU_RO): nút "Bản đồ" thu nhỏ ở phòng trùm có vùng chạm cao 31 (≈ 44 pt), nới xuống dưới (phía trên là dải linh khí)
-      const mmH = G.CHU_RO !== false && mm[3] < 31 ? 31 : mm[3] + 3, mmY = G.CHU_RO !== false && mm[3] < 31 ? mm[1] - 4 : mm[1];
+      const m44 = G.CHAM44 && G.theme.chamMin ? G.theme.chamMin() : 31, mmH = G.CHU_RO !== false && mm[3] < m44 ? m44 : mm[3] + 3, mmY = G.CHU_RO !== false && mm[3] < m44 ? mm[1] - 4 : mm[1];
       if (G.inRect(d, mm[0] - 2, mmY, mm[2] + 4, mmH)) { inp.mapP = true; d.role = 'ui'; continue; }
       if (hitBox(d, POT)) { inp.potionP = true; d.role = 'ui'; continue; }
       if (hitBox(d, PAU)) { inp.pauseP = true; d.role = 'ui'; continue; }
@@ -1072,7 +1072,14 @@
       const pw = Math.min(lx1 - lx0, Math.ceil(tw) + 12), ph = Math.round(lines.length * 9.5 + 6), mid = (lx0 + lx1) / 2, px = Math.round(mid - pw / 2), ga = G.ux.globalAlpha;
       const py = len ? by : 269 - ph;
       if (len) by += ph + 2;
-      G.ux.globalAlpha = ga * q[2];
+      // Rà soát C: ô chữ ở đáy (y 244–269) che chân em bé / quái / vùng sát thương ở mép dưới sàn: lúc có ai hay vùng nào dưới ô thì mờ còn 35%
+      let mo = 1;
+      if (!len && G.RSC !== false) {
+        const cam = W.cam || 0, x0 = px - 6 + cam, x1 = px + pw + 6 + cam, y0 = py - 4;
+        const duoi = (o, rr) => o && !o.dead && o.y + (rr || 0) >= y0 && o.x + (rr || 0) >= x0 && o.x - (rr || 0) <= x1;
+        if (duoi(S.P) || duoi(W.boss) || W.ents.some((e) => duoi(e)) || W.zones.some((z) => z.team !== 'player' && duoi(z, z.r || 0))) mo = 0.35;
+      }
+      G.ux.globalAlpha = ga * q[2] * mo;
       T.plate(px, py, pw, ph, { a: 0.78 });
       lines.forEach((l, i) => ui.text(l, mid, py + 9.5 + i * 9.5, { size: 7, align: 'center', color: q[1], bold }));
       G.ux.globalAlpha = ga;

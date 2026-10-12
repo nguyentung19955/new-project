@@ -1024,6 +1024,15 @@
     }
     L.sort((a, b) => a[0] - b[0]);
     for (const l of L) l[1]();
+    // Rà soát C (cờ G.RSC): em bé đi vào sau tán đa, mái nhà, cái dù... (chỗ đi được nhưng vật vẽ sau che kín) thì vẽ thêm bóng mờ của bé
+    // lên trên, như trong ải (G.mobHeroOver). Bé đang thấy rõ thì bóng mờ trùng khít hình bé, không đổi gì.
+    if (!o.hideHero && G.RSC !== false) {
+      const hx = S.x, hy = S.y - 12;
+      const sau = (q, top) => q[1] > S.y + 0.5 && Math.abs(S.x - q[0]) < 8 && S.y > q[1] + top; // đứng ngay sau người làng / các bé
+      const che = Bt.objs.some((ob) => ob.y > S.y + 0.5 && hx >= ob.x + 3 && hx <= ob.x + (ob.w || ob.cv.width) - 3 && hy >= ob.y0 && hy <= ob.y0 + (ob.h || ob.cv.height))
+        || ORDER.some((k) => shown(k) && sau(NPCS[k].pos, NPCS[k].top)) || seats().some((st) => sau([st.x, st.y], -22));
+      if (che) drawKid(c, sv.hero, S.x - cam, S.y, S.face, { move: S.moving, outfit: G.outfit ? G.outfit.look(sv) : null, alpha: 0.45, roundShadow: false });
+    }
     // quầng sáng và đom đóm
     ambTop(c, cam, t, M);
     c.globalCompositeOperation = 'lighter'; c.drawImage(Bt.light, -cam, 0); if (M > 0) ambLight(c, Bt, cam, t, M, tb); c.globalCompositeOperation = 'source-over';

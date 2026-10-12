@@ -72,11 +72,20 @@
     return null;
   }
   // ttVe: vẽ ảnh với GIỮA ĐÁY ảnh đặt tại (x, yb). h0..h1: chỉ vẽ dải ngang (xem veAnh).
+  // Rà soát C: vật trang trí CAO (ảnh từ 14 điểm trở lên: tượng đá, gốc cổ thụ, mỏ neo...) nằm ở lớp nền nên em bé / quái đứng SAU
+  // vật (chân cao hơn chân vật) vẫn bị vẽ đè lên vật. Ghi lại vật cao để lúc vẽ trận chèn thêm một lần vẽ vật theo thứ tự chân (y),
+  // nhờ vậy ai đứng sau thì bị vật che đúng lớp. Chỉ hình, không va chạm.
+  // Chỉ vật đứng (không tính vật nằm bẹt trên sàn như vũng nước, khóm hoa, thảm).
+  let ghiCao = null;
+  const CAO = { 'co-thu': 1, 'mo-neo': 1, 'tuong-hiep-si': 1, 'chan-nen': 1, 'cot-da': 1, 'thung-go': 1, 'goc-cay': 1, 'bui-qua': 1, 'dong-da': 1, 'dong-da-2': 1 };
   function ttVe(a, x, yb, lat, h0, h1) { song(() => veAnh(a, x - a.pw / a.net / 2, yb - a.ph / a.net, lat, h0, h1)); }
   // ttMot: có ảnh gd-tt-<vùng>-<tên> (tên là mảng thì chọn biến thể theo i) thì vẽ giữa đáy tại (x, yb) và trả về ảnh; không có thì trả về null.
   function ttMot(vung, ten, x, yb, i) {
     const a = Array.isArray(ten) ? ttChon(vung, ten, i) : gdA('gd-tt-' + vung + '-' + ten);
-    if (a) ttVe(a, x, yb);
+    if (a) {
+      ttVe(a, x, yb);
+      if (ghiCao && a.ph / a.net >= 12 && (Array.isArray(ten) ? ten : [ten]).some((t) => CAO[t])) ghiCao.push({ a, x, yb, lat: false });
+    }
     return a;
   }
   const ttNhoNho = new WeakMap(); // ảnh -> bản thu về cỡ game (để vẽ vào nền dựng sẵn)
@@ -1312,13 +1321,13 @@
     g.accSide = g.type === 'fountain' ? 1 : hs((seed || 11) + 101) & 1 ? -1 : 1; // góc trên đặt điểm nhấn (phòng suối: bên phải, bên trái có rương đồ)
     g.amb = []; // chỗ có chuyển động môi trường (vũng nước, giọt nhũ đá, nấm sáng...): ghi lại lúc dựng, vẽ động ở lớp sống
     c = base;
-    const tt = []; // lệnh vẽ sống của ảnh AI đồ trang trí (gd-tt-*); rỗng khi không có tệp nào
+    const tt = [], cao = []; // lệnh vẽ sống của ảnh AI đồ trang trí (gd-tt-*); rỗng khi không có tệp nào. cao: vật cao (xem ttVe)
     try {
       ghi = tt;
       T.paintVoid(g, rn);
       T.floors[g.variant % T.floors.length](g, rn);
       mark(T, g);
-      decor(T, g, rn);
+      ghiCao = cao; decor(T, g, rn); ghiCao = null;
       T.back(g, rn);
       backPass(T, g);
       T.sides(g, rn);
@@ -1326,9 +1335,10 @@
       T.backDeco(g, rn);
       const acc = accentPlan(T, g, G.srand(hs((seed || 11) * 7 + 3)));
       lightPass(T, g);
+      ghiCao = cao;
       if (acc) acc();
-    } finally { ghi = null; }
-    return { cv: base.canvas, lights: g.lights, amb: g.amb, accSide: g.accSide, tt };
+    } finally { ghi = null; ghiCao = null; }
+    return { cv: base.canvas, lights: g.lights, amb: g.amb, accSide: g.accSide, tt, cao };
   }
   function buildRoom(T, g, seed, shell) {
     const base = mk(g.W, g.H), fore = mk(g.W, g.H);
@@ -1351,7 +1361,7 @@
     if (T.fore) { try { ghi = cuaTruoc; T.fore(g, G.srand((seed || 11) + 9)); } finally { ghi = null; } } // ảnh AI ở mép trước (tinh thể Hang biển) vẽ sống, đè lên nhân vật
     ambSetup(T, g, seed);
     const fgr = fgBuild(T, g, G.srand(hs((seed || 11) + 17)));
-    return { base: base.canvas, fore: fore.canvas, fg: fgr.cv, fgCl: fgr.cl, g, T, cuaNen, cuaTruoc, ttNen: shell.tt || [] };
+    return { base: base.canvas, fore: fore.canvas, fg: fgr.cv, fgCl: fgr.cl, g, T, cuaNen, cuaTruoc, ttNen: shell.tt || [], cao: shell.cao || [] };
   }
   // ---------- Giai đoạn 2: điểm nhấn thị giác của phòng (một món, ở một góc trên, không đụng lối cửa) ----------
   // Lập kế hoạch trước lightPass (để quầng sáng của nó được tô xuống sàn), vẽ sau lightPass (để vật vẫn sáng rõ).
@@ -1871,6 +1881,14 @@
       if (!A.roomErr) { A.roomErr = e; if (window.console) console.warn('room_art bg', e); }
       cx.fillStyle = '#120c0c'; cx.fillRect(0, 0, G.W, G.H);
     }
+  };
+  // Rà soát C: các lần vẽ lại vật trang trí cao, để chèn vào danh sách vẽ theo chân (js/combat.js). cx: bút canvas thế giới.
+  RA.vatCao = function (cx, W) {
+    if (G.RSC === false || !W || !W.geo) return [];
+    let room = null;
+    try { room = get(W); } catch (e) { room = null; }
+    if (!room || !room.cao || !room.cao.length) return [];
+    return room.cao.map((q) => ({ y: q.yb - 0.5, x: q.x, h: q.a.ph / q.a.net, f: () => { const pv = c; c = cx; try { veAnh(q.a, q.x - q.a.pw / q.a.net / 2, q.yb - q.a.ph / q.a.net, q.lat); } finally { c = pv; } } }));
   };
   const PROPS = {
     // lớp phủ trước của phòng (song cửa dưới, măng đá, cỏ cao): vẽ sau nhân vật

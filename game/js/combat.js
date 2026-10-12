@@ -1123,6 +1123,7 @@
         if (ent) ent(c, b);
       } });
     }
+    if (G.roomArt && G.roomArt.vatCao) for (const q of G.roomArt.vatCao(c, W)) list.push(q); // Rà soát C: vật trang trí cao che đúng lớp ai đứng sau nó
     list.push({ y: P.y, f: () => { const on = xf && xf(c, P, 0); A.hero(c, G.heroArgs(P)); if (on) c.restore(); if (ent) ent(c, P); } });
     if (F && F.sorted) F.sorted(list, c);
     for (const pr of W.props) if (pr.type === 'loot') A.prop(c, pr); // đồ rơi nằm ở lớp sàn: không che quái, em bé, vùng báo trước (js/do_roi.js)
