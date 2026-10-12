@@ -1,0 +1,5 @@
+Gửi kèm: ảnh 18 (Zed cầm búa) đã đạt. SỬA ảnh này.
+XOÁ cây búa ở mọi ô; giữ hai bàn tay ở tư thế đang NẮM cán.
+Giữ nguyên mọi thứ khác: tư thế, vị trí, cỡ người, ô trống. Không thêm vật gì.
+Ảnh 8 cột × 2 hàng ô bằng nhau, mỗi ô 1 khung, đọc trái sang phải. Chừa lề ≥ 8% mỗi phía: tóc, khăn, đồ, vũ khí KHÔNG chạm ranh ô.
+Nền xanh lá thuần #00FF00 phủ kín cả ảnh. KHÔNG kẻ lưới, KHÔNG chữ, KHÔNG số khung, KHÔNG bóng đổ, KHÔNG quầng sáng, KHÔNG hiệu ứng.

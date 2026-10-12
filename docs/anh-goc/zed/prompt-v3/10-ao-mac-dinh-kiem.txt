@@ -1,0 +1,8 @@
+Gửi kèm: (1) ảnh thân combo kiếm 09, (2) ảnh áo mặc định 02 (để đúng đồ), (3) zed-canonical.png.
+Vẽ CHỈ phần áo mặc định (áo tối, tay áo trắng, khăn đỏ quấn cổ + đuôi khăn, đai đỏ trắng, bao cổ tay nâu) khớp từng ô của ảnh 09.
+CHỈ vẽ món đồ, đúng chỗ nó nằm trên người Zed ở từng ô; cả người Zed (đầu, tóc, da, đồ lót) tô #00FF00. Chỗ tay hoặc tóc che món đồ thì để trống (xanh).
+Đuôi khăn bay theo hướng vung kiếm (nhát 3 bay mạnh lên rồi rủ xuống) nhưng không chạm ranh ô.
+Áo phủ quá cạp quần 1–2 điểm ảnh. Ô trống của ảnh 09 cũng để trống.
+Giữ nguyên bố cục ô, cỡ người, vị trí chân và tư thế từng ô như ảnh thân gửi kèm.
+Ảnh 6 cột × 3 hàng ô bằng nhau, mỗi ô 1 khung, đọc trái sang phải. Chừa lề ≥ 8% mỗi phía: tóc, khăn, đồ, vũ khí KHÔNG chạm ranh ô.
+Nền xanh lá thuần #00FF00 phủ kín cả ảnh. KHÔNG kẻ lưới, KHÔNG chữ, KHÔNG số khung, KHÔNG bóng đổ, KHÔNG quầng sáng, KHÔNG hiệu ứng.

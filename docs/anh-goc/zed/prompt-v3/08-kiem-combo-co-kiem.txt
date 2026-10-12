@@ -1,0 +1,9 @@
+Gửi kèm: (1) ảnh thân trơn 01, (2) ảnh kiếm 07. Zed (thân trơn) cầm đúng thanh kiếm đó bằng tay GẦN người xem, nắm chặt chuôi.
+Pixel art chibi y hệt ảnh gửi kèm: cùng mặt, tóc đen buộc cao dây đỏ, tỉ lệ đầu/thân, độ to điểm ảnh, viền tối, cách tô bóng. Quay mặt sang phải. KHÔNG sừng.
+Hàng 1 Chém ngang (5 khung): 1 thủ thế kiếm ngang hông; 2 kéo kiếm ra sau vai; 3 ★ chém ngang ra trước, tay duỗi hết; 4 theo đà qua bên kia; 5 thu về thủ thế.
+Hàng 2 Chém ngược (5 khung): 1 kiếm ở dưới thấp phía trước; 2 hạ thấp lấy đà; 3 ★ hất chéo lên trước; 4 kiếm ở trên cao; 5 thu về.
+Hàng 3 Nhát kết (6 khung): 1 lùi chân sau; 2 giơ kiếm cao qua đầu bằng hai tay; 3 nhón người lên; 4 ★ bổ thẳng xuống trước, kiếm gần chạm đất; 5 giữ, ngồi thấp; 6 đứng dậy thu kiếm.
+Ô 6 hàng 1 và ô 6 hàng 2 để TRỐNG (chỉ nền xanh). Thanh kiếm cùng dài ngắn ở mọi khung, không xuyên qua đầu hay thân.
+Chân đặt cố định một chỗ (không lướt), cùng cỡ người ở mọi ô. Không vệt chém, không tia sáng.
+Ảnh 6 cột × 3 hàng ô bằng nhau, mỗi ô 1 khung, đọc trái sang phải. Chừa lề ≥ 8% mỗi phía: tóc, khăn, đồ, vũ khí KHÔNG chạm ranh ô.
+Nền xanh lá thuần #00FF00 phủ kín cả ảnh. KHÔNG kẻ lưới, KHÔNG chữ, KHÔNG số khung, KHÔNG bóng đổ, KHÔNG quầng sáng, KHÔNG hiệu ứng.

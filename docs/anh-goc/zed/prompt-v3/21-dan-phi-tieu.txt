@@ -1,0 +1,6 @@
+Gửi kèm: ảnh phi tiêu 20 (để đúng hình).
+Vẽ phi tiêu đó ĐANG BAY XOAY: 1 hàng 4 khung, mỗi khung xoay thêm 22,5° (khung 4 xoay tiếp sẽ về khung 1).
+Cùng cỡ, cùng tâm ở mọi khung; tâm phi tiêu đúng giữa ô.
+Không vệt bay, không tia sáng, không bóng.
+Ảnh 4 cột × 1 hàng ô bằng nhau, mỗi ô 1 khung, đọc trái sang phải. Chừa lề ≥ 8% mỗi phía: tóc, khăn, đồ, vũ khí KHÔNG chạm ranh ô.
+Nền xanh lá thuần #00FF00 phủ kín cả ảnh. KHÔNG kẻ lưới, KHÔNG chữ, KHÔNG số khung, KHÔNG bóng đổ, KHÔNG quầng sáng, KHÔNG hiệu ứng.
