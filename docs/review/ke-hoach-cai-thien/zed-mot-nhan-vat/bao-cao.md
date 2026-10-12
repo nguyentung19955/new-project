@@ -1,6 +1,6 @@
 # Báo cáo: Linh Khí bản Zed (một nhân vật)
 
-Làm theo `YEU-CAU-2.md`. Mã commit code: **8321a2b** (nhánh `khoi-tao-du-an`).
+Làm theo `YEU-CAU-2.md`. Mã commit code: **c07c00b** (nhánh `khoi-tao-du-an`).
 
 > **CHƯA TEST.** Theo lời dặn của chủ dự án: không chạy Playwright, không mở trình duyệt, không chạy bộ test trong `game/tests`, không chụp ảnh/quay GIF. Mục I của YEU-CAU-2 bỏ qua. Chỉ chạy `node --check` cho mọi tệp JS (đều qua) và 2 lệnh build (đều xong). **Chủ dự án tự kiểm trên web.**
 
