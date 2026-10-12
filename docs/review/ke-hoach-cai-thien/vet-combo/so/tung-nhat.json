@@ -1,0 +1,4002 @@
+{
+"smith:-:sword:dung": {
+"than": "em-be-smith",
+"don": "em-be-smith-don",
+"nhat": [
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3489,
+"px_truoc": 3441,
+"px_sau": 3441,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3477,
+"px_truoc": 3526,
+"px_sau": 3526,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4344,
+"px_truoc": 4286,
+"px_sau": 4286,
+"khung_thay_truoc": 17,
+"khung_thay_sau": 17
+},
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3488,
+"px_truoc": 3443,
+"px_sau": 3443,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3481,
+"px_truoc": 3526,
+"px_sau": 3526,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4080,
+"px_truoc": 4031,
+"px_sau": 4031,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+}
+]
+},
+"smith:-:sword:chay": {
+"than": "em-be-smith",
+"don": "em-be-smith-don",
+"nhat": [
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3549,
+"px_truoc": 3505,
+"px_sau": 3527,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3513,
+"px_truoc": 3535,
+"px_sau": 3535,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4275,
+"px_truoc": 4297,
+"px_sau": 4295,
+"khung_thay_truoc": 17,
+"khung_thay_sau": 17
+},
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3463,
+"px_truoc": 3503,
+"px_sau": 3551,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3546,
+"px_truoc": 3535,
+"px_sau": 3535,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4030,
+"px_truoc": 4025,
+"px_sau": 4015,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+}
+]
+},
+"smith:-:spear:dung": {
+"than": "em-be-smith",
+"don": "em-be-smith-don",
+"nhat": [
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7636,
+"px_truoc": 7642,
+"px_sau": 7642,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 1,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7559,
+"px_truoc": 7567,
+"px_sau": 7567,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 2,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 10081,
+"px_truoc": 10085,
+"px_sau": 10085,
+"khung_thay_truoc": 24,
+"khung_thay_sau": 24
+},
+{
+"ten": "Quét vòng",
+"pose": 3,
+"vet": [
+"hu-quet-giao:0.28"
+],
+"px_4a7fdbe": 5630,
+"px_truoc": 5630,
+"px_sau": 5630,
+"khung_thay_truoc": 23,
+"khung_thay_sau": 23
+},
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7635,
+"px_truoc": 7641,
+"px_sau": 7641,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+}
+]
+},
+"smith:-:spear:chay": {
+"than": "em-be-smith",
+"don": "em-be-smith-don",
+"nhat": [
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7659,
+"px_truoc": 7650,
+"px_sau": 7650,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 1,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7595,
+"px_truoc": 7617,
+"px_sau": 7617,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 2,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 10105,
+"px_truoc": 10110,
+"px_sau": 10110,
+"khung_thay_truoc": 23,
+"khung_thay_sau": 23
+},
+{
+"ten": "Quét vòng",
+"pose": 3,
+"vet": [
+"hu-quet-giao:0.28"
+],
+"px_4a7fdbe": 5722,
+"px_truoc": 5725,
+"px_sau": 5725,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+},
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7540,
+"px_truoc": 7651,
+"px_sau": 7651,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+}
+]
+},
+"smith:-:hammer:dung": {
+"than": "em-be-smith",
+"don": "em-be-smith-don",
+"nhat": [
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 7898,
+"px_truoc": 7947,
+"px_sau": 7948,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 7893,
+"px_truoc": 7941,
+"px_sau": 7943,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 7854,
+"px_truoc": 7904,
+"px_sau": 7905,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+}
+]
+},
+"smith:-:hammer:chay": {
+"than": "em-be-smith",
+"don": "em-be-smith-don",
+"nhat": [
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8004,
+"px_truoc": 8034,
+"px_sau": 8035,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 7987,
+"px_truoc": 8169,
+"px_sau": 8161,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 7905,
+"px_truoc": 7821,
+"px_sau": 7821,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+}
+]
+},
+"smith:-:bow:dung": {
+"than": "em-be-smith",
+"don": "em-be-smith-don",
+"nhat": [
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 869,
+"px_truoc": 869,
+"px_sau": 869,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 871,
+"px_truoc": 871,
+"px_sau": 871,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 867,
+"px_truoc": 867,
+"px_sau": 867,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 873,
+"px_truoc": 873,
+"px_sau": 873,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 873,
+"px_truoc": 873,
+"px_sau": 873,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 869,
+"px_truoc": 869,
+"px_sau": 869,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+}
+]
+},
+"smith:-:bow:chay": {
+"than": "em-be-smith",
+"don": "em-be-smith-don",
+"nhat": [
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 1053,
+"px_truoc": 1071,
+"px_sau": 1071,
+"khung_thay_truoc": 16,
+"khung_thay_sau": 16
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 755,
+"px_truoc": 776,
+"px_sau": 776,
+"khung_thay_truoc": 11,
+"khung_thay_sau": 11
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 1063,
+"px_truoc": 1060,
+"px_sau": 1060,
+"khung_thay_truoc": 16,
+"khung_thay_sau": 16
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 1052,
+"px_truoc": 1071,
+"px_sau": 1071,
+"khung_thay_truoc": 16,
+"khung_thay_sau": 16
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 905,
+"px_truoc": 924,
+"px_sau": 924,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+}
+]
+},
+"smith:rung:sword:dung": {
+"than": "em-be-smith-rung",
+"don": "em-be-smith-rung-don",
+"nhat": [
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3563,
+"px_truoc": 3561,
+"px_sau": 3561,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3570,
+"px_truoc": 3593,
+"px_sau": 3520,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4352,
+"px_truoc": 4376,
+"px_sau": 4376,
+"khung_thay_truoc": 17,
+"khung_thay_sau": 17
+},
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3566,
+"px_truoc": 3562,
+"px_sau": 3562,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3572,
+"px_truoc": 3590,
+"px_sau": 3519,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4125,
+"px_truoc": 4128,
+"px_sau": 4128,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+}
+]
+},
+"smith:rung:sword:chay": {
+"than": "em-be-smith-rung",
+"don": "em-be-smith-rung-don",
+"nhat": [
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3544,
+"px_truoc": 1982,
+"px_sau": 3549,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3550,
+"px_truoc": 2285,
+"px_sau": 3558,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4277,
+"px_truoc": 4203,
+"px_sau": 4258,
+"khung_thay_truoc": 17,
+"khung_thay_sau": 17
+},
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3488,
+"px_truoc": 2005,
+"px_sau": 3464,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3545,
+"px_truoc": 2275,
+"px_sau": 3561,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4029,
+"px_truoc": 3942,
+"px_sau": 4010,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+}
+]
+},
+"smith:rung:spear:dung": {
+"than": "em-be-smith-rung",
+"don": "em-be-smith-rung-don",
+"nhat": [
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7678,
+"px_truoc": 7655,
+"px_sau": 7655,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 1,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7689,
+"px_truoc": 7654,
+"px_sau": 7654,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 2,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 9964,
+"px_truoc": 9963,
+"px_sau": 9963,
+"khung_thay_truoc": 24,
+"khung_thay_sau": 24
+},
+{
+"ten": "Quét vòng",
+"pose": 3,
+"vet": [
+"hu-quet-giao:0.28"
+],
+"px_4a7fdbe": 5571,
+"px_truoc": 5667,
+"px_sau": 5667,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+},
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7679,
+"px_truoc": 7657,
+"px_sau": 7657,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+}
+]
+},
+"smith:rung:spear:chay": {
+"than": "em-be-smith-rung",
+"don": "em-be-smith-rung-don",
+"nhat": [
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7677,
+"px_truoc": 7642,
+"px_sau": 7642,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 1,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7669,
+"px_truoc": 7689,
+"px_sau": 7689,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 2,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 10174,
+"px_truoc": 10101,
+"px_sau": 10101,
+"khung_thay_truoc": 22,
+"khung_thay_sau": 22
+},
+{
+"ten": "Quét vòng",
+"pose": 3,
+"vet": [
+"hu-quet-giao:0.28"
+],
+"px_4a7fdbe": 5605,
+"px_truoc": 5574,
+"px_sau": 5574,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+},
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7671,
+"px_truoc": 7676,
+"px_sau": 7676,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+}
+]
+},
+"smith:rung:hammer:dung": {
+"than": "em-be-smith-rung",
+"don": "em-be-smith-rung-don",
+"nhat": [
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8052,
+"px_truoc": 8042,
+"px_sau": 8036,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8035,
+"px_truoc": 8059,
+"px_sau": 8067,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8002,
+"px_truoc": 8009,
+"px_sau": 8007,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+}
+]
+},
+"smith:rung:hammer:chay": {
+"than": "em-be-smith-rung",
+"don": "em-be-smith-rung-don",
+"nhat": [
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 7993,
+"px_truoc": 8019,
+"px_sau": 8018,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8029,
+"px_truoc": 8028,
+"px_sau": 8027,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 7970,
+"px_truoc": 7955,
+"px_sau": 7959,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+}
+]
+},
+"smith:rung:bow:dung": {
+"than": "em-be-smith-rung",
+"don": "em-be-smith-rung-don",
+"nhat": [
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 839,
+"px_truoc": 848,
+"px_sau": 848,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 842,
+"px_truoc": 851,
+"px_sau": 851,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 842,
+"px_truoc": 852,
+"px_sau": 852,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 839,
+"px_truoc": 848,
+"px_sau": 848,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 826,
+"px_truoc": 835,
+"px_sau": 835,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 839,
+"px_truoc": 848,
+"px_sau": 848,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+}
+]
+},
+"smith:rung:bow:chay": {
+"than": "em-be-smith-rung",
+"don": "em-be-smith-rung-don",
+"nhat": [
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 1049,
+"px_truoc": 1051,
+"px_sau": 1051,
+"khung_thay_truoc": 16,
+"khung_thay_sau": 16
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 762,
+"px_truoc": 761,
+"px_sau": 761,
+"khung_thay_truoc": 11,
+"khung_thay_sau": 11
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 1057,
+"px_truoc": 1056,
+"px_sau": 1056,
+"khung_thay_truoc": 16,
+"khung_thay_sau": 16
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 1061,
+"px_truoc": 1061,
+"px_sau": 1061,
+"khung_thay_truoc": 16,
+"khung_thay_sau": 16
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 893,
+"px_truoc": 895,
+"px_sau": 895,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+}
+]
+},
+"hunter:-:sword:dung": {
+"than": "em-be-hunter",
+"don": "em-be-hunter-don",
+"nhat": [
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3464,
+"px_truoc": 3539,
+"px_sau": 3539,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3470,
+"px_truoc": 3533,
+"px_sau": 3533,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4349,
+"px_truoc": 4337,
+"px_sau": 4337,
+"khung_thay_truoc": 17,
+"khung_thay_sau": 17
+},
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3470,
+"px_truoc": 3539,
+"px_sau": 3539,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3477,
+"px_truoc": 3534,
+"px_sau": 3534,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4094,
+"px_truoc": 4078,
+"px_sau": 4078,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+}
+]
+},
+"hunter:-:sword:chay": {
+"than": "em-be-hunter",
+"don": "em-be-hunter-don",
+"nhat": [
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3564,
+"px_truoc": 3561,
+"px_sau": 3516,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3502,
+"px_truoc": 3509,
+"px_sau": 3534,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4284,
+"px_truoc": 4365,
+"px_sau": 4312,
+"khung_thay_truoc": 17,
+"khung_thay_sau": 17
+},
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3504,
+"px_truoc": 3541,
+"px_sau": 3536,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3554,
+"px_truoc": 3536,
+"px_sau": 3536,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4041,
+"px_truoc": 4044,
+"px_sau": 4066,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+}
+]
+},
+"hunter:-:spear:dung": {
+"than": "em-be-hunter",
+"don": "em-be-hunter-don",
+"nhat": [
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7648,
+"px_truoc": 7652,
+"px_sau": 7652,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 1,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7606,
+"px_truoc": 7582,
+"px_sau": 7582,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 2,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 9964,
+"px_truoc": 9967,
+"px_sau": 9967,
+"khung_thay_truoc": 24,
+"khung_thay_sau": 24
+},
+{
+"ten": "Quét vòng",
+"pose": 3,
+"vet": [
+"hu-quet-giao:0.28"
+],
+"px_4a7fdbe": 5637,
+"px_truoc": 5637,
+"px_sau": 5637,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+},
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7654,
+"px_truoc": 7658,
+"px_sau": 7658,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+}
+]
+},
+"hunter:-:spear:chay": {
+"than": "em-be-hunter",
+"don": "em-be-hunter-don",
+"nhat": [
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7667,
+"px_truoc": 7573,
+"px_sau": 7573,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 1,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7667,
+"px_truoc": 7614,
+"px_sau": 7614,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 2,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 10127,
+"px_truoc": 10217,
+"px_sau": 10217,
+"khung_thay_truoc": 23,
+"khung_thay_sau": 23
+},
+{
+"ten": "Quét vòng",
+"pose": 3,
+"vet": [
+"hu-quet-giao:0.28"
+],
+"px_4a7fdbe": 5778,
+"px_truoc": 5759,
+"px_sau": 5759,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+},
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7664,
+"px_truoc": 7626,
+"px_sau": 7626,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+}
+]
+},
+"hunter:-:hammer:dung": {
+"than": "em-be-hunter",
+"don": "em-be-hunter-don",
+"nhat": [
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 7938,
+"px_truoc": 7878,
+"px_sau": 7880,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 7983,
+"px_truoc": 7915,
+"px_sau": 7916,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 7921,
+"px_truoc": 7850,
+"px_sau": 7846,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+}
+]
+},
+"hunter:-:hammer:chay": {
+"than": "em-be-hunter",
+"don": "em-be-hunter-don",
+"nhat": [
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8001,
+"px_truoc": 8254,
+"px_sau": 8256,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 7890,
+"px_truoc": 7939,
+"px_sau": 7938,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8006,
+"px_truoc": 8141,
+"px_sau": 8148,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+}
+]
+},
+"hunter:-:bow:dung": {
+"than": "em-be-hunter",
+"don": "em-be-hunter-don",
+"nhat": [
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 842,
+"px_truoc": 842,
+"px_sau": 842,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 839,
+"px_truoc": 839,
+"px_sau": 839,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 842,
+"px_truoc": 842,
+"px_sau": 842,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 834,
+"px_truoc": 834,
+"px_sau": 834,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 835,
+"px_truoc": 835,
+"px_sau": 835,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 842,
+"px_truoc": 842,
+"px_sau": 842,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+}
+]
+},
+"hunter:-:bow:chay": {
+"than": "em-be-hunter",
+"don": "em-be-hunter-don",
+"nhat": [
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 1079,
+"px_truoc": 1104,
+"px_sau": 1104,
+"khung_thay_truoc": 16,
+"khung_thay_sau": 16
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 742,
+"px_truoc": 772,
+"px_sau": 772,
+"khung_thay_truoc": 10,
+"khung_thay_sau": 10
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 1056,
+"px_truoc": 1082,
+"px_sau": 1082,
+"khung_thay_truoc": 17,
+"khung_thay_sau": 17
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 1092,
+"px_truoc": 1107,
+"px_sau": 1107,
+"khung_thay_truoc": 17,
+"khung_thay_sau": 17
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 901,
+"px_truoc": 925,
+"px_sau": 925,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+}
+]
+},
+"hunter:bien:sword:dung": {
+"than": "em-be-hunter-bien",
+"don": "em-be-hunter-bien-don",
+"nhat": [
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3554,
+"px_truoc": 1998,
+"px_sau": 3452,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3552,
+"px_truoc": 3610,
+"px_sau": 3463,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4360,
+"px_truoc": 4264,
+"px_sau": 4395,
+"khung_thay_truoc": 17,
+"khung_thay_sau": 17
+},
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3554,
+"px_truoc": 2010,
+"px_sau": 3451,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3554,
+"px_truoc": 3610,
+"px_sau": 3479,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4120,
+"px_truoc": 4005,
+"px_sau": 4136,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+}
+]
+},
+"hunter:bien:sword:chay": {
+"than": "em-be-hunter-bien",
+"don": "em-be-hunter-bien-don",
+"nhat": [
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3568,
+"px_truoc": 1972,
+"px_sau": 3560,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3560,
+"px_truoc": 2269,
+"px_sau": 3583,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4279,
+"px_truoc": 4187,
+"px_sau": 4267,
+"khung_thay_truoc": 17,
+"khung_thay_sau": 17
+},
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3520,
+"px_truoc": 1995,
+"px_sau": 3473,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3562,
+"px_truoc": 2249,
+"px_sau": 3594,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4033,
+"px_truoc": 3932,
+"px_sau": 4018,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+}
+]
+},
+"hunter:bien:spear:dung": {
+"than": "em-be-hunter-bien",
+"don": "em-be-hunter-bien-don",
+"nhat": [
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7644,
+"px_truoc": 7629,
+"px_sau": 7629,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 1,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7648,
+"px_truoc": 7632,
+"px_sau": 7632,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 2,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 9932,
+"px_truoc": 9821,
+"px_sau": 9821,
+"khung_thay_truoc": 24,
+"khung_thay_sau": 24
+},
+{
+"ten": "Quét vòng",
+"pose": 3,
+"vet": [
+"hu-quet-giao:0.28"
+],
+"px_4a7fdbe": 5602,
+"px_truoc": 5649,
+"px_sau": 5649,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+},
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7645,
+"px_truoc": 7628,
+"px_sau": 7628,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+}
+]
+},
+"hunter:bien:spear:chay": {
+"than": "em-be-hunter-bien",
+"don": "em-be-hunter-bien-don",
+"nhat": [
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7600,
+"px_truoc": 7568,
+"px_sau": 7568,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 1,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7586,
+"px_truoc": 7604,
+"px_sau": 7604,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 2,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 10050,
+"px_truoc": 9901,
+"px_sau": 9901,
+"khung_thay_truoc": 22,
+"khung_thay_sau": 22
+},
+{
+"ten": "Quét vòng",
+"pose": 3,
+"vet": [
+"hu-quet-giao:0.28"
+],
+"px_4a7fdbe": 5597,
+"px_truoc": 5606,
+"px_sau": 5606,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+},
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7609,
+"px_truoc": 7553,
+"px_sau": 7553,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+}
+]
+},
+"hunter:bien:hammer:dung": {
+"than": "em-be-hunter-bien",
+"don": "em-be-hunter-bien-don",
+"nhat": [
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8087,
+"px_truoc": 8066,
+"px_sau": 8072,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8091,
+"px_truoc": 8123,
+"px_sau": 8124,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8063,
+"px_truoc": 8058,
+"px_sau": 8061,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+}
+]
+},
+"hunter:bien:hammer:chay": {
+"than": "em-be-hunter-bien",
+"don": "em-be-hunter-bien-don",
+"nhat": [
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 7962,
+"px_truoc": 7991,
+"px_sau": 7993,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 7970,
+"px_truoc": 7994,
+"px_sau": 8000,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8000,
+"px_truoc": 7976,
+"px_sau": 7981,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+}
+]
+},
+"hunter:bien:bow:dung": {
+"than": "em-be-hunter-bien",
+"don": "em-be-hunter-bien-don",
+"nhat": [
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 846,
+"px_truoc": 859,
+"px_sau": 859,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 833,
+"px_truoc": 847,
+"px_sau": 847,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 844,
+"px_truoc": 857,
+"px_sau": 857,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 834,
+"px_truoc": 848,
+"px_sau": 848,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 835,
+"px_truoc": 850,
+"px_sau": 850,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 833,
+"px_truoc": 847,
+"px_sau": 847,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+}
+]
+},
+"hunter:bien:bow:chay": {
+"than": "em-be-hunter-bien",
+"don": "em-be-hunter-bien-don",
+"nhat": [
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 1089,
+"px_truoc": 1088,
+"px_sau": 1088,
+"khung_thay_truoc": 17,
+"khung_thay_sau": 17
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 752,
+"px_truoc": 757,
+"px_sau": 757,
+"khung_thay_truoc": 11,
+"khung_thay_sau": 11
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 1073,
+"px_truoc": 1075,
+"px_sau": 1075,
+"khung_thay_truoc": 17,
+"khung_thay_sau": 17
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 1100,
+"px_truoc": 1095,
+"px_sau": 1095,
+"khung_thay_truoc": 17,
+"khung_thay_sau": 17
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 887,
+"px_truoc": 886,
+"px_sau": 886,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+}
+]
+},
+"wrestler:-:sword:dung": {
+"than": "em-be-wrestler",
+"don": "em-be-wrestler-don",
+"nhat": [
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3535,
+"px_truoc": 3527,
+"px_sau": 3527,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3466,
+"px_truoc": 3542,
+"px_sau": 3542,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4397,
+"px_truoc": 4315,
+"px_sau": 4315,
+"khung_thay_truoc": 17,
+"khung_thay_sau": 17
+},
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3529,
+"px_truoc": 3521,
+"px_sau": 3521,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3479,
+"px_truoc": 3539,
+"px_sau": 3539,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4155,
+"px_truoc": 4068,
+"px_sau": 4068,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+}
+]
+},
+"wrestler:-:sword:chay": {
+"than": "em-be-wrestler",
+"don": "em-be-wrestler-don",
+"nhat": [
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3558,
+"px_truoc": 3515,
+"px_sau": 3520,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3534,
+"px_truoc": 3530,
+"px_sau": 3530,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4328,
+"px_truoc": 4278,
+"px_sau": 4271,
+"khung_thay_truoc": 17,
+"khung_thay_sau": 17
+},
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3506,
+"px_truoc": 3437,
+"px_sau": 3458,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3547,
+"px_truoc": 3538,
+"px_sau": 3538,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4067,
+"px_truoc": 4009,
+"px_sau": 3982,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+}
+]
+},
+"wrestler:-:spear:dung": {
+"than": "em-be-wrestler",
+"don": "em-be-wrestler-don",
+"nhat": [
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7644,
+"px_truoc": 7637,
+"px_sau": 7637,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 1,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7688,
+"px_truoc": 7667,
+"px_sau": 7667,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 2,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 10032,
+"px_truoc": 10025,
+"px_sau": 10025,
+"khung_thay_truoc": 24,
+"khung_thay_sau": 24
+},
+{
+"ten": "Quét vòng",
+"pose": 3,
+"vet": [
+"hu-quet-giao:0.28"
+],
+"px_4a7fdbe": 5678,
+"px_truoc": 5678,
+"px_sau": 5676,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+},
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7644,
+"px_truoc": 7638,
+"px_sau": 7638,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+}
+]
+},
+"wrestler:-:spear:chay": {
+"than": "em-be-wrestler",
+"don": "em-be-wrestler-don",
+"nhat": [
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7645,
+"px_truoc": 7599,
+"px_sau": 7599,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 1,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7640,
+"px_truoc": 7634,
+"px_sau": 7634,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 2,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 10183,
+"px_truoc": 10307,
+"px_sau": 10307,
+"khung_thay_truoc": 23,
+"khung_thay_sau": 23
+},
+{
+"ten": "Quét vòng",
+"pose": 3,
+"vet": [
+"hu-quet-giao:0.28"
+],
+"px_4a7fdbe": 5757,
+"px_truoc": 5714,
+"px_sau": 5714,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+},
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7652,
+"px_truoc": 7614,
+"px_sau": 7614,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+}
+]
+},
+"wrestler:-:hammer:dung": {
+"than": "em-be-wrestler",
+"don": "em-be-wrestler-don",
+"nhat": [
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8249,
+"px_truoc": 8407,
+"px_sau": 8406,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8260,
+"px_truoc": 8415,
+"px_sau": 8415,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8212,
+"px_truoc": 8375,
+"px_sau": 8378,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+}
+]
+},
+"wrestler:-:hammer:chay": {
+"than": "em-be-wrestler",
+"don": "em-be-wrestler-don",
+"nhat": [
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 7992,
+"px_truoc": 7940,
+"px_sau": 7944,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8110,
+"px_truoc": 8051,
+"px_sau": 8050,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8011,
+"px_truoc": 7867,
+"px_sau": 7872,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+}
+]
+},
+"wrestler:-:bow:dung": {
+"than": "em-be-wrestler",
+"don": "em-be-wrestler-don",
+"nhat": [
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 855,
+"px_truoc": 855,
+"px_sau": 855,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 849,
+"px_truoc": 849,
+"px_sau": 849,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 837,
+"px_truoc": 837,
+"px_sau": 837,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 844,
+"px_truoc": 844,
+"px_sau": 844,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 849,
+"px_truoc": 849,
+"px_sau": 849,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 841,
+"px_truoc": 841,
+"px_sau": 841,
+"khung_thay_truoc": 11,
+"khung_thay_sau": 11
+}
+]
+},
+"wrestler:-:bow:chay": {
+"than": "em-be-wrestler",
+"don": "em-be-wrestler-don",
+"nhat": [
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 983,
+"px_truoc": 1015,
+"px_sau": 1015,
+"khung_thay_truoc": 16,
+"khung_thay_sau": 16
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 769,
+"px_truoc": 795,
+"px_sau": 795,
+"khung_thay_truoc": 11,
+"khung_thay_sau": 11
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 1008,
+"px_truoc": 1020,
+"px_sau": 1020,
+"khung_thay_truoc": 16,
+"khung_thay_sau": 16
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 998,
+"px_truoc": 1016,
+"px_sau": 1016,
+"khung_thay_truoc": 15,
+"khung_thay_sau": 15
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 884,
+"px_truoc": 900,
+"px_sau": 900,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+}
+]
+},
+"wrestler:lau:sword:dung": {
+"than": "em-be-wrestler-lau",
+"don": "em-be-wrestler-lau-don",
+"nhat": [
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3568,
+"px_truoc": 2002,
+"px_sau": 3461,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3570,
+"px_truoc": 3608,
+"px_sau": 3518,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4363,
+"px_truoc": 4255,
+"px_sau": 4349,
+"khung_thay_truoc": 17,
+"khung_thay_sau": 17
+},
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3569,
+"px_truoc": 2007,
+"px_sau": 3469,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3572,
+"px_truoc": 3611,
+"px_sau": 3516,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4127,
+"px_truoc": 4003,
+"px_sau": 4078,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+}
+]
+},
+"wrestler:lau:sword:chay": {
+"than": "em-be-wrestler-lau",
+"don": "em-be-wrestler-lau-don",
+"nhat": [
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3557,
+"px_truoc": 1962,
+"px_sau": 3561,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3572,
+"px_truoc": 2253,
+"px_sau": 3558,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4318,
+"px_truoc": 4189,
+"px_sau": 4301,
+"khung_thay_truoc": 17,
+"khung_thay_sau": 17
+},
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3514,
+"px_truoc": 2001,
+"px_sau": 3478,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3541,
+"px_truoc": 2264,
+"px_sau": 3585,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4054,
+"px_truoc": 3929,
+"px_sau": 3999,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+}
+]
+},
+"wrestler:lau:spear:dung": {
+"than": "em-be-wrestler-lau",
+"don": "em-be-wrestler-lau-don",
+"nhat": [
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7636,
+"px_truoc": 7658,
+"px_sau": 7658,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 1,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7679,
+"px_truoc": 7655,
+"px_sau": 7655,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 2,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 9914,
+"px_truoc": 9919,
+"px_sau": 9919,
+"khung_thay_truoc": 23,
+"khung_thay_sau": 23
+},
+{
+"ten": "Quét vòng",
+"pose": 3,
+"vet": [
+"hu-quet-giao:0.28"
+],
+"px_4a7fdbe": 5573,
+"px_truoc": 5586,
+"px_sau": 5586,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+},
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7634,
+"px_truoc": 7658,
+"px_sau": 7658,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+}
+]
+},
+"wrestler:lau:spear:chay": {
+"than": "em-be-wrestler-lau",
+"don": "em-be-wrestler-lau-don",
+"nhat": [
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7658,
+"px_truoc": 7624,
+"px_sau": 7624,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 1,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7652,
+"px_truoc": 7659,
+"px_sau": 7659,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 2,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 10060,
+"px_truoc": 9982,
+"px_sau": 9982,
+"khung_thay_truoc": 22,
+"khung_thay_sau": 22
+},
+{
+"ten": "Quét vòng",
+"pose": 3,
+"vet": [
+"hu-quet-giao:0.28"
+],
+"px_4a7fdbe": 5510,
+"px_truoc": 5530,
+"px_sau": 5530,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+},
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7649,
+"px_truoc": 7650,
+"px_sau": 7650,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+}
+]
+},
+"wrestler:lau:hammer:dung": {
+"than": "em-be-wrestler-lau",
+"don": "em-be-wrestler-lau-don",
+"nhat": [
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8061,
+"px_truoc": 7856,
+"px_sau": 7865,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8056,
+"px_truoc": 7870,
+"px_sau": 7867,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8006,
+"px_truoc": 7817,
+"px_sau": 7814,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+}
+]
+},
+"wrestler:lau:hammer:chay": {
+"than": "em-be-wrestler-lau",
+"don": "em-be-wrestler-lau-don",
+"nhat": [
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 7965,
+"px_truoc": 7990,
+"px_sau": 7996,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8023,
+"px_truoc": 7999,
+"px_sau": 8001,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8017,
+"px_truoc": 7935,
+"px_sau": 7941,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+}
+]
+},
+"wrestler:lau:bow:dung": {
+"than": "em-be-wrestler-lau",
+"don": "em-be-wrestler-lau-don",
+"nhat": [
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 842,
+"px_truoc": 847,
+"px_sau": 847,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 838,
+"px_truoc": 844,
+"px_sau": 844,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 829,
+"px_truoc": 834,
+"px_sau": 834,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 838,
+"px_truoc": 844,
+"px_sau": 844,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 834,
+"px_truoc": 839,
+"px_sau": 839,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 839,
+"px_truoc": 842,
+"px_sau": 842,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+}
+]
+},
+"wrestler:lau:bow:chay": {
+"than": "em-be-wrestler-lau",
+"don": "em-be-wrestler-lau-don",
+"nhat": [
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 1029,
+"px_truoc": 1024,
+"px_sau": 1024,
+"khung_thay_truoc": 16,
+"khung_thay_sau": 16
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 777,
+"px_truoc": 781,
+"px_sau": 781,
+"khung_thay_truoc": 11,
+"khung_thay_sau": 11
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 1029,
+"px_truoc": 1030,
+"px_sau": 1030,
+"khung_thay_truoc": 16,
+"khung_thay_sau": 16
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 1030,
+"px_truoc": 1030,
+"px_sau": 1030,
+"khung_thay_truoc": 16,
+"khung_thay_sau": 16
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 877,
+"px_truoc": 878,
+"px_sau": 878,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+}
+]
+},
+"healer:-:sword:dung": {
+"than": "em-be-healer",
+"don": "em-be-healer-don",
+"nhat": [
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3531,
+"px_truoc": 3521,
+"px_sau": 3521,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3558,
+"px_truoc": 3583,
+"px_sau": 3583,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4283,
+"px_truoc": 4295,
+"px_sau": 4295,
+"khung_thay_truoc": 17,
+"khung_thay_sau": 17
+},
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3528,
+"px_truoc": 3519,
+"px_sau": 3519,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3562,
+"px_truoc": 3584,
+"px_sau": 3584,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4032,
+"px_truoc": 4066,
+"px_sau": 4066,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+}
+]
+},
+"healer:-:sword:chay": {
+"than": "em-be-healer",
+"don": "em-be-healer-don",
+"nhat": [
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3543,
+"px_truoc": 3517,
+"px_sau": 3534,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3525,
+"px_truoc": 3536,
+"px_sau": 3536,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4306,
+"px_truoc": 4251,
+"px_sau": 4260,
+"khung_thay_truoc": 17,
+"khung_thay_sau": 17
+},
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3478,
+"px_truoc": 3443,
+"px_sau": 3500,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3538,
+"px_truoc": 3540,
+"px_sau": 3540,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4036,
+"px_truoc": 4011,
+"px_sau": 3977,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+}
+]
+},
+"healer:-:spear:dung": {
+"than": "em-be-healer",
+"don": "em-be-healer-don",
+"nhat": [
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7558,
+"px_truoc": 7571,
+"px_sau": 7571,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 1,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7680,
+"px_truoc": 7683,
+"px_sau": 7683,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 2,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 10011,
+"px_truoc": 10014,
+"px_sau": 10014,
+"khung_thay_truoc": 24,
+"khung_thay_sau": 24
+},
+{
+"ten": "Quét vòng",
+"pose": 3,
+"vet": [
+"hu-quet-giao:0.28"
+],
+"px_4a7fdbe": 5727,
+"px_truoc": 5727,
+"px_sau": 5727,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+},
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7558,
+"px_truoc": 7571,
+"px_sau": 7571,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+}
+]
+},
+"healer:-:spear:chay": {
+"than": "em-be-healer",
+"don": "em-be-healer-don",
+"nhat": [
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7501,
+"px_truoc": 7580,
+"px_sau": 7580,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 1,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7557,
+"px_truoc": 7567,
+"px_sau": 7567,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 2,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 9981,
+"px_truoc": 10050,
+"px_sau": 10050,
+"khung_thay_truoc": 23,
+"khung_thay_sau": 23
+},
+{
+"ten": "Quét vòng",
+"pose": 3,
+"vet": [
+"hu-quet-giao:0.28"
+],
+"px_4a7fdbe": 5732,
+"px_truoc": 5746,
+"px_sau": 5746,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+},
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7494,
+"px_truoc": 7580,
+"px_sau": 7580,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+}
+]
+},
+"healer:-:hammer:dung": {
+"than": "em-be-healer",
+"don": "em-be-healer-don",
+"nhat": [
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 7949,
+"px_truoc": 8345,
+"px_sau": 8348,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 7957,
+"px_truoc": 8357,
+"px_sau": 8354,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 7909,
+"px_truoc": 8290,
+"px_sau": 8285,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+}
+]
+},
+"healer:-:hammer:chay": {
+"than": "em-be-healer",
+"don": "em-be-healer-don",
+"nhat": [
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8018,
+"px_truoc": 8049,
+"px_sau": 8049,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8000,
+"px_truoc": 7979,
+"px_sau": 7981,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 7931,
+"px_truoc": 8019,
+"px_sau": 8020,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+}
+]
+},
+"healer:-:bow:dung": {
+"than": "em-be-healer",
+"don": "em-be-healer-don",
+"nhat": [
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 870,
+"px_truoc": 870,
+"px_sau": 870,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 862,
+"px_truoc": 862,
+"px_sau": 862,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 861,
+"px_truoc": 861,
+"px_sau": 861,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 859,
+"px_truoc": 859,
+"px_sau": 859,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 863,
+"px_truoc": 863,
+"px_sau": 863,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 862,
+"px_truoc": 862,
+"px_sau": 862,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+}
+]
+},
+"healer:-:bow:chay": {
+"than": "em-be-healer",
+"don": "em-be-healer-don",
+"nhat": [
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 1057,
+"px_truoc": 1066,
+"px_sau": 1066,
+"khung_thay_truoc": 16,
+"khung_thay_sau": 16
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 767,
+"px_truoc": 768,
+"px_sau": 768,
+"khung_thay_truoc": 11,
+"khung_thay_sau": 11
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 1052,
+"px_truoc": 1054,
+"px_sau": 1054,
+"khung_thay_truoc": 16,
+"khung_thay_sau": 16
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 1070,
+"px_truoc": 1071,
+"px_sau": 1071,
+"khung_thay_truoc": 16,
+"khung_thay_sau": 16
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 908,
+"px_truoc": 914,
+"px_sau": 914,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+}
+]
+},
+"healer:bien:sword:dung": {
+"than": "em-be-healer",
+"don": "em-be-healer-don",
+"nhat": [
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3511,
+"px_truoc": 3517,
+"px_sau": 3517,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3510,
+"px_truoc": 3574,
+"px_sau": 3574,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4368,
+"px_truoc": 4310,
+"px_sau": 4310,
+"khung_thay_truoc": 17,
+"khung_thay_sau": 17
+},
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3509,
+"px_truoc": 3520,
+"px_sau": 3520,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3499,
+"px_truoc": 3583,
+"px_sau": 3583,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4116,
+"px_truoc": 4060,
+"px_sau": 4060,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+}
+]
+},
+"healer:bien:sword:chay": {
+"than": "em-be-healer",
+"don": "em-be-healer-don",
+"nhat": [
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3537,
+"px_truoc": 3514,
+"px_sau": 3530,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3516,
+"px_truoc": 3536,
+"px_sau": 3536,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4301,
+"px_truoc": 4254,
+"px_sau": 4259,
+"khung_thay_truoc": 17,
+"khung_thay_sau": 17
+},
+{
+"ten": "Chém ngang",
+"pose": 0,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3475,
+"px_truoc": 3440,
+"px_sau": 3492,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Chém ngược",
+"pose": 1,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 3536,
+"px_truoc": 3541,
+"px_sau": 3541,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+},
+{
+"ten": "Nhát kết",
+"pose": 2,
+"vet": [
+"hu-chem-kiem:0.18"
+],
+"px_4a7fdbe": 4022,
+"px_truoc": 4011,
+"px_sau": 3977,
+"khung_thay_truoc": 14,
+"khung_thay_sau": 14
+}
+]
+},
+"healer:bien:spear:dung": {
+"than": "em-be-healer",
+"don": "em-be-healer-don",
+"nhat": [
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7544,
+"px_truoc": 7530,
+"px_sau": 7530,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 1,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7647,
+"px_truoc": 7657,
+"px_sau": 7657,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 2,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 10055,
+"px_truoc": 9956,
+"px_sau": 9956,
+"khung_thay_truoc": 24,
+"khung_thay_sau": 24
+},
+{
+"ten": "Quét vòng",
+"pose": 3,
+"vet": [
+"hu-quet-giao:0.28"
+],
+"px_4a7fdbe": 5631,
+"px_truoc": 5683,
+"px_sau": 5683,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+},
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7546,
+"px_truoc": 7530,
+"px_sau": 7530,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+}
+]
+},
+"healer:bien:spear:chay": {
+"than": "em-be-healer",
+"don": "em-be-healer-don",
+"nhat": [
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7580,
+"px_truoc": 7541,
+"px_sau": 7541,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 1,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7623,
+"px_truoc": 7533,
+"px_sau": 7533,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+},
+{
+"ten": "Đâm",
+"pose": 2,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 10070,
+"px_truoc": 9981,
+"px_sau": 9981,
+"khung_thay_truoc": 23,
+"khung_thay_sau": 23
+},
+{
+"ten": "Quét vòng",
+"pose": 3,
+"vet": [
+"hu-quet-giao:0.28"
+],
+"px_4a7fdbe": 5617,
+"px_truoc": 5700,
+"px_sau": 5700,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+},
+{
+"ten": "Đâm",
+"pose": 0,
+"vet": [
+"hu-dam-giao:0.16"
+],
+"px_4a7fdbe": 7565,
+"px_truoc": 7540,
+"px_sau": 7540,
+"khung_thay_truoc": 13,
+"khung_thay_sau": 13
+}
+]
+},
+"healer:bien:hammer:dung": {
+"than": "em-be-healer",
+"don": "em-be-healer-don",
+"nhat": [
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8003,
+"px_truoc": 8240,
+"px_sau": 8241,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8016,
+"px_truoc": 8242,
+"px_sau": 8243,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 7969,
+"px_truoc": 8198,
+"px_sau": 8198,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+}
+]
+},
+"healer:bien:hammer:chay": {
+"than": "em-be-healer",
+"don": "em-be-healer-don",
+"nhat": [
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 8076,
+"px_truoc": 8016,
+"px_sau": 8017,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 7964,
+"px_truoc": 7928,
+"px_sau": 7929,
+"khung_thay_truoc": 26,
+"khung_thay_sau": 26
+},
+{
+"ten": "Nện",
+"pose": 0,
+"vet": [
+"hu-chem-bua:0.22",
+"hu-nen-dat:0.34"
+],
+"px_4a7fdbe": 7886,
+"px_truoc": 7997,
+"px_sau": 7997,
+"khung_thay_truoc": 25,
+"khung_thay_sau": 25
+}
+]
+},
+"healer:bien:bow:dung": {
+"than": "em-be-healer",
+"don": "em-be-healer-don",
+"nhat": [
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 859,
+"px_truoc": 865,
+"px_sau": 865,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 866,
+"px_truoc": 871,
+"px_sau": 871,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 855,
+"px_truoc": 861,
+"px_sau": 861,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 855,
+"px_truoc": 860,
+"px_sau": 860,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 862,
+"px_truoc": 869,
+"px_sau": 869,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 853,
+"px_truoc": 859,
+"px_sau": 859,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+}
+]
+},
+"healer:bien:bow:chay": {
+"than": "em-be-healer",
+"don": "em-be-healer-don",
+"nhat": [
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 1053,
+"px_truoc": 1073,
+"px_sau": 1073,
+"khung_thay_truoc": 16,
+"khung_thay_sau": 16
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 760,
+"px_truoc": 770,
+"px_sau": 770,
+"khung_thay_truoc": 10,
+"khung_thay_sau": 10
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 1065,
+"px_truoc": 1075,
+"px_sau": 1075,
+"khung_thay_truoc": 16,
+"khung_thay_sau": 16
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 1061,
+"px_truoc": 1081,
+"px_sau": 1081,
+"khung_thay_truoc": 16,
+"khung_thay_sau": 16
+},
+{
+"ten": "Bắn",
+"pose": 0,
+"vet": [],
+"px_4a7fdbe": 891,
+"px_truoc": 905,
+"px_sau": 905,
+"khung_thay_truoc": 12,
+"khung_thay_sau": 12
+}
+]
+}
+}

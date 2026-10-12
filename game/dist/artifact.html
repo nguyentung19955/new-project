@@ -53,7 +53,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.12-1754";
+(window.G = window.G || {}).VERSION = "lk-2026.10.12-1807";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -17064,20 +17064,38 @@
   // ANH_VK: bán kính mép ngoài của ảnh (điểm ảnh của ảnh gốc, chưa nhân "co" của tệp) đo từ điểm neo, và góc giữa cung (radian).
   const ANH_VK = { 'hu-chem-kiem': { r: 25, c: 0 }, 'hu-chem-bua': { r: 30, c: -0.21 }, 'hu-dam-giao': { r: 44, c: 0 }, 'hu-chem-luot': { r: 43.5, c: 0 } };
   const CU = { px: 0, py: 0, r: 0, am: 0, ex: 0, ey: 0, ea: 0, eL: 0 };
+  // Phiên vet-combo 12/10 (cờ G.VET_TRON, tắt: ?vettron=0 -> y hệt trước): vệt chém là HIỆU ỨNG, vẽ theo đường vung nhìn từ ngoài,
+  // không cắt theo lớp thân. Trước đây cung vệt bỏ mọi mẫu mà kiếm đang vẽ SAU thân (q.front === false, G.KIEM_MUOT). Ở thân bộ
+  // (Cu Tèo bộ Hang Biển, Cu Lì bộ Lâu Đài, Cu Tí bộ Rừng Già lúc chạy) đĩa mặt đo được to nên gần như cả đường vung bị coi là
+  // "sau thân": nhát 1 (và nhát 2 lúc chạy) còn 0 mẫu -> vệt rơi về chỗ cố định cũ, nhỏ, đè lên người (điểm ảnh thấy được còn ~55%).
+  // Nay chỉ giữ luật né mặt theo HƯỚNG lưỡi (kiếm chĩa ra sau lưng thì cung vệt không vòng qua đầu, như thân gốc); còn quá ít mẫu
+  // (< 3) thì dùng cả đường vung trong cửa sổ, không bao giờ rơi về chỗ cố định khi đo được kiếm.
+  if (G.VET_TRON === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]vettron=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.VET_TRON = !tat; }
+  const MAU = []; // mẫu (q) dùng lại giữa các lần đo, không tạo mảng mới mỗi nhát
+  for (let i = 0; i <= 40; i++) MAU.push({ gx: 0, gy: 0, dx: 0, dy: 0, L: 0, sau: false });
   // Cung vung thật của đòn thường đang đánh (đo trong cửa sổ win của tiến độ tư thế). null: không đo được (dùng cách cũ).
   function cungVk(P, win) {
     const TL = G.tinhLinh;
     if (!G.CO_VK || !TL || !TL.tip || !G.heroArgs || !S.W || P !== S.W.P) return null;
-    const o = G.heroArgs(P), f = P.face < 0 ? -1 : 1;
-    let n = 0, sx = 0, sy = 0, L = 0, a0 = 0, ap = 0, a1 = 0, best = -1e9;
+    const o = G.heroArgs(P), f = P.face < 0 ? -1 : 1, tron = G.VET_TRON !== false;
+    let m = 0, mTruoc = 0;
     for (let i = 0; i <= 40; i++) {
       o.atk = i / 40;
       const q = TL.tip(o);
       if (!q || q.anim !== 'atk' || q.u < win[0] || q.u > win[1]) continue;
-      // G.KIEM_KHOP (tay-kiem-mat 12/10): kiếm đang chĩa ra sau lưng thì vẽ sau thân (js/hero_tinhlinh.js), nên cung vệt bắt đầu
-      // từ chỗ lưỡi đã ra trước: vệt không còn vòng qua đỉnh đầu / trước mặt em bé. Không đổi độ đậm, cỡ ảnh.
-      if (G.KIEM_KHOP && q.wt === 'sword' && q.dx * f < -0.25 * Math.hypot(q.dx, q.dy)) continue;
-      if (G.KIEM_MUOT && q.wt === 'sword' && q.front === false) continue; // chem-kiem-muot: đoạn kiếm vẽ sau thân (qua đầu) không vào cung vệt
+      // G.KIEM_KHOP (tay-kiem-mat 12/10): kiếm đang chĩa ra sau lưng thì cung vệt bắt đầu từ chỗ lưỡi đã ra trước: vệt không vòng
+      // qua đỉnh đầu / trước mặt em bé (luật né mặt theo hướng lưỡi, giữ). Không đổi độ đậm, cỡ ảnh.
+      let sau = G.KIEM_KHOP && q.wt === 'sword' && q.dx * f < -0.25 * Math.hypot(q.dx, q.dy);
+      // chem-kiem-muot: đoạn kiếm vẽ sau thân không vào cung vệt — CHỈ khi tắt G.VET_TRON (vệt là hiệu ứng, không theo lớp thân)
+      if (!tron && G.KIEM_MUOT && q.wt === 'sword' && q.front === false) sau = true;
+      const s = MAU[m++]; s.gx = q.gx; s.gy = q.gy; s.dx = q.dx; s.dy = q.dy; s.L = q.L; s.sau = sau;
+      if (!sau) mTruoc++;
+    }
+    const caCung = tron && mTruoc < 3; // né mặt còn quá ít mẫu: lấy cả đường vung (vẫn đúng hướng, đúng chỗ cầm)
+    let n = 0, sx = 0, sy = 0, L = 0, a0 = 0, ap = 0, a1 = 0, best = -1e9;
+    for (let i = 0; i < m; i++) {
+      const q = MAU[i];
+      if (q.sau && !caCung) continue;
       let a = Math.atan2(q.dy, q.dx);
       if (!n) { a0 = a; ap = a; } else { while (a - ap > Math.PI) a -= TAU; while (a - ap < -Math.PI) a += TAU; ap = a; }
       const l = q.L * Math.hypot(q.dx, q.dy), gx = q.gx - P.x, gy = q.gy - P.y, ex = (gx + Math.cos(a) * l) * f;
