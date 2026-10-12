@@ -115,7 +115,7 @@ Còn: búa lấy đà giơ trước mặt (khung 1 Rừng/Biển) vẫn đè m�
 
 Nhập 4 tấm mới trong `docs/anh-goc/2026-10-12/than-bo/` (4/12 Cu Tèo Rừng, 8/12 Cu Lì Biển chưa có ảnh khi chạy). Cu Tèo, Cu Lì
 mặc đủ bộ Hang Biển / Lâu Đài (Cu Tèo) hoặc Rừng Già / Lâu Đài (Cu Lì) nay đánh bằng 5 hàng đòn riêng như Cu Tí. Code game chỉ thêm
-4 khoá `SC.TAY_KIEM`; không đụng đường vung kiếm, trường `khung`, dấu tạm tắt thân bộ Cái Bống. Không đổi gameplay.
+4 khoá `SC.TAY_KIEM` và 4 khoá `SC.TAY_DON`; không đụng đường vung kiếm, trường `khung`, dấu tạm tắt thân bộ Cái Bống. Không đổi gameplay.
 
 **`nhap.py` thêm 2 tuỳ chọn:**
 
@@ -140,14 +140,20 @@ mặc đủ bộ Hang Biển / Lâu Đài (Cu Tèo) hoặc Rừng Già / Lâu Đ
   cằm ở nhiều khung, và mũ / áo cam bộ Lâu Đài cùng màu da nên máy không phân được → đặt tay theo ảnh lưới toạ độ (vòng đỏ = số đã
   dùng): khung giơ tay qua đầu Cu Tèo Biển khung 6 → [-5, -22], Cu Tèo Lâu Đài khung 5 → [-3, -26]; còn lại nắm tay trước bụng / ngực.
   Trong trang: 24/24 khung kiếm của 4 thân lấy tay từ bảng (`nguon = 'bang-do'`).
+- **Nắm tay cung, giáo, búa** (`SC.TAY_DON`, bảng của phiên song song d70c5c6 — gộp khi rebase): chạy `tay-don/tay_don.py <key> <bộ>`,
+  soát ảnh `tay-don/tay-<key>-<bộ>.png`, sửa bằng mắt các khung máy đo sai: búa lấy đà giơ tay qua đầu (Cu Tèo Biển khung 2 →
+  [1,5; −26,5], Cu Lì Rừng khung 2 → [−6; −27], Cu Lì Lâu Đài khung 2 → [−1; −29]); khung ngồi / nện thấp máy bắt nhầm mặt / mũ
+  (Cu Tèo Lâu Đài giáo 6 → [7; −7], búa 6 → [7; −4,5]; Cu Lì Lâu Đài búa 5 → [0; −9], búa 6 → [−1; −6]); Cu Tèo Biển búa 4, 6 → tay
+  vươn trước [8; −12], [6; −10,5]. Trong trang: 4 thân × (kiếm, cung, giáo, búa) = **96/96 khung lấy tay từ bảng**. Nay búa lấy đà giơ
+  qua đầu đúng tay, cung không còn đặt ở tay sau lưng (thấy ở lần chạy trước khi có bảng).
 
 Kiểm bản HAI TỆP (`LK_HAI_TEP=1 python3 game/build.py --hai-tep`, `srv2.py`, `linh-khi-nhe.html?cloud=0`, `kiem/kiem.py`):
 4 thân bộ ghép đủ 12 hàng, 4 vũ khí × 14 tư thế + chưởng: 0 lỗi vẽ, vũ khí ở nắm tay, không che mặt; chơi thật ải 1-1 mặc đủ bộ
 × 4 vũ khí (bot đánh): thân `em-be-<key>-<bộ>`, tệp đòn đã ghép; **0 pageerror**. `cloud_save_regression` đạt; `python3 game/build.py`
 dưới trần (trang 0,87 / 1,5 MB nén, ảnh 20,83 / 26 MB).
 
-Lưu ý hình (giống đợt 1, do máy đo tay chung `doTay`, không sửa phiên này): khung thế đứng / thế ngồi cuối hàng cung (Cu Tèo Lâu Đài
-khung 6, Cu Lì Lâu Đài khung 1, 6) cây cung đặt ở tay sau, sau lưng — không che mặt, chỉ ở khung đầu / cuối đòn.
+Lưu ý hình: Cu Tèo Lâu Đài búa khung 2–3 (tay chụm ở ngực) búa vắt chéo trước thân như Cu Tí Lâu Đài; Cu Tèo Biển kiếm khung 6
+giơ tay qua đầu nên kiếm ra sau đầu (như hàng chém thân gốc).
 
 Ảnh (phóng ×3; hàng: kiếm, cung, giáo, búa; cột: đứng, chạy, 6 khung đòn, chạy + đánh, giữ lấy đà 3 mức, chưởng 2 khung):
 [Cu Tèo Biển](anh/hunter-bien-sau-x3.png) · [Cu Tèo Lâu Đài](anh/hunter-lau-sau-x3.png) ·
@@ -157,5 +163,7 @@ khung 6, Cu Lì Lâu Đài khung 1, 6) cây cung đặt ở tay sau, sau lưng �
   [wrestler-rung](anh/wrestler-rung-don-tam.png) · [wrestler-lau](anh/wrestler-lau-don-tam.png)
 - Nắm tay kiếm: [hunter-bien](anh/hunter-bien-tay-kiem.png) · [hunter-lau](anh/hunter-lau-tay-kiem.png) ·
   [wrestler-rung](anh/wrestler-rung-tay-kiem.png) · [wrestler-lau](anh/wrestler-lau-tay-kiem.png)
+- Nắm tay cung / giáo / búa (vòng đỏ = số máy đo, đã sửa các khung kể trên): [hunter-bien](tay-don/tay-hunter-bien.png) ·
+  [hunter-lau](tay-don/tay-hunter-lau.png) · [wrestler-rung](tay-don/tay-wrestler-rung.png) · [wrestler-lau](tay-don/tay-wrestler-lau.png)
 
 Còn thiếu ảnh: 4/12 Cu Tèo Rừng, 8/12 Cu Lì Biển, 10–12 thân bộ Cái Bống.
