@@ -23,3 +23,7 @@ Nguồn: `docs/anh-goc/2026-10-12/em-be-healer-than.png` (thân gốc 8 cột ×
 
 ## Tệp
 `game/art/custom/em-be-healer.sprite.json`, `game/art/custom/ghep-healer.sprite.json`, `game/dist/*` (build lại), thư mục này: `bao-cao.md`, `bang-kiem.png`, `chay-healer.gif`, `tham-chieu-healer-moi.png`, `kiem.py`, `taoghep.py`, `ghep-hang-chay.py`, `cat-bang-cong-cu.py`.
+
+## Ghi chú thêm (phiên trùng, 12/10)
+Một phiên thứ hai được giao cùng việc này, làm xong thì thấy các commit trên đã có trên nhánh → **bỏ bản của phiên thứ hai, không đẩy gì vào game**, chỉ ghi lại một điều phát hiện được:
+- Trang `tools/tach-anh-hung` (chế độ "Tự tìm từng hình") **làm rơi cánh tay đấm duỗi thẳng** ở hàng đánh khung 3–5 (coi cánh tay là đốm lạc). Trong thân hiện tại, hàng `atk` khung 3–5 có nắm tay xa nhất chỉ ~11,5 điểm ảnh trước chân (ảnh gốc: ~15). Khi có tệp đòn theo vũ khí thì hàng `atk` gốc gần như không dùng, nên ảnh hưởng nhỏ. Muốn sửa: tách nền hồng tím + vạch kẻ ra ảnh nền trong suốt trước rồi mới đưa vào công cụ (công cụ đi đường "có alpha" và giữ đủ tay), sau đó đo lại `tay_truoc` của `atk:0..5` trong `ghep-healer`.
