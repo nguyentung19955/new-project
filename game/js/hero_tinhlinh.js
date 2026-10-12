@@ -1134,6 +1134,12 @@
     if (a <= 0.53) return 0.45 + 0.04 * ((a - 0.43) / 0.1);
     return 0.49 + 0.51 * eOut((a - 0.53) / 0.47);
   }
+  // Trảm Nguyệt bay ra ngay lúc bấm (js/moves.js), nên khi G.CO_VK bật, khúc giơ kiếm ra sau (3/7 đầu của hoạt ảnh chiêu) chỉ chiếm
+  // 12% đầu (~0,04 giây): nhát chém tới trước đúng lúc vầng trăng còn ở sát mũi kiếm. Chỉ đổi hình; tắt cờ hoặc vũ khí khác: như cũ.
+  G.nhipChieu = function (k, wt) {
+    if (!G.CO_VK || wt !== 'sword' || !(k > 0)) return k;
+    return k < 0.12 ? (k / 0.12) * (3 / 7) : 3 / 7 + ((Math.min(1, k) - 0.12) / 0.88) * (4 / 7);
+  };
   // Chọn hoạt ảnh và khung hình theo trạng thái (giống cách hero_art.js chọn, để khớp nhịp đánh của game).
   function pick(o, wt) {
     const p = o.p, t = (o.t != null ? o.t : G.time) || 0;
@@ -1147,7 +1153,7 @@
     }
     const ai = p && p.aimRel != null ? Math.max(0, Math.min(12, Math.round(p.aimRel / 15) + 6)) : 6; // nấc góc ngắm (cung, và mọi đòn cận chiến)
     if (p && p.dashT > 0) return ['dash', Math.floor(t * 30) % 2, 0, ai];
-    if (p && p.specT > 0) return ['spec', Math.min(6, Math.max(0, Math.floor((1 - p.specT / 0.35) * 7))), wt === 'bow' ? ai : 0, ai];
+    if (p && p.specT > 0) return ['spec', Math.min(6, Math.max(0, Math.floor(G.nhipChieu(1 - p.specT / 0.35, wt) * 7))), wt === 'bow' ? ai : 0, ai];
     if (p && p.castT > 0) return ['cast', Math.min(7, Math.max(0, Math.floor((1 - p.castT / 0.4) * 8))), 0];
     const mv = p && p.mv;
     if (mv && mv.holding && !(o.atk >= 0) && REST[wt]) {

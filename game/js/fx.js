@@ -339,6 +339,66 @@
     const h = huongAnh(ux, uy);
     return anh(ma, x, y, Object.assign({ f: h.f, goc: h.goc, neo: 'khoa' }, o));
   }
+  // ---------- Vệt ảnh AI bám đúng đường vung của mũi vũ khí đang vẽ (chỉ khi G.CO_VK bật; tắt cờ: y hệt cũ) ----------
+  // Ảnh vệt đòn vẽ sẵn cho một cỡ vũ khí cũ và đặt ở chỗ cố định cạnh thân, nên khi vũ khí ảnh AI co nhỏ, vệt nằm đè lên người còn mũi
+  // kiếm đi chỗ khác. Ở đây hỏi js/hero_tinhlinh.js (tip) mũi vũ khí ở từng thời điểm của chính đòn đang đánh: tâm cung = chỗ cầm
+  // trung bình, bán kính = khoảng cách chỗ cầm tới mũi thật, xoay ảnh về giữa cung vung; giáo: đầu ảnh ở chỗ cầm lúc đâm hết tầm,
+  // dài tới mũi; lướt chém: mép trước của ảnh chạm mũi kiếm. Ảnh bám theo em bé (lướt, nhún) suốt lúc phát. Chỉ là hình.
+  // ANH_VK: bán kính mép ngoài của ảnh (điểm ảnh của ảnh gốc, chưa nhân "co" của tệp) đo từ điểm neo, và góc giữa cung (radian).
+  const ANH_VK = { 'hu-chem-kiem': { r: 25, c: 0 }, 'hu-chem-bua': { r: 30, c: -0.21 }, 'hu-dam-giao': { r: 44, c: 0 }, 'hu-chem-luot': { r: 43.5, c: 0 } };
+  const CU = { px: 0, py: 0, r: 0, am: 0, ex: 0, ey: 0, ea: 0, eL: 0 };
+  // Cung vung thật của đòn thường đang đánh (đo trong cửa sổ win của tiến độ tư thế). null: không đo được (dùng cách cũ).
+  function cungVk(P, win) {
+    const TL = G.tinhLinh;
+    if (!G.CO_VK || !TL || !TL.tip || !G.heroArgs || !S.W || P !== S.W.P) return null;
+    const o = G.heroArgs(P), f = P.face < 0 ? -1 : 1;
+    let n = 0, sx = 0, sy = 0, L = 0, a0 = 0, ap = 0, a1 = 0, best = -1e9;
+    for (let i = 0; i <= 40; i++) {
+      o.atk = i / 40;
+      const q = TL.tip(o);
+      if (!q || q.anim !== 'atk' || q.u < win[0] || q.u > win[1]) continue;
+      let a = Math.atan2(q.dy, q.dx);
+      if (!n) { a0 = a; ap = a; } else { while (a - ap > Math.PI) a -= TAU; while (a - ap < -Math.PI) a += TAU; ap = a; }
+      const l = q.L * Math.hypot(q.dx, q.dy), gx = q.gx - P.x, gy = q.gy - P.y, ex = (gx + Math.cos(a) * l) * f;
+      a1 = a; n++; sx += gx; sy += gy; if (l > L) L = l;
+      if (ex > best) { best = ex; CU.ex = gx; CU.ey = gy; CU.ea = a; CU.eL = l; }
+    }
+    if (!n || !(L > 4)) return null;
+    CU.px = sx / n; CU.py = sy / n; CU.r = L; CU.am = (a0 + a1) / 2;
+    return CU;
+  }
+  // Đặt ảnh vệt ma: neo (ax, ay) so với chân em bé, hướng ang (radian, trên màn hình), cỡ sc. Lật theo hướng mặt rồi xoay.
+  function anhVkDat(ma, P, ax, ay, ang, sc, c0) {
+    const FA = G.fxAnh;
+    if (!FA || !FA.co(ma)) return false;
+    const f = P.face < 0 ? -1 : 1;
+    const h = add({ ty: 'anh', ma, x: P.x + ax, y: P.y + ay, t: FA.giay(ma) || 0.4, f, sc, goc: 0, ly: 1, d: 0, neo: 'khoa' });
+    h.xg = f > 0 ? ang - c0 : ang - Math.PI + c0; h.theo = P; h.tdx = ax; h.tdy = ay;
+    return true;
+  }
+  // Đòn thường (kiếm, búa: cung vung; giáo: đâm, scDam: cỡ ảnh đâm như cũ). Trả về true nếu đã vẽ ảnh theo mũi thật.
+  function anhVk(ma, P, wt, scDam) {
+    const w = WIN.atk[wt], A = ANH_VK[ma], FA = G.fxAnh;
+    if (!w || !A || !FA || !FA.co(ma)) return false;
+    const cu = cungVk(P, w); if (!cu) return false;
+    const co = (FA.ds[ma] && FA.ds[ma].co) || 1;
+    if (wt === 'spear') { // đầu nhọn của ảnh (bán kính A.r) đúng ở mũi giáo lúc đâm hết tầm; dài nhiều nhất từ sau chỗ cầm 10 điểm ảnh (giữa thân) tới mũi
+      const R = Math.min(A.r * co * scDam, cu.eL + 10), sc = R / (A.r * co), tx = cu.ex + Math.cos(cu.ea) * cu.eL, ty = cu.ey + Math.sin(cu.ea) * cu.eL;
+      return anhVkDat(ma, P, tx - Math.cos(cu.ea) * R, ty - Math.sin(cu.ea) * R, cu.ea, sc, A.c);
+    }
+    return anhVkDat(ma, P, cu.px, cu.py, cu.am, (cu.r + 1) / (A.r * co), A.c);
+  }
+  // Lướt chém (sau Né): kiếm chĩa thẳng theo hướng lướt; mép trước của ảnh (bán kính A.r) đặt đúng ở mũi kiếm, cỡ ảnh giữ như cũ.
+  function anhLuot(ma, P, sc) {
+    const TL = G.tinhLinh, FA = G.fxAnh, A = ANH_VK['hu-chem-luot'];
+    if (!G.CO_VK || !TL || !TL.tip || !G.heroArgs || !S.W || P !== S.W.P || !FA || !FA.co(ma)) return false;
+    const o = G.heroArgs(P), pp = Object.create(P); pp.dashT = Math.max(0.05, P.dashT || 0); o.p = pp; o.atk = -1; o.dodge = -1;
+    const q = TL.tip(o);
+    if (!q || q.anim !== 'dash') return false;
+    const l = q.L * Math.hypot(q.dx, q.dy), a = Math.atan2(q.dy, q.dx), R = A.r * ((FA.ds[ma] && FA.ds[ma].co) || 1) * sc;
+    const tx = q.gx - P.x + Math.cos(a) * l, ty = q.gy - P.y + Math.sin(a) * l;
+    return anhVkDat(ma, P, tx - Math.cos(a) * R, ty - Math.sin(a) * R, a, sc, A.c);
+  }
   fx.coAnh = coAnh;
   fx.anh = function (ma, x, y, o) {
     if (G.noRender || !coAnh(ma)) return false;
@@ -609,7 +669,7 @@
     if (P === S.W.P) { P.fxS = -0.08; P.fxSV = 0; P.fxL = f * 2.5; P.fxLV = 0; } // nhún: vươn người theo nhát chém
     // Có ảnh AI cho vệt đòn của loại vũ khí này: vẽ ảnh thay cho trăng khuyết / mũi đâm (hạt và vết nứt giữ nguyên)
     const maVet = VET_ANH[o.type], vetAnh = !!maVet && coAnh(maVet);
-    if (vetAnh) anh(maVet, P.x + f * (o.type === 'spear' ? 8 : o.type === 'hammer' ? 4 : 2), P.y - (o.type === 'hammer' ? 17 : 13), { f, sc: Math.max(0.6, Math.min(1.8, (o.type === 'spear' ? R0 + 2 : R0) / 32)) * (o.combo === 2 ? 1.12 : 1) });
+    if (vetAnh && !anhVk(maVet, P, o.type, Math.max(0.6, Math.min(1.8, (R0 + 2) / 32)) * (o.combo === 2 ? 1.12 : 1))) anh(maVet, P.x + f * (o.type === 'spear' ? 8 : o.type === 'hammer' ? 4 : 2), P.y - (o.type === 'hammer' ? 17 : 13), { f, sc: Math.max(0.6, Math.min(1.8, (o.type === 'spear' ? R0 + 2 : R0) / 32)) * (o.combo === 2 ? 1.12 : 1) });
     if (o.type === 'sword') {
       const fin = o.combo === 2;
       if (fin) {
@@ -1892,6 +1952,14 @@
       switch (o.ty) {
         case 'anh': { // hiệu ứng ảnh AI (js/fx_anh.js); hết khung thì tắt sớm
           const FA = G.fxAnh, th = o.theo;
+          if (o.xg != null) { // vệt bám mũi vũ khí (anhVkDat): neo dời theo em bé, xoay quanh điểm neo
+            const X = Math.round((th ? th.x : o.x - (o.tdx || 0)) + (o.tdx || 0)), Y = Math.round((th ? th.y : o.y - (o.tdy || 0)) + (o.tdy || 0));
+            c.save(); c.translate(X, Y); c.rotate(o.xg);
+            let ok = false;
+            try { ok = !!FA && FA.ve(c, o.ma, 0, 0, o.t0 - o.t, 0, o.sc, o.f < 0); } finally { c.restore(); }
+            if (!ok) o.t = 0;
+            break;
+          }
           if (!FA || !FA.ve(c, o.ma, th ? th.x : o.x, th ? th.y : o.y, o.gian ? k * FA.giay(o.ma) * 0.999 : o.t0 - o.t, o.goc, o.sc, o.f < 0)) o.t = 0;
           break;
         }
@@ -2106,7 +2174,7 @@
     c.globalAlpha = 1;
   }
   // Bộ đồ nghề cho js/fx_he.js: dùng chung kho hạt, bảng màu và các hàm vẽ điểm ảnh ở trên.
-  fx.kit = { coAnh, anh, anhHe, anhHuong, huongAnh, aimed, S: () => S, api, layer, fail, emit, streak, spray, puffs, add, addRing, trauma, kick, stop, num, pal, PAL, RAMP, R, rr, hash, p, ell, ring, line, star, crescent, tongue, slam, blastFire, blastPoison, blastIce, elemBits, bodyOf, hand, A_ };
+  fx.kit = { coAnh, anh, anhHe, anhHuong, huongAnh, anhLuot, aimed, S: () => S, api, layer, fail, emit, streak, spray, puffs, add, addRing, trauma, kick, stop, num, pal, PAL, RAMP, R, rr, hash, p, ell, ring, line, star, crescent, tongue, slam, blastFire, blastPoison, blastIce, elemBits, bodyOf, hand, A_ };
 })();
 
 // V13 (Giai đoạn 2, phiên gd2-b): trùm có "Chống đánh xa" vừa giảm sát thương một mũi tên thì hiện chữ "Xa quá!" trên đầu trùm

@@ -514,7 +514,7 @@
     if (p && p.dead) { const u = (p.deadT || 0) / ((dt.die && dt.die.giay) || 0.6); return mot('die', u); }
     if (o.dodge >= 0) return dt.ne ? mot('ne', o.dodge) : lap('move', t);
     if (p && p.dashT > 0) return lap('move', t * 2);
-    if (p && p.specT > 0) return don('cast') ? theoDon('cast', 1 - p.specT / 0.35) : mot('atk', 1 - p.specT / 0.35);
+    if (p && p.specT > 0) { const k = G.nhipChieu ? G.nhipChieu(1 - p.specT / 0.35, wt) : 1 - p.specT / 0.35; return don('cast') ? theoDon('cast', k) : mot('atk', k); } // G.nhipChieu: Trảm Nguyệt chém tới sớm (js/hero_tinhlinh.js)
     if (p && p.castT > 0) return don('cast') ? theoDon('cast', 1 - p.castT / 0.4) : mot('atk', 1 - p.castT / 0.4);
     if (p && p.mv && p.mv.holding && !(o.atk >= 0)) return hv ? { ten: hv, i: doi6(dt[hv], giuDon(hv, p.mv.charge)), u: 0.99 } : mot('tele', 0.99);
     if (o.atk >= 0) return hv ? theoDon(hv, o.atk, p ? p.comboI : Math.floor(t / 1.6)) : mot('atk', o.atk);
@@ -1001,11 +1001,12 @@
   // Ảnh AI vẽ to (kiếm ~46 điểm ảnh, gấp rưỡi thân em bé 29). G.CO_VK: hệ số co theo loại, co quanh điểm cầm (cam); mũi, dây cung,
   // hạt hệ co theo. "lang": nhân thêm cho vũ khí bay theo em bé ở làng. "nam": chỗ bàn tay nắm trên ảnh AI, tính từ điểm cầm dọc
   // thân về phía mũi (điểm ảnh game của ảnh gốc), để chuôi nằm đúng trong tay (js/hero_tinhlinh.js).
+  // Kiếm 0,66 (0,54 thì kiếm dài 25, vung sát người; 0,66: dài ~30, ngang một thân em bé 29).
   // Tắt: G.CO_VK = null, hoặc mở game với ?covk=0  -> vẽ y hệt bản cũ.
   if (G.CO_VK === undefined) {
     let tat = false;
     try { tat = typeof location !== 'undefined' && /[?&]covk=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
-    G.CO_VK = tat ? null : { sword: 0.54, bow: 0.52, spear: 0.59, hammer: 0.48, lang: 0.9, nam: 1.5 };
+    G.CO_VK = tat ? null : { sword: 0.66, bow: 0.52, spear: 0.59, hammer: 0.48, lang: 0.9, nam: 1.5 };
   }
   // Hệ số co của một món: opts.lang (vũ khí bay ở làng) nhân thêm hệ số làng. Tắt cờ: 1.
   SC.coVk = function (loai, opts) {

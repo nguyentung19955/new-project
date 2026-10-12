@@ -165,7 +165,9 @@
       // nhát lướt sau khi né: lưỡi liềm rộng quét ngang và vệt gió
       // Ảnh AI hu-chem-luot (mép trái của hình là tay em bé; K.aimed xoay theo 8 hướng như vệt code): thay lưỡi liềm, vệt gió giữ nguyên
       const maL = K.anhHe('hu-chem-luot', o.el);
-      if (!maL || !K.anh(maL, P.x - f, P.y - 12, { f, sc: Math.max(0.5, Math.min(2, (o.reach * 0.9 + 11) / 56)) }))
+      // G.CO_VK bật: mép trước của ảnh đặt đúng ở mũi kiếm đang vẽ và bám theo em bé suốt cú lướt (K.anhLuot, js/fx.js)
+      const scL = Math.max(0.5, Math.min(2, (o.reach * 0.9 + 11) / 56));
+      if (!maL || !(K.anhLuot(maL, P, scL) || K.anh(maL, P.x - f, P.y - 12, { f, sc: scL })))
         add({ ty: 'cres', x: P.x + f * 6, y: P.y - 12, f, ra: o.reach * 0.9, rb: 11, off: 9, oy: 0, vert: false, rev: false, pl: PL, t: 0.2, big: true, st: o.stage, ly: 1, back: o.reach * 0.5 });
       for (let i = 0; i < 6; i++) streak(P.x - f * rr(0, 10), P.y - rr(4, 22), -f * rr(60, 140), 0, rr(0.12, 0.2), PL.ramp, 1, rr(8, 14), 0, 2);
       kick(f * 1.5, 0);
