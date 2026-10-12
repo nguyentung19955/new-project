@@ -1,0 +1,112 @@
+{
+ "tep_pha": [
+  {
+   "ma": "nguTinh",
+   "fw": 180,
+   "fh": 116,
+   "net": 1,
+   "hang": [
+    "idle",
+    "move",
+    "tele",
+    "atk",
+    "hit",
+    "die"
+   ]
+  },
+  {
+   "ma": "nguTinh-p2",
+   "fw": 180,
+   "fh": 116,
+   "net": 2,
+   "hang": [
+    "idle",
+    "tele",
+    "atk",
+    "hit"
+   ]
+  },
+  {
+   "ma": "nguTinh-p3",
+   "fw": 180,
+   "fh": 116,
+   "net": 2,
+   "hang": [
+    "idle",
+    "tele",
+    "atk",
+    "hit"
+   ]
+  }
+ ],
+ "vung_cua_ngu_tinh": 1,
+ "tam_da_ve": {
+  "pha 1 idle": [
+   "nguTinh:idle"
+  ],
+  "pha 1 tele": [
+   "nguTinh:tele"
+  ],
+  "pha 1 atk": [
+   "nguTinh:atk"
+  ],
+  "pha 1 hit": [
+   "nguTinh:hit"
+  ],
+  "pha 1 move": [
+   "nguTinh:move"
+  ],
+  "pha 1 die": [
+   "nguTinh:die"
+  ],
+  "pha 2 idle": [
+   "nguTinh-p2:idle"
+  ],
+  "pha 2 tele": [
+   "nguTinh-p2:tele"
+  ],
+  "pha 2 atk": [
+   "nguTinh-p2:atk"
+  ],
+  "pha 2 hit": [
+   "nguTinh-p2:hit"
+  ],
+  "pha 2 move": [
+   "nguTinh:move"
+  ],
+  "pha 2 die": [
+   "nguTinh:die"
+  ],
+  "pha 3 idle": [
+   "nguTinh-p3:idle"
+  ],
+  "pha 3 tele": [
+   "nguTinh-p3:tele"
+  ],
+  "pha 3 atk": [
+   "nguTinh-p3:atk"
+  ],
+  "pha 3 hit": [
+   "nguTinh-p3:hit"
+  ],
+  "pha 3 move": [
+   "nguTinh:move"
+  ],
+  "pha 3 die": [
+   "nguTinh:die"
+  ]
+ },
+ "pha_sau_khi_ha_mau": [
+  1,
+  2
+ ],
+ "loi": [],
+ "gif_don": {
+  "so_hinh": 22,
+  "byte": 94944
+ },
+ "gif": {
+  "so_hinh": 42,
+  "byte": 146772
+ }
+}
