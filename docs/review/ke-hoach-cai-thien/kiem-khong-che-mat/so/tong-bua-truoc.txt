@@ -1,0 +1,16 @@
+trạng thái       khung    đè mặt     %max    đè đầu   k.đo
+đứng              1856       600       4%       600      0
+đi                 928       158      24%       368      0
+chạy              1248       296      24%       588      0
+chạy→đứng          736       248       3%       248      0
+sau đòn           1664       984      61%      1272      0
+đứng→chạy          480       180      49%       310      0
+lộn                544         0       0%         0    152
+trúng đòn          480         0       0%         0      0
+chém 3 nhát       2528      1332      62%      2370      0
+chạy mà chém      2016      1164      62%      1890      0
+lướt chém          992       552      61%       930      0
+chiêu             1248       338      28%       622      0
+giữ lấy đà         128        54      62%       118      0
+KHÔNG ĐÁNH: 2466/7936 khung đè mặt;  ĐÁNH: 3440/6912
+theo em bé (không đánh, đánh): {'healer bien phải': [12, 96], 'healer bien trái': [12, 96], 'healer goc phải': [12, 96], 'healer goc trái': [12, 96], 'healer lau phải': [12, 96], 'healer lau trái': [12, 96], 'healer rung phải': [12, 96], 'healer rung trái': [12, 96], 'hunter bien phải': [74, 58], 'hunter bien trái': [74, 58], 'hunter goc phải': [96, 178], 'hunter goc trái': [96, 178], 'hunter lau phải': [55, 135], 'hunter lau trái': [55, 135], 'hunter rung phải': [113, 35], 'hunter rung trái': [113, 35], 'smith bien phải': [55, 187], 'smith bien trái': [55, 187], 'smith goc phải': [82, 4], 'smith goc trái': [82, 4], 'smith lau phải': [103, 176], 'smith lau trái': [103, 176], 'smith rung phải': [136, 208], 'smith rung trái': [136, 208], 'wrestler bien phải': [94, 19], 'wrestler bien trái': [94, 19], 'wrestler goc phải': [72, 132], 'wrestler goc trái': [72, 132], 'wrestler lau phải': [134, 109], 'wrestler lau trái': [134, 109], 'wrestler rung phải': [171, 95], 'wrestler rung trái': [171, 95]}

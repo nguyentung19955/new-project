@@ -1024,6 +1024,71 @@
       return r;
     };
   }
+  // ---------- NẮM TAY CẦM KIẾM (G.KIEM_SAU, phiên kiem-khong-che-mat 12/10; tắt: ?kiemsau=0) ----------
+  // Trước: vẽ lại cả một ĐĨA tròn r = 2,5 của thân AI quanh nắm tay đè lên kiếm → lấy luôn cả ngực, hông phía sau tay, che mất núm chuôi
+  // và một khúc chuôi (kiếm như dán cạnh tay). Nay: chọn đúng điểm ảnh BÀN TAY của khung — cùng màu da với giữa nắm tay (trong 2,6 điểm
+  // ảnh), kèm viền tối sát nó — vẽ lại riêng những điểm đó (giữ nhuộm, nháy trúng đòn), rồi thêm 2 ngón tay màu da của chính ảnh vắt
+  // ngang chuôi và một nét bóng giữa các ngón. Chuôi lòi ra hai đầu nắm tay: núm chuôi một bên, chắn kiếm + lưỡi bên kia.
+  if (G.KIEM_SAU === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]kiemsau=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.KIEM_SAU = !tat; }
+  function pxTam(sp) { // màu từng điểm ảnh thật của cả tấm (đọc một lần)
+    if (sp._pxNam !== undefined) return sp._pxNam;
+    let r = null;
+    try {
+      const im = sp.img, w = im.width || im.naturalWidth, h = im.height || im.naturalHeight, cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+      const x = cv.getContext('2d', { willReadFrequently: true }); x.drawImage(im, 0, 0); r = { d: x.getImageData(0, 0, w, h).data, w, h };
+    } catch (e) { r = null; }
+    return (sp._pxNam = r);
+  }
+  function matNam(sp, ten, i, P) {
+    const k = ten + ':' + i + ':' + Math.round(P[0] * 2) + ':' + Math.round(P[1] * 2);
+    sp._nam = sp._nam || new Map();
+    if (sp._nam.has(k)) return sp._nam.get(k);
+    let kq = null;
+    try {
+      const T = pxTam(sp), a = sp.dt[ten], n = sp.net || 1;
+      if (T && a) {
+        const fx = i * sp.fw * n, fy = a.hang * sp.fh * n, gx = (sp.lat ? sp.ax - P[0] : sp.ax + P[0]) * n, gy = (sp.ay + P[1]) * n, R = 2.6 * n;
+        const lay = (x, y) => { if (x < 0 || y < 0 || x >= sp.fw * n || y >= sp.fh * n) return null; const o = ((fy + y) * T.w + fx + x) * 4; return T.d[o + 3] > 127 ? [T.d[o], T.d[o + 1], T.d[o + 2]] : null; };
+        const sang = (c) => (0.3 * c[0] + 0.59 * c[1] + 0.11 * c[2]) / 255;
+        const ds = [];
+        for (let y = Math.floor(gy - R); y <= gy + R; y++) for (let x = Math.floor(gx - R); x <= gx + R; x++) {
+          const c = lay(x, y); if (!c) continue;
+          const d = Math.hypot(x + 0.5 - gx, y + 0.5 - gy); if (d > R) continue;
+          ds.push({ x, y, c, d, l: sang(c) });
+        }
+        const goc = ds.filter((q) => q.d <= 1.2 * n && q.l > 0.3).sort((p, q) => p.l - q.l);
+        if (goc.length) {
+          const da = goc[goc.length >> 1].c, gan = (c) => Math.abs(c[0] - da[0]) + Math.abs(c[1] - da[1]) + Math.abs(c[2] - da[2]) < 95;
+          const chon = new Set();
+          for (const q of ds) if (q.l > 0.25 && gan(q.c)) chon.add(q.x + ',' + q.y);
+          for (const q of ds) if (q.l <= 0.25 && [[1, 0], [-1, 0], [0, 1], [0, -1]].some((e) => chon.has(q.x + e[0] + ',' + (q.y + e[1])))) chon.add(q.x + ',' + q.y + 'v');
+          const o = [];
+          for (const key of chon) { const [x, y] = key.replace('v', '').split(',').map(Number); const lx = sp.lat ? sp.ax - (x + 1) / n : x / n - sp.ax; o.push(lx, y / n - sp.ay); }
+          const bong = [Math.round(da[0] * 0.72), Math.round(da[1] * 0.68), Math.round(da[2] * 0.7)];
+          kq = { o, s: 1 / n, da: hex2(da[0], da[1], da[2]), bong: hex2(bong[0], bong[1], bong[2]) };
+        }
+      }
+    } catch (e) { kq = null; }
+    if (sp._nam.size > 600) sp._nam.clear();
+    sp._nam.set(k, kq);
+    return kq;
+  }
+  // Vẽ nắm tay đè lên chuôi kiếm (gốc: chân bé, x về trước mặt). a: góc kiếm (độ). Trả false nếu không đo được (vẽ kiểu cũ).
+  SC.veNam = function (c, sp, ten, i, P, a, tint) {
+    const m = matNam(sp, ten, i, P); if (!m) return false;
+    c.save();
+    try {
+      c.beginPath(); for (let j = 0; j < m.o.length; j += 2) c.rect(m.o[j], m.o[j + 1], m.s, m.s); c.clip();
+      SC.veKhung(c, sp, ten, i, 1, { tint });
+    } finally { c.restore(); }
+    // ngón tay: 2 ô màu da (0,5 điểm ảnh, như nét ảnh AI) vắt ngang chuôi ngay trước nắm, một nét bóng sát chắn kiếm
+    const r = (a * Math.PI) / 180, dx = Math.cos(r), dy = Math.sin(r), q = (u, v) => [Math.floor((P[0] + dx * u - dy * v) * 2) / 2, Math.floor((P[1] + dy * u + dx * v) * 2) / 2];
+    const ga = c.globalAlpha;
+    c.fillStyle = m.da; for (const v of [-0.5, 0, 0.5]) { const z = q(0.5, v); c.fillRect(z[0], z[1], 0.5, 0.5); }
+    c.fillStyle = m.bong; for (const v of [-0.5, 0.5]) { const z = q(1.25, v); c.fillRect(z[0], z[1], 0.5, 0.5); }
+    c.globalAlpha = ga;
+    return true;
+  };
   // Vùng mặt của khung (ten, i): đĩa đầu tự đo (dauKhung), dời về phía trước mặt và xuống dưới (mặt nằm nửa trước, nửa dưới của đầu).
   // { x, y, r } điểm ảnh game tính từ chân, x về trước mặt; null: khung cuộn tròn / không đo được.
   SC.matKhung = function (sp, ten, i) {
@@ -1037,6 +1102,16 @@
       if (d && d.uy > 0.5) { const x = d.hx + (sp.lat ? -1 : 1) * 0.3 * d.R, y = d.hy + 0.3 * d.R; r = { x: sp.lat ? sp.ax - x : x - sp.ax, y: y - sp.ay, r: 0.5 * d.R }; }
     } catch (e) { r = null; }
     return (sp.matC[k] = r);
+  };
+  // G.KIEM_SAU: khung không đo được mặt (mũ to của thân bộ che đầu, đầu ngả) thì mượn đĩa mặt của khung gần nhất cùng hàng, rồi khung
+  // đứng — để kiếm vẫn né mặt. Khung cuộn tròn (lộn, chết) thì không mượn (mặt đã xoay đi chỗ khác).
+  SC.matKhungGan = function (sp, ten, i) {
+    const m = SC.matKhung(sp, ten, i); if (m || !sp || !sp.dt[ten] || ten === 'ne' || ten === 'die') return m;
+    const n = sp.dt[ten].so || 1;
+    for (let d = 1; d < n; d++) for (const j of [i - d, i + d]) if (j >= 0 && j < n) { const q = SC.matKhung(sp, ten, j); if (q) return q; }
+    for (let j = 0; j < ((sp.dt.idle && sp.dt.idle.so) || 0); j++) { const q = SC.matKhung(sp, 'idle', j); if (q) return q; }
+    const g = /^em-be-(smith|hunter|healer|wrestler)-(rung|bien|lau)$/.exec(sp.ma || ''), s0 = g && SC.get('em-be-' + g[1]); // thân bộ: mượn thân gốc
+    return s0 && s0 !== sp && s0.ready ? SC.matKhungGan(s0, s0.dt[ten] ? ten : 'idle', s0.dt[ten] ? Math.min(i, s0.dt[ten].so - 1) : 0) : null;
   };
   // Vẽ dấu ngực 3 × 3 tại p (tâm), trong hệ đã dời về chân bé.
   SC.veDauNguc = function (c, p, ao) {
@@ -1160,6 +1235,8 @@
       if (neo && neo.tay && (neo.tay[0] || neo.tay[1])) o = Object.assign({}, o, { neoTay: neo.tay });
       // G.KIEM_KHOP: bàn tay AI (cắt tròn quanh điểm nắm của khung này) vẽ lại đè lên chuôi, thay cho ô bàn tay code (js/hero_tinhlinh.js drawFrame).
       if (G.KIEM_KHOP) o = Object.assign({}, o, { veTayAI: (cc, P, r) => { cc.save(); cc.beginPath(); cc.arc(P[0], P[1], r, 0, Math.PI * 2); cc.clip(); SC.veKhung(cc, sp, s.ten, s.i, 1, { tint }); cc.restore(); } });
+      // G.KIEM_SAU: nắm tay thật — chỉ điểm ảnh bàn tay của khung (màu da + viền) đè lên chuôi, thêm ngón tay (SC.veNam).
+      if (G.KIEM_KHOP && G.KIEM_SAU) o.veNam = (cc, P, a) => SC.veNam(cc, sp, s.ten, s.i, P, a, tint);
       // Em bé gốc vẫn vẽ bóng, vũ khí, hào quang trang phục; chỗ vẽ thân thì vẽ hình tự vẽ.
       const thay = function (img, x, y) {
         const than = img === fr.cv || (arguments.length === 3 && x === fr.ox && y === fr.oy && img && img.width === fr.cv.width && img.height === fr.cv.height);

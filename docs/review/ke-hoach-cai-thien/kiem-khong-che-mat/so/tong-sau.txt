@@ -1,0 +1,16 @@
+trạng thái       khung    đè mặt     %max    đè đầu   k.đo
+đứng              1856         0       0%         0      0
+đi                 928         0       0%         4      0
+chạy              1248         0       0%        12      0
+chạy→đứng          736         0       0%         0      0
+sau đòn           1664         0       0%         0      0
+đứng→chạy          480         0       0%        12      0
+lộn                544         0       0%         0    152
+trúng đòn          480         0       0%         0      0
+chém 3 nhát       2528         0       0%         0      0
+chạy mà chém      2016         0       0%        32      0
+lướt chém          992         0       0%         0      0
+chiêu             1248         0       0%         0      0
+giữ lấy đà         128         0       0%         0      0
+KHÔNG ĐÁNH: 0/7936 khung đè mặt;  ĐÁNH: 0/6912
+theo em bé (không đánh, đánh): {}

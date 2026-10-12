@@ -1,0 +1,150 @@
+== so/truoc.json.gz
+  đứng                       lớn nhất  10°  lần ≥50°: 0
+  đứng→đi                    lớn nhất  62°  lần ≥50°: 18
+  đi                         lớn nhất  20°  lần ≥50°: 0
+  đi→chạy                    lớn nhất   0°  lần ≥50°: 0
+  chạy                       lớn nhất  35°  lần ≥50°: 0
+  chạy→chạy→đứng             lớn nhất  62°  lần ≥50°: 20
+  chạy→đứng                  lớn nhất  50°  lần ≥50°: 2
+  chạy→đứng→chém 3 nhát      lớn nhất  52°  lần ≥50°: 2
+  chém 3 nhát                lớn nhất 120°  lần ≥50°: 198
+  chém 3 nhát→sau đòn        lớn nhất  74°  lần ≥50°: 30
+  sau đòn                    lớn nhất 115°  lần ≥50°: 36
+  sau đòn→đứng→chạy          lớn nhất  62°  lần ≥50°: 20
+  đứng→chạy                  lớn nhất  35°  lần ≥50°: 0
+  đứng→chạy→chạy mà chém     lớn nhất   0°  lần ≥50°: 0
+  chạy mà chém               lớn nhất 118°  lần ≥50°: 120
+  chạy mà chém→sau đòn       lớn nhất  12°  lần ≥50°: 0
+  sau đòn→lộn                lớn nhất  88°  lần ≥50°: 30
+  lộn                        lớn nhất   0°  lần ≥50°: 0
+  lộn→lướt chém              lớn nhất   0°  lần ≥50°: 0
+  lướt chém                  lớn nhất  81°  lần ≥50°: 4
+  lướt chém→chiêu            lớn nhất  40°  lần ≥50°: 0
+  chiêu                      lớn nhất 107°  lần ≥50°: 98
+  chiêu→trúng đòn            lớn nhất  21°  lần ≥50°: 0
+  trúng đòn                  lớn nhất  50°  lần ≥50°: 2
+  trúng đòn→đứng             lớn nhất  37°  lần ≥50°: 0
+== so/sau.json.gz
+  đứng                       lớn nhất   2°  lần ≥50°: 0
+  đứng→đi                    lớn nhất   6°  lần ≥50°: 0
+  đi                         lớn nhất   4°  lần ≥50°: 0
+  đi→chạy                    lớn nhất   2°  lần ≥50°: 0
+  chạy                       lớn nhất   4°  lần ≥50°: 0
+  chạy→chạy→đứng             lớn nhất   7°  lần ≥50°: 0
+  chạy→đứng                  lớn nhất   2°  lần ≥50°: 0
+  chạy→đứng→chém 3 nhát      lớn nhất  16°  lần ≥50°: 0
+  chém 3 nhát                lớn nhất 120°  lần ≥50°: 198
+  chém 3 nhát→sau đòn        lớn nhất  74°  lần ≥50°: 30
+  sau đòn                    lớn nhất 115°  lần ≥50°: 36
+  sau đòn→đứng→chạy          lớn nhất   8°  lần ≥50°: 0
+  đứng→chạy                  lớn nhất   4°  lần ≥50°: 0
+  đứng→chạy→chạy mà chém     lớn nhất   0°  lần ≥50°: 0
+  chạy mà chém               lớn nhất 118°  lần ≥50°: 120
+  chạy mà chém→sau đòn       lớn nhất  12°  lần ≥50°: 0
+  sau đòn→lộn                lớn nhất  50°  lần ≥50°: 32
+  lộn                        lớn nhất  25°  lần ≥50°: 0
+  lộn→lướt chém              lớn nhất   0°  lần ≥50°: 0
+  lướt chém                  lớn nhất  82°  lần ≥50°: 2
+  lướt chém→chiêu            lớn nhất  19°  lần ≥50°: 0
+  chiêu                      lớn nhất 126°  lần ≥50°: 72
+  chiêu→trúng đòn            lớn nhất   4°  lần ≥50°: 0
+  trúng đòn                  lớn nhất   1°  lần ≥50°: 0
+  trúng đòn→đứng             lớn nhất   6°  lần ≥50°: 0
+== so/giao-truoc.json.gz
+  đứng                       lớn nhất  50°  lần ≥50°: 4
+  đứng→đi                    lớn nhất 102°  lần ≥50°: 20
+  đi                         lớn nhất  25°  lần ≥50°: 0
+  đi→chạy                    lớn nhất   0°  lần ≥50°: 0
+  chạy                       lớn nhất  35°  lần ≥50°: 0
+  chạy→chạy→đứng             lớn nhất  62°  lần ≥50°: 20
+  chạy→đứng                  lớn nhất  50°  lần ≥50°: 2
+  chạy→đứng→chém 3 nhát      lớn nhất  88°  lần ≥50°: 30
+  chém 3 nhát                lớn nhất  67°  lần ≥50°: 10
+  chém 3 nhát→sau đòn        lớn nhất  47°  lần ≥50°: 0
+  sau đòn                    lớn nhất 140°  lần ≥50°: 66
+  sau đòn→đứng→chạy          lớn nhất  60°  lần ≥50°: 18
+  đứng→chạy                  lớn nhất  35°  lần ≥50°: 0
+  đứng→chạy→chạy mà chém     lớn nhất  24°  lần ≥50°: 0
+  chạy mà chém               lớn nhất  67°  lần ≥50°: 10
+  chạy mà chém→sau đòn       lớn nhất  47°  lần ≥50°: 0
+  sau đòn→lộn                lớn nhất  91°  lần ≥50°: 32
+  lộn                        lớn nhất   0°  lần ≥50°: 0
+  lộn→lướt chém              lớn nhất  29°  lần ≥50°: 0
+  lướt chém                  lớn nhất  81°  lần ≥50°: 46
+  trúng đòn                  lớn nhất  25°  lần ≥50°: 0
+  trúng đòn→đứng             lớn nhất  38°  lần ≥50°: 0
+== so/giao-sau.json.gz
+  đứng                       lớn nhất   2°  lần ≥50°: 0
+  đứng→đi                    lớn nhất   5°  lần ≥50°: 0
+  đi                         lớn nhất   3°  lần ≥50°: 0
+  đi→chạy                    lớn nhất   1°  lần ≥50°: 0
+  chạy                       lớn nhất   3°  lần ≥50°: 0
+  chạy→chạy→đứng             lớn nhất   6°  lần ≥50°: 0
+  chạy→đứng                  lớn nhất   2°  lần ≥50°: 0
+  chạy→đứng→chém 3 nhát      lớn nhất  29°  lần ≥50°: 0
+  chém 3 nhát                lớn nhất  67°  lần ≥50°: 10
+  chém 3 nhát→sau đòn        lớn nhất  47°  lần ≥50°: 0
+  sau đòn                    lớn nhất  50°  lần ≥50°: 2
+  sau đòn→đứng→chạy          lớn nhất   4°  lần ≥50°: 0
+  đứng→chạy                  lớn nhất   3°  lần ≥50°: 0
+  đứng→chạy→chạy mà chém     lớn nhất  29°  lần ≥50°: 0
+  chạy mà chém               lớn nhất  67°  lần ≥50°: 10
+  chạy mà chém→sau đòn       lớn nhất  47°  lần ≥50°: 0
+  sau đòn→lộn                lớn nhất  50°  lần ≥50°: 32
+  lộn                        lớn nhất  25°  lần ≥50°: 0
+  lộn→lướt chém              lớn nhất   5°  lần ≥50°: 0
+  lướt chém                  lớn nhất  67°  lần ≥50°: 16
+  trúng đòn                  lớn nhất   1°  lần ≥50°: 0
+  trúng đòn→đứng             lớn nhất   5°  lần ≥50°: 0
+== so/bua-truoc.json.gz
+  đứng                       lớn nhất   5°  lần ≥50°: 0
+  đứng→đi                    lớn nhất 120°  lần ≥50°: 32
+  đi                         lớn nhất  25°  lần ≥50°: 0
+  đi→chạy                    lớn nhất   0°  lần ≥50°: 0
+  chạy                       lớn nhất  40°  lần ≥50°: 0
+  chạy→chạy→đứng             lớn nhất 115°  lần ≥50°: 32
+  chạy→đứng                  lớn nhất   0°  lần ≥50°: 0
+  chạy→đứng→chém 3 nhát      lớn nhất 155°  lần ≥50°: 32
+  chém 3 nhát                lớn nhất 114°  lần ≥50°: 16
+  chém 3 nhát→sau đòn        lớn nhất 137°  lần ≥50°: 2
+  sau đòn                    lớn nhất 124°  lần ≥50°: 150
+  sau đòn→đứng→chạy          lớn nhất  25°  lần ≥50°: 0
+  đứng→chạy                  lớn nhất  37°  lần ≥50°: 0
+  đứng→chạy→chạy mà chém     lớn nhất 105°  lần ≥50°: 2
+  chạy mà chém               lớn nhất 114°  lần ≥50°: 14
+  chạy mà chém→sau đòn       lớn nhất 136°  lần ≥50°: 4
+  sau đòn→lộn                lớn nhất  40°  lần ≥50°: 0
+  lộn                        lớn nhất   0°  lần ≥50°: 0
+  lộn→lướt chém              lớn nhất 140°  lần ≥50°: 20
+  lướt chém                  lớn nhất 153°  lần ≥50°: 106
+  lướt chém→chiêu            lớn nhất   2°  lần ≥50°: 0
+  chiêu                      lớn nhất 133°  lần ≥50°: 32
+  chiêu→trúng đòn            lớn nhất 143°  lần ≥50°: 32
+  trúng đòn                  lớn nhất  50°  lần ≥50°: 2
+  trúng đòn→đứng             lớn nhất 143°  lần ≥50°: 32
+== so/bua-sau.json.gz
+  đứng                       lớn nhất   3°  lần ≥50°: 0
+  đứng→đi                    lớn nhất   9°  lần ≥50°: 0
+  đi                         lớn nhất   5°  lần ≥50°: 0
+  đi→chạy                    lớn nhất   3°  lần ≥50°: 0
+  chạy                       lớn nhất   5°  lần ≥50°: 0
+  chạy→chạy→đứng             lớn nhất  10°  lần ≥50°: 0
+  chạy→đứng                  lớn nhất   3°  lần ≥50°: 0
+  chạy→đứng→chém 3 nhát      lớn nhất  29°  lần ≥50°: 0
+  chém 3 nhát                lớn nhất 114°  lần ≥50°: 16
+  chém 3 nhát→sau đòn        lớn nhất 137°  lần ≥50°: 2
+  sau đòn                    lớn nhất 124°  lần ≥50°: 150
+  sau đòn→đứng→chạy          lớn nhất  25°  lần ≥50°: 0
+  đứng→chạy                  lớn nhất  25°  lần ≥50°: 0
+  đứng→chạy→chạy mà chém     lớn nhất  29°  lần ≥50°: 0
+  chạy mà chém               lớn nhất 114°  lần ≥50°: 14
+  chạy mà chém→sau đòn       lớn nhất 136°  lần ≥50°: 4
+  sau đòn→lộn                lớn nhất  19°  lần ≥50°: 0
+  lộn                        lớn nhất   6°  lần ≥50°: 0
+  lộn→lướt chém              lớn nhất  23°  lần ≥50°: 0
+  lướt chém                  lớn nhất 153°  lần ≥50°: 106
+  lướt chém→chiêu            lớn nhất   2°  lần ≥50°: 0
+  chiêu                      lớn nhất  45°  lần ≥50°: 0
+  chiêu→trúng đòn            lớn nhất  37°  lần ≥50°: 0
+  trúng đòn                  lớn nhất  11°  lần ≥50°: 0
+  trúng đòn→đứng             lớn nhất  10°  lần ≥50°: 0

@@ -1356,7 +1356,7 @@
   // cầm; đổi được bằng "bam_vk": "nam" | "cam" | "day") đặt đúng vào điểm đó của thân ở khung đang vẽ rồi cộng dx, dy; góc vẫn là
   // góc của đòn (cộng xoay), xoay quanh bàn tay.
   // Quét vòng (giáo, hình ép bẹt) không bám. Trả về { wp, tay: [dx, dy] độ dời nắm tay vẽ đè lên chuôi, bam: có bám hay không }.
-  function vkGhep(o, fr) {
+  function vkGhep0(o, fr) {
     let wp = fr.weapon;
     const SCx = G.spriteCustom;
     if (!wp || !SCx || !SCx.capVuKhi) return { wp, tay: null, bam: false };
@@ -1386,6 +1386,82 @@
     if (km) { a2 = km.ang; if (a2 !== a1) h2 = rotv(Lh, 0, a2); }
     return { wp: Object.assign({}, wp, { x: Math.round(tx - h2[0]), y: Math.round(ty - h2[1]), ang: a2, lh: Lh }, cv.truoc ? { front: true } : null, km ? { front: km.front } : null), tay: [tx - (wp.x + h0[0]), ty - (wp.y + h0[1])], bam: true, P: [P[0] + cv.dx, P[1] + cv.dy] };
   }
+  // ---------- G.KIEM_SAU: KIẾM KHÔNG CHE MẶT (phiên kiem-khong-che-mat 12/10; tắt: ?kiemsau=0 -> y hệt trước) ----------
+  // Chủ dự án: "lưỡi đang che mặt nhân vật" (đo trước khi sửa: đứng cầm kiếm 812/1 856 khung có lưỡi đè vùng mắt-mũi-miệng, tới 21%
+  // mặt; chém 776/2 528 khung, tới 33%). Luật né mặt cũ (kiemKhop, kiemMuot) đoán bằng hình học nên lọt; nay:
+  //  - KHÔNG đánh (đứng, đi, chạy, lộn, trúng đòn): "kéo kiếm sau lưng" — bàn tay AI nắm chuôi ngang hông, lưỡi chĩa XUỐNG-RA-SAU
+  //    (mũi sát đất sau gót), lưỡi vẽ SAU thân; chỉ khúc chuôi (núm chuôi, nắm tay, chắn kiếm) vẽ trước thân rồi bàn tay đè lên.
+  //    Góc đổi êm từ góc vừa vẽ (sau đòn, đổi khung) chứ không nhảy.
+  //  - ĐANG đánh (chém, chạy chém, lướt chém, chiêu, chưởng, giữ lấy đà): đường vung G.KIEM_MUOT giữ nguyên; phần lưỡi rơi vào đĩa
+  //    đầu của khung (SC.matKhung) vẽ SAU đầu (cắt theo điểm ảnh, không xoay giật), phần còn lại vẫn trước thân.
+  //  - Bàn tay: chỉ vẽ lại điểm ảnh BÀN TAY của ảnh AI (màu da + viền) đè lên chuôi, thêm ngón tay màu da của chính ảnh (SC.veNam),
+  //    thay cho cắt tròn cả mảng thân (từng che mất núm chuôi, trông như kiếm dán cạnh tay).
+  // Giáo, búa cũng che mặt khi đứng/chạy (đo: giáo đứng 854/1 856 khung… tới 46% mặt; búa chạy tới 23%) → áp cùng luật: kéo giáo / kéo
+  // búa sau lưng khi không đánh (đầu búa sát đất sau gót), phần đi qua đầu lúc đánh vẽ sau đầu. Cung không đổi.
+  // Chỉ đổi HÌNH: đòn, tầm, vùng trúng, thời điểm, tốc độ không đổi.
+  if (G.KIEM_SAU === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]kiemsau=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.KIEM_SAU = !tat; }
+  const KS = { loai: { sword: 1, spear: 1, hammer: 1 }, mui: { sword: -1, spear: -1, hammer: -3 }, min: 140, max: 170, tau: 0.05, toc: 1500, vao: 6, lon: 0, chuoi: [-8, 3.5], rong: 5 };
+  const dangDanh = (o) => { const p = o.p; return o.atk >= 0 || !!(p && (p.specT > 0 || p.castT > 0 || p.dashT > 0 || (p.mv && p.mv.holding))); };
+  // đĩa đầu từ đĩa mặt (SC.matKhung: tâm đầu dời 0,3·R về trước + xuống, r = 0,5·R)
+  const dauTu = (m) => (m ? { x: m.x - 0.6 * m.r, y: m.y - 0.6 * m.r, R: 2 * m.r + 0.5 } : null);
+  function kiemSau(o, fr, res) {
+    const wp = res.wp;
+    if (!G.KIEM_SAU || !wp || !KS.loai[wp.type] || wp.sx != null || o.plainWeapon) return res;
+    const p = o.p; if (p && p.dead) return res;
+    const SCx = G.spriteCustom, gv = SCx && SCx.khungVk ? SCx.khungVk(o) : null;
+    if (!gv) return res; // không vẽ thân AI: như cũ
+    let mt = gv.mat; if (!mt && SCx.matKhungGan) try { mt = SCx.matKhungGan(SCx.cuaEmBe(o.key, o), gv.ten, gv.i); } catch (e) { mt = null; }
+    const dau = dauTu(mt);
+    const r = p ? NHO_GOC.get(p) : null, t = (o.t != null ? o.t : G.time) || 0;
+    if (dangDanh(o)) {
+      // vừa rời thế kéo kiếm (đứng, chạy, lộn) vào đòn (chém, lướt chém, chiêu): xoay dần từ góc kéo kiếm tới góc đòn trong KS.vao khung vẽ
+      // (đo: lộn -> lướt chém từng nhảy 157°/khung, đứng -> chiêu 111°/khung), không nhảy; vùng trúng, thời điểm đòn không đổi.
+      let w2 = wp;
+      // độ lệch tính MỘT lần ở khung đầu đòn rồi nhỏ dần theo SỐ KHUNG đã vẽ (khựng hình giữ nguyên thì không tính): góc vẫn liền khi
+      // góc đòn tự xoay qua phía đối diện (không lật 360°), và đòn rất ngắn (lướt chém ~4 khung) cũng không bị dồn xoay vào một khung.
+      if (r && r.ksNghi && (!r.ksVao || r.ksVao.tu !== r.ksNghi.t) && t >= r.ksNghi.t && t - r.ksNghi.t < 0.2) r.ksVao = { tu: r.ksNghi.t, d: gocGan(wp.ang, r.ksNghi.a) - wp.ang, n: 0, tl: r.ksNghi.t };
+      const v = r && r.ksVao && r.ksNghi && r.ksVao.tu === r.ksNghi.t ? r.ksVao : null;
+      if (v && v.n < KS.vao) {
+        if (t > v.tl) { v.n++; v.tl = t; }
+        const b = wp.ang, a = Math.round(b + v.d * (1 - Math.min(1, v.n / KS.vao))); // đều từng khung
+        if (a !== b) { const l0 = wp.lh != null ? wp.lh : HOLD[wp.type] || 0, h0 = rotv(l0, 0, b), h1 = rotv(l0, 0, a); w2 = Object.assign({}, wp, { x: Math.round(wp.x + h0[0] - h1[0]), y: Math.round(wp.y + h0[1] - h1[1]), ang: a }); }
+      }
+      return Object.assign({}, res, { wp: w2 }, dau && w2.front ? { dau } : null);
+    }
+    const wt = wp.type, lh = wp.lh != null ? wp.lh : HOLD[wt] || 0, h = rotv(lh, 0, wp.ang), hx = wp.x + h[0], hy = wp.y + h[1]; // bàn tay (chưa dời neoTay)
+    const nt = o.neoTay || [0, 0], H = [hx + nt[0], hy + nt[1]];
+    // dài lưỡi từ nắm tay theo ảnh (đã co): mũi cách tay Lb; góc để mũi chạm sát mặt đất (y = KS.mui) phía sau
+    let Lb = 24;
+    try { const wo = G.weaponArt.fromWeapon(o.weapon || {}), sp = SCx.timVuKhi(wo); if (sp && sp.vk) Lb = Math.hypot(sp.vk.mui[0] - sp.vk.cam[0], sp.vk.mui[1] - sp.vk.cam[1]) * SCx.coVk(wt, wo) - (SCx.namVk(wt, wo) || 0); } catch (e) { Lb = 24; }
+    const sn = Math.max(0.17, Math.min(0.64, (KS.mui[wt] - H[1]) / Math.max(8, Lb)));
+    const cuon = gv.ten === 'ne' || gv.ten === 'die';
+    // lộn (thân cuộn tròn, mặt khuất): giữ kiếm chĩa về trước sau quả bóng như cũ (0°) — để lộn rồi lướt chém (đòn chỉ ~4 khung) không phải
+    // xoay 155° trong vài khung; vào / ra lộn vẫn xoay êm (nối góc bên dưới)
+    let a = cuon ? KS.lon : Math.max(KS.min, Math.min(KS.max, 180 - (Math.asin(sn) * 180) / Math.PI));
+    // nối êm từ góc vừa vẽ (sau đòn, đổi khung chạy/đứng/lộn): tiến dần theo thời gian, không nhảy
+    if (r && r.ve && t >= r.ve.t && t - r.ve.t < 0.25) { const a0 = r.ve.ang, b = gocGan(a0, a), dt = t - r.ve.t, m = KS.toc * dt; a = a0 + Math.max(-m, Math.min(m, (b - a0) * (dt > 0 ? 1 - Math.exp(-dt / KS.tau) : 0))); } // nhanh nhất KS.toc độ/giây
+    a = Math.round(a);
+    if (r) r.ksNghi = { t, a }; // góc kéo kiếm cuối cùng (để vào đòn êm)
+    const h2 = rotv(lh, 0, a);
+    return Object.assign({}, res, { wp: Object.assign({}, wp, { x: Math.round(hx - h2[0]), y: Math.round(hy - h2[1]), ang: a, front: false }), sau: { H, a, tach: !cuon && !!res.bam }, dau });
+  }
+  function vkGhep(o, fr) { return kiemSau(o, fr, vkGhep0(o, fr)); }
+  // Các ô vuông (bước 0,5 điểm ảnh, khớp điểm ảnh thật của thân AI) thuộc đĩa đầu / thuộc khúc chuôi trước thân (trừ đĩa đầu).
+  const trongDau = (d, x, y) => d && (x - d.x) * (x - d.x) + (y - d.y) * (y - d.y) <= d.R * d.R;
+  function oDau(d) {
+    const L = [];
+    for (let y = Math.floor((d.y - d.R) * 2) / 2; y <= d.y + d.R; y += 0.5) for (let x = Math.floor((d.x - d.R) * 2) / 2; x <= d.x + d.R; x += 0.5) if (trongDau(d, x + 0.25, y + 0.25)) L.push(x, y);
+    return L;
+  }
+  function oChuoi(S, d) {
+    const L = [], r = (S.a * Math.PI) / 180, cx = Math.cos(r), sy = Math.sin(r), E = KS.rong + Math.abs(KS.chuoi[0]) + KS.chuoi[1];
+    for (let y = Math.floor((S.H[1] - E) * 2) / 2; y <= S.H[1] + E; y += 0.5) for (let x = Math.floor((S.H[0] - E) * 2) / 2; x <= S.H[0] + E; x += 0.5) {
+      const u = x + 0.25 - S.H[0], v = y + 0.25 - S.H[1], s = u * cx + v * sy, q = -u * sy + v * cx;
+      if (s >= KS.chuoi[0] && s <= KS.chuoi[1] && Math.abs(q) <= KS.rong && !trongDau(S.d, x + 0.25, y + 0.25)) L.push(x, y);
+    }
+    return L;
+  }
+  function catO(c, L, ngoai) { c.beginPath(); if (ngoai) c.rect(-200, -200, 400, 400); for (let i = 0; i < L.length; i += 2) c.rect(L[i], L[i + 1], 0.5, 0.5); c.clip(ngoai ? 'evenodd' : 'nonzero'); }
   // G.KIEM_KHOP (js/sprite_custom.js): kiếm trên thân AI lúc đang đánh (đứng chém, chạy chém, chiêu, giữ lấy đà).
   //  - Lưỡi chĩa ra sau lưng (đà vung ra sau, giơ qua đầu): kiếm vẽ SAU thân, bàn tay AI tự nhiên nằm trên chuôi, mặt không bị che.
   //  - Lưỡi ở trước thân mà đi ngang vùng mặt của khung (SC.matKhung): xoay lưỡi về phía trước từng 5 độ (tối đa 70) cho khỏi mặt;
@@ -1582,10 +1658,27 @@
   // Vẽ một bé (kèm vũ khí) tại chỗ c đang đứng: gốc là chân bé, đã lật theo hướng mặt.
   function drawFrame(c, o, fr, t) {
     const vg = vkGhep(o, fr), wp = vg.wp, dh = vg.tay;
-    if (G.KIEM_MUOT && wp && wp.type === 'sword' && o.p) ghiGoc(o, t, wp.ang); // nối liền góc kiếm giữa các trạng thái (kiemMuot)
+    if (wp && o.p && ((G.KIEM_MUOT && wp.type === 'sword') || (G.KIEM_SAU && KS.loai[wp.type]))) ghiGoc(o, t, wp.ang); // nối liền góc kiếm giữa các trạng thái (kiemMuot, kiemSau)
     // o.neoTay: [dx, dy] dời vũ khí và nắm tay tới đúng bàn tay của thân AI (sprite_custom.js, mục "neo.tay"). Không có thì như cũ.
     const nt = o.neoTay, doiTay = nt && (nt[0] || nt[1]);
     const veVk = () => { if (doiTay) { c.save(); c.translate(nt[0], nt[1]); } try { drawWeapon(c, o, wp, t); } finally { if (doiTay) c.restore(); } };
+    // G.KIEM_SAU: kiếm hạ sau lưng (vg.sau) hoặc đang đánh mà lưỡi ở trước thân (vg.dau): cắt theo điểm ảnh, xem kiemSau.
+    if (G.KIEM_SAU && wp && (vg.sau || (wp.front && vg.dau))) {
+      const veCat = (L, ngoai) => { c.save(); try { catO(c, L, ngoai); veVk(); } finally { c.restore(); } };
+      const nam = (P, a) => { if (o.veNam) { try { if (o.veNam(c, P, a)) return; } catch (e) { /* bỏ qua */ } } if (o.veTayAI) try { o.veTayAI(c, P, 2.5); } catch (e) { /* bỏ qua */ } };
+      if (vg.sau) {
+        veVk(); // cả cây sau thân
+        c.drawImage(fr.cv, fr.ox, fr.oy, fr.w, fr.h);
+        if (vg.sau.tach) { veCat(oChuoi(Object.assign({ d: vg.dau }, vg.sau)), false); nam(vg.sau.H, vg.sau.a); } // khúc chuôi trước thân + bàn tay nắm
+        return;
+      }
+      const L = oDau(vg.dau);
+      veCat(L, false); // phần lưỡi trong đĩa đầu: sau đầu
+      c.drawImage(fr.cv, fr.ox, fr.oy, fr.w, fr.h);
+      veCat(L, true); // phần còn lại: trước thân
+      if (vg.bam && vg.P) nam(vg.P, wp.ang);
+      return;
+    }
     if (wp && !wp.front) veVk();
     c.drawImage(fr.cv, fr.ox, fr.oy, fr.w, fr.h);
     if (wp && wp.front) {
