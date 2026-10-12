@@ -920,16 +920,39 @@
   // Bảng của đúng tấm thân đang vẽ: thân theo bộ (em-be-<key>-<bộ>) chỉ dùng khoá '<key>-<bộ>' (không mượn bảng thân gốc: ảnh khác,
   // số điểm ảnh có thể tình cờ lọt sai số -> nắm tay sai); thân gốc dùng khoá <key> như cũ.
   const khoaTay = (sp, key) => { const m = sp && /^em-be-(smith|hunter|healer|wrestler)-(rung|bien|lau)$/.exec(sp.ma || ''); return m ? m[1] + '-' + m[2] : key; };
+  // NẮM TAY các hàng cung, giáo, búa của thân theo bộ (phiên than-bo-don, 12/10): máy tự đo bàn tay (tìm màu da xa thân) bắt nhầm
+  // sừng mũ, gùi, khăn của bộ đồ — đo trong trang Cu Tí: Rừng cung khung 2 nắm tay ở (8,5; −25,5) = sừng mũ → cung vẽ trên đầu; Biển,
+  // Lâu, Rừng: giáo / búa nhiều khung x = −5,5…−9,5 = gùi, khăn sau lưng → vũ khí mọc ra sau lưng. Đo bằng mắt từng khung
+  // (docs/review/ke-hoach-cai-thien/than-bo-don/tay-don/tay_don.py), kiểm số điểm ảnh từng khung như TAY_KIEM (ảnh khác → tự thôi,
+  // về máy tự đo như cũ). Chỉ thân bộ; thân gốc không đổi. Tắt cùng G.DON_VK (?donvk=0).
+  SC.TAY_DON = {
+    'smith-rung': {
+      atk_bow: { so: [496, 510, 505, 506, 510, 488], tay: [[9.5, -10], [9.5, -10.5], [9, -10.5], [10.5, -9.5], [10.5, -9.5], [9, -9]] },
+      atk_spear: { so: [481, 498, 505, 493, 480, 472], tay: [[6, -5.5], [10.5, -8.5], [12.5, -10.5], [14.5, -10.5], [7.5, -7], [6, -9]] },
+      atk_hammer: { so: [537, 483, 433, 443, 424, 447], tay: [[9, -21], [5.5, -12], [9.5, -10.5], [9, -10], [9, -10.5], [8.5, -10.5]] },
+    },
+    'smith-bien': {
+      atk_bow: { so: [445, 447, 449, 453, 459, 430], tay: [[8.5, -10], [7.5, -10], [8.5, -10], [8.5, -10], [9.5, -10], [5.5, -7]] },
+      atk_spear: { so: [438, 432, 462, 466, 431, 431], tay: [[8, -8.5], [8.5, -9.5], [11.5, -10], [12.5, -11], [8, -9.5], [5.5, -7.5]] },
+      atk_hammer: { so: [484, 458, 439, 427, 401, 405], tay: [[9, -17], [4, -10], [9.5, -11], [9.5, -11], [9.5, -10.5], [9.5, -11]] },
+    },
+    'smith-lau': {
+      atk_bow: { so: [473, 502, 500, 496, 492, 492], tay: [[6, -7.5], [8.5, -9.5], [8.5, -11], [8.5, -10.5], [4.5, -5.5], [4, -6]] },
+      atk_spear: { so: [484, 474, 511, 508, 502, 489], tay: [[5.5, -7], [4.5, -7.5], [10.5, -10.5], [10, -10.5], [8.5, -9], [3.5, -7.5]] },
+      atk_hammer: { so: [514, 508, 515, 455, 415, 494], tay: [[3, -9], [5.5, -6], [-7, -22], [7.5, -9.5], [8, -9], [4.5, -6]] },
+    },
+  };
   function tayBang(sp, key, ten, i) {
-    const b = G.KIEM_KHOP && ten === 'atk_sword' && SC.TAY_KIEM[khoaTay(sp, key)];
+    const kb = khoaTay(sp, key), don = ten !== 'atk_sword' && kb !== key; // hàng đòn khác kiếm: chỉ thân bộ có bảng
+    const b = don ? G.DON_VK && SC.TAY_DON[kb] && SC.TAY_DON[kb][ten] : G.KIEM_KHOP && ten === 'atk_sword' && SC.TAY_KIEM[kb], ck = don ? ten + ':' + i : i;
     if (!b || !b.tay[i] || !sp.dt[ten] || sp.dt[ten].so !== b.tay.length) return null;
     sp.tayBang = sp.tayBang || {};
-    if (!(i in sp.tayBang)) {
+    if (!(ck in sp.tayBang)) {
       let ok = false;
       try { const m = matNa(sp)(ten, i); let n = 0; for (let j = 0; j < m.length; j++) n += m[j]; ok = Math.abs(n - b.so[i]) <= Math.max(4, b.so[i] * 0.03); } catch (e) { ok = false; }
-      sp.tayBang[i] = ok ? b.tay[i].slice() : null;
+      sp.tayBang[ck] = ok ? b.tay[i].slice() : null;
     }
-    return sp.tayBang[i];
+    return sp.tayBang[ck];
   }
   {
     const dk = SC.diemKhung;

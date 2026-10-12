@@ -87,3 +87,26 @@ mở `linh-khi-nhe.html?cloud=0`; chạy `python3 kiem/kiem.py <thư mục ảnh
 - [Rừng Già](anh/smith-rung-truoc-sau-x4.png) · [Hang Biển](anh/smith-bien-truoc-sau-x4.png) · [Lâu Đài](anh/smith-lau-truoc-sau-x4.png)
 - Tấm đã nhập: [rừng](anh/smith-rung-don-tam.png) · [biển](anh/smith-bien-don-tam.png) · [lâu đài](anh/smith-lau-don-tam.png)
 - Trong trận (cung): [rừng](anh/tran-rung-cung.png) · [biển](anh/tran-bien-cung.png) · [lâu đài](anh/tran-lau-cung.png)
+
+## Bổ sung: nắm tay cung, giáo, búa của thân bộ (`SC.TAY_DON`)
+
+Phiên chạy song song cùng yêu cầu (bản này) đo trong trang thấy **máy tự đo bàn tay bắt nhầm đồ của bộ** ở các hàng KHÁC kiếm
+(bảng `TAY_KIEM` ở trên chỉ phủ hàng kiếm). Đo `SC.diemKhung(...).tay_truoc` trên bản 6f71aa9:
+
+- Rừng: cung khung 2 nắm tay ở (8,5; −25,5) = **sừng mũ** → cây cung vẽ trên đầu; giáo khung 2 (−5,5; −13,5), búa khung 3, 4, 6
+  (−5,5…−6,5) = **gùi sau lưng** → giáo/búa mọc ra sau lưng.
+- Biển: cung khung 2, 6, giáo khung 6, búa khung 3, 4, 6 ở x = −7,5…−8,5 (khăn choàng sau lưng); nhiều khung "ước lượng" (không đo được).
+- Lâu Đài: cung khung 2, 5, giáo khung 1, búa khung 4 ở x = −8,5…−9,5 (gùi).
+
+Sửa (`game/js/sprite_custom.js`): bảng **`SC.TAY_DON['<key>-<bộ>'][atk_bow|atk_spear|atk_hammer]`** (cùng dạng `TAY_KIEM`: số điểm ảnh
+từng khung để tự thôi khi ảnh đổi + nắm tay từng khung); `tayBang` dùng nó cho thân bộ ở các hàng đó (thân gốc không đổi; tắt cùng
+`?donvk=0`). 54 khung của 3 thân bộ Cu Tí đều lấy tay từ bảng (`bang-do`). Đo bằng `tay-don/tay_don.py <key> <bộ>` (in sẵn bảng để dán
++ ảnh soát `tay-don/tay-<key>-<bộ>.png`, vòng đỏ = nắm tay) rồi sửa tay khung máy đo sai: búa lấy đà giơ tay (Rừng khung 1 →
+(9; −21), Biển khung 1 → (9; −17), Lâu khung 3 tay giơ sau đầu → (−7; −22)), búa tay chụm ở ngực (Rừng 2, Biển 2, Lâu 1).
+**Nhập tấm mới cho em bé khác: chạy thêm `tay_don.py`, soát ảnh, dán bảng** (cạnh dòng `TAY_KIEM` của `nhap.py`).
+
+Kiểm bản hai tệp (`tay-don/kiem_tay.py`: trước = bản 6f71aa9 dựng ở worktree riêng, cổng 8791; sau = bản này, cổng 8790; 4 vũ khí ×
+đứng, chạy, đánh 6 nhịp, chạy+đánh, giữ lấy đà 3 mức, chưởng, trúng): 0 pageerror, vũ khí không rời thân, không nhảy cỡ; nay cung
+không còn vẽ trên đầu, giáo/búa không còn mọc sau lưng (ảnh, trên = trước, dưới = sau, hàng kiếm không đổi):
+[Rừng](tay-don/anh/truoc-sau-smith-rung.png) · [Biển](tay-don/anh/truoc-sau-smith-bien.png) · [Lâu Đài](tay-don/anh/truoc-sau-smith-lau.png).
+Còn: búa lấy đà giơ trước mặt (khung 1 Rừng/Biển) vẫn đè một phần mặt theo luật chung `G.VK_NE_MAT` (như thân gốc).
