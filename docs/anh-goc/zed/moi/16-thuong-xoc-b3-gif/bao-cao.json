@@ -1,0 +1,105 @@
+{
+ "anh": "moi/16-thuong-xoc-b3.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 4,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 2,
+  "vien_khu": 6408,
+  "nga_mau_nen_trong_hinh": 102
+ },
+ "manh_bo": [],
+ "loi": [],
+ "canh_bao": [
+  "Hàng 1 khung 2 cao 373 (trung vị 442) — lệch cỡ >15%"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "16-thuong-xoc-b3",
+   "so_khung": 4,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      26,
+      199,
+      516,
+      631
+     ],
+     "chan": [
+      221.5,
+      631
+     ],
+     "rong": 490,
+     "cao": 432,
+     "diem_anh": 80306,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      535,
+      255,
+      1155,
+      628
+     ],
+     "chan": [
+      769.0,
+      628
+     ],
+     "rong": 620,
+     "cao": 373,
+     "diem_anh": 83429,
+     "nguon": "tu-dong",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      1151,
+      175,
+      1684,
+      628
+     ],
+     "chan": [
+      1358.5,
+      628
+     ],
+     "rong": 533,
+     "cao": 453,
+     "diem_anh": 82413,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1789,
+      151,
+      2124,
+      636
+     ],
+     "chan": [
+      1927.0,
+      636
+     ],
+     "rong": 335,
+     "cao": 485,
+     "diem_anh": 75338,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}
