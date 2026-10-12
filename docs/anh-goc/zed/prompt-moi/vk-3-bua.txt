@@ -1,0 +1,5 @@
+# Búa (ảnh riêng)
+# Gửi kèm: ảnh mẫu Zed đã duyệt
+
+Một cây BÚA hợp với Zed: [GHI MÔ TẢ — vd: đầu búa sắt bọc đồng, cán gỗ quấn vải đỏ]. Dài khoảng 0,9 lần chiều cao Zed, đầu búa to bằng đầu Zed.
+Cùng phong cách pixel art, độ to điểm ảnh, viền tối 1 nét như ẢNH MẪU Zed gửi kèm. Vũ khí nằm NGANG, mũi/đầu chỉ sang PHẢI, chuôi/cán bên trái, nằm giữa ảnh, chừa lề rộng. Chỉ có vũ khí, không tay, không người, không vệt chém. Nền xanh lá thuần #00FF00, không chữ, không bóng, không quầng sáng, không dùng màu xanh lá trên vũ khí.

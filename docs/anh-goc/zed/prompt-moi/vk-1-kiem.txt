@@ -1,0 +1,5 @@
+# Kiếm (ảnh riêng)
+# Gửi kèm: ảnh mẫu Zed đã duyệt
+
+Một thanh KIẾM hợp với Zed: [GHI MÔ TẢ — vd: kiếm ngắn lưỡi thép, chuôi quấn vải đỏ, chắn tay đồng]. Dài khoảng 0,9 lần chiều cao Zed.
+Cùng phong cách pixel art, độ to điểm ảnh, viền tối 1 nét như ẢNH MẪU Zed gửi kèm. Vũ khí nằm NGANG, mũi/đầu chỉ sang PHẢI, chuôi/cán bên trái, nằm giữa ảnh, chừa lề rộng. Chỉ có vũ khí, không tay, không người, không vệt chém. Nền xanh lá thuần #00FF00, không chữ, không bóng, không quầng sáng, không dùng màu xanh lá trên vũ khí.

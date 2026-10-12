@@ -1,0 +1,5 @@
+# Phi tiêu cầm tay + đang bay
+# Gửi kèm: ảnh mẫu Zed đã duyệt
+
+PHI TIÊU hợp với Zed: [GHI MÔ TẢ — vd: phi tiêu 4 cánh thép, tâm đỏ]. Một hàng 5 khung đều nhau, không chạm nhau: khung 1 phi tiêu đứng yên (cầm tay); khung 2–5 phi tiêu xoay tròn đang bay, mỗi khung xoay 1/8 vòng. Cỡ nhỏ, bằng khoảng bàn tay Zed.
+Cùng phong cách pixel art, độ to điểm ảnh, viền tối 1 nét như ẢNH MẪU Zed gửi kèm. Vũ khí nằm NGANG, mũi/đầu chỉ sang PHẢI, chuôi/cán bên trái, nằm giữa ảnh, chừa lề rộng. Chỉ có vũ khí, không tay, không người, không vệt chém. Nền xanh lá thuần #00FF00, không chữ, không bóng, không quầng sáng, không dùng màu xanh lá trên vũ khí.
