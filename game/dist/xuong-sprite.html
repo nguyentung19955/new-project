@@ -17328,7 +17328,7 @@ MA._xong();
       }
       if (typeof Image !== 'undefined') {
         const img = new Image();
-        img.onload = () => { sp.img = img; sp.img0 = null; sp.donMa = null; sp.ready = true; if (sp.doi === 'em-be') { ghepDon(sp.ma); if (G.NAP_SAU_MOI && napSauDangChay) xoaNhoDoKhiCan(sp); } };
+        img.onload = () => { sp.img = img; sp.img0 = null; sp.donMa = null; sp.ready = true; if (sp.doi === 'em-be') { ghepDon(sp.ma); if (roiCan && SC.don[sp.ma] && !SC.don[sp.ma].img) roiCan(SC.don[sp.ma].ma); /* thân (thân bộ) về trước tệp đòn của nó: tải tệp đòn ngay */ if (G.NAP_SAU_MOI && napSauDangChay) xoaNhoDoKhiCan(sp); } };
         img.onerror = () => { SC.loi.push(sp.ma + ': ảnh hỏng'); };
         SC.napAnh(img, tep.tam);
       }
@@ -18101,9 +18101,16 @@ MA._xong();
     hunter: { so: [353, 374, 370, 370, 361, 374], tay: [[4.5, -8.5], [10.5, -14.5], [6, -5.5], [9, -25], [-3.5, -25], [7, -4.5]] },
     wrestler: { so: [435, 444, 396, 414, 439, 398], tay: [[6.5, -9], [10.5, -10.5], [4.5, -7.5], [10.5, -19.5], [-4.5, -24.5], [6.5, -1.5]] },
     healer: { so: [439, 386, 382, 390, 369, 351], tay: [[12, -11], [7.5, -13], [6.5, -11], [16.5, -23.5], [2, -28.5], [4.5, -5]] },
+    // THÂN BỘ (khoá '<key>-<bộ>', tệp em-be-<key>-<bộ>-don; phiên than-bo-don 12/10, đo bằng docs/review/ke-hoach-cai-thien/than-bo-don/nhap.py)
+    'smith-rung': { so: [505, 498, 503, 497, 511, 475], tay: [[6, -9.5], [12, -10], [7.5, -9.5], [8.5, -8.5], [8, -8.5], [5, -5.5]] },
+    'smith-bien': { so: [452, 453, 480, 485, 437, 430], tay: [[6.5, -8.5], [4, -9.5], [6, -8], [8, -8], [7, -7.5], [8, -7]] },
+    'smith-lau': { so: [497, 500, 519, 508, 499, 484], tay: [[5, -8.5], [5, -8.5], [9, -9], [6, -8], [8, -8], [3, -8.5]] },
   };
+  // Bảng của đúng tấm thân đang vẽ: thân theo bộ (em-be-<key>-<bộ>) chỉ dùng khoá '<key>-<bộ>' (không mượn bảng thân gốc: ảnh khác,
+  // số điểm ảnh có thể tình cờ lọt sai số -> nắm tay sai); thân gốc dùng khoá <key> như cũ.
+  const khoaTay = (sp, key) => { const m = sp && /^em-be-(smith|hunter|healer|wrestler)-(rung|bien|lau)$/.exec(sp.ma || ''); return m ? m[1] + '-' + m[2] : key; };
   function tayBang(sp, key, ten, i) {
-    const b = G.KIEM_KHOP && ten === 'atk_sword' && SC.TAY_KIEM[key];
+    const b = G.KIEM_KHOP && ten === 'atk_sword' && SC.TAY_KIEM[khoaTay(sp, key)];
     if (!b || !b.tay[i] || !sp.dt[ten] || sp.dt[ten].so !== b.tay.length) return null;
     sp.tayBang = sp.tayBang || {};
     if (!(i in sp.tayBang)) {
