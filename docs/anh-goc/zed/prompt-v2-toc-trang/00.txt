@@ -1,0 +1,7 @@
+Thân Zed: đứng, đi, chạy (làm TRƯỚC TIÊN)
+
+Vẽ nhân vật Zed như ảnh gửi kèm (giữ y hệt: tóc trắng bù xù, hai sừng cong đỏ sẫm, mắt đỏ, khăn quàng đỏ, quấn tay đỏ đen, quần đen rộng, đai đỏ, giày đen). Pixel art chibi, viền tối một nét, quay mặt sang phải, cùng cỡ người và vị trí chân ở mọi ô, không bóng dưới chân.
+Hàng 1 đứng thở, lặp: ngực phồng nhẹ khung 1–4, xẹp 5–8, chân đứng yên, tóc và khăn nhích nhẹ.
+Hàng 2 đi bộ, lặp: 1 chân trái chạm đất trước, 2 dồn người, 3 hai chân sát nhau (người cao nhất), 4 chân phải bước tới; 5–8 như 1–4 đổi chân. Tay vung ngược chân.
+Hàng 3 chạy, lặp, nghiêng người tới: 1 chân trước chạm đất, 2 dồn lực, 3 đạp chân sau, 4 HAI CHÂN RỜI ĐẤT; 5–8 như 1–4 đổi chân. Tay co vung mạnh, tóc và khăn bay ra sau.
+Lưới 8 cột × 3 hàng đều nhau, nhân vật nằm trọn trong ô. Nền trơn xanh lá #00FF00, không lưới, không chữ, không quầng sáng.

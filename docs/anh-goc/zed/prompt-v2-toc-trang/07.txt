@@ -1,0 +1,5 @@
+Lớp lưng: áo choàng đỏ (chỉ áo choàng)
+
+Ảnh gửi kèm là tấm Zed 8×3 đứng, đi, chạy (tấm số 0 đã gen). Vẽ CHỈ tấm áo choàng ngắn màu đỏ sẫm gắn sau vai, đúng vị trí lưng Zed ở từng ô; đứng thì rủ nhẹ, đi thì đung đưa, chạy thì bay ngược ra sau. Không vẽ người.
+Pixel art chibi, viền tối một nét.
+Lưới 8 cột × 3 hàng đều nhau, khớp từng ô với tấm Zed gửi kèm (hàng 1 đứng, hàng 2 đi, hàng 3 chạy). Nền trơn xanh lá #00FF00, không lưới, không chữ, không quầng sáng.
