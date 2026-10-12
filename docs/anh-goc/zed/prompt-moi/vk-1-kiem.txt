@@ -1,7 +1,11 @@
 # Kiếm – 4 cấp
-# Gửi kèm: ảnh mẫu Zed đã duyệt
+# Gửi kèm: ảnh mẫu Zed + ảnh kiếm cũ (lấy cấp 1 làm gốc)
 
-KIẾM của Zed: [mô tả kiểu dáng — vd: kiếm ngắn một lưỡi, chuôi quấn vải]. Dài khoảng 0,9 lần chiều cao Zed.
-Một hàng 4 khung đều nhau, không chạm nhau = 4 cấp tiến hoá của CÙNG một món, từ trái sang phải: 1 TRẮNG (đơn sơ, kim loại xám, gỗ mộc); 2 MẦM (thêm chi tiết nhỏ như mầm lá, dây quấn, vân khắc mảnh); 3 THÀNH HÌNH (to và sắc hơn, thêm gờ, đai, hoa văn rõ); 4 THỨC TỈNH (dáng hoàn chỉnh uy nghi nhất, nhiều chi tiết nhất).
-Cả 4 cấp: cùng kiểu dáng gốc, cùng chiều dài, chuôi/cán ở ĐÚNG cùng vị trí và cùng cỡ (để tay cầm khớp mọi cấp). Màu trung tính (thép, gỗ, đồng) — game tự nhuộm theo hệ Lửa/Độc/Băng.
-Cùng phong cách pixel art, độ to điểm ảnh, viền tối 1 nét như ẢNH MẪU Zed gửi kèm. Mỗi món nằm NGANG, mũi/đầu chỉ sang PHẢI, chuôi/cán bên trái. Chỉ có vũ khí, không tay, không người, không vệt chém, không phát sáng. Nền xanh lá thuần #00FF00, không chữ, không số, không bóng, không dùng màu xanh lá trên vũ khí.
+KIẾM của Zed: một lưỡi hơi cong, chuôi quấn vải đỏ, đầu chuôi đồng.
+Một hàng 4 khung đều nhau, không chạm nhau = 4 cấp của CÙNG một món, trái→phải. Mỗi cấp phải KHÁC HẲN về DÁNG và CỠ (tô đen thành bóng vẫn phân biệt được), không chỉ thêm chi tiết nhỏ:
+1 TRẮNG: kiếm sắt mộc, lưỡi mảnh, chắn tay thanh ngang nhỏ.
+2 MẦM: lưỡi dài hơn 10%, bản rộng hơn, chắn tay mọc 2 lá đồng, rãnh dọc lưỡi.
+3 THÀNH HÌNH: lưỡi dài hơn 20%, bản to gấp rưỡi, sống lưng có gờ răng nhọn, chắn tay hình cánh lớn, tua vải ở đuôi chuôi.
+4 THỨC TỈNH: lưỡi dài hơn 30%, bản to gấp đôi cấp 1, mũi cong như nanh, vân sáng trắng chạy dọc lưỡi, chắn tay cánh xoè ôm lên lưỡi, ngọc trắng sáng giữa chắn tay.
+CỐ ĐỊNH: chuôi cùng vị trí, cùng cỡ ở cả 4 cấp; chỉ lưỡi và chắn tay thay đổi.
+Pixel art như ẢNH MẪU Zed, viền tối 1 nét. Nằm NGANG, mũi chỉ sang PHẢI, chuôi bên trái. Chỉ có vũ khí, không tay, không người, không vệt chém. Phần phát sáng dùng TRẮNG/xám nhạt (game tự nhuộm theo hệ Lửa/Độc/Băng). Nền xanh lá thuần #00FF00, không chữ, không số, không bóng, không dùng màu xanh lá trên vũ khí.

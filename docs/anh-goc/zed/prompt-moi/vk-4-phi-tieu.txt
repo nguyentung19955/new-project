@@ -1,7 +1,11 @@
 # Phi tiêu – 4 cấp
-# Gửi kèm: ảnh mẫu Zed đã duyệt
+# Gửi kèm: ảnh mẫu Zed
 
-PHI TIÊU của Zed: [mô tả — vd: phi tiêu 4 cánh, tâm tròn]. Nhìn thẳng mặt, nhỏ cỡ bàn tay Zed (game tự xoay khi bay).
-Một hàng 4 khung đều nhau, không chạm nhau = 4 cấp tiến hoá của CÙNG một món, từ trái sang phải: 1 TRẮNG (đơn sơ, kim loại xám, gỗ mộc); 2 MẦM (thêm chi tiết nhỏ như mầm lá, dây quấn, vân khắc mảnh); 3 THÀNH HÌNH (to và sắc hơn, thêm gờ, đai, hoa văn rõ); 4 THỨC TỈNH (dáng hoàn chỉnh uy nghi nhất, nhiều chi tiết nhất).
-Cả 4 cấp: cùng kiểu dáng gốc, cùng chiều dài, chuôi/cán ở ĐÚNG cùng vị trí và cùng cỡ (để tay cầm khớp mọi cấp). Màu trung tính (thép, gỗ, đồng) — game tự nhuộm theo hệ Lửa/Độc/Băng.
-Cùng phong cách pixel art, độ to điểm ảnh, viền tối 1 nét như ẢNH MẪU Zed gửi kèm. Mỗi món nằm NGANG, mũi/đầu chỉ sang PHẢI, chuôi/cán bên trái. Chỉ có vũ khí, không tay, không người, không vệt chém, không phát sáng. Nền xanh lá thuần #00FF00, không chữ, không số, không bóng, không dùng màu xanh lá trên vũ khí.
+PHI TIÊU của Zed: nhìn thẳng mặt, cấp 1 nhỏ cỡ bàn tay Zed (game tự xoay khi bay).
+Một hàng 4 khung đều nhau, không chạm nhau = 4 cấp của CÙNG một món, trái→phải. Mỗi cấp phải KHÁC HẲN về DÁNG và CỠ (tô đen thành bóng vẫn phân biệt được), không chỉ thêm chi tiết nhỏ:
+1 TRẮNG: phi tiêu sắt 4 cánh thẳng nhỏ, tâm tròn.
+2 MẦM: 4 cánh dài hơn, mép cánh có viền đồng, tâm có lỗ tròn.
+3 THÀNH HÌNH: 6 cánh cong như lưỡi liềm, to gấp 1,3 lần.
+4 THỨC TỈNH: 8 cánh xoáy cong kép, to gấp 1,6 lần, vân sáng trắng trên cánh, ngọc trắng sáng ở tâm.
+CỐ ĐỊNH: tâm phi tiêu nằm đúng giữa mỗi khung.
+Pixel art như ẢNH MẪU Zed, viền tối 1 nét. Nhìn thẳng mặt. Chỉ có vũ khí, không tay, không người, không vệt chém. Phần phát sáng dùng TRẮNG/xám nhạt (game tự nhuộm theo hệ Lửa/Độc/Băng). Nền xanh lá thuần #00FF00, không chữ, không số, không bóng, không dùng màu xanh lá trên vũ khí.

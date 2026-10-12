@@ -1,7 +1,11 @@
 # Thương – 4 cấp
-# Gửi kèm: ảnh mẫu Zed đã duyệt
+# Gửi kèm: ảnh mẫu Zed
 
-THƯƠNG của Zed: [mô tả — vd: cán gỗ dài, mũi thép nhọn có tua]. Dài khoảng 1,4 lần chiều cao Zed.
-Một hàng 4 khung đều nhau, không chạm nhau = 4 cấp tiến hoá của CÙNG một món, từ trái sang phải: 1 TRẮNG (đơn sơ, kim loại xám, gỗ mộc); 2 MẦM (thêm chi tiết nhỏ như mầm lá, dây quấn, vân khắc mảnh); 3 THÀNH HÌNH (to và sắc hơn, thêm gờ, đai, hoa văn rõ); 4 THỨC TỈNH (dáng hoàn chỉnh uy nghi nhất, nhiều chi tiết nhất).
-Cả 4 cấp: cùng kiểu dáng gốc, cùng chiều dài, chuôi/cán ở ĐÚNG cùng vị trí và cùng cỡ (để tay cầm khớp mọi cấp). Màu trung tính (thép, gỗ, đồng) — game tự nhuộm theo hệ Lửa/Độc/Băng.
-Cùng phong cách pixel art, độ to điểm ảnh, viền tối 1 nét như ẢNH MẪU Zed gửi kèm. Mỗi món nằm NGANG, mũi/đầu chỉ sang PHẢI, chuôi/cán bên trái. Chỉ có vũ khí, không tay, không người, không vệt chém, không phát sáng. Nền xanh lá thuần #00FF00, không chữ, không số, không bóng, không dùng màu xanh lá trên vũ khí.
+THƯƠNG của Zed: cán gỗ dài khoảng 1,4 lần chiều cao Zed, mũi thép.
+Một hàng 4 khung đều nhau, không chạm nhau = 4 cấp của CÙNG một món, trái→phải. Mỗi cấp phải KHÁC HẲN về DÁNG và CỠ (tô đen thành bóng vẫn phân biệt được), không chỉ thêm chi tiết nhỏ:
+1 TRẮNG: cán gỗ trơn, mũi sắt hình lá nhỏ.
+2 MẦM: mũi to hơn có 2 ngạnh nhỏ, 1 đai đồng dưới mũi, tua vải đỏ ngắn.
+3 THÀNH HÌNH: mũi dài gấp rưỡi, thêm lưỡi móc cong một bên, cán bọc 2 đai đồng, tua đỏ dài bay.
+4 THỨC TỈNH: đầu thương to gấp đôi cấp 1, lưỡi cong như trăng khuyết hai bên, vân sáng trắng trên lưỡi, đuôi cán có mũi nhọn phụ.
+CỐ ĐỊNH: phần tay cầm (giữa cán) cùng vị trí ở cả 4 cấp; chỉ đầu thương và đuôi cán thay đổi.
+Pixel art như ẢNH MẪU Zed, viền tối 1 nét. Nằm NGANG, mũi chỉ sang PHẢI, đuôi cán bên trái. Chỉ có vũ khí, không tay, không người, không vệt chém. Phần phát sáng dùng TRẮNG/xám nhạt (game tự nhuộm theo hệ Lửa/Độc/Băng). Nền xanh lá thuần #00FF00, không chữ, không số, không bóng, không dùng màu xanh lá trên vũ khí.
