@@ -1,7 +1,7 @@
 // Cốt truyện tối thiểu, bỏ qua được. Nạp sau js/village.js và js/stage.js (bọc thêm update/draw của làng và ải, không sửa luật chơi).
 //
 //   Mở đầu        4 khung (≈ 20 giây, mỗi khung tự sang sau 5 giây, chạm để sang nhanh, nút "Bỏ qua"): linh khí làng cạn, ba yêu tinh
-//                 thức dậy, ba em bé bị bắt, Cụ Đồ trao vũ khí sống cho Cu Tí. Chỉ chiếu MỘT lần lúc mới vào làng lần đầu
+//                 thức dậy, ba em bé bị bắt, Cụ Đồ trao vũ khí sống cho Cu Tí (chế độ Zed: cho Zed). Chỉ chiếu MỘT lần lúc mới vào làng lần đầu
 //                 (G.save.truyen.mo); người chơi cũ đã qua ải 1 thì không chiếu. Xem lại: Anh Mõ > "Âm thanh · Pin · Truyện" > "Xem lại truyện".
 //   Trùm          trùm vùng và trùm nhỏ nói một câu khi ra mắt, một câu khi gục (bong bóng lời trên đầu, KHÔNG dừng trận).
 //   Kết vùng      hạ trùm vùng lần đầu: về làng thì chiếu 2–3 câu (em bé được cứu, người làng nói). Hạ Hồ Tinh: thêm đoạn kết + mời Độ khó 2.
@@ -63,6 +63,18 @@
     tu: ['Cu Tèo chạy nhảy suốt sân đình. Ồn mà vui.', 'Cái Bống về, sân đình có tiếng hát rồi.', 'Đủ bốn bé rồi. Đình làng ấm hẳn lên.'],
     mo: ['Cốc cốc! Làng nước ơi, Cu Tí hạ được Mộc Tinh rồi!', 'Cốc cốc! Biển êm, đò chạy, làng nước nghe chưa!', 'Cốc cốc cốc! Ba yêu tinh ngủ cả rồi! Mở hội thôi!'],
   };
+  // ZED (js/data.js G.ZED): nhân vật chính là Zed (hình Cu Tí). Ba bạn vẫn bị bắt, vẫn được cứu, nhưng về làng thì DẠY Zed thay vì
+  // thành em bé chơi được. ?zed=0: lời cũ.
+  if (G.ZED) {
+    MO_DAU[3].loi = 'Còn Zed. Cầm lấy vũ khí sống này, cháu: vũ khí lớn lên theo cháu, yêu tinh học theo cháu. Chú Lái Đò chờ ở bến!';
+    VUNG[0][0].loi = 'Zed ơi! Rễ cây quấn tớ cả tuần, may mà cậu tới!';
+    VUNG[0][2].loi = 'Cu Tèo đã về làng, ngồi chơi ở sân đình. Cu Tèo dạy Zed đánh hiểm và bắn chưởng xa: xem ở Ông Từ.';
+    VUNG[1][0].loi = 'Nước dưới hang lạnh buốt... Cảm ơn Zed đã lặn xuống tìm tớ!';
+    VUNG[1][2].loi = 'Cái Bống đã về làng, ngồi chơi ở sân đình. Cái Bống dạy Zed giữ hiệu ứng lâu và chưởng hồi máu: xem ở Ông Từ.';
+    VUNG[2].push({ loi: 'Cu Lì đã về làng. Cu Lì dạy Zed gồng chịu đòn và chưởng to: xem ở Ông Từ.' });
+    KET[0].loi = 'Tối ấy cả làng mở hội dưới gốc đa. Zed và ba bạn ngồi nghe Cụ Đồ kể chuyện Lạc Long Quân trừ yêu. Hết truyện... mà chưa hết đâu!';
+    LANG.mo[0] = 'Cốc cốc! Làng nước ơi, Zed hạ được Mộc Tinh rồi!';
+  }
   TR.LOI = { MO_DAU, VUNG, KET, TRUM, LANG };
   // Bản tiếng Anh của mọi câu ở đây và ở bảng Cài đặt mới: tools/ngon-ngu/tu-dien/truyen-am-thanh.json (gộp vào js/ngon_ngu_en.js bằng tools/ngon-ngu/gop.py).
 

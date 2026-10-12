@@ -147,6 +147,77 @@
   };
   G.HKEYS = ['smith', 'hunter', 'healer', 'wrestler'];
 
+  // ZED (YEU-CAU-2, 12/10): chỉ còn MỘT nhân vật chơi được tên Zed. Zed dùng hình và dữ liệu của Cu Tí: khoá nội bộ vẫn là 'smith'
+  // (bản lưu, hình, cây chưởng đều theo khoá này), chỉ đổi TÊN HIỂN THỊ. Ba bạn Cu Tèo, Cái Bống, Cu Lì vẫn bị yêu tinh bắt,
+  // vẫn được cứu sau mỗi trùm vùng và ngồi chơi ở sân đình (NPC), nhưng không chơi được nữa: khi được cứu, bạn đó DẠY Zed nét riêng
+  // của mình (nội tại + nét riêng của chưởng + sở trường một vũ khí), cấp đúng 1 lần, lưu ở save.zed.hoc.
+  // Tắt: thêm ?zed=0 vào địa chỉ trang → game như bản trước (4 em bé, chọn ở Ông Từ). Bản lưu dùng chung, không mất gì.
+  G.ZED = true;
+  try { if (typeof location !== 'undefined' && /[?&]zed=0(&|$)/.test(location.search || '')) G.ZED = false; } catch (e) { /* giữ mặc định */ }
+  // Nét mỗi bạn dạy Zed. Số đã hạ so với khi bạn đó còn chơi được, vì Zed gom đủ cả ba (bản gốc ghi trong ngoặc).
+  G.ZED_DAY = {
+    hunter: {
+      boss: 'Mộc Tinh', fav: 'bow',
+      cc: 1.15,                      // +15% sát thương lên quái bị choáng, đóng băng, giữ chân, lộ điểm yếu (gốc +25%)
+      chRange: 1.2, chSpeed: 1.2,    // chưởng bay xa hơn 20%, nhanh hơn 20% (gốc 30% / 25%)
+      noiTai: '+15% sát thương lên quái bị choáng, đóng băng, giữ chân hoặc lộ điểm yếu',
+      chuong: 'chưởng bay xa hơn 20%, nhanh hơn 20%',
+      ngan: ['Đánh quái bị khống chế +15%', 'Chưởng xa, nhanh hơn 20%; cung +10%'], // dòng ngắn ở bảng kết quả
+    },
+    healer: {
+      boss: 'Ngư Tinh', fav: 'spear',
+      statusDur: 1.2,                // hiệu ứng Zed gây ra kéo dài hơn 20% (gốc 30%)
+      chHeal: 0.01, chHealMax: 3,    // chưởng trúng quái hồi 1% máu, tối đa 3 lần mỗi phát (gốc 1,5%)
+      noiTai: 'hiệu ứng gây ra kéo dài hơn 20%',
+      chuong: 'chưởng trúng quái thì hồi 1% máu (tối đa 3 lần mỗi phát)',
+      ngan: ['Hiệu ứng gây ra lâu hơn 20%', 'Chưởng trúng hồi 1% máu; giáo +10%'],
+    },
+    wrestler: {
+      boss: 'Hồ Tinh', fav: null,
+      dr: 0.12, reflect: 0.3,        // giảm 12% sát thương nhận, phản 30% sát thương cận chiến (gốc 25% / 50%)
+      chSize: 1.3, chArea: 1.2, chDmg: 1.1, // chưởng to hơn 30%, vùng nổ/mây rộng hơn 20%, mạnh hơn 10%; KHÔNG rút tầm (gốc 60% tầm)
+      noiTai: 'giảm 12% sát thương nhận vào, phản lại 30% sát thương cận chiến',
+      chuong: 'chưởng to hơn 30%, nổ rộng hơn 20%, mạnh hơn 10%',
+      ngan: ['Giảm 12% sát thương, phản 30% đòn gần', 'Chưởng to hơn 30%, mạnh hơn 10%'],
+    },
+  };
+  const tvz = (x) => (G.tv ? G.tv(x) : x); // dịch nếu đã nạp js/ngon_ngu.js
+  G.ZED_DAY_KEYS = ['hunter', 'healer', 'wrestler'];
+  // Bạn k đã dạy Zed chưa (chỉ tính khi đang ở chế độ Zed)
+  G.zedHoc = function (k, sv) {
+    sv = sv || G.save;
+    return !!(G.ZED && sv && sv.zed && typeof sv.zed === 'object' && sv.zed.hoc && sv.zed.hoc[k]);
+  };
+  // Em bé key có được tính các nét đã học không (Zed = khoá smith)
+  G.zedLa = (key) => !!(G.ZED && key === 'smith');
+  // Sở trường vũ khí (+10% sát thương) của em bé key: Zed thêm cung khi Cu Tèo dạy, giáo khi Cái Bống dạy
+  G.favOf = function (key) {
+    const H = G.HEROES[key] || G.HEROES.smith, f = H.fav.slice();
+    if (G.zedLa(key)) for (const k of G.ZED_DAY_KEYS) { const d = G.ZED_DAY[k]; if (d.fav && G.zedHoc(k) && !f.includes(d.fav)) f.push(d.fav); }
+    return f;
+  };
+  // Dòng nội tại đầy đủ (Zed: nội tại gốc + các nét đã học)
+  G.passiveOf = function (key) {
+    const H = G.HEROES[key] || G.HEROES.smith;
+    if (!G.zedLa(key)) return H.passive;
+    const ds = [tvz(H.passive)];
+    for (const k of G.ZED_DAY_KEYS) if (G.zedHoc(k)) ds.push(tvz(G.ZED_DAY[k].noiTai));
+    return ds.join('; ');
+  };
+  G.skillDescOf = function (key) {
+    const H = G.HEROES[key] || G.HEROES.smith;
+    if (!G.zedLa(key)) return H.skillDesc;
+    const ds = [];
+    for (const k of G.ZED_DAY_KEYS) if (G.zedHoc(k)) ds.push(tvz(G.ZED_DAY[k].chuong));
+    return ds.length ? tvz(H.skillDesc) + '; ' + ds.join('; ') : H.skillDesc;
+  };
+  if (G.ZED) {
+    G.HEROES.smith.name = 'Zed';
+    G.HEROES.smith.skillDesc = 'Nét riêng: chưởng đẩy lùi quái mạnh';
+  }
+  // Em bé chơi được (danh sách chọn): chế độ Zed chỉ còn Zed
+  G.HKEYS_CHOI = G.ZED ? ['smith'] : G.HKEYS;
+
   // Cây kỹ năng: 3 nhánh, mỗi nhánh 5 nút, phải mở theo thứ tự trong nhánh.
   G.SKILLS = {
     atk: {

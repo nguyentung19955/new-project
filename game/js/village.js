@@ -2,7 +2,7 @@
 //   Chú Lái Đò: tranh bản đồ vùng, chọn ải, độ khó, nút "Lên đò"      Ông Thợ Rèn: lò rèn (Mài, Nâng bậc, Tôi lại, Rèn đồ, Nâng lò)
 //   Bà Hàng Xén: rương vũ khí, chọn hai món mang theo, bán đồ, bán trang phục thường
 //   Cô Thợ May: trang phục năm ô (bảng riêng ở js/tailor.js)
-//   Cụ Đồ: cây kỹ năng, đặt lại điểm, hướng dẫn                         Ông Từ: chọn hero, xem chỉ số
+//   Cụ Đồ: cây kỹ năng, đặt lại điểm, hướng dẫn                         Ông Từ: chọn hero, xem chỉ số (bản Zed: xem chỉ số Zed, nét ba bạn đã dạy)
 //   Anh Mõ: cài đặt                                                     Chạm vũ khí sống đang bay theo: xem vũ khí
 //   Nút túi vải góc trên bên phải: Hành trang (js/hanh_trang.js), gom nhân vật, vũ khí, trang phục, linh khí, kỹ năng, tài nguyên
 // Bảng nằm bên phải, người đứng bên trái và nói một câu. Hình vẽ theo chủ đề trống đồng (js/ui_theme.js).
@@ -599,12 +599,56 @@
   // ---------- trang phục (Cô Thợ May): bảng nằm ở js/tailor.js, gắn vào PANELS.outfit ----------
   function outfit() { frame('Thợ may'); return 'Khung cửi đang sửa, cháu quay lại sau nhé.'; }
 
+  // ---------- ZED (js/data.js G.ZED): Ông Từ không cho chọn em bé nữa mà là bảng xem chỉ số Zed và các nét ba bạn đã dạy ----------
+  function heroZed() {
+    const sv = G.save, k = 'smith', H = G.HEROES[k], hs = sv.heroes[k];
+    frame('Sân đình: chỉ số Zed');
+    // chân dung Zed (mặc đồ đang mặc)
+    const c = G.ux, px = CX, py = 68, pwd = 64, ph = 72;
+    T.inset(px, py, pwd, ph, false, { fill: '#173030' });
+    c.save(); c.beginPath(); c.rect(px + 1, py + 1, pwd - 2, ph - 2); c.clip();
+    c.translate(px + pwd / 2 + 4, py + ph - 6); c.scale(1.8, 1.8);
+    try { G.art.hero(c, { x: 0, y: 0, face: 1, key: k, t: G.time, move: true, atk: -1, dodge: -1, weapon: null, noShadow: true, outfit: G.outfit ? G.outfit.look(sv) : null }); } catch (e) { /* thiếu hình thì bỏ qua */ }
+    c.restore();
+    const x = CX + 72, w = CW - 72;
+    ui.text(G.t('{0} · cấp {1}', H.name, hs.lvl), x, 80, { size: 10, bold: true, color: GOLD });
+    T.bar(x + 92, 73, w - 92, 'xp', hs.lvl >= G.MAX_LEVEL ? 1 : hs.xp / G.xpNeed(hs.lvl), null, { h: 7 });
+    const pw = G.power();
+    let y = 94;
+    ui.text(G.t('Sức mạnh {0}', pw), x, y, { size: 8.5, bold: true, color: GOLD });
+    ui.font(8.5, true); const sx = x + G.ux.measureText(G.t('Sức mạnh {0}', pw)).width + 6;
+    ui.text(G.t('Máu gốc {0} · Mana {1} · Tốc độ {2}%', H.hp, H.mana, Math.round(H.speed * 100)), sx, y, { size: 7 });
+    if (G.lucChienUI && G.lucChienUI.on()) { y += 10; ui.text(G.lucChienUI.chu(G.lucChien(sv, k)), x, y, { size: 7.5, bold: true, color: '#ffe9a8' }); }
+    y = ui.para(G.t('Sở trường: {0} (+10% sát thương)', G.favOf(k).map((f) => G.tv(G.WTYPES[f].name)).join(', ')), x, y + 10, w, { size: 7 });
+    y = ui.para(G.t('Nội tại: {0}', H.passive), x, y, w, { size: 7, color: SOFT });
+    ui.para(G.t('Chưởng ({0} mana). {1}', G.CHUONG ? G.CHUONG.cost : 30, H.skillDesc), x, y, w, { size: 7, color: SOFT });
+    // ba bạn: đã cứu thì đã dạy Zed (nội tại + nét chưởng + sở trường), chưa thì ghi trùm nào đang giữ bạn ấy
+    T.head('Ba bạn dạy Zed', CX, 150);
+    let left = 0;
+    G.ZED_DAY_KEYS.forEach((q, i) => {
+      const D = G.ZED_DAY[q], Hq = G.HEROES[q], hoc = G.zedHoc(q), ry = 154 + i * 36;
+      if (!hoc) left++;
+      T.inset(CX, ry, CW, 34, false);
+      c.save(); c.beginPath(); c.rect(CX + 2, ry + 2, 30, 30); c.clip();
+      try { G.art.hero(c, { x: CX + 17, y: ry + 32, face: 1, key: q, move: false, t: G.time, atk: -1, dodge: -1, weapon: null, noShadow: true, alpha: hoc ? null : 0.4 }); } catch (e) { /* thiếu hình thì bỏ qua */ }
+      c.restore();
+      ui.text(Hq.name, CX + 36, ry + 11, { size: 8.5, bold: true, color: hoc ? '#fff0c4' : '#8fa49e' });
+      ui.font(8.5, true); const nx = CX + 36 + G.ux.measureText(G.tv(Hq.name)).width + 6;
+      ui.text(hoc ? 'đã dạy Zed' : G.t('còn bị {0} bắt', D.boss), nx, ry + 11, { size: 7, color: hoc ? GOOD : SOFT });
+      // dòng ngắn (ngan) cho vừa thẻ; đủ chữ ở Hành trang > Nhân vật
+      const txt = hoc ? G.tv(D.ngan[0]) + '; ' + G.tv(D.ngan[1]) : G.t('Hạ {0} để cứu bạn ấy. Bạn ấy sẽ dạy Zed: {1}', D.boss, G.tv(D.ngan[0]));
+      ui.para(txt, CX + 36, ry + 20, CW - 42, { size: 6.5, color: hoc ? TXT : SOFT });
+    });
+    return left ? G.t('Khẽ thôi, các bé đang chơi trong sân. Còn {0} bạn bị yêu tinh bắt: hạ trùm vùng để cứu, bạn ấy sẽ dạy Zed.', left)
+      : 'Ba bạn về đủ cả rồi. Ngón nghề của các bạn, Zed học hết rồi đấy.';
+  }
   // ---------- chọn hero, xem chỉ số (Ông Từ) ----------
   function hero() {
+    if (G.ZED) return heroZed();
     const sv = G.save;
     frame(G.CHU_RO !== false ? 'Sân đình: chọn em bé' : 'Sân đình: chọn hero'); // 12/10: cả game gọi là "em bé"
     let line = null;
-    G.HKEYS.forEach((k, i) => {
+    G.HKEYS_CHOI.forEach((k, i) => { // (chỉ chạy khi ?zed=0: đủ 4 em bé)
       const H = G.HEROES[k], hs = sv.heroes[k];
       const x = CX + (i % 2) * 154, y = 72 + Math.floor(i / 2) * 40;
       if (T.btn(x, y, 150, 36, '', { disabled: !hs.unlocked, sel: sv.hero === k })) { sv.hero = k; G.persist(); VS.checkNews(); }
@@ -683,7 +727,7 @@
   const HELP = () => [
     ['Đi lại trong làng', 'Kéo ở nửa trái màn hình để đi, hoặc chạm vào một người để em bé tự chạy tới. Dải khuôn mặt ở mép trên là lối tắt. Ai có việc mới thì có dấu chấm than vàng.'],
     ['Di chuyển và đánh', 'Cảm ứng: đặt ngón ở nửa trái màn hình rồi kéo để đi. Bên phải có các nút tròn: giữ Đánh để ra đòn liên tục, Né để lăn tránh, Đặc biệt để tung đòn mạnh (tốn mana), nút trên cùng là Chưởng.'],
-    ['Chưởng', G.t('Nút Chưởng bắn một luồng chưởng linh khí (tốn {0} mana), tự ngắm quái gần nhất theo tám hướng. Hệ của chưởng theo cây chưởng đang dùng. Mỗi em bé có nét riêng: Cu Tí đẩy lùi mạnh, Cu Tèo bay xa và nhanh, Cái Bống trúng thì hồi chút máu, Cu Lì tầm gần mà to. Chưởng không cho linh khí cho vũ khí (linh khí chỉ đến từ vũ khí) và không kết hợp hệ với vũ khí.', G.CHUONG ? G.CHUONG.cost : 30)],
+    ['Chưởng', G.ZED ? G.t('Nút Chưởng bắn một luồng chưởng linh khí (tốn {0} mana), tự ngắm quái gần nhất theo tám hướng. Hệ của chưởng theo cây chưởng đang dùng. Chưởng của Zed đẩy lùi quái mạnh; mỗi bạn được cứu dạy Zed thêm một nét: Cu Tèo bay xa và nhanh, Cái Bống trúng thì hồi chút máu, Cu Lì chưởng to và mạnh. Chưởng không cho linh khí cho vũ khí (linh khí chỉ đến từ vũ khí) và không kết hợp hệ với vũ khí.', G.CHUONG ? G.CHUONG.cost : 30) : G.t('Nút Chưởng bắn một luồng chưởng linh khí (tốn {0} mana), tự ngắm quái gần nhất theo tám hướng. Hệ của chưởng theo cây chưởng đang dùng. Mỗi em bé có nét riêng: Cu Tí đẩy lùi mạnh, Cu Tèo bay xa và nhanh, Cái Bống trúng thì hồi chút máu, Cu Lì tầm gần mà to. Chưởng không cho linh khí cho vũ khí (linh khí chỉ đến từ vũ khí) và không kết hợp hệ với vũ khí.', G.CHUONG ? G.CHUONG.cost : 30)],
     ['Ba cây chưởng', 'Hỏa chưởng: cầu lửa nổ lan, vệt cháy, giữ nút để tích lực. Độc chưởng: mây độc, lây độc, ăn mòn giáp, tách 3 luồng. Băng chưởng: mũi băng xuyên nhiều quái, làm chậm, đóng băng, băng vỡ. Mỗi cấp nhận 1 điểm chưởng (riêng với điểm kỹ năng). Mỗi lúc dùng một cây; ở làng đổi cây miễn phí ở Cụ Đồ (thẻ Cây chưởng) hoặc Hành trang, điểm đã học được trả lại hết.'],
     ['Đánh tám hướng', 'Mọi đòn tự quay về quái gần nhất trong tầm, theo cả tám hướng (lên, xuống, chéo). Không có quái gần thì đánh theo hướng đang kéo cần, hoặc hướng vừa đi.'],
     ['Chiêu Đặc biệt', 'Mỗi loại vũ khí một chiêu (tốn mana). Kiếm, Trảm Nguyệt: phóng vệt chém trăng khuyết bay xuyên mọi quái. Giáo, Phi Thương: ném giáo xuyên một hàng quái, ghim con cuối, giáo tự bay về tay (lúc giáo chưa về thì nút Đánh là cú đấm tay). Búa, Địa Chấn: nện ra vệt nứt đất hất tung quái, kèm vòng chấn quanh người. Cung, Mưa Tên: mưa tên rơi vào cụm quái gần nhất.'],

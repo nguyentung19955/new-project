@@ -95,6 +95,9 @@
     const osum = G.outfit ? G.outfit.sum(sv) : null; // trang phục đang mặc: máu cộng vào trước các hệ số, như áo của bản cũ
     let maxhp = H.hp * (1 + G.LVL_HP * (hs.lvl - 1)) + (armor ? armor.hp : 0) + (osum ? osum.stats.hp || 0 : 0);
     if (sk.def >= 1) maxhp *= 1.1;
+    // ZED (js/data.js G.ZED_DAY): phần giảm sát thương từ nội tại (Cu Lì 25%; Zed được Cu Lì dạy 12%) — Sức mạnh, Lực chiến chỉ tính một nửa
+    const zed = G.zedLa ? G.zedLa(key) : false;
+    const drNT = key === 'wrestler' ? 0.25 : zed && G.zedHoc('wrestler') ? G.ZED_DAY.wrestler.dr : 0;
     if ((sv.charm === 'c_greed' || (osum && osum.oldCharm === 'c_greed')) && hs.lvl >= 5) maxhp *= 0.9;
     const P = {
       isPlayer: true, key, lvl: hs.lvl, sk, x: 60, y: 190, r: 7, hr: 6, face: 1,
@@ -110,11 +113,15 @@
       dmgMult: (1 + (sk.atk >= 1 ? 0.08 : 0) + (sk.atk >= 4 ? 0.08 : 0)),
       crit: sk.atk >= 5 ? 0.1 : 0, specCost: 25 - (sk.atk >= 2 ? 5 : 0), statusBonus: sk.atk >= 3 ? 1.15 : 1,
       dodgeCdMax: sk.def >= 2 ? 0.75 : 1, roomHeal: sk.def >= 3 ? 0.08 : 0,
-      dr: (armor ? armor.dr : 0) + (sk.def >= 5 ? 0.1 : 0) + (key === 'wrestler' ? 0.25 : 0),
+      dr: (armor ? armor.dr : 0) + (sk.def >= 5 ? 0.1 : 0) + drNT,
       resist: { fire: 0, poison: 0, ice: 0 },
       manaHit: 2 + (sk.elem >= 2 ? 1 : 0), comboMult: sk.elem >= 3 ? 1.3 : 1, swapProc: sk.elem >= 4,
-      statusDur: (key === 'healer' ? 1.3 : 1) * (sk.elem >= 5 ? 1.25 : 1),
-      markMult: key === 'smith' ? 1.2 : 1, set, charm: hs.lvl >= 5 ? sv.charm : null, helm: sv.helm, armor: sv.armor,
+      statusDur: (key === 'healer' ? 1.3 : 1) * (zed && G.zedHoc('healer') ? G.ZED_DAY.healer.statusDur : 1) * (sk.elem >= 5 ? 1.25 : 1),
+      markMult: key === 'smith' ? 1.2 : 1, set,
+      // nội tại "đánh quái bị khống chế" (Cu Tèo; Zed khi đã được Cu Tèo dạy), phản đòn cận chiến (Cu Lì; Zed khi Cu Lì dạy)
+      ccMult: key === 'hunter' ? 1.25 : zed && G.zedHoc('hunter') ? G.ZED_DAY.hunter.cc : 1,
+      reflect: key === 'wrestler' ? 0.5 : zed && G.zedHoc('wrestler') ? G.ZED_DAY.wrestler.reflect : 0,
+      drNT: drNT, charm: hs.lvl >= 5 ? sv.charm : null, helm: sv.helm, armor: sv.armor,
     };
     if (helm) P.resist[helm.res] += helm.pct;
     if (sk.def >= 4) for (const e of G.ELS) P.resist[e] = Math.min(0.8, P.resist[e] + 0.3);
@@ -148,7 +155,7 @@
     for (const e of G.ELS) res = Math.max(res, P.resist[e] || 0);
     // Phiên cân bằng (mục 6): nội tại giảm 25% sát thương của Cu Lì chỉ tính một nửa (Đô Vật bị đếm cao hơn Thợ Rèn 26%
     // dù thắng như nhau với số máu mất tương đương).
-    const drP = P.dr - (P.key === 'wrestler' ? 0.125 : 0);
+    const drP = P.dr - (P.drNT || 0) / 2;
     let ehp = (P.maxhp / (1 - Math.min(0.75, drP))) * (1 + 0.25 * Math.min(0.8, res));
     // Trang phục (js/outfit.js): máu, giảm sát thương, kháng hệ đã nằm trong P; thêm phần thưởng đủ bộ (sát thương hệ),
     // mỗi tác dụng riêng của món Tím, Vàng (khiên, vệt, vũng, nổ) và cánh (lộn xa hơn, khiên sau khi lộn).
@@ -167,7 +174,7 @@
     return G.wStage(w) > 0 ? w.branch : null;
   };
   G.pDamage = function (P, w) {
-    return G.wBase(w, P.lvl) * P.dmgMult * (G.HEROES[P.key].fav.includes(w.type) ? 1.1 : 1);
+    return G.wBase(w, P.lvl) * P.dmgMult * ((G.favOf ? G.favOf(P.key) : G.HEROES[P.key].fav).includes(w.type) ? 1.1 : 1);
   };
 
   // ---------- thế giới ----------
@@ -468,7 +475,7 @@
     if (w.power === 'first' && e.hp >= e.maxhp) d *= 2;
     if (G.hasStatus(e)) d *= P.statusBonus;
     if (P.charm === 'c_ember' && e.st.fire > 0) d *= 1.15;
-    if (P.key === 'hunter' && (e.st.frozen > 0 || e.st.stun > 0 || e.st.root > 0 || e.exposed > 0)) d *= 1.25;
+    if ((P.ccMult || 1) > 1 && (e.st.frozen > 0 || e.st.stun > 0 || e.st.root > 0 || e.exposed > 0)) d *= P.ccMult;
     if (P.boost) { d *= 1.6; P.boost = false; }
     const el = G.activeEl(P, w);
     G.damage(e, d, { el, ranged: o.ranged, src: 'hit', w, crit });
@@ -656,7 +663,7 @@
     W.shake = Math.max(W.shake, 0.18);
     G.sfx('hurt');
     if (!G.noRender) FX('hurt', P, amt, el, P.gongT > 0);
-    if (P.key === 'wrestler' && melee && src && !src.dead) G.damage(src, raw * 0.5, { src: 'reflect', fromPlayer: false });
+    if (P.reflect > 0 && melee && src && !src.dead) G.damage(src, raw * P.reflect, { src: 'reflect', fromPlayer: false });
     if (G.outfit) G.outfit.onHurt(P, src); // mũ có hệ: quái đánh trúng bé bị cháy, độc hoặc chậm
     if (el) {
       const k = 1 - P.resist[el];

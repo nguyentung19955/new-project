@@ -18,7 +18,7 @@
 //       × hệ số chưởng (G.chuong.powerMult) × (1 + nửa phần hồi chiêu nhanh)
 //       × mana và đòn Đặc biệt (Đặc biệt rẻ hơn 0,6%/mana, mana tối đa 0,08%/điểm, hồi mana mỗi đòn 3%/điểm)
 //       × hiệu ứng hệ kéo dài (20% phần tăng), nổ kết hợp hệ (10% phần tăng), đổi vũ khí chắc gây hiệu ứng (×1,02)
-//   Độ bền: EHP = máu tối đa / (1 − giảm sát thương, tối đa 75%; nội tại Cu Lì tính một nửa)
+//   Độ bền: EHP = máu tối đa / (1 − giảm sát thương, tối đa 75%; nội tại Cu Lì / nét Cu Lì dạy Zed tính một nửa)
 //       × (1 + 0,3 × kháng hệ trung bình) × (1 + hồi máu mỗi phòng) × lộn nhanh, cánh, tác dụng trang phục, tốc chạy
 //   Lực chiến = làm tròn(7 × căn bậc hai(DPS × EHP))
 //   Em bé mới (Cu Tí cấp 1, Kiếm Rèn + Cung Tre Thường) ≈ 400; cuối game (cấp 40, Vàng +15, Thức tỉnh, đồ bộ) ≈ 4.000.
@@ -79,7 +79,7 @@
       // mana và đòn Đặc biệt: đòn Đặc biệt rẻ hơn, mana nhiều hơn, hồi mana mỗi đòn, hiệu ứng hệ kéo dài, nổ kết hợp hệ, đổi vũ khí chắc gây hiệu ứng
       dps *= 1 + ((P.specCost != null ? 25 - P.specCost : 0) * 0.006) + 0.0008 * ((P.maxmana || 100) - 100) + 0.03 * ((P.manaHit || 2) - 2);
       dps *= 1 + ((P.statusDur || 1) - 1) * 0.2 + ((P.comboMult || 1) - 1) * 0.1 + (P.swapProc ? 0.02 : 0);
-      const drP = P.dr - (key === 'wrestler' ? 0.125 : 0);
+      const drP = P.dr - (P.drNT || 0) / 2; // nội tại giảm sát thương (Cu Lì, hoặc Zed được Cu Lì dạy) chỉ tính một nửa
       let ehp = P.maxhp / (1 - G.clamp(drP, 0, 0.75));
       let res = 0; for (const e of G.ELS) res += Math.min(0.8, P.resist[e] || 0);
       ehp *= 1 + 0.3 * (res / G.ELS.length);

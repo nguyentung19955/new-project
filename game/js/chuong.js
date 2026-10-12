@@ -141,8 +141,19 @@
   CH.heroKey = (P) => (P && P.key) || (G.save && G.save.hero) || 'smith';
 
   // ---------- chỉ số chưởng của em bé (từ cây đang dùng và nét riêng) ----------
+  // ZED (js/data.js G.ZED_DAY): nét riêng của Zed = nét của Cu Tí (đẩy lùi) cộng các nét bạn đã dạy (bay xa/nhanh, hồi máu, chưởng to).
+  // Không ở chế độ Zed thì y như cũ: nét riêng của chính em bé đó.
+  CH.heroMod = function (key) {
+    const Hh = C.hero[key] || {};
+    if (!(G.zedLa && G.zedLa(key))) return Hh;
+    const o = Object.assign({}, Hh), D = G.ZED_DAY;
+    if (G.zedHoc('hunter')) { o.range = (o.range || 1) * D.hunter.chRange; o.speed = (o.speed || 1) * D.hunter.chSpeed; }
+    if (G.zedHoc('healer')) { o.heal = D.healer.chHeal; o.healMax = D.healer.chHealMax; }
+    if (G.zedHoc('wrestler')) { o.size = (o.size || 1) * D.wrestler.chSize; o.area = (o.area || 1) * D.wrestler.chArea; o.dmg = (o.dmg || 1) * D.wrestler.chDmg; }
+    return o;
+  };
   CH.stats = function (key, hs) {
-    const s = state(hs, key), T = C.trees[s.cay], r = (id) => s.n[id] | 0, Hh = C.hero[key] || {};
+    const s = state(hs, key), T = C.trees[s.cay], r = (id) => s.n[id] | 0, Hh = CH.heroMod(key);
     const o = {
       cay: s.cay, el: T.el, name: T.name, cost: C.cost, cd: C.cd,
       dmg: (1 + 0.1 * r('luc')) * (Hh.dmg || 1), speed: T.speed * (Hh.speed || 1), rangeK: (T.range || 1) * (Hh.range || 1),

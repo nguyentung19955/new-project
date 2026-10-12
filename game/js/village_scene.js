@@ -40,7 +40,7 @@
     xen: { ten: 'Bà Hàng Xén', viec: 'Hàng xén', ngan: 'Vũ khí', chao: 'Mua gì bán gì, vào đây với bà.', ve: 'Lần sau lại ghé bà nhé.', robe: '#8a5a38', robe2: '#6e4428', wide: 1, top: -23, pos: [540, 198], den: [540, 214] },
     may: { ten: 'Cô Thợ May', viec: 'Thợ may', ngan: 'Mũ áo', chao: 'Bé thử bộ đồ mới xem nào.', ve: 'Mặc đẹp lắm đó!', robe: '#d86a7a', robe2: '#b04a5e', wide: -1, top: -28, pos: [574, 132], den: [555, 141] },
     do: { ten: 'Cụ Đồ', viec: 'Kỹ năng', ngan: 'Kỹ năng', chao: 'Ngồi xuống đây, lão chỉ cho một chiêu.', ve: 'Học rồi nhớ luyện nghe con.', robe: '#4a548c', robe2: '#363e6c', wide: 0, top: -24, sit: true, pos: [364, 150], den: [342, 160] },
-    tu: { ten: 'Ông Từ', viec: 'Chọn em bé', ngan: 'Em bé', chao: 'Khẽ thôi, các bé đang chơi trong sân.', ve: 'Các bé chơi ngoan nhé.', robe: '#d0a440', robe2: '#a87e2a', wide: 0, top: -27, pos: [142, 140], den: [124, 151] },
+    tu: { ten: 'Ông Từ', viec: G.ZED ? 'Xem chỉ số Zed' : 'Chọn em bé', ngan: G.ZED ? 'Zed' : 'Em bé', chao: 'Khẽ thôi, các bé đang chơi trong sân.', ve: 'Các bé chơi ngoan nhé.', robe: '#d0a440', robe2: '#a87e2a', wide: 0, top: -27, pos: [142, 140], den: [124, 151] },
     mo: { ten: 'Anh Mõ', viec: 'Cài đặt', ngan: 'Cài đặt', chao: 'Cốc cốc cốc! Làng nước nghe đây!', ve: 'Có gì cứ gọi anh Mõ!', robe: '#3f9a8c', robe2: '#2c7468', wide: -1, top: -26, pos: [100, 92], den: [118, 102] },
   };
   const ORDER = ['lai', 'ren', 'xen', 'may', 'do', 'tu', 'mo']; // thứ tự trên dải lối tắt
@@ -596,7 +596,7 @@
     return {
       lai: Object.keys(sv.stars || {}).length + Object.keys(sv.stars2 || {}).length + 1,
       xen: sv.nextId || 0,
-      tu: (G.HKEYS || []).filter((k) => sv.heroes[k] && sv.heroes[k].unlocked).length,
+      tu: G.ZED ? G.ZED_DAY_KEYS.filter((k) => G.zedHoc(k)).length : (G.HKEYS || []).filter((k) => sv.heroes[k] && sv.heroes[k].unlocked).length,
       mo: 1,
     };
   }
@@ -653,8 +653,18 @@
   VS.checkNews = checkNews;
   function markSeen(k) { const c = counts(); if (c[k] != null) { seen()[k] = c[k]; G.persist(); } checkNews(); }
   VS.markSeen = markSeen;
-  function say(s) { S.msg = s; S.msgT = 2.4; }
+  function say(s, dur) { S.msg = s; S.msgDur = dur || 2.4; S.msgT = S.msgDur; } // dur: giây (mặc định 2,4); dài hơn thì hộp rộng vừa chữ
   VS.say = say;
+  // ZED (js/engine.js fixSave): bản lưu nhiều em bé vừa được chuyển sang Zed: nói rõ một lần, rồi xoá dấu báo.
+  function zedBao() {
+    const sv = G.save, z = sv.zed;
+    delete z.bao;
+    const ten = z.tu && G.HEROES[z.tu] ? G.HEROES[z.tu].name : null, n = G.ZED_DAY_KEYS.filter((k) => G.zedHoc(k)).length;
+    const s = ten ? G.t('Bản lưu cũ đã chuyển sang Zed: cấp {0} lấy từ {1}, {2} bạn đã dạy Zed. Xem ở Ông Từ.', sv.heroes.smith.lvl, ten, n)
+      : G.t('Bản lưu cũ đã chuyển sang Zed: {0} bạn đã dạy Zed. Xem ở Ông Từ.', n);
+    say(s, 7);
+    G.persist();
+  }
 
   // o.from: 'stage' (từ ải về: xuống đò ở bến bên phải) | 'title' | 'keep' (giữ chỗ đang đứng)
   VS.enter = function (o) {
@@ -698,6 +708,11 @@
       if (!seen().hint) { seen().hint = 1; S.hintT = 0; G.persist(); }
       G.sfx && G.sfx('ui');
       if (VS.onTalk) VS.onTalk(g.id); else { S.bubble = { who: g.id, s: N.chao, t: 2.6 }; S.talk = null; }
+    } else if (g.kind === 'kid' && G.ZED) {
+      const Hh = G.HEROES[g.id], D = G.ZED_DAY[g.id];
+      if (!Hh || !D) return;
+      if (G.zedHoc(g.id)) { say(G.t('{0}: "Nhớ chiêu tớ dạy nhé: {1}"', Hh.name, G.tv(D.ngan[0])), 3.5); G.sfx && G.sfx('pick'); }
+      else { say(G.t('{0} còn bị {1} bắt. Hạ {1} để cứu bạn ấy.', Hh.name, D.boss), 3.5); G.sfx && G.sfx('warn'); }
     } else if (g.kind === 'kid') {
       const sv = G.save, hs = sv.heroes[g.id], Hh = G.HEROES[g.id];
       if (hs && hs.unlocked) { sv.hero = g.id; G.persist(); G.sfx && G.sfx('pick'); say(G.t('Đã đổi sang {0}', Hh.name)); markSeen('tu'); }
@@ -739,6 +754,7 @@
     if (S.hintT > 0) S.hintT -= dt;
     if (S.bubble) { S.bubble.t -= dt; if (S.bubble.t <= 0) S.bubble = null; }
     if ((S.newsT -= dt) <= 0) { S.newsT = 1; checkNews(); }
+    if (!locked && G.ZED && G.save && G.save.zed && G.save.zed.bao === 1) zedBao(); // ZED: báo một lần bản lưu cũ đã chuyển sang Zed
     let mx = 0, my = 0;
     if (!locked) {
       const k = G.keys, kp = G.keyP, bt = btnAt();
@@ -1015,7 +1031,7 @@
     }
     // ba bé ngồi chơi ở sân đình
     for (const st of seats()) {
-      const un = sv.heroes[st.key] && sv.heroes[st.key].unlocked;
+      const un = G.ZED ? G.zedHoc(st.key) : sv.heroes[st.key] && sv.heroes[st.key].unlocked; // ZED: đã cứu = đã dạy Zed
       L.push([st.y, () => drawKid(c, st.key, st.x - cam, st.y, st.x > B.dinh[0] ? -1 : 1, { alpha: un ? null : 0.45, move: un && Math.sin(t * 1.1 + st.x) > 0.75 })]);
     }
     if (!o.hideHero) {
@@ -1124,7 +1140,7 @@
       else BA.stick(c, 62 - (G.cx || 0) * 0.6, 216 + (G.cy || 0), 24, 0, 0, false);
     }
     // nút tròn: có người ở gần thì sáng lên thành "Nói chuyện"
-    const bt = btnAt(), lab = S.near ? (S.near.kind === 'npc' ? 'Nói chuyện' : 'Đổi em bé') : null;
+    const bt = btnAt(), lab = S.near ? (S.near.kind === 'npc' || G.ZED ? 'Nói chuyện' : 'Đổi em bé') : null;
     const held = [...G.pointers.values()].some((q) => q.role === 'talk');
     if (T && T.round) T.round(bt[0], bt[1], bt[2], 'talk', { lit: !!S.near, pressed: held, dim: !S.near, label: lab });
     else { ui.circle(bt[0], bt[1], bt[2], S.near ? 'rgba(200,120,40,0.92)' : 'rgba(60,50,44,0.5)', S.near ? '#ffe9a8' : 'rgba(255,255,255,0.3)'); if (lab) ui.text(lab, bt[0], bt[1] + 3, { size: 8.5, bold: true, align: 'center' }); }
@@ -1132,7 +1148,8 @@
       const s = 'Kéo bên trái để đi. Chạm vào một người để nói chuyện.';
       if (T && T.toast) T.toast(110, 236, 260, s, { size: 7.5 }); else { ui.rect(110, 238, 260, 16, 'rgba(10,8,6,0.82)', '#ffd27a'); ui.text(s, 240, 249, { size: 7.5, align: 'center', bold: true }); }
     }
-    if (S.msgT > 0 && S.msg) { if (T && T.toast) T.toast(130, 60, 220, S.msg, { age: 2.4 - S.msgT, left: S.msgT }); else { ui.rect(130, 60, 220, 16, 'rgba(10,8,6,0.9)', '#ffd27a'); ui.text(S.msg, 240, 71, { size: 8, align: 'center' }); } }
+    if (S.msgT > 0 && S.msg && (S.msgDur || 2.4) > 2.4 && T && T.toastFit) T.toastFit(240, 60, S.msg, { age: S.msgDur - S.msgT, left: S.msgT, size: 7.5 }); // ZED: lời báo dài (chuyển bản lưu cũ)
+    else if (S.msgT > 0 && S.msg) { if (T && T.toast) T.toast(130, 60, 220, S.msg, { age: 2.4 - S.msgT, left: S.msgT }); else { ui.rect(130, 60, 220, 16, 'rgba(10,8,6,0.9)', '#ffd27a'); ui.text(S.msg, 240, 71, { size: 8, align: 'center' }); } }
     // Một lần chạm trọn vẹn (G.click) phải xử lý ngay lúc vẽ: bộ máy xoá nó sau mỗi khung hình, kể cả khung không chạy bước cập nhật nào.
     if (G.click) {
       const cl = G.click;

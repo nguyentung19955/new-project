@@ -4,6 +4,10 @@ Game đánh quái màn hình ngang cho điện thoại, chạy ngay trong trình
 
 Đây là bản thử. Tiến trình được lưu trong trình duyệt của máy đang chơi và, khi chơi trên web có mạng, lưu lên mây (Firebase). Hướng dẫn cho chủ dự án: `docs/firebase-linh-khi/HUONG-DAN.md`.
 
+## Bản Zed: một nhân vật (12/10)
+
+Từ bản này chỉ còn **một nhân vật chơi được tên Zed** (dùng hình và dữ liệu của Cu Tí; khoá nội bộ vẫn là `smith`). Zed dùng đủ bốn vũ khí (kiếm, giáo, cung, búa) với cách đánh y như trước. Ba bạn Cu Tèo, Cái Bống, Cu Lì vẫn bị yêu tinh bắt; hạ trùm vùng (độ khó thường) lần đầu thì cứu được bạn đó, bạn về ngồi chơi ở sân đình và **dạy Zed** nét riêng của mình (nội tại + nét riêng của chưởng, Cu Tèo thêm sở trường cung, Cái Bống thêm sở trường giáo), cấp đúng một lần. Ông Từ không còn chọn em bé mà là bảng **xem chỉ số Zed** và ba nét đã học. Bản lưu cũ nhiều em bé được chuyển sang Zed (lấy em bé cấp cao nhất; vũ khí, đồ, vàng, tiến trình giữ nguyên; trùm đã hạ = nét đã học), dữ liệu cũ không bị xoá. Thêm `?zed=0` vào địa chỉ trang để chơi lại như bản 4 em bé. Con số: `G.ZED_DAY` trong `js/data.js`.
+
 ## Cách chơi
 
 Mở `index.html` (hoặc `dist/linh-khi.html`) bằng trình duyệt. Chạm màn hình để vào làng: em bé xuống đò ở bến bên phải. Nói chuyện với **Chú Lái Đò** ngay cạnh bến, chọn **Ải 1** trên tranh bản đồ rồi bấm **Lên đò**. Ải đầu tiên có lời chỉ dẫn ở từng phòng.
@@ -16,7 +20,7 @@ Làng là một cảnh đi lại được, rộng gấp rưỡi màn hình; màn
 - Tới gần một người thì người đó ngẩng lên và nút tròn bên phải thành **Nói chuyện**. Chạm thẳng vào người cũng được: em bé tự chạy tới.
 - Dải bảy khuôn mặt ở mép trên là lối tắt: chạm một mặt là em bé tự chạy tới người đó và bảng mở luôn (chạm lần hai thì tới ngay). Đang mở bảng mà chạm mặt khác thì sang thẳng người đó.
 - Ai có việc mới thì có dấu chấm than vàng trên đầu và chấm đỏ trên khuôn mặt ở dải lối tắt.
-- Chạm vào vũ khí đang bay để mở màn **Xem vũ khí**. Ba bé hero còn lại ngồi chơi ở sân đình, chạm vào bé nào là đổi sang bé đó.
+- Chạm vào vũ khí đang bay để mở màn **Xem vũ khí**. Ba bé hero còn lại ngồi chơi ở sân đình, chạm vào bé nào là đổi sang bé đó (bản Zed: ba bạn đã được cứu ngồi chơi ở sân đình, chạm vào thì bạn nhắc lại chiêu đã dạy Zed).
 - Tài nguyên ở dải trên cùng và mọi chỗ ghi giá, thưởng hiện bằng biểu tượng kèm số. Chạm vào biểu tượng để xem tên.
 
 | Người | Ở đâu | Việc |
@@ -26,7 +30,7 @@ Làng là một cảnh đi lại được, rộng gấp rưỡi màn hình; màn
 | Bà Hàng Xén | gánh hàng | Rương vũ khí, chọn hai món mang theo, xem, bán; bán trang phục thường (nút **Trang phục ›**) |
 | Cô Thợ May | khung cửi | Trang phục năm ô: mặc, tháo, may, nâng bậc, mở cấp cánh, mặc thử |
 | Cụ Đồ | gốc đa | Cây kỹ năng, **Cây chưởng** (học điểm chưởng, đổi cây), đặt lại điểm, hướng dẫn, **Bảng vàng** (xếp hạng Sức mạnh, sao, thời gian hạ từng trùm vùng) |
-| Ông Từ | sân đình | Chọn hero, xem chỉ số |
+| Ông Từ | sân đình | Xem chỉ số Zed và nét ba bạn đã dạy (`?zed=0`: chọn hero) |
 | Anh Mõ | cổng làng | Cài đặt: âm thanh, toàn màn hình, lưu mây và **Đăng nhập Google**, **✉ Góp ý**, xoá tiến trình |
 
 ### Trong ải

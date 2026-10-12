@@ -385,6 +385,48 @@
       for (const k of G.HKEYS) if (!s.heroes[k] || typeof s.heroes[k] !== 'object') s.heroes[k] = base.heroes[k]; // em lỗi nặng: lấy bản mới của riêng em đó
       if (!G.HKEYS.includes(s.hero) || !s.heroes[s.hero].unlocked) s.hero = 'smith';
       });
+      // ZED (js/data.js G.ZED): một nhân vật. Bản lưu cũ nhiều em bé được CHUYỂN, không xoá:
+      //  - Zed (khoá smith) nhận cấp, kinh nghiệm, điểm kỹ năng, cây chưởng của em bé cấp cao nhất (bằng cấp thì kinh nghiệm nhiều hơn);
+      //    dữ liệu cũ của Cu Tí cất ở save.zed.cuTi, dữ liệu ba bé kia để nguyên trong save.heroes (?zed=0 vẫn chơi lại được).
+      //  - Trùm vùng nào đã hạ (bé đã được cứu, hoặc có sao ải trùm) = bạn đó đã dạy Zed (save.zed.hoc).
+      //  - Vũ khí, đồ, vàng, tiến trình không đụng tới. Chuyển một lần (save.zed.v = 1); có thay đổi thì làng báo một lần (save.zed.bao).
+      // Dữ liệu zed lỗi: dựng lại từ đầu theo luật trên (an toàn, không mất gì vì em bé cũ vẫn còn trong save.heroes).
+      if (G.ZED) phan('Zed', [], () => {
+        let z = s.zed;
+        if (!z || typeof z !== 'object' || Array.isArray(z)) z = null;
+        if (!z || z.v !== 1) {
+          const nz = { v: 1, hoc: {} };
+          let best = 'smith';
+          for (const k of G.HKEYS) {
+            const h = s.heroes[k], b = s.heroes[best];
+            if (!h || !h.unlocked) continue;
+            if ((h.lvl | 0) > (b.lvl | 0) || ((h.lvl | 0) === (b.lvl | 0) && num(h.xp, 0) > num(b.xp, 0))) best = k;
+          }
+          if (best !== 'smith') {
+            const sm = s.heroes.smith, h = s.heroes[best];
+            nz.cuTi = JSON.parse(JSON.stringify(sm));
+            sm.lvl = h.lvl; sm.xp = h.xp; sm.sk = Object.assign({}, h.sk);
+            if (h.ch && typeof h.ch === 'object') sm.ch = JSON.parse(JSON.stringify(h.ch));
+            if (G.chuong) G.chuong.fix(sm, 'smith');
+            nz.tu = best;
+          }
+          for (let r = 0; r < G.REGIONS.length; r++) {
+            const k = G.REGIONS[r].rescue;
+            if (k && ((s.heroes[k] && s.heroes[k].unlocked) || (s.stars && s.stars[r + '-4']))) nz.hoc[k] = 1;
+          }
+          if (nz.tu || Object.keys(nz.hoc).length) nz.bao = 1;
+          s.zed = z = nz;
+        }
+        const hoc = z.hoc && typeof z.hoc === 'object' && !Array.isArray(z.hoc) ? z.hoc : {};
+        z.hoc = {};
+        for (const k of G.ZED_DAY_KEYS) {
+          // chơi tạm bằng ?zed=0 mà cứu thêm bạn: về chế độ Zed thì bạn đó cũng đã dạy
+          if (hoc[k] || (s.heroes[k] && s.heroes[k].unlocked)) { z.hoc[k] = 1; if (s.heroes[k]) s.heroes[k].unlocked = true; }
+        }
+        if (z.bao !== 1) delete z.bao;
+        if (z.tu && !G.HKEYS.includes(z.tu)) delete z.tu;
+        s.hero = 'smith';
+      });
       // vũ khí
       phan('vũ khí', ['weapons', 'nextId', 'bossGold', 'carry'], () => {
       const seen = {};

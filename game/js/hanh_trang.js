@@ -85,7 +85,7 @@
     const xf = hs.lvl >= G.MAX_LEVEL ? 1 : hs.xp / G.xpNeed(hs.lvl);
     T.bar(CX + 4, CY + 127, 104, 'xp', xf, null, { h: 7 });
     ui.text(hs.lvl >= G.MAX_LEVEL ? 'Đã tối đa' : G.t('{0}/{1} kinh nghiệm', Math.floor(hs.xp), G.xpNeed(hs.lvl)), CX + 56, CY + 144, { size: 6.5, align: 'center', color: SOFT });
-    if (!RO && T.sbtn(CX + 6, CY + 150, 100, 16, 'Đổi em bé: Ông Từ', { size: 7, pad: 2 })) { VS.goNpc('tu', true); return; }
+    if (!RO && T.sbtn(CX + 6, CY + 150, 100, 16, G.ZED ? 'Nét đã học: Ông Từ' : 'Đổi em bé: Ông Từ', { size: 7, pad: 2 })) { VS.goNpc('tu', true); return; }
     const x = CX + 122, w = CW - 128;
     region('hero', x, CY, w, CH, (y) => {
       y += 11;
@@ -120,10 +120,11 @@
         ui.text(String(r[1]), cx + cw - 4, cy + 9, { size: 7.5, bold: true, align: 'right', color: r[0] === 'Máu' ? '#ff9a7a' : r[0] === 'Mana' ? '#8fc6ff' : TXT });
       });
       y += Math.ceil(rows.length / 2) * 13 + 10;
-      T.head('Em bé', x, y); y += 3;
-      y = ui.para(G.t('Sở trường: {0} (+10% sát thương)', H.fav.map((f) => G.tv(G.WTYPES[f].name)).join(', ')), x, y + 8, w, { size: 7 });
-      y = ui.para(G.t('Nội tại: {0}', H.passive), x, y, w, { size: 7, color: SOFT });
-      y = ui.para(G.t('Chưởng ({0} mana, {1}). {2}', G.CHUONG ? G.CHUONG.cost : 30, G.chuong ? G.CHUONG.trees[G.chuong.state(sv.heroes[sv.hero], sv.hero).cay].name : '', H.skillDesc), x, y, w, { size: 7, color: SOFT });
+      T.head(G.ZED ? 'Zed' : 'Em bé', x, y); y += 3;
+      // ZED: sở trường, nội tại, nét chưởng gồm cả các nét ba bạn đã dạy (js/data.js G.favOf, G.passiveOf, G.skillDescOf)
+      y = ui.para(G.t('Sở trường: {0} (+10% sát thương)', G.favOf(k).map((f) => G.tv(G.WTYPES[f].name)).join(', ')), x, y + 8, w, { size: 7 });
+      y = ui.para(G.t('Nội tại: {0}', G.passiveOf(k)), x, y, w, { size: 7, color: SOFT });
+      y = ui.para(G.t('Chưởng ({0} mana, {1}). {2}', G.CHUONG ? G.CHUONG.cost : 30, G.chuong ? G.CHUONG.trees[G.chuong.state(sv.heroes[sv.hero], sv.hero).cay].name : '', G.skillDescOf(k)), x, y, w, { size: 7, color: SOFT });
       // trang phục
       y += 8; T.head('Trang phục đang mặc', x, y); y += 3;
       const O = G.outfit;
@@ -365,7 +366,7 @@
       T.head('Nguồn linh khí (dấu ấn hệ)', CX, y + 9);
       const src = [G.t('hạ tinh anh +{0}', L.elite), G.t('trùm nhỏ +{0}', L.mini), G.t('trùm vùng +{0}', L.boss), G.t('kết liễu quái thường đang dính hệ +1')];
       if (L.drop > 0) src.push(G.t('quái thường {0}% rơi viên linh khí, nhặt +{1}', Math.round(L.drop * 100), L.orb));
-      y = ui.para(G.t('{0}. Hệ nhận được: hệ quái đang dính lúc gục, không dính thì theo hệ của vùng.', src.join(' · ')) + (sv.hero === 'smith' ? ' ' + G.t('Cu Tí nhận dấu ấn nhanh hơn 20%.') : ''), CX, y + 20, CW - 8, { size: 7, color: TXT });
+      y = ui.para(G.t('{0}. Hệ nhận được: hệ quái đang dính lúc gục, không dính thì theo hệ của vùng.', src.join(' · ')) + (sv.hero === 'smith' ? ' ' + (G.ZED ? G.t('Zed nhận dấu ấn nhanh hơn 20%.') : G.t('Cu Tí nhận dấu ấn nhanh hơn 20%.')) : ''), CX, y + 20, CW - 8, { size: 7, color: TXT });
       y = ui.para(G.t('Mốc tiến hóa: {0}. Vũ khí Thường chỉ lên tới Thành hình.', G.MARKS.map((m, i) => m + ' ' + G.tv(G.STAGE_NAMES[i + 1])).join(' · ')), CX, y + 1, CW - 8, { size: 6.5, color: SOFT });
       y += 5;
       const cw = (CW - 8 - 150) / 3;
@@ -431,7 +432,7 @@
       });
       y = bottom + 6;
       T.head(G.t('Chưởng và nội tại của {0}', H.name), CX, y + 6);
-      y = ui.para(G.t('Chưởng ({0} mana). {1}. Nội tại: {2}.', G.CHUONG ? G.CHUONG.cost : 30, H.skillDesc, H.passive), CX, y + 16, CW - 8, { size: 7, color: TXT });
+      y = ui.para(G.t('Chưởng ({0} mana). {1}. Nội tại: {2}.', G.CHUONG ? G.CHUONG.cost : 30, G.skillDescOf(k), G.passiveOf(k)), CX, y + 16, CW - 8, { size: 7, color: TXT });
       if (!RO) { y += 2; if (goBtn(CX, y, 220, 'do', 'Đến Cụ Đồ: cây kỹ năng, đặt lại điểm')) return y; y += 20; }
       return y;
     });

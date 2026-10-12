@@ -498,6 +498,17 @@
         const it = O.roll(sv, S.r, big ? 'boss' : 'mini');
         if (it) { R.lines.push(ln(R, '{0} rơi {1} ({2})', big ? reg.bossName : 'Trùm', O.name(it), G.RARITY[it.r].name)); S.outfitLoot.push(it); }
       }
+      // ZED (js/data.js G.ZED_DAY): bạn được cứu không thành em bé chơi được nữa mà DẠY Zed nét riêng của mình, đúng 1 lần (save.zed.hoc).
+      const zedDay = G.ZED && big && !S.diff && reg.rescue && G.ZED_DAY[reg.rescue] && !G.zedHoc(reg.rescue, sv);
+      if (zedDay) {
+        if (!sv.zed || typeof sv.zed !== 'object' || Array.isArray(sv.zed)) sv.zed = { v: 1, hoc: {} };
+        if (!sv.zed.hoc || typeof sv.zed.hoc !== 'object') sv.zed.hoc = {};
+        sv.zed.v = 1; sv.zed.hoc[reg.rescue] = 1;
+        const D = G.ZED_DAY[reg.rescue], ten = G.HEROES[reg.rescue].name;
+        // bảng kết quả hẹp: 3 dòng ngắn; đủ chữ ở dòng báo giữa trận, ở làng (Ông Từ) và Hành trang
+        R.lines.push(ln(R, 'Cứu được {0}! Bạn ấy dạy Zed:', ten), ln(R, '· {0}', G.tv(D.ngan[0])), ln(R, '· {0}', G.tv(D.ngan[1])));
+        if (S.W) S.W.banner = { s: G.t('{0} dạy Zed: {1}', ten, G.tv(D.noiTai)), col: '#ffd23f', t: 4 }; // dòng báo giữa trận (đè dòng báo rơi đồ)
+      }
       if (big && !S.diff && !sv.heroes[reg.rescue].unlocked) {
         // Phiên cân bằng (mục 10): em bé mới mở ra ở cấp của em bé cao cấp nhất trừ 3 (trước luôn cấp 1, không vào nổi vùng đang chơi).
         const nh = sv.heroes[reg.rescue];
@@ -506,8 +517,10 @@
         for (const k of G.HKEYS) if (k !== reg.rescue && sv.heroes[k].unlocked) top = Math.max(top, sv.heroes[k].lvl | 0);
         const lv = Math.max(1, Math.min(G.MAX_LEVEL, top - 3));
         if (lv > (nh.lvl | 0)) { nh.lvl = lv; nh.xp = 0; }
-        R.lines.push(ln(R, 'Cứu được {0}! Em bé mới đã mở.', G.HEROES[reg.rescue].name));
-        if (nh.lvl > 1) R.lines.push(ln(R, '{0} theo về ở cấp {1}', G.HEROES[reg.rescue].name, nh.lvl));
+        if (!G.ZED) { // chế độ Zed: dòng báo "dạy Zed" ở trên thay cho dòng mở em bé
+          R.lines.push(ln(R, 'Cứu được {0}! Em bé mới đã mở.', G.HEROES[reg.rescue].name));
+          if (nh.lvl > 1) R.lines.push(ln(R, '{0} theo về ở cấp {1}', G.HEROES[reg.rescue].name, nh.lvl));
+        }
       }
       if (big && S.loot.finalEl) sv.scars[reg.boss] = S.loot.finalEl;
       if (S.tut) sv.tut.done = true;
@@ -1372,7 +1385,7 @@
     const lim = lkN ? lkTop - 3 : 208;
     const rows = Math.max(1, Math.floor((lim - y) / 11.5));
     // dòng nổi bật (lên cấp, cứu được em bé, kỷ lục): xét trên bản tiếng Việt của dòng; dòng kỷ lục của bảng vàng mở đầu bằng ★
-    const hot = (l) => { const v = viOf(R, l); return v.includes('lên cấp') || v.includes('Cứu được') || v.includes('Kỷ lục') || (G.LANG !== 'vi' && l.charAt(0) === '★'); };
+    const hot = (l) => { const v = viOf(R, l); return v.includes('lên cấp') || v.includes('Cứu được') || (G.ZED && v.indexOf('· ') === 0) || v.includes('Kỷ lục') || (G.LANG !== 'vi' && l.charAt(0) === '★'); };
     const line = (l, cx, cy) => ui.text(l, cx, cy, { size: 7.5, color: hot(l) || (R.v18 && R.v18.includes(l)) ? '#ffd27a' : '#e8dfcc', ten: G.CHU_RO !== false, tenCol: '#c9bfa6' }); // 12/10: "+128 [hình] Kinh nghiệm"
     // Ảnh AI "lên cấp" (hu-len-cap, js/fx_anh.js): quầng sáng chạy lặp sau dòng chữ lên cấp. Không có tệp thì như cũ.
     if (R.up && G.fxAnh && G.fxAnh.co('hu-len-cap')) { const i = texts.slice(0, rows).findIndex((l) => typeof l === 'string' && viOf(R, l).includes('lên cấp')); if (i >= 0) G.fxAnh.ve(G.ux, 'hu-len-cap', 146, y + i * 11.5 - 2, G.time - S.modeT, 0, 0.6, false, 0.85); }
