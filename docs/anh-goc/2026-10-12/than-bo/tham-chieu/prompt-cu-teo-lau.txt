@@ -1,0 +1,5 @@
+Ảnh gửi kèm: hai hình trên cùng là bé Cu Tèo mặc bộ Lâu Đài (đứng và chạy); tấm lưới bên dưới là 5 hàng đòn của chính bé Cu Tèo khi mặc đồ thường: chém kiếm, bắn cung, đâm giáo, nện búa, ra chưởng, mỗi hàng 6 khung.
+Vẽ lại ĐÚNG 30 động tác của tấm lưới đó, cùng thứ tự và tư thế từng khung, nhưng bé mặc nguyên bộ Lâu Đài như hai hình trên cùng (mũ, áo, đồ đeo, màu sắc y hệt).
+Tay không cầm vũ khí, game tự vẽ vũ khí. Tay không che mặt; tay sau thấy một phần, có viền tối tách khỏi thân. Quay mặt sang phải.
+Pixel art chibi, viền tối một nét, màu phẳng, không nhoè. Giữ cỡ người và vị trí chân như tấm lưới.
+Lưới đều 8 cột × 5 hàng có kẻ lưới mảnh, mỗi hàng 6 khung từ trái sang, 2 ô cuối trống. Nền trơn xanh lá #00FF00, không chữ.
