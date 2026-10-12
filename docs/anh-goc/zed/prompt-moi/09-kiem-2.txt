@@ -1,8 +1,7 @@
-# Kiếm nhát 2 – chém ngược (0,30 giây, ★ khung 3)
-# Gửi kèm: mẫu + mau-tu-the/tu-the/09-kiem-2.png
+# Kiếm nhát 2 – chém hất lên
+# Gửi kèm: ảnh mẫu Zed + zed/sua-tay/sua-08-k2.png (chỉ tay phải)
 
 Nhân vật như ẢNH MẪU gửi kèm (giữ y hệt mặt, tóc, đồ, đai đỏ, màu, tỉ lệ đầu/thân). Pixel art chibi, viền tối 1 nét, quay mặt PHẢI, cùng cỡ người ở mọi khung, chân trụ chạm cùng một đường đất.
-Ảnh 2 là khung xương từng khung (đỏ = tay/chân gần, xanh = xa, nét đứt xám = hướng vũ khí — KHÔNG vẽ vũ khí): vẽ ĐÚNG tư thế từng khung.
-Tay KHÔNG cầm vũ khí (game tự vẽ vũ khí). TAY PHẢI của Zed (tay phía gần người xem, màu ĐỎ trên khung xương) nắm như cầm chuôi và làm động tác vung; tay trái nắm ở hông. QUAN TRỌNG: tay vung/cầm chính là tay vẽ ĐÈ LÊN TRƯỚC thân người (phía gần mắt người xem), KHÔNG phải tay khuất sau lưng.
-Chém ngược: 1 tay ở dưới thấp phía trước, 2 hạ thấp lấy đà, 3 ★ hất chéo lên trước, 4 tay ở trên cao, 5 thu về.
+Tay KHÔNG cầm vũ khí (game tự vẽ kiếm). Tay vung là TAY PHẢI = tay phía SAU lưng/hông trong thế thủ, chính là tay đang giơ sau đầu ở ẢNH 2. Suốt cả đòn CHỈ tay này vung, tay kia luôn nắm ở hông trước bụng. Khi chém, cánh tay phải vung từ sau ra trước, đi NGANG QUA TRƯỚC MẶT (che mặt một chút cũng được).
+Chém hất lên: 1 tay phải thả thấp sau hông; 2 hạ người lấy đà, tay phải xuống sát đất phía sau; 3 tay phải hất chéo từ dưới lên, đi qua trước ngực và mặt; 4 tay phải giơ cao trên đầu phía trước; 5 về thủ thế.
 1 hàng 5 khung đều nhau, đọc trái sang phải; các hình không chạm nhau, không chạm mép ảnh. Nền xanh lá thuần #00FF00, không lưới, không chữ, không số, không bóng, không hiệu ứng.
