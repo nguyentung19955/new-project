@@ -72,10 +72,10 @@
    "nguTinh-p2:hit"
   ],
   "pha 2 move": [
-   "nguTinh:move"
+   "nguTinh-p2:idle"
   ],
   "pha 2 die": [
-   "nguTinh:die"
+   "nguTinh-p2:hit"
   ],
   "pha 3 idle": [
    "nguTinh-p3:idle"
@@ -90,10 +90,10 @@
    "nguTinh-p3:hit"
   ],
   "pha 3 move": [
-   "nguTinh:move"
+   "nguTinh-p3:idle"
   ],
   "pha 3 die": [
-   "nguTinh:die"
+   "nguTinh-p3:hit"
   ]
  },
  "pha_sau_khi_ha_mau": [
@@ -107,6 +107,6 @@
  },
  "gif": {
   "so_hinh": 42,
-  "byte": 146772
+  "byte": 151954
  }
 }

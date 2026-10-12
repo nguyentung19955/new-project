@@ -7,8 +7,8 @@ Thay: `game/art/custom/nguTinh-p2.sprite.json`, `game/art/custom/nguTinh-p3.spri
 - `ba-pha.png`: 3 pha cạnh nhau trong phòng trùm thật (cắt quanh trùm).
 - `pha-1.png`, `pha-2.png`, `pha-3.png`: cả màn hình 844×390, hạ máu để game TỰ chuyển pha (60% → pha 2, 30% → pha 3).
 - `don-tan-cong.gif` (95 KB): lấy đà + tấn công, pha 1 | pha 2 | pha 3 cạnh nhau.
-- `chuyen-pha.gif` (147 KB): pha 1 → 2 → 3 trong phòng thật.
-- `can-canh.png`: đúng đường vẽ của game, 3 pha × đứng, lấy đà, tấn công, trúng đòn, chạy, chết.
+- `chuyen-pha.gif` (~150 KB): pha 1 → 2 → 3 trong phòng thật.
+- `can-canh.png`: đúng đường vẽ của game, 3 pha × đứng, lấy đà, tấn công, trúng đòn, chạy, gục.
 
 ## Định dạng (giữ như tệp -p2/-p3 cũ)
 | | pha 1 | pha 2 | pha 3 |
@@ -16,7 +16,7 @@ Thay: `game/art/custom/nguTinh-p2.sprite.json`, `game/art/custom/nguTinh-p3.spri
 | ô / nét | 180×116, nét ×1 | 180×116, nét ×2 | 180×116, nét ×2 |
 | điểm gốc | [90,112] | [90,112] | [90,112] |
 | đứng · lấy đà · tấn công · trúng đòn | 6 · 4 · 6 · 4 | **6 · 4 · 6 · 4** (đủ, không phải lặp khung) | **6 · 4 · 6 · 4** |
-| chạy, chết | có | mượn pha 1 (game tự làm) | mượn pha 1 |
+| chạy, gục | có | dùng dáng đứng / trúng đòn pha 2 (logic phiên "Kiểm 3 pha trùm", 1542f27) | như pha 2 |
 | màu | — | 24 | 24 |
 | dung lượng tệp | 0,56 MB | **0,15 MB** (cũ 1,15 MB) | **0,16 MB** (cũ 1,23 MB) |
 
@@ -31,8 +31,8 @@ Thay: `game/art/custom/nguTinh-p2.sprite.json`, `game/art/custom/nguTinh-p3.spri
 Bị cắt: pha 2 lấy đà khung 1 và 3 chóp gai đỏ vượt mép trên ô 3–4 điểm game. Không khung nào bị cắt ngang.
 
 ## Kiểm (`kiem.py`)
-- Phòng trùm Hang biển (Ngư Tinh), pha 1 → hạ máu → game tự chuyển pha 2, pha 3. Pha 2, 3 vẽ đứng / lấy đà / tấn công / trúng đòn từ `nguTinh-p2` / `nguTinh-p3`; chạy, chết mượn `nguTinh`. **0 pageerror**, 0 lỗi trang (`ket-qua.json`).
-- `python3 game/build.py` và `LK_HAI_TEP=1 python3 game/build.py --hai-tep` chạy được. Hai tệp **23,97 MB / trần 26 MB** (hai tệp Ngư Tinh nhẹ đi ~2 MB so với trước).
+- Phòng trùm Hang biển (Ngư Tinh), pha 1 → hạ máu → game tự chuyển pha 2, pha 3. Pha 2, 3 vẽ đứng / lấy đà / tấn công / trúng đòn từ `nguTinh-p2` / `nguTinh-p3`; chạy, gục dùng dáng đứng / trúng đòn của chính pha đó (đã gộp 1542f27, kiểm lại sau gộp). **0 pageerror**, 0 lỗi trang (`ket-qua.json`).
+- `python3 game/build.py` và `LK_HAI_TEP=1 python3 game/build.py --hai-tep` chạy được. Sau khi gộp các phiên song song: hai tệp **22,39 MB / trần 26 MB** (hai tệp Ngư Tinh nhẹ đi ~2 MB so với trước).
 
 ## Ghi chú
 - Pha 1 đang nét ×1; pha 2, 3 nét ×2 nhưng vẽ khối 2×2 nên độ chi tiết bằng pha 1 — đổi pha không thấy "nét hơn/nhoè hơn".

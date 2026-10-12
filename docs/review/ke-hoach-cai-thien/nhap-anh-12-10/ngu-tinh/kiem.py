@@ -36,7 +36,7 @@ THEM = r"""
   T.ve2 = () => { const W = G.getWorld(), b = W.boss; T.yen(b); b.an = { n: 'idle', t: 0, spd: 1 }; for (let i = 0; i < 30; i++) { T.yen(b); T.frame(1); G.getRun().P.hp = G.getRun().P.maxhp; } return b.phase; };
 })();
 """
-COT = [('idle', 0.3, 'đứng'), ('tele', 0.6, 'lấy đà'), ('atk', 0.85, 'tấn công'), ('hit', 0.6, 'trúng đòn'), ('move', 0.3, 'chạy (mượn pha 1)'), ('die', 0.2, 'chết (mượn pha 1)')]
+COT = [('idle', 0.3, 'đứng'), ('tele', 0.6, 'lấy đà'), ('atk', 0.85, 'tấn công'), ('hit', 0.6, 'trúng đòn'), ('move', 0.3, 'chạy'), ('die', 0.2, 'gục')]
 KQ = {}
 
 
