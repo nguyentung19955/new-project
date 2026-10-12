@@ -1,0 +1,3 @@
+Nhân vật Zed như ảnh gửi kèm (giữ y hệt mặt, tóc, sừng, da, quần). Pixel art chibi, viền tối một nét, màu phẳng, không nhoè. Quay mặt sang phải, cùng cỡ người và vị trí chân ở mọi ô. Không vẽ bóng dưới chân.
+Vẽ 4 hàng: (1) lộn né về phía trước, cuộn tròn rồi đứng dậy; (2) trúng đòn: giật lùi, nhăn mặt, 4 khung, 4 ô cuối trống; (3) ngã chết: loạng choạng, khuỵu, nằm sấp bất động ở 2 khung cuối; (4) ra chưởng: thu tay, dồn lực, đẩy hai lòng bàn tay ra trước.
+Lưới đều 8 cột × 4 hàng có kẻ lưới mảnh, mỗi hàng 8 khung từ trái sang. Nền trơn xanh lá #00FF00, không chữ.

@@ -1,0 +1,4 @@
+Nhân vật Zed như ảnh gửi kèm (giữ y hệt mặt, tóc, sừng, da, quần). Pixel art chibi, viền tối một nét, màu phẳng, không nhoè. Quay mặt sang phải, cùng cỡ người và vị trí chân ở mọi ô. Không vẽ bóng dưới chân.
+Tay trái đưa ra trước như cầm cung, tay phải kéo dây; không vẽ cung, không vẽ tên (game tự vẽ).
+Vẽ 2 hàng: (1) bắn nhanh: giương – kéo dây – nhả – tay bật về; (2) bắn mạnh: kéo căng từ từ, ngả người ra sau, giữ, nhả mạnh, giật lùi nhẹ.
+Lưới đều 8 cột × 2 hàng có kẻ lưới mảnh, mỗi hàng 8 khung từ trái sang. Nền trơn xanh lá #00FF00, không chữ.

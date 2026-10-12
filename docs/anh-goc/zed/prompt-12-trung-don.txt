@@ -1,0 +1,2 @@
+Hiệu ứng trúng đòn: tia sáng hình sao trắng bung ra từ tâm, vài mảnh vụn văng, tan nhanh.
+Hiệu ứng pixel art, viền sắc, không nhoè, không có nhân vật. Một hàng 8 khung từ trái sang theo thời gian, mỗi khung trong ô vuông bằng nhau có kẻ lưới mảnh, hiệu ứng nằm trọn trong ô. Hướng sang phải. Nền trơn hồng tím #FF00FF, không chữ.

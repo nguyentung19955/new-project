@@ -1,0 +1,5 @@
+Nhân vật Zed như ảnh gửi kèm (giữ y hệt mặt, tóc, sừng, da, quần). Pixel art chibi, viền tối một nét, màu phẳng, không nhoè. Quay mặt sang phải, cùng cỡ người và vị trí chân ở mọi ô. Không vẽ bóng dưới chân.
+Tay không cầm vũ khí (game tự vẽ vũ khí), bàn tay nắm như đang cầm cán; tay không che mặt. Hai tay cầm cán dài.
+Combo giáo 3 hàng: (1) đâm thẳng nhanh ra trước; (2) đâm thứ hai, bước tới sâu hơn; (3) nhát cuối: quét vòng ngang quanh người rồi đâm mạnh.
+Mỗi nhát: thu về – đâm – duỗi hết tay – thu về.
+Lưới đều 8 cột × 3 hàng có kẻ lưới mảnh, mỗi hàng 8 khung từ trái sang. Nền trơn xanh lá #00FF00, không chữ.
