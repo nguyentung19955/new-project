@@ -743,6 +743,9 @@
         P.x += mx * sp * dt;
         P.y += my * sp * 0.75 * dt;
         P.moving = true;
+        // Nhịp chân hàng chạy ảnh AI theo tốc độ đi thật (phiên sửa dáng chạy 12/10): đẩy cần nửa chừng, vừa chạy vừa đánh (đi chậm 0,4)
+        // thì chân bước chậm lại thay vì đạp hết nhịp tại chỗ (trượt). Chỉ đổi hình (js/sprite_custom.js SC.chonEmBe đọc o.tc), không đổi tốc độ đi.
+        P.chayT = (P.chayT || 0) + dt * G.clamp((sp * Math.min(1, ml)) / (P.speed || sp || 1), 0.55, 1.2);
         if (P.atkT <= 0 && Math.abs(mx) > 0.2) P.face = mx > 0 ? 1 : -1;
         { const l1 = Math.hypot(mx, my); P.ldx = mx / l1; P.ldy = my / l1; } // nhớ hướng di chuyển gần nhất, để Né khi không đẩy cần
       }
@@ -1053,7 +1056,7 @@
     const w = curW(P);
     return {
       p: P, // hero_art.js đọc thêm trạng thái hoạt ảnh từ đây (chỉ đọc)
-      x: P.x, y: P.y, face: P.face, key: P.key, move: P.moving, t: P.t,
+      x: P.x, y: P.y, face: P.face, key: P.key, move: P.moving, t: P.t, tc: P.chayT,
       atk: P.atkT > 0 ? 1 - P.atkT / P.atkDur : -1, dodge: P.dodgeT > 0 ? 1 - P.dodgeT / 0.27 : -1,
       flash: P.hurtT > 0, alpha: P.inv > 0 && P.dodgeT <= 0 && Math.floor(G.time * 20) % 2 ? 0.5 : null,
       // giáo đang bay (Phi Thương): tay không, chưa vẽ cây giáo trên tay

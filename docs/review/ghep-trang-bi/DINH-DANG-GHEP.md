@@ -51,6 +51,7 @@ Quy ước chung:
   - Thân vẽ code không cần tệp này: game tự tính điểm từ khung xương ở **từng khung**, đúng tuyệt đối.
   - Tệp này vẫn có thể có `cap` cho thân code.
 - `diem_theo`: ghi đè điểm theo động tác (`"run"`) hoặc theo khung (`"atk:3"`). Ghi theo khung thì thắng ghi theo động tác.
+- `diem_theo_than` (tuỳ chọn, 12/10): `{ "em-be-hunter": { "run:0": {...}, ... } }` — điểm theo khung riêng cho MỘT tấm thân (thân gốc có hàng chạy 8 khung mới, thân theo bộ `-rung/-bien/-lau` vẫn hàng cũ 6 khung). Khoá nào có ở đây thì thay khoá cùng tên của `diem_theo` khi vẽ đúng tấm thân đó.
   - Thiếu điểm nào thì lấy `diem`, rồi dời theo phần game tự đo (`SC.khopEmBe`). Khi đó điểm ở trạng thái **"ước lượng"**.
 - `cap`: chỉnh riêng theo cặp **nhân vật + món đồ** (khoá là mã món đồ). Không ghi đè số liệu gốc của món đồ.
   - `dx`, `dy`: dời.
