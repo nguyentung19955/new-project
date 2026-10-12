@@ -7,3 +7,4 @@
 - em-be-hunter-lau-don.png (6/12 Cu Tèo Lâu Đài): hàng trên cùng là 2 hình tham chiếu (bỏ); bên dưới là 5 hàng × 6 khung, lưới kẻ KHÔNG đều (ô rộng hẹp khác nhau) → cắt theo vạch kẻ thật từng ô.
 - em-be-wrestler-rung-don.png (7/12 Cu Lì Rừng), em-be-wrestler-lau-don.png (9/12 Cu Lì Lâu Đài): đúng mẫu 8×5. Lưu ý hàng 5 (chưởng) của Cu Lì Lâu khung 2 có tay giơ thẳng lên cạnh đầu — giữ.
 - Còn thiếu: 4/12 Cu Tèo Rừng, 8/12 Cu Lì Biển, 10–12 thân bộ Cái Bống.
+- em-be-wrestler-bien-don.png (8/12 Cu Lì Hang Biển): lưới 7 cột (6 khung + 1 ô trống) × 5 hàng, đúng thứ tự; dải xanh trống ở đáy ảnh.
