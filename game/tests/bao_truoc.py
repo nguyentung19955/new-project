@@ -18,7 +18,8 @@ JS = r"""
   const ui = () => { mc.clearRect(0, 0, cw, ch); mc.drawImage(G.ux.canvas, G.ox * G.dpr, G.oy * G.dpr, G.W * G.uiScale, G.H * G.uiScale, 0, 0, cw, ch); return mc.getImageData(0, 0, cw, ch).data; };
   const draw = () => { G.ui.begin(); G.scene.draw(); };
   const cnt = (a, b) => { let n = 0; for (let i = 0; i < a.length; i += 4) if (a[i] !== b[i] || a[i + 1] !== b[i + 1] || a[i + 2] !== b[i + 2] || a[i + 3] !== b[i + 3]) n++; return n; };
-  const redAt = (d, x, y) => { const i = (Math.round(y) * cw + Math.round(x)) * 4; return d[i + 3] > 0 && d[i] > 120 && d[i] > d[i + 1] * 1.4; };
+  const NN = cw / G.W; // canvas thế giới nét gấp G.NET lần (480x270 -> 960x540): đổi toạ độ game sang điểm ảnh thật (Rà soát B 12/10: trước đây quên nhân nên đo sai chỗ)
+  const redAt = (d, x, y) => { const i = (Math.round(y * NN) * cw + Math.round(x * NN)) * 4; return d[i + 3] > 0 && d[i] > 120 && d[i] > d[i + 1] * 1.4; };
   const freeze = G.time, cam = Math.round(W.cam);
   // đủ mọi hình: tròn, chữ nhật, đường thẳng, quạt, vành có khe, tường nước (lúc chờ)
   const shapes = {

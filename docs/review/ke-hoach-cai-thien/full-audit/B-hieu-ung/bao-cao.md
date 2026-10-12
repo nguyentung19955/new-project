@@ -20,11 +20,11 @@ Cờ tắt (thêm vào cuối địa chỉ, ghép được): `?btpx=0` (vùng b�
 | B2 | Nghiêm trọng | sprite/asset + hiệu ứng | Bốn ảnh vũng của quái `hu-vung-quai-lua/doc/bang/do` dán theo bề ngang nên **thấp hơn vùng gây sát thương**: phần thân vũng cao 0,49 (lửa) – 0,70 (độc) bán kính, vùng thật cao 0,85 (`G.ZK`); vũng lửa còn **lệch xuống 0,36 bán kính**. Đứng ở nửa trên vùng: trông ngoài vũng, vẫn mất máu mỗi 0,5 giây | `game/js/fx.js` `pool()` + ảnh `game/art/custom/hu-vung-quai-*.sprite.json` | **ĐÃ SỬA cách dán** (ảnh nên vẽ lại, mục 6) |
 | B3 | Cao (phong cách) | render | Vùng báo trước vẽ **mịn (khử răng cưa) ở lớp nét cao**, sọc chéo 1,5 điểm, viền nét đứt chạy, góc bo — lệch phong cách pixel art của cả game | `game/js/bao_truoc.js` | **ĐÃ SỬA** (cờ `?btpx=0`) |
 | B4 | Trung bình | hiệu ứng | Bom quái (Sóc ném quả nổ, quái đặt bom, tinh anh "Nổ khi chết") gọi chung hình nổ của **đồ vật trên sàn cỡ 52**, trong khi vùng gây sát thương của bom chỉ 26–28 (tinh anh 44): vòng nổ, ảnh nổ AI to gần gấp đôi chỗ đau thật | `game/js/mobs.js` `blast()` → `game/js/fx.js` `propBlast` | **ĐÃ SỬA** |
-| B5 | Trung bình | hiệu ứng | Sóng thần (Ngư Tinh): báo trước chỉ một dải dài 40 ở chỗ tường xuất phát; tường chạy tới 340 nhưng **lối an toàn không được vẽ tiếp** nên khó biết phải đứng thẳng hàng với khe | `game/js/bao_truoc.js` | **ĐÃ SỬA** (kiểu điểm ảnh) |
+| B5 | Trung bình | hiệu ứng | Sóng thần (Ngư Tinh): báo trước chỉ một dải dài 40 ở chỗ tường xuất phát; tường chạy tới 340 nhưng **lối an toàn không được vẽ tiếp** nên khó biết phải đứng thẳng hàng với khe | `game/js/bao_truoc.js` | **ĐÃ SỬA** (kiểu điểm ảnh); phần đường tường quét qua tô đỏ nhạt: mục 10 |
 | B6 | Thấp | gameplay hiển thị | Vũng **của em bé** (vũng độc, vệt cháy, mưa tên): vẽ cao 0,85 bán kính nhưng luật áp hiệu ứng cho quái dùng chiều dọc ÷1,6 (≈0,63) cộng bán kính thân quái → lệch vài điểm ảnh ở mép trên/dưới | `game/js/combat.js` dòng ~990–1000 ↔ `fx.js pool()` | CHƯA SỬA (mục 4) |
 | B7 | Thấp | thiết kế đòn | Vài vũng của trùm hiện ra **không có báo trước**: "Vũng lửa ma" khi Hồ Tinh bật lùi, vũng băng / lửa sau Phun băng, Quạt đuôi, Vồ lửa, vũng độc của Bão bào tử. Các vũng này nằm trong vùng đòn vừa báo nên thường đã thấy | `game/js/boss.js` | Không sửa (là cơ chế) |
 | B8 | Thông tin | — | Đòn thường của quái (chém, húc, lao) không có vùng báo — theo quyết định trước của chủ dự án (`z.quiet`) | `mobs.js strikeZone` | Giữ nguyên |
-| B9 | Thông tin | bài kiểm | `game/tests/bao_truoc.py` hỏng 1/21 mục "sàn quanh em bé vẫn đỏ" **ngay cả trước khi sửa**: bài đọc điểm ảnh theo toạ độ game nhưng canvas thế giới nay gấp `G.NET` = 2 lần | `game/tests/bao_truoc.py` | Lỗi của bài kiểm, không phải game; chưa sửa bài |
+| B9 | Thông tin | bài kiểm | `game/tests/bao_truoc.py` hỏng 1/21 mục "sàn quanh em bé vẫn đỏ" **ngay cả trước khi sửa**: bài đọc điểm ảnh theo toạ độ game nhưng canvas thế giới nay gấp `G.NET` = 2 lần | `game/tests/bao_truoc.py` | Lỗi của bài kiểm, không phải game; **ĐÃ SỬA bài** (mục 10) |
 
 **Đã kiểm và thấy ổn** (không sửa): vùng **tròn** (mưa băng, rễ đâm, quả độc, vòng lửa ma, đập càng, bom) vẽ đúng hình bầu dục `G.inZone`; vùng chữ nhật; hạt nổ / lửa / băng / độc / va chạm trong `fx.js`, `fx_he.js` đều vẽ bằng ô điểm ảnh; đạn quái `fx_dan.js` vẽ điểm ảnh (quầng sáng là chấm thưa, không mờ nhoè); viền nóng quanh vũng quái đã tắt từ trước (`G.VIEN_VUNG`, lỗi "vòng quanh vũng độc"); nổ đồ vật trên sàn (lò than, nấm, tinh thể) cỡ 52 = đúng bán kính gây sát thương 52; sóng tràn `z.wave` (vẽ rộng ~14, trúng khi chân cách tâm < 6 — chạm thân là trúng, hợp lý); thời điểm: vùng báo đầy đúng lúc nổ, chớp sáng đúng khung nổ (bài `bao_truoc.py` mục "thời gian báo trước giữ nguyên" đạt). Trạng thái trên thân quái (cháy, độc, băng, đóng băng, choáng) và trên em bé: xem ảnh `anh/12-…`, không thấy che mặt bất thường ngoài chớp trắng khi trúng đòn (cố ý).
 
@@ -139,3 +139,56 @@ Nhập: trang `tools/tach-hieu-ung`, giữ mã tệp cũ, `goc` ở tâm khung.
 
 - Không cần sửa code: `?btpx=0` (vùng báo kiểu mịn cũ), `?vungkhop=0` (ảnh vũng dán như cũ).
 - Hoàn toàn: `git revert <mã commit của phiên này>` (ghi ở tin nhắn cuối / lịch sử git).
+
+## 10. Bổ sung (lượt chạy thứ hai của phiên B, cùng ngày)
+
+Lệnh rà soát phần B được chạy hai lần song song. Lượt thứ hai làm trùng phần vùng báo kiểu điểm ảnh, nên **bỏ bản của mình và giữ bản ở trên**. Lượt này chỉ đẩy thêm những phần lượt đầu chưa có.
+
+### 10.1 Đã sửa thêm
+
+| # | Mức | Việc | Tệp |
+|---|---|---|---|
+| B5b | Cao | **Sóng thần: phần đường tường sẽ quét qua chưa tô đỏ.** Tường trúng khi mép tường dày `th` quét qua (`abs(al − s) < th/2 + 3`, `G.mobWall`) trên **cả** đường từ `s` tới `maxS`, trừ khe. Bản ở trên chỉ tô đỏ dải 40 điểm ảnh đầu và kéo dài lối an toàn. Đo bằng cách đọc lớp giao diện ở màn 844×390 dpr 3: chỉ **4 032 / 25 920** điểm ảnh sẽ bị trúng có màu đỏ (84% thiếu). Nay phần đường còn lại tô **đỏ rất nhạt cộng chấm thưa**, gồm cả nửa bề dày mép tường ở hai đầu. Lối an toàn giữ nguyên, mép chấm trắng. | `js/bao_truoc.js` (`memb` loại `-4`, ô `8`; khung bao tường) |
+| B9 | — | Bài `tests/bao_truoc.py` đổi toạ độ game sang điểm ảnh thật (`cw / G.W`). Trước đây điểm "thân bé không đỏ" đo sai chỗ nên luôn đạt; nay **21/21**. | `tests/bao_truoc.py` |
+| B9b | — | Bài `tests/fx_check.py` so phép biến đổi gốc với `G.NET`. Trước đây báo **64 lỗi nhầm** "phép biến đổi canvas không được trả về như cũ" và mỗi phòng dừng sau 4 khung, nên kiểm hiệu ứng thực chất không chạy. Nay chạy đủ khoảng 2 400–3 000 khung mỗi phòng, **0 lỗi**. | `tests/fx_check.py` |
+
+Bài kiểm mới:
+
+- `tests/bt_tuong.py`: 3 bức tường (hướng, khe, bề dày khác nhau). Kết quả: không điểm nào bị trúng mà không đỏ, khe an toàn không bị tô đỏ. **Đạt 3/3.**
+- `tests/bt_vung.py`: đo vũng đang gây sát thương ở lớp `#world`, bản nguồn dùng hình code.
+  - Vũng quái: mép uốn ±2–3 điểm ảnh.
+  - Vũng của bé: vùng trúng rộng hơn hình 11–16 điểm ảnh ngang, do cộng thân quái (khớp B6).
+
+### 10.2 Tìm thêm, chưa sửa (lý do)
+
+| # | Mức | Lỗi | Tệp | Lý do chưa sửa |
+|---|---|---|---|---|
+| B10 | Vừa | Ảnh AI hiệu ứng **xoay góc tự do và co theo số lẻ**, nên điểm ảnh không đều và rung khi vũng hay mây đang nở. Gặp ở đạn quái `hu-dan-*`, tên, chưởng, Trảm Nguyệt, vũng `hu-vung-*`. | `js/fx_anh.js FA.ve` (`rotate(goc)`, `scale(s)`); gọi từ `fx_dan.js:229/256/257`, `fx_chuong.js:92/101`, `fx_he.js:381/580` | Đã thử làm tròn cỡ theo bậc 1/8 và góc 16 hướng ngay trong `FA.ve`, rồi bỏ. `FA.ve` cũng vẽ vệt chém bám mũi vũ khí (phiên Sửa vệt chém): làm tròn cỡ sẽ lệch mũi kiếm, làm tròn góc lệch tên tới 11°. Cách gọn: **ảnh vẽ sẵn 8 hướng** (prompt bên dưới). |
+| B11 | Vừa | Hiệu ứng vẽ bằng code xoay theo hướng nhắm (vệt chém, đâm, lướt, sóng búa) dùng `rotate` lên `fillRect`, nên ở góc chéo ô thành hình thoi mép mờ. | `js/fx.js drawFx` (`o.rot`, `aimed()`); `fx_he.js:417/499/582`; `fx_chuong.js:58` | Cần vẽ ra tấm phụ rồi xoay kiểu láng giềng gần nhất. Đụng `drawFx` cùng chỗ phiên Sửa vệt chém, nên để sau. |
+| B12 | Vừa | Nổ ảnh AI (`hu-no-*`, `hu-trum-no-*`), cột lửa/nước, mây độc vẽ ở lớp trên nhân vật (`ly:1`), nên che em bé đứng giữa vụ nổ. | `js/fx.js` (`anh` mặc định `ly:1`, `drawOver`), `fx_he.js:472` | Đã có viền em bé vẽ đè (`G.DOC_TRAN2`). Hạ lớp nổ là đổi cảm giác đòn, cần chủ dự án quyết. |
+| B13 | Nhẹ | Viền đỏ màn hình khi máu thấp dùng dải màu mịn (`createLinearGradient`) kéo giãn. | `js/fx.js:2285` | Hiệu ứng cả màn hình, không phải vật trên sàn. |
+| B14 | Nhẹ | Sóng hồi máu của quái giáp vẽ elip 90×54, vùng hồi thật tròn 90. | `mobs.js:880` ↔ `mobs.js:337` | Hồi máu cho quái, không phải đòn đánh bé. |
+| B15 | Nhẹ | Đạn quái trúng theo ô 7×8 quanh bóng dưới đất; đạn to (`dBig`) vẽ gấp đôi, ô trúng giữ nguyên. | `combat.js:959`, `fx_dan.js:257` | Có lợi cho người chơi; đổi là đổi cân bằng. |
+| B16 | Nhẹ | Bản vẽ dự phòng `drawLine/drawCone/drawDonut` dùng đường cong có khử răng cưa. | `mobs.js` | Chỉ chạy khi tắt hẳn `G.baoTruoc`. |
+
+**Chuyển phiên C (giao diện):** biểu tượng trạng thái và dấu tinh anh trên đầu quái (`gd-tt-troi`, `gd-quai-*`, `gd-quai-sap-danh`) vẽ qua `SC.veGd`. Hàm này **bật làm mịn** khi thu nhỏ ảnh AI ngay trên canvas thế giới, lại đặt lệch nửa điểm (`mobs.js:699`, `o = 5,5`), nên biểu tượng hơi nhoè. `SC.veGd` là hàm giao diện dùng chung (`sprite_custom.js`).
+
+### 10.3 Ảnh cần vẽ lại cho B10 (tuỳ chọn)
+
+Tham chiếu: `game/art/custom/hu-dan-ten.sprite.json`, `hu-dan-lua.sprite.json` và ảnh `anh/12-hieu-ung-khac-ban-sau.jpg`.
+
+> **Tên bắn, 8 hướng:** Pixel art 2D top-down nhìn chéo, cùng phong cách ảnh tham chiếu: viền tối 1 điểm ảnh, ít màu, không khử răng cưa. Một mũi tên gỗ đầu sắt dài khoảng 22 điểm ảnh, vẽ ở 8 hướng: phải, chéo phải-xuống, xuống, chéo trái-xuống, trái, chéo trái-lên, lên, chéo phải-lên. Mỗi hướng một ô 32×32, xếp một hàng 8 ô trên nền hồng tím đặc #ff00ff. Ở hướng chéo, nét đi đúng bậc thang 1:1, không có điểm ảnh lẻ mờ. Không bóng đổ, không chữ.
+
+> **Cầu lửa / đạn quái, 8 hướng:** Pixel art 2D, cùng phong cách ảnh tham chiếu. Một quả cầu lửa có đuôi lửa ngắn, dài khoảng 18 điểm ảnh, ở 8 hướng bay như trên, mỗi hướng 2 khung (đuôi lửa lay nhẹ). Lưới 8 cột × 2 hàng, ô 32×32, nền hồng tím đặc #ff00ff. Lõi vàng nhạt, giữa cam, mép đỏ thẫm, viền tối 1 điểm ảnh. Không khử răng cưa, không bóng đổ, không chữ.
+
+### 10.4 Kiểm của lượt này
+
+| bài | kết quả |
+|---|---|
+| `tests/bt_tuong.py` (mới) | 3/3 đạt |
+| `tests/bao_truoc.py` | 21/21 (trước 20/21 vì lỗi đo) |
+| `tests/fx_check.py` | 0 lỗi, chạy đủ khung (trước 64 lỗi nhầm) |
+| `tests/bt_khop.py` (bài của lượt đầu, bản hai tệp) | thoát 0, 0 pageerror |
+| `LK_HAI_TEP=1 python3 game/build.py --hai-tep` | chạy được |
+
+Ảnh trước/sau của Sóng thần (lượt đầu ↔ lượt này): `anh/13-song-than-duong-quet-truoc-sau.jpg`.

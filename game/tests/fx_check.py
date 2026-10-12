@@ -45,7 +45,8 @@ FUZZ = r"""
         if (st) { maxP = Math.max(maxP, st.parts); maxE = Math.max(maxE, st.fx); maxN = Math.max(maxN, st.nums); }
         for (const k of ['hp', 'x', 'y', 'mana']) if (!isFinite(P[k])) bad.push('người chơi ' + k + ' hỏng');
         const m = G.wx.getTransform();
-        if (m.a !== 1 || m.d !== 1 || m.e !== 0 || m.f !== 0) bad.push('phép biến đổi canvas không được trả về như cũ');
+        const N = G.NET || 1; // canvas thế giới nét gấp G.NET lần: phép biến đổi gốc là phóng xN (Rà soát B 12/10: trước so với 1 nên báo nhầm)
+        if (m.a !== N || m.d !== N || m.e !== 0 || m.f !== 0) bad.push('phép biến đổi canvas không được trả về như cũ');
         if (G.wx.globalAlpha !== 1 || G.ux.globalAlpha !== 1) bad.push('globalAlpha bị bỏ quên');
         if (bad.length > 3) break;
       }
