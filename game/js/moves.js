@@ -194,12 +194,31 @@
     mv.prog = P.atkT > 0 ? 1 - P.atkT / P.atkDur : P.dashT > 0 && mv.dashDur > 0 ? G.clamp(1 - P.dashT / mv.dashDur, 0, 1) : 0;
     if (!busy && !mv.holding) { mv.name = ''; mv.kind = ''; }
   };
+  // Phiên di chuyển khi chém (12/10, phản hồi "lúc chém bị đi chậm lại"): hệ số tốc độ đi theo vũ khí.
+  //  danh: trong lúc đang ra đòn (P.atkT > 0; trước: 0,4 cho mọi vũ khí); giu: lúc giữ nút lấy đà (trước: charge.slow 0,55 / 0,6 / 0,45).
+  // Tắt: G.CHAM_DANH = null hoặc ?chamdanh=0 -> như cũ.
+  if (G.CHAM_DANH === undefined) {
+    let tat = false;
+    try { tat = typeof location !== 'undefined' && /[?&]chamdanh=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
+    G.CHAM_DANH = tat ? null : {
+      danh: { sword: 0.85, spear: 0.8, bow: 0.7, hammer: 0.55, fist: 0.8 },
+      giu: { bow: 0.6, hammer: 0.5 }, // giáo giữ nguyên 0,6
+    };
+  }
+  // Hệ số đi khi đang ra đòn (combat.js)
+  M.speedAtk = function (P) {
+    const T = G.CHAM_DANH;
+    if (!T) return 0.4;
+    const w = G.curW(P), k = w && T.danh[w.type];
+    return k != null ? k : 0.4;
+  };
   // Đi chậm lại trong lúc lấy đà
   M.speed = function (P) {
     const mv = P.mv;
     if (!mv || !mv.holding || mv.chargeT < 0) return 1; // V12: tư thế chờ lúc vừa chạm (chưa tới 0,16 giây) chưa đi chậm
-    const cfg = C[G.curW(P).type];
-    return cfg && cfg.charge ? cfg.charge.slow : 1;
+    const t = G.curW(P).type, cfg = C[t], T = G.CHAM_DANH;
+    if (!cfg || !cfg.charge) return 1;
+    return T && T.giu[t] != null ? T.giu[t] : cfg.charge.slow;
   };
 
   // ---------- TÁM HƯỚNG ----------

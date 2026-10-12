@@ -1483,7 +1483,8 @@
     }
     const ox = (o.outfit || (o.p && o.p.outfit) || {}).fx || null, a0 = c.globalAlpha;
     if (ox && ox.aura && !fr.dead) aura(c, x, y, ox.aura, t, a0);
-    c.translate(x + (f < 0 ? 1 : 0), y);
+    const nb = G.spriteCustom && G.spriteCustom.nhunBuoc ? G.spriteCustom.nhunBuoc(o) : 0; // nhún theo bước (sprite_custom.js, G.NHUN_BUOC)
+    c.translate(x + (f < 0 ? 1 : 0), y + nb);
     c.scale(f, 1);
     if (ox && ox.glow && !fr.dead) { // ánh viền màu bậc (Tím, Vàng) quanh em bé, sáng tối theo nhịp
       const sil = silOf(fr, ox.glow);
@@ -1531,7 +1532,8 @@
     let L = 0;
     try { if (G.weaponArt && G.weaponArt.tipLen && !o.plainWeapon) L = G.weaponArt.tipLen(G.weaponArt.fromWeapon(o.weapon || {})); } catch (e) { L = 0; }
     if (!(L > 4)) L = w.type === 'spear' ? 48 : w.type === 'hammer' ? 34 : 36;
-    const f = o.face < 0 ? -1 : 1, X0 = Math.round(o.x) + (f < 0 ? 1 : 0), Y0 = Math.round(o.y);
+    const nb = G.spriteCustom && G.spriteCustom.nhunBuoc ? G.spriteCustom.nhunBuoc(o) : 0;
+    const f = o.face < 0 ? -1 : 1, X0 = Math.round(o.x) + (f < 0 ? 1 : 0), Y0 = Math.round(o.y) + nb;
     const r = (w.ang * Math.PI) / 180, sx = w.sx == null ? 1 : w.sx;
     let gx = w.x, gy = w.y;
     if (G.CO_VK && !o.plainWeapon) { // ảnh AI co nhỏ: vệt bám đúng mũi của hình đang vẽ (điểm cầm đã dời, dài = dài ảnh x hệ số co)

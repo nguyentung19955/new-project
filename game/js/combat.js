@@ -738,7 +738,7 @@
         if (G.outfit) G.outfit.dodgeEnd(P);
       }
     } else {
-      const sp = P.speed * slow * (P.atkT > 0 ? 0.4 : 1) * (MV ? MV.speed(P) : 1) * (P.chHold ? 0.6 : 1); // đang tích lực chưởng: đi chậm
+      const sp = P.speed * slow * (P.atkT > 0 ? (MV && MV.speedAtk ? MV.speedAtk(P) : 0.4) : 1) * (MV ? MV.speed(P) : 1) * (P.chHold ? 0.6 : 1); // đang tích lực chưởng: đi chậm
       if (ml > 0.12) {
         P.x += mx * sp * dt;
         P.y += my * sp * 0.75 * dt;

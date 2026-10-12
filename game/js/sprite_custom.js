@@ -27,6 +27,18 @@
     G.DON_VK = !tat;
   }
 
+  // Phiên di chuyển khi chém (12/10, phản hồi người chơi: "chạy mà chém thì tướng như đứng yên"):
+  //  G.CHAY_DANH: đang CHẠY mà đánh thì thân AI vẽ thế nào. 'than': thân giữ hàng chạy (chân bước), chỉ vũ khí vung theo đòn;
+  //    'lai': hàng đòn chỉ quanh lúc vung tới (u 0,2..0,65), còn lại hàng chạy; 'nhun': hàng đòn như cũ nhưng nhún theo bước.
+  //    false: như cũ (chỉ hàng đòn, chân đứng im). Đứng yên mà đánh: luôn hàng đòn đầy đủ. Mở game với ?chaydanh=0|than|lai|nhun.
+  //  G.NHUN_BUOC: thân nhấc lên 1 điểm ảnh ở hai nhịp mỗi vòng chạy (hàng chạy ít chuyển động). Tắt: G.NHUN_BUOC = false hoặc ?nhunbuoc=0.
+  {
+    let q = '';
+    try { q = typeof location !== 'undefined' ? location.search || '' : ''; } catch (e) { q = ''; }
+    if (G.CHAY_DANH === undefined) { const m = /[?&]chaydanh=(\w+)/.exec(q); G.CHAY_DANH = m ? (m[1] === '0' ? false : m[1]) : 'than'; }
+    if (G.NHUN_BUOC === undefined) G.NHUN_BUOC = !/[?&]nhunbuoc=0(&|$)/.test(q);
+  }
+
   const SC = (G.spriteCustom = { ds: {}, ANIMS, LOOP, loi: [], HANG_DON, don: {} });
   SC.laHangDon = (ten) => !!LA_DON[ten];
   // Phiên hiệu năng (V3): nạp tệp ảnh tải sau nhẹ nhàng hơn — giải mã ảnh ngoài luồng chính (img.decode) trước khi dùng, mỗi khung
@@ -517,10 +529,25 @@
     if (p && p.specT > 0) { const k = G.nhipChieu ? G.nhipChieu(1 - p.specT / 0.35, wt) : 1 - p.specT / 0.35; return don('cast') ? theoDon('cast', k) : mot('atk', k); } // G.nhipChieu: Trảm Nguyệt chém tới sớm (js/hero_tinhlinh.js)
     if (p && p.castT > 0) return don('cast') ? theoDon('cast', 1 - p.castT / 0.4) : mot('atk', 1 - p.castT / 0.4);
     if (p && p.mv && p.mv.holding && !(o.atk >= 0)) return hv ? { ten: hv, i: doi6(dt[hv], giuDon(hv, p.mv.charge)), u: 0.99 } : mot('tele', 0.99);
-    if (o.atk >= 0) return hv ? theoDon(hv, o.atk, p ? p.comboI : Math.floor(t / 1.6)) : mot('atk', o.atk);
+    if (o.atk >= 0) {
+      const cd = G.CHAY_DANH; // chạy mà đánh: chân vẫn bước (xem G.CHAY_DANH ở đầu tệp)
+      if (o.move && (cd === 'than' || (cd === 'lai' && !(o.atk >= 0.2 && o.atk < 0.65)))) { const r = lap('move', t); r.danh = true; return r; }
+      return hv ? theoDon(hv, o.atk, p ? p.comboI : Math.floor(t / 1.6)) : mot('atk', o.atk);
+    }
     if ((p && p.hurtT > 0) || (!p && o.flash)) return mot('hit', p ? 1 - p.hurtT / 0.2 : 0.3);
     if (o.move) return lap('move', t);
     return lap('idle', t);
+  };
+  // Nhún theo bước (G.NHUN_BUOC): số điểm ảnh dời thân lên (âm) ở khung này. Chỉ khi thân AI đang chạy (hàng chạy, hoặc chạy mà đánh
+  // với G.CHAY_DANH = 'nhun'); vòng chạy 6 khung = 2 bước, nhấc lên ở khung giữa mỗi bước (1 và 4). Bóng đổ không nhún.
+  SC.nhunBuoc = function (o) {
+    if (!G.NHUN_BUOC || !o || !o.move || o.dodge >= 0 || (o.p && (o.p.dead || o.p.dashT > 0))) return 0;
+    const sp = SC.cuaEmBe(o.key, o);
+    if (!sp || !sp.img || !sp.dt.move) return 0;
+    let s = null;
+    try { s = SC.chonEmBe(sp, o); } catch (e) { return 0; }
+    const t = (o.t != null ? o.t : G.time) || 0, i = s.ten === 'move' ? s.i : G.CHAY_DANH === 'nhun' && o.atk >= 0 ? khungLap(sp.dt.move, t) : -1;
+    return i >= 0 && i % 3 === 1 ? -1 : 0;
   };
   function emBeTint(o) {
     const p = o.p, st = p && p.st;
