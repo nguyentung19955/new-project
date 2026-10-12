@@ -20,6 +20,8 @@ Phiên "tải nhanh". Xử lý V4 trong `docs/review/kiem-thu-12-10/tester-3-hie
 
 ## Dung lượng
 
+Số đo dưới đây lấy trên 611 hình (commit `02108cb`). Sau khi gộp với ảnh mới của phiên khác (614 hình), build cho ra: trang chính nén 0,84 MB, WebP 5,43 MB, PNG 16,2 MB. So điểm ảnh chạy lại sau khi gộp vẫn ra 0 điểm khác.
+
 | | Trước (Đợt 10, 2 tệp) | Sau (ảnh rời) |
 |---|---|---|
 | Trang chính (gốc / nén gzip) | 5,12 MB / **2,70 MB** | 2,77 MB / **0,81 MB** (mã game + thông số 611 hình) |

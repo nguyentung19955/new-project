@@ -2136,7 +2136,8 @@
         bom();
       };
       img.src = url;
-      if (typeof img.decode === 'function') img.decode().then(ok, () => { if (img.complete && img.naturalWidth) ok(); else hong(); });
+      // Safari đôi khi từ chối img.decode() với ảnh lớn dù ảnh vẫn nạp được (xem SC.napAnh): chưa nạp xong thì chờ onload / onerror thật.
+      if (typeof img.decode === 'function') img.decode().then(ok, () => { if (img.complete && img.naturalWidth) ok(); else if (img.complete) hong(); else { img.onload = ok; img.onerror = hong; } });
       else { img.onload = ok; img.onerror = hong; }
     }
     // Ảnh đã giải mã xong: báo cho game (onload gốc của SC.add / themDo / themGd / fxAnh.add) theo từng đợt ngắn (≤ 6 ms),
