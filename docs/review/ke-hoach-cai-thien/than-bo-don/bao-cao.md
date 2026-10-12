@@ -110,3 +110,52 @@ Kiểm bản hai tệp (`tay-don/kiem_tay.py`: trước = bản 6f71aa9 dựng �
 không còn vẽ trên đầu, giáo/búa không còn mọc sau lưng (ảnh, trên = trước, dưới = sau, hàng kiếm không đổi):
 [Rừng](tay-don/anh/truoc-sau-smith-rung.png) · [Biển](tay-don/anh/truoc-sau-smith-bien.png) · [Lâu Đài](tay-don/anh/truoc-sau-smith-lau.png).
 Còn: búa lấy đà giơ trước mặt (khung 1 Rừng/Biển) vẫn đè một phần mặt theo luật chung `G.VK_NE_MAT` (như thân gốc).
+
+## Đợt 2 — Cu Tèo Biển, Cu Tèo Lâu Đài, Cu Lì Rừng, Cu Lì Lâu Đài (12/10)
+
+Nhập 4 tấm mới trong `docs/anh-goc/2026-10-12/than-bo/` (4/12 Cu Tèo Rừng, 8/12 Cu Lì Biển chưa có ảnh khi chạy). Cu Tèo, Cu Lì
+mặc đủ bộ Hang Biển / Lâu Đài (Cu Tèo) hoặc Rừng Già / Lâu Đài (Cu Lì) nay đánh bằng 5 hàng đòn riêng như Cu Tí. Code game chỉ thêm
+4 khoá `SC.TAY_KIEM`; không đụng đường vung kiếm, trường `khung`, dấu tạm tắt thân bộ Cái Bống. Không đổi gameplay.
+
+**`nhap.py` thêm 2 tuỳ chọn:**
+
+- `--vung y0,y1[,x0,x1]`: chỉ cắt trong vùng lưới (điểm ảnh gốc) — bỏ dải hình tham chiếu ở trên / dải thừa dưới lưới. Nên đặt vùng
+  **đúng trên vạch kẻ ngoài cùng** (nếu chừa lề trắng, viền lưới bị giữ lại thành nét đen trong khung).
+- `--tu-do`: lưới kẻ không đều — mọi vạch hàng tìm được là biên hàng, mỗi hàng tự dò vạch cột của riêng hàng đó.
+
+| Tệp | Lệnh | Xử lý |
+|---|---|---|
+| `em-be-hunter-bien-don` | `nhap.py hunter bien --vung 258,998,13,1524` | bỏ dải 2 hình tham chiếu (trên, nền trắng); lưới 8×5 đều |
+| `em-be-hunter-lau-don` | `nhap.py hunter lau --vung 209,1024 --tu-do` | bỏ hàng tham chiếu; cột rộng hẹp khác nhau (biên 0, 223, 426, 633, 840, 1048, 1279) — cắt theo vạch thật |
+| `em-be-wrestler-rung-don` | `nhap.py wrestler rung --vung 0,985` | đúng 8×5; bỏ dải thừa 40 điểm ảnh dưới lưới |
+| `em-be-wrestler-lau-don` | `nhap.py wrestler lau --vung 0,993` | như trên; hàng chưởng khung 2 tay giơ cạnh đầu — giữ |
+
+- **Thứ tự hàng** xác nhận bằng mắt cả 4 tấm: kiếm, cung, giáo, búa, chưởng (hàng búa có khung giơ tay / nện thấp; giáo vươn tay xa
+  hơn cung). Không tấm nào vẽ sẵn vũ khí / cầu lửa → không cần `--xoa-cung` / `--xoa-cau`.
+- **Màu nền**: chỉ xoá xanh lá rực nối mép ô — tóc trắng của Cu Lì, lá xanh rêu bộ Rừng, tóc xanh lá của Cu Tèo còn nguyên (xem ảnh tấm).
+  Da Cu Lì thân bộ là da đào (không `--tim`).
+- **Cỡ / chân**: cao khung đứng đầu các hàng đòn = khung đứng thân bộ (58–59 nét ×2); đáy chân 89–91 mọi khung; khung nện búa / khung
+  ngồi cuối hàng thấp hơn như tệp đòn thân gốc (Cu Tèo Lâu Đài: khung 6 mọi hàng là thế ngồi thụp 43–49). Không nhảy cỡ khi đổi trạng thái.
+- **Nắm tay kiếm** (`SC.TAY_KIEM` khoá `hunter-bien`, `hunter-lau`, `wrestler-rung`, `wrestler-lau`): máy đo của `nhap.py` bắt nhầm
+  cằm ở nhiều khung, và mũ / áo cam bộ Lâu Đài cùng màu da nên máy không phân được → đặt tay theo ảnh lưới toạ độ (vòng đỏ = số đã
+  dùng): khung giơ tay qua đầu Cu Tèo Biển khung 6 → [-5, -22], Cu Tèo Lâu Đài khung 5 → [-3, -26]; còn lại nắm tay trước bụng / ngực.
+  Trong trang: 24/24 khung kiếm của 4 thân lấy tay từ bảng (`nguon = 'bang-do'`).
+
+Kiểm bản HAI TỆP (`LK_HAI_TEP=1 python3 game/build.py --hai-tep`, `srv2.py`, `linh-khi-nhe.html?cloud=0`, `kiem/kiem.py`):
+4 thân bộ ghép đủ 12 hàng, 4 vũ khí × 14 tư thế + chưởng: 0 lỗi vẽ, vũ khí ở nắm tay, không che mặt; chơi thật ải 1-1 mặc đủ bộ
+× 4 vũ khí (bot đánh): thân `em-be-<key>-<bộ>`, tệp đòn đã ghép; **0 pageerror**. `cloud_save_regression` đạt; `python3 game/build.py`
+dưới trần (trang 0,87 / 1,5 MB nén, ảnh 20,83 / 26 MB).
+
+Lưu ý hình (giống đợt 1, do máy đo tay chung `doTay`, không sửa phiên này): khung thế đứng / thế ngồi cuối hàng cung (Cu Tèo Lâu Đài
+khung 6, Cu Lì Lâu Đài khung 1, 6) cây cung đặt ở tay sau, sau lưng — không che mặt, chỉ ở khung đầu / cuối đòn.
+
+Ảnh (phóng ×3; hàng: kiếm, cung, giáo, búa; cột: đứng, chạy, 6 khung đòn, chạy + đánh, giữ lấy đà 3 mức, chưởng 2 khung):
+[Cu Tèo Biển](anh/hunter-bien-sau-x3.png) · [Cu Tèo Lâu Đài](anh/hunter-lau-sau-x3.png) ·
+[Cu Lì Rừng](anh/wrestler-rung-sau-x3.png) · [Cu Lì Lâu Đài](anh/wrestler-lau-sau-x3.png)
+
+- Tấm đã nhập: [hunter-bien](anh/hunter-bien-don-tam.png) · [hunter-lau](anh/hunter-lau-don-tam.png) ·
+  [wrestler-rung](anh/wrestler-rung-don-tam.png) · [wrestler-lau](anh/wrestler-lau-don-tam.png)
+- Nắm tay kiếm: [hunter-bien](anh/hunter-bien-tay-kiem.png) · [hunter-lau](anh/hunter-lau-tay-kiem.png) ·
+  [wrestler-rung](anh/wrestler-rung-tay-kiem.png) · [wrestler-lau](anh/wrestler-lau-tay-kiem.png)
+
+Còn thiếu ảnh: 4/12 Cu Tèo Rừng, 8/12 Cu Lì Biển, 10–12 thân bộ Cái Bống.

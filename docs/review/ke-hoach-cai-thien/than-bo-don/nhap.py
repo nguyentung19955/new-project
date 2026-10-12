@@ -11,6 +11,9 @@ Chạy (từ bất kỳ thư mục nào):
     --xoa-cau          xoá quả cầu lửa / tia sáng ChatGPT vẽ sẵn ở nắm tay hàng chưởng (game tự vẽ hiệu ứng chưởng)
     --tim              đổi da hồng/đào -> tím hoa cà (nếu thân bộ của Cu Lì có da tím)
     --thu              chỉ nhập ra thư mục tam/ cạnh script (không ghi vào game), để xem trước
+    --vung y0,y1[,x0,x1]  chỉ cắt lưới trong vùng này của ảnh gốc (điểm ảnh gốc), bỏ dải hình tham chiếu / dải thừa ngoài lưới
+    --tu-do            lưới kẻ KHÔNG đều: lấy mọi vạch hàng tìm được trong vùng làm biên hàng, và mỗi hàng tự dò vạch cột của
+                       riêng hàng đó (ô rộng hẹp khác nhau); cắt các ô đầu hàng theo số khung
 
 Ảnh gốc: lưới đều 8 cột (tấm đòn: 5 hàng kiếm, cung, giáo, búa, chưởng, mỗi hàng 6 khung; tấm thân: 7 hàng đứng, chạy, lấy đà,
 đánh, trúng đòn, ngã, lộn theo số khung của tệp thân hiện có), kẻ lưới mảnh tối, nền xanh lá #00FF00.
@@ -64,16 +67,36 @@ def bien(vach, n, dai):
     return b
 
 
-def cat_o(A, n_cot, n_hang, hang_so):
+def bien_tu_do(vach, n, dai, ten):
+    """Lưới không đều: mọi vạch tìm được (thêm mép nếu thiếu), bỏ vạch sát nhau / sát mép; cần ít nhất n+1 biên."""
+    c = [(a + b) / 2 for a, b in vach]
+    b = [0.0]
+    for x in c + [float(dai)]:
+        if x - b[-1] > 40: b.append(x)
+        else: b[-1] = max(b[-1], x) if b[-1] > 0 else b[-1]
+    if b[-1] < dai - 40: b.append(float(dai))
+    if len(b) < n + 1: sys.exit('lưới tự do: %s chỉ thấy %d biên (cần %d): %s' % (ten, len(b), n + 1, [round(x) for x in b]))
+    return b
+
+
+def cat_o(A, n_cot, n_hang, hang_so, tu_do=False):
     """Cắt ô theo vạch kẻ thật. Trả về list theo hàng: [{rgb, a, bb}...] (toạ độ trong ô)."""
     r, g, b = A[..., 0], A[..., 1], A[..., 2]
     dark = (r < 80) & (g < 80) & (b < 80)
     H, W = dark.shape
-    hb = bien(nhom(np.where(dark.mean(1) > 0.4)[0]), n_hang, H)
-    vb = bien(nhom(np.where(dark.mean(0) > 0.4)[0]), n_cot, W)
+    if tu_do:
+        hb = bien_tu_do(nhom(np.where(dark.mean(1) > 0.4)[0]), n_hang, H, 'hàng')
+        if len(hb) != n_hang + 1: sys.exit('lưới tự do: %d hàng, cần %d — chỉnh --vung' % (len(hb) - 1, n_hang))
+    else:
+        hb = bien(nhom(np.where(dark.mean(1) > 0.4)[0]), n_hang, H)
+        vb = bien(nhom(np.where(dark.mean(0) > 0.4)[0]), n_cot, W)
     rows = []
     for h in range(n_hang):
         cells = []
+        if tu_do:  # vạch cột riêng của hàng này (giữa hàng, bỏ 6 điểm sát vạch hàng)
+            band = dark[int(hb[h]) + 6:int(hb[h + 1]) - 6]
+            vb = bien_tu_do(nhom(np.where(band.mean(0) > 0.6)[0]), hang_so[h], W, 'cột hàng %d' % (h + 1))
+            print('  hàng %d: y %d-%d, biên cột %s' % (h + 1, hb[h], hb[h + 1], [round(x) for x in vb]))
         for i in range(hang_so[h]):
             xa, xb, ya, yb = int(vb[i]) , int(vb[i + 1]), int(hb[h]), int(hb[h + 1])
             # dò lại mép tối (vạch) của chính ô này, bỏ đi
@@ -198,7 +221,11 @@ def main():
     ia = R[0:96, 0:96, 3] > 127
     iy = np.where(ia.any(1))[0]; idle_h = int(iy[-1] - iy[0] + 1); tx = dau_x(ia)
     A = np.array(Image.open(src).convert('RGB')).astype(int)
-    rows = cat_o(A, 8, len(thu_tu), [dt[k]['so'] for k in thu_tu])
+    if '--vung' in ar:
+        v = [int(x) for x in ar[ar.index('--vung') + 1].split(',')]
+        A = A[v[0]:v[1], (v[2] if len(v) > 2 else 0):(v[3] if len(v) > 3 else A.shape[1])]
+        print('vùng lưới', v, '->', A.shape[1], '×', A.shape[0])
+    rows = cat_o(A, 8, len(thu_tu), [dt[k]['so'] for k in thu_tu], '--tu-do' in ar)
     if '--xoa-cung' in ar and 'atk_bow' in thu_tu:
         print('xoá nét cung vẽ sẵn (điểm ảnh gốc bỏ đi):', [xoa_net_manh(c) for c in rows[thu_tu.index('atk_bow')]])
     if '--xoa-cau' in ar and 'cast' in thu_tu:
