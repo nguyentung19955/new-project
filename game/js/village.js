@@ -596,7 +596,10 @@
       const x = CX + (i % 2) * 154, y = 72 + Math.floor(i / 2) * 40;
       if (T.btn(x, y, 150, 36, '', { disabled: !hs.unlocked, sel: sv.hero === k })) { sv.hero = k; G.persist(); VS.checkNews(); }
       // chân dung em bé tinh linh của từng hero; hero đang chọn thì nhún nhảy, chưa mở thì mờ
+      // phiên kiểm trang phục 12/10: mũ cao (nón lá, mũ tai cáo) nhô khỏi thẻ -> cắt trong khung thẻ (cờ tắt G.THE_EM_BE_CAT = false)
+      const cat = G.THE_EM_BE_CAT !== false && G.ux.save; if (cat) { G.ux.save(); G.ux.beginPath(); G.ux.rect(x + 2, y + 2, 146, 32); G.ux.clip(); }
       G.art.hero(G.ux, { x: x + 18, y: y + 32, face: 1, key: k, move: sv.hero === k, t: G.time, atk: -1, dodge: -1, weapon: null, noShadow: true, alpha: hs.unlocked ? null : 0.4, outfit: sv.hero === k && G.outfit ? G.outfit.look(sv) : null });
+      if (cat) G.ux.restore();
       ui.text(H.name, x + 88, y + 15, { size: 10, bold: true, align: 'center', color: hs.unlocked ? '#fff0c4' : '#8fa49e' });
       ui.text(hs.unlocked ? G.t(sv.hero === k ? 'Cấp {0} · đang chọn' : 'Cấp {0}', hs.lvl) : H.unlock, x + 88, y + 27, { size: 7, align: 'center', color: hs.unlocked ? '#e8d9a8' : '#8fa49e' });
     });

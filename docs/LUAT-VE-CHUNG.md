@@ -23,9 +23,9 @@ Mọi prompt sinh ra từ 7 trang công cụ (`tools/tach-hieu-ung`, `tach-quai`
 | Cung | 19–31 × 32–44 | tach-do |
 | Giáo | 57–62 × 11–23 | tach-do |
 | Búa | 41–46 × 17–35 | tach-do |
-| Mũ, nón | 17–26 × 7–22 | tach-do |
+| Mũ, nón | 18–22 × 7–16 (rộng ≤ 1,4 lần đầu 16; vành ngang lông mày, không che mắt; cập nhật 12/10) | tach-do |
 | Áo | 11–15 × 8–16 | tach-do |
-| Đồ đeo lưng | 12–20 × 15–28 | tach-do |
+| Đồ đeo lưng | 12–18 × 14–18 (không to hơn thân; cập nhật 12/10) | tach-do |
 | Đồ cầm tay | 5–14 × 5–13 | tach-do |
 | Mặt nạ | 4–11 × 4–9 | tach-do |
 | Cánh | 13–25 × 11–28 | tach-do |

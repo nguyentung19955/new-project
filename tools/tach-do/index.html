@@ -214,6 +214,8 @@
 'use strict';
 // ===================== DANH SÁCH ĐỒ (số đo thật từ docs/xuong-sprite/DAC-DIEM-HINH-GAME.md, mô tả từ PROMPT-VE.md) =====================
 // [mã, tên, rộng, cao (cỡ trong game, kể cả viền), màu chính, mô tả]
+// 12/10 (phiên kiểm trang phục, docs/review/ke-hoach-cai-thien/trang-phuc/): cỡ mũ và đồ lưng đổi theo thân AI thật (đầu kể cả tóc
+// khoảng 16 × 14, thân 29 cao): mũ rộng tối đa ~1,4 lần đầu (22), mũ ôm đầu cao 14–16; đồ lưng không to hơn thân (cao ≤ 18).
 const DATA = [
   ["vk-sword-0", "Kiếm Rèn", 44, 19, ["#b4c0d4", "#5f6b84", "#f4f8ff", "#e2b64e"], "Thanh kiếm sắt rèn mộc mạc. Nét lạ: chuôi quấn dây gàu sòng, chắn tay là cái móng ngựa."],
   ["vk-sword-1", "Đao Lưỡi Liềm", 44, 28, ["#b4c0d4", "#5f6b84", "#f4f8ff", "#ffffff"], "Đao lưỡi cong như liềm gặt. Nét lạ: sống đao mọc bông lúa chín, chuôi buộc khăn rằn."],
@@ -261,13 +263,13 @@ const DATA = [
   ["tp-hats-trum_khan", "Mũ trùm quấn khăn đỏ", 20, 18, ["#d2362e", "#8c1c1f", "#f47a62"], "Mũ trùm có khăn đỏ. Nét lạ: khăn thắt kiểu khăn mỏ quạ."],
   ["tp-hats-non_la", "Nón lá", 22, 12, ["#d8b45c", "#8f6c2a", "#f8e6a4", "#d2362e"], "Nón lá Việt Nam nhìn ngang: hình tam giác DẸT, rộng gấp đôi cao, chóp nhọn ở giữa, vành phẳng thẳng ở đáy, không thấy mặt dưới nón. Nét lạ: quai lụa đỏ, mặt nón vẽ con cò bay."],
   ["tp-hats-khan_xep", "Khăn xếp", 18, 9, ["#2e2d55", "#5c5a92", "#e2b64e"], "Khăn xếp truyền thống. Nét lạ: cài cành hoa đào Tết."],
-  ["tp-hats-mu_rom", "Mũ rơm", 26, 9, ["#f8e6a4", "#8f6c2a", "#d8b45c"], "Mũ rơm vành rộng. Nét lạ: chim sẻ làm tổ trên chóp."],
-  ["tp-hats-mu_sung", "Mũ sừng", 25, 14, ["#e2b64e", "#8a5a34", "#b78350", "#a89c84"], "Mũ gỗ hai sừng cong. Nét lạ: sừng buộc cờ đuôi nheo nhỏ."],
-  ["tp-hats-vong_la", "Vòng lá", 17, 7, ["#479544", "#8fd070", "#255a2c", "#d2362e"], "Vòng lá đội đầu. Nét lạ: kết bằng lá trầu có quả cau."],
-  ["tp-hats-mu_da_ca", "Mũ da cá", 19, 16, ["#2a5a70", "#4a7f9a", "#8fc0d4"], "Mũ da cá có vây. Nét lạ: mũ là đầu cá trê có râu rủ hai bên."],
-  ["tp-hats-khan_lua", "Khăn đá lửa", 22, 9, ["#7a2a12", "#b0502a", "#f08a4a", "#ffe9a0"], "Khăn đỏ đính đá lửa. Nét lạ: viên đá đỏ như than hồng, tóe tia lửa."],
-  ["tp-hats-mu_vay_ca", "Mũ vây cá", 22, 17, ["#8fd0ea", "#3f8fb5", "#7fc4f2", "#2f62ad"], "Mũ xanh có vây cao. Nét lạ: vây là cánh buồm thuyền nan."],
-  ["tp-hats-mu_tai_cao", "Mũ tai cáo", 17, 21, ["#f0ece2", "#b8b0a8", "#ffffff", "#f0a0a0"], "Mũ trùm cam có tai cáo. Nét lạ: tai đeo khuyên bạc kiểu người H'Mông."],
+  ["tp-hats-mu_rom", "Mũ rơm", 22, 10, ["#f8e6a4", "#8f6c2a", "#d8b45c"], "Mũ rơm vành rộng. Nét lạ: chim sẻ làm tổ trên chóp."],
+  ["tp-hats-mu_sung", "Mũ sừng", 20, 14, ["#e2b64e", "#8a5a34", "#b78350", "#a89c84"], "Mũ gỗ hai sừng cong. Nét lạ: sừng buộc cờ đuôi nheo nhỏ."],
+  ["tp-hats-vong_la", "Vòng lá", 18, 7, ["#479544", "#8fd070", "#255a2c", "#d2362e"], "Vòng lá đội đầu. Nét lạ: kết bằng lá trầu có quả cau."],
+  ["tp-hats-mu_da_ca", "Mũ da cá", 18, 14, ["#2a5a70", "#4a7f9a", "#8fc0d4"], "Mũ da cá có vây. Nét lạ: mũ là đầu cá trê có râu rủ hai bên."],
+  ["tp-hats-khan_lua", "Khăn đá lửa", 18, 9, ["#7a2a12", "#b0502a", "#f08a4a", "#ffe9a0"], "Khăn đỏ đính đá lửa. Nét lạ: viên đá đỏ như than hồng, tóe tia lửa."],
+  ["tp-hats-mu_vay_ca", "Mũ vây cá", 19, 15, ["#8fd0ea", "#3f8fb5", "#7fc4f2", "#2f62ad"], "Mũ xanh có vây cao. Nét lạ: vây là cánh buồm thuyền nan."],
+  ["tp-hats-mu_tai_cao", "Mũ tai cáo", 18, 16, ["#f0ece2", "#b8b0a8", "#ffffff", "#f0a0a0"], "Mũ trùm cam có tai cáo. Nét lạ: tai đeo khuyên bạc kiểu người H'Mông."],
   ["tp-robes-ao_trum", "Áo trùm", 13, 13, ["#d2362e", "#8c1c1f", "#f47a62"], "Áo trùm vải dài. Nét lạ: vạt áo vá chằng vá đụp bằng vải hoa."],
   ["tp-robes-ao_toi", "Áo tơi lá", 15, 14, ["#d8b45c", "#8f6c2a", "#f8e6a4"], "Áo tơi bằng lá cọ. Nét lạ: có ốc sên bò trên lá."],
   ["tp-robes-ao_the", "Áo the", 12, 13, ["#2e2d55", "#5c5a92", "#f6f0e2", "#ffffff"], "Áo the dài đen. Nét lạ: hàng cúc là đồng xu lỗ vuông."],
@@ -281,12 +283,12 @@ const DATA = [
   ["tp-robes-ao_vo_cay", "Áo vỏ cây", 15, 16, ["#4a3018", "#7a5632", "#479544", "#a8804e"], "Giáp vỏ cây phủ rêu. Nét lạ: vỏ cây mọc nấm linh chi."],
   ["tp-robes-ao_vay", "Áo vảy", 12, 12, ["#3f8fb5", "#8fd0ea", "#1f5f85", "#e2b64e"], "Giáp vảy cá xanh. Nét lạ: vảy là đồng xu đồng xếp lớp."],
   ["tp-robes-ao_long", "Áo lông trắng", 15, 14, ["#f0ece2", "#b8b0a8", "#ffffff", "#d2362e"], "Áo lông trắng ngắn. Nét lạ: lông là bông lau ven sông."],
-  ["tp-backs-ho_lo", "Bầu hồ lô", 20, 28, ["#e09c4a", "#a8642a", "#f9d08c", "#d2362e"], "Bầu hồ lô đeo dây. Nét lạ: nút là bắp ngô, treo gáo dừa."],
+  ["tp-backs-ho_lo", "Bầu hồ lô", 12, 18, ["#e09c4a", "#a8642a", "#f9d08c", "#d2362e"], "Bầu hồ lô đeo dây. Nét lạ: nút là bắp ngô, treo gáo dừa."],
   ["tp-backs-ong_ten", "Ống tên", 18, 18, ["#8a5a34", "#5a3822", "#b78350", "#e2b64e"], "Ống tên tre. Nét lạ: đuôi tên là lông gà."],
-  ["tp-backs-ao_choang", "Áo choàng", 13, 15, ["#d2362e", "#8c1c1f", "#f47a62", "#e2b64e"], "Áo choàng ngắn bay. Nét lạ: là lá cờ hội làng ngũ sắc."],
+  ["tp-backs-ao_choang", "Áo choàng", 14, 16, ["#d2362e", "#8c1c1f", "#f47a62", "#e2b64e"], "Áo choàng ngắn khoác sau lưng: một tấm vải đỏ rủ từ hai vai xuống tới ngang gối, mép dưới hơi bay ra sau, cổ choàng có nút vàng; nhìn chéo 3/4 nên chỉ thấy tấm choàng, KHÔNG phải lá cờ, KHÔNG phải tấm thảm bay. Nét lạ: mép dưới viền dải ngũ sắc như cờ hội làng."],
   ["tp-backs-gui_tre", "Gùi tre", 12, 16, ["#b4ae58", "#6c6a2c", "#e6e298", "#5a3822"], "Gùi đan tre. Nét lạ: trong gùi có bó rau rừng và gà con thò đầu."],
   ["tp-backs-khan_bang", "Khăn choàng sương", 18, 16, ["#eafcff", "#2f62ad", "#4a7f9a", "#7fc4f2"], "Khăn choàng xanh sương. Nét lạ: khăn đọng giọt sương như chuỗi ngọc."],
-  ["tp-backs-trong_nho", "Trống đồng nhỏ", 16, 25, ["#754418", "#c4853a", "#ffe9a0", "#d2362e"], "Trống đồng đeo lưng. Nét lạ: mặt trống có con cóc ngồi (cóc kiện trời)."],
+  ["tp-backs-trong_nho", "Trống đồng nhỏ", 12, 16, ["#754418", "#c4853a", "#ffe9a0", "#d2362e"], "Trống đồng đeo lưng. Nét lạ: mặt trống có con cóc ngồi (cóc kiện trời)."],
   ["tp-hands-bua_con", "Búa rèn tí hon", 7, 11, ["#5f6b84", "#5a3822", "#f4f8ff", "#b4c0d4"], "Búa rèn nhỏ cầm tay. Nét lạ: cán là cây đũa cả."],
   ["tp-hands-gang_dong", "Găng đồng", 14, 5, ["#754418", "#f6d07c", "#c4853a", "#ffffff"], "Găng tay bằng đồng. Nét lạ: hoa văn trống đồng, đầu ngón là chuông nhỏ."],
   ["tp-hands-bua_nanh", "Bùa nanh rắn", 5, 13, ["#f47a62", "#fffaf0", "#a89c84", "#5a3822"], "Bùa nanh rắn tua đỏ. Nét lạ: nanh ngậm viên ngọc xanh."],
@@ -375,6 +377,18 @@ const CANH_CAP = [
 LO.push({ id: 'tp-wings-cap', ten: 'Trang phục · Cánh theo cấp (8 món: cấp 1 và cấp 3)', doi: 'trang-phuc', o: 'wings', cot: 4, hang: 2, mau: 12, nenXanh: false, xungDot: false, capCanh: true,
   bm: ['co_cay', 'he_lua', 'he_bang'],
   ds: [1, 3].flatMap((cap) => CANH_CAP.map((c) => ({ ma: 'tp-wings-' + c[0] + '-' + cap, ten: c[1] + ' cấp ' + cap, w: c[cap === 1 ? 3 : 4][0], h: c[cap === 1 ? 3 : 4][1], mau: c[2], mo: c[cap === 1 ? 5 : 6], look: c[0], cap }))) });
+// Lô "VẼ LẠI 12/10" (phiên kiểm trang phục, docs/review/ke-hoach-cai-thien/trang-phuc/bao-cao.md): chỉ các món chấm hỏng khi mặc lên
+// 4 em bé thân AI. Mũ: ảnh cũ nét thường (×1) lệch phong cách với thân nét gấp đôi, nhiều mũ ngồi chồng lên tóc; đồ lưng: áo choàng sai dáng
+// (vẽ thành lá cờ), bầu hồ lô và trống đồng to gần bằng cả thân. Cắt ra đúng mã tệp cũ (tp-hats-*, tp-backs-*) nên nhập vào là thay ảnh cũ.
+// duoi: số điểm ảnh game từ ĐỈNH ĐẦU em bé xuống tới MÉP DƯỚI mũ (điểm dinh_dau đặt cách mép dưới mũ chừng đó): 4 = vành mũ ngang lông
+// mày, không che mắt (mắt cách đỉnh đầu ~6); vòng lá chỉ đặt trên tóc: 2.
+const VE_LAI_MU = { non_la: 4, khan_xep: 4, mu_rom: 4, mu_sung: 4, vong_la: 2, mu_da_ca: 4, khan_lua: 4, mu_vay_ca: 4, mu_tai_cao: 4 };
+const VE_LAI_LUNG = ['ao_choang', 'ho_lo', 'trong_nho'];
+const monVeLai = (ma, them) => { const d = DATA.find((x) => x[0] === ma); return Object.assign({ ma: d[0], ten: d[1], w: d[2], h: d[3], mau: d[4], mo: d[5] || '', look: ma.replace(/^tp-[a-z]+-/, '') }, them || {}); };
+LO.push({ id: 'tp-hats-ve-lai', ten: 'VẼ LẠI 12/10 · Mũ (9 món, nét gấp đôi, ôm đầu)', doi: 'trang-phuc', o: 'hats', cot: 3, hang: 3, mau: 16, nenXanh: false, xungDot: false, veLai: true,
+  bm: ['vai', 'go', 'co_cay', 'kim_loai'], ds: Object.keys(VE_LAI_MU).map((k) => monVeLai('tp-hats-' + k, { duoi: VE_LAI_MU[k] })) });
+LO.push({ id: 'tp-backs-ve-lai', ten: 'VẼ LẠI 12/10 · Đồ đeo lưng (3 món: áo choàng, bầu hồ lô, trống đồng)', doi: 'trang-phuc', o: 'backs', cot: 3, hang: 1, mau: 12, nenXanh: true, xungDot: false, veLai: true,
+  bm: ['vai', 'go', 'kim_loai'], ds: VE_LAI_LUNG.map((k) => monVeLai('tp-backs-' + k)) });
 function hex2rgb(h) { const v = parseInt(h.slice(1), 16); return [(v >> 16) & 255, (v >> 8) & 255, v & 255]; }
 function sacDo(r, g, b) { const mx = Math.max(r, g, b), mn = Math.min(r, g, b), c = mx - mn; if (!c) return [0, 0];
   const h = mx === r ? ((g - b) / c) % 6 : mx === g ? (b - r) / c + 2 : (r - g) / c + 4; return [(h * 60 + 360) % 360, c / mx]; }
@@ -485,12 +499,15 @@ function taoPrompt(L) {
   if (L.doi === 'vu-khi' && L.loai !== 'bow') huong = 'HƯỚNG: mọi món NẰM NGANG, nhìn ngang phẳng: cán/chuôi bên TRÁI, mũi/lưỡi/đầu búa bên PHẢI, lưỡi hướng lên, dài gấp 2 đến 4 lần bề cao. Mỗi món có một đôi mắt nhỏ dễ thương (vũ khí sống). ';
   else if (L.doi === 'vu-khi') huong = 'HƯỚNG: mọi món DỰNG ĐỨNG, nhìn ngang phẳng: thân cung (hoặc nỏ, ná) cong phình sang bên PHẢI, hai đầu cung ở trên cùng và dưới cùng, phía bên trái để trống. KHÔNG vẽ dây cung, KHÔNG vẽ mũi tên (game tự vẽ dây và tên). Mỗi món có một đôi mắt nhỏ dễ thương (vũ khí sống). ';
   else if (L.doi === 'trang-phuc') {
-    huong = 'Món đồ dành cho em bé chibi cao khoảng 33 điểm ảnh (đầu khoảng 13 điểm ảnh): vẽ RIÊNG món đồ, KHÔNG có người mặc, không đầu, không thân, không tay em bé. ';
+    huong = 'Món đồ dành cho em bé chibi cao 29 điểm ảnh (đầu kể cả tóc khoảng 16 × 14 điểm ảnh): vẽ RIÊNG món đồ, KHÔNG có người mặc, không đầu, không thân, không tay em bé. ';
     huong += { hats: 'Mũ nhìn chéo 3/4 quay sang PHẢI như đang đội trên đầu, miệng mũ ở dưới. ', robes: 'Chỉ phần thân áo nhìn chéo 3/4 quay sang PHẢI, kiểu áo KHÔNG TAY (như áo gi lê, áo yếm): KHÔNG vẽ tay áo, kể cả tay áo ngắn, hai bên vai cắt gọn (game tự vẽ tay), cổ áo thấp, không cổ đứng cao, không mũ trùm, không đầu. ',
       backs: 'Đồ đeo sau lưng nhìn chéo 3/4 quay sang PHẢI, đứng thẳng (DỰNG ĐỨNG, không nằm ngang), không dây đeo dài. ', hands: 'Bùa đeo dựng đứng, dài và hẹp: móc treo ở trên cùng, dây treo thẳng, tua rủ THẲNG xuống dưới, không xoè sang hai bên; búa nhỏ dựng đứng cán ở dưới; găng tay nằm ngang. ',
       masks: 'Dấu vẽ trên mặt: một hình phẳng rất đơn giản, đậm, nhìn chính diện, chỉ 1 đến 2 màu, KHÔNG viền đen, KHÔNG có khuôn mặt, KHÔNG che mắt (trừ mặt nạ hổ). Trong game dấu chỉ 4 đến 11 điểm ảnh nên vẽ khối thật to và đơn giản, nét dày, không nét mảnh rời, đúng dáng ghi ở từng ô. ',
       wings: 'Chỉ MỘT bên cánh cho mỗi ô, gốc cánh ở góc DƯỚI BÊN PHẢI của hình, cánh xoè lên trên và sang trái (game tự vẽ cánh thứ hai và cho cánh vỗ). ' }[L.o];
   } else huong = 'Mỗi món là một biểu tượng nhìn chính diện, hình khối đậm đơn giản, 2 đến 4 màu phẳng, đọc được ở cỡ 7×7 điểm ảnh, viền tối cùng tông màu món. ';
+  if (L.veLai) huong += 'TÔI GỬI KÈM MỘT ẢNH THAM CHIẾU: 4 em bé chibi của game đứng cạnh nhau, có thước đo điểm ảnh. Chỉ dùng ảnh đó để so CỠ và PHONG CÁCH (độ chi tiết, độ dày viền, cách đổ bóng phải giống các em bé), KHÔNG vẽ em bé, KHÔNG chép bố cục ảnh đó. '
+    + (L.o === 'hats' ? 'Mũ phải ÔM LẤY ĐẦU như đang đội thật: lòng mũ trùm xuống che chỏm tóc, vành mũ nằm ngang lông mày; mũ KHÔNG ngồi chồng trên đỉnh tóc, KHÔNG che mắt, rộng nhất khoảng 1,4 lần bề rộng đầu (đầu em bé kể cả tóc khoảng 16 điểm ảnh). '
+      : 'Đồ đeo lưng KHÔNG to hơn thân em bé (thân cao 29 điểm ảnh, đồ cao tối đa khoảng 18), nằm gọn sau lưng. ');
   const oTrong = tong > n ? `Ô ${n + 1}${tong - n > 1 ? ' đến ô ' + tong : ''} (cuối hàng dưới) để TRỐNG hoàn toàn. ` : '';
   return `Dùng công cụ tạo ảnh vẽ MỘT tấm ảnh pixel art 2D gồm ĐÚNG ${n} món ${loai} cho game Linh Khí (game hành động pixel art lấy cảm hứng dân gian Việt Nam và hoa văn trống đồng Đông Sơn). `
     + `BỐ CỤC: lưới ĐỀU đúng ${L.cot} cột × ${L.hang} hàng = ${tong} ô (KHÔNG thêm cột, KHÔNG thêm hàng), các ô bằng nhau, kẻ lưới mảnh màu tối. Mỗi ô đúng MỘT món, theo thứ tự đọc từ trái sang phải, hết hàng trên mới xuống hàng dưới: ${ds}. ${oTrong}`
@@ -1174,7 +1191,7 @@ function datDiem(i) { // điểm tự đặt theo quy ước; điểm người d
     const bw = x1 - x0 + 1, bh = y1 - y0 + 1, mepHang = (y) => { let a = -1, b = -1; for (let x = 0; x < w; x++) if (dac(x, y)) { if (a < 0) a = x; b = x; } return a < 0 ? [x0, x1] : [a, b]; };
     const hangTB = (ya, yb) => { let s0 = 0, n = 0; for (let y = Math.max(y0, ya); y <= Math.min(y1, yb); y++) { const [a, b] = mepHang(y); s0 += (a + b + 1) / 2; n++; } return n ? s0 / n : (x0 + x1 + 1) / 2; };
     const dot = Math.max(1, Math.round(bh * 0.12)), P = {};
-    if (o === 'hats') { const yd = y1 + 1 - Math.max(1, Math.round(bh * 0.15)); P.dinh_dau = [hangTB(yd - 1, yd + 1), yd]; P.gay = [mepHang(yd)[0] + Math.max(1, bw * 0.12), yd]; }
+    if (o === 'hats') { const yd = m.duoi != null ? Math.max(y0 + 1, y1 + 1 - Math.round(m.duoi * N)) : y1 + 1 - Math.max(1, Math.round(bh * 0.15)); P.dinh_dau = [hangTB(yd - 1, yd + 1), yd]; if (m.duoi == null) P.gay = [mepHang(yd)[0] + Math.max(1, bw * 0.12), yd]; } // lô vẽ lại: chỉ đỉnh đầu (một điểm: mũ không bị co giãn, xoay theo điểm gáy ước lượng)
     else if (o === 'masks') P.mat = [(x0 + x1 + 1) / 2, (y0 + y1 + 1) / 2];
     else if (o === 'robes') {
       if (m.look === 'kho_vat') { P.eo = [hangTB(y0, y0 + dot), y0 + 0.5]; P.hong = [hangTB(y1 - dot, y1), y1 + 1]; }

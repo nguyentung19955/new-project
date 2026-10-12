@@ -260,10 +260,24 @@
     draw: (cx, P) => hood(cx, P, cx.C, 'khan'),
     front: (cx, P) => { const H = cx.H, k = cx.f % 4 < 2 ? 0 : 1, d = Math.min(0, hem(cx)); P((s) => { H.g([[-5, -5], [-10 + d, -8 + k], [-10 + d, -5 + k]], RED); H.g([[-5, -4], [-9, -2 - k], [-7, -5]], RED); }); P((s) => { H.r(-6, -6, 13, 2, RED); s.in(() => { H.r(-5, -6, 11, 1, Lt(RED)); }); }); },
   });
+  // Nón lá trên thân AI (phiên kiểm trang phục 12/10, cờ tắt G.NON_LA_GON = false): vành hẹp lại (rộng 19 thay 23, ~1,4 lần đầu),
+  // không ánh bóng (chấm trắng ở mép vành), bỏ quai đỏ (trên thân AI quai thành vệt sẫm dọc má như vết sẹo). Thân code: y hệt cũ.
+  const nonGon = (cx) => G.NON_LA_GON !== false && cx && cx.ai;
   def('hats', 'non_la', 'Nón lá', {
-    draw: (cx, P) => { const H = cx.H; P({ ol: RED[0] }, (s) => { H.l(-5, -3, -4, 5, 1, Md(RED)); }); },
+    draw: (cx, P) => {
+      const H = cx.H;
+      if (nonGon(cx)) return; // thân AI: mặt AI không trùng khung đầu H, vẽ quai sẽ rơi vào giữa mặt -> bỏ quai
+      P({ ol: RED[0] }, (s) => { H.l(-5, -3, -4, 5, 1, Md(RED)); });
+    },
     front: (cx, P) => {
       const H = cx.H;
+      if (nonGon(cx)) {
+        P({ bevel: false }, (s) => {
+          H.g([[0, -14], [9, -4], [-9, -4]], STRAW);
+          s.in(() => { H.l(-1, -10, -6, -5, 1, Dk(STRAW)); H.l(-3, -8, 3, -8, 1, Dk(STRAW)); H.r(-8, -4, 17, 1, Dk(STRAW)); H.r(-5, -6, 11, 1, Md(STRAW)); });
+        });
+        return;
+      }
       P((s) => {
         H.g([[0, -14], [11, -3], [-11, -3]], STRAW);
         s.in(() => { H.l(0, -13, 7, -5, 1, Lt(STRAW)); H.l(-1, -10, -7, -5, 1, Dk(STRAW)); H.l(-4, -8, 4, -8, 1, Dk(STRAW)); H.r(-10, -3, 21, 1, Dk(STRAW)); H.r(-6, -5, 13, 1, Md(STRAW)); });
@@ -662,6 +676,7 @@
     dongDua(cx, ps);
     const ai = only === 'aiSau' || only === 'aiTruoc';
     cx.fit = !only || ai;
+    cx.ai = ai; // thân AI: chỉnh cỡ theo món (G.spriteCustom.TP_CHINH) chỉ áp ở đây
     cx.dong = (neo && neo.khung) || { ten: ps.anim, i: ps.f | 0 };
     let dm = null;
     // điểm thân: khung xương (thân code: đúng tuyệt đối; thân AI: ước lượng), rồi điểm tệp ghep-<key> (thân AI) đè lên
@@ -1418,12 +1433,15 @@
         let x, y, col = ph < 0.5 ? C[0] : C[1];
         if (el === 'fire') { x = -7 + r * 14 + Math.sin(u * 9) * 1.2; y = -5 - ph * 26; }
         else if (el === 'poison') { x = -6 + r * 12; y = -18 + ph * 17; }
+        else if (G.TUYET_CHAM !== false) { x = (r < 0.5 ? -1 : 1) * (6 + Math.abs(r - 0.5) * 10) + Math.sin(u * 6 + i) * 1.5; y = -30 + ph * 30; } // bông tuyết rơi hai bên thân, không rơi ngang ngực
         else { x = -10 + r * 20 + Math.sin(u * 6 + i) * 2; y = -30 + ph * 30; }
         c.globalAlpha = a0 * (el === 'poison' ? Math.min(1, (1 - ph) * 2) : 1 - ph);
         c.fillStyle = col;
         const X = Math.round(x), Y = Math.round(y);
         c.fillRect(X, Y, 1, el === 'poison' && ph > 0.3 ? 2 : 1);
-        if (el === 'ice' && i % 2 === 0) { c.fillStyle = C[2]; c.fillRect(X - 1, Y, 1, 1); c.fillRect(X + 1, Y, 1, 1); c.fillRect(X, Y - 1, 1, 1); c.fillRect(X, Y + 1, 1, 1); }
+        // Phiên kiểm trang phục 12/10: bông tuyết hình dấu "+" 3 x 3 trông như điểm ảnh rác ("dấu + trắng lơ lửng") -> chỉ một chấm.
+        // Cờ tắt: G.TUYET_CHAM = false (như trước).
+        if (el === 'ice' && i % 2 === 0 && G.TUYET_CHAM === false) { c.fillStyle = C[2]; c.fillRect(X - 1, Y, 1, 1); c.fillRect(X + 1, Y, 1, 1); c.fillRect(X, Y - 1, 1, 1); c.fillRect(X, Y + 1, 1, 1); }
         if (el === 'fire' && ph < 0.25) { c.fillStyle = C[2]; c.fillRect(X, Y + 1, 1, 1); }
       }
     });
