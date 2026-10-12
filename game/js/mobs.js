@@ -155,7 +155,7 @@
   // ---------- nổ theo hệ của vùng ----------
   function blast(x, y, r, el, dmg) {
     const w = W();
-    FX('propBlast', { x, y }, el);
+    FX('propBlast', { x, y, nr: r }, el); // nr: bán kính nổ thật để hình nổ đúng cỡ vùng sát thương (js/fx.js)
     G.sfx('boom', 1.1);
     if (el === 'poison') addZone('circle', { x, y, r: Math.round(r * 0.75) }, 0, dmg * 0.6, 'poison', { pool: true, life: 4, tick: 0.3 });
     else if (el === 'fire') {

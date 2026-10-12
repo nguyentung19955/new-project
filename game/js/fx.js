@@ -1294,8 +1294,10 @@
   });
   // Lò than, nấm độc, tinh thể băng phát nổ
   api('propBlast', (pr, el) => {
-    const x = pr.x, y = pr.y;
-    if (el === 'fire') blastFire(x, y, 52, 1.5); else if (el === 'poison') blastPoison(x, y, 52, 1.5); else blastIce(x, y, 52, 1.4);
+    // Rà soát B (12/10): bom của quái (js/mobs.js blast) gửi kèm bán kính nổ thật pr.nr (26–44); trước đây luôn nổ cỡ 52 của đồ vật
+    // trên sàn, to gần gấp đôi vùng gây sát thương. Đồ vật trên sàn (lò than, nấm, tinh thể) vẫn 52 = bán kính gây sát thương của chúng.
+    const x = pr.x, y = pr.y, R0 = pr.nr > 0 ? pr.nr : 52;
+    if (el === 'fire') blastFire(x, y, R0, 1.5); else if (el === 'poison') blastPoison(x, y, R0, 1.5); else blastIce(x, y, R0, 1.4);
     for (let i = 0; i < 7; i++) emit(8, x + rr(-5, 5), y - rr(2, 10), rr(-90, 90), rr(-190, -80), rr(0.6, 1.0), el === 'ice' ? RAMP.ice : el === 'poison' ? RAMP.poison : RAMP.rock, R() < 0.5 ? 3 : 2, 460, 0, y + rr(-6, 8), 1);
     trauma(0.6); stop(90);
   });
@@ -1424,6 +1426,55 @@
     ring(c, x, y, R0, Q0, beat ? 2 : 1, end ? '#8a1c12' : beat ? '#ffe0c8' : q < 0.4 ? '#ff7a52' : '#ff4a30', end);
     if (beat) { const e = q / 0.16; ring(c, x, y, R0 + 1 + e * 6, Q0 + 1 + e * 4, 1, '#ff5a40', e > 0.5); }
   }
+  // Khung chứa phần có hình (độ đậm > 40) của một ảnh hiệu ứng, gộp mọi khung, tính theo điểm ảnh game; đo một lần cho mỗi ảnh.
+  // Ảnh không đọc được điểm ảnh (khác nguồn) → null: nơi gọi dán như cũ.
+  let tatKhop = false;
+  try { tatKhop = /[?&]vungkhop=0\b/i.test(String(window.location && window.location.search)); } catch (e) { tatKhop = false; }
+  if (G.VUNG_KHOP == null) G.VUNG_KHOP = !tatKhop;
+  const BBA = new WeakMap();
+  function bbAnh(a) {
+    if (!a || !a.img) return null;
+    let b = BBA.get(a.img);
+    if (b !== undefined) return b;
+    b = null;
+    try {
+      const n = a.net || 1, cw = a.fw * n, ch = a.fh * n, cv = document.createElement('canvas');
+      cv.width = cw; cv.height = ch;
+      const g = cv.getContext('2d', { willReadFrequently: true });
+      // gộp mọi khung: điểm có hình (độ đậm > 40); bề ngang = trái nhất..phải nhất. Bề cao lấy theo "thân vũng" chứ không theo lưỡi lửa,
+      // bong bóng nhô lên: các hàng rộng ≥ 50% hàng rộng nhất là phần |y| ≤ 0,866·bán trục dọc của một hình bầu dục, nên bán trục dọc
+      // = bề cao dải đó / 1,732 và tâm vũng = giữa dải đó.
+      const U = new Uint8Array(cw * ch);
+      for (let f = 0; f < a.so; f++) {
+        g.clearRect(0, 0, cw, ch);
+        g.drawImage(a.img, (f % a.cot) * cw, Math.floor(f / a.cot) * ch, cw, ch, 0, 0, cw, ch);
+        const d = g.getImageData(0, 0, cw, ch).data;
+        for (let i = 0; i < cw * ch; i++) if (d[i * 4 + 3] > 40) U[i] = 1;
+      }
+      let x0 = 1e9, x1 = -1, mx = 0;
+      const rw = new Int32Array(ch);
+      for (let y = 0; y < ch; y++) { let k = 0; for (let x = 0; x < cw; x++) if (U[y * cw + x]) { k++; if (x < x0) x0 = x; if (x > x1) x1 = x; } rw[y] = k; if (k > mx) mx = k; }
+      let r0 = -1, r1 = -1;
+      for (let y = 0; y < ch; y++) if (mx > 0 && rw[y] >= mx * 0.5) { if (r0 < 0) r0 = y; r1 = y; }
+      if (x1 > x0 + 1 && r1 > r0) { const cy = (r0 + r1 + 1) / 2, hh = (r1 + 1 - r0) / 1.732; b = { x0: x0 / n, x1: (x1 + 1) / n, y0: (cy - hh) / n, y1: (cy + hh) / n }; }
+    } catch (e) { b = null; }
+    BBA.set(a.img, b);
+    return b;
+  }
+  fx.bbAnh = bbAnh; // bài kiểm tra đọc
+  // Dán khung ảnh a sao cho phần có hình (bb) phủ đúng hình bầu dục tâm (x, y), bán trục rx, ry. Không làm mịn.
+  function veKhop(c, a, x, y, rx, ry, t, bb, mo) {
+    const f = G.fxAnh.khung(a, t);
+    if (f < 0) return;
+    const sx = (2 * rx) / (bb.x1 - bb.x0), sy = (2 * ry) / (bb.y1 - bb.y0), n = a.net || 1, sw = a.fw * n, sh = a.fh * n;
+    c.save();
+    try {
+      c.imageSmoothingEnabled = false;
+      if (a.cong) c.globalCompositeOperation = 'lighter';
+      if (mo < 1) c.globalAlpha *= mo;
+      c.drawImage(a.img, (f % a.cot) * sw, Math.floor(f / a.cot) * sh, sw, sh, Math.round(x - ((bb.x0 + bb.x1) / 2) * sx), Math.round(y - ((bb.y0 + bb.y1) / 2) * sy), a.fw * sx, a.fh * sy);
+    } finally { c.restore(); }
+  }
   const VUNG_QUAI = { fire: 'hu-vung-quai-lua', poison: 'hu-vung-quai-doc', ice: 'hu-vung-quai-bang', none: 'hu-vung-quai-do' };
   function pool(c, z) {
     const t = S.t, id = z.fxId || 1;
@@ -1449,7 +1500,13 @@
     // Viền nóng báo nguy hiểm vẫn vẽ bằng code đè lên trên.
     const ma = foe && !z.heal ? VUNG_QUAI[key] : null, an = ma && G.fxAnh && G.fxAnh.get(ma);
     if (an) {
-      G.fxAnh.ve(c, ma, x, y, t + id * 0.37, 0, (2 * rx) / Math.max(4, an.fw - 4), false, dth ? 0.55 : 1);
+      // Rà soát B (12/10): bốn ảnh vũng của quái dẹt hơn vùng gây sát thương (phần có hình chỉ cao 0,61–0,70 bán kính, vùng thật cao
+      // 0,85 = G.ZK) và ảnh vũng lửa lệch xuống dưới: em bé đứng phía trên vũng trông như ngoài vũng mà vẫn mất máu. Nay đo khung chứa
+      // phần có hình của ảnh (một lần) rồi dán sao cho khung đó khít đúng hình bầu dục G.inZone (rộng 2·rx, cao 2·ry, tâm ở tâm vùng).
+      // Cờ tắt: G.VUNG_KHOP = false hoặc ?vungkhop=0 → dán như cũ.
+      const bb = G.VUNG_KHOP !== false ? bbAnh(an) : null;
+      if (bb) veKhop(c, an, x, y, rx, ry, t + id * 0.37, bb, dth ? 0.55 : 1);
+      else G.fxAnh.ve(c, ma, x, y, t + id * 0.37, 0, (2 * rx) / Math.max(4, an.fw - 4), false, dth ? 0.55 : 1);
       vienNong(c, z, x, y, rx, ry, k, fade);
       return;
     }
