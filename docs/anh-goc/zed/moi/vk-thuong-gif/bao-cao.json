@@ -1,0 +1,116 @@
+{
+ "anh": "moi/vk-thuong.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 4,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 0,
+  "vien_khu": 4132,
+  "nga_mau_nen_trong_hinh": 100
+ },
+ "manh_bo": [],
+ "loi": [],
+ "canh_bao": [
+  "Hàng 1 khung 1 chỉ 10894 điểm ảnh (trung vị 19674) — có thể bị tách mất mảnh",
+  "Hàng 1 khung 1 cao 57 (trung vị 203) — lệch cỡ >15%",
+  "Hàng 1 khung 2 cao 137 (trung vị 203) — lệch cỡ >15%",
+  "Hàng 1 khung 3 cao 270 (trung vị 203) — lệch cỡ >15%",
+  "Hàng 1 khung 4 cao 376 (trung vị 203) — lệch cỡ >15%"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "vk-thuong",
+   "so_khung": 4,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      21,
+      310,
+      482,
+      367
+     ],
+     "chan": [
+      407.0,
+      367
+     ],
+     "rong": 461,
+     "cao": 57,
+     "diem_anh": 10894,
+     "nguon": "tu-dong",
+     "ghi_chu": [
+      "ít điểm ảnh bất thường",
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      526,
+      293,
+      997,
+      430
+     ],
+     "chan": [
+      842.0,
+      430
+     ],
+     "rong": 471,
+     "cao": 137,
+     "diem_anh": 14578,
+     "nguon": "tu-dong",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      1016,
+      256,
+      1530,
+      526
+     ],
+     "chan": [
+      1277.0,
+      526
+     ],
+     "rong": 514,
+     "cao": 270,
+     "diem_anh": 24771,
+     "nguon": "tu-dong",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1549,
+      216,
+      2168,
+      592
+     ],
+     "chan": [
+      1775.0,
+      592
+     ],
+     "rong": 619,
+     "cao": 376,
+     "diem_anh": 48799,
+     "nguon": "tu-dong",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    }
+   ]
+  }
+ ]
+}
