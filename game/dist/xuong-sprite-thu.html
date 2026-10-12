@@ -65,7 +65,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.12-1255";
+(window.G = window.G || {}).VERSION = "lk-2026.10.12-1302";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -11133,7 +11133,36 @@
     const kieu = cv.bam_vk || (wp.type === 'bow' ? 'cam' : 'nam');
     const Lh = kieu === 'cam' ? 0 : wp.type === 'bow' ? -9 - 8 * (wp.pull || 0) : HOLD[wp.type] || 0, h0 = rotv(Lh, 0, wp.ang), a1 = wp.ang + cv.xoay, h1 = rotv(Lh, 0, a1), nt = o.neoTay || [0, 0];
     const tx = P[0] + cv.dx - nt[0], ty = P[1] + cv.dy - nt[1]; // chỗ bàn tay của thân AI (vũ khí còn được dời thêm neoTay lúc vẽ)
-    return { wp: Object.assign({}, wp, { x: Math.round(tx - h1[0]), y: Math.round(ty - h1[1]), ang: a1, lh: Lh }, cv.truoc ? { front: true } : null), tay: [tx - (wp.x + h0[0]), ty - (wp.y + h0[1])], bam: true };
+    let a2 = a1, h2 = h1;
+    const km = kiemKhop(o, wp, gv, P[0] + cv.dx, P[1] + cv.dy, a1, !!(wp.front || cv.truoc));
+    if (km) { a2 = km.ang; if (a2 !== a1) h2 = rotv(Lh, 0, a2); }
+    return { wp: Object.assign({}, wp, { x: Math.round(tx - h2[0]), y: Math.round(ty - h2[1]), ang: a2, lh: Lh }, cv.truoc ? { front: true } : null, km ? { front: km.front } : null), tay: [tx - (wp.x + h0[0]), ty - (wp.y + h0[1])], bam: true, P: [P[0] + cv.dx, P[1] + cv.dy] };
+  }
+  // G.KIEM_KHOP (js/sprite_custom.js): kiếm trên thân AI lúc đang đánh (đứng chém, chạy chém, chiêu, giữ lấy đà).
+  //  - Lưỡi chĩa ra sau lưng (đà vung ra sau, giơ qua đầu): kiếm vẽ SAU thân, bàn tay AI tự nhiên nằm trên chuôi, mặt không bị che.
+  //  - Lưỡi ở trước thân mà đi ngang vùng mặt của khung (SC.matKhung): xoay lưỡi về phía trước từng 5 độ (tối đa 70) cho khỏi mặt;
+  //    vẫn chạm mặt thì vẽ sau thân. Chỉ đổi HÌNH (vệt chém bám theo hình này qua tip()); đòn, tầm, vùng trúng không đổi.
+  // (hx, hy): bàn tay trên thân (toạ độ tính từ chân, x về trước mặt). null: không áp (tắt cờ, không phải kiếm, không đánh...).
+  function kiemKhop(o, wp, gv, hx, hy, ang, front) {
+    if (!G.KIEM_KHOP || !wp || wp.type !== 'sword' || wp.sx != null || !gv || o.plainWeapon) return null;
+    const p = o.p, danh = o.atk >= 0 || (p && (p.specT > 0 || p.castT > 0 || (p.mv && p.mv.holding)));
+    if (!danh) return null;
+    const ra = (a) => (a * Math.PI) / 180, sau = (a) => Math.cos(ra(a)) < -0.25;
+    if (sau(ang)) return { ang, front: false };
+    const m = gv.mat;
+    if (!m) return { ang, front };
+    let L = 24;
+    try { const SCx = G.spriteCustom, wo = G.weaponArt.fromWeapon(o.weapon || {}), sp = SCx.timVuKhi(wo); if (sp && sp.vk) L = Math.hypot(sp.vk.mui[0] - sp.vk.cam[0], sp.vk.mui[1] - sp.vk.cam[1]) * SCx.coVk('sword', wo) - (HOLD.sword || 0); } catch (e) { L = 24; }
+    // khoảng cách từ tâm mặt tới đoạn chuôi -> mũi (bắt đầu sau nắm tay và chắn tay; lưỡi dày chừng 3 điểm ảnh)
+    const cham = (a) => {
+      const dx = Math.cos(ra(a)), dy = Math.sin(ra(a)), x0 = hx + dx * 2.5, y0 = hy + dy * 2.5;
+      const t = Math.max(0, Math.min(L, (m.x - x0) * dx + (m.y - y0) * dy));
+      return Math.hypot(x0 + dx * t - m.x, y0 + dy * t - m.y) < m.r + 1.5;
+    };
+    if (!cham(ang)) return { ang, front };
+    const huong = Math.sin(ra(ang)) < 0 ? 1 : -1; // chĩa lên: xoay xuống phía trước; chĩa xuống: xoay lên phía trước
+    for (let d = 5; d <= 70; d += 5) { const a = ang + huong * d; if (!sau(a) && !cham(a)) return { ang: a, front }; }
+    return { ang, front: false };
   }
   // Vẽ một bé (kèm vũ khí) tại chỗ c đang đứng: gốc là chân bé, đã lật theo hướng mặt.
   function drawFrame(c, o, fr, t) {
@@ -11145,6 +11174,9 @@
     c.drawImage(fr.cv, fr.ox, fr.oy, fr.w, fr.h);
     if (wp && wp.front) {
       veVk();
+      // G.KIEM_KHOP: thân AI có bàn tay vẽ sẵn -> vẽ lại chính bàn tay đó đè lên chuôi (nắm đúng chuôi), không vẽ ô bàn tay code
+      // (ô màu da code, lúc có lúc không giữa các khung, trông như bàn tay thừa).
+      if (G.KIEM_KHOP && vg.bam && vg.P && o.veTayAI) { try { o.veTayAI(c, vg.P, 2.5); } catch (e) { /* bỏ qua */ } return; }
       if (doiTay) { c.save(); c.translate(nt[0], nt[1]); }
       if (fr.hands) for (const h of fr.hands) { // bàn tay bé nắm đè lên chuôi
         const x = Math.round(h[0] + (dh ? dh[0] : 0)), y = Math.round(h[1] + (dh ? dh[1] : 0)), g = L.hands[outfitOf(HERO[o.key] ? o.key : 'smith', o).hand], gl = g && g.glove;
@@ -11335,6 +11367,7 @@
     // info(o): thông tin vũ khí của khung hiện tại { type, x, y, ang, pull, front, mood } hoặc null
     info: (o) => { const fr = frame(o); return fr.weapon ? Object.assign({ anim: fr.anim, f: fr.f }, fr.weapon) : null; },
     tip,
+    vkGhep: (o) => vkGhep(o, frame(o)), // trang thử (docs/review/ke-hoach-cai-thien/tay-kiem-mat): vũ khí sau khi ghép vào tay thân AI
     // Dành cho tờ phác thảo và trang thử:
     kidSprite, weaponSprite, drawKid, Spr, layers: ['lung', 'than', 'ao', 'mu', 'mat', 'tay'],
     cacheSize: () => KCACHE.size + WCACHE.size,
@@ -16771,6 +16804,9 @@
       o.atk = i / 40;
       const q = TL.tip(o);
       if (!q || q.anim !== 'atk' || q.u < win[0] || q.u > win[1]) continue;
+      // G.KIEM_KHOP (tay-kiem-mat 12/10): kiếm đang chĩa ra sau lưng thì vẽ sau thân (js/hero_tinhlinh.js), nên cung vệt bắt đầu
+      // từ chỗ lưỡi đã ra trước: vệt không còn vòng qua đỉnh đầu / trước mặt em bé. Không đổi độ đậm, cỡ ảnh.
+      if (G.KIEM_KHOP && q.wt === 'sword' && q.dx * f < -0.25 * Math.hypot(q.dx, q.dy)) continue;
       let a = Math.atan2(q.dy, q.dx);
       if (!n) { a0 = a; ap = a; } else { while (a - ap > Math.PI) a -= TAU; while (a - ap < -Math.PI) a += TAU; ap = a; }
       const l = q.L * Math.hypot(q.dx, q.dy), gx = q.gx - P.x, gy = q.gy - P.y, ex = (gx + Math.cos(a) * l) * f;
@@ -22742,6 +22778,61 @@ MA._xong();
     kq.diem.tay_truoc = tay; kq.nguon.tay_truoc = 'do-tu-dong';
     return kq;
   };
+  // ---------- TAY / KIẾM / MẶT KHI CHÉM (phiên 12/10, docs/review/ke-hoach-cai-thien/tay-kiem-mat) ----------
+  // Lỗi: kiếm vẽ bằng code luôn đè lên thân AI (kể cả lúc giơ ra sau đầu, đi ngang mặt), bàn tay code (ô trắng) chồng lên tay AI,
+  // và máy tự đo bàn tay trượt ở khung giơ tay qua đầu (nhận nhầm ngực). G.KIEM_KHOP bật:
+  //  - bàn tay trước ở hàng atk_sword lấy theo bảng đo tay từng khung (TAY_KIEM) nếu ảnh đúng là ảnh đã đo (so số điểm ảnh từng khung);
+  //  - SC.matKhung: vùng mặt của khung đang vẽ, để js/hero_tinhlinh.js (vkGhep) đặt kiếm ra sau thân khi lưỡi chĩa ra sau,
+  //    và xoay lưỡi né mặt khi đang ở trước thân; bàn tay AI vẽ lại đè lên chuôi thay cho ô bàn tay code.
+  // Tắt: G.KIEM_KHOP = false hoặc mở game với ?kiemkhop=0 -> y hệt trước.
+  if (G.KIEM_KHOP === undefined) {
+    let tat = false;
+    try { tat = typeof location !== 'undefined' && /[?&]kiemkhop=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
+    G.KIEM_KHOP = !tat;
+  }
+  // Bàn tay trước (giữa nắm tay) từng khung atk_sword, điểm ảnh game tính từ chân, x về trước mặt; so: số điểm ảnh có màu của khung
+  // (ảnh nhập lại khác đi thì không khớp -> quay về máy tự đo như cũ).
+  SC.TAY_KIEM = {
+    smith: { so: [460, 473, 472, 464, 470, 467], tay: [[6.5, -10], [7, -11.5], [9, -12], [6.5, -10], [7.5, -28.5], [11.5, -5]] },
+    hunter: { so: [387, 376, 422, 394, 389, 418], tay: [[6.5, -8], [5.5, -9], [8.5, -8], [6.5, -8], [6, -9], [9.5, -7]] },
+    wrestler: { so: [431, 441, 391, 410, 444, 398], tay: [[6.5, -8], [12, -10.5], [5.5, -7], [11, -21], [1, -31], [1, -6]] },
+    healer: { so: [439, 386, 382, 390, 369, 351], tay: [[12, -11], [7.5, -13], [6.5, -11], [16.5, -23.5], [2, -28.5], [4.5, -5]] },
+  };
+  function tayBang(sp, key, ten, i) {
+    const b = G.KIEM_KHOP && ten === 'atk_sword' && SC.TAY_KIEM[key];
+    if (!b || !b.tay[i] || !sp.dt[ten] || sp.dt[ten].so !== b.tay.length) return null;
+    sp.tayBang = sp.tayBang || {};
+    if (!(i in sp.tayBang)) {
+      let ok = false;
+      try { const m = matNa(sp)(ten, i); let n = 0; for (let j = 0; j < m.length; j++) n += m[j]; ok = Math.abs(n - b.so[i]) <= Math.max(4, b.so[i] * 0.03); } catch (e) { ok = false; }
+      sp.tayBang[i] = ok ? b.tay[i].slice() : null;
+    }
+    return sp.tayBang[i];
+  }
+  {
+    const dk = SC.diemKhung;
+    SC.diemKhung = function (sp, key, ten, i, kh) {
+      const kq = dk(sp, key, ten, i, kh), t = sp && tayBang(sp, key, ten, i);
+      if (!t || (kq && kq.nguon.tay_truoc === 'tep')) return kq;
+      const r = kq ? { diem: Object.assign({}, kq.diem), nguon: Object.assign({}, kq.nguon) } : { diem: {}, nguon: {} };
+      r.diem.tay_truoc = t; r.nguon.tay_truoc = 'bang-do';
+      return r;
+    };
+  }
+  // Vùng mặt của khung (ten, i): đĩa đầu tự đo (dauKhung), dời về phía trước mặt và xuống dưới (mặt nằm nửa trước, nửa dưới của đầu).
+  // { x, y, r } điểm ảnh game tính từ chân, x về trước mặt; null: khung cuộn tròn / không đo được.
+  SC.matKhung = function (sp, ten, i) {
+    if (!sp || !sp.img || !sp.dt[ten]) return null;
+    sp.matC = sp.matC || {};
+    const k = ten + ':' + i;
+    if (k in sp.matC) return sp.matC[k];
+    let r = null;
+    try {
+      const d = dauKhung(matNa(sp)(ten, i), sp.fw, sp.fh);
+      if (d && d.uy > 0.5) { const x = d.hx + (sp.lat ? -1 : 1) * 0.3 * d.R, y = d.hy + 0.3 * d.R; r = { x: sp.lat ? sp.ax - x : x - sp.ax, y: y - sp.ay, r: 0.5 * d.R }; }
+    } catch (e) { r = null; }
+    return (sp.matC[k] = r);
+  };
   // Vẽ dấu ngực 3 × 3 tại p (tâm), trong hệ đã dời về chân bé.
   SC.veDauNguc = function (c, p, ao) {
     const X = p[0], Y = p[1];
@@ -22861,6 +22952,8 @@ MA._xong();
       };
       // Vũ khí và nắm tay dời theo "neo.tay" cho khớp bàn tay của thân AI.
       if (neo && neo.tay && (neo.tay[0] || neo.tay[1])) o = Object.assign({}, o, { neoTay: neo.tay });
+      // G.KIEM_KHOP: bàn tay AI (cắt tròn quanh điểm nắm của khung này) vẽ lại đè lên chuôi, thay cho ô bàn tay code (js/hero_tinhlinh.js drawFrame).
+      if (G.KIEM_KHOP) o = Object.assign({}, o, { veTayAI: (cc, P, r) => { cc.save(); cc.beginPath(); cc.arc(P[0], P[1], r, 0, Math.PI * 2); cc.clip(); SC.veKhung(cc, sp, s.ten, s.i, 1, { tint }); cc.restore(); } });
       // Em bé gốc vẫn vẽ bóng, vũ khí, hào quang trang phục; chỗ vẽ thân thì vẽ hình tự vẽ.
       const thay = function (img, x, y) {
         const than = img === fr.cv || (arguments.length === 3 && x === fr.ox && y === fr.oy && img && img.width === fr.cv.width && img.height === fr.cv.height);
@@ -23707,7 +23800,7 @@ MA._xong();
       const s = SC.chonEmBe(sp, o);
       if (!coVk && !LA_DON[s.ten]) return null;
       const da = SC.diemKhung(sp, key, s.ten, s.i, SC.khopEmBe(sp, s.ten, s.i));
-      return { ten: s.ten, i: s.i, diem: da ? da.diem : null };
+      return { ten: s.ten, i: s.i, diem: da ? da.diem : null, mat: G.KIEM_KHOP ? SC.matKhung(sp, s.ten, s.i) : null };
     } catch (e) { return null; }
   };
   SC.MOC_TRANG_PHUC = { hats: 'H', masks: 'H', robes: 'B', backs: 'B', hands: 'B', wings: 'vai' };

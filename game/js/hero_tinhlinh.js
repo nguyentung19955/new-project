@@ -1372,7 +1372,36 @@
     const kieu = cv.bam_vk || (wp.type === 'bow' ? 'cam' : 'nam');
     const Lh = kieu === 'cam' ? 0 : wp.type === 'bow' ? -9 - 8 * (wp.pull || 0) : HOLD[wp.type] || 0, h0 = rotv(Lh, 0, wp.ang), a1 = wp.ang + cv.xoay, h1 = rotv(Lh, 0, a1), nt = o.neoTay || [0, 0];
     const tx = P[0] + cv.dx - nt[0], ty = P[1] + cv.dy - nt[1]; // chỗ bàn tay của thân AI (vũ khí còn được dời thêm neoTay lúc vẽ)
-    return { wp: Object.assign({}, wp, { x: Math.round(tx - h1[0]), y: Math.round(ty - h1[1]), ang: a1, lh: Lh }, cv.truoc ? { front: true } : null), tay: [tx - (wp.x + h0[0]), ty - (wp.y + h0[1])], bam: true };
+    let a2 = a1, h2 = h1;
+    const km = kiemKhop(o, wp, gv, P[0] + cv.dx, P[1] + cv.dy, a1, !!(wp.front || cv.truoc));
+    if (km) { a2 = km.ang; if (a2 !== a1) h2 = rotv(Lh, 0, a2); }
+    return { wp: Object.assign({}, wp, { x: Math.round(tx - h2[0]), y: Math.round(ty - h2[1]), ang: a2, lh: Lh }, cv.truoc ? { front: true } : null, km ? { front: km.front } : null), tay: [tx - (wp.x + h0[0]), ty - (wp.y + h0[1])], bam: true, P: [P[0] + cv.dx, P[1] + cv.dy] };
+  }
+  // G.KIEM_KHOP (js/sprite_custom.js): kiếm trên thân AI lúc đang đánh (đứng chém, chạy chém, chiêu, giữ lấy đà).
+  //  - Lưỡi chĩa ra sau lưng (đà vung ra sau, giơ qua đầu): kiếm vẽ SAU thân, bàn tay AI tự nhiên nằm trên chuôi, mặt không bị che.
+  //  - Lưỡi ở trước thân mà đi ngang vùng mặt của khung (SC.matKhung): xoay lưỡi về phía trước từng 5 độ (tối đa 70) cho khỏi mặt;
+  //    vẫn chạm mặt thì vẽ sau thân. Chỉ đổi HÌNH (vệt chém bám theo hình này qua tip()); đòn, tầm, vùng trúng không đổi.
+  // (hx, hy): bàn tay trên thân (toạ độ tính từ chân, x về trước mặt). null: không áp (tắt cờ, không phải kiếm, không đánh...).
+  function kiemKhop(o, wp, gv, hx, hy, ang, front) {
+    if (!G.KIEM_KHOP || !wp || wp.type !== 'sword' || wp.sx != null || !gv || o.plainWeapon) return null;
+    const p = o.p, danh = o.atk >= 0 || (p && (p.specT > 0 || p.castT > 0 || (p.mv && p.mv.holding)));
+    if (!danh) return null;
+    const ra = (a) => (a * Math.PI) / 180, sau = (a) => Math.cos(ra(a)) < -0.25;
+    if (sau(ang)) return { ang, front: false };
+    const m = gv.mat;
+    if (!m) return { ang, front };
+    let L = 24;
+    try { const SCx = G.spriteCustom, wo = G.weaponArt.fromWeapon(o.weapon || {}), sp = SCx.timVuKhi(wo); if (sp && sp.vk) L = Math.hypot(sp.vk.mui[0] - sp.vk.cam[0], sp.vk.mui[1] - sp.vk.cam[1]) * SCx.coVk('sword', wo) - (HOLD.sword || 0); } catch (e) { L = 24; }
+    // khoảng cách từ tâm mặt tới đoạn chuôi -> mũi (bắt đầu sau nắm tay và chắn tay; lưỡi dày chừng 3 điểm ảnh)
+    const cham = (a) => {
+      const dx = Math.cos(ra(a)), dy = Math.sin(ra(a)), x0 = hx + dx * 2.5, y0 = hy + dy * 2.5;
+      const t = Math.max(0, Math.min(L, (m.x - x0) * dx + (m.y - y0) * dy));
+      return Math.hypot(x0 + dx * t - m.x, y0 + dy * t - m.y) < m.r + 1.5;
+    };
+    if (!cham(ang)) return { ang, front };
+    const huong = Math.sin(ra(ang)) < 0 ? 1 : -1; // chĩa lên: xoay xuống phía trước; chĩa xuống: xoay lên phía trước
+    for (let d = 5; d <= 70; d += 5) { const a = ang + huong * d; if (!sau(a) && !cham(a)) return { ang: a, front }; }
+    return { ang, front: false };
   }
   // Vẽ một bé (kèm vũ khí) tại chỗ c đang đứng: gốc là chân bé, đã lật theo hướng mặt.
   function drawFrame(c, o, fr, t) {
@@ -1384,6 +1413,9 @@
     c.drawImage(fr.cv, fr.ox, fr.oy, fr.w, fr.h);
     if (wp && wp.front) {
       veVk();
+      // G.KIEM_KHOP: thân AI có bàn tay vẽ sẵn -> vẽ lại chính bàn tay đó đè lên chuôi (nắm đúng chuôi), không vẽ ô bàn tay code
+      // (ô màu da code, lúc có lúc không giữa các khung, trông như bàn tay thừa).
+      if (G.KIEM_KHOP && vg.bam && vg.P && o.veTayAI) { try { o.veTayAI(c, vg.P, 2.5); } catch (e) { /* bỏ qua */ } return; }
       if (doiTay) { c.save(); c.translate(nt[0], nt[1]); }
       if (fr.hands) for (const h of fr.hands) { // bàn tay bé nắm đè lên chuôi
         const x = Math.round(h[0] + (dh ? dh[0] : 0)), y = Math.round(h[1] + (dh ? dh[1] : 0)), g = L.hands[outfitOf(HERO[o.key] ? o.key : 'smith', o).hand], gl = g && g.glove;
@@ -1574,6 +1606,7 @@
     // info(o): thông tin vũ khí của khung hiện tại { type, x, y, ang, pull, front, mood } hoặc null
     info: (o) => { const fr = frame(o); return fr.weapon ? Object.assign({ anim: fr.anim, f: fr.f }, fr.weapon) : null; },
     tip,
+    vkGhep: (o) => vkGhep(o, frame(o)), // trang thử (docs/review/ke-hoach-cai-thien/tay-kiem-mat): vũ khí sau khi ghép vào tay thân AI
     // Dành cho tờ phác thảo và trang thử:
     kidSprite, weaponSprite, drawKid, Spr, layers: ['lung', 'than', 'ao', 'mu', 'mat', 'tay'],
     cacheSize: () => KCACHE.size + WCACHE.size,

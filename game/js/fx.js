@@ -379,6 +379,9 @@
       o.atk = i / 40;
       const q = TL.tip(o);
       if (!q || q.anim !== 'atk' || q.u < win[0] || q.u > win[1]) continue;
+      // G.KIEM_KHOP (tay-kiem-mat 12/10): kiếm đang chĩa ra sau lưng thì vẽ sau thân (js/hero_tinhlinh.js), nên cung vệt bắt đầu
+      // từ chỗ lưỡi đã ra trước: vệt không còn vòng qua đỉnh đầu / trước mặt em bé. Không đổi độ đậm, cỡ ảnh.
+      if (G.KIEM_KHOP && q.wt === 'sword' && q.dx * f < -0.25 * Math.hypot(q.dx, q.dy)) continue;
       let a = Math.atan2(q.dy, q.dx);
       if (!n) { a0 = a; ap = a; } else { while (a - ap > Math.PI) a -= TAU; while (a - ap < -Math.PI) a += TAU; ap = a; }
       const l = q.L * Math.hypot(q.dx, q.dy), gx = q.gx - P.x, gy = q.gy - P.y, ex = (gx + Math.cos(a) * l) * f;
