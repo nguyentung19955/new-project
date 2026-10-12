@@ -1,0 +1,7 @@
+# Đặc biệt kiếm Trảm Nguyệt (0,35 giây)
+# Gửi kèm: mẫu
+
+Nhân vật như ẢNH MẪU gửi kèm (giữ y hệt mặt, tóc, sừng, đồ, màu, tỉ lệ đầu/thân). Pixel art chibi, viền tối 1 nét, quay mặt PHẢI, cùng cỡ người ở mọi khung, chân trụ chạm cùng một đường đất.
+Tay KHÔNG cầm vũ khí (game tự vẽ vũ khí): bàn tay nắm như đang cầm cán, tay không che mặt.
+Chiêu đặc biệt: 1 xoay người lấy đà tay ra sau, 2 ★ vung một vòng cung lớn ra trước tay duỗi hết, 3 lùi một bước theo đà, 4–6 thu về thủ thế.
+1 hàng 6 khung đều nhau, đọc trái sang phải; các hình không chạm nhau, không chạm mép ảnh. Nền xanh lá thuần #00FF00, không lưới, không chữ, không số, không bóng, không hiệu ứng.

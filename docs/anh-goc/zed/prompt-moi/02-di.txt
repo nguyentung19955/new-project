@@ -1,0 +1,7 @@
+# Đi bộ
+# Gửi kèm: mẫu + mau-di-bo-v2.png
+
+Nhân vật như ẢNH MẪU gửi kèm (giữ y hệt mặt, tóc, sừng, đồ, màu, tỉ lệ đầu/thân). Pixel art chibi, viền tối 1 nét, quay mặt PHẢI, cùng cỡ người ở mọi khung, chân trụ chạm cùng một đường đất.
+Ảnh 2 là khung xương 8 tư thế (đỏ = tay/chân gần, xanh = xa): vẽ ĐÚNG tư thế từng khung.
+Đi bộ, LẶP: 1 chạm gót, 2 dồn người (thấp nhất), 3 bước qua, 4 nhón gót; 5–8 như 1–4 ĐỔI chân. Tay vung NGƯỢC chân. Đầu không trôi ngang. Khung 8 nối khung 1.
+1 hàng 8 khung đều nhau, đọc trái sang phải; các hình không chạm nhau, không chạm mép ảnh. Nền xanh lá thuần #00FF00, không lưới, không chữ, không số, không bóng, không hiệu ứng.

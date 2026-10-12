@@ -1,0 +1,6 @@
+# Trúng đòn (0,2 giây)
+# Gửi kèm: mẫu
+
+Nhân vật như ẢNH MẪU gửi kèm (giữ y hệt mặt, tóc, sừng, đồ, màu, tỉ lệ đầu/thân). Pixel art chibi, viền tối 1 nét, quay mặt PHẢI, cùng cỡ người ở mọi khung, chân trụ chạm cùng một đường đất.
+Trúng đòn: 1 giật đầu ngả ra sau, nhắm mắt nhăn mặt; 2 ngả nhiều nhất; 3 lấy lại thăng bằng; 4 về thế thủ.
+1 hàng 4 khung đều nhau, đọc trái sang phải; các hình không chạm nhau, không chạm mép ảnh. Nền xanh lá thuần #00FF00, không lưới, không chữ, không số, không bóng, không hiệu ứng.

@@ -1,0 +1,7 @@
+# Kiếm nhát kết – bổ xuống (0,46 giây, ★ khung 3)
+# Gửi kèm: mẫu
+
+Nhân vật như ẢNH MẪU gửi kèm (giữ y hệt mặt, tóc, sừng, đồ, màu, tỉ lệ đầu/thân). Pixel art chibi, viền tối 1 nét, quay mặt PHẢI, cùng cỡ người ở mọi khung, chân trụ chạm cùng một đường đất.
+Tay KHÔNG cầm vũ khí (game tự vẽ vũ khí): bàn tay nắm như đang cầm cán, tay không che mặt.
+Nhát kết thật mạnh: 1 lùi chân, giơ hai tay qua đầu, 2 nhón người lên, 3 ★ bổ thẳng xuống trước tay gần chạm đất, khuỵu gối, 4 giữ, 5 đứng dậy, 6 thu về thủ thế.
+1 hàng 6 khung đều nhau, đọc trái sang phải; các hình không chạm nhau, không chạm mép ảnh. Nền xanh lá thuần #00FF00, không lưới, không chữ, không số, không bóng, không hiệu ứng.

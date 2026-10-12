@@ -1,0 +1,7 @@
+# Búa giữ lấy đà (2 nấc)
+# Gửi kèm: mẫu
+
+Nhân vật như ẢNH MẪU gửi kèm (giữ y hệt mặt, tóc, sừng, đồ, màu, tỉ lệ đầu/thân). Pixel art chibi, viền tối 1 nét, quay mặt PHẢI, cùng cỡ người ở mọi khung, chân trụ chạm cùng một đường đất.
+Tay KHÔNG cầm vũ khí (game tự vẽ vũ khí): bàn tay nắm như đang cầm cán, tay không che mặt. Hai tay cầm cán búa.
+Giữ lấy đà, LẶP: búa kéo ra sau ngang hông, người khom gồng. Khung 1–2 gồng nhẹ (nấc 1), khung 3–4 gồng mạnh hơn, người thấp hơn, rung (nấc 2).
+1 hàng 4 khung đều nhau, đọc trái sang phải; các hình không chạm nhau, không chạm mép ảnh. Nền xanh lá thuần #00FF00, không lưới, không chữ, không số, không bóng, không hiệu ứng.

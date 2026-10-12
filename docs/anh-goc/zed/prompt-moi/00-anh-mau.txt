@@ -1,0 +1,9 @@
+# Ảnh mẫu Zed (làm TRƯỚC TIÊN, duyệt xong mới làm tiếp)
+# Gửi kèm: không
+
+Vẽ MỘT nhân vật chibi pixel art tên Zed, đứng thẳng thế thủ, quay mặt sang PHẢI (nghiêng 3/4), to rõ mặt giữa ảnh.
+Ngoại hình: [GHI MÔ TẢ ZED Ở ĐÂY — vd: cậu bé quỷ, tóc trắng bù xù, hai sừng cong đỏ sẫm, mắt đỏ, tai nhọn].
+Bộ đồ mặc định: [GHI MÔ TẢ — vd: cởi trần, khăn quàng đỏ ngắn, quấn tay đen viền đỏ, quần đen rộng, đai đỏ, dép đen].
+Tay không cầm gì, bàn tay nắm. Không khăn hay đồ bay dài quá người.
+Pixel art, viền tối 1 nét, màu phẳng, tô bóng mịn, khoảng 32–44 màu, không dùng màu xanh lá trên người.
+Nền xanh lá thuần #00FF00, không chữ, không bóng, không hiệu ứng.
