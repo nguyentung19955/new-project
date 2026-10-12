@@ -69,8 +69,9 @@
     chest: 'Lại gần rương rồi bấm Đánh để mở. Bùa hệ phủ hệ đó lên vũ khí trong 60 giây.',
     fight2: 'Thanh xanh là mana. Đủ 25 mana thì bấm Đặc biệt để tung đòn mạnh.',
     elite: 'Quái tinh anh mang hệ. Chạm ô vũ khí ở góc trên bên phải để đổi sang cung.',
-    fountain: 'Lại gần suối đỏ để hồi máu hoặc suối xanh để hồi mana rồi bấm Đánh, chỉ chọn được một. Dòng chữ phía trên cho biết trùm đã học gì từ bạn.',
-    boss: 'Trùm kháng hệ bạn dùng nhiều nhất. Đánh vỡ vật mang hệ khắc chế ở gần nó để gây sát thương lớn.',
+    fountain: 'Lại gần suối đỏ để hồi máu hoặc suối xanh để hồi mana rồi bấm Đánh, chỉ chọn được một. Từ ải sau, dòng chữ phía trên cho biết trùm đã học gì từ bạn.',
+    // Phiên cân bằng (mục 8, V39): trùm ải hướng dẫn không học theo người chơi nữa, câu gợi ý nói đúng như vậy.
+    boss: 'Trùm đầu tiên chưa học gì từ bạn. Từ ải sau, trùm kháng hệ bạn dùng nhiều nhất nhưng yếu hệ khắc chế: đổi vũ khí khác hệ để đánh mạnh hơn.',
     merchant: 'Thương nhân bán bình máu, bùa hệ và quặng. Lại gần rồi bấm Đánh để xem hàng.',
     challenge: 'Phòng thử thách: hạ hết quái trước khi hết giờ để nhận thưởng.',
     curse: 'Bàn thờ lời nguyền: chịu một bất lợi để dấu ấn tăng gấp đôi đến hết ải. Bỏ qua cũng được.',
@@ -111,9 +112,11 @@
     const reg = G.REGIONS[S.r];
     const big = S.i === 4;
     const first = S.r === 0 && !S.diff && big;
-    const layers = G.computeLayers(S.stats, big ? (first ? 1 : 2) : 1, first ? 0.3 : 0.5);
+    // Phiên cân bằng (mục 8): mức kháng 0,5 → 0,3 (Mộc Tinh lần đầu 0,3 → 0,2); ải 1-1 (ải hướng dẫn) không có lớp thích nghi nào.
+    const hoc = !(S.r === 0 && S.i === 0 && !S.diff);
+    const layers = hoc ? G.computeLayers(S.stats, big ? (first ? 1 : 2) : 1, first ? 0.2 : 0.3) : [];
     const scar = G.save.scars[reg.boss];
-    if (S.diff && big && scar && !layers.some((l) => l.type === 'resist' && l.el === scar)) layers.push({ type: 'resist', el: scar, pct: 0.5, scar: true });
+    if (S.diff && big && scar && !layers.some((l) => l.type === 'resist' && l.el === scar)) layers.push({ type: 'resist', el: scar, pct: 0.3, scar: true });
     return { layers, kind: big ? reg.boss : 'mini', name: big ? reg.bossName : reg.mini };
   }
 
@@ -277,6 +280,8 @@
       const xr = (W.px1 != null ? W.px1 : W.x1) - W.x0;
       W.props.push({ type: PROP_OF[el], env: true, x: W.x0 + xr * 0.3, y: W.y0 + 20 }, { type: PROP_OF[el], env: true, x: W.x0 + xr * 0.68, y: W.y1 - 14 });
       W.banner = { s: bs.layers.length ? G.t('{0}: {1}', b.name, layerTexts(bs.layers, ' · ')) : G.t('{0} xuất hiện', b.name), col: '#ff6a5a', t: 4 };
+      // Phiên cân bằng (mục 7): trùm chắn tên xa thì nói rõ cách đánh (đứng gần hơn 120 điểm ảnh mới đủ sức)
+      if (bs.layers.some((l) => l.type === 'antiRanged')) { W.banner.s += ' — ' + G.t('bắn từ xa yếu đi, lại gần hơn'); W.banner.t = 5; }
       G.sfx('gong');
     }
     if (W.cleared) S.cleared[id] = true;
@@ -463,6 +468,8 @@
       if (S.P && S.P.charm === 'c_greed') gold = Math.round(gold * 1.25); // Bùa tham (đang đeo, hero từ cấp 5)
       const ore = 3 + R.stars + 2 * S.r, mat = 5 + S.i; // cày nâng cấp: vùng sau cho nhiều quặng hơn (mài cao tốn quặng)
       sv.gold += gold; sv.ore += ore; sv.mats[S.r] += mat;
+      // kho đổi vàng lấy nguyên liệu (G.DOI_NL, js/upgrade.js): mỗi ải thắng thêm vài lượt đổi
+      if (G.DOI_NL) sv.doiNL = Math.min(G.DOI_NL.max, (sv.doiNL | 0) + G.DOI_NL.them);
       R.lines.push(ln(R, '+{0} kinh nghiệm', xp), ln(R, '+{0} vàng', gold), ln(R, '+{0} quặng', ore), ln(R, '+{0} {1}', mat, reg.mat.toLowerCase()));
       if (gm < 1) R.lines.push(ln(R, 'Ải đã quá dễ với sức mạnh của bé: kinh nghiệm và vàng còn {0}%', Math.round(gm * 100)));
       if (big) { const ns = S.diff ? 4 : 3; sv.shards[S.r] += ns; R.lines.push(ln(R, '+{0} mảnh {1}', ns, reg.bossName)); }
@@ -484,8 +491,15 @@
         if (it) { R.lines.push(ln(R, '{0} rơi {1} ({2})', big ? reg.bossName : 'Trùm', O.name(it), G.RARITY[it.r].name)); S.outfitLoot.push(it); }
       }
       if (big && !S.diff && !sv.heroes[reg.rescue].unlocked) {
-        sv.heroes[reg.rescue].unlocked = true;
+        // Phiên cân bằng (mục 10): em bé mới mở ra ở cấp của em bé cao cấp nhất trừ 3 (trước luôn cấp 1, không vào nổi vùng đang chơi).
+        const nh = sv.heroes[reg.rescue];
+        nh.unlocked = true;
+        let top = 1;
+        for (const k of G.HKEYS) if (k !== reg.rescue && sv.heroes[k].unlocked) top = Math.max(top, sv.heroes[k].lvl | 0);
+        const lv = Math.max(1, Math.min(G.MAX_LEVEL, top - 3));
+        if (lv > (nh.lvl | 0)) { nh.lvl = lv; nh.xp = 0; }
         R.lines.push(ln(R, 'Cứu được {0}! Em bé mới đã mở.', G.HEROES[reg.rescue].name));
+        if (nh.lvl > 1) R.lines.push(ln(R, '{0} theo về ở cấp {1}', G.HEROES[reg.rescue].name, nh.lvl));
       }
       if (big && S.loot.finalEl) sv.scars[reg.boss] = S.loot.finalEl;
       if (S.tut) sv.tut.done = true;
@@ -497,6 +511,12 @@
       const gold = Math.round(S.loot.kills * 2 * gm);
       sv.gold += gold;
       R.lines.push(ln(R, '+{0} kinh nghiệm', xp), ln(R, '+{0} vàng', gold));
+      // Phiên cân bằng (mục 17): đã vào tới phòng trùm mà thua thì vẫn nhận 30% nguyên liệu vùng và quặng của ải (bỏ ải thì không).
+      if (!S.quit && S.W && S.W.type === 'boss') {
+        const mat = Math.round((5 + S.i) * 0.3), ore = Math.round((4 + 2 * S.r) * 0.3);
+        sv.mats[S.r] += mat; sv.ore += ore;
+        R.lines.push(ln(R, '+{0} {1}', mat, reg.mat.toLowerCase()), ln(R, '+{0} quặng', ore));
+      }
       R.up = G.addXp(sv.hero, xp);
       // Thua không làm bé mạnh thêm (chủ dự án: sức mạnh chỉ đến từ cày nâng cấp). Thay vào đó bảng thua gợi ý nên cày gì (G.upgradeTips).
       if (!S.quit && G.upgradeTips) R.tips = G.upgradeTips(S.r, S.i, S.diff);
@@ -1256,14 +1276,20 @@
       { id: 'charm', label: G.t('Bùa {0}', G.EL[sh.el].name), sub: 'Phủ hệ 60 giây', cost: 80, ok: true, f: () => G.addCoat(sh.el, 60) },
       { id: 'ore', label: '3 quặng', sub: 'Để mài vũ khí', cost: 100, ok: true, f: () => { sv.ore += 3; S.got.push('3 quặng'); } },
     ];
+    // Phiên cân bằng (mục 3): bán thêm 1 nguyên liệu của vùng đã qua (vùng đang thiếu nhất), dùng chung kho lượt đổi với Bà Hàng Xén.
+    const U = G.upg, mr = U && U.doiVung ? U.doiVung(sv) : null;
+    if (mr != null) items.push({ id: 'mat', label: G.t('1 {0}', G.REGIONS[mr].mat.toLowerCase()), sub: G.t('Còn {0} lượt đổi', sv.doiNL | 0), cost: U.doiGia(), ok: U.doiDuoc(sv, mr) === '', f: () => { if (U.doi(sv, mr)) S.got.push(G.t('1 {0}', G.REGIONS[mr].mat.toLowerCase())); } });
+    const bw = items.length > 3 ? 76 : 100, bs = items.length > 3 ? 81 : 108;
     items.forEach((it, i) => {
-      const x = 82 + i * 108;
+      const x = 82 + i * bs;
       const dis = sh.bought[it.id] || sv.gold < it.cost || !it.ok;
-      if (ui.btn(x, 78, 100, 80, it.label, { sub: sh.bought[it.id] ? 'Đã mua' : G.t('{0} vàng', it.cost), size: 9.5, disabled: dis })) {
-        sv.gold -= it.cost; sh.bought[it.id] = true; it.f(); G.sfx('pick');
+      if (ui.btn(x, 78, bw, 80, it.label, { sub: sh.bought[it.id] ? 'Đã mua' : G.t('{0} vàng', it.cost), size: 9.5, disabled: dis })) {
+        if (it.id === 'mat') it.f(); // U.doi tự trừ vàng và lượt đổi
+        else { sv.gold -= it.cost; it.f(); }
+        sh.bought[it.id] = true; G.sfx('pick');
       }
-      if (it.id === 'charm') { const gb = gdAnh('gd-bua-' + sh.el); if (gb) { const c = G.ux, ga = c.globalAlpha; if (dis) c.globalAlpha = ga * 0.5; G.spriteCustom.veGd(c, gb, x + 38, 83, 24, 24); c.globalAlpha = ga; } } // hình lá bùa hệ (ảnh AI, phiên C2)
-      ui.text(it.sub, x + 50, 170, { size: 7, align: 'center', color: '#d9cdb8' });
+      if (it.id === 'charm') { const gb = gdAnh('gd-bua-' + sh.el); if (gb) { const c = G.ux, ga = c.globalAlpha; if (dis) c.globalAlpha = ga * 0.5; G.spriteCustom.veGd(c, gb, x + bw / 2 - 12, 83, 24, 24); c.globalAlpha = ga; } } // hình lá bùa hệ (ảnh AI, phiên C2)
+      ui.text(it.sub, x + bw / 2, 170, { size: 7, align: 'center', color: '#d9cdb8' });
     });
     if (ui.btn(82, 182, 90, 24, 'Đóng')) S.mode = 'play';
   }

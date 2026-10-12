@@ -55,6 +55,7 @@
       G.sfx('mark', 0.8 + 0.6 * Math.min(1, w.marks[el] / next));
     }
     if (after === 3 && !w.named) nameWeapon(w);
+    if (after === 3 && el === w.branch) doiThua(w);
     if (after > before) {
       // Lên Thành hình và Thức tỉnh: báo luôn tên đặc trưng hệ vừa mở.
       const ft = after >= 2 ? G.HE_FEATURES[w.branch][after - 2] : null;
@@ -63,6 +64,25 @@
       if (W) FX('evolve', w.branch, after);
     }
   };
+
+  // Dấu ấn thừa (phiên cân bằng, mục 2): vũ khí đã Thức tỉnh, hệ chính vượt mốc cuối mỗi G.LK_THUA dấu ấn thì đổi ra
+  // 1 nguyên liệu vùng của hệ đó (G.LK_THUA_MAT). Ghi vào danh sách "Trong ải" của lượt chơi để màn kết quả hiện ra.
+  function doiThua(w, sv0) {
+    const sv = sv0 || G.save, k = G.LK_THUA || 0, el = w.branch;
+    if (!sv || !sv.mats || !(k > 0) || !el) return 0;
+    const top = G.MARKS[G.MARKS.length - 1];
+    let n = 0;
+    while (w.marks[el] >= top + k && n < 1000) { w.marks[el] -= k; n++; }
+    if (!n) return 0;
+    const mi = G.LK_THUA_MAT[el] | 0;
+    sv.mats[mi] += n;
+    const S = !sv0 && G.getRun && G.getRun();
+    const mat = G.tv(G.REGIONS[mi].mat.toLowerCase()), txt = G.t('{0} {1} (dấu ấn thừa của {2})', n, mat, G.wName(w));
+    if (S && S.got && S.W === W) S.got.push(txt);
+    if (!sv0 && W && !W.banner) W.banner = { s: G.t('Dấu ấn thừa đổi ra {0} {1}', n, mat), col: G.EL[el].col, t: 2.5 };
+    return n;
+  }
+  G.lkDoiThua = doiThua;
 
   // ---------- chỉ số người chơi ----------
   G.buildPlayer = function () {
@@ -126,7 +146,10 @@
     if (G.chuong) off *= G.chuong.powerMult(G.save, P.key);
     let res = 0;
     for (const e of G.ELS) res = Math.max(res, P.resist[e] || 0);
-    let ehp = (P.maxhp / (1 - Math.min(0.75, P.dr))) * (1 + 0.25 * Math.min(0.8, res));
+    // Phiên cân bằng (mục 6): nội tại giảm 25% sát thương của Cu Lì chỉ tính một nửa (Đô Vật bị đếm cao hơn Thợ Rèn 26%
+    // dù thắng như nhau với số máu mất tương đương).
+    const drP = P.dr - (P.key === 'wrestler' ? 0.125 : 0);
+    let ehp = (P.maxhp / (1 - Math.min(0.75, drP))) * (1 + 0.25 * Math.min(0.8, res));
     // Trang phục (js/outfit.js): máu, giảm sát thương, kháng hệ đã nằm trong P; thêm phần thưởng đủ bộ (sát thương hệ),
     // mỗi tác dụng riêng của món Tím, Vàng (khiên, vệt, vũng, nổ) và cánh (lộn xa hơn, khiên sau khi lộn).
     if (P.elBonus) { let eb = 0; for (const e in P.elBonus) eb = Math.max(eb, P.elBonus[e] || 0); off *= 1 + eb * 0.6; }
@@ -237,11 +260,13 @@
       for (const l of t.layers) {
         if (l.type === 'resist' && o.el === l.el) m *= 1 - l.pct;
       }
-      if (o.el && t.weak.includes(o.el)) { m *= 1.3; t.weakHits++; }
+      // Phiên cân bằng (mục 8): đánh bằng hệ khắc chế +50% (trước +30%), để đổi hệ khi trùm kháng thật sự đáng.
+      if (o.el && t.weak.includes(o.el)) { m *= 1.5; t.weakHits++; }
       // V13: "Chống đánh xa" giảm còn 50% (trước 30%) và có báo: số sát thương xám (fx.js tự làm xám khi hệ số < 0,8)
       // kèm chữ "Xa quá!" trên đầu trùm lần đầu bị giảm, nhắc lại tối đa mỗi 6 giây.
+      // Phiên cân bằng (mục 7): 50% → 60% (cung làm vũ khí chính bớt bị phạt), chữ báo nay là "Xa quá! Lại gần".
       if (o.ranged && t.layers.some((l) => l.type === 'antiRanged') && t.rangedShield && t.rangedShield(W.P)) {
-        m *= 0.5;
+        m *= 0.6;
         if (!(G.time - (t.farHintT == null ? -99 : t.farHintT) < 6)) {
           t.farHintT = G.time;
           FX('farHint', t);
@@ -364,8 +389,21 @@
     if ((hasW && !(o && o.ch)) || (big && L)) {
       // Hệ của dấu ấn: hiệu ứng gây sau cùng nếu nó còn hiệu lực, không thì hiệu ứng đang có; tinh anh, trùm không dính gì thì hệ của vùng.
       const el = !hasW ? regEl : e.st.last && on[e.st.last] ? e.st.last : on.fire ? 'fire' : on.poison ? 'poison' : 'ice';
-      const n = big && L ? (e.isBoss ? (e.kind === 'mini' ? L.mini : L.boss) : L.elite) : e.marks == null ? 1 : e.marks;
-      G.addMarks(w, el, n * P.markMult * W.marksMult);
+      let n = big && L ? (e.isBoss ? (e.kind === 'mini' ? L.mini : L.boss) : L.elite) : e.marks == null ? 1 : e.marks;
+      // Ải hướng dẫn 1-1 (mục 9): phòng đầu dạy chậu than → dấu ấn Lửa, nên ở ải này dấu ấn Lửa x2, Độc chỉ x0,2 (trước kiếm
+      // ra khỏi ải với +5 Lửa, +38 Độc). Tinh anh, trùm không dính hệ thì cho Lửa thay vì Độc của Rừng già.
+      const run = G.getRun && G.getRun();
+      let elx = el;
+      if (run && run.tut && run.W === W) { if (!hasW) elx = 'fire'; n *= elx === 'fire' ? 2 : elx === 'poison' ? 0.2 : 1; }
+      G.addMarks(w, elx, n * P.markMult * W.marksMult);
+      // Vũ khí thứ hai (mục 7) nhận một nửa số dấu ấn, vào hệ chính của nó; chưa khoá hệ thì vào hệ nó đang nhiều nhất, còn trắng
+      // thì vào hệ KHẮC CHẾ hệ vừa nhận (G.WEAK): trùm kháng hệ của vũ khí chính thì vũ khí thứ hai sẵn hệ khắc chế để đổi sang.
+      const w2 = P.weapons && P.weapons.find((x) => x && x !== w);
+      if (w2 && G.LK_PHU > 0) {
+        let e2 = w2.branch;
+        if (!e2) { for (const x of G.ELS) if ((w2.marks[x] || 0) > 0 && (!e2 || w2.marks[x] > w2.marks[e2])) e2 = x; }
+        G.addMarks(w2, e2 || G.WEAK[elx], n * P.markMult * W.marksMult * G.LK_PHU);
+      }
       FX('markOrbs', e);
     }
     if (P.charm === 'c_spirit' && G.hasStatus(e)) P.mana = Math.min(P.maxmana, P.mana + 5);
@@ -708,7 +746,13 @@
         if (P.atkT <= 0 && Math.abs(mx) > 0.2) P.face = mx > 0 ? 1 : -1;
         { const l1 = Math.hypot(mx, my); P.ldx = mx / l1; P.ldy = my / l1; } // nhớ hướng di chuyển gần nhất, để Né khi không đẩy cần
       }
-      if ((inp.dodgeP || P.dodgeBuf > 0) && P.dodgeCd <= 0) {
+      // Phiên cân bằng (mục 12): búa có "giáp nhẹ" — đã lấy đà quá nửa phần trước lúc chạm thì Né không huỷ nhát nện: cú lộn chờ
+      // (giữ trong bộ nhớ Né) tới lúc búa chạm rồi mới ra, chậm nhiều nhất ~0,14 giây. Trước búa bị huỷ 43-44% nhát.
+      const cw0 = curW(P);
+      const giapBua = cw0 && cw0.type === 'hammer' && P.atkT > 0 && !P.hitDone && P.hitAt != null && P.atkDur > 0 && 1 - P.atkT / P.atkDur >= 0.5 * P.hitAt;
+      if (giapBua && (inp.dodgeP || P.dodgeBuf > 0) && P.dodgeCd <= 0) {
+        P.dodgeBuf = Math.max(P.dodgeBuf, 0.12);
+      } else if ((inp.dodgeP || P.dodgeBuf > 0) && P.dodgeCd <= 0) {
         P.dodgeBuf = 0;
         P.dodgeT = 0.27; P.dodgeCd = 1 * P.dodgeCdMax; P.inv = Math.max(P.inv, 0.32); // Q13: giữ bất tử 0,32 giây
         // V15 (Q5): Né huỷ nhát đang vung thì không bắt chờ hết thời gian nhát đó (búa trước phải chờ thêm ~0,43 giây sau cú lộn)

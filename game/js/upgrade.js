@@ -27,6 +27,39 @@
     }
     return any ? m : null;
   };
+  // ---------- đổi vàng lấy nguyên liệu vùng đã qua (phiên cân bằng, mục 3; số liệu G.DOI_NL ở data.js) ----------
+  // Vùng r "đã qua" khi đã hạ trùm vùng đó. Mỗi lần đổi: G.DOI_NL.gia vàng → 1 nguyên liệu vùng r, tốn 1 lượt trong kho sv.doiNL.
+  U.doiGia = () => (G.DOI_NL ? G.DOI_NL.gia : 150);
+  U.daQua = (sv, r) => !!(sv && sv.stars && sv.stars[r + '-4']);
+  // '' là đổi được; không thì lý do (chữ hiện lên nút)
+  U.doiDuoc = function (sv, r) {
+    if (!G.DOI_NL) return 'Chưa mở';
+    if (!U.daQua(sv, r)) return G.t('Hạ {0} để mở', G.REGIONS[r].bossName);
+    if (!((sv.doiNL | 0) > 0)) return 'Hết lượt đổi';
+    if (sv.gold < U.doiGia()) return 'Thiếu vàng';
+    return '';
+  };
+  U.doi = function (sv, r, n) {
+    n = n || 1;
+    let k = 0;
+    for (; k < n && U.doiDuoc(sv, r) === ''; k++) { sv.gold -= U.doiGia(); sv.mats[r]++; sv.doiNL = (sv.doiNL | 0) - 1; }
+    return k;
+  };
+  // Vùng đã qua đang ít nguyên liệu nhất (cho Thương nhân trong ải); null nếu chưa qua vùng nào.
+  U.doiVung = function (sv) {
+    let best = null;
+    for (let r = 0; r < 3; r++) if (U.daQua(sv, r) && (best == null || sv.mats[r] < sv.mats[best])) best = r;
+    return best;
+  };
+  // Phần thiếu m chỉ còn là nguyên liệu vùng đã qua mà đổi được ngay bằng vàng (đủ vàng, đủ lượt)? Trả về số món mỗi vùng, hoặc null.
+  U.doiDu = function (sv, m, giaThem) {
+    if (!m || !G.DOI_NL || m.ore || m.stones || m.gold) return null;
+    let n = 0;
+    for (let i = 0; i < 3; i++) { if (m.shard[i]) return null; if (m.mat[i]) { if (!U.daQua(sv, i)) return null; n += m.mat[i]; } }
+    if (!n || n > (sv.doiNL | 0) || sv.gold < n * U.doiGia() + (giaThem || 0)) return null;
+    return m.mat.slice();
+  };
+
   // Tên ải để chơi lại: ải thường cao nhất đã qua (trong vùng r nếu có).
   const stName = (r, i) => (i === 4 ? G.t('trùm {0}', G.REGIONS[r].bossName) : G.tv(G.REGIONS[r].name) + ' ' + (i + 1));
   U.grindStage = function (sv, r) {
@@ -59,7 +92,9 @@
       if (!m.mat[i]) continue;
       a.push(m.mat[i] + ' ' + G.tv(G.REGIONS[i].mat.toLowerCase()));
       const g = U.grindStage(sv, i);
-      where = where || (g ? G.t('chơi lại {0}', stName(g[0], g[1])) : G.t('vào vùng {0}', G.REGIONS[i].name));
+      // vùng đã qua: còn cách đổi vàng ở Bà Hàng Xén (mục 3)
+      const doi = U.daQua(sv, i) && (sv.doiNL | 0) > 0 ? ' ' + G.t('hoặc đổi vàng ở Bà Hàng Xén') : '';
+      where = where || (g ? G.t('chơi lại {0}', stName(g[0], g[1])) + doi : G.t('vào vùng {0}', G.REGIONS[i].name));
     }
     if (m.gold) a.push(G.t('{0} vàng', m.gold));
     if (m.ore) a.push(G.t('{0} quặng', m.ore));
@@ -226,7 +261,15 @@
         U.doIt(sv, sk[0]); done.push(sk[0].title); continue;
       }
       const list = all.filter((q) => q.ok && q.gain > 0);
-      if (!list.length) break;
+      if (!list.length) {
+        // Không việc nào làm ngay được: thử đổi vàng lấy nguyên liệu vùng đã qua cho việc đáng nhất chỉ còn thiếu nguyên liệu (mục 3)
+        const cv = all.filter((q) => q.apply && q.gain > 0 && q.miss && U.doiDu(sv, q.miss, q.cost.gold || 0)).sort((a, b) => b.gain / (5 + b.val) - a.gain / (5 + a.val))[0];
+        if (!cv || o.noDoi) break;
+        const need = U.doiDu(sv, cv.miss, cv.cost.gold || 0);
+        for (let i = 0; i < 3; i++) if (need[i]) U.doi(sv, i, need[i]);
+        done.push(G.t('Đổi vàng lấy nguyên liệu cho: {0}', cv.title));
+        continue;
+      }
       list.sort((a, b) => b.gain / (5 + b.val) - a.gain / (5 + a.val));
       const best = list[0];
       if (!U.doIt(sv, best)) break;

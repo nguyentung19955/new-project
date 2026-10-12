@@ -35,7 +35,8 @@ SAVE = """(() => {
   G.persist(); G.setScene(G.Village);
 })()"""
 # Bà Hàng Xén: khung bảng 152..472, nội dung 160..464
-TAB_W, TAB_BUY, TAB_SELL = (241, 57), (296, 57), (366, 57)
+# Phiên cân bằng: thêm thẻ Nguyên liệu (thẻ thứ hai), các thẻ dời lại: Vũ khí 218..254, Nguyên liệu 256..304, Mua 306..352, Bán 354..400
+TAB_W, TAB_BUY, TAB_SELL = (236, 57), (329, 57), (377, 57)
 SELL_ONE, LOCK_ONE = (432, 219), (374, 219)
 ASK_OK, ASK_NO = (373, 178), (251, 178)
 MULTI_SELL = (386, 249)

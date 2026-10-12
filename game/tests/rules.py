@@ -105,6 +105,8 @@ JS = r"""
   ok('Độc ngấm: độc kéo dài hơn trong lúc bị chậm', a.st.poisonN === 1 && a.st.iceN === 0);
 
   // ----- dấu ấn -----
+  // (phiên cân bằng: vũ khí thứ hai nhận một nửa dấu ấn, G.LK_PHU; các mục dưới đo riêng từng vũ khí nên tắt phần chia, thử riêng sau)
+  const phu0 = G.LK_PHU; G.LK_PHU = 0;
   room('hunter');
   const w0 = P.weapons[0], w1 = P.weapons[1];
   e = dummy(300); G.applyStatus(e, 'fire', 1); e.hp = 1; G.damage(e, 50, {});
@@ -125,27 +127,36 @@ JS = r"""
   ok('Dấu ấn: kết liễu bằng Nổ khói vẫn tính', e.dead && w1.marks.poison + w1.marks.fire === 3, JSON.stringify(w1.marks));
   room('smith'); e = dummy(300); G.applyStatus(e, 'fire', 1); e.hp = 1; G.damage(e, 50, {});
   ok('Thợ Rèn: dấu ấn nhanh hơn 20%', near(P.weapons[0].marks.fire, 1.2, 1e-9), P.weapons[0].marks.fire);
+  G.LK_PHU = phu0;
+  room('hunter'); e = dummy(300); G.applyStatus(e, 'fire', 1); e.hp = 1; G.damage(e, 50, {});
+  ok('Dấu ấn: vũ khí thứ hai (còn trắng) nhận một nửa, vào hệ khắc chế của hệ vừa nhận', P.weapons[0].marks.fire === 1 && near(P.weapons[1].marks.ice, G.LK_PHU, 1e-9), JSON.stringify(P.weapons[1].marks));
+  P.weapons[1].branch = 'poison'; e = dummy(300); G.applyStatus(e, 'fire', 1); e.hp = 1; G.damage(e, 50, {});
+  ok('Dấu ấn: vũ khí thứ hai đã có hệ chính thì nhận vào hệ chính', near(P.weapons[1].marks.poison, G.LK_PHU, 1e-9), JSON.stringify(P.weapons[1].marks));
 
   // ----- khóa nhánh và mốc tiến hóa -----
   room('hunter');
   let w = P.weapons[0];
-  G.addMarks(w, 'fire', 29);
-  ok('Nhánh: 29 dấu ấn chưa khóa', w.branch === null && G.wStage(w) === 0);
+  // phiên cân bằng: mốc 60/400/1.200 (trước 30/120/300)
+  G.addMarks(w, 'fire', 59);
+  ok('Nhánh: 59 dấu ấn chưa khóa', w.branch === null && G.wStage(w) === 0);
   G.addMarks(w, 'fire', 1);
-  ok('Nhánh: đủ 30 thì khóa nhánh, đạt Mầm', w.branch === 'fire' && G.wStage(w) === 1);
+  ok('Nhánh: đủ 60 thì khóa nhánh, đạt Mầm', w.branch === 'fire' && G.wStage(w) === 1);
   G.addMarks(w, 'ice', 80);
-  ok('Nhánh: hệ khác đủ 30 sau đó không đổi nhánh', w.branch === 'fire' && G.wStage(w) === 1 && w.marks.ice === 80);
-  G.addMarks(w, 'fire', 89);
-  ok('Mốc: 119 vẫn là Mầm', G.wStage(w) === 1);
+  ok('Nhánh: hệ khác đủ 60 sau đó không đổi nhánh', w.branch === 'fire' && G.wStage(w) === 1 && w.marks.ice === 80);
+  G.addMarks(w, 'fire', 339);
+  ok('Mốc: 399 vẫn là Mầm', G.wStage(w) === 1);
   G.addMarks(w, 'fire', 1);
-  ok('Mốc: 120 là Thành hình', G.wStage(w) === 2);
-  G.addMarks(w, 'fire', 400);
-  ok('Mốc: bậc Sắt dừng ở Thành hình', G.wStage(w) === 2 && w.name === null, G.wStage(w));
+  ok('Mốc: 400 là Thành hình', G.wStage(w) === 2);
+  G.addMarks(w, 'fire', 1000);
+  ok('Mốc: bậc Sắt dừng ở Thành hình (dấu ấn vẫn giữ, không đổi ra nguyên liệu)', G.wStage(w) === 2 && w.name === null && w.marks.fire === 1400, G.wStage(w));
   w.tier = 1;
-  ok('Mốc: bậc Bạc với 300 dấu ấn là Thức tỉnh', G.wStage(w) === 3);
-  w.marks.fire = 299;
-  ok('Mốc: 299 chưa Thức tỉnh', G.wStage(w) === 2);
-  ok('Cơ hội gây hiệu ứng theo mốc 0/20/50/100%', G.PROC.join() === '0,0.2,0.5,1' && G.MARKS.join() === '30,120,300');
+  ok('Mốc: bậc Bạc với 1.200 dấu ấn là Thức tỉnh', G.wStage(w) === 3);
+  w.marks.fire = 1199;
+  ok('Mốc: 1.199 chưa Thức tỉnh', G.wStage(w) === 2);
+  ok('Cơ hội gây hiệu ứng theo mốc 0/20/50/100%', G.PROC.join() === '0,0.2,0.5,1' && G.MARKS.join() === '60,400,1200');
+  const mat0 = G.save.mats[2]; w.marks.fire = 1250; G.addMarks(w, 'fire', 60);
+  ok('Dấu ấn thừa: Thức tỉnh rồi, mỗi 100 dấu ấn vượt 1.200 đổi ra 1 đá lửa', G.save.mats[2] === mat0 + 1 && near(w.marks.fire, 1210, 1e-9), G.save.mats[2] - mat0 + ' / ' + w.marks.fire);
+  w.marks.fire = 1199;
   ok('activeEl: vũ khí Mầm trở lên đánh ra hệ của nhánh', G.activeEl(P, w) === 'fire' && G.activeEl(P, P.weapons[1]) === null);
   G.addCoat('ice', 5);
   ok('Bùa hệ phủ đè lên hệ của nhánh', G.activeEl(P, w) === 'ice' && G.activeEl(P, P.weapons[1]) === 'ice');
@@ -179,9 +190,9 @@ JS = r"""
   b = boss('fire');
   ok('Trùm: kháng hệ dùng nhiều nhất, yếu hệ khắc chế', b.layers.length === 1 && b.layers[0].el === 'fire' && b.weak.join() === 'ice', JSON.stringify(b.layers) + b.weak);
   h0 = b.hp; G.damage(b, 100, { el: 'fire' });
-  ok('Kháng: sát thương hệ bị kháng giảm một nửa', near(h0 - b.hp, 50, 0.01), h0 - b.hp);
+  ok('Kháng: sát thương hệ bị kháng giảm 30% (phiên cân bằng, trước 50%)', near(h0 - b.hp, 70, 0.01), h0 - b.hp);
   h0 = b.hp; G.damage(b, 100, { el: 'ice' });
-  ok('Yếu: hệ khắc chế gây thêm 30%', near(h0 - b.hp, 130, 0.01), h0 - b.hp);
+  ok('Yếu: hệ khắc chế gây thêm 50% (trước 30%)', near(h0 - b.hp, 150, 0.01), h0 - b.hp);
   h0 = b.hp; G.damage(b, 100, { el: 'poison' });
   ok('Hệ còn lại và đòn trắng gây đủ 100%', near(h0 - b.hp, 100, 0.01), h0 - b.hp);
   b.exposed = 1; h0 = b.hp; G.damage(b, 100, {});
@@ -202,12 +213,12 @@ JS = r"""
   ok('Sao: dùng bình máu thì mất sao thứ hai', endWith('ice', true) === '101/2', endWith('ice', true));
   b = boss(null);
   ok('Trùm không kháng hệ nào khi người chơi không dùng hệ', b.weak.length === 0 && !b.layers.some((l) => l.type === 'resist'));
-  // boss vùng đầu tiên chỉ kháng 30% và 1 lớp; vùng sau 2 lớp, 50%
+  // boss vùng đầu tiên chỉ kháng 20% và 1 lớp; vùng sau 2 lớp, 30% (phiên cân bằng: trước 30% và 50%)
   b = boss('poison', 4);
   S.stats.melee = 0;
-  ok('Mộc Tinh lần đầu: 1 lớp, kháng 30%', b.layers.length === 1 && b.layers[0].pct === 0.3, JSON.stringify(b.layers));
+  ok('Mộc Tinh lần đầu: 1 lớp, kháng 20%', b.layers.length === 1 && b.layers[0].pct === 0.2, JSON.stringify(b.layers));
   h0 = b.hp; G.damage(b, 100, { el: 'poison' });
-  ok('Kháng 30% đúng số', near(h0 - b.hp, 70, 0.01), h0 - b.hp);
+  ok('Kháng 20% đúng số', near(h0 - b.hp, 80, 0.01), h0 - b.hp);
   // độ khó 2: thêm lớp vết sẹo
   G.testSave({ hero: 'hunter' }); G.save.scars.moc = 'ice';
   G.startStage(0, 4, 1); S = G.getRun(); G.getWorld().waves = [];

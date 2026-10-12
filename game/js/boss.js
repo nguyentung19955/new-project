@@ -65,7 +65,7 @@
     if (kind === 'mini') Object.assign(b, { role: 'mini' });
     b.hp = b.maxhp;
     setWeak(b);
-    // Chống đánh xa: đứng xa trùm quá 120 thì tên chỉ còn 30% sức.
+    // Chống đánh xa: đứng xa trùm quá 120 thì tên chỉ còn 60% sức (js/combat.js G.damage).
     b.rangedShield = (P) => Math.hypot(P.x - b.x, P.y - b.y) > 120;
     if (kind === 'ho') {
       b.hopCd = 2; b.tpCd = 0;
@@ -183,15 +183,16 @@
         for (let i = 0; i < n; i++) later(b, T + i * 0.05, () => shot(b, a + PI + (i / (n - 1) - 0.5) * 2.6, 72, { kind: 'fire', homing: 40, t: 3, dmg: b.dmg * 0.7, el: 'fire' }));
       } },
       // tele: báo trước tối thiểu (giây). GĐ2 (V8, Q4): Vồ mồi trước chỉ báo 0,44 s (pha 3 còn 0,37 s), không đi bộ ra kịp.
-      c2: { name: 'Vồ mồi', tele: 0.63, f(b, P, T, D, a) { // vồ hai lần, lần hai nhắm lại
+      // Phiên cân bằng (mục 11): báo trước lần vồ đầu 0,63 → 0,65 giây, lần vồ thứ hai 0,5 → 0,62 giây (cả hai ≥ 0,6).
+      c2: { name: 'Vồ mồi', tele: 0.65, f(b, P, T, D, a) { // vồ hai lần, lần hai nhắm lại
         const L = clamp(Math.hypot(P.x - b.x, P.y - b.y) + 20, 70, 140);
         Z('line', { x: b.x, y: b.y, ang: a, len: L, w: 40 }, T, b.dmg * 1.25, null, { melee: true });
         later(b, T, () => { lunge(b, a, L - 26, 0.22); FX('burst', b.x, b.y, '#ffffff', 8, 60); });
         later(b, T + 0.55, () => {
           const a2 = ang(b, P), L2 = clamp(Math.hypot(P.x - b.x, P.y - b.y) + 20, 60, 130);
           aimFace(b, a2);
-          Z('line', { x: b.x, y: b.y, ang: a2, len: L2, w: 40 }, 0.5, b.dmg * 1.25, null, { melee: true });
-          later(b, 0.5, () => lunge(b, a2, L2 - 26, 0.22));
+          Z('line', { x: b.x, y: b.y, ang: a2, len: L2, w: 40 }, 0.62, b.dmg * 1.25, null, { melee: true });
+          later(b, 0.62, () => lunge(b, a2, L2 - 26, 0.22));
         });
         b.an.cut = 0.9;
       } },
@@ -215,6 +216,7 @@
       } },
     },
   };
+  G.bossSK = SK; // chỉ để bài kiểm tra đọc thời gian báo trước tối thiểu (tele)
   // Mệt sau chiêu lớn: choáng một lúc, nhận thêm sát thương (cơ hội phản công)
   // Trùm nhỏ không có hình 'stun' riêng: đặt thêm choáng thật (st.stun) để hình lảo đảo (js/mobs.js vẽ 'hit' khi choáng).
   function tire(b, t) {
@@ -257,14 +259,36 @@
     namChua: { atk: 'Phun bào tử', chieu1: 'Hàng nấm độc', chieu2: 'Bão bào tử' },
     hoLua: { atk: 'Cào', chieu1: 'Vồ lửa', chieu2: 'Gầm phun lửa' },
   };
+  // Phiên cân bằng (mục 11): mỗi trùm nhỏ một nhịp riêng (trước ba con dùng chung một kịch bản, 12 chiêu đầu gần như giống hệt).
+  //  - Nấm Chúa: đứng xa rải bào tử, ưa Bão bào tử, nghỉ lâu giữa hai chiêu.
+  //  - Cua Đá: chậm, chắc; đứng gần thì hay đập sàn rồi kẹp liền (đòn đôi), ở xa thì mưa tinh thể.
+  //  - Hổ Lửa: nhanh, dồn dập; ưa Vồ lửa và có thể vồ hai lần liền, nghỉ ngắn.
+  // w: trọng số [chiêu 1, chiêu 2, đòn thường khi đứng gần]; cd: nghỉ sau chiêu theo pha; lap: được lặp chiêu vừa ra.
+  const MINI_NHIP = {
+    namChua: { w: [1, 2, 1], wXa: [1, 3, 0], cd: [1.7, 1.35, 1.1], lap: false },
+    cuaDa: { w: [3, 1, 2], wXa: [1, 2, 0], cd: [1.5, 1.2, 1.0], lap: false, combo: { chieu1: 'atk' } },
+    hoLua: { w: [3, 1, 2], wXa: [3, 2, 0], cd: [1.05, 0.85, 0.7], lap: true },
+  };
+  G.MINI_NHIP = MINI_NHIP;
   function thinkMini(b) {
     const w = W(), P = w.P, ph = b.phase, id = b.art;
     const d = Math.hypot(P.x - b.x, P.y - b.y), a = ang(b, P);
-    const opts = ['chieu1', 'chieu2'];
-    if (d < 70) opts.push('atk', 'atk');
+    const N = MINI_NHIP[id], gan = d < 70;
+    const opts = [];
+    if (N) {
+      const wt = gan ? N.w : N.wXa;
+      for (let j = 0; j < wt[0]; j++) opts.push('chieu1');
+      for (let j = 0; j < wt[1]; j++) opts.push('chieu2');
+      for (let j = 0; j < wt[2]; j++) opts.push('atk');
+      // đòn đôi (Cua Đá): vừa đập sàn mà em bé còn đứng gần thì kẹp ngay
+      if (N.combo && N.combo[b.last] && gan && !b.dbg) b.dbg = N.combo[b.last];
+    } else {
+      opts.push('chieu1', 'chieu2');
+      if (gan) opts.push('atk', 'atk');
+    }
     // GĐ2 (V38): Chống áp sát — em bé đứng gần thì trùm nhỏ hay ra chiêu 1 hơn (Cua Đá đập sàn quanh mình, Nấm Chúa hàng nấm, Hổ Lửa vồ)
     if (has(b, 'antiMelee') && d < 75) opts.push('chieu1', 'chieu1');
-    const k = choose(b, opts), spd = [1, 1.08, 1.16][ph];
+    const k = N && N.lap && !b.dbg ? (b.last = G.pick(opts)) : choose(b, opts), spd = [1, 1.08, 1.16][ph];
     b.skillName = (MINI_SK[id] && MINI_SK[id][k]) || (k === 'atk' ? 'Đòn thường' : k === 'chieu1' ? 'Chiêu 1' : 'Chiêu 2');
     aimFace(b, a);
     G.sfx('warn');
@@ -311,7 +335,7 @@
       if (k === 'chieu1') later(b, D, () => tire(b, 0.8));
     }
     if (has(b, 'antiDodge')) later(b, b.wind + 0.3, () => { const P2 = W().P; circle(clamp(P2.x + (P2.ddx || 0) * 46, w.x0, w.x1), clamp(P2.y + (P2.ddy || 0) * 34, w.y0, w.y1), 18, 0.6, b.dmg, b.el); });
-    b.cd = [1.4, 1.15, 0.9][ph];
+    b.cd = (N ? N.cd : [1.4, 1.15, 0.9])[ph];
   }
 
   // ======================= DI CHUYỂN =======================

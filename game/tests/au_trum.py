@@ -63,7 +63,9 @@ STATIC = r"""
   G.gotoRoom(S.map.boss);
   const b = G.getWorld().boss, MA = G.monsterArt, L = MA.list.find((x) => x.id === b.art);
   const out = { name: b.name, kind: b.kind, art: b.art, hp: Math.round(b.maxhp), dmg: Math.round(b.dmg), anims: {} };
-  for (const a of L.anims) out.anims[a.id] = { d: +MA.dur(b.art, a.id).toFixed(3), moc: a.moc };
+  // tele: thời gian báo trước tối thiểu trong luật (js/boss.js G.bossSK[kind][chiêu].tele): trùm kéo dài phần lấy đà cho đủ
+  const SKk = G.bossSK && G.bossSK[b.kind];
+  for (const a of L.anims) out.anims[a.id] = { d: +MA.dur(b.art, a.id).toFixed(3), moc: a.moc, tele: SKk && SKk[a.id] && SKk[a.id].tele || null };
   return out;
 }
 """
@@ -90,7 +92,8 @@ def main():
             for k, a in st['anims'].items():
                 if a['moc'] or k.startswith('c') or k.startswith('chieu') or k in ('atk', 'tele'):
                     T = a['d'] * a['moc'][0] if a['moc'] else None
-                    print('   %-8s dài %.2f  báo trước tới %s' % (k, a['d'], ('%.2f' % T) if T is not None else '-'))
+                    if T is not None and a.get('tele') and T < a['tele']: T = a['tele']  # luật kéo dài phần lấy đà (sk.tele)
+                    print('   %-8s dài %.2f  báo trước tới %s%s' % (k, a['d'], ('%.2f' % T) if T is not None else '-', ' (luật tele)' if a.get('tele') else ''))
         print('\n== PHẦN 2: cửa sổ an toàn (không vùng đỏ đang báo, không đạn, trùm không lao) — em bé bất tử đứng yên, %d giây mỗi pha' % SECS)
         print('%-22s %4s %6s %6s %6s %6s %7s %7s %7s  %s' % ('trùm', 'pha', 'số', 'tb', 'trung', 'dài', '%an', '%mệt', '%đi', 'chiêu (12 đầu)'))
         for r, i, nm in BOSSES:

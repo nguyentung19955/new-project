@@ -353,7 +353,7 @@
       }
     } else if (V.ftab === 'reforge') {
       const list = weaponList((w) => !!w.branch);
-      if (!list.length) ui.para('Chưa có vũ khí nào khóa nhánh. Vũ khí khóa nhánh khi đủ 30 dấu ấn của một hệ.', CX + 4, LIST_Y + 16, 290, { size: 8.5, color: SOFT });
+      if (!list.length) ui.para(G.t('Chưa có vũ khí nào khóa nhánh. Vũ khí khóa nhánh khi đủ {0} dấu ấn của một hệ.', G.MARKS[0]), CX + 4, LIST_Y + 16, 290, { size: 8.5, color: SOFT });
       const w = G.weaponById(V.sel);
       line = 'Tôi lại để đổi nhánh hệ. Tốn 1 đá tôi, vũ khí giữ một nửa số dấu ấn.';
       if (!w || !w.branch) ui.text('Chạm một vũ khí đã khóa nhánh để chọn.', CX + 8, DET_Y + 30, { size: 8.5, color: SOFT });
@@ -367,7 +367,7 @@
             const half = Math.floor(w.marks[w.branch] / 2);
             w.marks[w.branch] = 0;
             w.marks[e] = Math.max(w.marks[e], half);
-            w.branch = w.marks[e] >= G.MARKS[0] ? e : null; // chưa đủ 30 dấu ấn thì mở khóa nhánh
+            w.branch = w.marks[e] >= G.MARKS[0] ? e : null; // chưa đủ G.MARKS[0] dấu ấn thì mở khóa nhánh
             w.name = null;
             G.persist(); G.sfx('evolve'); say(G.t('Đã tôi lại sang hệ {0}.', G.EL[e].name));
           }
@@ -397,14 +397,15 @@
   // Ba thẻ trên băng tiêu đề: Vũ khí (rương, đổi món mang theo, bán), Mua trang phục (đồ thường), Bán trang phục.
   // Bán, khoá, chọn nhiều, bán hết theo bậc, hỏi lại: js/ban_do.js (G.banDo).
   function xenTabs() {
-    const BD = G.banDo, tabs = [['weapon', 'Vũ khí', 40], ['outfit', 'Mua trang phục', 66], ['sell', 'Bán trang phục', 66]];
-    let x = PX + PW - 70 - tabs.reduce((a, t) => a + t[2] + 3, 0);
-    const cur = V.gtab === 'outfit' || V.gtab === 'sell' ? V.gtab : 'weapon';
+    // Phiên cân bằng (mục 3): thêm thẻ Nguyên liệu (đổi vàng lấy nguyên liệu vùng đã qua, js/upgrade.js U.doi).
+    const BD = G.banDo, tabs = [['weapon', 'Vũ khí', 36], ['nl', 'Nguyên liệu', 48], ['outfit', 'Mua đồ mặc', 46], ['sell', 'Bán đồ mặc', 46]];
+    let x = PX + PW - 70 - tabs.reduce((a, t) => a + t[2] + 2, 0);
+    const cur = V.gtab === 'outfit' || V.gtab === 'sell' || V.gtab === 'nl' ? V.gtab : 'weapon';
     for (const t of tabs) {
-      if ((t[0] === 'weapon' || G.outfit) && T.sbtn(x, PY + 3, t[2], 17, t[1], { size: 7, pad: 2, sel: cur === t[0] }) && cur !== t[0]) {
+      if ((t[0] === 'weapon' || t[0] === 'nl' || G.outfit) && T.sbtn(x, PY + 3, t[2], 17, t[1], { size: 7, pad: 2, sel: cur === t[0] }) && cur !== t[0]) {
         V.gtab = t[0]; V.sel = null; V.page = 0; if (BD) BD.reset(); return true;
       }
-      x += t[2] + 3;
+      x += t[2] + 2;
     }
     return false;
   }
@@ -418,6 +419,7 @@
     const sv = G.save, BD = G.banDo;
     if (V.gtab === 'outfit' && G.outfit) return shop();
     if (V.gtab === 'sell' && G.outfit && BD) return sellOutfit();
+    if (V.gtab === 'nl') return nguyenLieu();
     frame('Hàng xén');
     if (xenTabs()) return null;
     const multi = BD && BD.multi && BD.kind === 'w';
@@ -469,6 +471,32 @@
     }
     // bà chỉ cách đổi vũ khí đang mang
     return !stash.length ? 'Chạm một vũ khí đang mang để xem bậc, dòng phụ và đặc trưng hệ.' : selW && !sv.carry.includes(selW.id) ? G.t('Đã chọn {0}. Giờ chạm một vũ khí đang mang để thay, hoặc bấm Xem, Bán.', G.wName(selW)) : 'Chạm vũ khí đang mang để xem. Muốn đổi: chạm một món trong rương để chọn trước.';
+  }
+
+  // ---------- đổi vàng lấy nguyên liệu vùng đã qua (Bà Hàng Xén, phiên cân bằng mục 3) ----------
+  function nguyenLieu() {
+    const sv = G.save, U = G.upg, D = G.DOI_NL;
+    frame('Hàng xén');
+    if (xenTabs()) return null;
+    if (!U || !D) return null;
+    const n = sv.doiNL | 0;
+    ui.para(G.t('{0} vàng đổi 1 nguyên liệu của vùng đã hạ trùm. Còn {1}/{2} lượt đổi; mỗi ải thắng thêm {3} lượt.', D.gia, n, D.max, D.them), CX + 2, 78, CW - 4, { size: 7, color: SOFT });
+    let line = n > 0 ? 'Thiếu gỗ, vảy hay đá của vùng cháu đã qua thì bà đổi cho, khỏi phải quay lại cày.' : 'Hết hàng rồi cháu ạ. Thắng thêm ải là bà lại có hàng về.';
+    for (let r = 0; r < 3; r++) {
+      const y = 100 + r * 44, reg = G.REGIONS[r], why = U.doiDuoc(sv, r);
+      T.inset(CX, y, CW, 40, false);
+      ui.text(G.tv(reg.mat), CX + 8, y + 15, { size: 9, bold: true, color: U.daQua(sv, r) ? TXT : SOFT });
+      ui.text(G.t('Đang có {0} · vùng {1}', sv.mats[r], G.tv(reg.name)), CX + 8, y + 29, { size: 7, color: SOFT });
+      if (T.sbtn(CX + CW - 168, y + 10, 76, 20, why || G.t('Đổi 1 ({0})', D.gia), { size: 7.5, pad: 2, disabled: !!why })) {
+        if (U.doi(sv, r, 1)) { G.persist(); G.sfx('pick'); say(G.t('Của cháu đây, 1 {0}.', G.tv(reg.mat.toLowerCase()))); }
+      }
+      const k5 = Math.min(5, n);
+      if (T.sbtn(CX + CW - 86, y + 10, 80, 20, G.t('Đổi {0} ({1})', Math.max(1, k5), Math.max(1, k5) * D.gia), { size: 7.5, pad: 2, disabled: !!why || k5 < 2 || sv.gold < k5 * D.gia })) {
+        const got = U.doi(sv, r, k5);
+        if (got) { G.persist(); G.sfx('pick'); say(G.t('Của cháu đây, {0} {1}.', got, G.tv(reg.mat.toLowerCase()))); }
+      }
+    }
+    return line;
   }
 
   // ---------- bán trang phục (Bà Hàng Xén mua lại) ----------
