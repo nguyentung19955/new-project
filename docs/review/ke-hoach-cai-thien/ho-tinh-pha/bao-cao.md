@@ -42,3 +42,6 @@ Hậu kỳ (`cong-cu/sau.py`): xếp lại khung tấn công pha 2; ~350 điểm
 - **Gần chạm trần dung lượng (còn 0,07 MB).** Ảnh gốc Mộc Tinh pha 2, 3 mới đã nằm chờ nhập; phiên nhập đó sẽ vượt trần nếu giữ PNG RGBA. Cách rẻ nhất: lưu các tấm trùm/quái hiện có sang PNG bảng màu (không mất điểm nào, như `cong-cu/sau.py`), riêng pha 1 Hồ Tinh (1,3 MB) và 4 tệp pha của Ngư Tinh, Mộc Tinh (~1,1 MB mỗi tệp) sẽ bớt được ~3–4 MB. Việc này thuộc phiên Tải nhanh / đóng gói.
 - Pha 3 lúc chạy vẫn mượn hình chạy pha 1 (cáo trắng không lửa). Muốn đều hơn: nhờ ChatGPT vẽ thêm hàng chạy pha 3; game đã đọc sẵn hàng `move` trong tệp pha, không phải sửa code.
 - Trang `tools/tach-quai`: nên sửa hẳn MONG (mục 1 ở trên) và cho chọn "giữ hình cuối" khi thiếu khung tấn công.
+
+## Phương án B (lượt chạy song song, chưa đưa vào game)
+Một lượt chạy trùng của phiên này cắt lại pha 2, 3 với tỉ lệ đo theo hình bóng chân + thân của pha 1 (pha 2 = pha 1 × 0,84, pha 3 = × 0,86 theo điểm ảnh gốc), nên thân cáo pha 3 **bằng** pha 1 thay vì nhỏ hơn 10–15%; đỉnh lửa/khí vượt ô thì mờ dần. Xem `phuong-an-khop-than/` (tệp sprite, ảnh 3 pha trong game, GIF, cách chép vào game). Bản đang chạy giữ nguyên.
