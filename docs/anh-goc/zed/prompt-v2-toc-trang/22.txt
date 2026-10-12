@@ -1,4 +1,4 @@
 Phi tiêu (đang bay + cắm)
 
-Phi tiêu ninja 4 cánh bằng thép, có điểm đỏ ở tâm. Một hàng 8 khung: 1–4 phi tiêu xoay tròn đang bay (mỗi khung xoay 1/8 vòng), 5–8 phi tiêu cắm vào đất rồi lóe sáng nhỏ và vụn tan.
+Phi tiêu 4 cánh bằng thép, có điểm đỏ ở tâm. Một hàng 8 khung: 1–4 phi tiêu xoay tròn đang bay (mỗi khung xoay 1/8 vòng), 5–8 phi tiêu cắm vào đất rồi lóe sáng nhỏ và vụn tan.
 Pixel art, viền tối một nét, mỗi khung trong ô đều nhau, nằm trọn trong ô. Nền trơn xanh lá #00FF00, không chữ, không quầng sáng.
