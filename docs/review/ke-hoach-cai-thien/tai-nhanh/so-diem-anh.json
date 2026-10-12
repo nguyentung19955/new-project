@@ -1,0 +1,111 @@
+{
+ "mot": {
+  "info": {
+   "webp": null,
+   "chan": 0,
+   "tai": "khong"
+  },
+  "canh": {},
+  "loi": []
+ },
+ "goc": {
+  "info": {
+   "webp": null,
+   "chan": 0,
+   "tai": "khong"
+  },
+  "canh": {
+   "man-chao": 11566,
+   "lang": 0,
+   "em-be-mac-do": 0,
+   "vung-rung": 0,
+   "trum-rung": 0,
+   "vung-bien": 0,
+   "trum-bien": 0,
+   "vung-lau-dai": 0,
+   "trum-lau-dai": 0,
+   "hieu-ung": 0
+  },
+  "loi": []
+ },
+ "roi-webp": {
+  "info": {
+   "webp": true,
+   "chan": 0,
+   "tai": "xong"
+  },
+  "canh": {
+   "man-chao": 0,
+   "lang": 0,
+   "em-be-mac-do": 0,
+   "vung-rung": 0,
+   "trum-rung": 0,
+   "vung-bien": 0,
+   "trum-bien": 0,
+   "vung-lau-dai": 0,
+   "trum-lau-dai": 0,
+   "hieu-ung": 0
+  },
+  "loi": []
+ },
+ "roi-png": {
+  "info": {
+   "webp": false,
+   "chan": 1,
+   "tai": "xong"
+  },
+  "canh": {
+   "man-chao": 0,
+   "lang": 0,
+   "em-be-mac-do": 0,
+   "vung-rung": 0,
+   "trum-rung": 0,
+   "vung-bien": 0,
+   "trum-bien": 0,
+   "vung-lau-dai": 0,
+   "trum-lau-dai": 0,
+   "hieu-ung": 0
+  },
+  "loi": []
+ },
+ "roi-webp0": {
+  "info": {
+   "webp": false,
+   "chan": 0,
+   "tai": "xong"
+  },
+  "canh": {
+   "man-chao": 0,
+   "lang": 0,
+   "em-be-mac-do": 0,
+   "vung-rung": 0,
+   "trum-rung": 0,
+   "vung-bien": 0,
+   "trum-bien": 0,
+   "vung-lau-dai": 0,
+   "trum-lau-dai": 0,
+   "hieu-ung": 0
+  },
+  "loi": []
+ },
+ "cu": {
+  "info": {
+   "webp": null,
+   "chan": 0,
+   "tai": "xong"
+  },
+  "canh": {
+   "man-chao": 10033,
+   "lang": 0,
+   "em-be-mac-do": 0,
+   "vung-rung": 0,
+   "trum-rung": 0,
+   "vung-bien": 0,
+   "trum-bien": 0,
+   "vung-lau-dai": 0,
+   "trum-lau-dai": 0,
+   "hieu-ung": 0
+  },
+  "loi": []
+ }
+}

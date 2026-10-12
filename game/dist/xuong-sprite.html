@@ -17005,9 +17005,16 @@ MA._xong();
     G.PHA_TRUM_DU = !tat;
   }
   let napSauDangChay = false, trongNapSau = false;
+  // Tải nhanh (12/10): ảnh rời. roiNhan(img, src) nhận ảnh anh/<mã>.<mã nội dung>.png vào hàng chờ; roiCan(ma) báo game đang cần hình ma
+  // (chưa có thì tải ngay). Chỉ có ở bản 2 tệp ảnh rời (G.ANH_ROI); bản một tệp, công cụ: null, như cũ.
+  let roiNhan = null, roiCan = null;
+  // Nguồn ảnh hợp lệ: ảnh PNG base64 nhúng sẵn (như cũ) hoặc đường dẫn ảnh rời anh/….png của bản 2 tệp ảnh rời.
+  SC.laAnh = (s) => typeof s === 'string' && (s.indexOf('data:image/png;base64,') === 0 || (!!G.ANH_ROI && /^anh\/[A-Za-z0-9_.-]{1,90}\.png$/.test(s)));
+  SC.canAnh = (ma) => { if (roiCan) roiCan(ma); };
   // Gắn ảnh nguồn src vào img (đã gắn sẵn onload / onerror). Ảnh của tệp tải sau: giải mã xong (ngoài luồng chính) mới gọi onload,
   // để lần vẽ đầu không phải giải mã PNG ngay trong khung hình. Trình duyệt không có img.decode: như cũ.
   SC.napAnh = function (img, src) {
+    if (roiNhan && roiNhan(img, src)) return; // tải nhanh 12/10: ảnh rời anh/… vào hàng chờ tải theo ưu tiên (khối ẢNH RỜI cuối tệp)
     if (!G.NAP_SAU_MOI || !trongNapSau || typeof img.decode !== 'function') { img.src = src; return; }
     const xong = img.onload, hong = img.onerror;
     img.onload = null; img.onerror = null;
@@ -17036,7 +17043,7 @@ MA._xong();
       if (tep.doi_tuong === 'em-be' && /-don$/.test(tep.ma)) return themDon(tep); // đòn theo vũ khí của một thân em bé (Phiên 3)
       if (tep.doi_tuong === 'ghep') return themGhep(tep); // hồ sơ ghép trang bị của một nhân vật (ghep-<key>), không có ảnh
       if (tep.doi_tuong === 'giao-dien') return themGd(tep); // ảnh giao diện (gd-<tên>): biểu tượng, ô phòng, khung bản đồ
-      if (typeof tep.tam !== 'string' || tep.tam.indexOf('data:image/png;base64,') !== 0) throw new Error('thiếu tấm sprite');
+      if (!SC.laAnh(tep.tam)) throw new Error('thiếu tấm sprite');
       const fw = tep.khung_rong | 0, fh = tep.khung_cao | 0, goc = tep.goc || [0, 0];
       if (fw < 1 || fh < 1 || fw > 1024 || fh > 1024) throw new Error('cỡ khung sai');
       const dt = {};
@@ -17087,7 +17094,7 @@ MA._xong();
   };
   SC.remove = function (ma) { for (const k in SC.don) if (SC.don[k].ma === ma) boDon(k); if (SC.do[ma]) boDo(ma); delete SC.ds[ma]; if (SC.gd) delete SC.gd[ma]; for (const k in SC.ghep) if (SC.ghep[k].ma === ma) boGhep(k); };
   SC.clear = function () { for (const k of Object.keys(SC.don)) boDon(k); for (const k of Object.keys(SC.ds)) delete SC.ds[k]; for (const k of Object.keys(SC.do)) boDo(k); for (const k of Object.keys(SC.ghep)) boGhep(k); if (SC.gd) for (const k of Object.keys(SC.gd)) delete SC.gd[k]; };
-  SC.get = function (ma) { const s = SC.ds[ma]; return s && s.ready ? s : null; };
+  SC.get = function (ma) { const s = SC.ds[ma]; if (s && !s.ready && roiCan) roiCan(ma); return s && s.ready ? s : null; };
   SC.has = (ma) => !!SC.ds[ma];
   SC.dungYen = (ma, bo) => { const s = SC.ds[ma]; return !!(s && s.dungYen && s.dungYen.indexOf(bo) >= 0); };
 
@@ -17359,7 +17366,7 @@ MA._xong();
     draw0 = MA.draw; dur0 = MA.dur;
     MA.draw = function (c, id, x, y, o) {
       const sp = SC.ds[id];
-      if (!sp || !sp.ready) return draw0.call(MA, c, id, x, y, o);
+      if (!sp || !sp.ready) { if (sp && roiCan) roiCan(id); return draw0.call(MA, c, id, x, y, o); }
       o = o || {};
       const def = MA._defs && MA._defs[id];
       if (!def) { SC.veQuai(c, sp, x, y, o, true, 0); return; }
@@ -17418,7 +17425,7 @@ MA._xong();
   function themDon(tep) {
     const m = /^(em-be(?:-(?:smith|hunter|healer|wrestler)(?:-(?:rung|bien|lau))?)?)-don$/.exec(tep.ma);
     if (!m) throw new Error('mã tệp đòn phải là em-be-<nhân vật>-don hoặc em-be-<nhân vật>-<bộ>-don');
-    if (typeof tep.tam !== 'string' || tep.tam.indexOf('data:image/png;base64,') !== 0) throw new Error('thiếu tấm sprite');
+    if (!SC.laAnh(tep.tam)) throw new Error('thiếu tấm sprite');
     const fw = tep.khung_rong | 0, fh = tep.khung_cao | 0, goc = tep.goc || [0, 0];
     if (fw < 1 || fh < 1 || fw > 1024 || fh > 1024) throw new Error('cỡ khung sai');
     const dt = {};
@@ -18038,7 +18045,7 @@ MA._xong();
     SC.do[sp.ma] = sp;
     if (tep.anhCanvas && tep.anhCanvas.getContext) xong(tep.anhCanvas); // công cụ đưa thẳng canvas (vẽ ngay, không chờ)
     else {
-      if (typeof tep.anh !== 'string' || tep.anh.indexOf('data:image/png;base64,') !== 0) throw new Error('thiếu ảnh');
+      if (!SC.laAnh(tep.anh)) throw new Error('thiếu ảnh');
       if (typeof Image !== 'undefined') { const img = new Image(); img.onload = () => xong(img); img.onerror = () => SC.loi.push(sp.ma + ': ảnh hỏng'); SC.napAnh(img, tep.anh); }
     }
     return sp;
@@ -18072,7 +18079,7 @@ MA._xong();
     xoaNhoDo();
   }
   boDo.cu = true;
-  const doSan = (ma) => { const s = SC.do[ma]; return s && s.ready ? s : null; };
+  const doSan = (ma) => { const s = SC.do[ma]; if (s && !s.ready && roiCan) roiCan(ma); return s && s.ready ? s : null; };
 
   // ---------- VŨ KHÍ ----------
   // ----- CỠ VŨ KHÍ ẢNH AI KHI VẼ (chỉ đổi HÌNH, không đổi tầm đánh, vùng trúng, sát thương) -----
@@ -18806,12 +18813,12 @@ MA._xong();
     SC.gd[g.ma] = g;
     if (tep.anhCanvas && tep.anhCanvas.getContext) xong(tep.anhCanvas); // công cụ đưa thẳng canvas (vẽ ngay, không chờ)
     else {
-      if (typeof tep.anh !== 'string' || tep.anh.indexOf('data:image/png;base64,') !== 0) { delete SC.gd[g.ma]; throw new Error('thiếu ảnh'); }
+      if (!SC.laAnh(tep.anh)) { delete SC.gd[g.ma]; throw new Error('thiếu ảnh'); }
       if (typeof Image !== 'undefined') { const img = new Image(); img.onload = () => xong(img); img.onerror = () => { SC.loi.push(g.ma + ': ảnh hỏng'); if (SC.gd[g.ma] === g) delete SC.gd[g.ma]; }; SC.napAnh(img, tep.anh); }
     }
     return g;
   }
-  SC.gdSan = (ma) => { const g = SC.gd[ma]; return g && g.ready ? g : null; };
+  SC.gdSan = (ma) => { const g = SC.gd[ma]; if (g && !g.ready && roiCan) roiCan(ma); return g && g.ready ? g : null; };
   // Ảnh 9 mảnh dựng sẵn cho cỡ đích (w x h điểm ảnh game): một canvas w*net x h*net, nhớ lại để lần sau vẽ một phát.
   function gdGhep9(g, w, h) {
     const N = g.net, W = Math.max(1, Math.round(w * N)), H = Math.max(1, Math.round(h * N)), key = W + 'x' + H;
@@ -18845,8 +18852,6 @@ MA._xong();
   if (G.monsterArt && !G.monsterArt.drawCode) G.monsterArt.drawCode = G.monsterArt.draw;
   if (G.art && G.art.hero && !G.art.heroCode) G.art.heroCode = G.art.hero;
   SC.noi = true;
-  // Tệp do game/build.py nhúng vào bản đóng gói.
-  if (Array.isArray(G.customSpriteData)) { for (const t of G.customSpriteData) SC.add(t); delete G.customSpriteData; }
 
   // ---------- ẢNH TẢI SAU (Đợt 10, quyết định Q5) ----------
   // Bản đóng gói 2 tệp (python3 game/build.py --hai-tep): trang chỉ nhúng phần ảnh BẮT BUỘC cho màn chào / làng / ải 1; phần còn lại
@@ -18965,6 +18970,7 @@ MA._xong();
   }
   // Gọi nhiều lần cũng chỉ chạy một lần. Không có tệp phụ, hoặc trình duyệt không có fetch (rất cũ): không làm gì.
   SC.napSau = function () {
+    if (roiMo) { roiMo(); return; } // bản ảnh rời: màn chào đã vẽ → tải nốt phần còn lại theo ưu tiên
     if (!KS || AS.tt !== 'cho') return;
     if (typeof fetch !== 'function' || typeof Promise === 'undefined') { AS.tt = 'loi'; AS.loi = 'trình duyệt không có fetch'; AS.hetLuc = Date.now(); ghi('Trình duyệt không tải được tệp ảnh rời: hình thiếu vẽ bằng code.'); return; }
     chayNapSau().catch((e) => { AS.tt = 'loi'; AS.loi = String((e && e.message) || e); AS.hetLuc = Date.now(); });
@@ -18975,6 +18981,172 @@ MA._xong();
     if (AS.tt === 'loi' && AS.hetLuc && Date.now() - AS.hetLuc < 6000) return { loi: true };
     return null;
   };
+  // ---------- ẢNH RỜI, WebP, TẢI THEO NHU CẦU (tải nhanh 12/10) ----------
+  // Bản 2 tệp mặc định (game/build.py anh_roi): trang chỉ có THÔNG SỐ các hình; mỗi ảnh là một tệp rời cạnh trang:
+  //   anh/<mã>.<mã nội dung>.png (luôn có) và anh/<mã>.<mã nội dung>.webp (WebP lossless, điểm ảnh y hệt, khi nhỏ hơn PNG).
+  // - Kiểm một lần lúc khởi động trình duyệt có đọc được WebP không (ảnh 1×1); không đọc được, hoặc ?webp=0, hoặc tệp .webp hỏng: tải .png.
+  // - Thứ tự tải (nhỏ trước trong cùng bậc): hình game đang cần vẽ mà chưa có (SC.get, MA.draw, đồ, giao diện, hiệu ứng gọi roiCan) →
+  //   hình cho màn chào / làng (_u[0] = 0, tải ngay khi trang chạy) → quái vùng đang chơi (vùng của ải vừa vào, hoặc vùng xa nhất đã tới),
+  //   trùm + dáng pha vùng đó khi vào ải 4–5 → hiệu ứng, vũ khí, thân em bé theo bộ → quái vùng khác → trùm vùng khác (nền, sau cùng).
+  //   Ngoài hình màn chào / làng, chỉ bắt đầu sau khi màn chào đã vẽ (js/engine.js gọi SC.napSau).
+  // - Cùng lúc nhiều nhất 24 tệp (hình màn chào / làng / đang cần) hoặc 16 (phần còn lại; trùm / vùng khác: 3), ảnh giải mã ngoài luồng
+  //   chính (img.decode), báo cho game theo từng đợt ngắn (không làm trễ chạm). Chưa về thì game vẽ bằng code như khi chưa có ảnh AI.
+  // - Tệp hỏng / mất mạng: thử lại sau 3 và 10 giây, vẫn hỏng thì thôi (hình đó vẽ code), có mạng lại thì thử thêm.
+  // Tắt khi đóng gói: LK_ANH_ROI=0 (về tệp linh-khi-anh.<mã>.json như Đợt 10).
+  const ROI = G.ANH_ROI && typeof G.ANH_ROI === 'object' && Array.isArray(G.customSpriteData) ? G.ANH_ROI : null;
+  let roiMo = null;
+  if (ROI) {
+    const bayGio = () => { try { return Math.round(performance.now()); } catch (e) { return 0; } }; // mốc thời gian từng ảnh (cho bài đo tải)
+    const theoSrc = new Map(), theoMa = new Map(), hang = [], choApDung = [], hongDs = [];
+    // Firebase phục vụ HTTP/2 (nhiều tệp cùng lúc trên một kết nối): hình màn chào / làng và hình đang cần tải 24 tệp một lúc,
+    // phần còn lại 16 (trong đó vùng khác / trùm nền nhiều nhất 3) để hình cần ngay không phải xếp hàng sau tệp lớn.
+    const MAX_GAP = 24, MAX = 16, MAX_THAP = 3, WEBP_THU = 'data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA==';
+    let webpHong = 0, dang = 0, dangThap = 0, dangGap = 0, choThu = 0, mo = false, coWebp = null, vung = -1, trumMo = false, daXong = 0, ketThuc = false, henGd = 0, keoHen = false;
+    for (const t of G.customSpriteData) { const src = t && (t.tam || t.anh); if (typeof src === 'string' && Array.isArray(t._u)) theoSrc.set(src, t); }
+    AS.tt = 'cho'; AS.tep = 'anh/'; AS.tong = 0; AS.xong = 0;
+    SC.roi = { get webp() { return coWebp; }, hang: () => hang.length, dang: () => dang, xong: () => daXong, loi: () => hongDs.length, ds: theoMa };
+    let tatWebp = false;
+    try { tatWebp = typeof location !== 'undefined' && /[?&]webp=0(&|$)/.test(location.search || ''); } catch (e) { tatWebp = false; }
+    if (G.ANH_WEBP === false || tatWebp || !ROI.webp || typeof Image === 'undefined') coWebp = false;
+    else {
+      try {
+        const th = new Image();
+        th.onload = () => { if (coWebp === null) { coWebp = th.width === 1; bom(); } };
+        th.onerror = () => { if (coWebp === null) { coWebp = false; bom(); } };
+        th.src = WEBP_THU;
+        setTimeout(() => { if (coWebp === null) { coWebp = false; bom(); } }, 3000);
+      } catch (e) { coWebp = false; }
+    }
+    // Vùng người chơi đang ở: vùng của ải vừa vào (G.startStage), chưa vào ải thì vùng xa nhất đã có sao (qua ải 5 thì vùng kế).
+    const vungNay = () => {
+      if (vung >= 0) return vung;
+      try { let r = 0; const st = G.save && G.save.stars; if (st) for (const k in st) { const m = /^(\d+)-(\d+)$/.exec(k); if (m) r = Math.max(r, +m[1] + (+m[2] >= 4 ? 1 : 0)); } return Math.min(2, r); } catch (e) { return 0; }
+    };
+    roiNhan = function (img, src) {
+      const t = theoSrc.get(src);
+      if (!t || typeof src !== 'string') return false;
+      theoSrc.delete(src);
+      const u = t._u;
+      const it = { img, ma: t.ma, png: src, webp: typeof t.webp === 'string' && /^anh\/[A-Za-z0-9_.-]{1,90}\.webp$/.test(t.webp) ? t.webp : null,
+        bac: u[0] | 0, co: +u[1] || 0, vung: u[2] | 0, trum: !!u[3], can: 0, lan: 0, xong: img.onload, hong: img.onerror, dangTai: false, thap: false, ve: false, boWebp: false };
+      img.onload = null; img.onerror = null;
+      theoMa.set(t.ma, it); hang.push(it); AS.tong++;
+      napSauDangChay = true; // hình em bé / đồ về muộn: chỉ xoá hình đã nhớ khi đang dùng (xoaNhoDoKhiCan), như lúc nạp tệp tải sau
+      bom();
+      return true;
+    };
+    roiCan = function (ma) {
+      const it = theoMa.get(ma);
+      if (!it || it.can || it.ve) return;
+      it.can = 1;
+      const d = theoMa.get(ma + '-don'); if (d) d.can = 1; // thân em bé: kèm tệp đòn theo vũ khí
+      if (!it.dangTai) bom();
+    };
+    // Gọi nhiều lần trong cùng một nhịp (nhiều ảnh về cùng lúc) chỉ xếp lượt một lần.
+    let bomHen = false;
+    function bom() {
+      if (bomHen) return;
+      bomHen = true;
+      setTimeout(() => { bomHen = false; bom0(); }, 0);
+    }
+    function bom0() {
+      if (coWebp === null) return; // chờ kiểm WebP (vài mili giây)
+      if (dang < MAX_GAP && hang.length) {
+        const v = vungNay(), uu = (it) => (it.can ? 0 : it.bac === 0 ? 1 : it.bac === 2 ? (it.vung === v ? 2 : 4) : it.bac === 3 ? (trumMo && it.vung === v ? 2 : 5) : 3);
+        for (const it of hang) it.u = uu(it);
+        hang.sort((a, b) => a.u - b.u || a.co - b.co);
+        // trước màn chào, hoặc còn hình màn chào / làng / hình đang cần chưa về: chỉ tải các hình đó (cả đường truyền cho chúng)
+        const conGap = dangGap > 0 || hang[0].u <= 1;
+        const bo = [];
+        while (dang < MAX_GAP && hang.length) {
+          const it = hang.shift();
+          if (it.u > 1 && (!mo || conGap || dang >= MAX)) { bo.push(it); break; } // đã xếp theo ưu tiên: các hình sau cũng không được tải lúc này
+          if (it.u >= 4 && dangThap >= MAX_THAP) { bo.push(it); continue; }
+          tai(it, it.u >= 4, it.u <= 1);
+        }
+        if (bo.length) hang.unshift(...bo);
+      }
+      capNhat();
+    }
+    function tai(it, thap, gap) {
+      dang++; it.dangTai = true; it.thap = thap; if (thap) dangThap++; it.gap = gap; if (gap) dangGap++; it.tBat = bayGio();
+      const url = (coWebp && it.webp && !it.boWebp ? it.webp : it.png) + (it.lan ? '?lan=' + it.lan : ''), img = it.img;
+      let het = false;
+      const xongTai = () => { het = true; dang--; it.dangTai = false; if (it.thap) dangThap--; if (it.gap) dangGap--; };
+      const ok = () => { if (het) return; xongTai(); it.tGiai = bayGio(); choApDung.push(it); keo(); bom(); };
+      const hong = () => {
+        if (het) return; xongTai();
+        if (url.indexOf('.webp') > 0) { // WebP lỗi: thử bản PNG; hỏng liền 3 ảnh WebP thì thôi WebP cho mọi ảnh còn lại
+          it.boWebp = true; hang.push(it);
+          if (++webpHong === 3 && coWebp) { coWebp = false; ghi('Ảnh WebP không đọc được: chuyển sang tải PNG.'); }
+        }
+        else if (it.lan < CHO_THU.length) { const ms = CHO_THU[it.lan++]; choThu++; setTimeout(() => { choThu--; hang.push(it); bom(); }, ms); }
+        else { hongDs.push(it); SC.loi.push(it.ma + ': không tải được ảnh'); ghi('Không tải được ảnh ' + it.ma + ' (đã thử ' + (it.lan + 1) + ' lần): hình này vẽ bằng code.'); }
+        bom();
+      };
+      img.src = url;
+      if (typeof img.decode === 'function') img.decode().then(ok, () => { if (img.complete && img.naturalWidth) ok(); else hong(); });
+      else { img.onload = ok; img.onerror = hong; }
+    }
+    // Ảnh đã giải mã xong: báo cho game (onload gốc của SC.add / themDo / themGd / fxAnh.add) theo từng đợt ngắn (≤ 6 ms),
+    // giữa hai đợt nhường cho chạm và khung hình (setTimeout), để chạm không bị trễ mà máy chậm vẫn nhận kịp vài trăm hình.
+    function keo() {
+      if (keoHen || !choApDung.length) return;
+      keoHen = true;
+      let da = false;
+      const chay = () => {
+        if (da) return; da = true; keoHen = false;
+        const t0 = Date.now();
+        while (choApDung.length) {
+          const it = choApDung.shift();
+          it.ve = true; daXong++; AS.xong = daXong; it.tNhan = bayGio();
+          try { if (it.xong) it.xong.call(it.img); } catch (e) { SC.loi.push(it.ma + ': ' + ((e && e.message) || e)); }
+          if (/^gd-/.test(it.ma) && !henGd) henGd = setTimeout(() => { henGd = 0; xoaNhoSau(true); }, 700); // ô phòng, giao diện: dựng lại hình đã nhớ
+          if (Date.now() - t0 > 6) break;
+        }
+        if (choApDung.length) keo();
+        capNhat();
+      };
+      setTimeout(chay, 0);
+    }
+    function capNhat() {
+      if (!mo) return;
+      if (hang.length || dang || choApDung.length || choThu) { AS.tt = 'tai'; ketThuc = false; return; }
+      if (ketThuc) return;
+      ketThuc = true;
+      AS.tt = hongDs.length ? 'loi' : 'xong'; AS.hetLuc = Date.now(); AS.loi = hongDs.length ? hongDs.length + ' ảnh không tải được' : '';
+      ghi(hongDs.length ? 'Thiếu ' + hongDs.length + '/' + AS.tong + ' ảnh (vẽ bằng code); có mạng lại sẽ thử tiếp.' : 'Đã tải xong ' + AS.tong + ' ảnh rời (' + (coWebp ? 'WebP' : 'PNG') + ').');
+      setTimeout(() => { if (ketThuc) { napSauDangChay = false; xoaNhoSau(true); } }, 300);
+      if (!hongDs.length) donBanCuRoi();
+    }
+    // Máy đã lưu ảnh của bản cũ (sw.js): xoá ảnh anh/… không còn dùng và tệp linh-khi-anh.<mã>.json (cách cũ) để không đầy máy.
+    function donBanCuRoi() {
+      try {
+        if (typeof caches === 'undefined' || !caches.keys) return;
+        const giu = new Set();
+        for (const it of theoMa.values()) { giu.add(it.png); if (it.webp) giu.add(it.webp); }
+        caches.keys().then((ten) => ten.forEach((n) => caches.open(n).then((c) => c.keys().then((ks) => ks.forEach((k) => {
+          const m = /\/(anh\/[^/?#]+)(\?|#|$)/.exec(k.url);
+          if ((m && !giu.has(m[1])) || /\/linh-khi-anh\.[0-9a-f]+\.json(\?|$)/.test(k.url)) c.delete(k);
+        }))))).catch(() => {});
+      } catch (e) { /* bỏ qua */ }
+    }
+    roiMo = function () {
+      if (mo) return;
+      mo = true;
+      // Vào ải: ưu tiên quái vùng đó; ải 4–5 thì cả trùm và dáng pha của vùng.
+      const g0 = G.startStage;
+      if (typeof g0 === 'function' && !g0.roi) {
+        const g1 = function (r, i) { try { vung = Math.max(0, Math.min(2, r | 0)); trumMo = (i | 0) >= 3; } catch (e) { /* bỏ qua */ } const kq = g0.apply(this, arguments); try { bom(); } catch (e) { /* bỏ qua */ } return kq; };
+        g1.roi = true; G.startStage = g1;
+      }
+      try { window.addEventListener('online', () => { for (const it of hongDs.splice(0)) { it.lan = 0; hang.push(it); } bom(); }); } catch (e) { /* bỏ qua */ }
+      bom();
+    };
+  }
+
+  // Tệp do game/build.py nhúng vào bản đóng gói (bản ảnh rời: chỉ thông số, ảnh vào hàng chờ tải ở trên).
+  if (Array.isArray(G.customSpriteData)) { for (const t of G.customSpriteData) SC.add(t); delete G.customSpriteData; }
 })();
 // ===== game/js/mapgen.js =====
 // Bản đồ một ải: 8 phòng vuông trên lưới, sinh ngẫu nhiên theo hạt giống, ba kiểu bố cục A, B, C.

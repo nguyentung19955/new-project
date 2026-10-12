@@ -22,13 +22,22 @@ Thêm (Xưởng Sprite, tools/xuong-sprite):
   (các bài kiểm mở tệp trên máy, bản thử Xưởng Sprite và artifact.html luôn dùng bản một tệp).
   Số đo và lý do: docs/review/ke-hoach-cai-thien/dot-10/bao-cao.md
 
-Cách dùng:  python3 build.py [--hai-tep | --mot-tep]
+Tải nhanh (12/10) — trong chế độ 2 tệp, mặc định ẢNH RỜI (hàm anh_roi bên dưới):
+  - dist/linh-khi-nhe.html   mã game + thông số hình, KHÔNG còn byte ảnh (≈0,5 MB nén)
+  - dist/anh/*.png, *.webp    mỗi ảnh một tệp rời (WebP lossless khi nhỏ hơn; PNG luôn có để dự phòng), game tải theo ưu tiên
+  Cờ quay lui: LK_ANH_ROI=0 (hoặc --anh-json) → cặp tệp Đợt 10 như trên; LK_WEBP=0 → chỉ PNG.
+  Số đo: docs/review/ke-hoach-cai-thien/tai-nhanh/bao-cao.md
+
+Cách dùng:  python3 build.py [--hai-tep | --mot-tep] [--anh-json]
 """
+import base64
 import glob
 import hashlib
+import io
 import json
 import os
 import re
+import shutil
 import sys
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -115,7 +124,8 @@ TEN_NHE = 'linh-khi-nhe.html'
 TEN_ANH = 'linh-khi-anh.%s.json'
 # Trần dung lượng theo quyết định Q5: gói một tệp 15 MB; tách ảnh tải sau thì cả gói 20 MB. Tệp đầu (2 tệp) nên dưới 5 MB để tới màn chào nhanh.
 # 11/10/2026 (chủ dự án duyệt): trần gói hai tệp nâng lên 25 MB, rồi 26 MB (21:43) vì phần ảnh tải sau không làm chậm màn chào; tệp đầu vẫn dưới 5 MB.
-TRAN_MOT_TEP, TRAN_HAI_TEP, NEN_DUOI = 15 * 1024 * 1024, 26 * 1024 * 1024, 5 * 1024 * 1024
+# 12/10 (tải nhanh): bản một tệp chỉ còn cho trang công cụ / GitHub Pages (nay 25 MB) → trần 30 MB, chỉ cảnh báo. Web chạy bản ảnh rời (trần ở anh_roi).
+TRAN_MOT_TEP, TRAN_HAI_TEP, NEN_DUOI = 30 * 1024 * 1024, 26 * 1024 * 1024, 5 * 1024 * 1024
 TRUM_VUNG = ('mocTinh', 'nguTinh', 'hoTinh')
 # Hiệu ứng cơ bản (đòn đánh thường nào cũng dùng): vệt chém / đâm, mũi tên của bé, trúng đòn, chí mạng, vỡ giáp, quái chết.
 HU_CO_BAN = re.compile(r'^hu-(chem|dam|trung|dan-ten|chi-mang|pha-giap|quai-chet)(-|$)')
@@ -170,12 +180,17 @@ def hai_tep(custom, gom, trang, frag):
     """Ghi thêm cặp tệp của chế độ 2 tệp (khi có cờ), hoặc dọn cặp tệp cũ (khi xuất như cũ). Luôn in dung lượng so với trần Q5."""
     bat = ('--hai-tep' in sys.argv[1:] or os.environ.get('LK_HAI_TEP') == '1') and '--mot-tep' not in sys.argv[1:]
     mot = os.path.getsize(os.path.join(DIST, 'linh-khi.html'))
-    print('Dung lượng một tệp: %.2f MB (bản một tệp nay chỉ dùng cho trang công cụ; web chạy bản hai tệp)' % (mot / 1048576))
+    print('Dung lượng một tệp: %.2f MB / trần %.0f MB (bản một tệp nay chỉ dùng cho trang công cụ; web chạy bản hai tệp)%s'
+          % (mot / 1048576, TRAN_MOT_TEP / 1048576, '  ← VƯỢT TRẦN' if mot > TRAN_MOT_TEP else ''))
     for p in glob.glob(os.path.join(DIST, TEN_ANH % '*')) + [os.path.join(DIST, TEN_NHE)]:
         if os.path.isfile(p):
             os.remove(p)  # tên tệp ảnh đổi theo nội dung: không để bản cũ nằm lại
+    if os.path.isdir(os.path.join(DIST, THU_MUC_ANH)):
+        shutil.rmtree(os.path.join(DIST, THU_MUC_ANH))  # ảnh rời của lần đóng gói trước
     if not bat or not custom:
         return
+    if anh_roi_bat():
+        return anh_roi(custom, gom, trang, frag)
     truoc = [t for t in custom if bat_buoc(t)]
     sau = sorted((t for t in custom if not bat_buoc(t)), key=thu_tu_sau)
     if not sau:
@@ -200,6 +215,133 @@ def hai_tep(custom, gom, trang, frag):
     print('Chế độ 2 tệp: dist/%s (%d KB, %d hình bắt buộc) + dist/%s (%d KB, %d hình tải sau)' % (TEN_NHE, n1 // 1024, len(truoc), ten, n2 // 1024, len(sau)))
     print('Dung lượng hai tệp: %.2f MB / trần 26 MB (Q5, nâng 11/10), còn %.2f MB%s; tệp đầu %.2f MB (nên dưới 5 MB)%s'
           % ((n1 + n2) / 1048576, (TRAN_HAI_TEP - n1 - n2) / 1048576, '  ← VƯỢT TRẦN' if n1 + n2 > TRAN_HAI_TEP else '', n1 / 1048576, '  ← TỆP ĐẦU QUÁ NẶNG, xem lại luật bat_buoc' if n1 > NEN_DUOI else ''))
+
+
+# ---------- Tải nhanh (12/10): ẢNH RỜI, WebP, tải theo nhu cầu ----------
+# Bật mặc định trong chế độ 2 tệp. Thay cho tệp linh-khi-anh.<mã>.json (ảnh base64 trong JSON), mỗi ảnh thành MỘT tệp rời:
+#   dist/anh/<mã hình>.<mã nội dung>.png    luôn có (gói PNG dự phòng, đúng từng byte ảnh gốc trong .sprite.json)
+#   dist/anh/<mã hình>.<mã nội dung>.webp   WebP lossless (Pillow lossless, method=6, exact) khi nhỏ hơn PNG; điểm ảnh y hệt (đã so lúc mã hoá)
+# Trang chính dist/linh-khi-nhe.html chỉ còn mã game + thông số các hình (không còn byte ảnh nào). js/sprite_custom.js tải ảnh theo
+# thứ tự ưu tiên (màn chào/làng trước, vùng đang chơi, rồi hiệu ứng / vũ khí, vùng khác, trùm và dáng pha sau cùng hoặc khi vào ải 4–5),
+# hình nào game cần vẽ mà chưa có thì tải ngay; chưa về thì vẽ bằng code như cũ. Trình duyệt không đọc được WebP: tải bản .png.
+# Tên tệp có mã nội dung → lưu đệm lâu (firebase.json trong workflow: /anh/** immutable; sw.js lưu một lần).
+# CỜ TẮT (quay về cách cũ, không cần sửa code game):
+#   LK_ANH_ROI=0 (hoặc --anh-json)  → chế độ 2 tệp như Đợt 10 (trang nhẹ + linh-khi-anh.<mã>.json)
+#   LK_WEBP=0                       → ảnh rời chỉ có PNG (không mã hoá WebP)
+#   trong game: ?webp=0 buộc tải PNG
+# Mã hoá WebP method=6 chậm (~2,5 phút cho 600 ảnh trên 2 lõi): kết quả nhớ ở game/.dem-webp/ (hoặc LK_DEM_WEBP), theo mã PNG gốc.
+THU_MUC_ANH = 'anh'
+TRAN_TRANG_NEN = 1.5 * 1024 * 1024  # trang chính sau gzip (mục tiêu tải nhanh)
+TRAN_ANH_ROI = 26 * 1024 * 1024  # tổng ảnh rời PNG + WebP trên máy chủ (người chơi chỉ tải một trong hai)
+WEBP_METHOD = int(os.environ.get('LK_WEBP_METHOD', '6'))
+VUNG_SO = {'rung': 0, 'bien': 1, 'laudai': 2}
+
+
+def anh_roi_bat():
+    return os.environ.get('LK_ANH_ROI', '1') != '0' and '--anh-json' not in sys.argv[1:]
+
+
+def ma_webp(png):
+    """PNG (byte) → WebP lossless (byte), hoặc None nếu điểm ảnh giải mã lại không y hệt (không bao giờ dùng ảnh lệch)."""
+    from PIL import Image
+    im = Image.open(io.BytesIO(png)).convert('RGBA')
+    b = io.BytesIO()
+    im.save(b, 'WEBP', lossless=True, method=WEBP_METHOD, quality=100, exact=True)
+    w = b.getvalue()
+    if Image.open(io.BytesIO(w)).convert('RGBA').tobytes() != im.tobytes():
+        return None
+    return w
+
+
+def webp_nhieu(ds):
+    """ds: danh sách PNG (byte). Trả về danh sách WebP (byte hoặc None). Có bộ nhớ đệm trên đĩa theo mã PNG."""
+    if os.environ.get('LK_WEBP') == '0':
+        return [None] * len(ds)
+    try:
+        import PIL  # noqa: F401
+    except ImportError:
+        print('CẢNH BÁO: thiếu Pillow (pip install pillow), ảnh rời chỉ có PNG')
+        return [None] * len(ds)
+    dem = os.environ.get('LK_DEM_WEBP') or os.path.join(ROOT, '.dem-webp')
+    os.makedirs(dem, exist_ok=True)
+    khoa = [hashlib.sha256(p).hexdigest() + '-m%d' % WEBP_METHOD for p in ds]
+    out, thieu = [None] * len(ds), []
+    for i, k in enumerate(khoa):
+        f = os.path.join(dem, k + '.webp')
+        if os.path.isfile(f):
+            with open(f, 'rb') as fh:
+                out[i] = fh.read() or None  # tệp rỗng = đã thử, WebP không dùng được
+        else:
+            thieu.append(i)
+    if thieu:
+        print('Mã hoá WebP lossless %d ảnh (method=%d, nhớ ở %s)…' % (len(thieu), WEBP_METHOD, os.path.relpath(dem, os.path.dirname(ROOT))))
+        from concurrent.futures import ProcessPoolExecutor
+        with ProcessPoolExecutor() as ex:
+            kq = list(ex.map(ma_webp, [ds[i] for i in thieu], chunksize=2))
+        for i, w in zip(thieu, kq):
+            with open(os.path.join(dem, khoa[i] + '.webp'), 'wb') as fh:
+                fh.write(w or b'')
+            out[i] = w
+    return out
+
+
+def anh_roi(custom, gom, trang, frag):
+    """Ghi dist/linh-khi-nhe.html (mã + thông số hình) và dist/anh/* (ảnh rời PNG + WebP)."""
+    thu = os.path.join(DIST, THU_MUC_ANH)
+    os.makedirs(thu, exist_ok=True)
+    vt, pngs = [], []
+    for i, t in enumerate(custom):
+        k = 'tam' if isinstance(t.get('tam'), str) else 'anh' if isinstance(t.get('anh'), str) else None
+        if k and t[k].startswith('data:image/png;base64,'):
+            vt.append((i, k))
+            pngs.append(base64.b64decode(t[k].split(',', 1)[1]))
+    webps = webp_nhieu(pngs)
+    ds = [dict(t) for t in custom]
+    tong_png = tong_webp = tong_tot = so_webp = 0
+    for (i, k), png, w in zip(vt, pngs, webps):
+        t = ds[i]
+        ten = '%s.%s' % (t['ma'], hashlib.sha256(png).hexdigest()[:10])
+        with open(os.path.join(thu, ten + '.png'), 'wb') as f:
+            f.write(png)
+        t[k] = THU_MUC_ANH + '/' + ten + '.png'
+        tot = len(png)
+        tong_png += len(png)
+        if w and len(w) < len(png):
+            tw = '%s.%s' % (t['ma'], hashlib.sha256(w).hexdigest()[:10])
+            with open(os.path.join(thu, tw + '.webp'), 'wb') as f:
+                f.write(w)
+            t['webp'] = THU_MUC_ANH + '/' + tw + '.webp'
+            tot = len(w)
+            tong_webp += len(w)
+            so_webp += 1
+        tong_tot += tot
+        # _u: [bậc ưu tiên tĩnh, số byte tải, vùng (0 rừng, 1 biển, 2 lâu đài, -1 không theo vùng), trùm/dáng pha]
+        # bậc 0: cần cho màn chào / làng (luật bat_buoc ở trên) · 1: hiệu ứng, vũ khí, thân em bé theo bộ… · 2: quái thường · 3: trùm và dáng pha
+        quai = t.get('doi_tuong') not in ('hieu-ung', 'ghep', 'giao-dien', 'nguoi-lang', 'em-be') and t.get('doi_tuong') not in DO_LOAI
+        trum = quai and t['ma'].split('-')[0] in TRUM_VUNG
+        bac = 0 if bat_buoc(custom[i]) else 3 if trum else 2 if quai else 1
+        t['_u'] = [bac, tot, VUNG_SO.get(t.get('vung'), -1) if quai else -1, 1 if trum else 0]
+    khai = ('// ===== ảnh rời (tải nhanh 12/10): ảnh nằm ở thư mục anh/ cạnh trang, js/sprite_custom.js tải theo ưu tiên =====\n'
+            '(window.G = window.G || {}).ANH_ROI = ' + json.dumps({'so': len(vt), 'webp': so_webp}) + ';\n')
+    js = gom(ds, khai, "['customSpriteData'] = ")
+    if '.customSpriteData = ' in js:
+        sys.exit('Trang nhẹ còn chuỗi ".customSpriteData = ": công cụ sẽ đọc nhầm trang thiếu ảnh')
+    if re.search(r'data:image/png;base64,[A-Za-z0-9+/]{64}', js):
+        sys.exit('Trang chính chế độ ảnh rời còn ảnh base64')
+    nhe = trang(js)
+    check(nhe, frag, js)
+    write(os.path.join(DIST, TEN_NHE), nhe)
+    import gzip
+    n1 = len(nhe.encode('utf-8'))
+    z1 = len(gzip.compress(nhe.encode('utf-8'), 6))
+    may_chu = tong_png + tong_webp
+    print('Ảnh rời: dist/%s (%d KB, nén %d KB, %d hình chỉ có thông số) + dist/%s/ (%d ảnh: PNG %.2f MB, %d bản WebP %.2f MB)'
+          % (TEN_NHE, n1 // 1024, z1 // 1024, len(ds), THU_MUC_ANH, len(vt), tong_png / 1048576, so_webp, tong_webp / 1048576))
+    print('Người chơi tải: trang %.2f MB nén + ảnh %.2f MB (WebP khi có, còn lại PNG); trình duyệt không có WebP: ảnh %.2f MB PNG'
+          % (z1 / 1048576, tong_tot / 1048576, tong_png / 1048576))
+    print('Trần: trang chính nén %.2f / %.2f MB%s; ảnh trên máy chủ %.2f / %.0f MB%s'
+          % (z1 / 1048576, TRAN_TRANG_NEN / 1048576, '  ← TRANG CHÍNH QUÁ NẶNG' if z1 > TRAN_TRANG_NEN else '',
+             may_chu / 1048576, TRAN_ANH_ROI / 1048576, '  ← VƯỢT TRẦN' if may_chu > TRAN_ANH_ROI else ''))
 
 
 # ---------- Xưởng Sprite ----------

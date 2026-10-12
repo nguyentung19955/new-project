@@ -25,6 +25,9 @@ jobs:
       # Đợt 10 (Q5): '1' = đăng bản 2 TỆP (trang nhẹ + tệp ảnh tải sau linh-khi-anh.<mã>.json; tới màn chào nhanh hơn ~4 lần ở mạng 1,5 Mbps,
       # số đo ở docs/review/ke-hoach-cai-thien/dot-10/bao-cao.md). Đổi thành '0' để đăng bản MỘT tệp như trước (cờ quay lui, không cần sửa code game).
       HAI_TEP: '1'
+      # Tải nhanh (12/10): '1' = bản 2 tệp dùng ẢNH RỜI (trang chính chỉ có mã + thông số, ảnh WebP/PNG từng tệp ở /anh/, game tải theo ưu tiên;
+      # số đo ở docs/review/ke-hoach-cai-thien/tai-nhanh/bao-cao.md). Đổi thành '0' để về cặp tệp Đợt 10 (linh-khi-anh.<mã>.json), không cần sửa code game.
+      ANH_ROI: '1'
     steps:
       - name: Kiểm tra secret
         run: |
@@ -40,6 +43,16 @@ jobs:
           node-version: 22
 
       # V4 bước 1: kiểm tra nhanh (không cần trình duyệt) TRƯỚC khi đăng. Có lỗi thì dừng ở đây, bản đang chạy trên web giữ nguyên.
+      # Ảnh rời: Pillow mã hoá WebP lossless; kết quả mã hoá nhớ theo nội dung ảnh (game/.dem-webp) để lần đăng sau không phải mã hoá lại.
+      - name: Cài Pillow (WebP)
+        run: python3 -m pip install --quiet pillow || pip install --quiet --break-system-packages pillow
+
+      - uses: actions/cache@v4
+        with:
+          path: game/.dem-webp
+          key: dem-webp-${{ hashFiles('game/art/custom/*.sprite.json') }}
+          restore-keys: dem-webp-
+
       - name: Kiểm tra nhanh trước khi đăng
         run: |
           set -e
@@ -55,8 +68,14 @@ jobs:
       - name: Gói game
         run: |
           mkdir -p "$RUNNER_TEMP/web/site"
-          if [ "$HAI_TEP" = "1" ]; then python3 game/build.py --hai-tep; else python3 game/build.py --mot-tep; fi
-          if [ "$HAI_TEP" = "1" ] && [ -f game/dist/linh-khi-nhe.html ] && ls game/dist/linh-khi-anh.*.json > /dev/null 2>&1; then
+          if [ "$HAI_TEP" = "1" ]; then LK_ANH_ROI="$ANH_ROI" python3 game/build.py --hai-tep; else python3 game/build.py --mot-tep; fi
+          if [ "$HAI_TEP" = "1" ] && [ -f game/dist/linh-khi-nhe.html ] && [ -d game/dist/anh ]; then
+            # Bản ảnh rời: trang chính + thư mục ảnh anh/ (tên có mã nội dung, lưu đệm lâu ở firebase.json bên dưới)
+            cp game/dist/linh-khi-nhe.html "$RUNNER_TEMP/web/site/index.html"
+            cp -r game/dist/anh "$RUNNER_TEMP/web/site/anh"
+            cp game/dist/linh-khi.html "$RUNNER_TEMP/web/site/linh-khi.html"
+            echo "- Bản ảnh rời: index.html $(stat -c %s game/dist/linh-khi-nhe.html) byte + anh/ $(ls game/dist/anh | wc -l) tệp ($(du -sb game/dist/anh | cut -f1) byte)" >> "$GITHUB_STEP_SUMMARY"
+          elif [ "$HAI_TEP" = "1" ] && [ -f game/dist/linh-khi-nhe.html ] && ls game/dist/linh-khi-anh.*.json > /dev/null 2>&1; then
             # Bản 2 tệp: trang nhẹ làm trang chính, tệp ảnh tải sau nằm cạnh trang (tên có mã nội dung, lưu đệm lâu ở firebase.json bên dưới)
             cp game/dist/linh-khi-nhe.html "$RUNNER_TEMP/web/site/index.html"
             cp game/dist/linh-khi-anh.*.json "$RUNNER_TEMP/web/site/"
@@ -82,7 +101,8 @@ jobs:
               "rewrites": [ { "source": "/game/dist/linh-khi.html", "destination": "/linh-khi.html" } ],
               "headers": [
                 { "source": "**", "headers": [ { "key": "Cache-Control", "value": "no-cache" } ] },
-                { "source": "/linh-khi-anh.*.json", "headers": [ { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" } ] }
+                { "source": "/linh-khi-anh.*.json", "headers": [ { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" } ] },
+                { "source": "/anh/**", "headers": [ { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" } ] }
               ]
             }
           }

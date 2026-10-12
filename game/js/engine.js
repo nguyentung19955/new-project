@@ -462,6 +462,9 @@
     c.clearRect(0, 0, uiCv.width, uiCv.height);
     c.setTransform(G.uiScale, 0, 0, G.uiScale, G.ox * G.dpr, G.oy * G.dpr);
     c.textBaseline = 'alphabetic';
+    // Tải nhanh (12/10): kiểu nối / đầu nét về mặc định mỗi khung. Có chỗ vẽ code đặt lineJoin = 'round' mà không trả lại (ví dụ chữ LINH KHÍ
+    // khi ảnh logo chưa về); ảnh về muộn thì nét để lại làm góc khung HUD tròn đi, khác bản ảnh có sẵn ngay từ đầu.
+    c.lineJoin = 'miter'; c.lineCap = 'butt';
   };
   // Sàn cỡ chữ (V25): chữ không nhỏ hơn 7,5 đơn vị (khoảng 11 px trên điện thoại cầm ngang; trước là 6,5 ≈ 9,4 px).
   // Sàn nằm ngay trong ui.font nên mọi chỗ đo chữ (ui.wrap, measureText sau ui.font) cũng đo đúng cỡ sẽ vẽ, chữ xuống dòng không tràn.

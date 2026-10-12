@@ -18,7 +18,8 @@
   FA.add = function (tep) {
     try {
       if (!tep || typeof tep !== 'object' || typeof tep.ma !== 'string' || !/^hu-[A-Za-z0-9_-]{1,37}$/.test(tep.ma)) throw new Error('mã phải bắt đầu bằng hu-');
-      if (typeof tep.tam !== 'string' || tep.tam.indexOf('data:image/png;base64,') !== 0) throw new Error('thiếu dải khung PNG');
+      const SC0 = G.spriteCustom; // tải nhanh 12/10: bản ảnh rời cho đường dẫn anh/….png (js/sprite_custom.js SC.laAnh)
+      if (typeof tep.tam !== 'string' || !(tep.tam.indexOf('data:image/png;base64,') === 0 || (SC0 && SC0.laAnh && SC0.laAnh(tep.tam)))) throw new Error('thiếu dải khung PNG');
       const fw = tep.khung_rong | 0, fh = tep.khung_cao | 0;
       if (fw < 1 || fh < 1 || fw > 512 || fh > 512) throw new Error('cỡ khung sai');
       const goc = Array.isArray(tep.goc) ? tep.goc : [fw / 2, fh / 2];
@@ -45,9 +46,11 @@
   };
   FA.remove = (ma) => { delete FA.ds[ma]; };
   FA.clear = () => { for (const k of Object.keys(FA.ds)) delete FA.ds[k]; };
-  FA.get = (ma) => { const a = FA.ds[ma]; return a && a.ready ? a : null; };
+  // Tải nhanh 12/10: hình có trong game mà ảnh rời chưa về → báo js/sprite_custom.js tải ngay (SC.canAnh); trong lúc đó vẽ bằng code.
+  const can = (a) => { if (a && !a.ready && G.spriteCustom && G.spriteCustom.canAnh) G.spriteCustom.canAnh(a.ma); };
+  FA.get = (ma) => { const a = FA.ds[ma]; can(a); return a && a.ready ? a : null; };
   // Có ảnh sẵn sàng để vẽ không (không có thì nơi gọi vẽ bằng code như cũ).
-  FA.co = (ma) => { const a = FA.ds[ma]; return !!(a && a.ready); };
+  FA.co = (ma) => { const a = FA.ds[ma]; can(a); return !!(a && a.ready); };
   FA.giay = (ma) => { const a = FA.ds[ma]; return a ? a.giay : 0; };
   FA.lap = (ma) => { const a = FA.ds[ma]; return !!(a && a.lap); };
   // Khung ở thời điểm t (giây từ lúc bắt đầu). Hiệu ứng một lần đã hết thì trả về -1.

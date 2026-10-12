@@ -1,0 +1,43 @@
+{
+ "chan-het": {
+  "sau": {
+   "tt": "loi",
+   "xong": 0,
+   "tong": 607,
+   "loi": 607
+  },
+  "chi_bao": {
+   "loi": true
+  },
+  "canh": [
+   true,
+   "play"
+  ],
+  "san": "0/63",
+  "loi_trang": [],
+  "ghi": [
+   "[Linh Khí] Không tải được ảnh mocTinh-p3 (đã thử 3 lần): hình này vẽ bằng code.",
+   "[Linh Khí] Không tải được ảnh hoTinh (đã thử 3 lần): hình này vẽ bằng code.",
+   "[Linh Khí] Thiếu 607/607 ảnh (vẽ bằng code); có mạng lại sẽ thử tiếp."
+  ]
+ },
+ "chan-webp": {
+  "sau": {
+   "tt": "xong",
+   "xong": 607,
+   "tong": 607,
+   "loi": 0
+  },
+  "chi_bao": null,
+  "canh": [
+   true,
+   "play"
+  ],
+  "san": "63/63",
+  "loi_trang": [],
+  "ghi": [
+   "[Linh Khí] Ảnh WebP không đọc được: chuyển sang tải PNG.",
+   "[Linh Khí] Đã tải xong 607 ảnh rời (PNG)."
+  ]
+ }
+}

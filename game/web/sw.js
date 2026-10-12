@@ -7,7 +7,8 @@ self.addEventListener('fetch', (e) => {
   if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return;
   // Phiên hiệu năng (V10): tệp ảnh tải sau có mã nội dung trong tên (linh-khi-anh.<mã>.json) không bao giờ đổi: có sẵn trong bộ nhớ thì dùng
   // luôn, không tải lại, không ghi lại 20 MB mỗi lần mở game. Chưa có thì tải rồi lưu một lần. (game tự xoá tệp của bản cũ: sprite_custom.js donBanCu)
-  if (/\/linh-khi-anh\.[0-9a-f]+\.json$/.test(new URL(req.url).pathname)) {
+  // Tải nhanh (12/10): ảnh rời anh/<mã>.<mã nội dung>.webp|png cũng không bao giờ đổi nội dung → cùng cách (game tự xoá ảnh bản cũ: sprite_custom.js donBanCuRoi).
+  if (/\/linh-khi-anh\.[0-9a-f]+\.json$/.test(new URL(req.url).pathname) || /\/anh\/[A-Za-z0-9_.-]+\.[0-9a-f]{10}\.(webp|png)$/.test(new URL(req.url).pathname)) {
     e.respondWith(caches.open(CACHE).then((c) => c.match(req).then((co) => co || fetch(req).then((res) => {
       if (res && res.ok) c.put(req, res.clone()).catch(() => {});
       return res;

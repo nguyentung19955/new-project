@@ -1,0 +1,242 @@
+{
+ "4G cpu1": {
+  "lan1": {
+   "tai": 329,
+   "sau": {
+    "tt": "xong",
+    "xong": 607,
+    "tong": 607,
+    "lan": 0
+   },
+   "manChao": 2697,
+   "batDauSau": 2697,
+   "lang": 3048,
+   "anhDau": 5102,
+   "xongSau": 12842,
+   "cham": 2869,
+   "chamTre": 179,
+   "sw": true,
+   "khung_trong_luc_tai_sau": null,
+   "so_khung": 811,
+   "khung_max_ms": 200.1,
+   "khung_tren_50ms": 3,
+   "khung_tren_100ms": 2,
+   "longtask_tong_ms_sau_lang": 0,
+   "byte_mang": 856023,
+   "loi": [
+    "console.error: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+    "console.warning: Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read"
+   ],
+   "dong_ho_s": 14.4
+  },
+  "lan2": {
+   "tai": 264,
+   "sau": {
+    "tt": "xong",
+    "xong": 607,
+    "tong": 607,
+    "lan": 0
+   },
+   "manChao": 778,
+   "batDauSau": 971,
+   "lang": 1140,
+   "anhDau": 1965,
+   "xongSau": 3194,
+   "cham": 972,
+   "chamTre": 168,
+   "sw": true,
+   "khung_trong_luc_tai_sau": null,
+   "so_khung": 225,
+   "khung_max_ms": 216.6,
+   "khung_tren_50ms": 5,
+   "khung_tren_100ms": 3,
+   "longtask_tong_ms_sau_lang": 0,
+   "byte_mang": 0,
+   "loi": [
+    "console.error: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+    "console.warning: Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read"
+   ],
+   "dong_ho_s": 4.8
+  }
+ },
+ "4G cpu4": {
+  "lan1": {
+   "tai": 280,
+   "sau": {
+    "tt": "xong",
+    "xong": 607,
+    "tong": 607,
+    "lan": 0
+   },
+   "manChao": 3552,
+   "batDauSau": 3552,
+   "lang": 4091,
+   "anhDau": 7777,
+   "xongSau": 17244,
+   "cham": 3746,
+   "chamTre": 345,
+   "sw": true,
+   "khung_trong_luc_tai_sau": null,
+   "so_khung": 609,
+   "khung_max_ms": 766.7,
+   "khung_tren_50ms": 61,
+   "khung_tren_100ms": 14,
+   "longtask_tong_ms_sau_lang": 3887,
+   "byte_mang": 853422,
+   "loi": [
+    "console.error: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+    "console.warning: Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read"
+   ],
+   "dong_ho_s": 18.9
+  },
+  "lan2": {
+   "tai": 295,
+   "sau": {
+    "tt": "xong",
+    "xong": 607,
+    "tong": 607,
+    "lan": 0
+   },
+   "manChao": 3525,
+   "batDauSau": 3525,
+   "lang": 4035,
+   "anhDau": 4468,
+   "xongSau": 8773,
+   "cham": 3809,
+   "chamTre": 226,
+   "sw": true,
+   "khung_trong_luc_tai_sau": null,
+   "so_khung": 203,
+   "khung_max_ms": 750,
+   "khung_tren_50ms": 59,
+   "khung_tren_100ms": 9,
+   "longtask_tong_ms_sau_lang": 2452,
+   "byte_mang": 0,
+   "loi": [
+    "console.error: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+    "console.warning: Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read"
+   ],
+   "dong_ho_s": 10.5
+  }
+ },
+ "3G cpu1": {
+  "lan1": {
+   "tai": 514,
+   "sau": {
+    "tt": "xong",
+    "xong": 607,
+    "tong": 607,
+    "lan": 0
+   },
+   "manChao": 6547,
+   "batDauSau": 6547,
+   "lang": 7079,
+   "anhDau": 11425,
+   "xongSau": 39450,
+   "cham": 6730,
+   "chamTre": 349,
+   "sw": true,
+   "khung_trong_luc_tai_sau": null,
+   "so_khung": 2393,
+   "khung_max_ms": 299.9,
+   "khung_tren_50ms": 3,
+   "khung_tren_100ms": 3,
+   "longtask_tong_ms_sau_lang": 0,
+   "byte_mang": 859390,
+   "loi": [
+    "console.error: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+    "console.warning: Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read"
+   ],
+   "dong_ho_s": 41.2
+  },
+  "lan2": {
+   "tai": 364,
+   "sau": {
+    "tt": "xong",
+    "xong": 607,
+    "tong": 607,
+    "lan": 0
+   },
+   "manChao": 894,
+   "batDauSau": 935,
+   "lang": 1191,
+   "anhDau": 2362,
+   "xongSau": 4078,
+   "cham": 1060,
+   "chamTre": 131,
+   "sw": true,
+   "khung_trong_luc_tai_sau": null,
+   "so_khung": 258,
+   "khung_max_ms": 216.6,
+   "khung_tren_50ms": 6,
+   "khung_tren_100ms": 2,
+   "longtask_tong_ms_sau_lang": 0,
+   "byte_mang": 0,
+   "loi": [
+    "console.error: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+    "console.warning: Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read"
+   ],
+   "dong_ho_s": 5.7
+  }
+ },
+ "3G cpu4": {
+  "lan1": {
+   "tai": 478,
+   "sau": {
+    "tt": "xong",
+    "xong": 607,
+    "tong": 607,
+    "lan": 0
+   },
+   "manChao": 7842,
+   "batDauSau": 7842,
+   "lang": 8654,
+   "anhDau": 14800,
+   "xongSau": 43838,
+   "cham": 8391,
+   "chamTre": 263,
+   "sw": true,
+   "khung_trong_luc_tai_sau": null,
+   "so_khung": 1894,
+   "khung_max_ms": 983.2,
+   "khung_tren_50ms": 90,
+   "khung_tren_100ms": 19,
+   "longtask_tong_ms_sau_lang": 7909,
+   "byte_mang": 853646,
+   "loi": [
+    "console.error: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+    "console.warning: Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read"
+   ],
+   "dong_ho_s": 45.5
+  },
+  "lan2": {
+   "tai": 431,
+   "sau": {
+    "tt": "xong",
+    "xong": 607,
+    "tong": 607,
+    "lan": 0
+   },
+   "manChao": 3338,
+   "batDauSau": 3338,
+   "lang": 3991,
+   "anhDau": 4413,
+   "xongSau": 8832,
+   "cham": 3677,
+   "chamTre": 314,
+   "sw": true,
+   "khung_trong_luc_tai_sau": null,
+   "so_khung": 223,
+   "khung_max_ms": 583.4,
+   "khung_tren_50ms": 54,
+   "khung_tren_100ms": 14,
+   "longtask_tong_ms_sau_lang": 1955,
+   "byte_mang": 0,
+   "loi": [
+    "console.error: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+    "console.warning: Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read"
+   ],
+   "dong_ho_s": 10.5
+  }
+ }
+}

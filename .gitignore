@@ -6,3 +6,6 @@ __pycache__/
 # Đợt 10 (Q5): cặp tệp của chế độ 2 tệp (python3 game/build.py --hai-tep) do workflow tạo lúc đăng, không lưu trong repo
 game/dist/linh-khi-nhe.html
 game/dist/linh-khi-anh.*.json
+# Tải nhanh (12/10): ảnh rời của chế độ 2 tệp (workflow tạo lúc đăng) và bộ nhớ đệm mã hoá WebP
+game/dist/anh/
+game/.dem-webp/
