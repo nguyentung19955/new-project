@@ -18,6 +18,7 @@ Nguồn: `docs/anh-goc/2026-10-12/em-be-healer-than.png` (thân gốc 8 cột ×
 - **0 pageerror**. `python3 game/build.py` và `LK_HAI_TEP=1 python3 game/build.py --hai-tep` chạy được: hai tệp 25,06 MB / trần 26 MB (sau khi gộp phiên 12/10). Tệp đầu 5,05 MB (cảnh báo "nên dưới 5 MB" có từ trước phiên này) — việc của phiên Tải nhanh.
 
 ## Còn để ý
+- Phiên "Nhập ảnh 12/10 (b)" vừa nhập `em-be-healer-don` (đòn theo vũ khí Cái Bống) song song. Đã gộp và kiểm lại: game ghép đủ 5 hàng đòn (hàng 7–11) vào thân mới, cột "đánh", "giữ" của bảng kiểm dùng các hàng này — cùng bé gái tóc đuôi ngựa, vũ khí trong tay. Nếu muốn khớp hẳn mặt/dáng, lần gen sau gửi kèm `tham-chieu-healer-moi.png`.
 - Thân theo bộ (`em-be-healer-rung/-bien/-lau`) giữ nguyên (không thuộc phiên này).
 
 ## Tệp
