@@ -100,6 +100,8 @@
       // (đầu, thân) và vũ khí + nắm tay (tay) theo điểm ảnh cho khớp hình AI.
       if (sp.doi === 'em-be') {
         sp.khoacDo = tep.khoac_do !== false; sp.neo = docNeo(tep.neo);
+        // Hàng chạy vẽ sẵn nhún lên xuống (nhập ảnh 12/10: hàng chạy 8 khung mới) thì tệp ghi "nhun_buoc": false: game không nhún thêm (G.NHUN_BUOC).
+        sp.nhunBuoc = tep.nhun_buoc !== false;
         // Thân theo BỘ TRANG PHỤC: mã em-be-<nhân vật>-<bộ> (bộ: rung, bien, lau). Thân đã vẽ sẵn mũ, áo, đồ lưng, bùa của bộ.
         const mb = /^em-be-(smith|hunter|healer|wrestler)-(rung|bien|lau)$/.exec(sp.ma); sp.bo = mb ? mb[2] : null;
       }
@@ -543,7 +545,7 @@
   SC.nhunBuoc = function (o) {
     if (!G.NHUN_BUOC || !o || !o.move || o.dodge >= 0 || (o.p && (o.p.dead || o.p.dashT > 0))) return 0;
     const sp = SC.cuaEmBe(o.key, o);
-    if (!sp || !sp.img || !sp.dt.move) return 0;
+    if (!sp || !sp.img || !sp.dt.move || sp.nhunBuoc === false) return 0;
     let s = null;
     try { s = SC.chonEmBe(sp, o); } catch (e) { return 0; }
     const t = (o.t != null ? o.t : G.time) || 0, i = s.ten === 'move' ? s.i : G.CHAY_DANH === 'nhun' && o.atk >= 0 ? khungLap(sp.dt.move, t) : -1;
