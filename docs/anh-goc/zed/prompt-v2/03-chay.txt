@@ -1,0 +1,3 @@
+Nhân vật Zed như ảnh gửi kèm (giữ y hệt mặt, sừng, tóc, hình xăm, khăn, quần). Pixel art chibi, viền tối một nét, quay mặt sang phải, cùng cỡ người và vị trí chân ở mọi ô, không bóng dưới chân.
+Chạy nhanh, lặp, người nghiêng tới: 1 chân trước chạm đất, 2 dồn lực (người thấp nhất), 3 đạp chân sau, 4 HAI CHÂN RỜI ĐẤT bay tới; 5–8 như 1–4 nhưng đổi chân. Tay co vung mạnh ngược chân, tóc và khăn bay ra sau.
+Một hàng 8 khung từ trái sang, ô đều có kẻ lưới mảnh, nhân vật nằm trọn trong ô. Nền trơn xanh lá #00FF00, không chữ.

@@ -1,0 +1,3 @@
+Nhân vật Zed như ảnh gửi kèm (giữ y hệt mặt, sừng, tóc, hình xăm, khăn, quần). Pixel art chibi, viền tối một nét, quay mặt sang phải, cùng cỡ người và vị trí chân ở mọi ô, không bóng dưới chân.
+Ra chưởng: 1 thu hai tay về hông, 2–3 dồn lực khuỵu gối, 4 đẩy mạnh hai lòng bàn tay ra trước, 5–6 giữ thế, 7–8 thu về đứng.
+Một hàng 8 khung từ trái sang, ô đều có kẻ lưới mảnh, nhân vật nằm trọn trong ô. Nền trơn xanh lá #00FF00, không chữ.
