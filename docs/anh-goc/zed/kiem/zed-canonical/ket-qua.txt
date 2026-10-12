@@ -1,0 +1,38 @@
+KIỂM TẤM: zed-canonical.png  (1536×1024 điểm ảnh, 8 cột × 3 hàng, loại: than)
+KẾT LUẬN: LỖI (giữ GENERATED, sửa hoặc gen lại)
+
+LỖI (8):
+  - Hàng 3 ô 1: hình CHẠM MÉP ô (phải) — có thể bị cắt
+  - Hàng 3 ô 2: hình CHẠM MÉP ô (phải) — có thể bị cắt
+  - Hàng 3 ô 3: hình CHẠM MÉP ô (phải) — có thể bị cắt
+  - Hàng 3 ô 4: hình CHẠM MÉP ô (phải) — có thể bị cắt
+  - Hàng 3 ô 5: hình CHẠM MÉP ô (phải) — có thể bị cắt
+  - Hàng 3 ô 6: hình CHẠM MÉP ô (phải) — có thể bị cắt
+  - Hàng 3 ô 7: hình CHẠM MÉP ô (phải) — có thể bị cắt
+  - Hàng 3 ô 8: hình CHẠM MÉP ô (trái, phải) — có thể bị cắt
+CẢNH BÁO (10):
+  - Ảnh nguồn CÓ ĐƯỜNG KẺ LƯỚI (9 dọc, 4 ngang) — đã dùng để chia ô và đã bỏ khi tách; ảnh mới nên KHÔNG kẻ lưới
+  - Ô không đều: rộng 189–192, cao 333–348 điểm ảnh (đã chuẩn hoá về ô đều khi xuất)
+  - Hàng 1 ô 7: 75 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)
+  - Hàng 2 ô 1: 76 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)
+  - Hàng 2 ô 5: 47 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)
+  - Hàng 2 ô 6: 174 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)
+  - Hàng 2 ô 8: 134 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)
+  - Hàng 3 ô 3: 52 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)
+  - Hàng 3 ô 5: 77 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)
+  - Hàng 3 ô 8: 223 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)
+
+SỐ ĐO:
+  Ô cột (điểm ảnh): 2–194, 196–385, 387–577, 578–768, 770–959, 961–1151, 1152–1342, 1344–1534
+  Ô hàng (điểm ảnh): 2–338, 340–673, 674–1022
+  Hàng 1 dung    : 8 khung, 150 ms/khung, cao người 281–282 (trung vị 281), rộng 163–165, đường đất y=320 (95.2% chiều cao ô)
+     neo ngang (tâm thân trung vị) x=98 trong ô (51.7% bề ngang); tâm thân từng khung lệch neo: +7 -2 +0 +0 +1 -1 +0 -3
+  Hàng 2 di      : 8 khung, 112 ms/khung, cao người 273–284 (trung vị 276), rộng 165–178, đường đất y=313 (94.0% chiều cao ô)
+     neo ngang (tâm thân trung vị) x=93 trong ô (48.7% bề ngang); tâm thân từng khung lệch neo: +6 -2 -1 +0 +2 +0 +0 +4
+  Hàng 3 chay    : 8 khung, 75 ms/khung, cao người 267–279 (trung vị 270), rộng 181–190, đường đất y=310 (89.2% chiều cao ô)
+     neo ngang (tâm thân trung vị) x=90 trong ô (47.4% bề ngang); tâm thân từng khung lệch neo: +6 +0 +2 +0 -6 +2 -5 -9
+  Tỉ lệ về cỡ game: 0.2206 (chiều cao trung vị hàng 1 → 31 điểm ảnh logic) → khung 48×48 logic, net 2, chân tại (24,45)
+  So canonical: {"mau_la": 0.005, "cao_tren_o_canonical": 0.836, "cao_tren_o": 0.836}
+
+TỆP RA: tong-quan.jpg (khung xanh = ổn, đỏ = lỗi; vàng = khung bao; xanh dương = chân), GIF từng hàng, sheet-game.png, do-dac.json (+ sheet-sach.png nếu chạy --sach)
+NHỚ: máy không thấy được tay cầm sai, vũ khí xuyên người, đồ trôi khỏi người, động tác giật → xem GIF theo checklist ở SPEC mục 9.3.
