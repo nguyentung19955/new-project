@@ -77,6 +77,8 @@ def main(ten, neo, cap_list=(1, 4)):
     for cap in cap_list:
         o = []
         for im, k in zip(ng, neo['khung']):
+            if not k:
+                o.append(im.crop(im.getbbox())); continue
             x, y = chinh_nam(im, k[0], k[1])
             t2 = chinh_nam(im, *k[4]) if len(k) > 4 else None
             o.append(ghep(im, vks[cap - 1], sc, x, y, k[2], k[3] if len(k) > 3 else 0, neo.get('cam'), t2)[0])
