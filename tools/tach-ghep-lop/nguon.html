@@ -142,6 +142,7 @@ const SLOTS = [ // slot, tên, lớp vẽ mặc định, kiểu mặc định, n
   ['chan', 'Giày / giáp chân', 50, 'khung', null], ['quan', 'Quần', 55, 'khung', null], ['ao', 'Áo / giáp thân', 60, 'khung', null],
   ['dai', 'Đai / hông', 65, 'khung', null], ['vai', 'Giáp vai', 70, 'khung', null], ['tay', 'Găng / giáp tay', 75, 'khung', null],
   ['lung_truoc', 'Đồ lưng (trước)', 80, 'khung', null], ['mu', 'Mũ', 85, 'gan', 'dau'], ['vu_khi', 'Vũ khí', 90, 'gan', 'vk'],
+  ['mu_sau', 'Mũ — phần sau đầu (mặt dưới nón, dây)', 35, 'khung', null], // SPEC 7.1: nón lá tách trước/sau, phần sau vẽ SAU thân
 ];
 const SLOT = Object.fromEntries(SLOTS.map((s) => [s[0], { ten: s[1], lop: s[2], kieu: s[3], neo: s[4] }]));
 const $ = (id) => document.getElementById(id);
@@ -239,6 +240,7 @@ function veZed(g, anim, i, t, chiThan) {
     }
     const p = N[loai];
     if (!p) { thieu.push(SLOT[slot].ten + ': khung này chưa đo neo ' + (loai === 'dau' ? 'ĐẦU' : 'LƯNG')); continue; }
+    if ((N.can_chinh_tay || []).includes(loai)) thieu.push(SLOT[slot].ten + ': neo ' + (loai === 'dau' ? 'ĐẦU' : 'LƯNG') + ' là số máy đo, CẦN CHỈNH TAY (chạm để xác nhận) — game chưa vẽ');
     const vo = m.lap ? Math.floor(t / (m.lap.giay || 0.8) * m.lap.so) : 0;
     ds.push({ lop: m.lop, ve: (q) => veGan(q, a, [p[0] - GOC[0], p[1] - GOC[1]], p[2] || 0, vo) });
     if (slot === 'mu' && m.an_toc && m.an_toc.vung) ds.anToc = [p[0] - GOC[0] + m.an_toc.vung[0], p[1] - GOC[1] + m.an_toc.vung[1], m.an_toc.vung[2], m.an_toc.vung[3]];
@@ -284,6 +286,8 @@ function ve() {
   const diem = (p, mau, chu) => { if (!p) return; const x = gx + f * (p[0] - GOC[0]) * z, y = gy + (p[1] - GOC[1]) * z; c.fillStyle = mau; c.fillRect(x - 3, y - 3, 6, 6); c.font = '11px sans-serif'; c.fillText(chu, x + 5, y - 4); };
   if ($('cheDo').value !== 'xem') {
     diem(N.dau, '#ffd27a', 'đầu'); diem(N.lung, '#7fd18b', 'lưng'); diem(N.tay_phai, '#ff8a70', 'tay P'); diem(N.tay_trai, '#8fd0ff', 'tay T');
+    if (N.mat) { const a = [gx + f * (N.mat[0] - GOC[0]) * z, gy + (N.mat[1] - GOC[1]) * z, gx + f * (N.mat[2] - GOC[0]) * z, gy + (N.mat[3] - GOC[1]) * z]; c.strokeStyle = '#4fe3ff'; c.strokeRect(Math.min(a[0], a[2]), a[1], Math.abs(a[2] - a[0]), a[3] - a[1]); }
+    for (const s of N.sung || []) diem(s, '#ffe14d', 'sừng');
     if (N.vk) { diem([N.vk.x, N.vk.y], '#fff', 'VK'); const r = N.vk.goc * Math.PI / 180, x = gx + f * (N.vk.x - GOC[0]) * z, y = gy + (N.vk.y - GOC[1]) * z; c.strokeStyle = '#fff'; c.beginPath(); c.moveTo(x, y); c.lineTo(x + f * Math.cos(r) * 16 * z, y + Math.sin(r) * 16 * z); c.stroke(); }
     if (S.vkCham) diem(S.vkCham, '#fff', 'chuôi…');
   }
@@ -298,6 +302,8 @@ function capNhatSoLieu(than, N) {
     (d.moc ? ' · mốc ' + d.moc.join(' ') + ' · chạm khung ' + ((d.cham | 0) + 1) : '') +
     '<br>Đầu ' + r(N.dau) + ' · Lưng ' + r(N.lung) + ' · Tay P ' + r(N.tay_phai) + ' · Tay T ' + r(N.tay_trai) +
     ' · VK ' + (N.vk ? r([N.vk.x, N.vk.y]) + ' góc ' + Math.round(N.vk.goc) + '° ' + N.vk.lop : '<i>chưa đo</i>') +
+    (N.can_chinh_tay && N.can_chinh_tay.length ? '<br><b style="color:#ff9a8a">Cần chỉnh tay: ' + N.can_chinh_tay.join(', ') + '</b>' : '') +
+    (N.mat ? '<br>Vùng mặt bảo vệ (khung xanh lơ): không lớp nào vẽ trên thân được chạm vào' : '') +
     '<br>(toạ độ logic trong khung 48×48, chân tại 24,45)';
   if (document.activeElement !== $('gDau')) $('gDau').value = N.dau ? N.dau[2] || 0 : '';
   if (document.activeElement !== $('gLung')) $('gLung').value = N.lung ? N.lung[2] || 0 : '';
@@ -373,6 +379,12 @@ function datNeo(than, k, p) {
   n[S.i] = n[S.i] || {};
   const cu = n[S.i][k];
   n[S.i][k] = k === 'dau' || k === 'lung' ? [lam(p[0]), lam(p[1]), cu ? cu[2] || 0 : 0] : [lam(p[0]), lam(p[1])];
+  danhDauTay(n[S.i], k);
+}
+// Neo người đặt tay: ghi nguồn "chinh-tay", bỏ khỏi danh sách cần chỉnh tay (SPEC mục 6: neo tự động có tin_cay / can_chinh_tay)
+function danhDauTay(o, k) {
+  o.nguon_neo = o.nguon_neo || {}; o.nguon_neo[k] = 'chinh-tay';
+  if (o.can_chinh_tay) o.can_chinh_tay = o.can_chinh_tay.filter((x) => x !== k);
 }
 cv.addEventListener('pointerdown', (ev) => {
   const mode = $('cheDo').value, than = thanCo(S.anim);
@@ -387,6 +399,7 @@ cv.addEventListener('pointerdown', (ev) => {
     const goc = Math.atan2(p[1] - S.vkCham[1], p[0] - S.vkCham[0]) * 180 / Math.PI;
     n[S.i].vk = { x: lam(S.vkCham[0]), y: lam(S.vkCham[1]), goc: Math.round(goc), lop: $('vkLop').value };
     n[S.i].tay_phai = n[S.i].tay_phai || [lam(S.vkCham[0]), lam(S.vkCham[1])];
+    danhDauTay(n[S.i], 'vk');
     S.vkCham = null; bao('Đã đo vũ khí khung ' + (S.i + 1) + ': góc ' + Math.round(goc) + '°', true); return;
   }
   S.keo = { p, mode }; cv.setPointerCapture(ev.pointerId);
@@ -430,6 +443,9 @@ function xuat(a) {
     const trong = [];
     for (const k in m.dong_tac) (m.neo[k] || []).forEach((n, i) => { if (!n) trong.push(k + ' ' + (i + 1)); });
     if (trong.length) m.ghi_chu_neo = 'Còn ' + trong.length + ' khung chưa đo neo: ' + trong.slice(0, 12).join(', ');
+    const can = [];
+    for (const k in m.dong_tac) (m.neo[k] || []).forEach((n, i) => { if (n && n.can_chinh_tay && n.can_chinh_tay.length) can.push(k + ' ' + (i + 1) + ' (' + n.can_chinh_tay.join('/') + ')'); });
+    if (can.length) m.ghi_chu_can_chinh_tay = 'Còn ' + can.length + ' khung có neo cần chỉnh tay: ' + can.slice(0, 12).join(', ');
   }
   Object.assign(m, { khung_rong: KHUNG, khung_cao: KHUNG, net: NET, goc: GOC, huong: 'phai' });
   m.tam = a.cv.toDataURL('image/png');

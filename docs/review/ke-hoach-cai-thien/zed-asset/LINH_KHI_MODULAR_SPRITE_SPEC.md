@@ -39,6 +39,7 @@ Một Zed hoàn chỉnh = **thân** + các **lớp** theo bảng dưới. Mỗi 
 | 10 | `canh` (phần sau) | cánh | `gan` (neo `lung`) | vỗ cánh: 1 hàng khung lặp riêng, nhịp theo động tác |
 | 20 | `lung` phần `sau` | gùi, ba lô, đuôi khăn bay, bao kiếm | `gan` (neo `lung`) hoặc `khung` | phần nằm SAU thân |
 | 30 | `vu_khi` khi `sau` | vũ khí lúc đeo sau lưng / tay xa | `gan` | từng khung ghi `sau`/`truoc` |
+| 35 | `mu_sau` | phần mũ nằm SAU đầu: mặt dưới nón lá, dây nón, nút dây, đuôi dây | `khung` | thêm 12/10 (ghep-sua): dây không bao giờ cắt ngang mặt; chỉ lộ ngoài viền người |
 | 40 | `than` | thân trơn (đầu, mặt, tóc, tay, chân, đồ lót) | `khung` | luôn vẽ **đủ**, không bao giờ bị cắt lỗ |
 | 50 | `chan` | giày, giáp chân | `khung` | |
 | 55 | `quan` | quần | `khung` | phủ lên giày 1–2 điểm ảnh ở cổ chân nếu là quần rộng |
@@ -187,6 +188,11 @@ Một tệp `<id>.lop.json` (định dạng `linh-khi-lop`) **cho mỗi ảnh**.
   "goc_anh": 0,                          // vũ khí gan: hướng lưỡi trong ảnh (độ; 0 = mũi chỉ sang phải)
   "an_toc": null,                        // mũ: { "vung": [x, y, w, h] } tính từ neo đầu (logic px): điểm ảnh thân trong vùng bị ẩn trước khi vẽ mũ
   "lap": null,                           // cánh: { "so": 8, "giay": 0.8 } vòng vỗ cánh riêng
+  // Thêm 12/10 (ghep-sua, không bắt buộc, đọc được bởi trang ghép + ghep_lop.js): trong mỗi phần tử neo[dong_tac][i] có thể có
+  //   "mat": [x0,y0,x1,y1] vùng mặt bảo vệ, "sung": [[x,y],[x,y]] đỉnh hai sừng, "co", "nguc", "eo": [x,y], "vai": [[x,y],[x,y]],
+  //   "tin_cay": { "mat": 0.9, ... } (0–1), "can_chinh_tay": ["dau", ...] (neo máy đo chưa người xác nhận),
+  //   "nguon_neo": { "dau": "tu-dong" | "chinh-tay" }.  Neo có tên trong can_chinh_tay → game KHÔNG dùng cho món gắn (như neo null);
+  //   đặt lại trên trang ghép = xác nhận (trang tự bỏ tên khỏi can_chinh_tay, ghi nguon_neo "chinh-tay").
   "tuong_thich": { "than": ["zed-than-tron"], "dong_tac": ["dung", "di", "chay"] }
 }
 ```
@@ -218,7 +224,26 @@ Neo đo trên **ảnh thật** ở trang ghép (`tach-ghep-lop.html`, chạm/ké
 - Mũ là lớp `gan` trên neo `dau`, xoay theo góc nghiêng đầu. (Được phép làm mũ kiểu `khung` — một ô cho mỗi khung thân — nếu mũ mềm/biến dạng; renderer nhận cả hai.)
 - **Zed v2 có hai sừng:** mũ phải khoét lỗ cho sừng; `an_toc.vung` **không bao giờ** gồm sừng (sừng là nhận diện). Mũ trùm kín cũng chừa hai lỗ sừng.
 - `an_toc.vung` = hình chữ nhật (tính từ neo đầu) mà **điểm ảnh thân bị ẩn** trước khi vẽ mũ. Quy tắc: **ẩn phần tóc nhô trên đỉnh và hai bên vành** (sẽ đâm xuyên mũ); **giữ đuôi tóc buộc và dây đỏ** phía sau-dưới vành (nhận diện Zed); **không bao giờ ẩn mặt, mắt, cằm** (vùng ẩn không được xuống dưới đường lông mày).
+- **Nón lá Zed v2 (thêm 12/10, `ghep-sua/`)**: ảnh nguồn 8×3 theo khung → kiểu `khung`, **tách hai tệp**: `mu` (lop 85) = chóp + vành (mọi điểm ảnh từ mép dưới vành trở lên, từng cột) **đục lỗ đúng hình sừng của thân ở khung đó** (sừng thật hiện qua, không vẽ lại); `mu_sau` (lop 35) = mặt dưới nón + dây + nút + đuôi dây, vẽ sau thân. Vị trí: nón thấp nhất mà phần `mu` không chạm `mat` (vùng mặt bảo vệ). Công cụ: `docs/anh-goc/zed/ghep-thu.py`.
 - Nón lá / mũ rộng: `an_toc` chỉ phủ đỉnh đầu. Mũ trùm kín (mũ sắt): phủ cả đuôi tóc, ghi rõ trong `ten`. Mũ không che tóc (băng đô, khăn buộc trán): `an_toc: null`.
+
+### 7.1b Neo máy đo trên ảnh nguồn (`linh-khi-neo`, thêm 12/10)
+`docs/anh-goc/zed/ghep-thu.py` đo neo **từng khung** trên tấm nguồn và ghi `docs/anh-goc/zed/neo/zed-v2.neo.json`:
+```jsonc
+{ "loai": "linh-khi-neo", "phien_ban": 1, "he_toa_do": "nguon-khung: điểm ảnh tấm nguồn, gốc = góc trên-trái khung_bao của hình",
+  "than": { "anh": "...00-than-dung-di-chay.png", "dong_tac": { "dung": [ {
+      "khung": 1, "khung_bao": [x0,y0,x1,y1],
+      "neo": { "dinh_dau": [x,y], "tam_mat": [x,y], "mat": [x0,y0,x1,y1], "mat_mat": [x0,y0,x1,y1],
+               "sung_trai": {"dinh":[x,y],"chan":[x,y],"khung_bao":[..]}, "sung_phai": {...},
+               "co": [x,y], "eo": [x,y], "nguc": [x,y], "vai_sau": [x,y], "vai_truoc": [x,y], "lung": [x,y], "tay_cam": null, "chan": [x,y] },
+      "tin_cay": { "mat": 0.9, "sung": 0.85, ... }, "can_chinh_tay": ["tay_cam"], "nguon_neo": { "co": "tu-dong" } } ] } },
+  "lop": { "non_la": { "ti_le": 1.0, "dong_tac": { "dung": [ { "khung": 1, "neo": { "vanh_trai", "vanh_phai", "dinh_non", "lo_sung_ve_san" },
+                                                          "dat": [x,y] /* góc trên-trái lớp trong hệ khung thân */, "nguon_dat": "tu-dong" } ] } },
+           "giap": {...}, "ao_choang": {...} } }
+```
+- **Tệp chỉnh tay** `zed-v2.neo.chinh-tay.json` (`"loai": "linh-khi-neo-chinh-tay"`) **thắng** tệp tự động: `than.<dong_tac>.<khung>.<ten_neo>`, `lop.<lop>.<dong_tac>.<khung>.{lech:[dx,dy] | dat:[x,y]}`, `ti_le.<lop>`.
+- Đổi sang toạ độ game (logic 48×48, goc [24,45]) theo đúng phép của `kiem-sheet.py`: `zed-v2.neo-game.json` → `tools/tach-ghep-lop/dong-goi.py` nhúng vào thân của trang ghép (các trường thêm ở mục 6).
+- Đổi cỡ lớp: tỉ lệ trong ±3% quanh 1 → giữ 1 (không đổi cỡ); khác → NEAREST + alpha nhị phân (ngưỡng 128). Không LANCZOS.
 
 ### 7.2 Khe hở giữa lớp
 1. **Thân không bao giờ bị khoét.** Lớp đồ chỉ vẽ **đè lên**; dưới mọi khe là đồ lót màu than của thân trơn → khe đọc như bóng, không thành lỗ trong suốt.

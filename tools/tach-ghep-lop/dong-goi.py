@@ -26,6 +26,14 @@ def than_tu(thu_muc, id_, ten, anh):
                       'dat_tren_o': d['dat_tren_o'], 'neo_x_tren_o': d['neo_x_tren_o']},
         'tuong_thich': {'dong_tac': list(dt)}, 'tam': tam,
     }
+    # Neo máy đo từng khung (ghep-thu.py → docs/anh-goc/zed/neo/<id>.neo-game.json): mặt, sừng, cổ, eo, vai, lưng, chỗ nón ngồi.
+    # Neo nào còn trong "can_chinh_tay" thì trang ghép báo CẦN CHỈNH TAY và game (ghep_lop.js) chưa dùng cho món gắn.
+    pn = os.path.join(GOC, 'docs', 'anh-goc', 'zed', 'neo', id_.replace('-canonical', '') + '.neo-game.json')
+    if os.path.exists(pn):
+        ng = json.load(open(pn, encoding='utf-8'))
+        if ng.get('than') == thu_muc:
+            than['neo'] = {t: ng['neo'].get(t, [None] * dt[t]['so']) for t in dt}
+            than['nguon']['neo'] = 'docs/anh-goc/zed/neo/' + os.path.basename(pn) + ' (máy đo, có tin_cay / can_chinh_tay)'
     return than
 
 

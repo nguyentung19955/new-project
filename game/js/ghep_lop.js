@@ -1,5 +1,6 @@
 // GHÉP LỚP (Zed modular): vẽ Zed bằng cách chồng thân + áo/quần/giáp + mũ + đồ lưng/cánh + vũ khí theo số liệu .lop.json.
 // Quy cách: docs/review/ke-hoach-cai-thien/zed-asset/LINH_KHI_MODULAR_SPRITE_SPEC.md (mục 6, 7, 10).
+// Mũ có thể có phần sau đầu (slot mu_sau, lớp 35: mặt dưới nón lá + dây) vẽ SAU thân; neo ghi can_chinh_tay → chưa dùng.
 //
 // CỜ G.GHEP_LOP — TẮT mặc định. Bật bằng ?ghep=1. Tắt → tệp này không bọc gì, game y hệt trước.
 // Bật mà thiếu ảnh/số liệu cho động tác đang vẽ (thân chưa có hàng đó, vũ khí trong tay chưa đo neo ở khung đó…)
@@ -17,9 +18,9 @@
   const KHUNG = 48, GOC = [24, 45];
   const DUNG = { VALIDATED: 1, INTEGRATED: 1 };
   // Lớp vẽ theo slot (SPEC mục 2). Lớp ghi trong tệp thắng.
-  const LOP = { canh: 10, lung_sau: 20, than: 40, chan: 50, quan: 55, ao: 60, giap_than: 60, dai: 65, vai: 70, tay: 75, lung_truoc: 80, mu: 85, vu_khi: 90 };
+  const LOP = { canh: 10, lung_sau: 20, mu_sau: 35, than: 40, chan: 50, quan: 55, ao: 60, giap_than: 60, dai: 65, vai: 70, tay: 75, lung_truoc: 80, mu: 85, vu_khi: 90 };
   // Ô trang phục của game (js/outfit.js, G.tinhLinh.outfitOf) → slot của hệ ghép lớp
-  const O_GAME = { hat: ['mu'], robe: ['ao', 'giap_than'], back: ['lung_sau', 'lung_truoc'], wing: ['canh'] };
+  const O_GAME = { hat: ['mu', 'mu_sau'], robe: ['ao', 'giap_than'], back: ['lung_sau', 'lung_truoc'], wing: ['canh'] };
   const VK = { sword: 'kiem', spear: 'thuong', hammer: 'bua', bow: 'phitieu' };
 
   // ---------- nạp ----------
@@ -130,7 +131,7 @@
     // vũ khí trong tay: phải có neo vk đo thật ở khung này (phi tiêu: tay không lúc đứng/chạy là hợp lệ khi tệp ghi vk null)
     const w = o.weapon || {}, wt = w.type;
     if (wt && VK[wt] && !(wt === 'bow' && !N.vk && /^(dung|di|chay|trung|lon)$/.test(ten))) {
-      if (!N.vk) return false;
+      if (!N.vk || (N.can_chinh_tay || []).includes('vk')) return false;
       const v = N.vk, P = [v.x - GOC[0], v.y - GOC[1]];
       const anh = GL.lop.find((a) => a.ok && a.m.slot === 'vu_khi' && a.m.kieu === 'gan' && (a.m.mon || []).includes(wt));
       if (anh) ve.push({ lop: v.lop === 'sau' ? 30 : 90, f: (q) => veGan(q, anh, P, v.goc - (anh.m.goc_anh || 0)) });
@@ -150,6 +151,7 @@
       }
       const neo = m.slot === 'mu' ? N.dau : N.lung;
       if (!neo) continue; // chưa đo neo: không vẽ món gắn (không bịa vị trí)
+      if ((N.can_chinh_tay || []).includes(m.slot === 'mu' ? 'dau' : 'lung')) continue; // neo máy đo chưa được người xác nhận (SPEC mục 6)
       const vo = m.lap ? Math.floor(t / (m.lap.giay || 0.8) * m.lap.so * (o.move ? 1.6 : 1)) : 0;
       ve.push({ lop: a.lop, f: (q) => veGan(q, a, [neo[0] - GOC[0], neo[1] - GOC[1]], neo[2] || 0, vo) });
       if (m.slot === 'mu' && m.an_toc && m.an_toc.vung) { const v = m.an_toc.vung; anToc = [neo[0] - GOC[0] + v[0], neo[1] - GOC[1] + v[1], v[2], v[3]]; }
