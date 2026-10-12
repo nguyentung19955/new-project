@@ -89,6 +89,12 @@
   LK.markEl = function (e) {
     if (!e || !e.st || e.illusion || e.marks === 0 || !G.hasStatus(e)) return null;
     const s = e.st, on = { fire: s.fire > 0, poison: s.poisonN > 0, ice: s.iceN > 0 || s.frozen > 0 };
+    // Phiên linh-khi-theo-thay: cùng luật với G.kill (bỏ hiệu ứng do chưởng, chọn hệ đang thấy rõ nhất). Cờ tắt: như cũ.
+    if (G.LK_THEO_THAY !== false && G.lkHeThay) {
+      const ch = s.ch || {};
+      const o2 = { fire: on.fire && !ch.fire, poison: on.poison && !ch.poison, ice: on.ice && !ch.ice };
+      return o2.fire || o2.poison || o2.ice ? G.lkHeThay(s, o2) : null;
+    }
     return s.last && on[s.last] ? s.last : on.fire ? 'fire' : on.poison ? 'poison' : 'ice';
   };
 
