@@ -9,6 +9,8 @@
 (function () {
   'use strict';
   const G = (window.G = window.G || {});
+  // Phiên hiệu năng (V2): bộ nhớ đệm hình dùng chung ngân sách điểm ảnh (js/bo_nho.js); trang không nạp bo_nho.js thì trần đếm như cũ.
+  const taoNho = (G && G.boNho && G.boNho.tao) || ((ten, o) => { const m = new Map(), max = (o && o.max) || 2000; return { get: (k) => m.get(k), set: (k, v) => { if (m.size >= max) m.clear(); m.set(k, v); return v; }, cong() {}, del: (k) => m.delete(k), clear: () => m.clear(), get size() { return m.size; } }; });
   const B = (G.btnArt = {});
   const TAU = Math.PI * 2;
   const OUT = '#140e0c'; // màu viền đen của nét pixel
@@ -374,11 +376,10 @@
     ]);
   };
 
-  const cache = new Map();
+  const cache = taoNho('nut', { max: 901 });
   function memo(key, make) {
     let v = cache.get(key);
     if (!v) {
-      if (cache.size > 900) cache.clear();
       v = make();
       cache.set(key, v);
     }
@@ -417,7 +418,7 @@
       if (w > 0 && h > 0 && w <= 1024 && h <= 1024) {
         const c = document.createElement('canvas');
         c.width = w; c.height = h;
-        const x = c.getContext('2d');
+        const x = c.getContext('2d', { willReadFrequently: true });
         x.drawImage(g.img, 0, 0);
         v = { w, h, d: x.getImageData(0, 0, w, h).data, xa: 0 };
         // xa: điểm đặc xa tâm nhất (1 = chạm mép ảnh, 1,41 = chạm góc), để thu hình cho gọn trong mặt nút tròn

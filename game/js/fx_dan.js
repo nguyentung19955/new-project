@@ -4,14 +4,16 @@
 // Đạn của quái: viền tối và quầng đỏ. Đạn của mình (mũi tên): quầng sáng trắng, lông đuôi màu bậc vũ khí.
 (function () {
   const G = window.G, fx = G.fx, A = G.art;
+  // Phiên hiệu năng (V2): bộ nhớ đệm hình dùng chung ngân sách điểm ảnh (js/bo_nho.js); trang không nạp bo_nho.js thì trần đếm như cũ.
+  const taoNho = (G && G.boNho && G.boNho.tao) || ((ten, o) => { const m = new Map(), max = (o && o.max) || 2000; return { get: (k) => m.get(k), set: (k, v) => { if (m.size >= max) m.clear(); m.set(k, v); return v; }, cong() {}, del: (k) => m.delete(k), clear: () => m.clear(), get size() { return m.size; } }; });
   if (!fx || !fx.kit || !A) return;
   const K = fx.kit, TAU = Math.PI * 2;
   const { emit, add, addRing, trauma, RAMP, rr, R, fail } = K;
 
   // ---------- canvas nhỏ vẽ sẵn ----------
   const mk = (w, h) => { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; return cv; };
-  const cache = new Map();
-  function cached(key, fn) { let v = cache.get(key); if (!v) { if (cache.size > 900) cache.clear(); v = fn(); cache.set(key, v); } return v; }
+  const cache = taoNho('dan', { max: 901 });
+  function cached(key, fn) { let v = cache.get(key); if (!v) { v = fn(); cache.set(key, v); } return v; }
   function rgba(hex, a) { const n = parseInt(hex.slice(1), 16); return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; }
   const RG = new Map();
   const ra = (hex, a) => { const k = hex + a; let v = RG.get(k); if (!v) { v = rgba(hex, a); RG.set(k, v); } return v; };

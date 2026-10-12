@@ -53,7 +53,7 @@
     let kq = null;
     try {
       const cv = document.createElement('canvas'); cv.width = g0.pw; cv.height = g0.ph;
-      const x = cv.getContext('2d'); x.drawImage(g0.img, 0, 0);
+      const x = cv.getContext('2d', { willReadFrequently: true }); x.drawImage(g0.img, 0, 0);
       const d = x.getImageData(0, 0, cv.width, cv.height), q = d.data;
       for (let i = 0; i < q.length; i += 4) {
         if (!q[i + 3]) continue;

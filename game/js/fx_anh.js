@@ -32,7 +32,8 @@
         const img = new Image();
         img.onload = () => { a.img = img; a.cot = Math.max(1, Math.floor(img.width / (fw * a.net))); a.ready = true; };
         img.onerror = () => { FA.loi.push(a.ma + ': ảnh hỏng'); };
-        img.src = tep.tam;
+        const SCx = G.spriteCustom; // Phiên hiệu năng (V3): ảnh của tệp tải sau giải mã ngoài luồng chính rồi mới dùng
+        if (SCx && SCx.napAnh) SCx.napAnh(img, tep.tam); else img.src = tep.tam;
       }
       FA.ds[a.ma] = a;
       return a;

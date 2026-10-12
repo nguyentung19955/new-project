@@ -488,6 +488,8 @@
   // ---------- vòng lặp ----------
   G.scene = null;
   G.setScene = function (s) {
+    // Phiên hiệu năng (V2): về làng thì bỏ khung / tấm nhuộm của quái và trùm vừa gặp (ải sau gặp quái khác; cần thì tự dựng lại).
+    if (s && s === G.Village && G.scene !== s && G.boNho && G.BO_NHO) { try { G.boNho.xoaNhom('quai'); } catch (e) { /* bỏ qua */ } }
     G.scene = s;
     G.syncTaps = [];
     G.click = null;

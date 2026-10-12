@@ -4,6 +4,8 @@
 (function () {
   'use strict';
   const G = window.G, A = G && G.art;
+  // Phiên hiệu năng (V2): bộ nhớ đệm hình dùng chung ngân sách điểm ảnh (js/bo_nho.js); trang không nạp bo_nho.js thì trần đếm như cũ.
+  const taoNho = (G && G.boNho && G.boNho.tao) || ((ten, o) => { const m = new Map(), max = (o && o.max) || 2000; return { get: (k) => m.get(k), set: (k, v) => { if (m.size >= max) m.clear(); m.set(k, v); return v; }, cong() {}, del: (k) => m.delete(k), clear: () => m.clear(), get size() { return m.size; } }; });
   if (!A || !A.hero) return;
   const old = A.hero; // bản cũ, dùng khi có lỗi
 
@@ -1131,8 +1133,7 @@
   }
 
   // ---------- bộ nhớ đệm ----------
-  const CACHE = new Map();
-  const CAP = 1400;
+  const CAP = 1400, CACHE = taoNho('khung-be-cu', { max: CAP });
   function getFrame(o) {
     const key = HS[o.key] ? o.key : 'smith';
     const look = o.weapon ? A.weaponLook(o.weapon) : null;
@@ -1146,7 +1147,6 @@
     const id = key + '|' + (o.helm || '') + '|' + (o.armor || '') + '|' + wk + '|' + sel[0] + '|' + sel[1] + '|' + sel[2] + '|' + tintK + (o.gong ? 'G' : '');
     let fr = CACHE.get(id);
     if (fr) return fr;
-    if (CACHE.size >= CAP) CACHE.clear();
     const ps = poseOf(key, wt, sel[0], sel[1], sel[2]);
     fr = render(key, ps, wt === 'none' ? null : look, palette(key, o.helm, o.armor), { helm: o.helm, armor: o.armor }, sel[1] + sel[2] * 3,
       { flash, ice: tintK === 'I', poison: tintK === 'P', gong: !!o.gong });

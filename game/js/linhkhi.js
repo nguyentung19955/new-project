@@ -83,7 +83,7 @@
     let m = MO.get(g);
     if (m && m.goc === g.img) return m;
     const cv = document.createElement('canvas'); cv.width = g.pw; cv.height = g.ph;
-    const x = cv.getContext('2d'); x.drawImage(g.img, 0, 0);
+    const x = cv.getContext('2d', { willReadFrequently: true }); x.drawImage(g.img, 0, 0);
     try {
       const d = x.getImageData(0, 0, cv.width, cv.height), q = d.data;
       for (let i = 0; i < q.length; i += 4) {

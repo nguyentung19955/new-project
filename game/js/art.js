@@ -1,6 +1,8 @@
 // Hình pixel vẽ bằng mã: hero, quái, boss, cảnh nền, đồ vật. Chỉ dùng fillRect toạ độ nguyên, màu phẳng.
 (function () {
   const G = window.G;
+  // Phiên hiệu năng (V2): bộ nhớ đệm hình dùng chung ngân sách điểm ảnh (js/bo_nho.js); trang không nạp bo_nho.js thì trần đếm như cũ.
+  const taoNho = (G && G.boNho && G.boNho.tao) || ((ten, o) => { const m = new Map(), max = (o && o.max) || 2000; return { get: (k) => m.get(k), set: (k, v) => { if (m.size >= max) m.clear(); m.set(k, v); return v; }, cong() {}, del: (k) => m.delete(k), clear: () => m.clear(), get size() { return m.size; } }; });
   const A = (G.art = {});
   const p = (c, x, y, w, h, col) => { c.fillStyle = col; c.fillRect(x, y, w, h); };
   A.p = p;
@@ -1144,7 +1146,7 @@
   const RATE = { rusher: 8, swarm: 11, shield: 6, archer: 8, nimble: 12, elite: 7, mini: 6 };
   const SKD = 0.27; // thời gian giữ dáng ra đòn sau khi hết lấy đà
   const MW = 80, MH = 64, MAX = 40, MAY = 52;
-  const SPR = new Map();
+  const SPR = taoNho('quai-code', { max: 1401, nhom: 'quai' });
   function mem(e) {
     let a = e._a;
     if (!a) a = e._a = { pw: 0, w0: 0.4, skT: -9 };
@@ -1175,7 +1177,6 @@
     const key = reg + role + (e.el || '-') + P.w + P.br + P.bl + P.tl + P.an + P.sk + P.lg;
     let s = SPR.get(key);
     if (s) return s;
-    if (SPR.size > 1400) SPR.clear();
     const S = e.skin || G.REGIONS[reg].skin;
     const E = e.el ? G.EL[e.el] : null;
     const alt = ALT[reg][role];

@@ -6,6 +6,8 @@
   'use strict';
   const G = (window.G = window.G || {});
   const INK = '#1b1118';
+  // Phiên hiệu năng (V2): bộ nhớ đệm hình dùng chung ngân sách điểm ảnh (js/bo_nho.js); trang không nạp bo_nho.js thì trần đếm như cũ.
+  const taoNho = (G.boNho && G.boNho.tao) || ((ten, o) => { const m = new Map(), max = (o && o.max) || 2000; return { get: (k) => m.get(k), set: (k, v) => { if (m.size >= max) m.clear(); m.set(k, v); return v; }, cong() {}, del: (k) => m.delete(k), clear: () => m.clear(), get size() { return m.size; } }; });
 
   // ====================================================================
   // 1. BỘ VẼ ĐIỂM ẢNH (lấy từ lib.js của tờ phác thảo đã duyệt)
@@ -868,13 +870,12 @@
     kindFx(S, F, kind, [[30, -11], [33, 2], [26, 11], [14, -9], [12, 9]]);
   }
   const WDRAW = { sword: wSword, bow: wBow, spear: wSpear, hammer: wHammer };
-  const WCACHE = new Map();
+  const WCACHE = taoNho('vk-em-be', { max: 901 });
   function weaponSprite(type, kind, mood, ang, pull) {
     ang = Math.round(ang); pull = Math.round((pull || 0) * 4) / 4;
     const id = type + '|' + kind + '|' + mood + '|' + ang + '|' + pull;
     let sp = WCACHE.get(id);
     if (sp) return sp;
-    if (WCACHE.size > 900) WCACHE.clear();
     const S = new Spr(128, 128, 64, 64);
     WDRAW[type](S, S.fr(0, 0, ang), kind || 'thuong', mood || 'idle', pull);
     S.finish();
@@ -1169,7 +1170,7 @@
   // ====================================================================
   // 7. DỰNG KHUNG HÌNH VÀ VẼ
   // ====================================================================
-  const KCACHE = new Map();
+  const KCACHE = taoNho('khung-em-be', { max: 1400 });
   const TINT = { F: ['#ffffff', 0.6], I: ['#9fdcff', 0.45], P: ['#8fe04a', 0.35] };
   function kidSprite(key, of, ps, tintK, only, neo, N) {
     const S = new Spr(120, 112, 60, 74, N);
@@ -1226,7 +1227,6 @@
     const id = key + '|' + ofKey(of) + '|' + wt + '|' + sel.join('|') + '|' + tintK + '|' + N + khoaGhep(key);
     let fr = KCACHE.get(id);
     if (fr) return fr;
-    if (KCACHE.size >= 1400) KCACHE.clear();
     const ps = finishPose(pose(key, wt, sel[0], sel[1], sel[2], sel[3]));
     const sp = kidSprite(key, of, ps, tintK, null, null, N);
     fr = {
@@ -1245,7 +1245,7 @@
   //   { dau: [dx, dy], than: [dx, dy] } thân AI khung này dời bao nhiêu so với khung đứng thở đầu tiên (đầu, thân riêng), hoặc
   //   { rot, x, y } (lộn, ngã) thân AI khung này xoay rot độ và dời: đồ ghép lên thân rồi xoay, dời CẢ KHỐI theo đúng như vậy.
   // Nhớ theo khung ảnh AI, đồ đang mặc, nhịp đung đưa, neo.
-  const LCACHE = new Map();
+  const LCACHE = taoNho('lop-do', { max: 1400 });
   const cong2 = (a, b) => [((a && a[0]) || 0) + ((b && b[0]) || 0), ((a && a[1]) || 0) + ((b && b[1]) || 0)];
   // Khoá bộ nhớ đệm phần ghép (tệp ghep-<key> đổi thì khung cũ không dùng lại). Không có tệp ghép: chuỗi rỗng.
   function khoaGhep(key) { const SCx = G.spriteCustom; return SCx && SCx.khoaGhep ? SCx.khoaGhep(key) : ''; }
@@ -1277,10 +1277,9 @@
     const N = fr.n || 1, id = [fr.key, ofKey(of), fr.tint, D.an + D.f, D.nd.join(','), D.nt.join(','), quay ? [khop.rot, khop.x, khop.y].join(',') : '', N].join('|') + ((neo && neo.khoa) || '');
     let r = LCACHE.get(id);
     if (r) return r;
-    if (LCACHE.size >= 1400) LCACHE.clear();
     const mk = (only) => { const sp = kidSprite(fr.key, of, ps, fr.tint, only, n2, N); return { cv: sp.cv, ox: ps.x - sp.ox, oy: ps.y - sp.oy, w: sp.w, h: sp.h, trong: sp.bb.x1 < sp.bb.x0 || (sp.cv.width <= 1 && sp.cv.height <= 1) }; };
     r = { sau: mk('aiSau'), truoc: mk('aiTruoc') };
-    LCACHE.set(id, r);
+    LCACHE.set(id, r, r.sau.cv.width * r.sau.cv.height + r.truoc.cv.width * r.truoc.cv.height);
     return r;
   }
   function wLook(w) {
@@ -1502,7 +1501,7 @@
   }
 
   // Hình một món trang phục đứng riêng (ô đồ, đồ rơi): chỉ vẽ lớp của món đó lên bé đứng yên. slot: hat|robe|back|hand|wing.
-  const ICACHE = new Map(), LAYER = { hat: 'mu', robe: 'ao', back: 'lung', wing: 'lung', hand: 'tay' };
+  const ICACHE = taoNho('o-do', { max: 1e9 }), LAYER = { hat: 'mu', robe: 'ao', back: 'lung', wing: 'lung', hand: 'tay' };
   function itemIcon(slot, look, rar, lv) {
     const id = slot + '|' + look + '|' + (rar | 0) + '|' + (lv | 0);
     let sp = ICACHE.get(id);

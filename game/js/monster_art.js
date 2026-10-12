@@ -1253,17 +1253,19 @@ function tanRa(put, F, T, B, E) {
     else if (k === 'quet') { const yb = top + (T.len ? (1 - u) : u) * (bh + 2); if (T.len ? y < yb : y > yb) continue; if (Math.abs(y - yb) < 2) c = mau[0]; }
     put(nx, ny, c); }
 }
-const KHUNG = new Map();
+// Phiên hiệu năng (V2): khung đã dựng nằm trong bộ nhớ chung (js/bo_nho.js, ngân sách điểm ảnh, nhóm 'quai' xoá khi về làng).
+// Trang công cụ không nạp bo_nho.js: Map có trần 2 500 khung như cũ.
+const KHUNG = (G.boNho && G.boNho.tao) ? G.boNho.tao('khung-quai', { max: 2501, nhom: 'quai' }) : (() => { const m = new Map(); return { get: (k) => m.get(k), set: (k, v) => { if (m.size > 2500) m.clear(); m.set(k, v); return v; }, cong() {}, clear: () => m.clear(), get size() { return m.size; } }; })();
 function veKhung(B, P, key) {
   let fr = key && KHUNG.get(key); if (fr) return fr;
   const F = ghepHinh(B, P), E = P.tan ? Math.ceil(Math.max(B.bw, B.bh) * .7) + 16 : 0, cv = taoCanvas(F.w + 2 * E, F.h + 2 * E), c = cv.getContext('2d'); let last = null;
   const put = (x, y, col) => { if (col !== last) { c.fillStyle = col; last = col; } c.fillRect(Math.round(x) + E, Math.round(y) + E, 1, 1); };
   if (P.tan) tanRa(put, F, P.tan, B, E);
   else for (let y = 0; y < F.h; y++) { let x = 0; while (x < F.w) { const col = F.d[y * F.w + x]; if (!col) { x++; continue; } let x1 = x + 1; while (x1 < F.w && F.d[y * F.w + x1] === col) x1++; if (col !== last) { c.fillStyle = col; last = col; } c.fillRect(x + E, y + E, x1 - x, 1); x = x1; } }
-  fr = { cv, ox: Math.round(F.ox) + E, oy: Math.round(F.oy) + E, sil: {} };
-  if (key) { if (KHUNG.size > 2500) KHUNG.clear(); KHUNG.set(key, fr); } return fr;
+  fr = { cv, ox: Math.round(F.ox) + E, oy: Math.round(F.oy) + E, sil: {}, key };
+  if (key) KHUNG.set(key, fr); return fr;
 }
-function bongHinh(fr, col) { let s = fr.sil[col]; if (s) return s; s = taoCanvas(fr.cv.width, fr.cv.height); const c = s.getContext('2d'); c.drawImage(fr.cv, 0, 0); c.globalCompositeOperation = 'source-in'; c.fillStyle = col; c.fillRect(0, 0, s.width, s.height); return fr.sil[col] = s; }
+function bongHinh(fr, col) { let s = fr.sil[col]; if (s) return s; s = taoCanvas(fr.cv.width, fr.cv.height); const c = s.getContext('2d'); c.drawImage(fr.cv, 0, 0); c.globalCompositeOperation = 'source-in'; c.fillStyle = col; c.fillRect(0, 0, s.width, s.height); if (fr.key) KHUNG.cong(fr.key, s.width * s.height); return fr.sil[col] = s; }
 
 // ---------- bộ vẽ hiệu ứng kiểu điểm ảnh (toạ độ quanh chân quái; mọi thứ xoay được theo góc bất kỳ) ----------
 const F = MA.fx = {};
