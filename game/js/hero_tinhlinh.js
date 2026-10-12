@@ -1565,9 +1565,14 @@
     // không quay lâu quanh nắm tay đứng yên.
     if (r && p.lastAtk != null) {
       if (!r.dau || r.dau.id !== p.lastAtk) r.dau = { id: p.lastAtk, ang: r.ve && t - r.ve.t < 0.2 && t >= r.ve.t ? r.ve.ang : null };
-      if (r.dau.ang != null && u < MU.vao) {
-        const a0 = gocGan(a, r.dau.ang);
-        a = a0 + (a - a0) * (0.6 + 0.4 * eO2(u / MU.vao)); // 60% ngay ở khung thân đổi, phần còn lại trong 2 khung sau
+      // Chạy mà chém (thân giữ hàng chạy, KHÔNG đổi khung để "che" cú vào thế): vào thế êm suốt lấy đà + giữ (0 -> 0,33, chậm-nhanh-chậm)
+      // thay vì nhảy 60% trong một khung (đo phiên kiểm chéo: trong trận thật kiếm giữ -15° tám khung rồi nhảy 83°, nhát 1 nhảy 98°/khung; nay <= 47°/khung).
+      const vao = chay ? MU.u2 : MU.vao;
+      if (r.dau.ang != null && u < vao) {
+        // góc cũ quy về số gần ĐẦU đường vung (cố định cả nhát), không gần góc đang tính: góc đang tính đi qua mốc ±180° so với góc cũ
+        // thì cách quy cũ lật 360° giữa hai khung (đo trận thật: chạy chém nhát 1 sau nhát 3: -39 -> -202 trong một khung)
+        const a0 = gocGan(goc(tienDo(0, D, F, T)), r.dau.ang);
+        a = a0 + (a - a0) * (chay ? 0.5 - 0.5 * Math.cos(Math.PI * (u / vao)) : 0.6 + 0.4 * eO2(u / MU.vao)); // đứng: 60% ngay ở khung thân đổi, phần còn lại trong 2 khung sau
         if (lop) a = kepMat(m, hx, hy, L, a, goc(q));
       }
     }

@@ -75,10 +75,13 @@ và số lần đổi lớp trước/sau:
 
 | Em bé | Nhát 2 đứng | Chuỗi 3 nhát đứng | Chạy chém 3 nhát | Đổi lớp (chuỗi 3 nhát) | Đổi chiều quay lớn trong nhát 2 |
 |---|---|---|---|---|---|
-| Cu Tí | 5 → 1 | 10 → 3 | 11 → 8 | 6 → 4 | 2 → 1 |
-| Cu Tèo | 4 → 2 | 9 → 5 | 9 → 8 | 6 → 4 | 2 → 2* |
-| Cu Lì | 4 → 2 | 9 → 4 | 12 → 7 | 6 → 4 | 2 → 1 |
-| Cái Bống | 4 → 1 | 9 → 3 | 11 → 8 | 6 → 4 | 2 → 1 |
+| Cu Tí | 5 → 1 | 10 → 3 | 11 → 9 † | 6 → 4 | 2 → 1 |
+| Cu Tèo | 4 → 2 | 9 → 5 | 9 → 10 † | 6 → 4 | 2 → 2* |
+| Cu Lì | 4 → 2 | 9 → 4 | 12 → 9 † | 6 → 4 | 2 → 1 |
+| Cái Bống | 4 → 1 | 9 → 3 | 11 → 9 † | 6 → 4 | 2 → 1 |
+
+† Số sau lần kiểm chéo (mục 9): chạy mà chém nay vào thế êm suốt 0,33 đầu đòn thay vì nhảy 60% trong một khung, nên có thêm vài
+bước 30–47°/khung nhưng không còn bước 83–98°/khung (trước kiểm chéo: 8 / 8 / 7 / 8).
 
 \* Cu Tèo: lần thứ hai là lúc về thế đứng sau đòn (khung đứng của Cu Tèo bắt kiếm nghiêng ra trước để khỏi che mặt), không phải giữa cú chém.
 
@@ -136,3 +139,44 @@ Vẽ lại thì cần đo lại bảng tay `SC.TAY_KIEM` cho 2 khung đó (bản
 `do_goc.py` (đo góc/lớp/chuôi từng khung 60 fps), `quat_goc.py` (tờ chọn góc), `gif_truoc_sau.py` (GIF trước/sau),
 `dai_khung.py` (dải từng khung), `tran_gif.py` (trận thật + số chạm), `so_px.py` (so điểm ảnh khi tắt cờ). Phục vụ `game/dist` bằng
 `docs/review/ke-hoach-cai-thien/full-audit/A-nhan-vat/kiem/srv2.py`.
+
+## 9. Kiểm chéo độc lập (phiên thứ hai, cùng yêu cầu) và 2 sửa nhỏ
+
+Một phiên khác chạy song song với **cùng yêu cầu** và tự làm một bản riêng (cũng cờ `G.KIEM_MUOT`, đường vung ~ tương tự). Bản ở trên
+(8cac41b) đã lên nhánh trước, nên **giữ nguyên bản này**, không đẩy bản thứ hai; phiên thứ hai chỉ dùng bộ đo riêng của mình
+(`kiem/kiem-cheo/`, đo khác cách: chung một người chơi suốt kịch bản, đo cả trong trận thật có vệt chém, khựng hình) để kiểm lại.
+
+**Kết quả kiểm chéo** (gộp 4 em bé × 2 hướng mặt, so với bản trước phiên; đầy đủ: `kiem/kiem-cheo/bang.md`; "cú vung" = u 0,40 → 0,50):
+
+| Kịch bản | Nhảy góc lớn nhất ngoài cú vung (độ/khung) | Khung "giữ rồi giật ≥ 30°" | Đổi lớp mỗi nhát | Lưỡi qua mặt | Lệch chuôi |
+|---|---|---|---|---|---|
+| Nhát 1 / 2 / 3 đứng | 61 / 71 / 68 → 53 / 63 / 68 | 0 / 2 / 16 → **0 / 0 / 0** | 2 / 2 / 2 → 2 / **0** / 2 | 0 → 0 | ≤ 0,71 |
+| Chém liên tục 3 nhát | 71 → 58 | 24 → **2** | 2,0 → **1,3** | 0 → 0 | ≤ 0,71 |
+| Vừa chạy vừa chém | 102 → **38** | 30 → **0** | 2,0 → **1,3** | 0 → 0 | ≤ 0,71 |
+| Trảm Nguyệt | 90 → 67 | 8 → **0** | 2 → 2 | 0 → 0 | ≤ 0,71 |
+| Né rồi lướt chém | 74 → 66 (khung đầu cú lộn, không thuộc đòn) | 8 → **0** | 2 → 2 | 0 → 0 | ≤ 0,71 |
+
+Các bước 53–68° (đứng) là chủ ý của bản này: ở khung đầu nhát kiếm nhảy 60% tới thế lấy đà **cùng lúc thân AI đổi khung**
+(đổi tư thế kiểu pixel art "từ thế này sang thế kia"), để kiếm không quay lâu quanh nắm tay đứng yên.
+
+Trong trận thật (`kiem/kiem-cheo/tran_that.py`: luật game thật, giữ Đánh đứng yên → nhả, chạy phải, chạy trái, Trảm Nguyệt, né + lướt;
+iPhone 844×390 dpr 3 và 1280×720 dpr 1): 0 lỗi vẽ, 0 pageerror; bia mất máu đúng một lần mỗi nhát, ở khung vẽ đầu tiên sau 0,45, lúc đó
+kiếm chĩa ra trước (nhát 1: 6–13°, nhát 2: −8…−65°, nhát 3: 25–35°). Cung vệt chém (`kiem/kiem-cheo/vet.py`) bám đường mới, giữa cung
+luôn hướng ra trước (−3° … −35°).
+
+**Sửa 1 — góc lật 360° (lỗi tiềm ẩn):** lúc "vào thế", góc cũ được quy về số gần **góc đang tính**; góc đang tính chạy qua mốc ±180°
+so với góc cũ thì cách quy lật 360° giữa hai khung. Bản gốc chỉ còn cách 3–7° là gặp (nhát 1 nối sau nhát 3: góc cũ 26–30°, đường vung
+−134…−150°); khi kéo dài vào thế (sửa 2) đã thấy thật trong trận: −39° → −202° trong một khung. Nay quy về số gần **đầu đường vung**
+(cố định cả nhát) — `kiemMuot` trong `game/js/hero_tinhlinh.js`.
+
+**Sửa 2 — chạy mà chém vào thế êm:** thân hàng chạy không đổi khung để "che" cú nhảy 60%, nên trong trận thật kiếm nhảy 98°/khung
+(nhát 1: 30° → −68°) và giữ −15° tám khung rồi nhảy 83° (nhát 3). Nay khi chạy mà chém, kiếm vào thế êm suốt 0,33 đầu đòn (chậm–nhanh–chậm):
+lớn nhất **47°/khung** trong trận, không còn "giữ rồi giật" (16 → 0). Đứng chém giữ nguyên như thiết kế ở trên.
+GIF chạy chém đã vẽ lại: [`anh/truoc-sau-chay.gif`](anh/truoc-sau-chay.gif); số đo `so-do-goc-sau.txt` đo lại (chỉ dòng `chay` đổi).
+
+Đã kiểm sau 2 sửa: `?kiemmuot=0` vẫn **y hệt từng điểm ảnh** bản trước phiên (64/64 dải ảnh, 8 kịch bản × 4 bé × 2 hướng); giáo, búa, cung
+bật/tắt cờ giống hệt (1 440 khung); đứng chém, Trảm Nguyệt, lướt: số đo không đổi; `smoke.py` 0 lỗi; `node --check` đạt; gameplay không đụng.
+
+Còn lại (chưa sửa, để chủ dự án xem rồi quyết): nhát 1 nối sau nhát 3 khi **đứng** chém, khung đầu nhảy ~90° (19° → −73°) cùng lúc thân đổi
+khung — nếu vẫn thấy "giật" ở đầu nhát thì có thể cho đứng chém cũng vào thế êm như chạy chém (đổi một dòng, `vao` trong `kiemMuot`).
+
