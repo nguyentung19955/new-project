@@ -1,8 +1,8 @@
 # Kiếm nhát kết – bổ xuống (0,46 giây, ★ khung 3)
-# Gửi kèm: mẫu + mau-tu-the/tu-the/10-kiem-3.png + vk-kiem.png (ảnh vũ khí, lấy CẤP 1)
+# Gửi kèm: mẫu + mau-tu-the/tu-the/10-kiem-3.png
 
 Nhân vật như ẢNH MẪU gửi kèm (giữ y hệt mặt, tóc, đồ, đai đỏ, màu, tỉ lệ đầu/thân). Pixel art chibi, viền tối 1 nét, quay mặt PHẢI, cùng cỡ người ở mọi khung, chân trụ chạm cùng một đường đất.
-Ảnh 2 là khung xương từng khung (đỏ = tay/chân gần, xanh = xa, nét đứt xám = hướng vũ khí: vẽ vũ khí nằm theo nét đó): vẽ ĐÚNG tư thế từng khung.
-Tay cầm kiếm giống ẢNH 3 (cấp 1, khung đầu), cùng cỡ ở mọi khung, cầm chắc trong tay; vũ khí không che mặt.
+Ảnh 2 là khung xương từng khung (đỏ = tay/chân gần, xanh = xa, nét đứt xám = hướng vũ khí — KHÔNG vẽ vũ khí): vẽ ĐÚNG tư thế từng khung.
+Tay KHÔNG cầm vũ khí (game tự vẽ vũ khí): bàn tay nắm như đang cầm cán, tay không che mặt.
 Nhát kết thật mạnh: 1 lùi chân, giơ hai tay qua đầu, 2 nhón người lên, 3 ★ bổ thẳng xuống trước tay gần chạm đất, khuỵu gối, 4 giữ, 5 đứng dậy, 6 thu về thủ thế.
 1 hàng 6 khung đều nhau, đọc trái sang phải; các hình không chạm nhau, không chạm mép ảnh. Nền xanh lá thuần #00FF00, không lưới, không chữ, không số, không bóng, không hiệu ứng.

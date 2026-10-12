@@ -2,6 +2,6 @@
 # Gửi kèm: mẫu + mau-tu-the/tu-the/06-chet.png
 
 Nhân vật như ẢNH MẪU gửi kèm (giữ y hệt mặt, tóc, đồ, đai đỏ, màu, tỉ lệ đầu/thân). Pixel art chibi, viền tối 1 nét, quay mặt PHẢI, cùng cỡ người ở mọi khung, chân trụ chạm cùng một đường đất.
-Ảnh 2 là khung xương từng khung (đỏ = tay/chân gần, xanh = xa): vẽ ĐÚNG tư thế từng khung.
+Ảnh 2 là khung xương từng khung (đỏ = tay/chân gần, xanh = xa, nét đứt xám = hướng vũ khí — KHÔNG vẽ vũ khí): vẽ ĐÚNG tư thế từng khung.
 Ngã chết: 1 trúng đòn ngửa ra, 2–3 loạng choạng, 4 khuỵu gối, 5 đổ người về trước, 6 chạm đất, 7–8 nằm sấp bất động (giống nhau).
 1 hàng 8 khung đều nhau, đọc trái sang phải; các hình không chạm nhau, không chạm mép ảnh. Nền xanh lá thuần #00FF00, không lưới, không chữ, không số, không bóng, không hiệu ứng.

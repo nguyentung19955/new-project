@@ -1,8 +1,8 @@
 # Búa giữ lấy đà (2 nấc)
-# Gửi kèm: mẫu + mau-tu-the/tu-the/18-bua-giu.png + vk-bua.png (ảnh vũ khí, lấy CẤP 1)
+# Gửi kèm: mẫu + mau-tu-the/tu-the/18-bua-giu.png
 
 Nhân vật như ẢNH MẪU gửi kèm (giữ y hệt mặt, tóc, đồ, đai đỏ, màu, tỉ lệ đầu/thân). Pixel art chibi, viền tối 1 nét, quay mặt PHẢI, cùng cỡ người ở mọi khung, chân trụ chạm cùng một đường đất.
-Ảnh 2 là khung xương từng khung (đỏ = tay/chân gần, xanh = xa, nét đứt xám = hướng vũ khí: vẽ vũ khí nằm theo nét đó): vẽ ĐÚNG tư thế từng khung.
-Tay cầm búa giống ẢNH 3 (cấp 1, khung đầu), cùng cỡ ở mọi khung, cầm chắc trong tay; vũ khí không che mặt. Hai tay cầm cán búa.
+Ảnh 2 là khung xương từng khung (đỏ = tay/chân gần, xanh = xa, nét đứt xám = hướng vũ khí — KHÔNG vẽ vũ khí): vẽ ĐÚNG tư thế từng khung.
+Tay KHÔNG cầm vũ khí (game tự vẽ vũ khí): bàn tay nắm như đang cầm cán, tay không che mặt. Hai tay cầm cán búa.
 Giữ lấy đà, LẶP: búa kéo ra sau ngang hông, người khom gồng. Khung 1–2 gồng nhẹ (nấc 1), khung 3–4 gồng mạnh hơn, người thấp hơn, rung (nấc 2).
 1 hàng 4 khung đều nhau, đọc trái sang phải; các hình không chạm nhau, không chạm mép ảnh. Nền xanh lá thuần #00FF00, không lưới, không chữ, không số, không bóng, không hiệu ứng.
