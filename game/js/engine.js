@@ -299,29 +299,49 @@
     }
   };
   // Kiểm tra bản lưu cũ hoặc hỏng: thiếu gì thì bù, sai gì thì sửa, hỏng nặng thì tạo mới.
+  // Phiên hiệu năng (bản lưu): sửa TỪNG PHẦN riêng. Một phần gặp lỗi (ví dụ bản cập nhật có lỗi trong outfit.fix) thì giữ nguyên dữ liệu cũ
+  // của phần đó (sai kiểu hẳn thì lấy phần đó của bản mới), các phần khác vẫn sửa bình thường, KHÔNG trả bản trắng. Có phần lỗi thì vẫn
+  // chép bản gốc sang khoá dự phòng như trước (fixFailed). Chỉ bản không phải đối tượng / sai phiên bản mới thành bản mới.
   G.fixSave = function (s) {
     const base = G.newSave();
     fixFailed = false;
+    G.fixSaveLoi = [];
     try {
       if (!s || typeof s !== 'object' || Array.isArray(s) || s.v !== 1) { fixFailed = s != null; return base; }
+      const kieu = (v) => (Array.isArray(v) ? 'arr' : v === null ? 'null' : typeof v);
+      const phan = (ten, keys, f) => {
+        try { f(); } catch (e) {
+          fixFailed = true; G.fixSaveLoi.push(ten);
+          console.error('Linh Khí: lỗi khi sửa phần "' + ten + '" của bản lưu, giữ dữ liệu cũ của phần này', e);
+          for (const k of keys) if (base[k] !== undefined && base[k] !== null && kieu(s[k]) !== kieu(base[k])) s[k] = base[k];
+        }
+      };
       const num = (v, d) => (typeof v === 'number' && isFinite(v) ? v : d);
       const obj = (v) => (v && typeof v === 'object' && !Array.isArray(v) ? v : {});
       const arr3 = (v) => [0, 1, 2].map((i) => Math.max(0, num(Array.isArray(v) ? v[i] : 0, 0)));
       for (const k in base) if (!(k in s)) s[k] = base[k];
+      phan('tài nguyên', ['gold', 'ore', 'stones', 'wins', 'mats', 'shards', 'forge'], () => {
       for (const k of ['gold', 'ore', 'stones', 'wins']) s[k] = Math.max(0, Math.floor(num(s[k], 0)));
       s.mats = arr3(s.mats); s.shards = arr3(s.shards);
       s.forge = G.clamp(Math.floor(num(s.forge, 1)), 1, G.FORGE_CAP.length - 1);
+      });
+      phan('cài đặt', [], () => {
       s.sound = s.sound !== false;
       if (s.lang !== 'en') delete s.lang; // ngôn ngữ: không có (mặc định) là tiếng Việt, 'en' là tiếng Anh (js/ngon_ngu.js)
       if (s.net !== 'thuong') delete s.net; // độ nét: không có (mặc định) là Cao, 'thuong' là Thường
+      if (s.pin !== true) delete s.pin; // tiết kiệm pin (vẽ 30 khung/giây, js/engine.js V6): không có là tắt
+      });
+      phan('sao, dấu', ['stars', 'stars2', 'scars', 'tut'], () => {
       for (const k of ['stars', 'stars2', 'scars', 'tut']) s[k] = obj(s[k]);
       for (const k of ['stars', 'stars2']) for (const id in s[k]) s[k][id] = G.clamp(Math.floor(num(s[k][id], 1)), 1, 3);
       for (const id in s.scars) if (!G.ELS.includes(s.scars[id])) delete s.scars[id];
       // "Quyết tâm" (thua nhiều thì mạnh thêm) đã bỏ: bản lưu cũ còn trường grit thì xoá đi, phần còn lại đọc bình thường.
       delete s.grit;
-      // hero
-      s.heroes = obj(s.heroes);
-      for (const k of G.HKEYS) {
+      });
+      // hero (từng em bé riêng: một em lỗi không kéo theo em khác)
+      phan('em bé', ['heroes'], () => { s.heroes = obj(s.heroes); });
+      for (const k of G.HKEYS) phan('em bé ' + k, [], () => {
+        if (!s.heroes || typeof s.heroes !== 'object') s.heroes = {};
         const h = obj(s.heroes[k]), sk = obj(h.sk);
         const lvl = G.clamp(Math.floor(num(h.lvl, 1)), 1, G.MAX_LEVEL);
         const fix = { unlocked: k === 'smith' || !!h.unlocked, lvl, xp: Math.max(0, num(h.xp, 0)), sk: {} };
@@ -330,9 +350,13 @@
         s.heroes[k] = Object.assign(h, fix);
         // Cây chưởng (js/chuong.js): bản lưu cũ chưa có thì nhận cây mặc định, điểm chưởng tính theo cấp nên tự có đủ điểm bù.
         if (G.chuong) G.chuong.fix(s.heroes[k], k);
-      }
+      });
+      phan('em bé đang chơi', ['hero'], () => {
+      for (const k of G.HKEYS) if (!s.heroes[k] || typeof s.heroes[k] !== 'object') s.heroes[k] = base.heroes[k]; // em lỗi nặng: lấy bản mới của riêng em đó
       if (!G.HKEYS.includes(s.hero) || !s.heroes[s.hero].unlocked) s.hero = 'smith';
+      });
       // vũ khí
+      phan('vũ khí', ['weapons', 'nextId', 'bossGold', 'carry'], () => {
       const seen = {};
       s.weapons = (Array.isArray(s.weapons) ? s.weapons : []).filter((w) => {
         if (!w || typeof w !== 'object' || !G.WTYPES[w.type] || typeof w.id !== 'number' || seen[w.id]) return false;
@@ -375,15 +399,18 @@
         }
       }
       s.carry = c;
+      });
       // trang bị
+      phan('trang bị', ['owned'], () => {
       const own = obj(s.owned);
       s.owned = {};
       for (const slot of ['helm', 'armor', 'charm']) {
         s.owned[slot] = (Array.isArray(own[slot]) ? own[slot] : []).filter((id, i, a) => G.GEAR[slot][id] && a.indexOf(id) === i);
         if (!s.owned[slot].includes(s[slot])) s[slot] = null;
       }
+      });
       // trang phục (js/outfit.js): kiểm tra phần đã lưu, rồi chuyển mũ, áo, bùa kiểu cũ ở trên sang hệ mới
-      if (G.outfit) G.outfit.fix(s);
+      phan('trang phục', ['outfit'], () => { if (G.outfit) G.outfit.fix(s); });
       return s;
     } catch (e) { fixFailed = true; console.error('Linh Khí: lỗi khi sửa bản lưu, dùng bản mới', e); return base; }
   };
