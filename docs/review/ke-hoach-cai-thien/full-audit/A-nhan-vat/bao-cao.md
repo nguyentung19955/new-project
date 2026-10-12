@@ -103,7 +103,7 @@ Kiểm thử:
 - **Vũ khí theo bậc**: quét dùng một dòng mỗi loại (kiếm dòng 3, cung 2, giáo 1, búa 3). Vũ khí bậc cao dài hơn có thể còn chạm mặt ở vài khung — luật né mặt tính theo chiều dài thật của từng ảnh nên vẫn áp, nhưng chưa chụp đủ 40 dòng.
 - **Quái/trùm khi ở trong trận** (màu nhuộm trạng thái, chớp trúng đòn, chuyển pha): chỉ đo trên tấm sprite và nhìn bảng; chuyển pha trùm đã có phiên pha-trum kiểm.
 - **Chiêu đặc biệt từng loại** (Trảm Nguyệt…): dùng nhịp `specT` chung; hiệu ứng chiêu thuộc phiên B.
-- Hàng chém kiếm vẽ lại của Cu Tí, Cu Tèo, Cu Lì (commit `acb5dd6`, ảnh gốc "chờ nhập") **chưa nhập** ở phiên này — phiên nhập ảnh làm; khi nhập, bảng `SC.TAY_KIEM` tự bỏ qua và `G.DAU_THAT` tự đo lại đầu.
+- Hàng chém kiếm vẽ lại của Cu Tí, Cu Tèo, Cu Lì được phiên khác nhập (commit `6500406`) trong lúc phiên này chạy. Sau khi gộp: quét lại 6 512 ô (0 pageerror; số ô che mặt của kiếm lúc chém không đổi: 45/87) và nhìn phóng to 6 ô chém có đội mũ (nón lá, khăn xếp, mũ tai cáo) — mặt rõ, mũ bám đầu. Chưa đo lại từng khung hàng mới bằng bảng tiếp xúc.
 
 ## 6. Khung cần gen lại (code không cứu được)
 
