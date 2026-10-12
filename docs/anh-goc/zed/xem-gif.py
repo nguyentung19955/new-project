@@ -106,6 +106,7 @@ def main():
         sc = min(S * 0.85 / cao, S * 0.95 / rong)
         anh = []
         for o, bb in khung:
+            o_rong = o.size[0]
             day = bb[3]
             o = o.crop(bb)
             nho = o.resize((max(1, round(o.size[0] * sc)), max(1, round(o.size[1] * sc))), Image.LANCZOS)
@@ -113,7 +114,9 @@ def main():
             dat = round(S * 0.9)
             for x in range(S):
                 nen_gif.putpixel((x, dat), (90, 96, 110, 255))
-            nen_gif.alpha_composite(nho, ((S - nho.size[0]) // 2, dat - nho.size[1]))
+            # giữ vị trí ngang như trong ô (thấy được nhân vật trôi/giật ngang)
+            x = round(S / 2 + (bb[0] - o_rong / 2) * sc)
+            nen_gif.alpha_composite(nho, (max(0, min(S - nho.size[0], x)), dat - nho.size[1]))
             anh.append(nen_gif.convert('RGB'))
         t = ten[r] if r < len(ten) else 'hang-%d' % (r + 1)
         p = os.path.join(ra, '%d-%s.gif' % (r + 1, t))
