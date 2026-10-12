@@ -367,7 +367,8 @@
   fx.heStep = function (W, dt, tick) {
     if (he0) he0(W, dt, tick);
     if (G.noRender) return;
-    try { step(W, dt, tick); } catch (e) { fail(e); }
+    const o0 = fx.own ? fx.own(0) : 0; // đạn quái: hiệu ứng của QUÁI, giữ độ đậm (js/fx.js, độ đọc trận 12/10)
+    try { step(W, dt, tick); } catch (e) { fail(e); } finally { if (fx.own) fx.own(o0); }
   };
   fx.danLook = lookOf; // cho bài kiểm tra
 })();

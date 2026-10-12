@@ -466,19 +466,22 @@
     HSPR.set(rx, sp);
     return sp;
   }
+  // Độ đọc trận 12/10: mây độc của bé chỉ thu HÌNH lại (bán kính G.theme.DOC.mayDocR ≈ cao một con quái thường); vũng độc
+  // trên sàn và vùng gây sát thương (z.r) giữ nguyên. Cờ tắt G.DOC_TRAN2 = false: hình to như cũ.
+  function mayR(z) { return G.docTran2 && G.docTran2() ? Math.min(z.r, G.theme.DOC.mayDocR) : z.r; }
   function drawCloud(c, o) {
     const z = o.z;
     if (z.dead || z.life <= 0) return;
     const t = K.S().t, id = z.fxId || 1;
     if (z.life < 0.4 && ((t * 20) | 0) % 2) return;
-    const sp = hazeSprite(z.r), x = Math.round(z.x), y = Math.round(z.y) - 12;
+    const zr = mayR(z), sp = hazeSprite(zr), x = Math.round(z.x), y = Math.round(z.y) - 12;
     // Làn B4: có ảnh hu-may-doc thì dán ảnh thay hai lớp sương và cụm khói; bề ngang = đường kính luật của vũng bên dưới, đậm 60% để còn thấy nhân vật.
     const FA = G.fxAnh, an = FA && FA.get('hu-may-doc');
-    if (an) { FA.ve(c, 'hu-may-doc', x, y - 2, t + id * 0.37, 0, (2 * z.r) / Math.max(4, an.fw - 4), false, 0.6); return; }
+    if (an) { FA.ve(c, 'hu-may-doc', x, y - 2, t + id * 0.37, 0, (2 * zr) / Math.max(4, an.fw - 4, G.docTran2 && G.docTran2() ? an.fh - 4 : 0), false, 0.6); return; } // 12/10: cả bề cao cũng không quá 2 x bán kính hình
     c.drawImage(sp.cv, x - (sp.w >> 1) + Math.round(Math.sin(t * 1.6 + id) * 3), y - (sp.h >> 1));
     c.drawImage(sp.cv, x - (sp.w >> 1) - Math.round(Math.sin(t * 1.1 + id * 2) * 4), y - (sp.h >> 1) - 5);
     c.fillStyle = 'rgba(154,95,214,0.3)';
-    for (let i = 0; i < 2; i++) { const px = x + Math.round(Math.sin(t * 0.9 + i * 2.1 + id) * z.r * 0.5), py = y + Math.round(Math.cos(t * 1.3 + i * 1.7 + id) * 4); c.fillRect(px - 4, py - 1, 8, 3); c.fillRect(px - 2, py - 2, 4, 5); }
+    for (let i = 0; i < 2; i++) { const px = x + Math.round(Math.sin(t * 0.9 + i * 2.1 + id) * zr * 0.5), py = y + Math.round(Math.cos(t * 1.3 + i * 1.7 + id) * 4); c.fillRect(px - 4, py - 1, 8, 3); c.fillRect(px - 2, py - 2, 4, 5); }
   }
   function drawShard(c, o) {
     const q = o.q;
@@ -529,7 +532,7 @@
       if (!z.he || !z.cloud || z.dead) continue;
       // màn khói độc lơ lửng phía trên vũng: một lớp sương mỏng và các cụm khói trôi chậm
       if (!z.fxOn) { z.fxOn = 1; add({ ty: 'he', x: z.x, y: z.y, t: z.life + 0.1, ly: 1, draw: drawCloud, z }); }
-      if (tick && R() < 0.4) { const a = R() * TAU, d = Math.sqrt(R()) * z.r * 0.8; emit(2, z.x + Math.cos(a) * d, z.y - rr(6, 20) + Math.sin(a) * d * 0.3, rr(-8, 8), rr(-9, -2), rr(0.7, 1.3), R() < 0.25 ? HAZE_P : RAMP.vapor, R() < 0.5 ? 6 : 4, 0, 0.6, null, 1); }
+      if (tick && R() < 0.4) { const a = R() * TAU, d = Math.sqrt(R()) * mayR(z) * 0.8; emit(2, z.x + Math.cos(a) * d, z.y - rr(6, 20) + Math.sin(a) * d * 0.3, rr(-8, 8), rr(-9, -2), rr(0.7, 1.3), R() < 0.25 ? HAZE_P : RAMP.vapor, R() < 0.5 ? 6 : 4, 0, 0.6, null, 1); }
     }
     if (W.mvShards) for (const q of W.mvShards) {
       // mảnh tên độc: một giọt nhớt bay, kéo theo vệt

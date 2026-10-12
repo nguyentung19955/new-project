@@ -207,7 +207,7 @@
     else { const q = T.vua(G.wName(w), 150, 10.5, true); ui.text(q[0], 96, 68 + (q[1] - 10.5) * 0.36, { size: q[1], bold: true, color: rar.col }); } // tên tiếng Anh dài: thu cỡ chữ cho khỏi lấn cột bên phải
     ui.text(fam ? G.t('Bậc {0} · dòng {1}', rar.name, fam.name) : G.t('Bậc {0} · {1}', rar.name, G.WTYPES[w.type].name), 96, 80, { size: 7.5, color: SOFT });
     if (fam && fam.nature) ui.text(G.t('Tính nết: {0}', fam.nature), 96, 91, { size: 7.5, color: SOFT });
-    ui.text(G.t('Sát thương mỗi đòn {0} · hệ số bậc x{1}', G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1), String(G.wRarMult(w)).replace('.', dp())), 96, 102, { size: 7.5 });
+    ui.text(G.t('Sát thương mỗi đòn {0} · hệ số bậc x{1}', G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1).replace('.', dp()), String(G.wRarMult(w)).replace('.', dp())), 96, 102, { size: 7.5 });
     // Hai thẻ ở cột trái: Linh khí (bảng dấu ấn ba hệ, js/linhkhi.js) và Dòng phụ (dòng phụ, dòng mạnh). Mặc định mở Linh khí.
     const lkTab = G.lk && V.wvTab !== 'aff';
     if (G.lk) {
@@ -288,9 +288,13 @@
     const sv = G.save;
     let line = null; // câu ông thợ rèn nói
     frame(G.t('Lò rèn cấp {0}', sv.forge));
-    const tabs = [['sharpen', 'Mài'], ['tier', 'Nâng bậc'], ['reforge', 'Tôi lại'], ['craft', 'Rèn đồ'], ['up', 'Nâng lò']];
+    // 12/10 (cờ G.CHU_RO): thẻ "Rèn đồ" cũ (chỉ còn lời giải thích cho bản cũ) được ẩn; bốn thẻ còn lại giãn đều. Đồ vải đã ở Cô Thợ May.
+    const anRen = G.CHU_RO !== false;
+    if (anRen && V.ftab === 'craft') V.ftab = 'sharpen';
+    const tabs = [['sharpen', 'Mài'], ['tier', 'Nâng bậc'], ['reforge', 'Tôi lại']].concat(anRen ? [] : [['craft', 'Rèn đồ']], [['up', 'Nâng lò']]);
+    const tp = anRen ? 77 : 61.5, tw = anRen ? 73 : 58;
     tabs.forEach((t, i) => {
-      if (T.tab(CX + i * 61.5, PY + 23, 58, 22, t[1], V.ftab === t[0], { pad: 2 })) { V.ftab = t[0]; V.sel = null; V.page = 0; }
+      if (T.tab(CX + i * tp, PY + 23, tw, 22, t[1], V.ftab === t[0], { pad: 2 })) { V.ftab = t[0]; V.sel = null; V.page = 0; }
     });
     const R4 = G.RARITY, xm = (m) => 'x' + String(m).replace('.', dp());
     if (V.ftab !== 'up') T.inset(CX, DET_Y, CW, 52, false);
@@ -589,7 +593,7 @@
   // ---------- chọn hero, xem chỉ số (Ông Từ) ----------
   function hero() {
     const sv = G.save;
-    frame('Sân đình: chọn hero');
+    frame(G.CHU_RO !== false ? 'Sân đình: chọn em bé' : 'Sân đình: chọn hero'); // 12/10: cả game gọi là "em bé"
     let line = null;
     G.HKEYS.forEach((k, i) => {
       const H = G.HEROES[k], hs = sv.heroes[k];

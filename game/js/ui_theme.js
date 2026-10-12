@@ -130,8 +130,55 @@
   // ---------- chạm ----------
   function lighten(col, k) { const n = parseInt(String(col).slice(1), 16); if (isNaN(n)) return col; const f = (v) => ('0' + Math.round(v + (255 - v) * k).toString(16)).slice(-2); return '#' + f((n >> 16) & 255) + f((n >> 8) & 255) + f(n & 255); }
   const heldIn = (x, y, w, h) => [...G.pointers.values()].some((q) => !q.role && !q.stale && G.inRect(q, x, y, w, h));
-  function clicked(x, y, w, h) {
-    if (G.click && G.inRect(G.click, x, y, w, h)) { G.click = null; if (G.sfx) G.sfx('ui'); return true; }
+  // Phiên giao diện 12/10 — VÙNG CHẠM TỐI THIỂU 44 pt: nút nào có vùng chạm nhỏ hơn T.CHAM_MIN (31 đơn vị ≈ 44 pt trên iPhone cầm ngang,
+  // 1 đơn vị ≈ 1,44 pt) thì được nới VÔ HÌNH ra cho đủ (hình nút giữ nguyên). Không chồng nhau: chạm trúng hình thật của một nút thì chỉ
+  // nút đó nhận; chạm vào phần nới thì nút có hình gần ngón tay nhất nhận (so với mọi nút đã vẽ ở khung trước).
+  // Cờ tắt: G.CHAM44 = false hoặc ?cham44=0 (vùng chạm như cũ).
+  let tat44 = false;
+  try { tat44 = /[?&]cham44=0\b/i.test(String(window.location && window.location.search)); } catch (e) { tat44 = false; }
+  if (G.CHAM44 == null) G.CHAM44 = !tat44;
+  T.CHAM_MIN = 31;
+  // Cờ CHỮ RÕ (phiên 12/10): chữ tràn / nhỏ / thuật ngữ khó hiểu (số linh khí vừa ô, "chọn em bé", "trận này chưa nhận linh khí",
+  // dòng thưởng có tên, xưng "cháu" ở màn thua, dấu phẩy thập phân, máu không âm, ẩn thẻ "Rèn đồ" cũ, dấu báo ở làng chỉ khi làm được...).
+  // Tắt: G.CHU_RO = false hoặc ?churo=0 (về chữ cũ).
+  let tatChu = false;
+  try { tatChu = /[?&]churo=0\b/i.test(String(window.location && window.location.search)); } catch (e) { tatChu = false; }
+  if (G.CHU_RO == null) G.CHU_RO = !tatChu;
+  let NUT = [], NUT0 = [];
+  const no = (r) => { const m = T.CHAM_MIN, dw = Math.max(0, m - r[2]) / 2, dh = Math.max(0, m - r[3]) / 2; return [r[0] - dw, r[1] - dh, r[2] + dw * 2, r[3] + dh * 2]; };
+  const xa = (p, r) => Math.hypot(Math.max(r[0] - p.x, 0, p.x - r[0] - r[2]), Math.max(r[1] - p.y, 0, p.y - r[1] - r[3]));
+  const cung = (a, b) => Math.abs(a[0] - b[0]) < 0.5 && Math.abs(a[1] - b[1]) < 0.5 && Math.abs(a[2] - b[2]) < 0.5 && Math.abs(a[3] - b[3]) < 0.5;
+  // r: vùng chạm cũ (đã gồm lề pad), v: hình thật của nút. Mỗi mục trong NUT0: [hình thật, vùng chạm đã nới].
+  function trungNoi(p, r, v) {
+    const e = no(r);
+    if (!G.inRect(p, e[0], e[1], e[2], e[3])) return false;
+    const d0 = xa(p, v);
+    for (const q of NUT0) {
+      if (cung(q[0], v)) continue;
+      if (G.inRect(p, q[0][0], q[0][1], q[0][2], q[0][3])) return false; // chạm trúng hình thật của nút khác
+      const eq = q[1];
+      if (G.inRect(p, eq[0], eq[1], eq[2], eq[3]) && xa(p, q[0]) < d0) return false; // nút khác gần ngón tay hơn
+    }
+    return true;
+  }
+  T.vungCham = (x, y, w, h) => (G.CHAM44 ? no([x, y, w, h]) : [x, y, w, h]); // cho bài kiểm tra
+  T.nutKhungTruoc = () => NUT0.slice();
+  function ghiNut(x, y, w, h, v) { if (G.CHAM44 && NUT.length < 300) NUT.push([v || [x, y, w, h], no([x, y, w, h])]); }
+  // v (tuỳ chọn): hình thật của nút khi (x, y, w, h) đã gồm lề pad.
+  function clicked(x, y, w, h, v) {
+    if (!G.CHAM44) {
+      if (G.click && G.inRect(G.click, x, y, w, h)) { G.click = null; if (G.sfx) G.sfx('ui'); return true; }
+      return false;
+    }
+    v = v || [x, y, w, h];
+    const r = [x, y, w, h];
+    if (NUT.length < 300) NUT.push([v, no(r)]);
+    if (!G.click) return false;
+    const p = G.click;
+    let ok;
+    if (G.inRect(p, v[0], v[1], v[2], v[3])) ok = true; // trúng hình thật
+    else ok = trungNoi(p, r, v); // trúng lề pad cũ hoặc phần nới: chỉ nhận khi không trúng hình nút khác và là nút gần nhất
+    if (ok) { G.click = null; if (G.sfx) G.sfx('ui'); return true; }
     return false;
   }
   T.hit = clicked;
@@ -199,7 +246,8 @@
     if (label) nhan(label, x + w / 2, y0 + h / 2 + size * 0.36 - (o.sub ? 3.5 : 0) - 0.3, w - (w >= 70 && h >= 16 ? 16 : 6), { size, bold: true, align: 'center', color: col });
     if (o.sub) nhan(o.sub, x + w / 2, y0 + h / 2 + 7.5, w - 6, { size: o.subSize || 7, bold: false, align: 'center', color: dis ? '#8fa49e' : '#e8d9a8' });
     if (o.dot) { const c = G.ux; c.beginPath(); c.arc(x + w - 3, y + 3, 3, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = C.dk; c.stroke(); }
-    return !dis && clicked(x - pad, y - pad, w + pad * 2, h + pad * 2);
+    if (dis) { ghiNut(x - pad, y - pad, w + pad * 2, h + pad * 2, [x, y, w, h]); return false; } // nút mờ vẫn giữ chỗ (không để nút bên cạnh nhận chạm trúng nó)
+    return clicked(x - pad, y - pad, w + pad * 2, h + pad * 2, [x, y, w, h]);
   };
   // ---------- nút nhỏ (Xem, Đổi, Học...) ----------
   T.sbtn = function (x, y, w, h, label, o) {
@@ -221,7 +269,8 @@
     const size = o.size || 8;
     if (label) nhan(label, x + w / 2, y + dy + (st === 1 ? 1 : 0) + h / 2 + size * 0.36 - 0.3, w - 5, { size, bold: true, align: 'center', color: dis ? '#8fa49e' : C.ink });
     if (o.dot) { const c = G.ux; c.beginPath(); c.arc(x + w - 2, y + 2, 2.6, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.7; c.strokeStyle = C.dk; c.stroke(); }
-    return !dis && clicked(x - pad, y - pad, w + pad * 2, h + pad * 2);
+    if (dis) { ghiNut(x - pad, y - pad, w + pad * 2, h + pad * 2, [x, y, w, h]); return false; } // nút mờ vẫn giữ chỗ (không để nút bên cạnh nhận chạm trúng nó)
+    return clicked(x - pad, y - pad, w + pad * 2, h + pad * 2, [x, y, w, h]);
   };
   // Thẻ chuyển mục trong bảng (Mài / Nâng bậc / ...): thẻ đang mở màu đỏ đồng
   T.tab = function (x, y, w, h, label, active, o) { return T.btn(x, y, w, h, label, Object.assign({ primary: !!active, size: 8 }, o || {})); };
@@ -674,6 +723,7 @@
   function zone(kind, x, y, w, h) { if (zones.length < 200) zones.push([kind, x, y, w, h]); }
   // Gọi sau khi một cảnh vẽ xong: lần chạm nào chưa bị nút nào nhận mà trúng một biểu tượng thì hiện tên của nó.
   T.endFrame = function () {
+    NUT0 = NUT; NUT = []; // vùng chạm 44 pt: các nút của khung này dùng để so ở khung sau
     if (G.click) for (const z of zones) if (G.inRect(G.click, z[1] - 3, z[2] - 6, z[3] + 6, z[4] + 12)) { tip = { s: T.resName(z[0]), x: z[1] + z[3] / 2, y: z[2], t: G.time + 1.8 }; G.click = null; break; }
     zones = [];
     if (tip && G.time < tip.t) {
@@ -728,13 +778,14 @@
     if (cur) parts.push([cur, null]);
     ui.font(size, o.bold);
     let total = 0;
-    for (const q of parts) { q[2] = q[0] != null ? c.measureText(q[0]).width : ih + 1; total += q[2]; }
+    // o.ten (phiên 12/10): sau biểu tượng ghi thêm tên tài nguyên ("+128 [hình] kinh nghiệm") cho dòng thưởng dễ hiểu
+    for (const q of parts) { if (q[0] == null && o.ten) q[3] = ' ' + (G.tv ? G.tv(T.resName(q[1])) : T.resName(q[1])); q[2] = q[0] != null ? c.measureText(q[0]).width : ih + 1 + (q[3] ? c.measureText(q[3]).width : 0); total += q[2]; }
     let cx = o.align === 'center' ? x - total / 2 : o.align === 'right' ? x - total : x;
     const oo = Object.assign({}, o, { align: 'left' });
     for (let i = 0; i < parts.length; i++) {
       const q = parts[i];
       if (q[0] != null) oldText(q[0], cx, y, oo);
-      else { T.resIcon(q[1], cx + 1, y - ih + 1, ih); const pw = i ? Math.min(parts[i - 1][2], 26) : 0; zone(q[1], cx - pw, y - ih + 1, pw + ih + 1, ih); }
+      else { T.resIcon(q[1], cx + 1, y - ih + 1, ih); if (q[3]) oldText(q[3], cx + ih + 1, y, Object.assign({}, oo, { color: o.tenCol || oo.color })); const pw = i ? Math.min(parts[i - 1][2], 26) : 0; zone(q[1], cx - pw, y - ih + 1, pw + ih + 1, ih); }
       cx += q[2];
     }
   }
@@ -806,6 +857,11 @@
   let tat = false;
   try { tat = /[?&]doctran=0\b/i.test(String(window.location && window.location.search)); } catch (e) { tat = false; }
   if (G.DO_DOC_TRAN == null) G.DO_DOC_TRAN = !tat;
+  let tat2 = false;
+  try { tat2 = /[?&]doctran2=0\b/i.test(String(window.location && window.location.search)); } catch (e) { tat2 = false; }
+  if (G.DOC_TRAN2 == null) G.DOC_TRAN2 = !tat2;
+  // Có bật độ đọc trận đợt 12/10 không (cần cả cờ Đợt 8). Các tệp js/fx*.js, js/combat.js hỏi hàm này lúc vẽ.
+  G.docTran2 = () => G.DOC_TRAN2 === true && G.DO_DOC_TRAN === true && !!(G.theme && G.theme.DOC);
   T.DOC = {
     // THỨ BẬC HÌNH ẢNH CỐ ĐỊNH của một trận (bac 1 = quan trọng nhất). Lớp có bậc lớn hơn (kém quan trọng hơn) KHÔNG được vẽ đè lên
     // lớp có bậc nhỏ hơn: trong một khung hình, lớp kém quan trọng vẽ trước, lớp quan trọng vẽ sau (cột "ve" = thứ tự vẽ, 1 là vẽ đầu tiên).
@@ -829,6 +885,15 @@
     nutDanh: { l: '#c98c34', m: '#a8752f', d: '#79451d' }, // mặt nút Đánh: đồng vàng (bảng màu lõi: gỗ nắng #c98c34, gỗ sáng #79451d; đồng #a8752f của bộ giao diện)
     matLua: { l: '#8a4a16', m: '#643410', d: '#3e1e08' }, // mặt nút Chiêu / Chưởng khi mang hệ Lửa: nâu than hồng thay cho đỏ sẫm #8a2a16
     thieuMana: '#b8c4d2', // số mana trên thẻ giá khi chưa đủ (trước là đỏ #ff6a5a)
+    // Phiên Độ đọc trận 12/10 (cờ tắt G.DOC_TRAN2 = false hoặc ?doctran2=0): hiệu ứng ĐÒN CỦA EM BÉ nhạt đi, viền sáng quanh em bé,
+    // mỗi mục tiêu tối đa soMoiChu số, số độc/cháy nhỏ và mờ hơn, mây độc của bé thu hình (không đổi vùng trúng).
+    lopPhu: false, // true: hiệu ứng của em bé vẽ qua lớp phụ rồi dán nhạt một lần (đều màu hơn, tốn hơn ~15% khung hình khi máy yếu); false: nhạt từng hình
+    fxBe: 0.62, // độ đậm hiệu ứng của em bé (lửa nổ, mây độc, tia sáng, hạt) — hiệu ứng của QUÁI và vùng báo đòn giữ nguyên
+    vienBe: '#fff4c0', vienA: 0.8, vienToi: '#1a0e08', vienToiA: 0.6, // viền sáng ấm 1 điểm ảnh (+ viền tối mảnh bên ngoài cho nổi trên lửa) // viền sáng ấm 1 điểm ảnh quanh em bé, vẽ trên mọi hiệu ứng
+    bongBe: 0.38, // bóng mờ của em bé vẽ thêm trên hiệu ứng (để thấy thân ngay cả khi lửa phủ kín)
+    soMoiChu: 3, // mỗi mục tiêu tối đa 3 số cùng lúc
+    soDotCo: 6, soDotA: 0.7, // số nhịp độc/cháy: nhỏ hơn và mờ hơn
+    mayDocR: 24, // bán kính HÌNH mây độc của bé (điểm ảnh thế giới); vùng gây sát thương giữ z.r như cũ
     soMat: '#ff6a5a', // số máu EM BÉ mất: đỏ (nguy hiểm), có dấu trừ. Số gây ra cho quái: trắng / màu hệ / vàng chí mạng, không bao giờ đỏ.
   };
 })();

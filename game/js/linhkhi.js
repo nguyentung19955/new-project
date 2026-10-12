@@ -211,7 +211,16 @@
         G.ux.globalAlpha = 1;
       }
       const num = I.next == null || I.capped ? I.m + ' ★' : I.m + '/' + I.next;
-      ui.text(num, bx + bw / 2, y + 14.6, { size: 6.5, align: 'center', bold: I.main, color: dim ? '#8a9a94' : I.main ? '#fff3da' : E.col2 });
+      // Phiên 12/10: số "132/300" không tràn khung ô: đo chữ, thu cỡ cho vừa bề ngang ô (không dưới 6), canh giữa ô khi rộng hơn vạch.
+      let nsz = 7, ncx = bx + bw / 2;
+      if (G.CHU_RO !== false) {
+        const room = HUD.cell - 3;
+        for (; nsz > 6; nsz -= 0.5) { ui.font(nsz, I.main, true); if (G.ux.measureText(num).width <= room) break; }
+        ui.font(nsz, I.main, true);
+        const tw = G.ux.measureText(num).width;
+        if (tw > bw) ncx = G.clamp(bx + bw / 2, x + 1 + tw / 2, x + HUD.cell - 2 - tw / 2);
+        ui.text(num, ncx, y + 14.6, { size: nsz, tiny: true, align: 'center', bold: I.main, color: dim ? '#8a9a94' : I.main ? '#fff3da' : E.col2 });
+      } else ui.text(num, bx + bw / 2, y + 14.6, { size: 6.5, align: 'center', bold: I.main, color: dim ? '#8a9a94' : I.main ? '#fff3da' : E.col2 });
       rows.push({ el, m: I.m, next: I.next, frac: I.frac, main: I.main, dim, near: I.near, fill: fw, text: num });
     });
     LK.state.last = { wid: w.id, rows };
@@ -270,7 +279,7 @@
       const el = w.branch || ELS.slice().sort((a, b) => w.marks[b] - w.marks[a])[0];
       const I = LK.info(w, el);
       let prog;
-      if (!w.branch && I.m <= 0) prog = G.t('Chưa có dấu ấn. Kết liễu quái đang dính hiệu ứng để nhận.');
+      if (!w.branch && I.m <= 0) prog = G.t(G.CHU_RO !== false ? 'Chưa có linh khí. Kết liễu quái đang dính hiệu ứng để nhận.' : 'Chưa có dấu ấn. Kết liễu quái đang dính hiệu ứng để nhận.');
       else if (I.next == null) prog = G.t('{0} {1} · đã Thức tỉnh: mỗi {2} dấu ấn thừa đổi 1 nguyên liệu', G.EL[el].name, I.m, G.LK_THUA);
       else if (I.capped) prog = G.t('{0} {1}/{2} · tối đa bậc {3}, nâng bậc để lên tiếp', G.EL[el].name, I.m, I.next, G.RARITY[G.wRar(w)].name);
       else prog = G.t('{0} {1}/{2} · còn {3} nữa → {4}', G.EL[el].name, I.m, I.next, I.left, I.unlock);
@@ -294,7 +303,7 @@
       const nmW = Math.min(110, G.ux.measureText(nm).width);
       ui.text(nm.length > 26 ? nm.slice(0, 25) + '…' : nm, cx, y + 8, { size: 7, bold: true, color: rar.col });
       cx += nmW + 6;
-      if (!r.got.length) ui.text('không nhận dấu ấn', cx, y + 8, { size: 6.5, color: '#9fb0aa' });
+      if (!r.got.length) ui.text(G.CHU_RO !== false ? 'trận này chưa nhận linh khí' : 'không nhận dấu ấn', cx, y + 8, { size: G.CHU_RO !== false ? 7 : 6.5, color: '#9fb0aa' }); // 12/10: câu cũ dễ hiểu nhầm là vũ khí không nhận được
       for (const q of r.got) {
         LK.icon(q.el, cx + 3, y + 5.5, 0.8);
         const s = '+' + q.n + ' ' + G.tv(G.EL[q.el].name);

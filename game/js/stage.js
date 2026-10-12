@@ -599,7 +599,7 @@
   function stickPos() { return [(bigRoom() && G.cx < 30 ? 42 : 62) - G.cx * 0.6, 216 + G.cy, 24]; }
   const BTN = BTN0;
   // Ô bình máu và nút tạm dừng: [x, y, rộng, cao]. Vùng chạm rộng hơn hình vẽ 4 đơn vị mỗi phía.
-  const POT = [4, 26, 54, 24], PAU = [62, 26, 30, 24]; // cao 24 (+ vùng chạm nới 4) để vừa ngón tay trên điện thoại
+  const POT = [4, 26, 54, 24], PAU = [G.CHU_RO !== false ? 70 : 62, 26, 30, 24]; // 12/10 (cờ G.CHU_RO): nút Dừng dời phải 8 để không che chữ "Bình máu"; vùng chạm hai nút không chồng nhau // cao 24 (+ vùng chạm nới 4) để vừa ngón tay trên điện thoại
   const hitBox = (d, b) => G.inRect(d, b[0] - 4, b[1] - 4, b[2] + 8, b[3] + 9); // vùng chạm cao 33 (khoảng 44 điểm trên điện thoại)
   function setMode(m) { S.mode = m; S.sel = null; }
   G.stageUi = { btnPos, stickPos, POT, PAU }; // để bài kiểm tra biết nút nằm ở đâu
@@ -615,7 +615,9 @@
     const mm = G.minimap.rect(S);
     for (const d of G.downs) {
       if (G.inRect(d, 368, 0, 112, 38)) { inp.swapP = true; d.role = 'ui'; continue; }
-      if (G.inRect(d, mm[0] - 2, mm[1], mm[2] + 4, mm[3] + 3)) { inp.mapP = true; d.role = 'ui'; continue; }
+      // 12/10 (cờ G.CHU_RO): nút "Bản đồ" thu nhỏ ở phòng trùm có vùng chạm cao 31 (≈ 44 pt), nới xuống dưới (phía trên là dải linh khí)
+      const mmH = G.CHU_RO !== false && mm[3] < 31 ? 31 : mm[3] + 3, mmY = G.CHU_RO !== false && mm[3] < 31 ? mm[1] - 4 : mm[1];
+      if (G.inRect(d, mm[0] - 2, mmY, mm[2] + 4, mmH)) { inp.mapP = true; d.role = 'ui'; continue; }
       if (hitBox(d, POT)) { inp.potionP = true; d.role = 'ui'; continue; }
       if (hitBox(d, PAU)) { inp.pauseP = true; d.role = 'ui'; continue; }
       // nút tròn: lấy nút gần ngón nhất, vùng chạm rộng hơn hình vẽ một chút
@@ -924,7 +926,7 @@
     const BA = G.btnArt; // bộ nút riêng (js/btn_art.js)
     if (on('vien')) {
     // Giai đoạn 4 (yêu cầu 2): thanh máu to hơn, chữ số to; thanh năng lượng có số để biết đủ mana cho chiêu chưa.
-    T.bar(4, 3, 120, 'hp', P.hp / P.maxhp, Math.ceil(P.hp) + ' / ' + P.maxhp, { h: 11, lag: P, size: 7.5 }); // lag: phần máu vừa mất tụt dần (js/ui_theme.js); khoá theo em bé của lượt chơi này
+    T.bar(4, 3, 120, 'hp', Math.max(0, P.hp / P.maxhp), (G.CHU_RO !== false ? Math.max(0, Math.ceil(P.hp)) : Math.ceil(P.hp)) + ' / ' + P.maxhp, { h: 11, lag: P, size: 7.5 }); // lag: phần máu vừa mất tụt dần (js/ui_theme.js); khoá theo em bé của lượt chơi này
     T.bar(4, 15, 108, 'mana', P.mana / P.maxmana, Math.floor(P.mana) + ' / ' + P.maxmana, { h: 8, size: 6.5 });
     const canDrink = P.potions > 0 && !W.noPotion;
     const heldBox = (b) => [...G.pointers.values()].some((p) => p.role === 'ui' && hitBox({ x: p.sx, y: p.sy }, b));
@@ -965,7 +967,7 @@
       // bậc và độ mài nằm ở phần phải của ô, không chồng lên hình vũ khí (hình chiếm 26 điểm bên trái)
       ui.text(rar.name, x + 51, 13, { size: 7, align: 'right', bold: true, color: rar.col });
       if (w.sharpen) ui.text('+' + w.sharpen, x + 51, 22, { size: 7, align: 'right', bold: true, color: on ? '#fff3da' : '#cbbd9e' });
-      ui.text(G.STAGE_NAMES[G.wStage(w)], x + 27, 29.5, { size: 6.5, align: 'center', color: w.branch ? G.EL[w.branch].col : '#b8b0a0' });
+      ui.text(G.CHU_RO !== false && !G.wStage(w) ? 'Chưa hệ' : G.STAGE_NAMES[G.wStage(w)], x + 27, 29.5, { size: 6.5, align: 'center', color: w.branch ? G.EL[w.branch].col : '#b8b0a0' });
       ui.bar(x + 3, 32.5, 48, 3, mi.frac, mi.col);
       // linh khí vừa bay tới ô vũ khí đang cầm: ô loé sáng màu hệ, viền sáng nở ra (VFX Phase 5)
       const fa = on && S.markFlashAt != null ? G.time - S.markFlashAt : -1;
@@ -1332,7 +1334,7 @@
     const R = S.result;
     if (G.time - S.modeT < 0.45) G.click = null; // tránh bấm nhầm khi bảng vừa hiện lúc đang đánh
     ui.rect(0, 0, G.W, G.H, 'rgba(0,0,0,0.65)');
-    ui.panel(70, 22, 340, 228, R.win ? G.t('Qua ải {0} {1}', G.REGIONS[S.r].name, S.i + 1) : S.quit ? G.t('Đã bỏ ải ở phòng {0}', ROOM_NAME[S.rooms[S.idx]]) : G.t('Bạn đã gục ở phòng {0}', ROOM_NAME[S.rooms[S.idx]]));
+    ui.panel(70, 22, 340, 228, R.win ? G.t('Qua ải {0} {1}', G.REGIONS[S.r].name, S.i + 1) : S.quit ? G.t('Đã bỏ ải ở phòng {0}', ROOM_NAME[S.rooms[S.idx]]) : G.t(G.CHU_RO !== false ? 'Cháu ngã ở phòng {0} rồi' : 'Bạn đã gục ở phòng {0}', ROOM_NAME[S.rooms[S.idx]])); // 12/10: giọng người làng
     if (G.cloudUI && G.theme.sbtn(338, 25, 68, 17, '✉ Góp ý', { size: 7.5, pad: 2 })) G.cloudUI.feedback({ shot: true });
     let y = 54;
     if (R.win) {
@@ -1356,7 +1358,7 @@
     const rows = Math.max(1, Math.floor((lim - y) / 11.5));
     // dòng nổi bật (lên cấp, cứu được em bé, kỷ lục): xét trên bản tiếng Việt của dòng; dòng kỷ lục của bảng vàng mở đầu bằng ★
     const hot = (l) => { const v = viOf(R, l); return v.includes('lên cấp') || v.includes('Cứu được') || v.includes('Kỷ lục') || (G.LANG !== 'vi' && l.charAt(0) === '★'); };
-    const line = (l, cx, cy) => ui.text(l, cx, cy, { size: 7.5, color: hot(l) || (R.v18 && R.v18.includes(l)) ? '#ffd27a' : '#e8dfcc' });
+    const line = (l, cx, cy) => ui.text(l, cx, cy, { size: 7.5, color: hot(l) || (R.v18 && R.v18.includes(l)) ? '#ffd27a' : '#e8dfcc', ten: G.CHU_RO !== false, tenCol: '#c9bfa6' }); // 12/10: "+128 [hình] Kinh nghiệm"
     // Ảnh AI "lên cấp" (hu-len-cap, js/fx_anh.js): quầng sáng chạy lặp sau dòng chữ lên cấp. Không có tệp thì như cũ.
     if (R.up && G.fxAnh && G.fxAnh.co('hu-len-cap')) { const i = texts.slice(0, rows).findIndex((l) => typeof l === 'string' && viOf(R, l).includes('lên cấp')); if (i >= 0) G.fxAnh.ve(G.ux, 'hu-len-cap', 146, y + i * 11.5 - 2, G.time - S.modeT, 0, 0.6, false, 0.85); }
     texts.slice(0, rows).forEach((l, i) => line(l, 86, y + i * 11.5));

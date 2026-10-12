@@ -1073,9 +1073,13 @@
     G.wxDat(c, 0, 0);
     A.bg(c, reg, W.seed, cam, W.w, W.shrink);
     G.wxDat(c, -cam + sx, sy);
+    const dimBe = F && F.dim2 ? F.dim2() : 1; // độ đọc trận 12/10: vũng / vùng do EM BÉ tạo nhạt đi (vùng của quái giữ nguyên)
     for (const z of W.zones) {
       if (z.oz) continue; // 11/10 (chủ dự án): vệt, vũng hệ do trang phục của bé rải ra vẫn gây hiệu ứng nhưng không vẽ vòng trên sàn
-      if (F && F.zone && F.zone(c, z, W)) continue;
+      const nhat = dimBe < 1 && z.team === 'player';
+      if (nhat) { c.save(); c.globalAlpha = dimBe; }
+      try { if (F && F.zone && F.zone(c, z, W)) continue; } finally { if (nhat) c.restore(); }
+      if (nhat) { c.save(); c.globalAlpha = dimBe; }
       if (z.wave) {
         // lúc còn báo trước thì sóng mờ và nhấp nháy, khe hở nhìn thấy ngay
         const wc = z.wait > 0 ? 'rgba(160,220,250,' + (Math.floor(G.time * 10) % 2 ? 0.3 : 0.5) + ')' : 'rgba(160,220,250,0.85)';
@@ -1083,6 +1087,7 @@
         A.p(c, Math.round(z.x) - 3, z.g1, 6, G.H - z.g1, wc);
       } else if (z.team === 'fx') A.ellipse(c, z.x, z.y, z.r, z.r * (G.ZK || 0.6), 'rgba(255,240,200,0.35)');
       else A.zone(c, z);
+      if (nhat) c.restore();
     }
     if (F && F.drawGround) F.drawGround(c);
     const ent = F && F.entity, rec = F && F.recoil, xf = F && F.xf; // xf: nhún, nghiêng, nảy khi trúng đòn (js/fx.js), chỉ đổi hình
@@ -1132,6 +1137,7 @@
     for (const s of W.slashes) A.slash(c, s);
     for (const o of W.parts) A.p(c, Math.round(o.x), Math.round(o.y), o.s, o.s, o.col);
     if (F && F.drawOver) F.drawOver(c);
+    if (F && F.vienBe) F.vienBe(c, P); // độ đọc trận 12/10: viền sáng + bóng mờ em bé trên mọi hiệu ứng (js/fx.js)
     G.wxDat(c, 0, 0);
     // chữ sát thương vẽ ở lớp giao diện cho nét
     for (const o of W.texts) G.ui.text(o.s, o.x - cam, o.y, { size: o.size, align: 'center', color: o.col, bold: true });

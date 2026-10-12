@@ -95,12 +95,24 @@
     if (fx.errs <= 3 && window.console) console.warn('fx: ' + fx.lastErr);
   }
   // Mọi hàm công khai đều qua đây: bỏ qua khi chạy không vẽ, và không bao giờ ném lỗi ra ngoài.
+  // Độ đọc trận 12/10: mỗi hạt / hình hiệu ứng nhớ nó là của EM BÉ (o.pl = 1) hay không (quái, môi trường) để lúc vẽ làm nhạt
+  // riêng hiệu ứng của em bé (G.theme.DOC.fxBe). OWN = chủ của hiệu ứng đang được sinh ra; đặt theo tên hàm gọi (danh sách dưới)
+  // và theo phe của đạn / vùng / chỗ đang cập nhật. Chỉ dùng lúc vẽ, không đổi luật chơi.
+  let OWN = 0;
+  const PL_API = { swing: 1, mvSwing: 1, mvCharge: 1, punch: 1, hit: 1, combo: 1, freeze: 1, status: 1, dash: 1, slam: 1, nung: 1, trapPlace: 1, trapSnap: 1,
+    bottle: 1, gong: 1, dodge: 1, potion: 1, swap: 1, heShatter: 1, heBoom: 1, heSpread: 1, heFinish: 1, heArrow: 1, spCast: 1, spPin: 1, spBack: 1, spCatch: 1,
+    spEnd: 1, chCast: 1, chBoom: 1, chHit: 1, chEnd: 1, chShatter: 1, chSpread: 1, chHeal: 1, death: 1, rainDrop: 1, marks: 1, markOrbs: 1, evolve: 1 };
+  const EN_API = { enemySwing: 1, lunge: 1, hurt: 1, zoneFire: 1, propBlast: 1 };
   function api(name, f) {
+    const own = PL_API[name] ? 1 : EN_API[name] ? 0 : -1;
     fx[name] = function (a, b, c, d, e) {
       if (G.noRender) return undefined;
-      try { if (!sync()) return undefined; return f(a, b, c, d, e); } catch (err) { fail(err); return undefined; }
+      const o0 = OWN;
+      if (own >= 0) OWN = own;
+      try { if (!sync()) return undefined; return f(a, b, c, d, e); } catch (err) { fail(err); return undefined; } finally { OWN = o0; }
     };
   }
+  fx.own = function (v) { const o0 = OWN; OWN = v ? 1 : 0; return o0; }; // js/fx_dan.js (đạn quái) đặt lại chủ khi tự sinh hạt
   fx.state = () => S; // cho kiểm thử
   fx.parts = () => PT;
   fx.stats = () => (S ? { parts: S.np, fx: S.E.length, nums: S.N.length, dying: S.dying.length } : null);
@@ -188,7 +200,7 @@
     let o;
     if (S.np < MAXP) o = PT[S.np++]; else { o = PT[S.ovr]; S.ovr = (S.ovr + 1) % MAXP; }
     o.k = k; o.x = x; o.y = y; o.vx = vx; o.vy = vy; o.t = t; o.t0 = t; o.c = c; o.s = s || 1;
-    o.g = g || 0; o.dr = dr || 0; o.fy = fy == null ? 1e9 : fy; o.ly = ly == null ? 1 : ly; o.a = R(); o.b = 0;
+    o.g = g || 0; o.dr = dr || 0; o.fy = fy == null ? 1e9 : fy; o.ly = ly == null ? 1 : ly; o.a = R(); o.b = 0; o.pl = OWN;
     if (CAP) CAP.p.push(o);
     return o;
   }
@@ -241,10 +253,11 @@
     for (let i = 0; i < 3; i++) emit(2, o.x + rr(-2, 2), o.fy, rr(-14, 14), rr(-12, -2), rr(0.18, 0.3), RAMP.dust, 2, 0, 3, null, 1);
     emit(6, o.x, o.fy - 1, 0, 0, 0.12, o.c, 2, 0, 0, null, 1);
   }
-  function drawParts(c, ly) {
+  function drawParts(c, ly, pl) {
     for (let i = 0; i < S.np; i++) {
       const o = PT[i];
-      if (o.ly !== ly) continue;
+      if (o.ly !== ly || (pl != null && !o.pl !== !pl)) continue;
+      if (MO < 1) c.globalAlpha = MO;
       const u = 1 - o.t / o.t0, r = o.c;
       c.fillStyle = r[Math.min(r.length - 1, (u * r.length) | 0)];
       const x = Math.round(o.x), y = Math.round(o.y);
@@ -300,6 +313,7 @@
   // ---------- hiệu ứng có hình riêng (vệt chém, vòng sóng, vết nứt...) ----------
   function add(o) {
     o.t0 = o.t; o.d = o.d || 0;
+    if (o.pl == null) o.pl = OWN;
     if (S.E.length >= MAXE) S.E.shift();
     S.E.push(o);
     if (CAP) CAP.e.push(o);
@@ -477,11 +491,22 @@
       if (k < 0) break;
       N.splice(k, 1);
     }
+    const d2 = G.docTran2 && G.docTran2();
+    if (d2 && so && o.chu) { // độ đọc trận 12/10: mỗi mục tiêu tối đa D.soMoiChu số cùng lúc; đủ thì bỏ số cũ nhất (số nhịp độc/cháy trước)
+      for (let dem = N.filter((q) => q.chu === o.chu && laSo(q)).length; dem >= D.soMoiChu; dem--) {
+        let k = -1;
+        for (let i = 0; i < N.length && k < 0; i++) if (N[i].chu === o.chu && laSo(N[i]) && N[i].dot) k = i;
+        for (let i = 0; i < N.length && k < 0; i++) if (N[i].chu === o.chu && laSo(N[i])) k = i;
+        if (k < 0) break;
+        N.splice(k, 1);
+      }
+    }
     let lan = 0;
     if (o.chu) for (const q of N) if (q.chu === o.chu) lan++;
     const side = lan ? (lan % 2 ? 1 : -1) * D.soLe * Math.ceil(lan / 2) : 0;
     const fall = o.vy == null;
-    const n = { x: x + side, y, x0: x, y0: y, vx: o.vx == null ? 0 : o.vx, vy: fall ? -58 : o.vy, g: fall ? 150 : 46, hold: fall ? 0.03 : 0.1, s, col: o.col || '#ffffff', size: Math.max(D.coChu, o.size || 8),
+    const nho = d2 && o.dot ? D.soDotCo : D.coChu; // số nhịp độc/cháy: cho nhỏ hơn sàn chữ trận (chữ phụ, không cần đọc kỹ)
+    const n = { x: x + side, y, x0: x, y0: y, vx: o.vx == null ? 0 : o.vx, vy: fall ? -58 : o.vy, g: fall ? 150 : 46, hold: fall ? 0.03 : 0.1, s, col: o.col || '#ffffff', size: Math.max(nho, o.size || 8), min: nho, mo: d2 && o.dot ? D.soDotA : 1,
       t: o.t || 0.75, t0: o.t || 0.75, pop: o.pop == null ? 0.7 : o.pop, edge: o.edge || 'rgba(12,8,8,0.9)', kind: o.kind || 0, d: o.d || 0,
       loai: o.loai || 'chu', chu: o.chu || null, val: o.val || 0, dot: !!o.dot, crit: !!o.crit, day: 0, hop: null, nay: null };
     N.push(n);
@@ -507,7 +532,7 @@
     const c2 = o.el ? pal(o.el).c2 : '#ffffff';
     top -= 5; // số mọc ngay TRÊN thanh máu nhỏ của quái (thanh máu thuộc lớp trên, vẽ sau số): số mới ra không bị thanh che
     if (o.crit) num(t.x, top - 4, v + '!', { col: '#ffd23f', size: 13, pop: 1.2, t: 1, edge: 'rgba(90,30,0,0.95)', kind: 1, loai: 'dmg', chu: t, val: v, crit: true });
-    else if (dot) { if (demSo(true) <= D.soToiDa - 2) num(t.x, top + 4, String(v), { col: c2, size: 7, pop: 0.2, t: 0.55, vy: -20, loai: 'dmg', chu: t, val: v, dot: true }); } // số nhịp nhỏ: chỉ ra khi còn chỗ, không đẩy số đòn đánh đi
+    else if (dot) { if (demSo(true) <= D.soToiDa - 2) num(t.x, top + 4, String(v), { col: c2, size: G.docTran2 && G.docTran2() ? D.soDotCo : 7, pop: 0.2, t: 0.55, vy: -20, loai: 'dmg', chu: t, val: v, dot: true }); } // số nhịp nhỏ: chỉ ra khi còn chỗ, không đẩy số đòn đánh đi
     else if (o.m < 0.8) num(t.x, top, String(v), { col: '#9a9a9a', size: 7, pop: 0.3, t: 0.6, loai: 'dmg', chu: t, val: v });
     else num(t.x, top, String(v), { col: c2, size: o.m > 1.25 ? 10 : 8, pop: o.m > 1.25 ? 1 : 0.7, loai: 'dmg', chu: t, val: v });
   }
@@ -573,7 +598,7 @@
       let sc = age < 0.07 ? 0.55 + (0.45 + n.pop) * (1 - (1 - age / 0.07) * (1 - age / 0.07)) : age < 0.24 ? 1 + n.pop * (1 - eio((age - 0.07) / 0.17)) : 1;
       sc *= 0.88 + 0.12 * a;
       if (n.nay != null && S.t - n.nay < 0.12) sc *= 1 + 0.18 * (1 - (S.t - n.nay) / 0.12); // vừa cộng dồn: nảy nhẹ một nhịp
-      const size = Math.max(D.coChu, n.size * sc), so = laSo(n);
+      const size = Math.max(n.min || D.coChu, n.size * sc), so = laSo(n);
       c.font = fontOf(size);
       const w = c.measureText(n.s).width + 2 + (n.kind === 2 ? 36 : 0), up = size * (so ? 0.8 : 1.02), dn = size * (so ? 0.12 : 0.3);
       const x = n.x - cam;
@@ -587,7 +612,7 @@
       if (!ok || y - up < 1) { n.t = Math.min(n.t, 0); continue; } // hết chỗ trên màn: số cũ tắt sớm
       n.hop = [x - w / 2, y - up, x + w / 2, y + dn];
       HOPS.push(n.hop);
-      n.ve = size; n.vy0 = y; n.va = a;
+      n.ve = size; n.vy0 = y; n.va = a * (n.mo == null ? 1 : n.mo);
     }
     for (const n of N) {
       if (!n.hop) continue;
@@ -911,6 +936,7 @@
         }
       }
       o.fxT += dt;
+      OWN = o.team === 'player' ? 1 : 0;
       const tick = ((o.fxT * 60) | 0);
       if (o.team === 'player') {
         if (o.big) { if (tick % 2 === 0) emit(1, o.x - Math.sign(o.vx) * 8, py + rr(-2, 2), -o.vx * 0.1, rr(-12, 12), 0.22, rampOf(o.col || '#ffffff'), 2, 0, 0, null, 1); }
@@ -1446,6 +1472,7 @@
         continue;
       }
       if (!z.pool || z.t > 0) continue;
+      OWN = z.team === 'player' ? 1 : 0;
       if (!z.fxId) z.fxId = 1 + R() * 50;
       z.fxA = (z.fxA || 0) + dt;
       if (!tick || z.rain || z.fxA < (z.fxD || 0)) continue;
@@ -1926,14 +1953,21 @@
     updParts(dt);
     stepFx(dt);
     stepDying(dt);
-    stepProjs(W, dt);
-    stepZones(W, dt, tick);
-    for (const e of W.ents) { edges(e); if (tick) stepStatus(e); }
-    if (W.boss && !W.boss.dead) { edges(W.boss); if (tick) stepStatus(W.boss); }
-    if (tick && !P.dead) stepStatus(P);
-    stepPlayer(W, P, dt, tick);
-    stepRoom(W, tick);
-    if (fx.heStep) fx.heStep(W, dt, tick); // hiệu ứng theo hệ và theo lối đánh (js/fx_he.js)
+    try {
+      stepProjs(W, dt);
+      stepZones(W, dt, tick);
+      OWN = 1; // cháy / độc / băng trên thân quái là do đòn của em bé
+      for (const e of W.ents) { edges(e); if (tick) stepStatus(e); }
+      if (W.boss && !W.boss.dead) { edges(W.boss); if (tick) stepStatus(W.boss); }
+      OWN = 0;
+      if (tick && !P.dead) stepStatus(P);
+      OWN = 1;
+      stepPlayer(W, P, dt, tick);
+      OWN = 0;
+      stepRoom(W, tick);
+      OWN = 1; // hiệu ứng theo hệ và lối đánh của em bé; js/fx_dan.js tự đặt lại 0 cho đạn quái
+      if (fx.heStep) fx.heStep(W, dt, tick); // hiệu ứng theo hệ và theo lối đánh (js/fx_he.js)
+    } finally { OWN = 0; }
   }
   // Gọi cuối mỗi lần cập nhật thế giới
   fx.update = function (dt) {
@@ -1942,11 +1976,12 @@
   };
 
   // ---------- vẽ các hiệu ứng có hình riêng ----------
-  function drawFx(c, ly) {
+  function drawFx(c, ly, pl) {
     const E = S.E;
     for (let i = 0; i < E.length; i++) {
       const o = E[i];
-      if (o.ly !== ly || o.d > 0) continue;
+      if (o.ly !== ly || o.d > 0 || (pl != null && !o.pl !== !pl)) continue;
+      if (MO < 1) c.globalAlpha = MO; // hình nào tự đặt lại độ đậm thì giữ cách của nó
       const k = 1 - o.t / o.t0, x = Math.round(o.x), y = Math.round(o.y);
       const rt = o.rot ? (c.save(), c.translate(o.px, o.py), c.rotate(o.rot), c.translate(-o.px, -o.py), 1) : 0; // đòn xoay theo hướng nhắm
       switch (o.ty) {
@@ -2106,7 +2141,92 @@
     };
   }
   // Lớp sát đất, vẽ trước các nhân vật
-  layer('drawGround', (c) => { drawFx(c, 0); drawParts(c, 0); });
+  // Độ đọc trận 12/10: hiệu ứng của em bé vẽ riêng vào một lớp phụ rồi dán xuống với độ đậm G.theme.DOC.fxBe (nhạt 60–70%),
+  // nằm DƯỚI hiệu ứng của quái trong cùng lớp. Không có hiệu ứng nào của em bé thì không dùng lớp phụ (không tốn thêm gì).
+  const dim2 = () => (G.docTran2 && G.docTran2() ? G.theme.DOC.fxBe : 1);
+  let LOPB = null;
+  // Hộp bao các hiệu ứng của em bé ở lớp ly (toạ độ thế giới) hoặc null nếu không có: lớp phụ chỉ xoá và dán đúng vùng này.
+  const HOP = [0, 0, 0, 0];
+  function coBe(ly) {
+    let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9, co = false;
+    for (let i = 0; i < S.np; i++) { const o = PT[i]; if (o.pl && o.ly === ly) { co = true; if (o.x < x0) x0 = o.x; if (o.x > x1) x1 = o.x; if (o.y < y0) y0 = o.y; if (o.y > y1) y1 = o.y; } }
+    for (const o of S.E) if (o.pl && o.ly === ly && !(o.d > 0)) {
+      co = true;
+      for (const q of [o, o.theo, o.z, o.q]) { // điểm neo, vật hiệu ứng bám theo, vùng / mảnh / sóng đang chạy
+        if (!q || q.x == null) continue;
+        if (q.x < x0) x0 = q.x; if (q.x > x1) x1 = q.x; if (q.y < y0) y0 = q.y; if (q.y > y1) y1 = q.y;
+      }
+      if (o.px != null) { if (o.px < x0) x0 = o.px; if (o.px > x1) x1 = o.px; if (o.py < y0) y0 = o.py; if (o.py > y1) y1 = o.py; }
+      if (o.sx != null) { if (o.sx < x0) x0 = o.sx; if (o.sx > x1) x1 = o.sx; if (o.sy < y0) y0 = o.sy; if (o.sy > y1) y1 = o.sy; }
+    }
+    if (!co) return null;
+    const P = S.W.P; if (P) { if (P.x < x0) x0 = P.x; if (P.x > x1) x1 = P.x; if (P.y < y0) y0 = P.y; if (P.y > y1) y1 = P.y; }
+    HOP[0] = x0 - 110; HOP[1] = y0 - 110; HOP[2] = x1 + 110; HOP[3] = y1 + 70; // hình hiệu ứng toả quanh điểm neo: chừa rộng
+    return HOP;
+  }
+  let MO = 1; // độ đậm đang áp cho hiệu ứng của em bé khi vẽ thẳng (không qua lớp phụ)
+  function veLop(c, ly) {
+    const a = dim2();
+    if (a < 1 && !G.theme.DOC.lopPhu) { // cách nhẹ (mặc định): vẽ thẳng từng hình của em bé với độ đậm a, trước hiệu ứng của quái
+      MO = a;
+      try { drawFx(c, ly, true); drawParts(c, ly, true); } finally { MO = 1; c.globalAlpha = 1; }
+      drawFx(c, ly, false); drawParts(c, ly, false);
+      return;
+    }
+    const hp = a < 1 ? coBe(ly) : null;
+    if (!hp) { drawFx(c, ly); drawParts(c, ly); return; }
+    const cv = c.canvas, T = c.getTransform();
+    // đổi hộp sang điểm ảnh thật của canvas, cắt theo mép
+    const X0 = Math.max(0, Math.floor(T.a * hp[0] + T.e)), Y0 = Math.max(0, Math.floor(T.d * hp[1] + T.f));
+    const X1 = Math.min(cv.width, Math.ceil(T.a * hp[2] + T.e)), Y1 = Math.min(cv.height, Math.ceil(T.d * hp[3] + T.f));
+    if (X1 <= X0 || Y1 <= Y0) { drawFx(c, ly, false); drawParts(c, ly, false); return; }
+    if (!LOPB) LOPB = document.createElement('canvas');
+    if (LOPB.width !== cv.width || LOPB.height !== cv.height) { LOPB.width = cv.width; LOPB.height = cv.height; }
+    const g = LOPB.getContext('2d');
+    g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
+    g.clearRect(X0, Y0, X1 - X0, Y1 - Y0);
+    g.save(); g.beginPath(); g.rect(X0, Y0, X1 - X0, Y1 - Y0); g.clip();
+    g.setTransform(T); g.imageSmoothingEnabled = false;
+    try { drawFx(g, ly, true); drawParts(g, ly, true); } finally { g.restore(); }
+    c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = a; c.drawImage(LOPB, X0, Y0, X1 - X0, Y1 - Y0, X0, Y0, X1 - X0, Y1 - Y0); c.restore();
+    drawFx(c, ly, false); drawParts(c, ly, false);
+  }
+  // Viền sáng ấm 1 điểm ảnh + bóng mờ của em bé, vẽ SAU mọi hiệu ứng (G.drawWorld gọi ngay sau drawOver): trận đông lửa khói
+  // đến đâu vẫn thấy dáng bé. Em bé vẽ vào một khung nhỏ quanh bé (không bóng đổ), lấy hình bóng một màu dời 4 hướng làm viền,
+  // khoét phần thân ra để chỉ còn viền; rồi dán viền (DOC.vienA) và thân mờ (DOC.bongBe). Cờ tắt: G.DOC_TRAN2 = false.
+  let VB = null, VB2 = null, VB3 = null;
+  const VBW = 120, VBH = 100, VBX = 60, VBY = 78; // khung quanh bé (điểm ảnh thế giới), chân bé ở (VBX, VBY)
+  const D4 = [[-1, 0], [1, 0], [0, -1], [0, 1]], D8 = [[-2, 0], [2, 0], [0, -2], [0, 2], [-1, -1], [1, -1], [-1, 1], [1, 1]];
+  fx.vienBe = function (c, P) {
+    if (G.noRender || !S || S.W !== G.getWorld() || !P || P.dead || P.hidden || !(G.docTran2 && G.docTran2()) || !G.art || !G.heroArgs) return;
+    try {
+      const D = G.theme.DOC, n = G.NET || 1, w = VBW * n, h = VBH * n;
+      if (!VB) { VB = document.createElement('canvas'); VB2 = document.createElement('canvas'); VB3 = document.createElement('canvas'); }
+      if (VB.width !== w || VB.height !== h) { VB.width = VB2.width = VB3.width = w; VB.height = VB2.height = VB3.height = h; }
+      const g = VB.getContext('2d'), g2 = VB2.getContext('2d'), g3 = VB3.getContext('2d'), X = Math.round(P.x) - VBX, Y = Math.round(P.y) - VBY;
+      const sach = (q) => { q.setTransform(1, 0, 0, 1, 0, 0); q.globalAlpha = 1; q.globalCompositeOperation = 'source-over'; q.clearRect(0, 0, w, h); };
+      sach(g); g.setTransform(n, 0, 0, n, -X * n, -Y * n); g.imageSmoothingEnabled = false;
+      const a = G.heroArgs(P); a.noShadow = true;
+      const on = fx.xf && fx.xf(g, P, 0);
+      G.art.hero(g, a);
+      if (on) g.restore();
+      // g2: hình bóng nở 1 điểm ảnh (viền sáng); g3: nở 2 điểm ảnh trừ phần nở 1 (viền tối bên ngoài, để viền sáng nổi cả trên nền lửa sáng)
+      sach(g2); for (const q of D4) g2.drawImage(VB, q[0] * n, q[1] * n); g2.drawImage(VB, 0, 0);
+      sach(g3); for (const q of D8) g3.drawImage(VB2, q[0] * n * 0.5, q[1] * n * 0.5); g3.drawImage(VB2, 0, 0);
+      g3.globalCompositeOperation = 'destination-out'; g3.drawImage(VB2, 0, 0);
+      g3.globalCompositeOperation = 'source-in'; g3.fillStyle = D.vienToi || '#1a0e08'; g3.fillRect(0, 0, w, h);
+      g2.globalCompositeOperation = 'destination-out'; g2.drawImage(VB, 0, 0);
+      g2.globalCompositeOperation = 'source-in'; g2.fillStyle = D.vienBe; g2.fillRect(0, 0, w, h);
+      const a0 = c.globalAlpha;
+      c.imageSmoothingEnabled = false;
+      if (D.bongBe > 0) { c.globalAlpha = a0 * D.bongBe; c.drawImage(VB, X, Y, VBW, VBH); }
+      if (D.vienToiA > 0) { c.globalAlpha = a0 * D.vienToiA; c.drawImage(VB3, X, Y, VBW, VBH); }
+      c.globalAlpha = a0 * D.vienA; c.drawImage(VB2, X, Y, VBW, VBH);
+      c.globalAlpha = a0;
+    } catch (e) { fail(e); }
+  };
+  fx.dim2 = dim2; // js/combat.js: vùng của em bé trên sàn cũng nhạt như vậy
+  layer('drawGround', (c) => { veLop(c, 0); });
   // Xác quái đang tan và bóng mờ của hero: xếp chung thứ tự xa gần với các nhân vật
   layer('sorted', (list, c) => {
     const A = G.art;
@@ -2137,7 +2257,7 @@
   }
   // Lớp trên cùng của thế giới
   layer('drawOver', (c) => {
-    drawFx(c, 1); drawParts(c, 1);
+    veLop(c, 1);
     if (S.pulse > 0) { const h = hand(S.W.P), PL = pal(S.pulseEl); star(c, h.x, h.y - 2, 2 + (S.pulse / 0.25) * 4, PL.c2, '#ffffff'); }
   });
   // Lớp giao diện: số sát thương, viền đỏ khi trúng đòn, nhịp đỏ khi máu thấp, chớp sáng khi tiến hoá

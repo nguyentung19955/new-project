@@ -529,8 +529,12 @@
     for (const r of RECTS) if (x >= r[0] && x <= r[2] && y >= r[1] && y <= r[3]) return true;
     const a = B.ao, ex = (x - a[0]) / (a[2] + 4), ey = (y - a[1]) / (a[3] + 4);
     if (ex * ex + ey * ey < 1) return true;
-    for (const k of ORDER) { const q = NPCS[k].pos; if (Math.hypot(x - q[0], (y - q[1]) * 1.5) < 7) return true; }
-    for (const q of B.be) if (Math.hypot(x - q[0], (y - q[1]) * 1.5) < 6) return true;
+    // 12/10 (cờ G.CHU_RO): người làng và các bé chiếm chỗ rộng hơn một chút (9 / 8 thay vì 7 / 6), thêm cái án thư của Cụ Đồ,
+    // để em bé không đi xuyên qua người. Chỗ đứng nói chuyện (den) vẫn cách đủ xa nên vẫn tới được.
+    const ro = G.CHU_RO !== false, rn = ro ? 9 : 7, rb = ro ? 8 : 6;
+    if (ro && x >= 336 && x <= 360 && y >= 146 && y <= 156) return true; // án thư Cụ Đồ
+    for (const k of ORDER) { const q = NPCS[k].pos; if (Math.hypot(x - q[0], (y - q[1]) * 1.5) < rn) return true; }
+    for (const q of B.be) if (Math.hypot(x - q[0], (y - q[1]) * 1.5) < rb) return true;
     return false;
   }
   VS.blocked = blocked;
@@ -621,6 +625,22 @@
     // Người mới (chưa qua quá 1 ải): chỉ một người có chấm đỏ, người quan trọng nhất.
     // Chưa đánh ải nào: Lái Đò (đi đánh ải) trước. Sau ải 1: Cụ Đồ có điểm → Lò rèn → Thợ May → Lái Đò.
     for (const k in n) if (!shown(k)) n[k] = false; // V53: người chưa ra mặt thì không có chấm
+    // 12/10 (cờ G.CHU_RO): chấm đỏ / "!" chỉ khi THẬT có việc làm được ngay. Anh Mõ (cài đặt) không còn chấm "có cái mới";
+    // Bà Hàng Xén chỉ báo khi trong rương có vũ khí mới nhặt mà mang vào thì Sức mạnh tăng (đổi được ngay).
+    if (G.CHU_RO !== false) {
+      n.mo = false;
+      if (n.xen) {
+        let co = false;
+        try {
+          const U = G.upg, moc = sn.xen || 0;
+          if (U && U.swapGain) for (const w of sv.weapons) {
+            if (co || w.id < moc || sv.carry.includes(w.id)) continue;
+            for (let slot = 0; slot < sv.carry.length && !co; slot++) if (U.swapGain(w, slot, sv) > 0) co = true;
+          }
+        } catch (e) { co = false; }
+        n.xen = co;
+      }
+    }
     const nStar = Object.keys(sv.stars || {}).length;
     if (nStar <= 1) {
       const order = nStar === 0 ? ['lai', 'do', 'ren', 'may'] : ['do', 'ren', 'may', 'lai'];
@@ -650,7 +670,10 @@
     const sn = seen();
     if (sn.base !== 1) { const c = counts(); for (const k of ['xen', 'may', 'tu']) if (sn[k] == null) sn[k] = c[k]; sn.base = 1; }
     checkNews();
-    if (!sn.hint) S.hintT = 9;
+    // 12/10: dòng mẹo người mới ("Kéo bên trái để đi...") không hiện nữa khi đã qua ải Rừng già 1-5 (cờ G.CHU_RO)
+    const quaMan1 = G.CHU_RO !== false && G.save.stars && G.save.stars['0-4'];
+    if (quaMan1) S.hintT = 0;
+    else if (!sn.hint) S.hintT = 9;
   };
   function goTo(x, y, goal, fast) {
     const pth = findPath(S.x, S.y, x, y);

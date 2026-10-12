@@ -156,13 +156,13 @@
     const g = S.W && S.W.geo;
     // Đợt 2: phòng thường sàn rộng (tường phải tới x = 394) thì bản đồ nhỏ thu hẹp lại cho vừa cột phải, không đè sàn.
     if (g && g.rong && !g.big) return [393, 58, 85, 68];
-    return g && g.big ? [424, 58, 52, 15] : [374, 58, 102, 68]; // dời xuống nhường chỗ cho ba vạch linh khí dưới ô vũ khí (js/linhkhi.js)
+    return g && g.big ? (G.CHU_RO !== false ? [418, 58, 58, 19] : [424, 58, 52, 15]) : [374, 58, 102, 68]; // 12/10: nút Bản đồ phòng trùm to hơn (vùng chạm ở js/stage.js) // dời xuống nhường chỗ cho ba vạch linh khí dưới ô vũ khí (js/linhkhi.js)
   };
   MM.draw = function (S) {
     const b = MM.rect(S), x = b[0], y = b[1], w = b[2], h = b[3];
     const small = h < 30;
     if (G.theme) G.theme.plate(x, y, w, h); else ui.rect(x, y, w, h, 'rgba(14,10,10,0.88)', '#7a5a3a');
-    if (small) { ui.text('Bản đồ', x + w / 2, y + 10.5, { size: 7, bold: true, align: 'center', color: '#f6dc92' }); return; }
+    if (small) { ui.text('Bản đồ', x + w / 2, y + (h >= 19 ? 13 : 10.5), { size: h >= 19 ? 8 : 7, bold: true, align: 'center', color: '#f6dc92' }); return; }
     ui.text('Bản đồ', x + 6, y + 10.5, { size: 7, bold: true, color: '#f6dc92' });
     const gi = gateInfo(S);
     if (gi) {

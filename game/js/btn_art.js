@@ -943,6 +943,13 @@
       blit(ctx, g, flashSprite(shape, R), x, y, 0, oy, alpha * 0.75 * (1 - p));
       blit(ctx, g, ringSprite(shape, R, 1 + Math.floor(p * 5)), x, y, 0, oy, alpha * (1 - p * p));
     }
+    // 12/10 (cờ G.CHU_RO): thẻ giá mana vẽ lại TRÊN CÙNG, để lúc nút loé sáng (vừa bấm, vừa hồi xong, đang gọi bấm) số "♦30"
+    // vẫn là chữ sáng trên nền xanh đậm, không bị lớp sáng màu kem phủ mất.
+    if (st.cost != null && G.CHU_RO !== false && (kind === 'skill' || kind === 'special' || kind === 'chuong')) {
+      const lack = st.lack != null ? !!st.lack : disabled && st.cost != null;
+      const bs = memo('cb|' + st.cost + '|' + (lack ? 1 : 0) + (docTran() ? '|d8' : ''), () => { const b = costBadge(st.cost, lack); return { c: b.canvas(), ax: b.w >> 1, ay: -(R - 1 - 5) }; });
+      blit(ctx, g, bs, x, y, 0, oy, disabled ? alpha * 0.8 : alpha);
+    }
     if (st.label) {
       const top = st.labelAt === 'top';
       const ly = top ? y - (R * g.k) / g.a - (kind === 'atk' && el === 'fire' ? 6.5 : 4) : y + ((R + base.lip + (st.cost != null ? 5 : 1)) * g.k) / g.a + 7;

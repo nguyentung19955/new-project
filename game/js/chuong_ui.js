@@ -22,6 +22,24 @@
     return s;
   }
   function tx(s, x, y, w, o) {
+    if (o.co && G.CHU_RO !== false) { // 12/10: tên chiêu dài thì thu cỡ chữ (không dưới 6) cho đủ chữ, chỉ cắt "…" khi vẫn không vừa
+      const str = G.tv(String(s));
+      let sz = Math.max(7.5, o.size || 8);
+      for (; sz > 6; sz -= 0.5) { ui.font(sz, o.bold, true); if (G.ux.measureText(str).width <= w) break; }
+      let bold = o.bold;
+      ui.font(sz, bold, true);
+      const mb = G.ux.measureText(str).width;
+      if (mb > w && bold && mb * 0.82 > w) { bold = false; ui.font(sz, false, true); } // quá chật kể cả khi ép: bỏ chữ đậm
+      const mw = G.ux.measureText(str).width;
+      if (mw <= w + 1) { U.texts.push({ s: str, w: mw, max: w }); ui.text(str, x, y, Object.assign({}, o, { size: sz, tiny: true, bold })); return mw; }
+      if (mw * 0.82 <= w && (o.align || 'left') === 'left') { // vẫn chật một chút: ép chữ hẹp lại theo chiều ngang (tối đa 18%), không cắt mất chữ
+        const k = w / mw, c = G.ux;
+        U.texts.push({ s: str, w: w, max: w });
+        c.save(); c.translate(x, y); c.scale(k, 1);
+        try { ui.text(str, 0, 0, Object.assign({}, o, { size: sz, tiny: true, bold })); } finally { c.restore(); }
+        return w;
+      }
+    }
     const t = fit(String(s), w, o.size || 8, o.bold);
     ui.font(Math.max(6.5, o.size || 8), o.bold);
     const mw = G.ux.measureText(t).width;
@@ -76,7 +94,7 @@
           T.inset(bx, ry, bw, bh, sel, { fill: r > 0 ? '#3a3014' : open ? '#1f3f3e' : '#152524', col: sel ? null : r >= nd.max ? '#ffd23f' : can ? GOOD : open ? '#3f6a64' : '#22302f' });
           // hàng cao thì chấm bậc nằm dưới tên; hàng thấp (Hành trang) thì chấm bậc nằm bên phải tên
           const low = bh < 18, pw = nd.max * 5, px0 = low ? bx + bw - pw - 3 : bx + 3, py = low ? ry + Math.round(bh / 2) - 1 : ry + bh - 5;
-          tx(nd.name, bx + 3, low ? ry + bh / 2 + 2.5 : ry + 8.5, low ? (open ? bw - pw - (can ? 16 : 8) : bw - 34) : bw - 6, { size: 6.5, bold: true, color: r > 0 ? GOLD : open ? TXT : LOCK });
+          tx(nd.name, bx + 3, low ? ry + bh / 2 + 2.5 : ry + 8.5, low ? (open ? bw - pw - (can ? 16 : 8) : bw - 34) : bw - 6, { size: 6.5, bold: true, co: true, color: r > 0 ? GOLD : open ? TXT : LOCK });
           if (open) for (let j = 0; j < nd.max; j++) { const c = G.ux; c.fillStyle = j < r ? '#ffd23f' : open ? '#0d1716' : '#1a2423'; c.fillRect(px0 + j * 5, py, 4, 3); }
           if (!open && (on || nd.need > 0)) tx(G.t('cần {0}', nd.need), bx + bw - 3, low ? ry + bh / 2 + 2.5 : ry + bh - 2, 26, { size: 6.5, align: 'right', color: LOCK });
           else if (can) tx('+', low ? px0 - 7 : bx + bw - 6, low ? ry + bh / 2 + 3 : ry + bh - 2, 8, { size: 8, bold: true, color: GOOD });
