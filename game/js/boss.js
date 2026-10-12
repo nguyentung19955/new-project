@@ -440,6 +440,8 @@
       // 1) 0,25 giây cuối trước khi đòn ra (b.wind, cùng mốc với dấu "!" của quái): thân nhấp nháy trắng. 2) Có tệp dáng pha (<mã>-p2 / -p3, js/sprite_custom.js): chớp trắng che lúc đổi dáng.
       if (anhAI && b.dying == null) {
         if (b.wind > 0 && b.wind < 0.25 && /^c\d$|^chieu|^atk|^tele/.test(n) && Math.floor(G.time * 20) % 2) o.baoDon = 0.35 * fk;
+        // Phiên Kiểm 3 pha (12/10): mở đầu cảnh chuyển pha thân chớp trắng mạnh rồi nhạt dần (mọi trùm vùng có ảnh AI, kể cả chưa có tệp dáng pha).
+        if ((n === 'phase2' || n === 'phase3') && G.PHA_TRUM_DU) { const u0 = t / (dur(b.art, n) || 1); if (u0 < 0.14) o.baoDon = Math.max(o.baoDon || 0, 0.85 * (1 - u0 / 0.14)); }
         if ((n === 'phase2' || n === 'phase3') && G.spriteCustom.phaTrum && G.spriteCustom.phaTrum(G.spriteCustom.ds[b.art], phase, 'tele')) {
           const u = t / (dur(b.art, n) || 1);
           if (u >= 0.45 && u < 0.58) o.baoDon = Math.max(o.baoDon || 0, 1 - ((u - 0.45) / 0.13) * 0.5);

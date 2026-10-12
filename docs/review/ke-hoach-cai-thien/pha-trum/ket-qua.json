@@ -1,0 +1,200 @@
+{
+ "mocTinh": {
+  "ten": "Mộc Tinh",
+  "log": [
+   {
+    "pha": 2,
+    "mau": 64,
+    "giay": 7.5,
+    "banner": "Mộc Tinh nổi giận!",
+    "rung": 0.48333333333333334
+   },
+   {
+    "pha": 3,
+    "mau": 32,
+    "giay": 13.5,
+    "banner": "Mộc Tinh hóa cuồng!",
+    "rung": 0.48333333333333334
+   }
+  ],
+  "ve": {
+   "p1 intro": {
+    "mocTinh:idle": 1
+   },
+   "p1 idle": {
+    "mocTinh:idle": 1
+   },
+   "p1 chiêu": {
+    "mocTinh:tele": 1,
+    "mocTinh:atk": 1
+   },
+   "p2 phase2": {
+    "mocTinh:tele": 1,
+    "mocTinh-p2:tele": 1
+   },
+   "p2 idle": {
+    "mocTinh-p2:idle": 1
+   },
+   "p2 chiêu": {
+    "mocTinh-p2:tele": 1,
+    "mocTinh-p2:atk": 1
+   },
+   "p3 phase3": {
+    "mocTinh-p2:tele": 1,
+    "mocTinh-p3:tele": 1
+   },
+   "p3 idle": {
+    "mocTinh-p3:idle": 1
+   },
+   "p3 chiêu": {
+    "mocTinh-p3:tele": 1,
+    "mocTinh-p3:atk": 1
+   },
+   "p3 mệt": {
+    "mocTinh-p3:hit": 1
+   }
+  },
+  "gucVe": {
+   "p1": "mocTinh:die",
+   "p2": "mocTinh-p2:hit",
+   "p3": "mocTinh-p3:hit"
+  },
+  "chet": true,
+  "giay": 19.5
+ },
+ "nguTinh": {
+  "ten": "Ngư Tinh",
+  "log": [
+   {
+    "pha": 2,
+    "mau": 64,
+    "giay": 7,
+    "banner": "Ngư Tinh nổi giận!",
+    "rung": 0.48333333333333334
+   },
+   {
+    "pha": 3,
+    "mau": 32,
+    "giay": 12.5,
+    "banner": "Ngư Tinh hóa cuồng!",
+    "rung": 0.48333333333333334
+   }
+  ],
+  "ve": {
+   "p1 intro": {
+    "nguTinh:idle": 1
+   },
+   "p1 idle": {
+    "nguTinh:idle": 1
+   },
+   "p1 chiêu": {
+    "nguTinh:tele": 1,
+    "nguTinh:atk": 1
+   },
+   "p1 move": {
+    "nguTinh:move": 1
+   },
+   "p2 phase2": {
+    "nguTinh:tele": 1,
+    "nguTinh-p2:tele": 1
+   },
+   "p2 move": {
+    "nguTinh-p2:idle": 1
+   },
+   "p2 chiêu": {
+    "nguTinh-p2:tele": 1,
+    "nguTinh-p2:atk": 1
+   },
+   "p2 mệt": {
+    "nguTinh-p2:hit": 1
+   },
+   "p3 phase3": {
+    "nguTinh-p2:tele": 1,
+    "nguTinh-p3:tele": 1
+   },
+   "p3 move": {
+    "nguTinh-p3:idle": 1
+   },
+   "p3 chiêu": {
+    "nguTinh-p3:tele": 1,
+    "nguTinh-p3:atk": 1
+   }
+  },
+  "gucVe": {
+   "p1": "nguTinh:die",
+   "p2": "nguTinh-p2:hit",
+   "p3": "nguTinh-p3:hit"
+  },
+  "chet": true,
+  "giay": 18.5
+ },
+ "hoTinh": {
+  "ten": "Hồ Tinh",
+  "log": [
+   {
+    "pha": 2,
+    "mau": 64,
+    "giay": 7.5,
+    "banner": "Hồ Tinh nổi giận!",
+    "rung": 0.48333333333333334
+   },
+   {
+    "pha": 3,
+    "mau": 28,
+    "giay": 13.5,
+    "banner": "Hồ Tinh hóa cuồng!",
+    "rung": 0.48333333333333334
+   }
+  ],
+  "ve": {
+   "p1 intro": {
+    "hoTinh:idle": 1
+   },
+   "p1 move": {
+    "hoTinh:move": 1
+   },
+   "p1 idle": {
+    "hoTinh:idle": 1
+   },
+   "p1 chiêu": {
+    "hoTinh:tele": 1,
+    "hoTinh:atk": 1
+   },
+   "p2 phase2": {
+    "hoTinh:tele": 1,
+    "hoTinh-p2:tele": 1
+   },
+   "p2 idle": {
+    "hoTinh-p2:idle": 1
+   },
+   "p2 chiêu": {
+    "hoTinh-p2:tele": 1,
+    "hoTinh-p2:atk": 1
+   },
+   "p2 mệt": {
+    "hoTinh-p2:hit": 1
+   },
+   "p3 phase3": {
+    "hoTinh-p2:tele": 1,
+    "hoTinh-p3:tele": 1
+   },
+   "p3 idle": {
+    "hoTinh-p3:idle": 1
+   },
+   "p3 chiêu": {
+    "hoTinh-p3:tele": 1,
+    "hoTinh-p3:atk": 1
+   },
+   "p3 mệt": {
+    "hoTinh-p3:hit": 1
+   }
+  },
+  "gucVe": {
+   "p1": "hoTinh:die",
+   "p2": "hoTinh-p2:hit",
+   "p3": "hoTinh-p3:hit"
+  },
+  "chet": true,
+  "giay": 19.5
+ }
+}

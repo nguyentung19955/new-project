@@ -16998,6 +16998,12 @@ MA._xong();
     try { tat = typeof location !== 'undefined' && /[?&]napsau=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
     G.NAP_SAU_MOI = !tat;
   }
+  // Phiên Kiểm 3 pha (12/10): trùm vùng ở pha 2, 3 lúc đi / gục vẫn giữ hình pha (SC.veQuai). Tắt: G.PHA_TRUM_DU = false hoặc ?phatrum=0.
+  if (G.PHA_TRUM_DU === undefined) {
+    let tat = false;
+    try { tat = typeof location !== 'undefined' && /[?&]phatrum=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
+    G.PHA_TRUM_DU = !tat;
+  }
   let napSauDangChay = false, trongNapSau = false;
   // Gắn ảnh nguồn src vào img (đã gắn sẵn onload / onerror). Ảnh của tệp tải sau: giải mã xong (ngoài luồng chính) mới gọi onload,
   // để lần vẽ đầu không phải giải mã PNG ngay trong khung hình. Trình duyệt không có img.decode: như cũ.
@@ -17006,7 +17012,13 @@ MA._xong();
     const xong = img.onload, hong = img.onerror;
     img.onload = null; img.onerror = null;
     img.src = src;
-    img.decode().then(() => { if (xong) xong.call(img); }, () => { if (img.complete && img.naturalWidth) { if (xong) xong.call(img); } else if (hong) hong.call(img); });
+    // Phiên Kiểm 3 pha (12/10): Safari (iPhone) đôi khi từ chối img.decode() với ảnh lớn dù ảnh vẫn nạp được. Trước đây lúc đó ảnh bị coi là
+    // hỏng ngay (không bao giờ "ready": ví dụ tệp dáng pha trùm 3 MP không hiện). Nay: chưa nạp xong thì chờ onload / onerror thật như cách cũ.
+    img.decode().then(() => { if (xong) xong.call(img); }, () => {
+      if (img.complete && img.naturalWidth) { if (xong) xong.call(img); }
+      else if (img.complete) { if (hong) hong.call(img); }
+      else { img.onload = xong; img.onerror = hong; }
+    });
   };
   // "net" (số nguyên 1..4, mặc định 1): ảnh trong tệp ("tam" hoặc "anh") có số điểm ảnh gấp net lần, còn MỌI số khác trong tệp
   // (khung_rong, khung_cao, goc, rong, cao, neo, vu_khi.cam/mui/day, trang_phuc.lech...) vẫn tính theo điểm ảnh GAME.
@@ -17255,6 +17267,17 @@ MA._xong();
     const sp2 = pha >= 2 ? SC.phaTrum(sp, pha, s.ten) : null;
     let ve = sp; // tệp thật sự dùng để vẽ thân (bóng dưới chân vẫn theo tệp pha 1)
     if (sp2) { const s2 = SC.chonQuai(sp2, n, t, D); if (s2.ten === s.ten) { s = s2; ve = sp2; } }
+    else if (pha >= 2 && G.PHA_TRUM_DU && (s.ten === 'move' || s.ten === 'die')) {
+      // Phiên Kiểm 3 pha (12/10): tệp dáng pha chỉ có 4 hàng (idle / tele / atk / hit). Trước đây lúc trùm ĐI (move) hay GỤC (die) thì mượn
+      // hàng của tệp pha 1, nên trùm đi lại giữa các chiêu lại hiện về hình pha 1 — chủ dự án chơi chỉ thấy "1 pha". Nay: đi thì dùng hàng
+      // đứng thở của tệp pha (thân vẫn trôi theo bước đi), gục thì dùng hàng trúng đòn của tệp pha rồi mờ dần như hàng gục. Tắt: ?phatrum=0.
+      const pf = SC.phaTrum(sp, pha, s.ten === 'move' ? 'idle' : 'hit');
+      if (pf) {
+        if (s.ten === 'move') s = { ten: 'idle', i: khungLap(pf.dt.idle, t), u: 0 };
+        else s = { ten: 'hit', i: khungMot(pf.dt.hit, Math.min(1, (s.u || 0) * 1.6)), u: s.u, alpha: s.alpha, dy: s.dy };
+        ve = pf;
+      }
+    }
     let flash = o.hit || 0;
     if (s.ten === 'hit' && n === 'hit' && s.u < 0.3) flash = Math.max(flash, 0.75); // chớp trắng đầu cú trúng đòn
     if (o.baoDon > 0) flash = Math.max(flash, o.baoDon); // Phiên E2: chớp trắng báo sắp ra đòn (js/boss.js truyền cho trùm vùng có ảnh AI); chỉ là hình
