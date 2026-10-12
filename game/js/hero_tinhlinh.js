@@ -1382,25 +1382,42 @@
   //  - Lưỡi ở trước thân mà đi ngang vùng mặt của khung (SC.matKhung): xoay lưỡi về phía trước từng 5 độ (tối đa 70) cho khỏi mặt;
   //    vẫn chạm mặt thì vẽ sau thân. Chỉ đổi HÌNH (vệt chém bám theo hình này qua tip()); đòn, tầm, vùng trúng không đổi.
   // (hx, hy): bàn tay trên thân (toạ độ tính từ chân, x về trước mặt). null: không áp (tắt cờ, không phải kiếm, không đánh...).
+  // G.VK_NE_MAT (rà soát A, 12/10; tắt: ?vknemat=0): luật né mặt mở rộng ra giáo và búa, và cả lúc KHÔNG đánh (đứng, chạy, trúng đòn):
+  //  - đứng / chạy / trúng đòn (kiếm, giáo, búa): cán hoặc lưỡi đi ngang mặt (trước đây: giáo dựng đứng xuyên giữa mặt, kiếm dựng
+  //    trước mũi, đầu búa đè mặt khi chạy) -> nghiêng vũ khí về phía trước từng 5 độ (tối đa 50) cho khỏi mặt, không được thì vẽ sau thân;
+  //  - giáo, búa lúc đánh / giữ lấy đà / chiêu: KHÔNG xoay (giữ đúng hướng đòn); chĩa ra sau lưng hoặc đi ngang mặt -> vẽ sau thân
+  //    (búa giơ qua đầu lấy đà không còn đè lên mặt). Kiếm lúc đánh: y như G.KIEM_KHOP.
+  if (G.VK_NE_MAT === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]vknemat=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.VK_NE_MAT = !tat; }
+  const NE_MAT_DAY = { sword: 1.5, spear: 2, hammer: 3 }; // nửa bề dày phần lưỡi / đầu vũ khí cộng thêm vào bán kính mặt
   function kiemKhop(o, wp, gv, hx, hy, ang, front) {
-    if (!G.KIEM_KHOP || !wp || wp.type !== 'sword' || wp.sx != null || !gv || o.plainWeapon) return null;
+    if (!G.KIEM_KHOP || !wp || wp.sx != null || !gv || o.plainWeapon) return null;
+    const wt = wp.type, rong = G.VK_NE_MAT && (wt === 'spear' || wt === 'hammer');
+    if (wt !== 'sword' && !rong) return null;
     const p = o.p, danh = o.atk >= 0 || (p && (p.specT > 0 || p.castT > 0 || (p.mv && p.mv.holding)));
-    if (!danh) return null;
+    if (!danh && !G.VK_NE_MAT) return null;
+    if (!danh && p && p.dead) return null;
     const ra = (a) => (a * Math.PI) / 180, sau = (a) => Math.cos(ra(a)) < -0.25;
-    if (sau(ang)) return { ang, front: false };
+    if (danh && sau(ang) && wt === 'sword') return { ang, front: false };
     const m = gv.mat;
     if (!m) return { ang, front };
     let L = 24;
-    try { const SCx = G.spriteCustom, wo = G.weaponArt.fromWeapon(o.weapon || {}), sp = SCx.timVuKhi(wo); if (sp && sp.vk) L = Math.hypot(sp.vk.mui[0] - sp.vk.cam[0], sp.vk.mui[1] - sp.vk.cam[1]) * SCx.coVk('sword', wo) - (HOLD.sword || 0); } catch (e) { L = 24; }
+    try { const SCx = G.spriteCustom, wo = G.weaponArt.fromWeapon(o.weapon || {}), sp = SCx.timVuKhi(wo); if (sp && sp.vk) L = Math.hypot(sp.vk.mui[0] - sp.vk.cam[0], sp.vk.mui[1] - sp.vk.cam[1]) * SCx.coVk(wt, wo) - (HOLD[wt] || 0); } catch (e) { L = 24; }
+    const day = G.VK_NE_MAT ? NE_MAT_DAY[wt] || 1.5 : 1.5;
     // khoảng cách từ tâm mặt tới đoạn chuôi -> mũi (bắt đầu sau nắm tay và chắn tay; lưỡi dày chừng 3 điểm ảnh)
     const cham = (a) => {
       const dx = Math.cos(ra(a)), dy = Math.sin(ra(a)), x0 = hx + dx * 2.5, y0 = hy + dy * 2.5;
       const t = Math.max(0, Math.min(L, (m.x - x0) * dx + (m.y - y0) * dy));
-      return Math.hypot(x0 + dx * t - m.x, y0 + dy * t - m.y) < m.r + 1.5;
+      return Math.hypot(x0 + dx * t - m.x, y0 + dy * t - m.y) < m.r + day;
     };
     if (!cham(ang)) return { ang, front };
     const huong = Math.sin(ra(ang)) < 0 ? 1 : -1; // chĩa lên: xoay xuống phía trước; chĩa xuống: xoay lên phía trước
-    for (let d = 5; d <= 70; d += 5) { const a = ang + huong * d; if (!sau(a) && !cham(a)) return { ang: a, front }; }
+    if (danh && wt !== 'sword') { // giáo, búa đang đánh (lấy đà giơ qua đầu): ngả ra sau đầu tối đa 45 độ, vẫn thấy vũ khí; không được thì vẽ sau thân
+      for (let d = 5; d <= 60; d += 5) { const a = ang - huong * d; if (!cham(a)) return { ang: a, front }; }
+      return { ang, front: wt === 'hammer' ? front : false }; // búa: vẽ sau thân thì khuất hẳn sau đầu (cả lúc giữ lấy đà lâu) -> giữ như cũ
+    }
+    const toiDa = danh ? 70 : 50;
+    for (let d = 5; d <= toiDa; d += 5) { const a = ang + huong * d; if (!sau(a) && !cham(a)) return { ang: a, front }; }
+    if (!danh) for (let d = 5; d <= 45; d += 5) { const a = ang - huong * d; if (!cham(a)) return { ang: a, front }; }
     return { ang, front: false };
   }
   // Vẽ một bé (kèm vũ khí) tại chỗ c đang đứng: gốc là chân bé, đã lật theo hướng mặt.

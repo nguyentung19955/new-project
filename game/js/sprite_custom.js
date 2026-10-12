@@ -884,6 +884,32 @@
       return r;
     };
   }
+  // ---------- ĐIỂM ĐẦU THEO ĐẦU THẬT CỦA KHUNG (rà soát A, 12/10) ----------
+  // Đo: ở hàng chưởng (cast), trúng đòn, đánh, điểm đỉnh đầu trong tệp ghép (hoặc ước lượng) có khi lệch hẳn khỏi đầu đang vẽ — Cu Lì
+  // chưởng: đầu vẽ cao hơn khung đứng ~5 điểm ảnh mà điểm đỉnh đầu vẫn thấp → mũ (khăn xếp, nón lá) chụp xuống che mắt; Cái Bống, Cu Tèo
+  // chưởng lệch 2–2,5. Nay: so vị trí đĩa mặt tự đo (SC.matKhung) của khung với khung đứng 0 cùng tấm; điểm đầu (đỉnh đầu, tâm đầu, mắt,
+  // gáy) lệch dọc quá 1,5 điểm ảnh thì dời theo đầu thật (tối đa 6). Không áp ở đứng, chạy (đã đo tay) và lộn, chết (thân xoay cả người).
+  // Tắt: G.DAU_THAT = false hoặc ?dauthat=0.
+  if (G.DAU_THAT === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]dauthat=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.DAU_THAT = !tat; }
+  const DIEM_DAU_THAT = ['dinh_dau', 'tam_dau', 'mat', 'gay'], KHONG_DAU_THAT = { idle: 1, move: 1, ne: 1, die: 1 };
+  {
+    const dk2 = SC.diemKhung;
+    SC.diemKhung = function (sp, key, ten, i, kh) {
+      const kq = dk2(sp, key, ten, i, kh);
+      if (!G.DAU_THAT || !kq || !sp || KHONG_DAU_THAT[ten] || !kq.diem.dinh_dau || !sp.dt.idle) return kq;
+      let lech = 0;
+      try {
+        const m = SC.matKhung(sp, ten, i), m0 = SC.matKhung(sp, 'idle', 0), d0 = dk2(sp, key, 'idle', 0, SC.khopEmBe(sp, 'idle', 0));
+        if (!m || !m0 || !d0 || !d0.diem.dinh_dau || m.r < 0.85 * m0.r) return kq; // đĩa đầu đo không chắc (đầu ngả, bị tay che): thôi
+        lech = (m.y - m0.y) - (kq.diem.dinh_dau[1] - d0.diem.dinh_dau[1]); // >0: đầu thật thấp hơn điểm; <0: đầu thật cao hơn
+      } catch (e) { return kq; }
+      if (Math.abs(lech) <= 1.5) return kq;
+      lech = clamp(lech, -6, 6);
+      const r = { diem: Object.assign({}, kq.diem), nguon: Object.assign({}, kq.nguon) };
+      for (const n of DIEM_DAU_THAT) if (r.diem[n]) { r.diem[n] = [r.diem[n][0], Math.round((r.diem[n][1] + lech) * 2) / 2]; r.nguon[n] = 'dau-that'; }
+      return r;
+    };
+  }
   // Vùng mặt của khung (ten, i): đĩa đầu tự đo (dauKhung), dời về phía trước mặt và xuống dưới (mặt nằm nửa trước, nửa dưới của đầu).
   // { x, y, r } điểm ảnh game tính từ chân, x về trước mặt; null: khung cuộn tròn / không đo được.
   SC.matKhung = function (sp, ten, i) {
@@ -1123,6 +1149,29 @@
     return px;
   }
   const P2 = (a) => (Array.isArray(a) && a.length === 2 && isFinite(a[0]) && isFinite(a[1]) ? [+a[0], +a[1]] : null);
+  // ---------- MŨ ĐỘI LÚN VÀO ĐẦU (rà soát A, 12/10) ----------
+  // Đo 9 ảnh mũ vẽ lại 12/10: điểm "dinh_dau" của tệp nằm sát mép dưới mũ, nên mũ chỉ phủ 1–3 điểm ảnh đỉnh tóc (nón lá: −0,5,
+  // tức đáy chóp nón còn cao hơn đỉnh đầu) → mũ "ngồi trên đầu như hai tầng", nón lá có dải quai đen–đỏ nằm ngang đỉnh tóc
+  // trông như mặt nạ mắt đỏ. Nay: đặt lại điểm đỉnh đầu trên ảnh mũ để thân mũ phủ 2,5–4,5 điểm ảnh đỉnh đầu (mép dưới vẫn
+  // trên mắt ít nhất 1–2 điểm ảnh ở cả 4 em bé, đã đo mọi khung), và nón lá bỏ dải quai dưới vành (quai ảnh chỉ là vòng ngắn
+  // dưới vành, không xuống tới cằm). Chỉ áp khi ảnh đúng cỡ đã đo (ảnh nhập lại khác cỡ: tự thôi).
+  // Tắt: G.MU_LUN = false trước khi nạp ảnh, hoặc ?mulun=0 -> y hệt trước.
+  if (G.MU_LUN === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]mulun=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.MU_LUN = !tat; }
+  // look: [rộng, cao (điểm ảnh game, để nhận đúng ảnh), y đỉnh đầu mới, cắt từ hàng y (điểm ảnh game) trở xuống hoặc null]
+  SC.MU_LUN = { non_la: [18, 12, 4.5, 7.5], khan_xep: [12, 9, 4, null], mu_sung: [20, 14, 8.5, null], vong_la: [12, 7, 3.5, null],
+    mu_da_ca: [16, 14, 8, null], khan_lua: [15, 9, 3.5, null], mu_vay_ca: [15, 15, 9, null], mu_tai_cao: [16, 16, 9, null] };
+  function muLun(sp, src) {
+    const e = G.MU_LUN && SC.MU_LUN && sp.tp && sp.tp.o === 'hats' ? SC.MU_LUN[sp.tp.look] : null, N = sp.net || 1;
+    if (!e || !src || Math.round(src.width / N) !== e[0] || Math.round(src.height / N) !== e[1]) return src;
+    const dm = sp.tp.diem;
+    if (dm && dm.dinh_dau) dm.dinh_dau = [dm.dinh_dau[0], e[2]];
+    if (e[3] == null || typeof document === 'undefined') return src;
+    try {
+      const cv = document.createElement('canvas'); cv.width = src.width; cv.height = src.height;
+      const x = cv.getContext('2d'); x.drawImage(src, 0, 0); x.clearRect(0, Math.round(e[3] * N), cv.width, cv.height);
+      return cv;
+    } catch (er) { return src; }
+  }
   function themDo(tep) {
     // rong, cao: cỡ theo điểm ảnh GAME; pw, ph: cỡ ảnh thật (gấp net lần); px: màu từng điểm ảnh THẬT (pw x ph).
     const doi = tep.doi_tuong, sp = { ma: tep.ma, ten: String(tep.ten || tep.ma), doi, net: docNet(tep.net), rong: 0, cao: 0, pw: 0, ph: 0, img: null, px: null, ready: false, xoay: new Map(), mau: {} };
@@ -1141,7 +1190,8 @@
       if (typeof tep.vat_pham !== 'string' || !/^[a-z0-9-]{2,20}$/.test(tep.vat_pham)) throw new Error('loại vật phẩm sai');
       sp.vp = tep.vat_pham;
     }
-    const xong = (src) => {
+    const xong = (src0) => {
+      const src = muLun(sp, src0);
       sp.img = src; sp.pw = src.width; sp.ph = src.height; sp.rong = Math.max(1, Math.round(src.width / sp.net)); sp.cao = Math.max(1, Math.round(src.height / sp.net));
       if (G.NAP_SAU_MOI) { // V3: mảng màu từng điểm ảnh chỉ đọc khi cần lần đầu (đọc điểm ảnh 150 vũ khí lúc nạp làm giật)
         let px = null; const anh = src;

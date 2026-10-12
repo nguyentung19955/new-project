@@ -9260,25 +9260,42 @@ window.G.LANG = 'vi';
   //  - Lưỡi ở trước thân mà đi ngang vùng mặt của khung (SC.matKhung): xoay lưỡi về phía trước từng 5 độ (tối đa 70) cho khỏi mặt;
   //    vẫn chạm mặt thì vẽ sau thân. Chỉ đổi HÌNH (vệt chém bám theo hình này qua tip()); đòn, tầm, vùng trúng không đổi.
   // (hx, hy): bàn tay trên thân (toạ độ tính từ chân, x về trước mặt). null: không áp (tắt cờ, không phải kiếm, không đánh...).
+  // G.VK_NE_MAT (rà soát A, 12/10; tắt: ?vknemat=0): luật né mặt mở rộng ra giáo và búa, và cả lúc KHÔNG đánh (đứng, chạy, trúng đòn):
+  //  - đứng / chạy / trúng đòn (kiếm, giáo, búa): cán hoặc lưỡi đi ngang mặt (trước đây: giáo dựng đứng xuyên giữa mặt, kiếm dựng
+  //    trước mũi, đầu búa đè mặt khi chạy) -> nghiêng vũ khí về phía trước từng 5 độ (tối đa 50) cho khỏi mặt, không được thì vẽ sau thân;
+  //  - giáo, búa lúc đánh / giữ lấy đà / chiêu: KHÔNG xoay (giữ đúng hướng đòn); chĩa ra sau lưng hoặc đi ngang mặt -> vẽ sau thân
+  //    (búa giơ qua đầu lấy đà không còn đè lên mặt). Kiếm lúc đánh: y như G.KIEM_KHOP.
+  if (G.VK_NE_MAT === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]vknemat=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.VK_NE_MAT = !tat; }
+  const NE_MAT_DAY = { sword: 1.5, spear: 2, hammer: 3 }; // nửa bề dày phần lưỡi / đầu vũ khí cộng thêm vào bán kính mặt
   function kiemKhop(o, wp, gv, hx, hy, ang, front) {
-    if (!G.KIEM_KHOP || !wp || wp.type !== 'sword' || wp.sx != null || !gv || o.plainWeapon) return null;
+    if (!G.KIEM_KHOP || !wp || wp.sx != null || !gv || o.plainWeapon) return null;
+    const wt = wp.type, rong = G.VK_NE_MAT && (wt === 'spear' || wt === 'hammer');
+    if (wt !== 'sword' && !rong) return null;
     const p = o.p, danh = o.atk >= 0 || (p && (p.specT > 0 || p.castT > 0 || (p.mv && p.mv.holding)));
-    if (!danh) return null;
+    if (!danh && !G.VK_NE_MAT) return null;
+    if (!danh && p && p.dead) return null;
     const ra = (a) => (a * Math.PI) / 180, sau = (a) => Math.cos(ra(a)) < -0.25;
-    if (sau(ang)) return { ang, front: false };
+    if (danh && sau(ang) && wt === 'sword') return { ang, front: false };
     const m = gv.mat;
     if (!m) return { ang, front };
     let L = 24;
-    try { const SCx = G.spriteCustom, wo = G.weaponArt.fromWeapon(o.weapon || {}), sp = SCx.timVuKhi(wo); if (sp && sp.vk) L = Math.hypot(sp.vk.mui[0] - sp.vk.cam[0], sp.vk.mui[1] - sp.vk.cam[1]) * SCx.coVk('sword', wo) - (HOLD.sword || 0); } catch (e) { L = 24; }
+    try { const SCx = G.spriteCustom, wo = G.weaponArt.fromWeapon(o.weapon || {}), sp = SCx.timVuKhi(wo); if (sp && sp.vk) L = Math.hypot(sp.vk.mui[0] - sp.vk.cam[0], sp.vk.mui[1] - sp.vk.cam[1]) * SCx.coVk(wt, wo) - (HOLD[wt] || 0); } catch (e) { L = 24; }
+    const day = G.VK_NE_MAT ? NE_MAT_DAY[wt] || 1.5 : 1.5;
     // khoảng cách từ tâm mặt tới đoạn chuôi -> mũi (bắt đầu sau nắm tay và chắn tay; lưỡi dày chừng 3 điểm ảnh)
     const cham = (a) => {
       const dx = Math.cos(ra(a)), dy = Math.sin(ra(a)), x0 = hx + dx * 2.5, y0 = hy + dy * 2.5;
       const t = Math.max(0, Math.min(L, (m.x - x0) * dx + (m.y - y0) * dy));
-      return Math.hypot(x0 + dx * t - m.x, y0 + dy * t - m.y) < m.r + 1.5;
+      return Math.hypot(x0 + dx * t - m.x, y0 + dy * t - m.y) < m.r + day;
     };
     if (!cham(ang)) return { ang, front };
     const huong = Math.sin(ra(ang)) < 0 ? 1 : -1; // chĩa lên: xoay xuống phía trước; chĩa xuống: xoay lên phía trước
-    for (let d = 5; d <= 70; d += 5) { const a = ang + huong * d; if (!sau(a) && !cham(a)) return { ang: a, front }; }
+    if (danh && wt !== 'sword') { // giáo, búa đang đánh (lấy đà giơ qua đầu): ngả ra sau đầu tối đa 45 độ, vẫn thấy vũ khí; không được thì vẽ sau thân
+      for (let d = 5; d <= 60; d += 5) { const a = ang - huong * d; if (!cham(a)) return { ang: a, front }; }
+      return { ang, front: wt === 'hammer' ? front : false }; // búa: vẽ sau thân thì khuất hẳn sau đầu (cả lúc giữ lấy đà lâu) -> giữ như cũ
+    }
+    const toiDa = danh ? 70 : 50;
+    for (let d = 5; d <= toiDa; d += 5) { const a = ang + huong * d; if (!sau(a) && !cham(a)) return { ang: a, front }; }
+    if (!danh) for (let d = 5; d <= 45; d += 5) { const a = ang - huong * d; if (!cham(a)) return { ang: a, front }; }
     return { ang, front: false };
   }
   // Vẽ một bé (kèm vũ khí) tại chỗ c đang đứng: gốc là chân bé, đã lật theo hướng mặt.
@@ -17895,6 +17912,32 @@ MA._xong();
       return r;
     };
   }
+  // ---------- ĐIỂM ĐẦU THEO ĐẦU THẬT CỦA KHUNG (rà soát A, 12/10) ----------
+  // Đo: ở hàng chưởng (cast), trúng đòn, đánh, điểm đỉnh đầu trong tệp ghép (hoặc ước lượng) có khi lệch hẳn khỏi đầu đang vẽ — Cu Lì
+  // chưởng: đầu vẽ cao hơn khung đứng ~5 điểm ảnh mà điểm đỉnh đầu vẫn thấp → mũ (khăn xếp, nón lá) chụp xuống che mắt; Cái Bống, Cu Tèo
+  // chưởng lệch 2–2,5. Nay: so vị trí đĩa mặt tự đo (SC.matKhung) của khung với khung đứng 0 cùng tấm; điểm đầu (đỉnh đầu, tâm đầu, mắt,
+  // gáy) lệch dọc quá 1,5 điểm ảnh thì dời theo đầu thật (tối đa 6). Không áp ở đứng, chạy (đã đo tay) và lộn, chết (thân xoay cả người).
+  // Tắt: G.DAU_THAT = false hoặc ?dauthat=0.
+  if (G.DAU_THAT === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]dauthat=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.DAU_THAT = !tat; }
+  const DIEM_DAU_THAT = ['dinh_dau', 'tam_dau', 'mat', 'gay'], KHONG_DAU_THAT = { idle: 1, move: 1, ne: 1, die: 1 };
+  {
+    const dk2 = SC.diemKhung;
+    SC.diemKhung = function (sp, key, ten, i, kh) {
+      const kq = dk2(sp, key, ten, i, kh);
+      if (!G.DAU_THAT || !kq || !sp || KHONG_DAU_THAT[ten] || !kq.diem.dinh_dau || !sp.dt.idle) return kq;
+      let lech = 0;
+      try {
+        const m = SC.matKhung(sp, ten, i), m0 = SC.matKhung(sp, 'idle', 0), d0 = dk2(sp, key, 'idle', 0, SC.khopEmBe(sp, 'idle', 0));
+        if (!m || !m0 || !d0 || !d0.diem.dinh_dau || m.r < 0.85 * m0.r) return kq; // đĩa đầu đo không chắc (đầu ngả, bị tay che): thôi
+        lech = (m.y - m0.y) - (kq.diem.dinh_dau[1] - d0.diem.dinh_dau[1]); // >0: đầu thật thấp hơn điểm; <0: đầu thật cao hơn
+      } catch (e) { return kq; }
+      if (Math.abs(lech) <= 1.5) return kq;
+      lech = clamp(lech, -6, 6);
+      const r = { diem: Object.assign({}, kq.diem), nguon: Object.assign({}, kq.nguon) };
+      for (const n of DIEM_DAU_THAT) if (r.diem[n]) { r.diem[n] = [r.diem[n][0], Math.round((r.diem[n][1] + lech) * 2) / 2]; r.nguon[n] = 'dau-that'; }
+      return r;
+    };
+  }
   // Vùng mặt của khung (ten, i): đĩa đầu tự đo (dauKhung), dời về phía trước mặt và xuống dưới (mặt nằm nửa trước, nửa dưới của đầu).
   // { x, y, r } điểm ảnh game tính từ chân, x về trước mặt; null: khung cuộn tròn / không đo được.
   SC.matKhung = function (sp, ten, i) {
@@ -18134,6 +18177,29 @@ MA._xong();
     return px;
   }
   const P2 = (a) => (Array.isArray(a) && a.length === 2 && isFinite(a[0]) && isFinite(a[1]) ? [+a[0], +a[1]] : null);
+  // ---------- MŨ ĐỘI LÚN VÀO ĐẦU (rà soát A, 12/10) ----------
+  // Đo 9 ảnh mũ vẽ lại 12/10: điểm "dinh_dau" của tệp nằm sát mép dưới mũ, nên mũ chỉ phủ 1–3 điểm ảnh đỉnh tóc (nón lá: −0,5,
+  // tức đáy chóp nón còn cao hơn đỉnh đầu) → mũ "ngồi trên đầu như hai tầng", nón lá có dải quai đen–đỏ nằm ngang đỉnh tóc
+  // trông như mặt nạ mắt đỏ. Nay: đặt lại điểm đỉnh đầu trên ảnh mũ để thân mũ phủ 2,5–4,5 điểm ảnh đỉnh đầu (mép dưới vẫn
+  // trên mắt ít nhất 1–2 điểm ảnh ở cả 4 em bé, đã đo mọi khung), và nón lá bỏ dải quai dưới vành (quai ảnh chỉ là vòng ngắn
+  // dưới vành, không xuống tới cằm). Chỉ áp khi ảnh đúng cỡ đã đo (ảnh nhập lại khác cỡ: tự thôi).
+  // Tắt: G.MU_LUN = false trước khi nạp ảnh, hoặc ?mulun=0 -> y hệt trước.
+  if (G.MU_LUN === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]mulun=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.MU_LUN = !tat; }
+  // look: [rộng, cao (điểm ảnh game, để nhận đúng ảnh), y đỉnh đầu mới, cắt từ hàng y (điểm ảnh game) trở xuống hoặc null]
+  SC.MU_LUN = { non_la: [18, 12, 4.5, 7.5], khan_xep: [12, 9, 4, null], mu_sung: [20, 14, 8.5, null], vong_la: [12, 7, 3.5, null],
+    mu_da_ca: [16, 14, 8, null], khan_lua: [15, 9, 3.5, null], mu_vay_ca: [15, 15, 9, null], mu_tai_cao: [16, 16, 9, null] };
+  function muLun(sp, src) {
+    const e = G.MU_LUN && SC.MU_LUN && sp.tp && sp.tp.o === 'hats' ? SC.MU_LUN[sp.tp.look] : null, N = sp.net || 1;
+    if (!e || !src || Math.round(src.width / N) !== e[0] || Math.round(src.height / N) !== e[1]) return src;
+    const dm = sp.tp.diem;
+    if (dm && dm.dinh_dau) dm.dinh_dau = [dm.dinh_dau[0], e[2]];
+    if (e[3] == null || typeof document === 'undefined') return src;
+    try {
+      const cv = document.createElement('canvas'); cv.width = src.width; cv.height = src.height;
+      const x = cv.getContext('2d'); x.drawImage(src, 0, 0); x.clearRect(0, Math.round(e[3] * N), cv.width, cv.height);
+      return cv;
+    } catch (er) { return src; }
+  }
   function themDo(tep) {
     // rong, cao: cỡ theo điểm ảnh GAME; pw, ph: cỡ ảnh thật (gấp net lần); px: màu từng điểm ảnh THẬT (pw x ph).
     const doi = tep.doi_tuong, sp = { ma: tep.ma, ten: String(tep.ten || tep.ma), doi, net: docNet(tep.net), rong: 0, cao: 0, pw: 0, ph: 0, img: null, px: null, ready: false, xoay: new Map(), mau: {} };
@@ -18152,7 +18218,8 @@ MA._xong();
       if (typeof tep.vat_pham !== 'string' || !/^[a-z0-9-]{2,20}$/.test(tep.vat_pham)) throw new Error('loại vật phẩm sai');
       sp.vp = tep.vat_pham;
     }
-    const xong = (src) => {
+    const xong = (src0) => {
+      const src = muLun(sp, src0);
       sp.img = src; sp.pw = src.width; sp.ph = src.height; sp.rong = Math.max(1, Math.round(src.width / sp.net)); sp.cao = Math.max(1, Math.round(src.height / sp.net));
       if (G.NAP_SAU_MOI) { // V3: mảng màu từng điểm ảnh chỉ đọc khi cần lần đầu (đọc điểm ảnh 150 vũ khí lúc nạp làm giật)
         let px = null; const anh = src;
