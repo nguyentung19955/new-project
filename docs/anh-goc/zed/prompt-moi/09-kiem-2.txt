@@ -3,6 +3,6 @@
 
 Nhân vật như ẢNH MẪU gửi kèm (giữ y hệt mặt, tóc, đồ, đai đỏ, màu, tỉ lệ đầu/thân). Pixel art chibi, viền tối 1 nét, quay mặt PHẢI, cùng cỡ người ở mọi khung, chân trụ chạm cùng một đường đất.
 Ảnh 2 là khung xương từng khung (đỏ = tay/chân gần, xanh = xa, nét đứt xám = hướng vũ khí — KHÔNG vẽ vũ khí): vẽ ĐÚNG tư thế từng khung.
-Tay KHÔNG cầm vũ khí (game tự vẽ vũ khí): bàn tay nắm như đang cầm cán, tay không che mặt.
+Tay KHÔNG cầm vũ khí (game tự vẽ vũ khí). TAY PHẢI của Zed (tay phía gần người xem, màu ĐỎ trên khung xương) nắm như cầm chuôi và làm động tác vung; tay trái nắm ở hông.
 Chém ngược: 1 tay ở dưới thấp phía trước, 2 hạ thấp lấy đà, 3 ★ hất chéo lên trước, 4 tay ở trên cao, 5 thu về.
 1 hàng 5 khung đều nhau, đọc trái sang phải; các hình không chạm nhau, không chạm mép ảnh. Nền xanh lá thuần #00FF00, không lưới, không chữ, không số, không bóng, không hiệu ứng.
