@@ -1,8 +1,8 @@
 # Đặc biệt thương Phi Thương (0,35 giây)
-# Gửi kèm: mẫu + mau-tu-the/tu-the/24-phi-thuong.png
+# Gửi kèm: mẫu + mau-tu-the/tu-the/24-phi-thuong.png + vk-thuong.png (ảnh vũ khí, lấy CẤP 1)
 
 Nhân vật như ẢNH MẪU gửi kèm (giữ y hệt mặt, tóc, đồ, đai đỏ, màu, tỉ lệ đầu/thân). Pixel art chibi, viền tối 1 nét, quay mặt PHẢI, cùng cỡ người ở mọi khung, chân trụ chạm cùng một đường đất.
-Ảnh 2 là khung xương từng khung (đỏ = tay/chân gần, xanh = xa, nét đứt xám = hướng vũ khí — KHÔNG vẽ vũ khí): vẽ ĐÚNG tư thế từng khung.
-Hai tay như cầm cán thương dài (không vẽ thương).
+Ảnh 2 là khung xương từng khung (đỏ = tay/chân gần, xanh = xa, nét đứt xám = hướng vũ khí: vẽ vũ khí nằm theo nét đó): vẽ ĐÚNG tư thế từng khung.
+Tay cầm thương giống ẢNH 3 (cấp 1) ở khung 1–2; từ khung 3 thương đã bay đi, tay không (không vẽ thương bay).
 Ném lao: 1 kéo tay ném ra sau ngả người, 2 ★ phóng tay ra trước thật mạnh, 3 theo đà, 4–6 về thế thủ tay không.
 1 hàng 6 khung đều nhau, đọc trái sang phải; các hình không chạm nhau, không chạm mép ảnh. Nền xanh lá thuần #00FF00, không lưới, không chữ, không số, không bóng, không hiệu ứng.

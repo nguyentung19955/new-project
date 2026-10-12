@@ -1,8 +1,8 @@
 # Ném phi tiêu (0,38 giây, ★ khung 3)
-# Gửi kèm: mẫu + mau-tu-the/tu-the/20-phi-tieu.png
+# Gửi kèm: mẫu + mau-tu-the/tu-the/20-phi-tieu.png + vk-phi-tieu.png (ảnh vũ khí, lấy CẤP 1)
 
 Nhân vật như ẢNH MẪU gửi kèm (giữ y hệt mặt, tóc, đồ, đai đỏ, màu, tỉ lệ đầu/thân). Pixel art chibi, viền tối 1 nét, quay mặt PHẢI, cùng cỡ người ở mọi khung, chân trụ chạm cùng một đường đất.
-Ảnh 2 là khung xương từng khung (đỏ = tay/chân gần, xanh = xa, nét đứt xám = hướng vũ khí — KHÔNG vẽ vũ khí): vẽ ĐÚNG tư thế từng khung.
-Tay phải cầm phi tiêu nhỏ (KHÔNG vẽ phi tiêu, game tự vẽ), tay trái giữ thăng bằng.
+Ảnh 2 là khung xương từng khung (đỏ = tay/chân gần, xanh = xa, nét đứt xám = hướng vũ khí: vẽ vũ khí nằm theo nét đó): vẽ ĐÚNG tư thế từng khung.
+Tay phải cầm 1 phi tiêu giống ẢNH 3 (cấp 1); từ khung 3 phi tiêu đã rời tay (không vẽ phi tiêu bay). Tay trái giữ thăng bằng.
 Ném: 1 rút từ thắt lưng, 2 kéo tay ra sau vai, 3 ★ vung tay ném ra trước duỗi hết, 4 theo đà, 5–6 thu về.
 1 hàng 6 khung đều nhau, đọc trái sang phải; các hình không chạm nhau, không chạm mép ảnh. Nền xanh lá thuần #00FF00, không lưới, không chữ, không số, không bóng, không hiệu ứng.

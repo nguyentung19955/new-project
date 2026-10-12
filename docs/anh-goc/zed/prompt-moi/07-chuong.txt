@@ -2,6 +2,6 @@
 # Gửi kèm: mẫu + mau-tu-the/tu-the/07-chuong.png
 
 Nhân vật như ẢNH MẪU gửi kèm (giữ y hệt mặt, tóc, đồ, đai đỏ, màu, tỉ lệ đầu/thân). Pixel art chibi, viền tối 1 nét, quay mặt PHẢI, cùng cỡ người ở mọi khung, chân trụ chạm cùng một đường đất.
-Ảnh 2 là khung xương từng khung (đỏ = tay/chân gần, xanh = xa, nét đứt xám = hướng vũ khí — KHÔNG vẽ vũ khí): vẽ ĐÚNG tư thế từng khung.
+Ảnh 2 là khung xương từng khung (đỏ = tay/chân gần, xanh = xa): vẽ ĐÚNG tư thế từng khung.
 Ra chưởng, đẩy NHANH: 1 thu hai tay về hông, 2 ★ đẩy mạnh hai lòng bàn tay ra trước (duỗi hết tay, chân trước bước tới), 3–4 giữ thế, 5–6 thu về thế thủ.
 1 hàng 6 khung đều nhau, đọc trái sang phải; các hình không chạm nhau, không chạm mép ảnh. Nền xanh lá thuần #00FF00, không lưới, không chữ, không số, không bóng, không hiệu ứng.

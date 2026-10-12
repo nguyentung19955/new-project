@@ -1,8 +1,8 @@
 # Ném chùm phi tiêu khi thả (0,5 giây, ★ khung 1)
-# Gửi kèm: mẫu + mau-tu-the/tu-the/22-phi-tieu-chum.png
+# Gửi kèm: mẫu + mau-tu-the/tu-the/22-phi-tieu-chum.png + vk-phi-tieu.png (ảnh vũ khí, lấy CẤP 1)
 
 Nhân vật như ẢNH MẪU gửi kèm (giữ y hệt mặt, tóc, đồ, đai đỏ, màu, tỉ lệ đầu/thân). Pixel art chibi, viền tối 1 nét, quay mặt PHẢI, cùng cỡ người ở mọi khung, chân trụ chạm cùng một đường đất.
-Ảnh 2 là khung xương từng khung (đỏ = tay/chân gần, xanh = xa, nét đứt xám = hướng vũ khí — KHÔNG vẽ vũ khí): vẽ ĐÚNG tư thế từng khung.
-Tay phải ném (không vẽ phi tiêu), tay trái giữ thăng bằng.
+Ảnh 2 là khung xương từng khung (đỏ = tay/chân gần, xanh = xa, nét đứt xám = hướng vũ khí: vẽ vũ khí nằm theo nét đó): vẽ ĐÚNG tư thế từng khung.
+Tay phải vừa ném, phi tiêu đã rời tay (không vẽ phi tiêu bay), tay trái giữ thăng bằng.
 Ném chùm: 1 ★ vung mạnh tay ném ra trước xoè ngón, 2 theo đà người đổ tới, 3 giật lùi nửa bước, 4–6 thu về thủ thế.
 1 hàng 6 khung đều nhau, đọc trái sang phải; các hình không chạm nhau, không chạm mép ảnh. Nền xanh lá thuần #00FF00, không lưới, không chữ, không số, không bóng, không hiệu ứng.
