@@ -1,0 +1,8 @@
+Gửi kèm: zed-v2-canonical.png (thân 8×3) và v2/06-lop-non-la.png (nón cũ, để giữ màu và nét).
+Sửa tấm nón lá 8 cột × 3 hàng (đứng / đi / chạy), mỗi ô khớp đúng tư thế và độ nghiêng đầu của ô cùng chỗ trong canonical.
+Cùng độ to điểm ảnh với canonical; vành nón rộng khoảng 1,2–1,3 lần bề ngang đầu (cả tóc).
+Hai lỗ sừng trên mặt nón đặt ĐÚNG chỗ hai sừng của Zed đâm lên ở từng ô; lỗ để TRỐNG (tô #00FF00), KHÔNG vẽ sừng hay mẩu sừng trong lỗ.
+Quai đỏ ngắn: từ mép vành hai bên má xuống, nút buộc nằm ngay DƯỚI CẰM (cằm cách mép vành khoảng 1/3 chiều cao đầu); quai không đi qua mắt, má, miệng.
+Chỉ có chiếc nón và quai, KHÔNG có đầu, tóc, sừng hay người. Đuôi quai bay ngắn về phía sau khi chạy.
+Chừa lề ≥ 8% mỗi phía mỗi ô; các ô không chạm nhau.
+Nền xanh lá thuần #00FF00 phủ kín. KHÔNG kẻ lưới, KHÔNG chữ, KHÔNG số, KHÔNG bóng đổ, KHÔNG quầng sáng.

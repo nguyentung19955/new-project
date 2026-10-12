@@ -1,0 +1,8 @@
+Gửi kèm: zed-v2-canonical.png (thân 8×3) và v2/05-lop-giap-do.png (giáp cũ, để giữ thiết kế đỏ viền vàng).
+Vẽ lại tấm giáp 8 cột × 3 hàng (đứng / đi / chạy), mỗi ô khớp đúng tư thế thân ở ô cùng chỗ trong canonical.
+Giáp CÙNG CỠ với thân Zed trong canonical (không to hơn): cổ áo ôm dưới cằm, giáp vai nằm trên hai vai, đai ngang đúng chỗ đai đỏ của quần.
+Hàng chạy: thân đổ người tới trước và thấp như canonical; vạt giáp ngắn, không phủ xuống đùi.
+Chỗ cánh tay gần người xem đi ngang trước ngực thì để TRỐNG (tô #00FF00) để tay đè lên được.
+Chỉ có bộ giáp, KHÔNG có người, đầu, tay, chân. Cùng độ to điểm ảnh, viền tối như canonical.
+Chừa lề ≥ 8% mỗi phía mỗi ô; các ô không chạm nhau.
+Nền xanh lá thuần #00FF00 phủ kín. KHÔNG kẻ lưới, KHÔNG chữ, KHÔNG số, KHÔNG bóng đổ, KHÔNG quầng sáng.
