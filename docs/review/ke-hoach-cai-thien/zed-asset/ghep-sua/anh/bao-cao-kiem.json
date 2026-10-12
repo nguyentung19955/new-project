@@ -1,0 +1,637 @@
+{
+ "loai": "linh-khi-bao-cao-ghep",
+ "phien_ban": 1,
+ "nguon": {
+  "than": "docs/anh-goc/zed/v2/00-than-dung-di-chay.png",
+  "giap": "docs/anh-goc/zed/v2/05-lop-giap-do.png",
+  "non": "docs/anh-goc/zed/v2/06-lop-non-la.png",
+  "ao_choang": "docs/anh-goc/zed/v2/07-lop-ao-choang.png"
+ },
+ "tach": {
+  "than": {
+   "dat": true,
+   "so_khung": [
+    8,
+    8,
+    8
+   ],
+   "loi": [],
+   "canh_bao": [],
+   "manh_bo": [],
+   "tach_nen": {
+    "nen": "xanh",
+    "cham_nhieu_bo": 0,
+    "vien_khu": 14373,
+    "nga_mau_nen_trong_hinh": 445
+   }
+  },
+  "giap": {
+   "dat": true,
+   "so_khung": [
+    8,
+    8,
+    8
+   ],
+   "loi": [],
+   "canh_bao": [],
+   "manh_bo": [],
+   "tach_nen": {
+    "nen": "xanh",
+    "cham_nhieu_bo": 0,
+    "vien_khu": 6849,
+    "nga_mau_nen_trong_hinh": 199
+   }
+  },
+  "non": {
+   "dat": true,
+   "so_khung": [
+    8,
+    8,
+    8
+   ],
+   "loi": [],
+   "canh_bao": [],
+   "manh_bo": [],
+   "tach_nen": {
+    "nen": "xanh",
+    "cham_nhieu_bo": 0,
+    "vien_khu": 9725,
+    "nga_mau_nen_trong_hinh": 86
+   }
+  },
+  "ao_choang": {
+   "dat": true,
+   "so_khung": [
+    8,
+    8,
+    8
+   ],
+   "loi": [],
+   "canh_bao": [],
+   "manh_bo": [],
+   "tach_nen": {
+    "nen": "xanh",
+    "cham_nhieu_bo": 0,
+    "vien_khu": 6053,
+    "nga_mau_nen_trong_hinh": 70
+   }
+  }
+ },
+ "loi": [],
+ "canh_bao": [
+  "Lớp ao_choang LẤN sang ô bên cạnh (chia ô của kiem/zed-v2-canonical) ở 24 khung: dung 1, dung 2, dung 3, dung 4, dung 5, dung 6, dung 7, dung 8, di 1, di 2, di 3, di 4, di 5, di 6, di 7, di 8, chay 1, chay 2, chay 3, chay 4, chay 5, chay 6, chay 7, chay 8 — cắt theo ô sẽ mất phần lấn; cần khung game rộng hơn hoặc lớp kiểu \"khung\" có ô riêng",
+  "Lớp ao_choang tràn ra ngoài tấm ở khung: dung 1, di 1, chay 1 (phần tràn bị cắt trong tấm chính thức; ảnh kiểm vẫn đủ)",
+  "Lớp non_sau LẤN sang ô bên cạnh (chia ô của kiem/zed-v2-canonical) ở 2 khung: chay 4, chay 7 — cắt theo ô sẽ mất phần lấn; cần khung game rộng hơn hoặc lớp kiểu \"khung\" có ô riêng",
+  "Lớp non_truoc LẤN sang ô bên cạnh (chia ô của kiem/zed-v2-canonical) ở 1 khung: chay 7 — cắt theo ô sẽ mất phần lấn; cần khung game rộng hơn hoặc lớp kiểu \"khung\" có ô riêng"
+ ],
+ "kiem_tu_dong": {
+  "khung": [
+   {
+    "hang": "dung",
+    "khung": 1,
+    "loi": [],
+    "canh_bao": [],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1026,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 78,
+    "day_non_lo_ngoai_nguoi": 1957,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.957,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "dung",
+    "khung": 2,
+    "loi": [],
+    "canh_bao": [],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1091,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 80,
+    "day_non_lo_ngoai_nguoi": 1881,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.959,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "dung",
+    "khung": 3,
+    "loi": [],
+    "canh_bao": [],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1089,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 82,
+    "day_non_lo_ngoai_nguoi": 1872,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.949,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "dung",
+    "khung": 4,
+    "loi": [],
+    "canh_bao": [],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1116,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 82,
+    "day_non_lo_ngoai_nguoi": 2243,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.924,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "dung",
+    "khung": 5,
+    "loi": [],
+    "canh_bao": [],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1062,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 79,
+    "day_non_lo_ngoai_nguoi": 2192,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.954,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "dung",
+    "khung": 6,
+    "loi": [],
+    "canh_bao": [],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1096,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 83,
+    "day_non_lo_ngoai_nguoi": 1878,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.948,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "dung",
+    "khung": 7,
+    "loi": [],
+    "canh_bao": [],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1142,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 86,
+    "day_non_lo_ngoai_nguoi": 2314,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.958,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "dung",
+    "khung": 8,
+    "loi": [],
+    "canh_bao": [],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1115,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 76,
+    "day_non_lo_ngoai_nguoi": 1739,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.941,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "di",
+    "khung": 1,
+    "loi": [],
+    "canh_bao": [],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1238,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 79,
+    "day_non_lo_ngoai_nguoi": 2134,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.882,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "di",
+    "khung": 2,
+    "loi": [],
+    "canh_bao": [],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1066,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 69,
+    "day_non_lo_ngoai_nguoi": 2052,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.889,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "di",
+    "khung": 3,
+    "loi": [],
+    "canh_bao": [],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1072,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 78,
+    "day_non_lo_ngoai_nguoi": 2243,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.904,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "di",
+    "khung": 4,
+    "loi": [],
+    "canh_bao": [],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1115,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 79,
+    "day_non_lo_ngoai_nguoi": 2442,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.878,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "di",
+    "khung": 5,
+    "loi": [],
+    "canh_bao": [],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1086,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 82,
+    "day_non_lo_ngoai_nguoi": 1395,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.881,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "di",
+    "khung": 6,
+    "loi": [],
+    "canh_bao": [],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1039,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 68,
+    "day_non_lo_ngoai_nguoi": 2315,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.909,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "di",
+    "khung": 7,
+    "loi": [],
+    "canh_bao": [
+     "giáp hạ 1 điểm ảnh để không chạm cằm"
+    ],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1100,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 76,
+    "day_non_lo_ngoai_nguoi": 1432,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.894,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "di",
+    "khung": 8,
+    "loi": [],
+    "canh_bao": [
+     "giáp hạ 1 điểm ảnh để không chạm cằm"
+    ],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1098,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 75,
+    "day_non_lo_ngoai_nguoi": 1821,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.881,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "chay",
+    "khung": 1,
+    "loi": [],
+    "canh_bao": [
+     "giáp hạ 2 điểm ảnh để không chạm cằm",
+     "mép vành (hai đầu) thấp hơn đỉnh mắt — xem bằng mắt",
+     "giáp 72% nằm trên người (vai giáp chìa ra ngoài) — xem bằng mắt"
+    ],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1235,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 83,
+    "day_non_lo_ngoai_nguoi": 2088,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.725,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "chay",
+    "khung": 2,
+    "loi": [],
+    "canh_bao": [
+     "giáp hạ 1 điểm ảnh để không chạm cằm",
+     "mép vành (hai đầu) thấp hơn đỉnh mắt — xem bằng mắt",
+     "neo co nhảy 18 điểm ảnh sang khung 3 (so với trọng tâm thân)"
+    ],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1211,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 82,
+    "day_non_lo_ngoai_nguoi": 1728,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.753,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "chay",
+    "khung": 3,
+    "loi": [],
+    "canh_bao": [
+     "giáp hạ 1 điểm ảnh để không chạm cằm",
+     "mép vành (hai đầu) thấp hơn đỉnh mắt — xem bằng mắt",
+     "neo co nhảy 15 điểm ảnh sang khung 4 (so với trọng tâm thân)"
+    ],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1149,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 83,
+    "day_non_lo_ngoai_nguoi": 3252,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.859,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "chay",
+    "khung": 4,
+    "loi": [],
+    "canh_bao": [
+     "giáp hạ 1 điểm ảnh để không chạm cằm",
+     "mép vành (hai đầu) thấp hơn đỉnh mắt — xem bằng mắt"
+    ],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1175,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 82,
+    "day_non_lo_ngoai_nguoi": 1801,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.794,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "chay",
+    "khung": 5,
+    "loi": [],
+    "canh_bao": [
+     "giáp hạ 1 điểm ảnh để không chạm cằm",
+     "giáp 70% nằm trên người (vai giáp chìa ra ngoài) — xem bằng mắt"
+    ],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1201,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 78,
+    "day_non_lo_ngoai_nguoi": 1697,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.703,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "chay",
+    "khung": 6,
+    "loi": [],
+    "canh_bao": [
+     "giáp hạ 3 điểm ảnh để không chạm cằm",
+     "mép vành (hai đầu) thấp hơn đỉnh mắt — xem bằng mắt",
+     "giáp 75% nằm trên người (vai giáp chìa ra ngoài) — xem bằng mắt"
+    ],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1201,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 82,
+    "day_non_lo_ngoai_nguoi": 2066,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.747,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "chay",
+    "khung": 7,
+    "loi": [],
+    "canh_bao": [
+     "giáp hạ 3 điểm ảnh để không chạm cằm",
+     "mép vành (hai đầu) thấp hơn đỉnh mắt — xem bằng mắt",
+     "giáp 70% nằm trên người (vai giáp chìa ra ngoài) — xem bằng mắt"
+    ],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1185,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 85,
+    "day_non_lo_ngoai_nguoi": 1780,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.701,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   },
+   {
+    "hang": "chay",
+    "khung": 8,
+    "loi": [],
+    "canh_bao": [
+     "giáp hạ 2 điểm ảnh để không chạm cằm",
+     "mép vành (hai đầu) thấp hơn đỉnh mắt — xem bằng mắt"
+    ],
+    "mat_bi_che_diem_anh": 0,
+    "mat_bi_che_theo_lop": {
+     "giap": 0,
+     "non_truoc": 0
+    },
+    "mat_mat_bi_che_diem_anh": 0,
+    "sung_diem_anh": 1113,
+    "sung_hien_ti_le": 1.0,
+    "vanh_non_y": 84,
+    "day_non_lo_ngoai_nguoi": 1569,
+    "day_non_trong_vung_mat": 0,
+    "giap_tren_nguoi_ti_le": 0.798,
+    "ao_choang_lo_phia_truoc": 0,
+    "alpha_trung_gian": 0
+   }
+  ],
+  "so_loi": 0,
+  "so_canh_bao": 23
+ },
+ "kiem_bang_mat": {
+  "trang_thai": "CHƯA XÁC NHẬN (cần người xem)",
+  "xem": [
+   "anh/luoi-dau-*.png (mặt, mắt, sừng, dây nón từng khung, ×3)",
+   "anh/luoi-*.png (thân + từng lớp, 8 khung × 3 hàng)",
+   "anh/gif-*.gif (đứng/đi/chạy)",
+   "anh/debug-neo-*.png (điểm neo)",
+   "anh/truoc-sau.png"
+  ],
+  "cau_hoi": [
+   "Mắt và mặt thấy rõ ở cả 24 khung?",
+   "Hai sừng hiện đúng hình, nhô qua nón tự nhiên?",
+   "Mẩu sừng/viền lỗ vẽ sẵn của nón còn lộ có khó chịu không?",
+   "Dây nón (vẽ sau thân) trông hợp lý hay lơ lửng?",
+   "Giáp nằm đúng ngực/vai, không trôi khi chạy?",
+   "Áo choàng sau lưng, không xuyên người?",
+   "GIF lặp không giật?"
+  ]
+ },
+ "ti_le_do_duoc": {
+  "giap": 0.599,
+  "ao_choang": 1.006
+ },
+ "ti_le": {
+  "non": 1.0,
+  "giap": 0.599,
+  "ao_choang": 1.0
+ },
+ "ti_le_ghi_chu": "nón 1,0 (không đổi cỡ: giữ nguyên điểm ảnh nguồn, vành rộng ~1,1–1,3 lần đầu như nón lá thật); giáp 0.599 = trung vị hàng đứng (cổ→eo thân)/(cổ→đai giáp); áo choàng 1.006 = đuôi áo tới 75% đoạn cổ→chân. Một tỉ lệ cho cả 3 hàng để giáp/áo không đổi cỡ giữa động tác.",
+ "dat_tu_dong": true,
+ "lop_chinh_thuc": "docs/anh-goc/zed/lop-ghep"
+}

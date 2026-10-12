@@ -1,0 +1,2031 @@
+{
+ "loai": "linh-khi-neo-game",
+ "phien_ban": 1,
+ "than": "zed-v2-canonical",
+ "he_toa_do": "logic px trong khung 48×48, chân tại goc [24,45] (như linh-khi-lop \"neo\")",
+ "nguon": "docs/anh-goc/zed/neo/zed-v2.neo.json + kiem/zed-v2-canonical/do-dac.json",
+ "neo": {
+  "dung": [
+   {
+    "dau": [
+     27.0,
+     23.5,
+     0
+    ],
+    "lung": [
+     21.8,
+     30.1,
+     0
+    ],
+    "co": [
+     26.5,
+     29.8
+    ],
+    "nguc": [
+     26.2,
+     32.3
+    ],
+    "eo": [
+     25.9,
+     34.8
+    ],
+    "vai": [
+     [
+      21.4,
+      31.0
+     ],
+     [
+      29.8,
+      31.0
+     ]
+    ],
+    "mat": [
+     23.2,
+     23.6,
+     31.2,
+     29.1
+    ],
+    "sung": [
+     [
+      22.0,
+      15.9
+     ],
+     [
+      29.5,
+      14.2
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   },
+   {
+    "dau": [
+     24.8,
+     23.6,
+     0
+    ],
+    "lung": [
+     19.6,
+     30.1,
+     0
+    ],
+    "co": [
+     24.6,
+     29.8
+    ],
+    "nguc": [
+     24.6,
+     32.3
+    ],
+    "eo": [
+     24.6,
+     34.8
+    ],
+    "vai": [
+     [
+      19.2,
+      31.0
+     ],
+     [
+      27.9,
+      31.0
+     ]
+    ],
+    "mat": [
+     21.3,
+     23.6,
+     29.4,
+     29.1
+    ],
+    "sung": [
+     [
+      20.3,
+      15.8
+     ],
+     [
+      27.7,
+      14.2
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   },
+   {
+    "dau": [
+     26.2,
+     24.1,
+     0
+    ],
+    "lung": [
+     21.3,
+     30.2,
+     0
+    ],
+    "co": [
+     25.8,
+     29.9
+    ],
+    "nguc": [
+     25.8,
+     32.4
+    ],
+    "eo": [
+     25.8,
+     35.0
+    ],
+    "vai": [
+     [
+      20.9,
+      31.1
+     ],
+     [
+      29.0,
+      31.1
+     ]
+    ],
+    "mat": [
+     22.5,
+     23.7,
+     30.4,
+     29.3
+    ],
+    "sung": [
+     [
+      21.3,
+      15.9
+     ],
+     [
+      28.9,
+      14.5
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   },
+   {
+    "dau": [
+     27.7,
+     24.1,
+     0
+    ],
+    "lung": [
+     23.2,
+     30.2,
+     0
+    ],
+    "co": [
+     27.0,
+     29.9
+    ],
+    "nguc": [
+     26.9,
+     32.4
+    ],
+    "eo": [
+     26.9,
+     35.0
+    ],
+    "vai": [
+     [
+      22.8,
+      31.1
+     ],
+     [
+      30.0,
+      31.1
+     ]
+    ],
+    "mat": [
+     23.7,
+     23.7,
+     31.6,
+     29.3
+    ],
+    "sung": [
+     [
+      22.6,
+      15.9
+     ],
+     [
+      30.0,
+      14.3
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   },
+   {
+    "dau": [
+     27.5,
+     23.8,
+     0
+    ],
+    "lung": [
+     22.8,
+     30.2,
+     0
+    ],
+    "co": [
+     26.7,
+     29.9
+    ],
+    "nguc": [
+     26.7,
+     32.4
+    ],
+    "eo": [
+     26.7,
+     35.0
+    ],
+    "vai": [
+     [
+      22.4,
+      31.1
+     ],
+     [
+      29.9,
+      31.1
+     ]
+    ],
+    "mat": [
+     23.3,
+     23.1,
+     31.4,
+     29.3
+    ],
+    "sung": [
+     [
+      22.2,
+      16.0
+     ],
+     [
+      30.0,
+      14.5
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   },
+   {
+    "dau": [
+     26.3,
+     24.2,
+     0
+    ],
+    "lung": [
+     21.2,
+     30.2,
+     0
+    ],
+    "co": [
+     25.9,
+     29.9
+    ],
+    "nguc": [
+     25.9,
+     32.4
+    ],
+    "eo": [
+     25.9,
+     35.0
+    ],
+    "vai": [
+     [
+      20.8,
+      31.1
+     ],
+     [
+      28.7,
+      31.1
+     ]
+    ],
+    "mat": [
+     22.6,
+     23.7,
+     30.4,
+     29.3
+    ],
+    "sung": [
+     [
+      21.4,
+      15.9
+     ],
+     [
+      28.7,
+      14.3
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   },
+   {
+    "dau": [
+     26.3,
+     24.5,
+     0
+    ],
+    "lung": [
+     21.4,
+     30.1,
+     0
+    ],
+    "co": [
+     25.6,
+     29.8
+    ],
+    "nguc": [
+     25.3,
+     32.4
+    ],
+    "eo": [
+     25.0,
+     35.0
+    ],
+    "vai": [
+     [
+      21.1,
+      31.0
+     ],
+     [
+      28.9,
+      31.0
+     ]
+    ],
+    "mat": [
+     22.2,
+     23.8,
+     30.3,
+     29.1
+    ],
+    "sung": [
+     [
+      21.1,
+      15.9
+     ],
+     [
+      28.6,
+      14.5
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   },
+   {
+    "dau": [
+     27.3,
+     23.5,
+     0
+    ],
+    "lung": [
+     23.0,
+     30.2,
+     0
+    ],
+    "co": [
+     27.5,
+     29.9
+    ],
+    "nguc": [
+     27.2,
+     32.4
+    ],
+    "eo": [
+     26.9,
+     35.0
+    ],
+    "vai": [
+     [
+      22.6,
+      31.1
+     ],
+     [
+      30.7,
+      31.1
+     ]
+    ],
+    "mat": [
+     24.2,
+     23.8,
+     32.2,
+     29.3
+    ],
+    "sung": [
+     [
+      23.2,
+      15.9
+     ],
+     [
+      30.8,
+      14.5
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   }
+  ],
+  "di": [
+   {
+    "dau": [
+     29.5,
+     24.2,
+     0
+    ],
+    "lung": [
+     24.6,
+     30.6,
+     0
+    ],
+    "co": [
+     29.3,
+     30.3
+    ],
+    "nguc": [
+     29.7,
+     32.6
+    ],
+    "eo": [
+     30.1,
+     35.0
+    ],
+    "vai": [
+     [
+      24.2,
+      31.4
+     ],
+     [
+      30.0,
+      31.4
+     ]
+    ],
+    "mat": [
+     25.9,
+     24.1,
+     34.1,
+     29.7
+    ],
+    "sung": [
+     [
+      25.0,
+      16.4
+     ],
+     [
+      32.5,
+      14.9
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   },
+   {
+    "dau": [
+     26.0,
+     23.3,
+     0
+    ],
+    "lung": [
+     21.7,
+     31.0,
+     0
+    ],
+    "co": [
+     26.4,
+     30.7
+    ],
+    "nguc": [
+     26.5,
+     33.0
+    ],
+    "eo": [
+     26.6,
+     35.2
+    ],
+    "vai": [
+     [
+      21.3,
+      31.8
+     ],
+     [
+      27.4,
+      31.8
+     ]
+    ],
+    "mat": [
+     23.1,
+     24.8,
+     31.1,
+     30.1
+    ],
+    "sung": [
+     [
+      21.4,
+      17.0
+     ],
+     [
+      29.2,
+      15.3
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   },
+   {
+    "dau": [
+     26.8,
+     24.0,
+     0
+    ],
+    "lung": [
+     22.7,
+     30.6,
+     0
+    ],
+    "co": [
+     26.8,
+     30.3
+    ],
+    "nguc": [
+     27.1,
+     32.4
+    ],
+    "eo": [
+     27.4,
+     34.6
+    ],
+    "vai": [
+     [
+      22.3,
+      31.4
+     ],
+     [
+      27.8,
+      31.4
+     ]
+    ],
+    "mat": [
+     23.5,
+     23.5,
+     31.2,
+     29.7
+    ],
+    "sung": [
+     [
+      22.2,
+      16.6
+     ],
+     [
+      29.6,
+      14.9
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   },
+   {
+    "dau": [
+     27.3,
+     24.2,
+     0
+    ],
+    "lung": [
+     21.8,
+     30.6,
+     0
+    ],
+    "co": [
+     27.0,
+     30.3
+    ],
+    "nguc": [
+     27.0,
+     32.7
+    ],
+    "eo": [
+     27.1,
+     35.1
+    ],
+    "vai": [
+     [
+      21.4,
+      31.5
+     ],
+     [
+      27.8,
+      31.5
+     ]
+    ],
+    "mat": [
+     23.7,
+     24.1,
+     31.7,
+     29.7
+    ],
+    "sung": [
+     [
+      22.1,
+      16.8
+     ],
+     [
+      29.6,
+      15.0
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   },
+   {
+    "dau": [
+     28.9,
+     25.0,
+     0
+    ],
+    "lung": [
+     24.2,
+     31.0,
+     0
+    ],
+    "co": [
+     28.8,
+     30.7
+    ],
+    "nguc": [
+     29.2,
+     33.2
+    ],
+    "eo": [
+     29.5,
+     35.6
+    ],
+    "vai": [
+     [
+      23.8,
+      31.9
+     ],
+     [
+      29.6,
+      31.9
+     ]
+    ],
+    "mat": [
+     25.5,
+     24.6,
+     33.6,
+     30.1
+    ],
+    "sung": [
+     [
+      24.2,
+      17.1
+     ],
+     [
+      31.9,
+      15.3
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   },
+   {
+    "dau": [
+     26.7,
+     22.7,
+     0
+    ],
+    "lung": [
+     22.7,
+     30.6,
+     0
+    ],
+    "co": [
+     27.0,
+     30.3
+    ],
+    "nguc": [
+     27.5,
+     32.6
+    ],
+    "eo": [
+     28.1,
+     35.0
+    ],
+    "vai": [
+     [
+      22.3,
+      31.4
+     ],
+     [
+      27.8,
+      31.4
+     ]
+    ],
+    "mat": [
+     23.8,
+     24.2,
+     31.6,
+     29.7
+    ],
+    "sung": [
+     [
+      22.2,
+      16.6
+     ],
+     [
+      29.6,
+      14.9
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   },
+   {
+    "dau": [
+     27.8,
+     24.2,
+     0
+    ],
+    "lung": [
+     22.7,
+     31.0,
+     0
+    ],
+    "co": [
+     27.6,
+     30.7
+    ],
+    "nguc": [
+     27.8,
+     33.0
+    ],
+    "eo": [
+     28.0,
+     35.2
+    ],
+    "vai": [
+     [
+      22.3,
+      31.8
+     ],
+     [
+      28.6,
+      31.8
+     ]
+    ],
+    "mat": [
+     24.2,
+     24.1,
+     32.3,
+     30.1
+    ],
+    "sung": [
+     [
+      23.1,
+      17.0
+     ],
+     [
+      30.7,
+      15.3
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   },
+   {
+    "dau": [
+     29.1,
+     24.1,
+     0
+    ],
+    "lung": [
+     23.3,
+     31.0,
+     0
+    ],
+    "co": [
+     28.7,
+     30.7
+    ],
+    "nguc": [
+     29.1,
+     33.2
+    ],
+    "eo": [
+     29.4,
+     35.6
+    ],
+    "vai": [
+     [
+      22.9,
+      31.9
+     ],
+     [
+      29.6,
+      31.9
+     ]
+    ],
+    "mat": [
+     25.4,
+     24.1,
+     33.4,
+     30.1
+    ],
+    "sung": [
+     [
+      24.1,
+      17.0
+     ],
+     [
+      31.6,
+      15.3
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   }
+  ],
+  "chay": [
+   {
+    "dau": [
+     31.1,
+     26.1,
+     0
+    ],
+    "lung": [
+     26.4,
+     32.0,
+     0
+    ],
+    "co": [
+     31.9,
+     31.8
+    ],
+    "nguc": [
+     30.3,
+     32.6
+    ],
+    "eo": [
+     28.9,
+     33.4
+    ],
+    "vai": [
+     [
+      26.0,
+      32.2
+     ],
+     [
+      32.5,
+      32.2
+     ]
+    ],
+    "mat": [
+     28.8,
+     24.9,
+     36.2,
+     31.1
+    ],
+    "sung": [
+     [
+      27.9,
+      17.5
+     ],
+     [
+      35.4,
+      16.3
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   },
+   {
+    "dau": [
+     28.7,
+     26.1,
+     0
+    ],
+    "lung": [
+     24.2,
+     32.0,
+     0
+    ],
+    "co": [
+     29.6,
+     31.8
+    ],
+    "nguc": [
+     29.5,
+     33.3
+    ],
+    "eo": [
+     29.3,
+     34.8
+    ],
+    "vai": [
+     [
+      23.8,
+      32.4
+     ],
+     [
+      30.5,
+      32.4
+     ]
+    ],
+    "mat": [
+     26.5,
+     25.0,
+     33.9,
+     31.1
+    ],
+    "sung": [
+     [
+      25.6,
+      17.5
+     ],
+     [
+      33.1,
+      16.6
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   },
+   {
+    "dau": [
+     29.1,
+     25.4,
+     0
+    ],
+    "lung": [
+     22.7,
+     31.1,
+     0
+    ],
+    "co": [
+     28.2,
+     30.9
+    ],
+    "nguc": [
+     28.4,
+     31.7
+    ],
+    "eo": [
+     28.5,
+     32.6
+    ],
+    "vai": [
+     [
+      22.3,
+      31.3
+     ],
+     [
+      32.1,
+      31.3
+     ]
+    ],
+    "mat": [
+     24.0,
+     24.1,
+     34.2,
+     30.2
+    ],
+    "sung": [
+     [
+      26.3,
+      16.6
+     ],
+     [
+      33.8,
+      15.7
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   },
+   {
+    "dau": [
+     29.8,
+     25.6,
+     0
+    ],
+    "lung": [
+     25.1,
+     31.1,
+     0
+    ],
+    "co": [
+     30.6,
+     30.9
+    ],
+    "nguc": [
+     30.3,
+     32.0
+    ],
+    "eo": [
+     30.0,
+     33.1
+    ],
+    "vai": [
+     [
+      24.7,
+      31.4
+     ],
+     [
+      34.2,
+      31.4
+     ]
+    ],
+    "mat": [
+     27.6,
+     24.4,
+     34.9,
+     30.2
+    ],
+    "sung": [
+     [
+      26.7,
+      16.7
+     ],
+     [
+      34.3,
+      15.8
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   },
+   {
+    "dau": [
+     31.3,
+     26.0,
+     0
+    ],
+    "lung": [
+     26.9,
+     32.4,
+     0
+    ],
+    "co": [
+     32.4,
+     32.2
+    ],
+    "nguc": [
+     32.7,
+     33.9
+    ],
+    "eo": [
+     32.9,
+     35.6
+    ],
+    "vai": [
+     [
+      26.5,
+      33.0
+     ],
+     [
+      33.5,
+      33.0
+     ]
+    ],
+    "mat": [
+     29.3,
+     25.4,
+     36.7,
+     31.5
+    ],
+    "sung": [
+     [
+      28.8,
+      17.8
+     ],
+     [
+      36.5,
+      16.8
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   },
+   {
+    "dau": [
+     29.6,
+     25.2,
+     0
+    ],
+    "lung": [
+     24.7,
+     31.0,
+     0
+    ],
+    "co": [
+     30.2,
+     30.7
+    ],
+    "nguc": [
+     30.6,
+     31.8
+    ],
+    "eo": [
+     30.9,
+     32.8
+    ],
+    "vai": [
+     [
+      24.3,
+      31.3
+     ],
+     [
+      32.8,
+      31.3
+     ]
+    ],
+    "mat": [
+     27.2,
+     24.0,
+     34.5,
+     30.1
+    ],
+    "sung": [
+     [
+      26.4,
+      16.6
+     ],
+     [
+      33.8,
+      15.7
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   },
+   {
+    "dau": [
+     30.5,
+     26.4,
+     0
+    ],
+    "lung": [
+     25.6,
+     31.9,
+     0
+    ],
+    "co": [
+     31.1,
+     31.6
+    ],
+    "nguc": [
+     30.5,
+     32.8
+    ],
+    "eo": [
+     29.9,
+     34.0
+    ],
+    "vai": [
+     [
+      25.2,
+      32.2
+     ],
+     [
+      32.4,
+      32.2
+     ]
+    ],
+    "mat": [
+     28.1,
+     24.9,
+     35.3,
+     31.0
+    ],
+    "sung": [
+     [
+      26.9,
+      17.5
+     ],
+     [
+      34.7,
+      16.2
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   },
+   {
+    "dau": [
+     31.0,
+     26.4,
+     0
+    ],
+    "lung": [
+     27.3,
+     32.0,
+     0
+    ],
+    "co": [
+     32.0,
+     31.8
+    ],
+    "nguc": [
+     31.6,
+     33.2
+    ],
+    "eo": [
+     31.2,
+     34.6
+    ],
+    "vai": [
+     [
+      26.9,
+      32.4
+     ],
+     [
+      33.9,
+      32.4
+     ]
+    ],
+    "mat": [
+     29.1,
+     25.2,
+     36.2,
+     31.1
+    ],
+    "sung": [
+     [
+      28.0,
+      17.8
+     ],
+     [
+      35.4,
+      16.6
+     ]
+    ],
+    "tay_phai": null,
+    "tay_trai": null,
+    "vk": null,
+    "tin_cay": {
+     "mat": 0.9,
+     "mat_mat": 0.85,
+     "sung": 0.85,
+     "co": 0.7,
+     "eo": 0.7,
+     "vai": 0.5,
+     "lung": 0.6,
+     "tay_cam": 0.0
+    },
+    "can_chinh_tay": [
+     "tay_cam",
+     "dau"
+    ],
+    "nguon_neo": {
+     "tam_mat": "tu-dong",
+     "mat_mat": "tu-dong",
+     "mat": "tu-dong",
+     "sung_trai": "tu-dong",
+     "sung_phai": "tu-dong",
+     "dinh_dau": "tu-dong",
+     "co": "tu-dong",
+     "eo": "tu-dong",
+     "nguc": "tu-dong",
+     "vai_sau": "tu-dong",
+     "vai_truoc": "tu-dong",
+     "lung": "tu-dong",
+     "tay_cam": "tu-dong",
+     "chan": "tu-dong",
+     "dau": "tu-dong (chỗ vành nón ngồi, đo khi ghép nón lá)"
+    }
+   }
+  ]
+ }
+}
