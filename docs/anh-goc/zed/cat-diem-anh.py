@@ -49,6 +49,43 @@ def tim_hinh(m, gian=6, nho=0.002):
     return hinh
 
 
+def sua_so_hinh(m, hinh, so):
+    """Một hàng phải có `so` hình: tách hình dính nhau ở cột ít điểm ảnh nhất, gộp mảnh vụn vào hình gần nhất."""
+    if not so:
+        return hinh
+    hinh = sorted(hinh, key=lambda h: h[2])
+    # gộp mảnh vụn khi thừa
+    while len(hinh) > so:
+        dt = [h[4].sum() for h in hinh]
+        i = int(np.argmin(dt))
+        nho = hinh.pop(i)
+        cx = (nho[2] + nho[3]) / 2
+        j = int(np.argmin([abs((h[2] + h[3]) / 2 - cx) for h in hinh]))
+        h = hinh[j]
+        y0, y1, x0, x1 = min(h[0], nho[0]), max(h[1], nho[1]), min(h[2], nho[2]), max(h[3], nho[3])
+        v = np.zeros((y1 - y0, x1 - x0), bool)
+        for a in (h, nho):
+            v[a[0] - y0:a[1] - y0, a[2] - x0:a[3] - x0] |= a[4]
+        hinh[j] = (y0, y1, x0, x1, v)
+    # tách hình dính khi thiếu
+    while len(hinh) < so:
+        rong = [h[3] - h[2] for h in hinh]
+        i = int(np.argmax(rong))
+        y0, y1, x0, x1, v = hinh[i]
+        cot = v.sum(0).astype(float)
+        w = len(cot)
+        a, b = int(w * 0.25), int(w * 0.75)
+        cat = a + int(np.argmin(cot[a:b]))
+        trai = (y0, y1, x0, x0 + cat, v[:, :cat])
+        phai = (y0, y1, x0 + cat, x1, v[:, cat:])
+        out = []
+        for (yy0, yy1, xx0, xx1, vv) in (trai, phai):
+            rows = np.where(vv.any(1))[0]
+            out.append((yy0 + rows.min(), yy0 + rows.max() + 1, xx0, xx1, vv[rows.min():rows.max() + 1]))
+        hinh[i:i + 1] = out
+    return hinh
+
+
 def chia_hang(hinh, so_hang):
     if not hinh:
         return []
@@ -74,6 +111,7 @@ def main():
     ap.add_argument('--ms', default='90')
     ap.add_argument('--co', type=int, default=320)
     ap.add_argument('--ra', default=None)
+    ap.add_argument('--so', type=int, default=8, help='số hình mỗi hàng (0 = không ép)')
     a = ap.parse_args()
 
     im = Image.open(a.anh).convert('RGB')
@@ -82,6 +120,14 @@ def main():
     rgba = np.dstack([arr, (m * 255).astype(np.uint8)])
     hinh = tim_hinh(m)
     hangs = chia_hang(hinh, a.hang)
+    if a.so:
+        moi = []
+        hangs2 = []
+        for g in hangs:
+            hh = sua_so_hinh(m, [hinh[i] for i in g], a.so)
+            hangs2.append(list(range(len(moi), len(moi) + len(hh))))
+            moi += hh
+        hinh, hangs = moi, hangs2
     ten = [t for t in a.ten.split(',') if t] if a.ten else []
     ms = [int(x) for x in a.ms.split(',')]
     ra = a.ra or os.path.splitext(a.anh)[0] + '-gif'
@@ -119,7 +165,7 @@ def main():
         p = os.path.join(ra, '%d-%s.gif' % (r + 1, t))
         anh[0].save(p, save_all=True, append_images=anh[1:], duration=d, loop=0)
         lech = (max(caos) - min(caos)) / max(caos) if caos else 0
-        bao_cao.append({'hang': t, 'so_hinh': len(g), 'cao_min': min(caos), 'cao_max': max(caos), 'lech_cao': round(lech, 2)})
+        bao_cao.append({'hang': t, 'so_hinh': len(g), 'cao_min': int(min(caos)), 'cao_max': int(max(caos)), 'lech_cao': round(float(lech), 2)})
         canh = []
         if len(g) != 8:
             canh.append('có %d hình (không phải 8)' % len(g))
