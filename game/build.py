@@ -80,6 +80,12 @@ def main():
     ver = 'lk-' + (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=7)).strftime('%Y.%m.%d-%H%M')
     parts.append('// ===== phiên bản đóng gói =====\n(window.G = window.G || {}).VERSION = ' + json.dumps(ver) + ';\n')
     custom = custom_sprites()
+    # Ghép lớp Zed (js/ghep_lop.js, cờ ?ghep=1): số liệu + ảnh lớp từ art/lop/*.lop.json. Thư mục trống → không thêm gì (bản build y hệt).
+    lop = lop_ghep()
+    if lop:
+        parts.append('// ===== art/lop (ghép lớp Zed, LINH_KHI_MODULAR_SPRITE_SPEC) =====\n(window.G = window.G || {}).lopGhepData = '
+                     + json.dumps(lop, ensure_ascii=False, separators=(',', ':')) + ';\n')
+        print('Đã nhúng %d lớp ghép: %s' % (len(lop), ', '.join(t['id'] for t in lop)))
 
     def gom(nhung, dau='', gan='.customSpriteData = '):
         """Gom mọi tệp JS thành một thẻ script; nhung: các hình nhúng thẳng vào trang; dau: mã chèn ngay trước js/sprite_custom.js;
@@ -373,6 +379,33 @@ SHIM = '''window.G = window.G || {};
   G.ui = G.ui || {}; // lớp vẽ giao diện rỗng: js/minimap.js giữ đúng đối tượng này, trang Tách Giao Diện gắn hàm vẽ vào để xem thử bản đồ
 })(window.G);
 '''
+
+
+LOP = os.path.join(ROOT, 'art', 'lop')
+
+
+def lop_ghep():
+    """Đọc game/art/lop/*.lop.json (docs/review/ke-hoach-cai-thien/zed-asset/LINH_KHI_MODULAR_SPRITE_SPEC.md mục 6).
+    Chỉ nhận tệp VALIDATED / INTEGRATED, không MẪU THỬ, có ảnh PNG; tệp sai thì dừng build (như art/custom)."""
+    out = []
+    if not os.path.isdir(LOP):
+        return out
+    for name in sorted(os.listdir(LOP)):
+        if not name.endswith('.lop.json'):
+            continue
+        try:
+            with open(os.path.join(LOP, name), encoding='utf-8') as f:
+                t = json.load(f)
+        except Exception as e:
+            sys.exit('Tệp lớp ghép hỏng: art/lop/%s (%s)' % (name, e))
+        if t.get('loai') != 'linh-khi-lop' or not re.match(r'^[a-z0-9_-]{1,60}$', str(t.get('id', ''))):
+            sys.exit('art/lop/%s: thiếu loai "linh-khi-lop" hoặc id (chữ thường, số, gạch)' % name)
+        if t.get('mau_thu') or t.get('trang_thai') not in ('VALIDATED', 'INTEGRATED'):
+            sys.exit('art/lop/%s: chỉ đưa vào game tệp VALIDATED hoặc INTEGRATED (không MẪU THỬ, không GENERATED)' % name)
+        if not re.match(r'^data:image/png;base64,[A-Za-z0-9+/=]+$', str(t.get('tam', ''))):
+            sys.exit('art/lop/%s thiếu ảnh PNG ("tam")' % name)
+        out.append(t)
+    return out
 
 
 def custom_sprites():
