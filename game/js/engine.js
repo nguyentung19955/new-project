@@ -189,12 +189,36 @@
   G.inRect = (p, x, y, w, h) => p && p.x >= x && p.x <= x + w && p.y >= y && p.y <= y + h;
 
   // ---------- âm thanh ----------
-  let ac = null;
+  // Một AudioContext cho cả game, tạo ở lần chạm / bấm phím đầu tiên (luật iOS). Tiếng hiệu ứng đi qua nút âm lượng "Tiếng",
+  // nhạc nền (js/nhac.js) đi qua nút "Nhạc" riêng. G.save.sound = false tắt cả hai (nút Âm thanh ở Anh Mõ).
+  // Âm lượng lưu ở G.save.nhac và G.save.tieng (0..100); không có trường thì là mặc định (nhạc 60, tiếng 100 = to như trước).
+  let ac = null, sfxBus = null;
+  const AM_MD = { nhac: 60, tieng: 100 };
+  G.amThanh = {
+    ac: () => ac,
+    MD: AM_MD,
+    // Âm lượng 0..1 đang dùng (đã tính nút bật/tắt âm thanh)
+    vol(k) {
+      const sv = G.save;
+      if (!sv || !sv.sound) return 0;
+      const v = sv[k];
+      return (typeof v === 'number' && isFinite(v) ? G.clamp(v, 0, 100) : AM_MD[k] != null ? AM_MD[k] : 100) / 100;
+    },
+    so(k) { const v = G.save && G.save[k]; return Math.round(typeof v === 'number' && isFinite(v) ? G.clamp(v, 0, 100) : AM_MD[k]); },
+    // Đổi âm lượng thì gọi để áp ngay
+    capNhat() {
+      try { if (ac && sfxBus) sfxBus.gain.setTargetAtTime(G.amThanh.vol('tieng'), ac.currentTime, 0.03); } catch (e) { /* bỏ qua */ }
+      if (G.nhac && G.nhac.capNhat) G.nhac.capNhat();
+    },
+  };
   G.audioStart = function () {
     if (!G.save || !G.save.sound) return;
     try {
-      if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)();
-      if (ac.state === 'suspended') ac.resume().catch(() => {});
+      if (!ac) {
+        ac = new (window.AudioContext || window.webkitAudioContext)();
+        sfxBus = ac.createGain(); sfxBus.gain.value = G.amThanh.vol('tieng'); sfxBus.connect(ac.destination);
+      }
+      if (ac.state === 'suspended' && !document.hidden) ac.resume().catch(() => {});
     } catch (e) { /* máy không có âm thanh */ }
   };
   const SFX = {
@@ -209,7 +233,7 @@
   // Hết "chỗ" âm lượng thì tiếng mới nhỏ lại cho vừa; còn quá ít thì bỏ qua.
   const voices = [], MAX_SAME = 2, MAX_VOICES = 8, MAX_GAIN = 0.28;
   G.sfx = function (name, pitch) {
-    if (!ac || !G.save.sound || G.noRender || ac.state !== 'running') return;
+    if (!ac || !G.save.sound || G.noRender || ac.state !== 'running' || !sfxBus) return;
     const d = SFX[name];
     if (!d) return;
     try {
@@ -221,6 +245,8 @@
       const vol = Math.min(d[3], MAX_GAIN - sum);
       if (vol < 0.01) return;
       voices.push({ name, end: now + d[1] + 0.02, g: vol });
+      // Tiếng "gong" (trùm ra mắt, đổi pha) là tiếng chiêng ấm, ngân dài (js/nhac.js); không có js/nhac.js thì như cũ.
+      if (name === 'gong' && G.nhac && G.nhac.chieng) { G.nhac.chieng(sfxBus, now, 98 * (pitch || 1), vol * 1.2, 0.8); return; }
       const o = ac.createOscillator(), g = ac.createGain();
       o.type = d[2];
       o.frequency.value = d[0] * (pitch || 1);
@@ -228,7 +254,7 @@
       if (name === 'boom' || name === 'hurt') o.frequency.exponentialRampToValueAtTime(d[0] * 0.5, ac.currentTime + d[1]);
       g.gain.value = vol;
       g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + d[1]);
-      o.connect(g); g.connect(ac.destination);
+      o.connect(g); g.connect(sfxBus);
       o.start(); o.stop(ac.currentTime + d[1] + 0.02);
     } catch (e) { /* bỏ qua lỗi âm thanh */ }
   };
@@ -330,6 +356,10 @@
       if (s.lang !== 'en') delete s.lang; // ngôn ngữ: không có (mặc định) là tiếng Việt, 'en' là tiếng Anh (js/ngon_ngu.js)
       if (s.net !== 'thuong') delete s.net; // độ nét: không có (mặc định) là Cao, 'thuong' là Thường
       if (s.pin !== true) delete s.pin; // tiết kiệm pin (vẽ 30 khung/giây, js/engine.js V6): không có là tắt
+      // âm lượng Nhạc / Tiếng 0..100 (G.amThanh): không có trường là mặc định; số hỏng thì bỏ (về mặc định)
+      for (const k of ['nhac', 'tieng']) { if (typeof s[k] === 'number' && isFinite(s[k])) s[k] = G.clamp(Math.round(s[k]), 0, 100); else delete s[k]; }
+      // tiến độ truyện (js/truyen.js): { mo, v, n }; sai kiểu thì bỏ, js/truyen.js tự dựng lại theo tiến độ chơi
+      if (s.truyen != null && (typeof s.truyen !== 'object' || Array.isArray(s.truyen))) delete s.truyen;
       });
       phan('sao, dấu', ['stars', 'stars2', 'scars', 'tut'], () => {
       for (const k of ['stars', 'stars2', 'scars', 'tut']) s[k] = obj(s[k]);
@@ -566,6 +596,7 @@
   function canhYen(now) { // trả về số khung/giây tối đa khi cảnh đứng yên, 0 = vẽ đủ
     try {
       const sc = G.scene; let man = '', fps = 0;
+      if (G.truyen && G.truyen.dang) return 0; // đang chiếu truyện (js/truyen.js): vẽ đủ khung cho chữ, hình chuyển mượt
       if (sc && sc === G.StageScene && G.getRun) { const S = G.getRun(); if (S && YEN_AI[S.mode]) { man = 'ai:' + S.mode; fps = 10; } }
       else if (sc && sc === G.Village) {
         const V = G.villageApi && G.villageApi.V, VS = G.villageScene && G.villageScene.state;

@@ -65,7 +65,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.12-1157";
+(window.G = window.G || {}).VERSION = "lk-2026.10.12-1203";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -261,6 +261,7 @@
 "10% cơ hội gây gấp đôi sát thương": "10% chance to deal double damage",
 "120 · Thành hình": "120 · Formed",
 "3 quặng": "3 ore",
+"30 khung/giây": "30 frames/sec",
 "30 · Mầm": "30 · Sprout",
 "300 · Thức tỉnh": "300 · Awakened",
 "6 quặng": "6 ore",
@@ -269,8 +270,15 @@
 "Ba hệ": "Three elements",
 "Ba sao": "Three stars",
 "Ba sao lần đầu, đôi khi sau ải, phòng thử thách": "First three-star clears, sometimes after a stage, challenge rooms",
+"Ba vùng yên ả. Muốn thử Độ khó 2 thì bảo chú.": "All three lands are at peace. Tell me if you want to try Difficulty 2.",
+"Ba yêu tinh": "Three demons",
+"Ba yêu tinh xưa kia Lạc Long Quân đã trừ nay thức dậy: Mộc Tinh ở Rừng già, Ngư Tinh ở Hang biển, Hồ Tinh ở Lâu đài cổ. Chúng hút linh khí về hang.": "Three demons Lac Long Quan defeated long ago have woken: the Tree Spirit in the Old Forest, the Fish Spirit in the Sea Cave, the Fox Spirit in the Ancient Castle. They drain the energy into their lairs.",
+"Ba yêu tinh đã ngủ lại. Linh khí về làng, cây đa xanh lá như xưa.": "The three demons sleep again. The energy is back, and the banyan is green as ever.",
 "Bay xa hơn {0}%, nhanh hơn {1}%": "Flies {0}% farther, {1}% faster",
 "Biến ra sau lưng vồ": "Blink Pounce",
+"Biển êm rồi, đò lại chạy. Bên kia sông, Lâu đài cổ đỏ rực lửa: Cu Lì ở trong đó.": "The sea is calm, the ferry runs again. Across the river the Ancient Castle glows red with fire: Cu Lì is in there.",
+"Biển êm thật rồi! Chú chèo một mạch sang Lâu đài cổ.": "The sea is really calm! I'll row you straight to the Ancient Castle.",
+"Biển Đông là nhà ta! Đứa bé con dám lội xuống hang của Ngư Tinh sao?": "The Eastern Sea is my home! A little child dares wade into the Fish Spirit's cave?",
 "Bom có vòng báo trước: bước ra khỏi vòng rồi mới đánh tiếp.": "Bombs show a warning ring: step out before attacking again.",
 "Bà Hàng Xén": "Peddler",
 "Bà mua rồi nhé, {0} vàng của cháu đây.": "Sold! Here's your {0} gold, dear.",
@@ -278,6 +286,7 @@
 "Bàn phím": "Keyboard",
 "Bàn thờ lời nguyền": "Curse Altar",
 "Bàn thờ lời nguyền: chịu một bất lợi để dấu ấn tăng gấp đôi đến hết ải. Bỏ qua cũng được.": "Curse Altar: take one handicap to double marks until the stage ends. You can skip it.",
+"Bào tử bay hết rồi... xẹp...": "All my spores are gone... *flop*...",
 "Bán": "Sell",
 "Bán hết {0}": "Sell all {0}",
 "Bán rồi thì không lấy lại được.": "Sold items can't be recovered.",
@@ -348,12 +357,15 @@
 "Bậc {0} · {1}": "{0} tier · {1}",
 "Bậc {0}. Vũ khí mới, cất vào rương đồ": "{0} tier. New weapon, goes to your chest",
 "Bậc {0}: {1}": "Rank {0}: {1}",
+"Bật cả nhạc lẫn tiếng.": "Music and sound effects on.",
 "Bắn": "Shoot",
 "Bắt bài lăn né": "Reads dodges",
 "Bắt đầu": "Start",
+"Bị bắt": "Captured",
 "Bọ Hung Mai Cứng": "Hardshell Beetle",
 "Bọc giáp": "Armored",
 "Bỏ qua": "Skip",
+"Bỏ qua ✕": "Skip ✕",
 "Bỏ ải, về làng": "Quit to village",
 "Bốn bậc màu": "Four color tiers",
 "Bốn bậc: {0}. Nâng bậc không mất dấu ấn và tiến hóa.": "Four tiers: {0}. Upgrading keeps marks and evolution.",
@@ -381,6 +393,7 @@
 "Chém ngang": "Slash",
 "Chém ngược": "Reverse Slash",
 "Chí mạng": "Crit",
+"Chín đuôi, nghìn năm tu luyện. Ngươi tưởng thắng được ta ư?": "Nine tails, a thousand years of training. You think you can beat me?",
 "Chùy Gai": "Spiked Mace",
 "Chùy Hồ Lô": "Gourd Mace",
 "Chú Lái Đò": "Ferryman",
@@ -400,6 +413,7 @@
 "Chưa có hệ: đủ {0} dấu ấn một hệ thì vũ khí theo hệ đó": "No element yet: {0} marks of one element locks it in",
 "Chưa có món nào cho ô này.": "No items for this slot yet.",
 "Chưa có trang phục.": "No outfit yet.",
+"Chưa có truyện để xem.": "No story to show yet.",
 "Chưa có vũ khí nào khóa nhánh. Vũ khí khóa nhánh khi đủ 30 dấu ấn của một hệ.": "No weapon has a locked element yet. A weapon locks in at 30 marks of one element.",
 "Chưa có vũ khí nào khóa nhánh. Vũ khí khóa nhánh khi đủ {0} dấu ấn của một hệ.": "No weapon has a locked element yet. A weapon locks in at {0} marks of one element.",
 "Chưa có.": "None yet.",
@@ -453,6 +467,7 @@
 "Chạm ô vũ khí ở góc trên bên phải để đổi giữa hai vũ khí. Chạm ô Bình máu để hồi máu. Chạm Dừng để tạm nghỉ.": "Tap the weapon slot at top right to swap between your two weapons. Tap the Potion slot to heal. Tap Pause to take a break.",
 "Chạm để bắt đầu": "Tap to start",
 "Chạm để chơi tiếp": "Tap to continue",
+"Chạm để tiếp ›": "Tap to continue ›",
 "Chạm để đổi vũ khí →": "Tap to swap weapon →",
 "Chạy": "Run",
 "Chạy và ra đòn nhanh hơn": "Moves and attacks faster",
@@ -473,12 +488,19 @@
 "Chồn Bóng": "Shadow Weasel",
 "Chỗ này không đăng nhập được": "Can't sign in from here",
 "Chỗ này không đăng nhập được [operation-not-supported-in-this-environment]": "Can't sign in from here [operation-not-supported-in-this-environment]",
+"Con cáo chín đuôi bắt tớ canh lửa cả tháng! Về nhà thôi, đói lắm rồi!": "That nine-tailed fox made me watch its fire for a month! Let's go home, I'm starving!",
 "Con còn {0} điểm chưởng. Chạm một nút để xem, chạm lần nữa để học.": "You have {0} Palm points, child. Tap a node to view it, tap again to learn.",
 "Con: {0}": "You: {0}",
 "Cu Lì": "Cu Lì",
+"Cu Lì đòi áo đỏ như lửa. Cô may ngay!": "Cu Lì wants a shirt as red as fire. Coming right up!",
 "Cu Tèo": "Cu Tèo",
+"Cu Tèo chạy nhảy suốt sân đình. Ồn mà vui.": "Cu Tèo runs all over the courtyard. Noisy, but fun.",
+"Cu Tèo về rồi, để cô may cho nó cái áo mới.": "Cu Tèo is back, let me sew him a new shirt.",
+"Cu Tèo đã về làng. Gặp Ông Từ ở sân đình để đổi em bé.": "Cu Tèo is back home. See the Temple Keeper in the courtyard to switch child.",
+"Cu Tèo, Cái Bống, Cu Lì đi tìm linh khí cho làng, rồi bị yêu tinh bắt mất.": "Cu Tèo, Cái Bống and Cu Lì went looking for energy for the village, and the demons caught them.",
 "Cu Tí": "Cu Tí",
 "Cu Tí nhận dấu ấn nhanh hơn 20%.": "Cu Tí gains marks 20% faster.",
+"Cu Tí ơi! Rễ cây quấn tớ cả tuần, may mà cậu tới!": "Cu Tí! Those roots held me for a whole week. Lucky you came!",
 "Cua Lính": "Soldier Crab",
 "Cua Tướng": "Crab General",
 "Cua Đá": "Rock Crab",
@@ -493,6 +515,7 @@
 "Cung Đèn Ông Sao": "Star Lantern Bow",
 "Cung: bấm để bắn nhanh, giữ rồi thả bắn tên mạnh. Đặc biệt: Mưa Tên rơi vào cụm quái gần nhất.": "Bow: tap to shoot fast, hold and release for a power shot. Special: Arrow Rain falls on the nearest pack.",
 "Cài đặt": "Settings",
+"Càng ta kẹp vỡ cả đá ngầm! Lùi lại!": "My claws crack reef rock! Back off!",
 "Cào": "Swipe",
 "Cá Chuồn": "Flying Fish",
 "Cá Chép": "Carp Saber",
@@ -504,6 +527,9 @@
 "Cách cày: {0}.": "How to farm: {0}.",
 "Cách cày: đánh quái đang cháy, trúng độc hoặc bị lạnh rồi kết liễu nó. Vật nổ trong phòng (chậu than, nấm, tinh thể băng) giúp gây hệ khi vũ khí còn trắng.": "How to farm: hit monsters that are burning, poisoned or chilled, then finish them off. Explosive objects in rooms (braziers, mushrooms, ice crystals) apply elements while the weapon is still plain.",
 "Cái Bống": "Cái Bống",
+"Cái Bống lạnh run, cô đang dệt cho cái khăn.": "Cái Bống is shivering, I'm weaving her a scarf.",
+"Cái Bống về, sân đình có tiếng hát rồi.": "With Cái Bống back, there is singing in the courtyard.",
+"Cái Bống đã về làng. Gặp Ông Từ ở sân đình để đổi em bé.": "Cái Bống is back home. See the Temple Keeper in the courtyard to switch child.",
 "Cánh": "Wings",
 "Cánh Cò": "Stork Wing",
 "Cánh băng": "Ice Wings",
@@ -534,6 +560,7 @@
 "Câu Liêm": "Hook Spear",
 "Cây chưởng": "Palm tree",
 "Cây kỹ năng": "Skill tree",
+"Còn Cu Tí. Cầm lấy vũ khí sống này, cháu: vũ khí lớn lên theo cháu, yêu tinh học theo cháu. Chú Lái Đò chờ ở bến!": "Only Cu Tí is left. Take this living weapon, child: it grows with you, and the demons learn from you. The Ferryman is waiting at the pier!",
 "Còn thiếu nguyên liệu. Vào ải {0} kiếm thêm nhé.": "Not enough materials. Go find more in the {0} stages.",
 "Còn {0} lượt đổi": "{0} trades left",
 "Còn {0} điểm (mỗi 3 cấp nhận 1 điểm)": "{0} points left (1 point every 3 levels)",
@@ -547,6 +574,7 @@
 "Cô Thợ May": "Tailor",
 "Cô Thợ May đi chợ xa. Qua ải Rừng già 2 rồi cô về may đồ cho bé.": "The Tailor is off at market. Clear Old Forest stage 2 and she'll return.",
 "Công": "Attack",
+"Cả làng mừng! Bà bán rẻ cho cháu... à mà thôi, giá cũ.": "The whole village celebrates! Granny will give you a discount... oh, never mind, same prices.",
 "Cả đợt cùng lúc": "Whole wave at once",
 "Cảm tử": "Kamikaze",
 "Cảm tử lao tới rồi nổ: thấy vòng đỏ quanh nó là lăn né ra xa.": "Kamikazes rush and explode: dodge away from the red ring.",
@@ -564,8 +592,11 @@
 "Cầu lửa nổ lan khi trúng, gây cháy": "Fireball that explodes on hit and burns",
 "Cầu lửa để lại vệt cháy trên sàn {0} giây": "Fireball leaves a burn trail for {0}s",
 "Cầu lửa để lại vệt cháy đốt quái đi qua; mỗi bậc cháy lâu, mạnh hơn": "Fireball leaves a burn trail that scorches monsters; each rank burns longer and harder",
+"Cốc cốc cốc! Ba yêu tinh ngủ cả rồi! Mở hội thôi!": "Clack clack clack! All three demons are asleep! Festival time!",
 "Cốc cốc cốc! Làng nước nghe đây!": "Knock knock knock! Hear ye, villagers!",
 "Cốc cốc cốc! Làng nước nghe đây! Cần chỉnh gì cứ bảo anh.": "Knock knock knock! Hear ye, villagers! Need anything tuned? Just ask me.",
+"Cốc cốc! Biển êm, đò chạy, làng nước nghe chưa!": "Clack clack! The sea is calm, the ferry runs, do you hear, villagers!",
+"Cốc cốc! Làng nước ơi, Cu Tí hạ được Mộc Tinh rồi!": "Clack clack! Hear ye, villagers, Cu Tí beat the Tree Spirit!",
 "Cổng dịch chuyển": "Portal",
 "Cổng làng: cài đặt": "Village Gate: settings",
 "Cờ Lau": "Reed Flag",
@@ -638,9 +669,13 @@
 "Gốc đa: {0}": "Banyan: {0}",
 "Gồng": "Brace",
 "Gỗ linh": "Spirit Wood",
+"Gỗ linh Rừng già đây rồi! Mang về ông rèn cho.": "Spirit wood from the Old Forest! Bring it and I'll forge for you.",
+"Gừ... lửa tàn rồi...": "Grr... the fire is dying...",
+"Gừừ! Lửa trong lâu đài này là của ta!": "Grrr! The fire in this castle is mine!",
 "Gửi góp ý": "Send feedback",
 "Gửi kèm: phiên bản {0}, chỗ đang mở ({1}), cỡ màn hình, loại máy và trình duyệt. Không gửi email hay tên của bạn.": "Also sent: version {0}, current screen ({1}), screen size, device and browser. Your email and name are not sent.",
 "Hang biển": "Sea Cave",
+"Hang cáo chín đuôi bị phá, chỗ ấy thành hồ lớn. Truyện của cháu, lão ghi vào sách.": "When the nine-tailed fox's lair was destroyed, it became a great lake. I'll write your story in my book.",
 "Heo Rừng Con": "Boar Piglet",
 "Heo Rừng Nanh Dài": "Longtusk Boar",
 "Hiệu ứng bạn gây ra kéo dài hơn 25%": "Effects you inflict last 25% longer",
@@ -756,6 +791,7 @@
 "Linh Khí": "Linh Khí",
 "Linh khí": "Spirit",
 "Linh khí (dấu ấn hệ)": "Spirit (element marks)",
+"Linh khí cạn": "Fading energy",
 "Linh khí của vũ khí": "Weapon Spirit",
 "Linh khí {0}": "{0} Spirit",
 "Linh khí: dấu ấn hệ của vũ khí": "Spirit: a weapon's element marks",
@@ -764,7 +800,9 @@
 "Loại góp ý": "Feedback type",
 "Luồng độc, để lại đám mây độc": "Poison stream that leaves a poison cloud",
 "Làng": "Village",
+"Làng ven sông sống nhờ linh khí của cây đa nghìn tuổi. Một sáng, lá đa úa vàng, linh khí cạn dần.": "The riverside village lives on the spirit energy of its thousand-year-old banyan. One morning its leaves turned yellow, and the energy began to fade.",
 "Lá Lúa": "Rice Leaf",
+"Lá rụng về cội... Rừng ơi, xanh lại đi...": "Leaves fall back to the roots... Forest, grow green again...",
 "Lâu đài cổ": "Ancient Castle",
 "Lây độc": "Contagion",
 "Lão chép cả ra đây, con đọc thong thả. Bấm mũi tên để lật trang.": "I've written it all down, child. Read at ease. Press the arrows to turn pages.",
@@ -779,6 +817,7 @@
 "Lên {0}": "To {0}",
 "Lên đò": "Set sail",
 "Lên đò đi cháu, nước đang êm.": "Hop aboard, kiddo. Calm waters.",
+"Lên đường": "Setting out",
 "Lính Ma Giáp Gỉ": "Rusty Ghost Soldier",
 "Lính xông": "Rusher",
 "Lính xông lao thẳng tới: né sang bên rồi đánh vào lưng.": "Rushers charge straight: sidestep, then hit their back.",
@@ -818,9 +857,11 @@
 "Lộn để lại vệt Độc trên đất, quái đi qua bị trúng độc.": "Dodging leaves a Poison trail; monsters crossing it get poisoned.",
 "Lời nguyền": "Curse",
 "Lửa": "Fire",
+"Lửa Lâu đài cổ thổi lò mới hừng làm sao!": "Ancient Castle fire makes my forge roar!",
 "Lửa dai": "Long Burn",
 "Lửa gặp Độc gây Nổ khói. Lửa gặp Băng gây Sốc nhiệt. Độc gặp Băng không phản ứng, nhưng Băng làm Độc tan chậm một nửa. Phản ứng chỉ có giữa hai vũ khí khác hệ (đổi vũ khí khi quái còn dính hệ cũ); chưởng không gây phản ứng với vũ khí.": "Fire meets Poison: Smoke Blast. Fire meets Ice: Thermal Shock. Poison and Ice don't react, but Ice makes Poison fade half as fast. Reactions only happen between two weapons of different elements (swap while the old element is still on the monster); Palms don't react with weapons.",
 "Lửa đốt cháy; từ Thức tỉnh, quái đang cháy mà chết thì nổ lan sang con đứng gần. Độc cộng dồn tầng, mạnh với quái trâu, trùm và cả bầy đông. Băng làm chậm, đủ tầng thì đóng băng, hợp với quái nhanh.": "Fire burns; from Awakened, burning monsters explode on death and ignite those nearby. Poison builds stacks: strong against tanky monsters, bosses and big packs. Ice slows, then freezes at enough stacks: good against fast monsters.",
+"Lửa ở đuôi tắt rồi... Hang ta lại thành hồ nước trong...": "The fire in my tails is out... My lair turns back into a clear lake...",
 "Mana tối đa +20": "+20 max mana",
 "Mang cánh": "Wear wings",
 "Mang {0}": "Equip {0}",
@@ -926,6 +967,7 @@
 "Mỗi đòn trúng hồi thêm 1 mana": "+1 mana per hit",
 "Mỗi ải có Sức mạnh khuyên dùng. Số đỏ là bé còn yếu: chơi lại ải cũ để lên cấp, kiếm quặng và nguyên liệu, rồi mài và nâng bậc vũ khí.": "Each stage has a recommended Power. A red number means your hero is too weak: replay earlier stages to level up and gather ore and materials, then sharpen and upgrade your weapons.",
 "Mộc Tinh": "Moc Tinh",
+"Mộc Tinh là cây chiên đàn nghìn năm. Xưa Lạc Long Quân trừ nó ở rừng Phong Châu.": "The Tree Spirit is a thousand-year sandalwood. Long ago Lac Long Quan defeated it in the Phong Châu forest.",
 "Mới": "New",
 "Mở bằng Chrome/Safari để đăng nhập Google": "Open in Chrome/Safari to sign in with Google",
 "Mở cấp cánh cần mảnh trùm của cả ba vùng.": "Growing these wings needs boss shards from all three regions.",
@@ -943,6 +985,7 @@
 "Nguồn vũ khí": "Weapon sources",
 "Ngôn ngữ": "Language",
 "Ngư Tinh": "Ngu Tinh",
+"Ngư Tinh xưa bị Lạc Long Quân ném khối sắt nung vào miệng. Cháu cũng giỏi chẳng kém.": "Lac Long Quan once threw a red-hot iron block into the Fish Spirit's mouth. You did just as well.",
 "Ngồi xuống đây, lão chỉ cho một chiêu.": "Sit down, I'll teach you a move.",
 "Ngồi xuống đây, lão chỉ cho một chiêu. Con còn {0} điểm chưa dùng đấy.": "Sit down, I'll teach you a move. You have {0} unused points.",
 "Nhanh": "Swift",
@@ -957,6 +1000,10 @@
 "Nhím Biển": "Sea Urchin",
 "Nhím Gai Độc": "Poison Hedgehog",
 "Nhím Than Hồng": "Ember Hedgehog",
+"Nhạc": "Music",
+"Nhạc làng có sáo trúc với đàn bầu đấy. Nghe hay thì để to lên!": "The village tune has a bamboo flute and a monochord. Turn it up if you like it!",
+"Nhạc tạo ngay trong máy, không tải thêm gì. Tiết kiệm pin: vẽ 30 khung mỗi giây, trận đấu vẫn chạy đủ nhanh.": "Music is generated on the device, nothing extra to download. Battery saver: draws 30 frames per second, the battle still runs at full speed.",
+"Nhạc · Truyện": "Music · Story",
 "Nhận lời nguyền": "Accept curse",
 "Nhận lời nguyền này để mọi dấu ấn từ giờ đến hết ải tăng gấp đôi:": "Accept this curse to double all marks for the rest of the stage:",
 "Nhận thêm 25% vàng, máu tối đa giảm 10%": "+25% gold, -10% max HP",
@@ -987,9 +1034,11 @@
 "Núi tuyết": "Snow Mountain",
 "Nút Chưởng (nút tròn trên cùng): bắn chưởng linh khí theo hệ của cây chưởng đang dùng, tự ngắm quái gần nhất. Tốn {0} mana.": "Palm button (top round button): fires a Spirit palm of your active Palm tree's element, auto-aimed at the nearest monster. Costs {0} mana.",
 "Nút Chưởng bắn một luồng chưởng linh khí (tốn {0} mana), tự ngắm quái gần nhất theo tám hướng. Hệ của chưởng theo cây chưởng đang dùng. Mỗi em bé có nét riêng: Cu Tí đẩy lùi mạnh, Cu Tèo bay xa và nhanh, Cái Bống trúng thì hồi chút máu, Cu Lì tầm gần mà to. Chưởng không cho linh khí cho vũ khí (linh khí chỉ đến từ vũ khí) và không kết hợp hệ với vũ khí.": "The Palm button fires a blast of spirit energy (costs {0} mana), auto-aimed at the nearest monster in eight directions. Its element follows the Palm tree in use. Each kid has a twist: Cu Tí knocks back hard, Cu Tèo flies far and fast, Cái Bống heals a little on hit, Cu Lì is short-range but big. Palms give no Spirit to weapons (Spirit comes only from weapons) and do not react with weapon elements.",
+"Nước dưới hang lạnh buốt... Cảm ơn Cu Tí đã lặn xuống tìm tớ!": "The cave water was freezing... Thank you for diving down to find me, Cu Tí!",
 "Nấm Chúa": "Mushroom King",
 "Nấm Phồng": "Puffshroom",
 "Nấm Phồng Chúa": "Puffshroom King",
+"Nấm mọc sau mưa, ăn vào là ngủ quên! Hự hự!": "Mushrooms after the rain: one bite and you sleep forever! Heh heh!",
 "Nện": "Smash",
 "Nện đất": "Ground Slam",
 "Nện đất mạnh": "Heavy Ground Slam",
@@ -1068,6 +1117,9 @@
 "Rời ải": "Leave stage",
 "Rừng gai": "Thorn Forest",
 "Rừng già": "Old Forest",
+"Rừng già thở lại rồi, cây đa đã nhú chồi. Nhưng gió biển lạnh lắm: Cái Bống còn kẹt ở Hang biển.": "The Old Forest breathes again, and the banyan has new buds. But the sea wind is cold: Cái Bống is still trapped in the Sea Cave.",
+"Rừng già yên rồi. Đò sang Hang biển được rồi đấy cháu.": "The Old Forest is quiet now. The ferry can take you to the Sea Cave.",
+"Rừng xanh lại, nấm tươi về chợ, bà vui ghê.": "The forest is green again and fresh mushrooms are back at market. Granny is so happy.",
 "Sang Cô Thợ May": "To the Tailor",
 "Sang vùng mới ▶": "New region ▶",
 "Sao 1: qua ải. Sao 2: không dùng bình máu. Sao 3: ra đòn kết liễu trùm bằng hệ khắc chế nó.": "Star 1: clear the stage. Star 2: use no potion. Star 3: finish off the boss with the element that counters it.",
@@ -1087,6 +1139,7 @@
 "Sân đình: chọn hero": "Village Yard: choose hero",
 "Sóc Ném Quả Nổ": "Bomb Squirrel",
 "Sóng Nước": "Wave Sword",
+"Sóng lặng rồi... Ta về đáy biển ngủ tiếp...": "The waves are still... I return to sleep on the seabed...",
 "Sóng thần": "Tsunami",
 "Sương Giá": "Frost",
 "Sạch bóng quái!": "Room cleared!",
@@ -1102,6 +1155,7 @@
 "Sức mạnh {0} / khuyên dùng {1} · đủ sức, thử lại né kỹ hơn nhé": "Power {0} / rec. {1} · strong enough, just dodge better!",
 "Sức mạnh {0} / khuyên {1}": "Power {0} / rec. {1}",
 "Sừng Trâu": "Buffalo Horn",
+"Ta là cây chiên đàn nghìn năm thành tinh. Linh khí của làng đã chảy vào rễ ta!": "I am the thousand-year sandalwood turned spirit. Your village's energy flows into my roots!",
 "Tam xà": "Triple Serpent",
 "Than Hồng": "Ember",
 "Thanh xanh là mana. Đủ 25 mana thì bấm Đặc biệt để tung đòn mạnh.": "The blue bar is mana. With 25 mana, tap Special for a powerful attack.",
@@ -1109,6 +1163,7 @@
 "Thiếu gỗ, vảy hay đá của vùng cháu đã qua thì bà đổi cho, khỏi phải quay lại cày.": "Short on wood, scales or stone from a zone you've cleared? I'll trade you some, no need to go back and grind.",
 "Thiếu nguyên liệu của vùng đã qua? Bà Hàng Xén (thẻ Nguyên liệu) và Thương nhân trong ải đổi vàng lấy nguyên liệu.": "Short on materials from a cleared zone? The Peddler (Materials tab) and the merchant inside stages trade gold for materials.",
 "Thiếu vàng": "Not enough gold",
+"Thuyền cá về bến rồi, chợ đông hẳn lên.": "The fishing boats are back, the market is busy again.",
 "Thành hình": "Formed",
 "Thành hình mở đặc trưng hệ thứ nhất, Thức tỉnh mở đặc trưng thứ hai. Bậc Thường chỉ lên tới Thành hình.": "Formed unlocks the first element trait, Awakened the second. Common tier only reaches Formed.",
 "Thành hình: mở {0}": "Formed: unlocks {0}",
@@ -1143,8 +1198,12 @@
 "Tiến hóa {0} lên {1}": "Evolve {0} to {1}",
 "Tiến trình luôn được lưu trong trình duyệt này.": "Progress is always saved in this browser.",
 "Tiến trình được lưu trong trình duyệt này. Đổi máy hoặc xoá dữ liệu trình duyệt sẽ mất tiến trình.": "Progress is saved in this browser. Switching devices or clearing browser data loses it.",
+"Tiếng": "SFX",
 "Tiếng Việt": "Tiếng Việt",
 "Tiếp: {0}": "Next: {0}",
+"Tiết kiệm pin: bật": "Battery saver: on",
+"Tiết kiệm pin: hình vẽ 30 khung mỗi giây, máy đỡ nóng.": "Battery saver: 30 frames per second, the phone stays cooler.",
+"Tiết kiệm pin: tắt": "Battery saver: off",
 "Tiểu Yêu Ném Pháo": "Firecracker Imp",
 "Toàn màn hình": "Fullscreen",
 "Trang phục": "Outfit",
@@ -1212,8 +1271,11 @@
 "Tầm nhặt đồ": "Pickup range",
 "Tầm xa": "Range",
 "Tầm đánh xa hơn 15%": "+15% reach",
+"Tắt": "Off",
+"Tắt hết nhạc và tiếng.": "All music and sound off.",
 "Tỉ lệ gây hiệu ứng hệ tăng thêm 25%": "+25% element effect chance",
 "Tốc chạy": "Speed",
+"Tối ấy cả làng mở hội dưới gốc đa. Bốn em bé ngồi nghe Cụ Đồ kể chuyện Lạc Long Quân trừ yêu. Hết truyện... mà chưa hết đâu!": "That night the village held a festival under the banyan. The four children listened to the Old Scholar tell how Lac Long Quan defeated the demons. The end... or is it?",
 "Tốn: {0}": "Cost: {0}",
 "Tổng sao": "Total stars",
 "Tới bến đò bên phải, gặp Chú Lái Đò để vào ải": "Head right to the dock and see the Ferryman to enter a stage",
@@ -1250,7 +1312,9 @@
 "Vượt thử thách! Nhận {0} và 80 vàng": "Challenge cleared! Got {0} and 80 gold",
 "Vạn độc": "Myriad Venom",
 "Vảy cá": "Fish Scale",
+"Vảy cá thần cứng thật, tôi lưỡi vào là bén lắm.": "Sacred fish scales are tough. Temper a blade with them and it gets razor sharp.",
 "Vật trong phòng": "Room objects",
+"Vẽ đủ khung hình, mượt nhất.": "Full frame rate, smoothest.",
 "Về làng": "To village",
 "Về làng để học thêm.": "Learn more in the village.",
 "Về làng để thay": "Swap in village",
@@ -1269,6 +1333,7 @@
 "Xem": "View",
 "Xem chi tiết": "Details",
 "Xem linh khí": "View Spirit",
+"Xem lại truyện": "Replay story",
 "Xem vũ khí": "View weapon",
 "Xoay ngang điện thoại để hình to và dễ chơi hơn": "Rotate your phone sideways for a bigger, easier view",
 "Xong! {0} lên bậc {1}.": "Done! {0} is now {1} tier.",
@@ -1460,6 +1525,8 @@
 "Áo vải thô": "Coarse Robe",
 "Áo vảy": "Scale Robe",
 "Áo vỏ cây": "Bark Robe",
+"Âm thanh, pin ›": "Sound, battery ›",
+"Âm thanh, pin, truyện": "Sound, battery, story",
 "Âm thanh: bật": "Sound: on",
 "Âm thanh: tắt": "Sound: off",
 "Âm thanh: {0}": "Sound: {0}",
@@ -1488,6 +1555,7 @@
 "Đang theo nhánh {0} ({1} dấu ấn). Đổi sang:": "On the {0} branch ({1} marks). Switch to:",
 "Đang tải bảng…": "Loading board…",
 "Đang tải…": "Loading…",
+"Đang tắt": "Off",
 "Đao Cá Chép": "Carp Saber",
 "Đao Lưỡi Liềm": "Sickle Saber",
 "Đi cẩn thận nhé!": "Travel safe!",
@@ -1560,6 +1628,7 @@
 "Đã ở bậc cao nhất.": "Already at top tier.",
 "Đèn Lồng Ma": "Ghost Lantern",
 "Đèn Ông Sao": "Star Lantern",
+"Đêm xuống, yêu tinh có thể thức dậy mạnh hơn. Muốn thử sức thì gặp chú, chạm \"Độ khó 2\" nhé!": "When night falls the demons may wake stronger. If you want a real test, come to me and tap \"Difficulty 2\"!",
 "Đính kèm ảnh chụp trận": "Attach battle screenshot",
 "Đòn của trùm": "Boss attack",
 "Đòn khác": "Other hits",
@@ -1625,6 +1694,7 @@
 "Đủ 3 mảnh chìa! Cửa phía trên sảnh đã mở": "All 3 key pieces! The door above the hall is open",
 "Đủ 30 dấu ấn của một hệ, vũ khí khóa theo nhánh hệ đó và bắt đầu tiến hóa.": "At 30 marks of one element, the weapon locks onto that element's branch and starts to evolve.",
 "Đủ 60 dấu ấn của một hệ, vũ khí khóa theo nhánh hệ đó và bắt đầu tiến hóa.": "At 60 marks of one element, the weapon locks onto that element's branch and starts to evolve.",
+"Đủ bốn bé rồi. Đình làng ấm hẳn lên.": "All four children are home. The temple feels warm again.",
 "Đủ mảnh trùm rồi, mở cấp cánh thôi!": "You've got enough boss shards. Let's grow those wings!",
 "Đủ đồ rồi đấy, nâng lò thôi cháu!": "You've got it all. Let's upgrade the forge!",
 "Đủ đồ để nâng bậc món này đấy.": "You've got enough to upgrade this one.",
@@ -1661,11 +1731,13 @@
 "Ảnh chụp trận": "Battle screenshot",
 "Ấy ấy! Xoá là mất hết đấy, nghĩ kỹ chưa?": "Whoa, whoa! Erasing wipes everything. Sure about that?",
 "Ốc Mượn Hồn": "Hermit Crab",
+"Ối, gãy càng! Bò ngang chạy thôi!": "Ow, my claw! Scuttle sideways and run!",
 "Ống tên": "Quiver",
 "Ộp!": "Ribbit!",
 "Ở làng, chạm vào vũ khí đang bay theo em bé để xem bậc, dòng phụ và các đặc trưng đã mở, sắp mở. Ở chỗ Bà Hàng Xén cũng có nút Xem cho món trong rương.": "In the village, tap the weapon floating beside your kid to see its tier, affixes and its unlocked and upcoming traits. The Peddler also has a View button for weapons in the chest.",
 "• {0}": "• {0}",
 "• {0} · sát thương mỗi đòn {1}": "• {0} · damage per hit {1}",
+"‹ Trở lại": "‹ Back",
 "← Quay lại": "← Back",
 "↑ Chạm để đổi vũ khí": "↑ Tap to swap weapon",
 "★ Kỷ lục mới: Sức mạnh {0}": "★ New record: Power {0}",
@@ -2269,12 +2341,36 @@
   G.inRect = (p, x, y, w, h) => p && p.x >= x && p.x <= x + w && p.y >= y && p.y <= y + h;
 
   // ---------- âm thanh ----------
-  let ac = null;
+  // Một AudioContext cho cả game, tạo ở lần chạm / bấm phím đầu tiên (luật iOS). Tiếng hiệu ứng đi qua nút âm lượng "Tiếng",
+  // nhạc nền (js/nhac.js) đi qua nút "Nhạc" riêng. G.save.sound = false tắt cả hai (nút Âm thanh ở Anh Mõ).
+  // Âm lượng lưu ở G.save.nhac và G.save.tieng (0..100); không có trường thì là mặc định (nhạc 60, tiếng 100 = to như trước).
+  let ac = null, sfxBus = null;
+  const AM_MD = { nhac: 60, tieng: 100 };
+  G.amThanh = {
+    ac: () => ac,
+    MD: AM_MD,
+    // Âm lượng 0..1 đang dùng (đã tính nút bật/tắt âm thanh)
+    vol(k) {
+      const sv = G.save;
+      if (!sv || !sv.sound) return 0;
+      const v = sv[k];
+      return (typeof v === 'number' && isFinite(v) ? G.clamp(v, 0, 100) : AM_MD[k] != null ? AM_MD[k] : 100) / 100;
+    },
+    so(k) { const v = G.save && G.save[k]; return Math.round(typeof v === 'number' && isFinite(v) ? G.clamp(v, 0, 100) : AM_MD[k]); },
+    // Đổi âm lượng thì gọi để áp ngay
+    capNhat() {
+      try { if (ac && sfxBus) sfxBus.gain.setTargetAtTime(G.amThanh.vol('tieng'), ac.currentTime, 0.03); } catch (e) { /* bỏ qua */ }
+      if (G.nhac && G.nhac.capNhat) G.nhac.capNhat();
+    },
+  };
   G.audioStart = function () {
     if (!G.save || !G.save.sound) return;
     try {
-      if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)();
-      if (ac.state === 'suspended') ac.resume().catch(() => {});
+      if (!ac) {
+        ac = new (window.AudioContext || window.webkitAudioContext)();
+        sfxBus = ac.createGain(); sfxBus.gain.value = G.amThanh.vol('tieng'); sfxBus.connect(ac.destination);
+      }
+      if (ac.state === 'suspended' && !document.hidden) ac.resume().catch(() => {});
     } catch (e) { /* máy không có âm thanh */ }
   };
   const SFX = {
@@ -2289,7 +2385,7 @@
   // Hết "chỗ" âm lượng thì tiếng mới nhỏ lại cho vừa; còn quá ít thì bỏ qua.
   const voices = [], MAX_SAME = 2, MAX_VOICES = 8, MAX_GAIN = 0.28;
   G.sfx = function (name, pitch) {
-    if (!ac || !G.save.sound || G.noRender || ac.state !== 'running') return;
+    if (!ac || !G.save.sound || G.noRender || ac.state !== 'running' || !sfxBus) return;
     const d = SFX[name];
     if (!d) return;
     try {
@@ -2301,6 +2397,8 @@
       const vol = Math.min(d[3], MAX_GAIN - sum);
       if (vol < 0.01) return;
       voices.push({ name, end: now + d[1] + 0.02, g: vol });
+      // Tiếng "gong" (trùm ra mắt, đổi pha) là tiếng chiêng ấm, ngân dài (js/nhac.js); không có js/nhac.js thì như cũ.
+      if (name === 'gong' && G.nhac && G.nhac.chieng) { G.nhac.chieng(sfxBus, now, 98 * (pitch || 1), vol * 1.2, 0.8); return; }
       const o = ac.createOscillator(), g = ac.createGain();
       o.type = d[2];
       o.frequency.value = d[0] * (pitch || 1);
@@ -2308,7 +2406,7 @@
       if (name === 'boom' || name === 'hurt') o.frequency.exponentialRampToValueAtTime(d[0] * 0.5, ac.currentTime + d[1]);
       g.gain.value = vol;
       g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + d[1]);
-      o.connect(g); g.connect(ac.destination);
+      o.connect(g); g.connect(sfxBus);
       o.start(); o.stop(ac.currentTime + d[1] + 0.02);
     } catch (e) { /* bỏ qua lỗi âm thanh */ }
   };
@@ -2410,6 +2508,10 @@
       if (s.lang !== 'en') delete s.lang; // ngôn ngữ: không có (mặc định) là tiếng Việt, 'en' là tiếng Anh (js/ngon_ngu.js)
       if (s.net !== 'thuong') delete s.net; // độ nét: không có (mặc định) là Cao, 'thuong' là Thường
       if (s.pin !== true) delete s.pin; // tiết kiệm pin (vẽ 30 khung/giây, js/engine.js V6): không có là tắt
+      // âm lượng Nhạc / Tiếng 0..100 (G.amThanh): không có trường là mặc định; số hỏng thì bỏ (về mặc định)
+      for (const k of ['nhac', 'tieng']) { if (typeof s[k] === 'number' && isFinite(s[k])) s[k] = G.clamp(Math.round(s[k]), 0, 100); else delete s[k]; }
+      // tiến độ truyện (js/truyen.js): { mo, v, n }; sai kiểu thì bỏ, js/truyen.js tự dựng lại theo tiến độ chơi
+      if (s.truyen != null && (typeof s.truyen !== 'object' || Array.isArray(s.truyen))) delete s.truyen;
       });
       phan('sao, dấu', ['stars', 'stars2', 'scars', 'tut'], () => {
       for (const k of ['stars', 'stars2', 'scars', 'tut']) s[k] = obj(s[k]);
@@ -2646,6 +2748,7 @@
   function canhYen(now) { // trả về số khung/giây tối đa khi cảnh đứng yên, 0 = vẽ đủ
     try {
       const sc = G.scene; let man = '', fps = 0;
+      if (G.truyen && G.truyen.dang) return 0; // đang chiếu truyện (js/truyen.js): vẽ đủ khung cho chữ, hình chuyển mượt
       if (sc && sc === G.StageScene && G.getRun) { const S = G.getRun(); if (S && YEN_AI[S.mode]) { man = 'ai:' + S.mode; fps = 10; } }
       else if (sc && sc === G.Village) {
         const V = G.villageApi && G.villageApi.V, VS = G.villageScene && G.villageScene.state;
@@ -31285,7 +31388,7 @@ MA._xong();
   }
   // Mở bảng của một người (k: lai, ren, xen, may, do, tu, mo)
   function open(k) {
-    V.who = k; V.tab = TAB_OF[k]; V.sel = null; V.page = 0; V.confirm = false; V.node = null; V.msgT = 0;
+    V.who = k; V.tab = TAB_OF[k]; V.sel = null; V.page = 0; V.confirm = false; V.node = null; V.msgT = 0; V.cd2 = false;
     if (G.banDo) G.banDo.reset();
     if (k === 'do') {
       V.tab = V.dtab === 'help' || (V.dtab === 'chuong' && chuongOpen()) || (V.dtab === 'rank' && PANELS.rank) ? V.dtab : 'skill';
@@ -31948,16 +32051,20 @@ MA._xong();
 
   // ---------- cài đặt (Anh Mõ) ----------
   // Lưu mây, đăng nhập Google, góp ý: js/cloud.js, js/cloud_ui.js (không có thì bảng chỉ còn phần cũ)
+  // Phiên Cốt truyện + Âm thanh: mọi nút của bảng cao 32 (khoảng 46 điểm trên iPhone cầm ngang, tối thiểu 44). Trang 2 (V.cd2):
+  // thanh Nhạc, thanh Tiếng (0..100, G.save.nhac / G.save.tieng, js/engine.js G.amThanh), bật/tắt âm thanh, Tiết kiệm pin (G.save.pin), Xem lại truyện.
+  const CDH = 32;
   function settings() {
     const sv = G.save, CL = G.cloud, CU = G.cloudUI;
+    if (V.cd2) return settings2();
     frame('Cổng làng: cài đặt');
-    if (T.btn(CX + 4, 72, 96, 26, sv.sound ? 'Âm thanh: bật' : 'Âm thanh: tắt', { size: 8.5 })) { sv.sound = !sv.sound; G.persist(); G.audioStart(); }
+    if (T.btn(CX + 4, 68, 96, CDH, 'Âm thanh, pin ›', { size: 8.5, sub: sv.sound ? 'Nhạc · Truyện' : 'Đang tắt', subSize: 7 })) { V.cd2 = true; V.confirm = false; G.audioStart(); }
     // Độ nét hình (js/engine.js G.NET): Cao = canvas thế giới gấp đôi điểm ảnh (ảnh AI rõ hơn), Thường = như cũ (nhẹ máy yếu)
-    if (T.btn(CX + 104, 72, 96, 26, sv.net === 'thuong' ? 'Độ nét: Thường' : 'Độ nét: Cao', { size: 8.5 })) {
+    if (T.btn(CX + 104, 68, 96, CDH, sv.net === 'thuong' ? 'Độ nét: Thường' : 'Độ nét: Cao', { size: 8.5 })) {
       if (sv.net === 'thuong') delete sv.net; else sv.net = 'thuong';
       G.persist(); say(sv.net === 'thuong' ? 'Độ nét Thường: nhẹ máy hơn, hình AI kém rõ hơn.' : 'Độ nét Cao: hình AI rõ gấp đôi.');
     }
-    if (T.btn(CX + 204, 72, 96, 26, 'Toàn màn hình', { size: 8.5 })) {
+    if (T.btn(CX + 204, 68, 96, CDH, 'Toàn màn hình', { size: 8.5 })) {
       try { const el = document.documentElement; if (document.fullscreenElement) document.exitFullscreen(); else el.requestFullscreen().catch(() => say('Thiết bị này không cho bật toàn màn hình.')); } catch (e) { say('Thiết bị này không cho bật toàn màn hình.'); }
     }
     T.head('Lưu tiến trình', CX + 4, 113);
@@ -31967,33 +32074,72 @@ MA._xong();
       ui.text(CL.label(), CX + 4, 125, { size: 7.5, color: on && !CL.dirty ? GOOD : SOFT });
       ui.text(on ? (CL.isGuest() ? 'Tài khoản: Khách. Đăng nhập Google để giữ tiến trình khi đổi máy.' : G.t('Tài khoản Google: {0}', G.kd(CL.who()))) : 'Tiến trình luôn được lưu trong trình duyệt này.', CX + 4, 136, { size: 7, color: SOFT });
       if (on && CL.isGuest()) {
-        G.syncTaps.push({ x: CX + 4, y: 142, w: 146, h: 24, fn: () => titleLogin(CL) });
-        if (T.btn(CX + 4, 142, 146, 24, 'Đăng nhập Google', { size: 8.5, primary: true }) && !V.gBusy) {
+        G.syncTaps.push({ x: CX + 4, y: 142, w: 146, h: CDH, fn: () => titleLogin(CL) });
+        if (T.btn(CX + 4, 142, 146, CDH, 'Đăng nhập Google', { size: 8.5, primary: true }) && !V.gBusy) {
           V.gBusy = true; say('Đang mở cửa sổ đăng nhập Google…');
           const snap = guestSnap();
           CL.google().then((r) => { guestKeep(snap, r); return r; }).then((r) => say(r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google. Tiến trình được giữ nguyên.' : 'Đã đăng nhập Google.'), (e) => say(G.t('Chưa đăng nhập được: {0}', e.message))).then(() => { V.gBusy = false; });
         }
-      } else T.btn(CX + 4, 142, 146, 24, on ? 'Đã đăng nhập Google' : 'Đăng nhập Google', { size: 8.5, disabled: true });
+      } else T.btn(CX + 4, 142, 146, CDH, on ? 'Đã đăng nhập Google' : 'Đăng nhập Google', { size: 8.5, disabled: true });
     } else ui.para('Tiến trình được lưu trong trình duyệt này. Đổi máy hoặc xoá dữ liệu trình duyệt sẽ mất tiến trình.', CX + 4, 125, 292, { size: 7.5, color: SOFT });
-    if (CU && T.btn(CX + 154, 142, 146, 24, '✉ Góp ý', { size: 8.5 })) CU.feedback({});
+    if (CU && T.btn(CX + 154, 142, 146, CDH, '✉ Góp ý', { size: 8.5 })) CU.feedback({});
     if (CL && CU && CL.isAdmin()) {
       const n = CL.adminNew;
-      if (T.btn(CX + 4, 170, 296, 22, n ? G.t('📥 Góp ý nhận được ({0} mới)', n) : '📥 Góp ý nhận được', { size: 8.5, gold: true, dot: !!n })) CU.inbox();
+      if (T.btn(CX + 4, 178, 296, 22, n ? G.t('📥 Góp ý nhận được ({0} mới)', n) : '📥 Góp ý nhận được', { size: 8.5, gold: true, dot: !!n })) CU.inbox();
     }
     if (!V.confirm) {
-      if (T.btn(CX + 4, 200, 200, 26, 'Xoá tiến trình, chơi lại từ đầu', { size: 8, danger: true })) V.confirm = true;
+      if (T.btn(CX + 4, 208, 200, CDH, 'Xoá tiến trình, chơi lại từ đầu', { size: 8, danger: true })) V.confirm = true;
       // Ngôn ngữ (js/ngon_ngu.js): bấm là đổi ngay Tiếng Việt <-> English, nhớ theo máy và ghi vào bản lưu (trường lang)
-      if (G.ngonNgu && T.btn(CX + 208, 200, 92, 26, 'Ngôn ngữ', { size: 8, sub: G.LANG === 'en' ? 'English' : 'Tiếng Việt' })) {
+      if (G.ngonNgu && T.btn(CX + 208, 208, 92, CDH, 'Ngôn ngữ', { size: 8, sub: G.LANG === 'en' ? 'English' : 'Tiếng Việt' })) {
         G.ngonNgu.doi(); say(G.LANG === 'en' ? 'Language: English.' : 'Ngôn ngữ: Tiếng Việt.');
       }
     } else {
-      ui.text('Chắc chắn xoá hết? Không khôi phục được.', CX + 4, 204, { size: 8.5, color: WARN, bold: true });
+      ui.text('Chắc chắn xoá hết? Không khôi phục được.', CX + 4, 205, { size: 8, color: WARN, bold: true });
       // "Thôi" nằm đúng chỗ nút xoá vừa bấm, để bấm đúp nhầm cũng không mất tiến trình
-      if (T.btn(CX + 4, 208, 120, 26, 'Thôi')) V.confirm = false;
-      else if (T.btn(CX + 132, 208, 120, 26, 'Xoá hết', { danger: true })) { G.resetSave(); V.confirm = false; goHub(); VS.enter({}); VS.say('Đã xoá tiến trình.'); return null; }
+      if (T.btn(CX + 4, 208, 120, CDH, 'Thôi')) V.confirm = false;
+      else if (T.btn(CX + 132, 208, 120, CDH, 'Xoá hết', { danger: true })) { G.resetSave(); V.confirm = false; goHub(); VS.enter({}); VS.say('Đã xoá tiến trình.'); return null; }
     }
     if (G.VERSION) ui.text(G.t('Phiên bản {0}', G.VERSION), CX + CW - 2, 258, { size: 6.5, align: 'right', color: SOFT });
     return V.confirm ? 'Ấy ấy! Xoá là mất hết đấy, nghĩ kỹ chưa?' : 'Cốc cốc cốc! Làng nước nghe đây! Cần chỉnh gì cứ bảo anh.';
+  }
+  // Trang 2: Nhạc, Tiếng, bật/tắt âm thanh, Tiết kiệm pin, Xem lại truyện
+  function settings2() {
+    const sv = G.save, AM = G.amThanh;
+    frame('Âm thanh, pin, truyện');
+    thanhAm('Nhạc', 'nhac', 66);
+    thanhAm('Tiếng', 'tieng', 104);
+    if (T.btn(CX + 4, 146, 146, CDH, sv.sound ? 'Âm thanh: bật' : 'Âm thanh: tắt', { size: 8.5, sel: !!sv.sound })) {
+      sv.sound = !sv.sound; G.persist(); G.audioStart(); if (AM) AM.capNhat();
+      say(sv.sound ? 'Bật cả nhạc lẫn tiếng.' : 'Tắt hết nhạc và tiếng.');
+    }
+    if (T.btn(CX + 154, 146, 146, CDH, sv.pin ? 'Tiết kiệm pin: bật' : 'Tiết kiệm pin: tắt', { size: 8.5, sub: '30 khung/giây', subSize: 7, sel: !!sv.pin })) {
+      if (sv.pin) delete sv.pin; else sv.pin = true;
+      G.persist(); say(sv.pin ? 'Tiết kiệm pin: hình vẽ 30 khung mỗi giây, máy đỡ nóng.' : 'Vẽ đủ khung hình, mượt nhất.');
+    }
+    if (T.btn(CX + 4, 186, 146, CDH, 'Xem lại truyện', { size: 8.5, disabled: !G.truyen })) { V.confirm = false; G.truyen.xemLai(); }
+    if (T.btn(CX + 154, 186, 146, CDH, '‹ Trở lại', { size: 8.5 })) V.cd2 = false;
+    ui.para('Nhạc tạo ngay trong máy, không tải thêm gì. Tiết kiệm pin: vẽ 30 khung mỗi giây, trận đấu vẫn chạy đủ nhanh.', CX + 4, 232, 296, { size: 7.5, color: SOFT });
+    return 'Nhạc làng có sáo trúc với đàn bầu đấy. Nghe hay thì để to lên!';
+  }
+  // Một thanh âm lượng: nút − và + (mỗi lần 10), kéo hoặc chạm trên thanh (mỗi nấc 5). Nhả tay mới lưu.
+  function thanhAm(nhan, k, y) {
+    const AM = G.amThanh, sv = G.save;
+    if (!AM) return;
+    const cu = AM.so(k), x0 = CX + 94, x1 = CX + 222;
+    let v = cu;
+    ui.text(nhan, CX + 4, y + 20, { size: 9, bold: true, color: TXT });
+    if (T.btn(CX + 52, y, 36, CDH, '−', { size: 12 })) v = Math.max(0, v - 10);
+    if (T.btn(CX + 228, y, 36, CDH, '+', { size: 12 })) v = Math.min(100, v + 10);
+    const theo = (px) => Math.round(G.clamp((px - x0) / (x1 - x0), 0, 1) * 20) * 5;
+    for (const p of G.pointers.values()) if (!p.stale && p.sx >= x0 - 6 && p.sx <= x1 + 6 && p.sy >= y - 2 && p.sy <= y + CDH + 2) { v = theo(p.x); p.role = 'ui'; }
+    if (G.click && G.inRect(G.click, x0 - 6, y - 2, x1 - x0 + 12, CDH + 4)) { v = theo(G.click.x); G.click = null; }
+    const kx = x0 + ((x1 - x0) * v) / 100;
+    ui.rect(x0, y + 14, x1 - x0, 5, '#14201e', '#3a5a52');
+    if (v > 0) ui.rect(x0, y + 14, kx - x0, 5, GOLD);
+    ui.rect(Math.round(kx - 4), y + 7, 8, 19, '#f3e8c8', '#2a1a14');
+    ui.text(v ? String(v) : G.t('Tắt'), CX + 300, y + 20, { size: 9, bold: true, align: 'right', color: v ? GOLD : SOFT });
+    if (v !== cu) { sv[k] = v; AM.capNhat(); V.cdLuu = k; }
+    if (V.cdLuu && !G.pointers.size) { const kk = V.cdLuu; V.cdLuu = null; G.persist(); if (kk === 'tieng') G.sfx('pick'); }
   }
 
   const PANELS = { forge, gear, outfit, hero, skill, chuong, help, settings };
@@ -37577,6 +37723,670 @@ window.FIREBASE_CONFIG = {
     const nut = (bx, chu, chinh) => (T && T.btn ? T.btn(bx, y + 74, 100, 26, G.t(chu), { size: 8.5, primary: chinh }) : ui.btn(bx, y + 74, 100, 26, G.t(chu)));
     if (nut(x + 14, 'Chơi tiếp', true)) { const giu = hoi; hoi = null; let ok = false; try { ok = khoiPhuc(giu); } catch (e) { ok = false; console.error('Linh Khí: không dựng lại được lượt ải', e); } if (!ok) { xoa(); G.setScene(G.Village); } }
     else if (nut(x + w - 114, 'Bỏ ải này', false)) { hoi = null; xoa(); }
+  }
+})();
+
+// ===== js/nhac.js =====
+// Nhạc nền tạo bằng code (WebAudio), KHÔNG dùng tệp âm thanh. Nạp sau js/engine.js (dùng G.amThanh: bộ âm thanh chung, âm lượng).
+//
+//   Làng          điệu Bắc (ngũ cung Rê), chậm 70 nhịp/phút: sáo trúc và đàn bầu thay nhau hát, đàn tranh rải nhẹ, phách thưa.
+//   Rừng già      điệu Bắc (La), 96 nhịp: trống đất, trống con, đàn tranh trầm, sáo / đàn bầu, tiếng côn trùng lách tách.
+//   Hang biển     điệu Oán (Rê), 84 nhịp: đàn tranh rải đều như sóng, đàn bầu hát, trống thưa, tiếng sóng dâng rút.
+//   Lâu đài cổ    điệu Oán (Mi), 108 nhịp: trống chầu, phách, chiêng mở mỗi vòng, sáo / đàn bầu.
+//   Trùm          trống dồn 128 nhịp (mỗi pha nhanh thêm 7%), chiêng, đàn tranh dồn bè trầm; giọng theo vùng.
+// Đổi cảnh thì bài cũ nhỏ dần, bài mới to dần (khoảng 1 giây). Chỉ phát sau lần chạm đầu tiên (luật iOS, G.audioStart ở js/engine.js).
+// Lên lịch nốt trước 0,35 giây bằng một bộ đếm 120 ms (không chạy theo khung hình): rất nhẹ máy. Ẩn trang / tắt âm thanh / nhạc 0 thì dừng.
+// Tắt hẳn: ?nhac=0 (hoặc G.nhac.tat = true).
+(function () {
+  'use strict';
+  const G = window.G;
+  let tatQS = false;
+  try { tatQS = /[?&]nhac=0(&|$)/.test(location.search || ''); } catch (e) { tatQS = false; }
+  const N = (G.nhac = { tat: tatQS, ten: null });
+
+  let ac = null, bus = null, noise = null;
+  const BAC = [0, 2, 5, 7, 9], OAN = [0, 3, 5, 7, 10];
+  function hz(root, scale, deg) { const n = scale.length, o = Math.floor(deg / n), i = ((deg % n) + n) % n; return root * Math.pow(2, (scale[i] + 12 * o) / 12); }
+
+  // ---------- nhạc cụ (mỗi nốt vài nút WebAudio, tự dừng) ----------
+  function osc(type, f, t) { const o = ac.createOscillator(); o.type = type; o.frequency.setValueAtTime(f, t); return o; }
+  function gain(v, out) { const g = ac.createGain(); g.gain.value = v; if (out) g.connect(out); return g; }
+  function noiseBuf() {
+    if (noise && noise.sampleRate === ac.sampleRate) return noise;
+    const n = Math.floor(ac.sampleRate * 1.5), b = ac.createBuffer(1, n, ac.sampleRate), d = b.getChannelData(0);
+    let s = 12345; for (let i = 0; i < n; i++) { s = (s * 1664525 + 1013904223) >>> 0; d[i] = s / 2147483648 - 1; }
+    return (noise = b);
+  }
+  // Tiếng gió / tiếng gõ: nhiễu qua bộ lọc dải
+  function nhieu(out, t, dur, v, f, q, kieu) {
+    const s = ac.createBufferSource(); s.buffer = noiseBuf();
+    const bf = ac.createBiquadFilter(); bf.type = kieu || 'bandpass'; bf.frequency.value = f; bf.Q.value = q || 1;
+    const g = gain(0, out);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + 0.004); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    s.connect(bf); bf.connect(g);
+    s.start(t, Math.random()); s.stop(t + dur + 0.02);
+  }
+  // Sáo trúc: tiếng tròn, luyến nhẹ lúc vào nốt, rung hơi ở nốt dài, có chút tiếng hơi thổi
+  function sao(out, t, f, dur, v) {
+    const o = osc('sine', f * 0.97, t), o2 = osc('triangle', f * 0.97, t), g = gain(0, out), g2 = gain(0.2, g);
+    o.frequency.exponentialRampToValueAtTime(f, t + 0.07); o2.frequency.exponentialRampToValueAtTime(f, t + 0.07);
+    if (dur > 0.55) {
+      const l = osc('sine', 5.2, t), lg = gain(0); lg.gain.setValueAtTime(0, t); lg.gain.linearRampToValueAtTime(f * 0.009, t + 0.45);
+      l.connect(lg); lg.connect(o.frequency); lg.connect(o2.frequency); l.start(t); l.stop(t + dur + 0.2);
+    }
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(v, t + 0.05); g.gain.linearRampToValueAtTime(v * 0.72, t + dur); g.gain.exponentialRampToValueAtTime(0.0001, t + dur + 0.16);
+    o.connect(g); o2.connect(g2);
+    o.start(t); o2.start(t); o.stop(t + dur + 0.2); o2.stop(t + dur + 0.2);
+    nhieu(out, t, 0.09, v * 0.18, f * 2, 3);
+  }
+  // Đàn bầu: một dây, tiếng trong, nhấn cần đàn làm cao giọng rồi buông về ở nốt dài, rung sâu
+  function bau(out, t, f, dur, v) {
+    const o = osc('sine', f, t), o2 = osc('sine', f * 2, t), g = gain(0, out), g2 = gain(0.14, g);
+    for (const x of [o, o2]) {
+      const k = x === o ? 1 : 2;
+      if (dur > 0.6) { x.frequency.setValueAtTime(f * k, t + dur * 0.5); x.frequency.linearRampToValueAtTime(f * k * 1.055, t + dur * 0.72); x.frequency.linearRampToValueAtTime(f * k, t + dur * 0.95); }
+    }
+    if (dur > 0.4) {
+      const l = osc('sine', 4.6, t), lg = gain(0); lg.gain.setValueAtTime(0, t); lg.gain.linearRampToValueAtTime(f * 0.014, t + 0.35);
+      l.connect(lg); lg.connect(o.frequency); l.start(t); l.stop(t + dur + 0.3);
+    }
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + 0.015); g.gain.exponentialRampToValueAtTime(v * 0.45, t + dur); g.gain.exponentialRampToValueAtTime(0.0001, t + dur + 0.25);
+    o.connect(g); o2.connect(g2);
+    o.start(t); o2.start(t); o.stop(t + dur + 0.3); o2.stop(t + dur + 0.3);
+  }
+  // Đàn tranh: gảy dây, tắt dần tự nhiên (độ dài nốt không quan trọng)
+  function tranh(out, t, f, dur, v) {
+    const d = Math.min(1.5, 0.5 + dur * 1.6);
+    const o = osc('triangle', f * 1.004, t), o2 = osc('sine', f * 2, t), g = gain(0, out), g2 = gain(0.3, g);
+    o.frequency.exponentialRampToValueAtTime(f, t + 0.05);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + 0.004); g.gain.exponentialRampToValueAtTime(v * 0.35, t + 0.12); g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+    o.connect(g); o2.connect(g2);
+    o.start(t); o2.start(t); o.stop(t + d + 0.02); o2.stop(t + d + 0.02);
+  }
+  // Trống: tiếng "thùng" trầm, cao độ tụt nhanh. chau: trống chầu (to, trầm, ngân lâu hơn)
+  function trong(out, t, v, chau) {
+    const f0 = chau ? 118 : 150, f1 = chau ? 44 : 52, d = chau ? 0.55 : 0.3;
+    const o = osc('sine', f0, t), g = gain(0, out);
+    o.frequency.exponentialRampToValueAtTime(f1, t + 0.16);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + 0.005); g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+    o.connect(g); o.start(t); o.stop(t + d + 0.02);
+    nhieu(out, t, 0.03, v * 0.25, 900, 0.8);
+  }
+  // Trống con (gõ mặt nhỏ)
+  function trongCon(out, t, v) {
+    const o = osc('sine', 320, t), g = gain(0, out);
+    o.frequency.exponentialRampToValueAtTime(190, t + 0.07);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + 0.003); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.1);
+    o.connect(g); o.start(t); o.stop(t + 0.12);
+    nhieu(out, t, 0.06, v * 0.6, 1400, 1.2);
+  }
+  // Phách (thanh tre gõ vào nhau)
+  function phach(out, t, v) { nhieu(out, t, 0.04, v, 2600, 7); }
+  // Chiêng: tiếng ấm, nhiều bồi âm không đều, ngân dài; dai: hệ số độ ngân
+  function chieng(out, t, f, v, dai) {
+    dai = dai || 1;
+    const P = [[1, 1, 2.4], [2.02, 0.38, 1.5], [2.78, 0.16, 0.9], [5.4, 0.05, 0.45]];
+    const g = gain(1, out);
+    for (const q of P) {
+      const o = osc('sine', f * q[0] * (q[0] === 1 ? 1.015 : 1), t), gg = gain(0, g), d = q[2] * dai;
+      if (q[0] === 1) o.frequency.exponentialRampToValueAtTime(f, t + 0.35);
+      gg.gain.setValueAtTime(0.0001, t); gg.gain.exponentialRampToValueAtTime(v * q[1], t + 0.008); gg.gain.exponentialRampToValueAtTime(0.0001, t + d);
+      o.connect(gg); o.start(t); o.stop(t + d + 0.02);
+    }
+    const th = osc('sine', f * 0.5, t), tg = gain(0, g);
+    tg.gain.setValueAtTime(0.0001, t); tg.gain.exponentialRampToValueAtTime(v * 0.4, t + 0.01); tg.gain.exponentialRampToValueAtTime(0.0001, t + 0.35 * dai);
+    th.connect(tg); th.start(t); th.stop(t + 0.4 * dai);
+  }
+  // Sóng biển: tiếng xào xạc dâng lên rồi rút (hai ô nhịp)
+  function song(out, t, dur, v) {
+    const s = ac.createBufferSource(); s.buffer = noiseBuf(); s.loop = true;
+    const bf = ac.createBiquadFilter(); bf.type = 'lowpass'; bf.frequency.setValueAtTime(380, t); bf.frequency.linearRampToValueAtTime(900, t + dur * 0.45); bf.frequency.linearRampToValueAtTime(300, t + dur);
+    const g = gain(0, out);
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(v, t + dur * 0.45); g.gain.linearRampToValueAtTime(0.0001, t + dur);
+    s.connect(bf); bf.connect(g); s.start(t); s.stop(t + dur + 0.05);
+  }
+  // Côn trùng rừng: ba tiếng lách tách cao rất nhỏ
+  function contrung(out, t, v) {
+    const o = osc('square', 3800 + Math.random() * 900, t), g = gain(0, out);
+    for (let i = 0; i < 3; i++) { const a = t + i * 0.06; g.gain.setValueAtTime(v, a); g.gain.setValueAtTime(0, a + 0.018); }
+    o.connect(g); o.start(t); o.stop(t + 0.2);
+  }
+  const NC = { sao, bau, tranh };
+  N.chieng = function (out, t, f, v, dai) { const a0 = ac; ac = out.context; try { chieng(out, t, f, v, dai); } finally { ac = a0; } }; // js/engine.js: tiếng "gong" của trận thành tiếng chiêng
+
+  // ---------- bài nhạc: mỗi bè là một dòng chữ, mỗi ô là một nốt móc đơn ----------
+  // Bè giai điệu: số = bậc trong thang 5 âm (0 = gốc, 5 = gốc cao hơn một quãng tám, -1 = bậc dưới gốc), "-" ngân tiếp, "." nghỉ.
+  // Bè trống: x gõ, X gõ mạnh, r dồn hai tiếng (móc kép), g chiêng, w sóng, c côn trùng.
+  function docBe(s) { return s.replace(/\|/g, ' ').trim().split(/\s+/); }
+  function ghiBe(be) {
+    const tok = docBe(be.p), ev = [];
+    for (let i = 0; i < tok.length; i++) {
+      const k = tok[i];
+      if (k === '-' || k === '.') continue;
+      if (/^-?\d+$/.test(k)) { let n = 1; while (tok[i + n] === '-') n++; ev.push({ s: i, deg: +k, len: n }); }
+      else ev.push({ s: i, go: k });
+    }
+    return { be, ev, len: tok.length };
+  }
+  function bai(o) {
+    o.vong = o.vong.map((v) => { const bs = v.map(ghiBe), len = Math.max(...bs.map((b) => b.len)); const theoO = []; for (let i = 0; i < len; i++) theoO.push([]); for (const b of bs) for (const e of b.ev) theoO[e.s].push([b.be, e]); return { len, theoO }; });
+    return o;
+  }
+  const SAO = 0.1, BAU = 0.12, TRANH = 0.07, TRONG = 0.24, CON = 0.07, PHACH = 0.06;
+  const B = {};
+  B.lang = bai({ bpm: 70, root: 293.66, thang: BAC, vong: [
+    [
+      { n: 'sao', v: SAO, p: '3 - - 5 4 - 3 2 | 3 - - - - - 2 3 | 5 - 4 3 2 - 1 2 | 3 - - - - - . . | 2 - 3 5 3 - 2 1 | 0 - - 1 2 - - - | 1 - 2 3 2 - 1 0 | 0 - - - - - . .' },
+      { n: 'tranh', v: TRANH * 0.8, o: -1, p: '0 . 2 . 4 . 2 . | 0 . 2 . 4 . 5 . | 2 . 4 . 5 . 4 . | 0 . 2 . 4 . 2 . | 2 . 4 . 6 . 4 . | 0 . 2 . 3 . 2 . | 1 . 3 . 4 . 3 . | 0 . 2 . 4 . 5 .' },
+      { n: 'phach', v: PHACH * 0.6, p: 'x . . . . . . . | . . . . . . . . | x . . . . . . . | . . . . . . . . | x . . . . . . . | . . . . . . . . | x . . . . . . . | . . . . . . . .' },
+    ], [
+      { n: 'bau', v: BAU, p: '5 - - - 4 - 3 - | 4 - - - - - . . | 3 - 4 - 5 - 4 3 | 2 - - - - - . . | 3 - - 2 1 - 2 - | 3 - - - 5 - - - | 4 - 3 - 2 - 1 - | 0 - - - - - . .' },
+      { n: 'tranh', v: TRANH * 0.8, o: -1, p: '0 . 2 . 4 . 2 . | 0 . 2 . 4 . 5 . | 2 . 4 . 5 . 4 . | 0 . 2 . 4 . 2 . | 2 . 4 . 6 . 4 . | 0 . 2 . 3 . 2 . | 1 . 3 . 4 . 3 . | 0 . 2 . 4 . 5 .' },
+      { n: 'phach', v: PHACH * 0.6, p: 'x . . . . . . . | . . . . . . . . | x . . . . . . . | . . . . . . . . | x . . . . . . . | . . . . . . . . | x . . . . . . . | . . . . . . . .' },
+    ],
+  ] });
+  const RUNG_TRONG = { n: 'trong', v: TRONG, p: 'x . . x . . x . | x . . x . . x . | x . . x . . x . | x . . x . x x .' };
+  const RUNG_CON = { n: 'con', v: CON, p: '. . x . . . x . | . . x . . . x x | . . x . . . x . | . . x . . x . x' };
+  const RUNG_BASS = { n: 'tranh', v: TRANH, o: -1, p: '0 . 0 2 . 0 3 . | 0 . 0 2 . 0 4 . | 2 . 2 4 . 2 5 . | 0 . 0 2 . 3 2 .' };
+  const RUNG_SAU = { n: 'kk', v: 0.012, p: '. . . c . . . . | . . . . . . c . | . c . . . . . . | . . . . . c . .' };
+  B.vung0 = bai({ bpm: 96, root: 220, thang: BAC, vong: [
+    [RUNG_TRONG, RUNG_CON, RUNG_BASS, RUNG_SAU, { n: 'sao', v: SAO * 0.9, p: '5 - 7 - 8 7 5 . | 7 - - - . . . . | 8 - 9 8 7 - 5 7 | 5 - - - . . . .' }],
+    [RUNG_TRONG, RUNG_CON, RUNG_BASS, RUNG_SAU, { n: 'bau', v: BAU, p: '9 - - 8 7 - - . | 8 - 7 5 7 - - . | 5 - 7 8 9 - 8 7 | 5 - - - - - . .' }],
+  ] });
+  const BIEN_ARP = { n: 'tranh', v: TRANH * 0.85, o: -1, p: '0 2 4 5 7 5 4 2 | -2 0 2 4 5 4 2 0 | -1 1 3 4 6 4 3 1 | 0 2 4 5 7 5 4 2' };
+  const BIEN_TRONG = { n: 'trong', v: TRONG * 0.6, p: 'x . . . . . . . | x . . . . . . . | x . . . . . . . | x . . . x . . .' };
+  const BIEN_SONG = { n: 'kk', v: 0.05, p: 'w . . . . . . . | . . . . . . . . | w . . . . . . . | . . . . . . . .' };
+  B.vung1 = bai({ bpm: 84, root: 293.66, thang: OAN, vong: [
+    [BIEN_ARP, BIEN_TRONG, BIEN_SONG, { n: 'bau', v: BAU, p: '5 - - - 4 - 3 - | 2 - - - - - . . | 3 - 4 - 5 - 7 - | 5 - - - - - . .' }],
+    [BIEN_ARP, BIEN_TRONG, BIEN_SONG, { n: 'bau', v: BAU, p: '7 - - 6 5 - 4 - | 5 - - - 3 - - . | 4 - 3 - 2 - 1 - | 0 - - - - - . .' }],
+  ] });
+  const LD_TRONG = { n: 'chau', v: TRONG, p: 'X . . . x . x . | X . . . x . x . | X . . . x . x . | X . x . x x x .' };
+  const LD_PHACH = { n: 'phach', v: PHACH, p: '. . x . . . x . | . . x . . . x . | . . x . . . x . | . x . x . x . x' };
+  const LD_CHIENG = { n: 'kk', v: 0.07, p: 'g . . . . . . . | . . . . . . . . | . . . . . . . . | . . . . . . . .' };
+  const LD_BASS = { n: 'tranh', v: TRANH, p: '0 . 0 . 1 . 0 . | 0 . 0 . 2 . 1 . | 0 . 0 . 1 . 0 . | 3 . 2 . 1 . -1 .' };
+  B.vung2 = bai({ bpm: 108, root: 164.81, thang: OAN, vong: [
+    [LD_TRONG, LD_PHACH, LD_CHIENG, LD_BASS, { n: 'sao', v: SAO * 0.9, p: '5 - 6 - 7 - 6 5 | 4 - - - 3 - 4 - | 5 - 7 - 8 - 7 6 | 5 - - - - - . .' }],
+    [LD_TRONG, LD_PHACH, LD_CHIENG, LD_BASS, { n: 'bau', v: BAU, p: '7 - - - 8 - 7 6 | 5 - - - - - . . | 6 - 5 - 4 - 3 - | 5 - - - - - . .' }],
+  ] });
+  // Nhạc trùm: trống dồn. Giọng (gốc, thang) theo vùng; quãng tám bè trầm chọn cho vừa loa điện thoại.
+  function trum(root, thang, ob) {
+    const T1 = { n: 'trong', v: TRONG, p: 'X . x . X . x x | X . x . X x r r' };
+    const T2 = { n: 'con', v: CON * 1.2, p: '. x . x . x . x | . x . x r r r r' };
+    const CH = { n: 'kk', v: 0.08, p: 'g . . . . . . . | . . . . . . . .' };
+    const BS = { n: 'tranh', v: TRANH * 1.1, o: ob, p: '0 0 3 0 2 0 3 4 | 0 0 3 0 2 3 4 5' };
+    return bai({ bpm: 128, root, thang, trum: true, vong: [
+      [T1, T2, CH, BS, { n: 'bau', v: BAU * 0.9, p: '5 . 4 . 5 . 7 . | 5 . 4 . 3 . 2 .' }],
+      [T1, T2, CH, BS, { n: 'bau', v: BAU * 0.9, p: '7 . 8 . 7 . 5 . | 4 . 5 . 3 . 2 .' }],
+    ] });
+  }
+  B.trum0 = trum(220, BAC, 0); B.trum1 = trum(293.66, OAN, -1); B.trum2 = trum(164.81, OAN, 0);
+  N.BAI = B;
+
+  // ---------- phát ----------
+  let cur = null; // { ten, d: bài, g: nút âm lượng riêng, vi: vòng, o: ô, t: giờ của ô kế tiếp }
+  function phatO(st, o, t, dO) {
+    const d = st.d, R = d.root, th = d.thang, out = st.g, ds = d.vong[st.vi].theoO[o];
+    for (const q of ds) {
+      const be = q[0], e = q[1], v = be.v;
+      if (e.go) {
+        const k = e.go;
+        if (be.n === 'trong' || be.n === 'chau') { if (k === 'r') { trong(out, t, v * 0.7, be.n === 'chau'); trong(out, t + dO / 2, v * 0.8, be.n === 'chau'); } else trong(out, t, k === 'X' ? v : v * 0.75, be.n === 'chau'); }
+        else if (be.n === 'con') { if (k === 'r') { trongCon(out, t, v); trongCon(out, t + dO / 2, v * 0.85); } else trongCon(out, t, v); }
+        else if (be.n === 'phach') phach(out, t, v);
+        else if (k === 'g') chieng(out, t, R / 2, v, 1.1);
+        else if (k === 'w') song(out, t, dO * 16, v);
+        else if (k === 'c') contrung(out, t, v);
+        continue;
+      }
+      const f = hz(R, th, e.deg + 5 * (be.o || 0)), lech = be.n === 'tranh' ? 0 : (Math.random() - 0.5) * 0.012;
+      NC[be.n](out, t + Math.max(0, lech), f, e.len * dO * 0.96, v);
+    }
+  }
+  function nhipNhanh(st) { // trùm sang pha mới thì trống dồn nhanh hơn
+    if (!st.d.trum || !G.getRun) return 1;
+    try { const S = G.getRun(), b = S && S.W && S.W.boss; return 1 + 0.07 * Math.min(2, (b && b.phase) | 0); } catch (e) { return 1; }
+  }
+  function lenLich(st, toi) {
+    const now = ac.currentTime;
+    if (st.t < now + 0.02) st.t = now + 0.06; // vừa ẩn trang / máy khựng: bỏ phần lỡ, không phát dồn
+    let n = 0;
+    while (st.t < toi && n++ < 24) {
+      const dO = 60 / (st.d.bpm * nhipNhanh(st)) / 2;
+      phatO(st, st.o, st.t, dO);
+      st.t += dO; st.o++;
+      if (st.o >= st.d.vong[st.vi].len) { st.o = 0; st.vi = (st.vi + 1) % st.d.vong.length; }
+    }
+  }
+  function tat(st, nhanh) {
+    if (!st) return;
+    const now = ac.currentTime;
+    try { st.g.gain.cancelScheduledValues(now); st.g.gain.setValueAtTime(st.g.gain.value, now); st.g.gain.setTargetAtTime(0, now, nhanh ? 0.08 : 0.35); } catch (e) { /* bỏ qua */ }
+    const g = st.g; setTimeout(() => { try { g.disconnect(); } catch (e) { /* bỏ qua */ } }, 3500);
+  }
+  function batBai(ten) {
+    if (cur) tat(cur);
+    cur = null; N.ten = ten;
+    if (!ten || !B[ten]) return;
+    const g = gain(0, bus), now = ac.currentTime;
+    g.gain.setValueAtTime(0, now); g.gain.setTargetAtTime(1, now + 0.15, 0.4);
+    cur = { ten, d: B[ten], g, vi: 0, o: 0, t: now + 0.2 };
+  }
+  // Bài hợp với cảnh đang chơi
+  function chonBai() {
+    const sc = G.scene;
+    if (!sc) return null;
+    if (G.truyen && G.truyen.dang) return 'lang';
+    if (sc === G.StageScene && G.getRun) {
+      const S = G.getRun();
+      if (!S) return 'lang';
+      if (S.mode === 'dead') return null;
+      const W = S.W, r = G.clamp(S.r | 0, 0, 2);
+      if (W && W.type === 'boss' && W.boss && !W.boss.dead && !S.won && !(S.loot && S.loot.bossDown)) return 'trum' + r;
+      return 'vung' + r;
+    }
+    return 'lang';
+  }
+  N.chonBai = chonBai;
+  function vol() { return G.amThanh ? G.amThanh.vol('nhac') : 0; }
+  N.capNhat = function () { if (bus && ac) { try { bus.gain.setTargetAtTime(vol() * 0.9, ac.currentTime, 0.05); } catch (e) { /* bỏ qua */ } } };
+  function nhip() {
+    try {
+      const a = G.amThanh && G.amThanh.ac();
+      if (!a) return;
+      if (a !== ac) { ac = a; bus = gain(0, ac.destination); cur = null; N.ten = null; }
+      if (ac.state !== 'running' || document.hidden) return;
+      const want = N.tat || vol() <= 0 || G.noRender ? null : chonBai();
+      if (want !== N.ten) { batBai(want); N.capNhat(); }
+      if (Math.abs(bus.gain.value - vol() * 0.9) > 0.02) N.capNhat();
+      if (cur) lenLich(cur, ac.currentTime + 0.35);
+    } catch (e) { /* nhạc hỏng thì thôi, không làm đứng game */ }
+  }
+  N.nhip = nhip;
+  setInterval(nhip, 120);
+  // Ẩn trang (chuyển ứng dụng, khoá máy): dừng hẳn bộ âm thanh cho đỡ pin; hiện lại thì chạy tiếp (iOS có thể cần chạm một lần nữa).
+  document.addEventListener('visibilitychange', () => {
+    const a = G.amThanh && G.amThanh.ac();
+    if (!a) return;
+    try {
+      if (document.hidden) { if (cur) tat(cur, true); cur = null; N.ten = null; if (a.state === 'running') a.suspend().catch(() => {}); }
+      else if (G.save && G.save.sound) a.resume().catch(() => {});
+    } catch (e) { /* bỏ qua */ }
+  });
+  // Cho kiểm thử: tạo sẵn các nốt của một bài vào một AudioContext bất kỳ (OfflineAudioContext để đo độ to, không phát ra loa)
+  N.thuBai = function (a, ten, giay) {
+    const ac0 = ac, bus0 = bus, noise0 = noise;
+    ac = a; noise = null;
+    try {
+      bus = gain(1, a.destination);
+      const st = { ten, d: B[ten], g: gain(1, bus), vi: 0, o: 0, t: 0.05 };
+      while (st.t < giay) {
+        const dO = 60 / st.d.bpm / 2;
+        phatO(st, st.o, st.t, dO); st.t += dO; st.o++;
+        if (st.o >= st.d.vong[st.vi].len) { st.o = 0; st.vi = (st.vi + 1) % st.d.vong.length; }
+      }
+    } finally { ac = ac0; bus = bus0; noise = noise0; }
+  };
+  N.thuChieng = function (a, f, v) { const ac0 = ac; ac = a; try { chieng(a.destination, 0.05, f, v, 0.8); } finally { ac = ac0; } };
+})();
+
+// ===== js/truyen.js =====
+// Cốt truyện tối thiểu, bỏ qua được. Nạp sau js/village.js và js/stage.js (bọc thêm update/draw của làng và ải, không sửa luật chơi).
+//
+//   Mở đầu        4 khung (≈ 20 giây, mỗi khung tự sang sau 5 giây, chạm để sang nhanh, nút "Bỏ qua"): linh khí làng cạn, ba yêu tinh
+//                 thức dậy, ba em bé bị bắt, Cụ Đồ trao vũ khí sống cho Cu Tí. Chỉ chiếu MỘT lần lúc mới vào làng lần đầu
+//                 (G.save.truyen.mo); người chơi cũ đã qua ải 1 thì không chiếu. Xem lại: Anh Mõ > "Âm thanh · Pin · Truyện" > "Xem lại truyện".
+//   Trùm          trùm vùng và trùm nhỏ nói một câu khi ra mắt, một câu khi gục (bong bóng lời trên đầu, KHÔNG dừng trận).
+//   Kết vùng      hạ trùm vùng lần đầu: về làng thì chiếu 2–3 câu (em bé được cứu, người làng nói). Hạ Hồ Tinh: thêm đoạn kết + mời Độ khó 2.
+//   Người làng    mỗi người có một câu mới sau mỗi trùm vùng (3 mốc), nói một lần khi mở bảng của người đó.
+// Bản lưu: G.save.truyen = { mo: 1 đã xem mở đầu, v: số đoạn kết vùng đã xem (0..3), n: { người: mốc đã nghe } }. Trường MỚI, tuỳ chọn:
+// bản lưu cũ chưa có thì dựng theo tiến độ đang có (không chiếu lại những gì đã qua).
+// Tắt: ?truyen=0 hoặc G.TRUYEN = false. Bot kiểm thử (G.botInput) không bao giờ gặp khung truyện.
+(function () {
+  'use strict';
+  const G = window.G, ui = G.ui, T = G.theme, VS = G.villageScene, A = G.art;
+  let tatQS = false;
+  try { tatQS = /[?&]truyen=0(&|$)/.test(location.search || ''); } catch (e) { tatQS = false; }
+  const TR = (G.truyen = { dang: null });
+  TR.bat = () => !tatQS && G.TRUYEN !== false && !G.botInput;
+
+  // ---------- lời thoại ----------
+  const MO_DAU = [
+    { nen: 'cayda', loi: 'Làng ven sông sống nhờ linh khí của cây đa nghìn tuổi. Một sáng, lá đa úa vàng, linh khí cạn dần.' },
+    { nen: 'yeu', loi: 'Ba yêu tinh xưa kia Lạc Long Quân đã trừ nay thức dậy: Mộc Tinh ở Rừng già, Ngư Tinh ở Hang biển, Hồ Tinh ở Lâu đài cổ. Chúng hút linh khí về hang.' },
+    { nen: 'emBe', loi: 'Cu Tèo, Cái Bống, Cu Lì đi tìm linh khí cho làng, rồi bị yêu tinh bắt mất.' },
+    { nen: 'cuti', ai: 'do', loi: 'Còn Cu Tí. Cầm lấy vũ khí sống này, cháu: vũ khí lớn lên theo cháu, yêu tinh học theo cháu. Chú Lái Đò chờ ở bến!' },
+  ];
+  const VUNG = [
+    [
+      { ai: 'hunter', loi: 'Cu Tí ơi! Rễ cây quấn tớ cả tuần, may mà cậu tới!' },
+      { ai: 'do', loi: 'Rừng già thở lại rồi, cây đa đã nhú chồi. Nhưng gió biển lạnh lắm: Cái Bống còn kẹt ở Hang biển.' },
+      { loi: 'Cu Tèo đã về làng. Gặp Ông Từ ở sân đình để đổi em bé.' },
+    ],
+    [
+      { ai: 'healer', loi: 'Nước dưới hang lạnh buốt... Cảm ơn Cu Tí đã lặn xuống tìm tớ!' },
+      { ai: 'lai', loi: 'Biển êm rồi, đò lại chạy. Bên kia sông, Lâu đài cổ đỏ rực lửa: Cu Lì ở trong đó.' },
+      { loi: 'Cái Bống đã về làng. Gặp Ông Từ ở sân đình để đổi em bé.' },
+    ],
+    [
+      { ai: 'wrestler', loi: 'Con cáo chín đuôi bắt tớ canh lửa cả tháng! Về nhà thôi, đói lắm rồi!' },
+      { ai: 'do', loi: 'Ba yêu tinh đã ngủ lại. Linh khí về làng, cây đa xanh lá như xưa.' },
+    ],
+  ];
+  const KET = [
+    { nen: 'hoi', loi: 'Tối ấy cả làng mở hội dưới gốc đa. Bốn em bé ngồi nghe Cụ Đồ kể chuyện Lạc Long Quân trừ yêu. Hết truyện... mà chưa hết đâu!' },
+    { nen: 'hoi', ai: 'lai', loi: 'Đêm xuống, yêu tinh có thể thức dậy mạnh hơn. Muốn thử sức thì gặp chú, chạm "Độ khó 2" nhé!' },
+  ];
+  // Trùm: [câu ra mắt, câu khi gục]. Trùm nhỏ theo vùng.
+  const TRUM = {
+    moc: ['Ta là cây chiên đàn nghìn năm thành tinh. Linh khí của làng đã chảy vào rễ ta!', 'Lá rụng về cội... Rừng ơi, xanh lại đi...'],
+    ngu: ['Biển Đông là nhà ta! Đứa bé con dám lội xuống hang của Ngư Tinh sao?', 'Sóng lặng rồi... Ta về đáy biển ngủ tiếp...'],
+    ho: ['Chín đuôi, nghìn năm tu luyện. Ngươi tưởng thắng được ta ư?', 'Lửa ở đuôi tắt rồi... Hang ta lại thành hồ nước trong...'],
+    mini0: ['Nấm mọc sau mưa, ăn vào là ngủ quên! Hự hự!', 'Bào tử bay hết rồi... xẹp...'],
+    mini1: ['Càng ta kẹp vỡ cả đá ngầm! Lùi lại!', 'Ối, gãy càng! Bò ngang chạy thôi!'],
+    mini2: ['Gừừ! Lửa trong lâu đài này là của ta!', 'Gừ... lửa tàn rồi...'],
+  };
+  // Người làng: câu mới sau khi hạ Mộc Tinh, Ngư Tinh, Hồ Tinh
+  const LANG = {
+    lai: ['Rừng già yên rồi. Đò sang Hang biển được rồi đấy cháu.', 'Biển êm thật rồi! Chú chèo một mạch sang Lâu đài cổ.', 'Ba vùng yên ả. Muốn thử Độ khó 2 thì bảo chú.'],
+    ren: ['Gỗ linh Rừng già đây rồi! Mang về ông rèn cho.', 'Vảy cá thần cứng thật, tôi lưỡi vào là bén lắm.', 'Lửa Lâu đài cổ thổi lò mới hừng làm sao!'],
+    xen: ['Rừng xanh lại, nấm tươi về chợ, bà vui ghê.', 'Thuyền cá về bến rồi, chợ đông hẳn lên.', 'Cả làng mừng! Bà bán rẻ cho cháu... à mà thôi, giá cũ.'],
+    may: ['Cu Tèo về rồi, để cô may cho nó cái áo mới.', 'Cái Bống lạnh run, cô đang dệt cho cái khăn.', 'Cu Lì đòi áo đỏ như lửa. Cô may ngay!'],
+    do: ['Mộc Tinh là cây chiên đàn nghìn năm. Xưa Lạc Long Quân trừ nó ở rừng Phong Châu.', 'Ngư Tinh xưa bị Lạc Long Quân ném khối sắt nung vào miệng. Cháu cũng giỏi chẳng kém.', 'Hang cáo chín đuôi bị phá, chỗ ấy thành hồ lớn. Truyện của cháu, lão ghi vào sách.'],
+    tu: ['Cu Tèo chạy nhảy suốt sân đình. Ồn mà vui.', 'Cái Bống về, sân đình có tiếng hát rồi.', 'Đủ bốn bé rồi. Đình làng ấm hẳn lên.'],
+    mo: ['Cốc cốc! Làng nước ơi, Cu Tí hạ được Mộc Tinh rồi!', 'Cốc cốc! Biển êm, đò chạy, làng nước nghe chưa!', 'Cốc cốc cốc! Ba yêu tinh ngủ cả rồi! Mở hội thôi!'],
+  };
+  TR.LOI = { MO_DAU, VUNG, KET, TRUM, LANG };
+  // Bản tiếng Anh của mọi câu ở đây và ở bảng Cài đặt mới: tools/ngon-ngu/tu-dien/truyen-am-thanh.json (gộp vào js/ngon_ngu_en.js bằng tools/ngon-ngu/gop.py).
+
+
+  // ---------- tiến độ trong bản lưu ----------
+  const daHa = (sv, r) => !!(sv && sv.stars && sv.stars[r + '-4']);
+  function soVung(sv) { let n = 0; while (n < 3 && daHa(sv, n)) n++; return n; }
+  function st() {
+    const sv = G.save;
+    if (!sv) return null;
+    let t = sv.truyen;
+    if (!t || typeof t !== 'object' || Array.isArray(t)) t = sv.truyen = { mo: sv.stars && Object.keys(sv.stars).length ? 1 : 0, v: soVung(sv), n: {} };
+    if (!t.n || typeof t.n !== 'object' || Array.isArray(t.n)) t.n = {};
+    t.v = G.clamp(t.v | 0, 0, 3); t.mo = t.mo ? 1 : 0;
+    return t;
+  }
+  TR.st = st;
+  const luu = () => { try { G.persist(); } catch (e) { /* bỏ qua */ } };
+
+  // ---------- trình chiếu (che hết cảnh bên dưới, chạm để sang khung, Bỏ qua) ----------
+  TR.choi = function (ds, o) {
+    if (!ds || !ds.length) return;
+    TR.dang = { ds, i: 0, t: 0, o: o || {} };
+    G.click = null; if (G.stalePointers) G.stalePointers();
+  };
+  function het() {
+    const d = TR.dang; TR.dang = null;
+    G.click = null; if (G.stalePointers) G.stalePointers();
+    if (d && d.o.xong) { try { d.o.xong(); } catch (e) { /* bỏ qua */ } }
+  }
+  TR.het = het;
+  function tiep() { const d = TR.dang; if (!d) return; d.i++; d.t = 0; if (d.i >= d.ds.length) het(); }
+  TR.tiep = tiep;
+  TR.update = function (dt) {
+    const d = TR.dang;
+    if (!d) return;
+    d.t += dt;
+    try { if (VS && G.scene === G.Village) VS.update(dt, true); } catch (e) { /* bỏ qua */ }
+    const kp = G.keyP;
+    if (kp.Escape) { kp.Escape = false; het(); return; }
+    if ((kp.Enter || kp.Space || kp.KeyJ) && d.t > 0.25) { tiep(); return; }
+    const f = d.ds[d.i];
+    if (d.t > (f.giay || 5)) tiep();
+  };
+  const SKIP = [384, 6, 90, 32]; // nút Bỏ qua: cao 32 (khoảng 46 điểm trên iPhone cầm ngang)
+  TR.SKIP = SKIP;
+  TR.draw = function () {
+    const d = TR.dang;
+    if (!d) return;
+    G.syncTaps = [];
+    const f = d.ds[d.i], c = G.wx;
+    try { veNen(f, d.t); } catch (e) { G.wxDat(c, 0, 0); c.fillStyle = '#120d10'; c.fillRect(0, 0, 480, 270); }
+    G.wxDat(c, 0, 0);
+    if (d.t < 0.35) { c.globalAlpha = 1 - d.t / 0.35; c.fillStyle = '#000'; c.fillRect(0, 0, 480, 270); c.globalAlpha = 1; }
+    // khung chữ dưới đáy
+    const size = 9, w = 448, x = 16, ten = f.ai ? tenAi(f.ai) : null;
+    const lines = ui.wrap(f.loi, w - 14, size, true), h = Math.max(24, lines.length * (size + 3) + 15);
+    const y = 260 - h;
+    const ga = G.ux.globalAlpha; G.ux.globalAlpha = ga * Math.min(1, d.t / 0.3 + 0.2);
+    T.dialog(x, y, w, ten, f.loi, { size, tail: f.ai ? 54 : -1 });
+    G.ux.globalAlpha = ga;
+    ui.text('Chạm để tiếp ›', 462, y - 5, { size: 7.5, align: 'right', color: '#f6dc92' });
+    // chấm tiến độ
+    const n = d.ds.length;
+    for (let i = 0; i < n; i++) ui.rect(240 - n * 6 + i * 12 + 2, 14, 8, 3, i === d.i ? '#f6dc92' : 'rgba(246,220,146,0.35)');
+    if (f.tieuDe) ui.text(f.tieuDe, 240, 34, { size: 10, bold: true, align: 'center', color: '#f6dc92' });
+    if (T.sbtn(SKIP[0], SKIP[1], SKIP[2], SKIP[3], 'Bỏ qua ✕', { size: 8.5 })) { het(); return; }
+    if (G.click) { const ok = d.t > 0.3; G.click = null; if (ok) tiep(); }
+  };
+  function tenAi(k) {
+    if (VS && VS.NPCS && VS.NPCS[k]) return VS.NPCS[k].ten;
+    if (G.HEROES[k]) return G.HEROES[k].name;
+    return null;
+  }
+
+  // ---------- hình nền các khung ----------
+  const VK = { // vũ khí cầm trong tay các em bé lúc vẽ (chỉ để vẽ)
+    smith: { type: 'sword', family: 0, rarity: 3, marks: { fire: 300, poison: 0, ice: 0 }, branch: 'fire', sharpen: 0 },
+    hunter: { type: 'bow', family: 3, rarity: 0, marks: { fire: 0, poison: 0, ice: 0 }, branch: null, sharpen: 0 },
+    healer: { type: 'spear', family: 6, rarity: 0, marks: { fire: 0, poison: 0, ice: 0 }, branch: null, sharpen: 0 },
+    wrestler: { type: 'hammer', family: 8, rarity: 0, marks: { fire: 0, poison: 0, ice: 0 }, branch: null, sharpen: 0 },
+  };
+  function emBe(c, key, x, y, s, face, vk) {
+    G.wxDat(c, x, y, s);
+    try { A.hero(c, { x: 0, y: 0, face: face || 1, key, move: false, t: G.time, atk: -1, dodge: -1, weapon: vk === false ? null : VK[key] }); } catch (e) { /* hình chưa sẵn thì bỏ */ }
+    G.wxDat(c, 0, 0);
+  }
+  function lang(cam, dim) {
+    const S = VS.state, cam0 = S.cam;
+    S.cam = cam == null ? cam0 : cam;
+    try { VS.drawWorld({ dim: dim, hideHero: true }); } finally { S.cam = cam0; }
+  }
+  function nguoi(c, k, x, y, s) {
+    if (VS.NPCS[k]) { VS.putNpc(c, k, x, y, Math.floor(G.time * 2) % 3, { look: 1, noShadow: false }, s); G.wxDat(c, 0, 0); }
+    else if (G.HEROES[k]) emBe(c, k, x, y, s, 1);
+  }
+  function la(c, t, mau) { // lá rơi
+    for (let i = 0; i < 16; i++) {
+      const sp = 14 + (i % 5) * 4, yy = ((t * sp + i * 37) % 200) + 20, xx = (i * 61 + Math.sin(t * 1.3 + i) * 14 + t * 6) % 480;
+      c.fillStyle = mau[i % mau.length]; c.fillRect(Math.round(xx), Math.round(yy), 3, 2); c.fillRect(Math.round(xx) + 1, Math.round(yy) + 2, 1, 1);
+    }
+  }
+  function veNen(f, t) {
+    const c = G.wx, k = f.nen || 'lang';
+    if (k === 'cayda') {
+      lang(240, 0.2);
+      G.wxDat(c, 0, 0);
+      // màu úa: cảnh nhạt màu ngả vàng nâu (linh khí cạn)
+      c.globalCompositeOperation = 'color'; c.globalAlpha = 0.7; c.fillStyle = '#9a7a40'; c.fillRect(0, 0, 480, 270);
+      c.globalAlpha = 1; c.globalCompositeOperation = 'source-over';
+      la(c, t, ['#d8b04a', '#b88a2a', '#e8c86a']);
+    } else if (k === 'yeu') {
+      const gr = c.createLinearGradient(0, 0, 0, 270); gr.addColorStop(0, '#0b0912'); gr.addColorStop(0.7, '#22142a'); gr.addColorStop(1, '#120a10');
+      G.wxDat(c, 0, 0); c.fillStyle = gr; c.fillRect(0, 0, 480, 270);
+      const M = G.MOB_ART || { boss: {} }, ds = [['moc', 88, '#5aa04a'], ['ngu', 240, '#4a90c0'], ['ho', 392, '#e0603a']];
+      ds.forEach((q, i) => {
+        const x = q[1], y = 186, rr = G.REGIONS[i];
+        const gl = c.createRadialGradient(x, y - 40, 4, x, y - 40, 70); gl.addColorStop(0, q[2] + '66'); gl.addColorStop(1, q[2] + '00');
+        c.fillStyle = gl; c.fillRect(x - 80, y - 120, 160, 150);
+        c.fillStyle = 'rgba(0,0,0,0.45)'; c.beginPath(); c.ellipse(x, y, 34, 6, 0, 0, 7); c.fill();
+        const art = M.boss && M.boss[rr.boss];
+        if (art && G.monsterArt) {
+          const s = 0.62 + 0.02 * Math.sin(t * 2 + i);
+          G.wxDat(c, x, y, s);
+          try { G.monsterArt.draw(c, art, 0, 0, { anim: 'idle', t: G.time + i, face: i === 0 ? 1 : -1, dir: i === 0 ? 0 : Math.PI, phase: 1 }); } catch (e) { /* bỏ */ }
+          G.wxDat(c, 0, 0);
+        }
+      });
+      ds.forEach((q, i) => ui.text(G.REGIONS[i].bossName, q[1], 60, { size: 10, bold: true, align: 'center', color: q[2] }));
+    } else if (k === 'emBe') {
+      G.wxDat(c, 0, 0);
+      const ds = [['hunter', '#1e3a24', '#3a6a3a'], ['healer', '#12283c', '#2e5a7a'], ['wrestler', '#3a160e', '#7a3020']];
+      ds.forEach((q, i) => {
+        const x0 = i * 160;
+        const gr = c.createLinearGradient(0, 0, 0, 270); gr.addColorStop(0, q[1]); gr.addColorStop(1, q[2]);
+        c.fillStyle = gr; c.fillRect(x0, 0, 160, 270);
+        c.fillStyle = 'rgba(0,0,0,0.35)'; c.fillRect(x0 + 159, 0, 1, 270);
+        emBe(c, q[0], x0 + 80, 168 + Math.round(Math.sin(t * 3 + i) * 1), 2.4, i === 2 ? -1 : 1, false);
+        // song sắt / rễ cây / băng nhốt em bé
+        const col = ['#5a3a20', '#a8d8f0', '#3a2a2a'][i];
+        for (let j = 0; j < 6; j++) { c.fillStyle = col; c.fillRect(x0 + 40 + j * 16, 76, 3, 102); }
+        c.fillRect(x0 + 34, 72, 92, 5); c.fillRect(x0 + 34, 176, 92, 5);
+        ui.text(G.HEROES[q[0]].name, x0 + 80, 52, { size: 10, bold: true, align: 'center', color: '#f6dc92' });
+        ui.text(G.REGIONS[i].name, x0 + 80, 64, { size: 7.5, align: 'center', color: '#e8dcc0' });
+      });
+    } else if (k === 'cuti') {
+      lang(240, 0.25); // Cụ Đồ ngồi gốc đa bên trái (người trong cảnh), Cu Tí cầm vũ khí sống sáng rực ở giữa
+      G.wxDat(c, 0, 0);
+      const gl = c.createRadialGradient(250, 150, 4, 250, 150, 80); gl.addColorStop(0, 'rgba(255,190,90,' + (0.35 + 0.1 * Math.sin(t * 3)) + ')'); gl.addColorStop(1, 'rgba(255,190,90,0)');
+      c.fillStyle = gl; c.fillRect(160, 60, 180, 180);
+      emBe(c, 'smith', 250, 190, 2.5, -1);
+    } else if (k === 'hoi') {
+      lang(240, 0.3);
+      G.wxDat(c, 0, 0);
+      c.globalCompositeOperation = 'multiply'; c.fillStyle = '#9890c8'; c.fillRect(0, 0, 480, 270); c.globalCompositeOperation = 'source-over';
+      for (let i = 0; i < 9; i++) { // đèn lồng
+        const x = 40 + i * 50, y = 40 + (i % 2) * 8 + Math.sin(t * 2 + i) * 1.5;
+        c.fillStyle = 'rgba(255,170,80,0.25)'; c.beginPath(); c.arc(x, y, 10, 0, 7); c.fill();
+        c.fillStyle = i % 3 ? '#e04a2a' : '#f0b030'; c.fillRect(x - 4, y - 5, 8, 10); c.fillStyle = '#ffd27a'; c.fillRect(x - 2, y - 3, 4, 6);
+      }
+      ['smith', 'hunter', 'healer', 'wrestler'].forEach((h, i) => emBe(c, h, 190 + i * 46, 190, 2, -1)); // ngồi quanh Cụ Đồ ở gốc đa
+    } else {
+      lang(240, 0.45); // nhìn về phía cây đa, khuất sân đình (không thấy em bé đang được kể là bị bắt)
+    }
+    if (f.ai && k === 'lang') { // người đang nói đứng to bên trái
+      G.wxDat(c, 0, 0);
+      const gl = c.createRadialGradient(70, 150, 4, 70, 150, 70); gl.addColorStop(0, 'rgba(255,230,170,0.22)'); gl.addColorStop(1, 'rgba(255,230,170,0)');
+      c.fillStyle = gl; c.fillRect(0, 70, 150, 140);
+      nguoi(c, f.ai, 70, 196, 3);
+    }
+    G.wxDat(c, 0, 0);
+  }
+
+  // ---------- khi nào chiếu ----------
+  function moDau() { return MO_DAU.map((f, i) => Object.assign({ tieuDe: ['Linh khí cạn', 'Ba yêu tinh', 'Bị bắt', 'Lên đường'][i] }, f)); }
+  function doanVung(r) {
+    const ds = VUNG[r].map((f) => Object.assign({ nen: 'lang', giay: 5 }, f));
+    return r === 2 ? ds.concat(KET.map((f) => Object.assign({ giay: 6 }, f))) : ds;
+  }
+  // Ở làng (bảng chính, không có hộp mời liên kết): chưa xem mở đầu thì chiếu; vừa hạ trùm vùng mới thì chiếu đoạn kết vùng đó.
+  // Chỉ chiếu khi NGƯỜI CHƠI tự đi vào làng: từ màn chào (mở đầu) hoặc từ ải về (kết vùng). Bài kiểm tra nhảy thẳng vào làng
+  // bằng G.setScene(G.Village) thì không gặp khung truyện (TR.cho chỉ được bật bên trong update/draw của màn chào và của ải).
+  TR.cho = { mo: false, vung: false };
+  function kiemTra() {
+    if (!TR.bat() || TR.dang || (!TR.cho.mo && !TR.cho.vung)) return;
+    const api = G.villageApi, V = api && api.V;
+    if (!V || V.tab !== 'hub' || V.moi) return;
+    const t = st(), sv = G.save, cho = TR.cho;
+    TR.cho = { mo: false, vung: false };
+    if (!t) return;
+    if (!t.mo) {
+      t.mo = 1; luu();
+      if (cho.mo && !Object.keys(sv.stars || {}).length) { TR.choi(moDau(), { ten: 'mo' }); return; }
+    }
+    const n = soVung(sv);
+    if (cho.vung && t.v < n) { const r = t.v; t.v = r + 1; luu(); TR.choi(doanVung(r), { ten: 'vung' + r }); }
+  }
+  TR.kiemTra = kiemTra;
+  // Anh Mõ: xem lại mở đầu và các đoạn kết vùng đã qua
+  TR.xemLai = function () {
+    const t = st();
+    let ds = moDau();
+    for (let r = 0; r < Math.min(3, t ? t.v : 0); r++) ds = ds.concat(doanVung(r));
+    TR.choi(ds, { ten: 'xemlai' });
+  };
+  // Người làng: câu mới theo mốc (số trùm vùng đã hạ), nói một lần khi mở bảng của người đó
+  TR.loiMoi = function (k) {
+    if (tatQS || G.TRUYEN === false) return null;
+    const t = st(), m = soVung(G.save);
+    if (!t || !m || !LANG[k]) return null;
+    if ((t.n[k] | 0) >= m) return null;
+    t.n[k] = m; luu();
+    return LANG[k][m - 1];
+  };
+
+  // ---------- bọc cảnh làng ----------
+  let tu = null; // đang chạy update/draw của cảnh nào (để biết lần đổi sang làng là do người chơi bấm)
+  const boc = (sc, ten) => {
+    if (!sc) return;
+    for (const f of ['update', 'draw']) { const f0 = sc[f]; sc[f] = function () { const cu = tu; tu = ten; try { return f0.apply(this, arguments); } finally { tu = cu; } }; }
+  };
+  boc(G.Title, 'chao'); boc(G.StageScene, 'ai');
+  const setScene0 = G.setScene;
+  G.setScene = function (s) {
+    const r = setScene0.apply(this, arguments);
+    if (s === G.Village) { if (tu === 'chao') TR.cho.mo = true; else if (tu === 'ai') TR.cho.vung = true; }
+    return r;
+  };
+  if (G.Village) {
+    const u0 = G.Village.update, d0 = G.Village.draw;
+    G.Village.update = function (dt) {
+      if (TR.dang) { TR.update(dt); return; }
+      try { kiemTra(); } catch (e) { /* bỏ qua */ }
+      if (TR.dang) return;
+      return u0.call(this, dt);
+    };
+    G.Village.draw = function () {
+      if (TR.dang) { TR.draw(); return; }
+      return d0.call(this);
+    };
+  }
+  // mở bảng người làng: nói câu mới (nếu có), lâu hơn câu thường cho kịp đọc
+  if (VS && VS.onTalk && G.villageApi) {
+    const t0 = VS.onTalk;
+    VS.onTalk = function (k) {
+      t0(k);
+      try { const l = TR.loiMoi(k); if (l) { G.villageApi.say(l); G.villageApi.V.msgT = 5; } } catch (e) { /* bỏ qua */ }
+    };
+  }
+
+  // ---------- trùm nói (bong bóng lời, không dừng trận) ----------
+  let bong = null, bongB = null, daGuc = false;
+  function khoaTrum(b, S) { return b.kind === 'mini' ? 'mini' + G.clamp(S.r | 0, 0, 2) : b.kind; }
+  function trumNhip(dt) {
+    const S = G.getRun && G.getRun();
+    if (!S || !S.W || !TR.bat() || G.noRender) { if (!S) { bong = null; bongB = null; } return; }
+    const W = S.W, b = W.boss;
+    if (b && b !== bongB) {
+      bongB = b; daGuc = false;
+      const L = TRUM[khoaTrum(b, S)];
+      bong = L && !b.dead ? { b, s: L[0], t: 4.2, ten: b.name } : null;
+    }
+    if (b && !daGuc && (b.dead || b.dying != null || b.hp <= 0)) {
+      daGuc = true;
+      const L = TRUM[khoaTrum(b, S)];
+      if (L) bong = { b, s: L[1], t: 3.4, ten: b.name, x: b.x, y: b.y };
+    }
+    if (bong && S.mode === 'play' && !S.trans) bong.t -= dt;
+    if (bong && (bong.t <= 0 || bong.b !== W.boss)) bong = null;
+  }
+  function trumVe() {
+    const S = G.getRun && G.getRun();
+    if (!bong || !S || !S.W || S.mode !== 'play' || S.trans) return;
+    const W = S.W, b = bong.b, cam = Math.round(W.cam || 0);
+    const bx = (bong.x != null ? bong.x : b.x) - cam, by = bong.y != null ? bong.y : b.y;
+    const hh = (b.drawH || b.h || 60) * (b.scale || 1), top = by - hh;
+    const size = 8, w = 176, lines = ui.wrap(bong.s, w - 14, size, true), h = Math.max(24, lines.length * (size + 3) + 15);
+    let x = G.clamp(bx - w / 2, 4, 476 - w), y = top - h - 6, tail = G.clamp(bx - x - 4, 10, w - 20);
+    if (y < 58) { // trùm cao quá: đặt lời bên cạnh đầu trùm, đuôi chỉ về phía trùm
+      y = G.clamp(top + 4, 58, 150);
+      if (bx > 240) { x = G.clamp(bx - w - 24, 4, 476 - w); tail = w - 20; } else { x = G.clamp(bx + 24, 4, 476 - w); tail = 10; }
+    }
+    const a = Math.min(1, (4.2 - bong.t) / 0.2 + 0.1, bong.t / 0.35), ga = G.ux.globalAlpha;
+    G.ux.globalAlpha = ga * G.clamp(a, 0, 1);
+    T.dialog(x, y, w, bong.ten, bong.s, { size, tail });
+    G.ux.globalAlpha = ga;
+  }
+  TR.bongTrum = () => bong; // cho kiểm thử
+  if (G.StageScene) {
+    const u0 = G.StageScene.update, d0 = G.StageScene.draw;
+    G.StageScene.update = function (dt) { const r = u0.call(this, dt); try { trumNhip(dt); } catch (e) { /* bỏ qua */ } return r; };
+    G.StageScene.draw = function () { const r = d0.call(this); try { trumVe(); } catch (e) { /* bỏ qua */ } return r; };
   }
 })();
 

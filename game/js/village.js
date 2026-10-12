@@ -49,7 +49,7 @@
   }
   // Mở bảng của một người (k: lai, ren, xen, may, do, tu, mo)
   function open(k) {
-    V.who = k; V.tab = TAB_OF[k]; V.sel = null; V.page = 0; V.confirm = false; V.node = null; V.msgT = 0;
+    V.who = k; V.tab = TAB_OF[k]; V.sel = null; V.page = 0; V.confirm = false; V.node = null; V.msgT = 0; V.cd2 = false;
     if (G.banDo) G.banDo.reset();
     if (k === 'do') {
       V.tab = V.dtab === 'help' || (V.dtab === 'chuong' && chuongOpen()) || (V.dtab === 'rank' && PANELS.rank) ? V.dtab : 'skill';
@@ -712,16 +712,20 @@
 
   // ---------- cài đặt (Anh Mõ) ----------
   // Lưu mây, đăng nhập Google, góp ý: js/cloud.js, js/cloud_ui.js (không có thì bảng chỉ còn phần cũ)
+  // Phiên Cốt truyện + Âm thanh: mọi nút của bảng cao 32 (khoảng 46 điểm trên iPhone cầm ngang, tối thiểu 44). Trang 2 (V.cd2):
+  // thanh Nhạc, thanh Tiếng (0..100, G.save.nhac / G.save.tieng, js/engine.js G.amThanh), bật/tắt âm thanh, Tiết kiệm pin (G.save.pin), Xem lại truyện.
+  const CDH = 32;
   function settings() {
     const sv = G.save, CL = G.cloud, CU = G.cloudUI;
+    if (V.cd2) return settings2();
     frame('Cổng làng: cài đặt');
-    if (T.btn(CX + 4, 72, 96, 26, sv.sound ? 'Âm thanh: bật' : 'Âm thanh: tắt', { size: 8.5 })) { sv.sound = !sv.sound; G.persist(); G.audioStart(); }
+    if (T.btn(CX + 4, 68, 96, CDH, 'Âm thanh, pin ›', { size: 8.5, sub: sv.sound ? 'Nhạc · Truyện' : 'Đang tắt', subSize: 7 })) { V.cd2 = true; V.confirm = false; G.audioStart(); }
     // Độ nét hình (js/engine.js G.NET): Cao = canvas thế giới gấp đôi điểm ảnh (ảnh AI rõ hơn), Thường = như cũ (nhẹ máy yếu)
-    if (T.btn(CX + 104, 72, 96, 26, sv.net === 'thuong' ? 'Độ nét: Thường' : 'Độ nét: Cao', { size: 8.5 })) {
+    if (T.btn(CX + 104, 68, 96, CDH, sv.net === 'thuong' ? 'Độ nét: Thường' : 'Độ nét: Cao', { size: 8.5 })) {
       if (sv.net === 'thuong') delete sv.net; else sv.net = 'thuong';
       G.persist(); say(sv.net === 'thuong' ? 'Độ nét Thường: nhẹ máy hơn, hình AI kém rõ hơn.' : 'Độ nét Cao: hình AI rõ gấp đôi.');
     }
-    if (T.btn(CX + 204, 72, 96, 26, 'Toàn màn hình', { size: 8.5 })) {
+    if (T.btn(CX + 204, 68, 96, CDH, 'Toàn màn hình', { size: 8.5 })) {
       try { const el = document.documentElement; if (document.fullscreenElement) document.exitFullscreen(); else el.requestFullscreen().catch(() => say('Thiết bị này không cho bật toàn màn hình.')); } catch (e) { say('Thiết bị này không cho bật toàn màn hình.'); }
     }
     T.head('Lưu tiến trình', CX + 4, 113);
@@ -731,33 +735,72 @@
       ui.text(CL.label(), CX + 4, 125, { size: 7.5, color: on && !CL.dirty ? GOOD : SOFT });
       ui.text(on ? (CL.isGuest() ? 'Tài khoản: Khách. Đăng nhập Google để giữ tiến trình khi đổi máy.' : G.t('Tài khoản Google: {0}', G.kd(CL.who()))) : 'Tiến trình luôn được lưu trong trình duyệt này.', CX + 4, 136, { size: 7, color: SOFT });
       if (on && CL.isGuest()) {
-        G.syncTaps.push({ x: CX + 4, y: 142, w: 146, h: 24, fn: () => titleLogin(CL) });
-        if (T.btn(CX + 4, 142, 146, 24, 'Đăng nhập Google', { size: 8.5, primary: true }) && !V.gBusy) {
+        G.syncTaps.push({ x: CX + 4, y: 142, w: 146, h: CDH, fn: () => titleLogin(CL) });
+        if (T.btn(CX + 4, 142, 146, CDH, 'Đăng nhập Google', { size: 8.5, primary: true }) && !V.gBusy) {
           V.gBusy = true; say('Đang mở cửa sổ đăng nhập Google…');
           const snap = guestSnap();
           CL.google().then((r) => { guestKeep(snap, r); return r; }).then((r) => say(r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google. Tiến trình được giữ nguyên.' : 'Đã đăng nhập Google.'), (e) => say(G.t('Chưa đăng nhập được: {0}', e.message))).then(() => { V.gBusy = false; });
         }
-      } else T.btn(CX + 4, 142, 146, 24, on ? 'Đã đăng nhập Google' : 'Đăng nhập Google', { size: 8.5, disabled: true });
+      } else T.btn(CX + 4, 142, 146, CDH, on ? 'Đã đăng nhập Google' : 'Đăng nhập Google', { size: 8.5, disabled: true });
     } else ui.para('Tiến trình được lưu trong trình duyệt này. Đổi máy hoặc xoá dữ liệu trình duyệt sẽ mất tiến trình.', CX + 4, 125, 292, { size: 7.5, color: SOFT });
-    if (CU && T.btn(CX + 154, 142, 146, 24, '✉ Góp ý', { size: 8.5 })) CU.feedback({});
+    if (CU && T.btn(CX + 154, 142, 146, CDH, '✉ Góp ý', { size: 8.5 })) CU.feedback({});
     if (CL && CU && CL.isAdmin()) {
       const n = CL.adminNew;
-      if (T.btn(CX + 4, 170, 296, 22, n ? G.t('📥 Góp ý nhận được ({0} mới)', n) : '📥 Góp ý nhận được', { size: 8.5, gold: true, dot: !!n })) CU.inbox();
+      if (T.btn(CX + 4, 178, 296, 22, n ? G.t('📥 Góp ý nhận được ({0} mới)', n) : '📥 Góp ý nhận được', { size: 8.5, gold: true, dot: !!n })) CU.inbox();
     }
     if (!V.confirm) {
-      if (T.btn(CX + 4, 200, 200, 26, 'Xoá tiến trình, chơi lại từ đầu', { size: 8, danger: true })) V.confirm = true;
+      if (T.btn(CX + 4, 208, 200, CDH, 'Xoá tiến trình, chơi lại từ đầu', { size: 8, danger: true })) V.confirm = true;
       // Ngôn ngữ (js/ngon_ngu.js): bấm là đổi ngay Tiếng Việt <-> English, nhớ theo máy và ghi vào bản lưu (trường lang)
-      if (G.ngonNgu && T.btn(CX + 208, 200, 92, 26, 'Ngôn ngữ', { size: 8, sub: G.LANG === 'en' ? 'English' : 'Tiếng Việt' })) {
+      if (G.ngonNgu && T.btn(CX + 208, 208, 92, CDH, 'Ngôn ngữ', { size: 8, sub: G.LANG === 'en' ? 'English' : 'Tiếng Việt' })) {
         G.ngonNgu.doi(); say(G.LANG === 'en' ? 'Language: English.' : 'Ngôn ngữ: Tiếng Việt.');
       }
     } else {
-      ui.text('Chắc chắn xoá hết? Không khôi phục được.', CX + 4, 204, { size: 8.5, color: WARN, bold: true });
+      ui.text('Chắc chắn xoá hết? Không khôi phục được.', CX + 4, 205, { size: 8, color: WARN, bold: true });
       // "Thôi" nằm đúng chỗ nút xoá vừa bấm, để bấm đúp nhầm cũng không mất tiến trình
-      if (T.btn(CX + 4, 208, 120, 26, 'Thôi')) V.confirm = false;
-      else if (T.btn(CX + 132, 208, 120, 26, 'Xoá hết', { danger: true })) { G.resetSave(); V.confirm = false; goHub(); VS.enter({}); VS.say('Đã xoá tiến trình.'); return null; }
+      if (T.btn(CX + 4, 208, 120, CDH, 'Thôi')) V.confirm = false;
+      else if (T.btn(CX + 132, 208, 120, CDH, 'Xoá hết', { danger: true })) { G.resetSave(); V.confirm = false; goHub(); VS.enter({}); VS.say('Đã xoá tiến trình.'); return null; }
     }
     if (G.VERSION) ui.text(G.t('Phiên bản {0}', G.VERSION), CX + CW - 2, 258, { size: 6.5, align: 'right', color: SOFT });
     return V.confirm ? 'Ấy ấy! Xoá là mất hết đấy, nghĩ kỹ chưa?' : 'Cốc cốc cốc! Làng nước nghe đây! Cần chỉnh gì cứ bảo anh.';
+  }
+  // Trang 2: Nhạc, Tiếng, bật/tắt âm thanh, Tiết kiệm pin, Xem lại truyện
+  function settings2() {
+    const sv = G.save, AM = G.amThanh;
+    frame('Âm thanh, pin, truyện');
+    thanhAm('Nhạc', 'nhac', 66);
+    thanhAm('Tiếng', 'tieng', 104);
+    if (T.btn(CX + 4, 146, 146, CDH, sv.sound ? 'Âm thanh: bật' : 'Âm thanh: tắt', { size: 8.5, sel: !!sv.sound })) {
+      sv.sound = !sv.sound; G.persist(); G.audioStart(); if (AM) AM.capNhat();
+      say(sv.sound ? 'Bật cả nhạc lẫn tiếng.' : 'Tắt hết nhạc và tiếng.');
+    }
+    if (T.btn(CX + 154, 146, 146, CDH, sv.pin ? 'Tiết kiệm pin: bật' : 'Tiết kiệm pin: tắt', { size: 8.5, sub: '30 khung/giây', subSize: 7, sel: !!sv.pin })) {
+      if (sv.pin) delete sv.pin; else sv.pin = true;
+      G.persist(); say(sv.pin ? 'Tiết kiệm pin: hình vẽ 30 khung mỗi giây, máy đỡ nóng.' : 'Vẽ đủ khung hình, mượt nhất.');
+    }
+    if (T.btn(CX + 4, 186, 146, CDH, 'Xem lại truyện', { size: 8.5, disabled: !G.truyen })) { V.confirm = false; G.truyen.xemLai(); }
+    if (T.btn(CX + 154, 186, 146, CDH, '‹ Trở lại', { size: 8.5 })) V.cd2 = false;
+    ui.para('Nhạc tạo ngay trong máy, không tải thêm gì. Tiết kiệm pin: vẽ 30 khung mỗi giây, trận đấu vẫn chạy đủ nhanh.', CX + 4, 232, 296, { size: 7.5, color: SOFT });
+    return 'Nhạc làng có sáo trúc với đàn bầu đấy. Nghe hay thì để to lên!';
+  }
+  // Một thanh âm lượng: nút − và + (mỗi lần 10), kéo hoặc chạm trên thanh (mỗi nấc 5). Nhả tay mới lưu.
+  function thanhAm(nhan, k, y) {
+    const AM = G.amThanh, sv = G.save;
+    if (!AM) return;
+    const cu = AM.so(k), x0 = CX + 94, x1 = CX + 222;
+    let v = cu;
+    ui.text(nhan, CX + 4, y + 20, { size: 9, bold: true, color: TXT });
+    if (T.btn(CX + 52, y, 36, CDH, '−', { size: 12 })) v = Math.max(0, v - 10);
+    if (T.btn(CX + 228, y, 36, CDH, '+', { size: 12 })) v = Math.min(100, v + 10);
+    const theo = (px) => Math.round(G.clamp((px - x0) / (x1 - x0), 0, 1) * 20) * 5;
+    for (const p of G.pointers.values()) if (!p.stale && p.sx >= x0 - 6 && p.sx <= x1 + 6 && p.sy >= y - 2 && p.sy <= y + CDH + 2) { v = theo(p.x); p.role = 'ui'; }
+    if (G.click && G.inRect(G.click, x0 - 6, y - 2, x1 - x0 + 12, CDH + 4)) { v = theo(G.click.x); G.click = null; }
+    const kx = x0 + ((x1 - x0) * v) / 100;
+    ui.rect(x0, y + 14, x1 - x0, 5, '#14201e', '#3a5a52');
+    if (v > 0) ui.rect(x0, y + 14, kx - x0, 5, GOLD);
+    ui.rect(Math.round(kx - 4), y + 7, 8, 19, '#f3e8c8', '#2a1a14');
+    ui.text(v ? String(v) : G.t('Tắt'), CX + 300, y + 20, { size: 9, bold: true, align: 'right', color: v ? GOLD : SOFT });
+    if (v !== cu) { sv[k] = v; AM.capNhat(); V.cdLuu = k; }
+    if (V.cdLuu && !G.pointers.size) { const kk = V.cdLuu; V.cdLuu = null; G.persist(); if (kk === 'tieng') G.sfx('pick'); }
   }
 
   const PANELS = { forge, gear, outfit, hero, skill, chuong, help, settings };

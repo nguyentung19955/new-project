@@ -75,6 +75,11 @@ def main():
         # 1. Màn chào (mở tệp trên máy: không có mây => "Chạm để bắt đầu")
         step('01-man-chao', 'mở lần đầu, không có mây')
         tap(240, 200, 600)
+        # Phiên Cốt truyện (js/truyen.js): người mới vào làng lần đầu thì có đoạn mở đầu 4 khung; chụp rồi bấm "Bỏ qua" như người chơi
+        if pg.evaluate('!!(G.truyen && G.truyen.dang)'):
+            step('02a-mo-dau-truyen', 'đoạn mở đầu (chạm để tiếp, nút Bỏ qua)')
+            sk = pg.evaluate('G.truyen.SKIP')
+            tap(sk[0] + sk[2] / 2, sk[1] + sk[3] / 2, 600)
         step('02-lang-vua-vao', 'chạm màn chào -> làng')
         pg.wait_for_timeout(3500)
         step('03-lang-sau-4-giay', 'đứng yên 4 giây')
