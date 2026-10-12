@@ -17317,6 +17317,9 @@ MA._xong();
         sp.nhunBuoc = tep.nhun_buoc !== false;
         // Thân theo BỘ TRANG PHỤC: mã em-be-<nhân vật>-<bộ> (bộ: rung, bien, lau). Thân đã vẽ sẵn mũ, áo, đồ lưng, bùa của bộ.
         const mb = /^em-be-(smith|hunter|healer|wrestler)-(rung|bien|lau)$/.exec(sp.ma); sp.bo = mb ? mb[2] : null;
+        // Thân bộ VẼ CŨ (tệp ghi "cu": true, 12/10: 3 thân bộ Cái Bống còn mặt kiểu bộ xương sau khi thân gốc đã thay bé gái mới):
+        // SC.thanBo bỏ qua → dùng thân gốc + đồ khoác rời như khi chưa đủ bộ. Nhập tệp thân bộ mới (không có "cu") là tự dùng lại.
+        sp.cu = !!(mb && tep.cu === true);
       }
       if (typeof Image !== 'undefined') {
         const img = new Image();
@@ -17682,7 +17685,15 @@ MA._xong();
   SC.BO_TP = ['rung', 'bien', 'lau'];
   const fxCua = (o) => { const x = o && (o.outfit || (o.p && o.p.outfit)); return (x && x.fx) || null; };
   SC.boCua = (o) => { const f = fxCua(o), b = f && (f.bo_than !== undefined ? f.bo_than : f.bo); return typeof b === 'string' && BO_TP[b] ? b : null; };
-  SC.thanBo = (key, o) => { const b = SC.boCua(o); return b ? SC.get('em-be-' + (key || 'smith') + '-' + b) : null; };
+  // G.THAN_BO_CU: true thì vẫn dùng thân bộ vẽ cũ (tệp "cu": true) để xem lại hình cũ (?thanbocu=1). Mặc định false: bỏ qua thân cũ.
+  if (G.THAN_BO_CU === undefined) { let bat = false; try { bat = typeof location !== 'undefined' && /[?&]thanbocu=1(&|$)/.test(location.search || ''); } catch (e) { bat = false; } G.THAN_BO_CU = bat; }
+  // Danh sách thân bộ đang tạm tắt (để kiểm/ghi báo cáo): mã các tệp thân bộ ghi "cu": true.
+  SC.thanBoTat = () => Object.keys(SC.ds).filter((m) => SC.ds[m] && SC.ds[m].cu);
+  SC.thanBo = (key, o) => {
+    const b = SC.boCua(o); if (!b) return null;
+    const ma = 'em-be-' + (key || 'smith') + '-' + b, s0 = SC.ds[ma];
+    return s0 && s0.cu && !G.THAN_BO_CU ? null : SC.get(ma); // xét trước SC.get: thân cũ bị tắt thì không tải ảnh của nó
+  };
   SC.cuaEmBe = (key, o) => (o && SC.thanBo(key, o)) || SC.get('em-be-' + (key || 'smith')) || SC.get('em-be');
   // ---------- ĐÒN THEO VŨ KHÍ (Phiên 3) ----------
   // Tệp em-be-<key>-don (hoặc em-be-<key>-<bộ>-don): "doi_tuong": "em-be", khung 48×48, nét ×2, cùng điểm chân với thân; "dong_tac" chỉ
