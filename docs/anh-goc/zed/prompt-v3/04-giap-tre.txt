@@ -1,7 +1,7 @@
-Gửi kèm: (1) ảnh thân trơn 01, (2) zed-canonical.png (để đúng nét vẽ).
+Gửi kèm: (1) ảnh thân trơn 01, (2) zed-v2-canonical.png (để đúng nét vẽ).
 Vẽ CHỈ bộ GIÁP TRE thay cho áo: các thanh tre vàng nâu xếp dọc buộc dây gai che ngực–bụng, 2 miếng tre che vai, váy giáp tre ngắn tới giữa đùi, áo vải nâu sẫm bên trong lộ ở nách.
-CHỈ vẽ món đồ, đúng chỗ nó nằm trên người Zed ở từng ô; cả người Zed (đầu, tóc, da, đồ lót) tô #00FF00. Chỗ tay hoặc tóc che món đồ thì để trống (xanh).
-Giáp RỘNG hơn thân trơn 1–2 điểm ảnh mỗi bên, phủ xuống quá cạp quần; khi tay gần người xem đưa ngang ngực thì phần giáp bị tay che để trống.
+CHỈ vẽ món đồ, đúng chỗ nó nằm trên người Zed ở từng ô; cả người Zed (đầu, tóc, sừng, da, quần bó) tô #00FF00. Chỗ tay, tóc hoặc sừng che món đồ thì để trống (xanh).
+Giáp RỘNG hơn thân trơn 1–2 điểm ảnh mỗi bên, phủ xuống quá cạp quần (che da thân); khi tay gần người xem đưa ngang ngực thì phần giáp bị tay che để trống.
 Miếng tre vai nhún theo vai khi đi, chạy; không trôi khỏi vai.
 Hàng 1 đứng thở, hàng 2 đi, hàng 3 chạy — khớp từng ô ảnh thân.
 Giữ nguyên bố cục ô, cỡ người, vị trí chân và tư thế từng ô như ảnh thân gửi kèm.

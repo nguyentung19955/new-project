@@ -92,7 +92,7 @@
       <label>Slot<select id="nSlot"></select></label>
       <label>Kiểu<select id="nKieu"><option value="khung">khung (theo từng khung thân)</option><option value="gan">gan (1 ảnh gắn neo)</option></select></label>
       <label>Mã (id)<input type="text" id="nId" placeholder="vd giap-tre"></label>
-      <label>Mã món game (mon)<input type="text" id="nMon" placeholder="vd giap_tre"></label>
+      <label>Mã món game (mon) — thân: tên bộ<input type="text" id="nMon" placeholder="vd giap_tre / zed-than-tron"></label>
       <label>Số cột<input type="number" id="nCot" value="8" min="1" max="16"></label>
       <label>Số hàng<input type="number" id="nHang" value="3" min="1" max="8"></label>
       <label>Tên động tác các hàng<input type="text" id="nTen" value="dung,di,chay"></label>
@@ -174,8 +174,15 @@ function themMon(m, cv, chonLuon) {
 }
 const monChon = (slot) => (S.chon[slot] >= 0 ? S.mon[slot][S.chon[slot]] : null);
 // Thân: có thể nhiều tệp (đứng/đi/chạy, kiếm…) → tệp thân nào có động tác này
-function thanCo(anim) { for (const a of S.mon.than) if (a.m.dong_tac[anim]) return a; return null; }
-function moiDongTac() { const s = new Set(); for (const a of S.mon.than) for (const k in a.m.dong_tac) s.add(k); return [...s]; }
+// Thân: một bộ thân có thể gồm nhiều tệp (đứng/đi/chạy, kiếm…) cùng "bo" → tệp nào trong bộ đang chọn có động tác này
+const boCua = (a) => a.m.bo || a.m.id;
+function thanCo(anim) {
+  const c0 = monChon('than');
+  if (!c0) return S.mon.than.find((a) => a.m.dong_tac[anim]) || null;
+  if (c0.m.dong_tac[anim]) return c0;
+  return S.mon.than.find((a) => a.m.dong_tac[anim] && boCua(a) === boCua(c0)) || null;
+}
+function moiDongTac() { const s = new Set(), c0 = monChon('than'); for (const a of S.mon.than) if (!c0 || boCua(a) === boCua(c0)) for (const k in a.m.dong_tac) s.add(k); return [...s]; }
 // Món theo slot cho động tác: món đang chọn; nếu là "khung" thì tìm tệp cùng mon/id gốc có động tác này
 function tepCho(slot, anim) {
   const a = monChon(slot);
@@ -322,7 +329,7 @@ function veDanhSach() {
     const sel = document.createElement('select');
     sel.innerHTML = (slot === 'than' ? '' : '<option value="-1">(không mặc)</option>') + ds.map((a, k) => '<option value="' + k + '">' + a.m.id + (a.m.mau_thu ? ' — MẪU THỬ' : '') + ' [' + (a.m.mau_thu ? 'MAU_THU' : a.m.trang_thai) + ']</option>').join('');
     sel.value = String(S.chon[slot]);
-    sel.onchange = () => { S.chon[slot] = +sel.value; if (+sel.value >= 0) { S.sua = { slot, id: ds[+sel.value].m.id }; napMonSua(); } };
+    sel.onchange = () => { S.chon[slot] = +sel.value; if (+sel.value >= 0) { S.sua = { slot, id: ds[+sel.value].m.id }; napMonSua(); } if (slot === 'than') chonDongTacHop(); };
     if (!ds.length) sel.disabled = true;
     r.appendChild(cb); r.appendChild(sel);
     box.appendChild(r);
@@ -479,6 +486,7 @@ $('tep').onchange = async (e) => {
     const id = ($('nId').value.trim() || f.name.replace(/\.[a-z]+$/i, '')).replace(/[^a-z0-9_-]+/gi, '-').toLowerCase();
     const mon = $('nMon').value.split(',').map((x) => x.trim()).filter(Boolean);
     const m = { id, ten: id, slot, kieu, mon, trang_thai: 'GENERATED', nguon: { anh: f.name } };
+    if (slot === 'than') { m.bo = mon[0] || id; m.mon = []; m.nhan_vat = 'zed'; } // thân: ô "mã món" = tên BỘ thân (các tệp thân cùng bộ ghép thành một)
     if (kieu === 'gan') {
       const cvs = tachNenMot(im);
       Object.assign(m, { ti_le: 0.22, diem_gan: [Math.round(cvs.width / 2), Math.round(cvs.height / 2)], goc_anh: 0 });
@@ -570,11 +578,13 @@ $('nutMau').onclick = () => {
 // ====== khởi động: thân canonical nhúng sẵn ======
 const THAN_NHUNG = /*THAN_NHUNG*/null;
 (async () => {
-  if (THAN_NHUNG) {
-    const im = await anhTuURL(THAN_NHUNG.tam);
-    const m = Object.assign({}, THAN_NHUNG); delete m.tam;
-    themMon(m, canvasTu(im), true);
+  // Thân nhúng: mỗi thân một "bộ" riêng (nhan_vat khác nhau) — chọn ở ô Thân. Thân đầu danh sách được chọn sẵn.
+  for (const t of THAN_NHUNG || []) {
+    const im = await anhTuURL(t.tam);
+    const m = Object.assign({}, t); delete m.tam;
+    themMon(m, canvasTu(im), false);
   }
+  S.chon.than = S.mon.than.length ? 0 : -1;
   veDanhSach(); chonDongTacHop();
   requestAnimationFrame(nhip);
 })();

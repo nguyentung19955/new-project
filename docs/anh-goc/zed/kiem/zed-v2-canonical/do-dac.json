@@ -1,5 +1,5 @@
 {
- "anh": "zed-v2-00-dung-di-chay-a.png",
+ "anh": "zed-v2-canonical.png",
  "co_anh": [
   2048,
   768
@@ -101,7 +101,11 @@
   0.44123478739503325,
   0.4852470489669087
  ],
- "so_sanh_canonical": null,
+ "so_sanh_canonical": {
+  "mau_la": 0.026,
+  "cao_tren_o_canonical": 0.895,
+  "cao_tren_o": 0.895
+ },
  "loi": [],
  "canh_bao": [
   "Ảnh nguồn CÓ ĐƯỜNG KẺ LƯỚI (1 dọc, 0 ngang) — đã dùng để chia ô và đã bỏ khi tách; ảnh mới nên KHÔNG kẻ lưới",

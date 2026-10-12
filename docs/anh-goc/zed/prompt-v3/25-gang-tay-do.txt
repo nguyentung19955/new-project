@@ -1,6 +1,6 @@
-Gửi kèm: (1) ảnh thân trơn 01, (2) zed-canonical.png.
+Gửi kèm: (1) ảnh thân trơn 01, (2) zed-v2-canonical.png.
 Vẽ CHỈ đôi GĂNG + GIÁP TAY ĐỎ: găng da đen hở ngón, ống giáp cẳng tay thép đỏ sẫm viền đồng, dài từ cổ tay tới gần khuỷu.
-CHỈ vẽ món đồ, đúng chỗ nó nằm trên người Zed ở từng ô; cả người Zed (đầu, tóc, da, đồ lót) tô #00FF00. Chỗ tay hoặc tóc che món đồ thì để trống (xanh).
+CHỈ vẽ món đồ, đúng chỗ nó nằm trên người Zed ở từng ô; cả người Zed (đầu, tóc, sừng, da, quần bó) tô #00FF00. Chỗ tay, tóc hoặc sừng che món đồ thì để trống (xanh).
 Găng ôm đúng bàn tay và cẳng tay từng ô (vung tay khi đi, chạy). Tay xa bị thân che thì phần bị che để trống.
 Hàng 1 đứng thở, hàng 2 đi, hàng 3 chạy.
 Giữ nguyên bố cục ô, cỡ người, vị trí chân và tư thế từng ô như ảnh thân gửi kèm.

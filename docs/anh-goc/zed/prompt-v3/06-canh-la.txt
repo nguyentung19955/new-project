@@ -1,4 +1,4 @@
-Gửi kèm: zed-canonical.png (để đúng cỡ người và nét vẽ).
+Gửi kèm: zed-v2-canonical.png (để đúng cỡ người và nét vẽ).
 Vẽ ĐÔI CÁNH LÁ (hai cánh như lá non xanh lục pha vàng, gân lá rõ) nhìn ngang, gốc cánh ở bên TRÁI mỗi ô (chỗ chạm lưng Zed quay phải), cánh xoè ra sau và lên trên.
 Mỗi cánh dài khoảng 0,8 lần chiều cao Zed; cánh xa người xem tối hơn, nằm sau cánh gần.
 1 hàng 8 khung vỗ cánh lặp: 1 xoè thấp, 2–3 nâng dần, 4 cao nhất, 5–7 hạ dần, 8 về gần như khung 1. Gốc cánh đứng YÊN một chỗ ở mọi khung.

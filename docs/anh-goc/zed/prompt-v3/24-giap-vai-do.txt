@@ -1,6 +1,6 @@
-Gửi kèm: (1) ảnh thân trơn 01, (2) zed-canonical.png.
+Gửi kèm: (1) ảnh thân trơn 01, (2) zed-v2-canonical.png.
 Vẽ CHỈ đôi GIÁP VAI ĐỎ (Bộ Giáp Đỏ): mỗi bên 3 lá thép sơn đỏ sẫm xếp lớp, viền đồng, dây buộc đen; vai gần người xem to hơn vai xa.
-CHỈ vẽ món đồ, đúng chỗ nó nằm trên người Zed ở từng ô; cả người Zed (đầu, tóc, da, đồ lót) tô #00FF00. Chỗ tay hoặc tóc che món đồ thì để trống (xanh).
+CHỈ vẽ món đồ, đúng chỗ nó nằm trên người Zed ở từng ô; cả người Zed (đầu, tóc, sừng, da, quần bó) tô #00FF00. Chỗ tay, tóc hoặc sừng che món đồ thì để trống (xanh).
 Giáp vai bám theo vai, nhún khi đi, lắc khi chạy, KHÔNG trôi khỏi vai.
 Hàng 1 đứng thở, hàng 2 đi, hàng 3 chạy — khớp từng ô ảnh thân.
 Giữ nguyên bố cục ô, cỡ người, vị trí chân và tư thế từng ô như ảnh thân gửi kèm.

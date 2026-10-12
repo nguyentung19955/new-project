@@ -1,0 +1,8 @@
+Gửi kèm: (1) ảnh thân trơn 01, (2) ảnh phi tiêu 20. TAY PHẢI (tay gần người xem) ném, TAY TRÁI (tay xa) giữ thăng bằng.
+Pixel art chibi y hệt ảnh gửi kèm: cùng mặt, tóc đen buộc cao dây đỏ, tỉ lệ đầu/thân, độ to điểm ảnh, viền tối, cách tô bóng. Quay mặt sang phải. KHÔNG sừng.
+Hàng 1 Ném (6 khung): 1 thủ thế, tay trái đưa ra trước chỉ hướng; 2 tay phải rút phi tiêu kẹp giữa ngón ra sau tai; 3 vặn hông, tay phải ra sau nhất; 4 ★ vung tay phải ra trước, phi tiêu VỪA rời ngón tay; 5 tay phải theo đà xuống chéo, tay trái kéo về; 6 thu về thủ thế.
+Hàng 2: ô 1–3 ngắm giữ nút (tay phải kéo ra sau dần: ít, vừa, căng nhất; tay trái chỉ thẳng trước); ô 4–6 Mưa Phi Tiêu: 4 hạ người, 5 ★ tung cả nắm phi tiêu lên trời, 6 thu tay.
+Phi tiêu rất nhỏ, chỉ hiện khi còn trong tay (khung 4 hàng 1 ngay sát ngón). Không vệt bay, không hiệu ứng.
+Chân đặt cố định, cùng cỡ người mọi ô.
+Ảnh 6 cột × 2 hàng ô bằng nhau, mỗi ô 1 khung, đọc trái sang phải. Chừa lề ≥ 8% mỗi phía: tóc, khăn, đồ, vũ khí KHÔNG chạm ranh ô.
+Nền xanh lá thuần #00FF00 phủ kín cả ảnh. KHÔNG kẻ lưới, KHÔNG chữ, KHÔNG số khung, KHÔNG bóng đổ, KHÔNG quầng sáng, KHÔNG hiệu ứng.

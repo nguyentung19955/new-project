@@ -1,12 +1,14 @@
 # LINH KHÍ — QUY CÁCH SPRITE GHÉP LỚP (MODULAR) CHO ZED
 
-*Phiên bản 1 — 12/10/2026. Làm theo [YEU-CAU-2-MODULAR.md](YEU-CAU-2-MODULAR.md) (thắng khi khác [YEU-CAU.md](YEU-CAU.md)) và chốt của chủ dự án: 4 vũ khí = **kiếm, thương, búa, phi tiêu** (bỏ cung); canonical = `docs/anh-goc/zed/zed-canonical.png`.*
+*Phiên bản 1 — 12/10/2026. Làm theo [YEU-CAU-2-MODULAR.md](YEU-CAU-2-MODULAR.md) (thắng khi khác [YEU-CAU.md](YEU-CAU.md)) và chốt của chủ dự án: 4 vũ khí = **kiếm, thương, búa, phi tiêu** (bỏ cung).*
+
+> **Canonical đổi giữa phiên.** Yêu cầu của phiên này ghi canonical = `zed-canonical.png` (Zed ninja tóc đen, không sừng). Trong lúc làm, repo có commit mới hơn **"Chốt tấm thân Zed v2 (đứng/đi/chạy) làm canonical"** → `zed-v2-canonical.png` (tóc trắng, hai sừng, cởi trần, khăn đỏ, quần đen rộng, dép). Quy cách này **không phụ thuộc** nhân vật: khung, số khung, neo, lớp, validator, trang ghép, module game giống hệt cho cả hai. Prompt có **hai bộ cùng bố cục** (`prompt-v3/` = v2, `prompt-v3/ninja/` = ninja); trang ghép nhúng sẵn **cả hai** thân. Mặc định theo commit mới nhất: **v2**. Chủ dự án xác nhận lại một lần là đủ.
 
 **Đọc nhanh (cho chủ dự án):**
 - Zed sẽ được **ghép từ nhiều tấm ảnh chồng lên nhau**: thân trơn → quần → áo/giáp → đai → giáp vai → găng → mũ → đồ lưng/cánh → vũ khí. Đổi một món = đổi một lớp, không vẽ lại cả người.
 - Đồ **ôm theo người** (áo, quần, giáp, găng, giày) phải có ảnh **cho từng khung** của từng động tác. Đồ **cứng** (mũ, gùi, cánh, vũ khí, phi tiêu đang bay) chỉ cần **1 ảnh** (cánh: 1 hàng vỗ cánh) và được **gắn vào điểm neo** đo trên thân.
 - Thời lượng đòn và lúc gây sát thương **không đổi**: số khung mỗi đòn được chọn để khung "chạm" hiện đúng lúc game trừ máu (bảng mục 5).
-- Chưa có ảnh nào **INTEGRATED**. Canonical hiện là **GENERATED** (kiểm tự động: LỖI vì hàng chạy chạm mép ô). Điểm neo tay, đầu, lưng **chưa đo** — để trống, không bịa.
+- Chưa có ảnh nào **INTEGRATED**. Hai canonical đều **GENERATED** (v2: kiểm tự động ĐẠT; ninja: LỖI vì hàng chạy chạm mép ô). Điểm neo tay, đầu, lưng **chưa đo** — để trống, không bịa.
 
 ---
 
@@ -16,10 +18,12 @@ Số đo thật bằng `docs/anh-goc/zed/kiem-sheet.py` (kết quả đầy đ�
 
 | Asset | Hiện trạng (đo) | Quyết định |
 |---|---|---|
-| `zed-canonical.png` (1536×1024, 8×3) | Ô **không đều** (rộng 189–192, cao 333–348 điểm ảnh), **có đường kẻ lưới** xanh đậm 1–2 điểm ảnh; người cao 281 điểm ảnh (đứng), 276 (đi), 270 (chạy), cỡ đều trong từng hàng (lệch < 4%); bảng màu ổn định; đường đất: đứng 95% chiều cao ô, đi 94%, chạy 89%. **Hàng chạy: 8/8 khung chạm mép phải ô** (tóc mái nhô sát ranh, có thể bị cắt 1–3 điểm ảnh), khung 8 chạm cả mép trái (đuôi khăn). Tâm thân lệch ngang giữa các hàng (52% / 49% / 47% bề ngang ô). Quần áo, khăn, đai **vẽ liền vào người**. | **GIỮ** làm (1) chuẩn nhận diện, (2) **thân "Zed mặc định (gộp)"** để xem thử và làm nền cho trang ghép ngay bây giờ. **KHÔNG dùng làm thân gốc production** vì không tách được lớp: giáp hẹp hơn quần rộng/khăn bay không che được phần vẽ liền, và không thể "cởi" áo mặc định khi mặc giáp. |
+| `zed-v2-canonical.png` (2048×768, 8×3) — **canonical mới** | Kiểm tự động **ĐẠT** (`kiem/zed-v2-canonical/ket-qua.txt`): không lưới (1 vạch lẻ), ô không đều (rộng 244–277, cao 251–262) → máy dò khe để chia; người cao 234 (đứng) / 229 (đi) / 217 (chạy) điểm ảnh, đều trong hàng; không chạm mép; tỉ lệ về game **0,2644**; tâm thân 47,5% / 44,1% / 48,5% bề ngang ô. Khăn đỏ, quấn tay, quần rộng, dép **vẽ liền**; thân trên cởi trần. | **GIỮ** làm chuẩn nhận diện + thân xem thử (trang ghép, mặc định). Thân production vẫn cần **thân trơn** (prompt `01`, bản v2: giữ cởi trần, đổi quần rộng → quần bó, bỏ khăn/quấn tay/dép) vì cùng lý do: đồ vẽ liền không tháo được. Chờ người xem GIF → mới VALIDATED. |
+| `zed-canonical.png` (1536×1024, 8×3) — ninja, canonical theo yêu cầu phiên | Ô **không đều** (rộng 189–192, cao 333–348 điểm ảnh), **có đường kẻ lưới** xanh đậm 1–2 điểm ảnh; người cao 281 điểm ảnh (đứng), 276 (đi), 270 (chạy), cỡ đều trong từng hàng (lệch < 4%); bảng màu ổn định; đường đất: đứng 95% chiều cao ô, đi 94%, chạy 89%. **Hàng chạy: 8/8 khung chạm mép phải ô** (tóc mái nhô sát ranh, có thể bị cắt 1–3 điểm ảnh), khung 8 chạm cả mép trái (đuôi khăn). Tâm thân lệch ngang giữa các hàng (52% / 49% / 47% bề ngang ô). Quần áo, khăn, đai **vẽ liền vào người**. | **GIỮ** làm (1) chuẩn nhận diện, (2) **thân "Zed mặc định (gộp)"** để xem thử và làm nền cho trang ghép ngay bây giờ. **KHÔNG dùng làm thân gốc production** vì không tách được lớp: giáp hẹp hơn quần rộng/khăn bay không che được phần vẽ liền, và không thể "cởi" áo mặc định khi mặc giáp. |
 | Thân trơn Zed (chưa có) | — | **GEN MỚI** (prompt `01`): sửa từ chính canonical (giữ đầu, mặt, tóc, dây buộc đỏ, dáng 8×3), thay quần áo bằng **đồ lót bó màu than**, bỏ khăn, đai, giày → thân gốc production. Lý do ghi ở trên; canonical giữ nguyên để đối chiếu. |
 | `docs/anh-goc/zed/goc/*` (bản thử cũ) | Zed bản cũ (có sừng / dáng khác) | **Không dùng** (chốt của chủ dự án). Không xoá. |
-| `zed-tham-chieu*.png`, `prompt-v2/*`, `prompt-*.txt` | Prompt cũ cho bản Zed có sừng, có lưới, có cung | **Thay bằng** `docs/anh-goc/zed/prompt-v3/`. Không xoá bản cũ. |
+| `zed-tham-chieu*.png`, `prompt-v2/*`, `prompt-*.txt` | Prompt cũ (có lưới, có cung) | **Thay bằng** `docs/anh-goc/zed/prompt-v3/`. Không xoá bản cũ. |
+| `prompt-ninja/`, `prompt-v2-toc-trang/` (phiên điều phối viết cùng ngày) | Prompt theo từng đòn (thân tay không + vũ khí riêng), mũ vẽ theo từng ô | **Dùng được song song**: ảnh nào ra đúng quy cách mục 3 (nền xanh, ô đều, không lưới) đều qua được validator và trang ghép. `prompt-v3` khác ở chỗ: tách thân trơn / đồ mặc định, ảnh 'có vũ khí' để ĐO góc, số khung theo mục 5. |
 | Ảnh Cu Tí `em-be-smith*.sprite.json` (Zed đang dùng trong game) | 48×48, net 2, goc [24,45], cao 29; vũ khí ghép bằng code | **Giữ nguyên trong game** cho tới khi bộ ghép lớp có đủ ảnh thật (cờ `G.GHEP_LOP` tắt mặc định). |
 | Trang phục `tp-*` (52 tệp), vũ khí `vk-*` (160 tệp) | Ảnh tĩnh gắn theo điểm neo của hệ cũ | **Giữ** cho hệ cũ. Vũ khí `vk-*` **dùng lại được** trong hệ ghép lớp (kiểu `game`, mục 7.4): chỉ cần góc + điểm tay đo trên thân mới. Áo `tp-robes-*` không dùng lại được (không có khung theo tư thế). |
 
@@ -163,6 +167,7 @@ Một tệp `<id>.lop.json` (định dạng `linh-khi-lop`) **cho mỗi ảnh**.
   "kieu": "khung",                       // khung = ảnh theo từng khung thân; gan = 1 ảnh gắn vào neo; game = vũ khí của game (vk-*)
   "lop": 40,                             // thứ tự vẽ (mục 2)
   "nhan_vat": "zed",
+  "bo": "zed-than-tron",                 // CHỈ thân: tên bộ thân; các tệp thân cùng "bo" (đứng/đi/chạy, kiếm, thương…) ghép thành một thân
   "mon": [],                             // mã món trong game (outfit.js) mà lớp này vẽ cho, vd ["giap_tre"]; vũ khí: ["sword"]
   "trang_thai": "GENERATED",             // GENERATED | VALIDATED | INTEGRATED
   "nguon": { "anh": "docs/anh-goc/zed/...png", "prompt": "docs/anh-goc/zed/prompt-v3/01-than-tron.txt", "kiem": ".../ket-qua.txt" },
@@ -210,7 +215,8 @@ Neo đo trên **ảnh thật** ở trang ghép (`tach-ghep-lop.html`, chạm/ké
 | `vk` {x, y, goc, lop} | điểm nắm + góc lưỡi đo trên ảnh **có vũ khí** (prompt "…-co-vu-khi") | mọi vũ khí cùng loại |
 
 ### 7.1 Mũ và tóc
-- Mũ là lớp `gan` trên neo `dau`, xoay theo góc nghiêng đầu.
+- Mũ là lớp `gan` trên neo `dau`, xoay theo góc nghiêng đầu. (Được phép làm mũ kiểu `khung` — một ô cho mỗi khung thân — nếu mũ mềm/biến dạng; renderer nhận cả hai.)
+- **Zed v2 có hai sừng:** mũ phải khoét lỗ cho sừng; `an_toc.vung` **không bao giờ** gồm sừng (sừng là nhận diện). Mũ trùm kín cũng chừa hai lỗ sừng.
 - `an_toc.vung` = hình chữ nhật (tính từ neo đầu) mà **điểm ảnh thân bị ẩn** trước khi vẽ mũ. Quy tắc: **ẩn phần tóc nhô trên đỉnh và hai bên vành** (sẽ đâm xuyên mũ); **giữ đuôi tóc buộc và dây đỏ** phía sau-dưới vành (nhận diện Zed); **không bao giờ ẩn mặt, mắt, cằm** (vùng ẩn không được xuống dưới đường lông mày).
 - Nón lá / mũ rộng: `an_toc` chỉ phủ đỉnh đầu. Mũ trùm kín (mũ sắt): phủ cả đuôi tóc, ghi rõ trong `ten`. Mũ không che tóc (băng đô, khăn buộc trán): `an_toc: null`.
 
@@ -269,8 +275,10 @@ Neo đo trên **ảnh thật** ở trang ghép (`tach-ghep-lop.html`, chạm/ké
 
 Ra: `ket-qua.txt`, `do-dac.json`, `tong-quan.jpg`, GIF từng hàng (giữ vị trí ngang, đúng tốc độ game theo `--giay`), `sheet-game.png` (+ `sheet-sach.png` với `--sach`). Mã thoát 0 = ĐẠT, 1 = LỖI.
 
-### 9.2 Kết quả chạy trên canonical (12/10/2026)
-LỖI 8 (hàng chạy 8/8 khung chạm mép ô), CẢNH BÁO 10 (lưới, ô không đều, xanh kẹt 47–223 điểm ảnh ở kẽ chân/khăn). Cỡ người đều, màu đúng, không chữ. → **GENERATED**, dùng làm tham chiếu và thân xem thử; không làm thân production.
+### 9.2 Kết quả chạy thật (12/10/2026)
+- `zed-canonical.png` (ninja): **LỖI** 8 (hàng chạy 8/8 khung chạm mép ô), CẢNH BÁO 10 (lưới, ô không đều, xanh kẹt 47–223 điểm ảnh ở kẽ chân/khăn). Cỡ người đều, màu đúng, không chữ → GENERATED.
+- `zed-v2-canonical.png`: **ĐẠT** kiểm tự động, CẢNH BÁO 12 (một vạch lưới lẻ, ô không đều, xanh kẹt 42–287 điểm ảnh) → GENERATED, chờ người xem để VALIDATED (làm tham chiếu; không làm thân production vì đồ vẽ liền).
+- `zed-v2-tham-chieu-to.png` (ảnh nhỏ nền ca-rô): **LỖI** đúng như mong đợi (nền không phải #00FF00, hình đè ranh ô) — máy bắt được ảnh không dùng được.
 
 ### 9.3 Checklist người xem (máy không thấy được)
 - [ ] Mặt, tóc, dây buộc đỏ, tỉ lệ đầu/thân giống canonical ở **mọi** khung.

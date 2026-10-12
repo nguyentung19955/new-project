@@ -1,6 +1,6 @@
-Gửi kèm: (1) ảnh thân combo kiếm 09, (2) ảnh giáp tre 04, (3) zed-canonical.png.
+Gửi kèm: (1) ảnh thân combo kiếm 09, (2) ảnh giáp tre 04, (3) zed-v2-canonical.png.
 Vẽ CHỈ bộ giáp tre (thanh tre ngực–bụng, 2 miếng tre vai, váy giáp tre ngắn) khớp từng ô ảnh 09.
-CHỈ vẽ món đồ, đúng chỗ nó nằm trên người Zed ở từng ô; cả người Zed (đầu, tóc, da, đồ lót) tô #00FF00. Chỗ tay hoặc tóc che món đồ thì để trống (xanh).
+CHỈ vẽ món đồ, đúng chỗ nó nằm trên người Zed ở từng ô; cả người Zed (đầu, tóc, sừng, da, quần bó) tô #00FF00. Chỗ tay, tóc hoặc sừng che món đồ thì để trống (xanh).
 Miếng tre vai nhấc theo vai khi giơ kiếm; giáp không trôi khỏi thân. Ô trống của ảnh 09 cũng để trống.
 Giữ nguyên bố cục ô, cỡ người, vị trí chân và tư thế từng ô như ảnh thân gửi kèm.
 Ảnh 6 cột × 3 hàng ô bằng nhau, mỗi ô 1 khung, đọc trái sang phải. Chừa lề ≥ 8% mỗi phía: tóc, khăn, đồ, vũ khí KHÔNG chạm ranh ô.

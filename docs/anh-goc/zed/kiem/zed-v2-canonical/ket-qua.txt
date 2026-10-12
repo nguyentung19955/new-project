@@ -1,4 +1,4 @@
-KIỂM TẤM: zed-v2-00-dung-di-chay-a.png  (2048×768 điểm ảnh, 8 cột × 3 hàng, loại: than)
+KIỂM TẤM: zed-v2-canonical.png  (2048×768 điểm ảnh, 8 cột × 3 hàng, loại: than)
 KẾT LUẬN: ĐẠT kiểm tự động (chờ người xem → VALIDATED)
 
 LỖI (0):
@@ -27,6 +27,7 @@ SỐ ĐO:
   Hàng 3 chay    : 8 khung, 75 ms/khung, cao người 207–220 (trung vị 217), rộng 210–214, đường đất y=237 (93.7% chiều cao ô)
      neo ngang (tâm thân trung vị) x=124 trong ô (48.5% bề ngang); tâm thân từng khung lệch neo: +3 -4 -4 +5 +14 -6 -3 +19
   Tỉ lệ về cỡ game: 0.2644 (chiều cao trung vị hàng 1 → 31 điểm ảnh logic) → khung 48×48 logic, net 2, chân tại (24,45)
+  So canonical: {"mau_la": 0.026, "cao_tren_o_canonical": 0.895, "cao_tren_o": 0.895}
 
 TỆP RA: tong-quan.jpg (khung xanh = ổn, đỏ = lỗi; vàng = khung bao; xanh dương = chân), GIF từng hàng, sheet-game.png, do-dac.json (+ sheet-sach.png nếu chạy --sach)
 NHỚ: máy không thấy được tay cầm sai, vũ khí xuyên người, đồ trôi khỏi người, động tác giật → xem GIF theo checklist ở SPEC mục 9.3.

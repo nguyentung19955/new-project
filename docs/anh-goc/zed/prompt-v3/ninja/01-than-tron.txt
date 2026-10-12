@@ -1,0 +1,9 @@
+Gửi kèm: zed-canonical.png. SỬA ảnh này, không vẽ người mới.
+Pixel art chibi y hệt ảnh gửi kèm: cùng mặt, tóc đen buộc cao dây đỏ, tỉ lệ đầu/thân, độ to điểm ảnh, viền tối, cách tô bóng. Quay mặt sang phải. KHÔNG sừng.
+Thay toàn bộ quần áo bằng ĐỒ LÓT BÓ màu xám than (#2b2a33): áo bó tay dài tới cổ tay, quần bó dài tới mắt cá, bàn chân bọc tất đen mỏng.
+BỎ khăn đỏ, bỏ đai, bỏ giày, bỏ tay áo trắng. GIỮ đầu, mặt, tóc, dây buộc tóc đỏ, bàn tay da y nguyên.
+Giữ đúng tư thế từng ô: hàng 1 đứng thở (8 khung), hàng 2 đi bộ (8 khung), hàng 3 chạy nhanh (8 khung); khung 8 nối liền khung 1.
+Thân gọn hơn canonical một chút (không còn quần rộng) nhưng cùng chiều cao, cùng chỗ đặt chân.
+Hàng 3 (chạy): đặt người lùi vào giữa ô để tóc mái không chạm mép phải ô, đuôi tóc không chạm mép trái.
+Ảnh 8 cột × 3 hàng ô bằng nhau, mỗi ô 1 khung, đọc trái sang phải. Chừa lề ≥ 8% mỗi phía: tóc, khăn, đồ, vũ khí KHÔNG chạm ranh ô.
+Nền xanh lá thuần #00FF00 phủ kín cả ảnh. KHÔNG kẻ lưới, KHÔNG chữ, KHÔNG số khung, KHÔNG bóng đổ, KHÔNG quầng sáng, KHÔNG hiệu ứng.

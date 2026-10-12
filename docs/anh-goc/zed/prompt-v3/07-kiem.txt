@@ -1,4 +1,4 @@
-Gửi kèm: zed-canonical.png (để đúng cỡ và nét vẽ).
+Gửi kèm: zed-v2-canonical.png (để đúng cỡ và nét vẽ).
 Vẽ MỘT thanh KIẾM ngắn kiểu ninja nằm NGANG: chuôi bên trái, mũi chỉ sang phải.
 Dài khoảng 0,9 lần chiều cao Zed; lưỡi thép xám sáng có sống lưng tối, chắn tay tròn đồng, chuôi quấn vải đỏ sẫm.
 Cùng độ to điểm ảnh, viền tối, cách tô bóng như canonical.

@@ -1,0 +1,8 @@
+Gửi kèm: (1) ảnh thân trơn 01, (2) ảnh búa 17. Zed cầm búa HAI TAY, búa NẶNG.
+Pixel art chibi y hệt ảnh gửi kèm: cùng mặt, tóc đen buộc cao dây đỏ, tỉ lệ đầu/thân, độ to điểm ảnh, viền tối, cách tô bóng. Quay mặt sang phải. KHÔNG sừng.
+Hàng 1 Nện (8 khung): 1 thủ thế búa trước bụng; 2 kéo búa ra sau; 3 nâng lên vai; 4 giơ cao qua đầu, ngả người sau (lấy đà đỉnh); 5 ★ nện xuống, đầu búa CHẠM ĐẤT trước mặt, gối chùng; 6 rung giữ búa trên đất; 7 nhấc búa lên; 8 thu về thủ thế.
+Hàng 2: ô 1 giơ búa sau vai lấy đà; ô 2 giơ cao hơn, gồng người. Ô 3–8 TRỐNG.
+Đầu búa CÙNG cỡ và hình ở mọi khung, cán thẳng, không xuyên đầu/thân. Thân thể hiện sức nặng (ngả người, chùng gối).
+Chân đặt cố định. Không bụi, không vết nứt, không hiệu ứng.
+Ảnh 8 cột × 2 hàng ô bằng nhau, mỗi ô 1 khung, đọc trái sang phải. Chừa lề ≥ 8% mỗi phía: tóc, khăn, đồ, vũ khí KHÔNG chạm ranh ô.
+Nền xanh lá thuần #00FF00 phủ kín cả ảnh. KHÔNG kẻ lưới, KHÔNG chữ, KHÔNG số khung, KHÔNG bóng đổ, KHÔNG quầng sáng, KHÔNG hiệu ứng.

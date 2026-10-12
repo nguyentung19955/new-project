@@ -1,8 +1,8 @@
-Gửi kèm: (1) ảnh thân trơn 01 đã đạt, (2) zed-canonical.png để chép đúng bộ đồ.
-Vẽ CHỈ phần áo mặc định của Zed như canonical: áo ngắn tay tối màu, tay áo trắng xắn tới khuỷu, khăn đỏ quấn cổ + 2 đuôi khăn bay phía sau, đai vải đỏ trắng buộc hông, bao cổ tay nâu.
-CHỈ vẽ món đồ, đúng chỗ nó nằm trên người Zed ở từng ô; cả người Zed (đầu, tóc, da, đồ lót) tô #00FF00. Chỗ tay hoặc tóc che món đồ thì để trống (xanh).
+Gửi kèm: (1) ảnh thân trơn 01 đã đạt, (2) zed-v2-canonical.png để chép đúng bộ đồ.
+Vẽ CHỈ phần đồ thân trên mặc định của Zed như canonical: khăn quàng đỏ quấn cổ + đuôi khăn bay phía sau, và đôi quấn tay / găng hở ngón đen viền đỏ hoa văn vàng ở hai cẳng tay. Zed cởi trần: KHÔNG vẽ áo.
+CHỈ vẽ món đồ, đúng chỗ nó nằm trên người Zed ở từng ô; cả người Zed (đầu, tóc, sừng, da, quần bó) tô #00FF00. Chỗ tay, tóc hoặc sừng che món đồ thì để trống (xanh).
 Đuôi khăn bay theo nhịp: đứng thì rủ nhẹ, đi thì đung đưa, chạy thì bay ngang ra sau nhưng KHÔNG chạm mép trái ô.
-Áo phủ xuống quá cạp quần 1–2 điểm ảnh (để không hở khi ghép với quần).
+Quấn tay ôm khít cẳng tay, không lệch khỏi tay khi vung.
 Hàng 1 đứng thở, hàng 2 đi, hàng 3 chạy — khớp từng ô của ảnh thân.
 Giữ nguyên bố cục ô, cỡ người, vị trí chân và tư thế từng ô như ảnh thân gửi kèm.
 Ảnh 8 cột × 3 hàng ô bằng nhau, mỗi ô 1 khung, đọc trái sang phải. Chừa lề ≥ 8% mỗi phía: tóc, khăn, đồ, vũ khí KHÔNG chạm ranh ô.
