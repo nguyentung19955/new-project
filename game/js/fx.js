@@ -382,6 +382,7 @@
       // G.KIEM_KHOP (tay-kiem-mat 12/10): kiếm đang chĩa ra sau lưng thì vẽ sau thân (js/hero_tinhlinh.js), nên cung vệt bắt đầu
       // từ chỗ lưỡi đã ra trước: vệt không còn vòng qua đỉnh đầu / trước mặt em bé. Không đổi độ đậm, cỡ ảnh.
       if (G.KIEM_KHOP && q.wt === 'sword' && q.dx * f < -0.25 * Math.hypot(q.dx, q.dy)) continue;
+      if (G.KIEM_MUOT && q.wt === 'sword' && q.front === false) continue; // chem-kiem-muot: đoạn kiếm vẽ sau thân (qua đầu) không vào cung vệt
       let a = Math.atan2(q.dy, q.dx);
       if (!n) { a0 = a; ap = a; } else { while (a - ap > Math.PI) a -= TAU; while (a - ap < -Math.PI) a += TAU; ap = a; }
       const l = q.L * Math.hypot(q.dx, q.dy), gx = q.gx - P.x, gy = q.gy - P.y, ex = (gx + Math.cos(a) * l) * f;
