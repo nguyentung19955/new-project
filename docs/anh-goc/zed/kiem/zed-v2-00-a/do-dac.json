@@ -1,0 +1,803 @@
+{
+ "anh": "zed-v2-00-dung-di-chay-a.png",
+ "co_anh": [
+  2048,
+  768
+ ],
+ "cot": 8,
+ "hang": 3,
+ "loai": "than",
+ "ten": [
+  "dung",
+  "di",
+  "chay"
+ ],
+ "giay": [
+  1.2,
+  0.9,
+  0.6
+ ],
+ "luoi": {
+  "x": [
+   [
+    157,
+    159
+   ]
+  ],
+  "y": []
+ },
+ "chia_cot": [
+  [
+   0,
+   260
+  ],
+  [
+   261,
+   505
+  ],
+  [
+   506,
+   753
+  ],
+  [
+   754,
+   1002
+  ],
+  [
+   1003,
+   1272
+  ],
+  [
+   1273,
+   1522
+  ],
+  [
+   1523,
+   1770
+  ],
+  [
+   1771,
+   2048
+  ]
+ ],
+ "chia_hang": [
+  [
+   0,
+   262
+  ],
+  [
+   263,
+   514
+  ],
+  [
+   515,
+   768
+  ]
+ ],
+ "so_khung_hang": [
+  8,
+  8,
+  8
+ ],
+ "ti_le_game": 0.26439232409381663,
+ "nguon_ti_le": "chiều cao trung vị hàng 1 → 31 điểm ảnh logic",
+ "dat_hang_px": [
+  252.0,
+  240.0,
+  237.0
+ ],
+ "dat_tren_o": [
+  0.9618320610687023,
+  0.9561752988047809,
+  0.9367588932806324
+ ],
+ "neo_x_px": [
+  121.30812276145166,
+  112.57002513415786,
+  123.79865336768258
+ ],
+ "neo_x_tren_o": [
+  0.47548504757060917,
+  0.44123478739503325,
+  0.4852470489669087
+ ],
+ "so_sanh_canonical": null,
+ "loi": [],
+ "canh_bao": [
+  "Ảnh nguồn CÓ ĐƯỜNG KẺ LƯỚI (1 dọc, 0 ngang) — đã dùng để chia ô và đã bỏ khi tách; ảnh mới nên KHÔNG kẻ lưới",
+  "Ranh giới ô: lưới lệch số ô (1 đường, cần 7) → dò khe",
+  "Ô không đều: rộng 244–277, cao 251–262 điểm ảnh (đã chuẩn hoá về ô đều khi xuất)",
+  "Hàng 1 ô 2: 42 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)",
+  "Hàng 2 ô 5: 287 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)",
+  "Hàng 2 ô 8: 58 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)",
+  "Hàng 3 ô 1: 123 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)",
+  "Hàng 3 ô 3: 82 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)",
+  "Hàng 3 ô 4: 149 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)",
+  "Hàng 3 ô 5: 69 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)",
+  "Hàng 3 ô 6: 55 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)",
+  "Hàng 3 ô 8: 76 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)"
+ ],
+ "ket_luan": "ĐẠT kiểm tự động (chờ người xem → VALIDATED)",
+ "dat": true,
+ "khung": [
+  [
+   {
+    "hang": 0,
+    "cot": 0,
+    "o": [
+     0,
+     0,
+     260,
+     262
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 611,
+    "xanh_ket_trong": 31,
+    "bao": [
+     45,
+     17,
+     157,
+     235
+    ],
+    "cao": 235,
+    "rong": 157,
+    "day": 252,
+    "chan_x": 140.0,
+    "giua_x": 123.5,
+    "than_x": 123.25089285714286,
+    "cham": [],
+    "nghi_chu": false
+   },
+   {
+    "hang": 0,
+    "cot": 1,
+    "o": [
+     261,
+     0,
+     244,
+     262
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 632,
+    "xanh_ket_trong": 42,
+    "bao": [
+     32,
+     16,
+     156,
+     236
+    ],
+    "cao": 236,
+    "rong": 156,
+    "day": 252,
+    "chan_x": 125.5,
+    "giua_x": 110.0,
+    "than_x": 109.25433700407301,
+    "cham": [],
+    "nghi_chu": false
+   },
+   {
+    "hang": 0,
+    "cot": 2,
+    "o": [
+     506,
+     0,
+     247,
+     262
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 591,
+    "xanh_ket_trong": 20,
+    "bao": [
+     47,
+     18,
+     150,
+     234
+    ],
+    "cao": 234,
+    "rong": 150,
+    "day": 252,
+    "chan_x": 133.5,
+    "giua_x": 122.0,
+    "than_x": 119.36535266576045,
+    "cham": [],
+    "nghi_chu": false
+   },
+   {
+    "hang": 0,
+    "cot": 3,
+    "o": [
+     754,
+     0,
+     248,
+     262
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 598,
+    "xanh_ket_trong": 13,
+    "bao": [
+     46,
+     17,
+     160,
+     235
+    ],
+    "cao": 235,
+    "rong": 160,
+    "day": 252,
+    "chan_x": 141.5,
+    "giua_x": 126.0,
+    "than_x": 126.47250571210967,
+    "cham": [],
+    "nghi_chu": false
+   },
+   {
+    "hang": 0,
+    "cot": 4,
+    "o": [
+     1003,
+     0,
+     269,
+     262
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 577,
+    "xanh_ket_trong": 4,
+    "bao": [
+     54,
+     18,
+     150,
+     234
+    ],
+    "cao": 234,
+    "rong": 150,
+    "day": 252,
+    "chan_x": 141.0,
+    "giua_x": 129.0,
+    "than_x": 127.67186525265127,
+    "cham": [],
+    "nghi_chu": false
+   },
+   {
+    "hang": 0,
+    "cot": 5,
+    "o": [
+     1273,
+     0,
+     249,
+     262
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 617,
+    "xanh_ket_trong": 5,
+    "bao": [
+     46,
+     18,
+     151,
+     234
+    ],
+    "cao": 234,
+    "rong": 151,
+    "day": 252,
+    "chan_x": 133.5,
+    "giua_x": 121.5,
+    "than_x": 119.1463933181473,
+    "cham": [],
+    "nghi_chu": false
+   },
+   {
+    "hang": 0,
+    "cot": 6,
+    "o": [
+     1523,
+     0,
+     247,
+     262
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 549,
+    "xanh_ket_trong": 7,
+    "bao": [
+     47,
+     17,
+     149,
+     235
+    ],
+    "cao": 235,
+    "rong": 149,
+    "day": 252,
+    "chan_x": 132.0,
+    "giua_x": 121.5,
+    "than_x": 118.78106870229007,
+    "cham": [],
+    "nghi_chu": false
+   },
+   {
+    "hang": 0,
+    "cot": 7,
+    "o": [
+     1771,
+     0,
+     277,
+     262
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 594,
+    "xanh_ket_trong": 11,
+    "bao": [
+     54,
+     18,
+     155,
+     234
+    ],
+    "cao": 234,
+    "rong": 155,
+    "day": 252,
+    "chan_x": 146.0,
+    "giua_x": 131.5,
+    "than_x": 130.29337115556882,
+    "cham": [],
+    "nghi_chu": false
+   }
+  ],
+  [
+   {
+    "hang": 1,
+    "cot": 0,
+    "o": [
+     0,
+     263,
+     260,
+     251
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 671,
+    "xanh_ket_trong": 0,
+    "bao": [
+     25,
+     9,
+     192,
+     231
+    ],
+    "cao": 231,
+    "rong": 192,
+    "day": 240,
+    "chan_x": 134.0,
+    "giua_x": 121.0,
+    "than_x": 117.36663364935616,
+    "cham": [],
+    "nghi_chu": false
+   },
+   {
+    "hang": 1,
+    "cot": 1,
+    "o": [
+     261,
+     263,
+     244,
+     251
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 687,
+    "xanh_ket_trong": 8,
+    "bao": [
+     34,
+     12,
+     157,
+     228
+    ],
+    "cao": 228,
+    "rong": 157,
+    "day": 240,
+    "chan_x": 115.0,
+    "giua_x": 112.5,
+    "than_x": 106.33965728274174,
+    "cham": [],
+    "nghi_chu": false
+   },
+   {
+    "hang": 1,
+    "cot": 2,
+    "o": [
+     506,
+     263,
+     247,
+     251
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 667,
+    "xanh_ket_trong": 1,
+    "bao": [
+     44,
+     9,
+     151,
+     231
+    ],
+    "cao": 231,
+    "rong": 151,
+    "day": 240,
+    "chan_x": 123.0,
+    "giua_x": 119.5,
+    "than_x": 113.10334676169818,
+    "cham": [],
+    "nghi_chu": false
+   },
+   {
+    "hang": 1,
+    "cot": 3,
+    "o": [
+     754,
+     263,
+     248,
+     251
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 670,
+    "xanh_ket_trong": 19,
+    "bao": [
+     16,
+     9,
+     180,
+     230
+    ],
+    "cao": 230,
+    "rong": 180,
+    "day": 239,
+    "chan_x": 119.0,
+    "giua_x": 106.0,
+    "than_x": 102.32444318343028,
+    "cham": [],
+    "nghi_chu": false
+   },
+   {
+    "hang": 1,
+    "cot": 4,
+    "o": [
+     1003,
+     263,
+     269,
+     251
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 767,
+    "xanh_ket_trong": 287,
+    "bao": [
+     13,
+     13,
+     199,
+     227
+    ],
+    "cao": 227,
+    "rong": 199,
+    "day": 240,
+    "chan_x": 132.0,
+    "giua_x": 112.5,
+    "than_x": 112.03670350661754,
+    "cham": [],
+    "nghi_chu": false
+   },
+   {
+    "hang": 1,
+    "cot": 5,
+    "o": [
+     1273,
+     263,
+     249,
+     251
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 649,
+    "xanh_ket_trong": 0,
+    "bao": [
+     44,
+     9,
+     151,
+     231
+    ],
+    "cao": 231,
+    "rong": 151,
+    "day": 240,
+    "chan_x": 126.5,
+    "giua_x": 119.5,
+    "than_x": 113.57399239543726,
+    "cham": [],
+    "nghi_chu": false
+   },
+   {
+    "hang": 1,
+    "cot": 6,
+    "o": [
+     1523,
+     263,
+     247,
+     251
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 734,
+    "xanh_ket_trong": 12,
+    "bao": [
+     19,
+     12,
+     183,
+     227
+    ],
+    "cao": 227,
+    "rong": 183,
+    "day": 239,
+    "chan_x": 125.5,
+    "giua_x": 110.5,
+    "than_x": 113.75198442414258,
+    "cham": [],
+    "nghi_chu": false
+   },
+   {
+    "hang": 1,
+    "cot": 7,
+    "o": [
+     1771,
+     263,
+     277,
+     251
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 736,
+    "xanh_ket_trong": 58,
+    "bao": [
+     9,
+     12,
+     201,
+     228
+    ],
+    "cao": 228,
+    "rong": 201,
+    "day": 240,
+    "chan_x": 132.5,
+    "giua_x": 109.5,
+    "than_x": 111.45309994655264,
+    "cham": [],
+    "nghi_chu": false
+   }
+  ],
+  [
+   {
+    "hang": 2,
+    "cot": 0,
+    "o": [
+     0,
+     515,
+     260,
+     253
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 781,
+    "xanh_ket_trong": 123,
+    "bao": [
+     32,
+     17,
+     211,
+     220
+    ],
+    "cao": 220,
+    "rong": 211,
+    "day": 237,
+    "chan_x": 167.5,
+    "giua_x": 137.5,
+    "than_x": 126.48956007879185,
+    "cham": [],
+    "nghi_chu": false
+   },
+   {
+    "hang": 2,
+    "cot": 1,
+    "o": [
+     261,
+     515,
+     244,
+     253
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 712,
+    "xanh_ket_trong": 16,
+    "bao": [
+     17,
+     18,
+     210,
+     218
+    ],
+    "cao": 218,
+    "rong": 210,
+    "day": 236,
+    "chan_x": 108.5,
+    "giua_x": 122.0,
+    "than_x": 119.32060623724861,
+    "cham": [],
+    "nghi_chu": false
+   },
+   {
+    "hang": 2,
+    "cot": 2,
+    "o": [
+     506,
+     515,
+     247,
+     253
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 679,
+    "xanh_ket_trong": 82,
+    "bao": [
+     17,
+     12,
+     214,
+     207
+    ],
+    "cao": 207,
+    "rong": 214,
+    "day": 219,
+    "chan_x": 89.0,
+    "giua_x": 124.0,
+    "than_x": 120.02629767313782,
+    "cham": [],
+    "nghi_chu": false
+   },
+   {
+    "hang": 2,
+    "cot": 3,
+    "o": [
+     754,
+     515,
+     248,
+     253
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 864,
+    "xanh_ket_trong": 149,
+    "bao": [
+     23,
+     13,
+     211,
+     208
+    ],
+    "cao": 208,
+    "rong": 211,
+    "day": 221,
+    "chan_x": 170.0,
+    "giua_x": 128.5,
+    "than_x": 129.16770354341358,
+    "cham": [],
+    "nghi_chu": false
+   },
+   {
+    "hang": 2,
+    "cot": 4,
+    "o": [
+     1003,
+     515,
+     269,
+     253
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 800,
+    "xanh_ket_trong": 69,
+    "bao": [
+     37,
+     21,
+     213,
+     216
+    ],
+    "cao": 216,
+    "rong": 213,
+    "day": 237,
+    "chan_x": 168.5,
+    "giua_x": 143.5,
+    "than_x": 137.55743005764094,
+    "cham": [],
+    "nghi_chu": false
+   },
+   {
+    "hang": 2,
+    "cot": 5,
+    "o": [
+     1273,
+     515,
+     249,
+     253
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 716,
+    "xanh_ket_trong": 55,
+    "bao": [
+     20,
+     11,
+     211,
+     210
+    ],
+    "cao": 210,
+    "rong": 211,
+    "day": 221,
+    "chan_x": 95.0,
+    "giua_x": 125.5,
+    "than_x": 117.44665770499817,
+    "cham": [],
+    "nghi_chu": false
+   },
+   {
+    "hang": 2,
+    "cot": 6,
+    "o": [
+     1523,
+     515,
+     247,
+     253
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 763,
+    "xanh_ket_trong": 0,
+    "bao": [
+     24,
+     17,
+     214,
+     219
+    ],
+    "cao": 219,
+    "rong": 214,
+    "day": 236,
+    "chan_x": 175.5,
+    "giua_x": 131.0,
+    "than_x": 121.1077466565733,
+    "cham": [],
+    "nghi_chu": false
+   },
+   {
+    "hang": 2,
+    "cot": 7,
+    "o": [
+     1771,
+     515,
+     277,
+     253
+    ],
+    "trong": false,
+    "vun": 0,
+    "khu_vien_xanh": 816,
+    "xanh_ket_trong": 76,
+    "bao": [
+     35,
+     18,
+     210,
+     219
+    ],
+    "cao": 219,
+    "rong": 210,
+    "day": 237,
+    "chan_x": 196.5,
+    "giua_x": 140.0,
+    "than_x": 142.74558734023128,
+    "cham": [],
+    "nghi_chu": false
+   }
+  ]
+ ],
+ "tran_khung_game": []
+}

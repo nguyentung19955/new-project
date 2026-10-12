@@ -1,0 +1,32 @@
+KIỂM TẤM: zed-v2-00-dung-di-chay-a.png  (2048×768 điểm ảnh, 8 cột × 3 hàng, loại: than)
+KẾT LUẬN: ĐẠT kiểm tự động (chờ người xem → VALIDATED)
+
+LỖI (0):
+  (không)
+CẢNH BÁO (12):
+  - Ảnh nguồn CÓ ĐƯỜNG KẺ LƯỚI (1 dọc, 0 ngang) — đã dùng để chia ô và đã bỏ khi tách; ảnh mới nên KHÔNG kẻ lưới
+  - Ranh giới ô: lưới lệch số ô (1 đường, cần 7) → dò khe
+  - Ô không đều: rộng 244–277, cao 251–262 điểm ảnh (đã chuẩn hoá về ô đều khi xuất)
+  - Hàng 1 ô 2: 42 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)
+  - Hàng 2 ô 5: 287 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)
+  - Hàng 2 ô 8: 58 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)
+  - Hàng 3 ô 1: 123 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)
+  - Hàng 3 ô 3: 82 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)
+  - Hàng 3 ô 4: 149 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)
+  - Hàng 3 ô 5: 69 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)
+  - Hàng 3 ô 6: 55 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)
+  - Hàng 3 ô 8: 76 điểm xanh thuần kẹt trong hình (đã xoá; xem lại kẽ tay/chân)
+
+SỐ ĐO:
+  Ô cột (điểm ảnh): 0–260, 261–505, 506–753, 754–1002, 1003–1272, 1273–1522, 1523–1770, 1771–2048
+  Ô hàng (điểm ảnh): 0–262, 263–514, 515–768
+  Hàng 1 dung    : 8 khung, 150 ms/khung, cao người 234–236 (trung vị 234), rộng 149–160, đường đất y=252 (96.2% chiều cao ô)
+     neo ngang (tâm thân trung vị) x=121 trong ô (47.5% bề ngang); tâm thân từng khung lệch neo: +2 -12 -2 +5 +6 -2 -3 +9
+  Hàng 2 di      : 8 khung, 112 ms/khung, cao người 227–231 (trung vị 229), rộng 151–201, đường đất y=240 (95.6% chiều cao ô)
+     neo ngang (tâm thân trung vị) x=113 trong ô (44.1% bề ngang); tâm thân từng khung lệch neo: +5 -6 +1 -10 -1 +1 +1 -1
+  Hàng 3 chay    : 8 khung, 75 ms/khung, cao người 207–220 (trung vị 217), rộng 210–214, đường đất y=237 (93.7% chiều cao ô)
+     neo ngang (tâm thân trung vị) x=124 trong ô (48.5% bề ngang); tâm thân từng khung lệch neo: +3 -4 -4 +5 +14 -6 -3 +19
+  Tỉ lệ về cỡ game: 0.2644 (chiều cao trung vị hàng 1 → 31 điểm ảnh logic) → khung 48×48 logic, net 2, chân tại (24,45)
+
+TỆP RA: tong-quan.jpg (khung xanh = ổn, đỏ = lỗi; vàng = khung bao; xanh dương = chân), GIF từng hàng, sheet-game.png, do-dac.json (+ sheet-sach.png nếu chạy --sach)
+NHỚ: máy không thấy được tay cầm sai, vũ khí xuyên người, đồ trôi khỏi người, động tác giật → xem GIF theo checklist ở SPEC mục 9.3.
