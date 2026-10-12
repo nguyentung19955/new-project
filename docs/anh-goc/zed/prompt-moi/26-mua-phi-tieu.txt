@@ -1,7 +1,8 @@
 # Đặc biệt phi tiêu: mưa phi tiêu (0,35 giây)
-# Gửi kèm: mẫu
+# Gửi kèm: mẫu + mau-tu-the/tu-the/26-mua-phi-tieu.png
 
 Nhân vật như ẢNH MẪU gửi kèm (giữ y hệt mặt, tóc, đồ, đai đỏ, màu, tỉ lệ đầu/thân). Pixel art chibi, viền tối 1 nét, quay mặt PHẢI, cùng cỡ người ở mọi khung, chân trụ chạm cùng một đường đất.
+Ảnh 2 là khung xương từng khung (đỏ = tay/chân gần, xanh = xa, nét đứt xám = hướng vũ khí — KHÔNG vẽ vũ khí): vẽ ĐÚNG tư thế từng khung.
 Không vẽ phi tiêu.
 Tung lên trời: 1 khom người hai tay sát hông, 2 ★ vung hai tay hất lên trời, ngửa người, 3 giữ, 4–6 về thế thủ.
 1 hàng 6 khung đều nhau, đọc trái sang phải; các hình không chạm nhau, không chạm mép ảnh. Nền xanh lá thuần #00FF00, không lưới, không chữ, không số, không bóng, không hiệu ứng.

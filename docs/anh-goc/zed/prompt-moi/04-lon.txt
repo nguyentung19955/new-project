@@ -1,6 +1,7 @@
 # Lộn né (0,27 giây)
-# Gửi kèm: mẫu
+# Gửi kèm: mẫu + mau-tu-the/tu-the/04-lon.png
 
 Nhân vật như ẢNH MẪU gửi kèm (giữ y hệt mặt, tóc, đồ, đai đỏ, màu, tỉ lệ đầu/thân). Pixel art chibi, viền tối 1 nét, quay mặt PHẢI, cùng cỡ người ở mọi khung, chân trụ chạm cùng một đường đất.
+Ảnh 2 là khung xương từng khung (đỏ = tay/chân gần, xanh = xa, nét đứt xám = hướng vũ khí — KHÔNG vẽ vũ khí): vẽ ĐÚNG tư thế từng khung.
 Lộn né về trước: 1 cúi thấp lao tới, 2 chúi đầu, 3–4 cuộn tròn như quả bóng lăn, 5 bung ra chống tay chân, 6 đứng dậy về thế thủ.
 1 hàng 6 khung đều nhau, đọc trái sang phải; các hình không chạm nhau, không chạm mép ảnh. Nền xanh lá thuần #00FF00, không lưới, không chữ, không số, không bóng, không hiệu ứng.
