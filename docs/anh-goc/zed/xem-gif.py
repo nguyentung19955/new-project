@@ -99,18 +99,21 @@ def main():
         if not khung:
             continue
         # căn theo chân: đáy hình trùng vạch đất; ngang theo giữa ô (giữ nguyên lệch trong ô như AI vẽ)
-        o0 = khung[0][0]
+        # phóng theo khung bao chung của cả hàng (nhân vật to vừa GIF, cùng một tỉ lệ cho mọi khung)
         S = a.co
-        sc = S / max(o0.size)
+        cao = max(bb[3] - bb[1] for _, bb in khung)
+        rong = max(bb[2] - bb[0] for _, bb in khung)
+        sc = min(S * 0.85 / cao, S * 0.95 / rong)
         anh = []
         for o, bb in khung:
             day = bb[3]
-            nho = o.resize((round(o.size[0] * sc), round(o.size[1] * sc)), Image.NEAREST)
+            o = o.crop(bb)
+            nho = o.resize((max(1, round(o.size[0] * sc)), max(1, round(o.size[1] * sc))), Image.LANCZOS)
             nen_gif = Image.new('RGBA', (S, S), (40, 44, 52, 255))
             dat = round(S * 0.9)
             for x in range(S):
                 nen_gif.putpixel((x, dat), (90, 96, 110, 255))
-            nen_gif.alpha_composite(nho, ((S - nho.size[0]) // 2, dat - round(day * sc)))
+            nen_gif.alpha_composite(nho, ((S - nho.size[0]) // 2, dat - nho.size[1]))
             anh.append(nen_gif.convert('RGB'))
         t = ten[r] if r < len(ten) else 'hang-%d' % (r + 1)
         p = os.path.join(ra, '%d-%s.gif' % (r + 1, t))
