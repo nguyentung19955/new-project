@@ -65,7 +65,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.12-1336";
+(window.G = window.G || {}).VERSION = "lk-2026.10.12-1344";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -25324,7 +25324,7 @@ MA._xong();
     if (z.wall) {
       if (!(z.wait > 0)) return false; // tường nước đang chạy là đòn thật: vẽ như cũ
       const age = since(z), tot = age + z.wait;
-      BT.add({ k: 'wall', x: z.x, y: z.y, ang: z.ang, s: z.s, half: z.half, g: z.g, gw: z.gw, maxS: z.maxS, el: 'ice', u: clamp(age / Math.max(0.05, tot), 0, 1), age });
+      BT.add({ k: 'wall', x: z.x, y: z.y, ang: z.ang, s: z.s, half: z.half, g: z.g, gw: z.gw, maxS: z.maxS, th: z.th, el: 'ice', u: clamp(age / Math.max(0.05, tot), 0, 1), age });
       return true;
     }
     const sh = z.shape;
@@ -25610,7 +25610,8 @@ MA._xong();
     else {
       // đường thẳng, đường ngắm, tường nước: bốn góc của hình chữ nhật xoay
       const cs = Math.cos(it.ang), sn = Math.sin(it.ang);
-      const a0 = it.k === 'wall' ? it.s : 0, a1 = it.k === 'wall' ? it.s + (G.BT_PIXEL && it.maxS > it.s + 40 ? it.maxS - it.s : 40) : it.len, b = it.k === 'wall' ? it.half : it.w / 2;
+      const wp = it.k === 'wall' && G.BT_PIXEL ? (it.th || 14) / 2 + 3 : 0; // kiểu điểm ảnh: cả dải mép tường dày th quét qua (G.mobWall)
+      const a0 = it.k === 'wall' ? it.s - wp : 0, a1 = it.k === 'wall' ? it.s + (G.BT_PIXEL && it.maxS > it.s + 40 ? it.maxS - it.s : 40) + wp : it.len, b = it.k === 'wall' ? it.half : it.w / 2;
       x0 = y0 = 1e9; x1 = y1 = -1e9;
       for (const a of [a0, a1]) for (const bb of [-b, b]) { const px = it.x + a * cs - bb * sn, py = it.y + a * sn + bb * cs; if (px < x0) x0 = px; if (px > x1) x1 = px; if (py < y0) y0 = py; if (py > y1) y1 = py; }
     }
@@ -25662,11 +25663,14 @@ MA._xong();
     }
     if (it.k === 'rect') return x >= it.x && x <= it.x + it.w && y >= it.y && y <= it.y + it.h ? Math.abs(x - it.x - it.w / 2) / Math.max(0.5, it.w / 2) : -1;
     if (it.k === 'wall') {
+      // Rà soát B (bổ sung): tường trúng em bé khi MÉP tường dày th quét qua (|al − s| < th/2 + 3, G.mobWall) trên CẢ đường từ s tới maxS,
+      // trừ khe |ac − g| ≤ gw. Trước chỉ dải 40 điểm ảnh đầu được tô đỏ (báo được ~16% chỗ sẽ bị trúng); nay phần đường còn lại tô đỏ nhạt (-4).
       const c = Math.cos(it.ang), s = Math.sin(it.ang), al = dx * c + dy * s - it.s, ac = -dx * s + dy * c;
-      const L = it.maxS > it.s + 40 ? it.maxS - it.s : 40;
-      if (al < 0 || al > L || Math.abs(ac) >= it.half) return -1;
-      if (al > 40) return Math.abs(ac - it.g) <= it.gw ? -3 : -1; // -3: khe an toàn kéo dài suốt đường tường sẽ chạy (tới z.maxS)
-      return Math.abs(ac - it.g) > it.gw ? al / 40 : -2; // -2: khe an toàn (đứng đây tường không đánh trúng: |ac − g| ≤ gw như G.mobWall)
+      const L = it.maxS > it.s + 40 ? it.maxS - it.s : 40, pad = (it.th || 14) / 2 + 3;
+      if (al < -pad || al > L + pad || Math.abs(ac) >= it.half) return -1;
+      const khe = Math.abs(ac - it.g) <= it.gw;
+      if (al < 0 || al > 40) return khe ? (al > 40 ? -3 : -2) : -4; // -3: khe an toàn kéo dài suốt đường tường sẽ chạy (tới z.maxS)
+      return !khe ? al / 40 : -2; // -2: khe an toàn (đứng đây tường không đánh trúng: |ac − g| ≤ gw như G.mobWall)
     }
     if (it.k === 'aim') {
       const c = Math.cos(it.ang), s = Math.sin(it.ang), al = dx * c + dy * s, ac = -dx * s + dy * c;
@@ -25698,7 +25702,7 @@ MA._xong();
     const m = new Uint8Array(w * h), p = new Uint8Array(w * h);
     for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) {
       const v = memb(it, x0 + i + 0.5, y0 + j + 0.5), o = j * w + i;
-      if (v >= 0) { m[o] = 2; p[o] = Math.round(v * 255); } else if (v === -2) m[o] = 4; else if (v === -3) m[o] = 6;
+      if (v >= 0) { m[o] = 2; p[o] = Math.round(v * 255); } else if (v === -2) m[o] = 4; else if (v === -3) m[o] = 6; else if (v === -4) m[o] = 8;
     }
     for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) {
       const o = j * w + i, v = m[o];
@@ -25706,7 +25710,7 @@ MA._xong();
       if (v === 0) { if (nb(2) || nb(3)) m[o] = 1; }
       else if (v === 2) { if ((i > 0 && m[o - 1] < 2) || (i < w - 1 && m[o + 1] < 2) || (j > 0 && m[o - w] < 2) || (j < h - 1 && m[o + w] < 2) || i === 0 || j === 0 || i === w - 1 || j === h - 1 || nb(4) || nb(5)) m[o] = 3; }
       else if (v === 4) { if (nb(2) || nb(3)) m[o] = 5; }
-      else if (v === 6) { if (nb(0) || nb(1)) m[o] = 7; }
+      else if (v === 6) { if (nb(0) || nb(1) || nb(8)) m[o] = 7; }
     }
     // cỡ tính bằng điểm ảnh của "độ xa" (để mép trước của phần đang lấp dày đúng 1 điểm ảnh)
     const R = it.k === 'circle' ? it.r : it.k === 'rect' ? it.w / 2 : it.k === 'line' || it.k === 'aim' ? it.len : it.k === 'cone' ? it.r : it.k === 'donut' ? it.r1 - it.r0 : 40;
@@ -25753,6 +25757,11 @@ MA._xong();
           continue;
         }
         if (v === 1) { put(d, di, 30, 4, 2, 0.55 * dim); continue; } // viền tối 1 điểm ảnh bên ngoài
+        if (v === 8) { // đường tường nước sẽ quét qua (ngoài dải xuất phát): đỏ rất nhạt + chấm thưa
+          put(d, di, C.base[0], C.base[1], C.base[2], 0.13 * dim);
+          if ((wy & 1) === 0 && ((wx + ((wy >> 1) & 1) * 2) & 3) === 0) put(d, di, C.base[0], C.base[1], C.base[2], 0.4 * dim);
+          continue;
+        }
         if (v >= 4) { // khe an toàn của tường nước: lối xanh nhạt, mép trắng; đoạn kéo dài suốt đường tường chạy thì nhạt hơn, mép chấm
           if (v === 4) put(d, di, 150, 255, 170, 0.16 * dim);
           else if (v === 5) put(d, di, 255, 255, 255, (0.75 + 0.25 * blink) * dim);
