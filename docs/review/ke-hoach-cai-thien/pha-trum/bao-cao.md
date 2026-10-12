@@ -49,3 +49,21 @@ Cờ tắt: `?phatrum=0` (hoặc `G.PHA_TRUM_DU = false`) → hình như cũ. Kh
 - `python3 game/build.py` và `LK_HAI_TEP=1 python3 game/build.py --hai-tep` chạy được (cảnh báo tệp đầu 5,08 MB đã có từ trước, không do phiên này).
 - `node --check` mọi tệp sửa, `cloud_save_regression.test.js` PASS, `tests/smoke.py` 0 lỗi, `au_pha_trum.py` 0 pageerror.
 - Chạy lại: `cd game && LK_HAI_TEP=1 python3 build.py --hai-tep && python3 tests/au_pha_trum.py` (thêm `--cham` để thử mạng chậm).
+
+## Bổ sung (phiên thứ hai, cùng ngày): ảnh trùm tải hỏng thì thử lại, vào phòng trùm thì tải trước
+
+Phiên thứ hai làm song song và tìm ra đúng hai lỗi hình ở trên. Phần dưới đây là phần mới, chỉ đụng tới việc **ảnh dáng pha có về kịp hay không**. Trong lúc làm, phiên Tải nhanh đã đổi cách tải sang ẢNH RỜI: mỗi ảnh một tệp, có hàng chờ ưu tiên, trùm và dáng pha được ưu tiên khi vào ải 4–5. Code dưới đây khớp theo cách tải mới.
+
+- **Rủi ro còn lại trên iPhone**: khoá máy, chuyển ứng dụng hoặc mạng chập chờn làm một ảnh tải hỏng. Game thử lại 2 lần (sau 3 giây và sau 10 giây) rồi bỏ ảnh đó. Ảnh bị bỏ chỉ được thử lại khi trình duyệt báo sự kiện `online`, mà sự kiện này thường không đến khi chỉ khoá máy. Khi đó trùm đổi pha nhưng vẫn mang hình pha 1 (hoặc hình vẽ bằng code) suốt buổi chơi.
+- **Đã sửa** (cờ tắt `?uutien=0` / `G.UU_TIEN_TRUM = false`):
+  - Vào phòng trùm (`js/stage.js` gọi `SC.uuTienTrum(mã, true)`): ảnh trùm nào đã bị bỏ thì thử lại ngay (`SC.roiThuLai`). Cả 3 dáng pha 1, -p2, -p3 được báo "đang cần" nên tải trước mọi thứ khác.
+  - Trùm đã sang pha mà dáng pha chưa về: `SC.phaTrum` báo "đang cần" để tải ngay. Dáng pha về tới là hình đổi ở khung kế tiếp.
+  - Quay lại trang (visibilitychange): game thử lại mọi ảnh đã bị bỏ.
+  - Nếu tắt ảnh rời (`LK_ANH_ROI=0`, quay về tệp `linh-khi-anh.<mã>.json`): `build.py` ghi vị trí byte các dòng ảnh trùm vào `G.ANH_SAU.trum`. Khi vào ải của vùng, nếu ảnh trùm chưa về thì game tải riêng các dòng đó bằng yêu cầu Range. Lượt tải cả tệp đã thôi thì game thử lại khi vào ải hoặc quay lại trang.
+- **Kiểm tra**: `cd game && LK_HAI_TEP=1 python3 build.py --hai-tep && python3 tests/au_pha_trum_tai.py`. Máy chủ thử làm hỏng 4 lần đầu của mỗi ảnh trùm (WebP 1 lần, rồi PNG 3 lần), nên game bỏ cả 9 ảnh trùm. Sau đó bài thử đánh từng trùm tới chết.
+  - Code mới: vào phòng trùm là có đủ 3 dáng, 0 pageerror.
+    - Mộc Tinh đổi pha ở 65,1% / 32,3%, vẽ đúng `mocTinh-p2` / `mocTinh-p3`.
+    - Ngư Tinh đổi pha ở 66,0% / 32,7%, vẽ đúng `nguTinh-p2` / `nguTinh-p3`.
+    - Hồ Tinh đổi pha ở 65,6% / 32,9%, vẽ đúng `hoTinh-p2` / `hoTinh-p3`.
+  - Code cũ (`LK_THEM='&uutien=0'`): cả 3 trùm không có ảnh nào, đúng như triệu chứng.
+  - Bản tệp JSON (`LK_ANH_ROI=0`, làm hỏng mọi lượt tải cả tệp, chỉ trả lời Range) cũng đạt: đủ 3 dáng cho cả 3 trùm. Kết quả này đo trước khi gộp cách tải ảnh rời.

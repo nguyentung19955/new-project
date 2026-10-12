@@ -65,7 +65,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.12-1241";
+(window.G = window.G || {}).VERSION = "lk-2026.10.12-1253";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -22181,6 +22181,7 @@ MA._xong();
   SC.phaTrum = function (sp, pha, ten) {
     if (!sp || pha < 2 || !PHA_HANG[ten]) return null;
     const p = SC.ds[sp.ma + '-p' + pha];
+    if (p && !p.ready && roiCan) roiCan(p.ma); // phiên kiểm 3 pha trùm: bản ảnh rời, trùm đã sang pha mà dáng pha chưa về → tải ngay (ưu tiên cao nhất)
     return p && p.ready && p.dt[ten] ? p : null;
   };
   // Vẽ quái tự vẽ tại (x, y) với tuỳ chọn giống G.monsterArt.draw. bong: có vẽ bóng dưới chân không. D: thời lượng cử động trong game.
@@ -23897,6 +23898,58 @@ MA._xong();
     if (typeof fetch !== 'function' || typeof Promise === 'undefined') { AS.tt = 'loi'; AS.loi = 'trình duyệt không có fetch'; AS.hetLuc = Date.now(); ghi('Trình duyệt không tải được tệp ảnh rời: hình thiếu vẽ bằng code.'); return; }
     chayNapSau().catch((e) => { AS.tt = 'loi'; AS.loi = String((e && e.message) || e); AS.hetLuc = Date.now(); });
   };
+  // ---------- ƯU TIÊN ẢNH TRÙM VÙNG (phiên kiểm 3 pha trùm, 12/10) ----------
+  // Phản hồi chơi trên iPhone: "đánh thử trùm chỉ mới thấy 1 pha". Dáng pha 2, 3 (<trùm>-p2 / -p3) nằm giữa tệp ảnh tải sau 20 MB (từ ~9 MB trở đi):
+  // mạng chậm, hoặc lượt tải bị ngắt (khoá máy, chuyển ứng dụng, Safari nạp lại trang khi thiếu bộ nhớ) thì trùm chỉ có hình pha 1, và sau 3 lượt hỏng
+  // game thôi tải luôn tới khi mở lại. Nay:
+  //  - stage.js gọi SC.uuTienTrum(<mã trùm>) khi vào MỘT ẢI của vùng (và khi vào phòng trùm): ảnh trùm (pha 1, 2, 3) chưa về thì tải RIÊNG mấy dòng đó
+  //    của tệp ảnh (yêu cầu Range theo vị trí byte build.py ghi ở G.ANH_SAU.trum), không chờ cả tệp. Máy chủ không hỗ trợ Range (trả 200): thôi, để lượt
+  //    tải thường lo như cũ (không tải thừa: ngắt ngay).
+  //  - Lượt tải thường đã thôi (tt 'loi'): vào ải hoặc quay lại trang (visibilitychange) thì thử tải lại (phần đã nhận vẫn giữ).
+  // Tắt: G.UU_TIEN_TRUM = false hoặc ?uutien=0.
+  if (G.UU_TIEN_TRUM === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]uutien=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.UU_TIEN_TRUM = !tat; }
+  const VT_TRUM = KS && KS.trum && typeof KS.trum === 'object' ? KS.trum : null, dangUu = {};
+  SC.uu = { lan: 0, dong: 0, loi: '' }; // cho kiểm thử
+  function thuLaiNeuThoi() { if (G.UU_TIEN_TRUM && KS && AS.tt === 'loi' && !dangChay) { AS.tt = 'cho'; SC.napSau(); } }
+  try { if (typeof document !== 'undefined' && document.addEventListener) document.addEventListener('visibilitychange', () => { if (!document.hidden) thuLaiNeuThoi(); }); } catch (e) { /* bỏ qua */ }
+  SC.uuTienTrum = function (ma, phongTrum) {
+    if (!G.UU_TIEN_TRUM) return false;
+    // Bản ảnh rời (Tải nhanh 12/10, mặc định trên web): hàng chờ đã tự ưu tiên trùm + dáng pha khi vào ải 4–5. Thêm: VÀO PHÒNG TRÙM thì
+    // báo "đang cần" cả 3 dáng (tải trước mọi thứ khác), và ảnh trùm nào đã tải hỏng thì thử lại ngay (trước đây chỉ thử lại khi có sự kiện 'online').
+    if (roiCan) {
+      if (!phongTrum || typeof ma !== 'string') return false;
+      const ds = [ma, ma + '-p2', ma + '-p3'];
+      if (SC.roiThuLai) SC.roiThuLai((m) => ds.indexOf(m) >= 0);
+      for (const k of ds) if (SC.ds[k] && !SC.ds[k].ready) roiCan(k);
+      return true;
+    }
+    if (!KS) return false;
+    thuLaiNeuThoi();
+    if (!VT_TRUM || typeof ma !== 'string' || dangUu[ma] || typeof fetch !== 'function') return false;
+    let a = Infinity, b = -1;
+    for (const k of [ma, ma + '-p2', ma + '-p3']) {
+      const v = VT_TRUM[k];
+      if (!Array.isArray(v) || daNhan.has(k) || !(v[0] >= 0 && v[1] > v[0])) continue;
+      a = Math.min(a, v[0]); b = Math.max(b, v[1]);
+    }
+    if (b < 0) return false; // đã có đủ (hoặc tệp không có ảnh trùm này)
+    dangUu[ma] = true; SC.uu.lan++;
+    const ngat = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const hen = setTimeout(() => { if (ngat) ngat.abort(); }, 60000);
+    fetch(AS.tep, { headers: { Range: 'bytes=' + a + '-' + (b - 1) }, signal: ngat ? ngat.signal : undefined }).then(async (res) => {
+      if (res.status !== 206) { // không hỗ trợ Range (hoặc bản lưu của sw.js trả cả tệp): để lượt tải thường lo
+        SC.uu.loi = 'máy chủ trả ' + res.status;
+        try { if (ngat) ngat.abort(); else if (res.body && res.body.cancel) res.body.cancel(); } catch (e) { /* bỏ qua */ }
+        return;
+      }
+      const ds = (await res.text()).split('\n');
+      for (const d of ds) {
+        try { if (nhanDong(d)) { SC.uu.dong++; await choKhung(); } } catch (e) { /* dòng cụt ở mép: lượt tải thường sẽ nhận */ }
+      }
+      ghi('Đã tải trước ảnh trùm ' + ma + ' (' + Math.round((b - a) / 1024) + ' KB).');
+    }).catch((e) => { SC.uu.loi = String((e && e.message) || e); }).finally(() => { clearTimeout(hen); dangUu[ma] = false; });
+    return true;
+  };
   // Chỉ báo nhỏ ở góc (js/engine.js gọi sau khi vẽ xong cảnh): { pct } đang tải; { loi: true } vừa thôi (hiện 6 giây); null: không vẽ gì.
   SC.sauChiBao = function () {
     if (AS.tt === 'tai' || AS.tt === 'thu-lai') return { pct: AS.tong > 0 ? Math.min(99, Math.floor(AS.xong / AS.tong * 100)) : 0 };
@@ -24054,6 +24107,13 @@ MA._xong();
         }))))).catch(() => {});
       } catch (e) { /* bỏ qua */ }
     }
+    // Thử lại ảnh đã tải hỏng (loc(mã) chọn ảnh nào; không có loc: mọi ảnh hỏng). Dùng ở SC.uuTienTrum và khi quay lại trang.
+    SC.roiThuLai = function (loc) {
+      let n = 0;
+      for (let i = hongDs.length - 1; i >= 0; i--) { const it = hongDs[i]; if (loc && !loc(it.ma)) continue; hongDs.splice(i, 1); it.lan = 0; hang.push(it); n++; }
+      if (n) { ketThuc = false; bom(); }
+      return n;
+    };
     roiMo = function () {
       if (mo) return;
       mo = true;
@@ -24064,6 +24124,8 @@ MA._xong();
         g1.roi = true; G.startStage = g1;
       }
       try { window.addEventListener('online', () => { for (const it of hongDs.splice(0)) { it.lan = 0; hang.push(it); } bom(); }); } catch (e) { /* bỏ qua */ }
+      // Phiên kiểm 3 pha trùm: iPhone khoá máy / chuyển ứng dụng giữa lúc tải thì ảnh hỏng mà không có sự kiện 'online'. Quay lại trang: thử lại các ảnh hỏng.
+      try { document.addEventListener('visibilitychange', () => { if (!document.hidden && hongDs.length && SC.roiThuLai) SC.roiThuLai(); }); } catch (e) { /* bỏ qua */ }
       bom();
     };
   }
@@ -29113,8 +29175,15 @@ MA._xong();
   let runNo = 0;
 
   // o (không bắt buộc): { kind: 'A' | 'B' | 'C', seed } để dựng lại đúng một bản đồ khi kiểm tra.
+  function uuTienTrum(r, phongTrum) {
+    try {
+      const SC = G.spriteCustom, R = G.REGIONS && G.REGIONS[r], ma = R && G.MOB_ART && G.MOB_ART.boss ? G.MOB_ART.boss[R.boss] : null;
+      if (ma && SC && SC.uuTienTrum) SC.uuTienTrum(ma, !!phongTrum);
+    } catch (e) { /* chỉ là tải ảnh: không được làm hỏng việc vào ải */ }
+  }
   G.startStage = function (r, i, diff, o) {
     o = o || {};
+    uuTienTrum(r); // phiên kiểm 3 pha trùm: ảnh trùm vùng (pha 1, 2, 3) chưa về thì tải trước ngay khi vào ải của vùng (js/sprite_custom.js)
     const tut = r === 0 && i === 0 && !diff && !G.save.tut.done;
     // Ải cuối vùng luôn là Kiểu C; ải dạy chơi dùng Kiểu A cho dễ theo; còn lại ngẫu nhiên, tránh kiểu vừa chơi.
     const kind = o.kind || (tut ? 'A' : G.mapgen.pickKind(i, G.save.lastKind, G.rnd));
@@ -29339,6 +29408,7 @@ MA._xong();
     const P = S.P, map = S.map;
     leaveRoom();
     S.idx = id;
+    if (map.rooms[id] && map.rooms[id].type === 'boss') uuTienTrum(S.r, true); // lượt tải trước lúc vào ải chưa xong / hỏng: thử lại khi vào phòng trùm
     let W = S.worlds[id];
     const first = !W;
     if (first) {

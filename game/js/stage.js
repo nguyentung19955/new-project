@@ -82,8 +82,15 @@
   let runNo = 0;
 
   // o (không bắt buộc): { kind: 'A' | 'B' | 'C', seed } để dựng lại đúng một bản đồ khi kiểm tra.
+  function uuTienTrum(r, phongTrum) {
+    try {
+      const SC = G.spriteCustom, R = G.REGIONS && G.REGIONS[r], ma = R && G.MOB_ART && G.MOB_ART.boss ? G.MOB_ART.boss[R.boss] : null;
+      if (ma && SC && SC.uuTienTrum) SC.uuTienTrum(ma, !!phongTrum);
+    } catch (e) { /* chỉ là tải ảnh: không được làm hỏng việc vào ải */ }
+  }
   G.startStage = function (r, i, diff, o) {
     o = o || {};
+    uuTienTrum(r); // phiên kiểm 3 pha trùm: ảnh trùm vùng (pha 1, 2, 3) chưa về thì tải trước ngay khi vào ải của vùng (js/sprite_custom.js)
     const tut = r === 0 && i === 0 && !diff && !G.save.tut.done;
     // Ải cuối vùng luôn là Kiểu C; ải dạy chơi dùng Kiểu A cho dễ theo; còn lại ngẫu nhiên, tránh kiểu vừa chơi.
     const kind = o.kind || (tut ? 'A' : G.mapgen.pickKind(i, G.save.lastKind, G.rnd));
@@ -308,6 +315,7 @@
     const P = S.P, map = S.map;
     leaveRoom();
     S.idx = id;
+    if (map.rooms[id] && map.rooms[id].type === 'boss') uuTienTrum(S.r, true); // lượt tải trước lúc vào ải chưa xong / hỏng: thử lại khi vào phòng trùm
     let W = S.worlds[id];
     const first = !W;
     if (first) {

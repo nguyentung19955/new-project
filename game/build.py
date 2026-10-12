@@ -196,10 +196,18 @@ def hai_tep(custom, gom, trang, frag):
     if not sau:
         return
     # Tệp ảnh tải sau: một mảng JSON hợp lệ, MỖI HÌNH MỘT DÒNG, để game đọc dần từng dòng khi tệp đang về (js/sprite_custom.js).
-    data = ('[\n' + ',\n'.join(json.dumps(t, ensure_ascii=False, separators=(',', ':')) for t in sau) + '\n]\n').encode('utf-8')
+    dong = [json.dumps(t, ensure_ascii=False, separators=(',', ':')).encode('utf-8') for t in sau]
+    data = b'[\n' + b',\n'.join(dong) + b'\n]\n'
     ten = TEN_ANH % hashlib.sha256(data).hexdigest()[:12]
+    # Phiên kiểm 3 pha trùm: vị trí byte [đầu, cuối) của dòng ảnh trùm vùng (pha 1 và dáng pha -p2 / -p3) trong tệp ảnh tải sau.
+    # js/sprite_custom.js (SC.uuTienTrum) tải RIÊNG mấy dòng này (yêu cầu Range) khi người chơi vào một ải của vùng mà ảnh trùm chưa về.
+    trum, vt = {}, 2
+    for t, d in zip(sau, dong):
+        if t.get('ma', '').split('-')[0] in TRUM_VUNG and t.get('doi_tuong') not in ('hieu-ung',):
+            trum[t['ma']] = [vt, vt + len(d)]
+        vt += len(d) + 2
     khai = ('// ===== ảnh tải sau (Đợt 10): tệp nằm cạnh trang, js/sprite_custom.js tải sau khi màn chào đã vẽ =====\n'
-            '(window.G = window.G || {}).ANH_SAU = ' + json.dumps({'tep': ten, 'so': len(sau), 'byte': len(data)}) + ';\n')
+            '(window.G = window.G || {}).ANH_SAU = ' + json.dumps({'tep': ten, 'so': len(sau), 'byte': len(data), 'trum': trum}) + ';\n')
     # Trang nhẹ CỐ Ý không chứa chuỗi ".customSpriteData = ": các trang công cụ (tools/tach-quai, tach-ghep, tach-do) tìm đúng chuỗi đó trong
     # index.html để lấy MỌI hình đang có trong game. Trang nhẹ chỉ có một phần hình, nên để công cụ bỏ qua nó và đọc bản một tệp đủ ảnh
     # (linh-khi.html, workflow đăng kèm) như trước. Với game hai cách viết là một.
