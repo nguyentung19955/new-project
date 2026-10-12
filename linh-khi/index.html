@@ -65,7 +65,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.12-1807";
+(window.G = window.G || {}).VERSION = "lk-2026.10.12-1834";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -13227,7 +13227,7 @@
     w.title = bk ? KE_HA + bk : w.kills >= 1000 ? ', nghìn mạng' : '';
     w.named = true;
   }
-  G.addMarks = function (w, el, n) {
+  G.addMarks = function (w, el, n, quiet) {
     if (!w || n <= 0) return;
     const before = G.wStage(w);
     w.marks[el] += n;
@@ -13236,7 +13236,7 @@
     if (W) {
       W.marksGained += n;
       if (G.lk) G.lk.log(w, el, n); // sổ ghi dấu ấn từng hệ cho màn kết quả (js/linhkhi.js)
-      FX('marks', el, n);
+      if (!quiet) FX('marks', el, n);
       const next = G.MARKS[Math.min(2, after)];
       G.sfx('mark', 0.8 + 0.6 * Math.min(1, w.marks[el] / next));
     }
@@ -13381,6 +13381,27 @@
     return { fire: 0, fireDmg: 0, poisonN: 0, poisonT: 0, poisonDmg: 0, iceN: 0, iceT: 0, frozen: 0, freezeImm: 0, stun: 0, root: 0, comboCd: 0, tick: 0, last: null, ch: {} }; // ch: hệ nào do chưởng gây (js/chuong.js)
   }
   G.st0 = st0;
+  // ---------- hệ của dấu ấn linh khí theo hiệu ứng ĐANG THẤY trên quái (phiên linh-khi-theo-thay) ----------
+  // Chủ dự án chọn: quái đang cháy thì cộng Lửa (kể cả lửa do bùa gây) dù vũ khí là Độc. Quái dính nhiều hệ cùng lúc thì lấy hệ
+  // NỔI NHẤT: ngọn lửa đang cháy và khối băng (đóng băng) là hiệu ứng to, điểm 1..2 theo phần thời gian còn lại; bọt độc và
+  // hạt băng làm chậm là hiệu ứng nhỏ, điểm 0..1 theo số tầng (5 tầng = 1). Hoà điểm thì hệ gây sau cùng (st.last) như cũ.
+  // `on` là các hệ được tính (G.kill bỏ hiệu ứng do chưởng gây: e.st.ch). Cờ G.LK_THEO_THAY = false (hay ?lkthay=0): luật cũ
+  // "hệ gây sau cùng nếu còn hiệu lực".
+  if (G.LK_THEO_THAY === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]lkthay=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.LK_THEO_THAY = !tat; }
+  G.lkHeThay = function (st, on) {
+    if (G.LK_THEO_THAY === false) return st.last && on[st.last] ? st.last : on.fire ? 'fire' : on.poison ? 'poison' : 'ice';
+    const d = (W && W.P && W.P.statusDur) || 1;
+    const sc = {
+      fire: on.fire ? 1 + Math.min(1, st.fire / (3 * d)) : -1,
+      ice: on.ice ? (st.frozen > 0 ? 1 + Math.min(1, st.frozen / (1.5 * d)) : Math.min(1, (st.iceN || 0) / 5)) : -1,
+      poison: on.poison ? Math.min(1, (st.poisonN || 0) / 5) : -1,
+    };
+    let best = null;
+    for (const k of ['fire', 'ice', 'poison']) if (sc[k] >= 0 && (best == null || sc[k] > sc[best] + 1e-6)) best = k;
+    if (best == null) return 'ice';
+    if (st.last && sc[st.last] >= 0 && Math.abs(sc[st.last] - sc[best]) <= 1e-6) return st.last;
+    return best;
+  };
   G.hasStatus = (e) => e.st.fire > 0 || e.st.poisonN > 0 || e.st.iceN > 0 || e.st.frozen > 0;
 
   G.spawnEnemy = function (role, x, y, o) {
@@ -13574,7 +13595,8 @@
     const hasW = on.fire || on.poison || on.ice;
     if ((hasW && !(o && o.ch)) || (big && L)) {
       // Hệ của dấu ấn: hiệu ứng gây sau cùng nếu nó còn hiệu lực, không thì hiệu ứng đang có; tinh anh, trùm không dính gì thì hệ của vùng.
-      const el = !hasW ? regEl : e.st.last && on[e.st.last] ? e.st.last : on.fire ? 'fire' : on.poison ? 'poison' : 'ice';
+      // Phiên linh-khi-theo-thay: hệ theo hiệu ứng ĐANG THẤY trên quái (G.lkHeThay); cờ tắt ?lkthay=0 về luật cũ ở trên.
+      const el = !hasW ? regEl : G.lkHeThay(e.st, on);
       let n = big && L ? (e.isBoss ? (e.kind === 'mini' ? L.mini : L.boss) : L.elite) : e.marks == null ? 1 : e.marks;
       // Ải hướng dẫn 1-1 (mục 9): phòng đầu dạy chậu than → dấu ấn Lửa, nên ở ải này dấu ấn Lửa x2, Độc chỉ x0,2 (trước kiếm
       // ra khỏi ải với +5 Lửa, +38 Độc). Tinh anh, trùm không dính hệ thì cho Lửa thay vì Độc của Rừng già.
@@ -13588,7 +13610,8 @@
       if (w2 && G.LK_PHU > 0) {
         let e2 = w2.branch;
         if (!e2) { for (const x of G.ELS) if ((w2.marks[x] || 0) > 0 && (!e2 || w2.marks[x] > w2.marks[e2])) e2 = x; }
-        G.addMarks(w2, e2 || G.WEAK[elx], n * P.markMult * W.marksMult * G.LK_PHU);
+        // Vũ khí thứ hai cộng lặng lẽ (không ghi đè hạt và chữ bay "+N <hệ>" của vũ khí đang cầm); cờ tắt thì như cũ.
+      G.addMarks(w2, e2 || G.WEAK[elx], n * P.markMult * W.marksMult * G.LK_PHU, G.LK_THEO_THAY !== false);
       }
       FX('markOrbs', e);
     }
@@ -29557,6 +29580,12 @@ MA._xong();
   LK.markEl = function (e) {
     if (!e || !e.st || e.illusion || e.marks === 0 || !G.hasStatus(e)) return null;
     const s = e.st, on = { fire: s.fire > 0, poison: s.poisonN > 0, ice: s.iceN > 0 || s.frozen > 0 };
+    // Phiên linh-khi-theo-thay: cùng luật với G.kill (bỏ hiệu ứng do chưởng, chọn hệ đang thấy rõ nhất). Cờ tắt: như cũ.
+    if (G.LK_THEO_THAY !== false && G.lkHeThay) {
+      const ch = s.ch || {};
+      const o2 = { fire: on.fire && !ch.fire, poison: on.poison && !ch.poison, ice: on.ice && !ch.ice };
+      return o2.fire || o2.poison || o2.ice ? G.lkHeThay(s, o2) : null;
+    }
     return s.last && on[s.last] ? s.last : on.fire ? 'fire' : on.poison ? 'poison' : 'ice';
   };
 
