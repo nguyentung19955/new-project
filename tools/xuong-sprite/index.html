@@ -9282,7 +9282,18 @@ window.G.LANG = 'vi';
     if (!m) return { ang, front };
     let L = 24;
     try { const SCx = G.spriteCustom, wo = G.weaponArt.fromWeapon(o.weapon || {}), sp = SCx.timVuKhi(wo); if (sp && sp.vk) L = Math.hypot(sp.vk.mui[0] - sp.vk.cam[0], sp.vk.mui[1] - sp.vk.cam[1]) * SCx.coVk(wt, wo) - (HOLD[wt] || 0); } catch (e) { L = 24; }
-    const day = G.VK_NE_MAT ? NE_MAT_DAY[wt] || 1.5 : 1.5;
+    let day = G.VK_NE_MAT ? NE_MAT_DAY[wt] || 1.5 : 1.5;
+    // G.VK_KHOP (rà soát A lần 2, 12/10; tắt ?vkkhop=0): lưỡi bản to (kiếm gỗ, đao cong, đại đao dòng 1, 3, 5–9) dày hơn 3 điểm ảnh
+    // -> ước bề dày từ ảnh (diện tích / chiều dài, lấy 60% vì còn chuôi, chắn tay), tối đa 3. Trước: đứng cầm đao to vẫn che nửa mặt.
+    if (G.VK_NE_MAT && G.VK_KHOP !== false) {
+      try {
+        const SCx = G.spriteCustom, wo = G.weaponArt.fromWeapon(o.weapon || {}), sp = SCx.timVuKhi(wo), dai = sp && sp.vk ? Math.hypot(sp.vk.mui[0] - sp.vk.cam[0], sp.vk.mui[1] - sp.vk.cam[1]) : 0;
+        if (dai > 4) {
+          if (sp._dayVk == null) { let n = 0; try { const px = sp.px; for (let i = 0; i < px.length; i++) if (px[i]) n++; } catch (e) { n = 0; } sp._dayVk = n / ((sp.net || 1) * (sp.net || 1)) / dai / 2; }
+          day = Math.max(day, Math.min(3, 0.6 * sp._dayVk * SCx.coVk(wt, wo)));
+        }
+      } catch (e) { /* giữ bề dày cũ */ }
+    }
     // khoảng cách từ tâm mặt tới đoạn chuôi -> mũi (bắt đầu sau nắm tay và chắn tay; lưỡi dày chừng 3 điểm ảnh)
     const cham = (a) => {
       const dx = Math.cos(ra(a)), dy = Math.sin(ra(a)), x0 = hx + dx * 2.5, y0 = hy + dy * 2.5;
@@ -9293,6 +9304,9 @@ window.G.LANG = 'vi';
     const huong = Math.sin(ra(ang)) < 0 ? 1 : -1; // chĩa lên: xoay xuống phía trước; chĩa xuống: xoay lên phía trước
     if (danh && wt !== 'sword') { // giáo, búa đang đánh (lấy đà giơ qua đầu): ngả ra sau đầu tối đa 45 độ, vẫn thấy vũ khí; không được thì vẽ sau thân
       for (let d = 5; d <= 60; d += 5) { const a = ang - huong * d; if (!cham(a)) return { ang: a, front }; }
+      // G.VK_KHOP: búa ngả ra sau không khỏi mặt (lấy đà, giữ lấy đà của Cu Tí, Cu Tèo, Cái Bống: đầu búa vẫn đè mặt) -> thử nghiêng
+      // về phía trước (tối đa 70 độ), vẫn vẽ trước thân nên thấy rõ búa. Không áp ở hàng "tele" (thân bộ cuộn người, vùng mặt đo không tin được)
+      if (G.VK_KHOP !== false && wt === 'hammer' && gv.ten !== 'tele') for (let d = 5; d <= 70; d += 5) { const a = ang + huong * d; if (!cham(a)) return { ang: a, front }; }
       return { ang, front: wt === 'hammer' ? front : false }; // búa: vẽ sau thân thì khuất hẳn sau đầu (cả lúc giữ lấy đà lâu) -> giữ như cũ
     }
     const toiDa = danh ? 70 : 50;
@@ -18017,6 +18031,13 @@ MA._xong();
     try { tat = typeof location !== 'undefined' && /[?&]kiemkhop=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
     G.KIEM_KHOP = !tat;
   }
+  // Rà soát A lần 2 (12/10): bề dày lưỡi theo ảnh + búa/giáo lấy đà nghiêng về trước khi ngả sau không khỏi mặt (js/hero_tinhlinh.js kiemKhop).
+  // Tắt: G.VK_KHOP = false hoặc ?vkkhop=0 (giữ nguyên G.VK_NE_MAT của lần 1).
+  if (G.VK_KHOP === undefined) {
+    let tat = false;
+    try { tat = typeof location !== 'undefined' && /[?&]vkkhop=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
+    G.VK_KHOP = !tat;
+  }
   // Bàn tay trước (giữa nắm tay) từng khung atk_sword, điểm ảnh game tính từ chân, x về trước mặt; so: số điểm ảnh có màu của khung
   // (ảnh nhập lại khác đi thì không khớp -> quay về máy tự đo như cũ).
   SC.TAY_KIEM = {
@@ -18422,8 +18443,14 @@ MA._xong();
     const C = G.CO_VK; if (!C || typeof C !== 'object') return 1;
     let k = +C[loai]; if (!(k > 0.05 && k <= 4)) k = 1;
     if (opts && opts.lang) { const l = +C.lang; if (l > 0.05 && l <= 4) k *= l; }
+    // Rà soát A lần 2 (12/10): vài ảnh vũ khí AI vẽ nhỏ hơn hẳn món cùng loại (Bút Lông vk-spear-9 dài 27 trong khi giáo khác 37–52: co
+    // xong chỉ thò khỏi nắm tay ~6 điểm ảnh, như tay không; cung vk-bow-7 dài 9, cung khác 11–20). Nhân thêm cho ngang món nhỏ nhất còn lại.
+    // Chỉ là HÌNH (tầm đánh, vùng trúng không đổi). Tắt: G.CO_VK_DONG = null.
+    const D = G.CO_VK_DONG, kd = D && opts && opts.family != null ? +D[loai + '-' + (opts.family | 0)] : 0;
+    if (kd > 0.5 && kd <= 3) k *= kd;
     return k;
   };
+  if (G.CO_VK_DONG === undefined) G.CO_VK_DONG = { 'spear-9': 1.45, 'bow-7': 1.35 };
   // Chỗ tay nắm trên ảnh AI (đã co): khoảng cách từ điểm cầm dọc thân. Tắt cờ: null (giữ cách cũ).
   SC.namVk = function (loai, opts) {
     const C = G.CO_VK; if (!C || typeof C !== 'object' || loai === 'bow') return null;
@@ -18969,6 +18996,14 @@ MA._xong();
       d.a = fit.a + (cc.xoay || 0); d.sx = fit.k * (cc.sx || 1) * tl; d.sy = fit.k * (cc.sy || 1) * tl;
       const r = xoay2(d.sx * fit.Pm[0], d.sy * fit.Pm[1], d.a);
       d.O = [fit.T[0] + dd[0] - r[0], fit.T[1] + dd[1] - r[1]];
+      // Rà soát A lần 2 (12/10): bùa treo hông (ô hands, không phải đồ cầm) trên thân AI lúc ngồi thụp (giương cung, nện búa, giữ lấy đà,
+      // chiêu, chưởng) thõng xuống quá mặt đất 2–4 điểm ảnh, như que cắm đất giữa hai chân (76 khung) -> nâng lên cho đáy bùa ở y = -1
+      // (toạ độ tính từ chân). Tắt: G.BUA_TREN_DAT = false.
+      if (G.BUA_TREN_DAT !== false && cx.ai && t.o === 'hands' && t.kieu !== 'cam') {
+        let y1 = -1e9;
+        for (const q of [[0, 0], [sp.rong, 0], [0, sp.cao], [sp.rong, sp.cao]]) { const v = xoay2(d.sx * q[0], d.sy * q[1], d.a); if (d.O[1] + v[1] > y1) y1 = d.O[1] + v[1]; }
+        if (y1 > -1) d.O[1] -= y1 + 1;
+      }
     }
     kq.ds = ds;
     return kq;
