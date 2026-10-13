@@ -60,14 +60,60 @@
     if (a.lap) return k % a.so;
     return k >= a.so ? -1 : k;
   };
+  // ---------- HIỆU ỨNG ĐỢT 3 (13/10, docs/review/ke-hoach-cai-thien/hieu-ung-dot-3) ----------
+  // Bật mặc định khi có ảnh. Cờ tắt: ?hudot3=0 (hoặc G.HU_DOT3 = false) → mọi chỗ của đợt 3 vẽ bằng code như cũ.
+  // G.huDot3(mã): cờ bật VÀ ảnh mã đó đã sẵn sàng.
+  let d3Tat = false;
+  try { d3Tat = typeof location !== 'undefined' && /[?&]hudot3=0\b/i.test(String(location.search || '')); } catch (e) { d3Tat = false; }
+  if (G.HU_DOT3 == null) G.HU_DOT3 = !d3Tat;
+  G.huDot3 = (ma) => G.HU_DOT3 !== false && FA.co(ma);
+  // Nhuộm màu (ảnh trắng-xám, game tự nhuộm): nhân màu rồi cộng lại một phần ảnh gốc cho lõi còn sáng (cùng cách js/fx_he.js nhuộm
+  // vòng tụ lực). kieu 'sang': chỉ nhuộm điểm sáng gần trắng (ánh trong khe nứt), phần còn lại giữ màu gốc.
+  // Tấm nhuộm làm MỘT lần cho mỗi (mã, màu, kiểu) rồi dùng lại. Lỗi (không có canvas) thì vẽ ảnh gốc.
+  const NHUOM = new Map();
+  const hex = (m) => { const v = parseInt(String(m).replace('#', ''), 16); return [(v >> 16) & 255, (v >> 8) & 255, v & 255]; };
+  FA.nhuom = function (a, mau, kieu) {
+    if (!mau || !a || !a.img || typeof document === 'undefined') return a && a.img;
+    const key = a.ma + '|' + mau + '|' + (kieu || '');
+    const o = NHUOM.get(key);
+    if (o && o.img === a.img) return o.cv;
+    try {
+      const cv = document.createElement('canvas');
+      cv.width = a.img.width; cv.height = a.img.height;
+      const g = cv.getContext('2d');
+      g.drawImage(a.img, 0, 0);
+      const d = g.getImageData(0, 0, cv.width, cv.height), px = d.data, M = hex(mau);
+      for (let i = 0; i < px.length; i += 4) {
+        if (!px[i + 3]) continue;
+        const r = px[i], gg = px[i + 1], b = px[i + 2];
+        let k = 1;
+        if (kieu === 'sang') { const mn = Math.min(r, gg, b), mx = Math.max(r, gg, b); k = mn > 150 && mx - mn < 60 ? Math.min(1, (mn - 150) / 50) : 0; if (!k) continue; }
+        const nr = Math.min(255, r * M[0] / 255 + r * 0.25), ng = Math.min(255, gg * M[1] / 255 + gg * 0.25), nb = Math.min(255, b * M[2] / 255 + b * 0.25);
+        px[i] = r + (nr - r) * k; px[i + 1] = gg + (ng - gg) * k; px[i + 2] = b + (nb - b) * k;
+      }
+      g.putImageData(d, 0, 0);
+      NHUOM.set(key, { img: a.img, cv });
+      return cv;
+    } catch (e) { NHUOM.set(key, { img: a.img, cv: a.img }); return a.img; }
+  };
+  // Vẽ đúng khung số f (đợt 3: khiên nước lặp 1–4 rồi 5–6 khi vỡ, cầu tích chưởng theo độ tích...). mau/kieu: nhuộm (xem FA.nhuom).
+  FA.veK = function (c, ma, x, y, f, goc, co, lat, mo, mau, kieu) {
+    const a = FA.ds[ma];
+    if (!a || !a.ready || !c) return false;
+    f = Math.max(0, Math.min(a.so - 1, f | 0));
+    return veF(c, a, f, x, y, goc, co, lat, mo, mau, kieu);
+  };
   // Vẽ hiệu ứng ma tại (x, y) (điểm neo của ảnh trùng điểm này).
   // t: giây từ lúc bắt đầu; goc: góc (radian) — tệp có "xoay" thì xoay theo góc, không thì chỉ lật trái/phải theo hướng góc;
-  // co: hệ số cỡ thêm (nhân với "co" của tệp); lat: lật ngang (quay trái); mo: độ đậm 0..1. Trả về true nếu đã vẽ.
-  FA.ve = function (c, ma, x, y, t, goc, co, lat, mo) {
+  // co: hệ số cỡ thêm (nhân với "co" của tệp); lat: lật ngang (quay trái); mo: độ đậm 0..1; mau, kieu (tuỳ chọn): nhuộm. Trả về true nếu đã vẽ.
+  FA.ve = function (c, ma, x, y, t, goc, co, lat, mo, mau, kieu) {
     const a = FA.ds[ma];
     if (!a || !a.ready || !c) return false;
     const f = FA.khung(a, t);
     if (f < 0) return false;
+    return veF(c, a, f, x, y, goc, co, lat, mo, mau, kieu);
+  };
+  function veF(c, a, f, x, y, goc, co, lat, mo, mau, kieu) {
     const s = a.co * (co > 0 ? co : 1);
     let flip = !!lat, rot = 0;
     if (goc) { if (a.xoay) rot = goc; else if (Math.cos(goc) < 0) flip = !flip; }
@@ -80,8 +126,8 @@
       if (a.cong) c.globalCompositeOperation = 'lighter';
       if (mo != null && mo < 1) c.globalAlpha *= clamp(mo, 0, 1);
       const n = a.net, sw = a.fw * n, sh = a.fh * n;
-      c.drawImage(a.img, (f % a.cot) * sw, Math.floor(f / a.cot) * sh, sw, sh, -a.ax, -a.ay, a.fw, a.fh);
+      c.drawImage(mau ? FA.nhuom(a, mau, kieu) || a.img : a.img, (f % a.cot) * sw, Math.floor(f / a.cot) * sh, sw, sh, -a.ax, -a.ay, a.fw, a.fh);
     } finally { c.restore(); }
     return true;
-  };
+  }
 })();

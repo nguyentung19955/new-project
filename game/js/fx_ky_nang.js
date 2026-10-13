@@ -132,7 +132,7 @@
     if (G.noRender || !K.S() || !e || e.dead || e.hidden) return;
     try {
       const pn = e.isPlayer ? (e.st.poison > 0 ? 1 : 0) : e.st.poisonN;
-      if (pn > 0) aura(c, e, pn);
+      if (pn > 0 && !(K.d3 && K.d3('hu-bam-doc'))) aura(c, e, pn); // đợt 3: có ảnh hu-bam-doc (js/fx.js fx.entity) thì bỏ hào quang code
     } catch (err) { fail(err); }
   };
   // Hạt nhỏ nổi lên rồi tan (lơ lửng chậm, hơi trôi ngang), số theo tầng độc

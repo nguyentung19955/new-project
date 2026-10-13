@@ -8,7 +8,10 @@
   const K = fx.kit;
   const { api, fail, emit, streak, add, addRing, trauma, kick, pal, RAMP, R, rr, hash, p, star, line, crescent, hand, tongue } = K;
   const TAU = Math.PI * 2;
-  const NUM = [0, 5, 7, 9]; // số chi tiết trang trí theo mốc Mầm, Thành hình, Thức tỉnh
+  const NUM = [0, 5, 7, 9];
+  // Đợt 3 (docs/review/ke-hoach-cai-thien/hieu-ung-dot-3, cờ tắt ?hudot3=0): ảnh thay sóng chấn búa, nứt đất, gai băng, độc toé, va chạm.
+  const d3 = (ma) => !!(K.d3 && K.d3(ma));
+  const mauHe = (el) => (K.mauHe ? K.mauHe(el) : null); // số chi tiết trang trí theo mốc Mầm, Thành hình, Thức tỉnh
 
   // ---------- GỌN NHẸ HIỆU ỨNG HỆ (13/10, docs/review/ke-hoach-cai-thien/hieu-ung-thuc-tinh) ----------
   // Bật mặc định. Cờ tắt: ?gonhu=0 ở cuối địa chỉ (hoặc G.GO_NHU = false) thì mọi hình về đúng như cũ.
@@ -197,6 +200,21 @@
   // Hàng gai băng mọc lần lượt theo hướng đánh (hoặc toả vòng), đứng một lúc rồi rút xuống
   function drawSpikes(c, o, k) {
     const age = o.t0 - o.t;
+    // Đợt 3: ảnh hu-gai-bang (một cụm gai mọc rồi vỡ): vài cụm dọc hướng đòn (hoặc toả vòng), mọc lần lượt, phát hết khung trong đúng đời hình.
+    if (d3('hu-gai-bang')) {
+      const A = G.fxAnh, a = A.get('hu-gai-bang'), m = o.round ? 5 : Math.max(2, Math.round(o.L / 14)), ZK = G.ZK || 0.85;
+      const sc = Math.max(0.7, Math.min(1.4, 0.75 + (o.h0 - 6) / 16));
+      const ux = o.ux != null ? o.ux : o.dir, uy = o.uy || 0;
+      for (let i = 0; i < m; i++) {
+        const born = i * 0.05, a0 = age - born, song = o.t0 - born;
+        if (a0 <= 0 || song <= 0) continue;
+        let x, y;
+        if (o.round) { const an = (i / m) * TAU + o.sd; x = o.x + Math.cos(an) * o.L * 0.6; y = o.y + Math.sin(an) * o.L * 0.36; }
+        else { const s0 = 6 + ((i + 0.5) / m) * o.L, j = (hash(o.sd + i * 5) - 0.5) * o.depth * 0.6; x = o.x + ux * s0 - uy * j; y = o.y + (uy * s0 + ux * j) * ZK; }
+        A.ve(c, 'hu-gai-bang', x, y, Math.min(1, a0 / song) * a.giay * 0.999, 0, sc * (0.85 + 0.3 * hash(o.sd + i)), hash(o.sd + i * 2) < 0.5);
+      }
+      return;
+    }
     for (let i = 0; i < o.n; i++) {
       const born = i * 0.028, a = age - born;
       if (a <= 0) continue;
@@ -315,6 +333,11 @@
       // nước độc toé ra rồi khói bốc lên (màn khói lơ lửng do vũng tự nhả ở heStep)
       const xs = o.pts.length ? o.pts : [[o.x, o.y]];
       for (const [x, y] of xs) {
+        // Đợt 3: ảnh hu-doc-toe (bãi nhớt toé lên rồi sủi bọt, tan thành hơi) thay giọt bắn và vòng tím; vòng tầm toé giữ (mảnh)
+        if (d3('hu-doc-toe') && K.anh('hu-doc-toe', x, y + 1, { sc: Math.max(0.7, Math.min(1.6, o.r / 18)) })) {
+          addRing(x, y, 4, o.r, 0.34, '#c2f58a', 1, 0);
+          continue;
+        }
         addRing(x, y, 4, o.r, 0.34, '#c2f58a', 2, 0);
         if (!G.goNhu()) addRing(x, y, 2, o.r * 0.7, 0.3, '#9a5fd6', 2, 0, 0.06); // gọn nhẹ: bỏ vòng tím trong (ảnh vũng đã có viền)
         const n = 4 + lv * 2;
@@ -367,7 +390,7 @@
     for (let i = 0; i < Math.min(5, list.length); i++) {
       const t = list[i], ty = t.y - Math.min(16, (t.h || 24) * 0.5), T0 = 0.22;
       for (let j = 0; j < 3; j++) { const o = emit(1, e.x, y0, (t.x - e.x) / T0 + rr(-12, 12), (ty - y0) / T0 + rr(-12, 12), T0 + j * 0.03, j === 1 ? TIM() : RAMP.poison, 3, 0, 0, null, 1); o.t0 = o.t * 1.6; }
-      addRing(t.x, ty, 2, 9, 0.2, '#c2f58a', 2, 1, T0);
+      if (!(d3('hu-doc-toe') && K.anh('hu-doc-toe', t.x, t.y + 1, { d: T0, sc: 0.7 }))) addRing(t.x, ty, 2, 9, 0.2, '#c2f58a', 2, 1, T0); // đợt 3: giọt độc toé ở đích
     }
     for (let i = 0; i < 5; i++) emit(11, e.x + rr(-8, 8), e.y - rr(2, 20), rr(-6, 6), rr(-26, -10), rr(0.4, 0.8), RAMP.poison, 2, 0, 0, null, 1);
   });
@@ -583,6 +606,13 @@
   // Tám hướng: vẽ gờ sóng như khi chạy ngang rồi xoay quanh chỗ gờ theo hướng chạy thật (z.ux, z.uy)
   function drawWave(c, z) {
     const ZK = G.ZK || 0.85, ux = z.ux != null ? z.ux : z.dir, uy = z.uy || 0, f = z.dir;
+    // Đợt 3: ảnh hu-song-dat (gờ đất lăn, lặp) xoay theo hướng chạy thật; sang trái thì lật chứ không lộn ngược. Nấc 2 to hơn.
+    if (d3('hu-song-dat')) {
+      const t = K.S().t, hg = K.huongAnh(Math.abs(ux) < 1e-3 && Math.abs(uy) < 1e-3 ? f : ux, uy * ZK);
+      if (z.fxAt == null) z.fxAt = t;
+      const mo = Math.min(1, z.left / 12);
+      if (G.fxAnh.ve(c, 'hu-song-dat', z.x, z.y, t - z.fxAt, hg.goc, z.level >= 2 ? 1.25 : 1, hg.f < 0, mo, z.he ? mauHe(z.he.el) : null, 'sang')) return;
+    }
     const th = Math.atan2(uy * ZK, Math.abs(ux) < 1e-3 ? 1e-3 * f : ux * f) * f;
     if (Math.abs(th) > 0.01) { c.save(); c.translate(z.x, z.y); c.rotate(th); c.translate(-z.x, -z.y); try { drawWave0(c, z); } finally { c.restore(); } }
     else drawWave0(c, z);
@@ -712,6 +742,18 @@
     const pt = (s, j) => { const w = (hash(q.sd + Math.floor(s / 5)) - 0.5) * 4 * (j || 1); return [q.x0 + q.ux * s + nx * w, q.y0 + q.uy * s * zk() + ny * w]; };
     // vệt nứt mảnh (báo trước): nét đứt tối chạy rất nhanh tới cuối vệt
     for (let s = 0; s < runL; s += 3) { const a = pt(s); p(c, Math.round(a[0]), Math.round(a[1]), 2, 1, s > at ? 'rgba(30,18,12,0.85)' : 'rgba(20,12,8,0.9)'); }
+    // Đợt 3: ảnh hu-nut-dat (một đoạn đất nứt, đá bắn lên rồi bụi tan) lặp từng đoạn dọc rãnh, mỗi đoạn bắt đầu khi đầu sóng đất đi qua;
+    // phát xong giữ khung cuối (vết nứt mờ) tới khi rãnh tan. Ánh trắng trong khe nhuộm màu hệ. Thay rãnh và đá trồi vẽ code.
+    if (d3('hu-nut-dat')) {
+      const A = G.fxAnh, a = A.get('hu-nut-dat'), now = K.S().t, SEG = 18, hg = K.huongAnh(v[0], v[1]);
+      const seg = q.fxSeg || (q.fxSeg = []);
+      for (let i = 0; i * SEG < L; i++) {
+        if (seg[i] == null) { if (t >= q.warn && at >= i * SEG) seg[i] = now; else break; }
+        const s = Math.min(L, i * SEG + SEG / 2), w = (hash(q.sd + i * 3) - 0.5) * 3;
+        A.ve(c, 'hu-nut-dat', q.x0 + q.ux * s + nx * w, q.y0 + q.uy * s * zk() + ny * w, Math.min(now - seg[i], a.giay * 0.999), hg.goc, 0.8 + 0.25 * hash(q.sd + i), hg.f < 0 ? !(i & 1) : !!(i & 1), fade, q.he ? PL.c : null, 'sang');
+      }
+      return;
+    }
     // rãnh đã trồi: rộng, viền màu hệ
     c.globalAlpha = fade;
     for (let s = 0; s < at; s += 2) {
@@ -783,7 +825,10 @@
   });
   api('spPin', (q) => {
     const PL = pal(q.he ? q.he.el : null), y = q.y - 12;
-    add({ ty: 'flash', x: q.x, y, r: 10, t: 0.12, c: '#ffffff', c2: PL.c2, ly: 1, sq: true });
+    // Đợt 3: ảnh hu-va-cham (sao va chạm, mảnh văng theo hướng giáo bay) thay chớp sáng; nhuộm hệ của giáo
+    const vq = scr(q);
+    if (!(d3('hu-va-cham') && K.anhHuong('hu-va-cham', q.x, y, vq[0], vq[1], { sc: q.pin ? 1.3 : 1, mau: mauHe(q.he && q.he.el) })))
+      add({ ty: 'flash', x: q.x, y, r: 10, t: 0.12, c: '#ffffff', c2: PL.c2, ly: 1, sq: true });
     addRing(q.x, q.y, 3, 18, 0.24, PL.c2, 2, 0);
     for (let i = 0; i < 8; i++) { const a = R() * TAU, vv = rr(50, 120); emit(8, q.x, y, Math.cos(a) * vv, Math.sin(a) * vv * 0.6 - 40, rr(0.3, 0.55), q.pin ? RAMP.white : RAMP.rock, 2, 320, 0, q.y + rr(-2, 4), 1); }
     trauma(q.pin ? 0.3 : 0.15); if (q.pin) K.stop(70);
@@ -811,6 +856,8 @@
   // Cú đấm tay (giáo đang bay): chớp nhỏ trước nắm tay theo hướng nhắm
   api('punch', (P) => {
     const v = P.aimUx != null ? [P.aimUx, P.aimUy] : [P.face, 0], x = P.x + v[0] * 12, y = P.y - 12 + v[1] * 12;
+    // Đợt 3: ảnh hu-va-cham (trắng) chĩa theo hướng đấm thay chớp và tia vẽ code
+    if (d3('hu-va-cham') && K.anhHuong('hu-va-cham', x, y, v[0], v[1], { sc: 0.8 })) { kick(v[0], v[1]); return; }
     add({ ty: 'flash', x, y, r: 5, t: 0.08, c: '#ffffff', c2: '#ffe9a3', ly: 1 });
     for (let i = 0; i < 3; i++) streak(x, y, v[0] * rr(60, 120), v[1] * rr(60, 120), 0.1, RAMP.white, 1, 5, 0, 3);
     kick(v[0], v[1]);

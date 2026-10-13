@@ -275,6 +275,8 @@
       for (let i = 0; i < n; i++) { const u = i / n; emit(1, e.x + (t.x - e.x) * u, e.y - 10 + (t.y - e.y) * u - Math.sin(u * Math.PI) * 10, (t.x - e.x) * 0.6, (t.y - e.y) * 0.6, 0.3, R() < 0.4 ? PURPLE : RAMP.poison, 2, 0, 0, null, 1); }
     }
     addRing(e.x, e.y, 3, 24, 0.3, '#b98af0', 2, 0);
+    // Đợt 3: giọt độc tới đích thì toé (ảnh hu-doc-toe), nhỏ
+    if (K.d3 && K.d3('hu-doc-toe')) for (const t of got) K.anh('hu-doc-toe', t.x, t.y + 1, { d: 0.28, sc: 0.65 });
   });
   api('chHeal', (P) => {
     for (let i = 0; i < 3; i++) emit(10, P.x + rr(-6, 6), P.y - rr(10, 22), 0, -18, rr(0.4, 0.6), RAMP.heal, 1, 0, 0, null, 1);
@@ -290,6 +292,14 @@
     p(c, x, y, BW, 4, '#3a1e14');
     const n = Math.round(BW * k);
     if (n > 0) { p(c, x, y, n, 4, full ? (blink ? '#ffffff' : '#ffd23f') : '#ff7a2a'); p(c, x, y, n, 1, '#fff3b0'); }
+    // Đợt 3 (cờ tắt ?hudot3=0): ảnh hu-tich-chuong (cầu năng lượng trắng, nhuộm theo hệ chưởng). Khung theo độ tích:
+    // 0..1 đi qua khung 1→5, đầy thì nhấp nháy khung 5–6 (khung cuối sáng chói). Thay quả cầu và hạt vẽ code; thanh tích giữ.
+    if (K.d3 && K.d3('hu-tich-chuong')) {
+      const h = hand(P), cay = P.ch && P.ch.cay, el = cay === 'doc' ? 'poison' : cay === 'bang' ? 'ice' : 'fire';
+      const f = full ? 4 + (((S.t * 10) | 0) % 2) : Math.min(4, Math.floor(k * 5));
+      G.fxAnh.veK(c, 'hu-tich-chuong', h.x + P.face * 4, h.y - 2, f, 0, 0.75 + 0.35 * k, P.face < 0, 1, K.mauHe(el));
+      return;
+    }
     // quả cầu lửa đang lớn dần trong tay
     const h = hand(P), r = 2 + Math.round(4 * k);
     ell(c, h.x + P.face * 4, h.y - 2, r + 1, r + 1, '#7a1e0a'); ell(c, h.x + P.face * 4, h.y - 2, r, r, '#ff7a2a'); ell(c, h.x + P.face * 4, h.y - 3, Math.max(1, r - 2), Math.max(1, r - 2), '#ffd23f');

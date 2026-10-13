@@ -349,6 +349,8 @@
     // Phiên hieu-ung-b3: gian = phát đủ các khung trong đúng thời lượng o.t (thay cho thời lượng ghi trong tệp); theo = bám theo một nhân vật đang di chuyển.
     if (o.gian) h.gian = true;
     if (o.theo) h.theo = o.theo;
+    if (o.mau) { h.mau = o.mau; h.kieu = o.kieu || ''; } // đợt 3: nhuộm ảnh trắng theo hệ (G.fxAnh.nhuom)
+    if (o.mo != null) h.mo3 = o.mo;
     return true;
   }
   // Phiên hieu-ung-b3 (nổ, trạng thái, trùm, cổng): hu-no-khoi, hu-soc-nhiet, hu-cot-lua, hu-cot-nuoc, hu-vong-phep (js/fx_ky_nang.js), hu-be-trung, hu-hoi-mau,
@@ -1185,7 +1187,12 @@
       const top = y - Math.round((e.h || 24) * (e.scale || 1));
       // Chủ dự án (11/10, 13:22): quái dùng trạng thái trên thân (Đợt 7) thì KHÔNG vẽ khung khối băng nữa — quái đã chậm lại, thân xanh và có mảnh băng ở chân là đủ.
       const khoiBang = v.frozen && !(G.TRANG_THAI_TREN_THAN !== false && !e.isPlayer && e.ttR);
-      if (khoiBang) {
+      // Đợt 3 (cờ tắt ?hudot3=0): lớp trạng thái trên thân bằng ảnh hu-bam-bang / hu-bam-lua / hu-bam-doc (lặp), neo ở chân,
+      // cỡ theo thân (ảnh cao 30 điểm ảnh ≈ thân nhân vật nhỏ). Mỗi con lệch nhịp theo fxId. Thay tinh thể / khối băng, lưỡi lửa, vệt độc vẽ code.
+      const scT = Math.max(0.5, Math.min(1.5, (B.h + 4) / 30)) * (e.isPlayer ? 0.85 : 1), tT = t + id * 0.37;
+      const anhBang = (khoiBang || v.frozen || v.ice > 0) && d3('hu-bam-bang');
+      if (anhBang) G.fxAnh.ve(c, 'hu-bam-bang', x, y + 1, tT, 0, scT, false, v.frozen ? 0.95 : Math.min(0.85, 0.45 + 0.1 * v.ice));
+      else if (khoiBang) {
         // khối băng trong: viền, mặt bóng, vệt sáng chéo
         const w = Math.round(B.w + 4), h = Math.round(B.h + 5);
         p(c, x - w, y - h + 2, w * 2, h - 1, 'rgba(160,220,250,0.24)');
@@ -1210,7 +1217,8 @@
         const f = ((t * 6) | 0) % 4;
         p(c, x - Math.round(B.w) - 2 + f, y, 5, 1, 'rgba(200,236,255,0.6)'); p(c, x + Math.round(B.w) - 4 - f, y + 1, 5, 1, 'rgba(200,236,255,0.5)');
       }
-      if (v.fire) {
+      if (v.fire && d3('hu-bam-lua')) G.fxAnh.ve(c, 'hu-bam-lua', x, y + 1, tT, 0, scT, false, 0.85);
+      else if (v.fire) {
         const n = e.isPlayer ? 2 : B.w > 12 ? 5 : B.w > 7 ? 4 : 3;
         for (let i = 0; i < n; i++) {
           const fx0 = x + Math.round(((i + 0.5) / n - 0.5) * 2 * B.w);
@@ -1223,8 +1231,9 @@
         p(c, x - Math.round(B.w), y, Math.round(B.w) * 2, 1, ((t * 12) | 0) % 2 ? 'rgba(255,160,60,0.5)' : 'rgba(255,122,42,0.35)');
       }
       if (v.pn > 0) {
-        // nước độc chảy thành vệt trên người
-        for (let i = 0; i < Math.min(4, v.pn); i++) {
+        // nước độc chảy thành vệt trên người (đợt 3: ảnh hu-bam-doc thay các vệt)
+        if (d3('hu-bam-doc')) G.fxAnh.ve(c, 'hu-bam-doc', x, y + 1, tT * 0.9, 0, scT, false, Math.min(0.9, 0.55 + 0.12 * v.pn));
+        else for (let i = 0; i < Math.min(4, v.pn); i++) {
           const hx = Math.round((hash(id + i * 5.1) - 0.5) * 1.6 * B.w), cyc = (t * 0.9 + hash(id + i)) % 1;
           const yy = y - Math.round(B.h * 0.75) + Math.round(cyc * B.h * 0.5);
           p(c, x + hx, yy - 2, 1, 3, '#6fcf3a'); p(c, x + hx, yy + 1, 1, 1, '#c2f58a');
@@ -1630,9 +1639,20 @@
     HAND.x = P.x + P.face * 7; HAND.y = P.y - 14; return HAND;
   };
   const HAND = { x: 0, y: 0 };
+  // Đợt 3 (docs/review/ke-hoach-cai-thien/hieu-ung-dot-3, cờ tắt ?hudot3=0): ảnh thay vệt lướt / bụi lộn / vòng đổi vũ khí vẽ bằng code.
+  const d3 = (ma) => !!(G.huDot3 && G.huDot3(ma));
+  const mauHe = (el) => (el === 'fire' || el === 'poison' || el === 'ice' ? PAL[el].c : null); // ảnh trắng: không hệ thì giữ trắng
   api('dash', (P, type, el) => {
     const PL = pal(el), f = P.face;
     S.dash = 0.2;
+    // Ảnh hu-xoc-toi (Xốc tới thương): vệt đâm từ chỗ bắt đầu lao, xoay theo hướng lao thật (8 hướng), nhuộm màu hệ. Bụi gót và rung giữ nguyên.
+    if (type === 'spear' && d3('hu-xoc-toi')) {
+      const ux = P.dashUx != null ? P.dashUx : f, uy = (P.dashUy || 0) * (G.ZK || 0.85), l = Math.hypot(ux, uy) || 1;
+      anhHuong('hu-xoc-toi', P.x - (ux / l) * 4, P.y - 13 - (uy / l) * 4, ux / l, uy / l, { mau: mauHe(el) });
+      for (let i = 0; i < 3; i++) emit(2, P.x - f * rr(0, 8), P.y + rr(-2, 2), -f * rr(30, 80), rr(-16, -4), rr(0.3, 0.5), RAMP.dust, 4, 0, 3, null, 1);
+      kick(f * 2.5, 0); trauma(0.25);
+      return;
+    }
     add({ ty: 'dashline', x: P.x, x1: P.x, y: P.y - 13, f, pl: PL, t: 0.4, spear: type === 'spear', P, ly: 1 });
     add({ ty: 'flash', x: P.x + f * 6, y: P.y - 13, r: 7, t: 0.1, c: '#ffffff', c2: PL.c2, ly: 1 });
     for (let i = 0; i < 5; i++) emit(2, P.x - f * rr(0, 8), P.y + rr(-2, 2), -f * rr(30, 80), rr(-16, -4), rr(0.3, 0.5), RAMP.dust, 4, 0, 3, null, 1);
@@ -1640,6 +1660,8 @@
   });
   api('dodge', (P) => {
     S.dodge = 0.27; S.ghostT = 0;
+    // Ảnh hu-lon: bụi bung ở chỗ bắt đầu lộn, vệt gió kéo theo hướng lộn (lật theo hướng lộn ngang); thay bụi + vệt gió vẽ bằng code.
+    if (d3('hu-lon') && anh('hu-lon', P.x - (P.ddx || 0) * 2, P.y + 1, { f: (P.ddx || P.face || 1) < 0 ? -1 : 1 })) return;
     for (let i = 0; i < 6; i++) emit(2, P.x - P.ddx * rr(0, 6), P.y + rr(-2, 2), -P.ddx * rr(20, 70) + rr(-10, 10), rr(-22, -4), rr(0.25, 0.5), RAMP.dust, R() < 0.4 ? 4 : 3, 0, 3, null, 1);
     for (let i = 0; i < 3; i++) streak(P.x, P.y - rr(4, 22), -P.ddx * rr(40, 90), -P.ddy * 40, 0.16, RAMP.white, 1, rr(8, 14), 0, 2);
   });
@@ -1652,6 +1674,8 @@
   });
   api('swap', (P, el) => {
     const h = hand(P), PL = pal(el);
+    // Ảnh hu-doi-vk (vòng sáng + lấp lánh ở tay), nhuộm theo hệ vũ khí mới; thay vòng và hạt vẽ bằng code.
+    if (d3('hu-doi-vk') && anh('hu-doi-vk', h.x, h.y, { mau: mauHe(el) })) return;
     addRing(h.x, h.y, 2, 11, 0.16, PL.c2, 2, 1);
     for (let i = 0; i < 5; i++) emit(6, h.x + rr(-6, 6), h.y + rr(-8, 6), 0, 0, rr(0.15, 0.3), PL.ramp, 2, 0, 0, null, 1);
   });
@@ -2035,7 +2059,7 @@
             if (!ok) o.t = 0;
             break;
           }
-          if (!FA || !FA.ve(c, o.ma, th ? th.x : o.x, th ? th.y : o.y, o.gian ? k * FA.giay(o.ma) * 0.999 : o.t0 - o.t, o.goc, o.sc, o.f < 0)) o.t = 0;
+          if (!FA || !FA.ve(c, o.ma, th ? th.x : o.x, th ? th.y : o.y, o.gian ? k * FA.giay(o.ma) * 0.999 : o.t0 - o.t, o.goc, o.sc, o.f < 0, o.mo3, o.mau, o.kieu)) o.t = 0;
           break;
         }
         case 'ring': {
@@ -2340,7 +2364,7 @@
     c.globalAlpha = 1;
   }
   // Bộ đồ nghề cho js/fx_he.js: dùng chung kho hạt, bảng màu và các hàm vẽ điểm ảnh ở trên.
-  fx.kit = { coAnh, anh, anhVk, dauBua, anhHe, anhHuong, huongAnh, anhLuot, aimed, S: () => S, api, layer, fail, emit, streak, spray, puffs, add, addRing, trauma, kick, stop, num, pal, PAL, RAMP, R, rr, hash, p, ell, ring, line, star, crescent, tongue, slam, blastFire, blastPoison, blastIce, elemBits, bodyOf, hand, A_ };
+  fx.kit = { d3, mauHe, coAnh, anh, anhVk, dauBua, anhHe, anhHuong, huongAnh, anhLuot, aimed, S: () => S, api, layer, fail, emit, streak, spray, puffs, add, addRing, trauma, kick, stop, num, pal, PAL, RAMP, R, rr, hash, p, ell, ring, line, star, crescent, tongue, slam, blastFire, blastPoison, blastIce, elemBits, bodyOf, hand, A_ };
 })();
 
 // V13 (Giai đoạn 2, phiên gd2-b): trùm có "Chống đánh xa" vừa giảm sát thương một mũi tên thì hiện chữ "Xa quá!" trên đầu trùm

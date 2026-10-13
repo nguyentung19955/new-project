@@ -16,6 +16,10 @@
   const bat = () => !!(G.SKILL_BO_BAT !== false && G.SKILL_BO);
   const so = (v) => { const s = String(Math.round(v * 100) / 100); return G.LANG === 'en' ? s : s.replace('.', ','); };
   const pt = (v) => Math.round(v * 100);
+  // Ảnh hiệu ứng đợt 3 (docs/review/ke-hoach-cai-thien/hieu-ung-dot-3, cờ tắt ?hudot3=0): có ảnh thì vẽ ảnh, không thì hình code như cũ.
+  const d3 = (ma) => !G.noRender && !!(G.huDot3 && G.huDot3(ma));
+  const ANH = (ma, x, y, o) => { const k = G.fx && G.fx.kit; return !!(k && k.anh && d3(ma) && k.anh(ma, x, y, o)); };
+  const veK = (c, ma, x, y, f, co, lat, mo, mau) => G.fxAnh.veK(c, ma, x, y, f, 0, co, lat, mo, mau);
 
   // ---------- skill đã mở ----------
   G.boSkill = function (bo, cap) {
@@ -76,7 +80,8 @@
     P.boSauLon += dt;
     // bóng phân thân
     const B = W.boBong;
-    if (B) { B.t -= dt; if (B.t <= 0) { W.boBong = null; FX('burst', B.x, B.y - 12, '#3a2a3e', 10, 40); FX('burst', B.x, B.y - 12, '#8a3040', 4, 30); } }
+    if (B) { B.t -= dt; if (B.t <= 0) { W.boBong = null; if (!ANH('hu-phan-than', B.x, B.y + 1)) { FX('burst', B.x, B.y - 12, '#3a2a3e', 10, 40); FX('burst', B.x, B.y - 12, '#8a3040', 4, 30); } } }
+    if (P.boVoT > 0) P.boVoT -= dt; // khiên nước vừa vỡ (ảnh khung 5–6)
     // vệt sóng, vòng nước (chỉ để vẽ)
     if (W.boVe) { for (const v of W.boVe) v.t -= dt; W.boVe = W.boVe.filter((v) => v.t > 0); }
     // chậm (Thuỷ triều), trói (Bẫy dây leo) trên quái: chỉ đếm thời gian
@@ -91,13 +96,15 @@
     }
     // Nhựa rừng: đứng yên (không chạy, không đánh, không lộn) đủ lâu thì hồi máu
     const nr = co(P, 'nhuaRung');
+    P.boHoiDang = false;
     if (nr) {
       const yen = !P.moving && !(P.atkT > 0) && !(P.dodgeT > 0) && !(P.dashT > 0) && !P.chHold;
       P.boDungT = yen ? P.boDungT + dt : 0;
       if (P.boDungT >= nr.dung && P.hp < P.maxhp && !W.safe) {
         P.hp = Math.min(P.maxhp, P.hp + P.maxhp * nr.hoi * dt);
         P.boHoiFx -= dt;
-        if (P.boHoiFx <= 0) { P.boHoiFx = 0.7; FX('sparkle', P.x + G.clamp((G.rnd() - 0.5) * 14, -7, 7), P.y - 10, '#9be26a', 3); }
+        P.boHoiDang = true; // đang hồi: ảnh hu-nhua-rung lặp dưới chân (vẽ ở G.fx.sorted)
+        if (P.boHoiFx <= 0 && !d3('hu-nhua-rung')) { P.boHoiFx = 0.7; FX('sparkle', P.x + G.clamp((G.rnd() - 0.5) * 14, -7, 7), P.y - 10, '#9be26a', 3); }
       }
     }
   };
@@ -161,6 +168,7 @@
       const dir = (o && o.dir) || (e.x >= P.x ? 1 : -1);
       if (dir === e.face) { // đòn đi cùng chiều quái đang nhìn = đánh vào lưng
         ep = true; P.boAmSatCd = as.hoi;
+        ANH('hu-am-sat', e.x, e.y - Math.min(16, (e.h || 16) * 0.5), { f: dir < 0 ? -1 : 1 });
         FX('text', e.x, e.y - (e.h || 16) - 12, 'Ám sát!', '#ff5a6a', 8);
       }
     }
@@ -186,7 +194,7 @@
     P.boPhanDa.push(src);
     G.damage(src, amt * pd.phan, { src: 'reflect', fromPlayer: false });
     FX('text', P.x, P.y - 40, 'Phản đòn!', '#ffd27a', 8);
-    FX('sparkle', P.x + P.face * 6, P.y - 14, '#e8e8f0', 8);
+    if (!ANH('hu-phan-don', P.x + P.face * 4, P.y - 14, { f: P.face < 0 ? -1 : 1 })) FX('sparkle', P.x + P.face * 6, P.y - 14, '#e8e8f0', 8);
     G.sfx('hit', 1.5);
   };
   // Khiên nước chặn trọn đòn. Trả về true nếu đã chặn.
@@ -195,7 +203,8 @@
     P.boKhien--; P.boKhienT = co(P, 'khienNuoc').hoi;
     P.inv = Math.max(P.inv, 0.35);
     FX('text', P.x, P.y - 32, 'Chặn!', '#bff4ff', 9);
-    FX('burst', P.x, P.y - 12, '#7fd4ff', 12, 70);
+    if (d3('hu-khien-nuoc')) P.boVoT = 0.3; // ảnh khiên vỡ (khung 5–6) vẽ ở G.fx.sorted
+    else FX('burst', P.x, P.y - 12, '#7fd4ff', 12, 70);
     G.sfx('pick', 1.6);
     const tt = co(P, 'thuyTrieu'), W = W_();
     if (tt && W) {
@@ -253,6 +262,7 @@
   }
   // Khiên nước: vòng chấm xanh ngọc gợn quanh Zed.
   function veKhien(c, P) {
+    if (d3('hu-khien-nuoc')) { veK(c, 'hu-khien-nuoc', P.x, P.y - 13, Math.floor(G.time * 5) % 4, 1, false, 0.8); return; }
     const n = 24, t = G.time;
     for (let i = 0; i < n; i++) {
       const an = (i / n) * Math.PI * 2, r = 12 + Math.sin(t * 6 + i) * 0.6;
@@ -263,6 +273,7 @@
   }
   // Khí thế: vài đốm lửa đỏ cam bốc lên quanh Zed.
   function veKhiThe(c, P) {
+    if (d3('hu-khi-the')) { veK(c, 'hu-khi-the', P.x, P.y + 1, Math.floor(G.time * 10) % 6, 1, false, 0.85); return; }
     const t = G.time;
     for (let i = 0; i < 6; i++) {
       const q = (t * 1.4 + i / 6) % 1, x = P.x + Math.sin(i * 2.3 + t * 2) * 9, y = P.y - 2 - q * 28;
@@ -276,7 +287,12 @@
     const ds = W.ents.slice(); if (W.boss && !W.boss.dead) ds.push(W.boss);
     for (const e of ds) {
       if (e.dead || e.hidden) continue;
-      if (e.boTroiT > 0 && e.st && e.st.root > 0) {
+      if (e.boTroiT > 0 && e.st && e.st.root > 0 && d3('hu-day-leo')) {
+        // ảnh hu-day-leo: mầm nhú → dây vươn (khung 1–4) trong 0,32 giây đầu, giữ (khung 4–5 xen nhau), 0,25 giây cuối héo rụng (khung 6)
+        const T0 = e.boTroiT0 || e.boTroiT, qua = T0 - e.boTroiT;
+        const f = qua < 0.32 ? Math.floor(qua / 0.08) : e.boTroiT < 0.25 ? 5 : 3 + (Math.floor(G.time * 4) % 2);
+        veK(c, 'hu-day-leo', e.x, e.y + 1, f, Math.max(0.7, Math.min(1.8, ((e.r || 8) * 2 + 10) / 28)), (e.fxId || 0) % 2 === 1, 1);
+      } else if (e.boTroiT > 0 && e.st && e.st.root > 0) {
         const r = (e.r || 8) + 2, n = 10;
         c.globalAlpha = Math.min(1, e.boTroiT / 0.3);
         for (let i = 0; i < n; i++) {
@@ -291,6 +307,10 @@
     // vòng sóng (Sóng dội), vòng thuỷ triều (Thuỷ triều)
     for (const v of W.boVe || []) {
       const q = 1 - v.t / v.t0, r = v.r * (0.35 + 0.65 * q);
+      if (d3('hu-song-doi')) { // ảnh vòng sóng (khung theo thời gian vòng), cỡ = bán kính tác dụng; Thuỷ triều nhuộm lam đậm
+        veK(c, 'hu-song-doi', v.x, v.y, Math.min(4, Math.floor(q * 5)), (2 * v.r) / 60, false, 0.9, v.k === 'song' ? null : '#3fa8d8');
+        continue;
+      }
       c.globalAlpha = 0.8 * (1 - q);
       vong(c, v.x, v.y, r, v.k === 'song' ? '#9fe8ff' : '#3fa8d8', 28, 0);
       vong(c, v.x, v.y, r - 2, '#ffffff', 14, q);
@@ -308,7 +328,12 @@
         const B = W.boBong;
         if (B && B.t > 0) list.push({ y: B.y - 0.25, f: () => { try { veBong(c, P, B); } catch (e) { /* bỏ qua hình */ } } });
         if (!P.dead && P.boKhien > 0 && co(P, 'khienNuoc')) list.push({ y: P.y + 0.2, f: () => veKhien(c, P) });
-        if (!P.dead && P.boKhiThe) list.push({ y: P.y + 0.3, f: () => veKhiThe(c, P) });
+        // khiên vừa vỡ: khung 5 rồi 6 của ảnh hu-khien-nuoc
+        if (P.boVoT > 0 && d3('hu-khien-nuoc')) list.push({ y: P.y + 0.2, f: () => veK(c, 'hu-khien-nuoc', P.x, P.y - 13, P.boVoT > 0.15 ? 4 : 5, 1, false, 0.9) });
+        // khí thế bằng ảnh: hào quang ở lớp SAU người (y nhỏ hơn Zed); hình code cũ vẫn ở trước
+        if (!P.dead && P.boKhiThe) list.push({ y: d3('hu-khi-the') ? P.y - 0.3 : P.y + 0.3, f: () => veKhiThe(c, P) });
+        // nhựa rừng: giọt nhựa xanh lặp dưới chân khi đang hồi (sau người)
+        if (!P.dead && P.boHoiDang && d3('hu-nhua-rung')) list.push({ y: P.y - 0.2, f: () => veK(c, 'hu-nhua-rung', P.x, P.y + 1, Math.floor(G.time / 0.175) % 4, 1, false, 0.85) });
       } catch (e) { /* bỏ qua hình */ }
     };
     const ground0 = G.fx.drawGround;

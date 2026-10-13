@@ -257,6 +257,15 @@
   // Nổ ngắn đúng chỗ va chạm. ux, uy: hướng bay của viên đạn (nếu có): vài tia sáng văng tiếp theo hướng đó.
   function impact(x, y, el, big, col, team, ux, uy) {
     const rp = el ? HIT_RAMP[el] : team === 'player' ? RAMP.steel : RAMP.hurt;
+    // Đợt 3 (cờ tắt ?hudot3=0): phi tiêu xuyên qua quái (có hướng bay) → ảnh hu-va-cham chĩa theo hướng bay, nhuộm hệ;
+    // thay vòng sóng, chớp và tia vẽ code. Hạt toé của hệ giữ (bớt một nửa).
+    let anhVC = false;
+    if (team === 'player' && ux != null && K.d3 && K.d3('hu-va-cham')) anhVC = K.anhHuong('hu-va-cham', x, y, ux, uy, { sc: big ? 1.2 : 0.9, mau: K.mauHe(el) });
+    if (anhVC) {
+      const n2 = hatN(big ? 5 : 3);
+      for (let i = 0; i < n2; i++) { const a = R() * TAU, v = rr(30, 80); emit(el === 'fire' ? 9 : el === 'poison' ? 5 : el === 'ice' ? 4 : 1, x, y, Math.cos(a) * v * 0.6, Math.sin(a) * v * 0.5 - 20, rr(0.2, 0.35), rp, 2, 0, 1, null, 1); }
+      return;
+    }
     addRing(x, y, 2, big ? 16 : 10, big ? 0.24 : 0.18, el ? EL_GLOW[el] : col || '#ffffff', big ? 2 : 1, 1);
     add({ ty: 'flash', x, y, r: big ? 7 : 4, t: 0.09, c: '#ffffff', c2: el ? EL_GLOW[el] : col || '#ffd9c8', ly: 1 });
     if (ux != null) {
