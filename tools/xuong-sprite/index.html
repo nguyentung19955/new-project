@@ -729,6 +729,35 @@ window.G.LANG = 'vi';
     max: 3,
     gia: [{ lk: 80, vang: 300 }, { lk: 200, vang: 800 }, { lk: 400, vang: 1800 }],
   };
+  // ===== HỆ THỐNG MỚI ĐỢT 3: SKILL RIÊNG CỦA 4 BỘ TRANG PHỤC (docs/review/ke-hoach-cai-thien/he-thong-moi/YEU-CAU-3-SKILL-BO.md) =====
+  // BẢNG HẰNG SỐ DUY NHẤT để chỉnh cân bằng skill bộ. Mỗi bộ 3 skill theo thứ tự cấp 1, 2, 3; cấp sau giữ skill cấp trước.
+  // Skill chỉ có tác dụng khi ĐANG MẶC bộ đó (G.zedBo()). Luật trong trận + hiệu ứng: js/bo_skill.js (G.boSk); mô tả trong bảng nâng bộ
+  // tự ghép từ các số dưới đây (đổi số là mô tả đổi theo). Thời gian tính bằng giây, tỉ lệ 0,3 = 30%, khoảng cách bằng điểm ảnh game.
+  // Cờ tắt toàn bộ skill bộ: thêm ?skillbo=0 vào địa chỉ trang (G.SKILL_BO_BAT = false; nâng bộ vẫn được, chỉ không có tác dụng).
+  G.SKILL_BO = {
+    ninja: [
+      { ma: 'bongLuot', ten: 'Bóng lướt', cuaSo: 1, them: 0.3 },          // lộn xong, đòn đầu tiên trong cuaSo giây +them sát thương
+      { ma: 'phanThan', ten: 'Phân thân', giay: 1.5 },                    // lộn để lại bóng đứng tại chỗ giay giây, quái thường nhắm vào bóng
+      { ma: 'amSat', ten: 'Ám sát', hoi: 4 },                             // đánh trúng từ sau lưng quái: chắc chắn chí mạng (x2), hồi hoi giây
+    ],
+    rung: [
+      { ma: 'nhuaRung', ten: 'Nhựa rừng', dung: 1, hoi: 0.01 },           // đứng yên >= dung giây: hồi hoi x máu tối đa mỗi giây
+      { ma: 'gaiDoc', ten: 'Gai độc', chong: 1, satThuong: 0.5 },         // quái đánh trúng Zed: chong lớp độc, độc tính theo satThuong x đòn vũ khí đang cầm
+      { ma: 'bayDayLeo', ten: 'Bẫy dây leo', giay: 1.5, trum: 0.4 },      // đòn giữ rồi thả trói chân quái trúng đòn giay giây (trùm: giay x trum)
+    ],
+    bien: [
+      { ma: 'khienNuoc', ten: 'Khiên nước', hoi: 10 },                    // có 1 lớp khiên chặn trọn 1 đòn; vỡ thì sau hoi giây có lại (vào ải có sẵn)
+      { ma: 'songDoi', ten: 'Sóng dội', banKinh: 40, day: 24 },           // lộn đẩy lùi quái trong banKinh ra thêm day điểm ảnh (trùm không bị đẩy)
+      { ma: 'thuyTrieu', ten: 'Thuỷ triều', giay: 2, banKinh: 60, cham: 0.5 }, // khiên vỡ: quái trong banKinh chậm còn cham x tốc độ trong giay giây
+    ],
+    lau: [
+      { ma: 'giapBac', ten: 'Giáp bạc', giam: 0.1 },                      // giảm giam sát thương nhận (nhân sau giảm sát thương sẵn có)
+      { ma: 'phanDon', ten: 'Phản đòn', cuaSo: 0.2, phan: 0.5 },          // lộn trong cuaSo giây trước khi đòn quái trúng: phản lại phan x sát thương đòn đó
+      { ma: 'khiThe', ten: 'Khí thế', mau: 0.3, them: 0.25 },             // máu dưới mau x tối đa: +them sát thương tới hết ải, mỗi ải 1 lần (chữ bay báo)
+    ],
+  };
+  G.SKILL_BO_BAT = true;
+  try { if (typeof location !== 'undefined' && /[?&]skillbo=0(&|$)/.test(location.search || '')) G.SKILL_BO_BAT = false; } catch (e) { /* giữ mặc định */ }
   // Phần thưởng thay đồ rơi (r = vùng 0..2). Giữ tổng giá trị tương đương: món cũ tính theo giá Bà Hàng Xén mua lại
   // (vũ khí Thường 20, Lam 60, Tím 150, Vàng 400; trang phục 10/30/80/200), 1 linh khí = 4 vàng (G.upg.VAL.lk). Bảng so: bao-cao-1.md.
   G.ROI_MOI = {

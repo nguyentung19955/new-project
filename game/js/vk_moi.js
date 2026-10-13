@@ -23,8 +23,9 @@
   const kep = (v, a, b) => (v < a ? a : v > b ? b : v);
   const SOFT = '#a9c2b4', TXT = '#f1e6c6', GOLD = '#f6dc92', GOOD = '#9be07a', WARN = '#ff9a5a';
 
-  // ---------- móc skill của bộ trang phục (đợt 3 gắn) ----------
-  // bo: 'ninja' | 'rung' | 'bien' | 'lau'; cap: 0..3. Trả về mô tả skill (đợt 3) hoặc null. Đợt 1: luôn null (chưa có skill).
+  // ---------- móc skill của bộ trang phục ----------
+  // bo: 'ninja' | 'rung' | 'bien' | 'lau'; cap: 0..3. Trả về skill đã mở hoặc null. Bản rỗng này chỉ là dự phòng:
+  // đợt 3 (js/bo_skill.js, nạp sau tệp này) thay bằng bản thật đọc bảng G.SKILL_BO (js/data.js); ?skillbo=0 → luôn null.
   G.boSkill = function (bo, cap) { void bo; void cap; return null; };
 
   // ---------- linh khí ----------
@@ -503,7 +504,19 @@
     const bo = G.zedBo(sv), B = G.ZED_BO[bo], cap = VM.boCap(sv, bo), max = G.BO_MOI.max, g = VM.boGia(cap);
     ui.text(G.t('{0} · cấp {1}/{2}', G.tv(B.ten), cap, max), x, y + 9, { size: 8, bold: true, color: GOLD });
     y += 12;
-    y = ui.para('Mỗi bộ nâng riêng 3 cấp bằng linh khí và vàng. Skill riêng của từng cấp sẽ có ở bản cập nhật sau.', x, y + 7, wd, { size: 6.5, color: SOFT });
+    y = ui.para('Mỗi bộ nâng riêng 3 cấp bằng linh khí và vàng. Mỗi cấp mở thêm một skill, chỉ có tác dụng khi đang mặc bộ đó.', x, y + 7, wd, { size: 6.5, color: SOFT });
+    // Skill của bộ đang mặc (đợt 3, bảng G.SKILL_BO trong js/data.js, luật js/bo_skill.js): tên + mô tả 1 dòng, cấp nào đã mở
+    const SK = G.SKILL_BO && G.SKILL_BO[bo];
+    if (SK) {
+      const tat = G.SKILL_BO_BAT === false;
+      SK.forEach((sk, i) => {
+        const mo = cap > i;
+        const dau = mo ? (tat ? G.t('Cấp {0} · {1} (đang tắt)', i + 1, sk.ten) : G.t('Cấp {0} · {1} (đã mở)', i + 1, sk.ten)) : G.t('Cấp {0} · {1} (chưa mở)', i + 1, sk.ten);
+        y = ui.para(dau, x, y + 2, wd, { size: 6.8, bold: true, color: mo && !tat ? GOOD : SOFT });
+        y = ui.para(G.boSk ? G.boSk.moTa(sk) : '', x + 6, y - 1, wd - 6, { size: 6.3, color: mo && !tat ? TXT : SOFT });
+      });
+      if (tat) y = ui.para('Skill bộ đang tắt (cờ ?skillbo=0).', x, y + 1, wd, { size: 6.3, color: WARN });
+    }
     if (g) {
       const why = VM.boDuoc(sv, bo);
       ui.text(G.t('Lên cấp {0}: {1} linh khí + {2} vàng', cap + 1, g.lk, g.vang), x, y + 9, { size: 7, bold: true, color: why ? WARN : GOOD });

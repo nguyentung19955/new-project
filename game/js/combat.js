@@ -399,7 +399,7 @@
     }
   }
   G.tickStatus = tickStatus;
-  const slowOf = (e) => Math.max(0.4, 1 - 0.15 * e.st.iceN);
+  const slowOf = (e) => Math.max(0.4, 1 - 0.15 * e.st.iceN) * (G.boSk ? G.boSk.cham(e) : 1); // × chậm của skill bộ Biển "Thuỷ triều"
 
   G.kill = function (e, o) {
     if (e.dead) return;
@@ -473,6 +473,8 @@
     let d = G.pDamage(P, w) * mult;
     let crit = false;
     if (G.rnd() < P.crit + (G.wHas(w, 'crit') ? 0.1 : 0)) { d *= 2; crit = true; }
+    const bk = G.boSk ? G.boSk.danh(P, e, o, crit) : null; // skill bộ: Bóng lướt, Ám sát (Ninja), Khí thế (Lâu đài) — js/bo_skill.js
+    if (bk) { d *= bk.k; if (bk.crit && !crit) { d *= 2; crit = true; } }
     // dòng mạnh riêng của bậc Vàng
     if (w.power === 'boss' && (e.isBoss || e.role === 'elite')) d *= 1.2;
     if (w.power === 'first' && e.hp >= e.maxhp) d *= 2;
@@ -482,6 +484,7 @@
     if (P.boost) { d *= 1.6; P.boost = false; }
     const el = G.activeEl(P, w);
     G.damage(e, d, { el, ranged: o.ranged, src: 'hit', w, crit });
+    if (G.boSk) G.boSk.trung(P, e, o); // skill bộ Rừng "Bẫy dây leo": đòn giữ rồi thả (o.manh) trói chân
     if (!G.noRender) FX('hit', e, { el, type: w.type, ranged: o.ranged, crit, dead: e.dead, heavy: o.heavy, rain: o.rain, dir: o.dir || (e.x >= P.x ? 1 : -1) });
     if (G.moves) G.moves.onHit(e, d, el, o); // luật riêng của hệ khi đòn trúng (js/moves.js)
     if (G.mobOnHit) G.mobOnHit(e, d, o); // quái gai phản đòn, giáp vỡ (js/mobs.js)
@@ -653,10 +656,13 @@
   }
   G.hurtPlayer = function (amt, el, src, melee) {
     const P = W.P;
+    if (G.boSk && !P.dead && !W.over && !W.safe) G.boSk.phanDon(P, amt, src); // skill bộ Lâu đài "Phản đòn": vừa lộn thì phản đòn (js/bo_skill.js)
     if (P.inv > 0 || P.dead || W.over || W.safe) return false; // W.safe: đã hạ trùm, đang đi dạo chờ vào cổng
     if (G.outfit && G.outfit.block(P)) return false; // khiên của trang phục (cánh, khiên đầu phòng) chặn đòn này
+    if (G.boSk && G.boSk.chan(P)) return false; // skill bộ Biển "Khiên nước" chặn trọn đòn này (js/bo_skill.js)
     const raw = amt;
     amt *= 1 - Math.min(0.75, P.dr);
+    if (G.boSk) amt *= G.boSk.nhan(P); // skill bộ Lâu đài "Giáp bạc"
     if (P.gongT > 0) amt *= 0.4;
     const hp0 = P.hp;
     P.hp -= amt;
@@ -676,6 +682,7 @@
     }
     if (P.hp <= 0) { P.dead = true; W.over = 'dead'; }
     noteHurt(hurtKey(src, melee), hp0 - Math.max(0, P.hp), el); // V17
+    if (G.boSk) G.boSk.biDanh(P, src); // skill bộ: Gai độc (Rừng), Khí thế (Lâu đài)
     return true;
   };
 
@@ -687,6 +694,7 @@
     if (P.dead) P.deadT += dt;
     for (const id in P.coats) if (P.coats[id].t > 0) P.coats[id].t -= dt;
     if (G.outfit) G.outfit.tick(P, dt); // tác dụng trang phục theo thời gian: vệt khi lộn, vũng mỗi vài giây
+    if (G.boSk) G.boSk.tick(P, dt); // skill bộ trang phục Zed theo thời gian (js/bo_skill.js)
     // hiệu ứng trên người chơi
     P.dotT -= dt;
     for (const k of ['fire', 'poison', 'ice']) if (P.st[k] > 0) P.st[k] -= dt;
@@ -770,6 +778,7 @@
         if (W.boss) W.boss.misted = false;
         if (P.set === 'ho') P.boost = true;
         if (G.outfit) G.outfit.dodgeEnd(P);
+        if (G.boSk) G.boSk.lonXong(P); // skill bộ Ninja "Bóng lướt"
         if (G.CHAY_DANH_MOI !== false && ml > 0.12) P.moving = true; // ưu tiên Né > … > Chạy: hết Né còn giữ cần → chạy ngay (không chen khung Đứng)
       }
     } else {
@@ -804,6 +813,7 @@
         W.stats.dodges++;
         G.sfx('swing', 0.7);
         FX('dodge', P);
+        if (G.boSk) G.boSk.lon(P); // skill bộ: Phân thân (Ninja), Sóng dội (Biển), mốc Phản đòn (Lâu đài)
       } else if (inp.specialP && P.mana >= P.specCost && P.specCd <= 0 && !(G.moves && G.moves.canSpecial && !G.moves.canSpecial(P, w))) {
         special(P);
       } else if (G.chuong && G.chuong.input(P, !!inp.skillP, !!(inp.skill || inp.skillP), dt)) {
@@ -850,7 +860,7 @@
     if (dx > -6 && dx < reach && Math.abs(P.y - e.y) < depth) G.hurtPlayer(e.dmg * (mult || 1), e.el, e, true);
   }
   function updateEnemy(e, dt) {
-    const P = W.P;
+    const P = (G.boSk && G.boSk.dich(e)) || W.P; // skill bộ Ninja "Phân thân": quái đi tới / ngắm vào bóng (đòn trúng vẫn đo trên Zed thật)
     e.t += dt;
     if (e.flash > 0) e.flash -= dt;
     tickStatus(e, dt);
@@ -881,7 +891,7 @@
     if (e.lunge > 0) {
       e.lunge -= dt;
       e.x += e.lv * dt;
-      if (!e.lhit && Math.abs(P.x - e.x) < 12 && Math.abs(P.y - e.y) < 11) { e.lhit = true; G.hurtPlayer(e.dmg, e.el, e, true); }
+      if (!e.lhit && Math.abs(W.P.x - e.x) < 12 && Math.abs(W.P.y - e.y) < 11) { e.lhit = true; G.hurtPlayer(e.dmg, e.el, e, true); }
       if (e.lunge <= 0) { e.lhit = false; e.retreat = 0.7; }
       return;
     }
@@ -987,7 +997,7 @@
         for (const hx of hits) {
           const e = hx[1];
           o.seen.push(e);
-          playerHit(e, o.mult, { w: o.w, ranged: true, heavy: o.big, dir: o.vx < 0 ? -1 : 1 });
+          playerHit(e, o.mult, { w: o.w, ranged: true, heavy: o.big, dir: o.vx < 0 ? -1 : 1, manh: o.charged > 0 }); // manh: phát giữ rồi thả (js/bo_skill.js)
           if (G.moves) G.moves.arrowHit(o, e);
           P.mana = Math.min(P.maxmana, P.mana + P.manaHit + (G.wHas(o.w, 'mana') ? 1 : 0));
           G.sfx('hit', 1.3);

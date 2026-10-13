@@ -212,7 +212,8 @@
   // ---------- cập nhật mỗi khung ----------
   const G_mob = (G.mob = {});
   G_mob.update = function (e, dt) {
-    const w = W(), P = w.P;
+    // skill bộ Ninja "Phân thân" (js/bo_skill.js): quái thường đi tới / ngắm đòn vào bóng; P ở đây chỉ dùng toạ độ, đòn trúng vẫn đo trên Zed thật
+    const w = W(), P = (G.boSk && G.boSk.dich(e)) || w.P;
     if (e.an) e.an.t += dt * (e.an.spd || 1);
     if (e.hitT > 0) e.hitT -= dt;
     if (e.reflT > 0) e.reflT -= dt;
@@ -226,7 +227,7 @@
       e.wind = 0; e.lungeT = 0; e.spikeUp = 0;
       return;
     }
-    const sp = e.speed * Math.max(0.4, 1 - 0.15 * e.st.iceN) * (e.st.root > 0 ? 0 : 1);
+    const sp = e.speed * Math.max(0.4, 1 - 0.15 * e.st.iceN) * (e.st.root > 0 ? 0 : 1) * (G.boSk ? G.boSk.cham(e) : 1); // × chậm "Thuỷ triều" (skill bộ Biển)
     if (e.lungeT > 0) {
       const k = Math.min(dt, e.lungeT); e.lungeT -= dt;
       e.x += Math.cos(e.act ? e.act.a : e.dirA) * e.lv * k; e.y += Math.sin(e.act ? e.act.a : e.dirA) * e.lv * k;

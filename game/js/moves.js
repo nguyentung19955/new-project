@@ -515,7 +515,7 @@
     aimM(P, ch.len1 + 20);
     const len = ch.len0 + (ch.len1 - ch.len0) * c;
     dashGo(P, len, ch.t); P.dashHit = []; P.dashMult = ch.mult0 + (ch.mult1 - ch.mult0) * c; P.dashStun = 0;
-    P.dashOpt = { stun: 0, heavy: c >= 1 };
+    P.dashOpt = { stun: 0, heavy: c >= 1, manh: true }; // manh: đòn giữ rồi thả (skill bộ Rừng "Bẫy dây leo", js/bo_skill.js)
     P.inv = Math.max(P.inv, ch.t); // đang xuyên qua quái thì không dính đòn
     P.atkT = ch.t; P.atkDur = ch.t; P.cdT = ch.t + 0.2; P.hitDone = true; P.lastAtk = G.time; P.comboI = 2;
     mv.name = ch.name; mv.kind = 'xoc'; mv.step = 0; mv.cur = null; mv.dashDur = ch.t; mv.chain = 0; mv.lastT = G.time + ch.t;
@@ -550,7 +550,7 @@
   function hammerSlam(P, w, o) {
     const W = G.getWorld(), ch = C.hammer.charge, sl = o.sl, [ux, uy] = aimOf(P);
     const r = reachOf(w, sl.r), q = along(P.x, P.y, ux, uy, Math.min(ch.ahead, wallLen(P.x, P.y, ux, uy, ch.ahead))), cx = q[0], cy = q[1];
-    const n = circleHit(cx, cy, r, (e) => G.cb.playerHit(e, sl.mult, { w, stun: sl.stun, heavy: true, dir: e.x >= P.x ? 1 : -1 }));
+    const n = circleHit(cx, cy, r, (e) => G.cb.playerHit(e, sl.mult, { w, stun: sl.stun, heavy: true, manh: true, dir: e.x >= P.x ? 1 : -1 })); // manh: đòn giữ rồi thả (js/bo_skill.js)
     G.cb.hitProps(cx - r, cx + r, cy, r * G.ZK);
     // sóng chấn động chạy trên mặt đất theo hướng đánh (tám hướng), tan khi chạm tường
     const left = Math.min(sl.wave.len, (W.x1 - W.x0) * ch.waveFrac, wallLen(cx, cy, ux, uy, 999));
