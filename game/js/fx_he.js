@@ -20,6 +20,13 @@
   try { gnTat = /[?&]gonhu=0\b/i.test(String(window.location && window.location.search)); } catch (e) { gnTat = false; }
   if (G.GO_NHU == null) G.GO_NHU = !gnTat;
   G.goNhu = () => G.GO_NHU !== false;
+  // ---------- TỤ LỰC BẰNG ẢNH (13/10, docs/review/ke-hoach-cai-thien/hu-tu-luc) ----------
+  // Bật mặc định khi có ảnh hu-tu-luc. Cờ tắt: ?tuluc=0 (hoặc G.TU_LUC = false) thì vòng sáng, gạch và hạt lấy đà vẽ bằng code như cũ.
+  // Chỉ đổi hình lúc giữ nút Đánh lấy đà; luật lấy đà (thời gian, nấc, sát thương) trong js/moves.js không đổi.
+  let tlTat = false;
+  try { tlTat = /[?&]tuluc=0\b/i.test(String(window.location && window.location.search)); } catch (e) { tlTat = false; }
+  if (G.TU_LUC == null) G.TU_LUC = !tlTat;
+  G.tuLuc = () => G.TU_LUC !== false && !!(G.fxAnh && G.fxAnh.co('hu-tu-luc'));
   const GN_MAX = 3;      // số vũng (mỗi hệ) và số mây độc của em bé được vẽ cùng lúc
   const GN_TRUNG = 0.5;  // phần diện tích chồng lên (so với vũng nhỏ hơn) từ mức này trở lên thì gộp hình
   const GN_MAY = 0.42, GN_MAY_TRONG = 0.26; // độ đậm ảnh mây độc (cũ 0,6); em bé đứng trong mây thì mờ hơn nữa
@@ -505,7 +512,10 @@
     } catch (e) { fail(e); }
   };
   // Vừa lên một nấc lấy đà: vòng sáng và lấp lánh ở tay
+  // Tụ lực bằng ảnh (G.tuLuc(), docs/review/ke-hoach-cai-thien/hu-tu-luc): có ảnh hu-tu-luc thì không vẽ lớp code này nữa
+  // (vòng ảnh dưới chân tự to lên theo nấc, xem drawTuLuc). Tiếng "pick" lên nấc vẫn do js/moves.js phát như cũ.
   api('mvCharge', (P, level) => {
+    if (G.tuLuc()) return;
     const h = hand(P), w = G.curW(P), PL = pal(G.activeEl(P, w));
     addRing(h.x, h.y - 4, 3, 13 + level * 3, 0.2, level >= 2 ? '#ffd23f' : PL.c2, 2, 1);
     add({ ty: 'flash', x: h.x, y: h.y - 4, r: 5 + level * 2, t: 0.1, c: '#ffffff', c2: level >= 2 ? '#ffd23f' : PL.c2, ly: 1 });
@@ -625,7 +635,7 @@
       }
     }
     stepSp(W, tick);
-    if (mv && mv.holding && tick && !P.dead) {
+    if (mv && mv.holding && tick && !P.dead && !G.tuLuc()) { // có ảnh tụ lực: không còn hạt màu hệ bay vòng quanh hút về tay
       // hạt sáng bị hút về tay, càng đầy càng dày
       const h = hand(P), w = G.curW(P), PL = pal(G.activeEl(P, w));
       if (R() < 0.35 + 0.6 * mv.charge) {
@@ -817,6 +827,75 @@
     if (ch.lv1 != null) { const m = x + Math.round((BW * ch.lv1) / ch.time); p(c, m, y - 1, 1, 6, '#140d0e'); } // vạch nấc 1 của búa
     if (full) { star(c, x + BW + 3, y + 2, 2, '#ffd23f', '#ffffff'); }
   }
+  // ---------- vòng TỤ LỰC dưới chân Zed (ảnh hu-tu-luc, lớp mặt đất: vẽ trước người) ----------
+  // Ảnh trắng-xám, nhuộm theo hệ vũ khí đang cầm (bảng PAL của js/fx.js: không hệ giữ trắng, Lửa cam, Độc xanh chanh, Băng xanh nhạt):
+  // nhân màu hệ rồi cộng lại một phần ảnh gốc để lõi còn sáng. Tấm nhuộm làm MỘT lần cho mỗi màu rồi dùng lại (không tạo canvas mỗi khung).
+  // Cỡ theo nấc lấy đà: chưa tới nấc 1 → 0,8; nấc 1 → 1; đầy → 1,2 (to dần êm). Đầy nấc thêm một lớp ánh vàng nhấp nháy như code cũ.
+  // Vũ khí chỉ có một nấc (giáo, phi tiêu): nửa đà coi như nấc 1. Hiện từ lúc đà bắt đầu tính (chargeT ≥ 0), không hiện lúc bấm nhanh.
+  const TL_MAU = { fire: PAL_C('fire'), poison: PAL_C('poison'), ice: PAL_C('ice'), gold: '#ffd23f' };
+  function PAL_C(el) { return pal(el).c; }
+  const TL_GIU = 0.25, TL_CO = [0.8, 1, 1.2];
+  const TL_NHUOM = new Map();
+  const TL = { t0: -1, co: 0.8, tPrev: 0 };
+  function tamNhuom(a, key) {
+    if (key === 'none') return a.img;
+    let o = TL_NHUOM.get(key);
+    if (o && o.img === a.img) return o.cv;
+    if (typeof document === 'undefined') return null;
+    const cv = document.createElement('canvas');
+    cv.width = a.img.width; cv.height = a.img.height;
+    const g = cv.getContext('2d');
+    g.imageSmoothingEnabled = false;
+    g.drawImage(a.img, 0, 0);
+    g.globalCompositeOperation = 'multiply';
+    g.fillStyle = TL_MAU[key]; g.fillRect(0, 0, cv.width, cv.height);
+    g.globalCompositeOperation = 'destination-in';
+    g.drawImage(a.img, 0, 0);
+    g.globalCompositeOperation = 'lighter';
+    g.globalAlpha = TL_GIU;
+    g.drawImage(a.img, 0, 0);
+    o = { img: a.img, cv };
+    TL_NHUOM.set(key, o);
+    return cv;
+  }
+  function veTuLuc(c, a, key, x, y, t, co, mo) {
+    const src = tamNhuom(a, key);
+    if (!src) return;
+    const f = G.fxAnh.khung(a, t);
+    if (f < 0) return;
+    const n = a.net, sw = a.fw * n, sh = a.fh * n, s = a.co * co;
+    c.save();
+    try {
+      c.translate(Math.round(x), Math.round(y));
+      c.scale(s, s);
+      c.imageSmoothingEnabled = false;
+      c.globalCompositeOperation = 'lighter';
+      c.globalAlpha *= mo;
+      c.drawImage(src, (f % a.cot) * sw, Math.floor(f / a.cot) * sh, sw, sh, -a.ax, -a.ay, a.fw, a.fh);
+    } finally { c.restore(); }
+  }
+  function drawTuLuc(c) {
+    const W = G.getWorld(), P = W && W.P, mv = P && P.mv, S = K.S();
+    if (!S || !mv || !mv.holding || P.dead || !(mv.chargeT >= 0) || !G.tuLuc()) { TL.t0 = -1; return; }
+    const w = G.curW(P), cfg = G.MOVES && G.MOVES[w.type], ch = cfg && cfg.charge;
+    if (!ch) { TL.t0 = -1; return; }
+    const a = G.fxAnh.get('hu-tu-luc');
+    if (!a) return;
+    const full = mv.charge >= 1, nac = full ? 2 : (ch.lv1 != null ? mv.level >= 1 : mv.charge >= 0.5) ? 1 : 0;
+    if (TL.t0 < 0) { TL.t0 = S.t; TL.co = TL_CO[nac]; TL.tPrev = S.t; }
+    const dt = Math.max(0, Math.min(0.1, S.t - TL.tPrev)); TL.tPrev = S.t;
+    TL.co += (TL_CO[nac] - TL.co) * Math.min(1, dt * 12);
+    const t = S.t - TL.t0, el = G.activeEl ? G.activeEl(P, w) : null, key = TL_MAU[el] ? el : 'none';
+    const mo = Math.min(1, 0.35 + t * 5) * 0.9;
+    veTuLuc(c, a, key, P.x, P.y, t, TL.co, mo);
+    if (full) veTuLuc(c, a, 'gold', P.x, P.y, t, TL.co, 0.45 + 0.3 * (((S.t * 12) | 0) % 2));
+  }
+  const ground0 = fx.drawGround;
+  fx.drawGround = function (c) {
+    if (ground0) ground0(c);
+    if (G.noRender) return;
+    try { drawTuLuc(c); } catch (e) { fail(e); }
+  };
   const over0 = fx.drawOver;
   fx.drawOver = function (c) {
     over0(c);
