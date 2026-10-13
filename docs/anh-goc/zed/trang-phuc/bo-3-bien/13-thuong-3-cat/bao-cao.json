@@ -1,0 +1,144 @@
+{
+ "anh": "trang-phuc/bo-3-bien/13-thuong-3.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 6,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 0,
+  "vien_khu": 8985,
+  "nga_mau_nen_trong_hinh": 115
+ },
+ "manh_bo": [],
+ "loi": [],
+ "canh_bao": [
+  "Hàng 1 khung 3 rộng 494 (trung vị 279) — có thể hai hình dính nhau",
+  "Hàng 1 khung 4 rộng 494 (trung vị 279) — có thể hai hình dính nhau"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "13-thuong-3",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      27,
+      150,
+      285,
+      592
+     ],
+     "chan": [
+      155.5,
+      592
+     ],
+     "rong": 258,
+     "cao": 442,
+     "diem_anh": 58865,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      341,
+      150,
+      596,
+      592
+     ],
+     "chan": [
+      468.0,
+      592
+     ],
+     "rong": 255,
+     "cao": 442,
+     "diem_anh": 58517,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      600,
+      181,
+      1094,
+      592
+     ],
+     "chan": [
+      791.5,
+      592
+     ],
+     "rong": 494,
+     "cao": 411,
+     "diem_anh": 64305,
+     "nguon": "tu-dong",
+     "ghi_chu": [
+      "rộng bất thường"
+     ]
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1005,
+      181,
+      1499,
+      592
+     ],
+     "chan": [
+      1196.0,
+      592
+     ],
+     "rong": 494,
+     "cao": 411,
+     "diem_anh": 64538,
+     "nguon": "tu-dong",
+     "ghi_chu": [
+      "rộng bất thường"
+     ]
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1526,
+      150,
+      1811,
+      592
+     ],
+     "chan": [
+      1668.0,
+      592
+     ],
+     "rong": 285,
+     "cao": 442,
+     "diem_anh": 60264,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1856,
+      150,
+      2129,
+      592
+     ],
+     "chan": [
+      1992.0,
+      592
+     ],
+     "rong": 273,
+     "cao": 442,
+     "diem_anh": 58985,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}

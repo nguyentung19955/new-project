@@ -1,0 +1,101 @@
+{
+ "anh": "trang-phuc/bo-3-bien/18-bua-giu.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 4,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 0,
+  "vien_khu": 7206,
+  "nga_mau_nen_trong_hinh": 50
+ },
+ "manh_bo": [],
+ "loi": [],
+ "canh_bao": [],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "18-bua-giu",
+   "so_khung": 4,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      24,
+      132,
+      441,
+      676
+     ],
+     "chan": [
+      217.5,
+      676
+     ],
+     "rong": 417,
+     "cao": 544,
+     "diem_anh": 110372,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      574,
+      138,
+      986,
+      676
+     ],
+     "chan": [
+      766.5,
+      676
+     ],
+     "rong": 412,
+     "cao": 538,
+     "diem_anh": 108742,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      1102,
+      170,
+      1570,
+      676
+     ],
+     "chan": [
+      1307.5,
+      676
+     ],
+     "rong": 468,
+     "cao": 506,
+     "diem_anh": 107922,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1673,
+      178,
+      2132,
+      676
+     ],
+     "chan": [
+      1882.5,
+      676
+     ],
+     "rong": 459,
+     "cao": 498,
+     "diem_anh": 107629,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}

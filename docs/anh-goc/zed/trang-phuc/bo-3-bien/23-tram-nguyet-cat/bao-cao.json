@@ -1,0 +1,137 @@
+{
+ "anh": "trang-phuc/bo-3-bien/23-tram-nguyet.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 6,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 0,
+  "vien_khu": 9154,
+  "nga_mau_nen_trong_hinh": 134
+ },
+ "manh_bo": [],
+ "loi": [],
+ "canh_bao": [],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "23-tram-nguyet",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      25,
+      142,
+      370,
+      631
+     ],
+     "chan": [
+      204.5,
+      631
+     ],
+     "rong": 345,
+     "cao": 489,
+     "diem_anh": 79603,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      380,
+      142,
+      739,
+      631
+     ],
+     "chan": [
+      544.0,
+      631
+     ],
+     "rong": 359,
+     "cao": 489,
+     "diem_anh": 76392,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      730,
+      144,
+      1064,
+      631
+     ],
+     "chan": [
+      889.5,
+      631
+     ],
+     "rong": 334,
+     "cao": 487,
+     "diem_anh": 74556,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1093,
+      142,
+      1418,
+      631
+     ],
+     "chan": [
+      1255.0,
+      631
+     ],
+     "rong": 325,
+     "cao": 489,
+     "diem_anh": 77858,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1446,
+      142,
+      1769,
+      631
+     ],
+     "chan": [
+      1607.0,
+      631
+     ],
+     "rong": 323,
+     "cao": 489,
+     "diem_anh": 78688,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1798,
+      142,
+      2125,
+      631
+     ],
+     "chan": [
+      1961.0,
+      631
+     ],
+     "rong": 327,
+     "cao": 489,
+     "diem_anh": 77007,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}
