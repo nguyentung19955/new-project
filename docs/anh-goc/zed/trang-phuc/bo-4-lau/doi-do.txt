@@ -1,0 +1,4 @@
+# Prompt đổi đồ bộ Lâu đài, dùng chung (thay N = số khung)
+# Gửi kèm: ẢNH 1 = tấm động tác ninja (docs/anh-goc/zed/moi/<ten>.png), ẢNH 2 = bo-4-lau/00-anh-mau.png
+
+Sửa ẢNH 1 (1 hàng N khung): giữ Y HỆT tư thế từng khung, vị trí, cỡ người, số khung, khoảng cách giữa các khung, nền xanh #00FF00. Chỉ thay quần áo cho giống ẢNH 2: áo đỏ đô viền vàng đồng cổ đứng, giáp ngực và giáp vai bạc, đai da đen khoá đồng tròn, quần đen xám, găng da nâu sẫm hở ngón, ủng da nâu sẫm. Bàn tay và ngón để trần màu da. Giữ nguyên mặt, tóc, mắt đỏ. Không thêm vũ khí, không chữ, không bóng, không còn đai đỏ hay dép của đồ ninja cũ.
