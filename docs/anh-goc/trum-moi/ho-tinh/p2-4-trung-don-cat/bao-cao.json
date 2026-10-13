@@ -1,0 +1,149 @@
+{
+ "anh": "p2-4-trung-don.png",
+ "co_anh": [
+  2232,
+  784
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 4,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 13,
+  "vien_khu": 10720,
+  "nga_mau_nen_trong_hinh": 1315
+ },
+ "manh_bo": [
+  {
+   "khung_bao": [
+    1425,
+    163,
+    1447,
+    194
+   ],
+   "diem_anh": 113
+  },
+  {
+   "khung_bao": [
+    585,
+    376,
+    611,
+    398
+   ],
+   "diem_anh": 27
+  },
+  {
+   "khung_bao": [
+    2180,
+    434,
+    2193,
+    448
+   ],
+   "diem_anh": 2
+  },
+  {
+   "khung_bao": [
+    1569,
+    599,
+    1584,
+    617
+   ],
+   "diem_anh": 15
+  },
+  {
+   "khung_bao": [
+    1481,
+    661,
+    1498,
+    674
+   ],
+   "diem_anh": 5
+  }
+ ],
+ "loi": [],
+ "canh_bao": [
+  "Mảnh 113 điểm ảnh ở [1425, 163, 1447, 194] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "p2-4-trung-don",
+   "so_khung": 4,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      33,
+      167,
+      499,
+      671
+     ],
+     "chan": [
+      255.5,
+      671
+     ],
+     "rong": 466,
+     "cao": 504,
+     "diem_anh": 156118,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      518,
+      112,
+      1096,
+      671
+     ],
+     "chan": [
+      845.5,
+      671
+     ],
+     "rong": 578,
+     "cao": 559,
+     "diem_anh": 161991,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      1116,
+      112,
+      1669,
+      672
+     ],
+     "chan": [
+      1372.0,
+      672
+     ],
+     "rong": 553,
+     "cao": 560,
+     "diem_anh": 187109,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1697,
+      169,
+      2189,
+      671
+     ],
+     "chan": [
+      1926.0,
+      671
+     ],
+     "rong": 492,
+     "cao": 502,
+     "diem_anh": 165006,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}
