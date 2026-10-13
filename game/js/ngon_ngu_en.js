@@ -1589,5 +1589,6 @@
 "Hạ {0} để mở {1}": "Defeat {0} to unlock {1}",
 "Mở trang phục Zed: {0}!": "Zed outfit unlocked: {0}!",
 "Zed có trang phục mới: {0}. Đổi bộ ở Hành trang, thẻ Nhân vật.": "Zed has a new outfit: {0}. Change it in the Inventory, Hero tab.",
-"Chiến Binh Biển": "Sea Warrior"
+"Chiến Binh Biển": "Sea Warrior",
+"Hiệp Sĩ Lâu Đài": "Castle Knight"
 }); })();

@@ -15,6 +15,9 @@ Ghi:  game/art/custom/zed-moi.sprite.json  thân Zed: mỗi động tác 1 hàng
       game/art/custom/zed-bien.sprite.json  TRANG PHỤC BỘ 3 "BIỂN" (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-bien/YEU-CAU.md):
                                             y như bộ Rừng (hàm dung_bo, danh sách BO_KHAC), ảnh từ trang-phuc/bo-3-bien/<tên>-cat/
       docs/review/ke-hoach-cai-thien/zed-bo-bien/xem-truoc-bien.png
+      game/art/custom/zed-lau.sprite.json  TRANG PHỤC BỘ 4 "LÂU ĐÀI CỔ" (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-lau/YEU-CAU.md):
+                                            y như bộ Rừng/Biển (hàm dung_bo, danh sách BO_KHAC), ảnh từ trang-phuc/bo-4-lau/<tên>-cat/
+      docs/review/ke-hoach-cai-thien/zed-bo-lau/xem-truoc-lau.png
 
 CO THEO TỪNG HÀNG (sửa 13/10/2026 — docs/review/ke-hoach-cai-thien/zed-co-deu/YEU-CAU.md):
   Ảnh gốc mỗi động tác vẽ Zed một cỡ khác nhau (chạy nhỏ hơn đứng ~25%, trúng đòn/thương giữ to hơn…), nên mỗi hàng có tỉ lệ
@@ -57,11 +60,15 @@ RA_XEM_RUNG = os.path.join(GOC_REPO, 'docs', 'review', 'ke-hoach-cai-thien', 'ze
 # Trang phục bộ 3 "Biển" (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-bien/YEU-CAU.md): trang-phuc/bo-3-bien/<tên>-cat/
 BIEN = os.path.join(DAY, 'trang-phuc', 'bo-3-bien')
 RA_XEM_BIEN = os.path.join(GOC_REPO, 'docs', 'review', 'ke-hoach-cai-thien', 'zed-bo-bien')
-# thư mục bộ ninja (cột 2 của DONG) → tên tấm các bộ trang phục khác (Rừng, Biển: cùng tên, cùng tư thế, cùng số khung)
+# thư mục bộ ninja (cột 2 của DONG) → tên tấm các bộ trang phục khác (Rừng, Biển, Lâu đài: cùng tên, cùng tư thế, cùng số khung)
 BO_TEN = {'06-chet-b2': '06-chet', '07-chuong-b2': '07-chuong', '08-kiem-1-tp': '08-kiem-1', '09-kiem-2-tp': '09-kiem-2',
             '23-tram-nguyet-tp': '23-tram-nguyet'}
 R_NAM_RUNG = 18        # bán kính chinh_nam trên ảnh Rừng (áo không tay: bán kính 28 sẽ kéo điểm cầm lên cẳng tay)
 R_NAM_BIEN = 18        # bộ Biển áo ngắn tay (cẳng tay trần) → như bộ Rừng
+# Trang phục bộ 4 "Lâu đài cổ" (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-lau/YEU-CAU.md): trang-phuc/bo-4-lau/<tên>-cat/
+LAU = os.path.join(DAY, 'trang-phuc', 'bo-4-lau')
+RA_XEM_LAU = os.path.join(GOC_REPO, 'docs', 'review', 'ke-hoach-cai-thien', 'zed-bo-lau')
+R_NAM_LAU = 18         # bộ Lâu đài áo ngắn tay, găng da hở ngón (nắm tay vẫn là da) → như bộ Rừng/Biển
 
 O = 96                 # cạnh ô ảnh (nguồn 96 = game 48 × net 2)
 CHAN = (48, 90)        # chân trong ô 96 (= goc [24,45] game)
@@ -365,7 +372,7 @@ def main():
             np.median(cao_ng) * s_cu, max(cao_ng) * s_cu, np.median(cao_ng) * s_moi, max(cao_ng) * s_moi))
     xem_truoc(os.path.join(RA_XEM, 'xem-truoc-than.png'), xem, dt, vk_meta, tam_vk, cot)
 
-    # ---------- CÁC BỘ TRANG PHỤC KHÁC (bộ 2 "Rừng", bộ 3 "Biển"): xem dung_bo ----------
+    # ---------- CÁC BỘ TRANG PHỤC KHÁC (bộ 2 "Rừng", bộ 3 "Biển", bộ 4 "Lâu đài cổ"): xem dung_bo ----------
     ctx = {'dong': dong, 'neo_all': neo_all, 'dt': dt, 'vk_meta': vk_meta, 'tam_vk': tam_vk, 'than': than}
     for bo in BO_KHAC:
         dung_bo(ctx, **bo)
@@ -383,6 +390,12 @@ BO_KHAC = [
          ghi_them=' Bộ 3 "Biển": neo dùng lại neo.json của hàng ninja tương ứng (quy đổi + chinh_nam trên ảnh Biển); '
                   'vũ khí dùng chung tấm zed-vk.',
          r_nam=R_NAM_BIEN, xem=os.path.join(RA_XEM_BIEN, 'xem-truoc-bien.png')),
+    # BỘ 4 "LÂU ĐÀI CỔ" (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-lau/YEU-CAU.md): áo ngắn tay, găng da nâu hở ngón →
+    # bán kính chinh_nam như bộ Rừng/Biển. 02-di, 03-chay-v4 cắt ở chế độ phục hồi (mũi chân khung 1 chạm mép), bao-cao.json dùng được.
+    dict(bo='lau', nhan='Lâu đài', thu_muc=LAU, ma='zed-lau', ten='Zed — trang phục Hiệp Sĩ Lâu Đài (bộ 4)',
+         ghi_them=' Bộ 4 "Lâu đài cổ": neo dùng lại neo.json của hàng ninja tương ứng (quy đổi + chinh_nam trên ảnh Lâu đài); '
+                  'vũ khí dùng chung tấm zed-vk.',
+         r_nam=R_NAM_LAU, xem=os.path.join(RA_XEM_LAU, 'xem-truoc-lau.png')),
 ]
 
 
