@@ -39,12 +39,12 @@
     if (!sk) return '';
     switch (sk.ma) {
       case 'bongLuot': return G.t('Lộn xong, đòn đầu tiên trong {0} giây +{1}% sát thương', so(sk.cuaSo), pt(sk.them));
-      case 'phanThan': return G.t('Lộn để lại bóng mờ đứng tại chỗ {0} giây, quái nhắm vào bóng', so(sk.giay));
+      case 'phanThan': return sk.hoi ? G.t('Lộn để lại bóng mờ {0} giây, quái nhắm vào bóng; hồi {1} giây', so(sk.giay), so(sk.hoi)) : G.t('Lộn để lại bóng mờ đứng tại chỗ {0} giây, quái nhắm vào bóng', so(sk.giay));
       case 'amSat': return G.t('Đánh trúng sau lưng quái chắc chắn chí mạng, hồi {0} giây', so(sk.hoi));
       case 'nhuaRung': return G.t('Đứng yên từ {0} giây: hồi {1}% máu tối đa mỗi giây', so(sk.dung), so(sk.hoi * 100));
       case 'gaiDoc': return G.t('Quái đánh trúng Zed bị nhiễm độc nhẹ');
       case 'bayDayLeo': return G.t('Đòn giữ rồi thả trói chân quái trúng đòn {0} giây', so(sk.giay));
-      case 'khienNuoc': return G.t('Mỗi {0} giây có 1 lớp khiên chặn trọn 1 đòn', so(sk.hoi));
+      case 'khienNuoc': return sk.toiDa ? G.t('Mỗi {0} giây có 1 lớp khiên chặn 1 đòn (tối đa {1}% máu)', so(sk.hoi), pt(sk.toiDa)) : G.t('Mỗi {0} giây có 1 lớp khiên chặn trọn 1 đòn', so(sk.hoi));
       case 'songDoi': return G.t('Lộn đẩy lùi quái ở gần (bán kính {0})', sk.banKinh);
       case 'thuyTrieu': return G.t('Khiên vỡ thì làm chậm quái gần đó {0} giây', so(sk.giay));
       case 'giapBac': return G.t('Giảm {0}% sát thương nhận', pt(sk.giam));
@@ -61,7 +61,7 @@
       const P = goc.apply(this, arguments);
       if (P) {
         P.boKhien = co(P, 'khienNuoc') ? 1 : 0; P.boKhienT = 0;
-        P.boLuotT = 0; P.boLuotHet = false; P.boAmSatCd = 0; P.boDungT = 0; P.boHoiFx = 0;
+        P.boLuotT = 0; P.boLuotHet = false; P.boAmSatCd = 0; P.boBongCd = 0; P.boDungT = 0; P.boHoiFx = 0;
         P.boSauLon = 99; P.boPhanDa = [];
         P.boKhiThe = false; P.boKhiTheDa = false;
       }
@@ -77,6 +77,7 @@
     if (P.boLuotHet) { P.boLuotHet = false; P.boLuotT = 0; }
     if (P.boLuotT > 0) P.boLuotT -= dt;
     if (P.boAmSatCd > 0) P.boAmSatCd -= dt;
+    if (P.boBongCd > 0) P.boBongCd -= dt;
     P.boSauLon += dt;
     // bóng phân thân
     const B = W.boBong;
@@ -116,7 +117,8 @@
     const W = W_(); if (!W || W.over) return;
     P.boSauLon = 0; P.boPhanDa = [];
     const pt2 = co(P, 'phanThan');
-    if (pt2) {
+    if (pt2 && !(P.boBongCd > 0)) { // đợt 4: có hồi (pt2.hoi giây)
+      P.boBongCd = pt2.hoi || 0;
       W.boBong = { x: P.x, y: P.y, face: P.face, t: pt2.giay, t0: pt2.giay };
       FX('burst', P.x, P.y - 10, '#2a1e2e', 6, 30);
     }
@@ -197,12 +199,16 @@
     if (!ANH('hu-phan-don', P.x + P.face * 4, P.y - 14, { f: P.face < 0 ? -1 : 1 })) FX('sparkle', P.x + P.face * 6, P.y - 14, '#e8e8f0', 8);
     G.sfx('hit', 1.5);
   };
-  // Khiên nước chặn trọn đòn. Trả về true nếu đã chặn.
-  K.chan = function (P) {
-    if (!co(P, 'khienNuoc') || !(P.boKhien > 0)) return false;
-    P.boKhien--; P.boKhienT = co(P, 'khienNuoc').hoi;
-    P.inv = Math.max(P.inv, 0.35);
-    FX('text', P.x, P.y - 32, 'Chặn!', '#bff4ff', 9);
+  // Khiên nước chặn đòn. Trả về true nếu đã chặn trọn; đợt 4: đòn lớn hơn toiDa x máu tối đa thì khiên vỡ, trả về phần sát thương
+  // còn lại (số) cho js/combat.js trừ tiếp; false nếu không có khiên.
+  K.chan = function (P, amt) {
+    const kn = co(P, 'khienNuoc');
+    if (!kn || !(P.boKhien > 0)) return false;
+    P.boKhien--; P.boKhienT = kn.hoi;
+    const toiDa = kn.toiDa > 0 ? kn.toiDa * (P.maxhp || 100) : Infinity;
+    const du = typeof amt === 'number' && amt > toiDa ? amt - toiDa : 0;
+    if (!du) P.inv = Math.max(P.inv, 0.35);
+    FX('text', P.x, P.y - 32, du ? 'Khiên vỡ!' : 'Chặn!', '#bff4ff', 9);
     if (d3('hu-khien-nuoc')) P.boVoT = 0.3; // ảnh khiên vỡ (khung 5–6) vẽ ở G.fx.sorted
     else FX('burst', P.x, P.y - 12, '#7fd4ff', 12, 70);
     G.sfx('pick', 1.6);
@@ -214,7 +220,7 @@
       }
       (W.boVe || (W.boVe = [])).push({ k: 'trieu', x: P.x, y: P.y, r: tt.banKinh, t: 0.5, t0: 0.5 });
     }
-    return true;
+    return du ? du : true;
   };
   // Hệ số sát thương nhận (Giáp bạc).
   K.nhan = function (P) {

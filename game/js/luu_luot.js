@@ -33,7 +33,7 @@
     // vật đã dùng (rương đã mở, suối đã uống, bàn thờ...) theo thứ tự trong phòng: dựng lại phòng thì đánh dấu lại
     for (const id in S.worlds) { const w = S.worlds[id]; if (!w || !w.props) continue; const ds = []; w.props.forEach((p, k) => { if (p && p.act && p.used) ds.push(k); }); if (ds.length) dung[id] = ds; }
     const o = {
-      v: 1, luc: Date.now(), hero: G.save.hero, carry: sao(G.save.carry), r: S.r, i: S.i, diff: S.diff, kind: S.map.kind, seed: S.map.seed,
+      v: 1, cl: G.SAVE_CAN_LAI || 1, luc: Date.now(), hero: G.save.hero, carry: sao(G.save.carry), r: S.r, i: S.i, diff: S.diff, kind: S.map.kind, seed: S.map.seed,
       idx: S.idx, cleared: sao(S.cleared), seen: sao(S.seen), known: sao(S.known), visits: S.visits, dung,
       P: {}, marks: S.marks || 0, marksMult: S.marksMult, haste: S.haste, curse: S.curse || null, usedPotion: !!S.usedPotion, swapped: !!S.swapped,
       stats: sao(S.stats), loot: sao(S.loot), got: sao(S.got),
@@ -85,7 +85,12 @@
     for (const k of (o.dung && o.dung[o.idx]) || []) { const W = G.getWorld(); if (W.props[k]) W.props[k].used = true; }
     if (o.cleared[o.idx]) { const W = G.getWorld(); W.cleared = true; W.waves = []; W.spawns = []; }
     const P = S.P;
-    for (const k in o.P) if (typeof o.P[k] === 'number') P[k] = o.P[k];
+    // Đợt 4 (cân lại đồ, G.SAVE_CAN_LAI): bản ghi lượt ải từ trước khi cân lại có máu tối đa theo luật cũ → lấy máu tối đa mới
+    // (lời nguyền "frail" vẫn trừ 20%), máu đang có không vượt máu tối đa.
+    const cu = o.cl !== (G.SAVE_CAN_LAI || 1);
+    for (const k in o.P) if (typeof o.P[k] === 'number' && !(cu && k === 'maxhp')) P[k] = o.P[k];
+    if (cu && o.curse === 'frail') P.maxhp = Math.round(P.maxhp * 0.8);
+    if (P.hp > P.maxhp) P.hp = P.maxhp;
     if (P.cur >= P.weapons.length) P.cur = 0;
     S.marks = o.marks || 0; S.marksMult = o.marksMult || S.marksMult; S.haste = o.haste || S.haste; S.curse = o.curse; S.usedPotion = !!o.usedPotion; S.swapped = !!o.swapped;
     if (o.stats) S.stats = o.stats; if (o.loot) S.loot = o.loot;

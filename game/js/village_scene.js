@@ -760,7 +760,7 @@
     if ((S.newsT -= dt) <= 0) { S.newsT = 1; checkNews(); }
     if (!locked && G.save && G.save.zed && G.save.zed.bao === 1) zedBao(); // ZED: báo một lần bản lưu cũ đã chuyển sang Zed
     else if (!locked && G.save && G.save.zed && G.save.zed.boBao === 1) zedBoBao(); // trang phục Zed vừa mở: báo một lần
-    else if (!locked && G.vkMoi && G.save && G.save.heMoiBao) { const s = G.vkMoi.baoChuyen(G.save); if (s) say(s, 9); G.persist(); } // hệ thống mới: báo một lần đã chuyển bản lưu cũ
+    else if (!locked && G.vkMoi && G.save && (G.save.heMoiBao || G.save.canLaiBao)) { const s = G.vkMoi.baoChuyen(G.save); if (s) say(s, 9); G.persist(); } // hệ thống mới: báo một lần đã chuyển bản lưu cũ / đã cân lại đồ (đợt 4)
     let mx = 0, my = 0;
     if (!locked) {
       const k = G.keys, kp = G.keyP, bt = btnAt();
@@ -1113,7 +1113,8 @@
   // Dải tài nguyên trên cùng (có G.theme thì dùng khung trống đồng)
   VS.resParts = function () {
     const sv = G.save;
-    return [['gold', sv.gold, '#ffd23f'], ['ore', sv.ore, '#c9ccd2'], ['stone', sv.stones, '#d48af5'],
+    // đợt 4: bỏ ô Đá tôi (không còn dùng, đổi ra quặng — G.DA_TOI_QUANG)
+    return [['gold', sv.gold, '#ffd23f'], ['ore', sv.ore, '#c9ccd2'],
       ['mat0', sv.mats[0], '#9bd14a'], ['mat1', sv.mats[1], '#7fd4ff'], ['mat2', sv.mats[2], '#ff9a5a'],
       ['shard0', sv.shards[0], '#c8e8a0'], ['shard1', sv.shards[1], '#a8d8ff'], ['shard2', sv.shards[2], '#ffc0a0']];
   };

@@ -331,6 +331,12 @@
   // Phiên hiệu năng (bản lưu): sửa TỪNG PHẦN riêng. Một phần gặp lỗi (ví dụ bản cập nhật có lỗi trong phần sửa vũ khí) thì giữ nguyên dữ liệu cũ
   // của phần đó (sai kiểu hẳn thì lấy phần đó của bản mới), các phần khác vẫn sửa bình thường, KHÔNG trả bản trắng. Có phần lỗi thì vẫn
   // chép bản gốc sang khoá dự phòng như trước (fixFailed). Chỉ bản không phải đối tượng / sai phiên bản mới thành bản mới.
+  // PHIÊN BẢN CÂN LẠI ĐỒ (đợt 4, YEU-CAU-4-RESET-CAN-BANG.md): bản lưu có s.canLai khác số này thì js/vk_moi.js (VM.canLai, chạy SAU phần
+  // dưới đây) tính lại MỘT lần mọi món theo luật hiện hành: 4 vũ khí chỉ giữ cấp + hệ + mài (mài vượt G.MAX_SHARPEN thì hoàn quặng / vàng /
+  // nguyên liệu), bộ trang phục mở đúng theo trùm đã hạ, bỏ trường đồ cũ, điểm kỹ năng / chưởng sai luật trả lại, đá tôi đổi ra quặng.
+  // Không đụng vàng, linh khí, cấp, sao ải, tiến độ vùng. Đổi luật đồ lần sau: tăng số này là mọi bản lưu (máy + mây) chạy lại một lần.
+  // Lưu ý: KHÔNG thêm cờ s.canLai vào G.newSave — vòng "thiếu gì thì bù" bên dưới sẽ chép cờ của bản mới sang bản cũ (đã gặp ở cờ heMoi).
+  G.SAVE_CAN_LAI = 1;
   G.fixSave = function (s) {
     const base = G.newSave();
     fixFailed = false;
@@ -378,7 +384,7 @@
         const h = obj(s.heroes[k]), sk = obj(h.sk);
         const lvl = G.clamp(Math.floor(num(h.lvl, 1)), 1, G.MAX_LEVEL);
         const fix = { unlocked: k === 'smith' || !!h.unlocked, lvl, xp: Math.max(0, num(h.xp, 0)), sk: {} };
-        for (const b of G.SKEYS) fix.sk[b] = G.clamp(Math.floor(num(sk[b], 0)), 0, 5);
+        for (const b of G.SKEYS) fix.sk[b] = G.clamp(Math.floor(num(sk[b], 0)), 0, G.SKILLS && G.SKILLS[b] ? G.SKILLS[b].nodes.length : 5);
         if (fix.sk.atk + fix.sk.def + fix.sk.elem > Math.floor(lvl / 3)) fix.sk = { atk: 0, def: 0, elem: 0 };
         s.heroes[k] = Object.assign(h, fix);
         // Cây chưởng (js/chuong.js): bản lưu cũ chưa có thì nhận cây mặc định, điểm chưởng tính theo cấp nên tự có đủ điểm bù.

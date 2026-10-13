@@ -340,7 +340,8 @@
     if (S.challenge) {
       const ok = S.challenge.t > 0;
       if (ok) {
-        if (G.rnd() < 0.5) { G.save.stones++; S.got.push('1 đá tôi'); } else { G.save.ore += 6; S.got.push('6 quặng'); }
+        // đợt 4: đá tôi bỏ hẳn — nửa phần thưởng trước là 1 đá tôi nay cũng là quặng (G.DA_TOI_QUANG)
+        { const q = G.rnd() < 0.5 ? G.DA_TOI_QUANG || 6 : 6; G.save.ore += q; S.got.push(G.t('{0} quặng', q)); }
         G.save.gold += 80;
         W.banner = { s: G.t('Vượt thử thách! Nhận {0} và 80 vàng', S.got[S.got.length - 1]), col: '#ffd23f', t: 3 };
       } else W.banner = { s: 'Hết giờ, không có thưởng', col: '#b8b0a0', t: 2.5 };
@@ -449,7 +450,8 @@
       R.lines.push(ln(R, '+{0} kinh nghiệm', xp), ln(R, '+{0} vàng', gold), ln(R, '+{0} quặng', ore), ln(R, '+{0} {1}', mat, reg.mat.toLowerCase()));
       if (gm < 1) R.lines.push(ln(R, 'Ải đã quá dễ với sức mạnh của bé: kinh nghiệm và vàng còn {0}%', Math.round(gm * 100)));
       if (big) { const ns = S.diff ? 4 : 3; sv.shards[S.r] += ns; R.lines.push(ln(R, '+{0} mảnh {1}', ns, reg.bossName)); }
-      if ((R.stars === 3 && prev < 3) || (!big && G.rnd() < 0.15)) { sv.stones++; R.lines.push(ln(R, '+1 đá tôi')); }
+      // đợt 4: đá tôi bỏ hẳn (Tôi lại, nâng bậc đã bỏ) — thay bằng quặng (G.DA_TOI_QUANG)
+      if ((R.stars === 3 && prev < 3) || (!big && G.rnd() < 0.15)) { const q = G.DA_TOI_QUANG || 6; sv.ore += q; R.lines.push(ln(R, '+{0} quặng', q)); }
       // Không rơi vũ khí / trang phục (đợt 1, js/vk_moi.js): trùm vùng và ải thường (G.DROP.stage) cho vàng + linh khí cùng giá trị.
       if (G.vkMoi) {
         const q = big ? G.vkMoi.thuongTrum(S.r) : G.rnd() < G.DROP.stage ? G.vkMoi.thuongVk(S.r) : null;

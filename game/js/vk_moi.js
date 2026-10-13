@@ -23,6 +23,27 @@
   const r1 = (v) => Math.round(v * 10) / 10;
   const kep = (v, a, b) => (v < a ? a : v > b ? b : v);
   const SOFT = '#a9c2b4', TXT = '#f1e6c6', GOLD = '#f6dc92', GOOD = '#9be07a', WARN = '#ff9a5a';
+  // Đợt 4: bản tiếng Anh của chữ mới (cân lại đồ, mảnh trùm của bộ, skill bộ đổi số, bảng tài nguyên)
+  if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({
+    'Thiếu mảnh trùm': 'Need shards',
+    'và {0} mảnh {1} (đang có {2}; hạ trùm vùng {3} được 3 mảnh)': 'and {0} {1} shards (have {2}; the {3} boss gives 3)',
+    'Đã cân lại đồ theo luật mới.': 'Your gear has been rebalanced to the new rules.',
+    'Hoàn lại: {0}.': 'Refunded: {0}.',
+    '{0} nguyên liệu': '{0} materials',
+    'Điểm kỹ năng đã trả lại, con phân lại ở Cụ Đồ nhé.': 'Skill points were refunded; reassign them at the Scholar.',
+    'Điểm chưởng đã trả lại, học lại ở Cụ Đồ nhé.': 'Palm points were refunded; relearn them at the Scholar.',
+    'Lộn để lại bóng mờ {0} giây, quái nhắm vào bóng; hồi {1} giây': 'Dodge leaves a decoy for {0}s that monsters target; {1}s cooldown',
+    'Mỗi {0} giây có 1 lớp khiên chặn 1 đòn (tối đa {1}% máu)': 'Every {0}s a shield blocks one hit (up to {1}% HP)',
+    'Khiên vỡ!': 'Shield broke!',
+    'Mài, nâng lò, nâng bộ trang phục, đổi nguyên liệu, đặt lại điểm kỹ năng': 'Sharpen, upgrade the forge, upgrade outfits, buy materials, reset skill points',
+    'Qua ải, hạ quái, tinh anh, trùm, phòng thử thách': 'Clear stages, kill monsters, elites, bosses, challenge rooms',
+    'Mài vũ khí, nâng lò cấp 4': 'Sharpen weapons, forge Lv 4',
+    'Nâng lò cấp 2, mài +5 lên +6': 'Forge Lv 2, sharpen +5 to +6',
+    'Mài từ +6 tới +9, nâng lò cấp 3': 'Sharpen +6 to +9, forge Lv 3',
+    'Mài từ +9 trở lên, nâng lò cấp 4': 'Sharpen from +9 up, forge Lv 4',
+    'Nâng bộ Ninja và bộ Rừng lên cấp 2, 3': 'Upgrade the Ninja and Forest outfits to Lv 2, 3',
+    'Nâng bộ của vùng này lên cấp 2, 3': "Upgrade this region's outfit to Lv 2, 3",
+  });
 
   // ---------- móc skill của bộ trang phục ----------
   // bo: 'ninja' | 'rung' | 'bien' | 'lau'; cap: 0..3. Trả về skill đã mở hoặc null. Bản rỗng này chỉ là dự phòng:
@@ -75,6 +96,9 @@
   // ---------- bộ trang phục Zed ----------
   VM.boCap = (sv, bo) => { sv = sv || G.save; const m = sv && sv.boCap && typeof sv.boCap === 'object' ? sv.boCap : {}; return kep(Math.floor(num(m[bo], 0)), 0, (G.BO_MOI || { max: 3 }).max); };
   VM.boGia = (cap) => (G.BO_MOI && cap >= 0 && cap < G.BO_MOI.max ? G.BO_MOI.gia[cap] : null);
+  // Đợt 4: cấp 2, 3 của bộ tốn thêm mảnh trùm của vùng mở bộ đó (G.BO_MOI.vungManh; bộ Ninja dùng mảnh Mộc Tinh).
+  VM.boVungManh = (bo) => kep(num(G.BO_MOI && G.BO_MOI.vungManh ? G.BO_MOI.vungManh[bo] : 0, 0) | 0, 0, 2);
+  VM.manh = (sv, bo) => { sv = sv || G.save; return Math.max(0, num(sv && Array.isArray(sv.shards) ? sv.shards[VM.boVungManh(bo)] : 0, 0)); };
   VM.boDuoc = function (sv, bo) { // '' là nâng được; không thì lý do
     sv = sv || G.save;
     if (!G.ZED_BO || !G.ZED_BO[bo]) return 'Không có bộ này';
@@ -83,12 +107,14 @@
     if (!g) return 'Đã tối đa';
     if (VM.lk(sv) < g.lk) return 'Thiếu linh khí';
     if ((sv.gold | 0) < g.vang) return 'Thiếu vàng';
+    if (VM.manh(sv, bo) < (g.manh | 0)) return 'Thiếu mảnh trùm';
     return '';
   };
   VM.nangBo = function (sv, bo) {
     if (VM.boDuoc(sv, bo) !== '') return false;
     const cap = VM.boCap(sv, bo), g = VM.boGia(cap);
     sv.linhKhi = r1(VM.lk(sv) - g.lk); sv.gold -= g.vang;
+    if (g.manh > 0 && Array.isArray(sv.shards)) sv.shards[VM.boVungManh(bo)] -= g.manh;
     if (!sv.boCap || typeof sv.boCap !== 'object' || Array.isArray(sv.boCap)) sv.boCap = {};
     sv.boCap[bo] = cap + 1;
     return true;
@@ -271,34 +297,218 @@
     return s;
   };
   // Câu báo một lần ở làng sau khi chuyển bản lưu cũ (xoá dấu báo).
+  // Đợt 4: gộp luôn câu "đã cân lại đồ theo luật mới" (sv.canLaiBao) để hai câu không đè nhau (làng chỉ hiện một câu mỗi lúc).
   VM.baoChuyen = function (sv) {
-    const h = sv && sv.heMoiBao;
-    if (sv) delete sv.heMoiBao;
-    if (!h || typeof h !== 'object') return null;
-    const phan = [];
-    if (h.vk) phan.push(G.t('{0} vũ khí trùng', h.vk));
-    if (h.ao) phan.push(G.t('{0} món quần áo cũ', h.ao));
-    return G.t('Vũ khí nay cố định 4 món (Kiếm, Thương, Búa, Phi tiêu), nâng bằng linh khí ở Ông Thợ Rèn. {0}Hoàn lại: {1} vàng, {2} linh khí.',
-      phan.length ? G.t('Đã đổi {0}. ', phan.join(', ')) : '', h.vang | 0, Math.floor(num(h.lk, 0)));
+    const h = sv && sv.heMoiBao, c = sv && sv.canLaiBao;
+    if (sv) { delete sv.heMoiBao; delete sv.canLaiBao; }
+    const cau = [];
+    if (h && typeof h === 'object') {
+      const phan = [];
+      if (h.vk) phan.push(G.t('{0} vũ khí trùng', h.vk));
+      if (h.ao) phan.push(G.t('{0} món quần áo cũ', h.ao));
+      cau.push(G.t('Vũ khí nay cố định 4 món (Kiếm, Thương, Búa, Phi tiêu), nâng bằng linh khí ở Ông Thợ Rèn. {0}Hoàn lại: {1} vàng, {2} linh khí.',
+        phan.length ? G.t('Đã đổi {0}. ', phan.join(', ')) : '', h.vang | 0, Math.floor(num(h.lk, 0))));
+    }
+    if (c && typeof c === 'object') {
+      const ds = [];
+      if (c.vang > 0) ds.push(G.t('{0} vàng', c.vang | 0));
+      if (c.lk > 0) ds.push(G.t('{0} linh khí', Math.floor(c.lk)));
+      if (c.quang > 0) ds.push(G.t('{0} quặng', c.quang | 0));
+      if (c.nl > 0) ds.push(G.t('{0} nguyên liệu', c.nl | 0));
+      const p = [G.t('Đã cân lại đồ theo luật mới.')];
+      if (ds.length) p.push(G.t('Hoàn lại: {0}.', ds.join(', ')));
+      if (c.diem) p.push(G.t('Điểm kỹ năng đã trả lại, con phân lại ở Cụ Đồ nhé.'));
+      if (c.chuong) p.push(G.t('Điểm chưởng đã trả lại, học lại ở Cụ Đồ nhé.'));
+      cau.push(p.join(' '));
+    }
+    return cau.length ? cau.join(' ') : null;
+  };
+
+  // ---------- ĐỢT 4: CÂN LẠI ĐỒ THEO LUẬT MỚI (YEU-CAU-4-RESET-CAN-BANG.md; phiên bản G.SAVE_CAN_LAI ở js/engine.js) ----------
+  // Chạy MỘT lần cho mọi bản lưu (máy + mây, kể cả bản đã chuyển ở đợt 1), sau VM.chuyen / VM.chuan. Không đụng vàng, linh khí, cấp,
+  // sao ải, tiến độ vùng (chỉ CỘNG phần hoàn lại).
+  const CAN_LAI_V = () => G.SAVE_CAN_LAI || 1;
+  const sao = (v) => JSON.parse(JSON.stringify(v));
+  // Số liệu thô của bản lưu đưa vào, chụp TRƯỚC phần sửa của js/engine.js (phần đó kẹp mài về G.MAX_SHARPEN, trả điểm kỹ năng sai luật
+  // mà không ghi lại): mài cao nhất mỗi loại vũ khí, điểm kỹ năng và cây chưởng của Zed.
+  function chupTho(s) {
+    const o = { mai: {}, sk: null, ch: null };
+    for (const w of Array.isArray(s.weapons) ? s.weapons : []) {
+      if (!w || typeof w !== 'object' || LOAI.indexOf(w.type) < 0) continue;
+      const m = Math.floor(num(w.sharpen, 0));
+      if (m > (o.mai[w.type] | 0)) o.mai[w.type] = m;
+    }
+    const hs = s.heroes && typeof s.heroes === 'object' ? s.heroes.smith : null;
+    if (hs && typeof hs === 'object') {
+      try { o.sk = JSON.stringify(hs.sk || null); } catch (e) { o.sk = null; }
+      try { o.ch = JSON.stringify(hs.ch && hs.ch.n ? hs.ch.n : null); } catch (e) { o.ch = null; }
+    }
+    return o;
+  }
+  // Mài từ cấp a lên b (a < b) tốn bao nhiêu (để hoàn khi kẹp mài vượt mức tối đa).
+  function giaMai(a, b) {
+    const t = { ore: 0, gold: 0, mat: [0, 0, 0] };
+    for (let n = a; n < b && n < 60; n++) {
+      const c = G.sharpenFull ? G.sharpenFull(n) : { ore: 0, gold: 0, mat: [0, 0, 0] };
+      t.ore += c.ore | 0; t.gold += c.gold | 0;
+      for (let i = 0; i < 3; i++) t.mat[i] += (c.mat && c.mat[i]) | 0;
+    }
+    return t;
+  }
+  // Phần hoàn của đợt 1 bị SÓT: G.fixSave của js/engine.js bù trường thiếu từ G.newSave() (đã có heMoi = 1), nên bản lưu cũ nhận cờ
+  // heMoi = 1 ngay trong lần nạp đầu và VM.chuyen không bao giờ chạy (không hoàn vàng / linh khí cho vũ khí trùng, bậc màu, quần áo cũ;
+  // mỗi loại giữ món đầu danh sách thay vì món cấp cao nhất). Bản gốc trước khi chuyển vẫn nằm trên máy ở khoá KHOA_TRUOC:
+  // tính lại phần hoàn từ bản đó, chỉ khi chắc là cùng một bản lưu (cùng chủ, số thứ tự đồ không lùi, sao ải cũ đều còn, vũ khí cũ còn
+  // đó với số quái hạ không ít hơn). Trả về { vang, lk, vk, ao, giu: { loại: { st, he, mai } } } hoặc null.
+  function hoanDot1(s, goc) {
+    let raw = null;
+    try { raw = window.localStorage ? window.localStorage.getItem(KHOA_TRUOC) : null; } catch (e) { raw = null; }
+    if (!raw) return null;
+    let b = null;
+    try { b = JSON.parse(raw); } catch (e) { return null; }
+    if (!b || typeof b !== 'object' || Array.isArray(b) || b.v !== 1 || b.heMoi === 1) return null;
+    if (b.owner && s.owner && b.owner !== s.owner) return null;
+    if (num(s.nextId, 0) < num(b.nextId, 0)) return null;
+    const sb = b.stars && typeof b.stars === 'object' ? b.stars : {}, ss = s.stars && typeof s.stars === 'object' ? s.stars : {};
+    for (const k in sb) if (!ss[k]) return null;
+    const wb = Array.isArray(b.weapons) ? b.weapons : [], ws = Array.isArray(s.weapons) ? s.weapons : [];
+    const cung = ws.some((w) => w && wb.some((x) => x && x.id === w.id && x.type === w.type && num(w.kills, 0) >= num(x.kills, 0)));
+    if (!cung) return null;
+    const c = goc(sao(b)); // phần sửa của js/engine.js + js/linhkhi.js (mốc dấu ấn), như lần nạp đợt 1
+    if (!c || typeof c !== 'object' || c.v !== 1) return null;
+    const hoan = VM.chuyen(c);
+    const giu = {};
+    for (const w of c.weapons || []) { const st = G.wStage(w); giu[w.type] = { st, he: st > 0 ? w.branch : null, mai: w.sharpen | 0 }; }
+    return { vang: hoan.vang | 0, lk: r1(num(hoan.lk, 0)), vk: hoan.vk | 0, ao: hoan.ao | 0, giu };
+  }
+  // Cân lại một bản lưu (đã qua VM.chuan). tho: chupTho của bản đưa vào; hd: hoanDot1 (có thể null). Trả về dấu báo { vang, lk, ... }.
+  VM.canLai = function (s, tho, hd) {
+    tho = tho || { mai: {} };
+    const bao = { vang: 0, lk: 0, quang: 0, nl: 0, diem: false, chuong: false };
+    // 0. phần hoàn đợt 1 bị sót (xem hoanDot1)
+    if (hd) {
+      s.gold = Math.max(0, Math.floor(num(s.gold, 0))) + hd.vang; bao.vang += hd.vang;
+      s.linhKhi = r1(VM.lk(s) + hd.lk); bao.lk += hd.lk;
+      for (const w of s.weapons) {
+        const q = hd.giu[w.type];
+        if (!q) continue;
+        if (q.st > G.wStage(w)) VM.datCap(w, q.st, q.he);
+        if (q.mai > (w.sharpen | 0)) w.sharpen = q.mai;
+        if ((tho.mai[w.type] | 0) < q.mai) tho.mai[w.type] = q.mai;
+      }
+      s.heMoiHoan = 1;
+    }
+    // 1. bốn vũ khí: dựng lại từ đầu, chỉ giữ loại, cấp, hệ, mài (và số quái đã hạ để thống kê); mọi chỉ số khác tính theo luật hiện hành
+    const maxMai = G.MAX_SHARPEN || 15;
+    s.weapons = s.weapons.map((w) => {
+      const st = G.wStage(w), he = st > 0 && G.EL[w.branch] ? w.branch : null;
+      let mai = Math.max(Math.floor(num(w.sharpen, 0)), tho.mai[w.type] | 0, 0);
+      if (mai > maxMai) {
+        const t = giaMai(maxMai, mai);
+        s.ore = Math.max(0, Math.floor(num(s.ore, 0))) + t.ore; bao.quang += t.ore;
+        s.gold = Math.max(0, Math.floor(num(s.gold, 0))) + t.gold; bao.vang += t.gold;
+        if (!Array.isArray(s.mats)) s.mats = [0, 0, 0];
+        for (let i = 0; i < 3; i++) { s.mats[i] = Math.max(0, num(s.mats[i], 0)) + t.mat[i]; bao.nl += t.mat[i]; }
+        mai = maxMai;
+      }
+      const nw = {
+        id: w.id, type: w.type, family: CFG.family[w.type] | 0, rarity: 0, gold: 0,
+        marks: { fire: 0, poison: 0, ice: 0 }, branch: null, sharpen: mai, name: null, title: '',
+        kills: Math.max(0, Math.floor(num(w.kills, 0))), bossKills: w.bossKills && typeof w.bossKills === 'object' && !Array.isArray(w.bossKills) ? w.bossKills : {},
+        affixes: [], power: null,
+      };
+      VM.datCap(nw, st, he);
+      if (G.linkTier) G.linkTier(nw);
+      return nw;
+    });
+    s.carry = s.vkThu.map((t) => { const w = s.weapons.find((x) => x.type === t); return w ? w.id : null; }).filter((id) => id != null);
+    // 2. trang phục: chỉ 4 bộ; bộ đã mở = đúng các trùm vùng đã hạ (mọi độ khó); bộ không còn mở thì hoàn linh khí + vàng đã nâng
+    if (!s.zed || typeof s.zed !== 'object' || Array.isArray(s.zed)) s.zed = { v: 1, hoc: {} };
+    const z = s.zed, ha = (r) => !!((s.stars && s.stars[r + '-4']) || (s.stars2 && s.stars2[r + '-4']));
+    const boMo = {};
+    for (const k of G.ZED_BO_KEYS || []) { if (k === 'ninja') continue; const r = G.zedBoVung(k); if (r >= 0 && ha(r)) boMo[k] = 1; }
+    const moCu = z.boMo && typeof z.boMo === 'object' ? z.boMo : {};
+    for (const k in boMo) if (!moCu[k]) z.boBao = 1; // mở bù: làng báo một lần (cách js/engine.js đang làm)
+    if (Object.keys(boMo).length) z.boMo = boMo; else delete z.boMo;
+    if (z.bo && (z.bo === 'ninja' || !G.ZED_BO || !G.ZED_BO[z.bo] || !boMo[z.bo])) delete z.bo;
+    if (z.boBao !== 1 || !z.boMo) delete z.boBao;
+    const bc = s.boCap && typeof s.boCap === 'object' ? s.boCap : {};
+    for (const k of Object.keys(bc)) {
+      if (k === 'ninja' || boMo[k]) continue;
+      for (let l = 0; l < (bc[k] | 0); l++) { const g = VM.boGia(l); if (g) { s.gold += g.vang; bao.vang += g.vang; s.linhKhi = r1(VM.lk(s) + g.lk); bao.lk += g.lk; } }
+      delete bc[k];
+    }
+    boAoCu(s); // mã đồ mặc cũ (outfit, owned, helm, armor, charm)
+    // 3. chỉ số nhân vật: tính lúc dựng trận từ cấp + điểm kỹ năng (js/combat.js G.buildPlayer), không lưu; ở đây chỉ kiểm cấp,
+    //    kinh nghiệm, điểm. Điểm sai luật đã được js/engine.js / js/chuong.js trả lại khi sửa: so với bản đưa vào để báo người chơi.
+    const hs = s.heroes && s.heroes.smith;
+    if (hs) {
+      hs.lvl = kep(Math.floor(num(hs.lvl, 1)), 1, G.MAX_LEVEL);
+      hs.xp = Math.max(0, num(hs.xp, 0));
+      while (hs.lvl < G.MAX_LEVEL && hs.xp >= G.xpNeed(hs.lvl)) { hs.xp -= G.xpNeed(hs.lvl); hs.lvl++; } // kinh nghiệm thừa (không mất cấp)
+      const sk = hs.sk || {};
+      let tong = 0;
+      for (const b of G.SKEYS) { sk[b] = kep(Math.floor(num(sk[b], 0)), 0, G.SKILLS[b].nodes.length); tong += sk[b]; }
+      if (tong > Math.floor(hs.lvl / 3)) { for (const b of G.SKEYS) sk[b] = 0; }
+      hs.sk = { atk: sk.atk, def: sk.def, elem: sk.elem };
+      if (G.chuong) G.chuong.fix(hs, 'smith');
+      let skCu = null, chCu = null;
+      try { skCu = tho.sk ? JSON.parse(tho.sk) : null; } catch (e) { skCu = null; }
+      try { chCu = tho.ch ? JSON.parse(tho.ch) : null; } catch (e) { chCu = null; }
+      const dem = (o) => { let n = 0; if (o && typeof o === 'object') for (const k in o) n += Math.max(0, Math.floor(num(o[k], 0))); return n; };
+      if (skCu && dem(skCu) > dem(hs.sk)) bao.diem = true;
+      if (chCu && hs.ch && dem(chCu) > dem(hs.ch.n)) bao.chuong = true;
+    }
+    // 4. hành trang: đá tôi (không còn dùng) đổi ra quặng; nguyên liệu vùng, mảnh trùm, quặng giữ nguyên
+    const da = Math.max(0, Math.floor(num(s.stones, 0)));
+    if (da > 0) { const q = da * (G.DA_TOI_QUANG || 6); s.ore = Math.max(0, Math.floor(num(s.ore, 0))) + q; bao.quang += q; }
+    s.stones = 0;
+    for (const k of ['grit', 'hecu', '_hecu', 'heCu']) delete s[k]; // trường của luật đã bỏ
+    s.canLai = CAN_LAI_V();
+    bao.vang = Math.round(bao.vang); bao.lk = r1(bao.lk);
+    // một dòng ở làng: bản lưu đã có tiến trình (bản mới tinh không cần báo)
+    const coTienTrinh = (s.stars && Object.keys(s.stars).length) || (s.wins | 0) > 0 || (hs && hs.lvl > 1);
+    if (coTienTrinh || bao.vang || bao.lk || bao.quang) s.canLaiBao = bao; else delete s.canLaiBao;
+    return bao;
   };
 
   if (G.fixSave && !G.fixSave.vkMoiBoc) {
     const goc = G.fixSave;
     G.fixSave = function (s) {
       const vao = s && typeof s === 'object' && !Array.isArray(s);
-      if (vao && s.v === 1 && s.heMoi !== 1) saoLuu(s); // bản gốc, trước mọi phần sửa
+      // Xét cờ trên bản ĐƯA VÀO, trước phần sửa của js/engine.js (phần đó bù trường thiếu từ G.newSave(), có cả heMoi = 1).
+      const chuaChuyen = vao && s.v === 1 && s.heMoi !== 1;
+      const canLai = vao && s.v === 1 && s.canLai !== CAN_LAI_V();
+      if (chuaChuyen) saoLuu(s); // bản gốc, trước mọi phần sửa
+      let hd = null, tho = null;
+      if (canLai) {
+        try { tho = chupTho(s); } catch (e) { tho = null; }
+        // phần hoàn đợt 1 bị sót: tính TRƯỚC khi sửa bản chính (phần sửa của js/engine.js giữ cờ lỗi theo lần gọi gần nhất)
+        if (!chuaChuyen && s.heMoiHoan !== 1) { try { hd = hoanDot1(s, (x) => goc.call(this, x)); } catch (e) { hd = null; console.error('Linh Khí: không tính được phần hoàn đợt 1 (bỏ qua)', e); } }
+      }
       const r = goc.apply(this, arguments);
       if (!r || typeof r !== 'object') return r;
-      if (r.heMoi !== 1) {
+      if (chuaChuyen && r === s) {
         // chuyển trên bản sao; lỗi giữa chừng thì bản lưu không bị chuyển dở (lần nạp sau thử lại)
         try {
           const c = JSON.parse(JSON.stringify(r));
           VM.chuyen(c);
+          c.heMoiHoan = 1;
           for (const k of Object.keys(r)) if (!(k in c)) delete r[k];
           Object.assign(r, c);
         } catch (e) { console.error('Linh Khí: lỗi khi chuyển bản lưu sang hệ thống mới (giữ nguyên bản lưu)', e); }
       }
       try { VM.chuan(r); } catch (e) { console.error('Linh Khí: lỗi khi sửa vũ khí của bản lưu hệ thống mới', e); }
+      if (canLai && r === s) {
+        // cân lại trên bản sao; lỗi giữa chừng thì giữ nguyên (lần nạp sau thử lại)
+        try {
+          const c = JSON.parse(JSON.stringify(r));
+          VM.canLai(c, tho, hd);
+          for (const k of Object.keys(r)) if (!(k in c)) delete r[k];
+          Object.assign(r, c);
+          if (G.linkTier) for (const w of r.weapons) G.linkTier(w);
+        } catch (e) { console.error('Linh Khí: lỗi khi cân lại đồ theo luật mới (giữ nguyên bản lưu)', e); }
+      } else if (r !== s && r.canLai !== CAN_LAI_V()) r.canLai = CAN_LAI_V(); // bản mới thay bản hỏng: không có gì để cân lại
       return r;
     };
     G.fixSave.vkMoiBoc = true;
@@ -552,8 +762,13 @@
     if (g) {
       const why = VM.boDuoc(sv, bo);
       ui.text(G.t('Lên cấp {0}: {1} linh khí + {2} vàng', cap + 1, g.lk, g.vang), x, y + 9, { size: 7, bold: true, color: why ? WARN : GOOD });
-      if (!ro && T.sbtn(x + wd - 92, y, 90, 15, why && why !== 'Thiếu linh khí' && why !== 'Thiếu vàng' ? why : 'Nâng cấp bộ', { size: 7, pad: 1, primary: !why, disabled: !!why })) {
+      if (!ro && T.sbtn(x + wd - 92, y, 90, 15, why && why !== 'Thiếu linh khí' && why !== 'Thiếu vàng' && why !== 'Thiếu mảnh trùm' ? why : 'Nâng cấp bộ', { size: 7, pad: 1, primary: !why, disabled: !!why })) {
         if (VM.nangBo(sv, bo)) { G.persist(); G.sfx('evolve'); say(G.t('{0} lên cấp {1}!', G.tv(B.ten), cap + 1)); }
+      }
+      if (g.manh > 0) { // đợt 4: mảnh trùm (dòng riêng để không đè nút)
+        const co = VM.manh(sv, bo), reg = G.REGIONS[VM.boVungManh(bo)];
+        tx(G.t('và {0} mảnh {1} (đang có {2}; hạ trùm vùng {3} được 3 mảnh)', g.manh, reg.bossName, Math.floor(co), G.tv(reg.name)), x, y + 19, wd - 96, { size: 6.5, color: co < g.manh ? WARN : SOFT });
+        y += 10;
       }
       y += 17;
     } else { ui.text('Bộ này đã nâng tối đa.', x, y + 9, { size: 7, bold: true, color: GOOD }); y += 13; }

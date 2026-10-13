@@ -628,7 +628,10 @@
     const P = W.P;
     if (G.boSk && !P.dead && !W.over && !W.safe) G.boSk.phanDon(P, amt, src); // skill bộ Lâu đài "Phản đòn": vừa lộn thì phản đòn (js/bo_skill.js)
     if (P.inv > 0 || P.dead || W.over || W.safe) return false; // W.safe: đã hạ trùm, đang đi dạo chờ vào cổng
-    if (G.boSk && G.boSk.chan(P)) return false; // skill bộ Biển "Khiên nước" chặn trọn đòn này (js/bo_skill.js)
+    // skill bộ Biển "Khiên nước" (js/bo_skill.js): true = chặn trọn đòn này; số = đòn quá to, khiên vỡ, phần vượt vẫn trúng (đợt 4)
+    const chanK = G.boSk ? G.boSk.chan(P, amt) : false;
+    if (chanK === true) return false;
+    if (typeof chanK === 'number') amt = chanK;
     const raw = amt;
     amt *= 1 - Math.min(0.75, P.dr);
     if (G.boSk) amt *= G.boSk.nhan(P); // skill bộ Lâu đài "Giáp bạc"

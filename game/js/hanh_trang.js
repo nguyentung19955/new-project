@@ -225,14 +225,14 @@
   // ---------- 4. Tài nguyên ----------
   function resInfo() {
     const R = G.REGIONS;
+    // Đợt 4: chữ theo luật mới (bỏ nâng bậc, trang phục cũ, đá tôi; mảnh trùm dùng nâng bộ, gỗ linh mài +6)
     const a = [
-      ['gold', 'Mài, nâng bậc, nâng lò, may và mua trang phục, đặt lại điểm kỹ năng', 'Qua ải, hạ quái, bán vũ khí cho Bà Hàng Xén'],
-      ['ore', 'Mài vũ khí, nâng vũ khí lên bậc Lam, nâng lò cấp 4', 'Qua ải (nhiều sao được nhiều hơn), rương báu, phòng thử thách, thương nhân'],
-      ['stone', 'Tôi lại đổi hệ vũ khí, nâng lên Tím và Vàng, nâng bậc trang phục', 'Ba sao lần đầu, đôi khi sau ải, phòng thử thách'],
+      ['gold', 'Mài, nâng lò, nâng bộ trang phục, đổi nguyên liệu, đặt lại điểm kỹ năng', 'Qua ải, hạ quái, tinh anh, trùm, phòng thử thách'],
+      ['ore', 'Mài vũ khí, nâng lò cấp 4', 'Qua ải (nhiều sao được nhiều hơn), rương báu, phòng thử thách, thương nhân'],
     ];
-    const matUse = ['Nâng lò cấp 2, nâng vũ khí lên Lam, may và nâng đồ Bộ Rừng Già', 'Mài từ +5 tới +9, nâng vũ khí lên Tím, nâng lò cấp 3, may và nâng đồ Bộ Hang Biển', 'Mài từ +10, nâng lò cấp 4, may và nâng đồ Bộ Lâu Đài'];
+    const matUse = ['Nâng lò cấp 2, mài +5 lên +6', 'Mài từ +6 tới +9, nâng lò cấp 3', 'Mài từ +9 trở lên, nâng lò cấp 4'];
     R.forEach((r, i) => a.push(['mat' + i, matUse[i] || 'Nguyên liệu vùng', G.t('Qua ải {0}', r.name)]));
-    R.forEach((r, i) => a.push(['shard' + i, 'Nâng vũ khí lên Vàng (4 mảnh), may đồ bộ, mở cấp cánh', G.t('Hạ trùm vùng {0} (ải 5 {1})', r.bossName, r.name)]));
+    R.forEach((r, i) => a.push(['shard' + i, i === 0 ? 'Nâng bộ Ninja và bộ Rừng lên cấp 2, 3' : 'Nâng bộ của vùng này lên cấp 2, 3', G.t('Hạ trùm vùng {0} (ải 5 {1})', r.bossName, r.name)]));
     return a;
   }
   function resTab(sv) {

@@ -1,4 +1,12 @@
 // Dữ liệu game: hệ, vũ khí, hero, quái, vùng, trang bị. Mọi con số cân bằng nằm ở đây.
+// ===== MỤC LỤC BẢNG CÂN BẰNG (đợt 4, YEU-CAU-4-RESET-CAN-BANG.md; tính thử số liệu: node tools/can-bang/tinh.js) =====
+//   Vũ khí: G.WTYPES (đòn gốc), G.STAGE_MULT (hệ số cấp), G.VK_MOI (giá linh khí nâng / đổi hệ) — nhịp, hệ số từng nhát: G.MOVES (js/moves.js)
+//   Mài, lò: G.sharpenCost / G.sharpenFull, G.MAX_SHARPEN, G.FORGE_CAP, G.FORGE_UP; đá tôi đổi quặng: G.DA_TOI_QUANG
+//   Nhân vật: G.HEROES.smith (máu, mana gốc), G.LVL_HP, G.LVL_DMG, G.xpNeed, G.MAX_LEVEL, G.SKILLS (cây kỹ năng), G.ZED_DAY (bạn dạy)
+//   Chưởng: G.CHUONG (js/chuong.js) · Skill bộ: G.SKILL_BO · Nâng bộ: G.BO_MOI
+//   Quái, trùm: G.ROLES, G.STAGE_K, G.stageStats, G.MINI_HP, G.BOSS_HP_OF, G.DIFF2 · Khuyên dùng: G.STAGE_REC, G.grindMult
+//   Thu nhập: G.LINHKHI (linh khí hạ tinh anh / trùm), G.ROI_MOI + G.DROP (thưởng thay đồ rơi), G.stageStats (kinh nghiệm, vàng qua ải),
+//     G.DOI_NL (đổi vàng lấy nguyên liệu); quặng / nguyên liệu qua ải: js/stage.js settle (3 + sao + 2 × vùng quặng, 5 + ải nguyên liệu)
 (function () {
   const G = (window.G = window.G || {});
   G.W = 480;
@@ -86,8 +94,11 @@
     // Người chơi đổi được vũ khí cầm đầu ("Cầm đầu" ở Ông Thợ Rèn / Hành trang); bản lưu cũ: món đang mang lên trước.
     thuMacDinh: ['sword', 'bow', 'spear', 'hammer'],
     family: { sword: 0, spear: 0, hammer: 0, bow: 0 }, // dòng cố định (đợt 2: mỗi loại một dòng; hình chính dùng bộ zed-vk)
-    // Linh khí để lên Mầm, Thành hình, Thức tỉnh. Cộng dồn 60 / 400 / 900 = đúng mốc dấu ấn cũ G.MARKS của MỘT vũ khí.
-    gia: [60, 340, 500],
+    // Linh khí để lên Mầm, Thành hình, Thức tỉnh.
+    // Đợt 4 (soát cân bằng, tools/can-bang/tinh.js): 60/340/500 → 100/400/800 (cộng dồn 100/500/1.300). Linh khí nay là MỘT túi chung,
+    // lại thêm phần thưởng thay đồ rơi, nên thu nhập gấp ~2-3 lần dấu ấn của một vũ khí ở luật cũ: giá cũ cho Mầm ngay sau ải 1-1,
+    // Thức tỉnh ngay đầu vùng hai. Giá mới: Mầm sau ~2 ải, Thành hình quanh trùm vùng 1, Thức tỉnh (món chính) quanh 2-1..2-4.
+    gia: [100, 400, 800],
     // Đổi hệ khi đang ở Mầm / Thành hình / Thức tỉnh (giữ nguyên cấp).
     doiHe: [0, 20, 60, 120],
   };
@@ -97,9 +108,14 @@
   G.RARITY[0].maxStage = 3;
   G.STAGE_MULT = [1, 1.15, 1.35, 1.6];
   // Nâng cấp bộ trang phục Zed: 3 cấp, mỗi cấp tốn linh khí + vàng (giống nhau cho cả 4 bộ).
+  // Đợt 4 (soát cân bằng): vàng 300/800/1.800 → 500/1.500/3.000 (mô hình tools/can-bang/tinh.js: giữa vùng hai đã dư ~7.000 vàng không có
+  // chỗ tiêu); thêm MẢNH TRÙM (manh) ở cấp 2, 3 — mảnh trùm của vùng mở bộ đó (bộ Ninja dùng mảnh Mộc Tinh), mỗi lần hạ trùm vùng +3 mảnh:
+  // cấp 1 mua được ngay khi vừa mở bộ, cấp 2 cần 3 mảnh (đủ ngay lần hạ trùm đầu), cấp 3 cần 6 mảnh (phải cày lại trùm vùng thêm 2 lần).
+  // Mảnh trùm trước đây chỉ dùng để nâng bậc Vàng (đã bỏ ở đợt 1) nên đang vô dụng.
   G.BO_MOI = {
     max: 3,
-    gia: [{ lk: 80, vang: 300 }, { lk: 200, vang: 800 }, { lk: 400, vang: 1800 }],
+    gia: [{ lk: 80, vang: 500, manh: 0 }, { lk: 200, vang: 1500, manh: 3 }, { lk: 400, vang: 3000, manh: 6 }],
+    vungManh: { ninja: 0, rung: 0, bien: 1, lau: 2 }, // mảnh trùm của vùng nào
   };
   // ===== HỆ THỐNG MỚI ĐỢT 3: SKILL RIÊNG CỦA 4 BỘ TRANG PHỤC (docs/review/ke-hoach-cai-thien/he-thong-moi/YEU-CAU-3-SKILL-BO.md) =====
   // BẢNG HẰNG SỐ DUY NHẤT để chỉnh cân bằng skill bộ. Mỗi bộ 3 skill theo thứ tự cấp 1, 2, 3; cấp sau giữ skill cấp trước.
@@ -109,7 +125,8 @@
   G.SKILL_BO = {
     ninja: [
       { ma: 'bongLuot', ten: 'Bóng lướt', cuaSo: 1, them: 0.3 },          // lộn xong, đòn đầu tiên trong cuaSo giây +them sát thương
-      { ma: 'phanThan', ten: 'Phân thân', giay: 1.5 },                    // lộn để lại bóng đứng tại chỗ giay giây, quái thường nhắm vào bóng
+      // Đợt 4: thêm hồi 4 giây (trước không hồi: lộn hồi ~1 giây nên lộn liên tục gần như lúc nào cũng có bóng hút quái)
+      { ma: 'phanThan', ten: 'Phân thân', giay: 1.5, hoi: 4 },            // lộn để lại bóng đứng tại chỗ giay giây, quái thường nhắm vào bóng; hồi hoi giây
       { ma: 'amSat', ten: 'Ám sát', hoi: 4 },                             // đánh trúng từ sau lưng quái: chắc chắn chí mạng (x2), hồi hoi giây
     ],
     rung: [
@@ -118,7 +135,9 @@
       { ma: 'bayDayLeo', ten: 'Bẫy dây leo', giay: 1.5, trum: 0.4 },      // đòn giữ rồi thả trói chân quái trúng đòn giay giây (trùm: giay x trum)
     ],
     bien: [
-      { ma: 'khienNuoc', ten: 'Khiên nước', hoi: 10 },                    // có 1 lớp khiên chặn trọn 1 đòn; vỡ thì sau hoi giây có lại (vào ải có sẵn)
+      // Đợt 4: khiên đỡ tối đa toiDa x máu tối đa mỗi lần (0,25) — trước chặn trọn cả đòn trùm vùng ba (~150-195 gốc, ~50-60% máu Zed)
+      // mỗi 10 giây. Đòn quái thường (~15-20% máu) vẫn bị chặn trọn; đòn to hơn thì khiên vỡ, phần vượt vẫn trúng.
+      { ma: 'khienNuoc', ten: 'Khiên nước', hoi: 10, toiDa: 0.25 },       // có 1 lớp khiên chặn 1 đòn (tối đa toiDa x máu tối đa); vỡ thì sau hoi giây có lại (vào ải có sẵn)
       { ma: 'songDoi', ten: 'Sóng dội', banKinh: 40, day: 24 },           // lộn đẩy lùi quái trong banKinh ra thêm day điểm ảnh (trùm không bị đẩy)
       { ma: 'thuyTrieu', ten: 'Thuỷ triều', giay: 2, banKinh: 60, cham: 0.5 }, // khiên vỡ: quái trong banKinh chậm còn cham x tốc độ trong giay giây
     ],
@@ -363,7 +382,10 @@
   G.xpNeed = (lvl) => 50 + 50 * lvl;
   // Mỗi cấp hero: sát thương +1,5% và máu +3,5% (trước là 1% và 3%), để cày lên cấp thấy rõ là mạnh lên.
   G.LVL_DMG = 0.015;
-  G.LVL_HP = 0.035;
+  // Đợt 4 (soát cân bằng, tools/can-bang/tinh.js): máu mỗi cấp 3,5% → 6%. Đợt 1 bỏ quần áo cũ (áo vùng ba Vàng +187 máu, ~15% giảm sát thương)
+  // mà chưa bù máu: ở vùng ba trùm (150-195 mỗi đòn gốc) hạ Zed cấp 40 (260 máu) trong 2 đòn, và Sức mạnh tối đa (491) không với tới
+  // khuyên dùng 3-5 (560). Nay Zed cấp 32 ~315 máu, đòn trùm vùng ba ~50-60% máu như thiết kế cũ; Sức mạnh cấp 40 đủ khuyên dùng.
+  G.LVL_HP = 0.06;
 
   G.REGIONS = [
     {
@@ -509,9 +531,14 @@
   G.sharpenFull = function (n) {
     const c = G.sharpenCost(n), cost = { ore: c.ore, gold: c.gold, mat: [0, 0, 0] };
     // Phiên cân bằng (mục 3): mài +9 lên +10 nay tốn đá lửa (trước tốn vảy cá vùng hai: người chơi ở vùng ba kẹt vì thiếu vảy cá).
-    if (c.mat) cost.mat[n < 9 ? 1 : 2] = c.mat;
+    // Đợt 4: mài +5 lên +6 tốn gỗ linh (trước vảy cá). Gỗ linh chỉ còn dùng nâng lò cấp 2 (6 món) nên dồn hàng trăm không có chỗ tiêu;
+    // lò cấp 2 mài tới +6, đúng lúc đang ở vùng một nên gỗ linh có sẵn.
+    if (c.mat) cost.mat[n < 6 ? 0 : n < 9 ? 1 : 2] = c.mat;
     return cost;
   };
+  // Đợt 4: ĐÁ TÔI bỏ hẳn (chỉ dùng cho Tôi lại / nâng bậc Tím, Vàng / nâng bậc trang phục — đều bỏ ở đợt 1, 2). Chỗ nào trước cho
+  // 1 đá tôi nay cho bấy nhiêu quặng (quặng là thứ thiếu nhất khi mài); đá tôi còn trong bản lưu đổi ra quặng cùng tỉ lệ (js/vk_moi.js).
+  G.DA_TOI_QUANG = 6;
   // Đợt 2: bỏ G.TIER_UP, G.goldCost (nâng bậc Lam / Tím / Vàng ở Ông Thợ Rèn của luật cũ).
   // ĐỔI VÀNG LẤY NGUYÊN LIỆU VÙNG ĐÃ QUA (mục 3): Bà Hàng Xén (thẻ Nguyên liệu) và Thương nhân trong ải bán nguyên liệu của vùng
   // đã hạ trùm, giá gia vàng một món. Giới hạn: kho hàng có tối đa max lượt; mỗi ải thắng (cả chơi lại) thêm them lượt.
