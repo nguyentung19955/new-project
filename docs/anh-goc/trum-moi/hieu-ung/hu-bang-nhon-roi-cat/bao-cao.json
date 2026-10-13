@@ -1,0 +1,430 @@
+{
+ "anh": "hu-bang-nhon-roi.png",
+ "co_anh": [
+  2232,
+  784
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 6,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 26,
+  "vien_khu": 5074,
+  "nga_mau_nen_trong_hinh": 235
+ },
+ "manh_bo": [
+  {
+   "khung_bao": [
+    1222,
+    358,
+    1237,
+    374
+   ],
+   "diem_anh": 12
+  },
+  {
+   "khung_bao": [
+    1319,
+    371,
+    1334,
+    385
+   ],
+   "diem_anh": 4
+  },
+  {
+   "khung_bao": [
+    1343,
+    379,
+    1357,
+    393
+   ],
+   "diem_anh": 4
+  },
+  {
+   "khung_bao": [
+    840,
+    383,
+    853,
+    396
+   ],
+   "diem_anh": 1
+  },
+  {
+   "khung_bao": [
+    803,
+    399,
+    818,
+    417
+   ],
+   "diem_anh": 14
+  },
+  {
+   "khung_bao": [
+    969,
+    407,
+    990,
+    421
+   ],
+   "diem_anh": 6
+  },
+  {
+   "khung_bao": [
+    1292,
+    407,
+    1314,
+    439
+   ],
+   "diem_anh": 100
+  },
+  {
+   "khung_bao": [
+    1660,
+    439,
+    1683,
+    466
+   ],
+   "diem_anh": 22
+  },
+  {
+   "khung_bao": [
+    1706,
+    443,
+    1720,
+    458
+   ],
+   "diem_anh": 6
+  },
+  {
+   "khung_bao": [
+    1146,
+    462,
+    1165,
+    482
+   ],
+   "diem_anh": 30
+  },
+  {
+   "khung_bao": [
+    1628,
+    463,
+    1643,
+    477
+   ],
+   "diem_anh": 4
+  },
+  {
+   "khung_bao": [
+    1269,
+    466,
+    1292,
+    497
+   ],
+   "diem_anh": 132
+  },
+  {
+   "khung_bao": [
+    977,
+    470,
+    991,
+    486
+   ],
+   "diem_anh": 6
+  },
+  {
+   "khung_bao": [
+    1034,
+    471,
+    1050,
+    485
+   ],
+   "diem_anh": 5
+  },
+  {
+   "khung_bao": [
+    1625,
+    479,
+    1640,
+    493
+   ],
+   "diem_anh": 6
+  },
+  {
+   "khung_bao": [
+    1991,
+    495,
+    2006,
+    510
+   ],
+   "diem_anh": 9
+  },
+  {
+   "khung_bao": [
+    803,
+    527,
+    824,
+    549
+   ],
+   "diem_anh": 47
+  },
+  {
+   "khung_bao": [
+    1344,
+    543,
+    1369,
+    562
+   ],
+   "diem_anh": 15
+  },
+  {
+   "khung_bao": [
+    1682,
+    544,
+    1696,
+    558
+   ],
+   "diem_anh": 3
+  },
+  {
+   "khung_bao": [
+    2087,
+    544,
+    2101,
+    558
+   ],
+   "diem_anh": 4
+  },
+  {
+   "khung_bao": [
+    1947,
+    547,
+    1961,
+    562
+   ],
+   "diem_anh": 4
+  },
+  {
+   "khung_bao": [
+    1232,
+    548,
+    1247,
+    561
+   ],
+   "diem_anh": 3
+  },
+  {
+   "khung_bao": [
+    1048,
+    552,
+    1069,
+    575
+   ],
+   "diem_anh": 25
+  },
+  {
+   "khung_bao": [
+    1657,
+    570,
+    1677,
+    594
+   ],
+   "diem_anh": 39
+  },
+  {
+   "khung_bao": [
+    2002,
+    571,
+    2018,
+    588
+   ],
+   "diem_anh": 12
+  },
+  {
+   "khung_bao": [
+    2035,
+    584,
+    2058,
+    600
+   ],
+   "diem_anh": 35
+  },
+  {
+   "khung_bao": [
+    1521,
+    612,
+    1551,
+    638
+   ],
+   "diem_anh": 78
+  },
+  {
+   "khung_bao": [
+    1549,
+    612,
+    1563,
+    627
+   ],
+   "diem_anh": 6
+  },
+  {
+   "khung_bao": [
+    1764,
+    612,
+    1788,
+    631
+   ],
+   "diem_anh": 45
+  },
+  {
+   "khung_bao": [
+    2011,
+    613,
+    2024,
+    626
+   ],
+   "diem_anh": 1
+  }
+ ],
+ "loi": [],
+ "canh_bao": [
+  "Mảnh 100 điểm ảnh ở [1292, 407, 1314, 439] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 132 điểm ảnh ở [1269, 466, 1292, 497] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 47 điểm ảnh ở [803, 527, 824, 549] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 78 điểm ảnh ở [1521, 612, 1551, 638] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 45 điểm ảnh ở [1764, 612, 1788, 631] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Hàng 1 khung 1 chỉ 4903 điểm ảnh (trung vị 25278) — có thể bị tách mất mảnh",
+  "Hàng 1 khung 1 cao 120 (trung vị 348) — lệch cỡ >15%",
+  "Hàng 1 khung 2 cao 494 (trung vị 348) — lệch cỡ >15%",
+  "Hàng 1 khung 3 cao 472 (trung vị 348) — lệch cỡ >15%",
+  "Hàng 1 khung 6 chỉ 8912 điểm ảnh (trung vị 25278) — có thể bị tách mất mảnh",
+  "Hàng 1 khung 6 cao 233 (trung vị 348) — lệch cỡ >15%"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "hu-bang-nhon-roi",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      80,
+      569,
+      347,
+      689
+     ],
+     "chan": [
+      213.0,
+      689
+     ],
+     "rong": 267,
+     "cao": 120,
+     "diem_anh": 4903,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "ít điểm ảnh bất thường",
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      491,
+      71,
+      635,
+      565
+     ],
+     "chan": [
+      566.0,
+      565
+     ],
+     "rong": 144,
+     "cao": 494,
+     "diem_anh": 29793,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      745,
+      219,
+      1069,
+      691
+     ],
+     "chan": [
+      907.0,
+      691
+     ],
+     "rong": 324,
+     "cao": 472,
+     "diem_anh": 46803,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1116,
+      318,
+      1446,
+      689
+     ],
+     "chan": [
+      1256.0,
+      689
+     ],
+     "rong": 330,
+     "cao": 371,
+     "diem_anh": 34560,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1499,
+      352,
+      1795,
+      677
+     ],
+     "chan": [
+      1646.5,
+      677
+     ],
+     "rong": 296,
+     "cao": 325,
+     "diem_anh": 20763,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1866,
+      441,
+      2159,
+      674
+     ],
+     "chan": [
+      2012.0,
+      674
+     ],
+     "rong": 293,
+     "cao": 233,
+     "diem_anh": 8912,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "ít điểm ảnh bất thường",
+      "cao bất thường"
+     ]
+    }
+   ]
+  }
+ ]
+}
