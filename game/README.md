@@ -169,7 +169,7 @@ Em bé mặc đồ theo năm ô: **Mũ**, **Áo**, **Đồ đeo lưng** (gùi, k
 - **Thua không làm bé mạnh thêm** (đã bỏ "Quyết tâm"). Sức mạnh chỉ đến từ cày nâng cấp: cấp hero (tối đa 40), mài vũ khí (tối đa +15, lò cấp 4), nâng bậc Thường → Lam → Tím → Vàng, tiến hóa theo linh khí, cây kỹ năng, trang phục (may, nâng bậc, cánh), nâng lò.
 - **Bảng thua chỉ nên cày gì**: Sức mạnh hiện tại so với khuyên dùng, và 2-3 gợi ý cụ thể (ví dụ "Mài Kiếm lên +6: thiếu 80 vàng", "Nâng lên Tím: thiếu 3 vảy cá — chơi lại Hang biển 2", "Còn 2 điểm kỹ năng chưa học"). Bấm gợi ý là về làng mở đúng người làng (js/upgrade.js).
 - Lên cấp chậm hơn trước (cần 50 + 50 x cấp kinh nghiệm), mỗi cấp tăng 1,5% sát thương và 3,5% máu.
-- Đi hết 15 ải lần đầu mất khoảng 3 đến 4 giờ chơi (bot đo bằng `tests/cay.py`).
+- Đi hết 15 ải lần đầu mất khoảng 3 giờ chơi, ~46 lượt (bot hệ thống mới đo bằng `tests/cay.py`, đợt 5).
 
 ## Các tệp
 
@@ -239,8 +239,9 @@ python3 tests/may.py              # lưu mây, bảng vàng, góp ý với Fireb
 python3 tests/ui_robust.py         # xoay màn hình, ẩn trang, khung hình chậm, bản lưu hỏng
 python3 tests/ui_build.py          # đóng gói rồi chơi thử cả hai tệp trong dist/
 python3 tests/smoke.py anh         # nạp game và đánh thử vài giây
-python3 tests/campaign.py          # bot tự chơi hết 15 ải để xem độ khó (thua thì cày ải trước một lượt rồi thử lại)
-python3 tests/cay.py               # cân bằng phải cày: kiểm luật sức mạnh, không còn quyết tâm, trần mới, gợi ý bảng thua; bot chơi từ đầu 12 lượt, đếm số lần chơi từng ải và tổng thời gian ("lieu": bot không nhìn lời khuyên; "--ban": bot bán đồ thừa)
+python3 tests/campaign.py          # bot (hệ thống mới, ?cloud=0) chơi một lượt 15 ải, in từng lượt + bảng từng ải: cày, thua, cấp, Sức mạnh, máu còn, đòn trùm, linh khí/vàng, mốc Mầm/Thành hình/Thức tỉnh, mốc nâng bộ ([hoa|doc|bang] [khuyen|lieu])
+python3 tests/cay.py               # cân bằng (đợt 5): luật Sức mạnh / 4 vũ khí / nâng bộ / gợi ý bảng thua; bot chơi từ đầu 12 lượt, bảng từng ải + mốc nâng cấp ("lieu": bot không nhìn lời khuyên; "--kd=4": đo lại Sức mạnh khuyên dùng từ bản lưu thật; "-v": in từng lượt)
+python3 tests/dps.py 60 8 quaimoi  # sát thương mỗi giây 4 vũ khí trên quái thật, Trắng và Thức tỉnh 3 hệ
 python3 tests/cay_nang_cap_shots.py # chụp bảng thua có gợi ý nên cày gì, và cảnh bấm gợi ý mở đúng người làng, vào docs/cay-nang-cap/
 python3 tests/mapgen.py            # bộ sinh bản đồ ải: 1000 hạt giống cho mỗi kiểu A, B, C
 python3 tests/doors.py             # luật cửa, điều kiện mở cửa Trùm, bot đi hết ải ở cả ba kiểu

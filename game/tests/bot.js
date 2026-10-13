@@ -173,12 +173,25 @@
     }
     // đổi vũ khí khi trùm kháng hệ đang dùng
     const b = W.boss;
-    if (cfg.swapOnResist && b && P.weapons.length > 1 && P.swapCd <= 0) {
-      const el = G.activeEl(P, w), o = P.weapons[1 - P.cur], oel = G.activeEl(P, o);
-      const res = (e) => e && b.layers.some((l) => l.type === 'resist' && l.el === e);
-      if ((res(el) && !res(oel)) || (oel && b.weak.includes(oel) && !b.weak.includes(el))) inp.swapP = true;
+    // Đợt 5 (hệ thống mới): 4 vũ khí xoay vòng (nút đổi chỉ sang món kế). Bot chỉ dùng 2 món đã nâng (G.botVk: món chính, món phụ;
+    // không có thì 2 món đầu vòng), chọn món muốn cầm rồi bấm đổi cho tới khi tới món đó (như người chơi bấm 1-3 lần).
+    const res = (e) => !!(b && e && b.layers.some((l) => l.type === 'resist' && l.el === e));
+    let want = -1;
+    if (P.weapons.length > 1) {
+      const dung = (S.botVk || (S.botVk = (G.botVk ? G.botVk(P) : [0, 1]).filter((i) => i >= 0 && i < P.weapons.length)));
+      const el = G.activeEl(P, w), inUse = dung.includes(P.cur);
+      if (!inUse && dung.length) want = dung[0];
+      if (cfg.swapOnResist && b) {
+        const alt = dung.filter((i) => i !== P.cur);
+        const cand = alt.find((i) => { const oel = G.activeEl(P, P.weapons[i]); return (res(el) && !res(oel)) || (oel && b.weak.includes(oel) && !b.weak.includes(el)); });
+        if (cand != null) want = cand;
+      }
+      if (want < 0 && cfg.prefer && w.type !== cfg.prefer) {
+        const pi = P.weapons.findIndex((x) => x.type === cfg.prefer);
+        if (pi >= 0 && !res(G.activeEl(P, P.weapons[pi]))) want = pi;
+      }
     }
-    if (cfg.prefer && !inp.swapP && P.swapCd <= 0 && P.weapons.length > 1 && w.type !== cfg.prefer && P.weapons[1 - P.cur].type === cfg.prefer && !(b && b.layers.some((l) => l.type === 'resist' && l.el === G.activeEl(P, P.weapons[1 - P.cur])))) inp.swapP = true;
+    if (want >= 0 && want !== P.cur && P.swapCd <= 0) inp.swapP = true;
     const dx = t.x - P.x, dy = t.y - P.y, ad = Math.abs(dx);
     if (T.ranged) {
       const want = Math.min(120, (W.x1 - W.x0) * 0.4); // phòng nhỏ thì đứng gần hơn, không chạy mãi về phía tường
@@ -226,10 +239,10 @@
       if (S.mode === 'chest') {
         let pick = G.botCfg.chest;
         if (pick === 'smart') {
-          const o = S.opts[0];
-          const same = G.save.weapons.filter((w) => (w.type === 'bow') === (o.type === 'bow'));
-          const best = Math.max(-1, ...same.map((w) => w.tier));
-          pick = o.tier > best ? 0 : G.save.ore < 14 ? 1 : 2;
+          // Đợt 5 (hệ thống mới): rương cho linh khí / quặng / bùa (js/stage.js chestOptions). Như người chơi: lấy linh khí,
+          // trừ khi quặng gần cạn (quặng là thứ mài cần nhiều nhất).
+          const iLk = S.opts.findIndex((o) => o.kind === 'lk'), iOre = S.opts.findIndex((o) => o.kind === 'ore');
+          pick = G.save.ore < 8 && iOre >= 0 ? iOre : iLk >= 0 ? iLk : 1;
         }
         tap(72 + pick * 114 + 54, 134);
       }

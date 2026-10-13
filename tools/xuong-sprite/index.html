@@ -719,7 +719,9 @@ window.G.LANG = 'vi';
     // Đợt 4 (soát cân bằng, tools/can-bang/tinh.js): 60/340/500 → 100/400/800 (cộng dồn 100/500/1.300). Linh khí nay là MỘT túi chung,
     // lại thêm phần thưởng thay đồ rơi, nên thu nhập gấp ~2-3 lần dấu ấn của một vũ khí ở luật cũ: giá cũ cho Mầm ngay sau ải 1-1,
     // Thức tỉnh ngay đầu vùng hai. Giá mới: Mầm sau ~2 ải, Thành hình quanh trùm vùng 1, Thức tỉnh (món chính) quanh 2-1..2-4.
-    gia: [100, 400, 800],
+    // Đợt 5 (bot chơi thật, tests/cay.py): 100/400/800 cho Thành hình ở 2-3 (mục tiêu: quanh trùm vùng 1) vì bot thu ~45-65 linh khí
+    // mỗi lượt và chỉ cày ~10 lượt hết vùng một (mô hình đợt 4 tính cày nhiều hơn) → Thành hình 400 → 300 (cộng dồn 100/400/1.200).
+    gia: [100, 300, 800],
     // Đổi hệ khi đang ở Mầm / Thành hình / Thức tỉnh (giữ nguyên cấp).
     doiHe: [0, 20, 60, 120],
   };
@@ -758,7 +760,10 @@ window.G.LANG = 'vi';
     bien: [
       // Đợt 4: khiên đỡ tối đa toiDa x máu tối đa mỗi lần (0,25) — trước chặn trọn cả đòn trùm vùng ba (~150-195 gốc, ~50-60% máu Zed)
       // mỗi 10 giây. Đòn quái thường (~15-20% máu) vẫn bị chặn trọn; đòn to hơn thì khiên vỡ, phần vượt vẫn trúng.
-      { ma: 'khienNuoc', ten: 'Khiên nước', hoi: 10, toiDa: 0.25 },       // có 1 lớp khiên chặn 1 đòn (tối đa toiDa x máu tối đa); vỡ thì sau hoi giây có lại (vào ải có sẵn)
+      // Đợt 5 (bot đo, tests/cay.py): 10 giây / 25% → 15 giây / 10%. Người chơi né tốt chỉ trúng ~1 đòn mỗi 20-40 giây nên khiên hồi kịp
+      // chặn gần MỌI đòn: bot đo khiên ăn 57-63% tổng sát thương ở vùng ba, thắng Hồ Tinh 21/40 so với 2/24 khi không có khiên
+      // (cùng bản lưu). Số mới: khiên ăn ~25-30% sát thương, thắng 9/40 — vẫn là skill thủ mạnh nhất nhưng không gánh cả vùng ba.
+      { ma: 'khienNuoc', ten: 'Khiên nước', hoi: 15, toiDa: 0.1 },        // có 1 lớp khiên chặn 1 đòn (tối đa toiDa x máu tối đa); vỡ thì sau hoi giây có lại (vào ải có sẵn)
       { ma: 'songDoi', ten: 'Sóng dội', banKinh: 40, day: 24 },           // lộn đẩy lùi quái trong banKinh ra thêm day điểm ảnh (trùm không bị đẩy)
       { ma: 'thuyTrieu', ten: 'Thuỷ triều', giay: 2, banKinh: 60, cham: 0.5 }, // khiên vỡ: quái trong banKinh chậm còn cham x tốc độ trong giay giây
     ],
@@ -1063,7 +1068,9 @@ window.G.LANG = 'vi';
   // bị bỏ, để tổng thời gian cày không ngắn đi quá 25%; máu trùm vùng hai tăng theo). Đã thử +8% máu vùng ba: bot không cày
   // (tests/campaign.py) lại kẹt 9-12 lượt ở 3-4/3-5 nên bỏ.
   G.STAGE_K = {
-    mob: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.57], [1.23, 1.655], [1.27, 1.76], [1.45, 2.03], [1.58, 2.14], [1.63, 2.27], [1.44, 2.43], [1.4, 2.61], [1.46, 2.78], [1.55, 2.9], [1.67, 3.04], [1.62, 2.98], [1.29, 3.0]],
+    // Đợt 5 (bot đo, tests/cay.py --kd): ải thường vùng ba dễ hơn cả Ngư Tinh (bot cần Sức mạnh ~267 / 286 / 319 ở 3-1 / 3-2 / 3-3 so với
+    // ~337 ở 2-5) — 3-1, 3-2 máu và sát thương x1,12, 3-3 x1,08 (cột trùm nhỏ của ba ải này hạ tương ứng, xem dưới).
+    mob: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.57], [1.23, 1.655], [1.27, 1.76], [1.45, 2.03], [1.58, 2.14], [1.63, 2.27], [1.44, 2.43], [1.4, 2.61], [1.64, 3.11], [1.74, 3.25], [1.8, 3.28], [1.62, 2.98], [1.29, 3.0]],
     // Sát thương trùm = sát thương quái thường của ải (đã nhân cột mob) x cột boss (js/boss.js makeBoss), nên hệ số bị nhân hai lần.
     // GĐ2 (V5, Q2): hạ riêng cột sát thương trùm nhỏ ải 2-1 (2,95 -> 2,0) và 3-1..3-4 (4,54/4,28/4,43/4,74 -> 2,0/2,1/2,0/1,8)
     // để mỗi đòn gốc không mạnh hơn trùm vùng cùng vùng (Ngư Tinh ~155, Hồ Tinh ~232) và ~45% máu bé vừa đủ khuyên dùng. Cột máu giữ nguyên.
@@ -1074,7 +1081,10 @@ window.G.LANG = 'vi';
     //    thua 3-5 tới 12 lần liền; nay ~50%, ngang Ngư Tinh).
     //  Máu trùm nhỏ vùng ba (mục 4): 8.670 · 9.260 · 10.380 · 11.790 → ~6.300 · 6.800 · 7.300 · 7.800, đều thấp hơn Hồ Tinh (8.620).
     //  Vùng hai: máu quái +10% nên Cua Đá cũng +10% máu; Ngư Tinh giữ máu cũ (~7.420, cột trùm 1,27 → 1,155).
-    boss: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.76], [1.23, 1.67], [1.27, 1.86], [1.32, 2.54], [1.44, 2.54], [1.48, 2.61], [1.31, 2.62], [1.155, 2.53], [1.44, 3.0], [1.31, 2.87], [1.17, 2.74], [1.18, 2.81], [1.29, 2.71]],
+    // Đợt 5 (bot đo): Ngư Tinh (ải 2-5) là bậc khó vọt (bot cần Sức mạnh ~337, ải 2-4 ~248, ải 3-1 ~267): máu 1,155 → 0,96, sát thương
+    // 2,53 → 1,98 (đòn gốc ~112 → ~88; đo lại lần 2: 1,04 / 2,15 vẫn cần ~291, bot cày 7+ lượt ở 2-5). Trùm nhỏ vùng ba đánh một đòn 80-110% máu Zed ở cấp người chơi tới vùng ba (bot đo): đòn gốc
+    // ~150 · 162 · 175 · 188 → ~125 · 135 · 145 · 155 (x0,83; ba ải đầu đã tính cả x1,12 / x1,12 / x1,08 của cột quái).
+    boss: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.76], [1.23, 1.67], [1.27, 1.86], [1.32, 2.54], [1.44, 2.54], [1.48, 2.61], [1.31, 2.62], [0.96, 1.98], [1.44, 2.22], [1.31, 2.13], [1.17, 2.11], [1.18, 2.33], [1.29, 2.71]],
   };
   // Độ khó thứ hai: [máu, sát thương] nhân thêm theo vùng. Trước là x2,2 máu, x1,5 sát thương cho mọi vùng; nay quái thường đã mạnh
   // theo ải, nên vùng sau nhân ít hơn để người chơi đã cày đầy (cấp 30, vũ khí Vàng) vẫn với tới được.
@@ -1102,7 +1112,11 @@ window.G.LANG = 'vi';
   // Đo lại sau khi làm phẳng đường khó (tests/cay.py 6 lượt): bot tới vùng ba đã dư sức (qua ngay lần đầu), còn Ngư Tinh phải cày
   // gần 7 lượt; nên Ngư Tinh 420 → 405, vùng ba 425/445/475/525 → 440/480/520/540, 1-4 150 → 160, 2-1..2-4 245/270/315/345 →
   // 255/280/330/360: phần cày dời từ ải trùm sang các ải thường (mỗi ải tối đa ~7 lượt, tổng thời gian không ngắn đi quá 25%).
-  G.STAGE_REC = [95, 110, 135, 160, 215, 255, 280, 330, 360, 405, 440, 480, 520, 540, 560];
+  // Đợt 5 (hệ thống mới, bot chơi thật: tests/cay.py --kd): số cũ (… 255 · 405 · 440 … 560) đo từ luật cũ (bậc màu, quần áo cộng máu).
+  // Bot hệ thống mới thắng 75% ở Sức mạnh thấp hơn nhiều từ ải 1-5 (vùng ba ~270-450 so với 440-560), nên bot nghe lời khuyên phải cày
+  // 6-8 lượt thừa ở gần như mọi ải (75 lượt, 4,2 giờ). Đo lại sau khi sửa Khiên nước, Ngư Tinh, quái vùng ba: lấy Sức mạnh bot thắng ~75%
+  // (khớp đường hồi quy thắng/thua trên bản lưu thật và tỉ lệ thắng lần thử đầu ở số này, 12 lượt chiến dịch).
+  G.STAGE_REC = [95, 105, 125, 140, 175, 180, 185, 220, 240, 275, 285, 315, 355, 400, 435];
   G.stageRec = function (r, i, diff) {
     const v = G.STAGE_REC[r * 5 + i] || 100;
     return diff ? Math.round((v * Math.sqrt(G.DIFF2[r][0] * G.DIFF2[r][1])) / 5) * 5 : v;

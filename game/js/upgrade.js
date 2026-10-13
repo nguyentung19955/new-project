@@ -107,6 +107,9 @@
   const wById = (sv, id) => sv.weapons.find((w) => w.id === id) || null;
   const wNameOf = (w) => G.wName(w).replace(/ \+\d+$/, '');
   const pts = (hs) => Math.floor(hs.lvl / 3) - (hs.sk.atk + hs.sk.def + hs.sk.elem);
+  // Hệ chọn khi nâng vũ khí Trắng lên Mầm (chỉ dùng khi tính thử / bot tự nâng; người chơi tự chọn ở Ông Thợ Rèn).
+  // Mặc định: hệ của vùng đầu như trước. Bot cân bằng (tests/bot_nang.js, đợt 5) thay hàm này để chọn hệ hợp vùng đang đánh.
+  U.heMam = function (sv, w) { void sv; void w; return G.REGIONS[0].el || 'fire'; };
   // Danh sách thô: { kind, key, title, cost, apply(sv) (null nếu không làm ngay được), go: {who, ...}, need (thiếu kinh nghiệm, linh khí) }
   U.list = function (sv) {
     sv = sv || G.save;
@@ -118,7 +121,10 @@
     // cây chưởng (js/chuong.js): điểm chưởng chưa học
     if (G.chuong) {
       const cp = G.chuong.pts(hs, sv.hero);
-      if (cp.left > 0) out.push({ kind: 'chuong', key: 'chuong', title: G.t('Còn {0} điểm chưởng chưa học ({1})', cp.left, G.CHUONG.trees[hs.ch.cay].name), cost: {}, apply: (s) => { const h = s.heroes[s.hero]; G.chuong.autoLearn(h, s.hero); }, go: { who: 'do', tab: 'chuong' } });
+      // Đợt 5 (bot đo cân bằng): cây đã học đủ mọi nút (cấp > tổng bậc của cây) thì điểm thừa không học được nữa — không gợi ý,
+      // nếu không G.upg.auto cứ "học" mãi mà không làm việc nào khác (bot kẹt mài / nâng từ cấp ~29).
+      const coHoc = cp.left > 0 && G.CHUONG.trees[hs.ch.cay] && G.CHUONG.trees[hs.ch.cay].nodes.some((nd) => !G.chuong.why(hs, nd.id, sv.hero));
+      if (coHoc) out.push({ kind: 'chuong', key: 'chuong', title: G.t('Còn {0} điểm chưởng chưa học ({1})', cp.left, G.CHUONG.trees[hs.ch.cay].name), cost: {}, apply: (s) => { const h = s.heroes[s.hero]; G.chuong.autoLearn(h, s.hero); }, go: { who: 'do', tab: 'chuong' } });
     }
     // vũ khí đang mang: mài, nâng cấp bằng linh khí, nâng lò
     const cap = G.FORGE_CAP[sv.forge];
@@ -133,7 +139,7 @@
       // cấp vũ khí nâng bằng linh khí ở Ông Thợ Rèn (thẻ Linh khí, js/vk_moi.js); không còn nâng bậc / lên Vàng
       const VM = G.vkMoi, st = G.wStage(w), c = VM ? VM.gia(st) : null;
       if (c != null) {
-        const el = w.branch || G.REGIONS[0].el || 'fire', ten = G.t('Nâng {0} lên {1}', nm, G.STAGE_NAMES[st + 1]), go = { who: 'ren', ftab: 'vk', sel: id };
+        const el = w.branch || U.heMam(sv, w), ten = G.t('Nâng {0} lên {1}', nm, G.STAGE_NAMES[st + 1]), go = { who: 'ren', ftab: 'vk', sel: id };
         if (VM.lk(sv) >= c) out.push({ kind: 'vklk', key: 'vl' + id, title: ten, cost: {}, apply: (s) => { VM.nang(s, wById(s, id), el); }, go });
         else out.push({ kind: 'evolve', key: 'ev' + id, title: ten, cost: {}, need: { lk: Math.ceil(c - VM.lk(sv)), el }, sim: (s) => { VM.nang(s, wById(s, id), el, true); }, apply: null, go });
       }

@@ -56,6 +56,8 @@
       if (r) {
         const k = W.type + ':' + (src ? (src.isBoss ? 'trùm-đánh' : src.role) : W.boss ? 'vùng-trùm' : 'vùng/đạn');
         out.hurt[k] = Math.round((out.hurt[k] || 0) + (hp0 - W.P.hp));
+        // Đợt 5: đòn trùm mạnh nhất (phần máu tối đa mất trong một đòn của trùm: trùm đánh trúng, hoặc vùng đỏ / đạn lúc trùm còn đứng)
+        if (src ? src.isBoss : W.boss && !W.boss.dead) { const f = (hp0 - W.P.hp) / W.P.maxhp; if (f > (out.bossHit || 0)) out.bossHit = Math.round(f * 100) / 100; }
       }
       return r;
     };

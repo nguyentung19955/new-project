@@ -1,5 +1,6 @@
 """Đo sát thương theo thời gian của bốn vũ khí khi bot chơi trong một phòng tập có quái hồi sinh liên tục.
-Mỗi vũ khí đo ở bốn trạng thái: chưa có hệ, và Thức tỉnh Lửa, Độc, Băng. Số ngẫu nhiên có hạt giống nên chạy lại ra đúng số cũ.
+Mỗi vũ khí đo ở bốn trạng thái: Trắng (chưa có hệ), và Thức tỉnh Lửa, Độc, Băng (hệ thống mới, đợt 5: bậc 0, cấp đặt bằng G.vkMoi.datCap;
+Zed cấp 10, mài +3; "Cung" trong bảng là Phi tiêu). Số ngẫu nhiên có hạt giống nên chạy lại ra đúng số cũ.
 Từ đợt ghép 2 game chỉ còn phòng vuông, nên bài này đo trong phòng thật:
   python3 tests/dps.py [giây mỗi lượt] [số hạt giống] [nho | trum] [mot] [khonghe]
     nho (mặc định): phòng thường, sàn 208x196      trum: phòng trùm, sàn 300x198 (không có trùm)
@@ -24,7 +25,10 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 JS = r"""
 ([wtype, el, secs, seed, small, one, real]) => {
   for (const k of G.HKEYS) G.HEROES[k].fav = [];           // bỏ thưởng vũ khí ưa thích để so cho công bằng
-  G.testSave({ hero: 'smith', melee: wtype === 'bow' ? 'sword' : wtype, lvl: 10, tier: 1, sharpen: 3, branch: el || undefined, marks: el ? 300 : 0 });
+  // Đợt 5 (hệ thống mới): không còn bậc màu (mọi vũ khí bậc 0); cấp vũ khí đặt thẳng bằng G.vkMoi.datCap — chưa có hệ = Trắng,
+  // có hệ = Thức tỉnh của hệ đó (như nâng bằng linh khí 100/400/800).
+  G.testSave({ hero: 'smith', melee: wtype === 'bow' ? 'sword' : wtype, lvl: 10, tier: 0, sharpen: 3 });
+  for (const w of G.save.weapons) G.vkMoi.datCap(w, el ? 3 : 0, el || null);
   if (window.__tp && G.outfit) { // "trangphuc": mặc đủ bộ 5 món bậc Vàng của hệ đang đo (chưa có hệ: bộ Lâu Đài), cánh cấp 3
     const O = G.outfit, set = { fire: 'lau', poison: 'rung', ice: 'bien' }[el] || 'lau';
     for (const k in O.ITEMS) if (O.ITEMS[k].set === set) O.wear(G.save, O.add(G.save, k, 3, { lv: 3 }));
@@ -100,7 +104,7 @@ def main():
         b = p.chromium.launch()
         pg = b.new_page(viewport={'width': 844, 'height': 390})
         pg.on('pageerror', lambda e: errs.append(str(e)))
-        pg.goto('file://' + ROOT + '/index.html')
+        pg.goto('file://' + ROOT + '/index.html?cloud=0')
         pg.wait_for_function('window.G && G.scene')
         pg.add_script_tag(path=os.path.join(ROOT, 'tests', 'bot.js'))
         pg.add_script_tag(path=os.path.join(ROOT, 'tests', 'setup.js'))
@@ -129,6 +133,12 @@ def main():
                 sys.stdout.flush()
         b.close()
     bad = []
+    if not noel:  # đợt 5: bảng gọn Trắng → Thức tỉnh (trung bình ba hệ) của từng vũ khí
+        print('\n| Vũ khí | Trắng (st/giây) | Thức tỉnh TB 3 hệ | Lửa / Độc / Băng | Thức tỉnh ÷ Trắng |')
+        print('|---|---|---|---|---|')
+        for wt, nm in [('sword', 'Kiếm'), ('spear', 'Giáo'), ('hammer', 'Búa'), ('bow', 'Phi tiêu')]:
+            t0 = table[(wt, None)]['dps']; tt = [table[(wt, e)]['dps'] for e in ['fire', 'poison', 'ice']]
+            print('| %s | %.1f | %.1f | %s | x%.2f |' % (nm, t0, sum(tt) / 3, ' / '.join('%.1f' % x for x in tt), sum(tt) / 3 / t0))
     d = {w: table[(w, None)]['dps'] for w in ['sword', 'bow', 'spear', 'hammer']}
     hit = {w: st[w]['hit'] for w in ['sword', 'bow', 'spear', 'hammer']}
     if not (hit['hammer'] > hit['spear'] > hit['sword'] > hit['bow']):
