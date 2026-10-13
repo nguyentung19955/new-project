@@ -1,0 +1,9 @@
+# Prompt ảnh cho ép đồ + ải ngày (13/10). Nền xanh lá #00FF00, không chữ. Đặt ảnh gen cùng thư mục, tên như mã.
+E1 da-nang-bac: Pixel art biểu tượng vật phẩm: viên đá pha lê lục giác màu tím phát sáng, có vân rune vàng khắc bên trong, vài tia lấp lánh. 1 hình, cỡ nhỏ 24×24 ô, viền đen rõ.
+E2 bua-giu-bac: Pixel art biểu tượng vật phẩm: lá bùa giấy vàng có chữ phù chú đỏ, buộc dây đỏ, toả hào quang vàng nhẹ. 1 hình, cỡ nhỏ 24×24 ô, viền đen rõ.
+E3 khung-o-7-bac: Pixel art 7 khung ô vuông đựng vũ khí xếp 1 hàng, cùng kiểu viền gỗ-kim loại, khác màu: trắng xám, xanh lam, xanh lục, tím, vàng kim, đỏ, khung cuối đỏ cam có lửa cháy quanh viền. Ruột ô tối trống. Các khung không chạm nhau.
+E4 hu-ep-thanh-cong: Pixel art hiệu ứng ép đồ thành công: cột sáng vàng phụt lên, vòng rune toả ra, nhiều tia lấp lánh. 1 hàng 6 khung. Các khung không chạm nhau.
+E5 hu-ep-that-bai: Pixel art hiệu ứng ép đồ thất bại: tia sáng chập chờn rồi tắt, khói xám bốc lên, vài tàn lửa rơi. 1 hàng 5 khung. Các khung không chạm nhau.
+E6 hu-ep-tut-bac: Pixel art hiệu ứng tụt bậc: viên ngọc màu nứt vỡ thành mảnh văng ra, ánh đỏ chớp, mảnh rơi xuống tan. 1 hàng 6 khung. Các khung không chạm nhau.
+E7 cong-ai-ngay: Pixel art cổng đá cổ có khắc lịch tuần 7 ô quanh vòm, giữa cổng là xoáy ánh sáng xanh, hai bên có đèn lồng, nhìn chính diện hơi chếch từ trên. 1 hình.
+E8 bieu-tuong-ai-ngay: Pixel art 3 biểu tượng tròn xếp 1 hàng: (1) đá pha lê tím (ải Đá Bậc), (2) đá mài xám có tia lửa (ải Đá Mài), (3) đống tiền vàng (ải Vàng). Viền đen rõ, cỡ nhỏ 32×32 ô mỗi cái, các hình không chạm nhau.

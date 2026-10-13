@@ -10,11 +10,12 @@ Làm SAU đợt 5 (`bao-cao-5.md`, bot cân bằng) — git pull, đọc báo c�
 - **Từ Tím trở lên mỗi bậc mở thêm 1 dòng hiệu ứng** (Tím 1 dòng, Vàng 2, Đỏ 3, Rực lửa 4). Dòng ngẫu nhiên khi vừa lên bậc, từ bảng dòng (đề xuất): +chí mạng, +sát thương chí mạng, +sát thương lên trùm/tinh anh, hút máu, +tốc đánh, giảm hồi chiêu đặc biệt, +linh khí nhận, +sát thương hệ, giảm sát thương nhận. Giá trị dòng tăng theo bậc. Cho **đổi dòng** (tẩy luyện) bằng đá nâng bậc ít hơn giá lên bậc.
 - **Đá nâng bậc**: rơi từ trùm (trùm nhỏ ít, trùm vùng nhiều, lần đầu nhiều hơn) và ải ngày. Giá lên bậc tăng dần (đề xuất 3 / 6 / 10 / 16 / 25 / 40 đá + vàng); bậc cao có thể cần thêm mảnh trùm. **CÓ THẤT BẠI** (chủ dự án 15:59 "Ép có thất bại chứ"):
   - Tỉ lệ thành công lên bậc (bảng `G.EP_DO.tiLe`): Xanh lam 100% · Xanh lục 90% · Tím 75% · Vàng 60% · Đỏ 45% · Rực lửa 30%.
-  - Thất bại: mất đá + vàng của lần ép, **KHÔNG tụt bậc**, không mất dòng hiệu ứng.
+  - Thất bại (chủ dự án 16:01 "Tụt 1 bậc"): luôn mất đá + vàng của lần ép. Ép lên **Xanh lam / Xanh lục / Tím** thất bại thì giữ bậc. Ép lên **Vàng / Đỏ / Rực lửa** thất bại thì **TỤT 1 BẬC** (Tím → Lam lục…, mất dòng hiệu ứng mới nhất của bậc bị tụt; Tím tụt xuống Xanh lục thì mất dòng duy nhất). Không bao giờ tụt dưới Trắng.
+  - **Bùa giữ bậc** (vật phẩm, rơi ít ở Ải Đá Bậc mức khó và trùm vùng; thương nhân bán giá cao): dùng khi ép thì thất bại không tụt bậc. Hỏi xác nhận rõ trước khi ép lúc có nguy cơ tụt: "Thất bại sẽ tụt về bậc X — dùng Bùa giữ bậc?".
   - **Điểm may mắn** chống xui: mỗi lần thất bại +một phần tỉ lệ (vd. +10% cộng dồn) cho món đó ở bậc đó, thành công thì về 0; hiện rõ "Tỉ lệ: 45% (+20% may mắn)".
-  - Hiệu ứng ép: thành công chớp sáng + chữ "Thành công!", thất bại khói xám + chữ "Thất bại…" (dùng hiệu ứng có sẵn).
+  - Hiệu ứng ép: thành công / thất bại / tụt bậc — dùng ảnh `hu-ep-thanh-cong`, `hu-ep-that-bai`, `hu-ep-tut-bac` nếu có (prompt ở `docs/anh-goc/ep-do/prompt.txt`), chưa có ảnh thì vẽ code: chớp sáng + "Thành công!" / khói xám + "Thất bại…" / vỡ vụn + "Tụt bậc!".
   - Đổi dòng (tẩy luyện) luôn thành công.
-- Màu khung ô vũ khí, tên vũ khí, viền icon theo bậc (đã có `gd-o-vk-0..3` 4 màu — mở rộng 7 màu bằng nhuộm code; Rực lửa có viền lửa chạy). Liệt kê ảnh nên gen thêm (khung ô 7 bậc, icon đá nâng bậc, đá mài, cổng ải ngày) kèm prompt ngắn trong báo cáo.
+- Màu khung ô vũ khí, tên vũ khí, viền icon theo bậc (đã có `gd-o-vk-0..3` 4 màu — mở rộng 7 màu bằng nhuộm code; Rực lửa có viền lửa chạy). Ảnh chủ dự án sẽ gen (prompt ở `docs/anh-goc/ep-do/prompt.txt`, ảnh đặt cùng thư mục): đá nâng bậc, bùa giữ bậc, khung ô vũ khí 7 bậc, 3 hiệu ứng ép, cổng ải ngày, 3 biểu tượng ải ngày. Có ảnh thì dùng, chưa có thì vẽ code tạm.
 - Chỗ ép: Ông Thợ Rèn (thẻ "Ép đồ") và Hành trang › Vũ khí.
 
 ## B. Ải theo ngày (tính theo giờ máy người chơi; đổi ngày lúc 00:00)
