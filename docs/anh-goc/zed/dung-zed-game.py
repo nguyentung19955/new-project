@@ -53,7 +53,7 @@ Q_VK = 2.0             # ảnh vũ khí lưu ở tỉ lệ Q_VK × s (s: tỉ l�
 
 # (khoá game, thư mục, giây một vòng, lặp)
 DONG = [
-    ('dung', '01-dung', 1.0, True), ('di', '02-di', 0.8, True), ('chay', '03-chay', 0.6, True), ('lon', '04-lon', 0.27, False),
+    ('dung', '01-dung', 1.0, True), ('di', '02-di', 0.8, True), ('chay', '03-chay-v4', 0.6, True), ('lon', '04-lon', 0.27, False),
     ('trung', '05-trung-don', 0.2, False), ('chet', '06-chet-b2', 0.6, False), ('chuong', '07-chuong-b2', 0.3, False),
     ('kiem_1', '08-kiem-1-tp', 0.3, False), ('kiem_2', '09-kiem-2-tp', 0.3, False), ('kiem_3', '10-kiem-3', 0.46, False),
     ('thuong_1', '11-thuong-1', 0.38, False), ('thuong_2', '12-thuong-2', 0.34, False), ('thuong_3', '13-thuong-3', 0.34, False),
