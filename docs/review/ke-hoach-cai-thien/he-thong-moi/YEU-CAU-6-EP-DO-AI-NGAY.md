@@ -8,7 +8,12 @@ Làm SAU đợt 5 (`bao-cao-5.md`, bot cân bằng) — git pull, đọc báo c�
 - 7 bậc: **Trắng** (khởi điểm) → **Xanh lam** → **Xanh lục** → **Tím** → **Vàng** → **Đỏ** → **Rực lửa**. Độc lập với cấp hệ (Trắng/Mầm/Thành hình/Thức tỉnh): hai trục cùng tồn tại. Đặt tên trục là "Bậc" (ép đồ) để không lẫn với "Cấp" hệ; chỗ nào trùng chữ "Trắng" thì ghi rõ "Bậc Trắng".
 - Mỗi bậc tăng chỉ số (đề xuất, ghi vào bảng hằng số một chỗ `G.EP_DO`): sát thương ×1,00 / 1,08 / 1,17 / 1,28 / 1,40 / 1,55 / 1,75; mỗi bậc thêm chút tốc đánh hoặc máu theo loại (kiếm tốc đánh, thương tầm, búa choáng, phi tiêu xuyên) — cân sao cho Rực lửa ≈ ×1,75 tổng sức mạnh vũ khí.
 - **Từ Tím trở lên mỗi bậc mở thêm 1 dòng hiệu ứng** (Tím 1 dòng, Vàng 2, Đỏ 3, Rực lửa 4). Dòng ngẫu nhiên khi vừa lên bậc, từ bảng dòng (đề xuất): +chí mạng, +sát thương chí mạng, +sát thương lên trùm/tinh anh, hút máu, +tốc đánh, giảm hồi chiêu đặc biệt, +linh khí nhận, +sát thương hệ, giảm sát thương nhận. Giá trị dòng tăng theo bậc. Cho **đổi dòng** (tẩy luyện) bằng đá nâng bậc ít hơn giá lên bậc.
-- **Đá nâng bậc**: rơi từ trùm (trùm nhỏ ít, trùm vùng nhiều, lần đầu nhiều hơn) và ải ngày. Giá lên bậc tăng dần (đề xuất 3 / 6 / 10 / 16 / 25 / 40 đá + vàng); bậc cao có thể cần thêm mảnh trùm. Có thể thất bại? KHÔNG — luôn thành công (đơn giản cho người chơi).
+- **Đá nâng bậc**: rơi từ trùm (trùm nhỏ ít, trùm vùng nhiều, lần đầu nhiều hơn) và ải ngày. Giá lên bậc tăng dần (đề xuất 3 / 6 / 10 / 16 / 25 / 40 đá + vàng); bậc cao có thể cần thêm mảnh trùm. **CÓ THẤT BẠI** (chủ dự án 15:59 "Ép có thất bại chứ"):
+  - Tỉ lệ thành công lên bậc (bảng `G.EP_DO.tiLe`): Xanh lam 100% · Xanh lục 90% · Tím 75% · Vàng 60% · Đỏ 45% · Rực lửa 30%.
+  - Thất bại: mất đá + vàng của lần ép, **KHÔNG tụt bậc**, không mất dòng hiệu ứng.
+  - **Điểm may mắn** chống xui: mỗi lần thất bại +một phần tỉ lệ (vd. +10% cộng dồn) cho món đó ở bậc đó, thành công thì về 0; hiện rõ "Tỉ lệ: 45% (+20% may mắn)".
+  - Hiệu ứng ép: thành công chớp sáng + chữ "Thành công!", thất bại khói xám + chữ "Thất bại…" (dùng hiệu ứng có sẵn).
+  - Đổi dòng (tẩy luyện) luôn thành công.
 - Màu khung ô vũ khí, tên vũ khí, viền icon theo bậc (đã có `gd-o-vk-0..3` 4 màu — mở rộng 7 màu bằng nhuộm code; Rực lửa có viền lửa chạy). Liệt kê ảnh nên gen thêm (khung ô 7 bậc, icon đá nâng bậc, đá mài, cổng ải ngày) kèm prompt ngắn trong báo cáo.
 - Chỗ ép: Ông Thợ Rèn (thẻ "Ép đồ") và Hành trang › Vũ khí.
 
