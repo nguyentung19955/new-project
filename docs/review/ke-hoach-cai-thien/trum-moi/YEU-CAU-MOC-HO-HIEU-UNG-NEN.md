@@ -35,7 +35,7 @@ Cỡ hiệu ứng khớp vùng gây sát thương hiện có (không đổi vùn
 - Thảm `gd-tt-lau-tham-*` giữ nguyên.
 
 ## Kiểm
-**Được chạy game CHỈ để chụp ảnh soát** (chủ dự án đã cho phép kiểm bằng ảnh khi đưa trùm vào): chụp 1 phòng Hang biển, 1 phòng Lâu đài, mỗi trùm 3 pha + vài chiêu. Không chạy bài kiểm khác. Ảnh soát: `xem-moc-ho.png`, `xem-hieu-ung-trum.png`, `xem-nen.png` trong thư mục này.
+**TUYỆT ĐỐI KHÔNG TEST** (không Playwright, không chạy game) — chỉ xử lý ảnh, ảnh soát TĨNH ghép bằng script, node --check, build.py. Ảnh soát: `xem-moc-ho.png` (mọi hàng × 3 pha × 2 trùm, cùng tỉ lệ, kèm con cũ), `xem-hieu-ung-trum.png`, `xem-nen.png` (lát thử 1 phòng mỗi vùng bằng script) trong thư mục này. Ghi trong báo cáo những gì cần chủ dự án xem khi chơi.
 Ràng buộc: KHÔNG đụng master, KHÔNG force push, KHÔNG PR. Không chép apiKey trong game/js/firebase-config.js. Không làm hỏng đăng nhập Google, lưu mây, `?cloud=0`. Xung đột game/dist khi rebase: lấy bản trên nhánh rồi build lại. `python3 game/build.py` (timeout dài). Push bị từ chối thì pull --rebase rồi push lại.
 Viết `bao-cao-moc-ho-hieu-ung-nen.md` (tiếng Việt, ngắn, có mã commit).
 Commit kết thúc bằng:
