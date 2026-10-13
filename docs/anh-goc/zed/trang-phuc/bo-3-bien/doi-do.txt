@@ -1,0 +1,4 @@
+# Prompt đổi đồ bộ Biển, dùng chung (thay N = số khung)
+# Gửi kèm: ẢNH 1 = tấm động tác ninja (docs/anh-goc/zed/moi/<ten>.png), ẢNH 2 = bo-3-bien/00-anh-mau.png
+
+Sửa ẢNH 1 (1 hàng N khung): giữ Y HỆT tư thế từng khung, vị trí, cỡ người, số khung, khoảng cách giữa các khung, nền xanh #00FF00. Chỉ thay quần áo cho giống ẢNH 2: áo trắng ngà ngắn tay viền xanh lam đậm, giáp vảy cá bạc–lam ở vai, đai xanh ngọc có vỏ ốc nhỏ, quần xanh lam đậm, băng cổ tay xanh lam, dép và băng chân nâu cát. Giữ nguyên mặt, tóc, mắt đỏ. Không thêm vũ khí, không chữ, không bóng, không còn màu đỏ hay đen của đồ ninja cũ.
