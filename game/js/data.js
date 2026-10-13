@@ -217,6 +217,36 @@
   G.ZED_MOI = G.ZED;
   try { if (typeof location !== 'undefined' && /[?&]zedmoi=0(&|$)/.test(location.search || '')) G.ZED_MOI = false; } catch (e) { /* giữ mặc định */ }
   if (G.ZED_MOI) { G.WTYPES.bow.name = 'Phi tiêu'; G.WTYPES.bow.special = 'Mưa Phi Tiêu'; }
+  // TRANG PHỤC ZED (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-rung): mỗi bộ = nguyên bộ hình Zed mặc sẵn bộ đó (js/zed_moi.js
+  // chọn tấm theo bộ đang mặc; vũ khí, nhịp, neo như nhau). Lưu ở save.zed.bo ('ninja' | 'rung'; không có = 'ninja') và save.zed.boMo
+  // (các bộ đã mở). Bộ Rừng mở khi hạ trùm vùng Rừng già (js/stage.js; bản lưu cũ đã có sao ải trùm Rừng thì tự mở, js/engine.js fixSave).
+  // Mở rồi mặc được ở mọi vùng. Cờ thử: ?zedbo=rung (mặc ngay bộ Rừng, không cần mở khoá, không ghi vào bản lưu).
+  G.ZED_BO = {
+    ninja: { ten: 'Ninja Bóng Đêm', tam: 'zed-moi' },
+    rung: { ten: 'Thợ Săn Rừng', tam: 'zed-rung', vung: 'Rừng già' },
+  };
+  G.ZED_BO_KEYS = ['ninja', 'rung'];
+  G.ZED_BO_THU = null;
+  try { const m = typeof location !== 'undefined' && /[?&]zedbo=([a-z]+)(&|$)/.exec(location.search || ''); if (m && G.ZED_BO[m[1]]) G.ZED_BO_THU = m[1]; } catch (e) { /* giữ mặc định */ }
+  // chỉ số vùng của bộ (vùng có trùm mở bộ đó); không tìm thấy tên vùng thì lấy vùng đầu tiên
+  G.zedBoVung = function (k) {
+    const B = G.ZED_BO[k];
+    if (!B || !B.vung || !G.REGIONS) return -1;
+    const i = G.REGIONS.findIndex((r) => r && r.name === B.vung);
+    return i >= 0 ? i : 0;
+  };
+  G.zedBoMo = function (k, sv) {
+    if (k === 'ninja') return true;
+    sv = sv || G.save;
+    return !!(sv && sv.zed && typeof sv.zed === 'object' && sv.zed.boMo && sv.zed.boMo[k]);
+  };
+  // bộ đang mặc (cờ thử ?zedbo= đè lên bản lưu)
+  G.zedBo = function (sv) {
+    if (G.ZED_BO_THU) return G.ZED_BO_THU;
+    sv = sv || G.save;
+    const b = sv && sv.zed && typeof sv.zed === 'object' ? sv.zed.bo : null;
+    return b && G.ZED_BO[b] && G.zedBoMo(b, sv) ? b : 'ninja';
+  };
   if (G.ZED) {
     G.HEROES.smith.name = 'Zed';
     G.HEROES.smith.skillDesc = 'Nét riêng: chưởng đẩy lùi quái mạnh';

@@ -8,6 +8,8 @@
 // Khung ★ (tư thế chạm) của mỗi đòn rơi đúng lúc u = hitAt (bảng MOC dưới đây). Sửa hai lỗi chọn khung cũ: chưởng chia đúng castT 0,3
 // (L3, trước chia 0,4), búa nện ★ ở 0,35 (L1, trước 0,45).
 // Phi tiêu (thay cung): ném tay không; viên phi tiêu bay là ảnh vk-phi-tieu cấp hiện tại, xoay khi bay.
+// Trang phục (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-rung): tấm thân chọn theo G.zedBo() — 'ninja' = zed-moi, 'rung' = zed-rung
+// (cùng chuẩn, neo dùng lại của bộ ninja); thử nhanh: ?zedbo=rung.
 // Tắt: ?zedmoi=0 (G.ZED_MOI, js/data.js) → hình Zed cũ; ?zed=0 → game như bản trước. Ảnh chưa tải xong → vẽ hình cũ cho tới khi có.
 (function () {
   const G = window.G;
@@ -20,6 +22,13 @@
     if (!z) return null;
     if (!z.ready && SC.canAnh) SC.canAnh(ma);
     return z.ready && z.img ? z : null;
+  };
+  // Tấm thân theo trang phục đang mặc (js/data.js G.zedBo: 'ninja' → zed-moi, 'rung' → zed-rung). Tấm bộ khác chưa tải xong
+  // (zed-rung là ảnh tải sau) thì vẽ tạm bằng bộ ninja. Vũ khí (zed-vk), nhịp, neo, cách ghép y như nhau ở mọi bộ.
+  const layThan = () => {
+    let ma = 'zed-moi';
+    try { const b = G.zedBo ? G.zedBo() : 'ninja'; if (G.ZED_BO && G.ZED_BO[b]) ma = G.ZED_BO[b].tam; } catch (e) { ma = 'zed-moi'; }
+    return (ma !== 'zed-moi' && lay(ma)) || lay('zed-moi');
   };
   const kep = (v, a, b) => (v < a ? a : v > b ? b : v);
   const VK_LOAI = { sword: 'kiem', spear: 'thuong', hammer: 'bua', bow: 'phitieu' };
@@ -139,7 +148,7 @@
 
   let tam = null; // canvas phụ khi phải nhuộm cả hình (trúng đòn, băng, độc)
   function ve(c, o) {
-    const T = lay('zed-moi');
+    const T = layThan();
     if (!T) return false;
     const D = T.tep, s = chon(o, D), a = D.dong_tac[s.ten];
     if (!a) return false;
@@ -189,7 +198,7 @@
 
   // Mũi vũ khí cho vệt chém (js/fx.js đọc G.tinhLinh.tip): giữ nhịp / cửa sổ vệt của bản cũ, chỉ dời điểm cầm, hướng, độ dài theo neo mới.
   function doiTip(q, o) {
-    const T = lay('zed-moi'), V = lay('zed-vk');
+    const T = layThan(), V = lay('zed-vk');
     if (!T || !V) return;
     const D = T.tep, s = chon(o, D), v = vkCua(o, D, s);
     if (!v) return;

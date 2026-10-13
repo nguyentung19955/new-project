@@ -509,6 +509,16 @@
         R.lines.push(ln(R, 'Cứu được {0}! Bạn ấy dạy Zed:', ten), ln(R, '· {0}', G.tv(D.ngan[0])), ln(R, '· {0}', G.tv(D.ngan[1])));
         if (S.W) S.W.banner = { s: G.t('{0} dạy Zed: {1}', ten, G.tv(D.noiTai)), col: '#ffd23f', t: 4 }; // dòng báo giữa trận (đè dòng báo rơi đồ)
       }
+      // TRANG PHỤC ZED (js/data.js G.ZED_BO): hạ trùm vùng của bộ (mọi độ khó) thì mở bộ đó, báo một dòng; làng nhắc chỗ đổi (save.zed.boBao)
+      if (G.ZED && G.ZED_BO && big) {
+        for (const bk of G.ZED_BO_KEYS) {
+          if (bk === 'ninja' || G.zedBoVung(bk) !== S.r || G.zedBoMo(bk, sv)) continue;
+          if (!sv.zed || typeof sv.zed !== 'object' || Array.isArray(sv.zed)) sv.zed = { v: 1, hoc: {} };
+          if (!sv.zed.boMo || typeof sv.zed.boMo !== 'object' || Array.isArray(sv.zed.boMo)) sv.zed.boMo = {};
+          sv.zed.boMo[bk] = 1; sv.zed.boBao = 1;
+          R.lines.push(ln(R, 'Mở trang phục Zed: {0}!', G.tv(G.ZED_BO[bk].ten)));
+        }
+      }
       if (big && !S.diff && !sv.heroes[reg.rescue].unlocked) {
         // Phiên cân bằng (mục 10): em bé mới mở ra ở cấp của em bé cao cấp nhất trừ 3 (trước luôn cấp 1, không vào nổi vùng đang chơi).
         const nh = sv.heroes[reg.rescue];

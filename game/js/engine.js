@@ -425,6 +425,21 @@
         }
         if (z.bao !== 1) delete z.bao;
         if (z.tu && !G.HKEYS.includes(z.tu)) delete z.tu;
+        // trang phục Zed (js/data.js G.ZED_BO): boMo = các bộ đã mở, bo = bộ đang mặc. Bản lưu cũ không có → 'ninja'.
+        // Bản lưu đã hạ trùm vùng của bộ (có sao ải trùm) mà chưa mở thì mở luôn.
+        if (G.ZED_BO) {
+          const mo = z.boMo && typeof z.boMo === 'object' && !Array.isArray(z.boMo) ? z.boMo : {};
+          z.boMo = {};
+          for (const k of G.ZED_BO_KEYS) {
+            if (k === 'ninja') continue;
+            const r = G.zedBoVung(k);
+            if (mo[k]) z.boMo[k] = 1;
+            else if (r >= 0 && s.stars && s.stars[r + '-4']) { z.boMo[k] = 1; z.boBao = 1; } // mở bù: làng báo một lần
+          }
+          if (!Object.keys(z.boMo).length) delete z.boMo;
+          if (z.bo && z.bo !== 'ninja' && G.ZED_BO[z.bo] && z.boMo && z.boMo[z.bo]) z.bo = String(z.bo); else delete z.bo;
+          if (z.boBao !== 1 || !z.boMo) delete z.boBao;
+        }
         s.hero = 'smith';
       });
       // vũ khí

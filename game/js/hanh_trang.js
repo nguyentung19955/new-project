@@ -77,9 +77,34 @@
     try { G.art.hero(c, { x: 0, y: 0, face: 1, key: sv.hero, t: G.time, move: false, atk: -1, dodge: -1, weapon: null, noShadow: true, outfit: G.outfit ? G.outfit.look(sv) : null }); } catch (e) { /* thiếu hình thì bỏ qua */ }
     c.restore();
   }
+  // Trang phục Zed (js/data.js G.ZED_BO; docs/review/ke-hoach-cai-thien/zed-bo-rung): dòng nhỏ trên khung hình Zed. Đã mở từ 2 bộ trở lên
+  // thì là nút bấm đổi sang bộ kế tiếp (chỉ ở làng), chưa mở thì nhắc cách mở. Trả true nếu vừa đổi bộ (vẽ lại khung sau).
+  function zedBoChon(sv) {
+    if (!G.ZED || !G.ZED_MOI || !G.ZED_BO || !G.zedBo) return false;
+    const cur = G.zedBo(sv), mo = G.ZED_BO_KEYS.filter((k) => G.zedBoMo(k, sv));
+    const ten = G.t('Bộ: {0}', G.tv(G.ZED_BO[cur].ten));
+    if (mo.length > 1 && !RO && !G.ZED_BO_THU) {
+      if (T.sbtn(CX + 4, CY + 4, 104, 14, ten + ' ›', { size: 6.5, pad: 1 })) {
+        const nx = mo[(mo.indexOf(cur) + 1) % mo.length];
+        if (!sv.zed || typeof sv.zed !== 'object') return false;
+        if (nx === 'ninja') delete sv.zed.bo; else sv.zed.bo = nx;
+        G.persist(); G.sfx && G.sfx('ui');
+        return true;
+      }
+      return false;
+    }
+    tx(ten, CX + 56, CY + 13, 104, { size: 6.5, bold: true, align: 'center', color: TXT });
+    const khoa = G.ZED_BO_KEYS.find((k) => !G.zedBoMo(k, sv));
+    if (khoa && !G.ZED_BO_THU) {
+      const r = G.REGIONS[G.zedBoVung(khoa)];
+      if (r) tx(G.t('Hạ {0} để mở {1}', r.bossName, G.tv(G.ZED_BO[khoa].ten)), CX + 56, CY + 22, 104, { size: 6, align: 'center', color: SOFT });
+    } else if (mo.length > 1 && RO) tx('Về làng để thay', CX + 56, CY + 22, 104, { size: 6, align: 'center', color: WARN });
+    return false;
+  }
   function heroTab(sv) {
     const k = sv.hero, H = G.HEROES[k], hs = sv.heroes[k], P = G.buildPlayer(), pw = G.power();
     heroArt(sv, CX, CY + 2, 112, 96);
+    if (zedBoChon(sv)) return;
     tx(H.name, CX + 56, CY + 111, 112, { size: 10, bold: true, align: 'center', color: GOLD });
     ui.text(hs.lvl >= G.MAX_LEVEL ? G.t('Cấp {0} (tối đa)', hs.lvl) : G.t('Cấp {0}', hs.lvl), CX + 56, CY + 122, { size: 8, bold: true, align: 'center', color: TXT });
     const xf = hs.lvl >= G.MAX_LEVEL ? 1 : hs.xp / G.xpNeed(hs.lvl);

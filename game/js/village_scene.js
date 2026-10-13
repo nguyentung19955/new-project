@@ -666,6 +666,15 @@
     G.persist();
   }
 
+  // TRANG PHỤC ZED (js/data.js G.ZED_BO): bộ mới mở (js/stage.js, hoặc mở bù ở js/engine.js fixSave) → nói một lần chỗ đổi bộ, xoá dấu báo.
+  function zedBoBao() {
+    const z = G.save.zed;
+    delete z.boBao;
+    const ds = (G.ZED_BO_KEYS || []).filter((k) => k !== 'ninja' && G.zedBoMo(k)).map((k) => G.tv(G.ZED_BO[k].ten));
+    if (ds.length) say(G.t('Zed có trang phục mới: {0}. Đổi bộ ở Hành trang, thẻ Nhân vật.', ds.join(', ')), 5);
+    G.persist();
+  }
+
   // o.from: 'stage' (từ ải về: xuống đò ở bến bên phải) | 'title' | 'keep' (giữ chỗ đang đứng)
   VS.enter = function (o) {
     o = o || {};
@@ -755,6 +764,7 @@
     if (S.bubble) { S.bubble.t -= dt; if (S.bubble.t <= 0) S.bubble = null; }
     if ((S.newsT -= dt) <= 0) { S.newsT = 1; checkNews(); }
     if (!locked && G.ZED && G.save && G.save.zed && G.save.zed.bao === 1) zedBao(); // ZED: báo một lần bản lưu cũ đã chuyển sang Zed
+    else if (!locked && G.ZED && G.save && G.save.zed && G.save.zed.boBao === 1) zedBoBao(); // trang phục Zed vừa mở: báo một lần
     let mx = 0, my = 0;
     if (!locked) {
       const k = G.keys, kp = G.keyP, bt = btnAt();
