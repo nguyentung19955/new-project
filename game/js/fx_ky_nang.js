@@ -215,6 +215,10 @@
     if (!r || G.noRender || !K.S()) return r;
     try {
       if (z.pool && z.el === 'poison' && !z.heal && !z.rain && z.shape === 'circle' && !(z.t > 0)) {
+        // Gọn nhẹ (js/fx_he.js, cờ tắt ?gonhu=0): vũng đã dán ảnh AI (hu-vung-doc của em bé, hu-vung-quai-doc của quái) thì không vẽ
+        // thêm mảng tối, vạch và chấm tím lấm tấm đè lên ảnh; vũng của em bé đang ẩn hình (z.fxAn) cũng không vẽ.
+        const gn = G.goNhu && G.goNhu(), FA = G.fxAnh;
+        if (gn && (z.he ? z.fxAn || (FA && FA.co('hu-vung-doc')) : z.team !== 'player' && FA && FA.co('hu-vung-quai-doc'))) return r;
         if (z.he) {
           // vũng độc theo hệ (js/fx_he.js): hình vẽ sẵn, nở trong 0,18 giây
           const k = Math.min(1, (z.fxA || 0) / 0.18);
@@ -265,7 +269,8 @@
   }
   // (Địa Chấn của búa đã có vòng sóng và vết nứt riêng: không thêm vòng phép để màn hình khỏi rối)
   // Nổ lan (quái đang cháy chết thì nổ): vòng phép lửa đúng bán kính hình nổ
-  wrap('heBoom', (e, r) => runeOf(e.x, e.y, r * 0.9, K.pal('fire'), 0.45, 6, 2.6));
+  // Gọn nhẹ (cờ tắt ?gonhu=0): đã có ảnh AI vụ nổ hu-no-lua thì không chồng thêm vòng phép (nổ dây chuyền ở Thức tỉnh nổ liên tiếp, rất rối)
+  wrap('heBoom', (e, r) => { if (G.goNhu && G.goNhu() && G.fxAnh && G.fxAnh.co('hu-no-lua')) return; runeOf(e.x, e.y, r * 0.9, K.pal('fire'), 0.45, 6, 2.6); });
   // Kết hợp hệ: Nổ khói, Sốc nhiệt
   wrap('combo', (kind, t) => runeOf(t.x, t.y, 32, K.pal(kind === 'smoke' ? 'fire' : 'ice'), 0.5, 8, kind === 'smoke' ? 2.4 : -3));
 

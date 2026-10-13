@@ -10,6 +10,59 @@
   const TAU = Math.PI * 2;
   const NUM = [0, 5, 7, 9]; // số chi tiết trang trí theo mốc Mầm, Thành hình, Thức tỉnh
 
+  // ---------- GỌN NHẸ HIỆU ỨNG HỆ (13/10, docs/review/ke-hoach-cai-thien/hieu-ung-thuc-tinh) ----------
+  // Bật mặc định. Cờ tắt: ?gonhu=0 ở cuối địa chỉ (hoặc G.GO_NHU = false) thì mọi hình về đúng như cũ.
+  // Khi bật (CHỈ đổi hình, không đổi luật: sát thương, thời gian, bán kính vùng gây hại giữ nguyên):
+  //  - đã có ảnh AI cho một hiệu ứng thì không vẽ thêm lớp code cùng loại đè lên (đốm, bong bóng, vệt tím, sương, vết cháy trùng);
+  //  - vũng/mây hệ của em bé chồng lên nhau quá nửa thì chỉ vẽ cái mới nhất (cái cũ ẩn hình, vẫn gây sát thương như luật);
+  //  - mỗi loại vũng của em bé chỉ vẽ tối đa GN_MAX cái cùng lúc (cái mới nhất), mây độc mờ hơn, nhất là khi em bé đứng trong mây.
+  let gnTat = false;
+  try { gnTat = /[?&]gonhu=0\b/i.test(String(window.location && window.location.search)); } catch (e) { gnTat = false; }
+  if (G.GO_NHU == null) G.GO_NHU = !gnTat;
+  G.goNhu = () => G.GO_NHU !== false;
+  const GN_MAX = 3;      // số vũng (mỗi hệ) và số mây độc của em bé được vẽ cùng lúc
+  const GN_TRUNG = 0.5;  // phần diện tích chồng lên (so với vũng nhỏ hơn) từ mức này trở lên thì gộp hình
+  const GN_MAY = 0.42, GN_MAY_TRONG = 0.26; // độ đậm ảnh mây độc (cũ 0,6); em bé đứng trong mây thì mờ hơn nữa
+  const coAnhGN = (ma) => G.goNhu() && !!(G.fxAnh && G.fxAnh.co(ma));
+  // Diện tích chung của hai hình tròn bán kính a, b cách nhau d, chia cho diện tích hình nhỏ hơn (0..1)
+  function phanTrung(a, b, d) {
+    if (d >= a + b) return 0;
+    const m = Math.min(a, b);
+    if (d <= Math.abs(a - b)) return 1;
+    const a2 = a * a, b2 = b * b;
+    const x = a2 * Math.acos((d * d + a2 - b2) / (2 * d * a)) + b2 * Math.acos((d * d + b2 - a2) / (2 * d * b)) - 0.5 * Math.sqrt(Math.max(0, (-d + a + b) * (d + a - b) * (d - a + b) * (d + a + b)));
+    return x / (Math.PI * m * m);
+  }
+  // Bỏ vết cháy (scorch) vừa đặt tại đúng (x, y) – dùng khi ảnh vũng lửa đã nằm đúng chỗ đó
+  function boVetChay(x, y) {
+    const S = K.S(), E = S && S.E;
+    if (!E) return;
+    for (let i = E.length - 1; i >= Math.max(0, E.length - 40); i--) if (E[i].ty === 'scorch' && E[i].x === x && E[i].y === y) { E.splice(i, 1); return; }
+  }
+  const GN_DS = [];
+  // Mỗi khung: đánh dấu z.fxAn (ẩn hình) cho vũng/mây hệ của em bé bị vũng mới hơn che quá nửa, hoặc vượt số GN_MAX.
+  // Chỉ là cờ của lớp vẽ (tên bắt đầu bằng fx như z.fxA, z.fxId), luật trong js/moves.js, js/combat.js không đọc.
+  // Vũng mới thay chỗ một vũng cũ đang hiện thì hiện đủ cỡ ngay (không nở lại từ nhỏ) để nhìn như vũng cũ được làm mới.
+  function gopVung(W) {
+    const zs = W.zones;
+    for (const z of zs) if (z.he) z.fxAn = false;
+    if (!G.goNhu()) return;
+    const ZK = G.ZK || 0.85;
+    for (const loai of ['fire', 'poison']) { // vũng độc của vũ khí luôn kèm mây (z.cloud): ẩn vũng là ẩn cả mây phía trên
+      GN_DS.length = 0;
+      for (let i = zs.length - 1; i >= 0; i--) { // mới nhất trước (vũng mới được đẩy vào cuối mảng)
+        const z = zs[i];
+        if (!z.he || z.dead || z.team !== 'player' || !(z.life > 0) || z.el !== loai) continue;
+        let an = GN_DS.length >= GN_MAX;
+        if (!an) for (const q of GN_DS) {
+          if (phanTrung(z.r, q.r, Math.hypot(z.x - q.x, (z.y - q.y) / ZK)) >= GN_TRUNG) { an = true; if (!q.fxGop && !z.fxAn0) { q.fxGop = 1; q.fxA = Math.max(q.fxA || 0, 0.18); } break; }
+        }
+        z.fxAn = an; z.fxAn0 = an;
+        if (!an) GN_DS.push(z);
+      }
+    }
+  }
+
   // ---------- hình dạng của một đòn: cung tròn trước mặt, đường thẳng, hoặc một vòng quanh người ----------
   // Trả về null nếu đòn không có vệt (ví dụ buông tên: mũi tên tự mang hiệu ứng).
   function shapeOf(P, o) {
@@ -60,15 +113,18 @@
   // ---------- ĐỘC: vệt xanh lục pha tím, nhỏ giọt ----------
   const VENOM = ['#e6ffc0', '#c2f58a', '#6fcf3a', '#9a5fd6', '#6a3fa0', '#3f2a66'];
   const PURPLE = ['#e2c8ff', '#b98af0', '#9a5fd6', '#6a3fa0'];
+  // Gọn nhẹ: hạt và vệt của đòn độc chỉ xanh lục (không đốm tím lẫn vào vũng/mây độc); tắt cờ thì pha tím như cũ
+  const TIM = () => (G.goNhu() ? RAMP.poison : PURPLE);
+  const TIM1 = () => (G.goNhu() ? '#3f8f22' : '#9a5fd6'), TIM2 = () => (G.goNhu() ? '#8fe04a' : '#b98af0');
   function drawDrips(c, o, k) {
-    const sh = o.sh, n = o.n;
+    const sh = o.sh, n = o.n, t1 = TIM1(), t2 = TIM2();
     const grow = Math.min(1, k * 2.4);
     // viền tím chạy dọc vệt đòn
     if (k < 0.7) for (let i = 0; i < n * 2; i++) {
       const u = (i + 0.5) / (n * 2);
       if (u > k * 4 + 0.15 || (k > 0.4 && (i & 1))) continue;
       const q = pt(sh, u);
-      p(c, Math.round(q.x + q.nx * 3), Math.round(q.y + q.ny * 2), 4, 2, i % 3 ? '#9a5fd6' : '#b98af0');
+      p(c, Math.round(q.x + q.nx * 3), Math.round(q.y + q.ny * 2), 4, 2, i % 3 ? t1 : t2);
     }
     for (let i = 0; i < n; i++) {
       const u = (i + 0.5) / n;
@@ -76,8 +132,8 @@
       if (k > 0.75 && (i & 1)) continue;
       const q = pt(sh, u);
       const L = Math.round((3 + hash(o.sd + i) * o.h0) * grow), x = Math.round(q.x), y = Math.round(q.y) + Math.round(k * 4);
-      p(c, x, y, i % 2 ? 1 : 2, L, i % 3 === 1 ? '#9a5fd6' : '#6fcf3a');
-      p(c, x - (L > 4 ? 1 : 0), y + L, L > 4 ? 3 : 2, 2, i % 3 === 1 ? '#b98af0' : '#c2f58a'); // giọt nặng ở đầu
+      p(c, x, y, i % 2 ? 1 : 2, L, i % 3 === 1 ? t1 : '#6fcf3a');
+      p(c, x - (L > 4 ? 1 : 0), y + L, L > 4 ? 3 : 2, 2, i % 3 === 1 ? t2 : '#c2f58a'); // giọt nặng ở đầu
     }
   }
   function poisonSwing(sh, lv, big) {
@@ -86,7 +142,7 @@
     const m = 1 + lv + (big ? 2 : 0), gy = sh.y + (sh.kind === 'round' ? 9 : 14);
     for (let i = 0; i < m; i++) {
       const q = pt(sh, R());
-      emit(5, q.x, q.y, sh.f * rr(0, 30), rr(-20, 30), rr(0.4, 0.7), i % 3 === 1 ? PURPLE : RAMP.poison, 2, 300, 0, gy + rr(-3, 4), 1); // giọt rơi xuống đất
+      emit(5, q.x, q.y, sh.f * rr(0, 30), rr(-20, 30), rr(0.4, 0.7), i % 3 === 1 ? TIM() : RAMP.poison, 2, 300, 0, gy + rr(-3, 4), 1); // giọt rơi xuống đất
       if (i % 2 === 0) emit(11, q.x + rr(-3, 3), q.y + rr(-3, 3), rr(-4, 4), rr(-20, -8), rr(0.4, 0.7), RAMP.poison, 2, 0, 0, null, 1);
     }
   }
@@ -234,11 +290,13 @@
           for (let j = 0; j < 2; j++) emit(0, q[0], q[1] - 4, rr(-50, 50), rr(-150, -70), rr(0.4, 0.7), RAMP.ember, 1, 260, 0, q[1] + rr(-3, 5), 1);
         });
         const m = o.pts[(o.pts.length - 1) >> 1];
-        add({ ty: 'scorch', x: m[0], y: m[1], r: Math.min(30, o.line * 0.4), t: 1.6, ly: 0 });
+        // gọn nhẹ: có ảnh hu-vung-lua thì các vệt cháy dọc đường đã là ảnh, không đặt thêm vết cháy code đè lên
+        if (!coAnhGN('hu-vung-lua')) add({ ty: 'scorch', x: m[0], y: m[1], r: Math.min(30, o.line * 0.4), t: 1.6, ly: 0 });
         trauma(0.2);
         return;
       }
       K.blastFire(o.x, o.y, o.r, Math.min(1.2, (0.4 + 0.13 * lv) * Math.sqrt(o.power)));
+      if (coAnhGN('hu-vung-lua')) boVetChay(o.x, o.y); // vết cháy của vụ nổ nằm đúng chỗ ảnh vệt cháy (vũng lửa) của luật: bỏ lớp trùng
       trauma(0.16 + 0.07 * lv); kick(o.sx != null ? o.sx : o.dir, o.sy != null ? o.sy : 1);
     },
     poison(lv, o) {
@@ -246,10 +304,11 @@
       const xs = o.pts.length ? o.pts : [[o.x, o.y]];
       for (const [x, y] of xs) {
         addRing(x, y, 4, o.r, 0.34, '#c2f58a', 2, 0);
-        addRing(x, y, 2, o.r * 0.7, 0.3, '#9a5fd6', 2, 0, 0.06);
+        if (!G.goNhu()) addRing(x, y, 2, o.r * 0.7, 0.3, '#9a5fd6', 2, 0, 0.06); // gọn nhẹ: bỏ vòng tím trong (ảnh vũng đã có viền)
         const n = 4 + lv * 2;
-        for (let i = 0; i < n; i++) { const a = -Math.PI / 2 + rr(-1.3, 1.3), v = rr(50, 130); emit(5, x, y - 4, Math.cos(a) * v, Math.sin(a) * v, rr(0.4, 0.75), i % 3 ? RAMP.poison : PURPLE, 2, 380, 0, y + rr(-6, 8), 1); }
-        for (let i = 0; i < 3 + lv; i++) { const a = R() * TAU, v = rr(10, o.r * 1.2); emit(2, x, y - 8, Math.cos(a) * v, Math.sin(a) * v * 0.4 - 8, rr(0.6, 1.1), RAMP.vapor, R() < 0.5 ? 6 : 4, -6, 2.2, null, 1); }
+        for (let i = 0; i < n; i++) { const a = -Math.PI / 2 + rr(-1.3, 1.3), v = rr(50, 130); emit(5, x, y - 4, Math.cos(a) * v, Math.sin(a) * v, rr(0.4, 0.75), i % 3 ? RAMP.poison : TIM(), 2, 380, 0, y + rr(-6, 8), 1); }
+        // gọn nhẹ: có ảnh hu-may-doc thì mây ảnh đã là khói bốc lên, không thả thêm cụm hơi code đè lên
+        if (!coAnhGN('hu-may-doc')) for (let i = 0; i < 3 + lv; i++) { const a = R() * TAU, v = rr(10, o.r * 1.2); emit(2, x, y - 8, Math.cos(a) * v, Math.sin(a) * v * 0.4 - 8, rr(0.6, 1.1), RAMP.vapor, R() < 0.5 ? 6 : 4, -6, 2.2, null, 1); }
       }
     },
     ice(lv, o) {
@@ -268,11 +327,13 @@
   // Lớp băng trên một con quái đang đóng băng vỡ tung: mảnh sắc văng ra bốn phía tới bán kính r
   api('heShatter', (e, r) => {
     const B = K.bodyOf(e), y = e.y - B.h * 0.5;
-    add({ ty: 'flash', x: e.x, y, r: 11, t: 0.12, c: '#ffffff', c2: '#bfeaff', ly: 1, sq: true });
+    // Gọn nhẹ: có ảnh AI băng vỡ (hu-bang-vo) thì dán ảnh thay chớp sáng và vòng nhỏ quanh thân, mảnh/tia bớt một nửa; vòng lớn (bán kính văng thật) giữ
+    const ai = coAnhGN('hu-bang-vo') && K.anh('hu-bang-vo', e.x, y, { sc: Math.max(0.6, Math.min(2.2, (B.w + 14) / 24)) });
+    if (!ai) add({ ty: 'flash', x: e.x, y, r: 11, t: 0.12, c: '#ffffff', c2: '#bfeaff', ly: 1, sq: true });
     addRing(e.x, e.y, 5, r, 0.28, '#e9f9ff', 3, 0);
-    addRing(e.x, y, 3, B.w + 14, 0.2, '#ffffff', 2, 1);
-    for (let i = 0; i < 12; i++) { const a = (i / 12) * TAU + rr(-0.2, 0.2), v = rr(110, 200); streak(e.x + Math.cos(a) * 4, y + Math.sin(a) * 4, Math.cos(a) * v, Math.sin(a) * v * 0.6, rr(0.16, 0.26), RAMP.ice, i % 3 === 0 ? 2 : 1, rr(6, 11), 0, 3); }
-    for (let i = 0; i < 10; i++) { const a = R() * TAU, v = rr(50, 150); emit(i % 3 ? 4 : 8, e.x + rr(-B.w, B.w), e.y - rr(2, B.h), Math.cos(a) * v, Math.sin(a) * v * 0.6 - 50, rr(0.4, 0.75), RAMP.ice, i % 3 ? 2 : 3, 320, 0, e.y + rr(-3, 5), 1); }
+    if (!ai) addRing(e.x, y, 3, B.w + 14, 0.2, '#ffffff', 2, 1);
+    for (let i = 0, nt = ai ? 6 : 12; i < nt; i++) { const a = (i / nt) * TAU + rr(-0.2, 0.2), v = rr(110, 200); streak(e.x + Math.cos(a) * 4, y + Math.sin(a) * 4, Math.cos(a) * v, Math.sin(a) * v * 0.6, rr(0.16, 0.26), RAMP.ice, i % 3 === 0 ? 2 : 1, rr(6, 11), 0, 3); }
+    for (let i = 0; i < (ai ? 5 : 10); i++) { const a = R() * TAU, v = rr(50, 150); emit(i % 3 ? 4 : 8, e.x + rr(-B.w, B.w), e.y - rr(2, B.h), Math.cos(a) * v, Math.sin(a) * v * 0.6 - 50, rr(0.4, 0.75), RAMP.ice, i % 3 ? 2 : 3, 320, 0, e.y + rr(-3, 5), 1); }
     for (let i = 0; i < 4; i++) emit(2, e.x + rr(-6, 6), y + rr(-6, 6), rr(-24, 24), rr(-20, -4), rr(0.4, 0.7), RAMP.mist, 4, 0, 2, null, 1);
     trauma(0.35); K.stop(70);
   });
@@ -280,18 +341,20 @@
   api('heBoom', (e, r, n) => {
     const y = e.y - Math.min(14, (e.h || 24) * 0.5);
     K.blastFire(e.x, e.y, r, n > 0 ? 0.95 : 0.7);
-    addRing(e.x, e.y, 5, r, 0.26, '#ffd23f', 3, 0);
-    for (let i = 0; i < 8; i++) { const a = (i / 8) * TAU + rr(-0.2, 0.2), v = rr(90, 160); streak(e.x + Math.cos(a) * 4, y + Math.sin(a) * 3, Math.cos(a) * v, Math.sin(a) * v * 0.6, rr(0.14, 0.22), RAMP.fire, i % 3 === 0 ? 2 : 1, rr(6, 10), 0, 3); }
-    add({ ty: 'scorch', x: e.x, y: e.y, r: Math.min(22, r * 0.6), t: 1.4, ly: 0 });
+    // Gọn nhẹ: có ảnh AI vụ nổ (hu-no-lua, blastFire đã dán) thì không thêm vòng vàng và vết cháy thứ hai trùng chỗ, tia lửa bớt một nửa
+    const ai = coAnhGN('hu-no-lua');
+    if (!ai) addRing(e.x, e.y, 5, r, 0.26, '#ffd23f', 3, 0);
+    for (let i = 0, nt = ai ? 4 : 8; i < nt; i++) { const a = (i / nt) * TAU + rr(-0.2, 0.2), v = rr(90, 160); streak(e.x + Math.cos(a) * 4, y + Math.sin(a) * 3, Math.cos(a) * v, Math.sin(a) * v * 0.6, rr(0.14, 0.22), RAMP.fire, i % 3 === 0 ? 2 : 1, rr(6, 10), 0, 3); }
+    if (!ai) add({ ty: 'scorch', x: e.x, y: e.y, r: Math.min(22, r * 0.6), t: 1.4, ly: 0 });
     trauma(0.22);
   });
   // Độc lây từ quái vừa chết sang quái gần: các giọt độc bắn sang từng con
   api('heSpread', (e, list) => {
     const y0 = e.y - Math.min(16, (e.h || 24) * 0.5);
-    addRing(e.x, e.y, 4, 30, 0.32, '#9a5fd6', 2, 0);
+    addRing(e.x, e.y, 4, 30, 0.32, G.goNhu() ? '#8fe04a' : '#9a5fd6', 2, 0);
     for (let i = 0; i < Math.min(5, list.length); i++) {
       const t = list[i], ty = t.y - Math.min(16, (t.h || 24) * 0.5), T0 = 0.22;
-      for (let j = 0; j < 3; j++) { const o = emit(1, e.x, y0, (t.x - e.x) / T0 + rr(-12, 12), (ty - y0) / T0 + rr(-12, 12), T0 + j * 0.03, j === 1 ? PURPLE : RAMP.poison, 3, 0, 0, null, 1); o.t0 = o.t * 1.6; }
+      for (let j = 0; j < 3; j++) { const o = emit(1, e.x, y0, (t.x - e.x) / T0 + rr(-12, 12), (ty - y0) / T0 + rr(-12, 12), T0 + j * 0.03, j === 1 ? TIM() : RAMP.poison, 3, 0, 0, null, 1); o.t0 = o.t * 1.6; }
       addRing(t.x, ty, 2, 9, 0.2, '#c2f58a', 2, 1, T0);
     }
     for (let i = 0; i < 5; i++) emit(11, e.x + rr(-8, 8), e.y - rr(2, 20), rr(-6, 6), rr(-26, -10), rr(0.4, 0.8), RAMP.poison, 2, 0, 0, null, 1);
@@ -311,9 +374,9 @@
     poison(lv, o) {
       const y = o.y - 10;
       add({ ty: 'flash', x: o.x, y, r: o.big ? 9 : 6, t: 0.1, c: '#e6ffc0', c2: '#8fe04a', ly: 1, sq: true });
-      addRing(o.x, y, 2, o.big ? 15 : 10, 0.2, '#9a5fd6', 2, 1);
+      addRing(o.x, y, 2, o.big ? 15 : 10, 0.2, G.goNhu() ? '#8fe04a' : '#9a5fd6', 2, 1);
       const n = (o.big ? 7 : 4) + lv;
-      for (let i = 0; i < n; i++) emit(5, o.x, y, o.dir * rr(-20, 80), rr(-90, -10), rr(0.4, 0.7), i % 3 ? RAMP.poison : PURPLE, 2, 320, 0, o.y + rr(-3, 5), 1);
+      for (let i = 0; i < n; i++) emit(5, o.x, y, o.dir * rr(-20, 80), rr(-90, -10), rr(0.4, 0.7), i % 3 ? RAMP.poison : TIM(), 2, 320, 0, o.y + rr(-3, 5), 1);
       for (let i = 0; i < 2 + lv; i++) emit(2, o.x + rr(-4, 4), y + rr(-4, 4), rr(-14, 14), rr(-20, -6), rr(0.5, 0.9), RAMP.vapor, 4, 0, 1.5, null, 1);
     },
     ice(lv, o) {
@@ -371,6 +434,7 @@
   const VUNG_ANH = { fire: 'hu-vung-lua', poison: 'hu-vung-doc' };
   function drawHeZone(c, z) {
     const S = K.S(), t = S.t, id = z.fxId || 1;
+    if (z.fxAn) return; // gọn nhẹ: bị vũng mới hơn che quá nửa hoặc vượt số vũng được vẽ (vẫn gây sát thương như luật)
     const k = Math.min(1, (z.fxA || 0) / 0.18);
     if (k <= 0) return;
     const sp = zoneSprite(z.el, z.r), x = Math.round(z.x), y = Math.round(z.y);
@@ -471,15 +535,22 @@
   // Độ đọc trận 12/10: mây độc của bé chỉ thu HÌNH lại (bán kính G.theme.DOC.mayDocR ≈ cao một con quái thường); vũng độc
   // trên sàn và vùng gây sát thương (z.r) giữ nguyên. Cờ tắt G.DOC_TRAN2 = false: hình to như cũ.
   function mayR(z) { return G.docTran2 && G.docTran2() ? Math.min(z.r, G.theme.DOC.mayDocR) : z.r; }
+  // Độ đậm ảnh mây độc: cũ 0,6; gọn nhẹ 0,42, em bé đứng trong vùng mây thì 0,26 để thấy rõ em bé
+  function mayMo(z) {
+    if (!G.goNhu()) return 0.6;
+    const W = G.getWorld && G.getWorld(), P = W && W.P;
+    if (P && !P.dead && Math.hypot(P.x - z.x, (P.y - z.y) / (G.ZK || 0.85)) < z.r + 6) return GN_MAY_TRONG;
+    return GN_MAY;
+  }
   function drawCloud(c, o) {
     const z = o.z;
-    if (z.dead || z.life <= 0) return;
+    if (z.dead || z.life <= 0 || z.fxAn) return; // z.fxAn: gọn nhẹ, mây của vũng đang ẩn hình
     const t = K.S().t, id = z.fxId || 1;
     if (z.life < 0.4 && ((t * 20) | 0) % 2) return;
     const zr = mayR(z), sp = hazeSprite(zr), x = Math.round(z.x), y = Math.round(z.y) - 12;
     // Làn B4: có ảnh hu-may-doc thì dán ảnh thay hai lớp sương và cụm khói; bề ngang = đường kính luật của vũng bên dưới, đậm 60% để còn thấy nhân vật.
     const FA = G.fxAnh, an = FA && FA.get('hu-may-doc');
-    if (an) { FA.ve(c, 'hu-may-doc', x, y - 2, t + id * 0.37, 0, (2 * zr) / Math.max(4, an.fw - 4, G.docTran2 && G.docTran2() ? an.fh - 4 : 0), false, 0.6); return; } // 12/10: cả bề cao cũng không quá 2 x bán kính hình
+    if (an) { FA.ve(c, 'hu-may-doc', x, y - 2, t + id * 0.37, 0, (2 * zr) / Math.max(4, an.fw - 4, G.docTran2 && G.docTran2() ? an.fh - 4 : 0), false, mayMo(z)); return; } // 12/10: cả bề cao cũng không quá 2 x bán kính hình
     c.drawImage(sp.cv, x - (sp.w >> 1) + Math.round(Math.sin(t * 1.6 + id) * 3), y - (sp.h >> 1));
     c.drawImage(sp.cv, x - (sp.w >> 1) - Math.round(Math.sin(t * 1.1 + id * 2) * 4), y - (sp.h >> 1) - 5);
     c.fillStyle = 'rgba(154,95,214,0.3)';
@@ -522,11 +593,12 @@
   // ---------- mỗi khung: sóng chấn động, hạt lúc lấy đà ----------
   fx.heStep = function (W, dt, tick) {
     const P = W.P, mv = P.mv;
+    try { gopVung(W); } catch (e) { fail(e); }
     if (tick) for (const o of W.projs) {
       // vệt hạt sau mũi tên mang hệ
       if (!o.he || o.team !== 'player') continue;
       const y = o.y - (o.z || 10), b = o.x - Math.sign(o.vx) * 6;
-      if (o.he.el === 'poison') { emit(5, b, y + 1, -o.vx * 0.03, rr(0, 20), rr(0.35, 0.55), R() < 0.3 ? PURPLE : RAMP.poison, o.big ? 2 : 1, 260, 0, o.y + rr(-1, 3), 1); if (o.big) emit(2, b, y, 0, -8, 0.45, RAMP.vapor, 3, 0, 0, null, 1); }
+      if (o.he.el === 'poison') { emit(5, b, y + 1, -o.vx * 0.03, rr(0, 20), rr(0.35, 0.55), R() < 0.3 ? TIM() : RAMP.poison, o.big ? 2 : 1, 260, 0, o.y + rr(-1, 3), 1); if (o.big) emit(2, b, y, 0, -8, 0.45, RAMP.vapor, 3, 0, 0, null, 1); }
       else if (o.he.el === 'ice') { emit(R() < 0.5 ? 6 : 4, b + rr(-2, 2), y + rr(-3, 3), -o.vx * 0.02, rr(-6, 14), rr(0.25, 0.45), RAMP.ice, o.big ? 2 : 1, 0, 0, null, 1); if (o.big) emit(2, b, y, 0, -3, 0.4, RAMP.mist, 3, 0, 0, null, 1); }
       else if (o.he.el === 'fire') { emit(9, b, y + rr(-1, 2), -o.vx * 0.06, rr(-30, -10), rr(0.2, 0.35), RAMP.fire, o.big ? 4 : 3, -20, 0, null, 1); if (o.big || o.he.lv >= 3) emit(0, b, y, -o.vx * 0.1 + rr(-20, 20), rr(-60, -20), rr(0.3, 0.5), RAMP.ember, 1, 200, 0, o.y + 2, 1); }
     }
@@ -534,12 +606,15 @@
       if (!z.he || !z.cloud || z.dead) continue;
       // màn khói độc lơ lửng phía trên vũng: một lớp sương mỏng và các cụm khói trôi chậm
       if (!z.fxOn) { z.fxOn = 1; add({ ty: 'he', x: z.x, y: z.y, t: z.life + 0.1, ly: 1, draw: drawCloud, z }); }
-      if (tick && R() < 0.4) { const a = R() * TAU, d = Math.sqrt(R()) * mayR(z) * 0.8; emit(2, z.x + Math.cos(a) * d, z.y - rr(6, 20) + Math.sin(a) * d * 0.3, rr(-8, 8), rr(-9, -2), rr(0.7, 1.3), R() < 0.25 ? HAZE_P : RAMP.vapor, R() < 0.5 ? 6 : 4, 0, 0.6, null, 1); }
+      // gọn nhẹ: vũng ẩn hình thì không nhả sương; có ảnh hu-may-doc thì sương code thưa hẳn (ảnh đã là mây) và không có hạt tím
+      const gn = G.goNhu(), anhMay = gn && G.fxAnh && G.fxAnh.co('hu-may-doc');
+      if (gn && z.fxAn) continue;
+      if (tick && R() < (anhMay ? 0.12 : 0.4)) { const a = R() * TAU, d = Math.sqrt(R()) * mayR(z) * 0.8; emit(2, z.x + Math.cos(a) * d, z.y - rr(6, 20) + Math.sin(a) * d * 0.3, rr(-8, 8), rr(-9, -2), rr(0.7, 1.3), !gn && R() < 0.25 ? HAZE_P : RAMP.vapor, R() < 0.5 ? 6 : 4, 0, 0.6, null, 1); }
     }
     if (W.mvShards) for (const q of W.mvShards) {
       // mảnh tên độc: một giọt nhớt bay, kéo theo vệt
       if (!q.fxOn) { q.fxOn = 1; add({ ty: 'he', x: q.x, y: q.y, t: 0.4, ly: 1, draw: drawShard, q }); }
-      if (tick) emit(1, q.x, q.y - 10, -q.vx * 0.05, -q.vy * 0.05, 0.22, R() < 0.3 ? PURPLE : RAMP.poison, 2, 0, 0, null, 1);
+      if (tick) emit(1, q.x, q.y - 10, -q.vx * 0.05, -q.vy * 0.05, 0.22, R() < 0.3 ? TIM() : RAMP.poison, 2, 0, 0, null, 1);
     }
     if (W.mvWaves) for (const z of W.mvWaves) {
       if (!z.fxOn) { z.fxOn = 1; z.x0 = z.x; z.y0 = z.y; add({ ty: 'he', x: z.x, y: z.y, t: z.left / z.v + 0.05, ly: 0, draw: (c, o) => { if (o.z.left > 0) drawWave(c, o.z); }, z }); }

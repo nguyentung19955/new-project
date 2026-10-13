@@ -11,6 +11,10 @@
   const UP = 12; // chưởng bay cao ngang ngực em bé
   const scr = (q) => { const sy = q.uy * zk(), l = Math.hypot(q.ux, sy) || 1; return [q.ux / l, sy / l]; };
   const PURPLE = ['#e2c6ff', '#b98af0', '#9a5fd6', '#6a3fa0'];
+  // Gọn nhẹ (js/fx_he.js, cờ tắt ?gonhu=0): mây độc của chưởng đã dán ảnh AI (hu-vung-doc, hu-may-doc) thì các lớp code
+  // còn vẽ đè lên (vòng nhịp, hạt xoáy, hạt bốc lên) chỉ xanh lục, không đốm tím; ảnh mây mờ hơn (0,6 -> 0,42).
+  const gnMay = () => !!(G.goNhu && G.goNhu() && G.fxAnh && G.fxAnh.co('hu-vung-doc'));
+  const TIMM = () => (gnMay() ? RAMP.poison : PURPLE);
   // Hệ số cường độ, bậc đòn và vòng phép dùng chung (js/fx_ky_nang.js, nạp sau tệp này nên lấy lúc gọi)
   const KN = () => fx.kyNang;
   const nHat = (n) => (KN() ? KN().nHat(n) : n);
@@ -142,10 +146,10 @@
     }
     // nhịp độc: vòng lục co về giữa đúng lúc mây gây sát thương
     const b = beat(z);
-    if (b > 0) ring(c, x, y, Math.max(2, Math.round(rx * (0.55 + 0.45 * b))), Math.max(2, Math.round(ry * (0.55 + 0.45 * b))), 1, b > 0.5 ? '#c2f58a' : '#b98af0', b < 0.4);
+    if (b > 0) ring(c, x, y, Math.max(2, Math.round(rx * (0.55 + 0.45 * b))), Math.max(2, Math.round(ry * (0.55 + 0.45 * b))), 1, b > 0.5 ? '#c2f58a' : an && gnMay() ? '#6fcf3a' : '#b98af0', b < 0.4);
     // màn khói lơ lửng trên mây: các vạch ngang so le trôi qua lại
     // Làn B4: có ảnh hu-may-doc thì dán ảnh (đậm 60%, cao hơn mặt sàn 10 điểm) thay các vạch.
-    if (!anhVung(c, 'hu-may-doc', x, y - 10, rx, 1, t + id * 0.37, 0.6)) for (let j = 0; j < 4; j++) {
+    if (!anhVung(c, 'hu-may-doc', x, y - 10, rx, 1, t + id * 0.37, an && gnMay() ? 0.42 : 0.6)) for (let j = 0; j < 4; j++) {
       const yy = y - 4 - j * 4, hw = Math.round(rx * (0.95 - j * 0.15)), sh = Math.round(Math.sin(t * (1.2 + j * 0.3) + id + j) * 3);
       if (hw < 2) continue;
       p(c, x - hw + sh, yy, hw * 2, 2, j % 2 ? 'rgba(154,95,214,0.22)' : 'rgba(143,224,74,0.24)');
@@ -153,7 +157,7 @@
     // Vạn độc: hạt độc xoáy vào giữa
     if (z.pull) for (let i = 0; i < 6; i++) {
       const u = ((t * 0.9 + i / 6) % 1), a = i * 1.05 + t * 2.2, d = (1 - u) * rx;
-      p(c, Math.round(x + Math.cos(a) * d), Math.round(y + Math.sin(a) * d * zk()) - 2, 2, 2, i % 2 ? '#c2f58a' : '#b98af0');
+      p(c, Math.round(x + Math.cos(a) * d), Math.round(y + Math.sin(a) * d * zk()) - 2, 2, 2, i % 2 ? '#c2f58a' : an && gnMay() ? '#6fcf3a' : '#b98af0');
     }
     // bong bóng sủi trên mặt mây (ảnh hu-vung-doc đã có bong bóng riêng)
     if (!an) for (let i = 0; i < 3; i++) {
@@ -197,13 +201,13 @@
         // vừa gây sát thương: vài hạt bật lên khắp vùng (giới hạn theo G.VFX.hat)
         for (let i = 0; i < nHat(3); i++) {
           const a = R() * TAU, d = Math.sqrt(R()) * z.r * 0.8, px = z.x + Math.cos(a) * d, py = z.y + Math.sin(a) * d * zk();
-          if (z.kind === 'may') emit(1, px, py - 2, rr(-6, 6), rr(-28, -12), rr(0.45, 0.7), R() < 0.4 ? PURPLE : RAMP.poison, 2, -4, 0.8, null, 1);
+          if (z.kind === 'may') emit(1, px, py - 2, rr(-6, 6), rr(-28, -12), rr(0.45, 0.7), R() < 0.4 ? TIMM() : RAMP.poison, 2, -4, 0.8, null, 1);
           else emit(9, px, py, 0, rr(-50, -25), rr(0.25, 0.4), RAMP.fire, 4, -20, 0, null, 1);
         }
       }
       z.fxTk = z.tick;
       if (!tick) continue;
-      if (z.kind === 'may' && R() < 0.5) { const a = R() * TAU, d = Math.sqrt(R()) * z.r * 0.8; emit(2, z.x + Math.cos(a) * d, z.y - rr(4, 16) + Math.sin(a) * d * 0.3, rr(-6, 6), rr(-10, -3), rr(0.6, 1.1), R() < 0.3 ? PURPLE : RAMP.vapor, R() < 0.5 ? 5 : 3, 0, 0.6, null, 1); }
+      if (z.kind === 'may' && R() < 0.5) { const a = R() * TAU, d = Math.sqrt(R()) * z.r * 0.8; emit(2, z.x + Math.cos(a) * d, z.y - rr(4, 16) + Math.sin(a) * d * 0.3, rr(-6, 6), rr(-10, -3), rr(0.6, 1.1), R() < 0.3 ? TIMM() : RAMP.vapor, R() < 0.5 ? 5 : 3, 0, 0.6, null, 1); }
       else if (z.kind === 'vet' && R() < 0.35) emit(9, z.x + rr(-z.r, z.r) * 0.6, z.y + rr(-2, 2), 0, rr(-30, -10), rr(0.2, 0.4), RAMP.fire, 3, -20, 0, null, 1);
     }
   }

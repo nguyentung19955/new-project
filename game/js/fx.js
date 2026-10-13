@@ -1577,7 +1577,7 @@
       OWN = z.team === 'player' ? 1 : 0;
       if (!z.fxId) z.fxId = 1 + R() * 50;
       z.fxA = (z.fxA || 0) + dt;
-      if (!tick || z.rain || z.fxA < (z.fxD || 0)) continue;
+      if (!tick || z.rain || z.fxA < (z.fxD || 0) || z.fxAn) continue; // z.fxAn: vũng hệ của em bé đang ẩn hình (gọn nhẹ, js/fx_he.js)
       const a = R() * TAU, d = Math.sqrt(R()) * 0.85, x = z.x + Math.cos(a) * z.r * d, y = z.y + Math.sin(a) * z.r * (G.ZK || 0.6) * d;
       if (z.heal) { if (R() < 0.6) emit(10, x, y - 2, 0, rr(-30, -16), rr(0.6, 1.0), RAMP.heal, 1, 0, 0, null, 1); }
       else if (z.el === 'fire') { if (R() < 0.6) emit(9, x, y, rr(-5, 5), rr(-50, -25), rr(0.3, 0.5), RAMP.fire, 3, -20, 0, null, 1); if (R() < 0.15) emit(2, x, y - 10, 0, -18, 0.6, RAMP.dark, 3, 0, 0, null, 1); }
