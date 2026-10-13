@@ -1,0 +1,402 @@
+{
+ "anh": "p3-3-danh.png",
+ "co_anh": [
+  3132,
+  572
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 6,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 164,
+  "vien_khu": 17711,
+  "nga_mau_nen_trong_hinh": 28272
+ },
+ "manh_bo": [
+  {
+   "khung_bao": [
+    2016,
+    95,
+    2040,
+    119
+   ],
+   "diem_anh": 97
+  },
+  {
+   "khung_bao": [
+    2027,
+    124,
+    2053,
+    149
+   ],
+   "diem_anh": 139
+  },
+  {
+   "khung_bao": [
+    2515,
+    126,
+    2539,
+    149
+   ],
+   "diem_anh": 107
+  },
+  {
+   "khung_bao": [
+    1610,
+    192,
+    1631,
+    212
+   ],
+   "diem_anh": 62
+  },
+  {
+   "khung_bao": [
+    2517,
+    224,
+    2534,
+    241
+   ],
+   "diem_anh": 22
+  },
+  {
+   "khung_bao": [
+    1015,
+    226,
+    1039,
+    253
+   ],
+   "diem_anh": 65
+  },
+  {
+   "khung_bao": [
+    1531,
+    232,
+    1549,
+    251
+   ],
+   "diem_anh": 34
+  },
+  {
+   "khung_bao": [
+    2557,
+    243,
+    2576,
+    262
+   ],
+   "diem_anh": 40
+  },
+  {
+   "khung_bao": [
+    1516,
+    252,
+    1534,
+    270
+   ],
+   "diem_anh": 33
+  },
+  {
+   "khung_bao": [
+    2104,
+    252,
+    2120,
+    269
+   ],
+   "diem_anh": 19
+  },
+  {
+   "khung_bao": [
+    2556,
+    276,
+    2575,
+    296
+   ],
+   "diem_anh": 39
+  },
+  {
+   "khung_bao": [
+    2039,
+    281,
+    2055,
+    298
+   ],
+   "diem_anh": 15
+  },
+  {
+   "khung_bao": [
+    1076,
+    291,
+    1095,
+    310
+   ],
+   "diem_anh": 36
+  },
+  {
+   "khung_bao": [
+    2109,
+    306,
+    2126,
+    324
+   ],
+   "diem_anh": 25
+  },
+  {
+   "khung_bao": [
+    1088,
+    319,
+    1108,
+    339
+   ],
+   "diem_anh": 38
+  },
+  {
+   "khung_bao": [
+    2102,
+    323,
+    2121,
+    342
+   ],
+   "diem_anh": 41
+  },
+  {
+   "khung_bao": [
+    2036,
+    350,
+    2059,
+    372
+   ],
+   "diem_anh": 91
+  },
+  {
+   "khung_bao": [
+    2537,
+    357,
+    2552,
+    372
+   ],
+   "diem_anh": 6
+  },
+  {
+   "khung_bao": [
+    1576,
+    369,
+    1594,
+    386
+   ],
+   "diem_anh": 26
+  },
+  {
+   "khung_bao": [
+    2019,
+    374,
+    2041,
+    394
+   ],
+   "diem_anh": 62
+  },
+  {
+   "khung_bao": [
+    2090,
+    382,
+    2109,
+    399
+   ],
+   "diem_anh": 27
+  },
+  {
+   "khung_bao": [
+    2132,
+    387,
+    2162,
+    409
+   ],
+   "diem_anh": 106
+  },
+  {
+   "khung_bao": [
+    2535,
+    387,
+    2550,
+    400
+   ],
+   "diem_anh": 3
+  },
+  {
+   "khung_bao": [
+    2034,
+    388,
+    2052,
+    406
+   ],
+   "diem_anh": 29
+  },
+  {
+   "khung_bao": [
+    2103,
+    410,
+    2122,
+    428
+   ],
+   "diem_anh": 33
+  },
+  {
+   "khung_bao": [
+    2121,
+    418,
+    2139,
+    436
+   ],
+   "diem_anh": 28
+  },
+  {
+   "khung_bao": [
+    1538,
+    429,
+    1558,
+    447
+   ],
+   "diem_anh": 35
+  },
+  {
+   "khung_bao": [
+    2559,
+    433,
+    2582,
+    455
+   ],
+   "diem_anh": 73
+  }
+ ],
+ "loi": [],
+ "canh_bao": [
+  "Mảnh 97 điểm ảnh ở [2016, 95, 2040, 119] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 139 điểm ảnh ở [2027, 124, 2053, 149] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 107 điểm ảnh ở [2515, 126, 2539, 149] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 62 điểm ảnh ở [1610, 192, 1631, 212] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 65 điểm ảnh ở [1015, 226, 1039, 253] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 40 điểm ảnh ở [2557, 243, 2576, 262] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 41 điểm ảnh ở [2102, 323, 2121, 342] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 91 điểm ảnh ở [2036, 350, 2059, 372] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 62 điểm ảnh ở [2019, 374, 2041, 394] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 106 điểm ảnh ở [2132, 387, 2162, 409] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 73 điểm ảnh ở [2559, 433, 2582, 455] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "p3-3-danh",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      47,
+      30,
+      508,
+      511
+     ],
+     "chan": [
+      277.0,
+      511
+     ],
+     "rong": 461,
+     "cao": 481,
+     "diem_anh": 140875,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      559,
+      42,
+      1036,
+      511
+     ],
+     "chan": [
+      791.5,
+      511
+     ],
+     "rong": 477,
+     "cao": 469,
+     "diem_anh": 140108,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      1064,
+      65,
+      1557,
+      525
+     ],
+     "chan": [
+      1309.5,
+      525
+     ],
+     "rong": 493,
+     "cao": 460,
+     "diem_anh": 147257,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1569,
+      74,
+      2058,
+      513
+     ],
+     "chan": [
+      1815.5,
+      513
+     ],
+     "rong": 489,
+     "cao": 439,
+     "diem_anh": 138745,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      2096,
+      53,
+      2601,
+      516
+     ],
+     "chan": [
+      2329.0,
+      516
+     ],
+     "rong": 505,
+     "cao": 463,
+     "diem_anh": 132471,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      2613,
+      52,
+      3076,
+      517
+     ],
+     "chan": [
+      2844.0,
+      517
+     ],
+     "rong": 463,
+     "cao": 465,
+     "diem_anh": 137578,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}

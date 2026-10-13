@@ -1,0 +1,369 @@
+{
+ "anh": "p3-4-trung-don.png",
+ "co_anh": [
+  1953,
+  891
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 4,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 124,
+  "vien_khu": 19395,
+  "nga_mau_nen_trong_hinh": 43601
+ },
+ "manh_bo": [
+  {
+   "khung_bao": [
+    1177,
+    175,
+    1201,
+    210
+   ],
+   "diem_anh": 121
+  },
+  {
+   "khung_bao": [
+    929,
+    189,
+    950,
+    210
+   ],
+   "diem_anh": 52
+  },
+  {
+   "khung_bao": [
+    878,
+    193,
+    901,
+    217
+   ],
+   "diem_anh": 56
+  },
+  {
+   "khung_bao": [
+    932,
+    266,
+    955,
+    287
+   ],
+   "diem_anh": 59
+  },
+  {
+   "khung_bao": [
+    530,
+    269,
+    559,
+    290
+   ],
+   "diem_anh": 37
+  },
+  {
+   "khung_bao": [
+    538,
+    300,
+    551,
+    314
+   ],
+   "diem_anh": 2
+  },
+  {
+   "khung_bao": [
+    1389,
+    315,
+    1405,
+    331
+   ],
+   "diem_anh": 13
+  },
+  {
+   "khung_bao": [
+    532,
+    319,
+    548,
+    334
+   ],
+   "diem_anh": 9
+  },
+  {
+   "khung_bao": [
+    936,
+    331,
+    962,
+    351
+   ],
+   "diem_anh": 41
+  },
+  {
+   "khung_bao": [
+    1362,
+    359,
+    1389,
+    377
+   ],
+   "diem_anh": 42
+  },
+  {
+   "khung_bao": [
+    1376,
+    376,
+    1401,
+    395
+   ],
+   "diem_anh": 55
+  },
+  {
+   "khung_bao": [
+    991,
+    394,
+    1016,
+    413
+   ],
+   "diem_anh": 41
+  },
+  {
+   "khung_bao": [
+    1385,
+    411,
+    1398,
+    424
+   ],
+   "diem_anh": 1
+  },
+  {
+   "khung_bao": [
+    529,
+    417,
+    547,
+    434
+   ],
+   "diem_anh": 25
+  },
+  {
+   "khung_bao": [
+    1378,
+    427,
+    1400,
+    445
+   ],
+   "diem_anh": 22
+  },
+  {
+   "khung_bao": [
+    994,
+    428,
+    1008,
+    442
+   ],
+   "diem_anh": 3
+  },
+  {
+   "khung_bao": [
+    933,
+    467,
+    948,
+    483
+   ],
+   "diem_anh": 8
+  },
+  {
+   "khung_bao": [
+    915,
+    483,
+    941,
+    499
+   ],
+   "diem_anh": 13
+  },
+  {
+   "khung_bao": [
+    857,
+    487,
+    873,
+    503
+   ],
+   "diem_anh": 10
+  },
+  {
+   "khung_bao": [
+    875,
+    503,
+    898,
+    531
+   ],
+   "diem_anh": 100
+  },
+  {
+   "khung_bao": [
+    925,
+    506,
+    951,
+    525
+   ],
+   "diem_anh": 46
+  },
+  {
+   "khung_bao": [
+    998,
+    550,
+    1030,
+    581
+   ],
+   "diem_anh": 131
+  },
+  {
+   "khung_bao": [
+    534,
+    568,
+    553,
+    587
+   ],
+   "diem_anh": 28
+  },
+  {
+   "khung_bao": [
+    586,
+    630,
+    600,
+    644
+   ],
+   "diem_anh": 4
+  },
+  {
+   "khung_bao": [
+    929,
+    636,
+    952,
+    663
+   ],
+   "diem_anh": 121
+  },
+  {
+   "khung_bao": [
+    566,
+    639,
+    592,
+    668
+   ],
+   "diem_anh": 58
+  },
+  {
+   "khung_bao": [
+    555,
+    662,
+    572,
+    678
+   ],
+   "diem_anh": 15
+  },
+  {
+   "khung_bao": [
+    941,
+    676,
+    966,
+    702
+   ],
+   "diem_anh": 133
+  }
+ ],
+ "loi": [],
+ "canh_bao": [
+  "Mảnh 121 điểm ảnh ở [1177, 175, 1201, 210] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 52 điểm ảnh ở [929, 189, 950, 210] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 56 điểm ảnh ở [878, 193, 901, 217] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 59 điểm ảnh ở [932, 266, 955, 287] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 41 điểm ảnh ở [936, 331, 962, 351] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 42 điểm ảnh ở [1362, 359, 1389, 377] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 55 điểm ảnh ở [1376, 376, 1401, 395] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 41 điểm ảnh ở [991, 394, 1016, 413] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 100 điểm ảnh ở [875, 503, 898, 531] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 46 điểm ảnh ở [925, 506, 951, 525] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 131 điểm ảnh ở [998, 550, 1030, 581] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 121 điểm ảnh ở [929, 636, 952, 663] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 58 điểm ảnh ở [566, 639, 592, 668] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 133 điểm ảnh ở [941, 676, 966, 702] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "p3-4-trung-don",
+   "so_khung": 4,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      37,
+      183,
+      508,
+      765
+     ],
+     "chan": [
+      272.0,
+      765
+     ],
+     "rong": 471,
+     "cao": 582,
+     "diem_anh": 170307,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      518,
+      165,
+      970,
+      764
+     ],
+     "chan": [
+      743.5,
+      764
+     ],
+     "rong": 452,
+     "cao": 599,
+     "diem_anh": 144989,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      983,
+      181,
+      1432,
+      764
+     ],
+     "chan": [
+      1207.0,
+      764
+     ],
+     "rong": 449,
+     "cao": 583,
+     "diem_anh": 153212,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1444,
+      183,
+      1915,
+      765
+     ],
+     "chan": [
+      1679.0,
+      765
+     ],
+     "rong": 471,
+     "cao": 582,
+     "diem_anh": 172168,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}
