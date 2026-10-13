@@ -1,0 +1,5 @@
+# Prompt động tác trùm mới (13/10). Mỗi tin = 1 hàng, gửi kèm ảnh mẫu của trùm/pha đó (docs/anh-goc/trum-moi/<ma>-pN.png).
+# Khung chung (thay <TÊN>, <N>, <ĐỘNG TÁC>):
+Vẽ lại đúng nhân vật trong ảnh gửi kèm (giữ y hệt thiết kế, màu, chi tiết), pixel art, nhìn nghiêng sang PHẢI. 1 hàng <N> khung: <ĐỘNG TÁC>. Cỡ nhân vật bằng nhau mọi khung, chân chạm cùng một đường đất. Nền xanh lá #00FF00, không chữ, không bóng, các khung không chạm nhau.
+# Pha 1 (và trùm nhỏ): 6 hàng đứng / đi / báo đòn / đánh / trúng đòn / chết. Pha 2, pha 3: 4 hàng đứng / báo đòn / đánh / trúng đòn.
+# Trùm nhỏ: pha 1 + pha 2 (nổi giận dưới 50% máu) — chủ dự án chọn a.
