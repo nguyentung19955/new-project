@@ -1,0 +1,173 @@
+{
+ "anh": "trang-phuc/bo-3-bien/02-di.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 8,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 0,
+  "vien_khu": 9980,
+  "nga_mau_nen_trong_hinh": 168
+ },
+ "manh_bo": [],
+ "loi": [],
+ "canh_bao": [],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "02-di",
+   "so_khung": 8,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      8,
+      147,
+      261,
+      591
+     ],
+     "chan": [
+      131.5,
+      591
+     ],
+     "rong": 253,
+     "cao": 444,
+     "diem_anh": 56630,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      278,
+      149,
+      533,
+      591
+     ],
+     "chan": [
+      416.5,
+      591
+     ],
+     "rong": 255,
+     "cao": 442,
+     "diem_anh": 52946,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      566,
+      147,
+      790,
+      590
+     ],
+     "chan": [
+      656.0,
+      590
+     ],
+     "rong": 224,
+     "cao": 443,
+     "diem_anh": 49181,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      802,
+      147,
+      1061,
+      591
+     ],
+     "chan": [
+      920.5,
+      591
+     ],
+     "rong": 259,
+     "cao": 444,
+     "diem_anh": 55202,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1089,
+      147,
+      1340,
+      591
+     ],
+     "chan": [
+      1212.5,
+      591
+     ],
+     "rong": 251,
+     "cao": 444,
+     "diem_anh": 56178,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1359,
+      148,
+      1616,
+      591
+     ],
+     "chan": [
+      1500.5,
+      591
+     ],
+     "rong": 257,
+     "cao": 443,
+     "diem_anh": 53134,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 7,
+     "khung_bao": [
+      1653,
+      147,
+      1877,
+      590
+     ],
+     "chan": [
+      1741.0,
+      590
+     ],
+     "rong": 224,
+     "cao": 443,
+     "diem_anh": 49043,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 8,
+     "khung_bao": [
+      1889,
+      147,
+      2150,
+      591
+     ],
+     "chan": [
+      2011.0,
+      591
+     ],
+     "rong": 261,
+     "cao": 444,
+     "diem_anh": 55471,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}
