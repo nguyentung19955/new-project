@@ -1,0 +1,142 @@
+{
+ "anh": "5-trung-don.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 4,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 47,
+  "vien_khu": 9311,
+  "nga_mau_nen_trong_hinh": 947
+ },
+ "manh_bo": [
+  {
+   "khung_bao": [
+    1358,
+    225,
+    1371,
+    239
+   ],
+   "diem_anh": 2
+  },
+  {
+   "khung_bao": [
+    1120,
+    284,
+    1146,
+    324
+   ],
+   "diem_anh": 22
+  },
+  {
+   "khung_bao": [
+    1164,
+    291,
+    1181,
+    308
+   ],
+   "diem_anh": 6
+  },
+  {
+   "khung_bao": [
+    1117,
+    381,
+    1132,
+    396
+   ],
+   "diem_anh": 3
+  }
+ ],
+ "loi": [],
+ "canh_bao": [
+  "Hàng 1 khung 2 cao 357 (trung vị 448) — lệch cỡ >15%"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "5-trung-don",
+   "so_khung": 4,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      6,
+      123,
+      542,
+      609
+     ],
+     "chan": [
+      281.5,
+      609
+     ],
+     "rong": 536,
+     "cao": 486,
+     "diem_anh": 149862,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      597,
+      251,
+      1002,
+      608
+     ],
+     "chan": [
+      799.0,
+      608
+     ],
+     "rong": 405,
+     "cao": 357,
+     "diem_anh": 96078,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      1088,
+      167,
+      1621,
+      609
+     ],
+     "chan": [
+      1330.5,
+      609
+     ],
+     "rong": 533,
+     "cao": 442,
+     "diem_anh": 141943,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1641,
+      156,
+      2148,
+      610
+     ],
+     "chan": [
+      1893.0,
+      610
+     ],
+     "rong": 507,
+     "cao": 454,
+     "diem_anh": 129961,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}
