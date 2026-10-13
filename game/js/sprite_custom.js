@@ -103,6 +103,7 @@
       if (tep.doi_tuong === 'em-be' && /-don$/.test(tep.ma)) return themDon(tep); // đòn theo vũ khí của một thân em bé (Phiên 3)
       if (tep.doi_tuong === 'ghep') return themGhep(tep); // hồ sơ ghép trang bị của một nhân vật (ghep-<key>), không có ảnh
       if (tep.doi_tuong === 'giao-dien') return themGd(tep); // ảnh giao diện (gd-<tên>): biểu tượng, ô phòng, khung bản đồ
+      if (tep.doi_tuong === 'zed') return themZed(tep); // bộ Zed mới 13/10 (zed-moi: thân + nắm tay, zed-vk: vũ khí 4 cấp); js/zed_moi.js vẽ
       if (!SC.laAnh(tep.tam)) throw new Error('thiếu tấm sprite');
       const fw = tep.khung_rong | 0, fh = tep.khung_cao | 0, goc = tep.goc || [0, 0];
       if (fw < 1 || fh < 1 || fw > 1024 || fh > 1024) throw new Error('cỡ khung sai');
@@ -156,7 +157,24 @@
       return null;
     }
   };
-  SC.remove = function (ma) { for (const k in SC.don) if (SC.don[k].ma === ma) boDon(k); if (SC.do[ma]) boDo(ma); delete SC.ds[ma]; if (SC.gd) delete SC.gd[ma]; for (const k in SC.ghep) if (SC.ghep[k].ma === ma) boGhep(k); };
+  // ---------- BỘ ZED MỚI (13/10/2026, docs/review/ke-hoach-cai-thien/zed-tich-hop) ----------
+  // Tệp "doi_tuong": "zed" (mã zed-moi, zed-vk; dựng bằng docs/anh-goc/zed/dung-zed-game.py): chỉ nạp ảnh và giữ nguyên số liệu
+  // vào SC.zed[mã] = { tep, img, ready }. Cách chọn khung, gắn vũ khí theo neo và vẽ nằm ở js/zed_moi.js.
+  SC.zed = {};
+  function themZed(tep) {
+    if (!/^zed-[a-z0-9-]{1,30}$/.test(tep.ma)) throw new Error('mã tệp Zed phải là zed-<tên>');
+    if (!SC.laAnh(tep.tam)) throw new Error('thiếu tấm ảnh');
+    const z = { ma: tep.ma, tep, img: null, ready: false };
+    SC.zed[tep.ma] = z;
+    if (typeof Image !== 'undefined') {
+      const img = new Image();
+      img.onload = () => { if (SC.zed[tep.ma] !== z) return; z.img = img; z.ready = true; };
+      img.onerror = () => { SC.loi.push(tep.ma + ': ảnh hỏng'); };
+      SC.napAnh(img, tep.tam);
+    }
+    return z;
+  }
+  SC.remove = function (ma) { for (const k in SC.don) if (SC.don[k].ma === ma) boDon(k); if (SC.do[ma]) boDo(ma); delete SC.ds[ma]; if (SC.gd) delete SC.gd[ma]; if (SC.zed) delete SC.zed[ma]; for (const k in SC.ghep) if (SC.ghep[k].ma === ma) boGhep(k); };
   SC.clear = function () { for (const k of Object.keys(SC.don)) boDon(k); for (const k of Object.keys(SC.ds)) delete SC.ds[k]; for (const k of Object.keys(SC.do)) boDo(k); for (const k of Object.keys(SC.ghep)) boGhep(k); if (SC.gd) for (const k of Object.keys(SC.gd)) delete SC.gd[k]; };
   SC.get = function (ma) { const s = SC.ds[ma]; if (s && !s.ready && roiCan) roiCan(ma); return s && s.ready ? s : null; };
   SC.has = (ma) => !!SC.ds[ma];

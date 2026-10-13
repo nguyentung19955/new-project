@@ -151,7 +151,7 @@ def bat_buoc(t):
     ma, d = t['ma'], t.get('doi_tuong')
     if ma in HINH_LON_SAU:  # 11/10 (chủ dự án duyệt): hình lớn không cần ở màn chào → tải sau; game vẽ code cho tới khi ảnh về
         return False
-    if d in ('ghep', 'nguoi-lang', 'giao-dien', 'vat-pham', 'trang-phuc'):
+    if d in ('ghep', 'nguoi-lang', 'giao-dien', 'vat-pham', 'trang-phuc', 'zed'):  # zed: bộ Zed mới (zed-moi, zed-vk) cần ngay ở làng
         return True
     if d == 'em-be':  # tệp đòn theo vũ khí (-don) tải sau: game ghép vào thân khi về tới, chưa về thì đánh bằng hàng atk như cũ
         return not re.search(r'-(rung|bien|lau|don)$', ma)
@@ -168,7 +168,7 @@ def thu_tu_sau(t):
     4 Hang biển · 5 Lâu đài cổ · 6 mọi thứ khác. Cùng bậc: tệp nhỏ trước."""
     ma, d = t['ma'], t.get('doi_tuong')
     co = len(str(t.get('tam') or t.get('anh') or ''))
-    quai = d not in ('hieu-ung', 'ghep', 'giao-dien', 'nguoi-lang', 'em-be') and d not in DO_LOAI
+    quai = d not in ('hieu-ung', 'ghep', 'giao-dien', 'nguoi-lang', 'em-be', 'zed') and d not in DO_LOAI
     trum = quai and ma.split('-')[0] in TRUM_VUNG
     vung = t.get('vung') if quai else None
     if vung == 'rung':
@@ -331,7 +331,7 @@ def anh_roi(custom, gom, trang, frag):
         tong_tot += tot
         # _u: [bậc ưu tiên tĩnh, số byte tải, vùng (0 rừng, 1 biển, 2 lâu đài, -1 không theo vùng), trùm/dáng pha]
         # bậc 0: cần cho màn chào / làng (luật bat_buoc ở trên) · 1: hiệu ứng, vũ khí, thân em bé theo bộ… · 2: quái thường · 3: trùm và dáng pha
-        quai = t.get('doi_tuong') not in ('hieu-ung', 'ghep', 'giao-dien', 'nguoi-lang', 'em-be') and t.get('doi_tuong') not in DO_LOAI
+        quai = t.get('doi_tuong') not in ('hieu-ung', 'ghep', 'giao-dien', 'nguoi-lang', 'em-be', 'zed') and t.get('doi_tuong') not in DO_LOAI
         trum = quai and t['ma'].split('-')[0] in TRUM_VUNG
         bac = 0 if bat_buoc(custom[i]) else 3 if trum else 2 if quai else 1
         t['_u'] = [bac, tot, VUNG_SO.get(t.get('vung'), -1) if quai else -1, 1 if trum else 0]
@@ -443,6 +443,12 @@ def custom_sprites():
             if v is not None and not (isinstance(v, list) and len(v) == 4 and all(isinstance(x, (int, float)) and not isinstance(x, bool) and 0 <= x <= 400 for x in v)):
                 sys.exit('art/custom/%s: "vien" phải là 4 số [trên, phải, dưới, trái]' % name)
             out.append({k: t[k] for k in GD_KEYS if k in t})
+            continue
+        if t.get('doi_tuong') == 'zed':
+            # bộ Zed mới 13/10 (docs/anh-goc/zed/dung-zed-game.py): zed-moi (thân + nắm tay + neo vũ khí), zed-vk (vũ khí 4 loại × 4 cấp)
+            if not re.match(r'^zed-[a-z0-9-]{1,30}$', ma) or not re.match(r'^data:image/png;base64,[A-Za-z0-9+/=]+$', str(t.get('tam', ''))):
+                sys.exit('art/custom/%s: tệp Zed phải có mã zed-<tên> và một tấm PNG' % name)
+            out.append({k: v for k, v in t.items() if k not in ('cong_cu', 'ghi_chu')})
             continue
         if t.get('doi_tuong') in DO_LOAI:
             if not re.match(r'^data:image/png;base64,[A-Za-z0-9+/=]+$', str(t.get('anh', ''))):

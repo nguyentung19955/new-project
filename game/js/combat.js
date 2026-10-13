@@ -776,6 +776,7 @@
         // Nhịp chân hàng chạy ảnh AI theo tốc độ đi thật (phiên sửa dáng chạy 12/10): đẩy cần nửa chừng, vừa chạy vừa đánh (đi chậm 0,4)
         // thì chân bước chậm lại thay vì đạp hết nhịp tại chỗ (trượt). Chỉ đổi hình (js/sprite_custom.js SC.chonEmBe đọc o.tc), không đổi tốc độ đi.
         P.chayT = (P.chayT || 0) + dt * G.clamp((sp * Math.min(1, ml)) / (P.speed || sp || 1), 0.55, 1.2);
+        P.diTL = (sp * Math.min(1, ml)) / (P.speed || sp || 1); // bộ Zed mới (js/zed_moi.js): tốc độ đi so với tốc độ chạy đầy, chậm thì vẽ hàng ĐI BỘ. Chỉ để vẽ, không đổi tốc độ.
         if (P.atkT <= 0 && Math.abs(mx) > 0.2) P.face = mx > 0 ? 1 : -1;
         { const l1 = Math.hypot(mx, my); P.ldx = mx / l1; P.ldy = my / l1; } // nhớ hướng di chuyển gần nhất, để Né khi không đẩy cần
       }

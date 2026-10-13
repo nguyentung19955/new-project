@@ -211,6 +211,12 @@
     for (const k of G.ZED_DAY_KEYS) if (G.zedHoc(k)) ds.push(tvz(G.ZED_DAY[k].chuong));
     return ds.length ? tvz(H.skillDesc) + '; ' + ds.join('; ') : H.skillDesc;
   };
+  // BỘ ZED MỚI (13/10/2026, docs/review/ke-hoach-cai-thien/zed-tich-hop): hình Zed vẽ từ bộ ảnh mới (js/zed_moi.js), vũ khí 4 cấp gắn
+  // theo neo, cung đổi thành PHI TIÊU (chỉ đổi tên và hình; nhịp, sát thương, cách giữ y như cung). Tắt: ?zedmoi=0 (hình Zed cũ, tên Cung).
+  // ?zed=0 thì cũng tắt luôn (game như bản trước).
+  G.ZED_MOI = G.ZED;
+  try { if (typeof location !== 'undefined' && /[?&]zedmoi=0(&|$)/.test(location.search || '')) G.ZED_MOI = false; } catch (e) { /* giữ mặc định */ }
+  if (G.ZED_MOI) { G.WTYPES.bow.name = 'Phi tiêu'; G.WTYPES.bow.special = 'Mưa Phi Tiêu'; }
   if (G.ZED) {
     G.HEROES.smith.name = 'Zed';
     G.HEROES.smith.skillDesc = 'Nét riêng: chưởng đẩy lùi quái mạnh';

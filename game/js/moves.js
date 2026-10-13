@@ -118,6 +118,12 @@
     spear: 'Giáo: bấm để đâm rồi quét, giữ rồi thả để xốc tới. Đặc biệt: Phi Thương ném giáo ghim quái, giáo tự bay về.',
     hammer: 'Búa: giữ Đánh lấy đà, thả ra nện đất. Đặc biệt: Địa Chấn nện ra vệt nứt hất tung quái.',
   };
+  // Bộ Zed mới (js/data.js G.ZED_MOI): cung thành phi tiêu — chỉ đổi tên đòn và lời nhắc, số liệu giữ y như cung.
+  if (G.ZED_MOI) {
+    G.MOVES.bow.shot.name = 'Ném';
+    G.MOVES.bow.charge.name = 'Ném chùm';
+    G.MOVE_TIPS.bow = 'Phi tiêu: bấm để ném nhanh, giữ rồi thả ném chùm phi tiêu. Đặc biệt: Mưa Phi Tiêu rơi vào cụm quái gần nhất.';
+  }
   const C = G.MOVES, HE = G.HE;
 
   // ---------- trạng thái đòn đánh trên người chơi (P.mv) ----------

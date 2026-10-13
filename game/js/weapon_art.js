@@ -54,7 +54,7 @@
   const STAGES = ['Trắng', 'Mầm', 'Thành hình', 'Thức tỉnh'];
   const BRANCHES = ['fire', 'poison', 'ice'];
   const TYPES = ['sword', 'bow', 'spear', 'hammer'];
-  const TYPE_NAMES = { sword: 'Kiếm', bow: 'Cung', spear: 'Giáo', hammer: 'Búa' };
+  const TYPE_NAMES = { sword: 'Kiếm', bow: G.ZED_MOI ? 'Phi tiêu' : 'Cung', spear: 'Giáo', hammer: 'Búa' }; // bộ Zed mới: cung thành phi tiêu (js/data.js G.ZED_MOI)
   // Chữ nối vào tên dòng theo nhánh và giai đoạn.
   const WORDS = {
     fire: ['Than Hồng', 'Xích Diệm', 'Hỏa Thần'],
@@ -2324,6 +2324,13 @@
     return Object.assign({ type: w.type, family: f, branch: stage > 0 ? w.branch : null, stage: stage, rarity: w.rarity == null ? Math.min(3, w.tier || 0) : w.rarity }, extra || {});
   }
 
+  // Bộ Zed mới (js/data.js G.ZED_MOI): mười dòng cung đổi tên thành phi tiêu (hình phi tiêu do js/zed_moi.js vẽ). ?zedmoi=0: tên cũ.
+  if (G.ZED_MOI) {
+    const PT = { 'Cung Rồng Rắn': 'Phi Tiêu Rồng Rắn', 'Nỏ Thần': 'Phi Tiêu Thần', 'Cung Sừng Trâu': 'Phi Tiêu Sừng Trâu', 'Cung Tre': 'Phi Tiêu Tre',
+      'Ná Thun': 'Phi Tiêu Ná Thun', 'Cung Cánh Cò': 'Phi Tiêu Cánh Cò', 'Cung Trăng Khuyết': 'Phi Tiêu Trăng Khuyết', 'Cung Đàn Bầu': 'Phi Tiêu Đàn Bầu',
+      'Cung Xương Cá': 'Phi Tiêu Xương Cá', 'Cung Đèn Ông Sao': 'Phi Tiêu Đèn Ông Sao' };
+    for (const F of FAM.bow) { if (PT[F.short]) F.short = PT[F.short]; if (PT[F.name]) F.name = PT[F.name]; }
+  }
   G.weaponArt = {
     draw: draw, tipLen: tipLen, icon: icon, name: name, fullName: fullName, familyName: familyName, size: size, fromWeapon: fromWeapon,
     FAMILIES: FAM, RARITY: RARITY, ELP: ELP, STAGES: STAGES, BRANCHES: BRANCHES, TYPES: TYPES, TYPE_NAMES: TYPE_NAMES, WORDS: WORDS, REST: REST,
