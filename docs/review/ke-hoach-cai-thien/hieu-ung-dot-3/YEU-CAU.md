@@ -25,7 +25,9 @@ Viết/dùng lại script như `docs/anh-goc/zed/hieu-ung/cat_phi_tieu.py` / `ca
 | S6 | hu-phan-than | skill bộ Ninja: bóng phân thân tan |
 | S7 | hu-nhua-rung | skill bộ Rừng Nhựa rừng (lặp dưới chân khi đang hồi máu); ảnh xanh lá thật, chỉ bỏ điểm #00FF00 thuần ở mép |
 | S8 | hu-am-sat | skill bộ Ninja Ám sát (chí mạng sau lưng), lật theo hướng đòn |
-S2 (dây leo) CHƯA có ảnh: giữ cách vẽ của đợt 3.
+| S2 | hu-day-leo | skill bộ Rừng Bẫy dây leo (`veSan`, đoạn trói chân `e.boTroiT`) |
+| H | gd-nut-danh-bow | THAY ảnh nút Đánh khi cầm phi tiêu (24×24, net 2, như tệp cũ): một phi tiêu, giữ viền đen, bỏ nền |
+| I | gd-nut-dac-biet-bow | THAY ảnh nút Đặc biệt Mưa phi tiêu (24×24, net 2) |
 
 Skill bộ do phiên đợt 3 làm (`he-thong-moi/bao-cao-3.md`): đọc báo cáo, móc ảnh vào đúng chỗ hiệu ứng skill đã làm. Làm SAU đợt 2 và đợt 3 (git pull, đọc code mới).
 
