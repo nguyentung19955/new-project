@@ -20,6 +20,7 @@
     const cfg = window.FIREBASE_CONFIG;
     if (!cfg || !cfg.apiKey) return 'no-config';
     if (/[?&]cloud=0\b/.test(location.search)) return 'off';
+    if (G && G.HE_CU) return 'off'; // ?hethongcu=1 (luật cũ, bản lưu riêng trên máy): không đọc/ghi mây, kẻo đè tiến trình hệ thống mới
     if (window.LK_CLOUD_TEST) return ''; // bài kiểm tra: Firebase giả có sẵn trong trang
     if (!/^https?:$/.test(location.protocol)) return 'file';
     if (location.origin === 'null') return 'frame';

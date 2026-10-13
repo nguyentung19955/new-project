@@ -205,12 +205,14 @@
     G.art.weaponIcon(G.ux, w, 53, 91, 54, 'idle');
     if (G.LANG === 'vi') ui.text(G.wName(w), 96, 68, { size: 10.5, bold: true, color: rar.col });
     else { const q = T.vua(G.wName(w), 150, 10.5, true); ui.text(q[0], 96, 68 + (q[1] - 10.5) * 0.36, { size: q[1], bold: true, color: rar.col }); } // tên tiếng Anh dài: thu cỡ chữ cho khỏi lấn cột bên phải
-    ui.text(fam ? G.t('Bậc {0} · dòng {1}', rar.name, fam.name) : G.t('Bậc {0} · {1}', rar.name, G.WTYPES[w.type].name), 96, 80, { size: 7.5, color: SOFT });
-    if (fam && fam.nature) ui.text(G.t('Tính nết: {0}', fam.nature), 96, 91, { size: 7.5, color: SOFT });
-    ui.text(G.t('Sát thương mỗi đòn {0} · hệ số bậc x{1}', G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1).replace('.', dp()), String(G.wRarMult(w)).replace('.', dp())), 96, 102, { size: 7.5 });
+    if (G.HE_MOI) ui.text(G.t('{0} · {1}', G.WTYPES[w.type].name, G.STAGE_NAMES[st]), 96, 80, { size: 7.5, color: SOFT }); // hệ thống mới: không bậc, không dòng
+    else ui.text(fam ? G.t('Bậc {0} · dòng {1}', rar.name, fam.name) : G.t('Bậc {0} · {1}', rar.name, G.WTYPES[w.type].name), 96, 80, { size: 7.5, color: SOFT });
+    if (fam && fam.nature && !G.HE_MOI) ui.text(G.t('Tính nết: {0}', fam.nature), 96, 91, { size: 7.5, color: SOFT });
+    if (G.HE_MOI) ui.text(G.t('Sát thương mỗi đòn {0} · mài +{1}', G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1).replace('.', dp()), w.sharpen | 0), 96, 102, { size: 7.5 });
+    else ui.text(G.t('Sát thương mỗi đòn {0} · hệ số bậc x{1}', G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1).replace('.', dp()), String(G.wRarMult(w)).replace('.', dp())), 96, 102, { size: 7.5 });
     // Hai thẻ ở cột trái: Linh khí (bảng dấu ấn ba hệ, js/linhkhi.js) và Dòng phụ (dòng phụ, dòng mạnh). Mặc định mở Linh khí.
-    const lkTab = G.lk && V.wvTab !== 'aff';
-    if (G.lk) {
+    const lkTab = G.lk && V.wvTab !== 'aff' && !G.HE_MOI;
+    if (G.lk && !G.HE_MOI) {
       if (T.sbtn(246, 29, 70, 17, 'Linh khí', { size: 8, pad: 4, primary: lkTab })) V.wvTab = 'lk';
       if (T.sbtn(320, 29, 70, 17, 'Dòng phụ', { size: 8, pad: 4, primary: !lkTab })) V.wvTab = 'aff';
     }
@@ -218,10 +220,14 @@
     ui.text(mi.txt, 96, 113, { size: 7.5, color: mi.col });
     ui.bar(96, 117, 146, 4, mi.frac, mi.col);
     let y = 156;
-    if (lkTab) G.lk.panel(w, 18, 140, 224);
+    if (G.HE_MOI && G.vkMoi) { // hệ thống mới: túi linh khí chung, nâng ở Ông Thợ Rèn
+      const c = G.vkMoi.gia(st);
+      ui.text(G.t('Linh khí đang có: {0}', Math.floor(G.vkMoi.lk(sv))), 18, 140, { size: 8, bold: true, color: GOLD });
+      ui.para(c == null ? 'Vũ khí đã Thức tỉnh, mở đủ hai đặc trưng hệ.' : G.t('{0}. Cần {1} linh khí, nâng ở Ông Thợ Rèn, thẻ Linh khí.', G.vkMoi.moTiep(w), c), 18, 152, 224, { size: 7, color: TXT });
+    } else if (lkTab) G.lk.panel(w, 18, 140, 224);
     else ui.text(G.t('Tiến hóa cao nhất của bậc này: {0}', G.STAGE_NAMES[rar.maxStage]), 18, 140, { size: 7, color: SOFT });
     // dòng phụ và dòng mạnh
-    if (!lkTab) {
+    if (!lkTab && !G.HE_MOI) {
     T.head('Dòng phụ', 18, y);
     y += 12;
     if (!w.affixes || !w.affixes.length) { ui.text(r === 0 ? 'Bậc Thường không có dòng phụ.' : 'Chưa có.', 18, y, { size: 7.5, color: SOFT }); y += 11; }
@@ -232,12 +238,12 @@
       y = ui.para(G.POWER[w.power].desc, 18, y + 11, 200, { size: 7.5 });
     }
     }
-    ui.para(r >= 3 ? 'Đã ở bậc cao nhất.' : 'Ông Thợ Rèn nâng bậc được, không mất dấu ấn và tiến hóa.', 18, 250, 220, { size: 7, color: SOFT });
+    if (!G.HE_MOI) ui.para(r >= 3 ? 'Đã ở bậc cao nhất.' : 'Ông Thợ Rèn nâng bậc được, không mất dấu ấn và tiến hóa.', 18, 250, 220, { size: 7, color: SOFT });
     // đặc trưng hệ theo cấp
     const x0 = 250;
     T.head('Đặc trưng hệ theo cấp', x0, 68);
     const el = w.branch, E = el ? G.EL[el] : null;
-    if (!el) ui.para(G.t('Chưa khóa nhánh hệ. Kết liễu quái đang dính hiệu ứng để nhận dấu ấn; đủ {0} dấu ấn của một hệ thì vũ khí theo hệ đó.', G.MARKS[0]), x0, 80, 212, { size: 7, color: SOFT });
+    if (!el) ui.para(G.HE_MOI ? G.t('Chưa có hệ. Lên Mầm bằng {0} linh khí ở Ông Thợ Rèn và chọn Lửa, Độc hoặc Băng.', G.VK_MOI.gia[0]) : G.t('Chưa khóa nhánh hệ. Kết liễu quái đang dính hiệu ứng để nhận dấu ấn; đủ {0} dấu ấn của một hệ thì vũ khí theo hệ đó.', G.MARKS[0]), x0, 80, 212, { size: 7, color: SOFT });
     const rows = [
       ['Trắng', 'Chưa mang hệ. Hạ tinh anh, trùm hoặc nhặt viên linh khí quái thường rơi để có dấu ấn.'],
       ['Mầm', G.t('Chỉ số tăng. {0}% mỗi đòn gây {1}, vệt chém nhuốm màu hệ. Chưa có luật hệ.', Math.round(G.PROC[1] * 100), el ? (el === 'fire' ? 'cháy' : el === 'poison' ? 'độc' : 'chậm') : 'hiệu ứng hệ')],
@@ -251,7 +257,7 @@
       if (!h) return;
       T.inset(x0, ry, 214, h - 2, false, { fill: got ? '#24484a' : '#17302f', col: got && E ? E.dark : T.C.brD });
       ui.text(q[0], x0 + 5, ry + 10, { size: 8, bold: true, color: got && E ? E.col : SOFT });
-      ui.text(locked ? 'Cần bậc Lam' : got ? 'Đã mở' : i === st + 1 ? G.t('Sắp mở: {0} dấu ấn', G.MARKS[i - 1]) : 'Chưa mở', x0 + 209, ry + 10, { size: 6.5, align: 'right', bold: got, tiny: true, color: locked ? WARN : got ? GOOD : SOFT });
+      ui.text(locked ? 'Cần bậc Lam' : got ? 'Đã mở' : i === st + 1 ? (G.HE_MOI && G.vkMoi ? G.t('Sắp mở: {0} linh khí', G.vkMoi.gia(st)) : G.t('Sắp mở: {0} dấu ấn', G.MARKS[i - 1])) : 'Chưa mở', x0 + 209, ry + 10, { size: 6.5, align: 'right', bold: got, tiny: true, color: locked ? WARN : got ? GOOD : SOFT });
       if (q[1]) fitPara(q[1], x0 + 5, ry + 19, 204, { size: 6.5, color: TXT }, 2);
       else if (el) {
         const f = G.HE_FEATURES[el][q[2]];
@@ -291,14 +297,20 @@
     // 12/10 (cờ G.CHU_RO): thẻ "Rèn đồ" cũ (chỉ còn lời giải thích cho bản cũ) được ẩn; bốn thẻ còn lại giãn đều. Đồ vải đã ở Cô Thợ May.
     const anRen = G.CHU_RO !== false;
     if (anRen && V.ftab === 'craft') V.ftab = 'sharpen';
-    const tabs = [['sharpen', 'Mài'], ['tier', 'Nâng bậc'], ['reforge', 'Tôi lại']].concat(anRen ? [] : [['craft', 'Rèn đồ']], [['up', 'Nâng lò']]);
-    const tp = anRen ? 77 : 61.5, tw = anRen ? 73 : 58;
+    // Hệ thống mới (G.HE_MOI, js/vk_moi.js): bỏ Nâng bậc, Tôi lại; thẻ Linh khí nâng cấp 4 vũ khí (chọn hệ, đổi hệ).
+    if (G.HE_MOI && (V.ftab === 'tier' || V.ftab === 'reforge' || V.ftab === 'craft')) V.ftab = 'vk';
+    const tabs = G.HE_MOI ? [['sharpen', 'Mài'], ['vk', 'Linh khí'], ['up', 'Nâng lò']]
+      : [['sharpen', 'Mài'], ['tier', 'Nâng bậc'], ['reforge', 'Tôi lại']].concat(anRen ? [] : [['craft', 'Rèn đồ']], [['up', 'Nâng lò']]);
+    const tp = G.HE_MOI ? 102 : anRen ? 77 : 61.5, tw = G.HE_MOI ? 98 : anRen ? 73 : 58;
     tabs.forEach((t, i) => {
       if (T.tab(CX + i * tp, PY + 23, tw, 22, t[1], V.ftab === t[0], { pad: 2 })) { V.ftab = t[0]; V.sel = null; V.page = 0; }
     });
     const R4 = G.RARITY, xm = (m) => 'x' + String(m).replace('.', dp());
-    if (V.ftab !== 'up') T.inset(CX, DET_Y, CW, 52, false);
-    if (V.ftab === 'sharpen') {
+    if (V.ftab !== 'up' && V.ftab !== 'vk') T.inset(CX, DET_Y, CW, 52, false);
+    if (V.ftab === 'vk' && G.vkMoi) {
+      G.vkMoi.vkPanel(CX, LIST_Y - 1, CW, { rowH: 39, say });
+      line = G.vkMoi.coTheNang(sv) ? 'Đủ linh khí rồi! Chọn vũ khí để nâng cấp, lên Mầm thì chọn hệ.' : 'Linh khí nâng vũ khí: Trắng, Mầm, Thành hình, Thức tỉnh. Hạ tinh anh và trùm để gom linh khí.';
+    } else if (V.ftab === 'sharpen') {
       weaponList();
       const w = G.weaponById(V.sel);
       line = 'Chọn một vũ khí để mài. Mỗi cấp mài tăng 8% sát thương gốc.';
@@ -402,7 +414,8 @@
   // Bán, khoá, chọn nhiều, bán hết theo bậc, hỏi lại: js/ban_do.js (G.banDo).
   function xenTabs() {
     // Phiên cân bằng (mục 3): thêm thẻ Nguyên liệu (đổi vàng lấy nguyên liệu vùng đã qua, js/upgrade.js U.doi).
-    const BD = G.banDo, tabs = [['weapon', 'Vũ khí', 36], ['nl', 'Nguyên liệu', 48], ['outfit', 'Mua đồ mặc', 46], ['sell', 'Bán đồ mặc', 46]];
+    // Hệ thống mới: không còn rương vũ khí, mua / bán quần áo → chỉ còn thẻ Nguyên liệu
+    const BD = G.banDo, tabs = G.HE_MOI ? [['nl', 'Nguyên liệu', 48]] : [['weapon', 'Vũ khí', 36], ['nl', 'Nguyên liệu', 48], ['outfit', 'Mua đồ mặc', 46], ['sell', 'Bán đồ mặc', 46]];
     // Rà soát C: thẻ rộng theo chữ (phông thật trên iPhone rộng hơn, "Nguyên liệu" chạm viền thẻ) nếu băng tiêu đề còn chỗ
     if (G.RSC !== false) {
       ui.font(7.5, true);
@@ -430,6 +443,7 @@
   }
   function gearBody() {
     const sv = G.save, BD = G.banDo;
+    if (G.HE_MOI) { V.gtab = 'nl'; return nguyenLieu(); } // hệ thống mới: Bà Hàng Xén chỉ đổi vàng lấy nguyên liệu
     if (V.gtab === 'outfit' && G.outfit) return shop();
     if (V.gtab === 'sell' && G.outfit && BD) return sellOutfit();
     if (V.gtab === 'nl') return nguyenLieu();

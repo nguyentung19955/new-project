@@ -23,9 +23,11 @@
   // Tên hiển thị lấy theo hình (dòng, nhánh, mốc) từ js/weapon_art.js, kèm danh hiệu và cấp mài.
   G.wName = function (w) {
     const st = G.wStage(w), WA = G.weaponArt;
-    const base = WA ? WA.name(WA.fromWeapon(w)) : G.WTYPES[w.type].name + (st ? ' ' + G.NAME_WORDS[w.branch][st - 1] : '');
+    // Hệ thống mới (G.HE_MOI): bỏ dòng vũ khí → tên = loại + chữ theo hệ và cấp (Kiếm Than Hồng, Phi tiêu Băng Đế…).
+    const dong = WA && !G.HE_MOI;
+    const base = dong ? WA.name(WA.fromWeapon(w)) : G.WTYPES[w.type].name + (st ? ' ' + G.NAME_WORDS[w.branch][st - 1] : '');
     // Ngôn ngữ khác: dịch tên gốc và danh hiệu lúc hiện (w.title nằm trong bản lưu, luôn là tiếng Việt).
-    if (G.LANG !== 'vi') return (WA || !st ? G.tv(base) : G.tv(G.WTYPES[w.type].name) + ' ' + G.tv(G.NAME_WORDS[w.branch][st - 1])) + titleOf(w.title) + (w.sharpen ? ' +' + w.sharpen : '');
+    if (G.LANG !== 'vi') return (dong || !st ? G.tv(base) : G.tv(G.WTYPES[w.type].name) + ' ' + G.tv(G.NAME_WORDS[w.branch][st - 1])) + titleOf(w.title) + (w.sharpen ? ' +' + w.sharpen : '');
     return base + (w.title || '') + (w.sharpen ? ' +' + w.sharpen : '');
   };
   const KE_HA = ', kẻ hạ ';
@@ -427,7 +429,8 @@
       G.addMarks(w, elx, n * P.markMult * W.marksMult);
       // Vũ khí thứ hai (mục 7) nhận một nửa số dấu ấn, vào hệ chính của nó; chưa khoá hệ thì vào hệ nó đang nhiều nhất, còn trắng
       // thì vào hệ KHẮC CHẾ hệ vừa nhận (G.WEAK): trùm kháng hệ của vũ khí chính thì vũ khí thứ hai sẵn hệ khắc chế để đổi sang.
-      const w2 = P.weapons && P.weapons.find((x) => x && x !== w);
+      // Hệ thống mới: linh khí vào túi chung (js/vk_moi.js bọc G.addMarks) → vũ khí thứ hai không nhận thêm phần nào.
+      const w2 = !G.HE_MOI && P.weapons && P.weapons.find((x) => x && x !== w);
       if (w2 && G.LK_PHU > 0) {
         let e2 = w2.branch;
         if (!e2) { for (const x of G.ELS) if ((w2.marks[x] || 0) > 0 && (!e2 || w2.marks[x] > w2.marks[e2])) e2 = x; }
@@ -811,8 +814,8 @@
         startAttack(P);
       }
       if (inp.swapP && P.weapons.length > 1 && P.swapCd <= 0) {
-        P.cur = 1 - P.cur;
-        P.swapCd = 1.5;
+        P.cur = (P.cur + 1) % P.weapons.length; // xoay vòng (hệ thống mới: 4 vũ khí cố định; cũ: 2 món như trước)
+        P.swapCd = G.SWAP_CD || 1.5; // hệ thống mới 0,75 giây (xoay 4 món), cũ 1,5
         // V34: đổi vũ khí giữa đòn thì huỷ sạch đòn đang vung (không gây sát thương bằng vũ khí mới, không chạy tiếp
         // động tác cũ với hình vũ khí mới); combo và phần lấy đà về đầu ở moves.js (M.input thấy đổi vũ khí).
         P.atkT = 0; P.hitDone = true; P.cdT = Math.min(P.cdT, 0.1);

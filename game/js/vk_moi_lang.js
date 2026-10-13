@@ -1,0 +1,22 @@
+// HỆ THỐNG MỚI ĐỢT 1 — phần ở làng (docs/review/ke-hoach-cai-thien/he-thong-moi/YEU-CAU-1-VU-KHI.md).
+//   - Cô Thợ May: không may / bán quần áo kiểu cũ nữa. Bảng của cô nay chỉ có khung nâng cấp bộ trang phục Zed (cùng khung ở Hành trang ›
+//     Nhân vật, js/vk_moi.js VM.boPanel) và lời giải thích; đổi bộ ở Hành trang.
+// Luật, số liệu, bản lưu: js/vk_moi.js. Cờ ?hethongcu=1: tệp này đứng yên (bảng cũ của js/tailor.js).
+(function () {
+  const G = window.G, ui = G.ui, T = G.theme, VA = G.villageApi, VM = G.vkMoi;
+  if (!G.HE_MOI || !VA || !VM || !T) return;
+  const TXT = '#f1e6c6';
+  const CX = 160, CW = 304; // vùng nội dung bên phải (như js/village.js)
+
+  function boPanel() {
+    VA.frame('Thợ may');
+    let y = ui.para('Quần áo cũ (mũ, áo, đồ đeo lưng, bùa, cánh) không dùng nữa, đã đổi ra vàng và linh khí. Zed có 4 bộ: Ninja Bóng Đêm, Thợ Săn Rừng, Chiến Binh Biển, Hiệp Sĩ Lâu Đài. Hạ trùm vùng để mở bộ, đổi bộ ở Hành trang › Nhân vật.', CX + 2, 80, CW - 4, { size: 7, color: TXT });
+    y = VM.boPanel(CX + 2, y + 2, CW - 6, false, VA.say);
+    if (G.hanhTrang && T.sbtn(CX + 2, Math.min(y + 6, 240), 150, 17, 'Mở Hành trang › Nhân vật', { size: 7, pad: 2 })) {
+      G.hanhTrang.openVillage(); G.hanhTrang.tab = 'hero';
+      return null;
+    }
+    return VM.boDuoc(G.save, G.zedBo ? G.zedBo() : 'ninja') === '' ? 'Đủ linh khí và vàng rồi, cô nâng bộ cho cháu nhé!' : 'Bộ nào cũng nâng được 3 cấp, skill riêng của từng cấp sẽ có ở bản sau. Gom linh khí và vàng rồi quay lại nhé.';
+  }
+  VA.PANELS.outfit = boPanel;
+})();

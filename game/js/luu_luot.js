@@ -14,7 +14,7 @@
     try { tat = /[?&]luuluot=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
     G.LUU_LUOT = !tat;
   }
-  const KHOA = 'linhkhi_luot_v1', HAN = 3 * 24 * 3600 * 1000; // bản ghi cũ hơn 3 ngày thì bỏ
+  const KHOA = G.HE_CU ? 'linhkhi_luot_v1_hecu' : 'linhkhi_luot_v1', HAN = 3 * 24 * 3600 * 1000; // bản ghi cũ hơn 3 ngày thì bỏ
   if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({
     'Chơi tiếp ải?': 'Continue the stage?', 'Chơi tiếp': 'Continue', 'Bỏ ải này': 'Abandon it',
     '{0}: ải {1}, đã dọn {2} phòng, máu {3}/{4}': '{0}: stage {1}, {2} rooms cleared, HP {3}/{4}',

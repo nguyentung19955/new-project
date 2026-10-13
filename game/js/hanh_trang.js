@@ -154,8 +154,10 @@
       y = ui.para(G.t('Nội tại: {0}', G.passiveOf(k)), x, y, w, { size: 7, color: SOFT });
       y = ui.para(G.t('Chưởng ({0} mana, {1}). {2}', G.CHUONG ? G.CHUONG.cost : 30, G.chuong ? G.CHUONG.trees[G.chuong.state(sv.heroes[sv.hero], sv.hero).cay].name : '', G.skillDescOf(k)), x, y, w, { size: 7, color: SOFT });
       // trang phục
-      y += 8; T.head('Trang phục đang mặc', x, y); y += 3;
-      const O = G.outfit;
+      // Hệ thống mới (js/vk_moi.js): quần áo kiểu cũ đã bỏ → khung nâng cấp bộ trang phục Zed đang mặc (đổi bộ ở nút trên hình Zed)
+      const O = G.HE_MOI && G.vkMoi ? null : G.outfit;
+      if (G.HE_MOI && G.vkMoi) y = G.vkMoi.boPanel(x, y + 4, w, RO, VA.say);
+      else { y += 8; T.head('Trang phục đang mặc', x, y); y += 3; }
       if (O) {
         const sm = O.sum(sv), ks = Object.keys(sm.stats);
         y = ui.para(ks.length ? ks.map((q) => O.statText(q, sm.stats[q])).join(', ') : 'Chưa mặc món nào tăng chỉ số.', x, y + 8, w, { size: 7, color: ks.length ? TXT : SOFT });
@@ -254,6 +256,17 @@
     else VA.viewWeapon(id, 'bag');
   }
   function weaponTab(sv) {
+    // Hệ thống mới (js/vk_moi.js): 4 vũ khí cố định, nâng bằng linh khí ngay tại đây (trong ải chỉ xem)
+    if (G.HE_MOI && G.vkMoi) {
+      region('weapon', CX, CY, CW - 4, CH, (y) => {
+        y = G.vkMoi.vkPanel(CX, y + 2, CW - 8, { ro: RO, say: VA.say });
+        if (RO) { roNote(CX, y + 10); return y + 14; }
+        y += 2;
+        if (goBtn(CX, y, 214, 'ren', 'Đến Ông Thợ Rèn: mài, nâng lò')) return y;
+        return y + 20;
+      });
+      return;
+    }
     const carry = sv.carry.map((id) => G.weaponById(id)).filter(Boolean);
     const stash = sv.weapons.filter((w) => !sv.carry.includes(w.id)).sort((a, b) => (G.wRar(b) - G.wRar(a)) || (b.sharpen - a.sharpen) || (a.id - b.id));
     const BD = G.banDo, sell = !RO && BD, multi = sell && BD.multi && BD.kind === 'w';
@@ -518,8 +531,11 @@
     T.panel(X0, Y0, PW, PH, RO ? 'Hành trang (chỉ xem)' : 'Hành trang', { rightPad: 74 + roW, noBand: true });
     if (T.sbtn(X0 + PW - 66, Y0 + 3, 60, 17, RO ? '← Quay lại' : '✕ Xong', { size: 8, pad: 5 })) { close(); return; }
     if (RO) ui.text(roTxt, X0 + PW - 72, Y0 + 15, { size: 6.5, align: 'right', color: WARN });
-    const tw = (CW - 5 * 3) / 6;
-    TABS.forEach((t, i) => {
+    // Hệ thống mới: bỏ thẻ Trang phục (quần áo cũ) và Linh khí (dấu ấn từng vũ khí); linh khí nay ở thẻ Vũ khí
+    const tabs = G.HE_MOI && G.vkMoi ? TABS.filter((t) => t[0] !== 'outfit' && t[0] !== 'lk') : TABS;
+    if (!tabs.some((t) => t[0] === B.tab)) B.tab = 'hero';
+    const tw = (CW - (tabs.length - 1) * 3) / tabs.length;
+    tabs.forEach((t, i) => {
       if (T.tab(CX + i * (tw + 3), Y0 + 23, tw, 19, G.tc('thẻ', t[1]), B.tab === t[0], { pad: 2 })) { B.tab = t[0]; B.sel = null; if (G.banDo) G.banDo.reset(); }
     });
     const fn = { hero: heroTab, weapon: weaponTab, outfit: outfitTab, lk: lkTab, skill: skillTab, res: resTab }[B.tab] || heroTab;

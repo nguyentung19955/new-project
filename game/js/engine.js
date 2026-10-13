@@ -260,7 +260,10 @@
   };
 
   // ---------- lưu game ----------
-  const KEY = 'linhkhi_save_v1';
+  // Hệ thống mới đợt 1 (js/data.js G.HE_MOI, js/vk_moi.js): cờ ?hethongcu=1 chơi lại luật cũ bằng bản lưu RIÊNG, không đụng bản lưu chính.
+  // Lần đầu bật cờ: chép bản lưu trước khi chuyển sang hệ mới (khoá ..._truoc_he_moi, js/vk_moi.js giữ lại), hoặc bản chính nếu chưa chuyển.
+  const KEY_CHINH = 'linhkhi_save_v1', KEY = G.HE_CU ? KEY_CHINH + '_hecu' : KEY_CHINH;
+  G.SAVE_KEY = KEY;
   // Trường "tier" cũ là tên khác của "rarity": đọc và ghi w.tier vẫn chạy, nhưng bản lưu chỉ ghi rarity.
   G.linkTier = function (w) {
     delete w.tier;
@@ -311,6 +314,12 @@
     let s = null, raw = null, bad = false;
     try {
       raw = window.localStorage.getItem(KEY);
+      if (!raw && G.HE_CU) { // ?hethongcu=1 lần đầu: lấy bản sao bản lưu cũ (chỉ đọc; từ giờ ghi vào khoá riêng)
+        const ls = window.localStorage, tr = ls.getItem(KEY_CHINH + '_truoc_he_moi'), ch = ls.getItem(KEY_CHINH);
+        let chuaChuyen = false;
+        try { const o = ch ? JSON.parse(ch) : null; chuaChuyen = !!(o && o.heMoi !== 1); } catch (e) { chuaChuyen = false; }
+        raw = tr || (chuaChuyen ? ch : null);
+      }
       if (raw) s = JSON.parse(raw);
     } catch (e) { s = null; bad = !!raw; if (bad) console.error('Linh Khí: bản lưu trên máy không đọc được', e); }
     G.save = G.fixSave(s);
@@ -325,6 +334,8 @@
     }
   };
   // Kiểm tra bản lưu cũ hoặc hỏng: thiếu gì thì bù, sai gì thì sửa, hỏng nặng thì tạo mới.
+  // Hệ thống mới đợt 1: phần chuyển bản lưu cũ sang 4 vũ khí cố định / bỏ quần áo cũ (một lần, cờ s.heMoi = 1) và giữ đúng 4 vũ khí mỗi
+  // lần nạp nằm ở js/vk_moi.js (bọc G.fixSave, chạy SAU phần dưới đây và sau js/linhkhi.js; mọi đường nạp máy / mây đều đi qua).
   // Phiên hiệu năng (bản lưu): sửa TỪNG PHẦN riêng. Một phần gặp lỗi (ví dụ bản cập nhật có lỗi trong outfit.fix) thì giữ nguyên dữ liệu cũ
   // của phần đó (sai kiểu hẳn thì lấy phần đó của bản mới), các phần khác vẫn sửa bình thường, KHÔNG trả bản trắng. Có phần lỗi thì vẫn
   // chép bản gốc sang khoá dự phòng như trước (fixFailed). Chỉ bản không phải đối tượng / sai phiên bản mới thành bản mới.

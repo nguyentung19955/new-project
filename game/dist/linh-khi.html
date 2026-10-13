@@ -65,7 +65,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.13-1314";
+(window.G = window.G || {}).VERSION = "lk-2026.10.13-1319";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -1904,6 +1904,52 @@
   //  - Quái thường: tỉ lệ drop rơi một viên linh khí của vùng nằm trên sàn, nhặt (đi lại gần) thì vũ khí đang cầm nhận orb dấu ấn.
   //  - Vẫn giữ luật cũ: kết liễu quái thường đang dính hiệu ứng hệ thì vũ khí nhận 1 dấu ấn của hệ đó.
   G.LINHKHI = { elite: 5, mini: 10, boss: 20, drop: 0, orb: 3 }; // drop 0: chủ dự án bỏ viên rơi từ quái thường (tinh anh, trùm đã đủ)
+
+  // ===== HỆ THỐNG MỚI ĐỢT 1 (13/10/2026, docs/review/ke-hoach-cai-thien/he-thong-moi/YEU-CAU-1-VU-KHI.md) =====
+  //  - Đúng 4 vũ khí cố định: Kiếm, Thương (giáo), Búa, Phi tiêu (loại 'bow'). Nút đổi vũ khí xoay vòng 4 món.
+  //  - Nâng vũ khí bằng LINH KHÍ (một túi chung sv.linhKhi, nhận khi hạ tinh anh, trùm, kết liễu quái đang dính hệ):
+  //    Trắng → Mầm (chọn hệ Lửa/Độc/Băng) → Thành hình → Thức tỉnh. Đổi hệ sau đó tốn linh khí. Không còn bậc màu, dòng phụ, dòng vũ khí.
+  //  - Không rơi vũ khí, quần áo nữa: thay bằng linh khí / vàng (G.ROI_MOI). Trang phục chỉ còn 4 bộ của Zed, mỗi bộ nâng 3 cấp
+  //    bằng linh khí + vàng (G.BO_MOI; skill của từng cấp làm ở đợt 3, móc rỗng G.boSkill trong js/vk_moi.js).
+  //  - Luật, chuyển bản lưu cũ, giao diện: js/vk_moi.js và js/vk_moi_lang.js.
+  // Cờ quay lui: ?hethongcu=1 → luật cũ (rơi đồ, nhiều vũ khí), đọc/ghi bản lưu RIÊNG (khoá linhkhi_save_v1_hecu), tắt lưu mây.
+  G.HE_CU = false;
+  try { if (typeof location !== 'undefined' && /[?&]hethongcu=1(&|$)/.test(location.search || '')) G.HE_CU = true; } catch (e) { /* giữ mặc định */ }
+  G.HE_MOI = !G.HE_CU;
+  G.VK_MOI = {
+    loai: ['sword', 'spear', 'hammer', 'bow'], // 4 vũ khí (thứ tự hiện trong bảng)
+    // Thứ tự xoay vòng của bản lưu mới: kiếm rồi phi tiêu như hai món đầu game cũ (ải hướng dẫn dạy đổi sang phi tiêu).
+    // Người chơi đổi được vũ khí cầm đầu ("Cầm đầu" ở Ông Thợ Rèn / Hành trang); bản lưu cũ: món đang mang lên trước.
+    thuMacDinh: ['sword', 'bow', 'spear', 'hammer'],
+    family: { sword: 0, spear: 0, hammer: 0, bow: 3 }, // dòng cố định (chỉ để mã cũ đọc được; hình dùng bộ zed-vk)
+    // Linh khí để lên Mầm, Thành hình, Thức tỉnh. Cộng dồn 60 / 400 / 900 = đúng mốc dấu ấn cũ G.MARKS của MỘT vũ khí.
+    gia: [60, 340, 500],
+    // Đổi hệ khi đang ở Mầm / Thành hình / Thức tỉnh (giữ nguyên cấp).
+    doiHe: [0, 20, 60, 120],
+  };
+  // Bỏ bậc màu: mọi vũ khí là bậc 0 (hệ số 1, không dòng phụ) nhưng lên được tới Thức tỉnh. Bù phần hệ số bậc cũ (Lam x1,15 … Vàng x1,5)
+  // bằng hệ số cấp cao hơn (cũ +8/+18/+30%).
+  G.SWAP_CD = G.HE_MOI ? 0.75 : 1.5; // chờ giữa hai lần đổi vũ khí: 4 món xoay vòng nên ngắn hơn
+  if (G.HE_MOI) {
+    G.RARITY[0].maxStage = 3;
+    G.STAGE_MULT = [1, 1.15, 1.35, 1.6];
+  }
+  // Nâng cấp bộ trang phục Zed: 3 cấp, mỗi cấp tốn linh khí + vàng (giống nhau cho cả 4 bộ).
+  G.BO_MOI = {
+    max: 3,
+    gia: [{ lk: 80, vang: 300 }, { lk: 200, vang: 800 }, { lk: 400, vang: 1800 }],
+  };
+  // Phần thưởng thay đồ rơi (r = vùng 0..2). Giữ tổng giá trị tương đương: món cũ tính theo giá Bà Hàng Xén mua lại
+  // (vũ khí Thường 20, Lam 60, Tím 150, Vàng 400; trang phục 10/30/80/200), 1 linh khí = 4 vàng (G.upg.VAL.lk). Bảng so: bao-cao-1.md.
+  G.ROI_MOI = {
+    vk: { vang: [20, 25, 35], lk: [4, 6, 8] },        // tinh anh (35%) và qua ải thường (50%): trước rơi 1 vũ khí
+    trum: { vangDau: 300, lkDau: 25, vang: 130, lk: 12 }, // trùm vùng: lần đầu (trước chắc chắn Vàng), đánh lại (trước Tím, 12% Vàng)
+    ruong: { lk: [9, 12, 16] },                       // rương báu: lựa chọn "vũ khí mới" thành túi linh khí
+    ao: { vang: [14, 18, 24] },                       // quái thường (1,2%) / tinh anh (12%) trước rơi 1 món trang phục
+    aoTrum: { vang: [30, 32, 35] },                   // trùm nhỏ (35%) trước rơi trang phục Lam trở lên
+    aoTrumVung: 110,                                  // trùm vùng trước rơi trang phục Tím (75%) / Vàng (25%)
+    bua: 30,                                          // bùa cũ của tinh anh (trang phục Lam)
+  };
   // Dòng phụ: bậc Lam có 1, Tím và Vàng có 2.
   G.AFFIX = {
     mana: 'Mỗi đòn trúng hồi thêm 1 mana',
@@ -2606,7 +2652,10 @@
   };
 
   // ---------- lưu game ----------
-  const KEY = 'linhkhi_save_v1';
+  // Hệ thống mới đợt 1 (js/data.js G.HE_MOI, js/vk_moi.js): cờ ?hethongcu=1 chơi lại luật cũ bằng bản lưu RIÊNG, không đụng bản lưu chính.
+  // Lần đầu bật cờ: chép bản lưu trước khi chuyển sang hệ mới (khoá ..._truoc_he_moi, js/vk_moi.js giữ lại), hoặc bản chính nếu chưa chuyển.
+  const KEY_CHINH = 'linhkhi_save_v1', KEY = G.HE_CU ? KEY_CHINH + '_hecu' : KEY_CHINH;
+  G.SAVE_KEY = KEY;
   // Trường "tier" cũ là tên khác của "rarity": đọc và ghi w.tier vẫn chạy, nhưng bản lưu chỉ ghi rarity.
   G.linkTier = function (w) {
     delete w.tier;
@@ -2657,6 +2706,12 @@
     let s = null, raw = null, bad = false;
     try {
       raw = window.localStorage.getItem(KEY);
+      if (!raw && G.HE_CU) { // ?hethongcu=1 lần đầu: lấy bản sao bản lưu cũ (chỉ đọc; từ giờ ghi vào khoá riêng)
+        const ls = window.localStorage, tr = ls.getItem(KEY_CHINH + '_truoc_he_moi'), ch = ls.getItem(KEY_CHINH);
+        let chuaChuyen = false;
+        try { const o = ch ? JSON.parse(ch) : null; chuaChuyen = !!(o && o.heMoi !== 1); } catch (e) { chuaChuyen = false; }
+        raw = tr || (chuaChuyen ? ch : null);
+      }
       if (raw) s = JSON.parse(raw);
     } catch (e) { s = null; bad = !!raw; if (bad) console.error('Linh Khí: bản lưu trên máy không đọc được', e); }
     G.save = G.fixSave(s);
@@ -2671,6 +2726,8 @@
     }
   };
   // Kiểm tra bản lưu cũ hoặc hỏng: thiếu gì thì bù, sai gì thì sửa, hỏng nặng thì tạo mới.
+  // Hệ thống mới đợt 1: phần chuyển bản lưu cũ sang 4 vũ khí cố định / bỏ quần áo cũ (một lần, cờ s.heMoi = 1) và giữ đúng 4 vũ khí mỗi
+  // lần nạp nằm ở js/vk_moi.js (bọc G.fixSave, chạy SAU phần dưới đây và sau js/linhkhi.js; mọi đường nạp máy / mây đều đi qua).
   // Phiên hiệu năng (bản lưu): sửa TỪNG PHẦN riêng. Một phần gặp lỗi (ví dụ bản cập nhật có lỗi trong outfit.fix) thì giữ nguyên dữ liệu cũ
   // của phần đó (sai kiểu hẳn thì lấy phần đó của bản mới), các phần khác vẫn sửa bình thường, KHÔNG trả bản trắng. Có phần lỗi thì vẫn
   // chép bản gốc sang khoá dự phòng như trước (fixFailed). Chỉ bản không phải đối tượng / sai phiên bản mới thành bản mới.
@@ -13457,9 +13514,11 @@
   // Tên hiển thị lấy theo hình (dòng, nhánh, mốc) từ js/weapon_art.js, kèm danh hiệu và cấp mài.
   G.wName = function (w) {
     const st = G.wStage(w), WA = G.weaponArt;
-    const base = WA ? WA.name(WA.fromWeapon(w)) : G.WTYPES[w.type].name + (st ? ' ' + G.NAME_WORDS[w.branch][st - 1] : '');
+    // Hệ thống mới (G.HE_MOI): bỏ dòng vũ khí → tên = loại + chữ theo hệ và cấp (Kiếm Than Hồng, Phi tiêu Băng Đế…).
+    const dong = WA && !G.HE_MOI;
+    const base = dong ? WA.name(WA.fromWeapon(w)) : G.WTYPES[w.type].name + (st ? ' ' + G.NAME_WORDS[w.branch][st - 1] : '');
     // Ngôn ngữ khác: dịch tên gốc và danh hiệu lúc hiện (w.title nằm trong bản lưu, luôn là tiếng Việt).
-    if (G.LANG !== 'vi') return (WA || !st ? G.tv(base) : G.tv(G.WTYPES[w.type].name) + ' ' + G.tv(G.NAME_WORDS[w.branch][st - 1])) + titleOf(w.title) + (w.sharpen ? ' +' + w.sharpen : '');
+    if (G.LANG !== 'vi') return (dong || !st ? G.tv(base) : G.tv(G.WTYPES[w.type].name) + ' ' + G.tv(G.NAME_WORDS[w.branch][st - 1])) + titleOf(w.title) + (w.sharpen ? ' +' + w.sharpen : '');
     return base + (w.title || '') + (w.sharpen ? ' +' + w.sharpen : '');
   };
   const KE_HA = ', kẻ hạ ';
@@ -13861,7 +13920,8 @@
       G.addMarks(w, elx, n * P.markMult * W.marksMult);
       // Vũ khí thứ hai (mục 7) nhận một nửa số dấu ấn, vào hệ chính của nó; chưa khoá hệ thì vào hệ nó đang nhiều nhất, còn trắng
       // thì vào hệ KHẮC CHẾ hệ vừa nhận (G.WEAK): trùm kháng hệ của vũ khí chính thì vũ khí thứ hai sẵn hệ khắc chế để đổi sang.
-      const w2 = P.weapons && P.weapons.find((x) => x && x !== w);
+      // Hệ thống mới: linh khí vào túi chung (js/vk_moi.js bọc G.addMarks) → vũ khí thứ hai không nhận thêm phần nào.
+      const w2 = !G.HE_MOI && P.weapons && P.weapons.find((x) => x && x !== w);
       if (w2 && G.LK_PHU > 0) {
         let e2 = w2.branch;
         if (!e2) { for (const x of G.ELS) if ((w2.marks[x] || 0) > 0 && (!e2 || w2.marks[x] > w2.marks[e2])) e2 = x; }
@@ -14245,8 +14305,8 @@
         startAttack(P);
       }
       if (inp.swapP && P.weapons.length > 1 && P.swapCd <= 0) {
-        P.cur = 1 - P.cur;
-        P.swapCd = 1.5;
+        P.cur = (P.cur + 1) % P.weapons.length; // xoay vòng (hệ thống mới: 4 vũ khí cố định; cũ: 2 món như trước)
+        P.swapCd = G.SWAP_CD || 1.5; // hệ thống mới 0,75 giây (xoay 4 món), cũ 1,5
         // V34: đổi vũ khí giữa đòn thì huỷ sạch đòn đang vung (không gây sát thương bằng vũ khí mới, không chạy tiếp
         // động tác cũ với hình vũ khí mới); combo và phần lấy đà về đầu ở moves.js (M.input thấy đổi vũ khí).
         P.atkT = 0; P.hitDone = true; P.cdT = Math.min(P.cdT, 0.1);
@@ -30921,6 +30981,7 @@ MA._xong();
   const cellX = (i) => HUD.x + 1.5 + i * HUD.cell;
   // Chỗ hạt sáng bay vào (toạ độ màn hình).
   LK.barPos = function (el) {
+    if (G.HE_MOI) return { x: HUD.x + 9, y: HUD.y + 8 }; // hệ thống mới: hạt sáng bay vào túi linh khí chung (js/vk_moi.js vẽ)
     const i = ELS.indexOf(el);
     if (i < 0) return null;
     return { x: cellX(i) + 22, y: HUD.y + 6 };
@@ -30933,6 +30994,12 @@ MA._xong();
   LK.hud = function (P, W) {
     const w = G.curW(P);
     if (!w || !w.marks) return;
+    // Hệ thống mới (js/vk_moi.js): một tấm "Linh khí N" (túi chung) thay ba vạch hệ của từng vũ khí; dấu hệ trên đầu quái giữ nguyên.
+    if (G.HE_MOI && G.vkMoi && G.vkMoi.hud) {
+      let xong = false;
+      try { xong = G.vkMoi.hud(P, HUD, pulse); } catch (e) { xong = false; }
+      if (xong) { if (W) badges(W); return; }
+    }
     const dt = Math.max(0, Math.min(0.1, G.time - pulseT)); pulseT = G.time;
     const T = G.theme;
     if (T && T.plate) T.plate(HUD.x, HUD.y, HUD.w, HUD.h); else ui.rect(HUD.x, HUD.y, HUD.w, HUD.h, 'rgba(14,10,10,0.88)', '#7a5a3a');
@@ -31037,6 +31104,7 @@ MA._xong();
   };
   // Vẽ khối linh khí của màn kết quả trong khung (x, y, rộng wd). Trả về y cuối.
   LK.resultBlock = function (S, x, y, wd) {
+    if (G.HE_MOI && G.vkMoi && G.vkMoi.ketQua) return G.vkMoi.ketQua(S, x, y, wd); // hệ thống mới: một dòng túi linh khí
     const rows = LK.resultRows(S);
     const T = G.theme;
     if (T && T.head) T.head('Linh khí của vũ khí', x, y + 7, { size: 7.5 }); else ui.text('Linh khí của vũ khí', x, y + 7, { size: 7.5, bold: true });
@@ -31169,6 +31237,527 @@ MA._xong();
       });
       ui.text('Kết hợp hai hệ: sắp có', x, y3 + 3, { size: 7, bold: true, color: '#9fb0aa' });
     },
+  };
+})();
+
+// ===== js/vk_moi.js =====
+// HỆ THỐNG MỚI ĐỢT 1 (13/10/2026) — docs/review/ke-hoach-cai-thien/he-thong-moi/YEU-CAU-1-VU-KHI.md
+//   - Đúng 4 vũ khí cố định: Kiếm, Thương, Búa, Phi tiêu (loại 'bow'). sv.weapons luôn đúng 4 món, sv.carry = cả 4 (thứ tự xoay vòng
+//     theo sv.vkThu; nút đổi vũ khí trong trận xoay vòng, js/combat.js).
+//   - LINH KHÍ thành một túi chung sv.linhKhi: mọi dấu ấn trước đây cộng vào vũ khí (G.addMarks) nay cộng vào túi. Nâng vũ khí
+//     Trắng → Mầm (chọn hệ Lửa/Độc/Băng) → Thành hình → Thức tỉnh bằng linh khí (G.VK_MOI.gia), đổi hệ tốn linh khí (G.VK_MOI.doiHe).
+//     Cấp vẫn lưu bằng w.branch + w.marks (dấu ấn đặt đúng mốc G.MARKS) nên mọi mã cũ đọc G.wStage / đặc trưng hệ chạy y như trước.
+//   - Không rơi đồ: thưởng thay thế G.ROI_MOI (js/stage.js gọi VM.thuongVk / thuongTrum / thuongAo / thuongAoTrum).
+//   - Trang phục: chỉ 4 bộ Zed (G.ZED_BO). Cấp bộ sv.boCap[bo] = 0..3, nâng bằng linh khí + vàng (G.BO_MOI). Móc rỗng G.boSkill(bo, cap)
+//     (đợt 3 gắn skill), gắn vào người chơi lúc dựng (P.bo, P.boCap, P.boSkill).
+//   - Bản lưu: bọc G.fixSave (chạy sau js/engine.js và js/linhkhi.js; mọi đường nạp máy / mây đi qua): chuyển MỘT lần (cờ sv.heMoi = 1),
+//     trước khi chuyển chép bản gốc sang khoá linhkhi_save_v1_truoc_he_moi (giữ bản đầu tiên) để ?hethongcu=1 chơi lại được.
+//     Mỗi lần nạp: giữ đúng 4 vũ khí, sửa số hỏng.
+//   - Hình vũ khí trong ô đồ: bộ zed-vk (4 loại × 4 cấp, cùng ảnh js/zed_moi.js vẽ trên tay Zed); chưa tải xong thì vẽ như cũ.
+// Cờ ?hethongcu=1 (G.HE_CU): mọi phần ở đây đứng yên, game chạy luật cũ.
+(function () {
+  const G = window.G, ui = G.ui;
+  const VM = (G.vkMoi = {});
+  const ELS = ['fire', 'poison', 'ice'];
+  const CFG = G.VK_MOI || { loai: ['sword', 'spear', 'hammer', 'bow'], family: {}, gia: [60, 340, 500], doiHe: [0, 20, 60, 120] };
+  const LOAI = CFG.loai;
+  const num = (v, d) => (typeof v === 'number' && isFinite(v) ? v : d);
+  const r1 = (v) => Math.round(v * 10) / 10;
+  const kep = (v, a, b) => (v < a ? a : v > b ? b : v);
+  const SOFT = '#a9c2b4', TXT = '#f1e6c6', GOLD = '#f6dc92', GOOD = '#9be07a', WARN = '#ff9a5a';
+
+  // ---------- móc skill của bộ trang phục (đợt 3 gắn) ----------
+  // bo: 'ninja' | 'rung' | 'bien' | 'lau'; cap: 0..3. Trả về mô tả skill (đợt 3) hoặc null. Đợt 1: luôn null (chưa có skill).
+  G.boSkill = function (bo, cap) { void bo; void cap; return null; };
+
+  // ---------- linh khí ----------
+  VM.lk = (sv) => Math.max(0, num((sv || G.save || {}).linhKhi, 0));
+  VM.themLk = function (sv, n) { sv = sv || G.save; if (!sv || !(n > 0)) return; sv.linhKhi = r1(VM.lk(sv) + n); };
+  VM.gia = (st) => (st >= 0 && st < 3 ? CFG.gia[st] : null); // linh khí để lên cấp st + 1
+  VM.giaDoiHe = (st) => CFG.doiHe[kep(st | 0, 0, 3)];
+  // Đặt cấp st (0..3) và hệ el cho vũ khí: dấu ấn đặt đúng mốc để G.wStage(w) = st.
+  VM.datCap = function (w, st, el) {
+    w.marks = { fire: 0, poison: 0, ice: 0 };
+    if (st > 0 && G.EL[el]) { w.branch = el; w.marks[el] = G.MARKS[st - 1]; } else w.branch = null;
+  };
+  // Nâng w lên cấp kế (Trắng → Mầm cần chọn hệ el). mienPhi: chỉ để tính thử (không trừ linh khí).
+  VM.nang = function (sv, w, el, mienPhi) {
+    if (!sv || !w) return false;
+    const st = G.wStage(w), c = VM.gia(st);
+    if (c == null) return false;
+    const he = st === 0 ? el : w.branch;
+    if (!G.EL[he]) return false;
+    if (!mienPhi) { if (VM.lk(sv) < c) return false; sv.linhKhi = r1(VM.lk(sv) - c); }
+    VM.datCap(w, st + 1, he);
+    return true;
+  };
+  VM.doiHe = function (sv, w, el) {
+    if (!sv || !w) return false;
+    const st = G.wStage(w), c = VM.giaDoiHe(st);
+    if (st < 1 || !G.EL[el] || el === w.branch || VM.lk(sv) < c) return false;
+    sv.linhKhi = r1(VM.lk(sv) - c);
+    VM.datCap(w, st, el);
+    return true;
+  };
+  // Có vũ khí nào nâng được ngay không (chấm đỏ ở Ông Thợ Rèn)
+  VM.coTheNang = function (sv) {
+    sv = sv || G.save;
+    if (!sv || !Array.isArray(sv.weapons)) return false;
+    return sv.weapons.some((w) => { const c = VM.gia(G.wStage(w)); return c != null && VM.lk(sv) >= c; });
+  };
+  // Đưa loại t lên đầu vòng xoay (vũ khí cầm khi vào ải)
+  VM.camDau = function (sv, t) {
+    if (!sv || !Array.isArray(sv.vkThu) || sv.vkThu.indexOf(t) < 0) return;
+    const i = sv.vkThu.indexOf(t);
+    sv.vkThu = sv.vkThu.slice(i).concat(sv.vkThu.slice(0, i));
+    sv.carry = sv.vkThu.map((k) => { const w = sv.weapons.find((x) => x.type === k); return w ? w.id : null; }).filter((id) => id != null);
+  };
+
+  // ---------- bộ trang phục Zed ----------
+  VM.boCap = (sv, bo) => { sv = sv || G.save; const m = sv && sv.boCap && typeof sv.boCap === 'object' ? sv.boCap : {}; return kep(Math.floor(num(m[bo], 0)), 0, (G.BO_MOI || { max: 3 }).max); };
+  VM.boGia = (cap) => (G.BO_MOI && cap >= 0 && cap < G.BO_MOI.max ? G.BO_MOI.gia[cap] : null);
+  VM.boDuoc = function (sv, bo) { // '' là nâng được; không thì lý do
+    sv = sv || G.save;
+    if (!G.ZED_BO || !G.ZED_BO[bo]) return 'Không có bộ này';
+    if (!G.zedBoMo(bo, sv)) return 'Chưa mở bộ';
+    const g = VM.boGia(VM.boCap(sv, bo));
+    if (!g) return 'Đã tối đa';
+    if (VM.lk(sv) < g.lk) return 'Thiếu linh khí';
+    if ((sv.gold | 0) < g.vang) return 'Thiếu vàng';
+    return '';
+  };
+  VM.nangBo = function (sv, bo) {
+    if (VM.boDuoc(sv, bo) !== '') return false;
+    const cap = VM.boCap(sv, bo), g = VM.boGia(cap);
+    sv.linhKhi = r1(VM.lk(sv) - g.lk); sv.gold -= g.vang;
+    if (!sv.boCap || typeof sv.boCap !== 'object' || Array.isArray(sv.boCap)) sv.boCap = {};
+    sv.boCap[bo] = cap + 1;
+    return true;
+  };
+  VM.coTheNangBo = function (sv) {
+    sv = sv || G.save;
+    return !!(G.ZED_BO_KEYS && G.ZED_BO_KEYS.some((k) => VM.boDuoc(sv, k) === ''));
+  };
+
+  // ---------- thưởng thay đồ rơi (js/stage.js gọi) ----------
+  const vung = (r) => kep(r | 0, 0, 2);
+  const chuThuong = (vang, lk) => (vang && lk ? G.t('{0} vàng, {1} linh khí', vang, lk) : lk ? G.t('{0} linh khí', lk) : G.t('{0} vàng', vang));
+  VM.thuongVk = function (r) {
+    const T = G.ROI_MOI.vk, i = vung(r), sv = G.save, vang = T.vang[i], lk = T.lk[i];
+    sv.gold += vang; VM.themLk(sv, lk);
+    return { vang, lk, s: chuThuong(vang, lk) };
+  };
+  VM.thuongTrum = function (r) {
+    const T = G.ROI_MOI.trum, sv = G.save, reg = G.REGIONS[vung(r)];
+    if (!sv.bossGold || typeof sv.bossGold !== 'object') sv.bossGold = {};
+    const dau = !sv.bossGold[reg.boss];
+    sv.bossGold[reg.boss] = true;
+    const vang = dau ? T.vangDau : T.vang, lk = dau ? T.lkDau : T.lk;
+    sv.gold += vang; VM.themLk(sv, lk);
+    return { vang, lk, s: chuThuong(vang, lk) };
+  };
+  VM.thuongAo = function (r) {
+    const vang = G.ROI_MOI.ao.vang[vung(r)];
+    G.save.gold += vang;
+    return { vang, lk: 0, s: chuThuong(vang, 0) };
+  };
+  // Phần trang phục của màn kết quả: bùa cũ của tinh anh, trùm nhỏ (35%) và trùm vùng (luôn). null nếu không có gì.
+  VM.thuongAoTrum = function (r, big, bua) {
+    const T = G.ROI_MOI, O = G.outfit;
+    let vang = bua ? T.bua : 0;
+    if (big) vang += T.aoTrumVung;
+    else if (G.rnd() < (O && O.DROP ? O.DROP.mini : 0.35)) vang += T.aoTrum.vang[vung(r)];
+    if (!vang) return null;
+    G.save.gold += vang;
+    return { vang, lk: 0, s: chuThuong(vang, 0) };
+  };
+
+  // ---------- bản lưu ----------
+  const KHOA_TRUOC = 'linhkhi_save_v1_truoc_he_moi';
+  VM.KHOA_TRUOC = KHOA_TRUOC;
+  function saoLuu(s) {
+    try {
+      const ls = window.localStorage;
+      if (ls && ls.getItem(KHOA_TRUOC) == null) ls.setItem(KHOA_TRUOC, JSON.stringify(s));
+    } catch (e) { /* bộ nhớ đầy: vẫn chuyển, chỉ mất bản sao */ }
+  }
+  const OLD_MAX = [2, 3, 3, 3]; // cấp cao nhất theo bậc cũ (Thường chỉ tới Thành hình)
+  const rarOf = (w) => kep(Math.floor(num(w.rarity != null ? w.rarity : w.tier, 0)), 0, 3);
+  function capCu(w) {
+    if (!w.branch || !w.marks) return 0;
+    const m = num(w.marks[w.branch], 0), M = G.MARKS;
+    const st = m >= M[2] ? 3 : m >= M[1] ? 2 : m >= M[0] ? 1 : 0;
+    return Math.min(st, OLD_MAX[rarOf(w)]);
+  }
+  const W_GIA = [20, 60, 150, 400], W_MAI = 15, O_GIA = [10, 30, 80, 200], O_CANH = [0, 0, 40, 140], O_LK = [2, 5, 10, 20];
+  VM.BANG_HOAN = { W_GIA, W_MAI, O_GIA, O_CANH, O_LK };
+  // Chuyển MỘT lần bản lưu cũ sang hệ mới (s đã qua phần sửa của js/engine.js và js/linhkhi.js; dấu ấn đã theo mốc G.MARKS).
+  //  - Mỗi loại vũ khí: giữ món có cấp cao nhất (cấp theo bậc cũ), hệ của món đó; độ mài = mài cao nhất của loại đó.
+  //    Dấu ấn còn dư của món giữ (phần vượt mốc cấp đang có) thành linh khí; hệ phụ tính một nửa.
+  //  - Bậc màu của món giữ hoàn vàng (giá Bà Hàng Xén trừ giá đồ Thường). Món trùng: hoàn đủ giá Bà Hàng Xén (cả mài, trừ phần mài đã
+  //    chuyển sang món giữ) + một nửa dấu ấn thành linh khí.
+  //  - Quần áo cũ (kể cả mũ, áo, bùa đời cũ đã chuyển thành trang phục): hoàn gấp đôi giá Bà Hàng Xén mua lại + linh khí theo bậc.
+  VM.chuyen = function (s) {
+    const hoan = { vang: 0, lk: 0, vk: 0, ao: 0 };
+    const giu = {}, ws = Array.isArray(s.weapons) ? s.weapons : [];
+    for (const t of LOAI) {
+      const ds = ws.filter((w) => w && w.type === t);
+      if (!ds.length) continue;
+      const mk = (w) => (w.branch && w.marks ? num(w.marks[w.branch], 0) : 0);
+      ds.sort((a, b) => capCu(b) - capCu(a) || mk(b) - mk(a) || (b.sharpen | 0) - (a.sharpen | 0) || rarOf(b) - rarOf(a) || a.id - b.id);
+      const w = ds[0], st = capCu(w), mai = Math.max.apply(null, ds.map((x) => x.sharpen | 0));
+      const m = w.marks || {};
+      const chinh = st > 0 ? w.branch : ELS.slice().sort((a, b) => num(m[b], 0) - num(m[a], 0))[0];
+      for (const e of ELS) {
+        const v = Math.max(0, num(m[e], 0));
+        hoan.lk += e === chinh ? Math.max(0, v - (st > 0 ? G.MARKS[st - 1] : 0)) : v * 0.5;
+      }
+      hoan.vang += W_GIA[rarOf(w)] - W_GIA[0];
+      let daLay = (w.sharpen | 0) === mai;
+      for (const x of ds.slice(1)) {
+        hoan.vk++;
+        let sh = x.sharpen | 0;
+        if (!daLay && sh === mai) { daLay = true; sh = 0; }
+        hoan.vang += W_GIA[rarOf(x)] + sh * W_MAI;
+        const xm = x.marks || {};
+        for (const e of ELS) hoan.lk += Math.max(0, num(xm[e], 0)) * 0.5;
+      }
+      w.sharpen = mai;
+      VM.datCap(w, st, st > 0 ? w.branch : null);
+      giu[t] = w;
+    }
+    // thứ tự xoay vòng: món đang mang trước
+    const thu = [];
+    for (const id of Array.isArray(s.carry) ? s.carry : []) { const x = ws.find((w) => w && w.id === id); if (x && LOAI.indexOf(x.type) >= 0 && thu.indexOf(x.type) < 0) thu.push(x.type); }
+    for (const t of LOAI) if (thu.indexOf(t) < 0) thu.push(t);
+    s.vkThu = thu;
+    s.weapons = LOAI.map((t) => giu[t]).filter(Boolean);
+    // quần áo cũ
+    const O = G.outfit;
+    const items = s.outfit && Array.isArray(s.outfit.items) ? s.outfit.items : [];
+    for (const it of items) {
+      if (!it || typeof it !== 'object') continue;
+      const r = kep(it.r | 0, 0, 3), Ti = O && O.ITEMS ? O.ITEMS[it.k] : null;
+      let p = O_GIA[r];
+      if (r === 0 && Ti && Ti.price) p = Math.min(p, Math.round(Ti.price / 6));
+      if (Ti && Ti.slot === 'wing') p += O_CANH[kep(it.lv | 0, 1, 3)];
+      hoan.ao++; hoan.vang += p * 2; hoan.lk += O_LK[r];
+    }
+    if (O && O.blank) s.outfit = O.blank();
+    s.owned = { helm: [], armor: [], charm: [] }; s.helm = null; s.armor = null; s.charm = null;
+    hoan.vang = Math.round(hoan.vang); hoan.lk = r1(hoan.lk);
+    s.gold = Math.max(0, Math.floor(num(s.gold, 0))) + hoan.vang;
+    s.linhKhi = r1(VM.lk(s) + hoan.lk);
+    s.heMoi = 1;
+    if (hoan.vang || hoan.lk || hoan.vk || hoan.ao) s.heMoiBao = hoan;
+    return hoan;
+  };
+  // Mỗi lần nạp (và bản lưu mới): đúng 4 vũ khí một loại một món, không bậc / dòng phụ, cấp đặt đúng mốc; carry theo vkThu; số hỏng thì sửa.
+  VM.chuan = function (s) {
+    if (!Array.isArray(s.weapons)) s.weapons = [];
+    const giu = {};
+    for (const w of s.weapons) if (w && typeof w === 'object' && LOAI.indexOf(w.type) >= 0 && !giu[w.type]) giu[w.type] = w;
+    s.nextId = Math.max(1, Math.floor(num(s.nextId, 1)), ...s.weapons.map((w) => (w && typeof w.id === 'number' ? w.id + 1 : 1)));
+    for (const t of LOAI) if (!giu[t]) giu[t] = G.newWeapon(s, t, 0, { family: CFG.family[t] | 0 });
+    s.weapons = LOAI.map((t) => giu[t]);
+    for (const w of s.weapons) {
+      w.rarity = 0; if (G.linkTier) G.linkTier(w);
+      w.gold = 0; w.affixes = []; w.power = null; w.family = CFG.family[w.type] | 0;
+      delete w.lock;
+      if (!w.marks || typeof w.marks !== 'object') w.marks = { fire: 0, poison: 0, ice: 0 };
+      const st = G.wStage(w);
+      VM.datCap(w, st, st > 0 ? w.branch : null);
+    }
+    const thu = (Array.isArray(s.vkThu) ? s.vkThu : []).filter((t, i, a) => LOAI.indexOf(t) >= 0 && a.indexOf(t) === i);
+    for (const t of LOAI) if (thu.indexOf(t) < 0) thu.push(t);
+    s.vkThu = thu;
+    s.carry = thu.map((t) => giu[t].id);
+    s.linhKhi = r1(VM.lk(s));
+    const bc = s.boCap && typeof s.boCap === 'object' && !Array.isArray(s.boCap) ? s.boCap : {};
+    s.boCap = {};
+    for (const k of G.ZED_BO_KEYS || []) { const v = kep(Math.floor(num(bc[k], 0)), 0, (G.BO_MOI || { max: 3 }).max); if (v) s.boCap[k] = v; }
+    if (s.heMoiBao != null && (typeof s.heMoiBao !== 'object' || Array.isArray(s.heMoiBao))) delete s.heMoiBao;
+    return s;
+  };
+  // Câu báo một lần ở làng sau khi chuyển bản lưu cũ (xoá dấu báo).
+  VM.baoChuyen = function (sv) {
+    const h = sv && sv.heMoiBao;
+    if (sv) delete sv.heMoiBao;
+    if (!h || typeof h !== 'object') return null;
+    const phan = [];
+    if (h.vk) phan.push(G.t('{0} vũ khí trùng', h.vk));
+    if (h.ao) phan.push(G.t('{0} món quần áo cũ', h.ao));
+    return G.t('Vũ khí nay cố định 4 món (Kiếm, Thương, Búa, Phi tiêu), nâng bằng linh khí ở Ông Thợ Rèn. {0}Hoàn lại: {1} vàng, {2} linh khí.',
+      phan.length ? G.t('Đã đổi {0}. ', phan.join(', ')) : '', h.vang | 0, Math.floor(num(h.lk, 0)));
+  };
+
+  if (G.fixSave && !G.fixSave.vkMoiBoc) {
+    const goc = G.fixSave;
+    G.fixSave = function (s) {
+      if (!G.HE_MOI) return goc.apply(this, arguments);
+      const vao = s && typeof s === 'object' && !Array.isArray(s);
+      if (vao && s.v === 1 && s.heMoi !== 1) saoLuu(s); // bản gốc, trước mọi phần sửa
+      const r = goc.apply(this, arguments);
+      if (!r || typeof r !== 'object') return r;
+      if (r.heMoi !== 1) {
+        // chuyển trên bản sao; lỗi giữa chừng thì bản lưu không bị chuyển dở (lần nạp sau thử lại)
+        try {
+          const c = JSON.parse(JSON.stringify(r));
+          VM.chuyen(c);
+          for (const k of Object.keys(r)) if (!(k in c)) delete r[k];
+          Object.assign(r, c);
+        } catch (e) { console.error('Linh Khí: lỗi khi chuyển bản lưu sang hệ thống mới (giữ nguyên bản lưu)', e); }
+      }
+      try { VM.chuan(r); } catch (e) { console.error('Linh Khí: lỗi khi sửa vũ khí của bản lưu hệ thống mới', e); }
+      return r;
+    };
+    G.fixSave.vkMoiBoc = true;
+  }
+  if (G.newSave && !G.newSave.vkMoiBoc) {
+    const goc = G.newSave;
+    G.newSave = function () {
+      const s = goc.apply(this, arguments);
+      if (G.HE_MOI && s && typeof s === 'object') {
+        s.heMoi = 1; s.linhKhi = 0;
+        s.vkThu = (CFG.thuMacDinh || LOAI).slice();
+        try { VM.chuan(s); } catch (e) { console.error('Linh Khí: lỗi khi tạo bản lưu hệ thống mới', e); }
+      }
+      return s;
+    };
+    G.newSave.vkMoiBoc = true;
+  }
+
+  // ---------- linh khí khi đánh: vào túi chung ----------
+  if (G.addMarks && !G.addMarks.vkMoiBoc) {
+    const goc = G.addMarks;
+    G.addMarks = function (w, el, n, quiet) {
+      if (!G.HE_MOI) return goc.apply(this, arguments);
+      if (!w || !(n >= 0.01) || !G.save) return;
+      VM.themLk(G.save, n);
+      const W = G.getWorld && G.getWorld();
+      if (W) {
+        W.marksGained = (W.marksGained || 0) + n;
+        if (G.lk) G.lk.log(w, el, n);
+        if (!quiet && !G.noRender && G.fx && G.fx.marks) { try { G.fx.marks(el, n); } catch (e) { /* bỏ qua hiệu ứng */ } }
+        if (G.sfx) G.sfx('mark', 1);
+      }
+    };
+    G.addMarks.vkMoiBoc = true;
+  }
+
+  // ---------- người chơi: gắn bộ đang mặc, cấp bộ, skill bộ (móc rỗng) ----------
+  if (G.buildPlayer && !G.buildPlayer.vkMoiBoc) {
+    const goc = G.buildPlayer;
+    G.buildPlayer = function () {
+      const P = goc.apply(this, arguments);
+      if (G.HE_MOI && P) {
+        try { const bo = G.zedBo ? G.zedBo() : 'ninja'; P.bo = bo; P.boCap = VM.boCap(G.save, bo); P.boSkill = G.boSkill(bo, P.boCap); } catch (e) { /* bỏ qua */ }
+      }
+      return P;
+    };
+    G.buildPlayer.vkMoiBoc = true;
+  }
+
+  // ---------- hình vũ khí trong ô đồ: bộ zed-vk ----------
+  const VK_LOAI = { sword: 'kiem', spear: 'thuong', hammer: 'bua', bow: 'phitieu' };
+  function layVk() {
+    const SC = G.spriteCustom, z = SC && SC.zed && SC.zed['zed-vk'];
+    if (!z) return null;
+    if (!z.ready && SC.canAnh) SC.canAnh('zed-vk');
+    return z.ready && z.img && z.tep && z.tep.vk ? z : null;
+  }
+  const NHUOM = new Map();
+  function anhVk(V, loai, cap, he) {
+    const r = V.tep.vk[loai][cap];
+    if (!he || typeof document === 'undefined') return { img: V.img, x: r[0], y: r[1], w: r[2], h: r[3] };
+    const k = loai + cap + he;
+    let cv = NHUOM.get(k);
+    if (!cv) {
+      cv = document.createElement('canvas'); cv.width = r[2]; cv.height = r[3];
+      const q = cv.getContext('2d'); q.imageSmoothingEnabled = false;
+      q.drawImage(V.img, r[0], r[1], r[2], r[3], 0, 0, r[2], r[3]);
+      q.globalCompositeOperation = 'source-atop'; q.globalAlpha = 0.3; q.fillStyle = G.EL[he].col; q.fillRect(0, 0, r[2], r[3]);
+      NHUOM.set(k, cv);
+    }
+    return { img: cv, x: 0, y: 0, w: r[2], h: r[3] };
+  }
+  VM.icon = function (c, w, x, y, size) {
+    const V = layVk(), loai = w && VK_LOAI[w.type];
+    if (!V || !loai || !V.tep.vk[loai]) return false;
+    let cap = 0;
+    try { cap = kep(G.wStage(w) | 0, 0, 3); } catch (e) { cap = 0; }
+    if (!V.tep.vk[loai][cap]) return false;
+    const he = w.coat && G.EL[w.coat] ? w.coat : cap > 0 && G.EL[w.branch] ? w.branch : null;
+    const a = anhVk(V, loai, cap, he), cheo = loai !== 'phitieu';
+    const k = cheo ? (size * 1.35) / (a.w + a.h) : size / Math.max(a.w, a.h);
+    c.save();
+    c.imageSmoothingEnabled = k < 1;
+    c.translate(Math.round(x), Math.round(y));
+    if (cheo) c.rotate(-Math.PI / 4);
+    c.drawImage(a.img, a.x, a.y, a.w, a.h, (-a.w * k) / 2, (-a.h * k) / 2, a.w * k, a.h * k);
+    c.restore();
+    return true;
+  };
+  if (G.art && G.art.weaponIcon && !G.art.weaponIcon.vkMoiBoc) {
+    const goc = G.art.weaponIcon;
+    G.art.weaponIcon = function (c, w, x, y, size) {
+      if (G.HE_MOI && w) { try { if (VM.icon(c, w, x, y, size || 22)) return; } catch (e) { /* vẽ như cũ */ } }
+      return goc.apply(this, arguments);
+    };
+    G.art.weaponIcon.vkMoiBoc = true;
+  }
+
+  // ---------- chữ tiến độ của một vũ khí (thay G.markInfo của js/stage.js) ----------
+  VM.markInfo = function (w) {
+    const st = G.wStage(w), el = st > 0 && G.EL[w.branch] ? w.branch : null, c = VM.gia(st), n = VM.lk();
+    const col = el ? G.EL[el].col : '#b8b0a0';
+    if (c == null) return { frac: 1, col, txt: G.t('{0} · {1} (tối đa)', G.EL[el].name, G.STAGE_NAMES[st]) };
+    const ten = el ? G.t('{0} · {1}', G.EL[el].name, G.STAGE_NAMES[st]) : G.STAGE_NAMES[0];
+    return { frac: kep(n / c, 0, 1), col: el ? col : n >= c ? '#ffd23f' : '#666', txt: G.t('{0} · lên {1}: {2}/{3} linh khí', ten, G.STAGE_NAMES[st + 1], Math.floor(n), c) };
+  };
+  VM.moTiep = function (w) { // cấp kế mở gì
+    const st = G.wStage(w);
+    if (st >= 3) return G.t('Đã mở: {0}', G.HE_FEATURES[w.branch].map((f) => G.tv(f.name)).join(', '));
+    if (st === 0) return 'Lên Mầm: chọn hệ Lửa, Độc hoặc Băng; tăng chỉ số';
+    return G.t('Lên {0}: mở {1}', G.STAGE_NAMES[st + 1], G.tv(G.HE_FEATURES[w.branch][st - 1].name));
+  };
+
+  // ---------- vẽ (dùng chung cho Ông Thợ Rèn, Hành trang, Cô Thợ May) ----------
+  function cat(s, w, size, bold) {
+    s = G.tv ? G.tv(String(s)) : String(s);
+    ui.font(Math.max(6.5, size), bold);
+    const c = G.ux;
+    if (c.measureText(s).width <= w) return s;
+    let lo = 0, hi = s.length;
+    while (lo < hi) { const m = (lo + hi + 1) >> 1; if (c.measureText(s.slice(0, m) + '…').width <= w) lo = m; else hi = m - 1; }
+    return s.slice(0, lo).trimEnd() + '…';
+  }
+  const tx = (s, x, y, w, o) => ui.text(cat(s, w, o.size || 8, o.bold), x, y, o);
+  const so1 = (v) => (G.LANG === 'en' ? v.toFixed(1) : v.toFixed(1).replace('.', ','));
+  function gem(x, y, s) { // viên linh khí (hình thoi vàng)
+    s = s || 1;
+    const c = G.ux;
+    c.fillStyle = '#7a4a10'; c.beginPath(); c.moveTo(x, y - 5 * s); c.lineTo(x + 4 * s, y); c.lineTo(x, y + 5 * s); c.lineTo(x - 4 * s, y); c.closePath(); c.fill();
+    c.fillStyle = '#ffd23f'; c.beginPath(); c.moveTo(x, y - 4 * s); c.lineTo(x + 3 * s, y); c.lineTo(x, y + 4 * s); c.lineTo(x - 3 * s, y); c.closePath(); c.fill();
+    c.fillStyle = '#fff6c8'; c.fillRect(x - 1 * s, y - 2 * s, 1 * s, 2 * s);
+  }
+  VM.gem = gem;
+  VM.ui = { doi: null };
+
+  // Tấm "Linh khí N" trong trận (thay ba vạch hệ, js/linhkhi.js gọi). Trả true nếu đã vẽ.
+  let tTruoc = 0;
+  VM.hud = function (P, HUD, pulse) {
+    const T = G.theme, sv = G.save, w = G.curW(P);
+    if (!sv || !w) return false;
+    const dt = Math.max(0, Math.min(0.1, (G.time || 0) - tTruoc)); tTruoc = G.time || 0;
+    let p = 0;
+    if (pulse) for (const k in pulse) { if (pulse[k] > 0) pulse[k] = Math.max(0, pulse[k] - dt); p = Math.max(p, pulse[k] || 0); }
+    if (T && T.plate) T.plate(HUD.x, HUD.y, HUD.w, HUD.h); else ui.rect(HUD.x, HUD.y, HUD.w, HUD.h, 'rgba(14,10,10,0.88)', '#7a5a3a');
+    gem(HUD.x + 9, HUD.y + 8.5, 1);
+    const n = Math.floor(VM.lk(sv)), c = VM.gia(G.wStage(w));
+    ui.text(G.t('Linh khí {0}', n), HUD.x + 17, HUD.y + 11.8, { size: 7.5, bold: true, color: '#ffe9a8' });
+    if (c != null && n >= c) ui.text('▲', HUD.x + HUD.w - 5, HUD.y + 11.8, { size: 7.5, bold: true, align: 'right', color: GOOD });
+    if (p > 0) { const ga = G.ux.globalAlpha; G.ux.globalAlpha = ga * (p / 0.4) * 0.5; ui.rect(HUD.x + 1, HUD.y + 1, HUD.w - 2, HUD.h - 2, '#fff3b0'); G.ux.globalAlpha = ga; }
+    if (G.lk && G.lk.state) G.lk.state.last = { wid: w.id, lk: n, rows: [] };
+    return true;
+  };
+  // Khối linh khí của màn kết quả (js/linhkhi.js LK.resultBlock gọi): một dòng. Trả về y cuối.
+  VM.ketQua = function (S, x, y, wd) {
+    const T = G.theme, sv = G.save;
+    if (T && T.head) T.head('Linh khí', x, y + 7, { size: 7.5 }); else ui.text('Linh khí', x, y + 7, { size: 7.5, bold: true });
+    y += 11;
+    const L = (S && S.lkGain) || {};
+    let got = 0;
+    for (const id in L) for (const e of ELS) got += num(L[id][e], 0);
+    ui.rect(x, y, wd, 19, 'rgba(10,22,20,0.55)', 'rgba(255,220,160,0.14)');
+    gem(x + 8, y + 9.5, 1);
+    tx(G.t('+{0} linh khí trận này · đang có {1}', Math.round(got), Math.floor(VM.lk(sv))), x + 17, y + 8, wd - 22, { size: 7, bold: true, color: '#ffe9a8' });
+    let goi = 'Nâng vũ khí bằng linh khí ở Ông Thợ Rèn (thẻ Linh khí).';
+    const ws = (sv && sv.weapons) || [];
+    const w = ws.find((q) => { const c = VM.gia(G.wStage(q)); return c != null && VM.lk(sv) >= c; });
+    if (w) goi = G.t('Đủ nâng {0} lên {1} ở Ông Thợ Rèn!', G.WTYPES[w.type].name, G.STAGE_NAMES[G.wStage(w) + 1]);
+    tx(goi, x + 17, y + 16, wd - 22, { size: 6.5, color: w ? GOOD : '#e8dfcc' });
+    return y + 21;
+  };
+
+  // Danh sách 4 vũ khí với nút nâng cấp / chọn hệ / đổi hệ / cầm đầu. o: { ro (chỉ xem), say(s), rowH }. Trả về y cuối.
+  VM.vkPanel = function (x, y, wd, o) {
+    o = o || {};
+    const T = G.theme, sv = G.save, ro = !!o.ro, rowH = o.rowH || 40, say = o.say || (() => {});
+    if (!T || !sv) return y;
+    const n = VM.lk(sv);
+    gem(x + 4, y + 6, 0.9);
+    ui.text(G.t('Linh khí: {0}', Math.floor(n)), x + 11, y + 9, { size: 8.5, bold: true, color: GOLD });
+    const L = G.LINHKHI || {};
+    tx(G.t('Nhận khi hạ tinh anh +{0}, trùm nhỏ +{1}, trùm vùng +{2}, kết liễu quái đang dính hệ +1; rương báu, phần thưởng ải.', L.elite, L.mini, L.boss), x + 80, y + 9, wd - 82, { size: 6.5, color: SOFT });
+    y += 13;
+    const lvl = sv.heroes && sv.heroes[sv.hero] ? sv.heroes[sv.hero].lvl : 1;
+    sv.weapons.forEach((w) => {
+      const st = G.wStage(w), el = st > 0 ? w.branch : null, E = el ? G.EL[el] : null, c = VM.gia(st), dau = sv.vkThu && sv.vkThu[0] === w.type;
+      T.inset(x, y, wd, rowH - 2, VM.ui.doi === w.id);
+      T.slot(x + 3, y + 3, 32, 0);
+      G.art.weaponIcon(G.ux, w, x + 19, y + 19, 26);
+      const bw = ro ? 0 : 150, tw = wd - 44 - bw;
+      tx(G.wName(w) + (dau ? ' · ' + G.t('cầm khi vào ải') : ''), x + 40, y + 10, tw, { size: 7.5, bold: true, color: E ? E.col : TXT });
+      tx(G.t('{0} · mài +{1} · đòn {2}', el ? G.t('{0} · hệ {1}', G.STAGE_NAMES[st], E.name) : G.STAGE_NAMES[0], w.sharpen | 0, so1(G.wBase(w, lvl))), x + 40, y + 20, tw, { size: 6.5, color: TXT });
+      tx(VM.moTiep(w), x + 40, y + 30, tw, { size: 6.5, color: SOFT });
+      if (ro) { y += rowH; return; }
+      const bx = x + wd - bw - 3, b1 = y + 3, b2 = y + 20;
+      if (VM.ui.doi === w.id && st >= 1) {
+        // đang chọn hệ mới
+        const cd = VM.giaDoiHe(st);
+        ELS.filter((e) => e !== w.branch).forEach((e, i) => {
+          if (T.sbtn(bx + i * 76, b1, 74, 15, G.t('{0} · {1}', G.EL[e].name, cd), { size: 7, pad: 1, primary: true, disabled: n < cd })) {
+            if (VM.doiHe(sv, w, e)) { VM.ui.doi = null; G.persist(); G.sfx('evolve'); say(G.t('{0} đổi sang hệ {1}.', G.WTYPES[w.type].name, G.EL[e].name)); }
+          }
+        });
+        if (T.sbtn(bx, b2, 74, 15, 'Thôi', { size: 7, pad: 1 })) VM.ui.doi = null;
+        ui.text(G.t('Đổi hệ: {0} linh khí', cd), bx + 150, b2 + 10.5, { size: 6.5, align: 'right', color: n < cd ? WARN : SOFT });
+        y += rowH;
+        return;
+      }
+      if (st === 0) {
+        ELS.forEach((e, i) => {
+          if (T.sbtn(bx + i * 51, b1, 48, 15, G.EL[e].name, { size: 7, pad: 1, primary: n >= c, disabled: n < c })) {
+            if (VM.nang(sv, w, e)) { G.persist(); G.sfx('evolve'); say(G.t('{0} lên Mầm, theo hệ {1}!', G.WTYPES[w.type].name, G.EL[e].name)); }
+          }
+        });
+        ui.text(G.t('Lên Mầm: {0} linh khí', c), bx, b2 + 10.5, { size: 6.5, bold: true, color: n < c ? WARN : GOOD });
+      } else if (c != null) {
+        if (T.sbtn(bx, b1, 150, 15, G.t('Lên {0} · {1} linh khí', G.STAGE_NAMES[st + 1], c), { size: 7, pad: 1, primary: n >= c, disabled: n < c })) {
+          if (VM.nang(sv, w)) { G.persist(); G.sfx('evolve'); say(G.t('{0} lên {1}!', G.WTYPES[w.type].name, G.STAGE_NAMES[st + 1])); }
+        }
+      } else ui.text('Đã Thức tỉnh', bx + 75, b1 + 10.5, { size: 7.5, bold: true, align: 'center', color: GOOD });
+      if (st >= 1 && T.sbtn(bx, b2, 74, 15, G.t('Đổi hệ · {0}', VM.giaDoiHe(st)), { size: 7, pad: 1 })) VM.ui.doi = w.id;
+      if (dau) ui.text('cầm đầu', bx + 113, b2 + 10.5, { size: 6.5, bold: true, align: 'center', color: GOOD });
+      else if (T.sbtn(bx + 76, b2, 74, 15, 'Cầm đầu', { size: 7, pad: 1 })) { VM.camDau(sv, w.type); G.persist(); G.sfx('pick'); say(G.t('Vào ải sẽ cầm {0} trước.', G.WTYPES[w.type].name)); }
+      y += rowH;
+    });
+    return y;
+  };
+
+  // Khung nâng cấp bộ trang phục Zed (bộ đang mặc). ro: chỉ xem. Trả về y cuối.
+  VM.boPanel = function (x, y, wd, ro, say) {
+    const T = G.theme, sv = G.save;
+    if (!T || !sv || !G.ZED_BO || !G.zedBo) return y;
+    say = say || (() => {});
+    T.head('Bộ trang phục Zed', x, y + 8);
+    y += 11;
+    const bo = G.zedBo(sv), B = G.ZED_BO[bo], cap = VM.boCap(sv, bo), max = G.BO_MOI.max, g = VM.boGia(cap);
+    ui.text(G.t('{0} · cấp {1}/{2}', G.tv(B.ten), cap, max), x, y + 9, { size: 8, bold: true, color: GOLD });
+    y += 12;
+    y = ui.para('Mỗi bộ nâng riêng 3 cấp bằng linh khí và vàng. Skill riêng của từng cấp sẽ có ở bản cập nhật sau.', x, y + 7, wd, { size: 6.5, color: SOFT });
+    if (g) {
+      const why = VM.boDuoc(sv, bo);
+      ui.text(G.t('Lên cấp {0}: {1} linh khí + {2} vàng', cap + 1, g.lk, g.vang), x, y + 9, { size: 7, bold: true, color: why ? WARN : GOOD });
+      if (!ro && T.sbtn(x + wd - 92, y, 90, 15, why && why !== 'Thiếu linh khí' && why !== 'Thiếu vàng' ? why : 'Nâng cấp bộ', { size: 7, pad: 1, primary: !why, disabled: !!why })) {
+        if (VM.nangBo(sv, bo)) { G.persist(); G.sfx('evolve'); say(G.t('{0} lên cấp {1}!', G.tv(B.ten), cap + 1)); }
+      }
+      y += 17;
+    } else { ui.text('Bộ này đã nâng tối đa.', x, y + 9, { size: 7, bold: true, color: GOOD }); y += 13; }
+    const ds = (G.ZED_BO_KEYS || []).map((k) => G.tv(G.ZED_BO[k].ten) + ' ' + (G.zedBoMo(k, sv) ? VM.boCap(sv, k) + '/' + max : G.t('(chưa mở)')));
+    y = ui.para(G.t('Các bộ: {0}', ds.join(' · ')), x, y + 6, wd, { size: 6.5, color: TXT });
+    return y;
   };
 })();
 
@@ -31361,6 +31950,14 @@ MA._xong();
   // Tinh anh gục: có thể rơi một vũ khí bậc ngẫu nhiên (combat.js gọi).
   G.onEliteDown = function (e) {
     if (!S || !S.W || G.rnd() >= G.DROP.elite) return;
+    // Hệ thống mới (js/vk_moi.js): không rơi vũ khí nữa, thay bằng vàng + linh khí cùng giá trị (G.ROI_MOI.vk)
+    if (G.HE_MOI && G.vkMoi) {
+      const q = G.vkMoi.thuongVk(S.r);
+      S.got.push(q.s);
+      S.W.banner = { s: G.t('Tinh anh rơi {0}', q.s), col: '#ffd23f', t: 3 };
+      if (G.fx && G.fx.text) G.fx.text(e.x, e.y - 24, q.s, '#ffd23f', 8);
+      return;
+    }
     const w = G.giveWeapon(G.pick(G.WKEYS), G.rollRarity(S.r));
     if (!w) { S.got.push('vàng (rương đồ đầy)'); return; }
     S.got.push({ s: rarName(w), w });
@@ -31372,6 +31969,13 @@ MA._xong();
     const O = G.outfit;
     if (!O || !S || !S.W || e.isBoss || e.add || e.illusion) return;
     if (G.rnd() >= (e.role === 'elite' ? O.DROP.elite : O.DROP.mob)) return;
+    // Hệ thống mới: không rơi quần áo nữa, thay bằng vàng cùng giá trị (G.ROI_MOI.ao)
+    if (G.HE_MOI && G.vkMoi) {
+      const q = G.vkMoi.thuongAo(S.r);
+      S.got.push(q.s);
+      if (G.fx && G.fx.text) G.fx.text(e.x, e.y - 24, q.s, '#ffd23f', 8);
+      return;
+    }
     const it = O.roll(G.save, S.r, e.role === 'elite' ? 'elite' : 'mob');
     if (!it) { S.got.push('vàng (kho trang phục đầy)'); return; }
     const s = G.t('{0} ({1})', O.name(it), G.RARITY[it.r].name);
@@ -31599,7 +32203,7 @@ MA._xong();
     } else if (type === 'fountain') {
       W.props.push({ type: 'fountain', kind: 'hp', x: cx - 44, y: cy + 14, act: 'fountain' });
       W.props.push({ type: 'fountain', kind: 'mana', x: cx + 44, y: cy + 14, act: 'fountain' });
-      W.props.push({ type: 'stash', x: geo.fx0 + 40, y: W.y0 + 6, act: 'stash' });
+      if (!G.HE_MOI) W.props.push({ type: 'stash', x: geo.fx0 + 40, y: W.y0 + 6, act: 'stash' }); // hệ thống mới: 4 vũ khí luôn mang, không còn rương đổi
       W.cleared = true;
     } else if (type === 'merchant') {
       W.props.push({ type: 'merchant', x: cx, y: cy - 2, act: 'merchant' });
@@ -31742,8 +32346,11 @@ MA._xong();
     const tier = G.rollRarity(S.r);
     const type = G.pick(G.WKEYS), family = Math.floor(G.rnd() * G.FAMILIES) % G.FAMILIES;
     const look = { type, family, rarity: tier, marks: { fire: 0, poison: 0, ice: 0 }, branch: null, sharpen: 0 };
+    // Hệ thống mới: lựa chọn "vũ khí mới" thành túi linh khí cùng giá trị (G.ROI_MOI.ruong)
+    const lkN = G.HE_MOI && G.ROI_MOI ? G.ROI_MOI.ruong.lk[G.clamp(S.r | 0, 0, 2)] : 0;
     return [
-      { kind: 'weapon', type, tier, family, look, label: G.wName(look), sub: G.t('Bậc {0}. Vũ khí mới, cất vào rương đồ', G.RARITY[tier].name) },
+      lkN ? { kind: 'lk', n: lkN, label: G.t('{0} linh khí', lkN), sub: 'Dùng để nâng vũ khí (Mầm, Thành hình, Thức tỉnh) và nâng bộ trang phục' }
+        : { kind: 'weapon', type, tier, family, look, label: G.wName(look), sub: G.t('Bậc {0}. Vũ khí mới, cất vào rương đồ', G.RARITY[tier].name) },
       { kind: 'ore', n: 5 + S.r * 3, label: G.t('{0} quặng', 5 + S.r * 3), sub: 'Dùng để mài vũ khí ở lò rèn' },
       { kind: 'charm', el: S.tut ? 'fire' : G.pick(G.ELS), label: '', sub: 'Phủ hệ lên cả hai vũ khí trong 60 giây' },
     ].map((o) => { if (o.kind === 'charm') o.label = G.t('Bùa {0}', G.EL[o.el].name); return o; });
@@ -31813,13 +32420,21 @@ MA._xong();
       if (big) { const ns = S.diff ? 4 : 3; sv.shards[S.r] += ns; R.lines.push(ln(R, '+{0} mảnh {1}', ns, reg.bossName)); }
       if ((R.stars === 3 && prev < 3) || (!big && G.rnd() < 0.15)) { sv.stones++; R.lines.push(ln(R, '+1 đá tôi')); }
       // Vũ khí rơi: trùm vùng theo G.bossDrop (lần đầu chắc chắn Vàng); ải thường thì 50% một món bậc ngẫu nhiên.
-      if (big || G.rnd() < G.DROP.stage) {
+      if (G.HE_MOI && G.vkMoi) {
+        // Hệ thống mới: trùm vùng và ải thường không rơi vũ khí nữa mà cho vàng + linh khí cùng giá trị (G.ROI_MOI)
+        const q = big ? G.vkMoi.thuongTrum(S.r) : G.rnd() < G.DROP.stage ? G.vkMoi.thuongVk(S.r) : null;
+        if (q) R.lines.push(big ? ln(R, '{0} để lại {1}', reg.bossName, q.s) : ln(R, 'Nhặt được {0}', q.s));
+      } else if (big || G.rnd() < G.DROP.stage) {
         const nw = big ? G.bossDrop(S.r) : G.giveWeapon(G.pick(G.WKEYS), G.rollRarity(S.r + (again ? G.DROP.againBonus : 0)));
         R.lines.push(nw ? { s: big ? G.t('{0} rơi {1}', reg.bossName, rarName(nw)) : G.t('Nhặt được {0}', rarName(nw)), w: nw } : ln(R, 'Rương đồ đầy, vũ khí rớt đổi thành vàng'));
       }
       // Bùa cũ (tinh anh 25%) nay là trang phục ô Bùa, bậc Lam; trùm rơi trang phục (trùm vùng: món Tím hoặc Vàng của bộ vùng).
-      const O = G.outfit;
+      const O = G.HE_MOI ? null : G.outfit; // hệ thống mới: không rơi trang phục (khối dưới đổi ra vàng)
       S.outfitLoot = [];
+      if (G.HE_MOI && G.vkMoi && G.outfit) {
+        const q = G.vkMoi.thuongAoTrum(S.r, big, !!S.loot.charm);
+        if (q) R.lines.push(ln(R, 'Nhặt được {0}', q.s));
+      }
       if (O && S.loot.charm) {
         const left = Object.keys(O.ITEMS).filter((k) => O.ITEMS[k].old && !O.has(sv, k));
         if (left.length) { const it = O.add(sv, G.pick(left), 1); if (it) { R.lines.push(ln(R, 'Nhặt được {0}', O.name(it))); S.outfitLoot.push(it); } }
@@ -32140,6 +32755,7 @@ MA._xong();
   }
 
   function markInfo(w) {
+    if (G.HE_MOI && G.vkMoi) return G.vkMoi.markInfo(w); // hệ thống mới: cấp + hệ + linh khí cần để lên cấp kế
     if (!w.branch) {
       const top = G.ELS.slice().sort((a, b) => w.marks[b] - w.marks[a])[0];
       return { frac: w.marks[top] / G.MARKS[0], col: w.marks[top] > 0 ? G.EL[top].col : '#666', txt: w.marks[top] > 0 ? G.t('{0} {1}/{2}', G.EL[top].name, Math.floor(w.marks[top]), G.MARKS[0]) : 'Chưa có dấu ấn' };
@@ -32315,18 +32931,20 @@ MA._xong();
     if (on('vien')) {
     G.minimap.draw(S);
     // vũ khí: hình và bậc ở trên, mốc tiến hóa ở dưới, thanh dấu ấn sát đáy
-    P.weapons.forEach((w, i) => {
-      const x = 368 + i * 56, on = i === P.cur;
+    // Hệ thống mới: 4 vũ khí xoay vòng, HUD vẫn 2 ô: ô trái = món đang cầm, ô phải = món kế tiếp khi bấm đổi.
+    const hienVk = G.HE_MOI && P.weapons.length > 2 ? [P.weapons[P.cur], P.weapons[(P.cur + 1) % P.weapons.length]] : P.weapons;
+    hienVk.forEach((w, i) => {
+      const x = 368 + i * 56, on = w === P.weapons[P.cur];
       // Khung ô vũ khí cùng bộ với nút, viền mang màu bậc. Hình vũ khí sống và chữ do game vẽ ở các dòng dưới.
       const rar = G.RARITY[G.wRar(w)];
       BA.slot(c, x, 3, 54, 35, {
         weapon: { type: w.type, branch: G.activeEl(P, w), stage: G.wStage(w), rarity: G.wRar(w) },
-        active: on, cd: on ? 0 : P.swapCd / 1.5, icon: false, gem: false, id: 'slot' + i,
+        active: on, cd: on ? 0 : P.swapCd / (G.SWAP_CD || 1.5), icon: false, gem: false, id: 'slot' + i,
       });
       G.art.weaponIcon(c, Object.assign({}, w, { coat: P.coats[w.id] && P.coats[w.id].t > 0 ? P.coats[w.id].el : null }), x + 13, 13, 19, on ? (P.atkT > 0 ? 'attack' : 'idle') : 'sleep');
       const mi = markInfo(w);
       // bậc và độ mài nằm ở phần phải của ô, không chồng lên hình vũ khí (hình chiếm 26 điểm bên trái)
-      ui.text(rar.name, x + 51, 13, { size: 7, align: 'right', bold: true, color: rar.col });
+      if (!G.HE_MOI) ui.text(rar.name, x + 51, 13, { size: 7, align: 'right', bold: true, color: rar.col }); // hệ thống mới: không còn bậc màu
       if (w.sharpen) ui.text('+' + w.sharpen, x + 51, 22, { size: 7, align: 'right', bold: true, color: on ? '#fff3da' : '#cbbd9e' });
       ui.text(G.CHU_RO !== false && !G.wStage(w) ? 'Chưa hệ' : G.STAGE_NAMES[G.wStage(w)], x + 27, 29.5, { size: 6.5, align: 'center', color: w.branch ? G.EL[w.branch].col : '#b8b0a0' });
       ui.bar(x + 3, 32.5, 48, 3, mi.frac, mi.col);
@@ -32572,6 +33190,7 @@ MA._xong();
       if (ui.btn(x, 84, 108, 100, isW ? '' : o.label, { sub: '', size: 10 })) {
         if (isW) { const w = G.giveWeapon(o.type, o.tier, { family: o.family }); S.got.push(w ? { s: rarName(w), w } : 'vàng (rương đồ đầy)'); }
         if (o.kind === 'ore') { G.save.ore += o.n; S.got.push(G.t('{0} quặng', o.n)); }
+        if (o.kind === 'lk' && G.vkMoi) { G.vkMoi.themLk(G.save, o.n); S.got.push(G.t('{0} linh khí', o.n)); }
         if (o.kind === 'charm') G.addCoat(o.el, 60);
         S.prop.used = true;
         S.mode = 'play';
@@ -32721,7 +33340,7 @@ MA._xong();
     // Phần thưởng: chữ ở cột trái; vũ khí nhận được thành thẻ viền màu bậc ở cột phải (khung thẻ của chủ đề trống đồng).
     const TH = G.theme, texts = R.lines.filter((l) => !l.w), weps = R.lines.filter((l) => l.w);
     // Khối linh khí (js/linhkhi.js) nằm sát trên hàng nút: mỗi vũ khí đang mang một dòng. Phần thưởng xếp phía trên khối này.
-    const lkN = G.lk && S.P ? S.P.weapons.length : 0, lkTop = lkN ? (!R.win && !S.quit ? 186 : 213) - (11 + lkN * 21) : 0;
+    const lkN = G.lk && S.P ? (G.HE_MOI ? 1 : S.P.weapons.length) : 0, lkTop = lkN ? (!R.win && !S.quit ? 186 : 213) - (11 + lkN * 21) : 0;
     const lim = lkN ? lkTop - 3 : 208;
     const rows = Math.max(1, Math.floor((lim - y) / 11.5));
     // dòng nổi bật (lên cấp, cứu được em bé, kỷ lục): xét trên bản tiếng Việt của dòng; dòng kỷ lục của bảng vàng mở đầu bằng ★
@@ -32913,7 +33532,7 @@ MA._xong();
     });
     if (!S) return;
     // khối linh khí của từng vũ khí (js/linhkhi.js) nằm dưới các gợi ý
-    const lkN = G.lk && S.P ? S.P.weapons.length : 0;
+    const lkN = G.lk && S.P ? (G.HE_MOI ? 1 : S.P.weapons.length) : 0;
     if (lkN) G.lk.resultBlock(S, 84, Math.max(ty + tips.length * 23 + 2, 213 - (11 + lkN * 21)), 312);
     if (ui.btn(86, 216, 140, 26, 'Về làng')) { S = null; G.setScene(G.Village); return; }
     if (ui.btn(254, 216, 140, 26, 'Thử lại')) G.startStage(S.r, S.i, S.diff);
@@ -33532,6 +34151,7 @@ MA._xong();
       // thợ may: có món trang phục mới chưa xem, hoặc đủ nguyên liệu may một món chưa có
       const O = G.outfit;
       n.may = !!(O && sv.outfit && (O.newCount(sv) > 0 || O.canCraftNew(sv)));
+      if (G.HE_MOI) n.may = !!(G.vkMoi && G.vkMoi.coTheNangBo(sv)); // hệ thống mới: thợ may = nâng bộ trang phục Zed
       // thợ rèn: đủ nguyên liệu để mài một món đang mang, nâng lò, hoặc nâng bậc
       const pay = G.villageApi && G.villageApi.canPay;
       n.ren = false;
@@ -33541,8 +34161,9 @@ MA._xong();
         for (const id of sv.carry) {
           const w = G.weaponById(id); if (!w) continue;
           if (w.sharpen < Math.min(G.MAX_SHARPEN, G.FORGE_CAP[sv.forge]) && pay(G.sharpenFull(w.sharpen))) n.ren = true;
-          if (G.wRar(w) < 2 && pay(G.TIER_UP[G.wRar(w) + 1])) n.ren = true;
+          if (!G.HE_MOI && G.wRar(w) < 2 && pay(G.TIER_UP[G.wRar(w) + 1])) n.ren = true;
         }
+        if (G.HE_MOI && G.vkMoi && G.vkMoi.coTheNang(sv)) n.ren = true; // đủ linh khí nâng một vũ khí
       }
     } catch (e) { /* thiếu số liệu thì coi như không có việc mới */ }
     // Người mới (chưa qua quá 1 ải): chỉ một người có chấm đỏ, người quan trọng nhất.
@@ -33688,6 +34309,7 @@ MA._xong();
     if ((S.newsT -= dt) <= 0) { S.newsT = 1; checkNews(); }
     if (!locked && G.ZED && G.save && G.save.zed && G.save.zed.bao === 1) zedBao(); // ZED: báo một lần bản lưu cũ đã chuyển sang Zed
     else if (!locked && G.ZED && G.save && G.save.zed && G.save.zed.boBao === 1) zedBoBao(); // trang phục Zed vừa mở: báo một lần
+    else if (!locked && G.HE_MOI && G.vkMoi && G.save && G.save.heMoiBao) { const s = G.vkMoi.baoChuyen(G.save); if (s) say(s, 9); G.persist(); } // hệ thống mới: báo một lần đã chuyển bản lưu cũ
     let mx = 0, my = 0;
     if (!locked) {
       const k = G.keys, kp = G.keyP, bt = btnAt();
@@ -34384,12 +35006,14 @@ MA._xong();
     G.art.weaponIcon(G.ux, w, 53, 91, 54, 'idle');
     if (G.LANG === 'vi') ui.text(G.wName(w), 96, 68, { size: 10.5, bold: true, color: rar.col });
     else { const q = T.vua(G.wName(w), 150, 10.5, true); ui.text(q[0], 96, 68 + (q[1] - 10.5) * 0.36, { size: q[1], bold: true, color: rar.col }); } // tên tiếng Anh dài: thu cỡ chữ cho khỏi lấn cột bên phải
-    ui.text(fam ? G.t('Bậc {0} · dòng {1}', rar.name, fam.name) : G.t('Bậc {0} · {1}', rar.name, G.WTYPES[w.type].name), 96, 80, { size: 7.5, color: SOFT });
-    if (fam && fam.nature) ui.text(G.t('Tính nết: {0}', fam.nature), 96, 91, { size: 7.5, color: SOFT });
-    ui.text(G.t('Sát thương mỗi đòn {0} · hệ số bậc x{1}', G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1).replace('.', dp()), String(G.wRarMult(w)).replace('.', dp())), 96, 102, { size: 7.5 });
+    if (G.HE_MOI) ui.text(G.t('{0} · {1}', G.WTYPES[w.type].name, G.STAGE_NAMES[st]), 96, 80, { size: 7.5, color: SOFT }); // hệ thống mới: không bậc, không dòng
+    else ui.text(fam ? G.t('Bậc {0} · dòng {1}', rar.name, fam.name) : G.t('Bậc {0} · {1}', rar.name, G.WTYPES[w.type].name), 96, 80, { size: 7.5, color: SOFT });
+    if (fam && fam.nature && !G.HE_MOI) ui.text(G.t('Tính nết: {0}', fam.nature), 96, 91, { size: 7.5, color: SOFT });
+    if (G.HE_MOI) ui.text(G.t('Sát thương mỗi đòn {0} · mài +{1}', G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1).replace('.', dp()), w.sharpen | 0), 96, 102, { size: 7.5 });
+    else ui.text(G.t('Sát thương mỗi đòn {0} · hệ số bậc x{1}', G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1).replace('.', dp()), String(G.wRarMult(w)).replace('.', dp())), 96, 102, { size: 7.5 });
     // Hai thẻ ở cột trái: Linh khí (bảng dấu ấn ba hệ, js/linhkhi.js) và Dòng phụ (dòng phụ, dòng mạnh). Mặc định mở Linh khí.
-    const lkTab = G.lk && V.wvTab !== 'aff';
-    if (G.lk) {
+    const lkTab = G.lk && V.wvTab !== 'aff' && !G.HE_MOI;
+    if (G.lk && !G.HE_MOI) {
       if (T.sbtn(246, 29, 70, 17, 'Linh khí', { size: 8, pad: 4, primary: lkTab })) V.wvTab = 'lk';
       if (T.sbtn(320, 29, 70, 17, 'Dòng phụ', { size: 8, pad: 4, primary: !lkTab })) V.wvTab = 'aff';
     }
@@ -34397,10 +35021,14 @@ MA._xong();
     ui.text(mi.txt, 96, 113, { size: 7.5, color: mi.col });
     ui.bar(96, 117, 146, 4, mi.frac, mi.col);
     let y = 156;
-    if (lkTab) G.lk.panel(w, 18, 140, 224);
+    if (G.HE_MOI && G.vkMoi) { // hệ thống mới: túi linh khí chung, nâng ở Ông Thợ Rèn
+      const c = G.vkMoi.gia(st);
+      ui.text(G.t('Linh khí đang có: {0}', Math.floor(G.vkMoi.lk(sv))), 18, 140, { size: 8, bold: true, color: GOLD });
+      ui.para(c == null ? 'Vũ khí đã Thức tỉnh, mở đủ hai đặc trưng hệ.' : G.t('{0}. Cần {1} linh khí, nâng ở Ông Thợ Rèn, thẻ Linh khí.', G.vkMoi.moTiep(w), c), 18, 152, 224, { size: 7, color: TXT });
+    } else if (lkTab) G.lk.panel(w, 18, 140, 224);
     else ui.text(G.t('Tiến hóa cao nhất của bậc này: {0}', G.STAGE_NAMES[rar.maxStage]), 18, 140, { size: 7, color: SOFT });
     // dòng phụ và dòng mạnh
-    if (!lkTab) {
+    if (!lkTab && !G.HE_MOI) {
     T.head('Dòng phụ', 18, y);
     y += 12;
     if (!w.affixes || !w.affixes.length) { ui.text(r === 0 ? 'Bậc Thường không có dòng phụ.' : 'Chưa có.', 18, y, { size: 7.5, color: SOFT }); y += 11; }
@@ -34411,12 +35039,12 @@ MA._xong();
       y = ui.para(G.POWER[w.power].desc, 18, y + 11, 200, { size: 7.5 });
     }
     }
-    ui.para(r >= 3 ? 'Đã ở bậc cao nhất.' : 'Ông Thợ Rèn nâng bậc được, không mất dấu ấn và tiến hóa.', 18, 250, 220, { size: 7, color: SOFT });
+    if (!G.HE_MOI) ui.para(r >= 3 ? 'Đã ở bậc cao nhất.' : 'Ông Thợ Rèn nâng bậc được, không mất dấu ấn và tiến hóa.', 18, 250, 220, { size: 7, color: SOFT });
     // đặc trưng hệ theo cấp
     const x0 = 250;
     T.head('Đặc trưng hệ theo cấp', x0, 68);
     const el = w.branch, E = el ? G.EL[el] : null;
-    if (!el) ui.para(G.t('Chưa khóa nhánh hệ. Kết liễu quái đang dính hiệu ứng để nhận dấu ấn; đủ {0} dấu ấn của một hệ thì vũ khí theo hệ đó.', G.MARKS[0]), x0, 80, 212, { size: 7, color: SOFT });
+    if (!el) ui.para(G.HE_MOI ? G.t('Chưa có hệ. Lên Mầm bằng {0} linh khí ở Ông Thợ Rèn và chọn Lửa, Độc hoặc Băng.', G.VK_MOI.gia[0]) : G.t('Chưa khóa nhánh hệ. Kết liễu quái đang dính hiệu ứng để nhận dấu ấn; đủ {0} dấu ấn của một hệ thì vũ khí theo hệ đó.', G.MARKS[0]), x0, 80, 212, { size: 7, color: SOFT });
     const rows = [
       ['Trắng', 'Chưa mang hệ. Hạ tinh anh, trùm hoặc nhặt viên linh khí quái thường rơi để có dấu ấn.'],
       ['Mầm', G.t('Chỉ số tăng. {0}% mỗi đòn gây {1}, vệt chém nhuốm màu hệ. Chưa có luật hệ.', Math.round(G.PROC[1] * 100), el ? (el === 'fire' ? 'cháy' : el === 'poison' ? 'độc' : 'chậm') : 'hiệu ứng hệ')],
@@ -34430,7 +35058,7 @@ MA._xong();
       if (!h) return;
       T.inset(x0, ry, 214, h - 2, false, { fill: got ? '#24484a' : '#17302f', col: got && E ? E.dark : T.C.brD });
       ui.text(q[0], x0 + 5, ry + 10, { size: 8, bold: true, color: got && E ? E.col : SOFT });
-      ui.text(locked ? 'Cần bậc Lam' : got ? 'Đã mở' : i === st + 1 ? G.t('Sắp mở: {0} dấu ấn', G.MARKS[i - 1]) : 'Chưa mở', x0 + 209, ry + 10, { size: 6.5, align: 'right', bold: got, tiny: true, color: locked ? WARN : got ? GOOD : SOFT });
+      ui.text(locked ? 'Cần bậc Lam' : got ? 'Đã mở' : i === st + 1 ? (G.HE_MOI && G.vkMoi ? G.t('Sắp mở: {0} linh khí', G.vkMoi.gia(st)) : G.t('Sắp mở: {0} dấu ấn', G.MARKS[i - 1])) : 'Chưa mở', x0 + 209, ry + 10, { size: 6.5, align: 'right', bold: got, tiny: true, color: locked ? WARN : got ? GOOD : SOFT });
       if (q[1]) fitPara(q[1], x0 + 5, ry + 19, 204, { size: 6.5, color: TXT }, 2);
       else if (el) {
         const f = G.HE_FEATURES[el][q[2]];
@@ -34470,14 +35098,20 @@ MA._xong();
     // 12/10 (cờ G.CHU_RO): thẻ "Rèn đồ" cũ (chỉ còn lời giải thích cho bản cũ) được ẩn; bốn thẻ còn lại giãn đều. Đồ vải đã ở Cô Thợ May.
     const anRen = G.CHU_RO !== false;
     if (anRen && V.ftab === 'craft') V.ftab = 'sharpen';
-    const tabs = [['sharpen', 'Mài'], ['tier', 'Nâng bậc'], ['reforge', 'Tôi lại']].concat(anRen ? [] : [['craft', 'Rèn đồ']], [['up', 'Nâng lò']]);
-    const tp = anRen ? 77 : 61.5, tw = anRen ? 73 : 58;
+    // Hệ thống mới (G.HE_MOI, js/vk_moi.js): bỏ Nâng bậc, Tôi lại; thẻ Linh khí nâng cấp 4 vũ khí (chọn hệ, đổi hệ).
+    if (G.HE_MOI && (V.ftab === 'tier' || V.ftab === 'reforge' || V.ftab === 'craft')) V.ftab = 'vk';
+    const tabs = G.HE_MOI ? [['sharpen', 'Mài'], ['vk', 'Linh khí'], ['up', 'Nâng lò']]
+      : [['sharpen', 'Mài'], ['tier', 'Nâng bậc'], ['reforge', 'Tôi lại']].concat(anRen ? [] : [['craft', 'Rèn đồ']], [['up', 'Nâng lò']]);
+    const tp = G.HE_MOI ? 102 : anRen ? 77 : 61.5, tw = G.HE_MOI ? 98 : anRen ? 73 : 58;
     tabs.forEach((t, i) => {
       if (T.tab(CX + i * tp, PY + 23, tw, 22, t[1], V.ftab === t[0], { pad: 2 })) { V.ftab = t[0]; V.sel = null; V.page = 0; }
     });
     const R4 = G.RARITY, xm = (m) => 'x' + String(m).replace('.', dp());
-    if (V.ftab !== 'up') T.inset(CX, DET_Y, CW, 52, false);
-    if (V.ftab === 'sharpen') {
+    if (V.ftab !== 'up' && V.ftab !== 'vk') T.inset(CX, DET_Y, CW, 52, false);
+    if (V.ftab === 'vk' && G.vkMoi) {
+      G.vkMoi.vkPanel(CX, LIST_Y - 1, CW, { rowH: 39, say });
+      line = G.vkMoi.coTheNang(sv) ? 'Đủ linh khí rồi! Chọn vũ khí để nâng cấp, lên Mầm thì chọn hệ.' : 'Linh khí nâng vũ khí: Trắng, Mầm, Thành hình, Thức tỉnh. Hạ tinh anh và trùm để gom linh khí.';
+    } else if (V.ftab === 'sharpen') {
       weaponList();
       const w = G.weaponById(V.sel);
       line = 'Chọn một vũ khí để mài. Mỗi cấp mài tăng 8% sát thương gốc.';
@@ -34581,7 +35215,8 @@ MA._xong();
   // Bán, khoá, chọn nhiều, bán hết theo bậc, hỏi lại: js/ban_do.js (G.banDo).
   function xenTabs() {
     // Phiên cân bằng (mục 3): thêm thẻ Nguyên liệu (đổi vàng lấy nguyên liệu vùng đã qua, js/upgrade.js U.doi).
-    const BD = G.banDo, tabs = [['weapon', 'Vũ khí', 36], ['nl', 'Nguyên liệu', 48], ['outfit', 'Mua đồ mặc', 46], ['sell', 'Bán đồ mặc', 46]];
+    // Hệ thống mới: không còn rương vũ khí, mua / bán quần áo → chỉ còn thẻ Nguyên liệu
+    const BD = G.banDo, tabs = G.HE_MOI ? [['nl', 'Nguyên liệu', 48]] : [['weapon', 'Vũ khí', 36], ['nl', 'Nguyên liệu', 48], ['outfit', 'Mua đồ mặc', 46], ['sell', 'Bán đồ mặc', 46]];
     // Rà soát C: thẻ rộng theo chữ (phông thật trên iPhone rộng hơn, "Nguyên liệu" chạm viền thẻ) nếu băng tiêu đề còn chỗ
     if (G.RSC !== false) {
       ui.font(7.5, true);
@@ -34609,6 +35244,7 @@ MA._xong();
   }
   function gearBody() {
     const sv = G.save, BD = G.banDo;
+    if (G.HE_MOI) { V.gtab = 'nl'; return nguyenLieu(); } // hệ thống mới: Bà Hàng Xén chỉ đổi vàng lấy nguyên liệu
     if (V.gtab === 'outfit' && G.outfit) return shop();
     if (V.gtab === 'sell' && G.outfit && BD) return sellOutfit();
     if (V.gtab === 'nl') return nguyenLieu();
@@ -35705,8 +36341,10 @@ MA._xong();
       y = ui.para(G.t('Nội tại: {0}', G.passiveOf(k)), x, y, w, { size: 7, color: SOFT });
       y = ui.para(G.t('Chưởng ({0} mana, {1}). {2}', G.CHUONG ? G.CHUONG.cost : 30, G.chuong ? G.CHUONG.trees[G.chuong.state(sv.heroes[sv.hero], sv.hero).cay].name : '', G.skillDescOf(k)), x, y, w, { size: 7, color: SOFT });
       // trang phục
-      y += 8; T.head('Trang phục đang mặc', x, y); y += 3;
-      const O = G.outfit;
+      // Hệ thống mới (js/vk_moi.js): quần áo kiểu cũ đã bỏ → khung nâng cấp bộ trang phục Zed đang mặc (đổi bộ ở nút trên hình Zed)
+      const O = G.HE_MOI && G.vkMoi ? null : G.outfit;
+      if (G.HE_MOI && G.vkMoi) y = G.vkMoi.boPanel(x, y + 4, w, RO, VA.say);
+      else { y += 8; T.head('Trang phục đang mặc', x, y); y += 3; }
       if (O) {
         const sm = O.sum(sv), ks = Object.keys(sm.stats);
         y = ui.para(ks.length ? ks.map((q) => O.statText(q, sm.stats[q])).join(', ') : 'Chưa mặc món nào tăng chỉ số.', x, y + 8, w, { size: 7, color: ks.length ? TXT : SOFT });
@@ -35805,6 +36443,17 @@ MA._xong();
     else VA.viewWeapon(id, 'bag');
   }
   function weaponTab(sv) {
+    // Hệ thống mới (js/vk_moi.js): 4 vũ khí cố định, nâng bằng linh khí ngay tại đây (trong ải chỉ xem)
+    if (G.HE_MOI && G.vkMoi) {
+      region('weapon', CX, CY, CW - 4, CH, (y) => {
+        y = G.vkMoi.vkPanel(CX, y + 2, CW - 8, { ro: RO, say: VA.say });
+        if (RO) { roNote(CX, y + 10); return y + 14; }
+        y += 2;
+        if (goBtn(CX, y, 214, 'ren', 'Đến Ông Thợ Rèn: mài, nâng lò')) return y;
+        return y + 20;
+      });
+      return;
+    }
     const carry = sv.carry.map((id) => G.weaponById(id)).filter(Boolean);
     const stash = sv.weapons.filter((w) => !sv.carry.includes(w.id)).sort((a, b) => (G.wRar(b) - G.wRar(a)) || (b.sharpen - a.sharpen) || (a.id - b.id));
     const BD = G.banDo, sell = !RO && BD, multi = sell && BD.multi && BD.kind === 'w';
@@ -36069,8 +36718,11 @@ MA._xong();
     T.panel(X0, Y0, PW, PH, RO ? 'Hành trang (chỉ xem)' : 'Hành trang', { rightPad: 74 + roW, noBand: true });
     if (T.sbtn(X0 + PW - 66, Y0 + 3, 60, 17, RO ? '← Quay lại' : '✕ Xong', { size: 8, pad: 5 })) { close(); return; }
     if (RO) ui.text(roTxt, X0 + PW - 72, Y0 + 15, { size: 6.5, align: 'right', color: WARN });
-    const tw = (CW - 5 * 3) / 6;
-    TABS.forEach((t, i) => {
+    // Hệ thống mới: bỏ thẻ Trang phục (quần áo cũ) và Linh khí (dấu ấn từng vũ khí); linh khí nay ở thẻ Vũ khí
+    const tabs = G.HE_MOI && G.vkMoi ? TABS.filter((t) => t[0] !== 'outfit' && t[0] !== 'lk') : TABS;
+    if (!tabs.some((t) => t[0] === B.tab)) B.tab = 'hero';
+    const tw = (CW - (tabs.length - 1) * 3) / tabs.length;
+    tabs.forEach((t, i) => {
       if (T.tab(CX + i * (tw + 3), Y0 + 23, tw, 19, G.tc('thẻ', t[1]), B.tab === t[0], { pad: 2 })) { B.tab = t[0]; B.sel = null; if (G.banDo) G.banDo.reset(); }
     });
     const fn = { hero: heroTab, weapon: weaponTab, outfit: outfitTab, lk: lkTab, skill: skillTab, res: resTab }[B.tab] || heroTab;
@@ -36484,6 +37136,16 @@ MA._xong();
       if (w.sharpen < Math.min(cap, G.MAX_SHARPEN)) {
         out.push({ kind: 'sharpen', key: 'sh' + id, title: G.t('Mài {0} lên +{1}', nm, w.sharpen + 1), cost: G.sharpenFull(w.sharpen), apply: (s) => { wById(s, id).sharpen++; }, go: { who: 'ren', ftab: 'sharpen', sel: id } });
       } else if (w.sharpen < G.MAX_SHARPEN) needForge = true;
+      if (G.HE_MOI && G.vkMoi) {
+        // Hệ thống mới (js/vk_moi.js): không còn nâng bậc / lên Vàng; cấp vũ khí nâng bằng linh khí ở Ông Thợ Rèn (thẻ Linh khí)
+        const VM = G.vkMoi, st = G.wStage(w), c = VM.gia(st);
+        if (c != null) {
+          const el = w.branch || G.REGIONS[0].el || 'fire', ten = G.t('Nâng {0} lên {1}', nm, G.STAGE_NAMES[st + 1]), go = { who: 'ren', ftab: 'vk', sel: id };
+          if (VM.lk(sv) >= c) out.push({ kind: 'vklk', key: 'vl' + id, title: ten, cost: {}, apply: (s) => { VM.nang(s, wById(s, id), el); }, go });
+          else out.push({ kind: 'evolve', key: 'ev' + id, title: ten, cost: {}, need: { lk: Math.ceil(c - VM.lk(sv)), el }, sim: (s) => { VM.nang(s, wById(s, id), el, true); }, apply: null, go });
+        }
+        continue;
+      }
       if (r < 2) out.push({ kind: 'tier', key: 'ti' + id, title: G.t('Nâng {0} lên {1}', nm, G.RARITY[r + 1].name), cost: G.TIER_UP[r + 1], apply: (s) => setRar(wById(s, id), r + 1, 0), go: { who: 'ren', ftab: 'tier', sel: id } });
       else {
         // lên Vàng (hoặc Vàng mạnh hơn): mảnh trùm vùng cao nhất đã hạ, nếu chưa hạ trùm nào thì mảnh Mộc Tinh
@@ -36510,12 +37172,12 @@ MA._xong();
     // mang vũ khí tốt hơn trong rương
     // (chỉ xét vài món mạnh nhất trong rương cho nhanh)
     const wq = (w) => G.wRarMult(w) * G.STAGE_MULT[G.wStage(w)] * (1 + 0.08 * w.sharpen) * G.WTYPES[w.type].dmg / (G.WTYPES[w.type].cd || 0.4);
-    const stash = sv.weapons.filter((w) => !sv.carry.includes(w.id)).sort((a, b) => wq(b) - wq(a)).slice(0, 3);
+    const stash = G.HE_MOI ? [] : sv.weapons.filter((w) => !sv.carry.includes(w.id)).sort((a, b) => wq(b) - wq(a)).slice(0, 3);
     for (const w of stash) for (let slot = 0; slot < Math.max(1, sv.carry.length); slot++) {
       out.push({ kind: 'carry', key: 'ca' + w.id + '-' + slot, title: G.t('Mang {0}', G.wName(w)), cost: {}, apply: (s) => { s.carry[slot] = w.id; }, go: { who: 'xen' } });
     }
     // trang phục
-    if (O && sv.outfit) {
+    if (O && sv.outfit && !G.HE_MOI) { // hệ thống mới: không may / mua / mặc quần áo kiểu cũ
       O.sync(sv);
       for (const slot of O.SLOTS) {
         const it = O.worn(sv, slot);
@@ -36658,6 +37320,7 @@ MA._xong();
       seen[grp] = true;
       let sub;
       if (q.kind === 'level') { const g = q.go.stage; sub = G.t('còn thiếu {0} kinh nghiệm', q.need.xp) + (g ? ' — ' + G.t('chơi lại {0}', stName(g[0], g[1])) : ''); }
+      else if (q.kind === 'evolve' && G.HE_MOI) sub = G.t('còn thiếu {0} linh khí — hạ tinh anh, trùm, kết liễu quái đang dính hệ', q.need.lk);
       else if (q.kind === 'evolve') sub = G.t('còn thiếu {0} linh khí {1} — kết liễu quái đang dính {1}', q.need.lk, G.EL[q.need.el].name);
       else if (q.miss) sub = U.missText(sv, q.miss);
       else sub = q.kind === 'skill' ? 'học ngay ở Cụ Đồ' : q.kind === 'chuong' ? 'học ngay ở Cụ Đồ, thẻ Cây chưởng' : q.kind === 'carry' ? 'đổi ngay ở Bà Hàng Xén' : q.kind === 'wear' ? 'mặc ngay ở Cô Thợ May' : G.t('đủ đồ rồi — tới {0} làm ngay', WHO_NAME[q.go.who]);
@@ -36907,6 +37570,30 @@ MA._xong();
       return r;
     };
   }
+})();
+
+// ===== js/vk_moi_lang.js =====
+// HỆ THỐNG MỚI ĐỢT 1 — phần ở làng (docs/review/ke-hoach-cai-thien/he-thong-moi/YEU-CAU-1-VU-KHI.md).
+//   - Cô Thợ May: không may / bán quần áo kiểu cũ nữa. Bảng của cô nay chỉ có khung nâng cấp bộ trang phục Zed (cùng khung ở Hành trang ›
+//     Nhân vật, js/vk_moi.js VM.boPanel) và lời giải thích; đổi bộ ở Hành trang.
+// Luật, số liệu, bản lưu: js/vk_moi.js. Cờ ?hethongcu=1: tệp này đứng yên (bảng cũ của js/tailor.js).
+(function () {
+  const G = window.G, ui = G.ui, T = G.theme, VA = G.villageApi, VM = G.vkMoi;
+  if (!G.HE_MOI || !VA || !VM || !T) return;
+  const TXT = '#f1e6c6';
+  const CX = 160, CW = 304; // vùng nội dung bên phải (như js/village.js)
+
+  function boPanel() {
+    VA.frame('Thợ may');
+    let y = ui.para('Quần áo cũ (mũ, áo, đồ đeo lưng, bùa, cánh) không dùng nữa, đã đổi ra vàng và linh khí. Zed có 4 bộ: Ninja Bóng Đêm, Thợ Săn Rừng, Chiến Binh Biển, Hiệp Sĩ Lâu Đài. Hạ trùm vùng để mở bộ, đổi bộ ở Hành trang › Nhân vật.', CX + 2, 80, CW - 4, { size: 7, color: TXT });
+    y = VM.boPanel(CX + 2, y + 2, CW - 6, false, VA.say);
+    if (G.hanhTrang && T.sbtn(CX + 2, Math.min(y + 6, 240), 150, 17, 'Mở Hành trang › Nhân vật', { size: 7, pad: 2 })) {
+      G.hanhTrang.openVillage(); G.hanhTrang.tab = 'hero';
+      return null;
+    }
+    return VM.boDuoc(G.save, G.zedBo ? G.zedBo() : 'ninja') === '' ? 'Đủ linh khí và vàng rồi, cô nâng bộ cho cháu nhé!' : 'Bộ nào cũng nâng được 3 cấp, skill riêng của từng cấp sẽ có ở bản sau. Gom linh khí và vàng rồi quay lại nhé.';
+  }
+  VA.PANELS.outfit = boPanel;
 })();
 
 // ===== js/mapgen.js =====
@@ -39867,6 +40554,7 @@ window.FIREBASE_CONFIG = {
     const cfg = window.FIREBASE_CONFIG;
     if (!cfg || !cfg.apiKey) return 'no-config';
     if (/[?&]cloud=0\b/.test(location.search)) return 'off';
+    if (G && G.HE_CU) return 'off'; // ?hethongcu=1 (luật cũ, bản lưu riêng trên máy): không đọc/ghi mây, kẻo đè tiến trình hệ thống mới
     if (window.LK_CLOUD_TEST) return ''; // bài kiểm tra: Firebase giả có sẵn trong trang
     if (!/^https?:$/.test(location.protocol)) return 'file';
     if (location.origin === 'null') return 'frame';
@@ -40792,7 +41480,7 @@ window.FIREBASE_CONFIG = {
     try { tat = /[?&]luuluot=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
     G.LUU_LUOT = !tat;
   }
-  const KHOA = 'linhkhi_luot_v1', HAN = 3 * 24 * 3600 * 1000; // bản ghi cũ hơn 3 ngày thì bỏ
+  const KHOA = G.HE_CU ? 'linhkhi_luot_v1_hecu' : 'linhkhi_luot_v1', HAN = 3 * 24 * 3600 * 1000; // bản ghi cũ hơn 3 ngày thì bỏ
   if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({
     'Chơi tiếp ải?': 'Continue the stage?', 'Chơi tiếp': 'Continue', 'Bỏ ải này': 'Abandon it',
     '{0}: ải {1}, đã dọn {2} phòng, máu {3}/{4}': '{0}: stage {1}, {2} rooms cleared, HP {3}/{4}',

@@ -609,6 +609,7 @@
       // thợ may: có món trang phục mới chưa xem, hoặc đủ nguyên liệu may một món chưa có
       const O = G.outfit;
       n.may = !!(O && sv.outfit && (O.newCount(sv) > 0 || O.canCraftNew(sv)));
+      if (G.HE_MOI) n.may = !!(G.vkMoi && G.vkMoi.coTheNangBo(sv)); // hệ thống mới: thợ may = nâng bộ trang phục Zed
       // thợ rèn: đủ nguyên liệu để mài một món đang mang, nâng lò, hoặc nâng bậc
       const pay = G.villageApi && G.villageApi.canPay;
       n.ren = false;
@@ -618,8 +619,9 @@
         for (const id of sv.carry) {
           const w = G.weaponById(id); if (!w) continue;
           if (w.sharpen < Math.min(G.MAX_SHARPEN, G.FORGE_CAP[sv.forge]) && pay(G.sharpenFull(w.sharpen))) n.ren = true;
-          if (G.wRar(w) < 2 && pay(G.TIER_UP[G.wRar(w) + 1])) n.ren = true;
+          if (!G.HE_MOI && G.wRar(w) < 2 && pay(G.TIER_UP[G.wRar(w) + 1])) n.ren = true;
         }
+        if (G.HE_MOI && G.vkMoi && G.vkMoi.coTheNang(sv)) n.ren = true; // đủ linh khí nâng một vũ khí
       }
     } catch (e) { /* thiếu số liệu thì coi như không có việc mới */ }
     // Người mới (chưa qua quá 1 ải): chỉ một người có chấm đỏ, người quan trọng nhất.
@@ -765,6 +767,7 @@
     if ((S.newsT -= dt) <= 0) { S.newsT = 1; checkNews(); }
     if (!locked && G.ZED && G.save && G.save.zed && G.save.zed.bao === 1) zedBao(); // ZED: báo một lần bản lưu cũ đã chuyển sang Zed
     else if (!locked && G.ZED && G.save && G.save.zed && G.save.zed.boBao === 1) zedBoBao(); // trang phục Zed vừa mở: báo một lần
+    else if (!locked && G.HE_MOI && G.vkMoi && G.save && G.save.heMoiBao) { const s = G.vkMoi.baoChuyen(G.save); if (s) say(s, 9); G.persist(); } // hệ thống mới: báo một lần đã chuyển bản lưu cũ
     let mx = 0, my = 0;
     if (!locked) {
       const k = G.keys, kp = G.keyP, bt = btnAt();

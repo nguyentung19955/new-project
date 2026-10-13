@@ -72,6 +72,52 @@
   //  - Quái thường: tỉ lệ drop rơi một viên linh khí của vùng nằm trên sàn, nhặt (đi lại gần) thì vũ khí đang cầm nhận orb dấu ấn.
   //  - Vẫn giữ luật cũ: kết liễu quái thường đang dính hiệu ứng hệ thì vũ khí nhận 1 dấu ấn của hệ đó.
   G.LINHKHI = { elite: 5, mini: 10, boss: 20, drop: 0, orb: 3 }; // drop 0: chủ dự án bỏ viên rơi từ quái thường (tinh anh, trùm đã đủ)
+
+  // ===== HỆ THỐNG MỚI ĐỢT 1 (13/10/2026, docs/review/ke-hoach-cai-thien/he-thong-moi/YEU-CAU-1-VU-KHI.md) =====
+  //  - Đúng 4 vũ khí cố định: Kiếm, Thương (giáo), Búa, Phi tiêu (loại 'bow'). Nút đổi vũ khí xoay vòng 4 món.
+  //  - Nâng vũ khí bằng LINH KHÍ (một túi chung sv.linhKhi, nhận khi hạ tinh anh, trùm, kết liễu quái đang dính hệ):
+  //    Trắng → Mầm (chọn hệ Lửa/Độc/Băng) → Thành hình → Thức tỉnh. Đổi hệ sau đó tốn linh khí. Không còn bậc màu, dòng phụ, dòng vũ khí.
+  //  - Không rơi vũ khí, quần áo nữa: thay bằng linh khí / vàng (G.ROI_MOI). Trang phục chỉ còn 4 bộ của Zed, mỗi bộ nâng 3 cấp
+  //    bằng linh khí + vàng (G.BO_MOI; skill của từng cấp làm ở đợt 3, móc rỗng G.boSkill trong js/vk_moi.js).
+  //  - Luật, chuyển bản lưu cũ, giao diện: js/vk_moi.js và js/vk_moi_lang.js.
+  // Cờ quay lui: ?hethongcu=1 → luật cũ (rơi đồ, nhiều vũ khí), đọc/ghi bản lưu RIÊNG (khoá linhkhi_save_v1_hecu), tắt lưu mây.
+  G.HE_CU = false;
+  try { if (typeof location !== 'undefined' && /[?&]hethongcu=1(&|$)/.test(location.search || '')) G.HE_CU = true; } catch (e) { /* giữ mặc định */ }
+  G.HE_MOI = !G.HE_CU;
+  G.VK_MOI = {
+    loai: ['sword', 'spear', 'hammer', 'bow'], // 4 vũ khí (thứ tự hiện trong bảng)
+    // Thứ tự xoay vòng của bản lưu mới: kiếm rồi phi tiêu như hai món đầu game cũ (ải hướng dẫn dạy đổi sang phi tiêu).
+    // Người chơi đổi được vũ khí cầm đầu ("Cầm đầu" ở Ông Thợ Rèn / Hành trang); bản lưu cũ: món đang mang lên trước.
+    thuMacDinh: ['sword', 'bow', 'spear', 'hammer'],
+    family: { sword: 0, spear: 0, hammer: 0, bow: 3 }, // dòng cố định (chỉ để mã cũ đọc được; hình dùng bộ zed-vk)
+    // Linh khí để lên Mầm, Thành hình, Thức tỉnh. Cộng dồn 60 / 400 / 900 = đúng mốc dấu ấn cũ G.MARKS của MỘT vũ khí.
+    gia: [60, 340, 500],
+    // Đổi hệ khi đang ở Mầm / Thành hình / Thức tỉnh (giữ nguyên cấp).
+    doiHe: [0, 20, 60, 120],
+  };
+  // Bỏ bậc màu: mọi vũ khí là bậc 0 (hệ số 1, không dòng phụ) nhưng lên được tới Thức tỉnh. Bù phần hệ số bậc cũ (Lam x1,15 … Vàng x1,5)
+  // bằng hệ số cấp cao hơn (cũ +8/+18/+30%).
+  G.SWAP_CD = G.HE_MOI ? 0.75 : 1.5; // chờ giữa hai lần đổi vũ khí: 4 món xoay vòng nên ngắn hơn
+  if (G.HE_MOI) {
+    G.RARITY[0].maxStage = 3;
+    G.STAGE_MULT = [1, 1.15, 1.35, 1.6];
+  }
+  // Nâng cấp bộ trang phục Zed: 3 cấp, mỗi cấp tốn linh khí + vàng (giống nhau cho cả 4 bộ).
+  G.BO_MOI = {
+    max: 3,
+    gia: [{ lk: 80, vang: 300 }, { lk: 200, vang: 800 }, { lk: 400, vang: 1800 }],
+  };
+  // Phần thưởng thay đồ rơi (r = vùng 0..2). Giữ tổng giá trị tương đương: món cũ tính theo giá Bà Hàng Xén mua lại
+  // (vũ khí Thường 20, Lam 60, Tím 150, Vàng 400; trang phục 10/30/80/200), 1 linh khí = 4 vàng (G.upg.VAL.lk). Bảng so: bao-cao-1.md.
+  G.ROI_MOI = {
+    vk: { vang: [20, 25, 35], lk: [4, 6, 8] },        // tinh anh (35%) và qua ải thường (50%): trước rơi 1 vũ khí
+    trum: { vangDau: 300, lkDau: 25, vang: 130, lk: 12 }, // trùm vùng: lần đầu (trước chắc chắn Vàng), đánh lại (trước Tím, 12% Vàng)
+    ruong: { lk: [9, 12, 16] },                       // rương báu: lựa chọn "vũ khí mới" thành túi linh khí
+    ao: { vang: [14, 18, 24] },                       // quái thường (1,2%) / tinh anh (12%) trước rơi 1 món trang phục
+    aoTrum: { vang: [30, 32, 35] },                   // trùm nhỏ (35%) trước rơi trang phục Lam trở lên
+    aoTrumVung: 110,                                  // trùm vùng trước rơi trang phục Tím (75%) / Vàng (25%)
+    bua: 30,                                          // bùa cũ của tinh anh (trang phục Lam)
+  };
   // Dòng phụ: bậc Lam có 1, Tím và Vàng có 2.
   G.AFFIX = {
     mana: 'Mỗi đòn trúng hồi thêm 1 mana',

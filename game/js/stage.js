@@ -31,6 +31,14 @@
   // Tinh anh gục: có thể rơi một vũ khí bậc ngẫu nhiên (combat.js gọi).
   G.onEliteDown = function (e) {
     if (!S || !S.W || G.rnd() >= G.DROP.elite) return;
+    // Hệ thống mới (js/vk_moi.js): không rơi vũ khí nữa, thay bằng vàng + linh khí cùng giá trị (G.ROI_MOI.vk)
+    if (G.HE_MOI && G.vkMoi) {
+      const q = G.vkMoi.thuongVk(S.r);
+      S.got.push(q.s);
+      S.W.banner = { s: G.t('Tinh anh rơi {0}', q.s), col: '#ffd23f', t: 3 };
+      if (G.fx && G.fx.text) G.fx.text(e.x, e.y - 24, q.s, '#ffd23f', 8);
+      return;
+    }
     const w = G.giveWeapon(G.pick(G.WKEYS), G.rollRarity(S.r));
     if (!w) { S.got.push('vàng (rương đồ đầy)'); return; }
     S.got.push({ s: rarName(w), w });
@@ -42,6 +50,13 @@
     const O = G.outfit;
     if (!O || !S || !S.W || e.isBoss || e.add || e.illusion) return;
     if (G.rnd() >= (e.role === 'elite' ? O.DROP.elite : O.DROP.mob)) return;
+    // Hệ thống mới: không rơi quần áo nữa, thay bằng vàng cùng giá trị (G.ROI_MOI.ao)
+    if (G.HE_MOI && G.vkMoi) {
+      const q = G.vkMoi.thuongAo(S.r);
+      S.got.push(q.s);
+      if (G.fx && G.fx.text) G.fx.text(e.x, e.y - 24, q.s, '#ffd23f', 8);
+      return;
+    }
     const it = O.roll(G.save, S.r, e.role === 'elite' ? 'elite' : 'mob');
     if (!it) { S.got.push('vàng (kho trang phục đầy)'); return; }
     const s = G.t('{0} ({1})', O.name(it), G.RARITY[it.r].name);
@@ -269,7 +284,7 @@
     } else if (type === 'fountain') {
       W.props.push({ type: 'fountain', kind: 'hp', x: cx - 44, y: cy + 14, act: 'fountain' });
       W.props.push({ type: 'fountain', kind: 'mana', x: cx + 44, y: cy + 14, act: 'fountain' });
-      W.props.push({ type: 'stash', x: geo.fx0 + 40, y: W.y0 + 6, act: 'stash' });
+      if (!G.HE_MOI) W.props.push({ type: 'stash', x: geo.fx0 + 40, y: W.y0 + 6, act: 'stash' }); // hệ thống mới: 4 vũ khí luôn mang, không còn rương đổi
       W.cleared = true;
     } else if (type === 'merchant') {
       W.props.push({ type: 'merchant', x: cx, y: cy - 2, act: 'merchant' });
@@ -412,8 +427,11 @@
     const tier = G.rollRarity(S.r);
     const type = G.pick(G.WKEYS), family = Math.floor(G.rnd() * G.FAMILIES) % G.FAMILIES;
     const look = { type, family, rarity: tier, marks: { fire: 0, poison: 0, ice: 0 }, branch: null, sharpen: 0 };
+    // Hệ thống mới: lựa chọn "vũ khí mới" thành túi linh khí cùng giá trị (G.ROI_MOI.ruong)
+    const lkN = G.HE_MOI && G.ROI_MOI ? G.ROI_MOI.ruong.lk[G.clamp(S.r | 0, 0, 2)] : 0;
     return [
-      { kind: 'weapon', type, tier, family, look, label: G.wName(look), sub: G.t('Bậc {0}. Vũ khí mới, cất vào rương đồ', G.RARITY[tier].name) },
+      lkN ? { kind: 'lk', n: lkN, label: G.t('{0} linh khí', lkN), sub: 'Dùng để nâng vũ khí (Mầm, Thành hình, Thức tỉnh) và nâng bộ trang phục' }
+        : { kind: 'weapon', type, tier, family, look, label: G.wName(look), sub: G.t('Bậc {0}. Vũ khí mới, cất vào rương đồ', G.RARITY[tier].name) },
       { kind: 'ore', n: 5 + S.r * 3, label: G.t('{0} quặng', 5 + S.r * 3), sub: 'Dùng để mài vũ khí ở lò rèn' },
       { kind: 'charm', el: S.tut ? 'fire' : G.pick(G.ELS), label: '', sub: 'Phủ hệ lên cả hai vũ khí trong 60 giây' },
     ].map((o) => { if (o.kind === 'charm') o.label = G.t('Bùa {0}', G.EL[o.el].name); return o; });
@@ -483,13 +501,21 @@
       if (big) { const ns = S.diff ? 4 : 3; sv.shards[S.r] += ns; R.lines.push(ln(R, '+{0} mảnh {1}', ns, reg.bossName)); }
       if ((R.stars === 3 && prev < 3) || (!big && G.rnd() < 0.15)) { sv.stones++; R.lines.push(ln(R, '+1 đá tôi')); }
       // Vũ khí rơi: trùm vùng theo G.bossDrop (lần đầu chắc chắn Vàng); ải thường thì 50% một món bậc ngẫu nhiên.
-      if (big || G.rnd() < G.DROP.stage) {
+      if (G.HE_MOI && G.vkMoi) {
+        // Hệ thống mới: trùm vùng và ải thường không rơi vũ khí nữa mà cho vàng + linh khí cùng giá trị (G.ROI_MOI)
+        const q = big ? G.vkMoi.thuongTrum(S.r) : G.rnd() < G.DROP.stage ? G.vkMoi.thuongVk(S.r) : null;
+        if (q) R.lines.push(big ? ln(R, '{0} để lại {1}', reg.bossName, q.s) : ln(R, 'Nhặt được {0}', q.s));
+      } else if (big || G.rnd() < G.DROP.stage) {
         const nw = big ? G.bossDrop(S.r) : G.giveWeapon(G.pick(G.WKEYS), G.rollRarity(S.r + (again ? G.DROP.againBonus : 0)));
         R.lines.push(nw ? { s: big ? G.t('{0} rơi {1}', reg.bossName, rarName(nw)) : G.t('Nhặt được {0}', rarName(nw)), w: nw } : ln(R, 'Rương đồ đầy, vũ khí rớt đổi thành vàng'));
       }
       // Bùa cũ (tinh anh 25%) nay là trang phục ô Bùa, bậc Lam; trùm rơi trang phục (trùm vùng: món Tím hoặc Vàng của bộ vùng).
-      const O = G.outfit;
+      const O = G.HE_MOI ? null : G.outfit; // hệ thống mới: không rơi trang phục (khối dưới đổi ra vàng)
       S.outfitLoot = [];
+      if (G.HE_MOI && G.vkMoi && G.outfit) {
+        const q = G.vkMoi.thuongAoTrum(S.r, big, !!S.loot.charm);
+        if (q) R.lines.push(ln(R, 'Nhặt được {0}', q.s));
+      }
       if (O && S.loot.charm) {
         const left = Object.keys(O.ITEMS).filter((k) => O.ITEMS[k].old && !O.has(sv, k));
         if (left.length) { const it = O.add(sv, G.pick(left), 1); if (it) { R.lines.push(ln(R, 'Nhặt được {0}', O.name(it))); S.outfitLoot.push(it); } }
@@ -810,6 +836,7 @@
   }
 
   function markInfo(w) {
+    if (G.HE_MOI && G.vkMoi) return G.vkMoi.markInfo(w); // hệ thống mới: cấp + hệ + linh khí cần để lên cấp kế
     if (!w.branch) {
       const top = G.ELS.slice().sort((a, b) => w.marks[b] - w.marks[a])[0];
       return { frac: w.marks[top] / G.MARKS[0], col: w.marks[top] > 0 ? G.EL[top].col : '#666', txt: w.marks[top] > 0 ? G.t('{0} {1}/{2}', G.EL[top].name, Math.floor(w.marks[top]), G.MARKS[0]) : 'Chưa có dấu ấn' };
@@ -985,18 +1012,20 @@
     if (on('vien')) {
     G.minimap.draw(S);
     // vũ khí: hình và bậc ở trên, mốc tiến hóa ở dưới, thanh dấu ấn sát đáy
-    P.weapons.forEach((w, i) => {
-      const x = 368 + i * 56, on = i === P.cur;
+    // Hệ thống mới: 4 vũ khí xoay vòng, HUD vẫn 2 ô: ô trái = món đang cầm, ô phải = món kế tiếp khi bấm đổi.
+    const hienVk = G.HE_MOI && P.weapons.length > 2 ? [P.weapons[P.cur], P.weapons[(P.cur + 1) % P.weapons.length]] : P.weapons;
+    hienVk.forEach((w, i) => {
+      const x = 368 + i * 56, on = w === P.weapons[P.cur];
       // Khung ô vũ khí cùng bộ với nút, viền mang màu bậc. Hình vũ khí sống và chữ do game vẽ ở các dòng dưới.
       const rar = G.RARITY[G.wRar(w)];
       BA.slot(c, x, 3, 54, 35, {
         weapon: { type: w.type, branch: G.activeEl(P, w), stage: G.wStage(w), rarity: G.wRar(w) },
-        active: on, cd: on ? 0 : P.swapCd / 1.5, icon: false, gem: false, id: 'slot' + i,
+        active: on, cd: on ? 0 : P.swapCd / (G.SWAP_CD || 1.5), icon: false, gem: false, id: 'slot' + i,
       });
       G.art.weaponIcon(c, Object.assign({}, w, { coat: P.coats[w.id] && P.coats[w.id].t > 0 ? P.coats[w.id].el : null }), x + 13, 13, 19, on ? (P.atkT > 0 ? 'attack' : 'idle') : 'sleep');
       const mi = markInfo(w);
       // bậc và độ mài nằm ở phần phải của ô, không chồng lên hình vũ khí (hình chiếm 26 điểm bên trái)
-      ui.text(rar.name, x + 51, 13, { size: 7, align: 'right', bold: true, color: rar.col });
+      if (!G.HE_MOI) ui.text(rar.name, x + 51, 13, { size: 7, align: 'right', bold: true, color: rar.col }); // hệ thống mới: không còn bậc màu
       if (w.sharpen) ui.text('+' + w.sharpen, x + 51, 22, { size: 7, align: 'right', bold: true, color: on ? '#fff3da' : '#cbbd9e' });
       ui.text(G.CHU_RO !== false && !G.wStage(w) ? 'Chưa hệ' : G.STAGE_NAMES[G.wStage(w)], x + 27, 29.5, { size: 6.5, align: 'center', color: w.branch ? G.EL[w.branch].col : '#b8b0a0' });
       ui.bar(x + 3, 32.5, 48, 3, mi.frac, mi.col);
@@ -1242,6 +1271,7 @@
       if (ui.btn(x, 84, 108, 100, isW ? '' : o.label, { sub: '', size: 10 })) {
         if (isW) { const w = G.giveWeapon(o.type, o.tier, { family: o.family }); S.got.push(w ? { s: rarName(w), w } : 'vàng (rương đồ đầy)'); }
         if (o.kind === 'ore') { G.save.ore += o.n; S.got.push(G.t('{0} quặng', o.n)); }
+        if (o.kind === 'lk' && G.vkMoi) { G.vkMoi.themLk(G.save, o.n); S.got.push(G.t('{0} linh khí', o.n)); }
         if (o.kind === 'charm') G.addCoat(o.el, 60);
         S.prop.used = true;
         S.mode = 'play';
@@ -1391,7 +1421,7 @@
     // Phần thưởng: chữ ở cột trái; vũ khí nhận được thành thẻ viền màu bậc ở cột phải (khung thẻ của chủ đề trống đồng).
     const TH = G.theme, texts = R.lines.filter((l) => !l.w), weps = R.lines.filter((l) => l.w);
     // Khối linh khí (js/linhkhi.js) nằm sát trên hàng nút: mỗi vũ khí đang mang một dòng. Phần thưởng xếp phía trên khối này.
-    const lkN = G.lk && S.P ? S.P.weapons.length : 0, lkTop = lkN ? (!R.win && !S.quit ? 186 : 213) - (11 + lkN * 21) : 0;
+    const lkN = G.lk && S.P ? (G.HE_MOI ? 1 : S.P.weapons.length) : 0, lkTop = lkN ? (!R.win && !S.quit ? 186 : 213) - (11 + lkN * 21) : 0;
     const lim = lkN ? lkTop - 3 : 208;
     const rows = Math.max(1, Math.floor((lim - y) / 11.5));
     // dòng nổi bật (lên cấp, cứu được em bé, kỷ lục): xét trên bản tiếng Việt của dòng; dòng kỷ lục của bảng vàng mở đầu bằng ★
@@ -1583,7 +1613,7 @@
     });
     if (!S) return;
     // khối linh khí của từng vũ khí (js/linhkhi.js) nằm dưới các gợi ý
-    const lkN = G.lk && S.P ? S.P.weapons.length : 0;
+    const lkN = G.lk && S.P ? (G.HE_MOI ? 1 : S.P.weapons.length) : 0;
     if (lkN) G.lk.resultBlock(S, 84, Math.max(ty + tips.length * 23 + 2, 213 - (11 + lkN * 21)), 312);
     if (ui.btn(86, 216, 140, 26, 'Về làng')) { S = null; G.setScene(G.Village); return; }
     if (ui.btn(254, 216, 140, 26, 'Thử lại')) G.startStage(S.r, S.i, S.diff);

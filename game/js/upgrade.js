@@ -135,6 +135,16 @@
       if (w.sharpen < Math.min(cap, G.MAX_SHARPEN)) {
         out.push({ kind: 'sharpen', key: 'sh' + id, title: G.t('Mài {0} lên +{1}', nm, w.sharpen + 1), cost: G.sharpenFull(w.sharpen), apply: (s) => { wById(s, id).sharpen++; }, go: { who: 'ren', ftab: 'sharpen', sel: id } });
       } else if (w.sharpen < G.MAX_SHARPEN) needForge = true;
+      if (G.HE_MOI && G.vkMoi) {
+        // Hệ thống mới (js/vk_moi.js): không còn nâng bậc / lên Vàng; cấp vũ khí nâng bằng linh khí ở Ông Thợ Rèn (thẻ Linh khí)
+        const VM = G.vkMoi, st = G.wStage(w), c = VM.gia(st);
+        if (c != null) {
+          const el = w.branch || G.REGIONS[0].el || 'fire', ten = G.t('Nâng {0} lên {1}', nm, G.STAGE_NAMES[st + 1]), go = { who: 'ren', ftab: 'vk', sel: id };
+          if (VM.lk(sv) >= c) out.push({ kind: 'vklk', key: 'vl' + id, title: ten, cost: {}, apply: (s) => { VM.nang(s, wById(s, id), el); }, go });
+          else out.push({ kind: 'evolve', key: 'ev' + id, title: ten, cost: {}, need: { lk: Math.ceil(c - VM.lk(sv)), el }, sim: (s) => { VM.nang(s, wById(s, id), el, true); }, apply: null, go });
+        }
+        continue;
+      }
       if (r < 2) out.push({ kind: 'tier', key: 'ti' + id, title: G.t('Nâng {0} lên {1}', nm, G.RARITY[r + 1].name), cost: G.TIER_UP[r + 1], apply: (s) => setRar(wById(s, id), r + 1, 0), go: { who: 'ren', ftab: 'tier', sel: id } });
       else {
         // lên Vàng (hoặc Vàng mạnh hơn): mảnh trùm vùng cao nhất đã hạ, nếu chưa hạ trùm nào thì mảnh Mộc Tinh
@@ -161,12 +171,12 @@
     // mang vũ khí tốt hơn trong rương
     // (chỉ xét vài món mạnh nhất trong rương cho nhanh)
     const wq = (w) => G.wRarMult(w) * G.STAGE_MULT[G.wStage(w)] * (1 + 0.08 * w.sharpen) * G.WTYPES[w.type].dmg / (G.WTYPES[w.type].cd || 0.4);
-    const stash = sv.weapons.filter((w) => !sv.carry.includes(w.id)).sort((a, b) => wq(b) - wq(a)).slice(0, 3);
+    const stash = G.HE_MOI ? [] : sv.weapons.filter((w) => !sv.carry.includes(w.id)).sort((a, b) => wq(b) - wq(a)).slice(0, 3);
     for (const w of stash) for (let slot = 0; slot < Math.max(1, sv.carry.length); slot++) {
       out.push({ kind: 'carry', key: 'ca' + w.id + '-' + slot, title: G.t('Mang {0}', G.wName(w)), cost: {}, apply: (s) => { s.carry[slot] = w.id; }, go: { who: 'xen' } });
     }
     // trang phục
-    if (O && sv.outfit) {
+    if (O && sv.outfit && !G.HE_MOI) { // hệ thống mới: không may / mua / mặc quần áo kiểu cũ
       O.sync(sv);
       for (const slot of O.SLOTS) {
         const it = O.worn(sv, slot);
@@ -309,6 +319,7 @@
       seen[grp] = true;
       let sub;
       if (q.kind === 'level') { const g = q.go.stage; sub = G.t('còn thiếu {0} kinh nghiệm', q.need.xp) + (g ? ' — ' + G.t('chơi lại {0}', stName(g[0], g[1])) : ''); }
+      else if (q.kind === 'evolve' && G.HE_MOI) sub = G.t('còn thiếu {0} linh khí — hạ tinh anh, trùm, kết liễu quái đang dính hệ', q.need.lk);
       else if (q.kind === 'evolve') sub = G.t('còn thiếu {0} linh khí {1} — kết liễu quái đang dính {1}', q.need.lk, G.EL[q.need.el].name);
       else if (q.miss) sub = U.missText(sv, q.miss);
       else sub = q.kind === 'skill' ? 'học ngay ở Cụ Đồ' : q.kind === 'chuong' ? 'học ngay ở Cụ Đồ, thẻ Cây chưởng' : q.kind === 'carry' ? 'đổi ngay ở Bà Hàng Xén' : q.kind === 'wear' ? 'mặc ngay ở Cô Thợ May' : G.t('đủ đồ rồi — tới {0} làm ngay', WHO_NAME[q.go.who]);
