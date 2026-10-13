@@ -2,5 +2,5 @@
 # Gửi kèm: ảnh mẫu Zed 00 (bộ ninja)
 
 Sửa ẢNH gửi kèm: giữ y hệt tư thế, mặt, tóc, mắt đỏ, tỉ lệ đầu/thân, cỡ người, vị trí chân. Chỉ thay quần áo:
-Áo vải trắng ngà ngắn tay, vạt chéo, viền xanh lam đậm. Quần xanh lam đậm, giữ nguyên dáng và độ rộng như ảnh. Đai vải xanh ngọc buộc gọn, đeo một vỏ ốc nhỏ ở hông. Băng cổ tay trắng; dép và băng chân màu nâu nhạt cát. Một miếng giáp vảy cá nhỏ màu bạc–lam ở vai, sát người.
+Áo vải trắng ngà ngắn tay, vạt chéo, viền xanh lam đậm. Quần xanh lam đậm, giữ nguyên dáng và độ rộng như ảnh. Đai vải xanh ngọc buộc gọn, đeo một vỏ ốc nhỏ ở hông. Băng cổ tay xanh lam; dép và băng chân màu nâu nhạt cát. Một miếng giáp vảy cá nhỏ màu bạc–lam ở vai, sát người.
 Không mũ, không áo choàng, không vũ khí. Pixel art chibi, viền tối 1 nét như ảnh. Nền xanh lá thuần #00FF00, không chữ, không bóng, không dùng màu xanh lá trên đồ.
