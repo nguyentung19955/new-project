@@ -1,0 +1,4 @@
+# Hiệu ứng chiêu trùm còn vẽ bằng code (13/10 19:40) — mỗi mục 1 tin gen. Cần thêm móc code khi đưa vào game.
+# Tên tệp: hu-song-than, hu-bang-nhon-roi, hu-xoay-nuoc, hu-phun-bang (Ngư Tinh); hu-gai-re, hu-qua-doc-roi, hu-la-chem (Mộc Tinh);
+#          hu-cau-lua-ma, hu-ho-phan-than (Hồ Tinh); hu-doi-pha (chung 3 trùm)
+# Nhóm sau (chưa gửi): nền Hang biển / Lâu đài (9 tấm mỗi vùng), khung bảng + nút giao diện, hiệu ứng trùm nhỏ, quái thường.
