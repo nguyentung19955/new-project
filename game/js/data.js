@@ -217,6 +217,10 @@
   G.ZED_MOI = G.ZED;
   try { if (typeof location !== 'undefined' && /[?&]zedmoi=0(&|$)/.test(location.search || '')) G.ZED_MOI = false; } catch (e) { /* giữ mặc định */ }
   if (G.ZED_MOI) { G.WTYPES.bow.name = 'Phi tiêu'; G.WTYPES.bow.special = 'Mưa Phi Tiêu'; }
+  // ZED CẦM VŨ KHÍ LÚC ĐỨNG / ĐI / CHẠY (13/10/2026, docs/review/ke-hoach-cai-thien/zed-cam-vk): js/zed_moi.js vẽ vũ khí trong tay phải ở
+  // hàng đứng/đi/chạy (hàng dung_<loại>, di_<loại>, chay_<loại> của tấm thân); lộn/trúng đòn/chết ẩn vũ khí. Tắt: ?camvk=0 (tay không như trước).
+  G.CAM_VK = true;
+  try { if (typeof location !== 'undefined' && /[?&]camvk=0(&|$)/.test(location.search || '')) G.CAM_VK = false; } catch (e) { /* giữ mặc định */ }
   // TRANG PHỤC ZED (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-rung): mỗi bộ = nguyên bộ hình Zed mặc sẵn bộ đó (js/zed_moi.js
   // chọn tấm theo bộ đang mặc; vũ khí, nhịp, neo như nhau). Lưu ở save.zed.bo ('ninja' | 'rung'; không có = 'ninja') và save.zed.boMo
   // (các bộ đã mở). Bộ Rừng mở khi hạ trùm vùng Rừng già (js/stage.js; bản lưu cũ đã có sao ải trùm Rừng thì tự mở, js/engine.js fixSave).
