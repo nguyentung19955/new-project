@@ -24,12 +24,12 @@ Dùng các bản sau (bản khác bỏ qua):
 | Trúng đòn | 05-trung-don | 4 |
 | Chết | 06-chet-b2 (người vẽ nhỏ hơn → phóng cho cùng chiều cao với tấm đứng) | 8 |
 | Chưởng | 07-chuong-b2 | 6 |
-| Kiếm nhát 1/2/3 | 08-kiem-1-b3 / 09-kiem-2 / 10-kiem-3 | 5/5/6 |
+| Kiếm nhát 1/2/3 | 08-kiem-1-tp / 09-kiem-2-tp / 10-kiem-3 (kiếm cầm TAY PHẢI) | 5/5/6 |
 | Thương đâm 1/2/3, quét | 11-thuong-1 / 12-thuong-2 / 13-thuong-3 / 14-thuong-quet | 6 mỗi đòn |
 | Thương giữ đà / Xốc tới | 15-thuong-giu / 16-thuong-xoc | 3 / 4 |
 | Búa nện / giữ đà / nện đất | 17-bua-nen / 18-bua-giu / 19-bua-nen-dat | 8/4/6 |
 | Phi tiêu ném / ngắm / chùm (thay CUNG) | 20-phi-tieu / 21-phi-tieu-ngam / 22-phi-tieu-chum | 6/3/6 |
-| Đặc biệt: Trảm Nguyệt / Phi Thương / Địa Chấn / Mưa phi tiêu | 23-tram-nguyet / 24-phi-thuong / 25-dia-chan / 26-mua-phi-tieu | 6 mỗi đòn |
+| Đặc biệt: Trảm Nguyệt / Phi Thương / Địa Chấn / Mưa phi tiêu | 23-tram-nguyet-tp / 24-phi-thuong / 25-dia-chan / 26-mua-phi-tieu | 6 mỗi đòn |
 | Đấm (tay không) | 27-dam | 5 |
 
 Vũ khí (4 cấp = `G.STAGE_NAMES` Trắng/Mầm/Thành hình/Thức tỉnh, mỗi cấp 1 khung):
