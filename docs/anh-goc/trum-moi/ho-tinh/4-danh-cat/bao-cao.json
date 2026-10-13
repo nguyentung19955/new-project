@@ -1,0 +1,147 @@
+{
+ "anh": "4-danh.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 6,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 28,
+  "vien_khu": 7143,
+  "nga_mau_nen_trong_hinh": 322
+ },
+ "manh_bo": [
+  {
+   "khung_bao": [
+    1294,
+    300,
+    1315,
+    320
+   ],
+   "diem_anh": 11
+  }
+ ],
+ "loi": [],
+ "canh_bao": [],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "4-danh",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      15,
+      186,
+      301,
+      558
+     ],
+     "chan": [
+      167.5,
+      558
+     ],
+     "rong": 286,
+     "cao": 372,
+     "diem_anh": 64326,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      317,
+      187,
+      651,
+      559
+     ],
+     "chan": [
+      497.0,
+      559
+     ],
+     "rong": 334,
+     "cao": 372,
+     "diem_anh": 74267,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      676,
+      194,
+      997,
+      559
+     ],
+     "chan": [
+      820.5,
+      559
+     ],
+     "rong": 321,
+     "cao": 365,
+     "diem_anh": 72742,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      997,
+      186,
+      1472,
+      559
+     ],
+     "chan": [
+      1179.5,
+      559
+     ],
+     "rong": 475,
+     "cao": 373,
+     "diem_anh": 84816,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1472,
+      188,
+      1847,
+      559
+     ],
+     "chan": [
+      1630.5,
+      559
+     ],
+     "rong": 375,
+     "cao": 371,
+     "diem_anh": 69936,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1859,
+      186,
+      2135,
+      559
+     ],
+     "chan": [
+      2011.0,
+      559
+     ],
+     "rong": 276,
+     "cao": 373,
+     "diem_anh": 62209,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}
