@@ -7,5 +7,5 @@ E5 hu-ep-that-bai: Pixel art hiệu ứng ép đồ thất bại: tia sáng ch�
 E6 hu-ep-tut-bac: Pixel art hiệu ứng tụt bậc: viên ngọc màu nứt vỡ thành mảnh văng ra, ánh đỏ chớp, mảnh rơi xuống tan. 1 hàng 6 khung. Các khung không chạm nhau.
 E7 cong-ai-ngay: Pixel art cổng đá cổ có khắc lịch tuần 7 ô quanh vòm, giữa cổng là xoáy ánh sáng xanh, hai bên có đèn lồng, nhìn chính diện hơi chếch từ trên. 1 hình.
 E8 bieu-tuong-ai-ngay: Pixel art 3 biểu tượng tròn xếp 1 hàng: (1) đá pha lê tím (ải Đá Bậc), (2) đá mài xám có tia lửa (ải Đá Mài), (3) đống tiền vàng (ải Vàng). Viền đen rõ, cỡ nhỏ 32×32 ô mỗi cái, các hình không chạm nhau.
-# 13/10 16:09 đã nhận: E2, E3, E4, E5, E6, E7, E8. Còn thiếu E1 (đá nâng bậc).
+# 13/10 16:09 đã nhận: E2, E3, E4, E5, E6, E7, E8. E1 đá nâng bậc đã nhận 16:13 — đủ 8 tấm.
 # Ghi chú cắt: E6 mỗi khung có VIỀN Ô VUÔNG ĐEN — bỏ viền khi cắt. E4 có hình thanh kiếm nhỏ trong cột sáng (giữ, hoặc xoá kiếm nếu game vẽ vũ khí thật lên trên). E5 có bệ lò rèn đá ở dưới (giữ, là bệ ép).
