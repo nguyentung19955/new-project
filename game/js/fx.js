@@ -916,7 +916,9 @@
     const NH = (n) => Math.max(1, Math.round(n * few * VX('hat')));
     const blunt = o.type === 'hammer', pierce = o.type === 'spear' || o.ranged;
     // Ảnh AI: chí mạng / trúng nặng / trúng thường. Có ảnh thì bỏ chớp sáng, vòng, vết cắt vẽ bằng code (giữ hạt văng theo hệ).
-    const maHit = o.crit ? (coAnh('hu-chi-mang') ? 'hu-chi-mang' : null) : hk >= 2 && coAnh('hu-trung-nang') ? 'hu-trung-nang' : coAnh('hu-trung') ? 'hu-trung' : null;
+    // Phi tiêu của người chơi trúng (bộ Zed mới, không chí mạng): ảnh hu-trung-phi-tieu (sao 4 cánh) thay trúng thường / trúng nặng.
+    const ptHit = !o.crit && o.ranged && o.type === 'bow' && G.ZED_MOI !== false && coAnh('hu-trung-phi-tieu');
+    const maHit = ptHit ? 'hu-trung-phi-tieu' : o.crit ? (coAnh('hu-chi-mang') ? 'hu-chi-mang' : null) : hk >= 2 && coAnh('hu-trung-nang') ? 'hu-trung-nang' : coAnh('hu-trung') ? 'hu-trung' : null;
     if (maHit) anh(maHit, cx, cy, { f: dir, sc: e.isBoss ? 1.35 : o.ranged ? 0.8 : 1 });
     if (maHit) {
       if (blunt) spray(8, cx, cy, NH(big ? 7 : 5), ang, 2.6, 40, 110, 0.3, 0.55, PL.ramp, 2, 380, 0, e.y + 2);
@@ -1030,8 +1032,11 @@
     if (!v) { const n = parseInt(hex.slice(1), 16); v = 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; AC.set(key, v); }
     return v;
   }
+  // Mưa phi tiêu bằng ảnh (bộ Zed mới, cờ ?zedmoi=0 tắt): ảnh hu-mua-phi-tieu đã vẽ phi tiêu rơi nên thôi bắn mũi tên bằng hạt.
+  const muaPT = () => G.ZED_MOI !== false && coAnh('hu-mua-phi-tieu');
   // Tên từ mưa tên rơi xuống (vị trí do luật chơi chọn)
   api('rainDrop', (x, y, el) => {
+    if (muaPT()) return;
     const PL = pal(el);
     const o = emit(7, x, y - 150, 0, 620, 0.5, el ? [PL.c2, PL.c] : ['#e8e2d0', '#c9ccd2'], 1, 0, 0, y, 1);
     o.vx = 0;
@@ -1504,6 +1509,9 @@
     const rx = z.r * (1 - (1 - k) * (1 - k)) * (0.75 + 0.25 * fade), ry = rx * (G.ZK || 0.6);
     const foe = z.team !== 'player';
     if (z.rain) {
+      // Phi tiêu (13/10, docs/anh-goc/zed/hieu-ung): bộ Zed mới có ảnh hu-mua-phi-tieu thì vẽ cả trận mưa phi tiêu bằng ảnh
+      // (vòng 80 điểm ảnh ở cỡ 1 = đường kính vùng r 40), thay vòng ngắm nét đứt và mũi tên rơi (api rainDrop). Không có ảnh: như cũ.
+      if (muaPT() && G.fxAnh.ve(c, 'hu-mua-phi-tieu', x, y, Math.min(z.fxA || 0, G.fxAnh.giay('hu-mua-phi-tieu') * 0.999), 0, (2 * z.r) / 80, false, Math.min(1, fade * 1.5))) return;
       // vòng ngắm của mưa tên: nét đứt xoay chậm
       const col = z.el ? pal(z.el).c2 : '#f1ead9';
       c.fillStyle = col;

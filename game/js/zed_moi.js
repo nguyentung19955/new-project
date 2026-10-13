@@ -330,7 +330,9 @@
     if (A && typeof A.proj === 'function' && !A.proj._zedMoi) {
       const cu = A.proj;
       const moi = function (c, o) {
-        if (o && o.team === 'player' && o.kind === 'arrow' && !G.noRender && bat()) { try { if (vePhiTieu(c, o)) return; } catch (e) { ghiLoi(e); } }
+        // phi tiêu mang hệ có ảnh hu-dan-ten-<hệ> (phi tiêu bọc lửa/nhớt/băng, js/fx_dan.js vẽ) thì để lớp trong vẽ ảnh đó
+        const heAnh = o && o.he && o.he.el && G.fxAnh && G.fxAnh.co('hu-dan-ten-' + o.he.el);
+        if (o && o.team === 'player' && o.kind === 'arrow' && !G.noRender && bat() && !heAnh) { try { if (vePhiTieu(c, o)) return; } catch (e) { ghiLoi(e); } }
         return cu.apply(this, arguments);
       };
       moi._zedMoi = true; A.proj = moi;

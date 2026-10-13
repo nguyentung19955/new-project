@@ -60,7 +60,7 @@
   def('ao_la', 'robe', 'Áo lá', { el: 'poison', reg: 0, st: { hp: 24, res_poison: 0.1 }, src: ['drop'] });
   def('giap_tre', 'robe', 'Giáp tre', { reg: 0, st: { hp: 30, dr: 0.03 }, src: ['drop'] });
   def('ao_choang', 'back', 'Áo choàng đỏ', { st: { spd: 0.03 }, src: ['shop'], price: 110 });
-  def('ong_ten', 'back', 'Ống tên', { st: { pick: 8 }, src: ['shop'], price: 80 });
+  def('ong_ten', 'back', 'Túi phi tiêu', { st: { pick: 8 }, src: ['shop'], price: 80 });
   def('ho_lo', 'back', 'Bầu hồ lô', { el: 'poison', reg: 0, st: { mana: 12 }, src: ['drop'] });
   def('bua_hut', 'hand', 'Bùa hút máu', { st: { hp: 6 }, old: 'c_leech', src: ['drop'] });
   def('bua_tan', 'hand', 'Bùa tàn lửa', { el: 'fire', reg: 2, st: { mana: 4 }, old: 'c_ember', src: ['drop'] });

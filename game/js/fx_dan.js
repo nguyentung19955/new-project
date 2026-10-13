@@ -321,6 +321,12 @@
         if (o.team === 'player') {
           const sp = Math.hypot(o.vx, o.vy) || 1;
           add({ ty: 'flash', x: o.x - (o.vx / sp) * 3, y: py, r: o.big ? 6 : 3, t: 0.07, c: '#ffffff', c2: el ? EL_GLOW[el] : '#fff3d0', ly: 1 });
+          // Phi tiêu ném thường (bộ Zed mới): vệt ném hu-ban-cung(-hệ) nhỏ, mép trái ở chỗ phi tiêu rời tay, chĩa theo hướng bay.
+          // Ném chùm (big) đã có hu-phi-tieu-chum ở tay (js/fx_he.js) nên bỏ qua. Không có ảnh: như cũ.
+          if (o.kind === 'arrow' && !o.big && G.ZED_MOI !== false && K.anhHe && K.anhHuong) {
+            const maN = K.anhHe('hu-ban-cung', el);
+            if (maN) K.anhHuong(maN, o.x - (o.vx / sp) * 4, py, o.vx / sp, o.vy / sp, { sc: 0.55 });
+          }
           for (let i = 0; i < 2; i++) emit(1, o.x, py, (o.vx / sp) * rr(30, 70) + rr(-15, 15), rr(-25, 15), 0.14, el ? HIT_RAMP[el] : RAMP.steel, 2, 0, 3, null, 1);
         } else {
           lookOf(o);

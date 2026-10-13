@@ -453,7 +453,7 @@
     },
     front: (cx, P) => { const B = cx.B; P({ ol: false, bevel: false }, (s) => { B.l(-3, -12, 3, -7, 1, RED[1]); }); },
   });
-  def('backs', 'ong_ten', 'Ống tên', {
+  def('backs', 'ong_ten', 'Túi phi tiêu', {
     draw: (cx, P) => {
       const K = cx.B.sub(-6, -10, -24);
       P((s) => { for (const u of [-2, 0, 2]) K.r(u, -10, 1, 5, WD); });

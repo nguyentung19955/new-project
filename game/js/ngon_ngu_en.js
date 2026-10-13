@@ -1503,6 +1503,7 @@
 "Ốc Mượn Hồn": "Hermit Crab",
 "Ối, gãy càng! Bò ngang chạy thôi!": "Ow, my claw! Scuttle sideways and run!",
 "Ống tên": "Quiver",
+"Túi phi tiêu": "Shuriken pouch",
 "Ộp!": "Ribbit!",
 "Ở làng, chạm vào vũ khí đang bay theo em bé để xem bậc, dòng phụ và các đặc trưng đã mở, sắp mở. Ở chỗ Bà Hàng Xén cũng có nút Xem cho món trong rương.": "In the village, tap the weapon floating beside your kid to see its tier, affixes and its unlocked and upcoming traits. The Peddler also has a View button for weapons in the chest.",
 "• {0}": "• {0}",
