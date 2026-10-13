@@ -36,6 +36,7 @@ PHI_GOC = -20       # phi tiêu trong nắm tay
 LAC = 0.12          # đung đưa: nắm tay ra trước (x lớn) → lưỡi chúc xuống một chút (độ / điểm ảnh nguồn), kẹp ±8°
 VK = {'kiem': 'vk-kiem-moi', 'thuong': 'vk-thuong', 'bua': 'vk-bua', 'phitieu': 'vk-phi-tieu'}
 LECH = 12           # thương/búa: góc hai tay lệch trung vị cả hàng quá LECH độ (tay trái không với tới cán hợp lý) → chỉ cầm tay phải
+TRUOC = 0          # 13/10 13:42 chủ dự án: vũ khí nằm RA TRƯỚC người khi đứng/đi/chạy (0 = vẽ trước thân; 1 = sau thân như bản đầu)
 DAI = {'thuong': (1.3, 0.2), 'bua': (0.75, 0.12), 'phitieu': (0.13, 0.5)}   # như hàng đòn; phi tiêu: một chiếc nhỏ, cầm giữa
 
 
@@ -56,13 +57,13 @@ def main():
                 px, py = gt.chinh_nam(im, *p); tx, ty = gt.chinh_nam(im, *t)   # như game: neo đi qua chinh_nam
                 lac = max(-8, min(8, (px - xtb) * LAC))
                 if loai == 'kiem':
-                    kh.append([p[0], p[1], round(KIEM_GOC + lac), 1])
+                    kh.append([p[0], p[1], round(KIEM_GOC + lac), TRUOC])
                 elif loai == 'phitieu':
-                    kh.append([p[0], p[1], round(PHI_GOC + lac), 1 if an else 0])
+                    kh.append([p[0], p[1], round(PHI_GOC + lac), TRUOC])
                 elif abs(g - gtv) <= LECH:  # thương, búa: hai tay — cán đi qua nắm tay phải rồi nắm tay trái
-                    kh.append([p[0], p[1], round(g, 1), 1, [t[0], t[1]]])
+                    kh.append([p[0], p[1], round(g, 1), TRUOC, [t[0], t[1]]])
                 else:  # tay trái không với tới cán: chỉ tay phải, cán chúi xuống-ra sau theo góc trung vị của hàng
-                    kh.append([p[0], p[1], round(gtv, 1), 1])
+                    kh.append([p[0], p[1], round(gtv, 1), TRUOC])
             e = {'vk': vk, 'khung': kh}
             if loai in DAI:
                 e['dai'], e['cam'] = DAI[loai]
