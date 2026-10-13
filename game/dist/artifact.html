@@ -53,7 +53,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.13-1345";
+(window.G = window.G || {}).VERSION = "lk-2026.10.13-1347";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -2092,6 +2092,10 @@
   // xoay cùng góc. Chỉ đổi HÌNH. Tắt: ?huongvk=0 (vũ khí chỉ vẽ ngang theo neo như trước).
   G.HUONG_VK = true;
   try { if (typeof location !== 'undefined' && /[?&]huongvk=0(&|$)/.test(location.search || '')) G.HUONG_VK = false; } catch (e) { /* giữ mặc định */ }
+  // SỬA BÓP EO / VẶN NGƯỜI KHI CHẠY + CHÉM (13/10/2026, docs/review/ke-hoach-cai-thien/zed-eo-sua): js/zed_moi.js cho chân luôn cùng hướng
+  // thân trên (chạy ngược hướng chém → chạy lùi), ghép ở giữa đùi, vùng nối giãn ngang khớp bề rộng. Chỉ đổi HÌNH. Tắt: ?eosua=0 (ghép như trước).
+  G.EO_SUA = true;
+  try { if (typeof location !== 'undefined' && /[?&]eosua=0(&|$)/.test(location.search || '')) G.EO_SUA = false; } catch (e) { /* giữ mặc định */ }
   // TRANG PHỤC ZED (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-rung): mỗi bộ = nguyên bộ hình Zed mặc sẵn bộ đó (js/zed_moi.js
   // chọn tấm theo bộ đang mặc; vũ khí, nhịp, neo như nhau). Lưu ở save.zed.bo ('ninja' | 'rung'; không có = 'ninja') và save.zed.boMo
   // (các bộ đã mở). Bộ Rừng mở khi hạ trùm vùng Rừng già (js/stage.js; bản lưu cũ đã có sao ải trùm Rừng thì tự mở, js/engine.js fixSave).
@@ -28250,7 +28254,7 @@ MA._xong();
 
 // ===== js/zed_eo_data.js =====
 // TỰ SINH bởi docs/anh-goc/zed/cat-than.py — đừng sửa tay. Điểm eo từng khung để ghép chạy + chém (js/zed_moi.js).
-(window.G = window.G || {}).ZED_EO = {"phien_ban":1,"ghi_chu":"Dựng bằng docs/anh-goc/zed/cat-than.py. Mỗi khung [y, x] ô 96×96 nguồn: y = đường cắt (đáy đai), x = tâm hông.","hang":["kiem_1","kiem_2","thuong_1","thuong_2","thuong_3","phitieu","phitieu_chum","phitieu_ngam","thuong_giu","dam","chuong"],"bo":{"moi":{"chay":[[65,39],[67,43],[65,40],[64,41],[64,43],[66,43],[64,43],[64,42],[64,42],[64,42],[64,43],[64,44]],"kiem_1":[[64,45],[64,44],[63,44],[63,44],[64,44]],"kiem_2":[[67,44],[72,54],[66,45],[66,44],[67,44]],"thuong_1":[[62,45],[62,46],[62,50],[62,50],[61,45],[62,44]],"thuong_2":[[66,44],[63,46],[62,45],[62,44],[63,44],[63,46]],"thuong_3":[[61,46],[61,44],[62,48],[61,48],[61,44],[61,44]],"phitieu":[[66,46],[66,46],[66,47],[65,47],[66,45],[66,46]],"phitieu_chum":[[64,45],[64,47],[64,47],[64,45],[64,44],[64,45]],"phitieu_ngam":[[67,45],[67,45],[66,46]],"thuong_giu":[[70,44],[70,45],[70,44]],"dam":[[68,44],[68,45],[68,44],[68,44],[67,44]],"chuong":[[67,45],[67,47],[67,47],[67,46],[67,45],[66,45]]},"rung":{"chay":[[63,39],[66,42],[63,40],[63,41],[62,42],[65,43],[62,43],[62,38],[62,40],[62,41],[61,39],[62,42]],"kiem_1":[[63,46],[63,45],[63,46],[63,44],[63,45]],"kiem_2":[[67,45],[72,54],[67,44],[67,44],[67,44]],"thuong_1":[[60,45],[60,44],[61,51],[61,50],[60,45],[60,45]],"thuong_2":[[66,44],[63,46],[62,44],[62,44],[66,43],[65,44]],"thuong_3":[[61,45],[61,45],[62,52],[61,50],[65,44],[65,43]],"phitieu":[[66,45],[66,46],[66,48],[66,48],[66,46],[66,45]],"phitieu_chum":[[63,43],[64,50],[64,48],[64,44],[64,44],[64,44]],"phitieu_ngam":[[65,44],[65,44],[65,44]],"thuong_giu":[[70,46],[70,46],[70,46]],"dam":[[68,44],[68,45],[68,43],[68,43],[68,45]],"chuong":[[67,45],[67,46],[67,46],[67,46],[67,45],[66,45]]},"bien":{"chay":[[68,42],[67,41],[68,41],[64,41],[63,40],[64,41],[64,43],[63,38],[68,39],[67,40],[67,39],[64,44]],"kiem_1":[[64,45],[64,44],[63,44],[67,43],[64,44]],"kiem_2":[[65,45],[72,54],[66,45],[66,44],[65,45]],"thuong_1":[[62,45],[60,50],[62,50],[62,49],[61,45],[62,44]],"thuong_2":[[66,45],[63,46],[62,45],[62,44],[63,44],[66,43]],"thuong_3":[[61,46],[61,44],[63,46],[61,48],[61,44],[61,44]],"phitieu":[[65,44],[65,42],[66,45],[66,44],[65,46],[65,46]],"phitieu_chum":[[64,48],[64,47],[64,47],[64,45],[64,44],[64,45]],"phitieu_ngam":[[67,45],[67,45],[66,46]],"thuong_giu":[[70,44],[70,45],[70,44]],"dam":[[71,44],[68,42],[68,42],[68,40],[71,44]],"chuong":[[66,41],[70,45],[70,45],[70,45],[70,45],[66,45]]},"lau":{"chay":[[63,40],[67,43],[65,40],[63,43],[63,41],[63,44],[64,43],[63,38],[65,40],[63,39],[63,40],[64,44]],"kiem_1":[[63,49],[65,46],[65,44],[63,44],[64,46]],"kiem_2":[[67,44],[72,54],[63,47],[63,48],[63,48]],"thuong_1":[[64,46],[64,46],[62,50],[62,50],[64,42],[63,46]],"thuong_2":[[65,43],[65,46],[64,42],[64,45],[65,44],[65,44]],"thuong_3":[[64,44],[64,44],[63,49],[63,44],[63,46],[64,44]],"phitieu":[[63,49],[63,48],[66,47],[65,47],[63,49],[67,49]],"phitieu_chum":[[65,46],[64,47],[64,47],[63,49],[67,42],[65,43]],"phitieu_ngam":[[66,45],[67,45],[66,46]],"thuong_giu":[[70,44],[70,45],[70,44]],"dam":[[68,44],[68,45],[66,46],[68,44],[63,40]],"chuong":[[67,45],[63,48],[63,49],[63,49],[68,44],[64,48]]}},"loai":{"rung":["kiem_2#1 [73, 44]→ninja [72, 54]"],"bien":["chay#3 None→ninja [64, 41]","chay#6 [64, 36]→ninja [64, 43]","chay#11 [64, 34]→ninja [64, 44]","kiem_1#0 [63, 36]→ninja [64, 45]","kiem_1#1 [63, 56]→ninja [64, 44]","kiem_1#2 [63, 53]→ninja [63, 44]","kiem_1#4 [63, 36]→ninja [64, 44]","kiem_2#1 [69, 59]→ninja [72, 54]","kiem_2#2 [65, 51]→ninja [66, 45]","kiem_2#3 [65, 53]→ninja [66, 44]","thuong_1#0 [61, 50]→ninja [62, 45]","thuong_1#4 [60, 52]→ninja [61, 45]","thuong_1#5 [61, 50]→ninja [62, 44]","thuong_2#1 None→ninja [63, 46]","thuong_2#2 None→ninja [62, 45]","thuong_2#3 None→ninja [62, 44]","thuong_2#4 None→ninja [63, 44]","thuong_3#0 [66, 44]→ninja [61, 46]","thuong_3#1 None→ninja [61, 44]","thuong_3#3 [62, 53]→ninja [61, 48]","thuong_3#4 [62, 53]→ninja [61, 44]","thuong_3#5 None→ninja [61, 44]","phitieu_chum#1 [65, 57]→ninja [64, 47]","phitieu_chum#2 [65, 54]→ninja [64, 47]","phitieu_chum#3 [65, 54]→ninja [64, 45]","phitieu_chum#4 None→ninja [64, 44]","phitieu_chum#5 None→ninja [64, 45]","phitieu_ngam#0 [65, 56]→ninja [67, 45]","phitieu_ngam#1 [65, 54]→ninja [67, 45]","phitieu_ngam#2 [65, 54]→ninja [66, 46]","thuong_giu#0 [69, 60]→ninja [70, 44]","thuong_giu#1 [69, 60]→ninja [70, 45]","thuong_giu#2 [69, 60]→ninja [70, 44]","chuong#5 None→ninja [66, 45]"],"lau":["chay#1 [64, 38]→ninja [67, 43]","chay#2 [63, 33]→ninja [65, 40]","chay#11 [63, 39]→ninja [64, 44]","kiem_2#0 [63, 49]→ninja [67, 44]","kiem_2#1 [64, 50]→ninja [72, 54]","thuong_1#2 [64, 44]→ninja [62, 50]","thuong_1#3 [64, 45]→ninja [62, 50]","phitieu#2 [63, 56]→ninja [66, 47]","phitieu#3 [63, 52]→ninja [65, 47]","phitieu_chum#1 [65, 56]→ninja [64, 47]","phitieu_chum#2 [63, 54]→ninja [64, 47]","phitieu_ngam#1 [66, 50]→ninja [67, 45]","phitieu_ngam#2 [66, 51]→ninja [66, 46]","thuong_giu#0 [64, 46]→ninja [70, 44]","thuong_giu#1 [64, 46]→ninja [70, 45]","thuong_giu#2 [63, 47]→ninja [70, 44]","dam#0 [63, 39]→ninja [68, 44]","dam#1 [63, 44]→ninja [68, 45]","dam#3 [70, 52]→ninja [68, 44]","chuong#0 [63, 52]→ninja [67, 45]"]}};
+(window.G = window.G || {}).ZED_EO = {"phien_ban":2,"vung_noi":5,"keo_toi_da":1.8,"doi_toi_da":10,"ghi_chu":"Dựng bằng docs/anh-goc/zed/cat-than.py. Mỗi khung [y, x, c, l, r] ô 96×96 nguồn: y = đáy đai (cắt cũ, trục nghiêng), x = tâm hông; c = đường cắt giữa đùi (zed-eo-sua), l/r = mép trái/phải hình ở hàng c (−1: không đo được).","hang":["kiem_1","kiem_2","thuong_1","thuong_2","thuong_3","phitieu","phitieu_chum","phitieu_ngam","thuong_giu","dam","chuong"],"bo":{"moi":{"chay":[[65,39,74,32,49],[67,43,75,32,48],[65,40,74,32,45],[64,41,73,33,49],[64,43,73,31,49],[66,43,74,44,51],[64,43,73,24,49],[64,42,73,25,45],[64,42,73,28,46],[64,42,73,33,49],[64,43,73,31,49],[64,44,73,34,53]],"kiem_1":[[64,45,73,35,63],[64,44,73,34,63],[63,44,72,35,63],[63,44,72,35,63],[64,44,73,34,63]],"kiem_2":[[67,44,75,35,62],[72,54,78,33,65],[66,45,74,35,62],[66,44,74,35,63],[67,44,75,35,62]],"thuong_1":[[62,45,72,34,62],[62,46,72,34,63],[62,50,72,30,50],[62,50,72,30,50],[61,45,71,33,63],[62,44,72,34,62]],"thuong_2":[[66,44,74,31,46],[63,46,72,34,64],[62,45,72,33,64],[62,44,72,33,63],[63,44,72,33,63],[63,46,72,35,65]],"thuong_3":[[61,46,71,36,62],[61,44,71,36,61],[62,48,72,29,73],[61,48,71,32,73],[61,44,71,34,63],[61,44,71,35,61]],"phitieu":[[66,46,74,36,62],[66,46,74,35,63],[66,47,74,35,64],[65,47,74,35,64],[66,45,74,35,62],[66,46,74,36,62]],"phitieu_chum":[[64,45,73,33,65],[64,47,73,32,67],[64,47,73,33,65],[64,45,73,35,59],[64,44,73,36,60],[64,45,73,36,60]],"phitieu_ngam":[[67,45,75,34,63],[67,45,75,34,63],[66,46,74,36,64]],"thuong_giu":[[70,44,77,32,64],[70,45,77,32,64],[70,44,77,32,64]],"dam":[[68,44,76,35,60],[68,45,76,35,62],[68,44,76,35,62],[68,44,76,35,62],[67,44,75,36,60]],"chuong":[[67,45,75,36,61],[67,47,75,36,64],[67,47,75,36,64],[67,46,75,35,64],[67,45,75,35,60],[66,45,74,36,60]]},"rung":{"chay":[[63,39,72,30,49],[66,42,74,31,48],[63,40,72,31,45],[63,41,72,33,49],[62,42,72,31,49],[65,43,74,45,52],[62,43,72,23,50],[62,38,72,23,45],[62,40,72,26,45],[62,41,72,31,49],[61,39,71,30,49],[62,42,72,32,51]],"kiem_1":[[63,46,72,36,62],[63,45,72,35,63],[63,46,72,35,63],[63,44,72,34,63],[63,45,72,35,62]],"kiem_2":[[67,45,75,35,62],[72,54,78,33,65],[67,44,75,35,63],[67,44,75,34,63],[67,44,75,35,62]],"thuong_1":[[60,45,70,35,61],[60,44,70,35,62],[61,51,71,31,52],[61,50,71,32,74],[60,45,70,34,63],[60,45,70,35,62]],"thuong_2":[[66,44,74,31,46],[63,46,72,35,64],[62,44,72,33,64],[62,44,72,33,64],[66,43,74,31,46],[65,44,74,31,46]],"thuong_3":[[61,45,71,36,63],[61,45,71,36,62],[62,52,72,29,73],[61,50,71,30,73],[65,44,74,33,46],[65,43,74,33,45]],"phitieu":[[66,45,74,36,62],[66,46,74,36,64],[66,48,74,36,65],[66,48,74,36,64],[66,46,74,36,62],[66,45,74,36,61]],"phitieu_chum":[[63,43,72,32,65],[64,50,73,31,67],[64,48,73,31,65],[64,44,73,36,60],[64,44,73,35,61],[64,44,73,35,60]],"phitieu_ngam":[[65,44,74,33,63],[65,44,74,33,64],[65,44,74,34,64]],"thuong_giu":[[70,46,77,33,64],[70,46,77,33,64],[70,46,77,33,64]],"dam":[[68,44,76,35,61],[68,45,76,34,63],[68,43,76,34,62],[68,43,76,34,61],[68,45,76,35,61]],"chuong":[[67,45,75,35,61],[67,46,75,35,64],[67,46,75,35,64],[67,46,75,35,64],[67,45,75,35,61],[66,45,74,36,60]]},"bien":{"chay":[[68,42,76,46,53],[67,41,75,35,49],[68,41,76,35,45],[64,41,73,31,49],[63,40,72,31,50],[64,41,73,28,51],[64,43,73,32,50],[63,38,72,24,46],[68,39,76,35,44],[67,40,75,29,42],[67,39,75,27,43],[64,44,73,30,52]],"kiem_1":[[64,45,73,35,63],[64,44,73,34,64],[63,44,72,35,63],[67,43,75,32,45],[64,44,73,34,63]],"kiem_2":[[65,45,74,34,64],[72,54,78,53,67],[66,45,74,33,66],[66,44,74,32,64],[65,45,74,34,64]],"thuong_1":[[62,45,72,33,62],[60,50,70,35,62],[62,50,72,30,50],[62,49,72,29,49],[61,45,71,34,64],[62,44,72,33,62]],"thuong_2":[[66,45,74,31,46],[63,46,72,35,65],[62,45,72,32,64],[62,44,72,33,64],[63,44,72,33,64],[66,43,74,31,45]],"thuong_3":[[61,46,71,36,62],[61,44,71,35,60],[63,46,72,31,73],[61,48,71,33,73],[61,44,71,36,63],[61,44,71,37,63]],"phitieu":[[65,44,74,35,62],[65,42,74,35,63],[66,45,74,35,65],[66,44,74,35,65],[65,46,74,35,63],[65,46,74,35,62]],"phitieu_chum":[[64,48,73,33,64],[64,47,73,33,67],[64,47,73,35,65],[64,45,73,37,59],[64,44,73,37,60],[64,45,73,37,59]],"phitieu_ngam":[[67,45,75,34,63],[67,45,75,33,63],[66,46,74,35,63]],"thuong_giu":[[70,44,77,32,64],[70,45,77,32,64],[70,44,77,32,64]],"dam":[[71,44,78,34,46],[68,42,76,35,62],[68,42,76,35,62],[68,40,76,35,61],[71,44,78,34,46]],"chuong":[[66,41,74,37,60],[70,45,77,34,64],[70,45,77,34,46],[70,45,77,33,46],[70,45,77,34,46],[66,45,74,36,60]]},"lau":{"chay":[[63,40,72,25,51],[67,43,75,34,49],[65,40,74,24,44],[63,43,72,29,49],[63,41,72,27,48],[63,44,72,27,51],[64,43,73,22,51],[63,38,72,23,48],[65,40,74,26,46],[63,39,72,27,48],[63,40,72,27,48],[64,44,73,28,53]],"kiem_1":[[63,49,72,35,63],[65,46,74,34,64],[65,44,74,33,64],[63,44,72,33,63],[64,46,73,34,63]],"kiem_2":[[67,44,75,33,63],[72,54,78,34,66],[63,47,72,35,60],[63,48,72,36,62],[63,48,72,36,61]],"thuong_1":[[64,46,73,32,64],[64,46,73,32,46],[62,50,72,28,49],[62,50,72,29,49],[64,42,73,31,46],[63,46,72,33,63]],"thuong_2":[[65,43,74,30,45],[65,46,74,31,46],[64,42,73,31,45],[64,45,73,31,46],[65,44,74,30,44],[65,44,74,30,45]],"thuong_3":[[64,44,73,34,63],[64,44,73,34,63],[63,49,72,31,73],[63,44,72,30,73],[63,46,72,34,64],[64,44,73,33,63]],"phitieu":[[63,49,72,37,62],[63,48,72,36,63],[66,47,74,35,66],[65,47,74,35,65],[63,49,72,36,63],[67,49,75,33,63]],"phitieu_chum":[[65,48,74,51,64],[65,43,74,30,47],[64,47,73,30,65],[67,46,75,34,61],[67,44,75,34,61],[65,46,74,34,60]],"phitieu_ngam":[[66,45,74,32,63],[67,45,75,30,44],[66,46,74,32,44]],"thuong_giu":[[70,44,77,30,64],[70,45,77,30,64],[70,44,77,30,64]],"dam":[[68,44,76,34,60],[68,45,76,34,63],[66,46,74,35,60],[68,44,76,34,61],[63,40,72,38,58]],"chuong":[[67,45,75,36,62],[63,48,72,37,62],[63,49,72,37,62],[63,49,72,37,62],[68,44,76,33,61],[64,48,73,36,60]]}},"loai":{"rung":["kiem_2#1 [73, 44]→ninja [72, 54]"],"bien":["chay#3 None→ninja [64, 41]","chay#6 [64, 36]→ninja [64, 43]","chay#11 [64, 34]→ninja [64, 44]","kiem_1#0 [63, 36]→ninja [64, 45]","kiem_1#1 [63, 56]→ninja [64, 44]","kiem_1#2 [63, 53]→ninja [63, 44]","kiem_1#4 [63, 36]→ninja [64, 44]","kiem_2#1 [69, 59]→ninja [72, 54]","kiem_2#2 [65, 51]→ninja [66, 45]","kiem_2#3 [65, 53]→ninja [66, 44]","thuong_1#0 [61, 50]→ninja [62, 45]","thuong_1#4 [60, 52]→ninja [61, 45]","thuong_1#5 [61, 50]→ninja [62, 44]","thuong_2#1 None→ninja [63, 46]","thuong_2#2 None→ninja [62, 45]","thuong_2#3 None→ninja [62, 44]","thuong_2#4 None→ninja [63, 44]","thuong_3#0 [66, 44]→ninja [61, 46]","thuong_3#1 None→ninja [61, 44]","thuong_3#3 [62, 53]→ninja [61, 48]","thuong_3#4 [62, 53]→ninja [61, 44]","thuong_3#5 None→ninja [61, 44]","phitieu_chum#1 [65, 57]→ninja [64, 47]","phitieu_chum#2 [65, 54]→ninja [64, 47]","phitieu_chum#3 [65, 54]→ninja [64, 45]","phitieu_chum#4 None→ninja [64, 44]","phitieu_chum#5 None→ninja [64, 45]","phitieu_ngam#0 [65, 56]→ninja [67, 45]","phitieu_ngam#1 [65, 54]→ninja [67, 45]","phitieu_ngam#2 [65, 54]→ninja [66, 46]","thuong_giu#0 [69, 60]→ninja [70, 44]","thuong_giu#1 [69, 60]→ninja [70, 45]","thuong_giu#2 [69, 60]→ninja [70, 44]","chuong#5 None→ninja [66, 45]"],"lau":["chay#1 [64, 38]→ninja [67, 43]","chay#2 [63, 33]→ninja [65, 40]","chay#11 [63, 39]→ninja [64, 44]","kiem_2#0 [63, 49]→ninja [67, 44]","kiem_2#1 [64, 50]→ninja [72, 54]","thuong_1#2 [64, 44]→ninja [62, 50]","thuong_1#3 [64, 45]→ninja [62, 50]","phitieu#2 [63, 56]→ninja [66, 47]","phitieu#3 [63, 52]→ninja [65, 47]","phitieu_chum#2 [63, 53]→ninja [64, 47]","phitieu_ngam#1 [66, 50]→ninja [67, 45]","phitieu_ngam#2 [66, 51]→ninja [66, 46]","thuong_giu#0 [64, 46]→ninja [70, 44]","thuong_giu#1 [64, 46]→ninja [70, 45]","thuong_giu#2 [63, 47]→ninja [70, 44]","dam#0 [63, 39]→ninja [68, 44]","dam#1 [63, 44]→ninja [68, 45]","dam#3 [70, 52]→ninja [68, 44]","chuong#0 [63, 52]→ninja [67, 45]"]}};
 
 // ===== js/zed_moi.js =====
 // BỘ ZED MỚI (13/10/2026) — docs/review/ke-hoach-cai-thien/zed-tich-hop/YEU-CAU.md
@@ -28274,6 +28278,10 @@ MA._xong();
 // quá ±75° thì nghiêng thân trên quanh eo tối đa 12°; chém/quét/nện: nghiêng cả đường vung tối đa ±35°. Vào thế êm (làm mượt theo thời
 // gian + nối góc như gocMuot). Ném phi tiêu / đấm tay không (không có neo vũ khí): cánh tay đang duỗi (bảng TAY) xoay quanh gốc tay cùng góc.
 // Vệt/hiệu ứng: mũi vũ khí (doiTip) đã xoay theo; js/fx.js aimed() hỏi G.zedMoi.lechHinh. Tắt: ?huongvk=0.
+// SỬA BÓP EO / VẶN NGƯỜI KHI CHẠY + CHÉM (13/10/2026, docs/review/ke-hoach-cai-thien/zed-eo-sua/YEU-CAU.md): chân luôn cùng hướng thân trên
+// (hướng chém); chạy ngược hướng chém → chạy LÙI (hàng chạy phát ngược thứ tự khung, nhịp ×0,8). Đường ghép dời xuống giữa đùi (đai + hông +
+// đùi trên của khung đòn), vùng nối 5 hàng nguồn: nửa hẹp hơn giãn ngang dần cho khớp mép nửa kia, nửa trên đè nửa dưới. Số đo từng khung cả
+// 4 bộ: G.ZED_EO phiên bản 2 (docs/anh-goc/zed/cat-than.py). Chỉ đổi HÌNH. Tắt: ?eosua=0 (G.EO_SUA, js/data.js) → cách ghép cũ.
 (function () {
   const G = window.G;
   const SC = G.spriteCustom;
@@ -28304,12 +28312,33 @@ MA._xong();
   const BO_MA = { 'zed-moi': 'moi', 'zed-rung': 'rung', 'zed-bien': 'bien', 'zed-lau': 'lau' };
   const eoBat = () => G.CHAY_DANH_MOI !== false && !!G.ZED_EO && (G.CHAY_DANH === 'than' || G.CHAY_DANH === 'eo');
   const coEo = (ten) => eoBat() && G.ZED_EO.hang.indexOf(ten) >= 0;
+  // Sửa bóp eo / vặn người (zed-eo-sua): cần dữ liệu phiên bản 2 (mỗi khung [y, x, c, l, r]). Tắt ?eosua=0.
+  const eoSua = () => G.EO_SUA !== false && !!G.ZED_EO && G.ZED_EO.phien_ban >= 2;
+  const LUI_NHIP = 0.8; // chạy lùi: nhịp chân chậm lại
+  // Chân có chạy ngược hướng mặt (hướng chém) không — cùng phép thử như eoTinh cũ.
+  const nguocMat = (o) => { const f = o.face < 0 ? -1 : 1, md = o.mdx || 0; return Math.abs(md) > 0.2 && (md > 0 ? 1 : -1) !== f; };
+  // Phép kéo vùng nối (y hệt keo_noi trong cat-than.py): { tren, l, r, L, R } — tren = nửa trên được kéo (nửa dưới nếu false); [l, r] mép
+  // nửa được kéo, [L, R] mép đích, đều theo cột nguồn của khung CHẠY (nửa trên đã dời dx). null: không kéo (khớp sẵn / không đo được / quá xa).
+  function keoNoi(eA, eR, dx) {
+    const Z = G.ZED_EO;
+    if (eA[3] < 0 || eR[3] < 0) return null;
+    const lA = eA[3] + dx, rA = eA[4] + dx, lR = eR[3], rR = eR[4], wA = rA - lA + 1, wR = rR - lR + 1;
+    if (wA === wR && lA === lR) return null;
+    const tren = wA < wR, l = tren ? lA : lR, r = tren ? rA : rR, L = tren ? lR : lA, R = tren ? rR : rA;
+    if ((R - L + 1) / (r - l + 1) > (Z.keo_toi_da || 1.8) || Math.max(Math.abs(L - l), Math.abs(R - r)) > (Z.doi_toi_da || 10)) return null;
+    return { tren, l, r, L, R };
+  }
   // Số liệu ghép một khung: eA, eR = điểm eo [y, x] (ô 96 nguồn) khung đòn / khung chạy; ox, oy = dời nửa trên (điểm ảnh game,
   // hệ toạ độ đã lật theo mặt); rel = -1 khi chân quay ngược mặt (chạy ngược hướng chém); kc = bù 1 điểm ảnh khi lật chân.
   function eoTinh(T, s, o) {
     const B = G.ZED_EO.bo[BO_MA[T._ma] || 'moi'] || G.ZED_EO.bo.moi;
     const eA = B[s.ten] && B[s.ten][s.i], eR = B.chay && B.chay[s.eo.i];
     if (!eA || !eR) return null;
+    // cách mới: chân không lật (luôn cùng hướng thân trên), ngang khớp tâm hông, dọc khớp đường cắt giữa đùi
+    if (s.eo.moi && eA.length >= 5 && eR.length >= 5) {
+      const dx = eR[1] - eA[1];
+      return { eA, eR, rel: 1, kc: 0, moi: true, ox: dx / 2, oy: (eR[2] - eA[2]) / 2, K: keoNoi(eA, eR, dx) };
+    }
     const f = o.face < 0 ? -1 : 1, md = o.mdx || 0;
     const rel = Math.abs(md) > 0.2 && (md > 0 ? 1 : -1) !== f ? -1 : 1;
     const kc = rel < 0 ? ((f > 0 ? 1 : 0) - (f < 0 ? 1 : 0)) * f : 0;
@@ -28356,7 +28385,14 @@ MA._xong();
   function chon(o, D) {
     const s = chon0(o, D);
     // chạy + chém: ghép eo (chân hàng chạy, thân trên hàng đòn) — chỉ hàng có điểm eo, chỉ khi đang chạy
-    if (s && s.ghep && o.move && coEo(s.ten) && D.dong_tac.chay) return { ten: s.ten, i: s.i, u: s.u, eo: { i: khungLap(D, 'chay', s.tc) } };
+    if (s && s.ghep && o.move && coEo(s.ten) && D.dong_tac.chay) {
+      if (eoSua()) { // chân cùng hướng thân trên; chạy ngược hướng chém → chạy lùi (phát ngược thứ tự khung, nhịp ×0,8)
+        const so = D.dong_tac.chay.so, lui = nguocMat(o);
+        const i = lui ? so - 1 - khungLap(D, 'chay', s.tc * LUI_NHIP) : khungLap(D, 'chay', s.tc);
+        return { ten: s.ten, i: s.i, u: s.u, eo: { i, moi: 1, lui: lui ? 1 : 0 } };
+      }
+      return { ten: s.ten, i: s.i, u: s.u, eo: { i: khungLap(D, 'chay', s.tc) } };
+    }
     if (s && s.ghep) { const r = { ten: s.ten, i: s.i, u: s.u }; return s.theo ? Object.assign(r, { theo: s.theo }) : r; }
     return s;
   }
@@ -28613,6 +28649,40 @@ MA._xong();
       q.save(); q.beginPath(); q.rect(-24 + ox, -45 + oy, 48, h / 2); q.rect(x0, y0, w, hh); q.clip('evenodd'); ve0(); q.restore();
       nghieng(q, [tay[0] / 2 - 24 + ox, tay[1] / 2 - 45 + oy], gTay, () => { q.beginPath(); q.rect(x0, y0, w, hh); q.clip(); ve0(); });
     };
+    if (s.eo && E && E.moi) {
+      // Ghép giữa đùi (zed-eo-sua): nửa trên = khung đòn hàng 0..cA, nửa dưới = khung chạy từ hàng cR (lấn 1 hàng, bị nửa trên đè).
+      const aC = D.dong_tac.chay, cA = E.eA[2], cR = E.eR[2], yA = cA + 1, yB = E.eA[0] + 1, K = E.K, S = G.ZED_EO.vung_noi || 5;
+      const dx = E.eR[1] - E.eA[1];
+      // một hàng nguồn sy (cột x0 = toạ độ cột khung chạy của cột 0), kéo theo K với mức t (0 = giữ nguyên, 1 = khớp hẳn mép đích)
+      const hang = (q, sx, sy, x0, yD, t) => {
+        if (!K || !(t > 0)) { q.drawImage(T.img, sx, sy, 96, 1, x0 / 2 - 24, yD, 48, 0.5); return; }
+        const tl = K.l + t * (K.L - K.l), tr = K.r + t * (K.R - K.r), k = (tr - tl + 1) / (K.r - K.l + 1);
+        q.drawImage(T.img, sx, sy, 96, 1, (tl + (x0 - K.l) * k) / 2 - 24, yD, 48 * k, 0.5);
+      };
+      const tKeo = (k) => (k >= 0 && k < S ? (S - k) / S : 0); // k = số hàng tính từ mép nối
+      // đang nghiêng: chỉ phần từ đai trở lên xoay, dải hông + đùi trên (dưới đai) đứng yên như chân; không nghiêng: vẽ liền tới vùng kéo
+      const yT = N ? Math.min(yB, yA) : K && K.tren ? Math.max(0, yA - S) : yA;
+      const lopEo = (q) => {
+        const xoay = (fn) => (N ? nghieng(q, N, lean, fn) : fn());
+        const vk = () => { q.save(); q.translate(E.ox, E.oy); veVk(q, V, v); q.restore(); };
+        if (v && v.n[3]) xoay(vk);
+        // nửa dưới: chân khung chạy từ hàng cR (cùng hướng thân trên, không lật); vùng nối kéo nếu nửa dưới hẹp hơn
+        const y0 = K && !K.tren ? cR + 1 + S : cR;
+        if (K && !K.tren) for (let y = cR; y < y0 && y < 96; y++) hang(q, s.eo.i * 96, aC.hang * 96 + y, 0, -45 + y / 2, y === cR ? 1 : tKeo(y - cR - 1));
+        if (y0 < 96) q.drawImage(T.img, s.eo.i * 96, aC.hang * 96 + y0, 96, 96 - y0, -24, -45 + y0 / 2, 48, (96 - y0) / 2);
+        // đang nghiêng: lót dải đai (6 hàng nguồn ngay trên đai, không xoay) để chỗ nối không hở
+        if (N) q.drawImage(T.img, s.i * 96, a.hang * 96 + yB - 6, 96, 6, -24 + E.ox, -45 + E.oy + (yB - 6) / 2, 48, 3);
+        // dải dưới (hàng yT..cA của khung đòn): không xoay; vùng nối kéo nếu nửa trên hẹp hơn
+        for (let y = yT; y < yA; y++) hang(q, s.i * 96, a.hang * 96 + y, dx, -45 + E.oy + y / 2, K && K.tren ? tKeo(cA - y) : 0);
+        // nửa trên: đai + thân + tay khung đòn (hàng 0..yT−1), dời về khung chạy; xoay quanh eo khi nghiêng
+        xoay(() => {
+          veTren(q, yT, E.ox, E.oy);
+          if (v && !v.n[3]) vk();
+          if (v && v.da.hang_tay != null) q.drawImage(T.img, v.wa.i * 96, v.da.hang_tay * 96, 96, yA, -24 + E.ox, -45 + E.oy, 48, yA / 2); // nắm tay đè lên cán
+        });
+      };
+      return veLop(c, o, lopEo);
+    }
     if (s.eo && E) {
       const aC = D.dong_tac.chay, yR = E.eR[0] + 1, yA = E.eA[0] + 1;
       const lopEo = (q) => {
