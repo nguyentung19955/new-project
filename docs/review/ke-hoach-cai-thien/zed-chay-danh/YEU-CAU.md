@@ -44,3 +44,8 @@ D. Kiểm thử (chủ dự án YÊU CẦU lần này): chạy headless Playwrig
 6. Kỹ thuật: tách movement state và combat state; timer riêng; không reset velocity/Run animation khi Attack; deltaTime; không đổi kích thước, gốc, anchor chân, tỉ lệ; giữ pixel art, không làm mờ.
 7. Kiểm thử bắt buộc: (1) đứng chém liên tục (2) chạy phải chém liên tục (3) chạy trái chém phải (4) chạy chéo combo 3 nhát (5) đổi hướng joystick trong lúc chém (6) chạy giữ Attack rồi Dodge (7) thả Attack vẫn giữ joystick: tiếp tục chạy, không khựng.
 Kiểm tra cấu trúc animation và code trước khi sửa; ưu tiên sprite có sẵn; thiếu RunAttack thì liệt kê chính xác, không tự dùng sai sprite. Lâu dài: tách animation chân và thân trên.
+
+## Bổ sung của chủ dự án (13/10, 12:00): "Trước hoạt ảnh vừa chạy vừa chém mượt hơn bây giờ"
+- Bản Zed cũ (`?zedmoi=0`, đường vung `G.KIEM_MUOT`) chạy chém MƯỢT HƠN bản Zed mới hiện tại (`G.CHAY_DANH='than'`: thân giữ hàng chạy, vũ khí nhảy theo neo từng khung đánh, không nằm trong tay).
+- Bắt buộc: bản mới sau khi làm phải mượt BẰNG hoặc HƠN bản cũ. Góc và vị trí vũ khí nội suy giữa các khung (không nhảy cóc), vũ khí luôn nằm trong tay, vào thế/ra thế êm như bản cũ (kiemMuot: vào thế êm suốt 0,33 đầu đòn).
+- Kiểm thử thêm: quay GIF chạy chém bản cũ (`?zedmoi=0`) và bản mới cạnh nhau, đo độ lệch góc vũ khí mỗi khung (bản mới không được lớn hơn bản cũ), ghi số đo vào BAO-CAO.md.
