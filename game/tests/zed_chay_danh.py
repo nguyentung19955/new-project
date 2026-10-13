@@ -6,6 +6,8 @@ Chạy headless (Chromium sẵn ở /opt/pw-browsers), mô phỏng từng khung 
 Mỗi khung ghi: vận tốc (vx, vy điểm ảnh/giây), P.face, hướng đòn (P.aimX/aimY), combo (P.comboI), tên đòn, tiến độ đòn u,
 khung thân dưới (hàng chạy #i) / thân trên (hàng đòn #i) do js/zed_moi.js chọn. Xuất: kq-<n>.json, dai-<n>.png (dải ảnh vẽ bằng
 đúng hàm vẽ của game), chay-danh-<n>.gif vào docs/review/ke-hoach-cai-thien/zed-chay-danh/kiem-thu/, tóm tắt kq.json.
+--muot: so độ mượt vũ khí khi chạy chém, bản cũ ?zedmoi=0 (G.KIEM_MUOT) với bản mới: góc vũ khí mỗi khung (G.tinhLinh.tip, đúng
+        hình đang vẽ), độ lệch góc giữa hai khung liền nhau; GIF đặt cạnh nhau muot-cu-moi.gif, số đo muot.json.
 --cu: chạy với ?chaydanh=0 (cách cũ) để so sánh (ghi vào kiem-thu-cu/)."""
 import base64, io, json, os, sys
 from playwright.sync_api import sync_playwright
@@ -156,7 +158,75 @@ def danh_gia(n, R):
     return ok, ghi
 
 
+JS_MUOT = r"""
+() => {
+  const { W, P } = AU.room({ melee: 'sword', lvl: 10 });
+  AU.want(P, 'sword');
+  P.inv = 1e9; P.hp = P.maxhp = 1e9;
+  P.x = W.x0 + 20; P.y = W.geo.cy;
+  const dum = AU.dummy(P.x + 34, P.y, { hp: 1e9 });
+  const cv = document.createElement('canvas'); cv.width = 96 * 3; cv.height = 72 * 3;
+  const q = cv.getContext('2d');
+  const out = [], anh = [];
+  for (let i = 0; i < 100; i++) {
+    AU.inp.mx = 1; AU.inp.atk = true; if (i === 0) AU.inp.atkP = true;
+    dum.x = P.x + 34; dum.y = P.y; dum.cd = 1e9; dum.hp = 1e9;
+    AU.run(1);
+    const o = G.heroArgs(P);
+    q.setTransform(1, 0, 0, 1, 0, 0); q.fillStyle = '#3a3c48'; q.fillRect(0, 0, cv.width, cv.height); q.imageSmoothingEnabled = false;
+    q.setTransform(3, 0, 0, 3, 0, 0); q.translate(48 - Math.round(P.x), 58 - Math.round(P.y));
+    G.art.hero(q, o);
+    const t = G.tinhLinh.tip(o);
+    const ang = t ? Math.atan2(t.dy, t.dx * (o.face < 0 ? -1 : 1)) * 180 / Math.PI : null;
+    out.push({ i, atk: o.atk, face: o.face, ang: ang == null ? null : +ang.toFixed(1), g: t ? [+t.gx.toFixed(1) - Math.round(P.x), +t.gy.toFixed(1) - Math.round(P.y)] : null, combo: P.comboI });
+    if (i % 2 === 0) anh.push(cv.toDataURL('image/png'));
+  }
+  return { out, anh };
+}
+"""
+
+
+def muot():
+    import statistics
+    ra = os.path.join(REPO, 'docs', 'review', 'ke-hoach-cai-thien', 'zed-chay-danh', 'kiem-thu')
+    os.makedirs(ra, exist_ok=True)
+    kq, gif = {}, {}
+    with sync_playwright() as p:
+        b = p.chromium.launch()
+        for ten, q in (('cu', '?cloud=0&zedmoi=0'), ('moi', '?cloud=0')):
+            pg = b.new_page(viewport={'width': 844, 'height': 390})
+            pg.goto('file://' + ROOT + '/dist/linh-khi.html' + q)
+            pg.wait_for_function('window.G && G.scene', timeout=60000)
+            for f in ['bot.js', 'setup.js', 'au_lib.js']:
+                pg.add_script_tag(path=os.path.join(ROOT, 'tests', f))
+            pg.evaluate("() => { const SC = G.spriteCustom; if (SC.canAnh) ['zed-moi', 'zed-vk', 'em-be-smith', 'em-be-smith-don'].forEach((m) => SC.canAnh(m)); }")
+            pg.wait_for_timeout(4000)
+            R = pg.evaluate(JS_MUOT)
+            rows = R['out']
+            d = []
+            for a, c in zip(rows, rows[1:]):
+                if a['atk'] >= 0 and c['atk'] >= 0 and a['ang'] is not None and c['ang'] is not None and a['face'] == c['face']:
+                    d.append(abs(((c['ang'] - a['ang']) + 180) % 360 - 180))
+            co = sum(1 for r in rows if r['atk'] >= 0 and r['ang'] is not None)
+            dd = sorted(d)
+            kq[ten] = {'khung_danh_co_vk': co, 'khung_danh': sum(1 for r in rows if r['atk'] >= 0), 'lech_max': round(max(d), 1) if d else None,
+                       'lech_tb': round(statistics.mean(d), 1) if d else None, 'lech_p95': round(dd[int(0.95 * (len(dd) - 1))], 1) if d else None,
+                       'so_cap': len(d), 'log': rows}
+            gif[ten] = [Image.open(io.BytesIO(base64.b64decode(u.split(',', 1)[1]))).convert('RGB') for u in R['anh']]
+            pg.close()
+        b.close()
+    fr = []
+    for a, c in zip(gif['cu'], gif['moi']):
+        im = Image.new('RGB', (a.width * 2, a.height)); im.paste(a, (0, 0)); im.paste(c, (a.width, 0)); fr.append(im)
+    fr[0].save(os.path.join(ra, 'muot-cu-moi.gif'), save_all=True, append_images=fr[1:], duration=33, loop=0)
+    json.dump(kq, open(os.path.join(ra, 'muot.json'), 'w'), ensure_ascii=False, indent=0)
+    for k, v in kq.items():
+        print(k, {a: b for a, b in v.items() if a != 'log'})
+
+
 def main():
+    if '--muot' in sys.argv:
+        return muot()
     os.makedirs(RA, exist_ok=True)
     tong = {}
     errs = []
