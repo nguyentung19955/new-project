@@ -23,6 +23,8 @@ Viết/dùng lại script như `docs/anh-goc/zed/hieu-ung/cat_phi_tieu.py` / `ca
 | S4 | hu-phan-don | skill bộ Lâu đài Phản đòn |
 | S5 | hu-khi-the | skill bộ Lâu đài Khí thế (lặp quanh Zed, lớp sau người phần dưới) |
 | S6 | hu-phan-than | skill bộ Ninja: bóng phân thân tan |
+| S7 | hu-nhua-rung | skill bộ Rừng Nhựa rừng (lặp dưới chân khi đang hồi máu); ảnh xanh lá thật, chỉ bỏ điểm #00FF00 thuần ở mép |
+| S8 | hu-am-sat | skill bộ Ninja Ám sát (chí mạng sau lưng), lật theo hướng đòn |
 S2 (dây leo) CHƯA có ảnh: giữ cách vẽ của đợt 3.
 
 Skill bộ do phiên đợt 3 làm (`he-thong-moi/bao-cao-3.md`): đọc báo cáo, móc ảnh vào đúng chỗ hiệu ứng skill đã làm. Làm SAU đợt 2 và đợt 3 (git pull, đọc code mới).
