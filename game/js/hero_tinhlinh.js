@@ -943,7 +943,12 @@
   const ofKey = (of) => [of.hat, of.robe, of.back, of.hand, of.mask, of.wing ? of.wing.kind + of.wing.level : '', of.rar ? [of.rar.hat, of.rar.robe, of.rar.back, of.rar.hand].join('') : ''].join(',');
   // Trả về mọi thứ cần để vẽ một khung: hình bé, chỗ đặt, và thông tin vũ khí.
   // N: độ nét ghép (netCua); không ghi thì dùng N của lần vẽ gần nhất (tip, info gọi không có canvas).
-  function frame(o, N) {
+  // Phiên hiệu năng 13/10: nhe = true (chỉ G.tinhLinh.tip gọi): chỉ cần tư thế và vũ khí (anim, f, v, weapon), không cần hình bé.
+  // Khung đã dựng đủ thì dùng luôn; chưa có thì chỉ tính tư thế (cùng pick / pose / finishPose, cùng số) mà KHÔNG dựng hình bé bằng code
+  // (Zed vẽ bằng ảnh AI: trước đây vệt chém dựng hình bé code ~25 KB rác + 1 canvas cho mỗi thời điểm lấy mẫu, rồi bỏ).
+  const vkCuaPs = (ps, wt) => (ps.w ? { type: wt, x: Math.round(ps.w.x), y: Math.round(ps.w.y), ang: Math.round(ps.w.ang), pull: ps.w.pull || 0, front: !!ps.w.front, mood: ps.w.mood || 'idle', sx: ps.w.sx == null ? null : ps.w.sx } : null);
+  const KNHE = taoNho('khung-em-be-nhe', { max: 1400 });
+  function frame(o, N, nhe) {
     N = N > 1 ? N : N === 1 ? 1 : lastN;
     const key = HERO[o.key] ? o.key : 'smith';
     const wt = o.weapon && REST[o.weapon.type] ? o.weapon.type : 'none';
@@ -953,6 +958,14 @@
     const id = key + '|' + ofKey(of) + '|' + wt + '|' + sel.join('|') + '|' + tintK + '|' + N + khoaGhep(key);
     let fr = KCACHE.get(id);
     if (fr) return fr;
+    if (nhe) {
+      fr = KNHE.get(id);
+      if (fr) return fr;
+      const ps = finishPose(pose(key, wt, sel[0], sel[1], sel[2], sel[3]));
+      fr = { anim: sel[0], f: sel[1], v: sel[2], tint: tintK, id, key, of, ps, nhe: true, weapon: vkCuaPs(ps, wt) };
+      KNHE.set(id, fr);
+      return fr;
+    }
     const ps = finishPose(pose(key, wt, sel[0], sel[1], sel[2], sel[3]));
     const sp = kidSprite(key, of, ps, tintK, null, null, N);
     fr = {
@@ -960,7 +973,7 @@
       anim: sel[0], f: sel[1], v: sel[2], hands: ps.hands || null, tint: tintK, id, key, of, ps,
       // Thông tin cho vũ khí: điểm cầm (x,y) tính từ chân bé lúc quay phải, góc (độ, 0 là chĩa về trước, âm là chĩa lên),
       // độ kéo dây, trước hay sau bé, tâm trạng.
-      weapon: ps.w ? { type: wt, x: Math.round(ps.w.x), y: Math.round(ps.w.y), ang: Math.round(ps.w.ang), pull: ps.w.pull || 0, front: !!ps.w.front, mood: ps.w.mood || 'idle', sx: ps.w.sx == null ? null : ps.w.sx } : null,
+      weapon: vkCuaPs(ps, wt),
     };
     KCACHE.set(id, fr);
     return fr;
@@ -1448,7 +1461,7 @@
   // (dx, dy): hướng thân vũ khí (đã lật theo mặt, đã ép bẹt khi quét vòng); L: dài từ điểm cầm tới mũi.
   const TIP = { anim: '', u: 0, wt: '', gx: 0, gy: 0, dx: 0, dy: 0, L: 0, combo: 0, front: true };
   function tip(o) {
-    const fr = frame(o), w = vkGhep(o, fr).wp; // vệt chém đi theo đúng hình vũ khí đang vẽ (kể cả khi tệp ghép dời vũ khí vào tay thân AI)
+    const fr = frame(o, undefined, true), w = vkGhep(o, fr).wp; // vệt chém đi theo đúng hình vũ khí đang vẽ (kể cả khi tệp ghép dời vũ khí vào tay thân AI)
     if (!w || w.type === 'bow' || !REST[w.type]) return null;
     let L = 0;
     try { if (G.weaponArt && G.weaponArt.tipLen && !o.plainWeapon) L = G.weaponArt.tipLen(G.weaponArt.fromWeapon(o.weapon || {})); } catch (e) { L = 0; }

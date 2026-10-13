@@ -1,0 +1,841 @@
+{
+ "tai": {
+  "hai_tep_4g": {
+   "html_xong": 917.67,
+   "dcl": 2142.67,
+   "load": 2150.0,
+   "khung_dau": 2021.33,
+   "man_chao": 2053.33,
+   "anh_lang_xong": 7321.33,
+   "moi_anh_xong": 14020.0,
+   "byte_tong": 8495076.0,
+   "byte_trang": 869539.0,
+   "so_anh_tai_sau": 405.0,
+   "byte_anh": 7625537.0,
+   "loi": [],
+   "lan": 1.0
+  },
+  "hai_tep_khong_gioi_han": {
+   "html_xong": 117.33,
+   "dcl": 1673.33,
+   "load": 1677.67,
+   "khung_dau": 1525.67,
+   "man_chao": 1674.33,
+   "anh_lang_xong": 6187.0,
+   "moi_anh_xong": 10061.67,
+   "byte_tong": 8495076.0,
+   "byte_trang": 869539.0,
+   "so_anh_tai_sau": 405.0,
+   "byte_anh": 7625537.0,
+   "loi": [],
+   "lan": 1.0
+  },
+  "mot_tep_4g": {
+   "html_xong": 17018.33,
+   "dcl": 23338.33,
+   "load": 23384.0,
+   "khung_dau": 23287.33,
+   "man_chao": 23367.0,
+   "anh_lang_xong": 23368.67,
+   "moi_anh_xong": 23368.67,
+   "byte_tong": 17758178.0,
+   "byte_trang": 17758178.0,
+   "so_anh_tai_sau": 0.0,
+   "byte_anh": 0.0,
+   "loi": [],
+   "lan": 1.0
+  },
+  "mot_tep_khong_gioi_han": {
+   "html_xong": 2746.67,
+   "dcl": 9239.0,
+   "load": 9279.33,
+   "khung_dau": 9187.33,
+   "man_chao": 9281.67,
+   "anh_lang_xong": 9283.0,
+   "moi_anh_xong": 9283.0,
+   "byte_tong": 17758178.0,
+   "byte_trang": 17758178.0,
+   "so_anh_tai_sau": 0.0,
+   "byte_anh": 0.0,
+   "loi": [],
+   "lan": 1.0
+  }
+ },
+ "fps": {
+  "man_chao": {
+   "fps": 26.07,
+   "khoang_cach_ms": {
+    "n": 395.67,
+    "tb": 38.34,
+    "p50": 33.37,
+    "p95": 66.63,
+    "p99": 94.5,
+    "max": 200.0
+   },
+   "js_moi_khung_ms": {
+    "n": 395.67,
+    "tb": 2.22,
+    "p50": 1.3,
+    "p95": 6.13,
+    "p99": 11.63,
+    "max": 40.07
+   },
+   "khung_cham_33ms": 149.0,
+   "khung_cham_50ms": 37.33,
+   "dinh_heap_MB": 21.23,
+   "rac_MB_moi_giay": 0.93,
+   "quai": null,
+   "loi": []
+  },
+  "lang": {
+   "fps": 40.17,
+   "khoang_cach_ms": {
+    "n": 607.67,
+    "tb": 25.01,
+    "p50": 22.23,
+    "p95": 38.93,
+    "p99": 55.6,
+    "max": 166.63
+   },
+   "js_moi_khung_ms": {
+    "n": 607.67,
+    "tb": 5.47,
+    "p50": 4.3,
+    "p95": 13.03,
+    "p99": 17.9,
+    "max": 36.63
+   },
+   "khung_cham_33ms": 60.67,
+   "khung_cham_50ms": 8.0,
+   "dinh_heap_MB": 21.83,
+   "rac_MB_moi_giay": 2.03,
+   "quai": null,
+   "loi": []
+  },
+  "ai_thuong": {
+   "fps": 29.6,
+   "khoang_cach_ms": {
+    "n": 450.0,
+    "tb": 33.79,
+    "p50": 33.3,
+    "p95": 61.1,
+    "p99": 122.2,
+    "max": 222.17
+   },
+   "js_moi_khung_ms": {
+    "n": 450.0,
+    "tb": 11.51,
+    "p50": 9.63,
+    "p95": 26.73,
+    "p99": 48.87,
+    "max": 196.4
+   },
+   "khung_cham_33ms": 125.0,
+   "khung_cham_50ms": 36.0,
+   "dinh_heap_MB": 24.53,
+   "rac_MB_moi_giay": 1.65,
+   "quai": 1.33,
+   "loi": []
+  },
+  "tran_dong": {
+   "fps": 11.83,
+   "khoang_cach_ms": {
+    "n": 180.33,
+    "tb": 84.63,
+    "p50": 83.3,
+    "p95": 127.8,
+    "p99": 172.23,
+    "max": 305.53
+   },
+   "js_moi_khung_ms": {
+    "n": 180.33,
+    "tb": 59.2,
+    "p50": 57.53,
+    "p95": 99.63,
+    "p99": 117.6,
+    "max": 123.43
+   },
+   "khung_cham_33ms": 178.33,
+   "khung_cham_50ms": 161.33,
+   "dinh_heap_MB": 28.8,
+   "rac_MB_moi_giay": 2.11,
+   "quai": 18.0,
+   "loi": []
+  }
+ },
+ "hoso_tran_dong": {
+  "fps": 10.9,
+  "khoang_cach_ms": {
+   "n": 177,
+   "tb": 91.52,
+   "p50": 83.3,
+   "p95": 166.6,
+   "p99": 250.1,
+   "max": 533.3
+  },
+  "js_moi_khung_ms": {
+   "n": 177,
+   "tb": 64.0,
+   "p50": 60.3,
+   "p95": 125.3,
+   "p99": 148.6,
+   "max": 189.5
+  },
+  "khung_cham_33ms": 173,
+  "khung_cham_50ms": 157,
+  "dinh_heap_MB": 27.9,
+  "rac_MB_moi_giay": 1.68,
+  "quai": 18,
+  "loi": [],
+  "top_ham": {
+   "tong_ms_moi_khung": 85.22,
+   "ham": [
+    [
+     "drawImage",
+     34.941,
+     41.0
+    ],
+    [
+     "(program)",
+     23.013,
+     27.0
+    ],
+    [
+     "fillRect",
+     1.763,
+     2.1
+    ],
+    [
+     "(garbage collector)",
+     1.036,
+     1.2
+    ],
+    [
+     "drawParts @ js/fx.js:265",
+     0.813,
+     1.0
+    ],
+    [
+     "khungThan @ js/sprite_custom.js:265",
+     0.644,
+     0.8
+    ],
+    [
+     "save",
+     0.615,
+     0.7
+    ],
+    [
+     "getImageData",
+     0.586,
+     0.7
+    ],
+    [
+     "getContext",
+     0.525,
+     0.6
+    ],
+    [
+     "put @ js/bao_truoc.js:465",
+     0.524,
+     0.6
+    ],
+    [
+     "MA.draw @ js/monster_art.js:1431",
+     0.513,
+     0.6
+    ],
+    [
+     "fillText",
+     0.505,
+     0.6
+    ],
+    [
+     "drawHud @ js/stage.js:899",
+     0.486,
+     0.6
+    ],
+    [
+     "measureText",
+     0.479,
+     0.6
+    ],
+    [
+     "A.enemy @ js/mobs.js:828",
+     0.478,
+     0.6
+    ],
+    [
+     "(idle)",
+     0.426,
+     0.5
+    ],
+    [
+     "G.drawWorld @ js/combat.js:1044",
+     0.423,
+     0.5
+    ],
+    [
+     "thay @ js/sprite_custom.js:473",
+     0.374,
+     0.4
+    ],
+    [
+     "G.updateWorld @ js/combat.js:907",
+     0.354,
+     0.4
+    ],
+    [
+     "get @ js/bo_nho.js:51",
+     0.341,
+     0.4
+    ],
+    [
+     "MA.draw @ js/sprite_custom.js:464",
+     0.329,
+     0.4
+    ],
+    [
+     "demAnh @ js/room_art.js:1622",
+     0.326,
+     0.4
+    ],
+    [
+     "f @ js/combat.js:1074",
+     0.318,
+     0.4
+    ],
+    [
+     "setTransform",
+     0.315,
+     0.4
+    ],
+    [
+     "restore",
+     0.302,
+     0.4
+    ]
+   ],
+   "ham_gom_lenh_ve": [
+    [
+     "(program)",
+     23.013,
+     27.0
+    ],
+    [
+     "maskOut @ js/bao_truoc.js:325",
+     22.146,
+     26.0
+    ],
+    [
+     "BT.snap @ js/bao_truoc.js:271",
+     4.413,
+     5.2
+    ],
+    [
+     "vienBe @ js/fx.js:2267",
+     4.293,
+     5.0
+    ],
+    [
+     "khungThan @ js/sprite_custom.js:265",
+     2.238,
+     2.6
+    ],
+    [
+     "drawParts @ js/fx.js:265",
+     1.303,
+     1.5
+    ],
+    [
+     "BT.draw @ js/bao_truoc.js:568",
+     1.1,
+     1.3
+    ],
+    [
+     "(garbage collector)",
+     1.036,
+     1.2
+    ],
+    [
+     "veLop @ js/zed_moi.js:468",
+     0.83,
+     1.0
+    ],
+    [
+     "MA.draw @ js/monster_art.js:1431",
+     0.659,
+     0.8
+    ],
+    [
+     "ui.text @ js/engine.js:534",
+     0.626,
+     0.7
+    ],
+    [
+     "veF @ js/fx_anh.js:116",
+     0.62,
+     0.7
+    ],
+    [
+     "drawNumsDoc @ js/fx.js:647",
+     0.6,
+     0.7
+    ],
+    [
+     "thay @ js/sprite_custom.js:473",
+     0.589,
+     0.7
+    ],
+    [
+     "SC.veKhung @ js/sprite_custom.js:319",
+     0.566,
+     0.7
+    ],
+    [
+     "put @ js/bao_truoc.js:465",
+     0.524,
+     0.6
+    ],
+    [
+     "drawHud @ js/stage.js:899",
+     0.495,
+     0.6
+    ],
+    [
+     "A.enemy @ js/mobs.js:828",
+     0.478,
+     0.6
+    ],
+    [
+     "veAnh @ js/room_art.js:52",
+     0.47,
+     0.6
+    ],
+    [
+     "G.drawWorld @ js/combat.js:1044",
+     0.432,
+     0.5
+    ],
+    [
+     "(idle)",
+     0.426,
+     0.5
+    ],
+    [
+     "p @ js/mobs.js:492",
+     0.395,
+     0.5
+    ],
+    [
+     "blit @ js/btn_art.js:821",
+     0.373,
+     0.4
+    ],
+    [
+     "MA.draw @ js/sprite_custom.js:464",
+     0.368,
+     0.4
+    ],
+    [
+     "G.updateWorld @ js/combat.js:907",
+     0.354,
+     0.4
+    ]
+   ]
+  }
+ },
+ "dem_tran_dong": {
+  "fps": 8.6,
+  "khoang_cach_ms": {
+   "n": 72,
+   "tb": 116.66,
+   "p50": 100,
+   "p95": 199.9,
+   "p99": 399.9,
+   "max": 399.9
+  },
+  "js_moi_khung_ms": {
+   "n": 72,
+   "tb": 88.47,
+   "p50": 80.6,
+   "p95": 152.9,
+   "p99": 308,
+   "max": 308
+  },
+  "khung_cham_33ms": 72,
+  "khung_cham_50ms": 72,
+  "dinh_heap_MB": 27.6,
+  "rac_MB_moi_giay": 1.89,
+  "quai": 18,
+  "loi": [],
+  "moi_khung": {
+   "canvas": 6.278,
+   "offscreen": 0.0,
+   "image": 0.0,
+   "getImageData": 4.389,
+   "putImageData": 5.889,
+   "toDataURL": 0.0,
+   "createPattern": 0.0,
+   "gradient": 0.056,
+   "filter": 1.0
+  },
+  "noi_tao": [
+   [
+    "canvas @ js/sprite_custom.js:273",
+    4.292
+   ],
+   [
+    "getImageData @ js/sprite_custom.js:275",
+    4.292
+   ],
+   [
+    "putImageData @ js/sprite_custom.js:285",
+    4.292
+   ],
+   [
+    "putImageData @ js/bao_truoc.js:559",
+    1.0
+   ],
+   [
+    "filter @ js/bao_truoc.js:334",
+    1.0
+   ],
+   [
+    "canvas @ js/sprite_custom.js:217",
+    0.847
+   ],
+   [
+    "canvas @ js/btn_art.js:125",
+    0.583
+   ],
+   [
+    "putImageData @ js/btn_art.js:129",
+    0.583
+   ],
+   [
+    "canvas @ js/fx_dan.js:14",
+    0.333
+   ],
+   [
+    "canvas @ js/ui_theme.js:30",
+    0.153
+   ],
+   [
+    "getImageData @ js/fx.js:1490",
+    0.083
+   ],
+   [
+    "canvas @ js/fx.js:1480",
+    0.014
+   ],
+   [
+    "canvas @ js/zed_moi.js:190",
+    0.014
+   ],
+   [
+    "canvas @ js/fx_anh.js:81",
+    0.014
+   ],
+   [
+    "getImageData @ js/fx_anh.js:85",
+    0.014
+   ],
+   [
+    "putImageData @ js/fx_anh.js:94",
+    0.014
+   ],
+   [
+    "canvas @ js/zed_moi.js:484",
+    0.014
+   ],
+   [
+    "canvas @ js/fx.js:2350",
+    0.014
+   ]
+  ]
+ },
+ "hoso_lang": {
+  "fps": 34.9,
+  "khoang_cach_ms": {
+   "n": 549,
+   "tb": 28.66,
+   "p50": 33.2,
+   "p95": 50,
+   "p99": 83.3,
+   "max": 416.6
+  },
+  "js_moi_khung_ms": {
+   "n": 549,
+   "tb": 6.44,
+   "p50": 4.4,
+   "p95": 18.8,
+   "p99": 27.4,
+   "max": 41.9
+  },
+  "khung_cham_33ms": 94,
+  "khung_cham_50ms": 24,
+  "dinh_heap_MB": 22.6,
+  "rac_MB_moi_giay": 2.06,
+  "quai": null,
+  "loi": [],
+  "top_ham": {
+   "tong_ms_moi_khung": 27.35,
+   "ham": [
+    [
+     "(program)",
+     21.056,
+     77.0
+    ],
+    [
+     "restore",
+     1.129,
+     4.1
+    ],
+    [
+     "fillRect",
+     0.558,
+     2.0
+    ],
+    [
+     "drawImage",
+     0.429,
+     1.6
+    ],
+    [
+     "(idle)",
+     0.423,
+     1.5
+    ],
+    [
+     "fillText",
+     0.316,
+     1.2
+    ],
+    [
+     "VS.drawWorld @ js/village_scene.js:1016",
+     0.253,
+     0.9
+    ],
+    [
+     "(garbage collector)",
+     0.18,
+     0.7
+    ],
+    [
+     "_draw @ js/village.js:630",
+     0.163,
+     0.6
+    ],
+    [
+     "?",
+     0.155,
+     0.6
+    ],
+    [
+     "ui.font @ js/engine.js:531",
+     0.103,
+     0.4
+    ],
+    [
+     "frame @ js/engine.js:678",
+     0.09,
+     0.3
+    ],
+    [
+     "anhNha @ js/village_scene.js:411",
+     0.089,
+     0.3
+    ],
+    [
+     "save",
+     0.079,
+     0.3
+    ],
+    [
+     "setTransform",
+     0.072,
+     0.3
+    ],
+    [
+     "VS.update @ js/village_scene.js:765",
+     0.066,
+     0.2
+    ],
+    [
+     "measureText",
+     0.064,
+     0.2
+    ],
+    [
+     "clip",
+     0.063,
+     0.2
+    ],
+    [
+     "clearRect",
+     0.062,
+     0.2
+    ],
+    [
+     "VS.drawStrip @ js/village_scene.js:1105",
+     0.06,
+     0.2
+    ],
+    [
+     "requestAnimationFrame",
+     0.058,
+     0.2
+    ],
+    [
+     "ui.text @ js/engine.js:534",
+     0.048,
+     0.2
+    ],
+    [
+     "ui.begin @ js/engine.js:516",
+     0.042,
+     0.2
+    ],
+    [
+     "p @ js/village_scene.js:16",
+     0.041,
+     0.1
+    ],
+    [
+     "draw @ js/weapon_art.js:956",
+     0.04,
+     0.1
+    ]
+   ],
+   "ham_gom_lenh_ve": [
+    [
+     "(program)",
+     21.056,
+     77.0
+    ],
+    [
+     "veLop @ js/zed_moi.js:468",
+     1.107,
+     4.0
+    ],
+    [
+     "ell @ js/village_scene.js:17",
+     0.458,
+     1.7
+    ],
+    [
+     "(idle)",
+     0.423,
+     1.5
+    ],
+    [
+     "ui.text @ js/engine.js:534",
+     0.364,
+     1.3
+    ],
+    [
+     "VS.drawWorld @ js/village_scene.js:1016",
+     0.305,
+     1.1
+    ],
+    [
+     "(vô danh) @ js/village_scene.js:1111",
+     0.19,
+     0.7
+    ],
+    [
+     "(garbage collector)",
+     0.18,
+     0.7
+    ],
+    [
+     "_draw @ js/village.js:630",
+     0.163,
+     0.6
+    ],
+    [
+     "?",
+     0.155,
+     0.6
+    ],
+    [
+     "ui.begin @ js/engine.js:516",
+     0.152,
+     0.6
+    ],
+    [
+     "veAnh @ js/village_scene.js:442",
+     0.115,
+     0.4
+    ],
+    [
+     "ui.font @ js/engine.js:531",
+     0.103,
+     0.4
+    ],
+    [
+     "frame @ js/engine.js:678",
+     0.098,
+     0.4
+    ],
+    [
+     "anhNha @ js/village_scene.js:411",
+     0.089,
+     0.3
+    ],
+    [
+     "SC.veVatPham @ js/sprite_custom.js:1126",
+     0.086,
+     0.3
+    ],
+    [
+     "T.resRow @ js/ui_theme.js:815",
+     0.084,
+     0.3
+    ],
+    [
+     "VS.drawStrip @ js/village_scene.js:1105",
+     0.08,
+     0.3
+    ],
+    [
+     "giu @ js/zed_moi.js:578",
+     0.075,
+     0.3
+    ],
+    [
+     "VS.tuVeMat @ js/sprite_custom.js:889",
+     0.075,
+     0.3
+    ],
+    [
+     "p @ js/village_scene.js:16",
+     0.073,
+     0.3
+    ],
+    [
+     "VS.update @ js/village_scene.js:765",
+     0.066,
+     0.2
+    ],
+    [
+     "draw @ js/weapon_art.js:956",
+     0.066,
+     0.2
+    ],
+    [
+     "veNen @ js/village_scene.js:437",
+     0.049,
+     0.2
+    ],
+    [
+     "SC.veKhung @ js/sprite_custom.js:319",
+     0.048,
+     0.2
+    ]
+   ]
+  }
+ },
+ "vong_xen_ke": 3
+}

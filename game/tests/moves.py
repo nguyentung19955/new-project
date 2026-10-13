@@ -1,5 +1,5 @@
 """Kiểm tra lối đánh riêng của từng vũ khí (js/moves.js) và luật riêng của ba hệ, ngay trong trang thật.
-Từ đợt ghép 1, luật hệ chia theo cấp: Mầm chưa có luật, Thành hình mở đặc trưng 1, Thức tỉnh mở đặc trưng 2 (xem thêm tests/ghep.py).
+Từ đợt ghép 1, luật hệ chia theo cấp: Mầm chưa có luật, Thành hình mở đặc trưng 1, Thức tỉnh mở đặc trưng 2.
 Chạy: python3 tests/moves.py [-v]   (thoát mã 1 nếu có mục sai)"""
 import os, sys
 from playwright.sync_api import sync_playwright

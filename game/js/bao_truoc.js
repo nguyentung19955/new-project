@@ -532,7 +532,7 @@
       }
     }
   }
-  let pcv = null, pcx = null, pid = null;
+  let pcv = null, pcx = null, pid = null, pbuf = null;
   const DWH = [0, 0];
   // Vẽ mọi vùng báo của khung này kiểu điểm ảnh lên tấm phụ c (đang ở phép biến đổi thế giới × sc). Trả về false nếu lỗi.
   function pxDraw(c, q, cam, sx, sy, bx, by, bw, bh) {
@@ -541,7 +541,16 @@
     const X0 = Math.floor(bx - ox), Y0 = Math.floor(by - oy), W0 = bw + 2, H0 = bh + 2;
     if (!pcv) { pcv = document.createElement('canvas'); pcx = pcv.getContext('2d'); }
     if (pcv.width < W0 || pcv.height < H0) { pcv.width = Math.max(W0, pcv.width); pcv.height = Math.max(H0, pcv.height); pid = null; }
-    if (!pid || pid.width !== W0 || pid.height !== H0) pid = pcx.createImageData(W0, H0); else pid.data.fill(0);
+    // Phiên hiệu năng 13/10: khung bao đổi cỡ gần như mỗi khung → trước đây cấp một ImageData mới (W0×H0×4 byte rác) mỗi khung.
+    // Nay dùng lại một vùng nhớ lớn dần (ImageData chỉ là khung nhìn W0×H0 lên vùng đó, xoá về 0 như tấm mới): cùng điểm ảnh.
+    if (!pid || pid.width !== W0 || pid.height !== H0) {
+      const n = W0 * H0 * 4;
+      try {
+        if (!pbuf || pbuf.byteLength < n) pbuf = new ArrayBuffer(Math.max(n, pbuf ? Math.ceil(pbuf.byteLength * 1.5 / 4) * 4 : 0));
+        const v = new Uint8ClampedArray(pbuf, 0, n); v.fill(0);
+        pid = new ImageData(v, W0, H0);
+      } catch (e) { pbuf = null; pid = pcx.createImageData(W0, H0); }
+    } else pid.data.fill(0);
     const d = pid.data;
     DWH[0] = W0; DWH[1] = H0;
     for (const it of q) pxItem(d, DWH, X0, Y0, it, 0, 0);

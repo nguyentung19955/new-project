@@ -359,8 +359,19 @@
     const cv = TMP[0], c = TMP[1];
     c.clearRect(0, 0, W, H); draw(c);
     const d = c.getImageData(0, 0, W, H).data;
-    let x0 = W, y0 = H, x1 = -1, y1 = -1;
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (d[(y * W + x) * 4 + 3]) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    // Phiên hiệu năng 13/10: tìm khung bao nhanh hơn (cùng kết quả): hàng trên / dưới cùng có điểm ảnh, rồi trong khoảng đó chỉ dò
+    // từ mép trái / phải vào tới mép đã biết, thay vì xét cả 720×270 điểm cho mỗi vật (màn chào dựng ~40 vật trước khung hình đầu).
+    const coHang = (y) => { for (let q = y * W * 4 + 3, e = q + W * 4; q < e; q += 4) if (d[q]) return true; return false; };
+    let y0 = 0, y1 = H - 1;
+    while (y0 < H && !coHang(y0)) y0++;
+    if (y0 >= H) return null;
+    while (y1 > y0 && !coHang(y1)) y1--;
+    let x0 = W, x1 = -1;
+    for (let y = y0; y <= y1; y++) {
+      const r = y * W * 4 + 3;
+      for (let x = 0; x < x0; x++) if (d[r + x * 4]) { x0 = x; break; }
+      for (let x = W - 1; x > x1; x--) if (d[r + x * 4]) { x1 = x; break; }
+    }
     if (x1 < 0) return null;
     const [o, oc] = mk(x1 - x0 + 1, y1 - y0 + 1);
     oc.drawImage(cv, -x0, -y0);

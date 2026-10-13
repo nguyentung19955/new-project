@@ -15,7 +15,9 @@
   try {
     if (document.fonts && document.fonts.load) {
       const lk = document.querySelector('link[href*="fonts.googleapis.com"]');
-      const cho = lk && lk.media === 'print' ? new Promise((r) => { lk.addEventListener('load', r); lk.addEventListener('error', r); }) : Promise.resolve();
+      // Phiên hiệu năng 13/10: tệp CSS phông đã LỖI trước khi tệp này chạy (mạng chặn Google, chơi ngoại tuyến): sự kiện 'error' đã qua,
+      // chờ nữa chỉ phí trọn 1,2 giây trước màn chào → vào ngay (index.html ghi dấu data-loi ở onerror). Phông dự phòng như khi hết giờ chờ.
+      const cho = lk && lk.media === 'print' && !(lk.dataset && lk.dataset.loi) ? new Promise((r) => { lk.addEventListener('load', r); lk.addEventListener('error', r); }) : Promise.resolve();
       Promise.race([
         cho.then(() => document.fonts.load('700 12px "Be Vietnam Pro"')),
         new Promise((r) => setTimeout(r, 1200)),

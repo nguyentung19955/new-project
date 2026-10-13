@@ -1,5 +1,5 @@
 <title>Linh Khí</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700&display=swap" media="print" onload="this.media='all'" onerror="this.dataset.loi='1'">
 <style>
   /* Bố cục: một khung game 16:9 nằm giữa màn hình, co giãn theo cạnh ngắn hơn. Game chỉ có một giao diện tối. */
   :root {
@@ -53,7 +53,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.13-1719";
+(window.G = window.G || {}).VERSION = "lk-2026.10.13-1727";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -8467,7 +8467,12 @@
   const ofKey = (of) => [of.hat, of.robe, of.back, of.hand, of.mask, of.wing ? of.wing.kind + of.wing.level : '', of.rar ? [of.rar.hat, of.rar.robe, of.rar.back, of.rar.hand].join('') : ''].join(',');
   // Trả về mọi thứ cần để vẽ một khung: hình bé, chỗ đặt, và thông tin vũ khí.
   // N: độ nét ghép (netCua); không ghi thì dùng N của lần vẽ gần nhất (tip, info gọi không có canvas).
-  function frame(o, N) {
+  // Phiên hiệu năng 13/10: nhe = true (chỉ G.tinhLinh.tip gọi): chỉ cần tư thế và vũ khí (anim, f, v, weapon), không cần hình bé.
+  // Khung đã dựng đủ thì dùng luôn; chưa có thì chỉ tính tư thế (cùng pick / pose / finishPose, cùng số) mà KHÔNG dựng hình bé bằng code
+  // (Zed vẽ bằng ảnh AI: trước đây vệt chém dựng hình bé code ~25 KB rác + 1 canvas cho mỗi thời điểm lấy mẫu, rồi bỏ).
+  const vkCuaPs = (ps, wt) => (ps.w ? { type: wt, x: Math.round(ps.w.x), y: Math.round(ps.w.y), ang: Math.round(ps.w.ang), pull: ps.w.pull || 0, front: !!ps.w.front, mood: ps.w.mood || 'idle', sx: ps.w.sx == null ? null : ps.w.sx } : null);
+  const KNHE = taoNho('khung-em-be-nhe', { max: 1400 });
+  function frame(o, N, nhe) {
     N = N > 1 ? N : N === 1 ? 1 : lastN;
     const key = HERO[o.key] ? o.key : 'smith';
     const wt = o.weapon && REST[o.weapon.type] ? o.weapon.type : 'none';
@@ -8477,6 +8482,14 @@
     const id = key + '|' + ofKey(of) + '|' + wt + '|' + sel.join('|') + '|' + tintK + '|' + N + khoaGhep(key);
     let fr = KCACHE.get(id);
     if (fr) return fr;
+    if (nhe) {
+      fr = KNHE.get(id);
+      if (fr) return fr;
+      const ps = finishPose(pose(key, wt, sel[0], sel[1], sel[2], sel[3]));
+      fr = { anim: sel[0], f: sel[1], v: sel[2], tint: tintK, id, key, of, ps, nhe: true, weapon: vkCuaPs(ps, wt) };
+      KNHE.set(id, fr);
+      return fr;
+    }
     const ps = finishPose(pose(key, wt, sel[0], sel[1], sel[2], sel[3]));
     const sp = kidSprite(key, of, ps, tintK, null, null, N);
     fr = {
@@ -8484,7 +8497,7 @@
       anim: sel[0], f: sel[1], v: sel[2], hands: ps.hands || null, tint: tintK, id, key, of, ps,
       // Thông tin cho vũ khí: điểm cầm (x,y) tính từ chân bé lúc quay phải, góc (độ, 0 là chĩa về trước, âm là chĩa lên),
       // độ kéo dây, trước hay sau bé, tâm trạng.
-      weapon: ps.w ? { type: wt, x: Math.round(ps.w.x), y: Math.round(ps.w.y), ang: Math.round(ps.w.ang), pull: ps.w.pull || 0, front: !!ps.w.front, mood: ps.w.mood || 'idle', sx: ps.w.sx == null ? null : ps.w.sx } : null,
+      weapon: vkCuaPs(ps, wt),
     };
     KCACHE.set(id, fr);
     return fr;
@@ -8972,7 +8985,7 @@
   // (dx, dy): hướng thân vũ khí (đã lật theo mặt, đã ép bẹt khi quét vòng); L: dài từ điểm cầm tới mũi.
   const TIP = { anim: '', u: 0, wt: '', gx: 0, gy: 0, dx: 0, dy: 0, L: 0, combo: 0, front: true };
   function tip(o) {
-    const fr = frame(o), w = vkGhep(o, fr).wp; // vệt chém đi theo đúng hình vũ khí đang vẽ (kể cả khi tệp ghép dời vũ khí vào tay thân AI)
+    const fr = frame(o, undefined, true), w = vkGhep(o, fr).wp; // vệt chém đi theo đúng hình vũ khí đang vẽ (kể cả khi tệp ghép dời vũ khí vào tay thân AI)
     if (!w || w.type === 'bow' || !REST[w.type]) return null;
     let L = 0;
     try { if (G.weaponArt && G.weaponArt.tipLen && !o.plainWeapon) L = G.weaponArt.tipLen(G.weaponArt.fromWeapon(o.weapon || {})); } catch (e) { L = 0; }
@@ -18572,8 +18585,13 @@ MA._xong = function () { MA.list.length = 0; const TT = ['bien', 'rung', 'laudai
   for (const id of Object.keys(DEFS)) { const d = DEFS[id];
     for (const k of Object.keys(DMAC)) if (!d.anims[k]) d.anims[k] = { d: DMAC[k][0], lap: DMAC[k][1], f: CH[k] };
     for (const k of Object.keys(d.anims)) { const a = d.anims[k]; if (typeof a === 'function') d.anims[k] = { d: DMAC[k] ? DMAC[k][0] : 1, f: a }; const b = d.anims[k]; if (b.lap == null) b.lap = !!(DMAC[k] && DMAC[k][1]); if (!b.nhan) b.nhan = NHAN[k] || k; }
-    let w = 0, h = 0; try { const B = goc(d, 1); w = B.bw; h = B.bh; } catch (e) { MA.loi.push(id + ': ' + (e && e.stack || e)); }
-    MA.list.push({ id, ten: d.ten, vung: d.vung, loai: d.loai, w, h, pha: d.pha || 1, bay: !!d.bay, anims: Object.keys(d.anims).map(k => ({ id: k, ten: d.anims[k].nhan, d: d.anims[k].d, lap: !!d.anims[k].lap, moc: d.anims[k].moc || null })) }); }
+    // Phiên hiệu năng 13/10: cỡ hình (w, h) tính LƯỜI, lần đầu có ai đọc (trước đây dựng hình gốc của cả 36 con ngay lúc nạp trang, ~0,15 giây
+    // trên máy chậm trước màn chào, dù quái có ảnh AI). Cùng hàm goc(d, 1), cùng số; lỗi vẫn ghi vào MA.loi (lúc tính).
+    let wh = null; const kich = () => { if (!wh) { wh = [0, 0]; try { const B = goc(d, 1); wh = [B.bw, B.bh]; } catch (e) { MA.loi.push(id + ': ' + (e && e.stack || e)); } } return wh; };
+    const it = { id, ten: d.ten, vung: d.vung, loai: d.loai, w: 0, h: 0, pha: d.pha || 1, bay: !!d.bay, anims: Object.keys(d.anims).map(k => ({ id: k, ten: d.anims[k].nhan, d: d.anims[k].d, lap: !!d.anims[k].lap, moc: d.anims[k].moc || null })) };
+    Object.defineProperty(it, 'w', { enumerable: true, configurable: true, get: () => kich()[0], set: (v) => { kich()[0] = v; } });
+    Object.defineProperty(it, 'h', { enumerable: true, configurable: true, get: () => kich()[1], set: (v) => { kich()[1] = v; } });
+    MA.list.push(it); }
   MA.list.sort((a, b) => (TT.indexOf(a.vung) - TT.indexOf(b.vung)) || (LL.indexOf(a.loai) - LL.indexOf(b.loai)) || (DEFS[a.id].tt || 0) - (DEFS[b.id].tt || 0)); };
 
 // ---------- VẼ ----------
@@ -22488,7 +22506,7 @@ MA._xong();
       }
     }
   }
-  let pcv = null, pcx = null, pid = null;
+  let pcv = null, pcx = null, pid = null, pbuf = null;
   const DWH = [0, 0];
   // Vẽ mọi vùng báo của khung này kiểu điểm ảnh lên tấm phụ c (đang ở phép biến đổi thế giới × sc). Trả về false nếu lỗi.
   function pxDraw(c, q, cam, sx, sy, bx, by, bw, bh) {
@@ -22497,7 +22515,16 @@ MA._xong();
     const X0 = Math.floor(bx - ox), Y0 = Math.floor(by - oy), W0 = bw + 2, H0 = bh + 2;
     if (!pcv) { pcv = document.createElement('canvas'); pcx = pcv.getContext('2d'); }
     if (pcv.width < W0 || pcv.height < H0) { pcv.width = Math.max(W0, pcv.width); pcv.height = Math.max(H0, pcv.height); pid = null; }
-    if (!pid || pid.width !== W0 || pid.height !== H0) pid = pcx.createImageData(W0, H0); else pid.data.fill(0);
+    // Phiên hiệu năng 13/10: khung bao đổi cỡ gần như mỗi khung → trước đây cấp một ImageData mới (W0×H0×4 byte rác) mỗi khung.
+    // Nay dùng lại một vùng nhớ lớn dần (ImageData chỉ là khung nhìn W0×H0 lên vùng đó, xoá về 0 như tấm mới): cùng điểm ảnh.
+    if (!pid || pid.width !== W0 || pid.height !== H0) {
+      const n = W0 * H0 * 4;
+      try {
+        if (!pbuf || pbuf.byteLength < n) pbuf = new ArrayBuffer(Math.max(n, pbuf ? Math.ceil(pbuf.byteLength * 1.5 / 4) * 4 : 0));
+        const v = new Uint8ClampedArray(pbuf, 0, n); v.fill(0);
+        pid = new ImageData(v, W0, H0);
+      } catch (e) { pbuf = null; pid = pcx.createImageData(W0, H0); }
+    } else pid.data.fill(0);
     const d = pid.data;
     DWH[0] = W0; DWH[1] = H0;
     for (const it of q) pxItem(d, DWH, X0, Y0, it, 0, 0);
@@ -29811,8 +29838,19 @@ MA._xong();
     const cv = TMP[0], c = TMP[1];
     c.clearRect(0, 0, W, H); draw(c);
     const d = c.getImageData(0, 0, W, H).data;
-    let x0 = W, y0 = H, x1 = -1, y1 = -1;
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (d[(y * W + x) * 4 + 3]) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    // Phiên hiệu năng 13/10: tìm khung bao nhanh hơn (cùng kết quả): hàng trên / dưới cùng có điểm ảnh, rồi trong khoảng đó chỉ dò
+    // từ mép trái / phải vào tới mép đã biết, thay vì xét cả 720×270 điểm cho mỗi vật (màn chào dựng ~40 vật trước khung hình đầu).
+    const coHang = (y) => { for (let q = y * W * 4 + 3, e = q + W * 4; q < e; q += 4) if (d[q]) return true; return false; };
+    let y0 = 0, y1 = H - 1;
+    while (y0 < H && !coHang(y0)) y0++;
+    if (y0 >= H) return null;
+    while (y1 > y0 && !coHang(y1)) y1--;
+    let x0 = W, x1 = -1;
+    for (let y = y0; y <= y1; y++) {
+      const r = y * W * 4 + 3;
+      for (let x = 0; x < x0; x++) if (d[r + x * 4]) { x0 = x; break; }
+      for (let x = W - 1; x > x1; x--) if (d[r + x * 4]) { x1 = x; break; }
+    }
     if (x1 < 0) return null;
     const [o, oc] = mk(x1 - x0 + 1, y1 - y0 + 1);
     oc.drawImage(cv, -x0, -y0);
@@ -37087,7 +37125,9 @@ window.FIREBASE_CONFIG = {
   try {
     if (document.fonts && document.fonts.load) {
       const lk = document.querySelector('link[href*="fonts.googleapis.com"]');
-      const cho = lk && lk.media === 'print' ? new Promise((r) => { lk.addEventListener('load', r); lk.addEventListener('error', r); }) : Promise.resolve();
+      // Phiên hiệu năng 13/10: tệp CSS phông đã LỖI trước khi tệp này chạy (mạng chặn Google, chơi ngoại tuyến): sự kiện 'error' đã qua,
+      // chờ nữa chỉ phí trọn 1,2 giây trước màn chào → vào ngay (index.html ghi dấu data-loi ở onerror). Phông dự phòng như khi hết giờ chờ.
+      const cho = lk && lk.media === 'print' && !(lk.dataset && lk.dataset.loi) ? new Promise((r) => { lk.addEventListener('load', r); lk.addEventListener('error', r); }) : Promise.resolve();
       Promise.race([
         cho.then(() => document.fonts.load('700 12px "Be Vietnam Pro"')),
         new Promise((r) => setTimeout(r, 1200)),

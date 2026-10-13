@@ -1,0 +1,64 @@
+{
+ "tai": {
+  "hai_tep_4g": {
+   "html_xong": 885,
+   "dcl": 2632,
+   "load": 2642,
+   "khung_dau": 2438,
+   "man_chao": 2470,
+   "anh_lang_xong": 7766,
+   "moi_anh_xong": 14310,
+   "byte_tong": 8493924,
+   "byte_trang": 868348,
+   "so_anh_tai_sau": 405,
+   "byte_anh": 7625537,
+   "loi": [],
+   "lan": 3
+  },
+  "hai_tep_khong_gioi_han": {
+   "html_xong": 94,
+   "dcl": 1909,
+   "load": 1913,
+   "khung_dau": 1880,
+   "man_chao": 1913,
+   "anh_lang_xong": 6139,
+   "moi_anh_xong": 9506,
+   "byte_tong": 8493924,
+   "byte_trang": 868348,
+   "so_anh_tai_sau": 405,
+   "byte_anh": 7625537,
+   "loi": [],
+   "lan": 3
+  },
+  "mot_tep_4g": {
+   "html_xong": 16584,
+   "dcl": 23544,
+   "load": 23579,
+   "khung_dau": 23482,
+   "man_chao": 23517,
+   "anh_lang_xong": 23518,
+   "moi_anh_xong": 23518,
+   "byte_tong": 17757100,
+   "byte_trang": 17757061,
+   "so_anh_tai_sau": 0,
+   "byte_anh": 0,
+   "loi": [],
+   "lan": 3
+  },
+  "mot_tep_khong_gioi_han": {
+   "html_xong": 2863,
+   "dcl": 9438,
+   "load": 9475,
+   "khung_dau": 9385,
+   "man_chao": 9422,
+   "anh_lang_xong": 9422,
+   "moi_anh_xong": 9422,
+   "byte_tong": 17757100,
+   "byte_trang": 17757061,
+   "so_anh_tai_sau": 0,
+   "byte_anh": 0,
+   "loi": [],
+   "lan": 3
+  }
+ }
+}

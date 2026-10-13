@@ -1415,8 +1415,13 @@ MA._xong = function () { MA.list.length = 0; const TT = ['bien', 'rung', 'laudai
   for (const id of Object.keys(DEFS)) { const d = DEFS[id];
     for (const k of Object.keys(DMAC)) if (!d.anims[k]) d.anims[k] = { d: DMAC[k][0], lap: DMAC[k][1], f: CH[k] };
     for (const k of Object.keys(d.anims)) { const a = d.anims[k]; if (typeof a === 'function') d.anims[k] = { d: DMAC[k] ? DMAC[k][0] : 1, f: a }; const b = d.anims[k]; if (b.lap == null) b.lap = !!(DMAC[k] && DMAC[k][1]); if (!b.nhan) b.nhan = NHAN[k] || k; }
-    let w = 0, h = 0; try { const B = goc(d, 1); w = B.bw; h = B.bh; } catch (e) { MA.loi.push(id + ': ' + (e && e.stack || e)); }
-    MA.list.push({ id, ten: d.ten, vung: d.vung, loai: d.loai, w, h, pha: d.pha || 1, bay: !!d.bay, anims: Object.keys(d.anims).map(k => ({ id: k, ten: d.anims[k].nhan, d: d.anims[k].d, lap: !!d.anims[k].lap, moc: d.anims[k].moc || null })) }); }
+    // Phiên hiệu năng 13/10: cỡ hình (w, h) tính LƯỜI, lần đầu có ai đọc (trước đây dựng hình gốc của cả 36 con ngay lúc nạp trang, ~0,15 giây
+    // trên máy chậm trước màn chào, dù quái có ảnh AI). Cùng hàm goc(d, 1), cùng số; lỗi vẫn ghi vào MA.loi (lúc tính).
+    let wh = null; const kich = () => { if (!wh) { wh = [0, 0]; try { const B = goc(d, 1); wh = [B.bw, B.bh]; } catch (e) { MA.loi.push(id + ': ' + (e && e.stack || e)); } } return wh; };
+    const it = { id, ten: d.ten, vung: d.vung, loai: d.loai, w: 0, h: 0, pha: d.pha || 1, bay: !!d.bay, anims: Object.keys(d.anims).map(k => ({ id: k, ten: d.anims[k].nhan, d: d.anims[k].d, lap: !!d.anims[k].lap, moc: d.anims[k].moc || null })) };
+    Object.defineProperty(it, 'w', { enumerable: true, configurable: true, get: () => kich()[0], set: (v) => { kich()[0] = v; } });
+    Object.defineProperty(it, 'h', { enumerable: true, configurable: true, get: () => kich()[1], set: (v) => { kich()[1] = v; } });
+    MA.list.push(it); }
   MA.list.sort((a, b) => (TT.indexOf(a.vung) - TT.indexOf(b.vung)) || (LL.indexOf(a.loai) - LL.indexOf(b.loai)) || (DEFS[a.id].tt || 0) - (DEFS[b.id].tt || 0)); };
 
 // ---------- VẼ ----------

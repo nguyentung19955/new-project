@@ -238,19 +238,14 @@ python3 tests/ui_input.py phone    # chỉ một cỡ: phone, p169, desk hoặc 
 python3 tests/may.py              # lưu mây, bảng vàng, góp ý với Firebase giả trong trang (không cần mạng)
 python3 tests/ui_robust.py         # xoay màn hình, ẩn trang, khung hình chậm, bản lưu hỏng
 python3 tests/ui_build.py          # đóng gói rồi chơi thử cả hai tệp trong dist/
-python3 tests/ui_shots.py anh phone   # chụp mọi màn hình vào thư mục anh/ để xem bằng mắt
 python3 tests/smoke.py anh         # nạp game và đánh thử vài giây
 python3 tests/campaign.py          # bot tự chơi hết 15 ải để xem độ khó (thua thì cày ải trước một lượt rồi thử lại)
 python3 tests/cay.py               # cân bằng phải cày: kiểm luật sức mạnh, không còn quyết tâm, trần mới, gợi ý bảng thua; bot chơi từ đầu 12 lượt, đếm số lần chơi từng ải và tổng thời gian ("lieu": bot không nhìn lời khuyên; "--ban": bot bán đồ thừa)
-python3 tests/cay_shots.py         # chụp ảnh sức mạnh khuyên dùng trên thẻ ải, bảng hero, dải trên vào docs/can-bang-cay/
 python3 tests/cay_nang_cap_shots.py # chụp bảng thua có gợi ý nên cày gì, và cảnh bấm gợi ý mở đúng người làng, vào docs/cay-nang-cap/
 python3 tests/mapgen.py            # bộ sinh bản đồ ải: 1000 hạt giống cho mỗi kiểu A, B, C
 python3 tests/doors.py             # luật cửa, điều kiện mở cửa Trùm, bot đi hết ải ở cả ba kiểu
 python3 tests/env_rooms.py         # vẽ thử mọi loại phòng ở ba vùng, cửa khóa và cửa mở
 python3 tests/rules.py             # luật ba hệ, dấu ấn, trùm thích nghi
-python3 tests/ban_do.py            # bán đồ lấy vàng: bán trang phục, khoá đồ, chọn nhiều, bán hết theo bậc, bảng hỏi lại, bán từ Hành trang (ngang và dọc)
-python3 tests/trang_phuc.py        # trang phục: bản lưu cũ và hỏng, mặc, tháo, mua, may, nâng bậc, cánh, rơi đồ, tác dụng trong trận, dấu chấm than
-python3 tests/trangphuc_shots.py   # chụp ảnh và GIF trang phục vào docs/trang-phuc/ (cần thêm Pillow)
 python3 tests/fuzz.py              # bấm loạn tìm lỗi sập
 python3 tests/room_shots.py        # chụp ảnh phòng và bản đồ vào docs/phong-vuong/
 python3 tests/moves.py             # lối đánh của bốn vũ khí và luật riêng của ba hệ
@@ -261,7 +256,6 @@ python3 tests/cong_shots.py        # chụp ảnh cổng dịch chuyển vào do
 python3 tests/dps.py 90 16 nho     # bảng tầm với, thời gian, sát thương mỗi đòn; đo sát thương mỗi giây của bốn vũ khí và ba hệ khi bot chơi ("trum": phòng trùm, "mot": một quái thay cho cụm, "khonghe": bỏ ba hệ, "trangphuc": mặc đủ bộ trang phục Vàng)
 python3 tests/perf.py              # đo thời gian một khung hình trong cảnh đông quái và 16 món đồ rơi
 python3 tests/chieu_shots.py       # chụp ảnh các lối đánh và hiệu ứng theo hệ vào docs/chieu-thuc/
-python3 tests/ghep.py              # bản lưu cũ, bốn bậc, trùm rơi Vàng, đặc trưng hệ theo cấp, né theo hướng cuối, hero và nút mới
 python3 tests/ghep2.py             # đợt ghép 2: nút trong hai lề, bóng và chiều sâu, lối đánh trong phòng hẹp, bản đồ một màu, né tám hướng, vũ khí rơi, suối khóa, hoạt ảnh trùm
 python3 tests/quai.py              # quái mới: mỗi cơ chế (bom, cảm tử, gai, giáp, bắn xa, lặn, tinh anh, kiểu xuất hiện), đòn tám hướng, trùm đủ ba pha và chết được
 python3 tests/linhkhi.py           # hiệu ứng đạn (hình theo vùng, không đổi đường bay, cắm tường, nhiều đạn) và linh khí (vạch tăng đúng, hạt bay vào vạch, màn kết quả ghi đúng số)
@@ -270,12 +264,9 @@ python3 tests/bao_truoc.py          # vùng báo trước vẽ mịn: đủ mọ
 python3 tests/bao_truoc_shots.py chup <thư mục game> <thư mục ra>   # chụp ảnh trước/sau vùng báo trước (rồi "ghep", "gif") vào docs/bao-truoc-muot/
 python3 tests/quai_shots.py        # chụp ảnh và GIF quái mới trong game vào docs/quai-vao-game/ (cần thêm Pillow)
 python3 tests/balance.py 4         # bot chơi 15 ải với bản lưu thật vừa đủ sức mạnh khuyên dùng (tests/cay_luu.json), mỗi ải 4 lần: tỉ lệ thắng, thời gian, máu mất (thêm "- 0,4,9 vukhi": chạy với từng loại vũ khí; thêm "- - trangphuc" hoặc "trangphuc:vang": mặc bộ trang phục của vùng; "codinh": bản lưu dựng tay)
-python3 tests/ghep2_shots.py       # chụp ảnh và ảnh động của đợt ghép 2 vào docs/ghep-2/ (cần thêm Pillow)
-python3 tests/ghep_shots.py        # chụp sáu ảnh của đợt ghép 1 vào docs/ghep/ (cần thêm Pillow)
 python3 tests/do_roi.py            # đồ rơi (đủ loại có viền, bóng, cột sáng theo bậc, tên, hút về, tinh anh rơi trên sàn) và quái chi tiết (cỡ không đổi, đủ bộ phận mới, mọi cử động vẽ được)
 python3 tests/chitiet_shots.py <thư mục ra> quai|do|gif 1   # chụp quái cỡ thật cạnh em bé, đồ rơi ba vùng, GIF trong game (cần thêm Pillow)
 python3 tests/quai_truoc_sau.py <thư mục game cũ> <ảnh ra> caNoc,sua   # ảnh trước/sau từng con (cỡ thật và phóng 3 lần)
-python3 tests/lang_shots.py        # chụp từng màn hình của giao diện trống đồng và làng có người vào docs/giao-dien-va-lang/
 ```
 
 Mỗi bài in ra số mục đạt và các mục hỏng. `tests/bot.js` là bot chơi thử, chỉ dùng khi kiểm tra và không bao giờ nằm trong bản đóng gói.
