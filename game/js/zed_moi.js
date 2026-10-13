@@ -19,6 +19,10 @@
 // quá ±75° thì nghiêng thân trên quanh eo tối đa 12°; chém/quét/nện: nghiêng cả đường vung tối đa ±35°. Vào thế êm (làm mượt theo thời
 // gian + nối góc như gocMuot). Ném phi tiêu / đấm tay không (không có neo vũ khí): cánh tay đang duỗi (bảng TAY) xoay quanh gốc tay cùng góc.
 // Vệt/hiệu ứng: mũi vũ khí (doiTip) đã xoay theo; js/fx.js aimed() hỏi G.zedMoi.lechHinh. Tắt: ?huongvk=0.
+// SỬA BÓP EO / VẶN NGƯỜI KHI CHẠY + CHÉM (13/10/2026, docs/review/ke-hoach-cai-thien/zed-eo-sua/YEU-CAU.md): chân luôn cùng hướng thân trên
+// (hướng chém); chạy ngược hướng chém → chạy LÙI (hàng chạy phát ngược thứ tự khung, nhịp ×0,8). Đường ghép dời xuống giữa đùi (đai + hông +
+// đùi trên của khung đòn), vùng nối 5 hàng nguồn: nửa hẹp hơn giãn ngang dần cho khớp mép nửa kia, nửa trên đè nửa dưới. Số đo từng khung cả
+// 4 bộ: G.ZED_EO phiên bản 2 (docs/anh-goc/zed/cat-than.py). Chỉ đổi HÌNH. Tắt: ?eosua=0 (G.EO_SUA, js/data.js) → cách ghép cũ.
 (function () {
   const G = window.G;
   const SC = G.spriteCustom;
@@ -49,12 +53,33 @@
   const BO_MA = { 'zed-moi': 'moi', 'zed-rung': 'rung', 'zed-bien': 'bien', 'zed-lau': 'lau' };
   const eoBat = () => G.CHAY_DANH_MOI !== false && !!G.ZED_EO && (G.CHAY_DANH === 'than' || G.CHAY_DANH === 'eo');
   const coEo = (ten) => eoBat() && G.ZED_EO.hang.indexOf(ten) >= 0;
+  // Sửa bóp eo / vặn người (zed-eo-sua): cần dữ liệu phiên bản 2 (mỗi khung [y, x, c, l, r]). Tắt ?eosua=0.
+  const eoSua = () => G.EO_SUA !== false && !!G.ZED_EO && G.ZED_EO.phien_ban >= 2;
+  const LUI_NHIP = 0.8; // chạy lùi: nhịp chân chậm lại
+  // Chân có chạy ngược hướng mặt (hướng chém) không — cùng phép thử như eoTinh cũ.
+  const nguocMat = (o) => { const f = o.face < 0 ? -1 : 1, md = o.mdx || 0; return Math.abs(md) > 0.2 && (md > 0 ? 1 : -1) !== f; };
+  // Phép kéo vùng nối (y hệt keo_noi trong cat-than.py): { tren, l, r, L, R } — tren = nửa trên được kéo (nửa dưới nếu false); [l, r] mép
+  // nửa được kéo, [L, R] mép đích, đều theo cột nguồn của khung CHẠY (nửa trên đã dời dx). null: không kéo (khớp sẵn / không đo được / quá xa).
+  function keoNoi(eA, eR, dx) {
+    const Z = G.ZED_EO;
+    if (eA[3] < 0 || eR[3] < 0) return null;
+    const lA = eA[3] + dx, rA = eA[4] + dx, lR = eR[3], rR = eR[4], wA = rA - lA + 1, wR = rR - lR + 1;
+    if (wA === wR && lA === lR) return null;
+    const tren = wA < wR, l = tren ? lA : lR, r = tren ? rA : rR, L = tren ? lR : lA, R = tren ? rR : rA;
+    if ((R - L + 1) / (r - l + 1) > (Z.keo_toi_da || 1.8) || Math.max(Math.abs(L - l), Math.abs(R - r)) > (Z.doi_toi_da || 10)) return null;
+    return { tren, l, r, L, R };
+  }
   // Số liệu ghép một khung: eA, eR = điểm eo [y, x] (ô 96 nguồn) khung đòn / khung chạy; ox, oy = dời nửa trên (điểm ảnh game,
   // hệ toạ độ đã lật theo mặt); rel = -1 khi chân quay ngược mặt (chạy ngược hướng chém); kc = bù 1 điểm ảnh khi lật chân.
   function eoTinh(T, s, o) {
     const B = G.ZED_EO.bo[BO_MA[T._ma] || 'moi'] || G.ZED_EO.bo.moi;
     const eA = B[s.ten] && B[s.ten][s.i], eR = B.chay && B.chay[s.eo.i];
     if (!eA || !eR) return null;
+    // cách mới: chân không lật (luôn cùng hướng thân trên), ngang khớp tâm hông, dọc khớp đường cắt giữa đùi
+    if (s.eo.moi && eA.length >= 5 && eR.length >= 5) {
+      const dx = eR[1] - eA[1];
+      return { eA, eR, rel: 1, kc: 0, moi: true, ox: dx / 2, oy: (eR[2] - eA[2]) / 2, K: keoNoi(eA, eR, dx) };
+    }
     const f = o.face < 0 ? -1 : 1, md = o.mdx || 0;
     const rel = Math.abs(md) > 0.2 && (md > 0 ? 1 : -1) !== f ? -1 : 1;
     const kc = rel < 0 ? ((f > 0 ? 1 : 0) - (f < 0 ? 1 : 0)) * f : 0;
@@ -101,7 +126,14 @@
   function chon(o, D) {
     const s = chon0(o, D);
     // chạy + chém: ghép eo (chân hàng chạy, thân trên hàng đòn) — chỉ hàng có điểm eo, chỉ khi đang chạy
-    if (s && s.ghep && o.move && coEo(s.ten) && D.dong_tac.chay) return { ten: s.ten, i: s.i, u: s.u, eo: { i: khungLap(D, 'chay', s.tc) } };
+    if (s && s.ghep && o.move && coEo(s.ten) && D.dong_tac.chay) {
+      if (eoSua()) { // chân cùng hướng thân trên; chạy ngược hướng chém → chạy lùi (phát ngược thứ tự khung, nhịp ×0,8)
+        const so = D.dong_tac.chay.so, lui = nguocMat(o);
+        const i = lui ? so - 1 - khungLap(D, 'chay', s.tc * LUI_NHIP) : khungLap(D, 'chay', s.tc);
+        return { ten: s.ten, i: s.i, u: s.u, eo: { i, moi: 1, lui: lui ? 1 : 0 } };
+      }
+      return { ten: s.ten, i: s.i, u: s.u, eo: { i: khungLap(D, 'chay', s.tc) } };
+    }
     if (s && s.ghep) { const r = { ten: s.ten, i: s.i, u: s.u }; return s.theo ? Object.assign(r, { theo: s.theo }) : r; }
     return s;
   }
@@ -358,6 +390,40 @@
       q.save(); q.beginPath(); q.rect(-24 + ox, -45 + oy, 48, h / 2); q.rect(x0, y0, w, hh); q.clip('evenodd'); ve0(); q.restore();
       nghieng(q, [tay[0] / 2 - 24 + ox, tay[1] / 2 - 45 + oy], gTay, () => { q.beginPath(); q.rect(x0, y0, w, hh); q.clip(); ve0(); });
     };
+    if (s.eo && E && E.moi) {
+      // Ghép giữa đùi (zed-eo-sua): nửa trên = khung đòn hàng 0..cA, nửa dưới = khung chạy từ hàng cR (lấn 1 hàng, bị nửa trên đè).
+      const aC = D.dong_tac.chay, cA = E.eA[2], cR = E.eR[2], yA = cA + 1, yB = E.eA[0] + 1, K = E.K, S = G.ZED_EO.vung_noi || 5;
+      const dx = E.eR[1] - E.eA[1];
+      // một hàng nguồn sy (cột x0 = toạ độ cột khung chạy của cột 0), kéo theo K với mức t (0 = giữ nguyên, 1 = khớp hẳn mép đích)
+      const hang = (q, sx, sy, x0, yD, t) => {
+        if (!K || !(t > 0)) { q.drawImage(T.img, sx, sy, 96, 1, x0 / 2 - 24, yD, 48, 0.5); return; }
+        const tl = K.l + t * (K.L - K.l), tr = K.r + t * (K.R - K.r), k = (tr - tl + 1) / (K.r - K.l + 1);
+        q.drawImage(T.img, sx, sy, 96, 1, (tl + (x0 - K.l) * k) / 2 - 24, yD, 48 * k, 0.5);
+      };
+      const tKeo = (k) => (k >= 0 && k < S ? (S - k) / S : 0); // k = số hàng tính từ mép nối
+      // đang nghiêng: chỉ phần từ đai trở lên xoay, dải hông + đùi trên (dưới đai) đứng yên như chân; không nghiêng: vẽ liền tới vùng kéo
+      const yT = N ? Math.min(yB, yA) : K && K.tren ? Math.max(0, yA - S) : yA;
+      const lopEo = (q) => {
+        const xoay = (fn) => (N ? nghieng(q, N, lean, fn) : fn());
+        const vk = () => { q.save(); q.translate(E.ox, E.oy); veVk(q, V, v); q.restore(); };
+        if (v && v.n[3]) xoay(vk);
+        // nửa dưới: chân khung chạy từ hàng cR (cùng hướng thân trên, không lật); vùng nối kéo nếu nửa dưới hẹp hơn
+        const y0 = K && !K.tren ? cR + 1 + S : cR;
+        if (K && !K.tren) for (let y = cR; y < y0 && y < 96; y++) hang(q, s.eo.i * 96, aC.hang * 96 + y, 0, -45 + y / 2, y === cR ? 1 : tKeo(y - cR - 1));
+        if (y0 < 96) q.drawImage(T.img, s.eo.i * 96, aC.hang * 96 + y0, 96, 96 - y0, -24, -45 + y0 / 2, 48, (96 - y0) / 2);
+        // đang nghiêng: lót dải đai (6 hàng nguồn ngay trên đai, không xoay) để chỗ nối không hở
+        if (N) q.drawImage(T.img, s.i * 96, a.hang * 96 + yB - 6, 96, 6, -24 + E.ox, -45 + E.oy + (yB - 6) / 2, 48, 3);
+        // dải dưới (hàng yT..cA của khung đòn): không xoay; vùng nối kéo nếu nửa trên hẹp hơn
+        for (let y = yT; y < yA; y++) hang(q, s.i * 96, a.hang * 96 + y, dx, -45 + E.oy + y / 2, K && K.tren ? tKeo(cA - y) : 0);
+        // nửa trên: đai + thân + tay khung đòn (hàng 0..yT−1), dời về khung chạy; xoay quanh eo khi nghiêng
+        xoay(() => {
+          veTren(q, yT, E.ox, E.oy);
+          if (v && !v.n[3]) vk();
+          if (v && v.da.hang_tay != null) q.drawImage(T.img, v.wa.i * 96, v.da.hang_tay * 96, 96, yA, -24 + E.ox, -45 + E.oy, 48, yA / 2); // nắm tay đè lên cán
+        });
+      };
+      return veLop(c, o, lopEo);
+    }
     if (s.eo && E) {
       const aC = D.dong_tac.chay, yR = E.eR[0] + 1, yA = E.eA[0] + 1;
       const lopEo = (q) => {

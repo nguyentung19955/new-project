@@ -272,6 +272,10 @@
   // xoay cùng góc. Chỉ đổi HÌNH. Tắt: ?huongvk=0 (vũ khí chỉ vẽ ngang theo neo như trước).
   G.HUONG_VK = true;
   try { if (typeof location !== 'undefined' && /[?&]huongvk=0(&|$)/.test(location.search || '')) G.HUONG_VK = false; } catch (e) { /* giữ mặc định */ }
+  // SỬA BÓP EO / VẶN NGƯỜI KHI CHẠY + CHÉM (13/10/2026, docs/review/ke-hoach-cai-thien/zed-eo-sua): js/zed_moi.js cho chân luôn cùng hướng
+  // thân trên (chạy ngược hướng chém → chạy lùi), ghép ở giữa đùi, vùng nối giãn ngang khớp bề rộng. Chỉ đổi HÌNH. Tắt: ?eosua=0 (ghép như trước).
+  G.EO_SUA = true;
+  try { if (typeof location !== 'undefined' && /[?&]eosua=0(&|$)/.test(location.search || '')) G.EO_SUA = false; } catch (e) { /* giữ mặc định */ }
   // TRANG PHỤC ZED (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-rung): mỗi bộ = nguyên bộ hình Zed mặc sẵn bộ đó (js/zed_moi.js
   // chọn tấm theo bộ đang mặc; vũ khí, nhịp, neo như nhau). Lưu ở save.zed.bo ('ninja' | 'rung'; không có = 'ninja') và save.zed.boMo
   // (các bộ đã mở). Bộ Rừng mở khi hạ trùm vùng Rừng già (js/stage.js; bản lưu cũ đã có sao ải trùm Rừng thì tự mở, js/engine.js fixSave).
