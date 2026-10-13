@@ -43,3 +43,17 @@ Pixel art hiệu ứng đòn ném mạnh, hướng sang PHẢI, mép trái là c
 
 ## F. Túi phi tiêu đeo lưng (thay ống tên tp-backs-ong_ten)
 Pixel art món đồ: túi da nâu nhỏ đeo lưng chéo, nắp gập có khuy đồng, ló ra 3 phi tiêu 4 cánh giống ảnh gửi kèm. Nhìn nghiêng, 1 hình duy nhất, cỡ nhỏ (khoảng 14×18 ô). Nền xanh lá #00FF00, không chữ.
+
+# ---- Đợt 2 (13/10 12:40): phần hình cung/tên còn sót ----
+#   H  gd-nut-danh-bow       -> nút Đánh khi cầm phi tiêu (24x24, net 2)
+#   I  gd-nut-dac-biet-bow   -> nút Đặc biệt: Mưa phi tiêu (24x24)
+#   J  vk-bow-0..9           -> 10 dòng vũ khí phi tiêu (ô vũ khí, hành trang); thứ tự: Rồng Rắn, Thần, Sừng Trâu, Tre, Ná Thun, Cánh Cò, Trăng Khuyết, Đàn Bầu, Xương Cá, Đèn Ông Sao
+
+## H. Nút Đánh – phi tiêu
+Pixel art biểu tượng nút bấm: một phi tiêu 4 cánh màu thép giống ảnh gửi kèm, nghiêng nhẹ, có 2 vệt gió ngắn phía sau. 1 hình vuông, viền đen rõ, cỡ nhỏ (24×24 ô), cùng phong cách biểu tượng thương trong ảnh mẫu. Nền xanh lá #00FF00, không chữ.
+
+## I. Nút Đặc biệt – Mưa phi tiêu
+Pixel art biểu tượng nút bấm: ba phi tiêu 4 cánh màu thép giống ảnh gửi kèm rơi chéo xuống, có vệt gió phía sau. 1 hình vuông, viền đen rõ, cỡ nhỏ (24×24 ô), cùng phong cách biểu tượng mưa tên trong ảnh mẫu. Nền xanh lá #00FF00, không chữ.
+
+## J. 10 dòng phi tiêu
+Pixel art 10 phi tiêu khác nhau, xếp 2 hàng × 5, mỗi cái một hình đứng riêng, cỡ ngang nhau, viền đen rõ, phong cách giống ảnh gửi kèm. Hàng 1: (1) Rồng Rắn – phi tiêu xanh lục, cánh là thân rồng uốn, đầu rồng vàng; (2) Thần – vàng đồng khắc phù, tâm ngọc đỏ; (3) Sừng Trâu – 2 cánh cong như sừng trâu màu ngà nâu; (4) Tre – 4 cánh là đốt tre xanh; (5) Ná Thun – hình chữ Y gỗ có dây thun đỏ. Hàng 2: (6) Cánh Cò – cánh lông trắng đầu đen; (7) Trăng Khuyết – lưỡi trăng lưỡi liềm bạc xanh; (8) Đàn Bầu – gỗ nâu bóng, căng dây đàn vàng; (9) Xương Cá – xương cá trắng ngà; (10) Đèn Ông Sao – ngôi sao 5 cánh đỏ viền vàng như đèn ông sao. Nền xanh lá #00FF00, không chữ, các hình không chạm nhau.
