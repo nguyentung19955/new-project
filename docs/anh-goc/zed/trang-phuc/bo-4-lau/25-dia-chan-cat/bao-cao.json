@@ -1,0 +1,141 @@
+{
+ "anh": "trang-phuc/bo-4-lau/25-dia-chan.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 6,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 0,
+  "vien_khu": 8503,
+  "nga_mau_nen_trong_hinh": 120
+ },
+ "manh_bo": [],
+ "loi": [],
+ "canh_bao": [
+  "Hàng 1 khung 3 cao 379 (trung vị 467) — lệch cỡ >15%"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "25-dia-chan",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      33,
+      132,
+      337,
+      643
+     ],
+     "chan": [
+      174.5,
+      643
+     ],
+     "rong": 304,
+     "cao": 511,
+     "diem_anh": 79865,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      351,
+      244,
+      744,
+      643
+     ],
+     "chan": [
+      537.0,
+      643
+     ],
+     "rong": 393,
+     "cao": 399,
+     "diem_anh": 77650,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      749,
+      264,
+      1134,
+      643
+     ],
+     "chan": [
+      919.5,
+      643
+     ],
+     "rong": 385,
+     "cao": 379,
+     "diem_anh": 73863,
+     "nguon": "tu-dong",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1119,
+      203,
+      1469,
+      643
+     ],
+     "chan": [
+      1284.0,
+      643
+     ],
+     "rong": 350,
+     "cao": 440,
+     "diem_anh": 77106,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1487,
+      147,
+      1781,
+      643
+     ],
+     "chan": [
+      1633.5,
+      643
+     ],
+     "rong": 294,
+     "cao": 496,
+     "diem_anh": 79224,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1834,
+      148,
+      2121,
+      643
+     ],
+     "chan": [
+      1975.5,
+      643
+     ],
+     "rong": 287,
+     "cao": 495,
+     "diem_anh": 80684,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}

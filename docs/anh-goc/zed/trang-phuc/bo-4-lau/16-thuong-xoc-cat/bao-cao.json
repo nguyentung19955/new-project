@@ -1,0 +1,108 @@
+{
+ "anh": "trang-phuc/bo-4-lau/16-thuong-xoc.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 4,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 0,
+  "vien_khu": 6206,
+  "nga_mau_nen_trong_hinh": 43
+ },
+ "manh_bo": [],
+ "loi": [],
+ "canh_bao": [
+  "Hàng 1 khung 2 cao 349 (trung vị 417) — lệch cỡ >15%",
+  "Hàng 1 khung 4 cao 481 (trung vị 417) — lệch cỡ >15%"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "16-thuong-xoc",
+   "so_khung": 4,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      13,
+      219,
+      596,
+      603
+     ],
+     "chan": [
+      210.0,
+      603
+     ],
+     "rong": 583,
+     "cao": 384,
+     "diem_anh": 81275,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      593,
+      204,
+      1215,
+      553
+     ],
+     "chan": [
+      629.5,
+      553
+     ],
+     "rong": 622,
+     "cao": 349,
+     "diem_anh": 72790,
+     "nguon": "tu-dong",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      1214,
+      164,
+      1712,
+      615
+     ],
+     "chan": [
+      1418.0,
+      615
+     ],
+     "rong": 498,
+     "cao": 451,
+     "diem_anh": 86347,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1781,
+      137,
+      2134,
+      618
+     ],
+     "chan": [
+      1954.5,
+      618
+     ],
+     "rong": 353,
+     "cao": 481,
+     "diem_anh": 79772,
+     "nguon": "tu-dong",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    }
+   ]
+  }
+ ]
+}
