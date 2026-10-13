@@ -1,0 +1,4 @@
+# Prompt đổi đồ dùng chung cho mọi tấm động tác (thay N = số khung)
+# Gửi kèm: ẢNH 1 = tấm động tác ninja (docs/anh-goc/zed/moi/<ten>.png), ẢNH 2 = bo-2-rung/00-anh-mau.png
+
+Sửa ẢNH 1 (1 hàng N khung): giữ Y HỆT tư thế từng khung, vị trí, cỡ người, số khung, khoảng cách giữa các khung, nền xanh #00FF00. Chỉ thay quần áo cho giống ẢNH 2: áo xanh rêu không tay cổ chữ V viền nâu, giáp da nhỏ ở vai, đai vàng đất có túi nhỏ, quần tối, băng tay nâu, dép và băng chân nâu. Giữ nguyên mặt, tóc, mắt đỏ. Không thêm vũ khí, không chữ, không bóng.
