@@ -635,8 +635,18 @@
     }
   }
   // ---------- mỗi khung: sóng chấn động, hạt lúc lấy đà ----------
+  let choDC = null; // Địa Chấn đang chờ búa chạm đất (bua-khop-2)
+  function buocDC(dt) {
+    const c = choDC, P = c.P;
+    c.t += dt;
+    const d = P.specT > 0 ? K.dauBuaDb(P) : null, u = 1 - (P.specT || 0) / 0.35;
+    if (d && u < d.cham && c.t < 0.3) return; // búa chưa xuống
+    choDC = null;
+    K.slam(d ? d.x : P.x, d ? d.y : P.y, 26, c.el, 1.4);
+  }
   fx.heStep = function (W, dt, tick) {
     const P = W.P, mv = P.mv;
+    if (choDC) { if (choDC.P !== P) choDC = null; else try { buocDC(dt); } catch (e) { choDC = null; fail(e); } }
     try { gopVung(W); } catch (e) { fail(e); }
     if (tick) for (const o of W.projs) {
       // vệt hạt sau mũi tên mang hệ
@@ -816,7 +826,9 @@
       for (let i = 0; i < 5; i++) streak(h.x, h.y, v[0] * rr(160, 260), v[1] * rr(160, 260), rr(0.1, 0.18), PL.ramp, 1, rr(8, 12), 0, 3);
       kick(v[0] * 1.5, v[1] * 1.5); trauma(0.14);
     } else if (type === 'hammer') {
-      K.slam(P.x, P.y, 26, el, 1.4);
+      // bua-khop-2: Zed còn đang giơ búa lúc bấm → bụi + vết nứt chờ tới khung búa chạm đất, đặt dưới đầu búa (heStep). Cờ ?buakhop=0: như cũ.
+      if (K.buaKhop && K.buaKhop() && K.dauBuaDb && K.dauBuaDb(P)) choDC = { P, el, t: 0 };
+      else K.slam(P.x, P.y, 26, el, 1.4);
       addRing(P.x, P.y, 6, 30, 0.26, PL.c, 3, 0);
       addRing(P.x + v[0] * 12, P.y + v[1] * 10, 3, 16, 0.2, '#ffffff', 2, 0, 0.04);
       trauma(0.5); kick(0, 3); K.stop(60);

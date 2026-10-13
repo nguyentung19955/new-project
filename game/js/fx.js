@@ -435,6 +435,7 @@
   function anhVk(ma, P, wt, scDam) {
     const w = WIN.atk[wt], A = ANH_VK[ma], FA = G.fxAnh;
     if (!w || !A || !FA || !FA.co(ma)) return false;
+    if (wt === 'hammer' && buaKhop()) { let k = null; try { k = buaDiem(P); } catch (e) { k = null; } if (k) return anhBua(ma, P, k); } // bua-khop-2
     const cu = cungVk(P, w); if (!cu) return false;
     const co = (FA.ds[ma] && FA.ds[ma].co) || 1;
     // Sửa vệt chém 12/10: vũ khí ảnh AI co nhỏ (G.CO_VK) từng kéo vệt co theo (giáo còn 0,6 lần, búa 0,75 lần cỡ cũ) nên vệt gần như
@@ -449,18 +450,79 @@
     const sc = (cu.r + 1) / (A.r * co);
     return anhVkDat(ma, P, cu.px, cu.py, cu.am, giu ? Math.max(sc, scDam) : sc, A.c);
   }
-  // 13/10 (chủ dự án: "búa đập xuống thì slash và đất nứt không khớp"): chỗ đầu búa thật chạm đất lúc nện = mũi vũ khí xa nhất về
-  // phía trước của cung vung (cùng nguồn với ảnh vệt hu-chem-bua bám vũ khí, anhVk). Đang trong aimed() có dời hình sát đất thì trả chỗ
+  // 13/10 (chủ dự án: "búa đập xuống thì slash và đất nứt không khớp"). Lần 2 (bua-khop-2, đã chạy game chụp 8 hướng × đứng/chạy):
+  // lần 1 lấy cung vung trong cửa sổ WIN.atk.hammer [0,26..0,64] theo nhịp của thân CŨ (q.u), nhưng với Zed mới cửa sổ đó chỉ còn các
+  // khung SAU khi búa đã nằm trên đất → "giữa cung" = hướng cán búa chúc xuống ~50°, ảnh vệt hu-chem-bua bị xoay ~60° → mép nện của
+  // ảnh rơi ra sau/dưới chân bé (lệch 20–25 điểm ảnh), vết nứt lại kẹp y ≤ +6 nên nhắm chéo xuống thì nằm cao hơn đầu búa ~10 điểm ảnh.
+  // Nay đo thẳng trên hình đang vẽ: I = đầu búa ở ĐÚNG khung đang nện (tiến độ hiện tại), T = chỗ đầu búa cao nhất từ lúc bắt đầu nhát
+  // tới lúc nện (đỉnh vung). Ảnh vệt đặt bằng phép xoay + co (hai điểm): đỉnh cung của ảnh → T, mép nện (chỗ toé) của ảnh → I; vết nứt,
+  // bụi hu-nen-dat đặt ở I. Cờ tắt: ?buakhop=0 (G.BUA_KHOP = false) → như trước lần 1.
+  const buaKhop = () => !(G.BUA_KHOP === false || (typeof location !== 'undefined' && /[?&]buakhop=0(&|$)/.test(location.search || '')));
+  const BK = { ix: 0, iy: 0, tx: 0, ty: 0 };
+  const BUA_SAU = 4; // đỉnh cung vệt không lùi ra sau tâm thân quá 4 điểm ảnh
+  const BUA_LUI = 3; // đầu búa = lùi từ mép ngoài ảnh búa (mũi) vào 3 điểm ảnh theo cán: giữa mặt búa chạm đất
+  // Ảnh hu-chem-bua (khung 56×56, neo [10,30]): đỉnh cung ~(3,-25), chỗ toé lúc nện ~(16,24) so với neo (điểm ảnh ảnh, chưa nhân "co").
+  const BUA_ANH = { tx: 3, ty: -25, ix: 16, iy: 24, vao: 0.08 }; // vao: ảnh bắt đầu phát từ giây 0,08 (cung đã vẽ xong một nửa lúc búa chạm)
+  function buaDiem(P) {
+    const TL = G.tinhLinh;
+    if (!buaKhop() || !TL || !TL.tip || !G.heroArgs || !S.W || P !== S.W.P) return null;
+    const o = G.heroArgs(P), uN = o.atk;
+    if (!(uN >= 0)) return null;
+    const q = TL.tip(o);
+    if (!q || q.anim !== 'atk') return null;
+    const L = Math.max(0, q.L * Math.hypot(q.dx, q.dy) - BUA_LUI), a = Math.atan2(q.dy, q.dx);
+    BK.ix = q.gx - P.x + Math.cos(a) * L; BK.iy = q.gy - P.y + Math.sin(a) * L;
+    // bắt đầu nhát (nện đất vào từ giữa nhát): tiến độ lúc ra đòn = hiện tại − thời gian đã qua / thời lượng nhát
+    let u0 = 0;
+    if (P.lastAtk != null && P.atkDur > 0) u0 = Math.max(0, Math.min(uN, uN - ((G.time || 0) - P.lastAtk) / P.atkDur - 0.02));
+    let best = 1e9;
+    for (let i = 0; i <= 24; i++) {
+      o.atk = u0 + ((uN - u0) * i) / 24;
+      const r = TL.tip(o);
+      if (!r || r.anim !== 'atk') continue;
+      const l = r.L * Math.hypot(r.dx, r.dy), b = Math.atan2(r.dy, r.dx), hx = r.gx - P.x + Math.cos(b) * l, hy = r.gy - P.y + Math.sin(b) * l;
+      if (hy < best) { best = hy; BK.tx = hx; BK.ty = hy; }
+    }
+    const f = P.face < 0 ? -1 : 1;
+    if (!(best < BK.iy - 12)) { BK.tx = BK.ix - f * 12; BK.ty = BK.iy - 40; } // không đo được đỉnh: vung thẳng từ trên xuống
+    if (BK.tx * f < -BUA_SAU) BK.tx = -BUA_SAU * f; // đỉnh vung ra sau lưng: kéo về trên đầu (cung không trùm cả người bé)
+    return BK;
+  }
+  // Ảnh vệt nện búa: đỉnh cung → T, chỗ toé → I (đã đo bằng buaDiem). Trả true nếu đã đặt.
+  function anhBua(ma, P, k) {
+    const FA = G.fxAnh;
+    if (!FA || !FA.co(ma) || !k) return false;
+    const f = P.face < 0 ? -1 : 1, co = (FA.ds[ma] && FA.ds[ma].co) || 1, A = BUA_ANH;
+    const vx = f * (A.ix - A.tx) * co, vy = (A.iy - A.ty) * co, wx = k.ix - k.tx, wy = k.iy - k.ty;
+    const sc = Math.max(0.7, Math.min(1.35, Math.hypot(wx, wy) / Math.hypot(vx, vy))); // co theo đường vung; giữ chỗ toé ở I
+    const xg = Math.atan2(wy, wx) - Math.atan2(vy, vx), c = Math.cos(xg), s = Math.sin(xg);
+    const px = f * A.ix * co * sc, py = A.iy * co * sc; // chỗ toé của ảnh (đã lật) so với neo, trước khi xoay
+    const ax = k.ix - (px * c - py * s), ay = k.iy - (px * s + py * c);
+    const g = FA.giay(ma) || 0.4, h = add({ ty: 'anh', ma, x: P.x + ax, y: P.y + ay, t: g, f, sc, goc: 0, ly: 1, d: 0, neo: 'khoa' });
+    h.t = Math.max(0.05, g - A.vao); // phát tiếp từ giây 0,08: lúc búa chạm, cung đã gần trọn, chỗ toé nở ngay sau đó
+    h.xg = xg; h.theo = P; h.tdx = ax; h.tdy = ay;
+    return true;
+  }
+  // Chỗ đầu búa thật chạm đất lúc nện (so với chân em bé → toạ độ thế giới). Đang trong aimed() có dời hình sát đất thì trả chỗ
   // "xoay ngược" để sau khi aimed() dời, vết nứt rơi đúng dưới đầu búa. null: không đo được (giữ chỗ cũ). Cờ tắt: ?buakhop=0.
   function dauBua(P) {
-    if (G.BUA_KHOP === false || /[?&]buakhop=0/.test(location.search)) return null;
     try {
-      const cu = cungVk(P, WIN.atk.hammer);
-      if (!cu) return null;
-      let tx = cu.ex + Math.cos(cu.ea) * cu.eL, ty = Math.max(-2, Math.min(6, cu.ey + Math.sin(cu.ea) * cu.eL));
+      const k = buaDiem(P);
+      if (!k) return null;
+      let tx = k.ix, ty = k.iy;
       if (AIMG && AIMG.P === P && AIMG.ground && AIMG.th) { const c2 = Math.cos(-AIMG.th), s2 = Math.sin(-AIMG.th), x0 = tx, y0 = ty; tx = x0 * c2 - y0 * s2; ty = x0 * s2 + y0 * c2; }
       return { x: P.x + tx, y: P.y + ty };
     } catch (e) { return null; }
+  }
+  // Địa Chấn (bua-khop-2): hình db_bua của Zed giơ búa ở khung đầu, búa chạm đất trước mặt từ mốc MOC.db_bua[1]; trước đây bụi + vết nứt nện
+  // ngay dưới chân lúc bấm (búa còn trên trời). dauBuaDb: chỗ đầu búa trên đất ở dáng đặc biệt (null: chưa tới khung chạm / không đo được).
+  function dauBuaDb(P) {
+    const TL = G.tinhLinh, ZM = G.zedMoi;
+    if (!buaKhop() || !TL || !TL.tip || !G.heroArgs || !ZM || !ZM.MOC || !ZM.MOC.db_bua || P.key !== 'smith') return null;
+    const q = TL.tip(G.heroArgs(P));
+    if (!q || q.anim !== 'spec') return null;
+    const L = Math.max(0, q.L * Math.hypot(q.dx, q.dy) - BUA_LUI), a = Math.atan2(q.dy, q.dx);
+    return { x: q.gx + Math.cos(a) * L, y: q.gy + Math.sin(a) * L, cham: ZM.MOC.db_bua[1] };
   }
   // Lướt chém (sau Né): kiếm chĩa thẳng theo hướng lướt; mép trước của ảnh (bán kính A.r) đặt đúng ở mũi kiếm, cỡ ảnh giữ như cũ.
   function anhLuot(ma, P, sc) {
@@ -2363,7 +2425,7 @@
     c.globalAlpha = 1;
   }
   // Bộ đồ nghề cho js/fx_he.js: dùng chung kho hạt, bảng màu và các hàm vẽ điểm ảnh ở trên.
-  fx.kit = { d3, mauHe, coAnh, anh, anhVk, dauBua, anhHe, anhHuong, huongAnh, anhLuot, aimed, S: () => S, api, layer, fail, emit, streak, spray, puffs, add, addRing, trauma, kick, stop, num, pal, PAL, RAMP, R, rr, hash, p, ell, ring, line, star, crescent, tongue, slam, blastFire, blastPoison, blastIce, elemBits, bodyOf, hand, A_ };
+  fx.kit = { d3, mauHe, coAnh, anh, anhVk, dauBua, dauBuaDb, buaKhop, anhHe, anhHuong, huongAnh, anhLuot, aimed, S: () => S, api, layer, fail, emit, streak, spray, puffs, add, addRing, trauma, kick, stop, num, pal, PAL, RAMP, R, rr, hash, p, ell, ring, line, star, crescent, tongue, slam, blastFire, blastPoison, blastIce, elemBits, bodyOf, hand, A_ };
 })();
 
 // V13 (Giai đoạn 2, phiên gd2-b): trùm có "Chống đánh xa" vừa giảm sát thương một mũi tên thì hiện chữ "Xa quá!" trên đầu trùm
