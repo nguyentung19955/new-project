@@ -245,7 +245,7 @@
       try { const ZM = G.zedMoi, gH = ZM && ZM.lechHinh ? ZM.lechHinh(P, o) : null; if (gH != null && isFinite(gH)) { const b = (gH * Math.PI) / 180; ax = f * Math.cos(b); ay = Math.sin(b); } } catch (e) { ax = ux; ay = uy; }
       // Ảnh AI hu-ban-cung (mép trái của hình là tay cầm cung, luồng gió chĩa theo hướng ngắm thật): thay chớp sáng và vòng gió, vệt gió giữ nguyên
       // Bộ Zed mới (phi tiêu): đòn ném mạnh / ném chùm dùng ảnh hu-phi-tieu-chum (tích lực rồi bung rẻ quạt, mép trái ở tay); chưa có thì hu-ban-cung
-      const chum = G.ZED_MOI !== false ? K.anhHe('hu-phi-tieu-chum', o.el) : null;
+      const chum = K.anhHe('hu-phi-tieu-chum', o.el);
       const maB = chum || K.anhHe('hu-ban-cung', o.el);
       if (!maB || !K.anhHuong(maB, h.x, h.y, ax, ay, { sc: chum ? (14 + 8 * c) / 22 : (12 + 8 * c) / 20 })) {
         add({ ty: 'flash', x: h.x + ux * 6, y: h.y + uy * 6, r: 6 + 4 * c, t: 0.1, c: '#ffffff', c2: PL.c2, ly: 1 });

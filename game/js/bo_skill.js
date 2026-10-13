@@ -6,14 +6,14 @@
 //     giữ rồi thả: opt.manh) và js/mobs.js (quái nhắm vào bóng phân thân, chậm của Thuỷ triều). Không sửa js/zed_moi.js:
 //     bóng phân thân vẽ bằng chính G.art.hero (hình Zed đang có) với độ mờ, giống bóng mờ khi lộn của js/fx.js.
 //   - Hiệu ứng: vẽ bằng code / tái dùng FX sẵn có (chữ bay, sparkle, burst, hiệu ứng độc). Ảnh cần gen sau: bao-cao-3.md.
-// Cờ ?hethongcu=1 (luật cũ) hoặc ?skillbo=0: G.boSkill trả null → mọi móc dưới đây đứng yên.
+// Cờ ?skillbo=0: G.boSkill trả null → mọi móc dưới đây đứng yên (cờ ?hethongcu=1 đã bỏ ở đợt 2).
 (function () {
   const G = window.G;
   const K = (G.boSk = {});
   const W_ = () => (G.getWorld ? G.getWorld() : null);
   const FX = (n, a, b, c, d, e) => { if (!G.noRender && G.fx && G.fx[n]) G.fx[n](a, b, c, d, e); };
   const ZK = () => G.ZK || 0.85;
-  const bat = () => !!(G.HE_MOI && G.SKILL_BO_BAT !== false && G.SKILL_BO);
+  const bat = () => !!(G.SKILL_BO_BAT !== false && G.SKILL_BO);
   const so = (v) => { const s = String(Math.round(v * 100) / 100); return G.LANG === 'en' ? s : s.replace('.', ','); };
   const pt = (v) => Math.round(v * 100);
 
@@ -129,7 +129,7 @@
       if (n) G.sfx('hit', 0.7);
     }
   };
-  // Lộn xong (combat.js, chỗ G.outfit.dodgeEnd).
+  // Lộn xong (combat.js, lúc hết lộn).
   K.lonXong = function (P) {
     const bl = co(P, 'bongLuot');
     if (bl) { P.boLuotT = bl.cuaSo; P.boLuotHet = false; }

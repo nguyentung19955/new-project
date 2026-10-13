@@ -260,9 +260,8 @@
   };
 
   // ---------- lưu game ----------
-  // Hệ thống mới đợt 1 (js/data.js G.HE_MOI, js/vk_moi.js): cờ ?hethongcu=1 chơi lại luật cũ bằng bản lưu RIÊNG, không đụng bản lưu chính.
-  // Lần đầu bật cờ: chép bản lưu trước khi chuyển sang hệ mới (khoá ..._truoc_he_moi, js/vk_moi.js giữ lại), hoặc bản chính nếu chưa chuyển.
-  const KEY_CHINH = 'linhkhi_save_v1', KEY = G.HE_CU ? KEY_CHINH + '_hecu' : KEY_CHINH;
+  // Đợt 2: bỏ cờ ?hethongcu=1 (bản lưu riêng ..._hecu không còn được đọc/ghi). Bản sao trước khi chuyển hệ mới vẫn nằm ở ..._truoc_he_moi.
+  const KEY = 'linhkhi_save_v1';
   G.SAVE_KEY = KEY;
   // Trường "tier" cũ là tên khác của "rarity": đọc và ghi w.tier vẫn chạy, nhưng bản lưu chỉ ghi rarity.
   G.linkTier = function (w) {
@@ -298,12 +297,11 @@
     const s = {
       v: 1, gold: 0, ore: 0, stones: 0, mats: [0, 0, 0], shards: [0, 0, 0], forge: 1,
       heroes: {}, hero: 'smith', weapons: [], nextId: 1, carry: [null, null],
-      owned: { helm: [], armor: [], charm: [] }, helm: null, armor: null, charm: null, outfit: G.outfit ? G.outfit.blank() : null,
       stars: {}, stars2: {}, scars: {}, tut: {}, sound: true, wins: 0, bossGold: {},
     };
     for (const k of G.HKEYS) s.heroes[k] = { unlocked: k === 'smith', lvl: 1, xp: 0, sk: { atk: 0, def: 0, elem: 0 }, ch: { cay: G.CHUONG ? G.CHUONG.defTree[k] : 'hoa', n: {} } };
     s.carry[0] = G.newWeapon(s, 'sword', 0, { family: 0 }).id; // Kiếm Rèn
-    s.carry[1] = G.newWeapon(s, 'bow', 0, { family: 3 }).id;   // Cung Tre
+    s.carry[1] = G.newWeapon(s, 'bow', 0, { family: 0 }).id;   // Phi tiêu (Cung Tre)
     return s;
   };
   // V3: bản lưu trên máy đọc không được (hỏng, sai phiên bản, phần sửa bản lưu gặp lỗi) thì trước khi chơi tiếp bằng bản trắng
@@ -314,12 +312,6 @@
     let s = null, raw = null, bad = false;
     try {
       raw = window.localStorage.getItem(KEY);
-      if (!raw && G.HE_CU) { // ?hethongcu=1 lần đầu: lấy bản sao bản lưu cũ (chỉ đọc; từ giờ ghi vào khoá riêng)
-        const ls = window.localStorage, tr = ls.getItem(KEY_CHINH + '_truoc_he_moi'), ch = ls.getItem(KEY_CHINH);
-        let chuaChuyen = false;
-        try { const o = ch ? JSON.parse(ch) : null; chuaChuyen = !!(o && o.heMoi !== 1); } catch (e) { chuaChuyen = false; }
-        raw = tr || (chuaChuyen ? ch : null);
-      }
       if (raw) s = JSON.parse(raw);
     } catch (e) { s = null; bad = !!raw; if (bad) console.error('Linh Khí: bản lưu trên máy không đọc được', e); }
     G.save = G.fixSave(s);
@@ -336,7 +328,7 @@
   // Kiểm tra bản lưu cũ hoặc hỏng: thiếu gì thì bù, sai gì thì sửa, hỏng nặng thì tạo mới.
   // Hệ thống mới đợt 1: phần chuyển bản lưu cũ sang 4 vũ khí cố định / bỏ quần áo cũ (một lần, cờ s.heMoi = 1) và giữ đúng 4 vũ khí mỗi
   // lần nạp nằm ở js/vk_moi.js (bọc G.fixSave, chạy SAU phần dưới đây và sau js/linhkhi.js; mọi đường nạp máy / mây đều đi qua).
-  // Phiên hiệu năng (bản lưu): sửa TỪNG PHẦN riêng. Một phần gặp lỗi (ví dụ bản cập nhật có lỗi trong outfit.fix) thì giữ nguyên dữ liệu cũ
+  // Phiên hiệu năng (bản lưu): sửa TỪNG PHẦN riêng. Một phần gặp lỗi (ví dụ bản cập nhật có lỗi trong phần sửa vũ khí) thì giữ nguyên dữ liệu cũ
   // của phần đó (sai kiểu hẳn thì lấy phần đó của bản mới), các phần khác vẫn sửa bình thường, KHÔNG trả bản trắng. Có phần lỗi thì vẫn
   // chép bản gốc sang khoá dự phòng như trước (fixFailed). Chỉ bản không phải đối tượng / sai phiên bản mới thành bản mới.
   G.fixSave = function (s) {
@@ -396,13 +388,13 @@
       for (const k of G.HKEYS) if (!s.heroes[k] || typeof s.heroes[k] !== 'object') s.heroes[k] = base.heroes[k]; // em lỗi nặng: lấy bản mới của riêng em đó
       if (!G.HKEYS.includes(s.hero) || !s.heroes[s.hero].unlocked) s.hero = 'smith';
       });
-      // ZED (js/data.js G.ZED): một nhân vật. Bản lưu cũ nhiều em bé được CHUYỂN, không xoá:
+      // ZED: một nhân vật. Bản lưu cũ nhiều em bé được CHUYỂN, không xoá:
       //  - Zed (khoá smith) nhận cấp, kinh nghiệm, điểm kỹ năng, cây chưởng của em bé cấp cao nhất (bằng cấp thì kinh nghiệm nhiều hơn);
-      //    dữ liệu cũ của Cu Tí cất ở save.zed.cuTi, dữ liệu ba bé kia để nguyên trong save.heroes (?zed=0 vẫn chơi lại được).
+      //    dữ liệu cũ của Cu Tí cất ở save.zed.cuTi, dữ liệu ba bé kia để nguyên trong save.heroes (đợt 2 bỏ cờ ?zed=0, chỉ còn để đọc).
       //  - Trùm vùng nào đã hạ (bé đã được cứu, hoặc có sao ải trùm) = bạn đó đã dạy Zed (save.zed.hoc).
       //  - Vũ khí, đồ, vàng, tiến trình không đụng tới. Chuyển một lần (save.zed.v = 1); có thay đổi thì làng báo một lần (save.zed.bao).
       // Dữ liệu zed lỗi: dựng lại từ đầu theo luật trên (an toàn, không mất gì vì em bé cũ vẫn còn trong save.heroes).
-      if (G.ZED) phan('Zed', [], () => {
+      phan('Zed', [], () => {
         let z = s.zed;
         if (!z || typeof z !== 'object' || Array.isArray(z)) z = null;
         if (!z || z.v !== 1) {
@@ -431,7 +423,7 @@
         const hoc = z.hoc && typeof z.hoc === 'object' && !Array.isArray(z.hoc) ? z.hoc : {};
         z.hoc = {};
         for (const k of G.ZED_DAY_KEYS) {
-          // chơi tạm bằng ?zed=0 mà cứu thêm bạn: về chế độ Zed thì bạn đó cũng đã dạy
+          // bản lưu cũ (chơi bằng cờ ?zed=0 trước đợt 2) đã cứu thêm bạn: bạn đó cũng đã dạy
           if (hoc[k] || (s.heroes[k] && s.heroes[k].unlocked)) { z.hoc[k] = 1; if (s.heroes[k]) s.heroes[k].unlocked = true; }
         }
         if (z.bao !== 1) delete z.bao;
@@ -473,7 +465,7 @@
         if (typeof w.title !== 'string') w.title = typeof w.name === 'string' && w.name.indexOf(', ') > 0 ? w.name.slice(w.name.indexOf(', ')) : '';
         w.name = null;
         w.kills = Math.max(0, num(w.kills, 0));
-        if (w.lock) w.lock = 1; else delete w.lock; // khoá đồ (js/ban_do.js): bản lưu cũ không có thì không khoá
+        delete w.lock; // khoá đồ của bản cũ (bán đồ đã bỏ ở đợt 2)
         w.bossKills = obj(w.bossKills);
         // Dòng phụ: dòng cũ (affix) được giữ; thiếu thì bù theo số thứ tự của món để lần nào nạp cũng ra như nhau.
         const af = Array.isArray(w.affixes) ? w.affixes.slice() : [];
@@ -486,7 +478,7 @@
       });
       s.nextId = Math.max(Math.floor(num(s.nextId, 1)), 1, ...s.weapons.map((w) => w.id + 1));
       if (!s.weapons.length) G.newWeapon(s, 'sword', 0, { family: 0 });
-      if (s.weapons.length < 2) G.newWeapon(s, 'bow', 0, { family: 3 });
+      if (s.weapons.length < 2) G.newWeapon(s, 'bow', 0, { family: 0 });
       s.bossGold = obj(s.bossGold); // trùm vùng nào đã rơi vũ khí Vàng lần đầu
       const has = (id) => s.weapons.some((w) => w.id === id);
       const c = Array.isArray(s.carry) ? s.carry.slice(0, 2) : [];
@@ -498,17 +490,8 @@
       }
       s.carry = c;
       });
-      // trang bị
-      phan('trang bị', ['owned'], () => {
-      const own = obj(s.owned);
-      s.owned = {};
-      for (const slot of ['helm', 'armor', 'charm']) {
-        s.owned[slot] = (Array.isArray(own[slot]) ? own[slot] : []).filter((id, i, a) => G.GEAR[slot][id] && a.indexOf(id) === i);
-        if (!s.owned[slot].includes(s[slot])) s[slot] = null;
-      }
-      });
-      // trang phục (js/outfit.js): kiểm tra phần đã lưu, rồi chuyển mũ, áo, bùa kiểu cũ ở trên sang hệ mới
-      phan('trang phục', ['outfit'], () => { if (G.outfit) G.outfit.fix(s); });
+      // Mũ, áo, bùa đời cũ (s.owned, s.helm, s.armor, s.charm) và trang phục cũ (s.outfit): đợt 2 bỏ js/outfit.js; js/vk_moi.js đọc
+      // thẳng các trường này (bỏ qua mã lạ) để hoàn vàng + linh khí một lần khi chuyển hệ mới, rồi xoá.
       return s;
     } catch (e) { fixFailed = true; console.error('Linh Khí: lỗi khi sửa bản lưu, dùng bản mới', e); return base; }
   };

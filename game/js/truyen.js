@@ -63,9 +63,9 @@
     tu: ['Cu Tèo chạy nhảy suốt sân đình. Ồn mà vui.', 'Cái Bống về, sân đình có tiếng hát rồi.', 'Đủ bốn bé rồi. Đình làng ấm hẳn lên.'],
     mo: ['Cốc cốc! Làng nước ơi, Cu Tí hạ được Mộc Tinh rồi!', 'Cốc cốc! Biển êm, đò chạy, làng nước nghe chưa!', 'Cốc cốc cốc! Ba yêu tinh ngủ cả rồi! Mở hội thôi!'],
   };
-  // ZED (js/data.js G.ZED): nhân vật chính là Zed (hình Cu Tí). Ba bạn vẫn bị bắt, vẫn được cứu, nhưng về làng thì DẠY Zed thay vì
-  // thành em bé chơi được. ?zed=0: lời cũ.
-  if (G.ZED) {
+  // ZED: nhân vật chính là Zed. Ba bạn vẫn bị bắt, vẫn được cứu, nhưng về làng thì DẠY Zed thay vì thành em bé chơi được
+  // (đợt 2 bỏ cờ ?zed=0: các câu dưới đây luôn thay lời cũ).
+  {
     MO_DAU[3].loi = 'Còn Zed. Cầm lấy vũ khí sống này, cháu: vũ khí lớn lên theo cháu, yêu tinh học theo cháu. Chú Lái Đò chờ ở bến!';
     VUNG[0][0].loi = 'Zed ơi! Rễ cây quấn tớ cả tuần, may mà cậu tới!';
     VUNG[0][2].loi = 'Cu Tèo đã về làng, ngồi chơi ở sân đình. Cu Tèo dạy Zed đánh hiểm và bắn chưởng xa: xem ở Ông Từ.';
@@ -153,9 +153,9 @@
   // ---------- hình nền các khung ----------
   const VK = { // vũ khí cầm trong tay các em bé lúc vẽ (chỉ để vẽ)
     smith: { type: 'sword', family: 0, rarity: 3, marks: { fire: 300, poison: 0, ice: 0 }, branch: 'fire', sharpen: 0 },
-    hunter: { type: 'bow', family: 3, rarity: 0, marks: { fire: 0, poison: 0, ice: 0 }, branch: null, sharpen: 0 },
-    healer: { type: 'spear', family: 6, rarity: 0, marks: { fire: 0, poison: 0, ice: 0 }, branch: null, sharpen: 0 },
-    wrestler: { type: 'hammer', family: 8, rarity: 0, marks: { fire: 0, poison: 0, ice: 0 }, branch: null, sharpen: 0 },
+    hunter: { type: 'bow', family: 0, rarity: 0, marks: { fire: 0, poison: 0, ice: 0 }, branch: null, sharpen: 0 },
+    healer: { type: 'spear', family: 0, rarity: 0, marks: { fire: 0, poison: 0, ice: 0 }, branch: null, sharpen: 0 },
+    wrestler: { type: 'hammer', family: 0, rarity: 0, marks: { fire: 0, poison: 0, ice: 0 }, branch: null, sharpen: 0 },
   };
   function emBe(c, key, x, y, s, face, vk) {
     G.wxDat(c, x, y, s);

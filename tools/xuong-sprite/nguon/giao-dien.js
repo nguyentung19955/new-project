@@ -7,8 +7,8 @@
   const VUNG_SO = { rung: 0, bien: 1, laudai: 2 };
   const LOAI = { thuong: 'Quái thường', tinhanh: 'Tinh anh', trumnho: 'Trùm nhỏ', trum: 'Trùm vùng' };
   const EM_BE = [
-    { ma: 'em-be', ten: 'Em bé (cả bốn)', key: 'smith' }, { ma: 'em-be-smith', ten: 'Thợ Rèn', key: 'smith' }, { ma: 'em-be-hunter', ten: 'Thợ Săn', key: 'hunter' },
-    { ma: 'em-be-healer', ten: 'Thầy Lang', key: 'healer' }, { ma: 'em-be-wrestler', ten: 'Đô Vật', key: 'wrestler' }];
+    // đợt 2 của game: chỉ còn thân ba bạn NPC (em-be chung và em-be-smith Cu Tí đã bỏ, Zed vẽ bằng bộ zed-*)
+    { ma: 'em-be-hunter', ten: 'Cu Tèo (NPC)', key: 'hunter' }, { ma: 'em-be-healer', ten: 'Cái Bống (NPC)', key: 'healer' }, { ma: 'em-be-wrestler', ten: 'Cu Lì (NPC)', key: 'wrestler' }];
   // Thời lượng động tác của em bé trong game (động tác một lần do game quyết định theo tiến độ).
   const GOC_EM_BE = { idle: 1.23, move: 0.62, tele: 0.4, atk: 0.4, hit: 0.2, die: 0.6, ne: 0.27 };
   const OL_QUAI = XS.hex('#14182e'), OL_EM_BE = XS.hex('#1b1118'), OL_NL = XS.hex('#1a1420');
@@ -98,7 +98,7 @@
   }
   function dsNhap() { const o = []; try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.indexOf(NHAP) === 0) o.push(k.slice(NHAP.length)); } } catch (e) { /* bỏ qua */ } return o; }
   // Các nhóm ở trang chọn. Mỗi lần chỉ hiện một nhóm cho gọn; thẻ nào cũng có hình hiện tại (vẽ bằng code) để so.
-  const NHOM = [['em-be', 'Em bé'], ['quai', 'Quái'], ['vu-khi', 'Vũ khí'], ['trang-phuc', 'Trang phục'], ['do', 'Đồ và tài nguyên'], ['nguoi-lang', 'Người làng']];
+  const NHOM = [['em-be', 'Em bé (NPC)'], ['quai', 'Quái'], ['do', 'Đồ và tài nguyên'], ['nguoi-lang', 'Người làng']]; // đợt 2: bỏ nhóm Vũ khí, Trang phục
   function nhomCua(m) {
     if (!m) return null;
     if (m.doi === 'vat-pham') return 'do';

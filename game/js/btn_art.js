@@ -389,9 +389,10 @@
   // ---------- biểu tượng bằng ảnh AI (trang tools/tach-giao-dien, lô "Nút điều khiển") ----------
   // Có tệp gd-nut-* (js/sprite_custom.js → SC.gd) thì ảnh thay cho HÌNH Ở GIỮA nút; vòng nút, màu hệ, trang trí hệ, thẻ giá mana,
   // màn hồi chiêu, số, lún khi bấm, xám khi khoá vẫn do code ở dưới vẽ như cũ. Không có tệp thì mọi thứ y hệt cũ.
-  // Mã: gd-nut-danh-<sword|bow|spear|hammer>, gd-nut-dac-biet-<vũ khí>, gd-nut-ky-nang-<hero>, gd-nut-chuong-<fire|poison|ice>,
+  // Mã: gd-nut-danh-<sword|bow|spear|hammer>, gd-nut-dac-biet-<vũ khí>, gd-nut-chuong-<fire|poison|ice>,
   //     gd-nut-ne (vẽ hướng sang PHẢI, game tự xoay 16 hướng), gd-nut-binh-mau, gd-nut-tam-dung.
-  const GD_DAU = { w_: 'gd-nut-danh-', s_: 'gd-nut-dac-biet-', h_: 'gd-nut-ky-nang-', c_: 'gd-nut-chuong-' };
+  //     (Đợt 2: bỏ gd-nut-ky-nang-<hero> — nút kỹ năng riêng của 4 em bé cũ; nút kỹ năng dự phòng vẽ bằng code.)
+  const GD_DAU = { w_: 'gd-nut-danh-', s_: 'gd-nut-dac-biet-', c_: 'gd-nut-chuong-' };
   const GD_RIENG = { dodge: 'gd-nut-ne', potion: 'gd-nut-binh-mau', pause: 'gd-nut-tam-dung' };
   function gdMa(name) { return GD_RIENG[name] || (GD_DAU[name.slice(0, 2)] ? GD_DAU[name.slice(0, 2)] + name.slice(2) : null); }
   B.maAnh = gdMa; // cho công cụ và bài kiểm tra biết nút nào dùng mã nào

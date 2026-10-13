@@ -8,10 +8,11 @@
 //   - Trang phục: chỉ 4 bộ Zed (G.ZED_BO). Cấp bộ sv.boCap[bo] = 0..3, nâng bằng linh khí + vàng (G.BO_MOI). Móc rỗng G.boSkill(bo, cap)
 //     (đợt 3 gắn skill), gắn vào người chơi lúc dựng (P.bo, P.boCap, P.boSkill).
 //   - Bản lưu: bọc G.fixSave (chạy sau js/engine.js và js/linhkhi.js; mọi đường nạp máy / mây đi qua): chuyển MỘT lần (cờ sv.heMoi = 1),
-//     trước khi chuyển chép bản gốc sang khoá linhkhi_save_v1_truoc_he_moi (giữ bản đầu tiên) để ?hethongcu=1 chơi lại được.
+//     trước khi chuyển chép bản gốc sang khoá linhkhi_save_v1_truoc_he_moi (giữ bản đầu tiên; chỉ để cứu tay, game không đọc lại).
 //     Mỗi lần nạp: giữ đúng 4 vũ khí, sửa số hỏng.
+//     Đợt 2 (YEU-CAU-2-DON-CU.md): js/outfit.js đã xoá — bảng giá quần áo cũ dùng để hoàn tiền nằm ngay trong tệp này (AO_CU, AO_TU_CU).
 //   - Hình vũ khí trong ô đồ: bộ zed-vk (4 loại × 4 cấp, cùng ảnh js/zed_moi.js vẽ trên tay Zed); chưa tải xong thì vẽ như cũ.
-// Cờ ?hethongcu=1 (G.HE_CU): mọi phần ở đây đứng yên, game chạy luật cũ.
+// Đợt 2: bỏ cờ ?hethongcu=1 — luôn chạy luật này.
 (function () {
   const G = window.G, ui = G.ui;
   const VM = (G.vkMoi = {});
@@ -121,10 +122,10 @@
   };
   // Phần trang phục của màn kết quả: bùa cũ của tinh anh, trùm nhỏ (35%) và trùm vùng (luôn). null nếu không có gì.
   VM.thuongAoTrum = function (r, big, bua) {
-    const T = G.ROI_MOI, O = G.outfit;
+    const T = G.ROI_MOI;
     let vang = bua ? T.bua : 0;
     if (big) vang += T.aoTrumVung;
-    else if (G.rnd() < (O && O.DROP ? O.DROP.mini : 0.35)) vang += T.aoTrum.vang[vung(r)];
+    else if (G.rnd() < 0.35) vang += T.aoTrum.vang[vung(r)]; // 35%: tỉ lệ trùm nhỏ rơi trang phục của luật cũ
     if (!vang) return null;
     G.save.gold += vang;
     return { vang, lk: 0, s: chuThuong(vang, 0) };
@@ -149,6 +150,41 @@
   }
   const W_GIA = [20, 60, 150, 400], W_MAI = 15, O_GIA = [10, 30, 80, 200], O_CANH = [0, 0, 40, 140], O_LK = [2, 5, 10, 20];
   VM.BANG_HOAN = { W_GIA, W_MAI, O_GIA, O_CANH, O_LK };
+  // Quần áo cũ (chép từ js/outfit.js đã xoá ở đợt 2, chỉ phần cần để hoàn tiền): mã món → [ô, giá bà bán (0 = không bán)].
+  const AO_CU = {
+    mu_sung: ['hat', 0], ao_vo_cay: ['robe', 0], gui_tre: ['back', 0], bua_nanh: ['hand', 0], canh_la: ['wing', 0],
+    mu_vay_ca: ['hat', 0], ao_vay: ['robe', 0], khan_bang: ['back', 0], bua_oc: ['hand', 0], canh_bang: ['wing', 0],
+    mu_tai_cao: ['hat', 0], ao_long: ['robe', 0], trong_nho: ['back', 0], bua_lua: ['hand', 0], canh_lua: ['wing', 0],
+    non_la: ['hat', 0], mu_da_ca: ['hat', 0], khan_lua: ['hat', 0], mu_rom: ['hat', 60], khan_xep: ['hat', 90], vong_la: ['hat', 0],
+    ao_vai: ['robe', 100], ao_da_bien: ['robe', 0], giap_da: ['robe', 0], ao_toi: ['robe', 120], ao_the: ['robe', 140], ao_la: ['robe', 0],
+    giap_tre: ['robe', 0], ao_choang: ['back', 110], ong_ten: ['back', 80], ho_lo: ['back', 0], bua_hut: ['hand', 0], bua_tan: ['hand', 0],
+    bua_suong: ['hand', 0], bua_tham: ['hand', 0], bua_linh: ['hand', 0], canh_chuon: ['wing', 0],
+  };
+  // Mũ, áo, bùa đời trước nữa (s.owned) → [món, bậc] (cách js/outfit.js cũ chuyển sang trang phục).
+  const AO_TU_CU = {
+    h_r1: ['non_la', 0], h_r2: ['mu_da_ca', 0], h_r3: ['khan_lua', 0], h_moc: ['mu_sung', 1], h_ngu: ['mu_vay_ca', 1], h_ho: ['mu_tai_cao', 1],
+    a_r1: ['ao_vai', 0], a_r2: ['ao_da_bien', 0], a_r3: ['giap_da', 0], a_moc: ['ao_vo_cay', 1], a_ngu: ['ao_vay', 1], a_ho: ['ao_long', 1],
+    c_leech: ['bua_hut', 1], c_ember: ['bua_tan', 1], c_mist: ['bua_suong', 1], c_greed: ['bua_tham', 1], c_spirit: ['bua_linh', 1],
+  };
+  // Gom mọi món quần áo cũ của bản lưu (bỏ qua mã lạ, món trùng số, món hỏng): [{ k, r, lv }]. Tối đa 40 món như kho cũ.
+  function aoCu(s) {
+    const ds = [], seen = {}, cu = {};
+    const items = s.outfit && typeof s.outfit === 'object' && Array.isArray(s.outfit.items) ? s.outfit.items : [];
+    for (const it of items) {
+      if (!it || typeof it !== 'object' || !AO_CU[it.k] || typeof it.id !== 'number' || !isFinite(it.id) || seen[it.id]) continue;
+      seen[it.id] = true;
+      if (it.old != null) cu[it.old] = true;
+      ds.push({ k: it.k, r: kep(Math.floor(num(it.r, 0)), 0, 3), lv: kep(Math.floor(num(it.lv, 1)), 1, 3) });
+    }
+    const own = s.owned && typeof s.owned === 'object' && !Array.isArray(s.owned) ? s.owned : {};
+    for (const slot of ['helm', 'armor', 'charm']) {
+      const list = Array.isArray(own[slot]) ? own[slot] : [];
+      list.forEach((id, i) => { const q = AO_TU_CU[id]; if (q && !cu[id] && list.indexOf(id) === i) { cu[id] = true; ds.push({ k: q[0], r: q[1], lv: 1 }); } });
+    }
+    return ds.slice(0, 40);
+  }
+  // Xoá các trường quần áo cũ khỏi bản lưu (đã hoàn tiền).
+  function boAoCu(s) { delete s.outfit; delete s.owned; delete s.helm; delete s.armor; delete s.charm; }
   // Chuyển MỘT lần bản lưu cũ sang hệ mới (s đã qua phần sửa của js/engine.js và js/linhkhi.js; dấu ấn đã theo mốc G.MARKS).
   //  - Mỗi loại vũ khí: giữ món có cấp cao nhất (cấp theo bậc cũ), hệ của món đó; độ mài = mài cao nhất của loại đó.
   //    Dấu ấn còn dư của món giữ (phần vượt mốc cấp đang có) thành linh khí; hệ phụ tính một nửa.
@@ -191,18 +227,14 @@
     s.vkThu = thu;
     s.weapons = LOAI.map((t) => giu[t]).filter(Boolean);
     // quần áo cũ
-    const O = G.outfit;
-    const items = s.outfit && Array.isArray(s.outfit.items) ? s.outfit.items : [];
-    for (const it of items) {
-      if (!it || typeof it !== 'object') continue;
-      const r = kep(it.r | 0, 0, 3), Ti = O && O.ITEMS ? O.ITEMS[it.k] : null;
+    for (const it of aoCu(s)) {
+      const r = it.r, Ti = AO_CU[it.k];
       let p = O_GIA[r];
-      if (r === 0 && Ti && Ti.price) p = Math.min(p, Math.round(Ti.price / 6));
-      if (Ti && Ti.slot === 'wing') p += O_CANH[kep(it.lv | 0, 1, 3)];
+      if (r === 0 && Ti[1]) p = Math.min(p, Math.round(Ti[1] / 6));
+      if (Ti[0] === 'wing') p += O_CANH[it.lv];
       hoan.ao++; hoan.vang += p * 2; hoan.lk += O_LK[r];
     }
-    if (O && O.blank) s.outfit = O.blank();
-    s.owned = { helm: [], armor: [], charm: [] }; s.helm = null; s.armor = null; s.charm = null;
+    boAoCu(s);
     hoan.vang = Math.round(hoan.vang); hoan.lk = r1(hoan.lk);
     s.gold = Math.max(0, Math.floor(num(s.gold, 0))) + hoan.vang;
     s.linhKhi = r1(VM.lk(s) + hoan.lk);
@@ -235,6 +267,7 @@
     s.boCap = {};
     for (const k of G.ZED_BO_KEYS || []) { const v = kep(Math.floor(num(bc[k], 0)), 0, (G.BO_MOI || { max: 3 }).max); if (v) s.boCap[k] = v; }
     if (s.heMoiBao != null && (typeof s.heMoiBao !== 'object' || Array.isArray(s.heMoiBao))) delete s.heMoiBao;
+    if (s.heMoi === 1) boAoCu(s); // bản lưu đã chuyển (kể cả chuyển ở đợt 1, còn trường trang phục rỗng): bỏ trường cũ
     return s;
   };
   // Câu báo một lần ở làng sau khi chuyển bản lưu cũ (xoá dấu báo).
@@ -252,7 +285,6 @@
   if (G.fixSave && !G.fixSave.vkMoiBoc) {
     const goc = G.fixSave;
     G.fixSave = function (s) {
-      if (!G.HE_MOI) return goc.apply(this, arguments);
       const vao = s && typeof s === 'object' && !Array.isArray(s);
       if (vao && s.v === 1 && s.heMoi !== 1) saoLuu(s); // bản gốc, trước mọi phần sửa
       const r = goc.apply(this, arguments);
@@ -275,7 +307,7 @@
     const goc = G.newSave;
     G.newSave = function () {
       const s = goc.apply(this, arguments);
-      if (G.HE_MOI && s && typeof s === 'object') {
+      if (s && typeof s === 'object') {
         s.heMoi = 1; s.linhKhi = 0;
         s.vkThu = (CFG.thuMacDinh || LOAI).slice();
         try { VM.chuan(s); } catch (e) { console.error('Linh Khí: lỗi khi tạo bản lưu hệ thống mới', e); }
@@ -289,7 +321,7 @@
   if (G.addMarks && !G.addMarks.vkMoiBoc) {
     const goc = G.addMarks;
     G.addMarks = function (w, el, n, quiet) {
-      if (!G.HE_MOI) return goc.apply(this, arguments);
+      void goc;
       if (!w || !(n >= 0.01) || !G.save) return;
       VM.themLk(G.save, n);
       const W = G.getWorld && G.getWorld();
@@ -308,7 +340,7 @@
     const goc = G.buildPlayer;
     G.buildPlayer = function () {
       const P = goc.apply(this, arguments);
-      if (G.HE_MOI && P) {
+      if (P) {
         try { const bo = G.zedBo ? G.zedBo() : 'ninja'; P.bo = bo; P.boCap = VM.boCap(G.save, bo); P.boSkill = G.boSkill(bo, P.boCap); } catch (e) { /* bỏ qua */ }
       }
       return P;
@@ -359,7 +391,7 @@
   if (G.art && G.art.weaponIcon && !G.art.weaponIcon.vkMoiBoc) {
     const goc = G.art.weaponIcon;
     G.art.weaponIcon = function (c, w, x, y, size) {
-      if (G.HE_MOI && w) { try { if (VM.icon(c, w, x, y, size || 22)) return; } catch (e) { /* vẽ như cũ */ } }
+      if (w) { try { if (VM.icon(c, w, x, y, size || 22)) return; } catch (e) { /* vẽ như cũ */ } }
       return goc.apply(this, arguments);
     };
     G.art.weaponIcon.vkMoiBoc = true;

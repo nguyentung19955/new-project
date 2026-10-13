@@ -80,12 +80,7 @@ def main():
     ver = 'lk-' + (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=7)).strftime('%Y.%m.%d-%H%M')
     parts.append('// ===== phiên bản đóng gói =====\n(window.G = window.G || {}).VERSION = ' + json.dumps(ver) + ';\n')
     custom = custom_sprites()
-    # Ghép lớp Zed (js/ghep_lop.js, cờ ?ghep=1): số liệu + ảnh lớp từ art/lop/*.lop.json. Thư mục trống → không thêm gì (bản build y hệt).
-    lop = lop_ghep()
-    if lop:
-        parts.append('// ===== art/lop (ghép lớp Zed, LINH_KHI_MODULAR_SPRITE_SPEC) =====\n(window.G = window.G || {}).lopGhepData = '
-                     + json.dumps(lop, ensure_ascii=False, separators=(',', ':')) + ';\n')
-        print('Đã nhúng %d lớp ghép: %s' % (len(lop), ', '.join(t['id'] for t in lop)))
+    # Đợt 2: bỏ ghép lớp Zed (js/ghep_lop.js, game/art/lop, cờ ?ghep=1) — Zed vẽ bằng bộ ảnh zed-* (js/zed_moi.js).
 
     def gom(nhung, dau='', gan='.customSpriteData = '):
         """Gom mọi tệp JS thành một thẻ script; nhung: các hình nhúng thẳng vào trang; dau: mã chèn ngay trước js/sprite_custom.js;
@@ -142,23 +137,18 @@ HINH_LON_SAU = {'gd-lang-nen', 'gd-ban-do-vung', 'gd-khung-ban-do'}
 
 def bat_buoc(t):
     """Hình phải nằm sẵn trong trang (màn chào, làng, ải 1 cần ngay). LUẬT ĐƠN GIẢN, mọi thứ không khớp đều là ẢNH TẢI SAU:
-      1. hồ sơ ghép (ghep-*: chỉ số liệu)             2. em bé 4 thân gốc (không phải thân theo bộ trang phục, không phải tệp đòn theo vũ khí -don)
+      1. bộ Zed mới (zed-moi, zed-vk; bộ Rừng/Biển/Lâu đài tải sau)   2. em bé NPC (em-be-hunter, em-be-healer, em-be-wrestler)
       3. người làng (nl-*)                             4. ảnh giao diện, làng, phòng (gd-*)
-      5. vật phẩm (vp-*) và trang phục rời (tp-*): rất nhỏ, có ngay để em bé trong làng không đổi hình giữa chừng
-      6. vũ khí khởi đầu: Kiếm Rèn (vk-sword-0*) và Cung Tre (vk-bow-3*), kể cả bản theo hệ (màn chào vẽ kiếm lửa)
-      7. hiệu ứng cơ bản (HU_CO_BAN)
-    Tải sau: mọi quái và trùm, thân theo bộ trang phục, vũ khí còn lại, hiệu ứng theo hệ / của quái / bảng kết quả, và mọi loại mới chưa có luật."""
+      5. vật phẩm (vp-*): rất nhỏ                      6. hiệu ứng cơ bản (HU_CO_BAN)
+    Tải sau: mọi quái và trùm, hiệu ứng theo hệ / của quái / bảng kết quả, và mọi loại mới chưa có luật.
+    Đợt 2 (YEU-CAU-2-DON-CU): đã xoá ảnh vũ khí cũ (vk-*), trang phục cũ (tp-*), hồ sơ ghép (ghep-*) và em bé cũ (smith, thân theo bộ, tệp đòn -don)."""
     ma, d = t['ma'], t.get('doi_tuong')
     if ma in HINH_LON_SAU:  # 11/10 (chủ dự án duyệt): hình lớn không cần ở màn chào → tải sau; game vẽ code cho tới khi ảnh về
         return False
     if d == 'zed' and ma in ('zed-rung', 'zed-bien', 'zed-lau'):  # trang phục Zed bộ Rừng / Biển / Lâu đài (mở sau trùm vùng 1 / 2 / 3): tải sau; chưa về thì js/zed_moi.js vẽ bộ ninja
         return False
-    if d in ('ghep', 'nguoi-lang', 'giao-dien', 'vat-pham', 'trang-phuc', 'zed'):  # zed: bộ Zed mới (zed-moi, zed-vk) cần ngay ở làng
+    if d in ('nguoi-lang', 'giao-dien', 'vat-pham', 'zed', 'em-be'):  # zed: bộ Zed mới (zed-moi, zed-vk) cần ngay ở làng; em-be: 3 NPC
         return True
-    if d == 'em-be':  # tệp đòn theo vũ khí (-don) tải sau: game ghép vào thân khi về tới, chưa về thì đánh bằng hàng atk như cũ
-        return not re.search(r'-(rung|bien|lau|don)$', ma)
-    if d == 'vu-khi':
-        return bool(re.match(r'^vk-(sword-0|bow-3)(-|$)', ma))
     if d == 'hieu-ung':
         return bool(HU_CO_BAN.match(ma))
     return False
@@ -166,19 +156,17 @@ def bat_buoc(t):
 
 def thu_tu_sau(t):
     """Thứ tự trong tệp tải sau (game nhận từng hình ngay khi dòng của nó về tới): thứ người mới chơi gặp trước thì đứng trước.
-    0 quái Rừng già (nhỏ trước: quái thường rồi tinh anh, trùm nhỏ) · 1 hiệu ứng còn lại · 2 vũ khí còn lại · 3 trùm Rừng già ·
+    0 quái Rừng già (nhỏ trước: quái thường rồi tinh anh, trùm nhỏ) · 1 hiệu ứng còn lại · 3 trùm Rừng già ·
     4 Hang biển · 5 Lâu đài cổ · 6 mọi thứ khác. Cùng bậc: tệp nhỏ trước."""
     ma, d = t['ma'], t.get('doi_tuong')
     co = len(str(t.get('tam') or t.get('anh') or ''))
-    quai = d not in ('hieu-ung', 'ghep', 'giao-dien', 'nguoi-lang', 'em-be', 'zed') and d not in DO_LOAI
+    quai = d not in ('hieu-ung', 'giao-dien', 'nguoi-lang', 'em-be', 'zed') and d not in DO_LOAI
     trum = quai and ma.split('-')[0] in TRUM_VUNG
     vung = t.get('vung') if quai else None
     if vung == 'rung':
         bac = 3 if trum else 0
     elif d == 'hieu-ung':
         bac = 1
-    elif d == 'vu-khi':
-        bac = 2
     else:
         bac = {'bien': 4, 'laudai': 5}.get(vung, 6)
     return (bac, co, ma)
@@ -332,8 +320,8 @@ def anh_roi(custom, gom, trang, frag):
             so_webp += 1
         tong_tot += tot
         # _u: [bậc ưu tiên tĩnh, số byte tải, vùng (0 rừng, 1 biển, 2 lâu đài, -1 không theo vùng), trùm/dáng pha]
-        # bậc 0: cần cho màn chào / làng (luật bat_buoc ở trên) · 1: hiệu ứng, vũ khí, thân em bé theo bộ… · 2: quái thường · 3: trùm và dáng pha
-        quai = t.get('doi_tuong') not in ('hieu-ung', 'ghep', 'giao-dien', 'nguoi-lang', 'em-be', 'zed') and t.get('doi_tuong') not in DO_LOAI
+        # bậc 0: cần cho màn chào / làng (luật bat_buoc ở trên) · 1: hiệu ứng… · 2: quái thường · 3: trùm và dáng pha
+        quai = t.get('doi_tuong') not in ('hieu-ung', 'giao-dien', 'nguoi-lang', 'em-be', 'zed') and t.get('doi_tuong') not in DO_LOAI
         trum = quai and t['ma'].split('-')[0] in TRUM_VUNG
         bac = 0 if bat_buoc(custom[i]) else 3 if trum else 2 if quai else 1
         t['_u'] = [bac, tot, VUNG_SO.get(t.get('vung'), -1) if quai else -1, 1 if trum else 0]
@@ -364,15 +352,15 @@ def anh_roi(custom, gom, trang, frag):
 CUSTOM = os.path.join(ROOT, 'art', 'custom')
 TOOL = os.path.join(os.path.dirname(ROOT), 'tools', 'xuong-sprite')
 # Mã game mà công cụ cần để vẽ hình gốc (quái, em bé, nền phòng) và vẽ hình tự làm giống hệt trong game.
-TOOL_GAME_JS = ['js/ngon_ngu.js', 'js/data.js', 'js/art.js', 'js/weapon_art.js', 'js/hero_art.js', 'js/hero_tinhlinh.js', 'js/env_art.js', 'js/monster_art.js', 'js/room_art.js', 'js/outfit.js', 'js/village_scene.js', 'js/sprite_custom.js', 'js/mapgen.js', 'js/minimap.js', 'js/btn_art.js']  # mapgen + minimap + btn_art: trang Tách Giao Diện vẽ thử bản đồ và nút bằng đúng code game; env_art: trang Tách Phòng vẽ thử đồ vật trong phòng
+TOOL_GAME_JS = ['js/ngon_ngu.js', 'js/data.js', 'js/art.js', 'js/weapon_art.js', 'js/hero_tinhlinh.js', 'js/env_art.js', 'js/monster_art.js', 'js/room_art.js', 'js/village_scene.js', 'js/sprite_custom.js', 'js/mapgen.js', 'js/minimap.js', 'js/btn_art.js']  # mapgen + minimap + btn_art: trang Tách Giao Diện vẽ thử bản đồ và nút bằng đúng code game; env_art: trang Tách Phòng vẽ thử đồ vật trong phòng
 TOOL_JS = ['xu-ly-anh.js', 'khung.js', 'tu-doan.js', 'do.js', 'giao-dien.js']
 RUNTIME_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'vung', 'thay_cho', 'tam', 'khung_rong', 'khung_cao', 'goc', 'rong', 'cao', 'bong', 'dong_tac',
                 'anh', 'vu_khi', 'trang_phuc', 'vat_pham', 'dung_yen', 'nhun', 'nhun_buoc', 'neo', 'khoac_do', 'cu',
                 'net', 'nhan_vat', 'diem', 'diem_theo', 'cap')  # net: ảnh gấp net lần (thiếu là game đọc thành 1 → hình to gấp đôi, khung bị cắt)
 HU_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'tam', 'khung_rong', 'khung_cao', 'goc', 'so', 'giay', 'lap', 'xoay', 'co', 'tron', 'net')  # hiệu ứng ảnh AI (js/fx_anh.js)
-GHEP_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'nhan_vat', 'diem', 'diem_theo', 'diem_theo_than', 'cap')  # tệp ghep-<key> (js/sprite_custom.js)
 GD_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'anh', 'net', 'vien')  # ảnh giao diện gd-<tên> (bản đồ, nút; js/sprite_custom.js → SC.gd, js/minimap.js)
-DO_LOAI = ('vu-khi', 'trang-phuc', 'vat-pham')  # đồ: một ảnh đứng yên, game tự xoay và đặt theo người
+DO_LOAI = ('vat-pham',)  # đồ: một ảnh đứng yên (đợt 2: bỏ vu-khi, trang-phuc)
+DA_BO = {'vu-khi': 'ảnh vũ khí cũ (vk-*)', 'trang-phuc': 'ảnh trang phục cũ (tp-*)', 'ghep': 'hồ sơ ghép trang bị (ghep-*)'}  # đợt 2: game không đọc nữa
 SHIM = '''window.G = window.G || {};
 (function (G) {
   G.rnd = Math.random; G.rr = (a, b) => a + G.rnd() * (b - a); G.ri = (a, b) => Math.floor(G.rr(a, b + 1)); G.pick = (a) => a[Math.floor(G.rnd() * a.length)];
@@ -381,33 +369,6 @@ SHIM = '''window.G = window.G || {};
   G.ui = G.ui || {}; // lớp vẽ giao diện rỗng: js/minimap.js giữ đúng đối tượng này, trang Tách Giao Diện gắn hàm vẽ vào để xem thử bản đồ
 })(window.G);
 '''
-
-
-LOP = os.path.join(ROOT, 'art', 'lop')
-
-
-def lop_ghep():
-    """Đọc game/art/lop/*.lop.json (docs/review/ke-hoach-cai-thien/zed-asset/LINH_KHI_MODULAR_SPRITE_SPEC.md mục 6).
-    Chỉ nhận tệp VALIDATED / INTEGRATED, không MẪU THỬ, có ảnh PNG; tệp sai thì dừng build (như art/custom)."""
-    out = []
-    if not os.path.isdir(LOP):
-        return out
-    for name in sorted(os.listdir(LOP)):
-        if not name.endswith('.lop.json'):
-            continue
-        try:
-            with open(os.path.join(LOP, name), encoding='utf-8') as f:
-                t = json.load(f)
-        except Exception as e:
-            sys.exit('Tệp lớp ghép hỏng: art/lop/%s (%s)' % (name, e))
-        if t.get('loai') != 'linh-khi-lop' or not re.match(r'^[a-z0-9_-]{1,60}$', str(t.get('id', ''))):
-            sys.exit('art/lop/%s: thiếu loai "linh-khi-lop" hoặc id (chữ thường, số, gạch)' % name)
-        if t.get('mau_thu') or t.get('trang_thai') not in ('VALIDATED', 'INTEGRATED'):
-            sys.exit('art/lop/%s: chỉ đưa vào game tệp VALIDATED hoặc INTEGRATED (không MẪU THỬ, không GENERATED)' % name)
-        if not re.match(r'^data:image/png;base64,[A-Za-z0-9+/=]+$', str(t.get('tam', ''))):
-            sys.exit('art/lop/%s thiếu ảnh PNG ("tam")' % name)
-        out.append(t)
-    return out
 
 
 def custom_sprites():
@@ -431,12 +392,8 @@ def custom_sprites():
                 sys.exit('art/custom/%s: hiệu ứng phải có mã hu-<tên> và dải khung PNG' % name)
             out.append({k: t[k] for k in HU_KEYS if k in t})
             continue
-        if t.get('doi_tuong') == 'ghep':
-            # hồ sơ ghép trang bị của một nhân vật (docs/review/ghep-trang-bi/DINH-DANG-GHEP.md): chỉ số liệu, không có ảnh
-            if not re.match(r'^ghep-(smith|hunter|healer|wrestler)$', ma):
-                sys.exit('art/custom/%s: tệp ghép phải có mã ghep-smith, ghep-hunter, ghep-healer hoặc ghep-wrestler' % name)
-            out.append({k: t[k] for k in GHEP_KEYS if k in t})
-            continue
+        if t.get('doi_tuong') in DA_BO:
+            sys.exit('art/custom/%s: đã bỏ ở đợt 2 — %s (nhân vật chơi chỉ còn Zed, xem docs/review/ke-hoach-cai-thien/he-thong-moi/YEU-CAU-2-DON-CU.md)' % (name, DA_BO[t['doi_tuong']]))
         if t.get('doi_tuong') == 'giao-dien':
             # ảnh giao diện (tools/tach-giao-dien): một ảnh tĩnh, mã gd-<tên>; "vien" (tuỳ chọn) là 4 số cắt 9 mảnh
             if not re.match(r'^gd-[a-z0-9_-]+$', ma) or not re.match(r'^data:image/png;base64,[A-Za-z0-9+/=]+$', str(t.get('anh', ''))):
@@ -455,26 +412,17 @@ def custom_sprites():
         if t.get('doi_tuong') in DO_LOAI:
             if not re.match(r'^data:image/png;base64,[A-Za-z0-9+/=]+$', str(t.get('anh', ''))):
                 sys.exit('art/custom/%s thiếu ảnh PNG của món đồ' % name)
-            if not isinstance(t.get({'vu-khi': 'vu_khi', 'trang-phuc': 'trang_phuc', 'vat-pham': 'vat_pham'}[t['doi_tuong']]), (dict, str)):
+            if not isinstance(t.get('vat_pham'), (dict, str)):
                 sys.exit('art/custom/%s thiếu thông số món đồ' % name)
             out.append({k: t[k] for k in RUNTIME_KEYS if k in t and k not in ('tam', 'dong_tac')})
             continue
         if not re.match(r'^data:image/png;base64,[A-Za-z0-9+/=]+$', str(t.get('tam', ''))):
             sys.exit('art/custom/%s thiếu tấm sprite PNG' % name)
-        # Phiên 3: tệp ĐÒN THEO VŨ KHÍ em-be-<nhân vật>[-<bộ>]-don chỉ có các hàng atk_sword, atk_bow, atk_spear, atk_hammer, cast (không có idle);
-        # js/sprite_custom.js ghép nó xuống dưới tấm thân cùng mã gốc khi nạp.
-        if t.get('doi_tuong') == 'em-be' and ma.endswith('-don'):
-            if not re.match(r'^em-be-(smith|hunter|healer|wrestler)(-(rung|bien|lau))?-don$', ma):
-                sys.exit('art/custom/%s: mã tệp đòn phải là em-be-<smith|hunter|healer|wrestler>[-rung|-bien|-lau]-don' % name)
-            if not isinstance(t.get('dong_tac'), dict) or not any(k in t['dong_tac'] for k in ('atk_sword', 'atk_bow', 'atk_spear', 'atk_hammer', 'cast')):
-                sys.exit('art/custom/%s: tệp đòn thiếu hàng (atk_sword, atk_bow, atk_spear, atk_hammer, cast)' % name)
-            out.append({k: t[k] for k in RUNTIME_KEYS if k in t})
-            continue
         if not isinstance(t.get('dong_tac'), dict) or 'idle' not in t['dong_tac']:
             sys.exit('art/custom/%s thiếu động tác đứng thở' % name)
-        # Em bé: em-be (cả bốn), em-be-<nhân vật> (thân thường) hoặc em-be-<nhân vật>-<bộ> (thân vẽ liền BỘ TRANG PHỤC: rung, bien, lau).
-        if t.get('doi_tuong') == 'em-be' and not re.match(r'^em-be(-(smith|hunter|healer|wrestler)(-(rung|bien|lau))?)?$', ma):
-            sys.exit('art/custom/%s: mã em bé phải là em-be, em-be-<smith|hunter|healer|wrestler> hoặc thêm đuôi bộ -rung, -bien, -lau' % name)
+        # Em bé: đợt 2 chỉ còn 3 NPC (bạn đồng hành) em-be-hunter, em-be-healer, em-be-wrestler; nhân vật chơi là Zed (zed-*).
+        if t.get('doi_tuong') == 'em-be' and not re.match(r'^em-be-(hunter|healer|wrestler)$', ma):
+            sys.exit('art/custom/%s: đã bỏ ở đợt 2 — em bé chỉ còn em-be-hunter, em-be-healer, em-be-wrestler' % name)
         out.append({k: t[k] for k in RUNTIME_KEYS if k in t})
     return out
 

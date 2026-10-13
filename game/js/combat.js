@@ -20,14 +20,12 @@
   // Bậc 0..3 (Thường, Lam, Tím, Vàng). Bản sao vũ khí hoặc vũ khí dựng tạm chỉ có tier cũ vẫn đọc được.
   G.wRar = (w) => G.clamp((w.rarity != null ? w.rarity : w.tier) | 0, 0, G.RARITY.length - 1);
   G.wHas = (w, k) => !!(w && w.affixes && w.affixes.includes(k)); // có dòng phụ k không
-  // Tên hiển thị lấy theo hình (dòng, nhánh, mốc) từ js/weapon_art.js, kèm danh hiệu và cấp mài.
+  // Tên hiển thị: loại + chữ theo hệ và cấp (Kiếm Than Hồng, Phi tiêu Băng Đế…), kèm danh hiệu và cấp mài (không còn dòng vũ khí).
   G.wName = function (w) {
-    const st = G.wStage(w), WA = G.weaponArt;
-    // Hệ thống mới (G.HE_MOI): bỏ dòng vũ khí → tên = loại + chữ theo hệ và cấp (Kiếm Than Hồng, Phi tiêu Băng Đế…).
-    const dong = WA && !G.HE_MOI;
-    const base = dong ? WA.name(WA.fromWeapon(w)) : G.WTYPES[w.type].name + (st ? ' ' + G.NAME_WORDS[w.branch][st - 1] : '');
+    const st = G.wStage(w);
+    const base = G.WTYPES[w.type].name + (st ? ' ' + G.NAME_WORDS[w.branch][st - 1] : '');
     // Ngôn ngữ khác: dịch tên gốc và danh hiệu lúc hiện (w.title nằm trong bản lưu, luôn là tiếng Việt).
-    if (G.LANG !== 'vi') return (dong || !st ? G.tv(base) : G.tv(G.WTYPES[w.type].name) + ' ' + G.tv(G.NAME_WORDS[w.branch][st - 1])) + titleOf(w.title) + (w.sharpen ? ' +' + w.sharpen : '');
+    if (G.LANG !== 'vi') return (!st ? G.tv(base) : G.tv(G.WTYPES[w.type].name) + ' ' + G.tv(G.NAME_WORDS[w.branch][st - 1])) + titleOf(w.title) + (w.sharpen ? ' +' + w.sharpen : '');
     return base + (w.title || '') + (w.sharpen ? ' +' + w.sharpen : '');
   };
   const KE_HA = ', kẻ hạ ';
@@ -89,23 +87,18 @@
   // ---------- chỉ số người chơi ----------
   G.buildPlayer = function () {
     const sv = G.save, key = sv.hero, H = G.HEROES[key], hs = sv.heroes[key];
-    if (G.outfit) G.outfit.sync(sv); // mũ, áo, bùa kiểu cũ (nếu còn) chuyển sang trang phục mới trước khi tính chỉ số
+    // Đợt 2: mũ, áo, bùa, trang phục kiểu cũ (G.GEAR, js/outfit.js) đã bỏ — chỉ số chỉ còn từ cấp, kỹ năng, nội tại, vũ khí, chưởng.
     const sk = hs.sk;
-    const armor = sv.armor ? G.GEAR.armor[sv.armor] : null;
-    const helm = sv.helm ? G.GEAR.helm[sv.helm] : null;
-    const set = armor && helm && armor.set && armor.set === helm.set ? armor.set : null;
-    const osum = G.outfit ? G.outfit.sum(sv) : null; // trang phục đang mặc: máu cộng vào trước các hệ số, như áo của bản cũ
-    let maxhp = H.hp * (1 + G.LVL_HP * (hs.lvl - 1)) + (armor ? armor.hp : 0) + (osum ? osum.stats.hp || 0 : 0);
+    let maxhp = H.hp * (1 + G.LVL_HP * (hs.lvl - 1));
     if (sk.def >= 1) maxhp *= 1.1;
     // ZED (js/data.js G.ZED_DAY): phần giảm sát thương từ nội tại (Cu Lì 25%; Zed được Cu Lì dạy 12%) — Sức mạnh, Lực chiến chỉ tính một nửa
     const zed = G.zedLa ? G.zedLa(key) : false;
     const drNT = key === 'wrestler' ? 0.25 : zed && G.zedHoc('wrestler') ? G.ZED_DAY.wrestler.dr : 0;
-    if ((sv.charm === 'c_greed' || (osum && osum.oldCharm === 'c_greed')) && hs.lvl >= 5) maxhp *= 0.9;
     const P = {
       isPlayer: true, key, lvl: hs.lvl, sk, x: 60, y: 190, r: 7, hr: 6, face: 1,
       maxhp: Math.round(maxhp), hp: Math.round(maxhp),
       maxmana: H.mana + (sk.elem >= 1 ? 20 : 0), mana: 0,
-      speed: 72 * H.speed * (sv.armor === 'a_ho' ? 1.08 : 1),
+      speed: 72 * H.speed,
       weapons: sv.carry.map((id) => G.weaponById(id)).filter(Boolean), cur: 0, coats: {},
       atkT: 0, atkDur: 0, cdT: 0, hitDone: true, comboI: -1, lastAtk: 0, hitCount: 0,
       dodgeT: 0, dodgeCd: 0, dodgeBuf: 0, ddx: 1, ddy: 0, inv: 0, hurtT: 0, dashT: 0, dashHit: null,
@@ -115,19 +108,17 @@
       dmgMult: (1 + (sk.atk >= 1 ? 0.08 : 0) + (sk.atk >= 4 ? 0.08 : 0)),
       crit: sk.atk >= 5 ? 0.1 : 0, specCost: 25 - (sk.atk >= 2 ? 5 : 0), statusBonus: sk.atk >= 3 ? 1.15 : 1,
       dodgeCdMax: sk.def >= 2 ? 0.75 : 1, roomHeal: sk.def >= 3 ? 0.08 : 0,
-      dr: (armor ? armor.dr : 0) + (sk.def >= 5 ? 0.1 : 0) + drNT,
+      dr: (sk.def >= 5 ? 0.1 : 0) + drNT,
       resist: { fire: 0, poison: 0, ice: 0 },
       manaHit: 2 + (sk.elem >= 2 ? 1 : 0), comboMult: sk.elem >= 3 ? 1.3 : 1, swapProc: sk.elem >= 4,
       statusDur: (key === 'healer' ? 1.3 : 1) * (zed && G.zedHoc('healer') ? G.ZED_DAY.healer.statusDur : 1) * (sk.elem >= 5 ? 1.25 : 1),
-      markMult: key === 'smith' ? 1.2 : 1, set,
+      markMult: key === 'smith' ? 1.2 : 1,
       // nội tại "đánh quái bị khống chế" (Cu Tèo; Zed khi đã được Cu Tèo dạy), phản đòn cận chiến (Cu Lì; Zed khi Cu Lì dạy)
       ccMult: key === 'hunter' ? 1.25 : zed && G.zedHoc('hunter') ? G.ZED_DAY.hunter.cc : 1,
       reflect: key === 'wrestler' ? 0.5 : zed && G.zedHoc('wrestler') ? G.ZED_DAY.wrestler.reflect : 0,
-      drNT: drNT, charm: hs.lvl >= 5 ? sv.charm : null, helm: sv.helm, armor: sv.armor,
+      drNT: drNT,
     };
-    if (helm) P.resist[helm.res] += helm.pct;
     if (sk.def >= 4) for (const e of G.ELS) P.resist[e] = Math.min(0.8, P.resist[e] + 0.3);
-    if (G.outfit) G.outfit.apply(P, sv); // trang phục: chỉ số, bộ, tác dụng đặc biệt, hình đang mặc (js/outfit.js)
     if (G.chuong) G.chuong.attach(P, sv); // nút Chưởng thay kỹ năng riêng: cây chưởng đang dùng, nét riêng của em bé (js/chuong.js)
     P.mana = Math.round(P.maxmana * 0.5);
     return P;
@@ -158,12 +149,7 @@
     // Phiên cân bằng (mục 6): nội tại giảm 25% sát thương của Cu Lì chỉ tính một nửa (Đô Vật bị đếm cao hơn Thợ Rèn 26%
     // dù thắng như nhau với số máu mất tương đương).
     const drP = P.dr - (P.drNT || 0) / 2;
-    let ehp = (P.maxhp / (1 - Math.min(0.75, drP))) * (1 + 0.25 * Math.min(0.8, res));
-    // Trang phục (js/outfit.js): máu, giảm sát thương, kháng hệ đã nằm trong P; thêm phần thưởng đủ bộ (sát thương hệ),
-    // mỗi tác dụng riêng của món Tím, Vàng (khiên, vệt, vũng, nổ) và cánh (lộn xa hơn, khiên sau khi lộn).
-    if (P.elBonus) { let eb = 0; for (const e in P.elBonus) eb = Math.max(eb, P.elBonus[e] || 0); off *= 1 + eb * 0.6; }
-    if (P.oSp) { let n = 0; for (const k in P.oSp) n += P.oSp[k].length; ehp *= 1 + 0.04 * Math.min(5, n); }
-    if (P.dodgeMul > 1) ehp *= 1 + (P.dodgeMul - 1) * 0.3;
+    const ehp = (P.maxhp / (1 - Math.min(0.75, drP))) * (1 + 0.25 * Math.min(0.8, res));
     return { off, ehp, power: Math.round(3 * Math.sqrt(off * ehp) * (P.powerMult || 1)) };
   };
   // Màu so sánh: đủ (xanh), sát nút (vàng, từ 90% khuyên dùng), thiếu (đỏ).
@@ -195,7 +181,6 @@
     P.x = 50; P.y = (W.y0 + W.y1) / 2;
     P.inv = 0.6;
     P.spearOut = null; P.slideT = 0; // giáo Phi Thương đang bay ở phòng cũ thì coi như đã về tay
-    if (G.outfit && P.oSp) G.outfit.onRoom(P); // khiên đầu phòng của trang phục
     return W;
   };
   G.setWorld = (w) => { W = w; };
@@ -305,7 +290,6 @@
       if (t.exposed > 0) m *= 1.5;
       if (t.onHit) t.onHit(o);
     }
-    if (o.fromPlayer !== false && o.el && G.outfit) m *= G.outfit.elMult(W.P, o.el); // đủ bộ trang phục một hệ: tăng sát thương hệ đó
     if (o.fromPlayer !== false && !o.ch) { // trùm chỉ học theo vũ khí (chưởng không tính, js/chuong.js)
       W.stats.el[o.el || 'none'] += amt;
       if (o.src === 'hit') { if (o.ranged) W.stats.ranged += amt; else W.stats.melee += amt; }
@@ -427,19 +411,9 @@
       let elx = el;
       if (run && run.tut && run.W === W) { if (!hasW) elx = 'fire'; n *= elx === 'fire' ? 2 : elx === 'poison' ? 0.2 : 1; }
       G.addMarks(w, elx, n * P.markMult * W.marksMult);
-      // Vũ khí thứ hai (mục 7) nhận một nửa số dấu ấn, vào hệ chính của nó; chưa khoá hệ thì vào hệ nó đang nhiều nhất, còn trắng
-      // thì vào hệ KHẮC CHẾ hệ vừa nhận (G.WEAK): trùm kháng hệ của vũ khí chính thì vũ khí thứ hai sẵn hệ khắc chế để đổi sang.
-      // Hệ thống mới: linh khí vào túi chung (js/vk_moi.js bọc G.addMarks) → vũ khí thứ hai không nhận thêm phần nào.
-      const w2 = !G.HE_MOI && P.weapons && P.weapons.find((x) => x && x !== w);
-      if (w2 && G.LK_PHU > 0) {
-        let e2 = w2.branch;
-        if (!e2) { for (const x of G.ELS) if ((w2.marks[x] || 0) > 0 && (!e2 || w2.marks[x] > w2.marks[e2])) e2 = x; }
-        // Vũ khí thứ hai cộng lặng lẽ (không ghi đè hạt và chữ bay "+N <hệ>" của vũ khí đang cầm); cờ tắt thì như cũ.
-      G.addMarks(w2, e2 || G.WEAK[elx], n * P.markMult * W.marksMult * G.LK_PHU, G.LK_THEO_THAY !== false);
-      }
+      // Linh khí vào túi chung (js/vk_moi.js bọc G.addMarks): vũ khí thứ hai không nhận thêm phần nào (luật cũ đã bỏ ở đợt 2).
       FX('markOrbs', e);
     }
-    if (P.charm === 'c_spirit' && G.hasStatus(e)) P.mana = Math.min(P.maxmana, P.mana + 5);
     // quái thường thỉnh thoảng rơi một viên linh khí của vùng: phải nhặt mới có (js/do_roi.js gọi onPick)
     if (!big && L && !e.add && G.doRoi && G.rnd() < L.drop) {
       const n = Math.round(L.orb * W.marksMult);
@@ -447,9 +421,7 @@
     }
     if (G.moves) G.moves.onKill(e, o, w); // đặc trưng hệ khi quái chết: Nổ lan, Lây độc (chỉ ở Thức tỉnh)
     if (G.chuong) G.chuong.onKill(e); // Lây độc của Độc chưởng, Băng vỡ của Băng chưởng
-    if (G.outfit) G.outfit.onKill(P, e); // bùa có hệ: quái gục gần bé nổ nhỏ
     P.mana = Math.min(P.maxmana, P.mana + 5);
-    if (P.charm === 'c_leech') P.hp = Math.min(P.maxhp, P.hp + P.maxhp * 0.02);
     if (!e.add) {
       W.loot.kills++;
       if (e.role === 'elite' && G.rnd() < 0.25) W.loot.charm = true;
@@ -479,9 +451,7 @@
     if (w.power === 'boss' && (e.isBoss || e.role === 'elite')) d *= 1.2;
     if (w.power === 'first' && e.hp >= e.maxhp) d *= 2;
     if (G.hasStatus(e)) d *= P.statusBonus;
-    if (P.charm === 'c_ember' && e.st.fire > 0) d *= 1.15;
     if ((P.ccMult || 1) > 1 && (e.st.frozen > 0 || e.st.stun > 0 || e.st.root > 0 || e.exposed > 0)) d *= P.ccMult;
-    if (P.boost) { d *= 1.6; P.boost = false; }
     const el = G.activeEl(P, w);
     G.damage(e, d, { el, ranged: o.ranged, src: 'hit', w, crit });
     if (G.boSk) G.boSk.trung(P, e, o); // skill bộ Rừng "Bẫy dây leo": đòn giữ rồi thả (o.manh) trói chân
@@ -658,7 +628,6 @@
     const P = W.P;
     if (G.boSk && !P.dead && !W.over && !W.safe) G.boSk.phanDon(P, amt, src); // skill bộ Lâu đài "Phản đòn": vừa lộn thì phản đòn (js/bo_skill.js)
     if (P.inv > 0 || P.dead || W.over || W.safe) return false; // W.safe: đã hạ trùm, đang đi dạo chờ vào cổng
-    if (G.outfit && G.outfit.block(P)) return false; // khiên của trang phục (cánh, khiên đầu phòng) chặn đòn này
     if (G.boSk && G.boSk.chan(P)) return false; // skill bộ Biển "Khiên nước" chặn trọn đòn này (js/bo_skill.js)
     const raw = amt;
     amt *= 1 - Math.min(0.75, P.dr);
@@ -671,9 +640,8 @@
     P.inv = 0.55; P.hurtT = 0.2;
     W.shake = Math.max(W.shake, 0.18);
     G.sfx('hurt');
-    if (!G.noRender) FX('hurt', P, amt, el, P.gongT > 0);
+    if (!G.noRender) FX('hurt', P, amt, el);
     if (P.reflect > 0 && melee && src && !src.dead) G.damage(src, raw * P.reflect, { src: 'reflect', fromPlayer: false });
-    if (G.outfit) G.outfit.onHurt(P, src); // mũ có hệ: quái đánh trúng bé bị cháy, độc hoặc chậm
     if (el) {
       const k = 1 - P.resist[el];
       if (el === 'fire') { P.st.fire = 3 * k; P.dot = raw * 0.05; } // tổng cộng thêm khoảng 30% nếu cháy đủ 3 giây
@@ -693,7 +661,6 @@
     if (P.dead && P.chHold) P.chHold = false;
     if (P.dead) P.deadT += dt;
     for (const id in P.coats) if (P.coats[id].t > 0) P.coats[id].t -= dt;
-    if (G.outfit) G.outfit.tick(P, dt); // tác dụng trang phục theo thời gian: vệt khi lộn, vũng mỗi vài giây
     if (G.boSk) G.boSk.tick(P, dt); // skill bộ trang phục Zed theo thời gian (js/bo_skill.js)
     // hiệu ứng trên người chơi
     P.dotT -= dt;
@@ -760,24 +727,10 @@
     }
     if (P.dodgeT > 0) {
       P.dodgeT -= dt;
-      const ox = P.x;
       // Phòng vuông nhìn từ trên: lộn dọc đi xa gần bằng lộn ngang (cùng tỉ lệ 0,75 như lúc đi bộ), tám hướng đều đúng góc.
-      const dm = P.dodgeMul || 1; // cánh cấp 2 trở lên: lộn xa hơn
-      P.x += P.ddx * G.DODGE.vx * dm * dt;
-      P.y += P.ddy * G.DODGE.vx * G.DODGE.ky * dm * dt;
-      if (P.charm === 'c_mist' || P.set === 'ngu') {
-        for (const e of G.targets()) {
-          if (!e.misted && e.x >= Math.min(ox, P.x) - e.r && e.x <= Math.max(ox, P.x) + e.r && Math.abs(e.y - P.y) < 14 + e.hr) {
-            e.misted = true;
-            G.applyStatus(e, 'ice', G.pDamage(P, w), 1);
-          }
-        }
-      }
+      P.x += P.ddx * G.DODGE.vx * dt;
+      P.y += P.ddy * G.DODGE.vx * G.DODGE.ky * dt;
       if (P.dodgeT <= 0) {
-        for (const e of W.ents) e.misted = false;
-        if (W.boss) W.boss.misted = false;
-        if (P.set === 'ho') P.boost = true;
-        if (G.outfit) G.outfit.dodgeEnd(P);
         if (G.boSk) G.boSk.lonXong(P); // skill bộ Ninja "Bóng lướt"
         if (G.CHAY_DANH_MOI !== false && ml > 0.12) P.moving = true; // ưu tiên Né > … > Chạy: hết Né còn giữ cần → chạy ngay (không chen khung Đứng)
       }
@@ -847,10 +800,6 @@
     if (P.atkT > 0 && !P.hitDone && P.atkT <= P.atkDur * (1 - (P.hitAt != null ? P.hitAt : 0.45))) { if (MV) MV.hit(P); else doHit(P); }
     P.x = G.clamp(P.x, W.x0, W.px1 != null ? W.px1 : W.x1);
     P.y = G.clamp(P.y, W.y0, W.y1);
-    if (P.set === 'moc') {
-      P.stillT = P.moving || P.atkT > 0 ? 0 : P.stillT + dt;
-      if (P.stillT > 2) P.hp = Math.min(P.maxhp, P.hp + P.maxhp * 0.02 * dt);
-    }
   };
 
   // ---------- quái ----------
@@ -1042,8 +991,7 @@
             if (z.rain) {
               z.tick = 0.15;
               for (const e of G.targets()) if (Math.hypot(e.x - z.x, (e.y - z.y) * 1.6) < z.r + e.r) playerHit(e, G.MOVES && G.MOVES.bow.rain ? G.MOVES.bow.rain.mult : 0.5, { w: z.w, ranged: true, rain: true });
-              const rx = z.x + G.rr(-30, 30), ry = z.y + G.rr(-12, 12); // vẫn rút hai số ngẫu nhiên như trước
-              FX('rainDrop', rx, ry, z.el);
+              G.rr(-30, 30); G.rr(-12, 12); // vẫn rút hai số ngẫu nhiên như trước (giữ chuỗi ngẫu nhiên; hạt mưa tên cũ đã bỏ ở đợt 2)
             } else {
               z.tick = z.every || 1;
               for (const e of G.targets()) if (Math.hypot(e.x - z.x, (e.y - z.y) * 1.6) < z.r + e.r) G.applyStatus(e, z.el, z.src, 1);
@@ -1060,24 +1008,6 @@
     W.zones = W.zones.filter((z) => !z.dead);
     if (G.moves) G.moves.update(W, dt); // sóng chấn động, đòn hẹn giờ của js/moves.js
     if (G.chuong) G.chuong.update(W, dt); // chưởng đang bay, vệt lửa và mây độc của chưởng (js/chuong.js)
-    // bẫy của Thợ Săn
-    for (const pr of W.props) {
-      if (pr.type !== 'trap' || pr.dead) continue;
-      pr.t -= dt;
-      if (pr.t <= 0) { pr.dead = true; continue; }
-      for (const e of G.targets()) {
-        if (Math.abs(e.x - pr.x) < 10 + e.r * 0.5 && Math.abs(e.y - pr.y) < 9 + e.hr * 0.5) {
-          pr.dead = true;
-          e.st.root = e.isBoss ? 0.8 : 2;
-          const src = G.pDamage(P, pr.w);
-          if (pr.el) G.applyStatus(e, pr.el, src, pr.el === 'fire' ? 1 : 2);
-          G.damage(e, src * 1.5, { el: pr.el, src: 'trap', w: pr.w });
-          G.sfx('hit', 0.6);
-          FX('trapSnap', pr, e);
-          break;
-        }
-      }
-    }
     W.props = W.props.filter((p) => !p.dead);
     W.ents = W.ents.filter((e) => !e.dead);
     // hạt, chữ, vệt chém
@@ -1101,14 +1031,14 @@
   G.heroArgs = function (P) {
     const w = curW(P);
     return {
-      p: P, // hero_art.js đọc thêm trạng thái hoạt ảnh từ đây (chỉ đọc)
+      p: P, // js/hero_tinhlinh.js, js/zed_moi.js đọc thêm trạng thái hoạt ảnh từ đây (chỉ đọc)
       x: P.x, y: P.y, face: P.face, key: P.key, move: P.moving, t: P.t, tc: P.chayT,
       mdx: P.moving && P.ldx != null ? P.ldx : 0, // hướng chạy (ngang) cho chân khi chạy + chém (js/zed_moi.js ghép eo): chân theo cần, thân trên theo hướng chém
       atk: P.atkT > 0 ? 1 - P.atkT / P.atkDur : -1, dodge: P.dodgeT > 0 ? 1 - P.dodgeT / 0.27 : -1,
       flash: P.hurtT > 0, alpha: P.inv > 0 && P.dodgeT <= 0 && Math.floor(G.time * 20) % 2 ? 0.5 : null,
       // giáo đang bay (Phi Thương): tay không, chưa vẽ cây giáo trên tay
       weapon: Object.assign({}, w, { coat: P.coats[w.id] && P.coats[w.id].t > 0 ? P.coats[w.id].el : null }, P.spearOut === w.id ? { type: 'fist' } : null),
-      helm: P.helm, armor: P.armor, outfit: P.outfit || null, gong: P.gongT > 0,
+      gong: P.gongT > 0,
       roundShadow: !!W.geo, // phòng vuông nhìn từ trên: bóng đổ tròn
     };
   };

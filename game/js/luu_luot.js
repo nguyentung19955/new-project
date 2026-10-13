@@ -14,7 +14,7 @@
     try { tat = /[?&]luuluot=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
     G.LUU_LUOT = !tat;
   }
-  const KHOA = G.HE_CU ? 'linhkhi_luot_v1_hecu' : 'linhkhi_luot_v1', HAN = 3 * 24 * 3600 * 1000; // bản ghi cũ hơn 3 ngày thì bỏ
+  const KHOA = 'linhkhi_luot_v1', HAN = 3 * 24 * 3600 * 1000; // bản ghi cũ hơn 3 ngày thì bỏ
   if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({
     'Chơi tiếp ải?': 'Continue the stage?', 'Chơi tiếp': 'Continue', 'Bỏ ải này': 'Abandon it',
     '{0}: ải {1}, đã dọn {2} phòng, máu {3}/{4}': '{0}: stage {1}, {2} rooms cleared, HP {3}/{4}',
@@ -36,7 +36,7 @@
       v: 1, luc: Date.now(), hero: G.save.hero, carry: sao(G.save.carry), r: S.r, i: S.i, diff: S.diff, kind: S.map.kind, seed: S.map.seed,
       idx: S.idx, cleared: sao(S.cleared), seen: sao(S.seen), known: sao(S.known), visits: S.visits, dung,
       P: {}, marks: S.marks || 0, marksMult: S.marksMult, haste: S.haste, curse: S.curse || null, usedPotion: !!S.usedPotion, swapped: !!S.swapped,
-      stats: sao(S.stats), loot: sao(S.loot), got: sao(S.got), outfitLoot: sao(S.outfitLoot || null),
+      stats: sao(S.stats), loot: sao(S.loot), got: sao(S.got),
     };
     for (const k of LUU_P) if (typeof P[k] === 'number') o.P[k] = P[k];
     if (W && W.type) o.loai = W.type;
@@ -88,7 +88,7 @@
     for (const k in o.P) if (typeof o.P[k] === 'number') P[k] = o.P[k];
     if (P.cur >= P.weapons.length) P.cur = 0;
     S.marks = o.marks || 0; S.marksMult = o.marksMult || S.marksMult; S.haste = o.haste || S.haste; S.curse = o.curse; S.usedPotion = !!o.usedPotion; S.swapped = !!o.swapped;
-    if (o.stats) S.stats = o.stats; if (o.loot) S.loot = o.loot; if (o.outfitLoot) S.outfitLoot = o.outfitLoot;
+    if (o.stats) S.stats = o.stats; if (o.loot) S.loot = o.loot;
     // đồ nhặt trong ải: vũ khí trỏ lại đúng món trong bản lưu (đã được cộng vào bản lưu lúc nhặt)
     if (Array.isArray(o.got)) S.got = o.got.map((g) => (g && g.w ? (G.weaponById(g.w.id) ? { s: g.s, w: G.weaponById(g.w.id) } : String(g.s || '')) : g));
     if (S.W) { S.W.marksMult = S.marksMult; S.W.haste = S.haste; S.W.noPotion = S.curse === 'dry'; }

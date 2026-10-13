@@ -99,9 +99,9 @@
   // riêng hiệu ứng của em bé (G.theme.DOC.fxBe). OWN = chủ của hiệu ứng đang được sinh ra; đặt theo tên hàm gọi (danh sách dưới)
   // và theo phe của đạn / vùng / chỗ đang cập nhật. Chỉ dùng lúc vẽ, không đổi luật chơi.
   let OWN = 0;
-  const PL_API = { swing: 1, mvSwing: 1, mvCharge: 1, punch: 1, hit: 1, combo: 1, freeze: 1, status: 1, dash: 1, slam: 1, nung: 1, trapPlace: 1, trapSnap: 1,
-    bottle: 1, gong: 1, dodge: 1, potion: 1, swap: 1, heShatter: 1, heBoom: 1, heSpread: 1, heFinish: 1, heArrow: 1, spCast: 1, spPin: 1, spBack: 1, spCatch: 1,
-    spEnd: 1, chCast: 1, chBoom: 1, chHit: 1, chEnd: 1, chShatter: 1, chSpread: 1, chHeal: 1, death: 1, rainDrop: 1, marks: 1, markOrbs: 1, evolve: 1 };
+  const PL_API = { swing: 1, mvSwing: 1, mvCharge: 1, punch: 1, hit: 1, combo: 1, freeze: 1, status: 1, dash: 1,
+    dodge: 1, potion: 1, swap: 1, heShatter: 1, heBoom: 1, heSpread: 1, heFinish: 1, heArrow: 1, spCast: 1, spPin: 1, spBack: 1, spCatch: 1,
+    spEnd: 1, chCast: 1, chBoom: 1, chHit: 1, chEnd: 1, chShatter: 1, chSpread: 1, chHeal: 1, death: 1, marks: 1, markOrbs: 1, evolve: 1 };
   const EN_API = { enemySwing: 1, lunge: 1, hurt: 1, zoneFire: 1, propBlast: 1 };
   function api(name, f) {
     const own = PL_API[name] ? 1 : EN_API[name] ? 0 : -1;
@@ -490,7 +490,6 @@
     S.stop = s;
   }
   api('shake', (a, dx, dy) => { trauma(a || 0.3); if (dx || dy) kick(dx || 0, dy || 0); });
-  api('hitStop', (ms) => stop(ms));
   const PRESS = ['atkP', 'dodgeP', 'specialP', 'skillP', 'swapP', 'potionP'];
   // Gọi đầu mỗi lần cập nhật thế giới. Trả về true nếu đang khựng hình (thế giới đứng yên một nhịp).
   // Nút bấm trong lúc khựng được giữ lại và trả về ở khung hình kế tiếp.
@@ -940,7 +939,7 @@
     const blunt = o.type === 'hammer', pierce = o.type === 'spear' || o.ranged;
     // Ảnh AI: chí mạng / trúng nặng / trúng thường. Có ảnh thì bỏ chớp sáng, vòng, vết cắt vẽ bằng code (giữ hạt văng theo hệ).
     // Phi tiêu của người chơi trúng (bộ Zed mới, không chí mạng): ảnh hu-trung-phi-tieu (sao 4 cánh) thay trúng thường / trúng nặng.
-    const ptHit = !o.crit && o.ranged && o.type === 'bow' && G.ZED_MOI !== false && coAnh('hu-trung-phi-tieu');
+    const ptHit = !o.crit && o.ranged && o.type === 'bow' && coAnh('hu-trung-phi-tieu');
     const maHit = ptHit ? 'hu-trung-phi-tieu' : o.crit ? (coAnh('hu-chi-mang') ? 'hu-chi-mang' : null) : hk >= 2 && coAnh('hu-trung-nang') ? 'hu-trung-nang' : coAnh('hu-trung') ? 'hu-trung' : null;
     if (maHit) anh(maHit, cx, cy, { f: dir, sc: e.isBoss ? 1.35 : o.ranged ? 0.8 : 1 });
     if (maHit) {
@@ -1055,17 +1054,8 @@
     if (!v) { const n = parseInt(hex.slice(1), 16); v = 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; AC.set(key, v); }
     return v;
   }
-  // Mưa phi tiêu bằng ảnh (bộ Zed mới, cờ ?zedmoi=0 tắt): ảnh hu-mua-phi-tieu đã vẽ phi tiêu rơi nên thôi bắn mũi tên bằng hạt.
-  const muaPT = () => G.ZED_MOI !== false && coAnh('hu-mua-phi-tieu');
-  // Tên từ mưa tên rơi xuống (vị trí do luật chơi chọn)
-  api('rainDrop', (x, y, el) => {
-    if (muaPT()) return;
-    const PL = pal(el);
-    const o = emit(7, x, y - 150, 0, 620, 0.5, el ? [PL.c2, PL.c] : ['#e8e2d0', '#c9ccd2'], 1, 0, 0, y, 1);
-    o.vx = 0;
-    // thêm vài mũi tên phụ cho dày
-    for (let i = 0; i < 3; i++) emit(7, x + rr(-34, 34), y + rr(-16, 16) - rr(120, 190), 0, 620, 0.6, el ? [PL.c2, PL.c] : ['#e8e2d0', '#c9ccd2'], 1, 0, 0, y + rr(-16, 16), 1);
-  });
+  // Mưa phi tiêu bằng ảnh (bộ Zed mới): ảnh hu-mua-phi-tieu (pool z.rain). Đợt 2: bỏ api rainDrop (mũi tên rơi bằng hạt của mưa tên cũ).
+  const muaPT = () => coAnh('hu-mua-phi-tieu');
 
   // ---------- trạng thái trên quái và người chơi ----------
   function stView(e) {
@@ -1242,13 +1232,7 @@
         if (!e.isPlayer && v.pn >= 2) digit(c, x + 10, top - 1, v.pn, '#c2f58a');
       }
       if (v.ice >= 2 && !v.frozen && !e.isPlayer) digit(c, x + 10, top + 6, Math.min(9, v.ice), '#bfeaff');
-      if (v.root) {
-        // hàm bẫy kẹp quanh chân
-        const k = Math.min(1, (t - (e.fxRt0 || 0)) / 0.08), w = Math.round(B.w + 3), up = Math.round(5 * k);
-        p(c, x - w, y + 1, w * 2, 2, '#3a3436'); p(c, x - w, y, w * 2, 1, '#8a93a0');
-        for (let i = 0; i < w * 2 - 1; i += 3) { p(c, x - w + i, y - up, 2, up, '#c9ccd2'); p(c, x - w + i, y - up - 1, 1, 1, '#ffffff'); }
-        p(c, x - w - 1, y - 1, 1, 3, '#5a5456'); p(c, x + w, y - 1, 1, 3, '#5a5456');
-      }
+      // (Đợt 2: bỏ hình hàm bẫy kẹp quanh chân của bẫy Thợ Săn cũ; bị giữ chân do skill bộ có dây leo riêng, js/bo_skill.js.)
       if (v.stun) {
         // sao choáng xoay trên đầu
         // Ảnh AI sao choáng (hu-choang, chạy lặp): điểm neo là giữa vòng sao, đặt ngay trên đầu.
@@ -1532,14 +1516,9 @@
     const rx = z.r * (1 - (1 - k) * (1 - k)) * (0.75 + 0.25 * fade), ry = rx * (G.ZK || 0.6);
     const foe = z.team !== 'player';
     if (z.rain) {
-      // Phi tiêu (13/10, docs/anh-goc/zed/hieu-ung): bộ Zed mới có ảnh hu-mua-phi-tieu thì vẽ cả trận mưa phi tiêu bằng ảnh
-      // (vòng 80 điểm ảnh ở cỡ 1 = đường kính vùng r 40), thay vòng ngắm nét đứt và mũi tên rơi (api rainDrop). Không có ảnh: như cũ.
+      // Phi tiêu (13/10, docs/anh-goc/zed/hieu-ung): ảnh hu-mua-phi-tieu vẽ cả trận mưa phi tiêu (vòng 80 điểm ảnh ở cỡ 1 = đường kính
+      // vùng r 40). Đợt 2: bỏ vòng ngắm nét đứt + mũi tên rơi của mưa tên cũ; ảnh chưa tải xong thì chỉ còn một quầng mờ.
       if (muaPT() && G.fxAnh.ve(c, 'hu-mua-phi-tieu', x, y, Math.min(z.fxA || 0, G.fxAnh.giay('hu-mua-phi-tieu') * 0.999), 0, (2 * z.r) / 80, false, Math.min(1, fade * 1.5))) return;
-      // vòng ngắm của mưa tên: nét đứt xoay chậm
-      const col = z.el ? pal(z.el).c2 : '#f1ead9';
-      c.fillStyle = col;
-      for (let i = 0; i < 24; i++) { const a = (i / 24) * TAU + t * 1.5; if (i % 2) continue; c.fillRect(Math.round(x + Math.cos(a) * rx) - 2, Math.round(y + Math.sin(a) * ry), 4, 2); }
-      p(c, x - 3, y, 7, 1, col); p(c, x, y - 2, 1, 5, col);
       ell(c, x, y, rx, ry, 'rgba(255,255,255,0.07)');
       return;
     }
@@ -1659,68 +1638,6 @@
     for (let i = 0; i < 5; i++) emit(2, P.x - f * rr(0, 8), P.y + rr(-2, 2), -f * rr(30, 80), rr(-16, -4), rr(0.3, 0.5), RAMP.dust, 4, 0, 3, null, 1);
     kick(f * 2.5, 0); trauma(0.25);
   });
-  api('slam', (P, el) => {
-    slam(P.x, P.y, 46, el, 1.7);
-    const PL = pal(el);
-    addRing(P.x, P.y, 8, 58, 0.3, PL.c, 4, 0);
-    addRing(P.x, P.y, 4, 58, 0.36, '#ffffff', 2, 0, 0.05);
-    for (let i = 0; i < 10; i++) { const a = (i / 10) * TAU + rr(-0.2, 0.2); add({ ty: 'crack', x: P.x + Math.cos(a) * 34, y: P.y + Math.sin(a) * 20, r: 9, t: 1.4, c: el ? PL.d : '#3a2e26', ly: 0, sd: R() * 100 }); }
-    if (el === 'fire') for (let i = 0; i < 10; i++) { const a = R() * TAU; emit(9, P.x + Math.cos(a) * rr(10, 50), P.y + Math.sin(a) * rr(6, 30), 0, rr(-80, -40), rr(0.3, 0.6), RAMP.fire, 5, -20, 0, null, 1); }
-    else if (el === 'ice') add({ ty: 'spikes', x: P.x, y: P.y, r: 44, t: 0.5, ly: 1, sd: R() * 50 });
-    else if (el === 'poison') for (let i = 0; i < 10; i++) { const a = R() * TAU, v = rr(30, 90); emit(2, P.x, P.y - 4, Math.cos(a) * v, Math.sin(a) * v * 0.5, rr(0.5, 0.9), RAMP.vapor, 5, 0, 2, null, 1); }
-    trauma(0.8); kick(0, 3); stop(70);
-  });
-  // Nung: vũ khí bắt lửa
-  api('nung', (P) => {
-    const h = hand(P);
-    add({ ty: 'flash', x: h.x, y: h.y - 4, r: 11, t: 0.14, c: '#fff3b0', c2: '#ff7a2a', ly: 1, sq: true });
-    addRing(P.x, P.y, 4, 26, 0.3, '#ff7a2a', 3, 0);
-    addRing(h.x, h.y - 4, 2, 16, 0.22, '#ffd23f', 2, 1);
-    for (let i = 0; i < 16; i++) { const a = (i / 16) * TAU; emit(9, h.x + Math.cos(a) * 3, h.y - 4 + Math.sin(a) * 3, Math.cos(a) * rr(30, 70), Math.sin(a) * rr(20, 50) - 40, rr(0.3, 0.6), RAMP.fire, R() < 0.5 ? 6 : 4, -40, 2, null, 1); }
-    for (let i = 0; i < 8; i++) emit(0, h.x, h.y - 4, rr(-90, 90), rr(-170, -60), rr(0.4, 0.8), RAMP.ember, 1, 240, 0, P.y + rr(-3, 5), 1);
-    add({ ty: 'pillar', x: P.x, y: P.y, w: 7, h: 44, t: 0.3, ly: 1 });
-    trauma(0.3);
-  });
-  api('trapPlace', (x, y, el) => {
-    const PL = pal(el);
-    addRing(x, y, 2, 14, 0.2, PL.c2, 2, 0);
-    for (let i = 0; i < 5; i++) emit(2, x + rr(-6, 6), y, rr(-30, 30), rr(-14, -4), rr(0.25, 0.45), RAMP.dust, 3, 0, 3, null, 1);
-    emit(6, x, y - 3, 0, 0, 0.3, RAMP.steel, 4, 0, 0, null, 1);
-  });
-  api('trapSnap', (pr, e) => {
-    const PL = pal(pr.el);
-    add({ ty: 'flash', x: pr.x, y: pr.y - 4, r: 8, t: 0.1, c: '#ffffff', c2: PL.c2, ly: 1 });
-    addRing(pr.x, pr.y, 3, 18, 0.2, PL.c2, 2, 0);
-    for (let i = 0; i < 8; i++) { const a = -Math.PI / 2 + rr(-1.3, 1.3), v = rr(80, 170); streak(pr.x, pr.y - 3, Math.cos(a) * v, Math.sin(a) * v, rr(0.12, 0.22), RAMP.steel, 1, 6, 300, 2); }
-    for (let i = 0; i < 4; i++) emit(8, pr.x + rr(-5, 5), pr.y - 2, rr(-60, 60), rr(-130, -60), 0.6, RAMP.steel, 2, 420, 0, pr.y + rr(-1, 4), 1);
-    trauma(0.3); stop(70); kick(0, 2);
-    if (e) { e.fxK = 0.13; e.fxD = 0; }
-  });
-  // Bình thuốc của Thầy Lang: bay theo đường cong rồi vỡ, vũng loang ra sau đó
-  api('bottle', (P, z) => {
-    z.fxD = 0.24;
-    add({ ty: 'bottle', x: P.x + P.face * 6, y: P.y, tx: z.x, ty2: z.y, t: 0.24, ly: 1, r: z.r });
-  });
-  function bottleBreak(o) {
-    const x = o.tx, y = o.ty2;
-    add({ ty: 'flash', x, y: y - 3, r: 8, t: 0.1, c: '#ffffff', c2: '#c2f58a', ly: 1, sq: true });
-    addRing(x, y, 4, o.r, 0.3, '#c2f58a', 3, 0);
-    for (let i = 0; i < 14; i++) { const a = -Math.PI / 2 + rr(-1.4, 1.4), v = rr(60, 160); emit(5, x, y - 3, Math.cos(a) * v, Math.sin(a) * v, rr(0.4, 0.8), RAMP.poison, 2, 400, 0, y + rr(-10, 12), 1); }
-    for (let i = 0; i < 5; i++) emit(8, x, y - 3, rr(-70, 70), rr(-140, -60), 0.6, ['#e9f9ff', '#bfeaff', '#7fd4ff'], 2, 420, 0, y + rr(-5, 8), 1);
-    for (let i = 0; i < 6; i++) emit(10, x + rr(-o.r, o.r) * 0.6, y + rr(-o.r, o.r) * 0.3, 0, rr(-40, -20), rr(0.5, 0.9), RAMP.heal, 1, 0, 0, null, 1);
-    puffs(x, y - 4, 5, RAMP.vapor, 40, 4, 6);
-    trauma(0.15);
-  }
-  // Gồng: vòng sóng vàng đẩy lùi, sau đó hào quang giữ suốt thời gian hiệu lực
-  api('gong', (P) => {
-    addRing(P.x, P.y, 6, 60, 0.3, '#ffd23f', 4, 0);
-    addRing(P.x, P.y, 3, 60, 0.38, '#fff3b0', 2, 0, 0.06);
-    addRing(P.x, P.y - 14, 4, 26, 0.22, '#fff3b0', 2, 1);
-    add({ ty: 'flash', x: P.x, y: P.y - 14, r: 12, t: 0.12, c: '#ffffff', c2: '#ffd23f', ly: 1, sq: true });
-    for (let i = 0; i < 14; i++) { const a = (i / 14) * TAU; streak(P.x + Math.cos(a) * 8, P.y - 6 + Math.sin(a) * 5, Math.cos(a) * 200, Math.sin(a) * 120, 0.22, RAMP.gold, i % 2 ? 2 : 1, 10, 0, 3); }
-    for (let i = 0; i < 10; i++) { const sd = i % 2 ? 1 : -1; emit(2, P.x + sd * rr(4, 14), P.y + rr(-3, 3), sd * rr(50, 120), rr(-16, -4), rr(0.3, 0.6), RAMP.dust, 4, 0, 3, null, 1); }
-    trauma(0.6); stop(60);
-  });
   api('dodge', (P) => {
     S.dodge = 0.27; S.ghostT = 0;
     for (let i = 0; i < 6; i++) emit(2, P.x - P.ddx * rr(0, 6), P.y + rr(-2, 2), -P.ddx * rr(20, 70) + rr(-10, 10), rr(-22, -4), rr(0.25, 0.5), RAMP.dust, R() < 0.4 ? 4 : 3, 0, 3, null, 1);
@@ -1740,14 +1657,13 @@
   });
 
   // ---------- người chơi trúng đòn ----------
-  api('hurt', (P, amt, el, blocked) => {
+  api('hurt', (P, amt, el) => {
     const PL = el ? pal(el) : PAL.foe;
     S.hurt = 0.3;
     // Ảnh AI em bé trúng đòn (hu-be-trung, có bản theo hệ của đòn): điểm neo là giữa thân em bé. Có ảnh thì bỏ chớp, tia bớt còn 3.
     const maTrung = anhHe('hu-be-trung', el), ai = !!maTrung && anh(maTrung, P.x, P.y - 14);
     if (!ai) add({ ty: 'flash', x: P.x, y: P.y - 14, r: 8, t: 0.1, c: '#ffffff', c2: '#ff6a5a', ly: 1 });
     for (let i = 0; i < (ai ? 3 : 7); i++) { const a = R() * TAU, v = rr(60, 140); streak(P.x, P.y - 14, Math.cos(a) * v, Math.sin(a) * v * 0.7, rr(0.14, 0.26), i % 2 ? RAMP.hurt : PL.ramp, 1, 6, 150, 3); }
-    if (blocked) { addRing(P.x, P.y - 14, 5, 18, 0.18, '#ffd23f', 2, 1); for (let i = 0; i < 5; i++) emit(6, P.x + rr(-10, 10), P.y - rr(4, 26), 0, 0, 0.25, RAMP.gold, 3, 0, 0, null, 1); }
     if (DOC()) {
       // Đợt 8: số máu em bé mất màu đỏ, có dấu trừ (khác hẳn số gây ra cho quái); trúng liền nhau trong 0,25 giây thì cộng dồn.
       const v = Math.round(amt), q = gopSo(P, 'be', false);
@@ -1941,8 +1857,7 @@
         o.x += o.vx * dt; o.y += o.vy * dt;
         emit(1, o.x, o.y, rr(-8, 8), rr(-8, 8), 0.22, o.pl.ramp, o.big ? 3 : 2, 0, 0, null, 1);
         if ((d < 8 && age > 0.16) || o.t <= 0) { orbArrive(o); o.t = 0; }
-      } else if (o.ty === 'bottle' && o.t <= 0) bottleBreak(o);
-      else if (o.ty === 'dashline' && o.P.dashT > 0) o.x1 = o.rot != null && o.sx != null ? o.x + o.f * Math.hypot(o.P.x - o.sx, o.P.y - o.sy) : o.P.x;
+      } else if (o.ty === 'dashline' && o.P.dashT > 0) o.x1 = o.rot != null && o.sx != null ? o.x + o.f * Math.hypot(o.P.x - o.sx, o.P.y - o.sy) : o.P.x;
       if (o.t > 0) E[w++] = o;
     }
     E.length = w;
@@ -2049,7 +1964,6 @@
     for (const pr of W.props) {
       if (pr.act && pr.used && !pr.fxU) { pr.fxU = 1; if (pr.type === 'chest' || pr.type === 'altar') fx.sparkle(pr.x, pr.y, pr.type === 'altar' ? '#b46aff' : '#ffd23f', 16); }
       else if (tick && pr.type === 'chest' && !pr.used && R() < 0.12) emit(6, pr.x + rr(-10, 10), pr.y - rr(2, 16), 0, -6, rr(0.3, 0.6), RAMP.gold, R() < 0.4 ? 3 : 2, 0, 0, null, 1);
-      else if (tick && pr.type === 'trap' && R() < 0.06) emit(6, pr.x + rr(-6, 6), pr.y - 2, 0, 0, 0.25, pr.el ? pal(pr.el).ramp : RAMP.steel, 2, 0, 0, null, 1);
     }
     if (W.cleared && !S.cleared && W.waves && W.waves.length) {
       // dọn sạch phòng: lấp lánh vàng chạy khắp sân và một dòng chữ ngắn
@@ -2207,14 +2121,6 @@
             if (ww > 2) p(c, Math.round(x - ww * 0.6 + ox), y - Math.round(yy) - 3, Math.round(ww * 1.2), 3, C1);
             if (ww > 4 && k < 0.6) p(c, Math.round(x - ww * 0.25 + ox), y - Math.round(yy) - 3, Math.max(1, Math.round(ww * 0.5)), 3, C2);
           }
-          break;
-        }
-        case 'bottle': {
-          const bx = Math.round(o.x + (o.tx - o.x) * k), by = Math.round(o.y + (o.ty2 - o.y) * k - 14 * (1 - k) - Math.sin(k * Math.PI) * 24);
-          const f = ((k * 8) | 0) % 4;
-          if (f % 2 === 0) { p(c, bx - 2, by - 3, 5, 6, '#1c3a10'); p(c, bx - 1, by - 2, 3, 4, '#6fcf3a'); p(c, bx - 1, by - 2, 1, 2, '#e6ffc0'); p(c, bx - 1, f ? by + 3 : by - 5, 2, 2, '#caa15a'); }
-          else { p(c, bx - 3, by - 2, 6, 5, '#1c3a10'); p(c, bx - 2, by - 1, 4, 3, '#6fcf3a'); p(c, bx - 2, by - 1, 2, 1, '#e6ffc0'); p(c, f === 1 ? bx + 3 : bx - 5, by - 1, 2, 2, '#caa15a'); }
-          p(c, Math.round(o.x + (o.tx - o.x) * k) - 2, Math.round(o.y + (o.ty2 - o.y) * k), 4, 1, 'rgba(0,0,0,0.3)');
           break;
         }
         case 'orb': {

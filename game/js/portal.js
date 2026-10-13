@@ -66,7 +66,7 @@
     }
   }
 
-  // đồ rơi: biểu tượng tài nguyên (bộ hình của G.theme.RES) hoặc hình vũ khí, nảy nhẹ trên sàn
+  // đồ rơi: biểu tượng tài nguyên (bộ hình của G.theme.RES), nảy nhẹ trên sàn
   function loot(o) {
     const t = G.time, age = t - (o.born || 0);
     if (age < 0) return;
@@ -76,14 +76,7 @@
     if (o.got) { const q = Math.min(1, (t - o.got) / 0.9); lift += q * 22; c.globalAlpha = 1 - q; }
     c.fillStyle = 'rgba(0,0,0,0.3)'; c.beginPath(); c.ellipse(Math.round(x), Math.round(y), 5, 2, 0, 0, Math.PI * 2); c.fill();
     const iy = Math.round(y - 8 - lift), ix = Math.round(x);
-    if (o.kind === 'outfit' && o.o && G.outfit && G.outfit.drawIcon) {
-      const col = G.RARITY[o.o.r].col;
-      c.fillStyle = col; c.globalAlpha *= 0.35 + 0.15 * Math.sin(t * 6); c.fillRect(ix - 7, iy - 7, 14, 14); c.globalAlpha = o.got ? 1 - Math.min(1, (t - o.got) / 0.9) : 1;
-      G.outfit.drawIcon(c, o.o, ix, iy, 14);
-    } else if (o.kind === 'weapon' && o.w && A.weaponIcon) {
-      c.fillStyle = 'rgba(255,240,180,' + (0.25 + 0.15 * Math.sin(t * 6)).toFixed(2) + ')'; c.fillRect(ix - 7, iy - 7, 14, 14);
-      A.weaponIcon(c, o.w, ix, iy, 13);
-    } else {
+    {
       const d = G.theme && G.theme.RES && G.theme.RES[o.kind];
       if (d) {
         px(ix - 5, iy - 5, 'rgba(26,18,10,0.6)', 11, 11);

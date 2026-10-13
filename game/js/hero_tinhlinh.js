@@ -1,5 +1,8 @@
 // Em bé tinh linh: bốn hero dựng theo lớp (lưng, thân trần, áo, mũ, mặt nạ, vũ khí sống).
-// Nạp sau hero_art.js thì thay G.art.hero, hàm cũ giữ ở G.art.heroOld.
+// Đợt 2 (YEU-CAU-2-DON-CU.md): nay chỉ còn để vẽ ba bạn NPC (Cu Tèo, Cái Bống, Cu Lì) và hình dự phòng của Zed (khoá smith) khi bộ ảnh
+// zed-* chưa tải xong (js/zed_moi.js bọc G.art.hero), cùng nhịp đòn / mũi vũ khí cho vệt chém (G.tinhLinh.tip, G.nhipChieu).
+// Đã bỏ: đồ mặc của trang phục cũ, hiệu ứng trang phục, ô đồ (itemIcon). js/hero_art.js (hình hero cũ hơn) đã xoá: hàm cũ G.art.heroOld
+// nay là hình đơn giản của js/art.js.
 // File tự đứng một mình: trang phác thảo cũng nạp chính file này để hình trong tờ duyệt và trong game là một.
 // Gốc (0,0) là điểm giữa hai bàn chân, x sang phải, y âm là lên trên. Bé quay mặt sang phải, sáng từ trên bên phải.
 (function () {
@@ -201,17 +204,6 @@
   const STEEL = ['#5f6b84', '#b4c0d4', '#f4f8ff'];
   const GOURD = ['#a8642a', '#e09c4a', '#f9d08c'];
   const BRZ = ['#754418', '#c4853a', '#f6d07c'];
-  const STRAW = ['#8f6c2a', '#d8b45c', '#f8e6a4'];
-  const INDIGO = ['#17162e', '#2e2d55', '#5c5a92'];
-  const BAMBOO = ['#6c6a2c', '#b4ae58', '#e6e298'];
-  const BONE = ['#a89c84', '#e8dec6', '#fffaf0'];
-  const CLOTH = ['#7a6a4a', '#a89872', '#d8ccaa'];
-  const TEAL = ['#2a5a70', '#4a7f9a', '#8fc0d4'];
-  const STONE = ['#5a4e4a', '#8a7a74', '#bdb0a8'];
-  const BARK = ['#4a3018', '#7a5632', '#a8804e'];
-  const SCALE = ['#1f5f85', '#3f8fb5', '#8fd0ea'];
-  const FUR = ['#b8b0a8', '#f0ece2', '#ffffff'];
-  const EMBER = ['#7a2a12', '#b0502a', '#f08a4a'];
   const FIRE = ['#a32418', '#f2622a', '#ffc64c'];
   const ICE = ['#2f62ad', '#7fc4f2', '#eafcff'];
   const TOX = ['#1d5a2a', '#49a83c', '#b5ea6a'];
@@ -220,7 +212,9 @@
   const SH = '#ffffff';
 
   // ====================================================================
-  // 3. DANH MỤC ĐỒ MẶC (G.heroLooks)
+  // 3. DANH MỤC ĐỒ MẶC (G.heroLooks) — đợt 2 (YEU-CAU-2-DON-CU.md): chỉ còn BỘ KHỞI ĐẦU của bốn bé (mũ trùm, áo trùm, túi phi tiêu,
+  // bầu hồ lô, búa tí hon, găng đồng) để vẽ ba bạn NPC bằng code khi chưa có ảnh AI; mũ, áo, đồ lưng, bùa, cánh, dấu mặt nạ của
+  // trang phục cũ (js/outfit.js đã xoá) đã bỏ.
   // Mỗi món: { id, name, draw(cx, P) }. cx: { B: hệ thân, H: hệ đầu, C: màu của bé, f: số khung, lv: cấp cánh }.
   // P(opt, fn) mở một miếng vẽ thuộc đúng lớp của món đó. Vẽ qua cx.B hoặc cx.H thì món đồ tự bám theo người.
   // Thân: chân ở y=0, hông y=-4, vai y=-11, rộng từ x=-4 đến 4. Đầu: tâm (0,0), rộng từ -6 đến 7, cao từ -6 đến 6; mặt nạ lệch phải.
@@ -245,7 +239,6 @@
     if (kieu === 'sung') P((s) => { H.r(-4, -10, 2, 4, MASK); H.r(4, -10, 2, 4, MASK); H.p(-4, -11, Md(MASK)); H.p(5, -11, Md(MASK)); });
     if (kieu === 'la') P({ ol: GRN[0] }, (s) => { H.l(0, -7, 1, -10, 1, Md(GRN)); H.r(1, -11, 3, 2, Md(GRN)); H.p(3, -12, Lt(GRN)); });
     if (kieu === 'khan') P((s) => { H.e(0.5, -8, 1.6, 1.6, DARK); });
-    if (kieu === 'tai') P((s) => { H.g([[-6, -3], [-5, -12], [-1, -6]], C); H.g([[2, -6], [6, -12], [7, -3]], C); s.in(() => { H.p(-4, -8, '#f0a0a0'); H.p(-4, -7, '#f0a0a0'); H.p(5, -8, '#f0a0a0'); H.p(5, -7, '#f0a0a0'); }); });
     P((s) => {
       if (kieu === 'nhon') H.g([[-7, 2], [-3, -13], [7, -2], [5, 3], [-5, 3]], C);
       H.e(0, -0.5, 7.2, 6.7, C);
@@ -260,100 +253,6 @@
     draw: (cx, P) => hood(cx, P, cx.C, 'khan'),
     front: (cx, P) => { const H = cx.H, k = cx.f % 4 < 2 ? 0 : 1, d = Math.min(0, hem(cx)); P((s) => { H.g([[-5, -5], [-10 + d, -8 + k], [-10 + d, -5 + k]], RED); H.g([[-5, -4], [-9, -2 - k], [-7, -5]], RED); }); P((s) => { H.r(-6, -6, 13, 2, RED); s.in(() => { H.r(-5, -6, 11, 1, Lt(RED)); }); }); },
   });
-  // Nón lá trên thân AI (phiên kiểm trang phục 12/10, cờ tắt G.NON_LA_GON = false): vành hẹp lại (rộng 19 thay 23, ~1,4 lần đầu),
-  // không ánh bóng (chấm trắng ở mép vành), bỏ quai đỏ (trên thân AI quai thành vệt sẫm dọc má như vết sẹo). Thân code: y hệt cũ.
-  const nonGon = (cx) => G.NON_LA_GON !== false && cx && cx.ai;
-  def('hats', 'non_la', 'Nón lá', {
-    draw: (cx, P) => {
-      const H = cx.H;
-      if (nonGon(cx)) return; // thân AI: mặt AI không trùng khung đầu H, vẽ quai sẽ rơi vào giữa mặt -> bỏ quai
-      P({ ol: RED[0] }, (s) => { H.l(-5, -3, -4, 5, 1, Md(RED)); });
-    },
-    front: (cx, P) => {
-      const H = cx.H;
-      if (nonGon(cx)) {
-        P({ bevel: false }, (s) => {
-          H.g([[0, -14], [9, -4], [-9, -4]], STRAW);
-          s.in(() => { H.l(-1, -10, -6, -5, 1, Dk(STRAW)); H.l(-3, -8, 3, -8, 1, Dk(STRAW)); H.r(-8, -4, 17, 1, Dk(STRAW)); H.r(-5, -6, 11, 1, Md(STRAW)); });
-        });
-        return;
-      }
-      P((s) => {
-        H.g([[0, -14], [11, -3], [-11, -3]], STRAW);
-        s.in(() => { H.l(0, -13, 7, -5, 1, Lt(STRAW)); H.l(-1, -10, -7, -5, 1, Dk(STRAW)); H.l(-4, -8, 4, -8, 1, Dk(STRAW)); H.r(-10, -3, 21, 1, Dk(STRAW)); H.r(-6, -5, 13, 1, Md(STRAW)); });
-      });
-    },
-  });
-  def('hats', 'khan_xep', 'Khăn xếp', {
-    draw: (cx, P) => {
-      const H = cx.H;
-      P((s) => {
-        H.g([[-7, -3], [-7, -7], [-5, -9], [6, -9], [8, -7], [8, -3]], INDIGO);
-        s.in(() => { H.l(-6, -6, 7, -6, 1, Dk(INDIGO)); H.l(-4, -8, 5, -8, 1, Lt(INDIGO)); H.p(3, -5, Lt(INDIGO)); H.p(4, -6, Lt(INDIGO)); H.p(5, -5, Lt(INDIGO)); H.p(4, -4, Md(GOLD)); });
-      });
-    },
-  });
-  def('hats', 'mu_rom', 'Mũ rơm', {
-    draw: (cx, P) => {
-      const H = cx.H;
-      P((s) => { H.e(0.5, -7, 5, 3.6, STRAW); s.in(() => { H.r(-5, -6, 12, 1, Md(RED)); H.p(-2, -9, Dk(STRAW)); H.p(2, -8, Dk(STRAW)); }); });
-    },
-    front: (cx, P) => {
-      const H = cx.H;
-      P((s) => { H.r(-10, -5, 22, 2, STRAW); H.p(-11, -4, Md(STRAW)); H.p(12, -4, Md(STRAW)); s.in(() => { for (let u = -9; u <= 11; u += 3) H.p(u, -4, Dk(STRAW)); }); });
-    },
-  });
-  function cap(cx, P, C, rim) {
-    const H = cx.H;
-    P((s) => { H.g([[-7, -3], [-6, -6], [-3, -8], [4, -8], [7, -6], [8, -3]], C); s.in(() => { H.r(-7, -4, 16, 2, rim); H.l(-2, -7, 3, -7, 1, Lt(C)); }); });
-  }
-  def('hats', 'mu_sung', 'Mũ sừng', {
-    draw: (cx, P) => {
-      const H = cx.H;
-      P((s) => { H.pl([[-5, -5], [-9, -8], [-10, -13]], 2, BONE); H.pl([[6, -5], [10, -8], [11, -13]], 2, BONE); s.in(() => { H.p(-10, -13, Lt(BONE)); H.p(11, -13, Lt(BONE)); H.p(-8, -7, Dk(BONE)); H.p(9, -7, Dk(BONE)); }); });
-      cap(cx, P, WD, Md(GOLD));
-    },
-  });
-  def('hats', 'vong_la', 'Vòng lá', {
-    draw: (cx, P) => { const H = cx.H; P({ ol: SKIN[0] }, (s) => { H.l(0, -6, 0, -8, 1, Md(SKIN)); H.p(1, -9, Lt(SKIN)); }); },
-    front: (cx, P) => {
-      const H = cx.H;
-      P({ ol: GRN[0] }, (s) => {
-        H.r(-6, -6, 14, 2, Md(GRN));
-        for (const u of [-6, -3, 0, 3, 6]) { H.g([[u - 1, -6], [u, -9], [u + 1, -6]], u % 2 ? Lt(GRN) : Md(GRN)); }
-        s.in(() => { H.p(-4, -5, Dk(GRN)); H.p(2, -5, Dk(GRN)); H.r(-2, -6, 2, 2, Md(RED)); H.p(5, -6, Lt(GOLD)); H.p(-6, -5, Lt(GOLD)); });
-      });
-    },
-  });
-  def('hats', 'mu_da_ca', 'Mũ da cá', {
-    draw: (cx, P) => {
-      const H = cx.H;
-      P((s) => { H.r(-8, -3, 3, 6, TEAL); s.in(() => { H.p(-7, 1, Lt(TEAL)); }); });
-      P((s) => { H.g([[-2, -8], [1, -11], [3, -8]], Lt(TEAL)); });
-      cap(cx, P, TEAL, Dk(TEAL));
-      P({ ol: false, bevel: false }, (s) => { H.p(-4, -6, Lt(TEAL)); H.p(-1, -5, Lt(TEAL)); H.p(5, -6, Lt(TEAL)); });
-    },
-  });
-  def('hats', 'khan_lua', 'Khăn đá lửa', {
-    draw: (cx, P) => {
-      const H = cx.H, k = cx.f % 4 < 2 ? 0 : 1, d = Math.min(0, hem(cx));
-      P((s) => { H.g([[-6, -6], [-11 + d, -8 + k], [-10 + d, -5 + k]], EMBER); H.g([[-6, -5], [-10, -2 - k], [-8, -5]], EMBER); });
-      P((s) => { H.g([[-7, -3], [-6, -7], [-3, -8], [4, -8], [7, -7], [8, -3]], EMBER); s.in(() => { H.r(-7, -4, 16, 1, Dk(EMBER)); H.r(3, -6, 2, 2, Lt(GOLD)); H.p(-2, -7, Lt(EMBER)); H.p(0, -6, Lt(EMBER)); }); });
-    },
-  });
-  def('hats', 'mu_vay_ca', 'Mũ vây cá', {
-    draw: (cx, P) => {
-      const H = cx.H;
-      P((s) => { H.g([[-5, -7], [-3, -13], [-1, -9], [1, -14], [3, -9], [5, -12], [6, -7]], ICE); s.in(() => { H.l(-3, -12, -2, -8, 1, Dk(ICE)); H.l(1, -13, 1, -8, 1, Dk(ICE)); H.l(5, -11, 4, -8, 1, Dk(ICE)); }); });
-      P((s) => { H.g([[-7, -4], [-11, -6], [-10, -1], [-7, 0]], Md(ICE)); });
-      cap(cx, P, SCALE, Lt(SCALE));
-    },
-  });
-  def('hats', 'mu_tai_cao', 'Mũ tai cáo', {
-    draw: (cx, P) => hood(cx, P, FUR, 'tai'),
-    front: (cx, P) => { const H = cx.H; P({ ol: false, bevel: false }, (s) => { H.r(1, -6, 2, 1, RED[1]); H.p(2, -5, RED[1]); }); },
-  });
-
   // ---------- ÁO ----------
   // Áo trùm (bộ khởi đầu): phủ từ vai xuống gần chân.
   function cloak(cx, P, C, o) {
@@ -365,76 +264,7 @@
       s.in(() => { B.r(-5 + d, -4, 11, 1, Lt(C)); B.r(-5, -9, 2, 6, Dk(C)); B.p(1, -11, o.clasp || Md(GOLD)); if (o.sash) B.r(-4, -8, 9, 1, o.sash); });
     });
   }
-  // Áo nhiều tầng xù: áo tơi, áo lông.
-  function tiers(cx, P, C, o) {
-    const B = cx.B; o = o || {};
-    const T = [[-6, 6, -7, -3], [-5, 5, -10, -7], [-4, 4, -13, -10]], d = hem(cx);
-    for (const t of T) P((s) => {
-      const k = t[3] === -3 ? d : t[3] === -7 ? Math.round(d / 2) : 0; // tầng dưới đung đưa nhiều hơn
-      B.g([[t[0] + 1, t[2]], [t[1] - 1, t[2]], [t[1] + k, t[3]], [t[0] + k, t[3]]], C);
-      s.in(() => { for (let u = t[0]; u <= t[1]; u += 2) { B.p(u, t[3], Dk(C)); B.p(u + 1, t[3] - 1, o.fleck || Md(C)); } });
-      for (let u = t[0] + 1; u <= t[1]; u += 3) B.p(u, t[3] + 1, Md(C));
-    });
-    if (o.sash) P({ ol: false, bevel: false }, (s) => { B.r(-4, -10, 9, 1, o.sash); });
-  }
-  // Áo ngắn vừa người: áo vải, áo the, áo vảy.
-  function tunic(cx, P, C, o) {
-    const B = cx.B; o = o || {}; const hem = o.hem == null ? -4 : o.hem, d = Math.round(hemOf(cx) * 0.6);
-    P((s) => {
-      B.g([[-3, -13], [3, -13], [4 + d, hem], [-4 + d, hem]], C);
-      s.in(() => {
-        B.r(-4, -9, 2, 9, Dk(C));
-        if (o.collar) { B.p(0, -13, o.collar); B.p(1, -12, o.collar); B.p(2, -13, o.collar); }
-        if (o.seam) B.l(1, -11, 1, hem, 1, Dk(C));
-        if (o.belt) { B.r(-4, -7, 9, 1, o.belt); B.p(1, -7, Lt(GOLD)); }
-        if (o.scales) for (let v = -12; v <= hem; v += 2) for (let u = -3 + ((v / 2) & 1); u <= 4; u += 2) B.p(u, v, Lt(C));
-        if (o.under) B.r(-4, hem, 9, 1, o.under);
-        if (o.patch) B.r(1, -6, 2, 2, o.patch);
-      });
-    });
-  }
-  // Giáp nẹp: giáp tre, giáp đá, áo vỏ cây.
-  function plates(cx, P, C, o) {
-    const B = cx.B; o = o || {};
-    P((s) => { B.r(-5, -6, 11, 3, C); s.in(() => { for (const u of [-3, 0, 3]) B.r(u, -6, 1, 3, Dk(C)); B.r(-5, -6, 11, 1, o.cord || Md(RED)); }); });
-    P((s) => {
-      B.g([[-4, -13], [4, -13], [4, -6], [-4, -6]], C);
-      s.in(() => { for (const u of [-2, 1]) B.r(u, -13, 1, 8, Dk(C)); B.r(-4, -10, 9, 1, o.cord || Md(RED)); if (o.glow) { B.p(2, -12, o.glow); B.p(3, -8, o.glow); B.p(-1, -8, o.glow); } });
-    });
-    P((s) => { B.r(-6, -14, 4, 3, C); B.r(3, -14, 4, 3, C); s.in(() => { B.r(-6, -12, 4, 1, Dk(C)); B.r(3, -12, 4, 1, Dk(C)); if (o.moss) { B.r(-6, -14, 2, 1, o.moss); B.p(5, -14, o.moss); } }); });
-    if (o.sprout) P({ ol: GRN[0] }, (s) => { B.r(4, -17, 2, 2, Md(GRN)); B.p(4, -15, Md(GRN)); });
-  }
-  // Áo cộc không tay: áo da.
-  function vest(cx, P, C, o) {
-    const B = cx.B; o = o || {};
-    P((s) => {
-      B.g([[-4, -12], [4, -12], [4, -4], [-4, -4]], C);
-      s.in(() => { B.r(-4, -9, 2, 6, Dk(C)); B.r(-4, -7, 9, 1, DARK); B.p(1, -7, Lt(GOLD)); for (let u = -4; u <= 4; u += 2) B.p(u, -4, o.trim ? Md(o.trim) : Lt(C)); });
-    });
-    P((s) => { B.e(0, -12.5, 4.6, 1.4, o.trim || FUR); });
-  }
   def('robes', 'ao_trum', 'Áo trùm', { tint: true, sleeve: (cx) => cx.C, draw: (cx, P) => cloak(cx, P, cx.C) });
-  def('robes', 'ao_toi', 'Áo tơi lá', { draw: (cx, P) => tiers(cx, P, STRAW, { fleck: Lt(STRAW) }) });
-  def('robes', 'ao_the', 'Áo the', { sleeve: () => INDIGO, draw: (cx, P) => tunic(cx, P, INDIGO, { hem: -3, collar: Lt(MASK), seam: true, under: Md(MASK) }) });
-  def('robes', 'giap_tre', 'Giáp tre', { draw: (cx, P) => plates(cx, P, BAMBOO) });
-  def('robes', 'ao_da', 'Áo da', { draw: (cx, P) => vest(cx, P, WD) });
-  def('robes', 'ao_la', 'Áo lá', {
-    draw: (cx, P) => {
-      const B = cx.B;
-      P({ ol: GRN[0] }, (s) => { for (const u of [-5, -2, 1, 4]) B.g([[u - 1, -8], [u + 2, -8], [u + 0.5, -2]], u === -2 || u === 4 ? Lt(GRN) : Md(GRN)); s.in(() => { B.r(-5, -8, 11, 1, Dk(GRN)); }); });
-      P({ ol: GRN[0] }, (s) => { for (const u of [-4, -1, 2]) B.g([[u, -13], [u + 3, -13], [u + 1.5, -10]], u === -1 ? Lt(GRN) : Md(GRN)); s.in(() => { B.p(1, -12, Md(RED)); }); });
-    },
-  });
-  def('robes', 'kho_vat', 'Khố đô vật', {
-    draw: (cx, P) => { const B = cx.B; P((s) => { B.r(-4, -7, 9, 2, RED); B.g([[0, -6], [4, -6], [3, -2], [1, -2]], RED); s.in(() => { B.r(-4, -7, 9, 1, Lt(RED)); B.p(2, -3, Md(GOLD)); }); }); },
-  });
-  def('robes', 'ao_vai', 'Áo vải thô', { sleeve: () => CLOTH, sleeveLen: 0.5, draw: (cx, P) => tunic(cx, P, CLOTH, { belt: Md(WD), patch: Dk(CLOTH) }) });
-  def('robes', 'ao_da_bien', 'Áo da biển', { draw: (cx, P) => vest(cx, P, TEAL, { trim: ICE }) });
-  def('robes', 'giap_da', 'Áo giáp đá', { draw: (cx, P) => plates(cx, P, STONE, { cord: Md(EMBER), glow: Lt(FIRE) }) });
-  def('robes', 'ao_vo_cay', 'Áo vỏ cây', { draw: (cx, P) => plates(cx, P, BARK, { cord: Dk(BARK), moss: Md(GRN), sprout: true }) });
-  def('robes', 'ao_vay', 'Áo vảy', { sleeve: () => SCALE, sleeveLen: 0.5, draw: (cx, P) => tunic(cx, P, SCALE, { scales: true, belt: Md(GOLD) }) });
-  def('robes', 'ao_long', 'Áo lông trắng', { draw: (cx, P) => tiers(cx, P, FUR, { sash: RED[1] }) });
-
   // ---------- ĐỒ ĐEO LƯNG ----------
   def('backs', 'ho_lo', 'Bầu hồ lô', {
     draw: (cx, P) => {
@@ -462,89 +292,6 @@
     },
     front: (cx, P) => { const B = cx.B; P({ ol: false, bevel: false }, (s) => { B.l(-3, -12, 3, -7, 1, WD[0]); }); },
   });
-  def('backs', 'ao_choang', 'Áo choàng', {
-    draw: (cx, P) => {
-      const B = cx.B, k = [0, 1, 2, 1][cx.f % 4] + (cx.tr | 0);
-      P((s) => { B.g([[-1, -13], [-4, -13], [-9 - k, -3 + (k >> 1)], [-7 - k, -1], [-3, -3]], RED); s.in(() => { B.l(-8 - k, -2, -4, -2, 1, Md(GOLD)); B.l(-5, -11, -8 - k, -4, 1, Dk(RED)); }); });
-    },
-    front: (cx, P) => { const B = cx.B; P((s) => { B.r(0, -13, 2, 2, GOLD); }); },
-  });
-  def('backs', 'gui_tre', 'Gùi tre', {
-    draw: (cx, P) => {
-      const K = cx.B.sub(-7, -8, -8);
-      P({ ol: GRN[0] }, (s) => { K.r(-2, -8, 2, 3, Md(GRN)); K.r(1, -9, 2, 4, Lt(GRN)); K.p(0, -7, Md(RED)); });
-      P((s) => { K.g([[-3, -5], [3, -5], [2, 4], [-2, 4]], BAMBOO); s.in(() => { K.r(-3, -5, 7, 1, Lt(BAMBOO)); for (let v = -3; v <= 3; v += 2) K.r(-3, v, 7, 1, Dk(BAMBOO)); K.r(0, -4, 1, 8, Dk(BAMBOO)); }); });
-    },
-    front: (cx, P) => { const B = cx.B; P({ ol: false, bevel: false }, (s) => { B.l(-3, -12, -2, -6, 1, WD[0]); }); },
-  });
-
-  // Khăn choàng sương (bộ Hang Biển): khăn băng quấn cổ, hai vạt bay ra sau theo bước chạy, có tua.
-  def('backs', 'khan_bang', 'Khăn choàng sương', {
-    draw: (cx, P) => {
-      const B = cx.B, k = [0, 1, 2, 1][cx.f % 4] + (cx.tr | 0), w = cx.sw || 0;
-      P((s) => { B.g([[-2, -13], [-4, -12], [-9 - k, -8 + w], [-11 - k, -5 + w], [-8 - k, -5 + w], [-3, -10]], ICE); s.in(() => { B.l(-4, -11, -9 - k, -6 + w, 1, Lt(ICE)); B.p(-10 - k, -5 + w, SH); }); });
-      P((s) => { B.g([[-3, -11], [-6 - (k >> 1), -4 - w], [-4 - (k >> 1), -3 - w], [-2, -9]], TEAL); });
-      tua(cx, P, B, -11 - k, -5 + w, 3, ICE, { k: 0.6 });
-    },
-    front: (cx, P) => { const B = cx.B; P((s) => { B.r(-3, -14, 7, 2, ICE); s.in(() => { B.r(-3, -14, 7, 1, Lt(ICE)); B.p(2, -13, SH); }); }); },
-  });
-  // Trống đồng nhỏ (bộ Lâu Đài): trống đeo sau lưng, mặt trống có sao, dùi gõ lắc theo bước.
-  def('backs', 'trong_nho', 'Trống đồng nhỏ', {
-    draw: (cx, P) => {
-      const K = cx.B.sub(-7, -8, -12), w = cx.sw || 0;
-      P((s) => { K.l(3, -4, 7 + w, -10, 1, WD); K.e(7 + w, -11, 1.3, 1.3, RED); });
-      P((s) => {
-        K.e(0, 0, 4.6, 5.4, BRZ);
-        s.in(() => { K.e(0, 0, 3, 3.6, Dk(BRZ)); K.e(0, 0, 1.4, 1.6, Lt(GOLD)); K.p(0, -3, Lt(GOLD)); K.p(0, 3, Lt(GOLD)); K.p(-2, 0, Lt(GOLD)); K.p(2, 0, Lt(GOLD)); K.r(-4, -1, 1, 3, Dk(BRZ)); });
-      });
-      tua(cx, P, K, -1, 5, 3, RED, { k: 0.8 });
-    },
-    front: (cx, P) => { const B = cx.B; P({ ol: false, bevel: false }, (s) => { B.l(-3, -12, 2, -7, 1, RED[1]); }); },
-  });
-
-  // ---------- CÁNH ----------
-  // Mỗi lá cánh: [góc (0 là chĩa ra sau, 90 là chĩa lên), dài, rộng]. Cấp càng cao càng nhiều lá, càng dài.
-  const WINGS = {
-    chuon: { name: 'Cánh chuồn chuồn', ramp: ['#5a8fb8', '#a8dcf0', '#f0fcff'], ol: '#2c4a6a', shape: 'lobe', lv: [[[26, 11, 5], [0, 8, 4]], [[42, 15, 5], [6, 12, 5]], [[52, 24, 7], [22, 22, 7], [-10, 14, 5]]] },
-    la: { name: 'Cánh lá', ramp: GRN, ol: '#12331a', shape: 'leaf', lv: [[[28, 11, 6]], [[40, 15, 7], [4, 12, 6]], [[56, 22, 9], [26, 24, 10], [-6, 17, 8]]] },
-    lua: { name: 'Cánh lửa', ramp: FIRE, ol: '#7a1810', shape: 'flame', lv: [[[28, 12, 6]], [[42, 16, 7], [8, 12, 6]], [[60, 22, 8], [34, 26, 10], [8, 20, 8], [-16, 12, 5]]] },
-    bang: { name: 'Cánh băng', ramp: ICE, ol: '#1c3a70', shape: 'shard', lv: [[[30, 12, 4], [4, 9, 4]], [[50, 15, 5], [24, 15, 5], [-2, 11, 4]], [[66, 20, 5], [46, 25, 6], [26, 24, 6], [6, 19, 5], [-14, 12, 4]]] },
-  };
-  function blade(W, a, len, wid, shape, C, hi) {
-    const r = a * D2R, dx = -Math.cos(r), dy = -Math.sin(r), nx = -dy, ny = dx, h = wid / 2;
-    const q = (t, k) => [dx * len * t + nx * h * k, dy * len * t + ny * h * k];
-    let pts;
-    if (shape === 'lobe') pts = [q(0, 0), q(0.25, 0.8), q(0.6, 1), q(0.9, 0.7), q(1, 0), q(0.9, -0.7), q(0.6, -1), q(0.25, -0.8)];
-    else if (shape === 'leaf') pts = [q(0, 0), q(0.4, 1), q(1, 0.1), q(0.45, -1)];
-    else if (shape === 'flame') pts = [q(0, 0.3), q(0.4, 1.1), q(0.7, 0.5), q(1, 0.9), q(0.75, -0.2), q(0.4, -1), q(0, -0.4)];
-    else pts = [q(0, 0.4), q(0.35, 1), q(1, 0), q(0.3, -1), q(0, -0.4)];
-    W.g(pts, C);
-    W.S.in(() => {
-      const a0 = q(0.12, 0), a1 = q(0.85, shape === 'flame' ? 0.4 : 0);
-      if (shape === 'leaf') W.l(a0[0], a0[1], a1[0], a1[1], 1, Dk(C));
-      else if (shape === 'flame') { const b = q(0.2, 0.1), d = q(0.6, 0.3); W.l(b[0], b[1], d[0], d[1], 1, hi ? '#fff0b0' : Lt(C)); }
-      else { const b = q(0.2, 0.2), d = q(0.75, 0.1); W.l(b[0], b[1], d[0], d[1], 1, shape === 'shard' ? SH : Lt(C)); }
-    });
-  }
-  for (const id in WINGS) {
-    const w = WINGS[id];
-    def('wings', id, w.name, {
-      levels: 3,
-      draw: (cx, P) => {
-        const lv = Math.max(1, Math.min(3, cx.lv | 0)), bl = w.lv[lv - 1], flap = [-14, 0, 18, 0][cx.f % 4] * (lv === 1 ? 0.6 : 1) * (cx.ps.anim === 'dodge' ? 1.5 : 1); // lộn thì vỗ mạnh hơn
-        const far = cx.B.sub(-3, -11, flap * 0.7 + 16), near = cx.B.sub(-4, -10, flap);
-        const dim = [w.ramp[0], w.ramp[0], w.ramp[1]];
-        P({ ol: w.ol }, (s) => { for (const b of bl) blade(far, b[0], b[1] * 0.85, b[2], w.shape, dim, false); });
-        P({ ol: w.ol }, (s) => { for (const b of bl) blade(near, b[0], b[1], b[2], w.shape, w.ramp, lv === 3); });
-        if (lv === 3) P({ fx: true }, (s) => {
-          const k = cx.f % 4, c1 = id === 'lua' ? '#ffd27a' : id === 'la' ? '#c8a0ea' : '#ffffff', c2 = id === 'lua' ? '#ff8a3a' : id === 'la' ? '#b5ea6a' : '#bfe9ff';
-          for (const q of [[-14, -18, c1], [-23, -8, c2], [-18, 4, c1], [-8, -24, c2], [-25, -16, c1]]) { const a = near.pt(q[0] - (k & 1), q[1] - k); s.p(a[0], a[1], q[2]); }
-          if (id === 'chuon' || id === 'bang') { const a = near.pt(-20, -13), x = Math.round(a[0]), y = Math.round(a[1]); s.p(x, y, SH); if (k < 2) { s.p(x - 1, y, '#bfe9ff'); s.p(x + 1, y, '#bfe9ff'); s.p(x, y - 1, '#bfe9ff'); s.p(x, y + 1, '#bfe9ff'); } }
-        });
-      },
-    });
-  }
-
   // ---------- ĐỒ CẦM TAY, GĂNG ----------
   def('hands', 'bua_con', 'Búa rèn tí hon', {
     // chỉ hiện khi tay xa đang rảnh; hx,hy là bàn tay xa
@@ -555,38 +302,6 @@
     },
   });
   def('hands', 'gang_dong', 'Găng đồng', { glove: BRZ });
-  // Bùa đeo hông (ô Bùa của trang phục): dây, mặt bùa, tua đỏ; lắc theo bước, văng ra sau khi lộn.
-  function charm(id, name, face, mark, kieu) {
-    def('hands', id, name, {
-      belt: (cx, P) => {
-        const B = cx.B, d = Math.round(hemOf(cx) * 0.7), x = 2 + d, y = -3;
-        P({ ol: false, bevel: false }, (s) => { B.l(2, -7, x, y - 1, 1, WD[0]); });
-        P((s) => {
-          if (kieu === 'tron') B.e(x, y + 1, 1.6, 1.6, face);
-          else if (kieu === 'nanh') B.g([[x - 1, y - 1], [x + 1, y - 1], [x, y + 3]], face);
-          else B.r(x - 1, y - 1, 3, 4, face);
-          s.in(() => { if (mark) B.p(x, y, mark); });
-        });
-        tua(cx, P, B, x, y + 3, 2, RED, { k: 0.5 });
-      },
-    });
-  }
-  charm('bua_nanh', 'Bùa nanh rắn', BONE, Md(TOX), 'nanh');
-  charm('bua_oc', 'Bùa vỏ ốc', ICE, SH, 'tron');
-  charm('bua_lua', 'Bùa đá lửa', FIRE, Lt(GOLD), 'vuong');
-  charm('bua_hut', 'Bùa hút máu', RED, SH, 'vuong');
-  charm('bua_tan', 'Bùa tàn lửa', EMBER, Lt(FIRE), 'tron');
-  charm('bua_suong', 'Bùa sương', BLU, SH, 'vuong');
-  charm('bua_tham', 'Bùa tham', GOLD, SH, 'tron');
-  charm('bua_linh', 'Bùa linh', PURP, Lt(PURP), 'vuong');
-
-  // ---------- DẤU TRÊN MẶT NẠ ----------
-  def('masks', 'lua', 'Dấu lửa', { draw: (H) => { H.r(2, -3, 2, 1, Md(RED)); H.p(3, -2, Lt(GOLD)); } });
-  def('masks', 'la', 'Dấu lá', { draw: (H) => { H.r(-2, 2, 2, 1, Md(GRN)); H.p(6, 2, Md(GRN)); H.p(2, -3, Md(GRN)); } });
-  def('masks', 'xoay', 'Dấu nước', { draw: (H) => { H.p(2, -3, Md(BLU)); H.p(3, -2, Md(BLU)); H.p(2, -2, Lt(BLU)); } });
-  def('masks', 'du', 'Dấu đô vật', { draw: (H) => { H.r(-1, -2, 1, 2, Md(RED)); H.r(6, -2, 1, 2, Md(RED)); H.r(2, -3, 2, 1, Md(RED)); } });
-  def('masks', 'ho', 'Mặt nạ hổ', { draw: (H) => { H.r(1, -3, 1, 2, Md(ORG)); H.r(3, -3, 1, 2, Md(ORG)); H.r(-2, 1, 2, 1, Md(ORG)); H.r(5, 1, 2, 1, Md(ORG)); H.r(-2, 3, 2, 1, Md(ORG)); } });
-
   // Bộ khởi đầu của từng hero và màu áo.
   const HERO = {
     smith: { name: 'Cu Tí', col: RED, outfit: { hat: 'trum_sung', robe: 'ao_trum', back: null, hand: 'bua_con', mask: null }, shadow: 7 },
@@ -595,25 +310,13 @@
     wrestler: { name: 'Cu Lì', col: ORG, outfit: { hat: 'trum_khan', robe: 'ao_trum', back: null, hand: 'gang_dong', mask: null }, shadow: 7 },
   };
   L.starter = {}; for (const k in HERO) L.starter[k] = HERO[k].outfit;
-  // Nối món đồ đang có trong data.js (G.GEAR) sang các lớp mới.
-  L.fromGear = {
-    helm: { h_r1: 'non_la', h_r2: 'mu_da_ca', h_r3: 'khan_lua', h_moc: 'mu_sung', h_ngu: 'mu_vay_ca', h_ho: 'mu_tai_cao' },
-    armor: { a_r1: 'ao_vai', a_r2: 'ao_da_bien', a_r3: 'giap_da', a_moc: 'ao_vo_cay', a_ngu: 'ao_vay', a_ho: 'ao_long' },
-  };
-  // Gộp: bộ khởi đầu, rồi mũ áo đang mặc trong game (o.helm, o.armor), rồi o.outfit nếu có (hoặc o.p.outfit: đồ gắn sẵn trên người chơi).
+  // Thân vẽ code: luôn mặc bộ khởi đầu. Thân AI (em-be-<key>): không khoác gì (mũ trùm, áo trùm… che mặt và hình riêng của nhân vật).
+  // Đợt 2: bỏ đồ đang mặc kiểu cũ (o.outfit, o.helm, o.armor, cánh, bậc màu) cùng js/outfit.js.
   const KHONG_DO = { hat: null, robe: null, back: null, hand: null, mask: null };
   function outfitOf(key, o) {
-    // Thân AI (em-be-<key>): không khoác bộ đồ khởi đầu mặc định (mũ trùm, áo trùm… che mặt và hình riêng của nhân vật);
-    // chỉ hiện đồ người chơi thật sự đang mặc (o.outfit / o.p.outfit / mũ áo trang bị) và cánh.
-    // (thân theo BỘ TRANG PHỤC em-be-<key>-<bộ> cũng là thân AI: SC.cuaEmBe nhận thêm o để biết đang mặc ÁO của bộ nào)
     const SCx = G.spriteCustom, coAI = !!(SCx && SCx.cuaEmBe && SCx.cuaEmBe(key, o));
-    const st = coAI ? KHONG_DO : HERO[key].outfit, x = (o && o.outfit) || (o && o.p && o.p.outfit) || {};
-    const pick = (k, gear) => (x[k] !== undefined ? x[k] : gear || st[k]);
-    return {
-      hat: pick('hat', o && o.helm && L.fromGear.helm[o.helm]), robe: pick('robe', o && o.armor && L.fromGear.armor[o.armor]),
-      back: pick('back'), hand: pick('hand'), mask: pick('mask'), wing: x.wing && x.wing.level > 0 && L.wings[x.wing.kind] ? { kind: x.wing.kind, level: Math.min(3, x.wing.level | 0) } : null,
-      rar: x.rar || null, // bậc từng món (trang phục): bậc Lam trở lên có tua màu bậc
-    };
+    const st = coAI ? KHONG_DO : (HERO[key] || HERO.smith).outfit;
+    return { hat: st.hat, robe: st.robe, back: st.back, hand: st.hand, mask: st.mask, wing: null, rar: null };
   }
 
   // ====================================================================
@@ -668,7 +371,7 @@
     cx.tr = an === 'run' || an === 'dodge' || an === 'atk' || an === 'spec' || an === 'dash' || an === 'sweep' ? 1 : 0;
     cx.sw = an === 'run' ? [0, 1, 1, 0, 0, -1, -1, 0][f8] : an === 'dodge' ? [1, -1][f8 & 1] : an === 'idle' ? [0, 0, 0, 1, 1, 1, 0, 0][f8] : 0;
   }
-  // Bối cảnh vẽ đồ của một khung (drawKid và API ghép G.spriteCustom.datDo dùng chung, để công cụ ra y hệt game).
+  // Bối cảnh vẽ đồ của một khung (drawKid và API ghép G.spriteCustom.diemNhanVat dùng chung, để công cụ ra y hệt game).
   // fit: có áp ghép mới (điểm neo, cap) hay không: chỉ khi vẽ cả em bé (only rỗng) hoặc lớp đồ thân AI; ô đồ (only = một lớp) giữ như cũ.
   function taoCx(S, key, of, ps, only, neo) {
     const X = xuong(S, ps, neo), T = tayXuong(ps, L.hands[of.hand]);
@@ -676,7 +379,7 @@
     dongDua(cx, ps);
     const ai = only === 'aiSau' || only === 'aiTruoc';
     cx.fit = !only || ai;
-    cx.ai = ai; // thân AI: chỉnh cỡ theo món (G.spriteCustom.TP_CHINH) chỉ áp ở đây
+    cx.ai = ai; // thân AI (lớp đồ sau / trước thân)
     cx.dong = (neo && neo.khung) || { ten: ps.anim, i: ps.f | 0 };
     let dm = null;
     // điểm thân: khung xương (thân code: đúng tuyệt đối; thân AI: ước lượng), rồi điểm tệp ghep-<key> (thân AI) đè lên
@@ -1698,86 +1401,9 @@
     }
   }
 
-  // ====================================================================
-  // 7b. HIỆU ỨNG TRANG PHỤC LÚC VẼ (không lưu vào khung đã nhớ): vầng sáng đủ bộ, ánh viền theo bậc, hạt theo hệ, khiên
-  // ====================================================================
-  const hh = (n) => { const q = Math.sin(n * 127.1 + 311.7) * 43758.5453; return q - Math.floor(q); };
-  const ELC = { fire: ['#ffd27a', '#ff7a2a', '#ffb347'], poison: ['#c2f58a', '#6fcf3a', '#9be05a'], ice: ['#ffffff', '#a8e4ff', '#e9f9ff'] };
-  // Hình bóng một màu của khung (để vẽ ánh viền), nhớ theo màu.
-  function silOf(fr, col) {
-    fr.sil = fr.sil || {};
-    let cv = fr.sil[col];
-    if (!cv) {
-      cv = document.createElement('canvas'); cv.width = fr.cv.width; cv.height = fr.cv.height;
-      const g = cv.getContext('2d'); g.drawImage(fr.cv, 0, 0); g.globalCompositeOperation = 'source-in'; g.fillStyle = col; g.fillRect(0, 0, cv.width, cv.height);
-      fr.sil[col] = cv;
-    }
-    return cv;
-  }
-  // Vầng sáng quanh chân (đủ bộ 3 món): vòng bầu dục chập chờn và vài đốm bay lên. Vẽ ở toạ độ thế giới, trước em bé.
-  function aura(c, x, y, el, t, a0) {
-    const C = ELC[el]; if (!C) return;
-    const pulse = 0.5 + 0.5 * Math.sin(t * 3);
-    for (let i = 0; i < 28; i++) {
-      const an = (i / 28) * Math.PI * 2, rx = 11 + pulse, ry = 4 + pulse * 0.5;
-      c.globalAlpha = a0 * (0.35 + 0.35 * pulse) * (Math.sin(an) > 0 ? 1 : 0.6);
-      c.fillStyle = i % 3 ? C[1] : C[0];
-      c.fillRect(Math.round(x + Math.cos(an) * rx), Math.round(y + Math.sin(an) * ry), 1, 1);
-    }
-    for (let i = 0; i < 3; i++) { const ph = (t * 0.7 + i / 3) % 1; c.globalAlpha = a0 * (1 - ph) * 0.8; c.fillStyle = C[0]; c.fillRect(Math.round(x - 8 + hh(Math.floor(t * 0.7 + i / 3) * 3 + i) * 16), Math.round(y - ph * 10), 1, 1); }
-    c.globalAlpha = a0;
-  }
-  // Hạt theo hệ của trang phục: tàn lửa bay lên, giọt độc rơi xuống, bông tuyết lả tả. Vẽ trong hệ đã dời về chân bé.
-  function motes(c, els, t, a0, n) {
-    els.forEach((el, j) => {
-      const C = ELC[el]; if (!C) return;
-      for (let i = 0; i < n; i++) {
-        const sp = el === 'fire' ? 0.9 : el === 'poison' ? 0.6 : 0.45, u = t * sp + i / n + j * 0.37, ph = u % 1, gen = Math.floor(u), r = hh(gen * 13 + i * 7 + j * 31);
-        let x, y, col = ph < 0.5 ? C[0] : C[1];
-        if (el === 'fire') { x = -7 + r * 14 + Math.sin(u * 9) * 1.2; y = -5 - ph * 26; }
-        else if (el === 'poison') { x = -6 + r * 12; y = -18 + ph * 17; }
-        else if (G.TUYET_CHAM !== false) { x = (r < 0.5 ? -1 : 1) * (6 + Math.abs(r - 0.5) * 10) + Math.sin(u * 6 + i) * 1.5; y = -30 + ph * 30; } // bông tuyết rơi hai bên thân, không rơi ngang ngực
-        else { x = -10 + r * 20 + Math.sin(u * 6 + i) * 2; y = -30 + ph * 30; }
-        c.globalAlpha = a0 * (el === 'poison' ? Math.min(1, (1 - ph) * 2) : 1 - ph);
-        c.fillStyle = col;
-        const X = Math.round(x), Y = Math.round(y);
-        c.fillRect(X, Y, 1, el === 'poison' && ph > 0.3 ? 2 : 1);
-        // Phiên kiểm trang phục 12/10: bông tuyết hình dấu "+" 3 x 3 trông như điểm ảnh rác ("dấu + trắng lơ lửng") -> chỉ một chấm.
-        // Cờ tắt: G.TUYET_CHAM = false (như trước).
-        if (el === 'ice' && i % 2 === 0 && G.TUYET_CHAM === false) { c.fillStyle = C[2]; c.fillRect(X - 1, Y, 1, 1); c.fillRect(X + 1, Y, 1, 1); c.fillRect(X, Y - 1, 1, 1); c.fillRect(X, Y + 1, 1, 1); }
-        if (el === 'fire' && ph < 0.25) { c.fillStyle = C[2]; c.fillRect(X, Y + 1, 1, 1); }
-      }
-    });
-    c.globalAlpha = a0;
-  }
-  // Khiên: cánh vừa lộn xong (bong bóng sáng) hoặc khiên đầu phòng (vòng chấm và biểu tượng khiên nhỏ trên đầu).
-  function shield(c, p, t, a0) {
-    const wing = p.oShieldT > 0, room = p.oShield > 0;
-    if (!wing && !room) return;
-    const n = 26;
-    for (let i = 0; i < n; i++) {
-      if (!wing && i % 2) continue;
-      const an = (i / n) * Math.PI * 2;
-      c.globalAlpha = a0 * (wing ? 0.55 + 0.3 * Math.sin(t * 20 + i) : 0.45);
-      c.fillStyle = i % 4 ? '#bfe9ff' : '#ffffff';
-      c.fillRect(Math.round(Math.cos(an) * 12), Math.round(-12 + Math.sin(an) * 14), 1, 1);
-    }
-    if (room) {
-      c.globalAlpha = a0 * 0.9;
-      const y = -38 + Math.round(Math.sin(t * 3)), K = [[1, 0, 5], [0, 1, 7], [0, 2, 7], [1, 3, 5], [2, 4, 3]];
-      const sc = G.spriteCustom, ga = sc && sc.gdSan ? sc.gdSan('gd-khien') : null; // ảnh AI (phiên C2) 8×8, đáy trùng đáy hình code 7×5
-      if (ga) sc.veGd(c, ga, -5, y - 3, 8, 8);
-      else {
-        for (const q of K) { c.fillStyle = '#1b1118'; c.fillRect(q[0] - 4, y + q[1], q[2], 1); }
-        for (const q of K) { c.fillStyle = '#bfe9ff'; c.fillRect(q[0] - 3, y + q[1], Math.max(1, q[2] - 2), 1); }
-      }
-      if (p.oShield > 1) { c.fillStyle = '#ffd24a'; c.fillRect(3, y, 1, 1); c.fillRect(4, y + 1, 1, 1); }
-    }
-    c.globalAlpha = a0;
-  }
+  // (7b. Hiệu ứng trang phục lúc vẽ — vầng sáng đủ bộ, ánh viền bậc, hạt theo hệ, khiên — đã bỏ ở đợt 2 cùng trang phục cũ.)
 
-  // Chữ ký giống hệt G.art.hero cũ: (c, o) với o gồm x, y, face, key, move, t, atk, dodge, flash, alpha, weapon, helm, armor, gong, p.
-  // Thêm: o.outfit = { hat, robe, back, hand, mask, wing: { kind, level } }.
+  // Chữ ký giống hệt G.art.hero cũ: (c, o) với o gồm x, y, face, key, move, t, atk, dodge, flash, alpha, weapon, gong, p.
   let warned = false;
   const HURT = new WeakMap();
   function hero(c, o) {
@@ -1802,21 +1428,10 @@
       if (o.roundShadow && A && A.ellipse) A.ellipse(c, sx, y, sw + 1, Math.max(2, Math.round((sw + 1) * 0.45)), 'rgba(0,0,0,0.3)'); // ghép đợt 2: bóng tròn cho sàn nhìn từ trên
       else { c.fillStyle = 'rgba(0,0,0,0.3)'; c.fillRect(sx - sw + 2, y - 1, sw * 2 - 4, 1); c.fillRect(sx - sw, y, sw * 2, 1); c.fillRect(sx - sw + 2, y + 1, sw * 2 - 4, 1); }
     }
-    const ox = (o.outfit || (o.p && o.p.outfit) || {}).fx || null, a0 = c.globalAlpha;
-    if (ox && ox.aura && !fr.dead) aura(c, x, y, ox.aura, t, a0);
     const nb = G.spriteCustom && G.spriteCustom.nhunBuoc ? G.spriteCustom.nhunBuoc(o) : 0; // nhún theo bước (sprite_custom.js, G.NHUN_BUOC)
     c.translate(x + (f < 0 ? 1 : 0), y + nb);
     c.scale(f, 1);
-    if (ox && ox.glow && !fr.dead) { // ánh viền màu bậc (Tím, Vàng) quanh em bé, sáng tối theo nhịp
-      const sil = silOf(fr, ox.glow);
-      c.globalAlpha = a0 * (0.45 + 0.3 * Math.sin(t * 4));
-      // viền dày 1 điểm ảnh GAME (= N điểm ảnh thật) như bản thường: ánh viền bậc không mảnh đi trên màn nét cao
-      for (const q of [[-1, 0], [1, 0], [0, -1], [0, 1]]) c.drawImage(sil, fr.ox + q[0], fr.oy + q[1], fr.w, fr.h);
-      c.globalAlpha = a0;
-    }
     try { drawFrame(c, o, fr, t); } catch (e) { if (!warned) { warned = true; if (window.console) console.warn('hero_tinhlinh: lỗi vẽ', e); } }
-    if (ox && ox.els && ox.els.length && !fr.dead) motes(c, ox.els, t, a0, ox.top >= 3 ? 6 : 4);
-    if (o.p && !o.p.dead) shield(c, o.p, t, a0);
     if (o.gong) {
       for (let i = 0; i < 6; i++) { // hào quang lúc Gồng
         const ph = (t * 1.6 + i * 0.37) % 1, sx = Math.round(-10 + i * 4) + (i % 2), sy = Math.round(-4 - ph * 30);
@@ -1826,21 +1441,6 @@
       }
     }
     c.restore();
-  }
-
-  // Hình một món trang phục đứng riêng (ô đồ, đồ rơi): chỉ vẽ lớp của món đó lên bé đứng yên. slot: hat|robe|back|hand|wing.
-  const ICACHE = taoNho('o-do', { max: 1e9 }), LAYER = { hat: 'mu', robe: 'ao', back: 'lung', wing: 'lung', hand: 'tay' };
-  function itemIcon(slot, look, rar, lv) {
-    const id = slot + '|' + look + '|' + (rar | 0) + '|' + (lv | 0);
-    let sp = ICACHE.get(id);
-    if (sp) return sp;
-    const of = { hat: null, robe: null, back: null, hand: null, mask: null, wing: null, rar: {} };
-    if (slot === 'wing') of.wing = { kind: look, level: lv || 1 }; else of[slot] = look;
-    of.rar[slot] = rar | 0;
-    const ps = finishPose(pose('smith', 'none', 'idle', 0, 0));
-    sp = kidSprite('smith', of, ps, '', LAYER[slot], null, Math.min(2, netDo(of))); // ảnh AI có net: hình ô đồ nét gấp đôi (sp.n)
-    ICACHE.set(id, sp);
-    return sp;
   }
 
   // VFX chiến đấu: vị trí vũ khí trên màn hình ở khung đang vẽ, để js/fx.js vẽ vệt bám đúng quỹ đạo mũi vũ khí.
@@ -1883,14 +1483,13 @@
     kidSprite, weaponSprite, drawKid, Spr, layers: ['lung', 'than', 'ao', 'mu', 'mat', 'tay'],
     cacheSize: () => KCACHE.size + WCACHE.size,
     // Xoá hình đã nhớ (Xưởng Sprite gọi khi vừa có hình tự vẽ cho đồ mặc).
-    clearCache: () => { KCACHE.clear(); ICACHE.clear(); LCACHE.clear(); },
+    clearCache: () => { KCACHE.clear(); LCACHE.clear(); },
     lopDo, // thân AI: lớp đồ sau và trước thân của một khung (js/sprite_custom.js gọi)
     // Ghép trang bị (js/sprite_custom.js dùng cho API diemNhanVat / datDo): bối cảnh vẽ đồ của thân code (ps: tư thế đã xong)
     // và của lớp đồ thân AI (fr: { key, of, anim, f }, neo, khop như lopDo). Trả về cx giống hệt lúc vẽ (B, H, tay, điểm neo).
     cxGia: (key, of, ps, neo) => taoCx(null, HERO[key] ? key : 'smith', of, ps, null, neo),
     cxLopDo: (fr, neo, khop) => { const D = dungLopDo(fr, neo, khop || null); return taoCx(null, fr.key, fr.of, D.ps, 'aiTruoc', D.n2); },
     poseRs: (key, wt, anim, f, v, rs) => finishPose(pose(key, wt, anim, f, v, rs)),
-    itemIcon,
     palette: { MASK, SKIN, RED, GRN, BLU, ORG, GOLD, WD, STEEL, GOURD, BRZ },
   };
   if (G.art && G.art.hero) {

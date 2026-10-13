@@ -49,7 +49,7 @@
   G.TIERS = G.RARITY; // tên cũ, giữ cho mã và bài kiểm tra cũ
   // Vũ khí Vàng của vùng sau có sát thương gốc cao hơn: vùng 1 x1,5; vùng 2 x1,6; vùng 3 x1,7 (w.gold = 0, 1, 2).
   G.GOLD_MULT = [1.5, 1.6, 1.7];
-  G.FAMILIES = 10; // mỗi loại vũ khí có 10 dòng (hình và tên do js/weapon_art.js giữ)
+  G.FAMILIES = 1; // đợt 2: mỗi loại vũ khí chỉ còn một dòng vẽ code (js/weapon_art.js); trước là 10
   // Phiên cân bằng (báo cáo tester mục 2): mốc cũ 30/120/300 làm vũ khí Thức tỉnh ngay ải 1-5 (bot: Thức tỉnh ở 2-2..2-4), dấu ấn
   // về sau bỏ phí. Đề xuất của tester là 60/400/1.200, nhưng đo 8 lượt tests/campaign.py thì lúc vào 3-5 kiếm mới có ~740-1.020
   // dấu ấn (Thức tỉnh rơi ra sau cả chiến dịch), nên mốc cuối 900: Mầm ở 1-1..1-2, Thành hình quanh 2-5..3-2, Thức tỉnh quanh 3-4..3-5.
@@ -63,8 +63,6 @@
   // (Độc ra Gỗ linh, Băng ra Vảy cá, Lửa ra Đá lửa), tự động, ghi ở màn kết quả.
   G.LK_THUA = 100;
   G.LK_THUA_MAT = { poison: 0, ice: 1, fire: 2 };
-  // Vũ khí thứ hai đang mang nhận bấy nhiêu phần dấu ấn của mỗi lần kết liễu (mục 7: trước ô thứ hai gần như không lớn lên).
-  G.LK_PHU = 0.5;
   G.PROC = [0, 0.2, 0.5, 1];
   // NGUỒN LINH KHÍ (góp ý của chủ dự án: kiếm linh khí bằng cách hạ tinh anh và trùm, quái thường thỉnh thoảng rơi linh khí để nhặt).
   //  - Hạ tinh anh, trùm nhỏ, trùm vùng: vũ khí kết liễu luôn nhận bấy nhiêu dấu ấn. Hệ: hệ quái đang dính lúc gục (cách dùng của bé),
@@ -80,16 +78,14 @@
   //  - Không rơi vũ khí, quần áo nữa: thay bằng linh khí / vàng (G.ROI_MOI). Trang phục chỉ còn 4 bộ của Zed, mỗi bộ nâng 3 cấp
   //    bằng linh khí + vàng (G.BO_MOI; skill của từng cấp làm ở đợt 3, móc rỗng G.boSkill trong js/vk_moi.js).
   //  - Luật, chuyển bản lưu cũ, giao diện: js/vk_moi.js và js/vk_moi_lang.js.
-  // Cờ quay lui: ?hethongcu=1 → luật cũ (rơi đồ, nhiều vũ khí), đọc/ghi bản lưu RIÊNG (khoá linhkhi_save_v1_hecu), tắt lưu mây.
-  G.HE_CU = false;
-  try { if (typeof location !== 'undefined' && /[?&]hethongcu=1(&|$)/.test(location.search || '')) G.HE_CU = true; } catch (e) { /* giữ mặc định */ }
-  G.HE_MOI = !G.HE_CU;
+  // Đợt 2 (YEU-CAU-2-DON-CU.md): bỏ cờ quay lui ?hethongcu=1 — luật cũ không còn. G.HE_MOI luôn true (giữ tên cho mã/công cụ còn đọc).
+  G.HE_MOI = true;
   G.VK_MOI = {
     loai: ['sword', 'spear', 'hammer', 'bow'], // 4 vũ khí (thứ tự hiện trong bảng)
     // Thứ tự xoay vòng của bản lưu mới: kiếm rồi phi tiêu như hai món đầu game cũ (ải hướng dẫn dạy đổi sang phi tiêu).
     // Người chơi đổi được vũ khí cầm đầu ("Cầm đầu" ở Ông Thợ Rèn / Hành trang); bản lưu cũ: món đang mang lên trước.
     thuMacDinh: ['sword', 'bow', 'spear', 'hammer'],
-    family: { sword: 0, spear: 0, hammer: 0, bow: 3 }, // dòng cố định (chỉ để mã cũ đọc được; hình dùng bộ zed-vk)
+    family: { sword: 0, spear: 0, hammer: 0, bow: 0 }, // dòng cố định (đợt 2: mỗi loại một dòng; hình chính dùng bộ zed-vk)
     // Linh khí để lên Mầm, Thành hình, Thức tỉnh. Cộng dồn 60 / 400 / 900 = đúng mốc dấu ấn cũ G.MARKS của MỘT vũ khí.
     gia: [60, 340, 500],
     // Đổi hệ khi đang ở Mầm / Thành hình / Thức tỉnh (giữ nguyên cấp).
@@ -97,11 +93,9 @@
   };
   // Bỏ bậc màu: mọi vũ khí là bậc 0 (hệ số 1, không dòng phụ) nhưng lên được tới Thức tỉnh. Bù phần hệ số bậc cũ (Lam x1,15 … Vàng x1,5)
   // bằng hệ số cấp cao hơn (cũ +8/+18/+30%).
-  G.SWAP_CD = G.HE_MOI ? 0.75 : 1.5; // chờ giữa hai lần đổi vũ khí: 4 món xoay vòng nên ngắn hơn
-  if (G.HE_MOI) {
-    G.RARITY[0].maxStage = 3;
-    G.STAGE_MULT = [1, 1.15, 1.35, 1.6];
-  }
+  G.SWAP_CD = 0.75; // chờ giữa hai lần đổi vũ khí: 4 món xoay vòng nên ngắn hơn (luật cũ 1,5)
+  G.RARITY[0].maxStage = 3;
+  G.STAGE_MULT = [1, 1.15, 1.35, 1.6];
   // Nâng cấp bộ trang phục Zed: 3 cấp, mỗi cấp tốn linh khí + vàng (giống nhau cho cả 4 bộ).
   G.BO_MOI = {
     max: 3,
@@ -177,15 +171,10 @@
   };
   // Mốc tiến hóa st (0..3) của hệ el đã mở những đặc trưng nào: trả về số đặc trưng (0, 1 hoặc 2).
   G.heFeatures = (st) => (st >= 3 ? 2 : st >= 2 ? 1 : 0);
-  // VŨ KHÍ RƠI. Rương và tinh anh: bậc ngẫu nhiên theo vùng [Thường, Lam, Tím], không bao giờ ra Vàng.
-  // Trùm vùng (ải 5, 10, 15): lần đầu hạ chắc chắn rơi 1 vũ khí Vàng; đánh lại thì 12% Vàng, còn lại Tím.
+  // TỈ LỆ THƯỞNG (trước là tỉ lệ rơi vũ khí; đợt 1 đổi thành vàng + linh khí G.ROI_MOI.vk, đợt 2 bỏ bảng bậc rơi cũ).
   G.DROP = {
-    // hàng thứ tư chỉ dùng khi chơi lại một ải Lâu đài cổ đã qua (chơi lại thì bảng rơi lên một hàng: G.DROP.againBonus)
-    table: [[0.72, 0.24, 0.04], [0.52, 0.38, 0.10], [0.36, 0.44, 0.20], [0.24, 0.46, 0.30]],
-    againBonus: 1,
-    elite: 0.35,      // cơ hội tinh anh rơi vũ khí
-    stage: 0.5,       // cơ hội nhận vũ khí khi qua một ải thường (trùm nhỏ)
-    bossAgain: 0.12,  // cơ hội ra Vàng khi đánh lại trùm vùng
+    elite: 0.35,      // cơ hội tinh anh cho thưởng
+    stage: 0.5,       // cơ hội nhận thưởng khi qua một ải thường (trùm nhỏ)
   };
   // Chữ nối vào tên theo nhánh và mốc (khớp với js/weapon_art.js).
   G.NAME_WORDS = {
@@ -226,9 +215,8 @@
   // (bản lưu, hình, cây chưởng đều theo khoá này), chỉ đổi TÊN HIỂN THỊ. Ba bạn Cu Tèo, Cái Bống, Cu Lì vẫn bị yêu tinh bắt,
   // vẫn được cứu sau mỗi trùm vùng và ngồi chơi ở sân đình (NPC), nhưng không chơi được nữa: khi được cứu, bạn đó DẠY Zed nét riêng
   // của mình (nội tại + nét riêng của chưởng + sở trường một vũ khí), cấp đúng 1 lần, lưu ở save.zed.hoc.
-  // Tắt: thêm ?zed=0 vào địa chỉ trang → game như bản trước (4 em bé, chọn ở Ông Từ). Bản lưu dùng chung, không mất gì.
+  // Đợt 2 (YEU-CAU-2-DON-CU.md): bỏ cờ ?zed=0 — Zed là nhân vật duy nhất. G.ZED luôn true (giữ tên cho mã/công cụ còn đọc).
   G.ZED = true;
-  try { if (typeof location !== 'undefined' && /[?&]zed=0(&|$)/.test(location.search || '')) G.ZED = false; } catch (e) { /* giữ mặc định */ }
   // Nét mỗi bạn dạy Zed. Số đã hạ so với khi bạn đó còn chơi được, vì Zed gom đủ cả ba (bản gốc ghi trong ngoặc).
   G.ZED_DAY = {
     hunter: {
@@ -258,13 +246,13 @@
   };
   const tvz = (x) => (G.tv ? G.tv(x) : x); // dịch nếu đã nạp js/ngon_ngu.js
   G.ZED_DAY_KEYS = ['hunter', 'healer', 'wrestler'];
-  // Bạn k đã dạy Zed chưa (chỉ tính khi đang ở chế độ Zed)
+  // Bạn k đã dạy Zed chưa
   G.zedHoc = function (k, sv) {
     sv = sv || G.save;
-    return !!(G.ZED && sv && sv.zed && typeof sv.zed === 'object' && sv.zed.hoc && sv.zed.hoc[k]);
+    return !!(sv && sv.zed && typeof sv.zed === 'object' && sv.zed.hoc && sv.zed.hoc[k]);
   };
   // Em bé key có được tính các nét đã học không (Zed = khoá smith)
-  G.zedLa = (key) => !!(G.ZED && key === 'smith');
+  G.zedLa = (key) => key === 'smith';
   // Sở trường vũ khí (+10% sát thương) của em bé key: Zed thêm cung khi Cu Tèo dạy, giáo khi Cái Bống dạy
   G.favOf = function (key) {
     const H = G.HEROES[key] || G.HEROES.smith, f = H.fav.slice();
@@ -287,11 +275,9 @@
     return ds.length ? tvz(H.skillDesc) + '; ' + ds.join('; ') : H.skillDesc;
   };
   // BỘ ZED MỚI (13/10/2026, docs/review/ke-hoach-cai-thien/zed-tich-hop): hình Zed vẽ từ bộ ảnh mới (js/zed_moi.js), vũ khí 4 cấp gắn
-  // theo neo, cung đổi thành PHI TIÊU (chỉ đổi tên và hình; nhịp, sát thương, cách giữ y như cung). Tắt: ?zedmoi=0 (hình Zed cũ, tên Cung).
-  // ?zed=0 thì cũng tắt luôn (game như bản trước).
-  G.ZED_MOI = G.ZED;
-  try { if (typeof location !== 'undefined' && /[?&]zedmoi=0(&|$)/.test(location.search || '')) G.ZED_MOI = false; } catch (e) { /* giữ mặc định */ }
-  if (G.ZED_MOI) { G.WTYPES.bow.name = 'Phi tiêu'; G.WTYPES.bow.special = 'Mưa Phi Tiêu'; }
+  // theo neo, cung đổi thành PHI TIÊU (chỉ đổi tên và hình; nhịp, sát thương, cách giữ y như cung). Đợt 2: bỏ cờ ?zedmoi=0, luôn bật.
+  G.ZED_MOI = true;
+  G.WTYPES.bow.name = 'Phi tiêu'; G.WTYPES.bow.special = 'Mưa Phi Tiêu';
   // ZED CẦM VŨ KHÍ LÚC ĐỨNG / ĐI / CHẠY (13/10/2026, docs/review/ke-hoach-cai-thien/zed-cam-vk): js/zed_moi.js vẽ vũ khí trong tay phải ở
   // hàng đứng/đi/chạy (hàng dung_<loại>, di_<loại>, chay_<loại> của tấm thân); lộn/trúng đòn/chết ẩn vũ khí. Tắt: ?camvk=0 (tay không như trước).
   G.CAM_VK = true;
@@ -340,12 +326,10 @@
     const b = sv && sv.zed && typeof sv.zed === 'object' ? sv.zed.bo : null;
     return b && G.ZED_BO[b] && G.zedBoMo(b, sv) ? b : 'ninja';
   };
-  if (G.ZED) {
-    G.HEROES.smith.name = 'Zed';
-    G.HEROES.smith.skillDesc = 'Nét riêng: chưởng đẩy lùi quái mạnh';
-  }
-  // Em bé chơi được (danh sách chọn): chế độ Zed chỉ còn Zed
-  G.HKEYS_CHOI = G.ZED ? ['smith'] : G.HKEYS;
+  G.HEROES.smith.name = 'Zed';
+  G.HEROES.smith.skillDesc = 'Nét riêng: chưởng đẩy lùi quái mạnh';
+  // Nhân vật chơi được: chỉ còn Zed
+  G.HKEYS_CHOI = ['smith'];
 
   // Cây kỹ năng: 3 nhánh, mỗi nhánh 5 nút, phải mở theo thứ tự trong nhánh.
   G.SKILLS = {
@@ -503,37 +487,7 @@
   // Hồ Tinh né nhiều nên ít lúc đánh trúng, cho ít máu hơn để trận không kéo quá 3 phút.
   G.BOSS_HP_OF = { moc: 20, ngu: 20, ho: 14 };
 
-  G.GEAR = {
-    // Mũ: giảm thời gian dính một hệ. Áo: máu và giảm sát thương.
-    helm: {
-      h_r1: { name: 'Nón lá rừng', res: 'poison', pct: 0.25, cost: { mat: [6, 0, 0], gold: 80 } },
-      h_r2: { name: 'Mũ da cá', res: 'ice', pct: 0.25, cost: { mat: [0, 6, 0], gold: 200 } },
-      h_r3: { name: 'Khăn đá lửa', res: 'fire', pct: 0.25, cost: { mat: [0, 0, 6], gold: 400 } },
-      h_moc: { name: 'Mũ sừng gỗ', res: 'poison', pct: 0.4, set: 'moc', cost: { shard: [1, 0, 0], mat: [8, 0, 0], gold: 150 } },
-      h_ngu: { name: 'Mũ vây cá', res: 'ice', pct: 0.4, set: 'ngu', cost: { shard: [0, 1, 0], mat: [0, 8, 0], gold: 350 } },
-      h_ho: { name: 'Mũ tai cáo', res: 'fire', pct: 0.4, set: 'ho', cost: { shard: [0, 0, 1], mat: [0, 0, 8], gold: 600 } },
-    },
-    armor: {
-      a_r1: { name: 'Áo vải thô', hp: 20, dr: 0, cost: { mat: [8, 0, 0], gold: 100 } },
-      a_r2: { name: 'Áo da biển', hp: 50, dr: 0.04, cost: { mat: [0, 8, 0], gold: 250 } },
-      a_r3: { name: 'Áo giáp đá', hp: 90, dr: 0.06, cost: { mat: [0, 0, 8], gold: 500 } },
-      a_moc: { name: 'Áo vỏ cây', hp: 45, dr: 0.08, set: 'moc', cost: { shard: [2, 0, 0], mat: [10, 0, 0], gold: 200 } },
-      a_ngu: { name: 'Áo vảy', hp: 85, dr: 0.1, set: 'ngu', cost: { shard: [0, 2, 0], mat: [0, 10, 0], gold: 450 } },
-      a_ho: { name: 'Áo lông trắng', hp: 130, dr: 0.1, set: 'ho', cost: { shard: [0, 0, 2], mat: [0, 0, 10], gold: 800 } },
-    },
-    charm: {
-      c_leech: { name: 'Bùa hút máu', desc: 'Kết liễu quái thì hồi 2% máu' },
-      c_ember: { name: 'Bùa tàn lửa', desc: 'Quái đang cháy nhận thêm 15% sát thương' },
-      c_mist: { name: 'Bùa sương', desc: 'Lăn né xuyên qua quái cộng cho nó 1 tầng Băng' },
-      c_greed: { name: 'Bùa tham', desc: 'Nhận thêm 25% vàng, máu tối đa giảm 10%' },
-      c_spirit: { name: 'Bùa linh', desc: 'Kết liễu quái đang dính hiệu ứng hồi thêm 5 mana' },
-    },
-  };
-  G.SETS = {
-    moc: 'Bộ Mộc Tinh: đứng yên 2 giây thì bắt đầu hồi máu',
-    ngu: 'Bộ Ngư Tinh: lăn né xuyên qua quái cộng cho nó 1 tầng Băng',
-    ho: 'Bộ Hồ Tinh: sau khi lăn né, đòn kế tiếp mạnh hơn 60%',
-  };
+  // Đợt 2: bỏ G.GEAR (mũ, áo, bùa đời cũ) và G.SETS (bộ 2 món cũ) — bảng hoàn tiền nằm ở js/vk_moi.js.
 
   G.CURSES = [
     { id: 'frail', name: 'Máu tối đa giảm 20% đến hết ải' },
@@ -558,19 +512,11 @@
     if (c.mat) cost.mat[n < 9 ? 1 : 2] = c.mat;
     return cost;
   };
-  // Nâng bậc vũ khí (giữ nguyên dấu ấn và tiến hóa): chi phí để lên Lam (1) và Tím (2).
-  // Nấc cuối lên Vàng cần mảnh trùm, thứ chỉ trùm vùng rơi: xem G.goldCost.
-  G.TIER_UP = [null, { gold: 150, ore: 4, mat: [6, 0, 0] }, { gold: 450, stones: 1, mat: [0, 8, 0] }, null];
-  // Lên Vàng bằng mảnh của trùm vùng r (0..2); dùng mảnh trùm vùng nào thì nhận sát thương gốc Vàng của vùng đó.
+  // Đợt 2: bỏ G.TIER_UP, G.goldCost (nâng bậc Lam / Tím / Vàng ở Ông Thợ Rèn của luật cũ).
   // ĐỔI VÀNG LẤY NGUYÊN LIỆU VÙNG ĐÃ QUA (mục 3): Bà Hàng Xén (thẻ Nguyên liệu) và Thương nhân trong ải bán nguyên liệu của vùng
   // đã hạ trùm, giá gia vàng một món. Giới hạn: kho hàng có tối đa max lượt; mỗi ải thắng (cả chơi lại) thêm them lượt.
   // Không theo ngày giờ máy (không lách được bằng chỉnh đồng hồ, không cần mạng). Bản lưu cũ chưa có thì nhận sẵn batDau lượt.
   G.DOI_NL = { gia: 150, max: 10, them: 2, batDau: 5 };
-  G.goldCost = function (r) {
-    const shard = [0, 0, 0];
-    shard[r] = 4;
-    return { gold: 800 + 300 * r, stones: 2, shard };
-  };
 
   G.HINTS = [
     'Kết liễu quái đang dính hiệu ứng thì vũ khí nhận dấu ấn của hệ đó.',

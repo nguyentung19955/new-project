@@ -40,7 +40,7 @@
     xen: { ten: 'Bà Hàng Xén', viec: 'Hàng xén', ngan: 'Vũ khí', chao: 'Mua gì bán gì, vào đây với bà.', ve: 'Lần sau lại ghé bà nhé.', robe: '#8a5a38', robe2: '#6e4428', wide: 1, top: -23, pos: [540, 198], den: [540, 214] },
     may: { ten: 'Cô Thợ May', viec: 'Thợ may', ngan: 'Mũ áo', chao: 'Bé thử bộ đồ mới xem nào.', ve: 'Mặc đẹp lắm đó!', robe: '#d86a7a', robe2: '#b04a5e', wide: -1, top: -28, pos: [574, 132], den: [555, 141] },
     do: { ten: 'Cụ Đồ', viec: 'Kỹ năng', ngan: 'Kỹ năng', chao: 'Ngồi xuống đây, lão chỉ cho một chiêu.', ve: 'Học rồi nhớ luyện nghe con.', robe: '#4a548c', robe2: '#363e6c', wide: 0, top: -24, sit: true, pos: [364, 150], den: [342, 160] },
-    tu: { ten: 'Ông Từ', viec: G.ZED ? 'Xem chỉ số Zed' : 'Chọn em bé', ngan: G.ZED ? 'Zed' : 'Em bé', chao: 'Khẽ thôi, các bé đang chơi trong sân.', ve: 'Các bé chơi ngoan nhé.', robe: '#d0a440', robe2: '#a87e2a', wide: 0, top: -27, pos: [142, 140], den: [124, 151] },
+    tu: { ten: 'Ông Từ', viec: 'Xem chỉ số Zed', ngan: 'Zed', chao: 'Khẽ thôi, các bé đang chơi trong sân.', ve: 'Các bé chơi ngoan nhé.', robe: '#d0a440', robe2: '#a87e2a', wide: 0, top: -27, pos: [142, 140], den: [124, 151] },
     mo: { ten: 'Anh Mõ', viec: 'Cài đặt', ngan: 'Cài đặt', chao: 'Cốc cốc cốc! Làng nước nghe đây!', ve: 'Có gì cứ gọi anh Mõ!', robe: '#3f9a8c', robe2: '#2c7468', wide: -1, top: -26, pos: [100, 92], den: [118, 102] },
   };
   const ORDER = ['lai', 'ren', 'xen', 'may', 'do', 'tu', 'mo']; // thứ tự trên dải lối tắt
@@ -518,7 +518,7 @@
     [36, 56, 52, 62], [76, 56, 92, 62], // trụ cổng
     [259, 149, 266, 154], [417, 177, 424, 182], [127, 187, 134, 192], // cột đèn
   ];
-  function seats() { // ba bé không được chọn ngồi chơi ở sân đình
+  function seats() { // ba bạn (NPC: Cu Tèo, Cái Bống, Cu Lì) ngồi chơi ở sân đình
     const keys = (G.HKEYS || []).filter((k) => G.save && k !== G.save.hero);
     return keys.slice(0, 3).map((k, i) => ({ key: k, x: B.be[i][0], y: B.be[i][1] }));
   }
@@ -596,7 +596,7 @@
     return {
       lai: Object.keys(sv.stars || {}).length + Object.keys(sv.stars2 || {}).length + 1,
       xen: sv.nextId || 0,
-      tu: G.ZED ? G.ZED_DAY_KEYS.filter((k) => G.zedHoc(k)).length : (G.HKEYS || []).filter((k) => sv.heroes[k] && sv.heroes[k].unlocked).length,
+      tu: G.ZED_DAY_KEYS.filter((k) => G.zedHoc(k)).length,
       mo: 1,
     };
   }
@@ -606,11 +606,9 @@
     try {
       const hs = sv.heroes[sv.hero];
       n.do = Math.floor(hs.lvl / 3) - (hs.sk.atk + hs.sk.def + hs.sk.elem) > 0 || !!(G.chuong && G.chuong.pts(hs, sv.hero).left > 0);
-      // thợ may: có món trang phục mới chưa xem, hoặc đủ nguyên liệu may một món chưa có
-      const O = G.outfit;
-      n.may = !!(O && sv.outfit && (O.newCount(sv) > 0 || O.canCraftNew(sv)));
-      if (G.HE_MOI) n.may = !!(G.vkMoi && G.vkMoi.coTheNangBo(sv)); // hệ thống mới: thợ may = nâng bộ trang phục Zed
-      // thợ rèn: đủ nguyên liệu để mài một món đang mang, nâng lò, hoặc nâng bậc
+      // thợ may: đủ linh khí + vàng nâng một bộ trang phục Zed
+      n.may = !!(G.vkMoi && G.vkMoi.coTheNangBo(sv));
+      // thợ rèn: đủ nguyên liệu để mài một món đang mang, nâng lò, hoặc đủ linh khí nâng một vũ khí
       const pay = G.villageApi && G.villageApi.canPay;
       n.ren = false;
       if (pay) {
@@ -619,9 +617,8 @@
         for (const id of sv.carry) {
           const w = G.weaponById(id); if (!w) continue;
           if (w.sharpen < Math.min(G.MAX_SHARPEN, G.FORGE_CAP[sv.forge]) && pay(G.sharpenFull(w.sharpen))) n.ren = true;
-          if (!G.HE_MOI && G.wRar(w) < 2 && pay(G.TIER_UP[G.wRar(w) + 1])) n.ren = true;
         }
-        if (G.HE_MOI && G.vkMoi && G.vkMoi.coTheNang(sv)) n.ren = true; // đủ linh khí nâng một vũ khí
+        if (G.vkMoi && G.vkMoi.coTheNang(sv)) n.ren = true; // đủ linh khí nâng một vũ khí
       }
     } catch (e) { /* thiếu số liệu thì coi như không có việc mới */ }
     // Người mới (chưa qua quá 1 ải): chỉ một người có chấm đỏ, người quan trọng nhất.
@@ -719,15 +716,11 @@
       if (!seen().hint) { seen().hint = 1; S.hintT = 0; G.persist(); }
       G.sfx && G.sfx('ui');
       if (VS.onTalk) VS.onTalk(g.id); else { S.bubble = { who: g.id, s: N.chao, t: 2.6 }; S.talk = null; }
-    } else if (g.kind === 'kid' && G.ZED) {
+    } else if (g.kind === 'kid') {
       const Hh = G.HEROES[g.id], D = G.ZED_DAY[g.id];
       if (!Hh || !D) return;
       if (G.zedHoc(g.id)) { say(G.t('{0}: "Nhớ chiêu tớ dạy nhé: {1}"', Hh.name, G.tv(D.ngan[0])), 3.5); G.sfx && G.sfx('pick'); }
       else { say(G.t('{0} còn bị {1} bắt. Hạ {1} để cứu bạn ấy.', Hh.name, D.boss), 3.5); G.sfx && G.sfx('warn'); }
-    } else if (g.kind === 'kid') {
-      const sv = G.save, hs = sv.heroes[g.id], Hh = G.HEROES[g.id];
-      if (hs && hs.unlocked) { sv.hero = g.id; G.persist(); G.sfx && G.sfx('pick'); say(G.t('Đã đổi sang {0}', Hh.name)); markSeen('tu'); }
-      else { say(G.t('{0} chưa mở: {1}', Hh.name, Hh.unlock)); G.sfx && G.sfx('warn'); }
     } else if (g.kind === 'weapon') {
       G.sfx && G.sfx('ui');
       if (VS.onWeapon) VS.onWeapon(g.id); else { const w = G.weaponById(g.id); if (w) say(G.wName ? G.wName(w) : 'Vũ khí sống'); }
@@ -765,9 +758,9 @@
     if (S.hintT > 0) S.hintT -= dt;
     if (S.bubble) { S.bubble.t -= dt; if (S.bubble.t <= 0) S.bubble = null; }
     if ((S.newsT -= dt) <= 0) { S.newsT = 1; checkNews(); }
-    if (!locked && G.ZED && G.save && G.save.zed && G.save.zed.bao === 1) zedBao(); // ZED: báo một lần bản lưu cũ đã chuyển sang Zed
-    else if (!locked && G.ZED && G.save && G.save.zed && G.save.zed.boBao === 1) zedBoBao(); // trang phục Zed vừa mở: báo một lần
-    else if (!locked && G.HE_MOI && G.vkMoi && G.save && G.save.heMoiBao) { const s = G.vkMoi.baoChuyen(G.save); if (s) say(s, 9); G.persist(); } // hệ thống mới: báo một lần đã chuyển bản lưu cũ
+    if (!locked && G.save && G.save.zed && G.save.zed.bao === 1) zedBao(); // ZED: báo một lần bản lưu cũ đã chuyển sang Zed
+    else if (!locked && G.save && G.save.zed && G.save.zed.boBao === 1) zedBoBao(); // trang phục Zed vừa mở: báo một lần
+    else if (!locked && G.vkMoi && G.save && G.save.heMoiBao) { const s = G.vkMoi.baoChuyen(G.save); if (s) say(s, 9); G.persist(); } // hệ thống mới: báo một lần đã chuyển bản lưu cũ
     let mx = 0, my = 0;
     if (!locked) {
       const k = G.keys, kp = G.keyP, bt = btnAt();
@@ -1044,12 +1037,12 @@
     }
     // ba bé ngồi chơi ở sân đình
     for (const st of seats()) {
-      const un = G.ZED ? G.zedHoc(st.key) : sv.heroes[st.key] && sv.heroes[st.key].unlocked; // ZED: đã cứu = đã dạy Zed
+      const un = G.zedHoc(st.key); // đã cứu = đã dạy Zed
       L.push([st.y, () => drawKid(c, st.key, st.x - cam, st.y, st.x > B.dinh[0] ? -1 : 1, { alpha: un ? null : 0.45, move: un && Math.sin(t * 1.1 + st.x) > 0.75 })]);
     }
     if (!o.hideHero) {
       for (let i = 1; i >= 0; i--) L.push([S.wp[i].y - 0.5, () => drawWeapon(c, i)]);
-      L.push([S.y, () => drawKid(c, sv.hero, S.x - cam, S.y, S.face, { move: S.moving, outfit: G.outfit ? G.outfit.look(sv) : null })]);
+      L.push([S.y, () => drawKid(c, sv.hero, S.x - cam, S.y, S.face, { move: S.moving })]);
     }
     L.sort((a, b) => a[0] - b[0]);
     for (const l of L) l[1]();
@@ -1060,7 +1053,7 @@
       const sau = (q, top) => q[1] > S.y + 0.5 && Math.abs(S.x - q[0]) < 8 && S.y > q[1] + top; // đứng ngay sau người làng / các bé
       const che = Bt.objs.some((ob) => ob.y > S.y + 0.5 && hx >= ob.x + 3 && hx <= ob.x + (ob.w || ob.cv.width) - 3 && hy >= ob.y0 && hy <= ob.y0 + (ob.h || ob.cv.height))
         || ORDER.some((k) => shown(k) && sau(NPCS[k].pos, NPCS[k].top)) || seats().some((st) => sau([st.x, st.y], -22));
-      if (che) drawKid(c, sv.hero, S.x - cam, S.y, S.face, { move: S.moving, outfit: G.outfit ? G.outfit.look(sv) : null, alpha: 0.45, roundShadow: false });
+      if (che) drawKid(c, sv.hero, S.x - cam, S.y, S.face, { move: S.moving, alpha: 0.45, roundShadow: false });
     }
     // quầng sáng và đom đóm
     ambTop(c, cam, t, M);
@@ -1153,7 +1146,7 @@
       else BA.stick(c, 62 - (G.cx || 0) * 0.6, 216 + (G.cy || 0), 24, 0, 0, false);
     }
     // nút tròn: có người ở gần thì sáng lên thành "Nói chuyện"
-    const bt = btnAt(), lab = S.near ? (S.near.kind === 'npc' || G.ZED ? 'Nói chuyện' : 'Đổi em bé') : null;
+    const bt = btnAt(), lab = S.near ? 'Nói chuyện' : null;
     const held = [...G.pointers.values()].some((q) => q.role === 'talk');
     if (T && T.round) T.round(bt[0], bt[1], bt[2], 'talk', { lit: !!S.near, pressed: held, dim: !S.near, label: lab });
     else { ui.circle(bt[0], bt[1], bt[2], S.near ? 'rgba(200,120,40,0.92)' : 'rgba(60,50,44,0.5)', S.near ? '#ffe9a8' : 'rgba(255,255,255,0.3)'); if (lab) ui.text(lab, bt[0], bt[1] + 3, { size: 8.5, bold: true, align: 'center' }); }

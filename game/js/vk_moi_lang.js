@@ -1,10 +1,10 @@
 // HỆ THỐNG MỚI ĐỢT 1 — phần ở làng (docs/review/ke-hoach-cai-thien/he-thong-moi/YEU-CAU-1-VU-KHI.md).
 //   - Cô Thợ May: không may / bán quần áo kiểu cũ nữa (đợt 3: khung nâng bộ hiện thêm 3 skill của bộ đang mặc). Bảng của cô nay chỉ có khung nâng cấp bộ trang phục Zed (cùng khung ở Hành trang ›
 //     Nhân vật, js/vk_moi.js VM.boPanel) và lời giải thích; đổi bộ ở Hành trang.
-// Luật, số liệu, bản lưu: js/vk_moi.js. Cờ ?hethongcu=1: tệp này đứng yên (bảng cũ của js/tailor.js).
+// Luật, số liệu, bản lưu: js/vk_moi.js. Đợt 2: bảng cũ js/tailor.js và cờ ?hethongcu=1 đã xoá, đây là bảng duy nhất của Cô Thợ May.
 (function () {
   const G = window.G, ui = G.ui, T = G.theme, VA = G.villageApi, VM = G.vkMoi;
-  if (!G.HE_MOI || !VA || !VM || !T) return;
+  if (!VA || !VM || !T) return;
   const TXT = '#f1e6c6';
   const CX = 160, CW = 304; // vùng nội dung bên phải (như js/village.js)
 

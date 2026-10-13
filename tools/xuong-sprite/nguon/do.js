@@ -1,4 +1,5 @@
-// XƯỞNG SPRITE: phần ĐỒ (vũ khí, trang phục, vật phẩm). giao-dien.js gọi XS.taoDo(U) rồi dùng các hàm trả về.
+// XƯỞNG SPRITE: phần ĐỒ (vật phẩm; đợt 2 của game bỏ ảnh vũ khí cũ vk-* và trang phục cũ tp-*: hai nhóm đó không còn trong danh sách,
+// game từ chối nạp hai loại tệp này). giao-dien.js gọi XS.taoDo(U) rồi dùng các hàm trả về.
 // Đồ là một hình đứng yên: công cụ đưa nó vào đúng đường vẽ của game (js/sprite_custom.js) nên hình xem ở đây và trong game là một.
 (function () {
   'use strict';
@@ -43,14 +44,10 @@
     // ---------- danh sách ----------
     function cacNhom() {
       const out = [];
-      for (const t of LOAI_VK) out.push({ nhom: 'vu-khi', ten: TEN_VK[t] + ' (mỗi dòng một thẻ)', ds: WA.FAMILIES[t].map((F, f) => ({ ma: 'vk-' + t + '-' + f, ten: F.name, doi: 'vu-khi', vk: { loai: t, dong: f }, vung: 'rung', phu: 'dòng ' + (f + 1) })) });
-      for (const o of O_TP) out.push({ nhom: 'trang-phuc', ten: TEN_O[o], ds: GOC[o].map((k) => ({ ma: 'tp-' + o + '-' + k, ten: (L[o][k].cuGoc || L[o][k]).name || k, doi: 'trang-phuc', tp: { o, look: k }, vung: 'rung', phu: k })) });
       out.push({ nhom: 'do', ten: 'Đồ rơi và biểu tượng tài nguyên (góc màn hình, Hành trang, giá bán, đồ rơi)', ds: VP.map((v) => ({ ma: 'vp-' + v[0], ten: v[1], doi: 'vat-pham', vp: v[0], vung: 'rung', phu: v[0] })) });
       return out;
     }
     function timMuc(ma) {
-      const m = /^vk-(sword|bow|spear|hammer)-(\d)(?:-(fire|poison|ice)(?:-([123]))?)?$/.exec(ma);
-      if (m) { const F = WA.FAMILIES[m[1]][+m[2]]; return { ma, ten: F.name, doi: 'vu-khi', vk: { loai: m[1], dong: +m[2] }, vung: 'rung', he: m[3] || null, gd: m[4] ? +m[4] : (m[3] ? 1 : null) }; }
       for (const n of cacNhom()) for (const x of n.ds) if (x.ma === ma) return x;
       return null;
     }

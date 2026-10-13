@@ -210,18 +210,19 @@
 
   // ---------- vẽ: hình viên đạn ----------
   const art0 = A.proj;
-  // Ảnh AI (js/fx_anh.js): mũi tên của em bé (hu-dan-ten), viên bào tử (hu-dan-bao-tu). Không có tệp thì vẽ như cũ.
+  // Ảnh AI (js/fx_anh.js): phi tiêu mang hệ của Zed (hu-dan-ten-<hệ>), viên bào tử (hu-dan-bao-tu). Không có tệp thì vẽ như cũ.
   const FA = () => G.fxAnh;
   // Phiên hieu-ung-b1: mỗi kiểu đạn quái có một mã ảnh riêng (trang tools/tach-hieu-ung). Chưa có tệp của mã nào thì kiểu đó vẽ bằng code y như cũ.
   // Quả nổ của quái khác (không phải Sóc) dùng lại hu-dan-qua-no. Đạn cầu và đạn gai thường: ảnh một màu trung tính (quầng và vệt bay vẫn theo màu quái).
   const DAN_MA = { bubble: 'hu-dan-bot', icespike: 'hu-dan-gai-bang', toxseed: 'hu-dan-hat-doc', ember: 'hu-dan-lua', bua: 'hu-dan-bua', cannon: 'hu-dan-phao', orb: 'hu-dan-cau', thorn: 'hu-dan-gai', fruit: 'hu-dan-qua-no' };
   const DAN_TRON = { bubble: 1, orb: 1 }; // hình tròn không có hướng: không lật khi bay sang trái (trừ khi tệp bật "xoay")
-  // Mũi tên mang hệ: hu-dan-ten-fire / -poison / -ice (cả mũi tên lẫn lửa, nhớt độc, băng bọc quanh); chưa có thì dùng hu-dan-ten hoặc code.
+  // Phi tiêu mang hệ: hu-dan-ten-fire / -poison / -ice (phi tiêu bọc lửa, nhớt độc, băng). Phi tiêu không hệ: js/zed_moi.js vẽ ảnh zed-vk
+  // (đợt 2 bỏ ảnh tạm hu-dan-ten và lông đuôi mũi tên vẽ code của cung cũ).
   function maTen(o) {
     const F = FA();
     if (!F) return null;
     const he = o.he && o.he.el ? 'hu-dan-ten-' + o.he.el : null;
-    return he && F.co(he) ? he : F.co('hu-dan-ten') ? 'hu-dan-ten' : null;
+    return he && F.co(he) ? he : null;
   }
   A.proj = function (c, o) {
     const ten = o.team === 'player' && o.kind === 'arrow' && !G.noRender ? maTen(o) : null;
@@ -229,20 +230,7 @@
       FA().ve(c, ten, o.x, o.y - (o.z || 10), o.fxT || 0, Math.atan2(o.vy, o.vx), o.big ? 1.5 : 1);
       return;
     }
-    if (o.team === 'player') {
-      art0(c, o);
-      if (G.noRender || o.kind !== 'arrow') return;
-      try {
-        // lông đuôi mang màu bậc vũ khí, mũi tên sáng viền trắng
-        const rar = o.w ? G.wRar(o.w) : 0, rc = G.RARITY[rar].col;
-        const x = Math.round(o.x), y = Math.round(o.y - (o.z || 10)), sp = Math.hypot(o.vx, o.vy) || 1, ux = o.vx / sp, uy = o.vy / sp;
-        c.fillStyle = rar ? rc : '#c8372d';
-        for (const q of [[-6, -1], [-6, 1], [-5, -1], [-5, 1], [-7, -2], [-7, 2]]) c.fillRect(Math.floor(x + ux * (q[0] + 0.5) - uy * (q[1] + 0.5)), Math.floor(y + uy * (q[0] + 0.5) + ux * (q[1] + 0.5)), 1, 1);
-        c.fillStyle = '#ffffff';
-        c.fillRect(Math.floor(x + ux * 5.5), Math.floor(y + uy * 5.5), 1, 1);
-      } catch (e) { fail(e); }
-      return;
-    }
+    if (o.team === 'player') return art0(c, o);
     if (G.noRender) return art0(c, o);
     try {
       const L = lookOf(o), f = Math.floor(G.time * 10 + (o.x + o.y) * 0.01) & 1;
@@ -284,22 +272,45 @@
       else emit(1, x, y, Math.cos(a) * v, Math.sin(a) * v, rr(0.15, 0.28), rp, 2, 0, 2, null, 1);
     }
   }
-  // tên cắm vào tường rồi mờ dần
+  // Phi tiêu cắm vào tường rồi mờ dần (đợt 2: thay mũi tên cũ). Ảnh phi tiêu của bộ zed-vk đúng cấp vũ khí lúc ném (Trắng..Thức tỉnh,
+  // js/zed_moi.js vẽ phi tiêu bay bằng cùng ảnh), cắm nghiêng: lún nửa vào tường theo hướng bay, nghiêng thêm 25 độ.
+  // Ảnh chưa tải xong: một ngôi sao nhỏ 4 cánh màu thép.
+  function anhPhiTieu(w) {
+    const SC = G.spriteCustom, z = SC && SC.zed && SC.zed['zed-vk'];
+    if (!z) return null;
+    if (!z.ready && SC.canAnh) SC.canAnh('zed-vk');
+    const pt = z.ready && z.img && z.tep && z.tep.vk && z.tep.vk.phitieu;
+    if (!pt) return null;
+    let cap = 0;
+    try { cap = Math.max(0, Math.min(3, (w ? G.wStage(w) : 0) | 0)); } catch (e) { cap = 0; }
+    const r = pt[cap] || pt[0], r0 = pt[0];
+    return r && r0 ? { img: z.img, r, r0 } : null;
+  }
   function drawStuck(c, s) {
     const k = s.t / s.t0;
     if (k < 0.35 && ((K.S().t * 20) | 0) % 2) return;
     const x = Math.round(s.x), y = Math.round(s.y), ux = s.ux, uy = s.uy;
-    const dot = (a, b, col) => { c.fillStyle = col; c.fillRect(Math.floor(x + ux * a - uy * b), Math.floor(y + uy * a + ux * b), 1, 1); };
-    for (let i = -9; i <= -1; i++) dot(i + 0.5, 0.5, i < -7 ? s.rc : '#e8e2d0');
-    dot(-8.5, -0.5, s.rc); dot(-8.5, 1.5, s.rc);
-    dot(-0.5, -0.5, 'rgba(0,0,0,0.5)'); dot(0.5, 0.5, 'rgba(0,0,0,0.5)');
+    const a = anhPhiTieu(s.w);
+    if (a) {
+      const F = 7 / Math.max(a.r0[2], a.r0[3]), w = a.r[2] * F, h = a.r[3] * F; // cấp 1 rộng 7 điểm ảnh (bay: 8), cấp cao to dần theo ảnh
+      c.save();
+      c.imageSmoothingEnabled = false;
+      c.translate(x - ux * 1.5, y - uy * 1.5); c.rotate(Math.atan2(uy, ux) + 0.44);
+      c.drawImage(a.img, a.r[0], a.r[1], a.r[2], a.r[3], -w / 2, -h / 2, w, h);
+      c.restore();
+      c.fillStyle = 'rgba(0,0,0,0.45)'; c.fillRect(x, y, 1, 1);
+      return;
+    }
+    c.fillStyle = '#c9ccd2';
+    c.fillRect(x - 2, y, 5, 1); c.fillRect(x, y - 2, 1, 5);
+    c.fillStyle = '#ffffff'; c.fillRect(x, y, 1, 1);
   }
   function wallHit(o, W) {
     const g = W.geo, x = G.clamp(o.x, g.fx0 - 1, g.fx1 + 1), py = o.y - (o.z || 10);
     const y = o.y < g.fy0 - 20 ? Math.max(py, g.fy0 - 36) : py;
     const el = elOf(o), sp = Math.hypot(o.vx, o.vy) || 1;
     if (o.team === 'player' && o.kind === 'arrow') {
-      add({ ty: 'he', x, y, t: 0.9, ly: 1, draw: drawStuck, ux: o.vx / sp, uy: o.vy / sp, rc: o.w && G.wRar(o.w) ? G.RARITY[G.wRar(o.w)].col : '#c8372d' });
+      add({ ty: 'he', x, y, t: 0.9, ly: 1, draw: drawStuck, ux: o.vx / sp, uy: o.vy / sp, w: o.w || null });
       for (let i = 0; i < 4; i++) emit(2, x + rr(-2, 2), y + rr(-2, 2), -o.vx * 0.05 + rr(-10, 10), rr(-20, -5), rr(0.25, 0.4), RAMP.dust || RAMP.smoke, 2, 0, 1, null, 1);
       if (el) impact(x, y, el, o.big, null, 'player');
       return;
@@ -323,7 +334,7 @@
           add({ ty: 'flash', x: o.x - (o.vx / sp) * 3, y: py, r: o.big ? 6 : 3, t: 0.07, c: '#ffffff', c2: el ? EL_GLOW[el] : '#fff3d0', ly: 1 });
           // Phi tiêu ném thường (bộ Zed mới): vệt ném hu-ban-cung(-hệ) nhỏ, mép trái ở chỗ phi tiêu rời tay, chĩa theo hướng bay.
           // Ném chùm (big) đã có hu-phi-tieu-chum ở tay (js/fx_he.js) nên bỏ qua. Không có ảnh: như cũ.
-          if (o.kind === 'arrow' && !o.big && G.ZED_MOI !== false && K.anhHe && K.anhHuong) {
+          if (o.kind === 'arrow' && !o.big && K.anhHe && K.anhHuong) {
             const maN = K.anhHe('hu-ban-cung', el);
             if (maN) K.anhHuong(maN, o.x - (o.vx / sp) * 4, py, o.vx / sp, o.vy / sp, { sc: 0.55 });
           }

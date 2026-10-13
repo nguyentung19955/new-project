@@ -179,7 +179,7 @@
   const cellX = (i) => HUD.x + 1.5 + i * HUD.cell;
   // Chỗ hạt sáng bay vào (toạ độ màn hình).
   LK.barPos = function (el) {
-    if (G.HE_MOI) return { x: HUD.x + 9, y: HUD.y + 8 }; // hệ thống mới: hạt sáng bay vào túi linh khí chung (js/vk_moi.js vẽ)
+    if (G.vkMoi) return { x: HUD.x + 9, y: HUD.y + 8 }; // hệ thống mới: hạt sáng bay vào túi linh khí chung (js/vk_moi.js vẽ)
     const i = ELS.indexOf(el);
     if (i < 0) return null;
     return { x: cellX(i) + 22, y: HUD.y + 6 };
@@ -193,7 +193,7 @@
     const w = G.curW(P);
     if (!w || !w.marks) return;
     // Hệ thống mới (js/vk_moi.js): một tấm "Linh khí N" (túi chung) thay ba vạch hệ của từng vũ khí; dấu hệ trên đầu quái giữ nguyên.
-    if (G.HE_MOI && G.vkMoi && G.vkMoi.hud) {
+    if (G.vkMoi && G.vkMoi.hud) {
       let xong = false;
       try { xong = G.vkMoi.hud(P, HUD, pulse); } catch (e) { xong = false; }
       if (xong) { if (W) badges(W); return; }
@@ -302,7 +302,7 @@
   };
   // Vẽ khối linh khí của màn kết quả trong khung (x, y, rộng wd). Trả về y cuối.
   LK.resultBlock = function (S, x, y, wd) {
-    if (G.HE_MOI && G.vkMoi && G.vkMoi.ketQua) return G.vkMoi.ketQua(S, x, y, wd); // hệ thống mới: một dòng túi linh khí
+    if (G.vkMoi && G.vkMoi.ketQua) return G.vkMoi.ketQua(S, x, y, wd); // hệ thống mới: một dòng túi linh khí
     const rows = LK.resultRows(S);
     const T = G.theme;
     if (T && T.head) T.head('Linh khí của vũ khí', x, y + 7, { size: 7.5 }); else ui.text('Linh khí của vũ khí', x, y + 7, { size: 7.5, bold: true });

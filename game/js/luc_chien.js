@@ -1,5 +1,5 @@
 // LỰC CHIẾN (tiếng Anh "Combat Power"): một con số tóm tắt em bé mạnh cỡ nào, tính từ đúng các chỉ số game đang dùng trong trận,
-// và dải thông báo "Lực chiến 1.234 ▲ +56" mỗi khi con số đổi (mặc, tháo, thay vũ khí hay trang phục, mài, luyện, nâng bậc,
+// và dải thông báo "Lực chiến 1.234 ▲ +56" mỗi khi con số đổi (nâng vũ khí bằng linh khí, mài,
 // lên cấp, học kỹ năng, chưởng...). CHỈ HIỂN THỊ: không đổi sát thương, máu, chỉ số đồ, cân bằng, không ghi gì vào bản lưu.
 //
 // Khác "Sức mạnh" (G.power, js/combat.js): Sức mạnh là thước đo đã cân với "Sức mạnh khuyên dùng" của từng ải (bot đo), quy mọi
@@ -7,19 +7,19 @@
 // cộng cả dòng phụ, dòng mạnh, hồi chiêu, tốc chạy, nên mọi thay đổi trên đồ đều làm con số nhích theo đúng chiều.
 //
 // CÔNG THỨC (G.lucChien):
-//   P = G.buildPlayer() (hàm dựng em bé lúc vào trận: cấp, điểm kỹ năng, vũ khí, trang phục, chưởng)
+//   P = G.buildPlayer() (hàm dựng Zed lúc vào trận: cấp, điểm kỹ năng, vũ khí, chưởng)
 //   Đòn của mỗi vũ khí đang mang w:
 //     dps(w) = G.pDamage(P, w)                       sát thương gốc × bậc × mốc linh khí × mài × cấp × điểm Công × sở trường
 //            × nhịp(w.type)                          (tổng hệ số các nhát / tổng thời gian chuỗi đòn, G.MOVES)
 //            × (1 + chí mạng)                        (điểm Công + dòng phụ "chí mạng" 10%)
 //            × dòng phụ (mana ×1,03, tầm ×1,03) × dòng mạnh (Diệt yêu ×1,10, Thấm hệ ×1,05, Mở màn ×1,05)
-//            × thưởng hệ đủ bộ trang phục (nếu vũ khí đã theo hệ đó) × (1 + nửa phần "+15% lên quái dính hiệu ứng")
+//            × (1 + nửa phần "+15% lên quái dính hiệu ứng")
 //   DPS = 0,75 × vũ khí mạnh hơn + 0,25 × vũ khí còn lại (như Sức mạnh: trùm bắt đổi vũ khí; ô trống tính 0)
 //       × hệ số chưởng (G.chuong.powerMult) × (1 + nửa phần hồi chiêu nhanh)
 //       × mana và đòn Đặc biệt (Đặc biệt rẻ hơn 0,6%/mana, mana tối đa 0,08%/điểm, hồi mana mỗi đòn 3%/điểm)
 //       × hiệu ứng hệ kéo dài (20% phần tăng), nổ kết hợp hệ (10% phần tăng), đổi vũ khí chắc gây hiệu ứng (×1,02)
 //   Độ bền: EHP = máu tối đa / (1 − giảm sát thương, tối đa 75%; nội tại Cu Lì / nét Cu Lì dạy Zed tính một nửa)
-//       × (1 + 0,3 × kháng hệ trung bình) × (1 + hồi máu mỗi phòng) × lộn nhanh, cánh, tác dụng trang phục, tốc chạy
+//       × (1 + 0,3 × kháng hệ trung bình) × (1 + hồi máu mỗi phòng) × lộn nhanh, tốc chạy (đợt 2: bỏ phần trang phục cũ)
 //   Lực chiến = làm tròn(7 × căn bậc hai(DPS × EHP))
 //   Em bé mới (Cu Tí cấp 1, Kiếm Rèn + Cung Tre Thường) ≈ 400; cuối game (cấp 40, Vàng +15, Thức tỉnh, đồ bộ) ≈ 4.000.
 //
@@ -54,8 +54,6 @@
     d *= 1 + (P.crit || 0) + (G.wHas(w, 'crit') ? 0.1 : 0);
     for (const k of w.affixes || []) if (AFX[k]) d *= AFX[k];
     if (w.power && POW[w.power]) d *= POW[w.power];
-    const el = G.wStage(w) > 0 ? w.branch : null;
-    if (el && G.outfit && G.outfit.elMult) d *= G.outfit.elMult(P, el);
     d *= 1 + ((P.statusBonus || 1) - 1) * 0.5;
     return d;
   }
@@ -85,8 +83,6 @@
       ehp *= 1 + 0.3 * (res / G.ELS.length);
       ehp *= 1 + (P.roomHeal || 0);
       if (P.dodgeCdMax < 1) ehp *= 1 + (1 - P.dodgeCdMax) * 0.2;
-      if (P.dodgeMul > 1) ehp *= 1 + (P.dodgeMul - 1) * 0.3;
-      if (P.oSp) { let n = 0; for (const k in P.oSp) n += P.oSp[k].length; ehp *= 1 + 0.04 * Math.min(5, n); }
       const base = 72 * (G.HEROES[key].speed || 1);
       ehp *= 1 + G.clamp(P.speed / base - 1, 0, 0.5) * 0.2;
       const v = Math.round(7 * Math.sqrt(Math.max(0, dps * ehp)));
@@ -97,8 +93,8 @@
   G.lucChien = function (sv, key) {
     try { const q = G.lucChienParts(sv, key); return q ? q.value : 0; } catch (e) { return 0; }
   };
-  // Lực chiến nếu làm fn trên bản sao NÔNG của bản lưu (mảng carry, trang phục đang mặc được chép riêng nên bản thật không đổi).
-  // fn(s) chỉ được đổi s.carry[...] hoặc s.outfit.wear[...] (thử mang vũ khí, thử mặc / tháo trang phục).
+  // Lực chiến nếu làm fn trên bản sao NÔNG của bản lưu (mảng carry được chép riêng nên bản thật không đổi).
+  // fn(s) chỉ được đổi s.carry[...] (thử mang vũ khí).
   const CACHE = new Map();
   LC.thu = function (key, fn, sv) {
     sv = sv || G.save;
@@ -107,9 +103,8 @@
     if (hit && hit.sv === sv && now - hit.t < 0.5 && now >= hit.t) return hit.v;
     let v = 0;
     try {
-      const v0 = G.lucChien(sv); // tính bản thật trước (trang phục kiểu cũ đã được chuyển xong), rồi mới tới bản sao
+      const v0 = G.lucChien(sv); // tính bản thật trước, rồi mới tới bản sao
       const c = Object.assign({}, sv, { carry: (sv.carry || []).slice() });
-      if (sv.outfit) c.outfit = Object.assign({}, sv.outfit, { wear: Object.assign({}, sv.outfit.wear) });
       fn(c);
       v = G.lucChien(c) - v0;
     } catch (e) { v = 0; }
@@ -119,12 +114,6 @@
   };
   // Mang vũ khí w ở ô slot thì lực chiến đổi bao nhiêu
   LC.thuVuKhi = (w, slot, sv) => LC.thu('w' + w.id + '-' + slot + '-' + ((sv || G.save).carry || []).join(','), (s) => { s.carry[slot] = w.id; }, sv);
-  // Mặc (on = false) hoặc tháo (on = true) món trang phục it thì lực chiến đổi bao nhiêu
-  LC.thuTrangPhuc = function (it, on, sv) {
-    const O = G.outfit; if (!O || !it || !O.ITEMS[it.k]) return 0;
-    const slot = O.ITEMS[it.k].slot;
-    return LC.thu('o' + it.id + '-' + (on ? 1 : 0) + '-' + JSON.stringify((sv || G.save).outfit.wear), (s) => { s.outfit.wear[slot] = on ? null : it.id; }, sv);
-  };
 
   // ---------- số có dấu ngăn hàng nghìn: tiếng Việt 1.234, tiếng Anh 1,234 ----------
   G.soNghin = function (n) {

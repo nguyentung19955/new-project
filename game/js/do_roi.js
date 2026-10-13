@@ -1,7 +1,7 @@
 // Đồ rơi dễ nhìn (góp ý của chủ dự án: "đồ rơi trên bản đồ hơi khó nhìn, hình dạng ấy").
 // Chỉ có phần hình và phần hút về; thưởng vẫn cộng sẵn như cũ (js/stage.js), đồ rơi trên sàn chỉ để thấy và nhặt cho vui tay.
-//  - Mỗi loại một hình rõ, to hơn, viền tối 1 điểm ảnh, bóng dưới chân: vũ khí là hình thu nhỏ của vũ khí sống nằm nghiêng,
-//    trang phục là hình món đồ, vàng là đống xu lấp lánh, nguyên liệu dùng đúng biểu tượng tài nguyên ở dải trên cùng (G.theme.RES).
+//  - Mỗi loại một hình rõ, to hơn, viền tối 1 điểm ảnh, bóng dưới chân (đợt 2: không còn vũ khí / trang phục rơi):
+//    vàng là đống xu lấp lánh, nguyên liệu dùng đúng biểu tượng tài nguyên ở dải trên cùng (G.theme.RES).
 //  - Đồ có bậc: cột sáng mảnh màu bậc (Lam, Tím, Vàng); đồ Vàng có thêm tia sáng xoay và lấp lánh; đồ thường chỉ ánh nhẹ.
 //  - Rơi ra thì nảy lên rồi nảy nhẹ một lần, sau đó nhấp nhô tại chỗ. Lại gần thì hiện tên ngắn màu theo bậc; rất gần thì tự hút về.
 // Đồ rơi vẽ ở lớp sàn (trước quái và em bé, trước khi chụp nền cho vùng báo trước) nên không che quái, không che vùng báo trước.
@@ -26,7 +26,7 @@
     return out;
   }
   // Hình (đã viền) của một món, lưu lại theo khoá. Tâm hình ở giữa canvas. Canvas có độ nét gấp cv.net lần (= G.NET lúc tạo):
-  // hình AI (vật phẩm, vũ khí) giữ được chi tiết gấp đôi khi vẽ lên canvas thế giới; hình vẽ bằng code y như cũ.
+  // hình AI (vật phẩm) giữ được chi tiết gấp đôi khi vẽ lên canvas thế giới; hình vẽ bằng code y như cũ.
   function hinh(o) {
     const N = G.NET || 1, k = khoa(o) + '|' + N; let cv = cache.get(k); if (cv) return cv;
     const S = 22, src = canvas(S * N, S * N), c = src.getContext('2d'); c.imageSmoothingEnabled = false; c.scale(N, N);
@@ -34,12 +34,6 @@
       // Vật phẩm có hình tự vẽ (Xưởng Sprite, js/sprite_custom.js) thì dùng hình đó.
       const tv = G.spriteCustom && G.spriteCustom.vatPham ? G.spriteCustom.vatPham(o.kind === 'linhkhi' ? 'linhkhi-' + o.el : o.kind) : null;
       if (tv) G.spriteCustom.veVatPham(c, tv, S / 2, S / 2, 18);
-      else if (o.kind === 'weapon' && o.w && G.weaponArt && G.weaponArt.icon) {
-        const wo = G.weaponArt.fromWeapon(o.w, { mood: 'calm', t: 0 });
-        if (o.w.coat && !wo.branch) { wo.branch = o.w.coat; wo.stage = 1; }
-        G.weaponArt.icon(c, wo, S / 2, S / 2, 18);
-      } else if (o.kind === 'weapon' && o.w && G.art.weaponIcon) G.art.weaponIcon(c, o.w, S / 2, S / 2, 16);
-      else if (o.kind === 'outfit' && o.o && G.outfit && G.outfit.drawIcon) G.outfit.drawIcon(c, o.o, S / 2, S / 2, 16);
       else if (o.kind === 'gold') dongXu(c, S / 2, S / 2 + 3);
       else if (o.kind === 'potion') binhMau(c, S / 2, S / 2);
       else if (o.kind === 'linhkhi') vienLinhKhi(c, S / 2, S / 2, o.el);
@@ -62,8 +56,6 @@
     px(x - 1, y - 2, 2, 4, E.col2); px(x - 2, y - 1, 4, 2, E.col2); px(x - 1, y - 1, 1, 1, '#ffffff');
   }
   function khoa(o) {
-    if (o.kind === 'weapon' && o.w) return 'w|' + (o.w.id || '') + '|' + o.w.type + '|' + (o.w.family || 0) + '|' + bac(o) + '|' + (o.w.branch || '') + '|' + (G.wStage ? G.wStage(o.w) : 0);
-    if (o.kind === 'outfit' && o.o) return 'o|' + o.o.k + '|' + o.o.r + '|' + (o.o.lv || 1);
     if (o.kind === 'linhkhi') return 'lk|' + o.el;
     return o.kind;
   }
@@ -85,10 +77,8 @@
     c.fillStyle = '#ff5a5a'; c.fillRect(x - 3, y - 2, 3, 3);
     c.fillStyle = '#ffffff'; c.fillRect(x - 3, y - 2, 1, 1);
   }
-  // Bậc của món: vũ khí, trang phục theo bậc; mảnh trùm coi như Tím; còn lại 0.
+  // Bậc của món: mảnh trùm coi như Tím; còn lại 0 (đợt 2: không còn vũ khí, trang phục rơi trên sàn).
   function bac(o) {
-    if (o.kind === 'weapon' && o.w) return G.wRar ? G.wRar(o.w) : (o.w.rarity || o.w.tier || 0);
-    if (o.kind === 'outfit' && o.o) return o.o.r || 0;
     if (/^shard/.test(o.kind)) return 2;
     return 0;
   }
@@ -99,7 +89,7 @@
     const r = bac(o); return (G.RARITY[r] || G.RARITY[0]).col;
   }
   D.ten = function (o) {
-    let s = o.kind === 'weapon' && o.w ? G.wName(o.w) : o.kind === 'outfit' && o.o && G.outfit ? G.outfit.name(o.o) : (o.s || '');
+    let s = o.s || '';
     s = G.tv(String(s).replace(/^Nhặt được /, '')); // dịch trước rồi mới cắt theo ký tự
     return s.length > 18 ? s.slice(0, 17) + '…' : s;
   };
@@ -155,7 +145,7 @@
       }
     }
     c.globalAlpha = ga * a;
-    // hình món đồ (đã viền tối), vũ khí nằm nghiêng sẵn trong hình thu nhỏ
+    // hình món đồ (đã viền tối)
     const cv = hinh(o);
     c.imageSmoothingEnabled = false;
     const n = cv.net || 1, cw = cv.width / n, ch = cv.height / n;
@@ -212,7 +202,7 @@
 
   // ---------- hoạt ảnh nhặt đồ ở lớp giao diện (VFX Phase 5) ----------
   // Linh khí bay vòng lên ô vũ khí đang cầm (ô đó tự chớp khi nhận dấu ấn); bình máu bay vào nút Bình máu;
-  // vàng, nguyên liệu, vũ khí, trang phục hiện lên trên đầu em bé, nảy một nhịp rồi tan. Chỗ nhặt có vòng sáng nhỏ.
+  // vàng, nguyên liệu hiện lên trên đầu em bé, nảy một nhịp rồi tan. Chỗ nhặt có vòng sáng nhỏ.
   // Hình bay vẽ trước các ô giao diện nên chui "vào" ô; không che thanh máu và nút. Theo G.VFX.giaoDien (0 = như cũ).
   const BAY = [];
   function bayLen(W, P, o) {
