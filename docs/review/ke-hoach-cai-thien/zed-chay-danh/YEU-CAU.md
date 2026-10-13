@@ -1,3 +1,5 @@
+> **CHỦ DỰ ÁN ĐỔI Ý (13/10 12:11): KHÔNG TEST. Bỏ 7 kiểm thử Playwright và phần quay GIF/đo so sánh; chỉ sửa code, kiểm cú pháp (node --check) rồi push để chủ dự án tự kiểm trên điện thoại.**
+
 # Zed: Di chuyển + Tấn công đồng thời (13/10/2026)
 
 Yêu cầu nguyên văn của chủ dự án ở cuối tệp. Mục tiêu: chạy liên tục, chân có nhịp chạy tự nhiên, tay chém dứt khoát, combo nối mượt, không giật khung, không khoá di chuyển, không trượt chân.
