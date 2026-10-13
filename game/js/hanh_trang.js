@@ -171,6 +171,8 @@
     if (!G.vkMoi) return;
     region('weapon', CX, CY, CW - 4, CH, (y) => {
       y = G.vkMoi.vkPanel(CX, y + 2, CW - 8, { ro: RO, say: VA.say });
+      // Đợt 6: ép đồ (bậc vũ khí, js/ep_do.js) ngay dưới; trong ải chỉ xem
+      if (G.epDo && G.epDo.bat()) { T.head('Ép đồ', CX, y + 10); y = G.epDo.panel(CX, y + 14, CW - 8, { ro: RO, say: VA.say, h: 168 }); }
       if (RO) { roNote(CX, y + 10); return y + 14; }
       y += 2;
       if (goBtn(CX, y, 214, 'ren', 'Đến Ông Thợ Rèn: mài, nâng lò')) return y;
@@ -247,6 +249,20 @@
         tx(G.t('Dùng: {0}', q[1]), CX + 128, y + 10, CW - 142, { size: 6.5, color: TXT });
         tx(G.t('Kiếm: {0}', q[2]), CX + 128, y + 20, CW - 142, { size: 6.5, color: SOFT });
         y += 26;
+      }
+      // Đợt 6: đá nâng bậc, bùa giữ bậc (ép đồ, js/ep_do.js)
+      if (G.epDo && G.epDo.bat()) {
+        const ds = [[G.epDo.iconDa, 'Đá nâng bậc', G.epDo.da(sv), 'Ép vũ khí lên bậc (Ông Thợ Rèn, thẻ Ép đồ), đổi dòng hiệu ứng', 'Trùm nhỏ, trùm vùng (lần đầu nhiều hơn), Ải Đá Bậc (ải ngày)'],
+          [G.epDo.iconBua, 'Bùa giữ bậc', G.epDo.bua(sv), 'Ép từ Vàng trở lên mà hỏng thì không tụt bậc', 'Trùm vùng, Ải Đá Bậc mức Khó, thương nhân trong ải']];
+        for (const q of ds) {
+          T.inset(CX, y, CW - 8, 24, false);
+          q[0](CX + 12, y + 12, 16);
+          tx(q[1], CX + 24, y + 10, 100, { size: 7.5, bold: true, color: GOLD });
+          ui.text(String(q[2] | 0), CX + 24, y + 20, { size: 8.5, bold: true, color: TXT });
+          tx(G.t('Dùng: {0}', q[3]), CX + 128, y + 10, CW - 142, { size: 6.5, color: TXT });
+          tx(G.t('Kiếm: {0}', q[4]), CX + 128, y + 20, CW - 142, { size: 6.5, color: SOFT });
+          y += 26;
+        }
       }
       return y + 2;
     });

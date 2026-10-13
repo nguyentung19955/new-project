@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // SOÁT CÂN BẰNG BẰNG SỐ LIỆU (đợt 4, docs/review/ke-hoach-cai-thien/he-thong-moi/YEU-CAU-4-RESET-CAN-BANG.md).
 // KHÔNG chạy game: chỉ nạp game/js/data.js (bảng hằng số) + đọc các hằng số đòn của game/js/moves.js, rồi tính kỳ vọng.
-// Chạy: node tools/can-bang/tinh.js            (in 5 bảng ra màn hình)
+// Chạy: node tools/can-bang/tinh.js            (in các bảng ra màn hình; mục 6: ép đồ + ải ngày, đợt 6)
 //       node tools/can-bang/tinh.js --json     (in số liệu thô dạng JSON)
 // Mô hình người chơi: chơi lần lượt 15 ải; chưa đủ 90% Sức mạnh khuyên dùng (G.STAGE_REC) thì chơi lại ải cao nhất đã qua để cày.
 // Mỗi lượt cộng phần thưởng KỲ VỌNG (tỉ lệ × giá trị). Tiêu: điểm kỹ năng, linh khí (vũ khí chính trước, rồi vũ khí phụ),
@@ -203,6 +203,52 @@ function bang2(cd) {
   return ra;
 }
 
+
+// ---------- 6. ÉP ĐỒ + ẢI NGÀY (đợt 6, YEU-CAU-6-EP-DO-AI-NGAY.md; bảng G.EP_DO, G.AI_NGAY) ----------
+// Mô phỏng Monte Carlo (hạt giống cố định) đúng luật js/ep_do.js: mỗi lần ép mất đá + vàng (+ mảnh); tỉ lệ G.EP_DO.tiLe + điểm may mắn
+// (mỗi lần hỏng +mayMan cho lần ép lên đúng bậc đó, thành công về 0); ép lên bậc >= tutTu hỏng thì tụt 1 bậc (trừ khi dùng bùa).
+function epDo(o) {
+  o = o || {};
+  const E = G.EP_DO, N = o.n || 20000;
+  let sd = 12345;
+  const rnd = () => { sd = (sd * 16807) % 2147483647; return sd / 2147483647; };
+  const ra = [];
+  for (let dich = 1; dich <= 6; dich++) {
+    let da = 0, vang = 0, manh = 0, lan = 0, bua = 0;
+    for (let k = 0; k < N; k++) {
+      let b = 0; const may = {};
+      while (b < dich) {
+        const t = b + 1, g = E.gia[t];
+        da += g.da; vang += g.vang; manh += g.manh ? g.manh.reduce((a, x) => a + x, 0) : 0; lan++;
+        if (rnd() < Math.min(1, E.tiLe[t] + (may[t] || 0))) { b = t; may[t] = 0; }
+        else { may[t] = (may[t] || 0) + E.mayMan; if (t >= E.tutTu) { if (o.bua) bua++; else b--; } }
+      }
+    }
+    ra.push({ bac: E.ten[dich], da: +(da / N).toFixed(1), vang: Math.round(vang / N), manh: +(manh / N).toFixed(1), lan: +(lan / N).toFixed(1), bua: +(bua / N).toFixed(1) });
+  }
+  return ra;
+}
+// Đá mỗi tuần và vàng / quặng của ải ngày so với một lượt ải thường cùng vùng (thuNhap, chơi lại, không tính lần đầu)
+function aiNgay(o) {
+  o = o || {};
+  const A = G.AI_NGAY, R = G.EP_DO.roi, luotThuong = o.luotThuong || 20; // lượt ải thường mỗi tuần (cày lại, 1/5 là ải trùm vùng)
+  const ngay = (loai) => A.ai[loai].thu.length * A.luot;               // lượt / tuần của một ải
+  const muc = [0, 1, 2].map((k) => {
+    const tn = [0, 1, 2, 3, 4].map((i) => thuNhap(k * 5 + i, { power: G.STAGE_REC[k * 5 + i], vk: { sword: { st: 2 } } }, false));
+    const vangTB = tn.reduce((a, q) => a + q.vang, 0) / 5, quangTB = tn.reduce((a, q) => a + q.quang, 0) / 5;
+    const daTrum = luotThuong * (0.8 * R.mini[k] + 0.2 * R.vung[k]);
+    const daAi = ngay('da') * A.ai.da.thuong.da[k];
+    return {
+      muc: A.muc[k], vung: G.REGIONS[k].name,
+      vangAi: A.ai.vang.thuong.vang[k], vangThuong: Math.round(vangTB), vangTiLe: +(A.ai.vang.thuong.vang[k] / vangTB).toFixed(2),
+      quangAi: A.ai.mai.thuong.quang[k], quangThuong: +quangTB.toFixed(1), quangTiLe: +(A.ai.mai.thuong.quang[k] / quangTB).toFixed(2),
+      daAiTuan: daAi, daTrumTuan: Math.round(daTrum), daTuan: Math.round(daAi + daTrum),
+      buaTuan: +(ngay('da') * (A.ai.da.thuong.bua[k] || 0) + luotThuong * 0.2 * G.EP_DO.bua.trumVung).toFixed(1),
+    };
+  });
+  return { muc, luotNgay: { da: ngay('da'), mai: ngay('mai'), vang: ngay('vang') }, luotThuong };
+}
+
 if (require.main === module) {
   const b1 = bang1(), cd = chienDich(), cd1 = chienDich({ motMon: true }), cdBo = chienDich({ bo: true }), b2 = bang2(cd);
   if (JSON_OUT) { console.log(JSON.stringify({ b1, cd, cd1, cdBo, b2 }, null, 1)); process.exit(0); }
@@ -224,5 +270,14 @@ if (require.main === module) {
   const tn = thuNhap(4, { power: 200, vk: { sword: { st: 1 } } }, true);
   console.log('\n== 5. NGUỒN mỗi lượt (ải 1-5 lần đầu) ==');
   console.log(JSON.stringify(tn.nguon));
+  // 6. ép đồ + ải ngày
+  const ep = epDo(), epB = epDo({ bua: true }), an = aiNgay();
+  console.log('\n== 6. ÉP ĐỒ: kỳ vọng để đưa MỘT vũ khí từ Bậc Trắng lên bậc (cộng dồn, có điểm may mắn; không bùa | luôn dùng bùa) ==');
+  console.log(pad('bậc', 10), pad('đá', 7), pad('vàng', 7), pad('mảnh', 6), pad('lần ép', 7), '| có bùa: đá, vàng, lần ép, bùa tốn');
+  ep.forEach((v, k) => console.log(pad(v.bac, 10), pad(v.da, 7), pad(v.vang, 7), pad(v.manh, 6), pad(v.lan, 7), '|', epB[k].da, epB[k].vang, epB[k].lan, epB[k].bua));
+  console.log('\n== 6. ẢI NGÀY: lượt/tuần', JSON.stringify(an.luotNgay), '| giả định', an.luotThuong, 'lượt ải thường/tuần (cày lại, 1/5 ải trùm vùng) ==');
+  console.log(pad('mức', 5), pad('vùng', 11), pad('vàng ải', 8), pad('vàng thường', 12), pad('×', 5), pad('quặng ải', 9), pad('quặng thường', 13), pad('×', 5), pad('đá ải/t', 8), pad('đá trùm/t', 10), pad('đá/tuần', 8), pad('bùa/t', 6), 'tuần lên Tím | Rực lửa (1 món)');
+  const tim = ep[3].da, ruc = ep[5].da;
+  for (const v of an.muc) console.log(pad(v.muc, 5), pad(v.vung, 11), pad(v.vangAi, 8), pad(v.vangThuong, 12), pad(v.vangTiLe, 5), pad(v.quangAi, 9), pad(v.quangThuong, 13), pad(v.quangTiLe, 5), pad(v.daAiTuan, 8), pad(v.daTrumTuan, 10), pad(v.daTuan, 8), pad(v.buaTuan, 6), (tim / v.daTuan).toFixed(2), '|', (ruc / v.daTuan).toFixed(1), '(4 món:', (4 * ruc / v.daTuan).toFixed(1) + ')');
 }
-module.exports = { G, bang1, chienDich, bang2, thuNhap, soQuai, nguoi };
+module.exports = { G, bang1, chienDich, bang2, thuNhap, soQuai, nguoi, epDo, aiNgay };

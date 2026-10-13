@@ -33,7 +33,8 @@
   // Hệ số bậc: Vàng của vùng sau cao hơn (G.GOLD_MULT).
   G.wRarMult = (w) => (G.wRar(w) === 3 ? G.GOLD_MULT[w.gold | 0] || G.GOLD_MULT[0] : G.RARITY[G.wRar(w)].mult);
   G.wBase = function (w, lvl) {
-    return G.WTYPES[w.type].dmg * G.wRarMult(w) * G.STAGE_MULT[G.wStage(w)] * (1 + 0.08 * w.sharpen) * (1 + G.LVL_DMG * ((lvl || 1) - 1));
+    // Đợt 6: × hệ số Bậc ép đồ (js/ep_do.js; ?epdo=0 → 1)
+    return G.WTYPES[w.type].dmg * G.wRarMult(w) * G.STAGE_MULT[G.wStage(w)] * (1 + 0.08 * w.sharpen) * (1 + G.LVL_DMG * ((lvl || 1) - 1)) * (G.epDo ? G.epDo.satThuong(w) : 1);
   };
   function nameWeapon(w) {
     // Danh hiệu chỉ tính boss vùng, không tính trùm nhỏ.
@@ -138,7 +139,8 @@
     let off = 0;
     // Cày nâng cấp: tính cả vũ khí thứ hai (75% món mạnh nhất + 25% món còn lại). Trùm thích nghi kháng hệ đang dùng nhiều nên phải đổi
     // sang vũ khí kia; vũ khí thứ hai bỏ mặc +0 thì đánh trùm rất khó, nên con số Sức mạnh và gợi ý nâng cấp phải thấy được điều đó.
-    const offs = P.weapons.map((w) => (G.pDamage(P, w) / G.WTYPES[w.type].dmg) * 10 * (G.wHas(w, 'crit') ? 1.1 : 1)).sort((a, b) => b - a);
+    // Đợt 6: G.pDamage đã có hệ số Bậc ép đồ; dòng hiệu ứng tính gần đúng (G.epDo.sucManh)
+    const offs = P.weapons.map((w) => (G.pDamage(P, w) / G.WTYPES[w.type].dmg) * 10 * (G.wHas(w, 'crit') ? 1.1 : 1) * (G.epDo ? G.epDo.sucManh(w) : 1)).sort((a, b) => b - a);
     if (offs.length) off = offs.length > 1 ? offs[0] * 0.75 + offs[1] * 0.25 : offs[0];
     if (!off) off = 10 * (1 + 0.01 * (P.lvl - 1));
     off *= 1 + P.crit;
@@ -439,9 +441,12 @@
     const P = W.P, w = o.w;
     let d = G.pDamage(P, w) * mult;
     let crit = false;
-    if (G.rnd() < P.crit + (G.wHas(w, 'crit') ? 0.1 : 0)) { d *= 2; crit = true; }
+    // Đợt 6: dòng hiệu ứng ép đồ của vũ khí đang cầm (js/ep_do.js): chí mạng, sát thương chí mạng, lên trùm / tinh anh, sát thương hệ
+    const el0 = G.activeEl(P, w), ed = G.epDo ? G.epDo.danh(P, w, e, el0) : null, xcm = 2 + (ed ? ed.xcm : 0);
+    if (ed) d *= ed.k;
+    if (G.rnd() < P.crit + (G.wHas(w, 'crit') ? 0.1 : 0) + (ed ? ed.cm : 0)) { d *= xcm; crit = true; }
     const bk = G.boSk ? G.boSk.danh(P, e, o, crit) : null; // skill bộ: Bóng lướt, Ám sát (Ninja), Khí thế (Lâu đài) — js/bo_skill.js
-    if (bk) { d *= bk.k; if (bk.crit && !crit) { d *= 2; crit = true; } }
+    if (bk) { d *= bk.k; if (bk.crit && !crit) { d *= xcm; crit = true; } }
     // dòng mạnh riêng của bậc Vàng
     if (w.power === 'boss' && (e.isBoss || e.role === 'elite')) d *= 1.2;
     if (w.power === 'first' && e.hp >= e.maxhp) d *= 2;
@@ -449,12 +454,13 @@
     if ((P.ccMult || 1) > 1 && (e.st.frozen > 0 || e.st.stun > 0 || e.st.root > 0 || e.exposed > 0)) d *= P.ccMult;
     const el = G.activeEl(P, w);
     G.damage(e, d, { el, ranged: o.ranged, src: 'hit', w, crit });
+    if (G.epDo) G.epDo.hut(P, w, d); // dòng ép đồ "Hút máu"
     if (G.boSk) G.boSk.trung(P, e, o); // skill bộ Rừng "Bẫy dây leo": đòn giữ rồi thả (o.manh) trói chân
     if (!G.noRender) FX('hit', e, { el, type: w.type, ranged: o.ranged, crit, dead: e.dead, heavy: o.heavy, rain: o.rain, dir: o.dir || (e.x >= P.x ? 1 : -1) });
     if (G.moves) G.moves.onHit(e, d, el, o); // luật riêng của hệ khi đòn trúng (js/moves.js)
     if (G.mobOnHit) G.mobOnHit(e, d, o); // quái gai phản đòn, giáp vỡ (js/mobs.js)
     const T = G.WTYPES[w.type];
-    if (T.stagger && !e.isBoss && !e.dead) e.st.stun = Math.max(e.st.stun, T.stagger);
+    if (T.stagger && !e.isBoss && !e.dead) e.st.stun = Math.max(e.st.stun, T.stagger * (G.epDo ? G.epDo.choang(w) : 1)); // đợt 6: búa ép bậc choáng lâu hơn
     if (o.stun && !e.dead) e.st.stun = Math.max(e.st.stun, e.isBoss ? o.stun * 0.4 : o.stun);
     if (el && !e.dead) {
       const stage = G.wStage(w);
@@ -563,7 +569,7 @@
     const w = curW(P);
     P.mana -= P.specCost;
     P.specT = 0.35;
-    P.specCd = 0.8 * (P.cdMul || 1);
+    P.specCd = 0.8 * (P.cdMul || 1) * (G.epDo ? G.epDo.hoiChieu(P) : 1); // đợt 6: dòng "Giảm hồi chiêu đặc biệt" (mana: js/ep_do.js)
     const el = G.activeEl(P, w);
     G.sfx('boom', 1.8);
     if (w.type !== 'bow' && G.moves && G.moves.cast) {
@@ -630,6 +636,7 @@
     const raw = amt;
     amt *= 1 - Math.min(0.75, P.dr);
     if (G.boSk) amt *= G.boSk.nhan(P); // skill bộ Lâu đài "Giáp bạc"
+    if (G.epDo) amt *= G.epDo.nhan(P); // đợt 6: dòng ép đồ "Giảm sát thương nhận" của vũ khí đang cầm
     if (P.gongT > 0) amt *= 0.4;
     const hp0 = P.hp;
     P.hp -= amt;

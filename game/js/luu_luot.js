@@ -51,7 +51,7 @@
       if (G.scene !== G.StageScene || !S) { if (trongAi && G.scene === G.Village) xoa(); trongAi = false; idxCu = null; return; } // rời ải về làng (bỏ ải): xoá
       trongAi = true;
       if (S.mode === 'result' || S.mode === 'dead' || S.won) { if (uidCu === S.uid) { xoa(); uidCu = null; } return; }
-      if (S.tut || S.mode !== 'play' || !S.map || S.idx == null || S.idx < 0) return;
+      if (S.tut || S.aiNgay || S.mode !== 'play' || !S.map || S.idx == null || S.idx < 0) return;
       if (S.idx === idxCu && S.uid === uidCu) return;
       idxCu = S.idx; uidCu = S.uid;
       G.persist(); // đồ nhặt trong ải đã cộng vào bản lưu: ghi luôn để khớp với bản ghi lượt ải

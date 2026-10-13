@@ -73,10 +73,12 @@
     // Ải cuối vùng luôn là Kiểu C; ải dạy chơi dùng Kiểu A cho dễ theo; còn lại ngẫu nhiên, tránh kiểu vừa chơi.
     const kind = o.kind || (tut ? 'A' : G.mapgen.pickKind(i, G.save.lastKind, G.rnd));
     const seed = o.seed || 1 + Math.floor(G.rnd() * 999999);
-    const map = G.mapgen.make(kind, seed);
+    // Đợt 6: ẢI THEO NGÀY (js/ai_ngay.js) — một phòng đánh, nhiều đợt quái + 1 tinh anh cuối, không cửa, không trùm
+    const an = o.aiNgay && G.aiNgay ? o.aiNgay : null;
+    const map = an ? { kind: 'N', seed, rooms: [{ id: 0, x: 0, y: 0, type: 'fight', main: true, doors: {} }], start: 0, fountain: -1, boss: -1, gate: null, w: 1, h: 1 } : G.mapgen.make(kind, seed);
     // Ải hướng dẫn: phòng phụ ngẫu nhiên (Thử thách, Lời nguyền) đổi thành Thương nhân cho người mới dễ hiểu.
     if (tut) for (const R of map.rooms) if (R.type === 'challenge' || R.type === 'curse') R.type = 'merchant';
-    G.save.lastKind = kind;
+    if (!an) G.save.lastKind = kind;
     S = {
       r, i, diff: diff ? 1 : 0, base: G.stageStats(r, i, diff), P: G.buildPlayer(), map, rooms: map.rooms.map((x) => x.type), idx: -1,
       worlds: {}, cleared: {}, seen: {}, known: {}, visits: 0, uid: ++runNo, trans: null, doorCd: 0,
@@ -86,6 +88,7 @@
       fade: 0, W: null, near: null, sel: null, swapped: false, opts: null, result: null,
       power: G.power(), rec: G.stageRec(r, i, diff), // sức mạnh lúc vào ải và sức mạnh khuyên dùng (thanh trên, thưởng khi cày)
     };
+    if (an) { S.aiNgay = an; S.base = G.stageStats(r, 4, 0); S.rec = G.stageRec(r, 4, 0); }
     if (S.tut) S.marksMult = 2;
     enterRoom(map.start, null);
     if (S.tut && S.W) S.W.waveT = 3.5; // phòng đầu ải hướng dẫn: quái ra sau 3,5 giây để người mới kịp đọc chỉ dẫn
@@ -230,7 +233,12 @@
     const cx = geo.cx, cy = geo.cy;
     if (type === 'start' || type === 'fight' || type === 'elite' || type === 'challenge') {
       W.waves = buildWaves(type);
-      if (S.tut && type === 'start') W.waves = [['rusher', 'rusher', 'rusher']];
+      if (S.aiNgay) { // ải ngày: G.AI_NGAY.dot đợt quái, đợt cuối thêm 1 tinh anh
+        const n = (G.AI_NGAY && G.AI_NGAY.dot) || 5;
+        W.waves = [];
+        for (let k = 0; k < n; k++) W.waves.push(buildWaves(k === n - 1 ? 'elite' : 'fight').slice(-1)[0]);
+        addEnv(2);
+      } else if (S.tut && type === 'start') W.waves = [['rusher', 'rusher', 'rusher']];
       else if (S.tut && id === 1) {
         W.waves = [['swarm', 'swarm'], ['swarm', 'swarm', 'rusher']];
         W.props.push({ type: 'brazier', env: true, x: cx - 34, y: cy - 12 }, { type: 'brazier', env: true, x: cx + 36, y: cy + 22 });
@@ -425,6 +433,16 @@
     const sv = G.save, reg = G.REGIONS[S.r], W = S.W;
     S.marks += W.marksGained; W.marksGained = 0;
     if (W.usedPotion) S.usedPotion = true;
+    if (S.aiNgay && G.aiNgay) { // đợt 6: ải ngày tự tính thưởng (js/ai_ngay.js), không sao, không trùm
+      const R = { win, lines: [], stars: 0, up: 0, aiNgay: true };
+      G.aiNgay.thuong(S, R, win, function () { return ln.apply(null, [R].concat(Array.prototype.slice.call(arguments))); });
+      if (R.up) R.lines.push(ln(R, '{0} lên cấp {1}!', G.HEROES[sv.hero].name, sv.heroes[sv.hero].lvl));
+      for (const g of S.got) R.lines.push(g.w ? { s: G.t('Trong ải: {0}', g.s), w: g.w } : ln(R, 'Trong ải: {0}', g));
+      S.result = R; S.gotN = S.got.length; S.marksAt = S.marks;
+      if (win) G.sfx('win');
+      G.persist();
+      return;
+    }
     const R = { win, lines: [], stars: 0, up: 0 };
     if (win) {
       const b = W.boss;
@@ -449,6 +467,8 @@
       R.lines.push(ln(R, '+{0} kinh nghiệm', xp), ln(R, '+{0} vàng', gold), ln(R, '+{0} quặng', ore), ln(R, '+{0} {1}', mat, reg.mat.toLowerCase()));
       if (gm < 1) R.lines.push(ln(R, 'Ải đã quá dễ với sức mạnh của bé: kinh nghiệm và vàng còn {0}%', Math.round(gm * 100)));
       if (big) { const ns = S.diff ? 4 : 3; sv.shards[S.r] += ns; R.lines.push(ln(R, '+{0} mảnh {1}', ns, reg.bossName)); }
+      // đợt 6: đá nâng bậc từ trùm nhỏ / trùm vùng (lần đầu qua ải này nhiều hơn), bùa giữ bậc (trùm vùng) — js/ep_do.js
+      if (G.epDo) for (const q of G.epDo.thuongTrum(sv, S.r, big, !prev, S.diff)) R.lines.push(ln(R, q[0], q[1]));
       // đợt 4: đá tôi bỏ hẳn (Tôi lại, nâng bậc đã bỏ) — thay bằng quặng (G.DA_TOI_QUANG)
       if ((R.stars === 3 && prev < 3) || (!big && G.rnd() < 0.15)) { const q = G.DA_TOI_QUANG || 6; sv.ore += q; R.lines.push(ln(R, '+{0} quặng', q)); }
       // Không rơi vũ khí / trang phục (đợt 1, js/vk_moi.js): trùm vùng và ải thường (G.DROP.stage) cho vàng + linh khí cùng giá trị.
@@ -545,7 +565,7 @@
       if (typeof l !== 'string') continue;
       const v = viOf(S.result, l); // nhận loại theo bản tiếng Việt của dòng
       if (v.indexOf('Trong ải') === 0) continue;
-      const k = /vàng/.test(v) ? 'gold' : /quặng/.test(v) ? 'ore' : /đá tôi/.test(v) ? 'stone' : /mảnh/.test(v) ? 'shard' + S.r : /kinh nghiệm/.test(v) ? 'xp' : /^\+\d+ /.test(v) ? 'mat' + S.r : null;
+      const k = /vàng/.test(v) ? 'gold' : /quặng/.test(v) ? 'ore' : /đá tôi|đá nâng bậc|bùa giữ bậc/.test(v) ? 'stone' : /mảnh/.test(v) ? 'shard' + S.r : /kinh nghiệm/.test(v) ? 'xp' : /^\+\d+ /.test(v) ? 'mat' + S.r : null;
       if (k) items.push({ kind: k, s: l });
     }
     items.forEach((it, i) => {
@@ -689,6 +709,7 @@
       if (S.challenge) S.challenge.t -= dt;
       // trùm chết hoành tráng (cử động chết dài vài giây) rồi mới mọc cổng dịch chuyển
       if (W.type === 'boss' && S.loot.bossDown && !S.won) { S.endT += dt; if (S.endT > (W.bossDieT || 1.2)) winPortal(); return; }
+      if (S.aiNgay && W.cleared && !S.won && W.over !== 'dead') { S.endT += dt; if (S.endT > 1.2) { S.won = true; finish(true); } return; } // ải ngày: dọn hết đợt là thắng
       if (W.over === 'dead' && !S.won) { S.endT += dt; if (S.endT > 1.2) finish(false); return; }
       // Mẹo bình máu: lần đầu máu xuống dưới 40% mà còn bình thì nhắc một lần (lưu ở G.save.tut.potion)
       const sv = G.save;
@@ -924,7 +945,8 @@
     const narrow = !!(W.geo && W.geo.rong);
     // Đợt 2: phòng thường sàn rộng thì tên vùng và loại phòng xuống hai dòng (tên dài như "Thương nhân" không tràn vào sàn).
     const wide2 = narrow && !W.geo.big;
-    if (wide2) { ui.text(G.t('{0} {1}', G.REGIONS[S.r].name, S.i + 1), 5, 76, { size: 7, color: '#d9cdb8' }); ui.text(ROOM_NAME[W.type], 5, 85, { size: 7, color: '#d9cdb8' }); }
+    if (S.aiNgay && G.aiNgay) ui.text(G.aiNgay.tenNgan(S), 5, 76, { size: 7, color: '#d9cdb8' }); // đợt 6: ải ngày
+    else if (wide2) { ui.text(G.t('{0} {1}', G.REGIONS[S.r].name, S.i + 1), 5, 76, { size: 7, color: '#d9cdb8' }); ui.text(ROOM_NAME[W.type], 5, 85, { size: 7, color: '#d9cdb8' }); }
     else ui.text(G.t('{0} {1} · {2}', G.REGIONS[S.r].name, S.i + 1, ROOM_NAME[W.type]), 5, 76, { size: 7, color: '#d9cdb8' });
     // sức mạnh của bé lúc vào ải so với sức mạnh khuyên dùng của ải (xanh đủ, vàng sát nút, đỏ thiếu)
     if (wide2) { ui.text(G.t('Sức mạnh {0}', S.power), 5, 95, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) }); ui.text(G.t('khuyên {0}', S.rec), 5, 104, { size: 6.5, color: '#bfb39c' }); }
@@ -944,6 +966,7 @@
         weapon: { type: w.type, branch: G.activeEl(P, w), stage: G.wStage(w), rarity: G.wRar(w) },
         active: on, cd: on ? 0 : P.swapCd / (G.SWAP_CD || 1.5), icon: false, gem: false, id: 'slot' + i,
       });
+      if (G.epDo) G.epDo.vien(c, x, 3, 54, 35, G.epDo.bac(w)); // đợt 6: viền màu Bậc ép đồ (Rực lửa có lửa chạy)
       G.art.weaponIcon(c, Object.assign({}, w, { coat: P.coats[w.id] && P.coats[w.id].t > 0 ? P.coats[w.id].el : null }), x + 13, 13, 19, on ? (P.atkT > 0 ? 'attack' : 'idle') : 'sleep');
       const mi = markInfo(w);
       // bậc và độ mài nằm ở phần phải của ô, không chồng lên hình vũ khí (hình chiếm 26 điểm bên trái)
@@ -1236,8 +1259,10 @@
     ];
     // Phiên cân bằng (mục 3): bán thêm 1 nguyên liệu của vùng đã qua (vùng đang thiếu nhất), dùng chung kho lượt đổi với Bà Hàng Xén.
     const U = G.upg, mr = U && U.doiVung ? U.doiVung(sv) : null;
+    // đợt 6: Bùa giữ bậc (ép đồ, js/ep_do.js) — giá cao
+    if (G.epDo && G.epDo.bat() && G.EP_DO.bua) items.push({ id: 'buaBac', label: 'Bùa giữ bậc', sub: 'Ép không tụt bậc', cost: G.EP_DO.bua.thuongNhan, ok: true, f: () => { G.epDo.themBua(sv, 1); S.got.push(G.t('{0} bùa giữ bậc', 1)); } });
     if (mr != null) items.push({ id: 'mat', label: G.t('1 {0}', G.REGIONS[mr].mat.toLowerCase()), sub: G.t('Còn {0} lượt đổi', sv.doiNL | 0), cost: U.doiGia(), ok: U.doiDuoc(sv, mr) === '', f: () => { if (U.doi(sv, mr)) S.got.push(G.t('1 {0}', G.REGIONS[mr].mat.toLowerCase())); } });
-    const bw = items.length > 3 ? 76 : 100, bs = items.length > 3 ? 81 : 108;
+    const bw = items.length > 4 ? 60 : items.length > 3 ? 76 : 100, bs = items.length > 4 ? 64 : items.length > 3 ? 81 : 108;
     items.forEach((it, i) => {
       const x = 82 + i * bs;
       const dis = sh.bought[it.id] || sv.gold < it.cost || !it.ok;
@@ -1290,6 +1315,15 @@
     const R = S.result;
     if (G.time - S.modeT < 0.45) G.click = null; // tránh bấm nhầm khi bảng vừa hiện lúc đang đánh
     ui.rect(0, 0, G.W, G.H, 'rgba(0,0,0,0.65)');
+    if (R.aiNgay && G.aiNgay) { // đợt 6: bảng kết quả của ải ngày
+      ui.panel(70, 22, 340, 228, G.aiNgay.tieuDe(S, R));
+      R.lines.filter((l) => !l.w).slice(0, 13).forEach((l, i) => ui.text(l, 86, 56 + i * 11.5, { size: 7.5, color: '#e8dfcc', ten: G.CHU_RO !== false, tenCol: '#c9bfa6' }));
+      if (G.lk && S.P) G.lk.resultBlock(S, 84, 182, 312);
+      if (ui.btn(86, 216, 140, 26, 'Về làng')) { S = null; G.setScene(G.Village); return; }
+      const lai = G.aiNgay.choiLai(S);
+      if (ui.btn(254, 216, 140, 26, R.win ? 'Chơi lại' : 'Thử lại', { disabled: !lai })) G.aiNgay.vao(S.aiNgay.loai, S.aiNgay.muc);
+      return;
+    }
     ui.panel(70, 22, 340, 228, R.win ? G.t('Qua ải {0} {1}', G.REGIONS[S.r].name, S.i + 1) : S.quit ? G.t('Đã bỏ ải ở phòng {0}', ROOM_NAME[S.rooms[S.idx]]) : G.t(G.CHU_RO !== false ? 'Cháu ngã ở phòng {0} rồi' : 'Bạn đã gục ở phòng {0}', ROOM_NAME[S.rooms[S.idx]])); // 12/10: giọng người làng
     if (G.cloudUI && G.theme.sbtn(338, 25, 68, 17, '✉ Góp ý', { size: 7.5, pad: 2 })) G.cloudUI.feedback({ shot: true });
     let y = 54;

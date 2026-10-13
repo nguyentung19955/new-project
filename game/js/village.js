@@ -166,6 +166,8 @@
     }
     VS.bubble(V.msgT > 0 && V.msg ? V.msg : V.sel ? 'Lên đò đi cháu, nước đang êm.' : 'Đi đâu hả cháu?', 40, 198, { maxW: 76, size: 7.5 });
     if (T.sbtn(404, 7, 68, 18, '✕ Về làng', { size: 8, pad: 4 })) { goHub(); return; }
+    // Đợt 6: cổng Ải ngày (js/ai_ngay.js) — mở sau khi hạ trùm vùng 1; chấm đỏ khi hôm nay còn lượt
+    if (G.aiNgay && G.aiNgay.bat() && G.aiNgay.mo(sv) && T.sbtn(404, 30, 68, 18, 'Ải ngày', { size: 8, pad: 4, dot: G.aiNgay.coLuot(sv) })) { V.tab = 'aingay'; G.sfx('ui'); return; }
     if (all) {
       if (T.sbtn(330, 182, 142, 19, V.diff ? 'Độ khó 2 (chạm để đổi)' : 'Độ khó thường (chạm để đổi)', { size: 7.5, pad: 3, sel: !!V.diff })) { V.diff = V.diff ? 0 : 1; pickNext(); }
     }
@@ -265,15 +267,20 @@
     let line = null; // câu ông thợ rèn nói
     frame(G.t('Lò rèn cấp {0}', sv.forge));
     // Thẻ Linh khí nâng cấp 4 vũ khí (chọn hệ, đổi hệ; js/vk_moi.js). Đợt 2: bỏ hẳn Nâng bậc, Tôi lại, Rèn đồ của luật cũ.
-    if (V.ftab !== 'sharpen' && V.ftab !== 'vk' && V.ftab !== 'up') V.ftab = 'vk';
-    const tabs = [['sharpen', 'Mài'], ['vk', 'Linh khí'], ['up', 'Nâng lò']];
-    const tp = 102, tw = 98;
+    // Đợt 6: thêm thẻ "Ép đồ" (bậc vũ khí, js/ep_do.js); ?epdo=0 thì ẩn
+    const coEp = !!(G.epDo && G.epDo.bat());
+    if (V.ftab !== 'sharpen' && V.ftab !== 'vk' && V.ftab !== 'up' && !(V.ftab === 'ep' && coEp)) V.ftab = 'vk';
+    const tabs = coEp ? [['sharpen', 'Mài'], ['vk', 'Linh khí'], ['ep', 'Ép đồ'], ['up', 'Nâng lò']] : [['sharpen', 'Mài'], ['vk', 'Linh khí'], ['up', 'Nâng lò']];
+    const tp = coEp ? 76 : 102, tw = coEp ? 73 : 98;
     tabs.forEach((t, i) => {
       if (T.tab(CX + i * tp, PY + 23, tw, 22, t[1], V.ftab === t[0], { pad: 2 })) { V.ftab = t[0]; V.sel = null; V.page = 0; }
     });
     const R4 = G.RARITY;
-    if (V.ftab !== 'up' && V.ftab !== 'vk') T.inset(CX, DET_Y, CW, 52, false);
-    if (V.ftab === 'vk' && G.vkMoi) {
+    if (V.ftab !== 'up' && V.ftab !== 'vk' && V.ftab !== 'ep') T.inset(CX, DET_Y, CW, 52, false);
+    if (V.ftab === 'ep' && coEp) {
+      G.epDo.panel(CX, LIST_Y - 1, CW, { h: 170, say });
+      line = G.epDo.coTheEp(sv) ? 'Đủ đá rồi! Ép lên bậc cao thì có thể hỏng, từ Vàng trở lên hỏng là tụt bậc.' : 'Đá nâng bậc rơi từ trùm và Ải Đá Bậc. Từ bậc Tím vũ khí có dòng hiệu ứng.';
+    } else if (V.ftab === 'vk' && G.vkMoi) {
       G.vkMoi.vkPanel(CX, LIST_Y - 1, CW, { rowH: 39, say });
       line = G.vkMoi.coTheNang(sv) ? 'Đủ linh khí rồi! Chọn vũ khí để nâng cấp, lên Mầm thì chọn hệ.' : 'Linh khí nâng vũ khí: Trắng, Mầm, Thành hình, Thức tỉnh. Hạ tinh anh và trùm để gom linh khí.';
     } else if (V.ftab === 'sharpen') {
@@ -630,6 +637,7 @@
     _draw() {
       if (V.tab === 'title') V.tab = 'hub';
       if (V.tab === 'map') { mapScreen(); return; }
+      if (V.tab === 'aingay') { if (G.aiNgay) G.aiNgay.screen(); else V.tab = 'map'; return; } // đợt 6: ải theo ngày
       VS.drawWorld(V.tab === 'hub' ? null : { dim: 0.62, hideHero: true });
       if (V.tab === 'hub') {
         VS.drawHud();

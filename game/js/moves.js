@@ -168,7 +168,7 @@
   }
   M.state = st;
   function cancel(mv) { mv.holding = false; mv.charge = 0; mv.level = 0; mv.chargeT = 0; mv.fullT = 0; }
-  const reachOf = (w, r) => r * (G.wHas(w, 'reach') ? 1.15 : 1);
+  const reachOf = (w, r) => r * (G.wHas(w, 'reach') ? 1.15 : 1) * (G.epDo ? G.epDo.tam(w) : 1); // đợt 6: thương ép bậc đánh xa hơn
   // Mức hiệu ứng hệ của vũ khí: null nếu đòn đang không mang hệ. lv 1..3 theo mốc Mầm, Thành hình, Thức tỉnh.
   function heOf(P, w) {
     const el = G.activeEl(P, w);
@@ -342,6 +342,7 @@
   // V15: o.hitAt là lúc đòn chạm, tính theo tiến độ động tác 0..1 (mặc định 0,45 như cũ, tức còn 55% thời gian; combat.js đọc P.hitAt).
   function begin(P, w, o, dur, phase) {
     const mv = P.mv;
+    if (G.epDo) dur *= G.epDo.nhip(P, w); // đợt 6: tốc đánh của kiếm ép bậc + dòng "Tốc đánh" (js/ep_do.js)
     P.atkDur = dur; P.atkT = dur * (1 - (phase || 0)); P.cdT = P.atkT; P.hitDone = false; P.lastAtk = G.time;
     P.hitAt = o.hitAt != null ? o.hitAt : null;
     P.comboI = o.pose || 0;
@@ -485,6 +486,7 @@
       vx: A.ux * o.speed, vy: A.uy * o.speed, t: o.range / o.speed, w, mult: o.mult,
       pierce: (o.pierce || 0) + (has1(h) && h.el === 'ice' ? HE.ice.pierce : 0), big: !!o.big, col, seen: [], he: h, charged: o.charged || 0, pierceMult: o.pierceMult,
     });
+    if (G.epDo) { const pr = W.projs[W.projs.length - 1], q = G.epDo.xuyen(w, pr.pierce, pr.pierceMult); pr.pierce = q[0]; pr.pierceMult = q[1]; } // đợt 6: phi tiêu ép bậc xuyên mạnh hơn
   }
   function bowTap(P, w) {
     const s = C.bow.shot;

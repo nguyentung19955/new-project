@@ -533,8 +533,9 @@
     G.addMarks = function (w, el, n, quiet) {
       void goc;
       if (!w || !(n >= 0.01) || !G.save) return;
-      VM.themLk(G.save, n);
       const W = G.getWorld && G.getWorld();
+      if (W && W.P && G.epDo) n *= G.epDo.linhKhi(W.P); // đợt 6: dòng ép đồ "Linh khí nhận" của vũ khí đang cầm
+      VM.themLk(G.save, n);
       if (W) {
         W.marksGained = (W.marksGained || 0) + n;
         if (G.lk) G.lk.log(w, el, n);
@@ -695,10 +696,12 @@
     sv.weapons.forEach((w) => {
       const st = G.wStage(w), el = st > 0 ? w.branch : null, E = el ? G.EL[el] : null, c = VM.gia(st), dau = sv.vkThu && sv.vkThu[0] === w.type;
       T.inset(x, y, wd, rowH - 2, VM.ui.doi === w.id);
-      T.slot(x + 3, y + 3, 32, 0);
+      // đợt 6: ô và màu tên theo Bậc ép đồ (js/ep_do.js) khi đã ép; chưa ép thì như cũ
+      const bac = G.epDo && G.epDo.bat() ? G.epDo.bac(w) : 0;
+      if (bac) G.epDo.o(x + 3, y + 3, 32, bac); else T.slot(x + 3, y + 3, 32, 0);
       G.art.weaponIcon(G.ux, w, x + 19, y + 19, 26);
       const bw = ro ? 0 : 150, tw = wd - 44 - bw;
-      tx(G.wName(w) + (dau ? ' · ' + G.t('cầm khi vào ải') : ''), x + 40, y + 10, tw, { size: 7.5, bold: true, color: E ? E.col : TXT });
+      tx(G.wName(w) + (bac ? ' · ' + G.t('Bậc {0}', G.epDo.tenBac(bac)) : '') + (dau ? ' · ' + G.t('cầm khi vào ải') : ''), x + 40, y + 10, tw, { size: 7.5, bold: true, color: bac ? G.epDo.mauBac(bac) : E ? E.col : TXT });
       tx(G.t('{0} · mài +{1} · đòn {2}', el ? G.t('{0} · hệ {1}', G.STAGE_NAMES[st], E.name) : G.STAGE_NAMES[0], w.sharpen | 0, so1(G.wBase(w, lvl))), x + 40, y + 20, tw, { size: 6.5, color: TXT });
       tx(VM.moTiep(w), x + 40, y + 30, tw, { size: 6.5, color: SOFT });
       if (ro) { y += rowH; return; }

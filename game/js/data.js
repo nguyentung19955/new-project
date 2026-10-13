@@ -5,6 +5,7 @@
 //   Nhân vật: G.HEROES.smith (máu, mana gốc), G.LVL_HP, G.LVL_DMG, G.xpNeed, G.MAX_LEVEL, G.SKILLS (cây kỹ năng), G.ZED_DAY (bạn dạy)
 //   Chưởng: G.CHUONG (js/chuong.js) · Skill bộ: G.SKILL_BO · Nâng bộ: G.BO_MOI
 //   Quái, trùm: G.ROLES, G.STAGE_K, G.stageStats, G.MINI_HP, G.BOSS_HP_OF, G.DIFF2 · Khuyên dùng: G.STAGE_REC, G.grindMult
+//   Ép đồ (bậc vũ khí, đá nâng bậc): G.EP_DO · Ải theo ngày: G.AI_NGAY (đợt 6)
 //   Thu nhập: G.LINHKHI (linh khí hạ tinh anh / trùm), G.ROI_MOI + G.DROP (thưởng thay đồ rơi), G.stageStats (kinh nghiệm, vàng qua ải),
 //     G.DOI_NL (đổi vàng lấy nguyên liệu); quặng / nguyên liệu qua ải: js/stage.js settle (3 + sao + 2 × vùng quặng, 5 + ải nguyên liệu)
 (function () {
@@ -165,6 +166,68 @@
     bua: 30,                                          // bùa cũ của tinh anh (trang phục Lam)
   };
   // Dòng phụ: bậc Lam có 1, Tím và Vàng có 2.
+  // ===== HỆ THỐNG MỚI ĐỢT 6: ÉP ĐỒ (BẬC) + ẢI THEO NGÀY (docs/review/ke-hoach-cai-thien/he-thong-moi/YEU-CAU-6-EP-DO-AI-NGAY.md) =====
+  // BẢNG HẰNG SỐ DUY NHẤT của ép đồ. Luật + giao diện: js/ep_do.js (G.epDo). Mô hình số liệu: node tools/can-bang/tinh.js (mục 6).
+  // Trục "Bậc" (ép đồ) độc lập với trục "Cấp" hệ (Trắng/Mầm/Thành hình/Thức tỉnh). Chữ "Trắng" của trục Bậc luôn ghi "Bậc Trắng".
+  // Cờ tắt: ?epdo=0 (G.EP_DO_BAT = false): bậc không có tác dụng (×1), không rơi đá, ẩn thẻ Ép đồ; dữ liệu bậc trong bản lưu giữ nguyên.
+  G.EP_DO = {
+    ten: ['Trắng', 'Xanh lam', 'Xanh lục', 'Tím', 'Vàng', 'Đỏ', 'Rực lửa'],
+    mau: ['#d6d2c8', '#5aa8ff', '#62d65a', '#c07cff', '#ffd24a', '#ff5a44', '#ff9a2a'],
+    // TỔNG sức mạnh vũ khí theo bậc (sát thương × phần phụ của loại). Sát thương thật = tong / (1 + phu.giaTri × bậc), để phần phụ
+    // (kiếm tốc đánh, thương tầm, búa choáng, phi tiêu xuyên) cộng lại đúng bằng tong: Rực lửa ≈ ×1,75.
+    tong: [1, 1.08, 1.17, 1.28, 1.4, 1.55, 1.75],
+    phu: {
+      sword: { ma: 'tocDanh', ten: 'tốc đánh', moi: 0.025, giaTri: 0.025 },   // mỗi bậc +2,5% tốc đánh (tính trọn vào sức mạnh)
+      spear: { ma: 'tam', ten: 'tầm đánh', moi: 0.03, giaTri: 0.015 },        // mỗi bậc +3% tầm (tính một nửa)
+      hammer: { ma: 'choang', ten: 'thời gian choáng', moi: 0.08, giaTri: 0.012 }, // mỗi bậc +8% choáng
+      bow: { ma: 'xuyen', ten: 'sát thương xuyên', moi: 0.05, giaTri: 0.015, them1: 5 }, // mỗi bậc +5% sát thương con sau; từ Đỏ xuyên thêm 1 quái
+    },
+    // Giá MỖI LẦN ÉP lên bậc b (thành công hay thất bại đều mất): đá nâng bậc, vàng, mảnh trùm [vùng 1, 2, 3].
+    gia: [null, { da: 3, vang: 100 }, { da: 6, vang: 200 }, { da: 10, vang: 350 }, { da: 16, vang: 550 }, { da: 25, vang: 800, manh: [0, 1, 0] }, { da: 40, vang: 1200, manh: [0, 0, 2] }],
+    tiLe: [1, 1, 0.9, 0.75, 0.6, 0.45, 0.3], // tỉ lệ thành công khi ép LÊN bậc b
+    tutTu: 4,       // ép lên bậc >= tutTu (Vàng, Đỏ, Rực lửa) mà thất bại thì tụt 1 bậc (bùa giữ bậc chặn)
+    mayMan: 0.1,    // điểm may mắn: mỗi lần thất bại +10% tỉ lệ cho món đó ở lần ép lên đúng bậc đó; thành công về 0
+    dongTu: 3,      // từ bậc Tím mỗi bậc mở 1 dòng hiệu ứng: số dòng = max(0, bậc − 2)
+    // Bảng dòng hiệu ứng. goc = giá trị ở bậc Tím (q ngẫu nhiên 0,8–1,2 lúc ra dòng); giá trị thật = goc × heSo[bậc hiện tại] × q.
+    // Dòng chỉ có tác dụng khi ĐANG CẦM vũ khí đó.
+    dong: [
+      { ma: 'chiMang', ten: 'Chí mạng', goc: 0.04 },
+      { ma: 'stChiMang', ten: 'Sát thương chí mạng', goc: 0.15 },
+      { ma: 'trum', ten: 'Sát thương lên trùm, tinh anh', goc: 0.08 },
+      { ma: 'hutMau', ten: 'Hút máu', goc: 0.012 },
+      { ma: 'tocDanh', ten: 'Tốc đánh', goc: 0.04 },
+      { ma: 'hoiChieu', ten: 'Giảm hồi chiêu đặc biệt', goc: 0.06 },
+      { ma: 'linhKhi', ten: 'Linh khí nhận', goc: 0.05 },
+      { ma: 'stHe', ten: 'Sát thương hệ', goc: 0.06 },
+      { ma: 'giamST', ten: 'Giảm sát thương nhận', goc: 0.03 },
+    ],
+    heSo: [0, 0, 0, 1, 1.25, 1.6, 2],
+    hutToiDa: 0.02,  // hút máu: mỗi đòn hồi tối đa 2% máu tối đa
+    // Đổi dòng (tẩy luyện): luôn thành công, ít đá hơn giá ép lên bậc kế. Theo bậc hiện tại.
+    doiDong: [null, null, null, { da: 3, vang: 150 }, { da: 5, vang: 250 }, { da: 8, vang: 400 }, { da: 12, vang: 600 }],
+    // Đá nâng bậc rơi từ trùm (mỗi lần hạ; lần đầu hạ ải đó nhiều hơn; độ khó 2 ×1,5). Theo vùng [1, 2, 3].
+    roi: { mini: [1, 1, 2], miniDau: [2, 2, 3], vung: [3, 4, 5], vungDau: [6, 8, 10], kho2: 1.5 },
+    bua: { trumVung: 0.1, thuongNhan: 600 }, // bùa giữ bậc: trùm vùng 10%; thương nhân trong ải bán 600 vàng (ải ngày Đá Bậc khó: G.AI_NGAY)
+  };
+  G.EP_DO_BAT = true;
+  try { if (typeof location !== 'undefined' && /[?&]epdo=0(&|$)/.test(location.search || '')) G.EP_DO_BAT = false; } catch (e) { /* giữ mặc định */ }
+  // ẢI THEO NGÀY: giờ máy người chơi, đổi ngày lúc 00:00. thu: 0 = Chủ nhật … 6 = Thứ 7 (Date.getDay). Mở sau khi hạ trùm vùng 1.
+  // Mỗi ải 3 lượt / ngày (trừ lượt khi THẮNG). Mức k (dễ / vừa / khó) mở khi đã hạ trùm vùng k + 1; quái theo ải trùm của vùng đó.
+  // Thưởng ≈ 1,5–2 lần một lượt ải thường cùng vùng (so ở tools/can-bang/tinh.js mục 6). Cờ tắt: ?aingay=0 (G.AI_NGAY_BAT = false).
+  G.AI_NGAY = {
+    luot: 3,
+    ai: {
+      da: { ten: 'Ải Đá Bậc', thu: [6, 0, 1, 3], thuong: { da: [3, 5, 8], bua: [0, 0, 0.1] } },  // T7, CN, T2, T4
+      mai: { ten: 'Ải Đá Mài', thu: [2, 5, 6, 0], thuong: { quang: [14, 18, 22] } },            // T3, T6, T7, CN (đá mài = quặng)
+      vang: { ten: 'Ải Vàng', thu: [4, 5, 6, 0], thuong: { vang: [520, 800, 1100] } },           // T5, T6, T7, CN
+    },
+    thuTu: ['da', 'mai', 'vang'],
+    muc: ['Dễ', 'Vừa', 'Khó'],
+    dot: 5,          // số đợt quái (đợt cuối có 1 tinh anh)
+    xp: 0.5,         // kinh nghiệm = 0,5 × kinh nghiệm ải trùm của vùng đó
+  };
+  G.AI_NGAY_BAT = true;
+  try { if (typeof location !== 'undefined' && /[?&]aingay=0(&|$)/.test(location.search || '')) G.AI_NGAY_BAT = false; } catch (e) { /* giữ mặc định */ }
   G.AFFIX = {
     mana: 'Mỗi đòn trúng hồi thêm 1 mana',
     crit: '10% cơ hội gây gấp đôi sát thương',
