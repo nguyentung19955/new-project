@@ -1,0 +1,21 @@
+# Hiệu ứng đợt 3 (13/10 13:30): thay phần còn vẽ bằng code + hiệu ứng skill bộ mới. Nền #00FF00, không chữ, khung không chạm nhau.
+# Mã tệp dự kiến trong ngoặc.
+
+K1 Lộn (hu-lon): Pixel art hiệu ứng lộn né sang PHẢI: bụi đất bung ở chân và 3 vệt gió ngang phía sau. 1 hàng 5 khung: 1 bụi nhỏ, 2–3 bụi to + vệt gió dài, 4 vệt mảnh dần, 5 vài hạt bụi tan. Màu nâu đất nhạt và trắng. Không vẽ người.
+K2 Xốc tới (hu-xoc-toi): Pixel art vệt đâm lao thẳng sang PHẢI: một vệt sáng dài nhọn mũi, chớp sáng ở đầu mũi. 1 hàng 5 khung: 1 chớp nhỏ, 2 vệt dài ra, 3 vệt dài nhất chớp mũi, 4–5 tan thành hạt. Chỉ màu TRẮNG và xám nhạt (game tự nhuộm). Không vẽ người, không vũ khí.
+K3 Sóng chấn búa (hu-song-dat): Pixel art gờ đất nhô lên lăn sang PHẢI, đá vụn văng hai bên, nhìn chếch từ trên. 1 hàng 4 khung lặp vòng. Màu đất nâu, đá xám.
+K4 Nứt đất Địa Chấn (hu-nut-dat): Pixel art một đoạn đất nứt nằm ngang, nhìn chếch từ trên, đá bắn lên. 1 hàng 6 khung: 1 vết nứt mảnh, 2–3 nứt toác, đá bắn lên, 4 đá rơi, 5–6 bụi tan, vết nứt mờ dần. Màu đất nâu, khe nứt tối, ánh TRẮNG trong khe (game tự nhuộm phần ánh).
+K5 Gai băng mọc (hu-gai-bang): Pixel art một cụm gai băng nhọn mọc lên từ mặt đất rồi vỡ. 1 hàng 6 khung: 1 vệt băng trên đất, 2–3 gai nhô cao, 4 gai cao nhất lấp lánh, 5 nứt vỡ, 6 mảnh băng tan. Màu xanh băng nhạt, trắng.
+K6 Độc toé (hu-doc-toe): Pixel art một bãi nhớt độc toé lên khi trúng đòn mạnh. 1 hàng 6 khung: 1 giọt rơi, 2 toé tròn, 3 toé to có giọt bay, 4–5 bọt sủi, 6 tan thành hơi. Xanh chanh, viền xanh đậm, KHÔNG tím.
+K7 Đổi vũ khí (hu-doi-vk): Pixel art hiệu ứng nhỏ ở tay khi đổi vũ khí: vòng sáng tròn nở ra và tia lấp lánh 4 cánh. 1 hàng 5 khung: chấm sáng → vòng nở → vòng to nhất + lấp lánh → vòng mờ → vài hạt. Chỉ màu TRẮNG và xám nhạt (game tự nhuộm).
+K8 Đang cháy trên người (hu-bam-lua): Pixel art ngọn lửa nhỏ bám trên người, cỡ bằng thân nhân vật nhỏ, đứng thẳng. 1 hàng 4 khung lặp vòng, lửa liếm lên. Lõi vàng, viền cam đỏ. Không vẽ người.
+K9 Đang trúng độc trên người (hu-bam-doc): Pixel art lớp nhớt độc nhỏ giọt và vài bong bóng bốc lên, cỡ bằng thân nhân vật nhỏ. 1 hàng 4 khung lặp vòng. Xanh chanh, KHÔNG tím. Không vẽ người.
+K10 Đang đóng băng trên người (hu-bam-bang): Pixel art tinh thể băng bám và hơi lạnh tỏa, cỡ bằng thân nhân vật nhỏ. 1 hàng 4 khung lặp vòng lấp lánh. Xanh băng nhạt, trắng. Không vẽ người.
+K11 Va chạm nhỏ (hu-va-cham): Pixel art tia va chạm nhỏ khi đấm/ghim trúng: sao 6 cánh nhọn và vài mảnh văng sang PHẢI. 1 hàng 4 khung: chấm → sao nở → sao vỡ mảnh → hạt tan. Chỉ màu TRẮNG và xám nhạt.
+K12 Tích chưởng trong tay (hu-tich-chuong): Pixel art quả cầu năng lượng lớn dần trong lòng bàn tay (không vẽ tay), có tia xoáy quanh. 1 hàng 6 khung lặp vòng, cầu to dần, khung cuối sáng chói. Chỉ màu TRẮNG và xám nhạt (game tự nhuộm).
+S1 Khiên nước – bộ Biển (hu-khien-nuoc): Pixel art bong bóng nước trong suốt bao quanh một nhân vật nhỏ (không vẽ người), viền xanh ngọc, ánh trắng. 1 hàng 6 khung: 1–4 khiên gợn sóng lặp vòng, 5 khiên nứt, 6 vỡ thành giọt nước bắn ra.
+S2 Dây leo trói – bộ Rừng (hu-day-leo): Pixel art dây leo xanh có lá mọc lên từ đất, quấn thành vòng ôm chân, nhìn chếch từ trên. 1 hàng 6 khung: 1 mầm nhú, 2–3 dây vươn cao, 4 quấn chặt, 5 giữ, 6 héo rụng. Xanh lá, nâu.
+S3 Sóng dội – bộ Biển (hu-song-doi): Pixel art vòng sóng nước tỏa ra từ tâm, nhìn chếch từ trên, bọt trắng ở mép. 1 hàng 5 khung: vòng nhỏ → to dần → to nhất bọt tung → mỏng dần → tan. Xanh lam, xanh ngọc, trắng.
+S4 Phản đòn – bộ Lâu đài (hu-phan-don): Pixel art chớp hình khiên bạc nhỏ lóe lên rồi bắn tia đỏ vàng sang PHẢI. 1 hàng 4 khung: khiên hiện → khiên lóe sáng → tia bắn ra → tan. Bạc, đỏ đô, vàng đồng.
+S5 Khí thế – bộ Lâu đài (hu-khi-the): Pixel art hào quang lửa đỏ bốc lên quanh một nhân vật nhỏ (không vẽ người), dưới chân có vòng sáng. 1 hàng 6 khung lặp vòng. Đỏ, cam, viền vàng.
+S6 Bóng phân thân – bộ Ninja (hu-phan-than): Pixel art làn khói đen tím mờ xoáy rồi tan, cỡ bằng thân nhân vật nhỏ (khi bóng phân thân biến mất). 1 hàng 5 khung. Đen, xám, ánh đỏ nhẹ.
