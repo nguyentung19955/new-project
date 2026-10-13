@@ -74,6 +74,8 @@ DONG = [
     ('db_kiem', '23-tram-nguyet-tp', 0.35, False), ('db_thuong', '24-phi-thuong', 0.35, False), ('db_bua', '25-dia-chan', 0.35, False),
     ('db_phitieu', '26-mua-phi-tieu', 0.35, False), ('dam', '27-dam', 0.3, False),
 ]
+NEO_DAU = ('dung', 'di', 'chay')
+DAU_X = 49  # hoành độ tâm đầu trong ô 96 cho các hàng NEO_DAU
 VK = [('kiem', 'vk-kiem-moi'), ('thuong', 'vk-thuong'), ('bua', 'vk-bua'), ('phitieu', 'vk-phi-tieu')]
 VK_THU_MUC = dict((b, a) for a, b in VK)
 
@@ -155,7 +157,11 @@ def doc_dong(thu, goc=None):
         kb = k['khung_bao']
         bb = im.getbbox()
         # chân: hoành độ theo báo cáo cắt (điểm chân đo trên tấm gốc), tung độ = đáy hình thật (điểm ảnh đặc thấp nhất)
-        ra.append({'im': im, 'chan': (float(k['chan'][0] - kb[0]), float(bb[3])), 'bb': bb})
+        # tâm đầu (bề ngang phần trên 30% hình) — dùng làm điểm neo ngang cho hàng lặp di chuyển
+        a = np.array(im)[bb[1]:bb[1] + max(1, int((bb[3] - bb[1]) * 0.3)), :, 3] > 0
+        xs = np.nonzero(a.any(0))[0]
+        dau_x = float((xs.min() + xs.max()) / 2) if len(xs) else float(k['chan'][0] - kb[0])
+        ra.append({'im': im, 'chan': (float(k['chan'][0] - kb[0]), float(bb[3])), 'bb': bb, 'dau_x': dau_x})
     if len(fs) != len(h['khung']):
         print('  ! %s: %d tệp khung, báo cáo ghi %d' % (thu, len(fs), len(h['khung'])))
     return ra
@@ -191,7 +197,13 @@ def dung_than(dong, neo_all, s, vk_cua, neo_cua):
             im = f['im']
             nw, nh = max(1, round(im.width * sk)), max(1, round(im.height * sk))
             sx, sy = nw / im.width, nh / im.height
-            dx, dy = round(CHAN[0] - f['chan'][0] * sx), round(CHAN[1] - f['chan'][1] * sy)
+            # Hàng lặp di chuyển (đứng/đi/chạy): neo ngang theo TÂM ĐẦU, không theo bàn chân —
+            # bàn chân đổi bên mỗi bước nên neo theo chân làm người giật tới/lui mỗi khung.
+            if k in NEO_DAU:
+                dx = round(DAU_X - f['dau_x'] * sx)  # đầu luôn ở cùng một chỗ, bằng chỗ đầu khi đứng
+            else:
+                dx = round(CHAN[0] - f['chan'][0] * sx)
+            dy = round(CHAN[1] - f['chan'][1] * sy)
             nho = im.resize((nw, nh), Image.BOX)
             bb = nho.getbbox()
             if bb:  # tràn ô 96×96 → dời vào trong ô (ít nhất có thể), không cắt hình
