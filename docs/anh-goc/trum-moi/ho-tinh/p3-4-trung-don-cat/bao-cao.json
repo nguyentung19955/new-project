@@ -1,0 +1,158 @@
+{
+ "anh": "p3-4-trung-don.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 4,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 115,
+  "vien_khu": 11591,
+  "nga_mau_nen_trong_hinh": 982
+ },
+ "manh_bo": [
+  {
+   "khung_bao": [
+    893,
+    152,
+    910,
+    169
+   ],
+   "diem_anh": 9
+  },
+  {
+   "khung_bao": [
+    1416,
+    276,
+    1429,
+    290
+   ],
+   "diem_anh": 2
+  },
+  {
+   "khung_bao": [
+    1164,
+    277,
+    1198,
+    304
+   ],
+   "diem_anh": 100
+  },
+  {
+   "khung_bao": [
+    883,
+    278,
+    904,
+    298
+   ],
+   "diem_anh": 10
+  },
+  {
+   "khung_bao": [
+    1188,
+    520,
+    1202,
+    534
+   ],
+   "diem_anh": 3
+  },
+  {
+   "khung_bao": [
+    1277,
+    541,
+    1298,
+    558
+   ],
+   "diem_anh": 26
+  }
+ ],
+ "loi": [],
+ "canh_bao": [
+  "Mảnh 100 điểm ảnh ở [1164, 277, 1198, 304] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "p3-4-trung-don",
+   "so_khung": 4,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      30,
+      151,
+      499,
+      590
+     ],
+     "chan": [
+      292.0,
+      590
+     ],
+     "rong": 469,
+     "cao": 439,
+     "diem_anh": 119282,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      569,
+      148,
+      1056,
+      584
+     ],
+     "chan": [
+      822.5,
+      584
+     ],
+     "rong": 487,
+     "cao": 436,
+     "diem_anh": 128704,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      1123,
+      199,
+      1583,
+      587
+     ],
+     "chan": [
+      1352.5,
+      587
+     ],
+     "rong": 460,
+     "cao": 388,
+     "diem_anh": 82761,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1668,
+      162,
+      2133,
+      590
+     ],
+     "chan": [
+      1906.0,
+      590
+     ],
+     "rong": 465,
+     "cao": 428,
+     "diem_anh": 121565,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}
