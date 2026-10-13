@@ -1,5 +1,5 @@
 {
- "anh": "trang-phuc/bo-4-lau/10-kiem-3.png",
+ "anh": "10-kiem-3.png",
  "co_anh": [
   2172,
   724
@@ -10,15 +10,14 @@
  "tach_nen": {
   "nen": "xanh",
   "cham_nhieu_bo": 0,
-  "vien_khu": 8209,
-  "nga_mau_nen_trong_hinh": 148
+  "vien_khu": 8003,
+  "nga_mau_nen_trong_hinh": 117
  },
  "manh_bo": [],
  "loi": [],
  "canh_bao": [
-  "Hàng 1 khung 2 cao 540 (trung vị 447) — lệch cỡ >15%",
-  "Hàng 1 khung 3 cao 375 (trung vị 447) — lệch cỡ >15%",
-  "Hàng 1 khung 4 cao 376 (trung vị 447) — lệch cỡ >15%"
+  "Hàng 1 khung 2 cao 523 (trung vị 448) — lệch cỡ >15%",
+  "Hàng 1 khung 3 cao 381 (trung vị 448) — lệch cỡ >15%"
  ],
  "dat": true,
  "suy_doan": [],
@@ -30,36 +29,36 @@
     {
      "stt": 1,
      "khung_bao": [
-      22,
-      176,
-      305,
-      663
+      14,
+      146,
+      303,
+      632
      ],
      "chan": [
-      163.0,
-      663
+      158.0,
+      632
      ],
-     "rong": 283,
-     "cao": 487,
-     "diem_anh": 68858,
+     "rong": 289,
+     "cao": 486,
+     "diem_anh": 68699,
      "nguon": "tu-dong",
      "ghi_chu": []
     },
     {
      "stt": 2,
      "khung_bao": [
-      371,
-      124,
-      597,
-      664
+      365,
+      95,
+      596,
+      618
      ],
      "chan": [
-      481.0,
-      664
+      469.0,
+      618
      ],
-     "rong": 226,
-     "cao": 540,
-     "diem_anh": 65741,
+     "rong": 231,
+     "cao": 523,
+     "diem_anh": 65472,
      "nguon": "tu-dong",
      "ghi_chu": [
       "cao bất thường"
@@ -68,18 +67,18 @@
     {
      "stt": 3,
      "khung_bao": [
-      657,
-      294,
-      1047,
-      669
+      647,
+      250,
+      1045,
+      631
      ],
      "chan": [
-      827.0,
-      669
+      821.5,
+      631
      ],
-     "rong": 390,
-     "cao": 375,
-     "diem_anh": 68788,
+     "rong": 398,
+     "cao": 381,
+     "diem_anh": 67306,
      "nguon": "tu-dong",
      "ghi_chu": [
       "cao bất thường"
@@ -88,56 +87,54 @@
     {
      "stt": 4,
      "khung_bao": [
-      1051,
-      294,
-      1429,
-      670
+      1031,
+      250,
+      1415,
+      632
      ],
      "chan": [
-      1222.5,
-      670
+      1207.5,
+      632
      ],
-     "rong": 378,
-     "cao": 376,
-     "diem_anh": 68628,
+     "rong": 384,
+     "cao": 382,
+     "diem_anh": 67474,
      "nguon": "tu-dong",
-     "ghi_chu": [
-      "cao bất thường"
-     ]
+     "ghi_chu": []
     },
     {
      "stt": 5,
      "khung_bao": [
-      1455,
-      233,
-      1786,
-      670
+      1429,
+      191,
+      1768,
+      632
      ],
      "chan": [
-      1604.5,
-      670
+      1587.0,
+      632
      ],
-     "rong": 331,
-     "cao": 437,
-     "diem_anh": 67127,
+     "rong": 339,
+     "cao": 441,
+     "diem_anh": 67212,
      "nguon": "tu-dong",
      "ghi_chu": []
     },
     {
      "stt": 6,
      "khung_bao": [
-      1851,
-      212,
-      2138,
-      670
+      1817,
+      176,
+      2128,
+      632
      ],
      "chan": [
-      1994.0,
-      670
+      1972.0,
+      632
      ],
-     "rong": 287,
-     "cao": 458,
-     "diem_anh": 68378,
+     "rong": 311,
+     "cao": 456,
+     "diem_anh": 70540,
      "nguon": "tu-dong",
      "ghi_chu": []
     }

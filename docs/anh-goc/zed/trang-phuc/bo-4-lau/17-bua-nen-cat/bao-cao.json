@@ -1,27 +1,37 @@
 {
- "anh": "trang-phuc/bo-4-lau/17-bua-nen.png",
+ "anh": "17-bua-nen.png",
  "co_anh": [
   2172,
   724
  ],
- "che_do": "chinh-thuc",
+ "che_do": "phuc-hoi",
  "so_hang_can": 1,
  "so_cot_can": 8,
  "tach_nen": {
   "nen": "xanh",
   "cham_nhieu_bo": 0,
-  "vien_khu": 7446,
-  "nga_mau_nen_trong_hinh": 117
+  "vien_khu": 8154,
+  "nga_mau_nen_trong_hinh": 116
  },
  "manh_bo": [],
  "loi": [],
  "canh_bao": [
-  "Hàng 1 khung 3 cao 261 (trung vị 352) — lệch cỡ >15%",
-  "Hàng 1 khung 4 cao 263 (trung vị 352) — lệch cỡ >15%",
-  "Hàng 1 khung 5 cao 263 (trung vị 352) — lệch cỡ >15%"
+  "Hàng 1 (17-bua-nen): tìm được 7 hình, cần 8 → PHỤC HỒI bằng suy đoán (xem các khung \"suy-doan\")",
+  "Hàng 1 khung 3 cao 305 (trung vị 407) — lệch cỡ >15%",
+  "Hàng 1 khung 4 cao 309 (trung vị 407) — lệch cỡ >15%",
+  "Hàng 1 khung 5 cao 309 (trung vị 407) — lệch cỡ >15%"
  ],
  "dat": true,
- "suy_doan": [],
+ "suy_doan": [
+  [
+   1,
+   2
+  ],
+  [
+   1,
+   3
+  ]
+ ],
  "hang": [
   {
    "ten": "17-bua-nen",
@@ -30,74 +40,77 @@
     {
      "stt": 1,
      "khung_bao": [
-      32,
-      216,
-      251,
-      579
+      19,
+      166,
+      266,
+      581
      ],
      "chan": [
-      131.0,
-      579
+      142.0,
+      581
      ],
-     "rong": 219,
-     "cao": 363,
-     "diem_anh": 39460,
+     "rong": 247,
+     "cao": 415,
+     "diem_anh": 53389,
      "nguon": "tu-dong",
      "ghi_chu": []
     },
     {
      "stt": 2,
      "khung_bao": [
-      277,
-      201,
-      498,
-      578
+      266,
+      158,
+      514,
+      575
      ],
      "chan": [
-      397.0,
-      578
+      395.5,
+      575
      ],
-     "rong": 221,
-     "cao": 377,
-     "diem_anh": 41563,
-     "nguon": "tu-dong",
-     "ghi_chu": []
+     "rong": 248,
+     "cao": 417,
+     "diem_anh": 53891,
+     "nguon": "suy-doan",
+     "ghi_chu": [
+      "SUY ĐOÁN: tách từ một hình rộng 548 điểm ảnh ở cột ít điểm ảnh nhất x=514 (có thể cắt nhầm tóc/khăn/tay)"
+     ]
     },
     {
      "stt": 3,
      "khung_bao": [
-      506,
-      317,
-      807,
-      578
+      514,
+      270,
+      814,
+      575
      ],
      "chan": [
-      637.0,
-      578
+      635.5,
+      575
      ],
-     "rong": 301,
-     "cao": 261,
-     "diem_anh": 36589,
-     "nguon": "tu-dong",
+     "rong": 300,
+     "cao": 305,
+     "diem_anh": 45492,
+     "nguon": "suy-doan",
      "ghi_chu": [
+      "SUY ĐOÁN: tách từ một hình rộng 548 điểm ảnh ở cột ít điểm ảnh nhất x=514 (có thể cắt nhầm tóc/khăn/tay)",
       "cao bất thường"
      ]
     },
     {
      "stt": 4,
      "khung_bao": [
-      803,
-      316,
-      1076,
-      579
+      766,
+      272,
+      1077,
+      581
      ],
      "chan": [
-      919.5,
-      579
+      889.0,
+      581
      ],
-     "rong": 273,
-     "cao": 263,
-     "diem_anh": 34960,
+     "rong": 311,
+     "cao": 309,
+     "diem_anh": 45245,
      "nguon": "tu-dong",
      "ghi_chu": [
       "cao bất thường"
@@ -106,18 +119,18 @@
     {
      "stt": 5,
      "khung_bao": [
-      1074,
-      316,
-      1347,
-      579
+      1026,
+      272,
+      1345,
+      581
      ],
      "chan": [
-      1192.5,
-      579
+      1152.5,
+      581
      ],
-     "rong": 273,
-     "cao": 263,
-     "diem_anh": 34744,
+     "rong": 319,
+     "cao": 309,
+     "diem_anh": 44849,
      "nguon": "tu-dong",
      "ghi_chu": [
       "cao bất thường"
@@ -126,54 +139,54 @@
     {
      "stt": 6,
      "khung_bao": [
-      1355,
-      236,
-      1625,
-      579
+      1299,
+      182,
+      1620,
+      581
      ],
      "chan": [
-      1465.5,
-      579
+      1443.0,
+      581
      ],
-     "rong": 270,
-     "cao": 343,
-     "diem_anh": 40743,
+     "rong": 321,
+     "cao": 399,
+     "diem_anh": 53171,
      "nguon": "tu-dong",
      "ghi_chu": []
     },
     {
      "stt": 7,
      "khung_bao": [
-      1646,
-      216,
-      1876,
-      579
+      1606,
+      165,
+      1893,
+      581
      ],
      "chan": [
-      1745.5,
-      579
+      1737.5,
+      581
      ],
-     "rong": 230,
-     "cao": 363,
-     "diem_anh": 38989,
+     "rong": 287,
+     "cao": 416,
+     "diem_anh": 51827,
      "nguon": "tu-dong",
      "ghi_chu": []
     },
     {
      "stt": 8,
      "khung_bao": [
-      1909,
-      217,
-      2136,
-      579
+      1882,
+      166,
+      2161,
+      581
      ],
      "chan": [
-      2009.0,
-      579
+      2012.0,
+      581
      ],
-     "rong": 227,
-     "cao": 362,
-     "diem_anh": 39024,
+     "rong": 279,
+     "cao": 415,
+     "diem_anh": 50377,
      "nguon": "tu-dong",
      "ghi_chu": []
     }
