@@ -28,8 +28,31 @@
   const layThan = () => {
     let ma = 'zed-moi';
     try { const b = G.zedBo ? G.zedBo() : 'ninja'; if (G.ZED_BO && G.ZED_BO[b]) ma = G.ZED_BO[b].tam; } catch (e) { ma = 'zed-moi'; }
-    return (ma !== 'zed-moi' && lay(ma)) || lay('zed-moi');
+    const z = (ma !== 'zed-moi' && lay(ma)) || lay('zed-moi');
+    if (z) z._ma = z === SC.zed['zed-moi'] ? 'zed-moi' : ma;
+    return z;
   };
+  // ---------- CHẠY + CHÉM: ghép ở thắt lưng (13/10/2026, docs/review/ke-hoach-cai-thien/zed-chay-danh/YEU-CAU.md mục C) ----------
+  // Đang chạy mà ra đòn ở hàng thân trên thẳng (G.ZED_EO.hang): chân = khung CHẠY hiện tại (nhịp P.chayT không reset), thân trên + tay +
+  // vũ khí + nắm tay = khung ĐÒN hiện tại, hai nửa khớp tại điểm eo từng khung (G.ZED_EO, js/zed_eo_data.js, dựng bằng
+  // docs/anh-goc/zed/cat-than.py). Chân quay theo hướng chạy (o.mdx), thân trên theo hướng chém (o.face) → chạy trái chém phải được.
+  // Hàng cúi/khuỵu (kiếm 3, búa, quét, đặc biệt) không ghép: vẽ toàn thân hàng đòn (combat chậm lại, js/moves.js CHAY_DANH_CFG).
+  // Bật khi G.CHAY_DANH là 'than' (mặc định) hoặc 'eo' và G.CHAY_DANH_MOI (tắt bằng ?chaydanh=0 → cách cũ).
+  const BO_MA = { 'zed-moi': 'moi', 'zed-rung': 'rung', 'zed-bien': 'bien', 'zed-lau': 'lau' };
+  const eoBat = () => G.CHAY_DANH_MOI !== false && !!G.ZED_EO && (G.CHAY_DANH === 'than' || G.CHAY_DANH === 'eo');
+  const coEo = (ten) => eoBat() && G.ZED_EO.hang.indexOf(ten) >= 0;
+  // Số liệu ghép một khung: eA, eR = điểm eo [y, x] (ô 96 nguồn) khung đòn / khung chạy; ox, oy = dời nửa trên (điểm ảnh game,
+  // hệ toạ độ đã lật theo mặt); rel = -1 khi chân quay ngược mặt (chạy ngược hướng chém); kc = bù 1 điểm ảnh khi lật chân.
+  function eoTinh(T, s, o) {
+    const B = G.ZED_EO.bo[BO_MA[T._ma] || 'moi'] || G.ZED_EO.bo.moi;
+    const eA = B[s.ten] && B[s.ten][s.i], eR = B.chay && B.chay[s.eo.i];
+    if (!eA || !eR) return null;
+    const f = o.face < 0 ? -1 : 1, md = o.mdx || 0;
+    const rel = Math.abs(md) > 0.2 && (md > 0 ? 1 : -1) !== f ? -1 : 1;
+    const kc = rel < 0 ? ((f > 0 ? 1 : 0) - (f < 0 ? 1 : 0)) * f : 0;
+    const Lx = kc + rel * (eR[1] / 2 - 24);
+    return { eA, eR, rel, kc, ox: Lx - (eA[1] / 2 - 24), oy: (eR[0] - eA[0]) / 2 };
+  }
   const kep = (v, a, b) => (v < a ? a : v > b ? b : v);
   const VK_LOAI = { sword: 'kiem', spear: 'thuong', hammer: 'bua', bow: 'phitieu' };
   // Mốc tiến độ u bắt đầu từng khung. ★ = khung đứng ở mốc hitAt (đánh dấu trong chú thích).
@@ -67,6 +90,13 @@
   // Chọn động tác + khung (cùng thứ tự ưu tiên như SC.chonEmBe ở js/sprite_custom.js). Trả { ten, i, theo? }: theo = động tác đánh mà
   // vũ khí đi theo khi thân đang ở hàng chạy (chạy mà đánh, G.CHAY_DANH).
   function chon(o, D) {
+    const s = chon0(o, D);
+    // chạy + chém: ghép eo (chân hàng chạy, thân trên hàng đòn) — chỉ hàng có điểm eo, chỉ khi đang chạy
+    if (s && s.ghep && o.move && coEo(s.ten) && D.dong_tac.chay) return { ten: s.ten, i: s.i, eo: { i: khungLap(D, 'chay', s.tc) } };
+    if (s && s.ghep) { const r = { ten: s.ten, i: s.i }; return s.theo ? Object.assign(r, { theo: s.theo }) : r; }
+    return s;
+  }
+  function chon0(o, D) {
     const p = o.p, t = (o.t != null ? o.t : G.time) || 0, tc = o.tc != null && isFinite(o.tc) ? o.tc : t;
     const mv = p && p.mv, wt = o.weapon && o.weapon.type;
     let goc = wt; // loại vũ khí thật (giáo đang bay thì o.weapon là 'fist' nhưng chiêu đặc biệt vẫn là của giáo)
@@ -80,8 +110,8 @@
       return lap('chay', t * 2); // Nhát lướt kiếm sau lộn: như cũ, hàng chạy nhanh gấp đôi
     }
     if (p && p.specT > 0 && DB[goc]) return mot(DB[goc], 1 - p.specT / 0.35);
-    if (p && p.castT > 0) return mot('chuong', 1 - p.castT / 0.3);
-    if (mv && mv.holding && !(o.atk >= 0)) { const k = GIU[wt]; return k ? lap(k, t) : lap('dung', t); }
+    if (p && p.castT > 0) return Object.assign(mot('chuong', 1 - p.castT / 0.3), { ghep: 1, tc });
+    if (mv && mv.holding && !(o.atk >= 0)) { const k = GIU[wt]; return k ? Object.assign(lap(k, t), { ghep: 1, tc }) : lap('dung', t); }
     if (o.atk >= 0) {
       const ci = p ? p.comboI | 0 : Math.floor(t / 1.6), u = o.atk;
       let r = null;
@@ -92,6 +122,7 @@
       else if (wt === 'bow') r = mot(mv && mv.kind === 'banManh' ? 'phitieu_chum' : 'phitieu', u);
       if (r) {
         const cd = G.CHAY_DANH; // chạy mà đánh: thân giữ hàng chạy (chân bước), chỉ vũ khí vung theo neo của khung đòn đánh
+        if (eoBat()) return Object.assign(r, { ghep: 1, tc }); // cách mới: ghép eo (hàng thẳng) hoặc toàn thân hàng đòn (hàng cúi)
         if (o.move && (cd === 'than' || (cd === 'lai' && !(u >= 0.2 && u < 0.65)))) return { ten: 'chay', i: khungLap(D, 'chay', tc), theo: r };
         return r;
       }
@@ -153,12 +184,34 @@
     const D = T.tep, s = chon(o, D), a = D.dong_tac[s.ten];
     if (!a) return false;
     const V = lay('zed-vk'), v = V ? vkCua(o, D, s) : null;
+    const E = s.eo ? eoTinh(T, s, o) : null;
+    if (s.eo && E) {
+      const aC = D.dong_tac.chay, yR = E.eR[0] + 1, yA = E.eA[0] + 1;
+      const lopEo = (q) => {
+        const vk = () => { q.save(); q.translate(E.ox, E.oy); veVk(q, V, v); q.restore(); };
+        if (v && v.n[3]) vk();
+        // nửa dưới: chân khung chạy (từ dưới đai), lật theo hướng chạy
+        q.save();
+        if (E.rel < 0) { q.translate(E.kc, 0); q.scale(-1, 1); }
+        q.drawImage(T.img, s.eo.i * 96, aC.hang * 96 + yR, 96, 96 - yR, -24, -45 + yR / 2, 48, (96 - yR) / 2);
+        q.restore();
+        // nửa trên: đai + thân + tay khung đòn, dời về điểm eo của khung chạy
+        q.drawImage(T.img, s.i * 96, a.hang * 96, 96, yA, -24 + E.ox, -45 + E.oy, 48, yA / 2);
+        if (v && !v.n[3]) vk();
+        if (v && v.da.hang_tay != null) q.drawImage(T.img, v.wa.i * 96, v.da.hang_tay * 96, 96, yA, -24 + E.ox, -45 + E.oy, 48, yA / 2); // nắm tay đè lên cán
+      };
+      return veLop(c, o, lopEo);
+    }
     const lop = (q) => {
       if (v && v.n[3]) veVk(q, V, v);
       q.drawImage(T.img, s.i * 96, a.hang * 96, 96, 96, -24, -45, 48, 48);
       if (v && !v.n[3]) veVk(q, V, v);
       if (v && !s.theo && v.da.hang_tay != null) q.drawImage(T.img, v.wa.i * 96, v.da.hang_tay * 96, 96, 96, -24, -45, 48, 48); // nắm tay đè lên cán
     };
+    return veLop(c, o, lop);
+  }
+  // Vẽ bóng + lật theo mặt + nhuộm (trúng đòn, băng, độc) + hào quang Gồng quanh một hàm vẽ người lop(q) (toạ độ tính từ chân).
+  function veLop(c, o, lop) {
     const x = Math.round(o.x), y = Math.round(o.y), f = o.face < 0 ? -1 : 1, t = (o.t != null ? o.t : G.time) || 0;
     const p = o.p, chet = !!(p && p.dead);
     c.save();
@@ -204,7 +257,8 @@
     if (!v) return;
     const f = o.face < 0 ? -1 : 1, X0 = Math.round(o.x) + (f < 0 ? 1 : 0), Y0 = Math.round(o.y), r = (v.n[2] * Math.PI) / 180;
     const R = V.tep.vk[v.da.vk][v.cap], g = v.da.vk_cam[v.cap];
-    q.gx = X0 + f * (v.n[0] / 2 - 24); q.gy = Y0 + (v.n[1] / 2 - 45);
+    const E = s.eo ? eoTinh(T, s, o) : null, ox = E ? E.ox : 0, oy = E ? E.oy : 0; // chạy + chém: vũ khí dời theo nửa trên đã khớp eo
+    q.gx = X0 + f * (v.n[0] / 2 - 24 + ox); q.gy = Y0 + (v.n[1] / 2 - 45 + oy);
     q.dx = f * Math.cos(r); q.dy = Math.sin(r);
     q.L = Math.max(4, (R[2] - g[0]) * v.da.vk_tl);
     q.front = !v.n[3];
@@ -227,7 +281,7 @@
   }
 
   // ---------- bọc G.art.hero, G.art.proj, G.tinhLinh.tip (ngoài cùng; lớp khác có thể bọc lại sau khi ảnh nạp nên kiểm mỗi khung) ----------
-  G.zedMoi = { chon, MOC, loi: [] };
+  G.zedMoi = { chon, MOC, eoTinh, loi: [] };
   let dangGoiCu = false;
   const ghiLoi = (e) => { if (G.zedMoi.loi.length < 5) G.zedMoi.loi.push(String((e && e.message) || e)); };
   function boc() {

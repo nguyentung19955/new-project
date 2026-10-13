@@ -739,6 +739,7 @@
       // Chạm tường thì đòn lao dừng ngay tại đó (không chạy tại chỗ sát tường, không kẹt ở cửa): người chơi điều khiển lại được liền.
       if ((nx !== P.x + vx * dd || ny !== P.y + vy * dd) && P.dashT > 0) { P.dashT = 0; P.atkT = Math.min(P.atkT, 0.05); P.cdT = Math.min(P.cdT, 0.12); }
       P.x = nx; P.y = ny;
+      if (P.dashT <= 0 && G.CHAY_DANH_MOI !== false && ml > 0.12) P.moving = true; // chạy + đánh: hết lướt mà còn giữ cần → hàng chạy ngay, không chen khung Đứng
       return;
     }
     if (P.slideT > 0) { // lùi nửa bước khi tung Trảm Nguyệt (không chặn điều khiển)
@@ -766,9 +767,10 @@
         if (W.boss) W.boss.misted = false;
         if (P.set === 'ho') P.boost = true;
         if (G.outfit) G.outfit.dodgeEnd(P);
+        if (G.CHAY_DANH_MOI !== false && ml > 0.12) P.moving = true; // ưu tiên Né > … > Chạy: hết Né còn giữ cần → chạy ngay (không chen khung Đứng)
       }
     } else {
-      const sp = P.speed * slow * (P.atkT > 0 ? (MV && MV.speedAtk ? MV.speedAtk(P) : 0.4) : 1) * (MV ? MV.speed(P) : 1) * (P.chHold ? 0.6 : 1); // đang tích lực chưởng: đi chậm
+      const sp = P.speed * slow * (P.atkT > 0 ? (MV && MV.speedAtk ? MV.speedAtk(P) : 0.4) : 1) * (MV ? MV.speed(P) : 1) * (P.chHold ? 0.6 : 1) * (G.CHAY_DANH_MOI !== false && P.specT > 0 && G.CHAY_DANH_CFG ? G.CHAY_DANH_CFG.dacBiet : 1); // đang tích lực chưởng: đi chậm; đòn Đặc biệt khi chạy: chậm nhẹ (js/moves.js CHAY_DANH_CFG)
       if (ml > 0.12) {
         P.x += mx * sp * dt;
         P.y += my * sp * 0.75 * dt;
@@ -1088,6 +1090,7 @@
     return {
       p: P, // hero_art.js đọc thêm trạng thái hoạt ảnh từ đây (chỉ đọc)
       x: P.x, y: P.y, face: P.face, key: P.key, move: P.moving, t: P.t, tc: P.chayT,
+      mdx: P.moving && P.ldx != null ? P.ldx : 0, // hướng chạy (ngang) cho chân khi chạy + chém (js/zed_moi.js ghép eo): chân theo cần, thân trên theo hướng chém
       atk: P.atkT > 0 ? 1 - P.atkT / P.atkDur : -1, dodge: P.dodgeT > 0 ? 1 - P.dodgeT / 0.27 : -1,
       flash: P.hurtT > 0, alpha: P.inv > 0 && P.dodgeT <= 0 && Math.floor(G.time * 20) % 2 ? 0.5 : null,
       // giáo đang bay (Phi Thương): tay không, chưa vẽ cây giáo trên tay

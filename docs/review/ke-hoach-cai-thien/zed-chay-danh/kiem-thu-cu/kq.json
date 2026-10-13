@@ -1,0 +1,94 @@
+{
+ "1": {
+  "ten": "Đứng chém liên tục",
+  "dat": true,
+  "ghi": [
+   "ĐẠT đứng yên: vận tốc 0 suốt",
+   "ĐẠT combo 1→2→3→1… liên tục: [0, 1, 2, 0, 1, 2]",
+   "ĐẠT không rơi về Đứng giữa combo (khung không đánh sau khung 5: [])"
+  ],
+  "loi_ve": []
+ },
+ "2": {
+  "ten": "Chạy phải chém liên tục",
+  "dat": false,
+  "ghi": [
+   "ĐẠT giữ cần thì luôn di chuyển (khung đứng khựng: [])",
+   "ĐẠT nhịp chạy P.chayT không reset khi ra đòn",
+   "ĐẠT chém thường giữ ≥ 85% tốc độ (thấp nhất 85%)",
+   "ĐẠT nhát kết (đòn nặng) giảm nhẹ ≥ 60% (thấp nhất 85%)",
+   "ĐẠT hướng chém + mặt chốt trong từng nhát",
+   "KHÔNG ĐẠT kiếm 1/2 khi chạy vẽ ghép eo (chân hàng chạy, thân trên hàng đòn): 0/76 khung",
+   "KHÔNG ĐẠT chân vẫn chạy qua nhiều khung chạy khi chém (0 khung chạy khác nhau)"
+  ],
+  "loi_ve": []
+ },
+ "3": {
+  "ten": "Chạy trái chém phải",
+  "dat": false,
+  "ghi": [
+   "ĐẠT giữ cần thì luôn di chuyển (khung đứng khựng: [])",
+   "ĐẠT nhịp chạy P.chayT không reset khi ra đòn",
+   "ĐẠT chém thường giữ ≥ 85% tốc độ (thấp nhất 85%)",
+   "ĐẠT nhát kết (đòn nặng) giảm nhẹ ≥ 60% (thấp nhất 85%)",
+   "ĐẠT hướng chém + mặt chốt trong từng nhát",
+   "KHÔNG ĐẠT kiếm 1/2 khi chạy vẽ ghép eo (chân hàng chạy, thân trên hàng đòn): 0/76 khung",
+   "KHÔNG ĐẠT chân vẫn chạy qua nhiều khung chạy khi chém (0 khung chạy khác nhau)",
+   "ĐẠT vẫn chạy sang trái khi chém (vx < 0)",
+   "ĐẠT chém sang phải (P.face = 1, aimX > 0)",
+   "ĐẠT chân quay theo hướng chạy (trái), thân trên theo hướng chém (phải)"
+  ],
+  "loi_ve": []
+ },
+ "4": {
+  "ten": "Chạy chéo combo 3 nhát",
+  "dat": false,
+  "ghi": [
+   "ĐẠT giữ cần thì luôn di chuyển (khung đứng khựng: [])",
+   "ĐẠT nhịp chạy P.chayT không reset khi ra đòn",
+   "ĐẠT chém thường giữ ≥ 85% tốc độ (thấp nhất 85%)",
+   "ĐẠT nhát kết (đòn nặng) giảm nhẹ ≥ 60% (thấp nhất 85%)",
+   "ĐẠT hướng chém + mặt chốt trong từng nhát",
+   "KHÔNG ĐẠT kiếm 1/2 khi chạy vẽ ghép eo (chân hàng chạy, thân trên hàng đòn): 0/38 khung",
+   "KHÔNG ĐẠT chân vẫn chạy qua nhiều khung chạy khi chém (0 khung chạy khác nhau)",
+   "ĐẠT combo 3 nhát khi chạy chéo: [0, 1, 2]",
+   "ĐẠT đi chéo suốt (vx > 0, vy > 0)"
+  ],
+  "loi_ve": []
+ },
+ "5": {
+  "ten": "Đổi hướng cần trong lúc chém",
+  "dat": true,
+  "ghi": [
+   "ĐẠT giữ cần thì luôn di chuyển (khung đứng khựng: [])",
+   "ĐẠT nhịp chạy P.chayT không reset khi ra đòn",
+   "ĐẠT đổi hướng cần giữa nhát: hướng chém + mặt KHÔNG đổi trong nhát (0 nhát đổi)",
+   "ĐẠT hướng chạy theo cần ngay khung đổi"
+  ],
+  "loi_ve": []
+ },
+ "6": {
+  "ten": "Chạy + giữ Đánh rồi Né",
+  "dat": false,
+  "ghi": [
+   "KHÔNG ĐẠT giữ cần thì luôn di chuyển (khung đứng khựng: [47, 56])",
+   "ĐẠT nhịp chạy P.chayT không reset khi ra đòn",
+   "ĐẠT Né ra ngay khung bấm (khung 30, bấm ở 30) — ngắt đòn đang chém",
+   "KHÔNG ĐẠT hết Né còn giữ cần: chạy ngay khung kế (v=195)",
+   "ĐẠT còn giữ Đánh: đánh tiếp sau Né"
+  ],
+  "loi_ve": []
+ },
+ "7": {
+  "ten": "Thả Đánh vẫn giữ cần",
+  "dat": true,
+  "ghi": [
+   "ĐẠT giữ cần thì luôn di chuyển (khung đứng khựng: [])",
+   "ĐẠT nhịp chạy P.chayT không reset khi ra đòn",
+   "ĐẠT thả Đánh: hết nhát chạy lại đủ tốc ngay, không khựng",
+   "ĐẠT hết nhát về hàng chạy (không về Đứng)"
+  ],
+  "loi_ve": []
+ },
+ "loi_trang": []
+}

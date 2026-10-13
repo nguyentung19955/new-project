@@ -125,6 +125,33 @@
     G.MOVE_TIPS.bow = 'Phi tiêu: bấm để ném nhanh, giữ rồi thả ném chùm phi tiêu. Đặc biệt: Mưa Phi Tiêu rơi vào cụm quái gần nhất.';
   }
   const C = G.MOVES, HE = G.HE;
+  // ---------- CHẠY + ĐÁNH (13/10/2026, docs/review/ke-hoach-cai-thien/zed-chay-danh/YEU-CAU.md) ----------
+  // Tách trạng thái DI CHUYỂN (cần → vận tốc, P.chayT nhịp chân, combat.js) và CHIẾN ĐẤU (P.atkT/atkDur/cdT, combo, bộ đệm — ở đây),
+  // mỗi bên đồng hồ riêng; ra đòn không đặt vận tốc về 0, không reset nhịp chạy. Ưu tiên: Né > Trúng/Choáng > Đánh > Chạy > Đứng.
+  //  - tốc độ đi khi đang chém (CHAY_DANH.danh): chém thường ≥ 0,9; đòn nặng (búa nện, nhát kết kiếm, quét giáo, nện đất) giảm nhẹ ≥ 0,6;
+  //    đòn Đặc biệt (specT) 0,7 khi đang chạy (vẽ toàn thân hàng đặc biệt, chân không bước → chậm lại cho đỡ trượt chân).
+  //  - hướng chém CHỐT lúc ra đòn (P.aimX/aimY, P.face đặt trong begin), không đổi giữa nhát (phi tiêu bay theo hướng đã chốt);
+  //    hết nhát mới ngắm lại cho nhát sau.
+  //  - bộ đệm nút Đánh 0,13 giây (trước 0,25: bấm sớm quá một phần tư giây vẫn ra đòn → cảm giác "tự đánh thêm một nhát"; 0,13 nằm
+  //    trong 100–150 ms, vẫn nối được khi bấm theo nhịp vì nhát kiếm/giáo dài 0,3–0,52 giây).
+  //  - nối combo (CHAY_DANH.noi): nhát chuỗi (kiếm, giáo, đấm) được nối sang nhát kế khi đã CHẠM và đi được ≥ noi phần động tác
+  //    (khung thu tay cuối), không bắt chờ hết khung cuối. Thời lượng, hitAt mỗi nhát giữ nguyên.
+  // Tắt: ?chaydanh=0 → như cũ (G.CHAY_DANH_MOI = false).
+  if (G.CHAY_DANH_MOI === undefined) {
+    let m = null;
+    try { m = typeof location !== 'undefined' ? /[?&]chaydanh=(\w+)/.exec(location.search || '') : null; } catch (e) { m = null; }
+    G.CHAY_DANH_MOI = !(m && m[1] === '0');
+  }
+  G.CHAY_DANH_CFG = {
+    buffer: 0.13,
+    noi: 0.85,
+    danh: { sword: 0.95, spear: 0.92, bow: 0.92, fist: 0.95, hammer: 0.65 },
+    nang: 0.75, // nhát kết kiếm, quét giáo
+    nenDat: 0.6, // búa thả đà nện đất
+    dacBiet: 0.7,
+  };
+  const moi = () => G.CHAY_DANH_MOI !== false;
+  const BUF = () => (moi() ? G.CHAY_DANH_CFG.buffer : C.buffer);
 
   // ---------- trạng thái đòn đánh trên người chơi (P.mv) ----------
   // Lớp vẽ nào cũng đọc được: name (tên đòn), step (nhịp trong chuỗi), chain (đã đánh mấy nhịp),
@@ -178,9 +205,9 @@
     const sl = Math.hypot(inp.mx || 0, inp.my || 0);
     if (sl > 0.12) { P.stickX = inp.mx / sl; P.stickY = inp.my / sl; } else { P.stickX = null; P.stickY = null; }
     mv.relP = !held && mv.wasHeld;
-    if (held && !mv.wasHeld) { mv.holdT = 0; mv.pressBuf = C.buffer; }
+    if (held && !mv.wasHeld) { mv.holdT = 0; mv.pressBuf = BUF(); }
     if (held) mv.holdT += dt;
-    if (mv.relP && !mv.holding) mv.buf = C.buffer;
+    if (mv.relP && !mv.holding) mv.buf = BUF();
     mv.wasHeld = held;
     // V7: đang lộn thì bộ nhớ nút Đánh không trôi (bấm Đánh ngay đầu cú lộn vẫn ra đòn khi lộn xong, ví dụ Nhát lướt)
     const rolling = P.dodgeT > 0;
@@ -213,6 +240,13 @@
   }
   // Hệ số đi khi đang ra đòn (combat.js)
   M.speedAtk = function (P) {
+    if (moi()) { // chạy + đánh: chém thường gần như đủ tốc, chỉ đòn nặng chậm nhẹ
+      const K = G.CHAY_DANH_CFG, w = G.curW(P), mv = P.mv, o = mv && mv.cur;
+      if (o && (o.kind === 'nenDat')) return K.nenDat;
+      if (o && (o.kind === 'quet' || (o.m && o.m.heavy))) return K.nang;
+      const k = w && K.danh[o && o.fist ? 'fist' : w.type];
+      return k != null ? k : 0.9;
+    }
     const T = G.CHAM_DANH;
     if (!T) return 0.4;
     const w = G.curW(P), k = w && T.danh[w.type];
@@ -443,7 +477,8 @@
   function shoot(P, w, o) {
     const W = G.getWorld(), h = heOf(P, w);
     const col = h ? G.EL[h.el].col : '#f1ead9';
-    const A = bowAim(P, o.range + 10, o.speed), B = C.bow;
+    // chạy + đánh: phát ném thường bay theo hướng đã CHỐT lúc ra đòn (bowTap), không ngắm lại giữa nhát
+    const A = moi() && o.lock && P.aimUx != null ? { ux: P.aimUx, uy: P.aimUy } : bowAim(P, o.range + 10, o.speed), B = C.bow;
     // tên sinh ra ở dây cung (chỗ cung đang chĩa theo hướng bắn) nhưng đoạn kiểm tra trúng đầu tiên bắt đầu từ giữa người,
     // nên quái đứng sát hay chồng lên người vẫn trúng, không có vùng chết ở cự ly gần.
     W.projs.push({
@@ -456,7 +491,7 @@
     const s = C.bow.shot;
     bowAim(P, s.range + 10, s.speed);
     // đứng yên thì giương nhanh hơn một chút so với vừa chạy vừa bắn
-    begin(P, w, { kind: 'ban', name: s.name, pose: 0, arrow: { mult: s.mult, speed: s.speed, range: s.range, pierce: s.pierce || 0, pierceMult: s.pierceMult } }, P.moving ? s.move : s.still);
+    begin(P, w, { kind: 'ban', name: s.name, pose: 0, arrow: { mult: s.mult, speed: s.speed, range: s.range, pierce: s.pierce || 0, pierceMult: s.pierceMult, lock: true } }, P.moving ? s.move : s.still);
   }
   function bowRelease(P, w, c) {
     const ch = C.bow.charge, full = c >= 1;
@@ -543,7 +578,11 @@
   // Gọi khi người chơi đang rảnh tay (không né, không lướt, không vừa bấm đòn đặc biệt hay kỹ năng).
   M.act = function (P, inp, dt) {
     const mv = st(P), w = G.curW(P), cfg = C[w.type];
-    const held = mv.wasHeld, can = P.cdT <= 0;
+    const held = mv.wasHeld;
+    let can = P.cdT <= 0;
+    // nối combo: nhát chuỗi đã chạm và đang ở khung thu tay cuối → nhát kế ra luôn (không chờ hết khung cuối, không về Đứng)
+    if (!can && moi() && P.atkT > 0 && P.hitDone && !(P.dashT > 0) && mv.cur && (mv.cur.kind === 'chem' || mv.cur.kind === 'dam' || mv.cur.kind === 'quet')
+      && P.atkDur > 0 && 1 - P.atkT / P.atkDur >= G.CHAY_DANH_CFG.noi) can = true;
     if (!cfg) { // vũ khí chưa có lối đánh riêng: đánh kiểu cũ
       if (held && can) { mv.cur = null; G.cb.startAttack(P); }
       return;
