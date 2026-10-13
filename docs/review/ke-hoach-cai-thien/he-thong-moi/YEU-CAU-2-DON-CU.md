@@ -14,3 +14,9 @@ Như đợt 1: KHÔNG TEST (chỉ `node --check`, build.py), chỉ nhánh `khoi-
 
 ## Khi xong
 `bao-cao-2.md` (tiếng Việt: bảng xoá/giữ, dung lượng trước/sau, mã commit), push, tự dừng.
+
+## Bổ sung (điều phối soát hiệu ứng 13/10 13:30) — xoá thêm
+- Ảnh: `hu-dan-ten.sprite.json` (phi tiêu thường tạm; Zed vẽ bằng zed-vk — GIỮ `hu-dan-ten-fire/-ice/-poison`), `gd-nut-ky-nang-healer/hunter/smith/wrestler`, `gd-khien`.
+- Code chết trong `fx.js`: api `slam` (không ai gọi), `nung`, `trapPlace`, `trapSnap`, `bottle`/`bottleBreak`, `gong`, `hitStop` nếu không ai gọi; lớp bẫy hàm kẹp trên người (~1230), lấp lánh bẫy (~2037), nhánh `blocked` của `hurt` (Gồng); `rainDrop` mũi tên + vòng ngắm mưa tên (đã có hu-mua-phi-tieu); lông đuôi mũi tên `fx_dan.js` ~236; `outfit.js` hiệu ứng và vòng khiên trang phục cũ.
+- `drawStuck` (fx_dan.js ~288) đang vẽ MŨI TÊN cắm tường: đổi sang vẽ ảnh phi tiêu zed-vk (cấp hiện tại) cắm nghiêng, không xoá.
+- `gd-bua-*` (bùa ở rương/lái buôn): CHỈ xoá nếu đợt 1 đã bỏ bùa; nếu bùa còn thì giữ.
