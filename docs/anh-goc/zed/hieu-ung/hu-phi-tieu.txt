@@ -1,7 +1,45 @@
-# Hiệu ứng phi tiêu (thay hiệu ứng cung). Gửi kèm: ảnh vk-phi-tieu (cấp 1)
-## A. Vệt ném
-Pixel art hiệu ứng: vệt gió xé ngang khi ném phi tiêu, bay sang PHẢI. 1 hàng 4 khung: 1 tia sáng nhỏ ở tay, 2 vệt dài mảnh hình mũi tên, 3 vệt dài nhất có tia lấp lánh, 4 tan thành vài hạt. Chỉ màu TRẮNG và xám nhạt (game tự nhuộm). Không vẽ người, không vẽ phi tiêu. Nền xanh lá #00FF00, không chữ, các khung không chạm nhau.
-## B. Trúng phi tiêu
+# Hiệu ứng phi tiêu (thay toàn bộ hiệu ứng cung). Gửi kèm mọi prompt: ảnh moi/vk-phi-tieu.png
+# Mỗi mục = 1 tin gen riêng. Nền xanh lá #00FF00, không chữ, các khung không chạm nhau.
+# Tên tệp sau khi cắt (thay mã cũ):
+#   A  hu-ban-cung        -> vệt ném (4 khung)           A1-A3: -fire / -poison / -ice
+#   D  hu-dan-ten         -> phi tiêu bay xoay (4 khung)  D1-D3: -fire / -poison / -ice
+#   B  hu-trung-phi-tieu  (mới) trúng đích
+#   C  hu-mua-phi-tieu    (mới) mưa phi tiêu
+#   E  hu-phi-tieu-chum   (mới) tích lực + ném chùm (đòn mạnh)
+#   F  tp-backs-ong_ten   -> túi phi tiêu đeo lưng (trang phục)
+
+## A. Vệt ném (thay hu-ban-cung)
+Pixel art hiệu ứng: vệt gió xé ngang khi ném phi tiêu, bay sang PHẢI, mép trái là chỗ tay ném. 1 hàng 4 khung: 1 tia sáng nhỏ ở tay, 2 vệt dài mảnh hình mũi nhọn, 3 vệt dài nhất có tia lấp lánh, 4 tan thành vài hạt. Chỉ màu TRẮNG và xám nhạt (game tự nhuộm). Không vẽ người, không vẽ phi tiêu. Nền xanh lá #00FF00, không chữ, các khung không chạm nhau.
+
+## A1. Vệt ném – Lửa (hu-ban-cung-fire)
+Vẽ lại y hệt bố cục hiệu ứng A (1 hàng 4 khung, vệt ném bay sang PHẢI) nhưng thành LỬA: lõi vàng sáng, viền cam đỏ, vài tàn lửa bay ra. Không vẽ người, không vẽ phi tiêu. Nền xanh lá #00FF00, không chữ, các khung không chạm nhau.
+
+## A2. Vệt ném – Độc (hu-ban-cung-poison)
+Vẽ lại y hệt bố cục hiệu ứng A (1 hàng 4 khung, vệt ném bay sang PHẢI) nhưng thành KHÍ ĐỘC: lõi xanh chanh, viền tím, vài giọt nhớt và bong bóng nhỏ. Không vẽ người, không vẽ phi tiêu. Nền xanh lá #00FF00, không chữ, các khung không chạm nhau.
+
+## A3. Vệt ném – Băng (hu-ban-cung-ice)
+Vẽ lại y hệt bố cục hiệu ứng A (1 hàng 4 khung, vệt ném bay sang PHẢI) nhưng thành BĂNG: lõi trắng, viền xanh băng nhạt, vài tinh thể băng nhỏ lấp lánh. Không vẽ người, không vẽ phi tiêu. Nền xanh lá #00FF00, không chữ, các khung không chạm nhau.
+
+## D. Phi tiêu bay xoay (thay hu-dan-ten)
+Pixel art viên đạn: phi tiêu 4 cánh giống ảnh gửi kèm, cỡ nhỏ, đang bay sang PHẢI và xoay tròn. 1 hàng 4 khung = 4 góc xoay lần lượt 0°, 22°, 45°, 67°, phía sau có vệt gió mảnh màu trắng ngắn. Phi tiêu màu thép xám, lưỡi sáng. Nền xanh lá #00FF00, không chữ, các khung không chạm nhau.
+
+## D1. Phi tiêu bay – Lửa (hu-dan-ten-fire)
+Vẽ lại y hệt hiệu ứng D (phi tiêu 4 cánh bay sang PHẢI, xoay 4 khung) nhưng phi tiêu bọc LỬA: lửa cam đỏ quanh lưỡi, vệt lửa phía sau. Nền xanh lá #00FF00, không chữ, các khung không chạm nhau.
+
+## D2. Phi tiêu bay – Độc (hu-dan-ten-poison)
+Vẽ lại y hệt hiệu ứng D (phi tiêu 4 cánh bay sang PHẢI, xoay 4 khung) nhưng phi tiêu bọc NHỚT ĐỘC xanh chanh viền tím, nhỏ giọt phía sau. Nền xanh lá #00FF00, không chữ, các khung không chạm nhau.
+
+## D3. Phi tiêu bay – Băng (hu-dan-ten-ice)
+Vẽ lại y hệt hiệu ứng D (phi tiêu 4 cánh bay sang PHẢI, xoay 4 khung) nhưng phi tiêu bọc BĂNG xanh nhạt, vệt tinh thể băng lấp lánh phía sau. Nền xanh lá #00FF00, không chữ, các khung không chạm nhau.
+
+## B. Trúng phi tiêu (hu-trung-phi-tieu)
 Pixel art hiệu ứng trúng đích của phi tiêu: tia chớp hình ngôi sao 4 cánh nhỏ toả ra. 1 hàng 4 khung: 1 chấm sáng, 2 sao 4 cánh nở to, 3 sao vỡ thành mảnh, 4 vài hạt tan. Chỉ màu TRẮNG và xám nhạt. Nền xanh lá #00FF00, không chữ, các khung không chạm nhau.
-## C. Mưa phi tiêu
+
+## C. Mưa phi tiêu (hu-mua-phi-tieu)
 Pixel art hiệu ứng nhìn chếch từ trên: một vòng tròn dẹt trên mặt đất, nhiều phi tiêu nhỏ (giống ảnh gửi kèm, mũi chúc xuống) rơi cắm xuống. 1 hàng 6 khung: 1 vòng tròn mờ xuất hiện, 2 phi tiêu bắt đầu rơi, 3–4 rơi dày, cắm đất bắn tia, 5 tia sáng nổ khắp vòng, 6 tan dần. Vòng tròn và tia màu TRẮNG–xám nhạt, phi tiêu màu thép. Nền xanh lá #00FF00, không chữ, các khung không chạm nhau.
+
+## E. Tích lực + ném chùm (hu-phi-tieu-chum)
+Pixel art hiệu ứng đòn ném mạnh, hướng sang PHẢI, mép trái là chỗ tay. 1 hàng 5 khung: 1 vài hạt sáng hút vào một điểm, 2 vòng khí tụ lại sáng dần, 3 vòng sáng chói, 4 bung ra hình rẻ quạt 5 vệt gió toả sang phải, 5 các vệt tan thành hạt. Chỉ màu TRẮNG và xám nhạt (game tự nhuộm). Không vẽ người, không vẽ phi tiêu. Nền xanh lá #00FF00, không chữ, các khung không chạm nhau.
+
+## F. Túi phi tiêu đeo lưng (thay ống tên tp-backs-ong_ten)
+Pixel art món đồ: túi da nâu nhỏ đeo lưng chéo, nắp gập có khuy đồng, ló ra 3 phi tiêu 4 cánh giống ảnh gửi kèm. Nhìn nghiêng, 1 hình duy nhất, cỡ nhỏ (khoảng 14×18 ô). Nền xanh lá #00FF00, không chữ.
