@@ -195,6 +195,7 @@
   // ---------- hạt ----------
   // Loại: 0 vuông, 1 co dần, 2 khói phồng, 3 vệt theo hướng bay, 4 mảnh xoay, 5 giọt (dính đất), 6 lấp lánh,
   // 7 mũi tên rơi, 8 mảnh vụn nảy, 9 lưỡi lửa, 10 dấu cộng hồi máu, 11 bong bóng
+  let AIMG = null; // đang trong aimed(): góc xoay hình sát đất sắp áp (th) — để đặt trước chỗ cần trúng (búa nện khớp đầu búa)
   let CAP = null; // đang gom hạt và hình vừa sinh ra để xoay theo hướng nhắm (aimed)
   function emit(k, x, y, vx, vy, t, c, s, g, dr, fy, ly) {
     let o;
@@ -217,9 +218,9 @@
     const ZM = G.zedMoi;
     if (ZM && ZM.lechHinh && opt && opt.don) { try { const v = ZM.lechHinh(P, opt.don); if (v != null && isFinite(v)) relH = v; } catch (e) { relH = rel; } }
     const cap = { p: [], e: [] };
-    CAP = cap;
-    try { fn(); } finally { CAP = null; }
     const th = (rel * P.face * Math.PI) / 180, cs = Math.cos(th), sn = Math.sin(th);
+    CAP = cap; AIMG = { th, ground: !opt || opt.ground !== false, P };
+    try { fn(); } finally { CAP = null; AIMG = null; }
     const thH = (relH * P.face * Math.PI) / 180, csH = Math.cos(thH), snH = Math.sin(thH);
     const px = P.x, py = P.y - 13, ground = !opt || opt.ground !== false;
     const rot = (o, cx, cy) => { const dx = o.x - cx, dy = o.y - cy; o.x = cx + dx * cs - dy * sn; o.y = cy + dx * sn + dy * cs; };
@@ -445,6 +446,19 @@
     }
     const sc = (cu.r + 1) / (A.r * co);
     return anhVkDat(ma, P, cu.px, cu.py, cu.am, giu ? Math.max(sc, scDam) : sc, A.c);
+  }
+  // 13/10 (chủ dự án: "búa đập xuống thì slash và đất nứt không khớp"): chỗ đầu búa thật chạm đất lúc nện = mũi vũ khí xa nhất về
+  // phía trước của cung vung (cùng nguồn với ảnh vệt hu-chem-bua bám vũ khí, anhVk). Đang trong aimed() có dời hình sát đất thì trả chỗ
+  // "xoay ngược" để sau khi aimed() dời, vết nứt rơi đúng dưới đầu búa. null: không đo được (giữ chỗ cũ). Cờ tắt: ?buakhop=0.
+  function dauBua(P) {
+    if (G.BUA_KHOP === false || /[?&]buakhop=0/.test(location.search)) return null;
+    try {
+      const cu = cungVk(P, WIN.atk.hammer);
+      if (!cu) return null;
+      let tx = cu.ex + Math.cos(cu.ea) * cu.eL, ty = Math.max(-2, Math.min(6, cu.ey + Math.sin(cu.ea) * cu.eL));
+      if (AIMG && AIMG.P === P && AIMG.ground && AIMG.th) { const c2 = Math.cos(-AIMG.th), s2 = Math.sin(-AIMG.th), x0 = tx, y0 = ty; tx = x0 * c2 - y0 * s2; ty = x0 * s2 + y0 * c2; }
+      return { x: P.x + tx, y: P.y + ty };
+    } catch (e) { return null; }
   }
   // Lướt chém (sau Né): kiếm chĩa thẳng theo hướng lướt; mép trước của ảnh (bán kính A.r) đặt đúng ở mũi kiếm, cỡ ảnh giữ như cũ.
   function anhLuot(ma, P, sc) {
@@ -755,7 +769,8 @@
       }
       if (st >= 2 || el) elemBits(el, P.x + f * R0 * 0.7, P.y - 14, (st >= 3 ? 6 : st >= 2 ? 4 : 2) + (fin ? 3 : 0), f, 70);
     } else if (o.type === 'hammer') {
-      const ix = P.x + f * R0 * 0.72, iy = P.y;
+      let ix = P.x + f * R0 * 0.72, iy = P.y;
+      { const q = dauBua(P); if (q) { ix = q.x; iy = q.y; } }
       if (!real && !vetAnh) add({ ty: 'cres', x: P.x + f * 4, y: P.y - 17, f, ra: R0 * 0.9, rb: 27, off: 10, oy: -5, vert: true, rev: false, pl: PL, t: 0.2, big: true, st, ly: 1 });
       slam(ix, iy, 20, el, 0.7);
       kick(0, 2.5); trauma(0.3);
@@ -2419,7 +2434,7 @@
     c.globalAlpha = 1;
   }
   // Bộ đồ nghề cho js/fx_he.js: dùng chung kho hạt, bảng màu và các hàm vẽ điểm ảnh ở trên.
-  fx.kit = { coAnh, anh, anhHe, anhHuong, huongAnh, anhLuot, aimed, S: () => S, api, layer, fail, emit, streak, spray, puffs, add, addRing, trauma, kick, stop, num, pal, PAL, RAMP, R, rr, hash, p, ell, ring, line, star, crescent, tongue, slam, blastFire, blastPoison, blastIce, elemBits, bodyOf, hand, A_ };
+  fx.kit = { coAnh, anh, anhVk, dauBua, anhHe, anhHuong, huongAnh, anhLuot, aimed, S: () => S, api, layer, fail, emit, streak, spray, puffs, add, addRing, trauma, kick, stop, num, pal, PAL, RAMP, R, rr, hash, p, ell, ring, line, star, crescent, tongue, slam, blastFire, blastPoison, blastIce, elemBits, bodyOf, hand, A_ };
 })();
 
 // V13 (Giai đoạn 2, phiên gd2-b): trùm có "Chống đánh xa" vừa giảm sát thương một mũi tên thì hiện chữ "Xa quá!" trên đầu trùm

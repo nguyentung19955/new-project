@@ -275,13 +275,15 @@
       // búa nện sau khi lấy đà: vệt bổ xuống, đất nứt, vòng sóng; nấc 2 to và rung mạnh hơn
       const big = o.level >= 2;
       // Vệt bổ xuống: đã có ảnh AI vệt nện búa (hu-chem-bua, dùng chung với đòn thường) thì vẽ ảnh, nấc 2 to hơn
-      if (!K.anh('hu-chem-bua', P.x + f * 4, P.y - 17, { f, sc: big ? 1.2 : 1.04 }))
+      // 13/10: vệt bám búa thật (anhVk) và vết nứt/bụi đặt đúng dưới đầu búa (K.dauBua) cho khớp nhau; vòng tầm đánh vẫn ở tâm vùng gây hại.
+      const db = K.dauBua ? K.dauBua(P) : null, nx = db ? db.x : o.x, ny = db ? db.y : o.y;
+      if (!(db && K.anhVk && K.anhVk('hu-chem-bua', P, 'hammer', big ? 1.2 : 1.04)) && !K.anh('hu-chem-bua', P.x + f * 4, P.y - 17, { f, sc: big ? 1.2 : 1.04 }))
         add({ ty: 'cres', x: P.x + f * 4, y: P.y - 17, f, ra: 30, rb: 28, off: 10, oy: -5, vert: true, rev: false, pl: PL, t: 0.2, big: true, st: o.stage, ly: 1 });
-      K.slam(o.x, o.y, o.r * 0.8, o.el, big ? 1.5 : 1);
+      K.slam(nx, ny, o.r * 0.8, o.el, big ? 1.5 : 1);
       addRing(o.x, o.y, 6, o.r, 0.28, PL.c, big ? 4 : 3, 0);
       if (big) {
         addRing(o.x, o.y, 3, o.r * 1.15, 0.36, '#ffffff', 2, 0, 0.05);
-        for (let i = 0; i < 6; i++) { const a = (i / 6) * 6.283 + rr(-0.3, 0.3); add({ ty: 'crack', x: o.x + Math.cos(a) * o.r * 0.6, y: o.y + Math.sin(a) * o.r * 0.36, r: 8, t: 1.3, c: o.el ? PL.d : '#3a2e26', ly: 0, sd: R() * 100 }); }
+        for (let i = 0; i < 6; i++) { const a = (i / 6) * 6.283 + rr(-0.3, 0.3); add({ ty: 'crack', x: nx + Math.cos(a) * o.r * 0.6, y: ny + Math.sin(a) * o.r * 0.36, r: 8, t: 1.3, c: o.el ? PL.d : '#3a2e26', ly: 0, sd: R() * 100 }); }
       }
       trauma(big ? 0.6 : 0.35); kick(0, big ? 3 : 2); if (big) K.stop(60);
       return;
