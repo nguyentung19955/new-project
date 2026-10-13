@@ -1083,9 +1083,10 @@
       const c = G.wx, A = G.art;
       V.tab = 'title';
       VS.drawWorld({ dim: 0.42, hideHero: true }); // cảnh làng sống (đèn lồng chập chờn, khói lò rèn, đom đóm) dùng lại của village_scene.js
+      // 13/10: chủ dự án muốn Zed chỉ ĐỨNG YÊN ở màn hình chính (bỏ vung kiếm mỗi 2,4 giây).
       // em bé cầm kiếm lửa: phóng đúng 2 lần (điểm ảnh vuông, không vỡ), đứng góc dưới bên trái, không chạm nút
       c.save(); c.translate(70, 252); c.scale(2, 2);
-      A.hero(c, { x: 0, y: 0, face: 1, key: 'smith', move: false, t: G.time, atk: (G.time % 2.4) < 0.4 ? (G.time % 2.4) / 0.4 : -1, dodge: -1, weapon: { type: 'sword', family: 0, rarity: 3, marks: { fire: 300, poison: 0, ice: 0 }, branch: 'fire', sharpen: 0 } });
+      A.hero(c, { x: 0, y: 0, face: 1, key: 'smith', move: false, t: G.time, atk: -1, dodge: -1, weapon: { type: 'sword', family: 0, rarity: 3, marks: { fire: 300, poison: 0, ice: 0 }, branch: 'fire', sharpen: 0 } });
       c.restore();
       titleVeil();
       G.syncTaps = [];
