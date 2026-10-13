@@ -1,0 +1,7 @@
+# Hiệu ứng phi tiêu (thay hiệu ứng cung). Gửi kèm: ảnh vk-phi-tieu (cấp 1)
+## A. Vệt ném
+Pixel art hiệu ứng: vệt gió xé ngang khi ném phi tiêu, bay sang PHẢI. 1 hàng 4 khung: 1 tia sáng nhỏ ở tay, 2 vệt dài mảnh hình mũi tên, 3 vệt dài nhất có tia lấp lánh, 4 tan thành vài hạt. Chỉ màu TRẮNG và xám nhạt (game tự nhuộm). Không vẽ người, không vẽ phi tiêu. Nền xanh lá #00FF00, không chữ, các khung không chạm nhau.
+## B. Trúng phi tiêu
+Pixel art hiệu ứng trúng đích của phi tiêu: tia chớp hình ngôi sao 4 cánh nhỏ toả ra. 1 hàng 4 khung: 1 chấm sáng, 2 sao 4 cánh nở to, 3 sao vỡ thành mảnh, 4 vài hạt tan. Chỉ màu TRẮNG và xám nhạt. Nền xanh lá #00FF00, không chữ, các khung không chạm nhau.
+## C. Mưa phi tiêu
+Pixel art hiệu ứng nhìn chếch từ trên: một vòng tròn dẹt trên mặt đất, nhiều phi tiêu nhỏ (giống ảnh gửi kèm, mũi chúc xuống) rơi cắm xuống. 1 hàng 6 khung: 1 vòng tròn mờ xuất hiện, 2 phi tiêu bắt đầu rơi, 3–4 rơi dày, cắm đất bắn tia, 5 tia sáng nổ khắp vòng, 6 tan dần. Vòng tròn và tia màu TRẮNG–xám nhạt, phi tiêu màu thép. Nền xanh lá #00FF00, không chữ, các khung không chạm nhau.
