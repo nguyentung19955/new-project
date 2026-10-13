@@ -10,8 +10,11 @@ Ghi:  game/art/custom/zed-moi.sprite.json  thân Zed: mỗi động tác 1 hàng
       docs/review/ke-hoach-cai-thien/zed-co-deu/xem-truoc-*.png  ảnh xem trước (dựng như game ghép: người → vũ khí → nắm tay)
       game/art/custom/zed-rung.sprite.json  TRANG PHỤC BỘ 2 "RỪNG" (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-rung/YEU-CAU.md):
                                             cùng chuẩn với zed-moi, ảnh từ trang-phuc/bo-2-rung/<tên>-cat/, neo dùng lại neo.json của hàng
-                                            ninja tương ứng (xem phần "BỘ 2" trong main), vũ khí dùng chung zed-vk
+                                            ninja tương ứng (xem hàm dung_bo), vũ khí dùng chung zed-vk
       docs/review/ke-hoach-cai-thien/zed-bo-rung/xem-truoc-rung.png
+      game/art/custom/zed-bien.sprite.json  TRANG PHỤC BỘ 3 "BIỂN" (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-bien/YEU-CAU.md):
+                                            y như bộ Rừng (hàm dung_bo, danh sách BO_KHAC), ảnh từ trang-phuc/bo-3-bien/<tên>-cat/
+      docs/review/ke-hoach-cai-thien/zed-bo-bien/xem-truoc-bien.png
 
 CO THEO TỪNG HÀNG (sửa 13/10/2026 — docs/review/ke-hoach-cai-thien/zed-co-deu/YEU-CAU.md):
   Ảnh gốc mỗi động tác vẽ Zed một cỡ khác nhau (chạy nhỏ hơn đứng ~25%, trúng đòn/thương giữ to hơn…), nên mỗi hàng có tỉ lệ
@@ -51,10 +54,14 @@ RA_XEM = os.path.join(GOC_REPO, 'docs', 'review', 'ke-hoach-cai-thien', 'zed-co-
 # Trang phục bộ 2 "Rừng" (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-rung/YEU-CAU.md): ảnh đã cắt ở trang-phuc/bo-2-rung/<tên>-cat/
 RUNG = os.path.join(DAY, 'trang-phuc', 'bo-2-rung')
 RA_XEM_RUNG = os.path.join(GOC_REPO, 'docs', 'review', 'ke-hoach-cai-thien', 'zed-bo-rung')
-# thư mục bộ ninja (cột 2 của DONG) → tên tấm bộ Rừng (cùng tư thế, cùng số khung)
-RUNG_TEN = {'06-chet-b2': '06-chet', '07-chuong-b2': '07-chuong', '08-kiem-1-tp': '08-kiem-1', '09-kiem-2-tp': '09-kiem-2',
+# Trang phục bộ 3 "Biển" (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-bien/YEU-CAU.md): trang-phuc/bo-3-bien/<tên>-cat/
+BIEN = os.path.join(DAY, 'trang-phuc', 'bo-3-bien')
+RA_XEM_BIEN = os.path.join(GOC_REPO, 'docs', 'review', 'ke-hoach-cai-thien', 'zed-bo-bien')
+# thư mục bộ ninja (cột 2 của DONG) → tên tấm các bộ trang phục khác (Rừng, Biển: cùng tên, cùng tư thế, cùng số khung)
+BO_TEN = {'06-chet-b2': '06-chet', '07-chuong-b2': '07-chuong', '08-kiem-1-tp': '08-kiem-1', '09-kiem-2-tp': '09-kiem-2',
             '23-tram-nguyet-tp': '23-tram-nguyet'}
 R_NAM_RUNG = 18        # bán kính chinh_nam trên ảnh Rừng (áo không tay: bán kính 28 sẽ kéo điểm cầm lên cẳng tay)
+R_NAM_BIEN = 18        # bộ Biển áo ngắn tay (cẳng tay trần) → như bộ Rừng
 
 O = 96                 # cạnh ô ảnh (nguồn 96 = game 48 × net 2)
 CHAN = (48, 90)        # chân trong ô 96 (= goc [24,45] game)
@@ -358,66 +365,86 @@ def main():
             np.median(cao_ng) * s_cu, max(cao_ng) * s_cu, np.median(cao_ng) * s_moi, max(cao_ng) * s_moi))
     xem_truoc(os.path.join(RA_XEM, 'xem-truoc-than.png'), xem, dt, vk_meta, tam_vk, cot)
 
-    # ---------- BỘ 2 "RỪNG" (docs/review/ke-hoach-cai-thien/zed-bo-rung/YEU-CAU.md) ----------
-    # Cùng chuẩn (net 2, goc [24,45], ô 96, chân (48,90), co từng hàng theo cỡ ĐẦU so với tấm đứng của chính bộ Rừng).
-    # Vũ khí: dùng chung tấm zed-vk, vk / vk_tl / vk_cam y hệt hàng ninja → vũ khí cùng cỡ ở mọi bộ.
-    # Neo: dùng lại gan-vk/neo.json của hàng ninja tương ứng (tư thế trùng). Điểm cầm đã chỉnh trên ảnh ninja (chinh_nam, như bộ ninja)
-    # được quy đổi sang ảnh Rừng theo điểm chân + tỉ lệ chiều cao hình (k = cao hình Rừng / cao hình ninja của cùng khung), rồi chạy
-    # chinh_nam trên ảnh Rừng (bán kính R_NAM_RUNG) để bám đúng nắm tay. Góc độ, sau, dai, cam giữ nguyên.
-    print('\n===== Bộ 2 "Rừng" =====')
+    # ---------- CÁC BỘ TRANG PHỤC KHÁC (bộ 2 "Rừng", bộ 3 "Biển"): xem dung_bo ----------
+    ctx = {'dong': dong, 'neo_all': neo_all, 'dt': dt, 'vk_meta': vk_meta, 'tam_vk': tam_vk, 'than': than}
+    for bo in BO_KHAC:
+        dung_bo(ctx, **bo)
+
+
+# Các bộ trang phục dựng thêm (cùng hàm dung_bo). ten_tam = tên thư mục ảnh đã cắt <ten>-cat/ (giống nhau ở mọi bộ, xem BO_TEN).
+BO_KHAC = [
+    dict(bo='rung', nhan='Rừng', thu_muc=RUNG, ma='zed-rung', ten='Zed — trang phục Thợ Săn Rừng (bộ 2)',
+         ghi_them=' Bộ 2 "Rừng": neo dùng lại neo.json của hàng ninja tương ứng (quy đổi + chinh_nam trên ảnh Rừng); '
+                  'vũ khí dùng chung tấm zed-vk.',
+         r_nam=R_NAM_RUNG, xem=os.path.join(RA_XEM_RUNG, 'xem-truoc-rung.png')),
+    # BỘ 3 "BIỂN" (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-bien/YEU-CAU.md): áo ngắn tay (cẳng tay trần) → bán kính
+    # chinh_nam như bộ Rừng. Sót màu băng tay trắng đã sửa thẳng PNG bằng trang-phuc/bo-3-bien/sua-bang-tay.py.
+    dict(bo='bien', nhan='Biển', thu_muc=BIEN, ma='zed-bien', ten='Zed — trang phục Chiến Binh Biển (bộ 3)',
+         ghi_them=' Bộ 3 "Biển": neo dùng lại neo.json của hàng ninja tương ứng (quy đổi + chinh_nam trên ảnh Biển); '
+                  'vũ khí dùng chung tấm zed-vk.',
+         r_nam=R_NAM_BIEN, xem=os.path.join(RA_XEM_BIEN, 'xem-truoc-bien.png')),
+]
+
+
+def dung_bo(ctx, bo, nhan, thu_muc, ma, ten, ghi_them, r_nam, xem):
+    """Dựng tấm thân một bộ trang phục khác bộ ninja (bộ 2 "Rừng": docs/review/ke-hoach-cai-thien/zed-bo-rung/YEU-CAU.md;
+    bộ 3 "Biển": .../zed-bo-bien/YEU-CAU.md). Ảnh: <thu_muc>/<tên>-cat/<tên>/khung-NN.png (tên theo BO_TEN).
+    Cùng chuẩn (net 2, goc [24,45], ô 96, chân (48,90), co từng hàng theo cỡ ĐẦU so với tấm đứng của chính bộ đó; đứng/đi/chạy neo
+    ngang theo tâm đầu — NEO_DAU/DAU_X). Vũ khí: dùng chung tấm zed-vk, vk / vk_tl / vk_cam y hệt hàng ninja → vũ khí cùng cỡ ở mọi bộ.
+    Neo: dùng lại gan-vk/neo.json của hàng ninja tương ứng (tư thế trùng). Điểm cầm đã chỉnh trên ảnh ninja (chinh_nam, như bộ ninja)
+    được quy đổi sang ảnh bộ này theo điểm chân + tỉ lệ chiều cao hình (k = cao hình bộ này / cao hình ninja của cùng khung), rồi chạy
+    chinh_nam trên ảnh bộ này (bán kính r_nam) để bám đúng nắm tay. Góc độ, sau, dai, cam giữ nguyên."""
+    dong, neo_all, dt, vk_meta, tam_vk, than = (ctx[k] for k in ('dong', 'neo_all', 'dt', 'vk_meta', 'tam_vk', 'than'))
+    print('\n===== Bộ "%s" =====' % nhan)
     ninja_fr = {thu: fr for k, thu, gi, lap, fr in dong}
     dong_r, neo_r, ve_ninja = [], {}, {}
     for k, thu, gi, lap in DONG:
-        ten = RUNG_TEN.get(thu, thu)
-        fr = doc_dong(ten, os.path.join(RUNG, ten + '-cat'))
-        assert len(fr) == len(ninja_fr[thu]), '%s: %d khung, ninja %d' % (ten, len(fr), len(ninja_fr[thu]))
-        dong_r.append((k, ten, gi, lap, fr))
-        ve_ninja[ten] = thu
+        tt = BO_TEN.get(thu, thu)
+        fr = doc_dong(tt, os.path.join(thu_muc, tt + '-cat'))
+        assert len(fr) == len(ninja_fr[thu]), '%s: %d khung, ninja %d' % (tt, len(fr), len(ninja_fr[thu]))
+        dong_r.append((k, tt, gi, lap, fr))
+        ve_ninja[tt] = thu
         if thu in neo_all:
-            neo_r[ten] = neo_all[thu]
+            neo_r[tt] = neo_all[thu]
     H_r = float(np.median([f['bb'][3] - f['bb'][1] for f in dong_r[0][4]]))
     s_r = CAO_96 / H_r
-    print('Chiều cao Zed đứng bộ Rừng (nguồn): %.1f điểm ảnh; s = %.5f' % (H_r, s_r))
+    print('Chiều cao Zed đứng bộ %s (nguồn): %.1f điểm ảnh; s = %.5f' % (nhan, H_r, s_r))
     lech = []
 
-    def vk_rung(k, n):
+    def vk_bo(k, n):
         return {kk: dt[k][kk] for kk in ('vk', 'vk_tl', 'vk_cam')}
 
     def doi(fn, fr_, x, y):
         k_ = (fr_['bb'][3] - fr_['bb'][1]) / (fn['bb'][3] - fn['bb'][1])
         return fr_['chan'][0] + (x - fn['chan'][0]) * k_, fr_['chan'][1] + (y - fn['chan'][1]) * k_
 
-    def neo_rung(ten, i, f, kk):
-        fn = ninja_fr[ve_ninja[ten]][i]
+    def neo_bo(tt, i, f, kk):
+        fn = ninja_fr[ve_ninja[tt]][i]
         xn, yn = chinh_nam(fn['im'], kk[0], kk[1])
         x0, y0 = doi(fn, f, xn, yn)
-        x, y = chinh_nam(f['im'], x0, y0, R_NAM_RUNG)
+        x, y = chinh_nam(f['im'], x0, y0, r_nam)
         lech.append(math.hypot(x - x0, y - y0))
         t2 = None
         if len(kk) > 4:
-            t2 = chinh_nam(f['im'], *doi(fn, f, *chinh_nam(fn['im'], *kk[4])), R_NAM_RUNG)
+            t2 = chinh_nam(f['im'], *doi(fn, f, *chinh_nam(fn['im'], *kk[4])), r_nam)
         return x, y, t2
 
-    tam_r, dt_r, xem_r, dau_r, r_hang_r, tran_r, cot_r = dung_than(dong_r, neo_r, s_r, vk_rung, neo_rung)
-    rung = dict(than)
-    rung.update({'ma': 'zed-rung', 'ten': 'Zed — trang phục Thợ Săn Rừng (bộ 2)', 'tam': png_b64(tam_r), 'dong_tac': dt_r,
-                 'bo': 'rung',
-                 'ghi_chu': than['ghi_chu'] + ' Bộ 2 "Rừng": neo dùng lại neo.json của hàng ninja tương ứng (quy đổi + chinh_nam trên ảnh Rừng); '
-                            'vũ khí dùng chung tấm zed-vk.'})
-    ghi_tep('zed-rung', rung)
-    print('Tấm thân Rừng: %d×%d' % (tam_r.width, tam_r.height))
+    tam_r, dt_r, xem_r, dau_r, r_hang_r, tran_r, cot_r = dung_than(dong_r, neo_r, s_r, vk_bo, neo_bo)
+    tep = dict(than)
+    tep.update({'ma': ma, 'ten': ten, 'tam': png_b64(tam_r), 'dong_tac': dt_r, 'bo': bo, 'ghi_chu': than['ghi_chu'] + ghi_them})
+    ghi_tep(ma, tep)
+    print('Tấm thân %s: %d×%d' % (nhan, tam_r.width, tam_r.height))
     if tran_r:
         print('  Tràn ô 96×96 đã xử lý: ' + ', '.join(tran_r))
     if lech:
-        print('  chinh_nam trên ảnh Rừng dời điểm cầm (điểm ảnh nguồn): trung vị %.1f, lớn nhất %.1f, %d điểm' % (
-            float(np.median(lech)), max(lech), len(lech)))
-    print('| Hàng Rừng | r_hang | Đầu (ô 96) | Cao người TV (ô 96) |')
+        print('  chinh_nam trên ảnh %s dời điểm cầm (điểm ảnh nguồn): trung vị %.1f, lớn nhất %.1f, %d điểm' % (
+            nhan, float(np.median(lech)), max(lech), len(lech)))
+    print('| Hàng %s | r_hang | Đầu (ô 96) | Cao người TV (ô 96) |' % nhan)
     print('|---|---|---|---|')
-    for k, ten, gi, lap, fr in dong_r:
-        sk = s_r * r_hang_r[ten]
-        print('| %s | %.3f | %.1f | %.1f |' % (ten, r_hang_r[ten], dau_r[ten][0] * sk, np.median([f['bb'][3] - f['bb'][1] for f in fr]) * sk))
-    xem_truoc(os.path.join(RA_XEM_RUNG, 'xem-truoc-rung.png'), xem_r, dt_r, vk_meta, tam_vk, cot_r)
-
+    for k, tt, gi, lap, fr in dong_r:
+        sk = s_r * r_hang_r[tt]
+        print('| %s | %.3f | %.1f | %.1f |' % (tt, r_hang_r[tt], dau_r[tt][0] * sk, np.median([f['bb'][3] - f['bb'][1] for f in fr]) * sk))
+    xem_truoc(xem, xem_r, dt_r, vk_meta, tam_vk, cot_r)
 
 if __name__ == '__main__':
     main()

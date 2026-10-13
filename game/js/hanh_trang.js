@@ -91,6 +91,9 @@
         G.persist(); G.sfx && G.sfx('ui');
         return true;
       }
+      // còn bộ chưa mở (vd. đã có Rừng, chưa có Biển) → nhắc cách mở bộ kế tiếp dưới nút
+      const kh = G.ZED_BO_KEYS.find((k) => !G.zedBoMo(k, sv)), rk = kh ? G.REGIONS[G.zedBoVung(kh)] : null;
+      if (rk) tx(G.t('Hạ {0} để mở {1}', rk.bossName, G.tv(G.ZED_BO[kh].ten)), CX + 56, CY + 24, 104, { size: 6, align: 'center', color: SOFT });
       return false;
     }
     tx(ten, CX + 56, CY + 13, 104, { size: 6.5, bold: true, align: 'center', color: TXT });

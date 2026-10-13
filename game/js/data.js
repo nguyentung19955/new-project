@@ -220,12 +220,15 @@
   // TRANG PHỤC ZED (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-rung): mỗi bộ = nguyên bộ hình Zed mặc sẵn bộ đó (js/zed_moi.js
   // chọn tấm theo bộ đang mặc; vũ khí, nhịp, neo như nhau). Lưu ở save.zed.bo ('ninja' | 'rung'; không có = 'ninja') và save.zed.boMo
   // (các bộ đã mở). Bộ Rừng mở khi hạ trùm vùng Rừng già (js/stage.js; bản lưu cũ đã có sao ải trùm Rừng thì tự mở, js/engine.js fixSave).
-  // Mở rồi mặc được ở mọi vùng. Cờ thử: ?zedbo=rung (mặc ngay bộ Rừng, không cần mở khoá, không ghi vào bản lưu).
+  // Mở rồi mặc được ở mọi vùng. Cờ thử: ?zedbo=rung / ?zedbo=bien (mặc ngay bộ đó, không cần mở khoá, không ghi vào bản lưu).
+  // Bộ 3 'bien' (docs/review/ke-hoach-cai-thien/zed-bo-bien) mở khi hạ trùm Hang biển — cùng đường mở khoá/mở bù/báo như bộ Rừng.
   G.ZED_BO = {
     ninja: { ten: 'Ninja Bóng Đêm', tam: 'zed-moi' },
     rung: { ten: 'Thợ Săn Rừng', tam: 'zed-rung', vung: 'Rừng già' },
+    // bộ 3 "Biển" (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-bien): mở khi hạ trùm vùng Hang biển (vùng thứ 2), như bộ Rừng
+    bien: { ten: 'Chiến Binh Biển', tam: 'zed-bien', vung: 'Hang biển' },
   };
-  G.ZED_BO_KEYS = ['ninja', 'rung'];
+  G.ZED_BO_KEYS = ['ninja', 'rung', 'bien'];
   G.ZED_BO_THU = null;
   try { const m = typeof location !== 'undefined' && /[?&]zedbo=([a-z]+)(&|$)/.exec(location.search || ''); if (m && G.ZED_BO[m[1]]) G.ZED_BO_THU = m[1]; } catch (e) { /* giữ mặc định */ }
   // chỉ số vùng của bộ (vùng có trùm mở bộ đó); không tìm thấy tên vùng thì lấy vùng đầu tiên
