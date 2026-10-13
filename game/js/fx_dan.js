@@ -34,7 +34,7 @@
   }
 
   // Hình đạn nhìn về bên phải, tâm ở giữa ô 17x17. f: khung hoạt hình (0, 1). Mỗi hình trả về các điểm ảnh [x, y, màu].
-  const SZ = 17, C0 = 8;
+  const SZ = 17;
   const DK = '#1a0a0c'; // viền tối của đạn quái
   const LOOK = {
     // bọt nước của quái biển: tròn, trong, vành sáng

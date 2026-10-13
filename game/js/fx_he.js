@@ -121,7 +121,6 @@
     }
   }
   // ---------- ĐỘC: vệt xanh lục pha tím, nhỏ giọt ----------
-  const VENOM = ['#e6ffc0', '#c2f58a', '#6fcf3a', '#9a5fd6', '#6a3fa0', '#3f2a66'];
   const PURPLE = ['#e2c8ff', '#b98af0', '#9a5fd6', '#6a3fa0'];
   // Gọn nhẹ: hạt và vệt của đòn độc chỉ xanh lục (không đốm tím lẫn vào vũng/mây độc); tắt cờ thì pha tím như cũ
   const TIM = () => (G.goNhu() ? RAMP.poison : PURPLE);

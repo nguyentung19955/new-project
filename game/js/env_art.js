@@ -123,7 +123,6 @@
   // ---------- vùng đã có vật trang trí ----------
   const keep = (R, x0, x1) => R.kept.push([x0, x1]);
   const free = (R, x0, x1) => !R.kept.some((k) => x0 < k[1] && x1 > k[0]);
-  const ri = (rn, a, b) => a + Math.floor(rn() * (b - a + 1));
 
   // ---------- sàn ----------
   const ROWS = [Y, 151, 162, 175, 190, 208, 229, LIP];
@@ -719,7 +718,7 @@
   }
   function cFlood(R) {
     const rn = R.rn, w = R.w, sx = w - 188, sh = R.shrink;
-    const foam = 'rgba(225,245,255,0.8)', wl = 'rgba(143,208,234,0.4)';
+    const wl = 'rgba(143,208,234,0.4)';
     // vùng nước sâu bên phải, nơi Ngư Tinh trồi lên
     r(sx, Y, 188, H - Y, C.waterD);
     r(sx + 60, Y + 30, 128, H - Y - 30, '#0e2c42');

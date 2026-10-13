@@ -836,7 +836,7 @@
   }
   function drawKid(c, key, x, y, face, o) {
     const sv = G.save;
-    try { G.art.hero(c, Object.assign({ x: Math.round(x), y: Math.round(y), face, key, move: false, t: S.t, atk: -1, dodge: -1, weapon: null, helm: null, armor: null, roundShadow: true }, o || {})); } catch (e) { p(c, x - 4, y - 18, 9, 18, '#c8402e'); }
+    try { G.art.hero(c, Object.assign({ x: Math.round(x), y: Math.round(y), face, key, move: false, t: S.t, atk: -1, dodge: -1, weapon: null, roundShadow: true }, o || {})); } catch (e) { p(c, x - 4, y - 18, 9, 18, '#c8402e'); }
     void sv;
   }
   // ======================= chuyển động môi trường của làng (VFX Phase 4) =======================
@@ -1245,7 +1245,4 @@
   // Đường nét đứt nối hai điểm trên tranh
   VS.mapDash = function (c, a, b, col) { const n = Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / 4); for (let j = 1; j < n; j++) if (j % 2) p(c, a[0] + ((b[0] - a[0]) * j) / n, a[1] + ((b[1] - a[1]) * j) / n, 2, 2, col); };
   VS.putNpc = putNpc;
-
-  // Cảnh chạy riêng (dùng để xem thử khi chưa ghép vào màn làng của game)
-  G.VillageDemo = { enter() { VS.enter({ from: 'stage' }); }, update(dt) { VS.update(dt, false); }, draw() { VS.draw(); } };
 })();

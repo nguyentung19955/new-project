@@ -731,7 +731,6 @@
   }
 
   // ---------- đòn cận chiến ----------
-  const stageOf = (w) => (w ? G.wStage(w) : 0);
   // Hạt theo hệ văng ra từ vệt chém (vũ khí mốc 2-3)
   function elemBits(el, x, y, n, dir, sp) {
     const P_ = pal(el);

@@ -163,7 +163,6 @@
       for (let i = 0; i < 3; i++) { const a = G.rnd() * TAU, d = i ? r * 0.5 : 0; addZone('circle', { x: clamp(x + Math.cos(a) * d, w.x0, w.x1), y: clamp(y + Math.sin(a) * d * 0.7, w.y0, w.y1), r: Math.round(r * 0.45) }, 0, dmg * 0.6, 'fire', { pool: true, life: 3.2, tick: 0.3 }); }
     }
   }
-  G.mobBlast = blast;
   // Đòn nổ trúng em bé: Băng thì đóng băng ngắn.
   function onBlastHit(el) { return el === 'ice' ? () => { const P = W().P; P.frozenT = Math.max(P.frozenT || 0, 0.65); FX('text', P.x, P.y - 48, 'Đóng băng!', '#bfeaff', 8); } : null; }
 
@@ -193,7 +192,6 @@
     const w = W(), d = e.don, cols = d.mau || null;
     w.projs.push(Object.assign({ team: 'enemy', kind: 'orb', x: e.x + Math.cos(a) * 8, y: e.y + Math.sin(a) * 6, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, t: 3, dmg: e.dmg, el: null, src: e, col: cols ? cols[1] : null, col2: cols ? cols[0] : null, z: Math.min(18, e.h * 0.45) }, o || {}));
   }
-  G.mobShoot = shoot;
   // Bom: bay từ (x0, y0) tới (x, y) trong fl giây, nằm đếm ngược fuse giây (vòng đỏ đầy dần), rồi nổ.
   function bomb(e, x, y, fl, fuse, r, o) {
     const w = W(), el = regEl();
@@ -207,7 +205,6 @@
     w.spawns = w.spawns || [];
     w.spawns.push({ role, x: clamp(x, w.x0 + 6, w.x1 - 6), y: clamp(y, w.y0 + 4, w.y1 - 4), t: 0.8, t0: 0.8, add: true, opt: Object.assign({ add: true }, o || {}) });
   }
-  G.mobSummonSpot = summon;
 
   // ---------- cập nhật mỗi khung ----------
   const G_mob = (G.mob = {});
@@ -495,17 +492,6 @@
   const p = (c, x, y, w, h, col) => { c.fillStyle = col; c.fillRect(Math.round(x), Math.round(y), w, h); };
 
   // ---------- vùng báo trước: quét từng hàng điểm ảnh, kiểu giống vùng tròn của art.js ----------
-  // f(px, py) trả 0 (ngoài), 1 (trong), 2 (phần đã đầy theo thời gian), 3 (viền)
-  function scan(c, x0, y0, x1, y1, f, cols) {
-    x0 = Math.floor(x0); y0 = Math.floor(y0); x1 = Math.ceil(x1); y1 = Math.ceil(y1);
-    for (let y = y0; y <= y1; y++) {
-      let run = -1, lv = 0;
-      for (let x = x0; x <= x1 + 1; x++) {
-        const v = x <= x1 ? f(x + 0.5, y + 0.5) : 0;
-        if (v !== lv) { if (lv) { c.fillStyle = cols[lv - 1]; c.fillRect(run, y, x - run, 1); } run = x; lv = v; }
-      }
-    }
-  }
   function zcols(z) {
     const tele = z.t > 0, blink = Math.floor(G.time * 10) % 2;
     if (!tele) { const a = (0.45 * clamp((z.life || 0) / 0.12, 0, 1)).toFixed(2); return ['rgba(255,244,210,' + a + ')', 'rgba(255,244,210,' + a + ')', 'rgba(255,255,255,' + a + ')']; } // chớp sáng nhẹ lúc nổ
@@ -714,7 +700,6 @@
   G.mobIconCo = IC_CO; // cho bài kiểm tra
   // Số biểu tượng đang hiện trên đầu một con quái (js/linhkhi.js dùng để nâng huy hiệu hệ lên trên hàng biểu tượng, khỏi che nhau).
   G.mobIconN = (e) => (e && e.art && e.dying == null ? (e.trait ? 1 : 0) + (e.spikeUp > 0 ? 1 : 0) + (e.role === 'shield' && e.brokeT > 0 ? 1 : 0) : 0);
-  G.mobIcon = icon;
   // Mặt khiên của quái giáp: vệt cong vàng ở phía trước (biết phải vòng ra sau)
   function shieldArc(c, e) {
     const f = e.face, r = e.r + 5;

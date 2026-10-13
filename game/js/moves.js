@@ -269,7 +269,6 @@
   // V6: đang đẩy cần thì tự ngắm chỉ bỏ qua quái ở HẲN phía sau lưng (lệch quá ~100 độ so với hướng cần), để không lao ngược;
   // quái ở trước mặt hoặc hai bên vẫn được ngắm như cũ. Không đẩy cần thì như cũ: quái gần nhất mọi hướng.
   // (Hotfix 10/10: nón ±60 độ quá hẹp — giáo đâm theo hướng cần thay vì vào quái lệch bên.)
-  const CONE = -0.17; // cos 100 độ
   function inCone(P, e) {
     if (G.AIM_CONE == null || P.stickX == null) return true; // chủ dự án 10/10: điện thoại khó nhắm → luôn tự ngắm vào quái gần nhất mọi hướng (đặt G.AIM_CONE = số cos để bật lại nón)
     const dx = e.x - P.x, dy = (e.y - P.y) / ZK(), d = Math.hypot(dx, dy);

@@ -41,7 +41,6 @@
     }
     return c.hat;
   }
-  fx.capNhan = nhan;
 
   // ---------- VÒNG PHÉP (AoE): xuất hiện -> đỉnh -> tan, vòng ngoài, vòng chấm xoay, ký tự xoay ----------
   // Chỉ là hình (nằm trên sàn, lớp 0). Bán kính hình có thể khác vùng trúng của luật: không đọc lại để tính trúng.

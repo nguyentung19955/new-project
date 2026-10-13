@@ -564,7 +564,6 @@
     });
     put(cv, x - 1, y - 1, o.dim ? 0.5 : 1);
   };
-  T.swordIcon = function (cx, cy) { put(layer('ic|sword', 12, 11, () => bmp(0, 0, BM.sword, { s: '#f4f0e6', d: '#9fb0bd', h: '#e0a63a', w: '#ffffff', k: '#16131a' })), cx - 6, cy - 5); };
 
   // ---------- sao ----------
   T.stars = function (cx, y, n, of, o) {
@@ -648,7 +647,6 @@
 
   // ---------- dải tài nguyên trên cùng ----------
   // parts: [[chữ, màu], ...] xếp từ trái; right: chữ bên phải (tên hero, cấp)
-  T.TOP_H = 15;
   T.topBar = function (items, right) {
     const mx = Math.ceil(G.mx || 0), w = 480 + mx * 2;
     put(layer('top|' + w, w, 17, () => {
@@ -826,17 +824,6 @@
       x += ih + 1.5 + w + (o.gap == null ? 7 : o.gap);
     }
     return x;
-  };
-  // Đổi một bảng giá { gold, ore, stones, mat: [..], shard: [..] } thành dãy cho T.resRow; món nào chưa đủ thì chữ màu cam.
-  T.costItems = function (c) {
-    const sv = G.save, a = [], col = (ok) => (ok ? C.text : '#ff9a5a');
-    if (!c) return a;
-    if (c.gold) a.push(['gold', c.gold, col(sv.gold >= c.gold)]);
-    if (c.ore) a.push(['ore', c.ore, col(sv.ore >= c.ore)]);
-    if (c.stones) a.push(['stone', c.stones, col(sv.stones >= c.stones)]);
-    if (c.mat) c.mat.forEach((n, i) => { if (n) a.push(['mat' + i, n, col(sv.mats[i] >= n)]); });
-    if (c.shard) c.shard.forEach((n, i) => { if (n) a.push(['shard' + i, n, col(sv.shards[i] >= n)]); });
-    return a;
   };
 
   // ---------- đổi cách vẽ chung của game sang chủ đề này ----------

@@ -86,8 +86,7 @@
   //  - Không rơi vũ khí, quần áo nữa: thay bằng linh khí / vàng (G.ROI_MOI). Trang phục chỉ còn 4 bộ của Zed, mỗi bộ nâng 3 cấp
   //    bằng linh khí + vàng (G.BO_MOI; skill của từng cấp làm ở đợt 3, móc rỗng G.boSkill trong js/vk_moi.js).
   //  - Luật, chuyển bản lưu cũ, giao diện: js/vk_moi.js và js/vk_moi_lang.js.
-  // Đợt 2 (YEU-CAU-2-DON-CU.md): bỏ cờ quay lui ?hethongcu=1 — luật cũ không còn. G.HE_MOI luôn true (giữ tên cho mã/công cụ còn đọc).
-  G.HE_MOI = true;
+  // Đợt 2 (YEU-CAU-2-DON-CU.md): bỏ cờ quay lui ?hethongcu=1 — luật cũ không còn (cờ G.HE_MOI đã xoá khi dọn code 13/10).
   G.VK_MOI = {
     loai: ['sword', 'spear', 'hammer', 'bow'], // 4 vũ khí (thứ tự hiện trong bảng)
     // Thứ tự xoay vòng của bản lưu mới: kiếm rồi phi tiêu như hai món đầu game cũ (ải hướng dẫn dạy đổi sang phi tiêu).
@@ -234,8 +233,7 @@
   // (bản lưu, hình, cây chưởng đều theo khoá này), chỉ đổi TÊN HIỂN THỊ. Ba bạn Cu Tèo, Cái Bống, Cu Lì vẫn bị yêu tinh bắt,
   // vẫn được cứu sau mỗi trùm vùng và ngồi chơi ở sân đình (NPC), nhưng không chơi được nữa: khi được cứu, bạn đó DẠY Zed nét riêng
   // của mình (nội tại + nét riêng của chưởng + sở trường một vũ khí), cấp đúng 1 lần, lưu ở save.zed.hoc.
-  // Đợt 2 (YEU-CAU-2-DON-CU.md): bỏ cờ ?zed=0 — Zed là nhân vật duy nhất. G.ZED luôn true (giữ tên cho mã/công cụ còn đọc).
-  G.ZED = true;
+  // Đợt 2 (YEU-CAU-2-DON-CU.md): bỏ cờ ?zed=0 — Zed là nhân vật duy nhất (cờ G.ZED đã xoá khi dọn code 13/10).
   // Nét mỗi bạn dạy Zed. Số đã hạ so với khi bạn đó còn chơi được, vì Zed gom đủ cả ba (bản gốc ghi trong ngoặc).
   G.ZED_DAY = {
     hunter: {
@@ -295,7 +293,6 @@
   };
   // BỘ ZED MỚI (13/10/2026, docs/review/ke-hoach-cai-thien/zed-tich-hop): hình Zed vẽ từ bộ ảnh mới (js/zed_moi.js), vũ khí 4 cấp gắn
   // theo neo, cung đổi thành PHI TIÊU (chỉ đổi tên và hình; nhịp, sát thương, cách giữ y như cung). Đợt 2: bỏ cờ ?zedmoi=0, luôn bật.
-  G.ZED_MOI = true;
   G.WTYPES.bow.name = 'Phi tiêu'; G.WTYPES.bow.special = 'Mưa Phi Tiêu';
   // ZED CẦM VŨ KHÍ LÚC ĐỨNG / ĐI / CHẠY (13/10/2026, docs/review/ke-hoach-cai-thien/zed-cam-vk): js/zed_moi.js vẽ vũ khí trong tay phải ở
   // hàng đứng/đi/chạy (hàng dung_<loại>, di_<loại>, chay_<loại> của tấm thân); lộn/trúng đòn/chết ẩn vũ khí. Tắt: ?camvk=0 (tay không như trước).
@@ -347,8 +344,6 @@
   };
   G.HEROES.smith.name = 'Zed';
   G.HEROES.smith.skillDesc = 'Nét riêng: chưởng đẩy lùi quái mạnh';
-  // Nhân vật chơi được: chỉ còn Zed
-  G.HKEYS_CHOI = ['smith'];
 
   // Cây kỹ năng: 3 nhánh, mỗi nhánh 5 nút, phải mở theo thứ tự trong nhánh.
   G.SKILLS = {

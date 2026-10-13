@@ -6,7 +6,7 @@
 (function () {
   const G = window.G, C = G.cloud, ui = G.ui, T = G.theme;
   const PER = 8, MAX = 50;
-  const SOFT = '#a9c2b4', TXT = '#f1e6c6', GOLD = '#f6dc92', GOOD = '#9be07a';
+  const SOFT = '#a9c2b4', TXT = '#f1e6c6', GOLD = '#f6dc92';
   const B = (G.bangVang = { cat: 'power', page: 0, data: {}, t: 0 });
 
   // ---------- tên ----------

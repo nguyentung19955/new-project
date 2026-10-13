@@ -243,7 +243,6 @@
       const fb = window.firebase, prov = new fb.auth.GoogleAuthProvider();
       // Mở từ biểu tượng màn hình chính (chế độ ứng dụng) hay khi cửa sổ phụ bị chặn: chuyển trang đăng nhập (redirect) thay cho cửa sổ phụ.
       const app = (window.matchMedia && (matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: fullscreen)').matches)) || navigator.standalone === true;
-      const REDIR = ['auth/popup-blocked', 'auth/operation-not-supported-in-this-environment', 'auth/web-storage-unsupported', 'auth/popup-closed-by-user'];
       const redirect = () => { try { localStorage.setItem('lk_gredir', '1'); } catch (e) { /* bỏ qua */ } return this.user.isAnonymous ? this.user.linkWithRedirect(prov) : this.auth.signInWithRedirect(prov); };
       void app; // giống Thần Thoại Việt: luôn dùng cửa sổ phụ, kể cả khi mở từ màn hình chính (chuyển trang bị mất kết quả)
       try {

@@ -943,7 +943,7 @@
   let henXoa = 0;
   function dangDung(sp) {
     try {
-      const sv = G.save, ma = sp.ma || '';
+      const ma = sp.ma || '';
       if (sp.vp) return true;
       if (sp.doi === 'em-be' || /^em-be/.test(ma)) return true; // ba bạn NPC: luôn có thể đang hiện trong làng
       return false;
@@ -1136,7 +1136,6 @@
     if (T._spriteCustom) return;
     T._spriteCustom = true;
     const res0 = T.resIcon;
-    T.resIconCode = res0;
     T.resIcon = function (kind, x, y, h) {
       const sp = SC.vatPham(kind); if (!sp) return res0.apply(this, arguments);
       h = h || 7; SC.veVatPham(G.ux, sp, x + h / 2, y + h / 2, h);

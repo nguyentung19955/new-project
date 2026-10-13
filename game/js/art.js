@@ -168,8 +168,7 @@
     healer: { skin: '#e0b08a', cloth: '#4658ac', cloth2: '#2c3878', hair: '#f2f2f2', acc: '#232c5e', w: 8 },
     wrestler: { skin: '#c98a5a', cloth: '#d0382e', cloth2: '#8a1f1a', hair: '#1e1410', acc: '#d0382e', w: 14 },
   };
-  const ARMOR_COL = { a_r1: '#9a8a6a', a_r2: '#4a7f9a', a_r3: '#7a6a62', a_moc: '#6b4a2a', a_ngu: '#3f8fb5', a_ho: '#f0ece2' };
-  const HELM_COL = { h_r1: '#d9b46a', h_r2: '#4a7f9a', h_r3: '#b0502a', h_moc: '#7a5a3a', h_ngu: '#5fb0d0', h_ho: '#f4f1ea' };
+  // (Màu mũ / áo giáp đời cũ HELM_COL, ARMOR_COL đã xoá khi dọn code 13/10: không nơi nào còn truyền o.helm / o.armor.)
   let FLK = 0; // độ sáng lên khi trúng đòn
   const K = (k) => (FLK ? lite(k, FLK) : k);
 
@@ -177,9 +176,9 @@
     const hw = L.w >> 1, big = key === 'wrestler';
     const skin = K(L.skin), skinD = K(dim(L.skin, 0.2));
     const cloth = K(L.cloth), cloth2 = K(L.cloth2), hair = K(L.hair);
-    const accRaw = o.helm && HELM_COL[o.helm] ? HELM_COL[o.helm] : L.acc;
+    const accRaw = L.acc;
     const acc = K(accRaw);
-    const armRaw = (o.armor && ARMOR_COL[o.armor]) || (big ? L.skin : L.cloth);
+    const armRaw = big ? L.skin : L.cloth;
     const torso = K(armRaw), torsoD = K(dim(armRaw, 0.22));
     if (o.dodge >= 0) {
       // lăn né: cuộn tròn, đầu xoay quanh thân
@@ -255,7 +254,6 @@
       d(-hw + ln, -11 + bob, L.w, 1, K(lite(L.cloth, 0.25)));
       q(1 + ln, -8 + bob, 5, 5, cloth);
       d(1 + ln, -4 + bob, 5, 1, cloth2);
-      if (o.armor) d(-hw + ln, top + bob, L.w, 3, torsoD);
     }
     // đầu
     q(-4 + hx0, hy, 9, 9, skin);
@@ -274,11 +272,11 @@
       const hat = K('#e8cc80'), hatD = K('#b08a45');
       d(-4 + hx0, hy + 2, 2, 6, hair);
       d(1 + hx0, hy + 2, 1, 6, K('#5a3a22'));
-      q(-9 + hx0, hy + 1, 19, 1, o.helm ? acc : hatD);
+      q(-9 + hx0, hy + 1, 19, 1, hatD);
       q(-7 + hx0, hy, 15, 1, hat);
       q(-5 + hx0, hy - 1, 11, 1, hat);
       q(-3 + hx0, hy - 2, 7, 1, hat);
-      q(-1 + hx0, hy - 3, 3, 1, o.helm ? acc : hat);
+      q(-1 + hx0, hy - 3, 3, 1, hat);
       d(-6 + hx0, hy, 5, 1, hatD);
       d(-4 + hx0, hy - 1, 3, 1, hatD);
     } else if (key === 'healer') {
@@ -298,11 +296,7 @@
       d(2 + hx0, hy + 2, 3, 1, hair);
       q(-1 + hx0, hy - 4, 3, 4, hair);
       d(-1 + hx0, hy - 1, 3, 1, acc);
-      if (o.helm) d(-4 + hx0, hy + 1, 9, 1, acc);
     }
-    if (o.helm === 'h_moc') { q(-5 + hx0, hy - 3, 2, 4, acc); q(4 + hx0, hy - 3, 2, 4, acc); q(-6 + hx0, hy - 4, 1, 2, acc); q(6 + hx0, hy - 4, 1, 2, acc); }
-    if (o.helm === 'h_ngu') { q(-1 + hx0, hy - 6, 2, 5, acc); q(-3 + hx0, hy - 4, 2, 3, acc); }
-    if (o.helm === 'h_ho') { q(-4 + hx0, hy - 3, 2, 3, acc); q(3 + hx0, hy - 3, 2, 3, acc); d(-4 + hx0, hy - 2, 1, 2, K('#d02020')); d(3 + hx0, hy - 2, 1, 2, K('#d02020')); }
     // tay trước và vũ khí
     let hx = hw + 2 + ln, hyy = -14 + bob + (mv === 0 ? 1 : 0), ang = -55, pull = 0;
     const a = o.atk;
@@ -1704,7 +1698,6 @@
     BSP.set(key, g.canvas);
     return g.canvas;
   }
-  const stage3 = (u) => (u < 0.3 ? 1 : u < 0.65 ? 2 : 3);
 
   // ===== Mộc Tinh =====
   const MCW = 150, MCH = 152, MCX = 75, MCY = 142;

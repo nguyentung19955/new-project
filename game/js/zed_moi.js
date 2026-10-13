@@ -10,7 +10,7 @@
 // Phi tiêu (thay cung): ném tay không; viên phi tiêu bay là ảnh vk-phi-tieu cấp hiện tại, xoay khi bay.
 // Trang phục (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-rung, zed-bo-bien, zed-bo-lau): tấm thân chọn theo G.zedBo() — 'ninja' = zed-moi,
 // 'rung' = zed-rung, 'bien' = zed-bien, 'lau' = zed-lau (cùng chuẩn, neo dùng lại của bộ ninja); thử nhanh: ?zedbo=rung, ?zedbo=bien, ?zedbo=lau.
-// Tắt: ?zedmoi=0 (G.ZED_MOI, js/data.js) → hình Zed cũ; ?zed=0 → game như bản trước. Ảnh chưa tải xong → vẽ hình cũ cho tới khi có.
+// Luôn bật (đợt 2 bỏ cờ ?zedmoi=0 / ?zed=0). Ảnh chưa tải xong → lớp vẽ bên trong (G.art.hero) vẽ tạm cho tới khi có.
 // CẦM VŨ KHÍ LÚC ĐỨNG / ĐI / CHẠY (13/10/2026, docs/review/ke-hoach-cai-thien/zed-cam-vk/YEU-CAU.md): hàng dung/di/chay vẽ vũ khí đang cầm
 // trong TAY PHẢI (cùng tay lúc chém) theo hàng neo riêng dung_<loại>, di_<loại>, chay_<loại> của tấm thân (cùng ảnh thân, neo + nắm tay riêng;
 // dựng bằng docs/anh-goc/zed/gan-vk/cam-vk.py + dung-zed-game.py). Lộn, trúng đòn, chết: không vũ khí. Tắt: ?camvk=0 (G.CAM_VK, js/data.js).
@@ -27,7 +27,6 @@
   const G = window.G;
   const SC = G.spriteCustom;
   if (!SC) return;
-  const bat = () => G.ZED !== false && G.ZED_MOI !== false;
   const laZed = (o) => !!o && (o.key === 'smith' || !o.key);
   const lay = (ma) => {
     const z = SC.zed && SC.zed[ma];
@@ -272,9 +271,9 @@
     h.t = t;
   }
   // Ra lệch góc dùng cho js/fx.js aimed(): hình trên không của đòn (vệt chém code, vệt đâm, hu-quet-giao...) xoay đúng góc vũ khí đang vẽ
-  // thay vì góc nhắm đầy đủ. d = info đòn của moves.js (type, move). null: không áp (Zed cũ, cờ tắt, lướt chém...) → fx giữ góc thật.
+  // thay vì góc nhắm đầy đủ. d = info đòn của moves.js (type, move). null: không áp (cờ tắt, lướt chém...) → fx giữ góc thật.
   function lechHinh(P, d) {
-    if (!hvBat() || !bat() || !P || P.aimRel == null || !isFinite(P.aimRel) || !laZed({ key: P.key }) || !layThan()) return null;
+    if (!hvBat() || !P || P.aimRel == null || !isFinite(P.aimRel) || !laZed({ key: P.key }) || !layThan()) return null;
     const mv = d && d.move;
     const loai = mv === 'dam' || mv === 'xoc' || mv === 'ban' || mv === 'banManh' ? 'dam' : mv === 'chem' || mv === 'quet' || mv === 'nen' || mv === 'nenDat' ? 'chem' : null;
     if (!loai) return null;
@@ -548,11 +547,11 @@
     if (A && typeof A.hero === 'function' && !A.hero._zedMoi) {
       const cu = A.hero;
       const moi = function (c, o) {
-        if (!dangGoiCu && laZed(o) && bat()) { try { if (ve(c, o)) return; } catch (e) { ghiLoi(e); } }
+        if (!dangGoiCu && laZed(o)) { try { if (ve(c, o)) return; } catch (e) { ghiLoi(e); } }
         const truoc = dangGoiCu; dangGoiCu = true;
         try { return cu.call(this, c, o); } finally { dangGoiCu = truoc; }
       };
-      moi._zedMoi = true; if (cu._ghepLop) moi._ghepLop = true; // js/ghep_lop.js cũng bọc lại mỗi khung: giữ dấu của nó để hai bên không bọc chồng mãi
+      moi._zedMoi = true;
       A.hero = moi;
     }
     if (A && typeof A.proj === 'function' && !A.proj._zedMoi) {
@@ -560,7 +559,7 @@
       const moi = function (c, o) {
         // phi tiêu mang hệ có ảnh hu-dan-ten-<hệ> (phi tiêu bọc lửa/nhớt/băng, js/fx_dan.js vẽ) thì để lớp trong vẽ ảnh đó
         const heAnh = o && o.he && o.he.el && G.fxAnh && G.fxAnh.co('hu-dan-ten-' + o.he.el);
-        if (o && o.team === 'player' && o.kind === 'arrow' && !G.noRender && bat() && !heAnh) { try { if (vePhiTieu(c, o)) return; } catch (e) { ghiLoi(e); } }
+        if (o && o.team === 'player' && o.kind === 'arrow' && !G.noRender && !heAnh) { try { if (vePhiTieu(c, o)) return; } catch (e) { ghiLoi(e); } }
         return cu.apply(this, arguments);
       };
       moi._zedMoi = true; A.proj = moi;
@@ -570,7 +569,7 @@
       const cu = TL.tip;
       const moi = function (o) {
         const q = cu.apply(this, arguments);
-        if (q && laZed(o) && bat()) { try { doiTip(q, o); } catch (e) { ghiLoi(e); } }
+        if (q && laZed(o)) { try { doiTip(q, o); } catch (e) { ghiLoi(e); } }
         return q;
       };
       moi._zedMoi = true; TL.tip = moi;

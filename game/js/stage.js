@@ -148,7 +148,6 @@
   }
   // Kiểu xuất hiện của một đợt: lần lượt từng con, cả đợt cùng lúc, hoặc từng tốp ba con.
   // Chỗ sắp mọc có vòng đỏ báo trước; quái mọc lên thì đẩy em bé ra khỏi vòng.
-  G.SPAWN_MODES = { one: 'Lần lượt từng con', all: 'Cả đợt cùng lúc', group: 'Từng tốp' };
   function spawnWave(list) {
     const W = S.W;
     const r = G.rnd();
@@ -1306,7 +1305,6 @@
       y += 2;
     }
     if (!R.win && !S.quit && R.tips) { panelLose(R); return; }
-    if (R.v18 === undefined) goldKeepHint(R);
     // Phần thưởng: chữ ở cột trái; vũ khí nhận được thành thẻ viền màu bậc ở cột phải (khung thẻ của chủ đề trống đồng).
     const TH = G.theme, texts = R.lines.filter((l) => !l.w), weps = R.lines.filter((l) => l.w);
     // Khối linh khí (js/linhkhi.js) nằm sát trên hàng nút: mỗi vũ khí đang mang một dòng. Phần thưởng xếp phía trên khối này.
@@ -1315,7 +1313,7 @@
     const rows = Math.max(1, Math.floor((lim - y) / 11.5));
     // dòng nổi bật (lên cấp, cứu được em bé, kỷ lục): xét trên bản tiếng Việt của dòng; dòng kỷ lục của bảng vàng mở đầu bằng ★
     const hot = (l) => { const v = viOf(R, l); return v.includes('lên cấp') || v.includes('Cứu được') || v.indexOf('· ') === 0 || v.includes('Kỷ lục') || (G.LANG !== 'vi' && l.charAt(0) === '★'); };
-    const line = (l, cx, cy) => ui.text(l, cx, cy, { size: 7.5, color: hot(l) || (R.v18 && R.v18.includes(l)) ? '#ffd27a' : '#e8dfcc', ten: G.CHU_RO !== false, tenCol: '#c9bfa6' }); // 12/10: "+128 [hình] Kinh nghiệm"
+    const line = (l, cx, cy) => ui.text(l, cx, cy, { size: 7.5, color: hot(l) ? '#ffd27a' : '#e8dfcc', ten: G.CHU_RO !== false, tenCol: '#c9bfa6' }); // 12/10: "+128 [hình] Kinh nghiệm"
     // Ảnh AI "lên cấp" (hu-len-cap, js/fx_anh.js): quầng sáng chạy lặp sau dòng chữ lên cấp. Không có tệp thì như cũ.
     if (R.up && G.fxAnh && G.fxAnh.co('hu-len-cap')) { const i = texts.slice(0, rows).findIndex((l) => typeof l === 'string' && viOf(R, l).includes('lên cấp')); if (i >= 0) G.fxAnh.ve(G.ux, 'hu-len-cap', 146, y + i * 11.5 - 2, G.time - S.modeT, 0, 0.6, false, 0.85); }
     texts.slice(0, rows).forEach((l, i) => line(l, 86, y + i * 11.5));
@@ -1368,26 +1366,6 @@
     for (let slot = 0; slot < sv.carry.length; slot++) { const g = U.swapGain(w, slot, sv); if (best == null || g > best) best = g; }
     if (!best) return null;
     return { up: best > 0, s: (best > 0 ? '▲ ' : '▼ ') + G.tv(U.gainText(best, true)) };
-  }
-  // V18 bước 1: trùm rơi món Vàng mà món đang mang (chưa Vàng) đã có linh khí → nhắc luyện món cũ lên Vàng ở Thợ Rèn để giữ linh khí.
-  // Tính một lần, thêm vài dòng lên đầu phần thưởng (R.v18 giữ các dòng đó để tô vàng).
-  function goldKeepHint(R) {
-    R.v18 = null;
-    try {
-      const sv = G.save;
-      if (!R.win || !R.lines.some((l) => l && l.w && G.wRar(l.w) === 3)) return;
-      let best = null, bm = 0;
-      for (const id of sv.carry) {
-        const w = G.weaponById(id);
-        if (!w || G.wRar(w) >= 3) continue;
-        const m = Object.values(w.marks || {}).reduce((a, b) => a + (+b || 0), 0);
-        if (m > bm) { bm = m; best = w; }
-      }
-      if (!best || bm < 1) return;
-      const msg = G.t('Món cũ {0} có {1} linh khí: luyện nó lên Vàng ở Thợ Rèn để giữ (đổi sang món mới thì linh khí không theo sang).', G.wName(best), Math.floor(bm));
-      R.v18 = ui.wrap(msg, 154, 7.5).slice(0, 3);
-      R.lines.unshift(...R.v18);
-    } catch (e) { R.v18 = null; }
   }
   // V17: VÌ SAO THUA. Đọc máu mất theo nguồn (W.hurtBy) và đòn cuối (W.lastHurt) do js/combat.js ghi; tên chiêu trùm b.skillName (js/boss.js).
   // Chưa có số liệu (bản cũ, hay khoá khác tên) thì bỏ qua, bảng thua giữ như trước. Không bao giờ được làm lỗi bảng thua.

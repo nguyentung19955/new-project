@@ -247,11 +247,6 @@
     W.zones.push(z);
     return z;
   };
-  G.zoneRect = function (x, y, w, h, t, dmg, el, extra) {
-    const z = Object.assign({ shape: 'rect', x, y, w, h, t, t0: t, dmg, el: el || null, life: 0.12 }, extra || {});
-    W.zones.push(z);
-    return z;
-  };
 
   // ---------- sát thương ----------
   G.targets = function () {
