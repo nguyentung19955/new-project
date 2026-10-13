@@ -207,26 +207,34 @@
   // TÁM HƯỚNG: chạy fn (vẽ một đòn nằm ngang theo hướng mặt như cũ) rồi xoay mọi hạt và hình vừa sinh ra theo góc nhắm thật
   // (P.aimRel, độ, so với hướng mặt). Hình trên không (vệt chém, mũi giáo) xoay quanh tay bé; hình sát đất (vết nứt, vòng sóng,
   // bụi) chỉ dời chỗ, giữ dáng nằm trên sàn. opt.ground === false: hình sát đất đã đặt đúng chỗ thật, không dời.
+  // Zed mới quay đòn theo hướng nhắm (zed-8-huong, cờ ?huongvk=0): opt.don = info đòn (type, move); G.zedMoi.lechHinh trả góc vũ khí đang
+  // vẽ (đâm/ném kẹp ±75° + nghiêng thân, chém/quét/nện ±35°) → hình TRÊN KHÔNG xoay theo góc đó cho khớp mũi vũ khí; hình sát đất vẫn dời
+  // theo góc nhắm thật (đúng chỗ trúng). null (Zed cũ, cờ tắt, hero khác): như cũ, mọi hình theo góc nhắm thật.
   function aimed(P, fn, opt) {
     const rel = P && P.aimRel ? P.aimRel : 0;
     if (!rel || CAP) { fn(); return; }
+    let relH = rel;
+    const ZM = G.zedMoi;
+    if (ZM && ZM.lechHinh && opt && opt.don) { try { const v = ZM.lechHinh(P, opt.don); if (v != null && isFinite(v)) relH = v; } catch (e) { relH = rel; } }
     const cap = { p: [], e: [] };
     CAP = cap;
     try { fn(); } finally { CAP = null; }
     const th = (rel * P.face * Math.PI) / 180, cs = Math.cos(th), sn = Math.sin(th);
+    const thH = (relH * P.face * Math.PI) / 180, csH = Math.cos(thH), snH = Math.sin(thH);
     const px = P.x, py = P.y - 13, ground = !opt || opt.ground !== false;
     const rot = (o, cx, cy) => { const dx = o.x - cx, dy = o.y - cy; o.x = cx + dx * cs - dy * sn; o.y = cy + dx * sn + dy * cs; };
+    const rotH = (o, cx, cy) => { const dx = o.x - cx, dy = o.y - cy; o.x = cx + dx * csH - dy * snH; o.y = cy + dx * snH + dy * csH; };
     for (const o of cap.p) {
       const vx = o.vx, vy = o.vy, y0 = o.y;
-      if (o.ly === 0) { if (!ground) continue; rot(o, P.x, P.y); } else rot(o, px, py);
-      o.vx = vx * cs - vy * sn; o.vy = vx * sn + vy * cs;
+      if (o.ly === 0) { if (!ground) continue; rot(o, P.x, P.y); o.vx = vx * cs - vy * sn; o.vy = vx * sn + vy * cs; }
+      else { rotH(o, px, py); o.vx = vx * csH - vy * snH; o.vy = vx * snH + vy * csH; }
       if (o.fy < 1e8) o.fy += o.y - y0;
     }
     for (const o of cap.e) {
       if (o.neo === 'khoa') continue; // ảnh AI đã tự đặt theo hướng nhắm thật (buông cung): không xoay thêm
       if (o.ly === 0 || o.neo === 'san') { if (ground) rot(o, P.x, P.y); continue; } // 'san': ảnh AI nằm trên sàn (nện đất) chỉ dời chỗ như hình sát đất
-      if (o.ty === 'ring' || o.ty === 'flash') { rot(o, px, py); continue; }
-      o.rot = th; o.px = px; o.py = py;
+      if (o.ty === 'ring' || o.ty === 'flash') { rotH(o, px, py); continue; }
+      o.rot = thH; o.px = px; o.py = py;
       if (o.ty === 'dashline') { o.sx = P.x; o.sy = P.y; }
     }
   }

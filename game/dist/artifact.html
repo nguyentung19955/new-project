@@ -53,7 +53,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.13-1305";
+(window.G = window.G || {}).VERSION = "lk-2026.10.13-1314";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -2041,6 +2041,11 @@
   // hàng đứng/đi/chạy (hàng dung_<loại>, di_<loại>, chay_<loại> của tấm thân); lộn/trúng đòn/chết ẩn vũ khí. Tắt: ?camvk=0 (tay không như trước).
   G.CAM_VK = true;
   try { if (typeof location !== 'undefined' && /[?&]camvk=0(&|$)/.test(location.search || '')) G.CAM_VK = false; } catch (e) { /* giữ mặc định */ }
+  // ĐÒN ZED MỚI QUAY THEO HƯỚNG NHẮM (13/10/2026, docs/review/ke-hoach-cai-thien/zed-8-huong): js/zed_moi.js xoay vũ khí đâm/ném quanh nắm tay
+  // theo góc nhắm thật (kẹp ±75°, quá thì nghiêng nhẹ thân trên), chém/quét/nện nghiêng đường vung tối đa ±35°; vệt/hiệu ứng (js/fx.js aimed)
+  // xoay cùng góc. Chỉ đổi HÌNH. Tắt: ?huongvk=0 (vũ khí chỉ vẽ ngang theo neo như trước).
+  G.HUONG_VK = true;
+  try { if (typeof location !== 'undefined' && /[?&]huongvk=0(&|$)/.test(location.search || '')) G.HUONG_VK = false; } catch (e) { /* giữ mặc định */ }
   // TRANG PHỤC ZED (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-rung): mỗi bộ = nguyên bộ hình Zed mặc sẵn bộ đó (js/zed_moi.js
   // chọn tấm theo bộ đang mặc; vũ khí, nhịp, neo như nhau). Lưu ở save.zed.bo ('ninja' | 'rung'; không có = 'ninja') và save.zed.boMo
   // (các bộ đã mở). Bộ Rừng mở khi hạ trùm vùng Rừng già (js/stage.js; bản lưu cũ đã có sao ải trùm Rừng thì tự mở, js/engine.js fixSave).
@@ -17235,26 +17240,34 @@
   // TÁM HƯỚNG: chạy fn (vẽ một đòn nằm ngang theo hướng mặt như cũ) rồi xoay mọi hạt và hình vừa sinh ra theo góc nhắm thật
   // (P.aimRel, độ, so với hướng mặt). Hình trên không (vệt chém, mũi giáo) xoay quanh tay bé; hình sát đất (vết nứt, vòng sóng,
   // bụi) chỉ dời chỗ, giữ dáng nằm trên sàn. opt.ground === false: hình sát đất đã đặt đúng chỗ thật, không dời.
+  // Zed mới quay đòn theo hướng nhắm (zed-8-huong, cờ ?huongvk=0): opt.don = info đòn (type, move); G.zedMoi.lechHinh trả góc vũ khí đang
+  // vẽ (đâm/ném kẹp ±75° + nghiêng thân, chém/quét/nện ±35°) → hình TRÊN KHÔNG xoay theo góc đó cho khớp mũi vũ khí; hình sát đất vẫn dời
+  // theo góc nhắm thật (đúng chỗ trúng). null (Zed cũ, cờ tắt, hero khác): như cũ, mọi hình theo góc nhắm thật.
   function aimed(P, fn, opt) {
     const rel = P && P.aimRel ? P.aimRel : 0;
     if (!rel || CAP) { fn(); return; }
+    let relH = rel;
+    const ZM = G.zedMoi;
+    if (ZM && ZM.lechHinh && opt && opt.don) { try { const v = ZM.lechHinh(P, opt.don); if (v != null && isFinite(v)) relH = v; } catch (e) { relH = rel; } }
     const cap = { p: [], e: [] };
     CAP = cap;
     try { fn(); } finally { CAP = null; }
     const th = (rel * P.face * Math.PI) / 180, cs = Math.cos(th), sn = Math.sin(th);
+    const thH = (relH * P.face * Math.PI) / 180, csH = Math.cos(thH), snH = Math.sin(thH);
     const px = P.x, py = P.y - 13, ground = !opt || opt.ground !== false;
     const rot = (o, cx, cy) => { const dx = o.x - cx, dy = o.y - cy; o.x = cx + dx * cs - dy * sn; o.y = cy + dx * sn + dy * cs; };
+    const rotH = (o, cx, cy) => { const dx = o.x - cx, dy = o.y - cy; o.x = cx + dx * csH - dy * snH; o.y = cy + dx * snH + dy * csH; };
     for (const o of cap.p) {
       const vx = o.vx, vy = o.vy, y0 = o.y;
-      if (o.ly === 0) { if (!ground) continue; rot(o, P.x, P.y); } else rot(o, px, py);
-      o.vx = vx * cs - vy * sn; o.vy = vx * sn + vy * cs;
+      if (o.ly === 0) { if (!ground) continue; rot(o, P.x, P.y); o.vx = vx * cs - vy * sn; o.vy = vx * sn + vy * cs; }
+      else { rotH(o, px, py); o.vx = vx * csH - vy * snH; o.vy = vx * snH + vy * csH; }
       if (o.fy < 1e8) o.fy += o.y - y0;
     }
     for (const o of cap.e) {
       if (o.neo === 'khoa') continue; // ảnh AI đã tự đặt theo hướng nhắm thật (buông cung): không xoay thêm
       if (o.ly === 0 || o.neo === 'san') { if (ground) rot(o, P.x, P.y); continue; } // 'san': ảnh AI nằm trên sàn (nện đất) chỉ dời chỗ như hình sát đất
-      if (o.ty === 'ring' || o.ty === 'flash') { rot(o, px, py); continue; }
-      o.rot = th; o.px = px; o.py = py;
+      if (o.ty === 'ring' || o.ty === 'flash') { rotH(o, px, py); continue; }
+      o.rot = thH; o.px = px; o.py = py;
       if (o.ty === 'dashline') { o.sx = P.x; o.sy = P.y; }
     }
   }
@@ -19678,7 +19691,7 @@
   const baseSwing = fx.swing;
   // o: { type, move, step, combo, reach, depth, el, lv, stage, charge, level }
   // Tám hướng: vẽ đòn nằm ngang như cũ rồi xoay theo góc nhắm (K.aimed). Nện đất đã đặt vết nứt đúng chỗ thật nên không dời hình sát đất.
-  api('mvSwing', (P, o) => { K.aimed(P, () => { swing(P, o); decorate(P, o); }, { ground: o.move !== 'nenDat' }); });
+  api('mvSwing', (P, o) => { K.aimed(P, () => { swing(P, o); decorate(P, o); }, { ground: o.move !== 'nenDat', don: o }); }); // don: Zed mới xoay hình trên không theo góc vũ khí (zed-8-huong)
   function swing(P, o) {
     const f = P.face, PL = pal(o.el);
     if (o.move === 'luot') {
@@ -19697,11 +19710,14 @@
       // buông dây cung đã căng: chớp sáng ở cung, vòng gió, giật lùi
       // Sửa góp ý 1: chớp sáng, vòng gió và vệt gió đi theo hướng ngắm thật (P.aimUx, P.aimUy), không chỉ nằm ngang.
       const h = hand(P), c = o.charge || 0, ux = P.aimUx != null ? P.aimUx : f, uy = P.aimUy || 0;
+      // Zed mới (zed-8-huong): ảnh ở tay xoay đúng góc tay ném đang vẽ (kẹp ±75° + nghiêng thân); vệt gió, giật lùi vẫn theo góc thật
+      let ax = ux, ay = uy;
+      try { const ZM = G.zedMoi, gH = ZM && ZM.lechHinh ? ZM.lechHinh(P, o) : null; if (gH != null && isFinite(gH)) { const b = (gH * Math.PI) / 180; ax = f * Math.cos(b); ay = Math.sin(b); } } catch (e) { ax = ux; ay = uy; }
       // Ảnh AI hu-ban-cung (mép trái của hình là tay cầm cung, luồng gió chĩa theo hướng ngắm thật): thay chớp sáng và vòng gió, vệt gió giữ nguyên
       // Bộ Zed mới (phi tiêu): đòn ném mạnh / ném chùm dùng ảnh hu-phi-tieu-chum (tích lực rồi bung rẻ quạt, mép trái ở tay); chưa có thì hu-ban-cung
       const chum = G.ZED_MOI !== false ? K.anhHe('hu-phi-tieu-chum', o.el) : null;
       const maB = chum || K.anhHe('hu-ban-cung', o.el);
-      if (!maB || !K.anhHuong(maB, h.x, h.y, ux, uy, { sc: chum ? (14 + 8 * c) / 22 : (12 + 8 * c) / 20 })) {
+      if (!maB || !K.anhHuong(maB, h.x, h.y, ax, ay, { sc: chum ? (14 + 8 * c) / 22 : (12 + 8 * c) / 20 })) {
         add({ ty: 'flash', x: h.x + ux * 6, y: h.y + uy * 6, r: 6 + 4 * c, t: 0.1, c: '#ffffff', c2: PL.c2, ly: 1 });
         addRing(h.x + ux * 4, h.y + uy * 4, 2, 10 + 8 * c, 0.18, PL.c2, 2, 1);
       }
@@ -28193,6 +28209,11 @@ MA._xong();
 // CẦM VŨ KHÍ LÚC ĐỨNG / ĐI / CHẠY (13/10/2026, docs/review/ke-hoach-cai-thien/zed-cam-vk/YEU-CAU.md): hàng dung/di/chay vẽ vũ khí đang cầm
 // trong TAY PHẢI (cùng tay lúc chém) theo hàng neo riêng dung_<loại>, di_<loại>, chay_<loại> của tấm thân (cùng ảnh thân, neo + nắm tay riêng;
 // dựng bằng docs/anh-goc/zed/gan-vk/cam-vk.py + dung-zed-game.py). Lộn, trúng đòn, chết: không vũ khí. Tắt: ?camvk=0 (G.CAM_VK, js/data.js).
+// ĐÒN QUAY THEO HƯỚNG NHẮM (13/10/2026, docs/review/ke-hoach-cai-thien/zed-8-huong/YEU-CAU.md): góc nhắm thật P.aimRel (độ, so với hướng
+// mặt sau khi lật, dương = chúc xuống; js/moves.js setAim) chốt lúc ra đòn → đâm/ném: cộng vào góc vũ khí, xoay quanh nắm tay, kẹp ±75°,
+// quá ±75° thì nghiêng thân trên quanh eo tối đa 12°; chém/quét/nện: nghiêng cả đường vung tối đa ±35°. Vào thế êm (làm mượt theo thời
+// gian + nối góc như gocMuot). Ném phi tiêu / đấm tay không (không có neo vũ khí): cánh tay đang duỗi (bảng TAY) xoay quanh gốc tay cùng góc.
+// Vệt/hiệu ứng: mũi vũ khí (doiTip) đã xoay theo; js/fx.js aimed() hỏi G.zedMoi.lechHinh. Tắt: ?huongvk=0.
 (function () {
   const G = window.G;
   const SC = G.spriteCustom;
@@ -28346,7 +28367,84 @@ MA._xong();
     const ten = s.ten + '_' + VK_LOAI[w.type];
     return D.dong_tac[ten] ? { ten, i: s.i, fl: s.fl, cam: 1 } : null;
   }
-  function vkCua(o, D, s) {
+  // ---------- ĐÒN QUAY THEO HƯỚNG NHẮM (zed-8-huong) ----------
+  // HV_DAM: hàng đâm / ném (vũ khí xoay quanh nắm tay theo góc nhắm, kẹp ±KEP_DAM; quá thì nghiêng thân trên quanh eo, tối đa NGHIENG).
+  // HV_CHEM: hàng chém / quét / nện (giữ đường vung theo ảnh, chỉ nghiêng cả đường vung tối đa ±KEP_CHEM).
+  // Mưa Phi Tiêu (db_phitieu, rơi từ trời) và nện đất đặc biệt (db_bua, vòng quanh người) không theo hướng nên không xoay.
+  const HV_DAM = { thuong_1: 1, thuong_2: 1, thuong_3: 1, thuong_xoc: 1, db_thuong: 1, phitieu: 1, phitieu_chum: 1, phitieu_ngam: 1, dam: 1 };
+  const HV_CHEM = { kiem_1: 1, kiem_2: 1, kiem_3: 1, thuong_quet: 1, bua_nen: 1, bua_nen_dat: 1, db_kiem: 1 };
+  const KEP_DAM = 75, KEP_CHEM = 35, NGHIENG = 12, HV_TAU = 0.05; // HV_TAU: hằng thời gian làm mượt (giây) — 95% sau ~0,15 s
+  const hvBat = () => G.HUONG_VK !== false;
+  const HV = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  const ss = (x) => { x = kep(x, 0, 1); return x * x * (3 - 2 * x); };
+  // Góc nhắm (độ, so với mặt) → { g: cộng vào góc vũ khí, lean: nghiêng thân trên } theo loại đòn. rel ±90 (js/moves.js setAim kẹp sẵn).
+  function lechTu(rel, loai, coEoKhung) {
+    if (loai === 'chem') return { g: kep(rel, -KEP_CHEM, KEP_CHEM), lean: 0 };
+    const g = kep(rel, -KEP_DAM, KEP_DAM), du = Math.abs(rel) - KEP_DAM;
+    return { g, lean: coEoKhung && du > 0 ? Math.sign(rel) * Math.min(NGHIENG, du * 0.8) : 0 };
+  }
+  // Điểm eo [y, x] (ô 96 nguồn) của khung đòn ten/i ở bộ đang mặc (G.ZED_EO, js/zed_eo_data.js) — trục nghiêng thân trên. null: không có.
+  function eoKhung(T, ten, i) {
+    const Z = G.ZED_EO; if (!Z || !Z.bo) return null;
+    const B = Z.bo[BO_MA[T && T._ma] || 'moi'] || Z.bo.moi;
+    return (B && B[ten] && B[ten][i]) || null;
+  }
+  // Hàng ném / đấm TAY KHÔNG (phitieu, phitieu_ngam, phitieu_chum, dam — không có neo vũ khí): cánh tay đang duỗi được cắt ra và xoay
+  // quanh gốc tay theo cùng góc lệch như vũ khí đâm. Mỗi khung [trục x, trục y, x0, y0, x1, y1] (ô 96 nguồn) hoặc null (tay không duỗi →
+  // chỉ nghiêng thân). Đo tự động từ ảnh (cột ngoài cùng của cánh tay, nới 2–3 điểm ảnh) bằng docs/anh-goc/zed/gan-vk/do-tay-nem.py.
+  const TAY = {"moi":{"phitieu":[null,null,[62,53,62,48,83,58],null,null,null],"phitieu_ngam":[[58,57,58,52,79,62],[55,57,55,52,76,62],[55,56,55,51,76,61]],"phitieu_chum":[[58,52,58,46,79,59],[72,53,72,47,93,59],null,null,null,null],"dam":[null,null,[55,58,55,53,76,63],[55,58,55,53,76,63],null]},"rung":{"phitieu":[null,null,[62,55,62,50,83,60],null,null,null],"phitieu_ngam":[[59,56,59,51,80,61],[59,56,59,51,80,61],[58,56,58,51,79,61]],"phitieu_chum":[[58,51,58,45,79,58],[73,53,73,47,94,59],null,null,null,null],"dam":[null,null,[55,58,55,53,76,63],[55,58,55,53,76,63],null]},"bien":{"phitieu":[null,null,[63,53,63,48,84,58],null,null,null],"phitieu_ngam":[[58,56,58,51,79,61],[56,56,56,51,77,61],[55,56,55,51,76,61]],"phitieu_chum":[[57,53,57,47,78,59],[71,54,71,49,92,60],null,null,null,null],"dam":[null,null,[55,59,55,54,76,64],[55,59,55,54,76,64],null]},"lau":{"phitieu":[null,null,[64,53,64,48,85,58],null,null,null],"phitieu_ngam":[[59,54,59,50,80,59],[58,54,58,50,79,59],[57,54,57,50,78,59]],"phitieu_chum":[[58,51,58,45,79,58],[73,53,73,47,94,59],null,null,null,null],"dam":[null,null,[55,57,55,52,76,62],[55,57,55,52,76,62],null]}};
+  const tayKhung = (T, ten, i) => { const B = TAY[BO_MA[T && T._ma] || 'moi'] || TAY.moi, r = B && B[ten]; return (r && r[i]) || null; };
+  // Mục tiêu lệch cho khung vũ khí wa (chưa làm mượt). Góc nhắm CHỐT theo nhát (p.lastAtk): ai hỏi trước (vẽ hay fx đo vệt) cũng lấy
+  // P.aimRel vừa đặt lúc ra đòn, cả nhát dùng đúng số đó. Phi tiêu ngắm (đang giữ): theo góc ngắm sống, làm mượt. Chiêu đặc biệt: P.aimRel
+  // (js/moves.js M.cast đặt một lần lúc tung). Lean giảm dần ở 25% cuối nhát để về hàng đứng không giật.
+  function huongCua(o, T, wa) {
+    if (!hvBat() || wa.cam) return null;
+    const loai = HV_DAM[wa.ten] ? 'dam' : HV_CHEM[wa.ten] ? 'chem' : null, p = o.p;
+    if (!loai || !p || p.aimRel == null || !isFinite(p.aimRel) || !HV) return null;
+    let h = HV.get(p); if (!h) HV.set(p, (h = { id: null, rel: 0, ng: 0, ngT: null, gv: 0, lv: 0, t: null }));
+    const t = G.time || 0;
+    let rel;
+    if (wa.ten === 'phitieu_ngam') {
+      if (h.ngT == null || t - h.ngT > 0.25) h.ng = 0; // vừa vào thế ngắm: đi từ thẳng trước mặt
+      const dt = h.ngT == null ? 0 : Math.max(0, t - h.ngT);
+      h.ng += (p.aimRel - h.ng) * (1 - Math.exp(-dt / 0.08)); h.ngT = t;
+      rel = h.ng; h.id = null;
+    } else if (/^db_/.test(wa.ten)) rel = p.aimRel;
+    else {
+      if (h.id !== p.lastAtk) { h.id = p.lastAtk; h.rel = p.aimRel; }
+      rel = h.rel;
+    }
+    const L = lechTu(kep(rel, -90, 90), loai, !!eoKhung(T, wa.ten, wa.i));
+    if (L.lean && wa.u != null) L.lean *= ss((1 - wa.u) / 0.25);
+    L.h = h;
+    return L;
+  }
+  // Làm mượt theo thời gian (chỉ ở lần VẼ thật, mỗi khung một lần): vào thế / đổi góc không giật; lần đo của fx (cùng G.time) không đổi trạng thái.
+  function hvMuot(L) {
+    const h = L.h, t = G.time || 0, dt = h.t == null ? 1 : t - h.t;
+    if (!(dt >= 0) || dt > 0.25) { h.gv = L.g; h.lv = L.lean; }
+    else if (dt > 0) { const k = 1 - Math.exp(-dt / HV_TAU); h.gv += (L.g - h.gv) * k; h.lv += (L.lean - h.lv) * k; }
+    h.t = t;
+    return { g: h.gv, lean: h.lv };
+  }
+  function hvNghi(o) { // lần vẽ không có đòn theo hướng: kéo trạng thái mượt về 0 (để nhát sau vào thế từ thẳng)
+    const p = o.p, h = p && HV ? HV.get(p) : null;
+    if (!h) return;
+    const t = G.time || 0, dt = h.t == null ? 1 : t - h.t;
+    if (!(dt >= 0) || dt > 0.25) { h.gv = 0; h.lv = 0; } else if (dt > 0) { const k = 1 - Math.exp(-dt / HV_TAU); h.gv -= h.gv * k; h.lv -= h.lv * k; }
+    h.t = t;
+  }
+  // Ra lệch góc dùng cho js/fx.js aimed(): hình trên không của đòn (vệt chém code, vệt đâm, hu-quet-giao...) xoay đúng góc vũ khí đang vẽ
+  // thay vì góc nhắm đầy đủ. d = info đòn của moves.js (type, move). null: không áp (Zed cũ, cờ tắt, lướt chém...) → fx giữ góc thật.
+  function lechHinh(P, d) {
+    if (!hvBat() || !bat() || !P || P.aimRel == null || !isFinite(P.aimRel) || !laZed({ key: P.key }) || !layThan()) return null;
+    const mv = d && d.move;
+    const loai = mv === 'dam' || mv === 'xoc' || mv === 'ban' || mv === 'banManh' ? 'dam' : mv === 'chem' || mv === 'quet' || mv === 'nen' || mv === 'nenDat' ? 'chem' : null;
+    if (!loai) return null;
+    const L = lechTu(kep(P.aimRel, -90, 90), loai, mv !== 'xoc'); // thương xốc (hàng thuong_xoc) không có điểm eo → không nghiêng thân
+    return L.g + L.lean;
+  }
+  function vkCua(o, D, s, T, ve) {
     const w = o.weapon;
     if (!w || !w.type) return null;
     const wa = camCua(D, s, w) || s.theo || s, da = D.dong_tac[wa.ten];
@@ -28355,7 +28453,21 @@ MA._xong();
     if (!n) return null; // khung null: không vũ khí (Phi Thương khung 3–6: giáo đã ném đi)
     if (w.type === 'fist' && !/^db_/.test(wa.ten)) return null; // tay không (giáo đang bay)
     if (w.type !== 'fist' && VK_LOAI[w.type] !== da.vk) return null;
-    return { da, n, wa, cap: capVk(w), he: heVk(w), ang: gocMuot(o, da, wa, n), cam: !!wa.cam };
+    let H = huongCua(o, T, wa);
+    if (H && ve) H = hvMuot(H);
+    const g = H ? H.g : 0, lean = H && !s.theo ? H.lean : 0; // chạy kiểu cũ (thân hàng chạy, s.theo): không nghiêng thân chạy
+    return { da, n, wa, cap: capVk(w), he: heVk(w), ang: gocMuot(o, da, wa, n, g), cam: !!wa.cam, lean, hv: !!H };
+  }
+  // Trục nghiêng thân trên (toạ độ vẽ đã lật, điểm ảnh game tính từ chân) hoặc null.
+  function trucNghieng(T, s, v, E) {
+    if (!v || !v.lean || Math.abs(v.lean) < 0.05 || v.wa !== s) return null;
+    if (s.eo) return E ? [E.ox + E.eA[1] / 2 - 24, E.oy + E.eA[0] / 2 - 45] : null;
+    const e = eoKhung(T, s.ten, s.i);
+    return e ? [e[1] / 2 - 24, e[0] / 2 - 45] : null;
+  }
+  function nghieng(q, P, deg, fn) {
+    q.save(); q.translate(P[0], P[1]); q.rotate((deg * Math.PI) / 180); q.translate(-P[0], -P[1]);
+    try { fn(); } finally { q.restore(); }
   }
   // ---------- VŨ KHÍ MƯỢT (bổ sung YEU-CAU zed-chay-danh 13/10 12:00: "mượt bằng hoặc hơn bản Zed cũ / G.KIEM_MUOT") ----------
   // Điểm cầm luôn là nắm tay của khung thân đang vẽ (vũ khí luôn nằm trong tay), còn GÓC vũ khí nội suy liên tục:
@@ -28381,15 +28493,20 @@ MA._xong();
     }
     return a;
   }
-  function gocMuot(o, da, wa, n) {
+  // g: độ lệch theo hướng nhắm (zed-8-huong, đã làm mượt) cộng vào góc đích TRƯỚC khi nối vào thế → nối từ góc vừa vẽ tới góc đã xoay.
+  function gocMuot(o, da, wa, n, g) {
     if (wa.cam) return gocCam(o, da, wa, n);
-    if (G.CHAY_DANH_MOI === false || wa.u == null || da.lap) return n[2];
+    g = g || 0;
+    // đâm/ném: góc cuối (ảnh + lệch) không quá ±90° so với mặt → mũi không bao giờ chĩa ra sau lưng (thương 2 ảnh đã chếch -35°)
+    const kd = (x) => (g && HV_DAM[wa.ten] ? kep(x, -90, 90) : x);
+    if (G.CHAY_DANH_MOI === false || wa.u == null || da.lap) return kd(n[2] + g);
     const m = MOC[wa.ten], u = wa.u, i = wa.i;
     let a = n[2];
     if (m && m.length === da.so && i + 1 < da.so && da.neo[i + 1]) {
       const fr = kep((u - m[i]) / Math.max(1e-6, m[i + 1] - m[i]), 0, 1), e = fr * fr * (3 - 2 * fr);
       a = n[2] + (gocGan(n[2], da.neo[i + 1][2]) - n[2]) * e;
     }
+    a = kd(a + g);
     const p = o.p, r = p && NHO ? NHO.get(p) : null, f = o.face < 0 ? -1 : 1;
     if (r && p.lastAtk != null) {
       if (r.id !== p.lastAtk) { r.id = p.lastAtk; r.dau = r.ve != null && r.f === f && (G.time || 0) - r.t < 0.2 ? r.ve : null; }
@@ -28418,29 +28535,60 @@ MA._xong();
     if (!T) return false;
     const D = T.tep, s = chon(o, D), a = D.dong_tac[s.ten];
     if (!a) return false;
-    const V = lay('zed-vk'), v = V ? vkCua(o, D, s) : null;
+    const V = lay('zed-vk'), v = V ? vkCua(o, D, s, T, true) : null;
+    // Hàng tay không (ném phi tiêu, đấm): không có vũ khí để xoay → xoay cánh tay duỗi (TAY) + nghiêng thân trên như đòn đâm.
+    let Hb = null;
+    if (!v && !s.theo && !s.cam && HV_DAM[s.ten]) { Hb = huongCua(o, T, s); if (Hb) Hb = hvMuot(Hb); }
+    if (!(v && v.hv) && !Hb) hvNghi(o);
     if (v) ghiGoc(o, v.ang, v.cam);
     const E = s.eo ? eoTinh(T, s, o) : null;
+    // Nghiêng thân trên quanh eo (đâm/ném nhắm gần thẳng lên/xuống, zed-8-huong): N = trục eo, null = không nghiêng (như cũ).
+    const N = trucNghieng(T, s, v || (Hb ? { lean: Hb.lean, wa: s } : null), E), lean = v ? v.lean : Hb ? Hb.lean : 0;
+    const tay = Hb && Math.abs(Hb.g) > 0.05 ? tayKhung(T, s.ten, s.i) : null, gTay = Hb ? Hb.g : 0;
+    // Vẽ phần trên (hàng nguồn 0..h) của khung thân dời (ox, oy); có tay thì cánh tay duỗi được khoét ra và vẽ lại xoay quanh gốc tay.
+    const veTren = (q, h, ox, oy) => {
+      const ve0 = () => q.drawImage(T.img, s.i * 96, a.hang * 96, 96, h, -24 + ox, -45 + oy, 48, h / 2);
+      if (!tay) { ve0(); return; }
+      const x0 = tay[2] / 2 - 24 + ox, y0 = tay[3] / 2 - 45 + oy, w = (tay[4] - tay[2]) / 2, hh = (tay[5] - tay[3]) / 2;
+      q.save(); q.beginPath(); q.rect(-24 + ox, -45 + oy, 48, h / 2); q.rect(x0, y0, w, hh); q.clip('evenodd'); ve0(); q.restore();
+      nghieng(q, [tay[0] / 2 - 24 + ox, tay[1] / 2 - 45 + oy], gTay, () => { q.beginPath(); q.rect(x0, y0, w, hh); q.clip(); ve0(); });
+    };
     if (s.eo && E) {
       const aC = D.dong_tac.chay, yR = E.eR[0] + 1, yA = E.eA[0] + 1;
       const lopEo = (q) => {
+        const xoay = (fn) => (N ? nghieng(q, N, lean, fn) : fn());
         const vk = () => { q.save(); q.translate(E.ox, E.oy); veVk(q, V, v); q.restore(); };
-        if (v && v.n[3]) vk();
+        if (v && v.n[3]) xoay(vk);
         // nửa dưới: chân khung chạy (từ dưới đai), lật theo hướng chạy
         q.save();
         if (E.rel < 0) { q.translate(E.kc, 0); q.scale(-1, 1); }
         q.drawImage(T.img, s.eo.i * 96, aC.hang * 96 + yR, 96, 96 - yR, -24, -45 + yR / 2, 48, (96 - yR) / 2);
         q.restore();
+        // đang nghiêng: lót dải đai (6 hàng nguồn ngay trên eo, không xoay) để chỗ nối không hở
+        if (N) q.drawImage(T.img, s.i * 96, a.hang * 96 + yA - 6, 96, 6, -24 + E.ox, -45 + E.oy + (yA - 6) / 2, 48, 3);
         // nửa trên: đai + thân + tay khung đòn, dời về điểm eo của khung chạy
-        q.drawImage(T.img, s.i * 96, a.hang * 96, 96, yA, -24 + E.ox, -45 + E.oy, 48, yA / 2);
-        if (v && !v.n[3]) vk();
-        if (v && v.da.hang_tay != null) q.drawImage(T.img, v.wa.i * 96, v.da.hang_tay * 96, 96, yA, -24 + E.ox, -45 + E.oy, 48, yA / 2); // nắm tay đè lên cán
+        xoay(() => {
+          veTren(q, yA, E.ox, E.oy);
+          if (v && !v.n[3]) vk();
+          if (v && v.da.hang_tay != null) q.drawImage(T.img, v.wa.i * 96, v.da.hang_tay * 96, 96, yA, -24 + E.ox, -45 + E.oy, 48, yA / 2); // nắm tay đè lên cán
+        });
       };
       return veLop(c, o, lopEo);
     }
     const lop = (q) => {
+      if (N) { // nửa dưới đứng yên (lấn lên 6 hàng nguồn để chỗ nối không hở), nửa trên + vũ khí + nắm tay xoay quanh eo
+        const e = eoKhung(T, s.ten, s.i), yC = e[0] + 1, yL = Math.max(0, yC - 6);
+        if (v && v.n[3]) nghieng(q, N, lean, () => veVk(q, V, v));
+        q.drawImage(T.img, s.i * 96, a.hang * 96 + yL, 96, 96 - yL, -24, -45 + yL / 2, 48, (96 - yL) / 2);
+        nghieng(q, N, lean, () => {
+          veTren(q, yC, 0, 0);
+          if (v && !v.n[3]) veVk(q, V, v);
+          if (v && !s.theo && v.da.hang_tay != null) q.drawImage(T.img, v.wa.i * 96, v.da.hang_tay * 96, 96, 96, -24, -45, 48, 48); // nắm tay đè lên cán
+        });
+        return;
+      }
       if (v && v.n[3]) veVk(q, V, v);
-      q.drawImage(T.img, s.i * 96, a.hang * 96, 96, 96, -24, -45, 48, 48);
+      veTren(q, 96, 0, 0);
       if (v && !v.n[3]) veVk(q, V, v);
       if (v && !s.theo && v.da.hang_tay != null) q.drawImage(T.img, v.wa.i * 96, v.da.hang_tay * 96, 96, 96, -24, -45, 48, 48); // nắm tay đè lên cán
     };
@@ -28489,12 +28637,16 @@ MA._xong();
   function doiTip(q, o) {
     const T = layThan(), V = lay('zed-vk');
     if (!T || !V) return;
-    const D = T.tep, s = chon(o, D), v = vkCua(o, D, s);
+    const D = T.tep, s = chon(o, D), v = vkCua(o, D, s, T, false);
     if (!v || v.cam) return; // vũ khí cầm lúc đứng/đi/chạy (cả lướt sau lộn): giữ mũi của bản cũ cho vệt/hiệu ứng
-    const f = o.face < 0 ? -1 : 1, X0 = Math.round(o.x) + (f < 0 ? 1 : 0), Y0 = Math.round(o.y), r = ((v.ang != null ? v.ang : v.n[2]) * Math.PI) / 180;
+    const f = o.face < 0 ? -1 : 1, X0 = Math.round(o.x) + (f < 0 ? 1 : 0), Y0 = Math.round(o.y);
     const R = V.tep.vk[v.da.vk][v.cap], g = v.da.vk_cam[v.cap];
     const E = s.eo ? eoTinh(T, s, o) : null, ox = E ? E.ox : 0, oy = E ? E.oy : 0; // chạy + chém: vũ khí dời theo nửa trên đã khớp eo
-    q.gx = X0 + f * (v.n[0] / 2 - 24 + ox); q.gy = Y0 + (v.n[1] / 2 - 45 + oy);
+    let gx = v.n[0] / 2 - 24 + ox, gy = v.n[1] / 2 - 45 + oy, ang = v.ang != null ? v.ang : v.n[2];
+    const N = trucNghieng(T, s, v, E); // nghiêng thân trên (zed-8-huong): nắm tay xoay quanh eo, hướng vũ khí cộng thêm góc nghiêng
+    if (N) { const b = (v.lean * Math.PI) / 180, cx = gx - N[0], cy = gy - N[1]; gx = N[0] + cx * Math.cos(b) - cy * Math.sin(b); gy = N[1] + cx * Math.sin(b) + cy * Math.cos(b); ang += v.lean; }
+    const r = (ang * Math.PI) / 180;
+    q.gx = X0 + f * gx; q.gy = Y0 + gy;
     q.dx = f * Math.cos(r); q.dy = Math.sin(r);
     q.L = Math.max(4, (R[2] - g[0]) * v.da.vk_tl);
     q.front = !v.n[3];
@@ -28517,7 +28669,7 @@ MA._xong();
   }
 
   // ---------- bọc G.art.hero, G.art.proj, G.tinhLinh.tip (ngoài cùng; lớp khác có thể bọc lại sau khi ảnh nạp nên kiểm mỗi khung) ----------
-  G.zedMoi = { chon, MOC, eoTinh, loi: [] };
+  G.zedMoi = { chon, MOC, eoTinh, lechHinh, lechTu, loi: [] };
   let dangGoiCu = false;
   const ghiLoi = (e) => { if (G.zedMoi.loi.length < 5) G.zedMoi.loi.push(String((e && e.message) || e)); };
   function boc() {

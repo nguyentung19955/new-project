@@ -221,7 +221,7 @@
   const baseSwing = fx.swing;
   // o: { type, move, step, combo, reach, depth, el, lv, stage, charge, level }
   // Tám hướng: vẽ đòn nằm ngang như cũ rồi xoay theo góc nhắm (K.aimed). Nện đất đã đặt vết nứt đúng chỗ thật nên không dời hình sát đất.
-  api('mvSwing', (P, o) => { K.aimed(P, () => { swing(P, o); decorate(P, o); }, { ground: o.move !== 'nenDat' }); });
+  api('mvSwing', (P, o) => { K.aimed(P, () => { swing(P, o); decorate(P, o); }, { ground: o.move !== 'nenDat', don: o }); }); // don: Zed mới xoay hình trên không theo góc vũ khí (zed-8-huong)
   function swing(P, o) {
     const f = P.face, PL = pal(o.el);
     if (o.move === 'luot') {
@@ -240,11 +240,14 @@
       // buông dây cung đã căng: chớp sáng ở cung, vòng gió, giật lùi
       // Sửa góp ý 1: chớp sáng, vòng gió và vệt gió đi theo hướng ngắm thật (P.aimUx, P.aimUy), không chỉ nằm ngang.
       const h = hand(P), c = o.charge || 0, ux = P.aimUx != null ? P.aimUx : f, uy = P.aimUy || 0;
+      // Zed mới (zed-8-huong): ảnh ở tay xoay đúng góc tay ném đang vẽ (kẹp ±75° + nghiêng thân); vệt gió, giật lùi vẫn theo góc thật
+      let ax = ux, ay = uy;
+      try { const ZM = G.zedMoi, gH = ZM && ZM.lechHinh ? ZM.lechHinh(P, o) : null; if (gH != null && isFinite(gH)) { const b = (gH * Math.PI) / 180; ax = f * Math.cos(b); ay = Math.sin(b); } } catch (e) { ax = ux; ay = uy; }
       // Ảnh AI hu-ban-cung (mép trái của hình là tay cầm cung, luồng gió chĩa theo hướng ngắm thật): thay chớp sáng và vòng gió, vệt gió giữ nguyên
       // Bộ Zed mới (phi tiêu): đòn ném mạnh / ném chùm dùng ảnh hu-phi-tieu-chum (tích lực rồi bung rẻ quạt, mép trái ở tay); chưa có thì hu-ban-cung
       const chum = G.ZED_MOI !== false ? K.anhHe('hu-phi-tieu-chum', o.el) : null;
       const maB = chum || K.anhHe('hu-ban-cung', o.el);
-      if (!maB || !K.anhHuong(maB, h.x, h.y, ux, uy, { sc: chum ? (14 + 8 * c) / 22 : (12 + 8 * c) / 20 })) {
+      if (!maB || !K.anhHuong(maB, h.x, h.y, ax, ay, { sc: chum ? (14 + 8 * c) / 22 : (12 + 8 * c) / 20 })) {
         add({ ty: 'flash', x: h.x + ux * 6, y: h.y + uy * 6, r: 6 + 4 * c, t: 0.1, c: '#ffffff', c2: PL.c2, ly: 1 });
         addRing(h.x + ux * 4, h.y + uy * 4, 2, 10 + 8 * c, 0.18, PL.c2, 2, 1);
       }
