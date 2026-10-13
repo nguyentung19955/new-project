@@ -7,7 +7,21 @@ Chạy lại được bất cứ lúc nào (từ đâu cũng được):  python3
 Ghi:  game/art/custom/zed-moi.sprite.json  thân Zed: mỗi động tác 1 hàng, khung 96×96 điểm ảnh (= 48×48 game, net 2),
                                             chân tại (48,90) ảnh = goc [24,45] game; thêm các hàng "nắm tay" (lớp vẽ đè lên cán vũ khí)
       game/art/custom/zed-vk.sprite.json    4 vũ khí × 4 cấp (kiếm, thương, búa, phi tiêu), ảnh rời, game tự xoay theo neo
-      docs/review/ke-hoach-cai-thien/zed-tich-hop/xem-truoc-*.png  ảnh xem trước (dựng như game ghép: người → vũ khí → nắm tay)
+      docs/review/ke-hoach-cai-thien/zed-co-deu/xem-truoc-*.png  ảnh xem trước (dựng như game ghép: người → vũ khí → nắm tay)
+
+CO THEO TỪNG HÀNG (sửa 13/10/2026 — docs/review/ke-hoach-cai-thien/zed-co-deu/YEU-CAU.md):
+  Ảnh gốc mỗi động tác vẽ Zed một cỡ khác nhau (chạy nhỏ hơn đứng ~25%, trúng đòn/thương giữ to hơn…), nên mỗi hàng có tỉ lệ
+  co riêng s_hang = s × r_hang, trong đó s = CAO_96 / chiều cao tấm đứng và r_hang làm cho ĐẦU Zed ở hàng đó bằng đầu ở tấm đứng.
+  Cỡ đầu đo trên ảnh nguồn từng khung (hàm do_dau), không phụ thuộc tư thế cúi/nhảy/ngã:
+    - mặt = mảng da (cùng hàm da() bên dưới) lớn, nằm cao nhất trong khung; cằm = đáy mảng mặt
+    - cao_dau = cằm − đỉnh tóc (trung vị của đỉnh điểm ảnh đặc trên các cột giữa mặt, phân vị 20–80 bề ngang mặt)
+    - mat = căn bậc hai diện tích mảng mặt
+  Mỗi hàng: bỏ khung đo hỏng (cao_dau < 0,75 × lớn nhất hàng — lúc mảng da cao nhất là bàn tay chứ không phải mặt), lấy trung vị
+  cao_dau và mat; r_hang = căn( (cao_dau_đứng / cao_dau_hàng) × (mat_đứng / mat_hàng) )  (trung bình nhân hai phép đo, đỡ lệch khi
+  đầu ngửa/nghiêng). Hàng chết 06-chet-b2 cũng theo cách này (bỏ hệ số phóng cứng cũ).
+  Vũ khí: độ dài tính theo Zed chuẩn (chiều cao ảnh khung tấm đứng × s), KHÔNG theo hàng → vũ khí không to nhỏ theo động tác.
+  Neo vũ khí quy đổi bằng s_hang, dx, dy của chính khung đó. Hình nào sau khi co vẫn tràn ô 96×96 thì DỜI trong ô (ít nhất có thể,
+  từng khung; neo + nắm tay dời theo) — không cắt hình.
 
 CÁCH GHÉP VŨ KHÍ = y hệt docs/anh-goc/zed/gan-vk/ghep-thu-vk.py (bản đã duyệt):
   - điểm cầm trên người: chinh_nam (tâm điểm da quanh điểm ghi trong neo.json, bán kính 28)
@@ -22,13 +36,14 @@ co/dịch đã dùng để đặt khung đó vào ô 96×96).
 import base64, glob, io, json, math, os, sys
 import numpy as np
 from PIL import Image
+from scipy import ndimage
 
 DAY = os.path.dirname(os.path.abspath(__file__))
 GOC_REPO = os.path.abspath(os.path.join(DAY, '..', '..', '..'))
 MOI = os.path.join(DAY, 'moi')
 NEO = os.path.join(DAY, 'gan-vk', 'neo.json')
 RA_GAME = os.path.join(GOC_REPO, 'game', 'art', 'custom')
-RA_XEM = os.path.join(GOC_REPO, 'docs', 'review', 'ke-hoach-cai-thien', 'zed-tich-hop')
+RA_XEM = os.path.join(GOC_REPO, 'docs', 'review', 'ke-hoach-cai-thien', 'zed-co-deu')
 
 O = 96                 # cạnh ô ảnh (nguồn 96 = game 48 × net 2)
 CHAN = (48, 90)        # chân trong ô 96 (= goc [24,45] game)
@@ -91,6 +106,31 @@ def lop_tay(im, x, y, tay2):
     return Image.fromarray(lop)
 
 
+# ---------- đo cỡ đầu (co theo từng hàng) ----------
+def do_dau(im):
+    """(cao_dau, mat) trên ảnh nguồn một khung: cao_dau = cằm − đỉnh tóc, mat = căn diện tích mảng da mặt. None nếu không thấy mặt."""
+    a = np.array(im)
+    m = ndimage.binary_opening(da(a), iterations=2)
+    lab, n = ndimage.label(m)
+    if n == 0:
+        return None
+    sz = ndimage.sum(m, lab, range(1, n + 1)); cm = ndimage.center_of_mass(m, lab, range(1, n + 1))
+    i = min((j for j in range(n) if sz[j] > 0.15 * sz.max()), key=lambda j: cm[j][0])  # mảng da lớn nằm cao nhất = mặt
+    yy, xx = np.nonzero(lab == i + 1)
+    x0, x1 = np.percentile(xx, [20, 80]).astype(int)
+    cot = a[:yy.max() + 1, x0:x1 + 1, 3] > 0
+    dinh = [int(np.argmax(cot[:, j])) for j in range(cot.shape[1]) if cot[:, j].any()]
+    return float(yy.max() - np.median(dinh)), float(np.sqrt(sz[i]))
+
+
+def co_dau_hang(fr):
+    """Trung vị (cao_dau, mat) của một hàng, bỏ khung đo hỏng."""
+    ds = [d for d in (do_dau(f['im']) for f in fr) if d]
+    lon = max(d[0] for d in ds)
+    ds = [d for d in ds if d[0] >= 0.75 * lon]
+    return float(np.median([d[0] for d in ds])), float(np.median([d[1] for d in ds])), len(ds)
+
+
 # ---------- đọc khung ----------
 def doc_dong(thu):
     goc = os.path.join(MOI, thu + '-gif')
@@ -119,7 +159,11 @@ def main():
     dong = [(k, thu, gi, lap, doc_dong(thu)) for k, thu, gi, lap in DONG]
     H_dung = float(np.median([f['bb'][3] - f['bb'][1] for f in dong[0][4]]))
     s = CAO_96 / H_dung
-    print('Chiều cao Zed đứng (nguồn): %.1f điểm ảnh → %d điểm ảnh ô 96; tỉ lệ co chung s = %.5f' % (H_dung, CAO_96, s))
+    print('Chiều cao Zed đứng (nguồn): %.1f điểm ảnh → %d điểm ảnh ô 96; tỉ lệ co tấm đứng s = %.5f' % (H_dung, CAO_96, s))
+    dau = {thu: co_dau_hang(fr) for k, thu, gi, lap, fr in dong}
+    dau_dung = dau[dong[0][1]]
+    r_hang = {thu: math.sqrt(dau_dung[0] / d[0] * dau_dung[1] / d[1]) for thu, d in dau.items()}
+    L_VK = max(f['im'].height for f in dong[0][4])  # chiều cao ảnh khung tấm đứng (nguồn): chuẩn độ dài vũ khí mọi hàng
 
     # ảnh vũ khí gốc (đủ 4 cấp)
     vk_goc = {}
@@ -133,20 +177,18 @@ def main():
     cot = max(len(fr) for *_, fr in dong)
     tam = Image.new('RGBA', (cot * O, (len(dong) + so_tay) * O), (0, 0, 0, 0))
     dt, tran, hang_tay = {}, [], len(dong)
+    cao_sau = {}
     xem = {}
     for hang, (k, thu, gi, lap, fr) in enumerate(dong):
-        sk = s
-        if thu == '06-chet-b2':  # người vẽ nhỏ hơn: phóng cho cùng chiều cao với tấm đứng
-            sk = s * H_dung / max(f['bb'][3] - f['bb'][1] for f in fr)
-            print('  chết: phóng thêm ×%.3f cho bằng chiều cao tấm đứng' % (sk / s))
+        sk = s * r_hang[thu]  # co theo từng hàng: đầu bằng đầu tấm đứng
         n = neo_all.get(thu)
         d = {'hang': hang, 'so': len(fr), 'giay': gi, 'lap': lap}
         if n:
             d['hang_tay'] = hang_tay
             d['vk'] = VK_THU_MUC[n['vk']]
-            cao = max(f['im'].height for f in fr)
-            sc = n.get('dai', DAI_CAP1) * cao / vk_goc[d['vk']][0].width  # điểm ảnh người nguồn / điểm ảnh vũ khí nguồn (như ghep-thu-vk.py)
-            d['vk_tl'] = round(sc * sk / (q * 2), 5)                     # điểm ảnh GAME / điểm ảnh ảnh vũ khí đã lưu
+            # độ dài vũ khí theo Zed chuẩn (tấm đứng, tỉ lệ s), không theo hàng → cùng một cỡ ở mọi động tác
+            sc = n.get('dai', DAI_CAP1) * L_VK / vk_goc[d['vk']][0].width  # điểm ảnh người nguồn (tấm đứng) / điểm ảnh vũ khí nguồn
+            d['vk_tl'] = round(sc * s / (q * 2), 5)                         # điểm ảnh GAME / điểm ảnh ảnh vũ khí đã lưu
             cam = n.get('cam')
             d['vk_cam'] = []
             for cap in range(4):
@@ -161,11 +203,18 @@ def main():
             sx, sy = nw / im.width, nh / im.height
             dx, dy = round(CHAN[0] - f['chan'][0] * sx), round(CHAN[1] - f['chan'][1] * sy)
             nho = im.resize((nw, nh), Image.BOX)
+            bb = nho.getbbox()
+            if bb:  # tràn ô 96×96 → dời vào trong ô (ít nhất có thể), không cắt hình
+                ddx = max(0, -(dx + bb[0])) - max(0, dx + bb[2] - O)
+                ddy = max(0, -(dy + bb[1])) - max(0, dy + bb[3] - O)
+                if bb[2] - bb[0] > O or bb[3] - bb[1] > O:
+                    tran.append('%s khung %d (hình lớn hơn ô, vẫn bị cắt)' % (thu, i + 1))
+                elif ddx or ddy:
+                    dx += ddx; dy += ddy
+                    tran.append('%s khung %d dời (%+d,%+d)' % (thu, i + 1, ddx, ddy))
+                cao_sau.setdefault(thu, []).append((bb[3] - bb[1]))
             o = Image.new('RGBA', (O, O), (0, 0, 0, 0)); o.paste(nho, (dx, dy), nho)
             tam.alpha_composite(o, (i * O, hang * O))
-            bb = nho.getbbox()
-            if bb and (dx + bb[0] < 0 or dy + bb[1] < 0 or dx + bb[2] > O or dy + bb[3] > O):
-                tran.append('%s khung %d' % (thu, i + 1))
             item = {'than': o}
             if n:
                 kk = n['khung'][i] if i < len(n['khung']) else None
@@ -219,7 +268,17 @@ def main():
         print('Ghi %s (%.0f KB)' % (os.path.relpath(p, GOC_REPO), os.path.getsize(p) / 1024))
     print('Tấm thân: %d×%d, %d hàng thân + %d hàng nắm tay' % (tam.width, tam.height, len(dong), hang_tay - len(dong)))
     if tran:
-        print('  ! hình tràn ô 96×96 (bị cắt mép): ' + ', '.join(tran))
+        print('  Tràn ô 96×96 đã xử lý: ' + ', '.join(tran))
+    # bảng cỡ người từng hàng (ô 96): TRƯỚC = tỉ lệ chung s (chết ×1,639 cũ), SAU = s × r_hang
+    print('\n| Hàng | r_hang | Đầu trước | Đầu sau | Cao người trước (TV/max) | Cao người sau (TV/max) |')
+    print('|---|---|---|---|---|---|')
+    for k, thu, gi, lap, fr in dong:
+        cao_ng = [f['bb'][3] - f['bb'][1] for f in fr]
+        s_cu = s * (H_dung / max(cao_ng) if thu == '06-chet-b2' else 1)
+        s_moi = s * r_hang[thu]
+        print('| %s | %.3f | %.1f | %.1f | %.1f / %.1f | %.1f / %.1f |' % (
+            thu, r_hang[thu], dau[thu][0] * s_cu, dau[thu][0] * s_moi,
+            np.median(cao_ng) * s_cu, max(cao_ng) * s_cu, np.median(cao_ng) * s_moi, max(cao_ng) * s_moi))
 
     # ---------- ảnh xem trước: ghép như game (cấp 1 và cấp 4), cỡ ô 96 (= game ×2) ----------
     os.makedirs(RA_XEM, exist_ok=True)
