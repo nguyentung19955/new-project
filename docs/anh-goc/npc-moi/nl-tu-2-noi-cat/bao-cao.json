@@ -1,0 +1,210 @@
+{
+ "anh": "nl-tu-2-noi.png",
+ "co_anh": [
+  2232,
+  784
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 6,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 25,
+  "vien_khu": 11015,
+  "nga_mau_nen_trong_hinh": 1387
+ },
+ "manh_bo": [
+  {
+   "khung_bao": [
+    1102,
+    70,
+    1121,
+    91
+   ],
+   "diem_anh": 12
+  },
+  {
+   "khung_bao": [
+    1432,
+    130,
+    1458,
+    164
+   ],
+   "diem_anh": 35
+  },
+  {
+   "khung_bao": [
+    1411,
+    154,
+    1432,
+    171
+   ],
+   "diem_anh": 7
+  },
+  {
+   "khung_bao": [
+    735,
+    158,
+    748,
+    171
+   ],
+   "diem_anh": 1
+  },
+  {
+   "khung_bao": [
+    1422,
+    178,
+    1478,
+    207
+   ],
+   "diem_anh": 25
+  },
+  {
+   "khung_bao": [
+    1422,
+    212,
+    1436,
+    227
+   ],
+   "diem_anh": 4
+  },
+  {
+   "khung_bao": [
+    2171,
+    214,
+    2184,
+    227
+   ],
+   "diem_anh": 1
+  },
+  {
+   "khung_bao": [
+    354,
+    225,
+    367,
+    238
+   ],
+   "diem_anh": 1
+  }
+ ],
+ "loi": [],
+ "canh_bao": [],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "nl-tu-2-noi",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      48,
+      167,
+      376,
+      726
+     ],
+     "chan": [
+      182.5,
+      726
+     ],
+     "rong": 328,
+     "cao": 559,
+     "diem_anh": 107888,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      416,
+      164,
+      750,
+      727
+     ],
+     "chan": [
+      544.0,
+      727
+     ],
+     "rong": 334,
+     "cao": 563,
+     "diem_anh": 110200,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      771,
+      76,
+      1115,
+      726
+     ],
+     "chan": [
+      905.5,
+      726
+     ],
+     "rong": 344,
+     "cao": 650,
+     "diem_anh": 112798,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1129,
+      136,
+      1472,
+      727
+     ],
+     "chan": [
+      1267.5,
+      727
+     ],
+     "rong": 343,
+     "cao": 591,
+     "diem_anh": 110918,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1503,
+      152,
+      1836,
+      727
+     ],
+     "chan": [
+      1630.5,
+      727
+     ],
+     "rong": 333,
+     "cao": 575,
+     "diem_anh": 108684,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1866,
+      168,
+      2184,
+      727
+     ],
+     "chan": [
+      1993.5,
+      727
+     ],
+     "rong": 318,
+     "cao": 559,
+     "diem_anh": 106400,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}

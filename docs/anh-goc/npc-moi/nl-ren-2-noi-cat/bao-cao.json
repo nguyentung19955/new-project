@@ -1,0 +1,137 @@
+{
+ "anh": "nl-ren-2-noi.png",
+ "co_anh": [
+  2232,
+  784
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 6,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 0,
+  "vien_khu": 10231,
+  "nga_mau_nen_trong_hinh": 140
+ },
+ "manh_bo": [],
+ "loi": [],
+ "canh_bao": [],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "nl-ren-2-noi",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      51,
+      171,
+      382,
+      676
+     ],
+     "chan": [
+      194.5,
+      676
+     ],
+     "rong": 331,
+     "cao": 505,
+     "diem_anh": 94496,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      382,
+      164,
+      738,
+      683
+     ],
+     "chan": [
+      530.5,
+      683
+     ],
+     "rong": 356,
+     "cao": 519,
+     "diem_anh": 98527,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      747,
+      185,
+      1111,
+      683
+     ],
+     "chan": [
+      896.0,
+      683
+     ],
+     "rong": 364,
+     "cao": 498,
+     "diem_anh": 96407,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1111,
+      183,
+      1512,
+      683
+     ],
+     "chan": [
+      1311.5,
+      683
+     ],
+     "rong": 401,
+     "cao": 500,
+     "diem_anh": 105051,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1512,
+      186,
+      1869,
+      683
+     ],
+     "chan": [
+      1653.0,
+      683
+     ],
+     "rong": 357,
+     "cao": 497,
+     "diem_anh": 100355,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1869,
+      184,
+      2176,
+      683
+     ],
+     "chan": [
+      2023.0,
+      683
+     ],
+     "rong": 307,
+     "cao": 499,
+     "diem_anh": 91168,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}
