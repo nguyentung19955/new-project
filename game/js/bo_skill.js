@@ -54,6 +54,41 @@
     }
   };
 
+  // ---------- quy đổi skill bộ ra Sức mạnh / Lực chiến (14/10, bước 1 làm chắc, mục 2) ----------
+  // Skill bộ không đổi chỉ số trên giấy nên G.power (js/combat.js) và G.lucChien (js/luc_chien.js) trước đây không thấy. Nay mỗi skill ĐÃ MỞ
+  // (theo cấp bộ đang mặc) quy thành một hệ số nhân phần đòn (off) hoặc phần máu hữu hiệu (ehp), tính từ chính số trong G.SKILL_BO
+  // (đổi số skill thì quy đổi tự đổi theo). Sức mạnh = 3·√(off·ehp) nên Sức mạnh tăng √(hệ số). Chỉ cộng vào Sức mạnh NGƯỜI CHƠI:
+  // G.STAGE_REC (sức mạnh khuyên dùng) không đổi. Bảng số và lý do: docs/review/ke-hoach-cai-thien/buoc-1-lam-chac/bao-cao.md (mục 2).
+  // Cờ tắt riêng phần này: ?smbo=0 (G.SM_SKILL_BO = false).
+  if (G.SM_SKILL_BO === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]smbo=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.SM_SKILL_BO = !tat; }
+  const QUY = {
+    bongLuot: (s) => ({ off: 1 + s.them * 0.1 }),                                   // ~1 đòn mỗi 10 đòn rơi vào cửa sổ sau lộn
+    phanThan: (s) => ({ ehp: 1 + 0.25 * Math.min(1, s.giay / Math.max(s.giay, s.hoi || s.giay)) }), // quái thường nhắm bóng ~giay/hoi thời gian, bớt ~1/4 đòn
+    amSat: (s) => ({ off: 1 + 0.2 / Math.max(1, s.hoi) }),                          // một chí mạng ép mỗi hồi (chỉ khi đứng sau lưng)
+    nhuaRung: (s) => ({ ehp: 1 + s.hoi * 4 }),                                      // đứng yên ~4 giây mỗi phòng có hồi
+    gaiDoc: (s) => ({ off: 1 + s.satThuong * 0.04 }),                               // độc nhẹ lên quái đánh trúng mình
+    bayDayLeo: (s) => ({ ehp: 1 + s.giay * 0.025 }),                                // trói chân sau đòn giữ: bớt đòn trúng
+    khienNuoc: (s) => ({ ehp: 1 + 3 * (s.toiDa || 0.3) * (10 / Math.max(1, s.hoi)) }), // bot đo (tests/cay.py, đợt 5): khiên ăn ~25-30% sát thương
+    songDoi: (s) => ({ ehp: 1 + s.banKinh / 1000 }),                                // đẩy lùi quái gần khi lộn
+    thuyTrieu: (s) => ({ ehp: 1 + (1 - s.cham) * s.giay * 0.03 }),                  // chậm quái khi khiên vỡ
+    giapBac: (s) => ({ ehp: 1 / (1 - Math.min(0.5, s.giam)) }),                    // giảm sát thương nhận: đúng như giáp
+    phanDon: (s) => ({ off: 1 + s.phan * s.cuaSo * 0.2 }),                          // phản đòn khi lộn sát lúc trúng (hiếm)
+    khiThe: (s) => ({ off: 1 + s.them * 0.25 }),                                    // ~1/4 thời gian ải ở dưới mốc máu
+  };
+  K.quyDoi = function (P) {
+    const kq = { off: 1, ehp: 1, ds: [] };
+    if (!P || !P.boSkill || G.SM_SKILL_BO === false) return kq;
+    for (const sk of P.boSkill.ds || []) {
+      const f = QUY[sk.ma];
+      if (!f) continue;
+      const q = f(sk) || {};
+      if (q.off > 0) kq.off *= q.off;
+      if (q.ehp > 0) kq.ehp *= q.ehp;
+      kq.ds.push({ ma: sk.ma, off: q.off || 1, ehp: q.ehp || 1 });
+    }
+    return kq;
+  };
+
   // ---------- dựng người chơi: trạng thái skill ----------
   if (G.buildPlayer && !G.buildPlayer.boSkBoc) {
     const goc = G.buildPlayer;

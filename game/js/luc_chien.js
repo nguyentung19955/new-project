@@ -20,6 +20,7 @@
 //       × hiệu ứng hệ kéo dài (20% phần tăng), nổ kết hợp hệ (10% phần tăng), đổi vũ khí chắc gây hiệu ứng (×1,02)
 //   Độ bền: EHP = máu tối đa / (1 − giảm sát thương, tối đa 75%; nội tại Cu Lì / nét Cu Lì dạy Zed tính một nửa)
 //       × (1 + 0,3 × kháng hệ trung bình) × (1 + hồi máu mỗi phòng) × lộn nhanh, tốc chạy (đợt 2: bỏ phần trang phục cũ)
+//   Skill bộ đồ đã mở (14/10): DPS × hệ số đòn, EHP × hệ số máu của G.boSk.quyDoi (js/bo_skill.js), giống Sức mạnh
 //   Lực chiến = làm tròn(7 × căn bậc hai(DPS × EHP))
 //   Em bé mới (Cu Tí cấp 1, Kiếm Rèn + Cung Tre Thường) ≈ 400; cuối game (cấp 40, Vàng +15, Thức tỉnh, đồ bộ) ≈ 4.000.
 //
@@ -85,6 +86,8 @@
       if (P.dodgeCdMax < 1) ehp *= 1 + (1 - P.dodgeCdMax) * 0.2;
       const base = 72 * (G.HEROES[key].speed || 1);
       ehp *= 1 + G.clamp(P.speed / base - 1, 0, 0.5) * 0.2;
+      // 14/10 (bước 1, mục 2): skill bộ đồ đã mở (cùng hệ số với Sức mạnh, js/bo_skill.js G.boSk.quyDoi)
+      if (G.boSk && G.boSk.quyDoi) { const q = G.boSk.quyDoi(P); dps *= q.off; ehp *= q.ehp; }
       const v = Math.round(7 * Math.sqrt(Math.max(0, dps * ehp)));
       return { dps, ehp, value: isFinite(v) ? v : 0 };
     } finally { G.save = keep; }

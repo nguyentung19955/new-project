@@ -151,7 +151,9 @@
     // Phiên cân bằng (mục 6): nội tại giảm 25% sát thương của Cu Lì chỉ tính một nửa (Đô Vật bị đếm cao hơn Thợ Rèn 26%
     // dù thắng như nhau với số máu mất tương đương).
     const drP = P.dr - (P.drNT || 0) / 2;
-    const ehp = (P.maxhp / (1 - Math.min(0.75, drP))) * (1 + 0.25 * Math.min(0.8, res));
+    let ehp = (P.maxhp / (1 - Math.min(0.75, drP))) * (1 + 0.25 * Math.min(0.8, res));
+    // 14/10 (bước 1, mục 2): skill bộ đồ đã mở quy ra phần đòn / máu hữu hiệu (js/bo_skill.js G.boSk.quyDoi). G.STAGE_REC không đổi.
+    if (G.boSk && G.boSk.quyDoi) { const q = G.boSk.quyDoi(P); off *= q.off; ehp *= q.ehp; }
     return { off, ehp, power: Math.round(3 * Math.sqrt(off * ehp) * (P.powerMult || 1)) };
   };
   // Màu so sánh: đủ (xanh), sát nút (vàng, từ 90% khuyên dùng), thiếu (đỏ).
