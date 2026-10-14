@@ -77,7 +77,7 @@
     if (z.t > 0) {
       const it = geo(z), t0 = z.t0 || 0;
       it.age = t0 ? t0 - z.t : since(z);
-      it.u = t0 ? clamp(1 - z.t / t0, 0, 1) : 0;
+      it.u = t0 ? clamp(1 - z.t / t0, 0, 1) : clamp(it.age / Math.max(0.05, it.age + z.t), 0, 1); // 14/10: vùng không có t0 vẫn kéo giãn theo thời gian còn lại
       if (z.bomb && z.bomb.fl > 0) { const gone = t0 - z.t, fl = z.bomb.fl; it.age = gone; it.u = gone < fl ? 0 : clamp((gone - fl) / Math.max(0.01, t0 - fl), 0, 1); }
       BT.add(it);
       nowSeen.set(z, it);
@@ -578,15 +578,18 @@
   // Chỉ đổi cách vẽ: thời gian báo trước, vùng va chạm, sát thương giữ nguyên. Thiếu ảnh (hoặc hình không có ảnh: tường nước, đường ngắm)
   // thì hình đó vẽ kiểu điểm ảnh cũ ngay trên lớp đất. CỜ TẮT: ?baoanh=0 hoặc G.BT_ANH = false → đường cũ y nguyên (#ui + snap + maskOut).
   let tatAnh = false;
-  try { tatAnh = /[?&]baoanh=0\b/i.test(String(window.location && window.location.search)); } catch (e) { tatAnh = false; }
+  // 14/10 (bước 1 làm chắc, mục 7): thêm cờ ?btcu=1 (xem lại kiểu vẽ bằng code cũ), cùng tác dụng ?baoanh=0
+  try { tatAnh = /[?&](baoanh=0|btcu=1)\b/i.test(String(window.location && window.location.search)); } catch (e) { tatAnh = false; }
   if (G.BT_ANH == null) G.BT_ANH = !tatAnh;
   // hình học trên ảnh (điểm ảnh của tấm, in ra bởi dung-bao-truoc.py): o cỡ ô khung; R bán kính vòng; r0 bán kính trong của vành;
   // quạt: dinh = đỉnh (gốc) trên ô, nua = nửa góc mở (độ); dải: x0..x1 thân dải theo chiều dài, nua = nửa bề dày thân dải.
+  // 14/10 (bước 1, mục 7): ảnh dựng lại bằng docs/review/ke-hoach-cai-thien/buoc-1-lam-chac/cong-cu/dung-bt-dong.py — cắt theo hình,
+  // CĂN TÂM TỪNG KHUNG (tâm vòng / đỉnh quạt / tâm dải đo trên ảnh gốc), viền ngoài từng khung đúng R. Số dưới đây do công cụ in ra.
   const HA = {
     tron: { ma: 'gd-bt-tron', o: [184, 184], R: 64 },
-    vanh: { ma: 'gd-bt-vanh', o: [184, 184], R: 64, r0: 47.21 },
-    quat: { ma: 'gd-bt-quat', o: [70, 114], dinh: [2.01, 57], R: 64, nua: 44 },
-    dai: { ma: 'gd-bt-dai', o: [170, 28], x0: 4.8, x1: 164.8, nua: 6.87 },
+    vanh: { ma: 'gd-bt-vanh', o: [184, 184], R: 64, r0: 38.73 },
+    quat: { ma: 'gd-bt-quat', o: [81, 138], dinh: [4.84, 69], R: 64, nua: 44 },
+    dai: { ma: 'gd-bt-dai', o: [170, 28], x0: 4.8, x1: 164.8, nua: 7.29 },
   };
   BT.HA = HA;
   const gdAnh = (ma) => { const SC = G.spriteCustom; return SC && SC.gdSan ? SC.gdSan(ma) : null; };
@@ -648,6 +651,8 @@
   // khung (0..7) và độ đậm theo kiểu vẽ: mode 0 báo trước (u), 1 nổ (f 0..1 của FLASH), 2 bị huỷ (mờ dần)
   function khungVa(it, mode, f) {
     if (mode === 1) return [7, f < 0.35 ? 1 : clamp(1 - (f - 0.35) / 0.65, 0, 1)];
+    // 14/10 (bước 1, mục 7): 8 khung kéo giãn đúng bằng thời gian báo trước — khung 1..7 chia đều từ lúc vùng hiện tới lúc nổ,
+    // khung 8 (chớp nổ) bắt đầu ĐÚNG lúc đòn nổ (mode 1) rồi mờ dần.
     const fi = Math.min(6, Math.max(0, Math.floor((it.u || 0) * 7)));
     const ap = mode === 2 ? 1 : clamp((it.age || 0) / APPEAR, 0, 1), e = 1 - (1 - ap) * (1 - ap) * (1 - ap);
     return [fi, e * (it.dim == null ? 1 : it.dim)];
@@ -656,7 +661,9 @@
   function veAnh(c, it, mode, f) {
     if (!anhBat()) return false;
     const k = it.k;
-    let kieu = k === 'circle' ? 'tron' : k === 'donut' ? (it.r0 < it.r1 * 0.15 ? 'tron' : 'vanh') : k === 'cone' ? (it.span >= TAU - 0.01 ? 'tron' : 'quat') : k === 'line' || k === 'rect' ? 'dai' : null;
+    // 14/10 (bước 1, mục 7): tường nước (Sóng thần) và đường ngắm cũng vẽ bằng ảnh dải (trước vẽ code) → có ảnh thì không còn hình code nào
+    if (k === 'wall') return veTuong(c, it, mode, f);
+    let kieu = k === 'circle' ? 'tron' : k === 'donut' ? (it.r0 < it.r1 * 0.15 ? 'tron' : 'vanh') : k === 'cone' ? (it.span >= TAU - 0.01 ? 'tron' : 'quat') : k === 'line' || k === 'rect' || k === 'aim' ? 'dai' : null;
     if (!kieu) return false;
     const src = kieu === 'vanh' ? tamVanh(it.el, it.r0 / Math.max(1, it.r1)) : tam(kieu, it.el);
     if (!src) return false;
@@ -703,6 +710,21 @@
         c.drawImage(src, sxo, 0, ow, oh, -h.x0 * sx, (-oh / 2) * sy, ow * sx, oh * sy);
       }
     } finally { c.restore(); }
+    return true;
+  }
+  // Tường nước: hai dải hai bên khe, sâu 40 theo hướng tường chạy (như path 'wall' kiểu cũ), mỗi dải là một ảnh dải xoay ngang hướng chạy.
+  function veTuong(c, it, mode, f) {
+    if (!tam('dai', 'ice')) return false;
+    const lo = it.g - it.gw, hi = it.g + it.gw, ca = Math.cos(it.ang), sa = Math.sin(it.ang), d = it.s + 20; // giữa bề sâu 40
+    const doan = [];
+    if (lo > -it.half) doan.push([-it.half, lo]);
+    if (hi < it.half) doan.push([hi, it.half]);
+    for (const [a0, a1] of doan) {
+      const m = (a0 + a1) / 2, L = a1 - a0;
+      // dải dọc theo hướng vuông góc (ang + 90°), tâm ở (d, m) trong hệ toạ độ của tường
+      const x = it.x + ca * d - sa * m, y = it.y + sa * d + ca * m, ang = it.ang + Math.PI / 2;
+      veAnh(c, { k: 'line', x: x - Math.cos(ang) * L / 2, y: y - Math.sin(ang) * L / 2, ang, len: L, w: 40, el: 'ice', u: it.u, age: it.age, dim: it.dim }, mode, f);
+    }
     return true;
   }
   BT.veAnh = veAnh;
