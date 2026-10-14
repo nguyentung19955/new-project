@@ -860,6 +860,10 @@
     else if (n === 'atk' && (e.role === 'elite' || e.role === 'shield') && e.dying == null) { const D = dur(e.art, 'atk'), a1 = D * 0.2; t = t < a1 ? t : t < a1 + 0.08 ? a1 : a1 + (t - a1 - 0.08) * 0.9; }
     const fk = G.fx && G.fx.chop ? G.fx.chop() : 1; // khựng hình: chỉ khung đầu chớp trắng hẳn
     Object.assign(o, { anim: n, t, face: e.face, dir, hit: e.flash > 0 ? (e.fxHk >= 3 ? 0.85 : e.fxHk === 2 ? 0.7 : 0.55) * fk : 0, chop: fk, tint: G.fx && G.fx.dotTint ? G.fx.dotTint(e) : null, bao: false }); // chớp trắng mạnh dần: thường, nặng, chí mạng (js/fx.js đặt e.fxHk); nhịp độc/cháy: nhuộm màu hệ
+    // 14/10 (YEU-CAU-TRUM-NHO): trùm nhỏ có tệp ảnh pha 2 (<mã>-p2, js/sprite_custom.js) thì đổi sang hình pha 2 khi máu dưới 50%.
+    // Chỉ là hình: chiêu, nhịp, số giữ nguyên (b.phase của js/boss.js không đổi). Lúc gục dùng hàng chết của pha 1. Tắt: ?trumnho=0 (G.TRUM_NHO_PHA = false).
+    if (e.role === 'mini' && e.dying == null && G.TRUM_NHO_PHA !== false && e.maxhp > 0) o.phase = e.hp < e.maxhp * 0.5 ? 2 : 1;
+    if (e.role === 'mini') o.huTrum = true; // 14/10: trong trận (js/monster_art.js HT.trongTran): ảnh hàng nấm đã đặt đúng vùng thật ở js/boss.js, ảnh đập sàn / phun lửa theo cỡ vùng thật
     if (e.role === 'shield' && !(e.brokeT > 0) && e.dying == null) shieldArc(c, e);
     if (e.spikeUp > 0 && e.dying == null) {
       // đang dựng gai: vòng đỏ nhấp nháy quanh chân

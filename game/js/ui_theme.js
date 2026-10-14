@@ -250,7 +250,8 @@
     x = Math.round(x); y = Math.round(y); w = Math.round(w); h = Math.round(h);
     const pad = o.pad || 0, dis = !!o.disabled, st = dis ? 2 : heldIn(x - pad, y - pad, w + pad * 2, h + pad * 2) ? 1 : 0;
     const tone = o.primary ? 'p' : o.danger ? 'd' : o.sel ? 's' : o.gold ? 'g' : o.purple ? 'v' : o.fill ? 'c' : 'n';
-    const cv = layer('b|' + w + '|' + h + '|' + st + '|' + tone + (o.fill || ''), w, h + 3, () => {
+    const gn = nutAnh(tone, dis, st); // 14/10: nút ảnh AI (gd-nut-*), không có thì vẽ code như cũ
+    const cv = gn ? null : layer('b|' + w + '|' + h + '|' + st + '|' + tone + (o.fill || ''), w, h + 3, () => {
       const yo = st === 1 ? 1 : 0, y0 = yo;
       if (st !== 1) rr(0, 2, w, h, 'rgba(0,0,0,0.5)', 2);
       rr(0, y0, w, h, dis ? '#232c2a' : C.dk, 2);
@@ -265,10 +266,11 @@
       if (w >= 70 && h >= 16) for (const ex of [4, w - 9]) ring(ex + 2, y0 + (h >> 1), 2, 1, tooth); // đinh tán tròn hai đầu
     });
     const dy = pressFx('b' + x + '|' + y + '|' + w + '|' + h, st === 1);
-    put(cv, x, y + dy);
-    const y0 = y + dy + (st === 1 ? 1 : 0) - (o.sub && h >= 28 && G.RSC !== false ? 1 : 0), size = o.size || (h >= 26 ? 10 : 9), col = dis ? '#8fa49e' : C.ink; // Rà soát C: nút cao có hai dòng chữ: nâng 1 để dòng dưới không chạm răng cưa
-    if (label) nhan(label, x + w / 2, y0 + h / 2 + size * 0.36 - (o.sub ? 3.5 : 0) - 0.3, w - (w >= 70 && h >= 16 ? 16 : 6), { size, bold: true, align: 'center', color: col });
-    if (o.sub) nhan(o.sub, x + w / 2, y0 + h / 2 + 7.5, w - 6, { size: o.subSize || 7, bold: false, align: 'center', color: dis ? '#8fa49e' : '#e8d9a8' });
+    if (gn) khungDat(lopNut(gn, w, h, st), x, y + dy, w, h + 3); else put(cv, x, y + dy);
+    const toi = !!gn && tone === 's' && !dis; // nút ảnh "đang chọn" màu vàng: chữ nâu sẫm cho rõ
+    const y0 = y + dy + (st === 1 ? 1 : 0) - (o.sub && h >= 28 && G.RSC !== false ? 1 : 0), size = o.size || (h >= 26 ? 10 : 9), col = dis ? '#8fa49e' : toi ? '#3a1a08' : C.ink; // Rà soát C: nút cao có hai dòng chữ: nâng 1 để dòng dưới không chạm răng cưa
+    if (label) nhan(label, x + w / 2, y0 + h / 2 + size * 0.36 - (o.sub ? 3.5 : 0) - 0.3, w - (w >= 70 && h >= 16 ? 16 : 6), toi ? { size, bold: true, align: 'center', color: col, shadow: false } : { size, bold: true, align: 'center', color: col });
+    if (o.sub) nhan(o.sub, x + w / 2, y0 + h / 2 + 7.5, w - 6, { size: o.subSize || 7, bold: false, align: 'center', color: dis ? '#8fa49e' : toi ? '#5a3010' : '#e8d9a8', shadow: toi ? false : undefined });
     if (o.dot) { const c = G.ux; c.beginPath(); c.arc(x + w - 3, y + 3, 3, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = C.dk; c.stroke(); }
     if (dis) { ghiNut(x - pad, y - pad, w + pad * 2, h + pad * 2, [x, y, w, h]); return false; } // nút mờ vẫn giữ chỗ (không để nút bên cạnh nhận chạm trúng nó)
     return clicked(x - pad, y - pad, w + pad * 2, h + pad * 2, [x, y, w, h]);
@@ -279,7 +281,8 @@
     x = Math.round(x); y = Math.round(y); w = Math.round(w); h = Math.round(h);
     const pad = o.pad == null ? 3 : o.pad, dis = !!o.disabled, st = dis ? 2 : heldIn(x - pad, y - pad, w + pad * 2, h + pad * 2) ? 1 : 0;
     const tone = o.primary ? 'p' : o.danger ? 'd' : o.sel ? 's' : 'n';
-    const cv = layer('s|' + w + '|' + h + '|' + st + '|' + tone, w, h + 2, () => {
+    const gn = nutAnh(tone, dis, st); // 14/10: nút ảnh AI (gd-nut-*), không có thì vẽ code như cũ
+    const cv = gn ? null : layer('s|' + w + '|' + h + '|' + st + '|' + tone, w, h + 2, () => {
       const y0 = st === 1 ? 1 : 0;
       if (st !== 1) rr(0, 1, w, h, 'rgba(0,0,0,0.5)', 2);
       rr(0, y0, w, h, C.dk, 2); rr(1, y0 + 1, w - 2, h - 2, dis ? '#4a5c57' : st === 1 || tone === 's' ? C.gold : C.br, 2);
@@ -289,9 +292,9 @@
       R(2, y0 + 3, 1, h - 6, dis ? '#56706a' : C.gold); R(w - 3, y0 + 3, 1, h - 6, dis ? '#56706a' : C.gold);
     });
     const dy = pressFx('s' + x + '|' + y + '|' + w + '|' + h, st === 1);
-    put(cv, x, y + dy);
-    const size = o.size || 8;
-    if (label) nhan(label, x + w / 2, y + dy + (st === 1 ? 1 : 0) + h / 2 + size * 0.36 - 0.3, w - 5, { size, bold: true, align: 'center', color: dis ? '#8fa49e' : C.ink });
+    if (gn) khungDat(lopNut(gn, w, h, st), x, y + dy, w, h + 3); else put(cv, x, y + dy);
+    const size = o.size || 8, toi = !!gn && tone === 's' && !dis;
+    if (label) nhan(label, x + w / 2, y + dy + (st === 1 ? 1 : 0) + h / 2 + size * 0.36 - 0.3, w - 5, { size, bold: true, align: 'center', color: dis ? '#8fa49e' : toi ? '#3a1a08' : C.ink, shadow: toi ? false : undefined });
     if (o.dot) { const c = G.ux; c.beginPath(); c.arc(x + w - 2, y + 2, 2.6, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.7; c.strokeStyle = C.dk; c.stroke(); }
     if (dis) { ghiNut(x - pad, y - pad, w + pad * 2, h + pad * 2, [x, y, w, h]); return false; } // nút mờ vẫn giữ chỗ (không để nút bên cạnh nhận chạm trúng nó)
     return clicked(x - pad, y - pad, w + pad * 2, h + pad * 2, [x, y, w, h]);
@@ -336,6 +339,17 @@
     x = Math.round(x); y = Math.round(y); w = Math.round(w); h = Math.round(h);
     let twd = 0;
     if (title) { ui.font(11, true); twd = Math.ceil(G.ux.measureText(title).width); }
+    // 14/10: khung bảng ảnh AI (gd-khung-bang): viền ảnh phủ từ x - 3 tới x + w + 3 (như viền code), lòng nâu; tiêu đề có vạch đồng bên dưới
+    const gp = khungCo('gd-khung-bang');
+    if (gp) {
+      khungDat(khungLop(gp, 'bang|' + w + '|' + h + '|' + (title ? 1 : 0), w + 6, h + 7, () => {
+        R(2, 3, w + 4, h + 4, 'rgba(0,0,0,0.45)');
+        khungVeDeu(gp, 0, 0, w + 6, h + 6);
+        if (title) R(3 + 12, 3 + 19, w - 24, 1, C.br);
+      }), x - 3, y - 3, w + 6, h + 7);
+      if (title) txt(title, x + 9, y + 15.5, { size: 11, bold: true, color: C.hi });
+      return;
+    }
     const cv = layer('p|' + w + '|' + h + '|' + twd + '|' + (o.rightPad || 0) + (o.plain ? 'p' : '') + (o.noBand ? 'n' : ''), w + 6, h + 7, () => {
       const X = 3, Y = 3;
       R(X + 2, Y + 3, w, h, 'rgba(0,0,0,0.45)');
@@ -417,6 +431,28 @@
     c.drawImage(cv, x, y, w, h);
     c.imageSmoothingEnabled = sm; c.globalAlpha = a0;
   }
+  // ---------- 14/10 (YEU-CAU-TRUM-NHO-HIEU-UNG-GIAO-DIEN mục 3): 4 khung giao diện ảnh AI 9 mảnh ----------
+  // gd-khung-bang (T.panel) · gd-nut-thuong / -chinh / -nguy / -chon (T.btn, T.sbtn, T.tab theo tông thường / chính / nguy / chọn) ·
+  // gd-khung-thoai (T.dialog) · gd-thanh-tren + gd-thanh-tren-vach (T.topBar). Dựng: docs/review/ke-hoach-cai-thien/trum-moi/cong-cu/dung-khung-giao-dien.py.
+  // Chỉ thay KHUNG: chữ, biểu tượng, vùng chạm, toạ độ giữ như cũ. Thiếu tệp hoặc cờ tắt thì vẽ code y như cũ.
+  // Cờ tắt: ?khunganh=0 (G.KHUNG_ANH = false; cờ này tắt luôn các khung 9 mảnh Làn C5 ở trên).
+  if (G.KHUNG_ANH === undefined) { let tat = false; try { tat = /[?&]khunganh=0(&|$)/.test(String(window.location && window.location.search)); } catch (e) { tat = false; } if (tat) G.KHUNG_ANH = false; }
+  // Dán ảnh 9 mảnh vào lớp đang dựng. Ô nhỏ hơn tổng hai góc thì thu ĐỀU cả hình (góc không bị bẹp một chiều).
+  function khungVeDeu(ga, x, y, w, h) {
+    const v = ga.vien || [0, 0, 0, 0], k = Math.min(1, h / (v[0] + v[2] + 2), w / (v[1] + v[3] + 2));
+    if (k >= 1) return khungVe(ga, x, y, w, h);
+    g.save(); g.translate(x, y); g.scale(k, k);
+    try { khungVe(ga, 0, 0, w / k, h / k); } finally { g.restore(); }
+  }
+  const MA_NUT = { n: 'gd-nut-thuong', p: 'gd-nut-chinh', d: 'gd-nut-nguy', s: 'gd-nut-chon' };
+  // ảnh nút theo tông (nút mờ: bản tối xám xanh; đang bấm: bản sáng do game tự làm). Tông khác (vàng kim, tím, màu riêng): null → vẽ code.
+  function nutAnh(tone, dis, st) {
+    const g0 = MA_NUT[tone] ? khungCo(MA_NUT[tone]) : null;
+    if (!g0) return null;
+    return dis ? gdBien(g0, 'toi') || g0 : st === 1 ? gdBien(g0, 'sang') || g0 : g0;
+  }
+  // lớp nút ảnh: bóng đổ như nút code, ảnh 9 mảnh (đang bấm thì thấp xuống 1 điểm)
+  const lopNut = (ga, w, h, st) => khungLop(ga, 'nut|' + w + '|' + h + '|' + st, w, h + 3, () => { if (st !== 1) rr(0, 2, w, h, 'rgba(0,0,0,0.5)', 2); khungVeDeu(ga, 0, st === 1 ? 1 : 0, w, h); });
 
   // ---------- thanh máu trùm / tinh anh ----------
   // Phân cấp: trùm vùng (big) khung to có hoa văn, tên chữ to; trùm nhỏ khung vừa; tinh anh khung nhỏ.
@@ -649,6 +685,23 @@
   // parts: [[chữ, màu], ...] xếp từ trái; right: chữ bên phải (tên hero, cấp)
   T.topBar = function (items, right) {
     const mx = Math.ceil(G.mx || 0), w = 480 + mx * 2;
+    // 14/10: thanh ảnh AI (gd-thanh-tren): đầu mây hai bên thò ra ngoài màn 10 điểm; 8 tài nguyên chia 4 ô bằng vạch (gd-thanh-tren-vach):
+    // vàng + quặng · 3 nguyên liệu · 3 mảnh · chữ bên phải. Vị trí chữ và vùng chạm giữ như cũ (tính lại cùng cách T.resRow).
+    const gb = khungCo('gd-thanh-tren');
+    if (gb) {
+      khungDat(khungLop(gb, 'tren|' + w, w + 20, 17, () => { R(0, 15, w + 20, 1, 'rgba(0,0,0,0.35)'); khungVe(gb, 0, 0, w + 20, 16); }), -mx - 10, 0, w + 20, 17);
+      const gv = khungCo('gd-thanh-tren-vach');
+      if (gv && items && items.length === 8) {
+        const size = 7.5, ih = Math.round(size * 1.05 * 2) / 2, gap = 8, vach = [];
+        let x = 6; ui.font(size, true);
+        items.forEach((q, i) => { const e = x + ih + 1.5 + G.ux.measureText(String(q[1])).width; if (i === 1 || i === 4) vach.push(e + gap / 2); x = e + gap; });
+        if (right) { ui.font(7.5, true); const px = 474 - G.ux.measureText(String(right)).width - 6; if (px > x + 2) vach.push(px); }
+        for (const px of vach) gdVe(gv, Math.round(px - gv.rong / 2), 0, gv.rong, 16);
+      }
+      T.resRow(items, 6, 10.5, { size: 7.5, gap: 8 });
+      if (right) oldText(right, 474, 10.5, { size: 7.5, bold: true, align: 'right', color: C.hi });
+      return;
+    }
     put(layer('top|' + w, w, 17, () => {
       R(0, 0, w, 14, 'rgba(13,26,26,0.93)'); R(0, 14, w, 1, C.br); R(0, 15, w, 1, C.dk);
       for (let i = 2; i < w - 4; i += 8) { P(i, 13, C.brD); P(i + 1, 12, C.brD); P(i + 2, 13, C.brD); } // răng cưa nhỏ sát mép
@@ -665,6 +718,23 @@
     x = Math.round(x); y = Math.round(y); w = Math.round(w);
     ui.font(7.5, true);
     const nw = name ? Math.ceil(G.ux.measureText(name).width) + 12 : 0;
+    // 14/10: hộp thoại ảnh AI (gd-khung-thoai, cuộn giấy hai trục): thẻ tên, đuôi, chữ vẽ như cũ; chữ nâu sẫm trên giấy kem
+    const gt = khungCo('gd-khung-thoai');
+    if (gt) {
+      const tx = o.tail == null ? 18 : o.tail;
+      // hai trục cuộn thò ra ngoài hộp 6 điểm mỗi bên, để chữ (bắt đầu ở x + 7 như cũ) nằm trên giấy, không đè lên trục
+      const L = 6;
+      khungDat(khungLop(gt, 'thoai|' + w + '|' + h + '|' + nw + '|' + tx, w + 2 + L * 2, h + 10, () => {
+        const Y = 7;
+        rr(L + 1, Y + 2, w, h, 'rgba(0,0,0,0.45)', 2);
+        khungVeDeu(gt, 0, Y - 2, w + L * 2, h + 4);
+        if (nw) { rr(L + 6, 0, nw, 12, C.dk, 2); rr(L + 7, 1, nw - 2, 10, C.br, 1); R(L + 8, 2, nw - 4, 8, C.patD); R(L + 9, 1, nw - 6, 1, C.hi); }
+        if (tx >= 0) for (let i = 0; i < 5; i++) { R(L + tx + i, Y + h - 1 + i, 9 - i * 2 > 0 ? 9 - i * 2 : 1, 1, i === 0 ? '#f3e8c8' : C.dk); if (9 - i * 2 > 2) R(L + tx + i + 1, Y + h - 1 + i, 7 - i * 2, 1, '#f3e8c8'); }
+      }), x - L, y - 7, w + 2 + L * 2, h + 10);
+      if (name) txt(name, x + 6 + nw / 2, y + 1.6, { size: 7.5, bold: true, align: 'center', color: C.hi });
+      lines.forEach((l, i) => txt(l, x + 7, y + 8 + size + i * (size + 3), { size, bold: true, color: '#2a1a14', shadow: false }));
+      return h;
+    }
     put(layer('dlg|' + w + '|' + h + '|' + nw, w + 2, h + 10, () => {
       const Y = 7;
       rr(1, Y + 2, w, h, 'rgba(0,0,0,0.45)', 2);

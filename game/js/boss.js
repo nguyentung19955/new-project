@@ -123,6 +123,10 @@
   function anhVung(b, ma, x, y, t, lead, giay, sc) {
     later(b, Math.max(0, t - lead), () => { if (!b.dead && G.huTrum && G.huTrum(ma) && G.fx && G.fx.anh) G.fx.anh(ma, x, y, { t: giay, gian: true, sc }); });
   }
+  // 14/10 (đợt trùm nhỏ, cờ tắt ?huthem=0 hoặc ?hutrum=0): như anhVung cho 7 hiệu ứng thêm (G.huThem). Hiện dùng: hàng nấm độc của Nấm Chúa.
+  function anhVungThem(b, ma, x, y, t, lead, giay, sc) {
+    later(b, Math.max(0, t - lead), () => { if (!b.dead && G.huThem && G.huThem(ma) && G.fx && G.fx.anh) G.fx.anh(ma, x, y, { t: giay, gian: true, sc }); });
+  }
 
   // ======================= CHIÊU CỦA TRÙM VÙNG =======================
   // Mỗi chiêu: anim cX đã gồm báo trước → ra đòn → dư âm; T là lúc vùng đỏ nổ (mốc moc[0]), D là độ dài cả chiêu.
@@ -320,7 +324,7 @@
         for (let i = 0; i < 5 + ph; i++) { const q = i ? near(P.x, P.y, 70, 40) : [P.x, P.y]; circle(q[0], q[1], 16, T + i * 0.1, b.dmg, 'ice', { fxKind: 'spout' }); }
       } else if (id === 'namChua' && k === 'chieu1') {
         // Hàng nấm độc: nấm mọc vọt nối nhau theo hướng em bé
-        for (let i = 0; i < 7; i++) { const x = b.x + Math.cos(a) * (22 + i * 21), y = b.y + Math.sin(a) * (22 + i * 21); if (x > w.x0 - 6 && x < w.x1 + 6 && y > w.y0 - 6 && y < w.y1 + 6) circle(x, y, 14, T + i * 0.08, b.dmg, 'poison', { fxKind: 'root', then: ph >= 2 ? 2 : 0 }); }
+        for (let i = 0; i < 7; i++) { const x = b.x + Math.cos(a) * (22 + i * 21), y = b.y + Math.sin(a) * (22 + i * 21); if (x > w.x0 - 6 && x < w.x1 + 6 && y > w.y0 - 6 && y < w.y1 + 6) { circle(x, y, 14, T + i * 0.08, b.dmg, 'poison', { fxKind: 'root', then: ph >= 2 ? 2 : 0 }); anhVungThem(b, 'hu-nam-moc', x, y, T + i * 0.08, 0.2, 0.6, 1); } }
       } else if (id === 'namChua') {
         // Bão bào tử: hai đợt bào tử toả tròn và vòng khí độc
         for (let j = 0; j < 2; j++) later(b, T + j * 0.4, () => { for (let i = 0; i < 9; i++) shot(b, a + ((i + j * 0.5) / 9) * TAU, 78, { kind: 'orb', col: '#c4f43c', col2: '#58208c', el: 'poison', t: 2.2 }); });

@@ -2164,6 +2164,9 @@
           break;
         }
         case 'crack': {
+          // 14/10 (cờ tắt ?huthem=0 / ?hutrum=0): ảnh hu-nut-san (chỉ khung 1; khung 2-3 ảnh AI bị pha xanh), cỡ theo bán kính vết nứt
+          // (ảnh chuẩn cho o.r = 30), mờ dần ở 25% cuối như vết vẽ code.
+          if (G.huThem && G.huThem('hu-nut-san')) { G.fxAnh.veK(c, 'hu-nut-san', x, y, 0, 0, kep(o.r / 30, 0.35, 3), false, k > 0.75 ? 1 - (k - 0.75) / 0.25 : 1); break; }
           const len = k > 0.75 ? 1 - (k - 0.75) * 3 : Math.min(1, k * 14 + 0.3);
           for (let j = 0; j < 5; j++) {
             const a = (j / 5) * TAU + hash(o.sd + j) * 1.1, L = o.r * (0.55 + hash(o.sd + j * 3) * 0.45) * len;
@@ -2209,6 +2212,12 @@
           break;
         }
         case 'orb': {
+          // 14/10 (cờ tắt ?huthem=0 / ?hutrum=0): ảnh hu-hat-linh-khi (trắng, nhuộm màu hệ, 4 khung lặp), đầu hạt ở (x, y), đuôi kéo ngược hướng bay.
+          if (G.huThem && G.huThem('hu-hat-linh-khi')) {
+            const g = Math.atan2(o.vy, o.vx), trai = Math.cos(g) < 0;
+            G.fxAnh.ve(c, 'hu-hat-linh-khi', x, y, o.t0 - o.t, trai ? g + Math.PI : g, o.big ? 1.5 : 1, trai, 1, o.pl.c);
+            break;
+          }
           const s = o.big ? 2 : 1;
           line(c, Math.round(o.px), Math.round(o.py), x, y, o.pl.c, s + 1);
           p(c, x - s - 1, y - s, s * 2 + 3, s * 2 + 1, o.pl.c); p(c, x - s, y - s - 1, s * 2 + 1, s * 2 + 3, o.pl.c);

@@ -18,7 +18,9 @@
   // Phiên E2 — DÁNG PHA của 3 trùm vùng: tệp có mã <trùm>-p2 hoặc <trùm>-p3 (ví dụ nguTinh-p2), lưới rút gọn 4 hàng idle / tele / atk / hit (tools/tach-quai).
   // Trùm đang ở pha đó thì các hàng CÓ trong tệp pha lấy từ tệp pha; hàng không có (move, die với lưới 4 hàng) mượn tệp pha 1. Không có tệp pha: vẽ pha 1 như trước.
   // Để sẵn: nếu sau này tệp pha có thêm hàng move hoặc die thì game dùng luôn, không phải sửa code (trang công cụ hiện chỉ xuất 4 hàng).
-  const PHA_MA = /^(nguTinh|mocTinh|hoTinh)-p([23])$/, PHA_HANG = { idle: 1, tele: 1, atk: 1, hit: 1, move: 1, die: 1 };
+  // 14/10 (YEU-CAU-TRUM-NHO): ba trùm nhỏ Nấm Chúa / Cua Đá / Hổ Lửa có thêm tệp pha 2 (<mã>-p2). Trùm nhỏ chỉ đổi HÌNH (js/mobs.js truyền
+  // o.phase = 2 khi máu < 50%), không đổi chiêu hay số. Tắt: G.TRUM_NHO_PHA = false hoặc ?trumnho=0 (trùm nhỏ giữ hình pha 1 suốt trận).
+  const PHA_MA = /^(nguTinh|mocTinh|hoTinh|namChua|cuaDa|hoLua)-p([23])$/, PHA_HANG = { idle: 1, tele: 1, atk: 1, hit: 1, move: 1, die: 1 };
 
   // Em bé còn dùng (ba bạn NPC ngồi ở sân đình, truyện, bảng Ông Từ). Thân Cu Tí cũ, đòn theo vũ khí, thân theo bộ: đã bỏ (đợt 2).
   const EM_BE_MA = /^em-be-(hunter|healer|wrestler)$/;
@@ -66,6 +68,12 @@
     let tat = false;
     try { tat = typeof location !== 'undefined' && /[?&]phanthan=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
     G.PHAN_THAN_ANH = !tat;
+  }
+  // 14/10: trùm nhỏ đổi sang hình pha 2 khi máu < 50% (js/mobs.js). ?trumnho=0: tắt, giữ hình pha 1.
+  if (G.TRUM_NHO_PHA === undefined) {
+    let tat = false;
+    try { tat = typeof location !== 'undefined' && /[?&]trumnho=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
+    G.TRUM_NHO_PHA = !tat;
   }
   let napSauDangChay = false, trongNapSau = false;
   // Tải nhanh (12/10): ảnh rời. roiNhan(img, src) nhận ảnh anh/<mã>.<mã nội dung>.png vào hàng chờ; roiCan(ma) báo game đang cần hình ma
@@ -1173,6 +1181,7 @@
       g.vien = tep.vien.map((v) => Math.min(400, Math.round(+v)));
       if (!g.vien.some((v) => v > 0)) g.vien = null;
     }
+    g.lap = tep.lap_canh === true && !!g.vien; // 14/10: "lap_canh": cạnh và lòng 9 mảnh LẶP (hoa văn không bị kéo dãn), góc giữ nguyên
     const xong = (src) => {
       g.img = src; g.pw = src.width; g.ph = src.height; g.rong = Math.max(1, Math.round(src.width / g.net)); g.cao = Math.max(1, Math.round(src.height / g.net));
       g.ghep9.clear(); g.ready = true;
@@ -1199,7 +1208,16 @@
     [l, r] = giu(l, r, W, g.pw); [t, b] = giu(t, b, H, g.ph);
     const sx = [0, l, g.pw - r], sw = [l, g.pw - l - r, r], dx = [0, l, W - r], dw = [l, W - l - r, r];
     const sy = [0, t, g.ph - b], sh = [t, g.ph - t - b, b], dy = [0, t, H - b], dh = [t, H - t - b, b];
-    for (let j = 0; j < 3; j++) for (let i = 0; i < 3; i++) if (sw[i] > 0 && sh[j] > 0 && dw[i] > 0 && dh[j] > 0) c.drawImage(g.img, sx[i], sy[j], sw[i], sh[j], dx[i], dy[j], dw[i], dh[j]);
+    for (let j = 0; j < 3; j++) for (let i = 0; i < 3; i++) {
+      if (!(sw[i] > 0 && sh[j] > 0 && dw[i] > 0 && dh[j] > 0)) continue;
+      if (!g.lap || (i !== 1 && j !== 1)) { c.drawImage(g.img, sx[i], sy[j], sw[i], sh[j], dx[i], dy[j], dw[i], dh[j]); continue; }
+      // 14/10 "lap_canh": mảnh cạnh / lòng lát lặp theo chiều dài (mảnh cuối cắt bớt), chiều kia giữ cỡ mảnh như góc
+      const tw = i === 1 ? sw[1] : dw[i], th = j === 1 ? sh[1] : dh[j];
+      for (let yy = 0; yy < dh[j]; yy += th) for (let xx = 0; xx < dw[i]; xx += tw) {
+        const ww = Math.min(tw, dw[i] - xx), hh = Math.min(th, dh[j] - yy);
+        c.drawImage(g.img, sx[i], sy[j], i === 1 ? ww : sw[i] * ww / tw, j === 1 ? hh : sh[j] * hh / th, dx[i] + xx, dy[j] + yy, ww, hh);
+      }
+    }
     g.ghep9.set(key, cv);
     return cv;
   }

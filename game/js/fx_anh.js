@@ -75,6 +75,14 @@
   try { tTat = typeof location !== 'undefined' && /[?&]hutrum=0\b/i.test(String(location.search || '')); } catch (e) { tTat = false; }
   if (G.HU_TRUM == null) G.HU_TRUM = !tTat;
   G.huTrum = (ma) => G.HU_TRUM !== false && FA.co(ma);
+  // ---------- 7 HIỆU ỨNG THÊM (14/10, docs/review/ke-hoach-cai-thien/trum-moi/YEU-CAU-TRUM-NHO-HIEU-UNG-GIAO-DIEN.md) ----------
+  // hu-dap-san (Cua Đá đập sàn), hu-nam-moc (Nấm Chúa hàng nấm), hu-phun-lua-quat (Hổ Lửa phun lửa), hu-hat-linh-khi (hạt linh khí bay về
+  // thanh, js/fx.js 'orb', nhuộm theo hệ), hu-nut-san (vết nứt sàn, js/fx.js 'crack', khung 1 mờ dần), hu-quai-hien (quái xuất hiện,
+  // CH.spawn), hu-quai-dap (quái thường đập đất, DON.dap). Cờ tắt: ?huthem=0 (G.HU_THEM = false) hoặc cờ chung ?hutrum=0 → vẽ code như cũ.
+  let thTat = false;
+  try { thTat = typeof location !== 'undefined' && /[?&]huthem=0\b/i.test(String(location.search || '')); } catch (e) { thTat = false; }
+  if (G.HU_THEM == null) G.HU_THEM = !thTat;
+  G.huThem = (ma) => G.HU_TRUM !== false && G.HU_THEM !== false && FA.co(ma);
   // Nhuộm màu (ảnh trắng-xám, game tự nhuộm): nhân màu rồi cộng lại một phần ảnh gốc cho lõi còn sáng (cùng cách js/fx_he.js nhuộm
   // vòng tụ lực). kieu 'sang': chỉ nhuộm điểm sáng gần trắng (ánh trong khe nứt), phần còn lại giữ màu gốc.
   // Tấm nhuộm làm MỘT lần cho mỗi (mã, màu, kiểu) rồi dùng lại. Lỗi (không có canvas) thì vẽ ảnh gốc.
