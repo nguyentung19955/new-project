@@ -1,0 +1,7 @@
+# Toàn bộ prompt còn lại (14/10 07:35). Mỗi dòng ## = 1 tin gen.
+K='Mỗi khung trong ô riêng, các khung CÁCH XA NHAU. Cỡ bằng nhau mọi khung, chân chạm cùng một đường đất. Nền xanh lá #00FF00, không chữ, không bóng, không viền ô.'
+# A. Cua Đá (kèm cua-da-p1 / cua-da-p2) -> cua-da/1-dung..6-chet, p2-1..4
+# B. Hổ Lửa (kèm ho-lua) -> ho-lua/1-dung..6-chet, p2-1..4
+# C. hu-dap-san, hu-nam-moc, hu-phun-lua-quat
+# D. hu-hat-linh-khi, hu-nut-san, hu-quai-hien, hu-quai-dap
+# E. gd-khung-bang, gd-nut-chu, gd-khung-thoai, gd-thanh-tren
