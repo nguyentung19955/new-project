@@ -331,6 +331,7 @@
   function xenTabs() {
     // Phiên cân bằng (mục 3): thẻ Nguyên liệu (đổi vàng lấy nguyên liệu vùng đã qua, js/upgrade.js U.doi) trên băng tiêu đề.
     const tabs = [['nl', 'Nguyên liệu', 48]];
+    if (G.BAN_QUANG && G.BAN_QUANG_BAT !== false && G.upg && G.upg.bqMua) tabs.push(['quang', 'Quặng', 34]); // 14/10 (bước 1, mục 4)
     // Rà soát C: thẻ rộng theo chữ (phông thật trên iPhone rộng hơn, "Nguyên liệu" chạm viền thẻ) nếu băng tiêu đề còn chỗ
     if (G.RSC !== false) {
       ui.font(7.5, true);
@@ -341,13 +342,38 @@
       if (du > 0 && tong > 0) { const k = Math.min(1, du / tong); tabs.forEach((t, i) => { t[2] = Math.floor(t[2] + thieu[i] * k); }); } // thiếu chỗ thì chia phần còn trống theo độ thiếu
     }
     let x = PX + PW - 70 - tabs.reduce((a, t) => a + t[2] + 2, 0);
+    if (V.gtab !== 'quang' || tabs.length < 2) V.gtab = 'nl';
     for (const t of tabs) {
-      T.sbtn(x, PY + 3, t[2], 17, t[1], { size: 7, pad: 2, sel: true });
+      if (T.sbtn(x, PY + 3, t[2], 17, t[1], { size: 7, pad: 2, sel: V.gtab === t[0] }) && V.gtab !== t[0]) { V.gtab = t[0]; G.sfx('ui'); }
       x += t[2] + 2;
     }
     return false;
   }
-  function gear() { V.gtab = 'nl'; return nguyenLieu(); }
+  function gear() { return V.gtab === 'quang' ? banQuang() : nguyenLieu(); }
+
+  // ---------- Bà Hàng Xén bán quặng (14/10, bước 1 làm chắc mục 4; js/upgrade.js U.bqMua, số G.BAN_QUANG) ----------
+  function banQuang() {
+    const sv = G.save, U = G.upg, D = G.BAN_QUANG;
+    frame('Hàng xén');
+    if (xenTabs()) return null;
+    if (V.gtab !== 'quang') return nguyenLieu();
+    const con = U.bqCon(sv), why = U.bqDuoc(sv);
+    ui.para(G.t('{0} vàng một quặng. Mỗi ngày bà bán tối đa {1} quặng; hôm nay còn {2}.', D.gia, D.moiNgay, con), CX + 2, 78, CW - 4, { size: 7, color: SOFT });
+    const y = 100;
+    T.inset(CX, y, CW, 40, false);
+    ui.text(G.tv('Quặng'), CX + 8, y + 15, { size: 9, bold: true, color: TXT });
+    ui.text(G.t('Đang có {0} · dùng để mài vũ khí, nâng lò', sv.ore | 0), CX + 8, y + 29, { size: 7, color: SOFT });
+    if (T.sbtn(CX + CW - 168, y + 10, 76, 20, why || G.t('Mua 1 ({0})', D.gia), { size: 7.5, pad: 2, disabled: !!why })) {
+      if (U.bqMua(sv, 1)) { G.persist(); G.sfx('pick'); say(G.t('Của cháu đây, {0} quặng.', 1)); }
+    }
+    const k5 = Math.max(1, Math.min(5, con));
+    if (T.sbtn(CX + CW - 86, y + 10, 80, 20, G.t('Mua {0} ({1})', k5, k5 * D.gia), { size: 7.5, pad: 2, disabled: !!why || k5 < 2 || sv.gold < k5 * D.gia })) {
+      const got = U.bqMua(sv, k5);
+      if (got) { G.persist(); G.sfx('pick'); say(G.t('Của cháu đây, {0} quặng.', got)); }
+    }
+    ui.para('Quặng vẫn rơi nhiều nhất khi thắng ải; bà chỉ bán thêm chút ít cho cháu khỏi thiếu lúc mài.', CX + 2, y + 50, CW - 4, { size: 7, color: SOFT });
+    return con > 0 ? 'Thiếu quặng mài vũ khí thì mua của bà, mỗi ngày bà có ít hàng thôi.' : 'Hôm nay bà bán hết quặng rồi, mai cháu quay lại nhé.';
+  }
 
   // ---------- đổi vàng lấy nguyên liệu vùng đã qua (Bà Hàng Xén, phiên cân bằng mục 3) ----------
   function nguyenLieu() {

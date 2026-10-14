@@ -65,7 +65,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.14-2013";
+(window.G = window.G || {}).VERSION = "lk-2026.10.14-2016";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -1834,7 +1834,17 @@
 "Hệ chính: {0} · {1} (tối đa)": "Main element: {0} · {1} (max)",
 "Chưởng xa, nhanh hơn 20%; phi tiêu +10%": "Palm 20% farther, faster; Shuriken +10%",
 "Chưởng trúng hồi 1% máu; thương +10%": "Palm hits heal 1% HP; Spear +10%",
-"Mưa phi tiêu": "Shuriken Rain"
+"Mưa phi tiêu": "Shuriken Rain",
+"{0} vàng một quặng. Mỗi ngày bà bán tối đa {1} quặng; hôm nay còn {2}.": "{0} gold per ore. I sell at most {1} ore a day; {2} left today.",
+"Đang có {0} · dùng để mài vũ khí, nâng lò": "You have {0} · used to sharpen weapons and upgrade the forge",
+"Mua 1 ({0})": "Buy 1 ({0})",
+"Mua {0} ({1})": "Buy {0} ({1})",
+"Của cháu đây, {0} quặng.": "Here you go, {0} ore.",
+"Quặng vẫn rơi nhiều nhất khi thắng ải; bà chỉ bán thêm chút ít cho cháu khỏi thiếu lúc mài.": "Stages still give the most ore; I only sell a little so you are not short when sharpening.",
+"Thiếu quặng mài vũ khí thì mua của bà, mỗi ngày bà có ít hàng thôi.": "Short on ore for sharpening? Buy from me, but I only get a little each day.",
+"Hôm nay bà bán hết quặng rồi, mai cháu quay lại nhé.": "I am out of ore today, come back tomorrow.",
+"Hết hàng hôm nay": "Sold out today",
+"Đang tải ảnh {0}": "Loading {0} images"
 }); })();
 
 // ===== js/data.js =====
@@ -2471,6 +2481,13 @@
   // đã hạ trùm, giá gia vàng một món. Giới hạn: kho hàng có tối đa max lượt; mỗi ải thắng (cả chơi lại) thêm them lượt.
   // Không theo ngày giờ máy (không lách được bằng chỉnh đồng hồ, không cần mạng). Bản lưu cũ chưa có thì nhận sẵn batDau lượt.
   G.DOI_NL = { gia: 150, max: 10, them: 2, batDau: 5 };
+  // 14/10 (bước 1 làm chắc, mục 4): Bà Hàng Xén BÁN QUẶNG (chỗ tiêu vàng). gia vàng / 1 quặng: cao hơn một chút so với giá quặng sẵn có
+  // (Thương nhân trong ải: 3 quặng 100 vàng ≈ 33 vàng / quặng); moiNgay: tối đa bấy nhiêu quặng mỗi ngày (theo ngày trên máy, đặt lại lúc
+  // nửa đêm; chỉnh lùi giờ máy không hồi lượt) để không thay được việc cày (một ải thắng cho 4-12 quặng). Bản lưu: sv.banQuang = { cuoi, n }.
+  // Cờ tắt: ?banquang=0 (G.BAN_QUANG_BAT = false).
+  G.BAN_QUANG = { gia: 40, moiNgay: 15 };
+  G.BAN_QUANG_BAT = true;
+  try { if (typeof location !== 'undefined' && /[?&]banquang=0(&|$)/.test(location.search || '')) G.BAN_QUANG_BAT = false; } catch (e) { /* giữ mặc định */ }
 
   G.HINTS = [
     'Kết liễu quái đang dính hiệu ứng thì vũ khí nhận dấu ấn của hệ đó.',
@@ -32618,6 +32635,7 @@ MA._xong();
   function xenTabs() {
     // Phiên cân bằng (mục 3): thẻ Nguyên liệu (đổi vàng lấy nguyên liệu vùng đã qua, js/upgrade.js U.doi) trên băng tiêu đề.
     const tabs = [['nl', 'Nguyên liệu', 48]];
+    if (G.BAN_QUANG && G.BAN_QUANG_BAT !== false && G.upg && G.upg.bqMua) tabs.push(['quang', 'Quặng', 34]); // 14/10 (bước 1, mục 4)
     // Rà soát C: thẻ rộng theo chữ (phông thật trên iPhone rộng hơn, "Nguyên liệu" chạm viền thẻ) nếu băng tiêu đề còn chỗ
     if (G.RSC !== false) {
       ui.font(7.5, true);
@@ -32628,13 +32646,38 @@ MA._xong();
       if (du > 0 && tong > 0) { const k = Math.min(1, du / tong); tabs.forEach((t, i) => { t[2] = Math.floor(t[2] + thieu[i] * k); }); } // thiếu chỗ thì chia phần còn trống theo độ thiếu
     }
     let x = PX + PW - 70 - tabs.reduce((a, t) => a + t[2] + 2, 0);
+    if (V.gtab !== 'quang' || tabs.length < 2) V.gtab = 'nl';
     for (const t of tabs) {
-      T.sbtn(x, PY + 3, t[2], 17, t[1], { size: 7, pad: 2, sel: true });
+      if (T.sbtn(x, PY + 3, t[2], 17, t[1], { size: 7, pad: 2, sel: V.gtab === t[0] }) && V.gtab !== t[0]) { V.gtab = t[0]; G.sfx('ui'); }
       x += t[2] + 2;
     }
     return false;
   }
-  function gear() { V.gtab = 'nl'; return nguyenLieu(); }
+  function gear() { return V.gtab === 'quang' ? banQuang() : nguyenLieu(); }
+
+  // ---------- Bà Hàng Xén bán quặng (14/10, bước 1 làm chắc mục 4; js/upgrade.js U.bqMua, số G.BAN_QUANG) ----------
+  function banQuang() {
+    const sv = G.save, U = G.upg, D = G.BAN_QUANG;
+    frame('Hàng xén');
+    if (xenTabs()) return null;
+    if (V.gtab !== 'quang') return nguyenLieu();
+    const con = U.bqCon(sv), why = U.bqDuoc(sv);
+    ui.para(G.t('{0} vàng một quặng. Mỗi ngày bà bán tối đa {1} quặng; hôm nay còn {2}.', D.gia, D.moiNgay, con), CX + 2, 78, CW - 4, { size: 7, color: SOFT });
+    const y = 100;
+    T.inset(CX, y, CW, 40, false);
+    ui.text(G.tv('Quặng'), CX + 8, y + 15, { size: 9, bold: true, color: TXT });
+    ui.text(G.t('Đang có {0} · dùng để mài vũ khí, nâng lò', sv.ore | 0), CX + 8, y + 29, { size: 7, color: SOFT });
+    if (T.sbtn(CX + CW - 168, y + 10, 76, 20, why || G.t('Mua 1 ({0})', D.gia), { size: 7.5, pad: 2, disabled: !!why })) {
+      if (U.bqMua(sv, 1)) { G.persist(); G.sfx('pick'); say(G.t('Của cháu đây, {0} quặng.', 1)); }
+    }
+    const k5 = Math.max(1, Math.min(5, con));
+    if (T.sbtn(CX + CW - 86, y + 10, 80, 20, G.t('Mua {0} ({1})', k5, k5 * D.gia), { size: 7.5, pad: 2, disabled: !!why || k5 < 2 || sv.gold < k5 * D.gia })) {
+      const got = U.bqMua(sv, k5);
+      if (got) { G.persist(); G.sfx('pick'); say(G.t('Của cháu đây, {0} quặng.', got)); }
+    }
+    ui.para('Quặng vẫn rơi nhiều nhất khi thắng ải; bà chỉ bán thêm chút ít cho cháu khỏi thiếu lúc mài.', CX + 2, y + 50, CW - 4, { size: 7, color: SOFT });
+    return con > 0 ? 'Thiếu quặng mài vũ khí thì mua của bà, mỗi ngày bà có ít hàng thôi.' : 'Hôm nay bà bán hết quặng rồi, mai cháu quay lại nhé.';
+  }
 
   // ---------- đổi vàng lấy nguyên liệu vùng đã qua (Bà Hàng Xén, phiên cân bằng mục 3) ----------
   function nguyenLieu() {
@@ -33550,6 +33593,36 @@ MA._xong();
     for (; k < n && U.doiDuoc(sv, r) === ''; k++) { sv.gold -= U.doiGia(); sv.mats[r]++; sv.doiNL = (sv.doiNL | 0) - 1; }
     return k;
   };
+  // ---------- Bà Hàng Xén bán quặng (14/10, bước 1 làm chắc mục 4; số liệu G.BAN_QUANG ở data.js) ----------
+  const ngayNay = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+  // Số quặng còn mua được hôm nay. Chuẩn hoá sv.banQuang (bản lưu cũ không có thì tạo; hỏng thì làm lại). Sang ngày mới (lớn hơn ngày lớn
+  // nhất đã thấy) thì đặt lại; ngày lùi (chỉnh giờ máy) thì giữ nguyên số đã mua.
+  U.bqCon = function (sv) {
+    const D = G.BAN_QUANG;
+    if (!D || !sv) return 0;
+    let o = sv.banQuang;
+    if (!o || typeof o !== 'object' || Array.isArray(o)) o = sv.banQuang = { cuoi: '', n: 0 };
+    if (typeof o.cuoi !== 'string') o.cuoi = '';
+    o.n = Math.max(0, Math.min(D.moiNgay, Math.floor(+o.n || 0)));
+    const h = ngayNay();
+    if (h > o.cuoi) { o.cuoi = h; o.n = 0; }
+    return Math.max(0, D.moiNgay - o.n);
+  };
+  U.bqGia = () => (G.BAN_QUANG ? G.BAN_QUANG.gia : 40);
+  // '' là mua được; không thì lý do (chữ hiện lên nút)
+  U.bqDuoc = function (sv) {
+    if (!G.BAN_QUANG || G.BAN_QUANG_BAT === false) return 'Chưa mở';
+    if (U.bqCon(sv) <= 0) return 'Hết hàng hôm nay';
+    if (sv.gold < U.bqGia()) return 'Thiếu vàng';
+    return '';
+  };
+  U.bqMua = function (sv, n) {
+    n = n || 1;
+    let k = 0;
+    for (; k < n && U.bqDuoc(sv) === ''; k++) { sv.gold -= U.bqGia(); sv.ore = (sv.ore | 0) + 1; sv.banQuang.n++; }
+    return k;
+  };
+
   // Vùng đã qua đang ít nguyên liệu nhất (cho Thương nhân trong ải); null nếu chưa qua vùng nào.
   U.doiVung = function (sv) {
     let best = null;

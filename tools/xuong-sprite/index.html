@@ -1253,6 +1253,13 @@ window.G.LANG = 'vi';
   // đã hạ trùm, giá gia vàng một món. Giới hạn: kho hàng có tối đa max lượt; mỗi ải thắng (cả chơi lại) thêm them lượt.
   // Không theo ngày giờ máy (không lách được bằng chỉnh đồng hồ, không cần mạng). Bản lưu cũ chưa có thì nhận sẵn batDau lượt.
   G.DOI_NL = { gia: 150, max: 10, them: 2, batDau: 5 };
+  // 14/10 (bước 1 làm chắc, mục 4): Bà Hàng Xén BÁN QUẶNG (chỗ tiêu vàng). gia vàng / 1 quặng: cao hơn một chút so với giá quặng sẵn có
+  // (Thương nhân trong ải: 3 quặng 100 vàng ≈ 33 vàng / quặng); moiNgay: tối đa bấy nhiêu quặng mỗi ngày (theo ngày trên máy, đặt lại lúc
+  // nửa đêm; chỉnh lùi giờ máy không hồi lượt) để không thay được việc cày (một ải thắng cho 4-12 quặng). Bản lưu: sv.banQuang = { cuoi, n }.
+  // Cờ tắt: ?banquang=0 (G.BAN_QUANG_BAT = false).
+  G.BAN_QUANG = { gia: 40, moiNgay: 15 };
+  G.BAN_QUANG_BAT = true;
+  try { if (typeof location !== 'undefined' && /[?&]banquang=0(&|$)/.test(location.search || '')) G.BAN_QUANG_BAT = false; } catch (e) { /* giữ mặc định */ }
 
   G.HINTS = [
     'Kết liễu quái đang dính hiệu ứng thì vũ khí nhận dấu ấn của hệ đó.',

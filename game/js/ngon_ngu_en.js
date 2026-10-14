@@ -1599,5 +1599,15 @@
 "Hệ chính: {0} · {1} (tối đa)": "Main element: {0} · {1} (max)",
 "Chưởng xa, nhanh hơn 20%; phi tiêu +10%": "Palm 20% farther, faster; Shuriken +10%",
 "Chưởng trúng hồi 1% máu; thương +10%": "Palm hits heal 1% HP; Spear +10%",
-"Mưa phi tiêu": "Shuriken Rain"
+"Mưa phi tiêu": "Shuriken Rain",
+"{0} vàng một quặng. Mỗi ngày bà bán tối đa {1} quặng; hôm nay còn {2}.": "{0} gold per ore. I sell at most {1} ore a day; {2} left today.",
+"Đang có {0} · dùng để mài vũ khí, nâng lò": "You have {0} · used to sharpen weapons and upgrade the forge",
+"Mua 1 ({0})": "Buy 1 ({0})",
+"Mua {0} ({1})": "Buy {0} ({1})",
+"Của cháu đây, {0} quặng.": "Here you go, {0} ore.",
+"Quặng vẫn rơi nhiều nhất khi thắng ải; bà chỉ bán thêm chút ít cho cháu khỏi thiếu lúc mài.": "Stages still give the most ore; I only sell a little so you are not short when sharpening.",
+"Thiếu quặng mài vũ khí thì mua của bà, mỗi ngày bà có ít hàng thôi.": "Short on ore for sharpening? Buy from me, but I only get a little each day.",
+"Hôm nay bà bán hết quặng rồi, mai cháu quay lại nhé.": "I am out of ore today, come back tomorrow.",
+"Hết hàng hôm nay": "Sold out today",
+"Đang tải ảnh {0}": "Loading {0} images"
 }); })();

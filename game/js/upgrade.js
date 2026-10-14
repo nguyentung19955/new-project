@@ -45,6 +45,36 @@
     for (; k < n && U.doiDuoc(sv, r) === ''; k++) { sv.gold -= U.doiGia(); sv.mats[r]++; sv.doiNL = (sv.doiNL | 0) - 1; }
     return k;
   };
+  // ---------- Bà Hàng Xén bán quặng (14/10, bước 1 làm chắc mục 4; số liệu G.BAN_QUANG ở data.js) ----------
+  const ngayNay = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+  // Số quặng còn mua được hôm nay. Chuẩn hoá sv.banQuang (bản lưu cũ không có thì tạo; hỏng thì làm lại). Sang ngày mới (lớn hơn ngày lớn
+  // nhất đã thấy) thì đặt lại; ngày lùi (chỉnh giờ máy) thì giữ nguyên số đã mua.
+  U.bqCon = function (sv) {
+    const D = G.BAN_QUANG;
+    if (!D || !sv) return 0;
+    let o = sv.banQuang;
+    if (!o || typeof o !== 'object' || Array.isArray(o)) o = sv.banQuang = { cuoi: '', n: 0 };
+    if (typeof o.cuoi !== 'string') o.cuoi = '';
+    o.n = Math.max(0, Math.min(D.moiNgay, Math.floor(+o.n || 0)));
+    const h = ngayNay();
+    if (h > o.cuoi) { o.cuoi = h; o.n = 0; }
+    return Math.max(0, D.moiNgay - o.n);
+  };
+  U.bqGia = () => (G.BAN_QUANG ? G.BAN_QUANG.gia : 40);
+  // '' là mua được; không thì lý do (chữ hiện lên nút)
+  U.bqDuoc = function (sv) {
+    if (!G.BAN_QUANG || G.BAN_QUANG_BAT === false) return 'Chưa mở';
+    if (U.bqCon(sv) <= 0) return 'Hết hàng hôm nay';
+    if (sv.gold < U.bqGia()) return 'Thiếu vàng';
+    return '';
+  };
+  U.bqMua = function (sv, n) {
+    n = n || 1;
+    let k = 0;
+    for (; k < n && U.bqDuoc(sv) === ''; k++) { sv.gold -= U.bqGia(); sv.ore = (sv.ore | 0) + 1; sv.banQuang.n++; }
+    return k;
+  };
+
   // Vùng đã qua đang ít nguyên liệu nhất (cho Thương nhân trong ải); null nếu chưa qua vùng nào.
   U.doiVung = function (sv) {
     let best = null;
