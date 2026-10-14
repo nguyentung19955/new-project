@@ -57,3 +57,18 @@ python tools/pixelize.py art/raw/moc-tinh.png --height 128 --colors 12
 - Các mảnh rời phải cách hẳn nhau trên ảnh gốc. Hai mảnh chạm nhau sẽ bị tính là một.
 - Mảnh được đánh số theo vị trí (`manh_01`, `manh_02`...), chưa tự đặt tên là đầu, thân hay tay.
 - Chưa có phần tạo cử động.
+
+## Kiểm alpha sau khi nén / đổi ảnh (`kiem-alpha.py`)
+
+Bài kiểm TĨNH (không chạy game) giữ cho mọi đợt nén ảnh không làm mất nền trong suốt (lỗi "nền đen" 14/10,
+`docs/review/ke-hoach-cai-thien/loi-nen-den/`). Giải mã từng ảnh trong `game/art/custom/*.sprite.json` bằng hai cách độc lập
+(Pillow và bộ giải mã PNG viết tay đọc PLTE/tRNS như trình duyệt), kiểm cấu trúc PNG, rồi so alpha từng điểm với một mốc git.
+
+```
+python3 tools/kiem-alpha.py                         # trước khi commit đợt nén: so với HEAD, alpha phải y hệt
+python3 tools/kiem-alpha.py --goc a0da2ca~1 --lech-ban-trong 64   # so với trước đợt nén 14/10 (16 tấm 256 màu có mất ở điểm bán trong)
+python3 game/build.py --hai-tep && python3 tools/kiem-alpha.py --dist game/dist/anh   # thêm: PNG/WebP rời + cờ alpha WebP
+```
+
+Thoát mã 1 khi có lỗi: điểm trong suốt thành đục (hoặc ngược lại), alpha bán trong lệch quá ngưỡng, WebP mất alpha / tắt cờ alpha,
+PNG bảng màu hỏng (tRNS dài hơn PLTE, chỉ số vượt bảng màu…).

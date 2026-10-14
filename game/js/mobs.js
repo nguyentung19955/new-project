@@ -693,12 +693,19 @@
     return cv;
   }
   const gdAnh = (ma) => { const s = G.spriteCustom; return s && s.gdSan ? s.gdSan(ma) : null; };
+  let IC_NEN_AI = false; // ?icnen=1: lót ô nền tối cả dưới ảnh AI (như trước 14/10), chỉ để so
+  try { IC_NEN_AI = typeof location !== 'undefined' && /[?&]icnen=1(&|$)/.test(location.search || ''); } catch (e) { IC_NEN_AI = false; }
   function icon(c, kind, x, y) {
     x = Math.round(x); y = Math.round(y);
-    p(c, x - 6, y - 6, IC_CO, IC_CO, 'rgba(20,24,46,0.85)');
-    if (!IC_BM[kind]) return;
+    // Lỗi "nền đen" 14/10 (docs/review/ke-hoach-cai-thien/loi-nen-den): ô nền tối 13×13 chỉ dành cho hình vẽ code (không viền).
+    // Ảnh AI (gd-quai-*, hu-pha-giap) có nền trong suốt và viền tối riêng → vẽ thẳng lên sàn, không lót ô (trước đây hiện ô đen sau
+    // quả bom tinh anh "Nổ khi chết" và mũi gai của nhím). ?icnen=1 bật lại ô nền cho cả ảnh AI để so.
+    const lot = () => p(c, x - 6, y - 6, IC_CO, IC_CO, 'rgba(20,24,46,0.85)');
+    if (!IC_BM[kind]) { lot(); return; }
     // hình 12×12 nằm giữa ô 13×13: lệch nửa điểm game (= 1 điểm thật khi màn nét gấp đôi) cho cân hai bên
     const o = (G.NET || 1) >= 2 ? 5.5 : 6, g = gdAnh('gd-quai-' + kind), sm = c.imageSmoothingEnabled, ga = c.globalAlpha;
+    const coAnhVo = !g && kind === 'vo' && G.fxAnh && G.fxAnh.co('hu-pha-giap');
+    if ((!g && !coAnhVo) || IC_NEN_AI) lot();
     if (g) { // ảnh AI: đứng yên; riêng "gai" vẫn nhấp nháy (mờ/rõ) để báo nguy hiểm như bản code
       if (kind === 'gai' && Math.floor(G.time * 12) % 2 === 0) c.globalAlpha = ga * 0.55;
       G.spriteCustom.veGd(c, g, x - o, y - o, 12, 12);
@@ -706,7 +713,7 @@
       return;
     }
     c.imageSmoothingEnabled = false;
-    if (kind === 'vo' && G.fxAnh && G.fxAnh.co('hu-pha-giap')) { // biểu tượng vỡ giáp: khung đầu của ảnh AI thu nhỏ vào ô 12×12
+    if (coAnhVo) { // biểu tượng vỡ giáp: khung đầu của ảnh AI thu nhỏ vào ô 12×12
       const a = G.fxAnh.get('hu-pha-giap'), n = a.net, sw = a.fw * n, sh = a.fh * n, k = Math.min(12 / a.fw, 12 / a.fh);
       c.drawImage(a.img, (a.so - 2) * sw, 0, sw, sh, x - Math.round(a.fw * k / 2), y - Math.round(a.fh * k / 2), Math.round(a.fw * k), Math.round(a.fh * k));
     } else c.drawImage(iconCode(kind, kind === 'no' ? Math.floor(G.time * 10) : kind === 'gai' ? Math.floor(G.time * 12) : 0), x - o, y - o, 12, 12);
