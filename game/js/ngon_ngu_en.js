@@ -1639,5 +1639,16 @@
 "Tê liệt!": "Shocked!",
 "Mỗi vùng quái con đánh một kiểu riêng. Rừng già: húc thẳng, lăn cầu đất, mưa bào tử, lẩn bóng sau lưng, nổ mây độc. Hang biển: lướt ngang kẹp, rút vỏ để vệt nhớt làm chậm, hút lại gần, vũng điện, gai xoáy ốc. Lâu đài cổ: chớp chém, phân thân, lửa ma đuổi, bùa tam giác, gai lửa trồi. Đòn nào cũng có vạch hay vòng đỏ báo trước: thấy là né. Quái giáp vẫn che phía trước và hồi máu cho bạn, quái bắn xa vẫn gọi thêm bầy.": "Each land's small monsters fight their own way. Old Forest: straight charges, rolling dirt balls, spore rain, sneaking behind you, poison cloud bursts. Sea Cave: sideways pinches, shells and slowing slime, pulling you in, electric puddles, spiral spikes. Old Castle: blink slashes, phantoms, chasing ghost fire, charm triangles, erupting fire spikes. Every attack shows a red line or circle first: see it, dodge it. Shield monsters still guard their front and heal allies; ranged ones still call swarms.",
 "Mài, nâng lò, nâng bộ trang phục, ép đồ, đổi nguyên liệu, mua quặng, đặt lại điểm kỹ năng": "Sharpen, upgrade the forge, upgrade outfits, refine, buy materials, buy ore, reset skill points",
-"Qua ải, hạ quái, tinh anh, trùm, phòng thử thách, Ải Vàng (ải ngày)": "Clear stages, kill monsters, elites, bosses, challenge rooms, Gold Trial (daily)"
+"Qua ải, hạ quái, tinh anh, trùm, phòng thử thách, Ải Vàng (ải ngày)": "Clear stages, kill monsters, elites, bosses, challenge rooms, Gold Trial (daily)",
+"Bổ rìu san hô": "Coral Axe Cleave",
+"Cột nước đuổi": "Chasing Geysers",
+"Xoáy hút": "Undertow Vortex",
+"Vồ nhảy": "Leaping Pounce",
+"Hồ ly phân thân": "Fox Doppelgangers",
+"Nấm mẹ đẻ con": "Mother Shroom Brood",
+"Tường tinh thể": "Crystal Walls",
+"Nhảy dập": "Stomp Hops",
+"Phồng lăn": "Puff Roll",
+"Đổ dầu châm lửa": "Oil and Ignite",
+"Ngắt chiêu!": "Interrupted!"
 }); })();

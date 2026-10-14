@@ -312,6 +312,7 @@
     hoLua: { w: [3, 1, 2], wXa: [3, 2, 0], cd: [1.05, 0.85, 0.7], lap: true },
   };
   G.MINI_NHIP = MINI_NHIP;
+  G.MINI_SK = MINI_SK; // 14/10 ky-nang-trum-rieng: js/chieu_trum.js đổi tên chiêu 2 của Nấm Chúa, Cua Đá (cờ ?chieucu=1 giữ tên cũ)
   function thinkMini(b) {
     const w = W(), P = dichOf(b, w.P), ph = b.phase, id = b.art;
     const d = Math.hypot(P.x - b.x, P.y - b.y), a = ang(b, P);
@@ -345,7 +346,10 @@
       const D = dur(id, k) / spd, T = 0.5 * D;
       play(b, k, spd);
       b.busy = D; b.wind = T;
-      if (id === 'cuaDa' && k === 'chieu1') {
+      // 14/10 ky-nang-trum-rieng (js/chieu_trum.js, cờ tắt ?chieucu=1): chiêu 2 của Nấm Chúa (Nấm mẹ đẻ con) và Cua Đá (Tường tinh thể) thay
+      // Bão bào tử / Mưa tinh thể (hai kiểu bị lặp: toả tròn đạn, mưa rơi quanh em bé). Cùng cử động, cùng mốc T, sát thương mỗi lần trúng giữ.
+      if (k === 'chieu2' && G.chieuTrum && G.chieuTrum.mini(b, id, k, P, T, D, a)) { /* chiêu mới */ }
+      else if (id === 'cuaDa' && k === 'chieu1') {
         // Đập càng rung sàn: sóng chấn động quanh mình, chạy ra ngoài vòng đỏ
         circle(b.x, b.y, 80, T, b.dmg * 1.3, null, { fxKind: 'slam' });
         if (ph >= 1) Z('donut', { x: b.x, y: b.y, r0: 80, r1: 118 }, T + 0.5, b.dmg, null);
@@ -489,6 +493,8 @@
         // cột nước) — đã có ảnh nổ trên thân (hu-no-nho) và nổ cuối (hu-trum-no) ở js/fx.js. Thân gục theo hàng 'die' của ảnh pha đang ở.
         if (b.dying != null && anhAI) o.fx = false;
       }
+      // 14/10 ky-nang-trum-rieng: chiêu mới (js/chieu_trum.js) dùng lại cử động của chiêu cũ → tắt hiệu ứng vẽ code của chiêu CŨ trong cử động đó.
+      if (G.chieuTrum && G.chieuTrum.tatFx(b, n)) o.fx = false;
       // Phiên E2 (chỉ khi trùm dùng ảnh AI, chỉ là hình, không đổi luật): hình vẽ bằng code tự chớp trắng lúc sắp ra đòn và lúc đổi dáng giữa cảnh chuyển pha, ảnh AI thì mất.
       // 1) 0,25 giây cuối trước khi đòn ra (b.wind, cùng mốc với dấu "!" của quái): thân nhấp nháy trắng. 2) Có tệp dáng pha (<mã>-p2 / -p3, js/sprite_custom.js): chớp trắng che lúc đổi dáng.
       if (anhAI && b.dying == null) {

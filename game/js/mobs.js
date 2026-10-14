@@ -425,7 +425,10 @@
       const T = 0.7 * (e.trait === 'nhanh' ? 0.85 : 1), D = dur(id, 'chieu1');
       const o = { cd: 1.2 * fast, anim0: 'chieu1', anim1: 'chieu1', end: D };
       // Chiêu riêng chạy trọn cử động chieu1 (đã gồm báo trước trong hình); vùng báo của luật chơi nổ ở mốc T.
-      if (id === 'cuaTuong') {
+      // 14/10 ky-nang-trum-rieng (js/chieu_trum.js, cờ tắt ?chieucu=1): Nấm Phồng Chúa Nhảy dập, Cá Nóc Chúa Phồng lăn, Hũ Chúa Đổ dầu châm lửa
+      // thay Mưa bào tử / Gai xoáy / Vòng cầu lửa (kiểu bị lặp). Các nhánh cũ bên dưới giữ nguyên cho cờ tắt.
+      if (G.chieuTrum && G.chieuTrum.elite(e, id, P, a, T, D, o)) { /* chiêu mới */ }
+      else if (id === 'cuaTuong') {
         // Kẹp chéo: hai đường chém chéo hình chữ X đi qua chỗ em bé đứng
         const L = 110;
         for (const s of [-1, 1]) { const b = a + s * PI / 4; addZone('line', { x: P.x - Math.cos(b) * L / 2, y: P.y - Math.sin(b) * L / 2, ang: b, len: L, w: 14 }, T + 0.1, e.dmg * 1.3, el, { src: e, cancel: true, melee: true }); }
@@ -869,6 +872,7 @@
     if (e.an && e.an.cut && n === e.an.n) t = Math.min(t, e.an.cut * dur(e.art, n)); // cú lao: chỉ dùng nửa đầu cử động
     const k = e.don && e.don.kieu;
     if (n === 'atk' && (k === 'ban' || k === 'nem')) o.fx = false; // đạn thật do luật chơi bắn, không vẽ thêm đạn giả
+    if (G.chieuTrum && G.chieuTrum.tatFx(e, n)) o.fx = false; // 14/10 ky-nang-trum-rieng: chiêu mới dùng cử động chiêu cũ → tắt hiệu ứng vẽ code của chiêu cũ
     const dir = e.act ? e.act.a : e.dirA != null ? e.dirA : e.face > 0 ? 0 : PI;
     // Lấy đà: cử động 'tele' trải đúng theo thời gian lấy đà thật (e.wind / e.act.T) nên tư thế co người đạt đỉnh và rung đúng lúc
     // sắp ra đòn, dù đòn lấy đà ngắn (bầy nhỏ 0,5 giây) hay dài (tinh anh, bom 0,85 giây). Chỉ đổi hình, không đổi thời gian ra đòn.
