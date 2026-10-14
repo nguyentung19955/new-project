@@ -229,8 +229,9 @@
     const R = G.REGIONS;
     // Đợt 4: chữ theo luật mới (bỏ nâng bậc, trang phục cũ, đá tôi; mảnh trùm dùng nâng bộ, gỗ linh mài +6)
     const a = [
-      ['gold', 'Mài, nâng lò, nâng bộ trang phục, đổi nguyên liệu, đặt lại điểm kỹ năng', 'Qua ải, hạ quái, tinh anh, trùm, phòng thử thách'],
-      ['ore', 'Mài vũ khí, nâng lò cấp 4', 'Qua ải (nhiều sao được nhiều hơn), rương báu, phòng thử thách, thương nhân'],
+      // 14/10 (bước 1, mục 6): thêm ép đồ, mua quặng (Bà Hàng Xén), Ải Vàng / Ải Đá Mài (ải ngày)
+      ['gold', 'Mài, nâng lò, nâng bộ trang phục, ép đồ, đổi nguyên liệu, mua quặng, đặt lại điểm kỹ năng', 'Qua ải, hạ quái, tinh anh, trùm, phòng thử thách, Ải Vàng (ải ngày)'],
+      ['ore', 'Mài vũ khí, nâng lò cấp 4', 'Qua ải (nhiều sao được nhiều hơn), rương báu, phòng thử thách, thương nhân, Ải Đá Mài (ải ngày), Bà Hàng Xén (thẻ Quặng)'],
     ];
     const matUse = ['Nâng lò cấp 2, mài +5 lên +6', 'Mài từ +6 tới +9, nâng lò cấp 3', 'Mài từ +9 trở lên, nâng lò cấp 4'];
     R.forEach((r, i) => a.push(['mat' + i, matUse[i] || 'Nguyên liệu vùng', G.t('Qua ải {0}', r.name)]));

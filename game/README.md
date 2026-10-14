@@ -1,12 +1,12 @@
 # Linh Khí
 
-Game đánh quái màn hình ngang cho điện thoại, chạy ngay trong trình duyệt. Bạn dẫn một em bé tinh linh (hero) cầm vũ khí sống đi qua từng ải, mỗi ải là một bản đồ 8 phòng vuông nhìn từ trên xuống, xếp ngẫu nhiên mỗi lần chơi, và kết thúc bằng một con trùm. Vũ khí lớn lên theo cách bạn đánh (nhận dấu ấn Lửa, Độc, Băng rồi tiến hóa), còn trùm thì học theo bạn: dùng một hệ quá nhiều, nó sẽ kháng hệ đó.
+Game đánh quái màn hình ngang cho điện thoại, chạy ngay trong trình duyệt. Bạn dẫn Zed đi qua từng ải, mỗi ải là một bản đồ 8 phòng vuông nhìn từ trên xuống, xếp ngẫu nhiên mỗi lần chơi, và kết thúc bằng một con trùm. Zed luôn mang đủ 4 vũ khí (Kiếm, Thương, Búa, Phi tiêu), nâng bằng linh khí từ Trắng lên Thức tỉnh và ép đồ 7 bậc; 4 bộ đồ (Ninja và 3 bộ vùng) mỗi bộ có skill riêng. Trùm thì học theo bạn: dùng một hệ quá nhiều, nó sẽ kháng hệ đó.
 
 Đây là bản thử. Tiến trình được lưu trong trình duyệt của máy đang chơi và, khi chơi trên web có mạng, lưu lên mây (Firebase). Hướng dẫn cho chủ dự án: `docs/firebase-linh-khi/HUONG-DAN.md`.
 
 ## Bản Zed: một nhân vật (12/10)
 
-Từ bản này chỉ còn **một nhân vật chơi được tên Zed** (dùng hình và dữ liệu của Cu Tí; khoá nội bộ vẫn là `smith`). Zed dùng đủ bốn vũ khí (kiếm, giáo, cung, búa) với cách đánh y như trước. Ba bạn Cu Tèo, Cái Bống, Cu Lì vẫn bị yêu tinh bắt; hạ trùm vùng (độ khó thường) lần đầu thì cứu được bạn đó, bạn về ngồi chơi ở sân đình và **dạy Zed** nét riêng của mình (nội tại + nét riêng của chưởng, Cu Tèo thêm sở trường cung, Cái Bống thêm sở trường giáo), cấp đúng một lần. Ông Từ không còn chọn em bé mà là bảng **xem chỉ số Zed** và ba nét đã học. Bản lưu cũ nhiều em bé được chuyển sang Zed (lấy em bé cấp cao nhất; vũ khí, đồ, vàng, tiến trình giữ nguyên; trùm đã hạ = nét đã học), dữ liệu cũ không bị xoá. Thêm `?zed=0` vào địa chỉ trang để chơi lại như bản 4 em bé. Con số: `G.ZED_DAY` trong `js/data.js`.
+Từ bản này chỉ còn **một nhân vật chơi được tên Zed** (dùng hình và dữ liệu của Cu Tí; khoá nội bộ vẫn là `smith`). Zed dùng đủ bốn vũ khí (Kiếm, Thương, Búa, Phi tiêu). Ba bạn Cu Tèo, Cái Bống, Cu Lì vẫn bị yêu tinh bắt; hạ trùm vùng (độ khó thường) lần đầu thì cứu được bạn đó, bạn về ngồi chơi ở sân đình và **dạy Zed** nét riêng của mình (nội tại + nét riêng của chưởng, Cu Tèo thêm sở trường phi tiêu, Cái Bống thêm sở trường thương), cấp đúng một lần. Ông Từ không còn chọn em bé mà là bảng **xem chỉ số Zed** và ba nét đã học. Bản lưu cũ nhiều em bé được chuyển sang Zed (lấy em bé cấp cao nhất; vàng, tiến trình giữ nguyên; trùm đã hạ = nét đã học), dữ liệu cũ không bị xoá. Con số: `G.ZED_DAY` trong `js/data.js`.
 
 ## Cách chơi
 
@@ -20,17 +20,17 @@ Làng là một cảnh đi lại được, rộng gấp rưỡi màn hình; màn
 - Tới gần một người thì người đó ngẩng lên và nút tròn bên phải thành **Nói chuyện**. Chạm thẳng vào người cũng được: em bé tự chạy tới.
 - Dải bảy khuôn mặt ở mép trên là lối tắt: chạm một mặt là em bé tự chạy tới người đó và bảng mở luôn (chạm lần hai thì tới ngay). Đang mở bảng mà chạm mặt khác thì sang thẳng người đó.
 - Ai có việc mới thì có dấu chấm than vàng trên đầu và chấm đỏ trên khuôn mặt ở dải lối tắt.
-- Xem vũ khí ở Ông Thợ Rèn (thẻ Linh khí, **Xem linh khí**). Ba bé hero còn lại ngồi chơi ở sân đình, chạm vào bé nào là đổi sang bé đó (bản Zed: ba bạn đã được cứu ngồi chơi ở sân đình, chạm vào thì bạn nhắc lại chiêu đã dạy Zed).
+- Xem vũ khí ở Ông Thợ Rèn (thẻ Linh khí, **Xem linh khí**). Ba bạn đã được cứu ngồi chơi ở sân đình, chạm vào thì bạn nhắc lại chiêu đã dạy Zed.
 - Tài nguyên ở dải trên cùng và mọi chỗ ghi giá, thưởng hiện bằng biểu tượng kèm số. Chạm vào biểu tượng để xem tên.
 
 | Người | Ở đâu | Việc |
 | --- | --- | --- |
 | Chú Lái Đò | bến đò | Tranh bản đồ vùng: chọn ải, đổi độ khó, **Lên đò** |
-| Ông Thợ Rèn | lò rèn | Mài, Nâng bậc, Tôi lại, Rèn đồ, Nâng lò |
-| Bà Hàng Xén | gánh hàng | Rương vũ khí, chọn hai món mang theo, xem, bán; bán trang phục thường (nút **Trang phục ›**) |
-| Cô Thợ May | khung cửi | Trang phục năm ô: mặc, tháo, may, nâng bậc, mở cấp cánh, mặc thử |
+| Ông Thợ Rèn | lò rèn | **Linh khí** (nâng 4 vũ khí: Trắng → Mầm → Thành hình → Thức tỉnh, chọn hệ), **Ép đồ** (7 bậc), Mài, Nâng lò |
+| Bà Hàng Xén | gánh hàng | **Nguyên liệu** (đổi vàng lấy nguyên liệu vùng đã qua), **Quặng** (mua quặng, có giới hạn mỗi ngày) |
+| Cô Thợ May | khung cửi | 4 bộ đồ của Zed: mặc, nâng cấp bộ (linh khí + vàng + mảnh trùm), mỗi cấp mở một skill bộ |
 | Cụ Đồ | gốc đa | Cây kỹ năng, **Cây chưởng** (học điểm chưởng, đổi cây), đặt lại điểm, hướng dẫn, **Bảng vàng** (xếp hạng Sức mạnh, sao, thời gian hạ từng trùm vùng) |
-| Ông Từ | sân đình | Xem chỉ số Zed và nét ba bạn đã dạy (`?zed=0`: chọn hero) |
+| Ông Từ | sân đình | Xem chỉ số Zed và nét ba bạn đã dạy |
 | Anh Mõ | cổng làng | Cài đặt: âm thanh, toàn màn hình, lưu mây và **Đăng nhập Google**, **✉ Góp ý**, xoá tiến trình |
 
 ### Trong ải
@@ -42,37 +42,34 @@ Trên điện thoại (nên cầm ngang):
 - **Né** lộn theo hướng đang đẩy cần. Không đẩy cần thì lộn theo hướng vừa di chuyển gần nhất; mũi tên trên nút Né chỉ sẵn hướng đó.
 - Mỗi vũ khí có lối đánh riêng với nút **Đánh**:
   - Kiếm: bấm liên tiếp (hoặc giữ) ra chuỗi 3 nhát, nhát thứ ba mạnh và rộng hơn. Đánh ngay sau khi Né thì lướt tới chém.
-  - Cung: bấm để bắn nhanh; tên tự ngắm vào quái gần nhất theo mọi hướng (trên, dưới, chéo, sau lưng, kể cả quái đứng sát người), đón đầu nhẹ quái đang chạy, và xuyên thêm một con (con sau nhận khoảng một phần ba sát thương). Giữ để giương cung (có vạch lấy đà trên đầu), cung xoay theo quái gần nhất; thả ra bắn tên mạnh xuyên qua nhiều quái. Mưa tên (Đặc biệt) rơi vào quái hoặc cụm quái gần nhất; bẫy của Thợ Săn khi cầm cung ném thẳng vào chỗ quái gần nhất.
+  - Phi tiêu: bấm để phóng nhanh; phi tiêu tự ngắm vào quái gần nhất theo mọi hướng (kể cả quái đứng sát người), đón đầu nhẹ quái đang chạy, và xuyên thêm một con (con sau nhận khoảng một phần ba sát thương). Giữ để lấy đà (có vạch trên đầu), thả ra phóng phát mạnh xuyên qua nhiều quái.
   - Thương: bấm liên tiếp ra ba nhát đâm rồi quét một vòng. Giữ rồi thả để xốc tới một đoạn ngắn xuyên qua quái. Quét vòng quét ba phần tư vòng quanh người, chỉ chừa khe ngay sau lưng.
   - Búa: bấm để nện, làm quái khựng. Giữ để lấy đà 2 nấc, thả ra nện đất tạo sóng chấn động; đủ nấc 2 thì làm choáng.
 - Mọi đòn đánh theo **tám hướng**: tự quay về quái gần nhất trong tầm của đòn (lên, xuống, chéo); không có quái thì theo hướng đang kéo cần, rồi hướng vừa đi. Em bé chỉ lật trái phải, còn vũ khí, vệt chém và vùng trúng xoay đúng góc. Lướt và lao đi theo hướng đó, chạm tường thì dừng.
 - Mỗi loại vũ khí một chiêu **Đặc biệt** riêng (tốn mana, cũng tám hướng):
   - Kiếm, **Trảm Nguyệt**: vung một nhát phóng vệt chém trăng khuyết bay thẳng chừng 2/3 phòng, xuyên mọi quái; em bé lùi nửa bước.
-  - Thương, **Phi Thương**: ném thương bay thẳng xuyên một hàng quái, con cuối (hoặc con sát tường) bị ghim, choáng ngắn; thương cắm 0,6 giây rồi tự bay về tay, trúng lần nữa trên đường về. Thương chưa về thì nút Đánh của cây thương đó là cú đấm tay yếu (đổi sang vũ khí kia vẫn đánh bình thường).
+  - Thương, **Phi Thương**: ném thương bay thẳng xuyên một hàng quái, con cuối (hoặc con sát tường) bị ghim, choáng ngắn; thương cắm 0,6 giây rồi tự bay về tay, trúng lần nữa trên đường về. Thương chưa về thì nút Đánh của cây thương đó là cú đấm tay yếu (đổi sang vũ khí khác vẫn đánh bình thường).
   - Búa, **Địa Chấn**: nện xuống, vòng chấn nhỏ quanh người, rồi vệt nứt chạy nhanh theo hướng nhắm chừng nửa phòng (có vết nứt báo trước rất ngắn), quái trên vệt bị hất tung và choáng.
   - Phi tiêu, **Mưa Phi Tiêu**: rơi vào cụm quái gần nhất.
   - Đặc trưng hệ (vệt cháy, vũng độc, gai băng) để lại dọc đường chiêu bay.
-- Hệ của vũ khí mạnh lên theo cấp tiến hóa:
+- **Linh khí** vào một túi chung (không còn dấu ấn riêng từng vũ khí). Linh khí có từ: hạ tinh anh, trùm nhỏ, trùm vùng; viên linh khí quái thường thỉnh thoảng rơi (đi lại gần là nhặt); kết liễu quái đang dính hiệu ứng hệ; rương báu; phần thưởng qua ải. Số: `G.LINHKHI`, `G.ROI_MOI` trong `js/data.js`.
+- Mỗi vũ khí nâng bằng linh khí ở Ông Thợ Rèn (thẻ Linh khí), theo cấp:
   - Trắng: chưa có hệ.
-- Linh khí (dấu ấn) có từ:
-  - Hạ tinh anh (+5), trùm nhỏ (+10), trùm vùng (+20): vũ khí kết liễu luôn nhận. Hệ là hệ quái đang dính lúc gục; không dính gì thì theo vùng (Rừng già Độc, Hang biển Băng, Lâu đài cổ Lửa).
-  - Quái thường có 5% rơi một viên linh khí của vùng (+3) nằm trên sàn; đi lại gần là nhặt, vũ khí đang cầm nhận.
-  - Kết liễu quái thường đang dính hiệu ứng hệ (+1 của hệ đó), như cũ. Muốn vũ khí theo hệ khác vùng thì dùng vật mang hệ, bùa hệ trước khi kết liễu tinh anh và trùm.
-  - Mầm (30 dấu ấn): chỉ số tăng, mỗi đòn có 20% gây cháy, độc hoặc chậm, vệt chém nhuốm màu hệ. Chưa có luật hệ.
-  - Thành hình (120 dấu ấn): mở đặc trưng thứ nhất, thứ để lại trên sân. Lửa: vệt cháy. Độc: vũng độc. Băng: gai băng làm chậm.
-  - Thức tỉnh (300 dấu ấn): mở đặc trưng thứ hai, phản ứng dây chuyền. Lửa: quái đang cháy chết thì nổ lan. Độc: quái đang trúng độc chết thì lây sang con bên cạnh. Băng: quái đóng băng bị đánh thì vỡ, văng mảnh.
-  - Lên Thành hình và Thức tỉnh giữa trận thì có dòng thông báo kèm tên đặc trưng vừa mở.
+  - Mầm: chọn hệ Lửa, Độc hoặc Băng; chỉ số tăng, mỗi đòn có tỉ lệ gây cháy, độc hoặc chậm, vệt chém nhuốm màu hệ. Chưa có luật hệ.
+  - Thành hình: mở đặc trưng thứ nhất, thứ để lại trên sân. Lửa: vệt cháy. Độc: vũng độc. Băng: gai băng làm chậm.
+  - Thức tỉnh: mở đặc trưng thứ hai, phản ứng dây chuyền. Lửa: quái đang cháy chết thì nổ lan. Độc: quái đang trúng độc chết thì lây sang con bên cạnh. Băng: quái đóng băng bị đánh thì vỡ, văng mảnh.
+  - Giá linh khí mỗi cấp: `G.VK_MOI.gia`; đổi hệ: `G.VK_MOI.doiHe`.
 - **Chưởng** (thay nút kỹ năng riêng của hero cũ): bắn một luồng chưởng linh khí, tốn 30 mana, hồi 1 giây, tự ngắm quái gần nhất theo tám hướng.
   - Ba cây chưởng, mỗi lúc dùng một cây: **Hỏa chưởng** (cầu lửa nổ lan, gây cháy; nhánh nổ to, vệt cháy, lửa dai, Tích lực, mưa tàn lửa), **Độc chưởng** (luồng độc để lại mây độc; nhánh mây dày, lây độc, ăn mòn giáp, tách 3 luồng, mây hút), **Băng chưởng** (mũi băng xuyên 3 quái, làm chậm; nhánh tầm xa, xuyên thêm, đóng băng, băng vỡ, vòng băng). Mỗi cây 6 nút, 28 điểm để đầy.
   - Mỗi cấp nhân vật +1 điểm chưởng (riêng với điểm kỹ năng). Học ở Cụ Đồ (thẻ Cây chưởng) hoặc Hành trang (thẻ Kỹ năng) khi ở làng; đổi cây miễn phí, điểm được trả lại hết.
   - Kỹ năng cũ thành nét riêng của chưởng: Thợ Rèn đẩy lùi mạnh, Thợ Săn bay xa và nhanh hơn, Thầy Lang trúng thì hồi chút máu, Đô Vật tầm gần mà to.
   - Chưởng không cho linh khí cho vũ khí, không kết hợp hệ với vũ khí, trùm không học theo chưởng.
-- Chạm ô vũ khí ở góc trên bên phải để đổi giữa hai vũ khí.
+- Chạm ô vũ khí ở góc trên bên phải để đổi sang vũ khí kế tiếp (xoay vòng 4 món).
 - Chạm ô **Bình máu** để hồi máu, chạm **Dừng** để tạm nghỉ.
 - Lại gần rương, suối, thương nhân, bàn thờ rồi bấm **Đánh** để mở hoặc chọn.
 - Suối hồi chỉ dùng được khi đã dọn đủ 3 phòng quái. Ghé sớm thì suối hiện mờ kèm dòng "Dọn hết quái rồi quay lại".
 - Còn quái thì mọi cửa khóa. Hết quái thì cửa mở: đi vào cửa có mũi tên để sang phòng kề.
-- Hạ trùm cuối ải thì chưa hiện bảng kết quả: phần thưởng đã được tính và lưu ngay, đồ rơi nằm trên sàn (đi ngang qua là nhặt), và một **cổng dịch chuyển** mọc lên giữa phòng trùm (bản đồ nhỏ có biểu tượng cổng). Cửa phòng trùm mở, bạn đi lại tuỳ ý (không còn mất máu), ghé lại rương, suối, thương nhân. Tới gần cổng thì nút Đánh thành **Vào cổng**; vào cổng mới hiện bảng kết quả (Về làng, Chơi lại, Ải tiếp theo). Bảng tạm dừng lúc này có nút **Rời ải** để sang thẳng bảng kết quả. Thua thì vẫn hiện bảng thua ngay.
+- Hạ trùm cuối ải thì chưa hiện bảng kết quả: phần thưởng đã được tính và lưu ngay (vàng, linh khí, quặng, nguyên liệu, đá nâng bậc nằm trên sàn, đi ngang qua là nhặt), và một **cổng dịch chuyển** mọc lên giữa phòng trùm (bản đồ nhỏ có biểu tượng cổng). Cửa phòng trùm mở, bạn đi lại tuỳ ý (không còn mất máu), ghé lại rương, suối, thương nhân. Tới gần cổng thì nút Đánh thành **Vào cổng**; vào cổng mới hiện bảng kết quả (Về làng, Chơi lại, Ải tiếp theo). Bảng tạm dừng lúc này có nút **Rời ải** để sang thẳng bảng kết quả. Thua thì vẫn hiện bảng thua ngay.
 - Chạm **bản đồ nhỏ** ở góc trên bên phải để tạm dừng và xem bản đồ cả ải; chạm lần nữa để chơi tiếp. Mọi ô phòng trên bản đồ cùng một màu, loại phòng xem ở biểu tượng; ô đang đứng sáng và có viền nổi, ô đã qua đậm hơn ô mới biết, cửa Trùm còn khóa có ổ khóa.
 
 Trên máy tính:
@@ -80,7 +77,7 @@ Trên máy tính:
 | Phím | Việc |
 | --- | --- |
 | Mũi tên hoặc W A S D | Di chuyển |
-| J | Đánh (kiếm: giữ để đánh liên tục; cung, giáo, búa: giữ để lấy đà, thả để tung đòn), mở rương |
+| J | Đánh (kiếm: giữ để đánh liên tục; phi tiêu, thương, búa: giữ để lấy đà, thả để tung đòn), mở rương |
 | K | Né |
 | L | Đòn đặc biệt |
 | I | Chưởng (Hỏa chưởng có Tích lực: giữ để tích, thả để bắn) |
@@ -116,58 +113,37 @@ Mỗi vùng có tám loại quái thường, hai tinh anh, một trùm nhỏ (�
 - Trùm vẫn học theo bạn: kháng hệ dùng nhiều nhất, chống đánh xa, chống áp sát, bắt bài lăn né.
 - Mười ba con trước trông chung chung (Cá Nóc, Sứa Bom, Cá Chuồn, Nhím Biển, Bầy Cá Con, Bầy Ong Vò Vẽ, Chồn Bóng, Nấm Phồng, Nhím Gai Độc, Bầy Dơi Than, Hũ Lửa Sống, Đèn Lồng Ma, Nhím Than Hồng) được thêm chi tiết nhận diện (đốm, vân, ánh mắt, nanh, lá bùa vàng trên Hũ Lửa...) và bộ phận cử động riêng (vây, cánh, đuôi, xúc tu, chùm gai, chân, quai), có tàn lửa, bào tử, khói bóng bay ra. Cỡ va chạm giữ nguyên.
 
-### Đồ rơi
+### Thưởng trên sàn
 
-Đồ rơi nằm trên sàn chỗ trùm, tinh anh hay quái gục: vũ khí là hình thu nhỏ của chính vũ khí đó nằm nghiêng, trang phục là hình món đồ, vàng là đống xu, nguyên liệu, quặng, đá tôi, mảnh trùm dùng đúng biểu tượng ở dải trên cùng. Mỗi món có viền tối và bóng dưới chân. Đồ Lam, Tím, Vàng có cột sáng màu bậc bốc lên; đồ Vàng thêm tia sáng xoay và lấp lánh. Đồ nảy ra khi rơi rồi nhấp nhô. Lại gần thì hiện tên ngắn (màu theo bậc); rất gần thì tự bay về (vàng và nguyên liệu bay về từ xa hơn). Thưởng đã được cộng ngay khi rơi, đồ trên sàn chỉ để thấy và nhặt. Đồ rơi nằm ở lớp sàn nên không che quái và vùng báo trước.
+Quái, tinh anh, trùm và rương **không rơi vũ khí hay quần áo** nữa: thưởng là vàng, linh khí, quặng, nguyên liệu vùng, mảnh trùm và đá nâng bậc. Thưởng được cộng ngay khi rơi; món trên sàn chỉ để thấy và nhặt (lại gần thì tự bay về). Thưởng nằm ở lớp sàn nên không che quái và vùng báo trước.
 
-## Trang phục
+## Bộ đồ của Zed
 
-Em bé mặc đồ theo năm ô: **Mũ**, **Áo**, **Đồ đeo lưng** (gùi, khăn choàng, trống nhỏ...), **Bùa** (đeo hông) và **Cánh**. Ô nào trống thì bé mặc đồ khởi đầu của mình. Đồ mặc chung cho cả bốn bé.
+- Có 4 bộ: **Ninja Bóng Đêm** (có sẵn), **Thợ Săn Rừng**, **Chiến Binh Biển**, **Hiệp Sĩ Lâu Đài** (mở khi hạ trùm vùng Rừng già, Hang biển, Lâu đài cổ lần đầu).
+- Mỗi bộ có 3 cấp, nâng ở Cô Thợ May bằng linh khí + vàng (cấp 2, 3 cần thêm mảnh trùm của vùng bộ đó). Số: `G.BO_MOI`.
+- Mỗi cấp bộ mở một **skill bộ** riêng, chỉ có tác dụng khi đang mặc bộ đó (bảng số `G.SKILL_BO`, luật `js/bo_skill.js`):
+  - Ninja: Bóng lướt, Phân thân, Ám sát.
+  - Rừng: Nhựa rừng, Gai độc, Bẫy dây leo.
+  - Biển: Khiên nước, Sóng dội, Thuỷ triều.
+  - Lâu đài: Giáp bạc, Phản đòn, Khí thế.
+- Skill bộ cũng tác dụng lên trùm (Thuỷ triều làm trùm chậm một nửa hiệu lực; trùm có lúc nhắm vào bóng Phân thân) và được tính vào Sức mạnh.
 
-- Mỗi món có bậc Thường, Lam, Tím, Vàng như vũ khí (chỉ số x1; x1,25; x1,5; x1,8) và có thể có hệ Lửa, Độc, Băng.
-- Mỗi món có 1 đến 3 chỉ số: máu, mana, giảm sát thương, tốc chạy, hồi chiêu nhanh, tầm nhặt đồ, bớt thời gian dính hệ.
-- Món bậc Tím và Vàng có thêm một tác dụng đặc biệt (Vàng mạnh hơn):
+## Vũ khí: ép đồ 7 bậc
 
-| Ô | Món có hệ | Món không hệ |
-| --- | --- | --- |
-| Mũ | Quái đánh trúng bé bị cháy, độc hoặc chậm | Khiên đầu phòng: vào phòng mới chặn 1 đòn (Vàng: 2) |
-| Áo | Lộn để lại vệt cháy, vũng độc hoặc vệt băng | như trên |
-| Đồ đeo lưng | Mỗi 5 giây (Vàng: 4) rải một vũng hệ dưới chân khi còn quái | như trên |
-| Bùa | Quái gục gần bé nổ nhỏ, làm quái quanh đó dính hệ | như trên |
-
-- Cánh có ba cấp: mầm cánh, cánh nhỏ, cánh lớn. Cánh không cho bay hay nhảy. Cánh nhỏ: lộn xa hơn 20%, lộn xong có khiên 0,5 giây chặn một đòn (hồi 4 giây). Cánh lớn: xa hơn 30%, khiên 0,8 giây (hồi 3 giây).
-- Ba bộ theo vùng: **Bộ Rừng Già** (Độc), **Bộ Hang Biển** (Băng), **Bộ Lâu Đài** (Lửa), mỗi bộ 5 món (cả cánh). Mặc 2 món cùng bộ: hiệu ứng bộ cũ (Mộc Tinh, Ngư Tinh, Hồ Tinh). Mặc 3 món trở lên: sát thương hệ của bộ +10% (4 món +14%, 5 món +18%) và vầng sáng quanh chân.
-- Hình: vải, khăn, tua đung đưa theo bước chạy và văng ra sau khi lộn; món Lam trở lên có tua màu bậc; Tím, Vàng có ánh viền quanh bé; món có hệ toả tàn lửa, giọt độc hoặc bông tuyết; khiên hiện thành vòng sáng quanh bé.
-- Cách kiếm: quái thường (1,2%) và tinh anh (12%) rơi món của vùng; trùm nhỏ 35% rơi một món Lam trở lên; trùm vùng luôn rơi một món của bộ vùng, bậc Tím (25% Vàng). Tinh anh vẫn có thể rơi bùa cũ (nay ở ô Bùa). Bà Hàng Xén bán đồ thường. Cô Thợ May may theo công thức từ gỗ linh, vảy cá, đá lửa (đồ bộ cần thêm 1 mảnh trùm), nâng bậc từng nấc (lên Vàng cần mảnh trùm), mở cấp cánh bằng mảnh trùm.
-- Cô Thợ May có dấu chấm than khi có món mới hoặc đủ nguyên liệu may một món chưa có. Kho chứa 40 món, đầy thì món rơi đổi thành vàng.
-- Bản lưu cũ: mũ, áo, bùa cũ tự chuyển sang kho trang phục, giữ nguyên chỉ số (đồ thường thành bậc Thường; đồ trùm và bùa thành bậc Lam), món đang mặc vẫn mặc. Thẻ **Rèn đồ** của Ông Thợ Rèn nay chỉ đường sang Cô Thợ May.
-
-## Vũ khí: dòng và bậc
-
-- Mỗi loại vũ khí (kiếm, cung, giáo, búa) có 10 dòng, mỗi dòng một hình và một tính nết. Tên và hình đổi theo nhánh hệ và mốc tiến hóa.
-- Bốn bậc màu:
-
-| Bậc | Sát thương gốc | Tiến hóa cao nhất | Dòng phụ |
-| --- | --- | --- | --- |
-| Thường | x1 | Thành hình | không có |
-| Lam | x1,15 | Thức tỉnh | 1 |
-| Tím | x1,3 | Thức tỉnh | 2 |
-| Vàng | x1,5 (vùng 1), x1,6 (vùng 2), x1,7 (vùng 3) | Thức tỉnh | 2 và 1 dòng mạnh riêng |
-
-- Dòng phụ: hồi thêm mana khi trúng, 10% gấp đôi sát thương, tầm xa hơn 15%. Dòng mạnh của bậc Vàng: Diệt yêu, Thấm hệ hoặc Mở màn.
-- Nguồn: rương và quái tinh anh rơi vũ khí bậc ngẫu nhiên (đa số Thường, cao nhất Tím, vùng sau dễ ra bậc cao hơn), dòng ngẫu nhiên. Trùm vùng (ải 5, 10, 15) lần đầu bị hạ chắc chắn rơi một vũ khí Vàng; đánh lại thì 12% Vàng, còn lại Tím.
-- Lò rèn, mục **Nâng bậc**: mỗi lần lên một nấc (Thường, Lam, Tím, Vàng), không mất dấu ấn và tiến hóa. Nấc lên Vàng cần mảnh trùm, thứ chỉ trùm vùng rơi.
-- Ở làng, chạm vào vũ khí đang bay theo em bé (hoặc bấm **Xem** ở chỗ Bà Hàng Xén) để mở màn **Xem vũ khí**: bậc, dòng phụ, các đặc trưng hệ đã mở và sắp mở.
-- Bản lưu cũ tự được nâng cấp khi mở game: Sắt thành Thường, Bạc thành Lam, Linh thành Tím; dòng lấy theo số thứ tự của món chia 10 lấy dư.
+- Ngoài cấp linh khí, mỗi vũ khí có **bậc ép đồ**: Trắng → Xanh lam → Xanh lục → Tím → Vàng → Đỏ → Rực lửa (Rực lửa mạnh khoảng gấp 1,75 lần).
+- Ép ở Ông Thợ Rèn (thẻ **Ép đồ**) bằng **đá nâng bậc** + vàng (bậc Đỏ, Rực lửa thêm mảnh trùm). Có tỉ lệ hỏng; từ Vàng trở lên hỏng thì tụt 1 bậc, trừ khi dùng **bùa giữ bậc**. Mỗi lần hỏng cộng điểm may mắn cho lần sau.
+- Từ bậc Tím, mỗi bậc mở 1 dòng hiệu ứng ngẫu nhiên (chí mạng, hút máu, tốc đánh...); đổi dòng luôn thành công. Bảng số: `G.EP_DO`.
+- Đá nâng bậc rơi từ trùm nhỏ, trùm vùng và **Ải Đá Bậc** (ải ngày). Màu tên vũ khí theo bậc ép đồ.
+- **Ải theo ngày** (mở sau khi hạ trùm vùng Rừng già, nút **Ải ngày** ở bản đồ của Chú Lái Đò): Ải Đá Bậc, Ải Đá Mài (quặng), Ải Vàng; mỗi ải mở vài ngày trong tuần, 3 lượt thắng mỗi ngày. Bảng số: `G.AI_NGAY`.
 
 ## Sức mạnh và cày
 
-- **Sức mạnh** của em bé là một con số tính từ cấp hero, vũ khí mạnh nhất đang mang (bậc, mài, mốc tiến hóa), điểm kỹ năng, mũ và áo. Em bé mới có sức mạnh 100. Xem ở dải trên cùng trong làng, ở bảng hero của Ông Từ và ở góc trái khi đang trong ải.
+- **Sức mạnh** của Zed là một con số tính từ cấp, vũ khí đang mang (cấp linh khí, bậc ép đồ, mài; 75% món mạnh nhất + 25% món kế), điểm kỹ năng, chưởng và skill bộ đang mặc. Zed mới có sức mạnh khoảng 100. Xem ở dải trên cùng trong làng, ở bảng hero của Ông Từ và ở góc trái khi đang trong ải.
 - Mỗi ải có **Sức mạnh khuyên dùng**, ghi dưới thẻ ải trên tranh bản đồ của Chú Lái Đò và trong thẻ thông tin ải. Màu so với sức mạnh của bé: xanh là đủ, vàng là sát nút (từ 90%), đỏ là còn thiếu.
 - Vùng 1 nhẹ: ải 1 đến 4 thường chơi một hai lần là qua. Ải 3, ải 4 của vùng 2 và 3 cần cày thêm vài lượt; ải trùm vùng (5, 10, 15) cần cày nhiều nhất, vùng sau nhiều hơn vùng trước.
-- **Cày**: chơi lại ải cũ vẫn được kinh nghiệm, vàng, quặng và nguyên liệu vùng (cần cho mài từ +5, nâng bậc, rèn đồ). Chơi lại một ải đã qua có cơ hội rơi vũ khí bậc cao hơn lần đầu. Khi bé đã mạnh hơn 130% khuyên dùng của ải thì kinh nghiệm và vàng giảm dần (thấp nhất 40%), nguyên liệu vẫn đủ.
-- **Thua không làm bé mạnh thêm** (đã bỏ "Quyết tâm"). Sức mạnh chỉ đến từ cày nâng cấp: cấp hero (tối đa 40), mài vũ khí (tối đa +15, lò cấp 4), nâng bậc Thường → Lam → Tím → Vàng, tiến hóa theo linh khí, cây kỹ năng, trang phục (may, nâng bậc, cánh), nâng lò.
-- **Bảng thua chỉ nên cày gì**: Sức mạnh hiện tại so với khuyên dùng, và 2-3 gợi ý cụ thể (ví dụ "Mài Kiếm lên +6: thiếu 80 vàng", "Nâng lên Tím: thiếu 3 vảy cá — chơi lại Hang biển 2", "Còn 2 điểm kỹ năng chưa học"). Bấm gợi ý là về làng mở đúng người làng (js/upgrade.js).
+- **Cày**: chơi lại ải cũ vẫn được kinh nghiệm, vàng, linh khí, quặng và nguyên liệu vùng (cần cho mài từ +5, nâng lò), đánh lại trùm được đá nâng bậc và mảnh trùm. Khi Zed đã mạnh hơn 130% khuyên dùng của ải thì kinh nghiệm và vàng giảm dần (thấp nhất 40%), nguyên liệu vẫn đủ.
+- **Thua không làm bé mạnh thêm** (đã bỏ "Quyết tâm"). Sức mạnh chỉ đến từ cày nâng cấp: cấp (tối đa 40), mài vũ khí (tối đa +15, lò cấp 4), nâng vũ khí bằng linh khí, ép đồ, cây kỹ năng, cây chưởng, nâng bộ đồ, nâng lò.
+- **Bảng thua chỉ nên cày gì**: Sức mạnh hiện tại so với khuyên dùng, và 2-3 gợi ý cụ thể (ví dụ "Mài Kiếm lên +6: thiếu 80 vàng", "Mài Kiếm lên +7: thiếu 3 vảy cá — chơi lại Hang biển 2", "Còn 2 điểm kỹ năng chưa học"). Bấm gợi ý là về làng mở đúng người làng (js/upgrade.js).
 - Lên cấp chậm hơn trước (cần 50 + 50 x cấp kinh nghiệm), mỗi cấp tăng 1,5% sát thương và 3,5% máu.
 - Đi hết 15 ải lần đầu mất khoảng 3 giờ chơi, ~46 lượt (bot hệ thống mới đo bằng `tests/cay.py`, đợt 5).
 
@@ -176,18 +152,19 @@ Em bé mặc đồ theo năm ô: **Mũ**, **Áo**, **Đồ đeo lưng** (gùi, k
 | Tệp | Nội dung |
 | --- | --- |
 | `index.html` | Trang game: bố cục, màu sắc, thứ tự nạp các tệp JS |
-| `js/data.js` | Số liệu: hệ, vũ khí, bốn bậc, dòng phụ, tỉ lệ rơi, hero, quái, vùng, trang bị, giá cả |
+| `js/data.js` | Số liệu: hệ, 4 vũ khí, linh khí, ép đồ, ải ngày, bộ đồ và skill bộ, hero, quái, vùng, giá cả |
 | `js/engine.js` | Bộ máy: co giãn màn hình, bàn phím và cảm ứng, âm thanh, lưu game, vẽ chữ và nút, vòng lặp |
 | `js/art.js` | Hình vẽ: đồ vật, phông nền, vùng nguy hiểm, đạn; hình quái, trùm, hero và vũ khí kiểu cũ (chỉ còn dùng khi thiếu các tệp mới) |
-| `js/weapon_art.js` | Vũ khí sống: 400 hình (4 loại, 10 dòng, 3 nhánh hệ, 3 mốc), 4 bậc, khuôn mặt theo tâm trạng, biểu tượng ô đồ, tên |
-| `js/hero_art.js` | Hình hero kiểu cũ (dự phòng khi hình mới lỗi) |
+| `js/weapon_art.js` | Hình vũ khí vẽ bằng code kiểu cũ (chỉ còn khi có `?vkcu=1`; game dùng bộ ảnh `zed-vk`, `js/vk_moi.js`) |
+| `js/vk_moi.js` | 4 vũ khí cố định, túi linh khí, nâng cấp vũ khí, nâng bộ đồ, chuyển bản lưu sang hệ mới |
+| `js/ep_do.js` | Ép đồ 7 bậc: đá nâng bậc, bùa giữ bậc, dòng hiệu ứng, thẻ Ép đồ |
+| `js/ai_ngay.js` | Ải theo ngày: Ải Đá Bậc, Ải Đá Mài, Ải Vàng |
+| `js/bo_skill.js` | Skill của 4 bộ đồ Zed, và quy đổi skill bộ ra Sức mạnh |
 | `js/hero_tinhlinh.js` | Em bé tinh linh: bốn hero vẽ theo lớp (thân, áo, mũ, đồ đeo lưng, bùa, cánh), tư thế theo từng đòn đánh, cầm vũ khí sống; vải và tua đung đưa, ánh viền, hạt theo hệ, vầng sáng đủ bộ, khiên |
-| `js/outfit.js` | Trang phục (`G.outfit`): danh mục món, bậc, hệ, bộ, chỉ số, tác dụng trong trận, rơi đồ, giá may, nâng bậc, mở cấp cánh, lưu và chuyển bản lưu cũ |
-| `js/tailor.js` | Bảng của Cô Thợ May: năm ô đang mặc, kho có lật trang, may, nâng bậc, cánh, em bé mặc thử |
 | `js/btn_art.js` | Bộ nút bấm: Đánh, Đặc biệt, kỹ năng, Né, bình máu, tạm dừng, ô vũ khí, cần điều khiển |
 | `js/ui_theme.js` | Bộ giao diện chủ đề trống đồng Đông Sơn (`G.theme`): nút, bảng, thanh máu và mana, ô đồ bốn bậc, thẻ ải mặt trống, thông báo, khung thoại, biểu tượng tài nguyên. Tệp này cũng đổi cách vẽ chung `G.ui.btn`, `G.ui.panel`, `G.ui.bar`, `G.ui.text` của cả game sang chủ đề |
-| `js/combat.js` | Trận đánh: người chơi, quái, sát thương, hiệu ứng ba hệ, dấu ấn |
-| `js/moves.js` | Lối đánh riêng của từng vũ khí (chuỗi kiếm, giương cung, loạt đâm, lấy đà búa) và đặc trưng hệ mở theo cấp; mọi con số nằm ở đầu tệp |
+| `js/combat.js` | Trận đánh: người chơi, quái, sát thương, hiệu ứng ba hệ, linh khí nhận |
+| `js/moves.js` | Lối đánh riêng của từng vũ khí (chuỗi kiếm, lấy đà phi tiêu, loạt đâm thương, lấy đà búa) và đặc trưng hệ mở theo cấp; mọi con số nằm ở đầu tệp |
 | `js/boss.js` | Trùm: trùm nhỏ (hai chiêu riêng), trùm vùng (ra mắt, ba pha, năm chiêu, choáng, chết), và cách trùm học theo người chơi |
 | `js/monster_art.js` | Hình và cử động của 36 quái và trùm (ghép tự động từ `docs/phac-thao/quai-hoat-hinh/nguon/`, không sửa tay; phần chi tiết thêm ở `nguon/chitiet.js`, ghép riêng bằng `nguon/ghep_chitiet.py`) |
 | `js/mobs.js` | Quái mới trong trận: con nào ở vùng nào, cơ chế từng vai, tinh anh, đòn ngắm mọi hướng, vùng báo trước xoay theo góc, cách vẽ quái |
@@ -195,13 +172,13 @@ Em bé mặc đồ theo năm ô: **Mũ**, **Áo**, **Đồ đeo lưng** (gùi, k
 | `js/fx.js` | Hiệu ứng hình ảnh chung: vệt chém, hạt, số sát thương, rung màn hình |
 | `js/fx_he.js` | Hiệu ứng ra chiêu theo lối đánh và theo hệ Lửa, Độc, Băng; vạch lấy đà |
 | `js/fx_dan.js` | Hiệu ứng đạn: hình riêng từng loại đạn theo vùng, xoay theo hướng bay, vệt bay, quầng sáng hệ, chớp lúc bắn, toé hạt lúc trúng, cắm tường, vỡ tan |
-| `js/linhkhi.js` | Hiển thị linh khí (dấu ấn hệ): ba vạch dưới ô vũ khí, biểu tượng hệ trên đầu quái, khối linh khí ở màn kết quả, bảng Xem vũ khí, trang hướng dẫn |
+| `js/linhkhi.js` | Hiển thị linh khí: biểu tượng hệ trên đầu quái, khối linh khí ở màn kết quả, chuyển mốc của bản lưu cũ |
 | `js/stage.js` | Một ải: bản đồ 8 phòng, cửa và chuyển phòng, đợt quái, nút điều khiển, thông tin trên màn hình, các bảng chọn, bảng kết quả |
 | `js/mapgen.js` | Sinh bản đồ ải ngẫu nhiên theo hạt giống (ba kiểu bố cục A, B, C) và hàm kiểm tra bản đồ |
 | `js/room_art.js` | Vẽ phòng vuông nhìn từ trên cho ba vùng: sàn, tường, cửa khóa và cửa mở |
 | `js/minimap.js` | Bản đồ nhỏ và bản đồ to |
 | `js/portal.js` | Hình cổng dịch chuyển sau khi thắng |
-| `js/do_roi.js` | Hình đồ rơi trên sàn (viền, bóng, cột sáng theo bậc, nảy), tên khi lại gần, tự hút về |
+| `js/do_roi.js` | Hình thưởng nằm trên sàn (viền, bóng, nảy), tên khi lại gần, tự hút về |
 | `js/village_scene.js` | Cảnh làng có người (`G.villageScene`): nền làng 720 điểm, bảy người làng, em bé đi lại, vũ khí bay theo, tìm đường khi chạm, dải khuôn mặt lối tắt, tranh bản đồ vùng |
 | `js/village.js` | Màn hình đầu và làng: mỗi người mở một bảng (tranh bản đồ, lò rèn, rương vũ khí, mũ áo bùa, cây kỹ năng và hướng dẫn, chọn hero, cài đặt), màn xem vũ khí |
 | `js/firebase-config.js` | Cấu hình web công khai của dự án Firebase sontinhthuytinh (dùng chung với Thần Thoại Việt) |
@@ -264,6 +241,7 @@ python3 tests/dan_linhkhi_shots.py # chụp ảnh và GIF đạn, linh khí vào
 python3 tests/bao_truoc.py          # vùng báo trước vẽ mịn: đủ mọi hình, không vẽ lên lớp điểm ảnh, nằm dưới em bé, hiện ra mượt, đếm ngược, chớp khi nổ, thời gian không đổi
 python3 tests/bao_truoc_shots.py chup <thư mục game> <thư mục ra>   # chụp ảnh trước/sau vùng báo trước (rồi "ghep", "gif") vào docs/bao-truoc-muot/
 python3 tests/quai_shots.py        # chụp ảnh và GIF quái mới trong game vào docs/quai-vao-game/ (cần thêm Pillow)
+python3 tests/cay.py 6 khuyen --kd=4 --node   # 14/10: cùng bot cân bằng nhưng chạy luật game trong Node (tests/node_trang.js), KHÔNG cần trình duyệt; --vk=thuong|bua, --kho2 (độ khó 2), --ngay=K (ải ngày)
 python3 tests/balance.py 4         # bot chơi 15 ải với bản lưu thật vừa đủ sức mạnh khuyên dùng (tests/cay_luu.json), mỗi ải 4 lần: tỉ lệ thắng, thời gian, máu mất (thêm "- 0,4,9 vukhi": chạy với từng loại vũ khí; thêm "- - trangphuc" hoặc "trangphuc:vang": mặc bộ trang phục của vùng; "codinh": bản lưu dựng tay)
 python3 tests/do_roi.py            # đồ rơi (đủ loại có viền, bóng, cột sáng theo bậc, tên, hút về, tinh anh rơi trên sàn) và quái chi tiết (cỡ không đổi, đủ bộ phận mới, mọi cử động vẽ được)
 python3 tests/chitiet_shots.py <thư mục ra> quai|do|gif 1   # chụp quái cỡ thật cạnh em bé, đồ rơi ba vùng, GIF trong game (cần thêm Pillow)

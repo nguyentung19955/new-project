@@ -43,7 +43,7 @@
   // Lời chỉ dẫn của ải đầu, theo loại phòng.
   const TUT = {
     start: 'Kéo cần bên trái để đi. Bấm (hoặc giữ) nút Đánh để chém, bấm Né để lăn tránh.',
-    fight1: 'Đánh vỡ chậu than để đốt quái. Kết liễu quái đang cháy thì kiếm nhận dấu ấn Lửa.',
+    fight1: 'Đánh vỡ chậu than để đốt quái. Kết liễu quái đang cháy thì được thêm linh khí.',
     chest: 'Lại gần rương rồi bấm Đánh để mở. Bùa hệ phủ hệ đó lên vũ khí trong 60 giây.',
     fight2: 'Thanh xanh là mana. Đủ 25 mana thì bấm Đặc biệt để tung đòn mạnh.',
     elite: 'Quái tinh anh mang hệ. Chạm ô vũ khí ở góc trên bên phải để đổi sang phi tiêu.',
@@ -52,7 +52,7 @@
     boss: 'Trùm đầu tiên chưa học gì từ bạn. Từ ải sau, trùm kháng hệ bạn dùng nhiều nhất nhưng yếu hệ khắc chế: đổi vũ khí khác hệ để đánh mạnh hơn.',
     merchant: 'Thương nhân bán bình máu, bùa hệ và quặng. Lại gần rồi bấm Đánh để xem hàng.',
     challenge: 'Phòng thử thách: hạ hết quái trước khi hết giờ để nhận thưởng.',
-    curse: 'Bàn thờ lời nguyền: chịu một bất lợi để dấu ấn tăng gấp đôi đến hết ải. Bỏ qua cũng được.',
+    curse: 'Bàn thờ lời nguyền: chịu một bất lợi để linh khí nhận tăng gấp đôi đến hết ải. Bỏ qua cũng được.',
     door: 'Hết quái rồi, cửa đã mở. Đi vào cửa có mũi tên để sang phòng kề. Bản đồ nhỏ ở góc phải cho biết phòng nào ở đâu.',
   };
   const DIRV = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
@@ -1278,7 +1278,7 @@
   function panelCurse() {
     ui.rect(0, 0, G.W, G.H, 'rgba(0,0,0,0.55)');
     ui.panel(80, 60, 320, 146, 'Bàn thờ lời nguyền');
-    ui.para('Nhận lời nguyền này để mọi dấu ấn từ giờ đến hết ải tăng gấp đôi:', 92, 92, 296, { size: 8.5 });
+    ui.para('Nhận lời nguyền này để linh khí nhận từ giờ đến hết ải tăng gấp đôi:', 92, 92, 296, { size: 8.5 });
     ui.para(S.curseOffer.name, 92, 124, 296, { size: 10, bold: true, color: '#d48af5' });
     if (ui.btn(92, 168, 140, 28, 'Nhận lời nguyền', { color: '#6a2a8a' })) {
       const P = S.P;

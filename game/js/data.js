@@ -283,7 +283,7 @@
   G.HEROES = {
     smith: {
       name: 'Cu Tí', hp: 100, mana: 100, speed: 1, fav: ['sword', 'hammer'],
-      passive: 'Vũ khí nhận dấu ấn nhanh hơn 20%',
+      passive: 'Nhận linh khí nhanh hơn 20%',
       skill: 'Chưởng', skillDesc: 'Nét riêng: chưởng đẩy lùi quái mạnh (lực tay thợ rèn)', // trước là Nung (js/chuong.js)
       unlock: 'Có sẵn',
     },
@@ -639,9 +639,11 @@
   G.BAN_QUANG_BAT = true;
   try { if (typeof location !== 'undefined' && /[?&]banquang=0(&|$)/.test(location.search || '')) G.BAN_QUANG_BAT = false; } catch (e) { /* giữ mặc định */ }
 
+  // 14/10 (bước 1 làm chắc, mục 6): viết lại theo hệ mới (4 vũ khí, linh khí túi chung Trắng → Thức tỉnh, ép đồ 7 bậc, bộ đồ vùng);
+  // bỏ câu dấu ấn / khoá nhánh 60 dấu ấn / dấu ấn thừa của luật cũ. Thứ tự giữ nguyên (js/village.js đọc HINTS[0..5]).
   G.HINTS = [
-    'Kết liễu quái đang dính hiệu ứng thì vũ khí nhận dấu ấn của hệ đó.',
-    'Đủ 60 dấu ấn của một hệ, vũ khí khóa theo nhánh hệ đó và bắt đầu tiến hóa.',
+    'Kết liễu quái đang dính hiệu ứng hệ thì được thêm linh khí. Tinh anh, trùm và viên linh khí quái rơi cho nhiều linh khí hơn.',
+    'Linh khí vào một túi chung. Zed mang đủ 4 vũ khí (Kiếm, Thương, Búa, Phi tiêu); ở Ông Thợ Rèn dùng linh khí nâng từng món: Trắng → Mầm (chọn Lửa, Độc hoặc Băng) → Thành hình → Thức tỉnh.',
     'Trùm học theo bạn (từ ải thứ hai): dùng một hệ quá nhiều thì nó kháng hệ đó, nhưng yếu với hệ khắc chế (đánh bằng hệ khắc chế mạnh hơn 50%).',
     'Kháng Lửa thì yếu Băng. Kháng Băng thì yếu Độc. Kháng Độc thì yếu Lửa.',
     // GĐ2 (V16, Q8): câu cũ "Lửa hợp với bầy quái" sai số đo (đánh đám Độc vẫn mạnh hơn Lửa). Chỉ sửa câu, chưa đổi số Lửa.
@@ -651,8 +653,8 @@
     'Hạ trùm bằng hệ khắc chế nó để nhận sao thứ ba.',
     'Vũ khí có bảy bậc ép đồ: Trắng, Xanh lam, Xanh lục, Tím, Vàng, Đỏ, Rực lửa. Ép ở Ông Thợ Rèn (thẻ Ép đồ) bằng đá nâng bậc rơi từ trùm.',
     'Thành hình mở đặc trưng hệ thứ nhất, Thức tỉnh mở đặc trưng thứ hai.',
-    'Mỗi ải có Sức mạnh khuyên dùng. Số đỏ là bé còn yếu: chơi lại ải cũ để lên cấp, kiếm quặng và nguyên liệu, rồi mài và nâng bậc vũ khí.',
-    'Thiếu nguyên liệu của vùng đã qua? Bà Hàng Xén (thẻ Nguyên liệu) và Thương nhân trong ải đổi vàng lấy nguyên liệu.',
-    'Vũ khí đã Thức tỉnh: dấu ấn thừa của hệ chính tự đổi ra nguyên liệu vùng (Độc ra Gỗ linh, Băng ra Vảy cá, Lửa ra Đá lửa).',
+    'Mỗi ải có Sức mạnh khuyên dùng. Số đỏ là bé còn yếu: chơi lại ải cũ để lên cấp, kiếm linh khí, quặng, nguyên liệu và đá nâng bậc, rồi nâng cấp, mài và ép đồ vũ khí.',
+    'Thiếu nguyên liệu của vùng đã qua? Bà Hàng Xén (thẻ Nguyên liệu) và Thương nhân trong ải đổi vàng lấy nguyên liệu. Thiếu quặng thì mua ở thẻ Quặng của Bà Hàng Xén (mỗi ngày có hạn).',
+    'Cô Thợ May nâng 4 bộ đồ của Zed (Ninja, Rừng, Biển, Lâu đài) bằng linh khí, vàng và mảnh trùm. Mỗi cấp bộ mở một skill riêng, chỉ có tác dụng khi đang mặc bộ đó.',
   ];
 })();

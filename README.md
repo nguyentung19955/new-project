@@ -1,13 +1,13 @@
 # Linh Khí (tên tạm)
 
 Game phiêu lưu hành động pixel art cho điện thoại, màn hình ngang, lấy bối cảnh truyền thuyết Việt Nam.
-Hai luật cốt lõi: vũ khí tiến hóa theo cách bạn dùng, và boss thích nghi để khắc chế thói quen của bạn.
+Hai luật cốt lõi: Zed mang 4 vũ khí (Kiếm, Thương, Búa, Phi tiêu) nâng bằng linh khí từ Trắng lên Thức tỉnh, ép đồ 7 bậc, mặc 4 bộ đồ có skill riêng; và boss thích nghi để khắc chế thói quen của bạn.
 
 ## Trạng thái
 
 - Thiết kế game: xong bản 4, xem [docs/thiet-ke-game.md](docs/thiet-ke-game.md).
-- Mã game: đã có bản thử chơi được trong thư mục `game/` (15 ải, 3 boss, 4 hero, làng). Hình hiện là hình tạm vẽ bằng mã.
-- Hình ảnh thật: chưa làm. Bắt đầu từ hero Thợ Rèn để chốt phong cách.
+- Mã game: đã có bản chơi được trong thư mục `game/` (15 ải, 3 trùm vùng, nhân vật Zed, làng, ải theo ngày). Luật chơi chi tiết: [game/README.md](game/README.md).
+- Hình ảnh: đã có bộ ảnh AI cho Zed, quái, trùm, làng, giao diện, hiệu ứng (`game/art/custom`).
 
 ## Cấu trúc thư mục
 

@@ -137,7 +137,7 @@
 "Mài, nâng bậc, nâng lò, may và mua trang phục, đặt lại điểm kỹ năng": "Sharpen, upgrade tier, upgrade forge, sew and buy outfits, reset skill points",
 "Qua ải, hạ quái, bán vũ khí cho Bà Hàng Xén": "Clear stages, kill monsters, sell weapons to the Peddler",
 "Mài vũ khí, nâng vũ khí lên bậc Lam, nâng lò cấp 4": "Sharpen weapons, upgrade weapons to Blue tier, forge Lv 4",
-"Qua ải (nhiều sao được nhiều hơn), rương báu, phòng thử thách, thương nhân": "Clear stages (more stars, more ore), chests, challenge rooms, merchant",
+"Qua ải (nhiều sao được nhiều hơn), rương báu, phòng thử thách, thương nhân, Ải Đá Mài (ải ngày), Bà Hàng Xén (thẻ Quặng)": "Clear stages (more stars, more ore), chests, challenge rooms, merchant, Whetstone Trial (daily), the Peddler (Ore tab)",
 "Tôi lại đổi hệ vũ khí, nâng lên Tím và Vàng, nâng bậc trang phục": "Retemper a weapon's element, upgrade to Purple and Gold, upgrade outfit tier",
 "Ba sao lần đầu, đôi khi sau ải, phòng thử thách": "First three-star clears, sometimes after a stage, challenge rooms",
 "Nâng lò cấp 2, nâng vũ khí lên Lam, may và nâng đồ Bộ Rừng Già": "Forge Lv 2, weapons to Blue, sew and upgrade the Forest Set",
@@ -244,5 +244,7 @@
 "Bậc {0}: {1}": "Rank {0}: {1}",
 "Đã đủ bậc": "Max rank",
 "Con còn {0} điểm chưởng. Chạm một nút để xem, chạm lần nữa để học.": "You have {0} Palm points, child. Tap a node to view it, tap again to learn.",
-"Chưởng là linh khí trong lòng bàn tay. Lên cấp, lão dạy thêm.": "A Palm is spirit held in your hand. Level up and I will teach you more."
+"Chưởng là linh khí trong lòng bàn tay. Lên cấp, lão dạy thêm.": "A Palm is spirit held in your hand. Level up and I will teach you more.",
+"Mài, nâng lò, nâng bộ trang phục, ép đồ, đổi nguyên liệu, mua quặng, đặt lại điểm kỹ năng": "Sharpen, upgrade the forge, upgrade outfits, refine, buy materials, buy ore, reset skill points",
+"Qua ải, hạ quái, tinh anh, trùm, phòng thử thách, Ải Vàng (ải ngày)": "Clear stages, kill monsters, elites, bosses, challenge rooms, Gold Trial (daily)"
 }

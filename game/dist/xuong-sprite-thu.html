@@ -65,7 +65,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.14-2018";
+(window.G = window.G || {}).VERSION = "lk-2026.10.14-2028";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -284,7 +284,7 @@
 "Bà trả {0} vàng": "I pay {0} gold",
 "Bàn phím": "Keyboard",
 "Bàn thờ lời nguyền": "Curse Altar",
-"Bàn thờ lời nguyền: chịu một bất lợi để dấu ấn tăng gấp đôi đến hết ải. Bỏ qua cũng được.": "Curse Altar: take one handicap to double marks until the stage ends. You can skip it.",
+"Bàn thờ lời nguyền: chịu một bất lợi để linh khí nhận tăng gấp đôi đến hết ải. Bỏ qua cũng được.": "Curse Altar: take one handicap to double the Spirit you gain until the stage ends. You can skip it.",
 "Bào tử bay hết rồi... xẹp...": "All my spores are gone... *flop*...",
 "Bán": "Sell",
 "Bán hết {0}": "Sell all {0}",
@@ -421,7 +421,7 @@
 "Chưa khóa nhánh hệ. Kết liễu quái đang dính hiệu ứng để nhận dấu ấn; đủ {0} dấu ấn của một hệ thì vũ khí theo hệ đó.": "No element locked yet. Kill monsters under an effect to earn marks; at {0} marks of one element the weapon takes it.",
 "Chưa kết nối mây": "Cloud not connected",
 "Chưa kết nối được mây": "Can't reach the cloud",
-"Chưa mang hệ. Hạ tinh anh, trùm hoặc nhặt viên linh khí quái thường rơi để có dấu ấn.": "No element yet. Beat elites and bosses, or pick up Spirit orbs from monsters, to earn marks.",
+"Chưa mang hệ. Hạ tinh anh, trùm hoặc nhặt viên linh khí quái thường rơi để có linh khí, rồi lên Mầm ở Ông Thợ Rèn.": "No element yet. Beat elites and bosses, or pick up Spirit orbs from monsters, to earn Spirit, then upgrade to Sprout at the Blacksmith.",
 "Chưa mặc món nào tăng chỉ số.": "Nothing worn adds stats yet.",
 "Chưa mở": "Locked",
 "Chưa đăng nhập được: ": "Sign-in failed: ",
@@ -763,7 +763,7 @@
 "Kết hợp hai hệ: sắp có": "Two-element combos: coming soon",
 "Kết liễu quái thì hồi 2% máu": "Kills heal 2% HP",
 "Kết liễu quái đang dính hiệu ứng hồi thêm 5 mana": "Killing a monster under an effect restores 5 mana",
-"Kết liễu quái đang dính hiệu ứng thì vũ khí nhận dấu ấn của hệ đó.": "Kill a monster under an element's effect and your weapon gains a mark of that element.",
+"Kết liễu quái đang dính hiệu ứng hệ thì được thêm linh khí. Tinh anh, trùm và viên linh khí quái rơi cho nhiều linh khí hơn.": "Kill a monster under an element's effect to gain extra Spirit. Elites, bosses and Spirit orbs dropped by monsters give more.",
 "Kỷ lục của con (trên máy)": "Your records (this device)",
 "Kỹ năng": "Skills",
 "LINH KHÍ": "LINH KHÍ",
@@ -944,7 +944,7 @@
 "Mỗi lần trúng {0} tầng Băng, đóng băng lâu hơn {1}%": "{0} Ice stacks per hit, freeze lasts {1}% longer",
 "Mỗi vũ khí tích dấu ấn ba hệ. Xem ở ba vạch dưới ô vũ khí khi đánh, và ở màn Xem vũ khí.": "Weapons gather marks of 3 elements: see the 3 bars under the weapon slots, or View weapon.",
 "Mỗi đòn trúng hồi thêm 1 mana": "+1 mana per hit",
-"Mỗi ải có Sức mạnh khuyên dùng. Số đỏ là bé còn yếu: chơi lại ải cũ để lên cấp, kiếm quặng và nguyên liệu, rồi mài và nâng bậc vũ khí.": "Each stage has a recommended Power. A red number means your hero is too weak: replay earlier stages to level up and gather ore and materials, then sharpen and upgrade your weapons.",
+"Mỗi ải có Sức mạnh khuyên dùng. Số đỏ là bé còn yếu: chơi lại ải cũ để lên cấp, kiếm linh khí, quặng, nguyên liệu và đá nâng bậc, rồi nâng cấp, mài và ép đồ vũ khí.": "Each stage has a recommended Power. A red number means you are still weak: replay old stages to level up and gather Spirit, ore, materials and tier stones, then upgrade, sharpen and refine your weapons.",
 "Mộc Tinh": "Moc Tinh",
 "Mộc Tinh là cây cổ thụ mọc đầy nấm độc. Cháu hạ được nó, Rừng già thở lại rồi.": "The Tree Spirit is an ancient tree full of poison mushrooms. You beat it, and the Old Forest breathes again.",
 "Mới": "New",
@@ -984,7 +984,7 @@
 "Nhạc tạo ngay trong máy, không tải thêm gì. Tiết kiệm pin: vẽ 30 khung mỗi giây, trận đấu vẫn chạy đủ nhanh.": "Music is generated on the device, nothing extra to download. Battery saver: draws 30 frames per second, the battle still runs at full speed.",
 "Nhạc · Truyện": "Music · Story",
 "Nhận lời nguyền": "Accept curse",
-"Nhận lời nguyền này để mọi dấu ấn từ giờ đến hết ải tăng gấp đôi:": "Accept this curse to double all marks for the rest of the stage:",
+"Nhận lời nguyền này để linh khí nhận từ giờ đến hết ải tăng gấp đôi:": "Accept this curse to double the Spirit you gain for the rest of the stage:",
 "Nhận thêm 25% vàng, máu tối đa giảm 10%": "+25% gold, -10% max HP",
 "Nhận được": "Received",
 "Nhặt được mảnh chìa {0}/3": "Key piece {0}/3 found",
@@ -1045,7 +1045,7 @@
 "Phủ hệ 60 giây": "Element coat, 60s",
 "Phủ hệ lên cả hai vũ khí trong 60 giây": "Coats both weapons with the element for 60s",
 "Qua ải": "Stage cleared",
-"Qua ải (nhiều sao được nhiều hơn), rương báu, phòng thử thách, thương nhân": "Clear stages (more stars, more ore), chests, challenge rooms, merchant",
+"Qua ải (nhiều sao được nhiều hơn), rương báu, phòng thử thách, thương nhân, Ải Đá Mài (ải ngày), Bà Hàng Xén (thẻ Quặng)": "Clear stages (more stars, more ore), chests, challenge rooms, merchant, Whetstone Trial (daily), the Peddler (Ore tab)",
 "Qua ải {0}": "Clear {0} stages",
 "Qua ải {0} {1}": "Cleared {0} {1}",
 "Qua ải, hạ quái, bán vũ khí cho Bà Hàng Xén": "Clear stages, kill monsters, sell weapons to the Peddler",
@@ -1138,7 +1138,7 @@
 "Thanh xanh là mana. Đủ 25 mana thì bấm Đặc biệt để tung đòn mạnh.": "The blue bar is mana. With 25 mana, tap Special for a powerful attack.",
 "Thiết bị này không cho bật toàn màn hình.": "This device doesn't allow fullscreen.",
 "Thiếu gỗ, vảy hay đá của vùng cháu đã qua thì bà đổi cho, khỏi phải quay lại cày.": "Short on wood, scales or stone from a zone you've cleared? I'll trade you some, no need to go back and grind.",
-"Thiếu nguyên liệu của vùng đã qua? Bà Hàng Xén (thẻ Nguyên liệu) và Thương nhân trong ải đổi vàng lấy nguyên liệu.": "Short on materials from a cleared zone? The Peddler (Materials tab) and the merchant inside stages trade gold for materials.",
+"Thiếu nguyên liệu của vùng đã qua? Bà Hàng Xén (thẻ Nguyên liệu) và Thương nhân trong ải đổi vàng lấy nguyên liệu. Thiếu quặng thì mua ở thẻ Quặng của Bà Hàng Xén (mỗi ngày có hạn).": "Short on materials from a cleared zone? The Peddler (Materials tab) and the merchant inside stages trade gold for materials. Short on ore? Buy some at the Peddler's Ore tab (limited each day).",
 "Thiếu vàng": "Not enough gold",
 "Thuyền cá về bến rồi, chợ đông hẳn lên.": "The fishing boats are back, the market is busy again.",
 "Thành hình": "Formed",
@@ -1216,7 +1216,7 @@
 "Trả {0} điểm, đổi?": "Refund {0} pts, swap?",
 "Trảm Nguyệt": "Moon Slash",
 "Trắng": "Plain",
-"Trắng: chưa có hệ. Linh khí (dấu ấn) có từ: hạ tinh anh ({0}), trùm nhỏ ({1}), trùm vùng ({2}); quái thường {3}% rơi viên linh khí của vùng ({4}), đi lại gần để nhặt; kết liễu quái đang dính hệ (+1). Hệ theo hệ quái đang dính, không dính thì theo vùng. Mầm: có tỉ lệ gây cháy, độc, chậm nhưng chưa có luật hệ. Thành hình: mở đặc trưng 1, thứ để lại trên sân (vệt cháy, vũng độc, gai băng). Thức tỉnh: mở đặc trưng 2, phản ứng dây chuyền (nổ lan, lây độc, băng vỡ).": "Plain: no element yet. Spirit (marks) comes from: beating elites ({0}), mini-bosses ({1}), region bosses ({2}); normal monsters have a {3}% chance to drop the region's Spirit orb ({4}), walk close to pick it up; and killing a monster under an element effect (+1). The element is the one on the monster, or the region's if none. Sprout: a chance to burn, poison or slow, but no element rule yet. Formed: unlocks trait 1, what it leaves on the field (burn trail, poison pool, ice spikes). Awakened: unlocks trait 2, chain reactions (spreading blast, spreading poison, shatter).",
+"Trắng: chưa có hệ. Linh khí (túi chung) có từ: hạ tinh anh ({0}), trùm nhỏ ({1}), trùm vùng ({2}); quái thường {3}% rơi viên linh khí ({4}), đi lại gần để nhặt; kết liễu quái đang dính hệ (+1). Mầm: chọn hệ Lửa, Độc hoặc Băng; có tỉ lệ gây cháy, độc, chậm nhưng chưa có luật hệ. Thành hình: mở đặc trưng 1, thứ để lại trên sân (vệt cháy, vũng độc, gai băng). Thức tỉnh: mở đặc trưng 2, phản ứng dây chuyền (nổ lan, lây độc, băng vỡ).": "White: no element. Spirit (shared pouch) comes from: beating elites ({0}), mini bosses ({1}), region bosses ({2}); common monsters have a {3}% chance to drop a Spirit orb ({4}), walk close to pick it up; killing a monster under an element (+1). Sprout: pick Fire, Poison or Ice; a chance to burn, poison or slow, but no element rules yet. Formed: unlocks trait 1, left on the field (burning trail, poison pool, ice spikes). Awakened: unlocks trait 2, chain reactions (spreading blast, spreading poison, shattering ice).",
 "Trống Đồng": "Bronze Drum",
 "Trống đồng nhỏ": "Small Bronze Drum",
 "Trống. Vũ khí nhặt trong ải sẽ nằm ở đây.": "Empty. Weapons found in stages end up here.",
@@ -1272,12 +1272,12 @@
 "Vùng đỏ trên sàn là chỗ đòn sắp rơi xuống, đầy dần rồi nổ: đi ra ngoài hoặc lộn qua. Quái đánh được mọi hướng, kể cả trên dưới và chéo. Vòng đỏ chỗ trống là quái sắp mọc lên.": "A red floor zone is where a hit will land. It fills, then bursts: step out or roll through. Monsters attack in all directions, diagonals too. A red ring on empty ground: a monster is about to spawn.",
 "Vũ khí": "Weapons",
 "Vũ khí lớn lên theo bạn. Yêu tinh học theo bạn.": "Your weapon grows with you. The monsters learn from you.",
-"Vũ khí nhận dấu ấn nhanh hơn 20%": "Weapons gain marks 20% faster",
+"Nhận linh khí nhanh hơn 20%": "Gains Spirit 20% faster",
 "Vũ khí nhận {0} dấu ấn": "Weapons gained {0} marks",
 "Vũ khí sống": "Living weapon",
 "Vũ khí đang mang": "Equipped weapons",
 "Vũ khí đang mang không bán được.": "Equipped weapons can't be sold.",
-"Vũ khí đã Thức tỉnh: dấu ấn thừa của hệ chính tự đổi ra nguyên liệu vùng (Độc ra Gỗ linh, Băng ra Vảy cá, Lửa ra Đá lửa).": "Awakened weapons: spare marks of the main element turn into zone materials (Poison into Spirit wood, Ice into Fish scales, Fire into Firestone).",
+"Cô Thợ May nâng 4 bộ đồ của Zed (Ninja, Rừng, Biển, Lâu đài) bằng linh khí, vàng và mảnh trùm. Mỗi cấp bộ mở một skill riêng, chỉ có tác dụng khi đang mặc bộ đó.": "The Tailor upgrades Zed's 4 outfits (Ninja, Forest, Sea, Castle) with Spirit, gold and boss shards. Each outfit level unlocks its own skill, active only while wearing that outfit.",
 "Vũng băng": "Ice Pool",
 "Vũng lửa": "Fire Pool",
 "Vũng lửa ma": "Ghostfire Pool",
@@ -1543,7 +1543,7 @@
 "Đánh quái {0} rồi kết liễu để nhận dấu ấn {1}": "hit a {0} monster, then finish it off to gain {1} marks",
 "Đánh trúng bé thì hồi máu": "Heals when it hits your hero",
 "Đánh tám hướng": "Eight-way attacks",
-"Đánh vỡ chậu than để đốt quái. Kết liễu quái đang cháy thì kiếm nhận dấu ấn Lửa.": "Break braziers to burn monsters. Kill a burning monster and your sword gains Fire marks.",
+"Đánh vỡ chậu than để đốt quái. Kết liễu quái đang cháy thì được thêm linh khí.": "Break braziers to burn monsters. Killing a burning monster gives extra Spirit.",
 "Đâm": "Thrust",
 "Đã bán 1 món, +{0} vàng.": "Sold 1 item, +{0} gold.",
 "Đã bán {0} món, +{1} vàng.": "Sold {0} items, +{1} gold.",
@@ -1664,7 +1664,7 @@
 "Đớp": "Chomp",
 "Đủ 3 mảnh chìa! Cửa phía trên sảnh đã mở": "All 3 key pieces! The door above the hall is open",
 "Đủ 30 dấu ấn của một hệ, vũ khí khóa theo nhánh hệ đó và bắt đầu tiến hóa.": "At 30 marks of one element, the weapon locks onto that element's branch and starts to evolve.",
-"Đủ 60 dấu ấn của một hệ, vũ khí khóa theo nhánh hệ đó và bắt đầu tiến hóa.": "At 60 marks of one element, the weapon locks onto that element's branch and starts to evolve.",
+"Linh khí vào một túi chung. Zed mang đủ 4 vũ khí (Kiếm, Thương, Búa, Phi tiêu); ở Ông Thợ Rèn dùng linh khí nâng từng món: Trắng → Mầm (chọn Lửa, Độc hoặc Băng) → Thành hình → Thức tỉnh.": "Spirit goes into one shared pouch. Zed always carries 4 weapons (Sword, Spear, Hammer, Shuriken); at the Blacksmith, spend Spirit to upgrade each: White → Sprout (pick Fire, Poison or Ice) → Formed → Awakened.",
 "Đủ bốn bé rồi. Đình làng ấm hẳn lên.": "All four children are home. The temple feels warm again.",
 "Đủ mảnh trùm rồi, mở cấp cánh thôi!": "You've got enough boss shards. Let's grow those wings!",
 "Đủ đồ rồi đấy, nâng lò thôi cháu!": "You've got it all. Let's upgrade the forge!",
@@ -1872,7 +1872,9 @@
 "Choáng!": "Stunned!",
 "Rút vỏ!": "In shell!",
 "Tê liệt!": "Shocked!",
-"Mỗi vùng quái con đánh một kiểu riêng. Rừng già: húc thẳng, lăn cầu đất, mưa bào tử, lẩn bóng sau lưng, nổ mây độc. Hang biển: lướt ngang kẹp, rút vỏ để vệt nhớt làm chậm, hút lại gần, vũng điện, gai xoáy ốc. Lâu đài cổ: chớp chém, phân thân, lửa ma đuổi, bùa tam giác, gai lửa trồi. Đòn nào cũng có vạch hay vòng đỏ báo trước: thấy là né. Quái giáp vẫn che phía trước và hồi máu cho bạn, quái bắn xa vẫn gọi thêm bầy.": "Each land's small monsters fight their own way. Old Forest: straight charges, rolling dirt balls, spore rain, sneaking behind you, poison cloud bursts. Sea Cave: sideways pinches, shells and slowing slime, pulling you in, electric puddles, spiral spikes. Old Castle: blink slashes, phantoms, chasing ghost fire, charm triangles, erupting fire spikes. Every attack shows a red line or circle first: see it, dodge it. Shield monsters still guard their front and heal allies; ranged ones still call swarms."
+"Mỗi vùng quái con đánh một kiểu riêng. Rừng già: húc thẳng, lăn cầu đất, mưa bào tử, lẩn bóng sau lưng, nổ mây độc. Hang biển: lướt ngang kẹp, rút vỏ để vệt nhớt làm chậm, hút lại gần, vũng điện, gai xoáy ốc. Lâu đài cổ: chớp chém, phân thân, lửa ma đuổi, bùa tam giác, gai lửa trồi. Đòn nào cũng có vạch hay vòng đỏ báo trước: thấy là né. Quái giáp vẫn che phía trước và hồi máu cho bạn, quái bắn xa vẫn gọi thêm bầy.": "Each land's small monsters fight their own way. Old Forest: straight charges, rolling dirt balls, spore rain, sneaking behind you, poison cloud bursts. Sea Cave: sideways pinches, shells and slowing slime, pulling you in, electric puddles, spiral spikes. Old Castle: blink slashes, phantoms, chasing ghost fire, charm triangles, erupting fire spikes. Every attack shows a red line or circle first: see it, dodge it. Shield monsters still guard their front and heal allies; ranged ones still call swarms.",
+"Mài, nâng lò, nâng bộ trang phục, ép đồ, đổi nguyên liệu, mua quặng, đặt lại điểm kỹ năng": "Sharpen, upgrade the forge, upgrade outfits, refine, buy materials, buy ore, reset skill points",
+"Qua ải, hạ quái, tinh anh, trùm, phòng thử thách, Ải Vàng (ải ngày)": "Clear stages, kill monsters, elites, bosses, challenge rooms, Gold Trial (daily)"
 }); })();
 
 // ===== js/data.js =====
@@ -2161,7 +2163,7 @@
   G.HEROES = {
     smith: {
       name: 'Cu Tí', hp: 100, mana: 100, speed: 1, fav: ['sword', 'hammer'],
-      passive: 'Vũ khí nhận dấu ấn nhanh hơn 20%',
+      passive: 'Nhận linh khí nhanh hơn 20%',
       skill: 'Chưởng', skillDesc: 'Nét riêng: chưởng đẩy lùi quái mạnh (lực tay thợ rèn)', // trước là Nung (js/chuong.js)
       unlock: 'Có sẵn',
     },
@@ -2517,9 +2519,11 @@
   G.BAN_QUANG_BAT = true;
   try { if (typeof location !== 'undefined' && /[?&]banquang=0(&|$)/.test(location.search || '')) G.BAN_QUANG_BAT = false; } catch (e) { /* giữ mặc định */ }
 
+  // 14/10 (bước 1 làm chắc, mục 6): viết lại theo hệ mới (4 vũ khí, linh khí túi chung Trắng → Thức tỉnh, ép đồ 7 bậc, bộ đồ vùng);
+  // bỏ câu dấu ấn / khoá nhánh 60 dấu ấn / dấu ấn thừa của luật cũ. Thứ tự giữ nguyên (js/village.js đọc HINTS[0..5]).
   G.HINTS = [
-    'Kết liễu quái đang dính hiệu ứng thì vũ khí nhận dấu ấn của hệ đó.',
-    'Đủ 60 dấu ấn của một hệ, vũ khí khóa theo nhánh hệ đó và bắt đầu tiến hóa.',
+    'Kết liễu quái đang dính hiệu ứng hệ thì được thêm linh khí. Tinh anh, trùm và viên linh khí quái rơi cho nhiều linh khí hơn.',
+    'Linh khí vào một túi chung. Zed mang đủ 4 vũ khí (Kiếm, Thương, Búa, Phi tiêu); ở Ông Thợ Rèn dùng linh khí nâng từng món: Trắng → Mầm (chọn Lửa, Độc hoặc Băng) → Thành hình → Thức tỉnh.',
     'Trùm học theo bạn (từ ải thứ hai): dùng một hệ quá nhiều thì nó kháng hệ đó, nhưng yếu với hệ khắc chế (đánh bằng hệ khắc chế mạnh hơn 50%).',
     'Kháng Lửa thì yếu Băng. Kháng Băng thì yếu Độc. Kháng Độc thì yếu Lửa.',
     // GĐ2 (V16, Q8): câu cũ "Lửa hợp với bầy quái" sai số đo (đánh đám Độc vẫn mạnh hơn Lửa). Chỉ sửa câu, chưa đổi số Lửa.
@@ -2529,9 +2533,9 @@
     'Hạ trùm bằng hệ khắc chế nó để nhận sao thứ ba.',
     'Vũ khí có bảy bậc ép đồ: Trắng, Xanh lam, Xanh lục, Tím, Vàng, Đỏ, Rực lửa. Ép ở Ông Thợ Rèn (thẻ Ép đồ) bằng đá nâng bậc rơi từ trùm.',
     'Thành hình mở đặc trưng hệ thứ nhất, Thức tỉnh mở đặc trưng thứ hai.',
-    'Mỗi ải có Sức mạnh khuyên dùng. Số đỏ là bé còn yếu: chơi lại ải cũ để lên cấp, kiếm quặng và nguyên liệu, rồi mài và nâng bậc vũ khí.',
-    'Thiếu nguyên liệu của vùng đã qua? Bà Hàng Xén (thẻ Nguyên liệu) và Thương nhân trong ải đổi vàng lấy nguyên liệu.',
-    'Vũ khí đã Thức tỉnh: dấu ấn thừa của hệ chính tự đổi ra nguyên liệu vùng (Độc ra Gỗ linh, Băng ra Vảy cá, Lửa ra Đá lửa).',
+    'Mỗi ải có Sức mạnh khuyên dùng. Số đỏ là bé còn yếu: chơi lại ải cũ để lên cấp, kiếm linh khí, quặng, nguyên liệu và đá nâng bậc, rồi nâng cấp, mài và ép đồ vũ khí.',
+    'Thiếu nguyên liệu của vùng đã qua? Bà Hàng Xén (thẻ Nguyên liệu) và Thương nhân trong ải đổi vàng lấy nguyên liệu. Thiếu quặng thì mua ở thẻ Quặng của Bà Hàng Xén (mỗi ngày có hạn).',
+    'Cô Thợ May nâng 4 bộ đồ của Zed (Ninja, Rừng, Biển, Lâu đài) bằng linh khí, vàng và mảnh trùm. Mỗi cấp bộ mở một skill riêng, chỉ có tác dụng khi đang mặc bộ đó.',
   ];
 })();
 
@@ -30439,7 +30443,7 @@ MA._xong();
   // Lời chỉ dẫn của ải đầu, theo loại phòng.
   const TUT = {
     start: 'Kéo cần bên trái để đi. Bấm (hoặc giữ) nút Đánh để chém, bấm Né để lăn tránh.',
-    fight1: 'Đánh vỡ chậu than để đốt quái. Kết liễu quái đang cháy thì kiếm nhận dấu ấn Lửa.',
+    fight1: 'Đánh vỡ chậu than để đốt quái. Kết liễu quái đang cháy thì được thêm linh khí.',
     chest: 'Lại gần rương rồi bấm Đánh để mở. Bùa hệ phủ hệ đó lên vũ khí trong 60 giây.',
     fight2: 'Thanh xanh là mana. Đủ 25 mana thì bấm Đặc biệt để tung đòn mạnh.',
     elite: 'Quái tinh anh mang hệ. Chạm ô vũ khí ở góc trên bên phải để đổi sang phi tiêu.',
@@ -30448,7 +30452,7 @@ MA._xong();
     boss: 'Trùm đầu tiên chưa học gì từ bạn. Từ ải sau, trùm kháng hệ bạn dùng nhiều nhất nhưng yếu hệ khắc chế: đổi vũ khí khác hệ để đánh mạnh hơn.',
     merchant: 'Thương nhân bán bình máu, bùa hệ và quặng. Lại gần rồi bấm Đánh để xem hàng.',
     challenge: 'Phòng thử thách: hạ hết quái trước khi hết giờ để nhận thưởng.',
-    curse: 'Bàn thờ lời nguyền: chịu một bất lợi để dấu ấn tăng gấp đôi đến hết ải. Bỏ qua cũng được.',
+    curse: 'Bàn thờ lời nguyền: chịu một bất lợi để linh khí nhận tăng gấp đôi đến hết ải. Bỏ qua cũng được.',
     door: 'Hết quái rồi, cửa đã mở. Đi vào cửa có mũi tên để sang phòng kề. Bản đồ nhỏ ở góc phải cho biết phòng nào ở đâu.',
   };
   const DIRV = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
@@ -31674,7 +31678,7 @@ MA._xong();
   function panelCurse() {
     ui.rect(0, 0, G.W, G.H, 'rgba(0,0,0,0.55)');
     ui.panel(80, 60, 320, 146, 'Bàn thờ lời nguyền');
-    ui.para('Nhận lời nguyền này để mọi dấu ấn từ giờ đến hết ải tăng gấp đôi:', 92, 92, 296, { size: 8.5 });
+    ui.para('Nhận lời nguyền này để linh khí nhận từ giờ đến hết ải tăng gấp đôi:', 92, 92, 296, { size: 8.5 });
     ui.para(S.curseOffer.name, 92, 124, 296, { size: 10, bold: true, color: '#d48af5' });
     if (ui.btn(92, 168, 140, 28, 'Nhận lời nguyền', { color: '#6a2a8a' })) {
       const P = S.P;
@@ -33427,7 +33431,7 @@ MA._xong();
     const el = w.branch, E = el ? G.EL[el] : null;
     if (!el) ui.para(G.t('Chưa có hệ. Lên Mầm bằng {0} linh khí ở Ông Thợ Rèn và chọn Lửa, Độc hoặc Băng.', G.VK_MOI.gia[0]), x0, 80, 212, { size: 7, color: SOFT });
     const rows = [
-      ['Trắng', 'Chưa mang hệ. Hạ tinh anh, trùm hoặc nhặt viên linh khí quái thường rơi để có dấu ấn.'],
+      ['Trắng', 'Chưa mang hệ. Hạ tinh anh, trùm hoặc nhặt viên linh khí quái thường rơi để có linh khí, rồi lên Mầm ở Ông Thợ Rèn.'],
       ['Mầm', G.t('Chỉ số tăng. {0}% mỗi đòn gây {1}, vệt chém nhuốm màu hệ. Chưa có luật hệ.', Math.round(G.PROC[1] * 100), el ? (el === 'fire' ? 'cháy' : el === 'poison' ? 'độc' : 'chậm') : 'hiệu ứng hệ')],
       ['Thành hình', null, 0],
       ['Thức tỉnh', null, 1],
@@ -33705,8 +33709,8 @@ MA._xong();
     ['Mở rương, qua cửa', 'Lại gần rương, suối hay thương nhân rồi bấm Đánh. Hết quái thì cửa mở: đi vào cửa có mũi tên để sang phòng kề. Chạm bản đồ nhỏ để xem cả ải.'],
     ['Bàn phím', 'Mũi tên hoặc WASD để đi, J đánh (ở làng: nói chuyện), K né, L đặc biệt, I chưởng (giữ để tích lực), Q đổi vũ khí, E uống bình máu, M xem bản đồ, Esc tạm dừng hoặc đóng bảng.'],
     ['Ba sao', 'Sao 1: qua ải. Sao 2: không dùng bình máu. Sao 3: ra đòn kết liễu trùm bằng hệ khắc chế nó.'],
-    G.lk ? ['Linh khí', '', G.lk.guide] : null, // trang vẽ hình về linh khí (dấu ấn hệ), js/linhkhi.js
-    ['Dấu ấn', G.t('{0} {1}', G.HINTS[0], G.HINTS[1])],
+    // 14/10 (bước 1, mục 6): bỏ trang vẽ hình "dấu ấn hệ của vũ khí" (js/linhkhi.js LK.guide, luật cũ: mỗi vũ khí tích dấu ấn ba hệ)
+    ['Linh khí', G.t('{0} {1}', G.HINTS[0], G.HINTS[1])],
     ['Ba hệ', G.t('{0} {1}', G.HINTS[4], G.HINTS[5])],
     ['Trùm học theo bạn', G.t('{0} {1}', G.HINTS[2], G.HINTS[3])],
     ['Đọc đòn quái', 'Vùng đỏ trên sàn là chỗ đòn sắp rơi xuống, đầy dần rồi nổ: đi ra ngoài hoặc lộn qua. Quái đánh được mọi hướng, kể cả trên dưới và chéo. Vòng đỏ chỗ trống là quái sắp mọc lên.'],
@@ -33716,7 +33720,7 @@ MA._xong();
     ['Tinh anh và trùm', 'Tinh anh có chiêu riêng và một dấu hiệu trên đầu: tia chớp là nhanh, khiên là bọc giáp, quả bom là nổ khi chết, giọt máu là hút máu. Trùm nhỏ có hai chiêu riêng. Trùm vùng có ba pha, đổi ở 2/3 và 1/3 máu, pha sau thêm chiêu và nhanh hơn; sau chiêu lớn trùm choáng một lúc, đó là lúc đánh mạnh nhất.'],
     ['Vật trong phòng', 'Chậu than, nấm độc và tinh thể băng phát nổ khi bị đánh, gây hiệu ứng lên quái đứng gần. Đây là cách gây hệ khi vũ khí còn trắng.'],
     ['Bốn vũ khí', G.t('Cu Tí luôn mang đủ 4 vũ khí: Kiếm, Thương, Búa, Phi tiêu; nút đổi vũ khí xoay vòng. Nâng vũ khí bằng linh khí ở Ông Thợ Rèn: Trắng, Mầm (chọn hệ Lửa, Độc hoặc Băng), Thành hình, Thức tỉnh ({0}, {1}, {2} linh khí). Quái, rương, trùm không rơi vũ khí hay quần áo nữa mà cho vàng và linh khí.', G.VK_MOI.gia[0], G.VK_MOI.gia[1], G.VK_MOI.gia[2])],
-    ['Đặc trưng hệ theo cấp', G.t('Trắng: chưa có hệ. Linh khí (dấu ấn) có từ: hạ tinh anh ({0}), trùm nhỏ ({1}), trùm vùng ({2}); quái thường {3}% rơi viên linh khí của vùng ({4}), đi lại gần để nhặt; kết liễu quái đang dính hệ (+1). Hệ theo hệ quái đang dính, không dính thì theo vùng. Mầm: có tỉ lệ gây cháy, độc, chậm nhưng chưa có luật hệ. Thành hình: mở đặc trưng 1, thứ để lại trên sân (vệt cháy, vũng độc, gai băng). Thức tỉnh: mở đặc trưng 2, phản ứng dây chuyền (nổ lan, lây độc, băng vỡ).', G.LINHKHI.elite, G.LINHKHI.mini, G.LINHKHI.boss, Math.round(G.LINHKHI.drop * 100), G.LINHKHI.orb)],
+    ['Đặc trưng hệ theo cấp', G.t('Trắng: chưa có hệ. Linh khí (túi chung) có từ: hạ tinh anh ({0}), trùm nhỏ ({1}), trùm vùng ({2}); quái thường {3}% rơi viên linh khí ({4}), đi lại gần để nhặt; kết liễu quái đang dính hệ (+1). Mầm: chọn hệ Lửa, Độc hoặc Băng; có tỉ lệ gây cháy, độc, chậm nhưng chưa có luật hệ. Thành hình: mở đặc trưng 1, thứ để lại trên sân (vệt cháy, vũng độc, gai băng). Thức tỉnh: mở đặc trưng 2, phản ứng dây chuyền (nổ lan, lây độc, băng vỡ).', G.LINHKHI.elite, G.LINHKHI.mini, G.LINHKHI.boss, Math.round(G.LINHKHI.drop * 100), G.LINHKHI.orb)],
     ['Xem vũ khí', 'Ở Ông Thợ Rèn (thẻ Linh khí, nút Xem linh khí) xem cấp, bậc ép đồ và các đặc trưng hệ đã mở, sắp mở của từng vũ khí.'],
   ];
   function help() {
@@ -34346,8 +34350,9 @@ MA._xong();
     const R = G.REGIONS;
     // Đợt 4: chữ theo luật mới (bỏ nâng bậc, trang phục cũ, đá tôi; mảnh trùm dùng nâng bộ, gỗ linh mài +6)
     const a = [
-      ['gold', 'Mài, nâng lò, nâng bộ trang phục, đổi nguyên liệu, đặt lại điểm kỹ năng', 'Qua ải, hạ quái, tinh anh, trùm, phòng thử thách'],
-      ['ore', 'Mài vũ khí, nâng lò cấp 4', 'Qua ải (nhiều sao được nhiều hơn), rương báu, phòng thử thách, thương nhân'],
+      // 14/10 (bước 1, mục 6): thêm ép đồ, mua quặng (Bà Hàng Xén), Ải Vàng / Ải Đá Mài (ải ngày)
+      ['gold', 'Mài, nâng lò, nâng bộ trang phục, ép đồ, đổi nguyên liệu, mua quặng, đặt lại điểm kỹ năng', 'Qua ải, hạ quái, tinh anh, trùm, phòng thử thách, Ải Vàng (ải ngày)'],
+      ['ore', 'Mài vũ khí, nâng lò cấp 4', 'Qua ải (nhiều sao được nhiều hơn), rương báu, phòng thử thách, thương nhân, Ải Đá Mài (ải ngày), Bà Hàng Xén (thẻ Quặng)'],
     ];
     const matUse = ['Nâng lò cấp 2, mài +5 lên +6', 'Mài từ +6 tới +9, nâng lò cấp 3', 'Mài từ +9 trở lên, nâng lò cấp 4'];
     R.forEach((r, i) => a.push(['mat' + i, matUse[i] || 'Nguyên liệu vùng', G.t('Qua ải {0}', r.name)]));
