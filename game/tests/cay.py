@@ -11,12 +11,14 @@ Cách bot chơi (mỗi lượt):
 Số lần chơi của một ải = mọi lượt (kể cả chơi lại ải cũ và lượt thua) từ lúc qua ải trước cho tới lúc qua ải đó.
 
 Chạy: python3 tests/cay.py [số lượt chiến dịch, mặc định 12] [khuyen|lieu] [-v: in từng lượt] [--nhanh: chỉ vùng 1]
+      [--node: chạy luật game trong Node (tests/node_trang.js), không trình duyệt / Playwright]
+      [--vk=kiem|thuong|bua: món chính của bot (phụ luôn là phi tiêu)] [--ngay=K: K lượt ải thường mỗi ngày giả, rồi chơi ải ngày; 0 tắt]
+      [--kho2: qua 15 ải rồi chơi tiếp 15 ải độ khó 2; với --kd đo cả Sức mạnh khuyên dùng độ khó 2 (G.stageRec(r, i, 1), G.DIFF2)]
       [--kd=R: đo lại Sức mạnh khuyên dùng — mỗi bản lưu lúc vừa tới một ải (của kiểu khuyen và kiểu lieu) chơi lại ải đó R lần,
        tìm Sức mạnh mà bot thắng 75%] [--json=tệp: ghi số liệu thô]
 Thoát mã 1 nếu: có luật hỏng, có lượt chiến dịch bị kẹt, có ải trung bình phải chơi quá 9 lần (8 lượt cày + 1 lượt thử), có lỗi trang."""
 import sys, json, os, math
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from playwright.sync_api import sync_playwright
 import cd_lib
 from cd_lib import ten
 
@@ -62,8 +64,11 @@ LUAT = r"""
   hs.lvl = 40; hs.sk = { atk: 5, def: 5, elem: 3 }; sv.forge = 4;
   if (G.chuong) G.chuong.autoLearn(hs, 'smith');
   for (const t of ['sword', 'bow']) { const x = sv.weapons.find((q) => q.type === t); x.sharpen = 15; VM.datCap(x, 3, t === 'sword' ? 'fire' : 'ice'); }
+  const top0 = G.power();
+  // 14/10 (bước 1, mục 5): trần tính cả ép đồ (đá nâng bậc rơi từ trùm + Ải Đá Bậc): hai món bậc Vàng (bot qua 3-5 thường đã có Vàng / Tím)
+  if (G.epDo) for (const t of ['sword', 'bow']) { const x = sv.weapons.find((q) => q.type === t); x.ep = { b: 4, d: [], may: {} }; }
   const top = G.power(), need = G.STAGE_REC[14];
-  ok(top >= need * 1.15, 'trần trước Hồ Tinh (cấp 40, kiếm + phi tiêu Thức tỉnh +15, cây chưởng đầy): Sức mạnh ' + top + ' >= 1,15 x khuyên dùng Hồ Tinh ' + need);
+  ok(top >= need * 1.15, 'trần trước Hồ Tinh (cấp 40, kiếm + phi tiêu Thức tỉnh +15 bậc ép Vàng, cây chưởng đầy): Sức mạnh ' + top + ' (chưa ép ' + top0 + ') >= 1,15 x khuyên dùng Hồ Tinh ' + need);
   // cây chưởng đã đầy: không gợi ý / không "học" mãi điểm thừa (G.upg.auto vẫn làm việc khác)
   ok(!G.upg.list(sv).some((q) => q.kind === 'chuong'), 'cây chưởng đã học hết nút: không còn mục "điểm chưởng chưa học" (cấp 40 > tổng bậc của cây)');
   sv.gold = 5000; sv.ore = 200; sv.mats = [50, 50, 50]; const xw = sv.weapons.find((q) => q.type === 'sword'); xw.sharpen = 10;
@@ -122,11 +127,21 @@ def main():
     upto = 5 if '--nhanh' in sys.argv else 15
     kd = [int(a.split('=', 1)[1]) for a in sys.argv if a.startswith('--kd=')]
     jout = [a.split('=', 1)[1] for a in sys.argv if a.startswith('--json=')]
+    vk = [a.split('=', 1)[1] for a in sys.argv if a.startswith('--vk=')]
+    chinh = cd_lib.VK.get(vk[0], vk[0]) if vk else 'sword'
+    ng = [int(a.split('=', 1)[1]) for a in sys.argv if a.startswith('--ngay=')]
+    ngay = ng[0] if ng else cd_lib.NGAY
+    kho2 = '--kho2' in sys.argv
+    saves2 = {} if kd and kho2 else None
+    # 14/10 (bước 1, mục 5): --luu=tệp → ghi bản lưu thật mỗi ải (lần thử đầu, Sức mạnh gần khuyên dùng nhất) cho tests/balance.py (cay_luu.json)
+    luu = [a.split('=', 1)[1] for a in sys.argv if a.startswith('--luu=')]
     errs = []
     runs = []
     saves = {} if kd else None
+    if luu and saves is None:
+        saves = {}
     bad = 0
-    with sync_playwright() as p:
+    with cd_lib.trinh_duyet() as p:
         b = p.chromium.launch()
         pg = cd_lib.open_page(b, errs)
         bad_luat = 0
@@ -139,7 +154,8 @@ def main():
         if kd and mode == 'khuyen':
             modes += ['lieu'] * n  # thêm bản lưu ở Sức mạnh thấp hơn để đo đường thắng/thua
         for k, md in enumerate(modes):
-            out, why = cd_lib.campaign(pg, md, upto, cd_lib.CAY[k % 3], saves)
+            out, why = cd_lib.campaign(pg, md, upto, cd_lib.CAY[k % 3], saves, chinh=chinh, ngay=ngay, kho2=kho2 and md == mode, saves2=saves2,
+                                       guard_max=440 if kho2 else 220)
             if md != mode:
                 print(f'(lượt {k+1}, kiểu {md}: chỉ lấy bản lưu để đo khuyên dùng){" — " + why if why else ""}')
                 continue
@@ -152,18 +168,40 @@ def main():
                 print('\n'.join(out['log']))
             print(f"lượt {k+1} ({cd_lib.CAY[k % 3]}): {out['t']/60:.0f} phút, {sum(s['plays'] for s in out['st'])} lần chơi | " + ' '.join(str(s['plays']) for s in out['st'][:upto]))
             sys.stdout.flush()
+        if luu:
+            ds = []
+            for k in range(15):
+                rec = pg.evaluate('(k) => G.STAGE_REC[k]', k)
+                cand = [(abs(pg.evaluate("(s) => { G.save = G.fixSave(JSON.parse(s)); return G.power(); }", x) - rec), x) for x in (saves or {}).get(k, [])]
+                ds.append(min(cand, key=lambda q: q[0])[1] if cand else None)
+            json.dump(ds, open(luu[0], 'w'), ensure_ascii=False)
+            print('Đã ghi bản lưu cho balance.py:', luu[0], sum(1 for x in ds if x), 'ải')
         kd_res = {}
-        if kd:
-            R = kd[0]
-            print(f'\nĐo khuyên dùng: mỗi bản lưu lúc vừa tới ải chơi lại ải đó {R} lần (không nâng cấp thêm)')
-            for k in sorted(saves):
+        for diff, sv_ds in ((0, saves), (1, saves2)):
+          if not kd or sv_ds is None:
+            continue
+          R = kd[0]
+          print(f'\nĐo khuyên dùng{" ĐỘ KHÓ 2" if diff else ""}: mỗi bản lưu lúc vừa tới ải chơi lại ải đó {R} lần (không nâng cấp thêm)')
+          pool = None
+          if diff:
+              # 14/10: bot tới độ khó 2 đã dư sức (vừa xong 15 ải thường), nên lấy thêm bản lưu ở MỌI mốc của lượt chiến dịch (cả ải thường)
+              # và chọn 8 bản có Sức mạnh gần khuyên dùng độ khó 2 nhất (4 dưới, 4 trên nếu có) để thấy được đường thắng / thua.
+              allsv = [x for d in (saves or {}, saves2 or {}) for ds in d.values() for x in ds]
+              pool = sorted(((pg.evaluate("(s) => { G.save = G.fixSave(JSON.parse(s)); G.save.sound = false; return G.power(); }", x), x) for x in allsv), key=lambda q: q[0])
+          for k in sorted(sv_ds):
+                ds_k = sv_ds[k]
+                if pool:
+                    rec2 = pg.evaluate('([r, i, d]) => G.stageRec(r, i, d)', list(divmod(k, 5)) + [1])
+                    duoi = [x for pw0, x in pool if pw0 < rec2][-4:]
+                    tren = [x for pw0, x in pool if pw0 >= rec2][:4]
+                    ds_k = duoi + tren + list(sv_ds[k][:2])
                 pts = []
-                for sj in saves[k]:
+                for sj in ds_k:
                     pw = pg.evaluate("(s) => { G.save = G.fixSave(JSON.parse(s)); G.save.sound = false; return G.power(); }", sj)
                     wn = 0
                     for _ in range(R):
                         pg.evaluate("(s) => { G.save = G.fixSave(JSON.parse(s)); G.save.sound = false; }", sj)
-                        pg.evaluate("([r, i]) => G.startStage(r, i, 0)", list(divmod(k, 5)))
+                        pg.evaluate("([r, i, d]) => G.startStage(r, i, d)", list(divmod(k, 5)) + [diff])
                         res = pg.evaluate("G.probeRun(900)")
                         wn += 1 if res.get('win') else 0
                     pts.append((pw, wn, R))
@@ -171,10 +209,12 @@ def main():
                 lo = sorted(pts)
                 if sum(w for _, w, _ in pts) >= 0.95 * sum(nn for _, _, nn in pts):
                     p75 = None  # thắng gần hết: chỉ biết Sức mạnh 75% thấp hơn bản lưu thấp nhất
-                kd_res[k] = {'pts': lo, 'p75': p75}
-                print(f"{ten(k)}: Sức mạnh 75% ≈ {'<= %d' % lo[0][0] if p75 is None else '%.0f' % p75} (khuyên dùng hiện {pg.evaluate('(k) => G.STAGE_REC[k]', k)}) | " + ' '.join(f'{p}:{w}/{nn}' for p, w, nn in lo))
+                elif p75 is not None and (p75 > lo[-1][0] * 1.25 or p75 < lo[0][0] * 0.75):
+                    p75 = -1  # 14/10: đường hồi quy vọt ra ngoài khoảng đo (thua gần hết hoặc dốc phẳng): chỉ biết là cao hơn bản lưu cao nhất
+                kd_res[('K2 ' if diff else '') + ten(k)] = {'pts': lo, 'p75': p75}
+                print(f"{'K2 ' if diff else ''}{ten(k)}: Sức mạnh 75% ≈ {'<= %d' % lo[0][0] if p75 is None else ('> %d (ngoài khoảng đo)' % lo[-1][0]) if p75 == -1 else '%.0f' % p75} (khuyên dùng hiện {pg.evaluate('([r, i, d]) => G.stageRec(r, i, d)', list(divmod(k, 5)) + [diff])}) | " + ' '.join(f'{p}:{w}/{nn}' for p, w, nn in lo))
                 sys.stdout.flush()
-        b.close()
+        cd_lib.dong(b, pg)
     ok = [r for r in runs if r]
     if len(ok) < n:
         print('SAI: có lượt chiến dịch bị kẹt'); bad = 1
@@ -187,22 +227,28 @@ def main():
     print(f"\nKiểu bot: {mode}, {m} lượt chiến dịch. Số lần chơi = mọi lượt (cả chơi lại ải cũ và lượt thua) để qua ải đó.")
     print('| Ải | Lần chơi TB (trung vị) | Lượt cày | Lần thử | Thua | Phút (cả cày) | Giây lượt thắng | Cấp khi qua | Sức mạnh khi qua / khuyên dùng | Máu còn khi thắng | Đòn trùm mạnh nhất (% máu) | Linh khí / lượt | Vàng / lượt | Tham khảo |')
     print('|---|---|---|---|---|---|---|---|---|---|---|---|---|---|')
-    for k in range(upto):
+    for k in range(upto + (15 if kho2 and upto == 15 else 0)):
         avg = lambda key: sum(r['st'][k][key] for r in ok) / m
-        lo, hi = muc_tieu(k)
+        lo, hi = muc_tieu(k % 15)
         pl = avg('plays')
         flag = ' ✗' if pl > 9 else ''
         if flag and mode == 'khuyen': bad = 1
         plays = sum(r['st'][k]['plays'] for r in ok)
         hp = [r['st'][k]['hp'] for r in ok if r['st'][k]['hp'] is not None]
         bh = [r['st'][k]['bossHit'] for r in ok if r['st'][k]['bossHit']]
-        print(f"| {ten(k)} | {pl:.1f}{flag} ({med([r['st'][k]['plays'] for r in ok]):g}) | {avg('grind'):.1f} | {avg('tries'):.1f} | {avg('fails'):.1f} | {avg('t')/60:.0f} | {avg('tWin'):.0f} | {avg('lvl'):.0f} | {avg('pw'):.0f} / {avg('rec'):.0f} | "
+        print(f"| {('K2 ' + ten(k - 15)) if k >= 15 else ten(k)} | {pl:.1f}{flag} ({med([r['st'][k]['plays'] for r in ok]):g}) | {avg('grind'):.1f} | {avg('tries'):.1f} | {avg('fails'):.1f} | {avg('t')/60:.0f} | {avg('tWin'):.0f} | {avg('lvl'):.0f} | {avg('pw'):.0f} / {avg('rec'):.0f} | "
               f"{(sum(hp)/len(hp)*100 if hp else 0):.0f}% | {(max(bh)*100 if bh else 0):.0f}% (TB {(sum(bh)/len(bh)*100 if bh else 0):.0f}%) | "
               f"{sum(r['st'][k]['lk'] for r in ok)/max(1,plays):.0f} | {sum(r['st'][k]['gold'] for r in ok)/max(1,plays):.0f} | {lo:g}-{hi:g} |")
     tt = sum(r['t'] for r in ok) / m / 60
     ts = sorted(r['t'] / 60 for r in ok)
     print(f"Tổng thời gian đi hết {upto} ải lần đầu: trung bình {tt:.0f} phút ({tt/60:.1f} giờ), trung vị {ts[m//2]:.0f}, nhanh nhất {ts[0]:.0f}, lâu nhất {ts[-1]:.0f}; "
           f"{sum(sum(s['plays'] for s in r['st']) for r in ok)/m:.0f} lần chơi")
+    an = [r['aiNgay'] for r in ok if r.get('aiNgay')]
+    if an and any(a['n'] for a in an):
+        nn = sum(a['n'] for a in an)
+        print(f"Ải ngày (mỗi {ngay} lượt ải thường = 1 ngày; trung bình mỗi lượt chiến dịch): {sum(r['ngay'] for r in ok)/m:.0f} ngày, {nn/m:.0f} lượt ải ngày, thắng {sum(a['win'] for a in an)*100/max(1,nn):.0f}%, "
+              f"+{sum(a['gold'] for a in an)/m:.0f} vàng, +{sum(a['ore'] for a in an)/m:.0f} quặng, +{sum(a['da'] for a in an)/m:.0f} đá nâng bậc, +{sum(a['lk'] for a in an)/m:.0f} linh khí; "
+              + ', '.join(f"{kk} {sum(a['loai'].get(kk, [0, 0])[1] for a in an)}/{sum(a['loai'].get(kk, [0, 0])[0] for a in an)}" for kk in ('da', 'mai', 'vang')))
     cu = [r['cuoi'] for r in ok if r.get('cuoi')]
     if cu:
         print(f"Lúc qua 3-5 (trung bình): cấp {sum(c['cap'] for c in cu)/len(cu):.0f}, Sức mạnh {sum(c['sm'] for c in cu)/len(cu):.0f}, vàng còn {sum(c['vang'] for c in cu)/len(cu):.0f}, "
@@ -213,12 +259,14 @@ def main():
     for r in ok:
         for kk in r['moc']:
             if kk not in keys: keys.append(kk)
-    order = lambda kk: med([int(r['moc'][kk][0]) * 5 + int(r['moc'][kk][2]) for r in ok if kk in r['moc']])
+    so = lambda lab: (15 if lab.startswith('K2 ') else 0) + (int(lab[-3]) - 1) * 5 + int(lab[-1]) - 1  # '2-3' → 7, 'K2 1-2' → 16
+    ten2 = lambda x: ('K2 ' + ten(x - 15)) if x >= 15 else ten(x)
+    order = lambda kk: med([so(r['moc'][kk]) for r in ok if kk in r['moc']])
     print('\nMốc nâng cấp (ải đang tới lúc đủ để nâng; trung vị, số lượt chiến dịch có đạt):')
     for kk in sorted(keys, key=order):
-        xs = [(int(r['moc'][kk][0]) - 1) * 5 + int(r['moc'][kk][2]) - 1 for r in ok if kk in r['moc']]
+        xs = [so(r['moc'][kk]) for r in ok if kk in r['moc']]
         mm = med(xs)
-        print(f"  {kk}: {ten(int(mm))}{'' if mm == int(mm) else '/' + ten(int(mm) + 1)} (sớm nhất {ten(min(xs))}, muộn nhất {ten(max(xs))}; {len(xs)}/{m} lượt)")
+        print(f"  {kk}: {ten2(int(mm))}{'' if mm == int(mm) else '/' + ten2(int(mm) + 1)} (sớm nhất {ten2(min(xs))}, muộn nhất {ten2(max(xs))}; {len(xs)}/{m} lượt)")
     hurt = {}
     for r in ok:
         for kk, x in r['hurt'].items(): hurt[kk] = hurt.get(kk, 0) + x

@@ -8,7 +8,6 @@ Chạy: python3 tests/campaign.py [hoa|doc|bang] [khuyen|lieu] [--nhanh: chỉ v
 Thoát mã 1 nếu bị kẹt (không qua nổi một ải sau 220 lượt) hoặc có lỗi trang."""
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from playwright.sync_api import sync_playwright
 import cd_lib
 from cd_lib import ten
 
@@ -19,11 +18,11 @@ def main():
     mode = args[1] if len(args) > 1 else 'khuyen'
     upto = 5 if '--nhanh' in sys.argv else 15
     errs = []
-    with sync_playwright() as p:
+    with cd_lib.trinh_duyet() as p:
         b = p.chromium.launch()
         pg = cd_lib.open_page(b, errs)
         out, why = cd_lib.campaign(pg, mode, upto, cay)
-        b.close()
+        cd_lib.dong(b, pg)
     o = out or cd_lib.campaign.last
     print('\n'.join(o['log']))
     print(f"\nCây chưởng {cay}, kiểu {mode}: {'xong' if out else why}. Tổng {o['t']/60:.0f} phút, {sum(s['plays'] for s in o['st'])} lần chơi.")

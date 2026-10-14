@@ -7,8 +7,12 @@ Chạy: python3 tests/balance.py [n mỗi ải, mặc định 3] [đường dẫ
 Ngưỡng (cân bằng phải cày): bản lưu vừa đủ sức mạnh khuyên dùng thì bot thắng từ 60% số lượt (thiết kế khoảng 75%);
 khi chạy "vukhi" thì loại vũ khí nào cũng phải thắng từ 50% (không loại nào vô dụng).
 Thời gian đánh trùm tính tới lúc trùm gục (sau đó bot còn đi nhặt đồ và vào cổng dịch chuyển). Thoát mã 1 nếu dưới ngưỡng."""
-import sys, json
-from playwright.sync_api import sync_playwright
+import sys, json, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import cd_lib
+# 14/10 (bước 1, mục 5): --node chạy luật game trong Node (tests/node_trang.js), không trình duyệt / Playwright.
+NODE = cd_lib.node_mode()
+sys.argv = [a for a in sys.argv if a != '--node']
 
 # Cân bằng phải cày: mỗi bản lưu là bản lưu thật của bot tests/cay.py lúc vừa đủ "Sức mạnh khuyên dùng" của ải (đã cày xong),
 # nên tỉ lệ thắng ở đây là tỉ lệ thắng của người chơi vừa đủ sức mạnh khuyên dùng.
@@ -49,15 +53,18 @@ def main():
     url = sys.argv[2] if len(sys.argv) > 2 and sys.argv[2] != '-' else 'file://' + __import__('os').path.dirname(__import__('os').path.dirname(__import__('os').path.abspath(__file__))) + '/index.html'
     errs = []
     tot = {'t': 0, 'win': 0, 'n': 0, 'marks': 0, 'kills': 0, 'boss': 0, 'bn': 0, 'hurt': 0}
-    with sync_playwright() as p:
+    with cd_lib.trinh_duyet() as p:
         b = p.chromium.launch()
-        pg = b.new_page(viewport={'width': 844, 'height': 390})
-        pg.on('pageerror', lambda e: errs.append(str(e)))
-        pg.goto(url)
-        pg.wait_for_timeout(1500)
-        base = url.rsplit('/', 1)[0].replace('file://', '')
-        pg.add_script_tag(path=base + '/tests/bot.js')
-        pg.add_script_tag(path=base + '/tests/setup.js')
+        if NODE:
+            pg = cd_lib.NodePage(errs)
+        else:
+            pg = b.new_page(viewport={'width': 844, 'height': 390})
+            pg.on('pageerror', lambda e: errs.append(str(e)))
+            pg.goto(url)
+            pg.wait_for_timeout(1500)
+            base = url.rsplit('/', 1)[0].replace('file://', '')
+            pg.add_script_tag(path=base + '/tests/bot.js')
+            pg.add_script_tag(path=base + '/tests/setup.js')
         tp = [a for a in sys.argv if a.startswith('trangphuc')]
         if tp: pg.evaluate("v => { window.__tp = v; }", 'vang' if tp[0] == 'trangphuc:vang' else 'co'); print('== mặc trang phục của vùng:', tp[0])
         only = [int(x) for x in sys.argv[3].split(',')] if len(sys.argv) > 3 and sys.argv[3] != '-' and not sys.argv[3].startswith('vukhi') and not sys.argv[3].startswith('trangphuc') else range(15)
@@ -82,7 +89,7 @@ def main():
                 pw['t'] += x['t']
                 tot['t'] += x['t']; tot['marks'] += x['marks']; tot['kills'] += x['kills']; tot['hurt'] += x['hurt'] / x['maxhp']
                 if x['boss']: tot['boss'] += x['boss']; tot['bn'] += 1
-        b.close()
+        cd_lib.dong(b, pg)
     w = max(1, tot['win'])
     print(f"TỔNG: thắng {tot['win']}/{tot['n']} | một ải trung bình {tot['t']/w:.0f} giây ({tot['t']/w/60:.1f} phút) | trùm {tot['boss']/max(1,tot['bn']):.0f} giây | dấu ấn {tot['marks']/w:.1f} mỗi ải | hạ {tot['kills']/w:.1f} quái mỗi ải | mất {tot['hurt']/w*100:.0f}% máu mỗi ải")
     bad = 0
