@@ -149,8 +149,9 @@
     wrestler: { type: 'hammer', family: 0, rarity: 0, marks: { fire: 0, poison: 0, ice: 0 }, branch: null, sharpen: 0 },
   };
   function emBe(c, key, x, y, s, face, vk) {
+    // 14/10: ba bạn ảnh mới (em-be-<key>.sprite.json) tự cầm đồ (cung, giỏ lá): không vẽ thêm vũ khí; hàng ĐỨNG (idle)
     G.wxDat(c, x, y, s);
-    try { A.hero(c, { x: 0, y: 0, face: face || 1, key, move: false, t: G.time, atk: -1, dodge: -1, weapon: vk === false ? null : VK[key] }); } catch (e) { /* hình chưa sẵn thì bỏ */ }
+    try { A.hero(c, { x: 0, y: 0, face: face || 1, key, move: false, t: G.time, atk: -1, dodge: -1, weapon: vk === false || (key !== 'smith' && G.spriteCustom && G.spriteCustom.cuaEmBe && G.spriteCustom.cuaEmBe(key)) ? null : VK[key] }); } catch (e) { /* hình chưa sẵn thì bỏ */ }
     G.wxDat(c, 0, 0);
   }
   function lang(cam, dim) {

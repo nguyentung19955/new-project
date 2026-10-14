@@ -1053,7 +1053,9 @@
     // ba bé ngồi chơi ở sân đình
     for (const st of seats()) {
       const un = G.zedHoc(st.key); // đã cứu = đã dạy Zed
-      L.push([st.y, () => drawKid(c, st.key, st.x - cam, st.y, st.x > B.dinh[0] ? -1 : 1, { alpha: un ? null : 0.45, move: un && Math.sin(t * 1.1 + st.x) > 0.75 })]);
+      // 14/10: có ảnh ngồi (em-be-<key>.sprite.json hàng 1) thì ngồi chơi, không nhúc nhích chân; không có thì như cũ
+      const ngoi = !!(G.spriteCustom && G.spriteCustom.caoNgoi && G.spriteCustom.caoNgoi(st.key));
+      L.push([st.y, () => drawKid(c, st.key, st.x - cam, st.y, st.x > B.dinh[0] ? -1 : 1, { alpha: un ? null : 0.45, ngoi, move: !ngoi && un && Math.sin(t * 1.1 + st.x) > 0.75 })]);
     }
     if (!o.hideHero) {
       for (let i = 1; i >= 0; i--) L.push([S.wp[i].y - 0.5, () => drawWeapon(c, i)]);
@@ -1153,7 +1155,7 @@
     c.restore();
     // bong bóng tên chức năng trên đầu người đang ở gần
     if (S.near && S.near.kind === 'npc' && !S.bubble) { const N = NPCS[S.near.id]; VS.bubble(G.t(N.viec) + (S.news[S.near.id] ? '  !' : ''), N.pos[0] - cam, N.pos[1] + topOf(S.near.id) - 12 + OY, { bg: '#ffe9a8' }); }
-    if (S.near && S.near.kind === 'kid') { const st = seats().find((q) => q.key === S.near.id); if (st) VS.bubble(G.HEROES[st.key].name, st.x - cam, st.y - 30 + OY, { bg: '#ffe9a8', size: 7.5 }); }
+    if (S.near && S.near.kind === 'kid') { const st = seats().find((q) => q.key === S.near.id); if (st) VS.bubble(G.HEROES[st.key].name, st.x - cam, st.y - ((G.spriteCustom && G.spriteCustom.caoNgoi && G.spriteCustom.caoNgoi(st.key)) ? G.spriteCustom.caoNgoi(st.key) + 2 : 30) + OY, { bg: '#ffe9a8', size: 7.5 }); }
     if (S.bubble) { const bq = S.bubble.who ? [NPCS[S.bubble.who].pos[0], NPCS[S.bubble.who].pos[1] + topOf(S.bubble.who) - 12] : S.bubble.at; VS.bubble(S.bubble.s, bq[0] - cam, bq[1] + OY, { maxW: 130 }); }
     // cần điều khiển
     const BA = G.btnArt;

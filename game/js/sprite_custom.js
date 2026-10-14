@@ -13,8 +13,8 @@
   const G = (typeof window !== 'undefined') ? (window.G = window.G || {}) : (globalThis.G = globalThis.G || {});
   const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
   const seg = (u, a, b) => clamp((u - a) / (b - a), 0, 1);
-  const ANIMS = ['idle', 'move', 'tele', 'atk', 'hit', 'die', 'ne', 'noi'];
-  const LOOP = { idle: true, move: true, noi: true };
+  const ANIMS = ['idle', 'move', 'tele', 'atk', 'hit', 'die', 'ne', 'noi', 'ngoi']; // ngoi: ba bạn nhỏ ngồi chơi ở sân đình (14/10)
+  const LOOP = { idle: true, move: true, noi: true, ngoi: true };
   // Phiên E2 — DÁNG PHA của 3 trùm vùng: tệp có mã <trùm>-p2 hoặc <trùm>-p3 (ví dụ nguTinh-p2), lưới rút gọn 4 hàng idle / tele / atk / hit (tools/tach-quai).
   // Trùm đang ở pha đó thì các hàng CÓ trong tệp pha lấy từ tệp pha; hàng không có (move, die với lưới 4 hàng) mượn tệp pha 1. Không có tệp pha: vẽ pha 1 như trước.
   // Để sẵn: nếu sau này tệp pha có thêm hàng move hoặc die thì game dùng luôn, không phải sửa code (trang công cụ hiện chỉ xuất 4 hàng).
@@ -143,6 +143,7 @@
         sp.khoacDo = tep.khoac_do !== false; sp.neo = docNeo(tep.neo);
         // Hàng chạy vẽ sẵn nhún lên xuống (nhập ảnh 12/10: hàng chạy 8 khung mới) thì tệp ghi "nhun_buoc": false: game không nhún thêm (G.NHUN_BUOC).
         sp.nhunBuoc = tep.nhun_buoc !== false;
+        sp.caoNgoi = tep.cao_ngoi | 0; // 14/10: chiều cao khung ngồi (điểm game), 0 = không có hàng ngồi
       }
       if (typeof Image !== 'undefined') {
         const img = new Image();
@@ -530,8 +531,12 @@
   // Mã tệp: em-be-hunter, em-be-healer, em-be-wrestler (ba bạn NPC). Đợt 2: bỏ em-be (chung), em-be-smith (Cu Tí cũ, nay là Zed:
   // js/zed_moi.js), thân theo bộ trang phục em-be-<key>-<bộ> và tệp đòn theo vũ khí em-be-<key>-don.
   SC.cuaEmBe = (key) => SC.get('em-be-' + (key || 'smith'));
+  // 14/10: bạn nhỏ có hàng ngồi đã nạp xong -> chiều cao khung ngồi (điểm game), không thì 0 (js/village_scene.js: bé ngồi ở sân đình).
+  SC.caoNgoi = (key) => { const sp = SC.cuaEmBe(key); return sp && sp.img && sp.dt.ngoi ? sp.caoNgoi || 24 : 0; };
   SC.chonEmBe = function (sp, o) {
     const p = o.p, t = (o.t != null ? o.t : G.time) || 0, dt = sp.dt;
+    // 14/10 (YEU-CAU-BAN-NHO): ba bạn nhỏ phong cách Zed: o.ngoi (sân đình) -> hàng ngồi lặp; còn lại đứng (mọi động tác khác trỏ về hàng đứng).
+    if (o.ngoi && dt.ngoi && !p) return { ten: 'ngoi', i: khungLap(dt.ngoi, t), u: 0 };
     const tc = o.tc != null && isFinite(o.tc) ? o.tc : t; // nhịp chân: thời gian chạy theo tốc độ đi thật (js/combat.js P.chayT), thiếu thì như cũ
     const mot = (ten, u) => { const k = dt[ten] ? ten : 'idle'; return { ten: k, i: dt[ten] ? khungMot(dt[k], u) : khungLap(dt.idle, t), u }; };
     const lap = (ten, tt) => { const k = dt[ten] ? ten : 'idle'; return { ten: k, i: khungLap(dt[k], tt), u: 0 }; };
