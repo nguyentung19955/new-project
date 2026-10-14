@@ -14434,6 +14434,15 @@ MA._xong();
     try { tat = typeof location !== 'undefined' && /[?&]nldong=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
     G.NL_DONG = !tat;
   }
+  // 14/10 (quai-moi-4-con): Heo Rừng Con, Heo Rừng Nanh Dài, Chồn Bóng, Bọ Hung Mai Cứng dựng lại từ ảnh vẽ mới (đủ 6 động tác, net 2, căn tâm).
+  // Tấm cũ giữ trong tệp <mã>-cu.sprite.json (mục "cu_cua": <mã>): bình thường KHÔNG nạp (không tạo ảnh nên không tải, không tính vào vùng).
+  // Cờ ?quaicu=1 (G.QUAI_CU = true): nạp tấm cũ dưới đúng mã con quái, bỏ tấm mới — y như trước phiên này.
+  if (G.QUAI_CU === undefined) {
+    let cu = false;
+    try { cu = typeof location !== 'undefined' && /[?&]quaicu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; }
+    G.QUAI_CU = cu;
+  }
+  const QUAI_MOI = { heoCon: 1, heoNanh: 1, chonBong: 1, boHung: 1 };
   let napSauDangChay = false, trongNapSau = false;
   // Tải nhanh (12/10): ảnh rời. roiNhan(img, src) nhận ảnh anh/<mã>.<mã nội dung>.png vào hàng chờ; roiCan(ma) báo game đang cần hình ma
   // (chưa có thì tải ngay). Chỉ có ở bản 2 tệp ảnh rời (G.ANH_ROI); bản một tệp, công cụ: null, như cũ.
@@ -14470,6 +14479,10 @@ MA._xong();
     try {
       if (!tep || typeof tep !== 'object' || typeof tep.ma !== 'string' || !/^[A-Za-z0-9_-]{1,40}$/.test(tep.ma)) throw new Error('thiếu mã');
       if (LOAI_BO[tep.doi_tuong]) throw new Error('đã bỏ ở đợt 2: ' + LOAI_BO[tep.doi_tuong]);
+      if (typeof tep.cu_cua === 'string') { // tấm cũ của quái vẽ lại (xem G.QUAI_CU): chỉ dùng khi bật ?quaicu=1, thay đúng mã con quái
+        if (!G.QUAI_CU || !QUAI_MOI[tep.cu_cua]) return null;
+        tep = Object.assign({}, tep, { ma: tep.cu_cua });
+      } else if (G.QUAI_CU && QUAI_MOI[tep.ma] && tep.doi_tuong === 'quai') return null; // ?quaicu=1: bỏ tấm mới
       if (tep.doi_tuong === 'em-be' && !EM_BE_MA.test(tep.ma)) throw new Error('đã bỏ ở đợt 2: em bé chỉ còn em-be-hunter, em-be-healer, em-be-wrestler');
       if (DO_LOAI[tep.doi_tuong]) return themDo(tep); // vật phẩm
       if (tep.doi_tuong === 'giao-dien') return themGd(tep); // ảnh giao diện (gd-<tên>): biểu tượng, ô phòng, khung bản đồ
@@ -14497,6 +14510,8 @@ MA._xong();
       sp.nhun = tep.nhun == null || !isFinite(+tep.nhun) ? null : clamp(+tep.nhun, 0, 200);
       // 14/10 trum-chet-pha3: "can_tam": { <động tác>: [độ dời ngang từng khung] } (điểm ảnh game, đo từ ảnh: tâm thân trên sàn → điểm neo).
       // Ảnh AI cắt không căn tâm: thân nhảy ngang giữa các khung / các hàng, lệch khỏi điểm neo (lật mặt thì lệch sang phía kia). Cờ tắt ?trumcu=1.
+      // quai-moi-4-con: quái thường / tinh anh vẽ lại cũng có "can_tam" (đo lúc dựng tấm) — luôn dùng, không theo cờ ?trumcu=1 của trùm.
+      sp.ctLuon = !!QUAI_MOI[tep.ma];
       if (tep.can_tam && typeof tep.can_tam === 'object') { sp.ct = {}; for (const k of Object.keys(dt)) { const v = tep.can_tam[k]; if (Array.isArray(v)) sp.ct[k] = v.map((x) => clamp(Math.round(+x || 0), -40, 40)); } }
       // Em bé thân AI: đồ đang mặc (mũ, áo, đồ lưng, bùa, dấu mặt nạ, cánh) vẫn khoác lên thân AI, trừ khi tệp ghi "khoac_do": false.
       // "neo": { "dau": [dx, dy], "than": [dx, dy], "tay": [dx, dy], "<động tác>": { "dau": [..], "than": [..], "tay": [..] } } dời chỗ đặt đồ
@@ -14699,7 +14714,7 @@ MA._xong();
     c.save();
     c.imageSmoothingEnabled = false;
     if ((face < 0) !== !!sp.lat) c.scale(-1, 1);
-    const ct = sp.ct && G.TRUM_MOI !== false ? sp.ct[a === sp.dt[ten] ? ten : 'idle'] : null; // 14/10: căn tâm từng khung (xem "can_tam")
+    const ct = sp.ct && (G.TRUM_MOI !== false || sp.ctLuon) ? sp.ct[a === sp.dt[ten] ? ten : 'idle'] : null; // 14/10: căn tâm từng khung (xem "can_tam")
     const dx = -sp.ax + (ct && ct[i] ? ct[i] : 0), dy = -sp.ay + (o.dy || 0);
     if (o.alpha != null) c.globalAlpha = ga * clamp(o.alpha, 0, 1);
     const a1 = c.globalAlpha;
@@ -15898,10 +15913,11 @@ MA._xong();
       if (!t || typeof src !== 'string') return false;
       theoSrc.delete(src);
       const u = t._u;
-      const it = { img, ma: t.ma, png: src, webp: typeof t.webp === 'string' && /^anh\/[A-Za-z0-9_.-]{1,90}\.webp$/.test(t.webp) ? t.webp : null,
+      const ma = G.QUAI_CU && typeof t.cu_cua === 'string' ? t.cu_cua : t.ma; // ?quaicu=1: tấm cũ mang mã con quái (xem G.QUAI_CU)
+      const it = { img, ma, png: src, webp: typeof t.webp === 'string' && /^anh\/[A-Za-z0-9_.-]{1,90}\.webp$/.test(t.webp) ? t.webp : null,
         bac: u[0] | 0, co: +u[1] || 0, vung: u[2] | 0, trum: !!u[3], khoa: !!(G.TAI_VUNG && u[4] && (u[2] | 0) >= 0 && (u[2] | 0) <= 2), can: 0, lan: 0, xong: img.onload, hong: img.onerror, dangTai: false, thap: false, ve: false, boWebp: false };
       img.onload = null; img.onerror = null;
-      theoMa.set(t.ma, it); hang.push(it); AS.tong++;
+      theoMa.set(ma, it); hang.push(it); AS.tong++;
       napSauDangChay = true; // hình em bé / đồ về muộn: chỉ xoá hình đã nhớ khi đang dùng (xoaNhoDoKhiCan), như lúc nạp tệp tải sau
       bom();
       return true;
