@@ -1,0 +1,131 @@
+{
+ "anh": "hu-hat-linh-khi.png",
+ "co_anh": [
+  2232,
+  784
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 4,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 0,
+  "vien_khu": 1447,
+  "nga_mau_nen_trong_hinh": 220
+ },
+ "manh_bo": [
+  {
+   "khung_bao": [
+    1253,
+    374,
+    1269,
+    389
+   ],
+   "diem_anh": 10
+  },
+  {
+   "khung_bao": [
+    793,
+    376,
+    806,
+    390
+   ],
+   "diem_anh": 2
+  },
+  {
+   "khung_bao": [
+    858,
+    425,
+    880,
+    449
+   ],
+   "diem_anh": 86
+  }
+ ],
+ "loi": [],
+ "canh_bao": [
+  "Mảnh 86 điểm ảnh ở [858, 425, 880, 449] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "hu-hat-linh-khi",
+   "so_khung": 4,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      322,
+      346,
+      486,
+      442
+     ],
+     "chan": [
+      415.0,
+      442
+     ],
+     "rong": 164,
+     "cao": 96,
+     "diem_anh": 6180,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      776,
+      340,
+      966,
+      447
+     ],
+     "chan": [
+      900.0,
+      447
+     ],
+     "rong": 190,
+     "cao": 107,
+     "diem_anh": 7383,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      1253,
+      340,
+      1444,
+      453
+     ],
+     "chan": [
+      1358.0,
+      453
+     ],
+     "rong": 191,
+     "cao": 113,
+     "diem_anh": 7093,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1728,
+      340,
+      1906,
+      446
+     ],
+     "chan": [
+      1840.0,
+      446
+     ],
+     "rong": 178,
+     "cao": 106,
+     "diem_anh": 6648,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}
