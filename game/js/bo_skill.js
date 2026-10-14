@@ -181,16 +181,29 @@
 
   // ---------- quái nhắm vào bóng phân thân ----------
   // js/mobs.js (G.mob.update) và js/combat.js (quái kiểu cũ) hỏi: trả về chỗ quái nên nhắm (x, y, face) thay cho em bé, hoặc null.
-  // Chỉ đổi chỗ quái đi tới / ngắm đòn; đòn trúng hay không vẫn đo trên người thật của Zed. Trùm (W.boss) không bị lừa.
+  // Chỉ đổi chỗ quái đi tới / ngắm đòn; đòn trúng hay không vẫn đo trên người thật của Zed. Trùm (W.boss) đi theo luật riêng: K.dichTrum.
   K.dich = function (e) {
     const W = W_();
     const B = W && W.boBong;
     if (!B || B.t <= 0 || !e || e.isBoss || e === W.boss) return null;
     return B;
   };
-  // Hệ số tốc độ của quái (Thuỷ triều).
+  // Hệ số tốc độ của quái (Thuỷ triều). 14/10 (bước 1, mục 3): trùm nhỏ / trùm vùng cũng chậm nhưng yếu hơn (e.boChamTrum, số "trum"
+  // của skill trong G.SKILL_BO, mặc định 0,5): hệ số = 1 − trum × (1 − cham). js/boss.js đọc hàm này cho tốc đi và nhịp ra chiêu.
   K.cham = function (e) {
-    return e && e.boChamT > 0 && e.boCham > 0 ? e.boCham : 1;
+    if (!(e && e.boChamT > 0 && e.boCham > 0)) return 1;
+    if (e.isBoss) { const k = e.boChamTrum >= 0 ? e.boChamTrum : 0.5; return 1 - k * (1 - e.boCham); }
+    return e.boCham;
+  };
+  // 14/10 (bước 1, mục 3): Phân thân lên trùm. Mỗi lần trùm nhỏ / trùm vùng CHỌN chiêu mới (js/boss.js thinkBig / thinkMini) mà đang có bóng:
+  // tỉ lệ "trum" của skill (G.SKILL_BO, 0,3) nhắm chiêu đó vào bóng. Chiêu đang ra không đổi (chỉ quyết lúc chọn chiêu).
+  K.dichTrum = function (b) {
+    const W = W_();
+    const B = W && W.boBong, P = W && W.P;
+    if (!B || B.t <= 0 || !b || !P) return null;
+    const pt3 = co(P, 'phanThan');
+    if (!pt3) return null;
+    return G.rnd() < (pt3.trum >= 0 ? pt3.trum : 0.3) ? B : null;
   };
 
   // ---------- Zed ra đòn (combat.js playerHit) ----------
@@ -251,7 +264,7 @@
     if (tt && W) {
       for (const e of G.targets()) {
         if (Math.hypot(e.x - P.x, (e.y - P.y) / ZK()) > tt.banKinh + (e.r || 0)) continue;
-        e.boChamT = Math.max(e.boChamT || 0, tt.giay); e.boCham = tt.cham;
+        e.boChamT = Math.max(e.boChamT || 0, tt.giay); e.boCham = tt.cham; e.boChamTrum = tt.trum >= 0 ? tt.trum : 0.5;
       }
       (W.boVe || (W.boVe = [])).push({ k: 'trieu', x: P.x, y: P.y, r: tt.banKinh, t: 0.5, t0: 0.5 });
     }

@@ -759,7 +759,8 @@ window.G.LANG = 'vi';
     ninja: [
       { ma: 'bongLuot', ten: 'Bóng lướt', cuaSo: 1, them: 0.3 },          // lộn xong, đòn đầu tiên trong cuaSo giây +them sát thương
       // Đợt 4: thêm hồi 4 giây (trước không hồi: lộn hồi ~1 giây nên lộn liên tục gần như lúc nào cũng có bóng hút quái)
-      { ma: 'phanThan', ten: 'Phân thân', giay: 1.5, hoi: 4 },            // lộn để lại bóng đứng tại chỗ giay giây, quái thường nhắm vào bóng; hồi hoi giây
+      // 14/10 (bước 1, mục 3): trum = tỉ lệ lần trùm nhỏ / trùm vùng chọn mục tiêu ra chiêu mà nhắm vào bóng (khi có bóng); chiêu đang ra không đổi
+      { ma: 'phanThan', ten: 'Phân thân', giay: 1.5, hoi: 4, trum: 0.3 }, // lộn để lại bóng đứng tại chỗ giay giây, quái thường nhắm vào bóng; hồi hoi giây
       { ma: 'amSat', ten: 'Ám sát', hoi: 4 },                             // đánh trúng từ sau lưng quái: chắc chắn chí mạng (x2), hồi hoi giây
     ],
     rung: [
@@ -775,7 +776,8 @@ window.G.LANG = 'vi';
       // (cùng bản lưu). Số mới: khiên ăn ~25-30% sát thương, thắng 9/40 — vẫn là skill thủ mạnh nhất nhưng không gánh cả vùng ba.
       { ma: 'khienNuoc', ten: 'Khiên nước', hoi: 15, toiDa: 0.1 },        // có 1 lớp khiên chặn 1 đòn (tối đa toiDa x máu tối đa); vỡ thì sau hoi giây có lại (vào ải có sẵn)
       { ma: 'songDoi', ten: 'Sóng dội', banKinh: 40, day: 24 },           // lộn đẩy lùi quái trong banKinh ra thêm day điểm ảnh (trùm không bị đẩy)
-      { ma: 'thuyTrieu', ten: 'Thuỷ triều', giay: 2, banKinh: 60, cham: 0.5 }, // khiên vỡ: quái trong banKinh chậm còn cham x tốc độ trong giay giây
+      // 14/10 (bước 1, mục 3): trum = phần hiệu lực lên trùm nhỏ / trùm vùng (0,5: chậm còn 1 − 0,5 × (1 − cham) = 0,75 tốc độ đi và nhịp ra chiêu)
+      { ma: 'thuyTrieu', ten: 'Thuỷ triều', giay: 2, banKinh: 60, cham: 0.5, trum: 0.5 }, // khiên vỡ: quái trong banKinh chậm còn cham x tốc độ trong giay giây
     ],
     lau: [
       { ma: 'giapBac', ten: 'Giáp bạc', giam: 0.1 },                      // giảm giam sát thương nhận (nhân sau giảm sát thương sẵn có)

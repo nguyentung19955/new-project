@@ -65,7 +65,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.14-2012";
+(window.G = window.G || {}).VERSION = "lk-2026.10.14-2013";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -1977,7 +1977,8 @@
     ninja: [
       { ma: 'bongLuot', ten: 'Bóng lướt', cuaSo: 1, them: 0.3 },          // lộn xong, đòn đầu tiên trong cuaSo giây +them sát thương
       // Đợt 4: thêm hồi 4 giây (trước không hồi: lộn hồi ~1 giây nên lộn liên tục gần như lúc nào cũng có bóng hút quái)
-      { ma: 'phanThan', ten: 'Phân thân', giay: 1.5, hoi: 4 },            // lộn để lại bóng đứng tại chỗ giay giây, quái thường nhắm vào bóng; hồi hoi giây
+      // 14/10 (bước 1, mục 3): trum = tỉ lệ lần trùm nhỏ / trùm vùng chọn mục tiêu ra chiêu mà nhắm vào bóng (khi có bóng); chiêu đang ra không đổi
+      { ma: 'phanThan', ten: 'Phân thân', giay: 1.5, hoi: 4, trum: 0.3 }, // lộn để lại bóng đứng tại chỗ giay giây, quái thường nhắm vào bóng; hồi hoi giây
       { ma: 'amSat', ten: 'Ám sát', hoi: 4 },                             // đánh trúng từ sau lưng quái: chắc chắn chí mạng (x2), hồi hoi giây
     ],
     rung: [
@@ -1993,7 +1994,8 @@
       // (cùng bản lưu). Số mới: khiên ăn ~25-30% sát thương, thắng 9/40 — vẫn là skill thủ mạnh nhất nhưng không gánh cả vùng ba.
       { ma: 'khienNuoc', ten: 'Khiên nước', hoi: 15, toiDa: 0.1 },        // có 1 lớp khiên chặn 1 đòn (tối đa toiDa x máu tối đa); vỡ thì sau hoi giây có lại (vào ải có sẵn)
       { ma: 'songDoi', ten: 'Sóng dội', banKinh: 40, day: 24 },           // lộn đẩy lùi quái trong banKinh ra thêm day điểm ảnh (trùm không bị đẩy)
-      { ma: 'thuyTrieu', ten: 'Thuỷ triều', giay: 2, banKinh: 60, cham: 0.5 }, // khiên vỡ: quái trong banKinh chậm còn cham x tốc độ trong giay giây
+      // 14/10 (bước 1, mục 3): trum = phần hiệu lực lên trùm nhỏ / trùm vùng (0,5: chậm còn 1 − 0,5 × (1 − cham) = 0,75 tốc độ đi và nhịp ra chiêu)
+      { ma: 'thuyTrieu', ten: 'Thuỷ triều', giay: 2, banKinh: 60, cham: 0.5, trum: 0.5 }, // khiên vỡ: quái trong banKinh chậm còn cham x tốc độ trong giay giây
     ],
     lau: [
       { ma: 'giapBac', ten: 'Giáp bạc', giam: 0.1 },                      // giảm giam sát thương nhận (nhân sau giảm sát thương sẵn có)
@@ -13486,8 +13488,13 @@
     if (b.kind === 'mini' && b.st) b.st.stun = Math.max(b.st.stun || 0, t);
   }
 
+  // 14/10 (bước 1, mục 3): skill bộ Ninja "Phân thân" — lúc chọn chiêu có thể nhắm vào bóng (js/bo_skill.js G.boSk.dichTrum, 30%);
+  // "Thuỷ triều" — chậm tốc đi và nhịp ra chiêu (G.boSk.cham, trùm 50% hiệu lực). Cờ tắt: ?skillbotrum=0 (G.SKILL_BO_TRUM = false).
+  if (G.SKILL_BO_TRUM === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]skillbotrum=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.SKILL_BO_TRUM = !tat; }
+  const dichOf = (b, P) => (G.SKILL_BO_TRUM && G.boSk && G.boSk.dichTrum ? G.boSk.dichTrum(b) || P : P);
+  const chamOf = (b) => (G.SKILL_BO_TRUM && G.boSk && G.boSk.cham ? G.boSk.cham(b) : 1);
   function thinkBig(b) {
-    const w = W(), P = w.P, ph = b.phase, S = SK[b.kind];
+    const w = W(), P = dichOf(b, w.P), ph = b.phase, S = SK[b.kind];
     const opts = ['c1', 'c2', 'c3'];
     if (ph >= 1) opts.push('c4');
     if (ph >= 2) opts.push('c5');
@@ -13532,7 +13539,7 @@
   };
   G.MINI_NHIP = MINI_NHIP;
   function thinkMini(b) {
-    const w = W(), P = w.P, ph = b.phase, id = b.art;
+    const w = W(), P = dichOf(b, w.P), ph = b.phase, id = b.art;
     const d = Math.hypot(P.x - b.x, P.y - b.y), a = ang(b, P);
     const N = MINI_NHIP[id], gan = d < 70;
     const opts = [];
@@ -13616,7 +13623,7 @@
       return;
     }
     const want = b.kind === 'moc' ? 70 : b.kind === 'ngu' ? 85 : b.kind === 'ho' ? 100 : 44;
-    const sp = b.speed * Math.max(0.4, 1 - 0.15 * b.st.iceN);
+    const sp = b.speed * Math.max(0.4, 1 - 0.15 * b.st.iceN) * chamOf(b);
     if (d > want + 12) { b.x += (dx / d) * sp * dt; b.y += (dy / d) * sp * 0.8 * dt; b.moving = true; }
     else if (d < want - 30 && b.kind !== 'mini') { b.x -= (dx / d) * sp * 0.45 * dt; b.y -= (dy / d) * sp * 0.3 * dt; b.moving = true; }
     if (b.kind === 'ho') b.y += Math.sin(b.t * 1.7) * 14 * dt;
@@ -13673,7 +13680,7 @@
       if (!b.an || b.an.n !== n) play(b, n);
     }
     if (b.busy <= 0 && b.st.stun <= 0 && b.st.frozen <= 0) {
-      b.cd -= dt;
+      b.cd -= dt * chamOf(b);
       if (b.cd <= 0) { if (b.kind === 'mini') thinkMini(b); else thinkBig(b); }
     }
   };
@@ -28482,16 +28489,29 @@ MA._xong();
 
   // ---------- quái nhắm vào bóng phân thân ----------
   // js/mobs.js (G.mob.update) và js/combat.js (quái kiểu cũ) hỏi: trả về chỗ quái nên nhắm (x, y, face) thay cho em bé, hoặc null.
-  // Chỉ đổi chỗ quái đi tới / ngắm đòn; đòn trúng hay không vẫn đo trên người thật của Zed. Trùm (W.boss) không bị lừa.
+  // Chỉ đổi chỗ quái đi tới / ngắm đòn; đòn trúng hay không vẫn đo trên người thật của Zed. Trùm (W.boss) đi theo luật riêng: K.dichTrum.
   K.dich = function (e) {
     const W = W_();
     const B = W && W.boBong;
     if (!B || B.t <= 0 || !e || e.isBoss || e === W.boss) return null;
     return B;
   };
-  // Hệ số tốc độ của quái (Thuỷ triều).
+  // Hệ số tốc độ của quái (Thuỷ triều). 14/10 (bước 1, mục 3): trùm nhỏ / trùm vùng cũng chậm nhưng yếu hơn (e.boChamTrum, số "trum"
+  // của skill trong G.SKILL_BO, mặc định 0,5): hệ số = 1 − trum × (1 − cham). js/boss.js đọc hàm này cho tốc đi và nhịp ra chiêu.
   K.cham = function (e) {
-    return e && e.boChamT > 0 && e.boCham > 0 ? e.boCham : 1;
+    if (!(e && e.boChamT > 0 && e.boCham > 0)) return 1;
+    if (e.isBoss) { const k = e.boChamTrum >= 0 ? e.boChamTrum : 0.5; return 1 - k * (1 - e.boCham); }
+    return e.boCham;
+  };
+  // 14/10 (bước 1, mục 3): Phân thân lên trùm. Mỗi lần trùm nhỏ / trùm vùng CHỌN chiêu mới (js/boss.js thinkBig / thinkMini) mà đang có bóng:
+  // tỉ lệ "trum" của skill (G.SKILL_BO, 0,3) nhắm chiêu đó vào bóng. Chiêu đang ra không đổi (chỉ quyết lúc chọn chiêu).
+  K.dichTrum = function (b) {
+    const W = W_();
+    const B = W && W.boBong, P = W && W.P;
+    if (!B || B.t <= 0 || !b || !P) return null;
+    const pt3 = co(P, 'phanThan');
+    if (!pt3) return null;
+    return G.rnd() < (pt3.trum >= 0 ? pt3.trum : 0.3) ? B : null;
   };
 
   // ---------- Zed ra đòn (combat.js playerHit) ----------
@@ -28552,7 +28572,7 @@ MA._xong();
     if (tt && W) {
       for (const e of G.targets()) {
         if (Math.hypot(e.x - P.x, (e.y - P.y) / ZK()) > tt.banKinh + (e.r || 0)) continue;
-        e.boChamT = Math.max(e.boChamT || 0, tt.giay); e.boCham = tt.cham;
+        e.boChamT = Math.max(e.boChamT || 0, tt.giay); e.boCham = tt.cham; e.boChamTrum = tt.trum >= 0 ? tt.trum : 0.5;
       }
       (W.boVe || (W.boVe = [])).push({ k: 'trieu', x: P.x, y: P.y, r: tt.banKinh, t: 0.5, t0: 0.5 });
     }

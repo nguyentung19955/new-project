@@ -262,8 +262,13 @@
     if (b.kind === 'mini' && b.st) b.st.stun = Math.max(b.st.stun || 0, t);
   }
 
+  // 14/10 (bước 1, mục 3): skill bộ Ninja "Phân thân" — lúc chọn chiêu có thể nhắm vào bóng (js/bo_skill.js G.boSk.dichTrum, 30%);
+  // "Thuỷ triều" — chậm tốc đi và nhịp ra chiêu (G.boSk.cham, trùm 50% hiệu lực). Cờ tắt: ?skillbotrum=0 (G.SKILL_BO_TRUM = false).
+  if (G.SKILL_BO_TRUM === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]skillbotrum=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.SKILL_BO_TRUM = !tat; }
+  const dichOf = (b, P) => (G.SKILL_BO_TRUM && G.boSk && G.boSk.dichTrum ? G.boSk.dichTrum(b) || P : P);
+  const chamOf = (b) => (G.SKILL_BO_TRUM && G.boSk && G.boSk.cham ? G.boSk.cham(b) : 1);
   function thinkBig(b) {
-    const w = W(), P = w.P, ph = b.phase, S = SK[b.kind];
+    const w = W(), P = dichOf(b, w.P), ph = b.phase, S = SK[b.kind];
     const opts = ['c1', 'c2', 'c3'];
     if (ph >= 1) opts.push('c4');
     if (ph >= 2) opts.push('c5');
@@ -308,7 +313,7 @@
   };
   G.MINI_NHIP = MINI_NHIP;
   function thinkMini(b) {
-    const w = W(), P = w.P, ph = b.phase, id = b.art;
+    const w = W(), P = dichOf(b, w.P), ph = b.phase, id = b.art;
     const d = Math.hypot(P.x - b.x, P.y - b.y), a = ang(b, P);
     const N = MINI_NHIP[id], gan = d < 70;
     const opts = [];
@@ -392,7 +397,7 @@
       return;
     }
     const want = b.kind === 'moc' ? 70 : b.kind === 'ngu' ? 85 : b.kind === 'ho' ? 100 : 44;
-    const sp = b.speed * Math.max(0.4, 1 - 0.15 * b.st.iceN);
+    const sp = b.speed * Math.max(0.4, 1 - 0.15 * b.st.iceN) * chamOf(b);
     if (d > want + 12) { b.x += (dx / d) * sp * dt; b.y += (dy / d) * sp * 0.8 * dt; b.moving = true; }
     else if (d < want - 30 && b.kind !== 'mini') { b.x -= (dx / d) * sp * 0.45 * dt; b.y -= (dy / d) * sp * 0.3 * dt; b.moving = true; }
     if (b.kind === 'ho') b.y += Math.sin(b.t * 1.7) * 14 * dt;
@@ -449,7 +454,7 @@
       if (!b.an || b.an.n !== n) play(b, n);
     }
     if (b.busy <= 0 && b.st.stun <= 0 && b.st.frozen <= 0) {
-      b.cd -= dt;
+      b.cd -= dt * chamOf(b);
       if (b.cd <= 0) { if (b.kind === 'mini') thinkMini(b); else thinkBig(b); }
     }
   };
