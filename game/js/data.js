@@ -414,7 +414,7 @@
     const b = sv && sv.zed && typeof sv.zed === 'object' ? sv.zed.bo : null;
     return b && G.ZED_BO[b] && G.zedBoMo(b, sv) ? b : 'ninja';
   };
-  G.HEROES.smith.name = 'Zed';
+  G.HEROES.smith.name = 'Cu Tí';
   G.HEROES.smith.skillDesc = 'Nét riêng: chưởng đẩy lùi quái mạnh';
 
   // Cây kỹ năng: 3 nhánh, mỗi nhánh 5 nút, phải mở theo thứ tự trong nhánh.

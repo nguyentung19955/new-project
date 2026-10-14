@@ -21,28 +21,28 @@
   const MO_DAU = [
     { nen: 'cayda', loi: 'Làng ven sông sống nhờ linh khí của cây đa nghìn tuổi. Một sáng, lá đa úa vàng, linh khí cạn dần.' },
     { nen: 'yeu', loi: 'Ba yêu tinh thức dậy: Mộc Tinh, cây cổ thụ ở Rừng già; Ngư Tinh, mực khổng lồ cầm rìu san hô ở Hang biển; Hồ Tinh, cáo chín đuôi đeo mặt nạ ở Lâu đài cổ.' },
-    { nen: 'emBe', loi: 'Cu Tèo, Cái Bống, Cu Lì, ba bạn thân của Zed, đi tìm linh khí cho làng rồi bị yêu tinh bắt mất.' },
-    { nen: 'cuti', ai: 'do', loi: 'Zed ơi, ba bạn đang chờ cháu. Cầm lấy vũ khí sống này: nó lớn lên theo cháu. Đi cứu bạn đi, Chú Lái Đò chờ ở bến!' },
+    { nen: 'emBe', loi: 'Cu Tèo, Cái Bống, Cu Lì, ba bạn thân của Cu Tí, đi tìm linh khí cho làng rồi bị yêu tinh bắt mất.' },
+    { nen: 'cuti', ai: 'do', loi: 'Cu Tí ơi, ba bạn đang chờ cháu. Cầm lấy vũ khí sống này: nó lớn lên theo cháu. Đi cứu bạn đi, Chú Lái Đò chờ ở bến!' },
   ];
   const VUNG = [
     [
-      { ai: 'hunter', loi: 'Zed ơi! Rễ cây quấn tớ cả tuần, may mà cậu tới!' },
+      { ai: 'hunter', loi: 'Cu Tí ơi! Rễ cây quấn tớ cả tuần, may mà cậu tới!' },
       { ai: 'do', loi: 'Rừng già thở lại rồi, cây đa đã nhú chồi. Nhưng gió biển lạnh lắm: Cái Bống còn kẹt ở Hang biển.' },
-      { loi: 'Cu Tèo đã về làng, ngồi chơi ở sân đình. Cu Tèo dạy Zed đánh hiểm và bắn chưởng xa: xem ở Ông Từ.' },
+      { loi: 'Cu Tèo đã về làng, ngồi chơi ở sân đình. Bạn ấy dạy Cu Tí đánh hiểm và bắn chưởng xa: xem ở Ông Từ.' },
     ],
     [
-      { ai: 'healer', loi: 'Nước dưới hang lạnh buốt... Cảm ơn Zed đã lặn xuống tìm tớ!' },
+      { ai: 'healer', loi: 'Nước dưới hang lạnh buốt... Cảm ơn Cu Tí đã lặn xuống tìm tớ!' },
       { ai: 'lai', loi: 'Biển êm rồi, đò lại chạy. Bên kia sông, Lâu đài cổ đỏ rực lửa: Cu Lì ở trong đó.' },
-      { loi: 'Cái Bống đã về làng, ngồi chơi ở sân đình. Cái Bống dạy Zed giữ hiệu ứng lâu và chưởng hồi máu: xem ở Ông Từ.' },
+      { loi: 'Cái Bống đã về làng, ngồi chơi ở sân đình. Bạn ấy dạy Cu Tí giữ hiệu ứng lâu và chưởng hồi máu: xem ở Ông Từ.' },
     ],
     [
       { ai: 'wrestler', loi: 'Con cáo chín đuôi bắt tớ canh lửa cả tháng! Về nhà thôi, đói lắm rồi!' },
       { ai: 'do', loi: 'Ba yêu tinh đã ngủ lại. Linh khí về làng, cây đa xanh lá như xưa.' },
-      { loi: 'Cu Lì đã về làng. Cu Lì dạy Zed gồng chịu đòn và chưởng to: xem ở Ông Từ.' },
+      { loi: 'Cu Lì đã về làng. Bạn ấy dạy Cu Tí gồng chịu đòn và chưởng to: xem ở Ông Từ.' },
     ],
   ];
   const KET = [
-    { nen: 'hoi', loi: 'Tối ấy cả làng mở hội dưới gốc đa, mừng ba bạn trở về. Ai cũng cảm ơn Zed đã cứu bạn. Hết truyện... mà chưa hết đâu!' },
+    { nen: 'hoi', loi: 'Tối ấy cả làng mở hội dưới gốc đa, mừng ba bạn trở về. Ai cũng cảm ơn Cu Tí đã cứu bạn. Hết truyện... mà chưa hết đâu!' },
     { nen: 'hoi', ai: 'lai', loi: 'Đêm xuống, yêu tinh có thể thức dậy mạnh hơn. Muốn thử sức thì gặp chú, chạm "Độ khó 2" nhé!' },
   ];
   // Trùm: [câu ra mắt, câu khi gục]. Trùm nhỏ theo vùng.
@@ -60,9 +60,9 @@
     ren: ['Gỗ linh Rừng già đây rồi! Mang về ông rèn cho.', 'Vảy cá thần cứng thật, tôi lưỡi vào là bén lắm.', 'Lửa Lâu đài cổ thổi lò mới hừng làm sao!'],
     xen: ['Rừng xanh lại, nấm tươi về chợ, bà vui ghê.', 'Thuyền cá về bến rồi, chợ đông hẳn lên.', 'Cả làng mừng! Bà bán rẻ cho cháu... à mà thôi, giá cũ.'],
     may: ['Cu Tèo về rồi, để cô may cho nó cái áo mới.', 'Cái Bống lạnh run, cô đang dệt cho cái khăn.', 'Cu Lì đòi áo đỏ như lửa. Cô may ngay!'],
-    do: ['Mộc Tinh là cây cổ thụ mọc đầy nấm độc. Cháu hạ được nó, Rừng già thở lại rồi.', 'Ngư Tinh là con mực khổng lồ cầm rìu san hô. Cháu hạ được nó, giỏi lắm!', 'Cáo lửa chín đuôi đeo mặt nạ cũng gục rồi. Chuyện Zed cứu bạn, lão ghi vào sách.'],
+    do: ['Mộc Tinh là cây cổ thụ mọc đầy nấm độc. Cháu hạ được nó, Rừng già thở lại rồi.', 'Ngư Tinh là con mực khổng lồ cầm rìu san hô. Cháu hạ được nó, giỏi lắm!', 'Cáo lửa chín đuôi đeo mặt nạ cũng gục rồi. Chuyện Cu Tí cứu bạn, lão ghi vào sách.'],
     tu: ['Cu Tèo chạy nhảy suốt sân đình. Ồn mà vui.', 'Cái Bống về, sân đình có tiếng hát rồi.', 'Đủ bốn bé rồi. Đình làng ấm hẳn lên.'],
-    mo: ['Cốc cốc! Làng nước ơi, Zed hạ được Mộc Tinh rồi!', 'Cốc cốc! Biển êm, đò chạy, làng nước nghe chưa!', 'Cốc cốc cốc! Ba yêu tinh ngủ cả rồi! Mở hội thôi!'],
+    mo: ['Cốc cốc! Làng nước ơi, Cu Tí hạ được Mộc Tinh rồi!', 'Cốc cốc! Biển êm, đò chạy, làng nước nghe chưa!', 'Cốc cốc cốc! Ba yêu tinh ngủ cả rồi! Mở hội thôi!'],
   };
   // ZED: nhân vật chính là Zed. Ba bạn vẫn bị bắt, vẫn được cứu, nhưng về làng thì DẠY Zed (lời Zed đã ghi thẳng vào các bảng trên;
   // bản Cu Tí / "đổi em bé" của cờ ?zed=0 đã xoá khi dọn code 13/10).

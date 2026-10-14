@@ -744,7 +744,7 @@
     const T = G.theme, sv = G.save;
     if (!T || !sv || !G.ZED_BO || !G.zedBo) return y;
     say = say || (() => {});
-    T.head('Bộ trang phục Zed', x, y + 8);
+    T.head('Bộ trang phục Cu Tí', x, y + 8);
     y += 11;
     const bo = G.zedBo(sv), B = G.ZED_BO[bo], cap = VM.boCap(sv, bo), max = G.BO_MOI.max, g = VM.boGia(cap);
     ui.text(G.t('{0} · cấp {1}/{2}', G.tv(B.ten), cap, max), x, y + 9, { size: 8, bold: true, color: GOLD });

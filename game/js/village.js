@@ -378,7 +378,7 @@
   // ---------- Ông Từ: bảng xem chỉ số Zed và các nét ba bạn đã dạy (đợt 2 bỏ bảng chọn em bé của cờ ?zed=0) ----------
   function hero() {
     const sv = G.save, k = 'smith', H = G.HEROES[k], hs = sv.heroes[k];
-    frame('Sân đình: chỉ số Zed');
+    frame('Sân đình: chỉ số Cu Tí');
     // chân dung Zed (bộ trang phục đang mặc, js/zed_moi.js)
     const c = G.ux, px = CX, py = 68, pwd = 64, ph = 72;
     T.inset(px, py, pwd, ph, false, { fill: '#173030' });
@@ -399,7 +399,7 @@
     y = ui.para(G.t('Nội tại: {0}', H.passive), x, y, w, { size: 7, color: SOFT });
     ui.para(G.t('Chưởng ({0} mana). {1}', G.CHUONG ? G.CHUONG.cost : 30, H.skillDesc), x, y, w, { size: 7, color: SOFT });
     // ba bạn: đã cứu thì đã dạy Zed (nội tại + nét chưởng + sở trường), chưa thì ghi trùm nào đang giữ bạn ấy
-    T.head('Ba bạn dạy Zed', CX, 150);
+    T.head('Ba bạn dạy Cu Tí', CX, 150);
     let left = 0;
     G.ZED_DAY_KEYS.forEach((q, i) => {
       const D = G.ZED_DAY[q], Hq = G.HEROES[q], hoc = G.zedHoc(q), ry = 154 + i * 36;
@@ -410,13 +410,13 @@
       c.restore();
       ui.text(Hq.name, CX + 36, ry + 11, { size: 8.5, bold: true, color: hoc ? '#fff0c4' : '#8fa49e' });
       ui.font(8.5, true); const nx = CX + 36 + G.ux.measureText(G.tv(Hq.name)).width + 6;
-      ui.text(hoc ? 'đã dạy Zed' : G.t('còn bị {0} bắt', D.boss), nx, ry + 11, { size: 7, color: hoc ? GOOD : SOFT });
+      ui.text(hoc ? 'đã dạy Cu Tí' : G.t('còn bị {0} bắt', D.boss), nx, ry + 11, { size: 7, color: hoc ? GOOD : SOFT });
       // dòng ngắn (ngan) cho vừa thẻ; đủ chữ ở Hành trang > Nhân vật
-      const txt = hoc ? G.tv(D.ngan[0]) + '; ' + G.tv(D.ngan[1]) : G.t('Hạ {0} để cứu bạn ấy. Bạn ấy sẽ dạy Zed: {1}', D.boss, G.tv(D.ngan[0]));
+      const txt = hoc ? G.tv(D.ngan[0]) + '; ' + G.tv(D.ngan[1]) : G.t('Hạ {0} để cứu bạn ấy. Bạn ấy sẽ dạy Cu Tí: {1}', D.boss, G.tv(D.ngan[0]));
       ui.para(txt, CX + 36, ry + 20, CW - 42, { size: 6.5, color: hoc ? TXT : SOFT });
     });
-    return left ? G.t('Khẽ thôi, các bé đang chơi trong sân. Còn {0} bạn bị yêu tinh bắt: hạ trùm vùng để cứu, bạn ấy sẽ dạy Zed.', left)
-      : 'Ba bạn về đủ cả rồi. Ngón nghề của các bạn, Zed học hết rồi đấy.';
+    return left ? G.t('Khẽ thôi, các bé đang chơi trong sân. Còn {0} bạn bị yêu tinh bắt: hạ trùm vùng để cứu, bạn ấy sẽ dạy cháu.', left)
+      : 'Ba bạn về đủ cả rồi. Ngón nghề của các bạn, cháu học hết rồi đấy.';
   }
   // ---------- cây kỹ năng và hướng dẫn (Cụ Đồ) ----------
   function doTabs() {
@@ -465,7 +465,7 @@
   const HELP = () => [
     ['Đi lại trong làng', 'Kéo ở nửa trái màn hình để đi, hoặc chạm vào một người để em bé tự chạy tới. Dải khuôn mặt ở mép trên là lối tắt. Ai có việc mới thì có dấu chấm than vàng.'],
     ['Di chuyển và đánh', 'Cảm ứng: đặt ngón ở nửa trái màn hình rồi kéo để đi. Bên phải có các nút tròn: giữ Đánh để ra đòn liên tục, Né để lăn tránh, Đặc biệt để tung đòn mạnh (tốn mana), nút trên cùng là Chưởng.'],
-    ['Chưởng', G.t('Nút Chưởng bắn một luồng chưởng linh khí (tốn {0} mana), tự ngắm quái gần nhất theo tám hướng. Hệ của chưởng theo cây chưởng đang dùng. Chưởng của Zed đẩy lùi quái mạnh; mỗi bạn được cứu dạy Zed thêm một nét: Cu Tèo bay xa và nhanh, Cái Bống trúng thì hồi chút máu, Cu Lì chưởng to và mạnh. Chưởng không cho linh khí cho vũ khí (linh khí chỉ đến từ vũ khí) và không kết hợp hệ với vũ khí.', G.CHUONG ? G.CHUONG.cost : 30)],
+    ['Chưởng', G.t('Nút Chưởng bắn một luồng chưởng linh khí (tốn {0} mana), tự ngắm quái gần nhất theo tám hướng. Hệ của chưởng theo cây chưởng đang dùng. Chưởng của Cu Tí đẩy lùi quái mạnh; mỗi bạn được cứu dạy cậu thêm một nét: Cu Tèo bay xa và nhanh, Cái Bống trúng thì hồi chút máu, Cu Lì chưởng to và mạnh. Chưởng không cho linh khí cho vũ khí (linh khí chỉ đến từ vũ khí) và không kết hợp hệ với vũ khí.', G.CHUONG ? G.CHUONG.cost : 30)],
     ['Ba cây chưởng', 'Hỏa chưởng: cầu lửa nổ lan, vệt cháy, giữ nút để tích lực. Độc chưởng: mây độc, lây độc, ăn mòn giáp, tách 3 luồng. Băng chưởng: mũi băng xuyên nhiều quái, làm chậm, đóng băng, băng vỡ. Mỗi cấp nhận 1 điểm chưởng (riêng với điểm kỹ năng). Mỗi lúc dùng một cây; ở làng đổi cây miễn phí ở Cụ Đồ (thẻ Cây chưởng) hoặc Hành trang, điểm đã học được trả lại hết.'],
     ['Đánh tám hướng', 'Mọi đòn tự quay về quái gần nhất trong tầm, theo cả tám hướng (lên, xuống, chéo). Không có quái gần thì đánh theo hướng đang kéo cần, hoặc hướng vừa đi.'],
     ['Chiêu Đặc biệt', 'Mỗi loại vũ khí một chiêu (tốn mana). Kiếm, Trảm Nguyệt: phóng vệt chém trăng khuyết bay xuyên mọi quái. Giáo, Phi Thương: ném giáo xuyên một hàng quái, ghim con cuối, giáo tự bay về tay (lúc giáo chưa về thì nút Đánh là cú đấm tay). Búa, Địa Chấn: nện ra vệt nứt đất hất tung quái, kèm vòng chấn quanh người. Cung, Mưa Tên: mưa tên rơi vào cụm quái gần nhất.'],
@@ -481,7 +481,7 @@
     ['Các loại quái', 'Xông tới, bầy nhỏ, bắn xa (gọi thêm bầy), nhanh nhẹn (lặn rồi trồi sau lưng), giáp (che phía trước, hồi máu cho bạn: vòng ra sau hoặc đánh vỡ giáp), cảm tử (lao vào rồi nổ), đặt bom (bom có vòng đếm ngược), gai (đang dựng gai mà chém thì bị phản đòn). Nổ ở Hang biển làm đóng băng, ở Rừng già để vũng độc, ở Lâu đài cổ để vệt cháy.'],
     ['Tinh anh và trùm', 'Tinh anh có chiêu riêng và một dấu hiệu trên đầu: tia chớp là nhanh, khiên là bọc giáp, quả bom là nổ khi chết, giọt máu là hút máu. Trùm nhỏ có hai chiêu riêng. Trùm vùng có ba pha, đổi ở 2/3 và 1/3 máu, pha sau thêm chiêu và nhanh hơn; sau chiêu lớn trùm choáng một lúc, đó là lúc đánh mạnh nhất.'],
     ['Vật trong phòng', 'Chậu than, nấm độc và tinh thể băng phát nổ khi bị đánh, gây hiệu ứng lên quái đứng gần. Đây là cách gây hệ khi vũ khí còn trắng.'],
-    ['Bốn vũ khí', G.t('Zed luôn mang đủ 4 vũ khí: Kiếm, Thương, Búa, Phi tiêu; nút đổi vũ khí xoay vòng. Nâng vũ khí bằng linh khí ở Ông Thợ Rèn: Trắng, Mầm (chọn hệ Lửa, Độc hoặc Băng), Thành hình, Thức tỉnh ({0}, {1}, {2} linh khí). Quái, rương, trùm không rơi vũ khí hay quần áo nữa mà cho vàng và linh khí.', G.VK_MOI.gia[0], G.VK_MOI.gia[1], G.VK_MOI.gia[2])],
+    ['Bốn vũ khí', G.t('Cu Tí luôn mang đủ 4 vũ khí: Kiếm, Thương, Búa, Phi tiêu; nút đổi vũ khí xoay vòng. Nâng vũ khí bằng linh khí ở Ông Thợ Rèn: Trắng, Mầm (chọn hệ Lửa, Độc hoặc Băng), Thành hình, Thức tỉnh ({0}, {1}, {2} linh khí). Quái, rương, trùm không rơi vũ khí hay quần áo nữa mà cho vàng và linh khí.', G.VK_MOI.gia[0], G.VK_MOI.gia[1], G.VK_MOI.gia[2])],
     ['Đặc trưng hệ theo cấp', G.t('Trắng: chưa có hệ. Linh khí (dấu ấn) có từ: hạ tinh anh ({0}), trùm nhỏ ({1}), trùm vùng ({2}); quái thường {3}% rơi viên linh khí của vùng ({4}), đi lại gần để nhặt; kết liễu quái đang dính hệ (+1). Hệ theo hệ quái đang dính, không dính thì theo vùng. Mầm: có tỉ lệ gây cháy, độc, chậm nhưng chưa có luật hệ. Thành hình: mở đặc trưng 1, thứ để lại trên sân (vệt cháy, vũng độc, gai băng). Thức tỉnh: mở đặc trưng 2, phản ứng dây chuyền (nổ lan, lây độc, băng vỡ).', G.LINHKHI.elite, G.LINHKHI.mini, G.LINHKHI.boss, Math.round(G.LINHKHI.drop * 100), G.LINHKHI.orb)],
     ['Xem vũ khí', 'Ở làng, chạm vào vũ khí đang bay theo em bé để xem bậc, dòng phụ và các đặc trưng đã mở, sắp mở. Ở chỗ Bà Hàng Xén cũng có nút Xem cho món trong rương.'],
   ];

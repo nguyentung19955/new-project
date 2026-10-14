@@ -40,7 +40,7 @@
     xen: { ten: 'Bà Hàng Xén', viec: 'Hàng xén', ngan: 'Vũ khí', chao: 'Mua gì bán gì, vào đây với bà.', ve: 'Lần sau lại ghé bà nhé.', robe: '#8a5a38', robe2: '#6e4428', wide: 1, top: -23, pos: [540, 198], den: [540, 214] },
     may: { ten: 'Cô Thợ May', viec: 'Thợ may', ngan: 'Mũ áo', chao: 'Bé thử bộ đồ mới xem nào.', ve: 'Mặc đẹp lắm đó!', robe: '#d86a7a', robe2: '#b04a5e', wide: -1, top: -28, pos: [574, 132], den: [555, 141] },
     do: { ten: 'Cụ Đồ', viec: 'Kỹ năng', ngan: 'Kỹ năng', chao: 'Ngồi xuống đây, lão chỉ cho một chiêu.', ve: 'Học rồi nhớ luyện nghe con.', robe: '#4a548c', robe2: '#363e6c', wide: 0, top: -24, sit: true, pos: [364, 150], den: [342, 160] },
-    tu: { ten: 'Ông Từ', viec: 'Xem chỉ số Zed', ngan: 'Zed', chao: 'Khẽ thôi, các bé đang chơi trong sân.', ve: 'Các bé chơi ngoan nhé.', robe: '#d0a440', robe2: '#a87e2a', wide: 0, top: -27, pos: [142, 140], den: [124, 151] },
+    tu: { ten: 'Ông Từ', viec: 'Xem chỉ số Cu Tí', ngan: 'Cu Tí', chao: 'Khẽ thôi, các bé đang chơi trong sân.', ve: 'Các bé chơi ngoan nhé.', robe: '#d0a440', robe2: '#a87e2a', wide: 0, top: -27, pos: [142, 140], den: [124, 151] },
     mo: { ten: 'Anh Mõ', viec: 'Cài đặt', ngan: 'Cài đặt', chao: 'Cốc cốc cốc! Làng nước nghe đây!', ve: 'Có gì cứ gọi anh Mõ!', robe: '#3f9a8c', robe2: '#2c7468', wide: -1, top: -26, pos: [100, 92], den: [118, 102] },
   };
   const ORDER = ['lai', 'ren', 'xen', 'may', 'do', 'tu', 'mo']; // thứ tự trên dải lối tắt
@@ -674,8 +674,8 @@
     const sv = G.save, z = sv.zed;
     delete z.bao;
     const ten = z.tu && G.HEROES[z.tu] ? G.HEROES[z.tu].name : null, n = G.ZED_DAY_KEYS.filter((k) => G.zedHoc(k)).length;
-    const s = ten ? G.t('Bản lưu cũ đã chuyển sang Zed: cấp {0} lấy từ {1}, {2} bạn đã dạy Zed. Xem ở Ông Từ.', sv.heroes.smith.lvl, ten, n)
-      : G.t('Bản lưu cũ đã chuyển sang Zed: {0} bạn đã dạy Zed. Xem ở Ông Từ.', n);
+    const s = ten ? G.t('Bản lưu cũ đã chuyển sang Cu Tí: cấp {0} lấy từ {1}, đã được {2} bạn dạy. Xem ở Ông Từ.', sv.heroes.smith.lvl, ten, n)
+      : G.t('Bản lưu cũ đã chuyển sang Cu Tí: đã được {0} bạn dạy. Xem ở Ông Từ.', n);
     say(s, 7);
     G.persist();
   }
@@ -685,7 +685,7 @@
     const z = G.save.zed;
     delete z.boBao;
     const ds = (G.ZED_BO_KEYS || []).filter((k) => k !== 'ninja' && G.zedBoMo(k)).map((k) => G.tv(G.ZED_BO[k].ten));
-    if (ds.length) say(G.t('Zed có trang phục mới: {0}. Đổi bộ ở Hành trang, thẻ Nhân vật.', ds.join(', ')), 5);
+    if (ds.length) say(G.t('Cu Tí có trang phục mới: {0}. Đổi bộ ở Hành trang, thẻ Nhân vật.', ds.join(', ')), 5);
     G.persist();
   }
 

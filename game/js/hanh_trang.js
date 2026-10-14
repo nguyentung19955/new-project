@@ -147,7 +147,7 @@
         ui.text(String(r[1]), cx + cw - 4, cy + 9, { size: 7.5, bold: true, align: 'right', color: r[0] === 'Máu' ? '#ff9a7a' : r[0] === 'Mana' ? '#8fc6ff' : TXT });
       });
       y += Math.ceil(rows.length / 2) * 13 + 10;
-      T.head('Zed', x, y); y += 3;
+      T.head('Cu Tí', x, y); y += 3;
       // ZED: sở trường, nội tại, nét chưởng gồm cả các nét ba bạn đã dạy (js/data.js G.favOf, G.passiveOf, G.skillDescOf)
       y = ui.para(G.t('Sở trường: {0} (+10% sát thương)', G.favOf(k).map((f) => G.tv(G.WTYPES[f].name)).join(', ')), x, y + 8, w, { size: 7 });
       y = ui.para(G.t('Nội tại: {0}', G.passiveOf(k)), x, y, w, { size: 7, color: SOFT });

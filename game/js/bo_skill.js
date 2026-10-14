@@ -42,7 +42,7 @@
       case 'phanThan': return sk.hoi ? G.t('Lộn để lại bóng mờ {0} giây, quái nhắm vào bóng; hồi {1} giây', so(sk.giay), so(sk.hoi)) : G.t('Lộn để lại bóng mờ đứng tại chỗ {0} giây, quái nhắm vào bóng', so(sk.giay));
       case 'amSat': return G.t('Đánh trúng sau lưng quái chắc chắn chí mạng, hồi {0} giây', so(sk.hoi));
       case 'nhuaRung': return G.t('Đứng yên từ {0} giây: hồi {1}% máu tối đa mỗi giây', so(sk.dung), so(sk.hoi * 100));
-      case 'gaiDoc': return G.t('Quái đánh trúng Zed bị nhiễm độc nhẹ');
+      case 'gaiDoc': return G.t('Quái đánh trúng Cu Tí bị nhiễm độc nhẹ');
       case 'bayDayLeo': return G.t('Đòn giữ rồi thả trói chân quái trúng đòn {0} giây', so(sk.giay));
       case 'khienNuoc': return sk.toiDa ? G.t('Mỗi {0} giây có 1 lớp khiên chặn 1 đòn (tối đa {1}% máu)', so(sk.hoi), pt(sk.toiDa)) : G.t('Mỗi {0} giây có 1 lớp khiên chặn trọn 1 đòn', so(sk.hoi));
       case 'songDoi': return G.t('Lộn đẩy lùi quái ở gần (bán kính {0})', sk.banKinh);
