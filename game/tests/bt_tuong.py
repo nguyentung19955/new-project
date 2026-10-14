@@ -7,7 +7,7 @@ from quai_lib import sync_playwright, open_page
 
 JS = r"""
 () => {
-  const BT = G.baoTruoc; G.BT_PIXEL = true;
+  const BT = G.baoTruoc; G.BT_PIXEL = true; G.BT_ANH = false; // 14/10: so mặt nạ kiểu điểm ảnh (kiểu ảnh lớp đất tắt)
   const { W } = T.room(1, 2, { seed: 3 });
   const out = [];
   const cases = [

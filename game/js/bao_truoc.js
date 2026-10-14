@@ -6,6 +6,7 @@
 // gốc ra (quạt theo bán kính, đường thẳng theo chiều đòn, tròn từ tâm, vành từ trong ra), đầy đúng lúc đòn ra;
 // đòn ra thì chớp sáng một nhịp rồi tan (~0,2 giây). Màu pha nhẹ theo hệ (băng xanh, độc lục, lửa cam) nhưng vẫn là đỏ.
 // Vì #ui nằm trên #world, chỗ thân em bé và quái đứng được xoá bớt (mềm) để vùng trông như nằm dưới chân.
+// 14/10: mặc định vẽ bằng ẢNH HOẠT ẢNH 8 khung ở LỚP ĐẤT (BT.dat, mục "KIỂU ẢNH" bên dưới); đường #ui ở trên chỉ còn làm dự phòng (?baoanh=0).
 (function () {
   const G = window.G;
   const A = G.art;
@@ -21,6 +22,7 @@
   const seen = new WeakMap(); // vật -> lúc thấy lần đầu (G.time), để làm hiện ra mượt cho vùng không có t0
   const fired = new WeakSet(); // vùng đã chớp nổ (khỏi chớp hai lần)
   let curW = null;
+  let datXong = false; // kiểu ảnh: lớp đất của khung này đã vẽ (BT.dat) — vùng thêm sau đó vẽ ngay lên #world
 
   // màu: đỏ nguy hiểm pha nhẹ theo hệ
   const TINT = { ice: [70, 160, 255, 0.24], poison: [120, 220, 40, 0.15], fire: [255, 150, 20, 0.3] };
@@ -41,7 +43,10 @@
   }
 
   // ---------- thu thập trong khung hình ----------
-  BT.add = function (it) { if (BT.q.length < 400) BT.q.push(it); };
+  BT.add = function (it) {
+    if (datXong && G.wx && veAnh(G.wx, it, 0, 0)) return; // kiểu ảnh (14/10): lớp đất đã vẽ xong trong khung này → vẽ ngay lên #world, trước thân quái
+    if (BT.q.length < 400) BT.q.push(it);
+  };
   function geo(z) {
     const it = { k: z.shape, x: z.x, y: z.y, el: z.el || null };
     if (z.shape === 'circle') { it.r = z.r; it.ky = G.ZK || 0.6; }
@@ -535,7 +540,8 @@
   let pcv = null, pcx = null, pid = null, pbuf = null;
   const DWH = [0, 0];
   // Vẽ mọi vùng báo của khung này kiểu điểm ảnh lên tấm phụ c (đang ở phép biến đổi thế giới × sc). Trả về false nếu lỗi.
-  function pxDraw(c, q, cam, sx, sy, bx, by, bw, bh) {
+  function pxDraw(c, q, cam, sx, sy, bx, by, bw, bh, gone, ghosts) {
+    gone = gone || BT.gone; ghosts = ghosts || BT.ghosts;
     // vùng điểm ảnh thế giới cần tô: khung bao màn hình (bx, by, bw, bh) đổi về toạ độ thế giới
     const ox = -cam + (sx || 0), oy = sy || 0;
     const X0 = Math.floor(bx - ox), Y0 = Math.floor(by - oy), W0 = bw + 2, H0 = bh + 2;
@@ -554,14 +560,181 @@
     const d = pid.data;
     DWH[0] = W0; DWH[1] = H0;
     for (const it of q) pxItem(d, DWH, X0, Y0, it, 0, 0);
-    for (const g of BT.gone) { const f = (G.time - g.at) / CANCEL; g.dim = (1 - f) * (1 - f); g.age = 1; pxItem(d, DWH, X0, Y0, g, 2, 0); }
-    for (const g of BT.ghosts) pxItem(d, DWH, X0, Y0, g, 1, (G.time - g.at) / FLASH);
+    for (const g of gone) { const f = (G.time - g.at) / CANCEL; g.dim = (1 - f) * (1 - f); g.age = 1; pxItem(d, DWH, X0, Y0, g, 2, 0); }
+    for (const g of ghosts) pxItem(d, DWH, X0, Y0, g, 1, (G.time - g.at) / FLASH);
     pcx.putImageData(pid, 0, 0);
     BT._px = { X0, Y0, W0, H0, data: d }; // bài kiểm tra đọc lại (game/tests/bt_khop.py)
     c.imageSmoothingEnabled = false;
     c.drawImage(pcv, 0, 0, W0, H0, X0, Y0, W0, H0);
     return true;
   }
+
+  // ---------- KIỂU ẢNH HOẠT ẢNH 8 KHUNG (14/10, chủ dự án 08:44–08:59) ----------
+  // Ảnh docs/anh-goc/bao-truoc → gd-bt-tron / gd-bt-vanh / gd-bt-quat / gd-bt-dai (một hàng 8 khung; dựng bằng
+  // docs/review/ke-hoach-cai-thien/npc-ban-do-bao-truoc/cong-cu/dung-bao-truoc.py). Khung 1 viền mờ → 2–6 lấp dần → 7 đầy → 8 chớp nổ.
+  // Khung = floor(tiến độ × 7) (tiến độ u: cùng t0 / thời điểm nổ mà kiểu cũ dùng cho phần "lấp dần"), khung 8 lúc nổ (thay chớp cũ).
+  // Vẽ ở LỚP ĐẤT (#world, ngay trước khi vẽ nhân vật / quái, BT.dat gọi từ G.drawWorld) nên tự nằm dưới chân mọi thứ:
+  // không còn chụp nền (BT.snap), so điểm ảnh, xoá chỗ thân (maskOut) — phần tốn máy nhất của kiểu cũ.
+  // Chỉ đổi cách vẽ: thời gian báo trước, vùng va chạm, sát thương giữ nguyên. Thiếu ảnh (hoặc hình không có ảnh: tường nước, đường ngắm)
+  // thì hình đó vẽ kiểu điểm ảnh cũ ngay trên lớp đất. CỜ TẮT: ?baoanh=0 hoặc G.BT_ANH = false → đường cũ y nguyên (#ui + snap + maskOut).
+  let tatAnh = false;
+  try { tatAnh = /[?&]baoanh=0\b/i.test(String(window.location && window.location.search)); } catch (e) { tatAnh = false; }
+  if (G.BT_ANH == null) G.BT_ANH = !tatAnh;
+  // hình học trên ảnh (điểm ảnh của tấm, in ra bởi dung-bao-truoc.py): o cỡ ô khung; R bán kính vòng; r0 bán kính trong của vành;
+  // quạt: dinh = đỉnh (gốc) trên ô, nua = nửa góc mở (độ); dải: x0..x1 thân dải theo chiều dài, nua = nửa bề dày thân dải.
+  const HA = {
+    tron: { ma: 'gd-bt-tron', o: [184, 184], R: 64 },
+    vanh: { ma: 'gd-bt-vanh', o: [184, 184], R: 64, r0: 47.21 },
+    quat: { ma: 'gd-bt-quat', o: [70, 114], dinh: [2.01, 57], R: 64, nua: 44 },
+    dai: { ma: 'gd-bt-dai', o: [170, 28], x0: 4.8, x1: 164.8, nua: 6.87 },
+  };
+  BT.HA = HA;
+  const gdAnh = (ma) => { const SC = G.spriteCustom; return SC && SC.gdSan ? SC.gdSan(ma) : null; };
+  const anhBat = () => G.BT_ANH !== false && !G.noRender;
+  BT.anhBat = anhBat;
+  // tấm đã nhuộm nhẹ theo hệ (băng / độc / lửa: cùng bảng TINT với kiểu cũ, đỏ vẫn là chủ đạo); nhớ theo ảnh gốc
+  const NH = new Map();
+  function tam(kieu, el) {
+    const h = HA[kieu], g = gdAnh(h.ma);
+    if (!g || !g.img) return null;
+    if (g.img.width < h.o[0] * 8) return null; // ảnh lạ (sai cỡ): không dùng
+    const t = TINT[el];
+    if (!t) return g.img;
+    const key = kieu + '|' + el;
+    let e = NH.get(key);
+    if (e && e.src === g.img) return e.cv;
+    const cv = document.createElement('canvas'); cv.width = g.img.width; cv.height = g.img.height;
+    const x = cv.getContext('2d'); x.drawImage(g.img, 0, 0);
+    x.globalCompositeOperation = 'source-atop'; x.fillStyle = 'rgba(' + t[0] + ',' + t[1] + ',' + t[2] + ',' + (t[3] * 0.85).toFixed(3) + ')'; x.fillRect(0, 0, cv.width, cv.height);
+    NH.set(key, (e = { src: g.img, cv }));
+    return cv;
+  }
+  // vành có bán kính trong / ngoài khác ảnh gốc: dời bán kính từng điểm ảnh (giữ góc) để dải vành ảnh nằm đúng r0..r1; nhớ theo tỉ lệ (bước 0,05)
+  const VR = new Map();
+  function tamVanh(el, ti) {
+    const src = tam('vanh', el);
+    if (!src) return null;
+    const h = HA.vanh, q = clamp(Math.round(ti * 20) / 20, 0, 0.95), key = el + '|' + q;
+    let e = VR.get(key);
+    if (e && e.src === src) return e.cv;
+    let cv = src;
+    try {
+      const W = src.width, H = src.height, o = h.o[0], c = o / 2, R = h.R, r0 = h.r0, rin = q * R;
+      const t = document.createElement('canvas'); t.width = W; t.height = H;
+      const x = t.getContext('2d', { willReadFrequently: true }); x.drawImage(src, 0, 0);
+      const a = x.getImageData(0, 0, W, H), b = x.createImageData(W, H), A = a.data, B = b.data;
+      for (let f = 0; f < 8; f++) for (let j = 0; j < o; j++) for (let i = 0; i < o; i++) {
+        const dx = i + 0.5 - c, dy = j + 0.5 - c, rho = Math.hypot(dx, dy);
+        if (rho < rin) continue;
+        const sr = rho >= R ? rho : r0 + ((rho - rin) * (R - r0)) / Math.max(0.5, R - rin), k = rho > 0 ? sr / rho : 0;
+        const sx = Math.floor(c + dx * k), sy = Math.floor(c + dy * k);
+        if (sx < 0 || sy < 0 || sx >= o || sy >= o) continue;
+        const si = (sy * W + f * o + sx) * 4, di = (j * W + f * o + i) * 4;
+        B[di] = A[si]; B[di + 1] = A[si + 1]; B[di + 2] = A[si + 2]; B[di + 3] = A[si + 3];
+      }
+      x.putImageData(b, 0, 0); cv = t;
+    } catch (err) { cv = src; } // không đọc được điểm ảnh: dùng ảnh gốc co theo r1
+    if (VR.size > 24) VR.clear();
+    VR.set(key, (e = { src, cv }));
+    return cv;
+  }
+  let oCv = null, oCx = null; // tấm phụ để xoá khe vành / quạt (destination-out) mà không xoá nền
+  function tamPhu(w, h) {
+    if (!oCv) { oCv = document.createElement('canvas'); oCx = oCv.getContext('2d'); }
+    if (oCv.width < w || oCv.height < h) { oCv.width = Math.max(w, oCv.width); oCv.height = Math.max(h, oCv.height); }
+    oCx.setTransform(1, 0, 0, 1, 0, 0); oCx.globalCompositeOperation = 'source-over'; oCx.globalAlpha = 1; oCx.clearRect(0, 0, w, h); oCx.imageSmoothingEnabled = false;
+    return oCx;
+  }
+  // khung (0..7) và độ đậm theo kiểu vẽ: mode 0 báo trước (u), 1 nổ (f 0..1 của FLASH), 2 bị huỷ (mờ dần)
+  function khungVa(it, mode, f) {
+    if (mode === 1) return [7, f < 0.35 ? 1 : clamp(1 - (f - 0.35) / 0.65, 0, 1)];
+    const fi = Math.min(6, Math.max(0, Math.floor((it.u || 0) * 7)));
+    const ap = mode === 2 ? 1 : clamp((it.age || 0) / APPEAR, 0, 1), e = 1 - (1 - ap) * (1 - ap) * (1 - ap);
+    return [fi, e * (it.dim == null ? 1 : it.dim)];
+  }
+  // Vẽ một vùng bằng ảnh lên c (toạ độ thế giới). Trả về false nếu hình này không có ảnh (để vẽ kiểu cũ).
+  function veAnh(c, it, mode, f) {
+    if (!anhBat()) return false;
+    const k = it.k;
+    let kieu = k === 'circle' ? 'tron' : k === 'donut' ? (it.r0 < it.r1 * 0.15 ? 'tron' : 'vanh') : k === 'cone' ? (it.span >= TAU - 0.01 ? 'tron' : 'quat') : k === 'line' || k === 'rect' ? 'dai' : null;
+    if (!kieu) return false;
+    const src = kieu === 'vanh' ? tamVanh(it.el, it.r0 / Math.max(1, it.r1)) : tam(kieu, it.el);
+    if (!src) return false;
+    const [fi, al] = khungVa(it, mode, f);
+    if (al <= 0.003) return true;
+    const h = HA[kieu], ow = h.o[0], oh = h.o[1], sxo = fi * ow;
+    c.save();
+    c.globalAlpha *= al; c.imageSmoothingEnabled = false;
+    try {
+      if (kieu === 'tron' || kieu === 'vanh') {
+        const r = k === 'donut' ? it.r1 : it.r, ky = k === 'cone' ? 1 : it.ky || G.ZK || 0.6, s = r / h.R, w = ow * s, hh = oh * s * ky;
+        const gaps = k === 'donut' && it.gaps && it.gw ? it.gaps : null;
+        if (!gaps) c.drawImage(src, sxo, 0, ow, oh, it.x - w / 2, it.y - hh / 2, w, hh);
+        else {
+          // vành có khe: vẽ khung lên tấm phụ, xoá các cung khe bằng destination-out, rồi dán lên lớp đất
+          const N = G.NET || 1, pw = Math.ceil(w * N), ph = Math.ceil(hh * N), o = tamPhu(pw, ph);
+          o.drawImage(src, sxo, 0, ow, oh, 0, 0, pw, ph);
+          o.globalCompositeOperation = 'destination-out'; o.fillStyle = '#000';
+          o.translate(pw / 2, ph / 2); o.scale(1, ky);
+          const RR = Math.max(pw, ph);
+          for (const g of gaps) { o.beginPath(); o.moveTo(0, 0); o.arc(0, 0, RR, g - it.gw, g + it.gw); o.closePath(); o.fill(); }
+          c.drawImage(oCv, 0, 0, pw, ph, it.x - w / 2, it.y - hh / 2, w, hh);
+        }
+      } else if (kieu === 'quat') {
+        // đỉnh ảnh ở gốc vùng, xoay theo ang, giãn theo r; góc mở khác ảnh thì chia lát: mỗi lát xoay phần ảnh tương ứng vào đúng góc
+        const s = it.r / h.R, half = it.span / 2, ni = (h.nua * Math.PI) / 180, dx0 = -h.dinh[0] * s, dy0 = -h.dinh[1] * s;
+        c.translate(it.x, it.y); c.rotate(it.ang);
+        if (Math.abs(half - ni) < 0.03) c.drawImage(src, sxo, 0, ow, oh, dx0, dy0, ow * s, oh * s);
+        else {
+          const n = Math.max(3, Math.ceil(it.span / 0.12)), st = it.span / n, kk = ni / half, RR = it.r * 1.35;
+          for (let j = 0; j < n; j++) {
+            const a0 = -half + j * st, a1 = a0 + st;
+            const rot = j === 0 ? -half + ni : j === n - 1 ? half - ni : ((a0 + a1) / 2) * (1 - kk); // lát mép: khớp đúng viền mép ảnh
+            c.save(); c.beginPath(); c.moveTo(0, 0); c.arc(0, 0, RR, a0 - (j === 0 ? 0.35 : 0.004), a1 + (j === n - 1 ? 0.35 : 0.004)); c.closePath(); c.clip();
+            c.rotate(rot); c.drawImage(src, sxo, 0, ow, oh, dx0, dy0, ow * s, oh * s); c.restore();
+          }
+        }
+      } else {
+        // dải thẳng: thân dải (x0..x1, ±nua) kéo theo chiều dài và bề rộng vùng; chữ nhật đứng thì xoay dọc
+        let x = it.x, y = it.y, ang = it.ang || 0, len = it.len, wd = it.w;
+        if (k === 'rect') { if (it.w >= it.h) { y = it.y + it.h / 2; len = it.w; wd = it.h; ang = 0; } else { x = it.x + it.w / 2; ang = Math.PI / 2; len = it.h; wd = it.w; } }
+        const sx = Math.max(0.01, len) / (h.x1 - h.x0), sy = Math.max(2, wd) / 2 / h.nua;
+        c.translate(x, y); c.rotate(ang);
+        c.drawImage(src, sxo, 0, ow, oh, -h.x0 * sx, (-oh / 2) * sy, ow * sx, oh * sy);
+      }
+    } finally { c.restore(); }
+    return true;
+  }
+  BT.veAnh = veAnh;
+  // Gọi từ G.drawWorld ngay trước khi vẽ nhân vật (chỗ BT.snap cũ). Kiểu ảnh: vẽ mọi vùng của khung này lên lớp đất.
+  BT.dat = function (c, cam, sx, sy) {
+    datXong = false;
+    if (!BT.on || G.noRender) return;
+    if (!anhBat()) { BT.snap(c); return; }
+    need = false; snapOk = false;
+    try {
+      const W = G.getWorld ? G.getWorld() : null;
+      if (W !== curW) return; // phòng mới: để BT.draw cuối khung dọn danh sách như cũ
+      const con = [], conGone = [], conGhost = [];
+      for (const it of BT.q) if (!veAnh(c, it, 0, 0)) con.push(it);
+      for (const g of BT.gone) { const f = (G.time - g.at) / CANCEL; g.dim = (1 - f) * (1 - f); g.age = 1; if (!veAnh(c, g, 2, 0)) conGone.push(g); }
+      for (const g of BT.ghosts) if (!veAnh(c, g, 1, (G.time - g.at) / FLASH)) conGhost.push(g);
+      BT.q.length = 0;
+      if (con.length || conGone.length || conGhost.length) {
+        // hình không có ảnh (tường nước...): kiểu điểm ảnh cũ, vẽ thẳng lên lớp đất (không cần xoá chỗ thân)
+        const B = [1e9, 1e9, -1e9, -1e9];
+        for (const it of con) box(it, B); for (const g of conGone) box(g, B); for (const g of conGhost) box(g, B);
+        const ox = -cam + (sx || 0), oy = sy || 0;
+        const bx = clamp(Math.floor(B[0] + ox), 0, G.W), by = clamp(Math.floor(B[1] + oy), 0, G.H);
+        const bw = clamp(Math.ceil(B[2] + ox), 0, G.W) - bx, bh = clamp(Math.ceil(B[3] + oy), 0, G.H) - by;
+        if (bw > 0 && bh > 0) { c.save(); pxDraw(c, con, cam, sx, sy, bx, by, bw, bh, conGone, conGhost); c.restore(); }
+      }
+      datXong = true;
+    } catch (e) {
+      BT.errs++;
+      if (BT.errs <= 2 && window.console) console.warn('bao_truoc anh', e);
+    }
+  };
 
   // ---------- vẽ một lượt lên tấm phụ rồi dán lên #ui ----------
   let cv = null, cx = null;
@@ -574,7 +747,10 @@
     const tmp = lastSeen; lastSeen = nowSeen; nowSeen = tmp; nowSeen.clear();
     BT.ghosts = BT.ghosts.filter((g) => G.time - g.at >= 0 && G.time - g.at < FLASH);
     BT.gone = BT.gone.filter((g) => G.time - g.at >= 0 && G.time - g.at < CANCEL);
-    if ((!q.length && !BT.ghosts.length && !BT.gone.length) || G.noRender || !W) { q.length = 0; return; }
+    const daDat = datXong; datXong = false; // kiểu ảnh: ghosts / gone đã vẽ ở lớp đất; còn lại (nếu có) là vùng thêm muộn không có ảnh
+    const GH = daDat ? [] : BT.ghosts, GO = daDat ? [] : BT.gone;
+    if (daDat) need = false;
+    if ((!q.length && !GH.length && !GO.length) || G.noRender || !W) { q.length = 0; return; }
     try {
       const sc = G.uiScale || 1, cw = Math.max(1, Math.round(G.W * sc)), ch = Math.max(1, Math.round(G.H * sc));
       if (!cv) { cv = document.createElement('canvas'); cx = cv.getContext('2d'); }
@@ -583,8 +759,8 @@
       // khung bao (điểm ảnh màn hình game) của mọi hình trong khung này
       const B = [1e9, 1e9, -1e9, -1e9];
       for (const it of q) box(it, B);
-      for (const g of BT.ghosts) box(g, B);
-      for (const g of BT.gone) box(g, B);
+      for (const g of GH) box(g, B);
+      for (const g of GO) box(g, B);
       const ox = -cam + (sx || 0), oy = sy || 0;
       const bx = clamp(Math.floor(B[0] + ox), 0, G.W), by = clamp(Math.floor(B[1] + oy), 0, G.H);
       const bw = clamp(Math.ceil(B[2] + ox), 0, G.W) - bx, bh = clamp(Math.ceil(B[3] + oy), 0, G.H) - by;
@@ -593,14 +769,14 @@
       c.setTransform(1, 0, 0, 1, 0, 0);
       c.clearRect(dx, dy, dw, dh);
       c.setTransform(sc, 0, 0, sc, (-cam + (sx || 0)) * sc, (sy || 0) * sc);
-      if (G.BT_PIXEL) pxDraw(c, q, cam, sx, sy, bx, by, bw, bh); // kiểu điểm ảnh (mặc định từ 12/10)
+      if (G.BT_PIXEL) pxDraw(c, q, cam, sx, sy, bx, by, bw, bh, GO, GH); // kiểu điểm ảnh (mặc định từ 12/10)
       else {
         for (const it of q) {
           if (it.k === 'wall') drawWallGap(c, it, sc);
           drawTele(c, it, sc);
         }
-        for (const g of BT.ghosts) drawFlash(c, g, (G.time - g.at) / FLASH, sc);
-        for (const g of BT.gone) { const f = (G.time - g.at) / CANCEL; g.dim = (1 - f) * (1 - f); g.age = 1; drawTele(c, g, sc); }
+        for (const g of GH) drawFlash(c, g, (G.time - g.at) / FLASH, sc);
+        for (const g of GO) { const f = (G.time - g.at) / CANCEL; g.dim = (1 - f) * (1 - f); g.age = 1; drawTele(c, g, sc); }
       }
       if (need && BT.mask !== 0) {
         // xoá chỗ nhân vật: trong phần chung của khung bao lúc vẽ và phần nền đã chụp

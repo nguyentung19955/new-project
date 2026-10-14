@@ -15,6 +15,8 @@ REPO = os.path.dirname(ROOT)
 OUT = sys.argv[1] if len(sys.argv) > 1 else '/tmp/bt_khop'
 PRE = sys.argv[2] if len(sys.argv) > 2 else 'sau'
 EXTRA = sys.argv[3] if len(sys.argv) > 3 else ''
+# 14/10: G.baoTruoc._px chỉ có ở kiểu điểm ảnh; mặc định nay là ảnh hoạt ảnh ở lớp đất → bài này luôn bật lại đường điểm ảnh để so từng điểm
+if 'baoanh=' not in EXTRA: EXTRA += '&baoanh=0'
 SRV = os.environ.get('LK_SRV', os.path.join(REPO, 'docs', 'review', 'kiem-thu-12-10', 'srv.py'))
 os.makedirs(OUT, exist_ok=True)
 

@@ -911,6 +911,7 @@
       SC.veNguoiLang(c, sp, x, y, { anim: look ? 'noi' : 'idle', t: o && o.t != null ? o.t : G.time || 0, face: look < 0 ? -1 : 1, s: s || 1 });
       return true;
     };
+    VS.coAnh = function (k) { const sp = SC.cuaNguoiLang(k); return sp ? [sp.rong, sp.cao] : null; }; // [rộng, cao] điểm game: hộp chạm, đỉnh đầu
     VS.tuVeMat = function (ctx, k, cx, cy, s) {
       const sp = SC.cuaNguoiLang(k); if (!sp) return false;
       const m = vungMat(sp), k2 = Math.min((22 * s) / m[2], (22 * s) / m[3]), w = m[2] * k2, h = m[3] * k2, sm = ctx.imageSmoothingEnabled;

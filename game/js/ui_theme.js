@@ -40,7 +40,7 @@
   }
   T.clearCache = () => cache.clear();
   // ---------- ảnh AI cho hình lớn (phiên C3; trang tools/tach-giao-dien, lô "Hình lớn") ----------
-  // Mã tệp: gd-nut-noi-chuyen, -sang, -bam (64×64) · gd-the-ai, -chon, -khoa (38×30) · gd-the-trum, -chon, -khoa (42×34) · gd-trong-dong (42×42).
+  // Mã tệp: gd-nut-noi-chuyen, -sang, -bam (64×64) · gd-the-ai, -chon, -khoa (35×34, 14/10: bia đá, vẽ theo cỡ ảnh + neo mặt đồng) · gd-the-trum, -chon, -khoa (40×41) · gd-trong-dong (42×42).
   // Có tệp thì vẽ ảnh; không có thì vẽ code y như cũ (không đổi một điểm ảnh). Thiếu tệp trạng thái (-sang, -bam, -chon, -khoa) mà có tệp thường
   // thì game tự làm sáng / làm tối từ tệp thường. Ảnh KHÔNG đi qua bộ nhớ đệm `cache` ở trên: mỗi lần vẽ đều hỏi SC.gdSan,
   // nên ảnh nạp xong lúc nào hiện lúc đó, gỡ tệp ra thì về hình code ngay.
@@ -611,6 +611,10 @@
   // ---------- thẻ ải mặt trống ----------
   // st: 'done' đã qua (kèm sao) | 'open' đã mở, chưa qua | 'sel' đang chọn | 'lock' chưa mở. o: { boss: ải trùm (trống to hơn), r, noClick }
   // (x, y, w, h) là vùng chạm; mặt trống nằm giữa phía trên, sao nằm dưới. Trả về true khi được bấm (kể cả ải chưa mở thì không).
+  // Điểm neo thẻ ải ảnh (tỉ lệ rộng, cao của ảnh) — dựng bằng docs/review/ke-hoach-cai-thien/npc-ban-do-bao-truoc/cong-cu/dung-the-ai.py
+  const THE_NEO = { 'gd-the-ai': [0.514, 0.4], 'gd-the-trum': [0.578, 0.679] }; // thẻ thường: giữa mặt bia; thẻ trùm: mặt đồng
+  // Khoảng từ điểm ải (chỗ viết số) xuống đáy thẻ ảnh (điểm game), để nơi gọi viết sao / sức mạnh ngay dưới thẻ. null: thẻ vẽ code.
+  T.theDuoi = function (boss) { const ten = boss ? 'gd-the-trum' : 'gd-the-ai', ga = gdCo(ten); return ga && THE_NEO[ten] ? (1 - THE_NEO[ten][1]) * ga.cao : null; };
   T.stageCard = function (x, y, w, h, label, st, stars, o) {
     o = o || {};
     x = Math.round(x); y = Math.round(y);
@@ -632,7 +636,11 @@
     });
     const cx = x + w / 2, top = y + (o.top || 0);
     const cy = top + r + 4;
-    if (ga) { // ảnh đặt sao cho tâm ảnh trùng tâm mặt trống của hình code (chỗ game viết số ải)
+    const neo = ga && THE_NEO[tenGd];
+    if (ga && neo) { // 14/10: thẻ bia đá (docs/anh-goc/giao-dien/the-o-ai-6.png): vẽ đúng cỡ ảnh, điểm neo trùng chỗ game viết số ải
+      gdVe(ga, Math.round(cx - neo[0] * ga.rong), Math.round(cy - neo[1] * ga.cao), ga.rong, ga.cao);
+      if (lock && khoaCode) put(layer('sc|khoa', 5, 7, () => bmp(0, 0, BM.lock, { a: '#7f948e' })), Math.round(cx) - 2, cy - 3);
+    } else if (ga) { // ảnh đặt sao cho tâm ảnh trùng tâm mặt trống của hình code (chỗ game viết số ải)
       gdVe(ga, Math.round(cx - cw / 2), top - 1, cw, chh);
       if (lock && khoaCode) put(layer('sc|khoa', 5, 7, () => bmp(0, 0, BM.lock, { a: '#7f948e' })), Math.round(cx - cw / 2) + (cw >> 1) - 2, cy - 3);
     } else put(cv, Math.round(cx - cw / 2), top);
@@ -947,7 +955,7 @@
     // THỨ BẬC HÌNH ẢNH CỐ ĐỊNH của một trận (bac 1 = quan trọng nhất). Lớp có bậc lớn hơn (kém quan trọng hơn) KHÔNG được vẽ đè lên
     // lớp có bậc nhỏ hơn: trong một khung hình, lớp kém quan trọng vẽ trước, lớp quan trọng vẽ sau (cột "ve" = thứ tự vẽ, 1 là vẽ đầu tiên).
     thuBac: [
-      { bac: 1, lop: 'baoDon', ten: 'Vùng báo đòn', ve: 7, noi: 'js/bao_truoc.js — G.baoTruoc.draw, cuối G.drawWorld' },
+      { bac: 1, lop: 'baoDon', ten: 'Vùng báo đòn', ve: 7, noi: 'js/bao_truoc.js — G.baoTruoc.dat (ảnh, lớp đất, 14/10) / G.baoTruoc.draw (dự phòng, cuối G.drawWorld)' },
       { bac: 2, lop: 'nhanVat', ten: 'Nhân vật và quái', ve: 1, noi: 'lớp #world; chữ và khung không được đặt lên giữa sàn; vùng báo đòn tự khoét chỗ thân nhân vật' },
       { bac: 3, lop: 'mauTrum', ten: 'Thanh máu trùm / tinh anh, trạng thái trên thân', ve: 6, noi: 'js/stage.js drawHud("tren"): thanh máu quái, khung trùm, thẻ kháng/yếu, biểu tượng hệ' },
       { bac: 4, lop: 'soSatThuong', ten: 'Số sát thương', ve: 5, noi: 'js/fx.js drawNums' },

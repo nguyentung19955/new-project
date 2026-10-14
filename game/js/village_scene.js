@@ -50,6 +50,10 @@
   const mayOpen = () => { const st = (G.save && G.save.stars) || {}; return !!st['0-1'] || Object.keys(st).length >= 2; };
   const shown = (k) => k !== 'may' || mayOpen();
   VS.shown = shown;
+  // 14/10: người làng ảnh mới (nl-<mã>.sprite.json) cao/rộng hơn hình code: đỉnh đầu và bề ngang hộp chạm lấy theo ảnh (VS.coAnh do sprite_custom gắn)
+  const topOf = (k) => { const a = VS.coAnh && VS.coAnh(k); return a ? -Math.max(20, a[1] - 2) : NPCS[k].top; };
+  const halfW = (k) => { const a = VS.coAnh && VS.coAnh(k); return a ? Math.max(17, Math.ceil(a[0] / 2) + 2) : 17; };
+  VS.topOf = topOf;
   function drawNpc(c, kind, f, o) {
     o = o || {}; const N = NPCS[kind], w = N.wide, y = N.top, look = o.look || 0;
     // chân
@@ -747,7 +751,7 @@
     const wx = sx + S.cam, wy = sy - OY;
     for (let i = 0; i < 2; i++) { const w = G.weaponById(G.save.carry[i]); if (w && Math.abs(wx - S.wp[i].x) < 13 && wy > S.wp[i].y - 50 && wy < S.wp[i].y + 6) return { kind: 'weapon', id: w.id }; }
     let best = null, bd = 1e9;
-    for (const k of ORDER) { if (!shown(k)) continue; const q = NPCS[k].pos; if (Math.abs(wx - q[0]) < 17 && wy > q[1] - 40 && wy < q[1] + 10) { const d = Math.hypot(wx - q[0], wy - q[1] + 14); if (d < bd) { bd = d; best = { kind: 'npc', id: k }; } } }
+    for (const k of ORDER) { if (!shown(k)) continue; const q = NPCS[k].pos; if (Math.abs(wx - q[0]) < halfW(k) && wy > q[1] - Math.max(40, 4 - topOf(k)) && wy < q[1] + 10) { const d = Math.hypot(wx - q[0], wy - q[1] + 14); if (d < bd) { bd = d; best = { kind: 'npc', id: k }; } } }
     for (const st of seats()) if (Math.abs(wx - st.x) < 14 && wy > st.y - 32 && wy < st.y + 8) { const d = Math.hypot(wx - st.x, wy - st.y + 12); if (d < bd) { bd = d; best = { kind: 'kid', id: st.key, x: st.x, y: st.y }; } }
     if (!best && S.frogT <= 0 && Math.abs(wx - (B.gieng[0] - 9)) < 9 && Math.abs(wy - (B.gieng[1] - 12)) < 9) return { kind: 'frog' };
     return best;
@@ -1043,7 +1047,7 @@
       const f = look ? 0 : Math.floor(t * 2.4 + k.length * 0.7) % 3, blink = !look && ((t * 0.31 + k.length * 0.37) % 1) > 0.95;
       L.push([q[1], () => {
         putNpc(c, k, q[0] - cam, q[1], f, { look, blink, breath: t });
-        if (S.news[k] && S.talk !== k) bang(c, q[0] - cam - (k === 'ren' ? 6 : 0), q[1] + N.top - 9 + Math.round(Math.sin(t * 4) * 1.2));
+        if (S.news[k] && S.talk !== k) bang(c, q[0] - cam - (k === 'ren' && !(VS.coAnh && VS.coAnh(k)) ? 6 : 0), q[1] + topOf(k) - 9 + Math.round(Math.sin(t * 4) * 1.2));
       }]);
     }
     // ba bé ngồi chơi ở sân đình
@@ -1063,7 +1067,7 @@
       const hx = S.x, hy = S.y - 12;
       const sau = (q, top) => q[1] > S.y + 0.5 && Math.abs(S.x - q[0]) < 8 && S.y > q[1] + top; // đứng ngay sau người làng / các bé
       const che = Bt.objs.some((ob) => ob.y > S.y + 0.5 && hx >= ob.x + 3 && hx <= ob.x + (ob.w || ob.cv.width) - 3 && hy >= ob.y0 && hy <= ob.y0 + (ob.h || ob.cv.height))
-        || ORDER.some((k) => shown(k) && sau(NPCS[k].pos, NPCS[k].top)) || seats().some((st) => sau([st.x, st.y], -22));
+        || ORDER.some((k) => shown(k) && sau(NPCS[k].pos, topOf(k))) || seats().some((st) => sau([st.x, st.y], -22));
       if (che) drawKid(c, sv.hero, S.x - cam, S.y, S.face, { move: S.moving, alpha: 0.45, roundShadow: false });
     }
     // quầng sáng và đom đóm
@@ -1148,9 +1152,9 @@
     VS.drawStrip(S.goal && S.goal.kind === 'npc' ? S.goal.id : S.near && S.near.kind === 'npc' ? S.near.id : null, false);
     c.restore();
     // bong bóng tên chức năng trên đầu người đang ở gần
-    if (S.near && S.near.kind === 'npc' && !S.bubble) { const N = NPCS[S.near.id]; VS.bubble(G.t(N.viec) + (S.news[S.near.id] ? '  !' : ''), N.pos[0] - cam, N.pos[1] + N.top - 12 + OY, { bg: '#ffe9a8' }); }
+    if (S.near && S.near.kind === 'npc' && !S.bubble) { const N = NPCS[S.near.id]; VS.bubble(G.t(N.viec) + (S.news[S.near.id] ? '  !' : ''), N.pos[0] - cam, N.pos[1] + topOf(S.near.id) - 12 + OY, { bg: '#ffe9a8' }); }
     if (S.near && S.near.kind === 'kid') { const st = seats().find((q) => q.key === S.near.id); if (st) VS.bubble(G.HEROES[st.key].name, st.x - cam, st.y - 30 + OY, { bg: '#ffe9a8', size: 7.5 }); }
-    if (S.bubble) { const bq = S.bubble.who ? [NPCS[S.bubble.who].pos[0], NPCS[S.bubble.who].pos[1] + NPCS[S.bubble.who].top - 12] : S.bubble.at; VS.bubble(S.bubble.s, bq[0] - cam, bq[1] + OY, { maxW: 130 }); }
+    if (S.bubble) { const bq = S.bubble.who ? [NPCS[S.bubble.who].pos[0], NPCS[S.bubble.who].pos[1] + topOf(S.bubble.who) - 12] : S.bubble.at; VS.bubble(S.bubble.s, bq[0] - cam, bq[1] + OY, { maxW: 130 }); }
     // cần điều khiển
     const BA = G.btnArt;
     if (BA) {
@@ -1183,14 +1187,20 @@
   // ======================= tranh bản đồ vùng (Chú Lái Đò) =======================
   // Toạ độ 15 điểm ải trên tranh: 3 vùng, mỗi vùng 5 ải, ải thứ năm là trùm vùng.
   const MAP = (VS.MAP = {
+    // 14/10: theo tranh mới docs/anh-goc/nen-phong/ban-do-chon-ai.png (đặt thử: docs/review/ke-hoach-cai-thien/npc-ban-do-bao-truoc/xem-ban-do.png):
+    // Rừng già bên trái (rừng + thác), Hang biển dọc bờ biển dưới (hang đá), Lâu đài cổ trên phải (núi lửa + lâu đài). Ô ải đặt trên đất trống.
     nodes: [
-      [[86, 118], [112, 96], [140, 106], [164, 82], [192, 60]],
-      [[112, 186], [136, 208], [160, 180], [188, 206], [222, 182]],
-      [[246, 146], [270, 128], [296, 148], [322, 130], [326, 84]],
+      [[102, 172], [126, 136], [98, 104], [132, 74], [176, 66]],
+      [[206, 180], [248, 166], [290, 176], [336, 166], [396, 174]],
+      [[312, 114], [344, 96], [378, 78], [406, 102], [438, 80]],
     ],
-    from: [[40, 138], [70, 182], [192, 60]], // đường vào ải đầu của từng vùng
-    names: [[126, 34, '#2f5a3a'], [150, 236, '#2a5a7a'], [300, 44, '#7a2a22']], // chỗ ghi tên vùng và màu chữ
-    soon: [['Núi tuyết', 412, 34, 412, 92], ['Núi lửa', 436, 112, 436, 176], ['Đầm lầy', 372, 172, 0, 0]], // vùng sắp có
+    from: [[70, 206], [150, 214], [176, 66]], // đường vào ải đầu của từng vùng
+    names: [[44, 24, '#2f5a3a'], [196, 238, '#2a5a7a'], [372, 58, '#7a2a22']], // chỗ ghi tên vùng và màu chữ
+    bossLab: [[0, 31], [36, 4], [0, 31]], // chỗ ghi tên trùm, dời so với ô trùm
+    soon: [['Núi tuyết', 110, 52, 110, 62], ['Núi lửa', 318, 50, 318, 60], ['Đầm lầy', 247, 72, 247, 82]], // vùng sắp có (tranh đã vẽ sẵn ổ khoá ở vùng sương)
+    soonDash: [[0, 4, [118, 44]], [2, 0, [322, 46]], [0, 4, [240, 60]]], // đường nét đứt mờ [vùng, ải, tới điểm] dẫn về vùng sắp có
+    lang: [96, 222], // chữ "Làng"
+    doKho: [256, 7], // nút đổi độ khó (chỉ hiện khi đã qua 15 ải)
   });
   // D3 · tranh bằng ảnh AI (tools/tach-lang, lô "Tranh bản đồ vùng"; tệp gd-ban-do-vung, kiểu "giao-dien"): MỘT tấm kín 480×270 cho cả 3 vùng.
   // Có tệp thì dán ảnh thay tranh code (game vẫn kẻ viền tranh, vẫn nhân màu đêm cho độ khó 2); 15 thẻ ải, đường nét đứt, tên vùng do js/village.js vẽ đè

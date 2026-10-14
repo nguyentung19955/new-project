@@ -131,15 +131,16 @@
       if (r === 2) VS.mapDash(c, M.nodes[1][4], n[0], unlocked(2, 0, V.diff) ? ink : faint);
       for (let i = 0; i < 4; i++) VS.mapDash(c, n[i], n[i + 1], unlocked(r, i + 1, V.diff) ? ink : faint);
     }
-    VS.mapDash(c, M.nodes[2][4], [392, 70], faint); VS.mapDash(c, M.nodes[2][3], [420, 150], faint); VS.mapDash(c, M.nodes[1][4], [344, 194], faint);
+    for (const d of M.soonDash || []) VS.mapDash(c, M.nodes[d[0]][d[1]], d[2], faint);
     VS.putNpc(c, 'lai', 32, 264, Math.floor(G.time * 2) % 3, { look: 1, noShadow: true }, 2);
     // tên vùng, tên trùm, vùng sắp có
     const halo = night ? 'rgba(20,16,40,0.85)' : null;
-    inkText('Làng', 36, 110, 8, night ? '#e8dcc0' : '#4a3626', halo);
+    inkText('Làng', M.lang ? M.lang[0] : 36, M.lang ? M.lang[1] : 110, 8, night ? '#e8dcc0' : '#4a3626', halo);
     for (let r = 0; r < 3; r++) {
       const q = M.names[r], R = G.REGIONS[r], b = M.nodes[r][4];
       inkText(R.name, q[0], q[1], 10, night ? '#f1e6c6' : q[2], halo);
-      inkText(R.bossName, b[0] + (r === 2 ? 40 : 38), b[1] + (r === 2 ? -6 : 3), 6.5, night ? '#e8dcc0' : '#4a3626', halo);
+      const bl = M.bossLab ? M.bossLab[r] : [r === 2 ? 40 : 38, r === 2 ? -6 : 3];
+      inkText(R.bossName, b[0] + bl[0], b[1] + bl[1], 6.5, night ? '#e8dcc0' : '#4a3626', halo);
     }
     for (const q of M.soon) {
       inkText(q[0], q[1], q[2], 8, night ? '#8a86a8' : '#8a7a58', halo);
@@ -153,8 +154,9 @@
       const q = M.nodes[r][i], st = map[r + '-' + i] || 0, ok = unlocked(r, i, V.diff), boss = i === 4, rad = boss ? 12 : 10;
       const selc = V.sel && V.sel[0] === r && V.sel[1] === i;
       T.stageCard(q[0] - 20, q[1] - rad - 4, 40, 36, i + 1, !ok ? 'lock' : selc ? 'sel' : st ? 'done' : 'open', st, { r: rad, boss, noClick: true, noStars: true });
-      if (ok && st) inkText('★'.repeat(st) + '☆'.repeat(3 - st), q[0], q[1] + rad + 8.5, 6.5, '#ffd23f', 'rgba(74,54,38,0.95)');
-      else if (ok && !selc) { const need = G.stageRec(r, i, V.diff); inkText('⚔' + need, q[0], q[1] + rad + 8.5, 6.5, G.powerCol(pw, need), 'rgba(40,28,20,0.92)'); }
+      const duoi = T.theDuoi ? T.theDuoi(boss) : null, ty = q[1] + (duoi != null ? duoi + 5 : rad + 8.5); // 14/10: thẻ bia đá ảnh cao hơn trống cũ
+      if (ok && st) inkText('★'.repeat(st) + '☆'.repeat(3 - st), q[0], ty, 6.5, '#ffd23f', 'rgba(74,54,38,0.95)');
+      else if (ok && !selc) { const need = G.stageRec(r, i, V.diff); inkText('⚔' + need, q[0], ty, 6.5, G.powerCol(pw, need), 'rgba(40,28,20,0.92)'); }
       if (ok && G.click) { const d = Math.hypot(G.click.x - q[0], G.click.y - q[1]); if (d < hd) { hd = d; hit = [r, i]; } }
     }
     if (hit && !(G.click.x > 246 && G.click.y > 206)) { V.sel = hit; G.click = null; G.sfx('ui'); }
@@ -169,7 +171,8 @@
     // Đợt 6: cổng Ải ngày (js/ai_ngay.js) — mở sau khi hạ trùm vùng 1; chấm đỏ khi hôm nay còn lượt
     if (G.aiNgay && G.aiNgay.bat() && G.aiNgay.mo(sv) && T.sbtn(404, 30, 68, 18, 'Ải ngày', { size: 8, pad: 4, dot: G.aiNgay.coLuot(sv) })) { V.tab = 'aingay'; G.sfx('ui'); return; }
     if (all) {
-      if (T.sbtn(330, 182, 142, 19, V.diff ? 'Độ khó 2 (chạm để đổi)' : 'Độ khó thường (chạm để đổi)', { size: 7.5, pad: 3, sel: !!V.diff })) { V.diff = V.diff ? 0 : 1; pickNext(); }
+      const dk = M.doKho || [330, 182];
+      if (T.sbtn(dk[0], dk[1], 142, 19, V.diff ? 'Độ khó 2 (chạm để đổi)' : 'Độ khó thường (chạm để đổi)', { size: 7.5, pad: 3, sel: !!V.diff })) { V.diff = V.diff ? 0 : 1; pickNext(); }
     }
     // thẻ thông tin ải và nút Lên đò
     T.panel(248, 206, 226, 60, null, { plain: true, noBand: true });

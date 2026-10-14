@@ -1109,7 +1109,7 @@
     list.push({ y: P.y, f: () => { const on = xf && xf(c, P, 0); A.hero(c, G.heroArgs(P)); if (on) c.restore(); if (ent) ent(c, P); } });
     if (F && F.sorted) F.sorted(list, c);
     for (const pr of W.props) if (pr.type === 'loot') A.prop(c, pr); // đồ rơi nằm ở lớp sàn: không che quái, em bé, vùng báo trước (js/do_roi.js)
-    if (G.baoTruoc) G.baoTruoc.snap(c); // chụp nền (đã có vũng, vết) trước khi vẽ nhân vật: để vùng báo trước nằm dưới nhân vật
+    if (G.baoTruoc) { if (G.baoTruoc.dat) G.baoTruoc.dat(c, cam, sx, sy); else G.baoTruoc.snap(c); } // 14/10: vùng báo trước bằng ảnh vẽ ở lớp đất, trước nhân vật (?baoanh=0: chụp nền như cũ)
     list.sort((a, b) => a.y - b.y);
     for (const o of list) o.f();
     if (G.mobHeroOver) G.mobHeroOver(c, P); // em bé đứng sau quái to: vẽ thêm bóng mờ của bé lên trên để không bị che mất

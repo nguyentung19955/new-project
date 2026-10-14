@@ -8,6 +8,7 @@ JS = r"""
 () => {
   const out = [], ok = (n, c, d) => out.push([n, !!c, d || '']);
   const BT = G.baoTruoc;
+  G.BT_ANH = false; // 14/10: bài này kiểm đường #ui cũ (vẽ mịn / điểm ảnh + xoá chỗ thân); kiểu ảnh ở lớp đất là mặc định, tắt ở đây
   ok('có G.baoTruoc', !!BT && typeof BT.draw === 'function');
   const { W, P } = T.room(0, 2, { seed: 5 });
   P.x = 200; P.y = 170;
