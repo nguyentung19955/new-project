@@ -559,6 +559,21 @@
       }
       return;
     }
+    // 14/10 (cờ tắt ?hutrum=0): ảnh sóng thần hu-song-than của Ngư Tinh xếp nối dọc bức tường (chừa khe), chỉ trong sàn phòng; mép trước vẫn chấm đỏ cam.
+    if (z.src && z.src.isBoss && G.huTrum && G.huTrum('hu-song-than')) {
+      const W0 = G.getWorld(), FA = G.fxAnh, so = FA.ds['hu-song-than'].so, co = 0.75, L = [];
+      for (let b = -z.half, i = 0; b <= z.half; b += 14, i++) {
+        if (Math.abs(b - z.g) <= z.gw + 6) continue;
+        const q = at(z.s, b);
+        if (W0 && (q[0] < W0.x0 - 6 || q[0] > W0.x1 + 6 || q[1] < W0.y0 - 6 || q[1] > W0.y1 + 10)) continue;
+        L.push([q[0], q[1] + 4, i]);
+      }
+      L.sort((p1, p2) => p1[1] - p2[1]);
+      for (const [x, y, i] of L) FA.veK(c, 'hu-song-than', x, y, (Math.floor(t * 12) + i * 2) % so, 0, co, cs < 0);
+      for (let b = -z.half; b <= z.half; b += 2) { if (Math.abs(b - z.g) <= z.gw) continue; if (((b >> 1) + ((t * 16) | 0)) % 3) { const q = at(z.s + z.th / 2 + 3, b); p(c, q[0], q[1], 1, 2, '#ff5a40'); } }
+      for (const s of [-1, 1]) { const q = at(z.s, z.g + s * z.gw); p(c, q[0] - 1, q[1] - 1, 3, 3, '#ffffff'); }
+      return;
+    }
     for (let b = -z.half; b <= z.half; b += 2) {
       if (Math.abs(b - z.g) <= z.gw) continue;
       const o = Math.sin(b * 0.2 + t * 12) * 2;

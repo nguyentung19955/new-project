@@ -118,6 +118,11 @@
   function aimFace(b, a) { b.dirA = a; if (Math.abs(Math.cos(a)) > 0.15) b.face = Math.cos(a) > 0 ? 1 : -1; }
   // Lao thân: dời vị trí thật trong T giây theo góc a, quãng L (giữ trong sàn)
   function lunge(b, a, L, T) { b.lunge = { vx: Math.cos(a) * L / T, vy: Math.sin(a) * L / T, t: T }; }
+  // 14/10 (cờ tắt ?hutrum=0, js/fx_anh.js): ảnh hiệu ứng chiêu trùm (hu-*) đặt đúng chỗ một vùng sát thương thật, phát trong `giay` giây,
+  // bắt đầu sớm `lead` giây để khung "chạm đất" trùng lúc vùng nổ (sau t giây). Chỉ là hình: vùng, sát thương, thời gian giữ nguyên.
+  function anhVung(b, ma, x, y, t, lead, giay, sc) {
+    later(b, Math.max(0, t - lead), () => { if (!b.dead && G.huTrum && G.huTrum(ma) && G.fx && G.fx.anh) G.fx.anh(ma, x, y, { t: giay, gian: true, sc }); });
+  }
 
   // ======================= CHIÊU CỦA TRÙM VÙNG =======================
   // Mỗi chiêu: anim cX đã gồm báo trước → ra đòn → dư âm; T là lúc vùng đỏ nổ (mốc moc[0]), D là độ dài cả chiêu.
@@ -143,7 +148,7 @@
         later(b, T, () => { for (let i = 1; i <= 3; i++) G.zoneCircle(clamp(b.x + Math.cos(a) * i * 34, W().x0, W().x1), clamp(b.y + Math.sin(a) * i * 34, W().y0, W().y1), 15, 0, b.dmg * 0.4, 'ice', { pool: true, life: 2, tick: 0.3 }); });
       } },
       c4: { name: 'Mưa băng nhọn', f(b, P, T, D) { // băng rơi thẳng xuống 7 chỗ quanh em bé
-        for (let i = 0; i < 7; i++) { const q = i ? near(P.x, P.y, 75, 45) : [P.x, P.y]; circle(q[0], q[1], 16, T + i * 0.08, b.dmg, 'ice', { fxKind: 'spout' }); }
+        for (let i = 0; i < 7; i++) { const q = i ? near(P.x, P.y, 75, 45) : [P.x, P.y]; circle(q[0], q[1], 16, T + i * 0.08, b.dmg, 'ice', { fxKind: 'spout' }); anhVung(b, 'hu-bang-nhon-roi', q[0], q[1], T + i * 0.08, 0.2, 0.6, 0.9); }
       } },
       c5: { name: 'Xoáy nước', near: true, f(b, P, T, D) { // xoáy quanh thân rồi bung vòng sóng (đứng ngoài xa, hoặc chạy vào giữa sau khi xoáy tan)
         circle(b.x, b.y, 60, T, b.dmg * 1.3, 'ice');
@@ -161,19 +166,22 @@
           const x = b.x + Math.cos(a + off) * (26 + i * 22), y = b.y + Math.sin(a + off) * (26 + i * 22);
           if (x < W().x0 - 4 || x > W().x1 + 4 || y < W().y0 - 4 || y > W().y1 + 4) continue;
           circle(x, y, 14, T + i * 0.09, b.dmg * 1.1, null, { fxKind: 'root' });
+          anhVung(b, 'hu-gai-re', x, y, T + i * 0.09, 0.2, 0.6, 0.8);
         }
       } },
       c3: { name: 'Mưa quả độc', f(b, P, T, D) { // quả độc vỡ thành vũng độc
         const n = b.phase >= 2 ? 6 : 5;
-        for (let i = 0; i < n; i++) { const q = i ? near(P.x, P.y, 70, 40) : [P.x, P.y]; circle(q[0], q[1], 18, T + i * 0.1, b.dmg * 0.8, 'poison', { then: 3.5, fxKind: 'fruit' }); }
+        for (let i = 0; i < n; i++) { const q = i ? near(P.x, P.y, 70, 40) : [P.x, P.y]; circle(q[0], q[1], 18, T + i * 0.1, b.dmg * 0.8, 'poison', { then: 3.5, fxKind: 'fruit' }); anhVung(b, 'hu-qua-doc-roi', q[0], q[1], T + i * 0.1, 0.14, 0.7, 1); }
         later(b, D, () => tire(b, 1.0)); // GĐ2 (V14): mệt sau chiêu lớn ngay từ pha 1
       } },
       c4: { name: 'Bùa bay', f(b, P, T, D, a) { // năm lá bùa bay uốn lượn đuổi theo em bé rồi cháy nổ
         later(b, T, () => { for (let i = 0; i < 5; i++) shot(b, a + (i - 2) * 0.45, 62, { kind: 'bua', homing: 44, t: 3.6, dmg: b.dmg * 0.85, el: 'poison' }); });
       } },
-      c5: { name: 'Rừng gai', near: true, f(b, P, T, D) { // ba vòng gai lan ra, mỗi vòng chừa bốn khe để né
-        const R = [[24, 58], [58, 92], [92, 126]];
-        R.forEach((r, i) => { const o = G.rnd() * TAU; Z('donut', { x: b.x, y: b.y, r0: r[0], r1: r[1], gaps: [0, 1, 2, 3].map((k) => o + k * PI / 2), gw: 0.3 }, T + i * 0.38, b.dmg * 1.2, 'poison'); });
+      c5: { name: 'Rừng gai', near: true, f(b, P, T, D, a, sp) { // ba vòng gai lan ra, mỗi vòng chừa bốn khe để né
+        const R = [[24, 58], [58, 92], [92, 126]], khe = [];
+        R.forEach((r, i) => { const o = G.rnd() * TAU, gaps = [0, 1, 2, 3].map((k) => o + k * PI / 2); khe.push(gaps); Z('donut', { x: b.x, y: b.y, r0: r[0], r1: r[1], gaps, gw: 0.3 }, T + i * 0.38, b.dmg * 1.2, 'poison'); });
+        // 14/10: hình gai rễ (ảnh hu-gai-re, js/monster_art.js mocTinh c5) vẽ theo đúng ba vòng này: bán kính, khe, lúc nổ (tính theo giờ của cử động)
+        if (b.an) b.an.vongGai = { R, khe, gw: 0.3, t: R.map((r, i) => (T + i * 0.38) * (sp || 1)) };
         later(b, D, () => tire(b, 1.5));
       } },
     },
@@ -435,7 +443,8 @@
       const s = pha3 ? 0.72 : 1; // Hồ Tinh pha 3 to gấp rưỡi: thu nhỏ cho vừa phòng
       b.drawW = (pha3 ? 281 : b.kind === 'ho' ? 174 : 150) * s; b.drawH = (pha3 ? 174 : b.h) * s;
       const fk = G.fx && G.fx.chop ? G.fx.chop() : 1; // khựng hình: chỉ khung đầu chớp trắng hẳn (js/fx.js)
-      const o = { anim: n, t, face: b.face, dir: b.dirA != null ? b.dirA : b.face > 0 ? 0 : PI, phase, hit: b.flash > 0 ? 0.7 * fk : 0, chop: fk, tint: G.fx && G.fx.dotTint ? G.fx.dotTint(b) : null, bao: false }; // nhịp độc/cháy: nhuộm màu hệ thay chớp trắng
+      const o = { anim: n, t, face: b.face, dir: b.dirA != null ? b.dirA : b.face > 0 ? 0 : PI, phase, hit: b.flash > 0 ? 0.7 * fk : 0, chop: fk, tint: G.fx && G.fx.dotTint ? G.fx.dotTint(b) : null, bao: false,
+        huTrum: true, vongGai: b.an && b.an.n === n && b.an.vongGai ? b.an.vongGai : null }; // 14/10: ảnh chiêu trùm (js/monster_art.js MA.huTrum) // nhịp độc/cháy: nhuộm màu hệ thay chớp trắng
       // Phiên E2 (chỉ khi trùm dùng ảnh AI, chỉ là hình, không đổi luật): hình vẽ bằng code tự chớp trắng lúc sắp ra đòn và lúc đổi dáng giữa cảnh chuyển pha, ảnh AI thì mất.
       // 1) 0,25 giây cuối trước khi đòn ra (b.wind, cùng mốc với dấu "!" của quái): thân nhấp nháy trắng. 2) Có tệp dáng pha (<mã>-p2 / -p3, js/sprite_custom.js): chớp trắng che lúc đổi dáng.
       if (anhAI && b.dying == null) {

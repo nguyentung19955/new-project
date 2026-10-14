@@ -232,6 +232,16 @@
     }
     if (o.team === 'player') return art0(c, o);
     if (G.noRender) return art0(c, o);
+    // 14/10 (cờ tắt ?hutrum=0): cầu lửa ma của Hồ Tinh (chiêu Hồ hoả, Bão hồ hoả) vẽ bằng ảnh hu-cau-lua-ma (cáo lửa, lặp), lật theo hướng bay
+    if (o.kind === 'fire' && o.src && o.src.isBoss && o.src.kind === 'ho' && G.huTrum && G.huTrum('hu-cau-lua-ma')) {
+      try {
+        const x = Math.round(o.x), y = Math.round(o.y - (o.z || 10));
+        c.fillStyle = 'rgba(0,0,0,0.3)'; c.fillRect(x - 4, Math.round(o.y), 8, 1);
+        FA().ve(c, 'hu-cau-lua-ma', x, y, o.fxT || G.time, Math.atan2(o.vy, o.vx), 0.8);
+        if (((G.time * 8) | 0) % 2) { c.fillStyle = '#ff3a22'; c.fillRect(x - 1, y - 16, 2, 1); }
+        return;
+      } catch (e) { fail(e); }
+    }
     try {
       const L = lookOf(o), f = Math.floor(G.time * 10 + (o.x + o.y) * 0.01) & 1;
       const ang = L === 'bubble' || L === 'fruit' || L === 'cannon' || L === 'bua' ? 0 : Math.atan2(o.vy, o.vx);

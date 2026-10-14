@@ -20,6 +20,10 @@
   // Thử nhanh không cần sửa code: thêm ?tile=0 vào cuối địa chỉ trang.
   G.TILE_RUNG = true;
   if (typeof location !== 'undefined' && /[?&]tile=0(&|$)/.test(location.search || '')) G.TILE_RUNG = false;
+  // 14/10 (YEU-CAU-MOC-HO-HIEU-UNG-NEN.md): sàn, tường, nền ngoài, phủ mép của HANG BIỂN và LÂU ĐÀI CỔ lát bằng ảnh (gd-nen-bien-*, gd-nen-lau-*;
+  // js/room_art.js tileVung), cùng chuẩn bộ Rừng. Thiếu tệp bắt buộc thì vẽ code như cũ. Tắt: ?nentile=0 (hoặc G.NEN_TILE = false).
+  G.NEN_TILE = true;
+  if (typeof location !== 'undefined' && /[?&]nentile=0(&|$)/.test(location.search || '')) G.NEN_TILE = false;
 
   G.EL = {
     fire: { name: 'Lửa', col: '#ff7a2a', col2: '#ffd23f', dark: '#a8320a' },

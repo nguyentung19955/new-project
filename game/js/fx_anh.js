@@ -67,6 +67,14 @@
   try { d3Tat = typeof location !== 'undefined' && /[?&]hudot3=0\b/i.test(String(location.search || '')); } catch (e) { d3Tat = false; }
   if (G.HU_DOT3 == null) G.HU_DOT3 = !d3Tat;
   G.huDot3 = (ma) => G.HU_DOT3 !== false && FA.co(ma);
+  // ---------- HIỆU ỨNG CHIÊU TRÙM VÙNG (14/10, docs/review/ke-hoach-cai-thien/trum-moi/YEU-CAU-MOC-HO-HIEU-UNG-NEN.md) ----------
+  // hu-song-than, hu-bang-nhon-roi, hu-xoay-nuoc, hu-phun-bang (Ngư Tinh), hu-gai-re, hu-qua-doc-roi, hu-la-chem (Mộc Tinh),
+  // hu-cau-lua-ma (Hồ Tinh), hu-doi-pha (cả ba trùm lúc đổi pha). Bật mặc định khi có ảnh; cờ tắt ?hutrum=0 (hoặc G.HU_TRUM = false)
+  // → mọi chỗ vẽ bằng code như cũ. G.huTrum(mã): cờ bật VÀ ảnh mã đó đã sẵn sàng. Chỉ là hình: không đổi vùng, sát thương, thời gian.
+  let tTat = false;
+  try { tTat = typeof location !== 'undefined' && /[?&]hutrum=0\b/i.test(String(location.search || '')); } catch (e) { tTat = false; }
+  if (G.HU_TRUM == null) G.HU_TRUM = !tTat;
+  G.huTrum = (ma) => G.HU_TRUM !== false && FA.co(ma);
   // Nhuộm màu (ảnh trắng-xám, game tự nhuộm): nhân màu rồi cộng lại một phần ảnh gốc cho lõi còn sáng (cùng cách js/fx_he.js nhuộm
   // vòng tụ lực). kieu 'sang': chỉ nhuộm điểm sáng gần trắng (ánh trong khe nứt), phần còn lại giữ màu gốc.
   // Tấm nhuộm làm MỘT lần cho mỗi (mã, màu, kiểu) rồi dùng lại. Lỗi (không có canvas) thì vẽ ảnh gốc.

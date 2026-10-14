@@ -242,6 +242,8 @@
   const Castle = {
     name: 'Lâu đài cổ', reg: 2, light: '#ffc878',
     paintVoid(g) {
+      const t = tileVung('lau');
+      if (t) { r(0, 0, g.W, g.H, K.void); trNgoai(t, g); return; } // 14/10 tile: nền ngoài lát kín màn
       r(0, 0, g.W, g.H, K.void);
       for (let y = 0, j = 0; y < g.H; y += 9, j++) for (let x = -(j % 2) * 11; x < g.W; x += 22) r(x, y, 21, 8, '#150e0e');
     },
@@ -299,6 +301,8 @@
     },
     back(g, rn) {
       const x0 = g.fx0 - g.sw, w = g.fx1 - g.fx0 + g.sw * 2, wy = g.fy0 - g.wh;
+      const t = tileVung('lau');
+      if (t) { trDai(t['tuong-sau'], x0, wy - g.cap, w, g.wh + g.cap, false, ri(rn, 0, 3) * TR.o); return; } // 14/10 tile: tường sau (cả mái ngói) lặp ngang
       bricks(x0, wy, w, g.wh, 16, 8, [K.brick, K.brick, K.brick, K.brick, K.brickD, K.brickD, K.brickL], dim(K.brickD, 0.25), rn);
       r(x0, wy, w, 5, 'rgba(0,0,0,0.22)'); r(x0, wy + 5, w, 3, 'rgba(0,0,0,0.1)');
       // chân tường
@@ -335,8 +339,10 @@
         else { if (!ttMot('lau', 'cua-so', x, wy + 28)) { r(x - 6, wy + 8, 12, 20, DARK); r(x - 5, wy + 9, 10, 18, '#a8502a'); r(x - 5, wy + 9, 10, 6, '#d8823a'); r(x - 1, wy + 9, 1, 18, DARK); r(x - 5, wy + 17, 10, 1, DARK); r(x - 6, wy + 7, 12, 1, K.stoneL); } if (g.amb) g.amb.push({ k: 'win', x, y: wy + 9, ph: rn() * 9 }); }
       }
     },
-    sides(g) {
+    sides(g, rn) {
       const y0 = g.fy0 - g.wh - g.cap, h = g.fy1 + g.fw - y0;
+      const t = tileVung('lau');
+      if (t) { trBen(t, g, rn); return; } // 14/10 tile
       for (const x of [g.fx0 - g.sw, g.fx1]) {
         r(x, y0, g.sw, h, K.cap);
         for (let y = y0 + 6; y < y0 + h; y += 12) r(x + 1, y, g.sw - 2, 1, K.capD);
@@ -344,8 +350,10 @@
         r(x + (x < g.fx0 ? 1 : g.sw - 2), y0, 1, h, x < g.fx0 ? K.capD : K.capD);
       }
     },
-    front(g) {
+    front(g, rn) {
       const x0 = g.fx0 - g.sw, w = g.fx1 - g.fx0 + g.sw * 2;
+      const t = tileVung('lau');
+      if (t) { trDai(t['tuong-truoc'], x0, g.fy1, w, g.fw, false, rn ? ri(rn, 0, 3) * TR.o : 0); return; } // 14/10 tile: lan can
       r(x0, g.fy1, w, g.fw, K.cap); r(x0, g.fy1, w, 1, K.capL); r(x0, g.fy1 + g.fw - 3, w, 3, '#241c1d'); r(x0, g.fy1 + g.fw - 1, w, 1, DARK);
       for (let x = x0 + 7; x < x0 + w; x += 14) r(x, g.fy1 + 1, 1, g.fw - 4, K.capD);
     },
@@ -494,6 +502,8 @@
   const Cave = {
     name: 'Hang biển', reg: 1, light: C.light,
     paintVoid(g, rn) {
+      const t = tileVung('bien');
+      if (t) { r(0, 0, g.W, g.H, C.void); trNgoai(t, g); return; } // 14/10 tile: nước tối ngoài hang lát kín màn
       r(0, 0, g.W, g.H, C.void);
       for (let i = 0; i < (g.W * g.H) / 1500; i++) ell(rn() * g.W, rn() * g.H, ri(rn, 8, 20), ri(rn, 3, 7), '#0d1622');
     },
@@ -532,6 +542,8 @@
     },
     back(g, rn) {
       const x0 = g.fx0 - g.sw, w = g.fx1 - g.fx0 + g.sw * 2, wy = g.fy0 - g.wh;
+      const t = tileVung('bien');
+      if (t) { trDai(t['tuong-sau'], x0, wy - g.cap, w, g.wh + g.cap, false, ri(rn, 0, 3) * TR.o); return; } // 14/10 tile: vách nhũ đá lặp ngang
       rockFace(x0, wy, w, g.wh, rn);
       r(x0, wy, w, 6, 'rgba(0,0,0,0.3)'); r(x0, wy + 6, w, 4, 'rgba(0,0,0,0.14)');
       r(x0, g.fy0 - 3, w, 3, C.rockD);
@@ -564,6 +576,8 @@
     },
     sides(g, rn) {
       const y0 = g.fy0 - g.wh - g.cap, h = g.fy1 + g.fw - y0;
+      const t = tileVung('bien');
+      if (t) { trBen(t, g, rn); return; } // 14/10 tile
       for (const x of [g.fx0 - g.sw, g.fx1]) {
         r(x, y0, g.sw, h, C.rockD);
         for (let y = y0 + 4; y < y0 + h; y += ri(rn, 8, 13)) { ell(x + g.sw / 2, y, g.sw / 2 - 1, 4, C.rock); r(x + 3, y - 3, g.sw - 7, 1, C.rockL); }
@@ -577,10 +591,14 @@
     },
     front(g, rn) {
       const x0 = g.fx0 - g.sw, w = g.fx1 - g.fx0 + g.sw * 2;
+      const t = tileVung('bien');
+      if (t) { trDai(t['tuong-truoc'], x0, g.fy1, w, g.fw, false, ri(rn, 0, 3) * TR.o); return; } // 14/10 tile
       r(x0, g.fy1, w, g.fw, C.rockD); r(x0, g.fy1, w, 1, C.rockL); r(x0, g.fy1 + g.fw - 1, w, 1, DARK);
       for (let x = x0 + 5; x < x0 + w; x += ri(rn, 9, 14)) { ell(x, g.fy1 + g.fw / 2, 5, g.fw / 2 - 2, C.rock); r(x - 3, g.fy1 + 2, 6, 1, C.rockL); }
     },
     fore(g, rn) {
+      const t = tileVung('bien');
+      if (t && t.mep) { trMep(t, g, rn); return; } // 14/10 tile: sóng vỗ đá ở mép trước (thay măng đá)
       // măng đá nhô lên ở mép trước, che một phần chân nhân vật khi đứng sát mép
       const skip = (x) => g.doors.some((d) => d.side === 'bottom' && Math.abs(d.at - x) < 26);
       for (let x = g.fx0 + 4; x < g.fx1; x += ri(rn, 10, 20)) {
@@ -714,8 +732,8 @@
   const TR_BAT_BUOC = ['san0', 'san1', 'san2', 'tuong-sau', 'tuong-ben', 'tuong-truoc', 'ngoai'];
   const trNho = new WeakMap(); // ảnh đã nạp -> bản thu về cỡ game (1 điểm ảnh game = 1 điểm ảnh)
   let trBao = false;
-  function trAnh(k) {
-    const a = gdA('gd-nen-rung-' + k);
+  function trAnh(k, vung) {
+    const a = gdA('gd-nen-' + (vung || 'rung') + '-' + k);
     if (!a) return null;
     let o = trNho.get(a);
     if (!o || o.img !== a.img) {
@@ -743,6 +761,26 @@
     }
     return null;
   }
+  // 14/10: cùng chuẩn tile cho HANG BIỂN (gd-nen-bien-*) và LÂU ĐÀI CỔ (gd-nen-lau-*). Cờ G.NEN_TILE (js/data.js, ?nentile=0 tắt).
+  // Thiếu tệp bắt buộc → null → code cũ. TRV: tuỳ chọn lát theo vùng — lat: được lật ngang khối sàn (sàn Hang biển trộn mép chung
+  // chỉ liền khi không lật), duong: độ đậm lớp lối mòn (Hang biển, Lâu đài không vẽ: Lâu đài có thảm dẫn vào cửa).
+  const TRV = { bien: { lat: false, duong: 0 }, lau: { lat: true, duong: 0 } }, trBaoV = {};
+  function tileVung(vung) {
+    if (vung === 'rung') return tileRung();
+    if (G.NEN_TILE === false) return null;
+    const t = {};
+    for (const k in TR_CO) t[k] = trAnh(k, vung);
+    const thieu = TR_BAT_BUOC.filter((k) => !t[k]);
+    if (!thieu.length) return t;
+    if (!trBaoV[vung]) {
+      const d = (G.spriteCustom && G.spriteCustom.gd) || {};
+      if (thieu.some((k) => !d['gd-nen-' + vung + '-' + k])) {
+        trBaoV[vung] = true;
+        if (window.console && console.info) console.info('[Linh Khí] Tile ' + vung + ': thiếu tệp gd-nen-' + vung + '-' + thieu.join(', gd-nen-' + vung + '-') + ' → vẽ bằng code như cũ.');
+      }
+    }
+    return null;
+  }
   // Một ô 16×16 lấy từ (su, sv) của mảng, đặt ở (dx, dy), có lật ngang / lật dọc. Toạ độ nguyên, không làm mịn.
   function trO(src, su, sv, dx, dy, lx, ly) {
     const O = TR.o;
@@ -761,15 +799,29 @@
       }
     });
   }
+  // 14/10: các mảnh dùng chung cho ba vùng (Rừng giữ nguyên code riêng của mình bên dưới).
+  function trNgoai(t, g) { for (let y = 0; y < g.H; y += t.ngoai.height) for (let x = 0; x < g.W; x += t.ngoai.width) c.drawImage(t.ngoai, x, y); }
+  function trBen(t, g, rn) {
+    const y0 = g.fy0 - g.wh - g.cap, h = g.fy1 + g.fw - y0, lech = rn ? ri(rn, 0, 3) * TR.o : 0;
+    trDai(t['tuong-ben'], g.fx0 - g.sw, y0, g.sw, h, true, lech, false);
+    trDai(t['tuong-ben'], g.fx1, y0, g.sw, h, true, lech + 2 * TR.o, true);
+  }
+  function trMep(t, g, rn) { // dải phủ mép dưới 64×12 lặp ngang, đáy dải ở fy1 + 2, chừa lối cửa dưới
+    const lech = ri(rn, 0, 3) * TR.o, y = g.fy1 + 2 - t.mep.height;
+    let segs = [[g.fx0, g.fx1]];
+    for (const d of g.doors) if (d.side === 'bottom') segs = segs.flatMap(([a, b]) => [[a, Math.min(b, d.at - 17)], [Math.max(a, d.at + 17), b]]);
+    for (const [a, b] of segs) if (b > a) clipRect(a, y, b - a, t.mep.height, () => trDai(t.mep, g.fx0, y, g.fx1 - g.fx0, t.mep.height, false, lech));
+  }
   // Sàn: rải theo hạt giống của phòng. Mỗi khối chọn 1 trong 3 mảng (kiểu phòng `variant` quyết định mảng nào chiếm nhiều) × lật.
-  function trSan(t, g, rn, variant) {
+  function trSan(t, g, rn, variant, tv) {
+    const latOK = !tv || tv.lat !== false, DUONG = tv && tv.duong != null ? tv.duong : TR.duong;
     const O = TR.o, fx = g.fx0, fy = g.fy0, w = g.fx1 - fx, h = g.fy1 - fy, B = Math.max(1, TR.khoi | 0);
     const nc = Math.ceil(w / O), nr = Math.ceil(h / O), bc = Math.ceil(nc / B), br = Math.ceil(nr / B), chon = [];
     for (let j = 0; j < br; j++) for (let i = 0; i < bc; i++) {
       const trai = i ? chon[j * bc + i - 1] : null, tren = j ? chon[(j - 1) * bc + i] : null;
       let b = null;
       for (let lan = 0; lan < 4; lan++) { // tránh giống hệt khối bên trái và khối bên trên (đỡ thấy lặp)
-        const q = rn(), k = (variant + (q < 0.5 ? 0 : q < 0.75 ? 1 : 2)) % 3, lx = rn() < 0.5, ly = rn() < 0.5 && TR.latDoc;
+        const q = rn(), k = (variant + (q < 0.5 ? 0 : q < 0.75 ? 1 : 2)) % 3, lx = rn() < 0.5 && latOK, ly = rn() < 0.5 && TR.latDoc;
         b = { k, lx, ly, nhan: false };
         if (!((trai && trai.k === k && trai.lx === lx && trai.ly === ly) || (tren && tren.k === k && tren.lx === lx && tren.ly === ly))) break;
       }
@@ -796,12 +848,12 @@
       }
     });
     // lối mòn nối tâm phòng với từng cửa (đúng trường pathField của sàn code): lớp nâu nhạt mờ, 3 nấc, chuyển nấc bằng lưới chấm
-    if (TR.duong > 0) {
+    if (DUONG > 0) {
       const pf = grid2(g, pf0), id = c.getImageData(fx, fy, w, h), d = id.data, P = hex('#7a6a48'), NAC = 3;
       for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
         const gx = fx + x, gy = fy + y, p = pf(gx, gy);
         if (p <= 0.02) continue;
-        const a = (Math.min(NAC, Math.floor(sharp(p * NAC) + bay(gx, gy))) / NAC) * TR.duong;
+        const a = (Math.min(NAC, Math.floor(sharp(p * NAC) + bay(gx, gy))) / NAC) * DUONG;
         if (a <= 0) continue;
         const o = (y * w + x) * 4;
         d[o] += (P[0] - d[o]) * a; d[o + 1] += (P[1] - d[o + 1]) * a; d[o + 2] += (P[2] - d[o + 2]) * a;
@@ -1134,6 +1186,25 @@
   // Đợt 6: có đủ tile (và cờ G.TILE_RUNG bật) thì cả ba kiểu sàn Rừng già lát bằng tile; kiểu phòng chỉ quyết định mảng nào chiếm nhiều.
   Forest.floors = Forest.floors.map((ve, kieu) => (g, rn) => { const t = tileRung(); if (t) trSan(t, g, rn, kieu); else ve(g, rn); });
   Forest.tile = TR; // cho công cụ và bài kiểm chỉnh thử (khoi, nhan, latDoc, duong)
+  // 14/10: Hang biển, Lâu đài cổ có đủ tile (cờ G.NEN_TILE) thì ba kiểu sàn lát bằng tile; kiểu phòng quyết định mảng nào chiếm nhiều.
+  // Lâu đài vẫn trải thảm như sàn code (ảnh gd-tt-lau-tham-* giữ nguyên): kiểu 0 thảm dẫn cửa + hoa văn tròn, kiểu 1 thảm chạy, kiểu 2 thảm vuông.
+  const THAM_LAU = [
+    (g, rn) => Castle.carpet(g, rn),
+    (g) => runners(g, '#3a3050', '#6a6a8a'),
+    (g) => {
+      const cx = (g.fx0 + g.fx1) >> 1, cy = (g.fy0 + g.fy1) >> 1, av = gdA('gd-tt-lau-tham-vuong');
+      if (av) { const cv = ttNho(av); c.drawImage(cv, cx - (cv.width >> 1), cy - (cv.height >> 1)); }
+      else {
+        r(cx - 34, cy - 24, 68, 48, '#77593a'); r(cx - 32, cy - 22, 64, 44, '#4e2a32'); r(cx - 28, cy - 18, 56, 36, '#5c3038');
+        for (let x = cx - 26; x < cx + 26; x += 6) { r(x, cy - 16, 3, 1, '#77593a'); r(x, cy + 15, 3, 1, '#77593a'); }
+        r(cx - 6, cy - 6, 12, 12, '#77593a'); r(cx - 4, cy - 4, 8, 8, '#4e2a32'); r(cx - 1, cy - 1, 2, 2, K.gold);
+      }
+      runners(g, '#4e2a32', '#77593a');
+    },
+  ];
+  Castle.floors = Castle.floors.map((ve, kieu) => (g, rn) => { const t = tileVung('lau'); if (!t) return ve(g, rn); trSan(t, g, rn, kieu, TRV.lau); THAM_LAU[kieu % 3](g, rn); });
+  Cave.floors = Cave.floors.map((ve, kieu) => (g, rn) => { const t = tileVung('bien'); if (!t) return ve(g, rn); trSan(t, g, rn, kieu, TRV.bien); });
+  Castle.fore = function (g, rn) { const t = tileVung('lau'); if (t && t.mep) trMep(t, g, rn); }; // 14/10: chỉ có khi lát tile (cỏ dại + đá vụn ở mép trước)
   function pick3(rn, a, b, d) { const k = rn(); return k < 0.34 ? a : k < 0.67 ? b : d; }
 
   // Dấu trên sàn theo loại phòng: nhìn sàn là biết phòng gì
@@ -1627,7 +1698,7 @@
   }
   RA.xoaDem = function () { cache.clear(); shells.clear(); };
   function get(W) {
-    const n = demAnh(), ct = G.TILE_RUNG !== false;
+    const n = demAnh(), ct = (G.TILE_RUNG !== false) + '|' + (G.NEN_TILE !== false);
     if (n !== soAnh || ct !== coTile) { soAnh = n; coTile = ct; RA.xoaDem(); }
     const doors = W.doors || [];
     const key = [W.uid, W.region, W.type, W.seed, doors.map((d) => d.dir + (d.open ? 1 : 0) + (d.gate ? 'g' : '') + (d.boss ? 'b' : '')).join(',')].join('|');

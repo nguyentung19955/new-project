@@ -61,6 +61,12 @@
     try { tat = typeof location !== 'undefined' && /[?&]khungtrung=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
     G.KHUNG_TRUNG = !tat;
   }
+  // 14/10: phân thân Hồ Tinh pha 2 vẽ bằng chính ảnh AI (trong suốt, nhuộm tím hồng). Tắt: G.PHAN_THAN_ANH = false hoặc ?phanthan=0.
+  if (G.PHAN_THAN_ANH === undefined) {
+    let tat = false;
+    try { tat = typeof location !== 'undefined' && /[?&]phanthan=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
+    G.PHAN_THAN_ANH = !tat;
+  }
   let napSauDangChay = false, trongNapSau = false;
   // Tải nhanh (12/10): ảnh rời. roiNhan(img, src) nhận ảnh anh/<mã>.<mã nội dung>.png vào hàng chờ; roiCan(ma) báo game đang cần hình ma
   // (chưa có thì tải ngay). Chỉ có ở bản 2 tệp ảnh rời (G.ANH_ROI); bản một tệp, công cụ: null, như cũ.
@@ -396,7 +402,7 @@
       c.restore();
     }
     // o.than (Đợt 7): màu nhuộm thân khi quái dính độc / cháy / đóng băng, do js/mobs.js truyền khi cờ G.TRANG_THAI_TREN_THAN bật. Không có thì vẽ y cũ.
-    SC.veKhung(c, ve, s.ten, s.i, face, { alpha: s.alpha, flash, dy: s.dy, than: o.than || null });
+    SC.veKhung(c, ve, s.ten, s.i, face, { alpha: s.alpha, flash, dy: s.dy, than: o.than || null, tint: o.nhuomMa || null }); // o.nhuomMa: phân thân (bóng ma) nhuộm màu
     c.restore();
     return s;
   };
@@ -407,6 +413,7 @@
     return new Proxy(c, {
       get(o, k) {
         if (k === 'drawImage') return thay;
+        if (k === '__that') return o; // bút thật (hiệu ứng ảnh vẽ trong cử động của monster_art.js không bị bút giả nuốt)
         const v = o[k];
         if (typeof v !== 'function') return v;
         let f = nho.get(k);
@@ -428,6 +435,7 @@
     b.p = new Proxy(c, {
       get(o, k) {
         if (k === 'drawImage') return b.thay;
+        if (k === '__that') return o; // bút thật (xem butGia)
         const v = o[k];
         if (typeof v !== 'function') return v;
         let f = nho.get(k);
@@ -470,16 +478,25 @@
       // Quái có sẵn: để hình gốc vẽ bóng và hiệu ứng (vệt chém, tia lửa...), chỉ thay phần thân bằng hình tự vẽ.
       const T0 = c.getTransform(), a0 = c.globalAlpha, D = dur0.call(MA, id, o.anim) || 0;
       let xong = false;
-      const thay = function () {
+      const thay = function (k0, mx, my, ma, mau) {
+        // 14/10: phân thân Hồ Tinh pha 2 (monster_art.js gọi c.drawImage('bongMa', dx, dy, độ đậm, màu)): vẽ CHÍNH ảnh trùm đúng khung động tác,
+        // dời (dx, dy), trong suốt và nhuộm màu. Trước đây lệnh này bị coi là thân nên bản sao không bao giờ hiện (vô hình).
+        if (k0 === 'bongMa') {
+          if (G.PHAN_THAN_ANH === false) return;
+          c.save(); c.setTransform(T0); c.globalAlpha = a0 * clamp(+ma || 0.5, 0, 1);
+          try { SC.veQuai(c, sp, x + (+mx || 0), y + (+my || 0), Object.assign({}, o, { hit: 0, baoDon: 0, than: null, nhuomMa: mau ? [mau, 0.6] : null }), false, D); } finally { c.restore(); }
+          return;
+        }
         if (xong) return;
         xong = true;
         c.save(); c.setTransform(T0); c.globalAlpha = a0;
         try { SC.veQuai(c, sp, x, y, o, false, D); } finally { c.restore(); }
       };
-      if (G.BO_THAN === false) { draw0.call(MA, butGia(c, thay), id, x, y, o); return; }
+      MA._thayAnh = true; // 14/10: monster_art.js biết thân đang được thay bằng ảnh AI (vẽ phân thân bằng lệnh 'bongMa')
+      if (G.BO_THAN === false) { try { draw0.call(MA, butGia(c, thay), id, x, y, o); } finally { MA._thayAnh = false; } return; }
       const b = muonBut(c, thay);
       MA._boThan = true; // V1: monster_art.js bỏ bước dựng thân bằng code (không bao giờ hiện ra), chỉ chạy Pose, bóng, hiệu ứng
-      try { draw0.call(MA, b.p, id, x, y, o); } finally { MA._boThan = false; traBut(b); }
+      try { draw0.call(MA, b.p, id, x, y, o); } finally { MA._boThan = false; MA._thayAnh = false; traBut(b); }
     };
     MA.dur = function (id, anim) {
       const d = dur0.call(MA, id, anim);
