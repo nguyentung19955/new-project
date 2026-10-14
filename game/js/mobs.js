@@ -115,6 +115,7 @@
       e.trait = o.trait || (tr.length ? tr[Math.floor(G.rnd() * tr.length)] : null);
       if (e.trait === 'nhanh') e.speed *= 1.45;
     }
+    if (G.knQuai && G.knQuai.init) G.knQuai.init(e); // kỹ năng riêng của từng con (js/ky_nang_quai.js, tắt: ?kynangcu=1)
   };
   // Giáp: quái giáp chỉ che phía trước (phải vòng ra sau hoặc phá giáp); tinh anh "Bọc giáp" che mọi phía.
   G.mobArmor = function (t, o) {
@@ -129,6 +130,7 @@
   G.mobOnHit = function (e, d, o) {
     if (!e.art || e.dead) return;
     e.hitT = 0.3;
+    if (G.knQuai && G.knQuai.onHit) G.knQuai.onHit(e, d, o); // Ốc rút vỏ (js/ky_nang_quai.js)
     const P = W().P;
     // Gai: đang dựng gai mà bị đánh cận chiến thì phản đòn (kèm hệ của vùng).
     if (e.spikeUp > 0 && !o.ranged && !(e.reflT > 0)) {
@@ -179,7 +181,7 @@
     const d = e.don, k = d.kieu || 'chem', tam = d.tam || 26;
     return k === 'lao' ? tam * 0.8 : k === 'dap' || k === 'no' ? tam * 0.7 : tam * 0.75;
   }
-  function cancelZones(e) { for (const z of W().zones) if (z.src === e && z.t > 0) z.dead = true; }
+  function cancelZones(e) { for (const z of W().zones) if (z.src === e && z.t > 0 && !z.knGiu) z.dead = true; } // knGiu: vật đã ném ra (bom, bào tử, vũng điện của js/ky_nang_quai.js) không tắt theo quái
   // Một lượt ra đòn: báo trước (anim tele) T giây, rồi ra đòn (anim atk).
   function begin(e, k, a, T, o) {
     e.act = Object.assign({ k, t: 0, T, a, fired: false, end: T + dur(e.art, 'atk') * 0.75 }, o || {});
@@ -273,6 +275,7 @@
   function think(e, dt, P, sp) {
     const w = W(), d = Math.hypot(P.x - e.x, P.y - e.y), a = angTo(e, P), role = e.role;
     if (role === 'elite') return thinkElite(e, dt, P, sp, d, a);
+    if (G.knQuai && G.knQuai.think && G.knQuai.think(e, dt, P, sp, d, a)) return; // 24 quái con: cách đánh riêng theo vùng (js/ky_nang_quai.js)
     if (role === 'archer') {
       e.sumCd -= dt;
       const allies = w.ents.filter((x) => !x.dead && x.sum === e).length + (w.spawns || []).filter((s) => s.opt && s.opt.sumBy === e).length;
@@ -467,6 +470,8 @@
   }
   function near(x, y, dx, dy) { const w = W(); return [clamp(x + G.rr(-dx, dx), w.x0 + 6, w.x1 - 6), clamp(y + G.rr(-dy, dy), w.y0, w.y1)]; }
   G.mobNear = near;
+  // Hàm dùng chung cho js/ky_nang_quai.js (kỹ năng riêng của 24 quái con).
+  G_mob.H = { addZone, begin, shoot, bomb, blast, onBlastHit, keep, moveTo, faceSlow, play, loop, dur, regEl, angTo, summon, strikeZone, reachOf, cancelZones, near };
   // Hẹn giờ nhỏ dùng chung (chạy theo thời gian của thế giới, xoá khi đổi phòng).
   G.later = function (t, f) { const w = W(); if (!w) return; (w.timers || (w.timers = [])).push({ t, f }); };
   G.mob.tick = function (dt) {
@@ -588,7 +593,11 @@
     const B = z.bomb, el = z.el, T0 = z.t0, gone = T0 - z.t;
     const col = el === 'ice' ? ['#1b4c92', '#3883d4', '#a6deff'] : el === 'poison' ? ['#58208c', '#9a48d4', '#e4a8ff'] : ['#5a1a0a', '#c43c10', '#ffd23c'];
     let x = z.x, y = z.y, lift = 0;
-    if (B.fl > 0 && gone < B.fl) { const q = gone / B.fl; x = B.x0 + (z.x - B.x0) * q; y = B.y0 + (z.y - B.y0) * q; lift = Math.sin(q * PI) * 26; }
+    if (B.fl > 0 && gone < B.fl && B.nx != null && B.f1 > 0) {
+      // hạt dẻ nảy (js/ky_nang_quai.js, Sóc): vòng cung cao tới chỗ chạm đất (nx, ny), rồi nảy một vòng cung thấp tới chỗ nổ
+      if (gone < B.f1) { const q = gone / B.f1; x = B.x0 + (B.nx - B.x0) * q; y = B.y0 + (B.ny - B.y0) * q; lift = Math.sin(q * PI) * 26; }
+      else { const q = Math.min(1, (gone - B.f1) / Math.max(0.01, B.fl - B.f1)); x = B.nx + (z.x - B.nx) * q; y = B.ny + (z.y - B.ny) * q; lift = Math.sin(q * PI) * 10; }
+    } else if (B.fl > 0 && gone < B.fl) { const q = gone / B.fl; x = B.x0 + (z.x - B.x0) * q; y = B.y0 + (z.y - B.y0) * q; lift = Math.sin(q * PI) * 26; }
     const s = B.big ? 5 : 3;
     p(c, x - s, y - 1, s * 2, 2, 'rgba(0,0,0,0.3)');
     const by = y - s - lift - 1;
@@ -599,7 +608,8 @@
     const maBom = !FA ? null : B.big ? 'hu-bom-to' : B.art === 'tieuYeu' ? 'hu-bom-phao' : B.art === 'sua' || B.art === 'haiQuy' ? 'hu-bom-bang' : el === 'ice' ? 'hu-bom-bang' : el === 'fire' ? 'hu-bom-phao' : null;
     const anhBom = maBom ? FA.get(maBom) : null;
     let dinh = by - s; // mép trên của quả bom: ngòi nhấp nháy vẽ ngay trên đó
-    if (B.art === 'socNo' && FA && FA.co('hu-dan-qua-no')) FA.ve(c, 'hu-dan-qua-no', x, by, gone, 0, 1);
+    if (B.anh && FA && FA.co(B.anh)) FA.ve(c, B.anh, x, by, gone, 0, 1); // ảnh riêng của vật ném (js/ky_nang_quai.js: hạt bào tử hu-dan-bao-tu)
+    else if (B.art === 'socNo' && FA && FA.co('hu-dan-qua-no')) FA.ve(c, 'hu-dan-qua-no', x, by, gone, 0, 1);
     else if (anhBom) { FA.ve(c, maBom, x, y - lift, gone, 0, 1); dinh = Math.round(y - lift - (anhBom.ay - 2) * anhBom.co); }
     else {
       p(c, x - s, by - s + 1, s * 2, s * 2 - 2, '#14182e'); p(c, x - s + 1, by - s, s * 2 - 2, s * 2, '#14182e');

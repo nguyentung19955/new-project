@@ -1433,6 +1433,8 @@
     return s;
   }
   function hurtInfo(k) {
+    const kn = G.knQuai && G.knQuai.meo ? G.knQuai.meo(String(k)) : null; // khoá là mã con quái (js/ky_nang_quai.js): tên con + mẹo riêng
+    if (kn) return { key: String(k), name: kn[0], tip: kn[1] };
     const key = hurtKey(k);
     if (HURT[key]) return { key, name: HURT[key][0], tip: HURT[key][1] };
     if (G.ROLES && G.ROLES[key]) return { key, name: G.ROLES[key].name, tip: HURT.other[1] };

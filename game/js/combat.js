@@ -614,6 +614,7 @@
     }
     if (src && src.role) {
       if (src.spikeUp > 0 && !melee && !hurtKind) return { key: 'gaiPhan', name: 'Gai phản đòn' };
+      if (src.knTen && src.art) return { key: src.art, name: src.knTen }; // kỹ năng riêng từng con (js/ky_nang_quai.js): bảng thua có mẹo riêng cho con đó
       const R = G.ROLES && G.ROLES[src.role];
       return { key: src.role, name: R ? R.name : 'Quái' };
     }
@@ -691,7 +692,7 @@
     const w = curW(P);
     const MV = G.moves; // lối đánh riêng của từng vũ khí; thiếu moves.js thì đánh kiểu cũ
     if (MV) MV.input(P, inp, dt);
-    const slow = P.st.ice > 0 ? 0.65 : 1;
+    const slow = (P.st.ice > 0 ? 0.65 : 1) * (P.knCham > 0 ? 0.6 : 1); // P.knCham: vệt nhớt của Ốc Mượn Hồn làm chậm 40% (js/ky_nang_quai.js)
     let mx = inp.mx, my = inp.my;
     const ml = Math.hypot(mx, my);
     if (ml > 1) { mx /= ml; my /= ml; }
