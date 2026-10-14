@@ -237,9 +237,30 @@ def hai_tep(custom, gom, trang, frag):
 # Mã hoá WebP method=6 chậm (~2,5 phút cho 600 ảnh trên 2 lõi): kết quả nhớ ở game/.dem-webp/ (hoặc LK_DEM_WEBP), theo mã PNG gốc.
 THU_MUC_ANH = 'anh'
 TRAN_TRANG_NEN = 1.5 * 1024 * 1024  # trang chính sau gzip (mục tiêu tải nhanh)
-TRAN_ANH_ROI = 26 * 1024 * 1024  # tổng ảnh rời PNG + WebP trên máy chủ (người chơi chỉ tải một trong hai)
+# 14/10 (bước 1 làm chắc, mục 1): thước đo chính đổi thành "NGƯỜI CHƠI TẢI" = cộng theo từng ảnh bản thực sự được phát
+# (WebP khi có, PNG khi không) + trang chính nén. Trần 20 MB (Q5 ~20 MB). Trước đây trần 26 MB tính TỔNG PNG + WebP trên máy chủ (chặn oan:
+# mỗi người chỉ tải một trong hai bản). Tổng máy chủ nay chỉ để thông tin, cảnh báo khi quá 60 MB.
+TRAN_NGUOI_TAI = 20 * 1024 * 1024
+CANH_BAO_MAY_CHU = 60 * 1024 * 1024
+TRAN_ANH_ROI = TRAN_NGUOI_TAI  # tên cũ (công cụ / bài kiểm khác có thể đọc)
 WEBP_METHOD = int(os.environ.get('LK_WEBP_METHOD', '6'))
 VUNG_SO = {'rung': 0, 'bien': 1, 'laudai': 2}
+
+
+# 14/10 (bước 1, mục 1): TẢI THEO VÙNG. Ảnh chỉ dùng ở MỘT vùng (quái, trùm + dáng pha, sàn/tường gd-nen-*, cửa gd-cua-*, vật trang trí gd-tt-*
+# của Rừng già / Hang biển / Lâu đài cổ) không tải ở màn chào; js/sprite_custom.js tải khi người chơi chọn vùng (thẻ ải hiện "Đang tải…")
+# và tải trước vùng kế tiếp khi rảnh. Ảnh lõi (Zed, giao diện, làng, hiệu ứng chung) tải như cũ. Cờ tắt trong game: ?taivung=0.
+VUNG_TEN_GD = {'rung': 0, 'bien': 1, 'lau': 2}
+
+
+def vung_rieng(t):
+    """Số vùng (0 Rừng, 1 Biển, 2 Lâu đài) nếu ảnh chỉ dùng ở vùng đó, -1 nếu là ảnh lõi / dùng chung."""
+    ma, d = t.get('ma', ''), t.get('doi_tuong')
+    if d == 'giao-dien':
+        m = re.match(r'^gd-(?:nen|cua|tt)-(rung|bien|lau)-', ma)
+        return VUNG_TEN_GD[m.group(1)] if m else -1
+    quai = d not in ('hieu-ung', 'giao-dien', 'nguoi-lang', 'em-be', 'zed') and d not in DO_LOAI
+    return VUNG_SO.get(t.get('vung'), -1) if quai else -1
 
 
 def anh_roi_bat():
@@ -303,6 +324,7 @@ def anh_roi(custom, gom, trang, frag):
     webps = webp_nhieu(pngs)
     ds = [dict(t) for t in custom]
     tong_png = tong_webp = tong_tot = so_webp = 0
+    bang = {}  # nhóm → [số ảnh, byte người chơi tải (WebP khi có), byte PNG]
     for (i, k), png, w in zip(vt, pngs, webps):
         t = ds[i]
         ten = '%s.%s' % (t['ma'], hashlib.sha256(png).hexdigest()[:10])
@@ -325,7 +347,16 @@ def anh_roi(custom, gom, trang, frag):
         quai = t.get('doi_tuong') not in ('hieu-ung', 'giao-dien', 'nguoi-lang', 'em-be', 'zed') and t.get('doi_tuong') not in DO_LOAI
         trum = quai and t['ma'].split('-')[0] in TRUM_VUNG
         bac = 0 if bat_buoc(custom[i]) else 3 if trum else 2 if quai else 1
-        t['_u'] = [bac, tot, VUNG_SO.get(t.get('vung'), -1) if quai else -1, 1 if trum else 0]
+        vr = vung_rieng(custom[i])
+        if vr >= 0 and bac == 0:
+            bac = 2  # ảnh riêng một vùng không còn tải ở màn chào (tải khi chọn vùng)
+        # _u[4] (14/10): 1 = ảnh riêng của vùng _u[2] (chỉ tải khi chọn vùng đó / tải trước vùng kế tiếp)
+        t['_u'] = [bac, tot, vr if vr >= 0 else (VUNG_SO.get(t.get('vung'), -1) if quai else -1), 1 if trum else 0, 1 if vr >= 0 else 0]
+        nhom = 'vung%d' % vr if vr >= 0 else 'loi'
+        bang.setdefault(nhom, [0, 0, 0])
+        bang[nhom][0] += 1
+        bang[nhom][1] += tot
+        bang[nhom][2] += len(png)
     khai = ('// ===== ảnh rời (tải nhanh 12/10): ảnh nằm ở thư mục anh/ cạnh trang, js/sprite_custom.js tải theo ưu tiên =====\n'
             '(window.G = window.G || {}).ANH_ROI = ' + json.dumps({'so': len(vt), 'webp': so_webp}) + ';\n')
     js = gom(ds, khai, "['customSpriteData'] = ")
@@ -342,11 +373,22 @@ def anh_roi(custom, gom, trang, frag):
     may_chu = tong_png + tong_webp
     print('Ảnh rời: dist/%s (%d KB, nén %d KB, %d hình chỉ có thông số) + dist/%s/ (%d ảnh: PNG %.2f MB, %d bản WebP %.2f MB)'
           % (TEN_NHE, n1 // 1024, z1 // 1024, len(ds), THU_MUC_ANH, len(vt), tong_png / 1048576, so_webp, tong_webp / 1048576))
-    print('Người chơi tải: trang %.2f MB nén + ảnh %.2f MB (WebP khi có, còn lại PNG); trình duyệt không có WebP: ảnh %.2f MB PNG'
-          % (z1 / 1048576, tong_tot / 1048576, tong_png / 1048576))
-    print('Trần: trang chính nén %.2f / %.2f MB%s; ảnh trên máy chủ %.2f / %.0f MB%s'
+    # Bảng dung lượng theo nhóm tải (mục 1, bước 1): lõi tải trước, từng vùng tải khi chọn vùng.
+    ten_nhom = {'loi': 'Lõi (màn chào, làng, Zed, giao diện, hiệu ứng chung)', 'vung0': 'Vùng Rừng già', 'vung1': 'Vùng Hang biển', 'vung2': 'Vùng Lâu đài cổ'}
+    print('Dung lượng theo nhóm tải (người chơi tải = WebP khi có, còn lại PNG | chỉ PNG):')
+    for k in ('loi', 'vung0', 'vung1', 'vung2'):
+        if k in bang:
+            b = bang[k]
+            print('  %-55s %3d ảnh  %6.2f MB | %6.2f MB' % (ten_nhom[k], b[0], b[1] / 1048576, b[2] / 1048576))
+    nguoi = z1 + tong_tot
+    print('NGƯỜI CHƠI TẢI (thước đo chính): trang %.2f MB nén + ảnh %.2f MB = %.2f MB / trần %.0f MB%s; trình duyệt không có WebP: %.2f MB'
+          % (z1 / 1048576, tong_tot / 1048576, nguoi / 1048576, TRAN_NGUOI_TAI / 1048576, '  ← VƯỢT TRẦN' if nguoi > TRAN_NGUOI_TAI else '',
+             (z1 + tong_png) / 1048576))
+    loi = bang.get('loi', [0, 0, 0])
+    print('Tải trước khi vào vùng đầu: lõi %.2f MB + trang %.2f MB = %.2f MB' % (loi[1] / 1048576, z1 / 1048576, (loi[1] + z1) / 1048576))
+    print('Trần: trang chính nén %.2f / %.2f MB%s; tổng ảnh trên máy chủ (PNG + WebP, chỉ để biết) %.2f MB%s'
           % (z1 / 1048576, TRAN_TRANG_NEN / 1048576, '  ← TRANG CHÍNH QUÁ NẶNG' if z1 > TRAN_TRANG_NEN else '',
-             may_chu / 1048576, TRAN_ANH_ROI / 1048576, '  ← VƯỢT TRẦN' if may_chu > TRAN_ANH_ROI else ''))
+             may_chu / 1048576, '  ← CẢNH BÁO: máy chủ quá %.0f MB' % (CANH_BAO_MAY_CHU / 1048576) if may_chu > CANH_BAO_MAY_CHU else ''))
 
 
 # ---------- Xưởng Sprite ----------

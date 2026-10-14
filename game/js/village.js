@@ -188,7 +188,11 @@
       // V25: chữ to hơn; dòng thưởng dài quá 2 dòng (ải trùm) thì giữ cỡ nhỏ cũ để không lọt khỏi khung
       const rw = i === 4 ? G.t('Thưởng: {0} kinh nghiệm, ~{1} vàng, {2} {3}, {4} mảnh {5}, linh khí', b.xp, b.gold, 5 + i, R.mat.toLowerCase(), V.diff ? 4 : 3, R.bossName) : G.t('Thưởng: {0} kinh nghiệm, ~{1} vàng, {2} {3}', b.xp, b.gold, 5 + i, R.mat.toLowerCase());
       ui.para(rw, 256, 250.5, 144, { size: 6.5, color: SOFT, tiny: ui.wrap(rw, 144, 6.5).length > 2 });
-      if (T.btn(404, 217, 64, 38, 'Lên đò', { size: 11, primary: true })) G.startStage(r, i, V.diff);
+      // 14/10 (bước 1, mục 1): chọn ải là bắt đầu tải ảnh riêng của vùng đó (js/sprite_custom.js SC.taiVung). Chưa đủ ảnh: nút ghi "Đang tải…"
+      // và thanh tiến độ dưới nút; bấm vẫn được (vào màn chờ, đủ ảnh thì tự vào ải).
+      const SCv = G.spriteCustom, tv = SCv && SCv.vungTien ? (SCv.taiVung(r), SCv.vungTien(r, i === 4)) : null, choTai = !!(tv && !tv.san);
+      if (choTai) { ui.rect(404, 258, 64, 4, 'rgba(0,0,0,0.55)'); ui.rect(404, 258, Math.round(64 * tv.xong / Math.max(1, tv.tong)), 4, '#ffd27a'); }
+      if (T.btn(404, 217, 64, 38, choTai ? 'Đang tải…' : 'Lên đò', { size: choTai ? 8.5 : 11, primary: true })) G.startStage(r, i, V.diff);
     } else ui.text('Chạm một ải trên tranh để xem.', 256, 238, { size: 8, color: SOFT });
   }
 

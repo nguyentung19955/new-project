@@ -135,7 +135,12 @@
     ui.text(G.t('Lần trước con đang chơi dở một ải.'), x + w / 2, y + 40, { size: 8, align: 'center', color: '#f0e0c0' });
     ui.text(G.t('{0}: ải {1}, đã dọn {2} phòng, máu {3}/{4}', G.kd ? G.kd(G.t(reg.name)) : reg.name, o.i + 1, n, Math.round(o.P.hp || 0), Math.round(o.P.maxhp || 0)), x + w / 2, y + 56, { size: 7.5, align: 'center', color: '#d8c8a8' });
     const nut = (bx, chu, chinh) => (T && T.btn ? T.btn(bx, y + 74, 100, 26, G.t(chu), { size: 8.5, primary: chinh }) : ui.btn(bx, y + 74, 100, 26, G.t(chu)));
-    if (nut(x + 14, 'Chơi tiếp', true)) { const giu = hoi; hoi = null; let ok = false; try { ok = khoiPhuc(giu); } catch (e) { ok = false; console.error('Linh Khí: không dựng lại được lượt ải', e); } if (!ok) { xoa(); G.setScene(G.Village); } }
+    if (nut(x + 14, 'Chơi tiếp', true)) {
+      const giu = hoi; hoi = null;
+      const chay = () => { let ok = false; try { ok = khoiPhuc(giu); } catch (e) { ok = false; console.error('Linh Khí: không dựng lại được lượt ải', e); } if (!ok) { xoa(); G.setScene(G.Village); } };
+      // 14/10 (bước 1, mục 1): ảnh riêng của vùng chưa về thì chờ tải xong (js/sprite_custom.js G.choVung) rồi mới dựng lại lượt ải
+      if (G.choVung) G.choVung(giu.r, giu.i === 4, chay); else chay();
+    }
     else if (nut(x + w - 114, 'Bỏ ải này', false)) { hoi = null; xoa(); }
   }
 })();

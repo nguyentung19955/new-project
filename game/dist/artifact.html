@@ -53,7 +53,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.14-2003";
+(window.G = window.G || {}).VERSION = "lk-2026.10.14-2011";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -21285,6 +21285,15 @@ MA._xong();
   // Tắt khi đóng gói: LK_ANH_ROI=0 (về tệp linh-khi-anh.<mã>.json như Đợt 10).
   const ROI = G.ANH_ROI && typeof G.ANH_ROI === 'object' && Array.isArray(G.customSpriteData) ? G.ANH_ROI : null;
   let roiMo = null;
+  // 14/10 (bước 1 làm chắc, mục 1): TẢI THEO VÙNG. Ảnh riêng một vùng (_u[4] = 1, game/build.py vung_rieng: quái, trùm + dáng pha, sàn / tường,
+  // cửa, vật trang trí của Rừng già / Hang biển / Lâu đài cổ) KHÔNG tải ở màn chào. Chọn một ải trên bản đồ (SC.taiVung) hoặc vào ải thì mới tải
+  // vùng đó; vùng chưa đủ ảnh thì thẻ ải hiện "Đang tải…" và vào ải phải chờ (màn chờ G.ChoVung), không vẽ hình code thay. Tải xong vùng đang chọn
+  // và hết việc khác thì tải trước vùng kế tiếp. Hình game cần vẽ ngay (roiCan, ví dụ quái ở trang Ông Từ) vẫn tải ngay như cũ.
+  // Tắt: ?taivung=0 hoặc G.TAI_VUNG = false (tải mọi ảnh sau màn chào như 12/10).
+  if (G.TAI_VUNG === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]taivung=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.TAI_VUNG = !tat; }
+  SC.taiVung = () => {};
+  SC.vungTien = () => ({ san: true, xong: 0, tong: 0, loi: 0 });
+  G.choVung = function (r, trum, fn) { return fn(); };
   if (ROI) {
     const bayGio = () => { try { return Math.round(performance.now()); } catch (e) { return 0; } }; // mốc thời gian từng ảnh (cho bài đo tải)
     const theoSrc = new Map(), theoMa = new Map(), hang = [], choApDung = [], hongDs = [];
@@ -21292,6 +21301,8 @@ MA._xong();
     // phần còn lại 16 (trong đó vùng khác / trùm nền nhiều nhất 3) để hình cần ngay không phải xếp hàng sau tệp lớn.
     const MAX_GAP = 24, MAX = 16, MAX_THAP = 3, WEBP_THU = 'data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA==';
     let webpHong = 0, dang = 0, dangThap = 0, dangGap = 0, choThu = 0, mo = false, coWebp = null, vung = -1, trumMo = false, daXong = 0, ketThuc = false, henGd = 0, keoHen = false;
+    const moVung = [0, 0, 0]; // tải theo vùng: 0 chưa mở, 1 tải trước (rảnh), 2 người chơi đã chọn vùng
+    let vungChon = -1;
     for (const t of G.customSpriteData) { const src = t && (t.tam || t.anh); if (typeof src === 'string' && Array.isArray(t._u)) theoSrc.set(src, t); }
     AS.tt = 'cho'; AS.tep = 'anh/'; AS.tong = 0; AS.xong = 0;
     SC.roi = { get webp() { return coWebp; }, hang: () => hang.length, dang: () => dang, xong: () => daXong, loi: () => hongDs.length, ds: theoMa };
@@ -21318,7 +21329,7 @@ MA._xong();
       theoSrc.delete(src);
       const u = t._u;
       const it = { img, ma: t.ma, png: src, webp: typeof t.webp === 'string' && /^anh\/[A-Za-z0-9_.-]{1,90}\.webp$/.test(t.webp) ? t.webp : null,
-        bac: u[0] | 0, co: +u[1] || 0, vung: u[2] | 0, trum: !!u[3], can: 0, lan: 0, xong: img.onload, hong: img.onerror, dangTai: false, thap: false, ve: false, boWebp: false };
+        bac: u[0] | 0, co: +u[1] || 0, vung: u[2] | 0, trum: !!u[3], khoa: !!(G.TAI_VUNG && u[4] && (u[2] | 0) >= 0 && (u[2] | 0) <= 2), can: 0, lan: 0, xong: img.onload, hong: img.onerror, dangTai: false, thap: false, ve: false, boWebp: false };
       img.onload = null; img.onerror = null;
       theoMa.set(t.ma, it); hang.push(it); AS.tong++;
       napSauDangChay = true; // hình em bé / đồ về muộn: chỉ xoá hình đã nhớ khi đang dùng (xoaNhoDoKhiCan), như lúc nạp tệp tải sau
@@ -21341,7 +21352,7 @@ MA._xong();
     function bom0() {
       if (coWebp === null) return; // chờ kiểm WebP (vài mili giây)
       if (dang < MAX_GAP && hang.length) {
-        const v = vungNay(), uu = (it) => (it.can ? 0 : it.bac === 0 ? 1 : it.bac === 2 ? (it.vung === v ? 2 : 4) : it.bac === 3 ? (trumMo && it.vung === v ? 2 : 5) : 3);
+        const v = vungNay(), uu = (it) => (it.can ? 0 : it.khoa ? uuVung(it) : it.bac === 0 ? 1 : it.bac === 2 ? (it.vung === v ? 2 : 4) : it.bac === 3 ? (trumMo && it.vung === v ? 2 : 5) : 3);
         for (const it of hang) it.u = uu(it);
         hang.sort((a, b) => a.u - b.u || a.co - b.co);
         // trước màn chào, hoặc còn hình màn chào / làng / hình đang cần chưa về: chỉ tải các hình đó (cả đường truyền cho chúng)
@@ -21349,14 +21360,79 @@ MA._xong();
         const bo = [];
         while (dang < MAX_GAP && hang.length) {
           const it = hang.shift();
+          if (it.u >= 90) { bo.push(it); break; } // ảnh riêng của vùng chưa mở: chưa tải (đã xếp cuối hàng)
           if (it.u > 1 && (!mo || conGap || dang >= MAX)) { bo.push(it); break; } // đã xếp theo ưu tiên: các hình sau cũng không được tải lúc này
           if (it.u >= 4 && dangThap >= MAX_THAP) { bo.push(it); continue; }
           tai(it, it.u >= 4, it.u <= 1);
         }
         if (bo.length) hang.unshift(...bo);
       }
+      taiTruocKhiRanh();
       capNhat();
     }
+    // Ưu tiên ảnh riêng vùng: vùng đã chọn (quái, nền) ngang quái vùng đang chơi; trùm vùng sau phần còn lại (ngay khi vào ải 4–5);
+    // vùng tải trước: bậc thấp (nhiều nhất 3 tệp một lúc); vùng chưa mở: 99 (không tải).
+    function uuVung(it) {
+      const m = moVung[it.vung];
+      if (m === 2) return it.trum ? (trumMo && it.vung === vung ? 2 : 3) : 2;
+      if (m === 1) return it.trum ? 6 : 5;
+      return 99;
+    }
+    // Hết việc (không còn ảnh nào đang tải / chờ thử lại / chờ nhận) → mở tải trước vùng kế tiếp của vùng vừa chọn.
+    function taiTruocKhiRanh() {
+      if (!mo || !G.TAI_VUNG || vungChon < 0 || dang || choThu || choApDung.length) return;
+      for (const it of hang) if ((it.u == null ? 0 : it.u) < 90) return;
+      const k = vungChon + 1;
+      if (k <= 2 && !moVung[k]) { moVung[k] = 1; ketThuc = false; napSauDangChay = true; ghi('Rảnh: tải trước ảnh vùng ' + (k + 1) + '.'); bom(); }
+    }
+    SC.taiVung = function (r) {
+      r = r | 0;
+      if (!G.TAI_VUNG || r < 0 || r > 2) return;
+      if (vungChon !== r || moVung[r] !== 2) { vungChon = r; moVung[r] = 2; ketThuc = false; napSauDangChay = true; bom(); }
+    };
+    // Tiến độ ảnh riêng của vùng r (trum: tính cả trùm vùng và dáng pha). san: đủ ảnh để vào ải.
+    SC.vungTien = function (r, trum) {
+      let xong = 0, tong = 0, loi = 0;
+      if (G.TAI_VUNG) for (const it of theoMa.values()) {
+        if (!it.khoa || it.vung !== r || (it.trum && !trum)) continue;
+        tong++; if (it.ve) xong++; else if (hongDs.indexOf(it) >= 0) loi++;
+      }
+      return { san: xong >= tong, xong, tong, loi, pct: tong ? Math.floor(xong / tong * 100) : 100 };
+    };
+    // Màn chờ ảnh vùng: vào ải khi vùng chưa đủ ảnh thì đứng ở đây (thanh "Đang tải…"), đủ ảnh thì vào luôn. Không vẽ hình code thay ảnh.
+    let cho = null;
+    G.ChoVung = {
+      enter() {},
+      update() {
+        if (!cho) return;
+        const tt = SC.vungTien(cho.r, cho.trum);
+        if (tt.san) { const fn = cho.fn; cho = null; try { fn(); } catch (e) { console.error('Linh Khí: vào ải sau khi tải ảnh vùng hỏng', e); if (G.scene === G.ChoVung) G.setScene(G.Village); } }
+      },
+      draw() {
+        const ui = G.ui, T = G.theme, c = G.ux;
+        if (!cho) return;
+        c.fillStyle = '#120d10'; c.fillRect(0, 0, 480, 270);
+        const tt = SC.vungTien(cho.r, cho.trum), R = G.REGIONS && G.REGIONS[cho.r];
+        const x = 120, y = 82, w = 240, h = 106;
+        if (T && T.panel) T.panel(x, y, w, h, G.t('Đang tải…')); else ui.panel(x, y, w, h, G.t('Đang tải…'));
+        ui.text(G.t('Đang tải ảnh {0}', R ? (G.kd ? G.kd(G.t(R.name)) : R.name) : ''), 240, y + 40, { size: 8.5, align: 'center', color: '#f0e0c0' });
+        ui.bar(150, y + 50, 180, 6, tt.tong ? tt.xong / tt.tong : 1, '#ffd27a');
+        ui.text(tt.xong + '/' + tt.tong, 240, y + 66, { size: 7.5, align: 'center', color: '#d8c8a8' });
+        const ranh = tt.loi > 0 && tt.loi + tt.xong >= tt.tong;
+        const nut = (bx, chu, chinh) => (T && T.btn ? T.btn(bx, y + 72, 96, 24, G.t(chu), { size: 8.5, primary: chinh }) : ui.btn(bx, y + 72, 96, 24, G.t(chu)));
+        if (ranh && nut(x + 18, 'Thử lại', true)) { if (SC.roiThuLai) { const r = cho.r; SC.roiThuLai((m) => { const it = theoMa.get(m); return !!(it && it.khoa && it.vung === r); }); } }
+        if (nut(x + w - 114, 'Về làng', false)) { cho = null; G.setScene(G.Village); }
+      },
+    };
+    if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({ 'Đang tải ảnh {0}': 'Loading {0} images', 'Đang tải…': 'Loading…', 'Thử lại': 'Retry', 'Về làng': 'Back to village' });
+    G.choVung = function (r, trum, fn) {
+      r = Math.max(0, Math.min(2, r | 0));
+      SC.taiVung(r);
+      if (!G.TAI_VUNG || SC.vungTien(r, trum).san) return fn();
+      cho = { r, trum: !!trum, fn };
+      G.setScene(G.ChoVung);
+      return undefined;
+    };
     function tai(it, thap, gap) {
       dang++; it.dangTai = true; it.thap = thap; if (thap) dangThap++; it.gap = gap; if (gap) dangGap++; it.tBat = bayGio();
       const url = (coWebp && it.webp && !it.boWebp ? it.webp : it.png) + (it.lan ? '?lan=' + it.lan : ''), img = it.img;
@@ -21401,7 +21477,10 @@ MA._xong();
     }
     function capNhat() {
       if (!mo) return;
-      if (hang.length || dang || choApDung.length || choThu) { AS.tt = 'tai'; ketThuc = false; return; }
+      let conHang = 0, khoaCho = 0;
+      for (const it of hang) { if ((it.u == null ? 0 : it.u) < 90) conHang++; else khoaCho++; }
+      AS.tong = theoMa.size - khoaCho; // ảnh riêng của vùng chưa mở không tính vào "Đang tải thêm ảnh… %"
+      if (conHang || dang || choApDung.length || choThu) { AS.tt = 'tai'; ketThuc = false; return; }
       if (ketThuc) return;
       ketThuc = true;
       AS.tt = hongDs.length ? 'loi' : 'xong'; AS.hetLuc = Date.now(); AS.loi = hongDs.length ? hongDs.length + ' ảnh không tải được' : '';
@@ -21434,7 +21513,15 @@ MA._xong();
       // Vào ải: ưu tiên quái vùng đó; ải 4–5 thì cả trùm và dáng pha của vùng.
       const g0 = G.startStage;
       if (typeof g0 === 'function' && !g0.roi) {
-        const g1 = function (r, i) { try { vung = Math.max(0, Math.min(2, r | 0)); trumMo = (i | 0) >= 3; } catch (e) { /* bỏ qua */ } const kq = g0.apply(this, arguments); try { bom(); } catch (e) { /* bỏ qua */ } return kq; };
+        const g1 = function (r, i) {
+          try { vung = Math.max(0, Math.min(2, r | 0)); trumMo = (i | 0) >= 3; } catch (e) { /* bỏ qua */ }
+          // tải theo vùng: vùng chưa đủ ảnh (ải trùm: cả trùm vùng) → màn chờ, đủ rồi mới vào ải
+          if (G.TAI_VUNG && G.scene !== G.ChoVung) {
+            const self = this, args = arguments;
+            try { SC.taiVung(vung); if (!SC.vungTien(vung, (i | 0) >= 4).san) return G.choVung(vung, (i | 0) >= 4, () => g1.apply(self, args)); } catch (e) { /* bỏ qua: vào ải như cũ */ }
+          }
+          const kq = g0.apply(this, arguments); try { bom(); } catch (e) { /* bỏ qua */ } return kq;
+        };
         g1.roi = true; G.startStage = g1;
       }
       try { window.addEventListener('online', () => { for (const it of hongDs.splice(0)) { it.lan = 0; hang.push(it); } bom(); }); } catch (e) { /* bỏ qua */ }
@@ -32319,7 +32406,11 @@ MA._xong();
       // V25: chữ to hơn; dòng thưởng dài quá 2 dòng (ải trùm) thì giữ cỡ nhỏ cũ để không lọt khỏi khung
       const rw = i === 4 ? G.t('Thưởng: {0} kinh nghiệm, ~{1} vàng, {2} {3}, {4} mảnh {5}, linh khí', b.xp, b.gold, 5 + i, R.mat.toLowerCase(), V.diff ? 4 : 3, R.bossName) : G.t('Thưởng: {0} kinh nghiệm, ~{1} vàng, {2} {3}', b.xp, b.gold, 5 + i, R.mat.toLowerCase());
       ui.para(rw, 256, 250.5, 144, { size: 6.5, color: SOFT, tiny: ui.wrap(rw, 144, 6.5).length > 2 });
-      if (T.btn(404, 217, 64, 38, 'Lên đò', { size: 11, primary: true })) G.startStage(r, i, V.diff);
+      // 14/10 (bước 1, mục 1): chọn ải là bắt đầu tải ảnh riêng của vùng đó (js/sprite_custom.js SC.taiVung). Chưa đủ ảnh: nút ghi "Đang tải…"
+      // và thanh tiến độ dưới nút; bấm vẫn được (vào màn chờ, đủ ảnh thì tự vào ải).
+      const SCv = G.spriteCustom, tv = SCv && SCv.vungTien ? (SCv.taiVung(r), SCv.vungTien(r, i === 4)) : null, choTai = !!(tv && !tv.san);
+      if (choTai) { ui.rect(404, 258, 64, 4, 'rgba(0,0,0,0.55)'); ui.rect(404, 258, Math.round(64 * tv.xong / Math.max(1, tv.tong)), 4, '#ffd27a'); }
+      if (T.btn(404, 217, 64, 38, choTai ? 'Đang tải…' : 'Lên đò', { size: choTai ? 8.5 : 11, primary: true })) G.startStage(r, i, V.diff);
     } else ui.text('Chạm một ải trên tranh để xem.', 256, 238, { size: 8, color: SOFT });
   }
 
@@ -37929,7 +38020,12 @@ window.FIREBASE_CONFIG = {
     ui.text(G.t('Lần trước con đang chơi dở một ải.'), x + w / 2, y + 40, { size: 8, align: 'center', color: '#f0e0c0' });
     ui.text(G.t('{0}: ải {1}, đã dọn {2} phòng, máu {3}/{4}', G.kd ? G.kd(G.t(reg.name)) : reg.name, o.i + 1, n, Math.round(o.P.hp || 0), Math.round(o.P.maxhp || 0)), x + w / 2, y + 56, { size: 7.5, align: 'center', color: '#d8c8a8' });
     const nut = (bx, chu, chinh) => (T && T.btn ? T.btn(bx, y + 74, 100, 26, G.t(chu), { size: 8.5, primary: chinh }) : ui.btn(bx, y + 74, 100, 26, G.t(chu)));
-    if (nut(x + 14, 'Chơi tiếp', true)) { const giu = hoi; hoi = null; let ok = false; try { ok = khoiPhuc(giu); } catch (e) { ok = false; console.error('Linh Khí: không dựng lại được lượt ải', e); } if (!ok) { xoa(); G.setScene(G.Village); } }
+    if (nut(x + 14, 'Chơi tiếp', true)) {
+      const giu = hoi; hoi = null;
+      const chay = () => { let ok = false; try { ok = khoiPhuc(giu); } catch (e) { ok = false; console.error('Linh Khí: không dựng lại được lượt ải', e); } if (!ok) { xoa(); G.setScene(G.Village); } };
+      // 14/10 (bước 1, mục 1): ảnh riêng của vùng chưa về thì chờ tải xong (js/sprite_custom.js G.choVung) rồi mới dựng lại lượt ải
+      if (G.choVung) G.choVung(giu.r, giu.i === 4, chay); else chay();
+    }
     else if (nut(x + w - 114, 'Bỏ ải này', false)) { hoi = null; xoa(); }
   }
 })();
