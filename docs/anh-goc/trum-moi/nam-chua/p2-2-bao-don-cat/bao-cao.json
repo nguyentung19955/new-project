@@ -1,0 +1,178 @@
+{
+ "anh": "p2-2-bao-don.png",
+ "co_anh": [
+  2232,
+  784
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 6,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 27,
+  "vien_khu": 11277,
+  "nga_mau_nen_trong_hinh": 1764
+ },
+ "manh_bo": [
+  {
+   "khung_bao": [
+    2153,
+    209,
+    2171,
+    227
+   ],
+   "diem_anh": 30
+  },
+  {
+   "khung_bao": [
+    836,
+    252,
+    852,
+    269
+   ],
+   "diem_anh": 15
+  },
+  {
+   "khung_bao": [
+    1697,
+    256,
+    1712,
+    271
+   ],
+   "diem_anh": 7
+  },
+  {
+   "khung_bao": [
+    773,
+    319,
+    789,
+    335
+   ],
+   "diem_anh": 13
+  }
+ ],
+ "loi": [],
+ "canh_bao": [
+  "Hàng 1 khung 1 cao 368 (trung vị 464) — lệch cỡ >15%"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "p2-2-bao-don",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      36,
+      268,
+      380,
+      636
+     ],
+     "chan": [
+      165.5,
+      636
+     ],
+     "rong": 344,
+     "cao": 368,
+     "diem_anh": 76907,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      386,
+      235,
+      727,
+      637
+     ],
+     "chan": [
+      514.0,
+      637
+     ],
+     "rong": 341,
+     "cao": 402,
+     "diem_anh": 78618,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      733,
+      190,
+      1079,
+      637
+     ],
+     "chan": [
+      861.5,
+      637
+     ],
+     "rong": 346,
+     "cao": 447,
+     "diem_anh": 82893,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1087,
+      156,
+      1433,
+      637
+     ],
+     "chan": [
+      1218.0,
+      637
+     ],
+     "rong": 346,
+     "cao": 481,
+     "diem_anh": 94852,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1433,
+      111,
+      1789,
+      637
+     ],
+     "chan": [
+      1577.0,
+      637
+     ],
+     "rong": 356,
+     "cao": 526,
+     "diem_anh": 108276,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1789,
+      109,
+      2189,
+      637
+     ],
+     "chan": [
+      1963.5,
+      637
+     ],
+     "rong": 400,
+     "cao": 528,
+     "diem_anh": 139826,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}
