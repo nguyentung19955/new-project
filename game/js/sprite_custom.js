@@ -75,6 +75,13 @@
     try { tat = typeof location !== 'undefined' && /[?&]trumnho=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
     G.TRUM_NHO_PHA = !tat;
   }
+  // 14/10 (sửa nhỏ, chủ dự án "Ok hết"): người làng cử động lại: hàng đứng lặp, hàng nói khi em bé lại gần / đang nói chuyện (village_scene.js
+  // truyền look). Tắt: G.NL_DONG = false hoặc ?nldong=0 (như 12/10: đứng yên một khung đầu hàng đứng).
+  if (G.NL_DONG === undefined) {
+    let tat = false;
+    try { tat = typeof location !== 'undefined' && /[?&]nldong=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
+    G.NL_DONG = !tat;
+  }
   let napSauDangChay = false, trongNapSau = false;
   // Tải nhanh (12/10): ảnh rời. roiNhan(img, src) nhận ảnh anh/<mã>.<mã nội dung>.png vào hàng chờ; roiCan(ma) báo game đang cần hình ma
   // (chưa có thì tải ngay). Chỉ có ở bản 2 tệp ảnh rời (G.ANH_ROI); bản một tệp, công cụ: null, như cũ.
@@ -881,7 +888,7 @@
     o = o || {};
     const ten = o.anim === 'noi' && sp.dt.noi ? 'noi' : 'idle', a = sp.dt[ten], s = o.s || 1;
     c.save(); c.translate(Math.round(x), Math.round(y)); if (s !== 1) c.scale(s, s);
-    // 12/10 (chủ dự án): người làng chỉ đứng yên, không nhún nhảy theo khung; bật lại hoạt ảnh: G.NL_DONG = true
+    // G.NL_DONG (mặc định bật từ 14/10, xem đầu tệp): chạy khung theo o.t; tắt (?nldong=0) thì đứng yên khung đầu hàng đứng như 12/10
     SC.veKhung(c, sp, G.NL_DONG ? ten : 'idle', G.NL_DONG ? khungLap(a, Math.max(0, o.t || 0)) : 0, o.face < 0 ? -1 : 1, {});
     c.restore();
   };

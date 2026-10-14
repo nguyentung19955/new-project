@@ -1,5 +1,5 @@
 """Bản đồ chọn ải: docs/anh-goc/nen-phong/ban-do-chon-ai.png (1672×941) -> gd-ban-do-vung (480×270, net 1; game dán vào tranh 480×270).
-python3 dung-ban-do.py [--ghi]  — và ảnh soát ../xem-ban-do.png (bản đồ + 15 ô ải đặt thử bằng thẻ ảnh mới, đường nét đứt, chữ, ô UI chồng lên).
+python3 dung-ban-do.py [--ghi] [--soat=xem-ban-do-2.png]  — và ảnh soát ../xem-ban-do.png (bản đồ + 15 ô ải đặt thử bằng thẻ ảnh mới, đường nét đứt, chữ, ô UI chồng lên).
 Toạ độ (VS.MAP trong js/village_scene.js) lấy từ MAP bên dưới — sửa ở đây rồi chép sang game."""
 import sys, os, io, json, base64
 import numpy as np
@@ -65,4 +65,5 @@ d = json.load(open(os.path.join(DAY, 'game/art/custom/nl-lai.sprite.json'), enco
 a = Image.open(io.BytesIO(base64.b64decode(d['tam'].split(',')[1]))).convert('RGBA'); n = d['net']; fw, fh = d['khung_rong'] * n, d['khung_cao'] * n
 k = a.crop((0, 0, fw, fh)); k = k.resize((fw * 2 * S // n, fh * 2 * S // n), Image.NEAREST)
 bg.alpha_composite(k, (int((32 - d['goc'][0] * 2) * S), int((264 - d['goc'][1] * 2) * S)))
-bg.convert('RGB').save(os.path.join(os.path.dirname(os.path.abspath(__file__)), '../xem-ban-do.png'))
+SOAT = next((x.split('=', 1)[1] for x in sys.argv if x.startswith('--soat=')), 'xem-ban-do.png')  # 14/10 sửa nhỏ: --soat=xem-ban-do-2.png
+bg.convert('RGB').save(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', SOAT))

@@ -53,7 +53,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.14-0945";
+(window.G = window.G || {}).VERSION = "lk-2026.10.14-1032";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -19770,6 +19770,13 @@ MA._xong();
     try { tat = typeof location !== 'undefined' && /[?&]trumnho=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
     G.TRUM_NHO_PHA = !tat;
   }
+  // 14/10 (sửa nhỏ, chủ dự án "Ok hết"): người làng cử động lại: hàng đứng lặp, hàng nói khi em bé lại gần / đang nói chuyện (village_scene.js
+  // truyền look). Tắt: G.NL_DONG = false hoặc ?nldong=0 (như 12/10: đứng yên một khung đầu hàng đứng).
+  if (G.NL_DONG === undefined) {
+    let tat = false;
+    try { tat = typeof location !== 'undefined' && /[?&]nldong=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
+    G.NL_DONG = !tat;
+  }
   let napSauDangChay = false, trongNapSau = false;
   // Tải nhanh (12/10): ảnh rời. roiNhan(img, src) nhận ảnh anh/<mã>.<mã nội dung>.png vào hàng chờ; roiCan(ma) báo game đang cần hình ma
   // (chưa có thì tải ngay). Chỉ có ở bản 2 tệp ảnh rời (G.ANH_ROI); bản một tệp, công cụ: null, như cũ.
@@ -20576,7 +20583,7 @@ MA._xong();
     o = o || {};
     const ten = o.anim === 'noi' && sp.dt.noi ? 'noi' : 'idle', a = sp.dt[ten], s = o.s || 1;
     c.save(); c.translate(Math.round(x), Math.round(y)); if (s !== 1) c.scale(s, s);
-    // 12/10 (chủ dự án): người làng chỉ đứng yên, không nhún nhảy theo khung; bật lại hoạt ảnh: G.NL_DONG = true
+    // G.NL_DONG (mặc định bật từ 14/10, xem đầu tệp): chạy khung theo o.t; tắt (?nldong=0) thì đứng yên khung đầu hàng đứng như 12/10
     SC.veKhung(c, sp, G.NL_DONG ? ten : 'idle', G.NL_DONG ? khungLap(a, Math.max(0, o.t || 0)) : 0, o.face < 0 ? -1 : 1, {});
     c.restore();
   };
@@ -31832,12 +31839,13 @@ MA._xong();
   const MAP = (VS.MAP = {
     // 14/10: theo tranh mới docs/anh-goc/nen-phong/ban-do-chon-ai.png (đặt thử: docs/review/ke-hoach-cai-thien/npc-ban-do-bao-truoc/xem-ban-do.png):
     // Rừng già bên trái (rừng + thác), Hang biển dọc bờ biển dưới (hang đá), Lâu đài cổ trên phải (núi lửa + lâu đài). Ô ải đặt trên đất trống.
+    // 14/10 sửa nhỏ: giãn Lâu đài cổ (cách ngang ≥ 36, trùm ≥ 41) và Rừng già để thẻ bia đá + dòng sao không chồng nhau (soát: xem-ban-do-2.png).
     nodes: [
-      [[102, 172], [126, 136], [98, 104], [132, 74], [176, 66]],
+      [[102, 178], [128, 138], [98, 104], [138, 80], [180, 66]],
       [[206, 180], [248, 166], [290, 176], [336, 166], [396, 174]],
-      [[312, 114], [344, 96], [378, 78], [406, 102], [438, 80]],
+      [[300, 112], [336, 96], [372, 104], [408, 92], [449, 84]],
     ],
-    from: [[70, 206], [150, 214], [176, 66]], // đường vào ải đầu của từng vùng
+    from: [[70, 206], [150, 214], [180, 66]], // đường vào ải đầu của từng vùng
     names: [[44, 24, '#2f5a3a'], [196, 238, '#2a5a7a'], [372, 58, '#7a2a22']], // chỗ ghi tên vùng và màu chữ
     bossLab: [[0, 31], [36, 4], [0, 31]], // chỗ ghi tên trùm, dời so với ô trùm
     soon: [['Núi tuyết', 110, 52, 110, 62], ['Núi lửa', 318, 50, 318, 60], ['Đầm lầy', 247, 72, 247, 82]], // vùng sắp có (tranh đã vẽ sẵn ổ khoá ở vùng sương)

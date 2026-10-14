@@ -1191,12 +1191,13 @@
   const MAP = (VS.MAP = {
     // 14/10: theo tranh mới docs/anh-goc/nen-phong/ban-do-chon-ai.png (đặt thử: docs/review/ke-hoach-cai-thien/npc-ban-do-bao-truoc/xem-ban-do.png):
     // Rừng già bên trái (rừng + thác), Hang biển dọc bờ biển dưới (hang đá), Lâu đài cổ trên phải (núi lửa + lâu đài). Ô ải đặt trên đất trống.
+    // 14/10 sửa nhỏ: giãn Lâu đài cổ (cách ngang ≥ 36, trùm ≥ 41) và Rừng già để thẻ bia đá + dòng sao không chồng nhau (soát: xem-ban-do-2.png).
     nodes: [
-      [[102, 172], [126, 136], [98, 104], [132, 74], [176, 66]],
+      [[102, 178], [128, 138], [98, 104], [138, 80], [180, 66]],
       [[206, 180], [248, 166], [290, 176], [336, 166], [396, 174]],
-      [[312, 114], [344, 96], [378, 78], [406, 102], [438, 80]],
+      [[300, 112], [336, 96], [372, 104], [408, 92], [449, 84]],
     ],
-    from: [[70, 206], [150, 214], [176, 66]], // đường vào ải đầu của từng vùng
+    from: [[70, 206], [150, 214], [180, 66]], // đường vào ải đầu của từng vùng
     names: [[44, 24, '#2f5a3a'], [196, 238, '#2a5a7a'], [372, 58, '#7a2a22']], // chỗ ghi tên vùng và màu chữ
     bossLab: [[0, 31], [36, 4], [0, 31]], // chỗ ghi tên trùm, dời so với ô trùm
     soon: [['Núi tuyết', 110, 52, 110, 62], ['Núi lửa', 318, 50, 318, 60], ['Đầm lầy', 247, 72, 247, 82]], // vùng sắp có (tranh đã vẽ sẵn ổ khoá ở vùng sương)
