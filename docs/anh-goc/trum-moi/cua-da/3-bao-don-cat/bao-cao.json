@@ -1,0 +1,187 @@
+{
+ "anh": "3-bao-don.png",
+ "co_anh": [
+  2232,
+  784
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 6,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 20,
+  "vien_khu": 13191,
+  "nga_mau_nen_trong_hinh": 43223
+ },
+ "manh_bo": [
+  {
+   "khung_bao": [
+    2005,
+    187,
+    2027,
+    212
+   ],
+   "diem_anh": 97
+  },
+  {
+   "khung_bao": [
+    1627,
+    219,
+    1652,
+    247
+   ],
+   "diem_anh": 136
+  },
+  {
+   "khung_bao": [
+    1683,
+    289,
+    1701,
+    310
+   ],
+   "diem_anh": 43
+  },
+  {
+   "khung_bao": [
+    2056,
+    305,
+    2073,
+    322
+   ],
+   "diem_anh": 15
+  }
+ ],
+ "loi": [],
+ "canh_bao": [
+  "Mảnh 97 điểm ảnh ở [2005, 187, 2027, 212] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 136 điểm ảnh ở [1627, 219, 1652, 247] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 43 điểm ảnh ở [1683, 289, 1701, 310] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Hàng 1 khung 1 cao 290 (trung vị 391) — lệch cỡ >15%",
+  "Hàng 1 khung 2 cao 321 (trung vị 391) — lệch cỡ >15%",
+  "Hàng 1 khung 6 cao 457 (trung vị 391) — lệch cỡ >15%"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "3-bao-don",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      30,
+      325,
+      391,
+      615
+     ],
+     "chan": [
+      212.0,
+      615
+     ],
+     "rong": 361,
+     "cao": 290,
+     "diem_anh": 63409,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      392,
+      290,
+      756,
+      611
+     ],
+     "chan": [
+      565.5,
+      611
+     ],
+     "rong": 364,
+     "cao": 321,
+     "diem_anh": 70395,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      761,
+      244,
+      1115,
+      611
+     ],
+     "chan": [
+      912.0,
+      611
+     ],
+     "rong": 354,
+     "cao": 367,
+     "diem_anh": 76912,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1119,
+      200,
+      1476,
+      615
+     ],
+     "chan": [
+      1258.0,
+      615
+     ],
+     "rong": 357,
+     "cao": 415,
+     "diem_anh": 84829,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1482,
+      189,
+      1836,
+      616
+     ],
+     "chan": [
+      1620.0,
+      616
+     ],
+     "rong": 354,
+     "cao": 427,
+     "diem_anh": 87814,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1847,
+      159,
+      2200,
+      616
+     ],
+     "chan": [
+      1981.5,
+      616
+     ],
+     "rong": 353,
+     "cao": 457,
+     "diem_anh": 92277,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    }
+   ]
+  }
+ ]
+}
