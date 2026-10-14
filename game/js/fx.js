@@ -351,6 +351,7 @@
     if (o.theo) h.theo = o.theo;
     if (o.mau) { h.mau = o.mau; h.kieu = o.kieu || ''; } // đợt 3: nhuộm ảnh trắng theo hệ (G.fxAnh.nhuom)
     if (o.mo != null) h.mo3 = o.mo;
+    if (o.mr) h.mr = true; // 14/10 trum-chet-pha3: mờ vào 0,05 giây đầu, mờ ra 0,08 giây cuối (không hiện / tắt phụt)
     return true;
   }
   // Phiên hieu-ung-b3 (nổ, trạng thái, trùm, cổng): hu-no-khoi, hu-soc-nhiet, hu-cot-lua, hu-cot-nuoc, hu-vong-phep (js/fx_ky_nang.js), hu-be-trung, hu-hoi-mau,
@@ -1814,6 +1815,12 @@
   });
 
   // ---------- cái chết của quái và trùm ----------
+  // 14/10 trum-chet-pha3: trùm VÙNG (không phải trùm nhỏ) có ảnh AI thân → cái chết chỉ dùng ảnh (cờ tắt ?trumcu=1, G.TRUM_MOI).
+  function chetMoi(e) {
+    if (G.TRUM_MOI === false || !e || !e.isBoss || e.kind === 'mini' || !e.art) return false;
+    const SC = G.spriteCustom, sp = SC && SC.ds && SC.ds[e.art];
+    return !!(sp && sp.ready);
+  }
   api('death', (e, o) => {
     const el = e.lastEl || (o && o.el) || e.el || null;
     const snap = Object.assign({}, e);
@@ -1823,7 +1830,9 @@
     const skin = e.skin && e.skin[0] ? rampOf(e.skin[0]) : RAMP.steel;
     const ad = e.art && G.monsterArt ? G.monsterArt.dur(e.art, 'die') : 0; // quái mới: chết theo cử động riêng
     if (e.isBoss) {
-      S.dying.push({ e: snap, t: ad || 1.25, t0: ad || 1.25, art: !!ad, boss: true, mini: e.kind === 'mini', pl: PL, el, skin, nb: 0, hh: Math.min(110, (e.h || 40) * (e.scale && e.kind !== 'mini' ? e.scale : 1)), w: Math.max(14, e.r) });
+      S.dying.push({ e: snap, t: ad || 1.25, t0: ad || 1.25, art: !!ad, boss: true, mini: e.kind === 'mini', pl: PL, el, skin, nb: 0, hh: Math.min(110, (e.h || 40) * (e.scale && e.kind !== 'mini' ? e.scale : 1)), w: Math.max(14, e.r), moi: chetMoi(e) });
+      // 14/10 trum-chet-pha3: trùm vùng có ảnh: bỏ chớp trắng cả màn hình (vẽ code), rung nhẹ hơn; khựng hình giữ nguyên
+      if (chetMoi(e)) { snap.flash = 0; trauma(0.5); stop(120); return; }
       S.flash = 0.5; S.flashCol = '255,255,255';
       trauma(1); stop(120);
       return;
@@ -1867,7 +1876,16 @@
       }
       // chuỗi nổ nhỏ chạy khắp thân trùm, càng về cuối càng dồn dập
       d.nb -= dt;
-      if (d.nb <= 0) {
+      if (d.nb <= 0 && d.moi) {
+        // 14/10 trum-chet-pha3 (trùm vùng có ảnh AI, cờ tắt ?trumcu=1): chỉ còn ảnh nổ nhỏ hu-no-nho — phát 5 khung trong 0,42 giây (~12 khung/giây,
+        // cũ 0,22 giây ≈ 23 khung/giây nháy quá nhanh), mờ vào/ra; bỏ chớp + vòng sóng vẽ code, mảnh văng, khói, chớp trắng thân. Nhịp nổ thưa hơn chút.
+        d.nb = 0.2 - 0.08 * k;
+        const x = d.e.x + rr(-d.w, d.w), y = d.e.y - rr(4, d.hh), maNo = anhHe('hu-no-nho', d.el);
+        if (maNo) anh(maNo, x, y, { sc: rr(0.8, 1.15), f: R() < 0.5 ? 1 : -1, t: 0.42, gian: true, mr: true });
+        else add({ ty: 'flash', x, y, r: rr(5, 8), t: 0.1, c: '#ffffff', c2: d.pl.c2, ly: 1 }); // thiếu ảnh: tối thiểu một chớp nhỏ
+        trauma(0.12 + 0.12 * k);
+      }
+      else if (d.nb <= 0) {
         d.nb = 0.16 - 0.09 * k;
         const x = d.e.x + rr(-d.w, d.w), y = d.e.y - rr(4, d.hh);
         // Ảnh AI nổ nhỏ trên thân trùm (hu-no-nho, có bản theo hệ): điểm neo là tâm vụ nổ. Có ảnh thì bỏ chớp và vòng sóng vẽ bằng code.
@@ -1886,6 +1904,14 @@
   }
   function bossEnd(d) {
     const x = d.e.x, y = d.e.y - d.hh * 0.4;
+    if (d.moi) {
+      // 14/10 trum-chet-pha3: trùm vùng có ảnh AI → chỉ ảnh nổ cuối hu-trum-no (6 khung, 10 khung/giây, mờ ra ở khung cuối). Bỏ tia, mảnh văng,
+      // khói, đốm vàng, chớp cả màn hình vẽ bằng code. Thiếu ảnh nổ cuối: tối thiểu một vòng sóng + một chớp (xem PROMPT-ANH.md).
+      const ma = anhHe('hu-trum-no', d.el);
+      if (!(ma && anh(ma, x, y, { t: 0.6, gian: true, mr: true }))) { addRing(x, d.e.y, 8, 90, 0.5, d.pl.c2, 4, 0); add({ ty: 'flash', x, y, r: 20, t: 0.16, c: '#ffffff', c2: d.pl.c2, ly: 1, sq: true }); }
+      trauma(0.6);
+      return;
+    }
     S.flash = 0.6; S.flashCol = '255,255,255';
     // Ảnh AI trùm nổ cuối (hu-trum-no, có bản theo hệ; khung to 192×160): điểm neo là tâm vụ nổ (khoảng giữa thân trùm), trùm nhỏ thì thu còn 0,7.
     // Có ảnh thì bỏ ba vòng sóng và chớp vẽ bằng code, tia và khói bớt hơn một nửa; mảnh văng và đốm vàng giữ nguyên.
@@ -2120,7 +2146,8 @@
             if (!ok) o.t = 0;
             break;
           }
-          if (!FA || !FA.ve(c, o.ma, th ? th.x : o.x, th ? th.y : o.y, o.gian ? k * FA.giay(o.ma) * 0.999 : o.t0 - o.t, o.goc, o.sc, o.f < 0, o.mo3, o.mau, o.kieu)) o.t = 0;
+          const moA = o.mr ? (o.mo3 == null ? 1 : o.mo3) * Math.min(1, (o.t0 - o.t) / 0.05, o.t / 0.08) : o.mo3;
+          if (!FA || !FA.ve(c, o.ma, th ? th.x : o.x, th ? th.y : o.y, o.gian ? k * FA.giay(o.ma) * 0.999 : o.t0 - o.t, o.goc, o.sc, o.f < 0, moA, o.mau, o.kieu)) o.t = 0;
           break;
         }
         case 'ring': {

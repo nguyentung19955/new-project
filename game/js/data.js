@@ -583,6 +583,10 @@
   // maxAlive: phòng thường chỉ có tối đa bấy nhiêu quái cùng lúc (tinh anh tính là hai), số còn lại chờ mọc nối tiếp.
   // Độ dẹt của vùng nguy hiểm và vũng hệ: cao bằng bấy nhiêu lần rộng. Trước là 0,6 (nhìn ngang), nay tròn hơn cho sàn nhìn từ trên.
   G.ZK = 0.85;
+  // 14/10 trum-chet-pha3 (docs/review/ke-hoach-cai-thien/trum-chet-pha3): trùm vùng chết bằng ảnh (bỏ hiệu ứng chết vẽ tay), hiệu ứng trùm chạy
+  // đều nhịp (căn tâm từng khung, giữ ~12 khung/giây, mờ vào/ra), chiêu tròn đối xứng quanh tâm trùm. Chỉ đổi HÌNH và vị trí cho đối xứng,
+  // không đổi sát thương / thời gian chiêu. Cờ tắt: ?trumcu=1 (hoặc G.TRUM_MOI = false) → y hệt kiểu cũ.
+  if (G.TRUM_MOI === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]trumcu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.TRUM_MOI = !cu; }
   // Lăn né: tốc độ ngang (điểm ảnh mỗi giây) và tỉ lệ chiều dọc so với chiều ngang (bằng tỉ lệ lúc đi bộ).
   G.DODGE = { vx: 195, ky: 0.75 };
   G.MINI_HP = 12; // máu trùm nhỏ = hệ số x máu quái thường

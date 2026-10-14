@@ -143,6 +143,9 @@
       // Tệp cũ không có hai mục này: null, phát như trước.
       sp.dungYen = Array.isArray(tep.dung_yen) ? tep.dung_yen.filter((x) => typeof x === 'string' && /^[A-Za-z0-9_]{1,20}$/.test(x)).slice(0, 20) : null;
       sp.nhun = tep.nhun == null || !isFinite(+tep.nhun) ? null : clamp(+tep.nhun, 0, 200);
+      // 14/10 trum-chet-pha3: "can_tam": { <động tác>: [độ dời ngang từng khung] } (điểm ảnh game, đo từ ảnh: tâm thân trên sàn → điểm neo).
+      // Ảnh AI cắt không căn tâm: thân nhảy ngang giữa các khung / các hàng, lệch khỏi điểm neo (lật mặt thì lệch sang phía kia). Cờ tắt ?trumcu=1.
+      if (tep.can_tam && typeof tep.can_tam === 'object') { sp.ct = {}; for (const k of Object.keys(dt)) { const v = tep.can_tam[k]; if (Array.isArray(v)) sp.ct[k] = v.map((x) => clamp(Math.round(+x || 0), -40, 40)); } }
       // Em bé thân AI: đồ đang mặc (mũ, áo, đồ lưng, bùa, dấu mặt nạ, cánh) vẫn khoác lên thân AI, trừ khi tệp ghi "khoac_do": false.
       // "neo": { "dau": [dx, dy], "than": [dx, dy], "tay": [dx, dy], "<động tác>": { "dau": [..], "than": [..], "tay": [..] } } dời chỗ đặt đồ
       // (đầu, thân) và vũ khí + nắm tay (tay) theo điểm ảnh cho khớp hình AI.
@@ -344,7 +347,8 @@
     c.save();
     c.imageSmoothingEnabled = false;
     if ((face < 0) !== !!sp.lat) c.scale(-1, 1);
-    const dx = -sp.ax, dy = -sp.ay + (o.dy || 0);
+    const ct = sp.ct && G.TRUM_MOI !== false ? sp.ct[a === sp.dt[ten] ? ten : 'idle'] : null; // 14/10: căn tâm từng khung (xem "can_tam")
+    const dx = -sp.ax + (ct && ct[i] ? ct[i] : 0), dy = -sp.ay + (o.dy || 0);
     if (o.alpha != null) c.globalAlpha = ga * clamp(o.alpha, 0, 1);
     const a1 = c.globalAlpha;
     const th = o.than ? khungThan(sp, a.hang, i, o.than) : null; // Đợt 7: thân đã nhuộm theo trạng thái (giữ viền, mắt), không có thì vẽ thân thường
@@ -373,6 +377,55 @@
     if (/^chieu|^c\d$/.test(n)) return u < 0.4 ? mot('tele', u / 0.4) : mot('atk', (u - 0.4) / 0.6);
     return lap('idle');
   };
+  // 14/10 trum-chet-pha3 (cờ tắt ?trumcu=1): nhịp khung ĐỀU cho trùm vùng (js/boss.js truyền o.nhip = { moc }). Cách cũ (chonQuai) kéo giãn
+  // cả hàng theo độ dài cử động của monster_art.js: chiêu 2,2–2,6 giây → hàng đánh 4 khung chỉ ~3 khung/giây, chuyển pha 8 khung trong 2,4 giây,
+  // gục 6 khung trong 3,4 giây (một khung đứng gần 0,6 giây rồi nhảy). Nay mọi hàng chạy ~12 khung/giây theo đồng hồ của cử động:
+  //  - chiêu: báo trước (tele) tới đúng mốc ra đòn moc[0] (khung cuối đúng lúc đòn nổ; báo trước dài thì đưa đi đưa lại 3 khung cuối),
+  //    rồi hàng đánh một lượt, đưa đi đưa lại 3 khung cuối tới hết phần ra đòn moc[1], sau đó về đứng thở;
+  //  - chuyển pha: hàng báo trước một lượt rồi đưa đi đưa lại 3 khung cuối (nửa sau lấy tệp dáng pha mới như cũ);
+  //  - gục: quằn quại (hàng trúng đòn qua lại, 10 khung/giây), rồi hàng gục 10 khung/giây kết thúc đúng lúc bắt đầu mờ, giữ khung cuối khi mờ dần.
+  const NHIP = 12;
+  function quaLai(a, tt, k, fps) { // đưa đi đưa lại k khung cuối của hàng a (k >= 2) theo thời gian tt
+    const so = a.so, n = Math.min(k, so); if (n < 2) return so - 1;
+    const p = Math.floor(Math.max(0, tt) * (fps || NHIP)) % (2 * n - 2), j = p < n ? p : 2 * n - 2 - p;
+    return so - n + j;
+  }
+  SC.quaLai = quaLai;
+  SC.chonTrum = function (sp, n, t, D, moc) {
+    const dt = sp.dt, co = (x) => !!dt[x];
+    D = D > 0 ? D : (dt[n] && dt[n].giay) || 0.6;
+    const u = clamp(t / D, 0, 1), r = (ten, i, o) => Object.assign({ ten, i, u }, o || {});
+    if (/^chieu|^c\d$/.test(n)) {
+      const m0 = moc && moc[0] > 0 ? moc[0] : 0.4, m1 = moc && moc[1] > m0 ? moc[1] : Math.min(1, m0 + 0.35);
+      const Tw = m0 * D, T1 = m1 * D, te = co('tele') ? dt.tele : dt.idle, tk = co('tele') ? 'tele' : 'idle';
+      if (t < Tw) {
+        const nt = te.so, can = nt / NHIP; // thời gian một lượt hàng báo trước ở nhịp đều
+        if (Tw <= can * 1.35) return r(tk, Math.min(nt - 1, Math.floor((t / Tw) * nt))); // báo trước ngắn: một lượt, nhanh hơn chút
+        const dau = Math.max(0, nt - 3), tDau = dau / NHIP, tCuoi = Tw - tDau; // các khung đầu một lượt, 3 khung cuối đưa qua lại tới lúc ra đòn
+        if (t < tDau) return r(tk, Math.floor(t * NHIP));
+        // nhịp của đoạn qua lại chỉnh nhẹ quanh 12 khung/giây cho số vòng tròn: đúng mốc ra đòn đang ở khung cuối (p = 2 của chu kỳ 4)
+        const vong = Math.max(0, Math.round((tCuoi * NHIP - 2.5) / 4)), fps = (2.5 + 4 * vong) / Math.max(0.05, tCuoi);
+        return r(tk, quaLai(te, t - tDau, 3, fps));
+      }
+      const ak = co('atk') ? 'atk' : 'idle', at = dt[ak], ta = t - Tw;
+      if (ta < at.so / NHIP) return r(ak, Math.min(at.so - 1, Math.floor(ta * NHIP)));
+      if (t < T1) return r(ak, quaLai(at, ta - at.so / NHIP + 0.3, 3, 10)); // +0,3 giây: bắt đầu ở khung áp cuối (nối liền khung cuối vừa phát)
+      return r('idle', khungLap(dt.idle, t - T1));
+    }
+    if (n === 'phase2' || n === 'phase3') {
+      const te = co('tele') ? dt.tele : dt.idle, tk = co('tele') ? 'tele' : 'idle';
+      if (t < te.so / NHIP) return r(tk, Math.floor(t * NHIP));
+      return r(tk, quaLai(te, t - te.so / NHIP + 3 / NHIP, 3));
+    }
+    if (n === 'die') {
+      const mo = dt.die && dt.die.mo != null ? dt.die.mo : 0.6, alpha = 1 - seg(u, mo, 1);
+      if (!co('die')) return r('hit', co('hit') ? quaLai(dt.hit, t, dt.hit.so, 10) : 0, { alpha });
+      const tg = dt.die.so / 10, t0 = Math.max(0, mo * D - tg); // hàng gục 10 khung/giây, xong đúng lúc bắt đầu mờ
+      if (t < t0 && co('hit')) return r('hit', quaLai(dt.hit, t, dt.hit.so, 10), { alpha });
+      return r('die', Math.min(dt.die.so - 1, Math.floor((t - t0) * 10)), { alpha });
+    }
+    return SC.chonQuai(sp, n, t, D);
+  };
   // Phiên E2: tệp dáng pha của trùm vùng. sp: tệp pha 1; pha: 2 hoặc 3; ten: hàng sắp vẽ. Trả về tệp pha nếu đã nạp xong và có hàng đó, không thì null (vẽ pha 1).
   SC.phaTrum = function (sp, pha, ten) {
     if (!sp || pha < 2 || !PHA_HANG[ten]) return null;
@@ -386,13 +439,15 @@
     const n = o.anim || 'idle', t = Math.max(0, o.t || 0);
     let face = o.face || 0;
     if (!face) { const dir = o.dir == null ? Math.PI : o.dir; face = Math.cos(dir) > 0.01 ? 1 : -1; }
-    let s = SC.chonQuai(sp, n, t, D);
+    const nhip = o.nhip && G.TRUM_MOI !== false ? o.nhip : null; // 14/10: trùm vùng chạy nhịp khung đều (SC.chonTrum)
+    const chon = (q) => (nhip ? SC.chonTrum(q, n, t, D, nhip.moc) : SC.chonQuai(q, n, t, D));
+    let s = chon(sp);
     // Phiên E2: trùm vùng ở pha 2, 3 có tệp dáng pha thì các hàng có trong tệp đó (idle / tele / atk / hit) lấy từ tệp đó (xem SC.phaTrum). Cảnh chuyển pha: nửa đầu còn dáng cũ, như hình vẽ bằng code.
     let pha = o.phase | 0;
     if (pha >= 2 && (n === 'phase2' || n === 'phase3') && s.u < 0.5) pha--;
     const sp2 = pha >= 2 ? SC.phaTrum(sp, pha, s.ten) : null;
     let ve = sp; // tệp thật sự dùng để vẽ thân (bóng dưới chân vẫn theo tệp pha 1)
-    if (sp2) { const s2 = SC.chonQuai(sp2, n, t, D); if (s2.ten === s.ten) { s = s2; ve = sp2; } }
+    if (sp2) { const s2 = chon(sp2); if (s2.ten === s.ten) { s = s2; ve = sp2; } }
     else if (pha >= 2 && G.PHA_TRUM_DU && (s.ten === 'move' || s.ten === 'die')) {
       // Phiên Kiểm 3 pha (12/10): tệp dáng pha chỉ có 4 hàng (idle / tele / atk / hit). Trước đây lúc trùm ĐI (move) hay GỤC (die) thì mượn
       // hàng của tệp pha 1, nên trùm đi lại giữa các chiêu lại hiện về hình pha 1 — chủ dự án chơi chỉ thấy "1 pha". Nay: đi thì dùng hàng
@@ -400,6 +455,7 @@
       const pf = SC.phaTrum(sp, pha, s.ten === 'move' ? 'idle' : 'hit');
       if (pf) {
         if (s.ten === 'move') s = { ten: 'idle', i: khungLap(pf.dt.idle, t), u: 0 };
+        else if (nhip) s = { ten: 'hit', i: quaLai(pf.dt.hit, t, pf.dt.hit.so, 10), u: s.u, alpha: s.alpha, dy: s.dy }; // 14/10: tệp pha chưa có hàng gục: quằn quại đều nhịp rồi mờ (chờ ảnh, PROMPT-ANH.md)
         else s = { ten: 'hit', i: khungMot(pf.dt.hit, Math.min(1, (s.u || 0) * 1.6)), u: s.u, alpha: s.alpha, dy: s.dy };
         ve = pf;
       }

@@ -1105,6 +1105,7 @@ QH.hoTinh = function (v, p) { v = v || 1; p = p || 1; const g = HT_than(v, p); r
 // Máy hoạt hình: cắt hình gốc thành từng bộ phận (càng, chân, đuôi...), xoay / uốn / co giãn từng bộ phận
 // theo thời gian, rồi tô lại viền tối cho từng khung. Hình đứng yên giống hệt bản chốt.
 const MA = G.monsterArt = { list: [], loi: [], fps: 12, det: 1 };
+const TRUM_MOI = () => G.TRUM_MOI !== false; // 14/10 trum-chet-pha3 (cờ tắt ?trumcu=1, js/data.js)
 const DEFS = {}; MA._defs = DEFS;
 const PI = Math.PI, TAU = PI * 2;
 const sn = u => Math.sin(u * TAU), cs = u => Math.cos(u * TAU);
@@ -1349,7 +1350,12 @@ const CHIEU = MA.chieu = {
     if (u < .3) { const v = u / .3; P.sy *= 1 + .1 * v; P.sx *= 1 - .07 * v; } else { const v = seg(u, .3, .8); P.sy *= 1 + .08 * Math.sin(v * PI * 5) * (1 - v); } },
   // Vòng đạn: bắn n viên toả tròn quanh mình (bắt đầu từ hướng dir), có thể 2 đợt lệch nhau.
   vongDan(P, n, tam, cols, dot) { const u = P.u, bh = P.B.bh, cy = -P.h - bh * .45; cols = cols || ['#c43c10', '#ff8a1e', '#fff6b0']; dot = dot || 1;
-    if (u < .35) { const v = u / .35; P.sx *= 1 + .12 * v; P.sy *= 1 + .12 * v; P.flash = v > .6 && ((u * 30) | 0) % 2 ? .4 : 0; P.under(c => { for (let i = 0; i < n * dot; i++) { const a = P.dir + i / (n * dot) * TAU + (i % dot) * PI / n; F.baoDuong(c, Math.cos(a) * 6, Math.sin(a) * 6 * MA.det, tam - 6, 4, a, v); } }); P.over(c => { F.dia(c, 0, cy, 2 + v * 4, cols[1]); F.dia(c, 0, cy, 1 + v * 2, cols[2]); }); }
+    // 14/10 trum-chet-pha3 (trùm vùng trong trận, P.o.huTrum): tia báo trước chĩa ĐÚNG hướng đạn thật (js/boss.js: đợt j lệch (j × 0,5) / n vòng;
+    // cũ lệch (j % dot) × π / n → đợt 2, 3 báo sai 12°, 24°) và không vẽ thêm vòng đạn giả bay từ giữa thân (đạn thật đã bay từ chân trùm:
+    // hai vòng khác tâm trông như chiêu tròn bị lệch). Cờ tắt ?trumcu=1.
+    const that = TRUM_MOI() && P.o && P.o.huTrum;
+    if (u < .35) { const v = u / .35; P.sx *= 1 + .12 * v; P.sy *= 1 + .12 * v; P.flash = v > .6 && ((u * 30) | 0) % 2 ? .4 : 0; P.under(c => { for (let i = 0; i < n * dot; i++) { const a = that ? P.dir + (Math.floor(i / dot) + (i % dot) * .5) / n * TAU : P.dir + i / (n * dot) * TAU + (i % dot) * PI / n; F.baoDuong(c, Math.cos(a) * 6, Math.sin(a) * 6 * MA.det, tam - 6, 4, a, v); } }); P.over(c => { F.dia(c, 0, cy, 2 + v * 4, cols[1]); F.dia(c, 0, cy, 1 + v * 2, cols[2]); }); }
+    else if (that) { const k = kf(u, [[.35, 1.15], [.45, .95], [.6, 1]]); P.sx *= k; P.sy *= k; if (u < .5) P.under(c => F.song(c, 0, 0, tam * .5, seg(u, .35, .5), [cols[2], cols[1]], 1)); }
     else { const k = kf(u, [[.35, 1.15], [.45, .95], [.6, 1]]); P.sx *= k; P.sy *= k;
       P.over(c => { for (let j = 0; j < dot; j++) { const q = seg(u, .35 + j * .15, .85 + j * .15); if (q <= 0 || q >= 1) continue; for (let i = 0; i < n; i++) { const a = P.dir + (i + j * .5) / n * TAU, r = 6 + (tam - 6) * q, x = Math.cos(a) * r, y = cy + Math.sin(a) * r * MA.det + q * bh * .4; for (let t = 1; t < 4; t++) { F.a(c, .6 - t * .15); F.dia(c, x - Math.cos(a) * t * 3, y - Math.sin(a) * t * 3 * MA.det, 2 - t * .4, cols[0]); } F.a(c, 1); F.cau(c, x, y, 2.5, [cols[0], cols[1], cols[2]]); } } if (u < .5) F.song(c, 0, 0, tam * .5, seg(u, .35, .5), [cols[2], cols[1]], 1); }); } },
 };
@@ -1391,6 +1397,14 @@ const TRUM = MA.trum = {
       if (u < .45) { const v = u / .45; P.x += (((u * 40) | 0) % 2 ? 1 : -1) * v * 1.5; P.sy *= 1 - .06 * v; P.sx *= 1 + .05 * v; P.tint = [cols[1], v * .45]; }
       else if (u < .58) { const v = seg(u, .45, .58); P.flash = 1 - v * .5; P.sx *= 1 + .12 * v; P.sy *= 1 + .12 * v; }
       else { const v = seg(u, .58, 1), k = kf(v, [[0, 1.12], [.25, .96], [.5, 1.03], [1, 1]]); P.sx *= k; P.sy *= k; P.tint = [cols[1], .4 * (1 - v)]; P.x += v < .5 ? (((u * 40) | 0) % 2 ? 1 : -1) : 0; }
+      if (TRUM_MOI()) { // 14/10 trum-chet-pha3: ảnh 8 khung không kéo giãn theo 2,2–2,6 giây của cảnh (cũ: tụ khí 3 khung trong ~1,1 giây, toả 4 khung trong ~1 giây)
+        const D = (P.d.anims[P.anim] || {}).d || 2.4, tt = P.tr, t1 = .45 * D, t2 = .58 * D, t3 = t2 + .4; let g = -1, mo = 1;
+        if (tt < t1) { const q = Math.floor(tt * 10) % 4; g = q < 3 ? q : 1; mo = Math.min(1, tt / .1); } // tụ khí: khung 1-2-3-2 qua lại 10 khung/giây, mờ vào 0,1 giây
+        else if (tt < t2) g = 3; // chớp (đổi dáng)
+        else if (tt < t3) g = 4 + Math.min(3, Math.floor((tt - t2) * 10)); // vòng toả rồi tan: 4 khung, 10 khung/giây
+        else { g = 7; mo = 1 - (tt - t3) / .15; } // giữ khung cuối 0,15 giây mờ dần rồi tắt (không tắt phụt)
+        if (mo > 0) P.over(c => HT.ve(c, 'hu-doi-pha', 0, cy, g, 0, co, false, mo, cols[1]));
+        return; }
       P.over(c => HT.ve(c, 'hu-doi-pha', 0, cy, f, 0, co, false, 1 - .5 * seg(u, .85, 1), cols[1]));
       return; }
     if (u < .45) { const v = u / .45; P.x += (((u * 40) | 0) % 2 ? 1 : -1) * v * 1.5; P.sy *= 1 - .06 * v; P.sx *= 1 + .05 * v; P.tint = [cols[1], v * .45];
@@ -1476,12 +1490,13 @@ MA.draw = function (c, id, x, y, o) {
   let face = o.face || 0, dir = o.dir; if (dir == null) dir = (face || -1) < 0 ? PI : 0; if (!face) { const cx = Math.cos(dir); face = cx > .01 ? 1 : -1; }
   const ph0 = ph; if (an.pha) ph = clamp(an.pha(u, ph) || ph, 1, d.pha || 1); // cử động chuyển pha tự đổi hình giữa chừng
   const hv = an.hinh ? an.hinh(u, ph) : 0, B = goc(d, ph, hv), P = new Pose(d, B, nm, u, fi / MA.fps, o, dir, face, ph); P.pha0 = ph0;
+  P.anhAI = thayAnh; P.tr = TRUM_MOI() ? t : P.t; // 14/10 trum-chet-pha3: đồng hồ thật của cử động (không làm tròn 12 khung/giây) để ảnh hiệu ứng 10 khung/giây đổi khung đều
   MA._tatBao = o.bao === false; an.f(P);
   // Phiên hiệu năng (V1): MA._boThan do js/sprite_custom.js bật khi quái đã có ảnh AI. Thân vẽ bằng code khi đó không bao giờ hiện ra
   // (bút giả chỉ lấy lệnh drawImage đầu tiên để dán ảnh AI), nên bỏ hẳn bước dựng khung (veKhung/ghepHinh) — chỉ còn Pose, bóng, hiệu ứng.
   const key = bo || P.khongNho ? null : id + '|' + ph + '|' + (hv || '') + '|' + nm + '|' + fi + '|' + P.aim + (P.khoa || ''), fr = bo ? null : veKhung(B, P, key);
   c.save(); c.translate(Math.round(x), Math.round(y)); c.imageSmoothingEnabled = false; const ga = c.globalAlpha;
-  if (P.bong > 0 && d.bong !== 0) { const bw = (d.bong || B.bw * .62) * (1 - Math.min(.5, P.h / 80)) * Math.min(1, P.bong + .3); c.globalAlpha = ga * .28 * Math.min(1, P.bong); F.elip(c, P.x, P.y, bw / 2, Math.max(1.5, bw * .14), '#000000'); c.globalAlpha = ga; }
+  if (P.bong > 0 && d.bong !== 0) { const bw = (d.bong || B.bw * .62) * (1 - Math.min(.5, P.h / 80)) * Math.min(1, P.bong + .3); c.globalAlpha = ga * .28 * Math.min(1, P.bong); F.elip(c, o.bongGoc && TRUM_MOI() ? 0 : P.x, P.y, bw / 2, Math.max(1.5, bw * .14), '#000000'); c.globalAlpha = ga; } // o.bongGoc (14/10): thân là ảnh AI đứng yên tại chân → bóng không rung theo P.x của dáng vẽ code
   if (o.fx !== false) for (const f of P._u) { c.save(); f(c, P); c.restore(); }
   const sx = Math.round(P.x), sy = Math.round(P.y - P.h);
   const ve = (img, dx, dy, a) => { c.save(); c.globalAlpha = ga * a; c.translate(sx + dx, sy + dy); if (face > 0) c.scale(-1, 1); if (bo) c.drawImage(); else c.drawImage(img, -fr.ox, -fr.oy); c.restore(); };
@@ -1969,11 +1984,14 @@ def('nguTinh', { ten: 'Ngư Tinh', vung: 'bien', loai: 'trum', tt: 1, pha: 3, lu
     c5: A(2.6, P => { const u = P.u, C = mauPha(P), R = 95;
       if (u < .3) { const v = u / .3; P.under(c => { F.baoTron(c, 0, 0, R, v); F.a(c, .5); F.vong(c, 0, 0, 34, 34 * MA.det, '#ffd0a0', 1); F.a(c, 1); }); P.b('duoi', 25 * v); P.rot += -5 * v; }
       else if (u < .82) { const v = seg(u, .3, .82), sp = EASE.io(v) * 3, cc = Math.cos(sp * TAU); P.sx *= Math.sign(cc || 1) * Math.max(.25, Math.abs(cc)); nhapNho(P, 4 * Math.sin(v * PI)); P.w('duoi', 10, -u * 6, .15);
-        if (HT.co('hu-xoay-nuoc')) P.under(c => HT.ve(c, 'hu-xoay-nuoc', 0, 0, Math.floor(P.t * 10) % HT.so('hu-xoay-nuoc'), 0, 2 * 112 / 138 * (.75 + .25 * v), false, Math.min(1, v * 4)));
+        if (HT.co('hu-xoay-nuoc')) P.under(c => HT.ve(c, 'hu-xoay-nuoc', 0, 0, Math.floor(P.tr * 10) % HT.so('hu-xoay-nuoc'), 0, 2 * 112 / 138 * (.75 + .25 * v), false, Math.min(1, v * 4)));
         else P.under(c => { for (let arm = 0; arm < 4; arm++) for (let k = 0; k < 40; k++) { const r = 12 + k / 40 * (R - 12), a = arm / 4 * TAU - sp * TAU * .6 - r * .045; F.a(c, Math.min(1, v * 4) * (1 - k / 60)); F.px(c, Math.cos(a) * r, Math.sin(a) * r * MA.det, k % 7 === 0 ? '#ffffff' : C[(k >> 3) % 2], 2, 2); } F.a(c, 1); F.vong(c, 0, 0, R, R * MA.det, C[0], 1); }); }
-      else { const v = seg(u, .82, 1); P.under(c => { F.song(c, 0, 0, R * 1.2, v, ['#ffffff', C[1]], 3); F.song(c, 0, 0, R * .8, seg(v, .1, 1), [C[1], C[0]], 2); }); P.over(c => F.hat(c, 0, -20, 30, 4, v, { v: R, goc: -PI / 2, xoe: TAU, g: 30, cols: ['#ffffff', C[1], C[0]], to: 2 })); } }, { nhan: 'Chiêu 5: xoáy nước', moc: [.3, .82] }),
+      else { const v = seg(u, .82, 1); const K = HT.trongTran(P) && TRUM_MOI() ? (G.ZK || 1) : MA.det; // 14/10: trong trận vòng sóng dẹt đúng như vành nước thật (G.ZK)
+        if (TRUM_MOI() && HT.co('hu-xoay-nuoc') && v < .3) P.under(c => HT.ve(c, 'hu-xoay-nuoc', 0, 0, Math.floor(P.tr * 10) % HT.so('hu-xoay-nuoc'), 0, 2 * 112 / 138, false, 1 - v / .3)); // xoáy mờ dần thay vì tắt phụt
+        P.under(c => { const d0 = MA.det; MA.det = K; try { F.song(c, 0, 0, R * 1.2, v, ['#ffffff', C[1]], 3); F.song(c, 0, 0, R * .8, seg(v, .1, 1), [C[1], C[0]], 2); } finally { MA.det = d0; } }); P.over(c => F.hat(c, 0, -20, 30, 4, v, { v: R, goc: -PI / 2, xoe: TAU, g: 30, cols: ['#ffffff', C[1], C[0]], to: 2 })); } }, { nhan: 'Chiêu 5: xoáy nước', moc: [.3, .82] }),
     phase2: A(2.2, P => { TRUM.doiPha(P, GIAN); nhapNho(P, 0); P.r('ham', -20 * Math.sin(seg(P.u, .5, 1) * PI)).b('rau', 30 * seg(P.u, .5, .7)); }, { nhan: 'Chuyển pha 2: giận dữ', pha: u => u < .5 ? 1 : 2 }),
-    phase3: A(2.4, P => { TRUM.doiPha(P, BANG); P.r('ham', -22 * Math.sin(seg(P.u, .5, 1) * PI)); if (P.u > .5) P.under(c => { const e = seg(P.u, .5, 1); for (let i = 0; i < 14; i++) { const a = i / 14 * TAU, r = 40 + 60 * e * hh(i, 1, 9); if (HT.co('hu-bang-nhon-roi')) { HT.ve(c, 'hu-bang-nhon-roi', Math.cos(a) * r, Math.sin(a) * r * MA.det * .6, e < .15 ? 1 : e < .8 ? 2 : 3 + Math.min(2, Math.floor(seg(e, .8, 1) * 3)), 0, .3 * (.6 + hh(i, 2, 9))); continue; } cotBang(c, Math.cos(a) * r, Math.sin(a) * r * MA.det * .6, 6 * Math.min(1, e * 3) * (.6 + hh(i, 2, 9))); } }); }, { nhan: 'Chuyển pha 3: hoá băng', pha: u => u < .5 ? 2 : 3 }),
+    phase3: A(2.4, P => { TRUM.doiPha(P, BANG); P.r('ham', -22 * Math.sin(seg(P.u, .5, 1) * PI)); if (P.u > .5) P.under(c => { const e = seg(P.u, .5, 1); for (let i = 0; i < 14; i++) { const a = i / 14 * TAU, r = 40 + 60 * e * hh(i, 1, 9); if (HT.co('hu-bang-nhon-roi')) { if (TRUM_MOI()) { const tt = P.tr - (1.2 + hh(i, 3, 9) * .5), g = 1 + Math.floor(tt * 10); if (tt >= 0 && g <= 5) HT.ve(c, 'hu-bang-nhon-roi', Math.cos(a) * r, Math.sin(a) * r * MA.det * .6, g, 0, .3 * (.6 + hh(i, 2, 9)), false, g === 5 ? 1 - (tt * 10 - 4) : 1); continue; } // 14/10: mỗi gai 5 khung 10 khung/giây, nổ lệch nhau (cũ: khung 2 đứng ~0,8 giây)
+          HT.ve(c, 'hu-bang-nhon-roi', Math.cos(a) * r, Math.sin(a) * r * MA.det * .6, e < .15 ? 1 : e < .8 ? 2 : 3 + Math.min(2, Math.floor(seg(e, .8, 1) * 3)), 0, .3 * (.6 + hh(i, 2, 9))); continue; } cotBang(c, Math.cos(a) * r, Math.sin(a) * r * MA.det * .6, 6 * Math.min(1, e * 3) * (.6 + hh(i, 2, 9))); } }); }, { nhan: 'Chuyển pha 3: hoá băng', pha: u => u < .5 ? 2 : 3 }),
     stun: A(1.4, P => { TRUM.choang(P, 60, 26); P.r('ham', -10).b('rau', -15 + 8 * sn(P.u)); P.m('song', 0, 0); }, { lap: true }),
     hit: A(.4, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.r('ham', -12 * k).b('rau', 25 * k).b('duoi', 20 * k); }),
     die: A(3.2, P => { const u = P.u; TRUM.chetLon(P, P.phase === 3 ? 'vo' : 'chim', mauPha(P), P.phase === 3 ? BANG : NUOC); P.r('ham', -28 * seg(u, 0, .2)).b('rau', 30 * seg(u, 0, .4)).b('duoi', -25 * sn(u * 3)); if (u > .55) P.under(c => { for (let i = 0; i < 6; i++) tungNuoc(c, (i - 2.5) * 22, 0, seg(u, .55 + i * .04, .95), i, 26, NUOC); }); }, { nhan: 'Chết' }),
@@ -2042,7 +2060,7 @@ def('mocTinh', { ten: 'Mộc Tinh', vung: 'rung', loai: 'trum', tt: 1, pha: 3, l
         const V = P.o && P.o.vongGai, K = V ? (G.ZK || 1) : MA.det, so = HT.so('hu-gai-re');
         const vong = V ? V.R.map((r, j) => ({ r: (r[0] + r[1]) / 2, khe: V.khe[j], gw: V.gw + .06, t: V.t[j] })) : rr.map((r, j) => ({ r, khe, gw: .3, t: (.4 + j * .12) * 2.6 }));
         const L = [];
-        for (const g of vong) { const f = Math.floor((P.t - g.t) / .1) + 2; if (f < 0 || f >= so) continue; const n = Math.max(8, Math.round(g.r * TAU / 13));
+        for (const g of vong) { const f = Math.floor((P.tr - g.t) / .1) + 2; if (f < 0 || f >= so) continue; const n = Math.max(8, Math.round(g.r * TAU / 13));
           for (let i = 0; i < n; i++) { const a = i / n * TAU; if (g.khe.some(k0 => Math.abs(Math.atan2(Math.sin(a - k0), Math.cos(a - k0))) < g.gw)) continue; L.push([Math.cos(a) * g.r, Math.sin(a) * g.r * K, f]); } }
         L.sort((p, q) => p[1] - q[1]);
         P.under(c => { for (const [x, y, f] of L) if (y < 0) HT.ve(c, 'hu-gai-re', x, y, f, 0, .85); });
@@ -2099,7 +2117,7 @@ def('hoTinh', { ten: 'Hồ Tinh', vung: 'laudai', loai: 'trum', tt: 1, pha: 3, l
       P.under(c => { for (const [x, y, t0] of T) if (u < t0 + .18) F.baoTron(c, x, y, 10, clamp(u / (t0 + .18), 0, 1)); });
       P.over(c => { for (let i = 0; i < 9; i++) { const d = dinhDuoi(i, P.phase), m = P.pt(d[0], d[1]), [x, y, t0] = T[i], q = seg(u, t0 - .1, t0 + .18), e = seg(u, t0 + .18, t0 + .5);
         if (u < t0 - .1) F.lua(c, m[0], m[1] + 3, 4 + 4 * Math.min(1, u / .3), 9 + 10 * Math.min(1, u / .3), P.t + i, [C[0], C[1], C[2], '#ffffff'], i);
-        else if (q < 1) { const px = lerp(m[0], x, q), py = lerp(m[1], y, q) - Math.sin(q * PI) * 30; if (HT.co('hu-cau-lua-ma')) { HT.ve(c, 'hu-cau-lua-ma', px, py, Math.floor(P.t * 10 + i) % HT.so('hu-cau-lua-ma'), 0, .35); } else { for (let t = 1; t < 5; t++) { const qq = Math.max(0, q - t * .04); F.a(c, .5 - t * .1); F.dia(c, lerp(m[0], x, qq), lerp(m[1], y, qq) - Math.sin(qq * PI) * 30, 3 - t * .5, C[1]); } F.a(c, 1); cauMa(c, px, py, 3, C); } }
+        else if (q < 1) { const px = lerp(m[0], x, q), py = lerp(m[1], y, q) - Math.sin(q * PI) * 30; if (HT.co('hu-cau-lua-ma')) { HT.ve(c, 'hu-cau-lua-ma', px, py, Math.floor(P.tr * 10 + i) % HT.so('hu-cau-lua-ma'), 0, .35); } else { for (let t = 1; t < 5; t++) { const qq = Math.max(0, q - t * .04); F.a(c, .5 - t * .1); F.dia(c, lerp(m[0], x, qq), lerp(m[1], y, qq) - Math.sin(qq * PI) * 30, 3 - t * .5, C[1]); } F.a(c, 1); cauMa(c, px, py, 3, C); } }
         if (e > 0 && e < 1) { if (e < .3) F.dia(c, x, y - 3, 4 + e * 20, C[2]); F.lua(c, x, y, 7 * (1 - e), 16 * (1 - e), P.t + i, [C[0], C[1], C[2], '#ffffff'], i); F.hat(c, x, y - 3, 12, i, e, { v: 14, cols: ['#ffffff', C[2], C[1]], to: 2 }); } } }); }, { nhan: 'Chiêu 1: hồ hoả', moc: [.36, .8] }),
     // Chiêu 2: VỒ MỒI. Rạp mình rồi vồ hai lần liền (zíc zắc), để bóng mờ, cuối cú vồ có vết vuốt.
     c2: A(2, P => { const u = P.u, C = mauHT(P), q = (u * 2) % 1; CHIEU.laoNhieu(P, 2, 96, 26, [C[0], C[1], '#ffffff'], .5); vayDuoi(P, 8, 3, 0); P.r('chanT', q > .45 ? -30 : 10 * q / .45).r('chanS', q > .45 ? 25 : 0).r('dau', q > .45 ? -10 : 4);
@@ -2112,6 +2130,13 @@ def('hoTinh', { ten: 'Hồ Tinh', vung: 'laudai', loai: 'trum', tt: 1, pha: 3, l
       else { const v = seg(u, .68, 1); for (let i = 0; i < 9; i++) P.r('d' + i, 40 * (1 - EASE.io(v))); P.under(c => { for (let i = 0; i < 7; i++) { const a = P.dir + (i - 3) / 3 * span * .42, r = tam * (.55 + .3 * hh(i, 1, 2)); F.a(c, 1 - seg(v, .5, 1)); F.lua(c, Math.cos(a) * r, Math.sin(a) * r * MA.det, 6, 12, P.t + i, [C[0], C[1], C[2], '#ffffff'], i); } F.a(c, 1); }); } }, { nhan: 'Chiêu 3: quạt đuôi', moc: [.42, .68] }),
     // Chiêu 4: VÒNG LỬA MA. Hai vòng cột lửa ma bùng lên lần lượt quanh mình (vòng trong rồi vòng ngoài, lệch chỗ nhau để có lối né).
     c4: A(2.5, P => { const u = P.u, C = mauHT(P), V = [[62, 8, 0, .3], [102, 12, PI / 12, .5]]; vayDuoi(P, 6, 3, 8); P.r('dau', 8 * Math.sin(seg(u, .2, .5) * PI)); P.sy *= 1 + .04 * Math.sin(seg(u, .2, .5) * PI);
+      // 14/10 trum-chet-pha3: trong trận vẽ ĐÚNG các cột lửa thật (js/boss.js truyền o.vongLua: toạ độ so với chân trùm, lúc nổ theo u) —
+      // cũ vẽ đủ 20 cột theo vòng tròn kể cả chỗ ngoài phòng không có vùng thật, vòng hình và vòng sát thương lệch nhau. coVe: hình trùm đang co (Hồ Tinh pha 3 vẽ code) thì bù lại.
+      const VL = TRUM_MOI() && P.o && P.o.vongLua;
+      if (VL) { const k = 1 / (P.o.coVe || 1);
+        P.under(c => { for (const [x, y, ti] of VL) if (u < ti) F.baoTron(c, x * k, y * k, 11, u / ti); });
+        P.over(c => { VL.forEach(([x, y, ti], i) => { const e = seg(u, ti, ti + .42); if (e > 0 && e < 1) { cotLuaMa(c, x * k, y * k, e, C, P.tr, i); if (e < .25) F.song(c, x * k, y * k, 14, e * 4, [C[2], C[1]], 1); } }); });
+        return; }
       P.under(c => { for (const [R, n, lech, t0] of V) for (let i = 0; i < n; i++) { const a = P.dir + lech + i / n * TAU, x = Math.cos(a) * R, y = Math.sin(a) * R * MA.det, ti = t0 + i * .015; if (u < ti) F.baoTron(c, x, y, 11, u / ti); } });
       P.over(c => { for (const [R, n, lech, t0] of V) for (let i = 0; i < n; i++) { const a = P.dir + lech + i / n * TAU, x = Math.cos(a) * R, y = Math.sin(a) * R * MA.det, ti = t0 + i * .015, e = seg(u, ti, ti + .42); if (e > 0 && e < 1) { cotLuaMa(c, x, y, e, C, P.t, i); if (e < .25) F.song(c, x, y, 14, e * 4, [C[2], C[1]], 1); } } }); }, { nhan: 'Chiêu 4: vòng lửa ma', moc: [.3, .92] }),
     // Chiêu 5: BÃO HỒ HOẢ. Xoay đuôi tụ lửa, bắn ba đợt cầu lửa toả tròn xoáy (mỗi đợt lệch nhau để luồn qua khe).
@@ -2125,7 +2150,9 @@ def('hoTinh', { ten: 'Hồ Tinh', vung: 'laudai', loai: 'trum', tt: 1, pha: 3, l
 // Lớp phủ theo pha cho mọi cử động: pha 2 có hai bóng cáo mờ màu tím lượn hai bên; pha 3 có lửa liếm khắp thân.
 (function () { const d = DEFS.hoTinh; for (const k of Object.keys(d.anims)) { const f = d.anims[k].f; d.anims[k].f = function (P) { f(P);
   if (P.phase === 2 && !P.bongMa && k !== 'die' && !P.tan) { const t = P.t; P.bongMa = [{ x: -46 + 6 * Math.sin(t * 2.2), y: -4 + 3 * Math.sin(t * 3), a: .26 + .08 * Math.sin(t * 4), aAnh: .5 + .06 * Math.sin(t * 4), mau: TIMX[1], mauAnh: '#d468e0', phanThan: true }, { x: 46 + 6 * Math.sin(t * 2.6 + 1), y: 4 + 3 * Math.sin(t * 2.4), a: .26 + .08 * Math.sin(t * 4 + 2), aAnh: .5 + .06 * Math.sin(t * 4 + 2), mau: TIMX[1], mauAnh: '#d468e0', phanThan: true }]; }
-  if (P.phase === 3 && !P.tan) { const t = P.t, B = P.B; P.over(c => { for (let i = 0; i < 7; i++) { const sx = B.cx + (hh(i, 1, 7) - .3) * B.bw * .6, sy = B.foot - B.bh * (.25 + .3 * hh(i, 2, 7)), m = P.pt(sx, sy); F.a(c, .75); F.lua(c, m[0], m[1], 5, 10 + 5 * Math.sin(t * 7 + i), t + i, null, i); } F.a(c, 1); }); } }; } })();
+  // 14/10 trum-chet-pha3: thân là ảnh AI pha 3 (đã vẽ sẵn lửa) thì bỏ 7 ngọn lửa vẽ code: chúng bám theo thân vẽ code (không trùng ảnh) và
+  // lệch hẳn về một phía (hh − 0,3) → nhìn như hiệu ứng pha 3 bị lệch. Cờ tắt ?trumcu=1.
+  if (P.phase === 3 && !P.tan && !(P.anhAI && TRUM_MOI())) { const t = P.t, B = P.B; P.over(c => { for (let i = 0; i < 7; i++) { const sx = B.cx + (hh(i, 1, 7) - .3) * B.bw * .6, sy = B.foot - B.bh * (.25 + .3 * hh(i, 2, 7)), m = P.pt(sx, sy); F.a(c, .75); F.lua(c, m[0], m[1], 5, 10 + 5 * Math.sin(t * 7 + i), t + i, null, i); } F.a(c, 1); }); } }; } })();
 
 })(); } catch (e) { MA.loi.push('hotinh.js: ' + (e && e.stack || e)); if (typeof console !== 'undefined') console.error('monster_art hotinh.js', e); }
 // ----- chitiet.js -----
