@@ -1,0 +1,105 @@
+{
+ "anh": "boHung-5-trung-don.png",
+ "co_anh": [
+  2171,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 4,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 0,
+  "vien_khu": 5415,
+  "nga_mau_nen_trong_hinh": 566
+ },
+ "manh_bo": [],
+ "loi": [],
+ "canh_bao": [
+  "Hàng 1 khung 1 cao 464 (trung vị 347) — lệch cỡ >15%"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "hit",
+   "so_khung": 4,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      44,
+      114,
+      489,
+      578
+     ],
+     "chan": [
+      213.0,
+      578
+     ],
+     "rong": 445,
+     "cao": 464,
+     "diem_anh": 109752,
+     "nguon": "tu-dong",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      553,
+      255,
+      1054,
+      579
+     ],
+     "chan": [
+      754.5,
+      579
+     ],
+     "rong": 501,
+     "cao": 324,
+     "diem_anh": 101804,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      1099,
+      255,
+      1580,
+      579
+     ],
+     "chan": [
+      1295.5,
+      579
+     ],
+     "rong": 481,
+     "cao": 324,
+     "diem_anh": 96754,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1639,
+      209,
+      2161,
+      579
+     ],
+     "chan": [
+      1849.5,
+      579
+     ],
+     "rong": 522,
+     "cao": 370,
+     "diem_anh": 111200,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}
