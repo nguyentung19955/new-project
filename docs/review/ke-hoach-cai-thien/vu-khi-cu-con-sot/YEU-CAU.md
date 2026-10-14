@@ -18,3 +18,10 @@ Giữ cờ tắt cho thay đổi hình nếu tiện (`?vkcu=1` để xem lại k
 Commit kết thúc bằng:
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 Claude-Session: https://claude.ai/code/session_017N7QXqfkK27mirk6Hvvt7g
+
+## BỔ SUNG 14/10 17:41 — chủ dự án: "tôi muốn bỏ các ảnh cũ, vũ khí, làng, nhân vật"
+Làm thêm, cùng phiên này:
+7. **Làng cũ**: rà `village_scene.js`, `village.js` và các tệp vẽ làng — mọi nhà cửa, cây, đồ vật, nền, người làng còn vẽ bằng code hoặc ảnh kiểu cũ (không thuộc bộ mới `gd-lang-*`, `nl-*`, `em-be-*`, nền `gd-lang-nen`) mà người chơi còn thấy → bỏ, hoặc thay bằng ảnh mới đã có. Hình vẽ code của người làng/em bé (`VS.npcCode`…) chỉ được dùng lúc ảnh chưa tải xong: khi đó KHÔNG vẽ gì thay vì vẽ kiểu cũ.
+8. **Nhân vật cũ**: nhân vật chính và 3 bạn nhỏ ở mọi màn (làng, ải, truyện, chọn nhân vật, hành trang, khung mặt) chỉ dùng ảnh mới (`zed-*`, `em-be-*`). Chỗ nào còn rơi về hình vẽ code/ảnh cũ thì sửa như mục 4 (chờ ảnh thì không vẽ). Mục 6 cũng theo luật này: không vẽ vũ khí cũ lên ai.
+9. **Xoá ảnh cũ không còn dùng**: sau khi sửa, tìm các tấm trong `game/art/custom/` và code vẽ ảnh cũ (vũ khí, làng, nhân vật) không còn chỗ nào gọi → xoá khỏi repo và khỏi build (git vẫn giữ lịch sử). Liệt kê tên từng tấm đã xoá + dung lượng giảm trong `bao-cao.md`. Không xoá quái, trùm, hiệu ứng, giao diện đang dùng.
+Ảnh soát tĩnh thêm: `xem-lang-moi.png` (ghép từ ảnh, không chạy game) cho thấy những gì còn lại trong làng.
