@@ -145,7 +145,7 @@ def main():
         pg.evaluate("G.testSave({ lvl: 12 }); G.save.sound = true; G.save.truyen = { mo: 1, v: 1, n: {} }; G.save.stars = { '0-0': 3, '0-1': 3, '0-2': 3, '0-3': 3, '0-4': 3 }; G.startStage(0, 4, 0); G.gotoRoom(G.getRun().map.boss)")
         pg.wait_for_timeout(1500)
         bo = pg.evaluate("G.truyen.bongTrum() && G.truyen.bongTrum().s")
-        check('Mộc Tinh nói câu ra mắt', bo and bo.startswith('Ta là cây chiên đàn'), bo)
+        check('Mộc Tinh nói câu ra mắt', bo and bo.startswith('Ta là cây cổ thụ'), bo)
         check('nhạc trùm trong phòng trùm', pg.evaluate('G.nhac.ten') == 'trum0', pg.evaluate('G.nhac.ten'))
         shot('10-trum-moc-tinh-ra-mat')
         pg.evaluate("(() => { const W = G.getRun().W; G.kill(W.boss, {}); })()")

@@ -1,7 +1,7 @@
 // Cốt truyện tối thiểu, bỏ qua được. Nạp sau js/village.js và js/stage.js (bọc thêm update/draw của làng và ải, không sửa luật chơi).
 //
 //   Mở đầu        4 khung (≈ 20 giây, mỗi khung tự sang sau 5 giây, chạm để sang nhanh, nút "Bỏ qua"): linh khí làng cạn, ba yêu tinh
-//                 thức dậy, ba em bé bị bắt, Cụ Đồ trao vũ khí sống cho Cu Tí (chế độ Zed: cho Zed). Chỉ chiếu MỘT lần lúc mới vào làng lần đầu
+//                 thức dậy, ba em bé bị bắt, Cụ Đồ trao vũ khí sống cho Zed, bạn thân của ba em, lên đường cứu bạn. Chỉ chiếu MỘT lần lúc mới vào làng lần đầu
 //                 (G.save.truyen.mo); người chơi cũ đã qua ải 1 thì không chiếu. Xem lại: Anh Mõ > "Âm thanh · Pin · Truyện" > "Xem lại truyện".
 //   Trùm          trùm vùng và trùm nhỏ nói một câu khi ra mắt, một câu khi gục (bong bóng lời trên đầu, KHÔNG dừng trận).
 //   Kết vùng      hạ trùm vùng lần đầu: về làng thì chiếu 2–3 câu (em bé được cứu, người làng nói). Hạ Hồ Tinh: thêm đoạn kết + mời Độ khó 2.
@@ -20,9 +20,9 @@
   // ---------- lời thoại ----------
   const MO_DAU = [
     { nen: 'cayda', loi: 'Làng ven sông sống nhờ linh khí của cây đa nghìn tuổi. Một sáng, lá đa úa vàng, linh khí cạn dần.' },
-    { nen: 'yeu', loi: 'Ba yêu tinh xưa kia Lạc Long Quân đã trừ nay thức dậy: Mộc Tinh ở Rừng già, Ngư Tinh ở Hang biển, Hồ Tinh ở Lâu đài cổ. Chúng hút linh khí về hang.' },
-    { nen: 'emBe', loi: 'Cu Tèo, Cái Bống, Cu Lì đi tìm linh khí cho làng, rồi bị yêu tinh bắt mất.' },
-    { nen: 'cuti', ai: 'do', loi: 'Còn Zed. Cầm lấy vũ khí sống này, cháu: vũ khí lớn lên theo cháu, yêu tinh học theo cháu. Chú Lái Đò chờ ở bến!' },
+    { nen: 'yeu', loi: 'Ba yêu tinh thức dậy: Mộc Tinh, cây cổ thụ ở Rừng già; Ngư Tinh, mực khổng lồ cầm rìu san hô ở Hang biển; Hồ Tinh, cáo chín đuôi đeo mặt nạ ở Lâu đài cổ.' },
+    { nen: 'emBe', loi: 'Cu Tèo, Cái Bống, Cu Lì, ba bạn thân của Zed, đi tìm linh khí cho làng rồi bị yêu tinh bắt mất.' },
+    { nen: 'cuti', ai: 'do', loi: 'Zed ơi, ba bạn đang chờ cháu. Cầm lấy vũ khí sống này: nó lớn lên theo cháu. Đi cứu bạn đi, Chú Lái Đò chờ ở bến!' },
   ];
   const VUNG = [
     [
@@ -42,14 +42,14 @@
     ],
   ];
   const KET = [
-    { nen: 'hoi', loi: 'Tối ấy cả làng mở hội dưới gốc đa. Zed và ba bạn ngồi nghe Cụ Đồ kể chuyện Lạc Long Quân trừ yêu. Hết truyện... mà chưa hết đâu!' },
+    { nen: 'hoi', loi: 'Tối ấy cả làng mở hội dưới gốc đa, mừng ba bạn trở về. Ai cũng cảm ơn Zed đã cứu bạn. Hết truyện... mà chưa hết đâu!' },
     { nen: 'hoi', ai: 'lai', loi: 'Đêm xuống, yêu tinh có thể thức dậy mạnh hơn. Muốn thử sức thì gặp chú, chạm "Độ khó 2" nhé!' },
   ];
   // Trùm: [câu ra mắt, câu khi gục]. Trùm nhỏ theo vùng.
   const TRUM = {
-    moc: ['Ta là cây chiên đàn nghìn năm thành tinh. Linh khí của làng đã chảy vào rễ ta!', 'Lá rụng về cội... Rừng ơi, xanh lại đi...'],
-    ngu: ['Biển Đông là nhà ta! Đứa bé con dám lội xuống hang của Ngư Tinh sao?', 'Sóng lặng rồi... Ta về đáy biển ngủ tiếp...'],
-    ho: ['Chín đuôi, nghìn năm tu luyện. Ngươi tưởng thắng được ta ư?', 'Lửa ở đuôi tắt rồi... Hang ta lại thành hồ nước trong...'],
+    moc: ['Ta là cây cổ thụ thành tinh, nấm độc mọc đầy thân. Linh khí của làng đã chảy vào rễ ta!', 'Lá rụng về cội... Rừng ơi, xanh lại đi...'],
+    ngu: ['Tám xúc tu, một rìu san hô! Đứa bé con dám lội xuống hang của Ngư Tinh sao?', 'Sóng lặng rồi... Ta về đáy biển ngủ tiếp...'],
+    ho: ['Chín đuôi lửa, một mặt nạ. Ngươi tưởng thắng được ta ư?', 'Lửa ở đuôi tắt rồi... Mặt nạ của ta nứt mất rồi...'],
     mini0: ['Nấm mọc sau mưa, ăn vào là ngủ quên! Hự hự!', 'Bào tử bay hết rồi... xẹp...'],
     mini1: ['Càng ta kẹp vỡ cả đá ngầm! Lùi lại!', 'Ối, gãy càng! Bò ngang chạy thôi!'],
     mini2: ['Gừừ! Lửa trong lâu đài này là của ta!', 'Gừ... lửa tàn rồi...'],
@@ -60,7 +60,7 @@
     ren: ['Gỗ linh Rừng già đây rồi! Mang về ông rèn cho.', 'Vảy cá thần cứng thật, tôi lưỡi vào là bén lắm.', 'Lửa Lâu đài cổ thổi lò mới hừng làm sao!'],
     xen: ['Rừng xanh lại, nấm tươi về chợ, bà vui ghê.', 'Thuyền cá về bến rồi, chợ đông hẳn lên.', 'Cả làng mừng! Bà bán rẻ cho cháu... à mà thôi, giá cũ.'],
     may: ['Cu Tèo về rồi, để cô may cho nó cái áo mới.', 'Cái Bống lạnh run, cô đang dệt cho cái khăn.', 'Cu Lì đòi áo đỏ như lửa. Cô may ngay!'],
-    do: ['Mộc Tinh là cây chiên đàn nghìn năm. Xưa Lạc Long Quân trừ nó ở rừng Phong Châu.', 'Ngư Tinh xưa bị Lạc Long Quân ném khối sắt nung vào miệng. Cháu cũng giỏi chẳng kém.', 'Hang cáo chín đuôi bị phá, chỗ ấy thành hồ lớn. Truyện của cháu, lão ghi vào sách.'],
+    do: ['Mộc Tinh là cây cổ thụ mọc đầy nấm độc. Cháu hạ được nó, Rừng già thở lại rồi.', 'Ngư Tinh là con mực khổng lồ cầm rìu san hô. Cháu hạ được nó, giỏi lắm!', 'Cáo lửa chín đuôi đeo mặt nạ cũng gục rồi. Chuyện Zed cứu bạn, lão ghi vào sách.'],
     tu: ['Cu Tèo chạy nhảy suốt sân đình. Ồn mà vui.', 'Cái Bống về, sân đình có tiếng hát rồi.', 'Đủ bốn bé rồi. Đình làng ấm hẳn lên.'],
     mo: ['Cốc cốc! Làng nước ơi, Zed hạ được Mộc Tinh rồi!', 'Cốc cốc! Biển êm, đò chạy, làng nước nghe chưa!', 'Cốc cốc cốc! Ba yêu tinh ngủ cả rồi! Mở hội thôi!'],
   };
