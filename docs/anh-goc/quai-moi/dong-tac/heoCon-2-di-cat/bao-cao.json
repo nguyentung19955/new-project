@@ -1,0 +1,137 @@
+{
+ "anh": "heoCon-2-di.png",
+ "co_anh": [
+  2171,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 6,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 0,
+  "vien_khu": 6641,
+  "nga_mau_nen_trong_hinh": 83
+ },
+ "manh_bo": [],
+ "loi": [],
+ "canh_bao": [],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "di",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      2,
+      206,
+      379,
+      483
+     ],
+     "chan": [
+      150.5,
+      483
+     ],
+     "rong": 377,
+     "cao": 277,
+     "diem_anh": 53718,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      368,
+      206,
+      735,
+      481
+     ],
+     "chan": [
+      535.0,
+      481
+     ],
+     "rong": 367,
+     "cao": 275,
+     "diem_anh": 52885,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      726,
+      207,
+      1091,
+      483
+     ],
+     "chan": [
+      875.0,
+      483
+     ],
+     "rong": 365,
+     "cao": 276,
+     "diem_anh": 51649,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1083,
+      207,
+      1452,
+      481
+     ],
+     "chan": [
+      1235.0,
+      481
+     ],
+     "rong": 369,
+     "cao": 274,
+     "diem_anh": 52978,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1442,
+      207,
+      1811,
+      483
+     ],
+     "chan": [
+      1593.0,
+      483
+     ],
+     "rong": 369,
+     "cao": 276,
+     "diem_anh": 52144,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1800,
+      207,
+      2169,
+      481
+     ],
+     "chan": [
+      1949.0,
+      481
+     ],
+     "rong": 369,
+     "cao": 274,
+     "diem_anh": 52923,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}
