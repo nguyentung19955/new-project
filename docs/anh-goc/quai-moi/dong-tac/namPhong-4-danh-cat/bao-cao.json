@@ -1,0 +1,525 @@
+{
+ "anh": "namPhong-4-danh.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 6,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 23,
+  "vien_khu": 4299,
+  "nga_mau_nen_trong_hinh": 698
+ },
+ "manh_bo": [
+  {
+   "khung_bao": [
+    1684,
+    158,
+    1709,
+    185
+   ],
+   "diem_anh": 115
+  },
+  {
+   "khung_bao": [
+    1657,
+    209,
+    1675,
+    227
+   ],
+   "diem_anh": 34
+  },
+  {
+   "khung_bao": [
+    1967,
+    209,
+    1987,
+    227
+   ],
+   "diem_anh": 43
+  },
+  {
+   "khung_bao": [
+    2029,
+    209,
+    2044,
+    225
+   ],
+   "diem_anh": 11
+  },
+  {
+   "khung_bao": [
+    1781,
+    215,
+    1797,
+    231
+   ],
+   "diem_anh": 11
+  },
+  {
+   "khung_bao": [
+    1298,
+    229,
+    1312,
+    242
+   ],
+   "diem_anh": 2
+  },
+  {
+   "khung_bao": [
+    1689,
+    242,
+    1703,
+    255
+   ],
+   "diem_anh": 2
+  },
+  {
+   "khung_bao": [
+    2062,
+    242,
+    2088,
+    268
+   ],
+   "diem_anh": 112
+  },
+  {
+   "khung_bao": [
+    1446,
+    243,
+    1462,
+    259
+   ],
+   "diem_anh": 15
+  },
+  {
+   "khung_bao": [
+    1940,
+    260,
+    1973,
+    290
+   ],
+   "diem_anh": 54
+  },
+  {
+   "khung_bao": [
+    2046,
+    265,
+    2064,
+    284
+   ],
+   "diem_anh": 29
+  },
+  {
+   "khung_bao": [
+    2034,
+    273,
+    2047,
+    286
+   ],
+   "diem_anh": 1
+  },
+  {
+   "khung_bao": [
+    2086,
+    276,
+    2102,
+    293
+   ],
+   "diem_anh": 12
+  },
+  {
+   "khung_bao": [
+    2120,
+    277,
+    2135,
+    292
+   ],
+   "diem_anh": 6
+  },
+  {
+   "khung_bao": [
+    1995,
+    293,
+    2026,
+    315
+   ],
+   "diem_anh": 63
+  },
+  {
+   "khung_bao": [
+    2034,
+    293,
+    2051,
+    310
+   ],
+   "diem_anh": 22
+  },
+  {
+   "khung_bao": [
+    2076,
+    305,
+    2090,
+    320
+   ],
+   "diem_anh": 6
+  },
+  {
+   "khung_bao": [
+    1752,
+    310,
+    1768,
+    326
+   ],
+   "diem_anh": 12
+  },
+  {
+   "khung_bao": [
+    2064,
+    311,
+    2078,
+    325
+   ],
+   "diem_anh": 3
+  },
+  {
+   "khung_bao": [
+    2141,
+    312,
+    2155,
+    325
+   ],
+   "diem_anh": 2
+  },
+  {
+   "khung_bao": [
+    2002,
+    321,
+    2019,
+    337
+   ],
+   "diem_anh": 16
+  },
+  {
+   "khung_bao": [
+    2074,
+    321,
+    2089,
+    336
+   ],
+   "diem_anh": 7
+  },
+  {
+   "khung_bao": [
+    1863,
+    327,
+    1878,
+    342
+   ],
+   "diem_anh": 7
+  },
+  {
+   "khung_bao": [
+    2035,
+    338,
+    2058,
+    365
+   ],
+   "diem_anh": 74
+  },
+  {
+   "khung_bao": [
+    1867,
+    354,
+    1884,
+    370
+   ],
+   "diem_anh": 16
+  },
+  {
+   "khung_bao": [
+    2008,
+    360,
+    2024,
+    375
+   ],
+   "diem_anh": 12
+  },
+  {
+   "khung_bao": [
+    1878,
+    375,
+    1894,
+    391
+   ],
+   "diem_anh": 14
+  },
+  {
+   "khung_bao": [
+    2002,
+    378,
+    2015,
+    391
+   ],
+   "diem_anh": 1
+  },
+  {
+   "khung_bao": [
+    2063,
+    380,
+    2092,
+    415
+   ],
+   "diem_anh": 74
+  },
+  {
+   "khung_bao": [
+    1866,
+    391,
+    1885,
+    422
+   ],
+   "diem_anh": 53
+  },
+  {
+   "khung_bao": [
+    1995,
+    391,
+    2012,
+    410
+   ],
+   "diem_anh": 29
+  },
+  {
+   "khung_bao": [
+    2039,
+    391,
+    2069,
+    426
+   ],
+   "diem_anh": 105
+  },
+  {
+   "khung_bao": [
+    1893,
+    393,
+    1907,
+    407
+   ],
+   "diem_anh": 3
+  },
+  {
+   "khung_bao": [
+    2111,
+    399,
+    2135,
+    432
+   ],
+   "diem_anh": 49
+  },
+  {
+   "khung_bao": [
+    1775,
+    406,
+    1790,
+    423
+   ],
+   "diem_anh": 13
+  },
+  {
+   "khung_bao": [
+    1943,
+    417,
+    1959,
+    432
+   ],
+   "diem_anh": 10
+  },
+  {
+   "khung_bao": [
+    1754,
+    421,
+    1780,
+    445
+   ],
+   "diem_anh": 108
+  },
+  {
+   "khung_bao": [
+    1961,
+    421,
+    1984,
+    446
+   ],
+   "diem_anh": 35
+  },
+  {
+   "khung_bao": [
+    2047,
+    426,
+    2070,
+    455
+   ],
+   "diem_anh": 42
+  },
+  {
+   "khung_bao": [
+    1954,
+    440,
+    1967,
+    454
+   ],
+   "diem_anh": 2
+  }
+ ],
+ "loi": [],
+ "canh_bao": [
+  "Mảnh 115 điểm ảnh ở [1684, 158, 1709, 185] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 43 điểm ảnh ở [1967, 209, 1987, 227] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 112 điểm ảnh ở [2062, 242, 2088, 268] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 54 điểm ảnh ở [1940, 260, 1973, 290] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 63 điểm ảnh ở [1995, 293, 2026, 315] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 74 điểm ảnh ở [2035, 338, 2058, 365] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 74 điểm ảnh ở [2063, 380, 2092, 415] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 53 điểm ảnh ở [1866, 391, 1885, 422] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 105 điểm ảnh ở [2039, 391, 2069, 426] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 49 điểm ảnh ở [2111, 399, 2135, 432] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 108 điểm ảnh ở [1754, 421, 1780, 445] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 42 điểm ảnh ở [2047, 426, 2070, 455] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Hàng 1 khung 1 chỉ 24306 điểm ảnh (trung vị 42615) — có thể bị tách mất mảnh",
+  "Hàng 1 khung 1 cao 168 (trung vị 261) — lệch cỡ >15%",
+  "Hàng 1 khung 2 cao 218 (trung vị 261) — lệch cỡ >15%",
+  "Hàng 1 khung 5 cao 331 (trung vị 261) — lệch cỡ >15%",
+  "Hàng 1 khung 6 chỉ 14235 điểm ảnh (trung vị 42615) — có thể bị tách mất mảnh"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "atk",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      42,
+      321,
+      279,
+      489
+     ],
+     "chan": [
+      160.0,
+      489
+     ],
+     "rong": 237,
+     "cao": 168,
+     "diem_anh": 24306,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "ít điểm ảnh bất thường",
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      342,
+      277,
+      593,
+      495
+     ],
+     "chan": [
+      467.0,
+      495
+     ],
+     "rong": 251,
+     "cao": 218,
+     "diem_anh": 36025,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      666,
+      249,
+      935,
+      494
+     ],
+     "chan": [
+      800.0,
+      494
+     ],
+     "rong": 269,
+     "cao": 245,
+     "diem_anh": 49206,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1008,
+      197,
+      1352,
+      495
+     ],
+     "chan": [
+      1172.0,
+      495
+     ],
+     "rong": 344,
+     "cao": 298,
+     "diem_anh": 75981,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1420,
+      164,
+      1807,
+      495
+     ],
+     "chan": [
+      1590.5,
+      495
+     ],
+     "rong": 387,
+     "cao": 331,
+     "diem_anh": 67110,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1856,
+      215,
+      2150,
+      493
+     ],
+     "chan": [
+      1979.0,
+      493
+     ],
+     "rong": 294,
+     "cao": 278,
+     "diem_anh": 14235,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "ít điểm ảnh bất thường"
+     ]
+    }
+   ]
+  }
+ ]
+}

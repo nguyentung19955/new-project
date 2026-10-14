@@ -1,0 +1,242 @@
+{
+ "anh": "namPhongChua-4-danh.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 6,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 0,
+  "vien_khu": 3905,
+  "nga_mau_nen_trong_hinh": 195
+ },
+ "manh_bo": [
+  {
+   "khung_bao": [
+    1732,
+    350,
+    1752,
+    370
+   ],
+   "diem_anh": 45
+  },
+  {
+   "khung_bao": [
+    1583,
+    358,
+    1602,
+    378
+   ],
+   "diem_anh": 34
+  },
+  {
+   "khung_bao": [
+    1765,
+    377,
+    1785,
+    397
+   ],
+   "diem_anh": 43
+  },
+  {
+   "khung_bao": [
+    1545,
+    381,
+    1572,
+    404
+   ],
+   "diem_anh": 62
+  },
+  {
+   "khung_bao": [
+    1378,
+    384,
+    1397,
+    403
+   ],
+   "diem_anh": 35
+  },
+  {
+   "khung_bao": [
+    1804,
+    436,
+    1826,
+    457
+   ],
+   "diem_anh": 47
+  },
+  {
+   "khung_bao": [
+    1507,
+    445,
+    1531,
+    466
+   ],
+   "diem_anh": 69
+  },
+  {
+   "khung_bao": [
+    1814,
+    460,
+    1834,
+    478
+   ],
+   "diem_anh": 32
+  },
+  {
+   "khung_bao": [
+    1497,
+    483,
+    1517,
+    502
+   ],
+   "diem_anh": 41
+  },
+  {
+   "khung_bao": [
+    1820,
+    485,
+    1840,
+    505
+   ],
+   "diem_anh": 44
+  }
+ ],
+ "loi": [],
+ "canh_bao": [
+  "Mảnh 45 điểm ảnh ở [1732, 350, 1752, 370] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 43 điểm ảnh ở [1765, 377, 1785, 397] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 62 điểm ảnh ở [1545, 381, 1572, 404] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 47 điểm ảnh ở [1804, 436, 1826, 457] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 69 điểm ảnh ở [1507, 445, 1531, 466] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 41 điểm ảnh ở [1497, 483, 1517, 502] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 44 điểm ảnh ở [1820, 485, 1840, 505] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Hàng 1 khung 3 cao 319 (trung vị 181) — lệch cỡ >15%",
+  "Hàng 1 khung 4 rộng 446 (trung vị 254) — có thể hai hình dính nhau"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "atk",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      46,
+      367,
+      300,
+      533
+     ],
+     "chan": [
+      172.5,
+      533
+     ],
+     "rong": 254,
+     "cao": 166,
+     "diem_anh": 33906,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      401,
+      250,
+      630,
+      433
+     ],
+     "chan": [
+      514.5,
+      433
+     ],
+     "rong": 229,
+     "cao": 183,
+     "diem_anh": 34010,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      755,
+      186,
+      1010,
+      505
+     ],
+     "chan": [
+      1000.0,
+      505
+     ],
+     "rong": 255,
+     "cao": 319,
+     "diem_anh": 31636,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1010,
+      353,
+      1456,
+      533
+     ],
+     "chan": [
+      1225.0,
+      533
+     ],
+     "rong": 446,
+     "cao": 180,
+     "diem_anh": 46708,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "rộng bất thường"
+     ]
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1503,
+      356,
+      1834,
+      533
+     ],
+     "chan": [
+      1670.0,
+      533
+     ],
+     "rong": 331,
+     "cao": 177,
+     "diem_anh": 36105,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1896,
+      330,
+      2126,
+      530
+     ],
+     "chan": [
+      2010.5,
+      530
+     ],
+     "rong": 230,
+     "cao": 200,
+     "diem_anh": 37909,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}
