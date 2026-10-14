@@ -844,11 +844,13 @@
     const hero0 = A.hero;
     A.hero = function (c, o) {
       const sp = SC.cuaEmBe(o && o.key, o);
-      if (!sp || !G.tinhLinh) return hero0.call(A, c, o);
+      // 14/10 (vũ khí cũ còn sót, mục 8): không có ảnh mới (em-be-* cho 3 bạn; Zed đã thử zed-* ở js/zed_moi.js trước khi tới đây) thì
+      // KHÔNG vẽ em bé code kiểu cũ (chờ ảnh: không vẽ gì). ?vkcu=1 (G.VK_CU) vẽ như cũ.
+      if (!sp || !G.tinhLinh) return G.VK_CU ? hero0.call(A, c, o) : undefined;
       if (G.VK_NGA && o && o.p && o.p.dead) o = Object.assign({}, o, { vkNga: true }); // rà soát A9: vũ khí nằm theo thân AI ngay khung chết đầu (js/hero_tinhlinh.js)
       let fr = null; // cùng độ nét ghép với em bé gốc (hero0 tính y như vậy) để nhận ra đúng chỗ vẽ thân
       try { fr = G.tinhLinh.frame(o, G.tinhLinh.netCua ? G.tinhLinh.netCua(c, o) : 1); } catch (e) { fr = null; }
-      if (!fr) return hero0.call(A, c, o);
+      if (!fr) return G.VK_CU ? hero0.call(A, c, o) : undefined;
       const s = SC.chonEmBe(sp, o), tint = emBeTint(o);
       let lop = null; // đồ đang mặc khoác lên thân AI: lớp sau thân và lớp trước thân, bám theo chính thân AI khung này
       const neo = SC.neoCua(sp, s.ten);

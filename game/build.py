@@ -132,7 +132,8 @@ TRUM_VUNG = ('mocTinh', 'nguTinh', 'hoTinh')
 HU_CO_BAN = re.compile(r'^hu-(chem|dam|trung|dan-ten|chi-mang|pha-giap|quai-chet)(-|$)')
 
 
-HINH_LON_SAU = {'gd-lang-nen', 'gd-ban-do-vung', 'gd-khung-ban-do'}
+# 14/10 (vũ khí cũ còn sót, mục 7): gd-lang-nen thôi tải sau — làng không còn vẽ nền code lúc chờ ảnh nên nền phải về cùng ảnh lõi.
+HINH_LON_SAU = {'gd-ban-do-vung', 'gd-khung-ban-do'}
 
 
 def bat_buoc(t):

@@ -198,9 +198,9 @@
     const sv = G.save, w = G.weaponById(V.wid);
     T.panel(8, 26, 464, 240, 'Xem vũ khí', { rightPad: 90, noBand: true });
     if (T.sbtn(396, 29, 70, 17, '← Quay lại', { size: 8, pad: 4 }) || !w) { V.tab = V.back; if (V.tab === 'hub') goHub(); return; }
-    const r = G.wRar(w), rar = G.RARITY[r], st = G.wStage(w);
-    // ô hình lớn (bộ zed-vk, js/vk_moi.js); không còn bậc màu, dòng vũ khí, dòng phụ (đợt 1–2)
-    T.slot(18, 56, 70, r);
+    const st = G.wStage(w), rar = { col: G.bacMauVk(w), maxStage: 3 }; // 14/10: màu tên theo bậc ép đồ (bỏ bậc màu cũ G.RARITY)
+    // ô hình lớn (bộ zed-vk, js/vk_moi.js), khung theo bậc ép đồ; không còn bậc màu, dòng vũ khí, dòng phụ (đợt 1–2)
+    G.oBacVk(18, 56, 70, w);
     G.art.weaponIcon(G.ux, w, 53, 91, 54, 'idle');
     if (G.LANG === 'vi') ui.text(G.wName(w), 96, 68, { size: 10.5, bold: true, color: rar.col });
     else { const q = T.vua(G.wName(w), 150, 10.5, true); ui.text(q[0], 96, 68 + (q[1] - 10.5) * 0.36, { size: q[1], bold: true, color: rar.col }); } // tên tiếng Anh dài: thu cỡ chữ cho khỏi lấn cột bên phải
@@ -232,7 +232,7 @@
       if (!h) return;
       T.inset(x0, ry, 214, h - 2, false, { fill: got ? '#24484a' : '#17302f', col: got && E ? E.dark : T.C.brD });
       ui.text(q[0], x0 + 5, ry + 10, { size: 8, bold: true, color: got && E ? E.col : SOFT });
-      ui.text(locked ? 'Cần bậc Lam' : got ? 'Đã mở' : i === st + 1 && G.vkMoi ? G.t('Sắp mở: {0} linh khí', G.vkMoi.gia(st)) : 'Chưa mở', x0 + 209, ry + 10, { size: 6.5, align: 'right', bold: got, tiny: true, color: locked ? WARN : got ? GOOD : SOFT });
+      ui.text(locked ? 'Chưa mở' : got ? 'Đã mở' : i === st + 1 && G.vkMoi ? G.t('Sắp mở: {0} linh khí', G.vkMoi.gia(st)) : 'Chưa mở', x0 + 209, ry + 10, { size: 6.5, align: 'right', bold: got, tiny: true, color: locked ? WARN : got ? GOOD : SOFT });
       if (q[1]) fitPara(q[1], x0 + 5, ry + 19, 204, { size: 6.5, color: TXT }, 2);
       else if (el) {
         const f = G.HE_FEATURES[el][q[2]];
@@ -278,7 +278,6 @@
     tabs.forEach((t, i) => {
       if (T.tab(CX + i * tp, PY + 23, tw, 22, t[1], V.ftab === t[0], { pad: 2 })) { V.ftab = t[0]; V.sel = null; V.page = 0; }
     });
-    const R4 = G.RARITY;
     if (V.ftab !== 'up' && V.ftab !== 'vk' && V.ftab !== 'ep') T.inset(CX, DET_Y, CW, 52, false);
     if (V.ftab === 'ep' && coEp) {
       G.epDo.panel(CX, LIST_Y - 1, CW, { h: 170, say });
@@ -294,7 +293,7 @@
       else {
         const cap = G.FORGE_CAP[sv.forge];
         const cost = G.sharpenFull(w.sharpen);
-        ui.text(G.wName(w), CX + 8, DET_Y + 14, { size: 8.5, bold: true, color: R4[G.wRar(w)].col });
+        ui.text(G.wName(w), CX + 8, DET_Y + 14, { size: 8.5, bold: true, color: G.bacMauVk(w) });
         // V26: số trước → sau khi mài (mài thử trên chính món rồi trả lại ngay, không lưu)
         const lvl = sv.heroes[sv.hero].lvl, f1 = (v) => v.toFixed(1).replace('.', dp()), dNow = G.wBase(w, lvl);
         let dAfter = null;
@@ -468,8 +467,8 @@
     ['Chưởng', G.t('Nút Chưởng bắn một luồng chưởng linh khí (tốn {0} mana), tự ngắm quái gần nhất theo tám hướng. Hệ của chưởng theo cây chưởng đang dùng. Chưởng của Cu Tí đẩy lùi quái mạnh; mỗi bạn được cứu dạy cậu thêm một nét: Cu Tèo bay xa và nhanh, Cái Bống trúng thì hồi chút máu, Cu Lì chưởng to và mạnh. Chưởng không cho linh khí cho vũ khí (linh khí chỉ đến từ vũ khí) và không kết hợp hệ với vũ khí.', G.CHUONG ? G.CHUONG.cost : 30)],
     ['Ba cây chưởng', 'Hỏa chưởng: cầu lửa nổ lan, vệt cháy, giữ nút để tích lực. Độc chưởng: mây độc, lây độc, ăn mòn giáp, tách 3 luồng. Băng chưởng: mũi băng xuyên nhiều quái, làm chậm, đóng băng, băng vỡ. Mỗi cấp nhận 1 điểm chưởng (riêng với điểm kỹ năng). Mỗi lúc dùng một cây; ở làng đổi cây miễn phí ở Cụ Đồ (thẻ Cây chưởng) hoặc Hành trang, điểm đã học được trả lại hết.'],
     ['Đánh tám hướng', 'Mọi đòn tự quay về quái gần nhất trong tầm, theo cả tám hướng (lên, xuống, chéo). Không có quái gần thì đánh theo hướng đang kéo cần, hoặc hướng vừa đi.'],
-    ['Chiêu Đặc biệt', 'Mỗi loại vũ khí một chiêu (tốn mana). Kiếm, Trảm Nguyệt: phóng vệt chém trăng khuyết bay xuyên mọi quái. Giáo, Phi Thương: ném giáo xuyên một hàng quái, ghim con cuối, giáo tự bay về tay (lúc giáo chưa về thì nút Đánh là cú đấm tay). Búa, Địa Chấn: nện ra vệt nứt đất hất tung quái, kèm vòng chấn quanh người. Cung, Mưa Tên: mưa tên rơi vào cụm quái gần nhất.'],
-    ['Các ô ở mép trên', 'Chạm ô vũ khí ở góc trên bên phải để đổi giữa hai vũ khí. Chạm ô Bình máu để hồi máu. Chạm Dừng để tạm nghỉ.'],
+    ['Chiêu Đặc biệt', 'Mỗi loại vũ khí một chiêu (tốn mana). Kiếm, Trảm Nguyệt: phóng vệt chém trăng khuyết bay xuyên mọi quái. Thương, Phi Thương: ném thương xuyên một hàng quái, ghim con cuối, thương tự bay về tay (lúc thương chưa về thì nút Đánh là cú đấm tay). Búa, Địa Chấn: nện ra vệt nứt đất hất tung quái, kèm vòng chấn quanh người. Phi tiêu, Mưa Phi Tiêu: mưa phi tiêu rơi vào cụm quái gần nhất.'],
+    ['Các ô ở mép trên', 'Chạm ô vũ khí ở góc trên bên phải để đổi sang vũ khí kế tiếp (xoay vòng 4 món). Chạm ô Bình máu để hồi máu. Chạm Dừng để tạm nghỉ.'],
     ['Mở rương, qua cửa', 'Lại gần rương, suối hay thương nhân rồi bấm Đánh. Hết quái thì cửa mở: đi vào cửa có mũi tên để sang phòng kề. Chạm bản đồ nhỏ để xem cả ải.'],
     ['Bàn phím', 'Mũi tên hoặc WASD để đi, J đánh (ở làng: nói chuyện), K né, L đặc biệt, I chưởng (giữ để tích lực), Q đổi vũ khí, E uống bình máu, M xem bản đồ, Esc tạm dừng hoặc đóng bảng.'],
     ['Ba sao', 'Sao 1: qua ải. Sao 2: không dùng bình máu. Sao 3: ra đòn kết liễu trùm bằng hệ khắc chế nó.'],
@@ -483,7 +482,7 @@
     ['Vật trong phòng', 'Chậu than, nấm độc và tinh thể băng phát nổ khi bị đánh, gây hiệu ứng lên quái đứng gần. Đây là cách gây hệ khi vũ khí còn trắng.'],
     ['Bốn vũ khí', G.t('Cu Tí luôn mang đủ 4 vũ khí: Kiếm, Thương, Búa, Phi tiêu; nút đổi vũ khí xoay vòng. Nâng vũ khí bằng linh khí ở Ông Thợ Rèn: Trắng, Mầm (chọn hệ Lửa, Độc hoặc Băng), Thành hình, Thức tỉnh ({0}, {1}, {2} linh khí). Quái, rương, trùm không rơi vũ khí hay quần áo nữa mà cho vàng và linh khí.', G.VK_MOI.gia[0], G.VK_MOI.gia[1], G.VK_MOI.gia[2])],
     ['Đặc trưng hệ theo cấp', G.t('Trắng: chưa có hệ. Linh khí (dấu ấn) có từ: hạ tinh anh ({0}), trùm nhỏ ({1}), trùm vùng ({2}); quái thường {3}% rơi viên linh khí của vùng ({4}), đi lại gần để nhặt; kết liễu quái đang dính hệ (+1). Hệ theo hệ quái đang dính, không dính thì theo vùng. Mầm: có tỉ lệ gây cháy, độc, chậm nhưng chưa có luật hệ. Thành hình: mở đặc trưng 1, thứ để lại trên sân (vệt cháy, vũng độc, gai băng). Thức tỉnh: mở đặc trưng 2, phản ứng dây chuyền (nổ lan, lây độc, băng vỡ).', G.LINHKHI.elite, G.LINHKHI.mini, G.LINHKHI.boss, Math.round(G.LINHKHI.drop * 100), G.LINHKHI.orb)],
-    ['Xem vũ khí', 'Ở làng, chạm vào vũ khí đang bay theo em bé để xem bậc, dòng phụ và các đặc trưng đã mở, sắp mở. Ở chỗ Bà Hàng Xén cũng có nút Xem cho món trong rương.'],
+    ['Xem vũ khí', 'Ở Ông Thợ Rèn (thẻ Linh khí, nút Xem linh khí) xem cấp, bậc ép đồ và các đặc trưng hệ đã mở, sắp mở của từng vũ khí.'],
   ];
   function help() {
     frame('Gốc đa: hướng dẫn');

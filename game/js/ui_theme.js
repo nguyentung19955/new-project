@@ -408,7 +408,8 @@
   // Lớp ghép (bóng + lót + ảnh) nhớ THEO TỪNG ẢNH (WeakMap): ảnh nạp xong, đổi hay gỡ thì lớp cũ tự bỏ theo, không cần xoá bộ nhớ đệm bằng tay.
   const KHUNG_LOP = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
   const khungCo = (ma) => (G.KHUNG_ANH === false || !KHUNG_LOP ? null : gdCo(ma));
-  T.MA_KHUNG = ['gd-o-do-0', 'gd-o-do-1', 'gd-o-do-2', 'gd-o-do-3', 'gd-o-do-0-chon', 'gd-o-do-1-chon', 'gd-o-do-2-chon', 'gd-o-do-3-chon',
+  // 14/10 (vũ khí cũ còn sót, mục 9): bỏ ô đồ theo bậc màu cũ gd-o-do-1..3 (+ -chon) — ô vũ khí nay theo bậc ép đồ (js/ep_do.js), chỉ còn ô thường bậc 0.
+  T.MA_KHUNG = ['gd-o-do-0', 'gd-o-do-0-chon',
     'gd-khung-mau', 'gd-khung-mana', 'gd-khung-xp', 'gd-khung-trum', 'gd-khung-trum-nho', 'gd-khung-tinh-anh', 'gd-the-thuong']; // cho công cụ và bài kiểm tra
   // Dựng một lớp w × h (điểm ảnh game) ở đúng độ nét của ảnh ga; ve() vẽ bằng R, rr, frame (toạ độ game) và khungVe.
   function khungLop(ga, key, w, h, ve) {
@@ -574,7 +575,7 @@
   // rar: 0 Thường, 1 Lam, 2 Tím, 3 Vàng. o: { sel, dim }. Hình món đồ do nơi gọi vẽ lên sau, tâm tại (x + s/2, y + s/2).
   T.slot = function (x, y, s, rar, o) {
     o = o || {};
-    x = Math.round(x); y = Math.round(y); s = Math.round(s); rar = G.clamp(rar | 0, 0, 3);
+    x = Math.round(x); y = Math.round(y); s = Math.round(s); rar = G.VK_CU ? G.clamp(rar | 0, 0, 3) : 0; // 14/10: không còn bậc màu cũ
     // Làn C5: có ảnh thì khung ô là ảnh 9 mảnh co theo cỡ ô (20 đến 70). Ô đang chọn dùng tệp -chon, phủ rộng hơn 1 điểm mỗi bên như vòng sáng của hình code;
     // thiếu tệp -chon thì dùng tệp thường và game tự vẽ vòng sáng. Bóng và màu lót lòng ô (xanh ngọc tối, đặc như hình code) do game vẽ dưới ảnh.
     const gkc = o.sel ? khungCo('gd-o-do-' + rar + '-chon') : null, gko = gkc || khungCo('gd-o-do-' + rar);

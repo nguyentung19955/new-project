@@ -51,7 +51,7 @@
   const STAGES = ['Trắng', 'Mầm', 'Thành hình', 'Thức tỉnh'];
   const BRANCHES = ['fire', 'poison', 'ice'];
   const TYPES = ['sword', 'bow', 'spear', 'hammer'];
-  const TYPE_NAMES = { sword: 'Kiếm', bow: 'Phi tiêu', spear: 'Giáo', hammer: 'Búa' }; // bộ Zed mới: cung thành phi tiêu
+  const TYPE_NAMES = { sword: 'Kiếm', bow: 'Phi tiêu', spear: 'Thương', hammer: 'Búa' }; // bộ Zed mới: cung thành phi tiêu
   // Chữ nối vào tên dòng theo nhánh và giai đoạn.
   const WORDS = {
     fire: ['Than Hồng', 'Xích Diệm', 'Hỏa Thần'],

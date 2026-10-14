@@ -271,8 +271,9 @@
     E.vien(c, x, y, s, s, b, true);
   };
   // Viền màu bậc nhuộm bằng code (ô vũ khí trong trận, ô dự phòng khi thiếu ảnh). Rực lửa: lửa chạy quanh viền.
-  E.vien = function (c, x, y, w, h, b, luonVe) {
-    if (!E.bat() || (!b && !luonVe)) return;
+  // trang: vẽ cả viền bậc Trắng (ô vũ khí trong trận: khung ảnh không còn theo bậc màu cũ G.RARITY, viền luôn theo bậc ép đồ)
+  E.vien = function (c, x, y, w, h, b, luonVe, trang) {
+    if (!E.bat() || (!b && !luonVe && !trang)) return;
     c.save();
     c.strokeStyle = E.mauBac(b); c.lineWidth = 1.5; c.strokeRect(x + 1, y + 1, w - 2, h - 2);
     if (luonVe) { c.strokeStyle = 'rgba(0,0,0,0.6)'; c.lineWidth = 1; c.strokeRect(x + 3.5, y + 3.5, w - 7, h - 7); }
@@ -287,6 +288,12 @@
     }
     c.restore();
   };
+  // Vũ khí còn sót 14/10: màu chữ, tên bậc, ô hình của một vũ khí theo BẬC ÉP ĐỒ (thay bậc màu cũ G.RARITY Thường/Lam/Tím/Vàng).
+  // Ép đồ tắt (?epdo=0): màu Trắng, ô thường bậc 0.
+  G.bacMauVk = (w) => (E.bat() ? E.mauBac(E.bac(w)) : CF.mau[0]);
+  G.bacTenVk = (w) => E.tenBac(E.bat() ? E.bac(w) : 0);
+  // Ô: đã ép (bậc > 0) thì ô ép đồ gd-o-ep-<bậc>; bậc Trắng thì ô thường (như bảng Linh khí của js/vk_moi.js).
+  G.oBacVk = function (x, y, s, w) { const b = E.bat() ? E.bac(w) : 0; if (b) E.o(x, y, s, b); else if (G.theme) G.theme.slot(x, y, s, 0); };
   E.iconDa = function (x, y, s) {
     const g = gd('gd-da-nang-bac');
     if (g && SC().veGd(G.ux, g, x - s / 2, y - s / 2, s, s)) return;

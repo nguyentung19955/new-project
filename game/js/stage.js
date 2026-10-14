@@ -46,7 +46,7 @@
     fight1: 'Đánh vỡ chậu than để đốt quái. Kết liễu quái đang cháy thì kiếm nhận dấu ấn Lửa.',
     chest: 'Lại gần rương rồi bấm Đánh để mở. Bùa hệ phủ hệ đó lên vũ khí trong 60 giây.',
     fight2: 'Thanh xanh là mana. Đủ 25 mana thì bấm Đặc biệt để tung đòn mạnh.',
-    elite: 'Quái tinh anh mang hệ. Chạm ô vũ khí ở góc trên bên phải để đổi sang cung.',
+    elite: 'Quái tinh anh mang hệ. Chạm ô vũ khí ở góc trên bên phải để đổi sang phi tiêu.',
     fountain: 'Lại gần suối đỏ để hồi máu hoặc suối xanh để hồi mana rồi bấm Đánh, chỉ chọn được một. Từ ải sau, dòng chữ phía trên cho biết trùm đã học gì từ bạn.',
     // Phiên cân bằng (mục 8, V39): trùm ải hướng dẫn không học theo người chơi nữa, câu gợi ý nói đúng như vậy.
     boss: 'Trùm đầu tiên chưa học gì từ bạn. Từ ải sau, trùm kháng hệ bạn dùng nhiều nhất nhưng yếu hệ khắc chế: đổi vũ khí khác hệ để đánh mạnh hơn.',
@@ -961,12 +961,12 @@
     hienVk.forEach((w, i) => {
       const x = 368 + i * 56, on = w === P.weapons[P.cur];
       // Khung ô vũ khí cùng bộ với nút, viền mang màu bậc. Hình vũ khí sống và chữ do game vẽ ở các dòng dưới.
-      const rar = G.RARITY[G.wRar(w)];
+      // 14/10: khung ô luôn là khung thường (gd-o-vk-0), viền màu theo bậc ép đồ (kể cả Trắng) — không còn bậc màu cũ G.RARITY
       BA.slot(c, x, 3, 54, 35, {
-        weapon: { type: w.type, branch: G.activeEl(P, w), stage: G.wStage(w), rarity: G.wRar(w) },
+        weapon: { type: w.type, branch: G.activeEl(P, w), stage: G.wStage(w), rarity: 0 },
         active: on, cd: on ? 0 : P.swapCd / (G.SWAP_CD || 1.5), icon: false, gem: false, id: 'slot' + i,
       });
-      if (G.epDo) G.epDo.vien(c, x, 3, 54, 35, G.epDo.bac(w)); // đợt 6: viền màu Bậc ép đồ (Rực lửa có lửa chạy)
+      if (G.epDo) G.epDo.vien(c, x, 3, 54, 35, G.epDo.bac(w), false, true); // đợt 6: viền màu Bậc ép đồ (Rực lửa có lửa chạy)
       G.art.weaponIcon(c, Object.assign({}, w, { coat: P.coats[w.id] && P.coats[w.id].t > 0 ? P.coats[w.id].el : null }), x + 13, 13, 19, on ? (P.atkT > 0 ? 'attack' : 'idle') : 'sleep');
       const mi = markInfo(w);
       // bậc và độ mài nằm ở phần phải của ô, không chồng lên hình vũ khí (hình chiếm 26 điểm bên trái)
@@ -1237,12 +1237,11 @@
   // rightPad: chừa chỗ bên phải dòng tên (lò rèn ghi "đang mang" ở đó)
   function weaponLine(w, x, y, wd, sel, rightPad) {
     const mi = markInfo(w);
-    const rar = G.RARITY[G.wRar(w)];
     G.theme.inset(x, y, wd, 22, sel);
-    // ô hình vũ khí: viền mang màu bậc
-    G.theme.slot(x + 2, y + 1, 20, G.wRar(w));
+    // ô hình vũ khí: khung + màu chữ theo bậc ép đồ (14/10: bỏ bậc màu cũ G.RARITY)
+    G.oBacVk(x + 2, y + 1, 20, w);
     G.art.weaponIcon(G.ux, w, x + 12, y + 11, 17);
-    ui.text(cutLine(G.wName(w), wd - 30 - (rightPad || 0), 7.5, true), x + 26, y + 9.5, { size: 7.5, bold: true, color: rar.col });
+    ui.text(cutLine(G.wName(w), wd - 30 - (rightPad || 0), 7.5, true), x + 26, y + 9.5, { size: 7.5, bold: true, color: G.bacMauVk(w) });
     ui.text(cutLine(mi.txt, wd - 30, 6.5), x + 26, y + 18.5, { size: 6.5, color: mi.col === '#666' ? '#a9c2b4' : mi.col });
     return G.click && G.inRect(G.click, x, y, wd, 22);
   }
@@ -1356,24 +1355,24 @@
     const avail = lim - ry, nW = weps.length, pitch = G.clamp(Math.floor(avail / Math.max(1, nW)), 15, 26), maxCards = Math.max(1, Math.floor(avail / pitch));
     const cut = (str, wd, sz) => { const a = ui.wrap(str, wd, sz, true); return a.length > 1 ? a[0] + '…' : a[0]; };
     weps.slice(0, maxCards).forEach((l, i) => {
-      if (i === maxCards - 1 && nW > maxCards) { ui.text(G.t('và {0} vũ khí nữa (xem ở Bà Hàng Xén)', nW - i), 246, ry + 10, { size: 7, color: '#ffd27a' }); ry += 14; return; }
-      const rar = G.wRar(l.w), nm = G.wName(l.w), k = l.s.indexOf(nm), h = pitch - 2;
-      TH.card(244, ry, 152, h, { rar });
+      if (i === maxCards - 1 && nW > maxCards) { ui.text(G.t('và {0} vũ khí nữa', nW - i), 246, ry + 10, { size: 7, color: '#ffd27a' }); ry += 14; return; }
+      const nm = G.wName(l.w), k = l.s.indexOf(nm), h = pitch - 2, mau = G.bacMauVk(l.w);
+      TH.card(244, ry, 152, h, {});
       if (pitch >= 22) {
-        TH.slot(247, ry + 2, 20, rar);
+        G.oBacVk(247, ry + 2, 20, l.w);
         G.art.weaponIcon(G.ux, l.w, 257, ry + 12, 16);
         // V26: ▲/▼ so với vũ khí đang mang (Sức mạnh nếu mang món này thay một ô; món đang mang rồi thì không ghi)
         const cmp = cmpMark(l.w), cw = cmp ? cutLine(cmp.s, 50, 6.5, true) : '';
         if (cmp) { ui.font(6.5, true); }
         const cmpW = cmp ? G.ux.measureText(cw).width + 3 : 0;
-        ui.text(cutLine(G.t('{0} · bậc {1}', k > 0 ? l.s.slice(0, k).trim().replace(/:$/, '') : 'Nhận được', G.RARITY[rar].name), 121 - cmpW, 6.5), 271, ry + 9.5, { size: 6.5, color: '#a9c2b4' });
+        ui.text(cutLine(G.t('{0} · bậc {1}', k > 0 ? l.s.slice(0, k).trim().replace(/:$/, '') : 'Nhận được', G.bacTenVk(l.w)), 121 - cmpW, 6.5), 271, ry + 9.5, { size: 6.5, color: '#a9c2b4' });
         if (cmp) ui.text(cw, 392, ry + 9.5, { size: 6.5, bold: true, align: 'right', color: cmp.up ? '#9be07a' : '#ff9a5a' });
-        ui.text(cut(nm, 118, 7.5), 271, ry + 19.5, { size: 7.5, bold: true, color: G.RARITY[rar].col });
+        ui.text(cut(nm, 118, 7.5), 271, ry + 19.5, { size: 7.5, bold: true, color: mau });
       } else {
         G.art.weaponIcon(G.ux, l.w, 254, ry + h / 2, Math.min(12, h - 2));
         const cmp = cmpMark(l.w);
         if (cmp) ui.text(cmp.up ? '▲' : '▼', 392, ry + h / 2 + 2.6, { size: 7, bold: true, align: 'right', color: cmp.up ? '#9be07a' : '#ff9a5a' });
-        ui.text(cut(nm, cmp ? 116 : 128, 7), 263, ry + h / 2 + 2.6, { size: 7, bold: true, color: G.RARITY[rar].col });
+        ui.text(cut(nm, cmp ? 116 : 128, 7), 263, ry + h / 2 + 2.6, { size: 7, bold: true, color: mau });
       }
       ry += pitch;
     });
@@ -1480,7 +1479,7 @@
     const T2 = R.tips, W0 = 86;
     // phần nhận được: gộp một dòng
     const texts = R.lines.filter((l) => !l.w), nW = R.lines.length - texts.length;
-    const got = texts.join(' · ') + (nW ? G.t(' · nhặt {0} vũ khí (ở Bà Hàng Xén)', nW) : '');
+    const got = texts.join(' · ') + (nW ? G.t(' · nhặt {0} vũ khí', nW) : '');
     const gl = ui.wrap(got, 308, 7, true);
     ui.text(gl[0] + (gl.length > 1 ? '…' : ''), W0, 52, { size: 7, color: '#e8dfcc' });
     // sức mạnh hiện tại / khuyên dùng

@@ -158,7 +158,7 @@
       y += 8; T.head('Vũ khí đang mang', x, y); y += 4;
       sv.carry.forEach((id) => {
         const wp = G.weaponById(id); if (!wp) return;
-        tx(G.t('• {0} · sát thương mỗi đòn {1}', G.wName(wp), so1(G.wBase(wp, hs.lvl))), x, y + 8, w, { size: 7, color: G.RARITY[G.wRar(wp)].col });
+        tx(G.t('• {0} · sát thương mỗi đòn {1}', G.wName(wp), so1(G.wBase(wp, hs.lvl))), x, y + 8, w, { size: 7, color: G.bacMauVk(wp) });
         y += 10;
       });
       return y + 4;

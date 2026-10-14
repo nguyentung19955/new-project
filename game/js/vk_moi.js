@@ -11,7 +11,7 @@
 //     trước khi chuyển chép bản gốc sang khoá linhkhi_save_v1_truoc_he_moi (giữ bản đầu tiên; chỉ để cứu tay, game không đọc lại).
 //     Mỗi lần nạp: giữ đúng 4 vũ khí, sửa số hỏng.
 //     Đợt 2 (YEU-CAU-2-DON-CU.md): js/outfit.js đã xoá — bảng giá quần áo cũ dùng để hoàn tiền nằm ngay trong tệp này (AO_CU, AO_TU_CU).
-//   - Hình vũ khí trong ô đồ: bộ zed-vk (4 loại × 4 cấp, cùng ảnh js/zed_moi.js vẽ trên tay Zed); chưa tải xong thì vẽ như cũ.
+//   - Hình vũ khí trong ô đồ: bộ zed-vk (4 loại × 4 cấp, cùng ảnh js/zed_moi.js vẽ trên tay Zed); chưa tải xong thì không vẽ gì (14/10; ?vkcu=1: như cũ).
 // Đợt 2: bỏ cờ ?hethongcu=1 — luôn chạy luật này.
 (function () {
   const G = window.G, ui = G.ui;
@@ -599,10 +599,25 @@
     c.restore();
     return true;
   };
+  // Ô zed-vk của một vũ khí (đúng loại, cấp, nhuộm hệ như ô đồ): { img, x, y, w, h } hoặc null khi ảnh chưa tải xong.
+  // type: loại muốn lấy khi không có w (nút Đánh / Đặc biệt dự phòng: cấp Trắng). Dùng ở js/fx_he.js (Phi Thương) và js/btn_art.js.
+  VM.anhO = function (w, type) {
+    const V = layVk(), loai = VK_LOAI[(w && w.type) || type];
+    if (!V || !loai || !V.tep.vk[loai]) return null;
+    let cap = 0;
+    if (w) { try { cap = kep(G.wStage(w) | 0, 0, 3); } catch (e) { cap = 0; } }
+    if (!V.tep.vk[loai][cap]) return null;
+    const he = w ? (w.coat && G.EL[w.coat] ? w.coat : cap > 0 && G.EL[w.branch] ? w.branch : null) : null;
+    return anhVk(V, loai, cap, he);
+  };
+  // 14/10 (vũ khí cũ còn sót, mục 4): nạp zed-vk sớm cùng ảnh lõi (ngay khi tệp này chạy, trước khi vào làng).
+  try { layVk(); } catch (e) { /* chưa có bộ nạp ảnh: bỏ qua */ }
   if (G.art && G.art.weaponIcon && !G.art.weaponIcon.vkMoiBoc) {
     const goc = G.art.weaponIcon;
     G.art.weaponIcon = function (c, w, x, y, size) {
-      if (w) { try { if (VM.icon(c, w, x, y, size || 22)) return; } catch (e) { /* vẽ như cũ */ } }
+      if (w) { try { if (VM.icon(c, w, x, y, size || 22)) return; } catch (e) { /* bỏ qua */ } }
+      // 14/10: zed-vk chưa tải xong thì KHÔNG vẽ gì (không bao giờ rơi về hình vũ khí cũ G.weaponArt / A.weapon). ?vkcu=1 vẽ như cũ.
+      if (!G.VK_CU) return;
       return goc.apply(this, arguments);
     };
     G.art.weaponIcon.vkMoiBoc = true;

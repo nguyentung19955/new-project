@@ -720,8 +720,32 @@
       crescent(c, 1, 0, 15 * g, 14 * g, -2, 0, 1, '#ffffff', 0.18, 0.82, true, false, 1, 0);
     } finally { c.restore(); c.globalAlpha = 1; }
   }
-  // Phi Thương: cây giáo sống thật (G.weaponArt) bay theo hướng ném; cắm thì rung, bay về thì xoay vòng
+  // Phi Thương: cây thương bay theo hướng ném; cắm thì rung, bay về thì xoay vòng.
+  // 14/10 (vũ khí cũ còn sót, mục 2): vẽ bằng ô zed-vk 'thuong' đúng cấp (và màu hệ) của cây thương đã ném, xoay theo hướng bay (như phi tiêu
+  // ở js/fx_dan.js), cỡ như trên tay Zed (hệ số vk_tl của bộ zed-moi). Ảnh chưa tải xong: không vẽ gì. ?vkcu=1: giáo tre cũ (G.weaponArt).
+  const TL_THUONG = 0.35249; // zed-moi.sprite.json dong_tac.*_thuong.vk_tl: cấp Trắng dài ≈ 40 điểm ảnh game
   function drawSpear(c, o) {
+    if (!G.VK_CU) {
+      const q = o.q;
+      if (q.done) { q.gone = true; return; }
+      const t = K.S().t, v = scr(q);
+      let ang = Math.atan2(v[1], v[0]), x = q.x, y = q.y - 12;
+      if (q.phase === 'stick') { ang += ((18 * Math.sign(v[0] || 1) + Math.sin(t * 60) * 4 * Math.max(0, q.stick - 0.3)) * Math.PI) / 180; y += 4; }
+      else if (q.phase === 'back') ang += (((t * 1100) % 360) * Math.PI) / 180;
+      let a = null;
+      try { a = G.vkMoi && G.vkMoi.anhO ? G.vkMoi.anhO(q.w, 'spear') : null; } catch (e) { a = null; }
+      if (!a) return;
+      if (q.phase !== 'back') p(c, Math.round(x - v[0] * 20) - 8, Math.round(q.y) - 1, 16, 2, 'rgba(0,0,0,0.25)'); // bóng
+      const w = a.w * TL_THUONG, h = a.h * TL_THUONG;
+      c.save();
+      try {
+        c.imageSmoothingEnabled = false;
+        // bay / cắm: mũi (mép phải ô) nằm ở chỗ đang bay; bay về: xoay quanh giữa thân
+        c.translate(Math.round(x), Math.round(y)); c.rotate(ang);
+        c.drawImage(a.img, a.x, a.y, a.w, a.h, q.phase === 'back' ? -w / 2 : -w + 2, -h / 2, w, h);
+      } finally { c.restore(); }
+      return;
+    }
     const q = o.q;
     if (q.done) { q.gone = true; return; }
     const t = K.S().t, v = scr(q);

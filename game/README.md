@@ -16,11 +16,11 @@ Mở `index.html` (hoặc `dist/linh-khi.html`) bằng trình duyệt. Chạm m�
 
 Làng là một cảnh đi lại được, rộng gấp rưỡi màn hình; màn hình trượt ngang theo em bé. Không còn danh sách nút: mỗi chức năng là một người.
 
-- Kéo ở nửa trái màn hình để đi (tám hướng). Hai vũ khí đang mang bay theo sau em bé.
+- Kéo ở nửa trái màn hình để đi (tám hướng). Nhân vật cầm vũ khí trên tay (14/10: bỏ hai vũ khí bay theo sau; `?vkcu=1` xem lại hình cũ).
 - Tới gần một người thì người đó ngẩng lên và nút tròn bên phải thành **Nói chuyện**. Chạm thẳng vào người cũng được: em bé tự chạy tới.
 - Dải bảy khuôn mặt ở mép trên là lối tắt: chạm một mặt là em bé tự chạy tới người đó và bảng mở luôn (chạm lần hai thì tới ngay). Đang mở bảng mà chạm mặt khác thì sang thẳng người đó.
 - Ai có việc mới thì có dấu chấm than vàng trên đầu và chấm đỏ trên khuôn mặt ở dải lối tắt.
-- Chạm vào vũ khí đang bay để mở màn **Xem vũ khí**. Ba bé hero còn lại ngồi chơi ở sân đình, chạm vào bé nào là đổi sang bé đó (bản Zed: ba bạn đã được cứu ngồi chơi ở sân đình, chạm vào thì bạn nhắc lại chiêu đã dạy Zed).
+- Xem vũ khí ở Ông Thợ Rèn (thẻ Linh khí, **Xem linh khí**). Ba bé hero còn lại ngồi chơi ở sân đình, chạm vào bé nào là đổi sang bé đó (bản Zed: ba bạn đã được cứu ngồi chơi ở sân đình, chạm vào thì bạn nhắc lại chiêu đã dạy Zed).
 - Tài nguyên ở dải trên cùng và mọi chỗ ghi giá, thưởng hiện bằng biểu tượng kèm số. Chạm vào biểu tượng để xem tên.
 
 | Người | Ở đâu | Việc |
@@ -43,14 +43,14 @@ Trên điện thoại (nên cầm ngang):
 - Mỗi vũ khí có lối đánh riêng với nút **Đánh**:
   - Kiếm: bấm liên tiếp (hoặc giữ) ra chuỗi 3 nhát, nhát thứ ba mạnh và rộng hơn. Đánh ngay sau khi Né thì lướt tới chém.
   - Cung: bấm để bắn nhanh; tên tự ngắm vào quái gần nhất theo mọi hướng (trên, dưới, chéo, sau lưng, kể cả quái đứng sát người), đón đầu nhẹ quái đang chạy, và xuyên thêm một con (con sau nhận khoảng một phần ba sát thương). Giữ để giương cung (có vạch lấy đà trên đầu), cung xoay theo quái gần nhất; thả ra bắn tên mạnh xuyên qua nhiều quái. Mưa tên (Đặc biệt) rơi vào quái hoặc cụm quái gần nhất; bẫy của Thợ Săn khi cầm cung ném thẳng vào chỗ quái gần nhất.
-  - Giáo: bấm liên tiếp ra ba nhát đâm rồi quét một vòng. Giữ rồi thả để xốc tới một đoạn ngắn xuyên qua quái. Quét vòng quét ba phần tư vòng quanh người, chỉ chừa khe ngay sau lưng.
+  - Thương: bấm liên tiếp ra ba nhát đâm rồi quét một vòng. Giữ rồi thả để xốc tới một đoạn ngắn xuyên qua quái. Quét vòng quét ba phần tư vòng quanh người, chỉ chừa khe ngay sau lưng.
   - Búa: bấm để nện, làm quái khựng. Giữ để lấy đà 2 nấc, thả ra nện đất tạo sóng chấn động; đủ nấc 2 thì làm choáng.
 - Mọi đòn đánh theo **tám hướng**: tự quay về quái gần nhất trong tầm của đòn (lên, xuống, chéo); không có quái thì theo hướng đang kéo cần, rồi hướng vừa đi. Em bé chỉ lật trái phải, còn vũ khí, vệt chém và vùng trúng xoay đúng góc. Lướt và lao đi theo hướng đó, chạm tường thì dừng.
 - Mỗi loại vũ khí một chiêu **Đặc biệt** riêng (tốn mana, cũng tám hướng):
   - Kiếm, **Trảm Nguyệt**: vung một nhát phóng vệt chém trăng khuyết bay thẳng chừng 2/3 phòng, xuyên mọi quái; em bé lùi nửa bước.
-  - Giáo, **Phi Thương**: ném giáo bay thẳng xuyên một hàng quái, con cuối (hoặc con sát tường) bị ghim, choáng ngắn; giáo cắm 0,6 giây rồi tự bay về tay, trúng lần nữa trên đường về. Giáo chưa về thì nút Đánh của cây giáo đó là cú đấm tay yếu (đổi sang vũ khí kia vẫn đánh bình thường).
+  - Thương, **Phi Thương**: ném thương bay thẳng xuyên một hàng quái, con cuối (hoặc con sát tường) bị ghim, choáng ngắn; thương cắm 0,6 giây rồi tự bay về tay, trúng lần nữa trên đường về. Thương chưa về thì nút Đánh của cây thương đó là cú đấm tay yếu (đổi sang vũ khí kia vẫn đánh bình thường).
   - Búa, **Địa Chấn**: nện xuống, vòng chấn nhỏ quanh người, rồi vệt nứt chạy nhanh theo hướng nhắm chừng nửa phòng (có vết nứt báo trước rất ngắn), quái trên vệt bị hất tung và choáng.
-  - Cung, **Mưa Tên**: như cũ, rơi vào cụm quái gần nhất.
+  - Phi tiêu, **Mưa Phi Tiêu**: rơi vào cụm quái gần nhất.
   - Đặc trưng hệ (vệt cháy, vũng độc, gai băng) để lại dọc đường chiêu bay.
 - Hệ của vũ khí mạnh lên theo cấp tiến hóa:
   - Trắng: chưa có hệ.

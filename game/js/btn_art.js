@@ -405,7 +405,7 @@
   let gdDem = 0;
   function gdTag(name) {
     const g = gdIcon(name);
-    if (!g) return '';
+    if (!g) return laVk(name) ? '~' + (zedIcon(name) ? 1 : 0) : ''; // dự phòng zed-vk: ảnh vừa tải xong thì nút tự dựng lại
     let n = gdSo.get(g);
     if (!n) gdSo.set(g, (n = ++gdDem));
     return '@' + n;
@@ -458,12 +458,34 @@
     }
     return co0 ? b : null; // ảnh rỗng: dùng hình vẽ code
   }
+  // 14/10 (vũ khí cũ còn sót, mục 3): thiếu ảnh gd-nut-danh-* / gd-nut-dac-biet-* thì dự phòng là ô zed-vk (cấp Trắng) của loại vũ khí đó,
+  // đặt chéo như nút Đánh; zed-vk chưa tải xong thì nút để trống. Hình vẽ code ICON.w_* / ICON.s_* cũ chỉ còn khi ?vkcu=1 (G.VK_CU).
+  const laVk = (name) => !G.VK_CU && (name.slice(0, 2) === 'w_' || name.slice(0, 2) === 's_');
+  const ZIC = {};
+  function zedIcon(name) {
+    const type = name.slice(2), VM = G.vkMoi;
+    let a = null;
+    try { a = VM && VM.anhO ? VM.anhO(null, type) : null; } catch (e) { a = null; }
+    if (!a || typeof document === 'undefined') return null;
+    const k = type + '|' + a.x + ',' + a.y;
+    if (ZIC[k]) return ZIC[k];
+    const N = 96, cv = document.createElement('canvas'); cv.width = N; cv.height = N;
+    const q = cv.getContext('2d'), cheo = type !== 'bow', z = cheo ? (N * 1.3) / (a.w + a.h) : (N * 0.9) / Math.max(a.w, a.h);
+    q.imageSmoothingEnabled = z < 1;
+    q.translate(N / 2, N / 2); if (cheo) q.rotate(-Math.PI / 4);
+    q.drawImage(a.img, a.x, a.y, a.w, a.h, (-a.w * z) / 2, (-a.h * z) / 2, a.w * z, a.h * z);
+    return (ZIC[k] = { img: cv, pw: N, ph: N });
+  }
   function iconBuf(name, S, arg) {
     const g = gdIcon(name);
     if (g) {
       const deg = name === 'dodge' ? +arg || 0 : 0;
       const b = memo('g|' + name + '|' + S + '|' + deg + gdTag(name), () => gdBuf(g, S, deg, name !== 'potion' && name !== 'pause') || 'hong');
       if (b !== 'hong') return b;
+    }
+    if (laVk(name)) {
+      const z = zedIcon(name);
+      return memo('z|' + name + '|' + S + '|' + (z ? 1 : 0), () => (z && gdBuf(z, S, 0, true)) || new Buf(S + 2, S + 2));
     }
     return memo('i|' + name + '|' + S + '|' + arg, () => raster(S, ICON[name](arg)).outline(OUT, true));
   }
@@ -485,7 +507,7 @@
     return null; // nút Kỹ năng (game hiện không dùng): chưa có ảnh, vẽ code
   }
   B.maThan = thanMa; // cho công cụ và bài kiểm tra
-  B.MA_THAN = ['gd-vong-thuong', 'gd-vong-fire', 'gd-vong-poison', 'gd-vong-ice', 'gd-vong-ngoc', 'gd-vong-sat', 'gd-nut-vuong', 'gd-can-de', 'gd-can-num', 'gd-o-vk-0', 'gd-o-vk-1', 'gd-o-vk-2', 'gd-o-vk-3'];
+  B.MA_THAN = ['gd-vong-thuong', 'gd-vong-fire', 'gd-vong-poison', 'gd-vong-ice', 'gd-vong-ngoc', 'gd-vong-sat', 'gd-nut-vuong', 'gd-can-de', 'gd-can-num', 'gd-o-vk-0']; // 14/10: bỏ gd-o-vk-1..3 (bậc màu cũ)
   const gdCo = (ma) => { if (G.THAN_NUT_ANH === false) return null; const s = G.spriteCustom; return ma && s && s.gdSan ? s.gdSan(ma) : null; };
   // Dấu riêng của ảnh thân, ghép vào khoá bộ nhớ đệm: ảnh nạp xong, bị đổi hay bị gỡ thì nút tự dựng lại (như gdTag của biểu tượng).
   function gdTagMa(ma) {
@@ -1014,7 +1036,8 @@
   B.slot = function (ctx, x, y, w, h, st) {
     st = st || {};
     const g = grid(ctx), W = Math.max(10, Math.round((w * g.a) / g.k)), H = Math.max(10, Math.round((h * g.a) / g.k));
-    const wp = st.weapon || {}, el = elOf(wp), rar = clamp(Math.floor(wp.rarity || 0), 0, 3), lv = clamp(wp.stage || 1, 1, 3);
+    // 14/10: không còn bậc màu cũ — khung ô luôn bậc 0 (gd-o-vk-0); viền màu bậc ép đồ do js/stage.js vẽ đè (G.epDo.vien). ?vkcu=1: như cũ.
+    const wp = st.weapon || {}, el = elOf(wp), rar = G.VK_CU ? clamp(Math.floor(wp.rarity || 0), 0, 3) : 0, lv = clamp(wp.stage || 1, 1, 3);
     const t = st.t != null ? st.t : G.time || 0;
     const key = ['sl', W, H, wType(wp), el, rar, lv, st.active ? 1 : 0, st.pressed ? 1 : 0, st.disabled ? 1 : 0, st.swap ? 1 : 0, st.icon === false ? 0 : 1, st.gem === false ? 0 : 1].join('|') + (st.icon === false ? '' : gdTag('w_' + wType(wp))) + gdTagMa('gd-o-vk-' + rar);
     const spr = memo(key, () => buildSlot(W, H, st, el, rar, lv, gdCo('gd-o-vk-' + rar)));

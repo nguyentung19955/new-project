@@ -20,6 +20,11 @@
   // Thử nhanh không cần sửa code: thêm ?tile=0 vào cuối địa chỉ trang.
   G.TILE_RUNG = true;
   if (typeof location !== 'undefined' && /[?&]tile=0(&|$)/.test(location.search || '')) G.TILE_RUNG = false;
+  // Vũ khí cũ còn sót (14/10, docs/review/ke-hoach-cai-thien/vu-khi-cu-con-sot/YEU-CAU.md): mặc định KHÔNG còn vẽ hình cũ ở bất kỳ đâu
+  // (vũ khí bay ở làng, giáo tre Phi Thương, biểu tượng nút vẽ code, icon vũ khí cũ lúc chờ ảnh, nhân vật / người làng / nhà vẽ code lúc chờ ảnh,
+  // sậy, áo phơi vẽ code). ?vkcu=1 → G.VK_CU = true: xem lại kiểu cũ y như trước.
+  G.VK_CU = false;
+  try { if (typeof location !== 'undefined' && /[?&]vkcu=1(&|$)/.test(location.search || '')) G.VK_CU = true; } catch (e) { /* giữ mặc định */ }
   // 14/10 (YEU-CAU-MOC-HO-HIEU-UNG-NEN.md): sàn, tường, nền ngoài, phủ mép của HANG BIỂN và LÂU ĐÀI CỔ lát bằng ảnh (gd-nen-bien-*, gd-nen-lau-*;
   // js/room_art.js tileVung), cùng chuẩn bộ Rừng. Thiếu tệp bắt buộc thì vẽ code như cũ. Tắt: ?nentile=0 (hoặc G.NEN_TILE = false).
   G.NEN_TILE = true;
@@ -46,8 +51,8 @@
     // Cân bằng phải cày: giáo 11 -> 10,7, búa 22 -> 21,3. Sau khi gộp "tám hướng" (đòn cận chiến tự ngắm quái gần nhất) kiếm mạnh
     // vượt hẳn (kiếm 84,6 so với giáo 71, búa 74 trên bia tập) nên kiếm 10 -> 9 và cung 11 -> 11,4 (mỗi phát vẫn dưới một nhát kiếm):
     // cung thấp hơn kiếm 19% trên bia tập, khoảng 29% trên quái mới thật (tests/dps.py, 8 và 12 hạt giống).
-    bow: { name: 'Cung', dmg: 11.4, cd: 0.5, ranged: true, special: 'Mưa Tên' },
-    spear: { name: 'Giáo', dmg: 10.7, cd: 0.44, reach: 56, depth: 12, special: 'Phi Thương' },
+    bow: { name: 'Phi tiêu', dmg: 11.4, cd: 0.5, ranged: true, special: 'Mưa Phi Tiêu' }, // 14/10: tên mới ngay từ bảng (trước là Cung / Mưa Tên rồi đổi ở dưới)
+    spear: { name: 'Thương', dmg: 10.7, cd: 0.44, reach: 56, depth: 12, special: 'Phi Thương' },
     hammer: { name: 'Búa', dmg: 21.3, cd: 0.8, reach: 32, depth: 25, stagger: 0.4, special: 'Địa Chấn' },
   };
   G.WKEYS = ['sword', 'bow', 'spear', 'hammer'];
@@ -314,7 +319,7 @@
       chRange: 1.2, chSpeed: 1.2,    // chưởng bay xa hơn 20%, nhanh hơn 20% (gốc 30% / 25%)
       noiTai: '+15% sát thương lên quái bị choáng, đóng băng, giữ chân hoặc lộ điểm yếu',
       chuong: 'chưởng bay xa hơn 20%, nhanh hơn 20%',
-      ngan: ['Đánh quái bị khống chế +15%', 'Chưởng xa, nhanh hơn 20%; cung +10%'], // dòng ngắn ở bảng kết quả
+      ngan: ['Đánh quái bị khống chế +15%', 'Chưởng xa, nhanh hơn 20%; phi tiêu +10%'], // dòng ngắn ở bảng kết quả
     },
     healer: {
       boss: 'Ngư Tinh', fav: 'spear',
@@ -322,7 +327,7 @@
       chHeal: 0.01, chHealMax: 3,    // chưởng trúng quái hồi 1% máu, tối đa 3 lần mỗi phát (gốc 1,5%)
       noiTai: 'hiệu ứng gây ra kéo dài hơn 20%',
       chuong: 'chưởng trúng quái thì hồi 1% máu (tối đa 3 lần mỗi phát)',
-      ngan: ['Hiệu ứng gây ra lâu hơn 20%', 'Chưởng trúng hồi 1% máu; giáo +10%'],
+      ngan: ['Hiệu ứng gây ra lâu hơn 20%', 'Chưởng trúng hồi 1% máu; thương +10%'],
     },
     wrestler: {
       boss: 'Hồ Tinh', fav: null,
@@ -631,8 +636,8 @@
     // GĐ2 (V48): ghi rõ phản ứng chỉ có giữa hai vũ khí khác hệ, và tương tác ẩn Độc - Băng.
     'Lửa gặp Độc gây Nổ khói. Lửa gặp Băng gây Sốc nhiệt. Độc gặp Băng không phản ứng, nhưng Băng làm Độc tan chậm một nửa. Phản ứng chỉ có giữa hai vũ khí khác hệ (đổi vũ khí khi quái còn dính hệ cũ); chưởng không gây phản ứng với vũ khí.',
     'Hạ trùm bằng hệ khắc chế nó để nhận sao thứ ba.',
-    'Vũ khí có bốn bậc: Thường, Lam, Tím, Vàng. Trùm vùng lần đầu bị hạ chắc chắn rơi một vũ khí Vàng.',
-    'Thành hình mở đặc trưng hệ thứ nhất, Thức tỉnh mở đặc trưng thứ hai. Bậc Thường chỉ lên tới Thành hình.',
+    'Vũ khí có bảy bậc ép đồ: Trắng, Xanh lam, Xanh lục, Tím, Vàng, Đỏ, Rực lửa. Ép ở Ông Thợ Rèn (thẻ Ép đồ) bằng đá nâng bậc rơi từ trùm.',
+    'Thành hình mở đặc trưng hệ thứ nhất, Thức tỉnh mở đặc trưng thứ hai.',
     'Mỗi ải có Sức mạnh khuyên dùng. Số đỏ là bé còn yếu: chơi lại ải cũ để lên cấp, kiếm quặng và nguyên liệu, rồi mài và nâng bậc vũ khí.',
     'Thiếu nguyên liệu của vùng đã qua? Bà Hàng Xén (thẻ Nguyên liệu) và Thương nhân trong ải đổi vàng lấy nguyên liệu.',
     'Vũ khí đã Thức tỉnh: dấu ấn thừa của hệ chính tự đổi ra nguyên liệu vùng (Độc ra Gỗ linh, Băng ra Vảy cá, Lửa ra Đá lửa).',

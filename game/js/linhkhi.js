@@ -359,11 +359,11 @@
       y += 13;
     });
     // hệ chính, đã mở, sắp mở, gợi ý
-    const el = w.branch, rar = G.RARITY[G.wRar(w)];
+    const el = w.branch, rar = { maxStage: 3 }; // 14/10: bỏ bậc màu cũ (mọi vũ khí lên tới Thức tỉnh)
     y += 4;
     if (el) {
       const st = G.wStage(w), I = LK.info(w, el), E = G.EL[el];
-      ui.text(st >= rar.maxStage ? G.t('Hệ chính: {0} · {1} (tối đa bậc {2})', E.name, G.STAGE_NAMES[st], rar.name) : G.t('Hệ chính: {0} · {1}', E.name, G.STAGE_NAMES[st]), x, y + 3, { size: 7.5, bold: true, color: E.col });
+      ui.text(st >= rar.maxStage ? G.t('Hệ chính: {0} · {1} (tối đa)', E.name, G.STAGE_NAMES[st]) : G.t('Hệ chính: {0} · {1}', E.name, G.STAGE_NAMES[st]), x, y + 3, { size: 7.5, bold: true, color: E.col });
       y += 10;
       const open = G.HE_FEATURES[el].slice(0, G.heFeatures(st)).map((f) => G.tv(f.name));
       ui.text(G.t('Đã mở: {0}', open.length ? open.join(', ') : 'chưa có đặc trưng (mốc Mầm chỉ tăng chỉ số)'), x, y + 3, { size: 6.5, color: '#cfe8c8' });

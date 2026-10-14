@@ -642,6 +642,11 @@ window.G.LANG = 'vi';
   // Thử nhanh không cần sửa code: thêm ?tile=0 vào cuối địa chỉ trang.
   G.TILE_RUNG = true;
   if (typeof location !== 'undefined' && /[?&]tile=0(&|$)/.test(location.search || '')) G.TILE_RUNG = false;
+  // Vũ khí cũ còn sót (14/10, docs/review/ke-hoach-cai-thien/vu-khi-cu-con-sot/YEU-CAU.md): mặc định KHÔNG còn vẽ hình cũ ở bất kỳ đâu
+  // (vũ khí bay ở làng, giáo tre Phi Thương, biểu tượng nút vẽ code, icon vũ khí cũ lúc chờ ảnh, nhân vật / người làng / nhà vẽ code lúc chờ ảnh,
+  // sậy, áo phơi vẽ code). ?vkcu=1 → G.VK_CU = true: xem lại kiểu cũ y như trước.
+  G.VK_CU = false;
+  try { if (typeof location !== 'undefined' && /[?&]vkcu=1(&|$)/.test(location.search || '')) G.VK_CU = true; } catch (e) { /* giữ mặc định */ }
   // 14/10 (YEU-CAU-MOC-HO-HIEU-UNG-NEN.md): sàn, tường, nền ngoài, phủ mép của HANG BIỂN và LÂU ĐÀI CỔ lát bằng ảnh (gd-nen-bien-*, gd-nen-lau-*;
   // js/room_art.js tileVung), cùng chuẩn bộ Rừng. Thiếu tệp bắt buộc thì vẽ code như cũ. Tắt: ?nentile=0 (hoặc G.NEN_TILE = false).
   G.NEN_TILE = true;
@@ -668,8 +673,8 @@ window.G.LANG = 'vi';
     // Cân bằng phải cày: giáo 11 -> 10,7, búa 22 -> 21,3. Sau khi gộp "tám hướng" (đòn cận chiến tự ngắm quái gần nhất) kiếm mạnh
     // vượt hẳn (kiếm 84,6 so với giáo 71, búa 74 trên bia tập) nên kiếm 10 -> 9 và cung 11 -> 11,4 (mỗi phát vẫn dưới một nhát kiếm):
     // cung thấp hơn kiếm 19% trên bia tập, khoảng 29% trên quái mới thật (tests/dps.py, 8 và 12 hạt giống).
-    bow: { name: 'Cung', dmg: 11.4, cd: 0.5, ranged: true, special: 'Mưa Tên' },
-    spear: { name: 'Giáo', dmg: 10.7, cd: 0.44, reach: 56, depth: 12, special: 'Phi Thương' },
+    bow: { name: 'Phi tiêu', dmg: 11.4, cd: 0.5, ranged: true, special: 'Mưa Phi Tiêu' }, // 14/10: tên mới ngay từ bảng (trước là Cung / Mưa Tên rồi đổi ở dưới)
+    spear: { name: 'Thương', dmg: 10.7, cd: 0.44, reach: 56, depth: 12, special: 'Phi Thương' },
     hammer: { name: 'Búa', dmg: 21.3, cd: 0.8, reach: 32, depth: 25, stagger: 0.4, special: 'Địa Chấn' },
   };
   G.WKEYS = ['sword', 'bow', 'spear', 'hammer'];
@@ -936,7 +941,7 @@ window.G.LANG = 'vi';
       chRange: 1.2, chSpeed: 1.2,    // chưởng bay xa hơn 20%, nhanh hơn 20% (gốc 30% / 25%)
       noiTai: '+15% sát thương lên quái bị choáng, đóng băng, giữ chân hoặc lộ điểm yếu',
       chuong: 'chưởng bay xa hơn 20%, nhanh hơn 20%',
-      ngan: ['Đánh quái bị khống chế +15%', 'Chưởng xa, nhanh hơn 20%; cung +10%'], // dòng ngắn ở bảng kết quả
+      ngan: ['Đánh quái bị khống chế +15%', 'Chưởng xa, nhanh hơn 20%; phi tiêu +10%'], // dòng ngắn ở bảng kết quả
     },
     healer: {
       boss: 'Ngư Tinh', fav: 'spear',
@@ -944,7 +949,7 @@ window.G.LANG = 'vi';
       chHeal: 0.01, chHealMax: 3,    // chưởng trúng quái hồi 1% máu, tối đa 3 lần mỗi phát (gốc 1,5%)
       noiTai: 'hiệu ứng gây ra kéo dài hơn 20%',
       chuong: 'chưởng trúng quái thì hồi 1% máu (tối đa 3 lần mỗi phát)',
-      ngan: ['Hiệu ứng gây ra lâu hơn 20%', 'Chưởng trúng hồi 1% máu; giáo +10%'],
+      ngan: ['Hiệu ứng gây ra lâu hơn 20%', 'Chưởng trúng hồi 1% máu; thương +10%'],
     },
     wrestler: {
       boss: 'Hồ Tinh', fav: null,
@@ -1253,8 +1258,8 @@ window.G.LANG = 'vi';
     // GĐ2 (V48): ghi rõ phản ứng chỉ có giữa hai vũ khí khác hệ, và tương tác ẩn Độc - Băng.
     'Lửa gặp Độc gây Nổ khói. Lửa gặp Băng gây Sốc nhiệt. Độc gặp Băng không phản ứng, nhưng Băng làm Độc tan chậm một nửa. Phản ứng chỉ có giữa hai vũ khí khác hệ (đổi vũ khí khi quái còn dính hệ cũ); chưởng không gây phản ứng với vũ khí.',
     'Hạ trùm bằng hệ khắc chế nó để nhận sao thứ ba.',
-    'Vũ khí có bốn bậc: Thường, Lam, Tím, Vàng. Trùm vùng lần đầu bị hạ chắc chắn rơi một vũ khí Vàng.',
-    'Thành hình mở đặc trưng hệ thứ nhất, Thức tỉnh mở đặc trưng thứ hai. Bậc Thường chỉ lên tới Thành hình.',
+    'Vũ khí có bảy bậc ép đồ: Trắng, Xanh lam, Xanh lục, Tím, Vàng, Đỏ, Rực lửa. Ép ở Ông Thợ Rèn (thẻ Ép đồ) bằng đá nâng bậc rơi từ trùm.',
+    'Thành hình mở đặc trưng hệ thứ nhất, Thức tỉnh mở đặc trưng thứ hai.',
     'Mỗi ải có Sức mạnh khuyên dùng. Số đỏ là bé còn yếu: chơi lại ải cũ để lên cấp, kiếm quặng và nguyên liệu, rồi mài và nâng bậc vũ khí.',
     'Thiếu nguyên liệu của vùng đã qua? Bà Hàng Xén (thẻ Nguyên liệu) và Thương nhân trong ải đổi vàng lấy nguyên liệu.',
     'Vũ khí đã Thức tỉnh: dấu ấn thừa của hệ chính tự đổi ra nguyên liệu vùng (Độc ra Gỗ linh, Băng ra Vảy cá, Lửa ra Đá lửa).',
@@ -4566,7 +4571,7 @@ window.G.LANG = 'vi';
   const STAGES = ['Trắng', 'Mầm', 'Thành hình', 'Thức tỉnh'];
   const BRANCHES = ['fire', 'poison', 'ice'];
   const TYPES = ['sword', 'bow', 'spear', 'hammer'];
-  const TYPE_NAMES = { sword: 'Kiếm', bow: 'Phi tiêu', spear: 'Giáo', hammer: 'Búa' }; // bộ Zed mới: cung thành phi tiêu
+  const TYPE_NAMES = { sword: 'Kiếm', bow: 'Phi tiêu', spear: 'Thương', hammer: 'Búa' }; // bộ Zed mới: cung thành phi tiêu
   // Chữ nối vào tên dòng theo nhánh và giai đoạn.
   const WORDS = {
     fire: ['Than Hồng', 'Xích Diệm', 'Hỏa Thần'],
@@ -13189,6 +13194,7 @@ MA._xong();
   }
   function putNpc(c, kind, x, y, f, o, s) {
     s = s || 1;
+    if (!G.VK_CU && !(VS.coAnh && VS.coAnh(kind))) return; // 14/10 (mục 7): ảnh nl-* chưa tải xong thì không vẽ người làng code kiểu cũ (?vkcu=1: như cũ)
     if (!(o && o.noShadow)) { // bóng chân tròn, cùng kiểu với em bé và quái trong ải
       const ga = c.globalAlpha; c.globalAlpha = ga * 0.3;
       ell(c, x, y + 0.5 * s, (NPCS[kind] && NPCS[kind].sit ? 11 : 8) * s, 2.4 * s, '#000000');
@@ -13221,6 +13227,7 @@ MA._xong();
   // Khuôn mặt một người (dùng cho dải lối tắt và khung thoại). ctx bất kỳ, s: số lần phóng.
   VS.face = function (ctx, k, cx, cy, s) {
     if (VS.tuVeMat && VS.tuVeMat(ctx, k, cx, cy, s)) return;
+    if (!G.VK_CU) return; // 14/10: chờ ảnh nl-* thì ô mặt để trống
     const sp = npcSprite(k, 0, { look: 1 }), ty = 50 + NPCS[k].top - 6;
     ctx.imageSmoothingEnabled = false; ctx.drawImage(sp.cv, 19, ty, 23, 20, cx - 11.5 * s, cy - 10 * s, 23 * s, 20 * s);
   };
@@ -13444,12 +13451,14 @@ MA._xong();
   function anhNen(Bt) {
     const g = gdLang('nen'); if (g === Bt.nenG) return;
     Bt.nenG = g;
-    if (!g) { Bt.ground = Bt.nenCode; Bt.nenAnh = false; return; }
+    if (!g) { Bt.ground = G.VK_CU ? Bt.nenCode : nenTron(); Bt.nenAnh = false; return; } // 14/10 (mục 7): chờ ảnh nền thì một màu cỏ, không vẽ nền code kiểu cũ
     const [cv, c] = mk(g.img.width, g.img.height);
-    c.drawImage(Bt.nenCode, 0, 0, cv.width, cv.height);
+    if (G.VK_CU) c.drawImage(Bt.nenCode, 0, 0, cv.width, cv.height);
     c.drawImage(Bt.ngay ? g.img : tint(g.img), 0, 0);
     Bt.ground = cv; Bt.nenAnh = true;
   }
+  let NEN_TRON = null;
+  function nenTron() { if (!NEN_TRON) { const [cv, c] = mk(W, H); c.fillStyle = NGAY ? '#3f7a44' : '#2c4a3e'; c.fillRect(0, 0, W, H); NEN_TRON = cv; } return NEN_TRON; }
   // Vẽ lớp nền tại (x, 0). Nền code: dán thẳng như cũ. Nền ảnh: dán kín 720×270 (k = số điểm ảnh thật trên một điểm ảnh làng của bút c).
   function veNen(c, Bt, x, k) {
     if (!Bt.nenAnh) { c.drawImage(Bt.ground, x, 0); return; }
@@ -13525,7 +13534,7 @@ MA._xong();
     const rd = rng(77), flies = [];
     for (let i = 0; i < W / 14; i++) flies.push([rd() * W, 40 + rd() * 220, rd() * 6.28, 0.5 + rd()]);
     const lants = LREC; LREC = null;
-    return { ground, nenCode: ground, nenG: null, nenAnh: false, objs, cui, cuiA, thuyenS, doN, den, light: lcv, flies, lants, nha, ngay: NGAY };
+    return { ground, nenCode: ground, nenG: undefined, nenAnh: false, objs, cui, cuiA, thuyenS, doN, den, light: lcv, flies, lants, nha, ngay: NGAY };
   }
 
   // ======================= chỗ không đi được =======================
@@ -13762,7 +13771,8 @@ MA._xong();
   // Vật chạm được tại điểm (x, y) của màn hình
   function hitAt(sx, sy) {
     const wx = sx + S.cam, wy = sy - OY;
-    for (let i = 0; i < 2; i++) { const w = G.weaponById(G.save.carry[i]); if (w && Math.abs(wx - S.wp[i].x) < 13 && wy > S.wp[i].y - 50 && wy < S.wp[i].y + 6) return { kind: 'weapon', id: w.id }; }
+    // 14/10 (vũ khí cũ còn sót, mục 1): bỏ 2 vũ khí sống bay cạnh nhân vật (Zed đã cầm vũ khí trên tay); ?vkcu=1 còn như cũ
+    if (G.VK_CU) for (let i = 0; i < 2; i++) { const w = G.weaponById(G.save.carry[i]); if (w && Math.abs(wx - S.wp[i].x) < 13 && wy > S.wp[i].y - 50 && wy < S.wp[i].y + 6) return { kind: 'weapon', id: w.id }; }
     let best = null, bd = 1e9;
     for (const k of ORDER) { if (!shown(k)) continue; const q = NPCS[k].pos; if (Math.abs(wx - q[0]) < halfW(k) && wy > q[1] - Math.max(40, 4 - topOf(k)) && wy < q[1] + 10) { const d = Math.hypot(wx - q[0], wy - q[1] + 14); if (d < bd) { bd = d; best = { kind: 'npc', id: k }; } } }
     for (const st of seats()) if (Math.abs(wx - st.x) < 14 && wy > st.y - 32 && wy < st.y + 8) { const d = Math.hypot(wx - st.x, wy - st.y + 12); if (d < bd) { bd = d; best = { kind: 'kid', id: st.key, x: st.x, y: st.y }; } }
@@ -13864,7 +13874,7 @@ MA._xong();
   }
   function drawKid(c, key, x, y, face, o) {
     const sv = G.save;
-    try { G.art.hero(c, Object.assign({ x: Math.round(x), y: Math.round(y), face, key, move: false, t: S.t, atk: -1, dodge: -1, weapon: null, roundShadow: true }, o || {})); } catch (e) { p(c, x - 4, y - 18, 9, 18, '#c8402e'); }
+    try { G.art.hero(c, Object.assign({ x: Math.round(x), y: Math.round(y), face, key, move: false, t: S.t, atk: -1, dodge: -1, weapon: null, roundShadow: true }, o || {})); } catch (e) { if (G.VK_CU) p(c, x - 4, y - 18, 9, 18, '#c8402e'); }
     void sv;
   }
   // ======================= chuyển động môi trường của làng (VFX Phase 4) =======================
@@ -13895,8 +13905,8 @@ MA._xong();
       if (x > -10 && x < 490) ring(x, y, u / 1.4, 7, ac(150, 200, 230, 0.55 * (1 - u / 1.4) * M));
     }
     { const per = 3.4, u = t % per, cyc = Math.floor(t / per); if (u < 1.2) { const a = cyc * 2.3, x = B.ao[0] + Math.cos(a) * B.ao[2] * 0.45 - cam, y = B.ao[1] + Math.sin(a) * B.ao[3] * 0.4; if (x > -10 && x < 490) ring(x, y, u / 1.2, 5, ac(150, 200, 220, 0.5 * (1 - u / 1.2) * M)); } }
-    // sậy: thân đứng yên, ngọn nghiêng theo gió
-    for (const q of REEDS) {
+    // sậy: thân đứng yên, ngọn nghiêng theo gió (14/10, mục 7: sậy vẽ code kiểu cũ chỉ còn ở ?vkcu=1)
+    if (G.VK_CU) for (const q of REEDS) {
       const e = q[0] - cam, y = q[1]; if (e < -10 || e > 490) continue;
       const w = gio(t, q[0] + y) * M, d = w > 0.6 ? 1 : w < -0.8 ? -1 : 0;
       p(c, e - 5, y - 8, 1, 9, tc('#4f7a52')); p(c, e - 5 + d, y - 9, 1, 1, tc('#4f7a52')); p(c, e - 5 + d, y - 11, 1, 2, tc('#8a5a34'));
@@ -13905,6 +13915,7 @@ MA._xong();
     }
   }
   function ambClothes(c, cam, t, M) { // áo phơi trên dây: vai cố định, vạt áo lay theo gió
+    if (!G.VK_CU) return; // 14/10 (mục 7): áo phơi vẽ code kiểu cũ — bỏ (ảnh gd-lang-day-phoi chỉ có cọc và dây); ?vkcu=1 còn như cũ
     const x0 = B.phoi[0] - cam, y = B.phoi[1], n = Math.floor((B.phoi[2] - 6) / 10), cols = ['#d8482e', '#6fc0d0', '#ffd23f', '#9be07a'];
     if (x0 > 490 || x0 + B.phoi[2] < -10) return;
     for (let i = 0; i < n; i++) {
@@ -13939,7 +13950,7 @@ MA._xong();
   const LUA = [-16, -7]; // chỗ đặt điểm neo của dải hu-lang-lua-lo so với chân lò: giữa đáy vùng ngọn lửa code (12 × 14)
   function luaLo(c, cam, t) { // lửa lò rèn bập bùng, khói bay (vẽ đè lên lò, cả khi lò là ảnh AI)
     const x = B.ren[0] - cam, y = B.ren[1], f = Math.floor(t * 7) % 3, a = huLang('lua-lo');
-    if (a) veDai(c, a, a.img, Math.floor(t * 7), x + LUA[0], y + LUA[1]); else luaKhung(c, x, y, f);
+    if (a) veDai(c, a, a.img, Math.floor(t * 7), x + LUA[0], y + LUA[1]); else if (G.VK_CU) luaKhung(c, x, y, f); // 14/10: chờ ảnh thì không vẽ lửa code
     for (let i = 0; i < 3; i++) { const ph = (t * 0.35 + i / 3) % 1; c.globalAlpha = 0.45 * (1 - ph); ell(c, x - 19 + Math.round(ph * 12 + Math.sin(ph * 6 + i) * 2), y - 74 - Math.round(ph * 22), 3 + Math.round(ph * 3), 2 + Math.round(ph), '#c8bec8'); }
     c.globalAlpha = 1;
   }
@@ -13949,13 +13960,14 @@ MA._xong();
     return [Bt.cui[0].y, () => {
       const a = huLang('khung-cui'), f = Math.floor(t * 2.2);
       if (a) veDai(c, a, Bt.ngay ? a.img : nhuom(a.img, NIGHT), f, Bt.cuiA[0] - cam, Bt.cuiA[1]);
-      else { const cf = Bt.cui[f % 3]; c.drawImage(cf.cv, cf.x - cam, cf.y0); }
+      else if (G.VK_CU) { const cf = Bt.cui[f % 3]; c.drawImage(cf.cv, cf.x - cam, cf.y0); } // 14/10: chờ ảnh thì không vẽ khung cửi code
     }];
   }
   function lopDo(c, Bt, cam, tb, k) {
     const th = Bt.thuyenS;
     return [th.y, () => {
       if (th.w) { veAnh(c, th, th.x - cam, th.y0 + tb, k); return; }
+      if (!G.VK_CU) return; // 14/10: chờ ảnh gd-lang-do thì không vẽ đò code
       c.drawImage(th.cv, th.x - cam, th.y0 + tb);
       for (const d of Bt.doN.den) veAnh(c, d, d.x - cam, d.y0 + tb, k); // đèn lồng rời bằng ảnh trên con đò vẽ code
     }];
@@ -13965,17 +13977,18 @@ MA._xong();
     const g0 = gdLang('ga'), g1 = (g0 && gdLang('ga-mo')) || g0;
     for (const q of GA) L.push([B.rom[1] + q[1], () => {
       const x = B.rom[0] + q[0] - cam + Math.round(Math.sin(t * 0.4 + q[3]) * 3), y = B.rom[1] + q[1], mo = Math.sin(t * 2.2 + q[3] * 2) > 0.55;
-      if (g0) veCon(c, mo ? g1 : g0, x + 0.5, y, q[2], k); else ga(c, x, y, q[2], mo);
+      if (g0) veCon(c, mo ? g1 : g0, x + 0.5, y, q[2], k); else if (G.VK_CU) ga(c, x, y, q[2], mo);
     }]);
   }
   function lopCoc(c, cam, t, k) {
     return [B.gieng[1] + 0.1, () => {
       const x = B.gieng[0] - 9 - cam, y = B.gieng[1] - 10 - (Math.sin(t * 0.9) > 0.96 ? 1 : 0), g = gdLang('coc');
-      if (g) veCon(c, g, x, y, null, k); else coc(c, x, y);
+      if (g) veCon(c, g, x, y, null, k); else if (G.VK_CU) coc(c, x, y);
     }];
   }
   // Các vật đứng của cảnh (công trình, đạo cụ, đèn lồng rời): đèn rời bỏ qua khi vật chủ đã có ảnh AI riêng.
-  const lopVat = (c, ob, cam, k) => [ob.y, ob.w ? () => veAnh(c, ob, ob.x - cam, ob.y0, k) : () => c.drawImage(ob.cv, ob.x - cam, ob.y0)];
+  // 14/10 (mục 7): vật chưa có ảnh gd-lang-* (đang chờ tải) thì không vẽ hình code kiểu cũ; đèn lồng rời chỉ đi kèm vật chủ vẽ code nên cũng thôi. ?vkcu=1: như cũ.
+  const lopVat = (c, ob, cam, k) => [ob.y, ob.w ? () => veAnh(c, ob, ob.x - cam, ob.y0, k) : G.VK_CU ? () => c.drawImage(ob.cv, ob.x - cam, ob.y0) : () => {}];
   // ---------- cho công cụ tools/tach-lang (game không gọi) ----------
   // Vẽ cảnh làng đứng yên lên bút c bất kỳ (1 đơn vị = 1 điểm ảnh làng, cả làng 720×270, không dời OY): nền, công trình, đạo cụ,
   // lửa lò, 7 người làng, quầng đèn. o: { t: giây, k: số điểm ảnh thật trên một điểm ảnh làng (để dán ảnh AI cho nét),
@@ -14071,7 +14084,7 @@ MA._xong();
       L.push([st.y, () => drawKid(c, st.key, st.x - cam, st.y, st.x > B.dinh[0] ? -1 : 1, { alpha: un ? null : 0.45, ngoi, move: !ngoi && un && Math.sin(t * 1.1 + st.x) > 0.75 })]);
     }
     if (!o.hideHero) {
-      for (let i = 1; i >= 0; i--) L.push([S.wp[i].y - 0.5, () => drawWeapon(c, i)]);
+      if (G.VK_CU) for (let i = 1; i >= 0; i--) L.push([S.wp[i].y - 0.5, () => drawWeapon(c, i)]); // 14/10: vũ khí bay chỉ còn ở ?vkcu=1
       L.push([S.y, () => drawKid(c, sv.hero, S.x - cam, S.y, S.face, { move: S.moving })]);
     }
     L.sort((a, b) => a[0] - b[0]);
@@ -15130,11 +15143,13 @@ MA._xong();
     const hero0 = A.hero;
     A.hero = function (c, o) {
       const sp = SC.cuaEmBe(o && o.key, o);
-      if (!sp || !G.tinhLinh) return hero0.call(A, c, o);
+      // 14/10 (vũ khí cũ còn sót, mục 8): không có ảnh mới (em-be-* cho 3 bạn; Zed đã thử zed-* ở js/zed_moi.js trước khi tới đây) thì
+      // KHÔNG vẽ em bé code kiểu cũ (chờ ảnh: không vẽ gì). ?vkcu=1 (G.VK_CU) vẽ như cũ.
+      if (!sp || !G.tinhLinh) return G.VK_CU ? hero0.call(A, c, o) : undefined;
       if (G.VK_NGA && o && o.p && o.p.dead) o = Object.assign({}, o, { vkNga: true }); // rà soát A9: vũ khí nằm theo thân AI ngay khung chết đầu (js/hero_tinhlinh.js)
       let fr = null; // cùng độ nét ghép với em bé gốc (hero0 tính y như vậy) để nhận ra đúng chỗ vẽ thân
       try { fr = G.tinhLinh.frame(o, G.tinhLinh.netCua ? G.tinhLinh.netCua(c, o) : 1); } catch (e) { fr = null; }
-      if (!fr) return hero0.call(A, c, o);
+      if (!fr) return G.VK_CU ? hero0.call(A, c, o) : undefined;
       const s = SC.chonEmBe(sp, o), tint = emBeTint(o);
       let lop = null; // đồ đang mặc khoác lên thân AI: lớp sau thân và lớp trước thân, bám theo chính thân AI khung này
       const neo = SC.neoCua(sp, s.ten);
@@ -16876,7 +16891,7 @@ MA._xong();
   let gdDem = 0;
   function gdTag(name) {
     const g = gdIcon(name);
-    if (!g) return '';
+    if (!g) return laVk(name) ? '~' + (zedIcon(name) ? 1 : 0) : ''; // dự phòng zed-vk: ảnh vừa tải xong thì nút tự dựng lại
     let n = gdSo.get(g);
     if (!n) gdSo.set(g, (n = ++gdDem));
     return '@' + n;
@@ -16929,12 +16944,34 @@ MA._xong();
     }
     return co0 ? b : null; // ảnh rỗng: dùng hình vẽ code
   }
+  // 14/10 (vũ khí cũ còn sót, mục 3): thiếu ảnh gd-nut-danh-* / gd-nut-dac-biet-* thì dự phòng là ô zed-vk (cấp Trắng) của loại vũ khí đó,
+  // đặt chéo như nút Đánh; zed-vk chưa tải xong thì nút để trống. Hình vẽ code ICON.w_* / ICON.s_* cũ chỉ còn khi ?vkcu=1 (G.VK_CU).
+  const laVk = (name) => !G.VK_CU && (name.slice(0, 2) === 'w_' || name.slice(0, 2) === 's_');
+  const ZIC = {};
+  function zedIcon(name) {
+    const type = name.slice(2), VM = G.vkMoi;
+    let a = null;
+    try { a = VM && VM.anhO ? VM.anhO(null, type) : null; } catch (e) { a = null; }
+    if (!a || typeof document === 'undefined') return null;
+    const k = type + '|' + a.x + ',' + a.y;
+    if (ZIC[k]) return ZIC[k];
+    const N = 96, cv = document.createElement('canvas'); cv.width = N; cv.height = N;
+    const q = cv.getContext('2d'), cheo = type !== 'bow', z = cheo ? (N * 1.3) / (a.w + a.h) : (N * 0.9) / Math.max(a.w, a.h);
+    q.imageSmoothingEnabled = z < 1;
+    q.translate(N / 2, N / 2); if (cheo) q.rotate(-Math.PI / 4);
+    q.drawImage(a.img, a.x, a.y, a.w, a.h, (-a.w * z) / 2, (-a.h * z) / 2, a.w * z, a.h * z);
+    return (ZIC[k] = { img: cv, pw: N, ph: N });
+  }
   function iconBuf(name, S, arg) {
     const g = gdIcon(name);
     if (g) {
       const deg = name === 'dodge' ? +arg || 0 : 0;
       const b = memo('g|' + name + '|' + S + '|' + deg + gdTag(name), () => gdBuf(g, S, deg, name !== 'potion' && name !== 'pause') || 'hong');
       if (b !== 'hong') return b;
+    }
+    if (laVk(name)) {
+      const z = zedIcon(name);
+      return memo('z|' + name + '|' + S + '|' + (z ? 1 : 0), () => (z && gdBuf(z, S, 0, true)) || new Buf(S + 2, S + 2));
     }
     return memo('i|' + name + '|' + S + '|' + arg, () => raster(S, ICON[name](arg)).outline(OUT, true));
   }
@@ -16956,7 +16993,7 @@ MA._xong();
     return null; // nút Kỹ năng (game hiện không dùng): chưa có ảnh, vẽ code
   }
   B.maThan = thanMa; // cho công cụ và bài kiểm tra
-  B.MA_THAN = ['gd-vong-thuong', 'gd-vong-fire', 'gd-vong-poison', 'gd-vong-ice', 'gd-vong-ngoc', 'gd-vong-sat', 'gd-nut-vuong', 'gd-can-de', 'gd-can-num', 'gd-o-vk-0', 'gd-o-vk-1', 'gd-o-vk-2', 'gd-o-vk-3'];
+  B.MA_THAN = ['gd-vong-thuong', 'gd-vong-fire', 'gd-vong-poison', 'gd-vong-ice', 'gd-vong-ngoc', 'gd-vong-sat', 'gd-nut-vuong', 'gd-can-de', 'gd-can-num', 'gd-o-vk-0']; // 14/10: bỏ gd-o-vk-1..3 (bậc màu cũ)
   const gdCo = (ma) => { if (G.THAN_NUT_ANH === false) return null; const s = G.spriteCustom; return ma && s && s.gdSan ? s.gdSan(ma) : null; };
   // Dấu riêng của ảnh thân, ghép vào khoá bộ nhớ đệm: ảnh nạp xong, bị đổi hay bị gỡ thì nút tự dựng lại (như gdTag của biểu tượng).
   function gdTagMa(ma) {
@@ -17485,7 +17522,8 @@ MA._xong();
   B.slot = function (ctx, x, y, w, h, st) {
     st = st || {};
     const g = grid(ctx), W = Math.max(10, Math.round((w * g.a) / g.k)), H = Math.max(10, Math.round((h * g.a) / g.k));
-    const wp = st.weapon || {}, el = elOf(wp), rar = clamp(Math.floor(wp.rarity || 0), 0, 3), lv = clamp(wp.stage || 1, 1, 3);
+    // 14/10: không còn bậc màu cũ — khung ô luôn bậc 0 (gd-o-vk-0); viền màu bậc ép đồ do js/stage.js vẽ đè (G.epDo.vien). ?vkcu=1: như cũ.
+    const wp = st.weapon || {}, el = elOf(wp), rar = G.VK_CU ? clamp(Math.floor(wp.rarity || 0), 0, 3) : 0, lv = clamp(wp.stage || 1, 1, 3);
     const t = st.t != null ? st.t : G.time || 0;
     const key = ['sl', W, H, wType(wp), el, rar, lv, st.active ? 1 : 0, st.pressed ? 1 : 0, st.disabled ? 1 : 0, st.swap ? 1 : 0, st.icon === false ? 0 : 1, st.gem === false ? 0 : 1].join('|') + (st.icon === false ? '' : gdTag('w_' + wType(wp))) + gdTagMa('gd-o-vk-' + rar);
     const spr = memo(key, () => buildSlot(W, H, st, el, rar, lv, gdCo('gd-o-vk-' + rar)));

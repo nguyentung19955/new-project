@@ -114,15 +114,15 @@
   // Một dòng chỉ dẫn cho mỗi vũ khí, hiện khi vào ải và lần đầu đổi sang vũ khí đó.
   G.MOVE_TIPS = {
     sword: 'Kiếm: bấm Đánh ra chuỗi 3 nhát, Né xong đánh ngay để lướt chém. Đặc biệt: Trảm Nguyệt phóng vệt chém xuyên quái.',
-    bow: 'Cung: bấm để bắn nhanh, giữ rồi thả bắn tên mạnh. Đặc biệt: Mưa Tên rơi vào cụm quái gần nhất.',
-    spear: 'Giáo: bấm để đâm rồi quét, giữ rồi thả để xốc tới. Đặc biệt: Phi Thương ném giáo ghim quái, giáo tự bay về.',
+    bow: 'Phi tiêu: bấm để ném nhanh, giữ rồi thả ném chùm phi tiêu. Đặc biệt: Mưa phi tiêu rơi vào cụm quái gần nhất.',
+    spear: 'Thương: bấm để đâm rồi quét, giữ rồi thả để xốc tới. Đặc biệt: Phi Thương ném thương ghim quái, thương tự bay về.',
     hammer: 'Búa: giữ Đánh lấy đà, thả ra nện đất. Đặc biệt: Địa Chấn nện ra vệt nứt hất tung quái.',
   };
   // Bộ Zed mới: cung thành phi tiêu — chỉ đổi tên đòn và lời nhắc, số liệu giữ y như cung (đợt 2: luôn bật).
   {
     G.MOVES.bow.shot.name = 'Ném';
     G.MOVES.bow.charge.name = 'Ném chùm';
-    G.MOVE_TIPS.bow = 'Phi tiêu: bấm để ném nhanh, giữ rồi thả ném chùm phi tiêu. Đặc biệt: Mưa Phi Tiêu rơi vào cụm quái gần nhất.';
+    G.MOVE_TIPS.bow = 'Phi tiêu: bấm để ném nhanh, giữ rồi thả ném chùm phi tiêu. Đặc biệt: Mưa phi tiêu rơi vào cụm quái gần nhất.';
   }
   const C = G.MOVES, HE = G.HE;
   // ---------- CHẠY + ĐÁNH (13/10/2026, docs/review/ke-hoach-cai-thien/zed-chay-danh/YEU-CAU.md) ----------
