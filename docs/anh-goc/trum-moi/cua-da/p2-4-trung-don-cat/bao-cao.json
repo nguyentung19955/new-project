@@ -1,0 +1,200 @@
+{
+ "anh": "p2-4-trung-don.png",
+ "co_anh": [
+  2232,
+  784
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 4,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 15,
+  "vien_khu": 13896,
+  "nga_mau_nen_trong_hinh": 33722
+ },
+ "manh_bo": [
+  {
+   "khung_bao": [
+    925,
+    138,
+    947,
+    159
+   ],
+   "diem_anh": 68
+  },
+  {
+   "khung_bao": [
+    807,
+    179,
+    832,
+    205
+   ],
+   "diem_anh": 138
+  },
+  {
+   "khung_bao": [
+    1317,
+    192,
+    1340,
+    216
+   ],
+   "diem_anh": 106
+  },
+  {
+   "khung_bao": [
+    839,
+    202,
+    859,
+    221
+   ],
+   "diem_anh": 44
+  },
+  {
+   "khung_bao": [
+    1526,
+    212,
+    1548,
+    236
+   ],
+   "diem_anh": 88
+  },
+  {
+   "khung_bao": [
+    966,
+    281,
+    987,
+    302
+   ],
+   "diem_anh": 43
+  },
+  {
+   "khung_bao": [
+    1561,
+    288,
+    1577,
+    304
+   ],
+   "diem_anh": 9
+  },
+  {
+   "khung_bao": [
+    1677,
+    444,
+    1699,
+    466
+   ],
+   "diem_anh": 64
+  },
+  {
+   "khung_bao": [
+    983,
+    560,
+    999,
+    577
+   ],
+   "diem_anh": 14
+  },
+  {
+   "khung_bao": [
+    2103,
+    570,
+    2118,
+    587
+   ],
+   "diem_anh": 11
+  }
+ ],
+ "loi": [],
+ "canh_bao": [
+  "Mảnh 68 điểm ảnh ở [925, 138, 947, 159] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 138 điểm ảnh ở [807, 179, 832, 205] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 106 điểm ảnh ở [1317, 192, 1340, 216] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 44 điểm ảnh ở [839, 202, 859, 221] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 88 điểm ảnh ở [1526, 212, 1548, 236] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 43 điểm ảnh ở [966, 281, 987, 302] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 64 điểm ảnh ở [1677, 444, 1699, 466] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "p2-4-trung-don",
+   "so_khung": 4,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      40,
+      222,
+      569,
+      617
+     ],
+     "chan": [
+      284.5,
+      617
+     ],
+     "rong": 529,
+     "cao": 395,
+     "diem_anh": 130819,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      569,
+      139,
+      1097,
+      631
+     ],
+     "chan": [
+      841.5,
+      631
+     ],
+     "rong": 528,
+     "cao": 492,
+     "diem_anh": 146453,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      1108,
+      154,
+      1664,
+      629
+     ],
+     "chan": [
+      1362.0,
+      629
+     ],
+     "rong": 556,
+     "cao": 475,
+     "diem_anh": 162220,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1676,
+      224,
+      2196,
+      619
+     ],
+     "chan": [
+      1919.5,
+      619
+     ],
+     "rong": 520,
+     "cao": 395,
+     "diem_anh": 128102,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}
