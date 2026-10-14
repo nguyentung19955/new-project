@@ -1,0 +1,141 @@
+{
+ "anh": "namPhong-3-bao-don.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 6,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 0,
+  "vien_khu": 3277,
+  "nga_mau_nen_trong_hinh": 4
+ },
+ "manh_bo": [],
+ "loi": [],
+ "canh_bao": [
+  "Hàng 1 khung 6 cao 269 (trung vị 229) — lệch cỡ >15%"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "tele",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      27,
+      232,
+      338,
+      492
+     ],
+     "chan": [
+      184.0,
+      492
+     ],
+     "rong": 311,
+     "cao": 260,
+     "diem_anh": 53097,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      412,
+      260,
+      687,
+      493
+     ],
+     "chan": [
+      554.5,
+      493
+     ],
+     "rong": 275,
+     "cao": 233,
+     "diem_anh": 42330,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      784,
+      286,
+      1042,
+      492
+     ],
+     "chan": [
+      913.5,
+      492
+     ],
+     "rong": 258,
+     "cao": 206,
+     "diem_anh": 36082,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1133,
+      282,
+      1404,
+      492
+     ],
+     "chan": [
+      1268.0,
+      492
+     ],
+     "rong": 271,
+     "cao": 210,
+     "diem_anh": 39237,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1496,
+      270,
+      1765,
+      496
+     ],
+     "chan": [
+      1638.5,
+      496
+     ],
+     "rong": 269,
+     "cao": 226,
+     "diem_anh": 41651,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1863,
+      227,
+      2145,
+      496
+     ],
+     "chan": [
+      2007.0,
+      496
+     ],
+     "rong": 282,
+     "cao": 269,
+     "diem_anh": 53142,
+     "nguon": "tu-dong",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    }
+   ]
+  }
+ ]
+}
