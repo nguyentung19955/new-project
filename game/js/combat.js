@@ -1152,6 +1152,7 @@
   function veQuaiDW(e) {
     return () => {
       const c = DW.c, A = DW.A, xf = DW.xf, rec = DW.rec, ent = DW.ent;
+      if (G.fx && !G.noRender) G.fx.dangVe = e; // soát mượt phiên 2 mục 24: chớp nhẹ mờ dần theo e.flash (js/sprite_custom.js hỏi G.fx.chopMo)
       const up = e.mvLift > 0 ? Math.round(Math.sin((e.mvLift / 0.45) * Math.PI) * 10) : 0; // bị Địa Chấn hất tung
       if (xf && xf(c, e, up)) { // đã gồm giật lùi
         if (e.illusion) A.boss(c, e); else A.enemy(c, e);

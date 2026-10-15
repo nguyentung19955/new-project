@@ -15181,6 +15181,8 @@ MA._xong();
       }
     }
     let flash = o.hit || 0;
+    // mục 24 (soát mượt Phiên 2, ?chopmo=0): chớp nhẹ trúng đòn mờ dần theo bình phương trong 0,07 giây (js/fx.js G.fx.chopMo), không bật/tắt cứng
+    if (G.CHOP_NHE !== false && flash > 0 && G.fx && G.fx.chopMo) flash *= G.fx.chopMo();
     if (s.ten === 'hit' && n === 'hit' && s.u < 0.3) flash = Math.max(flash, 0.75); // chớp trắng đầu cú trúng đòn
     let chopNhe = 0;
     if (G.CHOP_NHE !== false) { chopNhe = flash; flash = 0; } // 15/10 con-ve-tay: trúng đòn → viền sáng + đỏ nhẹ, không phủ trắng cả thân (cờ ?chopcu=1)
