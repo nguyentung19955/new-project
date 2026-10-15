@@ -55,6 +55,9 @@
   #lk-tai i { display: block; width: 180px; max-width: 60%; height: 6px; border: 1px solid var(--frame); border-radius: 4px; background: #1d1518; overflow: hidden; position: relative; }
   #lk-tai i::after { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 36%; border-radius: 3px; background: var(--accent); animation: lk-tai-chay 1.1s ease-in-out infinite alternate; }
   @keyframes lk-tai-chay { from { transform: translateX(-20%); } to { transform: translateX(198%); } }
+  /* Cầm máy dọc: game được engine.js xoay 90 độ cho nằm ngang (khoá ngang), chữ màn hình tải cũng xoay y như vậy để không bị nằm dọc. */
+  #lk-tai > div { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  @media (orientation: portrait) and (max-aspect-ratio: 10/11) { #lk-tai > div { transform: rotate(90deg); } }
 </style>
 </head>
 <body>
@@ -62,10 +65,10 @@
   <canvas id="world" width="480" height="270" aria-label="Màn hình game Linh Khí"></canvas>
 </div><canvas id="ui"></canvas></div></div>
 <!-- Màn hình tải: nằm TRƯỚC mọi thẻ script nên hiện ngay. Chữ theo ngôn ngữ đã chọn trong game (linhkhi_lang), chưa chọn thì theo máy; mặc định tiếng Việt. -->
-<div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div>
+<div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.15-1021";
+(window.G = window.G || {}).VERSION = "lk-2026.10.15-1232";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
