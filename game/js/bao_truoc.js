@@ -579,8 +579,8 @@
   // Chỉ đổi cách vẽ: thời gian báo trước, vùng va chạm, sát thương giữ nguyên. Thiếu ảnh (hoặc hình không có ảnh: tường nước, đường ngắm)
   // thì hình đó vẽ kiểu điểm ảnh cũ ngay trên lớp đất. CỜ TẮT: ?baoanh=0 hoặc G.BT_ANH = false → đường cũ y nguyên (#ui + snap + maskOut).
   let tatAnh = false;
-  // 14/10 (bước 1 làm chắc, mục 7): thêm cờ ?btcu=1 (xem lại kiểu vẽ bằng code cũ), cùng tác dụng ?baoanh=0
-  try { tatAnh = /[?&](baoanh=0|btcu=1)\b/i.test(String(window.location && window.location.search)); } catch (e) { tatAnh = false; }
+  // 15/10 don-tep B: bỏ cờ trùng ?btcu=1. Giữ ?baoanh=0 vì tests/bt_khop.py, bao_truoc.py, bt_tuong.py kiểm đường #ui cũ.
+  try { tatAnh = /[?&]baoanh=0\b/i.test(String(window.location && window.location.search)); } catch (e) { tatAnh = false; }
   if (G.BT_ANH == null) G.BT_ANH = !tatAnh;
   // hình học trên ảnh (điểm ảnh của tấm, in ra bởi dung-bao-truoc.py): o cỡ ô khung; R bán kính vòng; r0 bán kính trong của vành;
   // quạt: dinh = đỉnh (gốc) trên ô, nua = nửa góc mở (độ); dải: x0..x1 thân dải theo chiều dài, nua = nửa bề dày thân dải.
