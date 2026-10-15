@@ -1,0 +1,253 @@
+{
+ "Mục 2 + 4 · cua (Cua Kìm) đánh rồi nhích lại": {
+  "truoc": {
+   "luot": 151,
+   "doi_hang": 6,
+   "chop": 0,
+   "cot_atk": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "cot_hit": [],
+   "tele_doi_khung": 5,
+   "tele_luot": 36
+  },
+  "sau": {
+   "luot": 151,
+   "doi_hang": 5,
+   "chop": 0,
+   "cot_atk": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "cot_hit": [],
+   "tele_doi_khung": 5,
+   "tele_luot": 36
+  }
+ },
+ "Mục 2 · heoNanh (tinh anh) đánh": {
+  "truoc": {
+   "luot": 139,
+   "doi_hang": 3,
+   "chop": 0,
+   "cot_atk": [
+    1,
+    2
+   ],
+   "cot_hit": [],
+   "tele_doi_khung": 5,
+   "tele_luot": 36
+  },
+  "sau": {
+   "luot": 139,
+   "doi_hang": 3,
+   "chop": 0,
+   "cot_atk": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "cot_hit": [],
+   "tele_doi_khung": 5,
+   "tele_luot": 36
+  }
+ },
+ "Mục 19 · heoCon trúng đòn": {
+  "truoc": {
+   "luot": 91,
+   "doi_hang": 6,
+   "chop": 14,
+   "cot_atk": [],
+   "cot_hit": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "tele_doi_khung": 0,
+   "tele_luot": 0
+  },
+  "sau": {
+   "luot": 91,
+   "doi_hang": 6,
+   "chop": 14,
+   "cot_atk": [],
+   "cot_hit": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "tele_doi_khung": 0,
+   "tele_luot": 0
+  }
+ },
+ "Mục 3 · heoCon bị choáng": {
+  "truoc": {
+   "luot": 127,
+   "doi_hang": 3,
+   "chop": 66,
+   "cot_atk": [],
+   "cot_hit": [
+    0,
+    1
+   ],
+   "tele_doi_khung": 0,
+   "tele_luot": 0
+  },
+  "sau": {
+   "luot": 127,
+   "doi_hang": 3,
+   "chop": 0,
+   "cot_atk": [],
+   "cot_hit": [
+    0,
+    1
+   ],
+   "tele_doi_khung": 0,
+   "tele_luot": 0
+  }
+ },
+ "Mục 18 · heoCon đi chậm vì băng": {
+  "truoc": {
+   "luot": 103,
+   "doi_hang": 1,
+   "chop": 0,
+   "cot_atk": [],
+   "cot_hit": [],
+   "tele_doi_khung": 0,
+   "tele_luot": 0
+  },
+  "sau": {
+   "luot": 103,
+   "doi_hang": 1,
+   "chop": 0,
+   "cot_atk": [],
+   "cot_hit": [],
+   "tele_doi_khung": 0,
+   "tele_luot": 0
+  }
+ },
+ "Mục 18 · hoaBaoTu lùi xa": {
+  "truoc": {
+   "luot": 97,
+   "doi_hang": 1,
+   "chop": 0,
+   "cot_atk": [],
+   "cot_hit": [],
+   "tele_doi_khung": 0,
+   "tele_luot": 0
+  },
+  "sau": {
+   "luot": 97,
+   "doi_hang": 1,
+   "chop": 0,
+   "cot_atk": [],
+   "cot_hit": [],
+   "tele_doi_khung": 0,
+   "tele_luot": 0
+  }
+ },
+ "Mục 6A + 10A · caNoc báo đòn 1 s rồi nổ gai": {
+  "truoc": {
+   "luot": 127,
+   "doi_hang": 2,
+   "chop": 0,
+   "cot_atk": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "cot_hit": [],
+   "tele_doi_khung": 5,
+   "tele_luot": 60
+  },
+  "sau": {
+   "luot": 127,
+   "doi_hang": 2,
+   "chop": 0,
+   "cot_atk": [
+    2,
+    3,
+    4
+   ],
+   "cot_hit": [],
+   "tele_doi_khung": 18,
+   "tele_luot": 67
+  }
+ },
+ "Mục 6A + 10A · nhimDoc cuộn rồi lăn": {
+  "truoc": {
+   "luot": 271,
+   "doi_hang": 5,
+   "chop": 0,
+   "cot_atk": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "cot_hit": [],
+   "tele_doi_khung": 5,
+   "tele_luot": 133
+  },
+  "sau": {
+   "luot": 271,
+   "doi_hang": 4,
+   "chop": 0,
+   "cot_atk": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "cot_hit": [],
+   "tele_doi_khung": 30,
+   "tele_luot": 140
+  }
+ },
+ "Mục 10A · nhim xoay bắn gai xong về đứng": {
+  "truoc": {
+   "luot": 271,
+   "doi_hang": 5,
+   "chop": 0,
+   "cot_atk": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "cot_hit": [],
+   "tele_doi_khung": 5,
+   "tele_luot": 133
+  },
+  "sau": {
+   "luot": 271,
+   "doi_hang": 5,
+   "chop": 0,
+   "cot_atk": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "cot_hit": [],
+   "tele_doi_khung": 30,
+   "tele_luot": 143
+  }
+ }
+}

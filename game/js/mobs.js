@@ -24,6 +24,77 @@
   function play(e, n, spd) { e.an = { n, t: 0, spd: spd || 1 }; }
   function loop(e, n) { if (!e.an || e.an.n !== n) e.an = { n, t: 0, spd: 1 }; }
 
+  // ---------- 15/10 soat-muot Phiên 1 "Quái động mượt" (docs/review/ke-hoach-cai-thien/soat-muot/bao-cao.md mục 2, 3, 4, 6A, 10A, 18, 19) ----------
+  // CHỈ ĐỔI HÌNH: không đổi thời gian ra đòn, vùng sát thương, tốc độ, hồi chiêu. Các ô e.duT, e.diT, e.dh, e.anNho, e.buocT chỉ để vẽ.
+  // Mỗi mục một cờ quay lui (thêm vào địa chỉ trang):
+  //   ?dondu=0     (G.DON_DU)     mục 2: hàng đánh không chạy đủ tới khung cuối, không giữ khung cuối trước khi về đứng
+  //   ?choangcu=1  (G.CHOANG_YEN) mục 3: quái choáng vẽ 'hit' (viền trắng nhấp nháy) như cũ
+  //   ?didung=0    (G.DI_DUNG_EM) mục 4: đi↔đứng lật ngay, mỗi lần đổi về khung 1 (cả js/boss.js)
+  //   ?baodeu=0    (G.BAO_DEU)    mục 6A: hàng báo đòn kéo giãn đúng bằng thời gian báo như cũ (js/sprite_custom.js)
+  //   ?xihoi=0     (G.XI_HOI)     mục 10A: không chèn khung "xì hơi / thu gai" (hàng báo đòn phát ngược) cho nhóm phồng / cuộn
+  //   ?buoctoc=0   (G.BUOC_TOC)   mục 18: bước chân theo đồng hồ hàng đi như cũ (không theo tốc độ thật, lùi vẫn bước tới)
+  //   ?trungdu=0   (G.TRUNG_DU)   mục 19: hàng trúng đòn chia theo 0,35 giây như cũ (khung 4 chỉ ~37 ms)
+  // (Mục 11A dùng cờ có sẵn ?khungtrang=1 ở js/sprite_custom.js.)
+  function coMuot(ten, re) {
+    if (G[ten] !== undefined) return;
+    let tat = false;
+    try { tat = typeof location !== 'undefined' && re.test(location.search || ''); } catch (er) { tat = false; }
+    G[ten] = !tat;
+  }
+  coMuot('DON_DU', /[?&]dondu=0(&|$)/); coMuot('CHOANG_YEN', /[?&]choangcu=1(&|$)/); coMuot('DI_DUNG_EM', /[?&]didung=0(&|$)/);
+  coMuot('BAO_DEU', /[?&]baodeu=0(&|$)/); coMuot('XI_HOI', /[?&]xihoi=0(&|$)/); coMuot('BUOC_TOC', /[?&]buoctoc=0(&|$)/); coMuot('TRUNG_DU', /[?&]trungdu=0(&|$)/);
+  const GIU_CUOI = 0.06; // mục 2: giữ khung cuối hàng đánh ~1 nhịp rồi mới về đứng
+  const DI_EM = 0.13, NHO_HANG = 0.2; // mục 4: hết đi 0,13 giây mới coi là đứng; quay lại hàng cũ trong 0,2 giây thì đi tiếp từ khung cũ
+  // Mục 10A: nhóm phồng / cuộn (đo bằng ảnh, soat-muot/bao-cao.md mục 10): vao = lúc vào đánh (báo đòn phồng/cuộn hết cỡ → khung đánh đầu
+  // nhảy cỡ ×1,3–2,3), ve = lúc về đứng (Nhím Biển lăn, gai bung → đứng ×1,78). Chèn hàng báo đòn phát NGƯỢC thật nhanh làm khung xì hơi / thu gai.
+  const XI_VAO = { caNoc: 1, caNocChua: 1, nhimDoc: 1, nhimThan: 1 }, XI_VE = { nhim: 1 }, XI_T_VAO = 0.1, XI_T_VE = 0.15;
+  const BUOC0 = 600; // mục 18: đồng hồ bước bắt đầu ở 600 giây để chạy lùi (đi ngược hướng mặt) không bao giờ xuống dưới 0
+  function coAnh(e) { const S = G.spriteCustom, sp = S && S.ds ? S.ds[e.art] : null; return !!(sp && sp.ready); }
+  // Mục 4: đổi hàng đi / đứng, mỗi hàng nhớ đồng hồ riêng (quay lại trong 0,2 giây thì không về khung 1).
+  function doiHang(e, n) {
+    if (e.an && e.an.n === n) return;
+    const nho = e.anNho || (e.anNho = {}), luc = e.dh || 0;
+    if (e.an && (e.an.n === 'idle' || e.an.n === 'move')) nho[e.an.n] = { t: e.an.t, luc };
+    const c = nho[n];
+    e.an = { n, t: c && luc - c.luc < NHO_HANG ? c.t : 0, spd: 1 };
+  }
+  function diDung(e) {
+    if (G.DI_DUNG_EM === false) { loop(e, e.moving ? 'move' : 'idle'); return; }
+    if (e.moving) e.diT = DI_EM;
+    doiHang(e, e.moving || e.diT > 0 ? 'move' : 'idle');
+  }
+  // Mục 18: bước chân theo quãng đi thật (÷ tốc độ gốc, trong 0,5–1,5); đi ngược hướng mặt thì hàng đi phát ngược.
+  function buoc(e, x0, y0, dt) {
+    if (G.BUOC_TOC === false || !(dt > 0)) return;
+    if (e.buocT == null) e.buocT = BUOC0;
+    let k = 0.5, chieu = 1;
+    if (e.moving) {
+      const dx = e.x - x0, dy = (e.y - y0) / 0.8, v = Math.hypot(dx, dy) / dt;
+      k = clamp(v / Math.max(1, e.speed || 1), 0.5, 1.5);
+      if (dx * (e.face || 1) < 0 && Math.abs(dx) > Math.abs(dy) * 0.5) chieu = -1;
+    }
+    e.buocT = Math.max(0, e.buocT + dt * k * chieu);
+  }
+  // Mục 2 (+ 10A lúc vào đánh): thời gian vẽ hàng đánh. Lượt đánh thật kết thúc ở e.act.end (thường T + D×0,75, kỹ năng đặt riêng) nhưng
+  // hàng đánh chia theo cả D → khung thu đòn không bao giờ hiện. Nay: nén cho khung cuối hiện đúng lúc lượt đánh hết (chỉ nén, không kéo giãn:
+  // lượt đánh dài hơn hàng ảnh thì như cũ — giữ khung cuối / Nhím lăn lặp "lap_tu").
+  function gioDanh(e, t, o) {
+    const D = dur(e.art, 'atk'), nang = e.role === 'elite' || e.role === 'shield', a1 = D * 0.2;
+    // Ra đòn nặng (tinh anh, quái giáp): giữ khung vừa đánh ra lâu hơn một chút rồi thu đòn chậm (cảm giác có trọng lượng).
+    const f = nang ? (x) => (x < a1 ? x : x < a1 + 0.08 ? a1 : a1 + (x - a1 - 0.08) * 0.9) : (x) => x;
+    const A = e.act, chuan = !!(A && A.fired && e.an && (e.an.spd || 1) === 1);
+    let tt = t;
+    if (chuan && G.XI_HOI !== false && XI_VAO[e.art] && coAnh(e)) {
+      if (t < XI_T_VAO) { o.xiHoi = { u: t / XI_T_VAO }; return 0; }
+      tt = t - XI_T_VAO;
+    }
+    if (chuan && G.DON_DU !== false) {
+      const tong = tt + Math.max(0, A.end - A.t), Dc = D * 0.999, ft = f(tong);
+      if (tong > 0.05 && ft < Dc) return Math.min(Dc, f(tt) * Dc / ft);
+    }
+    return nang ? f(tt) : tt;
+  }
+
   // ---------- hình dạng vùng mới: đường thẳng, quạt, vành khăn (có khe), tường nước chạy ----------
   // Toạ độ thật (không bẹp theo chiều dọc) cho khớp với hình báo trước của js/monster_art.js.
   G.inShape = function (z, e, pad) {
@@ -210,12 +281,14 @@
 
   // ---------- cập nhật mỗi khung ----------
   const G_mob = (G.mob = {});
+  G_mob.muot = { gioDanh, coAnh, XI_T_VE }; // Phiên 1 soát mượt: phần vẽ (khối dưới) dùng
   G_mob.update = function (e, dt) {
     // skill bộ Ninja "Phân thân" (js/bo_skill.js): quái thường đi tới / ngắm đòn vào bóng; P ở đây chỉ dùng toạ độ, đòn trúng vẫn đo trên Zed thật
     const w = W(), P = (G.boSk && G.boSk.dich(e)) || w.P;
     if (e.an) e.an.t += dt * (e.an.spd || 1);
     if (e.role === 'elite' && G.noiGian) G.noiGian.tinhAnh(e); // 15/10 noi-gian-manh: tinh anh nổi giận ở ≤ 35% máu (js/noi_gian.js, cờ tắt ?giancu=1)
     if (e.hitT > 0) e.hitT -= dt;
+    e.dh = (e.dh || 0) + dt; if (e.duT > 0) e.duT -= dt; if (e.diT > 0) e.diT -= dt; // Phiên 1 soát mượt: đồng hồ chỉ để vẽ
     if (e.reflT > 0) e.reflT -= dt;
     if (e.brokeT > 0) { e.brokeT -= dt; if (e.brokeT <= 0) e.armorHp = e.armorMax; }
     e.moving = false;
@@ -236,9 +309,11 @@
     e.cd -= dt;
     if (e.act) { stepAct(e, dt, P); return; }
     if (e.spikeUp > 0) { e.spikeUp -= dt; if (e.spikeUp <= 0) spikeShot(e); return; }
+    const x0 = e.x, y0 = e.y;
     think(e, dt, P, sp);
-    if (!e.act && !e.dive) loop(e, e.moving ? 'move' : 'idle');
+    if (!e.act && !e.dive) diDung(e); // mục 4 (cờ ?didung=0: loop(e, e.moving ? 'move' : 'idle') như cũ)
     e.y = clamp(e.y, w.y0, w.y1);
+    buoc(e, x0, y0, dt); // mục 18: chỉ để vẽ
   };
   function stepAct(e, dt, P) {
     const A = e.act;
@@ -251,7 +326,15 @@
       if (A.fire) A.fire(e, A, P);
     }
     if (A.step) A.step(e, A, dt, P);
-    if (A.t >= A.end) { const k = A.k; e.act = null; e.cd = A.cd != null ? A.cd : 1.4; if (A.after) A.after(e); if (k !== 'boom') loop(e, 'idle'); }
+    if (A.t >= A.end) {
+      const k = A.k;
+      // mục 2 / 10A (chỉ để vẽ): vừa hết lượt đánh bằng hàng đánh thì giữ khung cuối GIU_CUOI giây (Nhím Biển: thu gai XI_T_VE giây) rồi mới về đứng
+      if (k !== 'boom' && e.an && e.an.n === 'atk' && (e.an.spd || 1) === 1) {
+        if (G.XI_HOI !== false && XI_VE[e.art] && coAnh(e)) { e.duT = XI_T_VE; e.duK = 've'; }
+        else if (G.DON_DU !== false) { e.duT = GIU_CUOI; e.duK = 'giu'; }
+      }
+      e.act = null; e.cd = A.cd != null ? A.cd : 1.4; if (A.after) A.after(e); if (k !== 'boom') loop(e, 'idle');
+    }
   }
   // Đi tới cách em bé khoảng want (đứng xa thì tiến lại, đứng gần quá thì lùi), có lượn vòng nhẹ.
   function keep(e, P, want, sp, dt, side) {
@@ -507,6 +590,7 @@
   const A = G.art;
   if (!A) return;
   const MA = () => G.monsterArt;
+  const MU = () => G.mob.muot; // Phiên 1 soát mượt (khối trên)
   const dur = (id, a) => { const m = MA(); return (m && m.dur(id, a)) || 0.6; };
   const p = (c, x, y, w, h, col) => { c.fillStyle = col; c.fillRect(Math.round(x), Math.round(y), w, h); };
 
@@ -885,8 +969,17 @@
     let n = e.an ? e.an.n : 'idle', t = e.an ? e.an.t : 0, o = {};
     if (e.dying != null) { n = 'die'; t = e.dying * dur(e.art, 'die'); }
     else if (e.st && e.st.frozen > 0) { n = 'idle'; t = 0; }
-    else if (e.st && e.st.stun > 0) { n = 'hit'; t = 0.08 + 0.06 * Math.sin(G.time * 9); }
-    else if (e.hitT > 0 && (n === 'idle' || n === 'move')) { n = 'hit'; t = 0.3 - e.hitT; }
+    // mục 3: choáng → 'stun' (lảo đảo trên hàng trúng đòn, KHÔNG chớp viền như js/boss.js), chỉ khi quái có ảnh AI (hình vẽ code không có cử động 'stun'). Cờ ?choangcu=1: như cũ.
+    else if (e.st && e.st.stun > 0) { if (G.CHOANG_YEN !== false && MU().coAnh(e)) { n = 'stun'; t = G.time; } else { n = 'hit'; t = 0.08 + 0.06 * Math.sin(G.time * 9); } }
+    // mục 19: e.hitT chạy 0,3 giây nhưng hàng trúng đòn chia theo D (0,35) → khung 4 chỉ ~37 ms. Nay trải đủ hàng trong 0,3 giây. Cờ ?trungdu=0: như cũ.
+    else if (e.hitT > 0 && (n === 'idle' || n === 'move')) { n = 'hit'; t = G.TRUNG_DU !== false ? clamp((0.3 - e.hitT) / 0.3, 0, 1) * dur(e.art, 'hit') * 0.999 : 0.3 - e.hitT; }
+    // mục 2 / 10A: vừa đánh xong — giữ khung cuối hàng đánh (hoặc Nhím Biển thu gai: hàng báo đòn phát ngược) rồi mới về đứng
+    else if (e.duT > 0 && !e.act && (n === 'idle' || n === 'move')) {
+      if (e.duK === 've') o.xiHoi = { u: clamp(1 - e.duT / MU().XI_T_VE, 0, 1) };
+      else { n = 'atk'; t = dur(e.art, 'atk') * 0.999; o.fx = false; }
+    }
+    // mục 18: hàng đi theo đồng hồ bước (tốc độ thật, đi lùi thì phát ngược)
+    else if (n === 'move' && !e.act && e.buocT != null && G.BUOC_TOC !== false) t = e.buocT;
     if (e.an && e.an.rev && n === 'spawn') t = Math.max(0, dur(e.art, 'spawn') - t); // lặn xuống: cử động xuất hiện chạy ngược
     if (e.an && e.an.cut && n === e.an.n) t = Math.min(t, e.an.cut * dur(e.art, n)); // cú lao: chỉ dùng nửa đầu cử động
     const k = e.don && e.don.kieu;
@@ -895,9 +988,12 @@
     const dir = e.act ? e.act.a : e.dirA != null ? e.dirA : e.face > 0 ? 0 : PI;
     // Lấy đà: cử động 'tele' trải đúng theo thời gian lấy đà thật (e.wind / e.act.T) nên tư thế co người đạt đỉnh và rung đúng lúc
     // sắp ra đòn, dù đòn lấy đà ngắn (bầy nhỏ 0,5 giây) hay dài (tinh anh, bom 0,85 giây). Chỉ đổi hình, không đổi thời gian ra đòn.
-    if (n === 'tele' && e.act && e.wind > 0 && e.act.T > 0) t = clamp(1 - e.wind / e.act.T, 0, 1) * dur(e.art, 'tele') * 0.999;
-    // Ra đòn nặng (tinh anh, quái giáp): giữ khung vừa đánh ra lâu hơn một chút rồi thu đòn chậm (cảm giác có trọng lượng).
-    else if (n === 'atk' && (e.role === 'elite' || e.role === 'shield') && e.dying == null) { const D = dur(e.art, 'atk'), a1 = D * 0.2; t = t < a1 ? t : t < a1 + 0.08 ? a1 : a1 + (t - a1 - 0.08) * 0.9; }
+    if (n === 'tele' && e.act && e.wind > 0 && e.act.T > 0) {
+      t = clamp(1 - e.wind / e.act.T, 0, 1) * dur(e.art, 'tele') * 0.999;
+      if (G.BAO_DEU !== false) o.baoDeu = { tt: Math.max(0, e.act.T - e.wind), T: e.act.T }; // mục 6A: ảnh AI chạy hàng báo ~12 khung/giây rồi đưa đi đưa lại 3 khung cuối (js/sprite_custom.js)
+    }
+    // Ra đòn: đủ khung tới khung cuối (mục 2), nhóm phồng / cuộn xì hơi trước (mục 10A), đòn nặng giữ khung (xem gioDanh)
+    else if (n === 'atk' && e.dying == null && !(e.duT > 0 && !e.act)) t = MU().gioDanh(e, t, o);
     const fk = G.fx && G.fx.chop ? G.fx.chop() : 1; // khựng hình: chỉ khung đầu chớp trắng hẳn
     Object.assign(o, { anim: n, t, face: e.face, dir, hit: e.flash > 0 ? (e.fxHk >= 3 ? 0.85 : e.fxHk === 2 ? 0.7 : 0.55) * fk : 0, chop: fk, tint: G.fx && G.fx.dotTint ? G.fx.dotTint(e) : null, bao: false }); // chớp trắng mạnh dần: thường, nặng, chí mạng (js/fx.js đặt e.fxHk); nhịp độc/cháy: nhuộm màu hệ
     // 14/10 (YEU-CAU-TRUM-NHO): trùm nhỏ có tệp ảnh pha 2 (<mã>-p2, js/sprite_custom.js) thì đổi sang hình pha 2 khi máu dưới 50%.

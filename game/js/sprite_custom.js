@@ -86,7 +86,10 @@
   // hàng hit khung 3, cả hai pha) → lúc trúng đòn / choáng trông như bóng ma. Nay khung đó vẽ bằng khung 2 cùng hàng, phủ trắng nhẹ 25%.
   // Danh sách đo bằng ảnh (bao-cao.md): mã → { hàng: { cột trắng: cột thay } }. Không sửa tệp ảnh. Tắt: G.KHUNG_TRANG_SUA = false hoặc ?khungtrang=1.
   const KHUNG_TRANG = { cuaDa: { hit: { 2: 1 } }, 'cuaDa-p2': { hit: { 2: 1 } }, 'mocTinh-p2': { hit: { 2: 1 } }, 'hoTinh-p2': { hit: { 2: 1 } },
-    hoLua: { hit: { 2: 1 } }, namChua: { hit: { 2: 1 } } };
+    hoLua: { hit: { 2: 1 } }, namChua: { hit: { 2: 1 } },
+    // 15/10 soat-muot Phiên 1 (mục 11A): hai chỗ còn sót, đo ở soat-muot/khung-trang-trum.png — Hổ Lửa pha 2 hàng trúng đòn khung 2 (23% thân trắng),
+    // Nấm Chúa pha 2 khung 3 (15%, loé hồng trắng). Cùng cờ ?khungtrang=1.
+    'hoLua-p2': { hit: { 1: 0 } }, 'namChua-p2': { hit: { 2: 1 } } };
   const PHU_TRANG = 0.25;
   if (G.KHUNG_TRANG_SUA === undefined) {
     let cu = false;
@@ -453,6 +456,25 @@
     return so - n + j;
   }
   SC.quaLai = quaLai;
+  // 15/10 soat-muot Phiên 1 — các cột thật sự phát của một hàng (theo "khung" nếu có bảng bỏ khung trùng), theo thứ tự.
+  function cotHang(a) { if (a.bang && G.KHUNG_TRUNG) return a.bang.map((b) => b.i); const r = []; for (let i = 0; i < a.so; i++) r.push(i); return r; }
+  // Mục 6A (cờ ?baodeu=0, G.BAO_DEU ở js/mobs.js): báo đòn của quái thường trước đây trải 6 khung đúng bằng thời gian báo (1 giây → 6 khung/giây,
+  // 0,8 giây → 7,5). Nay như trùm vùng: hàng báo chạy ~12 khung/giây một lượt, rồi đưa đi đưa lại 3 khung cuối, nhịp chỉnh nhẹ để đúng lúc ra đòn
+  // (tt = T) đang ở khung cuối. Báo ngắn (không đủ một lượt ở ~12 khung/giây) thì vẫn một lượt trải đều như cũ. tt: giây từ lúc báo, T: tổng thời gian báo.
+  function baoDeu(a, tt, T) {
+    const L = cotHang(a), n = L.length;
+    if (n < 2 || !(T > 0)) return khungMot(a, T > 0 ? tt / T : 1);
+    if (T <= (n / NHIP) * 1.35) return khungMot(a, tt / T);
+    const m = Math.min(3, n), dau = n - m, tDau = dau / NHIP;
+    if (tt < tDau) return L[Math.min(n - 1, Math.floor(tt * NHIP))];
+    const tCuoi = T - tDau, chuKy = 2 * m - 2, vong = Math.max(0, Math.round((tCuoi * NHIP - (m - 0.5)) / chuKy)), fps = (m - 0.5 + chuKy * vong) / Math.max(0.05, tCuoi);
+    const p = Math.floor(Math.max(0, Math.min(tt, T * 0.999) - tDau) * fps) % chuKy, j = p < m ? p : chuKy - p;
+    return L[dau + j];
+  }
+  SC.baoDeu = baoDeu;
+  // Mục 10A (cờ ?xihoi=0, G.XI_HOI ở js/mobs.js): khung "xì hơi / thu gai" = hàng báo đòn phát NGƯỢC (u 0 → 1: từ khung cuối về khung đầu).
+  function xiHoi(a, u) { const L = cotHang(a), n = L.length; return L[n - 1 - Math.min(n - 1, Math.floor(clamp(u, 0, 1) * n))]; }
+  SC.xiHoi = xiHoi;
   SC.chonTrum = function (sp, n, t, D, moc) {
     const dt = sp.dt, co = (x) => !!dt[x];
     D = D > 0 ? D : (dt[n] && dt[n].giay) || 0.6;
@@ -502,7 +524,14 @@
     let face = o.face || 0;
     if (!face) { const dir = o.dir == null ? Math.PI : o.dir; face = Math.cos(dir) > 0.01 ? 1 : -1; }
     const nhip = o.nhip && G.TRUM_MOI !== false ? o.nhip : null; // 14/10: trùm vùng chạy nhịp khung đều (SC.chonTrum)
-    const chon = (q) => (nhip ? SC.chonTrum(q, n, t, D, nhip.moc) : SC.chonQuai(q, n, t, D));
+    // 15/10 soat-muot Phiên 1: o.xiHoi { u } (mục 10A) / o.baoDeu { tt, T } (mục 6A) do js/mobs.js truyền cho quái thường có ảnh AI.
+    const xh = !nhip && o.xiHoi ? o.xiHoi : null, bd = !nhip && !xh && n === 'tele' && o.baoDeu ? o.baoDeu : null;
+    const chon = (q) => {
+      if (nhip) return SC.chonTrum(q, n, t, D, nhip.moc);
+      if (xh && q.dt.tele) return { ten: 'tele', i: xiHoi(q.dt.tele, xh.u), u: 1 };
+      if (bd && q.dt.tele) return { ten: 'tele', i: baoDeu(q.dt.tele, bd.tt, bd.T), u: clamp(bd.T > 0 ? bd.tt / bd.T : 1, 0, 1) };
+      return SC.chonQuai(q, n, t, D);
+    };
     let s = chon(sp);
     // Phiên E2: trùm vùng ở pha 2, 3 có tệp dáng pha thì các hàng có trong tệp đó (idle / tele / atk / hit) lấy từ tệp đó (xem SC.phaTrum). Cảnh chuyển pha: nửa đầu còn dáng cũ, như hình vẽ bằng code.
     let pha = o.phase | 0;

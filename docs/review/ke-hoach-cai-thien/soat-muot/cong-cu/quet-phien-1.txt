@@ -1,0 +1,30 @@
+heoCon       rusher  atk so=6 khung=[1, 2, 3, 4, 5] CU=[1, 2, 3, 4, 5] MOI=[1, 2, 3, 4, 5] | tele CU=(11, 72) MOI=(11, 72) | đi↔đứng CU=0 MOI=0
+cua          rusher  atk so=6 khung=[1, 2, 3, 4, 5] CU=[1, 2, 3, 4] MOI=[1, 2, 3, 4, 5] | tele CU=(11, 72) MOI=(11, 72) | đi↔đứng CU=4 MOI=1
+linhMa       rusher  atk so=6 khung=[2, 3, 4, 5] CU=[2, 3, 4] MOI=[2, 3, 4, 5] | tele CU=(21, 90) MOI=(21, 90) | đi↔đứng CU=0 MOI=0
+ongVo        swarm   atk so=6 khung=[2, 3, 4, 5] CU=[2] MOI=[2, 3] | tele CU=(5, 35) MOI=(5, 35) | đi↔đứng CU=1 MOI=1
+caCon        swarm   atk so=6 khung=None CU=[] MOI=[] | tele CU=(11, 153) MOI=(11, 153) | đi↔đứng CU=2 MOI=2
+doiThan      swarm   atk so=6 khung=None CU=[0, 1, 2, 3, 4, 5] MOI=[0, 1, 2, 3, 4, 5] | tele CU=(11, 66) MOI=(11, 66) | đi↔đứng CU=0 MOI=0
+boHung       shield  atk so=6 khung=[1, 2, 3, 4, 5] CU=[1, 2, 3] MOI=[1, 2, 3, 4, 5] | tele CU=(11, 72) MOI=(11, 72) | đi↔đứng CU=0 MOI=0
+oc           shield  atk so=6 khung=[2, 3, 4, 5] CU=[2, 3, 4] MOI=[2, 3, 4, 5] | tele CU=(11, 72) MOI=(11, 72) | đi↔đứng CU=3 MOI=2
+tuongDa      shield  atk so=6 khung=[3, 4, 5] CU=[3, 4, 5] MOI=[3, 4, 5] | tele CU=(11, 84) MOI=(19, 84) | đi↔đứng CU=0 MOI=0
+hoaBaoTu     archer  atk so=6 khung=[2, 3, 4, 5] CU=[2, 3, 4] MOI=[2, 3, 4, 5] | tele CU=(6, 45) MOI=(10, 45) | đi↔đứng CU=2 MOI=1
+haiQuy       archer  atk so=6 khung=[3, 4, 5] CU=[3, 4] MOI=[3, 4, 5] | tele CU=(6, 45) MOI=(10, 45) | đi↔đứng CU=2 MOI=1
+denLong      archer  atk so=6 khung=[3, 4, 5] CU=[3, 4, 5] MOI=[3, 4, 5] | tele CU=(7, 51) MOI=(11, 51) | đi↔đứng CU=2 MOI=1
+chonBong     nimble  atk so=6 khung=[1, 2, 3, 4, 5] CU=[1, 2, 3, 4] MOI=[1, 2, 3, 4, 5] | tele CU=(11, 49) MOI=(11, 49) | đi↔đứng CU=2 MOI=1
+caChuon      nimble  atk so=6 khung=[3, 4, 5] CU=[3, 4] MOI=[3, 4, 5] | tele CU=(5, 21) MOI=(5, 21) | đi↔đứng CU=1 MOI=1
+meoDen       nimble  atk so=6 khung=[3, 4, 5] CU=[3, 4, 5] MOI=[3, 4, 5] | tele CU=(17, 84) MOI=(17, 84) | đi↔đứng CU=4 MOI=1
+namPhong     kami    atk so=6 khung=[4, 5] CU=[4, 5] MOI=[4, 5] | tele CU=(5, 60) MOI=(13, 60) | đi↔đứng CU=1 MOI=1
+caNoc        kami    atk so=6 khung=[2, 3, 4, 5] CU=[2, 3, 4, 5] MOI=[2, 3, 4, 5] | tele CU=(5, 60) MOI=(18, 67) | đi↔đứng CU=0 MOI=0
+huLua        kami    atk so=6 khung=[4, 5] CU=[1, 2, 4, 5] MOI=[1, 2, 4, 5] | tele CU=(5, 51) MOI=(9, 51) | đi↔đứng CU=0 MOI=0
+socNo        bomber  atk so=6 khung=[3, 4, 5] CU=[3, 4, 5] MOI=[3, 4, 5] | tele CU=(8, 43) MOI=(8, 43) | đi↔đứng CU=2 MOI=1
+sua          bomber  atk so=6 khung=[1, 2, 3, 4, 5] CU=[1, 2, 3, 4] MOI=[1, 2, 3, 4, 5] | tele CU=(5, 31) MOI=(5, 31) | đi↔đứng CU=2 MOI=1
+tieuYeu      bomber  atk so=6 khung=[2, 3, 4, 5] CU=[2, 3, 4, 5] MOI=[2, 3, 4, 5] | tele CU=(5, 31) MOI=(5, 31) | đi↔đứng CU=2 MOI=1
+nhimDoc      spiky   atk so=6 khung=None CU=[0, 1, 2, 3, 4, 5] MOI=[0, 1, 2, 3, 4, 5] | tele CU=(5, 133) MOI=(30, 140) | đi↔đứng CU=2 MOI=1
+nhim         spiky   atk so=6 khung=[0, 1, 2, 3, 4] CU=[0, 1, 2, 3, 4] MOI=[0, 1, 2, 3, 4] | tele CU=(5, 133) MOI=(30, 143) | đi↔đứng CU=2 MOI=1
+nhimThan     spiky   atk so=6 khung=[2, 3, 4, 5] CU=[2, 3, 4, 5] MOI=[2, 3, 4, 5] | tele CU=(5, 133) MOI=(30, 140) | đi↔đứng CU=2 MOI=1
+heoNanh      elite   atk so=6 khung=[1, 2, 3, 4, 5] CU=[1, 2] MOI=[1, 2, 3, 4, 5] | tele CU=(11, 72) MOI=(11, 72) | đi↔đứng CU=2 MOI=2
+namPhongChua elite   atk so=6 khung=[1, 2, 3, 4, 5] CU=[1, 2, 3] MOI=[1, 2, 3, 4, 5] | tele CU=(11, 84) MOI=(19, 84) | đi↔đứng CU=2 MOI=1
+cuaTuong     elite   atk so=6 khung=[3, 4, 5] CU=[3, 4] MOI=[3, 4, 5] | tele CU=(15, 73) MOI=(16, 73) | đi↔đứng CU=2 MOI=2
+caNocChua    elite   atk so=6 khung=None CU=[0, 1, 2, 3] MOI=[0, 1, 2, 3, 4, 5] | tele CU=(12, 60) MOI=(20, 74) | đi↔đứng CU=3 MOI=1
+tuongMa      elite   atk so=6 khung=[3, 4, 5] CU=[3, 4] MOI=[3, 4, 5] | tele CU=(14, 87) MOI=(14, 87) | đi↔đứng CU=2 MOI=1
+huChua       elite   atk so=6 khung=[3, 4, 5] CU=[3, 4] MOI=[3, 4, 5] | tele CU=(11, 84) MOI=(19, 84) | đi↔đứng CU=2 MOI=1

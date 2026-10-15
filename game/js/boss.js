@@ -641,12 +641,25 @@
     const due = b.seq.filter((s) => s.t <= 0);
     b.seq = b.seq.filter((s) => s.t > 0);
     for (const s of due) s.f();
+    if (b.diT > 0) b.diT -= dt; // 15/10 soat-muot Phiên 1 mục 4: đồng hồ chỉ để vẽ
     move(b, dt);
     // hình: đang ra chiêu thì giữ cử động chiêu; xong chiêu thì đứng thở hoặc đi
     const busyAnim = b.an && (b.an.n === 'intro' || b.an.n === 'spawn' || b.an.n === 'phase2' || b.an.n === 'phase3' || /^c\d$|^chieu|^atk|^tele/.test(b.an.n));
     if (b.busy <= 0 || !busyAnim) {
-      const n = b.moving ? 'move' : 'idle';
-      if (!b.an || b.an.n !== n) play(b, n);
+      let n = b.moving ? 'move' : 'idle';
+      // 15/10 soat-muot Phiên 1 mục 4 (cờ ?didung=0, G.DI_DUNG_EM ở js/mobs.js): trùm đứng sát mốc dừng (d ≈ want + 12) bật tắt cờ đi vài khung một lần,
+      // mỗi lần về khung 1 → run tại chỗ. Nay: hết đi 0,13 giây mới đổi sang đứng; mỗi hàng đi / đứng nhớ đồng hồ, quay lại trong 0,2 giây thì đi tiếp từ khung cũ.
+      // Chỉ đổi hình (b.an), không đổi đường đi.
+      if (G.DI_DUNG_EM !== false) {
+        if (b.moving) b.diT = 0.13; else if (b.diT > 0) n = 'move';
+        if (!b.an || b.an.n !== n) {
+          const nho = b.anNho || (b.anNho = {});
+          if (b.an && (b.an.n === 'idle' || b.an.n === 'move')) nho[b.an.n] = { t: b.an.t, luc: b.t };
+          const c = nho[n];
+          play(b, n);
+          if (c && b.t - c.luc < 0.2) b.an.t = c.t;
+        }
+      } else if (!b.an || b.an.n !== n) play(b, n);
     }
     if (b.busy <= 0 && b.st.stun <= 0 && b.st.frozen <= 0) {
       b.cd -= dt * chamOf(b);
