@@ -68,7 +68,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.15-2035";
+(window.G = window.G || {}).VERSION = "lk-2026.10.15-2039";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -28839,8 +28839,16 @@ MA._xong();
     if (gn) khungDat(lopNut(gn, w, h, st), x, y + dy, w, h + 3); else put(cv, x, y + dy);
     const toi = !!gn && tone === 's' && !dis; // nút ảnh "đang chọn" màu vàng: chữ nâu sẫm cho rõ
     const y0 = y + dy + (st === 1 ? 1 : 0) - (o.sub && h >= 28 && G.RSC !== false ? 1 : 0), size = o.size || (h >= 26 ? 10 : 9), col = dis ? '#8fa49e' : toi ? '#3a1a08' : C.ink; // Rà soát C: nút cao có hai dòng chữ: nâng 1 để dòng dưới không chạm răng cưa
+    if (chuMoi() && (label || o.sub)) { // chu-lech-khung: chữ (và dòng phụ) trong lòng nút
+      const subCol = dis ? '#8fa49e' : toi ? '#5a3010' : '#e8d9a8';
+      const vc = h >= 22 ? [5, w >= 70 && h >= 16 ? 10 : 2, 5, w >= 70 && h >= 16 ? 10 : 2] : [3, w >= 70 && h >= 16 ? 10 : 2, 3, w >= 70 && h >= 16 ? 10 : 2];
+      const kh = { khung: gn ? MA_NUT[tone] : null, vien: vc, size, bold: true, color: col, shadow: toi ? false : undefined, dy: dy + (st === 1 ? 1 : 0) };
+      if (label) T.chuTrongKhung(label, x, y, w, h, Object.assign(kh, o.sub ? { phu: { s: o.sub, size: o.subSize || 7, bold: false, color: subCol, shadow: toi ? false : undefined } } : { dong: h >= 26 ? 2 : 1 }));
+      else T.chuTrongKhung(o.sub, x, y, w, h, Object.assign(kh, { size: o.subSize || 7, bold: false, color: subCol }));
+    } else {
     if (label) nhan(label, x + w / 2, y0 + h / 2 + size * 0.36 - (o.sub ? 3.5 : 0) - 0.3, w - (w >= 70 && h >= 16 ? 16 : 6), toi ? { size, bold: true, align: 'center', color: col, shadow: false } : { size, bold: true, align: 'center', color: col });
     if (o.sub) nhan(o.sub, x + w / 2, y0 + h / 2 + 7.5, w - 6, { size: o.subSize || 7, bold: false, align: 'center', color: dis ? '#8fa49e' : toi ? '#5a3010' : '#e8d9a8', shadow: toi ? false : undefined });
+    }
     if (o.dot) { const c = G.ux; c.beginPath(); c.arc(x + w - 3, y + 3, 3, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = C.dk; c.stroke(); }
     if (dis) { ghiNut(x - pad, y - pad, w + pad * 2, h + pad * 2, [x, y, w, h]); return false; } // nút mờ vẫn giữ chỗ (không để nút bên cạnh nhận chạm trúng nó)
     return clicked(x - pad, y - pad, w + pad * 2, h + pad * 2, [x, y, w, h]);
@@ -28864,7 +28872,8 @@ MA._xong();
     const dy = pressFx('s' + x + '|' + y + '|' + w + '|' + h, st === 1);
     if (gn) khungDat(lopNut(gn, w, h, st), x, y + dy, w, h + 3); else put(cv, x, y + dy);
     const size = o.size || 8, toi = !!gn && tone === 's' && !dis;
-    if (label) nhan(label, x + w / 2, y + dy + (st === 1 ? 1 : 0) + h / 2 + size * 0.36 - 0.3, w - 5, { size, bold: true, align: 'center', color: dis ? '#8fa49e' : toi ? '#3a1a08' : C.ink, shadow: toi ? false : undefined });
+    if (label && chuMoi()) T.chuTrongKhung(label, x, y, w, h, { khung: gn ? MA_NUT[tone] : null, vien: [3, 3, 3, 3], dong: h >= 26 ? 2 : 1, size, bold: true, color: dis ? '#8fa49e' : toi ? '#3a1a08' : C.ink, shadow: toi ? false : undefined, dy: dy + (st === 1 ? 1 : 0) }); // chu-lech-khung
+    else if (label) nhan(label, x + w / 2, y + dy + (st === 1 ? 1 : 0) + h / 2 + size * 0.36 - 0.3, w - 5, { size, bold: true, align: 'center', color: dis ? '#8fa49e' : toi ? '#3a1a08' : C.ink, shadow: toi ? false : undefined });
     if (o.dot) { const c = G.ux; c.beginPath(); c.arc(x + w - 2, y + 2, 2.6, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.7; c.strokeStyle = C.dk; c.stroke(); }
     if (dis) { ghiNut(x - pad, y - pad, w + pad * 2, h + pad * 2, [x, y, w, h]); return false; } // nút mờ vẫn giữ chỗ (không để nút bên cạnh nhận chạm trúng nó)
     return clicked(x - pad, y - pad, w + pad * 2, h + pad * 2, [x, y, w, h]);
@@ -28912,12 +28921,13 @@ MA._xong();
     // 14/10: khung bảng ảnh AI (gd-khung-bang): viền ảnh phủ từ x - 3 tới x + w + 3 (như viền code), lòng nâu; tiêu đề có vạch đồng bên dưới
     const gp = khungCo('gd-khung-bang');
     if (gp) {
-      khungDat(khungLop(gp, 'bang|' + w + '|' + h + '|' + (title ? 1 : 0), w + 6, h + 7, () => {
+      const kp = T.kBang(w, h);
+      khungDat(khungLop(gp, 'bang|' + w + '|' + h + '|' + (title ? 1 : 0) + '|' + kp, w + 6, h + 7, () => {
         R(2, 3, w + 4, h + 4, 'rgba(0,0,0,0.45)');
-        khungVeDeu(gp, 0, 0, w + 6, h + 6);
+        khungVeK(gp, 0, 0, w + 6, h + 6, kp);
         if (title) R(3 + 12, 3 + 19, w - 24, 1, C.br);
       }), x - 3, y - 3, w + 6, h + 7);
-      if (title) txt(title, x + 9, y + 15.5, { size: 11, bold: true, color: C.hi });
+      if (title) tieuDe(title, x, y, w, h, o, true);
       return;
     }
     const cv = layer('p|' + w + '|' + h + '|' + twd + '|' + (o.rightPad || 0) + (o.plain ? 'p' : '') + (o.noBand ? 'n' : ''), w + 6, h + 7, () => {
@@ -28939,8 +28949,17 @@ MA._xong();
       else for (const q of [[X + 1, Y + 1], [X + w - 4, Y + 1], [X + 1, Y + h - 4], [X + w - 4, Y + h - 4]]) { R(q[0], q[1], 3, 3, C.dk); P(q[0] + 1, q[1] + 1, C.hi); }
     });
     put(cv, x - 3, y - 3);
-    if (title) txt(title, x + 9, y + 15.5, { size: 11, bold: true, color: C.hi });
+    if (title) tieuDe(title, x, y, w, h, o, false);
   };
+  // Tiêu đề bảng: chữ trái từ x + 9 như cũ, nằm trong dải tiêu đề (từ lòng khung tới vạch đồng dưới tiêu đề ở y + 19), không vượt lòng phải
+  // (trừ o.rightPad: chỗ nút đóng). Dài thì thu cỡ (11 → 8), vẫn dài thì cắt "…".
+  function tieuDe(title, x, y, w, h, o, anh) {
+    if (!chuMoi()) return txt(title, x + 9, y + 15.5, { size: 11, bold: true, color: C.hi });
+    const r = x + w - (o.rightPad || 0);
+    // khung ảnh phủ từ (x - 3, y - 3) cỡ (w + 6, h + 6); khung code viền 4
+    if (anh) T.chuTrongKhung(title, x - 3, y - 3, w + 6, h + 6, { khung: 'gd-khung-bang', kKhung: T.kBang(w, h), vung: [x + 7, y, r - x - 7, 19.5], align: 'left', size: 11, min: 8, bold: true, color: C.hi });
+    else T.chuTrongKhung(title, x, y, w, h, { vien: [4, 4, 4, 4], vung: [x + 7, y, r - x - 7, 19.5], align: 'left', size: 11, min: 8, bold: true, color: C.hi });
+  }
   // Ô con trong bảng. sel: đang chọn (viền vàng sáng). o: { col: màu viền riêng, fill }
   T.inset = function (x, y, w, h, sel, o) {
     o = o || {};
@@ -29020,6 +29039,14 @@ MA._xong();
     g.save(); g.translate(x, y); g.scale(k, k);
     try { khungVe(ga, 0, 0, w / k, h / k); } finally { g.restore(); }
   }
+  // thu đều cả ảnh khung k lần (viền mỏng đi, ô giữ nguyên cỡ)
+  function khungVeK(ga, x, y, w, h, k) {
+    if (!(k < 1)) return khungVeDeu(ga, x, y, w, h);
+    g.save(); g.translate(x, y); g.scale(k, k);
+    try { khungVeDeu(ga, 0, 0, w / k, h / k); } finally { g.restore(); }
+  }
+  // chu-lech-khung: bảng THẤP / HẸP (thẻ thông tin ải 226×60, hộp hỏi...) có viền ảnh dày 10 điểm → nửa (5 điểm) để chữ đặt như cũ vẫn trong lòng.
+  T.kBang = (w, h) => (chuMoi() && Math.min(w, h) < 90 ? 0.5 : 1);
   const MA_NUT = { n: 'gd-nut-thuong', p: 'gd-nut-chinh', d: 'gd-nut-nguy', s: 'gd-nut-chon' };
   // ảnh nút theo tông (nút mờ: bản tối xám xanh; đang bấm: bản sáng do game tự làm). Tông khác (vàng kim, tím, màu riêng): null → vẽ code.
   function nutAnh(tone, dis, st) {
@@ -29029,6 +29056,267 @@ MA._xong();
   }
   // lớp nút ảnh: bóng đổ như nút code, ảnh 9 mảnh (đang bấm thì thấp xuống 1 điểm)
   const lopNut = (ga, w, h, st) => khungLop(ga, 'nut|' + w + '|' + h + '|' + st, w, h + 3, () => { if (st !== 1) rr(0, 2, w, h, 'rgba(0,0,0,0.5)', 2); khungVeDeu(ga, 0, st === 1 ? 1 : 0, w, h); });
+
+  // ---------- 15/10 (docs/review/ke-hoach-cai-thien/chu-lech-khung): CHỮ NẰM TRONG LÒNG KHUNG ----------
+  // `vien` của ảnh là ô cắt 9 mảnh (gồm núm / hoa văn góc), không phải độ dày viền. LÒNG THẬT của từng ảnh khung đo sẵn bằng
+  // chu-lech-khung/cong-cu/do-long-khung.py: mỗi hàng ảnh (điểm ảnh ẢNH, từ hàng y0) một đoạn lòng [trái, phải). T.longKhung đổi bảng đó
+  // theo đúng cách game cắt 9 mảnh + thu đều (khungVeDeu) ra đoạn lòng ở từng hàng của khung đã co giãn. T.chuTrongKhung đặt chữ:
+  // trong lòng trừ 2 điểm đệm, căn giữa ngang và dọc theo hộp chữ thật của phông (khối chữ hoa căn giữa, rồi đẩy cho dấu / chân chữ
+  // không chạm viền), chữ dài: thu cỡ tới tối thiểu → xuống dòng (nơi đủ cao) → cuối cùng mới cắt "…".
+  // Cờ quay lui: ?chucu=1 (G.CHU_CU = true): mọi chỗ vẽ chữ như trước phiên này.
+  if (G.CHU_CU == null) { let cu = false; try { cu = /[?&]chucu=1(&|$)/.test(String(window.location && window.location.search)); } catch (e) { cu = false; } G.CHU_CU = cu; }
+  const chuMoi = () => G.CHU_CU !== true;
+  // ma: [net, rộng ảnh, cao ảnh, hàng đầu y0, "trái,phải ..." mỗi hàng ảnh] — do do-long-khung.py --ghi tự ghi, không sửa tay
+  const LONG_BANG = {
+    // <LONG>
+    'gd-nut-thuong': [2, 126, 48, 10, '21,105 21,105 21,105 25,105 28,103 20,108 19,108 14,111 14,112 14,112 13,112 13,113 13,114 13,114 13,114 13,113 14,113 14,112 15,111 15,110 17,108 20,106 23,105 28,98 28,97 28,105 26,105 26,105 26,105'],
+    'gd-nut-chinh': [2, 126, 48, 9, '26,100 26,104 26,104 26,104 26,104 28,98 20,106 19,107 17,108 15,110 15,111 14,111 14,112 13,113 13,113 13,113 13,112 14,112 15,110 15,110 16,110 19,107 20,105 28,97 29,97 29,97 29,97 29,97 30,97'],
+    'gd-nut-nguy': [2, 126, 48, 9, '26,100 22,100 22,100 22,100 22,100 28,99 20,106 19,108 17,109 16,111 15,111 14,111 14,112 13,113 13,113 13,113 14,113 14,112 15,112 16,111 16,110 18,107 21,105 27,97 27,97 29,97 29,97 29,97 29,96'],
+    'gd-nut-chon': [2, 126, 48, 8, '29,97 29,97 26,104 26,104 26,104 26,104 28,98 20,106 19,107 18,108 15,110 15,111 14,111 14,112 14,112 14,112 14,112 14,112 14,111 15,110 16,110 16,109 19,107 20,105 28,97 29,97 29,97 29,97 29,97 30,97'],
+    'gd-khung-bang': [2, 352, 104, 20, '38,323 32,324 32,325 31,325 31,326 31,327 24,328 22,330 20,331 20,331 20,331 20,329 20,333 20,333 19,333 19,333 19,333 19,333 19,333 19,333 20,333 20,333 20,332 20,332 20,332 19,332 19,332 19,332 19,332 19,332 19,332 19,332 19,332 19,332 19,332 19,333 19,333 19,333 19,332 19,332 19,332 19,332 19,332 19,332 19,332 19,332 19,332 19,332 19,332 19,332 19,332 19,332 19,332 19,332 20,332 21,331 21,330 23,326 24,326 25,326 25,326 26,325 27,324 35,317 65,304'],
+    'gd-khung-thoai': [2, 274, 80, 17, '33,210 33,214 27,247 27,248 23,252 23,252 23,252 23,251 20,253 20,253 19,253 19,256 19,256 19,256 19,256 19,256 19,256 19,256 19,256 19,256 19,256 19,256 19,254 19,255 19,256 19,256 19,256 19,256 19,255 19,254 19,256 19,256 19,256 19,256 19,256 19,253 20,253 20,252 22,252 23,252 23,252 26,249 26,249 27,242 27,241 29,215'],
+    'gd-khung-nho': [2, 128, 38, 3, '10,118 10,118 10,118 7,121 6,121 6,121 6,122 3,125 3,125 3,125 3,125 3,125 3,125 3,125 3,125 3,125 3,125 3,125 3,125 3,125 3,125 3,125 3,125 3,125 3,125 6,122 6,122 7,121 7,121 10,118 10,118 10,118'],
+    'gd-dai-thong-bao': [2, 218, 36, 8, '29,191 26,191 26,193 23,195 23,195 23,195 23,195 23,195 23,195 23,195 23,195 23,195 26,195 24,195 23,195 23,195 23,195 24,195 24,195 24,195'],
+    'gd-the-thuong': [2, 64, 64, 9, '13,50 13,50 13,50 13,50 13,51 12,52 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 8,56 12,51 13,50 13,50 13,50 13,50 13,50'],
+    'gd-the-nho': [2, 78, 20, 5, '8,72 5,72 4,74 4,74 4,75 5,75 5,75 5,74 7,73 10,68'],
+    'gd-the-sap-co': [2, 64, 20, 2, '7,56 7,56 5,56 5,56 5,56 12,53 9,54 9,54 9,54 9,54 15,54 9,56 9,56 9,56 9,56 13,56 13,56'],
+    'gd-thanh-tren': [2, 122, 32, 6, '31,88 29,92 28,93 28,93 28,93 28,94 28,94 27,94 27,95 26,95 26,95 26,95 27,95 28,93 28,93 29,92 29,92 29,92 30,92 31,91'],
+    'gd-khung-canh-bao': [2, 168, 38, 8, '12,156 12,156 10,158 10,158 10,158 10,158 10,158 10,158 10,158 10,158 10,158 10,157 10,157 10,157 10,158 10,158 10,158 10,158 10,158 10,157 12,157 13,156'],
+    'gd-o-con': [2, 68, 66, 7, '11,57 11,57 11,57 11,57 10,59 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 7,61 10,58 11,57 11,57'],
+    'gd-o-con-chon': [2, 70, 68, 8, '12,57 12,57 12,58 11,58 8,61 8,61 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,62 8,61 11,60 12,58 12,57 12,57'],
+    'gd-khung-trum': [2, 120, 60, 7, '24,96 24,96 24,96 24,96 24,97 22,98 22,98 21,99 20,100 18,102 15,104 10,110 10,110 10,110 10,110 10,110 10,110 10,110 10,110 10,110 10,110 10,110 10,110 10,110 10,110 10,110 10,110 10,110 10,110 10,110 10,110 10,110 10,110 10,110 10,110 15,105 18,102 20,101 21,99 22,98 23,98 23,97 24,96 24,96 24,96 24,96'],
+    'gd-khung-trum-nho': [2, 104, 52, 7, '17,87 17,87 16,88 16,88 14,90 13,91 11,93 8,96 8,96 8,96 8,96 8,96 8,96 8,96 8,96 8,96 8,96 8,96 8,96 8,96 8,96 8,96 8,96 8,96 8,96 8,96 8,96 8,96 8,96 8,96 8,96 11,93 14,90 15,89 16,88 16,88 17,87 17,87'],
+    'gd-khung-tinh-anh': [2, 88, 44, 6, '11,77 11,77 10,78 9,79 6,82 5,83 5,83 5,83 5,83 5,83 5,83 5,83 5,83 5,83 5,83 5,83 5,83 5,83 5,83 5,83 5,83 5,83 5,83 5,83 5,83 5,83 5,83 9,79 10,78 11,77 11,77 11,77'],
+    'gd-o-do-0': [2, 64, 64, 12, '14,50 13,51 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 12,52 13,51 14,50'],
+    'gd-khung-ban-do': [2, 760, 484, 60, '62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 62,698 63,697'],
+    // </LONG>
+  };
+  const LONG_DOC = {};
+  function longBang(ma, ga) {
+    let b = LONG_DOC[ma];
+    if (b === undefined) {
+      const q = LONG_BANG[ma];
+      b = q ? { net: q[0], pw: q[1], ph: q[2], y0: q[3], r: q[4].split(' ').map((s) => s.split(',').map(Number)) } : null;
+      LONG_DOC[ma] = b;
+    }
+    if (b && ga && (b.pw !== ga.pw || b.ph !== ga.ph)) return null; // ảnh đã đổi mà chưa đo lại: dùng vien
+    return b;
+  }
+  // Đoạn lòng của khung ảnh ma vẽ ở cỡ w × h (toạ độ trong khung, điểm game). Trả về { top, bot, span(a, b) → [trái, phải] | null } hoặc null (không có ảnh).
+  const LONG_NHO_MAP = new Map();
+  T.longKhung = function (ma, w, h, kEp, vEp) {
+    const ga0 = ma ? khungCo(ma) : null;
+    if (!ga0 || !(w > 0) || !(h > 0)) return null;
+    const ga = vEp ? gaVien(ga0, vEp) : ga0; // vEp: nơi vẽ dùng ô cắt 9 mảnh khác tệp (viền giữ cỡ, không giãn theo chiều cao)
+    const key = ma + '|' + w + '|' + h + '|' + (kEp || '') + '|' + (vEp || '');
+    let L = LONG_NHO_MAP.get(key);
+    if (L && L.ga === ga) return L;
+    const v = ga.vien || [0, 0, 0, 0], N = ga.net || 1, pw = ga.pw, ph = ga.ph;
+    const k = Math.min(1, kEp || 1, h / (v[0] + v[2] + 2), w / (v[1] + v[3] + 2)), W = w / k, H = h / k; // kEp: nơi vẽ thu đều ảnh (ô con nhỏ)
+    const b = longBang(ma, ga0);
+    const hangAnh = (sy) => { // đoạn lòng ở hàng ảnh sy (ảnh gốc)
+      if (b) { const r = b.r[Math.floor(sy) - b.y0]; return r || null; }
+      return sy >= v[0] * N && sy < ph - v[2] * N ? [v[3] * N, pw - v[1] * N] : null; // không có bảng: lòng = trong vien
+    };
+    const giuaW = pw - (v[1] + v[3]) * N, dW = W - v[1] - v[3];
+    const doiX = (px, phai) => { // điểm ảnh ẢNH -> điểm game trong khung ảo W × H
+      if (!phai && px <= v[3] * N) return px / N;
+      if (phai && px >= pw - v[1] * N) return W - (pw - px) / N;
+      return v[3] + (giuaW > 0 ? ((px - v[3] * N) / giuaW) * dW : dW / 2);
+    };
+    const hangGame = (ty) => { // ty: hàng trong khung ảo
+      // góc trên / dưới giữ cỡ; hàng giữa co giãn (hoặc lặp) theo tỉ lệ
+      const giuaH = ph - (v[0] + v[2]) * N, dH = H - v[0] - v[2];
+      const sy = ty < v[0] ? ty * N : ty >= H - v[2] ? ph - (H - ty) * N : v[0] * N + (dH > 0 ? ((ty - v[0]) / dH) * giuaH : giuaH / 2);
+      const q = sy >= 0 && sy < ph ? hangAnh(sy) : null;
+      return q ? [doiX(q[0], false), doiX(q[1], true)] : null;
+    };
+    let top = null, bot = null;
+    for (let t = 0; t < H; t += 0.5) if (hangGame(t + 0.25)) { if (top == null) top = t; bot = t + 0.5; }
+    L = {
+      ga, k, top: top == null ? h / 2 : top * k, bot: bot == null ? h / 2 : bot * k,
+      span(a, bb) { // phần chung đoạn lòng các hàng từ a tới bb (toạ độ trong khung thật)
+        let l = -1e9, r = 1e9;
+        for (let t = Math.max(0, a); t <= Math.min(h, bb) + 1e-6; t += 0.5) {
+          const q = hangGame(Math.min(H - 0.01, (t + (t >= bb ? -0.01 : 0)) / k));
+          if (!q) return null;
+          l = Math.max(l, q[0] * k); r = Math.min(r, q[1] * k);
+        }
+        return r > l ? [l, r] : null;
+      },
+      // "lòng giữa": như span nhưng mọi hàng lấy theo dải hàng giữa (bỏ qua đinh / góc vuông nhỏ trong lòng ở hàng góc).
+      // Chỉ dùng cho khung quá nhỏ, trước khi phải cắt "…" (vẫn không chạm mây / viền hai đầu và viền trên / dưới).
+      spanGiua(a, bb) {
+        if (a < (top == null ? 0 : top * k) - 1e-6 || bb > (bot == null ? h : bot * k) + 1e-6) return null;
+        const m0 = Math.min(h / 2, v[0] * k), m1 = Math.max(h / 2, h - v[2] * k);
+        return this.span(Math.max(Math.min(a, m1), m0), Math.min(Math.max(bb, m0), m1));
+      },
+    };
+    if (LONG_NHO_MAP.size > 400) LONG_NHO_MAP.clear();
+    LONG_NHO_MAP.set(key, L);
+    return L;
+  };
+  // Lòng của khung vẽ code (không có ảnh / ?khunganh=0): hình chữ nhật trong viền [trên, phải, dưới, trái].
+  const longCode = (w, h, vc) => ({ top: vc[0], bot: h - vc[2], span: (a, b) => (a < vc[0] - 1e-6 || b > h - vc[2] + 1e-6 ? null : [vc[3], w - vc[1]]) });
+  T.longCode = longCode;
+  // Đo chữ ở cỡ s (đã qua sàn tiny 6,5): bề rộng, hộp chữ thật trên / dưới đường cơ sở. Tiếng Anh: canvas tự dịch khi đo (js/ngon_ngu.js).
+  function doChu(s, size, bold) {
+    ui.font(size, bold, true);
+    let m = G.ux.measureText(s);
+    let w = Math.max(m.width, (m.actualBoundingBoxLeft || 0) + (m.actualBoundingBoxRight || 0));
+    if (DIGIT.test(s) && s.length >= 3) { // "số + tài nguyên" vẽ thành biểu tượng (richText): đo như lúc vẽ
+      const t = mark(s);
+      if (HAS.test(t)) {
+        const ih = Math.round(Math.max(6.5, size) * 1.05 * 2) / 2; let tw = 0, cur = '';
+        for (const ch of t) { const k = ch.charCodeAt(0) - PUA; if (k >= 0 && k < KINDS.length) { tw += ih + 1; } else cur += ch; }
+        m = G.ux.measureText(cur.replace(/[-]/g, '')); w = tw + m.width;
+      }
+    }
+    return { w, a: m.actualBoundingBoxAscent != null ? m.actualBoundingBoxAscent : size * 0.95, d: m.actualBoundingBoxDescent != null ? m.actualBoundingBoxDescent : size * 0.25 };
+  }
+  const CAP = new Map();
+  function capCao(size, bold) { const k = size + '|' + (bold ? 1 : 0) + '|' + G.ux.font.replace(/^[^"]*/, ''); let v = CAP.get(k); if (v == null) { v = doChu('H', size, bold).a || size * 0.72; CAP.set(k, v); } return v; }
+  // xuống dòng theo bề rộng (chữ đã dịch nếu không phải tiếng Việt)
+  function chiaDong(s, maxW, size, bold) {
+    const words = String(s).split(' '), lines = []; let cur = '';
+    for (const wd of words) { const t = cur ? cur + ' ' + wd : wd; if (cur && doChu(t, size, bold).w > maxW) { lines.push(cur); cur = wd; } else cur = t; }
+    if (cur) lines.push(cur);
+    return lines;
+  }
+  function catBa(s, maxW, size, bold) { // cắt "…" cho vừa
+    if (doChu(s, size, bold).w <= maxW) return s;
+    while (s.length > 1 && doChu(s + '…', size, bold).w > maxW) s = s.slice(0, -1);
+    return s.trimEnd() + '…';
+  }
+  const DAT_NHO = new Map();
+  T.chuDo = { lan: 0, thap: 0, cat: 0, hep: 0, giua: 0 }; // đếm cho công cụ soát
+  // Tính chỗ đặt (không vẽ). Trả về { size, lines: [{ s, x, b, size, bold, color }], cat, thap } — toạ độ tuyệt đối.
+  // (x, y, w, h): khung. o: { khung: mã ảnh khung | null, vien: [t, r, b, l] viền khi khung vẽ code, dem (2), size, min (6,5), bold,
+  //   dong: số dòng tối đa (mặc định 1), giãn: khoảng giữa hai dòng (2,5), align 'center' | 'left' | 'right', vung: [x, y, w, h] chỉ được đặt trong vùng này
+  //   (ví dụ phần bên phải biểu tượng), phu: { s, size, bold } dòng phụ nhỏ bên dưới (nút có hai dòng), dy: dời cả khối (nút đang bấm) }
+  T.datChu = function (s, x, y, w, h, o) {
+    o = o || {};
+    s = String(s == null ? '' : s);
+    const src = G.LANG === 'vi' || !G.tv ? s : G.tv(s);
+    const ps = o.phu && o.phu.s ? (G.LANG === 'vi' || !G.tv ? String(o.phu.s) : G.tv(String(o.phu.s))) : '';
+    const ga = o.khung ? khungCo(o.khung) : null;
+    const vg = o.vung;
+    const key = [src, ps, G.LANG, x, y, w, h, ga ? o.khung + '|' + ga.pw + '|' + (o.kKhung || '') + '|' + (o.vienAnh || '') : 'c' + (o.vien || ''), o.size, o.min, o.bold ? 1 : 0, o.dong, o.align, o.dem, o.gian, vg ? vg.join(',') : '', o.phu ? o.phu.size + '|' + (o.phu.bold ? 1 : 0) : '', G.ux.font.replace(/^[^"]*/, '')].join('|');
+    const nho = DAT_NHO.get(key);
+    if (nho) return nho;
+    T.chuDo.lan++;
+    const L = (ga && T.longKhung(o.khung, w, h, o.kKhung, o.vienAnh)) || longCode(w, h, o.vien || [2, 2, 2, 2]);
+    const dem = o.dem == null ? 2 : o.dem, size0 = o.size || 9, min = Math.min(size0, o.min || 6.5), bold = o.bold !== false, align = o.align || 'center';
+    const maxDong = Math.max(1, o.dong || 1), gian = o.gian == null ? 2.5 : o.gian;
+    // vùng được phép, toạ độ trong khung
+    const vx0 = vg ? vg[0] - x : -1e9, vx1 = vg ? vg[0] + vg[2] - x : 1e9, vy0 = vg ? vg[1] - y : -1e9, vy1 = vg ? vg[1] + vg[3] - y : 1e9;
+    const top = Math.max(L.top, vy0), bot = Math.min(L.bot, vy1);
+    let giuaOn = false;
+    const spanVung = (a, b) => { const q = giuaOn && L.spanGiua ? L.spanGiua(a, b) : L.span(a, b); if (!q) return null; const l = Math.max(q[0], vx0), r = Math.min(q[1], vx1); return r > l ? [l, r] : null; };
+    const giuaSpan = spanVung((top + bot) / 2 - 0.5, (top + bot) / 2 + 0.5) || [0, w];
+    // thử một cách xếp: dòng (mảng chữ + cỡ), trả về kết quả nếu vừa. dm: đệm ngang. chat: không vừa thì cắt "…" (bước cuối).
+    function thu(dongs, dm, chat) {
+      const ms = dongs.map((q) => doChu(q.s, q.size, q.bold));
+      const cap0 = capCao(dongs[0].size, dongs[0].bold);
+      const rel = [0]; for (let i = 1; i < dongs.length; i++) rel.push(rel[i - 1] + dongs[i].size + gian - (dongs[i].size < dongs[i - 1].size ? (dongs[i - 1].size - dongs[i].size) * 0.3 : 0));
+      const last = rel.length - 1;
+      let b0 = (top + bot) / 2 - (rel[last] - cap0) / 2 + cap0 / 2; // khối chữ hoa căn giữa dải lòng
+      const hi = Math.min(...ms.map((m, i) => rel[i] - m.a)), lo = Math.max(...ms.map((m, i) => rel[i] + m.d));
+      const cao = lo - hi, room = bot - top;
+      if (cao > room + 1e-6 && !chat) return null; // khung thấp hơn chữ
+      const dv = Math.max(0, Math.min(dem, (room - cao) / 2)); // đệm dọc: 2 điểm khi đủ chỗ
+      if (b0 + hi < top + dv) b0 = top + dv - hi;
+      if (b0 + lo > bot - dv) b0 = bot - dv - lo;
+      if (b0 + hi < top - 1e-6 && cao <= room) b0 = top - hi;
+      const out = [];
+      for (let i = 0; i < dongs.length; i++) {
+        const bl = b0 + rel[i];
+        const sp = spanVung(bl - ms[i].a, bl + ms[i].d) || (chat ? giuaSpan : null);
+        if (!sp) return null;
+        const l = sp[0] + dm, r = sp[1] - dm;
+        let t = dongs[i].s, mw = ms[i].w;
+        if (mw > r - l + 1e-6) { if (!chat) return null; t = catBa(t, Math.max(4, r - l), dongs[i].size, dongs[i].bold); }
+        const xx = align === 'left' ? l : align === 'right' ? r : (l + r) / 2;
+        out.push({ s: t, x: x + xx, b: y + bl, size: dongs[i].size, bold: dongs[i].bold, cat: t !== dongs[i].s });
+      }
+      return { lines: out, thap: cao > room + 1e-6, dem: dm };
+    }
+    const ph = o.phu ? Math.max(6.5, o.phu.size || 7) : 0, phB = o.phu ? !!o.phu.bold : false;
+    // dòng phụ thu cỡ riêng (không kéo dòng chính nhỏ theo)
+    const phuCo = (dm) => { let z = ph; while (z > 6.5 && doChu(ps, z, phB).w > giuaSpan[1] - giuaSpan[0] - dm * 2) z = Math.max(6.5, z - 0.5); return z; };
+    const buoc = (sz) => Math.round((sz - 0.5) * 2) / 2;
+    // Thứ tự: (1) đệm 2: thu cỡ → xuống dòng; (2) khung quá nhỏ: đệm hẹp dần 1 → 0,5 → 0 (chữ vẫn trong lòng, không chạm viền); (3) cắt "…".
+    let kq = null;
+    const dems = [dem].concat(dem > 1 ? [1] : [], dem > 0.5 ? [0.5] : [], dem > 0 ? [0] : []);
+    for (const dm of dems) {
+      const them = ps ? [{ s: ps, size: phuCo(dm), bold: phB }] : [];
+      for (let sz = size0; !kq && sz >= min - 1e-6; sz = buoc(sz)) { kq = thu([{ s: src, size: sz, bold }].concat(them), dm); if (kq) kq.size = sz; }
+      if (!kq && maxDong > 1 && src.indexOf(' ') > 0) { // xuống dòng
+        const hepSpan = spanVung(top + 0.25, bot - 0.25) || giuaSpan; // bề rộng hẹp nhất của lòng (hàng góc có đinh): chia dòng theo nó trước
+        for (let sz = size0; !kq && sz >= min - 1e-6; sz = buoc(sz)) {
+          for (const sp of [hepSpan, giuaSpan]) {
+            const dl = chiaDong(src, sp[1] - sp[0] - dm * 2, sz, bold);
+            if (dl.length < 2 || dl.length > maxDong) continue;
+            kq = thu(dl.map((t) => ({ s: t, size: sz, bold })).concat(them), dm);
+            if (kq) { kq.size = sz; break; }
+          }
+        }
+      }
+      if (kq) break;
+    }
+    if (!kq && L.spanGiua) { // khung quá nhỏ: lòng giữa (bỏ qua đinh góc trong lòng), thu cỡ, đệm hẹp dần — trước khi cắt "…"
+      giuaOn = true;
+      for (const dm of dems) {
+        const them = ps ? [{ s: ps, size: phuCo(dm), bold: phB }] : [];
+        for (let sz = size0; !kq && sz >= min - 1e-6; sz = buoc(sz)) { kq = thu([{ s: src, size: sz, bold }].concat(them), dm); if (kq) { kq.size = sz; kq.giua = true; } }
+        if (kq) break;
+      }
+      if (!kq) giuaOn = false;
+    }
+    if (!kq) { // cuối cùng: cỡ tối thiểu, (nhiều dòng thì dòng cuối) cắt "…"
+      let dl = [src];
+      const dm = Math.min(dem, 1);
+      if (maxDong > 1 && src.indexOf(' ') > 0) { dl = chiaDong(src, giuaSpan[1] - giuaSpan[0] - dm * 2, min, bold); if (dl.length > maxDong) dl = dl.slice(0, maxDong - 1).concat([dl.slice(maxDong - 1).join(' ')]); }
+      const them = ps ? [{ s: ps, size: 6.5, bold: phB }] : [];
+      kq = thu(dl.map((t) => ({ s: t, size: min, bold })).concat(them), dm, true) || { lines: [{ s: src, x: x + w / 2, b: y + h / 2 + min * 0.36, size: min, bold }], thap: true, dem: 0 };
+      kq.size = min;
+    }
+    kq.cat = kq.lines.some((q) => q.cat);
+    kq.align = align;
+    if (kq.cat) T.chuDo.cat++;
+    if (kq.thap) T.chuDo.thap++;
+    if (kq.dem < dem) T.chuDo.hep++; // khung quá nhỏ: đệm ngang < 2
+    if (kq.giua) T.chuDo.giua++;
+    if (DAT_NHO.size > 800) DAT_NHO.clear();
+    DAT_NHO.set(key, kq);
+    return kq;
+  };
+  // Đặt và vẽ chữ trong lòng khung. o như T.datChu, thêm color, shadow, phu.color. Trả về kết quả của T.datChu.
+  T.chuTrongKhung = function (s, x, y, w, h, o) {
+    o = o || {};
+    if (s == null || s === '') return null;
+    const kq = T.datChu(s, x, y, w, h, o), dy = o.dy || 0;
+    kq.lines.forEach((q, i) => {
+      const phu = o.phu && i === kq.lines.length - 1 && o.phu.s;
+      oldTextCo(q.s, q.x, q.b + dy, { size: q.size, bold: q.bold, tiny: true, align: kq.align, color: phu ? o.phu.color || o.color : o.color, shadow: phu && o.phu.shadow !== undefined ? o.phu.shadow : o.shadow });
+    });
+    return kq;
+  };
+  // Lối tắt cho chữ nơi gọi tự vẽ trong ô con (T.inset) / tấm nhỏ (T.plate): khung, viền code, độ thu ảnh ô con tự điền.
+  // Chưa bật (?chucu=1) thì vẽ y như cũ ở (o.cu = [x, y] đường cơ sở cũ, o.cuAlign) để nơi gọi không phải giữ hai nhánh.
+  T.chuO = function (s, x, y, w, h, o) {
+    o = o || {};
+    if (!chuMoi()) { if (o.cu) ui.text(s, o.cu[0], o.cu[1], Object.assign({}, o, { align: o.cuAlign || o.align })); return null; }
+    return T.chuTrongKhung(s, x, y, w, h, Object.assign({ khung: o.sel ? 'gd-o-con-chon' : 'gd-o-con', kKhung: T.kOCon(w, h), vien: [1, 1, 1, 1] }, o));
+  };
+  T.chuTam = function (s, x, y, w, h, o) {
+    o = o || {};
+    if (!chuMoi()) { if (o.cu) ui.text(s, o.cu[0], o.cu[1], Object.assign({}, o, { align: o.cuAlign || o.align })); return null; }
+    return T.chuTrongKhung(s, x, y, w, h, Object.assign({ khung: 'gd-khung-nho', vien: [2, 2, 2, 2] }, o));
+  };
+  T.chuMoi = chuMoi;
+  // vẽ một dòng đã đặt: qua ui.text (biểu tượng tài nguyên, chữ dịch). Chữ đã dịch thì vẽ thẳng (tránh dịch hai lần).
+  function oldTextCo(s, x, y, o) { return ui.text(s, x, y, o); }
 
   // ---------- 15/10 (docs/review/ke-hoach-cai-thien/khung-gd-con): 9 khung còn vẽ code -> ảnh AI ----------
   // Dựng: khung-gd-con/cong-cu/dung-khung-gd-con.py (ảnh gốc docs/anh-goc/giao-dien/dot2/). Chỉ thay KHUNG: chữ, màu lòng thanh (máu, linh khí),
@@ -29057,13 +29345,19 @@ MA._xong();
     c.fillStyle = LONG_O; c.fillRect(x + 1, y + 1, w - 2, h - 2);
     if (o.fill) { c.fillStyle = o.fill; c.fillRect(x + 1, y + 1, w - 2, h - 2); }
     const m = sel ? 0.5 : 0, W = w + m * 2, H = h + m * 2;
-    khungDat(khungLop(go, 'o|' + W + '|' + H, W, H, () => khungVeDeu(go, 0, 0, W, H)), x - m, y - m, W, H);
+    const k = T.kOCon(w, h);
+    khungDat(khungLop(go, 'o|' + W + '|' + H + '|' + k, W, H, () => { if (k < 1) { g.save(); g.scale(k, k); try { khungVeDeu(go, 0, 0, W / k, H / k); } finally { g.restore(); } } else khungVeDeu(go, 0, 0, W, H); }), x - m, y - m, W, H);
+    if (sel && k < 1 && !o.col) { c.fillStyle = C.hi; c.fillRect(x + 1, y + 1, w - 2, 1); c.fillRect(x + 1, y + h - 2, w - 2, 1); c.fillRect(x + 1, y + 2, 1, h - 4); c.fillRect(x + w - 2, y + 2, 1, h - 4); } // ô chọn thu nhỏ: thêm nét vàng sáng trong viền cho dễ thấy
     if (o.col && o.col !== C.brD && w > 8 && h > 8) {
+      const e = k < 1 ? 1 : 2;
       c.fillStyle = o.col;
-      c.fillRect(x + 2, y + 2, w - 4, 1); c.fillRect(x + 2, y + h - 3, w - 4, 1); c.fillRect(x + 2, y + 3, 1, h - 6); c.fillRect(x + w - 3, y + 3, 1, h - 6);
+      c.fillRect(x + e, y + e, w - e * 2, 1); c.fillRect(x + e, y + h - e - 1, w - e * 2, 1); c.fillRect(x + e, y + e + 1, 1, h - e * 2 - 2); c.fillRect(x + w - e - 1, y + e + 1, 1, h - e * 2 - 2);
     }
     return true;
   }
+  // chu-lech-khung: ô con ảnh có viền dày ~4 điểm (ô code cũ chỉ 1 điểm) nên ô THẤP / HẸP (cạnh ngắn < 40: dòng chỉ số, nút cây kỹ năng, hàng danh sách)
+  // vẽ ảnh thu đều một nửa (viền ~2 điểm) để chữ đặt như cũ vẫn nằm trong lòng. Không đổi cỡ / vị trí ô. ?chucu=1: như trước.
+  T.kOCon = (w, h) => (chuMoi() && Math.min(w, h) < 40 ? 0.5 : 1);
   // ảnh nhuộm: kieu 'nhan' (nhân màu: ảnh trắng -> màu chip, giữ sáng tối) hoặc 'phu' (phủ màu k phần: viền máu quái theo hệ)
   function veNhuom(ga, w, h, col, kieu, k) {
     khungVeDeu(ga, 0, 0, w, h);
@@ -29073,9 +29367,20 @@ MA._xong();
     else { g.globalCompositeOperation = 'source-atop'; g.globalAlpha = k; g.fillStyle = col; g.fillRect(0, 0, w, h); }
     g.restore();
   }
+  // bản sao ảnh với ô cắt 9 mảnh khác (nhớ theo ảnh): dùng khi muốn viền trên / dưới giữ cỡ thay vì giãn theo chiều cao
+  const VIEN_EP = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  function gaVien(ga, v) {
+    if (!VIEN_EP) return ga;
+    let m = VIEN_EP.get(ga); if (!m) { m = new Map(); VIEN_EP.set(ga, m); }
+    const k = v.join(',');
+    let b = m.get(k); if (!b) { b = Object.assign({}, ga, { vien: v.slice(), ghep9: new Map() }); m.set(k, b); }
+    return b;
+  }
+  T.VIEN_THE_NHO = [2.5, 3, 2.5, 3]; // chu-lech-khung: thẻ kháng / yếu cao hơn 10 thì vành trắng trên / dưới giữ 2,5 điểm (tệp: [0,3,0,3], giãn theo chiều cao)
   T.theNho = function (x, y, w, h, col) { // chip kháng / yếu: thẻ trắng nhuộm màu chip
-    const ga = khungCo('gd-the-nho');
+    let ga = khungCo('gd-the-nho');
     if (!ga || w < 4) return false;
+    if (chuMoi() && h > 10) ga = gaVien(ga, T.VIEN_THE_NHO);
     khungDat(khungLop(ga, 'tn|' + w + '|' + h + '|' + col, w, h, () => veNhuom(ga, w, h, col, 'nhan')), x, y, w, h);
     return true;
   };
@@ -29151,9 +29456,16 @@ MA._xong();
       c.fillStyle = C.hi; c.fillRect(l - 2, ny - 5, 3, 3); c.fillRect(r - 1, ny - 5, 3, 3);
       c.fillStyle = C.dk; c.fillRect(l - 1, ny - 4, 1, 1); c.fillRect(r, ny - 4, 1, 1);
     }
+    const by = y + ph - bh - (big ? 5 : 4), bw = w - (big ? 12 : 10);
+    if (chuMoi()) { // chu-lech-khung: tên (và dấu hiệu) trong lòng tấm khung, phía trên thanh máu
+      const ma = gkt ? (big ? 'gd-khung-trum' : elite ? 'gd-khung-tinh-anh' : 'gd-khung-trum-nho') : 'gd-khung-nho', vc = [2, 2, 2, 2], tren = [x, y, w, by - y - 0.5];
+      let phai = x + w;
+      if (o.sub) { const k2 = T.chuTrongKhung(o.sub, x, y, w, ph, { khung: ma, vien: vc, vung: tren, align: 'right', size: 6.5, bold: true, color: '#ffb48a' }); if (k2 && k2.lines[0]) phai = k2.lines[0].x - doChu(k2.lines[0].s, k2.size, true).w - 3; }
+      T.chuTrongKhung(name, x, y, w, ph, { khung: ma, vien: vc, vung: [x, y, phai - x, by - y - 0.5], align: o.sub ? 'left' : 'center', size: ns, min: 6.5, bold: true, color: big ? '#ffe2c8' : elite ? '#ffd0a8' : '#ffd9c8' });
+    } else {
     txt(name, o.sub ? x + 7 : cx, ny, { size: ns, bold: true, align: o.sub ? 'left' : 'center', color: big ? '#ffe2c8' : elite ? '#ffd0a8' : '#ffd9c8' });
     if (o.sub) txt(o.sub, x + w - 6, ny, { size: 6.5, bold: true, align: 'right', color: '#ffb48a' });
-    const by = y + ph - bh - (big ? 5 : 4), bw = w - (big ? 12 : 10);
+    }
     T.bar(x + (big ? 6 : 5), by, bw, elite ? 'hp' : 'boss', o.frac, null, { h: bh, marks: 1, lag: o.lag, col: elite ? '#ff8a3a' : null, hi: elite ? '#ffc890' : null });
     // vạch pha (trùm đổi pha ở 60% và 30% máu)
     const cap = bh >= 7 ? 7 : 2, inner = bw - cap * 2;
@@ -29351,7 +29663,8 @@ MA._xong();
     });
     if (cv) put(cv, x, y);
     const size = o.size || 8.5;
-    txt(text, x + w / 2, y + 9 + size * 0.36, { size, bold: true, align: 'center', color: o.col || C.ink });
+    if (chuMoi()) T.chuTrongKhung(text, x, y, w, h, { khung: 'gd-dai-thong-bao', vien: [3, 12, 3, 12], size, bold: true, color: o.col || C.ink }); // chu-lech-khung
+    else txt(text, x + w / 2, y + 9 + size * 0.36, { size, bold: true, align: 'center', color: o.col || C.ink });
   }
   // Rộng vừa đủ chữ, đặt giữa quanh cx
   T.toastFit = function (cx, y, text, o) {
@@ -29398,33 +29711,44 @@ MA._xong();
     x = Math.round(x); y = Math.round(y); w = Math.round(w);
     ui.font(7.5, true);
     const nw = name ? Math.ceil(G.ux.measureText(name).width) + 12 : 0;
+    const th = chuMoi() ? 14 : 12; // chu-lech-khung: thẻ tên cao 12 chỉ có lòng 8 điểm, chữ có dấu (Ông, Thợ) cao ~9 → thẻ cao 14 (lòng 10)
     // 14/10: hộp thoại ảnh AI (gd-khung-thoai, cuộn giấy hai trục): thẻ tên, đuôi, chữ vẽ như cũ; chữ nâu sẫm trên giấy kem
     const gt = khungCo('gd-khung-thoai');
     if (gt) {
       const tx = o.tail == null ? 18 : o.tail;
       // hai trục cuộn thò ra ngoài hộp 6 điểm mỗi bên, để chữ (bắt đầu ở x + 7 như cũ) nằm trên giấy, không đè lên trục
       const L = 6;
-      khungDat(khungLop(gt, 'thoai|' + w + '|' + h + '|' + nw + '|' + tx, w + 2 + L * 2, h + 10, () => {
+      khungDat(khungLop(gt, 'thoai|' + w + '|' + h + '|' + nw + '|' + tx + '|' + th, w + 2 + L * 2, h + 10, () => {
         const Y = 7;
         rr(L + 1, Y + 2, w, h, 'rgba(0,0,0,0.45)', 2);
         khungVeDeu(gt, 0, Y - 2, w + L * 2, h + 4);
-        if (nw) { rr(L + 6, 0, nw, 12, C.dk, 2); rr(L + 7, 1, nw - 2, 10, C.br, 1); R(L + 8, 2, nw - 4, 8, C.patD); R(L + 9, 1, nw - 6, 1, C.hi); }
+        if (nw) { rr(L + 6, 0, nw, th, C.dk, 2); rr(L + 7, 1, nw - 2, th - 2, C.br, 1); R(L + 8, 2, nw - 4, th - 4, C.patD); R(L + 9, 1, nw - 6, 1, C.hi); }
         if (tx >= 0) for (let i = 0; i < 5; i++) { R(L + tx + i, Y + h - 1 + i, 9 - i * 2 > 0 ? 9 - i * 2 : 1, 1, i === 0 ? '#f3e8c8' : C.dk); if (9 - i * 2 > 2) R(L + tx + i + 1, Y + h - 1 + i, 7 - i * 2, 1, '#f3e8c8'); }
       }), x - L, y - 7, w + 2 + L * 2, h + 10);
+      if (chuMoi()) { // chu-lech-khung: thẻ tên + lời thoại trong lòng cuộn giấy
+        if (name) T.chuTrongKhung(name, x + 6, y - 7, nw, th, { vien: [2, 2, 2, 2], size: 7.5, bold: true, color: C.hi });
+        T.chuTrongKhung(text, x - L, y - 2, w + L * 2, h + 4, { khung: 'gd-khung-thoai', vien: [7, 11, 6, 11], align: 'left', dong: lines.length + 1, gian: 3, size, min: Math.min(size, 7), bold: true, color: '#2a1a14', shadow: false });
+        return h;
+      }
       if (name) txt(name, x + 6 + nw / 2, y + 1.6, { size: 7.5, bold: true, align: 'center', color: C.hi });
       lines.forEach((l, i) => txt(l, x + 7, y + 8 + size + i * (size + 3), { size, bold: true, color: '#2a1a14', shadow: false }));
       return h;
     }
-    put(layer('dlg|' + w + '|' + h + '|' + nw, w + 2, h + 10, () => {
+    put(layer('dlg|' + w + '|' + h + '|' + nw + '|' + th, w + 2, h + 10, () => {
       const Y = 7;
       rr(1, Y + 2, w, h, 'rgba(0,0,0,0.45)', 2);
       rr(0, Y, w, h, C.dk, 2); rr(1, Y + 1, w - 2, h - 2, C.br, 2); R(3, Y + 1, w - 6, 1, C.hi);
       R(2, Y + 2, w - 4, h - 4, '#f3e8c8'); frame(3, Y + 3, w - 6, h - 6, '#d9c89a');
       for (const q of [[3, Y + 3], [w - 5, Y + 3], [3, Y + h - 5], [w - 5, Y + h - 5]]) R(q[0], q[1], 2, 2, C.br);
-      if (nw) { rr(6, 0, nw, 12, C.dk, 2); rr(7, 1, nw - 2, 10, C.br, 1); R(8, 2, nw - 4, 8, C.patD); R(9, 1, nw - 6, 1, C.hi); }
+      if (nw) { rr(6, 0, nw, th, C.dk, 2); rr(7, 1, nw - 2, th - 2, C.br, 1); R(8, 2, nw - 4, th - 4, C.patD); R(9, 1, nw - 6, 1, C.hi); }
       // đuôi chỉ xuống người đang nói
       const tx = o.tail == null ? 18 : o.tail; if (tx >= 0) for (let i = 0; i < 5; i++) { R(tx + i, Y + h - 1 + i, 9 - i * 2 > 0 ? 9 - i * 2 : 1, 1, i === 0 ? '#f3e8c8' : C.dk); if (9 - i * 2 > 2) R(tx + i + 1, Y + h - 1 + i, 7 - i * 2, 1, '#f3e8c8'); }
     }), x, y - 7);
+    if (chuMoi()) {
+      if (name) T.chuTrongKhung(name, x + 6, y - 7, nw, th, { vien: [2, 2, 2, 2], size: 7.5, bold: true, color: C.hi });
+      T.chuTrongKhung(text, x, y, w, h, { vien: [3, 5, 3, 5], align: 'left', dong: lines.length + 1, gian: 3, size, min: Math.min(size, 7), bold: true, color: '#2a1a14', shadow: false });
+      return h;
+    }
     if (name) txt(name, x + 6 + nw / 2, y + 1.6, { size: 7.5, bold: true, align: 'center', color: C.hi });
     lines.forEach((l, i) => txt(l, x + 7, y + 8 + size + i * (size + 3), { size, bold: true, color: '#2a1a14', shadow: false }));
     return h;
@@ -29447,7 +29771,7 @@ MA._xong();
         khungVe(gkd, X, Y, w, h);
         if (rar >= 0) { const e = RAR[rar]; R(X + 3, Y + 1, w - 6, 1, e); R(X + 3, Y + h - 2, w - 6, 1, e); R(X + 1, Y + 3, 1, h - 6, e); R(X + w - 2, Y + 3, 1, h - 6, e); } // đường chỉ màu bậc, đúng chỗ vành màu bậc của hình code (không lấn vào chữ)
       }), x - 1, y - 1, w + 2, h + 3);
-      if (o.title) txt(o.title, x + 7, y + 12, { size: 6.5, color: C.sub });
+      if (o.title) tieuDeThe(o.title, x, y, w, h, true);
       return;
     }
     put(layer('cd|' + w + '|' + h + '|' + rar + '|' + st, w + 2, h + 3, () => {
@@ -29458,9 +29782,13 @@ MA._xong();
       if (h >= 30) { saw(X + 4, Y + 3, w - 8, rar >= 0 ? RARD[rar] : C.brD, false); saw(X + 4, Y + h - 6, w - 8, rar >= 0 ? RARD[rar] : C.brD, true); }
       for (const q of [[X + 3, Y + 3], [X + w - 5, Y + 3], [X + 3, Y + h - 5], [X + w - 5, Y + h - 5]]) R(q[0], q[1], 2, 2, edge);
     }), x - 1, y - 1);
-    if (o.title) txt(o.title, x + 7, y + 12, { size: 6.5, color: C.sub });
+    if (o.title) tieuDeThe(o.title, x, y, w, h, false);
   };
 
+  function tieuDeThe(title, x, y, w, h, anh) { // chữ nhỏ đầu thẻ: trái, trong lòng thẻ (chu-lech-khung)
+    if (!chuMoi()) return txt(title, x + 7, y + 12, { size: 6.5, color: C.sub });
+    T.chuTrongKhung(title, x, y, w, h, { khung: anh ? 'gd-the-thuong' : null, vien: h >= 30 ? [5, 4, 5, 4] : [3, 4, 3, 4], vung: [x + 5, y, w - 5, 15], align: 'left', size: 6.5, bold: false, color: C.sub });
+  }
   // ---------- tài nguyên hiện bằng biểu tượng, không dùng chữ ----------
   // Mỗi tài nguyên một hình pixel 7x7. Chạm vào biểu tượng thì hiện tên trong chốc lát.
   const RES = {
@@ -29501,7 +29829,9 @@ MA._xong();
     if (tip && G.time < tip.t) {
       ui.font(7.5, true);
       const w = Math.ceil(G.ux.measureText(tip.s).width) + 12, x = G.clamp(tip.x - w / 2, 2, 478 - w), y = tip.y < 20 ? tip.y + 11 : tip.y - 16;
-      T.plate(x, y, w, 14); oldText(tip.s, x + w / 2, y + 10, { size: 7.5, bold: true, align: 'center', color: C.hi });
+      T.plate(x, y, w, 14);
+      if (chuMoi()) T.chuTrongKhung(tip.s, x, y, w, 14, { khung: 'gd-khung-nho', vien: [2, 2, 2, 2], size: 7.5, bold: true, color: C.hi }); // chu-lech-khung
+      else oldText(tip.s, x + w / 2, y + 10, { size: 7.5, bold: true, align: 'center', color: C.hi });
     } else tip = null;
   };
   T.tipNow = () => (tip && G.time < tip.t ? tip.s : null);
@@ -29599,8 +29929,14 @@ MA._xong();
         T.card(x, y + dy + (held ? 1 : 0), w, h, { sel: held || q.sel });
         c.globalAlpha = ga;
         const size = o.size || 9, col = o.disabled ? '#8fa49e' : C.ink;
+        if (chuMoi()) { // chu-lech-khung: chữ trong lòng thẻ (gd-the-thuong / thẻ code)
+          const kh = { khung: 'gd-the-thuong', vien: h >= 30 ? [6, 4, 6, 4] : [3, 4, 3, 4], size, bold: true, color: col, dy: dy + (held ? 1 : 0), dong: 2 };
+          if (label) T.chuTrongKhung(label, x, y, w, h, Object.assign(kh, o.sub ? { dong: 1, phu: { s: o.sub, size: o.subSize || 7, bold: false, color: o.disabled ? '#8fa49e' : '#e8d9a8' } } : {}));
+          else if (o.sub) T.chuTrongKhung(o.sub, x, y, w, h, Object.assign(kh, { size: o.subSize || 7, bold: false, color: o.disabled ? '#8fa49e' : '#e8d9a8' }));
+        } else {
         if (label) nhan(label, x + w / 2, y + h / 2 + size * 0.36 - (o.sub ? 4 : 0), w - 8, { size, bold: true, align: 'center', color: col });
         if (o.sub) nhan(o.sub, x + w / 2, y + h / 2 + 8, w - 8, { size: o.subSize || 7, bold: false, align: 'center', color: o.disabled ? '#8fa49e' : '#e8d9a8' });
+        }
         return !o.disabled && clicked(x, y, w, h);
       }
       return T.btn(x, y, w, h, label, q);
@@ -31694,20 +32030,21 @@ MA._xong();
     });
     // cột phải: chi tiết
     const w = sv.weapons.find((q) => q.id === U.sel);
-    const rx = x + lw + 6, rw = wd - lw - 6;
+    const rx = x + lw + 6, rw = wd - lw - 6, l5 = T.chuMoi && T.chuMoi() ? 6 : 5; // chu-lech-khung: lòng ô ảnh từ 3,5 + 2 đệm
     T.inset(rx, y, rw, h - 16, false);
     if (!w) { ui.text(G.tv('Chọn một vũ khí để ép.'), rx + 6, y + 14, { size: 7.5, color: SOFT }); return y + h - 16; }
     const b = E.bac(w), t = b + 1, g = E.gia(t), tl = E.tiLe(w);
     let yy = y + 11;
-    tx(G.wName(w) + ' · ' + G.t('Bậc {0}', E.tenBac(b)), rx + 5, yy, rw - 10, { size: 8, bold: true, color: E.mauBac(b) });
+    if (T.chuMoi && T.chuMoi()) T.chuO(G.wName(w) + ' · ' + G.t('Bậc {0}', E.tenBac(b)), rx, y, rw, h - 16, { align: 'left', vung: [rx, y, rw, 15], size: 8, min: 7, bold: true, color: E.mauBac(b) }); // chu-lech-khung: dòng đầu tránh núm góc ô
+    else tx(G.wName(w) + ' · ' + G.t('Bậc {0}', E.tenBac(b)), rx + 5, yy, rw - 10, { size: 8, bold: true, color: E.mauBac(b) });
     yy += 10;
     const k0 = CF.tong[b], k1 = t <= MAX ? CF.tong[t] : null;
-    tx(k1 ? G.t('Sức mạnh vũ khí ×{0} → ×{1}', so2(k0), so2(k1)) : G.t('Sức mạnh vũ khí ×{0} → ×{1}', so2(k0), so2(k0)), rx + 5, yy, rw - 10, { size: 6.8, color: TXT });
+    tx(k1 ? G.t('Sức mạnh vũ khí ×{0} → ×{1}', so2(k0), so2(k1)) : G.t('Sức mạnh vũ khí ×{0} → ×{1}', so2(k0), so2(k0)), rx + l5, yy, rw - 10, { size: 6.8, color: TXT });
     yy += 9;
     const ph = E.chuPhu(w, t <= MAX ? t : b);
-    if (ph) { tx((t <= MAX ? G.t('Ép lên {0}', E.tenBac(t)) + ': ' : '') + ph, rx + 5, yy, rw - 10, { size: 6.5, color: SOFT }); yy += 9; }
+    if (ph) { tx((t <= MAX ? G.t('Ép lên {0}', E.tenBac(t)) + ': ' : '') + ph, rx + l5, yy, rw - 10, { size: 6.5, color: SOFT }); yy += 9; }
     // dòng hiệu ứng
-    tx(soDong(b) ? 'Dòng hiệu ứng (khi đang cầm)' : 'Từ Bậc Tím mỗi bậc mở 1 dòng hiệu ứng.', rx + 5, yy, rw - 10, { size: 6.5, bold: !!soDong(b), color: soDong(b) ? GOLD : SOFT });
+    tx(soDong(b) ? 'Dòng hiệu ứng (khi đang cầm)' : 'Từ Bậc Tím mỗi bậc mở 1 dòng hiệu ứng.', rx + l5, yy, rw - 10, { size: 6.5, bold: !!soDong(b), color: soDong(b) ? GOLD : SOFT });
     yy += 3;
     const gd2 = E.giaDoi(w);
     (w.ep && w.ep.d ? w.ep.d : []).forEach((d, i) => {
@@ -31725,7 +32062,7 @@ MA._xong();
     if (ro) return y + h - 16;
     if (U.doi != null && w.ep && w.ep.d && w.ep.d[U.doi]) { // xác nhận đổi dòng
       const d = w.ep.d[U.doi];
-      tx(G.t('Đổi dòng · {0}', E.chuDong(w, d)) + ' — ' + G.t('Tốn: {0}', costText(gd2)), rx + 5, yb + 8, rw - 10, { size: 6.5, color: TXT });
+      tx(G.t('Đổi dòng · {0}', E.chuDong(w, d)) + ' — ' + G.t('Tốn: {0}', costText(gd2)), rx + l5, yb + 8, rw - 10, { size: 6.5, color: TXT });
       if (T.sbtn(rx + 5, yb + 14, 70, 15, 'Đổi', { size: 7, pad: 1, primary: true })) {
         const nd = E.doiDong(sv, w, U.doi);
         U.doi = null;
@@ -31734,11 +32071,11 @@ MA._xong();
       if (T.sbtn(rx + 80, yb + 14, 50, 15, 'Thôi', { size: 7, pad: 1 })) U.doi = null;
       return y + h - 16;
     }
-    if (!g) { ui.text(G.tv('Đã tối đa (Rực lửa)'), rx + 5, yb + 18, { size: 8, bold: true, color: GOOD }); return y + h - 16; }
+    if (!g) { ui.text(G.tv('Đã tối đa (Rực lửa)'), rx + l5, yb + 18, { size: 8, bold: true, color: GOOD }); return y + h - 16; }
     const tu = E.tutVe(w);
-    tx(G.t('Tốn: {0}', costText(g)), rx + 5, yb + 2, rw - 50, { size: 6.5, color: coTien(sv, g) ? WARN : TXT });
-    tx(tl.may > 0 ? G.t('Tỉ lệ: {0}% (+{1}% may mắn)', Math.round(CF.tiLe[t] * 100), Math.round(tl.may * 100)) : G.t('Tỉ lệ: {0}%', Math.round(tl.tong * 100)), rx + 5, yb + 11, rw - 50, { size: 6.8, bold: true, color: tl.tong >= 0.75 ? GOOD : tl.tong >= 0.45 ? GOLD : WARN });
-    tx(tu == null ? 'Thất bại: giữ bậc, mất đá và vàng' : G.t('Thất bại: tụt về Bậc {0}', E.tenBac(tu)), rx + 5, yb + 20, rw - 50, { size: 6.5, color: tu == null ? SOFT : WARN });
+    tx(G.t('Tốn: {0}', costText(g)), rx + l5, yb + 2, rw - 50, { size: 6.5, color: coTien(sv, g) ? WARN : TXT });
+    tx(tl.may > 0 ? G.t('Tỉ lệ: {0}% (+{1}% may mắn)', Math.round(CF.tiLe[t] * 100), Math.round(tl.may * 100)) : G.t('Tỉ lệ: {0}%', Math.round(tl.tong * 100)), rx + l5, yb + 11, rw - 50, { size: 6.8, bold: true, color: tl.tong >= 0.75 ? GOOD : tl.tong >= 0.45 ? GOLD : WARN });
+    tx(tu == null ? 'Thất bại: giữ bậc, mất đá và vàng' : G.t('Thất bại: tụt về Bậc {0}', E.tenBac(tu)), rx + l5, yb + 20, rw - 50, { size: 6.5, color: tu == null ? SOFT : WARN });
     const why = E.duoc(sv, w);
     const lam = (dungBua) => {
       const kq = E.ep(sv, w, dungBua);
@@ -31751,15 +32088,22 @@ MA._xong();
       else { G.sfx('ui'); U.fx = { k: 'fail', t0: G.time || 0 }; say(kq.bua ? G.t('Bùa giữ bậc đã giữ {0} ở Bậc {1}.', ten, E.tenBac(kq.b1)) : G.t('{0} ép hỏng, giữ Bậc {1}.', ten, E.tenBac(kq.b1))); }
     };
     if (U.hoi === w.id && tu != null) { // hỏi xác nhận khi có nguy cơ tụt bậc
+      const coBua = E.bua(sv) > 0, hoiChu = coBua ? G.t('Thất bại sẽ tụt về Bậc {0} — dùng Bùa giữ bậc?', E.tenBac(tu)) : G.t('Thất bại sẽ tụt về Bậc {0}. Không có Bùa giữ bậc. Vẫn ép?', E.tenBac(tu));
+      let yq = yb + 16; const nh = T.chuMoi && T.chuMoi() ? 15 : 14;
+      if (T.chuMoi && T.chuMoi()) { // chu-lech-khung: hộp cao 36 thì dòng hỏi nằm trên viền ảnh → hộp cao 40 (lên trên 4), lời hỏi trong lòng hộp, nút dưới
+        const go = T.khungCanhBao && T.khungCanhBao(rx + 1, yb - 8, rw - 2, 40);
+        if (!go) ui.rect(rx + 1, yb - 8, rw - 2, 40, 'rgba(20,10,10,0.94)', '#ff9a5a');
+        T.chuTrongKhung(hoiChu, rx + 1, yb - 8, rw - 2, 40, { khung: go ? 'gd-khung-canh-bao' : null, vien: [2, 2, 2, 2], vung: [rx + 1, yb - 8, rw - 2, 20.5], align: 'left', dong: 2, gian: 1.5, size: 7, min: 6.5, bold: false, color: TXT });
+        yq = yb + 12.5;
+      } else {
       if (!(T.khungCanhBao && T.khungCanhBao(rx + 1, yb - 4, rw - 2, 36))) ui.rect(rx + 1, yb - 4, rw - 2, 36, 'rgba(20,10,10,0.94)', '#ff9a5a'); // 15/10: ảnh gd-khung-canh-bao
-      const coBua = E.bua(sv) > 0;
-      ui.para(coBua ? G.t('Thất bại sẽ tụt về Bậc {0} — dùng Bùa giữ bậc?', E.tenBac(tu)) : G.t('Thất bại sẽ tụt về Bậc {0}. Không có Bùa giữ bậc. Vẫn ép?', E.tenBac(tu)), rx + 5, yb + 4, rw - 10, { size: 6.5, color: TXT });
-      const yq = yb + 16;
+      ui.para(hoiChu, rx + 5, yb + 4, rw - 10, { size: 6.5, color: TXT });
+      }
       if (coBua) {
-        if (T.sbtn(rx + 5, yq, 60, 14, 'Dùng bùa', { size: 6.8, pad: 1, primary: true })) lam(true);
-        if (T.sbtn(rx + 68, yq, 60, 14, 'Không dùng', { size: 6.8, pad: 1, danger: true })) lam(false);
-      } else if (T.sbtn(rx + 5, yq, 60, 14, 'Vẫn ép', { size: 6.8, pad: 1, danger: true })) lam(false);
-      if (T.sbtn(rx + rw - 46, yq, 40, 14, 'Thôi', { size: 6.8, pad: 1 })) U.hoi = null;
+        if (T.sbtn(rx + 5, yq, 60, nh, 'Dùng bùa', { size: 6.8, pad: 1, primary: true })) lam(true);
+        if (T.sbtn(rx + 68, yq, 60, nh, 'Không dùng', { size: 6.8, pad: 1, danger: true })) lam(false);
+      } else if (T.sbtn(rx + 5, yq, 60, nh, 'Vẫn ép', { size: 6.8, pad: 1, danger: true })) lam(false);
+      if (T.sbtn(rx + rw - 46, yq, 40, nh, 'Thôi', { size: 6.8, pad: 1 })) U.hoi = null;
       return y + h - 16;
     }
     if (T.sbtn(rx + rw - 46, yb + 2, 42, 24, 'Ép', { size: 8.5, pad: 1, primary: !why, disabled: !!why })) {
@@ -32101,8 +32445,9 @@ MA._xong();
     const h = A.homNay(), o = A.st(sv);
     ui.text(G.t('{0} · {1}', G.tv(THU[h.thu]), h.d.getDate() + '/' + (h.d.getMonth() + 1)), 60, 160, { size: 9, bold: true, align: 'center', color: GOLD });
     ui.text(G.t('Ngày mới sau {0}', dongHo(A.conLaiGiay())), 60, 172, { size: 7, align: 'center', color: SOFT });
-    ui.para('Thắng mới trừ lượt. Mỗi ải 3 lượt mỗi ngày, hồi lúc 0 giờ.', 14, 186, 94, { size: 6.5, color: SOFT });
-    ui.para(G.t('Chiều sâu: 1 phòng, {0} đợt quái, tinh anh cuối', CF.dot), 14, 222, 94, { size: 6.5, color: SOFT });
+    const lx = T.chuMoi && T.chuMoi() ? 17 : 14, lw = T.chuMoi && T.chuMoi() ? 91 : 94; // chu-lech-khung: lòng khung bảng bắt đầu ở x 14,5 (+2 đệm)
+    ui.para('Thắng mới trừ lượt. Mỗi ải 3 lượt mỗi ngày, hồi lúc 0 giờ.', lx, 186, lw, { size: 6.5, color: SOFT });
+    ui.para(G.t('Chiều sâu: 1 phòng, {0} đợt quái, tinh anh cuối', CF.dot), lx, 222, lw, { size: 6.5, color: SOFT });
     if (!A.bat() || !A.mo(sv)) { ui.para(A.bat() ? 'Hạ trùm vùng Rừng già để mở ải ngày.' : 'Ải ngày đang tắt (?aingay=0)', 120, 70, 340, { size: 9, color: WARN }); return; }
     CF.thuTu.forEach((loai, i) => {
       const a = CF.ai[loai], y = 52 + i * 70, mo = A.moHomNay(loai), con = o ? o.luot[loai] | 0 : 0;
@@ -32222,10 +32567,20 @@ MA._xong();
           T.inset(bx, ry, bw, bh, sel, { fill: r > 0 ? '#3a3014' : open ? '#1f3f3e' : '#152524', col: sel ? null : r >= nd.max ? '#ffd23f' : can ? GOOD : open ? '#3f6a64' : '#22302f' });
           // hàng cao thì chấm bậc nằm dưới tên; hàng thấp (Hành trang) thì chấm bậc nằm bên phải tên
           const low = bh < 18, pw = nd.max * 5, px0 = low ? bx + bw - pw - 3 : bx + 3, py = low ? ry + Math.round(bh / 2) - 1 : ry + bh - 5;
+          if (T.chuMoi && T.chuMoi()) { // chu-lech-khung: tên nút / "cần N" / "+" đặt trong lòng ô (ảnh ô con viền ~2 điểm)
+            const nhanPhai = !open && (on || nd.need > 0) ? G.t('cần {0}', nd.need) : can ? '+' : '';
+            ui.font(6.5, false, true);
+            const rW = nhanPhai === '+' ? 9 : nhanPhai ? Math.ceil(G.ux.measureText(G.tv(nhanPhai)).width) + 6 : 0, nameW = low ? (open ? bw - pw - (can ? 16 : 8) + 3 : bw - rW - 4) : bw;
+            T.chuO(nd.name, bx, ry, bw, bh, { sel, align: 'left', vung: [bx, ry, nameW, low ? bh : bh - 5], size: 6.5, min: 6, bold: true, color: r > 0 ? GOLD : open ? TXT : LOCK });
+            if (open) for (let j = 0; j < nd.max; j++) { const c = G.ux; c.fillStyle = j < r ? '#ffd23f' : open ? '#0d1716' : '#1a2423'; c.fillRect(px0 + j * 5, py, 4, 3); }
+            if (nhanPhai === '+') T.chuO('+', bx, ry, bw, bh, { sel, align: low ? 'center' : 'right', vung: low ? [px0 - 10, ry, 9, bh] : [bx + bw - rW - 3, ry + bh - 10, rW + 3, 10], size: 8, min: 6.5, bold: true, color: GOOD });
+            else if (nhanPhai) T.chuO(nhanPhai, bx, ry, bw, bh, { sel, align: 'right', vung: low ? [bx + bw - rW - 3, ry, rW + 3, bh] : [bx + bw - rW - 3, ry + bh - 10, rW + 3, 10], size: 6.5, min: 6, bold: false, color: LOCK });
+          } else {
           tx(nd.name, bx + 3, low ? ry + bh / 2 + 2.5 : ry + 8.5, low ? (open ? bw - pw - (can ? 16 : 8) : bw - 34) : bw - 6, { size: 6.5, bold: true, co: true, color: r > 0 ? GOLD : open ? TXT : LOCK });
           if (open) for (let j = 0; j < nd.max; j++) { const c = G.ux; c.fillStyle = j < r ? '#ffd23f' : open ? '#0d1716' : '#1a2423'; c.fillRect(px0 + j * 5, py, 4, 3); }
           if (!open && (on || nd.need > 0)) tx(G.t('cần {0}', nd.need), bx + bw - 3, low ? ry + bh / 2 + 2.5 : ry + bh - 2, 26, { size: 6.5, align: 'right', color: LOCK });
           else if (can) tx('+', low ? px0 - 7 : bx + bw - 6, low ? ry + bh / 2 + 3 : ry + bh - 2, 8, { size: 8, bold: true, color: GOOD });
+          }
           U.boxes[cay + '/' + nd.id] = [bx, ry, bw, bh];
           if (G.click && G.inRect(G.click, bx - 1, ry - 1, bw + 2, bh + 2)) {
             G.click = null; G.sfx && G.sfx('ui');
@@ -32259,7 +32614,8 @@ MA._xong();
     const dy = Y + H - detailH;
     T.inset(X, dy, Wd, detailH, false, { fill: '#10201f' });
     const can = on && !o.ro && !CH.why(hs, nd.id, key), bw = 54;
-    tx(G.tv(nd.name) + ' ' + r + '/' + nd.max + ' · ' + G.tv(Tr.name), X + 4, dy + 9, Wd - bw - 12, { size: 7.5, bold: true, color: G.EL[Tr.el].col2 });
+    if (T.chuMoi && T.chuMoi()) T.chuO(G.tv(nd.name) + ' ' + r + '/' + nd.max + ' · ' + G.tv(Tr.name), X, dy, Wd, detailH, { align: 'left', vung: [X, dy, Wd - bw - 8, 13], size: 7.5, bold: true, color: G.EL[Tr.el].col2 }); // chu-lech-khung
+    else tx(G.tv(nd.name) + ' ' + r + '/' + nd.max + ' · ' + G.tv(Tr.name), X + 4, dy + 9, Wd - bw - 12, { size: 7.5, bold: true, color: G.EL[Tr.el].col2 });
     const why = !on ? G.t('Dùng {0} trước mới học được', Tr.name) : CH.why(hs, nd.id, key);
     const line = (r >= nd.max ? G.t('Đã đủ bậc: {0}', nd.desc(r)) : r > 0 ? G.t('Bậc {0}: {1}', r + 1, nd.desc(r + 1)) : G.tv(nd.d1)) + (why && why !== 'Đã đủ bậc' ? ' (' + G.tv(why) + ')' : '');
     para(line, X + 4, dy + 18, Wd - bw - 12, 2, { size: 6.5, color: why && why !== 'Đã đủ bậc' ? SOFT : TXT });
@@ -33162,7 +33518,7 @@ MA._xong();
     const ga = c.globalAlpha, gd = G.VFX ? +G.VFX.giaoDien : 1;
     let y = by, hop = null, dong = 0;
     for (const r of rows) {
-      const e = r.e, lh = r.size + 2.5, bh = Math.round(r.lines.length * lh + 4);
+      const e = r.e, lh = r.size + 2.5, bh = Math.round(r.lines.length * lh + (T.chuMoi && T.chuMoi() ? 6 : 4)); // chu-lech-khung: +2 cao để chữ có dấu không chạm viền tấm
       let tw = 0;
       ui.font(r.size, true);
       for (const l of r.lines) tw = Math.max(tw, c.measureText(l).width);
@@ -33174,7 +33530,8 @@ MA._xong();
       const age = G.time - e.at, py = Math.round(e.y);
       c.globalAlpha = ga * (gd > 0 ? Math.min(1, age < 0.12 ? 0.35 + (age / 0.12) * 0.65 : 1, e.b.t < 0.3 ? Math.max(0, e.b.t / 0.3) : 1) : 1);
       T.plate(px, py, pw, bh, { a: D.nen });
-      r.lines.forEach((l, i) => ui.text(l, mid, py + r.size + 1 + i * lh, { size: r.size, align: 'center', bold: true, color: e.col || '#ffd27a' }));
+      if (T.chuMoi && T.chuMoi()) T.chuTam(r.lines.join(' '), px, py, pw, bh, { dong: r.lines.length, gian: 2.5, size: r.size, min: Math.min(r.size, 7), bold: true, color: e.col || '#ffd27a' });
+      else r.lines.forEach((l, i) => ui.text(l, mid, py + r.size + 1 + i * lh, { size: r.size, align: 'center', bold: true, color: e.col || '#ffd27a' }));
       hop = hop ? [Math.min(hop[0], px), Math.min(hop[1], py), Math.max(hop[2], px + pw), Math.max(hop[3], py + bh)] : [px, py, px + pw, py + bh];
       dong += r.lines.length;
       y += bh + 1;
@@ -33289,10 +33646,17 @@ MA._xong();
       const chips = [];
       for (const l of b.layers) chips.push([l.type === 'resist' ? G.t('Kháng {0}', G.EL[l.el].name) : G.tv(G.layerText(l)), l.type === 'resist' ? G.EL[l.el].dark : '#1f4f4a', '#f1e6c6']);
       if (b.weak.length) chips.push([G.t('Yếu {0}', b.weak.map((e) => G.tv(G.EL[e].name)).join(', ')), 'rgba(20,14,8,0.9)', G.EL[b.weak[0]].col]);
-      ui.font(doc ? 7 : 6.5, true);
-      let tot = 0; for (const q of chips) { q[3] = Math.ceil(G.ux.measureText(q[0]).width) + 8; tot += q[3] + 3; }
+      const moi = T.chuMoi && T.chuMoi(), ch = moi ? 13 : 10, cs = doc ? 7.5 : 7; // chu-lech-khung: thẻ ảnh viền trắng dày, cao 10 chỉ có lòng 5 điểm → cao 13 (vành giữ 2,5), rộng chữ + 12; chữ đo đúng cỡ vẽ (trước đo 6,5 mà vẽ 7,5)
+      if (moi) ui.font(cs, true, true); else ui.font(doc ? 7 : 6.5, true);
+      let tot = 0; for (const q of chips) { q[3] = Math.ceil(G.ux.measureText(q[0]).width) + (moi ? 12 : 8); tot += q[3] + 3; }
       let lx = Math.round(240 - (tot - 3) / 2);
-      for (const q of chips) {
+      if (moi) for (const q of chips) {
+        const go = T.theNho && T.theNho(lx, topY + 1, q[3], ch, q[1]);
+        if (!go) { ui.rect(lx, topY + 1, q[3], ch, q[1], '#1a120a'); ui.rect(lx + 1, topY + 1, q[3] - 2, 1, 'rgba(255,240,196,0.25)'); }
+        T.chuTrongKhung(q[0], lx, topY + 1, q[3], ch, { khung: go ? 'gd-the-nho' : null, vienAnh: go ? T.VIEN_THE_NHO : null, vien: [1, 1, 1, 1], size: cs, min: 6.5, bold: true, color: q[2] });
+        lx += q[3] + 3;
+      }
+      else for (const q of chips) {
         if (!(T.theNho && T.theNho(lx, topY + 1, q[3], 10, q[1]))) { // 15/10 (khung-gd-con): thẻ ảnh gd-the-nho nhuộm màu chip; chưa có ảnh thì như cũ
           ui.rect(lx, topY + 1, q[3], 10, q[1], '#1a120a');
           ui.rect(lx + 1, topY + 1, q[3] - 2, 1, 'rgba(255,240,196,0.25)');
@@ -33300,7 +33664,7 @@ MA._xong();
         ui.text(q[0], lx + q[3] / 2, topY + 8.5, { size: doc ? 7 : 6.5, bold: true, align: 'center', color: q[2] });
         lx += q[3] + 3;
       }
-      if (chips.length) topY += 12;
+      if (chips.length) topY += moi ? 15 : 12;
       if (b.exposed > 0) { if (doc) nenChu(['LỘ ĐIỂM YẾU!'], 240, topY + 9, 8.5); ui.text('LỘ ĐIỂM YẾU!', 240, topY + 9, { size: 8.5, align: 'center', color: Math.floor(G.time * 8) % 2 ? '#ffd23f' : '#fff3b0', bold: true }); topY += 11; }
     } else if (W.type === 'elite' && S.mode === 'play') {
       // phòng tinh anh: khung nhỏ ở mép trên với tên loài và dấu hiệu (nhanh, bọc giáp...)
@@ -33351,7 +33715,7 @@ MA._xong();
       const bold = doc || q[1] !== '#f1e6c6', lines = ui.wrap(q[0], lx1 - lx0 - 10, 7, bold).slice(0, 4); // Đợt 8: lời chỉ dẫn cũng chữ đậm
       let tw = 0; ui.font(7, bold);
       for (const l of lines) tw = Math.max(tw, G.ux.measureText(l).width);
-      const pw = Math.min(lx1 - lx0, Math.ceil(tw) + 12), ph = Math.round(lines.length * 9.5 + 6), mid = (lx0 + lx1) / 2, px = Math.round(mid - pw / 2), ga = G.ux.globalAlpha;
+      const pw = Math.min(lx1 - lx0, Math.ceil(tw) + (T.chuMoi && T.chuMoi() ? 16 : 12)), ph = Math.round(lines.length * 9.5 + 6), mid = (lx0 + lx1) / 2, px = Math.round(mid - pw / 2), ga = G.ux.globalAlpha;
       const py = len ? by : 269 - ph;
       if (len) by += ph + 2;
       // Rà soát C: ô chữ ở đáy (y 244–269) che chân em bé / quái / vùng sát thương ở mép dưới sàn: lúc có ai hay vùng nào dưới ô thì mờ còn 35%
@@ -33527,8 +33891,13 @@ MA._xong();
     // ô hình vũ khí: khung + màu chữ theo bậc ép đồ (14/10: bỏ bậc màu cũ G.RARITY)
     G.oBacVk(x + 2, y + 1, 20, w);
     G.art.weaponIcon(G.ux, w, x + 12, y + 11, 17);
+    if (G.theme.chuMoi()) { // chu-lech-khung: tên (nửa trên) và dòng linh khí (nửa dưới) mỗi dòng trong dải riêng của lòng ô; dài thì thu cỡ rồi mới cắt "…"
+      G.theme.chuO(G.wName(w), x, y, wd, 22, { sel, align: 'left', vung: [x + 24, y, wd - 24 - (rightPad || 0), 11.5], size: 7.5, min: 6.5, bold: true, color: G.bacMauVk(w) });
+      G.theme.chuO(mi.txt, x, y, wd, 22, { sel, align: 'left', vung: [x + 24, y + 10.5, wd - 24, 11.5], size: 6.5, bold: false, color: mi.col === '#666' ? '#a9c2b4' : mi.col });
+    } else {
     ui.text(cutLine(G.wName(w), wd - 30 - (rightPad || 0), 7.5, true), x + 26, y + 9.5, { size: 7.5, bold: true, color: G.bacMauVk(w) });
     ui.text(cutLine(mi.txt, wd - 30, 6.5), x + 26, y + 18.5, { size: 6.5, color: mi.col === '#666' ? '#a9c2b4' : mi.col });
+    }
     return G.click && G.inRect(G.click, x, y, wd, 22);
   }
   G.weaponLine = weaponLine;
@@ -35173,9 +35542,10 @@ MA._xong();
     const pages = Math.max(1, Math.ceil(n / per));
     V.page = G.clamp(V.page, 0, pages - 1);
     if (pages > 1) {
-      if (T.sbtn(x, y - 1, 26, 18, '‹', { size: 10, pad: 4 })) V.page = (V.page + pages - 1) % pages;
+      const r = T.chuMoi() ? 2 : 0; // chu-lech-khung: nút ảnh rộng 26 thì hai đinh góc trong dồn vào giữa, đè lên mũi tên → rộng 30 (cùng tâm)
+      if (T.sbtn(x - r, y - 1, 26 + r * 2, 18, '‹', { size: 10, pad: 4 })) V.page = (V.page + pages - 1) % pages;
       ui.text(G.t('Trang {0}/{1}', V.page + 1, pages), x + 50, y + 11.5, { size: 7.5, align: 'center', color: SOFT });
-      if (T.sbtn(x + 74, y - 1, 26, 18, '›', { size: 10, pad: 4 })) V.page = (V.page + 1) % pages;
+      if (T.sbtn(x + 74 - r, y - 1, 26 + r * 2, 18, '›', { size: 10, pad: 4 })) V.page = (V.page + 1) % pages;
     }
     return pages;
   }
@@ -35239,9 +35609,16 @@ MA._xong();
       inkText(q[0], q[1], q[2], 8, night ? '#8a86a8' : '#8a7a58', halo);
       const px = q[3] || q[1], py = q[4] || q[2] + 12;
       ui.font(6.5, true);
+      if (T && T.chuTrongKhung && G.CHU_CU !== true) { // chu-lech-khung: tấm gỗ rộng theo chữ (32 quá hẹp cho "sắp có" / "coming soon"), chữ trong lòng tấm
+        const nhan = G.tc('bản đồ', 'sắp có'), tw = G.ux.measureText(nhan).width, ww = Math.max(32, Math.ceil(tw + 14));
+        const go = T.theSapCo && T.theSapCo(px - ww / 2, py - 7, ww, 10);
+        if (!go) ui.rect(px - ww / 2, py - 7, ww, 10, 'rgba(74,54,38,0.85)');
+        T.chuTrongKhung(nhan, px - ww / 2, py - 7, ww, 10, { khung: go ? 'gd-the-sap-co' : null, vien: [1, 2, 1, 2], size: 6.5, bold: true, color: '#f0e6c8', shadow: go ? undefined : false });
+      } else {
       const go = T && T.theSapCo && T.theSapCo(px - 16, py - 7, 32, 10); // 15/10 (khung-gd-con): tấm gỗ ảnh gd-the-sap-co; chữ vẫn vẽ code (có bóng cho rõ trên gỗ)
       if (!go) ui.rect(px - 16, py - 7, 32, 10, 'rgba(74,54,38,0.85)');
       ui.text(G.tc('bản đồ', 'sắp có'), px, py + 0.6, { size: 6.5, bold: true, align: 'center', color: '#f0e6c8', shadow: go ? undefined : false });
+      }
     }
     // 15 thẻ ải mặt trống; ải chưa qua ghi sức mạnh khuyên dùng, tô màu so với sức mạnh của bé (xanh đủ, vàng sát nút, đỏ thiếu)
     const pw = G.power();
@@ -35274,7 +35651,7 @@ MA._xong();
     T.panel(248, 206, 226, 60, null, { plain: true, noBand: true });
     if (V.sel) {
       const r = V.sel[0], i = V.sel[1], R = G.REGIONS[r], b = G.stageStats(r, i, V.diff);
-      ui.text(G.t(V.diff ? '{0} · {1} · khó 2' : '{0} · {1}', R.name, i === 4 ? 'Ải trùm' : G.t('Ải {0}', i + 1)), 256, 219, { size: 9.5, bold: true, color: GOLD });
+      ui.text(G.t(V.diff ? '{0} · {1} · khó 2' : '{0} · {1}', R.name, i === 4 ? 'Ải trùm' : G.t('Ải {0}', i + 1)), 256, T.chuMoi() ? 220 : 219, { size: 9.5, bold: true, color: GOLD }); // chu-lech-khung: +1 cho dấu chữ không chạm viền trên
       const l2 = G.t('{0} · 8 phòng · ', i === 4 ? G.t('Trùm {0}', R.bossName) : G.t('Trùm nhỏ {0}', R.mini));
       ui.text(l2, 256, 230, { size: 7, color: TXT });
       ui.font(7); ui.text(G.t('hệ {0}', G.EL[R.el].name), 256 + G.ux.measureText(l2).width, 230, { size: 7, color: G.EL[R.el].col });
@@ -35331,8 +35708,14 @@ MA._xong();
       const h = i < 2 ? (el ? (i ? 34 : 23) : 0) : (el ? 44 : 38);
       if (!h) return;
       T.inset(x0, ry, 214, h - 2, false, { fill: got ? '#24484a' : '#17302f', col: got && E ? E.dark : T.C.brD });
+      const trangThai = locked ? 'Chưa mở' : got ? 'Đã mở' : i === st + 1 && G.vkMoi ? G.t('Sắp mở: {0} linh khí', G.vkMoi.gia(st)) : 'Chưa mở';
+      if (T.chuMoi()) { // chu-lech-khung: tên cấp (trái) và trạng thái (phải) trong dải trên của lòng ô, tránh núm góc
+        T.chuO(q[0], x0, ry, 214, h - 2, { align: 'left', vung: [x0, ry, 60, 14], size: 8, min: 7, bold: true, color: got && E ? E.col : SOFT });
+        T.chuO(trangThai, x0, ry, 214, h - 2, { align: 'right', vung: [x0 + 120, ry, 94, 14], size: 6.5, bold: got, color: locked ? WARN : got ? GOOD : SOFT });
+      } else {
       ui.text(q[0], x0 + 5, ry + 10, { size: 8, bold: true, color: got && E ? E.col : SOFT });
-      ui.text(locked ? 'Chưa mở' : got ? 'Đã mở' : i === st + 1 && G.vkMoi ? G.t('Sắp mở: {0} linh khí', G.vkMoi.gia(st)) : 'Chưa mở', x0 + 209, ry + 10, { size: 6.5, align: 'right', bold: got, tiny: true, color: locked ? WARN : got ? GOOD : SOFT });
+      ui.text(trangThai, x0 + 209, ry + 10, { size: 6.5, align: 'right', bold: got, tiny: true, color: locked ? WARN : got ? GOOD : SOFT });
+      }
       if (q[1]) fitPara(q[1], x0 + 5, ry + 19, 204, { size: 6.5, color: TXT }, 2);
       else if (el) {
         const f = G.HE_FEATURES[el][q[2]];
@@ -35356,7 +35739,7 @@ MA._xong();
     list.slice(V.page * ROWS, V.page * ROWS + ROWS).forEach((w, k) => {
       const y = LIST_Y + k * PITCH;
       if (G.weaponLine(w, CX, y, CW, V.sel === w.id, carry.includes(w.id) ? 48 : 0)) { V.sel = w.id; G.click = null; G.sfx('ui'); }
-      if (carry.includes(w.id)) ui.text('đang mang', CX + CW - 6, y + 9.5, { size: 6.5, align: 'right', color: GOOD });
+      if (carry.includes(w.id)) T.chuO('đang mang', CX, y, CW, 22, { cu: [CX + CW - 6, y + 9.5], sel: V.sel === w.id, align: 'right', vung: [CX + CW - 50, y, 50, 12], size: 6.5, bold: false, color: GOOD });
     });
     ui.text(G.t('{0} vũ khí', list.length), CX + 2, 200.5, { size: 7, color: SOFT });
     // xem bảng linh khí (dấu ấn hệ) và đặc trưng của món đang chọn
@@ -35431,7 +35814,7 @@ MA._xong();
     // Rà soát C: thẻ rộng theo chữ (phông thật trên iPhone rộng hơn, "Nguyên liệu" chạm viền thẻ) nếu băng tiêu đề còn chỗ
     if (G.RSC !== false) {
       ui.font(7.5, true);
-      const rong = tabs.map((t) => Math.max(t[2], Math.ceil(G.ux.measureText(G.tv ? G.tv(t[1]) : t[1]).width) + 9));
+      const rong = tabs.map((t) => Math.max(t[2], Math.ceil(G.ux.measureText(G.tv ? G.tv(t[1]) : t[1]).width) + (T.chuMoi() ? 22 : 9))); // chu-lech-khung: nút ảnh có mây + đinh góc ~9 điểm mỗi bên
       ui.font(11, true);
       const tit = Math.ceil(G.ux.measureText(G.tv ? G.tv('Hàng xén') : 'Hàng xén').width) + 16;
       const du = PW - 70 - tit - tabs.reduce((a, t) => a + t[2] + 2, 0), thieu = rong.map((w, i) => w - tabs[i][2]), tong = thieu.reduce((a, b) => a + b, 0);
@@ -35485,11 +35868,12 @@ MA._xong();
       T.inset(CX, y, CW, 40, false);
       ui.text(G.tv(reg.mat), CX + 8, y + 15, { size: 9, bold: true, color: U.daQua(sv, r) ? TXT : SOFT });
       ui.text(G.t('Đang có {0} · vùng {1}', sv.mats[r], G.tv(reg.name)), CX + 8, y + 29, { size: 7, color: SOFT });
-      if (T.sbtn(CX + CW - 168, y + 10, 76, 20, why || G.t('Đổi 1 ({0})', D.gia), { size: 7.5, pad: 2, disabled: !!why })) {
+      const nY = T.chuMoi() ? y + 6 : y + 10, nH = T.chuMoi() ? 28 : 20; // chu-lech-khung: nút 76×20 không đủ lòng cho "Hạ Ngư Tinh để mở" → cao 28, chữ xuống hai dòng
+      if (T.sbtn(CX + CW - 168, nY, 76, nH, why || G.t('Đổi 1 ({0})', D.gia), { size: 7.5, pad: 2, disabled: !!why })) {
         if (U.doi(sv, r, 1)) { G.persist(); G.sfx('pick'); say(G.t('Của cháu đây, 1 {0}.', G.tv(reg.mat.toLowerCase()))); }
       }
       const k5 = Math.min(5, n);
-      if (T.sbtn(CX + CW - 86, y + 10, 80, 20, G.t('Đổi {0} ({1})', Math.max(1, k5), Math.max(1, k5) * D.gia), { size: 7.5, pad: 2, disabled: !!why || k5 < 2 || sv.gold < k5 * D.gia })) {
+      if (T.sbtn(CX + CW - 86, nY, 80, nH, G.t('Đổi {0} ({1})', Math.max(1, k5), Math.max(1, k5) * D.gia), { size: 7.5, pad: 2, disabled: !!why || k5 < 2 || sv.gold < k5 * D.gia })) {
         const got = U.doi(sv, r, k5);
         if (got) { G.persist(); G.sfx('pick'); say(G.t('Của cháu đây, {0} {1}.', got, G.tv(reg.mat.toLowerCase()))); }
       }
@@ -35538,7 +35922,8 @@ MA._xong();
       ui.text(hoc ? 'đã dạy Cu Tí' : G.t('còn bị {0} bắt', D.boss), nx, ry + 11, { size: 7, color: hoc ? GOOD : SOFT });
       // dòng ngắn (ngan) cho vừa thẻ; đủ chữ ở Hành trang > Nhân vật
       const txt = hoc ? G.tv(D.ngan[0]) + '; ' + G.tv(D.ngan[1]) : G.t('Hạ {0} để cứu bạn ấy. Bạn ấy sẽ dạy Cu Tí: {1}', D.boss, G.tv(D.ngan[0]));
-      ui.para(txt, CX + 36, ry + 20, CW - 42, { size: 6.5, color: hoc ? TXT : SOFT });
+      if (T.chuMoi()) T.chuO(txt, CX, ry, CW, 34, { align: 'left', vung: [CX + 34, ry + 12.5, CW - 34, 21.5], dong: 2, gian: 1.5, size: 6.5, bold: false, color: hoc ? TXT : SOFT }); // chu-lech-khung: hai dòng gọn trong lòng ô
+      else ui.para(txt, CX + 36, ry + 20, CW - 42, { size: 6.5, color: hoc ? TXT : SOFT });
     });
     return left ? G.t('Khẽ thôi, các bé đang chơi trong sân. Còn {0} bạn bị yêu tinh bắt: hạ trùm vùng để cứu, bạn ấy sẽ dạy cháu.', left)
       : 'Ba bạn về đủ cả rồi. Ngón nghề của các bạn, cháu học hết rồi đấy.';
@@ -35684,7 +36069,10 @@ MA._xong();
       if (T.btn(CX + 4, 208, 120, CDH, 'Thôi')) V.confirm = false;
       else if (T.btn(CX + 132, 208, 120, CDH, 'Xoá hết', { danger: true })) { G.resetSave(); V.confirm = false; goHub(); VS.enter({}); VS.say('Đã xoá tiến trình.'); return null; }
     }
-    if (G.VERSION) ui.text(G.t('Phiên bản {0}', G.VERSION), CX + CW - 2, 258, { size: 6.5, align: 'right', color: SOFT });
+    if (G.VERSION) { // chu-lech-khung: góc dưới phải khung bảng có núm tròn: chữ phiên bản đặt trong lòng, tránh núm
+      if (T.chuMoi()) T.chuTrongKhung(G.t('Phiên bản {0}', G.VERSION), PX - 3, PY - 3, PW + 6, PH + 6, { khung: 'gd-khung-bang', kKhung: T.kBang(PW, PH), vien: [7, 7, 7, 7], vung: [CX, 249, CW, 12], align: 'right', size: 6.5, bold: false, color: SOFT });
+      else ui.text(G.t('Phiên bản {0}', G.VERSION), CX + CW - 2, 258, { size: 6.5, align: 'right', color: SOFT });
+    }
     return V.confirm ? 'Ấy ấy! Xoá là mất hết đấy, nghĩ kỹ chưa?' : 'Cốc cốc cốc! Làng nước nghe đây! Cần chỉnh gì cứ bảo anh.';
   }
   // Trang 2: Nhạc, Tiếng, bật/tắt âm thanh, Tiết kiệm pin, Xem lại truyện
@@ -35927,7 +36315,7 @@ MA._xong();
       if (g.need) { if (G.keyP.Enter || G.keyP.Space) G.setScene(G.Village); return; } // vào bằng nút "Chơi ngay" / "Vào game"
       // không có mây: chạm chỗ trống để vào; chạm dải nút phụ thì không
       const r = TL.row, onBtns = G.downs.some((d) => d.y > r[0][1] - 4 && d.y < r[0][1] + r[0][3] + 4 && d.x > r[0][0] - 4 && d.x < r[1][0] + r[1][2] + 4);
-      const L = TL.lang, onLang = G.downs.some((d) => d.x > L[0] - 6 && d.y < L[1] + L[3] + 6); // nút EN / VI ở góc trên phải
+      const L = TL.lang, onLang = G.downs.some((d) => d.x > L[0] - 6 - (T.chuMoi() ? 8 : 0) && d.y < L[1] + L[3] + 6); // nút EN / VI ở góc trên phải
       if ((G.downs.length && !onBtns && !onLang) || G.keyP.Enter || G.keyP.Space || G.keyP.KeyJ) G.setScene(G.Village);
     },
     draw() {
@@ -35989,7 +36377,8 @@ MA._xong();
         lines.slice(0, 2).forEach((l, i) => ui.text(l, 240, TL.info + i * 9, { size: 7, align: 'center', color: V.tMsgT > 0 && V.tMsg ? GOLD : '#c9bfa8' }));
       }
       // nút nhỏ đổi ngôn ngữ ngay ở màn mở đầu (chữ đang dùng sáng hơn); nhớ theo máy nên lần sau mở lại vẫn đúng
-      if (G.ngonNgu && T.sbtn(TL.lang[0], TL.lang[1], TL.lang[2], TL.lang[3], 'EN / VI', { size: 7.5, sel: G.LANG === 'en' })) G.ngonNgu.doi();
+      const nr = T.chuMoi() ? 8 : 0; // chu-lech-khung: nút ảnh 44 rộng chỉ có lòng ~26 điểm cho "EN / VI" → rộng 52 (mép phải giữ nguyên)
+      if (G.ngonNgu && T.sbtn(TL.lang[0] - nr, TL.lang[1], TL.lang[2] + nr, TL.lang[3], 'EN / VI', { size: 7.5, sel: G.LANG === 'en' })) G.ngonNgu.doi();
       // thông tin phụ: nhỏ, góc dưới bên phải, không tranh chỗ với nút
       ui.text(G.t('Phiên bản {0}', G.VERSION || '?'), 474, 264, { size: 7, align: 'right', color: 'rgba(232,222,196,0.85)', shadow: true });
     },
@@ -36063,7 +36452,8 @@ MA._xong();
     st.y = G.clamp(st.y, 0, st.max);
     const c = G.ux, cl = G.click, out = cl && !G.inRect(cl, x, y, w, h);
     if (out) G.click = null;
-    c.save(); c.beginPath(); c.rect(x - 2, y, w + 4, h); c.clip();
+    const hc = T.chuMoi && T.chuMoi() ? Math.min(h, Y0 + PH - 8 - y) : h; // chu-lech-khung: chữ cuộn bị cắt ở trong lòng khung bảng, không lấn viền đáy
+    c.save(); c.beginPath(); c.rect(x - 2, y, w + 4, hc); c.clip();
     let end = y;
     try { end = fn(y - st.y); } finally { c.restore(); }
     if (out) G.click = cl;
@@ -36093,7 +36483,7 @@ MA._xong();
     const cur = G.zedBo(sv), mo = G.ZED_BO_KEYS.filter((k) => G.zedBoMo(k, sv));
     const ten = G.t('Bộ: {0}', G.tv(G.ZED_BO[cur].ten));
     if (mo.length > 1 && !RO && !G.ZED_BO_THU) {
-      if (T.sbtn(CX + 4, CY + 4, 104, 14, ten + ' ›', { size: 6.5, pad: 1 })) {
+      if (T.chuMoi() ? T.sbtn(CX + 4, CY + 2, 104, 18, ten + ' ›', { size: 7, pad: 0 }) : T.sbtn(CX + 4, CY + 4, 104, 14, ten + ' ›', { size: 6.5, pad: 1 })) { // chu-lech-khung: nút ảnh cao 14 chỉ còn lòng ~6 điểm → cao 18 (cùng tâm)
         const nx = mo[(mo.indexOf(cur) + 1) % mo.length];
         if (!sv.zed || typeof sv.zed !== 'object') return false;
         if (nx === 'ninja') delete sv.zed.bo; else sv.zed.bo = nx;
@@ -36102,14 +36492,14 @@ MA._xong();
       }
       // còn bộ chưa mở (vd. đã có Rừng, chưa có Biển) → nhắc cách mở bộ kế tiếp dưới nút
       const kh = G.ZED_BO_KEYS.find((k) => !G.zedBoMo(k, sv)), rk = kh ? G.REGIONS[G.zedBoVung(kh)] : null;
-      if (rk) tx(G.t('Hạ {0} để mở {1}', rk.bossName, G.tv(G.ZED_BO[kh].ten)), CX + 56, CY + 24, 104, { size: 6, align: 'center', color: SOFT });
+      if (rk) tx(G.t('Hạ {0} để mở {1}', rk.bossName, G.tv(G.ZED_BO[kh].ten)), CX + 56, CY + 24, T.chuMoi() ? 98 : 104, { size: 6, align: 'center', color: SOFT }); // chu-lech-khung: trong lòng ô hình (rộng 112, viền 3,5 + 2 đệm)
       return false;
     }
     tx(ten, CX + 56, CY + 13, 104, { size: 6.5, bold: true, align: 'center', color: TXT });
     const khoa = G.ZED_BO_KEYS.find((k) => !G.zedBoMo(k, sv));
     if (khoa && !G.ZED_BO_THU) {
       const r = G.REGIONS[G.zedBoVung(khoa)];
-      if (r) tx(G.t('Hạ {0} để mở {1}', r.bossName, G.tv(G.ZED_BO[khoa].ten)), CX + 56, CY + 22, 104, { size: 6, align: 'center', color: SOFT });
+      if (r) tx(G.t('Hạ {0} để mở {1}', r.bossName, G.tv(G.ZED_BO[khoa].ten)), CX + 56, CY + 22, T.chuMoi() ? 98 : 104, { size: 6, align: 'center', color: SOFT });
     } else if (mo.length > 1 && RO) tx('Về làng để thay', CX + 56, CY + 22, 104, { size: 6, align: 'center', color: WARN });
     return false;
   }
@@ -36122,7 +36512,7 @@ MA._xong();
     const xf = hs.lvl >= G.MAX_LEVEL ? 1 : hs.xp / G.xpNeed(hs.lvl);
     T.bar(CX + 4, CY + 127, 104, 'xp', xf, null, { h: 7 });
     ui.text(hs.lvl >= G.MAX_LEVEL ? 'Đã tối đa' : G.t('{0}/{1} kinh nghiệm', Math.floor(hs.xp), G.xpNeed(hs.lvl)), CX + 56, CY + 144, { size: 6.5, align: 'center', color: SOFT });
-    if (!RO && T.sbtn(CX + 6, CY + 150, 100, 16, 'Nét đã học: Ông Từ', { size: 7, pad: 2 })) { VS.goNpc('tu', true); return; }
+    if (!RO && (T.chuMoi() ? T.sbtn(CX + 6, CY + 149, 100, 18, 'Nét đã học: Ông Từ', { size: 7, pad: 1 }) : T.sbtn(CX + 6, CY + 150, 100, 16, 'Nét đã học: Ông Từ', { size: 7, pad: 2 }))) { VS.goNpc('tu', true); return; }
     const x = CX + 122, w = CW - 128;
     region('hero', x, CY, w, CH, (y) => {
       y += 11;
@@ -36153,8 +36543,9 @@ MA._xong();
       rows.forEach((r, i) => {
         const cx = x + (i % 2) * (cw + 6), cy = y + Math.floor(i / 2) * 13;
         T.inset(cx, cy, cw, 12, false);
-        ui.text(r[0], cx + 4, cy + 9, { size: 7, color: SOFT });
-        ui.text(String(r[1]), cx + cw - 4, cy + 9, { size: 7.5, bold: true, align: 'right', color: r[0] === 'Máu' ? '#ff9a7a' : r[0] === 'Mana' ? '#8fc6ff' : TXT });
+        // chu-lech-khung: tên chỉ số (trái) và số (phải) đặt trong lòng ô (?chucu=1: như cũ)
+        T.chuO(String(r[1]), cx, cy, cw, 12, { cu: [cx + cw - 4, cy + 9], align: 'right', size: 7.5, bold: true, color: r[0] === 'Máu' ? '#ff9a7a' : r[0] === 'Mana' ? '#8fc6ff' : TXT });
+        T.chuO(r[0], cx, cy, cw, 12, { cu: [cx + 4, cy + 9], align: 'left', vung: [cx, cy, cw - 26, 12], size: 7, bold: false, color: SOFT });
       });
       y += Math.ceil(rows.length / 2) * 13 + 10;
       T.head('Cu Tí', x, y); y += 3;
@@ -36214,7 +36605,7 @@ MA._xong();
         const Bk = G.SKILLS[b], n = hs.sk[b], x = CX + i * (cw + 4);
         let yy = y;
         T.inset(x, yy, cw, 20, false);
-        ui.text(G.tv(Bk.name) + ' ' + n + '/5', x + 5, yy + 13, { size: 8.5, bold: true, color: GOLD });
+        T.chuO(G.tv(Bk.name) + ' ' + n + '/5', x, yy, cw, 20, { cu: [x + 5, yy + 13], align: 'left', vung: [x, yy, n < 5 && !RO ? cw - 46 : cw, 20], size: 8.5, bold: true, color: GOLD });
         if (n < 5 && !RO) {
           if (T.sbtn(x + cw - 44, yy + 3, 40, 14, 'Học', { size: 7.5, pad: 2, primary: pts > 0, disabled: pts <= 0 })) { hs.sk[b]++; G.persist(); G.sfx('evolve'); VS.checkNews(); }
         }
@@ -36334,7 +36725,7 @@ MA._xong();
     const r = B.HUB, held = [...G.pointers.values()].some((q) => !q.role && !q.stale && G.inRect(q, r[0], r[1], r[2], r[3]));
     T.plate(r[0], r[1] + (held ? 1 : 0), r[2], r[3]);
     bagIcon(r[0] + r[2] / 2, r[1] + 11 + (held ? 1 : 0), 1.25);
-    ui.text('Hành trang', r[0] + r[2] / 2, r[1] + 27 + (held ? 1 : 0), { size: 6.5, bold: true, tiny: true, align: 'center', color: GOLD });
+    T.chuTam('Hành trang', r[0], r[1] + (held ? 1 : 0), r[2], r[3], { cu: [r[0] + r[2] / 2, r[1] + 27 + (held ? 1 : 0)], vung: [r[0], r[1] + (held ? 1 : 0) + 20, r[2], 11], size: 6.5, bold: true, tiny: true, align: 'center', color: GOLD });
     if ((G.click && G.inRect(G.click, r[0] - 2, r[1] - 1, r[2] + 4, r[3] + 2)) || G.keyP.KeyB) { G.click = null; B.openVillage(); return true; }
     return false;
   };
@@ -36860,7 +37251,9 @@ MA._xong();
     let dy = 0;
     if (age < 0.14) dy = -Math.round(5 * (1 - age / 0.14)); else if (age < 0.26) dy = 1;
     c.globalAlpha = ga0 * Math.min(age < 0.12 ? 0.3 + (age / 0.12) * 0.7 : 1, left < 0.3 ? Math.max(0, left / 0.3) : 1);
-    const tx0 = x + (w - w1 - w2 - 10) / 2, ty = y + dy + 9 + size * 0.36;
+    let ty = y + dy + 9 + size * 0.36;
+    if (T && T.datChu && T.chuMoi && T.chuMoi()) { const kq = T.datChu(s1 + ' ' + s2, x, y, w, 18, { khung: 'gd-dai-thong-bao', vien: [3, 12, 3, 12], size, min: size }); if (kq && kq.lines[0]) ty = kq.lines[0].b + dy; } // chu-lech-khung: đường cơ sở theo lòng dải (chữ có dấu không chạm viền trên)
+    const tx0 = x + (w - w1 - w2 - 10) / 2;
     ui.text(s1, tx0, ty, { size, bold: true, color: up ? '#ffe9a8' : '#f1e6c6' });
     // phần tăng / giảm: nảy nhẹ khi số vừa chạy xong
     const pop = k >= 1 && t - q.t0 - CHAY < 0.18 ? 1 : 0;
@@ -40745,7 +41138,8 @@ window.FIREBASE_CONFIG = {
       // Không có mạng: chỉ hiện kỷ lục trên máy, xếp thành ba ô số + một hàng thời gian hạ trùm (Giai đoạn 4: căn thẳng hàng, chữ đều cỡ)
       const r = rec(), sv = G.save;
       T.inset(CX, 116, CW, 104, false);
-      ui.para(G.t('Bảng vàng cần mạng. {0}.', C.label()), CX + 7, 129, CW - 14, { size: 7.5, color: SOFT });
+      if (T.chuMoi && T.chuMoi()) T.chuO(G.t('Bảng vàng cần mạng. {0}.', C.label()), CX, 116, CW, 104, { align: 'left', vung: [CX + 5, 116, CW - 10, 23], dong: 2, gian: 2, size: 7.5, min: 6.5, bold: false, color: SOFT }); // chu-lech-khung: tránh núm góc ô
+      else ui.para(G.t('Bảng vàng cần mạng. {0}.', C.label()), CX + 7, 129, CW - 14, { size: 7.5, color: SOFT });
       ui.text('Kỷ lục của con (trên máy)', CX + 7, 150, { size: 8, bold: true, color: GOLD });
       const boxes = [['Sức mạnh', String(r.power || powerNow())], ['Tổng sao', '★ ' + C.starSum(sv)], ['Xa nhất', C.farText(C.far(sv))]];
       const bw = Math.floor((CW - 14 - 2 * 4) / 3);
@@ -40802,9 +41196,10 @@ window.FIREBASE_CONFIG = {
     ui.text(at >= 0 ? G.t('hạng {0}', at + 1) : D.more ? G.t('ngoài {0} dòng đã tải', D.items.length) : G.t('ngoài {0} người đầu', MAX), cx.extra, 234.5, { size: 7, color: SOFT });
     // hàng nút dưới cùng
     if (pages > 1) {
-      if (T.sbtn(CX, 243, 24, 18, '‹', { size: 10, pad: 3, disabled: B.page === 0 })) B.page--;
+      const r = T.chuMoi && T.chuMoi() ? 6 : 0; // chu-lech-khung: nút ảnh rộng 24 → 30 (đinh góc trong không đè mũi tên)
+      if (T.sbtn(CX, 243, 24 + r, 18, '‹', { size: 10, pad: 3, disabled: B.page === 0 })) B.page--;
       ui.text(G.t('Trang {0}', B.page + 1 + (D.more ? '' : '/' + pages)), CX + 50, 255, { size: 7.5, align: 'center', color: SOFT });
-      if (T.sbtn(CX + 76, 243, 24, 18, '›', { size: 10, pad: 3, disabled: B.page >= pages - 1 || (D.loading && B.page * PER + PER >= D.items.length) })) B.page++;
+      if (T.sbtn(CX + 76 - r, 243, 24 + r, 18, '›', { size: 10, pad: 3, disabled: B.page >= pages - 1 || (D.loading && B.page * PER + PER >= D.items.length) })) B.page++;
     }
     if (T.sbtn(CX + 150, 243, 72, 18, 'Đổi tên', { size: 7.5, pad: 2 }) && G.cloudUI) {
       G.cloudUI.rename(mine.name, cleanName).then((v) => { if (v) { G.save.lbName = v; G.persist(); B.sync(true); B.reload(); A.say(G.t('Đổi tên thành {0}.', G.kd(v))); } });

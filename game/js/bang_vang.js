@@ -128,7 +128,8 @@
       // Không có mạng: chỉ hiện kỷ lục trên máy, xếp thành ba ô số + một hàng thời gian hạ trùm (Giai đoạn 4: căn thẳng hàng, chữ đều cỡ)
       const r = rec(), sv = G.save;
       T.inset(CX, 116, CW, 104, false);
-      ui.para(G.t('Bảng vàng cần mạng. {0}.', C.label()), CX + 7, 129, CW - 14, { size: 7.5, color: SOFT });
+      if (T.chuMoi && T.chuMoi()) T.chuO(G.t('Bảng vàng cần mạng. {0}.', C.label()), CX, 116, CW, 104, { align: 'left', vung: [CX + 5, 116, CW - 10, 23], dong: 2, gian: 2, size: 7.5, min: 6.5, bold: false, color: SOFT }); // chu-lech-khung: tránh núm góc ô
+      else ui.para(G.t('Bảng vàng cần mạng. {0}.', C.label()), CX + 7, 129, CW - 14, { size: 7.5, color: SOFT });
       ui.text('Kỷ lục của con (trên máy)', CX + 7, 150, { size: 8, bold: true, color: GOLD });
       const boxes = [['Sức mạnh', String(r.power || powerNow())], ['Tổng sao', '★ ' + C.starSum(sv)], ['Xa nhất', C.farText(C.far(sv))]];
       const bw = Math.floor((CW - 14 - 2 * 4) / 3);
@@ -185,9 +186,10 @@
     ui.text(at >= 0 ? G.t('hạng {0}', at + 1) : D.more ? G.t('ngoài {0} dòng đã tải', D.items.length) : G.t('ngoài {0} người đầu', MAX), cx.extra, 234.5, { size: 7, color: SOFT });
     // hàng nút dưới cùng
     if (pages > 1) {
-      if (T.sbtn(CX, 243, 24, 18, '‹', { size: 10, pad: 3, disabled: B.page === 0 })) B.page--;
+      const r = T.chuMoi && T.chuMoi() ? 6 : 0; // chu-lech-khung: nút ảnh rộng 24 → 30 (đinh góc trong không đè mũi tên)
+      if (T.sbtn(CX, 243, 24 + r, 18, '‹', { size: 10, pad: 3, disabled: B.page === 0 })) B.page--;
       ui.text(G.t('Trang {0}', B.page + 1 + (D.more ? '' : '/' + pages)), CX + 50, 255, { size: 7.5, align: 'center', color: SOFT });
-      if (T.sbtn(CX + 76, 243, 24, 18, '›', { size: 10, pad: 3, disabled: B.page >= pages - 1 || (D.loading && B.page * PER + PER >= D.items.length) })) B.page++;
+      if (T.sbtn(CX + 76 - r, 243, 24 + r, 18, '›', { size: 10, pad: 3, disabled: B.page >= pages - 1 || (D.loading && B.page * PER + PER >= D.items.length) })) B.page++;
     }
     if (T.sbtn(CX + 150, 243, 72, 18, 'Đổi tên', { size: 7.5, pad: 2 }) && G.cloudUI) {
       G.cloudUI.rename(mine.name, cleanName).then((v) => { if (v) { G.save.lbName = v; G.persist(); B.sync(true); B.reload(); A.say(G.t('Đổi tên thành {0}.', G.kd(v))); } });

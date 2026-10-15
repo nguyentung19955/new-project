@@ -132,8 +132,9 @@
     const h = A.homNay(), o = A.st(sv);
     ui.text(G.t('{0} · {1}', G.tv(THU[h.thu]), h.d.getDate() + '/' + (h.d.getMonth() + 1)), 60, 160, { size: 9, bold: true, align: 'center', color: GOLD });
     ui.text(G.t('Ngày mới sau {0}', dongHo(A.conLaiGiay())), 60, 172, { size: 7, align: 'center', color: SOFT });
-    ui.para('Thắng mới trừ lượt. Mỗi ải 3 lượt mỗi ngày, hồi lúc 0 giờ.', 14, 186, 94, { size: 6.5, color: SOFT });
-    ui.para(G.t('Chiều sâu: 1 phòng, {0} đợt quái, tinh anh cuối', CF.dot), 14, 222, 94, { size: 6.5, color: SOFT });
+    const lx = T.chuMoi && T.chuMoi() ? 17 : 14, lw = T.chuMoi && T.chuMoi() ? 91 : 94; // chu-lech-khung: lòng khung bảng bắt đầu ở x 14,5 (+2 đệm)
+    ui.para('Thắng mới trừ lượt. Mỗi ải 3 lượt mỗi ngày, hồi lúc 0 giờ.', lx, 186, lw, { size: 6.5, color: SOFT });
+    ui.para(G.t('Chiều sâu: 1 phòng, {0} đợt quái, tinh anh cuối', CF.dot), lx, 222, lw, { size: 6.5, color: SOFT });
     if (!A.bat() || !A.mo(sv)) { ui.para(A.bat() ? 'Hạ trùm vùng Rừng già để mở ải ngày.' : 'Ải ngày đang tắt (?aingay=0)', 120, 70, 340, { size: 9, color: WARN }); return; }
     CF.thuTu.forEach((loai, i) => {
       const a = CF.ai[loai], y = 52 + i * 70, mo = A.moHomNay(loai), con = o ? o.luot[loai] | 0 : 0;

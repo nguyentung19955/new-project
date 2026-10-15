@@ -53,7 +53,8 @@
     st.y = G.clamp(st.y, 0, st.max);
     const c = G.ux, cl = G.click, out = cl && !G.inRect(cl, x, y, w, h);
     if (out) G.click = null;
-    c.save(); c.beginPath(); c.rect(x - 2, y, w + 4, h); c.clip();
+    const hc = T.chuMoi && T.chuMoi() ? Math.min(h, Y0 + PH - 8 - y) : h; // chu-lech-khung: chữ cuộn bị cắt ở trong lòng khung bảng, không lấn viền đáy
+    c.save(); c.beginPath(); c.rect(x - 2, y, w + 4, hc); c.clip();
     let end = y;
     try { end = fn(y - st.y); } finally { c.restore(); }
     if (out) G.click = cl;
@@ -83,7 +84,7 @@
     const cur = G.zedBo(sv), mo = G.ZED_BO_KEYS.filter((k) => G.zedBoMo(k, sv));
     const ten = G.t('Bộ: {0}', G.tv(G.ZED_BO[cur].ten));
     if (mo.length > 1 && !RO && !G.ZED_BO_THU) {
-      if (T.sbtn(CX + 4, CY + 4, 104, 14, ten + ' ›', { size: 6.5, pad: 1 })) {
+      if (T.chuMoi() ? T.sbtn(CX + 4, CY + 2, 104, 18, ten + ' ›', { size: 7, pad: 0 }) : T.sbtn(CX + 4, CY + 4, 104, 14, ten + ' ›', { size: 6.5, pad: 1 })) { // chu-lech-khung: nút ảnh cao 14 chỉ còn lòng ~6 điểm → cao 18 (cùng tâm)
         const nx = mo[(mo.indexOf(cur) + 1) % mo.length];
         if (!sv.zed || typeof sv.zed !== 'object') return false;
         if (nx === 'ninja') delete sv.zed.bo; else sv.zed.bo = nx;
@@ -92,14 +93,14 @@
       }
       // còn bộ chưa mở (vd. đã có Rừng, chưa có Biển) → nhắc cách mở bộ kế tiếp dưới nút
       const kh = G.ZED_BO_KEYS.find((k) => !G.zedBoMo(k, sv)), rk = kh ? G.REGIONS[G.zedBoVung(kh)] : null;
-      if (rk) tx(G.t('Hạ {0} để mở {1}', rk.bossName, G.tv(G.ZED_BO[kh].ten)), CX + 56, CY + 24, 104, { size: 6, align: 'center', color: SOFT });
+      if (rk) tx(G.t('Hạ {0} để mở {1}', rk.bossName, G.tv(G.ZED_BO[kh].ten)), CX + 56, CY + 24, T.chuMoi() ? 98 : 104, { size: 6, align: 'center', color: SOFT }); // chu-lech-khung: trong lòng ô hình (rộng 112, viền 3,5 + 2 đệm)
       return false;
     }
     tx(ten, CX + 56, CY + 13, 104, { size: 6.5, bold: true, align: 'center', color: TXT });
     const khoa = G.ZED_BO_KEYS.find((k) => !G.zedBoMo(k, sv));
     if (khoa && !G.ZED_BO_THU) {
       const r = G.REGIONS[G.zedBoVung(khoa)];
-      if (r) tx(G.t('Hạ {0} để mở {1}', r.bossName, G.tv(G.ZED_BO[khoa].ten)), CX + 56, CY + 22, 104, { size: 6, align: 'center', color: SOFT });
+      if (r) tx(G.t('Hạ {0} để mở {1}', r.bossName, G.tv(G.ZED_BO[khoa].ten)), CX + 56, CY + 22, T.chuMoi() ? 98 : 104, { size: 6, align: 'center', color: SOFT });
     } else if (mo.length > 1 && RO) tx('Về làng để thay', CX + 56, CY + 22, 104, { size: 6, align: 'center', color: WARN });
     return false;
   }
@@ -112,7 +113,7 @@
     const xf = hs.lvl >= G.MAX_LEVEL ? 1 : hs.xp / G.xpNeed(hs.lvl);
     T.bar(CX + 4, CY + 127, 104, 'xp', xf, null, { h: 7 });
     ui.text(hs.lvl >= G.MAX_LEVEL ? 'Đã tối đa' : G.t('{0}/{1} kinh nghiệm', Math.floor(hs.xp), G.xpNeed(hs.lvl)), CX + 56, CY + 144, { size: 6.5, align: 'center', color: SOFT });
-    if (!RO && T.sbtn(CX + 6, CY + 150, 100, 16, 'Nét đã học: Ông Từ', { size: 7, pad: 2 })) { VS.goNpc('tu', true); return; }
+    if (!RO && (T.chuMoi() ? T.sbtn(CX + 6, CY + 149, 100, 18, 'Nét đã học: Ông Từ', { size: 7, pad: 1 }) : T.sbtn(CX + 6, CY + 150, 100, 16, 'Nét đã học: Ông Từ', { size: 7, pad: 2 }))) { VS.goNpc('tu', true); return; }
     const x = CX + 122, w = CW - 128;
     region('hero', x, CY, w, CH, (y) => {
       y += 11;
@@ -143,8 +144,9 @@
       rows.forEach((r, i) => {
         const cx = x + (i % 2) * (cw + 6), cy = y + Math.floor(i / 2) * 13;
         T.inset(cx, cy, cw, 12, false);
-        ui.text(r[0], cx + 4, cy + 9, { size: 7, color: SOFT });
-        ui.text(String(r[1]), cx + cw - 4, cy + 9, { size: 7.5, bold: true, align: 'right', color: r[0] === 'Máu' ? '#ff9a7a' : r[0] === 'Mana' ? '#8fc6ff' : TXT });
+        // chu-lech-khung: tên chỉ số (trái) và số (phải) đặt trong lòng ô (?chucu=1: như cũ)
+        T.chuO(String(r[1]), cx, cy, cw, 12, { cu: [cx + cw - 4, cy + 9], align: 'right', size: 7.5, bold: true, color: r[0] === 'Máu' ? '#ff9a7a' : r[0] === 'Mana' ? '#8fc6ff' : TXT });
+        T.chuO(r[0], cx, cy, cw, 12, { cu: [cx + 4, cy + 9], align: 'left', vung: [cx, cy, cw - 26, 12], size: 7, bold: false, color: SOFT });
       });
       y += Math.ceil(rows.length / 2) * 13 + 10;
       T.head('Cu Tí', x, y); y += 3;
@@ -204,7 +206,7 @@
         const Bk = G.SKILLS[b], n = hs.sk[b], x = CX + i * (cw + 4);
         let yy = y;
         T.inset(x, yy, cw, 20, false);
-        ui.text(G.tv(Bk.name) + ' ' + n + '/5', x + 5, yy + 13, { size: 8.5, bold: true, color: GOLD });
+        T.chuO(G.tv(Bk.name) + ' ' + n + '/5', x, yy, cw, 20, { cu: [x + 5, yy + 13], align: 'left', vung: [x, yy, n < 5 && !RO ? cw - 46 : cw, 20], size: 8.5, bold: true, color: GOLD });
         if (n < 5 && !RO) {
           if (T.sbtn(x + cw - 44, yy + 3, 40, 14, 'Học', { size: 7.5, pad: 2, primary: pts > 0, disabled: pts <= 0 })) { hs.sk[b]++; G.persist(); G.sfx('evolve'); VS.checkNews(); }
         }
@@ -324,7 +326,7 @@
     const r = B.HUB, held = [...G.pointers.values()].some((q) => !q.role && !q.stale && G.inRect(q, r[0], r[1], r[2], r[3]));
     T.plate(r[0], r[1] + (held ? 1 : 0), r[2], r[3]);
     bagIcon(r[0] + r[2] / 2, r[1] + 11 + (held ? 1 : 0), 1.25);
-    ui.text('Hành trang', r[0] + r[2] / 2, r[1] + 27 + (held ? 1 : 0), { size: 6.5, bold: true, tiny: true, align: 'center', color: GOLD });
+    T.chuTam('Hành trang', r[0], r[1] + (held ? 1 : 0), r[2], r[3], { cu: [r[0] + r[2] / 2, r[1] + 27 + (held ? 1 : 0)], vung: [r[0], r[1] + (held ? 1 : 0) + 20, r[2], 11], size: 6.5, bold: true, tiny: true, align: 'center', color: GOLD });
     if ((G.click && G.inRect(G.click, r[0] - 2, r[1] - 1, r[2] + 4, r[3] + 2)) || G.keyP.KeyB) { G.click = null; B.openVillage(); return true; }
     return false;
   };

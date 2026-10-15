@@ -879,7 +879,7 @@
     const ga = c.globalAlpha, gd = G.VFX ? +G.VFX.giaoDien : 1;
     let y = by, hop = null, dong = 0;
     for (const r of rows) {
-      const e = r.e, lh = r.size + 2.5, bh = Math.round(r.lines.length * lh + 4);
+      const e = r.e, lh = r.size + 2.5, bh = Math.round(r.lines.length * lh + (T.chuMoi && T.chuMoi() ? 6 : 4)); // chu-lech-khung: +2 cao để chữ có dấu không chạm viền tấm
       let tw = 0;
       ui.font(r.size, true);
       for (const l of r.lines) tw = Math.max(tw, c.measureText(l).width);
@@ -891,7 +891,8 @@
       const age = G.time - e.at, py = Math.round(e.y);
       c.globalAlpha = ga * (gd > 0 ? Math.min(1, age < 0.12 ? 0.35 + (age / 0.12) * 0.65 : 1, e.b.t < 0.3 ? Math.max(0, e.b.t / 0.3) : 1) : 1);
       T.plate(px, py, pw, bh, { a: D.nen });
-      r.lines.forEach((l, i) => ui.text(l, mid, py + r.size + 1 + i * lh, { size: r.size, align: 'center', bold: true, color: e.col || '#ffd27a' }));
+      if (T.chuMoi && T.chuMoi()) T.chuTam(r.lines.join(' '), px, py, pw, bh, { dong: r.lines.length, gian: 2.5, size: r.size, min: Math.min(r.size, 7), bold: true, color: e.col || '#ffd27a' });
+      else r.lines.forEach((l, i) => ui.text(l, mid, py + r.size + 1 + i * lh, { size: r.size, align: 'center', bold: true, color: e.col || '#ffd27a' }));
       hop = hop ? [Math.min(hop[0], px), Math.min(hop[1], py), Math.max(hop[2], px + pw), Math.max(hop[3], py + bh)] : [px, py, px + pw, py + bh];
       dong += r.lines.length;
       y += bh + 1;
@@ -1006,10 +1007,17 @@
       const chips = [];
       for (const l of b.layers) chips.push([l.type === 'resist' ? G.t('Kháng {0}', G.EL[l.el].name) : G.tv(G.layerText(l)), l.type === 'resist' ? G.EL[l.el].dark : '#1f4f4a', '#f1e6c6']);
       if (b.weak.length) chips.push([G.t('Yếu {0}', b.weak.map((e) => G.tv(G.EL[e].name)).join(', ')), 'rgba(20,14,8,0.9)', G.EL[b.weak[0]].col]);
-      ui.font(doc ? 7 : 6.5, true);
-      let tot = 0; for (const q of chips) { q[3] = Math.ceil(G.ux.measureText(q[0]).width) + 8; tot += q[3] + 3; }
+      const moi = T.chuMoi && T.chuMoi(), ch = moi ? 13 : 10, cs = doc ? 7.5 : 7; // chu-lech-khung: thẻ ảnh viền trắng dày, cao 10 chỉ có lòng 5 điểm → cao 13 (vành giữ 2,5), rộng chữ + 12; chữ đo đúng cỡ vẽ (trước đo 6,5 mà vẽ 7,5)
+      if (moi) ui.font(cs, true, true); else ui.font(doc ? 7 : 6.5, true);
+      let tot = 0; for (const q of chips) { q[3] = Math.ceil(G.ux.measureText(q[0]).width) + (moi ? 12 : 8); tot += q[3] + 3; }
       let lx = Math.round(240 - (tot - 3) / 2);
-      for (const q of chips) {
+      if (moi) for (const q of chips) {
+        const go = T.theNho && T.theNho(lx, topY + 1, q[3], ch, q[1]);
+        if (!go) { ui.rect(lx, topY + 1, q[3], ch, q[1], '#1a120a'); ui.rect(lx + 1, topY + 1, q[3] - 2, 1, 'rgba(255,240,196,0.25)'); }
+        T.chuTrongKhung(q[0], lx, topY + 1, q[3], ch, { khung: go ? 'gd-the-nho' : null, vienAnh: go ? T.VIEN_THE_NHO : null, vien: [1, 1, 1, 1], size: cs, min: 6.5, bold: true, color: q[2] });
+        lx += q[3] + 3;
+      }
+      else for (const q of chips) {
         if (!(T.theNho && T.theNho(lx, topY + 1, q[3], 10, q[1]))) { // 15/10 (khung-gd-con): thẻ ảnh gd-the-nho nhuộm màu chip; chưa có ảnh thì như cũ
           ui.rect(lx, topY + 1, q[3], 10, q[1], '#1a120a');
           ui.rect(lx + 1, topY + 1, q[3] - 2, 1, 'rgba(255,240,196,0.25)');
@@ -1017,7 +1025,7 @@
         ui.text(q[0], lx + q[3] / 2, topY + 8.5, { size: doc ? 7 : 6.5, bold: true, align: 'center', color: q[2] });
         lx += q[3] + 3;
       }
-      if (chips.length) topY += 12;
+      if (chips.length) topY += moi ? 15 : 12;
       if (b.exposed > 0) { if (doc) nenChu(['LỘ ĐIỂM YẾU!'], 240, topY + 9, 8.5); ui.text('LỘ ĐIỂM YẾU!', 240, topY + 9, { size: 8.5, align: 'center', color: Math.floor(G.time * 8) % 2 ? '#ffd23f' : '#fff3b0', bold: true }); topY += 11; }
     } else if (W.type === 'elite' && S.mode === 'play') {
       // phòng tinh anh: khung nhỏ ở mép trên với tên loài và dấu hiệu (nhanh, bọc giáp...)
@@ -1068,7 +1076,7 @@
       const bold = doc || q[1] !== '#f1e6c6', lines = ui.wrap(q[0], lx1 - lx0 - 10, 7, bold).slice(0, 4); // Đợt 8: lời chỉ dẫn cũng chữ đậm
       let tw = 0; ui.font(7, bold);
       for (const l of lines) tw = Math.max(tw, G.ux.measureText(l).width);
-      const pw = Math.min(lx1 - lx0, Math.ceil(tw) + 12), ph = Math.round(lines.length * 9.5 + 6), mid = (lx0 + lx1) / 2, px = Math.round(mid - pw / 2), ga = G.ux.globalAlpha;
+      const pw = Math.min(lx1 - lx0, Math.ceil(tw) + (T.chuMoi && T.chuMoi() ? 16 : 12)), ph = Math.round(lines.length * 9.5 + 6), mid = (lx0 + lx1) / 2, px = Math.round(mid - pw / 2), ga = G.ux.globalAlpha;
       const py = len ? by : 269 - ph;
       if (len) by += ph + 2;
       // Rà soát C: ô chữ ở đáy (y 244–269) che chân em bé / quái / vùng sát thương ở mép dưới sàn: lúc có ai hay vùng nào dưới ô thì mờ còn 35%
@@ -1244,8 +1252,13 @@
     // ô hình vũ khí: khung + màu chữ theo bậc ép đồ (14/10: bỏ bậc màu cũ G.RARITY)
     G.oBacVk(x + 2, y + 1, 20, w);
     G.art.weaponIcon(G.ux, w, x + 12, y + 11, 17);
+    if (G.theme.chuMoi()) { // chu-lech-khung: tên (nửa trên) và dòng linh khí (nửa dưới) mỗi dòng trong dải riêng của lòng ô; dài thì thu cỡ rồi mới cắt "…"
+      G.theme.chuO(G.wName(w), x, y, wd, 22, { sel, align: 'left', vung: [x + 24, y, wd - 24 - (rightPad || 0), 11.5], size: 7.5, min: 6.5, bold: true, color: G.bacMauVk(w) });
+      G.theme.chuO(mi.txt, x, y, wd, 22, { sel, align: 'left', vung: [x + 24, y + 10.5, wd - 24, 11.5], size: 6.5, bold: false, color: mi.col === '#666' ? '#a9c2b4' : mi.col });
+    } else {
     ui.text(cutLine(G.wName(w), wd - 30 - (rightPad || 0), 7.5, true), x + 26, y + 9.5, { size: 7.5, bold: true, color: G.bacMauVk(w) });
     ui.text(cutLine(mi.txt, wd - 30, 6.5), x + 26, y + 18.5, { size: 6.5, color: mi.col === '#666' ? '#a9c2b4' : mi.col });
+    }
     return G.click && G.inRect(G.click, x, y, wd, 22);
   }
   G.weaponLine = weaponLine;

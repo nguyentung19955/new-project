@@ -94,10 +94,20 @@
           T.inset(bx, ry, bw, bh, sel, { fill: r > 0 ? '#3a3014' : open ? '#1f3f3e' : '#152524', col: sel ? null : r >= nd.max ? '#ffd23f' : can ? GOOD : open ? '#3f6a64' : '#22302f' });
           // hàng cao thì chấm bậc nằm dưới tên; hàng thấp (Hành trang) thì chấm bậc nằm bên phải tên
           const low = bh < 18, pw = nd.max * 5, px0 = low ? bx + bw - pw - 3 : bx + 3, py = low ? ry + Math.round(bh / 2) - 1 : ry + bh - 5;
+          if (T.chuMoi && T.chuMoi()) { // chu-lech-khung: tên nút / "cần N" / "+" đặt trong lòng ô (ảnh ô con viền ~2 điểm)
+            const nhanPhai = !open && (on || nd.need > 0) ? G.t('cần {0}', nd.need) : can ? '+' : '';
+            ui.font(6.5, false, true);
+            const rW = nhanPhai === '+' ? 9 : nhanPhai ? Math.ceil(G.ux.measureText(G.tv(nhanPhai)).width) + 6 : 0, nameW = low ? (open ? bw - pw - (can ? 16 : 8) + 3 : bw - rW - 4) : bw;
+            T.chuO(nd.name, bx, ry, bw, bh, { sel, align: 'left', vung: [bx, ry, nameW, low ? bh : bh - 5], size: 6.5, min: 6, bold: true, color: r > 0 ? GOLD : open ? TXT : LOCK });
+            if (open) for (let j = 0; j < nd.max; j++) { const c = G.ux; c.fillStyle = j < r ? '#ffd23f' : open ? '#0d1716' : '#1a2423'; c.fillRect(px0 + j * 5, py, 4, 3); }
+            if (nhanPhai === '+') T.chuO('+', bx, ry, bw, bh, { sel, align: low ? 'center' : 'right', vung: low ? [px0 - 10, ry, 9, bh] : [bx + bw - rW - 3, ry + bh - 10, rW + 3, 10], size: 8, min: 6.5, bold: true, color: GOOD });
+            else if (nhanPhai) T.chuO(nhanPhai, bx, ry, bw, bh, { sel, align: 'right', vung: low ? [bx + bw - rW - 3, ry, rW + 3, bh] : [bx + bw - rW - 3, ry + bh - 10, rW + 3, 10], size: 6.5, min: 6, bold: false, color: LOCK });
+          } else {
           tx(nd.name, bx + 3, low ? ry + bh / 2 + 2.5 : ry + 8.5, low ? (open ? bw - pw - (can ? 16 : 8) : bw - 34) : bw - 6, { size: 6.5, bold: true, co: true, color: r > 0 ? GOLD : open ? TXT : LOCK });
           if (open) for (let j = 0; j < nd.max; j++) { const c = G.ux; c.fillStyle = j < r ? '#ffd23f' : open ? '#0d1716' : '#1a2423'; c.fillRect(px0 + j * 5, py, 4, 3); }
           if (!open && (on || nd.need > 0)) tx(G.t('cần {0}', nd.need), bx + bw - 3, low ? ry + bh / 2 + 2.5 : ry + bh - 2, 26, { size: 6.5, align: 'right', color: LOCK });
           else if (can) tx('+', low ? px0 - 7 : bx + bw - 6, low ? ry + bh / 2 + 3 : ry + bh - 2, 8, { size: 8, bold: true, color: GOOD });
+          }
           U.boxes[cay + '/' + nd.id] = [bx, ry, bw, bh];
           if (G.click && G.inRect(G.click, bx - 1, ry - 1, bw + 2, bh + 2)) {
             G.click = null; G.sfx && G.sfx('ui');
@@ -131,7 +141,8 @@
     const dy = Y + H - detailH;
     T.inset(X, dy, Wd, detailH, false, { fill: '#10201f' });
     const can = on && !o.ro && !CH.why(hs, nd.id, key), bw = 54;
-    tx(G.tv(nd.name) + ' ' + r + '/' + nd.max + ' · ' + G.tv(Tr.name), X + 4, dy + 9, Wd - bw - 12, { size: 7.5, bold: true, color: G.EL[Tr.el].col2 });
+    if (T.chuMoi && T.chuMoi()) T.chuO(G.tv(nd.name) + ' ' + r + '/' + nd.max + ' · ' + G.tv(Tr.name), X, dy, Wd, detailH, { align: 'left', vung: [X, dy, Wd - bw - 8, 13], size: 7.5, bold: true, color: G.EL[Tr.el].col2 }); // chu-lech-khung
+    else tx(G.tv(nd.name) + ' ' + r + '/' + nd.max + ' · ' + G.tv(Tr.name), X + 4, dy + 9, Wd - bw - 12, { size: 7.5, bold: true, color: G.EL[Tr.el].col2 });
     const why = !on ? G.t('Dùng {0} trước mới học được', Tr.name) : CH.why(hs, nd.id, key);
     const line = (r >= nd.max ? G.t('Đã đủ bậc: {0}', nd.desc(r)) : r > 0 ? G.t('Bậc {0}: {1}', r + 1, nd.desc(r + 1)) : G.tv(nd.d1)) + (why && why !== 'Đã đủ bậc' ? ' (' + G.tv(why) + ')' : '');
     para(line, X + 4, dy + 18, Wd - bw - 12, 2, { size: 6.5, color: why && why !== 'Đã đủ bậc' ? SOFT : TXT });

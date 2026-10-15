@@ -378,20 +378,21 @@
     });
     // cột phải: chi tiết
     const w = sv.weapons.find((q) => q.id === U.sel);
-    const rx = x + lw + 6, rw = wd - lw - 6;
+    const rx = x + lw + 6, rw = wd - lw - 6, l5 = T.chuMoi && T.chuMoi() ? 6 : 5; // chu-lech-khung: lòng ô ảnh từ 3,5 + 2 đệm
     T.inset(rx, y, rw, h - 16, false);
     if (!w) { ui.text(G.tv('Chọn một vũ khí để ép.'), rx + 6, y + 14, { size: 7.5, color: SOFT }); return y + h - 16; }
     const b = E.bac(w), t = b + 1, g = E.gia(t), tl = E.tiLe(w);
     let yy = y + 11;
-    tx(G.wName(w) + ' · ' + G.t('Bậc {0}', E.tenBac(b)), rx + 5, yy, rw - 10, { size: 8, bold: true, color: E.mauBac(b) });
+    if (T.chuMoi && T.chuMoi()) T.chuO(G.wName(w) + ' · ' + G.t('Bậc {0}', E.tenBac(b)), rx, y, rw, h - 16, { align: 'left', vung: [rx, y, rw, 15], size: 8, min: 7, bold: true, color: E.mauBac(b) }); // chu-lech-khung: dòng đầu tránh núm góc ô
+    else tx(G.wName(w) + ' · ' + G.t('Bậc {0}', E.tenBac(b)), rx + 5, yy, rw - 10, { size: 8, bold: true, color: E.mauBac(b) });
     yy += 10;
     const k0 = CF.tong[b], k1 = t <= MAX ? CF.tong[t] : null;
-    tx(k1 ? G.t('Sức mạnh vũ khí ×{0} → ×{1}', so2(k0), so2(k1)) : G.t('Sức mạnh vũ khí ×{0} → ×{1}', so2(k0), so2(k0)), rx + 5, yy, rw - 10, { size: 6.8, color: TXT });
+    tx(k1 ? G.t('Sức mạnh vũ khí ×{0} → ×{1}', so2(k0), so2(k1)) : G.t('Sức mạnh vũ khí ×{0} → ×{1}', so2(k0), so2(k0)), rx + l5, yy, rw - 10, { size: 6.8, color: TXT });
     yy += 9;
     const ph = E.chuPhu(w, t <= MAX ? t : b);
-    if (ph) { tx((t <= MAX ? G.t('Ép lên {0}', E.tenBac(t)) + ': ' : '') + ph, rx + 5, yy, rw - 10, { size: 6.5, color: SOFT }); yy += 9; }
+    if (ph) { tx((t <= MAX ? G.t('Ép lên {0}', E.tenBac(t)) + ': ' : '') + ph, rx + l5, yy, rw - 10, { size: 6.5, color: SOFT }); yy += 9; }
     // dòng hiệu ứng
-    tx(soDong(b) ? 'Dòng hiệu ứng (khi đang cầm)' : 'Từ Bậc Tím mỗi bậc mở 1 dòng hiệu ứng.', rx + 5, yy, rw - 10, { size: 6.5, bold: !!soDong(b), color: soDong(b) ? GOLD : SOFT });
+    tx(soDong(b) ? 'Dòng hiệu ứng (khi đang cầm)' : 'Từ Bậc Tím mỗi bậc mở 1 dòng hiệu ứng.', rx + l5, yy, rw - 10, { size: 6.5, bold: !!soDong(b), color: soDong(b) ? GOLD : SOFT });
     yy += 3;
     const gd2 = E.giaDoi(w);
     (w.ep && w.ep.d ? w.ep.d : []).forEach((d, i) => {
@@ -409,7 +410,7 @@
     if (ro) return y + h - 16;
     if (U.doi != null && w.ep && w.ep.d && w.ep.d[U.doi]) { // xác nhận đổi dòng
       const d = w.ep.d[U.doi];
-      tx(G.t('Đổi dòng · {0}', E.chuDong(w, d)) + ' — ' + G.t('Tốn: {0}', costText(gd2)), rx + 5, yb + 8, rw - 10, { size: 6.5, color: TXT });
+      tx(G.t('Đổi dòng · {0}', E.chuDong(w, d)) + ' — ' + G.t('Tốn: {0}', costText(gd2)), rx + l5, yb + 8, rw - 10, { size: 6.5, color: TXT });
       if (T.sbtn(rx + 5, yb + 14, 70, 15, 'Đổi', { size: 7, pad: 1, primary: true })) {
         const nd = E.doiDong(sv, w, U.doi);
         U.doi = null;
@@ -418,11 +419,11 @@
       if (T.sbtn(rx + 80, yb + 14, 50, 15, 'Thôi', { size: 7, pad: 1 })) U.doi = null;
       return y + h - 16;
     }
-    if (!g) { ui.text(G.tv('Đã tối đa (Rực lửa)'), rx + 5, yb + 18, { size: 8, bold: true, color: GOOD }); return y + h - 16; }
+    if (!g) { ui.text(G.tv('Đã tối đa (Rực lửa)'), rx + l5, yb + 18, { size: 8, bold: true, color: GOOD }); return y + h - 16; }
     const tu = E.tutVe(w);
-    tx(G.t('Tốn: {0}', costText(g)), rx + 5, yb + 2, rw - 50, { size: 6.5, color: coTien(sv, g) ? WARN : TXT });
-    tx(tl.may > 0 ? G.t('Tỉ lệ: {0}% (+{1}% may mắn)', Math.round(CF.tiLe[t] * 100), Math.round(tl.may * 100)) : G.t('Tỉ lệ: {0}%', Math.round(tl.tong * 100)), rx + 5, yb + 11, rw - 50, { size: 6.8, bold: true, color: tl.tong >= 0.75 ? GOOD : tl.tong >= 0.45 ? GOLD : WARN });
-    tx(tu == null ? 'Thất bại: giữ bậc, mất đá và vàng' : G.t('Thất bại: tụt về Bậc {0}', E.tenBac(tu)), rx + 5, yb + 20, rw - 50, { size: 6.5, color: tu == null ? SOFT : WARN });
+    tx(G.t('Tốn: {0}', costText(g)), rx + l5, yb + 2, rw - 50, { size: 6.5, color: coTien(sv, g) ? WARN : TXT });
+    tx(tl.may > 0 ? G.t('Tỉ lệ: {0}% (+{1}% may mắn)', Math.round(CF.tiLe[t] * 100), Math.round(tl.may * 100)) : G.t('Tỉ lệ: {0}%', Math.round(tl.tong * 100)), rx + l5, yb + 11, rw - 50, { size: 6.8, bold: true, color: tl.tong >= 0.75 ? GOOD : tl.tong >= 0.45 ? GOLD : WARN });
+    tx(tu == null ? 'Thất bại: giữ bậc, mất đá và vàng' : G.t('Thất bại: tụt về Bậc {0}', E.tenBac(tu)), rx + l5, yb + 20, rw - 50, { size: 6.5, color: tu == null ? SOFT : WARN });
     const why = E.duoc(sv, w);
     const lam = (dungBua) => {
       const kq = E.ep(sv, w, dungBua);
@@ -435,15 +436,22 @@
       else { G.sfx('ui'); U.fx = { k: 'fail', t0: G.time || 0 }; say(kq.bua ? G.t('Bùa giữ bậc đã giữ {0} ở Bậc {1}.', ten, E.tenBac(kq.b1)) : G.t('{0} ép hỏng, giữ Bậc {1}.', ten, E.tenBac(kq.b1))); }
     };
     if (U.hoi === w.id && tu != null) { // hỏi xác nhận khi có nguy cơ tụt bậc
+      const coBua = E.bua(sv) > 0, hoiChu = coBua ? G.t('Thất bại sẽ tụt về Bậc {0} — dùng Bùa giữ bậc?', E.tenBac(tu)) : G.t('Thất bại sẽ tụt về Bậc {0}. Không có Bùa giữ bậc. Vẫn ép?', E.tenBac(tu));
+      let yq = yb + 16; const nh = T.chuMoi && T.chuMoi() ? 15 : 14;
+      if (T.chuMoi && T.chuMoi()) { // chu-lech-khung: hộp cao 36 thì dòng hỏi nằm trên viền ảnh → hộp cao 40 (lên trên 4), lời hỏi trong lòng hộp, nút dưới
+        const go = T.khungCanhBao && T.khungCanhBao(rx + 1, yb - 8, rw - 2, 40);
+        if (!go) ui.rect(rx + 1, yb - 8, rw - 2, 40, 'rgba(20,10,10,0.94)', '#ff9a5a');
+        T.chuTrongKhung(hoiChu, rx + 1, yb - 8, rw - 2, 40, { khung: go ? 'gd-khung-canh-bao' : null, vien: [2, 2, 2, 2], vung: [rx + 1, yb - 8, rw - 2, 20.5], align: 'left', dong: 2, gian: 1.5, size: 7, min: 6.5, bold: false, color: TXT });
+        yq = yb + 12.5;
+      } else {
       if (!(T.khungCanhBao && T.khungCanhBao(rx + 1, yb - 4, rw - 2, 36))) ui.rect(rx + 1, yb - 4, rw - 2, 36, 'rgba(20,10,10,0.94)', '#ff9a5a'); // 15/10: ảnh gd-khung-canh-bao
-      const coBua = E.bua(sv) > 0;
-      ui.para(coBua ? G.t('Thất bại sẽ tụt về Bậc {0} — dùng Bùa giữ bậc?', E.tenBac(tu)) : G.t('Thất bại sẽ tụt về Bậc {0}. Không có Bùa giữ bậc. Vẫn ép?', E.tenBac(tu)), rx + 5, yb + 4, rw - 10, { size: 6.5, color: TXT });
-      const yq = yb + 16;
+      ui.para(hoiChu, rx + 5, yb + 4, rw - 10, { size: 6.5, color: TXT });
+      }
       if (coBua) {
-        if (T.sbtn(rx + 5, yq, 60, 14, 'Dùng bùa', { size: 6.8, pad: 1, primary: true })) lam(true);
-        if (T.sbtn(rx + 68, yq, 60, 14, 'Không dùng', { size: 6.8, pad: 1, danger: true })) lam(false);
-      } else if (T.sbtn(rx + 5, yq, 60, 14, 'Vẫn ép', { size: 6.8, pad: 1, danger: true })) lam(false);
-      if (T.sbtn(rx + rw - 46, yq, 40, 14, 'Thôi', { size: 6.8, pad: 1 })) U.hoi = null;
+        if (T.sbtn(rx + 5, yq, 60, nh, 'Dùng bùa', { size: 6.8, pad: 1, primary: true })) lam(true);
+        if (T.sbtn(rx + 68, yq, 60, nh, 'Không dùng', { size: 6.8, pad: 1, danger: true })) lam(false);
+      } else if (T.sbtn(rx + 5, yq, 60, nh, 'Vẫn ép', { size: 6.8, pad: 1, danger: true })) lam(false);
+      if (T.sbtn(rx + rw - 46, yq, 40, nh, 'Thôi', { size: 6.8, pad: 1 })) U.hoi = null;
       return y + h - 16;
     }
     if (T.sbtn(rx + rw - 46, yb + 2, 42, 24, 'Ép', { size: 8.5, pad: 1, primary: !why, disabled: !!why })) {
