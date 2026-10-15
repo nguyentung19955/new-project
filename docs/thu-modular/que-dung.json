@@ -1,0 +1,241 @@
+{
+ "loai": "linh-khi-thu-modular-que",
+ "phien_ban": 1,
+ "dong_tac": "đứng (dáng gốc, = nhan-vat.json)",
+ "so_khung": 1,
+ "giay_moi_khung": 1.2,
+ "o": [
+  256,
+  256
+ ],
+ "goc_trong_o": [
+  128,
+  248
+ ],
+ "he_toa_do": "khop_px: điểm ảnh trong ô (ô i bắt đầu ở x = (i-1)×256 trên tấm); cùng tỉ lệ ảnh gốc. khop_game: khung 48×48, chân [24,45]. Góc: 0° sang phải, 90° xuống.",
+ "khoa_goc": {
+  "than": "hong→co",
+  "dau": "co→dinh_dau",
+  "ttp": "vai_phai→khuyu_phai",
+  "tdp": "khuyu_phai→co_tay_phai",
+  "btp": "co_tay_phai→nam_tay_phai",
+  "ttt": "vai_trai→khuyu_trai",
+  "tdt": "khuyu_trai→co_tay_trai",
+  "btt": "co_tay_trai→nam_tay_trai",
+  "dp": "hong_phai→goi_phai",
+  "cp": "goi_phai→co_chan_phai",
+  "bcp": "co_chan_phai→mui_chan_phai",
+  "dt": "hong_trai→goi_trai",
+  "ct": "goi_trai→co_chan_trai",
+  "bct": "co_chan_trai→mui_chan_trai"
+ },
+ "khung": [
+  {
+   "khung": 1,
+   "khop_px": {
+    "hong": [
+     127,
+     187.0
+    ],
+    "co": [
+     129.0,
+     135.0
+    ],
+    "dinh_dau": [
+     124.0,
+     26.0
+    ],
+    "tam_dau": [
+     129.0,
+     82.0
+    ],
+    "cam": [
+     138.0,
+     130.0
+    ],
+    "eo": [
+     125.0,
+     172.0
+    ],
+    "vai_phai": [
+     100.0,
+     144.0
+    ],
+    "hong_phai": [
+     114.0,
+     188.0
+    ],
+    "vai_trai": [
+     148.0,
+     144.0
+    ],
+    "hong_trai": [
+     140.0,
+     188.0
+    ],
+    "khuyu_phai": [
+     93.0,
+     168.0
+    ],
+    "co_tay_phai": [
+     91.0,
+     185.0
+    ],
+    "nam_tay_phai": [
+     90.0,
+     194.0
+    ],
+    "khuyu_trai": [
+     157.0,
+     168.0
+    ],
+    "co_tay_trai": [
+     162.0,
+     183.0
+    ],
+    "nam_tay_trai": [
+     165.0,
+     191.0
+    ],
+    "goi_phai": [
+     106.0,
+     217.0
+    ],
+    "co_chan_phai": [
+     104.0,
+     235.0
+    ],
+    "mui_chan_phai": [
+     119.0,
+     246.0
+    ],
+    "goi_trai": [
+     148.0,
+     217.0
+    ],
+    "co_chan_trai": [
+     147.0,
+     235.0
+    ],
+    "mui_chan_trai": [
+     168.0,
+     245.0
+    ],
+    "goc": [
+     128.0,
+     248.0
+    ]
+   },
+   "khop_game": {
+    "hong": [
+     23.87,
+     36.99
+    ],
+    "co": [
+     24.13,
+     30.16
+    ],
+    "dinh_dau": [
+     23.47,
+     15.84
+    ],
+    "tam_dau": [
+     24.13,
+     23.19
+    ],
+    "cam": [
+     25.31,
+     29.5
+    ],
+    "eo": [
+     23.61,
+     35.02
+    ],
+    "vai_phai": [
+     20.32,
+     31.34
+    ],
+    "hong_phai": [
+     22.16,
+     37.12
+    ],
+    "vai_trai": [
+     26.63,
+     31.34
+    ],
+    "hong_trai": [
+     25.58,
+     37.12
+    ],
+    "khuyu_phai": [
+     19.4,
+     34.49
+    ],
+    "co_tay_phai": [
+     19.14,
+     36.72
+    ],
+    "nam_tay_phai": [
+     19.01,
+     37.91
+    ],
+    "khuyu_trai": [
+     27.81,
+     34.49
+    ],
+    "co_tay_trai": [
+     28.47,
+     36.46
+    ],
+    "nam_tay_trai": [
+     28.86,
+     37.51
+    ],
+    "goi_phai": [
+     21.11,
+     40.93
+    ],
+    "co_chan_phai": [
+     20.85,
+     43.29
+    ],
+    "mui_chan_phai": [
+     22.82,
+     44.74
+    ],
+    "goi_trai": [
+     26.63,
+     40.93
+    ],
+    "co_chan_trai": [
+     26.5,
+     43.29
+    ],
+    "mui_chan_trai": [
+     29.25,
+     44.61
+    ],
+    "goc": [
+     24.0,
+     45.0
+    ]
+   },
+   "goc_doan_do": {
+    "than": -87.8,
+    "dau": -92.6,
+    "ttp": 106.3,
+    "tdp": 96.7,
+    "btp": 96.3,
+    "ttt": 69.4,
+    "tdt": 71.6,
+    "btt": 69.4,
+    "dp": 105.4,
+    "cp": 96.3,
+    "bcp": 36.3,
+    "dt": 74.6,
+    "ct": 93.2,
+    "bct": 25.5
+   }
+  }
+ ]
+}

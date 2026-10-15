@@ -1,0 +1,582 @@
+{
+ "loai": "linh-khi-thu-modular-nhan-vat",
+ "phien_ban": 1,
+ "nhan_vat": "zed-v2 (Cu Tí)",
+ "anh_goc": "docs/anh-goc/zed/zed-v2-canonical.png (hàng 1 \"đứng\", khung 1)",
+ "anh_cat": "docs/thu-modular/nhan-vat-zed-dung.png (nền trong suốt, = khung_bao bên dưới)",
+ "huong": "nghiêng 3/4 sang phải. phải/trái = của nhân vật; phải = gần người xem = bên trái màn hình",
+ "he_toa_do": {
+  "goc_anh": "điểm ảnh trên tấm 2048×768; (0,0) góc trên-trái tấm; x sang phải, y xuống",
+  "trong_anh_cat": "trừ khung_bao[0..1]: x_cat = x - 45, y_cat = y - 16",
+  "game": "x_game = 24 + (x - 140) × ti_le ; y_game = 45 + (y - 252) × ti_le",
+  "goc_do": "0° = sang phải, 90° = thẳng xuống, -90° = thẳng lên (y màn hình hướng xuống)"
+ },
+ "khung_bao_tren_tam": [
+  45,
+  16,
+  202,
+  253
+ ],
+ "co_hinh_px": [
+  157,
+  237
+ ],
+ "diem_goc_chan": {
+  "px": [
+   140,
+   252
+  ],
+  "game": [
+   24.0,
+   45.0
+  ]
+ },
+ "ti_le_game": 0.13136,
+ "khung_game": [
+  48,
+  48
+ ],
+ "goc_game": [
+  24,
+  45
+ ],
+ "chieu_cao": {
+  "px": 236,
+  "game": 31.0,
+  "dau_tren_than": 0.47
+ },
+ "khop": {
+  "dinh_dau": {
+   "ten": "Đỉnh đầu (tóc, không tính sừng)",
+   "px": [
+    136,
+    30
+   ],
+   "game": [
+    23.47,
+    15.84
+   ],
+   "trong_anh_cat": [
+    91,
+    14
+   ]
+  },
+  "tam_dau": {
+   "ten": "Tâm đầu",
+   "px": [
+    141,
+    86
+   ],
+   "game": [
+    24.13,
+    23.19
+   ],
+   "trong_anh_cat": [
+    96,
+    70
+   ]
+  },
+  "cam": {
+   "ten": "Cằm",
+   "px": [
+    150,
+    134
+   ],
+   "game": [
+    25.31,
+    29.5
+   ],
+   "trong_anh_cat": [
+    105,
+    118
+   ]
+  },
+  "co": {
+   "ten": "Cổ",
+   "px": [
+    141,
+    139
+   ],
+   "game": [
+    24.13,
+    30.16
+   ],
+   "trong_anh_cat": [
+    96,
+    123
+   ]
+  },
+  "vai_phai": {
+   "ten": "Vai phải (gần)",
+   "px": [
+    112,
+    148
+   ],
+   "game": [
+    20.32,
+    31.34
+   ],
+   "trong_anh_cat": [
+    67,
+    132
+   ]
+  },
+  "vai_trai": {
+   "ten": "Vai trái (xa)",
+   "px": [
+    160,
+    148
+   ],
+   "game": [
+    26.63,
+    31.34
+   ],
+   "trong_anh_cat": [
+    115,
+    132
+   ]
+  },
+  "khuyu_phai": {
+   "ten": "Khuỷu phải",
+   "px": [
+    105,
+    172
+   ],
+   "game": [
+    19.4,
+    34.49
+   ],
+   "trong_anh_cat": [
+    60,
+    156
+   ]
+  },
+  "khuyu_trai": {
+   "ten": "Khuỷu trái",
+   "px": [
+    169,
+    172
+   ],
+   "game": [
+    27.81,
+    34.49
+   ],
+   "trong_anh_cat": [
+    124,
+    156
+   ]
+  },
+  "co_tay_phai": {
+   "ten": "Cổ tay phải",
+   "px": [
+    103,
+    189
+   ],
+   "game": [
+    19.14,
+    36.72
+   ],
+   "trong_anh_cat": [
+    58,
+    173
+   ]
+  },
+  "co_tay_trai": {
+   "ten": "Cổ tay trái",
+   "px": [
+    174,
+    187
+   ],
+   "game": [
+    28.47,
+    36.46
+   ],
+   "trong_anh_cat": [
+    129,
+    171
+   ]
+  },
+  "nam_tay_phai": {
+   "ten": "Nắm tay phải",
+   "px": [
+    102,
+    198
+   ],
+   "game": [
+    19.01,
+    37.91
+   ],
+   "trong_anh_cat": [
+    57,
+    182
+   ]
+  },
+  "nam_tay_trai": {
+   "ten": "Nắm tay trái",
+   "px": [
+    177,
+    195
+   ],
+   "game": [
+    28.86,
+    37.51
+   ],
+   "trong_anh_cat": [
+    132,
+    179
+   ]
+  },
+  "eo": {
+   "ten": "Eo (đai)",
+   "px": [
+    137,
+    176
+   ],
+   "game": [
+    23.61,
+    35.02
+   ],
+   "trong_anh_cat": [
+    92,
+    160
+   ]
+  },
+  "hong": {
+   "ten": "Hông (giữa chậu)",
+   "px": [
+    139,
+    191
+   ],
+   "game": [
+    23.87,
+    36.99
+   ],
+   "trong_anh_cat": [
+    94,
+    175
+   ]
+  },
+  "hong_phai": {
+   "ten": "Hông phải",
+   "px": [
+    126,
+    192
+   ],
+   "game": [
+    22.16,
+    37.12
+   ],
+   "trong_anh_cat": [
+    81,
+    176
+   ]
+  },
+  "hong_trai": {
+   "ten": "Hông trái",
+   "px": [
+    152,
+    192
+   ],
+   "game": [
+    25.58,
+    37.12
+   ],
+   "trong_anh_cat": [
+    107,
+    176
+   ]
+  },
+  "goi_phai": {
+   "ten": "Đầu gối phải",
+   "px": [
+    118,
+    221
+   ],
+   "game": [
+    21.11,
+    40.93
+   ],
+   "trong_anh_cat": [
+    73,
+    205
+   ]
+  },
+  "goi_trai": {
+   "ten": "Đầu gối trái",
+   "px": [
+    160,
+    221
+   ],
+   "game": [
+    26.63,
+    40.93
+   ],
+   "trong_anh_cat": [
+    115,
+    205
+   ]
+  },
+  "co_chan_phai": {
+   "ten": "Cổ chân phải",
+   "px": [
+    116,
+    239
+   ],
+   "game": [
+    20.85,
+    43.29
+   ],
+   "trong_anh_cat": [
+    71,
+    223
+   ]
+  },
+  "co_chan_trai": {
+   "ten": "Cổ chân trái",
+   "px": [
+    159,
+    239
+   ],
+   "game": [
+    26.5,
+    43.29
+   ],
+   "trong_anh_cat": [
+    114,
+    223
+   ]
+  },
+  "mui_chan_phai": {
+   "ten": "Mũi chân phải",
+   "px": [
+    131,
+    250
+   ],
+   "game": [
+    22.82,
+    44.74
+   ],
+   "trong_anh_cat": [
+    86,
+    234
+   ]
+  },
+  "mui_chan_trai": {
+   "ten": "Mũi chân trái",
+   "px": [
+    180,
+    249
+   ],
+   "game": [
+    29.25,
+    44.61
+   ],
+   "trong_anh_cat": [
+    135,
+    233
+   ]
+  },
+  "goc": {
+   "ten": "Điểm gốc (chân, đặt xuống đất)",
+   "px": [
+    140,
+    252
+   ],
+   "game": [
+    24.0,
+    45.0
+   ],
+   "trong_anh_cat": [
+    95,
+    236
+   ]
+  }
+ },
+ "xuong": {
+  "than": {
+   "tu": "hong",
+   "den": "co",
+   "do_dai_px": 52.0,
+   "do_dai_game": 6.84,
+   "goc_do": -87.8,
+   "bo_phan": "than",
+   "lop": 30
+  },
+  "dau": {
+   "tu": "co",
+   "den": "dinh_dau",
+   "do_dai_px": 109.1,
+   "do_dai_game": 14.33,
+   "goc_do": -92.6,
+   "bo_phan": "dau",
+   "lop": 50
+  },
+  "vai_phai": {
+   "tu": "co",
+   "den": "vai_phai",
+   "do_dai_px": 30.4,
+   "do_dai_game": 3.99,
+   "goc_do": 162.8,
+   "bo_phan": null,
+   "lop": null
+  },
+  "vai_trai": {
+   "tu": "co",
+   "den": "vai_trai",
+   "do_dai_px": 21.0,
+   "do_dai_game": 2.76,
+   "goc_do": 25.3,
+   "bo_phan": null,
+   "lop": null
+  },
+  "canh_tay_tren_phai": {
+   "tu": "vai_phai",
+   "den": "khuyu_phai",
+   "do_dai_px": 25.0,
+   "do_dai_game": 3.28,
+   "goc_do": 106.3,
+   "bo_phan": "canh-tay-tren-phai",
+   "lop": 70
+  },
+  "canh_tay_duoi_phai": {
+   "tu": "khuyu_phai",
+   "den": "co_tay_phai",
+   "do_dai_px": 17.1,
+   "do_dai_game": 2.25,
+   "goc_do": 96.7,
+   "bo_phan": "canh-tay-duoi-phai",
+   "lop": 71
+  },
+  "ban_tay_phai": {
+   "tu": "co_tay_phai",
+   "den": "nam_tay_phai",
+   "do_dai_px": 9.1,
+   "do_dai_game": 1.19,
+   "goc_do": 96.3,
+   "bo_phan": "ban-tay-phai",
+   "lop": 72
+  },
+  "canh_tay_tren_trai": {
+   "tu": "vai_trai",
+   "den": "khuyu_trai",
+   "do_dai_px": 25.6,
+   "do_dai_game": 3.37,
+   "goc_do": 69.4,
+   "bo_phan": "canh-tay-tren-trai",
+   "lop": 10
+  },
+  "canh_tay_duoi_trai": {
+   "tu": "khuyu_trai",
+   "den": "co_tay_trai",
+   "do_dai_px": 15.8,
+   "do_dai_game": 2.08,
+   "goc_do": 71.6,
+   "bo_phan": "canh-tay-duoi-trai",
+   "lop": 11
+  },
+  "ban_tay_trai": {
+   "tu": "co_tay_trai",
+   "den": "nam_tay_trai",
+   "do_dai_px": 8.5,
+   "do_dai_game": 1.12,
+   "goc_do": 69.4,
+   "bo_phan": "ban-tay-trai",
+   "lop": 12
+  },
+  "hong_phai": {
+   "tu": "hong",
+   "den": "hong_phai",
+   "do_dai_px": 13.0,
+   "do_dai_game": 1.71,
+   "goc_do": 175.6,
+   "bo_phan": null,
+   "lop": null
+  },
+  "hong_trai": {
+   "tu": "hong",
+   "den": "hong_trai",
+   "do_dai_px": 13.0,
+   "do_dai_game": 1.71,
+   "goc_do": 4.4,
+   "bo_phan": null,
+   "lop": null
+  },
+  "dui_phai": {
+   "tu": "hong_phai",
+   "den": "goi_phai",
+   "do_dai_px": 30.1,
+   "do_dai_game": 3.95,
+   "goc_do": 105.4,
+   "bo_phan": "dui-phai",
+   "lop": 40
+  },
+  "cang_chan_phai": {
+   "tu": "goi_phai",
+   "den": "co_chan_phai",
+   "do_dai_px": 18.1,
+   "do_dai_game": 2.38,
+   "goc_do": 96.3,
+   "bo_phan": "cang-chan-phai",
+   "lop": 41
+  },
+  "ban_chan_phai": {
+   "tu": "co_chan_phai",
+   "den": "mui_chan_phai",
+   "do_dai_px": 18.6,
+   "do_dai_game": 2.44,
+   "goc_do": 36.3,
+   "bo_phan": "ban-chan-phai",
+   "lop": 42
+  },
+  "dui_trai": {
+   "tu": "hong_trai",
+   "den": "goi_trai",
+   "do_dai_px": 30.1,
+   "do_dai_game": 3.95,
+   "goc_do": 74.6,
+   "bo_phan": "dui-trai",
+   "lop": 20
+  },
+  "cang_chan_trai": {
+   "tu": "goi_trai",
+   "den": "co_chan_trai",
+   "do_dai_px": 18.0,
+   "do_dai_game": 2.37,
+   "goc_do": 93.2,
+   "bo_phan": "cang-chan-trai",
+   "lop": 21
+  },
+  "ban_chan_trai": {
+   "tu": "co_chan_trai",
+   "den": "mui_chan_trai",
+   "do_dai_px": 23.3,
+   "do_dai_game": 3.06,
+   "goc_do": 25.5,
+   "bo_phan": "ban-chan-trai",
+   "lop": 22
+  }
+ },
+ "thu_tu_lop": {
+  "ghi_chu": "số nhỏ vẽ trước (nằm dưới). Bộ phận thân + chỗ chen lớp đồ",
+  "lop": {
+   "ao_choang_khan": 5,
+   "non_sau": 8,
+   "tay_trai (xa)": "10–12",
+   "chan_trai (xa)": "20–22",
+   "than": 30,
+   "ao / giap": 35,
+   "chan_phai (gần)": "40–42",
+   "quan": 45,
+   "dau": 50,
+   "mat_na": 55,
+   "tay_phai (gần)": "70–72",
+   "vu_khi": 75,
+   "non_truoc / mu": 85
+  }
+ },
+ "ghi_chu": [
+  "Khớp đo bằng mắt trên ảnh phóng ×4 (sai số ±2 px gốc ≈ ±0.3 điểm game).",
+  "Neo máy đo cũ: docs/anh-goc/zed/neo/zed-v2.neo.json (cổ, eo, vai, lưng…) — khớp với tệp này trong ±3 px.",
+  "Toạ độ x game của neo-game.json cũ lệch +2 so với tệp này vì tệp cũ lấy tâm khung khác; dùng tệp này cho bộ thử."
+ ]
+}
