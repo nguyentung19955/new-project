@@ -3,7 +3,9 @@
   hàng trên: Rừng già, trang Mộc Tinh (đã tìm điểm yếu, quà chờ nhận) — VI | EN
   hàng dưới: Hang biển, trang Cua Lính (đã hạ, chưa điểm yếu) cạnh các ô chưa gặp — VI | EN
 
-  python3 game/tests/so_yeu_quai_shots.py [--out docs/ke-hoach/buoc-2/xem-so.png] [--q soyq=0]
+  python3 game/tests/so_yeu_quai_shots.py [--out docs/ke-hoach/buoc-2/xem-so.png] [--q soyq=0] [--nguon]
+Phiên D (ảnh): mặc định mở bản đóng gói game/dist/linh-khi.html (có ảnh nhúng: chạy python3 game/build.py trước);
+--nguon: mở game/index.html (mã nguồn, không có ảnh → hình vẽ code). --q khunganh=0: bản đóng gói nhưng tắt ảnh khung Bước 2.
 """
 import os, sys
 from playwright.sync_api import sync_playwright
@@ -20,6 +22,7 @@ def arg(name, d=None):
 
 OUT = arg('--out', os.path.join(REPO, 'docs', 'ke-hoach', 'buoc-2', 'xem-so.png'))
 Q = arg('--q', '')
+TRANG = ROOT + '/index.html' if '--nguon' in sys.argv or not os.path.exists(ROOT + '/dist/linh-khi.html') else ROOT + '/dist/linh-khi.html'
 
 INIT = r"""
 window.requestAnimationFrame = function () { return 0; };
@@ -70,7 +73,7 @@ def main():
         pg.on('pageerror', lambda e: errs.append('PAGEERROR ' + str(e)))
         pg.on('console', lambda m: errs.append(m.text) if m.type == 'error' and 'ERR_' not in m.text and 'net::' not in m.text else None)
         pg.add_init_script(INIT)
-        pg.goto('file://' + ROOT + '/index.html?cloud=0' + ('&' + Q if Q else ''))
+        pg.goto('file://' + TRANG + '?cloud=0' + ('&' + Q if Q else ''))
         pg.wait_for_function('window.G && G.scene', timeout=20000)
         pg.add_script_tag(path=os.path.join(HERE, 'setup.js'))
         pg.wait_for_timeout(2500)  # ảnh AI (dữ liệu nhúng) giải mã xong

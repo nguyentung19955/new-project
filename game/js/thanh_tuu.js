@@ -256,7 +256,9 @@
 
   // ---------- vẽ (code tạm, chờ ảnh B11 / B12 / B13 / B17) ----------
   const ui = G.ui, T = G.theme;
-  const gd = (ma) => { const s = G.spriteCustom; return s && s.gdSan ? s.gdSan(ma) : null; };
+  // Phiên D: ảnh docs/anh-goc/buoc-2 (cat_buoc_2.py) — gd-huy-khung-*, gd-huy-hinh-*, gd-danh-hieu-*, hu-huy-hieu.
+  // ?khunganh=0 (G.KHUNG_ANH = false): bỏ ảnh, vẽ code như trước Phiên D.
+  const gd = (ma) => { const s = G.spriteCustom; return G.KHUNG_ANH !== false && s && s.gdSan ? s.gdSan(ma) : null; };
   const veGd = (ma, x, y, w, h) => { const g = gd(ma); return !!(g && G.spriteCustom.veGd(G.ux, g, x, y, w, h)); };
   const SOFT = '#a9c2b4', TXT = '#f1e6c6', GOLD = '#f6dc92', GOOD = '#9be07a', INK = '#14182e';
   function rect(c, x, y, w, h, col) { c.fillStyle = col; c.fillRect(x, y, w, h); }
@@ -307,7 +309,8 @@
   function veHuy(a, cx, cy, r, st, chon) {
     const c = G.ux, C = D.CAP[a.cap] || D.CAP.dong, khoa = st === 0, t = G.time || 0;
     if (chon) { c.save(); c.globalAlpha = 0.5 + 0.3 * Math.sin(t * 5); c.beginPath(); c.arc(cx, cy, r + 2.5, 0, 7); c.fillStyle = GOLD; c.fill(); c.restore(); }
-    if (!veGd('gd-huy-khung-' + (khoa ? 'khoa' : a.cap), cx - r, cy - r, r * 2, r * 2)) {
+    const anh = veGd('gd-huy-khung-' + (khoa ? 'khoa' : a.cap), cx - r, cy - r, r * 2, r * 2);
+    if (!anh) {
       c.beginPath(); c.arc(cx, cy, r, 0, 7); c.fillStyle = INK; c.fill();
       c.beginPath(); c.arc(cx, cy, r - 1, 0, 7); c.fillStyle = khoa ? '#4a4e56' : C.toi; c.fill();
       c.beginPath(); c.arc(cx, cy, r - 2, 0, 7); c.fillStyle = khoa ? '#7a7e86' : C.mau; c.fill();
@@ -316,6 +319,7 @@
       for (let i = 0; i < 12; i++) { const g = (i / 12) * Math.PI * 2; c.fillRect(Math.round(cx + Math.cos(g) * (r - 2.5) - 0.5), Math.round(cy + Math.sin(g) * (r - 2.5) - 0.5), 1, 1); }
       c.beginPath(); c.arc(cx, cy, r - 4, 0, 7); c.fillStyle = khoa ? '#24282e' : '#2a1a12'; c.fill();
     }
+    if (khoa && anh) return; // ảnh khung khoá đã có ổ khoá giữa lòng
     if (khoa) {
       veHinh(a.hinh, cx, cy, Math.round(r * 1.05), 'rgba(150,156,166,0.35)');
       // ổ khoá nhỏ góc dưới phải
@@ -324,7 +328,7 @@
       rect(c, lx, ly, 5, 4, '#c8ccd4'); rect(c, lx + 2, ly + 1, 1, 2, INK);
       return;
     }
-    veHinh(a.hinh, cx, cy, Math.round(r * 1.05), st === 2 ? GOLD : C.mau, 'rgba(0,0,0,0.55)');
+    veHinh(a.hinh, cx, cy, anh ? Math.round(r * 0.95) : Math.round(r * 1.05), st === 2 ? GOLD : C.mau, 'rgba(0,0,0,0.55)'); // ảnh khung: hình nằm trong lòng tối (≈ 0,55 bán kính)
     if (st === 1) { // đã đạt, chờ nhận: lấp lánh + chấm đỏ
       const k = (t * 1.6 + cx * 0.07) % 1;
       c.save(); c.globalAlpha = 1 - k; c.strokeStyle = '#fff2b0'; c.lineWidth = 1; c.beginPath(); c.arc(cx, cy, r + k * 4, 0, 7); c.stroke(); c.restore();
@@ -333,11 +337,19 @@
   }
   TT.veHuy = veHuy;
   // Dải băng danh hiệu (ảnh B13 gd-danh-hieu-<cap> khi có), chữ trong lòng băng bằng T.chuTrongKhung
+  // Ảnh băng cao 16: vẽ theo đúng tỉ lệ (băng thấp hơn thì thu cả hình, đuôi không bị bóp dẹt) → đuôi rộng vien * h / 16.
+  const duoiAnh = (cap, h) => { const g = D.CAP[cap] ? gd('gd-danh-hieu-' + cap) : null; return g ? Math.ceil(((g.vien ? g.vien[1] : 20) * h) / (g.cao || 16)) : 0; };
+  TT.duoiAnh = duoiAnh;
   function veDai(x, y, w, h, ten, cap, o) {
     o = o || {};
-    const c = G.ux, C = D.CAP[cap] || null;
-    const anh = C && veGd('gd-danh-hieu-' + cap, x, y, w, h);
-    const duoi = Math.min(6, Math.floor(h / 2));
+    const c = G.ux, C = D.CAP[cap] || null, g = C ? gd('gd-danh-hieu-' + cap) : null;
+    let anh = false;
+    if (g) {
+      const k = h / (g.cao || 16);
+      c.save(); c.translate(x, y); c.scale(k, k);
+      try { anh = G.spriteCustom.veGd(c, g, 0, 0, w / k, h / k); } finally { c.restore(); }
+    }
+    const duoi = anh ? duoiAnh(cap, h) : Math.min(6, Math.floor(h / 2));
     if (!anh) {
       const m = C ? C.mau : '#6a6e76', d = C ? C.toi : '#3a3e46';
       // hai đuôi gấp
@@ -352,14 +364,20 @@
       rect(c, x + duoi, y + h - 2, w - duoi * 2, 1, d);
       for (let i = x + duoi + 2; i < x + w - duoi - 2; i += 4) rect(c, i, y + 2, 2, 1, d); // hoa văn chữ 回 tối giản
     }
-    if (ten) T.chuTrongKhung(ten, x, y, w, h, { vien: [2, duoi + 1, 2, duoi + 1], size: o.size || 7.5, min: 6, bold: true, color: C ? '#2a1606' : '#d8dce4', shadow: false });
+    if (ten) T.chuTrongKhung(ten, x, y, w, h, { vien: anh ? [Math.round(h * 0.18), duoi, Math.round(h * 0.22), duoi] : [2, duoi + 1, 2, duoi + 1], dem: anh ? 0.5 : undefined, size: o.size || 7.5, min: 6, bold: true, color: C ? '#2a1606' : '#d8dce4', shadow: false });
   }
   TT.veDai = veDai;
   // Hiệu ứng bấm Nhận (B15 hu-nhan-thuong / B17 hu-huy-hieu khi có ảnh): tia vàng + mảnh lấp lánh toả ra, 0,7 giây
   const U = { fx: null };
   function veFx() {
     const f = U.fx; if (!f) return;
-    const a = (G.time || 0) - f.t0;
+    const a = (G.time || 0) - f.t0, FA = G.fxAnh;
+    if (G.KHUNG_ANH !== false && G.HU_MO !== false && FA && FA.co && FA.co('hu-huy-hieu')) { // ảnh B17: huy hiệu xoay, vòng sáng chim Lạc
+      const gy = FA.giay('hu-huy-hieu') || 0.8;
+      if (a < 0 || a >= gy) { U.fx = null; return; }
+      FA.ve(G.ux, 'hu-huy-hieu', f.x, f.y, a, 0, 0.75, false, a > gy * 0.75 ? Math.max(0, 1 - (a - gy * 0.75) / (gy * 0.25)) : 1);
+      return;
+    }
     if (a > 0.7 || a < 0) { U.fx = null; return; }
     const c = G.ux, k = a / 0.7;
     c.save();
@@ -480,7 +498,7 @@
           const dd = TT.dangDeo(), S = VS.state;
           if (dd && S && !(S.bubble && !S.bubble.who)) {
             ui.font(6.5, true);
-            const tw = Math.ceil(G.ux.measureText(G.tv(dd.ten)).width) + 16, hx = Math.round(S.x - S.cam), hy = Math.round(S.y + (VS.OY || 0) - 39);
+            const tw = Math.ceil(G.ux.measureText(G.tv(dd.ten)).width) + Math.max(16, 2 * duoiAnh(dd.cap, 12) + 4), hx = Math.round(S.x - S.cam), hy = Math.round(S.y + (VS.OY || 0) - 39);
             veDai(Math.round(hx - tw / 2), hy - 1, tw, 12, dd.ten, dd.cap, { size: 6.5 });
           }
         }

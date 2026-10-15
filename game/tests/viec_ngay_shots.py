@@ -1,6 +1,8 @@
 """Ảnh soát tĩnh Bước 2 Phiên B "Việc hôm nay" (không chơi thử): chụp thẻ Việc hôm nay ở Anh Mõ và bảng xem trong Tạm dừng, tiếng Việt + tiếng Anh,
 ghép thành docs/ke-hoach/buoc-2/xem-viec.png (khung game 480x270, mỗi ô phóng 2 lần).
-Chạy từ thư mục game: python3 tests/viec_ngay_shots.py (cần Playwright + Chromium + Pillow). Thoát mã 1 nếu trang có lỗi."""
+Chạy từ thư mục game: python3 tests/viec_ngay_shots.py (cần Playwright + Chromium + Pillow). Thoát mã 1 nếu trang có lỗi.
+Phiên D (ảnh): mặc định mở bản đóng gói dist/linh-khi.html (có ảnh nhúng: chạy python3 game/build.py trước); --nguon: mở index.html (không ảnh);
+--q khunganh=0: thêm tham số vào địa chỉ (tắt ảnh khung Bước 2)."""
 import os, sys, io
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from playwright.sync_api import sync_playwright
@@ -20,7 +22,9 @@ SAVE = """(() => { G.resetSave(); const s = G.save; s.sound = false; s.heroes[s.
 def main():
     errs, anh = [], []
     with sync_playwright() as p:
-        g = Game(p, 'soat')
+        trang = ROOT + '/index.html' if '--nguon' in sys.argv or not os.path.exists(ROOT + '/dist/linh-khi.html') else ROOT + '/dist/linh-khi.html'
+        q = sys.argv[sys.argv.index('--q') + 1] if '--q' in sys.argv else ''
+        g = Game(p, 'soat', url='file://' + trang + ('?cloud=0&' + q if q else ('?cloud=0' if trang.endswith('linh-khi.html') else '')))
         g.touch = False
         g.pg.on('pageerror', lambda e: errs.append(str(e)))
         ev = g.ev

@@ -353,8 +353,23 @@
   };
 
   // ---------- vẽ code tạm (chưa có ảnh B7..B10) ----------
-  const gd = (ma) => { const s = G.spriteCustom; return s && s.gdSan ? s.gdSan(ma) : null; };
+  // Phiên D: ảnh docs/anh-goc/buoc-2 (cat_buoc_2.py) — gd-the-viec(-xong), gd-icon-viec-*, gd-ruong-ngay(-mo), gd-o-tuan(-dau), hu-nhan-thuong.
+  // ?khunganh=0 (G.KHUNG_ANH = false): bỏ ảnh, vẽ code như trước Phiên D.
+  const gd = (ma) => { const s = G.spriteCustom; return G.KHUNG_ANH !== false && s && s.gdSan ? s.gdSan(ma) : null; };
   const veGd = (ma, x, y, w, h) => { const g = gd(ma); return !!(g && G.spriteCustom.veGd(G.ux, g, x, y, w, h)); };
+  const FXB = { ds: [] }; // hiệu ứng ảnh hu-nhan-thuong khi bấm Nhận / mở rương (không có ảnh thì thôi, như trước)
+  function phatHu(x, y, co) { const FA = G.fxAnh; if (G.KHUNG_ANH !== false && G.HU_MO !== false && FA && FA.co && FA.co('hu-nhan-thuong')) FXB.ds.push({ x, y, co: co || 0.7, t0: G.time || 0 }); }
+  function veHu() {
+    const FA = G.fxAnh;
+    FXB.ds = FXB.ds.filter((f) => {
+      const gy = FA && FA.giay ? FA.giay('hu-nhan-thuong') || 0.8 : 0, t = (G.time || 0) - f.t0;
+      if (!FA || t < 0 || t >= gy) return false;
+      FA.ve(G.ux, 'hu-nhan-thuong', f.x, f.y, t, 0, f.co, false, t > gy * 0.75 ? Math.max(0, 1 - (t - gy * 0.75) / (gy * 0.25)) : 1);
+      return true;
+    });
+  }
+  // chữ trên thẻ ảnh (giấy sáng): mực tối thay cho chữ sáng của ô vẽ code
+  const MUC_THE = { TXT: '#3a2414', SOFT: '#6a4a2a', GOOD: '#2f6b1a' };
   const MAU_ICON = ['#c8463a', '#9a48d4', '#3a9a6a', '#e0b04a', '#c86a6a', '#5ab0d0', '#ff8a3a', '#7ad0c0', '#6a8ae0', '#d0902a', '#8a9aa8', '#50c8e8'];
   function veIcon(i, x, y, s) {
     if (veGd('gd-icon-viec-' + i, x, y, s, s)) return;
@@ -400,18 +415,29 @@
   const CX = 160, CW = 304;
   function veThe(v, i, x, y, w, h, o) {
     const T = G.theme, xong = xongViec(v), sv = G.save, t = MAU[v.m] || { icon: 0 };
-    if (!veGd(xong ? 'gd-the-viec-xong' : 'gd-the-viec', x, y, w, h)) T.inset(x, y, w, h, xong && !v.nhan);
-    veIcon(t.icon | 0, x + 5, y + 6, 22);
-    const bw = w - 31 - 66; // phần chữ (trừ cột nút bên phải)
-    chu(VN.chu(v), x, y, w, h, { vung: [x + 31, y + 2, bw, 15], size: 8, color: v.nhan ? SOFT : TXT });
-    T.bar(x + 31, y + 19, 104, 'xp', v.can ? v.d / v.can : 0, G.t('{0}/{1}', v.d, v.can), { h: 10, col: xong ? '#5ab04a' : '#c89a3a', marks: 4 });
-    chu(G.t('{0} · {1}', G.tv(MUC[G.clamp(v.o | 0, 0, 2)]), VN.chuThuong(thuongViec(v, sv))), x, y, w, h, { vung: [x + 139, y + 18, bw - 108, 13], size: 6.5, bold: false, color: SOFT });
-    const bx = x + w - 62;
-    if (v.nhan) chu('Đã nhận', x, y, w, h, { vung: [bx, y + 8, 56, 18], align: 'center', size: 7.5, color: GOOD });
+    const ma = xong ? 'gd-the-viec-xong' : 'gd-the-viec', g = gd(ma), anh = !!(g && G.spriteCustom.veGd(G.ux, g, x, y, w, h));
+    if (!anh) T.inset(x, y, w, h, xong && !v.nhan);
+    // Ảnh thẻ: nắp đồng hai đầu (vien trái / phải của ảnh). Thẻ "xong" có dấu đỏ ✓ ở đầu phải: nút Nhận che dấu, nhận xong thì dấu hiện ra
+    // (thay cho chữ "Đã nhận" ở cột nút) → chữ, thanh, nút đặt trong lòng giấy, không đè nắp / dấu. Chữ mực tối trên giấy sáng.
+    const M = anh ? MUC_THE : { TXT, SOFT, GOOD };
+    let ix, lx, bx, tw, barW = 104, nhanO = null;
+    if (!anh) { ix = x + 5; lx = x + 31; bx = x + w - 62; tw = w - 31 - 66; }
+    else {
+      const vl = g.vien ? g.vien[3] : 18, vr = g.vien ? g.vien[1] : 18, g0 = gd('gd-the-viec'), vr0 = g0 && g0.vien ? g0.vien[1] : 20;
+      ix = x + vl - 3; lx = ix + 24; bx = x + w - vr0 - 56; barW = 84;
+      tw = (v.nhan ? x + w - vr - 2 : bx - 2) - lx;
+      if (v.nhan) nhanO = [lx + barW + 4, y + 18, x + w - vr - 2 - (lx + barW + 4), 13];
+    }
+    veIcon(t.icon | 0, ix, y + 6, 22);
+    chu(VN.chu(v), x, y, w, h, { vung: [lx, y + (anh ? 4 : 2), tw, anh ? 14 : 15], size: 8, color: v.nhan ? M.SOFT : M.TXT });
+    T.bar(lx, y + 19, barW, 'xp', v.can ? v.d / v.can : 0, G.t('{0}/{1}', v.d, v.can), { h: 10, col: xong ? '#5ab04a' : '#c89a3a', marks: 4 });
+    if (nhanO) chu('Đã nhận', x, y, w, h, { vung: nhanO, size: 7.5, color: M.GOOD });
+    else chu(G.t('{0} · {1}', G.tv(MUC[G.clamp(v.o | 0, 0, 2)]), VN.chuThuong(thuongViec(v, sv))), x, y, w, h, { vung: [lx + barW + 4, y + 18, (anh ? bx - 2 : lx + tw) - (lx + barW + 4), 13], size: 6.5, bold: false, color: M.SOFT });
+    if (v.nhan) { if (!anh) chu('Đã nhận', x, y, w, h, { vung: [bx, y + 8, 56, 18], align: 'center', size: 7.5, color: M.GOOD }); }
     else if (xong) {
       if (T.btn(bx, y + 6, 56, 22, 'Nhận', { primary: true, size: 8.5 })) {
         const q = VN.nhan(i, sv);
-        if (q) { G.persist(); G.sfx('pick'); G.villageApi.say('+' + VN.chuThuong(q)); }
+        if (q) { G.persist(); G.sfx('pick'); G.villageApi.say('+' + VN.chuThuong(q)); phatHu(bx + 28, y + 30, 0.6); }
       }
     } else if (VN.duocDoi(o, i)) {
       const hoi = hoiDoi === i && G.time - hoiDoiT < 4;
@@ -445,7 +471,7 @@
     const nx = soXong(o);
     if (T.btn(rx + 6, ry + 40, 136, 24, o.ruong ? 'Đã mở hôm nay' : VN.coRuong(o) ? 'Mở rương' : G.t('Còn {0} việc', o.ds.length - nx), { size: 8, primary: VN.coRuong(o), disabled: !VN.coRuong(o) })) {
       const q = VN.moRuong(sv);
-      if (q) { G.persist(); G.sfx('evolve'); VA.say('+' + VN.chuThuong(q)); }
+      if (q) { G.persist(); G.sfx('evolve'); VA.say('+' + VN.chuThuong(q)); phatHu(rx + 22, ry + 34, 0.8); }
     }
     // dải tuần
     const tx = CX + 152, tw = CW - 152;
@@ -460,8 +486,9 @@
     const rt = CF.ruongTuan[muc];
     if (T.btn(tx + 4, ry + 44, tw - 8, 20, o.tuanNhan ? 'Đã mở rương tuần' : VN.coTuan(o) ? 'Mở rương tuần' : G.t('Rương tuần: {0}', VN.chuThuong(rt)), { size: 7, primary: VN.coTuan(o), disabled: !VN.coTuan(o) })) {
       const q = VN.moTuan(sv);
-      if (q) { G.persist(); G.sfx('evolve'); VA.say('+' + VN.chuThuong(q)); }
+      if (q) { G.persist(); G.sfx('evolve'); VA.say('+' + VN.chuThuong(q)); phatHu(tx + tw / 2, ry + 62, 0.8); }
     }
+    veHu();
     if (o.ds.some((v) => xongViec(v) && !v.nhan)) return 'Xong việc rồi! Bấm Nhận đi cháu.';
     if (VN.coRuong(o)) return 'Đủ 3 việc rồi, mở rương ngày đi!';
     if (VN.coTuan(o)) return 'Đủ ngày rồi, mở rương tuần đi!';
