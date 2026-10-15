@@ -98,12 +98,7 @@
   }
   // 15/10 con-ve-tay: quái / trùm có ảnh AI trúng đòn KHÔNG còn phủ trắng cả thân (55–85%, cộng thêm 75% đầu hàng trúng đòn — chồng lên khung
   // đã trắng thành trắng gấp đôi). Nay: viền sáng mảnh quanh thân + nhuộm đỏ nhẹ. Chớp báo ra đòn / đổi pha của trùm (o.baoDon) giữ như cũ.
-  // Tắt: G.CHOP_NHE = false hoặc ?chopcu=1.
-  if (G.CHOP_NHE === undefined) {
-    let cu = false;
-    try { cu = typeof location !== 'undefined' && /[?&]chopcu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; }
-    G.CHOP_NHE = !cu;
-  }
+  // (15/10 don-tep B: bỏ cờ quay lui ?chopcu=1 / G.CHOP_NHE — luôn viền sáng + đỏ nhẹ.)
   // 14/10 (quai-moi-4-con): Heo Rừng Con, Heo Rừng Nanh Dài, Chồn Bóng, Bọ Hung Mai Cứng dựng lại từ ảnh vẽ mới (đủ 6 động tác, net 2, căn tâm).
   // Tấm cũ giữ trong tệp <mã>-cu.sprite.json (mục "cu_cua": <mã>): bình thường KHÔNG nạp (không tạo ảnh nên không tải, không tính vào vùng).
   // Cờ ?quaicu=1 (G.QUAI_CU = true): nạp tấm cũ dưới đúng mã con quái, bỏ tấm mới — y như trước phiên này.
@@ -573,8 +568,7 @@
     // mục 24 (soát mượt Phiên 2, ?chopmo=0): chớp nhẹ trúng đòn mờ dần theo bình phương trong 0,07 giây (js/fx.js G.fx.chopMo), không bật/tắt cứng
     if (G.CHOP_NHE !== false && flash > 0 && G.fx && G.fx.chopMo) flash *= G.fx.chopMo();
     if (s.ten === 'hit' && n === 'hit' && s.u < 0.3) flash = Math.max(flash, 0.75); // chớp trắng đầu cú trúng đòn
-    let chopNhe = 0;
-    if (G.CHOP_NHE !== false) { chopNhe = flash; flash = 0; } // 15/10 con-ve-tay: trúng đòn → viền sáng + đỏ nhẹ, không phủ trắng cả thân (cờ ?chopcu=1)
+    const chopNhe = flash; flash = 0; // 15/10 con-ve-tay: trúng đòn → viền sáng + đỏ nhẹ, không phủ trắng cả thân
     if (o.baoDon > 0) flash = Math.max(flash, o.baoDon); // Phiên E2: chớp trắng báo sắp ra đòn (js/boss.js truyền cho trùm vùng có ảnh AI); chỉ là hình
     c.save();
     const lt = G.lamTron || Math.round; // soát mượt phiên 3 mục 1: cùng kiểu làm tròn với camera (?noisuy=0 như cũ)
