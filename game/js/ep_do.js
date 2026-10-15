@@ -381,13 +381,12 @@
     });
     // cột phải: chi tiết
     const w = sv.weapons.find((q) => q.id === U.sel);
-    const rx = x + lw + 6, rw = wd - lw - 6, l5 = T.chuMoi && T.chuMoi() ? 6 : 5; // chu-lech-khung: lòng ô ảnh từ 3,5 + 2 đệm
+    const rx = x + lw + 6, rw = wd - lw - 6, l5 = 6; // chu-lech-khung: lòng ô ảnh từ 3,5 + 2 đệm
     T.inset(rx, y, rw, h - 16, false);
     if (!w) { ui.text(G.tv('Chọn một vũ khí để ép.'), rx + 6, y + 14, { size: 7.5, color: SOFT }); return y + h - 16; }
     const b = E.bac(w), t = b + 1, g = E.gia(t), tl = E.tiLe(w);
     let yy = y + 11;
-    if (T.chuMoi && T.chuMoi()) T.chuO(G.wName(w) + ' · ' + G.t('Bậc {0}', E.tenBac(b)), rx, y, rw, h - 16, { align: 'left', vung: [rx, y, rw, 15], size: 8, min: 7, bold: true, color: E.mauBac(b) }); // chu-lech-khung: dòng đầu tránh núm góc ô
-    else tx(G.wName(w) + ' · ' + G.t('Bậc {0}', E.tenBac(b)), rx + 5, yy, rw - 10, { size: 8, bold: true, color: E.mauBac(b) });
+    T.chuO(G.wName(w) + ' · ' + G.t('Bậc {0}', E.tenBac(b)), rx, y, rw, h - 16, { align: 'left', vung: [rx, y, rw, 15], size: 8, min: 7, bold: true, color: E.mauBac(b) }); // chu-lech-khung: dòng đầu tránh núm góc ô
     yy += 10;
     const k0 = CF.tong[b], k1 = t <= MAX ? CF.tong[t] : null;
     tx(k1 ? G.t('Sức mạnh vũ khí ×{0} → ×{1}', so2(k0), so2(k1)) : G.t('Sức mạnh vũ khí ×{0} → ×{1}', so2(k0), so2(k0)), rx + l5, yy, rw - 10, { size: 6.8, color: TXT });
@@ -440,15 +439,12 @@
     };
     if (U.hoi === w.id && tu != null) { // hỏi xác nhận khi có nguy cơ tụt bậc
       const coBua = E.bua(sv) > 0, hoiChu = coBua ? G.t('Thất bại sẽ tụt về Bậc {0} — dùng Bùa giữ bậc?', E.tenBac(tu)) : G.t('Thất bại sẽ tụt về Bậc {0}. Không có Bùa giữ bậc. Vẫn ép?', E.tenBac(tu));
-      let yq = yb + 16; const nh = T.chuMoi && T.chuMoi() ? 15 : 14;
-      if (T.chuMoi && T.chuMoi()) { // chu-lech-khung: hộp cao 36 thì dòng hỏi nằm trên viền ảnh → hộp cao 40 (lên trên 4), lời hỏi trong lòng hộp, nút dưới
+      let yq = yb + 16; const nh = 15;
+      { // chu-lech-khung: hộp cao 36 thì dòng hỏi nằm trên viền ảnh → hộp cao 40 (lên trên 4), lời hỏi trong lòng hộp, nút dưới
         const go = T.khungCanhBao && T.khungCanhBao(rx + 1, yb - 8, rw - 2, 40);
         if (!go) ui.rect(rx + 1, yb - 8, rw - 2, 40, 'rgba(20,10,10,0.94)', '#ff9a5a');
         T.chuTrongKhung(hoiChu, rx + 1, yb - 8, rw - 2, 40, { khung: go ? 'gd-khung-canh-bao' : null, vien: [2, 2, 2, 2], vung: [rx + 1, yb - 8, rw - 2, 20.5], align: 'left', dong: 2, gian: 1.5, size: 7, min: 6.5, bold: false, color: TXT });
         yq = yb + 12.5;
-      } else {
-      if (!(T.khungCanhBao && T.khungCanhBao(rx + 1, yb - 4, rw - 2, 36))) ui.rect(rx + 1, yb - 4, rw - 2, 36, 'rgba(20,10,10,0.94)', '#ff9a5a'); // 15/10: ảnh gd-khung-canh-bao
-      ui.para(hoiChu, rx + 5, yb + 4, rw - 10, { size: 6.5, color: TXT });
       }
       if (coBua) {
         if (T.sbtn(rx + 5, yq, 60, nh, 'Dùng bùa', { size: 6.8, pad: 1, primary: true })) lam(true);

@@ -101,7 +101,7 @@
     ui.font(11, true);
     const conCho = PW - 70 - (Math.ceil(G.ux.measureText(G.tv(tit)).width) + 22) - (tabs.length - 1) * 2;
     ui.font(7.5, true);
-    const muon = ten.map((s) => Math.ceil(G.ux.measureText(s).width) + (T.chuMoi() ? 22 : 12));
+    const muon = ten.map((s) => Math.ceil(G.ux.measureText(s).width) + 22);
     const tong = muon.reduce((a, b) => a + b, 0), k = tong > conCho ? conCho / tong : 1;
     const rong = muon.map((w) => Math.max(26, Math.floor(w * k)));
     let x = PX + PW - 70 - rong.reduce((a, w) => a + w + 2, 0);
@@ -136,7 +136,7 @@
     const pages = Math.max(1, Math.ceil(n / per));
     V.page = G.clamp(V.page, 0, pages - 1);
     if (pages > 1) {
-      const r = T.chuMoi() ? 2 : 0; // chu-lech-khung: nút ảnh rộng 26 thì hai đinh góc trong dồn vào giữa, đè lên mũi tên → rộng 30 (cùng tâm)
+      const r = 2; // chu-lech-khung: nút ảnh rộng 26 thì hai đinh góc trong dồn vào giữa, đè lên mũi tên → rộng 30 (cùng tâm)
       if (T.sbtn(x - r, y - 1, 26 + r * 2, 18, '‹', { size: 10, pad: 4 })) V.page = (V.page + pages - 1) % pages;
       ui.text(G.t('Trang {0}/{1}', V.page + 1, pages), x + 50, y + 11.5, { size: 7.5, align: 'center', color: SOFT });
       if (T.sbtn(x + 74 - r, y - 1, 26 + r * 2, 18, '›', { size: 10, pad: 4 })) V.page = (V.page + 1) % pages;
@@ -203,15 +203,11 @@
       inkText(q[0], q[1], q[2], 8, night ? '#8a86a8' : '#8a7a58', halo);
       const px = q[3] || q[1], py = q[4] || q[2] + 12;
       ui.font(6.5, true);
-      if (T && T.chuTrongKhung && G.CHU_CU !== true) { // chu-lech-khung: tấm gỗ rộng theo chữ (32 quá hẹp cho "sắp có" / "coming soon"), chữ trong lòng tấm
+      { // chu-lech-khung: tấm gỗ rộng theo chữ (32 quá hẹp cho "sắp có" / "coming soon"), chữ trong lòng tấm
         const nhan = G.tc('bản đồ', 'sắp có'), tw = G.ux.measureText(nhan).width, ww = Math.max(32, Math.ceil(tw + 14));
         const go = T.theSapCo && T.theSapCo(px - ww / 2, py - 7, ww, 10);
         if (!go) ui.rect(px - ww / 2, py - 7, ww, 10, 'rgba(74,54,38,0.85)');
         T.chuTrongKhung(nhan, px - ww / 2, py - 7, ww, 10, { khung: go ? 'gd-the-sap-co' : null, vien: [1, 2, 1, 2], size: 6.5, bold: true, color: '#f0e6c8', shadow: go ? undefined : false });
-      } else {
-      const go = T && T.theSapCo && T.theSapCo(px - 16, py - 7, 32, 10); // 15/10 (khung-gd-con): tấm gỗ ảnh gd-the-sap-co; chữ vẫn vẽ code (có bóng cho rõ trên gỗ)
-      if (!go) ui.rect(px - 16, py - 7, 32, 10, 'rgba(74,54,38,0.85)');
-      ui.text(G.tc('bản đồ', 'sắp có'), px, py + 0.6, { size: 6.5, bold: true, align: 'center', color: '#f0e6c8', shadow: go ? undefined : false });
       }
     }
     // 15 thẻ ải mặt trống; ải chưa qua ghi sức mạnh khuyên dùng, tô màu so với sức mạnh của bé (xanh đủ, vàng sát nút, đỏ thiếu)
@@ -245,7 +241,7 @@
     T.panel(248, 206, 226, 60, null, { plain: true, noBand: true });
     if (V.sel) {
       const r = V.sel[0], i = V.sel[1], R = G.REGIONS[r], b = G.stageStats(r, i, V.diff);
-      ui.text(G.t(V.diff ? '{0} · {1} · khó 2' : '{0} · {1}', R.name, i === 4 ? 'Ải trùm' : G.t('Ải {0}', i + 1)), 256, T.chuMoi() ? 220 : 219, { size: 9.5, bold: true, color: GOLD }); // chu-lech-khung: +1 cho dấu chữ không chạm viền trên
+      ui.text(G.t(V.diff ? '{0} · {1} · khó 2' : '{0} · {1}', R.name, i === 4 ? 'Ải trùm' : G.t('Ải {0}', i + 1)), 256, 220, { size: 9.5, bold: true, color: GOLD }); // chu-lech-khung: +1 cho dấu chữ không chạm viền trên
       const l2 = G.t('{0} · 8 phòng · ', i === 4 ? G.t('Trùm {0}', R.bossName) : G.t('Trùm nhỏ {0}', R.mini));
       // 15/10 sua-lang-npc: dòng dài (tiếng Anh "Mini-boss … · Poison") lấn vào dưới nút Lên đò (x 404) → giữ cỡ nhỏ cũ 6,5 cho vừa
       const l3 = G.t('hệ {0}', G.EL[R.el].name);
@@ -310,12 +306,9 @@
       if (!h) return;
       T.inset(x0, ry, 214, h - 2, false, { fill: got ? '#24484a' : '#17302f', col: got && E ? E.dark : T.C.brD });
       const trangThai = locked ? 'Chưa mở' : got ? 'Đã mở' : i === st + 1 && G.vkMoi ? G.t('Sắp mở: {0} linh khí', G.vkMoi.gia(st)) : 'Chưa mở';
-      if (T.chuMoi()) { // chu-lech-khung: tên cấp (trái) và trạng thái (phải) trong dải trên của lòng ô, tránh núm góc
+      { // chu-lech-khung: tên cấp (trái) và trạng thái (phải) trong dải trên của lòng ô, tránh núm góc
         T.chuO(q[0], x0, ry, 214, h - 2, { align: 'left', vung: [x0, ry, 60, 14], size: 8, min: 7, bold: true, color: got && E ? E.col : SOFT });
         T.chuO(trangThai, x0, ry, 214, h - 2, { align: 'right', vung: [x0 + 120, ry, 94, 14], size: 6.5, bold: got, color: locked ? WARN : got ? GOOD : SOFT });
-      } else {
-      ui.text(q[0], x0 + 5, ry + 10, { size: 8, bold: true, color: got && E ? E.col : SOFT });
-      ui.text(trangThai, x0 + 209, ry + 10, { size: 6.5, align: 'right', bold: got, tiny: true, color: locked ? WARN : got ? GOOD : SOFT });
       }
       if (q[1]) fitPara(q[1], x0 + 5, ry + 19, 204, { size: 6.5, color: TXT }, 2);
       else if (el) {
@@ -340,7 +333,7 @@
     list.slice(V.page * ROWS, V.page * ROWS + ROWS).forEach((w, k) => {
       const y = LIST_Y + k * PITCH;
       if (G.weaponLine(w, CX, y, CW, V.sel === w.id, carry.includes(w.id) ? 48 : 0)) { V.sel = w.id; G.click = null; G.sfx('ui'); }
-      if (carry.includes(w.id)) T.chuO('đang mang', CX, y, CW, 22, { cu: [CX + CW - 6, y + 9.5], sel: V.sel === w.id, align: 'right', vung: [CX + CW - 50, y, 50, 12], size: 6.5, bold: false, color: GOOD });
+      if (carry.includes(w.id)) T.chuO('đang mang', CX, y, CW, 22, { sel: V.sel === w.id, align: 'right', vung: [CX + CW - 50, y, 50, 12], size: 6.5, bold: false, color: GOOD });
     });
     ui.text(G.t('{0} vũ khí', list.length), CX + 2, 200.5, { size: 7, color: SOFT });
     // xem bảng linh khí (dấu ấn hệ) và đặc trưng của món đang chọn
@@ -415,7 +408,7 @@
     // Rà soát C: thẻ rộng theo chữ (phông thật trên iPhone rộng hơn, "Nguyên liệu" chạm viền thẻ) nếu băng tiêu đề còn chỗ
     if (G.RSC !== false) {
       ui.font(7.5, true);
-      const rong = tabs.map((t) => Math.max(t[2], Math.ceil(G.ux.measureText(G.tv ? G.tv(t[1]) : t[1]).width) + (T.chuMoi() ? 22 : 9))); // chu-lech-khung: nút ảnh có mây + đinh góc ~9 điểm mỗi bên
+      const rong = tabs.map((t) => Math.max(t[2], Math.ceil(G.ux.measureText(G.tv ? G.tv(t[1]) : t[1]).width) + 22)); // chu-lech-khung: nút ảnh có mây + đinh góc ~9 điểm mỗi bên
       ui.font(11, true);
       const tit = Math.ceil(G.ux.measureText(G.tv ? G.tv('Hàng xén') : 'Hàng xén').width) + 16;
       const du = PW - 70 - tit - tabs.reduce((a, t) => a + t[2] + 2, 0), thieu = rong.map((w, i) => w - tabs[i][2]), tong = thieu.reduce((a, b) => a + b, 0);
@@ -469,7 +462,7 @@
       T.inset(CX, y, CW, 40, false);
       ui.text(G.tv(reg.mat), CX + 8, y + 15, { size: 9, bold: true, color: U.daQua(sv, r) ? TXT : SOFT });
       ui.text(G.t('Đang có {0} · vùng {1}', sv.mats[r], G.tv(reg.name)), CX + 8, y + 29, { size: 7, color: SOFT });
-      const nY = T.chuMoi() ? y + 6 : y + 10, nH = T.chuMoi() ? 28 : 20; // chu-lech-khung: nút 76×20 không đủ lòng cho "Hạ Ngư Tinh để mở" → cao 28, chữ xuống hai dòng
+      const nY = y + 6, nH = 28; // chu-lech-khung: nút 76×20 không đủ lòng cho "Hạ Ngư Tinh để mở" → cao 28, chữ xuống hai dòng
       if (T.sbtn(CX + CW - 168, nY, 76, nH, why || G.t('Đổi 1 ({0})', D.gia), { size: 7.5, pad: 2, disabled: !!why })) {
         if (U.doi(sv, r, 1)) { G.persist(); G.sfx('pick'); say(G.t('Của cháu đây, 1 {0}.', G.tv(reg.mat.toLowerCase()))); }
       }
@@ -523,8 +516,7 @@
       ui.text(hoc ? 'đã dạy Cu Tí' : G.t('còn bị {0} bắt', D.boss), nx, ry + 11, { size: 7, color: hoc ? GOOD : SOFT });
       // dòng ngắn (ngan) cho vừa thẻ; đủ chữ ở Hành trang > Nhân vật
       const txt = hoc ? G.tv(D.ngan[0]) + '; ' + G.tv(D.ngan[1]) : G.t('Hạ {0} để cứu bạn ấy. Bạn ấy sẽ dạy Cu Tí: {1}', D.boss, G.tv(D.ngan[0]));
-      if (T.chuMoi()) T.chuO(txt, CX, ry, CW, 34, { align: 'left', vung: [CX + 34, ry + 12.5, CW - 34, 21.5], dong: 2, gian: 1.5, size: 6.5, bold: false, color: hoc ? TXT : SOFT }); // chu-lech-khung: hai dòng gọn trong lòng ô
-      else ui.para(txt, CX + 36, ry + 20, CW - 42, { size: 6.5, color: hoc ? TXT : SOFT });
+      T.chuO(txt, CX, ry, CW, 34, { align: 'left', vung: [CX + 34, ry + 12.5, CW - 34, 21.5], dong: 2, gian: 1.5, size: 6.5, bold: false, color: hoc ? TXT : SOFT }); // chu-lech-khung: hai dòng gọn trong lòng ô
     });
     return left ? G.t('Khẽ thôi, các bé đang chơi trong sân. Còn {0} bạn bị yêu tinh bắt: hạ trùm vùng để cứu, bạn ấy sẽ dạy cháu.', left)
       : 'Ba bạn về đủ cả rồi. Ngón nghề của các bạn, cháu học hết rồi đấy.';
@@ -672,8 +664,7 @@
       else if (T.btn(CX + 132, 208, 120, CDH, 'Xoá hết', { danger: true })) { G.resetSave(); V.confirm = false; goHub(); VS.enter({}); VS.say('Đã xoá tiến trình.'); return null; }
     }
     if (G.VERSION) { // chu-lech-khung: góc dưới phải khung bảng có núm tròn: chữ phiên bản đặt trong lòng, tránh núm
-      if (T.chuMoi()) T.chuTrongKhung(G.t('Phiên bản {0}', G.VERSION), PX - 3, PY - 3, PW + 6, PH + 6, { khung: 'gd-khung-bang', kKhung: T.kBang(PW, PH), vien: [7, 7, 7, 7], vung: [CX, 249, CW, 12], align: 'right', size: 6.5, bold: false, color: SOFT });
-      else ui.text(G.t('Phiên bản {0}', G.VERSION), CX + CW - 2, 258, { size: 6.5, align: 'right', color: SOFT });
+      T.chuTrongKhung(G.t('Phiên bản {0}', G.VERSION), PX - 3, PY - 3, PW + 6, PH + 6, { khung: 'gd-khung-bang', kKhung: T.kBang(PW, PH), vien: [7, 7, 7, 7], vung: [CX, 249, CW, 12], align: 'right', size: 6.5, bold: false, color: SOFT });
     }
     return V.confirm ? 'Ấy ấy! Xoá là mất hết đấy, nghĩ kỹ chưa?' : 'Cốc cốc cốc! Làng nước nghe đây! Cần chỉnh gì cứ bảo anh.';
   }
@@ -923,7 +914,7 @@
       if (g.need) { if (G.keyP.Enter || G.keyP.Space) G.setScene(G.Village); return; } // vào bằng nút "Chơi ngay" / "Vào game"
       // không có mây: chạm chỗ trống để vào; chạm dải nút phụ thì không
       const r = TL.row, onBtns = G.downs.some((d) => d.y > r[0][1] - 4 && d.y < r[0][1] + r[0][3] + 4 && d.x > r[0][0] - 4 && d.x < r[1][0] + r[1][2] + 4);
-      const L = TL.lang, onLang = G.downs.some((d) => d.x > L[0] - 6 - (T.chuMoi() ? 8 : 0) && d.y < L[1] + L[3] + 6); // nút EN / VI ở góc trên phải
+      const L = TL.lang, onLang = G.downs.some((d) => d.x > L[0] - 6 - 8 && d.y < L[1] + L[3] + 6); // nút EN / VI ở góc trên phải
       if ((G.downs.length && !onBtns && !onLang) || G.keyP.Enter || G.keyP.Space || G.keyP.KeyJ) G.setScene(G.Village);
     },
     draw() {
@@ -990,7 +981,7 @@
         }
       }
       // nút nhỏ đổi ngôn ngữ ngay ở màn mở đầu (chữ đang dùng sáng hơn); nhớ theo máy nên lần sau mở lại vẫn đúng
-      const nr = T.chuMoi() ? 8 : 0; // chu-lech-khung: nút ảnh 44 rộng chỉ có lòng ~26 điểm cho "EN / VI" → rộng 52 (mép phải giữ nguyên)
+      const nr = 8; // chu-lech-khung: nút ảnh 44 rộng chỉ có lòng ~26 điểm cho "EN / VI" → rộng 52 (mép phải giữ nguyên)
       if (G.ngonNgu && T.sbtn(TL.lang[0] - nr, TL.lang[1], TL.lang[2] + nr, TL.lang[3], 'EN / VI', { size: 7.5, sel: G.LANG === 'en' })) G.ngonNgu.doi();
       // thông tin phụ: nhỏ, góc dưới bên phải, không tranh chỗ với nút
       ui.text(G.t('Phiên bản {0}', G.VERSION || '?'), 474, 264, { size: 7, align: 'right', color: 'rgba(232,222,196,0.85)', shadow: true });

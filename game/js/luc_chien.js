@@ -186,7 +186,7 @@
     if (age < 0.14) dy = -Math.round(5 * (1 - age / 0.14)); else if (age < 0.26) dy = 1;
     c.globalAlpha = ga0 * Math.min(age < 0.12 ? 0.3 + (age / 0.12) * 0.7 : 1, left < 0.3 ? Math.max(0, left / 0.3) : 1);
     let ty = y + dy + 9 + size * 0.36;
-    if (T && T.datChu && T.chuMoi && T.chuMoi()) { const kq = T.datChu(s1 + ' ' + s2, x, y, w, 18, { khung: 'gd-dai-thong-bao', vien: [3, 12, 3, 12], size, min: size }); if (kq && kq.lines[0]) ty = kq.lines[0].b + dy; } // chu-lech-khung: đường cơ sở theo lòng dải (chữ có dấu không chạm viền trên)
+    if (T && T.datChu) { const kq = T.datChu(s1 + ' ' + s2, x, y, w, 18, { khung: 'gd-dai-thong-bao', vien: [3, 12, 3, 12], size, min: size }); if (kq && kq.lines[0]) ty = kq.lines[0].b + dy; } // chu-lech-khung: đường cơ sở theo lòng dải (chữ có dấu không chạm viền trên)
     const tx0 = x + (w - w1 - w2 - 10) / 2;
     ui.text(s1, tx0, ty, { size, bold: true, color: up ? '#ffe9a8' : '#f1e6c6' });
     // phần tăng / giảm: nảy nhẹ khi số vừa chạy xong
