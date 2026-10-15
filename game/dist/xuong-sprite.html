@@ -1022,6 +1022,15 @@ window.G.LANG = 'vi';
     if (/[?&]thuong2tay=0(&|$)/.test(q)) G.THUONG_2TAY = false;
     if (/[?&]phitieuto=0(&|$)/.test(q)) G.PHI_TIEU_TO = false;
   } catch (e) { /* giữ mặc định */ }
+  // NẮM TAY TỪ ẢNH + CHẠY HAI TAY (16/10/2026, docs/review/ke-hoach-cai-thien/vk-khop-tay/bao-cao-2.md, js/zed_moi.js): lớp ngón cắt từ ảnh nắm tay
+  // ôm cán (lòng bàn tay sau cán, ngón trước cán); chạy cầm thương / búa bằng hàng chạy hai tay. Chỉ đổi HÌNH. Tắt: ?ngonanh=0 (về lớp ngón
+  // tự vẽ), ?chay2tay=0 (về hàng chạy cũ).
+  G.NGON_ANH = true; G.CHAY_2TAY = true;
+  try {
+    const q = (typeof location !== 'undefined' && location.search) || '';
+    if (/[?&]ngonanh=0(&|$)/.test(q)) G.NGON_ANH = false;
+    if (/[?&]chay2tay=0(&|$)/.test(q)) G.CHAY_2TAY = false;
+  } catch (e) { /* giữ mặc định */ }
   // ĐÒN ZED MỚI QUAY THEO HƯỚNG NHẮM (13/10/2026, docs/review/ke-hoach-cai-thien/zed-8-huong): js/zed_moi.js xoay vũ khí đâm/ném quanh nắm tay
   // theo góc nhắm thật (kẹp ±75°, quá thì nghiêng nhẹ thân trên), chém/quét/nện nghiêng đường vung tối đa ±35°; vệt/hiệu ứng (js/fx.js aimed)
   // xoay cùng góc. Chỉ đổi HÌNH. Tắt: ?huongvk=0 (vũ khí chỉ vẽ ngang theo neo như trước).
@@ -1188,6 +1197,14 @@ window.G.LANG = 'vi';
     M4.elite.push(M4.elite[1].slice());
     M4.boss.thuong = M4.boss.ngu;
     G.VUNG4_MUON = 1; // vùng gốc của hình tạm (Hang biển): js/sprite_custom.js tải ảnh vùng này khi chọn vùng 4
+    // Bước 3 phiên 2A (docs/review/ke-hoach-cai-thien/vung-4-2a/bao-cao.md): 8 quái thường vùng 4 có mã + kỹ năng riêng (js/ky_nang_quai.js),
+    // hình tạm = ảnh con gần giống nhuộm màu (KN.TAM) tới khi có ảnh thật. Tinh anh / trùm nhỏ / trùm vùng vẫn mượn Hang biển (phiên 3A / 3B).
+    // Tắt riêng phần này: ?quaisong=0 (G.QUAI_SONG = false) → 8 vai mượn Hang biển như phiên 1.
+    if (G.QUAI_SONG === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]quaisong=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.QUAI_SONG = !tat; }
+    if (G.QUAI_SONG) {
+      const MOI = { rusher: 'raiCa', swarm: 'diaTrau', shield: 'baBa', archer: 'cocTia', nimble: 'ranNuoc', kami: 'echPhinh', bomber: 'maDa', spiky: 'traiGai' };
+      for (const k in MOI) M4[k][3] = MOI[k];
+    }
   }
   // Vùng dùng để VẼ (theme phòng, nền, hình vẽ code dự phòng) của vùng r: vùng 4 còn mượn hình thì vẽ như vùng mượn.
   G.vungVe = (r) => (r === 3 && G.VUNG4_MUON != null ? G.VUNG4_MUON : r);
@@ -1565,6 +1582,36 @@ window.G.LANG = 'vi';
   };
   // Cùng bảng dạng danh sách đối tượng (js/thanh_tuu.js của Phiên C đọc G.SO_YQ.ds[i].ma để đếm trang sổ "Chép sổ" / "Sổ đủ trang")
   G.SO_YQ.ds = G.SO_YQ.trang.map((t) => ({ ma: t[0], vung: t[1], loai: t[2], he: t[3] }));
+})();
+
+// ===================== BƯỚC 2 — PHIÊN E: CHỈNH SỐ THƯỞNG BA HỆ (cân bằng, docs/ke-hoach/buoc-2/bao-cao-phien-E.md) =====================
+// Bot Node (tests/cay.py --node --ngay=8 --viec, 24 lượt chiến dịch) với số gốc của Phiên A / B / C: số lần chơi qua 15 ải −12%,
+// vàng còn lúc qua 3-5 +29%, đá nâng bậc +30%/ngày → vượt LUAT-CAN-BANG.md. Khối này ĐÈ số (bảng gốc ở các khối trên giữ nguyên để so):
+//   Việc hôm nay: vàng mỗi việc còn ~1/2 (mức 3 còn ~40%), quặng ~1/2, rương ngày bớt đá (2/3/4 → 1/1/2; linh khí giữ).
+//   Sổ yêu quái: vàng ★ còn 1/2; đá ★★★ trùm nhỏ 2 → 1, trùm vùng 3 → 2; đá thưởng vùng 5/8/12 → 3/5/8.
+//   Thành tựu: vàng còn 1/2, đá còn 1/2 (làm tròn lên). Linh khí, bùa, quặng, danh hiệu giữ nguyên.
+// Cờ quay lui: ?thuongb2=goc (G.THUONG_B2_GOC = true trước khi nạp data.js) → dùng số gốc của Phiên A / B / C.
+(function () {
+  const G = window.G;
+  let goc = G.THUONG_B2_GOC === true;
+  try { if (typeof location !== 'undefined' && /[?&]thuongb2=goc(&|$)/.test(location.search || '')) goc = true; } catch (e) { /* giữ mặc định */ }
+  G.THUONG_B2_GOC = goc;
+  if (goc) return;
+  const V = G.VIEC_NGAY, Y = G.SO_YQ, T = G.THANH_TUU;
+  if (V) {
+    V.thuong = [
+      [{ v: 30, q: 1 }, { v: 50, q: 2 }, { v: 80, q: 2 }], // việc Dễ   (gốc 60/2 · 120/3 · 200/4)
+      [{ v: 45, q: 2 }, { v: 75, q: 2 }, { v: 120, q: 3 }], // việc Vừa (gốc 90/3 · 180/4 · 300/6)
+      [{ v: 60, q: 2 }, { v: 100, q: 3 }, { v: 160, q: 4 }], // việc Khó (gốc 120/4 · 240/6 · 400/8)
+    ];
+    V.ruongNgay = [{ da: 1, lk: 8 }, { da: 1, lk: 12 }, { da: 2, lk: 16 }]; // gốc đá 2 / 3 / 4
+  }
+  if (Y) {
+    Y.vang = { thuong: [10, 20, 30], tinhanh: [25, 40, 60], trumnho: [40, 60, 90], trum: [75, 125, 200] }; // gốc ×2
+    Y.da = { thuong: 0, tinhanh: 1, trumnho: 1, trum: 2 }; // gốc 0 / 1 / 2 / 3
+    Y.vungDa = [3, 5, 8]; // gốc 5 / 8 / 12
+  }
+  if (T) for (const a of T.DS) { if (a.th.vang) a.th.vang = Math.round(a.th.vang / 2); if (a.th.da) a.th.da = Math.ceil(a.th.da / 2); }
 })();
 // ===== game/js/art.js =====
 // Hình pixel vẽ bằng mã: hero, quái, boss, cảnh nền, đồ vật. Chỉ dùng fillRect toạ độ nguyên, màu phẳng.
@@ -10235,7 +10282,7 @@ const DON = {
     else if (k === 'ban') P.over(c => { const m = DON.mom(P), q = seg(u, .1, .85), x = m[0] + dx * tam * q, y = m[1] + dy * tam * q; if (u < .25) F.hat(c, m[0], m[1], 8, 5, u * 4, { v: 9, goc: dir, xoe: 1.4, cols: [cols[2] || cols[1], cols[1]] }); if (q < 1) { for (let i = 1; i < 5; i++) { c.globalAlpha = .7 - i * .15; F.dia(c, x - dx * i * 3, y - dy * i * 3, (d.co || 2.5) * (1 - i * .18), cols[0]); } c.globalAlpha = 1; F.cau(c, x, y, d.co || 2.5, cols); } else F.hat(c, m[0] + dx * tam, m[1] + dy * tam, 10, 7, seg(u, .85, 1), { v: 10, cols: [cols[2] || '#fff', cols[1], cols[0]] }); });
     // đợt 2: nổ cảm tử → ảnh nổ có sẵn theo vùng (rừng: độc, biển: băng, lâu đài: lửa). Ảnh neo ở tâm nổ TRÊN SÀN (chuẩn r 40) → đặt ở chân quái,
     // cỡ tam / 40 = đúng vùng sát thương thật (js/mobs.js: vòng tròn tâm chân quái, bán kính tam). Ảnh chưa tải: không vẽ.
-    else if (k === 'no' && MA._vt2) { const ma = { rung: 'hu-no-doc', bien: 'hu-no-bang', laudai: 'hu-no-lua' }[P.d.vung] || 'hu-no-nho', FA = G.fxAnh;
+    else if (k === 'no' && MA._vt2) { const ma = { rung: 'hu-no-doc', bien: 'hu-no-bang', laudai: 'hu-no-lua', song: 'hu-no-bang' }[P.d.vung] || 'hu-no-nho', FA = G.fxAnh;
       if (FA && FA.co(ma)) { const so = HT.so(ma); P.over(c => HT.ve(c, ma, 0, 0, Math.min(so - 1, Math.floor(u * so)), 0, tam / 40)); } }
     else if (k === 'no') P.over(c => { const cy = -P.h - B.bh * .4; if (u < .22) { F.dia(c, 0, cy, tam * (.25 + u * 2.4), cols[1]); F.dia(c, 0, cy, tam * (.15 + u * 2), cols[2] || '#fff'); } else if (u < .55) { const e = seg(u, .22, .55); F.vong(c, 0, cy, tam * (.8 + e * .3), tam * (.8 + e * .3), cols[1], Math.max(1, Math.round(4 * (1 - e)))); F.a(c, 1 - e); F.dia(c, 0, cy, tam * .45 * (1 - e), cols[2] || '#fff'); F.a(c, 1); } F.song(c, 0, 0, tam, seg(u, .05, .8), [cols[2] || '#fff', cols[1]], 2); F.hat(c, 0, cy, 26, 9, u, { v: tam * 1.1, cols: [cols[2] || '#fff', cols[1], cols[0]], to: 2 }); F.khoi(c, 0, cy, tam * .7, seg(u, .2, 1), [cols[0], '#48424e'], 4, 7); });
     else if (k === 'gai') { if (!MA._vt2) P.over(c => { const cy = -P.h - B.bh * .4, q = seg(u, 0, .6), n = d.so || 8; for (let i = 0; i < n; i++) { const a = dir + i / n * TAU, r0 = B.bw * .35 + (tam - B.bw * .35) * q, x = Math.cos(a) * r0, y = cy + Math.sin(a) * r0 * MA.det; if (q < 1) { F.duong(c, x - Math.cos(a) * 5, y - Math.sin(a) * 5, x, y, cols[1], 1); F.px(c, x, y, cols[2] || '#fff'); F.px(c, x - Math.cos(a) * 6, y - Math.sin(a) * 6, cols[0]); } else F.hat(c, x, y, 3, i, seg(u, .6, 1), { v: 5, cols: [cols[1]] }); } });
@@ -10397,7 +10444,7 @@ function def(id, d) { d.id = id; d.anims = d.anims || {}; DEFS[id] = d; return d
 MA._def = def;
 // Viết gọn một cử động: A(thời lượng giây, hàm tư thế, {lap: lặp, nhan: tên tiếng Việt, moc: [hết báo trước, hết ra đòn] tính theo 0..1})
 function A(dd, f, o) { return Object.assign({ d: dd, f }, o || {}); }
-MA._xong = function () { MA.list.length = 0; const TT = ['bien', 'rung', 'laudai'], LL = ['thuong', 'tinhanh', 'trumnho', 'trum'];
+MA._xong = function () { MA.list.length = 0; const TT = ['bien', 'rung', 'laudai', 'song'], LL = ['thuong', 'tinhanh', 'trumnho', 'trum'];
   for (const id of Object.keys(DEFS)) { const d = DEFS[id];
     for (const k of Object.keys(DMAC)) if (!d.anims[k]) d.anims[k] = { d: DMAC[k][0], lap: DMAC[k][1], f: CH[k] };
     for (const k of Object.keys(d.anims)) { const a = d.anims[k]; if (typeof a === 'function') d.anims[k] = { d: DMAC[k] ? DMAC[k][0] : 1, f: a }; const b = d.anims[k]; if (b.lap == null) b.lap = !!(DMAC[k] && DMAC[k][1]); if (!b.nhan) b.nhan = NHAN[k] || k; }
@@ -11354,6 +11401,73 @@ ctAnim('nhimThan', {
 
 })(); } catch (e) { MA.loi.push('chitiet.js: ' + (e && e.stack || e)); if (typeof console !== 'undefined') console.error('monster_art chitiet.js', e); }
 // ----- hết chitiet.js -----
+// ----- song (bước 3 vùng 4 Sông sâu, phiên 2A — docs/review/ke-hoach-cai-thien/vung-4-2a/bao-cao.md) -----
+// 8 quái thường vùng 4 CHƯA CÓ ẢNH: khai báo mã + tên, HÌNH TẠM = hình của con gần giống (MA.hinhTam[mã].muon) nhuộm màu (MA.hinhTam[mã].loc).
+// - Hình vẽ code của mã mới: lưới của con mượn, đổi màu từng điểm theo đúng phép lọc (cùng công thức với ctx.filter của trình duyệt).
+// - Trong trận (js/ky_nang_quai.js KN.veTam): con mượn đã có ảnh AI thì vẽ ẢNH con mượn qua ctx.filter = MA.locCss(loc); chưa có thì vẽ hình code ở trên.
+// - Có ảnh thật (game/art/custom/<mã>.sprite.json, dựng bằng docs/review/ke-hoach-cai-thien/vung-4-quai/cong-cu/dung-song.py) thì ảnh đó tự thay, hết nhuộm.
+// Cử động, bộ phận, cỡ (hộp va chạm) theo con mượn. Tệp nguồn ghép (docs/phac-thao/quai-hoat-hinh/nguon/ghep.py) chưa có khối này: ghép lại thì chép khối này theo.
+try { (function () {
+// loc: các phép lọc lần lượt — ['hue', độ] xoay màu, ['sat', k] độ đậm, ['bri', k] độ sáng, ['sep', k] ngả nâu (0..1), ['con', k] tương phản
+MA.hinhTam = {
+  raiCa:    { muon: 'heoCon',   loc: [['hue', -12], ['sat', 0.8], ['bri', 0.92]] },                  // Rái Cá Cầm Sào ← Heo Rừng Con (lông nâu, xông tới)
+  diaTrau:  { muon: 'caCon',    loc: [['sep', 0.85], ['hue', 30], ['sat', 1.5], ['bri', 0.72]] },    // Bầy Đỉa Trâu ← Bầy Cá Con (3 con, nâu rêu sọc vàng)
+  baBa:     { muon: 'boHung',   loc: [['sat', 0.5], ['hue', 18], ['bri', 1.05]] },                   // Ba Ba Mai Đồng ← Bọ Hung Mai Cứng (mai xanh xám)
+  cocTia:   { muon: 'hoaBaoTu', loc: [['hue', 95], ['sat', 0.9], ['bri', 0.9]] },                    // Cóc Tía Phun Bọt ← Hoa Phun Bào Tử (ngồi phun, tím nâu)
+  ranNuoc:  { muon: 'chonBong', loc: [['hue', -150], ['sat', 1.3], ['bri', 1.05]] },                 // Rắn Nước Sọc ← Chồn Bóng (trườn, lẩn — xanh lá)
+  echPhinh: { muon: 'caNoc',    loc: [['hue', 40], ['sat', 1.1], ['bri', 1.05]] },                   // Ếch Phình Hơi ← Cá Nóc (tròn, phình — xanh chấm lam)
+  maDa:     { muon: 'tieuYeu',  loc: [['hue', 150], ['sat', 0.75], ['bri', 1.0]] },                 // Ma Da Tóc Rong ← Tiểu Yêu Ném Pháo (tiểu yêu, da xanh nhạt)
+  traiGai:  { muon: 'oc',       loc: [['sep', 0.55], ['hue', -25], ['sat', 0.9], ['bri', 0.95]] },  // Trai Sông Gai ← Ốc Mượn Hồn (vỏ, khép / mở — nâu xám)
+};
+const TEN = { raiCa: 'Rái Cá Cầm Sào', diaTrau: 'Bầy Đỉa Trâu', baBa: 'Ba Ba Mai Đồng', cocTia: 'Cóc Tía Phun Bọt', ranNuoc: 'Rắn Nước Sọc', echPhinh: 'Ếch Phình Hơi', maDa: 'Ma Da Tóc Rong', traiGai: 'Trai Sông Gai' };
+MA.locCss = (loc) => (loc || []).map(([k, v]) => k === 'hue' ? 'hue-rotate(' + v + 'deg)' : k === 'sat' ? 'saturate(' + v + ')' : k === 'bri' ? 'brightness(' + v + ')' : k === 'sep' ? 'sepia(' + v + ')' : 'contrast(' + v + ')').join(' ');
+// Ma trận màu 3×3 (+ dịch) theo Filter Effects (W3C) — cùng kết quả với ctx.filter (không tính làm tròn).
+function mt(loc) {
+  let M = [1, 0, 0, 0, 1, 0, 0, 0, 1], B = [0, 0, 0];
+  const nhan = (N, b) => { const R = []; for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) R[i * 3 + j] = N[i * 3] * M[j] + N[i * 3 + 1] * M[3 + j] + N[i * 3 + 2] * M[6 + j];
+    B = [0, 1, 2].map((i) => N[i * 3] * B[0] + N[i * 3 + 1] * B[1] + N[i * 3 + 2] * B[2] + (b ? b[i] : 0)); M = R; };
+  for (const [k, v] of loc || []) {
+    if (k === 'hue') { const a = v * Math.PI / 180, c = Math.cos(a), s = Math.sin(a);
+      nhan([.213 + c * .787 - s * .213, .715 - c * .715 - s * .715, .072 - c * .072 + s * .928, .213 - c * .213 + s * .143, .715 + c * .285 + s * .140, .072 - c * .072 - s * .283, .213 - c * .213 - s * .787, .715 - c * .715 + s * .715, .072 + c * .928 + s * .072]); }
+    else if (k === 'sat') nhan([.213 + .787 * v, .715 - .715 * v, .072 - .072 * v, .213 - .213 * v, .715 + .285 * v, .072 - .072 * v, .213 - .213 * v, .715 - .715 * v, .072 + .928 * v]);
+    else if (k === 'bri') nhan([v, 0, 0, 0, v, 0, 0, 0, v]);
+    else if (k === 'sep') { const u = 1 - v; nhan([.393 + .607 * u, .769 - .769 * u, .189 - .189 * u, .349 - .349 * u, .686 + .314 * u, .168 - .168 * u, .272 - .272 * u, .534 - .534 * u, .131 + .869 * u]); }
+    else if (k === 'con') { const b = (1 - v) / 2; nhan([v, 0, 0, 0, v, 0, 0, 0, v], [b, b, b]); }
+  }
+  return { M, B };
+}
+function doiMau(loc) {
+  const { M, B } = mt(loc), nho = {};
+  const h2 = (x) => { x = Math.max(0, Math.min(255, Math.round(x * 255))); return (x < 16 ? '0' : '') + x.toString(16); };
+  return (c) => {
+    if (typeof c !== 'string' || !/^#[0-9a-fA-F]{6}$/.test(c)) return c;
+    if (nho[c]) return nho[c];
+    const r = parseInt(c.slice(1, 3), 16) / 255, g = parseInt(c.slice(3, 5), 16) / 255, b = parseInt(c.slice(5, 7), 16) / 255;
+    return (nho[c] = '#' + h2(M[0] * r + M[1] * g + M[2] * b + B[0]) + h2(M[3] * r + M[4] * g + M[5] * b + B[1]) + h2(M[6] * r + M[7] * g + M[8] * b + B[2]));
+  };
+}
+MA._doiMau = doiMau;
+let tt = 0;
+for (const id of Object.keys(MA.hinhTam)) {
+  const T = MA.hinhTam[id], g0 = DEFS[T.muon];
+  tt++;
+  if (!g0) { MA.loi.push('song: thiếu con mượn ' + T.muon + ' cho ' + id); continue; }
+  const dm = doiMau(T.loc), luoi0 = g0.luoi;
+  const d = Object.assign({}, g0, { ten: TEN[id], vung: 'song', loai: 'thuong', tt, hinhTam: T.muon });
+  d.luoi = function (ph, hv) {
+    const g = luoi0(ph, hv), h = Object.assign({}, g);
+    for (const k of ['d', 'pre', 'sauVien']) if (Array.isArray(g[k])) h[k] = g[k].map(dm);
+    h.bb = null; return h;
+  };
+  // bộ phận chọn điểm theo màu (mau / kmau): đổi màu theo cùng phép lọc để vẫn khớp
+  const p0 = g0.parts, doiP = (a) => (a || []).map((q) => (q && (q.mau || q.kmau) ? Object.assign({}, q, q.mau ? { mau: q.mau.map(dm) } : {}, q.kmau ? { kmau: q.kmau.map(dm) } : {}) : q));
+  d.parts = typeof p0 === 'function' ? (ph, hv) => doiP(p0(ph, hv)) : doiP(p0);
+  // bảng cử động riêng (cùng hàm cử động của con mượn) để MA._xong điền mặc định không đụng bảng của con mượn
+  d.anims = {}; for (const k of Object.keys(g0.anims || {})) d.anims[k] = typeof g0.anims[k] === 'function' ? g0.anims[k] : Object.assign({}, g0.anims[k]);
+  def(id, d);
+}
+})(); } catch (e) { MA.loi.push('song: ' + (e && e.stack || e)); if (typeof console !== 'undefined') console.error('monster_art song', e); }
+// ----- hết song -----
 MA._xong();
 })();
 // ===== game/js/room_art.js =====
