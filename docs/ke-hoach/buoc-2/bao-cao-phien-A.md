@@ -124,10 +124,20 @@ không dư thêm (1.868 < 2.081). **Chưa bù** bằng cách bớt thưởng ch�
 Nếu Phiên E thấy cần bù, nút vặn gọn nhất nằm ở `G.SO_YQ` cuối `data.js`: `vang` (★, phần lớn vàng của sổ) và `vungDa`.
 
 ## 6. Commit
-- `Bước 2 Phiên A: Sổ yêu quái …` — code, bảng, bài kiểm, ảnh soát, báo cáo này (một commit; mã commit xem `git log` nhánh `khoi-tao-du-an`).
+- `c9d9af82` Bước 2 Phiên A: Sổ yêu quái — code, bảng `G.SO_YQ`, bài kiểm, ảnh soát, báo cáo. Đã `pull --rebase` lên commit Phiên B (`ebcd0c4b`):
+  `data.js` giữ cả hai khối (khối Phiên B rồi khối Phiên A ở cuối tệp), `dist/` sinh lại bằng `build.py` sau khi gộp.
+- Commit sau: cập nhật báo cáo này (mã commit, ghi chú mục 7).
+
+Sau khi gộp với Phiên B đã chạy lại: `so_yeu_quai.test.js` PASS 41, `su_kien.test.js` PASS 83, `cloud_save_regression.test.js` 7 PASS, `build.py` không lỗi.
 
 ## 7. Lưu ý cho phiên sau
 - **Phiên C**: gộp `G.soYQ.danhHieu(sv)` vào danh sách danh hiệu (6 danh hiệu sổ); thành tựu 27–28 đọc `G.soYQ.dem(sv)`.
   Bài `su_kien.test.js` đã có `thanhtuu=0` trong cờ của bản "thường" (cờ chưa có thì vô hại).
 - **Phiên D**: cắt B1, B3, B4, B5 ra đúng các mã ở mục 3; B3 nên là 3 tệp riêng (`gd-so-o-0/1/2`), B4 3 tệp (`gd-so-dau-<hệ>`), B5 4 tệp (`gd-so-sao-0..3`).
 - **Phiên E**: bot bấm Nhận sổ bằng `G.soYQ.nhanHet(G.save)`.
+- **Phiên B — cần xem** (không sửa vì là tệp của Phiên B đang chạy song song): sau khi có sổ, `node game/tests/viec_ngay.test.js` hỏng đúng một điều
+  kiện "13 ngày liền: không ngày nào ra lại việc của hôm qua" (trước khi gộp sổ: PASS 36). Lý do: `viec_ngay.js` mở mẫu Khó `timDiemYeu` khi có
+  `G.SO_YQ`, nên dãy chọn theo hạt giống đổi; `taoViec` chọn ô Khó trước rồi mới tới Vừa (tham lam): ngày 2 Khó ra `baSao` (nhóm quaAi) → Vừa không được
+  lấy `khongBinh` (cùng nhóm) → chỉ còn `haTinhAnh` = việc hôm qua. Dãy ngày 15→16/10 của bài: `ne,haTinhAnh,timDiemYeu | ruong,haTinhAnh,baSao`.
+  Gợi ý sửa (trong `viec_ngay.js`): khi bộ 3 việc vừa chọn có mẫu trùng hôm qua, thử lại vài lần với hạt giống phụ (`key + ':' + hat + ':' + lần`)
+  và lấy bộ đầu tiên không trùng (vẫn có định: cùng ngày + cùng hạt giống ra cùng việc).
