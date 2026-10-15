@@ -1227,7 +1227,9 @@
         G.sfx('pick');
       }
       if (o.kind === 'charm') { const gb = gdAnh('gd-bua-' + o.el); if (gb) G.spriteCustom.veGd(G.ux, gb, x + 42, 97, 24, 24); } // hình lá bùa hệ (ảnh AI, phiên C2); chưa có tệp thì chỉ có chữ như cũ
-      ui.para(o.sub, x + 6, 160, 96, { size: 6.5, color: '#f0d9b0' });
+      // 15/10 chủ game báo chữ mô tả tràn ra dưới thẻ: đặt trong dải dưới của thẻ (y 145–182), tự thu cỡ, tối đa 4 dòng
+      if (G.theme && G.theme.chuTrongKhung) G.theme.chuTrongKhung(o.sub, x + 4, 145, 100, 37, { size: 6.5, min: 5, dong: 4, gian: 1.5, bold: false, color: '#f0d9b0', vien: [0, 0, 0, 0] });
+      else ui.para(o.sub, x + 6, 160, 96, { size: 6.5, color: '#f0d9b0' });
     });
   }
   // Cắt một dòng chữ cho vừa bề rộng wd (thêm "…"). Đo bằng ui.font nên theo đúng sàn cỡ chữ (V25).
