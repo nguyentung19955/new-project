@@ -125,7 +125,7 @@
   };
 
   // ---------- thưởng thay đồ rơi (js/stage.js gọi) ----------
-  const vung = (r) => kep(r | 0, 0, 2);
+  const vung = (r) => kep(r | 0, 0, G.REGIONS.length - 1); // vùng 4: bảng G.ROI_MOI có phần tử thứ 4 (js/data.js)
   const chuThuong = (vang, lk) => (vang && lk ? G.t('{0} vàng, {1} linh khí', vang, lk) : lk ? G.t('{0} linh khí', lk) : G.t('{0} vàng', vang));
   VM.thuongVk = function (r) {
     const T = G.ROI_MOI.vk, i = vung(r), sv = G.save, vang = T.vang[i], lk = T.lk[i];

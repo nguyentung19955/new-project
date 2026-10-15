@@ -298,7 +298,7 @@ TEN_ANH = 'linh-khi-anh.%s.json'
 # 11/10/2026 (chủ dự án duyệt): trần gói hai tệp nâng lên 25 MB, rồi 26 MB (21:43) vì phần ảnh tải sau không làm chậm màn chào; tệp đầu vẫn dưới 5 MB.
 # 12/10 (tải nhanh): bản một tệp chỉ còn cho trang công cụ / GitHub Pages (nay 25 MB) → trần 30 MB, chỉ cảnh báo. Web chạy bản ảnh rời (trần ở anh_roi).
 TRAN_MOT_TEP, TRAN_HAI_TEP, NEN_DUOI = 30 * 1024 * 1024, 26 * 1024 * 1024, 5 * 1024 * 1024
-TRUM_VUNG = ('mocTinh', 'nguTinh', 'hoTinh')
+TRUM_VUNG = ('mocTinh', 'nguTinh', 'hoTinh', 'thuongLuong')  # thuongLuong: vùng 4 Sông sâu (bước 3; chưa có ảnh ở phiên 1)
 # Hiệu ứng cơ bản (đòn đánh thường nào cũng dùng): vệt chém / đâm, mũi tên của bé, trúng đòn, chí mạng, vỡ giáp, quái chết.
 HU_CO_BAN = re.compile(r'^hu-(chem|dam|trung|dan-ten|chi-mang|pha-giap|quai-chet)(-|$)')
 
@@ -340,7 +340,7 @@ def thu_tu_sau(t):
     elif d == 'hieu-ung':
         bac = 1
     else:
-        bac = {'bien': 4, 'laudai': 5}.get(vung, 6)
+        bac = {'bien': 4, 'laudai': 5, 'song': 6}.get(vung, 6)  # song: vùng 4 (bước 3)
     return (bac, co, ma)
 
 
@@ -416,20 +416,20 @@ TRAN_NGUOI_TAI = 20 * 1024 * 1024
 CANH_BAO_MAY_CHU = 60 * 1024 * 1024
 TRAN_ANH_ROI = TRAN_NGUOI_TAI  # tên cũ (công cụ / bài kiểm khác có thể đọc)
 WEBP_METHOD = int(os.environ.get('LK_WEBP_METHOD', '6'))
-VUNG_SO = {'rung': 0, 'bien': 1, 'laudai': 2}
+VUNG_SO = {'rung': 0, 'bien': 1, 'laudai': 2, 'song': 3}  # song: vùng 4 Sông sâu (bước 3, js/data.js G.VUNG4)
 
 
 # 14/10 (bước 1, mục 1): TẢI THEO VÙNG. Ảnh chỉ dùng ở MỘT vùng (quái, trùm + dáng pha, sàn/tường gd-nen-*, cửa gd-cua-*, vật trang trí gd-tt-*
 # của Rừng già / Hang biển / Lâu đài cổ) không tải ở màn chào; js/sprite_custom.js tải khi người chơi chọn vùng (thẻ ải hiện "Đang tải…")
 # và tải trước vùng kế tiếp khi rảnh. Ảnh lõi (Zed, giao diện, làng, hiệu ứng chung) tải như cũ. Cờ tắt trong game: ?taivung=0.
-VUNG_TEN_GD = {'rung': 0, 'bien': 1, 'lau': 2}
+VUNG_TEN_GD = {'rung': 0, 'bien': 1, 'lau': 2, 'song': 3}
 
 
 def vung_rieng(t):
     """Số vùng (0 Rừng, 1 Biển, 2 Lâu đài) nếu ảnh chỉ dùng ở vùng đó, -1 nếu là ảnh lõi / dùng chung."""
     ma, d = t.get('ma', ''), t.get('doi_tuong')
     if d == 'giao-dien':
-        m = re.match(r'^gd-(?:nen|cua|tt)-(rung|bien|lau)-', ma)
+        m = re.match(r'^gd-(?:nen|cua|tt)-(rung|bien|lau|song)-', ma)
         return VUNG_TEN_GD[m.group(1)] if m else -1
     if d == 'hieu-ung':  # 15/10 (hieu-ung-ky-nang): hiệu ứng chỉ của quái / trùm một vùng ghi "vung" trong tệp → tải theo vùng như quái đó
         return VUNG_SO.get(t.get('vung'), -1)
@@ -560,9 +560,9 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
     print('Ảnh rời: dist/%s (%d KB, nén %d KB, %d hình chỉ có thông số) + dist/%s/ (%d ảnh: PNG %.2f MB, %d bản WebP %.2f MB)'
           % (TEN_NHE, n1 // 1024, z1 // 1024, len(ds), THU_MUC_ANH, len(vt), tong_png / 1048576, so_webp, tong_webp / 1048576))
     # Bảng dung lượng theo nhóm tải (mục 1, bước 1): lõi tải trước, từng vùng tải khi chọn vùng.
-    ten_nhom = {'loi': 'Lõi (màn chào, làng, Zed, giao diện, hiệu ứng chung)', 'vung0': 'Vùng Rừng già', 'vung1': 'Vùng Hang biển', 'vung2': 'Vùng Lâu đài cổ'}
+    ten_nhom = {'loi': 'Lõi (màn chào, làng, Zed, giao diện, hiệu ứng chung)', 'vung0': 'Vùng Rừng già', 'vung1': 'Vùng Hang biển', 'vung2': 'Vùng Lâu đài cổ', 'vung3': 'Vùng Sông sâu'}
     print('Dung lượng theo nhóm tải (người chơi tải = WebP khi có, còn lại PNG | chỉ PNG):')
-    for k in ('loi', 'vung0', 'vung1', 'vung2'):
+    for k in ('loi', 'vung0', 'vung1', 'vung2', 'vung3'):
         if k in bang:
             b = bang[k]
             print('  %-55s %3d ảnh  %6.2f MB | %6.2f MB' % (ten_nhom[k], b[0], b[1] / 1048576, b[2] / 1048576))

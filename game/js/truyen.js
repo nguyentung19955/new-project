@@ -80,14 +80,15 @@
 
   // ---------- tiến độ trong bản lưu ----------
   const daHa = (sv, r) => !!(sv && sv.stars && sv.stars[r + '-4']);
-  function soVung(sv) { let n = 0; while (n < 3 && daHa(sv, n)) n++; return n; }
+  // số vùng đã hạ trùm, tính tới số đoạn kết vùng đang có (VUNG; vùng 4 chưa có đoạn kết → dừng ở 3, phiên 2C thêm VUNG[3] thì tự tính tiếp)
+  function soVung(sv) { let n = 0; while (n < VUNG.length && daHa(sv, n)) n++; return n; }
   function st() {
     const sv = G.save;
     if (!sv) return null;
     let t = sv.truyen;
     if (!t || typeof t !== 'object' || Array.isArray(t)) t = sv.truyen = { mo: sv.stars && Object.keys(sv.stars).length ? 1 : 0, v: soVung(sv), n: {} };
     if (!t.n || typeof t.n !== 'object' || Array.isArray(t.n)) t.n = {};
-    t.v = G.clamp(t.v | 0, 0, 3); t.mo = t.mo ? 1 : 0;
+    t.v = G.clamp(t.v | 0, 0, Math.max(3, VUNG.length)); t.mo = t.mo ? 1 : 0;
     return t;
   }
   TR.st = st;
@@ -401,7 +402,7 @@
   TR.xemLai = function () {
     const t = st();
     let ds = moDau();
-    for (let r = 0; r < Math.min(3, t ? t.v : 0); r++) ds = ds.concat(doanVung(r));
+    for (let r = 0; r < Math.min(VUNG.length, t ? t.v : 0); r++) ds = ds.concat(doanVung(r));
     TR.choi(ds, { ten: 'xemlai' });
   };
   // Người làng: câu mới theo mốc (số trùm vùng đã hạ), nói một lần khi mở bảng của người đó
@@ -451,7 +452,7 @@
 
   // ---------- trùm nói (bong bóng lời, không dừng trận) ----------
   let bong = null, bongB = null, daGuc = false;
-  function khoaTrum(b, S) { return b.kind === 'mini' ? 'mini' + G.clamp(S.r | 0, 0, 2) : b.kind; }
+  function khoaTrum(b, S) { return b.kind === 'mini' ? 'mini' + G.clamp(S.r | 0, 0, G.REGIONS.length - 1) : b.kind; } // vùng 4: 'mini3' (lời Cá Trê — phiên 2C)
   function trumNhip(dt) {
     const S = G.getRun && G.getRun();
     if (!S || !S.W || !TR.bat() || G.noRender) { if (!S) { bong = null; bongB = null; } return; }

@@ -61,16 +61,21 @@ function rulesGop() {
   await no(g1.doc('linhkhi_scores/u1').set({ ...sc, power: 520, b_moc: 50 }), 'xoá kỷ lục trùm đã có → từ chối');
   await yes(g1.doc('linhkhi_scores/u1').set({ ...sc, name: 'Bé Na', power: 520, b_moc: 50, b_ngu: 80 }), 'đổi tên → được');
   for (const [m, bad] of [['tên 1 ký tự', { name: 'a' }], ['tên 17 ký tự', { name: 'a'.repeat(17) }], ['Sức mạnh quá lớn', { power: 2000000 }], ['Sức mạnh số lẻ', { power: 600.5 }],
-    ['sao quá 90', { stars: 91 }], ['ải xa nhất quá 15', { far: 16 }], ['hero lạ', { hero: 'rong' }], ['hạ trùm dưới 5 giây', { b_ho: 2 }], ['trường lạ', { cheat: 1 }],
+    ['sao quá 90', { stars: 91 }], ['ải xa nhất quá 20 (vùng 4: 20 ải)', { far: 21 }], ['hero lạ', { hero: 'rong' }], ['hạ trùm dưới 5 giây', { b_ho: 2 }], ['trường lạ', { cheat: 1 }],
     // GĐ2 (V23): luật siết
     ['Sức mạnh 2.000', { power: 2000 }], ['Sức mạnh 1.501', { power: 1501 }], ['sao nhiều hơn 3 x số ải đã qua (31 sao, qua 10 ải)', { stars: 31 }],
     ['46 sao khi chưa qua đủ 15 ải', { far: 14, stars: 46 }], ['hạ Mộc Tinh 19 giây', { b_moc: 19 }], ['có thời gian Ngư Tinh khi chưa qua ải 2-5', { far: 9, b_ngu: 80 }],
-    ['có thời gian Hồ Tinh khi chưa qua ải 3-5', { b_ho: 90 }]]) {
+    ['có thời gian Hồ Tinh khi chưa qua ải 3-5', { b_ho: 90 }],
+    // Bước 3 (vùng 4 Sông sâu): 20 ải, b_thuong
+    ['94 sao khi qua 16 ải (tối đa 16 × 3 + 45 = 93)', { far: 16, stars: 94 }], ['121 sao khi qua đủ 20 ải', { far: 20, stars: 121 }],
+    ['có thời gian Thuồng Luồng khi chưa qua ải 4-5', { far: 19, stars: 57, b_thuong: 100 }], ['hạ Thuồng Luồng 19 giây', { far: 20, stars: 60, b_thuong: 19 }]]) {
     await no(g2.doc('linhkhi_scores/u2').set({ ...sc, ...bad }), m + ' → từ chối');
   }
   await no(g2.doc('linhkhi_scores/u2').set({ name: 'Khách', power: 1, stars: 0, far: 0, hero: 'smith' }), 'thiếu trường at → từ chối');
   await yes(g2.doc('linhkhi_scores/u2').set({ ...sc, power: 1500, stars: 45, far: 15, b_moc: 20, b_ngu: 40, b_ho: 60 }), 'Sức mạnh 1.500, 45 sao, qua đủ 15 ải, hạ trùm đúng 20 giây → được');
   await yes(g2.doc('linhkhi_scores/u2').set({ ...sc, power: 1500, stars: 90, far: 15, b_moc: 20, b_ngu: 40, b_ho: 60 }), 'qua đủ 15 ải (mở độ khó 2): 90 sao → được');
+  await yes(g2.doc('linhkhi_scores/u2').set({ ...sc, power: 1500, stars: 93, far: 16, b_moc: 20, b_ngu: 40, b_ho: 60 }), 'vùng 4: qua 16 ải, 93 sao → được');
+  await yes(g2.doc('linhkhi_scores/u2').set({ ...sc, power: 1500, stars: 120, far: 20, b_moc: 20, b_ngu: 40, b_ho: 60, b_thuong: 90 }), 'vùng 4: qua đủ 20 ải, 120 sao, hạ Thuồng Luồng → được');
   await no(guest.doc('linhkhi_scores/k1').set(sc), 'khách ẩn danh ghi bảng vàng → từ chối');
   await yes(guest.collection('linhkhi_scores').orderBy('power', 'desc').limit(8).get(), 'khách ẩn danh vẫn xem được bảng');
   await yes(guest.collection('linhkhi_feedback').add({ kind: 'bug', text: 'Khách gửi góp ý thử', ver: 'lk-1', at: 1, uid: 'k1', guest: true }), 'khách ẩn danh vẫn gửi góp ý được');

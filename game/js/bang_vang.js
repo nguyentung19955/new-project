@@ -139,8 +139,8 @@
         ui.text(cutTo(q[1], bw - 6, 8.5), bx + bw / 2, 178.5, { size: 8.5, bold: true, align: 'center', color: TXT });
       });
       ui.text('Hạ trùm nhanh nhất', CX + 7, 197, { size: 7, bold: true, color: GOLD });
-      const tw = Math.floor((CW - 14) / 3);
-      G.REGIONS.forEach((R, i) => ui.text(G.t('{0}  {1}', R.bossName, r.b[R.boss] ? secs(r.b[R.boss]) : '–'), CX + 7 + i * tw, 210, { size: 7.5, color: r.b[R.boss] ? TXT : SOFT }));
+      const nT = G.REGIONS.length, tw = Math.floor((CW - 14) / nT), szT = nT > 3 ? 6.5 : 7.5; // vùng 4: 4 cột, chữ nhỏ hơn cho vừa
+      G.REGIONS.forEach((R, i) => ui.text(G.t('{0}  {1}', R.bossName, r.b[R.boss] ? secs(r.b[R.boss]) : '–'), CX + 7 + i * tw, 210, { size: szT, color: r.b[R.boss] ? TXT : SOFT }));
       return 'Bảng vàng treo ở đình, phải có mạng mới xem được, con ạ.';
     }
     if (B.t && G.time - B.t > 120) B.reload(); // để lâu thì tải lại

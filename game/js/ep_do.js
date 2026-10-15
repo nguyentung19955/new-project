@@ -124,7 +124,7 @@
   // Thưởng đá khi hạ trùm (js/stage.js settle gọi lúc thắng). big: trùm vùng; dau: lần đầu qua ải đó (ở độ khó này). Trả về các dòng chữ.
   E.thuongTrum = function (sv, r, big, dau, diff) {
     if (!E.bat() || !sv) return [];
-    const R = CF.roi, i = kep(r | 0, 0, 2);
+    const R = CF.roi, i = kep(r | 0, 0, R.vung.length - 1); // vùng 4: G.EP_DO.roi có phần tử thứ 4 (js/data.js)
     let n = big ? (dau ? R.vungDau[i] : R.vung[i]) : dau ? R.miniDau[i] : R.mini[i];
     if (diff) n = Math.round(n * R.kho2);
     const out = [];

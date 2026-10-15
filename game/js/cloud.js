@@ -13,6 +13,7 @@
   const ADMIN_EMAILS = ['ly230595@gmail.com'];
   const COL = { users: 'linhkhi_users', scores: 'linhkhi_scores', feedback: 'linhkhi_feedback' };
   const BOSSES = ['moc', 'ngu', 'ho']; // khoá trùm vùng (G.REGIONS[r].boss)
+  if (G.VUNG4) BOSSES.push('thuong'); // vùng 4 (bước 3): b_thuong trên bảng vàng — cần luật Firestore mới (game/firebase/linhkhi.rules)
   G.VERSION = G.VERSION || 'lk-2026.10.09';
 
   // Vì sao đám mây không chạy ('' = chạy được)
@@ -329,7 +330,26 @@
       const same = ['name', 'power', 'stars', 'far', 'g', 'hero'].every((k) => old[k] === m[k]) && BOSSES.every((k) => old['b_' + k] === m['b_' + k]);
       if (same) return false;
       m.at = Date.now();
-      try { await this.db.collection(COL.scores).doc(this.user.uid).set(m); this.myScore = m; return true; } catch (er) { this._fail(er); return false; }
+      // Vùng 4: luật Firestore cũ (chưa dán bản mới) chỉ nhận far ≤ 15, sao ≤ 90, không có b_thuong → bị từ chối thì ghi bản "vừa luật cũ"
+      // (cắt far / sao, bỏ b_thuong) để bảng vàng vẫn chạy; nhớ lại (luatCu) để lần sau ghi thẳng bản đó, khỏi tốn một lần bị từ chối.
+      const vuaLuatCu = (x) => {
+        const y = Object.assign({}, x); delete y.b_thuong;
+        y.far = Math.min(15, y.far | 0); y.stars = Math.min(y.stars | 0, y.far >= 15 ? 90 : y.far * 3);
+        for (const k of ['power', 'stars', 'far']) if (typeof old[k] === 'number') y[k] = Math.max(y[k], old[k]);
+        return y;
+      };
+      const vuot = (x) => (x.far | 0) > 15 || (x.stars | 0) > 90 || 'b_thuong' in x;
+      const ghi = async (x) => { await this.db.collection(COL.scores).doc(this.user.uid).set(x); this.myScore = x; return true; };
+      try {
+        if (this.luatCu && vuot(m)) { const y = vuaLuatCu(m); if (['power', 'stars', 'far', 'name', 'g', 'hero'].every((k) => old[k] === y[k]) && BOSSES.every((k) => old['b_' + k] === y['b_' + k])) return false; return await ghi(y); }
+        return await ghi(m);
+      } catch (er) {
+        if (er && er.code === 'permission-denied' && vuot(m)) {
+          this.luatCu = true;
+          try { return await ghi(vuaLuatCu(m)); } catch (er2) { this._fail(er2); return false; }
+        }
+        this._fail(er); return false;
+      }
     },
     // một trang của bảng; field: power | stars | b_moc | b_ngu | b_ho; after: con trỏ trang trước
     async topScores(field, after, n) {

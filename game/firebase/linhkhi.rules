@@ -17,6 +17,9 @@
     // thời gian hạ trùm chỉ giảm), giá trị phải nằm trong khoảng hợp lý.
     // GĐ2 (V23, Q1) siết lại: khách ẩn danh không được ghi; Sức mạnh ≤ 1500; sao ≤ 3 x số ải đã qua (tối đa 45 ở độ khó thường,
     // qua đủ 15 ải mới mở độ khó 2 nên lúc đó tối đa 90); hạ trùm vùng ≥ 20 giây và phải qua tới ải trùm đó mới có thời gian trùm.
+    // Bước 3 (vùng 4 Sông sâu, 16/10/2026): 20 ải (far ≤ 20), trùm Thuồng Luồng b_thuong (cần qua tới ải 20); sao: ≤ 3 × far, từ 15 ải
+    // thêm 45 (độ khó 2 ba vùng đầu), đủ 20 ải tối đa 120 (độ khó 2 cả vùng 4). Game vẫn ghi được khi CHƯA dán luật này (js/cloud.js
+    // tự cắt far ≤ 15, sao ≤ 90, bỏ b_thuong khi bị từ chối) — dán rồi thì bảng vàng nhận đủ 20 ải.
     match /linhkhi_scores/{uid} {
       function okBoss(d, k, need) { return !(k in d) || (d[k] is number && d[k] >= 20 && d[k] <= 3600 && d.far >= need); }
       function notSlower(k) { return !(k in resource.data) || (k in request.resource.data && request.resource.data[k] <= resource.data[k]); }
@@ -24,22 +27,24 @@
       allow read: if true;
       allow delete: if request.auth != null && request.auth.uid == uid;
       allow create, update: if request.auth != null && request.auth.uid == uid && notGuest()
-        && request.resource.data.keys().hasOnly(['name', 'power', 'stars', 'far', 'hero', 'g', 'at', 'b_moc', 'b_ngu', 'b_ho'])
+        && request.resource.data.keys().hasOnly(['name', 'power', 'stars', 'far', 'hero', 'g', 'at', 'b_moc', 'b_ngu', 'b_ho', 'b_thuong'])
         && request.resource.data.keys().hasAll(['name', 'power', 'stars', 'far', 'hero', 'at'])
         && request.resource.data.name is string && request.resource.data.name.size() >= 2 && request.resource.data.name.size() <= 16
         && request.resource.data.power is int && request.resource.data.power >= 0 && request.resource.data.power <= 1500
-        && request.resource.data.far is int && request.resource.data.far >= 0 && request.resource.data.far <= 15
+        && request.resource.data.far is int && request.resource.data.far >= 0 && request.resource.data.far <= 20
         && request.resource.data.stars is int && request.resource.data.stars >= 0
-        && (request.resource.data.stars <= request.resource.data.far * 3 || (request.resource.data.far >= 15 && request.resource.data.stars <= 90))
+        && (request.resource.data.stars <= request.resource.data.far * 3
+          || (request.resource.data.far >= 15 && request.resource.data.far < 20 && request.resource.data.stars <= request.resource.data.far * 3 + 45)
+          || (request.resource.data.far >= 20 && request.resource.data.stars <= 120))
         && request.resource.data.hero in ['smith', 'hunter', 'healer', 'wrestler']
         && request.resource.data.get('g', false) is bool
         && request.resource.data.at is number
-        && okBoss(request.resource.data, 'b_moc', 5) && okBoss(request.resource.data, 'b_ngu', 10) && okBoss(request.resource.data, 'b_ho', 15)
+        && okBoss(request.resource.data, 'b_moc', 5) && okBoss(request.resource.data, 'b_ngu', 10) && okBoss(request.resource.data, 'b_ho', 15) && okBoss(request.resource.data, 'b_thuong', 20)
         && (resource == null || (
           request.resource.data.power >= resource.data.power
           && request.resource.data.stars >= resource.data.stars
           && request.resource.data.far >= resource.data.far
-          && notSlower('b_moc') && notSlower('b_ngu') && notSlower('b_ho')));
+          && notSlower('b_moc') && notSlower('b_ngu') && notSlower('b_ho') && notSlower('b_thuong')));
     }
 
     // Góp ý: ai đã đăng nhập (kể cả khách ẩn danh) chỉ được tạo; chỉ tài khoản quản trị (email đã xác minh) được đọc,

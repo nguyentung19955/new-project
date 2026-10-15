@@ -94,12 +94,12 @@
   const stName = (r, i) => (i === 4 ? G.t('trùm {0}', G.REGIONS[r].bossName) : G.tv(G.REGIONS[r].name) + ' ' + (i + 1));
   U.grindStage = function (sv, r) {
     let best = null;
-    for (let rr = 0; rr < 3; rr++) {
+    for (let rr = 0; rr < G.REGIONS.length; rr++) { // vùng 4: tính cả ải Sông sâu
       if (r != null && rr !== r) continue;
       for (let i = 0; i < 4; i++) if (sv.stars[rr + '-' + i]) best = [rr, i];
     }
     // ưu tiên ải thường (dễ thắng, nhanh); chưa qua ải thường nào của vùng thì mới chỉ ải trùm
-    if (!best) for (let rr = 0; rr < 3; rr++) if ((r == null || rr === r) && sv.stars[rr + '-4']) best = [rr, 4];
+    if (!best) for (let rr = 0; rr < G.REGIONS.length; rr++) if ((r == null || rr === r) && sv.stars[rr + '-4']) best = [rr, 4];
     return best;
   };
   // Ải nên chơi lại để kiếm phần thiếu m (mảnh trùm: đánh lại trùm; nguyên liệu: ải cao nhất đã qua của vùng đó; còn lại: ải cao nhất đã qua).
