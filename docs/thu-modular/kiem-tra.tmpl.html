@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kiểm khung que</title>
+<style>
+:root{--nen:#f6f6f4;--chu:#222;--vien:#ccc;--the:#fff}
+@media (prefers-color-scheme:dark){:root{--nen:#1d1d1f;--chu:#eee;--vien:#555;--the:#2a2a2d}}
+body{margin:0;background:var(--nen);color:var(--chu);font:15px/1.45 system-ui,sans-serif}
+main{max-width:1100px;margin:0 auto;padding:12px 16px}
+h1{font-size:20px;margin:6px 0 10px}
+.hang{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:6px 0}
+label{white-space:nowrap}
+button,select,input[type=number]{font:inherit;padding:4px 8px}
+#khung{display:flex;gap:16px;flex-wrap:wrap}
+svg{background:#fff;border:1px solid var(--vien);width:min(100%,560px);height:auto;touch-action:none}
+image{image-rendering:pixelated}
+#bang{flex:1;min-width:260px;max-height:560px;overflow:auto;font:12px/1.4 ui-monospace,monospace;background:var(--the);border:1px solid var(--vien);padding:8px;white-space:pre}
+.nho{font-size:13px;opacity:.8}
+</style></head><body><main>
+<h1>Kiểm khung que + lớp đồ (Zed)</h1>
+<p class="nho">Đọc JSON que (toạ độ gốc ở góc trên-trái ô 256×256), vẽ xương, khớp và đồ chồng lên. Đồ vẽ ở dáng đứng, mỗi khung được dời theo neo và xoay theo xương bám.</p>
+<div class="hang">
+ <label>Dáng <select id="dang"></select></label>
+ <button id="lui">◀</button><button id="chay">▶ Chạy</button><button id="toi">▶|</button>
+ <label>Khung <input id="so" type="range" min="1" max="1" value="1"></label><span id="nhan">1/1</span>
+ <label>Nhanh <select id="toc"><option value="1">×1</option><option value="0.5">×0.5</option><option value="0.25">×0.25</option></select></label>
+</div>
+<div class="hang" id="bat"></div>
+<div class="hang nho">
+ <label>Mở JSON que khác <input type="file" id="moJson" accept=".json"></label>
+ <label>Thêm ảnh đồ (PNG cỡ ô 256, vẽ trên que-dung-x1) <input type="file" id="moAnh" accept="image/*"></label>
+ <label>bám <select id="bamMoi"><option value="than">thân (neo cổ)</option><option value="dau">đầu (neo cổ)</option><option value="khong">không xoay</option></select></label>
+ <label>lớp <input id="lopMoi" type="number" value="35" style="width:4em"></label>
+</div>
+<div id="khung"><svg id="sv" viewBox="0 0 256 256"></svg><div id="bang"></div></div>
+</main>
+<script>
+const D = __DATA__;
+const NS='http://www.w3.org/2000/svg';
+const sv=document.getElementById('sv'), bang=document.getElementById('bang');
+const dangSel=document.getElementById('dang'), so=document.getElementById('so'), nhan=document.getElementById('nhan');
+const BAT={luoi:['Lưới',true],xuong:['Xương',true],khop:['Khớp',true],ten:['Số khớp',false],neo:['Neo đồ',false],zed:['Zed thật (chỉ dáng đứng)',false]};
+const do_ = D.do.map(x=>Object.assign({bat:true},x));
+let bat={}; for(const k in BAT) bat[k]=BAT[k][1];
+let que=D.que, ten=Object.keys(que)[0], i=0, hen=null;
+function veBat(){const h=document.getElementById('bat');h.innerHTML='';
+ const them=(nhanT,gt,f)=>{const l=document.createElement('label');const c=document.createElement('input');c.type='checkbox';c.checked=gt;c.onchange=()=>{f(c.checked);ve()};l.append(c,' '+nhanT);h.append(l)};
+ for(const k in BAT) them(BAT[k][0],bat[k],v=>bat[k]=v);
+ do_.forEach(d=>them('Đồ: '+d.ten,d.bat,v=>d.bat=v));}
+function napDang(){dangSel.innerHTML='';for(const k in que){const o=document.createElement('option');o.value=k;o.textContent=k+' ('+que[k].so_khung+' khung)';dangSel.append(o)}dangSel.value=ten;}
+function el(t,a,cha){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(cha||sv).append(e);return e}
+const DOAN=D.doan;
+function ve(){
+ const Q=que[ten], K=Q.khung[i], J=K.khop_px, G=K.goc_doan_do;
+ so.max=Q.so_khung; so.value=i+1; nhan.textContent=(i+1)+'/'+Q.so_khung;
+ sv.innerHTML='';
+ if(bat.luoi){for(let v=0;v<=256;v+=8){const c=v%32?'#dde6ff':'#9fb3ea';el('line',{x1:v,y1:0,x2:v,y2:256,stroke:c,'stroke-width':.5});el('line',{x1:0,y1:v,x2:256,y2:v,stroke:c,'stroke-width':.5});
+   if(v%32==0&&v<256){el('text',{x:v+1,y:7,'font-size':6,fill:'#456'}).textContent=v;if(v)el('text',{x:1,y:v+7,'font-size':6,fill:'#456'}).textContent=v;}}}
+ el('line',{x1:4,y1:Q.goc_trong_o[1],x2:252,y2:Q.goc_trong_o[1],stroke:'#999'});
+ const viec=[], to=(bat.zed&&ten==='dung')?'none':'#f6f6f6';
+ if(bat.xuong){
+  DOAN.forEach(([l,a,b,c])=>viec.push([l,()=>{ if(J[a]&&J[b]) el('line',{x1:J[a][0],y1:J[a][1],x2:J[b][0],y2:J[b][1],stroke:c,'stroke-width':3,'stroke-linecap':'round'})}]));
+  viec.push([30,()=>el('polygon',{points:['vai_phai','vai_trai','hong_trai','hong_phai'].map(m=>J[m].join(',')).join(' '),fill:to,stroke:'#000','stroke-width':1})]);
+  viec.push([29,()=>{}]);
+  viec.push([50,()=>{const c=J.tam_dau,r=Math.hypot(J.dinh_dau[0]-c[0],J.dinh_dau[1]-c[1]);el('circle',{cx:c[0],cy:c[1],r,fill:to,stroke:'#000','stroke-width':3})}]);
+  if(J.mui_kiem) viec.push([75,()=>el('line',{x1:J.nam_tay_phai[0],y1:J.nam_tay_phai[1],x2:J.mui_kiem[0],y2:J.mui_kiem[1],stroke:'#777','stroke-width':3})]);
+ }
+ if(bat.zed && ten==='dung') viec.push([31,()=>el('image',{href:D.zed.uri,x:D.zed.x,y:D.zed.y,width:D.zed.w,height:D.zed.h})]);
+ do_.filter(d=>d.bat).forEach(d=>viec.push([d.lop,()=>{
+   const n=J[d.neo]; if(!n) return;
+   const xoay = d.bam==='khong'?0:(G[d.bam]-D.A0[d.bam]);
+   const g=el('g',{transform:`rotate(${xoay.toFixed(2)} ${n[0]} ${n[1]})`});
+   el('image',{href:d.uri,x:n[0]-d.lech[0],y:n[1]-d.lech[1],width:d.w,height:d.h},g);}]));
+ viec.sort((a,b)=>a[0]-b[0]).forEach(v=>v[1]());
+ if(bat.khop) for(const m in J){ if(m==='goc')continue; el('circle',{cx:J[m][0],cy:J[m][1],r:2.2,fill:'#dc1e1e'});
+   if(bat.ten) el('text',{x:J[m][0]+3,y:J[m][1]-2,'font-size':5,fill:'#a00'}).textContent=m;}
+ if(bat.neo&&K.neo_do){const N=K.neo_do;for(const k in N)for(const m in N[k]){const v=N[k][m];if(Array.isArray(v)){el('rect',{x:v[0]-2,y:v[1]-2,width:4,height:4,fill:'none',stroke:'#0a7','stroke-width':1})}}}
+ bang.textContent='Khung '+(i+1)+' — '+Q.dong_tac+'\n\nkhop_px (x, y):\n'+Object.entries(J).map(([m,v])=>m.padEnd(15)+v.map(x=>(+x).toFixed(1).padStart(7)).join('')).join('\n')
+   +'\n\ngoc_doan_do:\n'+Object.entries(G).map(([k,v])=>k.padEnd(6)+(+v).toFixed(1)).join('   ')
+   +(K.neo_do?'\n\nneo_do:\n'+JSON.stringify(K.neo_do,null,1):'');
+}
+function buoc(d){const n=que[ten].so_khung;i=(i+d+n)%n;ve()}
+function choi(){const Q=que[ten];let g=Q.giay_moi_khung;g=Array.isArray(g)?g[i]:g;hen=setTimeout(()=>{buoc(1);choi()},Math.max(40,g*1000/ +document.getElementById('toc').value))}
+document.getElementById('chay').onclick=e=>{if(hen){clearTimeout(hen);hen=null;e.target.textContent='▶ Chạy'}else{choi();e.target.textContent='❚❚ Dừng'}};
+document.getElementById('lui').onclick=()=>buoc(-1);document.getElementById('toi').onclick=()=>buoc(1);
+so.oninput=()=>{i=so.value-1;ve()};dangSel.onchange=()=>{ten=dangSel.value;i=0;ve()};
+document.getElementById('moJson').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const j=JSON.parse(await f.text());if(!j.khung)throw 0;const k=f.name.replace(/\.json$/,'');que[k]=j;ten=k;i=0;napDang();ve()}catch(_){alert('Tệp không phải JSON que (cần có "khung").')}};
+document.getElementById('moAnh').onchange=e=>{const f=e.target.files[0];if(!f)return;const im=new Image();im.onload=()=>{
+  const c=document.createElement('canvas');c.width=im.width;c.height=im.height;const x=c.getContext('2d');x.drawImage(im,0,0);
+  const p=x.getImageData(0,0,c.width,c.height),a=p.data;for(let k=0;k<a.length;k+=4){const r=a[k],g=a[k+1],b=a[k+2];if(g>150&&r<120&&b<120||g>Math.max(r,b)+45)a[k+3]=0}x.putImageData(p,0,0);
+  const bam=document.getElementById('bamMoi').value, s=256/im.width, co=D.que.dung.khung[0].khop_px.co;
+  do_.push({ten:f.name,lop:+document.getElementById('lopMoi').value,neo:'co',bam:bam==='khong'?'khong':bam,uri:c.toDataURL(),w:256,h:im.height*s,lech:[co[0],co[1]],bat:true});
+  veBat();ve()};im.src=URL.createObjectURL(f)};
+napDang();veBat();ve();
+</script></body></html>

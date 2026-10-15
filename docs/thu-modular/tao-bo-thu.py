@@ -567,6 +567,29 @@ def lam_ghep(dung, ch):
     def than_that(im): im.paste(to, ((OG[0] - (GOC[0] - HOP[0])) * S, (OG[1] - (GOC[1] - HOP[1])) * S), to)
     for lop, f in sorted(fn(0, dung[0], dung[1], 0, S) + [(30, than_that)], key=lambda t: t[0]): f(nen)
     nen.save(os.path.join(RA, 'ghep-thu-dung-tren-zed.png'))
+    lam_html(do)
+
+def uri(im):
+    import base64, io
+    b = io.BytesIO(); im.save(b, 'PNG'); return 'data:image/png;base64,' + base64.b64encode(b.getvalue()).decode()
+
+def lam_html(do):
+    """kiem-tra.html: một tệp tự chứa (JSON que + ảnh đồ nhúng sẵn), mở thẳng bằng trình duyệt."""
+    que = {}
+    for k in ('dung', 'di-6', 'chay-8', 'kiem-1-nhat'):
+        with open(os.path.join(RA, f'que-{k}.json'), encoding='utf-8') as f: que[k] = json.load(f)
+    cell = lambda xy: (xy[0] - GOC[0] + OG[0], xy[1] - GOC[1] + OG[1])
+    ds = []
+    for (tep, lop, (neo, kg)), (anh, goc_anh) in do:
+        ds.append({'ten': tep.replace('zed-v2-', '').replace('.png', ''), 'lop': lop, 'neo': neo, 'bam': kg, 'uri': uri(anh),
+                   'w': anh.width, 'h': anh.height, 'lech': [P[neo][0] - goc_anh[0], P[neo][1] - goc_anh[1]]})
+    hinh = Image.open(os.path.join(RA, 'nhan-vat-zed-dung.png')); zx, zy = cell(HOP[:2])
+    data = {'que': que, 'do': ds, 'A0': {k: round(v, 2) for k, v in A0.items()},
+            'doan': [[l, a, b, '#%02x%02x%02x' % c] for l, a, b, c in DOAN_VE],
+            'zed': {'uri': uri(hinh), 'x': zx, 'y': zy, 'w': hinh.width, 'h': hinh.height}}
+    with open(os.path.join(RA, 'kiem-tra.tmpl.html'), encoding='utf-8') as f: t = f.read()
+    with open(os.path.join(RA, 'kiem-tra.html'), 'w', encoding='utf-8') as f:
+        f.write(t.replace('__DATA__', json.dumps(data, ensure_ascii=False, separators=(',', ':'))))
 
 if __name__ == '__main__':
     os.makedirs(RA, exist_ok=True)
