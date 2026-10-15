@@ -108,6 +108,7 @@
     const k = sv.hero, H = G.HEROES[k], hs = sv.heroes[k], P = G.buildPlayer(), pw = G.power();
     heroArt(sv, CX, CY + 2, 112, 96);
     if (zedBoChon(sv)) return;
+    if (G.thanhTuu && G.thanhTuu.hanhTrang) G.thanhTuu.hanhTrang(CX, CY + 2, 112, 96, RO); // Bước 2 (Phiên C): dải danh hiệu đang đeo dưới hình Cu Tí
     tx(H.name, CX + 56, CY + 111, 112, { size: 10, bold: true, align: 'center', color: GOLD });
     ui.text(hs.lvl >= G.MAX_LEVEL ? G.t('Cấp {0} (tối đa)', hs.lvl) : G.t('Cấp {0}', hs.lvl), CX + 56, CY + 122, { size: 8, bold: true, align: 'center', color: TXT });
     const xf = hs.lvl >= G.MAX_LEVEL ? 1 : hs.xp / G.xpNeed(hs.lvl);

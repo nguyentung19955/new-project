@@ -1411,6 +1411,64 @@ window.G.LANG = 'vi';
   G.VIEC_NGAY_BAT = true;
   try { if (typeof location !== 'undefined' && /[?&]viecngay=0(&|$)/.test(location.search || '')) G.VIEC_NGAY_BAT = false; } catch (e) { /* giữ mặc định */ }
 })();
+
+// ======================= BƯỚC 2 — PHIÊN C: THÀNH TỰU + DANH HIỆU (docs/ke-hoach/buoc-2/KE-HOACH.md mục 1.3) =======================
+// Khối riêng của Phiên C (Phiên A / B thêm khối của mình ở cuối tệp, không sửa khối này). Luật + giao diện ở js/thanh_tuu.js.
+// Mỗi thành tựu: ma (mã lưu ở G.save.tt), ten, cach (cách đạt), cap ('dong' | 'bac' | 'vang'), hinh (ô 0..15 của tấm ảnh B12 gd-huy-hinh,
+// chưa có ảnh thì vẽ code), dk (điều kiện, js/thanh_tuu.js đọc), th (thưởng MỘT lần khi bấm Nhận: vang, lk = linh khí, da = đá nâng bậc,
+// bua = bùa giữ bậc, quang = quặng, dh = mã danh hiệu). Tổng thưởng cả game: 1.800 vàng, 130 linh khí, 19 đá, 6 bùa, 10 quặng (xem báo cáo).
+// Hình B12: 0 chim Lạc · 1 bé · 2 sọ quái · 3 sao · 4 bình máu · 5 hai vũ khí · 6 mầm · 7 kiếm Thức tỉnh · 8 ba hệ · 9 đe · 10 lửa · 11 đá mài
+//           12 sổ mở · 13 lịch mặt trời · 14 rương · 15 vương miện
+(function () {
+  const G = window.G;
+  G.THANH_TUU = {
+    CAP: { dong: { ten: 'Đồng', mau: '#d08a4a', toi: '#6a3a1a' }, bac: { ten: 'Bạc', mau: '#d8dce4', toi: '#5a606e' }, vang: { ten: 'Vàng', mau: '#ffd24a', toi: '#7a5a10' } },
+    DS: [
+      { ma: 'buocDau', ten: 'Bước đầu', cach: 'Qua ải hướng dẫn', cap: 'dong', hinh: 1, dk: { k: 'huongDan' }, th: { vang: 100, dh: 'tanBinh' } },
+      { ma: 'cuuTeo', ten: 'Cứu bạn đầu tiên', cach: 'Hạ Mộc Tinh, cứu Cu Tèo', cap: 'dong', hinh: 0, dk: { k: 'cuu', vung: 0 }, th: { lk: 10, dh: 'cuuBan' } },
+      { ma: 'cuuBong', ten: 'Cứu Cái Bống', cach: 'Hạ Ngư Tinh, cứu Cái Bống', cap: 'bac', hinh: 0, dk: { k: 'cuu', vung: 1 }, th: { lk: 20 } },
+      { ma: 'cuuLi', ten: 'Cứu Cu Lì', cach: 'Hạ Hồ Tinh, cứu Cu Lì', cap: 'vang', hinh: 15, dk: { k: 'cuu', vung: 2 }, th: { lk: 30, dh: 'anhHung' } },
+      { ma: 'quai100', ten: 'Diệt yêu', cach: 'Hạ 100 quái', cap: 'dong', hinh: 2, dk: { k: 'dem', dem: 'quai', can: 100 }, th: { vang: 200 } },
+      { ma: 'quai1000', ten: 'Trừ yêu', cach: 'Hạ 1.000 quái', cap: 'bac', hinh: 2, dk: { k: 'dem', dem: 'quai', can: 1000 }, th: { da: 3 } },
+      { ma: 'quai5000', ten: 'Khắc tinh yêu quái', cach: 'Hạ 5.000 quái', cap: 'vang', hinh: 2, dk: { k: 'dem', dem: 'quai', can: 5000 }, th: { bua: 1, dh: 'khacTinh' } },
+      { ma: 'tinhAnh50', ten: 'Săn tinh anh', cach: 'Hạ 50 tinh anh', cap: 'bac', hinh: 5, dk: { k: 'dem', dem: 'tinhAnh', can: 50 }, th: { da: 3 } },
+      { ma: 'sao15', ten: 'Mười lăm sao', cach: 'Tổng 15 sao (độ khó thường)', cap: 'dong', hinh: 3, dk: { k: 'sao', can: 15 }, th: { vang: 300 } },
+      { ma: 'sao45', ten: 'Trọn sao', cach: 'Đủ 45 sao ở 15 ải độ khó thường', cap: 'vang', hinh: 3, dk: { k: 'sao', can: 45 }, th: { bua: 1, dh: 'saoSang' } },
+      { ma: 'kho2', ten: 'Gan dạ', cach: 'Qua 1 ải độ khó 2', cap: 'bac', hinh: 5, dk: { k: 'kho2', can: 1 }, th: { da: 5 } },
+      { ma: 'kho2Trum', ten: 'Không sợ trùm', cach: 'Hạ Hồ Tinh ở độ khó 2', cap: 'vang', hinh: 15, dk: { k: 'kho2Ai', ai: '2-4' }, th: { bua: 1, dh: 'khongSo' } },
+      { ma: 'khongBinh', ten: 'Không cần thuốc', cach: 'Qua 10 ải không dùng bình máu', cap: 'bac', hinh: 4, dk: { k: 'dem', dem: 'khongBinh', can: 10 }, th: { vang: 300 } },
+      { ma: 'khacChe', ten: 'Biết người biết ta', cach: 'Hạ trùm bằng hệ khắc chế 10 lần', cap: 'bac', hinh: 8, dk: { k: 'dem', dem: 'khacChe', can: 10 }, th: { lk: 15, dh: 'quanSu' } },
+      { ma: 'khongKip', ten: 'Nhanh hơn trùm', cach: 'Hạ một trùm vùng khi nó chưa kịp kháng hệ nào', cap: 'vang', hinh: 10, dk: { k: 'dem', dem: 'khongKip', can: 1 }, th: { lk: 20, dh: 'tiaChop' } },
+      { ma: 'mam', ten: 'Mầm non', cach: 'Nâng 1 vũ khí lên Mầm', cap: 'dong', hinh: 6, dk: { k: 'vkCap', cap: 1, so: 1 }, th: { vang: 100 } },
+      { ma: 'thucTinh1', ten: 'Thức tỉnh', cach: 'Nâng 1 vũ khí lên Thức tỉnh', cap: 'bac', hinh: 7, dk: { k: 'vkCap', cap: 3, so: 1 }, th: { da: 3 } },
+      { ma: 'thucTinh4', ten: 'Bốn món thần binh', cach: 'Cả 4 vũ khí lên Thức tỉnh', cap: 'vang', hinh: 7, dk: { k: 'vkCap', cap: 3, so: 4 }, th: { bua: 1, dh: 'chuThanBinh' } },
+      { ma: 'baHe', ten: 'Đủ ba hệ', cach: 'Có vũ khí Thức tỉnh hệ Lửa, Độc và Băng (cùng lúc hoặc lần lượt)', cap: 'vang', hinh: 8, dk: { k: 'baHe' }, th: { lk: 20 } },
+      { ma: 'epTim', ten: 'Ép đồ lên Tím', cach: 'Ép 1 vũ khí lên bậc Tím', cap: 'dong', hinh: 9, dk: { k: 'ep', bac: 3 }, th: { da: 2 } },
+      { ma: 'epDo', ten: 'Rực lửa', cach: 'Ép 1 vũ khí lên bậc Rực lửa', cap: 'vang', hinh: 10, dk: { k: 'ep', bac: 6 }, th: { dh: 'thoRen' } },
+      { ma: 'mai10', ten: 'Mài sắc', cach: 'Mài 1 vũ khí lên +10', cap: 'bac', hinh: 11, dk: { k: 'mai', can: 10 }, th: { quang: 10 } },
+      { ma: 'cap20', ten: 'Lớn khôn', cach: 'Cu Tí lên cấp 20', cap: 'bac', hinh: 1, dk: { k: 'cap', can: 20 }, th: { vang: 300 } },
+      { ma: 'cap40', ten: 'Trưởng thành', cach: 'Cu Tí lên cấp 40', cap: 'vang', hinh: 15, dk: { k: 'cap', can: 40 }, th: { dh: 'daiHiep' } },
+      { ma: 'boDo', ten: 'Tủ đồ', cach: 'Mở đủ 4 bộ trang phục', cap: 'bac', hinh: 14, dk: { k: 'boDo', can: 4 }, th: { lk: 15 } },
+      { ma: 'chuongDay', ten: 'Chưởng đầy', cach: 'Học đầy 1 cây chưởng', cap: 'bac', hinh: 10, dk: { k: 'chuongDay' }, th: { vang: 300 } },
+      { ma: 'so12', ten: 'Chép sổ', cach: '12 trang Sổ yêu quái đạt ★', cap: 'dong', hinh: 12, dk: { k: 'soSao', sao: 1, can: 12 }, th: { vang: 200 } },
+      { ma: 'soDu', ten: 'Sổ đủ trang', cach: 'Cả 36 trang Sổ yêu quái đạt ★★', cap: 'vang', hinh: 12, dk: { k: 'soSao', sao: 2, can: 36 }, th: { bua: 1, dh: 'nhaYeuQuaiHoc' } },
+      { ma: 'viec7', ten: 'Chăm chỉ', cach: 'Nhận rương ngày 7 lần', cap: 'bac', hinh: 13, dk: { k: 'ruongNgay', can: 7 }, th: { da: 3, dh: 'chamNgoan' } },
+      { ma: 'viec30', ten: 'Siêng năng', cach: 'Nhận rương ngày 30 lần', cap: 'vang', hinh: 13, dk: { k: 'ruongNgay', can: 30 }, th: { bua: 1, dh: 'conNgoan' } },
+    ],
+    // Danh hiệu: chỉ để khoe, KHÔNG cộng sức mạnh. tu: 'tt' (nhận thưởng thành tựu có dh) | 'so' (Sổ yêu quái, Phiên A: so.vung[vung] có bit)
+    DH: {
+      tanBinh: { ten: 'Tân binh', cap: 'dong' }, cuuBan: { ten: 'Người cứu bạn', cap: 'dong' }, anhHung: { ten: 'Anh hùng làng', cap: 'vang' },
+      khacTinh: { ten: 'Khắc tinh yêu quái', cap: 'vang' }, saoSang: { ten: 'Sao sáng', cap: 'vang' }, khongSo: { ten: 'Không biết sợ', cap: 'vang' },
+      quanSu: { ten: 'Quân sư nhí', cap: 'bac' }, tiaChop: { ten: 'Tia chớp', cap: 'vang' }, chuThanBinh: { ten: 'Chủ thần binh', cap: 'vang' },
+      thoRen: { ten: 'Thợ rèn lửa', cap: 'vang' }, daiHiep: { ten: 'Đại hiệp nhí', cap: 'vang' }, nhaYeuQuaiHoc: { ten: 'Nhà yêu quái học', cap: 'vang' },
+      chamNgoan: { ten: 'Chăm ngoan', cap: 'bac' }, conNgoan: { ten: 'Con ngoan trò giỏi', cap: 'vang' },
+      thoSan0: { ten: 'Thợ săn Rừng già', cap: 'bac', tu: 'so', vung: 0, bit: 1 }, thoSan1: { ten: 'Thợ săn Hang biển', cap: 'bac', tu: 'so', vung: 1, bit: 1 },
+      thoSan2: { ten: 'Thợ săn Lâu đài cổ', cap: 'bac', tu: 'so', vung: 2, bit: 1 },
+      bacThay0: { ten: 'Bậc thầy Rừng già', cap: 'vang', tu: 'so', vung: 0, bit: 2 }, bacThay1: { ten: 'Bậc thầy Hang biển', cap: 'vang', tu: 'so', vung: 1, bit: 2 },
+      bacThay2: { ten: 'Bậc thầy Lâu đài cổ', cap: 'vang', tu: 'so', vung: 2, bit: 2 },
+    },
+  };
+})();
 // ===== game/js/art.js =====
 // Hình pixel vẽ bằng mã: hero, quái, boss, cảnh nền, đồ vật. Chỉ dùng fillRect toạ độ nguyên, màu phẳng.
 (function () {
