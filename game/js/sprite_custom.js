@@ -92,8 +92,10 @@
   }
   // 15/10 (quai-moi-6-con): thêm Nấm Phồng, Nấm Phồng Chúa, Hoa Phun Bào Tử, Sóc Ném Quả Nổ, Nhím Gai Độc, Bầy Ong Vò Vẽ — cùng cách, cùng cờ.
   // 15/10 (quai-moi-bien): thêm 10 quái Hang biển — Cua Lính, Bầy Cá Con, Ốc Mượn Hồn, Hải Quỳ, Cá Chuồn, Cá Nóc, Sứa Bom, Nhím Biển, Cua Tướng, Cá Nóc Chúa.
+  // 15/10 (quai-moi-lau): thêm 10 quái Lâu đài cổ — Lính Ma, Bầy Dơi Than, Tượng Đá, Đèn Lồng Ma, Mèo Đen, Hũ Lửa, Tiểu Yêu, Nhím Than, Tướng Ma, Hũ Lửa Chúa.
   const QUAI_MOI = { heoCon: 1, heoNanh: 1, chonBong: 1, boHung: 1, namPhong: 1, namPhongChua: 1, hoaBaoTu: 1, socNo: 1, nhimDoc: 1, ongVo: 1,
-    cua: 1, caCon: 1, oc: 1, haiQuy: 1, caChuon: 1, caNoc: 1, sua: 1, nhim: 1, cuaTuong: 1, caNocChua: 1 };
+    cua: 1, caCon: 1, oc: 1, haiQuy: 1, caChuon: 1, caNoc: 1, sua: 1, nhim: 1, cuaTuong: 1, caNocChua: 1,
+    linhMa: 1, doiThan: 1, tuongDa: 1, denLong: 1, meoDen: 1, huLua: 1, tieuYeu: 1, nhimThan: 1, tuongMa: 1, huChua: 1 };
   let napSauDangChay = false, trongNapSau = false;
   // Tải nhanh (12/10): ảnh rời. roiNhan(img, src) nhận ảnh anh/<mã>.<mã nội dung>.png vào hàng chờ; roiCan(ma) báo game đang cần hình ma
   // (chưa có thì tải ngay). Chỉ có ở bản 2 tệp ảnh rời (G.ANH_ROI); bản một tệp, công cụ: null, như cũ.
@@ -397,7 +399,7 @@
       return mot('atk', u);
     }
     // 15/10 quai-moi-bien: hai cử động riêng chỉ có ở tấm vẽ lại (code chỉ gọi khi tấm có, xem js/ky_nang_quai.js ocRut, js/chieu_trum.js caNocLan):
-    //  - 'lan' (Cá Nóc Chúa Phồng lăn): lặp các cột lap_tu..lap_den của hàng đánh (khung lăn tròn), mỗi cột giay / so giây, suốt lúc lăn.
+    //  - 'lan' (Cá Nóc Chúa Phồng lăn; quai-moi-lau: Hũ Lửa Sống lăn tới): lặp các cột lap_tu..lap_den của hàng đánh (khung lăn tròn), mỗi cột giay / so giây, suốt lúc lăn.
     //  - 'vo' (Ốc Mượn Hồn trong vỏ): chạy hàng báo đòn (rút vào vỏ) trong 0,3 giây rồi GIỮ khung cuối (vỏ rỗng) suốt lúc trong vỏ.
     if (n === 'lan') { const a = dt.atk; if (!a || a.lapTu == null) return lap('idle'); return { ten: 'atk', i: a.lapTu + (Math.floor(t / (a.giay / a.so) + 1e-6) % (a.lapDen - a.lapTu + 1)), u: 1 }; }
     if (n === 'vo') { const a = dt.tele; if (!a) return mot('hit', u); return { ten: 'tele', i: Math.min(a.so - 1, Math.floor((Math.max(0, t) / 0.3) * a.so)), u: 1 }; }

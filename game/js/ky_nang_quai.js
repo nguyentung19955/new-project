@@ -714,15 +714,19 @@
     baoV(e, 'line', { x: e.x, y: e.y, ang: a, len, w: S.rong }, S.bao, { knHuy: true });
     danh(e, 'circle', { x: e.x + c0 * len, y: e.y + s0 * len, r: S.r }, S.bao + lan, e.dmg * S.sat, el, { knHuy: true, onHit: H.onBlastHit(el) });
     G.sfx('warn', 0.8);
-    H.begin(e, 'boom', a, S.bao, { cd: 9, end: S.bao + lan + H.dur(e.art, 'atk') + 0.2, s: 0, vet: S.vet * 0.5, no: false,
+    // 15/10 quai-moi-lau: tấm Hũ Lửa vẽ lại có khung lăn tròn trong hàng đánh (lap_tu..lap_den) → lúc lăn dùng cử động 'lan' (lặp các khung đó,
+    // js/sprite_custom.js SC.chonQuai) và KHÔNG xoay thân bằng code (khung lăn đã vẽ hũ đang lăn); lúc vỡ phát hàng đánh (bảng khung: khung đứng lại).
+    // Tấm cũ (?quaicu=1) / chưa nạp ảnh: hàng đánh + xoay như trước.
+    const lanMoi = lanAnh(e);
+    H.begin(e, 'boom', a, S.bao, { cd: 9, end: S.bao + lan + H.dur(e.art, 'atk') + 0.2, s: 0, vet: S.vet * 0.5, no: false, anim1: lanMoi ? 'lan' : undefined,
       fire: (q) => { q.ghost = true; },
       step: (q, A, dt2) => {
         if (!A.fired || A.no) return;
         const k = Math.min(len - A.s, S.toc * dt2);
         A.s += k; q.x += c0 * k; q.y += s0 * k; giu(q); q.moving = true;
-        q.kn.xoay = (q.kn.xoay || 0) + (k / 8) * (c0 >= 0 ? 1 : -1);
+        if (!lanMoi) q.kn.xoay = (q.kn.xoay || 0) + (k / 8) * (c0 >= 0 ? 1 : -1);
         while (A.vet <= A.s) { H.addZone('circle', { x: A.x0 + c0 * A.vet, y: A.y0 + s0 * A.vet, r: S.vetR }, 0, q.dmg * S.vetSat, 'fire', { pool: true, life: S.vetGiay, tick: 0.3 }); A.vet += S.vet; }
-        if (A.s >= len - 0.01) { A.no = true; q.kn.xoay = 0; q.boomT = H.dur(q.art, 'atk') * 0.95; FX('propBlast', { x: q.x, y: q.y, nr: S.r }, 'fire'); G.sfx('boom', 1.1); }
+        if (A.s >= len - 0.01) { A.no = true; q.kn.xoay = 0; q.boomT = H.dur(q.art, 'atk') * 0.95; if (lanMoi) H.play(q, 'atk'); FX('propBlast', { x: q.x, y: q.y, nr: S.r }, 'fire'); G.sfx('boom', 1.1); }
       }, x0: e.x, y0: e.y });
   };
 
