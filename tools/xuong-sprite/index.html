@@ -11413,11 +11413,11 @@ MA.hinhTam = {
   raiCa:    { muon: 'heoCon',   loc: [['hue', -12], ['sat', 0.8], ['bri', 0.92]] },                  // Rái Cá Cầm Sào ← Heo Rừng Con (lông nâu, xông tới)
   diaTrau:  { muon: 'caCon',    loc: [['sep', 0.85], ['hue', 30], ['sat', 1.5], ['bri', 0.72]] },    // Bầy Đỉa Trâu ← Bầy Cá Con (3 con, nâu rêu sọc vàng)
   baBa:     { muon: 'boHung',   loc: [['sat', 0.5], ['hue', 18], ['bri', 1.05]] },                   // Ba Ba Mai Đồng ← Bọ Hung Mai Cứng (mai xanh xám)
-  cocTia:   { muon: 'hoaBaoTu', loc: [['hue', 95], ['sat', 0.9], ['bri', 0.9]] },                    // Cóc Tía Phun Bọt ← Hoa Phun Bào Tử (ngồi phun, tím nâu)
-  ranNuoc:  { muon: 'chonBong', loc: [['hue', -150], ['sat', 1.3], ['bri', 1.05]] },                 // Rắn Nước Sọc ← Chồn Bóng (trườn, lẩn — xanh lá)
-  echPhinh: { muon: 'caNoc',    loc: [['hue', 40], ['sat', 1.1], ['bri', 1.05]] },                   // Ếch Phình Hơi ← Cá Nóc (tròn, phình — xanh chấm lam)
-  maDa:     { muon: 'tieuYeu',  loc: [['hue', 150], ['sat', 0.75], ['bri', 1.0]] },                 // Ma Da Tóc Rong ← Tiểu Yêu Ném Pháo (tiểu yêu, da xanh nhạt)
-  traiGai:  { muon: 'oc',       loc: [['sep', 0.55], ['hue', -25], ['sat', 0.9], ['bri', 0.95]] },  // Trai Sông Gai ← Ốc Mượn Hồn (vỏ, khép / mở — nâu xám)
+  cocTia:   { muon: 'hoaBaoTu', loc: [['hue', -50], ['sat', 0.85], ['bri', 0.85]] },                    // Cóc Tía Phun Bọt ← Hoa Phun Bào Tử (ngồi phun, tím nâu)
+  ranNuoc:  { muon: 'chonBong', loc: [['hue', 95], ['sat', 1.25], ['bri', 1.0]] },                 // Rắn Nước Sọc ← Chồn Bóng (trườn, lẩn — xanh lá)
+  echPhinh: { muon: 'caNoc',    loc: [['hue', 80], ['sat', 1.1], ['bri', 1.0]] },                   // Ếch Phình Hơi ← Cá Nóc (tròn, phình — xanh chấm lam)
+  maDa:     { muon: 'tieuYeu',  loc: [['hue', 150], ['sat', 0.6], ['bri', 1.12]] },                 // Ma Da Tóc Rong ← Tiểu Yêu Ném Pháo (tiểu yêu, da xanh nhạt)
+  traiGai:  { muon: 'oc',       loc: [['sep', 0.8], ['sat', 0.6], ['bri', 0.92]] },  // Trai Sông Gai ← Ốc Mượn Hồn (vỏ, khép / mở — nâu xám)
 };
 const TEN = { raiCa: 'Rái Cá Cầm Sào', diaTrau: 'Bầy Đỉa Trâu', baBa: 'Ba Ba Mai Đồng', cocTia: 'Cóc Tía Phun Bọt', ranNuoc: 'Rắn Nước Sọc', echPhinh: 'Ếch Phình Hơi', maDa: 'Ma Da Tóc Rong', traiGai: 'Trai Sông Gai' };
 MA.locCss = (loc) => (loc || []).map(([k, v]) => k === 'hue' ? 'hue-rotate(' + v + 'deg)' : k === 'sat' ? 'saturate(' + v + ')' : k === 'bri' ? 'brightness(' + v + ')' : k === 'sep' ? 'sepia(' + v + ')' : 'contrast(' + v + ')').join(' ');
