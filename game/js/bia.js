@@ -1,5 +1,5 @@
 // Bìa game ở màn hình chính (bia-moi 15/10): ảnh bìa thay cảnh làng làm tối + Cu Tí đứng góc.
-//   - Mỗi lần mở game chọn ngẫu nhiên 1 trong 2 bìa; ?bia=1 / ?bia=2 ép một bìa; ?biacu=1 = màn chào cũ (cảnh làng + Cu Tí).
+//   - Mỗi lần mở game chọn ngẫu nhiên 1 trong 2 bìa; ?bia=1 / ?bia=2 ép một bìa (15/10 don-tep B: bỏ cờ ?biacu=1).
 //   - Ảnh: game/art/bia/<tên>.webp|jpg 960×540 (dựng bằng tools/anh-truyen/dung.py từ docs/anh-goc/bia). build.py khai G.BIA_ANH
 //     (bản ảnh rời: đường dẫn anh/bia-<tên>.<mã>.webp|jpg; bản một tệp: data:). Chạy thẳng game/index.html qua http: art/bia/.
 //   - TẢI SỚM, KHÔNG CHẶN: trang nhẹ (build.py) gắn đường dẫn ảnh vào #lk-tai (data-bia) → thẻ onanimationstart của màn tải HTML
@@ -15,7 +15,6 @@
   function chon() {
     let q = '';
     try { q = String(location.search || ''); } catch (e) { /* bỏ qua */ }
-    if (/[?&]biacu=1(&|$)/.test(q)) return 0;
     const L = window.LK_BIA;
     if (L && (L.n === 1 || L.n === 2)) return L.n; // màn tải HTML đã chọn (và đã bắt đầu tải) → dùng đúng bìa đó
     const m = /[?&]bia=([12])(&|$)/.exec(q);

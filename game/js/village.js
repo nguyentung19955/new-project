@@ -880,24 +880,14 @@
   // Bố cục màn chào (toạ độ 480x270), Giai đoạn 4 yêu cầu 2: logo > nút chính > nút phụ > dòng thông tin.
   // Nút nào chạy ngay trong lúc chạm (G.syncTaps) thì dùng đúng ô của nút vẽ.
   // gg, bv (Đợt 1): hàng nút dưới "Chơi ngay" khi chưa đăng nhập Google: Đăng nhập Google | Bảng vàng. (guest: ô nút "Chơi tạm" cũ, nay không vẽ nữa.)
-  const TL_CU = { main: [140, 128, 200, 32], play: [160, 128, 160, 32], guest: [180, 168, 120, 20], row: [[128, 168, 108, 22], [244, 168, 108, 22]], gg: [112, 166, 150, 24], bv: [268, 166, 100, 24], info: 210, lang: [430, 5, 44, 16], logo: [140, 52, 200, 40], trong: [240, 30, 20] }; // logo: ô của ảnh gd-logo (phiên C3), trùm đúng chỗ chữ LINH KHÍ
   // bia-moi 15/10 — bố cục trên ảnh bìa (js/bia.js): logo lên vùng trời tối phía trên giữa; nút xuống dải tối mờ dưới (y ≥ 176),
   // thấp hơn trống đồng ở bìa 1 (ảnh: tâm ≈ 120,145, bán kính ≈ 22) và lệch phải nó. Cỡ nút giữ nguyên (vùng chạm như cũ).
-  // trong: mặt trống nhỏ trên chữ [x, y, bán kính]. ?biacu=1: bố cục cũ.
+  // trong: mặt trống nhỏ trên chữ [x, y, bán kính]. logo: ô của ảnh gd-logo. (15/10 don-tep B: bỏ bố cục cũ TL_CU cùng cờ ?biacu=1.)
   const TL_BIA = { main: [140, 176, 200, 30], play: [160, 176, 160, 30], guest: [180, 213, 120, 20], row: [[128, 213, 108, 22], [244, 213, 108, 22]], gg: [112, 212, 150, 24], bv: [268, 212, 100, 24], info: 254, lang: [430, 5, 44, 16], logo: [140, 30, 200, 40], trong: [240, 15, 13] };
   const TL = {};
-  function datBoCuc() { const M = G.bia && G.bia.n ? TL_BIA : TL_CU; for (const k in M) TL[k] = JSON.parse(JSON.stringify(M[k])); }
+  function datBoCuc() { const M = TL_BIA; for (const k in M) TL[k] = JSON.parse(JSON.stringify(M[k])); }
   datBoCuc();
   G.titleLayout = TL; // để bài kiểm tra biết nút nằm ở đâu
-  // Lớp tối dịu phía sau khối chữ và nút: hình elip tối dần ra mép (không phủ cả màn), để chữ không đè lên nhà cửa sáng.
-  function titleVeil() {
-    const c = G.ux; c.save();
-    c.translate(240, 128); c.scale(1, 0.62);
-    const gr = c.createRadialGradient(0, 0, 20, 0, 0, 190);
-    gr.addColorStop(0, 'rgba(8,6,10,0.78)'); gr.addColorStop(0.55, 'rgba(8,6,10,0.56)'); gr.addColorStop(1, 'rgba(8,6,10,0)');
-    c.fillStyle = gr; c.fillRect(-200, -210, 400, 420);
-    c.restore();
-  }
   // Tiêu đề: chữ LINH KHÍ có viền tối dày + bóng đổ lệch xuống, dòng phụ SPIRITBLADE giãn chữ (tên miền spiritblade.web.app).
   function titleLogo() {
     const u = G.ux, dy = TL.logo[1] - 52, bia = !!(G.bia && G.bia.n); // dy: bố cục bìa dời cả khối logo lên trên (TL_BIA)
@@ -937,7 +927,7 @@
       if ((G.downs.length && !onBtns && !onLang) || G.keyP.Enter || G.keyP.Space || G.keyP.KeyJ) G.setScene(G.Village);
     },
     draw() {
-      const c = G.wx, A = G.art;
+      const c = G.wx;
       V.tab = 'title';
       // bia-moi 15/10: có bìa (js/bia.js) thì nền là ảnh bìa, BỎ hình Cu Tí đứng góc. Ảnh chưa về: cảnh làng như cũ (không Cu Tí), về thì hiện dần.
       const BIA = G.bia && G.bia.n ? G.bia : null, ha = BIA ? BIA.hien() : 0;
@@ -945,13 +935,6 @@
       if (BIA) {
         BIA.ve(c, ha, G.time);
         BIA.veMan(G.ux); // vùng tối sau logo + dải tối dưới cho nút
-      } else {
-        // 13/10: chủ dự án muốn Zed chỉ ĐỨNG YÊN ở màn hình chính (bỏ vung kiếm mỗi 2,4 giây).
-        // em bé cầm kiếm lửa: phóng đúng 2 lần (điểm ảnh vuông, không vỡ), đứng góc dưới bên trái, không chạm nút (?biacu=1)
-        c.save(); c.translate(70, 252); c.scale(2, 2);
-        A.hero(c, { x: 0, y: 0, face: 1, key: 'smith', move: false, t: G.time, atk: -1, dodge: -1, weapon: { type: 'sword', family: 0, rarity: 3, marks: { fire: 300, poison: 0, ice: 0 }, branch: 'fire', sharpen: 0 } });
-        c.restore();
-        titleVeil();
       }
       G.syncTaps = [];
       // Bảng vàng mở ngay trên màn mở đầu (không vào làng), có nút đóng

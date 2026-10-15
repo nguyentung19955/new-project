@@ -34,7 +34,7 @@ Cảnh truyện (15/10, canh-truyen) — ảnh game/art/truyen/<tên>.webp|jpg|p
   - G.TRUYEN_ANH = { '<tên>': { webp, jpg } } khai trong trang; js/truyen.js tra bảng này (không có ảnh thì vẽ nền code như cũ)
 
 Bìa màn hình chính (15/10, bia-moi) — ảnh game/art/bia/<tên>.webp|jpg + <tên>.mo.jpg (dựng bằng tools/anh-truyen/dung.py), TẢI SỚM:
-  - G.BIA_ANH = { '<tên>': { webp, jpg } } khai trong trang (js/bia.js chọn 1 trong 2 bìa mỗi lần mở; ?bia=1|2 ép; ?biacu=1 màn cũ)
+  - G.BIA_ANH = { '<tên>': { webp, jpg } } khai trong trang (js/bia.js chọn 1 trong 2 bìa mỗi lần mở; ?bia=1|2 ép)
   - bản ảnh rời: chép sang dist/anh/bia-<tên>.<mã>.webp|jpg và gắn đường dẫn vào thẻ #lk-tai (data-bia) → màn tải HTML bắt đầu tải
     đúng MỘT bìa ngay khi trang đang về (không thêm thẻ script, không chặn màn tải). Tính vào tải đầu.
   - bản một tệp: nhúng WebP dạng data: (như ảnh truyện)

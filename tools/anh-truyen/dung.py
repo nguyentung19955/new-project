@@ -27,7 +27,7 @@ RA = os.path.join(ROOT, 'game', 'art', 'truyen')
 # Trùng với bảng ANH trong game/js/truyen.js (khoá nền → tên tệp)
 TEN = ['b1-trong-vo-cay-da-ua', 'b2-ba-yeu-tinh', 'b2b-bong-duoi-song', 'b3-ba-ban-bi-bat', 'b4-trao-vu-khi', 'b5-hoi-lang', 'b6-nen-lang']
 CO = (960, 540)
-# Bìa màn hình chính (js/bia.js: ngẫu nhiên 1 trong 2, ?bia=1 / ?bia=2 ép, ?biacu=1 màn cũ)
+# Bìa màn hình chính (js/bia.js: ngẫu nhiên 1 trong 2, ?bia=1 / ?bia=2 ép)
 GOC_BIA = os.path.join(ROOT, 'docs', 'anh-goc', 'bia')
 RA_BIA = os.path.join(ROOT, 'game', 'art', 'bia')
 BIA = ['bia-1-cay-da', 'bia-2-dong-song']
