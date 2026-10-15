@@ -198,7 +198,8 @@ const sx = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Ar
       VA.goHub(); G.noRender = true;
       return r;
     });
-    dat(gd.moChua === 'hero' && gd.mo === 'hero,thanhTuu', 'thẻ Thành tựu chỉ hiện sau khi qua ải Rừng già 1');
+    const boSo = (x) => String(x).split(',').filter((t) => t !== 'so').join(','); // thẻ Sổ (Phiên A) mở từ đầu: không tính ở đây
+    dat(boSo(gd.moChua) === 'hero' && boSo(gd.mo) === 'hero,thanhTuu', 'thẻ Thành tựu chỉ hiện sau khi qua ải Rừng già 1');
     dat(gd.cham, 'có huy hiệu chờ nhận → chấm đỏ Ông Từ');
     dat(gd.ve0 === true && gd.sel === 'buocDau' && gd.ve1 === true && gd.sel2 === 'quai100', 'vẽ thẻ không lỗi; tự chọn huy hiệu chờ nhận; chạm huy hiệu để xem');
     dat(gd.ve2 === true && gd.nhan && gd.cham2 === false, 'bấm Nhận: +100 vàng, hết chấm đỏ');
@@ -223,7 +224,7 @@ const sx = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Ar
         dd: G.thanhTuu.dangDeo(), giu: G.save.tt.dh, nhan: G.thanhTuu.nhan('buocDau') };
     });
     dat(tat.bat === false && tat.win && tat.quai === 0, 'không đếm quái (bot vẫn thắng)');
-    dat(tat.rong && tat.the === 'hero' && tat.dd === null && !tat.nhan, 'thẻ ẩn, không hiện / không nhận gì');
+    dat(tat.rong && boSo(tat.the) === 'hero' && tat.dd === null && !tat.nhan, 'thẻ ẩn, không hiện / không nhận gì');
     dat(tat.giu === 'tanBinh', 'dữ liệu tt trong bản lưu giữ nguyên');
 
     const loiA = await A.goi(() => (window.__loiNgam || []).filter((s) => /thanh_tuu|thanhTuu/.test(s)));

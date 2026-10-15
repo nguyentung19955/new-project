@@ -1469,6 +1469,40 @@ window.G.LANG = 'vi';
     },
   };
 })();
+
+// ===================== BƯỚC 2 — PHIÊN A: SỔ YÊU QUÁI (js/so_yeu_quai.js) — khối riêng, các phiên khác không sửa =====================
+// docs/ke-hoach/buoc-2/KE-HOACH.md mục 1.1. Mỗi trang: [mã hình quái (js/monster_art.js, trùng e.art), vùng 0..2, loại, hệ khắc chế].
+//   loại: 'thuong' (quái thường) · 'tinhanh' · 'trumnho' · 'trum' (trùm vùng: điểm yếu = đạt sao thứ ba khi hạ, hệ để null).
+//   Hệ khắc chế của quái thường / tinh anh / trùm nhỏ CHỈ ĐỂ GHI SỔ, không đổi sát thương (QUYET-DINH.md, Q3 = a).
+//   Quy tắc: Bầy nhỏ → Lửa, Khiên → Độc, Xạ thủ + Nhanh nhẹn → Băng; vai khác → hệ khắc hệ của vùng (Rừng già Lửa, Hang biển Độc, Lâu đài cổ Băng).
+// Thưởng (bấm Nhận ở Ông Từ, mỗi nấc một lần):
+//   ★ đã hạ: vang[loại][vùng] · ★★ tìm ra điểm yếu: lk[loại] linh khí · ★★★ thuần thục (hạ đủ can[loại] con): da[loại] đá nâng bậc
+//   Vùng: mọi trang ★★ → vungDa[vùng] đá nâng bậc + danh hiệu "Thợ săn <vùng>"; mọi trang ★★★ → danh hiệu "Bậc thầy <vùng>" (chỉ danh hiệu).
+//   Cả game (một lần): 2.640 vàng, 198 linh khí, 46 đá nâng bậc — xem docs/ke-hoach/buoc-2/bao-cao-phien-A.md (bảng cân bằng trước / sau).
+// Vùng mới (Bước 3) chỉ cần thêm dòng vào trang (vùng 3…) và một số vào vang / vungDa: sổ tự có thêm một mục.
+(function () {
+  const G = (window.G = window.G || {});
+  G.SO_YQ = {
+    trang: [
+      ['heoCon', 0, 'thuong', 'fire'], ['ongVo', 0, 'thuong', 'fire'], ['boHung', 0, 'thuong', 'poison'], ['hoaBaoTu', 0, 'thuong', 'ice'],
+      ['chonBong', 0, 'thuong', 'ice'], ['namPhong', 0, 'thuong', 'fire'], ['socNo', 0, 'thuong', 'fire'], ['nhimDoc', 0, 'thuong', 'fire'],
+      ['heoNanh', 0, 'tinhanh', 'fire'], ['namPhongChua', 0, 'tinhanh', 'fire'], ['namChua', 0, 'trumnho', 'fire'], ['mocTinh', 0, 'trum', null],
+      ['cua', 1, 'thuong', 'poison'], ['caCon', 1, 'thuong', 'fire'], ['oc', 1, 'thuong', 'poison'], ['haiQuy', 1, 'thuong', 'ice'],
+      ['caChuon', 1, 'thuong', 'ice'], ['caNoc', 1, 'thuong', 'poison'], ['sua', 1, 'thuong', 'poison'], ['nhim', 1, 'thuong', 'poison'],
+      ['cuaTuong', 1, 'tinhanh', 'poison'], ['caNocChua', 1, 'tinhanh', 'poison'], ['cuaDa', 1, 'trumnho', 'poison'], ['nguTinh', 1, 'trum', null],
+      ['linhMa', 2, 'thuong', 'ice'], ['doiThan', 2, 'thuong', 'fire'], ['tuongDa', 2, 'thuong', 'poison'], ['denLong', 2, 'thuong', 'ice'],
+      ['meoDen', 2, 'thuong', 'ice'], ['huLua', 2, 'thuong', 'ice'], ['tieuYeu', 2, 'thuong', 'ice'], ['nhimThan', 2, 'thuong', 'ice'],
+      ['tuongMa', 2, 'tinhanh', 'ice'], ['huChua', 2, 'tinhanh', 'ice'], ['hoLua', 2, 'trumnho', 'ice'], ['hoTinh', 2, 'trum', null],
+    ],
+    vang: { thuong: [20, 40, 60], tinhanh: [50, 80, 120], trumnho: [80, 120, 180], trum: [150, 250, 400] },
+    lk: { thuong: 3, tinhanh: 6, trumnho: 10, trum: 20 },
+    da: { thuong: 0, tinhanh: 1, trumnho: 2, trum: 3 },
+    can: { thuong: 30, tinhanh: 10, trumnho: 5, trum: 3 },
+    vungDa: [5, 8, 12],
+  };
+  // Cùng bảng dạng danh sách đối tượng (js/thanh_tuu.js của Phiên C đọc G.SO_YQ.ds[i].ma để đếm trang sổ "Chép sổ" / "Sổ đủ trang")
+  G.SO_YQ.ds = G.SO_YQ.trang.map((t) => ({ ma: t[0], vung: t[1], loai: t[2], he: t[3] }));
+})();
 // ===== game/js/art.js =====
 // Hình pixel vẽ bằng mã: hero, quái, boss, cảnh nền, đồ vật. Chỉ dùng fillRect toạ độ nguyên, màu phẳng.
 (function () {

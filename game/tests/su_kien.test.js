@@ -37,7 +37,9 @@ const boBa = (o) => { const c = Object.assign({}, o); delete c.so; delete c.nv; 
 const sx = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Array.isArray(x) ? Object.keys(x).sort().reduce((a, kk) => ((a[kk] = x[kk]), a), {}) : x));
 
 (async () => {
-  const A = moTrang(''), B = moTrang('sukien=0');
+  // Phiên A (sổ), B (việc ngày), C (thành tựu) bù / ghi vào so, nv, tt và tự kiểm ở bài riêng (tests/so_yeu_quai.test.js…):
+  // bài này kiểm NỀN CHUNG của Phiên 0 nên bản "thường" tắt ba hệ đó bằng cờ quay lui của chúng.
+  const A = moTrang('soyq=0&viecngay=0&thanhtuu=0'), B = moTrang('sukien=0');
   try {
     // ---------- 0. nạp ----------
     console.log('0. Nạp game');
