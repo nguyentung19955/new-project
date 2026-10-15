@@ -1,7 +1,7 @@
 // Làng: cảnh làng có người (js/village_scene.js). Mỗi chức năng là một người đứng cạnh công trình của mình:
 //   Chú Lái Đò: tranh bản đồ vùng, chọn ải, độ khó, nút "Lên đò"      Ông Thợ Rèn: lò rèn (Mài, Linh khí — nâng 4 vũ khí, Nâng lò)
 //   Bà Hàng Xén: đổi vàng lấy nguyên liệu vùng đã qua
-//   Cô Thợ May: nâng cấp bộ trang phục Zed (bảng ở js/vk_moi_lang.js)
+//   Cô Thợ May: bán (thẻ Mua, vàng) và nâng cấp bộ trang phục Zed (bảng ở js/vk_moi_lang.js)
 //   Cụ Đồ: cây kỹ năng, đặt lại điểm, hướng dẫn                         Ông Từ: xem chỉ số Zed, nét ba bạn đã dạy
 //   Anh Mõ: cài đặt                                                     Chạm vũ khí sống đang bay theo: xem vũ khí
 //   Nút túi vải góc trên bên phải: Hành trang (js/hanh_trang.js), gom nhân vật, vũ khí, kỹ năng, tài nguyên
@@ -601,6 +601,10 @@
     ['Bốn vũ khí', G.t('Cu Tí luôn mang đủ 4 vũ khí: Kiếm, Thương, Búa, Phi tiêu; nút đổi vũ khí xoay vòng. Nâng vũ khí bằng linh khí ở Ông Thợ Rèn: Trắng, Mầm (chọn hệ Lửa, Độc hoặc Băng), Thành hình, Thức tỉnh ({0}, {1}, {2} linh khí). Quái, rương, trùm không rơi vũ khí hay quần áo nữa mà cho vàng và linh khí.', G.VK_MOI.gia[0], G.VK_MOI.gia[1], G.VK_MOI.gia[2])],
     ['Đặc trưng hệ theo cấp', G.t('Trắng: chưa có hệ. Linh khí (túi chung) có từ: hạ tinh anh ({0}), trùm nhỏ ({1}), trùm vùng ({2}); quái thường {3}% rơi viên linh khí ({4}), đi lại gần để nhặt; kết liễu quái đang dính hệ (+1). Mầm: chọn hệ Lửa, Độc hoặc Băng; có tỉ lệ gây cháy, độc, chậm nhưng chưa có luật hệ. Thành hình: mở đặc trưng 1, thứ để lại trên sân (vệt cháy, vũng độc, gai băng). Thức tỉnh: mở đặc trưng 2, phản ứng dây chuyền (nổ lan, lây độc, băng vỡ).', G.LINHKHI.elite, G.LINHKHI.mini, G.LINHKHI.boss, Math.round(G.LINHKHI.drop * 100), G.LINHKHI.orb)],
     ['Xem vũ khí', 'Ở Ông Thợ Rèn (thẻ Linh khí, nút Xem linh khí) xem cấp, bậc ép đồ và các đặc trưng hệ đã mở, sắp mở của từng vũ khí.'],
+    // 15/10 (bo-do-mua): bộ vùng mua bằng vàng ở Cô Thợ May; ?bocu=1 thì câu cũ (hạ trùm là có bộ)
+    G.BO_MUA_BAT !== false
+      ? ['Bộ trang phục', G.t('Cu Tí có sẵn bộ Ninja. Hạ trùm vùng thì Cô Thợ May bày bán bộ của vùng đó (thẻ Mua): Rừng {0}, Biển {1}, Lâu đài {2} vàng. Mua xong mới mặc và nâng cấp được (thẻ Nâng cấp: linh khí, vàng, mảnh trùm); đổi bộ ở Hành trang › Nhân vật.', G.zedBoGia('rung'), G.zedBoGia('bien'), G.zedBoGia('lau'))]
+      : ['Bộ trang phục', 'Cu Tí có sẵn bộ Ninja. Hạ trùm vùng thì mở bộ của vùng đó. Cô Thợ May nâng bộ bằng linh khí, vàng, mảnh trùm; đổi bộ ở Hành trang › Nhân vật.'],
   ];
   function help() {
     frame('Gốc đa: hướng dẫn');

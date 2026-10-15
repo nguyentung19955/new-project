@@ -491,14 +491,23 @@
         R.lines.push(ln(R, 'Cứu được {0}! Bạn ấy dạy Cu Tí:', ten), ln(R, '· {0}', G.tv(D.ngan[0])), ln(R, '· {0}', G.tv(D.ngan[1])));
         if (S.W) S.W.banner = { s: G.t('{0} dạy Cu Tí: {1}', ten, G.tv(D.noiTai)), col: '#ffd23f', t: 4 }; // dòng báo giữa trận (đè dòng báo rơi đồ)
       }
-      // TRANG PHỤC ZED (js/data.js G.ZED_BO): hạ trùm vùng của bộ (mọi độ khó) thì mở bộ đó, báo một dòng; làng nhắc chỗ đổi (save.zed.boBao)
+      // TRANG PHỤC ZED (js/data.js G.ZED_BO): hạ trùm vùng của bộ (mọi độ khó) thì MỞ BÁN bộ đó ở Cô Thợ May (15/10, bo-do-mua: mua bằng
+      // vàng, G.BO_MUA), báo một dòng; làng báo một lần + chấm đỏ Cô Thợ May (save.zed.boBanBao). ?bocu=1: tặng bộ như cũ (save.zed.boBao).
       if (G.ZED_BO && big) {
         for (const bk of G.ZED_BO_KEYS) {
           if (bk === 'ninja' || G.zedBoVung(bk) !== S.r || G.zedBoMo(bk, sv)) continue;
           if (!sv.zed || typeof sv.zed !== 'object' || Array.isArray(sv.zed)) sv.zed = { v: 1, hoc: {} };
-          if (!sv.zed.boMo || typeof sv.zed.boMo !== 'object' || Array.isArray(sv.zed.boMo)) sv.zed.boMo = {};
-          sv.zed.boMo[bk] = 1; sv.zed.boBao = 1;
-          R.lines.push(ln(R, 'Cu Tí mở được trang phục mới: {0}!', G.tv(G.ZED_BO[bk].ten)));
+          if (G.BO_MUA_BAT === false) {
+            if (!sv.zed.boMo || typeof sv.zed.boMo !== 'object' || Array.isArray(sv.zed.boMo)) sv.zed.boMo = {};
+            sv.zed.boMo[bk] = 1; sv.zed.boBao = 1;
+            R.lines.push(ln(R, 'Cu Tí mở được trang phục mới: {0}!', G.tv(G.ZED_BO[bk].ten)));
+            continue;
+          }
+          sv.zed.boMua = 1; // bản lưu theo luật mua (lần nạp sau fixSave không tặng bù)
+          if (!sv.zed.boBan || typeof sv.zed.boBan !== 'object' || Array.isArray(sv.zed.boBan)) sv.zed.boBan = {};
+          if (sv.zed.boBan[bk]) continue; // đã mở bán từ trước (đánh lại trùm)
+          sv.zed.boBan[bk] = 1; sv.zed.boBanBao = 1;
+          R.lines.push(ln(R, 'Cô Thợ May đã có bộ {0}, ghé mua nhé!', G.tv(G.ZED_BO[bk].ten)));
         }
       }
       // bạn được cứu về làng (NPC ngồi ở sân đình, js/village_scene.js); dòng báo "dạy Zed" ở trên

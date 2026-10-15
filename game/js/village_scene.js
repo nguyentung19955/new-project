@@ -38,7 +38,7 @@
     lai: { ten: 'Chú Lái Đò', viec: 'Vào ải', ngan: 'Vào ải', chao: 'Đi đâu hả cháu?', ve: 'Đi cẩn thận nhé!', robe: '#8a5632', robe2: '#6a3e22', wide: 0, top: -27, pos: [638, 152], den: [620, 163] },
     ren: { ten: 'Ông Thợ Rèn', viec: 'Lò rèn', ngan: 'Lò rèn', chao: 'Đưa đây ông xem lưỡi nào!', ve: 'Đi cẩn thận nhé!', robe: '#9a4a30', robe2: '#7a3622', wide: 2, top: -27, pos: [468, 132], den: [447, 141] },
     xen: { ten: 'Bà Hàng Xén', viec: 'Hàng xén', ngan: 'Vũ khí', chao: 'Mua gì bán gì, vào đây với bà.', ve: 'Lần sau lại ghé bà nhé.', robe: '#8a5a38', robe2: '#6e4428', wide: 1, top: -23, pos: [540, 198], den: [540, 214] },
-    may: { ten: 'Cô Thợ May', viec: 'Thợ may', ngan: 'Mũ áo', chao: 'Bé thử bộ đồ mới xem nào.', ve: 'Mặc đẹp lắm đó!', robe: '#d86a7a', robe2: '#b04a5e', wide: -1, top: -28, pos: [574, 132], den: [555, 141] },
+    may: { ten: 'Cô Thợ May', viec: 'Thợ may', ngan: 'Mũ áo', chao: 'Hạ trùm vùng là cô may bộ mới, gom vàng ghé mua nhé.', ve: 'Mặc đẹp lắm đó!', robe: '#d86a7a', robe2: '#b04a5e', wide: -1, top: -28, pos: [574, 132], den: [555, 141] },
     do: { ten: 'Cụ Đồ', viec: 'Kỹ năng', ngan: 'Kỹ năng', chao: 'Ngồi xuống đây, lão chỉ cho một chiêu.', ve: 'Học rồi nhớ luyện nghe con.', robe: '#4a548c', robe2: '#363e6c', wide: 0, top: -24, sit: true, pos: [364, 150], den: [342, 160] },
     tu: { ten: 'Ông Từ', viec: 'Xem chỉ số Cu Tí', ngan: 'Cu Tí', chao: 'Khẽ thôi, các bé đang chơi trong sân.', ve: 'Các bé chơi ngoan nhé.', robe: '#d0a440', robe2: '#a87e2a', wide: 0, top: -27, pos: [142, 140], den: [124, 151] },
     mo: { ten: 'Anh Mõ', viec: 'Cài đặt', ngan: 'Cài đặt', chao: 'Cốc cốc cốc! Làng nước nghe đây!', ve: 'Có gì cứ gọi anh Mõ!', robe: '#3f9a8c', robe2: '#2c7468', wide: -1, top: -26, pos: [100, 92], den: [118, 102] },
@@ -639,6 +639,8 @@
       n.do = Math.floor(hs.lvl / 3) - (hs.sk.atk + hs.sk.def + hs.sk.elem) > 0 || !!(G.chuong && G.chuong.pts(hs, sv.hero).left > 0);
       // thợ may: đủ linh khí + vàng nâng một bộ trang phục Zed
       n.may = !!(G.vkMoi && G.vkMoi.coTheNangBo(sv));
+      // 15/10 (bo-do-mua): bộ vừa mở bán chưa xem ở thẻ Mua, hoặc đủ vàng mua một bộ đang bán
+      if (!n.may && G.vkMoi && G.vkMoi.coTheMuaBo) n.may = !!G.vkMoi.coTheMuaBo(sv);
       // thợ rèn: đủ nguyên liệu để mài một món đang mang, nâng lò, hoặc đủ linh khí nâng một vũ khí
       const pay = G.villageApi && G.villageApi.canPay;
       n.ren = false;
@@ -705,6 +707,16 @@
     const ds = (G.ZED_BO_KEYS || []).filter((k) => k !== 'ninja' && G.zedBoMo(k)).map((k) => G.tv(G.ZED_BO[k].ten));
     if (ds.length) say(G.t('Cu Tí có trang phục mới: {0}. Đổi bộ ở Hành trang, thẻ Nhân vật.', ds.join(', ')), 5);
     G.persist();
+  }
+
+  // 15/10 (bo-do-mua): hạ trùm vùng vừa mở bán bộ ở Cô Thợ May (js/stage.js) → nói một lần, xoá dấu báo (chấm đỏ Cô Thợ May ở checkNews).
+  function zedBoBanBao() {
+    const z = G.save.zed;
+    delete z.boBanBao;
+    const ds = G.vkMoi && G.vkMoi.boDangBan ? G.vkMoi.boDangBan(G.save).map((k) => G.tv(G.ZED_BO[k].ten)) : [];
+    if (ds.length) say(G.t('Cô Thợ May đã có bộ {0}, ghé mua nhé!', ds.join(', ')), 5);
+    G.persist();
+    checkNews();
   }
 
   // o.from: 'stage' (từ ải về: xuống đò ở bến bên phải) | 'title' | 'keep' (giữ chỗ đang đứng)
@@ -799,6 +811,7 @@
     if ((S.newsT -= dt) <= 0) { S.newsT = 1; checkNews(); }
     if (!locked && G.save && G.save.zed && G.save.zed.bao === 1) zedBao(); // ZED: báo một lần bản lưu cũ đã chuyển sang Zed
     else if (!locked && G.save && G.save.zed && G.save.zed.boBao === 1) zedBoBao(); // trang phục Zed vừa mở: báo một lần
+    else if (!locked && G.save && G.save.zed && G.save.zed.boBanBao === 1) zedBoBanBao(); // bộ vừa mở bán ở Cô Thợ May: báo một lần
     else if (!locked && G.vkMoi && G.save && (G.save.heMoiBao || G.save.canLaiBao)) { const s = G.vkMoi.baoChuyen(G.save); if (s) say(s, 9); G.persist(); } // hệ thống mới: báo một lần đã chuyển bản lưu cũ / đã cân lại đồ (đợt 4)
     let mx = 0, my = 0;
     if (!locked) {

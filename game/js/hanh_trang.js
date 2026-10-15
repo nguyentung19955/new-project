@@ -79,6 +79,12 @@
   }
   // Trang phục Zed (js/data.js G.ZED_BO; docs/review/ke-hoach-cai-thien/zed-bo-rung): dòng nhỏ trên khung hình Zed. Đã mở từ 2 bộ trở lên
   // thì là nút bấm đổi sang bộ kế tiếp (chỉ ở làng), chưa mở thì nhắc cách mở. Trả true nếu vừa đổi bộ (vẽ lại khung sau).
+  // 15/10 (bo-do-mua): bộ chưa có → đang bán thì nhắc mua ở Cô Thợ May, chưa bán thì nhắc hạ trùm để mở bán (?bocu=1: câu cũ)
+  function boNhac(k, r, sv) {
+    const ten = G.tv(G.ZED_BO[k].ten);
+    if (G.BO_MUA_BAT === false) return G.t('Hạ {0} để mở {1}', r.bossName, ten);
+    return G.zedBoBan(k, sv) ? G.t('Mua {0} ở Cô Thợ May', ten) : G.t('Hạ {0} để mở bán {1}', r.bossName, ten);
+  }
   function zedBoChon(sv) {
     if (!G.ZED_BO || !G.zedBo) return false;
     const cur = G.zedBo(sv), mo = G.ZED_BO_KEYS.filter((k) => G.zedBoMo(k, sv));
@@ -93,14 +99,14 @@
       }
       // còn bộ chưa mở (vd. đã có Rừng, chưa có Biển) → nhắc cách mở bộ kế tiếp dưới nút
       const kh = G.ZED_BO_KEYS.find((k) => !G.zedBoMo(k, sv)), rk = kh ? G.REGIONS[G.zedBoVung(kh)] : null;
-      if (rk) tx(G.t('Hạ {0} để mở {1}', rk.bossName, G.tv(G.ZED_BO[kh].ten)), CX + 56, CY + 24, 98, { size: 6, align: 'center', color: SOFT }); // chu-lech-khung: trong lòng ô hình (rộng 112, viền 3,5 + 2 đệm)
+      if (rk) tx(boNhac(kh, rk, sv), CX + 56, CY + 24, 98, { size: 6, align: 'center', color: SOFT }); // chu-lech-khung: trong lòng ô hình (rộng 112, viền 3,5 + 2 đệm)
       return false;
     }
     tx(ten, CX + 56, CY + 13, 104, { size: 6.5, bold: true, align: 'center', color: TXT });
     const khoa = G.ZED_BO_KEYS.find((k) => !G.zedBoMo(k, sv));
     if (khoa && !G.ZED_BO_THU) {
       const r = G.REGIONS[G.zedBoVung(khoa)];
-      if (r) tx(G.t('Hạ {0} để mở {1}', r.bossName, G.tv(G.ZED_BO[khoa].ten)), CX + 56, CY + 22, 98, { size: 6, align: 'center', color: SOFT });
+      if (r) tx(boNhac(khoa, r, sv), CX + 56, CY + 22, 98, { size: 6, align: 'center', color: SOFT });
     } else if (mo.length > 1 && RO) tx('Về làng để thay', CX + 56, CY + 22, 104, { size: 6, align: 'center', color: WARN });
     return false;
   }
@@ -233,7 +239,7 @@
     // Đợt 4: chữ theo luật mới (bỏ nâng bậc, trang phục cũ, đá tôi; mảnh trùm dùng nâng bộ, gỗ linh mài +6)
     const a = [
       // 14/10 (bước 1, mục 6): thêm ép đồ, mua quặng (Bà Hàng Xén), Ải Vàng / Ải Đá Mài (ải ngày)
-      ['gold', 'Mài, nâng lò, nâng bộ trang phục, ép đồ, đổi nguyên liệu, mua quặng, đặt lại điểm kỹ năng', 'Qua ải, hạ quái, tinh anh, trùm, phòng thử thách, Ải Vàng (ải ngày)'],
+      ['gold', 'Mài, nâng lò, mua và nâng bộ trang phục, ép đồ, đổi nguyên liệu, mua quặng, đặt lại điểm kỹ năng', 'Qua ải, hạ quái, tinh anh, trùm, phòng thử thách, Ải Vàng (ải ngày)'],
       ['ore', 'Mài vũ khí, nâng lò cấp 4', 'Qua ải (nhiều sao được nhiều hơn), rương báu, phòng thử thách, thương nhân, Ải Đá Mài (ải ngày), Bà Hàng Xén (thẻ Quặng)'],
     ];
     const matUse = ['Nâng lò cấp 2, mài +5 lên +6', 'Mài từ +6 tới +9, nâng lò cấp 3', 'Mài từ +9 trở lên, nâng lò cấp 4'];

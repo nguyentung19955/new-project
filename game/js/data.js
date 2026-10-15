@@ -122,7 +122,7 @@
   // Nâng cấp bộ trang phục Zed: 3 cấp, mỗi cấp tốn linh khí + vàng (giống nhau cho cả 4 bộ).
   // Đợt 4 (soát cân bằng): vàng 300/800/1.800 → 500/1.500/3.000 (mô hình tools/can-bang/tinh.js: giữa vùng hai đã dư ~7.000 vàng không có
   // chỗ tiêu); thêm MẢNH TRÙM (manh) ở cấp 2, 3 — mảnh trùm của vùng mở bộ đó (bộ Ninja dùng mảnh Mộc Tinh), mỗi lần hạ trùm vùng +3 mảnh:
-  // cấp 1 mua được ngay khi vừa mở bộ, cấp 2 cần 3 mảnh (đủ ngay lần hạ trùm đầu), cấp 3 cần 6 mảnh (phải cày lại trùm vùng thêm 2 lần).
+  // cấp 1 nâng được ngay khi vừa có bộ (15/10: bộ vùng phải MUA bằng vàng trước, G.BO_MUA), cấp 2 cần 3 mảnh (đủ ngay lần hạ trùm đầu), cấp 3 cần 6 mảnh (phải cày lại trùm vùng thêm 2 lần).
   // Mảnh trùm trước đây chỉ dùng để nâng bậc Vàng (đã bỏ ở đợt 1) nên đang vô dụng.
   G.BO_MOI = {
     max: 3,
@@ -399,15 +399,16 @@
   try { if (typeof location !== 'undefined' && /[?&]eosua=0(&|$)/.test(location.search || '')) G.EO_SUA = false; } catch (e) { /* giữ mặc định */ }
   // TRANG PHỤC ZED (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-rung): mỗi bộ = nguyên bộ hình Zed mặc sẵn bộ đó (js/zed_moi.js
   // chọn tấm theo bộ đang mặc; vũ khí, nhịp, neo như nhau). Lưu ở save.zed.bo ('ninja' | 'rung'; không có = 'ninja') và save.zed.boMo
-  // (các bộ đã mở). Bộ Rừng mở khi hạ trùm vùng Rừng già (js/stage.js; bản lưu cũ đã có sao ải trùm Rừng thì tự mở, js/engine.js fixSave).
+  // (các bộ đã có). 15/10 23:08: hạ trùm vùng Rừng già chỉ MỞ BÁN bộ Rừng ở Cô Thợ May (mua bằng vàng, G.BO_MUA bên dưới; js/stage.js);
+  // bản lưu cũ đã có bộ thì giữ nguyên (js/engine.js fixSave). ?bocu=1: hạ trùm là có bộ như trước.
   // Mở rồi mặc được ở mọi vùng. Cờ thử: ?zedbo=rung / ?zedbo=bien / ?zedbo=lau (mặc ngay bộ đó, không cần mở khoá, không ghi vào bản lưu).
-  // Bộ 3 'bien' (docs/review/ke-hoach-cai-thien/zed-bo-bien) mở khi hạ trùm Hang biển — cùng đường mở khoá/mở bù/báo như bộ Rừng.
+  // Bộ 3 'bien' (docs/review/ke-hoach-cai-thien/zed-bo-bien) mở bán khi hạ trùm Hang biển — cùng đường mở bán/mua/báo như bộ Rừng.
   G.ZED_BO = {
     ninja: { ten: 'Ninja Bóng Đêm', tam: 'zed-moi' },
     rung: { ten: 'Thợ Săn Rừng', tam: 'zed-rung', vung: 'Rừng già' },
-    // bộ 3 "Biển" (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-bien): mở khi hạ trùm vùng Hang biển (vùng thứ 2), như bộ Rừng
+    // bộ 3 "Biển" (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-bien): mở bán khi hạ trùm vùng Hang biển (vùng thứ 2), như bộ Rừng
     bien: { ten: 'Chiến Binh Biển', tam: 'zed-bien', vung: 'Hang biển' },
-    // bộ 4 "Lâu đài cổ" (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-lau): mở khi hạ trùm vùng Lâu đài cổ (vùng thứ 3), như bộ Rừng/Biển
+    // bộ 4 "Lâu đài cổ" (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-lau): mở bán khi hạ trùm vùng Lâu đài cổ (vùng thứ 3), như bộ Rừng/Biển
     lau: { ten: 'Hiệp Sĩ Lâu Đài', tam: 'zed-lau', vung: 'Lâu đài cổ' },
   };
   G.ZED_BO_KEYS = ['ninja', 'rung', 'bien', 'lau'];
@@ -420,10 +421,33 @@
     const i = G.REGIONS.findIndex((r) => r && r.name === B.vung);
     return i >= 0 ? i : 0;
   };
+  // zedBoMo: bộ Cu Tí ĐÃ CÓ (đã mua, hoặc bản lưu cũ đã được tặng) → mặc / nâng cấp được. Lưu ở save.zed.boMo.
   G.zedBoMo = function (k, sv) {
     if (k === 'ninja') return true;
     sv = sv || G.save;
     return !!(sv && sv.zed && typeof sv.zed === 'object' && sv.zed.boMo && sv.zed.boMo[k]);
+  };
+  // MUA BỘ BẰNG VÀNG (chủ game 15/10 23:08, docs/review/ke-hoach-cai-thien/bo-do-mua): hạ trùm vùng không tặng bộ nữa mà chỉ MỞ BÁN bộ đó
+  // ở Cô Thợ May (thẻ "Mua", js/vk_moi_lang.js); mua xong mới mặc / nâng cấp. Ninja có sẵn. Giá chốt theo bot (tests/cay.py --node,
+  // tools/can-bang/tinh.js; bảng ở bo-do-mua/bao-cao.md): người chơi bình thường mua được bộ vùng trong lúc cày vùng kế tiếp.
+  // Bản lưu cũ (chưa có cờ save.zed.boMua) giữ nguyên mọi bộ đã có (js/engine.js fixSave). Cờ quay lui: ?bocu=1 (G.BO_MUA_BAT = false:
+  // hạ trùm là có bộ như cũ, không có thẻ Mua).
+  G.BO_MUA = { gia: { ninja: 0, rung: 1500, bien: 3000, lau: 5000 } };
+  G.BO_MUA_BAT = true;
+  try { if (typeof location !== 'undefined' && /[?&]bocu=1(&|$)/.test(location.search || '')) G.BO_MUA_BAT = false; } catch (e) { /* giữ mặc định */ }
+  G.zedBoGia = (k) => Math.max(0, (G.BO_MUA && G.BO_MUA.gia && G.BO_MUA.gia[k]) | 0);
+  // đã hạ trùm vùng của bộ (mọi độ khó)
+  G.zedBoHa = function (k, sv) {
+    sv = sv || G.save;
+    const r = G.zedBoVung(k);
+    return r >= 0 && !!(sv && ((sv.stars && sv.stars[r + '-4']) || (sv.stars2 && sv.stars2[r + '-4'])));
+  };
+  // bộ đang bày bán / mua được ở Cô Thợ May (đã mở bán; bộ đã có cũng tính là đã mở)
+  G.zedBoBan = function (k, sv) {
+    if (k === 'ninja' || G.zedBoMo(k, sv)) return true;
+    sv = sv || G.save;
+    const z = sv && sv.zed && typeof sv.zed === 'object' ? sv.zed : null;
+    return !!((z && z.boBan && z.boBan[k]) || G.zedBoHa(k, sv));
   };
   // bộ đang mặc (cờ thử ?zedbo= đè lên bản lưu)
   G.zedBo = function (sv) {
@@ -766,7 +790,7 @@
     'Thành hình mở đặc trưng hệ thứ nhất, Thức tỉnh mở đặc trưng thứ hai.',
     'Mỗi ải có Sức mạnh khuyên dùng. Số đỏ là bé còn yếu: chơi lại ải cũ để lên cấp, kiếm linh khí, quặng, nguyên liệu và đá nâng bậc, rồi nâng cấp, mài và ép đồ vũ khí.',
     'Thiếu nguyên liệu của vùng đã qua? Bà Hàng Xén (thẻ Nguyên liệu) và Thương nhân trong ải đổi vàng lấy nguyên liệu. Thiếu quặng thì mua ở thẻ Quặng của Bà Hàng Xén (mỗi ngày có hạn).',
-    'Cô Thợ May nâng 4 bộ đồ của Zed (Ninja, Rừng, Biển, Lâu đài) bằng linh khí, vàng và mảnh trùm. Mỗi cấp bộ mở một skill riêng, chỉ có tác dụng khi đang mặc bộ đó.',
+    'Hạ trùm vùng thì Cô Thợ May bày bán bộ đồ của vùng đó (thẻ Mua, trả bằng vàng). Mua xong cô nâng bộ bằng linh khí, vàng và mảnh trùm; mỗi cấp bộ mở một skill riêng, chỉ có tác dụng khi đang mặc bộ đó.',
   ];
 })();
 
@@ -853,7 +877,7 @@
       { ma: 'mai10', ten: 'Mài sắc', cach: 'Mài 1 vũ khí lên +10', cap: 'bac', hinh: 11, dk: { k: 'mai', can: 10 }, th: { quang: 10 } },
       { ma: 'cap20', ten: 'Lớn khôn', cach: 'Cu Tí lên cấp 20', cap: 'bac', hinh: 1, dk: { k: 'cap', can: 20 }, th: { vang: 300 } },
       { ma: 'cap40', ten: 'Trưởng thành', cach: 'Cu Tí lên cấp 40', cap: 'vang', hinh: 15, dk: { k: 'cap', can: 40 }, th: { dh: 'daiHiep' } },
-      { ma: 'boDo', ten: 'Tủ đồ', cach: 'Mở đủ 4 bộ trang phục', cap: 'bac', hinh: 14, dk: { k: 'boDo', can: 4 }, th: { lk: 15 } },
+      { ma: 'boDo', ten: 'Tủ đồ', cach: 'Có đủ 4 bộ trang phục', cap: 'bac', hinh: 14, dk: { k: 'boDo', can: 4 }, th: { lk: 15 } },
       { ma: 'chuongDay', ten: 'Chưởng đầy', cach: 'Học đầy 1 cây chưởng', cap: 'bac', hinh: 10, dk: { k: 'chuongDay' }, th: { vang: 300 } },
       { ma: 'so12', ten: 'Chép sổ', cach: '12 trang Sổ yêu quái đạt ★', cap: 'dong', hinh: 12, dk: { k: 'soSao', sao: 1, can: 12 }, th: { vang: 200 } },
       { ma: 'soDu', ten: 'Sổ đủ trang', cach: 'Cả 36 trang Sổ yêu quái đạt ★★', cap: 'vang', hinh: 12, dk: { k: 'soSao', sao: 2, can: 36 }, th: { bua: 1, dh: 'nhaYeuQuaiHoc' } },

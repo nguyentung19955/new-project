@@ -475,20 +475,30 @@
         }
         if (z.bao !== 1) delete z.bao;
         if (z.tu && !G.HKEYS.includes(z.tu)) delete z.tu;
-        // trang phục Zed (js/data.js G.ZED_BO): boMo = các bộ đã mở, bo = bộ đang mặc. Bản lưu cũ không có → 'ninja'.
-        // Bản lưu đã hạ trùm vùng của bộ (có sao ải trùm) mà chưa mở thì mở luôn.
+        // trang phục Zed (js/data.js G.ZED_BO): boMo = các bộ đã CÓ, bo = bộ đang mặc. Bản lưu cũ không có → 'ninja'.
+        // 15/10 (bo-do-mua): hạ trùm vùng chỉ MỞ BÁN bộ (boBan), mua bằng vàng ở Cô Thợ May mới có. boMua = 1: bản lưu đã theo luật mua.
+        // Bản lưu CŨ (chưa có boMua) đã hạ trùm mà chưa có bộ thì tặng luôn như luật cũ (không bắt mua lại, cấp bộ giữ nguyên),
+        // rồi đánh dấu boMua. ?bocu=1 (G.BO_MUA_BAT = false): lần nạp nào cũng tặng như cũ.
         if (G.ZED_BO) {
+          const mua = G.BO_MUA_BAT !== false, cu = z.boMua !== 1;
           const mo = z.boMo && typeof z.boMo === 'object' && !Array.isArray(z.boMo) ? z.boMo : {};
-          z.boMo = {};
+          const ban = z.boBan && typeof z.boBan === 'object' && !Array.isArray(z.boBan) ? z.boBan : {};
+          z.boMo = {}; z.boBan = {};
           for (const k of G.ZED_BO_KEYS) {
             if (k === 'ninja') continue;
-            const r = G.zedBoVung(k);
+            const r = G.zedBoVung(k), ha = r >= 0 && !!((s.stars && s.stars[r + '-4']) || (s.stars2 && s.stars2[r + '-4']));
+            const haCu = r >= 0 && !!(s.stars && s.stars[r + '-4']); // luật cũ chỉ tặng bù theo sao độ khó 1
             if (mo[k]) z.boMo[k] = 1;
-            else if (r >= 0 && s.stars && s.stars[r + '-4']) { z.boMo[k] = 1; z.boBao = 1; } // mở bù: làng báo một lần
+            else if (haCu && (!mua || cu)) { z.boMo[k] = 1; z.boBao = 1; } // mở bù (bản lưu cũ / ?bocu=1): làng báo một lần
+            else if (mua && (ban[k] || ha)) z.boBan[k] = 1; // mở bán, chưa mua
           }
+          if (mua) z.boMua = 1;
           if (!Object.keys(z.boMo).length) delete z.boMo;
+          if (!Object.keys(z.boBan).length) delete z.boBan;
           if (z.bo && z.bo !== 'ninja' && G.ZED_BO[z.bo] && z.boMo && z.boMo[z.bo]) z.bo = String(z.bo); else delete z.bo;
           if (z.boBao !== 1 || !z.boMo) delete z.boBao;
+          if (z.boBanBao !== 1 || !z.boBan) delete z.boBanBao;
+          if (z.boXem && (typeof z.boXem !== 'object' || Array.isArray(z.boXem))) delete z.boXem;
         }
         s.hero = 'smith';
       });

@@ -102,7 +102,7 @@
   VM.boDuoc = function (sv, bo) { // '' là nâng được; không thì lý do
     sv = sv || G.save;
     if (!G.ZED_BO || !G.ZED_BO[bo]) return 'Không có bộ này';
-    if (!G.zedBoMo(bo, sv)) return 'Chưa mở bộ';
+    if (!G.zedBoMo(bo, sv)) return G.BO_MUA_BAT !== false ? 'Chưa mua bộ' : 'Chưa mở bộ';
     const g = VM.boGia(VM.boCap(sv, bo));
     if (!g) return 'Đã tối đa';
     if (VM.lk(sv) < g.lk) return 'Thiếu linh khí';
@@ -122,6 +122,44 @@
   VM.coTheNangBo = function (sv) {
     sv = sv || G.save;
     return !!(G.ZED_BO_KEYS && G.ZED_BO_KEYS.some((k) => VM.boDuoc(sv, k) === ''));
+  };
+  // ---------- MUA bộ bằng vàng ở Cô Thợ May (15/10, bo-do-mua; giá G.BO_MUA trong js/data.js, cờ quay lui ?bocu=1) ----------
+  VM.boMuaDuoc = function (sv, bo) { // '' là mua được; không thì lý do
+    sv = sv || G.save;
+    if (G.BO_MUA_BAT === false) return 'Tắt bán bộ';
+    if (!G.ZED_BO || !G.ZED_BO[bo] || bo === 'ninja') return 'Không có bộ này';
+    if (G.zedBoMo(bo, sv)) return 'Đã có';
+    if (!G.zedBoBan(bo, sv)) return 'Chưa mở bán';
+    if ((num(sv.gold, 0) | 0) < G.zedBoGia(bo)) return 'Thiếu vàng';
+    return '';
+  };
+  VM.muaBo = function (sv, bo) {
+    sv = sv || G.save;
+    if (VM.boMuaDuoc(sv, bo) !== '') return false;
+    sv.gold = Math.floor(num(sv.gold, 0)) - G.zedBoGia(bo);
+    if (!sv.zed || typeof sv.zed !== 'object' || Array.isArray(sv.zed)) sv.zed = { v: 1, hoc: {} };
+    const z = sv.zed;
+    if (!z.boMo || typeof z.boMo !== 'object' || Array.isArray(z.boMo)) z.boMo = {};
+    z.boMo[bo] = 1; z.boMua = 1;
+    if (z.boBan && typeof z.boBan === 'object') { delete z.boBan[bo]; if (!Object.keys(z.boBan).length) { delete z.boBan; delete z.boBanBao; } }
+    return true;
+  };
+  // còn bộ đang bán mà chưa mua
+  VM.boDangBan = (sv) => (G.BO_MUA_BAT === false ? [] : (G.ZED_BO_KEYS || []).filter((k) => k !== 'ninja' && !G.zedBoMo(k, sv) && G.zedBoBan(k, sv)));
+  // chấm đỏ Cô Thợ May: có bộ vừa mở bán chưa xem ở thẻ Mua, hoặc đủ vàng mua một bộ đang bán
+  VM.coTheMuaBo = function (sv) {
+    sv = sv || G.save;
+    const xem = sv && sv.zed && sv.zed.boXem && typeof sv.zed.boXem === 'object' ? sv.zed.boXem : {};
+    return VM.boDangBan(sv).some((k) => !xem[k] || VM.boMuaDuoc(sv, k) === '');
+  };
+  VM.daXemBan = function (sv) { // mở thẻ Mua: các bộ đang bán coi như đã xem (chỉ còn chấm khi đủ vàng)
+    sv = sv || G.save;
+    const ds = VM.boDangBan(sv);
+    if (!ds.length || !sv.zed) return false;
+    if (!sv.zed.boXem || typeof sv.zed.boXem !== 'object' || Array.isArray(sv.zed.boXem)) sv.zed.boXem = {};
+    let doi = false;
+    for (const k of ds) if (!sv.zed.boXem[k]) { sv.zed.boXem[k] = 1; doi = true; }
+    return doi;
   };
 
   // ---------- thưởng thay đồ rơi (js/stage.js gọi) ----------
@@ -425,10 +463,12 @@
     });
     s.carry = s.vkThu.map((t) => { const w = s.weapons.find((x) => x.type === t); return w ? w.id : null; }).filter((id) => id != null);
     // 2. trang phục: chỉ 4 bộ; bộ đã mở = đúng các trùm vùng đã hạ (mọi độ khó); bộ không còn mở thì hoàn linh khí + vàng đã nâng
+    //    15/10 (bo-do-mua): theo luật mua (G.BO_MUA_BAT) chỉ giữ bộ ĐÃ CÓ mà trùm vùng đã hạ — không tặng bộ chỉ mới mở bán. Bản lưu cũ
+    //    tới đây đã được js/engine.js fixSave tặng bù mọi bộ đã hạ trùm nên vẫn giữ đủ như trước.
     if (!s.zed || typeof s.zed !== 'object' || Array.isArray(s.zed)) s.zed = { v: 1, hoc: {} };
     const z = s.zed, ha = (r) => !!((s.stars && s.stars[r + '-4']) || (s.stars2 && s.stars2[r + '-4']));
-    const boMo = {};
-    for (const k of G.ZED_BO_KEYS || []) { if (k === 'ninja') continue; const r = G.zedBoVung(k); if (r >= 0 && ha(r)) boMo[k] = 1; }
+    const boMo = {}, coSan = z.boMo && typeof z.boMo === 'object' ? z.boMo : {};
+    for (const k of G.ZED_BO_KEYS || []) { if (k === 'ninja') continue; const r = G.zedBoVung(k); if (r >= 0 && ha(r) && (G.BO_MUA_BAT === false || coSan[k])) boMo[k] = 1; }
     const moCu = z.boMo && typeof z.boMo === 'object' ? z.boMo : {};
     for (const k in boMo) if (!moCu[k]) z.boBao = 1; // mở bù: làng báo một lần (cách js/engine.js đang làm)
     if (Object.keys(boMo).length) z.boMo = boMo; else delete z.boMo;
@@ -797,7 +837,7 @@
       }
       y += 17;
     } else { ui.text('Bộ này đã nâng tối đa.', x, y + 9, { size: 7, bold: true, color: GOOD }); y += 13; }
-    const ds = (G.ZED_BO_KEYS || []).map((k) => G.tv(G.ZED_BO[k].ten) + ' ' + (G.zedBoMo(k, sv) ? VM.boCap(sv, k) + '/' + max : G.t('(chưa mở)')));
+    const ds = (G.ZED_BO_KEYS || []).map((k) => G.tv(G.ZED_BO[k].ten) + ' ' + (G.zedBoMo(k, sv) ? VM.boCap(sv, k) + '/' + max : G.BO_MUA_BAT !== false && G.zedBoBan(k, sv) ? G.t('(chưa mua)') : G.t('(chưa mở)')));
     y = ui.para(G.t('Các bộ: {0}', ds.join(' · ')), x, y + 6, wd, { size: 6.5, color: TXT });
     return y;
   };
