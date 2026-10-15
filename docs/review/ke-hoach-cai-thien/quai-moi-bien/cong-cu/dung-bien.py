@@ -44,7 +44,7 @@ BUOC_THAN = 0.5   # một vòng đi (6 khung) = 0,5 chiều rộng thân → gia
 CFG = {
     'cua':       dict(toc=44, tele=0.6, atk=0.55, die=1.2, khung=[1, 2, 3, 4, 5]),        # lướt ngang (hàng đi) → kẹp: hàng đánh bật ngay lúc kẹp
     'caCon':     dict(bay=True, toc=60, tele=0.6, atk=0.6, die=1.1, mo_tu=4),             # bầy 3 con; khung chết 5–6 đã mờ sẵn
-    'oc':        dict(toc=26, tele=0.6, atk=0.55, die=1.2, hit=0.4, khung=[2, 3, 4, 5], hit_ghep=True),  # quái giáp: đập càng đúng lúc ra đòn
+    'oc':        dict(toc=26, tele=0.6, atk=0.55, die=1.2, hit=0.4, khung=[2, 3, 4, 5]),  # quái giáp: đập càng đúng lúc ra đòn. (Đã bỏ hit_ghep: ảnh oc-5-trung-don về giữa phiên.)
     'haiQuy':    dict(move_giay=0.9, day_tam=0.15, tele=0.7, atk=0.9, die=1.3, khung=[3, 4, 5]),  # 3 tia nước (code vẽ); bọt nước dính đầu xúc tu ở khung phun giữ (dính liền thân, như bào tử dính miệng Hoa)
     'caChuon':   dict(bay=True, toc=78, tele=0.35, atk=0.55, die=1.1, khung=[3, 4, 5]),   # nhún 0,35 → bay (hàng đi, code nâng) → đáp: khung bổ nhào
     'caNoc':     dict(bay=True, toc=48, tele=1.0, atk=0.55, die=1.1, khung=[2, 3, 4, 5], giu_co=['tele'], mo_tu=4),  # phồng 1 s → nổ 8 gai
