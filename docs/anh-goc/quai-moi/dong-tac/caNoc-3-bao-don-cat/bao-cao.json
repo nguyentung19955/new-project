@@ -1,0 +1,150 @@
+{
+ "anh": "caNoc-3-bao-don.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 6,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 0,
+  "vien_khu": 4529,
+  "nga_mau_nen_trong_hinh": 30
+ },
+ "manh_bo": [],
+ "loi": [],
+ "canh_bao": [
+  "Hàng 1 khung 1 cao 218 (trung vị 292) — lệch cỡ >15%",
+  "Hàng 1 khung 2 cao 246 (trung vị 292) — lệch cỡ >15%",
+  "Hàng 1 khung 5 cao 357 (trung vị 292) — lệch cỡ >15%",
+  "Hàng 1 khung 6 cao 391 (trung vị 292) — lệch cỡ >15%"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "tele",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      26,
+      278,
+      327,
+      496
+     ],
+     "chan": [
+      182.0,
+      496
+     ],
+     "rong": 301,
+     "cao": 218,
+     "diem_anh": 36396,
+     "nguon": "tu-dong",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      365,
+      262,
+      664,
+      508
+     ],
+     "chan": [
+      523.0,
+      508
+     ],
+     "rong": 299,
+     "cao": 246,
+     "diem_anh": 41551,
+     "nguon": "tu-dong",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      684,
+      240,
+      1004,
+      520
+     ],
+     "chan": [
+      865.5,
+      520
+     ],
+     "rong": 320,
+     "cao": 280,
+     "diem_anh": 50244,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1014,
+      224,
+      1360,
+      528
+     ],
+     "chan": [
+      1197.5,
+      528
+     ],
+     "rong": 346,
+     "cao": 304,
+     "diem_anh": 60168,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1368,
+      192,
+      1734,
+      549
+     ],
+     "chan": [
+      1576.5,
+      549
+     ],
+     "rong": 366,
+     "cao": 357,
+     "diem_anh": 73662,
+     "nguon": "tu-dong",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1741,
+      169,
+      2146,
+      560
+     ],
+     "chan": [
+      1954.5,
+      560
+     ],
+     "rong": 405,
+     "cao": 391,
+     "diem_anh": 94883,
+     "nguon": "tu-dong",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    }
+   ]
+  }
+ ]
+}
