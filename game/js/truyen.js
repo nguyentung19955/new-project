@@ -1,8 +1,8 @@
 // Cốt truyện tối thiểu, bỏ qua được. Nạp sau js/village.js và js/stage.js (bọc thêm update/draw của làng và ải, không sửa luật chơi).
 //
 //   Mở đầu        5 khung (≈ 25 giây; canh-truyen 15/10: thêm khung bóng Thuồng Luồng dưới sông, lời theo mạch trống đồng
-//                 docs/cot-truyen/CHUNG.md; ?truyencu=1 = 4 khung, lời và nền vẽ code cũ). Cũ: 4 khung (≈ 20 giây, mỗi khung tự sang sau 5 giây, chạm để sang nhanh, nút "Bỏ qua"): linh khí làng cạn, ba yêu tinh
-//                 thức dậy, ba em bé bị bắt, Cụ Đồ trao vũ khí sống cho Zed, bạn thân của ba em, lên đường cứu bạn. Chỉ chiếu MỘT lần lúc mới vào làng lần đầu
+//                 docs/cot-truyen/CHUNG.md; mỗi khung tự sang sau 5 giây, chạm để sang nhanh, nút "Bỏ qua"; 15/10 don-tep B: bỏ bản 4 khung cũ
+//                 cùng cờ ?truyencu=1). Chỉ chiếu MỘT lần lúc mới vào làng lần đầu
 //                 (G.save.truyen.mo); người chơi cũ đã qua ải 1 thì không chiếu. Xem lại: Anh Mõ > "Âm thanh · Pin · Truyện" > "Xem lại truyện".
 //   Trùm          trùm vùng và trùm nhỏ nói một câu khi ra mắt, một câu khi gục (bong bóng lời trên đầu, KHÔNG dừng trận).
 //   Kết vùng      hạ trùm vùng lần đầu: về làng thì chiếu 2–3 câu (em bé được cứu, người làng nói). Hạ Hồ Tinh: thêm đoạn kết + mời Độ khó 2.
@@ -16,41 +16,12 @@
 (function () {
   'use strict';
   const G = window.G, ui = G.ui, T = G.theme, VS = G.villageScene, A = G.art;
-  let tatQS = false, CU = false;
+  let tatQS = false;
   try { tatQS = /[?&]truyen=0(&|$)/.test(location.search || ''); } catch (e) { tatQS = false; }
-  try { CU = /[?&]truyencu=1(&|$)/.test(location.search || ''); } catch (e) { CU = false; } // nền vẽ code + lời cũ (trước mạch trống đồng)
   const TR = (G.truyen = { dang: null });
   TR.bat = () => !tatQS && G.TRUYEN !== false && !G.botInput;
 
   // ---------- lời thoại ----------
-  // Bản CŨ (trước 15/10), chỉ dùng khi ?truyencu=1
-  const MO_DAU_CU = [
-    { nen: 'cayda', loi: 'Làng ven sông sống nhờ linh khí của cây đa nghìn tuổi. Một sáng, lá đa úa vàng, linh khí cạn dần.' },
-    { nen: 'yeu', loi: 'Ba yêu tinh thức dậy: Mộc Tinh, cây cổ thụ ở Rừng già; Ngư Tinh, mực khổng lồ cầm rìu san hô ở Hang biển; Hồ Tinh, cáo chín đuôi đeo mặt nạ ở Lâu đài cổ.' },
-    { nen: 'emBe', loi: 'Cu Tèo, Cái Bống, Cu Lì, ba bạn thân của Cu Tí, đi tìm linh khí cho làng rồi bị yêu tinh bắt mất.' },
-    { nen: 'cuti', ai: 'do', loi: 'Cu Tí ơi, ba bạn đang chờ cháu. Cầm lấy vũ khí sống này: nó lớn lên theo cháu. Đi cứu bạn đi, Chú Lái Đò chờ ở bến!' },
-  ];
-  const VUNG_CU = [
-    [
-      { ai: 'hunter', loi: 'Cu Tí ơi! Rễ cây quấn tớ cả tuần, may mà cậu tới!' },
-      { ai: 'do', loi: 'Rừng già thở lại rồi, cây đa đã nhú chồi. Nhưng gió biển lạnh lắm: Cái Bống còn kẹt ở Hang biển.' },
-      { loi: 'Cu Tèo đã về làng, ngồi chơi ở sân đình. Bạn ấy dạy Cu Tí đánh hiểm và bắn chưởng xa: xem ở Ông Từ.' },
-    ],
-    [
-      { ai: 'healer', loi: 'Nước dưới hang lạnh buốt... Cảm ơn Cu Tí đã lặn xuống tìm tớ!' },
-      { ai: 'lai', loi: 'Biển êm rồi, đò lại chạy. Bên kia sông, Lâu đài cổ đỏ rực lửa: Cu Lì ở trong đó.' },
-      { loi: 'Cái Bống đã về làng, ngồi chơi ở sân đình. Bạn ấy dạy Cu Tí giữ hiệu ứng lâu và chưởng hồi máu: xem ở Ông Từ.' },
-    ],
-    [
-      { ai: 'wrestler', loi: 'Con cáo chín đuôi bắt tớ canh lửa cả tháng! Về nhà thôi, đói lắm rồi!' },
-      { ai: 'do', loi: 'Ba yêu tinh đã ngủ lại. Linh khí về làng, cây đa xanh lá như xưa.' },
-      { loi: 'Cu Lì đã về làng. Bạn ấy dạy Cu Tí gồng chịu đòn và chưởng to: xem ở Ông Từ.' },
-    ],
-  ];
-  const KET_CU = [
-    { nen: 'hoi', loi: 'Tối ấy cả làng mở hội dưới gốc đa, mừng ba bạn trở về. Ai cũng cảm ơn Cu Tí đã cứu bạn. Hết truyện... mà chưa hết đâu!' },
-    { nen: 'hoi', ai: 'lai', loi: 'Đêm xuống, yêu tinh có thể thức dậy mạnh hơn. Muốn thử sức thì gặp chú, chạm "Độ khó 2" nhé!' },
-  ];
   // Bản MỚI (15/10, mạch trống đồng — docs/cot-truyen/CHUNG.md): làng giữ trống đồng trấn yêu; Thuồng Luồng dưới sông đập vỡ trống,
   // hút linh khí cây đa qua rễ, đánh thức ba yêu tinh; mỗi trùm vùng giữ một mảnh trống. Truyện MỞ: thêm vùng = thêm một khối vào VUNG.
   const MO_DAU_MOI = [
@@ -81,7 +52,7 @@
     { nen: 'hoi', loi: 'Tối ấy cả làng mở hội dưới gốc đa, mừng ba bạn trở về. Ba mảnh trống đã về đình, nhưng trống vẫn chưa lành. Hết truyện... mà chưa hết đâu!' },
     { nen: 'hoi', ai: 'lai', loi: 'Đêm xuống, mặt sông lại gợn sóng, như có gì dưới đáy chưa ngủ. Muốn thử sức thì gặp chú, chạm "Độ khó 2" nhé!' },
   ];
-  const MO_DAU = CU ? MO_DAU_CU : MO_DAU_MOI, VUNG = CU ? VUNG_CU : VUNG_MOI, KET = CU ? KET_CU : KET_MOI;
+  const MO_DAU = MO_DAU_MOI, VUNG = VUNG_MOI, KET = KET_MOI;
   // Trùm: [câu ra mắt, câu khi gục]. Trùm nhỏ theo vùng.
   const TRUM = {
     moc: ['Ta là cây cổ thụ thành tinh, nấm độc mọc đầy thân. Linh khí của làng đã chảy vào rễ ta!', 'Lá rụng về cội... Rừng ơi, xanh lại đi...'],
@@ -104,7 +75,6 @@
   // ZED: nhân vật chính là Zed. Ba bạn vẫn bị bắt, vẫn được cứu, nhưng về làng thì DẠY Zed (lời Zed đã ghi thẳng vào các bảng trên;
   // bản Cu Tí / "đổi em bé" của cờ ?zed=0 đã xoá khi dọn code 13/10).
   TR.LOI = { MO_DAU, VUNG, KET, TRUM, LANG };
-  TR.CU = CU;
   // Bản tiếng Anh của mọi câu ở đây và ở bảng Cài đặt mới: tools/ngon-ngu/tu-dien/truyen-am-thanh.json (gộp vào js/ngon_ngu_en.js bằng tools/ngon-ngu/gop.py).
 
 
@@ -165,7 +135,7 @@
     return e;
   }
   function anhCua(f) {
-    if (CU || !f) return null;
+    if (!f) return null;
     const ten = ANH[f.nen || 'lang'];
     return ten ? taiAnh(ten) : null;
   }
@@ -270,7 +240,7 @@
     if (d.t < 0.35 && !hoa) { c.globalAlpha = 1 - d.t / 0.35; c.fillStyle = '#000'; c.fillRect(0, 0, 480, 270); c.globalAlpha = 1; }
     let y;
     if (coAnh) y = veDai(f, d); // chữ trên dải tối dưới ảnh
-    else { // khung chữ dưới đáy (như cũ: chưa có ảnh, ảnh chưa về, hoặc ?truyencu=1)
+    else { // khung chữ dưới đáy (như cũ: chưa có ảnh, ảnh chưa về)
       const size = 9, w = 448, x = 16, ten = f.ai ? tenAi(f.ai) : null;
       const lines = ui.wrap(f.loi, w - 14, size, true), h = Math.max(24, lines.length * (size + 3) + 15);
       y = 260 - h;
@@ -402,7 +372,7 @@
   }
 
   // ---------- khi nào chiếu ----------
-  const TIEU_DE = CU ? ['Linh khí cạn', 'Ba yêu tinh', 'Bị bắt', 'Lên đường'] : ['Trống đồng vỡ', 'Ba yêu tinh', 'Bóng dưới sông', 'Bị bắt', 'Lên đường'];
+  const TIEU_DE = ['Trống đồng vỡ', 'Ba yêu tinh', 'Bóng dưới sông', 'Bị bắt', 'Lên đường'];
   function moDau() { return MO_DAU.map((f, i) => Object.assign({ tieuDe: TIEU_DE[i] }, f)); }
   function doanVung(r) {
     const ds = VUNG[r].map((f) => Object.assign({ nen: 'lang', giay: 5 }, f));
