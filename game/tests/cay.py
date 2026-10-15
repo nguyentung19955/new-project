@@ -15,7 +15,7 @@ Chạy: python3 tests/cay.py [số lượt chiến dịch, mặc định 12] [kh
       [--vk=kiem|thuong|bua: món chính của bot (phụ luôn là phi tiêu)] [--ngay=K: K lượt ải thường mỗi ngày giả, rồi chơi ải ngày; 0 tắt]
       [--kho2: qua 15 ải rồi chơi tiếp 15 ải độ khó 2; với --kd đo cả Sức mạnh khuyên dùng độ khó 2 (G.stageRec(r, i, 1), G.DIFF2)]
       [--kd=R: đo lại Sức mạnh khuyên dùng — mỗi bản lưu lúc vừa tới một ải (của kiểu khuyen và kiểu lieu) chơi lại ải đó R lần,
-       tìm Sức mạnh mà bot thắng 75%] [--json=tệp: ghi số liệu thô]
+       tìm Sức mạnh mà bot thắng 75%] [--json=tệp: ghi số liệu thô] [--pre=<mã JS>: chạy trước khi đo, thử số trong bộ nhớ]
 Thoát mã 1 nếu: có luật hỏng, có lượt chiến dịch bị kẹt, có ải trung bình phải chơi quá 9 lần (8 lượt cày + 1 lượt thử), có lỗi trang."""
 import sys, json, os, math
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -143,7 +143,8 @@ def main():
     bad = 0
     with cd_lib.trinh_duyet() as p:
         b = p.chromium.launch()
-        pg = cd_lib.open_page(b, errs)
+        pre = [a.split('=', 1)[1] for a in sys.argv if a.startswith('--pre=')]  # 15/10 kiem-can-bang C: --pre=<mã JS> thử số trong bộ nhớ (không sửa game)
+        pg = cd_lib.open_page(b, errs, '() => { ' + pre[0] + '; return 1; }' if pre else None)
         bad_luat = 0
         for good, msg in pg.evaluate(LUAT):
             print(('đạt ' if good else 'HỎNG ') + msg)

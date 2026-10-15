@@ -2,7 +2,8 @@
 Mỗi vũ khí đo ở bốn trạng thái: Trắng (chưa có hệ), và Thức tỉnh Lửa, Độc, Băng (hệ thống mới, đợt 5: bậc 0, cấp đặt bằng G.vkMoi.datCap;
 Zed cấp 10, mài +3; "Cung" trong bảng là Phi tiêu). Số ngẫu nhiên có hạt giống nên chạy lại ra đúng số cũ.
 Từ đợt ghép 2 game chỉ còn phòng vuông, nên bài này đo trong phòng thật:
-  python3 tests/dps.py [giây mỗi lượt] [số hạt giống] [nho | trum] [mot] [khonghe]
+  python3 tests/dps.py [giây mỗi lượt] [số hạt giống] [nho | trum] [mot] [khonghe] [--node]
+    --node (15/10): chạy luật game trong Node (tests/node_trang.js), không trình duyệt.
     nho (mặc định): phòng thường, sàn 208x196      trum: phòng trùm, sàn 300x198 (không có trùm)
     mot: chỉ một quái (máu dày) thay cho cụm năm quái     khonghe: chỉ đo vũ khí chưa có hệ (nhanh hơn)
     quaimoi: đánh quái mới thật (js/mobs.js: giáp che trước, lặn, cử động xuất hiện...) thay cho bia tập kiểu cũ.
@@ -18,7 +19,10 @@ Thoát mã 1 nếu một trong các điều sau sai:
   - không loại nào vô dụng: vũ khí thấp nhất vẫn đạt ít nhất 70% vũ khí cao nhất
   - ba hệ ở Thức tỉnh lệch nhau không quá 15% (bỏ qua khi chạy khonghe)"""
 import os, sys
-from playwright.sync_api import sync_playwright
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import cd_lib  # 15/10 kiem-can-bang C: --node chạy luật game trong Node (tests/node_trang.js), không trình duyệt / Playwright
+NODE = cd_lib.node_mode()
+sys.argv = [a for a in sys.argv if a != '--node']
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -100,14 +104,17 @@ def main():
     seeds = int(args[1]) if len(args) > 1 else 8  # 8 hạt giống (trước 4): 4 hạt dao động tới 5-7 điểm phần trăm giữa các lần đổi số
     errs = []
     table = {}
-    with sync_playwright() as p:
+    with cd_lib.trinh_duyet() as p:
         b = p.chromium.launch()
-        pg = b.new_page(viewport={'width': 844, 'height': 390})
-        pg.on('pageerror', lambda e: errs.append(str(e)))
-        pg.goto('file://' + ROOT + '/index.html?cloud=0')
-        pg.wait_for_function('window.G && G.scene')
-        pg.add_script_tag(path=os.path.join(ROOT, 'tests', 'bot.js'))
-        pg.add_script_tag(path=os.path.join(ROOT, 'tests', 'setup.js'))
+        if NODE:
+            pg = cd_lib.NodePage(errs)  # bot.js, setup.js đã nạp sẵn trong node_trang.js
+        else:
+            pg = b.new_page(viewport={'width': 844, 'height': 390})
+            pg.on('pageerror', lambda e: errs.append(str(e)))
+            pg.goto('file://' + ROOT + '/index.html?cloud=0')
+            pg.wait_for_function('window.G && G.scene')
+            pg.add_script_tag(path=os.path.join(ROOT, 'tests', 'bot.js'))
+            pg.add_script_tag(path=os.path.join(ROOT, 'tests', 'setup.js'))
         if 'trangphuc' in sys.argv: pg.evaluate("() => { window.__tp = 1; }"); print('== mặc đủ bộ trang phục Vàng của hệ đang đo, cánh lớn')
         if os.environ.get('DPS_PRE'): pg.evaluate(os.environ['DPS_PRE'])
         st = pg.evaluate(STATIC)
@@ -131,7 +138,7 @@ def main():
                 table[(wt, el)] = tot
                 print('%-7s %-6s %7.1f %7.1f %6.1f %7.1f' % (wt, el or 'không', tot['dps'], tot['hurt'], tot['kills'], tot['marks']))
                 sys.stdout.flush()
-        b.close()
+        cd_lib.dong(b, pg)
     bad = []
     if not noel:  # đợt 5: bảng gọn Trắng → Thức tỉnh (trung bình ba hệ) của từng vũ khí
         print('\n| Vũ khí | Trắng (st/giây) | Thức tỉnh TB 3 hệ | Lửa / Độc / Băng | Thức tỉnh ÷ Trắng |')

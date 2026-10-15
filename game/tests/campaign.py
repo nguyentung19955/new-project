@@ -4,7 +4,7 @@ lên Mầm chọn hệ hợp vùng, nâng bộ trang phục (linh khí + vàng +
 khuyên dùng thì cày ải cũ (tối đa 8 lượt liền), thua thì cày một lượt rồi thử lại. Game chạy với ?cloud=0.
 Nhiều lượt + bảng mục tiêu + đo khuyên dùng: tests/cay.py.
 
-Chạy: python3 tests/campaign.py [hoa|doc|bang] [khuyen|lieu] [--nhanh: chỉ vùng 1]
+Chạy: python3 tests/campaign.py [hoa|doc|bang] [khuyen|lieu] [--nhanh: chỉ vùng 1] [--node] [--vk=kiem|thuong|bua|phitieu: món chính cố định] [--pre=<mã JS>]
 Thoát mã 1 nếu bị kẹt (không qua nổi một ải sau 220 lượt) hoặc có lỗi trang."""
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -20,8 +20,10 @@ def main():
     errs = []
     with cd_lib.trinh_duyet() as p:
         b = p.chromium.launch()
-        pg = cd_lib.open_page(b, errs)
-        out, why = cd_lib.campaign(pg, mode, upto, cay)
+        pre = [a.split('=', 1)[1] for a in sys.argv if a.startswith('--pre=')]  # 15/10 kiem-can-bang C: --pre=<mã JS> thử số trong bộ nhớ (không sửa game)
+        pg = cd_lib.open_page(b, errs, '() => { ' + pre[0] + '; return 1; }' if pre else None)
+        vk = [a.split('=', 1)[1] for a in sys.argv if a.startswith('--vk=')]  # 15/10 kiem-can-bang C: món chính cố định (phụ: phi tiêu; phi tiêu chính thì phụ là kiếm)
+        out, why = cd_lib.campaign(pg, mode, upto, cay, chinh=cd_lib.VK.get(vk[0], vk[0]) if vk else 'sword')
         cd_lib.dong(b, pg)
     o = out or cd_lib.campaign.last
     print('\n'.join(o['log']))
