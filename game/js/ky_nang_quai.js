@@ -126,7 +126,10 @@
     if (!hurt.length) return false;
     H.begin(e, 'heal', e.face > 0 ? 0 : PI, 0.6, { cd: 1, keepFace: true, fire: (q) => {
       for (const x of w.ents) if (!x.dead && Math.hypot(x.x - q.x, x.y - q.y) < 90) { const h = x.maxhp * 0.14; x.hp = Math.min(x.maxhp, x.hp + h); FX('text', x.x, x.y - x.h - 4, '+' + Math.round(h), '#8fe86a', 8); }
-      q.healFx = 0.6; FX('sparkle', q.x, q.y - 6, '#8fe86a', 14); G.sfx('pick', 1.6);
+      // Con vẽ tay đợt 3 (YEU-CAU-3.md, ?vetaycu=1 tắt): vòng elip vẽ code (js/mobs.js healFx) → ảnh hu-vong-hoi-quai co 2 (rộng 180 = bán kính
+      // hồi 90) trên sàn dưới con hồi máu; ảnh chưa tải: không vẽ vòng.
+      if (G.VE_TAY_MOI !== false) FX('anh', 'hu-vong-hoi-quai', q.x, q.y, { sc: 2, ly: 0, mo: 0.85 }); else q.healFx = 0.6;
+      FX('sparkle', q.x, q.y - 6, '#8fe86a', 14); G.sfx('pick', 1.6);
     } });
     return true;
   }
@@ -743,6 +746,9 @@
     return !((d1 < 0 || d2 < 0 || d3 < 0) && (d1 > 0 || d2 > 0 || d3 > 0));
   }
   KN.trongTamGiac = trongTamGiac;
+  // 3 đỉnh tam giác của ảnh hu-tam-giac-bua (điểm game so với điểm neo, co 1; đo ở docs/review/ke-hoach-cai-thien/con-ve-tay/cong-cu/dung-dot3.py):
+  // đỉnh trên, phải dưới, trái dưới — cùng chiều kim đồng hồ trên màn hình như o.V (góc tăng dần) để ảnh không bị lật gương.
+  const TG_DINH = [[0, -28.01], [25.58, 14], [-25.58, 14]];
   function buaTamGiac(q, P) {
     const S = SO.tieuYeu, g0 = G.rnd() * TAU, V = [];
     for (let i = 0; i < 3; i++) { const g = g0 + (i * TAU) / 3; V.push(trong(P.x + Math.cos(g) * S.R, P.y + Math.sin(g) * S.R * 0.75)); }
@@ -761,7 +767,17 @@
       },
       ve(c, o) { // lá bùa (vẽ tạm như lá bùa bay của js/mobs.js) + lòng tam giác hồng đỏ đậm dần; prompt hu-bua-tam-giac trong PROMPT-ANH.md
         const u = Math.min(1, o.age / S.bay), dat = o.age >= S.bay;
-        if (dat && !o.no) {
+        // Con vẽ tay đợt 3 (YEU-CAU-3.md, ?vetaycu=1 quay lui): lòng tam giác tô code → ảnh hu-tam-giac-bua, ánh xạ affine cho 3 đỉnh tam giác
+        // ảnh (TG_DINH) trùng ĐÚNG 3 đỉnh vùng va chạm o.V (trongTamGiac). Trong lúc chờ nổ: khung 1–4 theo độ chờ k (vạch dần, sáng lên, đầy),
+        // k > 0,7 nhấp nháy nhanh như cũ (tín hiệu sắp nổ); lúc nổ (o.het 0,3 giây): khung 5 chớp, khung 6 tắt. Ba cạnh đỏ báo trước
+        // (vùng 'line' knGiu) vẫn vẽ suốt. Ảnh chưa tải: không tô lòng tam giác.
+        if (G.VE_TAY_MOI !== false) {
+          if (dat && FA() && FA().co('hu-tam-giac-bua')) {
+            const k = o.no ? 1 : Math.min(1, (o.age - S.bay) / S.cho), bl = !o.no && k > 0.7 && Math.floor(G.time * 20) % 2;
+            const f = o.no ? (o.het > 0.15 ? 4 : 5) : Math.min(3, Math.floor(k * 4));
+            FA().veAffine(c, 'hu-tam-giac-bua', f, TG_DINH, o.V, bl ? 0.7 : 1);
+          }
+        } else if (dat && !o.no) {
           const k = Math.min(1, (o.age - S.bay) / S.cho), bl = Math.floor(G.time * (k > 0.7 ? 20 : 8)) % 2;
           c.fillStyle = 'rgba(255,' + (bl ? 60 : 120) + ',40,' + (0.12 + 0.22 * k).toFixed(2) + ')';
           c.beginPath(); c.moveTo(o.V[0][0], o.V[0][1]); c.lineTo(o.V[1][0], o.V[1][1]); c.lineTo(o.V[2][0], o.V[2][1]); c.closePath(); c.fill();

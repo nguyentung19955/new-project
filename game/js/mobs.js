@@ -340,11 +340,13 @@
         e.healCd = hurt.length ? G.rr(7, 9) : 1.5;
         if (hurt.length) {
           begin(e, 'heal', e.face > 0 ? 0 : PI, 0.6, { cd: 1, keepFace: true, fire: (q) => {
-            // Con vẽ tay đợt 2 (?vetaycu=1 tắt): vòng elip xanh lá vẽ code (#10, chưa có ảnh hu-vong-hoi-quai) → ảnh hồi máu hu-hoi-mau có sẵn
-            // trên MỖI con được hồi (vẫn biết con nào hồi máu, con nào được hồi). Ảnh chưa tải: chỉ còn số +máu xanh như cũ.
+            // Con vẽ tay đợt 3 (YEU-CAU-3.md, ?vetaycu=1 tắt): vòng elip xanh lá vẽ code → ảnh hu-vong-hoi-quai trên sàn dưới con hồi máu
+            // (vòng khung 4 rộng 90 khi co 1 → co 2 = rộng 180 = đúng bán kính hồi 90). Bỏ ảnh thay tạm hu-hoi-mau của đợt 2.
+            // Ảnh chưa tải: không vẽ vòng (vẫn còn số +máu xanh).
             const vt = G.VE_TAY_MOI !== false;
-            for (const x of w.ents) if (!x.dead && Math.hypot(x.x - q.x, x.y - q.y) < 90) { const h = x.maxhp * 0.14; x.hp = Math.min(x.maxhp, x.hp + h); FX('text', x.x, x.y - x.h - 4, '+' + Math.round(h), '#8fe86a', 8); if (vt) FX('anh', 'hu-hoi-mau', x.x, x.y, { sc: Math.max(0.7, Math.min(1.4, (x.w || 34) / 34)) }); }
-            if (!vt) q.healFx = 0.6; FX('sparkle', q.x, q.y - 6, '#8fe86a', 14); G.sfx('pick', 1.6);
+            for (const x of w.ents) if (!x.dead && Math.hypot(x.x - q.x, x.y - q.y) < 90) { const h = x.maxhp * 0.14; x.hp = Math.min(x.maxhp, x.hp + h); FX('text', x.x, x.y - x.h - 4, '+' + Math.round(h), '#8fe86a', 8); }
+            if (vt) FX('anh', 'hu-vong-hoi-quai', q.x, q.y, { sc: 2, ly: 0, mo: 0.85 }); else q.healFx = 0.6;
+            FX('sparkle', q.x, q.y - 6, '#8fe86a', 14); G.sfx('pick', 1.6);
           } });
           return;
         }

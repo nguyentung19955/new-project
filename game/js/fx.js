@@ -203,7 +203,7 @@
   //   loại 5 (giọt) độc / tím độc → hu-giot-doc-san; băng → hu-ray-bang; nước: giữ như cũ (ngoài phạm vi)
   //   loại 8 (mảnh vụn nảy, ô vuông có bóng) → hu-manh-da; độc → hu-giot-doc-san; băng → hu-ray-bang
   //   loại 4 (mảnh xoay) băng, loại 0 băng rơi xuống sàn (quái đang đóng băng rụng hạt) → hu-ray-bang
-  //   loại 11 (bọt độc 2×2, chưa có ảnh #4 hu-bot-doc) → TẮT
+  //   loại 11 (bọt độc 2×2) → TẮT; riêng bọt nổi lên từ vũng độc / vùng độc nổ → ảnh hu-bot-doc (đợt 3, botDoc bên dưới)
   // Cùng mã, gần chỗ (< 9–12 điểm), cách nhau < 0,12 giây thì gộp làm một ảnh (một chùm 7 hạt = một ảnh). Ảnh chưa tải: KHÔNG vẽ gì.
   const HAT_GIA = { k: -1, x: 0, y: 0, vx: 0, vy: 0, t: 0, t0: 1, c: RAMP.steel, s: 1, g: 0, dr: 0, fy: 1e9, ly: 1, a: 0, b: 0, a2: 0 };
   const HE_RAMP = new Map();
@@ -248,6 +248,12 @@
     const sc = ma === 'hu-manh-da' ? (s >= 3 ? 1 : 0.8) : ma === 'hu-giot-doc-san' ? (s > 1 ? 1 : 0.75) : 0.9;
     datSan(ma, X, Y, sc, ma === 'hu-giot-doc-san' ? 0 : 1);
     return true;
+  }
+  // Con vẽ tay đợt 3 (YEU-CAU-3.md): bọt độc nổi lên từ vũng độc / vùng độc nổ → ảnh hu-bot-doc (vũng nhỏ rộng ~12, bọt phồng rồi vỡ) đặt
+  // trên sàn ở đúng chỗ bọt sinh ra (neo = giữa vũng), lớp sàn; gộp chùm như datSan. Ảnh chưa tải: không vẽ gì. ?vetaycu=1: bọt 2×2 vẽ code như cũ.
+  function botDoc(x, y, vy, t, c) {
+    if (G.VE_TAY_MOI !== false) { datSan('hu-bot-doc', x, y, 1, 0); return; }
+    emitHat(11, x, y, 0, vy, t, c, 2, 0, 0, null, 1);
   }
   function emit(k, x, y, vx, vy, t, c, s, g, dr, fy, ly) {
     if (G.VE_TAY_MOI !== false && doiHat(k, x, y, vx, vy, c, s, g, fy)) return HAT_GIA;
@@ -1416,7 +1422,7 @@
     const n = Math.round(14 * power * hatK());
     for (let i = 0; i < n * 0.7; i++) { const a = R() * TAU, v = rr(r * 0.5, r * 1.5); emit(2, x, y - 6, Math.cos(a) * v, Math.sin(a) * v * 0.5 - 6, rr(0.6, 1.1), RAMP.vapor, R() < 0.4 ? 5 : 3, -6, 2.2, null, 1); }
     for (let i = 0; i < n; i++) { const a = R() * TAU, v = rr(40, 130); emit(5, x, y - 8, Math.cos(a) * v, Math.sin(a) * v * 0.5 - rr(60, 140), rr(0.5, 0.9), RAMP.poison, 2, 380, 0, y + rr(-8, 10), 1); }
-    for (let i = 0; i < Math.round(7 * hatK()); i++) emit(11, x + rr(-r, r) * 0.6, y + rr(-r, r) * 0.3, 0, rr(-26, -10), rr(0.5, 1.0), RAMP.poison, 2, 0, 0, null, 1);
+    for (let i = 0; i < Math.round(7 * hatK()); i++) botDoc(x + rr(-r, r) * 0.6, y + rr(-r, r) * 0.3, rr(-26, -10), rr(0.5, 1.0), RAMP.poison); // đợt 3: hu-bot-doc
   }
   function blastIce(x, y, r, power) {
     if (noAnh('hu-no-bang', x, y, r)) power *= 0.5;
@@ -1512,7 +1518,7 @@
       addRing(x, y, 3, r, 0.28, '#c2f58a', 3, 0);
       for (let i = 0; i < 9 * k; i++) { const a = -Math.PI / 2 + rr(-1.2, 1.2), v = rr(60, 150); emit(5, x, y - 2, Math.cos(a) * v * 0.8, Math.sin(a) * v, rr(0.4, 0.75), RAMP.poison, 2, 400, 0, y + rr(-4, 6), 1); }
       for (let i = 0; i < 4 * k; i++) emit(2, x + rr(-r, r) * 0.5, y - rr(2, 10), rr(-16, 16), rr(-26, -8), rr(0.5, 0.9), RAMP.vapor, 5, 0, 1.2, null, 1);
-      for (let i = 0; i < 3 * k; i++) emit(11, x + rr(-r, r) * 0.6, y + rr(-r, r) * 0.3, 0, rr(-22, -8), rr(0.4, 0.8), RAMP.poison, 2, 0, 0, null, 1);
+      for (let i = 0; i < 3 * k; i++) botDoc(x + rr(-r, r) * 0.6, y + rr(-r, r) * 0.3, rr(-22, -8), rr(0.4, 0.8), RAMP.poison); // đợt 3: hu-bot-doc
       add({ ty: 'flash', x, y: y - 4, r: 5 + r * 0.15, t: 0.08, c: '#e6ffc0', c2: '#8fe04a', ly: 1, sq: true });
     } else {
       // đất đá: vết nứt, bụi, đá văng
@@ -1722,7 +1728,7 @@
       if (z.heal) { if (R() < 0.6) emit(10, x, y - 2, 0, rr(-30, -16), rr(0.6, 1.0), RAMP.heal, 1, 0, 0, null, 1); }
       else if (z.el === 'fire') { if (R() < 0.6) emit(9, x, y, rr(-5, 5), rr(-50, -25), rr(0.3, 0.5), RAMP.fire, 3, -20, 0, null, 1); if (R() < 0.15) emit(2, x, y - 10, 0, -18, 0.6, RAMP.dark, 3, 0, 0, null, 1); }
       else if (z.el === 'ice') { if (R() < 0.3) emit(2, x, y - 1, rr(-8, 8), -4, rr(0.5, 0.8), RAMP.mist, 3, 0, 0, null, 0); if (R() < 0.2) emit(6, x, y - rr(0, 6), 0, 0, 0.3, RAMP.ice, 2, 0, 0, null, 1); }
-      else { if (R() < 0.35) emit(11, x, y - 1, 0, rr(-20, -10), rr(0.4, 0.7), z.el ? RAMP.poison : RAMP.red, 2, 0, 0, null, 1); if (R() < 0.2) emit(2, x, y - 3, rr(-4, 4), rr(-12, -6), rr(0.5, 0.9), z.el ? RAMP.vapor : RAMP.dark, 3, 0, 0, null, 1); }
+      else { if (R() < 0.35) { if (z.el === 'poison') botDoc(x, y, rr(-20, -10), rr(0.4, 0.7), RAMP.poison); else emit(11, x, y - 1, 0, rr(-20, -10), rr(0.4, 0.7), z.el ? RAMP.poison : RAMP.red, 2, 0, 0, null, 1); } /* đợt 3: vũng độc → hu-bot-doc */ if (R() < 0.2) emit(2, x, y - 3, rr(-4, 4), rr(-12, -6), rr(0.5, 0.9), z.el ? RAMP.vapor : RAMP.dark, 3, 0, 0, null, 1); }
     }
   }
   // Sóng tràn của Ngư Tinh: tường nước có bọt ở mép trước, chừa khe an toàn
@@ -1742,7 +1748,22 @@
         if (((y / 3 + ((t * 8) | 0)) | 0) % 3 === 0) { p(c, x - 9 + o, y, 2, 1, '#e9f9ff'); p(c, x + 10 + o, y + 1, 3, 1, 'rgba(159,208,232,0.7)'); }
       }
     };
-    col(W.y0 - 6, z.g0); col(z.g1, W.y1 + 7);
+    // Con vẽ tay đợt 3 (YEU-CAU-3.md, ?vetaycu=1 quay lui): sóng ĐANG CHẠY → ảnh hu-tuong-song xếp chồng dọc hai đoạn tường (chừa đúng khe
+    // z.g0..z.g1). Sóng chạy sang trái (js/combat.js: z.x giảm) nên lật ảnh (ảnh vẽ mép trước bên PHẢI, neo = mép trước, đáy). Khớp vùng va chạm:
+    // luật trúng |P.x − z.x| < 6 → mép trước ảnh ở z.x − 6, co 0,45 (thân sóng rộng ~25: nửa trước ~12 = dải trúng, nửa sau là đuôi sóng),
+    // mỗi bản cao ~23, xếp cách 12. Lúc báo trước (wait) giữ hình nhấp nháy cũ; chấm đỏ mép trước + mép khe trắng giữ (tín hiệu né).
+    // Ảnh chưa tải: không vẽ thân sóng (chỉ còn chấm đỏ + mép khe).
+    if (!wait && G.VE_TAY_MOI !== false) {
+      const FA = G.fxAnh, A = FA && FA.get('hu-tuong-song');
+      if (A) {
+        const co = 0.45, h = A.ay * co, buoc = 12, L = [];
+        for (let yb = z.g0, i = 0; yb - h > W.y0 - 6 - buoc; yb -= buoc, i++) L.push([yb, i]);
+        for (let yb = z.g1 + h, i = 50; yb - h < W.y1 + 7; yb += buoc, i++) L.push([yb, i]);
+        L.sort((a, b) => a[0] - b[0]);
+        for (const [yb, i] of L) FA.veK(c, 'hu-tuong-song', x - 6, yb, (Math.floor(t * 10) + i) % 4, 0, co, true);
+      }
+      for (const [y0, y1] of [[W.y0 - 6, z.g0], [z.g1, W.y1 + 7]]) for (let y = Math.round(y0); y < y1; y += 3) if (((y / 3 + ((t * 16) | 0)) | 0) % 3) p(c, x - 9, y, 1, Math.min(3, y1 - y), '#ff5a40');
+    } else col(W.y0 - 6, z.g0), col(z.g1, W.y1 + 7);
     // mép khe hở: chỗ đứng an toàn
     const g = wait ? (blink ? '#ffffff' : '#9fd0e8') : '#ffffff';
     p(c, x - 8, Math.round(z.g0) - 1, 16, 2, g); p(c, x - 8, Math.round(z.g1) - 1, 16, 2, g);

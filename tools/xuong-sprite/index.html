@@ -10001,17 +10001,29 @@ const DON = {
   bao(P, u) { const d = P.d.don || {}, k = d.kieu || 'chem', tam = d.tam || 24, dir = P.dir;
     P.under(c => { if (k === 'chem') F.baoQuat(c, 0, 0, tam, dir, d.xoe || 1.9, u); else if (k === 'lao') F.baoDuong(c, 0, 0, tam, d.rong || Math.max(10, P.B.bw * .6), dir, u); else if (k === 'ban') F.baoDuong(c, 0, 0, tam, d.rong || 5, dir, u);
       else if (k === 'no' || k === 'gai' || k === 'dap') F.baoTron(c, 0, 0, tam, u); else if (k === 'phun') F.baoQuat(c, 0, 0, tam, dir, d.xoe || 1.1, u); else if (k === 'nem') F.baoTron(c, Math.cos(dir) * tam, Math.sin(dir) * tam * MA.det, d.rong || 12, u); });
-    if ((k === 'ban' || k === 'phun' || k === 'nem') && !MA._vt2) P.over(c => { const m = DON.mom(P), cols = d.mau || ['#7cc4ee', '#dff4ff', '#ffffff']; F.hat(c, m[0], m[1], 6, 11, 1 - (u * 3 % 1), { v: -7, cols: [cols[1], cols[2] || cols[1]] }); F.dia(c, m[0], m[1], 1 + u * 2, cols[1]); F.px(c, m[0], m[1], '#ffffff'); }); },
+    // Con vẽ tay đợt 3 (YEU-CAU-3.md): trong trận tia sáng ở miệng lúc lấy đà → ảnh hu-tia-mom (trắng, nhuộm màu giữa của đòn quái), 5 khung
+    // theo độ lấy đà u, cỡ 16 ≈ đốm + hạt code cũ (bán kính 6). Ảnh chưa tải: không vẽ. ?vetaycu=1: vẽ code như cũ.
+    if ((k === 'ban' || k === 'phun' || k === 'nem') && MA._vt2) { if (VT3('hu-tia-mom')) { const cols = d.mau || ['#7cc4ee', '#dff4ff', '#ffffff']; P.over(c => { const m = DON.mom(P); HT.ve(c, 'hu-tia-mom', m[0], m[1], Math.min(4, Math.floor(u * 5)), 0, 1, false, 1, cols[1]); }); } }
+    else if ((k === 'ban' || k === 'phun' || k === 'nem') && !MA._vt2) P.over(c => { const m = DON.mom(P), cols = d.mau || ['#7cc4ee', '#dff4ff', '#ffffff']; F.hat(c, m[0], m[1], 6, 11, 1 - (u * 3 % 1), { v: -7, cols: [cols[1], cols[2] || cols[1]] }); F.dia(c, m[0], m[1], 1 + u * 2, cols[1]); F.px(c, m[0], m[1], '#ffffff'); }); },
   don(P, u) { const d = P.d.don || {}, k = d.kieu || 'chem', tam = d.tam || 24, dir = P.dir, cols = d.mau || ['#7cc4ee', '#dff4ff', '#ffffff'], dx = Math.cos(dir), dy = Math.sin(dir) * MA.det, B = P.B;
-    if (k === 'chem') { if (!MA._vt2) P.over(c => { F.liem(c, dx * 4, dy * 4 - B.bh * .3, tam - 3, dir, d.xoe || 1.9, u, cols); }); } // đợt 2: #6 chưa có ảnh hu-cao-quai (vệt cào ảnh hu-quai-cao đã do js/fx.js vẽ) → tắt
-    else if (k === 'lao') { if (!MA._vt2) P.under(c => { for (let i = 0; i < 5; i++) { const f = (i + 1) / 6, a = (1 - u) * (1 - f); if (a <= .05) continue; c.globalAlpha = a; F.duong(c, P.x - dx * (6 + f * tam * .7) - dy * (i - 2) * 3, P.y - dy * (6 + f * tam * .7) + dx * (i - 2) * 3 - B.bh * .3, P.x - dx * (10 + f * tam * .9) - dy * (i - 2) * 3, P.y - dy * (10 + f * tam * .9) + dx * (i - 2) * 3 - B.bh * .3, cols[1], 1); } c.globalAlpha = 1; F.khoi(c, P.x - dx * 8, P.y - dy * 8, 7, u, ['#8a8290', '#5a5460'], 3); }); } // đợt 2: #7 chưa có ảnh hu-lao-bui → tắt
+    // đợt 3: vệt cào cận chiến → ảnh hu-cao-quai (trắng, nhuộm màu giữa của đòn quái), xoay theo hướng đòn (ảnh chĩa phải; sang trái thì lật rồi
+    // xoay, không lộn ngược). Neo giữa ảnh ở (4 + tam/2) trước mặt, co tam/48 → vệt phủ từ ~4 tới ~tam + 4 = vùng quạt thật (js/mobs.js r tam + 6).
+    if (k === 'chem') { if (!MA._vt2) P.over(c => { F.liem(c, dx * 4, dy * 4 - B.bh * .3, tam - 3, dir, d.xoe || 1.9, u, cols); });
+      else if (VT3('hu-cao-quai')) P.over(c => { const g = HT.goc(dir, MA.det), tr = Math.cos(g) < 0, r = 4 + tam / 2; HT.ve(c, 'hu-cao-quai', dx * r, dy * r - B.bh * .3, Math.min(4, Math.floor(u * 5)), tr ? g + PI : g, Math.max(.55, tam / 48), tr, 1, cols[1]); }); }
+    else if (k === 'lao') { if (!MA._vt2) P.under(c => { for (let i = 0; i < 5; i++) { const f = (i + 1) / 6, a = (1 - u) * (1 - f); if (a <= .05) continue; c.globalAlpha = a; F.duong(c, P.x - dx * (6 + f * tam * .7) - dy * (i - 2) * 3, P.y - dy * (6 + f * tam * .7) + dx * (i - 2) * 3 - B.bh * .3, P.x - dx * (10 + f * tam * .9) - dy * (i - 2) * 3, P.y - dy * (10 + f * tam * .9) + dx * (i - 2) * 3 - B.bh * .3, cols[1], 1); } c.globalAlpha = 1; F.khoi(c, P.x - dx * 8, P.y - dy * 8, 7, u, ['#8a8290', '#5a5460'], 3); });
+      // đợt 3: bụi + vạch tốc độ → ảnh hu-lao-bui (vạch bên trái ảnh = phía sau), lật theo hướng lao; neo ở đuôi vạch, đặt sao cho mép trước
+      // của bụi chạm gót quái (bụi đá lên sau chân, vạch kéo dài ~(0,9 tam + 10) phía sau như vạch code cũ). Lớp dưới thân như cũ.
+      else if (VT3('hu-lao-bui')) { const co = clamp((tam * .9 + 10) / 31, .7, 1.6), L = 31 * co - 4; P.under(c => HT.ve(c, 'hu-lao-bui', P.x - dx * L, P.y - dy * L, Math.min(4, Math.floor(u * 5)), dir, co, false, 1)); } }
     else if (k === 'ban') P.over(c => { const m = DON.mom(P), q = seg(u, .1, .85), x = m[0] + dx * tam * q, y = m[1] + dy * tam * q; if (u < .25) F.hat(c, m[0], m[1], 8, 5, u * 4, { v: 9, goc: dir, xoe: 1.4, cols: [cols[2] || cols[1], cols[1]] }); if (q < 1) { for (let i = 1; i < 5; i++) { c.globalAlpha = .7 - i * .15; F.dia(c, x - dx * i * 3, y - dy * i * 3, (d.co || 2.5) * (1 - i * .18), cols[0]); } c.globalAlpha = 1; F.cau(c, x, y, d.co || 2.5, cols); } else F.hat(c, m[0] + dx * tam, m[1] + dy * tam, 10, 7, seg(u, .85, 1), { v: 10, cols: [cols[2] || '#fff', cols[1], cols[0]] }); });
     // đợt 2: nổ cảm tử → ảnh nổ có sẵn theo vùng (rừng: độc, biển: băng, lâu đài: lửa). Ảnh neo ở tâm nổ TRÊN SÀN (chuẩn r 40) → đặt ở chân quái,
     // cỡ tam / 40 = đúng vùng sát thương thật (js/mobs.js: vòng tròn tâm chân quái, bán kính tam). Ảnh chưa tải: không vẽ.
     else if (k === 'no' && MA._vt2) { const ma = { rung: 'hu-no-doc', bien: 'hu-no-bang', laudai: 'hu-no-lua' }[P.d.vung] || 'hu-no-nho', FA = G.fxAnh;
       if (FA && FA.co(ma)) { const so = HT.so(ma); P.over(c => HT.ve(c, ma, 0, 0, Math.min(so - 1, Math.floor(u * so)), 0, tam / 40)); } }
     else if (k === 'no') P.over(c => { const cy = -P.h - B.bh * .4; if (u < .22) { F.dia(c, 0, cy, tam * (.25 + u * 2.4), cols[1]); F.dia(c, 0, cy, tam * (.15 + u * 2), cols[2] || '#fff'); } else if (u < .55) { const e = seg(u, .22, .55); F.vong(c, 0, cy, tam * (.8 + e * .3), tam * (.8 + e * .3), cols[1], Math.max(1, Math.round(4 * (1 - e)))); F.a(c, 1 - e); F.dia(c, 0, cy, tam * .45 * (1 - e), cols[2] || '#fff'); F.a(c, 1); } F.song(c, 0, 0, tam, seg(u, .05, .8), [cols[2] || '#fff', cols[1]], 2); F.hat(c, 0, cy, 26, 9, u, { v: tam * 1.1, cols: [cols[2] || '#fff', cols[1], cols[0]], to: 2 }); F.khoi(c, 0, cy, tam * .7, seg(u, .2, 1), [cols[0], '#48424e'], 4, 7); });
-    else if (k === 'gai') { if (!MA._vt2) P.over(c => { const cy = -P.h - B.bh * .4, q = seg(u, 0, .6), n = d.so || 8; for (let i = 0; i < n; i++) { const a = dir + i / n * TAU, r0 = B.bw * .35 + (tam - B.bw * .35) * q, x = Math.cos(a) * r0, y = cy + Math.sin(a) * r0 * MA.det; if (q < 1) { F.duong(c, x - Math.cos(a) * 5, y - Math.sin(a) * 5, x, y, cols[1], 1); F.px(c, x, y, cols[2] || '#fff'); F.px(c, x - Math.cos(a) * 6, y - Math.sin(a) * 6, cols[0]); } else F.hat(c, x, y, 3, i, seg(u, .6, 1), { v: 5, cols: [cols[1]] }); } }); } // đợt 2: #8 chưa có ảnh hu-gai-toa (đạn gai thật vẫn bay) → tắt
+    else if (k === 'gai') { if (!MA._vt2) P.over(c => { const cy = -P.h - B.bh * .4, q = seg(u, 0, .6), n = d.so || 8; for (let i = 0; i < n; i++) { const a = dir + i / n * TAU, r0 = B.bw * .35 + (tam - B.bw * .35) * q, x = Math.cos(a) * r0, y = cy + Math.sin(a) * r0 * MA.det; if (q < 1) { F.duong(c, x - Math.cos(a) * 5, y - Math.sin(a) * 5, x, y, cols[1], 1); F.px(c, x, y, cols[2] || '#fff'); F.px(c, x - Math.cos(a) * 6, y - Math.sin(a) * 6, cols[0]); } else F.hat(c, x, y, 3, i, seg(u, .6, 1), { v: 5, cols: [cols[1]] }); } });
+      // đợt 3: vòng gai toả → ảnh hu-gai-toa (trắng, nhuộm màu giữa của đòn quái), tâm ở giữa thân như vòng code; khung 4 bán kính 32 khi co 1
+      // → co tam/32 = vòng gai lớn nhất chạm bán kính tam như cũ. Đạn gai thật vẫn bay (js/mobs.js).
+      else if (VT3('hu-gai-toa')) P.over(c => HT.ve(c, 'hu-gai-toa', 0, -P.h - B.bh * .4, Math.min(5, Math.floor(u * 6)), 0, tam / 32, false, 1, cols[1])); }
     else if (k === 'dap' && HT.coThem('hu-quai-dap')) P.under(c => HT.ve(c, 'hu-quai-dap', 0, 0, Math.min(4, Math.floor(u * 5)), 0, tam / 28, false, 1 - seg(u, .85, 1))); // 14/10: ảnh đập đất (vòng r 28 khi co 1)
     else if (k === 'dap') { P.under(c => { F.song(c, 0, 0, tam, seg(u, .1, .9), [cols[2] || '#fff', cols[1]], 2); F.song(c, 0, 0, tam * .7, seg(u, .25, 1), [cols[1], cols[0]], 1); }); P.over(c => { for (let i = 0; i < 8; i++) { const a = i / 8 * TAU + .3; F.hat(c, Math.cos(a) * tam * .5 * u, Math.sin(a) * tam * .5 * u * MA.det, 3, i, u, { v: 8, goc: -PI / 2, xoe: 1.2, g: 14, cols: [cols[1], cols[0]] }); } }); }
     else if (k === 'phun') P.over(c => { const m = DON.mom(P), xo = d.xoe || 1.1, n = d.so || 34; for (let i = 0; i < n; i++) { const r1 = hh(i, 3, 1), r2 = hh(i, 3, 2), ph = (u * 1.6 + r2) % 1, a = dir + (r1 - .5) * xo, rr = (tam - 6) * ph * (u < .8 ? 1 : 1); if (u > .75 && ph < seg(u, .75, 1)) continue; if (u < .2 && ph > u * 5) continue; c.fillStyle = cols[(i + ((ph * 3) | 0)) % cols.length]; const s = ph < .6 ? 2 : 1; c.fillRect(Math.round(m[0] + Math.cos(a) * (6 + rr)), Math.round(m[1] + Math.sin(a) * (6 + rr) * MA.det + ph * ph * (d.roi == null ? 6 : d.roi)), s, s); } });
@@ -10142,6 +10154,15 @@ const HT = MA.huTrum = {
     for (let j = -W / 2, i = 0; j <= W / 2; j += buoc, i++) { if (khe != null && Math.abs(j - khe) < rk) continue; L.push([ox + ex * d + nx * j, oy + ey * d + ny * j, i]); }
     L.sort((a, b) => a[1] - b[1]); for (const [x, y, i] of L) HT.ve(c, 'hu-song-than', x, y, (Math.floor(t * 12) + i * 2) % so, 0, co, ex < 0, mo); },
 };
+// Con vẽ tay đợt 3 (docs/review/ke-hoach-cai-thien/con-ve-tay/YEU-CAU-3.md): trong trận (MA._vt2) các hình vẽ code đợt 2 đã tắt nay vẽ bằng ảnh
+// hu-cao-quai, hu-lao-bui, hu-gai-toa, hu-tia-mom (DON), hu-khoi-doc-nho (khiDoc). VT3(mã): ảnh đã sẵn sàng (G.fxAnh.co cũng báo tải ngay).
+// Ảnh chưa tải: không vẽ gì. ?vetaycu=1 (MA._vt2 = false): vẽ code như cũ.
+const VT3 = (ma) => !!MA._vt2 && !!G.fxAnh && G.fxAnh.co(ma);
+// khói độc nhỏ QUANH thân (Nấm Phồng, Nấm Phồng Chúa, Nấm Chúa, Mộc Tinh): ảnh lặp 6 khung neo ở gốc khói (đáy giữa), cao 24 khi co 1.
+// Hai làn ở hai bên (x ± 0,85 r, làn phải lật, lệch 3 khung) để không bị thân ảnh AI che hết (khiDoc vẽ dưới thân); co r/16 → mỗi làn cao ~1,5 r,
+// cả đám rộng ~2 r như đám khói code bán kính r. Khung theo tiến độ e (ảnh lặp liền mạch nên e quay vòng không giật).
+const khoiDoc3 = (c, x, y, r, e, s) => { if (!VT3('hu-khoi-doc-nho')) return; const f = Math.floor(clamp(e, 0, .999) * 6), co = clamp(r / 16, .5, 5), l = (s | 0) % 2 === 1;
+  HT.ve(c, 'hu-khoi-doc-nho', x - r * .85, y, f, 0, co, l, .85); HT.ve(c, 'hu-khoi-doc-nho', x + r * .85, y, (f + 3) % 6, 0, co, !l, .85); };
 // 14/10: quái xuất hiện bằng ảnh hu-quai-hien (vòng phép, cột khí xoáy, tan) thay hạt / bụi / vòng vẽ code của CH.spawn; dáng thân
 // (co giãn, trồi, rơi...) giữ như cũ. Cờ tắt ?huthem=0 / ?hutrum=0. Cỡ theo bề ngang thân (ảnh chuẩn cho thân rộng 34).
 { const spawn0 = CH.spawn; CH.spawn = function (P) {
@@ -10364,7 +10385,7 @@ def('chonBong', { ten: 'Chồn Bóng', vung: 'rung', loai: 'thuong', tt: 5, luoi
     die: A(1.2, P => { const k = kf(P.u, [[0, 0], [.25, 1, 'nay']]); CH.die(P); P.r('dau', 30 * k).b('duoi', 40 * k).r('chanT', -40 * k).r('chanS', 40 * k); }),
   } });
 // ---- Nấm Phồng: mũ nhún; lại gần thì phồng to (đổi sang hình phồng) rồi nổ khí độc ----
-const khiDoc = (c, x, y, r, e, s) => { if (MA._vt2) return; /* đợt 2: #12 chưa có ảnh hu-khoi-doc-nho → tắt */ F.a(c, (1 - e) * .5); F.khoi(c, x, y, r, e * .7, [DOCX[2], DOCX[1], TIMD[3]], s, 7); F.a(c, 1); };
+const khiDoc = (c, x, y, r, e, s) => { if (MA._vt2) return khoiDoc3(c, x, y, r, e, s); F.a(c, (1 - e) * .5); F.khoi(c, x, y, r, e * .7, [DOCX[2], DOCX[1], TIMD[3]], s, 7); F.a(c, 1); };
 def('namPhong', { ten: 'Nấm Phồng', vung: 'rung', loai: 'thuong', tt: 6, luoi: (p, hv) => QR.nam(hv === 'phong'), don: { kieu: 'no', tam: 34, mau: DOC }, chet: { k: 'no', mau: DOC }, hien: { k: 'tu', mau: [TIMD[2], DOCX[2], DOCX[3]] },
   parts: hv => hv === 'phong' ? [] : [{ n: 'mu', m: [[18, 23, 46, 38]], pv: [32, 38] }],
   anims: {
@@ -10585,7 +10606,7 @@ def('cuaDa', { ten: 'Cua Đá', vung: 'bien', loai: 'trumnho', tt: 1, luoi: () =
     chieu2: A(1.8, P => { const u = P.u; P.flash = u > .15 && u < .3 && ((u * 30) | 0) % 2 ? .4 : 0; P.tint = ['#5ae8d8', u < .3 ? u / .3 * .22 : .22 * (1 - seg(u, .3, .6))]; CHIEU.muaNem(P, 5, 70, 9, NGOC, tinhThe, (c, x, y, e) => { if (e < .9) { F.duong(c, x, y - 8 * (1 - e * .5), x, y, NGOC[1], 3); F.px(c, x, y - 8 * (1 - e * .5), NGOC[2]); } }); P.r('cangT', 10 * sn(u * 4)).r('cangP', -10 * sn(u * 4)); }, { nhan: 'Chiêu 2: mưa tinh thể' }),
   } });
 // ---- NẤM CHÚA: mũ tím đội vương miện, tay rễ có vuốt ----
-const khiDoc = (c, x, y, r, e, s) => { if (MA._vt2) return; /* đợt 2: #12 chưa có ảnh hu-khoi-doc-nho → tắt */ F.a(c, (1 - e) * .5); F.khoi(c, x, y, r, e * .7, [DOCX[2], DOCX[1], TIMD[3]], s, 7); F.a(c, 1); };
+const khiDoc = (c, x, y, r, e, s) => { if (MA._vt2) return khoiDoc3(c, x, y, r, e, s); F.a(c, (1 - e) * .5); F.khoi(c, x, y, r, e * .7, [DOCX[2], DOCX[1], TIMD[3]], s, 7); F.a(c, 1); };
 const namNho = (c, x, y, e) => { const h = Math.min(1, e * 4) * (1 - seg(e, .75, 1)); if (h <= 0) return; F.px(c, x - 1, y - 4 * h, '#d4c8a8', 2, 4 * h + 1); F.elip(c, x, y - 4 * h - 1, 4 * h + 1, 2 * h + 1, TIMD[2]); F.px(c, x - 2, y - 4 * h - 2, TIMD[3], 2, 1); };
 def('namChua', { ten: 'Nấm Chúa', vung: 'rung', loai: 'trumnho', tt: 1, luoi: () => QT.namChua(), don: { kieu: 'phun', tam: 52, xoe: 1.2, mau: [DOCX[1], DOCX[2], DOCX[3], TIMD[3]], mom: [40, 52] }, chet: { k: 'heo', mau: [NAUG[0], NAUG[1], '#5a4a6a', '#8a7a9a'] }, hien: { k: 'moc', mau: TIMD },
   parts: [{ n: 'mu', m: [[8, 4, 93, 38]], pv: [50, 38] }, { n: 'tayT', m: [[0, 30, 30, 64]], pv: [29, 48] }, { n: 'tayP', m: [[71, 30, 100, 64]], pv: [72, 48] }],
@@ -10707,7 +10728,7 @@ try { (function () {
 // TRÙM VÙNG Rừng già: MỘC TINH. Ba pha (1 đứng lặng, 2 nổi giận: cành giơ cao, 3 hoá độc: tán tím). Cây cổ thụ có mặt người; cành và rễ là vuốt.
 const LAX = [LUCR[1], LUCR[2], LUCR[3]], GO = [NAUG[1], NAUG[2], NAUG[3]], GIAN = ['#5a0e0c', '#ff5a3c', '#ffd0a0'], TIM = [TIMD[1], TIMD[2], TIMD[3]], DOC = [DOCX[0], DOCX[1], DOCX[3]];
 const mauLa = P => P.phase === 3 ? TIM : LAX;
-const khiDoc = (c, x, y, r, e, s) => { if (MA._vt2) return; /* đợt 2: #12 chưa có ảnh hu-khoi-doc-nho → tắt */ F.a(c, (1 - e) * .5); F.khoi(c, x, y, r, e * .7, [DOCX[2], DOCX[1], TIMD[3]], s, 7); F.a(c, 1); };
+const khiDoc = (c, x, y, r, e, s) => { if (MA._vt2) return khoiDoc3(c, x, y, r, e, s); F.a(c, (1 - e) * .5); F.khoi(c, x, y, r, e * .7, [DOCX[2], DOCX[1], TIMD[3]], s, 7); F.a(c, 1); };
 // lá rơi lả tả
 const laRoi = (c, x, y, n, s, e, C, R) => { for (let i = 0; i < n; i++) { const r1 = hh(i, s, 1), r2 = hh(i, s, 2); if (e > .6 + r2 * .4) continue; const px = x + (r1 - .5) * (R || 90) + Math.sin(e * 9 + i) * 5, py = y + e * 60 * (.5 + r2) - 30 * r2; c.fillStyle = C[i % 3]; c.fillRect(Math.round(px), Math.round(py), 2, 1); c.fillRect(Math.round(px) + ((e * 9 + i) | 0) % 2, Math.round(py) + 1, 1, 1); } };
 // gai rễ nhọn trồi lên từ đất

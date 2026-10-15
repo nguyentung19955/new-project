@@ -145,6 +145,30 @@
     if (f < 0) return false;
     return veF(c, a, f, x, y, goc, co, lat, mo, mau, kieu);
   };
+  // Con vẽ tay đợt 3 (hu-tam-giac-bua): vẽ khung f sao cho 3 điểm S (tọa độ điểm game so với điểm neo của ảnh, khi co 1) rơi ĐÚNG vào 3 điểm
+  // D trên màn hình (ánh xạ affine: dời, co giãn, xoay, xô nghiêng). Dùng để tam giác ảnh khớp đúng 3 đỉnh vùng va chạm thật. Trả về true nếu đã vẽ.
+  FA.veAffine = function (c, ma, f, S, D, mo) {
+    const a = FA.ds[ma];
+    if (!a || !a.ready || !c) return false;
+    const sx1 = S[1][0] - S[0][0], sy1 = S[1][1] - S[0][1], sx2 = S[2][0] - S[0][0], sy2 = S[2][1] - S[0][1];
+    const det = sx1 * sy2 - sx2 * sy1;
+    if (!det) return false;
+    const ux1 = D[1][0] - D[0][0], uy1 = D[1][1] - D[0][1], ux2 = D[2][0] - D[0][0], uy2 = D[2][1] - D[0][1];
+    const m11 = (ux1 * sy2 - ux2 * sy1) / det, m12 = (ux2 * sx1 - ux1 * sx2) / det, m21 = (uy1 * sy2 - uy2 * sy1) / det, m22 = (uy2 * sx1 - uy1 * sx2) / det;
+    const tx = D[0][0] - (m11 * S[0][0] + m12 * S[0][1]), ty = D[0][1] - (m21 * S[0][0] + m22 * S[0][1]);
+    if (![m11, m12, m21, m22, tx, ty].every(isFinite)) return false;
+    f = Math.max(0, Math.min(a.so - 1, f | 0));
+    c.save();
+    try {
+      c.transform(m11, m21, m12, m22, tx, ty);
+      c.imageSmoothingEnabled = false;
+      if (a.cong) c.globalCompositeOperation = 'lighter';
+      if (mo != null && mo < 1) c.globalAlpha *= clamp(mo, 0, 1);
+      const n = a.net, sw = a.fw * n, sh = a.fh * n;
+      c.drawImage(a.img, (f % a.cot) * sw, Math.floor(f / a.cot) * sh, sw, sh, -a.ax, -a.ay, a.fw, a.fh);
+    } finally { c.restore(); }
+    return true;
+  };
   function veF(c, a, f, x, y, goc, co, lat, mo, mau, kieu) {
     const s = a.co * (co > 0 ? co : 1);
     let flip = !!lat, rot = 0;
