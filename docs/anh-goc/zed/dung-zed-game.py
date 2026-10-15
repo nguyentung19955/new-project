@@ -97,8 +97,12 @@ DONG = [
     ('phitieu', '20-phi-tieu', 0.38, False), ('phitieu_ngam', '21-phi-tieu-ngam', 0.45, True), ('phitieu_chum', '22-phi-tieu-chum', 0.5, False),
     ('db_kiem', '23-tram-nguyet-tp', 0.35, False), ('db_thuong', '24-phi-thuong', 0.35, False), ('db_bua', '25-dia-chan', 0.35, False),
     ('db_phitieu', '26-mua-phi-tieu', 0.35, False), ('dam', '27-dam', 0.3, False),
+    # 16/10 (docs/review/ke-hoach-cai-thien/vk-khop-tay/bao-cao-2.md): chạy HAI TAY ôm cán — game dùng khi chạy cầm thương / búa
+    # (hàng chay2tay_thuong, chay2tay_bua; tắt ?chay2tay=0). Chỉ có ảnh bộ ninja → các bộ khác không có hàng này (game giữ hàng chạy cũ).
+    ('chay2tay', '03-chay-2tay', 0.6, True),
 ]
-NEO_DAU = ('dung', 'di', 'chay')
+CHI_NINJA = {'03-chay-2tay'}   # hàng chỉ có ảnh bộ ninja: dung_bo bỏ qua
+NEO_DAU = ('dung', 'di', 'chay', 'chay2tay')
 DAU_X = 49  # hoành độ tâm đầu trong ô 96 cho các hàng NEO_DAU
 VK = [('kiem', 'vk-kiem-moi'), ('thuong', 'vk-thuong'), ('bua', 'vk-bua'), ('phitieu', 'vk-phi-tieu')]
 VK_THU_MUC = dict((b, a) for a, b in VK)
@@ -283,8 +287,9 @@ def dung_than(dong, neo_all, s, vk_cua, neo_cua, neo_nam=None, r0=28):
                         dn['nam']['neo'].append(None)
                     else:
                         x, y, t2 = neo_cua(thu, i, f, k2)
-                        xn, yn = NC.tam_nam(im, x, y, r0)
-                        tn = NC.tam_nam(im, t2[0], t2[1], r0) if t2 else None
+                        r0_ = NC.R0_HANG.get(thu, r0)
+                        xn, yn = NC.tam_nam(im, x, y, r0_)
+                        tn = NC.tam_nam(im, t2[0], t2[1], r0_) if t2 else None
                         g = k2[2]
                         if tn and len(k2) > 5 and isinstance(k2[5], dict) and k2[5].get('hai'):
                             g = round(math.degrees(math.atan2(tn[1] - yn, tn[0] - xn)), 1)
@@ -338,6 +343,8 @@ def xem_truoc(p, xem, dt, vk_meta, tam_vk, cot):
         return nen
     hang = []
     for k, *_ in DONG:
+        if k not in dt:
+            continue
         for cap in ((0, 3) if 'vk' in dt[k] else (0,)):
             hang.append([ghep(k, i, cap) for i in range(dt[k]['so'])])
     P = Image.new('RGBA', (cot * O * 2, len(hang) * O * 2), (40, 44, 52, 255))
@@ -421,8 +428,9 @@ def main():
         return d
 
     def neo_ninja(thu, i, f, kk):
-        x, y = chinh_nam(f['im'], kk[0], kk[1])
-        return x, y, (chinh_nam(f['im'], *kk[4]) if len(kk) > 4 else None)
+        r_ = NC.R0_HANG.get(thu, 28)
+        x, y = chinh_nam(f['im'], kk[0], kk[1], r_)
+        return x, y, (chinh_nam(f['im'], *kk[4], r_) if len(kk) > 4 else None)
 
     neo_nam, bao_nam = NC.chuan_bi(neo_all, {thu: [f['im'] for f in fr] for k, thu, gi, lap, fr in dong}, L_VK)
     print('Nắm chuôi (gan-vk/nam_chuoi.py): thương dai %.3f cam %.2f, phi tiêu ×%.1f' % (NC.THUONG_DAI, NC.THUONG_CAM, NC.PHI_TO))
@@ -483,9 +491,41 @@ def main():
             im_ = NC.ngon_anh(t96)
             ngon_anh.append((im_, xk)); ngon_meta[loai].append([xk, yk, im_.width, im_.height, lech])
             xk += im_.width + 2; cao_h = max(cao_h, im_.height)
-    t2_ = Image.new('RGBA', (max(W, xk), yk + cao_h), (0, 0, 0, 0)); t2_.alpha_composite(tam_vk, (0, 0))
+    # NẮM TAY ÔM CÁN TỪ ẢNH (16/10, bao-cao-2.md; nam_chuoi.tach_nam_tay / nam_tay_96): 4 góc × (lớp SAU, lớp TRƯỚC) cho mỗi cỡ, thêm một hàng
+    # nữa dưới hàng ngón. Cỡ (đường kính nắm tay kể cả viền, điểm ảnh ô 96) theo LOẠI vũ khí = chiều cao lớp ngón tự vẽ cấp 1 của loại đó
+    # (= bề dày cán + 4, như lớp đang thay): nắm đấm thân Zed chỉ ~5 điểm ảnh, cán 4 điểm ảnh → cỡ thân thì cán che gần hết lòng bàn tay,
+    # không thấy ngón ôm cán (đã thử, xem bao-cao-2.md mục 2). In thêm cỡ nắm đấm đo trên tấm đứng để so.
+    # 'nam_tay': {goc: [độ], co: {loại: D}, sau: {D: [[x, y, rộng, cao, cx, cy] × 4]}, truoc: {...}} — đơn vị ô 96 (game vẽ ×0,5), (cx, cy) = tâm lỗ.
+    nam_tay_meta, nam_tay_anh, cao2 = None, [], 0
+    if os.path.exists(NC.ANH_NAM_TAY):
+        dk = []
+        for i_, f_ in enumerate(dong[0][4]):
+            kk_ = neo_all['01-dung#kiem']['khung'][i_]
+            xn_, yn_ = NC.tam_nam(f_['im'], kk_[0], kk_[1])
+            a_ = np.array(f_['im']); m_ = ndimage.binary_closing(NC.da(a_), iterations=2); yy_, xx_ = np.mgrid[:a_.shape[0], :a_.shape[1]]
+            lb_, _ = ndimage.label(m_); q_ = lb_[int(round(yn_)), int(round(xn_))]
+            if q_:
+                kh_ = (lb_ == q_) & ((xx_ - xn_) ** 2 + (yy_ - yn_) ** 2 < NC.R_NAM ** 2)
+                dk.append(2 * math.sqrt(kh_.sum() / math.pi))
+        D_than = int(round(float(np.median(dk)) * s)) + 2
+        ds_ = NC.tach_nam_tay()
+        co_ = {loai: ngon_meta[loai][0][3] for loai, _ in VK}
+        nam_tay_meta = {'goc': [d_['goc'] for d_ in ds_], 'co': co_, 'sau': {}, 'truoc': {}}
+        xk2, yk2 = 0, yk + cao_h + 2
+        for D_ in sorted(set(co_.values())):
+            for d_ in ds_:
+                sau_, truoc_, (cx_, cy_) = NC.nam_tay_96(d_, D_)
+                for ten_, im_ in (('sau', sau_), ('truoc', truoc_)):
+                    nam_tay_anh.append((im_, xk2, yk2)); nam_tay_meta[ten_].setdefault(str(D_), []).append([xk2, yk2, im_.width, im_.height, cx_, cy_])
+                    xk2 += im_.width + 2; cao2 = max(cao2, im_.height)
+        print('Nắm tay ôm cán (ảnh %s): nắm đấm thân ở tấm đứng ≈ %d điểm ảnh ô 96 (khối da %.1f nguồn + viền); cỡ dùng %s; góc đo %s' % (
+            os.path.basename(NC.ANH_NAM_TAY), D_than, float(np.median(dk)), co_, nam_tay_meta['goc']))
+        xk = max(xk, xk2)
+    t2_ = Image.new('RGBA', (max(W, xk), yk + cao_h + (2 + cao2 if nam_tay_meta else 0)), (0, 0, 0, 0)); t2_.alpha_composite(tam_vk, (0, 0))
     for im_, x_ in ngon_anh:
         t2_.alpha_composite(im_, (x_, yk))
+    for im_, x_, y_ in nam_tay_anh:
+        t2_.alpha_composite(im_, (x_, y_))
     tam_vk = t2_
     than = {
         'loai': 'linh-khi-sprite', 'doi_tuong': 'zed', 'ma': 'zed-moi', 'ten': 'Zed (bộ ảnh mới 13/10)', 'phien_ban': 1,
@@ -496,7 +536,7 @@ def main():
     }
     vk = {
         'loai': 'linh-khi-sprite', 'doi_tuong': 'zed', 'ma': 'zed-vk', 'ten': 'Vũ khí Zed 4 loại × 4 cấp', 'phien_ban': 1,
-        'tam': png_b64(tam_vk), 'vk': vk_meta, 'ngon': ngon_meta, 'cap': ['Trắng', 'Mầm', 'Thành hình', 'Thức tỉnh'],
+        'tam': png_b64(tam_vk), 'vk': vk_meta, 'ngon': ngon_meta, **({'nam_tay': nam_tay_meta} if nam_tay_meta else {}), 'cap': ['Trắng', 'Mầm', 'Thành hình', 'Thức tỉnh'],
         'ti_le': round(q, 5), 'ghi_chu': 'Mỗi loại một hàng [x, y, rộng, cao] × 4 cấp; ti_le = điểm ảnh tấm / điểm ảnh ảnh gốc.',
     }
     ghi_tep('zed-moi', than)
@@ -558,6 +598,8 @@ def dung_bo(ctx, bo, nhan, thu_muc, ma, ten, ghi_them, r_nam, xem):
     dong_r, neo_r, ve_ninja, nam_r = [], {}, {}, {}
     neo_nam = ctx.get('neo_nam') or {}
     for k, thu, gi, lap in DONG:
+        if thu in CHI_NINJA:
+            continue
         tt = BO_TEN.get(thu, thu)
         fr = doc_dong(tt, os.path.join(thu_muc, tt + '-cat'))
         assert len(fr) == len(ninja_fr[thu]), '%s: %d khung, ninja %d' % (tt, len(fr), len(ninja_fr[thu]))

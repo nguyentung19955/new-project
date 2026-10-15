@@ -30,7 +30,16 @@ HANG = {
         ((55, 176), (156, 140), 0), ((102, 166), (143, 140), 0), ((40, 178), (128, 140), 1), ((55, 176), (138, 141), 1),
         ((55, 177), (156, 142), 0), ((58, 178), (167, 148), 1), ((53, 178), (161, 145), 1), ((48, 177), (158, 143), 0),
         ((39, 178), (129, 144), 1), ((55, 176), (146, 143), 1), ((70, 188), (163, 145), 0), ((79, 177), (180, 147), 0)]),
+    # 16/10 (vk-khop-tay/bao-cao-2.md): hàng chạy HAI TAY ôm cán (ảnh moi/03-chay-2tay.png, cắt bằng cat-diem-anh.py). P = nắm tay phải
+    # trước bụng/hông, T = nắm tay trái đưa ra trước ngực; hai nắm gần một đường ngang → thương / búa cầm hai tay cả 12 khung.
+    # Đo bằng khối da (nam_chuoi.da) + soát mắt trên ảnh phóng to; khung 3, 4 nắm tay phải dính cẳng tay nên ghi tay.
+    '03-chay-2tay': ('../moi/03-chay-2tay-gif/03-chay-2tay', [
+        ((107, 168), (163, 163), 0), ((81, 168), (134, 162), 0), ((107, 164), (140, 164), 0), ((112, 163), (155, 164), 0),
+        ((124, 169), (173, 164), 0), ((102, 169), (153, 165), 0), ((96, 169), (146, 165), 0), ((94, 169), (144, 165), 0),
+        ((104, 169), (151, 165), 0), ((123, 169), (169, 165), 0), ((116, 169), (166, 165), 0), ((102, 169), (153, 164), 0)]),
 }
+# hàng chỉ dùng cho một số loại vũ khí (không có: cả 4 loại). 03-chay-2tay: chỉ thương / búa (kiếm, phi tiêu giữ hàng chạy cũ).
+CHI_LOAI = {'03-chay-2tay': ('thuong', 'bua')}
 KIEM_GOC = -15      # kiếm thế thủ: lưỡi chếch lên-ra trước, ló ra trước ngực (dốc hơn thì lưỡi mọc ra sau đầu/che mặt)
 PHI_GOC = -20       # phi tiêu trong nắm tay
 LAC = 0.12          # đung đưa: nắm tay ra trước (x lớn) → lưỡi chúc xuống một chút (độ / điểm ảnh nguồn), kẹp ±8°
@@ -47,6 +56,8 @@ def main():
         assert Image.open('%s/khung-%02d.png' % (thu_muc, len(ds))) and len(ims) == len(ds)
         xs = [p[0] for p, t, a in ds]; xtb = sum(xs) / len(xs)
         for loai, vk in VK.items():
+            if loai not in CHI_LOAI.get(thu, VK):
+                continue
             kh = []
             g2 = []
             for im, (p, t, an) in zip(ims, ds):

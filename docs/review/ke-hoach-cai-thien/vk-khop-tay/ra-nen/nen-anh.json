@@ -1,55 +1,25 @@
 {
- "tong_truoc": 3956304,
- "tong_sau": 1138131,
+ "tong_truoc": 1972996,
+ "tong_sau": 1155581,
  "tam": [
   {
-   "ma": "zed-bien",
-   "truoc": 974098,
-   "sau": 272473,
-   "cach": "256 màu (k-means)",
-   "sai_so": [
-    3.04,
-    32.0
-   ]
-  },
-  {
-   "ma": "zed-lau",
-   "truoc": 970194,
-   "sau": 280642,
-   "cach": "256 màu (k-means)",
-   "sai_so": [
-    2.36,
-    26.0
-   ]
-  },
-  {
-   "ma": "zed-rung",
-   "truoc": 929918,
-   "sau": 270057,
-   "cach": "256 màu (k-means)",
-   "sai_so": [
-    2.18,
-    23.0
-   ]
-  },
-  {
    "ma": "zed-moi",
-   "truoc": 908298,
-   "sau": 261947,
+   "truoc": 973730,
+   "sau": 278756,
    "cach": "256 màu (k-means)",
    "sai_so": [
-    1.77,
-    21.0
+    1.85,
+    22.0
    ]
   },
   {
    "ma": "zed-vk",
-   "truoc": 173796,
-   "sau": 53012,
+   "truoc": 176094,
+   "sau": 53653,
    "cach": "256 màu (k-means)",
    "sai_so": [
     2.15,
-    21.0
+    22.0
    ]
   }
  ]

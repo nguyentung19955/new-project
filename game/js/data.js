@@ -400,6 +400,15 @@
     if (/[?&]thuong2tay=0(&|$)/.test(q)) G.THUONG_2TAY = false;
     if (/[?&]phitieuto=0(&|$)/.test(q)) G.PHI_TIEU_TO = false;
   } catch (e) { /* giữ mặc định */ }
+  // NẮM TAY TỪ ẢNH + CHẠY HAI TAY (16/10/2026, docs/review/ke-hoach-cai-thien/vk-khop-tay/bao-cao-2.md, js/zed_moi.js): lớp ngón cắt từ ảnh nắm tay
+  // ôm cán (lòng bàn tay sau cán, ngón trước cán); chạy cầm thương / búa bằng hàng chạy hai tay. Chỉ đổi HÌNH. Tắt: ?ngonanh=0 (về lớp ngón
+  // tự vẽ), ?chay2tay=0 (về hàng chạy cũ).
+  G.NGON_ANH = true; G.CHAY_2TAY = true;
+  try {
+    const q = (typeof location !== 'undefined' && location.search) || '';
+    if (/[?&]ngonanh=0(&|$)/.test(q)) G.NGON_ANH = false;
+    if (/[?&]chay2tay=0(&|$)/.test(q)) G.CHAY_2TAY = false;
+  } catch (e) { /* giữ mặc định */ }
   // ĐÒN ZED MỚI QUAY THEO HƯỚNG NHẮM (13/10/2026, docs/review/ke-hoach-cai-thien/zed-8-huong): js/zed_moi.js xoay vũ khí đâm/ném quanh nắm tay
   // theo góc nhắm thật (kẹp ±75°, quá thì nghiêng nhẹ thân trên), chém/quét/nện nghiêng đường vung tối đa ±35°; vệt/hiệu ứng (js/fx.js aimed)
   // xoay cùng góc. Chỉ đổi HÌNH. Tắt: ?huongvk=0 (vũ khí chỉ vẽ ngang theo neo như trước).

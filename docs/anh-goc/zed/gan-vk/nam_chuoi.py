@@ -35,6 +35,9 @@ THUONG_DAI = round(THUONG_DAI_CU[0] * (1 - THUONG_DAI_CU[1]) / (1 - THUONG_CAM),
 PHI_TO = 1.3        # phi tiêu to hơn (cả cầm lẫn bay) — chỉ hình
 PHI_CAM = 0.17      # kẹp ở cánh trái của phi tiêu (tỉ lệ bề ngang ảnh)
 PHI_GOC = 55        # phi tiêu ló ra dưới-trước nắm tay (không đè lên bụng/đai)
+# bán kính đầu của tam_nam / chinh_nam theo hàng (không có: 28). 03-chay-2tay: nắm tay phải ở hông sát cẳng tay trái → bán kính 28 kéo
+# tâm sang cẳng tay trái (góc cán lệch tới +14°); 14 thì bám đúng nắm đấm (bao-cao-2.md).
+R0_HANG = {'03-chay-2tay': 14}
 LECH_TOI_DA = 25    # góc qua hai nắm tay lệch góc cũ quá ngần này → giữ góc cũ, in cảnh báo (soát tay)
 
 
@@ -211,7 +214,7 @@ def chuan_bi(neo_all, khung_ninja, L_VK, bat_thuong=True, bat_phi=True):
                     k = k[:4] + [list(sua['tay2'])]
             elif hai and len(k) <= 4 and loai == 'vk-thuong':
                 im = ims[i]
-                p = tam_nam(im, k[0], k[1])
+                p = tam_nam(im, k[0], k[1], R0_HANG.get(thu, 28))
                 t2 = tim_tay2(im, p, k[2], e2['dai'] * L_VK * (1 - e2['cam']) * 0.75)
                 if t2:
                     k = k[:4] + [[round(t2[0]), round(t2[1])]]
@@ -220,7 +223,8 @@ def chuan_bi(neo_all, khung_ninja, L_VK, bat_thuong=True, bat_phi=True):
                 k[2] = sua['goc']
             elif hai and len(k) > 4:
                 im = ims[i]
-                p = tam_nam(im, k[0], k[1]); t = tam_nam(im, *k[4])
+                r0_ = R0_HANG.get(thu, 28)
+                p = tam_nam(im, k[0], k[1], r0_); t = tam_nam(im, *k[4], r0_)
                 g = math.degrees(math.atan2(t[1] - p[1], t[0] - p[0]))
                 d = ((g - k[2] + 540) % 360) - 180
                 dai_c = e2['dai'] * L_VK * (1 - e2['cam'])
@@ -244,3 +248,87 @@ def chuan_bi(neo_all, khung_ninja, L_VK, bat_thuong=True, bat_phi=True):
         e2['khung'] = kh
         ra[key] = e2
     return ra, bao
+
+
+# ---------------- NẮM TAY ÔM CÁN TỪ ẢNH (16/10/2026, docs/review/ke-hoach-cai-thien/vk-khop-tay/bao-cao-2.md) ----------------
+# Ảnh docs/anh-goc/zed/moi/20-nam-tay-om-can.png: nắm tay phải 4 góc, có lỗ tròn chỗ cán đi qua. Mỗi hình cắt thành 2 lớp ở ô 96:
+#   SAU   = cả nắm tay (lỗ tô nâu tối) — game vẽ TRƯỚC vũ khí (lòng bàn tay sau cán)
+#   TRƯỚC = phần ngón + ngón cái (từ mép lỗ phía cổ tay trở ra đầu ngón, bỏ lỗ) — game vẽ SAU vũ khí (ngón phủ lên cán)
+# Góc mỗi hình đo trên ảnh (trục cổ tay → lỗ, quy ước game: 0 = sang phải, dương = chúc xuống), không theo nhãn của prompt.
+ANH_NAM_TAY = os.path.join(os.path.dirname(DAY), 'moi', '20-nam-tay-om-can.png')
+VIEN_NAM = (38, 22, 18)     # viền 1 điểm ảnh ô 96 quanh nắm tay (như viền đen ảnh gốc)
+LO_NAM = (70, 34, 24)       # lòng lỗ (lớp sau) khi cán không phủ kín
+
+
+def tach_nam_tay(path=ANH_NAM_TAY):
+    """Các nắm tay trong ảnh (trái → phải): dict a (ảnh), hand (mặt nạ bàn tay, bỏ băng cổ tay + cẳng tay), hole, u (hướng cổ tay → nắm),
+    rh (bán kính lỗ), h (tâm lỗ), goc (độ, quy ước game)."""
+    import importlib.util
+    from PIL import Image
+    sp = importlib.util.spec_from_file_location('cat_diem_anh', os.path.join(os.path.dirname(DAY), 'cat-diem-anh.py'))
+    cd = importlib.util.module_from_spec(sp); sp.loader.exec_module(cd)
+    a = np.array(Image.open(path).convert('RGBA'))
+    m, _ = cd.mat_na_bao_cao(a)
+    lab, n = ndimage.label(ndimage.binary_dilation(m, iterations=3))
+    yy, xx = _luoi(a)
+    r, g, b = (a[..., i].astype(int) for i in range(3))
+    ra = []
+    for j in range(1, n + 1):
+        k = (lab == j) & m
+        if k.sum() < 2000:
+            continue
+        kf = ndimage.binary_fill_holes(k); hole = kf & ~k
+        hl, hn = ndimage.label(hole)
+        if hn == 0:
+            continue
+        hole = hl == int(np.argmax(ndimage.sum(hole, hl, range(1, hn + 1)))) + 1
+        hy, hx = ndimage.center_of_mass(hole); rh = math.sqrt(hole.sum() / math.pi)
+        bang = k & (np.abs(r - g) < 25) & (np.abs(g - b) < 25) & (r > 40) & (r < 110)   # băng cổ tay xám đen
+        wl, wn = ndimage.label(bang)
+        bang = wl == int(np.argmax(ndimage.sum(bang, wl, range(1, wn + 1)))) + 1
+        bang = ndimage.binary_fill_holes(ndimage.binary_closing(bang, iterations=4))
+        wy, wx = ndimage.center_of_mass(bang)
+        ys, xs = np.nonzero(kf)
+        X = np.stack([xs - xs.mean(), ys - ys.mean()]); w, v = np.linalg.eigh(X @ X.T); u = v[:, 1]
+        if u[0] * (hx - wx) + u[1] * (hy - wy) < 0:
+            u = -u
+        u2 = np.array([hx - wx, hy - wy]); u2 /= np.linalg.norm(u2); u = u + u2; u /= np.linalg.norm(u)  # trục hình + băng → lỗ
+        t = (xx - hx) * u[0] + (yy - hy) * u[1]
+        hand = kf & ~ndimage.binary_dilation(bang, iterations=3) & (t > np.median(t[bang]))
+        hl2, _ = ndimage.label(hand)
+        q = hl2[int(hy), min(a.shape[1] - 1, int(hx + rh + 3))]
+        if q:
+            hand = hl2 == q
+        hand = ndimage.binary_fill_holes(hand | hole)
+        ra.append(dict(a=a, hand=hand, hole=hole, u=u, rh=rh, h=(hx, hy), goc=round(math.degrees(math.atan2(u[1], u[0])), 1), x0=xs.min()))
+    ra.sort(key=lambda d: d['x0'])
+    return ra
+
+
+def nam_tay_96(d, D):
+    """(sau, truoc, (cx, cy)) — 2 ảnh RGBA ở ô 96, nắm tay đường kính D (kể cả viền 1 điểm ảnh); (cx, cy) = tâm lỗ trong ảnh.
+    Co phần trong (D − 2) bằng BOX trên ảnh nhân alpha (không lệch màu), rồi viền 1 điểm ảnh — kiểu pixel art, không mờ mép."""
+    from PIL import Image
+    a, hand, hole = d['a'], d['hand'], d['hole']
+    ys, xs = np.nonzero(hand)
+    f = (D - 2) / (2 * math.sqrt(hand.sum() / math.pi))
+    x0, y0, x1, y1 = xs.min(), ys.min(), xs.max() + 1, ys.max() + 1
+    W, H = max(1, round((x1 - x0) * f)) + 2, max(1, round((y1 - y0) * f)) + 2
+    fx, fy = (W - 2) / (x1 - x0), (H - 2) / (y1 - y0)
+    sm = lambda z: np.array(Image.fromarray(z.astype(np.float32), 'F').resize((W - 2, H - 2), Image.BOX))
+    M = (hand & ~hole)[y0:y1, x0:x1].astype(float)
+    al = sm(M)
+    col = np.dstack([sm(a[y0:y1, x0:x1, i].astype(float) * M) for i in range(3)]) / np.maximum(al, 1e-6)[..., None]
+    ok = np.zeros((H, W), bool); ok[1:-1, 1:-1] = sm(hand[y0:y1, x0:x1].astype(float)) >= 0.45
+    img = np.zeros((H, W, 4), np.uint8); img[1:-1, 1:-1, :3] = np.clip(col, 0, 255); img[..., 3] = ok * 255
+    cx, cy = (d['h'][0] - x0) * fx + 1, (d['h'][1] - y0) * fy + 1
+    lo = np.zeros((H, W), bool); lo[1:-1, 1:-1] = (sm(hole[y0:y1, x0:x1].astype(float)) >= 0.4) & ok[1:-1, 1:-1]
+    if not lo.any():
+        lo[int(cy), int(cx)] = True
+    du = ndimage.binary_dilation(ok)
+    img[du & ~ok] = list(VIEN_NAM) + [255]
+    img[lo] = list(LO_NAM) + [255]
+    yy, xx = np.mgrid[:H, :W]
+    t = (xx + 0.5 - cx) * d['u'][0] + (yy + 0.5 - cy) * d['u'][1]
+    tr = img.copy(); tr[..., 3] = np.where(du & (t >= -d['rh'] * fx - 0.25) & ~lo, 255, 0)
+    return Image.fromarray(img), Image.fromarray(tr), (round(cx, 2), round(cy, 2))
