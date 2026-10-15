@@ -27,7 +27,7 @@
   // Thời gian: giây. Cự li: điểm ảnh game. sat: hệ số × b.dmg / e.dmg (một lần trúng). Trùm vùng: pha 2, 3 mọi thời gian chia cho tốc pha
   // (1,1 / 1,2) như cử động của chiêu.
   const SO = /*SO*/{
-    "nguBoRiu": { "dai": [80, 160], "them": 24, "rong": 30, "sat": 1.4, "manhDiem": [0.35, 0.65, 0.95], "manhDai": 52, "manhRong": 16, "manhSat": 1.4 },
+    "nguBoRiu": { "dai": [80, 160], "them": 24, "rong": 30, "sat": 1.4, "manhDiem": [0.35, 0.65, 0.95], "manhDai": 52, "manhRong": 16, "manhSat": 1.0 },
     "nguCotNuoc": { "so": 6, "cach": 0.25, "bao": 0.6, "r": 16, "sat": 1.0 },
     "nguXoayHut": { "R": 112, "keo": 30, "dau": 0.2, "giay": 2.0, "nghi": 0.3, "r": 40, "sat": 1.3, "met": 1.5 },
     "hoVoNhay": { "bay": 0.4, "cao": 46, "r": 34, "sat": 1.25, "lan2": 0.55, "bao2": 0.62 },
@@ -40,6 +40,8 @@
     "huDau": { "tay": 70, "rong": 18, "cho": 1.0, "chay": 2.0, "sat": 0.8, "nhip": 0.5, "satChay": 0.3 }
   }/*HET-SO*/;
   CT.SO = SO;
+  // 15/10 sua-can-bang (bao-cao-C mục 6b): mảnh san hô Bổ rìu Ngư Tinh 1,4 → 1,0 (nhát bổ chính giữ 1,4). ?cbcu=1 (G.CB_CU, js/data.js): số cũ.
+  if (G.CB_CU) SO.nguBoRiu.manhSat = 1.4;
   // Chiêu cũ để so (đọc từ js/boss.js, js/mobs.js trước phiên này): hệ số sát thương mỗi lần trúng, cử động, mốc, hết chiêu (giây, pha 1,
   // tinh anh không có tính chất "nhanh"); "dan": đạn cũ còn bay tới lúc này.
   CT.CU = /*CU*/{
