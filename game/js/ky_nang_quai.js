@@ -1,4 +1,4 @@
-// KỸ NĂNG RIÊNG CỦA 24 QUÁI CON (8 vai × 3 vùng) — docs/review/ke-hoach-cai-thien/ky-nang-quai-vung/YEU-CAU.md
+// KỸ NĂNG RIÊNG CỦA 32 QUÁI CON (8 vai × 4 vùng; vùng 4 Sông sâu: bước 3 phiên 2A) — docs/review/ke-hoach-cai-thien/ky-nang-quai-vung/YEU-CAU.md
 // Trước đây 8 vai (G.ROLES) đánh CHUNG một kiểu ở cả ba vùng, chỉ khác hình. Nay mỗi con (mã hình e.art, G.MOB_ART) có cách đánh riêng.
 // GIỮ NGUYÊN: vai (chia đợt, cost ở js/stage.js), máu, sát thương gốc e.dmg, tốc độ, giáp phía trước của quái giáp, hồi máu bạn của
 // quái giáp, gọi bầy của quái bắn xa. Chỉ thay đòn tấn công và cách báo trước. Tinh anh, trùm nhỏ, trùm vùng: không đổi.
@@ -41,7 +41,15 @@
     "meoDen": { "tam": 160, "bao": 0.45, "sat": 1.0, "hoi": 1.8, "bong": 2, "lech": 24, "giay": 5, "tamBong": 30, "baoBong": 0.45, "rongBong": 12, "satBong": 0.35, "hoiBong": 7 },
     "huLua": { "tam": 110, "bao": 0.85, "qua": 10, "rong": 16, "toc": 180, "r": 40, "sat": 1.3, "vet": 14, "vetR": 10, "vetGiay": 2, "vetSat": 0.5 },
     "tieuYeu": { "giu": 95, "tam": 170, "bao": 0.5, "bay": 0.4, "cho": 1.3, "R": 36, "rong": 6, "sat": 1.2, "hoi": 3.4 },
-    "nhimThan": { "giu": 80, "tam": 170, "cuon": 1.4, "bao": 0.8, "so": 7, "dau": 22, "cach": 18, "nhip": 0.12, "r": 12, "sat": 0.85, "hoi": 2.6 }
+    "nhimThan": { "giu": 80, "tam": 170, "cuon": 1.4, "bao": 0.8, "so": 7, "dau": 22, "cach": 18, "nhip": 0.12, "r": 12, "sat": 0.85, "hoi": 2.6 },
+    "raiCa": { "tam": 130, "gan": 40, "bao": 0.6, "bay": 0.45, "cao": 30, "r": 22, "sat": 1.0, "ngan": 1.0, "hoi": 1.6 },
+    "diaTrau": { "tam": 46, "ngoan": 0.7, "nhip": 5, "bao": 0.5, "dai": 54, "rong": 12, "toc": 220, "sat": 0.6, "bam": 2.5, "giu": 0.6, "hoi": 1.6 },
+    "baBa": { "giu": 56, "tam": 82, "goc": 1.05, "bao": 0.6, "dai": 70, "rong": 14, "sat": 1.0, "ket": 1.0, "hoi": 2.0 },
+    "cocTia": { "tam": 190, "bao": 0.7, "bay": 0.7, "r": 13, "lech": 26, "sat": 1.0, "vungR": 11, "vungGiay": 2, "vungSat": 0.45, "gan": 56, "nhay": 60, "nhayGiay": 0.35, "nhayHoi": 3, "hoi": 3 },
+    "ranNuoc": { "giu": 80, "tam": 160, "lan0": 0.3, "lan": 1.0, "sau": 16, "r": 24, "bao": 0.45, "sat": 1.0, "can": 40, "canR": 30, "canXoe": 1.4, "hoi": 3.0 },
+    "echPhinh": { "tam": 64, "bao": 1.0, "nhay": 40, "cao": 12, "r": 38, "sat": 1.3, "vung": 30, "vungGiay": 2, "quaiR": 42, "quaiSat": 0.35 },
+    "maDa": { "giu": 95, "tam": 170, "bao": 0.5, "bay": 0.55, "xoay": 1.3, "r": 28, "keo": 1.8, "hut": 22, "sat": 1.2, "hoi": 3.4 },
+    "traiGai": { "giu": 70, "tam": 170, "mo": 1.4, "bao": 0.8, "so": 5, "xoe": 1.0, "dai": 150, "rong": 10, "toc": 120, "cao": 12, "sat": 0.8, "giap": 1.0, "haSau": 0.6, "hoi": 2.6 }
   }/*HET-SO*/;
   KN.SO = SO;
   // Vai cũ để so (js/mobs.js trước phiên này): báo trước của đòn, hệ số sát thương một lần trúng, nghỉ sau đòn.
@@ -78,6 +86,15 @@
     huLua: 'Hũ Lửa lăn tới rồi vỡ, để lại vệt lửa 2 giây: tránh vạch đỏ và vòng đỏ cuối đường.',
     tieuYeu: 'Tiểu Yêu đặt ba lá bùa thành tam giác quanh bạn rồi nổ cả vùng: chạy ra khỏi tam giác.',
     nhimThan: 'Nhím Than Hồng làm gai lửa trồi từ đất thành hàng về phía bạn: bước ngang khỏi hàng vòng đỏ.',
+    // Vùng 4 Sông sâu (bước 3 phiên 2A)
+    raiCa: 'Rái Cá chống sào nhảy xuống vòng đỏ chỗ bạn đứng: chạy ra khỏi vòng, nó đáp hụt thì ngẩn ra, đánh ngay.',
+    diaTrau: 'Bầy Đỉa nhổm lên rồi lao bám chân bạn làm chậm và mất máu: bấm lăn để giũ chúng ra.',
+    baBa: 'Ba Ba có mai chắn phía trước, rụt cổ rồi vươn cổ đớp theo vạch đỏ: né vạch rồi vòng ra sau lưng đánh lúc nó vừa đớp.',
+    cocTia: 'Cóc Tía phun ba bọt rơi xuống vòng đỏ thành vũng độc, lại gần thì nó nhảy lùi: ra khỏi vòng, đừng đứng trong vũng.',
+    ranNuoc: 'Rắn Nước lặn xuống, gợn nước chạy ra sau lưng bạn rồi trồi lên đớp ở vòng đỏ: thấy gợn tới thì chạy đi. Trên sàn đá nó không lặn được.',
+    echPhinh: 'Ếch Phình phình to rồi nảy tới nổ ở vòng đỏ: chạy ra xa. Đánh nổ nó sớm thì nó nổ trúng quái đứng gần.',
+    maDa: 'Ma Da ném bầu nước, chỗ rơi thành xoáy nước kéo bạn vào rồi bắn nước: chạy ngược ra ngoài vòng đỏ.',
+    traiGai: 'Trai Sông Gai khép vỏ thì không ăn đòn phía trước; há vỏ thì bắn năm viên ngọc nảy theo vạch đỏ: né vạch, đánh từ phía sau.',
   };
   const tenQuai = (id) => { const d = G.monsterArt && G.monsterArt._defs && G.monsterArt._defs[id]; return (d && d.ten) || id; };
   // js/stage.js (bảng thua): khoá W.hurtBy là mã hình (js/combat.js hurtKey) → [tên con, mẹo]
@@ -822,6 +839,311 @@
       } });
   };
 
+  // ---------------- SÔNG SÂU (vùng 4 — bước 3 phiên 2A, docs/ke-hoach/buoc-3/KE-HOACH.md mục 2.1) ----------------
+  // Nước sông: nhảy, bám, lặn, xoáy kéo, nảy. Hình tạm (chưa có ảnh): js/monster_art.js MA.hinhTam + KN.veTam bên dưới.
+  // Hàm phiên 2B có thể cài: G.vung4Nuoc(x, y) → true khi (x, y) là nước / bùn (Rắn Nước chỉ lặn ở đó). Chưa có: coi như lặn được mọi chỗ.
+  const coNuoc = (x, y) => (typeof G.vung4Nuoc === 'function' ? !!G.vung4Nuoc(x, y) : true);
+
+  // Rái Cá Cầm Sào · Chống sào nhảy: vòng đỏ ở chỗ bé đứng (0,6 giây), chống sào vọt lên đáp xuống đập sào; đáp hụt thì đứng ngẩn 1 giây.
+  T.raiCa = function (e, dt, P, sp, d, a) {
+    const S = SO.raiCa, k = e.kn;
+    if (d > S.tam - 10) H.moveTo(e, P.x, P.y, sp, dt);
+    else if (d < S.gan) { if (k.luiG == null) k.luiG = d > 2 ? Math.atan2(e.y - P.y, e.x - P.x) : G.rnd() * TAU; const b = k.luiG; H.moveTo(e, e.x + Math.cos(b) * 30, e.y + Math.sin(b) * 30, sp, dt); } // lùi lấy đà
+    else mat(e, a);
+    if (d >= S.gan) k.luiG = null;
+    if (e.cd > 0 || d > S.tam || d < S.gan) return;
+    const v = trong(P.x, P.y), x0 = e.x, y0 = e.y;
+    let trung = false;
+    const dat = (q) => { q.x = v[0]; q.y = v[1]; k.bay = 0; q.ghost = false; k.anT = 0; };
+    danh(e, 'circle', { x: v[0], y: v[1], r: S.r }, S.bao + S.bay, e.dmg * S.sat, null, { melee: true, knHuy: true, onHit: () => { trung = true; },
+      onFire: (z) => {
+        if (e.dead) return;
+        dat(e); W().shake = Math.max(W().shake || 0, 0.08);
+        if (!anh('hu-cot-nuoc', z.x, z.y, { sc: 0.55 })) FX('burst', z.x, z.y - 4, '#c8b090', 12, 70);
+        G.sfx('boom', 1.5);
+        if (!trung) { e.st.stun = Math.max(e.st.stun || 0, S.ngan); FX('text', e.x, e.y - e.h - 6, 'Ngẩn ra!', '#ffd23f', 8); }
+      } });
+    G.sfx('warn', 1.1);
+    H.begin(e, 'kn', a, S.bao, { cd: S.hoi, end: S.bao + S.bay + 0.3, anim1: 'move',
+      fire: (q) => { q.ghost = true; k.anT = S.bay + 0.2; mat(q, Math.atan2(v[1] - q.y, v[0] - q.x)); FX('burst', q.x, q.y, '#c8b090', 6, 40); G.sfx('swing', 0.7); },
+      step: (q, A) => {
+        if (!A.fired || A.dat) return;
+        const u = Math.min(1, (A.t - S.bao) / S.bay);
+        q.x = x0 + (v[0] - x0) * u; q.y = y0 + (v[1] - y0) * u; k.bay = Math.sin(u * PI) * S.cao; q.moving = true;
+        if (u >= 1) { A.dat = true; dat(q); H.play(q, 'atk'); }
+      } });
+  };
+
+  // Bầy Đỉa Trâu · Bám chân: bò ngoằn ngoèo; tới gần thì nhổm lên (vạch đỏ ngắn 0,5 giây) rồi lao bám. Dính: bé đi chậm (vệt nhớt 40%)
+  // và ngấm độc (đòn Độc), đỉa bám theo chân tới 2,5 giây; bấm LĂN là giũ ra (đỉa văng ra, choáng 0,6 giây).
+  T.diaTrau = function (e, dt, P, sp, d, a) {
+    const S = SO.diaTrau, k = e.kn;
+    if (k.bam > 0) { bamChan(e, dt, P); return; }
+    k.dong = (k.dong || 0) + dt;
+    if (d > S.tam - 6) { const g = a + Math.sin(k.dong * S.nhip) * S.ngoan; H.moveTo(e, e.x + Math.cos(g) * 40, e.y + Math.sin(g) * 40, sp, dt); }
+    else mat(e, a);
+    if (e.cd > 0 || d > S.tam) return;
+    const len = Math.max(20, tuong(e.x, e.y, a, S.dai));
+    baoV(e, 'line', { x: e.x, y: e.y, ang: a, len, w: S.rong }, S.bao, { knHuy: true });
+    H.begin(e, 'kn', a, S.bao, { cd: S.hoi, end: S.bao + len / S.toc + 0.15, s: 0,
+      fire: () => G.sfx('swing', 1.4),
+      step: (q, A, dt2, P2) => {
+        if (!A.fired || A.s >= len || k.bam > 0) return;
+        const m = Math.min(len - A.s, S.toc * dt2);
+        A.s += m; q.x += Math.cos(A.a) * m; q.y += Math.sin(A.a) * m; giu(q); q.moving = true;
+        if (!(P2.dodgeT > 0) && cham(q.x, q.y, q.r + 6) && G.hurtPlayer(q.dmg * S.sat, 'poison', q, true)) {
+          k.bam = S.bam; k.lx = q.x >= P2.x ? 7 : -7; A.end = A.t; FX('text', P2.x, P2.y - 46, 'Bị bám!', '#c2f58a', 8);
+        }
+      } });
+    G.sfx('warn', 1.5);
+  };
+  function bamChan(e, dt, P) {
+    const S = SO.diaTrau, k = e.kn, w = W();
+    k.bam -= dt;
+    if (!P || P.dead || w.over || w.cleared || P.dodgeT > 0 || k.bam <= 0) {
+      const lan = !!(P && P.dodgeT > 0 && k.bam > 0);
+      k.bam = 0; e.cd = S.hoi;
+      if (lan) { // lăn: giũ đỉa văng ra sau
+        e.x += (k.lx > 0 ? 1 : -1) * 22; giu(e); e.st.stun = Math.max(e.st.stun || 0, S.giu);
+        FX('text', e.x, e.y - e.h - 6, 'Giũ ra!', '#ffd23f', 8); FX('burst', e.x, e.y - 4, '#7a8a50', 8, 50); G.sfx('hit', 1.2);
+      }
+      return;
+    }
+    e.x = P.x + k.lx; e.y = P.y + 2; e.face = k.lx > 0 ? -1 : 1; e.moving = false;
+    P.knCham = Math.max(P.knCham || 0, 0.12); // js/combat.js: đi chậm 40% (cùng cơ chế vệt nhớt Ốc Mượn Hồn)
+  }
+
+  // Ba Ba Mai Đồng · Vươn cổ đớp: mai chắn phía trước (giáp vai Khiên giữ nguyên); rụt cổ 0,6 giây (vạch đỏ thẳng 70) rồi phóng cổ đớp.
+  // Đớp xong cổ còn duỗi 1 giây: đứng im, KHÔNG quay lại được → lúc vòng ra sau lưng mà đánh. Đòn Băng.
+  T.baBa = function (e, dt, P, sp, d, a) {
+    const S = SO.baBa, k = e.kn;
+    if (k.ket > 0) { k.ket -= dt; e.turnT = 0; return; }
+    H.faceSlow(e, P, dt);
+    if (chuaBan(e, dt)) return;
+    diKhien(e, P, sp, dt, S.giu);
+    if (e.cd > 0 || d > S.tam || (P.x - e.x) * e.face <= -8) return;
+    let g = a; const g0 = e.face > 0 ? 0 : PI; let dg = Math.atan2(Math.sin(g - g0), Math.cos(g - g0));
+    if (Math.abs(dg) > S.goc) g = g0 + Math.sign(dg) * S.goc; // chỉ đớp về phía trước
+    const len = Math.max(20, tuong(e.x, e.y, g, S.dai));
+    H.begin(e, 'kn', g, S.bao, { cd: S.hoi, keepFace: true, end: S.bao + 0.3,
+      zone: danh(e, 'line', { x: e.x, y: e.y, ang: g, len, w: S.rong }, S.bao, e.dmg * S.sat, 'ice', { melee: true, knHuy: true }),
+      fire: (q) => { k.ket = S.ket; FX('lunge', q); G.sfx('swing', 0.9); } });
+    G.sfx('warn', 1.0);
+  };
+
+  // Cóc Tía Phun Bọt · Phun 3 bọt: 3 bọt bay vòng cung rơi xuống chỗ bé (vòng đỏ 0,7 giây), vỡ thành vũng độc nhỏ 2 giây.
+  // Bé lại gần quá thì nhảy lùi một bước (không gây sát thương). Gọi bầy như vai Xạ thủ cũ.
+  T.cocTia = function (e, dt, P, sp, d, a) {
+    const S = SO.cocTia, k = e.kn;
+    if (goiBay(e, dt, a)) return;
+    k.nhayCd = (k.nhayCd || 0) - dt;
+    if (d < S.gan && k.nhayCd <= 0) { nhayLui(e, P, a); return; }
+    xaThu(e, dt, P, sp);
+    if (e.cd > 0 || d >= S.tam) return;
+    H.begin(e, 'kn', a, S.bao, { cd: S.hoi, end: S.bao + 0.45, fire: (q) => {
+      const b = Math.atan2(P.y - q.y, P.x - q.x), nx = -Math.sin(b), ny = Math.cos(b);
+      for (const s of [0, -1, 1]) {
+        const v = trong(P.x + nx * S.lech * s + Math.cos(b) * 8 * Math.abs(s), P.y + ny * S.lech * s * 0.7 + Math.sin(b) * 8 * Math.abs(s));
+        danh(q, 'circle', { x: v[0], y: v[1], r: S.r }, S.bay, q.dmg * S.sat, 'poison', { cancel: false, knGiu: true, fxKind: 'bomb', bomb: { x0: q.x, y0: q.y - q.h * 0.5, fl: S.bay, art: q.art },
+          onFire: (z) => { H.addZone('circle', { x: z.x, y: z.y, r: S.vungR }, 0, q.dmg * S.vungSat, 'poison', { pool: true, life: S.vungGiay, tick: 0.3 }); FX('burst', z.x, z.y, '#c08ae0', 7, 40); } });
+      }
+      G.sfx('swing', 1.3);
+    } });
+    G.sfx('warn', 1.3);
+  };
+  function nhayLui(e, P, a) {
+    const S = SO.cocTia, k = e.kn, b = a + PI + G.rr(-0.5, 0.5), L = Math.max(8, tuong(e.x, e.y, b, S.nhay)), x0 = e.x, y0 = e.y, x1 = x0 + Math.cos(b) * L, y1 = y0 + Math.sin(b) * L;
+    k.nhayCd = S.nhayHoi; k.anT = S.nhayGiay + 0.05;
+    H.begin(e, 'kn', a, 0.01, { cd: Math.max(0.3, e.cd - S.nhayGiay), keepFace: true, end: S.nhayGiay, anim1: 'move',
+      step: (q, A) => {
+        if (!A.fired) return;
+        const u = Math.min(1, A.t / S.nhayGiay);
+        q.x = x0 + (x1 - x0) * u; q.y = y0 + (y1 - y0) * u; k.bay = u >= 1 ? 0 : Math.sin(u * PI) * 10; q.moving = true;
+      } });
+    G.sfx('swing', 1.8);
+  }
+
+  // Rắn Nước Sọc · Lặn – trồi đớp: trườn xuống nước (mờ dần 0,3 giây), chỉ thấy GỢN NƯỚC chạy vòng ra sau lưng bé (1 giây), rồi trồi lên
+  // (vòng đỏ 0,45 giây) và đớp. Chỗ không có nước (G.vung4Nuoc của phiên 2B) thì không lặn được: chỉ cắn thường (quạt ngắn, báo 0,45 giây).
+  T.ranNuoc = function (e, dt, P, sp, d, a) {
+    const S = SO.ranNuoc, k = e.kn;
+    if (k.lui > 0) { k.lui -= dt; H.keep(e, P, 90, sp, dt, 1); return; }
+    const nuoc = coNuoc(e.x, e.y);
+    if (!nuoc) { // sàn khô: tiến lại cắn thường
+      if (d > S.can - 6) H.moveTo(e, P.x, P.y, sp, dt); else mat(e, a);
+      if (e.cd > 0 || d > S.can) return;
+      H.begin(e, 'kn', a, S.bao, { cd: S.hoi * 0.6, zone: danh(e, 'cone', { x: e.x, y: e.y, ang: a, r: S.canR, span: S.canXoe }, S.bao, e.dmg * S.sat, 'poison', { melee: true, knHuy: true }) });
+      return;
+    }
+    H.keep(e, P, S.giu, sp, dt, 1);
+    if (e.cd > 0 || d > S.tam) return;
+    H.begin(e, 'kn', a, S.lan0, { cd: S.hoi, end: S.lan0 + S.lan + S.bao + 0.45, b: 0,
+      fire: (q, A) => { q.ghost = true; k.mo = 0; k.anT = S.lan + S.bao + 0.4; gonNuoc(q, A); FX('burst', q.x, q.y - 2, '#bfe8f0', 8, 40); G.sfx('swing', 0.5); },
+      step: (q, A, dt2, P2) => {
+        if (!A.fired) { k.mo = 1 - 0.9 * Math.min(1, A.t / S.lan0); return; }
+        if (A.b === 0) {
+          k.mo = 0;
+          const f = (P2.face || 1) < 0 ? -1 : 1, h = trong(P2.x - f * S.sau, P2.y + 2), kk = Math.min(1, dt2 * 3.2);
+          q.x += (h[0] - q.x) * kk; q.y += (h[1] - q.y) * kk; giu(q); q.moving = true;
+          if (A.t < S.lan0 + S.lan) return;
+          A.b = 1; q.ghost = false; k.mo = 1; k.anT = 0;
+          const b = Math.atan2(P2.y - q.y, P2.x - q.x); A.a = b; q.dirA = b; mat(q, b); H.play(q, 'tele', 1.4);
+          danh(q, 'circle', { x: q.x, y: q.y, r: S.r }, S.bao, q.dmg * S.sat, 'poison', { melee: true, knHuy: true });
+          FX('burst', q.x, q.y - 4, '#bfe8f0', 10, 60); G.sfx('warn', 1.6);
+          return;
+        }
+        if (A.b === 1 && A.t >= S.lan0 + S.lan + S.bao) { A.b = 2; H.play(q, 'atk'); k.lui = 0.8; }
+      } });
+  };
+  function gonNuoc(q, A) { // gợn nước theo con rắn đang lặn (chỉ để nhìn)
+    vat({ x: q.x, y: q.y, q, A,
+      buoc(o) { o.x = o.q.x; o.y = o.q.y; return !o.q.dead && o.q.act === o.A && o.A.b === 0; },
+      ve(c, o) {
+        for (let i = 0; i < 3; i++) {
+          const u = ((o.age * 1.6 + i / 3) % 1), r = 4 + u * 12, a = (1 - u) * 0.7;
+          c.strokeStyle = 'rgba(220,245,255,' + a.toFixed(2) + ')'; c.lineWidth = 1;
+          c.beginPath(); c.ellipse(Math.round(o.x), Math.round(o.y), r, r * 0.4, 0, 0, TAU); c.stroke();
+        }
+        p(c, o.x - 1, o.y - 1, 2, 1, 'rgba(255,255,255,0.8)');
+      } });
+  }
+
+  // Ếch Phình Hơi · Phình rồi nổ: phình to 1 giây (vòng đỏ đầy dần ở chỗ sẽ nổ), 0,3 giây cuối nảy tới rồi nổ Băng, để lại vũng nước lạnh
+  // làm chậm 2 giây. Bị đánh chết trước khi nổ: vẫn nổ, trúng QUÁI đứng gần (không trúng bé) — dụ nó vào giữa bầy quái rồi đánh nổ.
+  T.echPhinh = function (e, dt, P, sp, d, a) {
+    const S = SO.echPhinh, k = e.kn;
+    if (d > S.tam * 0.7) H.moveTo(e, P.x, P.y, sp, dt);
+    if (e.cd > 0 || d >= S.tam) return;
+    const L = Math.min(S.nhay, d), v = trong(e.x + Math.cos(a) * L, e.y + Math.sin(a) * L), x0 = e.x, y0 = e.y;
+    H.begin(e, 'boom', a, S.bao, { cd: 9, end: S.bao + H.dur(e.art, 'atk'),
+      zone: danh(e, 'circle', { x: v[0], y: v[1], r: S.r }, S.bao, e.dmg * S.sat, 'ice'),
+      step: (q, A) => {
+        if (A.fired) return;
+        const u = A.t / S.bao;
+        if (u > 0.7) { const w2 = Math.min(1, (u - 0.7) / 0.3); q.x = x0 + (v[0] - x0) * w2; q.y = y0 + (v[1] - y0) * w2; k.bay = Math.sin(w2 * PI) * S.cao; k.anT = 0.1; }
+      },
+      fire: (q) => {
+        k.bay = 0; q.x = v[0]; q.y = v[1];
+        q.ghost = true; q.boomT = H.dur(q.art, 'atk') * 0.95;
+        FX('propBlast', { x: q.x, y: q.y, nr: S.r }, 'ice'); G.sfx('boom', 1.1);
+        vungLanh(q.x, q.y);
+      } });
+    G.sfx('warn', 0.8);
+  };
+  function vungLanh(x, y) { // vũng nước lạnh: đứng trong thì đi chậm (vệt nhớt 40%)
+    const S = SO.echPhinh, r = S.vung;
+    vat({ x, y, life: S.vungGiay,
+      buoc(o) {
+        const P = W().P;
+        if (P && !P.dead && ((P.x - o.x) / r) ** 2 + ((P.y - o.y) / (r * 0.6)) ** 2 <= 1) P.knCham = Math.max(P.knCham || 0, 0.12);
+        return o.age < o.life;
+      },
+      ve(c, o) {
+        const k = Math.min(1, o.age / 0.2) * Math.min(1, (o.life - o.age) / 0.5);
+        elip(c, o.x, o.y, r, r * 0.55, 'rgba(120,190,230,' + (0.35 * k).toFixed(2) + ')');
+        elip(c, o.x - 4, o.y - 1, r * 0.4, r * 0.18, 'rgba(230,248,255,' + (0.4 * k).toFixed(2) + ')');
+        for (let i = 0; i < 4; i++) { const g = i * 1.7 + o.age; p(c, o.x + Math.cos(g) * r * 0.6, o.y + Math.sin(g) * r * 0.3, 1, 1, 'rgba(255,255,255,' + (0.7 * k).toFixed(2) + ')'); }
+      } });
+  }
+  // Ếch bị đánh chết trước khi tự nổ (G.kill → G.mobOnKill): nổ trúng quái quanh đó (mỗi con mất quaiSat × máu tối đa của nó; trùm không tính).
+  function echNoSom(e) {
+    const S = SO.echPhinh, w = W();
+    if (!w || e.boomT != null) return;
+    FX('propBlast', { x: e.x, y: e.y, nr: S.quaiR }, 'ice'); G.sfx('boom', 1.2);
+    vungLanh(e.x, e.y);
+    for (const t of w.ents.slice()) {
+      if (t === e || t.dead || t.isBoss || t.ghost) continue;
+      if (Math.hypot(t.x - e.x, (t.y - e.y) / (G.ZK || 0.85)) > S.quaiR + (t.r || 0)) continue;
+      G.damage(t, t.maxhp * S.quaiSat, { fromPlayer: false, el: 'ice', src: 'echNo' });
+    }
+  }
+  if (typeof G.mobOnKill === 'function') { const ok0 = G.mobOnKill; G.mobOnKill = function (e) { ok0.apply(this, arguments); if (KN.on && e && e.art === 'echPhinh' && e.kn) { try { echNoSom(e); } catch (er) { if (window.console) console.warn('echPhinh', er); } } }; }
+
+  // Ma Da Tóc Rong · Ném bầu nước: bầu nước bay tới chỗ bé (vòng đỏ từ lúc ném), rơi thành XOÁY NƯỚC 1,3 giây kéo nhẹ bé vào tâm
+  // (22 điểm ảnh/giây — chạy ngược ra là thoát), hết giờ thì bắn nước (đòn Băng) cả vòng.
+  T.maDa = function (e, dt, P, sp, d, a) {
+    const S = SO.maDa;
+    H.keep(e, P, S.giu, sp, dt, 1);
+    if (e.cd > 0 || d >= S.tam) return;
+    H.begin(e, 'kn', a, S.bao, { cd: S.hoi, end: S.bao + H.dur(e.art, 'atk') * 0.8, fire: (q) => {
+      const v = trong(P.x, P.y);
+      danh(q, 'circle', { x: v[0], y: v[1], r: S.r }, S.bay + S.xoay, q.dmg * S.sat, 'ice', { cancel: false, knGiu: true, fxKind: 'bomb', bomb: { x0: q.x, y0: q.y - q.h * 0.5, fl: S.bay, art: q.art },
+        onHit: H.onBlastHit('ice'),
+        onFire: (z) => { if (!anh('hu-cot-nuoc', z.x, z.y, { sc: 0.7 })) FX('burst', z.x, z.y - 4, '#a6deff', 14, 80); FX('burst', z.x, z.y, '#ffffff', 6, 50); G.sfx('boom', 1.5); } });
+      xoayNuoc(v[0], v[1]);
+      G.sfx('swing', 1.1);
+    } });
+  };
+  function xoayNuoc(x, y) {
+    const S = SO.maDa;
+    vat({ x, y, life: S.bay + S.xoay,
+      buoc(o, dt) {
+        if (o.age >= S.bay) { const P = W().P; if (P && Math.hypot(P.x - o.x, (P.y - o.y) / 0.6) < S.r * S.keo) keo(o, S.hut, dt); }
+        return o.age < o.life;
+      },
+      ve(c, o) {
+        if (o.age < S.bay) return;
+        const u = (o.age - S.bay) / S.xoay, k = Math.min(1, u * 4);
+        elip(c, o.x, o.y, S.r, S.r * 0.55, 'rgba(40,110,140,' + (0.3 * k).toFixed(2) + ')');
+        for (let i = 0; i < 10; i++) {
+          const g = i * TAU / 10 - o.age * 5, rr = S.r * (0.95 - i * 0.08);
+          p(c, o.x + Math.cos(g) * rr, o.y + Math.sin(g) * rr * 0.55, 2, 1, i % 3 ? 'rgba(170,225,245,' + (0.8 * k).toFixed(2) + ')' : 'rgba(255,255,255,' + (0.9 * k).toFixed(2) + ')');
+        }
+      } });
+  }
+
+  // Trai Sông Gai · Bắn ngọc nảy: KHÉP VỎ thì đòn đánh từ phía trước không ăn (G.mobArmor bên dưới), quay chậm như quái giáp.
+  // Há vỏ (vòng đỏ quanh thân 1,4 giây, ngọc sáng dần) → 5 vạch đỏ hình quạt 0,8 giây → bắn 5 viên ngọc lăn theo vạch, nảy lên một lần giữa đường.
+  // Đang há vỏ (và 0,6 giây sau khi bắn) thì đánh trước mặt cũng ăn đòn.
+  T.traiGai = function (e, dt, P, sp, d, a) {
+    const S = SO.traiGai, k = e.kn, T0 = S.mo + S.bao;
+    H.faceSlow(e, P, dt);
+    diKhien(e, P, sp, dt, S.giu);
+    if (e.cd > 0 || d >= S.tam) return;
+    baoV(e, 'circle', { x: e.x, y: e.y, r: e.r + 7 }, S.mo, { knHuy: true });
+    G.sfx('warn', 0.7);
+    H.begin(e, 'kn', a, T0, { cd: S.hoi, keepFace: true, end: T0 + 0.4, gs: null,
+      step: (q, A, dt2, P2) => {
+        if (A.gs || A.t < S.mo) return;
+        const b = Math.atan2(P2.y - q.y, P2.x - q.x); A.a = b; q.dirA = b;
+        A.gs = [];
+        for (let i = 0; i < S.so; i++) {
+          const g = b + (i - (S.so - 1) / 2) * (S.xoe / (S.so - 1)), len = Math.max(20, tuong(q.x, q.y, g, S.dai));
+          A.gs.push([g, len]);
+          baoV(q, 'line', { x: q.x, y: q.y, ang: g, len, w: S.rong }, Math.max(0.05, T0 - A.t), { knHuy: true });
+        }
+      },
+      fire: (q, A) => { for (const [g, len] of A.gs || []) ngocNay(q, g, len); G.sfx('swing', 1.5); },
+      after: (q) => { k.haT = S.haSau; } });
+  };
+  function ngocNay(q, g, len) {
+    const S = SO.traiGai, c0 = Math.cos(g), s0 = Math.sin(g);
+    vat({ x: q.x + c0 * 6, y: q.y + s0 * 4, x0: q.x, y0: q.y, s: 6, len, src: q, dmg: q.dmg * S.sat, z: 0,
+      buoc(o, dt) {
+        o.s += S.toc * dt; o.x = o.x0 + c0 * o.s; o.y = o.y0 + s0 * o.s;
+        const u = o.s / o.len; o.z = u < 0.55 ? Math.sin(u / 0.55 * PI) * S.cao : Math.sin((u - 0.55) / 0.45 * PI) * S.cao * 0.5;
+        if (o.z < 8 && cham(o.x, o.y, 9) && G.hurtPlayer(o.dmg, null, o.src, false)) { FX('burst', o.x, o.y - 4, '#ffe0f0', 6, 40); return false; }
+        if (o.s >= o.len) { FX('burst', o.x, o.y - 2, '#ffe0f0', 4, 30); return false; }
+        return true;
+      },
+      ve(c, o) {
+        const x = Math.round(o.x), y = Math.round(o.y), h = Math.round(o.z);
+        elip(c, x, y + 1, 3, 1.2, 'rgba(0,0,0,0.3)');
+        elip(c, x, y - 3 - h, 3.5, 3.5, '#14182e'); elip(c, x, y - 3 - h, 2.6, 2.6, '#f4dcea'); p(c, x - 1, y - 5 - h, 1, 1, '#ffffff');
+      } });
+  }
+  // Giáp vỏ trai: khép vỏ + đòn từ phía trước → giáp S.giap (Độc trên thân vẫn mòn giáp như quái giáp cũ: js/combat.js G.damage).
+  const traiKhep = (t) => !(t.act && t.act.k === 'kn') && !(t.kn && t.kn.haT > 0);
+  if (typeof G.mobArmor === 'function') {
+    const ar0 = G.mobArmor;
+    G.mobArmor = function (t, o) {
+      const a0 = ar0.apply(this, arguments);
+      if (!KN.on || !t || t.art !== 'traiGai' || !t.kn || !traiKhep(t)) return a0;
+      const P = W().P;
+      return P && (P.x - t.x) * (t.face || 1) > -4 ? Math.max(a0 || 0, SO.traiGai.giap) : a0;
+    };
+  }
+
   // =====================================================================
   // NỐI VÀO js/mobs.js
   // =====================================================================
@@ -858,6 +1180,7 @@
       if (!e.act && k.xoay) k.xoay = 0;
       if (e.st && (e.st.stun > 0 || e.st.frozen > 0)) for (const z of w.zones) if (z.knHuy && z.src === e && z.t > 0) z.dead = true;
       if (e.art === 'oc') ocTick(e, k, dt);
+      if (k.haT > 0) k.haT -= dt; // Trai Sông Gai: còn há vỏ sau khi bắn
     }
     for (const z of w.zones) {
       if (!z.kn || z.dead) continue;
@@ -875,6 +1198,34 @@
   G.mob.tick = function (dt) { tick0(dt); tick(dt); };
   // Vùng chỉ để báo: lúc hết giờ không rải chớp sáng như vùng nổ thật (vẫn chớp nhịp báo ở js/bao_truoc.js).
   if (G.fx && G.fx.zoneFire) { const zf = G.fx.zoneFire; G.fx.zoneFire = function (z) { if (z && z.knBao) return; return zf(z); }; }
+
+  // ---------- HÌNH TẠM vùng 4 (bước 3 phiên 2A) ----------
+  // Mã có trong G.monsterArt.hinhTam (js/monster_art.js) mà CHƯA có tệp ảnh riêng (game/art/custom/<mã>.sprite.json): vẽ ẢNH của con mượn
+  // (T.muon) qua ctx.filter nhuộm màu (T.loc). Con mượn chưa có ảnh / trình duyệt không có ctx.filter: vẽ hình code của mã (đã đổi màu sẵn).
+  // Bỏ phần nhuộm nước đục chung của js/vung4.js cho các con này (đã có màu riêng). Có ảnh thật thì nhánh này tự thôi.
+  const MAx = G.monsterArt;
+  if (MAx && MAx.hinhTam && typeof MAx.draw === 'function') {
+    const d0 = MAx.draw;
+    KN.veTam = function (c, id, x, y, o) {
+      const T = MAx.hinhTam[id], S2 = G.spriteCustom;
+      if (!T || (S2 && S2.ds && S2.ds[id])) return false;
+      const sp = S2 && S2.get ? S2.get(T.muon) : null;
+      if (!sp || !c || !('filter' in c)) return false;
+      const f0 = c.filter, bo = G.vung4 && G.vung4.LOC;
+      let goc = f0 && f0 !== 'none' ? String(f0) : '';
+      if (bo && goc.endsWith(bo)) goc = goc.slice(0, -bo.length).trim();
+      c.filter = (goc ? goc + ' ' : '') + (T.css || (T.css = MAx.locCss(T.loc)));
+      try { d0.call(MAx, c, T.muon, x, y, o); } finally { c.filter = f0; }
+      return true;
+    };
+    MAx.draw = function (c, id) { if (MAx.hinhTam[id] && KN.veTam.apply(this, arguments)) return; return d0.apply(this, arguments); };
+    // Chọn vùng 4 trên bản đồ (js/sprite_custom.js SC.taiVung): tải luôn ảnh các con mượn (ảnh vùng khác, bình thường chưa tải lúc này).
+    const S3 = G.spriteCustom;
+    if (S3 && typeof S3.taiVung === 'function') {
+      const tv0 = S3.taiVung;
+      S3.taiVung = function (r) { const kq = tv0.apply(this, arguments); if ((r | 0) === 3) for (const id in MAx.hinhTam) if (!(S3.ds && S3.ds[id])) S3.get(MAx.hinhTam[id].muon); return kq; };
+    }
+  }
 
   // ---------- VẼ ----------
   const A = G.art;

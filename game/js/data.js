@@ -575,6 +575,14 @@
     M4.elite.push(M4.elite[1].slice());
     M4.boss.thuong = M4.boss.ngu;
     G.VUNG4_MUON = 1; // vùng gốc của hình tạm (Hang biển): js/sprite_custom.js tải ảnh vùng này khi chọn vùng 4
+    // Bước 3 phiên 2A (docs/review/ke-hoach-cai-thien/vung-4-2a/bao-cao.md): 8 quái thường vùng 4 có mã + kỹ năng riêng (js/ky_nang_quai.js),
+    // hình tạm = ảnh con gần giống nhuộm màu (KN.TAM) tới khi có ảnh thật. Tinh anh / trùm nhỏ / trùm vùng vẫn mượn Hang biển (phiên 3A / 3B).
+    // Tắt riêng phần này: ?quaisong=0 (G.QUAI_SONG = false) → 8 vai mượn Hang biển như phiên 1.
+    if (G.QUAI_SONG === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]quaisong=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.QUAI_SONG = !tat; }
+    if (G.QUAI_SONG) {
+      const MOI = { rusher: 'raiCa', swarm: 'diaTrau', shield: 'baBa', archer: 'cocTia', nimble: 'ranNuoc', kami: 'echPhinh', bomber: 'maDa', spiky: 'traiGai' };
+      for (const k in MOI) M4[k][3] = MOI[k];
+    }
   }
   // Vùng dùng để VẼ (theme phòng, nền, hình vẽ code dự phòng) của vùng r: vùng 4 còn mượn hình thì vẽ như vùng mượn.
   G.vungVe = (r) => (r === 3 && G.VUNG4_MUON != null ? G.VUNG4_MUON : r);

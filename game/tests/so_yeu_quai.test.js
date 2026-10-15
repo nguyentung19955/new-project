@@ -50,7 +50,8 @@ const sx = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Ar
     const bang = await A.goi(() => {
       const CF = G.SO_YQ, ma = CF.trang.map((t) => t[0]), defs = G.monsterArt._defs, M = G.MOB_ART;
       const tatCa = [];
-      for (const k of ['rusher', 'swarm', 'shield', 'archer', 'nimble', 'kami', 'bomber', 'spiky']) tatCa.push(...M[k]);
+      // 3 vùng đầu (Sổ chưa có trang vùng 4 Sông sâu — bước 3 phiên 2A: 8 quái mới chưa vào sổ, xem docs/review/ke-hoach-cai-thien/vung-4-2a/bao-cao.md)
+      for (const k of ['rusher', 'swarm', 'shield', 'archer', 'nimble', 'kami', 'bomber', 'spiky']) tatCa.push(...M[k].slice(0, 3));
       M.elite.forEach((a) => tatCa.push(...a)); tatCa.push(...M.mini, ...Object.values(M.boss));
       const loai = {}; CF.trang.forEach((t) => { loai[t[2]] = (loai[t[2]] || 0) + 1; });
       const heDung = CF.trang.every((t) => (t[2] === 'trum' ? t[3] === null : G.ELS.includes(t[3])));
