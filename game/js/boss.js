@@ -177,12 +177,7 @@
   // Mỗi chiêu: anim cX đã gồm báo trước → ra đòn → dư âm; T là lúc vùng đỏ nổ (mốc moc[0]), D là độ dài cả chiêu.
   const SK = {
     ngu: {
-      c1: { name: 'Đớp', f(b, P, T, D, a, sp) { // lao tới đớp theo đường thẳng
-        const L = clamp(Math.hypot(P.x - b.x, P.y - b.y) + 24, 80, 160);
-        Z('line', { x: b.x, y: b.y, ang: a, len: L, w: 46 }, T, b.dmg * 1.4, 'ice', { melee: true });
-        later(b, T, () => lunge(b, a, L - 36, (moc(b.art, 'c1')[1] - moc(b.art, 'c1')[0]) * D));
-        b.an.cut = moc(b.art, 'c1')[1]; // cú lao tự lùi về trong hình: chỉ dùng tới lúc đớp xong
-      } },
+      c1: { name: 'Bổ rìu san hô', f: null }, // thân chiêu: js/chieu_trum.js (15/10 don-tep B: bỏ thân chiêu cũ cùng cờ ?chieucu=1)
       c2: { name: 'Sóng thần', to: true, f(b, P, T, D, a, sp) { // tường nước chạy theo hướng em bé, chừa một khe
         const mk = (wait, off, ks) => {
           const lat = G.rr(-70, 70) + off;
@@ -205,14 +200,8 @@
         for (let k = 1; k < n; k++) lapDot(b, 'c3', T + k * gap, sanNG(b, true) || 0.6, (w) => { const g = huongDot(b, P, a, 'nguPhun'); aimFace(b, g); Z('cone', { x: b.x, y: b.y, ang: g, r: 125, span: 1.0 }, w, b.dmg * 1.3, 'ice'); later(b, w, () => gai(g)); });
         if (n > 1) giuBan(b, T + (n - 1) * gap + 0.25);
       } },
-      c4: { name: 'Mưa băng nhọn', f(b, P, T, D) { // băng rơi thẳng xuống 7 chỗ quanh em bé
-        for (let i = 0; i < 7; i++) { const q = i ? near(P.x, P.y, 75, 45) : [P.x, P.y]; circle(q[0], q[1], 16, T + i * 0.08, b.dmg, 'ice', { fxKind: 'spout' }); anhVung(b, 'hu-bang-nhon-roi', q[0], q[1], T + i * 0.08, 0.2, 0.6, 0.9); }
-      } },
-      c5: { name: 'Xoáy nước', near: true, f(b, P, T, D) { // xoáy quanh thân rồi bung vòng sóng (đứng ngoài xa, hoặc chạy vào giữa sau khi xoáy tan)
-        circle(b.x, b.y, 60, T, b.dmg * 1.3, 'ice');
-        Z('donut', { x: b.x, y: b.y, r0: 60, r1: 112 }, T + 0.55, b.dmg * 1.2, 'ice');
-        later(b, D, () => tire(b, 1.5));
-      } },
+      c4: { name: 'Cột nước đuổi', f: null }, // thân chiêu: js/chieu_trum.js (15/10 don-tep B: bỏ thân chiêu cũ cùng cờ ?chieucu=1)
+      c5: { name: 'Xoáy hút', near: true, f: null }, // thân chiêu: js/chieu_trum.js (15/10 don-tep B: bỏ thân chiêu cũ cùng cờ ?chieucu=1)
     },
     moc: {
       c1: { name: 'Quật cành', near: true, to: true, f(b, P, T, D, a) {
@@ -264,18 +253,7 @@
       } },
       // tele: báo trước tối thiểu (giây). GĐ2 (V8, Q4): Vồ mồi trước chỉ báo 0,44 s (pha 3 còn 0,37 s), không đi bộ ra kịp.
       // Phiên cân bằng (mục 11): báo trước lần vồ đầu 0,63 → 0,65 giây, lần vồ thứ hai 0,5 → 0,62 giây (cả hai ≥ 0,6).
-      c2: { name: 'Vồ mồi', tele: 0.65, f(b, P, T, D, a) { // vồ hai lần, lần hai nhắm lại
-        const L = clamp(Math.hypot(P.x - b.x, P.y - b.y) + 20, 70, 140);
-        Z('line', { x: b.x, y: b.y, ang: a, len: L, w: 40 }, T, b.dmg * 1.25, null, { melee: true });
-        later(b, T, () => { lunge(b, a, L - 26, 0.22); FX('burst', b.x, b.y, '#ffffff', 8, 60); });
-        later(b, T + 0.55, () => {
-          const a2 = ang(b, P), L2 = clamp(Math.hypot(P.x - b.x, P.y - b.y) + 20, 60, 130);
-          aimFace(b, a2);
-          Z('line', { x: b.x, y: b.y, ang: a2, len: L2, w: 40 }, 0.62, b.dmg * 1.25, null, { melee: true });
-          later(b, 0.62, () => lunge(b, a2, L2 - 26, 0.22));
-        });
-        b.an.cut = 0.9;
-      } },
+      c2: { name: 'Vồ nhảy', tele: 0.65, f: null }, // thân chiêu: js/chieu_trum.js (15/10 don-tep B: bỏ thân chiêu cũ cùng cờ ?chieucu=1)
       c3: { name: 'Quạt đuôi', near: true, to: true, f(b, P, T, D, a) { // ba lớp vệt lửa hình trăng khuyết, sàn cháy xanh
         const quat = (g, t) => {
           [[0, 62], [56, 98], [92, 134]].forEach((r, i) => Z('donut', { x: b.x, y: b.y, r0: r[0], r1: r[1], gaps: [g + PI], gw: PI - 0.85 }, t + i * 0.12, b.dmg * 1.2, 'fire'));
@@ -289,30 +267,7 @@
         if (X > D) giuBan(b, X);
         later(b, X, () => tire(b, 1.0)); // GĐ2 (V14): Hồ Tinh pha 1 chỉ có c1-c3 (c4 mở từ pha 2) nên mệt cả sau Quạt đuôi
       } },
-      c4: { name: 'Vòng lửa ma', to: true, f(b, P, T, D, a) { // hai vòng cột lửa lệch chỗ nhau (giữa hai cột là khe đứng được)
-        const V = [[62, 8, 0, 0.3], [102, 12, PI / 12, 0.5]];
-        if (G.TRUM_MOI !== false) {
-          // 14/10 trum-chet-pha3: vòng cột ĐỐI XỨNG quanh tâm trùm trên sàn — cột chia đều 360°, vòng dẹt theo sàn (G.ZK, như vùng tròn / vành
-          // khăn và ảnh báo trước); cột nằm hẳn ngoài phòng (quá mép sàn hơn bán kính cột) thì không có vùng, cột còn chạm sàn thì giữ (vòng
-          // chỉ bị cắt phần ngoài phòng, không xê dịch). Hình (js/monster_art.js hoTinh c4) vẽ đúng danh sách này (b.an.vongLua). Sát thương, lúc nổ giữ nguyên.
-          const w = W(), K = G.ZK || 1, VL = [];
-          for (const [R, n, lech, t0] of V) for (let i = 0; i < n; i++) {
-            const q = a + lech + (i / n) * TAU, dx = Math.cos(q) * R, dy = Math.sin(q) * R * K, x = b.x + dx, y = b.y + dy;
-            if (x < w.x0 - 12 || x > w.x1 + 12 || y < w.y0 - 12 || y > w.y1 + 12) continue;
-            circle(x, y, 12, (t0 + i * 0.015) * D, b.dmg * 1.1, 'fire', { fxKind: 'nova' });
-            VL.push([Math.round(dx), Math.round(dy), t0 + i * 0.015]);
-          }
-          if (b.an) b.an.vongLua = VL;
-          later(b, D, () => tire(b, 1.0));
-          return;
-        }
-        for (const [R, n, lech, t0] of V) for (let i = 0; i < n; i++) {
-          const q = a + lech + (i / n) * TAU, x = b.x + Math.cos(q) * R, y = b.y + Math.sin(q) * R;
-          if (x < W().x0 - 8 || x > W().x1 + 8 || y < W().y0 - 8 || y > W().y1 + 8) continue;
-          circle(x, y, 12, (t0 + i * 0.015) * D, b.dmg * 1.1, 'fire', { fxKind: 'nova' });
-        }
-        later(b, D, () => tire(b, 1.0)); // GĐ2 (V14): mệt sau chiêu lớn ngay từ pha 1
-      } },
+      c4: { name: 'Hồ ly phân thân', to: true, f: null }, // thân chiêu: js/chieu_trum.js (15/10 don-tep B: bỏ thân chiêu cũ cùng cờ ?chieucu=1)
       c5: { name: 'Bão hồ hoả', f(b, P, T, D, a) { // ba đợt cầu lửa toả tròn, mỗi đợt lệch nhau để luồn qua khe
         // 14/10 trum-chet-pha3: đạn xuất phát trên một vòng TRÒN bán kính 14 quanh tâm trùm (cũ: elip 14 × 10 nên đường bay không đi qua tâm,
         // vòng đạn méo); hướng, tốc độ, sát thương giữ nguyên.
@@ -384,8 +339,8 @@
   // ======================= TRÙM NHỎ =======================
   // Tên chiêu trùm nhỏ (b.skillName) theo hình: atk đòn thường, chieu1, chieu2.
   const MINI_SK = {
-    cuaDa: { atk: 'Kẹp càng', chieu1: 'Đập càng rung sàn', chieu2: 'Mưa tinh thể' },
-    namChua: { atk: 'Phun bào tử', chieu1: 'Hàng nấm độc', chieu2: 'Bão bào tử' },
+    cuaDa: { atk: 'Kẹp càng', chieu1: 'Đập càng rung sàn', chieu2: 'Tường tinh thể' }, // chiêu 2 (Cua Đá, Nấm Chúa): js/chieu_trum.js
+    namChua: { atk: 'Phun bào tử', chieu1: 'Hàng nấm độc', chieu2: 'Nấm mẹ đẻ con' },
     hoLua: { atk: 'Cào', chieu1: 'Vồ lửa', chieu2: 'Gầm phun lửa' },
   };
   // Phiên cân bằng (mục 11): mỗi trùm nhỏ một nhịp riêng (trước ba con dùng chung một kịch bản, 12 chiêu đầu gần như giống hệt).
@@ -441,7 +396,7 @@
       circle(x, y, S.r, t, b.dmg * S.sat, null, { fxKind: 'spout' });
     }
   }
-  G.MINI_SK = MINI_SK; // 14/10 ky-nang-trum-rieng: js/chieu_trum.js đổi tên chiêu 2 của Nấm Chúa, Cua Đá (cờ ?chieucu=1 giữ tên cũ)
+  G.MINI_SK = MINI_SK; // 14/10 ky-nang-trum-rieng: chiêu 2 của Nấm Chúa, Cua Đá chạy ở js/chieu_trum.js
   function thinkMini(b) {
     const w = W(), P = dichOf(b, w.P), ph = b.phase, id = b.art;
     const d = Math.hypot(P.x - b.x, P.y - b.y), a = ang(b, P);
@@ -495,7 +450,7 @@
       let xong = 0; // nổi giận: lúc đợt thêm cuối xong (giữ trùm bận tới đó)
       play(b, k, spd);
       b.busy = D; b.wind = T; b.ngXong = 0;
-      // 14/10 ky-nang-trum-rieng (js/chieu_trum.js, cờ tắt ?chieucu=1): chiêu 2 của Nấm Chúa (Nấm mẹ đẻ con) và Cua Đá (Tường tinh thể) thay
+      // 14/10 ky-nang-trum-rieng (js/chieu_trum.js; 15/10 don-tep B bỏ cờ ?chieucu=1 và nhánh cũ): chiêu 2 của Nấm Chúa (Nấm mẹ đẻ con) và Cua Đá (Tường tinh thể) thay
       // Bão bào tử / Mưa tinh thể (hai kiểu bị lặp: toả tròn đạn, mưa rơi quanh em bé). Cùng cử động, cùng mốc T, sát thương mỗi lần trúng giữ.
       if (k === 'chieu2' && G.chieuTrum && G.chieuTrum.mini(b, id, k, P, T, D, a)) { /* chiêu mới */ }
       else if (id === 'cuaDa' && k === 'chieu1') {
@@ -511,10 +466,6 @@
           if (CUA(b)) { const g = ang(b, W().P); aimFace(b, g); cuaNut(b, g, wt + CUA_SO.nut.tre); } // nứt lại theo chỗ em bé lúc này
         });
         if (n > 1) xong = T + 0.5 + (n - 1) * 0.55 + 0.2;
-      } else if (id === 'cuaDa') {
-        // Mưa tinh thể: tinh thể trên lưng bắn lên rồi cắm xuống 5 chỗ
-        const nM = soNG(b, 'cuaMua', 'so', 5 + ph);
-        for (let i = 0; i < nM; i++) { const q = i ? near(P.x, P.y, 70, 40) : [P.x, P.y]; circle(q[0], q[1], 16, T + i * 0.1, b.dmg, 'ice', { fxKind: 'spout' }); }
       } else if (id === 'namChua' && k === 'chieu1') {
         // Hàng nấm độc: nấm mọc vọt nối nhau theo hướng em bé
         const vu = (B ? ph >= 1 : ph >= 2) ? 2 : 0; // vũng độc ở lại: pha cuối (nổi giận: pha 2)
@@ -524,11 +475,6 @@
         const n = soNG(b, 'namHang', 'dot', 1);
         for (let j = 1; j < n; j++) lapDot(b, 'chieu1', T + j * 0.75, sanNG(b, true) || 0.6, (wt) => { const g = huongDot(b, P, a, 'namHang'); aimFace(b, g); hang(g, wt); });
         if (n > 1) xong = T + (n - 1) * 0.75 + 0.6;
-      } else if (id === 'namChua') {
-        // Bão bào tử: hai đợt bào tử toả tròn và vòng khí độc
-        const nB = soNG(b, 'namBao', 'dot', 2);
-        for (let j = 0; j < nB; j++) later(b, T + j * 0.4, () => { for (let i = 0; i < 9; i++) shot(b, a + ((i + j * 0.5) / 9) * TAU, 78, { kind: 'orb', col: '#c4f43c', col2: '#58208c', el: 'poison', t: 2.2 }); });
-        later(b, T, () => G.zoneCircle(b.x, b.y, 34, 0, b.dmg * 0.5, 'poison', { pool: true, life: 3, tick: 0.3 }));
       } else if (id === 'hoLua' && k === 'chieu1') {
         // Vồ lửa: chồm tới một đường dài, để lại vệt lửa trên sàn
         const vo = (g, L, t, vet) => {

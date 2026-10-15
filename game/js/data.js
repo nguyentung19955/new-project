@@ -611,9 +611,7 @@
   // 14/10 trum-chet-pha3 (docs/review/ke-hoach-cai-thien/trum-chet-pha3): trùm vùng chết bằng ảnh (bỏ hiệu ứng chết vẽ tay), hiệu ứng trùm chạy
   // đều nhịp (căn tâm từng khung, giữ ~12 khung/giây, mờ vào/ra), chiêu tròn đối xứng quanh tâm trùm. Chỉ đổi HÌNH và vị trí cho đối xứng,
   // không đổi sát thương / thời gian chiêu. Cờ tắt: ?trumcu=1 (hoặc G.TRUM_MOI = false) → y hệt kiểu cũ.
-  // 14/10 ky-nang-trum-rieng: 10 chiêu lặp kiểu của trùm vùng / trùm nhỏ / tinh anh đổi sang chiêu mới (js/chieu_trum.js). Cờ tắt: ?chieucu=1
-  // (hoặc G.CHIEU_MOI = false) → dùng lại đúng chiêu cũ.
-  if (G.CHIEU_MOI === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]chieucu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.CHIEU_MOI = !cu; }
+  // 14/10 ky-nang-trum-rieng: 10 chiêu lặp kiểu của trùm vùng / trùm nhỏ / tinh anh đổi sang chiêu mới (js/chieu_trum.js). 15/10 don-tep B: bỏ cờ ?chieucu=1.
   // 15/10 cua-tuong-kho (docs/review/ke-hoach-cai-thien/cua-tuong-kho): Cua Đá không còn chỗ đứng an toàn (đuổi tới mép, chiêu nhắm theo em bé,
   // Tường tinh thể nhốt em bé, đá rơi dọc chân tường). Cờ tắt: ?cuade=1 (hoặc G.CUA_MOI = false) → Cua Đá y hệt cũ. Số liệu: G.CUA_SO (js/boss.js).
   if (G.CUA_MOI === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]cuade=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.CUA_MOI = !cu; }
@@ -662,10 +660,8 @@
       nhoDon: { dot: [1, 1] }, // đòn thường (không phải chiêu): không thêm nhát — đo bot: thêm nhát làm Cua Đá tụt 50 điểm % (đặt [1, 2] để bật)
       cuaDap: { dot: [1, 2] }, // Cua Đá Đập càng rung sàn: đập thêm một lần
       cuaTuong: { dot: [1, 2] }, // Cua Đá Tường tinh thể: tường vỡ bắn thêm một loạt mảnh (lệch nửa hàng)
-      cuaMua: { so: [5, 7] }, // Cua Đá Mưa tinh thể (?chieucu=1): số tinh thể (cũ 5 / 6 / 7)
       namHang: { dot: [1, 2], nham: true }, // Nấm Chúa Hàng nấm độc: thêm một hàng nhắm lại
       namMe: { so: [3, 4] }, // Nấm Chúa Nấm mẹ đẻ con: số nấm con
-      namBao: { dot: [2, 3] }, // Nấm Chúa Bão bào tử (?chieucu=1): số đợt bào tử
       hoVoLua: { dot: [1, 2], nham: true }, // Hổ Lửa Vồ lửa: vồ thêm một lần nhắm lại
       hoPhun: { dot: [1, 2] }, // Hổ Lửa Gầm phun lửa: phun thêm một lần (cùng hướng)
     },

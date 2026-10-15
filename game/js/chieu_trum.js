@@ -8,7 +8,7 @@
 // đúng tâm của nó (tâm chân trùm, chỗ em bé, tâm sàn) — cùng cách căn của phiên trum-chet-pha3: vòng tròn dẹt theo sàn G.ZK, chia đều 360°.
 // Chiêu đặc biệt: Xoáy hút kéo NHẸ (chậm hơn em bé chạy, không kéo lúc lộn / lướt, không kéo vào vùng đỏ sắp nổ mà bé đang đứng ngoài);
 // Tường tinh thể chỉ chắn đường đi và đạn (không gây sát thương khi đứng cạnh).
-// Cờ ?chieucu=1 (G.CHIEU_MOI = false, khai ở js/data.js): dùng lại đúng chiêu cũ (hàm cũ giữ nguyên trong js/boss.js, js/mobs.js).
+// 15/10 don-tep B: bỏ cờ ?chieucu=1 (G.CHIEU_MOI) cùng thân chiêu cũ trong js/boss.js, js/mobs.js.
 // Hình: dùng lại ảnh hu-* có sẵn (hu-cot-nuoc, hu-xoay-nuoc, hu-nut-dat, hu-bang-vo, hu-no-lua, hu-no-doc, hu-nam-moc, hu-gai-bang,
 // hu-vung-lua, hu-phan-than, hu-va-cham, hu-dap-san); chỗ thiếu ảnh vẽ tạm tối giản bằng code (prompt ảnh: PROMPT-ANH.md cùng thư mục yêu cầu).
 // KHÔNG thêm ảnh vào build. Số liệu: bảng SO (JSON thuần giữa /*SO*/ ... /*HET-SO*/) — công cụ vẽ ảnh soát tĩnh đọc thẳng.
@@ -19,8 +19,6 @@
   const W = () => G.getWorld();
   const PI = Math.PI, TAU = PI * 2;
   const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
-  if (G.CHIEU_MOI === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]chieucu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.CHIEU_MOI = !cu; }
-  const ON = () => G.CHIEU_MOI !== false;
   const CT = (G.chieuTrum = {});
 
   // ---------- SỐ LIỆU ----------
@@ -268,7 +266,7 @@
       const o0 = b.onHit;
       b.onHit = function (hit) {
         const s = b.ctPT;
-        if (ON() && s && !s.ngat && !s.laoThat && !b.dead) ngatPT(b, s);
+        if (s && !s.ngat && !s.laoThat && !b.dead) ngatPT(b, s);
         if (o0) return o0.call(this, hit);
       };
     }
@@ -413,7 +411,7 @@
     }
   }
   CT.mini = function (b, id, k, P, T, D, a) {
-    if (!ON() || k !== 'chieu2' || (id !== 'namChua' && id !== 'cuaDa')) return false;
+    if (k !== 'chieu2' || (id !== 'namChua' && id !== 'cuaDa')) return false;
     if (b.an) b.an.ct = true;
     if (id === 'namChua') namMe(b, P, T, D, a); else if (G.cuaMoi && G.cuaMoi(b)) tuongNhot(b, P, T, D); else tuongTinhThe(b, P, T, D);
     return true;
@@ -605,7 +603,6 @@
     };
   }
   CT.elite = function (e, id, P, a, T, D, o) {
-    if (!ON()) return false;
     if (id === 'namPhongChua') namPhongNhay(e, P, a, T, D, o);
     else if (id === 'caNocChua') caNocLan(e, P, a, T, D, o);
     else if (id === 'huChua') huDau(e, P, a, T, D, o);
@@ -615,7 +612,7 @@
 
   // Cử động của chiêu mới dùng lại hàng cử động của chiêu cũ (độ dài, mốc ra đòn): hiệu ứng vẽ code của chiêu CŨ trong cử động đó
   // (js/monster_art.js P.under / P.over: vạch báo, xoáy, mưa ném, vòng đạn giả) phải tắt — js/boss.js, js/mobs.js hỏi hàm này để đặt o.fx = false.
-  CT.tatFx = function (e, n) { return ON() && !!e && ((!!e.an && !!e.an.ct && e.an.n === n) || (!!e.act && !!e.act.ct)); };
+  CT.tatFx = function (e, n) { return !!e && ((!!e.an && !!e.an.ct && e.an.n === n) || (!!e.act && !!e.act.ct)); };
 
   // =====================================================================
   // MỖI KHUNG: vật tự quản, thân nhảy, tường chắn
@@ -646,7 +643,7 @@
     if (b) {
       buocThan(b, dt);
       const st = b.ctPT;
-      if (st && (b.dead || b.phase !== st.ph || !ON())) { for (const q of st.cao) q.on = false; b.ctPT = null; }
+      if (st && (b.dead || b.phase !== st.ph)) { for (const q of st.cao) q.on = false; b.ctPT = null; }
       else if (st) for (const q of st.cao) if (q.on && q.d) {
         q.d.t += dt;
         const u = clamp(q.d.t / SO.hoPhanThan.lao, 0, 1);
@@ -681,26 +678,18 @@
   if (G.fx && G.fx.zoneFire) { const zf = G.fx.zoneFire; G.fx.zoneFire = function (z) { if (z && z.ctBao) return; return zf(z); }; }
 
   // =====================================================================
-  // TÊN CHIÊU + THAY HÀM CHIÊU TRÙM VÙNG (giữ hàm cũ cho ?chieucu=1)
+  // TÊN CHIÊU + THÂN CHIÊU TRÙM VÙNG (js/boss.js để f: null cho 5 chiêu này)
   // =====================================================================
   function thay(kind, key, ten, f) {
     const sk = G.bossSK && G.bossSK[kind] && G.bossSK[kind][key];
-    if (!sk || sk.fCu) return;
-    const cu = sk.f, tenCu = sk.name;
-    sk.fCu = cu; sk.tenCu = tenCu;
-    sk.f = function (b, P, T, D, a, sp) { return ON() ? f(b, P, T, D, a, sp) : cu.call(this, b, P, T, D, a, sp); };
-    Object.defineProperty(sk, 'name', { get: () => (ON() ? ten : tenCu), configurable: true, enumerable: true });
+    if (!sk) return;
+    sk.f = f; sk.name = ten;
   }
   thay('ngu', 'c1', TEN.nguBoRiu, boRiu);
   thay('ngu', 'c4', TEN.nguCotNuoc, cotNuoc);
   thay('ngu', 'c5', TEN.nguXoayHut, xoayHut);
   thay('ho', 'c2', TEN.hoVoNhay, voNhay);
   thay('ho', 'c4', TEN.hoPhanThan, phanThan);
-  if (G.MINI_SK) {
-    const dat = (id, key, ten) => { const M = G.MINI_SK[id]; if (!M) return; const cu = M[key]; Object.defineProperty(M, key, { get: () => (ON() ? ten : cu), configurable: true, enumerable: true }); };
-    dat('namChua', 'chieu2', TEN.namMe);
-    dat('cuaDa', 'chieu2', TEN.cuaTuong);
-  }
 
   // =====================================================================
   // VẼ: vật ở lớp sàn, thân nhảy (nâng lên + bóng chân), bóng cáo phân thân, thân lăn (xoay, phồng)
@@ -727,7 +716,7 @@
   }
   const boss0 = A.boss;
   A.boss = function (c, b) {
-    if (!ON() || !b) return boss0(c, b);
+    if (!b) return boss0(c, b);
     veCao(c, b);
     if (b.ctCao > 0 && b.dying == null) {
       bong(c, b, b.ctCao, 26);
@@ -739,7 +728,7 @@
   const enemy0 = A.enemy;
   A.enemy = function (c, e) {
     const k = e && e.ct, cao = (e && e.ctCao) || 0;
-    if (!ON() || !e || e.dying != null || (!cao && !(k && (k.xoay || k.phong > 1)))) return enemy0(c, e);
+    if (!e || e.dying != null || (!cao && !(k && (k.xoay || k.phong > 1)))) return enemy0(c, e);
     if (cao) bong(c, e, cao, Math.max(8, (e.r || 10) + 2));
     c.save();
     try {

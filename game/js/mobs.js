@@ -525,16 +525,13 @@
       const o = { cd: 1.2 * fast, anim0: 'chieu1', anim1: 'chieu1', end: D };
       if (ng !== 1) { o.spd0 = ng; o.spd1 = ng; } // cử động chiêu chạy nhanh theo
       // Chiêu riêng chạy trọn cử động chieu1 (đã gồm báo trước trong hình); vùng báo của luật chơi nổ ở mốc T.
-      // 14/10 ky-nang-trum-rieng (js/chieu_trum.js, cờ tắt ?chieucu=1): Nấm Phồng Chúa Nhảy dập, Cá Nóc Chúa Phồng lăn, Hũ Chúa Đổ dầu châm lửa
-      // thay Mưa bào tử / Gai xoáy / Vòng cầu lửa (kiểu bị lặp). Các nhánh cũ bên dưới giữ nguyên cho cờ tắt.
+      // 14/10 ky-nang-trum-rieng (js/chieu_trum.js): Nấm Phồng Chúa Nhảy dập, Cá Nóc Chúa Phồng lăn, Hũ Chúa Đổ dầu châm lửa
+      // thay Mưa bào tử / Gai xoáy / Vòng cầu lửa (kiểu bị lặp). 15/10 don-tep B: bỏ cờ ?chieucu=1 và ba nhánh cũ.
       if (G.chieuTrum && G.chieuTrum.elite(e, id, P, a, T, D, o)) { /* chiêu mới */ }
       else if (id === 'cuaTuong') {
         // Kẹp chéo: hai đường chém chéo hình chữ X đi qua chỗ em bé đứng
         const L = 110;
         for (const s of [-1, 1]) { const b = a + s * PI / 4; addZone('line', { x: P.x - Math.cos(b) * L / 2, y: P.y - Math.sin(b) * L / 2, ang: b, len: L, w: 14 }, T + 0.1, e.dmg * 1.3, el, { src: e, cancel: true, melee: true }); }
-      } else if (id === 'caNocChua') {
-        // Gai xoáy: hai đợt gai băng toả tròn lệch nhau
-        o.fire = (q) => { for (let j = 0; j < 2; j++) G.later(j * 0.35, () => { if (!q.dead) for (let i = 0; i < 10; i++) shoot(q, (i + j * 0.5) / 10 * TAU, 100, { kind: 'spike', dmg: q.dmg * 0.8, el: 'ice', t: 1.6 }); }); };
       } else if (id === 'heoNanh') {
         // Húc ba lần zíc zắc: mỗi lần nhắm lại theo chỗ em bé
         o.end = 0.5 + 3 * 0.55; o.anim1 = 'atk';
@@ -544,15 +541,9 @@
           addZone('line', { x: e.x, y: e.y, ang: b, len: 66, w: 22 }, 0.45, e.dmg * 1.2, null, { src: e, cancel: true, melee: true, onFire: () => { if (!e.dead && e.act) { e.lungeT = 0.15; e.lv = 52 / 0.15; play(e, 'atk', 1.4); } } });
         });
         o.anim0 = 'tele'; o.T = 0.45;
-      } else if (id === 'namPhongChua') {
-        // Mưa bào tử: năm quả rơi quanh em bé, để lại khí độc
-        for (let i = 0; i < 5; i++) { const q = near(P.x, P.y, i ? 60 : 0, i ? 30 : 0); addZone('circle', { x: q[0], y: q[1], r: 17 }, T + 0.2 + i * 0.1, e.dmg, 'poison', { src: e, cancel: true, then: 3, fxKind: 'fruit' }); }
       } else if (id === 'tuongMa') {
         // Đao xoáy: xoay hai vòng chém quanh mình
         for (let j = 0; j < 2; j++) addZone('circle', { x: e.x, y: e.y, r: 50 }, T + j * 0.45, e.dmg * 1.1, null, { src: e, cancel: true, melee: true });
-      } else if (id === 'huChua') {
-        // Vòng cầu lửa: hai đợt cầu lửa toả tròn
-        o.fire = (q) => { for (let j = 0; j < 2; j++) G.later(j * 0.4, () => { if (!q.dead) for (let i = 0; i < 10; i++) shoot(q, (i + j * 0.5) / 10 * TAU, 95, { kind: 'fire', dmg: q.dmg * 0.8, el: 'fire', t: 1.8 }); }); };
       }
       begin(e, 'sk', a, o.T || T, o);
       G.sfx('warn', 0.9);
