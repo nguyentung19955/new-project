@@ -56,7 +56,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.15-1501";
+(window.G = window.G || {}).VERSION = "lk-2026.10.15-1709";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -26558,8 +26558,12 @@ MA._xong();
     if (m && m.length === a.so) { let i = 0; while (i < a.so - 1 && u + 1e-6 >= m[i + 1]) i++; return i; }
     return Math.min(a.so - 1, Math.floor(u * a.so));
   }
-  function khungLap(D, ten, t) { const a = D.dong_tac[ten]; return Math.floor(Math.max(0, t) / (a.giay || 1) * a.so) % a.so; }
-  function phanKhung(D, ten, t) { const a = D.dong_tac[ten], v = Math.max(0, t) / (a.giay || 1) * a.so; return v - Math.floor(v); } // tiến độ trong khung lặp (0..1)
+  // 15/10: chủ dự án thấy dáng đứng / đi / chạy của em bé hơi nhanh → các hàng LẶP (dung*, di*, chay*) chạy chậm lại ×NHIP_LAP.
+  // Đòn đánh, lộn, trúng đòn… KHÔNG đổi (khớp mốc ra đòn). Cờ ?chaynhanh=1 → nhịp cũ.
+  const NHIP_LAP = (() => { try { if (/[?&]chaynhanh=1(&|$)/.test(location.search || '')) return 1; } catch (e) { /* bỏ qua */ } return G.ZED_NHIP_LAP || 1.25; })();
+  const giayLap = (ten, a) => (a.giay || 1) * (/^(dung|di|chay)(_|$)/.test(ten) ? NHIP_LAP : 1);
+  function khungLap(D, ten, t) { const a = D.dong_tac[ten]; return Math.floor(Math.max(0, t) / giayLap(ten, a) * a.so) % a.so; }
+  function phanKhung(D, ten, t) { const a = D.dong_tac[ten], v = Math.max(0, t) / giayLap(ten, a) * a.so; return v - Math.floor(v); } // tiến độ trong khung lặp (0..1)
 
   // Chọn động tác + khung (cùng thứ tự ưu tiên như SC.chonEmBe ở js/sprite_custom.js). Trả { ten, i, theo? }: theo = động tác đánh mà
   // vũ khí đi theo khi thân đang ở hàng chạy (chạy mà đánh, G.CHAY_DANH).
