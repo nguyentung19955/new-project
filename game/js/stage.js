@@ -785,7 +785,7 @@
       return { frac: w.marks[top] / G.MARKS[0], col: w.marks[top] > 0 ? G.EL[top].col : '#666', txt: w.marks[top] > 0 ? G.t('{0} {1}/{2}', G.EL[top].name, Math.floor(w.marks[top]), G.MARKS[0]) : 'Chưa có dấu ấn' };
     }
     const st = G.wStage(w), m = w.marks[w.branch];
-    const cap = G.RARITY[G.wRar(w)].maxStage;
+    const cap = 3; // 15/10: bỏ kẹp theo bậc màu cũ (G.RARITY) — mọi vũ khí lên tới Thức tỉnh
     if (st >= cap) return { frac: 1, col: G.EL[w.branch].col, txt: cap < 3 ? G.t('{0} · {1} (tối đa bậc {2})', G.EL[w.branch].name, G.STAGE_NAMES[st], G.RARITY[G.wRar(w)].name) : G.t('{0} · {1} (tối đa)', G.EL[w.branch].name, G.STAGE_NAMES[st]) };
     return { frac: (m - (st ? G.MARKS[st - 1] : 0)) / (G.MARKS[st] - (st ? G.MARKS[st - 1] : 0)), col: G.EL[w.branch].col, txt: G.t('{0} · {1} {2}/{3}', G.EL[w.branch].name, G.STAGE_NAMES[st], Math.floor(m), G.MARKS[st]) };
   }

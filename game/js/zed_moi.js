@@ -19,6 +19,8 @@
 // quá ±75° thì nghiêng thân trên quanh eo tối đa 12°; chém/quét/nện: nghiêng cả đường vung tối đa ±35°. Vào thế êm (làm mượt theo thời
 // gian + nối góc như gocMuot). Ném phi tiêu / đấm tay không (không có neo vũ khí): cánh tay đang duỗi (bảng TAY) xoay quanh gốc tay cùng góc.
 // Vệt/hiệu ứng: mũi vũ khí (doiTip) đã xoay theo; js/fx.js aimed() hỏi G.zedMoi.lechHinh. Tắt: ?huongvk=0.
+// VIỀN VŨ KHÍ THEO BẬC ÉP ĐỒ + ÁNH THEO CẤP MÀI (15/10/2026, docs/review/ke-hoach-cai-thien/vien-vk-bac/YEU-CAU.md): veVk gọi G.vienVk.truoc/sau
+// (js/vien_vk.js) quanh ảnh vũ khí, mọi hàng có vũ khí (đứng/đi/chạy/chém/phi tiêu đang cầm). Tắt: ?vienvk=0.
 // SỬA BÓP EO / VẶN NGƯỜI KHI CHẠY + CHÉM (13/10/2026, docs/review/ke-hoach-cai-thien/zed-eo-sua/YEU-CAU.md): chân luôn cùng hướng thân trên
 // (hướng chém); chạy ngược hướng chém → chạy LÙI (hàng chạy phát ngược thứ tự khung, nhịp ×0,8). Đường ghép dời xuống giữa đùi (đai + hông +
 // đùi trên của khung đòn), vùng nối 5 hàng nguồn: nửa hẹp hơn giãn ngang dần cho khớp mép nửa kia, nửa trên đè nửa dưới. Số đo từng khung cả
@@ -296,7 +298,7 @@
     let H = huongCua(o, T, wa);
     if (H && ve) H = hvMuot(H);
     const g = H ? H.g : 0, lean = H && !s.theo ? H.lean : 0; // chạy kiểu cũ (thân hàng chạy, s.theo): không nghiêng thân chạy
-    return { da, n, wa, cap: capVk(w), he: heVk(w), ang: gocMuot(o, da, wa, n, g), cam: !!wa.cam, lean, hv: !!H };
+    return { da, n, wa, cap: capVk(w), he: heVk(w), ang: gocMuot(o, da, wa, n, g), cam: !!wa.cam, lean, hv: !!H, w };
   }
   // Trục nghiêng thân trên (toạ độ vẽ đã lật, điểm ảnh game tính từ chân) hoặc null.
   function trucNghieng(T, s, v, E) {
@@ -365,7 +367,11 @@
     c.translate(n[0] / 2 - 24, n[1] / 2 - 45); // he_neo "nguon-96": chia 2 ra điểm ảnh game, trừ goc (24,45) → tính từ chân
     c.rotate(((v.ang != null ? v.ang : n[2]) * Math.PI) / 180); // góc độ: 0 mũi chỉ sang phải, dương chúc xuống (v.ang: góc đã nội suy, gocMuot)
     c.scale(F, F);
+    // 15/10 viền + hào quang theo bậc ép đồ, ánh lướt theo cấp mài (js/vien_vk.js; ?vienvk=0 tắt): vẽ cùng hệ toạ độ đã xoay/lật của ảnh
+    const VV = G.vienVk, r0 = VV && VV.co(v.w) ? V.tep.vk[da.vk][v.cap] : null, kv = r0 ? 'zed-vk:' + da.vk + v.cap : null;
+    if (r0) { try { VV.truoc(c, v.w, V.img, r0[0], r0[1], r0[2], r0[3], kv, -g[0], -g[1], 1 / F); } catch (e) { ghiLoi(e); } }
     c.drawImage(a.img, a.x, a.y, a.w, a.h, -g[0], -g[1], a.w, a.h);
+    if (r0) { try { VV.sau(c, v.w, V.img, r0[0], r0[1], r0[2], r0[3], kv, -g[0], -g[1], 1 / F); } catch (e) { ghiLoi(e); } }
     c.restore();
   }
 

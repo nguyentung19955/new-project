@@ -595,7 +595,15 @@
     c.imageSmoothingEnabled = k < 1;
     c.translate(Math.round(x), Math.round(y));
     if (cheo) c.rotate(-Math.PI / 4);
-    c.drawImage(a.img, a.x, a.y, a.w, a.h, (-a.w * k) / 2, (-a.h * k) / 2, a.w * k, a.h * k);
+    // 15/10 viền + hào quang theo bậc ép đồ, ánh lướt theo cấp mài (js/vien_vk.js; ?vienvk=0 tắt) — vẽ ở hệ toạ độ ảnh (đã xoay, thu theo k)
+    const VV = G.vienVk, r0 = VV && VV.co(w) ? V.tep.vk[loai][cap] : null;
+    if (r0) {
+      const kv = 'zed-vk:' + loai + cap, dx = -a.w / 2, dy = -a.h / 2;
+      c.scale(k, k);
+      try { VV.truoc(c, w, V.img, r0[0], r0[1], r0[2], r0[3], kv, dx, dy, 1 / k); } catch (e) { /* bỏ qua */ }
+      c.drawImage(a.img, a.x, a.y, a.w, a.h, dx, dy, a.w, a.h);
+      try { VV.sau(c, w, V.img, r0[0], r0[1], r0[2], r0[3], kv, dx, dy, 1 / k); } catch (e) { /* bỏ qua */ }
+    } else c.drawImage(a.img, a.x, a.y, a.w, a.h, (-a.w * k) / 2, (-a.h * k) / 2, a.w * k, a.h * k);
     c.restore();
     return true;
   };

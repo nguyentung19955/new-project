@@ -70,7 +70,7 @@
   LK.info = function (w, el) {
     const m = Math.floor(w.marks[el] || 0), nx = LK.next(m), pv = LK.prev(m);
     const main = w.branch === el, free = !w.branch;
-    const cap = G.RARITY[G.wRar(w)].maxStage;
+    const cap = 3; // 15/10: bỏ kẹp theo bậc màu cũ (G.RARITY) — mọi vũ khí lên tới Thức tỉnh
     const st = main ? G.wStage(w) : 0;
     const idx = nx == null ? 3 : G.MARKS.indexOf(nx) + 1; // mốc kế là mốc thứ mấy (1: Mầm, 2: Thành hình, 3: Thức tỉnh)
     const capped = main && (st >= cap);

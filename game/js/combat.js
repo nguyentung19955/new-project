@@ -14,8 +14,9 @@
   G.wStage = function (w) {
     if (!w || !w.branch) return 0;
     const m = w.marks[w.branch];
-    const s = m >= G.MARKS[2] ? 3 : m >= G.MARKS[1] ? 2 : m >= G.MARKS[0] ? 1 : 0;
-    return Math.min(s, G.RARITY[G.wRar(w)].maxStage);
+    // 15/10 (vien-vk-bac): bỏ kẹp theo bậc màu cũ G.RARITY[..].maxStage (bậc màu cũ đã bỏ 14/10; mọi vũ khí lên tới Thức tỉnh).
+    // Cấp chỉ tính từ dấu ấn hệ chính như trước → bản lưu cũ (còn w.rarity) đọc ra đúng cấp cũ, không vũ khí nào tụt/nhảy cấp.
+    return m >= G.MARKS[2] ? 3 : m >= G.MARKS[1] ? 2 : m >= G.MARKS[0] ? 1 : 0;
   };
   // Bậc 0..3 (Thường, Lam, Tím, Vàng). Bản sao vũ khí hoặc vũ khí dựng tạm chỉ có tier cũ vẫn đọc được.
   G.wRar = (w) => G.clamp((w.rarity != null ? w.rarity : w.tier) | 0, 0, G.RARITY.length - 1);
