@@ -11,7 +11,7 @@
 // bản lưu cũ chưa có thì dựng theo tiến độ đang có (không chiếu lại những gì đã qua).
 // Ảnh cảnh truyện (15/10): mỗi khung có ảnh nền (bảng ANH bên dưới, ảnh ở game/art/truyen, dựng bằng tools/anh-truyen/dung.py),
 // TẢI LƯỜI khi mở truyện (không vào gói tải đầu), phóng chậm (Ken Burns) + chữ trên dải tối dưới ảnh. Ảnh chưa về / không có
-// (B4 trao vũ khí, B5 hội làng chưa vẽ): nền vẽ code như cũ + khung thoại cũ. Thả ảnh mới vào là game tự dùng, không sửa code.
+// / lỗi: nền vẽ code như cũ + khung thoại cũ. Ảnh mới (cảnh mới của vùng mới) thả vào là game tự dùng, không sửa code.
 // Tắt: ?truyen=0 hoặc G.TRUYEN = false. Bot kiểm thử (G.botInput) không bao giờ gặp khung truyện.
 (function () {
   'use strict';
@@ -132,8 +132,8 @@
   };
 
   // ---------- ảnh cảnh truyện (canh-truyen 15/10): tải lười, Ken Burns, chữ trên dải tối ----------
-  // Khoá nền (f.nen) → tên ảnh trong game/art/truyen (docs/anh-goc/truyen). B4 'cuti' và B5 'hoi' chưa có ảnh: chỉ cần dựng
-  // b4-trao-vu-khi / b5-hoi-lang bằng tools/anh-truyen/dung.py rồi đóng gói lại, game tự dùng (chưa có thì vẽ nền code).
+  // Khoá nền (f.nen) → tên ảnh trong game/art/truyen (docs/anh-goc/truyen). Tệp nào thiếu thì khung đó vẽ nền code; thêm ảnh:
+  // đặt <tên>.png vào docs/anh-goc/truyen, chạy tools/anh-truyen/dung.py rồi đóng gói lại (B4, B5 vào game theo đúng cách này).
   const ANH = { cayda: 'b1-trong-vo-cay-da-ua', yeu: 'b2-ba-yeu-tinh', song: 'b2b-bong-duoi-song', emBe: 'b3-ba-ban-bi-bat', cuti: 'b4-trao-vu-khi', hoi: 'b5-hoi-lang', lang: 'b6-nen-lang' };
   TR.ANH = ANH;
   const kho = {}; // tên ảnh → { img, ok, hong, t: lúc tải xong (giây) }

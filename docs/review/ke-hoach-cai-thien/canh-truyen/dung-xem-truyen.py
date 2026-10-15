@@ -2,7 +2,7 @@
 """Ảnh soát TĨNH xem-truyen.png (KHÔNG chạy game): mỗi trang truyện mới = ảnh nền (game/art/truyen, khung đầu Ken Burns phóng 1,02)
 + dải tối + chữ, dựng lại đúng bố cục js/truyen.js (DAI: lề 20, rộng 440, đáy 265; cỡ 9,5 → 8 khi quá 3 dòng; tên người nói 8,5 đậm),
 cả tiếng Việt và tiếng Anh (game/js/ngon_ngu_en.js). Chữ đo bằng phông DejaVu Sans (máy dựng không có Be Vietnam Pro) và ghi
-bề rộng dòng dài nhất so với 440 để soát tràn. Trang chưa có ảnh (B4 'cuti', B5 'hoi') ghi "nền code cũ + khung thoại cũ".
+bề rộng dòng dài nhất so với 440 để soát tràn. Trang nào chưa có ảnh thì ghi "nền code cũ + khung thoại cũ" (nay đủ 7 ảnh).
 
   python3 docs/review/ke-hoach-cai-thien/canh-truyen/dung-xem-truyen.py
 """

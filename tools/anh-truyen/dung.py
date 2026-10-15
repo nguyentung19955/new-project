@@ -7,8 +7,8 @@
 960×540 = đúng số điểm ảnh thật của canvas thế giới khi Độ nét Cao (480×270 × G.NET 2), nên ảnh hiện đủ chi tiết, không phóng mờ.
 WebP có mất mát (quality 80) cho trình duyệt thường; JPEG (quality 80, progressive) dự phòng cho trình duyệt không đọc được WebP.
 game/build.py lấy MỌI tệp trong game/art/truyen/ (bản một tệp: nhúng; bản ảnh rời: chép sang dist/anh/, tải lười khi mở truyện).
-B4 (trao vũ khí) và B5 (hội làng) chưa có ảnh: thả b4-trao-vu-khi.png / b5-hoi-lang.png vào docs/anh-goc/truyen/ rồi chạy lệnh này,
-game tự dùng ảnh thay nền vẽ code (js/truyen.js, bảng ANH). KHÔNG đưa vào game: b2b-bong-duoi-song-v2.png (dự phòng),
+Thêm cảnh: thả <tên>.png vào docs/anh-goc/truyen/, thêm tên vào TEN (và khoá nền vào bảng ANH của js/truyen.js nếu là khoá mới) rồi chạy
+lệnh này; tệp chưa có thì game vẽ nền code. (B4 b4-trao-vu-khi, B5 b5-hoi-lang về sau và vào game đúng theo cách này.) KHÔNG đưa vào game: b2b-bong-duoi-song-v2.png (dự phòng),
 hac-long-tao-hinh.png (ảnh chốt tạo hình trùm vùng 8).
 """
 import os
