@@ -16,7 +16,7 @@ Ba nguyên tắc không đổi suốt kế hoạch:
 
 ## 1. Kiểm kê: phải vẽ lại những gì
 
-Số liệu dưới đây đếm thẳng từ `game/art/custom/*.sprite.json` (526 tệp) ngày 15/10. Không tính 30 tệp `*-cu` (hình quái cũ chỉ dùng khi bật `?quaicu=1`) và `game/art/du-tru/`. Hai nhóm này giữ pixel, không vẽ lại.
+Số liệu dưới đây đếm thẳng từ `game/art/custom/*.sprite.json` (526 tệp) ngày 15/10. Không tính 30 tệp `*-cu` (hình quái cũ chỉ dùng khi bật `?quaicu=1`; đã xoá cùng cờ 15/10, don-tep B) và `game/art/du-tru/` (giữ pixel, không vẽ lại).
 
 ### 1.1 Bảng tổng
 
