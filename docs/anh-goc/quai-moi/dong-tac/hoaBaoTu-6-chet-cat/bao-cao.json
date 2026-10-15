@@ -1,0 +1,222 @@
+{
+ "anh": "hoaBaoTu-6-chet.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 6,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 8,
+  "vien_khu": 8269,
+  "nga_mau_nen_trong_hinh": 2415
+ },
+ "manh_bo": [
+  {
+   "khung_bao": [
+    1986,
+    377,
+    2011,
+    431
+   ],
+   "diem_anh": 75
+  },
+  {
+   "khung_bao": [
+    2082,
+    412,
+    2109,
+    437
+   ],
+   "diem_anh": 78
+  },
+  {
+   "khung_bao": [
+    2007,
+    417,
+    2034,
+    452
+   ],
+   "diem_anh": 72
+  },
+  {
+   "khung_bao": [
+    1927,
+    422,
+    1941,
+    436
+   ],
+   "diem_anh": 4
+  },
+  {
+   "khung_bao": [
+    2026,
+    439,
+    2047,
+    462
+   ],
+   "diem_anh": 53
+  },
+  {
+   "khung_bao": [
+    2107,
+    458,
+    2134,
+    483
+   ],
+   "diem_anh": 73
+  },
+  {
+   "khung_bao": [
+    2126,
+    499,
+    2152,
+    523
+   ],
+   "diem_anh": 68
+  }
+ ],
+ "loi": [],
+ "canh_bao": [
+  "Mảnh 75 điểm ảnh ở [1986, 377, 2011, 431] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 78 điểm ảnh ở [2082, 412, 2109, 437] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 72 điểm ảnh ở [2007, 417, 2034, 452] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 53 điểm ảnh ở [2026, 439, 2047, 462] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 73 điểm ảnh ở [2107, 458, 2134, 483] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 68 điểm ảnh ở [2126, 499, 2152, 523] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Hàng 1 khung 1 cao 346 (trung vị 207) — lệch cỡ >15%",
+  "Hàng 1 khung 2 cao 289 (trung vị 207) — lệch cỡ >15%",
+  "Hàng 1 khung 5 cao 158 (trung vị 207) — lệch cỡ >15%",
+  "Hàng 1 khung 6 chỉ 15637 điểm ảnh (trung vị 46261) — có thể bị tách mất mảnh",
+  "Hàng 1 khung 6 cao 175 (trung vị 207) — lệch cỡ >15%"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "die",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      17,
+      207,
+      340,
+      553
+     ],
+     "chan": [
+      139.0,
+      553
+     ],
+     "rong": 323,
+     "cao": 346,
+     "diem_anh": 59336,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      362,
+      264,
+      701,
+      553
+     ],
+     "chan": [
+      531.0,
+      553
+     ],
+     "rong": 339,
+     "cao": 289,
+     "diem_anh": 53425,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      701,
+      321,
+      1069,
+      553
+     ],
+     "chan": [
+      862.0,
+      553
+     ],
+     "rong": 368,
+     "cao": 232,
+     "diem_anh": 50210,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1069,
+      371,
+      1430,
+      553
+     ],
+     "chan": [
+      1250.0,
+      553
+     ],
+     "rong": 361,
+     "cao": 182,
+     "diem_anh": 42313,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1447,
+      396,
+      1796,
+      554
+     ],
+     "chan": [
+      1621.0,
+      554
+     ],
+     "rong": 349,
+     "cao": 158,
+     "diem_anh": 31886,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1824,
+      378,
+      2156,
+      553
+     ],
+     "chan": [
+      1989.5,
+      553
+     ],
+     "rong": 332,
+     "cao": 175,
+     "diem_anh": 15637,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "ít điểm ảnh bất thường",
+      "cao bất thường"
+     ]
+    }
+   ]
+  }
+ ]
+}

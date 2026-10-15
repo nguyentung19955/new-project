@@ -1,0 +1,137 @@
+{
+ "anh": "hoaBaoTu-4-danh-sach.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 6,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 27,
+  "vien_khu": 8078,
+  "nga_mau_nen_trong_hinh": 13236
+ },
+ "manh_bo": [],
+ "loi": [],
+ "canh_bao": [],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "atk",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      12,
+      210,
+      299,
+      559
+     ],
+     "chan": [
+      144.0,
+      559
+     ],
+     "rong": 287,
+     "cao": 349,
+     "diem_anh": 55953,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      327,
+      181,
+      646,
+      559
+     ],
+     "chan": [
+      459.5,
+      559
+     ],
+     "rong": 319,
+     "cao": 378,
+     "diem_anh": 53263,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      658,
+      180,
+      1085,
+      559
+     ],
+     "chan": [
+      789.5,
+      559
+     ],
+     "rong": 427,
+     "cao": 379,
+     "diem_anh": 55230,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1016,
+      188,
+      1464,
+      559
+     ],
+     "chan": [
+      1147.0,
+      559
+     ],
+     "rong": 448,
+     "cao": 371,
+     "diem_anh": 58088,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1545,
+      186,
+      1868,
+      559
+     ],
+     "chan": [
+      1677.0,
+      559
+     ],
+     "rong": 323,
+     "cao": 373,
+     "diem_anh": 51488,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1869,
+      167,
+      2160,
+      559
+     ],
+     "chan": [
+      2000.5,
+      559
+     ],
+     "rong": 291,
+     "cao": 392,
+     "diem_anh": 54967,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}
