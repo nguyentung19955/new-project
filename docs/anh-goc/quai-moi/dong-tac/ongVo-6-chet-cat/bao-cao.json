@@ -1,0 +1,823 @@
+{
+ "anh": "ongVo-6-chet.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 6,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 486,
+  "vien_khu": 12058,
+  "nga_mau_nen_trong_hinh": 4785
+ },
+ "manh_bo": [
+  {
+   "khung_bao": [
+    1561,
+    249,
+    1576,
+    265
+   ],
+   "diem_anh": 12
+  },
+  {
+   "khung_bao": [
+    1926,
+    249,
+    1939,
+    264
+   ],
+   "diem_anh": 3
+  },
+  {
+   "khung_bao": [
+    1329,
+    266,
+    1353,
+    335
+   ],
+   "diem_anh": 77
+  },
+  {
+   "khung_bao": [
+    1617,
+    271,
+    1633,
+    287
+   ],
+   "diem_anh": 13
+  },
+  {
+   "khung_bao": [
+    1519,
+    273,
+    1533,
+    287
+   ],
+   "diem_anh": 4
+  },
+  {
+   "khung_bao": [
+    1903,
+    275,
+    1917,
+    290
+   ],
+   "diem_anh": 6
+  },
+  {
+   "khung_bao": [
+    1538,
+    276,
+    1553,
+    291
+   ],
+   "diem_anh": 5
+  },
+  {
+   "khung_bao": [
+    1157,
+    279,
+    1170,
+    334
+   ],
+   "diem_anh": 43
+  },
+  {
+   "khung_bao": [
+    1511,
+    286,
+    1526,
+    302
+   ],
+   "diem_anh": 10
+  },
+  {
+   "khung_bao": [
+    1535,
+    288,
+    1570,
+    325
+   ],
+   "diem_anh": 32
+  },
+  {
+   "khung_bao": [
+    1871,
+    288,
+    1884,
+    301
+   ],
+   "diem_anh": 1
+  },
+  {
+   "khung_bao": [
+    1902,
+    290,
+    1934,
+    327
+   ],
+   "diem_anh": 23
+  },
+  {
+   "khung_bao": [
+    1925,
+    290,
+    1938,
+    304
+   ],
+   "diem_anh": 2
+  },
+  {
+   "khung_bao": [
+    1972,
+    292,
+    1985,
+    305
+   ],
+   "diem_anh": 1
+  },
+  {
+   "khung_bao": [
+    1604,
+    293,
+    1617,
+    306
+   ],
+   "diem_anh": 1
+  },
+  {
+   "khung_bao": [
+    1704,
+    304,
+    1720,
+    335
+   ],
+   "diem_anh": 10
+  },
+  {
+   "khung_bao": [
+    1684,
+    308,
+    1699,
+    324
+   ],
+   "diem_anh": 12
+  },
+  {
+   "khung_bao": [
+    411,
+    316,
+    425,
+    332
+   ],
+   "diem_anh": 4
+  },
+  {
+   "khung_bao": [
+    1617,
+    320,
+    1631,
+    336
+   ],
+   "diem_anh": 8
+  },
+  {
+   "khung_bao": [
+    2099,
+    327,
+    2113,
+    342
+   ],
+   "diem_anh": 6
+  },
+  {
+   "khung_bao": [
+    1952,
+    328,
+    1972,
+    354
+   ],
+   "diem_anh": 16
+  },
+  {
+   "khung_bao": [
+    1537,
+    329,
+    1551,
+    343
+   ],
+   "diem_anh": 2
+  },
+  {
+   "khung_bao": [
+    1391,
+    330,
+    1404,
+    368
+   ],
+   "diem_anh": 16
+  },
+  {
+   "khung_bao": [
+    1526,
+    332,
+    1539,
+    345
+   ],
+   "diem_anh": 1
+  },
+  {
+   "khung_bao": [
+    1974,
+    332,
+    1987,
+    345
+   ],
+   "diem_anh": 1
+  },
+  {
+   "khung_bao": [
+    1750,
+    335,
+    1765,
+    350
+   ],
+   "diem_anh": 6
+  },
+  {
+   "khung_bao": [
+    1774,
+    337,
+    1788,
+    375
+   ],
+   "diem_anh": 22
+  },
+  {
+   "khung_bao": [
+    1930,
+    338,
+    1946,
+    353
+   ],
+   "diem_anh": 9
+  },
+  {
+   "khung_bao": [
+    2108,
+    338,
+    2121,
+    352
+   ],
+   "diem_anh": 2
+  },
+  {
+   "khung_bao": [
+    1904,
+    341,
+    1919,
+    355
+   ],
+   "diem_anh": 3
+  },
+  {
+   "khung_bao": [
+    2141,
+    342,
+    2156,
+    358
+   ],
+   "diem_anh": 7
+  },
+  {
+   "khung_bao": [
+    1792,
+    343,
+    1807,
+    359
+   ],
+   "diem_anh": 10
+  },
+  {
+   "khung_bao": [
+    1883,
+    352,
+    1907,
+    367
+   ],
+   "diem_anh": 2
+  },
+  {
+   "khung_bao": [
+    1680,
+    356,
+    1694,
+    369
+   ],
+   "diem_anh": 2
+  },
+  {
+   "khung_bao": [
+    1758,
+    357,
+    1772,
+    371
+   ],
+   "diem_anh": 3
+  },
+  {
+   "khung_bao": [
+    2120,
+    358,
+    2134,
+    372
+   ],
+   "diem_anh": 3
+  },
+  {
+   "khung_bao": [
+    1925,
+    359,
+    1938,
+    373
+   ],
+   "diem_anh": 2
+  },
+  {
+   "khung_bao": [
+    1503,
+    360,
+    1517,
+    375
+   ],
+   "diem_anh": 5
+  },
+  {
+   "khung_bao": [
+    2059,
+    368,
+    2092,
+    391
+   ],
+   "diem_anh": 11
+  },
+  {
+   "khung_bao": [
+    1869,
+    374,
+    1889,
+    392
+   ],
+   "diem_anh": 7
+  },
+  {
+   "khung_bao": [
+    2037,
+    376,
+    2051,
+    390
+   ],
+   "diem_anh": 4
+  },
+  {
+   "khung_bao": [
+    1981,
+    378,
+    1994,
+    391
+   ],
+   "diem_anh": 1
+  },
+  {
+   "khung_bao": [
+    1791,
+    381,
+    1816,
+    434
+   ],
+   "diem_anh": 37
+  },
+  {
+   "khung_bao": [
+    1896,
+    383,
+    1911,
+    398
+   ],
+   "diem_anh": 6
+  },
+  {
+   "khung_bao": [
+    914,
+    389,
+    983,
+    413
+   ],
+   "diem_anh": 100
+  },
+  {
+   "khung_bao": [
+    2040,
+    390,
+    2053,
+    403
+   ],
+   "diem_anh": 1
+  },
+  {
+   "khung_bao": [
+    1621,
+    414,
+    1636,
+    429
+   ],
+   "diem_anh": 7
+  },
+  {
+   "khung_bao": [
+    2010,
+    414,
+    2023,
+    427
+   ],
+   "diem_anh": 1
+  },
+  {
+   "khung_bao": [
+    2127,
+    418,
+    2153,
+    439
+   ],
+   "diem_anh": 20
+  },
+  {
+   "khung_bao": [
+    1996,
+    420,
+    2015,
+    442
+   ],
+   "diem_anh": 5
+  },
+  {
+   "khung_bao": [
+    2020,
+    422,
+    2033,
+    435
+   ],
+   "diem_anh": 1
+  },
+  {
+   "khung_bao": [
+    1490,
+    423,
+    1505,
+    439
+   ],
+   "diem_anh": 9
+  },
+  {
+   "khung_bao": [
+    1943,
+    424,
+    1957,
+    438
+   ],
+   "diem_anh": 4
+  },
+  {
+   "khung_bao": [
+    1504,
+    441,
+    1521,
+    457
+   ],
+   "diem_anh": 13
+  },
+  {
+   "khung_bao": [
+    1540,
+    441,
+    1554,
+    455
+   ],
+   "diem_anh": 2
+  },
+  {
+   "khung_bao": [
+    1950,
+    441,
+    1969,
+    465
+   ],
+   "diem_anh": 14
+  },
+  {
+   "khung_bao": [
+    1648,
+    450,
+    1663,
+    465
+   ],
+   "diem_anh": 6
+  },
+  {
+   "khung_bao": [
+    1988,
+    451,
+    2016,
+    474
+   ],
+   "diem_anh": 14
+  },
+  {
+   "khung_bao": [
+    1935,
+    455,
+    1958,
+    472
+   ],
+   "diem_anh": 13
+  },
+  {
+   "khung_bao": [
+    1492,
+    456,
+    1505,
+    470
+   ],
+   "diem_anh": 2
+  },
+  {
+   "khung_bao": [
+    1902,
+    463,
+    1930,
+    479
+   ],
+   "diem_anh": 20
+  },
+  {
+   "khung_bao": [
+    1507,
+    470,
+    1520,
+    483
+   ],
+   "diem_anh": 1
+  },
+  {
+   "khung_bao": [
+    1678,
+    479,
+    1691,
+    492
+   ],
+   "diem_anh": 1
+  },
+  {
+   "khung_bao": [
+    1686,
+    487,
+    1700,
+    501
+   ],
+   "diem_anh": 4
+  },
+  {
+   "khung_bao": [
+    2027,
+    487,
+    2043,
+    503
+   ],
+   "diem_anh": 14
+  },
+  {
+   "khung_bao": [
+    1927,
+    489,
+    1940,
+    502
+   ],
+   "diem_anh": 1
+  },
+  {
+   "khung_bao": [
+    1954,
+    492,
+    1967,
+    506
+   ],
+   "diem_anh": 2
+  },
+  {
+   "khung_bao": [
+    1877,
+    513,
+    1893,
+    527
+   ],
+   "diem_anh": 5
+  },
+  {
+   "khung_bao": [
+    1923,
+    513,
+    1938,
+    529
+   ],
+   "diem_anh": 6
+  },
+  {
+   "khung_bao": [
+    1895,
+    515,
+    1911,
+    530
+   ],
+   "diem_anh": 9
+  },
+  {
+   "khung_bao": [
+    1996,
+    515,
+    2011,
+    531
+   ],
+   "diem_anh": 6
+  },
+  {
+   "khung_bao": [
+    1915,
+    525,
+    1930,
+    540
+   ],
+   "diem_anh": 7
+  },
+  {
+   "khung_bao": [
+    1859,
+    526,
+    1874,
+    541
+   ],
+   "diem_anh": 7
+  },
+  {
+   "khung_bao": [
+    2017,
+    526,
+    2032,
+    541
+   ],
+   "diem_anh": 8
+  },
+  {
+   "khung_bao": [
+    1967,
+    527,
+    1982,
+    541
+   ],
+   "diem_anh": 5
+  }
+ ],
+ "loi": [],
+ "canh_bao": [
+  "Mảnh 77 điểm ảnh ở [1329, 266, 1353, 335] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 43 điểm ảnh ở [1157, 279, 1170, 334] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 100 điểm ảnh ở [914, 389, 983, 413] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Hàng 1 khung 5 chỉ 4656 điểm ảnh (trung vị 26823) — có thể bị tách mất mảnh",
+  "Hàng 1 khung 6 chỉ 279 điểm ảnh (trung vị 26823) — có thể bị tách mất mảnh"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "die",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      31,
+      248,
+      351,
+      502
+     ],
+     "chan": [
+      107.5,
+      502
+     ],
+     "rong": 320,
+     "cao": 254,
+     "diem_anh": 28877,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      396,
+      212,
+      697,
+      508
+     ],
+     "chan": [
+      491.0,
+      508
+     ],
+     "rong": 301,
+     "cao": 296,
+     "diem_anh": 33374,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      761,
+      194,
+      1076,
+      491
+     ],
+     "chan": [
+      840.5,
+      491
+     ],
+     "rong": 315,
+     "cao": 297,
+     "diem_anh": 30695,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1124,
+      272,
+      1433,
+      519
+     ],
+     "chan": [
+      1209.0,
+      519
+     ],
+     "rong": 309,
+     "cao": 247,
+     "diem_anh": 24770,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1124,
+      272,
+      1433,
+      519
+     ],
+     "chan": [
+      1209.0,
+      519
+     ],
+     "rong": 309,
+     "cao": 247,
+     "diem_anh": 24770,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "ban mo dan cua khung 4"
+     ]
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1124,
+      272,
+      1433,
+      519
+     ],
+     "chan": [
+      1209.0,
+      519
+     ],
+     "rong": 309,
+     "cao": 247,
+     "diem_anh": 24770,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "ban mo dan cua khung 4"
+     ]
+    }
+   ]
+  }
+ ]
+}
