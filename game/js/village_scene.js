@@ -542,6 +542,7 @@
   // Không mở chức năng gì, không đổi số liệu.
   // VÙNG 4 (G.VUNG4): khi có cảnh Bé Sen bị bắt thì ẩn bé cho tới khi hạ Thuồng Luồng. Phiên 2C vùng 4 nối bằng cách gán
   //   VS.senVang = () => <đã chiếu mở vùng 4 mà chưa hạ Thuồng Luồng>; trả true là bé vắng mặt (không vẽ, không chạm, không chắn đường).
+  //   (16/10 phiên 2C: đã gán ở js/truyen.js TR.senVang; sau khi hạ Thuồng Luồng bé nói 4 câu SEN_LOI_VE.)
   const SEN = { x: 670, y: 160, face: -1 }; // đầu cầu bến (cầu x 636–677), quay về phía bố; Cu Tí từ ải về lên bờ ở (662, 160) vẫn không vướng
   const SEN_LOI = [
     'Bố tớ chèo đò giỏi nhất làng đấy!',
@@ -549,9 +550,17 @@
     'Cu Tí đi ải nhớ cẩn thận nha, về kể tớ nghe!',
     'Đêm nay sông đục lạ... Bố dặn tớ đừng thò chân xuống nước.',
   ];
+  // Vùng 4 (bước 3 phiên 2C, G.VUNG4): sau khi Cu Tí hạ Thuồng Luồng cứu bé về, bé nói mấy câu này (thay 4 câu trên)
+  const SEN_LOI_VE = [
+    'Cảm ơn Cu Tí đã cứu tớ! Bố bảo cậu là khách quen của đò nhà tớ.',
+    'Trong hang dưới thác tối om, tớ đếm giọt nước cho đỡ sợ.',
+    'Từ giờ tớ giặt áo ở chỗ nước nông thôi, không ra xa nữa.',
+    'Nghe nói trên Núi Sét sấm nổ suốt đêm... Cu Tí đi thì mang áo mưa nha!',
+  ];
+  const senLoi = () => (G.VUNG4 && G.save && G.save.stars && G.save.stars['3-4'] ? SEN_LOI_VE : SEN_LOI);
   const senSp = () => (G.spriteCustom && G.spriteCustom.get ? G.spriteCustom.get('nl-sen') : null);
   const senO = () => { const sp = senSp(); return !!(sp && sp.img && sp.dt.ngoi) && !(VS.senVang && VS.senVang()); };
-  VS.SEN = SEN; VS.senO = senO;
+  VS.SEN = SEN; VS.senO = senO; VS.senLoi = senLoi; VS.SEN_LOI_VE = SEN_LOI_VE;
   function blocked(x, y) {
     if (x < 8 || y < 62 || y > 250) return true;
     const onDock = x >= B.cau[0] - 2 && x <= B.cau[0] + B.cau[2] - 5 && y >= B.cau[1] - 5 && y <= B.cau[1] + 9;
@@ -768,8 +777,9 @@
       else { say(G.t('{0} còn bị {1} bắt. Hạ {1} để cứu bạn ấy.', Hh.name, D.boss), 3.5); G.sfx && G.sfx('warn'); }
     } else if (g.kind === 'sen') { // Bé Sen: lần lượt từng câu, không mở bảng nào
       S.face = SEN.x >= S.x ? 1 : -1;
-      S.senI = ((S.senI | 0) + 1) % SEN_LOI.length;
-      S.bubble = { at: [SEN.x, SEN.y - 26], s: SEN_LOI[S.senI], t: 3.2 }; G.sfx && G.sfx('pick', 0.6);
+      const dsLoi = senLoi();
+      S.senI = ((S.senI | 0) + 1) % dsLoi.length;
+      S.bubble = { at: [SEN.x, SEN.y - 26], s: dsLoi[S.senI], t: 3.2 }; G.sfx && G.sfx('pick', 0.6);
     } else if (g.kind === 'weapon') {
       G.sfx && G.sfx('ui');
       if (VS.onWeapon) VS.onWeapon(g.id); else { const w = G.weaponById(g.id); if (w) say(G.wName ? G.wName(w) : 'Vũ khí sống'); }

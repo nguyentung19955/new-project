@@ -1,6 +1,7 @@
 // BƯỚC 3 — VÙNG 4 SÔNG SÂU, PHIÊN 1 (docs/ke-hoach/buoc-3/KE-HOACH.md mục 5 hàng "1"): khung vùng 4 chạy được bằng HÌNH TẠM.
 // Chỉ chạy khi G.VUNG4 (tắt: ?vung4=0 → tệp này không làm gì, game y hệt 3 vùng).
-//  1. Trang 2 của bản đồ Chú Lái Đò (VS.MAP2 toạ độ 5 ải, VS.mapArt2 tranh vẽ bằng code) — js/village.js đọc. Phiên 2C thay bằng ảnh bản đồ mới (Q7 = A).
+//  1. Trang 2 của bản đồ Chú Lái Đò (VS.MAP2 toạ độ 5 ải, VS.mapArt2 tranh vẽ bằng code) — js/village.js đọc. Phiên 2C: ảnh F1 chưa có nên giữ
+//     tranh code; có tệp gd-ban-do-song thì tự dùng ảnh (Q7 = A).
 //  2. Quái / trùm vùng 4 đang mượn hình Hang biển (G.MOB_ART, G.VUNG4_MUON trong js/data.js): lúc vẽ trận ở vùng 4 thì nhuộm hình quái xanh rêu
 //     (ctx.filter; trình duyệt không hỗ trợ thì giữ màu gốc) và phủ một lớp nước đục lên nền phòng, để người chơi thấy đây là vùng khác.
 //     Phiên 2A / 2B / 3A / 3B có ảnh thật thì đặt G.VUNG4_MUON = null (js/data.js) → hết nhuộm, hết phủ.
@@ -23,13 +24,21 @@
       lang: [40, 252],
       doKho: [256, 7],
     };
-    const cache = {};
+    // Phiên 2C: ảnh bản đồ F1 chưa có → giữ tranh code. Khi có ảnh, cắt thành tệp gd-ban-do-song (kiểu "giao-dien", 480×270 như gd-ban-do-vung)
+    // thì tự dán ảnh thay tranh code (vẫn kẻ viền, vẫn nhân màu đêm); toạ độ 5 ải ở MAP2 phải sửa theo ảnh mới.
+    const cache = { g: null };
+    const gdAnh = () => { const s = G.spriteCustom; return s && s.gdSan ? s.gdSan('gd-ban-do-song') : null; };
     VSx.mapArt2 = function (night) {
-      const id = night ? 'n' : 'd';
+      const id = night ? 'n' : 'd', g = gdAnh();
+      if (g !== cache.g) { cache.g = g; cache.n = cache.d = null; }
       if (cache[id]) return cache[id];
       const cv = document.createElement('canvas'); cv.width = 480; cv.height = 270;
       const c = cv.getContext('2d');
-      tranhSong(c);
+      if (g && g.img) {
+        c.fillStyle = '#e6d8b0'; c.fillRect(0, 0, 480, 270);
+        c.imageSmoothingEnabled = g.img.width > 480; c.drawImage(g.img, 0, 0, 480, 270); c.imageSmoothingEnabled = false;
+        for (const k of [0, 1, 2]) { c.strokeStyle = ['#6a4a30', '#a88a58', '#6a4a30'][k]; c.lineWidth = 1; c.strokeRect(k * 2 + 0.5, k * 2 + 0.5, 479 - k * 4, 269 - k * 4); }
+      } else tranhSong(c);
       if (night) { c.globalCompositeOperation = 'multiply'; c.fillStyle = '#8c88c4'; c.fillRect(0, 0, 480, 270); c.globalCompositeOperation = 'source-over'; }
       return (cache[id] = cv);
     };

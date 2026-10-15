@@ -4,6 +4,7 @@
 //   Rừng già      điệu Bắc (La), 96 nhịp: trống đất, trống con, đàn tranh trầm, sáo / đàn bầu, tiếng côn trùng lách tách.
 //   Hang biển     điệu Oán (Rê), 84 nhịp: đàn tranh rải đều như sóng, đàn bầu hát, trống thưa, tiếng sóng dâng rút.
 //   Lâu đài cổ    điệu Oán (Mi), 108 nhịp: trống chầu, phách, chiêng mở mỗi vòng, sáo / đàn bầu.
+//   Sông sâu      điệu Oán (Sol), 76 nhịp: đàn tranh rải như dòng chảy, đàn bầu trầm buồn / sáo, trống mái chèo thưa, nước vỗ, ếch nhái (vùng 4).
 //   Trùm          trống dồn 128 nhịp (mỗi pha nhanh thêm 7%), chiêng, đàn tranh dồn bè trầm; giọng theo vùng.
 // Đổi cảnh thì bài cũ nhỏ dần, bài mới to dần (khoảng 1 giây). Chỉ phát sau lần chạm đầu tiên (luật iOS, G.audioStart ở js/engine.js).
 // Lên lịch nốt trước 0,35 giây bằng một bộ đếm 120 ms (không chạy theo khung hình): rất nhẹ máy. Ẩn trang / tắt âm thanh / nhạc 0 thì dừng.
@@ -179,6 +180,16 @@
     [LD_TRONG, LD_PHACH, LD_CHIENG, LD_BASS, { n: 'sao', v: SAO * 0.9, p: '5 - 6 - 7 - 6 5 | 4 - - - 3 - 4 - | 5 - 7 - 8 - 7 6 | 5 - - - - - . .' }],
     [LD_TRONG, LD_PHACH, LD_CHIENG, LD_BASS, { n: 'bau', v: BAU, p: '7 - - - 8 - 7 6 | 5 - - - - - . . | 6 - 5 - 4 - 3 - | 5 - - - - - . .' }],
   ] });
+  // Sông sâu (vùng 4, bước 3 phiên 2C): điệu Oán (Sol), 76 nhịp, chậm và tối như nước đục: đàn tranh rải lên xuống như dòng chảy,
+  // đàn bầu hát giọng trầm buồn (Bé Sen bị bắt), sáo trả lời ở vòng sau, trống thưa như mái chèo khua, tiếng nước vỗ, ếch nhái lách tách.
+  const SONG_TRANH = { n: 'tranh', v: TRANH * 0.8, o: -1, p: '0 . 2 3 . 2 0 . | -1 . 1 2 . 1 -1 . | -2 . 0 2 . 3 2 . | 0 . 2 3 4 3 2 .' };
+  const SONG_CHEO = { n: 'trong', v: TRONG * 0.5, p: 'x . . . . . x . | . . . . . . . . | x . . . . . x . | . . . . x . . .' };
+  const SONG_NUOC = { n: 'kk', v: 0.035, p: '. . . . w . . . | . . . . . . . . | . . . . . . . . | . . . . . . . .' };
+  const SONG_EECH = { n: 'kk', v: 0.01, p: '. c . . . . . . | . . . . . c . . | . . . c . . . . | . . . . . . . c' };
+  B.vung3 = bai({ bpm: 76, root: 196, thang: OAN, vong: [
+    [SONG_TRANH, SONG_CHEO, SONG_NUOC, SONG_EECH, { n: 'bau', v: BAU, p: '4 - - - 3 - 2 - | 3 - - - - - . . | 2 - 1 - 0 - 1 2 | 1 - - - - - . .' }],
+    [SONG_TRANH, SONG_CHEO, SONG_NUOC, SONG_EECH, { n: 'sao', v: SAO * 0.85, p: '5 - - 6 5 - 4 - | 3 - - - 4 - - . | 5 - 4 - 3 - 2 - | 0 - - - - - . .' }],
+  ] });
   // Nhạc trùm: trống dồn. Giọng (gốc, thang) theo vùng; quãng tám bè trầm chọn cho vừa loa điện thoại.
   function trum(root, thang, ob) {
     const T1 = { n: 'trong', v: TRONG, p: 'X . x . X . x x | X . x . X x r r' };
@@ -191,6 +202,7 @@
     ] });
   }
   B.trum0 = trum(220, BAC, 0); B.trum1 = trum(293.66, OAN, -1); B.trum2 = trum(164.81, OAN, 0);
+  B.trum3 = trum(196, OAN, -1); // Thuồng Luồng / Cá Trê: giọng Sol điệu Oán như bài Sông sâu
   N.BAI = B;
 
   // ---------- phát ----------
