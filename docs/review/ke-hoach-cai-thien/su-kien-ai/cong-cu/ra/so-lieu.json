@@ -1,0 +1,134 @@
+{
+ "N": 100,
+ "vung": [
+  {
+   "vung": "Rừng già",
+   "phongPhu": {
+    "curse": 26,
+    "challenge": 35,
+    "merchant": 39
+   },
+   "ruongLuaChonGiaTri": {
+    "lk": 36,
+    "ore": 60,
+    "ghiChu": "quy ra vàng theo U.VAL; bùa hệ là thưởng tạm 60 giây"
+   },
+   "traiNghiemKhacNhau": 21,
+   "traiNghiemToiDa": 21,
+   "giongHetLuotTruoc": 0.06,
+   "lapLienPhongPhu": 0.34,
+   "chuoiDaiNhatKhongGap": {
+    "merchant": 6,
+    "challenge": 6,
+    "curse": 12
+   },
+   "batNgoMoiLuot": 3.74,
+   "batNgoNguoiVoi": 1.87,
+   "nguoiVoiBoPhongPhu": 0.8,
+   "nguoiVoiBoRuong": 0.89,
+   "roiNgauNhien": {
+    "quaiRoiVang": 30,
+    "tinhAnhRoiVang": 16,
+    "quaAiThuong": 39,
+    "tinhAnhRoi": 35,
+    "trumNhoRoiVang": 37,
+    "quangThem": 17
+   },
+   "nguyen": {
+    "soLuot": 26,
+    "viTriTB": 0.48,
+    "lkThemTB": 32.44,
+    "lkThemMin": "20.0",
+    "lkThemMax": "54.2",
+    "lkCaLuotTB": 56.79
+   },
+   "quaiMoiLuot": 29.86
+  },
+  {
+   "vung": "Hang biển",
+   "phongPhu": {
+    "challenge": 34,
+    "curse": 33,
+    "merchant": 33
+   },
+   "ruongLuaChonGiaTri": {
+    "lk": 48,
+    "ore": 96,
+    "ghiChu": "quy ra vàng theo U.VAL; bùa hệ là thưởng tạm 60 giây"
+   },
+   "traiNghiemKhacNhau": 21,
+   "traiNghiemToiDa": 21,
+   "giongHetLuotTruoc": 0.05,
+   "lapLienPhongPhu": 0.35,
+   "chuoiDaiNhatKhongGap": {
+    "merchant": 11,
+    "challenge": 7,
+    "curse": 9
+   },
+   "batNgoMoiLuot": 3.76,
+   "batNgoNguoiVoi": 1.91,
+   "nguoiVoiBoPhongPhu": 0.82,
+   "nguoiVoiBoRuong": 0.86,
+   "roiNgauNhien": {
+    "quaiRoiVang": 45,
+    "quaAiThuong": 45,
+    "quangThem": 11,
+    "trumNhoRoiVang": 32,
+    "tinhAnhRoi": 26,
+    "tinhAnhRoiVang": 17
+   },
+   "nguyen": {
+    "soLuot": 33,
+    "viTriTB": 0.45,
+    "lkThemTB": 29.43,
+    "lkThemMin": "20.0",
+    "lkThemMax": "53.6",
+    "lkCaLuotTB": 59.37
+   },
+   "quaiMoiLuot": 33.49
+  },
+  {
+   "vung": "Lâu đài cổ",
+   "phongPhu": {
+    "merchant": 34,
+    "curse": 33,
+    "challenge": 33
+   },
+   "ruongLuaChonGiaTri": {
+    "lk": 64,
+    "ore": 132,
+    "ghiChu": "quy ra vàng theo U.VAL; bùa hệ là thưởng tạm 60 giây"
+   },
+   "traiNghiemKhacNhau": 21,
+   "traiNghiemToiDa": 21,
+   "giongHetLuotTruoc": 0.07,
+   "lapLienPhongPhu": 0.33,
+   "chuoiDaiNhatKhongGap": {
+    "merchant": 9,
+    "challenge": 17,
+    "curse": 8
+   },
+   "batNgoMoiLuot": 3.76,
+   "batNgoNguoiVoi": 1.99,
+   "nguoiVoiBoPhongPhu": 0.9,
+   "nguoiVoiBoRuong": 0.91,
+   "roiNgauNhien": {
+    "tinhAnhRoi": 42,
+    "quaAiThuong": 37,
+    "quaiRoiVang": 37,
+    "tinhAnhRoiVang": 12,
+    "trumNhoRoiVang": 32,
+    "quangThem": 16
+   },
+   "nguyen": {
+    "soLuot": 33,
+    "viTriTB": 0.5,
+    "lkThemTB": 28.08,
+    "lkThemMin": "20.0",
+    "lkThemMax": "54.1",
+    "lkCaLuotTB": 60.99
+   },
+   "quaiMoiLuot": 38.98
+  }
+ ]
+}
