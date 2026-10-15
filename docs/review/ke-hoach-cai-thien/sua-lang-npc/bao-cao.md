@@ -38,7 +38,7 @@ Ghi chú: nút việc ở lò rèn có hai dòng (tên + dòng phụ), nên khi 
 
 ## Commit
 
-- `f93b7d72`: sửa cả 3 lỗi, kèm ảnh soát (khi rebase đã gộp `vung_mat` cùng các khoá mới `muot_cua`, `muot`, `bo_va` của phiên soát mượt trong build.py).
+- `96b86a39`: sửa cả 3 lỗi, kèm ảnh soát (khi rebase đã gộp `vung_mat` cùng các khoá mới `muot_cua`, `muot`, `bo_va` của phiên soát mượt trong build.py).
 - Commit kế tiếp: báo cáo này.
 
 ## Có cần gen lại ảnh không?
