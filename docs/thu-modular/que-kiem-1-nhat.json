@@ -19,7 +19,7 @@
   128,
   248
  ],
- "he_toa_do": "khop_px: điểm ảnh trong ô (ô i bắt đầu ở x = (i-1)×256 trên tấm); cùng tỉ lệ ảnh gốc. khop_game: khung 48×48, chân [24,45]. Góc: 0° sang phải, 90° xuống.",
+ "he_toa_do": "GỐC (0,0) = góc TRÊN-TRÁI của khung (ô). khop_px/neo_do: (x, y) điểm ảnh trong ô 256×256 (ô i nằm ở x = (i-1)×256 trên tấm png); cùng tỉ lệ ảnh gốc. khop_game: khung 48×48, chân [24,45]. Góc: 0° sang phải, 90° xuống.",
  "khoa_goc": {
   "than": "hong→co",
   "dau": "co→dinh_dau",
@@ -36,9 +36,117 @@
   "ct": "goi_trai→co_chan_trai",
   "bct": "co_chan_trai→mui_chan_trai"
  },
+ "cach_gan_do": "Ảnh đồ vẽ ở dáng đứng → đặt neo của đồ trùng neo khung (vd áo: co), rồi xoay quanh neo một góc = xoay_so_voi_dung (độ, dương = theo chiều kim đồng hồ trên màn hình).",
+ "thu_tu_lop": {
+  "ao_choang_khan": 5,
+  "non_sau": 8,
+  "tay_trai (xa)": "10–12",
+  "chan_trai (xa)": "20–22",
+  "than": 30,
+  "ao / giap": 35,
+  "chan_phai (gần)": "40–42",
+  "quan": 45,
+  "dau": 50,
+  "mat_na": 55,
+  "tay_phai (gần)": "70–72",
+  "vu_khi": 75,
+  "non_truoc / mu": 85
+ },
  "khung": [
   {
    "khung": 1,
+   "neo_do": {
+    "ao": {
+     "bam": "than",
+     "neo": "co",
+     "co": [
+      132.4,
+      134.1
+     ],
+     "eo": [
+      126.0,
+      170.8
+     ],
+     "vai_phai": [
+      102.9,
+      141.2
+     ],
+     "vai_trai": [
+      150.8,
+      144.3
+     ],
+     "goc_do": -84,
+     "xoay_so_voi_dung": 3.8
+    },
+    "quan": {
+     "bam": "than+dui",
+     "neo": "hong",
+     "eo": [
+      126.0,
+      170.8
+     ],
+     "hong": [
+      127,
+      185.9
+     ],
+     "hong_phai": [
+      114.0,
+      186.9
+     ],
+     "hong_trai": [
+      140.0,
+      186.9
+     ],
+     "goi_phai": [
+      119.2,
+      216.5
+     ],
+     "goi_trai": [
+      128.7,
+      214.7
+     ],
+     "goc_dui_phai": 80,
+     "goc_dui_trai": 112
+    },
+    "toc_mu": {
+     "bam": "dau",
+     "neo": "co",
+     "co": [
+      132.4,
+      134.1
+     ],
+     "dinh_dau": [
+      127.4,
+      25.1
+     ],
+     "tam_dau": [
+      132.4,
+      81.1
+     ],
+     "goc_do": -92.6,
+     "xoay_so_voi_dung": 0.0
+    },
+    "phu_kien": {
+     "lung": [
+      98.8,
+      142.9
+     ],
+     "tay_cam_phai": [
+      134.7,
+      172.0
+     ],
+     "tay_cam_trai": [
+      155.0,
+      192.4
+     ],
+     "goc_cang_tay_phai": 15,
+     "goc_cang_tay_trai": 70,
+     "eo_treo_tui": [
+      126.0,
+      170.8
+     ]
+    }
+   },
    "khop_px": {
     "hong": [
      127,
@@ -255,6 +363,98 @@
   },
   {
    "khung": 2,
+   "neo_do": {
+    "ao": {
+     "bam": "than",
+     "neo": "co",
+     "co": [
+      118.7,
+      133.8
+     ],
+     "eo": [
+      120.6,
+      171.0
+     ],
+     "vai_phai": [
+      91.5,
+      147.3
+     ],
+     "vai_trai": [
+      138.9,
+      139.7
+     ],
+     "goc_do": -97,
+     "xoay_so_voi_dung": -9.2
+    },
+    "quan": {
+     "bam": "than+dui",
+     "neo": "hong",
+     "eo": [
+      120.6,
+      171.0
+     ],
+     "hong": [
+      125,
+      185.5
+     ],
+     "hong_phai": [
+      112.0,
+      186.5
+     ],
+     "hong_trai": [
+      138.0,
+      186.5
+     ],
+     "goi_phai": [
+      114.1,
+      216.5
+     ],
+     "goi_trai": [
+      127.7,
+      214.7
+     ],
+     "goc_dui_phai": 86,
+     "goc_dui_trai": 110
+    },
+    "toc_mu": {
+     "bam": "dau",
+     "neo": "co",
+     "co": [
+      118.7,
+      133.8
+     ],
+     "dinh_dau": [
+      107.3,
+      25.3
+     ],
+     "tam_dau": [
+      115.5,
+      80.9
+     ],
+     "goc_do": -96,
+     "xoay_so_voi_dung": -3.4
+    },
+    "phu_kien": {
+     "lung": [
+      87.8,
+      150.0
+     ],
+     "tay_cam_phai": [
+      70.3,
+      101.6
+     ],
+     "tay_cam_trai": [
+      157.0,
+      183.7
+     ],
+     "goc_cang_tay_phai": -105,
+     "goc_cang_tay_trai": 50,
+     "eo_treo_tui": [
+      120.6,
+      171.0
+     ]
+    }
+   },
    "khop_px": {
     "hong": [
      125,
@@ -471,6 +671,98 @@
   },
   {
    "khung": 3,
+   "neo_do": {
+    "ao": {
+     "bam": "than",
+     "neo": "co",
+     "co": [
+      125.2,
+      134.2
+     ],
+     "eo": [
+      123.9,
+      171.4
+     ],
+     "vai_phai": [
+      96.9,
+      145.3
+     ],
+     "vai_trai": [
+      144.8,
+      141.8
+     ],
+     "goc_do": -92,
+     "xoay_so_voi_dung": -4.2
+    },
+    "quan": {
+     "bam": "than+dui",
+     "neo": "hong",
+     "eo": [
+      123.9,
+      171.4
+     ],
+     "hong": [
+      127,
+      186.2
+     ],
+     "hong_phai": [
+      114.0,
+      187.2
+     ],
+     "hong_trai": [
+      140.0,
+      187.2
+     ],
+     "goi_phai": [
+      120.3,
+      216.6
+     ],
+     "goi_trai": [
+      126.8,
+      214.3
+     ],
+     "goc_dui_phai": 78,
+     "goc_dui_trai": 116
+    },
+    "toc_mu": {
+     "bam": "dau",
+     "neo": "co",
+     "co": [
+      125.2,
+      134.2
+     ],
+     "dinh_dau": [
+      120.2,
+      25.2
+     ],
+     "tam_dau": [
+      125.2,
+      81.2
+     ],
+     "goc_do": -92.6,
+     "xoay_so_voi_dung": 0.0
+    },
+    "phu_kien": {
+     "lung": [
+      93.1,
+      147.6
+     ],
+     "tay_cam_phai": [
+      92.9,
+      96.0
+     ],
+     "tay_cam_trai": [
+      155.0,
+      188.3
+     ],
+     "goc_cang_tay_phai": -80,
+     "goc_cang_tay_trai": 60,
+     "eo_treo_tui": [
+      123.9,
+      171.4
+     ]
+    }
+   },
    "khop_px": {
     "hong": [
      127,
@@ -687,6 +979,98 @@
   },
   {
    "khung": 4,
+   "neo_do": {
+    "ao": {
+     "bam": "than",
+     "neo": "co",
+     "co": [
+      157.3,
+      141.2
+     ],
+     "eo": [
+      144.6,
+      176.2
+     ],
+     "vai_phai": [
+      127.0,
+      143.1
+     ],
+     "vai_trai": [
+      173.6,
+      154.5
+     ],
+     "goc_do": -74,
+     "xoay_so_voi_dung": 13.8
+    },
+    "quan": {
+     "bam": "than+dui",
+     "neo": "hong",
+     "eo": [
+      144.6,
+      176.2
+     ],
+     "hong": [
+      143,
+      191.3
+     ],
+     "hong_phai": [
+      130.0,
+      192.3
+     ],
+     "hong_trai": [
+      156.0,
+      192.3
+     ],
+     "goi_phai": [
+      147.3,
+      216.9
+     ],
+     "goi_trai": [
+      135.9,
+      214.6
+     ],
+     "goc_dui_phai": 55,
+     "goc_dui_trai": 132
+    },
+    "toc_mu": {
+     "bam": "dau",
+     "neo": "co",
+     "co": [
+      157.3,
+      141.2
+     ],
+     "dinh_dau": [
+      165.0,
+      32.4
+     ],
+     "tam_dau": [
+      163.5,
+      88.6
+     ],
+     "goc_do": -86,
+     "xoay_so_voi_dung": 6.6
+    },
+    "phu_kien": {
+     "lung": [
+      122.7,
+      144.0
+     ],
+     "tay_cam_phai": [
+      177.4,
+      136.5
+     ],
+     "tay_cam_trai": [
+      147.5,
+      195.6
+     ],
+     "goc_cang_tay_phai": 0,
+     "goc_cang_tay_trai": 110,
+     "eo_treo_tui": [
+      144.6,
+      176.2
+     ]
+    }
+   },
    "khop_px": {
     "hong": [
      143,
@@ -903,6 +1287,98 @@
   },
   {
    "khung": 5,
+   "neo_do": {
+    "ao": {
+     "bam": "than",
+     "neo": "co",
+     "co": [
+      161.1,
+      141.2
+     ],
+     "eo": [
+      147.2,
+      175.7
+     ],
+     "vai_phai": [
+      130.7,
+      142.0
+     ],
+     "vai_trai": [
+      176.9,
+      155.0
+     ],
+     "goc_do": -72,
+     "xoay_so_voi_dung": 15.8
+    },
+    "quan": {
+     "bam": "than+dui",
+     "neo": "hong",
+     "eo": [
+      147.2,
+      175.7
+     ],
+     "hong": [
+      145,
+      190.7
+     ],
+     "hong_phai": [
+      132.0,
+      191.7
+     ],
+     "hong_trai": [
+      158.0,
+      191.7
+     ],
+     "goi_phai": [
+      148.8,
+      216.6
+     ],
+     "goi_trai": [
+      138.7,
+      214.7
+     ],
+     "goc_dui_phai": 56,
+     "goc_dui_trai": 130
+    },
+    "toc_mu": {
+     "bam": "dau",
+     "neo": "co",
+     "co": [
+      161.1,
+      141.2
+     ],
+     "dinh_dau": [
+      168.7,
+      32.4
+     ],
+     "tam_dau": [
+      167.2,
+      88.6
+     ],
+     "goc_do": -86,
+     "xoay_so_voi_dung": 6.6
+    },
+    "phu_kien": {
+     "lung": [
+      126.3,
+      142.8
+     ],
+     "tay_cam_phai": [
+      155.8,
+      185.7
+     ],
+     "tay_cam_trai": [
+      154.4,
+      198.3
+     ],
+     "goc_cang_tay_phai": 70,
+     "goc_cang_tay_trai": 105,
+     "eo_treo_tui": [
+      147.2,
+      175.7
+     ]
+    }
+   },
    "khop_px": {
     "hong": [
      145,
@@ -1119,6 +1595,98 @@
   },
   {
    "khung": 6,
+   "neo_do": {
+    "ao": {
+     "bam": "than",
+     "neo": "co",
+     "co": [
+      138.4,
+      134.5
+     ],
+     "eo": [
+      132.0,
+      171.1
+     ],
+     "vai_phai": [
+      108.9,
+      141.5
+     ],
+     "vai_trai": [
+      156.8,
+      144.7
+     ],
+     "goc_do": -84,
+     "xoay_so_voi_dung": 3.8
+    },
+    "quan": {
+     "bam": "than+dui",
+     "neo": "hong",
+     "eo": [
+      132.0,
+      171.1
+     ],
+     "hong": [
+      133,
+      186.2
+     ],
+     "hong_phai": [
+      120.0,
+      187.2
+     ],
+     "hong_trai": [
+      146.0,
+      187.2
+     ],
+     "goi_phai": [
+      128.3,
+      216.1
+     ],
+     "goi_trai": [
+      132.8,
+      214.3
+     ],
+     "goc_dui_phai": 74,
+     "goc_dui_trai": 116
+    },
+    "toc_mu": {
+     "bam": "dau",
+     "neo": "co",
+     "co": [
+      138.4,
+      134.5
+     ],
+     "dinh_dau": [
+      133.4,
+      25.5
+     ],
+     "tam_dau": [
+      138.4,
+      81.5
+     ],
+     "goc_do": -92.6,
+     "xoay_so_voi_dung": 0.0
+    },
+    "phu_kien": {
+     "lung": [
+      104.8,
+      143.3
+     ],
+     "tay_cam_phai": [
+      135.9,
+      179.2
+     ],
+     "tay_cam_trai": [
+      156.8,
+      192.9
+     ],
+     "goc_cang_tay_phai": 30,
+     "goc_cang_tay_trai": 75,
+     "eo_treo_tui": [
+      132.0,
+      171.1
+     ]
+    }
+   },
    "khop_px": {
     "hong": [
      133,

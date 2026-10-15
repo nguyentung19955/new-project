@@ -12,7 +12,7 @@
   128,
   248
  ],
- "he_toa_do": "khop_px: điểm ảnh trong ô (ô i bắt đầu ở x = (i-1)×256 trên tấm); cùng tỉ lệ ảnh gốc. khop_game: khung 48×48, chân [24,45]. Góc: 0° sang phải, 90° xuống.",
+ "he_toa_do": "GỐC (0,0) = góc TRÊN-TRÁI của khung (ô). khop_px/neo_do: (x, y) điểm ảnh trong ô 256×256 (ô i nằm ở x = (i-1)×256 trên tấm png); cùng tỉ lệ ảnh gốc. khop_game: khung 48×48, chân [24,45]. Góc: 0° sang phải, 90° xuống.",
  "khoa_goc": {
   "than": "hong→co",
   "dau": "co→dinh_dau",
@@ -29,9 +29,117 @@
   "ct": "goi_trai→co_chan_trai",
   "bct": "co_chan_trai→mui_chan_trai"
  },
+ "cach_gan_do": "Ảnh đồ vẽ ở dáng đứng → đặt neo của đồ trùng neo khung (vd áo: co), rồi xoay quanh neo một góc = xoay_so_voi_dung (độ, dương = theo chiều kim đồng hồ trên màn hình).",
+ "thu_tu_lop": {
+  "ao_choang_khan": 5,
+  "non_sau": 8,
+  "tay_trai (xa)": "10–12",
+  "chan_trai (xa)": "20–22",
+  "than": 30,
+  "ao / giap": 35,
+  "chan_phai (gần)": "40–42",
+  "quan": 45,
+  "dau": 50,
+  "mat_na": 55,
+  "tay_phai (gần)": "70–72",
+  "vu_khi": 75,
+  "non_truoc / mu": 85
+ },
  "khung": [
   {
    "khung": 1,
+   "neo_do": {
+    "ao": {
+     "bam": "than",
+     "neo": "co",
+     "co": [
+      129.0,
+      135.0
+     ],
+     "eo": [
+      125.0,
+      172.0
+     ],
+     "vai_phai": [
+      100.0,
+      144.0
+     ],
+     "vai_trai": [
+      148.0,
+      144.0
+     ],
+     "goc_do": -87.8,
+     "xoay_so_voi_dung": 0.0
+    },
+    "quan": {
+     "bam": "than+dui",
+     "neo": "hong",
+     "eo": [
+      125.0,
+      172.0
+     ],
+     "hong": [
+      127,
+      187.0
+     ],
+     "hong_phai": [
+      114.0,
+      188.0
+     ],
+     "hong_trai": [
+      140.0,
+      188.0
+     ],
+     "goi_phai": [
+      106.0,
+      217.0
+     ],
+     "goi_trai": [
+      148.0,
+      217.0
+     ],
+     "goc_dui_phai": 105.4,
+     "goc_dui_trai": 74.6
+    },
+    "toc_mu": {
+     "bam": "dau",
+     "neo": "co",
+     "co": [
+      129.0,
+      135.0
+     ],
+     "dinh_dau": [
+      124.0,
+      26.0
+     ],
+     "tam_dau": [
+      129.0,
+      82.0
+     ],
+     "goc_do": -92.6,
+     "xoay_so_voi_dung": 0.0
+    },
+    "phu_kien": {
+     "lung": [
+      96.0,
+      146.0
+     ],
+     "tay_cam_phai": [
+      90.0,
+      194.0
+     ],
+     "tay_cam_trai": [
+      165.0,
+      191.0
+     ],
+     "goc_cang_tay_phai": 96.7,
+     "goc_cang_tay_trai": 71.6,
+     "eo_treo_tui": [
+      125.0,
+      172.0
+     ]
+    }
+   },
    "khop_px": {
     "hong": [
      127,

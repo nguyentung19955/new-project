@@ -270,7 +270,7 @@ DOAN_VE = [  # (lớp, khớp a, khớp b, màu)
     (40, 'hong_phai', 'goi_phai', DEN), (41, 'goi_phai', 'co_chan_phai', DEN), (42, 'co_chan_phai', 'mui_chan_phai', DEN),
     (70, 'vai_phai', 'khuyu_phai', DEN), (71, 'khuyu_phai', 'co_tay_phai', DEN), (72, 'co_tay_phai', 'nam_tay_phai', DEN),
 ]
-def ve_que(im, J, ox=0, oy=0, S=1, them=None, nhan=False):
+def ve_que(im, J, ox=0, oy=0, S=1, them=None, nhan=False, to=None):
     """Vẽ que theo thứ tự lớp; them = [(lớp, hàm(im))] chen ảnh đồ vào giữa các lớp."""
     viec = [(l, ('doan', a, b, c)) for l, a, b, c in DOAN_VE] + [(50, ('dau',))]
     if 'mui_kiem' in J: viec.append((75, ('kiem',)))
@@ -280,10 +280,12 @@ def ve_que(im, J, ox=0, oy=0, S=1, them=None, nhan=False):
     def q(m): return (ox + J[m][0] * S, oy + J[m][1] * S)
     w = max(2, round(3 * S))
     for _, v in viec:
+        if v[0] == 'doan' and to and v[1] == 'hong' and v[2] == 'co':   # tô thân khi ghép đồ (để thấy lớp trước/sau)
+            d.polygon([q('vai_phai'), q('vai_trai'), q('hong_trai'), q('hong_phai')], fill=to, outline=DEN)
         if v[0] == 'doan': d.line([q(v[1]), q(v[2])], fill=v[3], width=w)
         elif v[0] == 'dau':
             c = q('tam_dau'); r = dai(J['tam_dau'], J['dinh_dau']) * S
-            d.ellipse([c[0] - r, c[1] - r, c[0] + r, c[1] + r], outline=DEN, width=w)
+            d.ellipse([c[0] - r, c[1] - r, c[0] + r, c[1] + r], outline=DEN, width=w, fill=to)
             d.line([q('co'), q('cam')], fill=DEN, width=max(1, w - 1))
             # mũi nhỏ chỉ hướng mặt (sang phải)
             d.line([c, (c[0] + r * 0.9 * (J['cam'][0] - J['tam_dau'][0]) / max(1, dai(J['cam'], J['tam_dau'])) + r * 0.3,
@@ -307,30 +309,52 @@ def ve_que(im, J, ox=0, oy=0, S=1, them=None, nhan=False):
 def cell_game(xy):  # toạ độ ô que → điểm game (khung 48×48, chân [24,45])
     return [round(GAME_GOC[0] + (xy[0] - OG[0]) * K_GAME, 2), round(GAME_GOC[1] + (xy[1] - OG[1]) * K_GAME, 2)]
 
-def tam_que(ten, khung, giay, mo_ta, S=1, them_fn=None):
+def tam_que(ten, khung, giay, mo_ta, S=1, them_fn=None, nhan=None, to=None):
     n = len(khung); GAP = 0
     im = Image.new('RGB', (n * O * S, O * S + 30 * S), TRANG); d = ImageDraw.Draw(im)
     for i, (J, a) in enumerate(khung):
         ox = i * O * S
         d.rectangle([ox, 0, ox + O * S - 1, O * S - 1], outline=(215, 215, 215), width=1)
         d.line([(ox + 8, OG[1] * S), (ox + O * S - 8, OG[1] * S)], fill=(185, 185, 185), width=max(1, S))
-        ve_que(im, J, ox, 0, S, them=them_fn(i, J, a, ox, S) if them_fn else None)
+        ve_que(im, J, ox, 0, S, them=them_fn(i, J, a, ox, S) if them_fn else None, to=to)
         d = ImageDraw.Draw(im)
-        d.text((ox + 6 * S, O * S + 4 * S), str(i + 1), fill=(200, 0, 0), font=font(16 * S, True))
+        d.text((ox + 6 * S, O * S + 4 * S), nhan[i] if nhan else str(i + 1), fill=(200, 0, 0), font=font(16 * S, True))
     return im
+
+LUNG0 = (108, 150)   # điểm giữa lưng (dáng đứng, px gốc) — chỗ đeo áo choàng / đồ sau lưng
+def neo_do(J, a):
+    """Neo cho đồ ở 1 khung (toạ độ ô que, gốc góc trên-trái ô). goc_do = góc xương bám."""
+    r = lambda v: [round(v[0], 1), round(v[1], 1)]
+    lung = cong(J['co'], xoay(tru(LUNG0, P['co']), a['than'] - A0['than']))
+    return {
+        'ao':   {'bam': 'than', 'neo': 'co', 'co': r(J['co']), 'eo': r(J['eo']), 'vai_phai': r(J['vai_phai']),
+                 'vai_trai': r(J['vai_trai']), 'goc_do': round(a['than'], 1), 'xoay_so_voi_dung': round(a['than'] - A0['than'], 1)},
+        'quan': {'bam': 'than+dui', 'neo': 'hong', 'eo': r(J['eo']), 'hong': r(J['hong']), 'hong_phai': r(J['hong_phai']),
+                 'hong_trai': r(J['hong_trai']), 'goi_phai': r(J['goi_phai']), 'goi_trai': r(J['goi_trai']),
+                 'goc_dui_phai': round(a['dp'], 1), 'goc_dui_trai': round(a['dt'], 1)},
+        'toc_mu': {'bam': 'dau', 'neo': 'co', 'co': r(J['co']), 'dinh_dau': r(J['dinh_dau']), 'tam_dau': r(J['tam_dau']),
+                   'goc_do': round(a['dau'], 1), 'xoay_so_voi_dung': round(a['dau'] - A0['dau'], 1)},
+        'phu_kien': {'lung': r(lung), 'tay_cam_phai': r(J['nam_tay_phai']), 'tay_cam_trai': r(J['nam_tay_trai']),
+                     'goc_cang_tay_phai': round(a['tdp'], 1), 'goc_cang_tay_trai': round(a['tdt'], 1),
+                     'eo_treo_tui': r(J['eo'])},
+    }
 
 def json_que(ten, khung, giay, mo_ta):
     ds = []
     for i, (J, a) in enumerate(khung):
-        ds.append({'khung': i + 1,
+        ds.append({'khung': i + 1, 'neo_do': neo_do(J, a),
                    'khop_px': {m: [round(v[0], 1), round(v[1], 1)] for m, v in J.items()},
                    'khop_game': {m: cell_game(v) for m, v in J.items()},
                    'goc_doan_do': {k: round(v, 1) for k, v in a.items()}})
     ghi_json(ten, {'loai': 'linh-khi-thu-modular-que', 'phien_ban': 1, 'dong_tac': mo_ta, 'so_khung': len(khung),
                    'giay_moi_khung': giay, 'o': [O, O], 'goc_trong_o': list(OG),
-                   'he_toa_do': 'khop_px: điểm ảnh trong ô (ô i bắt đầu ở x = (i-1)×256 trên tấm); cùng tỉ lệ ảnh gốc. '
+                   'he_toa_do': 'GỐC (0,0) = góc TRÊN-TRÁI của khung (ô). khop_px/neo_do: (x, y) điểm ảnh trong ô 256×256 '
+                                '(ô i nằm ở x = (i-1)×256 trên tấm png); cùng tỉ lệ ảnh gốc. '
                                 'khop_game: khung 48×48, chân [24,45]. Góc: 0° sang phải, 90° xuống.',
                    'khoa_goc': {k: f'{a}→{b}' for k, (a, b) in CHUOI.items()},
+                   'cach_gan_do': 'Ảnh đồ vẽ ở dáng đứng → đặt neo của đồ trùng neo khung (vd áo: co), rồi xoay quanh neo '
+                                  'một góc = xoay_so_voi_dung (độ, dương = theo chiều kim đồng hồ trên màn hình).',
+                   'thu_tu_lop': LOP_DO,
                    'khung': ds})
 
 def lam_que():
@@ -364,10 +388,190 @@ def lam_que():
             f = Image.new('RGB', (O, O), TRANG); ImageDraw.Draw(f).line([(8, OG[1]), (O - 8, OG[1])], fill=(185, 185, 185))
             ve_que(f, J); fr.append(f.resize((O * 2, O * 2), Image.NEAREST))
         fr[0].save(os.path.join(RA, f'que-{ten}.gif'), save_all=True, append_images=fr[1:], duration=ms, loop=0)
+    for ten, ks in (('dung', [dung]), ('di-6', di), ('chay-8', ch), ('kiem-1-nhat', kk)):
+        luoi(ks).save(os.path.join(RA, f'que-{ten}-luoi.png'))
     return dung, di, ch, kk
+
+def luoi(ks, S=2):
+    """Que ×2 có lưới toạ độ: vạch mảnh mỗi 8 px, vạch đậm + số mỗi 32 px; (0,0) = góc trên-trái MỖI ô."""
+    n = len(ks); im = Image.new('RGB', (n * O * S, O * S + 26), TRANG); d = ImageDraw.Draw(im)
+    f = font(11)
+    for i, (J, a) in enumerate(ks):
+        ox = i * O * S
+        for v in range(0, O + 1, 8):
+            c = (200, 215, 255) if v % 32 else (120, 150, 230)
+            d.line([(ox + v * S, 0), (ox + v * S, O * S)], fill=c); d.line([(ox, v * S), (ox + O * S, v * S)], fill=c)
+        for v in range(0, O, 32):
+            d.text((ox + v * S + 2, 2), str(v), fill=(40, 70, 170), font=f)
+            if v: d.text((ox + 2, v * S + 2), str(v), fill=(40, 70, 170), font=f)
+        d.line([(ox, OG[1] * S), (ox + O * S, OG[1] * S)], fill=(150, 150, 150), width=2)
+        ve_que(im, J, ox, 0, S); d = ImageDraw.Draw(im)
+        d.rectangle([ox, 0, ox + O * S - 1, O * S - 1], outline=(60, 60, 60))
+        d.text((ox + 6, O * S + 5), f'khung {i + 1}  ·  gốc chân ({OG[0]}, {OG[1]})', fill=(200, 0, 0), font=font(14, True))
+    return im
+
+# ---------------------------------------------------------------- 3. BỘ PHẬN HÌNH QUE RỜI
+SB = 3   # ảnh bộ phận phóng ×3 (pivot ghi cả theo ảnh ×3 lẫn theo điểm ảnh gốc)
+BO_PHAN = [  # (tệp, khớp xoay (pivot), khớp cuối, bề rộng px gốc, cha, lớp, khoá góc)
+    ('than', 'hong', 'co', None, None, 30, 'than'),
+    ('dau', 'co', 'dinh_dau', None, 'than', 50, 'dau'),
+]
+for s_, xa in (('phai', False), ('trai', True)):
+    l = (lambda a: a) if not xa else (lambda a: a - 60)
+    BO_PHAN += [
+        (f'canh-tay-tren-{s_}', f'vai_{s_}', f'khuyu_{s_}', 16, 'than', l(70), 'tt' + s_[0]),
+        (f'canh-tay-duoi-{s_}', f'khuyu_{s_}', f'co_tay_{s_}', 14, f'canh-tay-tren-{s_}', l(71), 'td' + s_[0]),
+        (f'ban-tay-{s_}', f'co_tay_{s_}', f'nam_tay_{s_}', 15, f'canh-tay-duoi-{s_}', l(72), 'bt' + s_[0]),
+        (f'dui-{s_}', f'hong_{s_}', f'goi_{s_}', 22, 'than', 40 if not xa else 20, 'd' + s_[0]),
+        (f'cang-chan-{s_}', f'goi_{s_}', f'co_chan_{s_}', 17, f'dui-{s_}', 41 if not xa else 21, 'c' + s_[0]),
+        (f'ban-chan-{s_}', f'co_chan_{s_}', f'mui_chan_{s_}', 12, f'cang-chan-{s_}', 42 if not xa else 22, 'bc' + s_[0]),
+    ]
+
+def hinh_bo_phan(ten, J):
+    """Đa giác/hình tròn của 1 bộ phận theo khớp J (toạ độ bất kỳ). Trả về ('vong'|'da_giac', dữ liệu)."""
+    if ten == 'dau':
+        return [('vong', J['tam_dau'], dai(J['tam_dau'], J['dinh_dau']))]
+    if ten == 'than':
+        return [('da_giac', [J['vai_phai'], J['co'], J['vai_trai'], J['hong_trai'], J['hong_phai']])]
+    bp = next(b for b in BO_PHAN if b[0] == ten)
+    a, b, w = J[bp[1]], J[bp[2]], bp[3] / 2
+    ux, uy = (b[0] - a[0]) / dai(a, b), (b[1] - a[1]) / dai(a, b)
+    nx, ny = -uy * w, ux * w
+    return [('da_giac', [(a[0] + nx, a[1] + ny), (b[0] + nx, b[1] + ny), (b[0] - nx, b[1] - ny), (a[0] - nx, a[1] - ny)]),
+            ('vong', a, w), ('vong', b, w)]
+
+def ve_hinh(d, hs, f, S, ox, oy, to=(238, 238, 238), net=DEN, w=3):
+    def q(p): return (ox + (p[0] - f[0]) * S, oy + (p[1] - f[1]) * S)
+    for lop in ('vien', 'ruot'):
+        for h in hs:
+            if h[0] == 'vong':
+                c = q(h[1]); r = h[2] * S + (w if lop == 'vien' else 0)
+                d.ellipse([c[0] - r, c[1] - r, c[0] + r, c[1] + r], fill=net if lop == 'vien' else to)
+            else:
+                pts = [q(p) for p in h[1]]
+                if lop == 'vien': d.polygon(pts, fill=to, outline=net, width=w)
+                else: d.polygon(pts, fill=to)
+    # vẽ lại viền đa giác cho rõ (sau khi lấp vòng tròn)
+    for h in hs:
+        if h[0] == 'da_giac' and len(h[1]) > 4:
+            d.polygon([q(p) for p in h[1]], outline=net, width=w)
+
+def hop_hinh(hs):
+    xs, ys = [], []
+    for h in hs:
+        if h[0] == 'vong': xs += [h[1][0] - h[2], h[1][0] + h[2]]; ys += [h[1][1] - h[2], h[1][1] + h[2]]
+        else: xs += [p[0] for p in h[1]]; ys += [p[1] for p in h[1]]
+    return min(xs), min(ys), max(xs), max(ys)
+
+def lam_bo_phan():
+    os.makedirs(os.path.join(RA, 'bo-phan'), exist_ok=True)
+    ds = {}; anh = {}
+    for ten, piv, cuoi, rong, cha, lop, kg in BO_PHAN:
+        hs = hinh_bo_phan(ten, P)
+        x0, y0, x1, y1 = hop_hinh(hs + [('vong', P[piv], 3), ('vong', P[cuoi], 3)])
+        pad = 8; f = (x0 - pad, y0 - pad)
+        im = Image.new('RGB', (round((x1 - x0 + 2 * pad) * SB), round((y1 - y0 + 2 * pad) * SB)), TRANG)
+        d = ImageDraw.Draw(im)
+        ve_hinh(d, hs, f, SB, 0, 0)
+        def q(p): return ((p[0] - f[0]) * SB, (p[1] - f[1]) * SB)
+        d.line([q(P[piv]), q(P[cuoi])], fill=XAM, width=2)
+        if ten == 'dau': d.line([q(P['co']), q(P['cam'])], fill=XAM, width=2)
+        c = q(P[cuoi]); d.ellipse([c[0] - 6, c[1] - 6, c[0] + 6, c[1] + 6], outline=DO, width=3)
+        c = q(P[piv]); d.ellipse([c[0] - 8, c[1] - 8, c[0] + 8, c[1] + 8], fill=DO)
+        d.line([(c[0] - 13, c[1]), (c[0] + 13, c[1])], fill=DO, width=2); d.line([(c[0], c[1] - 13), (c[0], c[1] + 13)], fill=DO, width=2)
+        im.save(os.path.join(RA, 'bo-phan', ten + '.png')); anh[ten] = im
+        ds[ten] = {'anh': f'bo-phan/{ten}.png', 'ti_le_anh': SB,
+                   'pivot': piv, 'pivot_trong_anh': [round(c[0], 1), round(c[1], 1)],
+                   'pivot_px_goc': list(P[piv]), 'pivot_game': game(P[piv]),
+                   'khop_cuoi': cuoi, 'khop_cuoi_trong_anh': [round(v, 1) for v in q(P[cuoi])],
+                   'do_dai_px': round(dai(P[piv], P[cuoi]), 1), 'do_dai_game': round(dai(P[piv], P[cuoi]) * K_GAME, 2),
+                   'goc_goc_do': round(goc(P[piv], P[cuoi]), 1), 'be_rong_px': rong, 'cha': cha, 'lop': lop,
+                   'khoa_goc_trong_que': kg}
+        if ten == 'dau': ds[ten]['ban_kinh_px'] = round(dai(P['tam_dau'], P['dinh_dau']), 1); ds[ten]['tam_dau_px'] = list(P['tam_dau'])
+        if ten == 'than': ds[ten]['goc_than'] = {m: list(P[m]) for m in ('vai_phai', 'vai_trai', 'hong_phai', 'hong_trai', 'co')}
+    ghi_json('bo-phan.json', {
+        'loai': 'linh-khi-thu-modular-bo-phan', 'phien_ban': 1, 'nhan_vat': 'zed-v2',
+        'ghi_chu': ['Mỗi ảnh vẽ bộ phận ở đúng góc dáng đứng (goc_goc_do), phóng ×3.',
+                    'Chấm đỏ đặc + dấu cộng = pivot (khớp xoay, gắn vào bộ phận cha). Vòng đỏ rỗng = khớp cuối (chỗ gắn bộ phận con).',
+                    'Góc: 0° sang phải, 90° xuống. Đặt bộ phận vào dáng mới: xoay quanh pivot một góc = góc_mới − goc_goc_do.',
+                    'Lớp: số nhỏ vẽ trước. Bên trái (xa) 10–22 nằm sau thân 30; bên phải (gần) 40–72 nằm trước.'],
+        'bo_phan': ds})
+    # ảnh tổng
+    W = 1700; o = Image.new('RGB', (W, 1250), TRANG); d = ImageDraw.Draw(o)
+    d.text((20, 14), 'Bộ phận hình que rời — Zed (chấm đỏ = pivot, vòng đỏ = khớp con)', fill=DEN, font=font(26, True))
+    x, y, hmax = 20, 70, 0
+    for ten, *_ in BO_PHAN:
+        im = anh[ten]
+        if x + im.width > 1180: x = 20; y += hmax + 46; hmax = 0
+        o.paste(im, (x, y)); d.rectangle([x, y, x + im.width, y + im.height], outline=(215, 215, 215))
+        b = ds[ten]
+        d.text((x, y + im.height + 3), ten, fill=DEN, font=font(15, True))
+        d.text((x, y + im.height + 21), f"dài {b['do_dai_px']}px · {b['goc_goc_do']}° · lớp {b['lop']}", fill=(90, 90, 90), font=font(12))
+        x += max(im.width, 150) + 18; hmax = max(hmax, im.height)
+    # ráp lại theo thứ tự lớp
+    d.text((1220, 70), 'Ráp lại (đúng thứ tự lớp)', fill=DEN, font=font(18, True))
+    f = (GOC[0] - 75, GOC[1] - 250)
+    for ten, piv, cuoi, rong, cha, lop, kg in sorted(BO_PHAN, key=lambda b: b[5]):
+        xa = ten.endswith('trai')
+        ve_hinh(d, hinh_bo_phan(ten, P), f, 1.8, 1230, 110, to=(205, 205, 205) if xa else (240, 240, 240), w=2)
+    for ten, piv, *_ in BO_PHAN:
+        c = (1230 + (P[piv][0] - f[0]) * 1.8, 110 + (P[piv][1] - f[1]) * 1.8)
+        d.ellipse([c[0] - 4, c[1] - 4, c[0] + 4, c[1] + 4], fill=DO)
+    o = o.crop((0, 0, W, max(y + hmax + 60, 620)))
+    o.save(os.path.join(RA, 'bo-phan.png'))
+    return ds
+
+# ---------------------------------------------------------------- 4. GHÉP THỬ ĐỒ CÓ SẴN LÊN QUE CHẠY
+LOP_GHEP = os.path.join(ZED, 'lop-ghep')
+DO_THU = [  # (tệp lớp, lớp vẽ, xương bám: (khớp neo, khoá góc))
+    ('zed-v2-non-sau.png', 8, ('co', 'dau')),
+    ('zed-v2-giap.png', 35, ('co', 'than')),
+    ('zed-v2-non-truoc.png', 85, ('co', 'dau')),
+]
+def cat_do(tep):
+    im = Image.open(os.path.join(LOP_GHEP, tep)).convert('RGBA').crop((0, 0, 262, 262))  # ô đứng 1 (cùng toạ độ tấm thân)
+    b = im.getbbox(); return im.crop(b), (b[0], b[1])
+
+def ham_ghep(do):
+    def them(i, J, a, ox, S):
+        ra = []
+        for (tep, lop, (neo, kg)), (anh, goc_anh) in do:
+            def f(im, anh=anh, goc_anh=goc_anh, neo=neo, kg=kg):
+                lech = a[kg] - A0[kg]
+                tx, ty = ox + J[neo][0] * S, J[neo][1] * S
+                it = anh.resize((anh.width * S, anh.height * S), Image.NEAREST)
+                ca = Image.new('RGBA', im.size, (0, 0, 0, 0))
+                ca.paste(it, (round(tx - (P[neo][0] - goc_anh[0]) * S), round(ty - (P[neo][1] - goc_anh[1]) * S)))
+                ca = ca.rotate(-lech, center=(tx, ty), resample=Image.NEAREST)
+                im.paste(ca, (0, 0), ca)
+            ra.append((lop, f))
+        return ra
+    return them
+
+def lam_ghep(dung, ch):
+    do = [(x, cat_do(x[0])) for x in DO_THU]
+    fn = ham_ghep(do)
+    S = 2
+    tam = tam_que('', [dung] + ch, 0, '', S=S, them_fn=fn, to=(246, 246, 246),
+                  nhan=['đứng (gốc)'] + [f'chạy {i}' for i in range(1, len(ch) + 1)])
+    tam.save(os.path.join(RA, 'ghep-thu-giap-non-chay.png'))
+    fr = []
+    for J, a in ch:
+        f = Image.new('RGB', (O * S, O * S), TRANG); ImageDraw.Draw(f).line([(8, OG[1] * S), (O * S - 8, OG[1] * S)], fill=(185, 185, 185), width=2)
+        ve_que(f, J, 0, 0, S, them=fn(0, J, a, 0, S), to=(246, 246, 246)); fr.append(f)
+    fr[0].save(os.path.join(RA, 'ghep-thu-giap-non-chay.gif'), save_all=True, append_images=fr[1:], duration=80, loop=0)
+    # đối chiếu: đồ đặt trên Zed thật ở dáng đứng (đúng chỗ = neo đúng)
+    S = 3; hinh = Image.open(os.path.join(RA, 'nhan-vat-zed-dung.png'))
+    nen = Image.new('RGB', (O * S, O * S), TRANG)
+    to = hinh.resize((hinh.width * S, hinh.height * S), Image.NEAREST)
+    def than_that(im): im.paste(to, ((OG[0] - (GOC[0] - HOP[0])) * S, (OG[1] - (GOC[1] - HOP[1])) * S), to)
+    for lop, f in sorted(fn(0, dung[0], dung[1], 0, S) + [(30, than_that)], key=lambda t: t[0]): f(nen)
+    nen.save(os.path.join(RA, 'ghep-thu-dung-tren-zed.png'))
 
 if __name__ == '__main__':
     os.makedirs(RA, exist_ok=True)
     lam_nhan_vat()
-    lam_que()
+    dung, di, ch, kk = lam_que()
+    lam_bo_phan()
+    lam_ghep(dung, ch)
     print('xong')
