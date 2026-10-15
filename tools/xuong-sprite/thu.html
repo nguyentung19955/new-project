@@ -49,7 +49,7 @@
   #ui { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
   /* Màn hình tải (Đợt 1): khối tĩnh hiện ngay khi trang vừa về, trước cả khi mã game tải xong. Chỉ CSS, không ảnh.
      Bản gom một tệp không đo được tiến độ thật nên vạch chỉ chạy qua lại. js/engine.js gỡ khối này khi vẽ xong khung hình đầu. */
-  /* bia-moi 15/10: nền là bản rất nhỏ (32×18) của bìa sắp hiện, trình duyệt phóng to tự mờ (thẻ onanimationstart gắn; ?biacu=1 / chưa có bìa: nền tối như cũ). */
+  /* bia-moi 15/10: nền là bản rất nhỏ (32×18) của bìa sắp hiện, trình duyệt phóng to tự mờ (thẻ onanimationstart gắn; chưa có bìa: nền tối). */
   #lk-tai { position: fixed; inset: 0; z-index: 5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: var(--bg) center / cover no-repeat; pointer-events: none; }
   #lk-tai b { font-size: 34px; font-weight: 700; letter-spacing: 0.14em; color: var(--accent); text-shadow: 0 3px 0 #1a120a; }
   #lk-tai span { font-size: 14px; font-weight: 500; color: var(--fg); opacity: 0.85; }
@@ -68,9 +68,9 @@
   <canvas id="world" width="480" height="270" aria-label="Màn hình game Linh Khí"></canvas>
 </div><canvas id="ui"></canvas></div></div>
 <!-- Màn hình tải: nằm TRƯỚC mọi thẻ script nên hiện ngay. Chữ theo ngôn ngữ đã chọn trong game (linhkhi_lang), chưa chọn thì theo máy; mặc định tiếng Việt.
-     bia-moi 15/10: build.py gắn data-bia (đường dẫn ảnh bìa + bản mờ rất nhỏ): thẻ này chọn bìa (ngẫu nhiên / ?bia=1|2, ?biacu=1 thì thôi),
+     bia-moi 15/10: build.py gắn data-bia (đường dẫn ảnh bìa + bản mờ rất nhỏ): thẻ này chọn bìa (ngẫu nhiên / ?bia=1|2),
      bắt đầu tải ảnh bìa ngay (window.LK_BIA, js/bia.js dùng lại) và lấy bản mờ làm nền. Chạy thẳng index.html: không có data-bia, js/bia.js tự tải. -->
-<div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5&&!/[?&]biacu=1(&|$)/.test(q)){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
+<div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script src="../../game/js/ngon_ngu.js"></script>
 <script src="../../game/js/ngon_ngu_en.js"></script>
 <script src="../../game/js/data.js"></script>
