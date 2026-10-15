@@ -64,6 +64,9 @@
     if (!A || !A.ellipse) return;
     A.ellipse(c, e.x, e.y, rx * 1.18, rx * 1.18 * K * 0.5, 'rgba(255,40,20,' + (0.07 + 0.08 * p).toFixed(3) + ')');
     A.ellipse(c, e.x, e.y, rx, rx * K * 0.5, 'rgba(255,60,30,' + ((lv >= 2 ? 0.2 : 0.14) + 0.12 * p).toFixed(3) + ')');
+    // Con vẽ tay đợt 2 (YEU-CAU-2, ?vetaycu=1 quay lui): GIỮ TẠM quầng elip mờ (tắt thì mất dấu hiệu nổi giận dưới chân; chưa có ảnh #13
+    // hu-hao-quang-gian; ảnh vũng hu-vung-* sẵn có trông như vùng sát thương nên không dùng) nhưng bỏ các ô đỏ chạy vòng vẽ code.
+    if (G.VE_TAY_MOI !== false) return;
     // viền quầng: các điểm đỏ sáng chạy vòng (nhấp nháy)
     const n = lv >= 2 ? 18 : 12, t = G.time || 0;
     for (let i = 0; i < n; i++) {
@@ -78,6 +81,7 @@
     if (!lv || G.noRender || e.hidden) return;
     const A = G.art;
     if (!A || !A.p) return;
+    if (G.VE_TAY_MOI !== false) return; // đợt 2: đốm lửa VUÔNG vẽ code → tắt (thân vẫn nhuộm đỏ có nhịp + quầng dưới chân)
     const h = Math.min(110, e.drawH || e.h || 40), rx = rongCua(e), n = lv >= 2 ? 10 : 6, t = G.time || 0, s = lv >= 2 ? 3 : 2;
     const ga = c.globalAlpha;
     for (let i = 0; i < n; i++) {

@@ -1655,14 +1655,14 @@
     const SCt = G.spriteCustom, coGd = G.VE_TAY_MOI !== false && SCt && SCt.gdSan && SCt.veGd;
     const gF = coGd && st.fire > 0 ? SCt.gdSan('gd-tt-chay') : null, gP = coGd && st.poisonN > 0 ? SCt.gdSan('gd-tt-doc') : null, gI = coGd && (st.iceN > 0 || st.frozen > 0) ? SCt.gdSan('gd-tt-bang') : null;
     if (gF || gP || gI) { const ds = [gF, gP, gI].filter(Boolean); ds.forEach((g, i) => SCt.veGd(c, g, Math.round(x - (ds.length * 10 - 1) / 2 + i * 10), top - 6, 9, 9)); }
-    if (st.fire > 0 && !gF) {
+    if (st.fire > 0 && !gF && !coGd) { // đợt 2: ảnh chưa tải thì không vẽ ô code
       const f = Math.floor(t * 12) % 3;
       p(c, x - 4 + f, top - 4, 3, 4, '#ff7a2a');
       p(c, x + 1 - f, top - 6, 2, 5, '#ff7a2a');
       p(c, x - 1, top - 3, 3, 3, '#ffd23f');
       p(c, x + 1 - f, top - 4, 1, 2, '#ffd23f');
     }
-    if (st.poisonN > 0 && !gP) {
+    if (st.poisonN > 0 && !gP && !coGd) {
       const f = Math.floor(t * 6) % 4;
       for (let i = 0; i < Math.min(5, st.poisonN); i++) {
         const py = top + 2 - ((f + i) % 3);
@@ -1670,7 +1670,7 @@
         p(c, x - 6 + i * 3, py, 2, 2, '#8fe04a');
       }
     }
-    if ((st.iceN > 0 || st.frozen > 0) && !gI) {
+    if ((st.iceN > 0 || st.frozen > 0) && !gI && !coGd) {
       const n = Math.max(st.iceN, st.frozen > 0 ? 4 : 0);
       for (let i = 0; i < n; i++) {
         p(c, x - 7 + i * 3, top + 5, 4, 4, '#173a5a');

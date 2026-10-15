@@ -197,7 +197,63 @@
   // 7 mũi tên rơi, 8 mảnh vụn nảy, 9 lưỡi lửa, 10 dấu cộng hồi máu, 11 bong bóng
   let AIMG = null; // đang trong aimed(): góc xoay hình sát đất sắp áp (th) — để đặt trước chỗ cần trúng (búa nện khớp đầu búa)
   let CAP = null; // đang gom hạt và hình vừa sinh ra để xoay theo hướng nhắm (aimed)
+  // ---------- CON VẼ TAY ĐỢT 2 (15/10, docs/review/ke-hoach-cai-thien/con-ve-tay/YEU-CAU-2.md; cờ quay lui chung ?vetaycu=1) ----------
+  // Hạt vẽ code thành ô / vệt trên sàn đổi sang ảnh (một hạt loại 12 = một ảnh hiệu ứng phát tại chỗ, chung kho PT nên vẫn qua lớp nhạt
+  // của em bé, aimed(), giới hạn MAXP):
+  //   loại 5 (giọt) độc / tím độc → hu-giot-doc-san; băng → hu-ray-bang; nước: giữ như cũ (ngoài phạm vi)
+  //   loại 8 (mảnh vụn nảy, ô vuông có bóng) → hu-manh-da; độc → hu-giot-doc-san; băng → hu-ray-bang
+  //   loại 4 (mảnh xoay) băng, loại 0 băng rơi xuống sàn (quái đang đóng băng rụng hạt) → hu-ray-bang
+  //   loại 11 (bọt độc 2×2, chưa có ảnh #4 hu-bot-doc) → TẮT
+  // Cùng mã, gần chỗ (< 9–12 điểm), cách nhau < 0,12 giây thì gộp làm một ảnh (một chùm 7 hạt = một ảnh). Ảnh chưa tải: KHÔNG vẽ gì.
+  const HAT_GIA = { k: -1, x: 0, y: 0, vx: 0, vy: 0, t: 0, t0: 1, c: RAMP.steel, s: 1, g: 0, dr: 0, fy: 1e9, ly: 1, a: 0, b: 0, a2: 0 };
+  const HE_RAMP = new Map();
+  function heRamp(c) {
+    if (c === RAMP.poison || c === RAMP.vapor) return 'doc';
+    if (c === RAMP.ice || c === RAMP.mist) return 'bang';
+    if (c === RAMP.water) return 'nuoc';
+    if (!Array.isArray(c)) return 'khac';
+    let h = HE_RAMP.get(c);
+    if (h) return h;
+    h = 'khac';
+    const m = String(c[Math.min(2, c.length - 1)]);
+    if (m[0] === '#' && m.length === 7) {
+      const n = parseInt(m.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+      if ((g > r + 25 && g > b + 25) || (r > g + 20 && b > g + 20)) h = 'doc'; // lục độc, tím độc
+      else if (b > r + 40 && b >= g) h = 'bang';
+    }
+    HE_RAMP.set(c, h);
+    return h;
+  }
+  function datSan(ma, x, y, sc, ly) {
+    const A = G.fxAnh;
+    if (!A || !A.co(ma)) return; // chưa tải: không vẽ gì (A.co cũng báo tải ngay)
+    const gop = ma === 'hu-ray-bang' ? 12 : 9;
+    for (let i = 0; i < S.np; i++) { const q = PT[i]; if (q.k === 12 && q.ma === ma && q.t0 - q.t < 0.12 && Math.abs(q.x - x) < gop && Math.abs(q.y - y) < gop * 0.6) return; }
+    const o = emitHat(12, x, y, 0, 0, A.giay(ma) || 0.6, RAMP.steel, sc, 0, 0, null, ly);
+    o.ma = ma; o.f = R() < 0.5 ? -1 : 1;
+  }
+  function doiHat(k, x, y, vx, vy, c, s, g, fy) {
+    if (k === 11) return true;
+    if (k !== 5 && k !== 8 && k !== 4 && k !== 0) return false;
+    const he = heRamp(c);
+    let ma = null;
+    if (k === 8) ma = he === 'doc' ? 'hu-giot-doc-san' : he === 'bang' ? 'hu-ray-bang' : 'hu-manh-da';
+    else if (k === 5) ma = he === 'doc' ? 'hu-giot-doc-san' : he === 'bang' ? 'hu-ray-bang' : null;
+    else if (he === 'bang' && (k === 4 || fy < 1e8)) ma = 'hu-ray-bang';
+    if (!ma) return false;
+    if (k === 0 && R() > 0.3) return true; // quái đóng băng rụng hạt mỗi khung: thưa lại
+    const san = fy != null && fy < 1e8;
+    let X = x, Y = san ? fy : y;
+    if (ma !== 'hu-manh-da' && san && g > 0 && fy > y) { const tl = (-vy + Math.sqrt(vy * vy + 2 * g * (fy - y))) / g; X = x + vx * Math.min(tl, 0.6); }
+    const sc = ma === 'hu-manh-da' ? (s >= 3 ? 1 : 0.8) : ma === 'hu-giot-doc-san' ? (s > 1 ? 1 : 0.75) : 0.9;
+    datSan(ma, X, Y, sc, ma === 'hu-giot-doc-san' ? 0 : 1);
+    return true;
+  }
   function emit(k, x, y, vx, vy, t, c, s, g, dr, fy, ly) {
+    if (G.VE_TAY_MOI !== false && doiHat(k, x, y, vx, vy, c, s, g, fy)) return HAT_GIA;
+    return emitHat(k, x, y, vx, vy, t, c, s, g, dr, fy, ly);
+  }
+  function emitHat(k, x, y, vx, vy, t, c, s, g, dr, fy, ly) {
     let o;
     if (S.np < MAXP) o = PT[S.np++]; else { o = PT[S.ovr]; S.ovr = (S.ovr + 1) % MAXP; }
     o.k = k; o.x = x; o.y = y; o.vx = vx; o.vy = vy; o.t = t; o.t0 = t; o.c = c; o.s = s || 1;
@@ -301,6 +357,7 @@
           else { c.fillRect(x - 1, y - 1, 2, 2); c.fillStyle = 'rgba(255,255,255,0.8)'; c.fillRect(x - 1, y - 1, 1, 1); }
           break;
         }
+        case 12: { const A = G.fxAnh; if (A) A.ve(c, o.ma, x, y, o.t0 - o.t, 0, o.s, o.f < 0); break; } // ảnh trên sàn (con vẽ tay đợt 2)
         default: c.fillRect(x, y, 1, 1);
       }
     }
@@ -329,6 +386,7 @@
   function add(o) {
     // 15/10 con-ve-tay: chớp "sq" (lõi VUÔNG + 4 ô vuông góc, vẽ code — ô vuông xanh lục ở vùng độc nổ, ô be ở vùng đất đá, cam ở lửa...)
     // → ảnh va chạm hu-va-cham nhuộm đúng màu chớp, cỡ theo bán kính chớp. Ảnh chưa có / cờ ?vetaycu=1: như cũ.
+    if (o.ty === 'flash' && o.sq && G.VE_TAY_MOI !== false && !(G.huVt && G.huVt('hu-va-cham'))) return o; // đợt 2: ảnh chưa tải thì không vẽ ô vuông
     if (o.ty === 'flash' && o.sq && G.huVt && G.huVt('hu-va-cham')) {
       const h = { ty: 'anh', ma: 'hu-va-cham', x: o.x, y: o.y, t: G.fxAnh.giay('hu-va-cham') || 0.2, f: 1, sc: Math.max(0.7, Math.min(3, (o.r || 7) / 7)), goc: 0, ly: o.ly == null ? 1 : o.ly, d: o.d || 0, mau: o.c2 || null, kieu: '', laChop: true }; // laChop: giữ đậm như chớp cũ (vetDon)
       if (o.pl != null) h.pl = o.pl;
@@ -1315,7 +1373,7 @@
         // sao choáng xoay trên đầu
         // Ảnh AI sao choáng (hu-choang, chạy lặp): điểm neo là giữa vòng sao, đặt ngay trên đầu.
         // 15/10 con-ve-tay: trùm vùng choáng đã có sao trên đầu ở cử động 'stun' (js/monster_art.js TRUM.choang, nay cũng là ảnh hu-choang) → không vẽ lần hai
-        if (e.isBoss && e.kind !== 'mini' && G.huVt && G.huVt('hu-choang') && e.art) { /* sao do TRUM.choang vẽ */ }
+        if (e.isBoss && e.kind !== 'mini' && G.VE_TAY_MOI !== false && e.art) { /* sao do TRUM.choang vẽ */ }
         else if (coAnh('hu-choang')) G.fxAnh.ve(c, 'hu-choang', x, top - 4, t + id * 0.37, 0, 1);
         else for (let i = 0; i < 3; i++) { const a = t * 6 + i * 2.094; const sx = x + Math.round(Math.cos(a) * 7), sy = top - 4 + Math.round(Math.sin(a) * 2); if (Math.sin(a) > -0.3) star(c, sx, sy, 1, '#ffd23f', '#ffffff'); else p(c, sx, sy, 1, 1, '#a8742a'); }
       }
@@ -2215,6 +2273,9 @@
         }
         case 'scorch': {
           const a = k > 0.7 ? (1 - k) / 0.3 : 1;
+          // Con vẽ tay đợt 2: vết cháy đen = ảnh hu-vet-chay (rộng 32 = đường kính 2r khi co 1), 4 khung than tắt dần theo thời gian của vết,
+          // mờ dần như cũ. Ảnh chưa tải: không vẽ. ?vetaycu=1: elip + đốm vẽ code như cũ.
+          if (G.VE_TAY_MOI !== false) { if (coAnh('hu-vet-chay')) G.fxAnh.veK(c, 'hu-vet-chay', x, y, Math.floor(k * 4), 0, kep(o.r / 16, 0.4, 3), false, a); break; }
           ell(c, x, y, o.r, o.r * 0.6, 'rgba(26,16,12,' + (0.42 * a).toFixed(2) + ')');
           ell(c, x, y, o.r * 0.55, o.r * 0.33, 'rgba(16,10,8,' + (0.35 * a).toFixed(2) + ')');
           if (k < 0.5) for (let j = 0; j < 4; j++) if (((S.t * 8 + j * 1.7) | 0) % 3) p(c, x + Math.round((hash(o.r + j) - 0.5) * o.r * 1.4), y + Math.round((hash(o.r + j * 5) - 0.5) * o.r * 0.7), 1, 1, j % 2 ? '#ff7a2a' : '#ffd23f');

@@ -340,8 +340,11 @@
         e.healCd = hurt.length ? G.rr(7, 9) : 1.5;
         if (hurt.length) {
           begin(e, 'heal', e.face > 0 ? 0 : PI, 0.6, { cd: 1, keepFace: true, fire: (q) => {
-            for (const x of w.ents) if (!x.dead && Math.hypot(x.x - q.x, x.y - q.y) < 90) { const h = x.maxhp * 0.14; x.hp = Math.min(x.maxhp, x.hp + h); FX('text', x.x, x.y - x.h - 4, '+' + Math.round(h), '#8fe86a', 8); }
-            q.healFx = 0.6; FX('sparkle', q.x, q.y - 6, '#8fe86a', 14); G.sfx('pick', 1.6);
+            // Con vẽ tay đợt 2 (?vetaycu=1 tắt): vòng elip xanh lá vẽ code (#10, chưa có ảnh hu-vong-hoi-quai) → ảnh hồi máu hu-hoi-mau có sẵn
+            // trên MỖI con được hồi (vẫn biết con nào hồi máu, con nào được hồi). Ảnh chưa tải: chỉ còn số +máu xanh như cũ.
+            const vt = G.VE_TAY_MOI !== false;
+            for (const x of w.ents) if (!x.dead && Math.hypot(x.x - q.x, x.y - q.y) < 90) { const h = x.maxhp * 0.14; x.hp = Math.min(x.maxhp, x.hp + h); FX('text', x.x, x.y - x.h - 4, '+' + Math.round(h), '#8fe86a', 8); if (vt) FX('anh', 'hu-hoi-mau', x.x, x.y, { sc: Math.max(0.7, Math.min(1.4, (x.w || 34) / 34)) }); }
+            if (!vt) q.healFx = 0.6; FX('sparkle', q.x, q.y - 6, '#8fe86a', 14); G.sfx('pick', 1.6);
           } });
           return;
         }
@@ -653,7 +656,7 @@
       const col = z.el && G.EL[z.el] ? G.EL[z.el].col : '#fff0c8';
       // 15/10 con-ve-tay: có ảnh hu-va-cham thì mỗi điểm là ảnh va chạm nhuộm màu hệ (thay 4 hạt vuông vẽ code); cờ tắt ?vetaycu=1
       const vc = G.huVt && G.huVt('hu-va-cham');
-      for (const q of pts) if (!(vc && G.fx.anh('hu-va-cham', q[0], q[1] - 3, { sc: 1.1, mau: z.el && G.EL[z.el] ? col : null }))) G.fx.burst(q[0], q[1], col, 4, 60);
+      for (const q of pts) if (!(vc && G.fx.anh('hu-va-cham', q[0], q[1] - 3, { sc: 1.1, mau: z.el && G.EL[z.el] ? col : null })) && G.VE_TAY_MOI === false) G.fx.burst(q[0], q[1], col, 4, 60); // đợt 2: ảnh chưa tải thì không rải hạt vuông
       if (G.fx.shake) G.fx.shake(0.15);
     };
   }
@@ -834,7 +837,8 @@
     // 15/10 con-ve-tay: js/fx.js (fx.entity) đã vẽ ảnh hu-bam-bang / hu-bam-lua / hu-bam-doc trên MỌI quái đang dính hệ → hạt vẽ code ở đây
     // (mảnh băng ở chân, lưỡi lửa, bong bóng độc VUÔNG xanh lục) chồng thêm một lớp nữa. Có ảnh thì bỏ phần hạt code đó; nhuộm thân giữ.
     // Cờ tắt ?vetaycu=1 (hoặc ?hudot3=0: không có ảnh hu-bam-* → hạt code như cũ).
-    const coA = (ma) => G.VE_TAY_MOI !== false && !!G.huDot3 && G.huDot3(ma);
+    // Đợt 2 (YEU-CAU-2): ảnh hu-bam-* chưa tải xong cũng KHÔNG vẽ hạt code (gọi G.huDot3 chỉ để báo tải ngay).
+    const coA = (ma) => { if (G.huDot3) G.huDot3(ma); return G.VE_TAY_MOI !== false && G.HU_DOT3 !== false; };
     const boBang = coA('hu-bam-bang'), boLua = coA('hu-bam-lua'), boDoc = coA('hu-bam-doc');
     const tren = (xr) => { if (!D.tren) return D.y0; const i = clamp(Math.round(xr - D.cx0), 0, D.tren.length - 1), v = D.tren[i]; return v > 9999 ? D.y0 : v; };
     const lung = (yr) => { if (!D.sau) return D.x0; const i = clamp(Math.round(yr - D.cy0), 0, D.sau.length - 1), v = D.sau[i]; return v > 9999 ? D.x0 : v; };
