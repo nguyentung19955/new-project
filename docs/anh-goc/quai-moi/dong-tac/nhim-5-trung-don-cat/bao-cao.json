@@ -1,0 +1,116 @@
+{
+ "anh": "nhim-5-trung-don.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 4,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 0,
+  "vien_khu": 6564,
+  "nga_mau_nen_trong_hinh": 99
+ },
+ "manh_bo": [
+  {
+   "khung_bao": [
+    74,
+    333,
+    113,
+    350
+   ],
+   "diem_anh": 95
+  }
+ ],
+ "loi": [],
+ "canh_bao": [
+  "Mảnh 95 điểm ảnh ở [74, 333, 113, 350] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Hàng 1 khung 2 cao 339 (trung vị 405) — lệch cỡ >15%"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "hit",
+   "so_khung": 4,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      48,
+      169,
+      588,
+      582
+     ],
+     "chan": [
+      354.5,
+      582
+     ],
+     "rong": 540,
+     "cao": 413,
+     "diem_anh": 127885,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      637,
+      219,
+      1036,
+      558
+     ],
+     "chan": [
+      852.0,
+      558
+     ],
+     "rong": 399,
+     "cao": 339,
+     "diem_anh": 91952,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      1090,
+      183,
+      1552,
+      580
+     ],
+     "chan": [
+      1330.5,
+      580
+     ],
+     "rong": 462,
+     "cao": 397,
+     "diem_anh": 111161,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1600,
+      140,
+      2124,
+      585
+     ],
+     "chan": [
+      1847.5,
+      585
+     ],
+     "rong": 524,
+     "cao": 445,
+     "diem_anh": 136457,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}
