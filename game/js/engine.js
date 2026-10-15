@@ -220,7 +220,10 @@
     if (!G.save || !G.save.sound) return;
     try {
       if (!ac) {
-        ac = new (window.AudioContext || window.webkitAudioContext)();
+        const AC = window.AudioContext || window.webkitAudioContext;
+        // Mục 13 (soát mượt Phiên 2): latencyHint 'interactive' cho tiếng đánh ra sát lúc chạm (máy không nhận tuỳ chọn thì tạo như cũ). ?amcu=1: như cũ.
+        if (G.AM_MOI !== false) { try { ac = new AC({ latencyHint: 'interactive' }); } catch (e) { ac = null; } }
+        if (!ac) ac = new AC();
         sfxBus = ac.createGain(); sfxBus.gain.value = G.amThanh.vol('tieng'); sfxBus.connect(ac.destination);
       }
       if (ac.state === 'suspended' && !document.hidden) ac.resume().catch(() => {});
@@ -232,22 +235,51 @@
     gong: [98, 0.6, 'sine', 0.12], pick: [780, 0.08, 'sine', 0.05], die: [160, 0.1, 'square', 0.04],
     fire: [300, 0.08, 'sawtooth', 0.03], poison: [180, 0.1, 'triangle', 0.04], ice: [1400, 0.06, 'sine', 0.04],
     boom: [70, 0.25, 'sawtooth', 0.1], ui: [600, 0.03, 'square', 0.03], win: [880, 0.5, 'triangle', 0.08],
+    // Mục 13: tiếng trúng theo vũ khí (G.sfxDanh) và lớp cao của chí mạng
+    hitKiem: [240, 0.05, 'square', 0.05], hitGiao: [330, 0.045, 'triangle', 0.06], hitBua: [118, 0.1, 'square', 0.075],
+    hitDam: [190, 0.045, 'square', 0.045], hitTieu: [430, 0.035, 'triangle', 0.04], chiMang: [1320, 0.08, 'sine', 0.035],
+  };
+  // ---------- Mục 13 (soát mượt Phiên 2): tiếng đánh đổi cao độ, theo vũ khí, vung đúng lúc ----------
+  // G.AM_MOI (tắt: ?amcu=1 → một tiếng 'hit' 220 Hz cho mọi đòn, tiếng vung lúc bấm nút như cũ):
+  //  - tiếng vung / trúng / chí mạng đổi cao độ ngẫu nhiên ±8% (Math.random, không đụng chuỗi ngẫu nhiên G.rnd của luật chơi);
+  //  - tiếng trúng theo vũ khí: kiếm, giáo, búa (thấp, to, trầm dần), đấm, phi tiêu; đòn nặng (nhát kết, quét, nện) thấp hơn x0,82 và to hơn x1,3;
+  //    chí mạng thêm lớp cao 1320 Hz;
+  //  - tiếng vung phát ở ~60% đà (G.sfxVung, hẹn giờ bằng đồng hồ âm thanh) thay vì lúc bấm.
+  if (G.AM_MOI === undefined) { let cu = false; try { cu = /[?&]amcu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.AM_MOI = !cu; }
+  const DOI_CAO = { hit: 1, swing: 1, hitKiem: 1, hitGiao: 1, hitBua: 1, hitDam: 1, hitTieu: 1, chiMang: 1 };
+  const AM_VK = { sword: 'hitKiem', spear: 'hitGiao', hammer: 'hitBua', fist: 'hitDam', bow: 'hitTieu' };
+  let amCho = { crit: false, nang: false }; // js/combat.js playerHit ghi lại đòn vừa trúng có chí mạng / nặng không (G.amGhi)
+  G.amGhi = function (crit, nang) { if (crit) amCho.crit = true; if (nang) amCho.nang = true; };
+  // Tiếng trúng của đòn người chơi. type: loại vũ khí; cu: cao độ tiếng 'hit' của bản cũ ở chỗ gọi (mặc định 1).
+  G.sfxDanh = function (type, cu) {
+    const ch = amCho; amCho = { crit: false, nang: false };
+    if (G.AM_MOI === false) { G.sfx('hit', cu); return; }
+    const nang = ch.nang || type === 'hammer';
+    G.sfx(AM_VK[type] || 'hit', nang && type !== 'hammer' ? 0.82 : 1, nang ? 1.3 : 1);
+    if (ch.crit) G.sfx('chiMang');
+  };
+  // Tiếng vung: bản mới hẹn ở 60% quãng từ lúc ra đòn tới lúc chạm (hitAt, mặc định 0,45 động tác). dur: thời lượng đòn, phase: đã đi sẵn.
+  G.sfxVung = function (pitch, dur, hitAt, phase) {
+    if (G.AM_MOI === false) { G.sfx('swing', pitch); return; }
+    const tre = Math.max(0, ((hitAt != null ? hitAt : 0.45) * 0.6 - (phase || 0)) * (dur || 0));
+    G.sfx('swing', pitch, 1, Math.min(0.4, tre));
   };
   // V30: giới hạn tiếng cùng lúc để 20 quái chết một lúc không thành 20 tiếng chồng nhau (rè, to bất thường).
   // Mỗi loại tối đa 2 tiếng đang kêu, tổng tối đa 8 tiếng, tổng âm lượng các tiếng đang kêu không quá 0,28.
   // Hết "chỗ" âm lượng thì tiếng mới nhỏ lại cho vừa; còn quá ít thì bỏ qua.
   const voices = [], MAX_SAME = 2, MAX_VOICES = 8, MAX_GAIN = 0.28;
-  G.sfx = function (name, pitch) {
+  G.sfx = function (name, pitch, to, tre) { // to: nhân âm lượng (mục 13), tre: phát trễ bao nhiêu giây (mục 13, tiếng vung)
     if (!ac || !G.save.sound || G.noRender || ac.state !== 'running' || !sfxBus) return;
     const d = SFX[name];
     if (!d) return;
     try {
-      const now = ac.currentTime;
-      for (let i = voices.length - 1; i >= 0; i--) if (voices[i].end <= now) voices.splice(i, 1);
+      const now = ac.currentTime + (tre > 0 ? tre : 0);
+      if (G.AM_MOI !== false && DOI_CAO[name]) pitch = (pitch || 1) * (1 + (Math.random() * 2 - 1) * 0.08);
+      for (let i = voices.length - 1; i >= 0; i--) if (voices[i].end <= ac.currentTime) voices.splice(i, 1);
       let same = 0, sum = 0;
       for (const v of voices) { sum += v.g; if (v.name === name) same++; }
       if (same >= MAX_SAME || voices.length >= MAX_VOICES) return;
-      const vol = Math.min(d[3], MAX_GAIN - sum);
+      const vol = Math.min(d[3] * (to > 0 ? to : 1), MAX_GAIN - sum);
       if (vol < 0.01) return;
       voices.push({ name, end: now + d[1] + 0.02, g: vol });
       // Tiếng "gong" (trùm ra mắt, đổi pha) là tiếng chiêng ấm, ngân dài (js/nhac.js); không có js/nhac.js thì như cũ.
@@ -256,11 +288,13 @@
       o.type = d[2];
       o.frequency.value = d[0] * (pitch || 1);
       if (name === 'evolve' || name === 'win') o.frequency.exponentialRampToValueAtTime(d[0] * 2, ac.currentTime + d[1]);
-      if (name === 'boom' || name === 'hurt') o.frequency.exponentialRampToValueAtTime(d[0] * 0.5, ac.currentTime + d[1]);
-      g.gain.value = vol;
-      g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + d[1]);
+      if (name === 'boom' || name === 'hurt') o.frequency.exponentialRampToValueAtTime(d[0] * 0.5, now + d[1]);
+      if (name === 'hitBua') o.frequency.exponentialRampToValueAtTime(d[0] * (pitch || 1) * 0.6, now + d[1]); // búa: trầm dần
+      if (name === 'chiMang') o.frequency.exponentialRampToValueAtTime(d[0] * (pitch || 1) * 1.5, now + d[1]); // chí mạng: vút lên
+      if (now > ac.currentTime) { g.gain.setValueAtTime(vol, now); } else g.gain.value = vol;
+      g.gain.exponentialRampToValueAtTime(0.0001, now + d[1]);
       o.connect(g); g.connect(sfxBus);
-      o.start(); o.stop(ac.currentTime + d[1] + 0.02);
+      o.start(now); o.stop(now + d[1] + 0.02);
     } catch (e) { /* bỏ qua lỗi âm thanh */ }
   };
 

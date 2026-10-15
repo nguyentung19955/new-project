@@ -616,7 +616,8 @@
   // ---------- cài đặt (Anh Mõ) ----------
   // Lưu mây, đăng nhập Google, góp ý: js/cloud.js, js/cloud_ui.js (không có thì bảng chỉ còn phần cũ)
   // Phiên Cốt truyện + Âm thanh: mọi nút của bảng cao 32 (khoảng 46 điểm trên iPhone cầm ngang, tối thiểu 44). Trang 2 (V.cd2):
-  // thanh Nhạc, thanh Tiếng (0..100, G.save.nhac / G.save.tieng, js/engine.js G.amThanh), bật/tắt âm thanh, Tiết kiệm pin (G.save.pin), Xem lại truyện.
+  // thanh Nhạc, thanh Tiếng (0..100, G.save.nhac / G.save.tieng, js/engine.js G.amThanh), bật/tắt âm thanh, Tiết kiệm pin (G.save.pin), Xem lại truyện,
+  // Rung màn (G.save.rungTat = true: tắt rung màn hình, soát mượt Phiên 2).
   const CDH = 32;
   function settings() {
     const sv = G.save, CL = G.cloud, CU = G.cloudUI;
@@ -683,8 +684,13 @@
       if (sv.pin) delete sv.pin; else sv.pin = true;
       G.persist(); say(sv.pin ? 'Tiết kiệm pin: hình vẽ 30 khung mỗi giây, máy đỡ nóng.' : 'Vẽ đủ khung hình, mượt nhất.');
     }
-    if (T.btn(CX + 4, 186, 146, CDH, 'Xem lại truyện', { size: 8.5, disabled: !G.truyen })) { V.confirm = false; G.truyen.xemLai(); }
-    if (T.btn(CX + 154, 186, 146, CDH, '‹ Trở lại', { size: 8.5 })) V.cd2 = false;
+    if (T.btn(CX + 4, 186, 96, CDH, 'Xem lại truyện', { size: 8.5, disabled: !G.truyen })) { V.confirm = false; G.truyen.xemLai(); }
+    // Soát mượt Phiên 2 (mục 5): tắt rung màn hình (G.save.rungTat, js/fx.js trauma / kick). Khựng hình, tiếng, chớp vẫn giữ.
+    if (T.btn(CX + 104, 186, 96, CDH, sv.rungTat ? 'Rung màn: tắt' : 'Rung màn: bật', { size: 8.5, sel: !sv.rungTat })) {
+      if (sv.rungTat) delete sv.rungTat; else sv.rungTat = true;
+      G.persist(); say(sv.rungTat ? 'Đã tắt rung màn hình.' : 'Bật rung màn hình khi đánh trúng.');
+    }
+    if (T.btn(CX + 204, 186, 96, CDH, '‹ Trở lại', { size: 8.5 })) V.cd2 = false;
     ui.para('Nhạc tạo ngay trong máy, không tải thêm gì. Tiết kiệm pin: vẽ 30 khung mỗi giây, trận đấu vẫn chạy đủ nhanh.', CX + 4, 232, 296, { size: 7.5, color: SOFT });
     return 'Nhạc làng có sáo trúc với đàn bầu đấy. Nghe hay thì để to lên!';
   }

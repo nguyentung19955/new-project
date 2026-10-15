@@ -101,7 +101,7 @@
   let OWN = 0;
   const PL_API = { swing: 1, mvSwing: 1, mvCharge: 1, punch: 1, hit: 1, combo: 1, freeze: 1, status: 1, dash: 1,
     dodge: 1, potion: 1, swap: 1, heShatter: 1, heBoom: 1, heSpread: 1, heFinish: 1, heArrow: 1, spCast: 1, spPin: 1, spBack: 1, spCatch: 1,
-    spEnd: 1, chCast: 1, chBoom: 1, chHit: 1, chEnd: 1, chShatter: 1, chSpread: 1, chHeal: 1, death: 1, marks: 1, markOrbs: 1, evolve: 1 };
+    spEnd: 1, chCast: 1, chBoom: 1, chHit: 1, chEnd: 1, chShatter: 1, chSpread: 1, chHeal: 1, death: 1, marks: 1, markOrbs: 1, evolve: 1, buiDung: 1 };
   const EN_API = { enemySwing: 1, lunge: 1, hurt: 1, zoneFire: 1, propBlast: 1 };
   function api(name, f) {
     const own = PL_API[name] ? 1 : EN_API[name] ? 0 : -1;
@@ -619,16 +619,48 @@
 
   // ---------- rung màn hình và khựng hình ----------
   // Cường độ chỉnh ở js/vfx_cfg.js (G.VFX): rung nhân vào độ rung và cú giật, khung nhân vào thời gian khựng.
-  function trauma(a) { a *= VX('rung'); if (!(a > 0)) return; S.trauma = Math.min(1, Math.max(S.trauma, a * 0.75) + a * 0.3); }
-  function kick(dx, dy) { const k = VX('rung'); S.kx = Math.max(-4, Math.min(4, S.kx + dx * k)); S.ky = Math.max(-3, Math.min(3, S.ky + dy * k)); }
+  // 15/10 soát mượt Phiên 2 (docs/review/ke-hoach-cai-thien/soat-muot/bao-cao.md mục 5, 14, 24). Mỗi mục một cờ quay lui:
+  //  - G.RUNG_MUOT (mục 5, tắt: ?rungcu=1): rung theo nhiễu mượt (tổng 3 sóng sin ~25 lần/giây) thay cho số ngẫu nhiên mỗi khung,
+  //    làm tròn theo điểm ảnh thật (nửa điểm ảnh game khi Độ nét Cao), mức sàn ~0,75 điểm ảnh cho đòn thường, cú "đá" một phía tắt dần
+  //    (không lật dấu mỗi khung). Nút "Rung màn" ở Anh Mõ › Âm thanh, pin (G.save.rungTat = true) tắt hẳn rung và cú đá, ở cả hai bản.
+  //  - G.DUNG_MOI (mục 14, tắt: ?dungcu=1): trần tổng thời gian khựng 150 ms mỗi 0,5 giây, lần khựng sau trong cùng cửa sổ x0,6;
+  //    phi tiêu / mũi tên thường trúng khựng 25 ms.
+  //  - G.CHOP_MO (mục 24, tắt: ?chopmo=0): chớp nhẹ trúng đòn mờ dần theo bình phương (js/sprite_custom.js đọc G.fx.chopMo),
+  //    số sát thương đi theo độ rung màn.
+  const coQ = (re) => { try { return typeof location !== 'undefined' && re.test(location.search || ''); } catch (e) { return false; } };
+  if (G.RUNG_MUOT === undefined) G.RUNG_MUOT = !coQ(/[?&]rungcu=1(&|$)/);
+  if (G.DUNG_MOI === undefined) G.DUNG_MOI = !coQ(/[?&]dungcu=1(&|$)/);
+  if (G.CHOP_MO === undefined) G.CHOP_MO = !coQ(/[?&]chopmo=0(&|$)/);
+  const rungTat = () => !!(G.save && G.save.rungTat);
+  function trauma(a) { if (rungTat()) return; a *= VX('rung'); if (!(a > 0)) return; S.trauma = Math.min(1, Math.max(S.trauma, a * 0.75) + a * 0.3); }
+  function kick(dx, dy) { if (rungTat()) return; const k = VX('rung'); S.kx = Math.max(-4, Math.min(4, S.kx + dx * k)); S.ky = Math.max(-3, Math.min(3, S.ky + dy * k)); }
+  const DUNG = { cua: 0.5, tran: 150, giam: 0.6, it: 8 }; // mục 14: cửa sổ 0,5 giây, trần 150 ms, lần sau x0,6, dưới 8 ms thì bỏ
   function stop(ms) {
     ms *= VX('khung');
     if (!(ms > 0)) return;
+    if (G.DUNG_MOI !== false && ms < 120 * VX('khung')) { // trùm gục, đòn chí mạng phá trùm (>= 120 ms) giữ nguyên, không tính vào trần
+      const now = S.tThuc || 0;
+      if (!(now - (S.dungT0 == null ? -9 : S.dungT0) < DUNG.cua)) { S.dungT0 = now; S.dungMs = 0; S.dungN = 0; }
+      ms *= Math.pow(DUNG.giam, S.dungN | 0);
+      ms = Math.min(ms, DUNG.tran - (S.dungMs || 0));
+      if (ms < DUNG.it) return;
+      const s = ms / 1000;
+      if (S.stop > 0) { if (s > S.stop) { S.dungMs += (s - S.stop) * 1000; S.stop = s; } return; } // đang khựng: chỉ kéo dài phần thiếu
+      S.dungMs += ms; S.dungN = (S.dungN | 0) + 1;
+      S.stop = s;
+      return;
+    }
     const s = ms / 1000;
     if (S.stop > 0) { if (s > S.stop) S.stop = s; return; }
     if (S.stopGap > 0 && ms < 100) return; // không khựng liên tục khi đánh cả đám
     S.stop = s;
   }
+  // Mục 12A (soát mượt Phiên 2): đang chạy mà ra đòn nặng không ghép chân chạy → đứng lại ra đòn, bụi toé sau gót (js/moves.js gọi).
+  api('buiDung', (P, f) => {
+    if (!(VX('bui') > 0)) return;
+    const n = Math.round(3 * Math.min(1.5, VX('bui')));
+    for (let i = 0; i < n; i++) emit(2, P.x - f * rr(2, 6), P.y + rr(-1, 1), -f * rr(12, 30), rr(-12, -4), rr(0.22, 0.36), RAMP.dust, i < 1 ? 3 : 2, 0, 3, null, 0);
+  });
   api('shake', (a, dx, dy) => { trauma(a || 0.3); if (dx || dy) kick(dx || 0, dy || 0); });
   const PRESS = ['atkP', 'dodgeP', 'specialP', 'skillP', 'swapP', 'potionP'];
   // Gọi đầu mỗi lần cập nhật thế giới. Trả về true nếu đang khựng hình (thế giới đứng yên một nhịp).
@@ -661,6 +693,14 @@
     if (!(age >= 0 && age < 0.22)) return null;
     DT[0] = e.fxDotEl ? pal(e.fxDotEl).c : '#ff5a40'; DT[1] = 0.4 * (1 - age / 0.22);
     return DT;
+  };
+  // Mục 24: hệ số chớp nhẹ trúng đòn của con đang vẽ (js/combat.js đặt G.fx.dangVe trước khi vẽ quái / trùm). 1 = như cũ.
+  fx.dangVe = null;
+  fx.chopMo = function () {
+    const e = fx.dangVe;
+    if (G.CHOP_MO === false || !e || !(e.flash > 0)) return 1;
+    const u = Math.min(1, e.flash / 0.07);
+    return u * u;
   };
   fx.shakeOffset = function () {
     if (G.noRender || !S) return ZERO;
@@ -1070,12 +1110,15 @@
     e.fxHitAt = S.t; // nhịp độc/cháy cùng lúc với đòn thật thì vẫn chớp trắng (api dmg)
     // giật lùi nhẹ (chỉ là dời hình lúc vẽ)
     e.fxK = 0.13; e.fxD = dir * (e.isBoss ? 1 : o.heavy || o.crit ? 4 : 2);
+    const lui = G.DAY_LUI !== false && !o.rain; // mục 7: quái bị đẩy lùi THẬT (js/combat.js e.kbVx) → bỏ dời hình giả (trùm vẫn dời 1 điểm ảnh)
+    if (lui && !e.isBoss) e.fxD = 0;
     const big = o.heavy || o.crit || o.dead;
     // VFX chiến đấu: phản ứng phân cấp thường / nặng / chí mạng (chỉ đổi hình lúc vẽ, js/fx.js xf):
     // bẹp theo hướng đánh, nghiêng người ra sau, nảy lên (nặng, chí mạng), chớp trắng mạnh dần theo cấp (js/mobs.js đọc e.fxHk).
     const hk = o.crit ? 3 : o.heavy || o.dead || o.type === 'hammer' ? 2 : 1, bs = e.isBoss ? 0.35 : 1;
     e.fxHk = hk;
-    e.fxS = Math.min(0.13, Math.max(e.fxS || 0, 0) + [0, 0.06, 0.1, 0.13][hk] * bs * (o.ranged ? 0.6 : 1)); e.fxSV = 0;
+    if (lui) { e.fxBepT = S.t; e.fxBep = [0, 0.06, 0.08, 0.1][hk] * bs * (o.ranged ? 0.6 : 1); } // mục 7: bẹp nhẹ 0,1 giây (fx.xf) thay cho vươn cao
+    else { e.fxS = Math.min(0.13, Math.max(e.fxS || 0, 0) + [0, 0.06, 0.1, 0.13][hk] * bs * (o.ranged ? 0.6 : 1)); e.fxSV = 0; }
     e.fxL = dir * [0, 1.5, 3.5, 5][hk] * bs; e.fxLV = 0;
     if (hk >= 2 && !e.isBoss) { e.fxHop0 = e.fxHop = hk === 3 ? 0.2 : 0.16; e.fxHopH = hk === 3 ? 3 : 2; }
     if (o.crit && !o.ranged) S.trCrit = 0.12; // vệt vũ khí đang tắt dần chuyển màu vàng
@@ -1120,7 +1163,7 @@
       for (let i = 0, n = NH(6); i < n; i++) { const a = (i / n) * TAU + 0.3; streak(cx, cy, Math.cos(a) * 150, Math.sin(a) * 110, 0.2, RAMP.gold, 1, 9, 0, 4); }
     } else if (hk === 2 && !o.ranged && !maHit) addRing(cx, cy, 3, 14, 0.14, PL.hi, 1, 1); // đòn nặng: một vòng mảnh
     // khựng hình và rung (nhiều mục tiêu cùng nhịp thì giảm dần theo dim; khựng hình đã tự không chồng nhau)
-    if (o.ranged) { if (big) { stop(50); trauma(0.15 * dim); } kick(dir * 0.8 * dim, 0); }
+    if (o.ranged) { if (big) { stop(50); trauma(0.15 * dim); } else if (G.DUNG_MOI !== false) stop(25); kick(dir * 0.8 * dim, 0); } // mục 14: phi tiêu thường trúng khựng 25 ms
     else {
       stop(o.crit ? 115 : o.dead ? 100 : o.heavy ? 90 : blunt ? 70 : 45);
       trauma((o.crit ? 0.4 : o.heavy || blunt ? 0.3 : 0.14) * dim);
@@ -1293,12 +1336,16 @@
       const n = Math.min(1.5, VX('nhun'));
       const sq = qz((e.fxS || 0) * n), ln = Math.round((e.fxL || 0) * n * 2) / 2;
       const hop = e.fxHop > 0 && e.fxHop0 ? Math.round(Math.sin((Math.PI * e.fxHop) / e.fxHop0) * (e.fxHopH || 0) * n) : 0;
-      if (!sq && !ln && !hop) return false;
+      // mục 7: bẹp nhẹ ngay lúc trúng đòn: scale(1 + b, 1 - b), b = 0,06 (thường) .. 0,1 (chí mạng), trả về theo bình phương trong 0,1 giây
+      const ub = e.fxBep > 0 && e.fxBepT != null ? (S.t - e.fxBepT) / 0.1 : 1;
+      const bep = ub >= 0 && ub < 1 ? qz(e.fxBep * (1 - ub) * (1 - ub) * n) : 0;
+      if (!sq && !ln && !hop && !bep) return false;
       const k = fx.recoil(e), x = Math.round(e.x), y = Math.round(e.y);
       c.save();
       c.translate(x + k, y - (up || 0) - hop);
       if (ln) c.rotate((ln * Math.PI) / 180);
       if (sq) c.scale(1 - sq * 0.7, 1 + sq);
+      if (bep) c.scale(1 + bep, 1 - bep);
       c.translate(-x, -y);
       return true;
     } catch (err) { fail(err); return false; }
@@ -2091,6 +2138,22 @@
     S.shakeSeen = W.shake > 0 ? W.shake : 0;
     S.trauma = Math.max(0, S.trauma - dt * 1.9);
     const a = S.trauma * S.trauma;
+    if (G.RUNG_MUOT !== false) {
+      // Mục 5: nhiễu mượt (3 sóng sin lệch pha, ~25 / 15 / 37 lần mỗi giây) thay cho số ngẫu nhiên mới mỗi khung; mức sàn 0,75 điểm ảnh
+      // cho đòn thường (trauma ~0,15 → 4 x 0,02 = 0,09 điểm ảnh, làm tròn về 0 nên trước đây không thấy gì), nhạt dần khi trauma < 0,08.
+      // Làm tròn theo điểm ảnh thật của canvas thế giới (G.NET = 2 → nửa điểm ảnh game). Cú đá (kx, ky) tắt dần về một phía.
+      const T = S.tThuc || 0, n = G.NET || 1, san = S.trauma > 0 ? 0.75 * Math.min(1, S.trauma / 0.08) : 0;
+      const ax = Math.max(4 * a, san), ay = Math.max(3 * a, san * 0.6);
+      const nx = Math.sin(T * 157) * 0.5 + Math.sin(T * 94 + 1.3) * 0.3 + Math.sin(T * 233 + 2.1) * 0.2;
+      const ny = Math.sin(T * 141 + 0.7) * 0.5 + Math.sin(T * 103 + 2.6) * 0.3 + Math.sin(T * 211 + 4.2) * 0.2;
+      S.sx = Math.round((S.kx + nx * ax) * n) / n;
+      S.sy = Math.round((S.ky + ny * ay) * n) / n;
+      const g = Math.exp(-dt * 15); // ~0,1 giây là hết cú đá
+      S.kx *= g; S.ky *= g;
+      if (Math.abs(S.kx) < 0.25) S.kx = 0;
+      if (Math.abs(S.ky) < 0.25) S.ky = 0;
+      return;
+    }
     S.sx = Math.round(S.kx + (R() * 2 - 1) * 4 * a);
     S.sy = Math.round(S.ky + (R() * 2 - 1) * 3 * a);
     S.kx *= -0.55; S.ky *= -0.55;
@@ -2188,6 +2251,7 @@
   }
   function step(dt, frozen) {
     const W = S.W, P = W.P;
+    S.tThuc = (S.tThuc || 0) + dt; // đồng hồ chạy cả lúc khựng hình (mục 5 nhiễu rung, mục 14 cửa sổ trần khựng)
     S.hitN = 0;
     legacy(W);
     stepShake(dt, W);
@@ -2574,7 +2638,10 @@
     // trên thân vẽ SAU số; vùng báo đòn (G.baoTruoc.draw, ngay sau hàm này trong G.drawWorld) vẽ sau cùng nên không gì che được nó.
     const dt = DOC() ? G.docTran : null;
     if (dt && dt.duoi) { try { dt.duoi(); } catch (e) { fail(e); } }
-    drawNums(cam);
+    // Mục 24: số sát thương đi theo rung màn (vẽ ở lớp giao diện, trước đây đứng yên trong khi quái rung)
+    const rs = G.CHOP_MO !== false && (S.sx || S.sy);
+    if (rs) { c.save(); c.translate(S.sx, S.sy); }
+    try { drawNums(cam); } finally { if (rs) c.restore(); }
     if (dt && dt.tren) { try { dt.tren(); } catch (e) { fail(e); } }
   });
   // Viền đỏ quanh màn hình: vẽ sẵn một lần vào canvas nhỏ, mỗi khung chỉ dán lại với độ trong suốt

@@ -150,7 +150,24 @@
     nenDat: 0.6, // búa thả đà nện đất
     dacBiet: 0.7,
   };
+  // Mục 12A (soát mượt Phiên 2, docs/review/ke-hoach-cai-thien/soat-muot/bao-cao.md): các đòn KHÔNG có hàng thân trên ghép chân chạy
+  // (G.ZED_EO.hang không có kiem_3, thuong_quet, bua_nen, bua_nen_dat, bua_giu) vẽ toàn thân đứng tấn trong khi vẫn trôi 47–54 điểm ảnh/giây
+  // ("trượt băng"). Nay: hệ số đi khi ra / giữ các đòn này 0,25 (đứng lại ra đòn), lúc vào đòn mà đang chạy thì toé bụi gót.
+  // Tắt: ?chaydanhnang=0 (G.CHAY_DANH_NANG = false) → hệ số cũ (0,75 / 0,6 / 0,65 / 0,5).
+  if (G.CHAY_DANH_NANG === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]chaydanhnang=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.CHAY_DANH_NANG = !tat; }
+  G.CHAY_DANH_CFG.dungDanh = 0.25;
   const moi = () => G.CHAY_DANH_MOI !== false;
+  // Đòn đang ra (hay đang giữ) có vẽ toàn thân không ghép chân chạy không (khớp cách chọn hàng của js/zed_moi.js)
+  function donDung(P) {
+    if (G.CHAY_DANH_NANG === false || !moi()) return false;
+    const w = G.curW(P), mv = P.mv, o = mv && mv.cur;
+    if (!w || (o && o.fist)) return false;
+    if (w.type === 'hammer') return true; // bua_nen, bua_nen_dat, bua_giu
+    if (w.type === 'sword') return P.atkT > 0 && ((P.comboI | 0) % 3 + 3) % 3 === 2; // kiem_3 (nhát kết)
+    if (w.type === 'spear') return P.atkT > 0 && ((mv && mv.kind === 'quet') || (P.comboI | 0) === 3); // thuong_quet
+    return false;
+  }
+  M.donDung = donDung;
   const BUF = () => (moi() ? G.CHAY_DANH_CFG.buffer : C.buffer);
 
   // ---------- trạng thái đòn đánh trên người chơi (P.mv) ----------
@@ -242,6 +259,7 @@
   M.speedAtk = function (P) {
     if (moi()) { // chạy + đánh: chém thường gần như đủ tốc, chỉ đòn nặng chậm nhẹ
       const K = G.CHAY_DANH_CFG, w = G.curW(P), mv = P.mv, o = mv && mv.cur;
+      if (donDung(P)) return K.dungDanh; // mục 12A
       if (o && (o.kind === 'nenDat')) return K.nenDat;
       if (o && (o.kind === 'quet' || (o.m && o.m.heavy))) return K.nang;
       const k = w && K.danh[o && o.fist ? 'fist' : w.type];
@@ -258,6 +276,7 @@
     if (!mv || !mv.holding || mv.chargeT < 0) return 1; // V12: tư thế chờ lúc vừa chạm (chưa tới 0,16 giây) chưa đi chậm
     const t = G.curW(P).type, cfg = C[t], T = G.CHAM_DANH;
     if (!cfg || !cfg.charge) return 1;
+    if (t === 'hammer' && donDung(P)) return G.CHAY_DANH_CFG.dungDanh; // mục 12A: giơ búa (bua_giu) đứng lại
     return T && T.giu[t] != null ? T.giu[t] : cfg.charge.slow;
   };
 
@@ -347,12 +366,13 @@
     P.hitAt = o.hitAt != null ? o.hitAt : null;
     P.comboI = o.pose || 0;
     mv.name = o.name; mv.kind = o.kind; mv.step = o.step || 0; mv.cur = o; mv.lastT = G.time + P.atkT;
-    G.sfx('swing', w.type === 'hammer' ? 0.6 : 1);
+    if (G.sfxVung) G.sfxVung(w.type === 'hammer' ? 0.6 : 1, dur, P.hitAt, phase); else G.sfx('swing', w.type === 'hammer' ? 0.6 : 1); // mục 13: vung ở 60% đà
+    if (!G.noRender && G.fx && P.moving && !(phase > 0) && donDung(P)) G.fx.buiDung(P, P.ldx != null && P.ldx ? (P.ldx > 0 ? 1 : -1) : P.face); // mục 12A
   }
   function gain(P, w, n) {
     if (n <= 0) return;
     P.mana = Math.min(P.maxmana, P.mana + P.manaHit + (G.wHas(w, 'mana') ? 1 : 0));
-    G.sfx('hit');
+    if (G.sfxDanh) G.sfxDanh(P.mv && P.mv.cur && P.mv.cur.fist ? 'fist' : w.type); else G.sfx('hit'); // mục 13: tiếng theo vũ khí
   }
   // Đánh mọi quái trong hộp trước mặt. Trả về danh sách quái trúng đòn.
   // Hộp trúng xoay theo hướng nhắm (không còn lọc "phía trước" theo P.face)
@@ -366,6 +386,8 @@
   // Đẩy lùi theo hướng nhắm
   function push(P, list, d) {
     const ux = P.aimX != null ? P.aimX : P.face, uy = P.aimX != null ? P.aimY : 0;
+    // mục 7 (G.DAY_LUI, js/combat.js): đặt vận tốc lùi G.kbQuang(quãng cũ) (lùi đúng quãng cũ nhưng trượt mượt), trùm / quái giáp hệ số nhỏ
+    if (G.DAY_LUI !== false && G.kbDay) { for (const e of list) if (!e.dead) G.kbDay(e, ux, uy, G.kbQuang(d), true); return; }
     for (const e of list) if (!e.dead && !e.isBoss) { e.x += ux * d; e.y += uy * d * ZK(); }
   }
   const aimOf = (P) => (P.aimX != null ? [P.aimX, P.aimY] : [P.face, 0]);
@@ -653,7 +675,8 @@
         if (d < o.reach + e.r && (d < 8 || (dx * ux + dy * uy) / d > -0.77)) { G.cb.playerHit(e, m.mult, { w, heavy: true, dir: e.x >= P.x ? 1 : -1 }); list.push(e); }
       }
       G.cb.hitProps(P.x - o.reach, P.x + o.reach, P.y, o.reach * G.ZK);
-      for (const e of list) if (!e.dead && !e.isBoss) { const dx = e.x - P.x, dy = e.y - P.y, d = Math.hypot(dx, dy) || 1; e.x += (dx / d) * m.push; e.y += (dy / d) * m.push * k; }
+      if (G.DAY_LUI !== false && G.kbDay) { for (const e of list) if (!e.dead) G.kbDay(e, e.x - P.x, (e.y - P.y) / k, G.kbQuang(m.push), true); } // mục 7
+      else for (const e of list) if (!e.dead && !e.isBoss) { const dx = e.x - P.x, dy = e.y - P.y, d = Math.hypot(dx, dy) || 1; e.x += (dx / d) * m.push; e.y += (dy / d) * m.push * k; }
       swingFx(P, w, o);
       { const q = along(P.x, P.y, ux, uy, 10); finish(P, w, { x: q[0], y: q[1], ux, uy, power: 1, round: true }); }
       gain(P, w, list.length);

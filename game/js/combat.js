@@ -200,6 +200,52 @@
   // hạt băng làm chậm là hiệu ứng nhỏ, điểm 0..1 theo số tầng (5 tầng = 1). Hoà điểm thì hệ gây sau cùng (st.last) như cũ.
   // `on` là các hệ được tính (G.kill bỏ hiệu ứng do chưởng gây: e.st.ch). Cờ G.LK_THEO_THAY = false (hay ?lkthay=0): luật cũ
   // "hệ gây sau cùng nếu còn hiệu lực".
+  // ---------- Mục 7 (soát mượt Phiên 2): đẩy lùi THẬT khi trúng đòn ----------
+  // Trước: chỉ dời hình lúc vẽ 2–4 điểm ảnh (js/fx.js), đòn kết dịch quái 8–10 điểm ảnh trong một khung (js/moves.js push).
+  // Nay: đòn cận chiến trúng cho quái một vận tốc lùi e.kbVx/e.kbVy (theo hướng từ người chơi tới quái), tắt dần exp(-12·dt), trượt
+  // 2,5 điểm ảnh (đòn thường) / 3,5 (nặng, chí mạng) trong ~0,25 giây, nhưng KHÔNG đẩy quái ra quá 80% tầm đánh của vũ khí (giuTam: chuỗi đòn
+  // vẫn nối được, không bắt người chơi đuổi theo). Đòn kết (moves.js push) đặt vận tốc G.kbQuang(quãng cũ): lùi đúng bằng quãng cũ 8–10 điểm ảnh
+  // nhưng trượt mượt thay vì dịch trong một khung. Phi tiêu không đẩy.
+  // Hệ số: trùm, trùm nhỏ, quái giáp (shield / có giáp) x0,2; tinh anh x0,5; trùm cây, đóng băng, bị trói chân thì không lùi.
+  // Số chọn bằng bot (tests/dps.py quaimoi 20 hạt giống, tests/balance.py --node vukhi): báo cáo đề xuất vận tốc 120 / 220 (10 / 18 điểm ảnh)
+  // làm kiếm mất 14–26% sát thương mỗi giây vì quái bị đẩy ra khỏi tầm; 2,5 / 3,5 điểm ảnh không giữ tầm vẫn làm kiếm thua thêm ~6 điểm
+  // phần trăm (bot, 180 lượt); có giữ tầm thì nằm trong nhiễu đo.
+  // Đổi VỊ TRÍ quái nên đổi luật chơi: đo lại bằng bot (tests/balance.py --node), xem docs/review/ke-hoach-cai-thien/soat-muot/bao-cao-phien-2.md.
+  // Tắt: ?dayluicu=1 (G.DAY_LUI = false) → như cũ.
+  if (G.DAY_LUI === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]dayluicu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.DAY_LUI = !cu; }
+  G.DAY_LUI_SO = { thuong: 2.5, nang: 3.5, giuTam: 0.8, tat: 12, tran: 240, trum: 0.2, giap: 0.2, tinhAnh: 0.5 }; // thuong / nang: điểm ảnh
+  // Vận tốc lùi để quái trượt đúng d điểm ảnh (tổng của nhịp 1/60 giây tắt dần exp(-tat/60) mỗi nhịp)
+  G.kbQuang = (d) => d * 60 * (1 - Math.exp(-G.DAY_LUI_SO.tat / 60));
+  G.kbHeSo = function (e) {
+    if (!e || e.dead || e.hidden || (e.st && (e.st.frozen > 0 || e.st.root > 0))) return 0;
+    const K = G.DAY_LUI_SO;
+    if (e.isBoss || e.role === 'mini') return e.kind === 'moc' ? 0 : K.trum; // trùm cây đứng gốc: không lùi
+    if (e.role === 'shield' || e.armor > 0) return K.giap;
+    if (e.role === 'elite') return K.tinhAnh;
+    return 1;
+  };
+  // Đặt vận tốc lùi v (điểm ảnh/giây trên sàn) theo hướng (ux, uy) cho quái e (tự nhân hệ số). dat: true = đặt luôn (đòn kết);
+  // 'max' = chỉ đặt khi nhanh hơn vận tốc đang lùi (đòn thường không hãm cú đẩy của đòn kết); false = cộng dồn.
+  G.kbDay = function (e, ux, uy, v, dat) {
+    if (G.DAY_LUI === false) return;
+    const k = G.kbHeSo(e);
+    if (!(k > 0) || !(v > 0)) return;
+    const L = Math.hypot(ux, uy) || 1, zk = G.ZK || 0.85;
+    let vx = (ux / L) * v * k, vy = (uy / L) * v * k * zk;
+    if (dat === 'max' && Math.hypot(e.kbVx || 0, e.kbVy || 0) >= Math.hypot(vx, vy)) return;
+    if (!dat) { vx += e.kbVx || 0; vy += e.kbVy || 0; }
+    const m = Math.hypot(vx, vy), T = G.DAY_LUI_SO.tran;
+    if (m > T) { vx *= T / m; vy *= T / m; }
+    e.kbVx = vx; e.kbVy = vy;
+  };
+  function kbBuoc(e, dt) {
+    if (!e.kbVx && !e.kbVy) return;
+    if (e.dead || (e.st && (e.st.frozen > 0 || e.st.root > 0))) { e.kbVx = e.kbVy = 0; return; }
+    e.x += e.kbVx * dt; e.y = G.clamp(e.y + e.kbVy * dt, W.y0, W.y1);
+    const g = Math.exp(-G.DAY_LUI_SO.tat * dt);
+    e.kbVx *= g; e.kbVy *= g;
+    if (Math.hypot(e.kbVx, e.kbVy) < 3) e.kbVx = e.kbVy = 0;
+  }
   if (G.LK_THEO_THAY === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]lkthay=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.LK_THEO_THAY = !tat; }
   G.lkHeThay = function (st, on) {
     if (G.LK_THEO_THAY === false) return st.last && on[st.last] ? st.last : on.fire ? 'fire' : on.poison ? 'poison' : 'ice';
@@ -460,6 +506,16 @@
     if (G.epDo) G.epDo.hut(P, w, d); // dòng ép đồ "Hút máu"
     if (G.boSk) G.boSk.trung(P, e, o); // skill bộ Rừng "Bẫy dây leo": đòn giữ rồi thả (o.manh) trói chân
     if (!G.noRender) FX('hit', e, { el, type: w.type, ranged: o.ranged, crit, dead: e.dead, heavy: o.heavy, rain: o.rain, dir: o.dir || (e.x >= P.x ? 1 : -1) });
+    if (!G.noRender && G.amGhi) G.amGhi(crit, o.heavy); // mục 13: tiếng trúng kế tiếp biết đòn này chí mạng / nặng
+    // mục 7: đẩy lùi thật đòn cận chiến, theo hướng người chơi → quái, không quá 80% tầm vũ khí (phi tiêu, mưa phi tiêu không đẩy)
+    if (G.DAY_LUI !== false && !o.ranged && !o.rain && !e.dead) {
+      const K = G.DAY_LUI_SO, zk = G.ZK || 0.85, TW = G.WTYPES[w.type];
+      let ux = e.x - P.x, uy = (e.y - P.y) / zk;
+      const d = Math.hypot(ux, uy);
+      if (d < 2) { ux = o.dir || (e.x >= P.x ? 1 : -1); uy = 0; }
+      const tam = ((TW && TW.reach) || 32) + (e.r || 8), q = Math.min(o.heavy || crit ? K.nang : K.thuong, tam * K.giuTam - d);
+      if (q > 0.2) G.kbDay(e, ux, uy, G.kbQuang(q), 'max');
+    }
     if (G.moves) G.moves.onHit(e, d, el, o); // luật riêng của hệ khi đòn trúng (js/moves.js)
     if (G.mobOnHit) G.mobOnHit(e, d, o); // quái gai phản đòn, giáp vỡ (js/mobs.js)
     const T = G.WTYPES[w.type];
@@ -541,7 +597,7 @@
     P.comboI = G.time - P.lastAtk < T.cd + 0.35 ? (P.comboI + 1) % 3 : 0;
     P.lastAtk = G.time;
     P.atkDur = T.cd; P.atkT = T.cd; P.cdT = T.cd; P.hitDone = false; P.hitAt = null;
-    G.sfx('swing', w.type === 'hammer' ? 0.6 : 1);
+    if (G.sfxVung) G.sfxVung(w.type === 'hammer' ? 0.6 : 1, T.cd, null, 0); else G.sfx('swing', w.type === 'hammer' ? 0.6 : 1); // mục 13
   }
   function doHit(P) {
     const w = curW(P), T = G.WTYPES[w.type];
@@ -563,7 +619,7 @@
     }
     if (hits > 0) {
       P.mana = Math.min(P.maxmana, P.mana + P.manaHit + (G.wHas(w, 'mana') ? 1 : 0));
-      G.sfx('hit');
+      if (G.sfxDanh) G.sfxDanh(w.type); else G.sfx('hit'); // mục 13: tiếng theo vũ khí
     }
   }
   // Các hàm ra đòn dùng chung cho js/moves.js (lối đánh riêng của từng vũ khí).
@@ -647,7 +703,8 @@
     if (src && src.trait === 'hut' && !src.dead) src.hp = Math.min(src.maxhp, src.hp + amt * 1.5); // tinh anh hút máu
     if (W.hpFloor && P.hp < 1) P.hp = 1;
     P.inv = 0.55; P.hurtT = 0.2;
-    W.shake = Math.max(W.shake, 0.18);
+    // mục 5: FX('hurt') đã tự rung (trauma 0,45): không đặt thêm W.shake (trước bị cộng rung hai lần). ?rungcu=1: như cũ.
+    if (G.RUNG_MUOT === false || G.noRender || !G.fx) W.shake = Math.max(W.shake, 0.18);
     G.sfx('hurt');
     if (!G.noRender) FX('hurt', P, amt, el);
     if (P.reflect > 0 && melee && src && !src.dead) G.damage(src, raw * P.reflect, { src: 'reflect', fromPlayer: false });
@@ -721,7 +778,7 @@
           nDash++;
         }
       }
-      if (nDash > 0) G.sfx('hit'); // V10: Nhát lướt, Xốc tới trúng quái thì có tiếng trúng (một lần mỗi khung)
+      if (nDash > 0) { if (G.sfxDanh) G.sfxDanh(w.type); else G.sfx('hit'); } // V10: Nhát lướt, Xốc tới trúng quái thì có tiếng trúng (một lần mỗi khung)
       hitProps(Math.min(P.x, nx) - 4, Math.max(P.x, nx) + 4, (P.y + ny) / 2, 14 + Math.abs(ny - P.y) / 2);
       // Chạm tường thì đòn lao dừng ngay tại đó (không chạy tại chỗ sát tường, không kẹt ở cửa): người chơi điều khiển lại được liền.
       if ((nx !== P.x + vx * dd || ny !== P.y + vy * dd) && P.dashT > 0) { P.dashT = 0; P.atkT = Math.min(P.atkT, 0.05); P.cdT = Math.min(P.cdT, 0.12); }
@@ -921,6 +978,7 @@
     if (!G.noRender && G.fx && G.fx.frozen && G.fx.frozen(dt, inp)) return;
     G.updatePlayer(P, inp, dt);
     for (const e of W.ents) if (!e.dead) updateEnemy(e, dt);
+    if (G.DAY_LUI !== false) { for (const e of W.ents) kbBuoc(e, dt); if (W.boss && !W.boss.dead) kbBuoc(W.boss, dt); } // mục 7
     separate();
     // Quái đã vào phòng thì không được lùi hay bị đẩy ra ngoài mép phòng (ngoài đó người chơi không với tới).
     for (const e of W.ents) {
@@ -958,7 +1016,7 @@
           playerHit(e, o.mult, { w: o.w, ranged: true, heavy: o.big, dir: o.vx < 0 ? -1 : 1, manh: o.charged > 0 }); // manh: phát giữ rồi thả (js/bo_skill.js)
           if (G.moves) G.moves.arrowHit(o, e);
           P.mana = Math.min(P.maxmana, P.mana + P.manaHit + (G.wHas(o.w, 'mana') ? 1 : 0));
-          G.sfx('hit', 1.3);
+          if (G.sfxDanh) G.sfxDanh('bow', 1.3); else G.sfx('hit', 1.3);
           if (o.pierce > 0) { o.pierce--; if (o.pierceMult) o.mult *= o.pierceMult; } else { o.t = 0; break; } // tên thường xuyên qua thì yếu đi (pierceMult)
         }
         // đồ vật trên sàn (lò lửa, nấm, đá băng): tên bay qua thì kích nổ nhưng không bị chặn lại
@@ -1146,6 +1204,7 @@
     if (nhe) for (const e of W.ents) { let it = DW_MUC.get(e); if (!it) DW_MUC.set(e, (it = { y: 0, f: veQuaiDW(e) })); it.y = e.y; list.push(it); }
     else for (const e of W.ents) {
       list.push({ y: e.y, f: () => {
+        if (F) F.dangVe = e; // mục 24: chớp nhẹ mờ dần theo e.flash (js/sprite_custom.js hỏi G.fx.chopMo)
         const up = e.mvLift > 0 ? Math.round(Math.sin((e.mvLift / 0.45) * Math.PI) * 10) : 0; // bị Địa Chấn hất tung
         if (xf && xf(c, e, up)) { // đã gồm giật lùi
           if (e.illusion) A.boss(c, e); else A.enemy(c, e);
@@ -1165,6 +1224,7 @@
       list.push({ y: b.y + (b.kind === 'moc' ? -30 : 0), f: () => {
         const on = xf && xf(c, b, 0), k = on ? 0 : rec ? rec(b) : 0;
         if (k) c.translate(k, 0);
+        if (F) F.dangVe = b;
         if (b.kind === 'mini') A.enemy(c, b); else A.boss(c, b);
         if (k) c.translate(-k, 0);
         if (on) c.restore();
