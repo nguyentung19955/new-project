@@ -1651,8 +1651,8 @@
     const t = G.time, st = e.st || ST0;
     // 15/10 con-ve-tay: trùm / trùm nhỏ (js/combat.js luôn gọi) dính hệ thì trên đầu hiện hàng ô VUÔNG vẽ code (độc: ô xanh lục).
     // Có ảnh biểu tượng trạng thái gd-tt-chay / gd-tt-doc / gd-tt-bang (9×9, đang dùng ở thanh trạng thái của em bé, js/stage.js) thì vẽ ảnh,
-    // xếp một hàng giữa đầu. Ảnh nào chưa có thì phần đó vẽ code như cũ. Cờ tắt ?vetaycu=1.
-    const SCt = G.spriteCustom, coGd = G.VE_TAY_MOI !== false && SCt && SCt.gdSan && SCt.veGd;
+    // xếp một hàng giữa đầu. Ảnh nào chưa có thì không vẽ (thiếu js/sprite_custom.js thì vẽ code như cũ).
+    const SCt = G.spriteCustom, coGd = SCt && SCt.gdSan && SCt.veGd;
     const gF = coGd && st.fire > 0 ? SCt.gdSan('gd-tt-chay') : null, gP = coGd && st.poisonN > 0 ? SCt.gdSan('gd-tt-doc') : null, gI = coGd && (st.iceN > 0 || st.frozen > 0) ? SCt.gdSan('gd-tt-bang') : null;
     if (gF || gP || gI) { const ds = [gF, gP, gI].filter(Boolean); ds.forEach((g, i) => SCt.veGd(c, g, Math.round(x - (ds.length * 10 - 1) / 2 + i * 10), top - 6, 9, 9)); }
     if (st.fire > 0 && !gF && !coGd) { // đợt 2: ảnh chưa tải thì không vẽ ô code

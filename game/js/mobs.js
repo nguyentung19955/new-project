@@ -429,12 +429,11 @@
         e.healCd = hurt.length ? G.rr(7, 9) : 1.5;
         if (hurt.length) {
           begin(e, 'heal', e.face > 0 ? 0 : PI, 0.6, { cd: 1, keepFace: true, fire: (q) => {
-            // Con vẽ tay đợt 3 (YEU-CAU-3.md, ?vetaycu=1 tắt): vòng elip xanh lá vẽ code → ảnh hu-vong-hoi-quai trên sàn dưới con hồi máu
+            // Con vẽ tay đợt 3 (YEU-CAU-3.md): vòng elip xanh lá vẽ code → ảnh hu-vong-hoi-quai trên sàn dưới con hồi máu
             // (vòng khung 4 rộng 90 khi co 1 → co 2 = rộng 180 = đúng bán kính hồi 90). Bỏ ảnh thay tạm hu-hoi-mau của đợt 2.
             // Ảnh chưa tải: không vẽ vòng (vẫn còn số +máu xanh).
-            const vt = G.VE_TAY_MOI !== false;
             for (const x of w.ents) if (!x.dead && Math.hypot(x.x - q.x, x.y - q.y) < 90) { const h = x.maxhp * 0.14; x.hp = Math.min(x.maxhp, x.hp + h); FX('text', x.x, x.y - x.h - 4, '+' + Math.round(h), '#8fe86a', 8); }
-            if (vt) FX('anh', 'hu-vong-hoi-quai', q.x, q.y, { sc: 2, ly: 0, mo: 0.85 }); else q.healFx = 0.6;
+            FX('anh', 'hu-vong-hoi-quai', q.x, q.y, { sc: 2, ly: 0, mo: 0.85 });
             FX('sparkle', q.x, q.y - 6, '#8fe86a', 14); G.sfx('pick', 1.6);
           } });
           return;
@@ -737,9 +736,9 @@
       else if (z.shape === 'cone') for (let i = 0; i < 4; i++) { const a = z.ang + (i / 3 - 0.5) * z.span; pts.push([z.x + Math.cos(a) * z.r * 0.7, z.y + Math.sin(a) * z.r * 0.7]); }
       else if (z.shape === 'donut') for (let i = 0; i < 8; i++) { const a = i / 8 * TAU, r = (z.r0 + z.r1) / 2; pts.push([z.x + Math.cos(a) * r, z.y + Math.sin(a) * r * (G.ZK || 1)]); }
       const col = z.el && G.EL[z.el] ? G.EL[z.el].col : '#fff0c8';
-      // 15/10 con-ve-tay: có ảnh hu-va-cham thì mỗi điểm là ảnh va chạm nhuộm màu hệ (thay 4 hạt vuông vẽ code); cờ tắt ?vetaycu=1
+      // 15/10 con-ve-tay: có ảnh hu-va-cham thì mỗi điểm là ảnh va chạm nhuộm màu hệ (thay 4 hạt vuông vẽ code); ảnh chưa tải thì không rải hạt
       const vc = G.huVt && G.huVt('hu-va-cham');
-      for (const q of pts) if (!(vc && G.fx.anh('hu-va-cham', q[0], q[1] - 3, { sc: 1.1, mau: z.el && G.EL[z.el] ? col : null })) && G.VE_TAY_MOI === false) G.fx.burst(q[0], q[1], col, 4, 60); // đợt 2: ảnh chưa tải thì không rải hạt vuông
+      if (vc) for (const q of pts) G.fx.anh('hu-va-cham', q[0], q[1] - 3, { sc: 1.1, mau: z.el && G.EL[z.el] ? col : null }); // đợt 2: ảnh chưa tải thì không rải hạt vuông
       if (G.fx.shake) G.fx.shake(0.15);
     };
   }
@@ -919,9 +918,9 @@
     const D = R.D, f = e.face < 0 ? -1 : 1, F = Math.floor(G.time * 60), s = Math.max(1, Math.round(R.s * k)), ex = Math.round(e.x), ey = Math.round(e.y);
     // 15/10 con-ve-tay: js/fx.js (fx.entity) đã vẽ ảnh hu-bam-bang / hu-bam-lua / hu-bam-doc trên MỌI quái đang dính hệ → hạt vẽ code ở đây
     // (mảnh băng ở chân, lưỡi lửa, bong bóng độc VUÔNG xanh lục) chồng thêm một lớp nữa. Có ảnh thì bỏ phần hạt code đó; nhuộm thân giữ.
-    // Cờ tắt ?vetaycu=1 (hoặc ?hudot3=0: không có ảnh hu-bam-* → hạt code như cũ).
+    // ?hudot3=0: không có ảnh hu-bam-* → hạt code như cũ. (15/10 don-tep B: bỏ cờ ?vetaycu=1.)
     // Đợt 2 (YEU-CAU-2): ảnh hu-bam-* chưa tải xong cũng KHÔNG vẽ hạt code (gọi G.huDot3 chỉ để báo tải ngay).
-    const coA = (ma) => { if (G.huDot3) G.huDot3(ma); return G.VE_TAY_MOI !== false && G.HU_DOT3 !== false; };
+    const coA = (ma) => { if (G.huDot3) G.huDot3(ma); return G.HU_DOT3 !== false; };
     const boBang = coA('hu-bam-bang'), boLua = coA('hu-bam-lua'), boDoc = coA('hu-bam-doc');
     const tren = (xr) => { if (!D.tren) return D.y0; const i = clamp(Math.round(xr - D.cx0), 0, D.tren.length - 1), v = D.tren[i]; return v > 9999 ? D.y0 : v; };
     const lung = (yr) => { if (!D.sau) return D.x0; const i = clamp(Math.round(yr - D.cy0), 0, D.sau.length - 1), v = D.sau[i]; return v > 9999 ? D.x0 : v; };
@@ -1022,7 +1021,6 @@
     G.monsterArt.draw(c, e.art, e.x, e.y, o);
     if (NGv) NGv.veTren(c, e);
     if (TR) ttHat(c, e, TR, 1);
-    if (e.healFx > 0) { e.healFx -= 1 / 60; A.ellipse(c, e.x, e.y, 90 * (1 - e.healFx / 0.6), 90 * 0.6 * (1 - e.healFx / 0.6), 'rgba(143,232,106,0.18)'); }
     if (e.dying != null) return;
     const top = e.y - e.h - 2;
     const ic = [];

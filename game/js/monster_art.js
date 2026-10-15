@@ -1312,7 +1312,7 @@ const DON = {
     P.under(c => { if (k === 'chem') F.baoQuat(c, 0, 0, tam, dir, d.xoe || 1.9, u); else if (k === 'lao') F.baoDuong(c, 0, 0, tam, d.rong || Math.max(10, P.B.bw * .6), dir, u); else if (k === 'ban') F.baoDuong(c, 0, 0, tam, d.rong || 5, dir, u);
       else if (k === 'no' || k === 'gai' || k === 'dap') F.baoTron(c, 0, 0, tam, u); else if (k === 'phun') F.baoQuat(c, 0, 0, tam, dir, d.xoe || 1.1, u); else if (k === 'nem') F.baoTron(c, Math.cos(dir) * tam, Math.sin(dir) * tam * MA.det, d.rong || 12, u); });
     // Con vẽ tay đợt 3 (YEU-CAU-3.md): trong trận tia sáng ở miệng lúc lấy đà → ảnh hu-tia-mom (trắng, nhuộm màu giữa của đòn quái), 5 khung
-    // theo độ lấy đà u, cỡ 16 ≈ đốm + hạt code cũ (bán kính 6). Ảnh chưa tải: không vẽ. ?vetaycu=1: vẽ code như cũ.
+    // theo độ lấy đà u, cỡ 16 ≈ đốm + hạt code cũ (bán kính 6). Ảnh chưa tải: không vẽ. Trang công cụ (MA._vt2 = false): vẽ code.
     if ((k === 'ban' || k === 'phun' || k === 'nem') && MA._vt2) { if (VT3('hu-tia-mom')) { const cols = d.mau || ['#7cc4ee', '#dff4ff', '#ffffff']; P.over(c => { const m = DON.mom(P); HT.ve(c, 'hu-tia-mom', m[0], m[1], Math.min(4, Math.floor(u * 5)), 0, 1, false, G.HU_MO !== false && u > 0.75 ? Math.max(0, 1 - (u - 0.75) / 0.25) : 1, cols[1]); /* soát mượt phiên 3 mục 8: mờ dần 25% cuối (?humo=0 như cũ) */ }); } }
     else if ((k === 'ban' || k === 'phun' || k === 'nem') && !MA._vt2) P.over(c => { const m = DON.mom(P), cols = d.mau || ['#7cc4ee', '#dff4ff', '#ffffff']; F.hat(c, m[0], m[1], 6, 11, 1 - (u * 3 % 1), { v: -7, cols: [cols[1], cols[2] || cols[1]] }); F.dia(c, m[0], m[1], 1 + u * 2, cols[1]); F.px(c, m[0], m[1], '#ffffff'); }); },
   don(P, u) { const d = P.d.don || {}, k = d.kieu || 'chem', tam = d.tam || 24, dir = P.dir, cols = d.mau || ['#7cc4ee', '#dff4ff', '#ffffff'], dx = Math.cos(dir), dy = Math.sin(dir) * MA.det, B = P.B;
@@ -1429,10 +1429,10 @@ const TRUM = MA.trum = {
       P.over(c => { F.hat(c, 0, cy, 40, 7, v, { v: R * 1.3, cols: [cols[2], cols[1], cols[0]], to: 2 }); for (let i = 0; i < 12; i++) { const a = i / 12 * TAU + .2, r0 = R * .4, r1 = R * (.6 + v * 1.1); F.a(c, 1 - v); F.duong(c, Math.cos(a) * r0, cy + Math.sin(a) * r0, Math.cos(a) * r1, cy + Math.sin(a) * r1, cols[2], 1); } F.a(c, 1); }); } },
   // Choáng: lảo đảo, sao vàng xoay quanh đỉnh đầu (hx, hy là điểm trên hình gốc).
   choang(P, hx, hy) { const u = P.u; P.rot += 5 * sn(u); P.sh += 3 * sn(u + .25); P.sy *= .96 + .02 * sn(u * 2); const q = P.pt(hx, hy);
-    // 15/10 con-ve-tay: có ảnh sao choáng hu-choang (đang dùng cho quái thường ở js/fx.js) thì vẽ ảnh (rộng 40 ≈ vòng sao code), cờ tắt ?vetaycu=1
+    // 15/10 con-ve-tay: có ảnh sao choáng hu-choang (đang dùng cho quái thường ở js/fx.js) thì vẽ ảnh (rộng 40 ≈ vòng sao code)
     if (G.huVt && G.huVt('hu-choang')) { P.over(c => HT.ve(c, 'hu-choang', q[0], q[1] - 10, Math.floor(G.time / 0.1) % 6, 0, 2)); return; }
-    if (G.VE_TAY_MOI !== false) return; // đợt 2 (YEU-CAU-2): ảnh chưa tải thì không vẽ sao code
-    P.over(c => { for (let i = 0; i < 4; i++) { const a = (u + i / 4) * TAU, x = q[0] + Math.cos(a) * 20, y = q[1] - 10 + Math.sin(a) * 6; const truoc = Math.sin(a) > 0; F.a(c, truoc ? 1 : .6); F.sao(c, x, y, truoc ? 3 : 2, i % 2 ? '#ffd23c' : '#fff6b0'); F.dia(c, x, y, 1.2, '#ffffff'); } F.a(c, 1); }); },
+    // đợt 2 (YEU-CAU-2): ảnh chưa tải thì không vẽ sao code (15/10 don-tep B: bỏ sao vẽ code của ?vetaycu=1)
+  },
   // Chết hoành tráng: rung dữ dội, nổ lốp bốp khắp thân, tia sáng toả, chớp trắng lớn, rồi tan theo kiểu k.
   chetLon(P, k, cols, mauTan) { const u = P.u, B = P.B, bh = B.bh, bw = B.bw, cy = -P.h - bh * .5, R = Math.max(bw, bh) * .6;
     if (u < .55) { const v = u / .55; P.x += (((u * 48) | 0) % 2 ? 1 : -1) * (1 + v * 2); P.rot += 6 * v * sn(u * 6); P.flash = ((u * 24) | 0) % 3 === 0 ? .7 : 0; P.sy *= 1 - .05 * v;
@@ -1465,7 +1465,7 @@ const HT = MA.huTrum = {
 };
 // Con vẽ tay đợt 3 (docs/review/ke-hoach-cai-thien/con-ve-tay/YEU-CAU-3.md): trong trận (MA._vt2) các hình vẽ code đợt 2 đã tắt nay vẽ bằng ảnh
 // hu-cao-quai, hu-lao-bui, hu-gai-toa, hu-tia-mom (DON), hu-khoi-doc-nho (khiDoc). VT3(mã): ảnh đã sẵn sàng (G.fxAnh.co cũng báo tải ngay).
-// Ảnh chưa tải: không vẽ gì. ?vetaycu=1 (MA._vt2 = false): vẽ code như cũ.
+// Ảnh chưa tải: không vẽ gì. Trang công cụ / truyện (không truyền bao: false, MA._vt2 = false): vẽ code.
 const VT3 = (ma) => !!MA._vt2 && !!G.fxAnh && G.fxAnh.co(ma);
 // khói độc nhỏ QUANH thân (Nấm Phồng, Nấm Phồng Chúa, Nấm Chúa, Mộc Tinh): ảnh lặp 6 khung neo ở gốc khói (đáy giữa), cao 24 khi co 1.
 // Hai làn ở hai bên (x ± 0,85 r, làn phải lật, lệch 3 khung) để không bị thân ảnh AI che hết (khiDoc vẽ dưới thân); co r/16 → mỗi làn cao ~1,5 r,
@@ -1521,8 +1521,8 @@ MA.draw = function (c, id, x, y, o) {
   // Con vẽ tay đợt 2 (docs/review/ke-hoach-cai-thien/con-ve-tay/YEU-CAU-2.md): TRONG TRẬN (game luôn vẽ với bao: false) tắt các hình vẽ code
   // chưa có ảnh (vệt chém lưỡi liềm, vệt lao, vòng gai, tia sáng ở miệng, khói độc quanh thân, bùa giả Mộc Tinh) và thay vài chỗ bằng ảnh có sẵn
   // (nổ cảm tử → hu-no-*, Quạt đuôi Hồ Tinh → hu-tram-nguyet-fire, cột băng Ngư Tinh → hu-gai-bang). Trang công cụ / truyện (không truyền
-  // bao: false) vẫn xem hình code. Cờ quay lui chung ?vetaycu=1 (G.VE_TAY_MOI = false).
-  MA._vt2 = G.VE_TAY_MOI !== false && o.bao === false;
+  // bao: false) vẫn xem hình code. (15/10 don-tep B: bỏ cờ quay lui ?vetaycu=1.)
+  MA._vt2 = o.bao === false;
   an.f(P);
   // Phiên hiệu năng (V1): MA._boThan do js/sprite_custom.js bật khi quái đã có ảnh AI. Thân vẽ bằng code khi đó không bao giờ hiện ra
   // (bút giả chỉ lấy lệnh drawImage đầu tiên để dán ảnh AI), nên bỏ hẳn bước dựng khung (veKhung/ghepHinh) — chỉ còn Pose, bóng, hiệu ứng.
@@ -1905,7 +1905,7 @@ def('cuaDa', { ten: 'Cua Đá', vung: 'bien', loai: 'trumnho', tt: 1, luoi: () =
     move: A(.7, P => { const u = P.u; P.h += Math.abs(sn(u * 2)) * 1.2; P.rot += 2 * sn(u); P.x += sn(u * 2) * .8; P.r('chanT', 16 * sn(u * 2)).r('chanP', 16 * sn(u * 2 + .5)); P.r('cangT', 5 * sn(u * 2)).r('cangP', 5 * sn(u * 2 + .3)); }),
     tele: A(.8, P => { const u = P.u, k = kf(u, [[0, 0], [.4, 1, 'back'], [1, 1]]); CH.tele(P); P.r('cangT', 30 * k + rung(u, .4) * 6).m('cangT', 3 * k, -6 * k).r('cangP', -20 * k); }),
     atk: A(.6, P => { const u = P.u, a = kf(u, [[0, 30], [.18, -40, 'in'], [.45, -30], [1, 0, 'back']]); CH.atk(P); P.r('cangT', a).m('cangT', 3 * (1 - seg(u, 0, .2)), -6 * (1 - seg(u, 0, .2))); P.r('cangP', -20 * (1 - u)); }),
-    hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.r('cangT', -15 * k).r('cangP', 15 * k); if (!(P.anhAI && G.VE_TAY_MOI !== false)) P.over(c => F.hat(c, 0, -40, 8, 4, P.u, { v: 14, cols: DA })); }), // 15/10 con-ve-tay: thân ảnh AI (hàng hit đã vẽ sẵn đá văng) thì bỏ hạt vuông xám xanh vẽ code (nhấp nháy suốt lúc choáng)
+    hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.r('cangT', -15 * k).r('cangP', 15 * k); if (!P.anhAI) P.over(c => F.hat(c, 0, -40, 8, 4, P.u, { v: 14, cols: DA })); }), // 15/10 con-ve-tay: thân ảnh AI (hàng hit đã vẽ sẵn đá văng) thì bỏ hạt vuông xám xanh vẽ code (nhấp nháy suốt lúc choáng)
     die: A(1.6, P => { const k = kf(P.u, [[0, 0], [.25, 1, 'nay']]); CH.die(P); P.r('cangT', -40 * k).m('cangT', 0, 8 * k).r('cangP', 40 * k).m('cangP', 0, 8 * k); P.sy *= 1 - .15 * k; }),
     spawn: A(1.3, P => { const u = P.u; CH.spawn(P); P.r('cangT', 30 * sn(u * 3) * (u > .6 ? 1 : 0)).r('cangP', -30 * sn(u * 3) * (u > .6 ? 1 : 0)); }),
     // Chiêu 1: giơ hai càng lên cao rồi đập xuống, sàn nứt và sóng chấn động lan ra (phải chạy ra ngoài vòng đỏ).

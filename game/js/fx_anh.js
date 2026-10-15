@@ -69,12 +69,9 @@
   G.huDot3 = (ma) => G.HU_DOT3 !== false && FA.co(ma);
   // ---------- CÒN VẼ TAY (15/10, docs/review/ke-hoach-cai-thien/con-ve-tay) ----------
   // Nối ảnh đã có vào các chỗ trong trận còn vẽ bằng code (ô vuông chớp ở vùng nổ, bong bóng / mảnh băng / lưỡi lửa vẽ code chồng lên ảnh
-  // hu-bam-*, biểu tượng trạng thái trên đầu trùm, sao choáng trùm vùng). Cờ tắt ?vetaycu=1 (G.VE_TAY_MOI = false) → như cũ.
-  // G.huVt(mã): cờ bật VÀ ảnh mã đó đã sẵn sàng (ảnh chưa về: vẽ code như cũ).
-  let vtCu = false;
-  try { vtCu = typeof location !== 'undefined' && /[?&]vetaycu=1(&|$)/.test(String(location.search || '')); } catch (e) { vtCu = false; }
-  if (G.VE_TAY_MOI == null) G.VE_TAY_MOI = !vtCu;
-  G.huVt = (ma) => G.VE_TAY_MOI !== false && FA.co(ma);
+  // hu-bam-*, biểu tượng trạng thái trên đầu trùm, sao choáng trùm vùng). 15/10 don-tep B: bỏ cờ ?vetaycu=1 (G.VE_TAY_MOI).
+  // G.huVt(mã): ảnh mã đó đã sẵn sàng.
+  G.huVt = (ma) => FA.co(ma);
   // ---------- HIỆU ỨNG CHIÊU TRÙM VÙNG (14/10, docs/review/ke-hoach-cai-thien/trum-moi/YEU-CAU-MOC-HO-HIEU-UNG-NEN.md) ----------
   // hu-song-than, hu-bang-nhon-roi, hu-xoay-nuoc, hu-phun-bang (Ngư Tinh), hu-gai-re, hu-qua-doc-roi, hu-la-chem (Mộc Tinh),
   // hu-cau-lua-ma (Hồ Tinh), hu-doi-pha (cả ba trùm lúc đổi pha). Bật mặc định khi có ảnh; cờ tắt ?hutrum=0 (hoặc G.HU_TRUM = false)

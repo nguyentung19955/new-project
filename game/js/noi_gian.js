@@ -61,42 +61,14 @@
     const lv = NG.muc(e);
     if (!lv || G.noRender || e.hidden) return;
     const A = G.art, p = nhip(lv), rx = rongCua(e) * (1 + 0.08 * p), K = G.ZK || 0.85;
-    // Con vẽ tay đợt 3 (YEU-CAU-3.md, ?vetaycu=1 quay lui): quầng elip mờ giữ tạm ở đợt 2 → ảnh hu-hao-quang-gian (vòng lửa đỏ lặp 6 khung, vòng
+    // Con vẽ tay đợt 3 (YEU-CAU-3.md): quầng elip mờ giữ tạm ở đợt 2 → ảnh hu-hao-quang-gian (vòng lửa đỏ lặp 6 khung, vòng
     // rộng 40 khi co 1, neo tâm vòng) dưới chân: co = 2·rx·1,1 / 40 (vòng phủ quầng cũ, nhịp to nhỏ theo nhịp giận), lv 1 nhạt hơn lv 2.
     // Thân nhuộm đỏ có nhịp và màn đỏ ở mép (pha 3) giữ nguyên. Ảnh chưa tải: không vẽ gì dưới chân.
-    if (G.VE_TAY_MOI !== false) {
-      const FA = G.fxAnh;
-      if (FA && FA.co('hu-hao-quang-gian')) FA.ve(c, 'hu-hao-quang-gian', e.x, e.y, (G.time || 0) * (lv >= 2 ? 1.4 : 1) + (e.id || 0) * 0.13, 0, (2 * rx * 1.1) / 40, false, lv >= 2 ? 0.95 : 0.75);
-      return;
-    }
-    if (!A || !A.ellipse) return;
-    A.ellipse(c, e.x, e.y, rx * 1.18, rx * 1.18 * K * 0.5, 'rgba(255,40,20,' + (0.07 + 0.08 * p).toFixed(3) + ')');
-    A.ellipse(c, e.x, e.y, rx, rx * K * 0.5, 'rgba(255,60,30,' + ((lv >= 2 ? 0.2 : 0.14) + 0.12 * p).toFixed(3) + ')');
-    // viền quầng: các điểm đỏ sáng chạy vòng (nhấp nháy)
-    const n = lv >= 2 ? 18 : 12, t = G.time || 0;
-    for (let i = 0; i < n; i++) {
-      if (((i + Math.floor(t * (lv >= 2 ? 14 : 9))) % 3) === 0) continue;
-      const g = (i / n) * Math.PI * 2 + t * 0.8;
-      A.p(c, Math.round(e.x + Math.cos(g) * rx * 1.1), Math.round(e.y + Math.sin(g) * rx * 1.1 * K * 0.5), 2, 1, i % 2 ? '#ff5a30' : '#ffb040');
-    }
+    const FA = G.fxAnh;
+    if (FA && FA.co('hu-hao-quang-gian')) FA.ve(c, 'hu-hao-quang-gian', e.x, e.y, (G.time || 0) * (lv >= 2 ? 1.4 : 1) + (e.id || 0) * 0.13, 0, (2 * rx * 1.1) / 40, false, lv >= 2 ? 0.95 : 0.75);
   };
-  // Đốm lửa giận bốc lên quanh thân (vẽ SAU thân).
-  NG.veTren = function (c, e) {
-    const lv = NG.muc(e);
-    if (!lv || G.noRender || e.hidden) return;
-    const A = G.art;
-    if (!A || !A.p) return;
-    if (G.VE_TAY_MOI !== false) return; // đợt 2: đốm lửa VUÔNG vẽ code → tắt (thân vẫn nhuộm đỏ có nhịp + quầng dưới chân)
-    const h = Math.min(110, e.drawH || e.h || 40), rx = rongCua(e), n = lv >= 2 ? 10 : 6, t = G.time || 0, s = lv >= 2 ? 3 : 2;
-    const ga = c.globalAlpha;
-    for (let i = 0; i < n; i++) {
-      const u = (t * (lv >= 2 ? 0.9 : 0.6) + hh(i, 1)) % 1;
-      const x = e.x + (hh(i, 2) - 0.5) * 2 * rx + Math.sin(t * 3 + i) * 2, y = e.y - 4 - u * h * 0.95;
-      c.globalAlpha = ga * (1 - u) * 0.9;
-      A.p(c, Math.round(x), Math.round(y), s, s, u < 0.4 ? '#ffd23c' : '#ff4a20');
-    }
-    c.globalAlpha = ga;
-  };
+  // Đốm lửa giận bốc lên quanh thân: đợt 2 con-ve-tay đã tắt (đốm VUÔNG vẽ code); 15/10 don-tep B bỏ hẳn cùng cờ ?vetaycu=1. Giữ hàm rỗng cho nơi gọi.
+  NG.veTren = function () {};
 
   // ---------- pha 3 (hóa cuồng): màn hơi đỏ ở mép ----------
   let VIG = null;
