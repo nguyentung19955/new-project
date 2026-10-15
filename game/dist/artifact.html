@@ -59,7 +59,7 @@
 <div id="lk-tai" data-bia="||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAMEBQYH/8QAKRAAAQMCBQMDBQAAAAAAAAAAAQIDEQAEBRIhMUETFGEiQnEVUWKBsf/EABcBAAMBAAAAAAAAAAAAAAAAAAIDBAX/xAAlEQACAQEFCQAAAAAAAAAAAAABAgADBBExUfASEyEyM0FxobH/2gAMAwEAAhEDEQA/AOfNMWj9zbWiEtBsn1ugGTPCvjXajFcBNssNsvoeMxlCgVJqzCbhHftG3aGdcJBUAUn7neRzTMcumxjD0hDSkmFBtWZMjSdR5qamzb4DtHOiimTfxmt/T3UpzLBCTt5q22sWekt0vBvImSF8+KyF5eWDaGFNZlr6YkKGiTPGvzSutZDDX1sF3P0wPUBMzvP62rStACi5TEWB9pizi/H1JsLUo3NhKiZUOfyqbE1Hu3jJkqPNFFRUuprOHU5dZSVwmE6+2mNk9u7r7R/aKKqqQLNifB+T/9k=|||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAgf/xAAmEAACAgEEAQQCAwAAAAAAAAABAgMRAAQSITEFE1FhgSJBcbHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQIDBAX/xAAeEQABBAIDAQAAAAAAAAAAAAAAAQIDEiExBBEyIv/aAAwDAQACEQMRAD8A51EIZIo53EASNwHG07mBPFno9HFyeOhl1Y2yFIbtjVkDnr54yzx2vaLSyII1cELvBQEVu5PyeshTWvFJG6qi7OR+A9/4xoa3yQzWRvzsH8YkWrkCMZYlsoSvJHfWUalzFpI4/TRBZbca3HsUcXqvJvPqpZgEAewAFHAP1mZ9aZIoyqKWVa4jX3P+jByGor8aNDgT0gXvDiHTs1EbjRAsX3jKuEH92Ofs4YYGeim/yLulscHjFuT6YNno/wBnDDGfsEej/9k=" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.15-2304";
+(window.G = window.G || {}).VERSION = "lk-2026.10.15-2305";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -22524,7 +22524,9 @@ MA._xong();
     // phần còn lại 16 (trong đó vùng khác / trùm nền nhiều nhất 3) để hình cần ngay không phải xếp hàng sau tệp lớn.
     const MAX_GAP = 24, MAX = 16, MAX_THAP = 3, WEBP_THU = 'data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA==';
     let webpHong = 0, dang = 0, dangThap = 0, dangGap = 0, choThu = 0, mo = false, coWebp = null, vung = -1, trumMo = false, daXong = 0, ketThuc = false, henGd = 0, keoHen = false;
-    const moVung = [0, 0, 0]; // tải theo vùng: 0 chưa mở, 1 tải trước (rảnh), 2 người chơi đã chọn vùng
+    const moVung = (G.REGIONS || [0, 0, 0]).map(() => 0); // tải theo vùng: 0 chưa mở, 1 tải trước (rảnh), 2 người chơi đã chọn vùng (vùng 4: 4 ô)
+    // Vùng 4 còn mượn hình của vùng khác (G.VUNG4_MUON, bước 3 phiên 1): chọn vùng 4 thì tải luôn ảnh vùng mượn, chờ đủ cả hai.
+    const vungMuon = (r) => (r === 3 && G.VUNG4_MUON != null && G.VUNG4_MUON !== r ? G.VUNG4_MUON : -1);
     let vungChon = -1;
     for (const t of G.customSpriteData) { const src = t && (t.tam || t.anh); if (typeof src === 'string' && Array.isArray(t._u)) theoSrc.set(src, t); }
     AS.tt = 'cho'; AS.tep = 'anh/'; AS.tong = 0; AS.xong = 0;
@@ -22544,7 +22546,7 @@ MA._xong();
     // Vùng người chơi đang ở: vùng của ải vừa vào (G.startStage), chưa vào ải thì vùng xa nhất đã có sao (qua ải 5 thì vùng kế).
     const vungNay = () => {
       if (vung >= 0) return vung;
-      try { let r = 0; const st = G.save && G.save.stars; if (st) for (const k in st) { const m = /^(\d+)-(\d+)$/.exec(k); if (m) r = Math.max(r, +m[1] + (+m[2] >= 4 ? 1 : 0)); } return Math.min(2, r); } catch (e) { return 0; }
+      try { let r = 0; const st = G.save && G.save.stars; if (st) for (const k in st) { const m = /^(\d+)-(\d+)$/.exec(k); if (m) r = Math.max(r, +m[1] + (+m[2] >= 4 ? 1 : 0)); } return Math.min(moVung.length - 1, r); } catch (e) { return 0; }
     };
     roiNhan = function (img, src) {
       const t = theoSrc.get(src);
@@ -22553,7 +22555,7 @@ MA._xong();
       const u = t._u;
       const ma = G.ANH_MUOT_CU && typeof t.muot_cua === 'string' ? t.muot_cua : t.ma; // ?anhmuotcu=1: tấm cũ mang mã con quái (xem G.ANH_MUOT_CU)
       const it = { img, ma, png: src, webp: typeof t.webp === 'string' && /^anh\/[A-Za-z0-9_.-]{1,90}\.webp$/.test(t.webp) ? t.webp : null,
-        bac: u[0] | 0, co: +u[1] || 0, vung: u[2] | 0, trum: !!u[3], khoa: !!(G.TAI_VUNG && u[4] && (u[2] | 0) >= 0 && (u[2] | 0) <= 2), can: 0, lan: 0, xong: img.onload, hong: img.onerror, dangTai: false, thap: false, ve: false, boWebp: false };
+        bac: u[0] | 0, co: +u[1] || 0, vung: u[2] | 0, trum: !!u[3], khoa: !!(G.TAI_VUNG && u[4] && (u[2] | 0) >= 0 && (u[2] | 0) <= 3), can: 0, lan: 0, xong: img.onload, hong: img.onerror, dangTai: false, thap: false, ve: false, boWebp: false };
       img.onload = null; img.onerror = null;
       theoMa.set(ma, it); hang.push(it); AS.tong++;
       napSauDangChay = true; // hình em bé / đồ về muộn: chỉ xoá hình đã nhớ khi đang dùng (xoaNhoDoKhiCan), như lúc nạp tệp tải sau
@@ -22607,18 +22609,20 @@ MA._xong();
       if (!mo || !G.TAI_VUNG || vungChon < 0 || dang || choThu || choApDung.length) return;
       for (const it of hang) if ((it.u == null ? 0 : it.u) < 90) return;
       const k = vungChon + 1;
-      if (k <= 2 && !moVung[k]) { moVung[k] = 1; ketThuc = false; napSauDangChay = true; ghi('Rảnh: tải trước ảnh vùng ' + (k + 1) + '.'); bom(); }
+      if (k < moVung.length && !moVung[k]) { moVung[k] = 1; ketThuc = false; napSauDangChay = true; ghi('Rảnh: tải trước ảnh vùng ' + (k + 1) + '.'); bom(); }
     }
     SC.taiVung = function (r) {
       r = r | 0;
-      if (!G.TAI_VUNG || r < 0 || r > 2) return;
-      if (vungChon !== r || moVung[r] !== 2) { vungChon = r; moVung[r] = 2; ketThuc = false; napSauDangChay = true; bom(); }
+      if (!G.TAI_VUNG || r < 0 || r >= moVung.length) return;
+      const m = vungMuon(r);
+      if (vungChon !== r || moVung[r] !== 2 || (m >= 0 && moVung[m] !== 2)) { vungChon = r; moVung[r] = 2; if (m >= 0) moVung[m] = 2; ketThuc = false; napSauDangChay = true; bom(); }
     };
     // Tiến độ ảnh riêng của vùng r (trum: tính cả trùm vùng và dáng pha). san: đủ ảnh để vào ải.
     SC.vungTien = function (r, trum) {
       let xong = 0, tong = 0, loi = 0;
+      const m = vungMuon(r);
       if (G.TAI_VUNG) for (const it of theoMa.values()) {
-        if (!it.khoa || it.vung !== r || (it.trum && !trum)) continue;
+        if (!it.khoa || (it.vung !== r && it.vung !== m) || (it.trum && !trum)) continue;
         tong++; if (it.ve) xong++; else if (hongDs.indexOf(it) >= 0) loi++;
       }
       return { san: xong >= tong, xong, tong, loi, pct: tong ? Math.floor(xong / tong * 100) : 100 };
@@ -22644,13 +22648,13 @@ MA._xong();
         ui.text(tt.xong + '/' + tt.tong, 240, y + 66, { size: 7.5, align: 'center', color: '#d8c8a8' });
         const ranh = tt.loi > 0 && tt.loi + tt.xong >= tt.tong;
         const nut = (bx, chu, chinh) => (T && T.btn ? T.btn(bx, y + 72, 96, 24, G.t(chu), { size: 8.5, primary: chinh }) : ui.btn(bx, y + 72, 96, 24, G.t(chu)));
-        if (ranh && nut(x + 18, 'Thử lại', true)) { if (SC.roiThuLai) { const r = cho.r; SC.roiThuLai((m) => { const it = theoMa.get(m); return !!(it && it.khoa && it.vung === r); }); } }
+        if (ranh && nut(x + 18, 'Thử lại', true)) { if (SC.roiThuLai) { const r = cho.r; SC.roiThuLai((m) => { const it = theoMa.get(m); return !!(it && it.khoa && (it.vung === r || it.vung === vungMuon(r))); }); } }
         if (nut(x + w - 114, 'Về làng', false)) { cho = null; G.setScene(G.Village); }
       },
     };
     if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({ 'Đang tải ảnh {0}': 'Loading {0} images', 'Đang tải…': 'Loading…', 'Thử lại': 'Retry', 'Về làng': 'Back to village' });
     G.choVung = function (r, trum, fn) {
-      r = Math.max(0, Math.min(2, r | 0));
+      r = Math.max(0, Math.min(moVung.length - 1, r | 0));
       SC.taiVung(r);
       if (!G.TAI_VUNG || SC.vungTien(r, trum).san) return fn();
       cho = { r, trum: !!trum, fn };
@@ -22743,7 +22747,7 @@ MA._xong();
       const g0 = G.startStage;
       if (typeof g0 === 'function' && !g0.roi) {
         const g1 = function (r, i) {
-          try { vung = Math.max(0, Math.min(2, r | 0)); trumMo = (i | 0) >= 3; } catch (e) { /* bỏ qua */ }
+          try { vung = Math.max(0, Math.min(moVung.length - 1, r | 0)); trumMo = (i | 0) >= 3; } catch (e) { /* bỏ qua */ }
           // tải theo vùng: vùng chưa đủ ảnh (ải trùm: cả trùm vùng) → màn chờ, đủ rồi mới vào ải
           if (G.TAI_VUNG && G.scene !== G.ChoVung) {
             const self = this, args = arguments;
@@ -30379,7 +30383,7 @@ MA._xong();
     if (gb) {
       khungDat(khungLop(gb, 'tren|' + w, w + 20, 17, () => { R(0, 15, w + 20, 1, 'rgba(0,0,0,0.35)'); khungVe(gb, 0, 0, w + 20, 16); }), -mx - 10, 0, w + 20, 17);
       const gv = khungCo('gd-thanh-tren-vach');
-      if (gv && items && items.length === 8) {
+      if (gv && items && items.length >= 8) { // vùng 4: ô mảnh thứ 4 (9 tài nguyên) vẫn chia như cũ
         const size = 7.5, ih = Math.round(size * 1.05 * 2) / 2, gap = 8, vach = [];
         let x = 6; ui.font(size, true);
         items.forEach((q, i) => { const e = x + ih + 1.5 + G.ux.measureText(String(q[1])).width; if (i === 1 || i === 4) vach.push(e + gap / 2); x = e + gap; });
@@ -30486,6 +30490,7 @@ MA._xong();
     shard0: { rows: ['....k..', '...kak.', '..kaak.', '.kawak.', '.kaaak.', 'kaaadk.', 'kkkkkk.'], pal: { a: '#8ac84a', w: '#eaffc0', d: '#4a8a2a', k: '#1e3a12' } },
     shard1: { rows: ['....k..', '...kak.', '..kaak.', '.kawak.', '.kaaak.', 'kaaadk.', 'kkkkkk.'], pal: { a: '#5ab0f0', w: '#e0f4ff', d: '#2a6ab0', k: '#12284a' } },
     shard2: { rows: ['....k..', '...kak.', '..kaak.', '.kawak.', '.kaaak.', 'kaaadk.', 'kkkkkk.'], pal: { a: '#ff8a4a', w: '#fff0d0', d: '#c04a1a', k: '#4a1a08' } },
+    shard3: { rows: ['....k..', '...kak.', '..kaak.', '.kawak.', '.kaaak.', 'kaaadk.', 'kkkkkk.'], pal: { a: '#4ac0a0', w: '#d8fff0', d: '#1e7a6a', k: '#0a3a30' } }, // vùng 4 Sông sâu (mảnh Thuồng Luồng)
     xp: { rows: ['...c...', '...c...', '..cwc..', 'ccwwwcc', '..cwc..', '...c...', '...c...'], pal: { c: '#8fd0ff', w: '#ffffff' } },
   };
   T.RES = RES;
@@ -30525,7 +30530,7 @@ MA._xong();
     if (RES_RE && RES_LANG === G.LANG) return RES_RE;
     RES_LANG = G.LANG; marked.clear();
     RES_MAP = { 'vàng': 'gold', 'quặng': 'ore', 'đá tôi': 'stone', 'kinh nghiệm': 'xp' };
-    (G.REGIONS || []).forEach((r, i) => { RES_MAP[r.mat.toLowerCase()] = 'mat' + i; RES_MAP['mảnh ' + r.bossName.toLowerCase()] = 'shard' + i; });
+    (G.REGIONS || []).forEach((r, i) => { if (!r.matChung) RES_MAP[r.mat.toLowerCase()] = 'mat' + i; RES_MAP['mảnh ' + r.bossName.toLowerCase()] = 'shard' + i; }); // matChung: vùng 4 không có nguyên liệu riêng
     if (G.LANG !== 'vi') {
       // Ngôn ngữ khác: tên tài nguyên lấy từ từ điển (js/ngon_ngu.js), nhận cả dạng số nhiều có "s" ("3 whetstones").
       const vi = RES_MAP; RES_MAP = {};
@@ -31245,7 +31250,7 @@ MA._xong();
   };
 
   // ---------- thưởng thay đồ rơi (js/stage.js gọi) ----------
-  const vung = (r) => kep(r | 0, 0, 2);
+  const vung = (r) => kep(r | 0, 0, G.REGIONS.length - 1); // vùng 4: bảng G.ROI_MOI có phần tử thứ 4 (js/data.js)
   const chuThuong = (vang, lk) => (vang && lk ? G.t('{0} vàng, {1} linh khí', vang, lk) : lk ? G.t('{0} linh khí', lk) : G.t('{0} vàng', vang));
   VM.thuongVk = function (r) {
     const T = G.ROI_MOI.vk, i = vung(r), sv = G.save, vang = T.vang[i], lk = T.lk[i];
@@ -32454,7 +32459,7 @@ MA._xong();
   // Thưởng đá khi hạ trùm (js/stage.js settle gọi lúc thắng). big: trùm vùng; dau: lần đầu qua ải đó (ở độ khó này). Trả về các dòng chữ.
   E.thuongTrum = function (sv, r, big, dau, diff) {
     if (!E.bat() || !sv) return [];
-    const R = CF.roi, i = kep(r | 0, 0, 2);
+    const R = CF.roi, i = kep(r | 0, 0, R.vung.length - 1); // vùng 4: G.EP_DO.roi có phần tử thứ 4 (js/data.js)
     let n = big ? (dau ? R.vungDau[i] : R.vung[i]) : dau ? R.miniDau[i] : R.mini[i];
     if (diff) n = Math.round(n * R.kho2);
     const out = [];
@@ -36360,7 +36365,8 @@ MA._xong();
     // đợt 4: bỏ ô Đá tôi (không còn dùng, đổi ra quặng — G.DA_TOI_QUANG)
     return [['gold', sv.gold, '#ffd23f'], ['ore', sv.ore, '#c9ccd2'],
       ['mat0', sv.mats[0], '#9bd14a'], ['mat1', sv.mats[1], '#7fd4ff'], ['mat2', sv.mats[2], '#ff9a5a'],
-      ['shard0', sv.shards[0], '#c8e8a0'], ['shard1', sv.shards[1], '#a8d8ff'], ['shard2', sv.shards[2], '#ffc0a0']];
+      ['shard0', sv.shards[0], '#c8e8a0'], ['shard1', sv.shards[1], '#a8d8ff'], ['shard2', sv.shards[2], '#ffc0a0']]
+      .concat(G.REGIONS.length > 3 && sv.shards.length > 3 && (sv.shards[3] > 0 || (sv.stars && sv.stars['2-4'])) ? [['shard3', sv.shards[3], '#a8e8d0']] : []); // vùng 4: mảnh Thuồng Luồng
   };
   VS.drawTop = function () {
     const sv = G.save, ui = G.ui, parts = VS.resParts();
@@ -36819,6 +36825,7 @@ MA._xong();
   function unlocked(r, i, diff) {
     const map = diff ? G.save.stars2 : G.save.stars;
     if (diff && Object.keys(G.save.stars).length < 15) return false;
+    if (diff && r >= 3 && !G.save.stars[r + '-4']) return false; // vùng 4 (Q8 = A): độ khó 2 mở khi đã hạ trùm vùng đó (Độ khó 2 ba vùng đầu như cũ)
     if (r === 0 && i === 0) return true;
     const pr = i === 0 ? r - 1 : r, pi = i === 0 ? 4 : i - 1;
     return !!map[pr + '-' + pi];
@@ -36827,9 +36834,15 @@ MA._xong();
   function pickNext() {
     const map = V.diff ? G.save.stars2 : G.save.stars;
     V.sel = null;
-    for (let r = 0; r < 3 && !V.sel; r++) for (let i = 0; i < 5; i++) if (unlocked(r, i, V.diff) && !map[r + '-' + i]) { V.sel = [r, i]; break; }
+    for (let r = 0; r < G.REGIONS.length && !V.sel; r++) for (let i = 0; i < 5; i++) if (unlocked(r, i, V.diff) && !map[r + '-' + i]) { V.sel = [r, i]; break; }
     if (!V.sel) V.sel = [0, 0];
+    V.mapTrang = trangCua(V.sel[0]);
   }
+  // Bản đồ hai trang (bước 3 phiên 1, G.VUNG4): trang 0 = tranh 3 vùng đầu như cũ, trang 1 = tranh Sông sâu (VS.MAP2 / VS.mapArt2, js/vung4.js).
+  // ?vung4=0 hoặc chưa có VS.MAP2: chỉ một trang, y như cũ.
+  const coTrang2 = () => !!(G.VUNG4 && G.REGIONS.length > 3 && VS.MAP2 && VS.mapArt2);
+  const trangCua = (r) => (coTrang2() && r >= 3 ? 1 : 0);
+  const vungTrang = (tr) => (tr === 1 ? [3] : [0, 1, 2]);
   function inkText(s, x, y, size, col, halo) { // chữ trên giấy: viền sáng quanh chữ
     const c = G.ux;
     ui.font(size, true); c.textAlign = 'center'; c.lineJoin = 'round'; c.lineWidth = size / 3.2; c.strokeStyle = halo || 'rgba(240,230,200,0.9)';
@@ -36837,32 +36850,33 @@ MA._xong();
     ui.text(s, x, y, { size, bold: true, align: 'center', color: col, shadow: false });
   }
   function mapScreen() {
-    const sv = G.save, c = G.wx, M = VS.MAP, night = !!V.diff;
+    const tr2 = coTrang2() && V.mapTrang === 1 ? 1 : 0, DSV = vungTrang(tr2);
+    const sv = G.save, c = G.wx, M = tr2 ? VS.MAP2 : VS.MAP, night = !!V.diff;
     const all = Object.keys(sv.stars).length >= 15;
     if (!all) V.diff = 0;
     const map = V.diff ? sv.stars2 : sv.stars;
     G.wxDat(c, 0, 0); c.globalAlpha = 1;
-    c.drawImage(VS.mapArt(night), 0, 0);
+    c.drawImage(tr2 ? VS.mapArt2(night) : VS.mapArt(night), 0, 0);
     // đường nét đứt nối các ải theo thứ tự; chưa mở thì nhạt
     const ink = night ? '#3a2a4a' : '#7a4a30', faint = night ? '#6a6488' : '#b8a880';
-    for (let r = 0; r < 3; r++) {
+    for (const r of DSV) {
       const n = M.nodes[r];
       VS.mapDash(c, M.from[r], n[0], unlocked(r, 0, V.diff) ? ink : faint);
       if (r === 2) VS.mapDash(c, M.nodes[1][4], n[0], unlocked(2, 0, V.diff) ? ink : faint);
       for (let i = 0; i < 4; i++) VS.mapDash(c, n[i], n[i + 1], unlocked(r, i + 1, V.diff) ? ink : faint);
     }
-    for (const d of M.soonDash || []) VS.mapDash(c, M.nodes[d[0]][d[1]], d[2], faint);
+    for (const d of tr2 ? [] : M.soonDash || []) VS.mapDash(c, M.nodes[d[0]][d[1]], d[2], faint);
     VS.putNpc(c, 'lai', 32, 264, Math.floor(G.time * 2) % 3, { look: 1, noShadow: true }, 2);
     // tên vùng, tên trùm, vùng sắp có
     const halo = night ? 'rgba(20,16,40,0.85)' : null;
     inkText('Làng', M.lang ? M.lang[0] : 36, M.lang ? M.lang[1] : 110, 8, night ? '#e8dcc0' : '#4a3626', halo);
-    for (let r = 0; r < 3; r++) {
+    for (const r of DSV) {
       const q = M.names[r], R = G.REGIONS[r], b = M.nodes[r][4];
       inkText(R.name, q[0], q[1], 10, night ? '#f1e6c6' : q[2], halo);
       const bl = M.bossLab ? M.bossLab[r] : [r === 2 ? 40 : 38, r === 2 ? -6 : 3];
       inkText(R.bossName, b[0] + bl[0], b[1] + bl[1], 6.5, night ? '#e8dcc0' : '#4a3626', halo);
     }
-    for (const q of M.soon) {
+    for (const q of M.soon || []) {
       inkText(q[0], q[1], q[2], 8, night ? '#8a86a8' : '#8a7a58', halo);
       const px = q[3] || q[1], py = q[4] || q[2] + 12;
       ui.font(6.5, true);
@@ -36876,7 +36890,7 @@ MA._xong();
     // 15 thẻ ải mặt trống; ải chưa qua ghi sức mạnh khuyên dùng, tô màu so với sức mạnh của bé (xanh đủ, vàng sát nút, đỏ thiếu)
     const pw = G.power();
     let hit = null, hd = 19;
-    for (let r = 0; r < 3; r++) for (let i = 0; i < 5; i++) {
+    for (const r of DSV) for (let i = 0; i < 5; i++) {
       const q = M.nodes[r][i], st = map[r + '-' + i] || 0, ok = unlocked(r, i, V.diff), boss = i === 4, rad = boss ? 12 : 10;
       const selc = V.sel && V.sel[0] === r && V.sel[1] === i;
       T.stageCard(q[0] - 20, q[1] - rad - 4, 40, 36, i + 1, !ok ? 'lock' : selc ? 'sel' : st ? 'done' : 'open', st, { r: rad, boss, noClick: true, noStars: true });
@@ -36887,13 +36901,18 @@ MA._xong();
     }
     if (hit && !(G.click.x > 246 && G.click.y > 206)) { V.sel = hit; G.click = null; G.sfx('ui'); }
     // em bé đứng ở ải đang chọn
-    if (V.sel) {
+    if (V.sel && trangCua(V.sel[0]) === tr2) {
       const q = M.nodes[V.sel[0]][V.sel[1]], rad = V.sel[1] === 4 ? 12 : 10;
       G.art.hero(G.ux, { x: q[0], y: q[1] - rad + 1, face: 1, key: sv.hero, move: false, t: G.time, atk: -1, dodge: -1, weapon: null, noShadow: true });
       VS.bubble(V.sel[1] === 4 ? G.t('Trùm {0}', G.REGIONS[V.sel[0]].bossName) : G.t('Ải {0}', V.sel[1] + 1), q[0], q[1] - rad - 26, { bg: '#ffe9a8', size: 7.5 });
     }
     VS.bubble(V.msgT > 0 && V.msg ? V.msg : V.sel ? 'Lên đò đi cháu, nước đang êm.' : 'Đi đâu hả cháu?', 40, 198, { maxW: 76, size: 7.5 });
     if (T.sbtn(404, 7, 68, 18, '✕ Về làng', { size: 8, pad: 4 })) { goHub(); return; }
+    // vùng 4: nút sang trang bản đồ Sông sâu / về trang ba vùng đầu (chấm đỏ khi vùng 4 vừa mở mà chưa qua ải nào)
+    if (coTrang2()) {
+      const moi = !tr2 && unlocked(3, 0, 0) && !sv.stars['3-0'];
+      if (T.sbtn(404, 53, 68, 18, tr2 ? '‹ Ba vùng đầu' : G.t('{0} ›', G.REGIONS[3].name), { size: 7.5, pad: 3, dot: moi })) { V.mapTrang = tr2 ? 0 : 1; G.sfx('ui'); return; }
+    }
     // Đợt 6: cổng Ải ngày (js/ai_ngay.js) — mở sau khi hạ trùm vùng 1; chấm đỏ khi hôm nay còn lượt
     if (G.aiNgay && G.aiNgay.bat() && G.aiNgay.mo(sv) && T.sbtn(404, 30, 68, 18, 'Ải ngày', { size: 8, pad: 4, dot: G.aiNgay.coLuot(sv) })) { V.tab = 'aingay'; G.sfx('ui'); return; }
     if (all) {
@@ -36919,7 +36938,8 @@ MA._xong();
       const need = G.stageRec(r, i, V.diff), col = G.powerCol(pw, need);
       ui.text(G.t('Sức mạnh khuyên dùng {0} · bé {1}', need, pw), 256, 240, { size: 7.5, bold: true, color: col });
       // V25: chữ to hơn; dòng thưởng dài quá 2 dòng (ải trùm) thì giữ cỡ nhỏ cũ để không lọt khỏi khung
-      const rw = i === 4 ? G.t('Thưởng: {0} kinh nghiệm, ~{1} vàng, {2} {3}, {4} mảnh {5}, linh khí', b.xp, b.gold, 5 + i, R.mat.toLowerCase(), V.diff ? 4 : 3, R.bossName) : G.t('Thưởng: {0} kinh nghiệm, ~{1} vàng, {2} {3}', b.xp, b.gold, 5 + i, R.mat.toLowerCase());
+      const matTen = (G.matAi ? G.REGIONS[G.matAi(r, i)] : R).mat.toLowerCase(); // vùng 4: nguyên liệu của một vùng cũ theo ải
+      const rw = i === 4 ? G.t('Thưởng: {0} kinh nghiệm, ~{1} vàng, {2} {3}, {4} mảnh {5}, linh khí', b.xp, b.gold, 5 + i, matTen, V.diff ? 4 : 3, R.bossName) : G.t('Thưởng: {0} kinh nghiệm, ~{1} vàng, {2} {3}', b.xp, b.gold, 5 + i, matTen);
       ui.para(rw, 256, 250.5, 144, { size: 6.5, color: SOFT, tiny: ui.wrap(rw, 144, 6.5).length > 2 });
       // 14/10 (bước 1, mục 1): chọn ải là bắt đầu tải ảnh riêng của vùng đó (js/sprite_custom.js SC.taiVung). Chưa đủ ảnh: nút ghi "Đang tải…"
       // và thanh tiến độ dưới nút; bấm vẫn được (vào màn chờ, đủ ảnh thì tự vào ải).
@@ -37901,13 +37921,14 @@ MA._xong();
       ['ore', 'Mài vũ khí, nâng lò cấp 4', 'Qua ải (nhiều sao được nhiều hơn), rương báu, phòng thử thách, thương nhân, Ải Đá Mài (ải ngày), Bà Hàng Xén (thẻ Quặng)'],
     ];
     const matUse = ['Nâng lò cấp 2, mài +5 lên +6', 'Mài từ +6 tới +9, nâng lò cấp 3', 'Mài từ +9 trở lên, nâng lò cấp 4'];
-    R.forEach((r, i) => a.push(['mat' + i, matUse[i] || 'Nguyên liệu vùng', G.t('Qua ải {0}', r.name)]));
-    R.forEach((r, i) => a.push(['shard' + i, i === 0 ? 'Nâng bộ Ninja và bộ Rừng lên cấp 2, 3' : 'Nâng bộ của vùng này lên cấp 2, 3', G.t('Hạ trùm vùng {0} (ải 5 {1})', r.bossName, r.name)]));
+    R.forEach((r, i) => { if (!r.matChung) a.push(['mat' + i, matUse[i] || 'Nguyên liệu vùng', G.t('Qua ải {0}', r.name)]); }); // vùng 4 không có nguyên liệu riêng (Q2 = A)
+    R.forEach((r, i) => a.push(['shard' + i, i === 0 ? 'Nâng bộ Ninja và bộ Rừng lên cấp 2, 3' : i >= 3 ? 'Để dành (chưa có bộ trang phục vùng này)' : 'Nâng bộ của vùng này lên cấp 2, 3', G.t('Hạ trùm vùng {0} (ải 5 {1})', r.bossName, r.name)]));
     return a;
   }
   function resTab(sv) {
     const val = { gold: sv.gold, ore: sv.ore, stone: sv.stones };
-    for (let i = 0; i < 3; i++) { val['mat' + i] = sv.mats[i]; val['shard' + i] = sv.shards[i]; }
+    for (let i = 0; i < 3; i++) val['mat' + i] = sv.mats[i];
+    for (let i = 0; i < sv.shards.length; i++) val['shard' + i] = sv.shards[i]; // vùng 4: ô mảnh trùm thứ 4
     region('res', CX, CY, CW - 4, CH, (y) => {
       for (const q of resInfo()) {
         T.inset(CX, y, CW - 8, 24, false);
@@ -38094,12 +38115,12 @@ MA._xong();
   const stName = (r, i) => (i === 4 ? G.t('trùm {0}', G.REGIONS[r].bossName) : G.tv(G.REGIONS[r].name) + ' ' + (i + 1));
   U.grindStage = function (sv, r) {
     let best = null;
-    for (let rr = 0; rr < 3; rr++) {
+    for (let rr = 0; rr < G.REGIONS.length; rr++) { // vùng 4: tính cả ải Sông sâu
       if (r != null && rr !== r) continue;
       for (let i = 0; i < 4; i++) if (sv.stars[rr + '-' + i]) best = [rr, i];
     }
     // ưu tiên ải thường (dễ thắng, nhanh); chưa qua ải thường nào của vùng thì mới chỉ ải trùm
-    if (!best) for (let rr = 0; rr < 3; rr++) if ((r == null || rr === r) && sv.stars[rr + '-4']) best = [rr, 4];
+    if (!best) for (let rr = 0; rr < G.REGIONS.length; rr++) if ((r == null || rr === r) && sv.stars[rr + '-4']) best = [rr, 4];
     return best;
   };
   // Ải nên chơi lại để kiếm phần thiếu m (mảnh trùm: đánh lại trùm; nguyên liệu: ải cao nhất đã qua của vùng đó; còn lại: ải cao nhất đã qua).
@@ -43184,6 +43205,7 @@ window.FIREBASE_CONFIG = {
   const ADMIN_EMAILS = ['ly230595@gmail.com'];
   const COL = { users: 'linhkhi_users', scores: 'linhkhi_scores', feedback: 'linhkhi_feedback' };
   const BOSSES = ['moc', 'ngu', 'ho']; // khoá trùm vùng (G.REGIONS[r].boss)
+  if (G.VUNG4) BOSSES.push('thuong'); // vùng 4 (bước 3): b_thuong trên bảng vàng — cần luật Firestore mới (game/firebase/linhkhi.rules)
   G.VERSION = G.VERSION || 'lk-2026.10.09';
 
   // Vì sao đám mây không chạy ('' = chạy được)
@@ -43500,7 +43522,26 @@ window.FIREBASE_CONFIG = {
       const same = ['name', 'power', 'stars', 'far', 'g', 'hero'].every((k) => old[k] === m[k]) && BOSSES.every((k) => old['b_' + k] === m['b_' + k]);
       if (same) return false;
       m.at = Date.now();
-      try { await this.db.collection(COL.scores).doc(this.user.uid).set(m); this.myScore = m; return true; } catch (er) { this._fail(er); return false; }
+      // Vùng 4: luật Firestore cũ (chưa dán bản mới) chỉ nhận far ≤ 15, sao ≤ 90, không có b_thuong → bị từ chối thì ghi bản "vừa luật cũ"
+      // (cắt far / sao, bỏ b_thuong) để bảng vàng vẫn chạy; nhớ lại (luatCu) để lần sau ghi thẳng bản đó, khỏi tốn một lần bị từ chối.
+      const vuaLuatCu = (x) => {
+        const y = Object.assign({}, x); delete y.b_thuong;
+        y.far = Math.min(15, y.far | 0); y.stars = Math.min(y.stars | 0, y.far >= 15 ? 90 : y.far * 3);
+        for (const k of ['power', 'stars', 'far']) if (typeof old[k] === 'number') y[k] = Math.max(y[k], old[k]);
+        return y;
+      };
+      const vuot = (x) => (x.far | 0) > 15 || (x.stars | 0) > 90 || 'b_thuong' in x;
+      const ghi = async (x) => { await this.db.collection(COL.scores).doc(this.user.uid).set(x); this.myScore = x; return true; };
+      try {
+        if (this.luatCu && vuot(m)) { const y = vuaLuatCu(m); if (['power', 'stars', 'far', 'name', 'g', 'hero'].every((k) => old[k] === y[k]) && BOSSES.every((k) => old['b_' + k] === y['b_' + k])) return false; return await ghi(y); }
+        return await ghi(m);
+      } catch (er) {
+        if (er && er.code === 'permission-denied' && vuot(m)) {
+          this.luatCu = true;
+          try { return await ghi(vuaLuatCu(m)); } catch (er2) { this._fail(er2); return false; }
+        }
+        this._fail(er); return false;
+      }
     },
     // một trang của bảng; field: power | stars | b_moc | b_ngu | b_ho; after: con trỏ trang trước
     async topScores(field, after, n) {
@@ -44068,8 +44109,8 @@ window.FIREBASE_CONFIG = {
         ui.text(cutTo(q[1], bw - 6, 8.5), bx + bw / 2, 178.5, { size: 8.5, bold: true, align: 'center', color: TXT });
       });
       ui.text('Hạ trùm nhanh nhất', CX + 7, 197, { size: 7, bold: true, color: GOLD });
-      const tw = Math.floor((CW - 14) / 3);
-      G.REGIONS.forEach((R, i) => ui.text(G.t('{0}  {1}', R.bossName, r.b[R.boss] ? secs(r.b[R.boss]) : '–'), CX + 7 + i * tw, 210, { size: 7.5, color: r.b[R.boss] ? TXT : SOFT }));
+      const nT = G.REGIONS.length, tw = Math.floor((CW - 14) / nT), szT = nT > 3 ? 6.5 : 7.5; // vùng 4: 4 cột, chữ nhỏ hơn cho vừa
+      G.REGIONS.forEach((R, i) => ui.text(G.t('{0}  {1}', R.bossName, r.b[R.boss] ? secs(r.b[R.boss]) : '–'), CX + 7 + i * tw, 210, { size: szT, color: r.b[R.boss] ? TXT : SOFT }));
       return 'Bảng vàng treo ở đình, phải có mạng mới xem được, con ạ.';
     }
     if (B.t && G.time - B.t > 120) B.reload(); // để lâu thì tải lại
@@ -44537,7 +44578,8 @@ window.FIREBASE_CONFIG = {
       const S = G.getRun();
       if (!S) return 'lang';
       if (S.mode === 'dead') return null;
-      const W = S.W, r = G.clamp(S.r | 0, 0, 2);
+      // vùng 4 chưa có bài riêng (phiên 2C thêm B.vung3 / trum3): dùng bài của vùng mượn hình (G.vungVe), nếu không thì vùng 3
+      const W = S.W, r0 = S.r | 0, r = r0 > 2 && !(B['vung' + r0]) ? G.clamp(G.vungVe ? G.vungVe(r0) : 2, 0, 2) : G.clamp(r0, 0, 3);
       if (W && W.type === 'boss' && W.boss && !W.boss.dead && !S.won && !(S.loot && S.loot.bossDown)) return 'trum' + r;
       return 'vung' + r;
     }
@@ -44670,14 +44712,15 @@ window.FIREBASE_CONFIG = {
 
   // ---------- tiến độ trong bản lưu ----------
   const daHa = (sv, r) => !!(sv && sv.stars && sv.stars[r + '-4']);
-  function soVung(sv) { let n = 0; while (n < 3 && daHa(sv, n)) n++; return n; }
+  // số vùng đã hạ trùm, tính tới số đoạn kết vùng đang có (VUNG; vùng 4 chưa có đoạn kết → dừng ở 3, phiên 2C thêm VUNG[3] thì tự tính tiếp)
+  function soVung(sv) { let n = 0; while (n < VUNG.length && daHa(sv, n)) n++; return n; }
   function st() {
     const sv = G.save;
     if (!sv) return null;
     let t = sv.truyen;
     if (!t || typeof t !== 'object' || Array.isArray(t)) t = sv.truyen = { mo: sv.stars && Object.keys(sv.stars).length ? 1 : 0, v: soVung(sv), n: {} };
     if (!t.n || typeof t.n !== 'object' || Array.isArray(t.n)) t.n = {};
-    t.v = G.clamp(t.v | 0, 0, 3); t.mo = t.mo ? 1 : 0;
+    t.v = G.clamp(t.v | 0, 0, Math.max(3, VUNG.length)); t.mo = t.mo ? 1 : 0;
     return t;
   }
   TR.st = st;
@@ -44992,7 +45035,7 @@ window.FIREBASE_CONFIG = {
   TR.xemLai = function () {
     const t = st();
     let ds = moDau();
-    for (let r = 0; r < Math.min(3, t ? t.v : 0); r++) ds = ds.concat(doanVung(r));
+    for (let r = 0; r < Math.min(VUNG.length, t ? t.v : 0); r++) ds = ds.concat(doanVung(r));
     TR.choi(ds, { ten: 'xemlai' });
   };
   // Người làng: câu mới theo mốc (số trùm vùng đã hạ), nói một lần khi mở bảng của người đó
@@ -45042,7 +45085,7 @@ window.FIREBASE_CONFIG = {
 
   // ---------- trùm nói (bong bóng lời, không dừng trận) ----------
   let bong = null, bongB = null, daGuc = false;
-  function khoaTrum(b, S) { return b.kind === 'mini' ? 'mini' + G.clamp(S.r | 0, 0, 2) : b.kind; }
+  function khoaTrum(b, S) { return b.kind === 'mini' ? 'mini' + G.clamp(S.r | 0, 0, G.REGIONS.length - 1) : b.kind; } // vùng 4: 'mini3' (lời Cá Trê — phiên 2C)
   function trumNhip(dt) {
     const S = G.getRun && G.getRun();
     if (!S || !S.W || !TR.bat() || G.noRender) { if (!S) { bong = null; bongB = null; } return; }
@@ -45083,6 +45126,129 @@ window.FIREBASE_CONFIG = {
     G.StageScene.update = function (dt) { const r = u0.call(this, dt); try { trumNhip(dt); } catch (e) { /* bỏ qua */ } return r; };
     G.StageScene.draw = function () { const r = d0.call(this); try { trumVe(); } catch (e) { /* bỏ qua */ } return r; };
   }
+})();
+
+// ===== js/vung4.js =====
+// BƯỚC 3 — VÙNG 4 SÔNG SÂU, PHIÊN 1 (docs/ke-hoach/buoc-3/KE-HOACH.md mục 5 hàng "1"): khung vùng 4 chạy được bằng HÌNH TẠM.
+// Chỉ chạy khi G.VUNG4 (tắt: ?vung4=0 → tệp này không làm gì, game y hệt 3 vùng).
+//  1. Trang 2 của bản đồ Chú Lái Đò (VS.MAP2 toạ độ 5 ải, VS.mapArt2 tranh vẽ bằng code) — js/village.js đọc. Phiên 2C thay bằng ảnh bản đồ mới (Q7 = A).
+//  2. Quái / trùm vùng 4 đang mượn hình Hang biển (G.MOB_ART, G.VUNG4_MUON trong js/data.js): lúc vẽ trận ở vùng 4 thì nhuộm hình quái xanh rêu
+//     (ctx.filter; trình duyệt không hỗ trợ thì giữ màu gốc) và phủ một lớp nước đục lên nền phòng, để người chơi thấy đây là vùng khác.
+//     Phiên 2A / 2B / 3A / 3B có ảnh thật thì đặt G.VUNG4_MUON = null (js/data.js) → hết nhuộm, hết phủ.
+//  3. Chữ tiếng Anh của vài tên mới.
+(function () {
+  const G = window.G;
+  if (!G || !G.VUNG4) return;
+  const V4 = (G.vung4 = { LOC: 'hue-rotate(-62deg) saturate(0.8) brightness(0.93)', PHU: '#a8c8b4', dangVe: false });
+
+  // ---------- 1. bản đồ trang 2: Sông sâu ----------
+  function ganBanDo(VSx) {
+    if (!VSx || VSx.MAP2) return;
+    // Mảng theo chỉ số vùng (vùng 4 = chỉ số 3), cùng kiểu VS.MAP: nodes[r][i], from[r], names[r] = [x, y, màu chữ], bossLab[r]
+    VSx.MAP2 = {
+      nodes: [null, null, null, [[96, 200], [158, 158], [230, 186], [306, 144], [396, 104]]],
+      from: [null, null, null, [44, 236]],
+      names: [null, null, null, [252, 34, '#1f4a48']],
+      bossLab: [null, null, null, [0, 31]],
+      soon: [], soonDash: [],
+      lang: [40, 252],
+      doKho: [256, 7],
+    };
+    const cache = {};
+    VSx.mapArt2 = function (night) {
+      const id = night ? 'n' : 'd';
+      if (cache[id]) return cache[id];
+      const cv = document.createElement('canvas'); cv.width = 480; cv.height = 270;
+      const c = cv.getContext('2d');
+      tranhSong(c);
+      if (night) { c.globalCompositeOperation = 'multiply'; c.fillStyle = '#8c88c4'; c.fillRect(0, 0, 480, 270); c.globalCompositeOperation = 'source-over'; }
+      return (cache[id] = cv);
+    };
+  }
+  // tranh giấy cũ: dòng sông uốn từ bến làng (góc dưới trái) ngược lên vực Thuồng Luồng (trên phải), lau sậy, nhà sàn, thác
+  function tranhSong(c) {
+    let s = 7;
+    const rd = () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
+    const p = (x, y, w, h, col) => { c.fillStyle = col; c.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); };
+    const ell = (x, y, rx, ry, col) => { c.fillStyle = col; c.beginPath(); c.ellipse(Math.round(x), Math.round(y), rx, ry, 0, 0, Math.PI * 2); c.fill(); };
+    p(0, 0, 480, 270, '#e6d8b0');
+    for (let i = 0; i < 900; i++) p(rd() * 480, rd() * 270, 1 + (rd() < 0.2 ? 1 : 0), 1, rd() < 0.5 ? '#d8c898' : '#f0e6c8');
+    // dòng sông: dải rộng theo đường cong qua các ải
+    const duong = [[20, 262], [60, 232], [96, 206], [128, 176], [160, 160], [196, 176], [232, 190], [270, 168], [306, 148], [350, 126], [396, 108], [440, 80], [470, 60]];
+    const mau = [['#6a8a84', 15], ['#8aa8a0', 12], ['#b4cac0', 8]];
+    for (const [col, w] of mau) {
+      c.strokeStyle = col; c.lineWidth = w; c.lineJoin = 'round'; c.lineCap = 'round';
+      c.beginPath(); c.moveTo(duong[0][0], duong[0][1]); for (const q of duong.slice(1)) c.lineTo(q[0], q[1]); c.stroke();
+    }
+    for (let i = 0; i < 40; i++) { const k = Math.floor(rd() * (duong.length - 1)), a = duong[k], b = duong[k + 1], u = rd(); p(a[0] + (b[0] - a[0]) * u - 3, a[1] + (b[1] - a[1]) * u, 6, 1, '#f4eee0'); }
+    // lau sậy hai bên bờ
+    for (let i = 0; i < 70; i++) {
+      const k = Math.floor(rd() * (duong.length - 1)), a = duong[k], b = duong[k + 1], u = rd(), bo = rd() < 0.5 ? -1 : 1;
+      const x = a[0] + (b[0] - a[0]) * u + bo * (4 + rd() * 6), y = a[1] + (b[1] - a[1]) * u + bo * (10 + rd() * 6);
+      p(x, y - 7, 1, 7, '#7a8a50'); p(x - 1, y - 9, 3, 3, '#8a6a40'); if (rd() < 0.5) p(x + 2, y - 5, 1, 5, '#6a7a44');
+    }
+    // nhà sàn đổ (làng chài bỏ hoang) quanh ải 3
+    for (const [hx, hy] of [[250, 214], [276, 208]]) { p(hx - 8, hy - 10, 16, 8, '#8a6a48'); for (let i = 0; i < 6; i++) p(hx - 10 + i, hy - 16 + i, 20 - i * 2, 1, '#6a5038'); for (const dx of [-7, -1, 6]) p(hx + dx, hy - 2, 1, 7, '#5a4030'); }
+    // thác ngầm (ải 4) và vực đá (ải 5)
+    for (let i = 0; i < 6; i++) p(318 + i * 3, 100, 2, 30, i % 2 ? '#d8e8e4' : '#b4cac0');
+    for (const r of [[392, 74, 26, 12], [428, 92, 18, 10], [364, 88, 14, 8]]) { ell(r[0], r[1], r[2], r[3], '#6a7a7a'); ell(r[0] - 2, r[1] - 2, r[2] - 4, r[3] - 3, '#8a9a96'); }
+    // bóng Thuồng Luồng uốn chữ S dưới nước gần vực (nét đậm, mắt xanh)
+    c.strokeStyle = '#2a3a38'; c.lineWidth = 4; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(420, 132); c.bezierCurveTo(440, 116, 404, 112, 424, 96); c.bezierCurveTo(436, 88, 446, 92, 450, 84); c.stroke();
+    p(447, 81, 2, 2, '#5ff0ff');
+    // núi xa có sét (móc vùng 5)
+    for (const m of [[430, 30, 22], [470, 22, 18]]) for (let i = 0; i < m[2]; i++) p(m[0] - i, m[1] + i, i * 2, 1, i < 3 ? '#b8a880' : '#d0c098');
+    c.strokeStyle = '#c8a040'; c.lineWidth = 1; c.beginPath(); c.moveTo(452, 6); c.lineTo(446, 16); c.lineTo(452, 16); c.lineTo(445, 28); c.stroke();
+    // bến đò làng
+    p(10, 236, 22, 10, '#8a5a34'); for (let i = 0; i < 7; i++) p(8 + i, 229 + i, 26 - i, 1, '#c8402e'); ell(56, 246, 8, 2, '#5a4030'); p(51, 242, 10, 2, '#c9a24f');
+    // la bàn, viền tranh
+    const INK = '#4a3626';
+    p(22, 14, 1, 18, INK); p(14, 22, 17, 1, INK); p(21, 12, 3, 3, '#c8402e');
+    for (const k of [0, 1, 2]) { c.strokeStyle = ['#6a4a30', '#a88a58', '#6a4a30'][k]; c.lineWidth = 1; c.strokeRect(k * 2 + 0.5, k * 2 + 0.5, 479 - k * 4, 269 - k * 4); }
+  }
+  ganBanDo(G.villageScene); // js/village_scene.js (nạp trước tệp này); js/village.js đọc VS.MAP2 / VS.mapArt2 khi vẽ bản đồ
+
+  // ---------- 2. nhuộm hình tạm khi vẽ trận vùng 4 ----------
+  const muon = () => G.VUNG4_MUON != null;
+  const dw = G.drawWorld;
+  if (typeof dw === 'function') {
+    G.drawWorld = function (reg) {
+      V4.dangVe = reg === 3 && muon();
+      try { return dw.apply(this, arguments); } finally { V4.dangVe = false; }
+    };
+  }
+  const MA = G.monsterArt;
+  if (MA && typeof MA.draw === 'function') {
+    const d0 = MA.draw;
+    MA.draw = function (c) {
+      if (!V4.dangVe || !c || !('filter' in c)) return d0.apply(this, arguments);
+      const f0 = c.filter;
+      c.filter = f0 && f0 !== 'none' ? f0 + ' ' + V4.LOC : V4.LOC;
+      try { return d0.apply(this, arguments); } finally { c.filter = f0; }
+    };
+  }
+  const A = G.art;
+  if (A && typeof A.bg === 'function') {
+    const bg0 = A.bg;
+    A.bg = function (c) {
+      const kq = bg0.apply(this, arguments);
+      if (V4.dangVe && c) {
+        try {
+          c.save();
+          c.globalCompositeOperation = 'multiply'; c.fillStyle = V4.PHU; c.fillRect(-16, -16, G.W + 32, G.H + 32);
+          c.globalCompositeOperation = 'source-over'; c.fillStyle = 'rgba(20,48,46,0.14)'; c.fillRect(-16, -16, G.W + 32, G.H + 32);
+          c.restore();
+        } catch (e) { /* chỉ là màu phủ */ }
+      }
+      return kq;
+    };
+  }
+
+  // ---------- 3. chữ tiếng Anh ----------
+  if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({
+    'Sông sâu': 'Deep River', 'Thuồng Luồng': 'River Serpent', 'mảnh thuồng luồng': 'river serpent shard', 'sông sâu': 'deep river', 'nguyên liệu': 'materials', 'Cá Trê': 'Whisker Catfish', 'Nguyên liệu': 'Materials',
+    '‹ Ba vùng đầu': '‹ First regions', '{0} ›': '{0} ›', 'Để dành (chưa có bộ trang phục vùng này)': 'Saved for later (no outfit for this region yet)',
+  });
 })();
 
 // ===== js/main.js =====
