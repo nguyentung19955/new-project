@@ -1,0 +1,470 @@
+{
+ "anh": "nhimDoc-6-chet.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 6,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 42,
+  "vien_khu": 6269,
+  "nga_mau_nen_trong_hinh": 1761
+ },
+ "manh_bo": [
+  {
+   "khung_bao": [
+    1919,
+    355,
+    1935,
+    371
+   ],
+   "diem_anh": 15
+  },
+  {
+   "khung_bao": [
+    1554,
+    357,
+    1572,
+    387
+   ],
+   "diem_anh": 51
+  },
+  {
+   "khung_bao": [
+    1928,
+    363,
+    1957,
+    386
+   ],
+   "diem_anh": 51
+  },
+  {
+   "khung_bao": [
+    1542,
+    365,
+    1555,
+    378
+   ],
+   "diem_anh": 1
+  },
+  {
+   "khung_bao": [
+    1873,
+    369,
+    1891,
+    388
+   ],
+   "diem_anh": 33
+  },
+  {
+   "khung_bao": [
+    1505,
+    373,
+    1524,
+    391
+   ],
+   "diem_anh": 40
+  },
+  {
+   "khung_bao": [
+    1903,
+    377,
+    1926,
+    399
+   ],
+   "diem_anh": 60
+  },
+  {
+   "khung_bao": [
+    1959,
+    380,
+    1976,
+    398
+   ],
+   "diem_anh": 21
+  },
+  {
+   "khung_bao": [
+    2052,
+    382,
+    2067,
+    399
+   ],
+   "diem_anh": 14
+  },
+  {
+   "khung_bao": [
+    1713,
+    383,
+    1732,
+    399
+   ],
+   "diem_anh": 22
+  },
+  {
+   "khung_bao": [
+    1833,
+    385,
+    1855,
+    405
+   ],
+   "diem_anh": 40
+  },
+  {
+   "khung_bao": [
+    1468,
+    391,
+    1489,
+    410
+   ],
+   "diem_anh": 30
+  },
+  {
+   "khung_bao": [
+    1876,
+    394,
+    1899,
+    421
+   ],
+   "diem_anh": 50
+  },
+  {
+   "khung_bao": [
+    1927,
+    394,
+    1948,
+    412
+   ],
+   "diem_anh": 41
+  },
+  {
+   "khung_bao": [
+    1726,
+    401,
+    1740,
+    416
+   ],
+   "diem_anh": 6
+  },
+  {
+   "khung_bao": [
+    1939,
+    406,
+    1960,
+    433
+   ],
+   "diem_anh": 29
+  },
+  {
+   "khung_bao": [
+    1747,
+    407,
+    1763,
+    423
+   ],
+   "diem_anh": 10
+  },
+  {
+   "khung_bao": [
+    1854,
+    408,
+    1875,
+    423
+   ],
+   "diem_anh": 11
+  },
+  {
+   "khung_bao": [
+    2024,
+    408,
+    2037,
+    421
+   ],
+   "diem_anh": 1
+  },
+  {
+   "khung_bao": [
+    2005,
+    412,
+    2027,
+    436
+   ],
+   "diem_anh": 18
+  },
+  {
+   "khung_bao": [
+    1468,
+    413,
+    1483,
+    427
+   ],
+   "diem_anh": 6
+  },
+  {
+   "khung_bao": [
+    1758,
+    418,
+    1773,
+    434
+   ],
+   "diem_anh": 9
+  },
+  {
+   "khung_bao": [
+    2045,
+    418,
+    2060,
+    433
+   ],
+   "diem_anh": 7
+  },
+  {
+   "khung_bao": [
+    1957,
+    422,
+    1971,
+    437
+   ],
+   "diem_anh": 4
+  },
+  {
+   "khung_bao": [
+    1862,
+    423,
+    1875,
+    437
+   ],
+   "diem_anh": 2
+  },
+  {
+   "khung_bao": [
+    2118,
+    425,
+    2133,
+    443
+   ],
+   "diem_anh": 16
+  },
+  {
+   "khung_bao": [
+    1771,
+    430,
+    1787,
+    447
+   ],
+   "diem_anh": 12
+  },
+  {
+   "khung_bao": [
+    2094,
+    435,
+    2108,
+    449
+   ],
+   "diem_anh": 4
+  },
+  {
+   "khung_bao": [
+    1464,
+    436,
+    1486,
+    460
+   ],
+   "diem_anh": 19
+  },
+  {
+   "khung_bao": [
+    1841,
+    436,
+    1857,
+    451
+   ],
+   "diem_anh": 10
+  },
+  {
+   "khung_bao": [
+    1861,
+    439,
+    1878,
+    456
+   ],
+   "diem_anh": 20
+  },
+  {
+   "khung_bao": [
+    2107,
+    455,
+    2121,
+    468
+   ],
+   "diem_anh": 2
+  },
+  {
+   "khung_bao": [
+    2129,
+    468,
+    2145,
+    484
+   ],
+   "diem_anh": 15
+  },
+  {
+   "khung_bao": [
+    2137,
+    486,
+    2150,
+    499
+   ],
+   "diem_anh": 1
+  },
+  {
+   "khung_bao": [
+    1901,
+    489,
+    1924,
+    509
+   ],
+   "diem_anh": 12
+  }
+ ],
+ "loi": [],
+ "canh_bao": [
+  "Mảnh 51 điểm ảnh ở [1554, 357, 1572, 387] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 51 điểm ảnh ở [1928, 363, 1957, 386] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 40 điểm ảnh ở [1505, 373, 1524, 391] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 60 điểm ảnh ở [1903, 377, 1926, 399] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 40 điểm ảnh ở [1833, 385, 1855, 405] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 50 điểm ảnh ở [1876, 394, 1899, 421] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 41 điểm ảnh ở [1927, 394, 1948, 412] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Hàng 1 khung 1 cao 263 (trung vị 194) — lệch cỡ >15%",
+  "Hàng 1 khung 2 cao 251 (trung vị 194) — lệch cỡ >15%",
+  "Hàng 1 khung 6 chỉ 4094 điểm ảnh (trung vị 45500) — có thể bị tách mất mảnh"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "die",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      25,
+      271,
+      329,
+      534
+     ],
+     "chan": [
+      190.5,
+      534
+     ],
+     "rong": 304,
+     "cao": 263,
+     "diem_anh": 58369,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      381,
+      286,
+      713,
+      537
+     ],
+     "chan": [
+      540.0,
+      537
+     ],
+     "rong": 332,
+     "cao": 251,
+     "diem_anh": 59654,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      748,
+      324,
+      1066,
+      537
+     ],
+     "chan": [
+      909.0,
+      537
+     ],
+     "rong": 318,
+     "cao": 213,
+     "diem_anh": 50633,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1089,
+      371,
+      1444,
+      540
+     ],
+     "chan": [
+      1266.0,
+      540
+     ],
+     "rong": 355,
+     "cao": 169,
+     "diem_anh": 40367,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1458,
+      363,
+      1811,
+      539
+     ],
+     "chan": [
+      1634.0,
+      539
+     ],
+     "rong": 353,
+     "cao": 176,
+     "diem_anh": 32220,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1839,
+      361,
+      2158,
+      537
+     ],
+     "chan": [
+      2051.0,
+      537
+     ],
+     "rong": 319,
+     "cao": 176,
+     "diem_anh": 4094,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "ít điểm ảnh bất thường"
+     ]
+    }
+   ]
+  }
+ ]
+}
