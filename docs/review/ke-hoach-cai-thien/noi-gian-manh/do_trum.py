@@ -21,7 +21,9 @@ import cd_lib  # noqa: E402
 
 JS = r"""
 ([r, i, sv, mau, lop]) => {
-  G.save = G.fixSave(JSON.parse(sv)); G.save.sound = false;
+  // sua-mat-bac-ep (bao-cao-B mục 7): cay_luu.json không có cờ canLai → không đặt thì G.fixSave chạy VM.canLai. Đặt cờ trước khi nạp.
+  const o = JSON.parse(sv); o.canLai = G.SAVE_CAN_LAI || 1;
+  G.save = G.fixSave(o); G.save.sound = false;
   G.botCfg.prefer = null;
   G.startStage(r, i, 0);
   const S0 = G.getRun();

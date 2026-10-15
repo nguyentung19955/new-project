@@ -398,7 +398,7 @@
       }
       s.heMoiHoan = 1;
     }
-    // 1. bốn vũ khí: dựng lại từ đầu, chỉ giữ loại, cấp, hệ, mài (và số quái đã hạ để thống kê); mọi chỉ số khác tính theo luật hiện hành
+    // 1. bốn vũ khí: dựng lại từ đầu, chỉ giữ loại, cấp, hệ, mài, bậc ép (và số quái đã hạ để thống kê); mọi chỉ số khác tính theo luật hiện hành
     const maxMai = G.MAX_SHARPEN || 15;
     s.weapons = s.weapons.map((w) => {
       const st = G.wStage(w), he = st > 0 && G.EL[w.branch] ? w.branch : null;
@@ -417,6 +417,8 @@
         kills: Math.max(0, Math.floor(num(w.kills, 0))), bossKills: w.bossKills && typeof w.bossKills === 'object' && !Array.isArray(w.bossKills) ? w.bossKills : {},
         affixes: [], power: null,
       };
+      // sua-mat-bac-ep: GIỮ bậc ép + dòng hiệu ứng (w.ep, đã tốn đá / vàng / mảnh). js/ep_do.js (bọc G.fixSave sau file này) chuẩn hoá lại.
+      if (w.ep && typeof w.ep === 'object' && !Array.isArray(w.ep)) nw.ep = w.ep;
       VM.datCap(nw, st, he);
       if (G.linkTier) G.linkTier(nw);
       return nw;

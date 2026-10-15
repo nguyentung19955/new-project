@@ -30,7 +30,9 @@ JS = r"""
 ([r, i, sv, wt]) => {
   if (typeof sv === 'string') {
     // bản lưu thật (tests/cay_luu.json): vũ khí cận chiến đang mang đổi sang loại wt khi chạy "vukhi"
-    G.save = G.fixSave(JSON.parse(sv)); G.save.sound = false;
+    // sua-mat-bac-ep (bao-cao-B mục 7): cay_luu.json không có cờ canLai → không đặt thì G.fixSave chạy VM.canLai. Đặt cờ trước khi nạp.
+    const o = JSON.parse(sv); o.canLai = G.SAVE_CAN_LAI || 1;
+    G.save = G.fixSave(o); G.save.sound = false;
     if (wt && wt !== 'bow') G.weaponById(G.save.carry[0]).type = wt;
   } else G.testSave({ lvl: sv[0], tier: sv[1], sharpen: sv[2], armor: sv[3], helm: sv[4], melee: wt && wt !== 'bow' ? wt : sv[5], branch: sv[6] ? 'fire' : null, marks: sv[6] });
   if (window.__tp && G.outfit) { // "trangphuc": mặc bộ trang phục của vùng đang đánh (ải 1-3 bậc Lam, ải 4-5 bậc Tím; "trangphuc:vang": bậc Vàng, cánh lớn)

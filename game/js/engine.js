@@ -506,6 +506,9 @@
   };
   G.resetSave = function () {
     G.save = G.newSave();
+    // sua-mat-bac-ep: bản "Xoá hết" là bản mới theo luật hiện hành → đánh dấu đã cân lại, để lần nạp sau VM.canLai (js/vk_moi.js) không
+    // chạy lại vô cớ. Chỉ đặt ở đây, KHÔNG trong G.newSave (xem ghi chú ở G.SAVE_CAN_LAI).
+    G.save.canLai = G.SAVE_CAN_LAI || 1;
     G.persist();
   };
   G.weaponById = (id) => G.save.weapons.find((w) => w.id === id) || null;

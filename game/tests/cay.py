@@ -20,6 +20,8 @@ Thoát mã 1 nếu: có luật hỏng, có lượt chiến dịch bị kẹt, c�
 import sys, json, os, math
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import cd_lib
+# sua-mat-bac-ep (bao-cao-B mục 7, đề xuất 1b): bản lưu (tests/cay_luu.json, bản tạm --luu) không có cờ canLai → G.fixSave chạy VM.canLai.
+# Mọi chỗ nạp bản lưu dưới đây đặt cờ trước G.fixSave để nạp đúng bản bot đã chơi (bản đã theo luật hiện hành, không cần cân lại).
 from cd_lib import ten
 
 # Mục tiêu tham khảo (số lần chơi trung bình mỗi ải) từ các phiên cân bằng trước; đợt 5 chỉ BẮT BUỘC "không ải nào quá ~8 lượt cày".
@@ -173,7 +175,7 @@ def main():
             ds = []
             for k in range(15):
                 rec = pg.evaluate('(k) => G.STAGE_REC[k]', k)
-                cand = [(abs(pg.evaluate("(s) => { G.save = G.fixSave(JSON.parse(s)); return G.power(); }", x) - rec), x) for x in (saves or {}).get(k, [])]
+                cand = [(abs(pg.evaluate("(s) => { const o = JSON.parse(s); o.canLai = G.SAVE_CAN_LAI || 1; G.save = G.fixSave(o); return G.power(); }", x) - rec), x) for x in (saves or {}).get(k, [])]
                 ds.append(min(cand, key=lambda q: q[0])[1] if cand else None)
             json.dump(ds, open(luu[0], 'w'), ensure_ascii=False)
             print('Đã ghi bản lưu cho balance.py:', luu[0], sum(1 for x in ds if x), 'ải')
@@ -188,7 +190,7 @@ def main():
               # 14/10: bot tới độ khó 2 đã dư sức (vừa xong 15 ải thường), nên lấy thêm bản lưu ở MỌI mốc của lượt chiến dịch (cả ải thường)
               # và chọn 8 bản có Sức mạnh gần khuyên dùng độ khó 2 nhất (4 dưới, 4 trên nếu có) để thấy được đường thắng / thua.
               allsv = [x for d in (saves or {}, saves2 or {}) for ds in d.values() for x in ds]
-              pool = sorted(((pg.evaluate("(s) => { G.save = G.fixSave(JSON.parse(s)); G.save.sound = false; return G.power(); }", x), x) for x in allsv), key=lambda q: q[0])
+              pool = sorted(((pg.evaluate("(s) => { const o = JSON.parse(s); o.canLai = G.SAVE_CAN_LAI || 1; G.save = G.fixSave(o); G.save.sound = false; return G.power(); }", x), x) for x in allsv), key=lambda q: q[0])
           for k in sorted(sv_ds):
                 ds_k = sv_ds[k]
                 if pool:
@@ -198,10 +200,10 @@ def main():
                     ds_k = duoi + tren + list(sv_ds[k][:2])
                 pts = []
                 for sj in ds_k:
-                    pw = pg.evaluate("(s) => { G.save = G.fixSave(JSON.parse(s)); G.save.sound = false; return G.power(); }", sj)
+                    pw = pg.evaluate("(s) => { const o = JSON.parse(s); o.canLai = G.SAVE_CAN_LAI || 1; G.save = G.fixSave(o); G.save.sound = false; return G.power(); }", sj)
                     wn = 0
                     for _ in range(R):
-                        pg.evaluate("(s) => { G.save = G.fixSave(JSON.parse(s)); G.save.sound = false; }", sj)
+                        pg.evaluate("(s) => { const o = JSON.parse(s); o.canLai = G.SAVE_CAN_LAI || 1; G.save = G.fixSave(o); G.save.sound = false; }", sj)
                         pg.evaluate("([r, i, d]) => G.startStage(r, i, d)", list(divmod(k, 5)) + [diff])
                         res = pg.evaluate("G.probeRun(900)")
                         wn += 1 if res.get('win') else 0
