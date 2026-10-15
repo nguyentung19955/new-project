@@ -188,93 +188,7 @@
   // a: bộ ba màu nhấn (màu hệ của vũ khí, hoặc vàng nhạt khi chưa hệ)
   const PLAIN = pal3('#fff6d8', '#ffd27a', '#c88a3a');
   const accent = (el) => (el && EL_RING[el] && el !== 'none' ? EL_RING[el] : PLAIN);
-  function blade(el) {
-    if (!el || el === 'none') return STEEL;
-    const e = EL_RING[el];
-    return pal3(mix(STEEL.l, e.l, 0.45), mix(STEEL.m, e.m, 0.5), mix(STEEL.d, e.d, 0.5));
-  }
   const ICON = {};
-  // Bốn loại vũ khí (nút Đánh và ô vũ khí)
-  ICON.w_sword = function (el) {
-    const s = blade(el);
-    return xf(45, 1, 0, 0, [
-      rect(-0.18, -0.62, 0, 0.3, s.l), rect(0, -0.62, 0.18, 0.3, s.m),
-      poly([[-0.18, -0.62], [0, -1], [0, -0.62]], s.l), poly([[0, -0.62], [0, -1], [0.18, -0.62]], s.m),
-      rect(-0.46, 0.28, 0.46, 0.38, GOLD.l), rect(-0.46, 0.38, 0.46, 0.46, GOLD.m),
-      rect(-0.1, 0.46, 0, 0.8, HANDLE.l), rect(0, 0.46, 0.1, 0.8, HANDLE.d),
-      circ(0, 0.87, 0.13, GOLD.m),
-    ]);
-  };
-  ICON.w_bow = function (el) {
-    const s = blade(el), a = accent(el);
-    return xf(-45, 1, -0.08, 0.08, [
-      seg(0.0, -0.84, -0.52, 0, 0.09, '#e8e0c8'), seg(0.0, 0.84, -0.52, 0, 0.09, '#e8e0c8'),
-      arc(-0.55, 0, 1.0, 0.2, -57, 57, HANDLE.m), arc(-0.55, 0, 1.06, 0.08, -57, 57, HANDLE.l),
-      arc(-0.55, 0, 1.0, 0.24, -12, 12, el && el !== 'none' ? a.m : '#c0392e'),
-      circ(0.0, -0.84, 0.11, GOLD.m), circ(0.0, 0.84, 0.11, GOLD.m),
-      rect(-0.52, -0.06, 0.66, 0.06, '#f0e0b8'),
-      poly([[0.6, -0.24], [1.04, 0], [0.6, 0], ], s.l), poly([[0.6, 0], [1.04, 0], [0.6, 0.24]], s.m),
-    ]);
-  };
-  ICON.w_spear = function (el) {
-    const s = blade(el);
-    return xf(45, 1, 0, 0, [
-      rect(-0.075, -0.4, 0, 0.9, HANDLE.l), rect(0, -0.4, 0.075, 0.9, HANDLE.d),
-      poly([[-0.075, -0.36], [-0.34, -0.08], [-0.075, -0.12]], '#e0483a'), poly([[0.075, -0.36], [0.34, -0.08], [0.075, -0.12]], '#b0322a'),
-      poly([[0, -1.04], [-0.27, -0.64], [0, -0.32]], s.l), poly([[0, -1.04], [0.27, -0.64], [0, -0.32]], s.m),
-      rect(-0.12, -0.42, 0.12, -0.32, GOLD.m),
-      rect(-0.11, 0.84, 0.11, 0.98, GOLD.m),
-    ]);
-  };
-  ICON.w_hammer = function (el) {
-    const s = blade(el);
-    return xf(40, 0.88, 0.04, 0.02, [
-      rect(-0.1, -0.24, 0, 1.02, HANDLE.l), rect(0, -0.24, 0.1, 1.02, HANDLE.d),
-      rect(-0.13, 0.9, 0.13, 1.04, GOLD.m),
-      rect(-0.6, -0.9, 0.6, -0.24, s.m), rect(-0.6, -0.9, 0.6, -0.72, s.l), rect(-0.6, -0.4, 0.6, -0.24, s.d),
-      rect(-0.74, -0.96, -0.54, -0.18, GOLD.m), rect(0.54, -0.96, 0.74, -0.18, GOLD.m),
-      rect(-0.74, -0.96, -0.54, -0.8, GOLD.l), rect(0.54, -0.96, 0.74, -0.8, GOLD.l),
-    ]);
-  };
-  // Đòn đặc biệt của từng vũ khí
-  ICON.s_sword = function (el) { // Trảm Nguyệt: vệt trăng lưỡi liềm bay đi, hai bóng mờ phía sau
-    const a = accent(el);
-    return [
-      cres(-0.62, 0, 0.62, -0.28, 0, 0.6, a.d || a.m), cres(-0.3, 0, 0.78, -0.3, 0, 0.75, a.m),
-      cres(0.14, 0, 0.96, -0.4, 0, 0.92, a.m), cres(0.14, 0, 0.96, -0.24, 0, 0.94, '#ffffff'),
-      rect(-1, -0.08, -0.7, 0.06, a.l),
-    ];
-  };
-  ICON.s_bow = function (el) { // Mưa tên: ba mũi tên cắm xuống
-    const a = accent(el), s = blade(el);
-    const arrow = (x, y0, y1) => [
-      rect(x - 0.07, y0, x + 0.07, y1 - 0.2, '#f0e0b8'),
-      poly([[x - 0.07, y0], [x - 0.24, y0 - 0.16], [x - 0.24, y0 + 0.1], [x - 0.07, y0 + 0.24]], a.m),
-      poly([[x + 0.07, y0], [x + 0.24, y0 - 0.16], [x + 0.24, y0 + 0.1], [x + 0.07, y0 + 0.24]], a.m),
-      poly([[x - 0.24, y1 - 0.3], [x, y1], [x, y1 - 0.3]], s.l), poly([[x, y1 - 0.3], [x, y1], [x + 0.24, y1 - 0.3]], s.m),
-    ];
-    return xf(18, 0.96, 0, 0, [].concat(arrow(-0.58, -0.62, 0.42), arrow(0.58, -0.4, 0.62), arrow(0, -0.9, 0.98)));
-  };
-  ICON.s_spear = function (el) { // Phi Thương: cây giáo bay chéo lên, mũi tên cong quay về tay
-    const a = accent(el), s = blade(el);
-    return [
-      arc(0.05, 0.25, 0.86, 0.12, 100, 250, a.m), poly([[-0.98, 0.18], [-0.66, 0.12], [-0.86, 0.46]], a.m),
-    ].concat(xf(-35, 1, 0.08, -0.06, [
-      rect(-0.9, -0.07, 0.36, 0, HANDLE.l), rect(-0.9, 0, 0.36, 0.07, HANDLE.d),
-      poly([[1.0, 0], [0.36, -0.3], [0.2, 0]], s.l), poly([[1.0, 0], [0.36, 0.3], [0.2, 0]], s.m),
-      rect(0.2, -0.11, 0.3, 0.11, GOLD.m),
-    ]));
-  };
-  ICON.s_hammer = function (el) { // Địa Chấn: búa nện xuống bên trái, vệt nứt đất chạy sang phải, đá trồi
-    const a = accent(el), s = blade(el);
-    return [
-      rect(-0.62, -1, -0.54, -0.42, HANDLE.l), rect(-0.54, -1, -0.46, -0.42, HANDLE.d),
-      rect(-0.98, -0.5, -0.1, 0.06, s.m), rect(-0.98, -0.5, -0.1, -0.36, s.l), rect(-0.98, -0.06, -0.1, 0.06, s.d),
-      rect(-1, 0.14, 1, 0.26, '#e8dcc0'),
-      poly([[-0.2, 0.26], [0.1, 0.44], [0.36, 0.3], [0.62, 0.5], [1, 0.36], [1, 0.46], [0.62, 0.62], [0.36, 0.42], [0.1, 0.56], [-0.2, 0.38]], '#3a2e26'),
-      poly([[0.02, 0.14], [0.14, -0.3], [0.28, 0.14]], a.m), poly([[0.4, 0.14], [0.56, -0.5], [0.72, 0.14]], a.l), poly([[0.78, 0.14], [0.9, -0.2], [1, 0.14]], a.m),
-    ];
-  };
   // Kỹ năng của bốn hero
   ICON.h_smith = function () { // Nung: lưỡi kiếm nung trong lửa
     const flame = [[0, -1], [0.26, -0.52], [0.52, -0.74], [0.74, -0.1], [0.66, 0.5], [0.34, 0.9], [-0.34, 0.9], [-0.66, 0.5], [-0.74, -0.1], [-0.5, -0.62], [-0.26, -0.36]];
@@ -459,8 +373,8 @@
     return co0 ? b : null; // ảnh rỗng: dùng hình vẽ code
   }
   // 14/10 (vũ khí cũ còn sót, mục 3): thiếu ảnh gd-nut-danh-* / gd-nut-dac-biet-* thì dự phòng là ô zed-vk (cấp Trắng) của loại vũ khí đó,
-  // đặt chéo như nút Đánh; zed-vk chưa tải xong thì nút để trống. Hình vẽ code ICON.w_* / ICON.s_* cũ chỉ còn khi ?vkcu=1 (G.VK_CU).
-  const laVk = (name) => !G.VK_CU && (name.slice(0, 2) === 'w_' || name.slice(0, 2) === 's_');
+  // đặt chéo như nút Đánh; zed-vk chưa tải xong thì nút để trống. (15/10 don-tep B: bỏ hình vẽ code ICON.w_* / ICON.s_* cùng cờ ?vkcu=1.)
+  const laVk = (name) => name.slice(0, 2) === 'w_' || name.slice(0, 2) === 's_';
   const ZIC = {};
   function zedIcon(name) {
     const type = name.slice(2), VM = G.vkMoi;
@@ -887,7 +801,8 @@
     return t - (given != null ? given : s.at);
   }
   const elOf = (w) => (w && w.branch && G.EL && G.EL[w.branch] ? w.branch : w && EL_RING[w.branch] ? w.branch : 'none');
-  const wType = (w) => (w && ICON['w_' + w.type] ? w.type : 'sword');
+  const LOAI_VK = { sword: 1, bow: 1, spear: 1, hammer: 1 };
+  const wType = (w) => (w && LOAI_VK[w.type] ? w.type : 'sword');
 
   // Vẽ một nút tròn (hoặc vuông vát góc với bình máu, tạm dừng).
   // st: { weapon:{type,branch,stage,rarity}, hero, pressed, disabled, cd, cdSec, cost, lack, charge, chargeSteps,
@@ -1036,8 +951,8 @@
   B.slot = function (ctx, x, y, w, h, st) {
     st = st || {};
     const g = grid(ctx), W = Math.max(10, Math.round((w * g.a) / g.k)), H = Math.max(10, Math.round((h * g.a) / g.k));
-    // 14/10: không còn bậc màu cũ — khung ô luôn bậc 0 (gd-o-vk-0); viền màu bậc ép đồ do js/stage.js vẽ đè (G.epDo.vien). ?vkcu=1: như cũ.
-    const wp = st.weapon || {}, el = elOf(wp), rar = G.VK_CU ? clamp(Math.floor(wp.rarity || 0), 0, 3) : 0, lv = clamp(wp.stage || 1, 1, 3);
+    // 14/10: không còn bậc màu cũ — khung ô luôn bậc 0 (gd-o-vk-0); viền màu bậc ép đồ do js/stage.js vẽ đè (G.epDo.vien).
+    const wp = st.weapon || {}, el = elOf(wp), rar = 0, lv = clamp(wp.stage || 1, 1, 3);
     const t = st.t != null ? st.t : G.time || 0;
     const key = ['sl', W, H, wType(wp), el, rar, lv, st.active ? 1 : 0, st.pressed ? 1 : 0, st.disabled ? 1 : 0, st.swap ? 1 : 0, st.icon === false ? 0 : 1, st.gem === false ? 0 : 1].join('|') + (st.icon === false ? '' : gdTag('w_' + wType(wp))) + gdTagMa('gd-o-vk-' + rar);
     const spr = memo(key, () => buildSlot(W, H, st, el, rar, lv, gdCo('gd-o-vk-' + rar)));

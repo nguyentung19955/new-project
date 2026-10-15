@@ -176,7 +176,7 @@
   }
   function putNpc(c, kind, x, y, f, o, s) {
     s = s || 1;
-    if (!G.VK_CU && !(VS.coAnh && VS.coAnh(kind))) return; // 14/10 (mục 7): ảnh nl-* chưa tải xong thì không vẽ người làng code kiểu cũ (?vkcu=1: như cũ)
+    if (!(VS.coAnh && VS.coAnh(kind))) return; // 14/10 (mục 7): ảnh nl-* chưa tải xong thì không vẽ người làng code kiểu cũ
     if (!(o && o.noShadow)) { // bóng chân tròn, cùng kiểu với em bé và quái trong ải
       const ga = c.globalAlpha; c.globalAlpha = ga * 0.3;
       ell(c, x, y + 0.5 * s, (NPCS[kind] && NPCS[kind].sit ? 11 : 8) * s, 2.4 * s, '#000000');
@@ -208,10 +208,7 @@
   }
   // Khuôn mặt một người (dùng cho dải lối tắt và khung thoại). ctx bất kỳ, s: số lần phóng.
   VS.face = function (ctx, k, cx, cy, s) {
-    if (VS.tuVeMat && VS.tuVeMat(ctx, k, cx, cy, s)) return;
-    if (!G.VK_CU) return; // 14/10: chờ ảnh nl-* thì ô mặt để trống
-    const sp = npcSprite(k, 0, { look: 1 }), ty = 50 + NPCS[k].top - 6;
-    ctx.imageSmoothingEnabled = false; ctx.drawImage(sp.cv, 19, ty, 23, 20, cx - 11.5 * s, cy - 10 * s, 23 * s, 20 * s);
+    if (VS.tuVeMat) VS.tuVeMat(ctx, k, cx, cy, s); // 14/10: chờ ảnh nl-* thì ô mặt để trống (15/10 don-tep B: bỏ ô mặt vẽ code của ?vkcu=1)
   };
   // Vẽ một người cỡ lớn (đứng cạnh bảng). (x, y) là chân.
   VS.bigNpc = function (ctx, k, x, y, s, f) { const sv = ctx.imageSmoothingEnabled; putNpc(ctx, k, x, y, f || 0, { look: 1, noShadow: true }, s); ctx.imageSmoothingEnabled = sv; };
@@ -433,9 +430,8 @@
   function anhNen(Bt) {
     const g = gdLang('nen'); if (g === Bt.nenG) return;
     Bt.nenG = g;
-    if (!g) { Bt.ground = G.VK_CU ? Bt.nenCode : nenTron(); Bt.nenAnh = false; return; } // 14/10 (mục 7): chờ ảnh nền thì một màu cỏ, không vẽ nền code kiểu cũ
+    if (!g) { Bt.ground = nenTron(); Bt.nenAnh = false; return; } // 14/10 (mục 7): chờ ảnh nền thì một màu cỏ, không vẽ nền code kiểu cũ
     const [cv, c] = mk(g.img.width, g.img.height);
-    if (G.VK_CU) c.drawImage(Bt.nenCode, 0, 0, cv.width, cv.height);
     c.drawImage(Bt.ngay ? g.img : tint(g.img), 0, 0);
     Bt.ground = cv; Bt.nenAnh = true;
   }
@@ -755,8 +751,7 @@
   // Vật chạm được tại điểm (x, y) của màn hình
   function hitAt(sx, sy) {
     const wx = sx + S.cam, wy = sy - OY;
-    // 14/10 (vũ khí cũ còn sót, mục 1): bỏ 2 vũ khí sống bay cạnh nhân vật (Zed đã cầm vũ khí trên tay); ?vkcu=1 còn như cũ
-    if (G.VK_CU) for (let i = 0; i < 2; i++) { const w = G.weaponById(G.save.carry[i]); if (w && Math.abs(wx - S.wp[i].x) < 13 && wy > S.wp[i].y - 50 && wy < S.wp[i].y + 6) return { kind: 'weapon', id: w.id }; }
+    // 14/10 (vũ khí cũ còn sót, mục 1): bỏ 2 vũ khí sống bay cạnh nhân vật (Zed đã cầm vũ khí trên tay)
     let best = null, bd = 1e9;
     for (const k of ORDER) { if (!shown(k)) continue; const q = NPCS[k].pos; if (Math.abs(wx - q[0]) < halfW(k) && wy > q[1] - Math.max(40, 4 - topOf(k)) && wy < q[1] + 10) { const d = Math.hypot(wx - q[0], wy - q[1] + 14); if (d < bd) { bd = d; best = { kind: 'npc', id: k }; } } }
     for (const st of seats()) if (Math.abs(wx - st.x) < 14 && wy > st.y - 32 && wy < st.y + 8) { const d = Math.hypot(wx - st.x, wy - st.y + 12); if (d < bd) { bd = d; best = { kind: 'kid', id: st.key, x: st.x, y: st.y }; } }
@@ -846,19 +841,9 @@
   };
 
   // ======================= vẽ =======================
-  function drawWeapon(c, i) {
-    const sv = G.save, w = G.weaponById(sv.carry[i]); if (!w) return;
-    const q = S.wp[i], bob = Math.round(Math.sin(S.t * 3 + i * 1.7) * 1.5), x = Math.round(q.x - S.cam), y = Math.round(q.y);
-    { const ga = c.globalAlpha; c.globalAlpha = ga * (0.3 - bob * 0.03); ell(c, x, y, 4 - (bob > 0 ? 1 : 0), 1, '#000000'); c.globalAlpha = ga; } // bóng nhỏ lại khi vũ khí bay cao
-    const WA = G.weaponArt;
-    try {
-      if (WA) { const o = WA.fromWeapon(w, { mood: S.near || S.talk ? 'calm' : 'idle', t: S.t + i }); o.lang = true; /* vũ khí bay theo ở làng: co thêm G.CO_VK.lang */ WA.draw(c, o, x, y - 14 - bob - (w.type === 'bow' ? 8 : 0), WA.REST[w.type], 0); }
-      else if (G.tinhLinh) { const sp = G.tinhLinh.weaponSprite(w.type, 'thuong', 'idle', -90, 0); c.drawImage(sp.cv, x - sp.ox, y - 14 - bob - sp.oy); }
-    } catch (e) { /* thiếu hình vũ khí thì bỏ qua */ }
-  }
   function drawKid(c, key, x, y, face, o) {
     const sv = G.save;
-    try { G.art.hero(c, Object.assign({ x: Math.round(x), y: Math.round(y), face, key, move: false, t: S.t, atk: -1, dodge: -1, weapon: null, roundShadow: true }, o || {})); } catch (e) { if (G.VK_CU) p(c, x - 4, y - 18, 9, 18, '#c8402e'); }
+    try { G.art.hero(c, Object.assign({ x: Math.round(x), y: Math.round(y), face, key, move: false, t: S.t, atk: -1, dodge: -1, weapon: null, roundShadow: true }, o || {})); } catch (e) { /* bỏ qua */ }
     void sv;
   }
   // ======================= chuyển động môi trường của làng (VFX Phase 4) =======================
@@ -889,23 +874,7 @@
       if (x > -10 && x < 490) ring(x, y, u / 1.4, 7, ac(150, 200, 230, 0.55 * (1 - u / 1.4) * M));
     }
     { const per = 3.4, u = t % per, cyc = Math.floor(t / per); if (u < 1.2) { const a = cyc * 2.3, x = B.ao[0] + Math.cos(a) * B.ao[2] * 0.45 - cam, y = B.ao[1] + Math.sin(a) * B.ao[3] * 0.4; if (x > -10 && x < 490) ring(x, y, u / 1.2, 5, ac(150, 200, 220, 0.5 * (1 - u / 1.2) * M)); } }
-    // sậy: thân đứng yên, ngọn nghiêng theo gió (14/10, mục 7: sậy vẽ code kiểu cũ chỉ còn ở ?vkcu=1)
-    if (G.VK_CU) for (const q of REEDS) {
-      const e = q[0] - cam, y = q[1]; if (e < -10 || e > 490) continue;
-      const w = gio(t, q[0] + y) * M, d = w > 0.6 ? 1 : w < -0.8 ? -1 : 0;
-      p(c, e - 5, y - 8, 1, 9, tc('#4f7a52')); p(c, e - 5 + d, y - 9, 1, 1, tc('#4f7a52')); p(c, e - 5 + d, y - 11, 1, 2, tc('#8a5a34'));
-      p(c, e - 7, y - 6, 1, 7, tc('#3a6240')); p(c, e - 7 + d, y - 7, 1, 1, tc('#3a6240'));
-      p(c, e - 3, y - 5, 1, 6, tc('#4f7a52')); p(c, e - 3 + d, y - 6, 1, 1, tc('#4f7a52'));
-    }
-  }
-  function ambClothes(c, cam, t, M) { // áo phơi trên dây: vai cố định, vạt áo lay theo gió
-    if (!G.VK_CU) return; // 14/10 (mục 7): áo phơi vẽ code kiểu cũ — bỏ (ảnh gd-lang-day-phoi chỉ có cọc và dây); ?vkcu=1 còn như cũ
-    const x0 = B.phoi[0] - cam, y = B.phoi[1], n = Math.floor((B.phoi[2] - 6) / 10), cols = ['#d8482e', '#6fc0d0', '#ffd23f', '#9be07a'];
-    if (x0 > 490 || x0 + B.phoi[2] < -10) return;
-    for (let i = 0; i < n; i++) {
-      const xx = x0 + 5 + i * 10, col = tc(cols[i % 4]), w = gio(t, B.phoi[0] + i * 10) * M, d = w > 0.5 ? 1 : w < -0.7 ? -1 : 0;
-      p(c, xx - 2, y - 23, 11, 3, col); p(c, xx, y - 20, 7, 3, col); p(c, xx + d, y - 17, 7, 3, col); p(c, xx + 2, y - 23, 3, 2, tc('#1a1420'));
-    }
+    // (14/10, mục 7 + 15/10 don-tep B: bỏ sậy vẽ code kiểu cũ của ?vkcu=1)
   }
   function ambLight(c, Bt, cam, t, M, tb) {
     // từng đèn lồng chập chờn một kiểu: quầng nhỏ sáng lên tối xuống không đều
@@ -934,7 +903,7 @@
   const LUA = [-16, -7]; // chỗ đặt điểm neo của dải hu-lang-lua-lo so với chân lò: giữa đáy vùng ngọn lửa code (12 × 14)
   function luaLo(c, cam, t) { // lửa lò rèn bập bùng, khói bay (vẽ đè lên lò, cả khi lò là ảnh AI)
     const x = B.ren[0] - cam, y = B.ren[1], f = Math.floor(t * 7) % 3, a = huLang('lua-lo');
-    if (a) veDai(c, a, a.img, Math.floor(t * 7), x + LUA[0], y + LUA[1]); else if (G.VK_CU) luaKhung(c, x, y, f); // 14/10: chờ ảnh thì không vẽ lửa code
+    if (a) veDai(c, a, a.img, Math.floor(t * 7), x + LUA[0], y + LUA[1]); // 14/10: chờ ảnh thì không vẽ lửa code
     for (let i = 0; i < 3; i++) { const ph = (t * 0.35 + i / 3) % 1; c.globalAlpha = 0.45 * (1 - ph); ell(c, x - 19 + Math.round(ph * 12 + Math.sin(ph * 6 + i) * 2), y - 74 - Math.round(ph * 22), 3 + Math.round(ph * 3), 2 + Math.round(ph), '#c8bec8'); }
     c.globalAlpha = 1;
   }
@@ -944,16 +913,13 @@
     return [Bt.cui[0].y, () => {
       const a = huLang('khung-cui'), f = Math.floor(t * 2.2);
       if (a) veDai(c, a, Bt.ngay ? a.img : nhuom(a.img, NIGHT), f, Bt.cuiA[0] - cam, Bt.cuiA[1]);
-      else if (G.VK_CU) { const cf = Bt.cui[f % 3]; c.drawImage(cf.cv, cf.x - cam, cf.y0); } // 14/10: chờ ảnh thì không vẽ khung cửi code
     }];
   }
   function lopDo(c, Bt, cam, tb, k) {
     const th = Bt.thuyenS;
     return [th.y, () => {
       if (th.w) { veAnh(c, th, th.x - cam, th.y0 + tb, k); return; }
-      if (!G.VK_CU) return; // 14/10: chờ ảnh gd-lang-do thì không vẽ đò code
-      c.drawImage(th.cv, th.x - cam, th.y0 + tb);
-      for (const d of Bt.doN.den) veAnh(c, d, d.x - cam, d.y0 + tb, k); // đèn lồng rời bằng ảnh trên con đò vẽ code
+      // 14/10: chờ ảnh gd-lang-do thì không vẽ đò code (cũng không đèn lồng rời)
     }];
   }
   const GA = [[-34, -18, null, 0], [-22, -8, '#c87050', 1.3], [-44, -4, '#ffd23f', 2.6]]; // đàn gà quanh cây rơm: lệch x, lệch y, màu lông, lệch nhịp
@@ -961,18 +927,18 @@
     const g0 = gdLang('ga'), g1 = (g0 && gdLang('ga-mo')) || g0;
     for (const q of GA) L.push([B.rom[1] + q[1], () => {
       const x = B.rom[0] + q[0] - cam + Math.round(Math.sin(t * 0.4 + q[3]) * 3), y = B.rom[1] + q[1], mo = Math.sin(t * 2.2 + q[3] * 2) > 0.55;
-      if (g0) veCon(c, mo ? g1 : g0, x + 0.5, y, q[2], k); else if (G.VK_CU) ga(c, x, y, q[2], mo);
+      if (g0) veCon(c, mo ? g1 : g0, x + 0.5, y, q[2], k);
     }]);
   }
   function lopCoc(c, cam, t, k) {
     return [B.gieng[1] + 0.1, () => {
       const x = B.gieng[0] - 9 - cam, y = B.gieng[1] - 10 - (Math.sin(t * 0.9) > 0.96 ? 1 : 0), g = gdLang('coc');
-      if (g) veCon(c, g, x, y, null, k); else if (G.VK_CU) coc(c, x, y);
+      if (g) veCon(c, g, x, y, null, k);
     }];
   }
   // Các vật đứng của cảnh (công trình, đạo cụ, đèn lồng rời): đèn rời bỏ qua khi vật chủ đã có ảnh AI riêng.
-  // 14/10 (mục 7): vật chưa có ảnh gd-lang-* (đang chờ tải) thì không vẽ hình code kiểu cũ; đèn lồng rời chỉ đi kèm vật chủ vẽ code nên cũng thôi. ?vkcu=1: như cũ.
-  const lopVat = (c, ob, cam, k) => [ob.y, ob.w ? () => veAnh(c, ob, ob.x - cam, ob.y0, k) : G.VK_CU ? () => c.drawImage(ob.cv, ob.x - cam, ob.y0) : () => {}];
+  // 14/10 (mục 7): vật chưa có ảnh gd-lang-* (đang chờ tải) thì không vẽ hình code kiểu cũ; đèn lồng rời chỉ đi kèm vật chủ vẽ code nên cũng thôi.
+  const lopVat = (c, ob, cam, k) => [ob.y, ob.w ? () => veAnh(c, ob, ob.x - cam, ob.y0, k) : () => {}];
   // ---------- cho công cụ tools/tach-lang (game không gọi) ----------
   // Vẽ cảnh làng đứng yên lên bút c bất kỳ (1 đơn vị = 1 điểm ảnh làng, cả làng 720×270, không dời OY): nền, công trình, đạo cụ,
   // lửa lò, 7 người làng, quầng đèn. o: { t: giây, k: số điểm ảnh thật trên một điểm ảnh làng (để dán ảnh AI cho nét),
@@ -992,7 +958,6 @@
     if (o.chiNen) return;
     for (const ob of Bt.objs) if (!(ob.chu && ob.chu.g)) L.push(lopVat(c, ob, 0, k));
     L.push(lopCui(c, Bt, 0, t)); L.push(lopDo(c, Bt, 0, 0, k));
-    if (!o.ngay) L.push([B.phoi[1] + 0.01, () => ambClothes(c, 0, t, 1)]);
     L.push([B.ren[1] + 0.2, () => luaLo(c, 0, t)]);
     if (o.conVat !== false) { lopGa(c, L, 0, t, k); L.push(lopCoc(c, 0, t, k)); }
     if (o.nguoi !== false) for (const kk of ORDER) { const q = NPCS[kk].pos; L.push([q[1], () => { const sv = c.imageSmoothingEnabled; putNpc(c, kk, q[0], q[1], 0, {}); c.imageSmoothingEnabled = sv; }]); }
@@ -1043,7 +1008,6 @@
     for (const ob of Bt.objs) if (ob.x - cam < 480 && ob.x + (ob.w || ob.cv.width) - cam > 0 && !(ob.chu && ob.chu.g)) L.push(lopVat(c, ob, cam, NK));
     L.push(lopCui(c, Bt, cam, t));
     const tb = Math.round(Math.sin(t * 1.3)); L.push(lopDo(c, Bt, cam, tb, NK));
-    L.push([B.phoi[1] + 0.01, () => ambClothes(c, cam, t, M)]);
     // lửa lò rèn bập bùng, khói bay
     L.push([B.ren[1] + 0.2, () => luaLo(c, cam, t)]);
     // đàn gà, con cóc
@@ -1068,7 +1032,6 @@
       L.push([st.y, () => drawKid(c, st.key, st.x - cam, st.y, st.x > B.dinh[0] ? -1 : 1, { alpha: un ? null : 0.45, ngoi, move: !ngoi && un && Math.sin(t * 1.1 + st.x) > 0.75 })]);
     }
     if (!o.hideHero) {
-      if (G.VK_CU) for (let i = 1; i >= 0; i--) L.push([S.wp[i].y - 0.5, () => drawWeapon(c, i)]); // 14/10: vũ khí bay chỉ còn ở ?vkcu=1
       L.push([S.y, () => drawKid(c, sv.hero, S.x - cam, S.y, S.face, { move: S.moving })]);
     }
     L.sort((a, b) => a[0] - b[0]);

@@ -22,9 +22,7 @@
   if (typeof location !== 'undefined' && /[?&]tile=0(&|$)/.test(location.search || '')) G.TILE_RUNG = false;
   // Vũ khí cũ còn sót (14/10, docs/review/ke-hoach-cai-thien/vu-khi-cu-con-sot/YEU-CAU.md): mặc định KHÔNG còn vẽ hình cũ ở bất kỳ đâu
   // (vũ khí bay ở làng, giáo tre Phi Thương, biểu tượng nút vẽ code, icon vũ khí cũ lúc chờ ảnh, nhân vật / người làng / nhà vẽ code lúc chờ ảnh,
-  // sậy, áo phơi vẽ code). ?vkcu=1 → G.VK_CU = true: xem lại kiểu cũ y như trước.
-  G.VK_CU = false;
-  try { if (typeof location !== 'undefined' && /[?&]vkcu=1(&|$)/.test(location.search || '')) G.VK_CU = true; } catch (e) { /* giữ mặc định */ }
+  // sậy, áo phơi vẽ code). 15/10 don-tep B: bỏ cờ ?vkcu=1 (G.VK_CU) cùng các nhánh vẽ cũ.
   // 14/10 (YEU-CAU-MOC-HO-HIEU-UNG-NEN.md): sàn, tường, nền ngoài, phủ mép của HANG BIỂN và LÂU ĐÀI CỔ lát bằng ảnh (gd-nen-bien-*, gd-nen-lau-*;
   // js/room_art.js tileVung), cùng chuẩn bộ Rừng. Thiếu tệp bắt buộc thì vẽ code như cũ. Tắt: ?nentile=0 (hoặc G.NEN_TILE = false).
   G.NEN_TILE = true;

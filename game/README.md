@@ -16,7 +16,7 @@ Mở `index.html` (hoặc `dist/linh-khi.html`) bằng trình duyệt. Chạm m�
 
 Làng là một cảnh đi lại được, rộng gấp rưỡi màn hình; màn hình trượt ngang theo em bé. Không còn danh sách nút: mỗi chức năng là một người.
 
-- Kéo ở nửa trái màn hình để đi (tám hướng). Nhân vật cầm vũ khí trên tay (14/10: bỏ hai vũ khí bay theo sau; `?vkcu=1` xem lại hình cũ).
+- Kéo ở nửa trái màn hình để đi (tám hướng). Nhân vật cầm vũ khí trên tay (14/10: bỏ hai vũ khí bay theo sau; 15/10 bỏ luôn cờ xem lại `?vkcu=1`).
 - Tới gần một người thì người đó ngẩng lên và nút tròn bên phải thành **Nói chuyện**. Chạm thẳng vào người cũng được: em bé tự chạy tới.
 - Dải bảy khuôn mặt ở mép trên là lối tắt: chạm một mặt là em bé tự chạy tới người đó và bảng mở luôn (chạm lần hai thì tới ngay). Đang mở bảng mà chạm mặt khác thì sang thẳng người đó.
 - Ai có việc mới thì có dấu chấm than vàng trên đầu và chấm đỏ trên khuôn mặt ở dải lối tắt.
@@ -155,7 +155,7 @@ Quái, tinh anh, trùm và rương **không rơi vũ khí hay quần áo** nữa
 | `js/data.js` | Số liệu: hệ, 4 vũ khí, linh khí, ép đồ, ải ngày, bộ đồ và skill bộ, hero, quái, vùng, giá cả |
 | `js/engine.js` | Bộ máy: co giãn màn hình, bàn phím và cảm ứng, âm thanh, lưu game, vẽ chữ và nút, vòng lặp |
 | `js/art.js` | Hình vẽ: đồ vật, phông nền, vùng nguy hiểm, đạn; hình quái, trùm, hero và vũ khí kiểu cũ (chỉ còn dùng khi thiếu các tệp mới) |
-| `js/weapon_art.js` | Hình vũ khí vẽ bằng code kiểu cũ (chỉ còn khi có `?vkcu=1`; game dùng bộ ảnh `zed-vk`, `js/vk_moi.js`) |
+| `js/weapon_art.js` | Mô tả vũ khí (`G.weaponArt.fromWeapon`, tầm mũi) để tra ảnh vũ khí; hàm vẽ code kiểu cũ chỉ còn cho công cụ Xưởng Sprite / tách đồ (game vẽ bằng bộ ảnh `zed-vk`, `js/vk_moi.js`; cờ `?vkcu=1` đã bỏ 15/10) |
 | `js/vk_moi.js` | 4 vũ khí cố định, túi linh khí, nâng cấp vũ khí, nâng bộ đồ, chuyển bản lưu sang hệ mới |
 | `js/ep_do.js` | Ép đồ 7 bậc: đá nâng bậc, bùa giữ bậc, dòng hiệu ứng, thẻ Ép đồ |
 | `js/ai_ngay.js` | Ải theo ngày: Ải Đá Bậc, Ải Đá Mài, Ải Vàng |

@@ -11,7 +11,7 @@
 //     trước khi chuyển chép bản gốc sang khoá linhkhi_save_v1_truoc_he_moi (giữ bản đầu tiên; chỉ để cứu tay, game không đọc lại).
 //     Mỗi lần nạp: giữ đúng 4 vũ khí, sửa số hỏng.
 //     Đợt 2 (YEU-CAU-2-DON-CU.md): js/outfit.js đã xoá — bảng giá quần áo cũ dùng để hoàn tiền nằm ngay trong tệp này (AO_CU, AO_TU_CU).
-//   - Hình vũ khí trong ô đồ: bộ zed-vk (4 loại × 4 cấp, cùng ảnh js/zed_moi.js vẽ trên tay Zed); chưa tải xong thì không vẽ gì (14/10; ?vkcu=1: như cũ).
+//   - Hình vũ khí trong ô đồ: bộ zed-vk (4 loại × 4 cấp, cùng ảnh js/zed_moi.js vẽ trên tay Zed); chưa tải xong thì không vẽ gì (14/10).
 // Đợt 2: bỏ cờ ?hethongcu=1 — luôn chạy luật này.
 (function () {
   const G = window.G, ui = G.ui;
@@ -623,12 +623,9 @@
   // 14/10 (vũ khí cũ còn sót, mục 4): nạp zed-vk sớm cùng ảnh lõi (ngay khi tệp này chạy, trước khi vào làng).
   try { layVk(); } catch (e) { /* chưa có bộ nạp ảnh: bỏ qua */ }
   if (G.art && G.art.weaponIcon && !G.art.weaponIcon.vkMoiBoc) {
-    const goc = G.art.weaponIcon;
     G.art.weaponIcon = function (c, w, x, y, size) {
       if (w) { try { if (VM.icon(c, w, x, y, size || 22)) return; } catch (e) { /* bỏ qua */ } }
-      // 14/10: zed-vk chưa tải xong thì KHÔNG vẽ gì (không bao giờ rơi về hình vũ khí cũ G.weaponArt / A.weapon). ?vkcu=1 vẽ như cũ.
-      if (!G.VK_CU) return;
-      return goc.apply(this, arguments);
+      // 14/10: zed-vk chưa tải xong thì KHÔNG vẽ gì (không bao giờ rơi về hình vũ khí cũ G.weaponArt / A.weapon).
     };
     G.art.weaponIcon.vkMoiBoc = true;
   }

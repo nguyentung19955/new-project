@@ -614,11 +614,11 @@
     if (A && typeof A.hero === 'function' && !A.hero._zedMoi) {
       const cu = A.hero;
       // 14/10 (vũ khí cũ còn sót, mục 8): Zed chưa vẽ được bằng ảnh zed-* (chờ tải) → KHÔNG vẽ em bé code kiểu cũ; bạn nhỏ chưa có ảnh em-be-*
-      // cũng vậy. ?vkcu=1 (G.VK_CU) vẽ như cũ (công cụ cần hình code thì mở kèm ?vkcu=1).
+      // cũng vậy (công cụ cần hình code thì gọi thẳng G.art.heroCode). 15/10 don-tep B: bỏ cờ ?vkcu=1.
       const coEmBe = (o) => { const SC = G.spriteCustom; return !!(SC && SC.cuaEmBe && SC.cuaEmBe(o && o.key, o)); };
       const moi = function (c, o) {
-        if (!dangGoiCu && laZed(o)) { try { if (ve(c, o)) return; } catch (e) { ghiLoi(e); } if (!G.VK_CU) return; }
-        else if (!dangGoiCu && !G.VK_CU && !coEmBe(o)) return;
+        if (!dangGoiCu && laZed(o)) { try { if (ve(c, o)) return; } catch (e) { ghiLoi(e); } return; }
+        else if (!dangGoiCu && !coEmBe(o)) return;
         const truoc = dangGoiCu; dangGoiCu = true;
         try { return cu.call(this, c, o); } finally { dangGoiCu = truoc; }
       };
@@ -630,7 +630,7 @@
       const moi = function (c, o) {
         // phi tiêu mang hệ có ảnh hu-dan-ten-<hệ> (phi tiêu bọc lửa/nhớt/băng, js/fx_dan.js vẽ) thì để lớp trong vẽ ảnh đó
         const heAnh = o && o.he && o.he.el && G.fxAnh && G.fxAnh.co('hu-dan-ten-' + o.he.el);
-        if (o && o.team === 'player' && o.kind === 'arrow' && !G.noRender && !heAnh) { try { if (vePhiTieu(c, o)) return; } catch (e) { ghiLoi(e); } if (!G.VK_CU) return; } // 14/10: zed-vk chưa về thì không vẽ mũi tên cũ
+        if (o && o.team === 'player' && o.kind === 'arrow' && !G.noRender && !heAnh) { try { if (vePhiTieu(c, o)) return; } catch (e) { ghiLoi(e); } return; } // 14/10: zed-vk chưa về thì không vẽ mũi tên cũ
         return cu.apply(this, arguments);
       };
       moi._zedMoi = true; A.proj = moi;

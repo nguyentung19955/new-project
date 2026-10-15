@@ -1023,7 +1023,7 @@
   // rar: 0 Thường, 1 Lam, 2 Tím, 3 Vàng. o: { sel, dim }. Hình món đồ do nơi gọi vẽ lên sau, tâm tại (x + s/2, y + s/2).
   T.slot = function (x, y, s, rar, o) {
     o = o || {};
-    x = Math.round(x); y = Math.round(y); s = Math.round(s); rar = G.VK_CU ? G.clamp(rar | 0, 0, 3) : 0; // 14/10: không còn bậc màu cũ
+    x = Math.round(x); y = Math.round(y); s = Math.round(s); rar = 0; // 14/10: không còn bậc màu cũ (15/10 don-tep B: bỏ cờ ?vkcu=1)
     // Làn C5: có ảnh thì khung ô là ảnh 9 mảnh co theo cỡ ô (20 đến 70). Ô đang chọn dùng tệp -chon, phủ rộng hơn 1 điểm mỗi bên như vòng sáng của hình code;
     // thiếu tệp -chon thì dùng tệp thường và game tự vẽ vòng sáng. Bóng và màu lót lòng ô (xanh ngọc tối, đặc như hình code) do game vẽ dưới ảnh.
     const gkc = o.sel ? khungCo('gd-o-do-' + rar + '-chon') : null, gko = gkc || khungCo('gd-o-do-' + rar);
