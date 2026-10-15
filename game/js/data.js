@@ -126,7 +126,9 @@
   // Mảnh trùm trước đây chỉ dùng để nâng bậc Vàng (đã bỏ ở đợt 1) nên đang vô dụng.
   G.BO_MOI = {
     max: 3,
-    gia: [{ lk: 80, vang: 500, manh: 0 }, { lk: 200, vang: 1500, manh: 3 }, { lk: 400, vang: 3000, manh: 6 }],
+    // 15/10 (bo-do-mua): vàng cấp 1 500 → 300 để bù phần vàng phải bỏ ra MUA bộ vùng (G.BO_MUA): mô hình tools/can-bang/tinh.js
+    // (có mua bộ) 33 → 32 lượt so với 30 lượt khi bộ được tặng; bot tests/cay.py --node: tổng thời gian lệch < 2% (bảng ở bo-do-mua/bao-cao.md).
+    gia: [{ lk: 80, vang: 300, manh: 0 }, { lk: 200, vang: 1500, manh: 3 }, { lk: 400, vang: 3000, manh: 6 }],
     vungManh: { ninja: 0, rung: 0, bien: 1, lau: 2 }, // mảnh trùm của vùng nào
   };
   // ===== HỆ THỐNG MỚI ĐỢT 3: SKILL RIÊNG CỦA 4 BỘ TRANG PHỤC (docs/review/ke-hoach-cai-thien/he-thong-moi/YEU-CAU-3-SKILL-BO.md) =====

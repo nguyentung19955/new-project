@@ -802,7 +802,8 @@
   };
 
   // Khung nâng cấp bộ trang phục Zed (bộ đang mặc). ro: chỉ xem. Trả về y cuối.
-  VM.boPanel = function (x, y, wd, ro, say) {
+  // o.boQuaDs: không in dòng "Các bộ: …" (bảng Cô Thợ May có thẻ Mua liệt kê đủ các bộ — 15/10 bo-do-mua, để nút dưới không đè chữ)
+  VM.boPanel = function (x, y, wd, ro, say, o) {
     const T = G.theme, sv = G.save;
     if (!T || !sv || !G.ZED_BO || !G.zedBo) return y;
     say = say || (() => {});
@@ -837,6 +838,7 @@
       }
       y += 17;
     } else { ui.text('Bộ này đã nâng tối đa.', x, y + 9, { size: 7, bold: true, color: GOOD }); y += 13; }
+    if (o && o.boQuaDs) return y;
     const ds = (G.ZED_BO_KEYS || []).map((k) => G.tv(G.ZED_BO[k].ten) + ' ' + (G.zedBoMo(k, sv) ? VM.boCap(sv, k) + '/' + max : G.BO_MUA_BAT !== false && G.zedBoBan(k, sv) ? G.t('(chưa mua)') : G.t('(chưa mở)')));
     y = ui.para(G.t('Các bộ: {0}', ds.join(' · ')), x, y + 6, wd, { size: 6.5, color: TXT });
     return y;

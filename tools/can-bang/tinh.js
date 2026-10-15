@@ -140,7 +140,7 @@ function chienDich(o) {
   // lượt ải thường = 1 ngày, chơi đủ 3 lượt mọi ải ngày mở hôm đó ở mức cao nhất đã mở), o.banQuang (thiếu quặng để mài thì mua của
   // Bà Hàng Xén, tối đa G.BAN_QUANG.moiNgay mỗi ngày). Đặt false để so với luật cũ.
   const EP = o.ep !== false && G.EP_DO, AN = o.aiNgay !== false && G.AI_NGAY, BQ = o.banQuang !== false && G.BAN_QUANG, NGAY_LUOT = o.ngay || 8;
-  const p = { lvl: 1, xp: 0, vang: 0, quang: 0, nl: [0, 0, 0], manh: [0, 0, 0], lk: 0, lkTong: 0, lo: 1, hoc: {}, vk: { sword: { st: 0, sh: 0, ep: 0 }, bow: { st: 0, sh: 0, ep: 0 }, spear: { st: 0, sh: 0, ep: 0 }, hammer: { st: 0, sh: 0, ep: 0 } }, bo: { ninja: 0 }, power: 98, luot: 0, vangTong: 0, da: 0, daTong: 0, ngay: 0, muaQuang: 0, muaHom: 0, anLuot: 0 };
+  const p = { lvl: 1, xp: 0, vang: 0, quang: 0, nl: [0, 0, 0], manh: [0, 0, 0], lk: 0, lkTong: 0, lo: 1, hoc: {}, vk: { sword: { st: 0, sh: 0, ep: 0 }, bow: { st: 0, sh: 0, ep: 0 }, spear: { st: 0, sh: 0, ep: 0 }, hammer: { st: 0, sh: 0, ep: 0 } }, bo: { ninja: 0 }, ban: {}, muaBoVang: 0, power: 98, luot: 0, vangTong: 0, da: 0, daTong: 0, ngay: 0, muaQuang: 0, muaHom: 0, anLuot: 0 };
   // giá kỳ vọng mỗi bậc ép (chênh lệch cộng dồn của bảng mục 6, không bùa)
   const giaEp = EP ? (() => { const t = epDo({ n: 4000 }); return t.map((v, k) => ({ da: v.da - (k ? t[k - 1].da : 0), vang: v.vang - (k ? t[k - 1].vang : 0), manh: v.manh - (k ? t[k - 1].manh : 0) })); })() : [];
   const muaBo = (k, cap) => { // nâng bộ k từ cap lên cap + 1 nếu đủ (linh khí, vàng, mảnh trùm của vùng bộ)
@@ -153,7 +153,19 @@ function chienDich(o) {
   const thuTuVk = o.motMon ? [['sword', 1], ['sword', 2], ['sword', 3], ['bow', 1], ['bow', 2], ['bow', 3]] : [['sword', 1], ['bow', 1], ['sword', 2], ['bow', 2], ['sword', 3], ['bow', 3]];
   const ds = [], moc = {};
   const tieu = () => {
-    // linh khí: bộ cấp 1 khi vừa mở (nếu o.bo) rồi vũ khí
+    // 15/10 (bo-do-mua): bộ vùng mở bán khi hạ trùm vùng, đủ vàng thì MUA ngay (G.BO_MUA, trước mọi việc tiêu vàng khác) — o.muaBo === false: tặng như cũ
+    if (o.bo) for (const k of ['rung', 'bien', 'lau']) {
+      if (!p.ban[k] || p.bo[k] != null) continue;
+      const gia = (G.BO_MUA && G.BO_MUA.gia[k]) | 0;
+      if (p.vang < gia) continue;
+      p.vang -= gia; p.bo[k] = 0; p.muaBoVang += gia;
+      moc['mua bộ ' + k] = moc['mua bộ ' + k] || { luot: p.luot, ai: ds.length + 1 };
+    }
+    // còn bộ đang bán chưa đủ vàng: để dành (ép, mài, nâng lò chỉ tiêu phần vượt giá bộ rẻ nhất; o.deDanh === false: tiêu hết)
+    const banCho = o.bo && o.deDanh !== false ? ['rung', 'bien', 'lau'].filter((k) => p.ban[k] && p.bo[k] == null) : [];
+    const deDanh = banCho.length ? Math.min(p.vang, Math.min(...banCho.map((k) => (G.BO_MUA.gia[k] | 0)))) : 0;
+    p.vang -= deDanh;
+    // linh khí: bộ cấp 1 khi vừa có (nếu o.bo) rồi vũ khí
     if (o.bo) for (const k of ['rung', 'bien', 'lau']) if (p.bo[k] === 0) muaBo(k, 0);
     for (const [t, st] of thuTuVk) {
       const w = p.vk[t];
@@ -194,6 +206,7 @@ function chienDich(o) {
       if (p.vang < c.gold || p.quang < c.ore || c.mat.some((m, i) => p.nl[i] < m)) break;
       p.vang -= c.gold; p.quang -= c.ore; c.mat.forEach((m, i) => { p.nl[i] -= m; }); w.sh++;
     }
+    p.vang += deDanh;
   };
   const choi = (n, dau) => {
     const q = thuNhap(n, p, dau);
@@ -218,7 +231,11 @@ function chienDich(o) {
         p.xp += L * Math.round(G.stageStats(k, 4, 0).xp * (G.AI_NGAY.xp || 0));
       }
     }
-    if (dau && n % 5 === 4) { const k = G.REGIONS[Math.floor(n / 5)].rescue; p.hoc[k] = 1; p.bo[['rung', 'bien', 'lau'][Math.floor(n / 5)]] = 0; }
+    if (dau && n % 5 === 4) {
+      const k = G.REGIONS[Math.floor(n / 5)].rescue, bo = ['rung', 'bien', 'lau'][Math.floor(n / 5)];
+      p.hoc[k] = 1;
+      if (o.muaBo === false || !G.BO_MUA) p.bo[bo] = 0; else p.ban[bo] = 1; // 15/10: hạ trùm chỉ mở bán (mua trong tieu)
+    }
     tieu();
     p.power = nguoi(p).power;
     return q;
@@ -301,8 +318,9 @@ function aiNgay(o) {
 
 if (require.main === module) {
   const b1 = bang1(), cd = chienDich(), cd1 = chienDich({ motMon: true }), cdBo = chienDich({ bo: true }), b2 = bang2(cd);
+  const cdBoCu = chienDich({ bo: true, muaBo: false }); // 15/10 bo-do-mua: bộ tặng khi hạ trùm như cũ (?bocu=1)
   const cdCu = chienDich({ ep: false, aiNgay: false, banQuang: false }); // luật trước bước 1 (không ép, không ải ngày, không mua quặng)
-  if (JSON_OUT) { console.log(JSON.stringify({ b1, cd, cd1, cdBo, cdCu, b2 }, null, 1)); process.exit(0); }
+  if (JSON_OUT) { console.log(JSON.stringify({ b1, cd, cd1, cdBo, cdBoCu, cdCu, b2 }, null, 1)); process.exit(0); }
   const pad = (s, n) => String(s).padEnd(n);
   console.log('== 1. VŨ KHÍ: sát thương mỗi giây chuỗi đòn thường (đơn mục tiêu), cấp hero 1, mài +0 ==');
   console.log(pad('Loại', 10), pad('đòn gốc', 8), pad('nhát TB', 8), pad('Trắng', 7), pad('Mầm', 7), pad('T.hình', 7), pad('T.tỉnh', 7), pad('lệch TB', 8), 'tầm');
@@ -316,7 +334,9 @@ if (require.main === module) {
   console.log('Mốc (mua bộ cấp 1 trước):', JSON.stringify(cdBo.moc));
   console.log('Tổng lượt:', cd.p.luot, '| vàng tổng', Math.round(cd.p.vangTong), '| ngày giả', cd.p.ngay, '(lượt ải ngày ' + cd.p.anLuot + ') | đá nâng bậc tổng', Math.round(cd.p.daTong), '| quặng mua', Math.round(cd.p.muaQuang));
   console.log('So luật cũ (không ép đồ, không ải ngày, không mua quặng): tổng lượt', cdCu.p.luot, '| Sức mạnh qua từng ải mới/cũ:', cd.ds.map((v, k) => v.power + '/' + cdCu.ds[k].power).join(' '));
-  console.log('Có mua bộ (skill bộ tính vào Sức mạnh): tổng lượt', cdBo.p.luot, '| Sức mạnh:', cdBo.ds.map((v) => v.power).join(' '));
+  console.log('Có mua bộ (skill bộ tính vào Sức mạnh): tổng lượt', cdBo.p.luot, '| vàng mua bộ', cdBo.p.muaBoVang, '| Sức mạnh:', cdBo.ds.map((v) => v.power).join(' '));
+  console.log('Bộ tặng khi hạ trùm như cũ (?bocu=1): tổng lượt', cdBoCu.p.luot, '| Sức mạnh:', cdBoCu.ds.map((v) => v.power).join(' '));
+  console.log('Mốc mua bộ (lượt, ải đang tới):', JSON.stringify(Object.fromEntries(Object.entries(cdBo.moc).filter(([k]) => /bộ/.test(k)))), '| như cũ:', JSON.stringify(Object.fromEntries(Object.entries(cdBoCu.moc).filter(([k]) => /bộ/.test(k)))));
   console.log('\n== 2. SỐ ĐÒN (đòn kiếm thường của Zed lúc vào ải; quái đánh = đòn gốc, chưa tính kỹ năng/né) ==');
   console.log(pad('ải', 5), pad('cấp', 4), pad('máu', 5), pad('đòn', 6), pad('quái', 5), pad('tinh anh', 9), pad('trùm', 6), '| quái hạ Zed / tinh anh / trùm (đòn trùm)');
   for (const v of b2) console.log(pad(v.ai, 5), pad(v.lvl, 4), pad(v.mau, 5), pad(v.don, 6), pad(v.danhQuai, 5), pad(v.danhTinhAnh, 9), pad(v.danhTrum, 6), '|', v.quaiDanh, '/', v.tinhAnhDanh, '/', v.trumDanh, '(' + v.trumDon + ')');

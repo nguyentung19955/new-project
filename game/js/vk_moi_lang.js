@@ -18,7 +18,7 @@
   function nangThe(y0, coMua) {
     let y = y0;
     if (!coMua) y = ui.para('Quần áo cũ đã đổi ra vàng và linh khí. Cu Tí có 4 bộ, hạ trùm vùng để mở bộ, đổi bộ ở Hành trang › Nhân vật.', CX + 2, y0, CW - 4, { size: 7, color: TXT }); // đợt 3: câu ngắn lại để đủ chỗ cho 3 dòng skill bộ
-    y = VM.boPanel(CX + 2, y + 2, CW - 6, false, VA.say);
+    y = VM.boPanel(CX + 2, y + 2, CW - 6, false, VA.say, { boQuaDs: coMua });
     if (G.hanhTrang && T.sbtn(CX + 2, Math.min(y + 6, 240), 150, 17, 'Mở Hành trang › Nhân vật', { size: 7, pad: 2 })) {
       G.hanhTrang.openVillage(); G.hanhTrang.tab = 'hero';
       return null;

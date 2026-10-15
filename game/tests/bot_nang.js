@@ -12,6 +12,8 @@
 //  - Bộ trang phục: mặc bộ có cấp cao nhất (bằng nhau thì bộ mới mở sau cùng); nâng bộ mới mở sau cùng còn chưa tối đa khi đủ linh khí + vàng + mảnh, và chỉ khi giá linh khí của cấp bộ đó không cao hơn lần nâng vũ khí rẻ nhất còn chờ
 //    (người chơi mua món rẻ trước). Nâng bộ làm trước G.upg.auto để vàng không bị mài tiêu hết.
 //    Bộ đang nhắm còn thiếu mảnh trùm (cấp 2, 3): khi cần cày, bot đánh lại trùm vùng đó nếu đã dư sức (như người chơi muốn bộ cấp 3).
+//  - 15/10 (bo-do-mua): bộ vùng mở bán khi hạ trùm vùng, đủ vàng thì mua ngay (G.BO_MUA), rồi mới nâng; chưa đủ thì để dành vàng
+//    (ép đồ, mài, nâng lò chỉ tiêu phần vàng vượt giá bộ; G.botDeDanh = false: tiêu hết như trước).
 //  - Còn lại: G.upg.auto (học kỹ năng, chưởng, mài, nâng lò, nâng vũ khí bằng linh khí — việc tăng Sức mạnh nhiều nhất trên mỗi đồng).
 (function () {
   const G = window.G, VM = G.vkMoi, U = G.upg;
@@ -103,6 +105,13 @@
     sv.vkThu = ['sword', 'bow', 'spear', 'hammer'];
     sv.carry = sv.vkThu.map((t) => wOf(sv, t).id);
     const did = [];
+    // 15/10 (bo-do-mua): bộ vùng phải MUA bằng vàng ở Cô Thợ May sau khi hạ trùm vùng (G.BO_MUA). Như người chơi bình thường: đủ vàng là
+    // mua ngay (trước nâng bộ, mài), bộ cũ trước. G.botMuaBo = false: không mua (đo luật cũ trên cùng bản game thì dùng ?bocu=1).
+    if (G.botMuaBo !== false && VM.boMuaDuoc) for (const k of G.ZED_BO_KEYS || []) {
+      if (VM.boMuaDuoc(sv, k) !== '') continue;
+      VM.muaBo(sv, k); did.push('Mua bộ ' + k);
+      const q = 'mua bộ ' + k; if (!(q in moc)) moc[q] = ai;
+    }
     for (let n = 0; n < 6; n++) {
       mac(sv);
       const bo = boNham(sv);
@@ -113,11 +122,18 @@
     }
     mac(sv);
     G.botAiHien = ai;
-    epDo(sv, did);
-    // G.upg.auto chỉ thấy 2 món bot dùng (Sức mạnh tính 2 món mạnh nhất; nếu để cả 4 thì auto có thể nâng Búa thay Phi tiêu)
+    // 15/10 (bo-do-mua): còn bộ đang bán mà chưa đủ vàng thì ĐỂ DÀNH (như người chơi muốn có bộ): ép đồ, mài, nâng lò chỉ tiêu phần vàng
+    // vượt giá bộ rẻ nhất đang bán. G.botDeDanh = false: tiêu hết như trước (đủ vàng lúc nào thì mua lúc đó).
+    const dangBan = G.botMuaBo !== false && G.botDeDanh !== false && VM.boDangBan ? VM.boDangBan(sv) : [];
+    const deDanh = dangBan.length ? Math.min(Math.floor(sv.gold), Math.min(...dangBan.map((k) => G.zedBoGia(k)))) : 0;
+    sv.gold -= deDanh;
     const du = sv.carry.slice();
-    sv.carry = [CHINH, PHU].map((t) => wOf(sv, t).id);
-    try { did.push(...U.auto(sv)); } finally { sv.carry = du; }
+    try {
+      epDo(sv, did);
+      // G.upg.auto chỉ thấy 2 món bot dùng (Sức mạnh tính 2 món mạnh nhất; nếu để cả 4 thì auto có thể nâng Búa thay Phi tiêu)
+      sv.carry = [CHINH, PHU].map((t) => wOf(sv, t).id);
+      did.push(...U.auto(sv));
+    } finally { sv.carry = du; sv.gold += deDanh; }
     mac(sv);
     ghiMoc(sv, moc, ai);
     const hs = sv.heroes[sv.hero], P = G.buildPlayer();
