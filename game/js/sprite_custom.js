@@ -201,9 +201,8 @@
       const vm = tep.vung_mat;
       sp.vungMatTay = Array.isArray(vm) && vm.length === 3 && vm.every((v) => isFinite(+v)) && +vm[2] > 0 ? vm.map((v) => +v) : null;
       // 14/10 trum-chet-pha3: "can_tam": { <động tác>: [độ dời ngang từng khung] } (điểm ảnh game, đo từ ảnh: tâm thân trên sàn → điểm neo).
-      // Ảnh AI cắt không căn tâm: thân nhảy ngang giữa các khung / các hàng, lệch khỏi điểm neo (lật mặt thì lệch sang phía kia). Cờ tắt ?trumcu=1.
-      // quai-moi-4-con: quái thường / tinh anh vẽ lại cũng có "can_tam" (đo lúc dựng tấm) — luôn dùng, không theo cờ ?trumcu=1 của trùm.
-      sp.ctLuon = !!QUAI_MOI[tep.ma];
+      // Ảnh AI cắt không căn tâm: thân nhảy ngang giữa các khung / các hàng, lệch khỏi điểm neo (lật mặt thì lệch sang phía kia).
+      // quai-moi-4-con: quái thường / tinh anh vẽ lại cũng có "can_tam" (đo lúc dựng tấm) — luôn dùng.
       // 15/10 soát mượt: "bo_va": vá tạm Phiên 1 không cần nữa vì ảnh mới đã vẽ đúng ('xi_vao', 'xi_ve' ở js/mobs.js; 'khung_trang' ở KHUNG_TRANG).
       sp.boVa = Array.isArray(tep.bo_va) ? tep.bo_va.filter((x) => typeof x === 'string').slice(0, 8) : null;
       if (tep.can_tam && typeof tep.can_tam === 'object') { sp.ct = {}; for (const k of Object.keys(dt)) { const v = tep.can_tam[k]; if (Array.isArray(v)) sp.ct[k] = v.map((x) => clamp(Math.round(+x || 0), -40, 40)); } }
@@ -410,7 +409,7 @@
     c.save();
     c.imageSmoothingEnabled = false;
     if ((face < 0) !== !!sp.lat) c.scale(-1, 1);
-    const ct = sp.ct && (G.TRUM_MOI !== false || sp.ctLuon) ? sp.ct[a === sp.dt[ten] ? ten : 'idle'] : null; // 14/10: căn tâm từng khung (xem "can_tam")
+    const ct = sp.ct ? sp.ct[a === sp.dt[ten] ? ten : 'idle'] : null; // 14/10: căn tâm từng khung (xem "can_tam")
     const dx = -sp.ax + (ct && ct[i] ? ct[i] : 0), dy = -sp.ay + (o.dy || 0);
     if (o.alpha != null) c.globalAlpha = ga * clamp(o.alpha, 0, 1);
     const a1 = c.globalAlpha;
@@ -457,7 +456,7 @@
     if (/^chieu|^c\d$/.test(n)) return u < 0.4 ? mot('tele', u / 0.4) : mot('atk', (u - 0.4) / 0.6);
     return lap('idle');
   };
-  // 14/10 trum-chet-pha3 (cờ tắt ?trumcu=1): nhịp khung ĐỀU cho trùm vùng (js/boss.js truyền o.nhip = { moc }). Cách cũ (chonQuai) kéo giãn
+  // 14/10 trum-chet-pha3: nhịp khung ĐỀU cho trùm vùng (js/boss.js truyền o.nhip = { moc }). Cách cũ (chonQuai) kéo giãn
   // cả hàng theo độ dài cử động của monster_art.js: chiêu 2,2–2,6 giây → hàng đánh 4 khung chỉ ~3 khung/giây, chuyển pha 8 khung trong 2,4 giây,
   // gục 6 khung trong 3,4 giây (một khung đứng gần 0,6 giây rồi nhảy). Nay mọi hàng chạy ~12 khung/giây theo đồng hồ của cử động:
   //  - chiêu: báo trước (tele) tới đúng mốc ra đòn moc[0] (khung cuối đúng lúc đòn nổ; báo trước dài thì đưa đi đưa lại 3 khung cuối),
@@ -538,7 +537,7 @@
     const n = o.anim || 'idle', t = Math.max(0, o.t || 0);
     let face = o.face || 0;
     if (!face) { const dir = o.dir == null ? Math.PI : o.dir; face = Math.cos(dir) > 0.01 ? 1 : -1; }
-    const nhip = o.nhip && G.TRUM_MOI !== false ? o.nhip : null; // 14/10: trùm vùng chạy nhịp khung đều (SC.chonTrum)
+    const nhip = o.nhip || null; // 14/10: trùm vùng chạy nhịp khung đều (SC.chonTrum)
     // 15/10 soat-muot Phiên 1: o.xiHoi { u } (mục 10A) / o.baoDeu { tt, T } (mục 6A) do js/mobs.js truyền cho quái thường có ảnh AI.
     const xh = !nhip && o.xiHoi ? o.xiHoi : null, bd = !nhip && !xh && n === 'tele' && o.baoDeu ? o.baoDeu : null;
     const chon = (q) => {

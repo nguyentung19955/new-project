@@ -1962,9 +1962,9 @@
   });
 
   // ---------- cái chết của quái và trùm ----------
-  // 14/10 trum-chet-pha3: trùm VÙNG (không phải trùm nhỏ) có ảnh AI thân → cái chết chỉ dùng ảnh (cờ tắt ?trumcu=1, G.TRUM_MOI).
+  // 14/10 trum-chet-pha3: trùm VÙNG (không phải trùm nhỏ) có ảnh AI thân → cái chết chỉ dùng ảnh.
   function chetMoi(e) {
-    if (G.TRUM_MOI === false || !e || !e.isBoss || e.kind === 'mini' || !e.art) return false;
+    if (!e || !e.isBoss || e.kind === 'mini' || !e.art) return false;
     const SC = G.spriteCustom, sp = SC && SC.ds && SC.ds[e.art];
     return !!(sp && sp.ready);
   }
@@ -2024,7 +2024,7 @@
       // chuỗi nổ nhỏ chạy khắp thân trùm, càng về cuối càng dồn dập
       d.nb -= dt;
       if (d.nb <= 0 && d.moi) {
-        // 14/10 trum-chet-pha3 (trùm vùng có ảnh AI, cờ tắt ?trumcu=1): chỉ còn ảnh nổ nhỏ hu-no-nho — phát 5 khung trong 0,42 giây (~12 khung/giây,
+        // 14/10 trum-chet-pha3 (trùm vùng có ảnh AI): chỉ còn ảnh nổ nhỏ hu-no-nho — phát 5 khung trong 0,42 giây (~12 khung/giây,
         // cũ 0,22 giây ≈ 23 khung/giây nháy quá nhanh), mờ vào/ra; bỏ chớp + vòng sóng vẽ code, mảnh văng, khói, chớp trắng thân. Nhịp nổ thưa hơn chút.
         d.nb = 0.2 - 0.08 * k;
         const x = d.e.x + rr(-d.w, d.w), y = d.e.y - rr(4, d.hh), maNo = anhHe('hu-no-nho', d.el);

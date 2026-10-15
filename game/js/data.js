@@ -610,12 +610,11 @@
   G.ZK = 0.85;
   // 14/10 trum-chet-pha3 (docs/review/ke-hoach-cai-thien/trum-chet-pha3): trùm vùng chết bằng ảnh (bỏ hiệu ứng chết vẽ tay), hiệu ứng trùm chạy
   // đều nhịp (căn tâm từng khung, giữ ~12 khung/giây, mờ vào/ra), chiêu tròn đối xứng quanh tâm trùm. Chỉ đổi HÌNH và vị trí cho đối xứng,
-  // không đổi sát thương / thời gian chiêu. Cờ tắt: ?trumcu=1 (hoặc G.TRUM_MOI = false) → y hệt kiểu cũ.
+  // không đổi sát thương / thời gian chiêu. (15/10 don-tep B: bỏ cờ tắt ?trumcu=1 / G.TRUM_MOI.)
   // 14/10 ky-nang-trum-rieng: 10 chiêu lặp kiểu của trùm vùng / trùm nhỏ / tinh anh đổi sang chiêu mới (js/chieu_trum.js). 15/10 don-tep B: bỏ cờ ?chieucu=1.
   // 15/10 cua-tuong-kho (docs/review/ke-hoach-cai-thien/cua-tuong-kho): Cua Đá không còn chỗ đứng an toàn (đuổi tới mép, chiêu nhắm theo em bé,
   // Tường tinh thể nhốt em bé, đá rơi dọc chân tường). Cờ tắt: ?cuade=1 (hoặc G.CUA_MOI = false) → Cua Đá y hệt cũ. Số liệu: G.CUA_SO (js/boss.js).
   if (G.CUA_MOI === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]cuade=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.CUA_MOI = !cu; }
-  if (G.TRUM_MOI === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]trumcu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.TRUM_MOI = !cu; }
   // 15/10 noi-gian-manh (docs/review/ke-hoach-cai-thien/noi-gian-manh): NỔI GIẬN / HÓA CUỒNG thấy và cảm được — mọi hệ số ở bảng này
   // (js/boss.js, js/chieu_trum.js, js/mobs.js đọc; hình: js/noi_gian.js). (15/10 don-tep B: bỏ cờ tắt ?giancu=1 / G.NOI_GIAN_BAT.)
   // Mảng [pha 1, pha 2, pha 3] của trùm vùng (pha 2 "nổi giận" ≤ 66% máu, pha 3 "hóa cuồng" ≤ 33%); trùm nhỏ [pha 1, pha 2] (pha 2 ≤ nguong).

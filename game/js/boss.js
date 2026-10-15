@@ -92,7 +92,7 @@
     if (kind !== 'mini') w.shake = Math.max(w.shake, 0.4);
     // 14/10 trum-chet-pha3: tải sẵn ảnh dáng pha 2, 3 ngay khi trùm ra (trước đây chỉ tải lúc đã sang pha → vài khung đầu cảnh chuyển pha
     // còn hình pha cũ rồi "nhảy" sang hình mới khi ảnh về). Chỉ gọi tải, không đổi gì khác.
-    if (G.TRUM_MOI !== false && kind !== 'mini' && art && G.spriteCustom && G.spriteCustom.phaTrum) { const sp = G.spriteCustom.ds && G.spriteCustom.ds[art]; if (sp) { G.spriteCustom.phaTrum(sp, 2, 'idle'); G.spriteCustom.phaTrum(sp, 3, 'idle'); } }
+    if (kind !== 'mini' && art && G.spriteCustom && G.spriteCustom.phaTrum) { const sp = G.spriteCustom.ds && G.spriteCustom.ds[art]; if (sp) { G.spriteCustom.phaTrum(sp, 2, 'idle'); G.spriteCustom.phaTrum(sp, 3, 'idle'); } }
     w.px1 = null; w.shrink = null;
     w.boss = b;
     return b;
@@ -143,10 +143,9 @@
   // bắt đầu sớm `lead` giây để khung "chạm đất" trùng lúc vùng nổ (sau t giây). Chỉ là hình: vùng, sát thương, thời gian giữ nguyên.
   function anhVung(b, ma, x, y, t, lead, giay, sc) {
     // 14/10 trum-chet-pha3: mờ vào/ra ngắn (mr); quả độc rơi 5 khung trong 0,7 giây (~7 khung/giây) → 0,45 giây (~11 khung/giây), khung chạm đất
-    // (khung 2) vẫn trùng lúc vùng nổ (lead 0,14 → 0,09 giây). Cờ tắt ?trumcu=1.
-    const moi = G.TRUM_MOI !== false;
-    if (moi && ma === 'hu-qua-doc-roi') { lead = 0.09; giay = 0.45; }
-    later(b, Math.max(0, t - lead), () => { if (!b.dead && G.huTrum && G.huTrum(ma) && G.fx && G.fx.anh) G.fx.anh(ma, x, y, { t: giay, gian: true, sc, mr: moi }); });
+    // (khung 2) vẫn trùng lúc vùng nổ (lead 0,14 → 0,09 giây).
+    if (ma === 'hu-qua-doc-roi') { lead = 0.09; giay = 0.45; }
+    later(b, Math.max(0, t - lead), () => { if (!b.dead && G.huTrum && G.huTrum(ma) && G.fx && G.fx.anh) G.fx.anh(ma, x, y, { t: giay, gian: true, sc, mr: true }); });
   }
   // 14/10 (đợt trùm nhỏ, cờ tắt ?huthem=0 hoặc ?hutrum=0): như anhVung cho 7 hiệu ứng thêm (G.huThem). Hiện dùng: hàng nấm độc của Nấm Chúa.
   function anhVungThem(b, ma, x, y, t, lead, giay, sc) {
@@ -271,7 +270,7 @@
       c5: { name: 'Bão hồ hoả', f(b, P, T, D, a) { // ba đợt cầu lửa toả tròn, mỗi đợt lệch nhau để luồn qua khe
         // 14/10 trum-chet-pha3: đạn xuất phát trên một vòng TRÒN bán kính 14 quanh tâm trùm (cũ: elip 14 × 10 nên đường bay không đi qua tâm,
         // vòng đạn méo); hướng, tốc độ, sát thương giữ nguyên.
-        const tron = G.TRUM_MOI !== false, o0 = (q) => (tron ? { x: b.x + Math.cos(q) * 14, y: b.y + Math.sin(q) * 14 } : null);
+        const o0 = (q) => ({ x: b.x + Math.cos(q) * 14, y: b.y + Math.sin(q) * 14 });
         const nD = soNG(b, 'hoBao', 'dot', 3), X = Math.max(D, T + (nD - 1) * 0.32 + 0.2); // nổi giận: thêm đợt cầu lửa (lệch nửa khe xen kẽ)
         for (let j = 0; j < nD; j++) later(b, T + j * 0.32, () => { for (let i = 0; i < 10; i++) { const q = a + ((i + j * 0.5) / 10) * TAU; shot(b, q, 82, Object.assign({ kind: 'fire', t: 2.6, dmg: b.dmg * 0.75 * (j >= 3 ? satDotNG() : 1), el: 'fire' }, o0(q))); } });
         if (X > D) giuBan(b, X);
@@ -637,12 +636,11 @@
       const fk = G.fx && G.fx.chop ? G.fx.chop() : 1; // khựng hình: chỉ khung đầu chớp trắng hẳn (js/fx.js)
       const o = { anim: n, t, face: b.face, dir: b.dirA != null ? b.dirA : b.face > 0 ? 0 : PI, phase, hit: b.flash > 0 ? 0.7 * fk : 0, chop: fk, tint: (G.fx && G.fx.dotTint ? G.fx.dotTint(b) : null) || (G.noiGian ? G.noiGian.tint(b) : null), bao: false,
         huTrum: true, vongGai: b.an && b.an.n === n && b.an.vongGai ? b.an.vongGai : null }; // 14/10: ảnh chiêu trùm (js/monster_art.js MA.huTrum) // nhịp độc/cháy: nhuộm màu hệ thay chớp trắng
-      if (G.TRUM_MOI !== false) {
-        // 14/10 trum-chet-pha3 (cờ tắt ?trumcu=1): nhịp khung đều cho ảnh AI (js/sprite_custom.js SC.chonTrum, cần mốc ra đòn của chiêu),
-        // bóng chân đứng yên dưới ảnh (dáng vẽ code còn rung P.x), danh sách cột lửa thật của Vòng lửa ma, hệ số co hình để vòng hiệu ứng bù lại.
+      {
+        // 14/10 trum-chet-pha3: nhịp khung đều cho ảnh AI (js/sprite_custom.js SC.chonTrum, cần mốc ra đòn của chiêu),
+        // bóng chân đứng yên dưới ảnh (dáng vẽ code còn rung P.x). (15/10 don-tep B: bỏ cờ ?trumcu=1.)
         o.nhip = { moc: /^c\d$/.test(n) ? moc(b.art, n) : null };
-        o.bongGoc = anhAI; o.coVe = s;
-        o.vongLua = b.an && b.an.n === n && b.an.vongLua ? b.an.vongLua : null;
+        o.bongGoc = anhAI;
         // Trùm vùng gục khi đã có ảnh AI: bỏ hẳn hiệu ứng chết vẽ tay của cử động 'die' (TRUM.chetLon: nổ lốp bốp, tia, vòng sóng, chớp, lá rơi,
         // cột nước) — đã có ảnh nổ trên thân (hu-no-nho) và nổ cuối (hu-trum-no) ở js/fx.js. Thân gục theo hàng 'die' của ảnh pha đang ở.
         if (b.dying != null && anhAI) o.fx = false;
