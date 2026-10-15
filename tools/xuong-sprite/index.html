@@ -14812,6 +14812,10 @@ MA._xong();
       // Tệp cũ không có hai mục này: null, phát như trước.
       sp.dungYen = Array.isArray(tep.dung_yen) ? tep.dung_yen.filter((x) => typeof x === 'string' && /^[A-Za-z0-9_]{1,20}$/.test(x)).slice(0, 20) : null;
       sp.nhun = tep.nhun == null || !isFinite(+tep.nhun) ? null : clamp(+tep.nhun, 0, 200);
+      // 15/10 sua-lang-npc: người làng có thể ghi tay ô mặt cho dải lối tắt, "vung_mat": [x, y, cạnh] theo điểm GAME trong khung đứng thở đầu
+      // (Cụ Đồ ngồi: đầu chiếm gần nửa hình, ô mặt tự dò lệch lên mũ và bị vòng tròn cắt mất mặt). Không có thì tự dò như cũ.
+      const vm = tep.vung_mat;
+      sp.vungMatTay = Array.isArray(vm) && vm.length === 3 && vm.every((v) => isFinite(+v)) && +vm[2] > 0 ? vm.map((v) => +v) : null;
       // 14/10 trum-chet-pha3: "can_tam": { <động tác>: [độ dời ngang từng khung] } (điểm ảnh game, đo từ ảnh: tâm thân trên sàn → điểm neo).
       // Ảnh AI cắt không căn tâm: thân nhảy ngang giữa các khung / các hàng, lệch khỏi điểm neo (lật mặt thì lệch sang phía kia). Cờ tắt ?trumcu=1.
       // quai-moi-4-con: quái thường / tinh anh vẽ lại cũng có "can_tam" (đo lúc dựng tấm) — luôn dùng, không theo cờ ?trumcu=1 của trùm.
@@ -15679,6 +15683,11 @@ MA._xong();
   function vungMat(sp) {
     if (sp.mat) return sp.mat;
     const N = sp.net || 1, fw = sp.fw * N, fh = sp.fh * N;
+    if (sp.vungMatTay) { // 15/10 sua-lang-npc: ô mặt ghi tay trong tệp ("vung_mat", điểm game × net), giữ trong khung
+      const t = sp.vungMatTay, s2 = Math.max(1, Math.min(Math.round(t[2] * N), fw, fh));
+      const mx = Math.max(0, Math.min(fw - s2, Math.round(t[0] * N))), my = Math.max(0, Math.min(fh - s2, Math.round(t[1] * N)));
+      return (sp.mat = [mx, sp.dt.idle.hang * fh + my, s2, s2]);
+    }
     const a = sp.dt.idle, cv = document.createElement('canvas'); cv.width = fw; cv.height = fh;
     const x = cv.getContext('2d', { willReadFrequently: true }); x.drawImage(sp.img, 0, a.hang * fh, fw, fh, 0, 0, fw, fh);
     const d = x.getImageData(0, 0, fw, fh).data;

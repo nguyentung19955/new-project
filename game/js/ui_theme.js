@@ -276,7 +276,7 @@
     if (chuMoi() && (label || o.sub)) { // chu-lech-khung: chữ (và dòng phụ) trong lòng nút
       const subCol = dis ? '#8fa49e' : toi ? '#5a3010' : '#e8d9a8';
       const vc = h >= 22 ? [5, w >= 70 && h >= 16 ? 10 : 2, 5, w >= 70 && h >= 16 ? 10 : 2] : [3, w >= 70 && h >= 16 ? 10 : 2, 3, w >= 70 && h >= 16 ? 10 : 2];
-      const kh = { khung: gn ? MA_NUT[tone] : null, vien: vc, size, bold: true, color: col, shadow: toi ? false : undefined, dy: dy + (st === 1 ? 1 : 0) };
+      const kh = { khung: gn ? MA_NUT[tone] : null, vien: vc, size, bold: true, color: col, shadow: toi ? false : undefined, dy: dy + (st === 1 ? 1 : 0), trongVien: !!o.trongVien }; // trongVien: nút lớn ở làng, chữ trong viền ảnh
       if (label) T.chuTrongKhung(label, x, y, w, h, Object.assign(kh, o.sub ? { phu: { s: o.sub, size: o.subSize || 7, bold: false, color: subCol, shadow: toi ? false : undefined } } : { dong: h >= 26 ? 2 : 1 }));
       else T.chuTrongKhung(o.sub, x, y, w, h, Object.assign(kh, { size: o.subSize || 7, bold: false, color: subCol }));
     } else {
@@ -593,6 +593,11 @@
   // Lòng của khung vẽ code (không có ảnh / ?khunganh=0): hình chữ nhật trong viền [trên, phải, dưới, trái].
   const longCode = (w, h, vc) => ({ top: vc[0], bot: h - vc[2], span: (a, b) => (a < vc[0] - 1e-6 || b > h - vc[2] + 1e-6 ? null : [vc[3], w - vc[1]]) });
   T.longCode = longCode;
+  // Lòng trong viền "vien" của ảnh khung (9 mảnh: góc giữ cỡ, thu đều khi khung nhỏ hơn hai viền như T.longKhung). null nếu lòng quá nhỏ.
+  function longVien(ga, w, h) {
+    const v = ga.vien, k = Math.min(1, h / (v[0] + v[2] + 2), w / (v[1] + v[3] + 2)), vc = v.map((q) => q * k);
+    return h - vc[0] - vc[2] >= 9 && w - vc[1] - vc[3] >= 18 ? longCode(w, h, vc) : null;
+  }
   // Đo chữ ở cỡ s (đã qua sàn tiny 6,5): bề rộng, hộp chữ thật trên / dưới đường cơ sở. Tiếng Anh: canvas tự dịch khi đo (js/ngon_ngu.js).
   function doChu(s, size, bold) {
     ui.font(size, bold, true);
@@ -635,11 +640,14 @@
     const ps = o.phu && o.phu.s ? (G.LANG === 'vi' || !G.tv ? String(o.phu.s) : G.tv(String(o.phu.s))) : '';
     const ga = o.khung ? khungCo(o.khung) : null;
     const vg = o.vung;
-    const key = [src, ps, G.LANG, x, y, w, h, ga ? o.khung + '|' + ga.pw + '|' + (o.kKhung || '') + '|' + (o.vienAnh || '') : 'c' + (o.vien || ''), o.size, o.min, o.bold ? 1 : 0, o.dong, o.align, o.dem, o.gian, vg ? vg.join(',') : '', o.phu ? o.phu.size + '|' + (o.phu.bold ? 1 : 0) : '', G.ux.font.replace(/^[^"]*/, '')].join('|');
+    const key = [src, ps, G.LANG, x, y, w, h, ga ? o.khung + '|' + ga.pw + '|' + (o.kKhung || '') + '|' + (o.vienAnh || '') + (o.trongVien ? '|tv' : '') : 'c' + (o.vien || ''), o.size, o.min, o.bold ? 1 : 0, o.dong, o.align, o.dem, o.gian, vg ? vg.join(',') : '', o.phu ? o.phu.size + '|' + (o.phu.bold ? 1 : 0) : '', G.ux.font.replace(/^[^"]*/, '')].join('|');
     const nho = DAT_NHO.get(key);
     if (nho) return nho;
     T.chuDo.lan++;
-    const L = (ga && T.longKhung(o.khung, w, h, o.kKhung, o.vienAnh)) || longCode(w, h, o.vien || [2, 2, 2, 2]);
+    // 15/10 sua-lang-npc: o.trongVien (nút lớn ở làng: Lên đò, Nâng lò, nút việc ở lò rèn) — chữ chỉ đặt trong phần ở giữa, trừ viền "vien" của ảnh
+    // gd-* (góc / hoa văn hai đầu), không lấn vào đoạn đỏ chạy dưới hoa văn. Lòng trong viền quá nhỏ thì đặt như cũ.
+    const vT = o.trongVien && ga && ga.vien ? longVien(ga, w, h) : null;
+    const L = vT || (ga && T.longKhung(o.khung, w, h, o.kKhung, o.vienAnh)) || longCode(w, h, o.vien || [2, 2, 2, 2]);
     const dem = o.dem == null ? 2 : o.dem, size0 = o.size || 9, min = Math.min(size0, o.min || 6.5), bold = o.bold !== false, align = o.align || 'center';
     const maxDong = Math.max(1, o.dong || 1), gian = o.gian == null ? 2.5 : o.gian;
     // vùng được phép, toạ độ trong khung

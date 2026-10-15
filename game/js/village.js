@@ -247,8 +247,15 @@
       const r = V.sel[0], i = V.sel[1], R = G.REGIONS[r], b = G.stageStats(r, i, V.diff);
       ui.text(G.t(V.diff ? '{0} · {1} · khó 2' : '{0} · {1}', R.name, i === 4 ? 'Ải trùm' : G.t('Ải {0}', i + 1)), 256, T.chuMoi() ? 220 : 219, { size: 9.5, bold: true, color: GOLD }); // chu-lech-khung: +1 cho dấu chữ không chạm viền trên
       const l2 = G.t('{0} · 8 phòng · ', i === 4 ? G.t('Trùm {0}', R.bossName) : G.t('Trùm nhỏ {0}', R.mini));
-      ui.text(l2, 256, 230, { size: 7, color: TXT });
-      ui.font(7); ui.text(G.t('hệ {0}', G.EL[R.el].name), 256 + G.ux.measureText(l2).width, 230, { size: 7, color: G.EL[R.el].col });
+      // 15/10 sua-lang-npc: dòng dài (tiếng Anh "Mini-boss … · Poison") lấn vào dưới nút Lên đò (x 404) → giữ cỡ nhỏ cũ 6,5 cho vừa
+      const l3 = G.t('hệ {0}', G.EL[R.el].name);
+      //   (cỡ 6,5 vẫn dài hơn chỗ trống thì ép ngang vừa đúng chỗ, không cắt chữ)
+      const rong2 = (tn) => { ui.font(7, false, tn); return G.ux.measureText(l2).width + G.ux.measureText(l3).width; }, cho2 = 404 - 8 - 256;
+      const nho = rong2(false) > cho2, ep = nho ? Math.min(1, cho2 / rong2(true)) : 1, cx2 = G.ux;
+      cx2.save(); cx2.translate(256, 0); cx2.scale(ep, 1);
+      ui.text(l2, 0, 230, { size: 7, color: TXT, tiny: nho });
+      ui.font(7, false, nho); ui.text(l3, G.ux.measureText(l2).width, 230, { size: 7, color: G.EL[R.el].col, tiny: nho });
+      cx2.restore();
       // Sức mạnh khuyên dùng so với sức mạnh hiện tại của bé (G.power): xanh đủ, vàng sát nút, đỏ thiếu
       const need = G.stageRec(r, i, V.diff), col = G.powerCol(pw, need);
       ui.text(G.t('Sức mạnh khuyên dùng {0} · bé {1}', need, pw), 256, 240, { size: 7.5, bold: true, color: col });
@@ -259,7 +266,7 @@
       // và thanh tiến độ dưới nút; bấm vẫn được (vào màn chờ, đủ ảnh thì tự vào ải).
       const SCv = G.spriteCustom, tv = SCv && SCv.vungTien ? (SCv.taiVung(r), SCv.vungTien(r, i === 4)) : null, choTai = !!(tv && !tv.san);
       if (choTai) { ui.rect(404, 258, 64, 4, 'rgba(0,0,0,0.55)'); ui.rect(404, 258, Math.round(64 * tv.xong / Math.max(1, tv.tong)), 4, '#ffd27a'); }
-      if (T.btn(404, 217, 64, 38, choTai ? 'Đang tải…' : 'Lên đò', { size: choTai ? 8.5 : 11, primary: true })) G.startStage(r, i, V.diff);
+      if (T.btn(404, 217, 64, 38, choTai ? 'Đang tải…' : 'Lên đò', { size: choTai ? 8.5 : 11, primary: true, trongVien: true })) G.startStage(r, i, V.diff);
     } else ui.text('Chạm một ải trên tranh để xem.', 256, 238, { size: 8, color: SOFT });
   }
 
@@ -341,7 +348,7 @@
     if (sw && list.includes(sw) && T.sbtn(CX + 52, 190, 88, 16, 'Xem linh khí', { size: 7.5, pad: 3 })) viewWeapon(sw.id, 'forge');
     return list;
   }
-  const actBtn = (label, o) => T.btn(CX + CW - 92, DET_Y + 9, 86, 34, label, Object.assign({ size: 11, primary: true }, o));
+  const actBtn = (label, o) => T.btn(CX + CW - 92, DET_Y + 9, 86, 34, label, Object.assign({ size: 11, primary: true, trongVien: true }, o));
   function forge() {
     const sv = G.save;
     let line = null; // câu ông thợ rèn nói
@@ -394,7 +401,7 @@
         const y2 = ui.para(G.t('Nâng lên cấp {0} để mài tới +{1}.', sv.forge + 1, G.FORGE_CAP[sv.forge + 1]), CX + 4, 134, 296, { size: 9 });
         ui.para(G.t('Tốn: {0}', costText(up)), CX + 4, y2 + 4, 296, { size: 9, color: canPay(up) ? TXT : WARN });
         line = canPay(up) ? 'Đủ đồ rồi đấy, nâng lò thôi cháu!' : 'Gom đủ nguyên liệu rồi ông nâng lò cho.';
-        if (T.btn(CX + 4, y2 + 24, 130, 34, 'Nâng lò', { size: 11, primary: true, disabled: !canPay(up) })) { pay(up); sv.forge++; G.persist(); G.sfx('evolve'); say(G.t('Lò rèn đã lên cấp {0}!', sv.forge)); }
+        if (T.btn(CX + 4, y2 + 24, 130, 34, 'Nâng lò', { size: 11, primary: true, trongVien: true, disabled: !canPay(up) })) { pay(up); sv.forge++; G.persist(); G.sfx('evolve'); say(G.t('Lò rèn đã lên cấp {0}!', sv.forge)); }
       }
     }
     return line;
