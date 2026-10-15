@@ -118,6 +118,8 @@
     { side: '#14251a', sideLine: '#1c3422', course: 9, frame: F.bark, frameHi: F.barkL, inner: '#060c08', light: F.light, lip: '#0c120c', floor: F.floor },
     { side: '#18222e', sideLine: '#0f1822', course: 14, frame: C.rockL, frameHi: '#4a6278', inner: '#05090e', light: C.light, lip: '#0a1018', floor: C.floor },
     { side: '#3a3031', sideLine: '#2a2223', course: 10, frame: K.stone, frameHi: K.stoneL, inner: '#0c0808', light: K.light, lip: '#141010', floor: K.floor },
+    // Sông sâu (bước 3 phiên 2B): khung tre, nền bùn — chỉ dùng cho cửa chọn đường (PROPS.door); nền phòng là js/room_art.js theme River
+    { side: '#2c251c', sideLine: '#1e1a14', course: 8, frame: '#6a5a36', frameHi: '#a8945e', inner: '#06100e', light: '#ffc878', lip: '#0c1410', floor: '#3e5148' },
   ];
 
   // ---------- vùng đã có vật trang trí ----------
@@ -1472,7 +1474,7 @@
     door(o, x, y, t) {
       // cửa gắn vào tường sau, bậc thềm nằm trên sàn
       const yb = Math.min(y, Y + 1), W = G.getWorld ? G.getWorld() : null, S = G.getRun ? G.getRun() : null;
-      const reg = W && W.region != null ? (G.vungVe ? G.vungVe(W.region) : W.region) : 2, T = TH[reg] || TH[2];
+      const reg = W && W.region != null ? (G.roomArt && G.roomArt.vungTheme ? G.roomArt.vungTheme(W.region) : G.vungVe ? G.vungVe(W.region) : W.region) : 2, T = TH[reg] || TH[2];
       const dc = /^#[0-9a-f]{6}$/i.test(o.col || '') ? o.col : '#3a2c20', dl = lite(dc, 0.3), dd = dim(dc, 0.4);
       const near = !!(S && S.near === o);
       q(x - 17, yb, 34, y - yb + 3, dim(T.frame, 0.25)); q(x - 17, yb, 34, 1, T.frameHi); q(x - 15, y + 3, 30, 1, 'rgba(0,0,0,0.35)');

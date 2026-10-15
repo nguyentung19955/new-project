@@ -209,6 +209,7 @@
     for (let k = 0; k < n; k++) {
       const e = el || (G.rnd() < 0.65 ? reg.el : G.pick(G.ELS));
       const q = propSpot();
+      if (G.songLuat && G.songLuat.datVat(W, e, q[0], q[1])) continue; // vùng 4: lục bình / đèn dầu / vũng nước sâu (js/song_luat.js)
       W.props.push({ type: PROP_OF[e], env: true, x: q[0], y: q[1] });
     }
   }
@@ -230,6 +231,7 @@
     W.doors = M.DKEYS.filter((d) => R.doors[d] != null).map((d) => ({ dir: d, to: R.doors[d], gate: M.isGate(S.map, id, R.doors[d]), boss: S.map.rooms[R.doors[d]].type === 'boss', open: false }));
     W.props.push({ type: 'roomFore', x: 0, y: 9999 }); // lớp phủ trước của phòng, vẽ sau nhân vật
     S.W = W; S.challenge = null;
+    if (G.songLuat) G.songLuat.datPhong(W, type, S); // vùng 4 Sông sâu: dải dòng chảy + cầu tre (js/song_luat.js; ?dongchay=0 tắt), vùng khác không làm gì
     const cx = geo.cx, cy = geo.cy;
     if (type === 'start' || type === 'fight' || type === 'elite' || type === 'challenge') {
       W.waves = buildWaves(type);
@@ -269,7 +271,7 @@
       const res = bs.layers.find((l) => l.type === 'resist');
       const el = res ? G.WEAK[res.el] : G.pick(G.ELS);
       const xr = (W.px1 != null ? W.px1 : W.x1) - W.x0;
-      W.props.push({ type: PROP_OF[el], env: true, x: W.x0 + xr * 0.3, y: W.y0 + 20 }, { type: PROP_OF[el], env: true, x: W.x0 + xr * 0.68, y: W.y1 - 14 });
+      for (const q of [[W.x0 + xr * 0.3, W.y0 + 20], [W.x0 + xr * 0.68, W.y1 - 14]]) if (!(G.songLuat && G.songLuat.datVat(W, el, q[0], q[1], true))) W.props.push({ type: PROP_OF[el], env: true, x: q[0], y: q[1] });
       W.banner = { s: bs.layers.length ? G.t('{0}: {1}', b.name, layerTexts(bs.layers, ' · ')) : G.t('{0} xuất hiện', b.name), col: '#ff6a5a', t: 4 };
       // Phiên cân bằng (mục 7): trùm chắn tên xa thì nói rõ cách đánh (đứng gần hơn 120 điểm ảnh mới đủ sức)
       if (bs.layers.some((l) => l.type === 'antiRanged')) { W.banner.s += ' — ' + G.t('bắn từ xa yếu đi, lại gần hơn'); W.banner.t = 5; }
