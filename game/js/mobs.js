@@ -191,7 +191,7 @@
       e.trait = o.trait || (tr.length ? tr[Math.floor(G.rnd() * tr.length)] : null);
       if (e.trait === 'nhanh') e.speed *= 1.45;
     }
-    if (G.knQuai && G.knQuai.init) G.knQuai.init(e); // kỹ năng riêng của từng con (js/ky_nang_quai.js, tắt: ?kynangcu=1)
+    if (G.knQuai && G.knQuai.init) G.knQuai.init(e); // kỹ năng riêng của từng con (js/ky_nang_quai.js)
   };
   // Giáp: quái giáp chỉ che phía trước (phải vòng ra sau hoặc phá giáp); tinh anh "Bọc giáp" che mọi phía.
   G.mobArmor = function (t, o) {

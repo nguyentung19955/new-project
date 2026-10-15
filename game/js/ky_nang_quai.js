@@ -5,7 +5,7 @@
 // Báo trước: mọi đòn mới đều có vùng đỏ trên sàn (hệ báo trước js/bao_truoc.js, ảnh gd-bt-*) — vùng chỉ để báo (dmg 0, knBao) hoặc
 // vùng đánh thật — dài ít nhất bằng báo trước của vai cũ; né được bằng lộn / chạy.
 // Số liệu: bảng SO bên dưới (JSON thuần, công cụ vẽ ảnh soát tĩnh docs/review/ke-hoach-cai-thien/ky-nang-quai-vung/ve_xem.py đọc thẳng).
-// sat: hệ số nhân với e.dmg (đòn vai cũ = 1, cảm tử 1,3, bom 1,2, gai 0,8). Cờ ?kynangcu=1: dùng lại cách đánh chung cũ (js/mobs.js).
+// sat: hệ số nhân với e.dmg (đòn vai cũ = 1, cảm tử 1,3, bom 1,2, gai 0,8). (15/10 don-tep B: bỏ cờ ?kynangcu=1; con nào không có trong bảng T thì vẫn đánh chung theo vai ở js/mobs.js.)
 // Nạp sau js/mobs.js và js/bao_truoc.js (dùng các hàm G.mob.H của js/mobs.js).
 (function () {
   const G = window.G;
@@ -13,9 +13,7 @@
   const H = G.mob.H, W = () => G.getWorld();
   const PI = Math.PI, TAU = PI * 2;
   const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
-  let cu = false;
-  try { cu = typeof location !== 'undefined' && /[?&]kynangcu=1(&|$)/.test(location.search || ''); } catch (err) { cu = false; }
-  const KN = (G.knQuai = { on: !cu });
+  const KN = (G.knQuai = { on: true });
 
   // ---------- SỐ LIỆU (JSON thuần giữa hai dấu /*SO*/ ... /*HET-SO*/) ----------
   // Thời gian: giây. Cự li: điểm ảnh game. bao: thời gian báo trước. hoi: nghỉ sau đòn (e.cd). tam: tầm bắt đầu ra đòn.
