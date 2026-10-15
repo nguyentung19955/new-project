@@ -33,6 +33,13 @@ Cảnh truyện (15/10, canh-truyen) — ảnh game/art/truyen/<tên>.webp|jpg|p
   - bản ảnh rời: chép sang dist/anh/truyen-<tên>.<mã>.webp|jpg, KHÔNG vào gói tải đầu; js/truyen.js chỉ tải khi mở truyện
   - G.TRUYEN_ANH = { '<tên>': { webp, jpg } } khai trong trang; js/truyen.js tra bảng này (không có ảnh thì vẽ nền code như cũ)
 
+Bìa màn hình chính (15/10, bia-moi) — ảnh game/art/bia/<tên>.webp|jpg + <tên>.mo.jpg (dựng bằng tools/anh-truyen/dung.py), TẢI SỚM:
+  - G.BIA_ANH = { '<tên>': { webp, jpg } } khai trong trang (js/bia.js chọn 1 trong 2 bìa mỗi lần mở; ?bia=1|2 ép; ?biacu=1 màn cũ)
+  - bản ảnh rời: chép sang dist/anh/bia-<tên>.<mã>.webp|jpg và gắn đường dẫn vào thẻ #lk-tai (data-bia) → màn tải HTML bắt đầu tải
+    đúng MỘT bìa ngay khi trang đang về (không thêm thẻ script, không chặn màn tải). Tính vào tải đầu.
+  - bản một tệp: nhúng WebP dạng data: (như ảnh truyện)
+  - mọi bản: data-bia mang thêm bản 32×18 rất nhỏ (<tên>.mo.jpg, data:) làm nền mờ của màn tải HTML
+
 Cách dùng:  python3 build.py [--hai-tep | --mot-tep] [--anh-json]
 """
 import base64
@@ -79,6 +86,8 @@ def main():
     # Lấy danh sách tệp JS theo đúng thứ tự trong index.html rồi bỏ các thẻ script khỏi phần thân.
     srcs = re.findall(r'<script\s+src="([^"]+)"\s*>\s*</script>', body)
     markup = re.sub(r'<script\b.*?</script>\s*', '', body, flags=re.S).strip()
+    bia = bia_anh()
+    markup = gan_bia(markup, bia, None)  # nền mờ màn tải (bản rất nhỏ); trang nhẹ gắn thêm đường dẫn ảnh (anh_roi)
     if not srcs:
         sys.exit('index.html không nạp tệp JS nào')
     parts = []
@@ -119,7 +128,7 @@ def main():
         return ('<!doctype html>\n<html lang="' + lang + '">\n<head>\n' + '\n'.join(metas) + '\n' + pwa + title + '\n' + link + '\n'
                 + style + '\n</head>\n<body>\n' + markup + '\n<script>\n' + js + '</script>\n</body>\n</html>\n')
 
-    js = gom(custom, khai_truyen_mot(truyen))
+    js = gom(custom, khai_truyen_mot(truyen) + khai_bia_mot(bia))
     script = '<script>\n' + js + '</script>'
     full = trang(js)
     frag = title + '\n' + link + '\n' + style + '\n' + markup + '\n' + script + '\n'
@@ -134,7 +143,9 @@ def main():
         print('Đã nhúng %d hình tự vẽ: %s' % (len(custom), ', '.join(t['ma'] for t in custom)))
     if truyen:
         print('Ảnh truyện nhúng trong bản một tệp (tải lười: chỉ giải mã khi mở truyện): %d ảnh, %d KB' % (len(truyen), sum(len(nhung_truyen(v)[1]) for v in truyen.values()) // 1024))
-    hai_tep(custom, gom, trang, frag, truyen)
+    if bia:
+        print('Bìa màn hình chính nhúng trong bản một tệp: %d ảnh, %d KB' % (len(bia), sum(len(nhung_truyen(v)[1]) for v in bia.values()) // 1024))
+    hai_tep(custom, gom, trang, frag, truyen, bia)
     build_tool(full)
 
 
@@ -200,6 +211,85 @@ def chep_truyen(truyen, thu):
     return bang, tai, jpg
 
 
+# ---------- Bìa màn hình chính (15/10, bia-moi): ảnh tải sớm ----------
+BIA_DIR = os.path.join(ROOT, 'art', 'bia')
+BIA_TEN = ('bia-1-cay-da', 'bia-2-dong-song')  # thứ tự = ?bia=1 / ?bia=2, trùng js/bia.js và tools/anh-truyen/dung.py
+
+
+def bia_anh():
+    """{ tên: { 'webp': …, 'jpg': …, 'mo': … } } theo thứ tự BIA_TEN, chỉ bìa có WebP hoặc JPEG."""
+    out = {}
+    for ten in BIA_TEN:
+        v = {}
+        for d, f in (('webp', ten + '.webp'), ('jpg', ten + '.jpg'), ('mo', ten + '.mo.jpg')):
+            p = os.path.join(BIA_DIR, f)
+            if os.path.isfile(p):
+                v[d] = p
+        if 'webp' in v or 'jpg' in v:
+            out[ten] = v
+    return out
+
+
+def khai_bia(bang):
+    return ('// ===== bìa màn hình chính (bia-moi 15/10): js/bia.js chọn một bìa =====\n'
+            '(window.G = window.G || {}).BIA_ANH = ' + json.dumps(bang, separators=(',', ':')) + ';\n')
+
+
+def khai_bia_mot(bia):
+    bang = {}
+    for ten, v in bia.items():
+        d, uri = nhung_truyen({k: v[k] for k in ('webp', 'jpg') if k in v})
+        if d:
+            bang[ten] = {'webp' if d == 'webp' else 'jpg': uri}
+    return khai_bia(bang)
+
+
+def gan_bia(html, bia, duong):
+    """Gắn data-bia vào thẻ <div id="lk-tai"> (màn tải HTML): "webp1|jpg1|mờ1|webp2|jpg2|mờ2" (bìa 1 rồi bìa 2).
+    duong: { tên: { webp, jpg } } đường dẫn ảnh rời (trang nhẹ) hoặc None (chỉ nền mờ: bản một tệp, artifact.html).
+    Thẻ onanimationstart của #lk-tai (index.html) đọc chuỗi này. Không có bìa nào: bỏ data-bia."""
+    if html.count('<div id="lk-tai"') != 1:
+        sys.exit('index.html phải có đúng một <div id="lk-tai"> (màn tải)')
+    html = re.sub(r'(<div id="lk-tai")\s+data-bia="[^"]*"', r'\1', html)
+    if not bia:
+        return html
+    o = []
+    for ten in BIA_TEN:
+        v, d = bia.get(ten, {}), (duong or {}).get(ten, {})
+        mo = ''
+        if 'mo' in v:
+            with open(v['mo'], 'rb') as f:
+                mo = 'data:image/jpeg;base64,' + base64.b64encode(f.read()).decode('ascii')
+        o += [d.get('webp', ''), d.get('jpg', ''), mo]
+    gt = '|'.join(o)
+    if '"' in gt or '<' in gt:
+        sys.exit('data-bia có ký tự không hợp lệ')
+    return html.replace('<div id="lk-tai"', '<div id="lk-tai" data-bia="' + gt + '"', 1)
+
+
+def chep_bia(bia, thu):
+    """Bản ảnh rời: chép bìa sang dist/anh/bia-<tên>.<mã>.webp|jpg (tên có mã nội dung, sw.js lưu đệm lâu như ảnh rời khác).
+    Trả (bảng đường dẫn, byte một bìa người chơi tải — bìa nặng nhất, WebP nếu có —, byte JPEG một bìa)."""
+    bang, tai, jpg = {}, 0, 0
+    for ten, v in bia.items():
+        e = {}
+        for d in ('webp', 'jpg'):
+            if d not in v:
+                continue
+            with open(v[d], 'rb') as f:
+                b = f.read()
+            tf = '%s.%s.%s' % (ten, hashlib.sha256(b).hexdigest()[:10], d)
+            with open(os.path.join(thu, tf), 'wb') as f:
+                f.write(b)
+            e[d] = THU_MUC_ANH + '/' + tf
+            if d == 'webp' or 'webp' not in v:
+                tai = max(tai, len(b))
+            if d == 'jpg':
+                jpg = max(jpg, len(b))
+        bang[ten] = e
+    return bang, tai, jpg
+
+
 # ---------- Đợt 10 (Q5): chế độ 2 tệp, ảnh tải sau ----------
 TEN_NHE = 'linh-khi-nhe.html'
 TEN_ANH = 'linh-khi-anh.%s.json'
@@ -253,7 +343,7 @@ def thu_tu_sau(t):
     return (bac, co, ma)
 
 
-def hai_tep(custom, gom, trang, frag, truyen=None):
+def hai_tep(custom, gom, trang, frag, truyen=None, bia=None):
     """Ghi thêm cặp tệp của chế độ 2 tệp (khi có cờ), hoặc dọn cặp tệp cũ (khi xuất như cũ). Luôn in dung lượng so với trần Q5."""
     bat = ('--hai-tep' in sys.argv[1:] or os.environ.get('LK_HAI_TEP') == '1') and '--mot-tep' not in sys.argv[1:]
     mot = os.path.getsize(os.path.join(DIST, 'linh-khi.html'))
@@ -267,7 +357,7 @@ def hai_tep(custom, gom, trang, frag, truyen=None):
     if not bat or not custom:
         return
     if anh_roi_bat():
-        return anh_roi(custom, gom, trang, frag, truyen or {})
+        return anh_roi(custom, gom, trang, frag, truyen or {}, bia or {})
     truoc = [t for t in custom if bat_buoc(t)]
     sau = sorted((t for t in custom if not bat_buoc(t)), key=thu_tu_sau)
     if not sau:
@@ -285,7 +375,7 @@ def hai_tep(custom, gom, trang, frag, truyen=None):
         vt += len(d) + 2
     khai = ('// ===== ảnh tải sau (Đợt 10): tệp nằm cạnh trang, js/sprite_custom.js tải sau khi màn chào đã vẽ =====\n'
             '(window.G = window.G || {}).ANH_SAU = ' + json.dumps({'tep': ten, 'so': len(sau), 'byte': len(data), 'trum': trum}) + ';\n'
-            + khai_truyen({}))  # cách Đợt 10 không có thư mục anh/: truyện vẽ nền code như cũ
+            + khai_truyen({}) + khai_bia({}))  # cách Đợt 10 không có thư mục anh/: truyện vẽ nền code như cũ, màn chào vẽ cảnh làng
     # Trang nhẹ CỐ Ý không chứa chuỗi ".customSpriteData = ": các trang công cụ (tools/tach-quai, tach-ghep, tach-do) tìm đúng chuỗi đó trong
     # index.html để lấy MỌI hình đang có trong game. Trang nhẹ chỉ có một phần hình, nên để công cụ bỏ qua nó và đọc bản một tệp đủ ảnh
     # (linh-khi.html, workflow đăng kèm) như trước. Với game hai cách viết là một.
@@ -394,7 +484,7 @@ def webp_nhieu(ds):
     return out
 
 
-def anh_roi(custom, gom, trang, frag, truyen=None):
+def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
     """Ghi dist/linh-khi-nhe.html (mã + thông số hình) và dist/anh/* (ảnh rời PNG + WebP)."""
     thu = os.path.join(DIST, THU_MUC_ANH)
     os.makedirs(thu, exist_ok=True)
@@ -451,12 +541,14 @@ def anh_roi(custom, gom, trang, frag, truyen=None):
             '(window.G = window.G || {}).ANH_ROI = ' + json.dumps({'so': len(vt), 'webp': so_webp}) + ';\n')
     bang_tr, tr_tai, tr_jpg = chep_truyen(truyen or {}, thu)
     khai += khai_truyen(bang_tr)
+    bang_bia, bia_tai, bia_jpg = chep_bia(bia or {}, thu)
+    khai += khai_bia(bang_bia)
     js = gom(ds, khai, "['customSpriteData'] = ")
     if '.customSpriteData = ' in js:
         sys.exit('Trang nhẹ còn chuỗi ".customSpriteData = ": công cụ sẽ đọc nhầm trang thiếu ảnh')
     if re.search(r'data:image/png;base64,[A-Za-z0-9+/]{64}', js):
         sys.exit('Trang chính chế độ ảnh rời còn ảnh base64')
-    nhe = trang(js)
+    nhe = gan_bia(trang(js), bia or {}, bang_bia)  # màn tải HTML bắt đầu tải bìa ngay khi trang đang về
     check(nhe, frag, js)
     write(os.path.join(DIST, TEN_NHE), nhe)
     import gzip
@@ -472,16 +564,18 @@ def anh_roi(custom, gom, trang, frag, truyen=None):
         if k in bang:
             b = bang[k]
             print('  %-55s %3d ảnh  %6.2f MB | %6.2f MB' % (ten_nhom[k], b[0], b[1] / 1048576, b[2] / 1048576))
-    nguoi = z1 + tong_tot
+    nguoi = z1 + tong_tot + bia_tai  # bia-moi: một bìa màn hình chính
     if cu_n:
         print('  (không tính) %d tấm cũ chỉ tải khi mở ?quaicu=1: %.2f MB' % (cu_n, cu_tot / 1048576))
-    print('NGƯỜI CHƠI TẢI (thước đo chính): trang %.2f MB nén + ảnh %.2f MB = %.2f MB / trần %.0f MB%s; trình duyệt không có WebP: %.2f MB'
-          % (z1 / 1048576, tong_tot / 1048576, nguoi / 1048576, TRAN_NGUOI_TAI / 1048576, '  ← VƯỢT TRẦN' if nguoi > TRAN_NGUOI_TAI else '',
-             (z1 + tong_png) / 1048576))
+    print('NGƯỜI CHƠI TẢI (thước đo chính): trang %.2f MB nén + ảnh %.2f MB + bìa %.2f MB = %.2f MB / trần %.0f MB%s; trình duyệt không có WebP: %.2f MB'
+          % (z1 / 1048576, tong_tot / 1048576, bia_tai / 1048576, nguoi / 1048576, TRAN_NGUOI_TAI / 1048576, '  ← VƯỢT TRẦN' if nguoi > TRAN_NGUOI_TAI else '',
+             (z1 + tong_png + bia_jpg) / 1048576))
     print('Ảnh truyện (tải lười, chỉ khi mở truyện, KHÔNG tính vào tải đầu): %d ảnh, %.2f MB (JPEG dự phòng %.2f MB) → xem hết truyện: %.2f MB'
           % (len(bang_tr), tr_tai / 1048576, tr_jpg / 1048576, (nguoi + tr_tai) / 1048576))
     loi = bang.get('loi', [0, 0, 0])
-    print('Tải trước khi vào vùng đầu: lõi %.2f MB + trang %.2f MB = %.2f MB' % (loi[1] / 1048576, z1 / 1048576, (loi[1] + z1) / 1048576))
+    if bang_bia:
+        print('Bìa màn hình chính (tải SỚM, 1 trong %d bìa, tính vào tải đầu): %d KB WebP (JPEG dự phòng %d KB)' % (len(bang_bia), bia_tai // 1024, bia_jpg // 1024))
+    print('Tải trước khi vào vùng đầu: lõi %.2f MB + trang %.2f MB + bìa %.2f MB = %.2f MB' % (loi[1] / 1048576, z1 / 1048576, bia_tai / 1048576, (loi[1] + z1 + bia_tai) / 1048576))
     print('Trần: trang chính nén %.2f / %.2f MB%s; tổng ảnh trên máy chủ (PNG + WebP, chỉ để biết) %.2f MB%s'
           % (z1 / 1048576, TRAN_TRANG_NEN / 1048576, '  ← TRANG CHÍNH QUÁ NẶNG' if z1 > TRAN_TRANG_NEN else '',
              may_chu / 1048576, '  ← CẢNH BÁO: máy chủ quá %.0f MB' % (CANH_BAO_MAY_CHU / 1048576) if may_chu > CANH_BAO_MAY_CHU else ''))

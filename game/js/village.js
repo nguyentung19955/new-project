@@ -809,7 +809,14 @@
   // Bố cục màn chào (toạ độ 480x270), Giai đoạn 4 yêu cầu 2: logo > nút chính > nút phụ > dòng thông tin.
   // Nút nào chạy ngay trong lúc chạm (G.syncTaps) thì dùng đúng ô của nút vẽ.
   // gg, bv (Đợt 1): hàng nút dưới "Chơi ngay" khi chưa đăng nhập Google: Đăng nhập Google | Bảng vàng. (guest: ô nút "Chơi tạm" cũ, nay không vẽ nữa.)
-  const TL = { main: [140, 128, 200, 32], play: [160, 128, 160, 32], guest: [180, 168, 120, 20], row: [[128, 168, 108, 22], [244, 168, 108, 22]], gg: [112, 166, 150, 24], bv: [268, 166, 100, 24], info: 210, lang: [430, 5, 44, 16], logo: [140, 52, 200, 40] }; // logo: ô của ảnh gd-logo (phiên C3), trùm đúng chỗ chữ LINH KHÍ
+  const TL_CU = { main: [140, 128, 200, 32], play: [160, 128, 160, 32], guest: [180, 168, 120, 20], row: [[128, 168, 108, 22], [244, 168, 108, 22]], gg: [112, 166, 150, 24], bv: [268, 166, 100, 24], info: 210, lang: [430, 5, 44, 16], logo: [140, 52, 200, 40], trong: [240, 30, 20] }; // logo: ô của ảnh gd-logo (phiên C3), trùm đúng chỗ chữ LINH KHÍ
+  // bia-moi 15/10 — bố cục trên ảnh bìa (js/bia.js): logo lên vùng trời tối phía trên giữa; nút xuống dải tối mờ dưới (y ≥ 176),
+  // thấp hơn trống đồng ở bìa 1 (ảnh: tâm ≈ 120,145, bán kính ≈ 22) và lệch phải nó. Cỡ nút giữ nguyên (vùng chạm như cũ).
+  // trong: mặt trống nhỏ trên chữ [x, y, bán kính]. ?biacu=1: bố cục cũ.
+  const TL_BIA = { main: [140, 176, 200, 30], play: [160, 176, 160, 30], guest: [180, 213, 120, 20], row: [[128, 213, 108, 22], [244, 213, 108, 22]], gg: [112, 212, 150, 24], bv: [268, 212, 100, 24], info: 254, lang: [430, 5, 44, 16], logo: [140, 30, 200, 40], trong: [240, 15, 13] };
+  const TL = {};
+  function datBoCuc() { const M = G.bia && G.bia.n ? TL_BIA : TL_CU; for (const k in M) TL[k] = JSON.parse(JSON.stringify(M[k])); }
+  datBoCuc();
   G.titleLayout = TL; // để bài kiểm tra biết nút nằm ở đâu
   // Lớp tối dịu phía sau khối chữ và nút: hình elip tối dần ra mép (không phủ cả màn), để chữ không đè lên nhà cửa sáng.
   function titleVeil() {
@@ -822,30 +829,32 @@
   }
   // Tiêu đề: chữ LINH KHÍ có viền tối dày + bóng đổ lệch xuống, dòng phụ SPIRITBLADE giãn chữ (tên miền spiritblade.web.app).
   function titleLogo() {
-    const u = G.ux;
-    T.drum(240, 30, 20, 0.85); // mặt trống đồng nhỏ làm biểu tượng, nằm trên chữ (không còn nằm sau chữ)
+    const u = G.ux, dy = TL.logo[1] - 52, bia = !!(G.bia && G.bia.n); // dy: bố cục bìa dời cả khối logo lên trên (TL_BIA)
+    T.drum(TL.trong[0], TL.trong[1], TL.trong[2], 0.85); // mặt trống đồng nhỏ làm biểu tượng, nằm trên chữ (không còn nằm sau chữ)
     // Phiên C3: có tệp gd-logo (ảnh AI 200×40, chữ LINH KHÍ khắc gỗ; trang tools/tach-giao-dien, lô "Logo") thì vẽ ảnh vào đúng chỗ của chữ;
     // không có thì vẽ chữ phông y như cũ. Dòng phụ và câu giới thiệu bên dưới vẫn là chữ của game.
     const SC = G.spriteCustom, logo = SC && SC.gdSan && SC.veGd ? SC.gdSan('gd-logo') : null;
     if (logo) SC.veGd(u, logo, TL.logo[0], TL.logo[1], TL.logo[2], TL.logo[3]);
     else {
       ui.font(38, true); u.textAlign = 'center'; u.lineJoin = 'round';
-      u.fillStyle = 'rgba(0,0,0,0.55)'; u.fillText('LINH KHÍ', 240, 89);
-      u.lineWidth = 5; u.strokeStyle = '#1a120a'; u.strokeText('LINH KHÍ', 240, 86);
-      ui.text('LINH KHÍ', 240, 86, { size: 38, bold: true, align: 'center', color: GOLD, shadow: false });
+      u.fillStyle = 'rgba(0,0,0,0.55)'; u.fillText('LINH KHÍ', 240, 89 + dy);
+      u.lineWidth = 5; u.strokeStyle = '#1a120a'; u.strokeText('LINH KHÍ', 240, 86 + dy);
+      ui.text('LINH KHÍ', 240, 86 + dy, { size: 38, bold: true, align: 'center', color: GOLD, shadow: false });
       // vệt sáng mảnh trên nửa trên mặt chữ (ánh kim loại), chỉ một dải, không phát sáng
-      u.save(); u.beginPath(); u.rect(120, 58, 240, 12); u.clip();
-      ui.text('LINH KHÍ', 240, 86, { size: 38, bold: true, align: 'center', color: '#fff6d8', shadow: false }); u.restore();
+      u.save(); u.beginPath(); u.rect(120, 58 + dy, 240, 12); u.clip();
+      ui.text('LINH KHÍ', 240, 86 + dy, { size: 38, bold: true, align: 'center', color: '#fff6d8', shadow: false }); u.restore();
     }
     // dòng phụ: chữ giãn rộng, hai gạch đồng hai bên
     ui.font(9, true);
     const sub = 'S P I R I T B L A D E', sw = u.measureText(sub).width;
-    u.fillStyle = '#a8752f'; u.fillRect(Math.round(240 - sw / 2 - 26), 98, 18, 1); u.fillRect(Math.round(240 + sw / 2 + 8), 98, 18, 1);
-    ui.text(sub, 240, 101.5, { size: 9, bold: true, align: 'center', color: '#d9a441' });
-    ui.text('Vũ khí lớn lên theo bạn. Yêu tinh học theo bạn.', 240, 116, { size: 8, align: 'center', color: TXT });
+    u.fillStyle = '#a8752f'; u.fillRect(Math.round(240 - sw / 2 - 26), 98 + dy, 18, 1); u.fillRect(Math.round(240 + sw / 2 + 8), 98 + dy, 18, 1);
+    ui.text(sub, 240, 101.5 + dy, { size: 9, bold: true, align: 'center', color: '#d9a441' });
+    // câu giới thiệu: trên ảnh bìa đặt trong ô cố định bằng hàm chung T.chuTrongKhung (tiếng Anh dài hơn thì tự thu cỡ, không tràn)
+    if (bia && T.chuTrongKhung) T.chuTrongKhung('Vũ khí lớn lên theo bạn. Yêu tinh học theo bạn.', 90, 106 + dy, 300, 14, { vien: [0, 0, 0, 0], size: 8, min: 6.5, bold: false, color: TXT, shadow: true });
+    else ui.text('Vũ khí lớn lên theo bạn. Yêu tinh học theo bạn.', 240, 116, { size: 8, align: 'center', color: TXT });
   }
   G.Title = {
-    enter() { VS.enter({ from: 'keep' }); VS.state.x = 470; VS.state.cam = 230; },
+    enter() { VS.enter({ from: 'keep' }); VS.state.x = 470; VS.state.cam = 230; datBoCuc(); },
     update(dt) {
       VS.update(dt, true);
       const g = titleGate();
@@ -859,13 +868,20 @@
     draw() {
       const c = G.wx, A = G.art;
       V.tab = 'title';
-      VS.drawWorld({ dim: 0.42, hideHero: true }); // cảnh làng sống (đèn lồng chập chờn, khói lò rèn, đom đóm) dùng lại của village_scene.js
-      // 13/10: chủ dự án muốn Zed chỉ ĐỨNG YÊN ở màn hình chính (bỏ vung kiếm mỗi 2,4 giây).
-      // em bé cầm kiếm lửa: phóng đúng 2 lần (điểm ảnh vuông, không vỡ), đứng góc dưới bên trái, không chạm nút
-      c.save(); c.translate(70, 252); c.scale(2, 2);
-      A.hero(c, { x: 0, y: 0, face: 1, key: 'smith', move: false, t: G.time, atk: -1, dodge: -1, weapon: { type: 'sword', family: 0, rarity: 3, marks: { fire: 300, poison: 0, ice: 0 }, branch: 'fire', sharpen: 0 } });
-      c.restore();
-      titleVeil();
+      // bia-moi 15/10: có bìa (js/bia.js) thì nền là ảnh bìa, BỎ hình Cu Tí đứng góc. Ảnh chưa về: cảnh làng như cũ (không Cu Tí), về thì hiện dần.
+      const BIA = G.bia && G.bia.n ? G.bia : null, ha = BIA ? BIA.hien() : 0;
+      if (ha < 1) VS.drawWorld({ dim: 0.42, hideHero: true }); // cảnh làng sống (đèn lồng chập chờn, khói lò rèn, đom đóm) dùng lại của village_scene.js
+      if (BIA) {
+        BIA.ve(c, ha, G.time);
+        BIA.veMan(G.ux); // vùng tối sau logo + dải tối dưới cho nút
+      } else {
+        // 13/10: chủ dự án muốn Zed chỉ ĐỨNG YÊN ở màn hình chính (bỏ vung kiếm mỗi 2,4 giây).
+        // em bé cầm kiếm lửa: phóng đúng 2 lần (điểm ảnh vuông, không vỡ), đứng góc dưới bên trái, không chạm nút (?biacu=1)
+        c.save(); c.translate(70, 252); c.scale(2, 2);
+        A.hero(c, { x: 0, y: 0, face: 1, key: 'smith', move: false, t: G.time, atk: -1, dodge: -1, weapon: { type: 'sword', family: 0, rarity: 3, marks: { fire: 300, poison: 0, ice: 0 }, branch: 'fire', sharpen: 0 } });
+        c.restore();
+        titleVeil();
+      }
       G.syncTaps = [];
       // Bảng vàng mở ngay trên màn mở đầu (không vào làng), có nút đóng
       if (!(V.tRank && G.bangVang)) titleLogo();
@@ -911,8 +927,13 @@
         if (CL.gMsg) { if (/^Chưa đăng nhập|chưa trả kết quả/.test(CL.gMsg) || (G.LANG !== 'vi' && gMsgFail(CL.gMsg))) V.loginFail = true; V.tMsg = CL.gMsg; V.tMsgT = 8; CL.gMsg = ''; }
         if (V.tMsgT > 0) V.tMsgT -= 1 / 60;
         const line = V.tMsgT > 0 && V.tMsg ? V.tMsg : need && !ok ? G.t('Đã có tài khoản? Bấm Đăng nhập Google để chơi tiếp tiến trình cũ. {0}', CL.label()) : CL.label();
-        const lines = ui.wrap(line, 260, 7); // hẹp để không chạm hình em bé bên trái
-        lines.slice(0, 2).forEach((l, i) => ui.text(l, 240, TL.info + i * 9, { size: 7, align: 'center', color: V.tMsgT > 0 && V.tMsg ? GOLD : '#c9bfa8' }));
+        const mau = V.tMsgT > 0 && V.tMsg ? GOLD : '#c9bfa8';
+        if (G.bia && G.bia.n && T.chuTrongKhung) { // bìa: hai dòng trong ô cố định trên dải tối (hàm chung đo cả tiếng Anh, dài thì thu cỡ / cắt "…")
+          T.chuTrongKhung(line, 100, TL.info - 7, 280, 18, { vien: [0, 0, 0, 0], dem: 0, dong: 2, gian: 2, size: 7, min: 6, bold: false, color: mau, shadow: true });
+        } else {
+          const lines = ui.wrap(line, 260, 7); // hẹp để không chạm hình em bé bên trái
+          lines.slice(0, 2).forEach((l, i) => ui.text(l, 240, TL.info + i * 9, { size: 7, align: 'center', color: mau }));
+        }
       }
       // nút nhỏ đổi ngôn ngữ ngay ở màn mở đầu (chữ đang dùng sáng hơn); nhớ theo máy nên lần sau mở lại vẫn đúng
       const nr = T.chuMoi() ? 8 : 0; // chu-lech-khung: nút ảnh 44 rộng chỉ có lòng ~26 điểm cho "EN / VI" → rộng 52 (mép phải giữ nguyên)
