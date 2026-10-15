@@ -1,0 +1,147 @@
+{
+ "anh": "meoDen-2-di.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 6,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 3,
+  "vien_khu": 8286,
+  "nga_mau_nen_trong_hinh": 112
+ },
+ "manh_bo": [
+  {
+   "khung_bao": [
+    828,
+    197,
+    842,
+    211
+   ],
+   "diem_anh": 4
+  }
+ ],
+ "loi": [],
+ "canh_bao": [],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "move",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      12,
+      196,
+      364,
+      534
+     ],
+     "chan": [
+      187.5,
+      534
+     ],
+     "rong": 352,
+     "cao": 338,
+     "diem_anh": 52890,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      373,
+      191,
+      721,
+      534
+     ],
+     "chan": [
+      526.5,
+      534
+     ],
+     "rong": 348,
+     "cao": 343,
+     "diem_anh": 52840,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      722,
+      194,
+      1082,
+      534
+     ],
+     "chan": [
+      902.0,
+      534
+     ],
+     "rong": 360,
+     "cao": 340,
+     "diem_anh": 54898,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1090,
+      194,
+      1437,
+      534
+     ],
+     "chan": [
+      1267.5,
+      534
+     ],
+     "rong": 347,
+     "cao": 340,
+     "diem_anh": 51847,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1438,
+      191,
+      1799,
+      534
+     ],
+     "chan": [
+      1593.0,
+      534
+     ],
+     "rong": 361,
+     "cao": 343,
+     "diem_anh": 53929,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1811,
+      197,
+      2160,
+      534
+     ],
+     "chan": [
+      1949.0,
+      534
+     ],
+     "rong": 349,
+     "cao": 337,
+     "diem_anh": 54846,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}
