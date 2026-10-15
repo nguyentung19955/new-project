@@ -90,7 +90,8 @@
     try { cu = typeof location !== 'undefined' && /[?&]quaicu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; }
     G.QUAI_CU = cu;
   }
-  const QUAI_MOI = { heoCon: 1, heoNanh: 1, chonBong: 1, boHung: 1 };
+  // 15/10 (quai-moi-6-con): thêm Nấm Phồng, Nấm Phồng Chúa, Hoa Phun Bào Tử, Sóc Ném Quả Nổ, Nhím Gai Độc, Bầy Ong Vò Vẽ — cùng cách, cùng cờ.
+  const QUAI_MOI = { heoCon: 1, heoNanh: 1, chonBong: 1, boHung: 1, namPhong: 1, namPhongChua: 1, hoaBaoTu: 1, socNo: 1, nhimDoc: 1, ongVo: 1 };
   let napSauDangChay = false, trongNapSau = false;
   // Tải nhanh (12/10): ảnh rời. roiNhan(img, src) nhận ảnh anh/<mã>.<mã nội dung>.png vào hàng chờ; roiCan(ma) báo game đang cần hình ma
   // (chưa có thì tải ngay). Chỉ có ở bản 2 tệp ảnh rời (G.ANH_ROI); bản một tệp, công cụ: null, như cũ.
@@ -143,6 +144,8 @@
         const a = tep.dong_tac && tep.dong_tac[k];
         if (!a) continue;
         dt[k] = { hang: a.hang | 0, so: Math.max(1, a.so | 0), giay: +a.giay > 0 ? +a.giay : 0.6, lap: !!a.lap, mo: a.mo != null ? +a.mo : null };
+        // 15/10 quai-moi-6-con: "lap_tu" (hàng đánh): chạy hết một lượt rồi LẶP các cột lap_tu..so-1 cho tới khi game đổi cử động (Nhím lăn dài).
+        if (k === 'atk' && a.lap_tu != null && isFinite(+a.lap_tu)) dt[k].lapTu = clamp(Math.round(+a.lap_tu), 0, dt[k].so - 1);
         const bg = docBang(a, dt[k].so); if (bg) dt[k].bang = bg; // "khung" / "cham" (bỏ khung trùng); không có thì không thêm gì
       }
       if (!dt.idle) throw new Error('thiếu động tác đứng thở');
@@ -384,7 +387,11 @@
     if (n === 'idle' || n === 'intro') return lap('idle');
     if (n === 'move') return lap('move');
     if (n === 'tele' || n === 'phase2' || n === 'phase3') return mot('tele', u);
-    if (n === 'atk') return mot('atk', u);
+    if (n === 'atk') {
+      const a = dt.atk; // "lap_tu": hết một lượt (t >= D) thì lặp các cột lap_tu..so-1, mỗi cột D / so giây (Nhím lăn theo vạch tới khi dừng)
+      if (a && a.lapTu != null && t >= D) { const m = a.so - a.lapTu; return { ten: 'atk', i: a.lapTu + (Math.floor((t - D) / (D / a.so) + 1e-6) % m), u: 1 }; }
+      return mot('atk', u);
+    }
     if (n === 'hit') return mot('hit', u);
     if (n === 'stun') { const r = mot('hit', 0.35 + 0.15 * Math.sin(t * 9)); r.u = 1; return r; }
     if (n === 'die') { const r = mot('die', u); r.alpha = 1 - seg(u, dt.die && dt.die.mo != null ? dt.die.mo : 0.6, 1); return r; }

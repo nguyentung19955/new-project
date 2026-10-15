@@ -101,78 +101,80 @@ def tam_than_tam(sh, R, FW, FH, so):
     return L
 
 
-so_do = {}
-for MA_ in MA:
-    cu_p = os.path.join(CUSTOM, MA_ + '.sprite.json'); cu_ten = MA_ + '-cu'
-    cu_d = json.load(open(cu_p, encoding='utf-8'))
-    if cu_d.get('net', 1) != 1 or 'can_tam' in cu_d:   # đã dựng mới rồi → đọc tấm cũ ở tệp -cu
-        cu_d = json.load(open(os.path.join(CUSTOM, cu_ten + '.sprite.json'), encoding='utf-8'))
-    ca = np.array(Image.open(io.BytesIO(base64.b64decode(cu_d['tam'].split(',', 1)[1]))).convert('RGBA'))
-    H_cu = float(np.median([do_than(khung_tam(cu_d, ca, 'idle', i))['cao'] for i in range(cu_d['dong_tac']['idle']['so'])]))
-    W_cu = float(np.median([do_than(khung_tam(cu_d, ca, 'idle', i))['rong'] for i in range(cu_d['dong_tac']['idle']['so'])]))
+# quai-moi-6-con: chạy thẳng thì dựng 4 con như cũ; import (dung-6-con.py) chỉ lấy các hàm thu / luu_png / ti_le_hang / tam_than_tam.
+if __name__ == '__main__':
+    so_do = {}
+    for MA_ in MA:
+        cu_p = os.path.join(CUSTOM, MA_ + '.sprite.json'); cu_ten = MA_ + '-cu'
+        cu_d = json.load(open(cu_p, encoding='utf-8'))
+        if cu_d.get('net', 1) != 1 or 'can_tam' in cu_d:   # đã dựng mới rồi → đọc tấm cũ ở tệp -cu
+            cu_d = json.load(open(os.path.join(CUSTOM, cu_ten + '.sprite.json'), encoding='utf-8'))
+        ca = np.array(Image.open(io.BytesIO(base64.b64decode(cu_d['tam'].split(',', 1)[1]))).convert('RGBA'))
+        H_cu = float(np.median([do_than(khung_tam(cu_d, ca, 'idle', i))['cao'] for i in range(cu_d['dong_tac']['idle']['so'])]))
+        W_cu = float(np.median([do_than(khung_tam(cu_d, ca, 'idle', i))['rong'] for i in range(cu_d['dong_tac']['idle']['so'])]))
 
-    idle, _ = doc_khung(MA_, '1-dung'); fi = [dac_trung(a) for a in idle]
-    A0 = float(np.median([(a[..., 3] > 128).sum() for a in idle]))
-    mi = [do_than(a) for a in idle]; H0 = float(np.median([m['cao'] for m in mi])); W0 = float(np.median([m['rong'] for m in mi]))
-    K = H_cu / H0   # điểm ảnh game / điểm ảnh ảnh cắt (ở hàng idle)
-    hang, info, thua = {}, {}, {}
-    for ten, b, so in BUOC:
-        ks, fs = doc_khung(MA_, b); assert len(ks) == so, (MA_, b, len(ks))
-        ms = [do_than(a) for a in ks]
-        for j, (a, m) in enumerate(zip(ks, ms)):   # khung chỉ còn bụi tan (gục, khung cuối): đáy = mép dưới ảnh cắt, tâm = giữa ảnh
-            if (a[..., 3] > 128).sum() < 0.15 * A0: ms[j] = dict(m, day=a.shape[0], cx=a.shape[1] / 2, thua=True)
-        s, cach, rieng = (1.0, {}, [1.0] * so) if ten == 'idle' else ti_le_hang(ten, fi, ks, A0)
-        hang[ten] = []
-        for a, m, k in zip(ks, ms, rieng):
-            z = N * K / (s * k)
-            hang[ten].append((thu(a, z), m['cx'] * z, m['day'] * z))
-        thua[ten] = [bool(m.get('thua')) for m in ms]
-        info[ten] = dict(he_so=round(s, 4), **cach, tung_khung=rieng,
-                         cao=round(float(np.median([m['cao'] / k for m, k in zip(ms, rieng)])) / s / H0, 3), rong=round(float(np.median([m['rong'] / k for m, k in zip(ms, rieng)])) / s / W0, 3))
-    trai = max(x for v in hang.values() for a, x, y in v); phai = max(a.shape[1] - x for v in hang.values() for a, x, y in v)
-    tren = max(y for v in hang.values() for a, x, y in v); duoi = max(a.shape[0] - y for v in hang.values() for a, x, y in v)
-    GX = int(np.ceil(trai / N)) + 1; FW = GX + int(np.ceil(phai / N)) + 1
-    GY = int(np.ceil(tren / N)) + 1; FH = GY + max(1, int(np.ceil(duoi / N))) + 1
-    sh = np.zeros((len(BUOC) * FH * N, 6 * FW * N, 4), np.uint8)
-    for R, (ten, b, so) in enumerate(BUOC):
-        for C, (a, x, y) in enumerate(hang[ten]):
-            X = int(round(GX * N - x)); Y = int(round(GY * N - y))
-            o = sh[R * FH * N:(R + 1) * FH * N, C * FW * N:(C + 1) * FW * N]
-            assert X >= 0 and Y >= 0 and X + a.shape[1] <= FW * N and Y + a.shape[0] <= FH * N, ('tràn ô', MA_, ten, C)
-            sub = o[Y:Y + a.shape[0], X:X + a.shape[1]]; sub[:] = np.where(a[..., 3:4] > 0, a, sub)
-    png, nm = luu_png(sh)
-    nh = NHIP[MA_]
-    W_game = W0 * K
-    move_giay = round(min(1.0, max(0.35, BUOC_THAN * W_game / TOC[MA_])), 2)
-    dong = {
-        'idle': {'hang': 0, 'so': 6, 'giay': IDLE_GIAY, 'lap': True},
-        'move': {'hang': 1, 'so': 6, 'giay': move_giay, 'lap': True},
-        'tele': {'hang': 2, 'so': 6, 'giay': nh['tele']},
-        # khung 1 của hàng đánh là thế đứng (giống đứng thở): bỏ, để hàng đánh mở bằng cú bật / lao đúng lúc ra đòn (khung chạm sớm)
-        'atk': {'hang': 3, 'so': 6, 'giay': nh['atk'], 'khung': [1, 2, 3, 4, 5]},
-        'hit': {'hang': 4, 'so': 4, 'giay': HIT_GIAY},
-        'die': {'hang': 5, 'so': 6, 'giay': nh['die'], 'mo': round(DIE_TOI / nh['die'], 2)},
-    }
-    # can_tam: đo lại trên tấm vừa dựng
-    ct = {}
-    for R, (ten, b, so) in enumerate(BUOC):
-        L = tam_than_tam(sh, R, FW, FH, so)
-        # khung chỉ còn bụi lác đác: tâm đo theo vài hạt bụi không có nghĩa (đã đặt giữa ảnh cắt lúc dựng) → 0
-        ct[ten] = [int(round(GX - c)) if c is not None and not thua[ten][i] else 0 for i, c in enumerate(L)]
-    t = {'loai': 'linh-khi-sprite', 'doi_tuong': 'quai', 'ma': MA_, 'ten': cu_d['ten'], 'vung': cu_d['vung'],
-         'tam': 'data:image/png;base64,' + base64.b64encode(png).decode(), 'net': N, 'khung_rong': FW, 'khung_cao': FH, 'goc': [GX, GY],
-         'can_tam': ct, 'rong': cu_d['rong'], 'cao': cu_d['cao'], 'dong_tac': dong}
-    Image.fromarray(sh).save(os.path.join(RA, MA_ + '.png'))
-    ra = os.path.join(CUSTOM, MA_ + '.sprite.json') if GHI else os.path.join(RA, MA_ + '.sprite.json')
-    if GHI:
-        cu = dict(cu_d); cu['ma'] = cu_ten; cu['cu_cua'] = MA_
-        cu['ten'] = cu_d['ten'] if cu_d['ten'].endswith('(tấm cũ)') else cu_d['ten'] + ' (tấm cũ)'
-        json.dump(cu, open(os.path.join(CUSTOM, cu_ten + '.sprite.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
-    json.dump(t, open(ra, 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
-    so_do[MA_] = {'cao_dung_cu': H_cu, 'rong_dung_cu': W_cu, 'cao_dung_moi': round(H0 * K, 1), 'rong_dung_moi': round(W_game, 1), 'K': round(K, 5),
-                  'o': [FW, FH], 'goc': [GX, GY], 'tam': list(sh.shape[1::-1]), 'mau': nm, 'byte_png': len(png), 'byte_tep': os.path.getsize(ra),
-                  'hang': info, 'dong_tac': dong, 'can_tam': ct}
-    print(MA_, json.dumps({k: v for k, v in so_do[MA_].items() if k not in ('hang', 'dong_tac', 'can_tam')}, ensure_ascii=False))
-    for k, v in info.items(): print('   ', k, v)
-    print('    can_tam', ct)
-json.dump(so_do, open(os.path.join(RA, 'so-do.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+        idle, _ = doc_khung(MA_, '1-dung'); fi = [dac_trung(a) for a in idle]
+        A0 = float(np.median([(a[..., 3] > 128).sum() for a in idle]))
+        mi = [do_than(a) for a in idle]; H0 = float(np.median([m['cao'] for m in mi])); W0 = float(np.median([m['rong'] for m in mi]))
+        K = H_cu / H0   # điểm ảnh game / điểm ảnh ảnh cắt (ở hàng idle)
+        hang, info, thua = {}, {}, {}
+        for ten, b, so in BUOC:
+            ks, fs = doc_khung(MA_, b); assert len(ks) == so, (MA_, b, len(ks))
+            ms = [do_than(a) for a in ks]
+            for j, (a, m) in enumerate(zip(ks, ms)):   # khung chỉ còn bụi tan (gục, khung cuối): đáy = mép dưới ảnh cắt, tâm = giữa ảnh
+                if (a[..., 3] > 128).sum() < 0.15 * A0: ms[j] = dict(m, day=a.shape[0], cx=a.shape[1] / 2, thua=True)
+            s, cach, rieng = (1.0, {}, [1.0] * so) if ten == 'idle' else ti_le_hang(ten, fi, ks, A0)
+            hang[ten] = []
+            for a, m, k in zip(ks, ms, rieng):
+                z = N * K / (s * k)
+                hang[ten].append((thu(a, z), m['cx'] * z, m['day'] * z))
+            thua[ten] = [bool(m.get('thua')) for m in ms]
+            info[ten] = dict(he_so=round(s, 4), **cach, tung_khung=rieng,
+                             cao=round(float(np.median([m['cao'] / k for m, k in zip(ms, rieng)])) / s / H0, 3), rong=round(float(np.median([m['rong'] / k for m, k in zip(ms, rieng)])) / s / W0, 3))
+        trai = max(x for v in hang.values() for a, x, y in v); phai = max(a.shape[1] - x for v in hang.values() for a, x, y in v)
+        tren = max(y for v in hang.values() for a, x, y in v); duoi = max(a.shape[0] - y for v in hang.values() for a, x, y in v)
+        GX = int(np.ceil(trai / N)) + 1; FW = GX + int(np.ceil(phai / N)) + 1
+        GY = int(np.ceil(tren / N)) + 1; FH = GY + max(1, int(np.ceil(duoi / N))) + 1
+        sh = np.zeros((len(BUOC) * FH * N, 6 * FW * N, 4), np.uint8)
+        for R, (ten, b, so) in enumerate(BUOC):
+            for C, (a, x, y) in enumerate(hang[ten]):
+                X = int(round(GX * N - x)); Y = int(round(GY * N - y))
+                o = sh[R * FH * N:(R + 1) * FH * N, C * FW * N:(C + 1) * FW * N]
+                assert X >= 0 and Y >= 0 and X + a.shape[1] <= FW * N and Y + a.shape[0] <= FH * N, ('tràn ô', MA_, ten, C)
+                sub = o[Y:Y + a.shape[0], X:X + a.shape[1]]; sub[:] = np.where(a[..., 3:4] > 0, a, sub)
+        png, nm = luu_png(sh)
+        nh = NHIP[MA_]
+        W_game = W0 * K
+        move_giay = round(min(1.0, max(0.35, BUOC_THAN * W_game / TOC[MA_])), 2)
+        dong = {
+            'idle': {'hang': 0, 'so': 6, 'giay': IDLE_GIAY, 'lap': True},
+            'move': {'hang': 1, 'so': 6, 'giay': move_giay, 'lap': True},
+            'tele': {'hang': 2, 'so': 6, 'giay': nh['tele']},
+            # khung 1 của hàng đánh là thế đứng (giống đứng thở): bỏ, để hàng đánh mở bằng cú bật / lao đúng lúc ra đòn (khung chạm sớm)
+            'atk': {'hang': 3, 'so': 6, 'giay': nh['atk'], 'khung': [1, 2, 3, 4, 5]},
+            'hit': {'hang': 4, 'so': 4, 'giay': HIT_GIAY},
+            'die': {'hang': 5, 'so': 6, 'giay': nh['die'], 'mo': round(DIE_TOI / nh['die'], 2)},
+        }
+        # can_tam: đo lại trên tấm vừa dựng
+        ct = {}
+        for R, (ten, b, so) in enumerate(BUOC):
+            L = tam_than_tam(sh, R, FW, FH, so)
+            # khung chỉ còn bụi lác đác: tâm đo theo vài hạt bụi không có nghĩa (đã đặt giữa ảnh cắt lúc dựng) → 0
+            ct[ten] = [int(round(GX - c)) if c is not None and not thua[ten][i] else 0 for i, c in enumerate(L)]
+        t = {'loai': 'linh-khi-sprite', 'doi_tuong': 'quai', 'ma': MA_, 'ten': cu_d['ten'], 'vung': cu_d['vung'],
+             'tam': 'data:image/png;base64,' + base64.b64encode(png).decode(), 'net': N, 'khung_rong': FW, 'khung_cao': FH, 'goc': [GX, GY],
+             'can_tam': ct, 'rong': cu_d['rong'], 'cao': cu_d['cao'], 'dong_tac': dong}
+        Image.fromarray(sh).save(os.path.join(RA, MA_ + '.png'))
+        ra = os.path.join(CUSTOM, MA_ + '.sprite.json') if GHI else os.path.join(RA, MA_ + '.sprite.json')
+        if GHI:
+            cu = dict(cu_d); cu['ma'] = cu_ten; cu['cu_cua'] = MA_
+            cu['ten'] = cu_d['ten'] if cu_d['ten'].endswith('(tấm cũ)') else cu_d['ten'] + ' (tấm cũ)'
+            json.dump(cu, open(os.path.join(CUSTOM, cu_ten + '.sprite.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
+        json.dump(t, open(ra, 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
+        so_do[MA_] = {'cao_dung_cu': H_cu, 'rong_dung_cu': W_cu, 'cao_dung_moi': round(H0 * K, 1), 'rong_dung_moi': round(W_game, 1), 'K': round(K, 5),
+                      'o': [FW, FH], 'goc': [GX, GY], 'tam': list(sh.shape[1::-1]), 'mau': nm, 'byte_png': len(png), 'byte_tep': os.path.getsize(ra),
+                      'hang': info, 'dong_tac': dong, 'can_tam': ct}
+        print(MA_, json.dumps({k: v for k, v in so_do[MA_].items() if k not in ('hang', 'dong_tac', 'can_tam')}, ensure_ascii=False))
+        for k, v in info.items(): print('   ', k, v)
+        print('    can_tam', ct)
+    json.dump(so_do, open(os.path.join(RA, 'so-do.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)

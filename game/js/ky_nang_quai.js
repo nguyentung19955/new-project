@@ -345,12 +345,15 @@
         if (!A.fired || !A.path || A.i >= A.path.length) { if (A.fired) q.kn.xoay = 0; return; }
         const g = A.path[A.i], k = Math.min(g.len - A.s, S.toc * dt2);
         A.s += k; q.x += Math.cos(g.a) * k; q.y += Math.sin(g.a) * k; giu(q); q.moving = true;
-        q.kn.xoay = (q.kn.xoay || 0) + (k / Math.max(4, q.r)) * (Math.cos(g.a) >= 0 ? 1 : -1);
+        if (!lanAnh(q)) q.kn.xoay = (q.kn.xoay || 0) + (k / Math.max(4, q.r)) * (Math.cos(g.a) >= 0 ? 1 : -1); // ảnh mới đã vẽ cuộn lăn (có bụi): không xoay thân
         if (!A.trung && cham(q.x, q.y, q.r + 8)) A.trung = G.hurtPlayer(q.dmg * S.sat, regElGai(), q, true);
         if (A.s >= g.len - 0.01) { A.i++; A.s = 0; if (A.i < A.path.length) { A.a = A.path[A.i].a; q.dirA = A.a; mat(q, A.a); FX('burst', q.x, q.y - 4, '#c8b090', 6, 50); G.sfx('hit', 0.9); } }
       } });
   }
   const regElGai = () => (H.regEl() === 'poison' ? 'poison' : null); // gai Rừng già có độc như gai cũ
+  // 15/10 quai-moi-6-con: tấm Nhím Gai Độc vẽ lại có hàng đánh = cuộn tròn lăn (lặp, "lap_tu") → thân không xoay bằng code nữa (xoay cả vệt bụi).
+  // Tấm cũ (?quaicu=1) hoặc chưa nạp ảnh: xoay như trước.
+  function lanAnh(q) { const S2 = G.spriteCustom, sp = S2 && S2.get ? S2.get(q.art) : null; return !!(sp && sp.dt && sp.dt.atk && sp.dt.atk.lapTu != null); }
   T.nhimDoc = cuonLan;
 
   // ---------------- HANG BIỂN (nước: kéo, đẩy, làm chậm) ----------------
