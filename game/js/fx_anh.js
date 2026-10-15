@@ -138,12 +138,21 @@
   // Vẽ hiệu ứng ma tại (x, y) (điểm neo của ảnh trùng điểm này).
   // t: giây từ lúc bắt đầu; goc: góc (radian) — tệp có "xoay" thì xoay theo góc, không thì chỉ lật trái/phải theo hướng góc;
   // co: hệ số cỡ thêm (nhân với "co" của tệp); lat: lật ngang (quay trái); mo: độ đậm 0..1; mau, kieu (tuỳ chọn): nhuộm. Trả về true nếu đã vẽ.
+  // Soát mượt phiên 3 mục 16A (?hoalap=0 tắt): hiệu ứng LẶP chậm (4,5–9 khung/giây: dính thân hu-bam-*, vùng sàn hu-vung-*, mây độc, cổng…)
+  // vẽ thêm khung kế đè lên với độ hiện 0–35% theo phần lẻ của khung → đỡ "nhảy" giữa các khung. Hiệu ứng chậm cố ý (< 4,5 khung/giây) để nguyên.
+  const lapCham = (a) => { if (!a.lap || a.so < 2) return false; const fps = a.so / a.giay; return fps >= 4.5 && fps < 9; };
+  FA.lapCham = (ma) => { const a = FA.ds[ma]; return !!(a && lapCham(a)); };
   FA.ve = function (c, ma, x, y, t, goc, co, lat, mo, mau, kieu) {
     const a = FA.ds[ma];
     if (!a || !a.ready || !c) return false;
     const f = FA.khung(a, t);
     if (f < 0) return false;
-    return veF(c, a, f, x, y, goc, co, lat, mo, mau, kieu);
+    const ok = veF(c, a, f, x, y, goc, co, lat, mo, mau, kieu);
+    if (ok && G.HOA_LAP !== false && lapCham(a)) {
+      const v = (Math.max(0, t || 0) / a.giay) * a.so, fr = v - Math.floor(v);
+      if (fr > 0.02) veF(c, a, (f + 1) % a.so, x, y, goc, co, lat, (mo == null ? 1 : clamp(mo, 0, 1)) * 0.35 * fr, mau, kieu);
+    }
+    return ok;
   };
   // Con vẽ tay đợt 3 (hu-tam-giac-bua): vẽ khung f sao cho 3 điểm S (tọa độ điểm game so với điểm neo của ảnh, khi co 1) rơi ĐÚNG vào 3 điểm
   // D trên màn hình (ánh xạ affine: dời, co giãn, xoay, xô nghiêng). Dùng để tam giác ảnh khớp đúng 3 đỉnh vùng va chạm thật. Trả về true nếu đã vẽ.
@@ -169,6 +178,11 @@
     } finally { c.restore(); }
     return true;
   };
+  // Soát mượt phiên 3 mục 21 (?tile05=0 tắt): FA.bac05(cỡ) làm tròn cỡ vẽ theo bậc 0,5 khi ≥ 0,75 — nền vẽ gấp đôi (G.NET 2) nên mỗi điểm ảnh
+  // ảnh (tệp net 1) phủ số nguyên điểm ảnh thật, hết răng cưa lấp lánh. CHỈ dùng ở chỗ cỡ là tuỳ ý (vệt vũ khí scVet, nổ / trúng đòn trang trí);
+  // KHÔNG dùng cho ảnh co theo bán kính vùng thật (vũng, vùng báo trước, nổ có bán kính sát thương): hình phải khớp đúng vùng chạm.
+  const bac05 = (s) => (G.TILE05 !== false && s >= 0.75 ? Math.round(s * 2) / 2 : s);
+  FA.bac05 = bac05;
   function veF(c, a, f, x, y, goc, co, lat, mo, mau, kieu) {
     const s = a.co * (co > 0 ? co : 1);
     let flip = !!lat, rot = 0;

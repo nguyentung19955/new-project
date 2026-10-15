@@ -389,6 +389,7 @@
   const VD_TY = { cut: 1, cres: 1, slash: 1, thrust: 1, dashline: 1, crack: 1, stuck: 1, ring: 1, flash: 1 };
   const VD_ANH = /^hu-(chem|dam|quet|ban-cung|ra-chieu|ra-chuong|tram-nguyet|nen-dat|trung|chi-mang|pha-giap)(-|$)/;
   const vetDon = (o) => (VD_TY[o.ty] === 1 || (o.ty === 'anh' && VD_ANH.test(o.ma || '')) || (o.ty === 'he' && !(o.t0 > 0.5)));
+  const HU_GIU = 0.12, HU_NAY = /^hu-(no|trung|chi-mang|va-cham|pha-giap|trum-no|be-trung|soc-nhiet)(-|$)/; // mục 8: giữ khung cuối; nhóm nổ / trúng đòn nảy nhẹ
   function add(o) {
     // 15/10 con-ve-tay: chớp "sq" (lõi VUÔNG + 4 ô vuông góc, vẽ code — ô vuông xanh lục ở vùng độc nổ, ô be ở vùng đất đá, cam ở lửa...)
     // → ảnh va chạm hu-va-cham nhuộm đúng màu chớp, cỡ theo bán kính chớp. Ảnh chưa có / cờ ?vetaycu=1: như cũ.
@@ -398,6 +399,9 @@
       if (o.pl != null) h.pl = o.pl;
       return add(h);
     }
+    // Soát mượt phiên 3 mục 8 (?humo=0: như cũ): hiệu ứng ảnh KHÔNG lặp được giữ khung cuối thêm HU_GIU giây trong lúc mờ dần (hết khung
+    // không còn tắt phụt). Chỉ thêm thời gian HIỂN THỊ của hình; không hiệu ứng nào gây sát thương / đổi luật theo danh sách hình này.
+    if (o.ty === 'anh' && G.HU_MO !== false && !o.mr && !o.hold && G.fxAnh && !G.fxAnh.lap(o.ma)) { o.hold = HU_GIU; o.t += HU_GIU; }
     o.t0 = o.t; o.d = o.d || 0;
     if (o.pl == null) o.pl = OWN;
     o.vd = !!o.pl && G.VET_DAM !== false && (vetDon(o) || !!o.laChop); // vệt đòn của em bé: đậm, và vẽ SAU viền quanh bé (fx.vienBe)
@@ -877,6 +881,9 @@
     }
   }
   const VET_ANH = { sword: 'hu-chem-kiem', hammer: 'hu-chem-bua', spear: 'hu-dam-giao' }; // ảnh AI cho vệt đòn thường
+  // Soát mượt phiên 3 mục 21 (?tile05=0 tắt): cỡ TUỲ Ý của ảnh trang trí (vệt vũ khí, cào / chết theo thân, nổ trùm ngẫu nhiên) làm tròn bậc 0,5
+  // (js/fx_anh.js FA.bac05). Ảnh co theo bán kính vùng thật (vũng, nổ có bán kính sát thương, chớp va chạm) giữ cỡ đúng.
+  const b05 = (v) => (G.fxAnh && G.fxAnh.bac05 ? G.fxAnh.bac05(v) : v);
   // o: { type, combo, reach, el, stage }
   api('swing', (P, o) => {
     const f = P.face, el = o.el, st = o.stage || 0, PL = pal(el);
@@ -886,7 +893,7 @@
     if (P === S.W.P) { P.fxS = -0.08; P.fxSV = 0; P.fxL = f * 2.5; P.fxLV = 0; } // nhún: vươn người theo nhát chém
     // Có ảnh AI cho vệt đòn của loại vũ khí này: vẽ ảnh thay cho trăng khuyết / mũi đâm (hạt và vết nứt giữ nguyên)
     const maVet = VET_ANH[o.type], vetAnh = !!maVet && coAnh(maVet);
-    const scVet = Math.max(0.6, Math.min(1.8, (o.type === 'spear' ? R0 + 2 : R0) / 32)) * (o.combo === 2 ? 1.12 : 1); // cỡ vệt ảnh như cũ
+    const scVet = b05(Math.max(0.6, Math.min(1.8, (o.type === 'spear' ? R0 + 2 : R0) / 32)) * (o.combo === 2 ? 1.12 : 1)); // cỡ vệt ảnh như cũ (mục 21: bậc 0,5)
     if (vetAnh && !anhVk(maVet, P, o.type, scVet)) anh(maVet, P.x + f * (o.type === 'spear' ? 8 : o.type === 'hammer' ? 4 : 2), P.y - (o.type === 'hammer' ? 17 : 13), { f, sc: scVet });
     if (o.type === 'sword') {
       const fin = o.combo === 2;
@@ -959,6 +966,10 @@
   function quad(c, ax, ay, bx, by, cx, cy, dx, dy, dith) {
     QX[0] = ax; QY[0] = ay; QX[1] = bx; QY[1] = by; QX[2] = cx; QY[2] = cy; QX[3] = dx; QY[3] = dy;
     const y0 = Math.floor(Math.min(ay, by, cy, dy)), y1 = Math.ceil(Math.max(ay, by, cy, dy));
+    // soát mượt phiên 3 mục 22 (?venhe=0: bàn cờ như cũ): đuôi thưa tô cả hàng ở độ đậm 50% (1 lệnh / hàng thay cho 1 lệnh / điểm ảnh)
+    const ga = c.globalAlpha, mo = dith && G.VE_NHE !== false;
+    if (mo) { c.globalAlpha = ga * 0.5; dith = false; }
+    try {
     for (let y = y0; y < y1; y++) {
       const yc = y + 0.5;
       let lo = 1e9, hi = -1e9;
@@ -971,6 +982,7 @@
       if (dith) { for (let x = xa + ((xa + y) & 1); x < xb; x += 2) c.fillRect(x, y, 1, 1); }
       else c.fillRect(xa, y, xb - xa, 1);
     }
+    } finally { if (mo) c.globalAlpha = ga; }
   }
   function trailDraw(c) {
     if (S.trN < 2) return;
@@ -1036,7 +1048,7 @@
     const sc = e.scale || 1;
     // Ảnh AI hu-quai-cao (ba vết vuốt; có bản riêng theo hệ của quái thì dùng): thay vệt cào vẽ bằng code, cỡ theo thân quái
     const maCao = anhHe('hu-quai-cao', e.el);
-    if (maCao && anh(maCao, e.x + e.face * 4, e.y - Math.min(20, (e.h || 20) * sc * 0.55), { f: e.face, sc: Math.max(0.6, Math.min(2.2, (9 + e.r * 0.5) / 14)) })) return;
+    if (maCao && anh(maCao, e.x + e.face * 4, e.y - Math.min(20, (e.h || 20) * sc * 0.55), { f: e.face, sc: b05(Math.max(0.6, Math.min(2.2, (9 + e.r * 0.5) / 14))) })) return;
     add({ ty: 'cres', x: e.x + e.face * 4, y: e.y - Math.min(20, (e.h || 20) * sc * 0.55), f: e.face, ra: (22 + e.r) * 0.8, rb: 9 + e.r * 0.5, off: 5, oy: 2, vert: true, rev: false, pl: e.el ? pal(e.el) : PAL.foe, t: 0.14, big: false, st: 0, ly: 1 });
   });
   api('lunge', (e) => {
@@ -1930,7 +1942,7 @@
     S.dying.push({ e: snap, t: ad || 0.42, t0: ad || 0.42, boss: false, ill: !!e.illusion, pl: PL, art: !!ad, skin, w: B.w, hh: B.h, dis: false });
     if (e.st && e.st.frozen > 0) shatter(e);
     // Ảnh AI quái chết tan (hu-quai-chet): điểm neo ở chân quái, cỡ theo chiều cao thân (ảnh chuẩn cho thân cao 24). Có ảnh thì bỏ khói và tia.
-    const chetAnh = anh('hu-quai-chet', x, y, { f: e.face || 1, sc: Math.max(0.6, Math.min(2, B.h / 24)) });
+    const chetAnh = anh('hu-quai-chet', x, y, { f: e.face || 1, sc: b05(Math.max(0.6, Math.min(2, B.h / 24))) });
     // khói theo hệ và mảnh vụn rơi
     if (!chetAnh) for (let i = 0; i < 6; i++) emit(2, x + rr(-B.w, B.w), y - rr(2, B.h), rr(-24, 24), rr(-34, -8), rr(0.35, 0.65), el ? PL.puff : RAMP.dust, R() < 0.4 ? 5 : 4, 0, 2, null, 1);
     for (let i = 0; i < 6; i++) emit(8, x + rr(-B.w, B.w), y - rr(4, B.h), rr(-70, 70), rr(-130, -40), rr(0.5, 0.85), i % 2 ? skin : PL.ramp, R() < 0.4 ? 3 : 2, 420, 0, y + rr(-2, 5), 1);
@@ -1969,7 +1981,7 @@
         // cũ 0,22 giây ≈ 23 khung/giây nháy quá nhanh), mờ vào/ra; bỏ chớp + vòng sóng vẽ code, mảnh văng, khói, chớp trắng thân. Nhịp nổ thưa hơn chút.
         d.nb = 0.2 - 0.08 * k;
         const x = d.e.x + rr(-d.w, d.w), y = d.e.y - rr(4, d.hh), maNo = anhHe('hu-no-nho', d.el);
-        if (maNo) anh(maNo, x, y, { sc: rr(0.8, 1.15), f: R() < 0.5 ? 1 : -1, t: 0.42, gian: true, mr: true });
+        if (maNo) anh(maNo, x, y, { sc: b05(rr(0.8, 1.15)), f: R() < 0.5 ? 1 : -1, t: 0.42, gian: true, mr: true });
         else add({ ty: 'flash', x, y, r: rr(5, 8), t: 0.1, c: '#ffffff', c2: d.pl.c2, ly: 1 }); // thiếu ảnh: tối thiểu một chớp nhỏ
         trauma(0.12 + 0.12 * k);
       }
@@ -1978,7 +1990,7 @@
         const x = d.e.x + rr(-d.w, d.w), y = d.e.y - rr(4, d.hh);
         // Ảnh AI nổ nhỏ trên thân trùm (hu-no-nho, có bản theo hệ): điểm neo là tâm vụ nổ. Có ảnh thì bỏ chớp và vòng sóng vẽ bằng code.
         const maNo = anhHe('hu-no-nho', d.el);
-        if (maNo) anh(maNo, x, y, { sc: rr(0.75, 1.15) * (d.mini ? 0.8 : 1), f: R() < 0.5 ? 1 : -1 });
+        if (maNo) anh(maNo, x, y, { sc: b05(rr(0.75, 1.15) * (d.mini ? 0.8 : 1)), f: R() < 0.5 ? 1 : -1 });
         else {
           add({ ty: 'flash', x, y, r: rr(6, 11), t: 0.1, c: '#ffffff', c2: d.pl.c2, ly: 1, sq: R() < 0.5 });
           addRing(x, y, 2, rr(10, 18), 0.2, d.pl.c2, 2, 1);
@@ -2234,7 +2246,21 @@
             if (!ok) o.t = 0;
             break;
           }
-          const moA = o.mr ? (o.mo3 == null ? 1 : o.mo3) * Math.min(1, (o.t0 - o.t) / 0.05, o.t / 0.08) : o.mo3;
+          let moA = o.mr ? (o.mo3 == null ? 1 : o.mo3) * Math.min(1, (o.t0 - o.t) / 0.05, o.t / 0.08) : o.mo3;
+          if (o.hold && FA) {
+            // mục 8: tt = giây đã chạy; vis = lúc hết khung cuối (gian: đúng thời lượng gốc; không: min(thời lượng, số khung / nhịp ảnh)).
+            // Từ 75% vis tới hết phần giữ: mờ dần về 0; trong phần giữ vẽ đứng ở khung cuối. Nhóm nổ / trúng đòn nảy 1 → 1,08 → 1 trong 0,12 giây đầu.
+            const tt = o.t0 - o.t, base = o.t0 - o.hold, gy = FA.giay(o.ma) || base, vis = o.gian ? base : Math.min(base, gy);
+            const tv = Math.min(tt, vis - 1e-4), mo0 = o.mo3 == null ? 1 : o.mo3;
+            const fade = tt <= vis * 0.75 ? 1 : Math.max(0, 1 - (tt - vis * 0.75) / (vis * 0.25 + o.hold));
+            const nay = HU_NAY.test(o.ma) && tt < 0.12 ? 1 + 0.08 * Math.sin((Math.PI * tt) / 0.12) : 1;
+            const ax = th ? th.x : o.x, ay = th ? th.y : o.y, X = Math.round(ax), Y = Math.round(ay);
+            if (nay !== 1) { c.save(); c.translate(X, Y); c.scale(nay, nay); c.translate(-X, -Y); } // nảy bằng phép phóng quanh điểm neo (cỡ gốc giữ bậc 0,5, mục 21)
+            let ok = false;
+            try { ok = fade > 0.003 && FA.ve(c, o.ma, ax, ay, o.gian ? (Math.max(0, tv) / Math.max(1e-4, base)) * gy * 0.999 : Math.max(0, tv), o.goc, o.sc, o.f < 0, mo0 * fade, o.mau, o.kieu); } finally { if (nay !== 1) c.restore(); }
+            if (!ok) o.t = 0;
+            break;
+          }
           if (!FA || !FA.ve(c, o.ma, th ? th.x : o.x, th ? th.y : o.y, o.gian ? k * FA.giay(o.ma) * 0.999 : o.t0 - o.t, o.goc, o.sc, o.f < 0, moA, o.mau, o.kieu)) o.t = 0;
           break;
         }
@@ -2453,16 +2479,41 @@
     if (G.noRender || !S || S.W !== G.getWorld()) return;
     try { vienBe(c, P); } finally { if (S.vdSau) { S.vdSau = false; try { veVdSau(c); } catch (e) { fail(e); } } }
   };
+  // Soát mượt phiên 3 mục 22 (?venhe=0: dựng lại mỗi khung như cũ): ba tấm viền chỉ dựng lại khi HÌNH Cu Tí đổi (khoá = động tác, khung,
+  // vũ khí + góc làm tròn 2°, mặt, vị trí lẻ nửa điểm ảnh, nhún / nghiêng, màu viền; js/zed_moi.js G.zedMoi.khoaVe). Trạng thái có nhuộm /
+  // hào quang / ánh vũ khí chạy theo thời gian, em bé khác (không phải bộ Zed): khoá null → dựng mỗi khung như cũ. Máy yếu (Tiết kiệm pin
+  // bật hoặc ?fps=30): bỏ hẳn viền (chỉ là lớp tô thêm cho dễ nhìn, thân bé vẫn vẽ đủ).
+  let VBK = null;
+  const FPS30 = !!(G.coTat && G.coTat(/[?&]fps=30(&|$)/)), pinYeu = () => !!((G.save && G.save.pin) || FPS30);
   function vienBe(c, P) {
     if (!vienBat(P)) return;
+    const nhe = G.VE_NHE !== false;
+    if (nhe && pinYeu()) return;
     try {
       const D = G.theme.DOC, n = G.NET || 1, w = VBW * n, h = VBH * n;
-      if (!VB) { VB = document.createElement('canvas'); VB2 = document.createElement('canvas'); VB3 = document.createElement('canvas'); }
-      if (VB.width !== w || VB.height !== h) { VB.width = VB2.width = VB3.width = w; VB.height = VB2.height = VB3.height = h; }
+      if (!VB) { VB = document.createElement('canvas'); VB2 = document.createElement('canvas'); VB3 = document.createElement('canvas'); VBK = null; }
+      if (VB.width !== w || VB.height !== h) { VB.width = VB2.width = VB3.width = w; VB.height = VB2.height = VB3.height = h; VBK = null; }
       const g = VB.getContext('2d'), g2 = VB2.getContext('2d'), g3 = VB3.getContext('2d'), X = Math.round(P.x) - VBX, Y = Math.round(P.y) - VBY;
+      const a = G.heroArgs(P); a.noShadow = true; a.alpha = 1; a.flash = false; // hình bóng đặc (lúc lăn né thân bé mờ: viền vẫn đủ nét, không loang vào thân)
+      let k0 = null;
+      if (nhe && G.zedMoi && G.zedMoi.khoaVe) {
+        try { k0 = G.zedMoi.khoaVe(a); } catch (e) { k0 = null; }
+        if (k0 != null) { const lt = G.lamTron || Math.round; k0 += '|' + (lt(P.x) - X) + ',' + (lt(P.y) - Y) + '|' + n + '|' + (P.fxS || 0) + ',' + (P.fxL || 0) + ',' + (P.fxHop || 0) + '|' + D.vienBe + D.vienToi; }
+      }
+      if (k0 == null || k0 !== VBK) veVien(g, g2, g3, D, n, w, h, X, Y, a, P);
+      VBK = k0;
+      const a0 = c.globalAlpha;
+      c.imageSmoothingEnabled = false;
+      if (D.bongBe > 0) { c.globalAlpha = a0 * D.bongBe; c.drawImage(VB, X, Y, VBW, VBH); }
+      if (D.vienToiA > 0) { c.globalAlpha = a0 * D.vienToiA; c.drawImage(VB3, X, Y, VBW, VBH); }
+      c.globalAlpha = a0 * D.vienA; c.drawImage(VB2, X, Y, VBW, VBH);
+      c.globalAlpha = a0;
+    } catch (e) { VBK = null; fail(e); }
+  }
+  function veVien(g, g2, g3, D, n, w, h, X, Y, a, P) {
+    {
       const sach = (q) => { q.setTransform(1, 0, 0, 1, 0, 0); q.globalAlpha = 1; q.globalCompositeOperation = 'source-over'; q.clearRect(0, 0, w, h); };
       sach(g); g.setTransform(n, 0, 0, n, -X * n, -Y * n); g.imageSmoothingEnabled = false;
-      const a = G.heroArgs(P); a.noShadow = true; a.alpha = 1; a.flash = false; // hình bóng đặc (lúc lăn né thân bé mờ: viền vẫn đủ nét, không loang vào thân)
       const on = fx.xf && fx.xf(g, P, 0);
       G.art.hero(g, a);
       if (on) g.restore();
@@ -2473,13 +2524,7 @@
       g3.globalCompositeOperation = 'source-in'; g3.fillStyle = D.vienToi || '#1a0e08'; g3.fillRect(0, 0, w, h);
       g2.globalCompositeOperation = 'destination-out'; g2.drawImage(VB, 0, 0);
       g2.globalCompositeOperation = 'source-in'; g2.fillStyle = D.vienBe; g2.fillRect(0, 0, w, h);
-      const a0 = c.globalAlpha;
-      c.imageSmoothingEnabled = false;
-      if (D.bongBe > 0) { c.globalAlpha = a0 * D.bongBe; c.drawImage(VB, X, Y, VBW, VBH); }
-      if (D.vienToiA > 0) { c.globalAlpha = a0 * D.vienToiA; c.drawImage(VB3, X, Y, VBW, VBH); }
-      c.globalAlpha = a0 * D.vienA; c.drawImage(VB2, X, Y, VBW, VBH);
-      c.globalAlpha = a0;
-    } catch (e) { fail(e); }
+    }
   }
   fx.dim2 = dim2; // js/combat.js: vùng của em bé trên sàn cũng nhạt như vậy
   layer('drawGround', (c) => { veLop(c, 0); });

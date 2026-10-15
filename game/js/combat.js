@@ -1051,15 +1051,73 @@
       roundShadow: !!W.geo, // phòng vuông nhìn từ trên: bóng đổ tròn
     };
   };
+  // ---------- Soát mượt phiên 3, mục 1: nội suy khi vẽ (cờ G.NOI_SUY, ?noisuy=0) ----------
+  // Logic chạy 60 nhịp/giây nhưng màn 90/120 Hz vẽ nhiều hơn số nhịp: đầu mỗi nhịp (G.tick) nhớ vị trí em bé, quái, trùm và camera;
+  // lúc vẽ đặt tạm vị trí trung gian (vị trí trước + (vị trí mới − vị trí trước) × G.nsAlpha), vẽ xong trả lại đúng vị trí thật.
+  // Chỉ là hình: luật chơi, va chạm, chạm đều dùng vị trí thật. Dời quá NS_NHAY điểm ảnh trong một nhịp (đổi phòng, lướt xa, kéo tức
+  // thời) thì coi là dịch chuyển, vẽ đúng chỗ mới như cũ.
+  const NS_NHAY = 24, NS_CAM = 60, nsDs = [];
+  let nsW = null, nsCamCu = 0, nsCamThat = 0, nsCamDoi = false;
+  G.nsChup = function () {
+    if (!W || G.noRender || G.scene !== G.StageScene) { nsW = null; return; }
+    nsW = W; nsCamCu = W.cam;
+    const P = W.P;
+    if (P) { P._nsx = P.x; P._nsy = P.y; }
+    for (const e of W.ents) { e._nsx = e.x; e._nsy = e.y; }
+    if (W.boss) { W.boss._nsx = W.boss.x; W.boss._nsy = W.boss.y; }
+  };
+  function nsDoi(o, a) {
+    if (!o || o._nsx == null) return;
+    const dx = o.x - o._nsx, dy = o.y - o._nsy;
+    if ((dx === 0 && dy === 0) || !(Math.abs(dx) <= NS_NHAY && Math.abs(dy) <= NS_NHAY)) return;
+    nsDs.push(o, o.x, o.y);
+    o.x = o._nsx + dx * a; o.y = o._nsy + dy * a;
+  }
+  G.nsVao = function (a) {
+    nsDs.length = 0; nsCamDoi = false;
+    if (!W || nsW !== W || G.scene !== G.StageScene || !(a >= 0 && a < 1)) return false;
+    nsDoi(W.P, a);
+    for (const e of W.ents) nsDoi(e, a);
+    if (W.boss) nsDoi(W.boss, a);
+    const dc = W.cam - nsCamCu;
+    if (dc !== 0 && Math.abs(dc) <= NS_CAM) { nsCamThat = W.cam; W.cam = nsCamCu + dc * a; nsCamDoi = true; }
+    return true;
+  };
+  G.nsRa = function () {
+    for (let i = 0; i < nsDs.length; i += 3) { const o = nsDs[i]; o.x = nsDs[i + 1]; o.y = nsDs[i + 2]; }
+    nsDs.length = 0;
+    if (nsCamDoi && W) W.cam = nsCamThat;
+    nsCamDoi = false;
+  };
+  // mục 22: bút + hàm fx của khung đang vẽ (hàm vẽ quái nhớ theo quái đọc qua đây), mảng danh sách vẽ dùng lại
+  const DW = { c: null, A: null, ent: null, rec: null, xf: null }, DW_LIST = [], DW_MUC = typeof WeakMap !== 'undefined' ? new WeakMap() : new Map();
+  function veQuaiDW(e) {
+    return () => {
+      const c = DW.c, A = DW.A, xf = DW.xf, rec = DW.rec, ent = DW.ent;
+      const up = e.mvLift > 0 ? Math.round(Math.sin((e.mvLift / 0.45) * Math.PI) * 10) : 0; // bị Địa Chấn hất tung
+      if (xf && xf(c, e, up)) { // đã gồm giật lùi
+        if (e.illusion) A.boss(c, e); else A.enemy(c, e);
+        c.restore();
+      } else {
+        const k = rec ? rec(e) : 0; // giật lùi khi trúng đòn: chỉ dời hình
+        if (k || up) c.translate(k, -up);
+        if (e.illusion) A.boss(c, e); else A.enemy(c, e);
+        if (k || up) c.translate(-k, up);
+      }
+      if (ent) ent(c, e);
+    };
+  }
+  // Camera đã làm tròn dùng cho cả khung vẽ (thanh máu quái ở js/stage.js dùng chung, không lệch với thân quái).
+  G.camVe = (w) => { w = w || W; return w ? (G.lamTron ? G.lamTron(w.cam || 0) : Math.round(w.cam || 0)) : 0; };
   // Thứ tự lớp: nền, vùng và vũng, hiệu ứng sát đất, nhân vật (kèm hiệu ứng bám theo), đạn, hiệu ứng phía trên, rồi lớp giao diện.
   G.drawWorld = function (reg) {
     const c = G.wx, A = G.art, P = W.P;
     const F = G.noRender ? null : G.fx;
-    const cam = Math.round(W.cam);
+    const cam = G.NOI_SUY !== false ? G.camVe(W) : Math.round(W.cam);
     let sx = 0, sy = 0;
     if (F && F.shakeOffset) { const o = F.shakeOffset(); sx = o.x; sy = o.y; }
     else if (W.shake > 0) { sx = Math.round(Math.random() * 4 - 2); sy = Math.round(Math.random() * 2 - 1); }
-    G.wxDat(c, 0, 0);
+    G.wxDat(c, G.NOI_SUY !== false ? Math.round(cam) - cam : 0, 0); // mục 1: nền tự làm tròn camera về số nguyên → dời nốt phần nửa điểm ảnh cho khớp nhân vật
     A.bg(c, reg, W.seed, cam, W.w, W.shrink);
     G.wxDat(c, -cam + sx, sy);
     const dimBe = F && F.dim2 ? F.dim2() : 1; // độ đọc trận 12/10: vũng / vùng do EM BÉ tạo nhạt đi (vùng của quái giữ nguyên)
@@ -1080,8 +1138,13 @@
     }
     if (F && F.drawGround) F.drawGround(c);
     const ent = F && F.entity, rec = F && F.recoil, xf = F && F.xf; // xf: nhún, nghiêng, nảy khi trúng đòn (js/fx.js), chỉ đổi hình
-    const list = [];
-    for (const e of W.ents) {
+    // Soát mượt phiên 3 mục 22 (?venhe=0: tạo mới mỗi khung như cũ): dùng lại mảng danh sách vẽ và MỘT mục { y, f } cho mỗi quái (hàm vẽ
+    // tạo một lần cho mỗi quái, đọc bút / hàm fx của khung hiện tại qua DW) → không sinh hàng chục hàm + đối tượng mới mỗi khung.
+    const nhe = G.VE_NHE !== false;
+    DW.c = c; DW.A = A; DW.ent = ent; DW.rec = rec; DW.xf = xf;
+    const list = nhe ? (DW_LIST.length = 0, DW_LIST) : [];
+    if (nhe) for (const e of W.ents) { let it = DW_MUC.get(e); if (!it) DW_MUC.set(e, (it = { y: 0, f: veQuaiDW(e) })); it.y = e.y; list.push(it); }
+    else for (const e of W.ents) {
       list.push({ y: e.y, f: () => {
         const up = e.mvLift > 0 ? Math.round(Math.sin((e.mvLift / 0.45) * Math.PI) * 10) : 0; // bị Địa Chấn hất tung
         if (xf && xf(c, e, up)) { // đã gồm giật lùi

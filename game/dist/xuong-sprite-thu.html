@@ -71,7 +71,7 @@
 <div id="lk-tai" data-bia="||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAMEBQYH/8QAKRAAAQMCBQMDBQAAAAAAAAAAAQIDEQAEBRIhMUETFGEiQnEVUWKBsf/EABcBAAMBAAAAAAAAAAAAAAAAAAIDBAX/xAAlEQACAQEFCQAAAAAAAAAAAAABAgADBBExUfASEyEyM0FxobH/2gAMAwEAAhEDEQA/AOfNMWj9zbWiEtBsn1ugGTPCvjXajFcBNssNsvoeMxlCgVJqzCbhHftG3aGdcJBUAUn7neRzTMcumxjD0hDSkmFBtWZMjSdR5qamzb4DtHOiimTfxmt/T3UpzLBCTt5q22sWekt0vBvImSF8+KyF5eWDaGFNZlr6YkKGiTPGvzSutZDDX1sF3P0wPUBMzvP62rStACi5TEWB9pizi/H1JsLUo3NhKiZUOfyqbE1Hu3jJkqPNFFRUuprOHU5dZSVwmE6+2mNk9u7r7R/aKKqqQLNifB+T/9k=|||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAgf/xAAmEAACAgEEAQQCAwAAAAAAAAABAgMRAAQSITEFE1FhgSJBcbHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQIDBAX/xAAeEQABBAIDAQAAAAAAAAAAAAAAAQIDEiExBBEyIv/aAAwDAQACEQMRAD8A51EIZIo53EASNwHG07mBPFno9HFyeOhl1Y2yFIbtjVkDnr54yzx2vaLSyII1cELvBQEVu5PyeshTWvFJG6qi7OR+A9/4xoa3yQzWRvzsH8YkWrkCMZYlsoSvJHfWUalzFpI4/TRBZbca3HsUcXqvJvPqpZgEAewAFHAP1mZ9aZIoyqKWVa4jX3P+jByGor8aNDgT0gXvDiHTs1EbjRAsX3jKuEH92Ofs4YYGeim/yLulscHjFuT6YNno/wBnDDGfsEej/9k=" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5&&!/[?&]biacu=1(&|$)/.test(q)){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.15-2202";
+(window.G = window.G || {}).VERSION = "lk-2026.10.15-2210";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -2819,7 +2819,8 @@
   function syncTap(e) {
     if (!G.syncTaps.length || performance.now() - syncAt < 400) return;
     const t0 = e.changedTouches && e.changedTouches[0];
-    const p = pos(t0 ? { clientX: t0.clientX, clientY: t0.clientY } : e);
+    let p = pos(t0 ? { clientX: t0.clientX, clientY: t0.clientY } : e);
+    if (G.uiBang) p = G.uiBang.doiCham(p); // mục 15: bảng đang phóng lúc mở → đổi toạ độ ngược đúng phép phóng (khớp hình)
     for (const b of G.syncTaps) {
       if (p.x >= b.x && p.x <= b.x + b.w && p.y >= b.y && p.y <= b.y + b.h) { syncAt = performance.now(); try { b.fn(); } catch (err) { /* bỏ qua */ } return; }
     }
@@ -2831,6 +2832,10 @@
   G.dropPointers = function () { G.pointers.clear(); G.downs.length = 0; G.click = null; };
   // Đánh dấu các ngón đang giữ là cũ: nhấc lên sẽ không tính là bấm vào màn hình mới.
   G.stalePointers = function () { for (const o of G.pointers.values()) o.stale = true; };
+  // Soát mượt phiên 3 mục 22 (?venhe=0: chép mảng như cũ): hỏi "có ngón nào thoả fn" / "ngón đầu tiên thoả fn" mà không chép G.pointers
+  // ra mảng mới mỗi lần (ui.button hỏi cho từng nút mỗi khung).
+  G.coTro = function (fn) { if (G.VE_NHE === false) return [...G.pointers.values()].some(fn); for (const p of G.pointers.values()) if (fn(p)) return true; return false; };
+  G.timTro = function (fn) { if (G.VE_NHE === false) return [...G.pointers.values()].find(fn); for (const p of G.pointers.values()) if (fn(p)) return p; return undefined; };
   function dropInput() { G.dropPointers(); G.keys = {}; G.keyP = {}; }
   window.addEventListener('blur', dropInput);
   document.addEventListener('visibilitychange', () => {
@@ -3237,7 +3242,7 @@
   };
   ui.btn = function (x, y, w, h, label, o) {
     o = o || {};
-    const hover = [...G.pointers.values()].some((p) => !p.role && !p.stale && G.inRect(p, x, y, w, h));
+    const hover = G.coTro((p) => !p.role && !p.stale && G.inRect(p, x, y, w, h));
     const base = o.disabled ? '#3a322c' : o.color || '#8a4b25';
     ui.rect(x, y, w, h, hover && !o.disabled ? '#b5672f' : base, o.disabled ? '#51463d' : '#e2b36a');
     const size = o.size || 9;
@@ -3265,9 +3270,139 @@
     if (stroke) { c.strokeStyle = stroke; c.lineWidth = 1.2; c.stroke(); }
   };
 
+  // ---------- SOÁT MƯỢT PHIÊN 3 (15/10, docs/review/ke-hoach-cai-thien/soat-muot/bao-cao-phien-3.md): cờ quay lui, mỗi mục một cờ ----------
+  // Chỉ đổi HÌNH (cách vẽ), không đổi luật chơi. Cờ bật mặc định; đặt G.X = false trước khi nạp, hoặc thêm cờ trên địa chỉ:
+  //   ?noisuy=0  mục 1: nội suy vị trí khi vẽ + làm tròn camera / nhân vật cùng kiểu nửa điểm ảnh  (G.NOI_SUY)
+  //   ?humo=0    mục 8: hiệu ứng ảnh một lần mờ dần cuối + giữ khung cuối, nổ / trúng đòn nảy nhẹ (G.HU_MO, js/fx.js)
+  //   ?bthoa=0   mục 9A: vùng báo trước hoà khung kế + nhịp sáng 0,15 giây cuối (G.BT_HOA, js/bao_truoc.js)
+  //   ?hoalap=0  mục 16A: hiệu ứng lặp chậm (4,5–9 khung/giây) hoà nhẹ khung kế (G.HOA_LAP, js/fx_anh.js)
+  //   ?uimuot=0  mục 15: chuyển màn mờ ra / vào, bảng mở / đóng, truyện hoà ảnh + chữ chạy, thanh kinh nghiệm chạy, màn tải mờ (G.UI_MUOT)
+  //   ?thocuti=0 mục 17: Cu Tí đứng thở / tụ lực búa phát đi đi về về (G.THO_CUTI, js/zed_moi.js)
+  //   ?nhipcuti=0 mục 20: Cu Tí giữ pha bước chung cho đi / chạy, vùng đệm đổi đi↔chạy (G.NHIP_CUTI, js/zed_moi.js)
+  //   ?tile05=0  mục 21: cỡ hiệu ứng ảnh làm tròn bậc 0,5; đạn xoay theo 16 hướng (G.TILE05, js/fx_anh.js, js/fx_dan.js)
+  //   ?venhe=0   mục 22: bớt việc vẽ (viền bé, bộ nhớ thanh, vệt chém, quạt báo trước, mảng tạm) (G.VE_NHE)
+  G.coTat = function (re) { try { return re.test(String((typeof location !== 'undefined' && location.search) || '')); } catch (e) { return false; } };
+  for (const [k, ten] of [['NOI_SUY', 'noisuy'], ['HU_MO', 'humo'], ['BT_HOA', 'bthoa'], ['HOA_LAP', 'hoalap'], ['UI_MUOT', 'uimuot'], ['THO_CUTI', 'thocuti'], ['NHIP_CUTI', 'nhipcuti'], ['TILE05', 'tile05'], ['VE_NHE', 'venhe']]) {
+    if (G[k] == null) G[k] = !G.coTat(new RegExp('[?&]' + ten + '=0(&|$)'));
+  }
+  // Mục 1: làm tròn vị trí vẽ. Bật: theo nửa điểm ảnh game (= 1 điểm ảnh thật khi G.NET = 2, không vỡ nét); camera và nhân vật dùng CÙNG
+  // một kiểu nên không lệch nhau 1 điểm ảnh khi camera đuổi chậm. Tắt (?noisuy=0) hoặc Độ nét Thường (G.NET = 1): Math.round như cũ.
+  G.lamTron = (v) => { const n = G.NOI_SUY !== false ? G.NET || 1 : 1; return n > 1 ? Math.round(v * n) / n : Math.round(v); };
+  G.nsAlpha = 1; // phần lẻ của nhịp logic lúc vẽ (0..1), do vòng lặp đặt; js/combat.js dùng để vẽ ở vị trí trung gian
+
+  // ---------- Mục 15: bảng mở / đóng (cờ G.UI_MUOT) ----------
+  // Mở: phóng 0,94 → 1 cùng độ hiện trong 0,12 giây (ease-out) quanh giữa khung. Trong lúc phóng, toạ độ chạm (G.click, nút chạy ngay
+  // G.syncTaps) được đổi ngược đúng phép phóng → chạm vào đâu trên hình là đúng nút đó (vùng chạm khớp hình đang thấy).
+  // Đóng: hình bảng vừa đóng (chụp lớp #ui của khung trước) mờ dần 0,12 giây đè lên màn mới; không nhận chạm (chạm rơi vào màn mới bên dưới).
+  // Làng: cả lớp #ui khi đang mở bảng (nền làng tối ở #world không phóng). Trong ải: chỉ phần bảng (js/stage.js gọi G.uiBang.vao / ra).
+  const BANG_MO = 0.12, BANG_DONG = 0.12;
+  const BANG_AI = { paused: 1, map: 1, bag: 1, result: 1, dead: 1, chest: 1, merchant: 1, curse: 1 };
+  const BANG_LANG_KHONG = { hub: 1, title: 1, map: 1, aingay: 1 }; // màn đầy đủ / làng: không tính là bảng
+  const UB = { khoa: '', canh: null, mo: -9, dong: -9, bong: null, bongCv: null, s: 1, a: 1, phong: false, clickGoc: null, clickMoi: null };
+  function khoaBang() {
+    try {
+      const sc = G.scene;
+      if (sc && sc === G.Village) { const V = G.villageApi && G.villageApi.V; return V && V.tab && !BANG_LANG_KHONG[V.tab] ? 'lang:' + V.tab : ''; }
+      if (sc && sc === G.StageScene && G.getRun) { const S = G.getRun(); return S && BANG_AI[S.mode] ? 'ai:' + S.mode : ''; }
+    } catch (e) { /* bỏ qua */ }
+    return '';
+  }
+  const daoDong = (u) => 1 - (1 - u) * (1 - u) * (1 - u); // ease-out
+  // Gọi đầu khung vẽ (trước ui.begin): nhận ra bảng vừa mở / vừa đóng. Đóng thì chụp lại lớp #ui của khung trước làm bóng mờ dần.
+  function bangDauKhung(now) {
+    UB.s = 1; // phép phóng chỉ còn hiệu lực nếu khung này lại phóng (bangVao); bảng đóng giữa chừng thì chạm không bị đổi nữa
+    if (G.UI_MUOT === false) { UB.khoa = ''; UB.bong = null; return; }
+    const k = khoaBang(), sc = G.scene;
+    if (sc !== UB.canh) { UB.canh = sc; UB.khoa = k; UB.mo = -9; UB.bong = null; return; } // đổi màn: phần chuyển màn lo
+    if (k === UB.khoa) return;
+    if (k && !UB.khoa) UB.mo = now; // từ không bảng → có bảng: mở
+    else if (!k && UB.khoa) { // đóng bảng: chụp bóng
+      try {
+        if (!UB.bongCv) UB.bongCv = document.createElement('canvas');
+        const b = UB.bongCv;
+        if (b.width !== uiCv.width || b.height !== uiCv.height) { b.width = uiCv.width; b.height = uiCv.height; }
+        const g = b.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, b.width, b.height); g.drawImage(uiCv, 0, 0);
+        UB.bong = b; UB.dong = now;
+      } catch (e) { UB.bong = null; }
+      UB.mo = -9;
+    }
+    UB.khoa = k;
+  }
+  function bangCuoiKhung(now) { // vẽ bóng bảng vừa đóng (đè lên trên, không nhận chạm)
+    if (!UB.bong) return;
+    const u = (now - UB.dong) / BANG_DONG;
+    if (u >= 1 || u < 0) { UB.bong = null; return; }
+    const c = G.ux; c.save();
+    try { c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = 1 - daoDong(u); c.drawImage(UB.bong, 0, 0); } finally { c.restore(); }
+  }
+  // Áp phép phóng mở bảng lên G.ux (đã ui.begin). Trả về true nếu đã áp (khi đó PHẢI gọi G.uiBang.ra()).
+  function bangVao(now) {
+    if (G.UI_MUOT === false || UB.phong) return false;
+    const u = (now - UB.mo) / BANG_MO;
+    if (!(u >= 0 && u < 1)) { UB.s = 1; return false; }
+    const e = daoDong(u), s = 0.94 + 0.06 * e, cx = G.W / 2, cy = G.H / 2, c = G.ux;
+    c.save(); c.translate(cx, cy); c.scale(s, s); c.translate(-cx, -cy); c.globalAlpha *= e;
+    UB.s = s; UB.phong = true;
+    UB.clickGoc = G.click;
+    if (G.click) { G.click = { x: cx + (G.click.x - cx) / s, y: cy + (G.click.y - cy) / s }; UB.clickMoi = G.click; } else UB.clickMoi = null;
+    return true;
+  }
+  function bangRa() {
+    if (!UB.phong) return;
+    UB.phong = false;
+    try { G.ux.restore(); } catch (e) { /* bỏ qua */ }
+    if (UB.clickMoi && G.click === UB.clickMoi) G.click = UB.clickGoc; // chạm chưa dùng: trả lại toạ độ gốc cho phần vẽ sau
+    UB.clickGoc = UB.clickMoi = null;
+  }
+  // Toạ độ chạm của nút chạy ngay (G.syncTaps) theo đúng phép phóng của khung vừa vẽ.
+  function bangDoiCham(p) {
+    if (!(UB.s < 1) || G.UI_MUOT === false) return p;
+    const cx = G.W / 2, cy = G.H / 2;
+    return { x: cx + (p.x - cx) / UB.s, y: cy + (p.y - cy) / UB.s };
+  }
+  G.uiBang = { vao: () => bangVao(performance.now() / 1000), ra: bangRa, khoa: khoaBang, doiCham: bangDoiCham, _UB: UB };
+
+  // ---------- Mục 15: chuyển màn (cờ G.UI_MUOT) ----------
+  // Đổi màn vẫn tức thì như cũ (luật, enter(), chạm của màn mới không trễ). Chỉ phần HÌNH: 0,1 giây đầu hiện ảnh chụp màn cũ tối dần
+  // về đen (trong lúc đó bỏ chạm, vì màn mới chưa thấy), rồi 0,15 giây màn mới hiện dần từ đen. Tổng 0,25 giây.
+  const CM_RA = 0.1, CM_VAO = 0.15;
+  const CM = { cho: false, at: -9, cv: null, co: false };
+  function chuyenDauKhung(now) { // gọi đầu khung vẽ, trước khi màn mới vẽ đè: chụp màn cũ (#world + #ui của khung trước)
+    if (!CM.cho) return;
+    CM.cho = false;
+    try {
+      if (!CM.cv) CM.cv = document.createElement('canvas');
+      const b = CM.cv;
+      if (b.width !== uiCv.width || b.height !== uiCv.height) { b.width = uiCv.width; b.height = uiCv.height; }
+      const g = b.getContext('2d'), d = G.dpr || 1;
+      g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.fillStyle = '#000'; g.fillRect(0, 0, b.width, b.height);
+      g.imageSmoothingEnabled = false;
+      g.drawImage(world, G.ox * d, G.oy * d, G.W * G.scale * d, G.H * G.scale * d);
+      g.drawImage(uiCv, 0, 0);
+      CM.co = true;
+    } catch (e) { CM.co = false; }
+    CM.at = now;
+  }
+  function chuyenCuoiKhung(now) {
+    const u = now - CM.at;
+    if (!(u >= 0) || u >= CM_RA + CM_VAO) { CM.co = false; return; }
+    const c = G.ux, d = G.dpr || 1;
+    c.save();
+    try {
+      c.setTransform(1, 0, 0, 1, 0, 0);
+      const x = G.ox * d, y = G.oy * d, w = G.W * G.scale * d, h = G.H * G.scale * d;
+      if (u < CM_RA) {
+        if (CM.co && CM.cv) { c.globalAlpha = 1; c.drawImage(CM.cv, 0, 0); }
+        c.globalAlpha = u / CM_RA; c.fillStyle = '#000'; c.fillRect(x, y, w, h);
+      } else { const k = 1 - (u - CM_RA) / CM_VAO; c.globalAlpha = k * k; c.fillStyle = '#000'; c.fillRect(x, y, w, h); }
+    } finally { c.restore(); }
+  }
+  const dangChuyenRa = (now) => G.UI_MUOT !== false && now - CM.at >= 0 && now - CM.at < CM_RA;
+
   // ---------- vòng lặp ----------
   G.scene = null;
   G.setScene = function (s) {
+    if (G.UI_MUOT !== false && G.scene && s !== G.scene && !G.noRender && daVe) CM.cho = true; // mục 15: lần vẽ tới chụp màn cũ rồi mờ
     // Phiên hiệu năng (V2): về làng thì bỏ khung / tấm nhuộm của quái và trùm vừa gặp (ải sau gặp quái khác; cần thì tự dựng lại).
     if (s && s === G.Village && G.scene !== s && G.boNho && G.BO_NHO) { try { G.boNho.xoaNhom('quai'); } catch (e) { /* bỏ qua */ } }
     G.scene = s;
@@ -3281,6 +3416,7 @@
   let last = 0, acc = 0, daVe = false;
   G.tick = function () {
     G.time += STEP;
+    if (G.NOI_SUY !== false && G.nsChup) { try { G.nsChup(); } catch (e) { /* bỏ qua */ } } // mục 1: nhớ vị trí trước lượt tính (js/combat.js)
     if (G.scene) G.scene.update(STEP);
     G.keyP = {};
     G.downs.length = 0;
@@ -3350,10 +3486,27 @@
     veCuoi = performance.now() / 1000;
     if (G.scene && !G.noRender) {
       if (G.NET !== G.netMuon()) G.setNet(G.netMuon());
+      const bayGio = veCuoi;
+      chuyenDauKhung(bayGio); // mục 15: vừa đổi màn → chụp màn cũ trước khi màn mới vẽ đè
+      bangDauKhung(bayGio); // mục 15: bảng vừa mở / đóng
+      if (dangChuyenRa(bayGio)) { G.click = null; G.syncTaps = []; } // đang hiện ảnh màn cũ: chạm chưa nhắm được gì của màn mới
       ui.begin();
-      G.scene.draw();
+      G.nsAlpha = G.NOI_SUY !== false ? G.clamp(acc / STEP, 0, 1) : 1;
+      const ns = G.NOI_SUY !== false && G.nsVao ? G.nsVao(G.nsAlpha) : false; // mục 1: vẽ ở vị trí trung gian giữa hai lượt tính
+      const bl = UB.khoa.indexOf('lang:') === 0 && G.uiBang.vao(); // mục 15: bảng ở làng đang mở → phóng cả lớp #ui
+      try { G.scene.draw(); } finally { if (bl) G.uiBang.ra(); if (ns) G.nsRa(); }
       if (G.theme && G.theme.endFrame) G.theme.endFrame(); // tên biểu tượng tài nguyên khi chạm vào
-      if (!daVe) { daVe = true; try { const el = document.getElementById('lk-tai'); if (el) el.remove(); } catch (e) { /* bỏ qua */ } } // Đợt 1: khung hình đầu đã vẽ xong → gỡ màn hình tải (index.html)
+      bangCuoiKhung(bayGio);
+      chuyenCuoiKhung(bayGio);
+      if (dangChuyenRa(bayGio)) G.syncTaps = [];
+      if (!daVe) { // Đợt 1: khung hình đầu đã vẽ xong → gỡ màn hình tải (index.html). Mục 15: mờ dần 0,3 giây rồi mới gỡ (?uimuot=0: gỡ ngay)
+        daVe = true;
+        try {
+          const el = document.getElementById('lk-tai');
+          if (el && G.UI_MUOT !== false && el.style) { el.style.transition = 'opacity 0.3s ease-out'; el.style.opacity = '0'; setTimeout(() => { try { el.remove(); } catch (e) { /* bỏ qua */ } }, 320); }
+          else if (el) el.remove();
+        } catch (e) { /* bỏ qua */ }
+      }
       if (!daGoiSau) { daGoiSau = true; try { if (G.spriteCustom && G.spriteCustom.napSau) G.spriteCustom.napSau(); } catch (e) { /* bỏ qua */ } } // Đợt 10: màn chào đã vẽ → mới bắt đầu tải phần ảnh tải sau (bản 2 tệp)
       veTaiSau();
       if (G.portrait) {
@@ -9194,7 +9347,7 @@
     }
     const A = G.art;
     if (!fr) { if (A && A.heroOld) return A.heroOld.call(A, c, o); return; }
-    const x = Math.round(o.x), y = Math.round(o.y), f = o.face < 0 ? -1 : 1, t = (o.t != null ? o.t : G.time) || 0;
+    const x = (G.lamTron || Math.round)(o.x), y = (G.lamTron || Math.round)(o.y), f = o.face < 0 ? -1 : 1, t = (o.t != null ? o.t : G.time) || 0; // soát mượt phiên 3 mục 1
     // Ghép: vũ khí nhăn mặt khoảng nửa giây sau khi bé trúng đòn; ở làng (o.wmood) thì theo ý nơi gọi.
     if (o.p && !o.wmood) {
       if (o.p.hurtT > 0) HURT.set(o.p, t + 0.5);
@@ -9235,7 +9388,7 @@
     try { if (G.weaponArt && G.weaponArt.tipLen && !o.plainWeapon) L = G.weaponArt.tipLen(G.weaponArt.fromWeapon(o.weapon || {})); } catch (e) { L = 0; }
     if (!(L > 4)) L = w.type === 'spear' ? 48 : w.type === 'hammer' ? 34 : 36;
     const nb = G.spriteCustom && G.spriteCustom.nhunBuoc ? G.spriteCustom.nhunBuoc(o) : 0;
-    const f = o.face < 0 ? -1 : 1, X0 = Math.round(o.x) + (f < 0 ? 1 : 0), Y0 = Math.round(o.y) + nb;
+    const f = o.face < 0 ? -1 : 1, X0 = (G.lamTron || Math.round)(o.x) + (f < 0 ? 1 : 0), Y0 = (G.lamTron || Math.round)(o.y) + nb;
     const r = (w.ang * Math.PI) / 180, sx = w.sx == null ? 1 : w.sx;
     let gx = w.x, gy = w.y;
     if (G.CO_VK && !o.plainWeapon) { // ảnh AI co nhỏ: vệt bám đúng mũi của hình đang vẽ (điểm cầm đã dời, dài = dài ảnh x hệ số co)
@@ -11849,15 +12002,73 @@
       roundShadow: !!W.geo, // phòng vuông nhìn từ trên: bóng đổ tròn
     };
   };
+  // ---------- Soát mượt phiên 3, mục 1: nội suy khi vẽ (cờ G.NOI_SUY, ?noisuy=0) ----------
+  // Logic chạy 60 nhịp/giây nhưng màn 90/120 Hz vẽ nhiều hơn số nhịp: đầu mỗi nhịp (G.tick) nhớ vị trí em bé, quái, trùm và camera;
+  // lúc vẽ đặt tạm vị trí trung gian (vị trí trước + (vị trí mới − vị trí trước) × G.nsAlpha), vẽ xong trả lại đúng vị trí thật.
+  // Chỉ là hình: luật chơi, va chạm, chạm đều dùng vị trí thật. Dời quá NS_NHAY điểm ảnh trong một nhịp (đổi phòng, lướt xa, kéo tức
+  // thời) thì coi là dịch chuyển, vẽ đúng chỗ mới như cũ.
+  const NS_NHAY = 24, NS_CAM = 60, nsDs = [];
+  let nsW = null, nsCamCu = 0, nsCamThat = 0, nsCamDoi = false;
+  G.nsChup = function () {
+    if (!W || G.noRender || G.scene !== G.StageScene) { nsW = null; return; }
+    nsW = W; nsCamCu = W.cam;
+    const P = W.P;
+    if (P) { P._nsx = P.x; P._nsy = P.y; }
+    for (const e of W.ents) { e._nsx = e.x; e._nsy = e.y; }
+    if (W.boss) { W.boss._nsx = W.boss.x; W.boss._nsy = W.boss.y; }
+  };
+  function nsDoi(o, a) {
+    if (!o || o._nsx == null) return;
+    const dx = o.x - o._nsx, dy = o.y - o._nsy;
+    if ((dx === 0 && dy === 0) || !(Math.abs(dx) <= NS_NHAY && Math.abs(dy) <= NS_NHAY)) return;
+    nsDs.push(o, o.x, o.y);
+    o.x = o._nsx + dx * a; o.y = o._nsy + dy * a;
+  }
+  G.nsVao = function (a) {
+    nsDs.length = 0; nsCamDoi = false;
+    if (!W || nsW !== W || G.scene !== G.StageScene || !(a >= 0 && a < 1)) return false;
+    nsDoi(W.P, a);
+    for (const e of W.ents) nsDoi(e, a);
+    if (W.boss) nsDoi(W.boss, a);
+    const dc = W.cam - nsCamCu;
+    if (dc !== 0 && Math.abs(dc) <= NS_CAM) { nsCamThat = W.cam; W.cam = nsCamCu + dc * a; nsCamDoi = true; }
+    return true;
+  };
+  G.nsRa = function () {
+    for (let i = 0; i < nsDs.length; i += 3) { const o = nsDs[i]; o.x = nsDs[i + 1]; o.y = nsDs[i + 2]; }
+    nsDs.length = 0;
+    if (nsCamDoi && W) W.cam = nsCamThat;
+    nsCamDoi = false;
+  };
+  // mục 22: bút + hàm fx của khung đang vẽ (hàm vẽ quái nhớ theo quái đọc qua đây), mảng danh sách vẽ dùng lại
+  const DW = { c: null, A: null, ent: null, rec: null, xf: null }, DW_LIST = [], DW_MUC = typeof WeakMap !== 'undefined' ? new WeakMap() : new Map();
+  function veQuaiDW(e) {
+    return () => {
+      const c = DW.c, A = DW.A, xf = DW.xf, rec = DW.rec, ent = DW.ent;
+      const up = e.mvLift > 0 ? Math.round(Math.sin((e.mvLift / 0.45) * Math.PI) * 10) : 0; // bị Địa Chấn hất tung
+      if (xf && xf(c, e, up)) { // đã gồm giật lùi
+        if (e.illusion) A.boss(c, e); else A.enemy(c, e);
+        c.restore();
+      } else {
+        const k = rec ? rec(e) : 0; // giật lùi khi trúng đòn: chỉ dời hình
+        if (k || up) c.translate(k, -up);
+        if (e.illusion) A.boss(c, e); else A.enemy(c, e);
+        if (k || up) c.translate(-k, up);
+      }
+      if (ent) ent(c, e);
+    };
+  }
+  // Camera đã làm tròn dùng cho cả khung vẽ (thanh máu quái ở js/stage.js dùng chung, không lệch với thân quái).
+  G.camVe = (w) => { w = w || W; return w ? (G.lamTron ? G.lamTron(w.cam || 0) : Math.round(w.cam || 0)) : 0; };
   // Thứ tự lớp: nền, vùng và vũng, hiệu ứng sát đất, nhân vật (kèm hiệu ứng bám theo), đạn, hiệu ứng phía trên, rồi lớp giao diện.
   G.drawWorld = function (reg) {
     const c = G.wx, A = G.art, P = W.P;
     const F = G.noRender ? null : G.fx;
-    const cam = Math.round(W.cam);
+    const cam = G.NOI_SUY !== false ? G.camVe(W) : Math.round(W.cam);
     let sx = 0, sy = 0;
     if (F && F.shakeOffset) { const o = F.shakeOffset(); sx = o.x; sy = o.y; }
     else if (W.shake > 0) { sx = Math.round(Math.random() * 4 - 2); sy = Math.round(Math.random() * 2 - 1); }
-    G.wxDat(c, 0, 0);
+    G.wxDat(c, G.NOI_SUY !== false ? Math.round(cam) - cam : 0, 0); // mục 1: nền tự làm tròn camera về số nguyên → dời nốt phần nửa điểm ảnh cho khớp nhân vật
     A.bg(c, reg, W.seed, cam, W.w, W.shrink);
     G.wxDat(c, -cam + sx, sy);
     const dimBe = F && F.dim2 ? F.dim2() : 1; // độ đọc trận 12/10: vũng / vùng do EM BÉ tạo nhạt đi (vùng của quái giữ nguyên)
@@ -11878,8 +12089,13 @@
     }
     if (F && F.drawGround) F.drawGround(c);
     const ent = F && F.entity, rec = F && F.recoil, xf = F && F.xf; // xf: nhún, nghiêng, nảy khi trúng đòn (js/fx.js), chỉ đổi hình
-    const list = [];
-    for (const e of W.ents) {
+    // Soát mượt phiên 3 mục 22 (?venhe=0: tạo mới mỗi khung như cũ): dùng lại mảng danh sách vẽ và MỘT mục { y, f } cho mỗi quái (hàm vẽ
+    // tạo một lần cho mỗi quái, đọc bút / hàm fx của khung hiện tại qua DW) → không sinh hàng chục hàm + đối tượng mới mỗi khung.
+    const nhe = G.VE_NHE !== false;
+    DW.c = c; DW.A = A; DW.ent = ent; DW.rec = rec; DW.xf = xf;
+    const list = nhe ? (DW_LIST.length = 0, DW_LIST) : [];
+    if (nhe) for (const e of W.ents) { let it = DW_MUC.get(e); if (!it) DW_MUC.set(e, (it = { y: 0, f: veQuaiDW(e) })); it.y = e.y; list.push(it); }
+    else for (const e of W.ents) {
       list.push({ y: e.y, f: () => {
         const up = e.mvLift > 0 ? Math.round(Math.sin((e.mvLift / 0.45) * Math.PI) * 10) : 0; // bị Địa Chấn hất tung
         if (xf && xf(c, e, up)) { // đã gồm giật lùi
@@ -14538,6 +14754,7 @@
   const VD_TY = { cut: 1, cres: 1, slash: 1, thrust: 1, dashline: 1, crack: 1, stuck: 1, ring: 1, flash: 1 };
   const VD_ANH = /^hu-(chem|dam|quet|ban-cung|ra-chieu|ra-chuong|tram-nguyet|nen-dat|trung|chi-mang|pha-giap)(-|$)/;
   const vetDon = (o) => (VD_TY[o.ty] === 1 || (o.ty === 'anh' && VD_ANH.test(o.ma || '')) || (o.ty === 'he' && !(o.t0 > 0.5)));
+  const HU_GIU = 0.12, HU_NAY = /^hu-(no|trung|chi-mang|va-cham|pha-giap|trum-no|be-trung|soc-nhiet)(-|$)/; // mục 8: giữ khung cuối; nhóm nổ / trúng đòn nảy nhẹ
   function add(o) {
     // 15/10 con-ve-tay: chớp "sq" (lõi VUÔNG + 4 ô vuông góc, vẽ code — ô vuông xanh lục ở vùng độc nổ, ô be ở vùng đất đá, cam ở lửa...)
     // → ảnh va chạm hu-va-cham nhuộm đúng màu chớp, cỡ theo bán kính chớp. Ảnh chưa có / cờ ?vetaycu=1: như cũ.
@@ -14547,6 +14764,9 @@
       if (o.pl != null) h.pl = o.pl;
       return add(h);
     }
+    // Soát mượt phiên 3 mục 8 (?humo=0: như cũ): hiệu ứng ảnh KHÔNG lặp được giữ khung cuối thêm HU_GIU giây trong lúc mờ dần (hết khung
+    // không còn tắt phụt). Chỉ thêm thời gian HIỂN THỊ của hình; không hiệu ứng nào gây sát thương / đổi luật theo danh sách hình này.
+    if (o.ty === 'anh' && G.HU_MO !== false && !o.mr && !o.hold && G.fxAnh && !G.fxAnh.lap(o.ma)) { o.hold = HU_GIU; o.t += HU_GIU; }
     o.t0 = o.t; o.d = o.d || 0;
     if (o.pl == null) o.pl = OWN;
     o.vd = !!o.pl && G.VET_DAM !== false && (vetDon(o) || !!o.laChop); // vệt đòn của em bé: đậm, và vẽ SAU viền quanh bé (fx.vienBe)
@@ -15026,6 +15246,9 @@
     }
   }
   const VET_ANH = { sword: 'hu-chem-kiem', hammer: 'hu-chem-bua', spear: 'hu-dam-giao' }; // ảnh AI cho vệt đòn thường
+  // Soát mượt phiên 3 mục 21 (?tile05=0 tắt): cỡ TUỲ Ý của ảnh trang trí (vệt vũ khí, cào / chết theo thân, nổ trùm ngẫu nhiên) làm tròn bậc 0,5
+  // (js/fx_anh.js FA.bac05). Ảnh co theo bán kính vùng thật (vũng, nổ có bán kính sát thương, chớp va chạm) giữ cỡ đúng.
+  const b05 = (v) => (G.fxAnh && G.fxAnh.bac05 ? G.fxAnh.bac05(v) : v);
   // o: { type, combo, reach, el, stage }
   api('swing', (P, o) => {
     const f = P.face, el = o.el, st = o.stage || 0, PL = pal(el);
@@ -15035,7 +15258,7 @@
     if (P === S.W.P) { P.fxS = -0.08; P.fxSV = 0; P.fxL = f * 2.5; P.fxLV = 0; } // nhún: vươn người theo nhát chém
     // Có ảnh AI cho vệt đòn của loại vũ khí này: vẽ ảnh thay cho trăng khuyết / mũi đâm (hạt và vết nứt giữ nguyên)
     const maVet = VET_ANH[o.type], vetAnh = !!maVet && coAnh(maVet);
-    const scVet = Math.max(0.6, Math.min(1.8, (o.type === 'spear' ? R0 + 2 : R0) / 32)) * (o.combo === 2 ? 1.12 : 1); // cỡ vệt ảnh như cũ
+    const scVet = b05(Math.max(0.6, Math.min(1.8, (o.type === 'spear' ? R0 + 2 : R0) / 32)) * (o.combo === 2 ? 1.12 : 1)); // cỡ vệt ảnh như cũ (mục 21: bậc 0,5)
     if (vetAnh && !anhVk(maVet, P, o.type, scVet)) anh(maVet, P.x + f * (o.type === 'spear' ? 8 : o.type === 'hammer' ? 4 : 2), P.y - (o.type === 'hammer' ? 17 : 13), { f, sc: scVet });
     if (o.type === 'sword') {
       const fin = o.combo === 2;
@@ -15108,6 +15331,10 @@
   function quad(c, ax, ay, bx, by, cx, cy, dx, dy, dith) {
     QX[0] = ax; QY[0] = ay; QX[1] = bx; QY[1] = by; QX[2] = cx; QY[2] = cy; QX[3] = dx; QY[3] = dy;
     const y0 = Math.floor(Math.min(ay, by, cy, dy)), y1 = Math.ceil(Math.max(ay, by, cy, dy));
+    // soát mượt phiên 3 mục 22 (?venhe=0: bàn cờ như cũ): đuôi thưa tô cả hàng ở độ đậm 50% (1 lệnh / hàng thay cho 1 lệnh / điểm ảnh)
+    const ga = c.globalAlpha, mo = dith && G.VE_NHE !== false;
+    if (mo) { c.globalAlpha = ga * 0.5; dith = false; }
+    try {
     for (let y = y0; y < y1; y++) {
       const yc = y + 0.5;
       let lo = 1e9, hi = -1e9;
@@ -15120,6 +15347,7 @@
       if (dith) { for (let x = xa + ((xa + y) & 1); x < xb; x += 2) c.fillRect(x, y, 1, 1); }
       else c.fillRect(xa, y, xb - xa, 1);
     }
+    } finally { if (mo) c.globalAlpha = ga; }
   }
   function trailDraw(c) {
     if (S.trN < 2) return;
@@ -15185,7 +15413,7 @@
     const sc = e.scale || 1;
     // Ảnh AI hu-quai-cao (ba vết vuốt; có bản riêng theo hệ của quái thì dùng): thay vệt cào vẽ bằng code, cỡ theo thân quái
     const maCao = anhHe('hu-quai-cao', e.el);
-    if (maCao && anh(maCao, e.x + e.face * 4, e.y - Math.min(20, (e.h || 20) * sc * 0.55), { f: e.face, sc: Math.max(0.6, Math.min(2.2, (9 + e.r * 0.5) / 14)) })) return;
+    if (maCao && anh(maCao, e.x + e.face * 4, e.y - Math.min(20, (e.h || 20) * sc * 0.55), { f: e.face, sc: b05(Math.max(0.6, Math.min(2.2, (9 + e.r * 0.5) / 14))) })) return;
     add({ ty: 'cres', x: e.x + e.face * 4, y: e.y - Math.min(20, (e.h || 20) * sc * 0.55), f: e.face, ra: (22 + e.r) * 0.8, rb: 9 + e.r * 0.5, off: 5, oy: 2, vert: true, rev: false, pl: e.el ? pal(e.el) : PAL.foe, t: 0.14, big: false, st: 0, ly: 1 });
   });
   api('lunge', (e) => {
@@ -16079,7 +16307,7 @@
     S.dying.push({ e: snap, t: ad || 0.42, t0: ad || 0.42, boss: false, ill: !!e.illusion, pl: PL, art: !!ad, skin, w: B.w, hh: B.h, dis: false });
     if (e.st && e.st.frozen > 0) shatter(e);
     // Ảnh AI quái chết tan (hu-quai-chet): điểm neo ở chân quái, cỡ theo chiều cao thân (ảnh chuẩn cho thân cao 24). Có ảnh thì bỏ khói và tia.
-    const chetAnh = anh('hu-quai-chet', x, y, { f: e.face || 1, sc: Math.max(0.6, Math.min(2, B.h / 24)) });
+    const chetAnh = anh('hu-quai-chet', x, y, { f: e.face || 1, sc: b05(Math.max(0.6, Math.min(2, B.h / 24))) });
     // khói theo hệ và mảnh vụn rơi
     if (!chetAnh) for (let i = 0; i < 6; i++) emit(2, x + rr(-B.w, B.w), y - rr(2, B.h), rr(-24, 24), rr(-34, -8), rr(0.35, 0.65), el ? PL.puff : RAMP.dust, R() < 0.4 ? 5 : 4, 0, 2, null, 1);
     for (let i = 0; i < 6; i++) emit(8, x + rr(-B.w, B.w), y - rr(4, B.h), rr(-70, 70), rr(-130, -40), rr(0.5, 0.85), i % 2 ? skin : PL.ramp, R() < 0.4 ? 3 : 2, 420, 0, y + rr(-2, 5), 1);
@@ -16118,7 +16346,7 @@
         // cũ 0,22 giây ≈ 23 khung/giây nháy quá nhanh), mờ vào/ra; bỏ chớp + vòng sóng vẽ code, mảnh văng, khói, chớp trắng thân. Nhịp nổ thưa hơn chút.
         d.nb = 0.2 - 0.08 * k;
         const x = d.e.x + rr(-d.w, d.w), y = d.e.y - rr(4, d.hh), maNo = anhHe('hu-no-nho', d.el);
-        if (maNo) anh(maNo, x, y, { sc: rr(0.8, 1.15), f: R() < 0.5 ? 1 : -1, t: 0.42, gian: true, mr: true });
+        if (maNo) anh(maNo, x, y, { sc: b05(rr(0.8, 1.15)), f: R() < 0.5 ? 1 : -1, t: 0.42, gian: true, mr: true });
         else add({ ty: 'flash', x, y, r: rr(5, 8), t: 0.1, c: '#ffffff', c2: d.pl.c2, ly: 1 }); // thiếu ảnh: tối thiểu một chớp nhỏ
         trauma(0.12 + 0.12 * k);
       }
@@ -16127,7 +16355,7 @@
         const x = d.e.x + rr(-d.w, d.w), y = d.e.y - rr(4, d.hh);
         // Ảnh AI nổ nhỏ trên thân trùm (hu-no-nho, có bản theo hệ): điểm neo là tâm vụ nổ. Có ảnh thì bỏ chớp và vòng sóng vẽ bằng code.
         const maNo = anhHe('hu-no-nho', d.el);
-        if (maNo) anh(maNo, x, y, { sc: rr(0.75, 1.15) * (d.mini ? 0.8 : 1), f: R() < 0.5 ? 1 : -1 });
+        if (maNo) anh(maNo, x, y, { sc: b05(rr(0.75, 1.15) * (d.mini ? 0.8 : 1)), f: R() < 0.5 ? 1 : -1 });
         else {
           add({ ty: 'flash', x, y, r: rr(6, 11), t: 0.1, c: '#ffffff', c2: d.pl.c2, ly: 1, sq: R() < 0.5 });
           addRing(x, y, 2, rr(10, 18), 0.2, d.pl.c2, 2, 1);
@@ -16383,7 +16611,21 @@
             if (!ok) o.t = 0;
             break;
           }
-          const moA = o.mr ? (o.mo3 == null ? 1 : o.mo3) * Math.min(1, (o.t0 - o.t) / 0.05, o.t / 0.08) : o.mo3;
+          let moA = o.mr ? (o.mo3 == null ? 1 : o.mo3) * Math.min(1, (o.t0 - o.t) / 0.05, o.t / 0.08) : o.mo3;
+          if (o.hold && FA) {
+            // mục 8: tt = giây đã chạy; vis = lúc hết khung cuối (gian: đúng thời lượng gốc; không: min(thời lượng, số khung / nhịp ảnh)).
+            // Từ 75% vis tới hết phần giữ: mờ dần về 0; trong phần giữ vẽ đứng ở khung cuối. Nhóm nổ / trúng đòn nảy 1 → 1,08 → 1 trong 0,12 giây đầu.
+            const tt = o.t0 - o.t, base = o.t0 - o.hold, gy = FA.giay(o.ma) || base, vis = o.gian ? base : Math.min(base, gy);
+            const tv = Math.min(tt, vis - 1e-4), mo0 = o.mo3 == null ? 1 : o.mo3;
+            const fade = tt <= vis * 0.75 ? 1 : Math.max(0, 1 - (tt - vis * 0.75) / (vis * 0.25 + o.hold));
+            const nay = HU_NAY.test(o.ma) && tt < 0.12 ? 1 + 0.08 * Math.sin((Math.PI * tt) / 0.12) : 1;
+            const ax = th ? th.x : o.x, ay = th ? th.y : o.y, X = Math.round(ax), Y = Math.round(ay);
+            if (nay !== 1) { c.save(); c.translate(X, Y); c.scale(nay, nay); c.translate(-X, -Y); } // nảy bằng phép phóng quanh điểm neo (cỡ gốc giữ bậc 0,5, mục 21)
+            let ok = false;
+            try { ok = fade > 0.003 && FA.ve(c, o.ma, ax, ay, o.gian ? (Math.max(0, tv) / Math.max(1e-4, base)) * gy * 0.999 : Math.max(0, tv), o.goc, o.sc, o.f < 0, mo0 * fade, o.mau, o.kieu); } finally { if (nay !== 1) c.restore(); }
+            if (!ok) o.t = 0;
+            break;
+          }
           if (!FA || !FA.ve(c, o.ma, th ? th.x : o.x, th ? th.y : o.y, o.gian ? k * FA.giay(o.ma) * 0.999 : o.t0 - o.t, o.goc, o.sc, o.f < 0, moA, o.mau, o.kieu)) o.t = 0;
           break;
         }
@@ -16602,16 +16844,41 @@
     if (G.noRender || !S || S.W !== G.getWorld()) return;
     try { vienBe(c, P); } finally { if (S.vdSau) { S.vdSau = false; try { veVdSau(c); } catch (e) { fail(e); } } }
   };
+  // Soát mượt phiên 3 mục 22 (?venhe=0: dựng lại mỗi khung như cũ): ba tấm viền chỉ dựng lại khi HÌNH Cu Tí đổi (khoá = động tác, khung,
+  // vũ khí + góc làm tròn 2°, mặt, vị trí lẻ nửa điểm ảnh, nhún / nghiêng, màu viền; js/zed_moi.js G.zedMoi.khoaVe). Trạng thái có nhuộm /
+  // hào quang / ánh vũ khí chạy theo thời gian, em bé khác (không phải bộ Zed): khoá null → dựng mỗi khung như cũ. Máy yếu (Tiết kiệm pin
+  // bật hoặc ?fps=30): bỏ hẳn viền (chỉ là lớp tô thêm cho dễ nhìn, thân bé vẫn vẽ đủ).
+  let VBK = null;
+  const FPS30 = !!(G.coTat && G.coTat(/[?&]fps=30(&|$)/)), pinYeu = () => !!((G.save && G.save.pin) || FPS30);
   function vienBe(c, P) {
     if (!vienBat(P)) return;
+    const nhe = G.VE_NHE !== false;
+    if (nhe && pinYeu()) return;
     try {
       const D = G.theme.DOC, n = G.NET || 1, w = VBW * n, h = VBH * n;
-      if (!VB) { VB = document.createElement('canvas'); VB2 = document.createElement('canvas'); VB3 = document.createElement('canvas'); }
-      if (VB.width !== w || VB.height !== h) { VB.width = VB2.width = VB3.width = w; VB.height = VB2.height = VB3.height = h; }
+      if (!VB) { VB = document.createElement('canvas'); VB2 = document.createElement('canvas'); VB3 = document.createElement('canvas'); VBK = null; }
+      if (VB.width !== w || VB.height !== h) { VB.width = VB2.width = VB3.width = w; VB.height = VB2.height = VB3.height = h; VBK = null; }
       const g = VB.getContext('2d'), g2 = VB2.getContext('2d'), g3 = VB3.getContext('2d'), X = Math.round(P.x) - VBX, Y = Math.round(P.y) - VBY;
+      const a = G.heroArgs(P); a.noShadow = true; a.alpha = 1; a.flash = false; // hình bóng đặc (lúc lăn né thân bé mờ: viền vẫn đủ nét, không loang vào thân)
+      let k0 = null;
+      if (nhe && G.zedMoi && G.zedMoi.khoaVe) {
+        try { k0 = G.zedMoi.khoaVe(a); } catch (e) { k0 = null; }
+        if (k0 != null) { const lt = G.lamTron || Math.round; k0 += '|' + (lt(P.x) - X) + ',' + (lt(P.y) - Y) + '|' + n + '|' + (P.fxS || 0) + ',' + (P.fxL || 0) + ',' + (P.fxHop || 0) + '|' + D.vienBe + D.vienToi; }
+      }
+      if (k0 == null || k0 !== VBK) veVien(g, g2, g3, D, n, w, h, X, Y, a, P);
+      VBK = k0;
+      const a0 = c.globalAlpha;
+      c.imageSmoothingEnabled = false;
+      if (D.bongBe > 0) { c.globalAlpha = a0 * D.bongBe; c.drawImage(VB, X, Y, VBW, VBH); }
+      if (D.vienToiA > 0) { c.globalAlpha = a0 * D.vienToiA; c.drawImage(VB3, X, Y, VBW, VBH); }
+      c.globalAlpha = a0 * D.vienA; c.drawImage(VB2, X, Y, VBW, VBH);
+      c.globalAlpha = a0;
+    } catch (e) { VBK = null; fail(e); }
+  }
+  function veVien(g, g2, g3, D, n, w, h, X, Y, a, P) {
+    {
       const sach = (q) => { q.setTransform(1, 0, 0, 1, 0, 0); q.globalAlpha = 1; q.globalCompositeOperation = 'source-over'; q.clearRect(0, 0, w, h); };
       sach(g); g.setTransform(n, 0, 0, n, -X * n, -Y * n); g.imageSmoothingEnabled = false;
-      const a = G.heroArgs(P); a.noShadow = true; a.alpha = 1; a.flash = false; // hình bóng đặc (lúc lăn né thân bé mờ: viền vẫn đủ nét, không loang vào thân)
       const on = fx.xf && fx.xf(g, P, 0);
       G.art.hero(g, a);
       if (on) g.restore();
@@ -16622,13 +16889,7 @@
       g3.globalCompositeOperation = 'source-in'; g3.fillStyle = D.vienToi || '#1a0e08'; g3.fillRect(0, 0, w, h);
       g2.globalCompositeOperation = 'destination-out'; g2.drawImage(VB, 0, 0);
       g2.globalCompositeOperation = 'source-in'; g2.fillStyle = D.vienBe; g2.fillRect(0, 0, w, h);
-      const a0 = c.globalAlpha;
-      c.imageSmoothingEnabled = false;
-      if (D.bongBe > 0) { c.globalAlpha = a0 * D.bongBe; c.drawImage(VB, X, Y, VBW, VBH); }
-      if (D.vienToiA > 0) { c.globalAlpha = a0 * D.vienToiA; c.drawImage(VB3, X, Y, VBW, VBH); }
-      c.globalAlpha = a0 * D.vienA; c.drawImage(VB2, X, Y, VBW, VBH);
-      c.globalAlpha = a0;
-    } catch (e) { fail(e); }
+    }
   }
   fx.dim2 = dim2; // js/combat.js: vùng của em bé trên sàn cũng nhạt như vậy
   layer('drawGround', (c) => { veLop(c, 0); });
@@ -17851,12 +18112,21 @@
   // Vẽ hiệu ứng ma tại (x, y) (điểm neo của ảnh trùng điểm này).
   // t: giây từ lúc bắt đầu; goc: góc (radian) — tệp có "xoay" thì xoay theo góc, không thì chỉ lật trái/phải theo hướng góc;
   // co: hệ số cỡ thêm (nhân với "co" của tệp); lat: lật ngang (quay trái); mo: độ đậm 0..1; mau, kieu (tuỳ chọn): nhuộm. Trả về true nếu đã vẽ.
+  // Soát mượt phiên 3 mục 16A (?hoalap=0 tắt): hiệu ứng LẶP chậm (4,5–9 khung/giây: dính thân hu-bam-*, vùng sàn hu-vung-*, mây độc, cổng…)
+  // vẽ thêm khung kế đè lên với độ hiện 0–35% theo phần lẻ của khung → đỡ "nhảy" giữa các khung. Hiệu ứng chậm cố ý (< 4,5 khung/giây) để nguyên.
+  const lapCham = (a) => { if (!a.lap || a.so < 2) return false; const fps = a.so / a.giay; return fps >= 4.5 && fps < 9; };
+  FA.lapCham = (ma) => { const a = FA.ds[ma]; return !!(a && lapCham(a)); };
   FA.ve = function (c, ma, x, y, t, goc, co, lat, mo, mau, kieu) {
     const a = FA.ds[ma];
     if (!a || !a.ready || !c) return false;
     const f = FA.khung(a, t);
     if (f < 0) return false;
-    return veF(c, a, f, x, y, goc, co, lat, mo, mau, kieu);
+    const ok = veF(c, a, f, x, y, goc, co, lat, mo, mau, kieu);
+    if (ok && G.HOA_LAP !== false && lapCham(a)) {
+      const v = (Math.max(0, t || 0) / a.giay) * a.so, fr = v - Math.floor(v);
+      if (fr > 0.02) veF(c, a, (f + 1) % a.so, x, y, goc, co, lat, (mo == null ? 1 : clamp(mo, 0, 1)) * 0.35 * fr, mau, kieu);
+    }
+    return ok;
   };
   // Con vẽ tay đợt 3 (hu-tam-giac-bua): vẽ khung f sao cho 3 điểm S (tọa độ điểm game so với điểm neo của ảnh, khi co 1) rơi ĐÚNG vào 3 điểm
   // D trên màn hình (ánh xạ affine: dời, co giãn, xoay, xô nghiêng). Dùng để tam giác ảnh khớp đúng 3 đỉnh vùng va chạm thật. Trả về true nếu đã vẽ.
@@ -17882,6 +18152,11 @@
     } finally { c.restore(); }
     return true;
   };
+  // Soát mượt phiên 3 mục 21 (?tile05=0 tắt): FA.bac05(cỡ) làm tròn cỡ vẽ theo bậc 0,5 khi ≥ 0,75 — nền vẽ gấp đôi (G.NET 2) nên mỗi điểm ảnh
+  // ảnh (tệp net 1) phủ số nguyên điểm ảnh thật, hết răng cưa lấp lánh. CHỈ dùng ở chỗ cỡ là tuỳ ý (vệt vũ khí scVet, nổ / trúng đòn trang trí);
+  // KHÔNG dùng cho ảnh co theo bán kính vùng thật (vũng, vùng báo trước, nổ có bán kính sát thương): hình phải khớp đúng vùng chạm.
+  const bac05 = (s) => (G.TILE05 !== false && s >= 0.75 ? Math.round(s * 2) / 2 : s);
+  FA.bac05 = bac05;
   function veF(c, a, f, x, y, goc, co, lat, mo, mau, kieu) {
     const s = a.co * (co > 0 ? co : 1);
     let flip = !!lat, rot = 0;
@@ -19218,7 +19493,7 @@ const DON = {
       else if (k === 'no' || k === 'gai' || k === 'dap') F.baoTron(c, 0, 0, tam, u); else if (k === 'phun') F.baoQuat(c, 0, 0, tam, dir, d.xoe || 1.1, u); else if (k === 'nem') F.baoTron(c, Math.cos(dir) * tam, Math.sin(dir) * tam * MA.det, d.rong || 12, u); });
     // Con vẽ tay đợt 3 (YEU-CAU-3.md): trong trận tia sáng ở miệng lúc lấy đà → ảnh hu-tia-mom (trắng, nhuộm màu giữa của đòn quái), 5 khung
     // theo độ lấy đà u, cỡ 16 ≈ đốm + hạt code cũ (bán kính 6). Ảnh chưa tải: không vẽ. ?vetaycu=1: vẽ code như cũ.
-    if ((k === 'ban' || k === 'phun' || k === 'nem') && MA._vt2) { if (VT3('hu-tia-mom')) { const cols = d.mau || ['#7cc4ee', '#dff4ff', '#ffffff']; P.over(c => { const m = DON.mom(P); HT.ve(c, 'hu-tia-mom', m[0], m[1], Math.min(4, Math.floor(u * 5)), 0, 1, false, 1, cols[1]); }); } }
+    if ((k === 'ban' || k === 'phun' || k === 'nem') && MA._vt2) { if (VT3('hu-tia-mom')) { const cols = d.mau || ['#7cc4ee', '#dff4ff', '#ffffff']; P.over(c => { const m = DON.mom(P); HT.ve(c, 'hu-tia-mom', m[0], m[1], Math.min(4, Math.floor(u * 5)), 0, 1, false, G.HU_MO !== false && u > 0.75 ? Math.max(0, 1 - (u - 0.75) / 0.25) : 1, cols[1]); /* soát mượt phiên 3 mục 8: mờ dần 25% cuối (?humo=0 như cũ) */ }); } }
     else if ((k === 'ban' || k === 'phun' || k === 'nem') && !MA._vt2) P.over(c => { const m = DON.mom(P), cols = d.mau || ['#7cc4ee', '#dff4ff', '#ffffff']; F.hat(c, m[0], m[1], 6, 11, 1 - (u * 3 % 1), { v: -7, cols: [cols[1], cols[2] || cols[1]] }); F.dia(c, m[0], m[1], 1 + u * 2, cols[1]); F.px(c, m[0], m[1], '#ffffff'); }); },
   don(P, u) { const d = P.d.don || {}, k = d.kieu || 'chem', tam = d.tam || 24, dir = P.dir, cols = d.mau || ['#7cc4ee', '#dff4ff', '#ffffff'], dx = Math.cos(dir), dy = Math.sin(dir) * MA.det, B = P.B;
     // đợt 3: vệt cào cận chiến → ảnh hu-cao-quai (trắng, nhuộm màu giữa của đòn quái), xoay theo hướng đòn (ảnh chĩa phải; sang trái thì lật rồi
@@ -20930,7 +21205,8 @@ MA._xong();
     if (G.CHOP_NHE !== false) { chopNhe = flash; flash = 0; } // 15/10 con-ve-tay: trúng đòn → viền sáng + đỏ nhẹ, không phủ trắng cả thân (cờ ?chopcu=1)
     if (o.baoDon > 0) flash = Math.max(flash, o.baoDon); // Phiên E2: chớp trắng báo sắp ra đòn (js/boss.js truyền cho trùm vùng có ảnh AI); chỉ là hình
     c.save();
-    c.translate(Math.round(x), Math.round(y));
+    const lt = G.lamTron || Math.round; // soát mượt phiên 3 mục 1: cùng kiểu làm tròn với camera (?noisuy=0 như cũ)
+    c.translate(lt(x), lt(y));
     if (bong) {
       const w = sp.bong * (n === 'die' ? 1 - 0.5 * (s.u || 0) : 1);
       c.save();
@@ -23368,7 +23644,7 @@ MA._xong();
     if (z.wall) {
       if (!(z.wait > 0)) return false; // tường nước đang chạy là đòn thật: vẽ như cũ
       const age = since(z), tot = age + z.wait;
-      BT.add({ k: 'wall', x: z.x, y: z.y, ang: z.ang, s: z.s, half: z.half, g: z.g, gw: z.gw, maxS: z.maxS, th: z.th, el: 'ice', u: clamp(age / Math.max(0.05, tot), 0, 1), age });
+      BT.add({ k: 'wall', x: z.x, y: z.y, ang: z.ang, s: z.s, half: z.half, g: z.g, gw: z.gw, maxS: z.maxS, th: z.th, el: 'ice', u: clamp(age / Math.max(0.05, tot), 0, 1), age, con: z.wait });
       return true;
     }
     const sh = z.shape;
@@ -23378,6 +23654,7 @@ MA._xong();
       it.age = t0 ? t0 - z.t : since(z);
       it.u = t0 ? clamp(1 - z.t / t0, 0, 1) : clamp(it.age / Math.max(0.05, it.age + z.t), 0, 1); // 14/10: vùng không có t0 vẫn kéo giãn theo thời gian còn lại
       if (z.bomb && z.bomb.fl > 0) { const gone = t0 - z.t, fl = z.bomb.fl; it.age = gone; it.u = gone < fl ? 0 : clamp((gone - fl) / Math.max(0.01, t0 - fl), 0, 1); }
+      it.con = z.t; // soát mượt phiên 3 mục 9A: giây còn lại tới lúc nổ (nhịp sáng cuối)
       BT.add(it);
       nowSeen.set(z, it);
     } else if (!fired.has(z)) {
@@ -23954,7 +24231,15 @@ MA._xong();
     // khung 8 (chớp nổ) bắt đầu ĐÚNG lúc đòn nổ (mode 1) rồi mờ dần.
     const fi = Math.min(6, Math.max(0, Math.floor((it.u || 0) * 7)));
     const ap = mode === 2 ? 1 : clamp((it.age || 0) / APPEAR, 0, 1), e = 1 - (1 - ap) * (1 - ap) * (1 - ap);
-    return [fi, e * (it.dim == null ? 1 : it.dim)];
+    // soát mượt phiên 3 mục 9A (?bthoa=0: nhảy 7 bậc như cũ): phần lẻ của u×7 → khung kế hoà lên trên (lan đều thay vì nhảy bậc);
+    // 0,15 giây cuối trước khi nổ: nhịp sáng (lớp cộng sáng mạnh dần). Thời điểm, vùng, khung nổ không đổi.
+    let hoa = 0, sang = 0;
+    if (mode === 0 && G.BT_HOA !== false) {
+      const v = clamp(it.u || 0, 0, 1) * 7;
+      if (fi < 6) hoa = clamp(v - fi, 0, 1); // khung 7 giữ nguyên tới lúc nổ: không hoà sang khung 8 (chớp nổ) để không báo nổ sớm
+      if (it.con != null && it.con < 0.15) sang = clamp(1 - it.con / 0.15, 0, 1);
+    }
+    return [fi, e * (it.dim == null ? 1 : it.dim), hoa, sang];
   }
   // Vẽ một vùng bằng ảnh lên c (toạ độ thế giới). Trả về false nếu hình này không có ảnh (để vẽ kiểu cũ).
   function veAnh(c, it, mode, f) {
@@ -23966,9 +24251,48 @@ MA._xong();
     if (!kieu) return false;
     const src = kieu === 'vanh' ? tamVanh(it.el, it.r0 / Math.max(1, it.r1)) : tam(kieu, it.el);
     if (!src) return false;
-    const [fi, al] = khungVa(it, mode, f);
+    const [fi, al, hoa, sang] = khungVa(it, mode, f);
     if (al <= 0.003) return true;
-    const h = HA[kieu], ow = h.o[0], oh = h.o[1], sxo = fi * ow;
+    const h = HA[kieu], ow = h.o[0], oh = h.o[1];
+    // mục 9A: vẽ khung fi, rồi khung fi+1 đè lên theo phần lẻ, rồi nhịp sáng cuối (cộng sáng) — cùng một hàm vẽ hình
+    veHinh(c, it, k, kieu, src, h, ow, oh, fi * ow, al);
+    if (hoa > 0.02) veHinh(c, it, k, kieu, src, h, ow, oh, (fi + 1) * ow, al * hoa);
+    if (sang > 0.02) {
+      const go = c.globalCompositeOperation;
+      c.globalCompositeOperation = 'lighter';
+      try { veHinh(c, it, k, kieu, src, h, ow, oh, Math.min(7, fi + (hoa > 0.5 ? 1 : 0)) * ow, al * 0.45 * sang * (0.6 + 0.4 * Math.sin(sang * Math.PI * 3))); } finally { c.globalCompositeOperation = go; }
+    }
+    return true;
+  }
+  // Soát mượt phiên 3 mục 22 (?venhe=0: cắt lát mỗi khung như cũ): quạt có góc mở khác ảnh phải cắt ~18 lát xoay mỗi khung. Dựng SẴN một
+  // tấm theo (ảnh, khung, góc mở, bán kính) ở hệ toạ độ chưa xoay, rồi mỗi khung chỉ xoay dán 1 lần. Nhớ tối đa 24 tấm (dùng gần nhất giữ lại).
+  const QS = new Map();
+  function quatSan(c, src, h, ow, oh, sxo, it, s, half, ni, dx0, dy0) {
+    try {
+      const RR = it.r * 1.35, N = G.NET || 1, key = sxo + '|' + Math.round(it.span * 100) + '|' + Math.round(it.r) + '|' + N + '|' + it.el + '|' + h.R;
+      let e = QS.get(key);
+      if (e && e.src !== src) e = null;
+      if (e) { QS.delete(key); QS.set(key, e); }
+      else {
+        const W = Math.ceil(RR * 2 * N) + 2, cv = document.createElement('canvas'); cv.width = cv.height = W;
+        const g = cv.getContext('2d'); g.imageSmoothingEnabled = false; g.setTransform(N, 0, 0, N, W / 2, W / 2);
+        const n = Math.max(3, Math.ceil(it.span / 0.12)), st = it.span / n, kk = ni / half, R2 = it.r * 1.35;
+        for (let j = 0; j < n; j++) {
+          const a0 = -half + j * st, a1 = a0 + st;
+          const rot = j === 0 ? -half + ni : j === n - 1 ? half - ni : ((a0 + a1) / 2) * (1 - kk);
+          g.save(); g.beginPath(); g.moveTo(0, 0); g.arc(0, 0, R2, a0 - (j === 0 ? 0.35 : 0.004), a1 + (j === n - 1 ? 0.35 : 0.004)); g.closePath(); g.clip();
+          g.rotate(rot); g.drawImage(src, sxo, 0, ow, oh, dx0, dy0, ow * s, oh * s); g.restore();
+        }
+        e = { src, cv, W };
+        if (QS.size >= 24) QS.delete(QS.keys().next().value);
+        QS.set(key, e);
+      }
+      const half2 = e.W / 2 / N;
+      c.drawImage(e.cv, -half2, -half2, e.W / N, e.W / N);
+      return true;
+    } catch (err) { return false; }
+  }
+  function veHinh(c, it, k, kieu, src, h, ow, oh, sxo, al) {
     c.save();
     c.globalAlpha *= al; c.imageSmoothingEnabled = false;
     try {
@@ -23991,6 +24315,7 @@ MA._xong();
         const s = it.r / h.R, half = it.span / 2, ni = (h.nua * Math.PI) / 180, dx0 = -h.dinh[0] * s, dy0 = -h.dinh[1] * s;
         c.translate(it.x, it.y); c.rotate(it.ang);
         if (Math.abs(half - ni) < 0.03) c.drawImage(src, sxo, 0, ow, oh, dx0, dy0, ow * s, oh * s);
+        else if (G.VE_NHE !== false && quatSan(c, src, h, ow, oh, sxo, it, s, half, ni, dx0, dy0)) { /* mục 22: tấm quạt dựng sẵn */ }
         else {
           const n = Math.max(3, Math.ceil(it.span / 0.12)), st = it.span / n, kk = ni / half, RR = it.r * 1.35;
           for (let j = 0; j < n; j++) {
@@ -24022,7 +24347,7 @@ MA._xong();
       const m = (a0 + a1) / 2, L = a1 - a0;
       // dải dọc theo hướng vuông góc (ang + 90°), tâm ở (d, m) trong hệ toạ độ của tường
       const x = it.x + ca * d - sa * m, y = it.y + sa * d + ca * m, ang = it.ang + Math.PI / 2;
-      veAnh(c, { k: 'line', x: x - Math.cos(ang) * L / 2, y: y - Math.sin(ang) * L / 2, ang, len: L, w: 40, el: 'ice', u: it.u, age: it.age, dim: it.dim }, mode, f);
+      veAnh(c, { k: 'line', x: x - Math.cos(ang) * L / 2, y: y - Math.sin(ang) * L / 2, ang, len: L, w: 40, el: 'ice', u: it.u, age: it.age, dim: it.dim, con: it.con }, mode, f);
     }
     return true;
   }
@@ -24269,6 +24594,8 @@ MA._xong();
   function goiBay(e, dt, a) {
     const w = W();
     e.sumCd = (e.sumCd == null ? 8 : e.sumCd) - dt;
+    // soát mượt phiên 3 mục 22 (?venhe=0: như cũ): xét hồi chiêu / số quái trước, chỉ đếm đồng bọn khi đã có thể gọi (cùng kết quả, bớt lọc mảng mỗi nhịp)
+    if (G.VE_NHE !== false && (e.sumCd > 0 || w.ents.length >= 9)) return false;
     const allies = w.ents.filter((x) => !x.dead && x.sum === e).length + (w.spawns || []).filter((s) => s.opt && s.opt.sumBy === e).length;
     if (e.sumCd > 0 || allies >= 2 || w.ents.length >= 9) return false;
     e.sumCd = G.rr(12, 16);
@@ -24915,7 +25242,8 @@ MA._xong();
           c.fillStyle = 'rgba(255,' + (bl ? 60 : 120) + ',40,' + (0.12 + 0.22 * k).toFixed(2) + ')';
           c.beginPath(); c.moveTo(o.V[0][0], o.V[0][1]); c.lineTo(o.V[1][0], o.V[1][1]); c.lineTo(o.V[2][0], o.V[2][1]); c.closePath(); c.fill();
         }
-        if (o.no) return;
+        // soát mượt phiên 3 mục 8 (?humo=0 như cũ): nổ xong (o.het 0,3 giây) lá bùa không tắt phụt: giữ khung cuối, mờ dần trong 0,15 giây
+        if (o.no) { if (G.HU_MO !== false && KA('hu-bua-tam-giac') && o.het > 0.15) for (const v of o.V) FA().veK(c, 'hu-bua-tam-giac', v[0], v[1] + 1, 5, 0, 1, false, (o.het - 0.15) / 0.15); return; }
         // ảnh hu-bua-tam-giac (lá bùa cao 12 khi co 1, neo chân bùa): đang bay khung 1; cắm xuống thì rung (khung 1–3 lặp), 45% cuối thời gian
         // chờ nổ chạy khung 4–6 (vòng lửa chân to dần, khung 6 đúng lúc nổ).
         if (KA('hu-bua-tam-giac')) {
@@ -25042,7 +25370,7 @@ MA._xong();
     if (!(k.vo > 0)) return;
     // ảnh hu-vo-oc (vỏ trùm kín thân ốc: rộng 48 ≈ thân 46 của oc.sprite.json, neo chân), khung theo phần thời gian rút vỏ đã qua:
     // 1–2 yên, 3–4 rung, 5–6 ló ra (1/3 cuối = sắp bò ra). Ảnh quay phải như ảnh quái; quay trái thì lật.
-    if (KA('hu-vo-oc')) { const u = clamp(1 - k.vo / SO.oc.vo, 0, 0.999); if (FA().veK(c, 'hu-vo-oc', e.x, e.y, Math.floor(u * 6), 0, 1, e.face < 0, 1)) return; }
+    if (KA('hu-vo-oc')) { const u = clamp(1 - k.vo / SO.oc.vo, 0, 0.999); if (FA().veK(c, 'hu-vo-oc', e.x, e.y, Math.floor(u * 6), 0, 1, e.face < 0, G.HU_MO !== false && u > 0.75 ? 1 - (u - 0.75) / 0.25 * 0.95 : 1)) return; } // mục 8: vỏ mờ dần 25% cuối (ốc ló ra), không tắt phụt
     // thiếu ảnh / ?fxcu=1: vẽ tạm bằng code
     const x = Math.round(e.x), y = Math.round(e.y), r = Math.max(7, e.r + 2), bl = k.vo < 0.4 && Math.floor(G.time * 12) % 2;
     for (let i = -r; i <= r; i++) { const h = Math.round(Math.sqrt(Math.max(0, r * r - i * i)) * 0.8); p(c, x + i, y - h - 1, 1, h + 1, bl ? 'rgba(220,230,240,0.5)' : 'rgba(150,160,175,0.55)'); }
@@ -25648,6 +25976,7 @@ MA._xong();
               // 0,4 giây cuối trước khi châm lửa khung 5–6 (mép đỏ, tia lửa). Mỗi chấm lệch pha.
               if (!chay && KA('hu-vet-dau')) { const f = v.age < 0.25 ? Math.floor(v.age / 0.125) : v.age < S.cho - 0.4 ? 2 + ((Math.floor(v.age * 6) + i) % 2) : 4 + ((Math.floor(v.age * 10) + i) % 2); FA().veK(c, 'hu-vet-dau', x, y, f, 0, S.rong / 18, i % 2 === 1, 1); continue; }
               if (!chay) { elip(c, x, y, 7, 4, 'rgba(40,24,10,0.75)'); p(c, x - 2, y - 1, 3, 1, 'rgba(160,130,60,0.8)'); continue; }
+              if (G.HU_MO !== false && KA('hu-vet-dau') && v.age - S.cho < 0.15) FA().veK(c, 'hu-vet-dau', x, y, 4 + (i % 2), 0, S.rong / 18, i % 2 === 1, 1 - (v.age - S.cho) / 0.15); // soát mượt phiên 3 mục 8: vệt dầu mờ dần dưới lửa (không tắt phụt)
               if (coAnh('hu-vung-lua')) { FA().veK(c, 'hu-vung-lua', x, y, (Math.floor(v.age * 10) + i) % 6, 0, 0.42, false, 1); continue; }
               const fl = Math.floor(v.age * 12 + i) % 3;
               p(c, x - 3, y - 5 - fl, 6, 5 + fl, '#c43c10'); p(c, x - 2, y - 4 - fl, 4, 4 + fl, '#ff8a1e'); p(c, x - 1, y - 3, 2, 2, '#ffd23c');
@@ -26158,10 +26487,13 @@ MA._xong();
     const he = o.he && o.he.el ? 'hu-dan-ten-' + o.he.el : null;
     return he && F.co(he) ? he : null;
   }
+  // Soát mượt phiên 3 mục 21 (?tile05=0 tắt): ảnh đạn XOAY theo hướng bay dùng 16 hướng cố định (bước 22,5°) — mỗi hướng một kiểu răng cưa
+  // ổn định, không lấp lánh từng khung khi đạn cong / góc đổi nhẹ. Chỉ là hình: đường bay, va chạm không đổi.
+  const H16 = Math.PI / 8, goc16 = (a) => (G.TILE05 !== false ? Math.round(a / H16) * H16 : a);
   A.proj = function (c, o) {
     const ten = o.team === 'player' && o.kind === 'arrow' && !G.noRender ? maTen(o) : null;
     if (ten) {
-      FA().ve(c, ten, o.x, o.y - (o.z || 10), o.fxT || 0, Math.atan2(o.vy, o.vx), o.big ? 1.5 : 1);
+      FA().ve(c, ten, o.x, o.y - (o.z || 10), o.fxT || 0, goc16(Math.atan2(o.vy, o.vx)), o.big ? 1.5 : 1);
       return;
     }
     if (o.team === 'player') return art0(c, o);
@@ -26186,7 +26518,7 @@ MA._xong();
       const baoTu = (L === 'spore' || (o.src && o.src.art === 'hoaBaoTu')) && FA() && FA().co('hu-dan-bao-tu');
       const ma = baoTu ? null : DAN_MA[L], anh = ma && FA() ? FA().get(ma) : null;
       if (baoTu) FA().ve(c, 'hu-dan-bao-tu', x, y, o.fxT || G.time, Math.atan2(o.vy, o.vx), o.dBig ? 1.6 : 1);
-      else if (anh) FA().ve(c, ma, x, y, o.fxT || G.time, DAN_TRON[L] && !anh.xoay ? 0 : Math.atan2(o.vy, o.vx), o.dBig ? 2 : 1);
+      else if (anh) FA().ve(c, ma, x, y, o.fxT || G.time, DAN_TRON[L] && !anh.xoay ? 0 : anh.xoay ? goc16(Math.atan2(o.vy, o.vx)) : Math.atan2(o.vy, o.vx), o.dBig ? 2 : 1);
       else c.drawImage(sv, x - h, y - h);
       // chấm đỏ nhấp nháy trên đầu đạn quái: nhìn là biết phải né
       if (((G.time * 8) | 0) % 2) { c.fillStyle = '#ff3a22'; c.fillRect(x - 1, y - h + (o.dBig ? 4 : 2), 2, 1); }
@@ -27127,19 +27459,59 @@ MA._xong();
   const giayLap = (ten, a) => (a.giay || 1) * (/^(dung|di|chay)(_|$)/.test(ten) ? NHIP_LAP : 1);
   function khungLap(D, ten, t) { const a = D.dong_tac[ten]; return Math.floor(Math.max(0, t) / giayLap(ten, a) * a.so) % a.so; }
   function phanKhung(D, ten, t) { const a = D.dong_tac[ten], v = Math.max(0, t) / giayLap(ten, a) * a.so; return v - Math.floor(v); } // tiến độ trong khung lặp (0..1)
+  // ---------- Soát mượt phiên 3 ----------
+  // Mục 17 (?thocuti=0 tắt): hàng ĐỨNG THỞ có 4 khung cuối gần như trùng nhau, nối vòng 8→1 bị nhảy → phát đi đi về về 1-2-3-4-5-4-3-2
+  // (cùng nhịp mỗi khung, cùng chu kỳ 8 bước). Tụ lực búa (bua_giu, 4 khung) nối vòng cũng nhảy → 1-2-3-4-3-2. i2: khung kế (góc vũ khí
+  // cầm nội suy về đúng khung sẽ tới, không về khung i+1). Hàng cầm vũ khí lúc đứng (dung_<loại>) dùng cùng khung với hàng thân.
+  const QUA_LAI = { dung: [0, 1, 2, 3, 4, 3, 2, 1], bua_giu: [0, 1, 2, 3, 2, 1] };
+  function lapQuaLai(D, ten, t) {
+    const q = G.THO_CUTI !== false && QUA_LAI[ten], a = D.dong_tac[ten];
+    if (!q || !a || a.so < 5 - (ten === 'bua_giu' ? 1 : 0)) return null;
+    const v = Math.max(0, t) / (giayLap(ten, a) / a.so), k = Math.floor(v) % q.length;
+    return { ten, i: q[k], i2: q[(k + 1) % q.length], fl: v - Math.floor(v) };
+  }
+  // Mục 20 (?nhipcuti=0 tắt): PHA BƯỚC chung 0..1 cho đi bộ và chạy (mỗi em bé một pha, nhớ theo P): đổi đi↔chạy giữ đúng chỗ trong
+  // bước (không nhảy chân), vừa bắt đầu đi / chạy thì vào từ khung 1 (chân chạm đất), lướt kiếm cũng đi theo pha bước (nhanh gấp đôi)
+  // thay cho đồng hồ P.t. Vùng đệm: đang đi bộ thì phải nhanh hơn 0,65 mới sang chạy, đang chạy thì chậm hơn 0,55 mới về đi bộ.
+  // Chỉ lần vẽ của chính em bé (o.t = P.t) mới đẩy pha; bóng mờ (o.t cũ) vẽ theo cách cũ. Chỉ là hình: tốc độ thật không đổi.
+  const BUOC = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  const BUOC_VAO = 0.65, BUOC_RA = 0.55;
+  const buocCua = (o) => (G.NHIP_CUTI !== false && BUOC && o.p && (o.t == null || o.t === o.p.t) ? o.p : null);
+  function buoc(o, D, ten0, nhan) { // ten0: ép hàng ('chay'), không thì chọn đi / chạy theo P.diTL có vùng đệm; nhan: hệ số nhịp
+    const p = buocCua(o);
+    if (!p) return null;
+    const t = G.time || 0;
+    let b = BUOC.get(p);
+    if (!b) BUOC.set(p, (b = { ph: 0, t, chay: true, di: false }));
+    const dt = b.di ? kep(t - b.t, 0, 0.1) : 0;
+    if (!b.di) b.ph = 0; // vừa bắt đầu bước: khung 1
+    b.di = true; b.t = t;
+    const tl = p.diTL;
+    if (tl == null) b.chay = true;
+    else if (b.chay && tl < BUOC_RA) b.chay = false;
+    else if (!b.chay && tl > BUOC_VAO) b.chay = true;
+    const ten = ten0 || (b.chay || !D.dong_tac.di ? 'chay' : 'di'), a = D.dong_tac[ten];
+    if (!a) return null;
+    b.ph = (b.ph + (dt * (nhan || 1)) / giayLap(ten, a)) % 1;
+    const v = b.ph * a.so, i = Math.floor(v) % a.so;
+    return { ten, i, fl: v - Math.floor(v), i2: (i + 1) % a.so };
+  }
+  function nghiBuoc(o) { const p = buocCua(o), b = p && BUOC.get(p); if (b) { b.di = false; b.t = G.time || 0; } }
 
   // Chọn động tác + khung (cùng thứ tự ưu tiên như SC.chonEmBe ở js/sprite_custom.js). Trả { ten, i, theo? }: theo = động tác đánh mà
   // vũ khí đi theo khi thân đang ở hàng chạy (chạy mà đánh, G.CHAY_DANH).
   function chon(o, D) {
     const s = chon0(o, D);
+    if (s && !s.buoc && !(s.ghep && o.move)) nghiBuoc(o); // mục 20: không bước → lần bước sau vào từ khung 1
     // chạy + chém: ghép eo (chân hàng chạy, thân trên hàng đòn) — chỉ hàng có điểm eo, chỉ khi đang chạy
     if (s && s.ghep && o.move && coEo(s.ten) && D.dong_tac.chay) {
       if (eoSua()) { // chân cùng hướng thân trên; chạy ngược hướng chém → chạy lùi (phát ngược thứ tự khung, nhịp ×0,8)
-        const so = D.dong_tac.chay.so, lui = nguocMat(o);
-        const i = lui ? so - 1 - khungLap(D, 'chay', s.tc * LUI_NHIP) : khungLap(D, 'chay', s.tc);
+        const so = D.dong_tac.chay.so, lui = nguocMat(o), B = buoc(o, D, 'chay', lui ? LUI_NHIP : 1); // mục 20: chân theo pha bước chung
+        const i = B ? (lui ? so - 1 - B.i : B.i) : lui ? so - 1 - khungLap(D, 'chay', s.tc * LUI_NHIP) : khungLap(D, 'chay', s.tc);
         return { ten: s.ten, i: s.i, u: s.u, eo: { i, moi: 1, lui: lui ? 1 : 0 } };
       }
-      return { ten: s.ten, i: s.i, u: s.u, eo: { i: khungLap(D, 'chay', s.tc) } };
+      const B = buoc(o, D, 'chay');
+      return { ten: s.ten, i: s.i, u: s.u, eo: { i: B ? B.i : khungLap(D, 'chay', s.tc) } };
     }
     if (s && s.ghep) { const r = { ten: s.ten, i: s.i, u: s.u }; return s.theo ? Object.assign(r, { theo: s.theo }) : r; }
     return s;
@@ -27150,12 +27522,13 @@ MA._xong();
     let goc = wt; // loại vũ khí thật (giáo đang bay thì o.weapon là 'fist' nhưng chiêu đặc biệt vẫn là của giáo)
     try { if (p && G.curW) { const w = G.curW(p); if (w && w.type) goc = w.type; } } catch (e) { goc = wt; }
     const mot = (ten, u) => ({ ten, i: khungMot(D, ten, u), u: kep(u || 0, 0, 1) });
-    const lap = (ten, tt) => ({ ten, i: khungLap(D, ten, tt), fl: phanKhung(D, ten, tt) });
+    const lap = (ten, tt) => lapQuaLai(D, ten, tt) || ({ ten, i: khungLap(D, ten, tt), fl: phanKhung(D, ten, tt) });
+    const buocB = (ten0, nhan) => { const B = buoc(o, D, ten0, nhan); if (B) B.buoc = 1; return B; }; // mục 20
     if (p && p.dead) return mot('chet', (p.deadT || 0) / 0.6);
     if (o.dodge >= 0) return mot('lon', o.dodge);
     if (p && p.dashT > 0) {
       if (mv && mv.kind === 'xoc') return mot('thuong_xoc', mv.dashDur > 0 ? 1 - p.dashT / mv.dashDur : 0.5);
-      return lap('chay', t * 2); // Nhát lướt kiếm sau lộn: như cũ, hàng chạy nhanh gấp đôi
+      return buocB('chay', 2) || lap('chay', t * 2); // Nhát lướt kiếm sau lộn: hàng chạy nhanh gấp đôi (mục 20: theo pha bước, không theo P.t)
     }
     if (p && p.specT > 0 && DB[goc]) return mot(DB[goc], 1 - p.specT / 0.35);
     if (p && p.castT > 0) return Object.assign(mot('chuong', 1 - p.castT / 0.3), { ghep: 1, tc });
@@ -27171,12 +27544,12 @@ MA._xong();
       if (r) {
         const cd = G.CHAY_DANH; // chạy mà đánh: thân giữ hàng chạy (chân bước), chỉ vũ khí vung theo neo của khung đòn đánh
         if (eoBat()) return Object.assign(r, { ghep: 1, tc }); // cách mới: ghép eo (hàng thẳng) hoặc toàn thân hàng đòn (hàng cúi)
-        if (o.move && (cd === 'than' || (cd === 'lai' && !(u >= 0.2 && u < 0.65)))) return { ten: 'chay', i: khungLap(D, 'chay', tc), theo: r };
+        if (o.move && (cd === 'than' || (cd === 'lai' && !(u >= 0.2 && u < 0.65)))) { const B = buocB('chay'); return { ten: 'chay', i: B ? B.i : khungLap(D, 'chay', tc), theo: r, buoc: B ? 1 : 0 }; }
         return r;
       }
     }
     if ((p && p.hurtT > 0) || (!p && o.flash)) return mot('trung', p ? 1 - p.hurtT / 0.2 : 0.3);
-    if (o.move) return lap(p && p.diTL != null && p.diTL < DI_BO ? 'di' : 'chay', tc);
+    if (o.move) return buocB() || lap(p && p.diTL != null && p.diTL < DI_BO ? 'di' : 'chay', tc);
     return lap('dung', t);
   }
 
@@ -27209,7 +27582,7 @@ MA._xong();
   function camCua(D, s, w) {
     if (G.CAM_VK === false || s.theo || !CAM_HANG[s.ten] || !w || w.type === 'fist' || !VK_LOAI[w.type]) return null;
     const ten = s.ten + '_' + VK_LOAI[w.type];
-    return D.dong_tac[ten] ? { ten, i: s.i, fl: s.fl, cam: 1 } : null;
+    return D.dong_tac[ten] ? { ten, i: s.i, fl: s.fl, i2: s.i2, cam: 1 } : null;
   }
   // ---------- ĐÒN QUAY THEO HƯỚNG NHẮM (zed-8-huong) ----------
   // HV_DAM: hàng đâm / ném (vũ khí xoay quanh nắm tay theo góc nhắm, kẹp ±KEP_DAM; quá thì nghiêng thân trên quanh eo, tối đa NGHIENG).
@@ -27327,7 +27700,7 @@ MA._xong();
   // là của hàng đòn, cùng mặt, < 0,2 s) thì trong RA giây đầu góc đi dần từ góc cuối đòn về thế cầm (đường ngắn nhất: không lật 360°).
   const RA = 0.18;
   function gocCam(o, da, wa, n) {
-    const i = wa.i, n2 = da.neo[(i + 1) % da.so];
+    const i = wa.i, n2 = da.neo[wa.i2 != null ? wa.i2 % da.so : (i + 1) % da.so]; // i2: khung kế khi phát đi đi về về (mục 17) / pha bước (mục 20)
     let a = n[2];
     if (n2) { const fr = kep(wa.fl || 0, 0, 1), e = fr * fr * (3 - 2 * fr); a = n[2] + (gocGan(n[2], n2[2]) - n[2]) * e; }
     const p = o.p, r = p && NHO ? NHO.get(p) : null, f = o.face < 0 ? -1 : 1, t = G.time || 0;
@@ -27478,7 +27851,8 @@ MA._xong();
   }
   // Vẽ bóng + lật theo mặt + nhuộm (trúng đòn, băng, độc) + hào quang Gồng quanh một hàm vẽ người lop(q) (toạ độ tính từ chân).
   function veLop(c, o, lop) {
-    const x = Math.round(o.x), y = Math.round(o.y), f = o.face < 0 ? -1 : 1, t = (o.t != null ? o.t : G.time) || 0;
+    const R = G.lamTron || Math.round; // soát mượt phiên 3 mục 1: cùng kiểu làm tròn với camera (nửa điểm ảnh; ?noisuy=0 như cũ)
+    const x = R(o.x), y = R(o.y), f = o.face < 0 ? -1 : 1, t = (o.t != null ? o.t : G.time) || 0;
     const p = o.p, chet = !!(p && p.dead);
     c.save();
     if (o.alpha != null) c.globalAlpha = c.globalAlpha * o.alpha;
@@ -27521,7 +27895,7 @@ MA._xong();
     if (!T || !V) return;
     const D = T.tep, s = chon(o, D), v = vkCua(o, D, s, T, false);
     if (!v || v.cam) return; // vũ khí cầm lúc đứng/đi/chạy (cả lướt sau lộn): giữ mũi của bản cũ cho vệt/hiệu ứng
-    const f = o.face < 0 ? -1 : 1, X0 = Math.round(o.x) + (f < 0 ? 1 : 0), Y0 = Math.round(o.y);
+    const f = o.face < 0 ? -1 : 1, X0 = (G.lamTron || Math.round)(o.x) + (f < 0 ? 1 : 0), Y0 = (G.lamTron || Math.round)(o.y);
     const R = V.tep.vk[v.da.vk][v.cap], g = v.da.vk_cam[v.cap];
     const E = s.eo ? eoTinh(T, s, o) : null, ox = E ? E.ox : 0, oy = E ? E.oy : 0; // chạy + chém: vũ khí dời theo nửa trên đã khớp eo
     let gx = v.n[0] / 2 - 24 + ox, gy = v.n[1] / 2 - 45 + oy, ang = v.ang != null ? v.ang : v.n[2];
@@ -27551,7 +27925,22 @@ MA._xong();
   }
 
   // ---------- bọc G.art.hero, G.art.proj, G.tinhLinh.tip (ngoài cùng; lớp khác có thể bọc lại sau khi ảnh nạp nên kiểm mỗi khung) ----------
-  G.zedMoi = { chon, MOC, eoTinh, lechHinh, lechTu, loi: [] };
+  // Soát mượt phiên 3 mục 22: khoá HÌNH của lần vẽ Cu Tí (js/fx.js viền bé chỉ dựng lại khi khoá đổi). null = không chắc (em bé khác, đang
+  // nhuộm / trúng đòn / Gồng / ánh vũ khí chạy theo thời gian…) → nơi gọi dựng lại như cũ. Chỉ đọc, không đổi trạng thái vẽ.
+  function khoaVe(o) {
+    if (!o || !laZed(o) || o.gong || o.alpha != null && o.alpha !== 1 || o.flash) return null;
+    const T = layThan(), p = o.p;
+    if (!T || !p || p.dead || p.hurtT > 0) return null;
+    const st = p.st || {};
+    if (st.ice > 0 || st.poison > 0 || st.fire > 0) return null;
+    const w = o.weapon, VV = G.vienVk;
+    if (w && VV && VV.co && VV.co(w)) return null;
+    const D = T.tep, s = chon(o, D), V = lay('zed-vk'), v = V ? vkCua(o, D, s, T, false) : null, h = HV && HV.get(p);
+    return [T._ma, s.ten, s.i, s.eo ? s.eo.i + ':' + (s.eo.lui || 0) + ':' + (s.eo.moi || 0) : '', s.theo ? s.theo.ten + ':' + s.theo.i : '',
+      v ? v.wa.ten + ':' + v.wa.i + ':' + v.cap + ':' + (v.he || '') + ':' + Math.round(v.ang / 2) + ':' + Math.round((v.lean || 0) * 2) : V ? '-' : '0',
+      h ? Math.round(h.gv / 2) + ':' + Math.round(h.lv * 2) : '', o.face < 0 ? -1 : 1, w ? w.type + ':' + (w.coat || '') : '', o.dodge >= 0 ? 1 : 0, o.roundShadow ? 1 : 0].join('|');
+  }
+  G.zedMoi = { chon, MOC, eoTinh, lechHinh, lechTu, khoaVe, loi: [] };
   let dangGoiCu = false;
   const ghiLoi = (e) => { if (G.zedMoi.loi.length < 5) G.zedMoi.loi.push(String((e && e.message) || e)); };
   function boc() {
@@ -28740,8 +29129,12 @@ MA._xong();
   const cache = new Map();
   function layer(key, w, h, fn) {
     let cv = cache.get(key);
+    if (cv && G.VE_NHE !== false) { cache.delete(key); cache.set(key, cv); } // soát mượt phiên 3 mục 22: dùng gần nhất xếp cuối (LRU)
     if (!cv) {
-      if (cache.size > 700) cache.clear();
+      if (cache.size > 700) {
+        if (G.VE_NHE !== false) { let n = 0; for (const k of cache.keys()) { cache.delete(k); if (++n >= 80) break; } } // xoá dần 80 tấm lâu không dùng, không xoá sạch (khựng)
+        else cache.clear();
+      }
       cv = document.createElement('canvas'); cv.width = Math.max(1, Math.round(w)); cv.height = Math.max(1, Math.round(h));
       g = cv.getContext('2d'); fn(); cache.set(key, cv);
     }
@@ -28844,7 +29237,7 @@ MA._xong();
 
   // ---------- chạm ----------
   function lighten(col, k) { const n = parseInt(String(col).slice(1), 16); if (isNaN(n)) return col; const f = (v) => ('0' + Math.round(v + (255 - v) * k).toString(16)).slice(-2); return '#' + f((n >> 16) & 255) + f((n >> 8) & 255) + f(n & 255); }
-  const heldIn = (x, y, w, h) => [...G.pointers.values()].some((q) => !q.role && !q.stale && G.inRect(q, x, y, w, h));
+  const heldIn = (x, y, w, h) => (G.coTro ? G.coTro((q) => !q.role && !q.stale && G.inRect(q, x, y, w, h)) : [...G.pointers.values()].some((q) => !q.role && !q.stale && G.inRect(q, x, y, w, h)));
   // Phiên giao diện 12/10 — VÙNG CHẠM TỐI THIỂU 44 pt: nút nào có vùng chạm nhỏ hơn T.CHAM_MIN (31 đơn vị ≈ 44 pt trên iPhone cầm ngang,
   // 1 đơn vị ≈ 1,44 pt) thì được nới VÔ HÌNH ra cho đủ (hình nút giữ nguyên). Không chồng nhau: chạm trúng hình thật của một nút thì chỉ
   // nút đó nhận; chạm vào phần nới thì nút có hình gần ngón tay nhất nhận (so với mọi nút đã vẽ ở khung trước).
@@ -29642,14 +30035,41 @@ MA._xong();
     if (st.heal > 0) st.heal -= dt;
     return st;
   }
+  // Mục 15 (soát mượt phiên 3, ?uimuot=0 tắt): thanh kinh nghiệm nhớ số đang hiện theo chỗ vẽ (x, y, w); số mới lớn hơn thì chạy tới
+  // trong 0,4 giây (ease-out). Số nhỏ đi (lên cấp, đổi em bé) thì hiện ngay số mới. Chỉ là hình: số kinh nghiệm thật không đổi.
+  const XP_CHAY = new Map();
+  function xpChay(x, y, w, frac) {
+    frac = G.clamp(+frac || 0, 0, 1);
+    const k = x + '|' + y + '|' + w, now = (typeof performance !== 'undefined' ? performance.now() : Date.now()) / 1000;
+    let m = XP_CHAY.get(k);
+    if (!m) { if (XP_CHAY.size > 40) XP_CHAY.clear(); XP_CHAY.set(k, (m = { tu: frac, den: frac, at: now })); return frac; }
+    const u = G.clamp((now - m.at) / 0.4, 0, 1), dang = m.tu + (m.den - m.tu) * (1 - (1 - u) * (1 - u) * (1 - u));
+    if (Math.abs(frac - m.den) > 1e-6) {
+      if (frac < dang - 1e-6) { m.tu = m.den = frac; m.at = now; return frac; }
+      m.tu = dang; m.den = frac; m.at = now; return dang;
+    }
+    return dang;
+  }
   T.bar = function (x, y, w, kind, frac, label, o) {
     o = o || {};
     x = Math.round(x); y = Math.round(y); w = Math.round(w);
     const h = o.h || 9, cap = h >= 7 ? 7 : 2, inner = w - cap * 2;
     const gd = G.VFX ? +G.VFX.giaoDien : 1, ls = o.lag && gd > 0 && h >= 6 ? lagOf(o.lag, G.clamp(frac || 0, 0, 1)) : null;
+    if (kind === 'xp' && G.UI_MUOT !== false) frac = xpChay(x, y, w, frac); // soát mượt phiên 3 mục 15: thanh kinh nghiệm chạy tới đích 0,4 giây
     const trueFrac = frac;
     if (ls) frac = ls.shown;
     const fw = Math.round(inner * G.clamp(frac || 0, 0, 1)), cols = o.col ? [o.col, o.hi || lighten(o.col, 0.35)] : BARC[kind] || BARC.hp;
+    // Soát mượt phiên 3 mục 22 (?venhe=0: như cũ): tấm nhớ chỉ là KHUNG thanh (không có độ dài máu trong khoá) + một tấm vạch khắc;
+    // phần đổ màu tô thẳng bằng fillRect. Hình y hệt (cùng thứ tự lớp), nhưng máu đổi không còn sinh tấm mới mỗi lần.
+    const nhe = G.VE_NHE !== false, U = G.ux;
+    const doMau = (px, py, pw, ph, hi) => { if (pw <= 0 || ph <= 0) return; U.fillStyle = cols[0]; U.fillRect(px, py, pw, ph); if (hi) { U.fillStyle = cols[1]; U.fillRect(px, py, pw, 1); } };
+    const vach = (n) => layer('barM|' + inner + '|' + h + '|' + n, inner, h - 4, () => { for (let k = 1; k < n; k++) { const px = Math.round((inner * k) / n); P(px, 0, C.dk); P(px, h - 5, C.dk); if (k * 2 === n) R(px, 0, 1, h - 4, 'rgba(0,0,0,0.5)'); } });
+    if (h < 6 && nhe) {
+      const iw = Math.round((w - 2) * G.clamp(frac || 0, 0, 1));
+      put(layer('barS0|' + w + '|' + h, w, h, () => { R(0, 0, w, h, C.dk); R(1, 1, w - 2, h - 2, '#0d1716'); R(0, 0, 1, h, C.br); R(w - 1, 0, 1, h, C.br); }), x, y);
+      doMau(x + 1, y + 1, iw, h - 2, h >= 4);
+      return;
+    }
     if (h < 6) { // thanh mỏng (dấu ấn, kinh nghiệm nhỏ): viền tối, hai đầu đồng
       const iw = Math.round((w - 2) * G.clamp(frac || 0, 0, 1));
       put(layer('barS|' + w + '|' + h + '|' + cols[0] + '|' + iw, w, h, () => { R(0, 0, w, h, C.dk); R(1, 1, w - 2, h - 2, '#0d1716'); R(1, 1, iw, h - 2, cols[0]); if (h >= 4) R(1, 1, iw, 1, cols[1]); R(0, 0, 1, h, C.br); R(w - 1, 0, 1, h, C.br); }), x, y);
@@ -29660,12 +30080,22 @@ MA._xong();
     const gkh = khungCo(kind === 'mana' ? 'gd-khung-mana' : kind === 'xp' ? 'gd-khung-xp' : 'gd-khung-mau');
     if (gkh) {
       khungDat(khungLop(gkh, 'bar|' + w + '|' + h, w, h + 1, () => { rr(0, 1, w, h, 'rgba(0,0,0,0.5)', 1); khungVe(gkh, 0, 0, w, h); }), x, y, w, h + 1);
-      put(layer('barL|' + w + '|' + h + '|' + cols[0] + '|' + fw + '|' + (o.marks || 10), inner, h - 4, () => {
+      if (nhe) { put(layer('barL0|' + inner + '|' + h, inner, h - 4, () => R(0, 0, inner, h - 4, '#0d1716')), x + cap, y + 2); doMau(x + cap, y + 2, fw, h - 4, true); put(vach(o.marks || 10), x + cap, y + 2); }
+      else put(layer('barL|' + w + '|' + h + '|' + cols[0] + '|' + fw + '|' + (o.marks || 10), inner, h - 4, () => {
         R(0, 0, inner, h - 4, '#0d1716');
         R(0, 0, fw, h - 4, cols[0]); R(0, 0, fw, 1, cols[1]);
         const n = o.marks || 10;
         for (let k = 1; k < n; k++) { const px = Math.round((inner * k) / n); P(px, 0, C.dk); P(px, h - 5, C.dk); if (k * 2 === n) R(px, 0, 1, h - 4, 'rgba(0,0,0,0.5)'); }
       }), x + cap, y + 2);
+    } else if (nhe) {
+      put(layer('bar0|' + w + '|' + h, w, h + 1, () => {
+        rr(0, 1, w, h, 'rgba(0,0,0,0.5)', 1);
+        rr(0, 0, w, h, C.dk, 1); rr(1, 1, w - 2, h - 2, C.br, 1); R(2, 1, w - 4, 1, C.hi);
+        R(cap, 2, inner, h - 4, '#0d1716');
+        if (cap >= 7) for (const ex of [2, w - 6]) { R(ex, (h >> 1) - 1, 4, 3, C.dk); P(ex + 1, h >> 1, C.gold); P(ex + 2, h >> 1, C.gold); } // đinh tán hai đầu
+      }), x, y);
+      doMau(x + cap, y + 2, fw, h - 4, true);
+      put(vach(o.marks || 10), x + cap, y + 2);
     } else {
     const cv = layer('bar|' + w + '|' + h + '|' + cols[0] + '|' + fw + '|' + (o.marks || 10), w, h + 1, () => {
       rr(0, 1, w, h, 'rgba(0,0,0,0.5)', 1);
@@ -32113,7 +32543,10 @@ MA._xong();
     if (t > 1.6) { E.ui.fx = null; return; }
     const c = G.ux, FA = G.fxAnh, ma = FX_MA[f.k];
     let ve = false;
-    if (FA && FA.co && FA.co(ma) && t < 0.95) ve = FA.ve(c, ma, cx, cy + s * 0.45, t, 0, 1.15);
+    if (FA && FA.co && FA.co(ma) && G.HU_MO !== false) { // soát mượt phiên 3 mục 8 (?humo=0 như cũ): giữ khung cuối 0,12 giây, mờ dần 25% cuối
+      const gy = Math.min(0.95, FA.giay(ma) || 0.95);
+      if (t < gy + 0.12) { ve = true; const mo = t < gy * 0.75 ? 1 : Math.max(0, 1 - (t - gy * 0.75) / (gy * 0.25 + 0.12)); if (mo > 0.003) FA.ve(c, ma, cx, cy + s * 0.45, Math.min(t, gy - 1e-4), 0, 1.15, false, mo); }
+    } else if (FA && FA.co && FA.co(ma) && t < 0.95) ve = FA.ve(c, ma, cx, cy + s * 0.45, t, 0, 1.15);
     if (!ve && t < 0.9) {
       const k = t / 0.9;
       c.save();
@@ -33533,6 +33966,8 @@ MA._xong();
         if (S.trans) slideWorld();
         drawHud();
       }
+      const bm = S.mode !== 'play' && G.uiBang ? G.uiBang.vao() : false; // soát mượt phiên 3 mục 15: bảng vừa mở phóng 0,94→1 + hiện dần (chạm đổi ngược theo phép phóng)
+      try {
       if (S.mode === 'map') { G.minimap.drawBig(S); if (G.click) { G.click = null; setMode('play'); G.sfx('ui'); } }
       else if (S.mode === 'chest') panelChest();
       else if (S.mode === 'merchant') panelMerchant();
@@ -33540,6 +33975,7 @@ MA._xong();
       else if (S.mode === 'paused') panelPause();
       else if (S.mode === 'bag') { ui.rect(0, 0, G.W, G.H, 'rgba(0,0,0,0.6)'); if (G.hanhTrang) G.hanhTrang.panel(true, () => setMode('paused')); else setMode('paused'); }
       else if (S.mode === 'result' || S.mode === 'dead') panelResult();
+      } finally { if (bm) G.uiBang.ra(); }
       if (S && S.fade > 0) ui.rect(0, 0, G.W, G.H, 'rgba(0,0,0,' + Math.min(1, S.fade / 0.35) + ')'); // S có thể vừa bị xoá khi bấm Về làng
     },
   };
@@ -33583,7 +34019,7 @@ MA._xong();
   function mobBars(W) {
     const gd = G.VFX ? +G.VFX.giaoDien : 1;
     if (!(gd > 0) || !G.theme || !G.theme.lagOf) return;
-    const c = G.ux, ga = c.globalAlpha, now = G.time || 0, cam = W.cam || 0;
+    const c = G.ux, ga = c.globalAlpha, now = G.time || 0, cam = G.camVe && G.NOI_SUY !== false ? G.camVe(W) : W.cam || 0; // soát mượt phiên 3 mục 1: cùng camera đã làm tròn với thân quái
     for (const e of W.ents) {
       if (!e || e.dead || !(e.maxhp > 0)) continue;
       let m = MOBHP.get(e);
@@ -33716,7 +34152,7 @@ MA._xong();
     T.bar(4, 3, 120, 'hp', Math.max(0, P.hp / P.maxhp), (G.CHU_RO !== false ? Math.max(0, Math.ceil(P.hp)) : Math.ceil(P.hp)) + ' / ' + P.maxhp, { h: 11, lag: P, size: 7.5 }); // lag: phần máu vừa mất tụt dần (js/ui_theme.js); khoá theo em bé của lượt chơi này
     T.bar(4, 15, 108, 'mana', P.mana / P.maxmana, Math.floor(P.mana) + ' / ' + P.maxmana, { h: 8, size: 6.5 });
     const canDrink = P.potions > 0 && !W.noPotion;
-    const heldBox = (b) => [...G.pointers.values()].some((p) => p.role === 'ui' && hitBox({ x: p.sx, y: p.sy }, b));
+    const heldBox = (b) => G.coTro((p) => p.role === 'ui' && hitBox({ x: p.sx, y: p.sy }, b)); // soát mượt phiên 3 mục 22: không chép mảng ngón mỗi lần
     BA.draw(c, 'potion', POT[0] + 13, POT[1] + 12, 12, { count: P.potions, disabled: !canDrink, pressed: heldBox(POT) });
     ui.text(W.noPotion ? 'Cấm' : 'Bình máu', POT[0] + 29, POT[1] + 15, { size: 7, bold: true, color: canDrink ? '#fff3da' : '#a89c8c' });
     BA.draw(c, 'pause', PAU[0] + PAU[2] / 2, PAU[1] + 12, 11, { pressed: heldBox(PAU) });
@@ -33952,7 +34388,7 @@ MA._xong();
     }
     // nút cảm ứng
     if (on('vien') && S.mode === 'play') {
-      const joy = [...G.pointers.values()].find((p) => p.role === 'joy');
+      const joy = G.timTro((p) => p.role === 'joy');
       let jdx = 0, jdy = 0;
       if (joy) {
         jdx = joy.x - joy.sx; jdy = joy.y - joy.sy;
@@ -33960,7 +34396,7 @@ MA._xong();
         if (jl > 24) { jdx *= 24 / jl; jdy *= 24 / jl; }
         BA.stick(c, joy.sx, joy.sy, 24, jdx, jdy, true);
       } else { const sp = stickPos(); BA.stick(c, sp[0], sp[1], sp[2], 0, 0, false); }
-      const held = (name) => [...G.pointers.values()].some((p) => p.role === name);
+      const held = (name) => G.coTro((p) => p.role === name);
       const cw2 = G.curW(P);
       // Vũ khí đang cầm: loại, hệ đang có hiệu lực (kể cả lúc đang Nung), mốc tiến hóa, bậc.
       const wst = { type: cw2.type, branch: G.activeEl(P, cw2), stage: G.wStage(cw2), rarity: G.wRar(cw2) };
@@ -42707,17 +43143,30 @@ window.FIREBASE_CONFIG = {
     c.fillStyle = g2; c.fillRect(0, 0, 480, 46);
     const ga = c.globalAlpha; c.globalAlpha = ga * Math.min(1, d.t / 0.3 + 0.2);
     if (b.ten) ui.text(b.ten, DAI.x, y0 + 9, { size: 8.5, bold: true, color: '#f6dc92' });
-    b.lines.forEach((l, k) => ui.text(l, DAI.x, y0 + b.hTen + b.size + 2 + k * b.lh, { size: b.size, color: '#f6efdc' }));
+    // Soát mượt phiên 3 mục 15 (?uimuot=0: hiện cả đoạn như cũ): chữ chạy ~40 chữ/giây theo TỪNG TỪ (cắt ở dấu cách, từ không nhảy dòng),
+    // dòng đã ngắt sẵn theo cả đoạn nên khung không đổi cỡ; chạm / Enter lúc chữ đang chạy thì hiện hết ngay (js: TR.draw, TR.update).
+    let con = G.UI_MUOT !== false && !d.hetChu ? Math.floor(Math.max(0, d.t - 0.1) * CHU_GIAY) : Infinity, xong = true;
+    b.lines.forEach((l, k) => {
+      if (con <= 0) { xong = false; return; }
+      let s = l;
+      if (con < l.length) { const cut = l.lastIndexOf(' ', con); s = cut > 0 ? l.slice(0, cut) : ''; xong = false; }
+      con -= l.length + 1;
+      if (s) ui.text(s, DAI.x, y0 + b.hTen + b.size + 2 + k * b.lh, { size: b.size, color: '#f6efdc' });
+    });
+    d.chuXong = xong;
     c.globalAlpha = ga;
     return y0;
   }
+  const CHU_GIAY = 40, HOA_ANH = 0.4; // mục 15: tốc độ chữ chạy; thời gian hoà ảnh khung cũ sang khung mới
   function het() {
     const d = TR.dang; TR.dang = null;
     G.click = null; if (G.stalePointers) G.stalePointers();
     if (d && d.o.xong) { try { d.o.xong(); } catch (e) { /* bỏ qua */ } }
   }
   TR.het = het;
-  function tiep() { const d = TR.dang; if (!d) return; d.i++; d.t = 0; if (d.i >= d.ds.length) het(); }
+  function tiep() { const d = TR.dang; if (!d) return; d.cu = { i: d.i, t: d.t }; d.i++; d.t = 0; d.hetChu = false; d.chuXong = true; if (d.i >= d.ds.length) het(); }
+  // mục 15: lần chạm / phím lúc chữ còn đang chạy thì hiện hết chữ; lần sau mới sang khung (vùng chạm không đổi)
+  function chamTiep() { const d = TR.dang; if (!d) return; if (G.UI_MUOT !== false && d.chuXong === false && !d.hetChu) { d.hetChu = true; return; } tiep(); }
   TR.tiep = tiep;
   TR.update = function (dt) {
     const d = TR.dang;
@@ -42726,7 +43175,7 @@ window.FIREBASE_CONFIG = {
     try { if (VS && G.scene === G.Village) VS.update(dt, true); } catch (e) { /* bỏ qua */ }
     const kp = G.keyP;
     if (kp.Escape) { kp.Escape = false; het(); return; }
-    if ((kp.Enter || kp.Space || kp.KeyJ) && d.t > 0.25) { tiep(); return; }
+    if ((kp.Enter || kp.Space || kp.KeyJ) && d.t > 0.25) { chamTiep(); return; }
     const f = d.ds[d.i];
     if (d.t > (f.giay || 5)) tiep();
   };
@@ -42738,14 +43187,27 @@ window.FIREBASE_CONFIG = {
     G.syncTaps = [];
     const f = d.ds[d.i], c = G.wx, a = anhCua(f), coAnh = !!(a && a.ok), mo = coAnh ? G.clamp((bayGio() - a.t) / 0.5, 0, 1) : 0;
     if (mo < 1) { try { veNen(f, d.t); } catch (e) { G.wxDat(c, 0, 0); c.fillStyle = '#120d10'; c.fillRect(0, 0, 480, 270); } }
+    // mục 15 (?uimuot=0: cắt đen như cũ): sang khung mới mà cả hai khung đều có ảnh → giữ ảnh cũ, hoà sang ảnh mới trong 0,4 giây
+    const cu = G.UI_MUOT !== false && d.cu && d.t < HOA_ANH && coAnh && mo >= 1 ? d.cu : null, fCu = cu ? d.ds[cu.i] : null, aCu = fCu ? anhCua(fCu) : null;
+    const hoa = !!(aCu && aCu.ok && aCu.img);
+    let kHoa = 1;
+    if (hoa) {
+      const u = G.clamp(d.t / HOA_ANH, 0, 1); kHoa = u * u * (3 - 2 * u);
+      try {
+        c.globalAlpha = 1; veAnh(c, aCu.img, cu.t + d.t, fCu.giay || 5, cu.i);
+        if (fCu.ai && (fCu.nen || 'lang') === 'lang') veNguoiNoi(c, fCu);
+      } catch (e) { /* bỏ qua */ }
+      c.globalAlpha = 1;
+    }
     if (coAnh) { // ảnh về giữa khung thì hiện dần đè lên nền code (0,5 giây)
       try {
-        c.globalAlpha = mo; veAnh(c, a.img, d.t, f.giay || 5, d.i); c.globalAlpha = 1;
-        if (f.ai && (f.nen || 'lang') === 'lang') veNguoiNoi(c, f);
+        c.globalAlpha = mo * kHoa; veAnh(c, a.img, d.t, f.giay || 5, d.i);
+        if (f.ai && (f.nen || 'lang') === 'lang') { c.globalAlpha = kHoa; veNguoiNoi(c, f); }
+        c.globalAlpha = 1;
       } catch (e) { c.globalAlpha = 1; }
     }
     G.wxDat(c, 0, 0);
-    if (d.t < 0.35) { c.globalAlpha = 1 - d.t / 0.35; c.fillStyle = '#000'; c.fillRect(0, 0, 480, 270); c.globalAlpha = 1; }
+    if (d.t < 0.35 && !hoa) { c.globalAlpha = 1 - d.t / 0.35; c.fillStyle = '#000'; c.fillRect(0, 0, 480, 270); c.globalAlpha = 1; }
     let y;
     if (coAnh) y = veDai(f, d); // chữ trên dải tối dưới ảnh
     else { // khung chữ dưới đáy (như cũ: chưa có ảnh, ảnh chưa về, hoặc ?truyencu=1)
@@ -42755,6 +43217,7 @@ window.FIREBASE_CONFIG = {
       const ga = G.ux.globalAlpha; G.ux.globalAlpha = ga * Math.min(1, d.t / 0.3 + 0.2);
       T.dialog(x, y, w, ten, f.loi, { size, tail: f.ai ? 54 : -1 });
       G.ux.globalAlpha = ga;
+      d.chuXong = true; // khung chữ cũ (chưa có ảnh): hiện cả đoạn như trước
     }
     ui.text('Chạm để tiếp ›', 462, y - 5, { size: 7.5, align: 'right', color: '#f6dc92' });
     // chấm tiến độ
@@ -42762,7 +43225,7 @@ window.FIREBASE_CONFIG = {
     for (let i = 0; i < n; i++) ui.rect(240 - n * 6 + i * 12 + 2, 14, 8, 3, i === d.i ? '#f6dc92' : 'rgba(246,220,146,0.35)');
     if (f.tieuDe) ui.text(f.tieuDe, 240, 34, { size: 10, bold: true, align: 'center', color: '#f6dc92' });
     if (T.sbtn(SKIP[0], SKIP[1], SKIP[2], SKIP[3], 'Bỏ qua ✕', { size: 8.5 })) { het(); return; }
-    if (G.click) { const ok = d.t > 0.3; G.click = null; if (ok) tiep(); }
+    if (G.click) { const ok = d.t > 0.3; G.click = null; if (ok) chamTiep(); }
   };
   function tenAi(k) {
     if (VS && VS.NPCS && VS.NPCS[k]) return VS.NPCS[k].ten;

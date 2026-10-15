@@ -749,6 +749,8 @@
         if (S.trans) slideWorld();
         drawHud();
       }
+      const bm = S.mode !== 'play' && G.uiBang ? G.uiBang.vao() : false; // soát mượt phiên 3 mục 15: bảng vừa mở phóng 0,94→1 + hiện dần (chạm đổi ngược theo phép phóng)
+      try {
       if (S.mode === 'map') { G.minimap.drawBig(S); if (G.click) { G.click = null; setMode('play'); G.sfx('ui'); } }
       else if (S.mode === 'chest') panelChest();
       else if (S.mode === 'merchant') panelMerchant();
@@ -756,6 +758,7 @@
       else if (S.mode === 'paused') panelPause();
       else if (S.mode === 'bag') { ui.rect(0, 0, G.W, G.H, 'rgba(0,0,0,0.6)'); if (G.hanhTrang) G.hanhTrang.panel(true, () => setMode('paused')); else setMode('paused'); }
       else if (S.mode === 'result' || S.mode === 'dead') panelResult();
+      } finally { if (bm) G.uiBang.ra(); }
       if (S && S.fade > 0) ui.rect(0, 0, G.W, G.H, 'rgba(0,0,0,' + Math.min(1, S.fade / 0.35) + ')'); // S có thể vừa bị xoá khi bấm Về làng
     },
   };
@@ -799,7 +802,7 @@
   function mobBars(W) {
     const gd = G.VFX ? +G.VFX.giaoDien : 1;
     if (!(gd > 0) || !G.theme || !G.theme.lagOf) return;
-    const c = G.ux, ga = c.globalAlpha, now = G.time || 0, cam = W.cam || 0;
+    const c = G.ux, ga = c.globalAlpha, now = G.time || 0, cam = G.camVe && G.NOI_SUY !== false ? G.camVe(W) : W.cam || 0; // soát mượt phiên 3 mục 1: cùng camera đã làm tròn với thân quái
     for (const e of W.ents) {
       if (!e || e.dead || !(e.maxhp > 0)) continue;
       let m = MOBHP.get(e);
@@ -932,7 +935,7 @@
     T.bar(4, 3, 120, 'hp', Math.max(0, P.hp / P.maxhp), (G.CHU_RO !== false ? Math.max(0, Math.ceil(P.hp)) : Math.ceil(P.hp)) + ' / ' + P.maxhp, { h: 11, lag: P, size: 7.5 }); // lag: phần máu vừa mất tụt dần (js/ui_theme.js); khoá theo em bé của lượt chơi này
     T.bar(4, 15, 108, 'mana', P.mana / P.maxmana, Math.floor(P.mana) + ' / ' + P.maxmana, { h: 8, size: 6.5 });
     const canDrink = P.potions > 0 && !W.noPotion;
-    const heldBox = (b) => [...G.pointers.values()].some((p) => p.role === 'ui' && hitBox({ x: p.sx, y: p.sy }, b));
+    const heldBox = (b) => G.coTro((p) => p.role === 'ui' && hitBox({ x: p.sx, y: p.sy }, b)); // soát mượt phiên 3 mục 22: không chép mảng ngón mỗi lần
     BA.draw(c, 'potion', POT[0] + 13, POT[1] + 12, 12, { count: P.potions, disabled: !canDrink, pressed: heldBox(POT) });
     ui.text(W.noPotion ? 'Cấm' : 'Bình máu', POT[0] + 29, POT[1] + 15, { size: 7, bold: true, color: canDrink ? '#fff3da' : '#a89c8c' });
     BA.draw(c, 'pause', PAU[0] + PAU[2] / 2, PAU[1] + 12, 11, { pressed: heldBox(PAU) });
@@ -1168,7 +1171,7 @@
     }
     // nút cảm ứng
     if (on('vien') && S.mode === 'play') {
-      const joy = [...G.pointers.values()].find((p) => p.role === 'joy');
+      const joy = G.timTro((p) => p.role === 'joy');
       let jdx = 0, jdy = 0;
       if (joy) {
         jdx = joy.x - joy.sx; jdy = joy.y - joy.sy;
@@ -1176,7 +1179,7 @@
         if (jl > 24) { jdx *= 24 / jl; jdy *= 24 / jl; }
         BA.stick(c, joy.sx, joy.sy, 24, jdx, jdy, true);
       } else { const sp = stickPos(); BA.stick(c, sp[0], sp[1], sp[2], 0, 0, false); }
-      const held = (name) => [...G.pointers.values()].some((p) => p.role === name);
+      const held = (name) => G.coTro((p) => p.role === name);
       const cw2 = G.curW(P);
       // Vũ khí đang cầm: loại, hệ đang có hiệu lực (kể cả lúc đang Nung), mốc tiến hóa, bậc.
       const wst = { type: cw2.type, branch: G.activeEl(P, cw2), stage: G.wStage(cw2), rarity: G.wRar(cw2) };

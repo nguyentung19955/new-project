@@ -136,6 +136,8 @@
   function goiBay(e, dt, a) {
     const w = W();
     e.sumCd = (e.sumCd == null ? 8 : e.sumCd) - dt;
+    // soát mượt phiên 3 mục 22 (?venhe=0: như cũ): xét hồi chiêu / số quái trước, chỉ đếm đồng bọn khi đã có thể gọi (cùng kết quả, bớt lọc mảng mỗi nhịp)
+    if (G.VE_NHE !== false && (e.sumCd > 0 || w.ents.length >= 9)) return false;
     const allies = w.ents.filter((x) => !x.dead && x.sum === e).length + (w.spawns || []).filter((s) => s.opt && s.opt.sumBy === e).length;
     if (e.sumCd > 0 || allies >= 2 || w.ents.length >= 9) return false;
     e.sumCd = G.rr(12, 16);
@@ -782,7 +784,8 @@
           c.fillStyle = 'rgba(255,' + (bl ? 60 : 120) + ',40,' + (0.12 + 0.22 * k).toFixed(2) + ')';
           c.beginPath(); c.moveTo(o.V[0][0], o.V[0][1]); c.lineTo(o.V[1][0], o.V[1][1]); c.lineTo(o.V[2][0], o.V[2][1]); c.closePath(); c.fill();
         }
-        if (o.no) return;
+        // soát mượt phiên 3 mục 8 (?humo=0 như cũ): nổ xong (o.het 0,3 giây) lá bùa không tắt phụt: giữ khung cuối, mờ dần trong 0,15 giây
+        if (o.no) { if (G.HU_MO !== false && KA('hu-bua-tam-giac') && o.het > 0.15) for (const v of o.V) FA().veK(c, 'hu-bua-tam-giac', v[0], v[1] + 1, 5, 0, 1, false, (o.het - 0.15) / 0.15); return; }
         // ảnh hu-bua-tam-giac (lá bùa cao 12 khi co 1, neo chân bùa): đang bay khung 1; cắm xuống thì rung (khung 1–3 lặp), 45% cuối thời gian
         // chờ nổ chạy khung 4–6 (vòng lửa chân to dần, khung 6 đúng lúc nổ).
         if (KA('hu-bua-tam-giac')) {
@@ -909,7 +912,7 @@
     if (!(k.vo > 0)) return;
     // ảnh hu-vo-oc (vỏ trùm kín thân ốc: rộng 48 ≈ thân 46 của oc.sprite.json, neo chân), khung theo phần thời gian rút vỏ đã qua:
     // 1–2 yên, 3–4 rung, 5–6 ló ra (1/3 cuối = sắp bò ra). Ảnh quay phải như ảnh quái; quay trái thì lật.
-    if (KA('hu-vo-oc')) { const u = clamp(1 - k.vo / SO.oc.vo, 0, 0.999); if (FA().veK(c, 'hu-vo-oc', e.x, e.y, Math.floor(u * 6), 0, 1, e.face < 0, 1)) return; }
+    if (KA('hu-vo-oc')) { const u = clamp(1 - k.vo / SO.oc.vo, 0, 0.999); if (FA().veK(c, 'hu-vo-oc', e.x, e.y, Math.floor(u * 6), 0, 1, e.face < 0, G.HU_MO !== false && u > 0.75 ? 1 - (u - 0.75) / 0.25 * 0.95 : 1)) return; } // mục 8: vỏ mờ dần 25% cuối (ốc ló ra), không tắt phụt
     // thiếu ảnh / ?fxcu=1: vẽ tạm bằng code
     const x = Math.round(e.x), y = Math.round(e.y), r = Math.max(7, e.r + 2), bl = k.vo < 0.4 && Math.floor(G.time * 12) % 2;
     for (let i = -r; i <= r; i++) { const h = Math.round(Math.sqrt(Math.max(0, r * r - i * i)) * 0.8); p(c, x + i, y - h - 1, 1, h + 1, bl ? 'rgba(220,230,240,0.5)' : 'rgba(150,160,175,0.55)'); }

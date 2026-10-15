@@ -203,17 +203,30 @@
     c.fillStyle = g2; c.fillRect(0, 0, 480, 46);
     const ga = c.globalAlpha; c.globalAlpha = ga * Math.min(1, d.t / 0.3 + 0.2);
     if (b.ten) ui.text(b.ten, DAI.x, y0 + 9, { size: 8.5, bold: true, color: '#f6dc92' });
-    b.lines.forEach((l, k) => ui.text(l, DAI.x, y0 + b.hTen + b.size + 2 + k * b.lh, { size: b.size, color: '#f6efdc' }));
+    // Soát mượt phiên 3 mục 15 (?uimuot=0: hiện cả đoạn như cũ): chữ chạy ~40 chữ/giây theo TỪNG TỪ (cắt ở dấu cách, từ không nhảy dòng),
+    // dòng đã ngắt sẵn theo cả đoạn nên khung không đổi cỡ; chạm / Enter lúc chữ đang chạy thì hiện hết ngay (js: TR.draw, TR.update).
+    let con = G.UI_MUOT !== false && !d.hetChu ? Math.floor(Math.max(0, d.t - 0.1) * CHU_GIAY) : Infinity, xong = true;
+    b.lines.forEach((l, k) => {
+      if (con <= 0) { xong = false; return; }
+      let s = l;
+      if (con < l.length) { const cut = l.lastIndexOf(' ', con); s = cut > 0 ? l.slice(0, cut) : ''; xong = false; }
+      con -= l.length + 1;
+      if (s) ui.text(s, DAI.x, y0 + b.hTen + b.size + 2 + k * b.lh, { size: b.size, color: '#f6efdc' });
+    });
+    d.chuXong = xong;
     c.globalAlpha = ga;
     return y0;
   }
+  const CHU_GIAY = 40, HOA_ANH = 0.4; // mục 15: tốc độ chữ chạy; thời gian hoà ảnh khung cũ sang khung mới
   function het() {
     const d = TR.dang; TR.dang = null;
     G.click = null; if (G.stalePointers) G.stalePointers();
     if (d && d.o.xong) { try { d.o.xong(); } catch (e) { /* bỏ qua */ } }
   }
   TR.het = het;
-  function tiep() { const d = TR.dang; if (!d) return; d.i++; d.t = 0; if (d.i >= d.ds.length) het(); }
+  function tiep() { const d = TR.dang; if (!d) return; d.cu = { i: d.i, t: d.t }; d.i++; d.t = 0; d.hetChu = false; d.chuXong = true; if (d.i >= d.ds.length) het(); }
+  // mục 15: lần chạm / phím lúc chữ còn đang chạy thì hiện hết chữ; lần sau mới sang khung (vùng chạm không đổi)
+  function chamTiep() { const d = TR.dang; if (!d) return; if (G.UI_MUOT !== false && d.chuXong === false && !d.hetChu) { d.hetChu = true; return; } tiep(); }
   TR.tiep = tiep;
   TR.update = function (dt) {
     const d = TR.dang;
@@ -222,7 +235,7 @@
     try { if (VS && G.scene === G.Village) VS.update(dt, true); } catch (e) { /* bỏ qua */ }
     const kp = G.keyP;
     if (kp.Escape) { kp.Escape = false; het(); return; }
-    if ((kp.Enter || kp.Space || kp.KeyJ) && d.t > 0.25) { tiep(); return; }
+    if ((kp.Enter || kp.Space || kp.KeyJ) && d.t > 0.25) { chamTiep(); return; }
     const f = d.ds[d.i];
     if (d.t > (f.giay || 5)) tiep();
   };
@@ -234,14 +247,27 @@
     G.syncTaps = [];
     const f = d.ds[d.i], c = G.wx, a = anhCua(f), coAnh = !!(a && a.ok), mo = coAnh ? G.clamp((bayGio() - a.t) / 0.5, 0, 1) : 0;
     if (mo < 1) { try { veNen(f, d.t); } catch (e) { G.wxDat(c, 0, 0); c.fillStyle = '#120d10'; c.fillRect(0, 0, 480, 270); } }
+    // mục 15 (?uimuot=0: cắt đen như cũ): sang khung mới mà cả hai khung đều có ảnh → giữ ảnh cũ, hoà sang ảnh mới trong 0,4 giây
+    const cu = G.UI_MUOT !== false && d.cu && d.t < HOA_ANH && coAnh && mo >= 1 ? d.cu : null, fCu = cu ? d.ds[cu.i] : null, aCu = fCu ? anhCua(fCu) : null;
+    const hoa = !!(aCu && aCu.ok && aCu.img);
+    let kHoa = 1;
+    if (hoa) {
+      const u = G.clamp(d.t / HOA_ANH, 0, 1); kHoa = u * u * (3 - 2 * u);
+      try {
+        c.globalAlpha = 1; veAnh(c, aCu.img, cu.t + d.t, fCu.giay || 5, cu.i);
+        if (fCu.ai && (fCu.nen || 'lang') === 'lang') veNguoiNoi(c, fCu);
+      } catch (e) { /* bỏ qua */ }
+      c.globalAlpha = 1;
+    }
     if (coAnh) { // ảnh về giữa khung thì hiện dần đè lên nền code (0,5 giây)
       try {
-        c.globalAlpha = mo; veAnh(c, a.img, d.t, f.giay || 5, d.i); c.globalAlpha = 1;
-        if (f.ai && (f.nen || 'lang') === 'lang') veNguoiNoi(c, f);
+        c.globalAlpha = mo * kHoa; veAnh(c, a.img, d.t, f.giay || 5, d.i);
+        if (f.ai && (f.nen || 'lang') === 'lang') { c.globalAlpha = kHoa; veNguoiNoi(c, f); }
+        c.globalAlpha = 1;
       } catch (e) { c.globalAlpha = 1; }
     }
     G.wxDat(c, 0, 0);
-    if (d.t < 0.35) { c.globalAlpha = 1 - d.t / 0.35; c.fillStyle = '#000'; c.fillRect(0, 0, 480, 270); c.globalAlpha = 1; }
+    if (d.t < 0.35 && !hoa) { c.globalAlpha = 1 - d.t / 0.35; c.fillStyle = '#000'; c.fillRect(0, 0, 480, 270); c.globalAlpha = 1; }
     let y;
     if (coAnh) y = veDai(f, d); // chữ trên dải tối dưới ảnh
     else { // khung chữ dưới đáy (như cũ: chưa có ảnh, ảnh chưa về, hoặc ?truyencu=1)
@@ -251,6 +277,7 @@
       const ga = G.ux.globalAlpha; G.ux.globalAlpha = ga * Math.min(1, d.t / 0.3 + 0.2);
       T.dialog(x, y, w, ten, f.loi, { size, tail: f.ai ? 54 : -1 });
       G.ux.globalAlpha = ga;
+      d.chuXong = true; // khung chữ cũ (chưa có ảnh): hiện cả đoạn như trước
     }
     ui.text('Chạm để tiếp ›', 462, y - 5, { size: 7.5, align: 'right', color: '#f6dc92' });
     // chấm tiến độ
@@ -258,7 +285,7 @@
     for (let i = 0; i < n; i++) ui.rect(240 - n * 6 + i * 12 + 2, 14, 8, 3, i === d.i ? '#f6dc92' : 'rgba(246,220,146,0.35)');
     if (f.tieuDe) ui.text(f.tieuDe, 240, 34, { size: 10, bold: true, align: 'center', color: '#f6dc92' });
     if (T.sbtn(SKIP[0], SKIP[1], SKIP[2], SKIP[3], 'Bỏ qua ✕', { size: 8.5 })) { het(); return; }
-    if (G.click) { const ok = d.t > 0.3; G.click = null; if (ok) tiep(); }
+    if (G.click) { const ok = d.t > 0.3; G.click = null; if (ok) chamTiep(); }
   };
   function tenAi(k) {
     if (VS && VS.NPCS && VS.NPCS[k]) return VS.NPCS[k].ten;

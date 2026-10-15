@@ -125,19 +125,59 @@
   const giayLap = (ten, a) => (a.giay || 1) * (/^(dung|di|chay)(_|$)/.test(ten) ? NHIP_LAP : 1);
   function khungLap(D, ten, t) { const a = D.dong_tac[ten]; return Math.floor(Math.max(0, t) / giayLap(ten, a) * a.so) % a.so; }
   function phanKhung(D, ten, t) { const a = D.dong_tac[ten], v = Math.max(0, t) / giayLap(ten, a) * a.so; return v - Math.floor(v); } // tiến độ trong khung lặp (0..1)
+  // ---------- Soát mượt phiên 3 ----------
+  // Mục 17 (?thocuti=0 tắt): hàng ĐỨNG THỞ có 4 khung cuối gần như trùng nhau, nối vòng 8→1 bị nhảy → phát đi đi về về 1-2-3-4-5-4-3-2
+  // (cùng nhịp mỗi khung, cùng chu kỳ 8 bước). Tụ lực búa (bua_giu, 4 khung) nối vòng cũng nhảy → 1-2-3-4-3-2. i2: khung kế (góc vũ khí
+  // cầm nội suy về đúng khung sẽ tới, không về khung i+1). Hàng cầm vũ khí lúc đứng (dung_<loại>) dùng cùng khung với hàng thân.
+  const QUA_LAI = { dung: [0, 1, 2, 3, 4, 3, 2, 1], bua_giu: [0, 1, 2, 3, 2, 1] };
+  function lapQuaLai(D, ten, t) {
+    const q = G.THO_CUTI !== false && QUA_LAI[ten], a = D.dong_tac[ten];
+    if (!q || !a || a.so < 5 - (ten === 'bua_giu' ? 1 : 0)) return null;
+    const v = Math.max(0, t) / (giayLap(ten, a) / a.so), k = Math.floor(v) % q.length;
+    return { ten, i: q[k], i2: q[(k + 1) % q.length], fl: v - Math.floor(v) };
+  }
+  // Mục 20 (?nhipcuti=0 tắt): PHA BƯỚC chung 0..1 cho đi bộ và chạy (mỗi em bé một pha, nhớ theo P): đổi đi↔chạy giữ đúng chỗ trong
+  // bước (không nhảy chân), vừa bắt đầu đi / chạy thì vào từ khung 1 (chân chạm đất), lướt kiếm cũng đi theo pha bước (nhanh gấp đôi)
+  // thay cho đồng hồ P.t. Vùng đệm: đang đi bộ thì phải nhanh hơn 0,65 mới sang chạy, đang chạy thì chậm hơn 0,55 mới về đi bộ.
+  // Chỉ lần vẽ của chính em bé (o.t = P.t) mới đẩy pha; bóng mờ (o.t cũ) vẽ theo cách cũ. Chỉ là hình: tốc độ thật không đổi.
+  const BUOC = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  const BUOC_VAO = 0.65, BUOC_RA = 0.55;
+  const buocCua = (o) => (G.NHIP_CUTI !== false && BUOC && o.p && (o.t == null || o.t === o.p.t) ? o.p : null);
+  function buoc(o, D, ten0, nhan) { // ten0: ép hàng ('chay'), không thì chọn đi / chạy theo P.diTL có vùng đệm; nhan: hệ số nhịp
+    const p = buocCua(o);
+    if (!p) return null;
+    const t = G.time || 0;
+    let b = BUOC.get(p);
+    if (!b) BUOC.set(p, (b = { ph: 0, t, chay: true, di: false }));
+    const dt = b.di ? kep(t - b.t, 0, 0.1) : 0;
+    if (!b.di) b.ph = 0; // vừa bắt đầu bước: khung 1
+    b.di = true; b.t = t;
+    const tl = p.diTL;
+    if (tl == null) b.chay = true;
+    else if (b.chay && tl < BUOC_RA) b.chay = false;
+    else if (!b.chay && tl > BUOC_VAO) b.chay = true;
+    const ten = ten0 || (b.chay || !D.dong_tac.di ? 'chay' : 'di'), a = D.dong_tac[ten];
+    if (!a) return null;
+    b.ph = (b.ph + (dt * (nhan || 1)) / giayLap(ten, a)) % 1;
+    const v = b.ph * a.so, i = Math.floor(v) % a.so;
+    return { ten, i, fl: v - Math.floor(v), i2: (i + 1) % a.so };
+  }
+  function nghiBuoc(o) { const p = buocCua(o), b = p && BUOC.get(p); if (b) { b.di = false; b.t = G.time || 0; } }
 
   // Chọn động tác + khung (cùng thứ tự ưu tiên như SC.chonEmBe ở js/sprite_custom.js). Trả { ten, i, theo? }: theo = động tác đánh mà
   // vũ khí đi theo khi thân đang ở hàng chạy (chạy mà đánh, G.CHAY_DANH).
   function chon(o, D) {
     const s = chon0(o, D);
+    if (s && !s.buoc && !(s.ghep && o.move)) nghiBuoc(o); // mục 20: không bước → lần bước sau vào từ khung 1
     // chạy + chém: ghép eo (chân hàng chạy, thân trên hàng đòn) — chỉ hàng có điểm eo, chỉ khi đang chạy
     if (s && s.ghep && o.move && coEo(s.ten) && D.dong_tac.chay) {
       if (eoSua()) { // chân cùng hướng thân trên; chạy ngược hướng chém → chạy lùi (phát ngược thứ tự khung, nhịp ×0,8)
-        const so = D.dong_tac.chay.so, lui = nguocMat(o);
-        const i = lui ? so - 1 - khungLap(D, 'chay', s.tc * LUI_NHIP) : khungLap(D, 'chay', s.tc);
+        const so = D.dong_tac.chay.so, lui = nguocMat(o), B = buoc(o, D, 'chay', lui ? LUI_NHIP : 1); // mục 20: chân theo pha bước chung
+        const i = B ? (lui ? so - 1 - B.i : B.i) : lui ? so - 1 - khungLap(D, 'chay', s.tc * LUI_NHIP) : khungLap(D, 'chay', s.tc);
         return { ten: s.ten, i: s.i, u: s.u, eo: { i, moi: 1, lui: lui ? 1 : 0 } };
       }
-      return { ten: s.ten, i: s.i, u: s.u, eo: { i: khungLap(D, 'chay', s.tc) } };
+      const B = buoc(o, D, 'chay');
+      return { ten: s.ten, i: s.i, u: s.u, eo: { i: B ? B.i : khungLap(D, 'chay', s.tc) } };
     }
     if (s && s.ghep) { const r = { ten: s.ten, i: s.i, u: s.u }; return s.theo ? Object.assign(r, { theo: s.theo }) : r; }
     return s;
@@ -148,12 +188,13 @@
     let goc = wt; // loại vũ khí thật (giáo đang bay thì o.weapon là 'fist' nhưng chiêu đặc biệt vẫn là của giáo)
     try { if (p && G.curW) { const w = G.curW(p); if (w && w.type) goc = w.type; } } catch (e) { goc = wt; }
     const mot = (ten, u) => ({ ten, i: khungMot(D, ten, u), u: kep(u || 0, 0, 1) });
-    const lap = (ten, tt) => ({ ten, i: khungLap(D, ten, tt), fl: phanKhung(D, ten, tt) });
+    const lap = (ten, tt) => lapQuaLai(D, ten, tt) || ({ ten, i: khungLap(D, ten, tt), fl: phanKhung(D, ten, tt) });
+    const buocB = (ten0, nhan) => { const B = buoc(o, D, ten0, nhan); if (B) B.buoc = 1; return B; }; // mục 20
     if (p && p.dead) return mot('chet', (p.deadT || 0) / 0.6);
     if (o.dodge >= 0) return mot('lon', o.dodge);
     if (p && p.dashT > 0) {
       if (mv && mv.kind === 'xoc') return mot('thuong_xoc', mv.dashDur > 0 ? 1 - p.dashT / mv.dashDur : 0.5);
-      return lap('chay', t * 2); // Nhát lướt kiếm sau lộn: như cũ, hàng chạy nhanh gấp đôi
+      return buocB('chay', 2) || lap('chay', t * 2); // Nhát lướt kiếm sau lộn: hàng chạy nhanh gấp đôi (mục 20: theo pha bước, không theo P.t)
     }
     if (p && p.specT > 0 && DB[goc]) return mot(DB[goc], 1 - p.specT / 0.35);
     if (p && p.castT > 0) return Object.assign(mot('chuong', 1 - p.castT / 0.3), { ghep: 1, tc });
@@ -169,12 +210,12 @@
       if (r) {
         const cd = G.CHAY_DANH; // chạy mà đánh: thân giữ hàng chạy (chân bước), chỉ vũ khí vung theo neo của khung đòn đánh
         if (eoBat()) return Object.assign(r, { ghep: 1, tc }); // cách mới: ghép eo (hàng thẳng) hoặc toàn thân hàng đòn (hàng cúi)
-        if (o.move && (cd === 'than' || (cd === 'lai' && !(u >= 0.2 && u < 0.65)))) return { ten: 'chay', i: khungLap(D, 'chay', tc), theo: r };
+        if (o.move && (cd === 'than' || (cd === 'lai' && !(u >= 0.2 && u < 0.65)))) { const B = buocB('chay'); return { ten: 'chay', i: B ? B.i : khungLap(D, 'chay', tc), theo: r, buoc: B ? 1 : 0 }; }
         return r;
       }
     }
     if ((p && p.hurtT > 0) || (!p && o.flash)) return mot('trung', p ? 1 - p.hurtT / 0.2 : 0.3);
-    if (o.move) return lap(p && p.diTL != null && p.diTL < DI_BO ? 'di' : 'chay', tc);
+    if (o.move) return buocB() || lap(p && p.diTL != null && p.diTL < DI_BO ? 'di' : 'chay', tc);
     return lap('dung', t);
   }
 
@@ -207,7 +248,7 @@
   function camCua(D, s, w) {
     if (G.CAM_VK === false || s.theo || !CAM_HANG[s.ten] || !w || w.type === 'fist' || !VK_LOAI[w.type]) return null;
     const ten = s.ten + '_' + VK_LOAI[w.type];
-    return D.dong_tac[ten] ? { ten, i: s.i, fl: s.fl, cam: 1 } : null;
+    return D.dong_tac[ten] ? { ten, i: s.i, fl: s.fl, i2: s.i2, cam: 1 } : null;
   }
   // ---------- ĐÒN QUAY THEO HƯỚNG NHẮM (zed-8-huong) ----------
   // HV_DAM: hàng đâm / ném (vũ khí xoay quanh nắm tay theo góc nhắm, kẹp ±KEP_DAM; quá thì nghiêng thân trên quanh eo, tối đa NGHIENG).
@@ -325,7 +366,7 @@
   // là của hàng đòn, cùng mặt, < 0,2 s) thì trong RA giây đầu góc đi dần từ góc cuối đòn về thế cầm (đường ngắn nhất: không lật 360°).
   const RA = 0.18;
   function gocCam(o, da, wa, n) {
-    const i = wa.i, n2 = da.neo[(i + 1) % da.so];
+    const i = wa.i, n2 = da.neo[wa.i2 != null ? wa.i2 % da.so : (i + 1) % da.so]; // i2: khung kế khi phát đi đi về về (mục 17) / pha bước (mục 20)
     let a = n[2];
     if (n2) { const fr = kep(wa.fl || 0, 0, 1), e = fr * fr * (3 - 2 * fr); a = n[2] + (gocGan(n[2], n2[2]) - n[2]) * e; }
     const p = o.p, r = p && NHO ? NHO.get(p) : null, f = o.face < 0 ? -1 : 1, t = G.time || 0;
@@ -476,7 +517,8 @@
   }
   // Vẽ bóng + lật theo mặt + nhuộm (trúng đòn, băng, độc) + hào quang Gồng quanh một hàm vẽ người lop(q) (toạ độ tính từ chân).
   function veLop(c, o, lop) {
-    const x = Math.round(o.x), y = Math.round(o.y), f = o.face < 0 ? -1 : 1, t = (o.t != null ? o.t : G.time) || 0;
+    const R = G.lamTron || Math.round; // soát mượt phiên 3 mục 1: cùng kiểu làm tròn với camera (nửa điểm ảnh; ?noisuy=0 như cũ)
+    const x = R(o.x), y = R(o.y), f = o.face < 0 ? -1 : 1, t = (o.t != null ? o.t : G.time) || 0;
     const p = o.p, chet = !!(p && p.dead);
     c.save();
     if (o.alpha != null) c.globalAlpha = c.globalAlpha * o.alpha;
@@ -519,7 +561,7 @@
     if (!T || !V) return;
     const D = T.tep, s = chon(o, D), v = vkCua(o, D, s, T, false);
     if (!v || v.cam) return; // vũ khí cầm lúc đứng/đi/chạy (cả lướt sau lộn): giữ mũi của bản cũ cho vệt/hiệu ứng
-    const f = o.face < 0 ? -1 : 1, X0 = Math.round(o.x) + (f < 0 ? 1 : 0), Y0 = Math.round(o.y);
+    const f = o.face < 0 ? -1 : 1, X0 = (G.lamTron || Math.round)(o.x) + (f < 0 ? 1 : 0), Y0 = (G.lamTron || Math.round)(o.y);
     const R = V.tep.vk[v.da.vk][v.cap], g = v.da.vk_cam[v.cap];
     const E = s.eo ? eoTinh(T, s, o) : null, ox = E ? E.ox : 0, oy = E ? E.oy : 0; // chạy + chém: vũ khí dời theo nửa trên đã khớp eo
     let gx = v.n[0] / 2 - 24 + ox, gy = v.n[1] / 2 - 45 + oy, ang = v.ang != null ? v.ang : v.n[2];
@@ -549,7 +591,22 @@
   }
 
   // ---------- bọc G.art.hero, G.art.proj, G.tinhLinh.tip (ngoài cùng; lớp khác có thể bọc lại sau khi ảnh nạp nên kiểm mỗi khung) ----------
-  G.zedMoi = { chon, MOC, eoTinh, lechHinh, lechTu, loi: [] };
+  // Soát mượt phiên 3 mục 22: khoá HÌNH của lần vẽ Cu Tí (js/fx.js viền bé chỉ dựng lại khi khoá đổi). null = không chắc (em bé khác, đang
+  // nhuộm / trúng đòn / Gồng / ánh vũ khí chạy theo thời gian…) → nơi gọi dựng lại như cũ. Chỉ đọc, không đổi trạng thái vẽ.
+  function khoaVe(o) {
+    if (!o || !laZed(o) || o.gong || o.alpha != null && o.alpha !== 1 || o.flash) return null;
+    const T = layThan(), p = o.p;
+    if (!T || !p || p.dead || p.hurtT > 0) return null;
+    const st = p.st || {};
+    if (st.ice > 0 || st.poison > 0 || st.fire > 0) return null;
+    const w = o.weapon, VV = G.vienVk;
+    if (w && VV && VV.co && VV.co(w)) return null;
+    const D = T.tep, s = chon(o, D), V = lay('zed-vk'), v = V ? vkCua(o, D, s, T, false) : null, h = HV && HV.get(p);
+    return [T._ma, s.ten, s.i, s.eo ? s.eo.i + ':' + (s.eo.lui || 0) + ':' + (s.eo.moi || 0) : '', s.theo ? s.theo.ten + ':' + s.theo.i : '',
+      v ? v.wa.ten + ':' + v.wa.i + ':' + v.cap + ':' + (v.he || '') + ':' + Math.round(v.ang / 2) + ':' + Math.round((v.lean || 0) * 2) : V ? '-' : '0',
+      h ? Math.round(h.gv / 2) + ':' + Math.round(h.lv * 2) : '', o.face < 0 ? -1 : 1, w ? w.type + ':' + (w.coat || '') : '', o.dodge >= 0 ? 1 : 0, o.roundShadow ? 1 : 0].join('|');
+  }
+  G.zedMoi = { chon, MOC, eoTinh, lechHinh, lechTu, khoaVe, loi: [] };
   let dangGoiCu = false;
   const ghiLoi = (e) => { if (G.zedMoi.loi.length < 5) G.zedMoi.loi.push(String((e && e.message) || e)); };
   function boc() {

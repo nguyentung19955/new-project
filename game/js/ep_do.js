@@ -316,7 +316,10 @@
     if (t > 1.6) { E.ui.fx = null; return; }
     const c = G.ux, FA = G.fxAnh, ma = FX_MA[f.k];
     let ve = false;
-    if (FA && FA.co && FA.co(ma) && t < 0.95) ve = FA.ve(c, ma, cx, cy + s * 0.45, t, 0, 1.15);
+    if (FA && FA.co && FA.co(ma) && G.HU_MO !== false) { // soát mượt phiên 3 mục 8 (?humo=0 như cũ): giữ khung cuối 0,12 giây, mờ dần 25% cuối
+      const gy = Math.min(0.95, FA.giay(ma) || 0.95);
+      if (t < gy + 0.12) { ve = true; const mo = t < gy * 0.75 ? 1 : Math.max(0, 1 - (t - gy * 0.75) / (gy * 0.25 + 0.12)); if (mo > 0.003) FA.ve(c, ma, cx, cy + s * 0.45, Math.min(t, gy - 1e-4), 0, 1.15, false, mo); }
+    } else if (FA && FA.co && FA.co(ma) && t < 0.95) ve = FA.ve(c, ma, cx, cy + s * 0.45, t, 0, 1.15);
     if (!ve && t < 0.9) {
       const k = t / 0.9;
       c.save();

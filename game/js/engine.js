@@ -159,7 +159,8 @@
   function syncTap(e) {
     if (!G.syncTaps.length || performance.now() - syncAt < 400) return;
     const t0 = e.changedTouches && e.changedTouches[0];
-    const p = pos(t0 ? { clientX: t0.clientX, clientY: t0.clientY } : e);
+    let p = pos(t0 ? { clientX: t0.clientX, clientY: t0.clientY } : e);
+    if (G.uiBang) p = G.uiBang.doiCham(p); // mục 15: bảng đang phóng lúc mở → đổi toạ độ ngược đúng phép phóng (khớp hình)
     for (const b of G.syncTaps) {
       if (p.x >= b.x && p.x <= b.x + b.w && p.y >= b.y && p.y <= b.y + b.h) { syncAt = performance.now(); try { b.fn(); } catch (err) { /* bỏ qua */ } return; }
     }
@@ -171,6 +172,10 @@
   G.dropPointers = function () { G.pointers.clear(); G.downs.length = 0; G.click = null; };
   // Đánh dấu các ngón đang giữ là cũ: nhấc lên sẽ không tính là bấm vào màn hình mới.
   G.stalePointers = function () { for (const o of G.pointers.values()) o.stale = true; };
+  // Soát mượt phiên 3 mục 22 (?venhe=0: chép mảng như cũ): hỏi "có ngón nào thoả fn" / "ngón đầu tiên thoả fn" mà không chép G.pointers
+  // ra mảng mới mỗi lần (ui.button hỏi cho từng nút mỗi khung).
+  G.coTro = function (fn) { if (G.VE_NHE === false) return [...G.pointers.values()].some(fn); for (const p of G.pointers.values()) if (fn(p)) return true; return false; };
+  G.timTro = function (fn) { if (G.VE_NHE === false) return [...G.pointers.values()].find(fn); for (const p of G.pointers.values()) if (fn(p)) return p; return undefined; };
   function dropInput() { G.dropPointers(); G.keys = {}; G.keyP = {}; }
   window.addEventListener('blur', dropInput);
   document.addEventListener('visibilitychange', () => {
@@ -577,7 +582,7 @@
   };
   ui.btn = function (x, y, w, h, label, o) {
     o = o || {};
-    const hover = [...G.pointers.values()].some((p) => !p.role && !p.stale && G.inRect(p, x, y, w, h));
+    const hover = G.coTro((p) => !p.role && !p.stale && G.inRect(p, x, y, w, h));
     const base = o.disabled ? '#3a322c' : o.color || '#8a4b25';
     ui.rect(x, y, w, h, hover && !o.disabled ? '#b5672f' : base, o.disabled ? '#51463d' : '#e2b36a');
     const size = o.size || 9;
@@ -605,9 +610,139 @@
     if (stroke) { c.strokeStyle = stroke; c.lineWidth = 1.2; c.stroke(); }
   };
 
+  // ---------- SOÁT MƯỢT PHIÊN 3 (15/10, docs/review/ke-hoach-cai-thien/soat-muot/bao-cao-phien-3.md): cờ quay lui, mỗi mục một cờ ----------
+  // Chỉ đổi HÌNH (cách vẽ), không đổi luật chơi. Cờ bật mặc định; đặt G.X = false trước khi nạp, hoặc thêm cờ trên địa chỉ:
+  //   ?noisuy=0  mục 1: nội suy vị trí khi vẽ + làm tròn camera / nhân vật cùng kiểu nửa điểm ảnh  (G.NOI_SUY)
+  //   ?humo=0    mục 8: hiệu ứng ảnh một lần mờ dần cuối + giữ khung cuối, nổ / trúng đòn nảy nhẹ (G.HU_MO, js/fx.js)
+  //   ?bthoa=0   mục 9A: vùng báo trước hoà khung kế + nhịp sáng 0,15 giây cuối (G.BT_HOA, js/bao_truoc.js)
+  //   ?hoalap=0  mục 16A: hiệu ứng lặp chậm (4,5–9 khung/giây) hoà nhẹ khung kế (G.HOA_LAP, js/fx_anh.js)
+  //   ?uimuot=0  mục 15: chuyển màn mờ ra / vào, bảng mở / đóng, truyện hoà ảnh + chữ chạy, thanh kinh nghiệm chạy, màn tải mờ (G.UI_MUOT)
+  //   ?thocuti=0 mục 17: Cu Tí đứng thở / tụ lực búa phát đi đi về về (G.THO_CUTI, js/zed_moi.js)
+  //   ?nhipcuti=0 mục 20: Cu Tí giữ pha bước chung cho đi / chạy, vùng đệm đổi đi↔chạy (G.NHIP_CUTI, js/zed_moi.js)
+  //   ?tile05=0  mục 21: cỡ hiệu ứng ảnh làm tròn bậc 0,5; đạn xoay theo 16 hướng (G.TILE05, js/fx_anh.js, js/fx_dan.js)
+  //   ?venhe=0   mục 22: bớt việc vẽ (viền bé, bộ nhớ thanh, vệt chém, quạt báo trước, mảng tạm) (G.VE_NHE)
+  G.coTat = function (re) { try { return re.test(String((typeof location !== 'undefined' && location.search) || '')); } catch (e) { return false; } };
+  for (const [k, ten] of [['NOI_SUY', 'noisuy'], ['HU_MO', 'humo'], ['BT_HOA', 'bthoa'], ['HOA_LAP', 'hoalap'], ['UI_MUOT', 'uimuot'], ['THO_CUTI', 'thocuti'], ['NHIP_CUTI', 'nhipcuti'], ['TILE05', 'tile05'], ['VE_NHE', 'venhe']]) {
+    if (G[k] == null) G[k] = !G.coTat(new RegExp('[?&]' + ten + '=0(&|$)'));
+  }
+  // Mục 1: làm tròn vị trí vẽ. Bật: theo nửa điểm ảnh game (= 1 điểm ảnh thật khi G.NET = 2, không vỡ nét); camera và nhân vật dùng CÙNG
+  // một kiểu nên không lệch nhau 1 điểm ảnh khi camera đuổi chậm. Tắt (?noisuy=0) hoặc Độ nét Thường (G.NET = 1): Math.round như cũ.
+  G.lamTron = (v) => { const n = G.NOI_SUY !== false ? G.NET || 1 : 1; return n > 1 ? Math.round(v * n) / n : Math.round(v); };
+  G.nsAlpha = 1; // phần lẻ của nhịp logic lúc vẽ (0..1), do vòng lặp đặt; js/combat.js dùng để vẽ ở vị trí trung gian
+
+  // ---------- Mục 15: bảng mở / đóng (cờ G.UI_MUOT) ----------
+  // Mở: phóng 0,94 → 1 cùng độ hiện trong 0,12 giây (ease-out) quanh giữa khung. Trong lúc phóng, toạ độ chạm (G.click, nút chạy ngay
+  // G.syncTaps) được đổi ngược đúng phép phóng → chạm vào đâu trên hình là đúng nút đó (vùng chạm khớp hình đang thấy).
+  // Đóng: hình bảng vừa đóng (chụp lớp #ui của khung trước) mờ dần 0,12 giây đè lên màn mới; không nhận chạm (chạm rơi vào màn mới bên dưới).
+  // Làng: cả lớp #ui khi đang mở bảng (nền làng tối ở #world không phóng). Trong ải: chỉ phần bảng (js/stage.js gọi G.uiBang.vao / ra).
+  const BANG_MO = 0.12, BANG_DONG = 0.12;
+  const BANG_AI = { paused: 1, map: 1, bag: 1, result: 1, dead: 1, chest: 1, merchant: 1, curse: 1 };
+  const BANG_LANG_KHONG = { hub: 1, title: 1, map: 1, aingay: 1 }; // màn đầy đủ / làng: không tính là bảng
+  const UB = { khoa: '', canh: null, mo: -9, dong: -9, bong: null, bongCv: null, s: 1, a: 1, phong: false, clickGoc: null, clickMoi: null };
+  function khoaBang() {
+    try {
+      const sc = G.scene;
+      if (sc && sc === G.Village) { const V = G.villageApi && G.villageApi.V; return V && V.tab && !BANG_LANG_KHONG[V.tab] ? 'lang:' + V.tab : ''; }
+      if (sc && sc === G.StageScene && G.getRun) { const S = G.getRun(); return S && BANG_AI[S.mode] ? 'ai:' + S.mode : ''; }
+    } catch (e) { /* bỏ qua */ }
+    return '';
+  }
+  const daoDong = (u) => 1 - (1 - u) * (1 - u) * (1 - u); // ease-out
+  // Gọi đầu khung vẽ (trước ui.begin): nhận ra bảng vừa mở / vừa đóng. Đóng thì chụp lại lớp #ui của khung trước làm bóng mờ dần.
+  function bangDauKhung(now) {
+    UB.s = 1; // phép phóng chỉ còn hiệu lực nếu khung này lại phóng (bangVao); bảng đóng giữa chừng thì chạm không bị đổi nữa
+    if (G.UI_MUOT === false) { UB.khoa = ''; UB.bong = null; return; }
+    const k = khoaBang(), sc = G.scene;
+    if (sc !== UB.canh) { UB.canh = sc; UB.khoa = k; UB.mo = -9; UB.bong = null; return; } // đổi màn: phần chuyển màn lo
+    if (k === UB.khoa) return;
+    if (k && !UB.khoa) UB.mo = now; // từ không bảng → có bảng: mở
+    else if (!k && UB.khoa) { // đóng bảng: chụp bóng
+      try {
+        if (!UB.bongCv) UB.bongCv = document.createElement('canvas');
+        const b = UB.bongCv;
+        if (b.width !== uiCv.width || b.height !== uiCv.height) { b.width = uiCv.width; b.height = uiCv.height; }
+        const g = b.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, b.width, b.height); g.drawImage(uiCv, 0, 0);
+        UB.bong = b; UB.dong = now;
+      } catch (e) { UB.bong = null; }
+      UB.mo = -9;
+    }
+    UB.khoa = k;
+  }
+  function bangCuoiKhung(now) { // vẽ bóng bảng vừa đóng (đè lên trên, không nhận chạm)
+    if (!UB.bong) return;
+    const u = (now - UB.dong) / BANG_DONG;
+    if (u >= 1 || u < 0) { UB.bong = null; return; }
+    const c = G.ux; c.save();
+    try { c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = 1 - daoDong(u); c.drawImage(UB.bong, 0, 0); } finally { c.restore(); }
+  }
+  // Áp phép phóng mở bảng lên G.ux (đã ui.begin). Trả về true nếu đã áp (khi đó PHẢI gọi G.uiBang.ra()).
+  function bangVao(now) {
+    if (G.UI_MUOT === false || UB.phong) return false;
+    const u = (now - UB.mo) / BANG_MO;
+    if (!(u >= 0 && u < 1)) { UB.s = 1; return false; }
+    const e = daoDong(u), s = 0.94 + 0.06 * e, cx = G.W / 2, cy = G.H / 2, c = G.ux;
+    c.save(); c.translate(cx, cy); c.scale(s, s); c.translate(-cx, -cy); c.globalAlpha *= e;
+    UB.s = s; UB.phong = true;
+    UB.clickGoc = G.click;
+    if (G.click) { G.click = { x: cx + (G.click.x - cx) / s, y: cy + (G.click.y - cy) / s }; UB.clickMoi = G.click; } else UB.clickMoi = null;
+    return true;
+  }
+  function bangRa() {
+    if (!UB.phong) return;
+    UB.phong = false;
+    try { G.ux.restore(); } catch (e) { /* bỏ qua */ }
+    if (UB.clickMoi && G.click === UB.clickMoi) G.click = UB.clickGoc; // chạm chưa dùng: trả lại toạ độ gốc cho phần vẽ sau
+    UB.clickGoc = UB.clickMoi = null;
+  }
+  // Toạ độ chạm của nút chạy ngay (G.syncTaps) theo đúng phép phóng của khung vừa vẽ.
+  function bangDoiCham(p) {
+    if (!(UB.s < 1) || G.UI_MUOT === false) return p;
+    const cx = G.W / 2, cy = G.H / 2;
+    return { x: cx + (p.x - cx) / UB.s, y: cy + (p.y - cy) / UB.s };
+  }
+  G.uiBang = { vao: () => bangVao(performance.now() / 1000), ra: bangRa, khoa: khoaBang, doiCham: bangDoiCham, _UB: UB };
+
+  // ---------- Mục 15: chuyển màn (cờ G.UI_MUOT) ----------
+  // Đổi màn vẫn tức thì như cũ (luật, enter(), chạm của màn mới không trễ). Chỉ phần HÌNH: 0,1 giây đầu hiện ảnh chụp màn cũ tối dần
+  // về đen (trong lúc đó bỏ chạm, vì màn mới chưa thấy), rồi 0,15 giây màn mới hiện dần từ đen. Tổng 0,25 giây.
+  const CM_RA = 0.1, CM_VAO = 0.15;
+  const CM = { cho: false, at: -9, cv: null, co: false };
+  function chuyenDauKhung(now) { // gọi đầu khung vẽ, trước khi màn mới vẽ đè: chụp màn cũ (#world + #ui của khung trước)
+    if (!CM.cho) return;
+    CM.cho = false;
+    try {
+      if (!CM.cv) CM.cv = document.createElement('canvas');
+      const b = CM.cv;
+      if (b.width !== uiCv.width || b.height !== uiCv.height) { b.width = uiCv.width; b.height = uiCv.height; }
+      const g = b.getContext('2d'), d = G.dpr || 1;
+      g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.fillStyle = '#000'; g.fillRect(0, 0, b.width, b.height);
+      g.imageSmoothingEnabled = false;
+      g.drawImage(world, G.ox * d, G.oy * d, G.W * G.scale * d, G.H * G.scale * d);
+      g.drawImage(uiCv, 0, 0);
+      CM.co = true;
+    } catch (e) { CM.co = false; }
+    CM.at = now;
+  }
+  function chuyenCuoiKhung(now) {
+    const u = now - CM.at;
+    if (!(u >= 0) || u >= CM_RA + CM_VAO) { CM.co = false; return; }
+    const c = G.ux, d = G.dpr || 1;
+    c.save();
+    try {
+      c.setTransform(1, 0, 0, 1, 0, 0);
+      const x = G.ox * d, y = G.oy * d, w = G.W * G.scale * d, h = G.H * G.scale * d;
+      if (u < CM_RA) {
+        if (CM.co && CM.cv) { c.globalAlpha = 1; c.drawImage(CM.cv, 0, 0); }
+        c.globalAlpha = u / CM_RA; c.fillStyle = '#000'; c.fillRect(x, y, w, h);
+      } else { const k = 1 - (u - CM_RA) / CM_VAO; c.globalAlpha = k * k; c.fillStyle = '#000'; c.fillRect(x, y, w, h); }
+    } finally { c.restore(); }
+  }
+  const dangChuyenRa = (now) => G.UI_MUOT !== false && now - CM.at >= 0 && now - CM.at < CM_RA;
+
   // ---------- vòng lặp ----------
   G.scene = null;
   G.setScene = function (s) {
+    if (G.UI_MUOT !== false && G.scene && s !== G.scene && !G.noRender && daVe) CM.cho = true; // mục 15: lần vẽ tới chụp màn cũ rồi mờ
     // Phiên hiệu năng (V2): về làng thì bỏ khung / tấm nhuộm của quái và trùm vừa gặp (ải sau gặp quái khác; cần thì tự dựng lại).
     if (s && s === G.Village && G.scene !== s && G.boNho && G.BO_NHO) { try { G.boNho.xoaNhom('quai'); } catch (e) { /* bỏ qua */ } }
     G.scene = s;
@@ -621,6 +756,7 @@
   let last = 0, acc = 0, daVe = false;
   G.tick = function () {
     G.time += STEP;
+    if (G.NOI_SUY !== false && G.nsChup) { try { G.nsChup(); } catch (e) { /* bỏ qua */ } } // mục 1: nhớ vị trí trước lượt tính (js/combat.js)
     if (G.scene) G.scene.update(STEP);
     G.keyP = {};
     G.downs.length = 0;
@@ -690,10 +826,27 @@
     veCuoi = performance.now() / 1000;
     if (G.scene && !G.noRender) {
       if (G.NET !== G.netMuon()) G.setNet(G.netMuon());
+      const bayGio = veCuoi;
+      chuyenDauKhung(bayGio); // mục 15: vừa đổi màn → chụp màn cũ trước khi màn mới vẽ đè
+      bangDauKhung(bayGio); // mục 15: bảng vừa mở / đóng
+      if (dangChuyenRa(bayGio)) { G.click = null; G.syncTaps = []; } // đang hiện ảnh màn cũ: chạm chưa nhắm được gì của màn mới
       ui.begin();
-      G.scene.draw();
+      G.nsAlpha = G.NOI_SUY !== false ? G.clamp(acc / STEP, 0, 1) : 1;
+      const ns = G.NOI_SUY !== false && G.nsVao ? G.nsVao(G.nsAlpha) : false; // mục 1: vẽ ở vị trí trung gian giữa hai lượt tính
+      const bl = UB.khoa.indexOf('lang:') === 0 && G.uiBang.vao(); // mục 15: bảng ở làng đang mở → phóng cả lớp #ui
+      try { G.scene.draw(); } finally { if (bl) G.uiBang.ra(); if (ns) G.nsRa(); }
       if (G.theme && G.theme.endFrame) G.theme.endFrame(); // tên biểu tượng tài nguyên khi chạm vào
-      if (!daVe) { daVe = true; try { const el = document.getElementById('lk-tai'); if (el) el.remove(); } catch (e) { /* bỏ qua */ } } // Đợt 1: khung hình đầu đã vẽ xong → gỡ màn hình tải (index.html)
+      bangCuoiKhung(bayGio);
+      chuyenCuoiKhung(bayGio);
+      if (dangChuyenRa(bayGio)) G.syncTaps = [];
+      if (!daVe) { // Đợt 1: khung hình đầu đã vẽ xong → gỡ màn hình tải (index.html). Mục 15: mờ dần 0,3 giây rồi mới gỡ (?uimuot=0: gỡ ngay)
+        daVe = true;
+        try {
+          const el = document.getElementById('lk-tai');
+          if (el && G.UI_MUOT !== false && el.style) { el.style.transition = 'opacity 0.3s ease-out'; el.style.opacity = '0'; setTimeout(() => { try { el.remove(); } catch (e) { /* bỏ qua */ } }, 320); }
+          else if (el) el.remove();
+        } catch (e) { /* bỏ qua */ }
+      }
       if (!daGoiSau) { daGoiSau = true; try { if (G.spriteCustom && G.spriteCustom.napSau) G.spriteCustom.napSau(); } catch (e) { /* bỏ qua */ } } // Đợt 10: màn chào đã vẽ → mới bắt đầu tải phần ảnh tải sau (bản 2 tệp)
       veTaiSau();
       if (G.portrait) {

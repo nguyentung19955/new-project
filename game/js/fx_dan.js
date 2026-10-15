@@ -224,10 +224,13 @@
     const he = o.he && o.he.el ? 'hu-dan-ten-' + o.he.el : null;
     return he && F.co(he) ? he : null;
   }
+  // Soát mượt phiên 3 mục 21 (?tile05=0 tắt): ảnh đạn XOAY theo hướng bay dùng 16 hướng cố định (bước 22,5°) — mỗi hướng một kiểu răng cưa
+  // ổn định, không lấp lánh từng khung khi đạn cong / góc đổi nhẹ. Chỉ là hình: đường bay, va chạm không đổi.
+  const H16 = Math.PI / 8, goc16 = (a) => (G.TILE05 !== false ? Math.round(a / H16) * H16 : a);
   A.proj = function (c, o) {
     const ten = o.team === 'player' && o.kind === 'arrow' && !G.noRender ? maTen(o) : null;
     if (ten) {
-      FA().ve(c, ten, o.x, o.y - (o.z || 10), o.fxT || 0, Math.atan2(o.vy, o.vx), o.big ? 1.5 : 1);
+      FA().ve(c, ten, o.x, o.y - (o.z || 10), o.fxT || 0, goc16(Math.atan2(o.vy, o.vx)), o.big ? 1.5 : 1);
       return;
     }
     if (o.team === 'player') return art0(c, o);
@@ -252,7 +255,7 @@
       const baoTu = (L === 'spore' || (o.src && o.src.art === 'hoaBaoTu')) && FA() && FA().co('hu-dan-bao-tu');
       const ma = baoTu ? null : DAN_MA[L], anh = ma && FA() ? FA().get(ma) : null;
       if (baoTu) FA().ve(c, 'hu-dan-bao-tu', x, y, o.fxT || G.time, Math.atan2(o.vy, o.vx), o.dBig ? 1.6 : 1);
-      else if (anh) FA().ve(c, ma, x, y, o.fxT || G.time, DAN_TRON[L] && !anh.xoay ? 0 : Math.atan2(o.vy, o.vx), o.dBig ? 2 : 1);
+      else if (anh) FA().ve(c, ma, x, y, o.fxT || G.time, DAN_TRON[L] && !anh.xoay ? 0 : anh.xoay ? goc16(Math.atan2(o.vy, o.vx)) : Math.atan2(o.vy, o.vx), o.dBig ? 2 : 1);
       else c.drawImage(sv, x - h, y - h);
       // chấm đỏ nhấp nháy trên đầu đạn quái: nhìn là biết phải né
       if (((G.time * 8) | 0) % 2) { c.fillStyle = '#ff3a22'; c.fillRect(x - 1, y - h + (o.dBig ? 4 : 2), 2, 1); }

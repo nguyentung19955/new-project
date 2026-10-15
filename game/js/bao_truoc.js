@@ -69,7 +69,7 @@
     if (z.wall) {
       if (!(z.wait > 0)) return false; // tường nước đang chạy là đòn thật: vẽ như cũ
       const age = since(z), tot = age + z.wait;
-      BT.add({ k: 'wall', x: z.x, y: z.y, ang: z.ang, s: z.s, half: z.half, g: z.g, gw: z.gw, maxS: z.maxS, th: z.th, el: 'ice', u: clamp(age / Math.max(0.05, tot), 0, 1), age });
+      BT.add({ k: 'wall', x: z.x, y: z.y, ang: z.ang, s: z.s, half: z.half, g: z.g, gw: z.gw, maxS: z.maxS, th: z.th, el: 'ice', u: clamp(age / Math.max(0.05, tot), 0, 1), age, con: z.wait });
       return true;
     }
     const sh = z.shape;
@@ -79,6 +79,7 @@
       it.age = t0 ? t0 - z.t : since(z);
       it.u = t0 ? clamp(1 - z.t / t0, 0, 1) : clamp(it.age / Math.max(0.05, it.age + z.t), 0, 1); // 14/10: vùng không có t0 vẫn kéo giãn theo thời gian còn lại
       if (z.bomb && z.bomb.fl > 0) { const gone = t0 - z.t, fl = z.bomb.fl; it.age = gone; it.u = gone < fl ? 0 : clamp((gone - fl) / Math.max(0.01, t0 - fl), 0, 1); }
+      it.con = z.t; // soát mượt phiên 3 mục 9A: giây còn lại tới lúc nổ (nhịp sáng cuối)
       BT.add(it);
       nowSeen.set(z, it);
     } else if (!fired.has(z)) {
@@ -655,7 +656,15 @@
     // khung 8 (chớp nổ) bắt đầu ĐÚNG lúc đòn nổ (mode 1) rồi mờ dần.
     const fi = Math.min(6, Math.max(0, Math.floor((it.u || 0) * 7)));
     const ap = mode === 2 ? 1 : clamp((it.age || 0) / APPEAR, 0, 1), e = 1 - (1 - ap) * (1 - ap) * (1 - ap);
-    return [fi, e * (it.dim == null ? 1 : it.dim)];
+    // soát mượt phiên 3 mục 9A (?bthoa=0: nhảy 7 bậc như cũ): phần lẻ của u×7 → khung kế hoà lên trên (lan đều thay vì nhảy bậc);
+    // 0,15 giây cuối trước khi nổ: nhịp sáng (lớp cộng sáng mạnh dần). Thời điểm, vùng, khung nổ không đổi.
+    let hoa = 0, sang = 0;
+    if (mode === 0 && G.BT_HOA !== false) {
+      const v = clamp(it.u || 0, 0, 1) * 7;
+      if (fi < 6) hoa = clamp(v - fi, 0, 1); // khung 7 giữ nguyên tới lúc nổ: không hoà sang khung 8 (chớp nổ) để không báo nổ sớm
+      if (it.con != null && it.con < 0.15) sang = clamp(1 - it.con / 0.15, 0, 1);
+    }
+    return [fi, e * (it.dim == null ? 1 : it.dim), hoa, sang];
   }
   // Vẽ một vùng bằng ảnh lên c (toạ độ thế giới). Trả về false nếu hình này không có ảnh (để vẽ kiểu cũ).
   function veAnh(c, it, mode, f) {
@@ -667,9 +676,48 @@
     if (!kieu) return false;
     const src = kieu === 'vanh' ? tamVanh(it.el, it.r0 / Math.max(1, it.r1)) : tam(kieu, it.el);
     if (!src) return false;
-    const [fi, al] = khungVa(it, mode, f);
+    const [fi, al, hoa, sang] = khungVa(it, mode, f);
     if (al <= 0.003) return true;
-    const h = HA[kieu], ow = h.o[0], oh = h.o[1], sxo = fi * ow;
+    const h = HA[kieu], ow = h.o[0], oh = h.o[1];
+    // mục 9A: vẽ khung fi, rồi khung fi+1 đè lên theo phần lẻ, rồi nhịp sáng cuối (cộng sáng) — cùng một hàm vẽ hình
+    veHinh(c, it, k, kieu, src, h, ow, oh, fi * ow, al);
+    if (hoa > 0.02) veHinh(c, it, k, kieu, src, h, ow, oh, (fi + 1) * ow, al * hoa);
+    if (sang > 0.02) {
+      const go = c.globalCompositeOperation;
+      c.globalCompositeOperation = 'lighter';
+      try { veHinh(c, it, k, kieu, src, h, ow, oh, Math.min(7, fi + (hoa > 0.5 ? 1 : 0)) * ow, al * 0.45 * sang * (0.6 + 0.4 * Math.sin(sang * Math.PI * 3))); } finally { c.globalCompositeOperation = go; }
+    }
+    return true;
+  }
+  // Soát mượt phiên 3 mục 22 (?venhe=0: cắt lát mỗi khung như cũ): quạt có góc mở khác ảnh phải cắt ~18 lát xoay mỗi khung. Dựng SẴN một
+  // tấm theo (ảnh, khung, góc mở, bán kính) ở hệ toạ độ chưa xoay, rồi mỗi khung chỉ xoay dán 1 lần. Nhớ tối đa 24 tấm (dùng gần nhất giữ lại).
+  const QS = new Map();
+  function quatSan(c, src, h, ow, oh, sxo, it, s, half, ni, dx0, dy0) {
+    try {
+      const RR = it.r * 1.35, N = G.NET || 1, key = sxo + '|' + Math.round(it.span * 100) + '|' + Math.round(it.r) + '|' + N + '|' + it.el + '|' + h.R;
+      let e = QS.get(key);
+      if (e && e.src !== src) e = null;
+      if (e) { QS.delete(key); QS.set(key, e); }
+      else {
+        const W = Math.ceil(RR * 2 * N) + 2, cv = document.createElement('canvas'); cv.width = cv.height = W;
+        const g = cv.getContext('2d'); g.imageSmoothingEnabled = false; g.setTransform(N, 0, 0, N, W / 2, W / 2);
+        const n = Math.max(3, Math.ceil(it.span / 0.12)), st = it.span / n, kk = ni / half, R2 = it.r * 1.35;
+        for (let j = 0; j < n; j++) {
+          const a0 = -half + j * st, a1 = a0 + st;
+          const rot = j === 0 ? -half + ni : j === n - 1 ? half - ni : ((a0 + a1) / 2) * (1 - kk);
+          g.save(); g.beginPath(); g.moveTo(0, 0); g.arc(0, 0, R2, a0 - (j === 0 ? 0.35 : 0.004), a1 + (j === n - 1 ? 0.35 : 0.004)); g.closePath(); g.clip();
+          g.rotate(rot); g.drawImage(src, sxo, 0, ow, oh, dx0, dy0, ow * s, oh * s); g.restore();
+        }
+        e = { src, cv, W };
+        if (QS.size >= 24) QS.delete(QS.keys().next().value);
+        QS.set(key, e);
+      }
+      const half2 = e.W / 2 / N;
+      c.drawImage(e.cv, -half2, -half2, e.W / N, e.W / N);
+      return true;
+    } catch (err) { return false; }
+  }
+  function veHinh(c, it, k, kieu, src, h, ow, oh, sxo, al) {
     c.save();
     c.globalAlpha *= al; c.imageSmoothingEnabled = false;
     try {
@@ -692,6 +740,7 @@
         const s = it.r / h.R, half = it.span / 2, ni = (h.nua * Math.PI) / 180, dx0 = -h.dinh[0] * s, dy0 = -h.dinh[1] * s;
         c.translate(it.x, it.y); c.rotate(it.ang);
         if (Math.abs(half - ni) < 0.03) c.drawImage(src, sxo, 0, ow, oh, dx0, dy0, ow * s, oh * s);
+        else if (G.VE_NHE !== false && quatSan(c, src, h, ow, oh, sxo, it, s, half, ni, dx0, dy0)) { /* mục 22: tấm quạt dựng sẵn */ }
         else {
           const n = Math.max(3, Math.ceil(it.span / 0.12)), st = it.span / n, kk = ni / half, RR = it.r * 1.35;
           for (let j = 0; j < n; j++) {
@@ -723,7 +772,7 @@
       const m = (a0 + a1) / 2, L = a1 - a0;
       // dải dọc theo hướng vuông góc (ang + 90°), tâm ở (d, m) trong hệ toạ độ của tường
       const x = it.x + ca * d - sa * m, y = it.y + sa * d + ca * m, ang = it.ang + Math.PI / 2;
-      veAnh(c, { k: 'line', x: x - Math.cos(ang) * L / 2, y: y - Math.sin(ang) * L / 2, ang, len: L, w: 40, el: 'ice', u: it.u, age: it.age, dim: it.dim }, mode, f);
+      veAnh(c, { k: 'line', x: x - Math.cos(ang) * L / 2, y: y - Math.sin(ang) * L / 2, ang, len: L, w: 40, el: 'ice', u: it.u, age: it.age, dim: it.dim, con: it.con }, mode, f);
     }
     return true;
   }

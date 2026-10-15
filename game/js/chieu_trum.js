@@ -595,6 +595,7 @@
               // 0,4 giây cuối trước khi châm lửa khung 5–6 (mép đỏ, tia lửa). Mỗi chấm lệch pha.
               if (!chay && KA('hu-vet-dau')) { const f = v.age < 0.25 ? Math.floor(v.age / 0.125) : v.age < S.cho - 0.4 ? 2 + ((Math.floor(v.age * 6) + i) % 2) : 4 + ((Math.floor(v.age * 10) + i) % 2); FA().veK(c, 'hu-vet-dau', x, y, f, 0, S.rong / 18, i % 2 === 1, 1); continue; }
               if (!chay) { elip(c, x, y, 7, 4, 'rgba(40,24,10,0.75)'); p(c, x - 2, y - 1, 3, 1, 'rgba(160,130,60,0.8)'); continue; }
+              if (G.HU_MO !== false && KA('hu-vet-dau') && v.age - S.cho < 0.15) FA().veK(c, 'hu-vet-dau', x, y, 4 + (i % 2), 0, S.rong / 18, i % 2 === 1, 1 - (v.age - S.cho) / 0.15); // soát mượt phiên 3 mục 8: vệt dầu mờ dần dưới lửa (không tắt phụt)
               if (coAnh('hu-vung-lua')) { FA().veK(c, 'hu-vung-lua', x, y, (Math.floor(v.age * 10) + i) % 6, 0, 0.42, false, 1); continue; }
               const fl = Math.floor(v.age * 12 + i) % 3;
               p(c, x - 3, y - 5 - fl, 6, 5 + fl, '#c43c10'); p(c, x - 2, y - 4 - fl, 4, 4 + fl, '#ff8a1e'); p(c, x - 1, y - 3, 2, 2, '#ffd23c');

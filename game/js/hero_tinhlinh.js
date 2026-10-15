@@ -1426,7 +1426,7 @@
     }
     const A = G.art;
     if (!fr) { if (A && A.heroOld) return A.heroOld.call(A, c, o); return; }
-    const x = Math.round(o.x), y = Math.round(o.y), f = o.face < 0 ? -1 : 1, t = (o.t != null ? o.t : G.time) || 0;
+    const x = (G.lamTron || Math.round)(o.x), y = (G.lamTron || Math.round)(o.y), f = o.face < 0 ? -1 : 1, t = (o.t != null ? o.t : G.time) || 0; // soát mượt phiên 3 mục 1
     // Ghép: vũ khí nhăn mặt khoảng nửa giây sau khi bé trúng đòn; ở làng (o.wmood) thì theo ý nơi gọi.
     if (o.p && !o.wmood) {
       if (o.p.hurtT > 0) HURT.set(o.p, t + 0.5);
@@ -1467,7 +1467,7 @@
     try { if (G.weaponArt && G.weaponArt.tipLen && !o.plainWeapon) L = G.weaponArt.tipLen(G.weaponArt.fromWeapon(o.weapon || {})); } catch (e) { L = 0; }
     if (!(L > 4)) L = w.type === 'spear' ? 48 : w.type === 'hammer' ? 34 : 36;
     const nb = G.spriteCustom && G.spriteCustom.nhunBuoc ? G.spriteCustom.nhunBuoc(o) : 0;
-    const f = o.face < 0 ? -1 : 1, X0 = Math.round(o.x) + (f < 0 ? 1 : 0), Y0 = Math.round(o.y) + nb;
+    const f = o.face < 0 ? -1 : 1, X0 = (G.lamTron || Math.round)(o.x) + (f < 0 ? 1 : 0), Y0 = (G.lamTron || Math.round)(o.y) + nb;
     const r = (w.ang * Math.PI) / 180, sx = w.sx == null ? 1 : w.sx;
     let gx = w.x, gy = w.y;
     if (G.CO_VK && !o.plainWeapon) { // ảnh AI co nhỏ: vệt bám đúng mũi của hình đang vẽ (điểm cầm đã dời, dài = dài ảnh x hệ số co)

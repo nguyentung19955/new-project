@@ -557,7 +557,8 @@
     if (G.CHOP_NHE !== false) { chopNhe = flash; flash = 0; } // 15/10 con-ve-tay: trúng đòn → viền sáng + đỏ nhẹ, không phủ trắng cả thân (cờ ?chopcu=1)
     if (o.baoDon > 0) flash = Math.max(flash, o.baoDon); // Phiên E2: chớp trắng báo sắp ra đòn (js/boss.js truyền cho trùm vùng có ảnh AI); chỉ là hình
     c.save();
-    c.translate(Math.round(x), Math.round(y));
+    const lt = G.lamTron || Math.round; // soát mượt phiên 3 mục 1: cùng kiểu làm tròn với camera (?noisuy=0 như cũ)
+    c.translate(lt(x), lt(y));
     if (bong) {
       const w = sp.bong * (n === 'die' ? 1 - 0.5 * (s.u || 0) : 1);
       c.save();

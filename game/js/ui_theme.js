@@ -25,8 +25,12 @@
   const cache = new Map();
   function layer(key, w, h, fn) {
     let cv = cache.get(key);
+    if (cv && G.VE_NHE !== false) { cache.delete(key); cache.set(key, cv); } // soát mượt phiên 3 mục 22: dùng gần nhất xếp cuối (LRU)
     if (!cv) {
-      if (cache.size > 700) cache.clear();
+      if (cache.size > 700) {
+        if (G.VE_NHE !== false) { let n = 0; for (const k of cache.keys()) { cache.delete(k); if (++n >= 80) break; } } // xoá dần 80 tấm lâu không dùng, không xoá sạch (khựng)
+        else cache.clear();
+      }
       cv = document.createElement('canvas'); cv.width = Math.max(1, Math.round(w)); cv.height = Math.max(1, Math.round(h));
       g = cv.getContext('2d'); fn(); cache.set(key, cv);
     }
@@ -129,7 +133,7 @@
 
   // ---------- chạm ----------
   function lighten(col, k) { const n = parseInt(String(col).slice(1), 16); if (isNaN(n)) return col; const f = (v) => ('0' + Math.round(v + (255 - v) * k).toString(16)).slice(-2); return '#' + f((n >> 16) & 255) + f((n >> 8) & 255) + f(n & 255); }
-  const heldIn = (x, y, w, h) => [...G.pointers.values()].some((q) => !q.role && !q.stale && G.inRect(q, x, y, w, h));
+  const heldIn = (x, y, w, h) => (G.coTro ? G.coTro((q) => !q.role && !q.stale && G.inRect(q, x, y, w, h)) : [...G.pointers.values()].some((q) => !q.role && !q.stale && G.inRect(q, x, y, w, h)));
   // Phiên giao diện 12/10 — VÙNG CHẠM TỐI THIỂU 44 pt: nút nào có vùng chạm nhỏ hơn T.CHAM_MIN (31 đơn vị ≈ 44 pt trên iPhone cầm ngang,
   // 1 đơn vị ≈ 1,44 pt) thì được nới VÔ HÌNH ra cho đủ (hình nút giữ nguyên). Không chồng nhau: chạm trúng hình thật của một nút thì chỉ
   // nút đó nhận; chạm vào phần nới thì nút có hình gần ngón tay nhất nhận (so với mọi nút đã vẽ ở khung trước).
@@ -927,14 +931,41 @@
     if (st.heal > 0) st.heal -= dt;
     return st;
   }
+  // Mục 15 (soát mượt phiên 3, ?uimuot=0 tắt): thanh kinh nghiệm nhớ số đang hiện theo chỗ vẽ (x, y, w); số mới lớn hơn thì chạy tới
+  // trong 0,4 giây (ease-out). Số nhỏ đi (lên cấp, đổi em bé) thì hiện ngay số mới. Chỉ là hình: số kinh nghiệm thật không đổi.
+  const XP_CHAY = new Map();
+  function xpChay(x, y, w, frac) {
+    frac = G.clamp(+frac || 0, 0, 1);
+    const k = x + '|' + y + '|' + w, now = (typeof performance !== 'undefined' ? performance.now() : Date.now()) / 1000;
+    let m = XP_CHAY.get(k);
+    if (!m) { if (XP_CHAY.size > 40) XP_CHAY.clear(); XP_CHAY.set(k, (m = { tu: frac, den: frac, at: now })); return frac; }
+    const u = G.clamp((now - m.at) / 0.4, 0, 1), dang = m.tu + (m.den - m.tu) * (1 - (1 - u) * (1 - u) * (1 - u));
+    if (Math.abs(frac - m.den) > 1e-6) {
+      if (frac < dang - 1e-6) { m.tu = m.den = frac; m.at = now; return frac; }
+      m.tu = dang; m.den = frac; m.at = now; return dang;
+    }
+    return dang;
+  }
   T.bar = function (x, y, w, kind, frac, label, o) {
     o = o || {};
     x = Math.round(x); y = Math.round(y); w = Math.round(w);
     const h = o.h || 9, cap = h >= 7 ? 7 : 2, inner = w - cap * 2;
     const gd = G.VFX ? +G.VFX.giaoDien : 1, ls = o.lag && gd > 0 && h >= 6 ? lagOf(o.lag, G.clamp(frac || 0, 0, 1)) : null;
+    if (kind === 'xp' && G.UI_MUOT !== false) frac = xpChay(x, y, w, frac); // soát mượt phiên 3 mục 15: thanh kinh nghiệm chạy tới đích 0,4 giây
     const trueFrac = frac;
     if (ls) frac = ls.shown;
     const fw = Math.round(inner * G.clamp(frac || 0, 0, 1)), cols = o.col ? [o.col, o.hi || lighten(o.col, 0.35)] : BARC[kind] || BARC.hp;
+    // Soát mượt phiên 3 mục 22 (?venhe=0: như cũ): tấm nhớ chỉ là KHUNG thanh (không có độ dài máu trong khoá) + một tấm vạch khắc;
+    // phần đổ màu tô thẳng bằng fillRect. Hình y hệt (cùng thứ tự lớp), nhưng máu đổi không còn sinh tấm mới mỗi lần.
+    const nhe = G.VE_NHE !== false, U = G.ux;
+    const doMau = (px, py, pw, ph, hi) => { if (pw <= 0 || ph <= 0) return; U.fillStyle = cols[0]; U.fillRect(px, py, pw, ph); if (hi) { U.fillStyle = cols[1]; U.fillRect(px, py, pw, 1); } };
+    const vach = (n) => layer('barM|' + inner + '|' + h + '|' + n, inner, h - 4, () => { for (let k = 1; k < n; k++) { const px = Math.round((inner * k) / n); P(px, 0, C.dk); P(px, h - 5, C.dk); if (k * 2 === n) R(px, 0, 1, h - 4, 'rgba(0,0,0,0.5)'); } });
+    if (h < 6 && nhe) {
+      const iw = Math.round((w - 2) * G.clamp(frac || 0, 0, 1));
+      put(layer('barS0|' + w + '|' + h, w, h, () => { R(0, 0, w, h, C.dk); R(1, 1, w - 2, h - 2, '#0d1716'); R(0, 0, 1, h, C.br); R(w - 1, 0, 1, h, C.br); }), x, y);
+      doMau(x + 1, y + 1, iw, h - 2, h >= 4);
+      return;
+    }
     if (h < 6) { // thanh mỏng (dấu ấn, kinh nghiệm nhỏ): viền tối, hai đầu đồng
       const iw = Math.round((w - 2) * G.clamp(frac || 0, 0, 1));
       put(layer('barS|' + w + '|' + h + '|' + cols[0] + '|' + iw, w, h, () => { R(0, 0, w, h, C.dk); R(1, 1, w - 2, h - 2, '#0d1716'); R(1, 1, iw, h - 2, cols[0]); if (h >= 4) R(1, 1, iw, 1, cols[1]); R(0, 0, 1, h, C.br); R(w - 1, 0, 1, h, C.br); }), x, y);
@@ -945,12 +976,22 @@
     const gkh = khungCo(kind === 'mana' ? 'gd-khung-mana' : kind === 'xp' ? 'gd-khung-xp' : 'gd-khung-mau');
     if (gkh) {
       khungDat(khungLop(gkh, 'bar|' + w + '|' + h, w, h + 1, () => { rr(0, 1, w, h, 'rgba(0,0,0,0.5)', 1); khungVe(gkh, 0, 0, w, h); }), x, y, w, h + 1);
-      put(layer('barL|' + w + '|' + h + '|' + cols[0] + '|' + fw + '|' + (o.marks || 10), inner, h - 4, () => {
+      if (nhe) { put(layer('barL0|' + inner + '|' + h, inner, h - 4, () => R(0, 0, inner, h - 4, '#0d1716')), x + cap, y + 2); doMau(x + cap, y + 2, fw, h - 4, true); put(vach(o.marks || 10), x + cap, y + 2); }
+      else put(layer('barL|' + w + '|' + h + '|' + cols[0] + '|' + fw + '|' + (o.marks || 10), inner, h - 4, () => {
         R(0, 0, inner, h - 4, '#0d1716');
         R(0, 0, fw, h - 4, cols[0]); R(0, 0, fw, 1, cols[1]);
         const n = o.marks || 10;
         for (let k = 1; k < n; k++) { const px = Math.round((inner * k) / n); P(px, 0, C.dk); P(px, h - 5, C.dk); if (k * 2 === n) R(px, 0, 1, h - 4, 'rgba(0,0,0,0.5)'); }
       }), x + cap, y + 2);
+    } else if (nhe) {
+      put(layer('bar0|' + w + '|' + h, w, h + 1, () => {
+        rr(0, 1, w, h, 'rgba(0,0,0,0.5)', 1);
+        rr(0, 0, w, h, C.dk, 1); rr(1, 1, w - 2, h - 2, C.br, 1); R(2, 1, w - 4, 1, C.hi);
+        R(cap, 2, inner, h - 4, '#0d1716');
+        if (cap >= 7) for (const ex of [2, w - 6]) { R(ex, (h >> 1) - 1, 4, 3, C.dk); P(ex + 1, h >> 1, C.gold); P(ex + 2, h >> 1, C.gold); } // đinh tán hai đầu
+      }), x, y);
+      doMau(x + cap, y + 2, fw, h - 4, true);
+      put(vach(o.marks || 10), x + cap, y + 2);
     } else {
     const cv = layer('bar|' + w + '|' + h + '|' + cols[0] + '|' + fw + '|' + (o.marks || 10), w, h + 1, () => {
       rr(0, 1, w, h, 'rgba(0,0,0,0.5)', 1);

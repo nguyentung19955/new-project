@@ -7101,7 +7101,7 @@ window.G.LANG = 'vi';
     }
     const A = G.art;
     if (!fr) { if (A && A.heroOld) return A.heroOld.call(A, c, o); return; }
-    const x = Math.round(o.x), y = Math.round(o.y), f = o.face < 0 ? -1 : 1, t = (o.t != null ? o.t : G.time) || 0;
+    const x = (G.lamTron || Math.round)(o.x), y = (G.lamTron || Math.round)(o.y), f = o.face < 0 ? -1 : 1, t = (o.t != null ? o.t : G.time) || 0; // soát mượt phiên 3 mục 1
     // Ghép: vũ khí nhăn mặt khoảng nửa giây sau khi bé trúng đòn; ở làng (o.wmood) thì theo ý nơi gọi.
     if (o.p && !o.wmood) {
       if (o.p.hurtT > 0) HURT.set(o.p, t + 0.5);
@@ -7142,7 +7142,7 @@ window.G.LANG = 'vi';
     try { if (G.weaponArt && G.weaponArt.tipLen && !o.plainWeapon) L = G.weaponArt.tipLen(G.weaponArt.fromWeapon(o.weapon || {})); } catch (e) { L = 0; }
     if (!(L > 4)) L = w.type === 'spear' ? 48 : w.type === 'hammer' ? 34 : 36;
     const nb = G.spriteCustom && G.spriteCustom.nhunBuoc ? G.spriteCustom.nhunBuoc(o) : 0;
-    const f = o.face < 0 ? -1 : 1, X0 = Math.round(o.x) + (f < 0 ? 1 : 0), Y0 = Math.round(o.y) + nb;
+    const f = o.face < 0 ? -1 : 1, X0 = (G.lamTron || Math.round)(o.x) + (f < 0 ? 1 : 0), Y0 = (G.lamTron || Math.round)(o.y) + nb;
     const r = (w.ang * Math.PI) / 180, sx = w.sx == null ? 1 : w.sx;
     let gx = w.x, gy = w.y;
     if (G.CO_VK && !o.plainWeapon) { // ảnh AI co nhỏ: vệt bám đúng mũi của hình đang vẽ (điểm cầm đã dời, dài = dài ảnh x hệ số co)
@@ -10017,7 +10017,7 @@ const DON = {
       else if (k === 'no' || k === 'gai' || k === 'dap') F.baoTron(c, 0, 0, tam, u); else if (k === 'phun') F.baoQuat(c, 0, 0, tam, dir, d.xoe || 1.1, u); else if (k === 'nem') F.baoTron(c, Math.cos(dir) * tam, Math.sin(dir) * tam * MA.det, d.rong || 12, u); });
     // Con vẽ tay đợt 3 (YEU-CAU-3.md): trong trận tia sáng ở miệng lúc lấy đà → ảnh hu-tia-mom (trắng, nhuộm màu giữa của đòn quái), 5 khung
     // theo độ lấy đà u, cỡ 16 ≈ đốm + hạt code cũ (bán kính 6). Ảnh chưa tải: không vẽ. ?vetaycu=1: vẽ code như cũ.
-    if ((k === 'ban' || k === 'phun' || k === 'nem') && MA._vt2) { if (VT3('hu-tia-mom')) { const cols = d.mau || ['#7cc4ee', '#dff4ff', '#ffffff']; P.over(c => { const m = DON.mom(P); HT.ve(c, 'hu-tia-mom', m[0], m[1], Math.min(4, Math.floor(u * 5)), 0, 1, false, 1, cols[1]); }); } }
+    if ((k === 'ban' || k === 'phun' || k === 'nem') && MA._vt2) { if (VT3('hu-tia-mom')) { const cols = d.mau || ['#7cc4ee', '#dff4ff', '#ffffff']; P.over(c => { const m = DON.mom(P); HT.ve(c, 'hu-tia-mom', m[0], m[1], Math.min(4, Math.floor(u * 5)), 0, 1, false, G.HU_MO !== false && u > 0.75 ? Math.max(0, 1 - (u - 0.75) / 0.25) : 1, cols[1]); /* soát mượt phiên 3 mục 8: mờ dần 25% cuối (?humo=0 như cũ) */ }); } }
     else if ((k === 'ban' || k === 'phun' || k === 'nem') && !MA._vt2) P.over(c => { const m = DON.mom(P), cols = d.mau || ['#7cc4ee', '#dff4ff', '#ffffff']; F.hat(c, m[0], m[1], 6, 11, 1 - (u * 3 % 1), { v: -7, cols: [cols[1], cols[2] || cols[1]] }); F.dia(c, m[0], m[1], 1 + u * 2, cols[1]); F.px(c, m[0], m[1], '#ffffff'); }); },
   don(P, u) { const d = P.d.don || {}, k = d.kieu || 'chem', tam = d.tam || 24, dir = P.dir, cols = d.mau || ['#7cc4ee', '#dff4ff', '#ffffff'], dx = Math.cos(dir), dy = Math.sin(dir) * MA.det, B = P.B;
     // đợt 3: vệt cào cận chiến → ảnh hu-cao-quai (trắng, nhuộm màu giữa của đòn quái), xoay theo hướng đòn (ảnh chĩa phải; sang trái thì lật rồi
@@ -15029,7 +15029,8 @@ MA._xong();
     if (G.CHOP_NHE !== false) { chopNhe = flash; flash = 0; } // 15/10 con-ve-tay: trúng đòn → viền sáng + đỏ nhẹ, không phủ trắng cả thân (cờ ?chopcu=1)
     if (o.baoDon > 0) flash = Math.max(flash, o.baoDon); // Phiên E2: chớp trắng báo sắp ra đòn (js/boss.js truyền cho trùm vùng có ảnh AI); chỉ là hình
     c.save();
-    c.translate(Math.round(x), Math.round(y));
+    const lt = G.lamTron || Math.round; // soát mượt phiên 3 mục 1: cùng kiểu làm tròn với camera (?noisuy=0 như cũ)
+    c.translate(lt(x), lt(y));
     if (bong) {
       const w = sp.bong * (n === 'die' ? 1 - 0.5 * (s.u || 0) : 1);
       c.save();
