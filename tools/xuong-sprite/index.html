@@ -1222,6 +1222,58 @@ window.G.LANG = 'vi';
   // (hoặc G.CHIEU_MOI = false) → dùng lại đúng chiêu cũ.
   if (G.CHIEU_MOI === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]chieucu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.CHIEU_MOI = !cu; }
   if (G.TRUM_MOI === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]trumcu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.TRUM_MOI = !cu; }
+  // 15/10 noi-gian-manh (docs/review/ke-hoach-cai-thien/noi-gian-manh): NỔI GIẬN / HÓA CUỒNG thấy và cảm được — mọi hệ số ở bảng này
+  // (js/boss.js, js/chieu_trum.js, js/mobs.js đọc; hình: js/noi_gian.js). Cờ tắt: ?giancu=1 (G.NOI_GIAN_BAT = false) → y hệt cũ.
+  // Mảng [pha 1, pha 2, pha 3] của trùm vùng (pha 2 "nổi giận" ≤ 66% máu, pha 3 "hóa cuồng" ≤ 33%); trùm nhỏ [pha 1, pha 2] (pha 2 ≤ nguong).
+  // Mọi hệ số so với pha 1. toc: tốc ra chiêu (cử động + báo trước) · nghi: × nghỉ giữa chiêu của pha 1 · noi: [xác suất nối ≥ 2 chiêu, nối 3 chiêu] ·
+  // noiNghi: nghỉ (giây) giữa hai chiêu nối · sat: × sát thương (satTrum: riêng một trùm) · diChuyen: × tốc đi · met: × thời gian mệt sau chiêu lớn · dan: × tốc đạn bay.
+  // san: sàn công bằng khi nổi giận — báo trước tối thiểu (giây) của vùng thường / vùng to hoặc nhiều đợt; danMax: trần × tốc đạn.
+  // chieu: số đòn mỗi chiêu theo pha (mỗi chiêu một cách tăng: so = số đạn / cột / quả, dot = số đợt, hang = số hàng, vong = số vòng, ...).
+  if (G.NOI_GIAN_BAT === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]giancu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.NOI_GIAN_BAT = !cu; }
+  G.NOI_GIAN = {
+    // sat, satTrum, dan, satDot, tinhAnh.sat: đã HẠ sau khi đo bằng bot cân bằng (docs/review/ke-hoach-cai-thien/noi-gian-manh/bao-cao.md).
+    // Số yêu cầu: sat [1, 1,1, 1,2] / trùm nhỏ [1, 1,1] / tinh anh 1,1, đạn tối đa × 1,25. Với số đó bot (đủ Sức mạnh khuyên dùng) thắng trùm
+    // tụt 30–60 điểm % (Mộc Tinh, Cua Đá, Hổ Lửa, Hồ Tinh) → hạ sát thương, GIỮ NGUYÊN tốc, nối chiêu, số đòn (cũ → mới):
+    // trùm vùng sat 1,1 / 1,2 → 0,5 / 0,45; trùm nhỏ 1,1 → 0,7; tinh anh 1,1 → 0,85; đạn 1,15 / 1,25 → 1,1 / 1,15; nhát của đợt thêm × 0,5.
+    // Mỗi nhát nhẹ hơn nhưng nhanh, dày, dồn dập hơn hẳn (sát thương mỗi giây của trùm vẫn cao hơn pha 1). G.STAGE_REC giữ nguyên.
+    // satTrum (tuỳ chọn): hệ số riêng một trùm, vd { moc: [1, 0.7, 0.6] } — hiện không dùng.
+    vung: { toc: [1, 1.3, 1.55], nghi: [1, 0.7, 0.5], noi: [[0, 0], [0.35, 0], [0.6, 0.2]], noiNghi: 0.3, sat: [1, 0.5, 0.45], diChuyen: [1, 1.2, 1.4], met: [1, 0.8, 0.6], dan: [1, 1.1, 1.15] },
+    nho: { nguong: 0.5, toc: [1, 1.3], nghi: [1, 0.65], noi: [[0, 0], [0.4, 0]], noiNghi: 0.3, sat: [1, 0.7], diChuyen: [1, 1], met: [1, 1], dan: [1, 1.1] },
+    tinhAnh: { nguong: 0.35, toc: 1.3, hoi: 0.6, sat: 0.85 },
+    san: { bao: 0.45, baoTo: 0.6, danMax: 1.25 },
+    nhamLai: false, // đợt thêm nhắm lại chỗ em bé? (false: đánh lại đúng hướng đợt đầu; chiêu có nham: true trong chieu thì luôn nhắm lại)
+    satDot: 0.5, // × sát thương mỗi nhát của ĐỢT THÊM (đợt 2, 3 của một chiêu: quật lại, phun lại, vồ lại...) so với nhát chính
+    chieu: {
+      // Mộc Tinh
+      mocQuat: { dot: [1, 2, 3] }, // c1 Quật cành: số lần quật (lần 2 quật ngược ra sau lưng, lần 3 quật lại phía trước)
+      mocRe: { hang: [1, 2, 2], dot: [1, 2, 3], nham: true }, // c2 Rễ đâm: hàng gai (như cũ) + đợt rễ đâm lại nhắm theo em bé
+      mocQua: { so: [5, 7, 8] }, // c3 Mưa quả độc: số quả (cũ 5 / 5 / 6)
+      mocBua: { so: [5, 7, 8] }, // c4 Bùa bay: số lá bùa (cũ 5)
+      mocGai: { vong: [3, 4, 5] }, // c5 Rừng gai (pha 3): số vòng gai lan (cũ 3; vòng 4, 5 lan lại từ trong, khe đổi chỗ)
+      // Ngư Tinh
+      nguRiu: { dot: [1, 2, 3], nham: true }, // c1 Bổ rìu san hô: số nhát bổ (nhát thêm: vết nứt mới nhắm lại, không văng mảnh)
+      nguSong: { tuong: [1, 2, 3] }, // c2 Sóng thần: số bức tường nước (cũ 1 / 2 / 2; đo bot: [1, 3, 4] làm Ngư Tinh tụt mạnh)
+      nguPhun: { dot: [1, 2, 3], gai: [3, 4, 5] }, // c3 Phun băng: số lần phun (cùng hướng), số ô gai băng mỗi lần
+      nguCot: { so: [6, 8, 10] }, // c4 Cột nước đuổi: số cột (cũ 6)
+      nguXoay: { vong: [0, 1, 2] }, // c5 Xoáy hút (pha 3): số vòng sóng bung thêm sau cú nổ giữa
+      // Hồ Tinh
+      hoHoa: { so: [5, 7, 8] }, // c1 Hồ hoả: số cầu lửa (cũ 5 / 6 / 8)
+      hoVo: { lan: [1, 3, 4] }, // c2 Vồ nhảy: số lần nhảy (cũ 1 / 2 / 2)
+      hoQuat: { dot: [1, 2, 3] }, // c3 Quạt đuôi: số lần quạt (cùng hướng)
+      hoPhan: { lao: [4, 5, 6] }, // c4 Hồ ly phân thân: số lượt lao (cũ 4; lượt 5, 6 là bóng giả lao ngược lại)
+      hoBao: { dot: [3, 4, 5] }, // c5 Bão hồ hoả (pha 3): số đợt cầu lửa (cũ 3)
+      // Trùm nhỏ [pha 1, pha 2]
+      nhoDon: { dot: [1, 1] }, // đòn thường (không phải chiêu): không thêm nhát — đo bot: thêm nhát làm Cua Đá tụt 50 điểm % (đặt [1, 2] để bật)
+      cuaDap: { dot: [1, 2] }, // Cua Đá Đập càng rung sàn: đập thêm một lần
+      cuaTuong: { dot: [1, 2] }, // Cua Đá Tường tinh thể: tường vỡ bắn thêm một loạt mảnh (lệch nửa hàng)
+      cuaMua: { so: [5, 7] }, // Cua Đá Mưa tinh thể (?chieucu=1): số tinh thể (cũ 5 / 6 / 7)
+      namHang: { dot: [1, 2], nham: true }, // Nấm Chúa Hàng nấm độc: thêm một hàng nhắm lại
+      namMe: { so: [3, 4] }, // Nấm Chúa Nấm mẹ đẻ con: số nấm con
+      namBao: { dot: [2, 3] }, // Nấm Chúa Bão bào tử (?chieucu=1): số đợt bào tử
+      hoVoLua: { dot: [1, 2], nham: true }, // Hổ Lửa Vồ lửa: vồ thêm một lần nhắm lại
+      hoPhun: { dot: [1, 2] }, // Hổ Lửa Gầm phun lửa: phun thêm một lần (cùng hướng)
+    },
+  };
   // Lăn né: tốc độ ngang (điểm ảnh mỗi giây) và tỉ lệ chiều dọc so với chiều ngang (bằng tỉ lệ lúc đi bộ).
   G.DODGE = { vx: 195, ky: 0.75 };
   G.MINI_HP = 12; // máu trùm nhỏ = hệ số x máu quái thường

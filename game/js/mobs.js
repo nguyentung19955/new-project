@@ -214,6 +214,7 @@
     // skill bộ Ninja "Phân thân" (js/bo_skill.js): quái thường đi tới / ngắm đòn vào bóng; P ở đây chỉ dùng toạ độ, đòn trúng vẫn đo trên Zed thật
     const w = W(), P = (G.boSk && G.boSk.dich(e)) || w.P;
     if (e.an) e.an.t += dt * (e.an.spd || 1);
+    if (e.role === 'elite' && G.noiGian) G.noiGian.tinhAnh(e); // 15/10 noi-gian-manh: tinh anh nổi giận ở ≤ 35% máu (js/noi_gian.js, cờ tắt ?giancu=1)
     if (e.hitT > 0) e.hitT -= dt;
     if (e.reflT > 0) e.reflT -= dt;
     if (e.brokeT > 0) { e.brokeT -= dt; if (e.brokeT <= 0) e.armorHp = e.armorMax; }
@@ -418,12 +419,17 @@
 
   // ---------- tinh anh ----------
   function thinkElite(e, dt, P, sp, d, a) {
-    const w = W(), id = e.art, el = e.el || regEl(), fast = e.trait === 'nhanh' ? 0.75 : 1;
+    const w = W(), id = e.art, el = e.el || regEl();
+    // 15/10 noi-gian-manh (js/noi_gian.js, G.NOI_GIAN.tinhAnh, cờ tắt ?giancu=1): nổi giận thì tốc chiêu × toc (báo trước chia tốc nhưng không
+    // dưới sàn công bằng 0,45 giây), hồi chiêu riêng × hoi. Chưa giận / cờ tắt: ng = 1, như cũ.
+    const NGq = G.noiGian, ng = NGq ? NGq.tinhAnh(e) : 1, bao = (t, to) => (NGq && ng !== 1 ? NGq.baoTinhAnh(e, t, to) : t);
+    const fast = (e.trait === 'nhanh' ? 0.75 : 1) / ng;
     e.skCd -= dt;
     if (e.skCd <= 0 && d < 170) {
-      e.skCd = G.rr(6, 7.5) * fast;
-      const T = 0.7 * (e.trait === 'nhanh' ? 0.85 : 1), D = dur(id, 'chieu1');
+      e.skCd = G.rr(6, 7.5) * (e.trait === 'nhanh' ? 0.75 : 1) * (NGq ? NGq.hoiTinhAnh(e) : 1);
+      const T = bao(0.7 * (e.trait === 'nhanh' ? 0.85 : 1), true), D = dur(id, 'chieu1') / ng;
       const o = { cd: 1.2 * fast, anim0: 'chieu1', anim1: 'chieu1', end: D };
+      if (ng !== 1) { o.spd0 = ng; o.spd1 = ng; } // cử động chiêu chạy nhanh theo
       // Chiêu riêng chạy trọn cử động chieu1 (đã gồm báo trước trong hình); vùng báo của luật chơi nổ ở mốc T.
       // 14/10 ky-nang-trum-rieng (js/chieu_trum.js, cờ tắt ?chieucu=1): Nấm Phồng Chúa Nhảy dập, Cá Nóc Chúa Phồng lăn, Hũ Chúa Đổ dầu châm lửa
       // thay Mưa bào tử / Gai xoáy / Vòng cầu lửa (kiểu bị lặp). Các nhánh cũ bên dưới giữ nguyên cho cờ tắt.
@@ -463,13 +469,13 @@
     if (k === 'gai' || k === 'no') {
       keep(e, P, reach * 0.7, sp, dt, 1);
       if (e.cd <= 0 && d < reach + 8) {
-        if (k === 'gai') begin(e, 'gai', a, 0.6 * fast, { cd: 1.8 * fast, fire: (q) => { for (let i = 0; i < 8; i++) shoot(q, i / 8 * TAU, 100, { kind: 'spike', dmg: q.dmg * 0.8, el: 'ice', t: 1.3 }); } });
-        else begin(e, 'no', a, 0.7 * fast, { cd: 1.9 * fast, zone: addZone('circle', { x: e.x, y: e.y, r: (e.don.tam || 40) }, 0.7 * fast, e.dmg * 1.1, el, { src: e, cancel: true, melee: true }) });
+        if (k === 'gai') begin(e, 'gai', a, bao(0.6 * fast * ng), { cd: 1.8 * fast, fire: (q) => { for (let i = 0; i < 8; i++) shoot(q, i / 8 * TAU, 100, { kind: 'spike', dmg: q.dmg * 0.8, el: 'ice', t: 1.3 }); } });
+        else begin(e, 'no', a, bao(0.7 * fast * ng), { cd: 1.9 * fast, zone: addZone('circle', { x: e.x, y: e.y, r: (e.don.tam || 40) }, bao(0.7 * fast * ng), e.dmg * 1.1, el, { src: e, cancel: true, melee: true }) });
       }
       return;
     }
     if (d > reach * 0.85) moveTo(e, P.x, P.y, sp, dt);
-    if (e.cd <= 0 && d < reach + 8) melee(e, a, 0.6 * fast, 1.5 * fast);
+    if (e.cd <= 0 && d < reach + 8) melee(e, a, bao(0.6 * fast * ng), 1.5 * fast);
   }
   function near(x, y, dx, dy) { const w = W(); return [clamp(x + G.rr(-dx, dx), w.x0 + 6, w.x1 - 6), clamp(y + G.rr(-dy, dy), w.y0, w.y1)]; }
   G.mobNear = near;
@@ -882,9 +888,14 @@
     const fk = G.fx && G.fx.chop ? G.fx.chop() : 1; // khựng hình: chỉ khung đầu chớp trắng hẳn
     Object.assign(o, { anim: n, t, face: e.face, dir, hit: e.flash > 0 ? (e.fxHk >= 3 ? 0.85 : e.fxHk === 2 ? 0.7 : 0.55) * fk : 0, chop: fk, tint: G.fx && G.fx.dotTint ? G.fx.dotTint(e) : null, bao: false }); // chớp trắng mạnh dần: thường, nặng, chí mạng (js/fx.js đặt e.fxHk); nhịp độc/cháy: nhuộm màu hệ
     // 14/10 (YEU-CAU-TRUM-NHO): trùm nhỏ có tệp ảnh pha 2 (<mã>-p2, js/sprite_custom.js) thì đổi sang hình pha 2 khi máu dưới 50%.
-    // Chỉ là hình: chiêu, nhịp, số giữ nguyên (b.phase của js/boss.js không đổi). Lúc gục dùng hàng chết của pha 1. Tắt: ?trumnho=0 (G.TRUM_NHO_PHA = false).
-    if (e.role === 'mini' && e.dying == null && G.TRUM_NHO_PHA !== false && e.maxhp > 0) o.phase = e.hp < e.maxhp * 0.5 ? 2 : 1;
-    if (e.role === 'mini') o.huTrum = true; // 14/10: trong trận (js/monster_art.js HT.trongTran): ảnh hàng nấm đã đặt đúng vùng thật ở js/boss.js, ảnh đập sàn / phun lửa theo cỡ vùng thật
+    // Lúc gục dùng hàng chết của pha 1. Tắt: ?trumnho=0 (G.TRUM_NHO_PHA = false).
+    // 15/10 noi-gian-manh: nay là pha 2 THẬT (js/boss.js đổi b.phase ở G.NOI_GIAN.nho.nguong = 50% máu: nhanh hơn, thêm đòn, nối chiêu) → hình theo
+    // đúng b.phase. Cờ ?giancu=1: như cũ (chỉ đổi hình ở 50% máu, chiêu giữ nguyên).
+    if (e.role === 'mini' && e.dying == null && G.TRUM_NHO_PHA !== false && e.maxhp > 0) o.phase = G.NOI_GIAN_BAT !== false && G.NOI_GIAN ? (e.phase >= 1 ? 2 : 1) : e.hp < e.maxhp * 0.5 ? 2 : 1;
+    if (e.role === 'mini') o.huTrum = true;
+    // 15/10 noi-gian-manh (js/noi_gian.js): trùm nhỏ pha 2, tinh anh nổi giận — thân đỏ nhẹ có nhịp (nhuộm hệ có trước thì giữ), quầng đỏ dưới chân, đốm lửa giận
+    const NGv = G.noiGian && e.dying == null ? G.noiGian : null;
+    if (NGv && !o.tint) o.tint = NGv.tint(e); // 14/10: trong trận (js/monster_art.js HT.trongTran): ảnh hàng nấm đã đặt đúng vùng thật ở js/boss.js, ảnh đập sàn / phun lửa theo cỡ vùng thật
     if (e.role === 'shield' && !(e.brokeT > 0) && e.dying == null) shieldArc(c, e);
     if (e.spikeUp > 0 && e.dying == null) {
       // đang dựng gai: vòng đỏ nhấp nháy quanh chân
@@ -901,7 +912,9 @@
     }
     const TR = G.TRANG_THAI_TREN_THAN !== false ? ttQuai(e) : null; // Đợt 7: trạng thái trên thân (null = cờ tắt hoặc quái chưa có ảnh AI → vẽ y cũ)
     if (TR) { o.than = TR.nhuom; ttHat(c, e, TR, 0); }
+    if (NGv) NGv.veDuoi(c, e);
     G.monsterArt.draw(c, e.art, e.x, e.y, o);
+    if (NGv) NGv.veTren(c, e);
     if (TR) ttHat(c, e, TR, 1);
     if (e.healFx > 0) { e.healFx -= 1 / 60; A.ellipse(c, e.x, e.y, 90 * (1 - e.healFx / 0.6), 90 * 0.6 * (1 - e.healFx / 0.6), 'rgba(143,232,106,0.18)'); }
     if (e.dying != null) return;

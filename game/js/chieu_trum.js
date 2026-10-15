@@ -73,12 +73,17 @@
   function trong(x, y, m) { const w = W(); m = m || 0; return [clamp(x, w.x0 + m, w.x1 - m), clamp(y, w.y0 + m * 0.5, w.y1 - m * 0.5)]; }
   function moc(id, a) { const m = G.monsterArt, l = m && id && m.list.find((x) => x.id === id), an = l && l.anims.find((x) => x.id === a); return (an && an.moc) || [0.45, 0.75]; }
   function seq(b, t, f) { b.seq.push({ t: Math.max(0, t), f }); }
+  // 15/10 noi-gian-manh: số đòn theo pha (bảng G.NOI_GIAN.chieu, js/data.js; cờ tắt ?giancu=1 → cu) và sàn báo trước khi nổi giận.
+  const soNG = (b, key, f, cu) => (G.noiGianSo ? G.noiGianSo(b, key, f, cu) : cu);
+  const sanNG = (b, to) => (G.noiGianSan ? G.noiGianSan(b, to) : 0);
+  const satDot = () => (G.NOI_GIAN_BAT !== false && G.NOI_GIAN && G.NOI_GIAN.satDot) || 1; // × sát thương nhát của đợt thêm
   const theo = (b) => ({ src: b, skill: b.skillName || null });
   function vung(b, shape, geo, t, dmg, el, o) { return G.mobZone(shape, geo, t, dmg, el || null, Object.assign(theo(b), o || {})); }
   function tron(b, x, y, r, t, dmg, el, o) { return G.zoneCircle(x, y, r, t, dmg, el || null, Object.assign(theo(b), o || {})); }
   // Mệt sau chiêu lớn (như tire() của js/boss.js).
   function met(b, t) {
     if (b.dead) return;
+    if (G.noiGianMet) t = G.noiGianMet(b, t); // 15/10 noi-gian-manh: nổi giận mệt ngắn hơn (G.NOI_GIAN, cờ tắt ?giancu=1)
     b.tired = t; b.exposed = Math.max(b.exposed || 0, t); b.busy = Math.max(b.busy || 0, t);
     if (b.kind === 'mini' && b.st) b.st.stun = Math.max(b.st.stun || 0, t);
   }
@@ -124,6 +129,18 @@
     const L = clamp(Math.hypot(P.x - b.x, P.y - b.y) + S.them, S.dai[0], S.dai[1]), x0 = b.x, y0 = b.y, ca = Math.cos(a), sa = Math.sin(a);
     vung(b, 'line', { x: x0, y: y0, ang: a, len: L, w: S.rong }, T, b.dmg * S.sat, 'ice', { melee: true, onFire: () => { W().shake = Math.max(W().shake, 0.25); G.sfx('boom', 1.3); } });
     const M = [];
+    // 15/10 noi-gian-manh: nổi giận thì BỔ THÊM (đợt 2, 3): mỗi nhát một vết nứt mới (không văng mảnh), nhắm lại chỗ em bé, báo trước như vùng
+    // to, sau lúc mảnh văng. (Thử thêm điểm văng mảnh trên cùng vết nứt: mảnh phủ kín hai bên vết nứt, không còn chỗ né → bỏ.)
+    const nD = soNG(b, 'nguRiu', 'dot', 1), gap = 0.7;
+    if (nD > 1 && G.noiGianLapDot) {
+      for (let k = 1; k < nD; k++) G.noiGianLapDot(b, 'c1', T2 + k * gap, sanNG(b, true) || 0.6, (w) => {
+        const g = G.noiGianHuong ? G.noiGianHuong(b, P, a, 'nguRiu') : a, L2 = clamp(Math.hypot(P.x - b.x, P.y - b.y) + S.them, S.dai[0], S.dai[1]);
+        b.dirA = g; if (Math.abs(Math.cos(g)) > 0.15) b.face = Math.cos(g) > 0 ? 1 : -1;
+        vung(b, 'line', { x: b.x, y: b.y, ang: g, len: L2, w: S.rong }, w, b.dmg * S.sat, 'ice', { melee: true, onFire: () => { W().shake = Math.max(W().shake, 0.2); G.sfx('boom', 1.3); } });
+        if (b.an) b.an.ct = true;
+      });
+      giuBan(b, T2 + (nD - 1) * gap + 0.3);
+    }
     for (const f of S.manhDiem) {
       const px = x0 + ca * L * f, py = y0 + sa * L * f;
       for (const s of [-1, 1]) { const g = a + (s * PI) / 2; M.push([px, py, g]); vung(b, 'line', { x: px, y: py, ang: g, len: S.manhDai, w: S.manhRong }, T2, b.dmg * S.manhSat, 'ice'); }
@@ -161,7 +178,8 @@
     const S = SO.nguCotNuoc, cach = S.cach / (sp || 1), bat = Math.max(0, T - S.bao), ph = b.phase;
     if (b.an) b.an.ct = true;
     let het = 0;
-    for (let k = 0; k < S.so; k++) {
+    const so = soNG(b, 'nguCot', 'so', S.so); // nổi giận: thêm cột
+    for (let k = 0; k < so; k++) {
       const tk = bat + k * cach;
       het = tk + S.bao;
       seq(b, tk, () => {
@@ -188,22 +206,29 @@
         for (let arm = 0; arm < 4; arm++) for (let i = 0; i < 30; i++) { const r = 10 + (i / 30) * (S.R - 10), g = (arm / 4) * TAU - o.age * 5 - r * 0.045; p(c, x + Math.cos(g) * r, y + Math.sin(g) * r * ZK(), 2, 2, i % 6 === 0 ? '#ffffff' : i % 2 ? '#5fb8e0' : '#2a78b0'); }
         c.restore();
       } });
-    if (tn + 0.05 > D) giuBan(b, tn + 0.05);
-    seq(b, Math.max(D, tn + 0.05), () => met(b, S.met)); // như cũ: mệt sau chiêu lớn
+    // nổi giận (pha 3): sau cú nổ giữa bung thêm vòng sóng lan ra (vành khăn, báo trước suốt lúc xoáy), mỗi vòng cách 0,4 giây
+    const nV = soNG(b, 'nguXoay', 'vong', 0);
+    for (let j = 1; j <= nV; j++) { const r0 = S.r + (j - 1) * 45; vung(b, 'donut', { x, y, r0, r1: r0 + 45 }, tn + j * 0.4, b.dmg * 1.2 * satDot(), 'ice'); }
+    const het = tn + nV * 0.4 + 0.05;
+    if (het > D) giuBan(b, het);
+    seq(b, Math.max(D, het), () => met(b, S.met)); // như cũ: mệt sau chiêu lớn
   }
   // Hồ Tinh c2 · VỒ NHẢY: nhảy vòng cung lên cao, bóng tròn (vùng đỏ) báo chỗ đáp ngay dưới em bé lúc ra chiêu, đáp xuống bung lửa vòng
   // nhỏ (một lần trúng như một cú vồ cũ). Pha 2 trở đi nhảy lần hai, nhắm lại theo chỗ em bé (đúng mốc lần vồ thứ hai cũ).
   // Báo trước lần đầu = T (≥ 0,65 giây, do sk.tele của js/boss.js), lần hai 0,62 giây.
-  function voNhay(b, P, T, D, a) {
+  function voNhay(b, P, T, D, a, sp) {
     const S = SO.hoVoNhay, ph = b.phase;
     if (b.an) b.an.ct = true;
-    const mot = (bao) => {
+    const mot = (bao, ks) => {
       const q = trong(P.x, P.y, 6);
-      tron(b, q[0], q[1], S.r, bao, b.dmg * S.sat, null, { melee: true, onFire: (z) => { if (!anh('hu-no-lua', z.x, z.y, { sc: S.r / 40, t: 0.45, gian: true, mr: true })) FX('burst', z.x, z.y - 4, '#ff8a1e', 14, 80); W().shake = Math.max(W().shake, 0.2); } });
+      tron(b, q[0], q[1], S.r, bao, b.dmg * S.sat * (ks || 1), null, { melee: true, onFire: (z) => { if (!anh('hu-no-lua', z.x, z.y, { sc: S.r / 40, t: 0.45, gian: true, mr: true })) FX('burst', z.x, z.y - 4, '#ff8a1e', 14, 80); W().shake = Math.max(W().shake, 0.2); } });
       seq(b, bao - S.bay, () => { if (!b.dead && b.phase === ph) { mat(b, Math.atan2(q[1] - b.y, q[0] - b.x)); nhay(b, q[0], q[1], Math.min(S.bay, bao), S.cao); } });
     };
     mot(T);
-    if (b.phase >= 1) seq(b, T + S.lan2, () => { if (b.dead || b.phase !== ph) return; mat(b, Math.atan2(P.y - b.y, P.x - b.x)); mot(S.bao2); });
+    // Lần nhảy sau: nhắm lại ngay khi lần trước đáp + lan2 (nổi giận: nhiều lần hơn, nghỉ giữa hai lần chia tốc pha; báo trước vẫn bao2).
+    const lan = soNG(b, 'hoVo', 'lan', b.phase >= 1 ? 2 : 1), nghi = G.noiGianSo && lan > 2 ? S.lan2 / Math.max(1, sp || 1) : S.lan2;
+    for (let j = 1; j < lan; j++) seq(b, T + j * nghi + (j - 1) * S.bao2, () => { if (b.dead || b.phase !== ph) return; mat(b, Math.atan2(P.y - b.y, P.x - b.x)); mot(S.bao2, j >= 2 ? satDot() : 1); }); // lần nhảy thêm (thứ 3, 4): × satDot
+    if (lan > 2) giuBan(b, T + (lan - 1) * (nghi + S.bao2) + 0.3);
   }
   // Hồ Tinh c4 · HỒ LY PHÂN THÂN: trùm biến mất, 4 bóng cáo hiện ở 4 góc sàn (đối xứng qua tâm sàn), lần lượt lao chéo qua tâm sang góc
   // đối diện (đường đỏ báo trước từng đường). Một bóng là thật (thân trùm); đánh trúng thân thật trước lúc nó lao thì ngắt chiêu (trùm choáng).
@@ -218,18 +243,24 @@
     b.x = C[r][0]; b.y = C[r][1]; b.face = cx >= b.x ? 1 : -1; b.dirA = Math.atan2(cy - b.y, cx - b.x);
     const st = (b.ctPT = { C, r, thu, ph, an: b.an, ngat: false, laoThat: false, cao: C.map((q, i) => ({ i, x: q[0], y: q[1], on: i !== r, d: null })) });
     for (const q of st.cao) if (q.on) anh('hu-phan-than', q.x, q.y, { sc: 1.6 });
-    const tBao = S.bao * D;
-    thu.forEach((i, k) => {
-      const tk = (S.dau + k * S.buoc) * D, j = (i + 2) % 4, g = Math.atan2(C[j][1] - C[i][1], C[j][0] - C[i][0]);
-      seq(b, tk - tBao, () => { if (b.dead || st.ngat || b.ctPT !== st) return; vung(b, 'line', { x: C[i][0], y: C[i][1], ang: g, len: L, w: S.rong }, tBao, b.dmg * S.sat, 'fire', { ctPT: st }); });
+    // 15/10 noi-gian-manh: nổi giận thì báo trước mỗi đường không ngắn hơn sàn công bằng (vùng nhiều đợt: 0,6 giây),
+    // các lượt lao lùi lại cho khớp; thêm lượt lao (bóng giả lao ngược về góc cũ). Cờ tắt → như cũ.
+    const tBao = Math.max(S.bao * D, sanNG(b, true)), lui = Math.max(0, tBao - S.dau * D), nL = soNG(b, 'hoPhan', 'lao', 4);
+    const luot = thu.map((i) => ({ i, nguoc: false }));
+    for (let k = 4; k < nL; k++) { const i = thu[(k - 4) % 4] === r ? thu[(k - 3) % 4] : thu[(k - 4) % 4]; luot.push({ i, nguoc: true }); }
+    luot.forEach(({ i: i0, nguoc }, k) => {
+      const i = nguoc ? (i0 + 2) % 4 : i0, tk = (S.dau + k * S.buoc) * D + lui, j = (i + 2) % 4, g = Math.atan2(C[j][1] - C[i][1], C[j][0] - C[i][0]);
+      seq(b, tk - tBao, () => { if (b.dead || st.ngat || b.ctPT !== st) return; vung(b, 'line', { x: C[i][0], y: C[i][1], ang: g, len: L, w: S.rong }, tBao, b.dmg * S.sat * (nguoc ? satDot() : 1), 'fire', { ctPT: st }); });
       seq(b, tk, () => {
         if (b.dead || st.ngat || b.ctPT !== st) return;
-        if (i === r) { st.laoThat = true; mat(b, g); b.lunge = { vx: (Math.cos(g) * L) / S.lao, vy: (Math.sin(g) * L) / S.lao, t: S.lao }; }
-        else { const q = st.cao[i]; q.d = { x0: q.x, y0: q.y, x1: C[j][0], y1: C[j][1], t: 0 }; q.face = Math.cos(g) >= 0 ? 1 : -1; q.dir = g; }
+        if (i === r && !nguoc) { st.laoThat = true; mat(b, g); b.lunge = { vx: (Math.cos(g) * L) / S.lao, vy: (Math.sin(g) * L) / S.lao, t: S.lao }; }
+        else { const q = st.cao[i0]; if (nguoc) { q.on = true; q.x = C[i][0]; q.y = C[i][1]; } q.d = { x0: q.x, y0: q.y, x1: C[j][0], y1: C[j][1], t: 0 }; q.face = Math.cos(g) >= 0 ? 1 : -1; q.dir = g; }
         G.sfx('swing', 0.8);
       });
     });
-    seq(b, D, () => { if (b.ctPT === st) { if (!st.ngat) met(b, S.met); for (const q of st.cao) if (q.on) { q.on = false; anh('hu-phan-than', q.x, q.y, { sc: 1.6 }); } b.ctPT = null; } });
+    const het = Math.max(D, (S.dau + (luot.length - 1) * S.buoc) * D + lui + S.lao + 0.05);
+    if (het > D) giuBan(b, het);
+    seq(b, het, () => { if (b.ctPT === st) { if (!st.ngat) met(b, S.met); for (const q of st.cao) if (q.on) { q.on = false; anh('hu-phan-than', q.x, q.y, { sc: 1.6 }); } b.ctPT = null; } });
     if (!b.ctMoc) {
       b.ctMoc = true;
       const o0 = b.onHit;
@@ -259,8 +290,9 @@
     const S = SO.namMe;
     seq(b, T, () => {
       if (b.dead) return;
-      for (let k = 0; k < S.so; k++) {
-        const g = a + (k / S.so) * TAU, q = trong(b.x + Math.cos(g) * S.R, b.y + Math.sin(g) * S.R * ZK(), 8);
+      const so = soNG(b, 'namMe', 'so', S.so); // nổi giận: thêm nấm con
+      for (let k = 0; k < so; k++) {
+        const g = a + (k / so) * TAU, q = trong(b.x + Math.cos(g) * S.R, b.y + Math.sin(g) * S.R * ZK(), 8);
         const z = tron(b, q[0], q[1], S.r, S.giay, b.dmg * S.sat, 'poison', { cancel: true, then: S.may, onFire: (z2) => { if (!anh('hu-no-doc', z2.x, z2.y, { sc: S.r / 40, t: 0.5, gian: true, mr: true })) FX('burst', z2.x, z2.y - 6, '#c4f43c', 14, 70); G.sfx('boom', 1.2); } });
         vat({ x: q[0], y: q[1],
           buoc(o) {
@@ -317,9 +349,10 @@
           }
         } });
     });
-    seq(b, T + S.giu - S.bao, () => {
+    const nD = soNG(b, 'cuaTuong', 'dot', 1); // nổi giận: thêm loạt mảnh, mỗi loạt sau 0,5 giây, lệch nửa hàng
+    for (let d = 0; d < nD; d++) seq(b, T + S.giu - S.bao + d * 0.5, () => {
       if (b.dead) return;
-      for (const t of TU) for (const y of hang) for (const g of [0, PI]) vung(b, 'line', { x: t.x, y, ang: g, len: Math.min(L, g ? t.x - w.x0 : w.x1 - t.x), w: S.manhRong }, S.bao, b.dmg * S.sat, 'ice', { cancel: true }); // mảnh bay tới mép sàn là hết
+      for (const t of TU) for (const y0 of hang) { const y = y0 + (d % 2 ? S.hang / 2 : 0); if (y > t.y1 + 2) continue; for (const g of [0, PI]) vung(b, 'line', { x: t.x, y, ang: g, len: Math.min(L, g ? t.x - w.x0 : w.x1 - t.x), w: S.manhRong }, S.bao, b.dmg * S.sat * (d ? satDot() : 1), 'ice', { cancel: true }); } // mảnh bay tới mép sàn là hết
     });
   }
   CT.mini = function (b, id, k, P, T, D, a) {

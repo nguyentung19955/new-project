@@ -1650,5 +1650,9 @@
 "Nhảy dập": "Stomp Hops",
 "Phồng lăn": "Puff Roll",
 "Đổ dầu châm lửa": "Oil and Ignite",
-"Ngắt chiêu!": "Interrupted!"
+"Ngắt chiêu!": "Interrupted!",
+"Nối chiêu!": "Combo!",
+"Nổi giận!": "Enraged!",
+"Ra chiêu nhanh hơn, nối chiêu": "Faster attacks, chained skills",
+"Nhanh hơn nữa, nối chiêu dồn dập": "Even faster, relentless combos"
 }); })();

@@ -10,6 +10,8 @@
 'use strict';
 const fs = require('fs'), path = require('path'), vm = require('vm'), readline = require('readline');
 const GAME = path.join(__dirname, '..');
+// 15/10 noi-gian-manh: biến môi trường LK_Q thêm cờ vào địa chỉ trang giả (vd LK_Q=giancu=1 → ?cloud=0&giancu=1) để bot đo bản cũ / mới.
+const Q = process.env.LK_Q ? '&' + String(process.env.LK_Q).replace(/^[?&]+/, '') : '';
 
 function vatGia(ten) { // đối tượng "gì cũng được": mọi thuộc tính là hàm rỗng trả lại chính nó
   const f = function () { return p; };
@@ -85,7 +87,7 @@ const sb = {
   performance: { now: () => Number(process.hrtime.bigint() / 1000n) / 1000 },
   document, localStorage: kho, sessionStorage: kho, Image: Anh, ImageData: function (d, w, h) { this.data = d; this.width = w; this.height = h; },
   navigator: { language: 'vi', languages: ['vi'], userAgent: 'node-bot', maxTouchPoints: 0, onLine: false, serviceWorker: undefined, vibrate: () => false },
-  location: { search: '?cloud=0', href: 'file://' + GAME + '/index.html?cloud=0', protocol: 'file:', hostname: '', host: '', pathname: GAME + '/index.html', origin: 'null', reload() {} },
+  location: { search: '?cloud=0' + Q, href: 'file://' + GAME + '/index.html?cloud=0' + Q, protocol: 'file:', hostname: '', host: '', pathname: GAME + '/index.html', origin: 'null', reload() {} },
   innerWidth: 844, innerHeight: 390, devicePixelRatio: 1, screen: { width: 844, height: 390, orientation: { type: 'landscape-primary', addEventListener() {} } },
   addEventListener() {}, removeEventListener() {}, dispatchEvent() {}, matchMedia: () => ({ matches: false, addEventListener() {}, addListener() {} }),
   getComputedStyle: () => ({ getPropertyValue: () => '0px' }), ResizeObserver: class { observe() {} disconnect() {} }, history: { replaceState() {}, pushState() {} },

@@ -1,0 +1,116 @@
+// NỔI GIẬN THẤY ĐƯỢC — docs/review/ke-hoach-cai-thien/noi-gian-manh/YEU-CAU.md (15/10).
+// Luật (tốc, nghỉ, số đòn, nối chiêu, sát thương, di chuyển, mệt) ở js/boss.js, js/chieu_trum.js, js/mobs.js; mọi hệ số: G.NOI_GIAN (js/data.js).
+// Tệp này: (1) tinh anh nổi giận ở ≤ 35% máu (một lần duy nhất), (2) dấu hiệu nhìn thấy BỀN SUỐT PHA: thân tô đỏ nhẹ có nhịp, quầng đỏ
+// nhấp nháy dưới chân, đốm lửa giận bốc quanh thân (pha 3 / hóa cuồng: nhịp nhanh hơn, đỏ hơn, nhiều đốm hơn), (3) pha 3 của trùm vùng:
+// màn hơi đỏ ở mép (rung nhẹ khi dậm nằm ở js/boss.js). Chỉ là HÌNH (trừ mục 1). Cờ tắt: ?giancu=1 (G.NOI_GIAN_BAT = false) → y hệt cũ.
+// Nạp sau js/fx.js, js/mobs.js, js/chieu_trum.js.
+(function () {
+  const G = window.G;
+  if (!G) return;
+  const W = () => G.getWorld();
+  const BAT = () => G.NOI_GIAN_BAT !== false && !!G.NOI_GIAN;
+  const NG = (G.noiGian = {});
+  function FX(n, a, b, c, d, e) { if (G.noRender) return; const f = G.fx && G.fx[n]; if (f) f(a, b, c, d, e); }
+
+  // ---------- mức giận của một con: 0 không, 1 nổi giận (trùm pha 2, trùm nhỏ pha 2, tinh anh), 2 hóa cuồng (trùm vùng pha 3) ----------
+  NG.muc = function (e) {
+    if (!BAT() || !e || e.dead || e.dying != null) return 0;
+    if (e.isBoss) return e.phase >= 2 && e.kind !== 'mini' ? 2 : e.phase >= 1 ? 1 : 0;
+    return e.ngGian ? 1 : 0;
+  };
+
+  // ---------- TINH ANH: nổi giận ở ≤ nguong máu, một lần ----------
+  // Gọi mỗi khung từ js/mobs.js (G.mob.update). Trả về hệ số tốc chiêu (1 khi chưa giận / cờ tắt).
+  NG.tinhAnh = function (e) {
+    if (!BAT() || !e || e.role !== 'elite' || e.dead) return 1;
+    const N = G.NOI_GIAN.tinhAnh;
+    if (!e.ngGian && e.maxhp > 0 && e.hp > 0 && e.hp <= e.maxhp * N.nguong) {
+      e.ngGian = true;
+      e.dmg *= N.sat; // × sát thương (một lần)
+      if (e.skCd > 0) e.skCd *= N.hoi; // chiêu riêng đang hồi: rút ngắn luôn
+      FX('text', e.x, e.y - (e.h || 30) - 10, 'Nổi giận!', '#ff6a5a', 9); // chuỗi tĩnh: dịch lúc vẽ (tools/ngon-ngu/tu-dien/noi-gian.json)
+      FX('burst', e.x, e.y - (e.h || 30) * 0.5, '#ff5a30', 12, 70);
+      if (G.sfx) G.sfx('warn', 0.7);
+    }
+    return e.ngGian ? N.toc : 1;
+  };
+  NG.hoiTinhAnh = (e) => (BAT() && e && e.ngGian ? G.NOI_GIAN.tinhAnh.hoi : 1);
+  // Báo trước của tinh anh khi nổi giận: T chia tốc, không ngắn hơn sàn công bằng (to: chiêu riêng — vùng to / nhiều đợt, 0,6 giây;
+  // đòn thường 0,45 giây) và không dài hơn T cũ.
+  NG.baoTinhAnh = function (e, T, to) {
+    const k = NG.tinhAnh(e);
+    if (k === 1) return T;
+    return Math.min(T, Math.max(T / k, to ? G.NOI_GIAN.san.baoTo : G.NOI_GIAN.san.bao));
+  };
+
+  // ---------- HÌNH ----------
+  const nhip = (lv) => 0.5 + 0.5 * Math.sin((G.time || 0) * (lv >= 2 ? 10 : 6.5));
+  const TINT = ['#ff2a18', 0];
+  // Tô đỏ thân có nhịp (o.tint của G.monsterArt.draw / ảnh AI); null khi không giận. Nhuộm hệ (nhịp độc / cháy) có trước thì giữ.
+  NG.tint = function (e) {
+    const lv = NG.muc(e);
+    if (!lv) return null;
+    const p = nhip(lv);
+    TINT[1] = lv >= 2 ? 0.16 + 0.16 * p : 0.08 + 0.12 * p;
+    return TINT;
+  };
+  const hh = (i, k) => { const s = Math.sin(i * 12.9898 + k * 78.233) * 43758.5453; return s - Math.floor(s); };
+  function rongCua(e) { return Math.max(10, Math.min(46, (e.isBoss && e.kind !== 'mini' ? (e.r || 30) * 1.25 : (e.r || 10) * 1.6))); }
+  // Quầng đỏ dưới chân (vẽ TRƯỚC thân).
+  NG.veDuoi = function (c, e) {
+    const lv = NG.muc(e);
+    if (!lv || G.noRender || e.hidden) return;
+    const A = G.art, p = nhip(lv), rx = rongCua(e) * (1 + 0.08 * p), K = G.ZK || 0.85;
+    if (!A || !A.ellipse) return;
+    A.ellipse(c, e.x, e.y, rx * 1.18, rx * 1.18 * K * 0.5, 'rgba(255,40,20,' + (0.07 + 0.08 * p).toFixed(3) + ')');
+    A.ellipse(c, e.x, e.y, rx, rx * K * 0.5, 'rgba(255,60,30,' + ((lv >= 2 ? 0.2 : 0.14) + 0.12 * p).toFixed(3) + ')');
+    // viền quầng: các điểm đỏ sáng chạy vòng (nhấp nháy)
+    const n = lv >= 2 ? 18 : 12, t = G.time || 0;
+    for (let i = 0; i < n; i++) {
+      if (((i + Math.floor(t * (lv >= 2 ? 14 : 9))) % 3) === 0) continue;
+      const g = (i / n) * Math.PI * 2 + t * 0.8;
+      A.p(c, Math.round(e.x + Math.cos(g) * rx * 1.1), Math.round(e.y + Math.sin(g) * rx * 1.1 * K * 0.5), 2, 1, i % 2 ? '#ff5a30' : '#ffb040');
+    }
+  };
+  // Đốm lửa giận bốc lên quanh thân (vẽ SAU thân).
+  NG.veTren = function (c, e) {
+    const lv = NG.muc(e);
+    if (!lv || G.noRender || e.hidden) return;
+    const A = G.art;
+    if (!A || !A.p) return;
+    const h = Math.min(110, e.drawH || e.h || 40), rx = rongCua(e), n = lv >= 2 ? 10 : 6, t = G.time || 0, s = lv >= 2 ? 3 : 2;
+    const ga = c.globalAlpha;
+    for (let i = 0; i < n; i++) {
+      const u = (t * (lv >= 2 ? 0.9 : 0.6) + hh(i, 1)) % 1;
+      const x = e.x + (hh(i, 2) - 0.5) * 2 * rx + Math.sin(t * 3 + i) * 2, y = e.y - 4 - u * h * 0.95;
+      c.globalAlpha = ga * (1 - u) * 0.9;
+      A.p(c, Math.round(x), Math.round(y), s, s, u < 0.4 ? '#ffd23c' : '#ff4a20');
+    }
+    c.globalAlpha = ga;
+  };
+
+  // ---------- pha 3 (hóa cuồng): màn hơi đỏ ở mép ----------
+  let VIG = null;
+  function vien(c, a) {
+    if (!VIG) {
+      if (typeof document === 'undefined' || !document.createElement) return;
+      VIG = document.createElement('canvas');
+      VIG.width = 240; VIG.height = 135;
+      const v = VIG.getContext('2d'), Wd = 240, H = 135, d = 22, col = 'rgba(200,16,8,';
+      const side = (x0, y0, x1, y1, rx, ry, rw, rh) => { const g = v.createLinearGradient(x0, y0, x1, y1); g.addColorStop(0, col + '1)'); g.addColorStop(1, col + '0)'); v.fillStyle = g; v.fillRect(rx, ry, rw, rh); };
+      side(0, 0, d, 0, 0, 0, d, H); side(Wd, 0, Wd - d, 0, Wd - d, 0, d, H);
+      side(0, 0, 0, d * 0.6, 0, 0, Wd, d * 0.6); side(0, H, 0, H - d * 0.6, 0, H - d * 0.6, Wd, d * 0.6);
+    }
+    const ga = c.globalAlpha;
+    c.globalAlpha = Math.min(1, a);
+    c.drawImage(VIG, 0, 0, G.W, G.H);
+    c.globalAlpha = ga;
+  }
+  NG.veMep = function () {
+    if (!BAT() || G.noRender) return;
+    const w = W(), b = w && w.boss;
+    if (!b || b.dead || b.dying != null || b.kind === 'mini' || !(b.phase >= 2) || w.over) return;
+    if (G.ux) vien(G.ux, 0.1 + 0.05 * Math.sin((G.time || 0) * 3));
+  };
+  if (G.fx && G.fx.drawUI) { const d0 = G.fx.drawUI; G.fx.drawUI = function (a, b) { try { NG.veMep(); } catch (e) { /* chỉ là hình */ } return d0.call(this, a, b); }; }
+})();

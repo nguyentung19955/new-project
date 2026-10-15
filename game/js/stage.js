@@ -1000,7 +1000,7 @@
     if (on('tren')) {
     if (b && !b.dead) {
       const big = b.kind !== 'mini';
-      topY = T.bossBar(240, 2, { tier: big ? 'big' : 'mini', name: b.name, frac: b.hp / b.maxhp, lag: b, marks: [0.3, 0.6] });
+      topY = T.bossBar(240, 2, { tier: big ? 'big' : 'mini', name: b.name, frac: b.hp / b.maxhp, lag: b, marks: big || G.NOI_GIAN_BAT === false || !G.NOI_GIAN ? [0.3, 0.6] : [G.NOI_GIAN.nho.nguong] }); // 15/10 noi-gian-manh: trùm nhỏ một vạch pha (50%)
       // các lớp thích nghi và điểm yếu: một hàng thẻ nhỏ ngay dưới khung, căn giữa
       const chips = [];
       for (const l of b.layers) chips.push([l.type === 'resist' ? G.t('Kháng {0}', G.EL[l.el].name) : G.tv(G.layerText(l)), l.type === 'resist' ? G.EL[l.el].dark : '#1f4f4a', '#f1e6c6']);

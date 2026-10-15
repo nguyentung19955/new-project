@@ -13,6 +13,9 @@ import cd_lib
 # 14/10 (bước 1, mục 5): --node chạy luật game trong Node (tests/node_trang.js), không trình duyệt / Playwright.
 NODE = cd_lib.node_mode()
 sys.argv = [a for a in sys.argv if a != '--node']
+# 15/10 noi-gian-manh: --trum in thêm tỉ lệ thắng riêng phòng trùm (đo nổi giận trước / sau; thêm ?giancu=1 qua biến môi trường LK_Q=giancu=1 khi --node)
+TRUM = '--trum' in sys.argv
+sys.argv = [a for a in sys.argv if a != '--trum']
 
 # Cân bằng phải cày: mỗi bản lưu là bản lưu thật của bot tests/cay.py lúc vừa đủ "Sức mạnh khuyên dùng" của ải (đã cày xong),
 # nên tỉ lệ thắng ở đây là tỉ lệ thắng của người chơi vừa đủ sức mạnh khuyên dùng.
@@ -42,7 +45,7 @@ JS = r"""
   const last = res.rooms && res.rooms.length ? res.rooms[res.rooms.length - 1] : ['?', 0];
   if (res.bossT != null) last[1] = res.bossT;
   let fight = 0; for (const x of res.rooms || []) if (x[0] !== 'boss') fight += x[1];
-  return { pw, rec, win: !!res.win, t: res.t, boss: last[0] === 'boss' ? last[1] : null, fight, marks: res.marks || 0, kills: res.kills || 0, hp: res.hp, maxhp: res.maxhp, potions: res.potions, bad: res.bad, kind: S && S.map ? S.map.kind : '-', hurt: Object.values(res.hurt || {}).reduce((a, b) => a + b, 0) };
+  return { pw, rec, win: !!res.win, t: res.t, boss: last[0] === 'boss' ? last[1] : null, toiTrum: last[0] === 'boss', bossHp: res.bossHp, fight, marks: res.marks || 0, kills: res.kills || 0, hp: res.hp, maxhp: res.maxhp, potions: res.potions, bad: res.bad, kind: S && S.map ? S.map.kind : '-', hurt: Object.values(res.hurt || {}).reduce((a, b) => a + b, 0) };
 }
 """
 
@@ -81,6 +84,11 @@ def main():
             src = wins or rs
             avg = lambda key: sum((x[key] or 0) for x in src) / len(src)
             print(f"{r+1}-{i+1}: sức mạnh {rs[0]['pw']}/{rs[0]['rec']} thắng {len(wins)}/{n} | {avg('t'):>4.0f}s (đánh quái {avg('fight'):>4.0f}s, trùm {avg('boss'):>3.0f}s) | dấu ấn {avg('marks'):>5.1f} | hạ {avg('kills'):>4.1f} quái | mất {avg('hurt'):>4.0f} máu trên {src[0]['maxhp']} | kiểu {''.join(x['kind'] for x in rs)}" + (' LỖI ' + str([x['bad'] for x in rs if x['bad']]) if any(x['bad'] for x in rs) else ''))
+            if TRUM:  # 15/10 noi-gian-manh: riêng phòng trùm — số lượt tới được phòng trùm, thắng trùm trong số đó, máu trùm còn lại khi thua ở phòng trùm
+                toi = [x for x in rs if x.get('toiTrum')]
+                thua = [x for x in toi if not x['win']]
+                print(f"     trùm: tới {len(toi)}/{n}, thắng trùm {len(wins)}/{len(toi)}" + (f" ({100*len(wins)/len(toi):.0f}%)" if toi else '') + (f", thua ở trùm còn {sum((x.get('bossHp') or 0) for x in thua)/len(thua):.0f}% máu trùm" if thua else ''))
+                tot['toi'] = tot.get('toi', 0) + len(toi)
             sys.stdout.flush()
             tot['n'] += n; tot['win'] += len(wins)
             pw = per.setdefault(wt, {'n': 0, 'win': 0, 't': 0})
@@ -92,6 +100,7 @@ def main():
         cd_lib.dong(b, pg)
     w = max(1, tot['win'])
     print(f"TỔNG: thắng {tot['win']}/{tot['n']} | một ải trung bình {tot['t']/w:.0f} giây ({tot['t']/w/60:.1f} phút) | trùm {tot['boss']/max(1,tot['bn']):.0f} giây | dấu ấn {tot['marks']/w:.1f} mỗi ải | hạ {tot['kills']/w:.1f} quái mỗi ải | mất {tot['hurt']/w*100:.0f}% máu mỗi ải")
+    if TRUM: print(f"TRÙM: tới phòng trùm {tot.get('toi', 0)}/{tot['n']}, thắng trùm {tot['win']}/{tot.get('toi', 0)}")
     bad = 0
     if tot['win'] < 0.6 * tot['n']: print('SAI: bot thắng dưới 60% số lượt'); bad = 1
     if len(per) > 1:
