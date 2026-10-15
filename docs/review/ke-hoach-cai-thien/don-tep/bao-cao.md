@@ -39,6 +39,8 @@ Cặp tệp 2 tệp/ảnh rời đã nằm trong `.gitignore`. Không có bản 
 
 ## (B) Chỉ dùng cho cờ quay lui: GIỮ, chờ chủ game quyết sau khi chơi thử
 
+**Cập nhật 15/10:** chủ game đã quyết bỏ nhóm này (trừ `?authcu` và tệp dự trữ Núi lửa). Kết quả: `bao-cao-B.md`.
+
 | Tệp / phần | Dung lượng | Bỏ cùng cờ |
 |---|---|---|
 | `game/art/custom/*-cu.sprite.json` (30 tệp: boHung, caChuon, caCon, caNoc, caNocChua, chonBong, cua, cuaTuong, denLong, doiThan, haiQuy, heoCon, heoNanh, hoaBaoTu, huChua, huLua, linhMa, meoDen, namPhong, namPhongChua, nhim, nhimDoc, nhimThan, oc, ongVo, socNo, sua, tieuYeu, tuongDa, tuongMa) | 936 KB | `?quaicu=1` (mục `cu_cua`, `js/sprite_custom.js`, `build.py`) |
