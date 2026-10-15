@@ -50,6 +50,11 @@
   const XI_VAO = { caNoc: 1, caNocChua: 1, nhimDoc: 1, nhimThan: 1 }, XI_VE = { nhim: 1 }, XI_T_VAO = 0.1, XI_T_VE = 0.15;
   const BUOC0 = 600; // mục 18: đồng hồ bước bắt đầu ở 600 giây để chạy lùi (đi ngược hướng mặt) không bao giờ xuống dưới 0
   function coAnh(e) { const S = G.spriteCustom, sp = S && S.ds ? S.ds[e.art] : null; return !!(sp && sp.ready); }
+  // 15/10 soát mượt (ảnh gen P1, P2): tấm đã vẽ đúng chỗ nối thì bỏ vá tạm ("bo_va" trong tệp ảnh); Nhím có khung duỗi về đứng ("ve" của hàng đánh).
+  // Cờ ?anhmuotcu=1 nạp lại tấm cũ (không có hai mục này) → vá tạm chạy như Phiên 1.
+  function spAnh(e) { const S = G.spriteCustom, sp = S && S.ds ? S.ds[e.art] : null; return sp && sp.ready ? sp : null; }
+  function boVa(e, k) { const sp = spAnh(e); return !!(sp && sp.boVa && sp.boVa.indexOf(k) >= 0); }
+  function veAnh(e) { const sp = spAnh(e); return !!(sp && sp.dt && sp.dt.atk && sp.dt.atk.ve); }
   // Mục 4: đổi hàng đi / đứng, mỗi hàng nhớ đồng hồ riêng (quay lại trong 0,2 giây thì không về khung 1).
   function doiHang(e, n) {
     if (e.an && e.an.n === n) return;
@@ -84,7 +89,7 @@
     const f = nang ? (x) => (x < a1 ? x : x < a1 + 0.08 ? a1 : a1 + (x - a1 - 0.08) * 0.9) : (x) => x;
     const A = e.act, chuan = !!(A && A.fired && e.an && (e.an.spd || 1) === 1);
     let tt = t;
-    if (chuan && G.XI_HOI !== false && XI_VAO[e.art] && coAnh(e)) {
+    if (chuan && G.XI_HOI !== false && XI_VAO[e.art] && coAnh(e) && !boVa(e, 'xi_vao')) {
       if (t < XI_T_VAO) { o.xiHoi = { u: t / XI_T_VAO }; return 0; }
       tt = t - XI_T_VAO;
     }
@@ -330,7 +335,8 @@
       const k = A.k;
       // mục 2 / 10A (chỉ để vẽ): vừa hết lượt đánh bằng hàng đánh thì giữ khung cuối GIU_CUOI giây (Nhím Biển: thu gai XI_T_VE giây) rồi mới về đứng
       if (k !== 'boom' && e.an && e.an.n === 'atk' && (e.an.spd || 1) === 1) {
-        if (G.XI_HOI !== false && XI_VE[e.art] && coAnh(e)) { e.duT = XI_T_VE; e.duK = 've'; }
+        if (G.DON_DU !== false && veAnh(e)) { e.duT = XI_T_VE; e.duK = 've'; } // soát mượt P2: khung duỗi về đứng vẽ sẵn
+        else if (G.XI_HOI !== false && XI_VE[e.art] && coAnh(e) && !boVa(e, 'xi_ve')) { e.duT = XI_T_VE; e.duK = 've'; }
         else if (G.DON_DU !== false) { e.duT = GIU_CUOI; e.duK = 'giu'; }
       }
       e.act = null; e.cd = A.cd != null ? A.cd : 1.4; if (A.after) A.after(e); if (k !== 'boom') loop(e, 'idle');

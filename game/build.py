@@ -128,7 +128,8 @@ def main():
         return ('<!doctype html>\n<html lang="' + lang + '">\n<head>\n' + '\n'.join(metas) + '\n' + pwa + title + '\n' + link + '\n'
                 + style + '\n</head>\n<body>\n' + markup + '\n<script>\n' + js + '</script>\n</body>\n</html>\n')
 
-    js = gom(custom, khai_truyen_mot(truyen) + khai_bia_mot(bia))
+    # 15/10 soát mượt: tấm trước khi thay hàng (<mã>-muotcu, cờ ?anhmuotcu=1) chỉ có ở bản hai tệp (web) — bản một tệp giữ dưới trần 30 MB.
+    js = gom([t for t in custom if not t.get('muot_cua')], khai_truyen_mot(truyen) + khai_bia_mot(bia))
     script = '<script>\n' + js + '</script>'
     full = trang(js)
     frag = title + '\n' + link + '\n' + style + '\n' + markup + '\n' + script + '\n'
@@ -497,7 +498,7 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
     webps = webp_nhieu(pngs)
     ds = [dict(t) for t in custom]
     tong_png = tong_webp = tong_tot = so_webp = 0
-    cu_n = cu_tot = 0  # 14/10 quai-moi-4-con: tấm cũ (mục cu_cua) nằm trên máy chủ nhưng game chỉ tải khi ?quaicu=1 → không tính vào người chơi tải
+    cu_n = cu_tot = cu_png = 0  # 14/10 quai-moi-4-con: tấm cũ (mục cu_cua) nằm trên máy chủ nhưng game chỉ tải khi ?quaicu=1 → không tính vào người chơi tải
     bang = {}  # nhóm → [số ảnh, byte người chơi tải (WebP khi có), byte PNG]
     for (i, k), png, w in zip(vt, pngs, webps):
         t = ds[i]
@@ -515,9 +516,10 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
             tot = len(w)
             tong_webp += len(w)
             so_webp += 1
-        if t.get('cu_cua'):
+        if t.get('cu_cua') or t.get('muot_cua'):  # 15/10 soát mượt: tấm trước khi thay hàng (<mã>-muotcu) chỉ tải khi ?anhmuotcu=1
             cu_n += 1
             cu_tot += tot
+            cu_png += len(png)
             vr = vung_rieng(custom[i])  # như quái thường của vùng đó (khi bật cờ thì tải theo vùng như tấm cũ trước đây)
             t['_u'] = [2, tot, vr, 0, 1 if vr >= 0 else 0]
             continue
@@ -566,10 +568,10 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
             print('  %-55s %3d ảnh  %6.2f MB | %6.2f MB' % (ten_nhom[k], b[0], b[1] / 1048576, b[2] / 1048576))
     nguoi = z1 + tong_tot + bia_tai  # bia-moi: một bìa màn hình chính
     if cu_n:
-        print('  (không tính) %d tấm cũ chỉ tải khi mở ?quaicu=1: %.2f MB' % (cu_n, cu_tot / 1048576))
+        print('  (không tính) %d tấm cũ chỉ tải khi mở ?quaicu=1 / ?anhmuotcu=1: %.2f MB' % (cu_n, cu_tot / 1048576))
     print('NGƯỜI CHƠI TẢI (thước đo chính): trang %.2f MB nén + ảnh %.2f MB + bìa %.2f MB = %.2f MB / trần %.0f MB%s; trình duyệt không có WebP: %.2f MB'
           % (z1 / 1048576, tong_tot / 1048576, bia_tai / 1048576, nguoi / 1048576, TRAN_NGUOI_TAI / 1048576, '  ← VƯỢT TRẦN' if nguoi > TRAN_NGUOI_TAI else '',
-             (z1 + tong_png + bia_jpg) / 1048576))
+             (z1 + tong_png - cu_png + bia_jpg) / 1048576))  # 15/10 soát mượt: không tính tấm cũ (chỉ tải khi bật cờ)
     print('Ảnh truyện (tải lười, chỉ khi mở truyện, KHÔNG tính vào tải đầu): %d ảnh, %.2f MB (JPEG dự phòng %.2f MB) → xem hết truyện: %.2f MB'
           % (len(bang_tr), tr_tai / 1048576, tr_jpg / 1048576, (nguoi + tr_tai) / 1048576))
     loi = bang.get('loi', [0, 0, 0])
@@ -589,7 +591,7 @@ TOOL_GAME_JS = ['js/ngon_ngu.js', 'js/data.js', 'js/art.js', 'js/weapon_art.js',
 TOOL_JS = ['xu-ly-anh.js', 'khung.js', 'tu-doan.js', 'do.js', 'giao-dien.js']
 RUNTIME_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'vung', 'thay_cho', 'tam', 'khung_rong', 'khung_cao', 'goc', 'rong', 'cao', 'bong', 'dong_tac',
                 'anh', 'vu_khi', 'trang_phuc', 'vat_pham', 'dung_yen', 'nhun', 'nhun_buoc', 'neo', 'khoac_do', 'cu',
-                'net', 'nhan_vat', 'diem', 'diem_theo', 'cap', 'can_tam', 'cu_cua')  # cu_cua (14/10 quai-moi-4-con): tấm cũ <mã>-cu chỉ nạp khi ?quaicu=1. can_tam (14/10 trum-chet-pha3): độ dời ngang từng khung để tâm thân trùm trùng điểm neo. net: ảnh gấp net lần (thiếu là game đọc thành 1 → hình to gấp đôi, khung bị cắt)
+                'net', 'nhan_vat', 'diem', 'diem_theo', 'cap', 'can_tam', 'cu_cua', 'muot_cua', 'muot', 'bo_va')  # cu_cua (14/10 quai-moi-4-con): tấm cũ <mã>-cu chỉ nạp khi ?quaicu=1. can_tam (14/10 trum-chet-pha3): độ dời ngang từng khung để tâm thân trùm trùng điểm neo. net: ảnh gấp net lần (thiếu là game đọc thành 1 → hình to gấp đôi, khung bị cắt)
 HU_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'tam', 'khung_rong', 'khung_cao', 'goc', 'so', 'giay', 'lap', 'xoay', 'co', 'tron', 'net', 'vung')  # hiệu ứng ảnh AI (js/fx_anh.js); vung (15/10): tải theo vùng (vung_rieng)
 GD_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'anh', 'net', 'vien', 'lap_canh')  # lap_canh (14/10): cạnh + lòng 9 mảnh lặp thay vì kéo giãn. Ảnh giao diện gd-<tên> (bản đồ, nút; js/sprite_custom.js → SC.gd, js/minimap.js)
 DO_LOAI = ('vat-pham',)  # đồ: một ảnh đứng yên (đợt 2: bỏ vu-khi, trang-phuc)

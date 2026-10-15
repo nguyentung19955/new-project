@@ -12,3 +12,5 @@
 | P6-hoTinh-p1-4-danh-6k.png | P6 | trum-moi/ho-tinh/4-danh |
 
 Chưa có: P5, P7, P8, P9 (tuỳ chọn).
+
+Đã gắn vào game (8 ảnh, kể cả P2 Nhím Than): xem bao-cao.md, cong-cu/thay-hang.py, xem-truoc.png. Cờ quay lui ?anhmuotcu=1.

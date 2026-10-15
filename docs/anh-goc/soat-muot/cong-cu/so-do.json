@@ -1,0 +1,330 @@
+{
+ "caNocChua": {
+  "hang": "atk",
+  "so_cu": 6,
+  "so": 6,
+  "z": 0.5499,
+  "z_dien_tich": 0.5499,
+  "z_sift": null,
+  "cap_sift": 1,
+  "o": [
+   97,
+   111
+  ],
+  "goc": [
+   51,
+   87
+  ],
+  "tran_o": [
+   [
+    1,
+    110
+   ]
+  ],
+  "mau": 66,
+  "them_mau": 16,
+  "lech_mau_xa": 747,
+  "byte_cu": 211907,
+  "byte_moi": 234476,
+  "dong_tac": {
+   "hang": 3,
+   "so": 6,
+   "giay": 0.55,
+   "lap_tu": 3,
+   "lap_den": 4
+  },
+  "can_tam": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "nhim": {
+  "hang": "atk",
+  "so_cu": 6,
+  "so": 6,
+  "z": 0.1543,
+  "z_dien_tich": 0.1543,
+  "z_sift": null,
+  "cap_sift": 0,
+  "o": [
+   38,
+   44
+  ],
+  "goc": [
+   19,
+   38
+  ],
+  "tran_o": [],
+  "mau": 66,
+  "them_mau": 16,
+  "lech_mau_xa": 40,
+  "byte_cu": 38609,
+  "byte_moi": 37620,
+  "dong_tac": {
+   "hang": 3,
+   "so": 6,
+   "giay": 0.55,
+   "khung": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "lap_tu": 2,
+   "lap_den": 3,
+   "ve": [
+    4,
+    5
+   ]
+  },
+  "can_tam": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "nhimDoc": {
+  "hang": "atk",
+  "so_cu": 6,
+  "so": 6,
+  "z": 0.2423,
+  "z_dien_tich": 0.2328,
+  "z_sift": 0.2521,
+  "cap_sift": 7,
+  "o": [
+   50,
+   40
+  ],
+  "goc": [
+   25,
+   37
+  ],
+  "tran_o": [
+   [
+    3,
+    156
+   ],
+   [
+    4,
+    86
+   ]
+  ],
+  "mau": 66,
+  "them_mau": 16,
+  "lech_mau_xa": 180,
+  "byte_cu": 67241,
+  "byte_moi": 69196,
+  "dong_tac": {
+   "hang": 3,
+   "so": 6,
+   "giay": 0.6,
+   "lap_tu": 2,
+   "khung": [
+    1,
+    2,
+    3
+   ],
+   "lap_den": 3,
+   "ve": [
+    4,
+    5
+   ]
+  },
+  "can_tam": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   -1
+  ]
+ },
+ "heoNanh": {
+  "hang": "hit",
+  "so_cu": 4,
+  "so": 4,
+  "z": 0.2695,
+  "z_dien_tich": 0.2698,
+  "z_sift": 0.2692,
+  "cap_sift": 12,
+  "o": [
+   95,
+   64
+  ],
+  "goc": [
+   49,
+   61
+  ],
+  "tran_o": [],
+  "mau": 50,
+  "them_mau": 16,
+  "lech_mau_xa": 24,
+  "byte_cu": 157112,
+  "byte_moi": 158141,
+  "dong_tac": {
+   "hang": 4,
+   "so": 4,
+   "giay": 0.35
+  },
+  "can_tam": [
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "hoLua-p2": {
+  "hang": "hit",
+  "so_cu": 4,
+  "so": 4,
+  "z": 0.3032,
+  "z_dien_tich": 0.2986,
+  "z_sift": 0.3079,
+  "cap_sift": 12,
+  "o": [
+   96,
+   99
+  ],
+  "goc": [
+   50,
+   93
+  ],
+  "tran_o": [],
+  "mau": 146,
+  "them_mau": 16,
+  "lech_mau_xa": 189,
+  "byte_cu": 268288,
+  "byte_moi": 273056,
+  "dong_tac": {
+   "hang": 3,
+   "so": 4,
+   "giay": 0.3
+  },
+  "can_tam": null
+ },
+ "namChua-p2": {
+  "hang": "hit",
+  "so_cu": 4,
+  "so": 4,
+  "z": 0.272,
+  "z_dien_tich": 0.2549,
+  "z_sift": 0.2904,
+  "cap_sift": 9,
+  "o": [
+   79,
+   96
+  ],
+  "goc": [
+   41,
+   93
+  ],
+  "tran_o": [],
+  "mau": 146,
+  "them_mau": 16,
+  "lech_mau_xa": 765,
+  "byte_cu": 225390,
+  "byte_moi": 225160,
+  "dong_tac": {
+   "hang": 3,
+   "so": 4,
+   "giay": 0.3
+  },
+  "can_tam": null
+ },
+ "hoTinh": {
+  "hang": "atk",
+  "so_cu": 3,
+  "so": 6,
+  "z": 0.7021,
+  "z_dien_tich": 0.6797,
+  "z_sift": 0.7252,
+  "cap_sift": 12,
+  "o": [
+   166,
+   210
+  ],
+  "goc": [
+   84,
+   208
+  ],
+  "tran_o": [],
+  "mau": 146,
+  "them_mau": 16,
+  "lech_mau_xa": 2663,
+  "byte_cu": 951076,
+  "byte_moi": 1046325,
+  "dong_tac": {
+   "hang": 3,
+   "so": 6,
+   "giay": 0.6
+  },
+  "can_tam": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "nhimThan": {
+  "hang": "atk",
+  "so_cu": 6,
+  "so": 6,
+  "z": 0.1673,
+  "z_dien_tich": 0.1683,
+  "z_sift": 0.1663,
+  "cap_sift": 9,
+  "o": [
+   42,
+   37
+  ],
+  "goc": [
+   25,
+   35
+  ],
+  "tran_o": [
+   [
+    4,
+    5
+   ]
+  ],
+  "mau": 50,
+  "them_mau": 16,
+  "lech_mau_xa": 270,
+  "byte_cu": 42273,
+  "byte_moi": 43634,
+  "dong_tac": {
+   "hang": 3,
+   "so": 6,
+   "giay": 0.6,
+   "khung": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "lap_tu": 2,
+   "lap_den": 3,
+   "ve": [
+    4,
+    5
+   ]
+  },
+  "can_tam": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ }
+}

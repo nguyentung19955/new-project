@@ -112,6 +112,14 @@
     try { cu = typeof location !== 'undefined' && /[?&]quaicu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; }
     G.QUAI_CU = cu;
   }
+  // 15/10 soát mượt (ảnh gen P1–P4, P6, docs/anh-goc/soat-muot/bao-cao.md): 7 tấm (Cá Nóc Chúa, Nhím Biển, Nhím Gai Độc, Heo Nanh Dài, Hổ Lửa pha 2,
+  // Nấm Chúa pha 2, Hồ Tinh) thay một hàng bằng ảnh gen mới; tấm có mục "muot". Tấm trước đó giữ ở <mã>-muotcu.sprite.json (mục "muot_cua": <mã>):
+  // bình thường KHÔNG nạp. Cờ ?anhmuotcu=1 (G.ANH_MUOT_CU): nạp tấm đó dưới đúng mã, bỏ tấm mới (các vá tạm Phiên 1 tự chạy lại vì tấm cũ không có "bo_va").
+  if (G.ANH_MUOT_CU === undefined) {
+    let cu = false;
+    try { cu = typeof location !== 'undefined' && /[?&]anhmuotcu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; }
+    G.ANH_MUOT_CU = cu;
+  }
   // 15/10 (quai-moi-6-con): thêm Nấm Phồng, Nấm Phồng Chúa, Hoa Phun Bào Tử, Sóc Ném Quả Nổ, Nhím Gai Độc, Bầy Ong Vò Vẽ — cùng cách, cùng cờ.
   // 15/10 (quai-moi-bien): thêm 10 quái Hang biển — Cua Lính, Bầy Cá Con, Ốc Mượn Hồn, Hải Quỳ, Cá Chuồn, Cá Nóc, Sứa Bom, Nhím Biển, Cua Tướng, Cá Nóc Chúa.
   // 15/10 (quai-moi-lau): thêm 10 quái Lâu đài cổ — Lính Ma, Bầy Dơi Than, Tượng Đá, Đèn Lồng Ma, Mèo Đen, Hũ Lửa, Tiểu Yêu, Nhím Than, Tướng Ma, Hũ Lửa Chúa.
@@ -154,6 +162,10 @@
     try {
       if (!tep || typeof tep !== 'object' || typeof tep.ma !== 'string' || !/^[A-Za-z0-9_-]{1,40}$/.test(tep.ma)) throw new Error('thiếu mã');
       if (LOAI_BO[tep.doi_tuong]) throw new Error('đã bỏ ở đợt 2: ' + LOAI_BO[tep.doi_tuong]);
+      if (typeof tep.muot_cua === 'string') { // soát mượt: tấm trước khi thay hàng (xem G.ANH_MUOT_CU), chỉ dùng khi bật ?anhmuotcu=1
+        if (!G.ANH_MUOT_CU) return null;
+        tep = Object.assign({}, tep, { ma: tep.muot_cua });
+      } else if (G.ANH_MUOT_CU && tep.muot) return null; // ?anhmuotcu=1: bỏ tấm đã thay hàng
       if (typeof tep.cu_cua === 'string') { // tấm cũ của quái vẽ lại (xem G.QUAI_CU): chỉ dùng khi bật ?quaicu=1, thay đúng mã con quái
         if (!G.QUAI_CU || !QUAI_MOI[tep.cu_cua]) return null;
         tep = Object.assign({}, tep, { ma: tep.cu_cua });
@@ -174,6 +186,8 @@
         if (k === 'atk' && a.lap_tu != null && isFinite(+a.lap_tu)) dt[k].lapTu = clamp(Math.round(+a.lap_tu), 0, dt[k].so - 1);
         // 15/10 quai-moi-bien: "lap_den" (cột cuối của đoạn lặp, mặc định cột cuối hàng): Nhím Biển xoay bắn gai lặp cột 2–5, Cá Nóc Chúa lăn lặp cột 3–4.
         if (dt[k].lapTu != null) dt[k].lapDen = a.lap_den != null && isFinite(+a.lap_den) ? clamp(Math.round(+a.lap_den), dt[k].lapTu, dt[k].so - 1) : dt[k].so - 1;
+        // 15/10 soát mượt (P2): "ve" (hàng đánh): các cột "duỗi về dáng đứng" phát sau lượt đánh thay cho vá thu gai (js/mobs.js).
+        if (k === 'atk' && Array.isArray(a.ve) && a.ve.length) dt[k].ve = a.ve.slice(0, 8).map((x) => clamp(Math.round(+x || 0), 0, dt[k].so - 1));
         const bg = docBang(a, dt[k].so); if (bg) dt[k].bang = bg; // "khung" / "cham" (bỏ khung trùng); không có thì không thêm gì
       }
       if (!dt.idle) throw new Error('thiếu động tác đứng thở');
@@ -191,6 +205,8 @@
       // Ảnh AI cắt không căn tâm: thân nhảy ngang giữa các khung / các hàng, lệch khỏi điểm neo (lật mặt thì lệch sang phía kia). Cờ tắt ?trumcu=1.
       // quai-moi-4-con: quái thường / tinh anh vẽ lại cũng có "can_tam" (đo lúc dựng tấm) — luôn dùng, không theo cờ ?trumcu=1 của trùm.
       sp.ctLuon = !!QUAI_MOI[tep.ma];
+      // 15/10 soát mượt: "bo_va": vá tạm Phiên 1 không cần nữa vì ảnh mới đã vẽ đúng ('xi_vao', 'xi_ve' ở js/mobs.js; 'khung_trang' ở KHUNG_TRANG).
+      sp.boVa = Array.isArray(tep.bo_va) ? tep.bo_va.filter((x) => typeof x === 'string').slice(0, 8) : null;
       if (tep.can_tam && typeof tep.can_tam === 'object') { sp.ct = {}; for (const k of Object.keys(dt)) { const v = tep.can_tam[k]; if (Array.isArray(v)) sp.ct[k] = v.map((x) => clamp(Math.round(+x || 0), -40, 40)); } }
       // Em bé thân AI: đồ đang mặc (mũ, áo, đồ lưng, bùa, dấu mặt nạ, cánh) vẫn khoác lên thân AI, trừ khi tệp ghi "khoac_do": false.
       // "neo": { "dau": [dx, dy], "than": [dx, dy], "tay": [dx, dy], "<động tác>": { "dau": [..], "than": [..], "tay": [..] } } dời chỗ đặt đồ
@@ -390,7 +406,7 @@
   SC.veKhung = function (c, sp, ten, i, face, o) {
     o = o || {};
     let phu = 0; // 15/10 con-ve-tay: khung trắng toàn thân → khung kề + phủ trắng nhẹ (xem KHUNG_TRANG)
-    if (G.KHUNG_TRANG_SUA !== false && KHUNG_TRANG[sp.ma] && sp.dt[ten]) { const t0 = KHUNG_TRANG[sp.ma][ten], j = t0 ? t0[i] : undefined; if (j != null && j < sp.dt[ten].so) { i = j; phu = PHU_TRANG; } }
+    if (G.KHUNG_TRANG_SUA !== false && KHUNG_TRANG[sp.ma] && sp.dt[ten] && !(sp.boVa && sp.boVa.indexOf('khung_trang') >= 0)) { const t0 = KHUNG_TRANG[sp.ma][ten], j = t0 ? t0[i] : undefined; if (j != null && j < sp.dt[ten].so) { i = j; phu = PHU_TRANG; } }
     const a = sp.dt[ten] || sp.dt.idle, n = sp.net || 1, sx = i * sp.fw * n, sy = a.hang * sp.fh * n, sw = sp.fw * n, sh = sp.fh * n, ga = c.globalAlpha;
     c.save();
     c.imageSmoothingEnabled = false;
@@ -528,6 +544,8 @@
     const xh = !nhip && o.xiHoi ? o.xiHoi : null, bd = !nhip && !xh && n === 'tele' && o.baoDeu ? o.baoDeu : null;
     const chon = (q) => {
       if (nhip) return SC.chonTrum(q, n, t, D, nhip.moc);
+      const ve = xh && q.dt.atk && q.dt.atk.ve; // soát mượt P2: ảnh có khung duỗi về đứng → dùng khung đó thay hàng báo đòn phát ngược
+      if (ve) return { ten: 'atk', i: ve[Math.min(ve.length - 1, Math.floor(clamp(xh.u, 0, 1) * ve.length))], u: 1 };
       if (xh && q.dt.tele) return { ten: 'tele', i: xiHoi(q.dt.tele, xh.u), u: 1 };
       if (bd && q.dt.tele) return { ten: 'tele', i: baoDeu(q.dt.tele, bd.tt, bd.T), u: clamp(bd.T > 0 ? bd.tt / bd.T : 1, 0, 1) };
       return SC.chonQuai(q, n, t, D);
@@ -1640,7 +1658,7 @@
       if (!t || typeof src !== 'string') return false;
       theoSrc.delete(src);
       const u = t._u;
-      const ma = G.QUAI_CU && typeof t.cu_cua === 'string' ? t.cu_cua : t.ma; // ?quaicu=1: tấm cũ mang mã con quái (xem G.QUAI_CU)
+      const ma = G.ANH_MUOT_CU && typeof t.muot_cua === 'string' ? t.muot_cua : G.QUAI_CU && typeof t.cu_cua === 'string' ? t.cu_cua : t.ma; // ?anhmuotcu=1 tương tự // ?quaicu=1: tấm cũ mang mã con quái (xem G.QUAI_CU)
       const it = { img, ma, png: src, webp: typeof t.webp === 'string' && /^anh\/[A-Za-z0-9_.-]{1,90}\.webp$/.test(t.webp) ? t.webp : null,
         bac: u[0] | 0, co: +u[1] || 0, vung: u[2] | 0, trum: !!u[3], khoa: !!(G.TAI_VUNG && u[4] && (u[2] | 0) >= 0 && (u[2] | 0) <= 2), can: 0, lan: 0, xong: img.onload, hong: img.onerror, dangTai: false, thap: false, ve: false, boWebp: false };
       img.onload = null; img.onerror = null;
