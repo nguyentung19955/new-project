@@ -16,6 +16,7 @@ Chạy: python3 tests/cay.py [số lượt chiến dịch, mặc định 12] [kh
       [--kho2: qua 15 ải rồi chơi tiếp 15 ải độ khó 2; với --kd đo cả Sức mạnh khuyên dùng độ khó 2 (G.stageRec(r, i, 1), G.DIFF2)]
       [--kd=R: đo lại Sức mạnh khuyên dùng — mỗi bản lưu lúc vừa tới một ải (của kiểu khuyen và kiểu lieu) chơi lại ải đó R lần,
        tìm Sức mạnh mà bot thắng 75%] [--json=tệp: ghi số liệu thô] [--pre=<mã JS>: chạy trước khi đo, thử số trong bộ nhớ]
+      [--viec: mỗi lần về làng bot bấm Nhận hết Việc hôm nay / Sổ yêu quái / Thành tựu (Bước 2), in thu nhập mỗi ngày giả]
 Thoát mã 1 nếu: có luật hỏng, có lượt chiến dịch bị kẹt, có ải trung bình phải chơi quá 9 lần (8 lượt cày + 1 lượt thử), có lỗi trang."""
 import sys, json, os, math
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -122,6 +123,43 @@ def fit75(pts):
     return math.exp(x75), b
 
 
+VIEC_JS = r"""
+  G.botB2 = { vang: 0, quang: 0, lk: 0, da: 0, bua: 0, viecVang: 0, soVang: 0, ttVang: 0, ruong: 0, tuan: 0 };
+  G.botThu = { da: 0, bua: 0 };
+  if (G.epDo && !G.epDo._botDem) {
+    const d0 = G.epDo.themDa, b0 = G.epDo.themBua;
+    G.epDo.themDa = function (sv, n) { if (n > 0) G.botThu.da += Math.round(n); return d0.apply(this, arguments); };
+    G.epDo.themBua = function (sv, n) { if (n > 0) G.botThu.bua += Math.round(n); return b0.apply(this, arguments); };
+    G.epDo._botDem = 1;
+  }
+  if (!G.botNang._viec) {
+    const goc = G.botNang;
+    let quenCu = null;
+    const chup = (sv) => ({ vang: +sv.gold || 0, quang: +sv.ore || 0, lk: G.vkMoi.lk(sv), da: G.epDo ? G.epDo.da(sv) : 0, bua: G.epDo ? G.epDo.bua(sv) : 0 });
+    const cong = (a, b, k) => { const B = G.botB2; for (const x of ['vang', 'quang', 'lk', 'da', 'bua']) B[x] += b[x] - a[x]; if (k) B[k] += b.vang - a.vang; };
+    G.botNang = function () {
+      const sv = G.save;
+      try {
+        const VN = G.viecNgay, Y = G.soYQ, TT = G.thanhTuu;
+        if (VN && VN.mo && VN.mo(sv)) {
+          const o = VN.capNhat(sv);
+          if (o && o.quen && o.quen !== quenCu) { quenCu = o.quen; const q = o.quen, B = G.botB2; B.vang += q.v | 0; B.viecVang += q.v | 0; B.quang += q.q | 0; B.lk += q.lk | 0; B.da += q.da | 0; B.bua += q.bua | 0; }
+          const a = chup(sv);
+          for (let i = 0; i < 3; i++) VN.nhan(i, sv);
+          if (VN.moRuong(sv)) G.botB2.ruong++;
+          if (VN.moTuan(sv)) G.botB2.tuan++;
+          cong(a, chup(sv), 'viecVang');
+        }
+        if (Y && Y.bat && Y.bat()) { const a = chup(sv); Y.nhanHet(sv); cong(a, chup(sv), 'soVang'); }
+        if (TT && TT.bat && TT.bat()) { const a = chup(sv); TT.kiem(sv); for (const m of TT.choNhan(sv)) TT.nhan(m, sv); cong(a, chup(sv), 'ttVang'); }
+      } catch (e) { G.botB2.loi = String(e); }
+      return goc.apply(this, arguments);
+    };
+    G.botNang._viec = 1;
+  }
+"""
+
+
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith('-')]
     n = int(args[0]) if args else 12
@@ -146,6 +184,10 @@ def main():
     with cd_lib.trinh_duyet() as p:
         b = p.chromium.launch()
         pre = [a.split('=', 1)[1] for a in sys.argv if a.startswith('--pre=')]  # 15/10 kiem-can-bang C: --pre=<mã JS> thử số trong bộ nhớ (không sửa game)
+        # 15/10 Bước 2 Phiên E: --viec → mỗi lần về làng (trước G.botNang) bot bấm Nhận hết Việc hôm nay (việc, rương ngày, rương tuần),
+        # Sổ yêu quái (G.soYQ.nhanHet) và Thành tựu; G.botB2 cộng phần thưởng ba hệ (kể cả "quên nhận → hôm sau tự cộng"), G.botThu đếm mọi đá / bùa.
+        if '--viec' in sys.argv:
+            pre = [(pre[0] + '; ' if pre else '') + VIEC_JS]
         pg = cd_lib.open_page(b, errs, '() => { ' + pre[0] + '; return 1; }' if pre else None)
         bad_luat = 0
         for good, msg in pg.evaluate(LUAT):
@@ -157,8 +199,12 @@ def main():
         if kd and mode == 'khuyen':
             modes += ['lieu'] * n  # thêm bản lưu ở Sức mạnh thấp hơn để đo đường thắng/thua
         for k, md in enumerate(modes):
+            pg.evaluate("() => { if (G.botB2) for (const x in G.botB2) G.botB2[x] = 0; if (G.botThu) G.botThu.da = G.botThu.bua = 0; return 1; }")
             out, why = cd_lib.campaign(pg, md, upto, cd_lib.CAY[k % 3], saves, chinh=chinh, ngay=ngay, kho2=kho2 and md == mode, saves2=saves2,
                                        guard_max=440 if kho2 else 220)
+            if out:
+                out['b2'] = pg.evaluate("() => G.botB2 ? Object.assign({}, G.botB2) : null")
+                out['thu'] = pg.evaluate("() => G.botThu ? Object.assign({}, G.botThu) : null")
             if md != mode:
                 print(f'(lượt {k+1}, kiểu {md}: chỉ lấy bản lưu để đo khuyên dùng){" — " + why if why else ""}')
                 continue
@@ -252,6 +298,24 @@ def main():
         print(f"Ải ngày (mỗi {ngay} lượt ải thường = 1 ngày; trung bình mỗi lượt chiến dịch): {sum(r['ngay'] for r in ok)/m:.0f} ngày, {nn/m:.0f} lượt ải ngày, thắng {sum(a['win'] for a in an)*100/max(1,nn):.0f}%, "
               f"+{sum(a['gold'] for a in an)/m:.0f} vàng, +{sum(a['ore'] for a in an)/m:.0f} quặng, +{sum(a['da'] for a in an)/m:.0f} đá nâng bậc, +{sum(a['lk'] for a in an)/m:.0f} linh khí; "
               + ', '.join(f"{kk} {sum(a['loai'].get(kk, [0, 0])[1] for a in an)}/{sum(a['loai'].get(kk, [0, 0])[0] for a in an)}" for kk in ('da', 'mai', 'vang')))
+    # 15/10 Bước 2 Phiên E: thu nhập mỗi ngày giả (vàng / linh khí cộng lượt ải thường + ải ngày + ba hệ Bước 2; đá, bùa: mọi nguồn)
+    nday = sum(r['ngay'] for r in ok) / m
+    if nday:
+        g_st = sum(sum(s['gold'] for s in r['st']) for r in ok) / m
+        lk_st = sum(sum(s['lk'] for s in r['st']) for r in ok) / m
+        g_an = sum(r['aiNgay']['gold'] for r in ok if r.get('aiNgay')) / m
+        lk_an = sum(r['aiNgay']['lk'] for r in ok if r.get('aiNgay')) / m
+        b2 = [r['b2'] for r in ok if r.get('b2')]
+        B = {x: (sum(q.get(x, 0) for q in b2) / m) for x in ('vang', 'quang', 'lk', 'da', 'bua', 'viecVang', 'soVang', 'ttVang', 'ruong', 'tuan')}
+        th = [r['thu'] for r in ok if r.get('thu')]
+        da_all = sum(q['da'] for q in th) / m if th else 0
+        bua_all = sum(q['bua'] for q in th) / m if th else 0
+        print(f"Mỗi ngày giả ({nday:.1f} ngày / lượt chiến dịch): vàng {(g_st + g_an + B['vang']) / nday:.0f} (ải {g_st / nday:.0f} + ải ngày {g_an / nday:.0f} + Bước 2 {B['vang'] / nday:.0f}), "
+              f"linh khí {(lk_st + lk_an + B['lk']) / nday:.0f} (Bước 2 {B['lk'] / nday:.0f}), đá nâng bậc {da_all / nday:.1f} (Bước 2 {B['da'] / nday:.1f}), bùa {bua_all / nday:.2f} (Bước 2 {B['bua'] / nday:.2f}), "
+              f"quặng Bước 2 {B['quang'] / nday:.1f}")
+        if b2:
+            print(f"Bước 2 cả chiến dịch (TB): {B['vang']:.0f} vàng (việc {B['viecVang']:.0f}, sổ {B['soVang']:.0f}, thành tựu {B['ttVang']:.0f}), {B['quang']:.0f} quặng, {B['lk']:.0f} linh khí, "
+                  f"{B['da']:.1f} đá, {B['bua']:.2f} bùa; rương ngày {B['ruong']:.1f}, rương tuần {B['tuan']:.1f}" + (' — LỖI: ' + str([q.get('loi') for q in b2 if q.get('loi')][:1]) if any(q.get('loi') for q in b2) else ''))
     cu = [r['cuoi'] for r in ok if r.get('cuoi')]
     if cu:
         print(f"Lúc qua 3-5 (trung bình): cấp {sum(c['cap'] for c in cu)/len(cu):.0f}, Sức mạnh {sum(c['sm'] for c in cu)/len(cu):.0f}, vàng còn {sum(c['vang'] for c in cu)/len(cu):.0f}, "

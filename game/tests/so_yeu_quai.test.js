@@ -37,7 +37,8 @@ const boSo = (o) => { const c = JSON.parse(JSON.stringify(o)); delete c.so; if (
 const sx = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Array.isArray(x) ? Object.keys(x).sort().reduce((a, kk) => ((a[kk] = x[kk]), a), {}) : x));
 
 (async () => {
-  const A = moTrang(''), B = moTrang('soyq=0');
+  // Bước 2 Phiên E: bài này kiểm luật với bảng thưởng GỐC (?thuongb2=goc); số đã chỉnh kiểm ở tests/thuong_b2.test.js
+  const A = moTrang('thuongb2=goc'), B = moTrang('soyq=0&thuongb2=goc');
   try {
     // ---------- 0. nạp ----------
     console.log('0. Nạp game');

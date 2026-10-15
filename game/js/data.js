@@ -961,3 +961,33 @@
   // Cùng bảng dạng danh sách đối tượng (js/thanh_tuu.js của Phiên C đọc G.SO_YQ.ds[i].ma để đếm trang sổ "Chép sổ" / "Sổ đủ trang")
   G.SO_YQ.ds = G.SO_YQ.trang.map((t) => ({ ma: t[0], vung: t[1], loai: t[2], he: t[3] }));
 })();
+
+// ===================== BƯỚC 2 — PHIÊN E: CHỈNH SỐ THƯỞNG BA HỆ (cân bằng, docs/ke-hoach/buoc-2/bao-cao-phien-E.md) =====================
+// Bot Node (tests/cay.py --node --ngay=8 --viec, 24 lượt chiến dịch) với số gốc của Phiên A / B / C: số lần chơi qua 15 ải −12%,
+// vàng còn lúc qua 3-5 +29%, đá nâng bậc +30%/ngày → vượt LUAT-CAN-BANG.md. Khối này ĐÈ số (bảng gốc ở các khối trên giữ nguyên để so):
+//   Việc hôm nay: vàng mỗi việc còn ~1/2 (mức 3 còn ~40%), quặng ~1/2, rương ngày bớt đá (2/3/4 → 1/1/2; linh khí giữ).
+//   Sổ yêu quái: vàng ★ còn 1/2; đá ★★★ trùm nhỏ 2 → 1, trùm vùng 3 → 2; đá thưởng vùng 5/8/12 → 3/5/8.
+//   Thành tựu: vàng còn 1/2, đá còn 1/2 (làm tròn lên). Linh khí, bùa, quặng, danh hiệu giữ nguyên.
+// Cờ quay lui: ?thuongb2=goc (G.THUONG_B2_GOC = true trước khi nạp data.js) → dùng số gốc của Phiên A / B / C.
+(function () {
+  const G = window.G;
+  let goc = G.THUONG_B2_GOC === true;
+  try { if (typeof location !== 'undefined' && /[?&]thuongb2=goc(&|$)/.test(location.search || '')) goc = true; } catch (e) { /* giữ mặc định */ }
+  G.THUONG_B2_GOC = goc;
+  if (goc) return;
+  const V = G.VIEC_NGAY, Y = G.SO_YQ, T = G.THANH_TUU;
+  if (V) {
+    V.thuong = [
+      [{ v: 30, q: 1 }, { v: 50, q: 2 }, { v: 80, q: 2 }], // việc Dễ   (gốc 60/2 · 120/3 · 200/4)
+      [{ v: 45, q: 2 }, { v: 75, q: 2 }, { v: 120, q: 3 }], // việc Vừa (gốc 90/3 · 180/4 · 300/6)
+      [{ v: 60, q: 2 }, { v: 100, q: 3 }, { v: 160, q: 4 }], // việc Khó (gốc 120/4 · 240/6 · 400/8)
+    ];
+    V.ruongNgay = [{ da: 1, lk: 8 }, { da: 1, lk: 12 }, { da: 2, lk: 16 }]; // gốc đá 2 / 3 / 4
+  }
+  if (Y) {
+    Y.vang = { thuong: [10, 20, 30], tinhanh: [25, 40, 60], trumnho: [40, 60, 90], trum: [75, 125, 200] }; // gốc ×2
+    Y.da = { thuong: 0, tinhanh: 1, trumnho: 1, trum: 2 }; // gốc 0 / 1 / 2 / 3
+    Y.vungDa = [3, 5, 8]; // gốc 5 / 8 / 12
+  }
+  if (T) for (const a of T.DS) { if (a.th.vang) a.th.vang = Math.round(a.th.vang / 2); if (a.th.da) a.th.da = Math.ceil(a.th.da / 2); }
+})();

@@ -30,8 +30,17 @@ Làng là một cảnh đi lại được, rộng gấp rưỡi màn hình; màn
 | Bà Hàng Xén | gánh hàng | **Nguyên liệu** (đổi vàng lấy nguyên liệu vùng đã qua), **Quặng** (mua quặng, có giới hạn mỗi ngày) |
 | Cô Thợ May | khung cửi | 4 bộ đồ của Zed: mặc, nâng cấp bộ (linh khí + vàng + mảnh trùm), mỗi cấp mở một skill bộ |
 | Cụ Đồ | gốc đa | Cây kỹ năng, **Cây chưởng** (học điểm chưởng, đổi cây), đặt lại điểm, hướng dẫn, **Bảng vàng** (xếp hạng Sức mạnh, sao, thời gian hạ từng trùm vùng) |
-| Ông Từ | sân đình | Xem chỉ số Zed và nét ba bạn đã dạy |
-| Anh Mõ | cổng làng | Cài đặt: âm thanh, toàn màn hình, lưu mây và **Đăng nhập Google**, **✉ Góp ý**, xoá tiến trình |
+| Ông Từ | sân đình | Thẻ **Zed** (chỉ số, nét ba bạn đã dạy), **Sổ yêu quái**, **Thành tựu** (đổi danh hiệu) |
+| Anh Mõ | cổng làng | Thẻ **Việc hôm nay** (3 việc mỗi ngày, rương ngày, dải tuần), **Cài đặt**: âm thanh, toàn màn hình, lưu mây và **Đăng nhập Google**, **✉ Góp ý**, xoá tiến trình |
+
+### Việc hôm nay, Sổ yêu quái, Thành tựu (Bước 2)
+
+Ba hệ cho bé lý do ghé làng mỗi ngày (chừng 15–20 phút là xong việc), thưởng vừa phải. Chấm đỏ trên mặt Anh Mõ / Ông Từ ở dải lối tắt là có quà chờ **Nhận**.
+
+- **Anh Mõ → Việc hôm nay** (mở sau ải Rừng già 2): mỗi ngày 3 việc (Dễ / Vừa / Khó), ví dụ "Hạ 30 quái", "Qua 1 ải không dùng bình máu", "Kết liễu 15 quái bằng đòn Lửa". Mỗi ngày đổi được 1 việc miễn phí. Xong việc thì bấm Nhận (vàng + quặng); xong đủ 3 việc mở **rương ngày** (đá nâng bậc + linh khí) và đóng dấu một ô trong **dải 7 ngày**; đủ 5 ngày trong tuần (Thứ 2 → Chủ nhật) mở **rương tuần** (bùa giữ bậc + đá). Quên nhận thì hôm sau tự cộng. Trong ải có dòng báo nhỏ khi xong việc, bảng kết quả có dòng "Việc hôm nay: x/3", bảng Tạm dừng có nút xem việc.
+- **Ông Từ → Sổ yêu quái**: 36 trang (12 mỗi vùng), quái chưa gặp là bóng đen "?". Mỗi trang 3 nấc: ★ Đã hạ (vàng) · ★★ Tìm ra điểm yếu = hạ nó bằng hệ khắc chế (đòn kết liễu mang hệ đó, hoặc nó đang dính cháy / độc / chậm do vũ khí; trùm vùng: đạt sao thứ ba) (linh khí) · ★★★ Thuần thục = hạ đủ số con (đá nâng bậc). Đủ ★★ cả vùng: đá + danh hiệu "Thợ săn <vùng>"; đủ ★★★: danh hiệu "Bậc thầy <vùng>". Hệ khắc của quái thường chỉ để ghi sổ, **không** cộng sát thương.
+- **Ông Từ → Thành tựu**: 30 huy hiệu Đồng / Bạc / Vàng, thưởng một lần (vàng, linh khí, đá, bùa, quặng) và danh hiệu. Danh hiệu chỉ để khoe (không cộng sức mạnh): đeo một cái, hiện dưới tên Zed ở Hành trang, ở bảng Ông Từ và trên đầu Zed trong làng.
+- Bảng số: `G.VIEC_NGAY`, `G.SO_YQ`, `G.THANH_TUU` ở cuối `js/data.js`; khối **"PHIÊN E"** cuối tệp chỉnh lại số thưởng cho cân bằng (việc ~1/2 vàng, sổ và thành tựu 1/2 vàng, bớt đá). Cờ quay lui: `?sukien=0` (tắt cả ba), `?viecngay=0`, `?soyq=0`, `?thanhtuu=0`, `?khunganh=0` (ảnh khung → vẽ code), `?thuongb2=goc` (số thưởng gốc trước Phiên E). Dữ liệu trong bản lưu giữ nguyên khi tắt.
 
 ### Trong ải
 
@@ -218,6 +227,9 @@ python3 tests/ui_build.py          # đóng gói rồi chơi thử cả hai tệ
 python3 tests/smoke.py anh         # nạp game và đánh thử vài giây
 python3 tests/campaign.py          # bot (hệ thống mới, ?cloud=0) chơi một lượt 15 ải, in từng lượt + bảng từng ải: cày, thua, cấp, Sức mạnh, máu còn, đòn trùm, linh khí/vàng, mốc Mầm/Thành hình/Thức tỉnh, mốc nâng bộ ([hoa|doc|bang] [khuyen|lieu])
 python3 tests/cay.py               # cân bằng (đợt 5): luật Sức mạnh / 4 vũ khí / nâng bộ / gợi ý bảng thua; bot chơi từ đầu 12 lượt, bảng từng ải + mốc nâng cấp ("lieu": bot không nhìn lời khuyên; "--kd=4": đo lại Sức mạnh khuyên dùng từ bản lưu thật; "-v": in từng lượt)
+python3 tests/cay.py 12 --node --ngay=8 --viec   # Bước 2: bot bấm Nhận hết Việc hôm nay / Sổ / Thành tựu mỗi lần về làng, in thu nhập mỗi ngày giả (so với --pre='G.SU_KIEN_BAT=false')
+node tests/thuong_b2.test.js      # số thưởng ba hệ Bước 2 đã chỉnh (Phiên E) và cờ ?thuongb2=goc
+node ../tools/can-bang/tinh.js     # mô hình số; mục 7: chiến dịch có / không ba hệ Bước 2 (--khong-buoc2: tắt ba hệ ở mọi bảng)
 python3 tests/dps.py 60 8 quaimoi  # sát thương mỗi giây 4 vũ khí trên quái thật, Trắng và Thức tỉnh 3 hệ
 python3 tests/cay_nang_cap_shots.py # chụp bảng thua có gợi ý nên cày gì, và cảnh bấm gợi ý mở đúng người làng, vào docs/cay-nang-cap/
 python3 tests/mapgen.py            # bộ sinh bản đồ ải: 1000 hạt giống cho mỗi kiểu A, B, C

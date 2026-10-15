@@ -38,7 +38,8 @@ function dat(ok, m) { if (!ok) throw new Error('SAI: ' + m); soDat++; console.lo
 const sx = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Array.isArray(x) ? Object.keys(x).sort().reduce((a, kk) => ((a[kk] = x[kk]), a), {}) : x));
 
 (async () => {
-  const A = moTrang(''), B = moTrang('thanhtuu=0');
+  // Bước 2 Phiên E: bài này kiểm luật với bảng thưởng GỐC (?thuongb2=goc); số đã chỉnh kiểm ở tests/thuong_b2.test.js
+  const A = moTrang('thuongb2=goc'), B = moTrang('thanhtuu=0&thuongb2=goc');
   try {
     console.log('0. Nạp game');
     const nap = await A.goi(() => ({ tt: !!G.thanhTuu, bat: G.THANH_TUU_BAT, n: G.THANH_TUU.DS.length, dh: Object.keys(G.THANH_TUU.DH).length,

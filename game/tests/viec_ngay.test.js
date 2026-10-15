@@ -61,7 +61,8 @@ const CAI = function () {
 };
 
 (async () => {
-  const A = moTrang(''), B = moTrang('viecngay=0');
+  // Bước 2 Phiên E: bài này kiểm luật với bảng thưởng GỐC (?thuongb2=goc); số đã chỉnh kiểm ở tests/thuong_b2.test.js
+  const A = moTrang('thuongb2=goc'), B = moTrang('viecngay=0&thuongb2=goc');
   try {
     await A.goi(CAI); await B.goi(CAI);
     // ---------- 1. mở khoá, thẻ ----------

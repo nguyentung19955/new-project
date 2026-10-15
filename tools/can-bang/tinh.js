@@ -5,13 +5,16 @@
 //       14/10 (bước 1 làm chắc, mục 5): chiến dịch mặc định tính cả ép đồ (đá từ trùm), ải ngày (8 lượt = 1 ngày), mua quặng ở Bà Hàng Xén,
 //       skill bộ trong Sức mạnh (js/bo_skill.js G.boSk.quyDoi); dòng "So luật cũ" in kết quả khi tắt ba thứ đầu.
 //       node tools/can-bang/tinh.js --json     (in số liệu thô dạng JSON)
+//       15/10 (Bước 2 Phiên E): mục 7 so chiến dịch có / không Việc hôm nay + Sổ yêu quái + Thành tựu; --khong-buoc2 tắt ba hệ ở mọi bảng,
+//       --b2-goc dùng số thưởng gốc (?thuongb2=goc).
 // Mô hình người chơi: chơi lần lượt 15 ải; chưa đủ 90% Sức mạnh khuyên dùng (G.STAGE_REC) thì chơi lại ải cao nhất đã qua để cày.
 // Mỗi lượt cộng phần thưởng KỲ VỌNG (tỉ lệ × giá trị). Tiêu: điểm kỹ năng, linh khí (vũ khí chính trước, rồi vũ khí phụ),
 // vàng / quặng / nguyên liệu (nâng lò, mài vũ khí chính rồi phụ). Không tính kỹ năng tay người chơi, chỉ là thước đo so sánh.
 'use strict';
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const GOC = process.env.LK_GOC || path.join(__dirname, '..', '..', 'game', 'js'); // LK_GOC=thư mục js khác (so bản cũ)
-const ctx = { window: {}, location: { search: '' }, console, Math };
+// 15/10 Bước 2 Phiên E: --b2-goc → nạp data.js với ?thuongb2=goc (số thưởng ba hệ gốc của Phiên A / B / C, trước khi Phiên E chỉnh)
+const ctx = { window: {}, location: { search: process.argv.includes('--b2-goc') ? '?thuongb2=goc' : '' }, console, Math };
 ctx.window.G = undefined;
 vm.createContext(ctx);
 vm.runInContext(fs.readFileSync(path.join(GOC, 'data.js'), 'utf8'), ctx);
@@ -20,6 +23,8 @@ const G = ctx.window.G;
 try { vm.runInContext(fs.readFileSync(path.join(GOC, 'bo_skill.js'), 'utf8'), ctx); } catch (e) { /* bản cũ không có: bỏ qua phần skill bộ */ }
 const quyBo = (bo, cap) => (G.boSk && G.boSk.quyDoi && G.boSkill ? G.boSk.quyDoi({ boSkill: G.boSkill(bo, cap) }) : { off: 1, ehp: 1 });
 const JSON_OUT = process.argv.includes('--json');
+// 15/10 Bước 2 Phiên E (mục 7): --khong-buoc2 → mọi chiến dịch không tính Việc hôm nay / Sổ yêu quái / Thành tựu (như trước Bước 2)
+const KHONG_B2 = process.argv.includes('--khong-buoc2');
 // Thử số khác không sửa tệp: --dat LVL_HP=0.06 --dat 'STAGE_MULT=[1,1.2,1.45,1.75]' (đặt đè lên G sau khi nạp data.js)
 process.argv.forEach((a, k, all) => { if (a === '--dat' && all[k + 1]) { const m = /^([A-Z_]+)=(.*)$/.exec(all[k + 1]); if (m) G[m[1]] = JSON.parse(m[2]); } });
 
@@ -116,7 +121,7 @@ function thuNhap(n, p, dau) {
   const tut = n === 0 && dau ? 2 : 1;        // ải hướng dẫn 1-1 lần đầu: dấu ấn x2 (và Lửa x2)
   const mk = 1.2;                            // Zed nhận linh khí nhanh hơn 20%
   // quặng: 3 + sao (tính 2) + 2 × vùng; đá tôi cũ (15% ải thường, ba sao lần đầu ~30%) nay là G.DA_TOI_QUANG quặng
-  const o = { xp: b.xp * gm, vang: (b.gold + kills * 2) * gm, quang: 3 + 2 + 2 * r + ((big ? 0 : 0.15) + (dau ? 0.3 : 0)) * (G.DA_TOI_QUANG || 0), nl: 5 + i, manh: big ? 3 : 0, lk: 0, nguon: {} };
+  const o = { kills, xp: b.xp * gm, vang: (b.gold + kills * 2) * gm, quang: 3 + 2 + 2 * r + ((big ? 0 : 0.15) + (dau ? 0.3 : 0)) * (G.DA_TOI_QUANG || 0), nl: 5 + i, manh: big ? 3 : 0, lk: 0, nguon: {} };
   const them = (k, lk, vang) => { o.lk += lk; o.vang += vang || 0; o.nguon[k] = { lk: +(lk).toFixed(1), vang: Math.round(vang || 0) }; };
   them('tinh anh gục', 5 * mk * tut * (n === 0 && dau ? 2 : 1), 0);
   them('tinh anh thưởng 35%', G.DROP.elite * R.vk.lk[r], G.DROP.elite * R.vk.vang[r]);
@@ -140,7 +145,9 @@ function chienDich(o) {
   // lượt ải thường = 1 ngày, chơi đủ 3 lượt mọi ải ngày mở hôm đó ở mức cao nhất đã mở), o.banQuang (thiếu quặng để mài thì mua của
   // Bà Hàng Xén, tối đa G.BAN_QUANG.moiNgay mỗi ngày). Đặt false để so với luật cũ.
   const EP = o.ep !== false && G.EP_DO, AN = o.aiNgay !== false && G.AI_NGAY, BQ = o.banQuang !== false && G.BAN_QUANG, NGAY_LUOT = o.ngay || 8;
-  const p = { lvl: 1, xp: 0, vang: 0, quang: 0, nl: [0, 0, 0], manh: [0, 0, 0], lk: 0, lkTong: 0, lo: 1, hoc: {}, vk: { sword: { st: 0, sh: 0, ep: 0 }, bow: { st: 0, sh: 0, ep: 0 }, spear: { st: 0, sh: 0, ep: 0 }, hammer: { st: 0, sh: 0, ep: 0 } }, bo: { ninja: 0 }, ban: {}, muaBoVang: 0, power: 98, luot: 0, vangTong: 0, da: 0, daTong: 0, ngay: 0, muaQuang: 0, muaHom: 0, anLuot: 0 };
+  // 15/10 Bước 2 Phiên E (mục 7): o.buoc2 (mặc định BẬT, --khong-buoc2 / o.buoc2 = false: tắt) — Việc hôm nay, Sổ yêu quái, Thành tựu, bé bấm Nhận hết.
+  const B2 = o.buoc2 !== false && !KHONG_B2 && G.VIEC_NGAY && G.SO_YQ && G.THANH_TUU, TL = o.tlViec == null ? 0.8 : o.tlViec;
+  const p = { lvl: 1, xp: 0, vang: 0, quang: 0, nl: [0, 0, 0], manh: [0, 0, 0], lk: 0, lkTong: 0, lo: 1, hoc: {}, vk: { sword: { st: 0, sh: 0, ep: 0 }, bow: { st: 0, sh: 0, ep: 0 }, spear: { st: 0, sh: 0, ep: 0 }, hammer: { st: 0, sh: 0, ep: 0 } }, bo: { ninja: 0 }, ban: {}, muaBoVang: 0, power: 98, luot: 0, vangTong: 0, da: 0, daTong: 0, ngay: 0, muaQuang: 0, muaHom: 0, anLuot: 0, quai: 0, tinhAnh: 0, ruongNgay: 0, b2: { vang: 0, quang: 0, lk: 0, da: 0, bua: 0, viec: 0, so: 0, tt: 0 }, ttXong: {} };
   // giá kỳ vọng mỗi bậc ép (chênh lệch cộng dồn của bảng mục 6, không bùa)
   const giaEp = EP ? (() => { const t = epDo({ n: 4000 }); return t.map((v, k) => ({ da: v.da - (k ? t[k - 1].da : 0), vang: v.vang - (k ? t[k - 1].vang : 0), manh: v.manh - (k ? t[k - 1].manh : 0) })); })() : [];
   const muaBo = (k, cap) => { // nâng bộ k từ cap lên cap + 1 nếu đủ (linh khí, vàng, mảnh trùm của vùng bộ)
@@ -208,9 +215,23 @@ function chienDich(o) {
     }
     p.vang += deDanh;
   };
+  // Bước 2: cộng thưởng (k = 'viec' | 'so' | 'tt' để tách vàng theo nguồn); bùa chỉ đếm (mô hình ép không dùng bùa)
+  const b2 = (t, k) => {
+    const v = t.vang || 0, qg = t.quang || 0, lk = t.lk || 0, da = t.da || 0, bua = t.bua || 0;
+    p.vang += v; p.vangTong += v; p.quang += qg; p.lk += lk; p.lkTong += lk; if (EP) { p.da += da; p.daTong += da; }
+    const B = p.b2; B.vang += v; B.quang += qg; B.lk += lk; B.da += da; B.bua += bua; B[k] += v;
+  };
+  // thành tựu: điều kiện ước theo trạng thái mô hình (mã khớp G.THANH_TUU.DS; thành tựu cuối game / độ khó 2 / đủ 45 sao không tới trong 15 ải)
+  const TT_DK = {
+    buocDau: () => ds.length >= 1, cuuTeo: () => p.hoc.hunter, cuuBong: () => p.hoc.healer, cuuLi: () => p.hoc.wrestler,
+    quai100: () => p.quai >= 100, quai1000: () => p.quai >= 1000, tinhAnh50: () => p.tinhAnh >= 50, sao15: () => ds.length * 2.4 >= 15,
+    khongBinh: () => p.luot >= 20, khacChe: () => p.luot >= 30, mam: () => p.vk.sword.st >= 1, thucTinh1: () => p.vk.sword.st >= 3,
+    epTim: () => p.vk.sword.ep >= 3, mai10: () => p.vk.sword.sh >= 10, cap20: () => p.lvl >= 20, so12: () => p.hoc.hunter, viec7: () => p.ruongNgay >= 7,
+  };
+  const kiemTT = () => { if (!B2) return; for (const a of G.THANH_TUU.DS) { const f = TT_DK[a.ma]; if (f && !p.ttXong[a.ma] && f()) { p.ttXong[a.ma] = 1; b2(a.th, 'tt'); } } };
   const choi = (n, dau) => {
     const q = thuNhap(n, p, dau);
-    p.luot++;
+    p.luot++; p.quai += q.kills + 2; p.tinhAnh += 1;
     p.xp += q.xp; while (p.lvl < G.MAX_LEVEL && p.xp >= G.xpNeed(p.lvl)) { p.xp -= G.xpNeed(p.lvl); p.lvl++; }
     p.vang += q.vang; p.vangTong += q.vang; p.quang += q.quang; p.nl[Math.floor(n / 5)] += q.nl; p.manh[Math.floor(n / 5)] += q.manh;
     p.lk += q.lk; p.lkTong += q.lk;
@@ -230,12 +251,27 @@ function chienDich(o) {
         if (T.vang) { p.vang += L * T.vang[k]; p.vangTong += L * T.vang[k]; }
         p.xp += L * Math.round(G.stageStats(k, 4, 0).xp * (G.AI_NGAY.xp || 0));
       }
+      // Bước 2: Việc hôm nay (mở sau 0-1) — 3 việc Dễ / Vừa / Khó + rương ngày, xong 3/3 ở TL số ngày; rương tuần mỗi 7 ngày nếu đủ 5/7 ngày
+      if (B2 && ds.length >= 2) {
+        const V = G.VIEC_NGAY, mu = Math.min(2, ['hunter', 'healer'].filter((x) => p.hoc[x]).length);
+        for (let d = 0; d < 3; d++) b2({ vang: TL * V.thuong[d][mu].v, quang: TL * V.thuong[d][mu].q }, 'viec');
+        b2({ da: TL * V.ruongNgay[mu].da, lk: TL * V.ruongNgay[mu].lk }, 'viec'); p.ruongNgay += TL;
+        if (p.ngay % 7 === 0) { let pt = 0; for (let j = V.tuanCan; j <= 7; j++) { let c = 1; for (let x = 0; x < j; x++) c = (c * (7 - x)) / (x + 1); pt += c * Math.pow(TL, j) * Math.pow(1 - TL, 7 - j); } b2({ bua: pt * V.ruongTuan[mu].bua, da: pt * V.ruongTuan[mu].da }, 'viec'); }
+      }
     }
     if (dau && n % 5 === 4) {
       const k = G.REGIONS[Math.floor(n / 5)].rescue, bo = ['rung', 'bien', 'lau'][Math.floor(n / 5)];
       p.hoc[k] = 1;
       if (o.muaBo === false || !G.BO_MUA) p.bo[bo] = 0; else p.ban[bo] = 1; // 15/10: hạ trùm chỉ mở bán (mua trong tieu)
     }
+    // Bước 2: Sổ yêu quái — hạ trùm vùng lần đầu thì tính cả vùng: ★ mọi trang (vàng), ★★ ở 70% trang (linh khí, chưa đủ cả vùng nên
+    // không có đá thưởng vùng), ★★★ ở tinh anh + trùm nhỏ (đá) — khớp bot thật (bao-cao-phien-A.md: 2.240–2.640 V, 98–137 LK, 14 Đ).
+    if (B2 && dau && n % 5 === 4) {
+      const Y = G.SO_YQ, r = Math.floor(n / 5), t = { vang: 0, lk: 0, da: 0 };
+      for (const tr of Y.trang) if (tr[1] === r) { t.vang += Y.vang[tr[2]][r]; t.lk += 0.7 * Y.lk[tr[2]]; if (tr[2] === 'tinhanh' || tr[2] === 'trumnho') t.da += Y.da[tr[2]]; }
+      b2(t, 'so');
+    }
+    kiemTT();
     tieu();
     p.power = nguoi(p).power;
     return q;
@@ -353,4 +389,25 @@ if (require.main === module) {
   const tim = ep[3].da, ruc = ep[5].da;
   for (const v of an.muc) console.log(pad(v.muc, 5), pad(v.vung, 11), pad(v.vangAi, 8), pad(v.vangThuong, 12), pad(v.vangTiLe, 5), pad(v.quangAi, 9), pad(v.quangThuong, 13), pad(v.quangTiLe, 5), pad(v.daAiTuan, 8), pad(v.daTrumTuan, 10), pad(v.daTuan, 8), pad(v.buaTuan, 6), (tim / v.daTuan).toFixed(2), '|', (ruc / v.daTuan).toFixed(1), '(4 món:', (4 * ruc / v.daTuan).toFixed(1) + ')');
 }
-module.exports = { G, bang1, chienDich, bang2, thuNhap, soQuai, nguoi, epDo, aiNgay };
+// ---------- 7. VIỆC HÔM NAY + SỔ YÊU QUÁI + THÀNH TỰU (Bước 2, docs/ke-hoach/buoc-2/KE-HOACH.md mục 5) ----------
+// So chiến dịch có mua bộ (như game hiện hành) có / không ba hệ: lượt cày từng ải, Sức mạnh lúc tới ải, thu nhập mỗi ngày giả (8 lượt).
+function buoc2(o) {
+  o = o || {};
+  const co = chienDich(Object.assign({ bo: true }, o)), khong = chienDich(Object.assign({ bo: true }, o, { buoc2: false }));
+  const ngay = (cd) => Math.max(1, cd.p.luot / 8);
+  const moiNgay = (cd) => ({ luot: cd.p.luot, ngay: +ngay(cd).toFixed(1), vang: Math.round(cd.p.vangTong / ngay(cd)), lk: Math.round(cd.p.lkTong / ngay(cd)), da: +(cd.p.daTong / ngay(cd)).toFixed(1) });
+  return { co, khong, a: moiNgay(co), b: moiNgay(khong), b2: co.p.b2 };
+}
+if (require.main === module && !JSON_OUT) {
+  const pad = (s, n) => String(s).padEnd(n);
+  const r = buoc2(), B = r.b2;
+  console.log('\n== 7. BƯỚC 2: Việc hôm nay + Sổ yêu quái + Thành tựu (có mua bộ; việc xong 3/3 ở 80% số ngày, bé bấm Nhận hết)' + (KHONG_B2 ? ' — ĐANG TẮT (--khong-buoc2)' : '') + ' ==');
+  console.log(pad('ải', 5), pad('cày có/không', 13), pad('SM lúc tới có/không', 20), 'KD');
+  r.co.ds.forEach((v, k) => { const w = r.khong.ds[k]; console.log(pad(v.ai, 5), pad(v.cay + '/' + w.cay, 13), pad(v.power + '/' + w.power, 20), v.rec); });
+  const lech = ((r.a.luot - r.b.luot) / r.b.luot * 100).toFixed(0);
+  console.log('Tổng lượt có/không:', r.a.luot + '/' + r.b.luot, '(' + (lech > 0 ? '+' : '') + lech + '%) | ngày giả', r.a.ngay + '/' + r.b.ngay,
+    '| mỗi ngày: vàng', r.a.vang + '/' + r.b.vang, '· linh khí', r.a.lk + '/' + r.b.lk, '· đá nâng bậc', r.a.da + '/' + r.b.da);
+  console.log('Ba hệ cộng cả chiến dịch:', Math.round(B.vang), 'vàng (việc', Math.round(B.viec) + ', sổ', Math.round(B.so) + ', thành tựu', Math.round(B.tt) + '),', Math.round(B.quang), 'quặng,', Math.round(B.lk), 'linh khí,', B.da.toFixed(1), 'đá,', B.bua.toFixed(2), 'bùa',
+    '| phần vàng ba hệ / vàng cả chiến dịch:', (B.vang / r.co.p.vangTong * 100).toFixed(0) + '%', '| đá:', (B.da / Math.max(1, r.co.p.daTong) * 100).toFixed(0) + '%', '| vàng mua bộ', r.co.p.muaBoVang + '/' + r.khong.p.muaBoVang);
+}
+module.exports = { G, bang1, chienDich, bang2, thuNhap, soQuai, nguoi, epDo, aiNgay, buoc2 };
