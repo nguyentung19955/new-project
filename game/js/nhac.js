@@ -252,7 +252,7 @@
       if (!S) return 'lang';
       if (S.mode === 'dead') return null;
       // vùng 4 chưa có bài riêng (phiên 2C thêm B.vung3 / trum3): dùng bài của vùng mượn hình (G.vungVe), nếu không thì vùng 3
-      const r0 = S.r | 0, r = r0 > 2 && !(B['vung' + r0]) ? G.clamp(G.vungVe ? G.vungVe(r0) : 2, 0, 2) : G.clamp(r0, 0, 3);
+      const W = S.W, r0 = S.r | 0, r = r0 > 2 && !(B['vung' + r0]) ? G.clamp(G.vungVe ? G.vungVe(r0) : 2, 0, 2) : G.clamp(r0, 0, 3);
       if (W && W.type === 'boss' && W.boss && !W.boss.dead && !S.won && !(S.loot && S.loot.bossDown)) return 'trum' + r;
       return 'vung' + r;
     }

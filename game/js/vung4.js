@@ -115,7 +115,7 @@
 
   // ---------- 3. chữ tiếng Anh ----------
   if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({
-    'Sông sâu': 'Deep River', 'Thuồng Luồng': 'River Serpent', 'Cá Trê': 'Whisker Catfish', 'Nguyên liệu': 'Materials',
+    'Sông sâu': 'Deep River', 'Thuồng Luồng': 'River Serpent', 'mảnh thuồng luồng': 'river serpent shard', 'sông sâu': 'deep river', 'nguyên liệu': 'materials', 'Cá Trê': 'Whisker Catfish', 'Nguyên liệu': 'Materials',
     '‹ Ba vùng đầu': '‹ First regions', '{0} ›': '{0} ›', 'Để dành (chưa có bộ trang phục vùng này)': 'Saved for later (no outfit for this region yet)',
   });
 })();
