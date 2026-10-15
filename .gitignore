@@ -9,3 +9,19 @@ game/dist/linh-khi-anh.*.json
 # Tải nhanh (12/10): ảnh rời của chế độ 2 tệp (workflow tạo lúc đăng) và bộ nhớ đệm mã hoá WebP
 game/dist/anh/
 game/.dem-webp/
+
+# Dọn tệp (15/10, docs/review/ke-hoach-cai-thien/don-tep): thứ sinh ra, không nên commit
+*.tmp
+*.bak
+*.orig
+*.swp
+*~
+Thumbs.db
+node_modules/
+# bộ nhớ đệm mã hoá WebP của build.py (workflow giữ bằng actions/cache)
+game/.dem-webp/
+# ảnh soát do docs/anh-goc/zed/cat-diem-anh.py ghi ra (không công cụ nào đọc; chạy lại script là có)
+docs/anh-goc/**/*-cat/debug.png
+docs/anh-goc/**/*-gif/debug.png
+docs/anh-goc/**/*-cat/*.gif
+docs/anh-goc/**/*-gif/*.gif
