@@ -24,3 +24,10 @@ Commit kết thúc bằng:
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 Claude-Session: https://claude.ai/code/session_017N7QXqfkK27mirk6Hvvt7g
 Không đụng master, không force push, không PR. Push (bị từ chối thì pull --rebase rồi push lại; giữ thay đổi của phiên khác). Xong viết bao-cao.md, push, tự dừng.
+
+## THÊM (20:51): giữ đăng nhập 1–2 ngày
+Chủ game: "mới login được 30 phút, lúc sau quay lại lại bắt login". Yêu cầu: mở lại game trong 1–2 ngày (cả PWA lẫn trình duyệt) KHÔNG phải đăng nhập lại.
+- Tìm nguyên nhân: persistence Firebase Auth (đảm bảo LOCAL / indexedDB, không phải SESSION/NONE); iOS PWA bị chặn lưu trữ / cookie bên thứ ba khi
+  authDomain khác tên miền (cùng gốc với mục 1); mã game tự đăng xuất / ẩn danh đè (signInAnonymously chạy lại khi currentUser chưa kịp nạp — phải
+  chờ onAuthStateChanged lần đầu); service worker xoá bộ nhớ; ITP Safari xoá dữ liệu sau 7 ngày không dùng (ghi chú).
+- Mục tiêu: phiên đăng nhập giữ ít nhất 1–2 ngày (thực tế Firebase giữ tới khi đăng xuất). Ghi rõ trong báo cáo vì sao trước đây mất sau ~30 phút.
