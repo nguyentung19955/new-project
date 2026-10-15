@@ -59,7 +59,7 @@
 <div id="lk-tai" data-bia="||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAMEBQYH/8QAKRAAAQMCBQMDBQAAAAAAAAAAAQIDEQAEBRIhMUETFGEiQnEVUWKBsf/EABcBAAMBAAAAAAAAAAAAAAAAAAIDBAX/xAAlEQACAQEFCQAAAAAAAAAAAAABAgADBBExUfASEyEyM0FxobH/2gAMAwEAAhEDEQA/AOfNMWj9zbWiEtBsn1ugGTPCvjXajFcBNssNsvoeMxlCgVJqzCbhHftG3aGdcJBUAUn7neRzTMcumxjD0hDSkmFBtWZMjSdR5qamzb4DtHOiimTfxmt/T3UpzLBCTt5q22sWekt0vBvImSF8+KyF5eWDaGFNZlr6YkKGiTPGvzSutZDDX1sF3P0wPUBMzvP62rStACi5TEWB9pizi/H1JsLUo3NhKiZUOfyqbE1Hu3jJkqPNFFRUuprOHU5dZSVwmE6+2mNk9u7r7R/aKKqqQLNifB+T/9k=|||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAgf/xAAmEAACAgEEAQQCAwAAAAAAAAABAgMRAAQSITEFE1FhgSJBcbHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQIDBAX/xAAeEQABBAIDAQAAAAAAAAAAAAAAAQIDEiExBBEyIv/aAAwDAQACEQMRAD8A51EIZIo53EASNwHG07mBPFno9HFyeOhl1Y2yFIbtjVkDnr54yzx2vaLSyII1cELvBQEVu5PyeshTWvFJG6qi7OR+A9/4xoa3yQzWRvzsH8YkWrkCMZYlsoSvJHfWUalzFpI4/TRBZbca3HsUcXqvJvPqpZgEAewAFHAP1mZ9aZIoyqKWVa4jX3P+jByGor8aNDgT0gXvDiHTs1EbjRAsX3jKuEH92Ofs4YYGeim/yLulscHjFuT6YNno/wBnDDGfsEej/9k=" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5&&!/[?&]biacu=1(&|$)/.test(q)){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.15-2131";
+(window.G = window.G || {}).VERSION = "lk-2026.10.15-2138";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -34172,6 +34172,380 @@ MA._xong();
   }
 })();
 
+// ===== js/su_kien.js =====
+// BƯỚC 2 — PHIÊN 0: NỀN CHUNG "SỰ KIỆN" + NGÀY + BẢN LƯU (docs/ke-hoach/buoc-2/KE-HOACH.md mục 2, mục 4 "Phiên 0", Phụ lục kỹ thuật)
+// Ba hệ của Bước 2 (Sổ yêu quái — Phiên A, Việc hôm nay — Phiên B, Thành tựu — Phiên C) chỉ NGHE sự kiện ở đây, không phải sửa combat.js / stage.js.
+// Mọi chỗ móc đều BỌC TỪ BÊN NGOÀI hàm có sẵn (gọi hàm cũ trước, rồi mới phát sự kiện; lỗi của người nghe không bao giờ làm hỏng trận).
+//
+// Nạp sau js/stage.js, trước js/village_scene.js (index.html). Cờ quay lui ?sukien=0 (G.SU_KIEN_BAT = false): không bọc gì, không phát gì,
+// không đụng bản lưu (dữ liệu so / nv / tt có sẵn giữ nguyên), các thẻ mới ở Ông Từ / Anh Mõ tự ẩn (js/village.js).
+//
+// API (chi tiết + ví dụ: docs/ke-hoach/buoc-2/bao-cao-phien-0.md)
+//   G.suKien.on(ten, fn) → hàm gỡ        G.suKien.off(ten, fn)        G.suKien.phat(ten, duLieu)        G.suKien.bat()
+//   Tên sự kiện (G.suKien.TEN): vaoAi, vaoPhong, gapQuai, haQuai, phanUng, lonNe, dacBiet, doiVk, chuong, moRuong, thuThach, hetAi, nangCap
+//   G.ngay.homNay() → { key:'YYYY-MM-DD', thu:0..6 (0 = CN), d }   G.ngay.dauTuan(key?) → 'YYYY-MM-DD' (thứ Hai)   G.ngay.thuTuan(key?) → 0..6 (0 = T2)
+//   G.ngay.cong(key, n) · G.ngay.sau(a, b) (a > b) · G.ngay.conLaiGiay() · G.ngay.bam(chuoi) → số 32 bit · G.ngay.ngauNhien(hat) → hàm 0..1 có định
+//   Bản lưu: bọc G.fixSave tạo / sửa G.save.so, .nv, .tt (rỗng, an toàn; sai kiểu thì dựng lại riêng phần đó, KHÔNG đụng phần cũ).
+//   KHÔNG thêm vào G.newSave (cờ một lần "bu" của Phiên A / C sẽ bị vòng "thiếu gì thì bù" chép sang bản cũ — xem ghi chú ở js/engine.js).
+(function () {
+  'use strict';
+  const G = window.G;
+  if (!G) return;
+  if (G.SU_KIEN_BAT === undefined) { let tat = false; try { tat = /[?&]sukien=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.SU_KIEN_BAT = !tat; }
+  const num = (v, d) => (typeof v === 'number' && isFinite(v) ? v : d);
+  const obj = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
+  const ngayHop = (s) => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s);
+
+  // ---------- ngày (dùng chung với ải ngày: cùng giờ máy, đổi lúc 0 giờ) ----------
+  const keyCua = (d) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  const tuKey = (k) => { const a = String(k).split('-').map(Number); return new Date(a[0], a[1] - 1, a[2], 12); }; // 12 giờ trưa: đổi giờ mùa hè không lệch ngày
+  const N = (G.ngay = {});
+  N.key = keyCua;
+  N.homNay = function () {
+    if (G.aiNgay && G.aiNgay.homNay) { try { return G.aiNgay.homNay(); } catch (e) { /* tính lại bên dưới */ } }
+    const d = new Date(); return { key: keyCua(d), thu: d.getDay(), d };
+  };
+  N.cong = (k, n) => { const d = tuKey(k); d.setDate(d.getDate() + (n | 0)); return keyCua(d); };
+  N.thuTuan = (k) => (tuKey(k || N.homNay().key).getDay() + 6) % 7; // 0 = thứ Hai … 6 = Chủ nhật
+  N.dauTuan = (k) => { k = k || N.homNay().key; return N.cong(k, -N.thuTuan(k)); };
+  N.sau = (a, b) => ngayHop(a) && (!ngayHop(b) || a > b); // chống chỉnh lùi giờ máy: chỉ tiến khi ngày mới > ngày lớn nhất đã thấy
+  N.conLaiGiay = function () {
+    if (G.aiNgay && G.aiNgay.conLaiGiay) return G.aiNgay.conLaiGiay();
+    const d = new Date(), m = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1); return Math.max(0, Math.round((m - d) / 1000));
+  };
+  N.bam = function (s) { s = String(s); let h = 2166136261 >>> 0; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h >>> 0; };
+  N.ngauNhien = function (hat) { // mulberry32: cùng hạt giống ra cùng dãy (không đụng G.rnd của trận)
+    let a = (typeof hat === 'number' ? hat : N.bam(hat)) >>> 0;
+    return function () { a = (a + 0x6d2b79f5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  };
+
+  // ---------- bus sự kiện ----------
+  const TEN = ['vaoAi', 'vaoPhong', 'gapQuai', 'haQuai', 'phanUng', 'lonNe', 'dacBiet', 'doiVk', 'chuong', 'moRuong', 'thuThach', 'hetAi', 'nangCap'];
+  const nghe = {};
+  const K = (G.suKien = { TEN, goc: {} });
+  K.bat = () => G.SU_KIEN_BAT !== false;
+  K.on = function (ten, fn) {
+    if (typeof fn !== 'function') return () => {};
+    (nghe[ten] || (nghe[ten] = [])).push(fn);
+    return () => K.off(ten, fn);
+  };
+  K.off = function (ten, fn) { const a = nghe[ten]; if (!a) return; const i = a.indexOf(fn); if (i >= 0) a.splice(i, 1); };
+  K.phat = function (ten, d) {
+    if (!K.bat()) return;
+    const a = nghe[ten];
+    if (!a || !a.length) return;
+    for (const fn of a.slice()) {
+      try { fn(d || {}); } catch (e) { console.error('Linh Khí: lỗi khi nghe sự kiện "' + ten + '" (bỏ qua)', e); }
+    }
+  };
+  const phat = K.phat;
+  // Chấm đỏ của người làng (js/village_scene.js checkNews gọi): Ông Từ ('tu') / Anh Mõ ('mo') có thẻ mới nào báo "có thưởng chờ nhận".
+  // Thẻ tự khai báo bằng hàm .cham(sv) gắn trên hàm vẽ của thẻ (G.villageApi.PANELS.so.cham = …), xem js/village.js THE_NGUOI.
+  K.chamNguoi = function (k, sv) {
+    if (!K.bat()) return false;
+    const VA = G.villageApi, ds = VA && VA.THE_NGUOI && VA.THE_NGUOI[k];
+    if (!ds) return false;
+    for (const t of ds) {
+      const fn = VA.PANELS && VA.PANELS[t[0]];
+      try { if (VA.theMo(t[0]) && fn && typeof fn.cham === 'function' && fn.cham(sv || G.save)) return true; } catch (e) { /* thẻ lỗi: coi như không có chấm */ }
+    }
+    return false;
+  };
+
+  // ---------- bản lưu: so / nv / tt ----------
+  const so01 = (v) => (v ? 1 : 0);
+  const nguyen = (v, lo, hi) => Math.max(lo, Math.min(hi, Math.floor(num(v, lo))));
+  const MAX_KHOA = 300; // chặn bản lưu phình to vì dữ liệu lạ (giới hạn 400 KB của mây)
+  const catKhoa = (o) => { const ks = Object.keys(o); for (let i = MAX_KHOA; i < ks.length; i++) delete o[ks[i]]; return o; };
+  const banMoi = (v) => typeof v.v === 'number' && v.v > 1; // định dạng mới hơn bản này: để nguyên, không sửa lùi
+  function suaSo(sv) {
+    let o = sv.so;
+    if (!obj(o)) o = sv.so = {};
+    if (banMoi(o)) return;
+    o.v = 1;
+    if (!obj(o.q)) o.q = {};
+    for (const m of Object.keys(o.q)) {
+      const t = o.q[m];
+      if (!obj(t)) { delete o.q[m]; continue; }
+      t.g = so01(t.g); t.h = nguyen(t.h, 0, 1e9); t.k = so01(t.k); t.n = nguyen(t.n, 0, 7);
+    }
+    catKhoa(o.q);
+    if (!obj(o.vung)) o.vung = {};
+    for (const r of Object.keys(o.vung)) { if (!/^\d{1,2}$/.test(r)) delete o.vung[r]; else o.vung[r] = nguyen(o.vung[r], 0, 3); }
+    if (o.bu === 1 || o.bu === true) o.bu = 1; else delete o.bu;
+  }
+  function suaNv(sv) {
+    let o = sv.nv;
+    if (!obj(o)) o = sv.nv = {};
+    if (banMoi(o)) return;
+    o.v = 1;
+    o.hat = nguyen(o.hat, 0, 2147483647);
+    if (!o.hat) o.hat = 1 + Math.floor(Math.random() * 2147483646); // hạt giống riêng của bản lưu: tạo MỘT lần, đi theo bản lưu lên mây
+    if (!ngayHop(o.cuoi)) o.cuoi = '';
+    const ds = Array.isArray(o.ds) ? o.ds : [];
+    o.ds = ds.filter((v) => obj(v) && typeof v.m === 'string' && v.m).slice(0, 3).map((v) => {
+      const x = v.x == null || typeof v.x === 'string' || (typeof v.x === 'number' && isFinite(v.x)) ? (v.x == null ? null : v.x) : null;
+      const can = nguyen(v.can, 1, 1e6);
+      return Object.assign(v, { m: v.m, x, can, d: nguyen(v.d, 0, can), nhan: so01(v.nhan) });
+    });
+    o.doi = so01(o.doi); o.ruong = so01(o.ruong); o.tuanNhan = so01(o.tuanNhan);
+    if (typeof o.hom !== 'string') o.hom = '';
+    if (!obj(o.tuan)) o.tuan = {};
+    if (!ngayHop(o.tuan.ma)) o.tuan.ma = '';
+    const ng = Array.isArray(o.tuan.ngay) ? o.tuan.ngay : [];
+    o.tuan.ngay = ng.map((v) => Math.floor(num(v, -1))).filter((v, i, a) => v >= 0 && v <= 6 && a.indexOf(v) === i).sort((a, b) => a - b);
+    o.demRuong = nguyen(o.demRuong, 0, 1e6);
+  }
+  function suaTt(sv) {
+    let o = sv.tt;
+    if (!obj(o)) o = sv.tt = {};
+    if (banMoi(o)) return;
+    o.v = 1;
+    if (!obj(o.dem)) o.dem = {};
+    for (const k of Object.keys(o.dem)) { const v = num(o.dem[k], -1); if (v < 0) delete o.dem[k]; else o.dem[k] = Math.min(1e12, Math.floor(v)); }
+    catKhoa(o.dem);
+    for (const k of ['xong', 'nhan']) {
+      if (!obj(o[k])) o[k] = {};
+      for (const m of Object.keys(o[k])) { if (o[k][m]) o[k][m] = 1; else delete o[k][m]; }
+      catKhoa(o[k]);
+    }
+    if (typeof o.dh !== 'string' || !o.dh) delete o.dh;
+    if (o.bu === 1 || o.bu === true) o.bu = 1; else delete o.bu;
+  }
+  K.suaBanLuu = function (sv) { // từng phần riêng: một phần lỗi thì dựng lại phần đó, các phần khác vẫn sửa
+    if (!obj(sv)) return sv;
+    for (const [k, f] of [['so', suaSo], ['nv', suaNv], ['tt', suaTt]]) {
+      try { f(sv); } catch (e) { console.error('Linh Khí: lỗi khi sửa phần "' + k + '" của bản lưu (dựng lại phần này)', e); try { sv[k] = {}; f(sv); } catch (e2) { delete sv[k]; } }
+    }
+    return sv;
+  };
+
+  if (!K.bat()) return; // ?sukien=0: không bọc hàm nào, không đụng bản lưu
+
+  if (G.fixSave && !G.fixSave.suKienBoc) {
+    const goc = G.fixSave;
+    G.fixSave = function () {
+      const r = goc.apply(this, arguments);
+      try { if (obj(r)) K.suaBanLuu(r); } catch (e) { console.error('Linh Khí: lỗi khi sửa phần Bước 2 của bản lưu (bỏ qua)', e); }
+      return r;
+    };
+    G.fixSave.suKienBoc = true;
+  }
+  // Bản lưu đang dùng (đã nạp trước tệp này? thường là chưa — main.js mới gọi G.loadSave) cũng có đủ ba phần
+  try { if (obj(G.save)) K.suaBanLuu(G.save); } catch (e) { /* bỏ qua */ }
+
+  // ---------- móc vào trận ----------
+  const run = () => (G.getRun ? G.getRun() : null);
+  const loaiTrum = (e) => (e.isBoss ? (e.kind === 'mini' ? 'nho' : 'vung') : null);
+  const heVk = (e) => { // hiệu ứng hệ ĐANG DÍNH do vũ khí gây (bỏ phần do chưởng: e.st.ch), như G.kill tính linh khí
+    const st = e.st || {}, chs = st.ch || {};
+    return { fire: st.fire > 0 && !chs.fire, poison: st.poisonN > 0 && !chs.poison, ice: (st.iceN > 0 || st.frozen > 0) && !chs.ice };
+  };
+  const thongTin = (e) => ({ e, ma: e.art || e.name || '', ten: e.name || '', vai: e.role || '', tinhAnh: e.role === 'elite', trum: loaiTrum(e) });
+
+  // hạ quái (combat.js G.kill): bỏ quái phụ do trùm gọi ra (e.add) và ảo ảnh (e.illusion)
+  if (G.kill && !G.kill.suKienBoc) {
+    const goc = G.kill;
+    K.goc.kill = goc;
+    G.kill = function (e, o) {
+      if (!e || e.dead) return goc.apply(this, arguments);
+      let truoc = null;
+      try { if (!e.illusion && !e.add) { const W = G.getWorld ? G.getWorld() : null, P = W && W.P; truoc = { he: heVk(e), w: (o && o.w) || (P && G.curW ? G.curW(P) : null), vung: W ? W.region : 0 }; } } catch (x) { truoc = null; }
+      const r = goc.apply(this, arguments);
+      if (truoc && e.dead) {
+        const S = run();
+        phat('haQuai', Object.assign(thongTin(e), {
+          el: (o && o.el) || null, // hệ của đòn kết liễu
+          ch: !!(o && o.ch), // bị chưởng kết liễu
+          he: truoc.he, // { fire, poison, ice }: đang dính hiệu ứng hệ do vũ khí
+          w: truoc.w, wType: truoc.w ? truoc.w.type : null, vung: truoc.vung,
+          S, aiNgay: !!(S && S.aiNgay), diff: S ? S.diff | 0 : 0,
+        }));
+      }
+      return r;
+    };
+    G.kill.suKienBoc = true;
+  }
+
+  // phản ứng hệ: Nổ lan, Lây độc (G.moves.onKill), Băng vỡ (G.moves.onHit) — chỉ vũ khí Thức tỉnh (đặc trưng 2)
+  const M = G.moves;
+  if (M && M.onKill && !M.onKill.suKienBoc) {
+    const goc = M.onKill;
+    M.onKill = function (e, o, w) {
+      let loai = null;
+      try {
+        const W = G.getWorld ? G.getWorld() : null, P = W && W.P, HE = G.HE;
+        if (w && e && !e.illusion && P && M.heOf && HE) {
+          const h = M.heOf(P, w), chs = (e.st && e.st.ch) || {};
+          if (h && h.lv >= HE.f2) {
+            if (h.el === 'fire' && e.st.fire > 0 && !chs.fire) loai = 'noLan';
+            else if (h.el === 'poison' && e.st.poisonN > 0 && !chs.poison) loai = 'layDoc';
+          }
+        }
+      } catch (x) { loai = null; }
+      const r = goc.apply(this, arguments);
+      if (loai) phat('phanUng', { loai, e, w, S: run() });
+      return r;
+    };
+    M.onKill.suKienBoc = true;
+  }
+  if (M && M.onHit && !M.onHit.suKienBoc) {
+    const goc = M.onHit;
+    M.onHit = function (e, d, el, o) {
+      const truoc = !!(e && e.mvShat);
+      const r = goc.apply(this, arguments);
+      if (e && !truoc && e.mvShat) phat('phanUng', { loai: 'bangVo', e, w: o && o.w, S: run() });
+      return r;
+    };
+    M.onHit.suKienBoc = true;
+  }
+
+  // bắn chưởng (G.chuong.fire: mọi đường bắn trong js/chuong.js gọi CH.fire)
+  if (G.chuong && G.chuong.fire && !G.chuong.fire.suKienBoc) {
+    const goc = G.chuong.fire;
+    G.chuong.fire = function (P) {
+      const r = goc.apply(this, arguments);
+      if (r) phat('chuong', { P, cay: P && P.ch ? P.ch.cay : null, S: run() });
+      return r;
+    };
+    G.chuong.fire.suKienBoc = true;
+  }
+
+  // vào ải (G.startStage: Lái Đò, Chơi lại, Ải tiếp theo, ải ngày, khôi phục lượt dở của js/luu_luot.js)
+  if (G.startStage && !G.startStage.suKienBoc) {
+    const goc = G.startStage;
+    G.startStage = function (r, i, diff, o) {
+      const kq = goc.apply(this, arguments);
+      const S = run();
+      if (S) { theo.S = null; phat('vaoAi', { S, r: S.r, i: S.i, diff: S.diff | 0, aiNgay: S.aiNgay || null, tut: !!S.tut }); }
+      return kq;
+    };
+    G.startStage.suKienBoc = true;
+  }
+
+  // hết ải thường: G.onStageEnd do js/bang_vang.js gán SAU tệp này → giữ hàm được gán (Bảng vàng) ở "trong", stage.js luôn gọi qua lớp bọc.
+  // Lớp bọc gọi hàm cũ TRƯỚC (kỷ lục, dòng báo của Bảng vàng), rồi phát 'hetAi'.
+  function duLieuHet(S, R, win) {
+    const note = (R && R.starNote) || [];
+    return {
+      S, R, win: !!win, r: S.r, i: S.i, diff: S.diff | 0, aiNgay: S.aiNgay || null, tut: !!S.tut, quit: !!S.quit,
+      stars: R ? R.stars | 0 : 0, starNote: note, khongBinh: !S.usedPotion, khacChe: !!note[2],
+      kills: S.loot ? S.loot.kills | 0 : 0, trumVung: S.i === 4 && !S.aiNgay,
+    };
+  }
+  {
+    let trong = Object.prototype.hasOwnProperty.call(G, 'onStageEnd') ? G.onStageEnd : null;
+    const boc = function (S, R) {
+      let kq;
+      if (typeof trong === 'function') kq = trong.apply(this, arguments);
+      try { if (S) phat('hetAi', duLieuHet(S, R, R && R.win)); } catch (e) { console.error('Linh Khí: lỗi khi phát sự kiện hết ải (bỏ qua)', e); }
+      return kq;
+    };
+    boc.suKienBoc = true;
+    try {
+      Object.defineProperty(G, 'onStageEnd', { configurable: true, enumerable: true, get: () => boc, set: (f) => { trong = f === boc ? trong : f; } });
+      Object.defineProperty(K.goc, 'onStageEnd', { enumerable: true, get: () => trong }); // cho kiểm thử: hàm Bảng vàng đang nằm trong
+    } catch (e) { /* không đặt được thì thôi phát hetAi cho ải thường */ }
+  }
+  // hết ải ngày: stage.js settle trả sớm, KHÔNG gọi G.onStageEnd → bọc G.aiNgay.thuong (gọi đúng một lần mỗi lượt)
+  if (G.aiNgay && G.aiNgay.thuong && !G.aiNgay.thuong.suKienBoc) {
+    const goc = G.aiNgay.thuong;
+    G.aiNgay.thuong = function (S, R, win) {
+      const an = S && S.aiNgay, truoc = an && win ? G.aiNgay.luot(an.loai) : 0;
+      const kq = goc.apply(this, arguments);
+      try {
+        if (S) {
+          const d = duLieuHet(S, R, win);
+          d.tinhLuot = !!(an && win && truoc > 0 && G.aiNgay.luot(an.loai) < truoc); // thắng có tính lượt (có thưởng)
+          phat('hetAi', d);
+        }
+      } catch (e) { console.error('Linh Khí: lỗi khi phát sự kiện hết ải ngày (bỏ qua)', e); }
+      return kq;
+    };
+    G.aiNgay.thuong.suKienBoc = true;
+  }
+
+  // ---------- đọc thay đổi mỗi khung (G.tick): gặp quái, lộn né, đặc biệt, đổi vũ khí, mở rương, thắng thử thách, vào phòng ----------
+  // Chỉ so vài con số, không vẽ, không ghi bản lưu.
+  const theo = { S: null, W: null, P: null, dodge: 0, spec: 0, cur: -1, ch: null, chW: null };
+  let daGap = new WeakSet(), daRuong = new WeakSet();
+  function docKhung() {
+    const S = run();
+    if (!S || G.scene !== G.StageScene || !S.W || !S.P) { theo.S = null; return; }
+    const W = S.W, P = S.P;
+    if (theo.S !== S) { Object.assign(theo, { S, W: null, P: null, ch: null, chW: null }); daGap = new WeakSet(); daRuong = new WeakSet(); }
+    if (theo.W !== W) { theo.W = W; phat('vaoPhong', { S, W, id: S.idx, loai: W.type }); }
+    if (theo.P !== P) { theo.P = P; theo.dodge = num(P.dodgeT, 0); theo.spec = num(P.specCd, 0); theo.cur = P.cur | 0; }
+    // gặp quái: quái có mặt trong phòng bé đang đứng (kể cả đợt mọc sau)
+    for (const e of W.ents) {
+      if (!e || e.dead || e.add || e.illusion || daGap.has(e)) continue;
+      daGap.add(e);
+      phat('gapQuai', Object.assign(thongTin(e), { vung: W.region, S }));
+    }
+    const dg = num(P.dodgeT, 0), sp = num(P.specCd, 0), cur = P.cur | 0;
+    if (dg > 0 && theo.dodge <= 0) phat('lonNe', { P, S });
+    if (sp > theo.spec + 0.01) phat('dacBiet', { P, S });
+    if (cur !== theo.cur) phat('doiVk', { P, S, tu: theo.cur, sang: cur });
+    theo.dodge = dg; theo.spec = sp; theo.cur = cur;
+    // rương báu: vật 'chest' vừa được dùng (đã chọn phần thưởng)
+    for (const pr of W.props) if (pr && pr.type === 'chest' && pr.used && !daRuong.has(pr)) { daRuong.add(pr); phat('moRuong', { S, prop: pr }); }
+    // phòng thử thách: S.challenge vừa về null trong khi phòng đã dọn và đồng hồ còn > 0 (stage.js clearRoom cho thưởng)
+    if (S.challenge) { theo.ch = S.challenge; theo.chW = W; }
+    else if (theo.ch) {
+      const c = theo.ch, w0 = theo.chW;
+      theo.ch = null; theo.chW = null;
+      if (w0 === W && W.cleared && W.type === 'challenge' && c.t > 0) phat('thuThach', { S, W, conGiay: c.t });
+    }
+  }
+  if (G.tick && !G.tick.suKienBoc) {
+    const goc = G.tick;
+    G.tick = function () {
+      const r = goc.apply(this, arguments);
+      try { docKhung(); } catch (e) { /* đọc thay đổi lỗi: bỏ qua, không làm đứng game */ }
+      return r;
+    };
+    G.tick.suKienBoc = true;
+  }
+
+  // ---------- nâng cấp ở làng: bọc G.persist, so dấu vân tay các thứ nâng được (mài, cấp vũ khí, bậc ép, lò, điểm kỹ năng, chưởng, bộ) ----------
+  function vanTay(sv) {
+    const v = { mai: 0, vk: 0, ep: 0, lo: num(sv.forge, 0), diem: 0, chuong: 0, bo: 0, da: num(sv.daBac, 0) };
+    for (const w of sv.weapons || []) {
+      if (!w) continue;
+      v.mai += num(w.sharpen, 0);
+      try { v.vk += G.wStage ? G.wStage(w) : 0; } catch (e) { /* bỏ qua */ }
+      v.ep += G.epDo && G.epDo.bac ? G.epDo.bac(w) : 0;
+    }
+    for (const k in sv.heroes || {}) {
+      const h = sv.heroes[k]; if (!h) continue;
+      if (h.sk) v.diem += num(h.sk.atk, 0) + num(h.sk.def, 0) + num(h.sk.elem, 0);
+      if (h.ch && h.ch.n) for (const id in h.ch.n) v.chuong += num(h.ch.n[id], 0);
+    }
+    if (obj(sv.boCap)) for (const k in sv.boCap) v.bo += num(sv.boCap[k], 0);
+    return v;
+  }
+  let vtCu = null, svCu = null;
+  if (G.persist && !G.persist.suKienBoc) {
+    const goc = G.persist;
+    G.persist = function () {
+      try {
+        const sv = G.save;
+        if (G.scene === G.Village && obj(sv)) {
+          const vt = vanTay(sv);
+          if (vtCu && svCu === sv) {
+            const loai = ['mai', 'vk', 'ep', 'lo', 'diem', 'chuong', 'bo'].filter((k) => vt[k] > vtCu[k]);
+            if (!loai.length && vt.da < vtCu.da) loai.push('ep'); // ép hỏng / giữ bậc: không lên bậc nhưng đã tốn đá
+            vtCu = vt;
+            if (loai.length) phat('nangCap', { loai });
+          } else { vtCu = vt; svCu = sv; }
+        } else { vtCu = null; svCu = null; }
+      } catch (e) { vtCu = null; }
+      return goc.apply(this, arguments);
+    };
+    G.persist.suKienBoc = true;
+  }
+})();
+
 // ===== js/village_scene.js =====
 // Cảnh làng có người (bố cục A): làng rộng 720 điểm, màn hình 480 trượt ngang theo em bé.
 // Em bé đi tám hướng bằng cần điều khiển, vũ khí sống bay theo. Bảy người làng đứng cạnh công trình của mình,
@@ -34834,6 +35208,8 @@ MA._xong();
         n.xen = co;
       }
     }
+    // Bước 2 (js/su_kien.js): thẻ mới của Ông Từ (Sổ, Thành tựu) / Anh Mõ (Việc hôm nay) có thưởng chờ nhận thì người đó có chấm đỏ
+    try { if (G.suKien && G.suKien.chamNguoi) for (const k of ['tu', 'mo']) if (shown(k) && G.suKien.chamNguoi(k, sv)) n[k] = true; } catch (e) { /* bỏ qua */ }
     const nStar = Object.keys(sv.stars || {}).length;
     if (nStar <= 1) {
       const order = nStar === 0 ? ['lai', 'do', 'ren', 'may'] : ['do', 'ren', 'may', 'lai'];
@@ -35630,7 +36006,8 @@ MA._xong();
   const G = window.G, ui = G.ui, T = G.theme, VS = G.villageScene;
   const V = { tab: 'hub', who: null, sel: null, ftab: 'sharpen', node: null, page: 0, confirm: false, diff: 0, msg: null, msgT: 0, wid: null, back: 'hub', dtab: 'skill' };
   const TAB_OF = { lai: 'map', ren: 'forge', xen: 'gear', may: 'outfit', do: 'skill', tu: 'hero', mo: 'settings' };
-  const WHO_OF = { map: 'lai', forge: 'ren', gear: 'xen', outfit: 'may', skill: 'do', chuong: 'do', help: 'do', rank: 'do', hero: 'tu', settings: 'mo' };
+  const WHO_OF = { map: 'lai', forge: 'ren', gear: 'xen', outfit: 'may', skill: 'do', chuong: 'do', help: 'do', rank: 'do', hero: 'tu', settings: 'mo',
+    so: 'tu', thanhTuu: 'tu', viecNgay: 'mo' }; // Bước 2 (Phiên 0): thẻ Sổ yêu quái, Thành tựu (Ông Từ), Việc hôm nay (Anh Mõ)
   // Khung bảng bên phải và vùng nội dung bên trong
   const PX = 152, PY = 46, PW = 320, PH = 220, CX = 160, CW = 304;
   const SOFT = '#a9c2b4', TXT = '#f1e6c6', GOLD = '#f6dc92', GOOD = '#9be07a', WARN = '#ff9a5a';
@@ -35677,6 +36054,8 @@ MA._xong();
       }
     }
     if (k === 'lai') pickNext();
+    if (k === 'tu') V.tab = V.ttab && theMo(V.ttab) ? V.ttab : 'hero'; // Bước 2: nhớ thẻ vừa xem ở Ông Từ
+    if (k === 'mo') V.tab = theMo('viecNgay') ? 'viecNgay' : 'settings'; // Bước 2: Việc hôm nay là thẻ đầu của Anh Mõ (có thì mở trước)
   }
   // V53: thẻ Cây chưởng chỉ hiện sau khi qua ải đầu tiên (người mới làm quen Cây kỹ năng trước)
   function chuongOpen() { return Object.keys(G.save.stars || {}).length >= 1; }
@@ -35687,6 +36066,59 @@ MA._xong();
     VS.state.talk = null;
   }
   G.villageApi = { canPay, pay, V, open, goHub, TAB_OF };
+
+  // ---------- BƯỚC 2 (Phiên 0): hàng thẻ của Ông Từ (Cu Tí | Sổ | Thành tựu) và Anh Mõ (Việc hôm nay | Cài đặt) ----------
+  // Thẻ nằm trên băng tiêu đề của bảng (như Bà Hàng Xén), bên trái nút "✕ Xong". Hàm vẽ từng thẻ ở PANELS (so, thanhTuu, viecNgay);
+  // Phiên 0 để hàm RỖNG (cờ .rong = true → thẻ không hiện). Phiên A / C / B chỉ cần gán đè hàm của mình:
+  //   PANELS.so = function () { VA.khungThe('tu', 'Sân đình: sổ yêu quái'); …vẽ trong CX..CX+CW, y 68..262…; return 'câu ông Từ nói'; };
+  //   PANELS.so.mo = (sv) => true/false   (thẻ mở chưa — tuỳ chọn)       PANELS.so.cham = (sv) => true/false   (chấm đỏ: có thưởng chờ nhận)
+  // Cờ ?sukien=0 (G.SU_KIEN_BAT = false) hay thiếu js/su_kien.js: mọi thẻ Bước 2 ẩn, Ông Từ / Anh Mõ y như cũ.
+  const THE_NGUOI = {
+    tu: [['hero', () => G.HEROES.smith.name], ['so', 'Sổ'], ['thanhTuu', 'Thành tựu']],
+    mo: [['viecNgay', 'Việc hôm nay'], ['settings', 'Cài đặt']],
+  };
+  const THE_B2 = { so: 1, thanhTuu: 1, viecNgay: 1 };
+  if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({ 'Sân đình': 'Village Yard', 'Cổng làng': 'Village Gate', 'Sổ': 'Book', 'Thành tựu': 'Achievements', 'Việc hôm nay': "Today's jobs", 'Đang soạn…': 'Coming soon…' });
+  function theMo(k) {
+    if (!THE_B2[k]) return true;
+    const fn = PANELS[k];
+    if (!fn || fn.rong || !(G.suKien && G.suKien.bat && G.suKien.bat())) return false;
+    try { return typeof fn.mo !== 'function' || !!fn.mo(G.save); } catch (e) { return false; }
+  }
+  const theCua = (who) => (THE_NGUOI[who] || []).filter((t) => theMo(t[0]));
+  // Vẽ khung bảng + hàng thẻ. dai: tiêu đề khi KHÔNG có hàng thẻ (giữ y như cũ); có thẻ thì tiêu đề ngắn cho đủ chỗ.
+  function khungThe(who, dai) {
+    const tabs = theCua(who);
+    if (tabs.length < 2) { frame(dai); return false; }
+    const tit = who === 'tu' ? 'Sân đình' : 'Cổng làng';
+    frame(tit);
+    const sv = G.save, ten = tabs.map((t) => G.tv(typeof t[1] === 'function' ? t[1]() : t[1]));
+    ui.font(11, true);
+    const conCho = PW - 70 - (Math.ceil(G.ux.measureText(G.tv(tit)).width) + 22) - (tabs.length - 1) * 2;
+    ui.font(7.5, true);
+    const muon = ten.map((s) => Math.ceil(G.ux.measureText(s).width) + (T.chuMoi() ? 22 : 12));
+    const tong = muon.reduce((a, b) => a + b, 0), k = tong > conCho ? conCho / tong : 1;
+    const rong = muon.map((w) => Math.max(26, Math.floor(w * k)));
+    let x = PX + PW - 70 - rong.reduce((a, w) => a + w + 2, 0);
+    tabs.forEach((t, i) => {
+      const fn = PANELS[t[0]];
+      let dot = false;
+      try { dot = THE_B2[t[0]] && !!(fn && typeof fn.cham === 'function' && fn.cham(sv)); } catch (e) { dot = false; }
+      if (T.sbtn(x, PY + 3, rong[i], 17, ten[i], { size: 7, pad: 2, sel: V.tab === t[0], dot }) && V.tab !== t[0]) {
+        V.tab = t[0]; if (who === 'tu') V.ttab = t[0];
+        V.page = 0; V.sel = null; V.confirm = false; V.cd2 = false; G.sfx('ui');
+      }
+      x += rong[i] + 2;
+    });
+    return true;
+  }
+  // Hàm rỗng giữ chỗ cho Phiên A (so), C (thanhTuu), B (viecNgay): cờ .rong → thẻ không hiện
+  function theRong(who, dai) {
+    const f = function () { khungThe(who, dai); ui.para('Đang soạn…', CX + 4, 96, CW - 8, { size: 8, color: SOFT }); return ''; };
+    f.rong = true;
+    return f;
+  }
+  Object.assign(G.villageApi, { THE_NGUOI, theMo, theCua, khungThe });
   VS.onTalk = open;
   VS.onWeapon = (id) => viewWeapon(id, 'hub');
 
@@ -36044,7 +36476,7 @@ MA._xong();
   // ---------- Ông Từ: bảng xem chỉ số Zed và các nét ba bạn đã dạy (đợt 2 bỏ bảng chọn em bé của cờ ?zed=0) ----------
   function hero() {
     const sv = G.save, k = 'smith', H = G.HEROES[k], hs = sv.heroes[k];
-    frame('Sân đình: chỉ số Cu Tí');
+    khungThe('tu', 'Sân đình: chỉ số Cu Tí'); // Bước 2: có thẻ Sổ / Thành tựu thì hiện hàng thẻ trên băng tiêu đề
     // chân dung Zed (bộ trang phục đang mặc, js/zed_moi.js)
     const c = G.ux, px = CX, py = 68, pwd = 64, ph = 72;
     T.inset(px, py, pwd, ph, false, { fill: '#173030' });
@@ -36184,7 +36616,7 @@ MA._xong();
   function settings() {
     const sv = G.save, CL = G.cloud, CU = G.cloudUI;
     if (V.cd2) return settings2();
-    frame('Cổng làng: cài đặt');
+    khungThe('mo', 'Cổng làng: cài đặt'); // Bước 2: có thẻ Việc hôm nay thì hiện hàng thẻ trên băng tiêu đề
     if (T.btn(CX + 4, 68, 96, CDH, 'Âm thanh, pin ›', { size: 8.5, sub: sv.sound ? 'Nhạc · Truyện' : 'Đang tắt', subSize: 7 })) { V.cd2 = true; V.confirm = false; G.audioStart(); }
     // Độ nét hình (js/engine.js G.NET): Cao = canvas thế giới gấp đôi điểm ảnh (ảnh AI rõ hơn), Thường = như cũ (nhẹ máy yếu)
     if (T.btn(CX + 104, 68, 96, CDH, sv.net === 'thuong' ? 'Độ nét: Thường' : 'Độ nét: Cao', { size: 8.5 })) {
@@ -36272,7 +36704,8 @@ MA._xong();
     if (V.cdLuu && !G.pointers.size) { const kk = V.cdLuu; V.cdLuu = null; G.persist(); if (kk === 'tieng') G.sfx('pick'); }
   }
 
-  const PANELS = { forge, gear, outfit, hero, skill, chuong, help, settings };
+  const PANELS = { forge, gear, outfit, hero, skill, chuong, help, settings,
+    so: theRong('tu', 'Sân đình: sổ yêu quái'), thanhTuu: theRong('tu', 'Sân đình: thành tựu'), viecNgay: theRong('mo', 'Cổng làng: việc hôm nay') }; // Bước 2: Phiên A / C / B điền
   Object.assign(G.villageApi, { PANELS, pager, say, costText, frame, npcSide, viewWeapon, weaponView, doTabs });
   G.Village = {
     enter() {
@@ -36328,6 +36761,7 @@ MA._xong();
       const hit = VS.drawStrip(V.who || WHO_OF[V.tab], true, true);
       if (hit && VS.shown && !VS.shown(hit)) say('Cô Thợ May đi chợ xa. Qua ải Rừng già 2 rồi cô về may đồ cho bé.'); // V53
       else if (hit) { VS.goNpc(hit, true); return; }
+      if (THE_B2[V.tab] && !theMo(V.tab)) V.tab = WHO_OF[V.tab] === 'tu' ? 'hero' : 'settings'; // thẻ Bước 2 bị tắt / chưa mở: về thẻ cũ
       const fn = PANELS[V.tab] || settings;
       const tab = V.tab, line = fn();
       if (fn.full) return; // bảng tự vẽ người nói (Cô Thợ May)

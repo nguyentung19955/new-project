@@ -11,7 +11,8 @@
   const G = window.G, ui = G.ui, T = G.theme, VS = G.villageScene;
   const V = { tab: 'hub', who: null, sel: null, ftab: 'sharpen', node: null, page: 0, confirm: false, diff: 0, msg: null, msgT: 0, wid: null, back: 'hub', dtab: 'skill' };
   const TAB_OF = { lai: 'map', ren: 'forge', xen: 'gear', may: 'outfit', do: 'skill', tu: 'hero', mo: 'settings' };
-  const WHO_OF = { map: 'lai', forge: 'ren', gear: 'xen', outfit: 'may', skill: 'do', chuong: 'do', help: 'do', rank: 'do', hero: 'tu', settings: 'mo' };
+  const WHO_OF = { map: 'lai', forge: 'ren', gear: 'xen', outfit: 'may', skill: 'do', chuong: 'do', help: 'do', rank: 'do', hero: 'tu', settings: 'mo',
+    so: 'tu', thanhTuu: 'tu', viecNgay: 'mo' }; // Bước 2 (Phiên 0): thẻ Sổ yêu quái, Thành tựu (Ông Từ), Việc hôm nay (Anh Mõ)
   // Khung bảng bên phải và vùng nội dung bên trong
   const PX = 152, PY = 46, PW = 320, PH = 220, CX = 160, CW = 304;
   const SOFT = '#a9c2b4', TXT = '#f1e6c6', GOLD = '#f6dc92', GOOD = '#9be07a', WARN = '#ff9a5a';
@@ -58,6 +59,8 @@
       }
     }
     if (k === 'lai') pickNext();
+    if (k === 'tu') V.tab = V.ttab && theMo(V.ttab) ? V.ttab : 'hero'; // Bước 2: nhớ thẻ vừa xem ở Ông Từ
+    if (k === 'mo') V.tab = theMo('viecNgay') ? 'viecNgay' : 'settings'; // Bước 2: Việc hôm nay là thẻ đầu của Anh Mõ (có thì mở trước)
   }
   // V53: thẻ Cây chưởng chỉ hiện sau khi qua ải đầu tiên (người mới làm quen Cây kỹ năng trước)
   function chuongOpen() { return Object.keys(G.save.stars || {}).length >= 1; }
@@ -68,6 +71,59 @@
     VS.state.talk = null;
   }
   G.villageApi = { canPay, pay, V, open, goHub, TAB_OF };
+
+  // ---------- BƯỚC 2 (Phiên 0): hàng thẻ của Ông Từ (Cu Tí | Sổ | Thành tựu) và Anh Mõ (Việc hôm nay | Cài đặt) ----------
+  // Thẻ nằm trên băng tiêu đề của bảng (như Bà Hàng Xén), bên trái nút "✕ Xong". Hàm vẽ từng thẻ ở PANELS (so, thanhTuu, viecNgay);
+  // Phiên 0 để hàm RỖNG (cờ .rong = true → thẻ không hiện). Phiên A / C / B chỉ cần gán đè hàm của mình:
+  //   PANELS.so = function () { VA.khungThe('tu', 'Sân đình: sổ yêu quái'); …vẽ trong CX..CX+CW, y 68..262…; return 'câu ông Từ nói'; };
+  //   PANELS.so.mo = (sv) => true/false   (thẻ mở chưa — tuỳ chọn)       PANELS.so.cham = (sv) => true/false   (chấm đỏ: có thưởng chờ nhận)
+  // Cờ ?sukien=0 (G.SU_KIEN_BAT = false) hay thiếu js/su_kien.js: mọi thẻ Bước 2 ẩn, Ông Từ / Anh Mõ y như cũ.
+  const THE_NGUOI = {
+    tu: [['hero', () => G.HEROES.smith.name], ['so', 'Sổ'], ['thanhTuu', 'Thành tựu']],
+    mo: [['viecNgay', 'Việc hôm nay'], ['settings', 'Cài đặt']],
+  };
+  const THE_B2 = { so: 1, thanhTuu: 1, viecNgay: 1 };
+  if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({ 'Sân đình': 'Village Yard', 'Cổng làng': 'Village Gate', 'Sổ': 'Book', 'Thành tựu': 'Achievements', 'Việc hôm nay': "Today's jobs", 'Đang soạn…': 'Coming soon…' });
+  function theMo(k) {
+    if (!THE_B2[k]) return true;
+    const fn = PANELS[k];
+    if (!fn || fn.rong || !(G.suKien && G.suKien.bat && G.suKien.bat())) return false;
+    try { return typeof fn.mo !== 'function' || !!fn.mo(G.save); } catch (e) { return false; }
+  }
+  const theCua = (who) => (THE_NGUOI[who] || []).filter((t) => theMo(t[0]));
+  // Vẽ khung bảng + hàng thẻ. dai: tiêu đề khi KHÔNG có hàng thẻ (giữ y như cũ); có thẻ thì tiêu đề ngắn cho đủ chỗ.
+  function khungThe(who, dai) {
+    const tabs = theCua(who);
+    if (tabs.length < 2) { frame(dai); return false; }
+    const tit = who === 'tu' ? 'Sân đình' : 'Cổng làng';
+    frame(tit);
+    const sv = G.save, ten = tabs.map((t) => G.tv(typeof t[1] === 'function' ? t[1]() : t[1]));
+    ui.font(11, true);
+    const conCho = PW - 70 - (Math.ceil(G.ux.measureText(G.tv(tit)).width) + 22) - (tabs.length - 1) * 2;
+    ui.font(7.5, true);
+    const muon = ten.map((s) => Math.ceil(G.ux.measureText(s).width) + (T.chuMoi() ? 22 : 12));
+    const tong = muon.reduce((a, b) => a + b, 0), k = tong > conCho ? conCho / tong : 1;
+    const rong = muon.map((w) => Math.max(26, Math.floor(w * k)));
+    let x = PX + PW - 70 - rong.reduce((a, w) => a + w + 2, 0);
+    tabs.forEach((t, i) => {
+      const fn = PANELS[t[0]];
+      let dot = false;
+      try { dot = THE_B2[t[0]] && !!(fn && typeof fn.cham === 'function' && fn.cham(sv)); } catch (e) { dot = false; }
+      if (T.sbtn(x, PY + 3, rong[i], 17, ten[i], { size: 7, pad: 2, sel: V.tab === t[0], dot }) && V.tab !== t[0]) {
+        V.tab = t[0]; if (who === 'tu') V.ttab = t[0];
+        V.page = 0; V.sel = null; V.confirm = false; V.cd2 = false; G.sfx('ui');
+      }
+      x += rong[i] + 2;
+    });
+    return true;
+  }
+  // Hàm rỗng giữ chỗ cho Phiên A (so), C (thanhTuu), B (viecNgay): cờ .rong → thẻ không hiện
+  function theRong(who, dai) {
+    const f = function () { khungThe(who, dai); ui.para('Đang soạn…', CX + 4, 96, CW - 8, { size: 8, color: SOFT }); return ''; };
+    f.rong = true;
+    return f;
+  }
+  Object.assign(G.villageApi, { THE_NGUOI, theMo, theCua, khungThe });
   VS.onTalk = open;
   VS.onWeapon = (id) => viewWeapon(id, 'hub');
 
@@ -425,7 +481,7 @@
   // ---------- Ông Từ: bảng xem chỉ số Zed và các nét ba bạn đã dạy (đợt 2 bỏ bảng chọn em bé của cờ ?zed=0) ----------
   function hero() {
     const sv = G.save, k = 'smith', H = G.HEROES[k], hs = sv.heroes[k];
-    frame('Sân đình: chỉ số Cu Tí');
+    khungThe('tu', 'Sân đình: chỉ số Cu Tí'); // Bước 2: có thẻ Sổ / Thành tựu thì hiện hàng thẻ trên băng tiêu đề
     // chân dung Zed (bộ trang phục đang mặc, js/zed_moi.js)
     const c = G.ux, px = CX, py = 68, pwd = 64, ph = 72;
     T.inset(px, py, pwd, ph, false, { fill: '#173030' });
@@ -565,7 +621,7 @@
   function settings() {
     const sv = G.save, CL = G.cloud, CU = G.cloudUI;
     if (V.cd2) return settings2();
-    frame('Cổng làng: cài đặt');
+    khungThe('mo', 'Cổng làng: cài đặt'); // Bước 2: có thẻ Việc hôm nay thì hiện hàng thẻ trên băng tiêu đề
     if (T.btn(CX + 4, 68, 96, CDH, 'Âm thanh, pin ›', { size: 8.5, sub: sv.sound ? 'Nhạc · Truyện' : 'Đang tắt', subSize: 7 })) { V.cd2 = true; V.confirm = false; G.audioStart(); }
     // Độ nét hình (js/engine.js G.NET): Cao = canvas thế giới gấp đôi điểm ảnh (ảnh AI rõ hơn), Thường = như cũ (nhẹ máy yếu)
     if (T.btn(CX + 104, 68, 96, CDH, sv.net === 'thuong' ? 'Độ nét: Thường' : 'Độ nét: Cao', { size: 8.5 })) {
@@ -653,7 +709,8 @@
     if (V.cdLuu && !G.pointers.size) { const kk = V.cdLuu; V.cdLuu = null; G.persist(); if (kk === 'tieng') G.sfx('pick'); }
   }
 
-  const PANELS = { forge, gear, outfit, hero, skill, chuong, help, settings };
+  const PANELS = { forge, gear, outfit, hero, skill, chuong, help, settings,
+    so: theRong('tu', 'Sân đình: sổ yêu quái'), thanhTuu: theRong('tu', 'Sân đình: thành tựu'), viecNgay: theRong('mo', 'Cổng làng: việc hôm nay') }; // Bước 2: Phiên A / C / B điền
   Object.assign(G.villageApi, { PANELS, pager, say, costText, frame, npcSide, viewWeapon, weaponView, doTabs });
   G.Village = {
     enter() {
@@ -709,6 +766,7 @@
       const hit = VS.drawStrip(V.who || WHO_OF[V.tab], true, true);
       if (hit && VS.shown && !VS.shown(hit)) say('Cô Thợ May đi chợ xa. Qua ải Rừng già 2 rồi cô về may đồ cho bé.'); // V53
       else if (hit) { VS.goNpc(hit, true); return; }
+      if (THE_B2[V.tab] && !theMo(V.tab)) V.tab = WHO_OF[V.tab] === 'tu' ? 'hero' : 'settings'; // thẻ Bước 2 bị tắt / chưa mở: về thẻ cũ
       const fn = PANELS[V.tab] || settings;
       const tab = V.tab, line = fn();
       if (fn.full) return; // bảng tự vẽ người nói (Cô Thợ May)

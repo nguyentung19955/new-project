@@ -659,6 +659,8 @@
         n.xen = co;
       }
     }
+    // Bước 2 (js/su_kien.js): thẻ mới của Ông Từ (Sổ, Thành tựu) / Anh Mõ (Việc hôm nay) có thưởng chờ nhận thì người đó có chấm đỏ
+    try { if (G.suKien && G.suKien.chamNguoi) for (const k of ['tu', 'mo']) if (shown(k) && G.suKien.chamNguoi(k, sv)) n[k] = true; } catch (e) { /* bỏ qua */ }
     const nStar = Object.keys(sv.stars || {}).length;
     if (nStar <= 1) {
       const order = nStar === 0 ? ['lai', 'do', 'ren', 'may'] : ['do', 'ren', 'may', 'lai'];
