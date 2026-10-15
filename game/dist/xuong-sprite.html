@@ -14829,7 +14829,7 @@ MA._xong();
       const pf = SC.phaTrum(sp, pha, s.ten === 'move' ? 'idle' : 'hit');
       if (pf) {
         if (s.ten === 'move') s = { ten: 'idle', i: khungLap(pf.dt.idle, t), u: 0 };
-        else if (nhip) s = { ten: 'hit', i: quaLai(pf.dt.hit, t, pf.dt.hit.so, 10), u: s.u, alpha: s.alpha, dy: s.dy }; // 14/10: tệp pha chưa có hàng gục: quằn quại đều nhịp rồi mờ (chờ ảnh, PROMPT-ANH.md)
+        else if (nhip) s = { ten: 'hit', i: quaLai(pf.dt.hit, t, pf.dt.hit.so, 10), u: s.u, alpha: s.alpha, dy: s.dy }; // 14/10: tệp pha chưa có hàng gục: quằn quại đều nhịp rồi mờ. 15/10: 6 tấm pha 2/3 của Mộc/Ngư/Hồ Tinh đã có hàng die (SC.phaTrum lấy thẳng, không vào nhánh này); nhánh còn cho tệp pha thiếu die (trùm nhỏ -p2)
         else s = { ten: 'hit', i: khungMot(pf.dt.hit, Math.min(1, (s.u || 0) * 1.6)), u: s.u, alpha: s.alpha, dy: s.dy };
         ve = pf;
       }
