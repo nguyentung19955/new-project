@@ -246,6 +246,8 @@
     e.kbVx *= g; e.kbVy *= g;
     if (Math.hypot(e.kbVx, e.kbVy) < 3) e.kbVx = e.kbVy = 0;
   }
+  // vu-khi-4 (16/10): cờ quay lui tỉ lệ gây hệ theo nhịp vũ khí (playerHit). ?hetheonhip=0 → G.HE_THEO_NHIP = false.
+  if (G.HE_THEO_NHIP === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]hetheonhip=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.HE_THEO_NHIP = !tat; }
   if (G.LK_THEO_THAY === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]lkthay=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.LK_THEO_THAY = !tat; }
   G.lkHeThay = function (st, on) {
     if (G.LK_THEO_THAY === false) return st.last && on[st.last] ? st.last : on.fire ? 'fire' : on.poison ? 'poison' : 'ice';
@@ -528,7 +530,10 @@
       if (w.power === 'proc') chance += 0.25;
       // V46: tỉ lệ gây hệ tính theo nhịp vũ khí, để vũ khí chậm không tích dấu ấn chậm hơn hẳn (kiếm 0,36 giây là chuẩn):
       // búa x2,2, cung x1,4, giáo x1,2, kiếm giữ nguyên; tối đa 100%.
-      chance = Math.min(1, chance * Math.max(1, (T.cd || 0.36) / 0.36));
+      // vu-khi-4 (16/10, Chỉnh A): kẹp ≤ 100%; tắt bằng ?hetheonhip=0 (G.HE_THEO_NHIP = false) → không nhân theo nhịp (như trước V46).
+      // Đã thử cho phần vượt 100% thành cơ hội gây thêm 1 tầng (búa Thành hình / Thức tỉnh): chỉ làm búa Độc mạnh thêm, búa Băng
+      // không nhích (Băng bị giới hạn bởi miễn đóng băng 5 giây, không phải số tầng) → bỏ. Xem docs/review/ke-hoach-cai-thien/vu-khi-4.
+      if (G.HE_THEO_NHIP !== false) chance = Math.min(1, chance * Math.max(1, (T.cd || 0.36) / 0.36));
       if (P.firstHit && P.swapProc) chance = 1;
       if (G.rnd() < chance) G.applyStatus(e, el, d, 1);
     }

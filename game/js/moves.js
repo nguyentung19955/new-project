@@ -62,7 +62,9 @@
         // nên mỗi nhát mạnh hơn kiếm (đâm 0,85 -> 1,1; quét 1,5 -> 1,85).
         { name: 'Đâm', dur: 0.38, mult: 1.1, reach: 60, depth: 12 },
         { name: 'Đâm', dur: 0.34, mult: 1.1, reach: 60, depth: 12 },
-        { name: 'Đâm', dur: 0.34, mult: 1.1, reach: 62, depth: 12 },
+        // vu-khi-4 (16/10, Chỉnh B): nhát đâm thứ 3 đẩy lùi nhẹ (day: điểm ảnh, qua G.kbDay: trùm / quái giáp x0,2, tinh anh x0,5)
+        // để thương rõ vai giữ khoảng cách; không đẩy quái ra ngoài 85% vòng Quét vòng kế tiếp nên chuỗi vẫn nối. Tắt: ?thuongday=0.
+        { name: 'Đâm', dur: 0.34, mult: 1.1, reach: 62, depth: 12, day: 6, dayGiu: 0.85 },
         { name: 'Quét vòng', dur: 0.52, mult: 1.85, r: 44, push: 8, heavy: true, sweep: true, finish: 1 },
       ],
       // giữ rồi thả: lao một đoạn ngắn xuyên qua quái (đòn Đặc biệt "Lao tới" thì dài hơn và làm choáng)
@@ -533,6 +535,18 @@
     else begin(P, w, { kind: 'dam', name: m.name, step: i, pose: i, m, reach: reachOf(w, m.reach), depth: m.depth }, m.dur);
     mv.chain = i + 1; mv.gap = C.spear.gap;
   }
+  // Chỉnh B (vu-khi-4): đẩy lùi nhẹ theo hướng đâm, chỉ tới 85% vòng Quét vòng (cộng bán kính quái); quái đã xa hơn thì không đẩy thêm.
+  if (G.THUONG_DAY === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]thuongday=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.THUONG_DAY = !tat; }
+  function spearDay(P, w, list, m) {
+    if (G.THUONG_DAY === false || G.DAY_LUI === false || !G.kbDay || !list.length) return;
+    const ux = P.aimX != null ? P.aimX : P.face, uy = P.aimX != null ? P.aimY : 0, k = ZK();
+    const quet = C.spear.chain.find((c) => c.sweep), rq = reachOf(w, quet ? quet.r : 44);
+    for (const e of list) {
+      if (e.dead) continue;
+      const d = Math.hypot(e.x - P.x, (e.y - P.y) / k), q = Math.min(m.day, (rq + (e.r || 8)) * (m.dayGiu || 0.85) - d);
+      if (q > 0.5) G.kbDay(e, ux, uy, G.kbQuang(q), 'max');
+    }
+  }
   function spearLunge(P, w, c) {
     const mv = P.mv, ch = C.spear.charge;
     aimM(P, ch.len1 + 20);
@@ -663,6 +677,7 @@
     } else if (o.kind === 'dam' || o.kind === 'nen') {
       const list = boxHit(P, o.reach, o.depth, o.m.mult, { w });
       if (o.fist) { if (!G.noRender) FX('punch', P); gain(P, w, list.length); return; }
+      if (o.kind === 'dam' && o.m.day) spearDay(P, w, list, o.m);
       swingFx(P, w, o);
       if (o.kind === 'nen') G.getWorld().shake = Math.max(G.getWorld().shake, 0.08);
       gain(P, w, list.length);

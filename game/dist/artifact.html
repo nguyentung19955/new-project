@@ -59,7 +59,7 @@
 <div id="lk-tai" data-bia="||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAMEBQYH/8QAKRAAAQMCBQMDBQAAAAAAAAAAAQIDEQAEBRIhMUETFGEiQnEVUWKBsf/EABcBAAMBAAAAAAAAAAAAAAAAAAIDBAX/xAAlEQACAQEFCQAAAAAAAAAAAAABAgADBBExUfASEyEyM0FxobH/2gAMAwEAAhEDEQA/AOfNMWj9zbWiEtBsn1ugGTPCvjXajFcBNssNsvoeMxlCgVJqzCbhHftG3aGdcJBUAUn7neRzTMcumxjD0hDSkmFBtWZMjSdR5qamzb4DtHOiimTfxmt/T3UpzLBCTt5q22sWekt0vBvImSF8+KyF5eWDaGFNZlr6YkKGiTPGvzSutZDDX1sF3P0wPUBMzvP62rStACi5TEWB9pizi/H1JsLUo3NhKiZUOfyqbE1Hu3jJkqPNFFRUuprOHU5dZSVwmE6+2mNk9u7r7R/aKKqqQLNifB+T/9k=|||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAgf/xAAmEAACAgEEAQQCAwAAAAAAAAABAgMRAAQSITEFE1FhgSJBcbHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQIDBAX/xAAeEQABBAIDAQAAAAAAAAAAAAAAAQIDEiExBBEyIv/aAAwDAQACEQMRAD8A51EIZIo53EASNwHG07mBPFno9HFyeOhl1Y2yFIbtjVkDnr54yzx2vaLSyII1cELvBQEVu5PyeshTWvFJG6qi7OR+A9/4xoa3yQzWRvzsH8YkWrkCMZYlsoSvJHfWUalzFpI4/TRBZbca3HsUcXqvJvPqpZgEAewAFHAP1mZ9aZIoyqKWVa4jX3P+jByGor8aNDgT0gXvDiHTs1EbjRAsX3jKuEH92Ofs4YYGeim/yLulscHjFuT6YNno/wBnDDGfsEej/9k=" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.16-0523";
+(window.G = window.G || {}).VERSION = "lk-2026.10.16-0526";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -11569,6 +11569,8 @@
     e.kbVx *= g; e.kbVy *= g;
     if (Math.hypot(e.kbVx, e.kbVy) < 3) e.kbVx = e.kbVy = 0;
   }
+  // vu-khi-4 (16/10): cờ quay lui tỉ lệ gây hệ theo nhịp vũ khí (playerHit). ?hetheonhip=0 → G.HE_THEO_NHIP = false.
+  if (G.HE_THEO_NHIP === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]hetheonhip=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.HE_THEO_NHIP = !tat; }
   if (G.LK_THEO_THAY === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]lkthay=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.LK_THEO_THAY = !tat; }
   G.lkHeThay = function (st, on) {
     if (G.LK_THEO_THAY === false) return st.last && on[st.last] ? st.last : on.fire ? 'fire' : on.poison ? 'poison' : 'ice';
@@ -11851,7 +11853,10 @@
       if (w.power === 'proc') chance += 0.25;
       // V46: tỉ lệ gây hệ tính theo nhịp vũ khí, để vũ khí chậm không tích dấu ấn chậm hơn hẳn (kiếm 0,36 giây là chuẩn):
       // búa x2,2, cung x1,4, giáo x1,2, kiếm giữ nguyên; tối đa 100%.
-      chance = Math.min(1, chance * Math.max(1, (T.cd || 0.36) / 0.36));
+      // vu-khi-4 (16/10, Chỉnh A): kẹp ≤ 100%; tắt bằng ?hetheonhip=0 (G.HE_THEO_NHIP = false) → không nhân theo nhịp (như trước V46).
+      // Đã thử cho phần vượt 100% thành cơ hội gây thêm 1 tầng (búa Thành hình / Thức tỉnh): chỉ làm búa Độc mạnh thêm, búa Băng
+      // không nhích (Băng bị giới hạn bởi miễn đóng băng 5 giây, không phải số tầng) → bỏ. Xem docs/review/ke-hoach-cai-thien/vu-khi-4.
+      if (G.HE_THEO_NHIP !== false) chance = Math.min(1, chance * Math.max(1, (T.cd || 0.36) / 0.36));
       if (P.firstHit && P.swapProc) chance = 1;
       if (G.rnd() < chance) G.applyStatus(e, el, d, 1);
     }
@@ -12650,7 +12655,9 @@
         // nên mỗi nhát mạnh hơn kiếm (đâm 0,85 -> 1,1; quét 1,5 -> 1,85).
         { name: 'Đâm', dur: 0.38, mult: 1.1, reach: 60, depth: 12 },
         { name: 'Đâm', dur: 0.34, mult: 1.1, reach: 60, depth: 12 },
-        { name: 'Đâm', dur: 0.34, mult: 1.1, reach: 62, depth: 12 },
+        // vu-khi-4 (16/10, Chỉnh B): nhát đâm thứ 3 đẩy lùi nhẹ (day: điểm ảnh, qua G.kbDay: trùm / quái giáp x0,2, tinh anh x0,5)
+        // để thương rõ vai giữ khoảng cách; không đẩy quái ra ngoài 85% vòng Quét vòng kế tiếp nên chuỗi vẫn nối. Tắt: ?thuongday=0.
+        { name: 'Đâm', dur: 0.34, mult: 1.1, reach: 62, depth: 12, day: 6, dayGiu: 0.85 },
         { name: 'Quét vòng', dur: 0.52, mult: 1.85, r: 44, push: 8, heavy: true, sweep: true, finish: 1 },
       ],
       // giữ rồi thả: lao một đoạn ngắn xuyên qua quái (đòn Đặc biệt "Lao tới" thì dài hơn và làm choáng)
@@ -13121,6 +13128,18 @@
     else begin(P, w, { kind: 'dam', name: m.name, step: i, pose: i, m, reach: reachOf(w, m.reach), depth: m.depth }, m.dur);
     mv.chain = i + 1; mv.gap = C.spear.gap;
   }
+  // Chỉnh B (vu-khi-4): đẩy lùi nhẹ theo hướng đâm, chỉ tới 85% vòng Quét vòng (cộng bán kính quái); quái đã xa hơn thì không đẩy thêm.
+  if (G.THUONG_DAY === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]thuongday=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.THUONG_DAY = !tat; }
+  function spearDay(P, w, list, m) {
+    if (G.THUONG_DAY === false || G.DAY_LUI === false || !G.kbDay || !list.length) return;
+    const ux = P.aimX != null ? P.aimX : P.face, uy = P.aimX != null ? P.aimY : 0, k = ZK();
+    const quet = C.spear.chain.find((c) => c.sweep), rq = reachOf(w, quet ? quet.r : 44);
+    for (const e of list) {
+      if (e.dead) continue;
+      const d = Math.hypot(e.x - P.x, (e.y - P.y) / k), q = Math.min(m.day, (rq + (e.r || 8)) * (m.dayGiu || 0.85) - d);
+      if (q > 0.5) G.kbDay(e, ux, uy, G.kbQuang(q), 'max');
+    }
+  }
   function spearLunge(P, w, c) {
     const mv = P.mv, ch = C.spear.charge;
     aimM(P, ch.len1 + 20);
@@ -13251,6 +13270,7 @@
     } else if (o.kind === 'dam' || o.kind === 'nen') {
       const list = boxHit(P, o.reach, o.depth, o.m.mult, { w });
       if (o.fist) { if (!G.noRender) FX('punch', P); gain(P, w, list.length); return; }
+      if (o.kind === 'dam' && o.m.day) spearDay(P, w, list, o.m);
       swingFx(P, w, o);
       if (o.kind === 'nen') G.getWorld().shake = Math.max(G.getWorld().shake, 0.08);
       gain(P, w, list.length);

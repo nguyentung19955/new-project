@@ -98,6 +98,8 @@ def main():
         pg.wait_for_function('window.G && G.scene')
         pg.add_script_tag(path=os.path.join(ROOT, 'tests', 'bot.js'))
         pg.add_script_tag(path=os.path.join(ROOT, 'tests', 'setup.js'))
+        # vu-khi-4 (16/10): PRE='<mã JS>' chạy trước khi đo, ví dụ PRE='G.HE_THEO_NHIP=false' hay PRE='G.THUONG_DAY=false' (thử cờ quay lui)
+        if os.environ.get('PRE'): pg.evaluate('() => { ' + os.environ['PRE'] + ' }')
         st = pg.evaluate(STATIC)
         res['static'] = st
         print('== PHẦN 1: từng đòn (sát thương gốc loại vũ khí, chưa tính cấp/bậc/mài)')
