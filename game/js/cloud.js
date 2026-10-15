@@ -119,9 +119,18 @@
         this.auth.onAuthStateChanged((u) => this._onUser(u));
         // quay về từ trang đăng nhập Google (redirect): báo kết quả; tài khoản Google đã có dữ liệu thì chuyển sang nó
         let back = false; try { back = localStorage.getItem('lk_gredir') === '1'; localStorage.removeItem('lk_gredir'); } catch (e) { /* bỏ qua */ }
-        if (back) this.auth.getRedirectResult().then((r) => { this.gMsg = r && r.user ? 'Đã đăng nhập Google.' : 'Google chưa trả kết quả đăng nhập về [no-redirect-result]'; if (r && r.user) { this.myScore = null; setTimeout(() => this.push(true), 1500); } }, (e) => {
-          if (e && e.code === 'auth/credential-already-in-use' && e.credential) { this.auth.signInWithCredential(e.credential).then(() => { this.gMsg = 'Đã đăng nhập Google.'; }, (e2) => { this.gMsg = 'Chưa đăng nhập được: ' + this._err(e2); }); return; }
+        if (back) this.auth.getRedirectResult().then((r) => {
+          if (r && r.user) { this.gMsg = 'Đã đăng nhập Google.'; this._authMoiOk(); this.myScore = null; setTimeout(() => this.push(true), 1500); return; }
+          this.gMsg = 'Google chưa trả kết quả đăng nhập về [no-redirect-result]';
+          this._authLui(null);
+        }, (e) => {
+          if (e && e.code === 'auth/credential-already-in-use' && e.credential) {
+            this._authMoiOk(); this._giuKhach();
+            this.auth.signInWithCredential(e.credential).then(() => { this.gMsg = 'Đã đăng nhập Google.'; }, (e2) => { this.gMsg = 'Chưa đăng nhập được: ' + this._err(e2); });
+            return;
+          }
           this.gMsg = 'Chưa đăng nhập được: ' + this._err(e);
+          this._authLui(e);
         });
       } catch (e) {
         // không tải được thư viện (mất mạng, bị chặn): tắt mây, game chạy như cũ
@@ -142,6 +151,29 @@
       if (this.isAdmin()) this.countNew();
     },
     _fail(e) { this.status = 'error'; this.error = (e && (e.code || e.message)) || 'lỗi'; },
+    // PWA bỏ thanh URL (15/10): đăng nhập kiểu mới (authDomain = tên miền game, js/firebase-config.js) đã chạy được trên máy này → không bao giờ tự quay lui.
+    _authMoiOk() { try { if (window.LK_AUTH && window.LK_AUTH.moi) localStorage.setItem('lk_authmoi_ok', '1'); } catch (e) { /* bỏ qua */ } },
+    // Lần chuyển trang đăng nhập kiểu mới không trả kết quả (Google báo lỗi redirect_uri_mismatch, tên miền chưa được phép, bấm quay lại…) và máy này
+    // chưa từng đăng nhập kiểu mới thành công → nhớ lk_authcu để lần mở sau dùng lại cách cũ (authDomain cũ + cửa sổ phụ), như trước bản sửa này.
+    // Mất mạng thì không quay lui.
+    _authLui(e) {
+      try {
+        if (!(window.LK_AUTH && window.LK_AUTH.moi)) return;
+        if (e && e.code === 'auth/network-request-failed') return;
+        if (localStorage.getItem('lk_authmoi_ok') === '1') return;
+        localStorage.setItem('lk_authcu', '1');
+        this.gMsg = 'Chưa đăng nhập được: Google chưa nhận cách đăng nhập mới, game đã chuyển về cách cũ. Tắt hẳn game, mở lại rồi bấm "Đăng nhập Google" lần nữa. [authcu]';
+      } catch (er) { /* bỏ qua */ }
+    },
+    // Quay về từ trang Google mà tài khoản Google đó đã có tiến trình: cất bản lưu khách trên máy (giống guestKeep ở js/village.js) trước khi chuyển tài khoản.
+    _giuKhach() {
+      try {
+        const s = G.save;
+        if (!s || !Object.keys(s.stars || {}).length) return;
+        const snap = JSON.stringify(s), ls = window.localStorage, K = 'linhkhi_save_v1_khach', old = ls.getItem(K);
+        ls.setItem(old === null || old === snap ? K : K + '2', snap);
+      } catch (e) { /* bộ nhớ đầy: bỏ qua */ }
+    },
     _doc() { return this.db.collection(COL.users).doc(this.user.uid); },
 
     // ---------- bản lưu ----------
@@ -244,8 +276,12 @@
       // Mở từ biểu tượng màn hình chính (chế độ ứng dụng) hay khi cửa sổ phụ bị chặn: chuyển trang đăng nhập (redirect) thay cho cửa sổ phụ.
       const app = (window.matchMedia && (matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: fullscreen)').matches)) || navigator.standalone === true;
       const redirect = () => { try { localStorage.setItem('lk_gredir', '1'); } catch (e) { /* bỏ qua */ } return this.user.isAnonymous ? this.user.linkWithRedirect(prov) : this.auth.signInWithRedirect(prov); };
-      void app; // giống Thần Thoại Việt: luôn dùng cửa sổ phụ, kể cả khi mở từ màn hình chính (chuyển trang bị mất kết quả)
+      // Trước 15/10: luôn dùng cửa sổ phụ (chuyển trang bị mất kết quả vì trang đăng nhập ở tên miền khác). Nay: chế độ ứng dụng trên spiritblade.web.app
+      // dùng authDomain = tên miền game (js/firebase-config.js, window.LK_AUTH.moi) → chuyển trang KHÔNG còn mất kết quả và không mở cửa sổ phụ
+      // (cửa sổ phụ trong chế độ ứng dụng mở khung trình duyệt có thanh URL; iPhone còn mở sang Safari với bộ nhớ riêng). Còn lại giữ cửa sổ phụ như cũ.
+      const moi = !!(window.LK_AUTH && window.LK_AUTH.moi);
       try {
+        if (app && moi) { await redirect(); return 'redirect'; }
         if (this.user.isAnonymous) {
           try {
             const r = await this.user.linkWithPopup(prov).catch((e) => { throw e; });

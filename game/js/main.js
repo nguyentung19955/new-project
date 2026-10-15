@@ -34,3 +34,25 @@
     window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
   } catch (e) { /* bỏ qua */ }
 })();
+
+// PWA bỏ thanh URL (15/10): Android mở từ màn hình chính mà máy không cho chế độ "fullscreen" của manifest (display-mode vẫn là standalone /
+// minimal-ui, còn thanh trạng thái/thanh điều hướng) → lần chạm đầu tiên xin toàn màn hình. Chỉ chạy ở chế độ ứng dụng: mở trong trình duyệt thường
+// thì không làm gì. iPhone (navigator.standalone) không có toàn màn hình kiểu này: iOS tự lo theo các thẻ apple-mobile-web-app-* trong index.html.
+// Thoát toàn màn hình (vuốt, nút "Toàn màn hình" ở Anh Mõ) thì để yên tới lần mở lại game sau (quay lại từ ứng dụng khác).
+(function () {
+  try {
+    const mm = (q) => !!(window.matchMedia && window.matchMedia(q).matches);
+    if (window.top !== window.self || navigator.standalone === true || mm('(display-mode: fullscreen)')) return;
+    if (!(mm('(display-mode: standalone)') || mm('(display-mode: minimal-ui)'))) return;
+    const el = document.documentElement;
+    if (!el.requestFullscreen) return;
+    let cho = true;
+    const thu = () => {
+      if (!cho || document.fullscreenElement) return;
+      cho = false;
+      try { const p = el.requestFullscreen({ navigationUI: 'hide' }); if (p && p.catch) p.catch(() => {}); } catch (e) { /* máy không cho: bỏ qua */ }
+    };
+    for (const t of ['pointerup', 'touchend', 'click', 'keydown']) window.addEventListener(t, thu, { capture: true, passive: true });
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && !document.fullscreenElement) cho = true; });
+  } catch (e) { /* bỏ qua */ }
+})();

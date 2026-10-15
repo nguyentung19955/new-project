@@ -8,6 +8,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Linh Khí">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>Linh Khí</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700&display=swap" media="print" onload="this.media='all'" onerror="this.dataset.loi='1'">
 <style>
@@ -68,7 +70,7 @@
 <div id="lk-tai" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.15-2039";
+(window.G = window.G || {}).VERSION = "lk-2026.10.15-2110";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -40285,6 +40287,41 @@ window.FIREBASE_CONFIG = {
   appId: '1:194086791076:web:81b3be1d4b2f1c7afd4331',
 };
 
+// PWA bỏ thanh URL (15/10, docs/review/ke-hoach-cai-thien/pwa-bo-thanh-url): mở game từ biểu tượng màn hình chính (chế độ ứng dụng) trên
+// spiritblade.web.app thì trang đăng nhập Firebase (/__/auth/handler) chạy NGAY trên tên miền game, không nhảy sang sontinhthuytinh.firebaseapp.com
+// (tên miền khác → máy hiện thanh URL, iPhone tách bộ nhớ nên mất đăng nhập). Site spiritblade nằm trong cùng dự án sontinhthuytinh
+// (.github/workflows/linh-khi-hosting.yml) nên Firebase Hosting có sẵn /__/auth/handler ở đây.
+//  - Chỉ đổi khi: đúng site spiritblade (*.web.app / *.firebaseapp.com), https, và đang ở chế độ ứng dụng (hoặc thêm ?authmoi=1 để thử trên trình duyệt).
+//    Mở trong trình duyệt thường: GIỮ authDomain cũ như trước (không đổi gì).
+//  - Cờ quay lui: ?authcu=1 → dùng lại authDomain cũ (máy nhớ luôn; ?authmoi=1 để bỏ nhớ). Máy tự quay lui (lk_authcu) nếu lần đăng nhập
+//    kiểu mới đầu tiên không trả kết quả về (ví dụ Google báo redirect_uri_mismatch vì chủ game chưa thêm địa chỉ ở Google Cloud) — js/cloud.js.
+(function () {
+  const cfg = window.FIREBASE_CONFIG;
+  const info = (window.LK_AUTH = { cu: cfg ? cfg.authDomain : '', moi: false, ly: '' });
+  try {
+    if (!cfg) return;
+    let ls = null;
+    try { ls = window.localStorage; } catch (e) { ls = null; }
+    const q = location.search || '';
+    const thuMoi = /[?&]authmoi=1\b/.test(q);
+    try {
+      if (thuMoi && ls) ls.removeItem('lk_authcu');
+      if (/[?&]authcu=1\b/.test(q) && ls) ls.setItem('lk_authcu', '1');
+    } catch (e) { /* bỏ qua */ }
+    if (/[?&]authcu=1\b/.test(q)) { info.ly = 'authcu'; return; }
+    if (location.protocol !== 'https:' || !/^spiritblade\.(web\.app|firebaseapp\.com)$/.test(location.hostname)) { info.ly = 'ten-mien-khac'; return; }
+    const mm = (s) => !!(window.matchMedia && window.matchMedia(s).matches);
+    const app = mm('(display-mode: fullscreen)') || mm('(display-mode: standalone)') || mm('(display-mode: minimal-ui)') || navigator.standalone === true;
+    info.app = app;
+    if (!app && !thuMoi) { info.ly = 'trinh-duyet'; return; }
+    let cu = false;
+    try { cu = !!ls && ls.getItem('lk_authcu') === '1'; } catch (e) { cu = false; }
+    if (cu) { info.ly = 'tu-quay-lui'; return; }
+    cfg.authDomain = location.hostname;
+    info.moi = true;
+  } catch (e) { /* lỗi bất kỳ: giữ authDomain cũ */ }
+})();
+
 // ===== js/cloud.js =====
 // LƯU MÂY (Firebase, dự án dùng chung "sontinhthuytinh"; dữ liệu Linh Khí nằm riêng ở linhkhi_users, linhkhi_scores, linhkhi_feedback).
 //  - Vào game tự đăng nhập khách (ẩn danh). Máy vẫn lưu localStorage như cũ; có mạng thì đẩy bản lưu lên mây, gộp các lần lưu trong 4 giây.
@@ -40407,9 +40444,18 @@ window.FIREBASE_CONFIG = {
         this.auth.onAuthStateChanged((u) => this._onUser(u));
         // quay về từ trang đăng nhập Google (redirect): báo kết quả; tài khoản Google đã có dữ liệu thì chuyển sang nó
         let back = false; try { back = localStorage.getItem('lk_gredir') === '1'; localStorage.removeItem('lk_gredir'); } catch (e) { /* bỏ qua */ }
-        if (back) this.auth.getRedirectResult().then((r) => { this.gMsg = r && r.user ? 'Đã đăng nhập Google.' : 'Google chưa trả kết quả đăng nhập về [no-redirect-result]'; if (r && r.user) { this.myScore = null; setTimeout(() => this.push(true), 1500); } }, (e) => {
-          if (e && e.code === 'auth/credential-already-in-use' && e.credential) { this.auth.signInWithCredential(e.credential).then(() => { this.gMsg = 'Đã đăng nhập Google.'; }, (e2) => { this.gMsg = 'Chưa đăng nhập được: ' + this._err(e2); }); return; }
+        if (back) this.auth.getRedirectResult().then((r) => {
+          if (r && r.user) { this.gMsg = 'Đã đăng nhập Google.'; this._authMoiOk(); this.myScore = null; setTimeout(() => this.push(true), 1500); return; }
+          this.gMsg = 'Google chưa trả kết quả đăng nhập về [no-redirect-result]';
+          this._authLui(null);
+        }, (e) => {
+          if (e && e.code === 'auth/credential-already-in-use' && e.credential) {
+            this._authMoiOk(); this._giuKhach();
+            this.auth.signInWithCredential(e.credential).then(() => { this.gMsg = 'Đã đăng nhập Google.'; }, (e2) => { this.gMsg = 'Chưa đăng nhập được: ' + this._err(e2); });
+            return;
+          }
           this.gMsg = 'Chưa đăng nhập được: ' + this._err(e);
+          this._authLui(e);
         });
       } catch (e) {
         // không tải được thư viện (mất mạng, bị chặn): tắt mây, game chạy như cũ
@@ -40430,6 +40476,29 @@ window.FIREBASE_CONFIG = {
       if (this.isAdmin()) this.countNew();
     },
     _fail(e) { this.status = 'error'; this.error = (e && (e.code || e.message)) || 'lỗi'; },
+    // PWA bỏ thanh URL (15/10): đăng nhập kiểu mới (authDomain = tên miền game, js/firebase-config.js) đã chạy được trên máy này → không bao giờ tự quay lui.
+    _authMoiOk() { try { if (window.LK_AUTH && window.LK_AUTH.moi) localStorage.setItem('lk_authmoi_ok', '1'); } catch (e) { /* bỏ qua */ } },
+    // Lần chuyển trang đăng nhập kiểu mới không trả kết quả (Google báo lỗi redirect_uri_mismatch, tên miền chưa được phép, bấm quay lại…) và máy này
+    // chưa từng đăng nhập kiểu mới thành công → nhớ lk_authcu để lần mở sau dùng lại cách cũ (authDomain cũ + cửa sổ phụ), như trước bản sửa này.
+    // Mất mạng thì không quay lui.
+    _authLui(e) {
+      try {
+        if (!(window.LK_AUTH && window.LK_AUTH.moi)) return;
+        if (e && e.code === 'auth/network-request-failed') return;
+        if (localStorage.getItem('lk_authmoi_ok') === '1') return;
+        localStorage.setItem('lk_authcu', '1');
+        this.gMsg = 'Chưa đăng nhập được: Google chưa nhận cách đăng nhập mới, game đã chuyển về cách cũ. Tắt hẳn game, mở lại rồi bấm "Đăng nhập Google" lần nữa. [authcu]';
+      } catch (er) { /* bỏ qua */ }
+    },
+    // Quay về từ trang Google mà tài khoản Google đó đã có tiến trình: cất bản lưu khách trên máy (giống guestKeep ở js/village.js) trước khi chuyển tài khoản.
+    _giuKhach() {
+      try {
+        const s = G.save;
+        if (!s || !Object.keys(s.stars || {}).length) return;
+        const snap = JSON.stringify(s), ls = window.localStorage, K = 'linhkhi_save_v1_khach', old = ls.getItem(K);
+        ls.setItem(old === null || old === snap ? K : K + '2', snap);
+      } catch (e) { /* bộ nhớ đầy: bỏ qua */ }
+    },
     _doc() { return this.db.collection(COL.users).doc(this.user.uid); },
 
     // ---------- bản lưu ----------
@@ -40532,8 +40601,12 @@ window.FIREBASE_CONFIG = {
       // Mở từ biểu tượng màn hình chính (chế độ ứng dụng) hay khi cửa sổ phụ bị chặn: chuyển trang đăng nhập (redirect) thay cho cửa sổ phụ.
       const app = (window.matchMedia && (matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: fullscreen)').matches)) || navigator.standalone === true;
       const redirect = () => { try { localStorage.setItem('lk_gredir', '1'); } catch (e) { /* bỏ qua */ } return this.user.isAnonymous ? this.user.linkWithRedirect(prov) : this.auth.signInWithRedirect(prov); };
-      void app; // giống Thần Thoại Việt: luôn dùng cửa sổ phụ, kể cả khi mở từ màn hình chính (chuyển trang bị mất kết quả)
+      // Trước 15/10: luôn dùng cửa sổ phụ (chuyển trang bị mất kết quả vì trang đăng nhập ở tên miền khác). Nay: chế độ ứng dụng trên spiritblade.web.app
+      // dùng authDomain = tên miền game (js/firebase-config.js, window.LK_AUTH.moi) → chuyển trang KHÔNG còn mất kết quả và không mở cửa sổ phụ
+      // (cửa sổ phụ trong chế độ ứng dụng mở khung trình duyệt có thanh URL; iPhone còn mở sang Safari với bộ nhớ riêng). Còn lại giữ cửa sổ phụ như cũ.
+      const moi = !!(window.LK_AUTH && window.LK_AUTH.moi);
       try {
+        if (app && moi) { await redirect(); return 'redirect'; }
         if (this.user.isAnonymous) {
           try {
             const r = await this.user.linkWithPopup(prov).catch((e) => { throw e; });
@@ -42203,6 +42276,28 @@ window.FIREBASE_CONFIG = {
   try {
     if (!('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol) || window.top !== window.self) return;
     window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
+  } catch (e) { /* bỏ qua */ }
+})();
+
+// PWA bỏ thanh URL (15/10): Android mở từ màn hình chính mà máy không cho chế độ "fullscreen" của manifest (display-mode vẫn là standalone /
+// minimal-ui, còn thanh trạng thái/thanh điều hướng) → lần chạm đầu tiên xin toàn màn hình. Chỉ chạy ở chế độ ứng dụng: mở trong trình duyệt thường
+// thì không làm gì. iPhone (navigator.standalone) không có toàn màn hình kiểu này: iOS tự lo theo các thẻ apple-mobile-web-app-* trong index.html.
+// Thoát toàn màn hình (vuốt, nút "Toàn màn hình" ở Anh Mõ) thì để yên tới lần mở lại game sau (quay lại từ ứng dụng khác).
+(function () {
+  try {
+    const mm = (q) => !!(window.matchMedia && window.matchMedia(q).matches);
+    if (window.top !== window.self || navigator.standalone === true || mm('(display-mode: fullscreen)')) return;
+    if (!(mm('(display-mode: standalone)') || mm('(display-mode: minimal-ui)'))) return;
+    const el = document.documentElement;
+    if (!el.requestFullscreen) return;
+    let cho = true;
+    const thu = () => {
+      if (!cho || document.fullscreenElement) return;
+      cho = false;
+      try { const p = el.requestFullscreen({ navigationUI: 'hide' }); if (p && p.catch) p.catch(() => {}); } catch (e) { /* máy không cho: bỏ qua */ }
+    };
+    for (const t of ['pointerup', 'touchend', 'click', 'keydown']) window.addEventListener(t, thu, { capture: true, passive: true });
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && !document.fullscreenElement) cho = true; });
   } catch (e) { /* bỏ qua */ }
 })();
 </script>

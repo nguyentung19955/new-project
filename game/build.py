@@ -51,6 +51,8 @@ FONT_HOST = 'https://fonts.googleapis.com/'
 # Thư viện Firebase (lưu mây, js/cloud.js) được tải lúc chạy, chỉ khi trang chạy trên web thật (không phải tệp trên máy,
 # không trong khung xem trước). Đây là địa chỉ ngoài duy nhất được phép nằm trong mã JS ngoài phông chữ.
 FIREBASE_SDK = 'https://www.gstatic.com/firebasejs/'
+# Tệp "Thêm vào màn hình chính" nằm cạnh trang trên spiritblade.web.app (game/web/): trang đóng gói được trỏ tới (đường tương đối).
+PWA_HREF = ('manifest.webmanifest', 'apple-touch-icon.png')
 
 
 def read(path):
@@ -105,8 +107,16 @@ def main():
         # Không để chuỗi nào trong JS đóng thẻ script sớm.
         return safe_js('\n'.join(ps))
 
+    # PWA bỏ thanh URL (15/10): trước đây trang đóng gói chỉ giữ <meta>, <title> và link phông chữ → MẤT <link rel="manifest"> và
+    # <link rel="apple-touch-icon"> của index.html: trang thật trên spiritblade.web.app không có manifest, Android "Thêm vào màn hình chính" chỉ tạo
+    # lối tắt mở tab Chrome (có thanh URL). Nay giữ đúng 2 thẻ đó (đường tương đối, tệp ở game/web/ được chép cạnh trang khi đăng).
+    # artifact.html (mảnh trang) không có; bản game thử của Xưởng Sprite bỏ đi (build_tool).
+    pwa = ''.join(m + '\n' for m in re.findall(r'<link rel="(?:manifest|apple-touch-icon)" href="[^"]+">', html))
+    if 'rel="manifest"' not in pwa:
+        sys.exit('index.html thiếu <link rel="manifest" href="..."> (Thêm vào màn hình chính)')
+
     def trang(js):
-        return ('<!doctype html>\n<html lang="' + lang + '">\n<head>\n' + '\n'.join(metas) + '\n' + title + '\n' + link + '\n'
+        return ('<!doctype html>\n<html lang="' + lang + '">\n<head>\n' + '\n'.join(metas) + '\n' + pwa + title + '\n' + link + '\n'
                 + style + '\n</head>\n<body>\n' + markup + '\n<script>\n' + js + '</script>\n</body>\n</html>\n')
 
     js = gom(custom, khai_truyen_mot(truyen))
@@ -590,6 +600,7 @@ def build_tool(game_full):
     # Bản game thử đóng gói: game đầy đủ + mã nhận tệp từ công cụ (chỉ trang này có, bản chơi chính không có).
     thu = game_full.replace('</script>\n</body>', '\n// ===== tools/xuong-sprite/nguon/thu.js =====\n' + safe_js(rd('thu.js')) + '</script>\n</body>')
     thu = thu.replace('<title>Linh Khí</title>', '<title>Linh Khí · bản thử Xưởng Sprite</title>')
+    thu = re.sub(r'<link rel="(manifest|apple-touch-icon)"[^>]*>\n', '', thu)  # bản thử mở trong khung của công cụ: không phải ứng dụng
     if 'nguon/thu.js' not in thu:
         sys.exit('Không gắn được thu.js vào bản game thử')
     write(os.path.join(DIST, 'xuong-sprite-thu.html'), thu)
@@ -625,11 +636,13 @@ def check(full, frag, js):
     order = [frag.find('<title>'), frag.find('<link'), frag.find('<style>'), frag.find('<div'), frag.find('<script>')]
     if order[0] != 0 or -1 in order or order != sorted(order):
         errs.append('artifact.html sai thứ tự: phải là title, link, style, phần thân, script')
+    if 'rel="manifest"' in frag or 'rel="manifest"' not in full:
+        errs.append('manifest: phải có ở linh-khi.html / trang nhẹ, không có ở artifact.html')
     if frag.count('<script') != 1 or full.count('<script') != 1:
         errs.append('phải có đúng một thẻ script')
     for name, text in (('linh-khi.html', full), ('artifact.html', frag)):
         for m in re.finditer(r'''(?:src|href)\s*=\s*["']([^"']+)["']''', text):
-            if not m.group(1).startswith(FONT_HOST):
+            if not m.group(1).startswith(FONT_HOST) and m.group(1) not in PWA_HREF:
                 errs.append(name + ' còn trỏ ra ngoài: ' + m.group(1))
         for u in re.findall(r'''https?://[^\s"'<>)]+''', text):
             if not u.startswith((FONT_HOST, FIREBASE_SDK)):
