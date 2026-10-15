@@ -1,0 +1,77 @@
+đạt Zed mới (cấp 1, 4 vũ khí Trắng +0) có Sức mạnh khoảng 100: 99
+đạt bản lưu mới: đúng 4 vũ khí Trắng, không bậc màu
+đạt Sức mạnh khuyên dùng tăng dần qua 15 ải: 95 105 125 140 175 180 215 260 275 305 310 330 410 420 520 540 565 595 630 690
+đạt độ khó thứ hai cần Sức mạnh cao hơn
+đạt thưởng khi cày: đủ khi chưa quá 130%, giảm dần, thấp nhất 40%
+đạt Sức mạnh tăng theo cấp, mài, nâng Mầm bằng 100 linh khí: 99 < 132 < 143 < 151
+đạt thua 4 lần liền: không quyết tâm, máu 100, Sức mạnh 99 như cũ
+đạt sau các lượt thua vẫn đúng 4 vũ khí (không rơi đồ)
+đạt trần: cấp 40, mài +15 với lò cấp 4
+đạt trần trước Hồ Tinh (cấp 40, kiếm + phi tiêu Thức tỉnh +15 bậc ép Vàng, cây chưởng đầy): Sức mạnh 657 (chưa ép 579) >= 1,15 x khuyên dùng Hồ Tinh 520
+đạt cây chưởng đã học hết nút: không còn mục "điểm chưởng chưa học" (cấp 40 > tổng bậc của cây)
+đạt cây chưởng đầy mà G.upg.auto vẫn mài tiếp: Mài Kiếm Hỏa Thần lên +11; Mài Kiếm Hỏa Thần lên +12; Mài Kiếm Hỏa Thần lên +13
+đạt bảng thua có 2-3 gợi ý: Còn 2 điểm kỹ năng chưa học (nhánh Thủ) (học ngay ở Cụ Đồ) | Còn 7 điểm chưởng chưa học (Hỏa chưởng) (học ngay ở Cụ Đồ, thẻ Cây chưởng) | Mài Kiếm lên +1 (đủ đồ rồi — tới Ông Thợ Rèn làm ngay)
+đạt còn điểm kỹ năng thì gợi ý học trước tiên
+đạt gợi ý nào cũng tăng Sức mạnh (hoặc là điểm chưa học) và có chỗ để đi tới
+đạt nâng cấp tự động: Sức mạnh 128 -> 174 sau 13 việc, có nâng Mầm, không tiêu quá số có
+đạt nâng bộ Ninja: cấp 1 không cần mảnh, cấp 2 cần 3 mảnh Mộc Tinh
+lượt 1 (hoa): 175 phút, 38 lần chơi | 1 1 1 2 5 1 3 4 2 5 1 4 3 1 4
+lượt 2 (doc): 149 phút, 31 lần chơi | 1 1 3 1 2 1 2 4 2 1 3 4 1 1 4
+lượt 3 (bang): 171 phút, 39 lần chơi | 1 1 3 1 4 1 3 7 1 4 1 4 3 1 4
+lượt 4 (hoa): 174 phút, 37 lần chơi | 1 1 3 1 4 1 3 3 1 3 5 1 2 2 6
+lượt 5 (doc): 160 phút, 34 lần chơi | 1 1 1 2 3 1 3 5 1 5 1 3 4 1 2
+lượt 6 (bang): 176 phút, 35 lần chơi | 1 1 3 1 2 1 2 4 2 4 3 2 5 1 3
+lượt 7 (hoa): 182 phút, 37 lần chơi | 1 1 1 2 4 1 3 4 3 4 1 1 5 3 3
+lượt 8 (doc): 193 phút, 40 lần chơi | 1 1 1 2 3 1 2 5 1 4 1 4 5 2 7
+lượt 9 (bang): 205 phút, 40 lần chơi | 1 1 3 2 5 1 1 4 1 5 1 1 7 1 6
+lượt 10 (hoa): 166 phút, 35 lần chơi | 1 1 3 1 4 1 3 6 1 4 3 3 2 1 1
+lượt 11 (doc): 167 phút, 36 lần chơi | 1 1 1 2 3 1 1 5 2 4 1 6 4 3 1
+lượt 12 (bang): 177 phút, 37 lần chơi | 1 1 1 2 4 1 6 2 2 5 1 5 4 1 1
+
+Kiểu bot: khuyen, 12 lượt chiến dịch. Số lần chơi = mọi lượt (cả chơi lại ải cũ và lượt thua) để qua ải đó.
+| Ải | Lần chơi TB (trung vị) | Lượt cày | Lần thử | Thua | Phút (cả cày) | Giây lượt thắng | Cấp khi qua | Sức mạnh khi qua / khuyên dùng | Máu còn khi thắng | Đòn trùm mạnh nhất (% máu) | Linh khí / lượt | Vàng / lượt | Tham khảo |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1-1 | 1.0 (1) | 0.0 | 1.0 | 0.0 | 3 | 167 | 1 | 100 / 95 | 83% | 13% (TB 11%) | 77 | 163 | 1-2.5 |
+| 1-2 | 1.0 (1) | 0.0 | 1.0 | 0.0 | 3 | 202 | 2 | 109 / 105 | 69% | 19% (TB 16%) | 29 | 233 | 1-2.5 |
+| 1-3 | 2.0 (2) | 1.0 | 1.0 | 0.0 | 7 | 240 | 4 | 131 / 125 | 78% | 22% (TB 14%) | 35 | 230 | 1-2.5 |
+| 1-4 | 1.6 (2) | 0.6 | 1.0 | 0.0 | 8 | 307 | 5 | 144 / 140 | 77% | 22% (TB 14%) | 49 | 283 | 1-2.5 |
+| 1-5 | 3.6 (4) | 2.4 | 1.2 | 0.2 | 17 | 304 | 8 | 181 / 175 | 50% | 29% (TB 22%) | 65 | 458 | 3-9 |
+| 2-1 | 1.0 (1) | 0.0 | 1.0 | 0.0 | 4 | 225 | 9 | 195 / 180 | 65% | 49% (TB 32%) | 49 | 509 | 1-5.5 |
+| 2-2 | 2.7 (3) | 1.6 | 1.1 | 0.1 | 10 | 258 | 11 | 220 / 215 | 76% | 53% (TB 36%) | 54 | 340 | 1-5.5 |
+| 2-3 | 4.4 (4) | 3.2 | 1.2 | 0.2 | 18 | 272 | 15 | 269 / 260 | 72% | 57% (TB 37%) | 62 | 441 | 1-5.5 |
+| 2-4 | 1.6 (1.5) | 0.5 | 1.1 | 0.1 | 7 | 275 | 16 | 286 / 275 | 67% | 45% (TB 30%) | 74 | 532 | 1-5.5 |
+| 2-5 | 4.0 (4) | 3.0 | 1.0 | 0.0 | 18 | 278 | 19 | 309 / 305 | 66% | 24% (TB 20%) | 86 | 578 | 3-9 |
+| 3-1 | 1.8 (1) | 0.6 | 1.2 | 0.2 | 7 | 266 | 20 | 322 / 310 | 82% | 8% (TB 8%) | 72 | 532 | 1-5.5 |
+| 3-2 | 3.2 (3.5) | 1.8 | 1.3 | 0.3 | 13 | 285 | 22 | 356 / 330 | 73% | 27% (TB 10%) | 71 | 539 | 1-5.5 |
+| 3-3 | 3.8 (4) | 2.4 | 1.3 | 0.3 | 17 | 317 | 25 | 430 / 410 | 83% | 52% (TB 18%) | 75 | 606 | 1-5.5 |
+| 3-4 | 1.5 (1) | 0.3 | 1.2 | 0.2 | 8 | 353 | 26 | 468 / 420 | 86% | 29% (TB 15%) | 94 | 732 | 1-5.5 |
+| 3-5 | 3.5 (3.5) | 2.2 | 1.2 | 0.2 | 17 | 338 | 28 | 532 / 520 | 50% | 34% (TB 18%) | 106 | 734 | 3-9 |
+Tổng thời gian đi hết 15 ải lần đầu: trung bình 175 phút (2.9 giờ), trung vị 175, nhanh nhất 149, lâu nhất 205; 37 lần chơi
+Ải ngày (mỗi 8 lượt ải thường = 1 ngày; trung bình mỗi lượt chiến dịch): 4 ngày, 19 lượt ải ngày, thắng 100%, +4418 vàng, +104 quặng, +24 đá nâng bậc, +376 linh khí; da 72/72, mai 78/78, vang 75/75
+Lúc qua 3-5 (trung bình): cấp 29, Sức mạnh 563, vàng còn 1458, linh khí còn 479, quặng 241, nguyên liệu 64/67/27, mảnh 4.0/3.5/3.0
+
+Mốc nâng cấp (ải đang tới lúc đủ để nâng; trung vị, số lượt chiến dịch có đạt):
+  sword bậc Xanh lam: 1-3 (sớm nhất 1-3, muộn nhất 1-3; 12/12 lượt)
+  sword Mầm: 1-3/1-4 (sớm nhất 1-3, muộn nhất 1-4; 12/12 lượt)
+  bộ ninja 1: 1-3/1-4 (sớm nhất 1-3, muộn nhất 1-5; 12/12 lượt)
+  sword bậc Xanh lục: 1-5 (sớm nhất 1-5, muộn nhất 1-5; 12/12 lượt)
+  bow Mầm: 1-5 (sớm nhất 1-4, muộn nhất 1-5; 12/12 lượt)
+  bow bậc Xanh lam: 1-5 (sớm nhất 1-5, muộn nhất 2-2; 12/12 lượt)
+  sword Thành hình: 2-2 (sớm nhất 2-2, muộn nhất 2-3; 12/12 lượt)
+  mua bộ rung: 2-2 (sớm nhất 1-5, muộn nhất 2-3; 12/12 lượt)
+  bộ rung 1: 2-2 (sớm nhất 1-5, muộn nhất 2-3; 12/12 lượt)
+  sword bậc Tím: 2-3 (sớm nhất 2-1, muộn nhất 2-4; 12/12 lượt)
+  bow Thành hình: 2-3 (sớm nhất 2-3, muộn nhất 2-4; 12/12 lượt)
+  bow bậc Xanh lục: 2-3 (sớm nhất 2-2, muộn nhất 2-5; 12/12 lượt)
+  bộ rung 2: 2-5 (sớm nhất 2-5, muộn nhất 3-1; 12/12 lượt)
+  mua bộ bien: 3-1/3-2 (sớm nhất 3-1, muộn nhất 3-3; 12/12 lượt)
+  bộ bien 1: 3-2 (sớm nhất 3-1, muộn nhất 3-3; 12/12 lượt)
+  sword Thức tỉnh: 3-3 (sớm nhất 3-2, muộn nhất 3-5; 12/12 lượt)
+  sword bậc Vàng: 3-3 (sớm nhất 3-1, muộn nhất 3-5; 12/12 lượt)
+  bow bậc Tím: 3-3 (sớm nhất 3-1, muộn nhất 3-5; 11/12 lượt)
+  bộ bien 2: 3-3 (sớm nhất 3-2, muộn nhất 3-5; 11/12 lượt)
+  sword bậc Đỏ: 3-3 (sớm nhất 3-3, muộn nhất 3-3; 1/12 lượt)
+  bộ bien 3: 3-4 (sớm nhất 3-4, muộn nhất 3-4; 1/12 lượt)
+  bow Thức tỉnh: 3-5 (sớm nhất 3-5, muộn nhất 3-5; 3/12 lượt)
+Nguồn mất máu: archer 22%, trùm-đánh 17%, shield 11%, spiky 10%, elite 9%, swarm 8%, vùng-trùm 6%, kami 6%, bomber 5%, nimble 3%, rusher 2%, vùng/đạn 1%
+exit 0 giay 174

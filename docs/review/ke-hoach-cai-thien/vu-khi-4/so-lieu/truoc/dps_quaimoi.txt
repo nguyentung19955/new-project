@@ -1,0 +1,41 @@
+Trên giấy (sát thương gốc của loại vũ khí, chưa tính cấp, bậc, mài):
+lối đánh                  tầm với   giây/đòn     st/đòn    st/giây
+Kiếm (chuỗi 3 nhát)         32-40       0.35       11.6       32.7
+Giáo (3 đâm + quét)         60-62       0.40       13.8       34.9
+Búa (nện)                      32       0.80       21.3       26.6
+Cung (bắn thường)             180       0.38       11.4       30.0
+Giáo (xốc tới đầy)             58       1.02       23.5       23.1
+Búa (lấy đà 2 nấc)        38 vòng       1.71       26.6       15.6
+Cung (giương đầy)             250       1.19       34.2       28.9
+phòng thường 208x196 | cụm năm quái | 60 giây x 8 hạt giống
+vũ khí  hệ     st/giây bị đánh     hạ  dấu ấn
+sword   không     43.9     2.4    6.1     0.0
+sword   fire      74.3     2.0   13.0    15.1
+sword   poison    96.5     2.0   18.4    21.4
+sword   ice       83.8     1.7   16.5    19.4
+bow     không     31.5     1.7    3.9     0.0
+bow     fire      61.9     1.7   10.0    11.5
+bow     poison    81.5     1.7   14.6    17.2
+bow     ice       65.7     1.5   10.9    12.0
+spear   không     39.0     1.8    4.8     0.0
+spear   fire      77.6     1.5   14.2    15.2
+spear   poison    88.3     1.9   16.6    19.4
+spear   ice       75.6     1.6   14.1    16.8
+hammer  không     36.0     2.4    5.0     0.0
+hammer  fire      84.8     2.1   16.6    18.4
+hammer  poison    87.8     1.8   16.6    19.1
+hammer  ice       63.4     1.8   11.6    12.4
+
+| Vũ khí | Trắng (st/giây) | Thức tỉnh TB 3 hệ | Lửa / Độc / Băng | Thức tỉnh ÷ Trắng |
+|---|---|---|---|---|
+| Kiếm | 43.9 | 84.9 | 74.3 / 96.5 / 83.8 | x1.93 |
+| Giáo | 39.0 | 80.5 | 77.6 / 88.3 / 75.6 | x2.06 |
+| Búa | 36.0 | 78.7 | 84.8 / 87.8 / 63.4 | x2.18 |
+| Phi tiêu | 31.5 | 69.7 | 61.9 / 81.5 / 65.7 | x2.21 |
+Cung thấp hơn kiếm 28% (cần 13-27%)
+Ba vũ khí cận chiến: trung bình 39.7, lệch nhiều nhất 11% (cần không quá 15%)
+Vũ khí thấp nhất bằng 72% vũ khí cao nhất (cần từ 70%)
+Ba hệ ở Thức tỉnh (trung bình bốn vũ khí): Lửa 74.6, Độc 88.5, Băng 72.1, lệch nhiều nhất 13%
+SAI: cung phải thấp hơn kiếm khoảng 15-25%
+không đạt
+exit 1

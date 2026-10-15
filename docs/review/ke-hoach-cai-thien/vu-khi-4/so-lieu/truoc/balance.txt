@@ -1,0 +1,36 @@
+== vũ khí: spear
+1-1: sức mạnh 99/95 thắng 8/8 |  204s (đánh quái  158s, trùm  48s) | dấu ấn  73.4 | hạ 19.1 quái | mất   36 máu trên 100 | kiểu AAAAAAAA
+1-2: sức mạnh 103/105 thắng 8/8 |  276s (đánh quái  214s, trùm  63s) | dấu ấn  19.8 | hạ 21.2 quái | mất   79 máu trên 106 | kiểu BBBBBBBB
+1-3: sức mạnh 124/125 thắng 7/8 |  324s (đánh quái  259s, trùm  67s) | dấu ấn  27.3 | hạ 26.6 quái | mất  109 máu trên 123 | kiểu CCCAACCC
+1-4: sức mạnh 140/140 thắng 7/8 |  396s (đánh quái  331s, trùm  67s) | dấu ấn  39.1 | hạ 37.7 quái | mất  171 máu trên 136 | kiểu CCCACACC
+1-5: sức mạnh 178/175 thắng 2/8 |  470s (đánh quái  336s, trùm 136s) | dấu ấn  50.5 | hạ 41.0 quái | mất  282 máu trên 156 | kiểu CCCCCCCC
+2-1: sức mạnh 185/180 thắng 1/8 |  294s (đánh quái  221s, trùm  74s) | dấu ấn  24.0 | hạ 20.0 quái | mất  227 máu trên 156 | kiểu ABABBABB
+2-2: sức mạnh 211/215 thắng 3/8 |  320s (đánh quái  262s, trùm  59s) | dấu ấn  34.0 | hạ 25.7 quái | mất  305 máu trên 169 | kiểu BABBBBAB
+2-3: sức mạnh 264/260 thắng 4/8 |  346s (đánh quái  288s, trùm  58s) | dấu ấn  41.2 | hạ 30.2 quái | mất  386 máu trên 196 | kiểu CBBBBCBC
+2-4: sức mạnh 282/275 thắng 3/8 |  332s (đánh quái  276s, trùm  58s) | dấu ấn  56.3 | hạ 41.7 quái | mất  297 máu trên 209 | kiểu BABBAABA
+2-5: sức mạnh 312/305 thắng 1/8 |  355s (đánh quái  301s, trùm  56s) | dấu ấn  68.0 | hạ 45.0 quái | mất  496 máu trên 235 | kiểu CCCCCCCC
+3-1: sức mạnh 357/310 thắng 7/8 |  317s (đánh quái  256s, trùm  62s) | dấu ấn  42.6 | hạ 27.6 quái | mất  251 máu trên 249 | kiểu BABBBBBA
+3-2: sức mạnh 395/330 thắng 8/8 |  324s (đánh quái  262s, trùm  62s) | dấu ấn  47.0 | hạ 29.2 quái | mất  311 máu trên 255 | kiểu BCBCCBCB
+3-3: sức mạnh 458/410 thắng 7/8 |  405s (đánh quái  349s, trùm  56s) | dấu ấn  46.3 | hạ 31.4 quái | mất  287 máu trên 262 | kiểu BAAABBBB
+3-4: sức mạnh 470/420 thắng 5/8 |  480s (đánh quái  429s, trùm  52s) | dấu ấn  63.2 | hạ 45.8 quái | mất  476 máu trên 282 | kiểu BBBCBCCB
+3-5: sức mạnh 521/520 thắng 3/8 |  386s (đánh quái  341s, trùm  47s) | dấu ấn  79.0 | hạ 48.0 quái | mất  687 máu trên 301 | kiểu CCCCCCCC
+== vũ khí: hammer
+1-1: sức mạnh 100/95 thắng 8/8 |  199s (đánh quái  152s, trùm  48s) | dấu ấn  77.1 | hạ 19.0 quái | mất   30 máu trên 100 | kiểu AAAAAAAA
+1-2: sức mạnh 107/105 thắng 8/8 |  258s (đánh quái  203s, trùm  57s) | dấu ấn  19.6 | hạ 20.8 quái | mất   68 máu trên 106 | kiểu CBCBBBCC
+1-3: sức mạnh 129/125 thắng 8/8 |  303s (đánh quái  241s, trùm  63s) | dấu ấn  26.0 | hạ 25.6 quái | mất   91 máu trên 123 | kiểu AACACAAA
+1-4: sức mạnh 145/140 thắng 7/8 |  406s (đánh quái  350s, trùm  58s) | dấu ấn  39.3 | hạ 39.0 quái | mất  151 máu trên 136 | kiểu ACCAAAAC
+1-5: sức mạnh 185/175 thắng 3/8 |  457s (đánh quái  347s, trùm 112s) | dấu ấn  49.7 | hạ 41.7 quái | mất  285 máu trên 156 | kiểu CCCCCCCC
+2-1: sức mạnh 192/180 thắng 2/8 |  308s (đánh quái  230s, trùm  78s) | dấu ấn  28.5 | hạ 19.5 quái | mất  248 máu trên 156 | kiểu BAABABAA
+2-2: sức mạnh 219/215 thắng 3/8 |  320s (đánh quái  260s, trùm  61s) | dấu ấn  32.0 | hạ 22.7 quái | mất  240 máu trên 169 | kiểu BBBABABA
+2-3: sức mạnh 275/260 thắng 2/8 |  321s (đánh quái  261s, trùm  60s) | dấu ấn  37.5 | hạ 29.5 quái | mất  270 máu trên 196 | kiểu CBBCBBCB
+2-4: sức mạnh 292/275 thắng 4/8 |  342s (đánh quái  297s, trùm  45s) | dấu ấn  50.2 | hạ 40.8 quái | mất  350 máu trên 209 | kiểu BABBAABB
+2-5: sức mạnh 322/305 thắng 2/8 |  350s (đánh quái  296s, trùm  54s) | dấu ấn  65.5 | hạ 46.0 quái | mất  308 máu trên 235 | kiểu CCCCCCCC
+3-1: sức mạnh 358/310 thắng 7/8 |  282s (đánh quái  228s, trùm  56s) | dấu ấn  42.0 | hạ 26.0 quái | mất  189 máu trên 249 | kiểu AAAAAABA
+3-2: sức mạnh 397/330 thắng 8/8 |  303s (đánh quái  249s, trùm  55s) | dấu ấn  46.4 | hạ 29.1 quái | mất  288 máu trên 255 | kiểu BCBCCCCB
+3-3: sức mạnh 460/410 thắng 5/8 |  353s (đánh quái  304s, trùm  50s) | dấu ấn  47.2 | hạ 32.6 quái | mất  276 máu trên 262 | kiểu BABBAAAB
+3-4: sức mạnh 472/420 thắng 3/8 |  456s (đánh quái  402s, trùm  55s) | dấu ấn  63.0 | hạ 46.3 quái | mất  457 máu trên 282 | kiểu CCBBCBCC
+3-5: sức mạnh 523/520 thắng 3/8 |  357s (đánh quái  318s, trùm  40s) | dấu ấn  82.7 | hạ 49.0 quái | mất  287 máu trên 301 | kiểu CCCCCCCC
+TỔNG: thắng 147/240 | một ải trung bình 328 giây (5.5 phút) | trùm 59 giây | dấu ấn 45.5 mỗi ải | hạ 30.4 quái mỗi ải | mất 110% máu mỗi ải
+  spear: thắng 74/120, một ải trung bình 338 giây
+  hammer: thắng 73/120, một ải trung bình 318 giây
+exit 0

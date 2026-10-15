@@ -1,0 +1,40 @@
+Trên giấy (sát thương gốc của loại vũ khí, chưa tính cấp, bậc, mài):
+lối đánh                  tầm với   giây/đòn     st/đòn    st/giây
+Kiếm (chuỗi 3 nhát)         32-40       0.35       11.6       32.7
+Giáo (3 đâm + quét)         60-62       0.40       13.8       34.9
+Búa (nện)                      32       0.80       21.3       26.6
+Cung (bắn thường)             180       0.38       11.4       30.0
+Giáo (xốc tới đầy)             58       1.02       23.5       23.1
+Búa (lấy đà 2 nấc)        38 vòng       1.71       26.6       15.6
+Cung (giương đầy)             250       1.19       34.2       28.9
+phòng thường 208x196 | cụm năm quái | 60 giây x 8 hạt giống
+vũ khí  hệ     st/giây bị đánh     hạ  dấu ấn
+sword   không     62.2     3.5   39.2     0.0
+sword   fire     102.3     3.2   65.5    74.5
+sword   poison   105.1     2.6   68.2    78.9
+sword   ice       94.6     2.7   60.9    68.6
+bow     không     47.2     2.3   28.8     0.0
+bow     fire      95.7     1.4   61.6    69.4
+bow     poison    97.2     1.5   62.5    72.1
+bow     ice       86.9     1.2   55.1    62.5
+spear   không     57.6     2.6   36.5     0.0
+spear   fire      99.5     2.1   64.0    71.2
+spear   poison   101.1     1.9   65.5    73.9
+spear   ice       90.4     1.4   57.9    63.6
+hammer  không     52.3     2.1   32.9     0.0
+hammer  fire     102.4     1.7   65.9    55.9
+hammer  poison   102.4     1.9   66.0    57.8
+hammer  ice       83.9     1.9   54.0    34.0
+
+| Vũ khí | Trắng (st/giây) | Thức tỉnh TB 3 hệ | Lửa / Độc / Băng | Thức tỉnh ÷ Trắng |
+|---|---|---|---|---|
+| Kiếm | 62.2 | 100.7 | 102.3 / 105.1 / 94.6 | x1.62 |
+| Giáo | 57.6 | 97.0 | 99.5 / 101.1 / 90.4 | x1.68 |
+| Búa | 52.3 | 96.2 | 102.4 / 102.4 / 83.9 | x1.84 |
+| Phi tiêu | 47.2 | 93.3 | 95.7 / 97.2 / 86.9 | x1.98 |
+Cung thấp hơn kiếm 24% (cần 13-27%)
+Ba vũ khí cận chiến: trung bình 57.4, lệch nhiều nhất 9% (cần không quá 15%)
+Vũ khí thấp nhất bằng 76% vũ khí cao nhất (cần từ 70%)
+Ba hệ ở Thức tỉnh (trung bình bốn vũ khí): Lửa 100.0, Độc 101.5, Băng 88.9, lệch nhiều nhất 8%
+đạt
+exit 0

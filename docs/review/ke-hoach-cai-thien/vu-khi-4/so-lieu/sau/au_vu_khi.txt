@@ -1,0 +1,35 @@
+== PHẦN 1: từng đòn (sát thương gốc loại vũ khí, chưa tính cấp/bậc/mài)
+   {"w": "sword", "name": "Chém ngang", "dur": 0.3, "hitAt": 0.135, "dmg": 9, "reach": 32, "depth": 20, "push": 0}
+   {"w": "sword", "name": "Chém ngược", "dur": 0.3, "hitAt": 0.135, "dmg": 9.5, "reach": 34, "depth": 20, "push": 0}
+   {"w": "sword", "name": "Nhát kết", "dur": 0.46, "hitAt": 0.207, "dmg": 16.2, "reach": 40, "depth": 30, "push": 10}
+   {"w": "sword", "name": "Nhát lướt (sau né)", "dur": 0.12, "hitAt": 0.054, "dmg": 12.6, "reach": 30, "depth": 24, "win": 0.35}
+   {"w": "bow", "name": "Ném (đứng yên)", "dur": 0.38, "hitAt": 0.171, "dmg": 11.4, "reach": 180, "depth": 0, "pierce": 1, "pierceMult": 0.35}
+   {"w": "bow", "name": "Ném (vừa chạy)", "dur": 0.45, "hitAt": 0.203, "dmg": 11.4, "reach": 180, "depth": 0}
+   {"w": "bow", "name": "Ném chùm (đầy)", "dur": 1.185, "hitAt": 0.533, "dmg": 34.2, "reach": 250, "depth": 0, "pierce": 2}
+   {"w": "spear", "name": "Đâm", "dur": 0.38, "hitAt": 0.171, "dmg": 11.8, "reach": 60, "depth": 12, "push": 0}
+   {"w": "spear", "name": "Đâm", "dur": 0.34, "hitAt": 0.153, "dmg": 11.8, "reach": 60, "depth": 12, "push": 0}
+   {"w": "spear", "name": "Đâm", "dur": 0.34, "hitAt": 0.153, "dmg": 11.8, "reach": 62, "depth": 12, "push": 0}
+   {"w": "spear", "name": "Quét vòng", "dur": 0.52, "hitAt": 0.234, "dmg": 19.8, "reach": 44, "depth": "vòng", "push": 8}
+   {"w": "spear", "name": "Xốc tới (đầy)", "dur": 1.02, "hitAt": 0.459, "dmg": 23.5, "reach": 58, "depth": 12, "iframe": 0.16}
+   {"w": "hammer", "name": "Nện", "dur": 0.8, "hitAt": 0.36, "dmg": 21.3, "reach": 32, "depth": 26, "stagger": 0.4}
+   {"w": "hammer", "name": "Nện đất (nấc 1)", "dur": 1.108, "hitAt": 0.499, "dmg": 21.3, "reach": 30, "depth": "vòng", "wave": 0.4}
+   {"w": "hammer", "name": "Nện đất mạnh (nấc 2)", "dur": 1.708, "hitAt": 0.769, "dmg": 26.6, "reach": 38, "depth": "vòng", "stun": 0.7, "wave": 0.5}
+   {"w": "sword", "name": "Đặc biệt: Trảm Nguyệt", "dmg": 18, "reach": "110-170", "stun": 0, "special": true}
+   {"w": "spear", "name": "Đặc biệt: Phi Thương", "dmg": 17.1, "reach": "110-165", "stun": 1, "special": true}
+   {"w": "hammer", "name": "Đặc biệt: Địa Chấn", "dmg": 44.7, "reach": "90-140", "stun": 0.9, "special": true}
+   {"w": "bow", "name": "Đặc biệt: Mưa Tên", "dmg": "3.9 x ~6 đợt", "reach": "vòng 40", "special": true}
+
+== PHẦN 2: bot, phòng thường, quái mới (máu x2,5), 60 giây x 8 hạt giống
+vũ khí  cảnh        st/giây mất/giây quái/nhịp   %raĐòn  né/phút       hạ  ấn/phút   %huỷ
+sword   cụm 5          47.8     2.19     1.23      50%     38.5      7.1      0.0    11%
+sword   1 quái         28.9     0.00     1.00      40%     18.9      1.6      0.0     6%
+sword   cụm, Mầm L     54.9     1.89     1.21      49%     38.4      8.8      4.6    11%
+bow     cụm 5          33.4     2.01     1.32      59%     36.1      4.2      0.0    13%
+bow     1 quái         35.6     0.52     1.00      75%     19.5      2.0      0.0     6%
+bow     cụm, Mầm L     44.2     1.90     1.38      61%     36.0      6.9      3.5    12%
+spear   cụm 5          44.2     2.21     1.27      58%     38.4      6.1      0.0    13%
+spear   1 quái         38.7     0.36     1.00      64%     16.0      2.1      0.0     8%
+spear   cụm, Mầm L     54.9     1.86     1.24      59%     36.8      9.1      5.2    12%
+hammer  cụm 5          42.1     2.54     1.25      68%     36.1      6.6      0.0    18%
+hammer  1 quái         47.9     1.05     1.00      76%     20.1      2.9      0.0     1%
+hammer  cụm, Mầm L     53.4     2.23     1.26      67%     34.0      9.5      5.6    17%
