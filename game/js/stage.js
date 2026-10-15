@@ -1322,7 +1322,10 @@
     if (S.won) { if (ui.btn(165, 154, 150, 28, 'Rời ải', { color: '#a8452a' })) finish(true); }
     else if (ui.btn(165, 154, 150, 28, 'Bỏ ải, về làng', { color: '#6a2a22' })) { S.quit = true; finish(false); }
     // hòm thư góp ý (js/cloud_ui.js), kèm ảnh chụp trận
-    if (G.cloudUI && ui.btn(165, 192, 150, 26, '✉ Góp ý', { color: '#2f5a52', size: 8.5 })) G.cloudUI.feedback({ shot: true });
+    // Bước 2 Phiên B (js/viec_ngay.js): nút "Việc hôm nay" (chỉ xem tiến độ) chia đôi hàng với Góp ý; không có / ?viecngay=0 thì như cũ
+    const vn = !!(G.viecNgay && G.viecNgay.coNut && G.viecNgay.coNut()), gw = vn && G.cloudUI ? 73 : 150;
+    if (G.cloudUI && ui.btn(165, 192, gw, 26, '✉ Góp ý', { color: '#2f5a52', size: 8.5 })) G.cloudUI.feedback({ shot: true });
+    if (vn && ui.btn(G.cloudUI ? 242 : 165, 192, gw, 26, 'Việc hôm nay', { color: '#7a5a12', size: 8 })) G.viecNgay.xemTrongAi();
     // Hành trang (js/hanh_trang.js): xem nhân vật, vũ khí, trang phục, linh khí, kỹ năng, tài nguyên; trong ải chỉ xem
     if (G.hanhTrang) {
       if (ui.btn(165, 224, 150, 26, '    Hành trang (xem)', { size: 8.5 })) { G.hanhTrang.reset(); setMode('bag'); }

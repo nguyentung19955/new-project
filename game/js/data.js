@@ -742,3 +742,50 @@
     'Cô Thợ May nâng 4 bộ đồ của Zed (Ninja, Rừng, Biển, Lâu đài) bằng linh khí, vàng và mảnh trùm. Mỗi cấp bộ mở một skill riêng, chỉ có tác dụng khi đang mặc bộ đó.',
   ];
 })();
+
+// ===================== BƯỚC 2 — PHIÊN B: VIỆC HÔM NAY (việc làng hằng ngày của Anh Mõ) =====================
+// docs/ke-hoach/buoc-2/KE-HOACH.md mục 1.2 (bảng thưởng, 22 mẫu việc). Mã chạy: js/viec_ngay.js. Cờ quay lui ?viecngay=0.
+// Chỉ có SỐ và CHỮ ở đây; điều kiện mở từng mẫu, cách đếm tiến độ nằm trong js/viec_ngay.js (theo mã mẫu).
+// thuong: [mức 1, mức 2, mức 3] theo trùm vùng cao nhất đã hạ (chưa hạ Mộc Tinh = mức 1, đã hạ Mộc Tinh = 2, đã hạ Ngư Tinh = 3).
+// Mỗi việc: { v: vàng, q: quặng }. Rương ngày (xong 3/3): { da: đá nâng bậc, lk: linh khí }. Rương tuần (đủ tuanCan ngày): { bua, da }.
+// Mẫu: m mã · nhom (3 việc một ngày khác nhóm) · muc 0 Dễ / 1 Vừa / 2 Khó · can số cần · chu câu việc ({0} = số cần, {1} = tham số) · icon ô trong tấm B8.
+(function () {
+  const G = window.G;
+  G.VIEC_NGAY = {
+    moSau: '0-1', // mở khi đã qua ải Rừng già 2 (cùng lúc Cô Thợ May ra mặt) — Q1 = a
+    soViec: 3, doiMoiNgay: 1, tuanCan: 5, // Q8 = a (1 lần đổi miễn phí), Q9 = a (5/7 ngày)
+    thuong: [
+      [{ v: 60, q: 2 }, { v: 120, q: 3 }, { v: 200, q: 4 }], // việc Dễ
+      [{ v: 90, q: 3 }, { v: 180, q: 4 }, { v: 300, q: 6 }], // việc Vừa
+      [{ v: 120, q: 4 }, { v: 240, q: 6 }, { v: 400, q: 8 }], // việc Khó
+    ],
+    ruongNgay: [{ da: 2, lk: 8 }, { da: 3, lk: 12 }, { da: 4, lk: 16 }],
+    ruongTuan: [{ bua: 1, da: 5 }, { bua: 1, da: 8 }, { bua: 1, da: 12 }],
+    mau: [
+      { m: 'haQuai', nhom: 'haQuai', muc: 0, can: 30, chu: 'Hạ {0} quái', icon: 0 },
+      { m: 'haTinhAnh', nhom: 'haQuai', muc: 1, can: 3, chu: 'Hạ {0} tinh anh', icon: 1 },
+      { m: 'haLoai', nhom: 'so', muc: 0, can: 8, chu: 'Hạ {0} con {1}', icon: 0 },
+      { m: 'timDiemYeu', nhom: 'so', muc: 2, can: 1, chu: 'Tìm ra điểm yếu của {0} quái mới trong sổ', icon: 5 },
+      { m: 'quaAi', nhom: 'quaAi', muc: 0, can: 2, chu: 'Qua {0} ải bất kỳ', icon: 2 },
+      { m: 'khongBinh', nhom: 'quaAi', muc: 1, can: 1, chu: 'Qua {0} ải không dùng bình máu', icon: 4 },
+      { m: 'baSao', nhom: 'quaAi', muc: 2, can: 1, chu: 'Qua {0} ải đạt 3 sao', icon: 3 },
+      { m: 'trumKhac', nhom: 'trum', muc: 2, can: 1, chu: 'Hạ {0} trùm bằng hệ khắc chế (sao thứ ba)', icon: 5 },
+      { m: 'veVung', nhom: 'quaAi', muc: 0, can: 1, chu: 'Về thăm {1}: qua {0} ải ở đó', icon: 2 },
+      { m: 'kho2', nhom: 'quaAi', muc: 2, can: 1, chu: 'Qua {0} ải độ khó 2', icon: 3 },
+      { m: 'aiNgay', nhom: 'aiNgay', muc: 1, can: 1, chu: 'Thắng {0} lượt Ải ngày', icon: 11 },
+      { m: 'heKet', nhom: 'he', muc: 1, can: 15, chu: 'Kết liễu {0} quái bằng đòn {1}', icon: 5 },
+      { m: 'dinhHe', nhom: 'he', muc: 0, can: 25, chu: 'Hạ {0} quái đang dính cháy, độc hoặc chậm', icon: 5 },
+      { m: 'phanUng', nhom: 'he', muc: 2, can: 5, chu: 'Gây {0} lần phản ứng hệ (Nổ lan, Lây độc, Băng vỡ)', icon: 6 },
+      { m: 'vuKhi', nhom: 'vuKhi', muc: 0, can: 12, chu: 'Hạ {0} quái bằng {1}', icon: 0 },
+      { m: 'doiVk', nhom: 'vuKhi', muc: 0, can: 10, chu: 'Đổi vũ khí giữa trận {0} lần', icon: 0 },
+      { m: 'dacBiet', nhom: 'chieu', muc: 0, can: 10, chu: 'Dùng đòn Đặc biệt {0} lần', icon: 8 },
+      { m: 'chuong', nhom: 'chieu', muc: 0, can: 15, chu: 'Bắn Chưởng {0} lần', icon: 8 },
+      { m: 'ne', nhom: 'chieu', muc: 0, can: 20, chu: 'Lộn né {0} lần', icon: 7 },
+      { m: 'ruong', nhom: 'phong', muc: 0, can: 2, chu: 'Mở {0} rương báu', icon: 9 },
+      { m: 'thuThach', nhom: 'phong', muc: 1, can: 1, chu: 'Thắng {0} phòng thử thách', icon: 3 },
+      { m: 'nangCap', nhom: 'lang', muc: 0, can: 1, chu: 'Nâng cấp {0} lần ở làng (mài, ép đồ, học điểm…)', icon: 10 },
+    ],
+  };
+  G.VIEC_NGAY_BAT = true;
+  try { if (typeof location !== 'undefined' && /[?&]viecngay=0(&|$)/.test(location.search || '')) G.VIEC_NGAY_BAT = false; } catch (e) { /* giữ mặc định */ }
+})();

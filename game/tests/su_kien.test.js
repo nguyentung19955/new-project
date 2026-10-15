@@ -209,6 +209,9 @@ const sx = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Ar
     console.log('8. Khung thẻ Ông Từ (Cu Tí | Sổ | Thành tựu), Anh Mõ (Việc hôm nay | Cài đặt)');
     const the = await A.goi(() => {
       const VA = G.villageApi, P = VA.PANELS, V = VA.V, r = {};
+      // Phiên A / B / C đã điền hàm thật: tạm thay bằng hàm rỗng (.rong) để kiểm đúng trạng thái Phiên 0, cuối mục trả lại
+      const that = { so: P.so, thanhTuu: P.thanhTuu, viecNgay: P.viecNgay };
+      for (const k of Object.keys(that)) if (!P[k].rong) { const f = function () { return ''; }; f.rong = true; P[k] = f; }
       G.noRender = false;
       const ve = () => { try { G.Village.draw(); return true; } catch (e) { return String(e && e.stack || e); } };
       r.rong = [P.so.rong, P.thanhTuu.rong, P.viecNgay.rong];
@@ -231,7 +234,7 @@ const sx = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Ar
       G.villageScene.checkNews(); r.cham = [G.villageScene.state.news.tu, G.villageScene.state.news.mo];
       P.so.cham = () => false; P.viecNgay.cham = () => false;
       G.villageScene.checkNews(); r.cham2 = [G.villageScene.state.news.tu, G.villageScene.state.news.mo];
-      Object.assign(P, goc); VA.goHub();
+      Object.assign(P, that); VA.goHub();
       G.noRender = true;
       return r;
     });
