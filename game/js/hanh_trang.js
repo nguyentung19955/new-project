@@ -237,13 +237,14 @@
       ['ore', 'Mài vũ khí, nâng lò cấp 4', 'Qua ải (nhiều sao được nhiều hơn), rương báu, phòng thử thách, thương nhân, Ải Đá Mài (ải ngày), Bà Hàng Xén (thẻ Quặng)'],
     ];
     const matUse = ['Nâng lò cấp 2, mài +5 lên +6', 'Mài từ +6 tới +9, nâng lò cấp 3', 'Mài từ +9 trở lên, nâng lò cấp 4'];
-    R.forEach((r, i) => a.push(['mat' + i, matUse[i] || 'Nguyên liệu vùng', G.t('Qua ải {0}', r.name)]));
-    R.forEach((r, i) => a.push(['shard' + i, i === 0 ? 'Nâng bộ Ninja và bộ Rừng lên cấp 2, 3' : 'Nâng bộ của vùng này lên cấp 2, 3', G.t('Hạ trùm vùng {0} (ải 5 {1})', r.bossName, r.name)]));
+    R.forEach((r, i) => { if (!r.matChung) a.push(['mat' + i, matUse[i] || 'Nguyên liệu vùng', G.t('Qua ải {0}', r.name)]); }); // vùng 4 không có nguyên liệu riêng (Q2 = A)
+    R.forEach((r, i) => a.push(['shard' + i, i === 0 ? 'Nâng bộ Ninja và bộ Rừng lên cấp 2, 3' : i >= 3 ? 'Để dành (chưa có bộ trang phục vùng này)' : 'Nâng bộ của vùng này lên cấp 2, 3', G.t('Hạ trùm vùng {0} (ải 5 {1})', r.bossName, r.name)]));
     return a;
   }
   function resTab(sv) {
     const val = { gold: sv.gold, ore: sv.ore, stone: sv.stones };
-    for (let i = 0; i < 3; i++) { val['mat' + i] = sv.mats[i]; val['shard' + i] = sv.shards[i]; }
+    for (let i = 0; i < 3; i++) val['mat' + i] = sv.mats[i];
+    for (let i = 0; i < sv.shards.length; i++) val['shard' + i] = sv.shards[i]; // vùng 4: ô mảnh trùm thứ 4
     region('res', CX, CY, CW - 4, CH, (y) => {
       for (const q of resInfo()) {
         T.inset(CX, y, CW - 8, 24, false);

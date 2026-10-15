@@ -156,6 +156,7 @@
   function unlocked(r, i, diff) {
     const map = diff ? G.save.stars2 : G.save.stars;
     if (diff && Object.keys(G.save.stars).length < 15) return false;
+    if (diff && r >= 3 && !G.save.stars[r + '-4']) return false; // vùng 4 (Q8 = A): độ khó 2 mở khi đã hạ trùm vùng đó (Độ khó 2 ba vùng đầu như cũ)
     if (r === 0 && i === 0) return true;
     const pr = i === 0 ? r - 1 : r, pi = i === 0 ? 4 : i - 1;
     return !!map[pr + '-' + pi];
@@ -164,9 +165,15 @@
   function pickNext() {
     const map = V.diff ? G.save.stars2 : G.save.stars;
     V.sel = null;
-    for (let r = 0; r < 3 && !V.sel; r++) for (let i = 0; i < 5; i++) if (unlocked(r, i, V.diff) && !map[r + '-' + i]) { V.sel = [r, i]; break; }
+    for (let r = 0; r < G.REGIONS.length && !V.sel; r++) for (let i = 0; i < 5; i++) if (unlocked(r, i, V.diff) && !map[r + '-' + i]) { V.sel = [r, i]; break; }
     if (!V.sel) V.sel = [0, 0];
+    V.mapTrang = trangCua(V.sel[0]);
   }
+  // Bản đồ hai trang (bước 3 phiên 1, G.VUNG4): trang 0 = tranh 3 vùng đầu như cũ, trang 1 = tranh Sông sâu (VS.MAP2 / VS.mapArt2, js/vung4.js).
+  // ?vung4=0 hoặc chưa có VS.MAP2: chỉ một trang, y như cũ.
+  const coTrang2 = () => !!(G.VUNG4 && G.REGIONS.length > 3 && VS.MAP2 && VS.mapArt2);
+  const trangCua = (r) => (coTrang2() && r >= 3 ? 1 : 0);
+  const vungTrang = (tr) => (tr === 1 ? [3] : [0, 1, 2]);
   function inkText(s, x, y, size, col, halo) { // chữ trên giấy: viền sáng quanh chữ
     const c = G.ux;
     ui.font(size, true); c.textAlign = 'center'; c.lineJoin = 'round'; c.lineWidth = size / 3.2; c.strokeStyle = halo || 'rgba(240,230,200,0.9)';
@@ -174,32 +181,33 @@
     ui.text(s, x, y, { size, bold: true, align: 'center', color: col, shadow: false });
   }
   function mapScreen() {
-    const sv = G.save, c = G.wx, M = VS.MAP, night = !!V.diff;
+    const tr2 = coTrang2() && V.mapTrang === 1 ? 1 : 0, DSV = vungTrang(tr2);
+    const sv = G.save, c = G.wx, M = tr2 ? VS.MAP2 : VS.MAP, night = !!V.diff;
     const all = Object.keys(sv.stars).length >= 15;
     if (!all) V.diff = 0;
     const map = V.diff ? sv.stars2 : sv.stars;
     G.wxDat(c, 0, 0); c.globalAlpha = 1;
-    c.drawImage(VS.mapArt(night), 0, 0);
+    c.drawImage(tr2 ? VS.mapArt2(night) : VS.mapArt(night), 0, 0);
     // đường nét đứt nối các ải theo thứ tự; chưa mở thì nhạt
     const ink = night ? '#3a2a4a' : '#7a4a30', faint = night ? '#6a6488' : '#b8a880';
-    for (let r = 0; r < 3; r++) {
+    for (const r of DSV) {
       const n = M.nodes[r];
       VS.mapDash(c, M.from[r], n[0], unlocked(r, 0, V.diff) ? ink : faint);
       if (r === 2) VS.mapDash(c, M.nodes[1][4], n[0], unlocked(2, 0, V.diff) ? ink : faint);
       for (let i = 0; i < 4; i++) VS.mapDash(c, n[i], n[i + 1], unlocked(r, i + 1, V.diff) ? ink : faint);
     }
-    for (const d of M.soonDash || []) VS.mapDash(c, M.nodes[d[0]][d[1]], d[2], faint);
+    for (const d of tr2 ? [] : M.soonDash || []) VS.mapDash(c, M.nodes[d[0]][d[1]], d[2], faint);
     VS.putNpc(c, 'lai', 32, 264, Math.floor(G.time * 2) % 3, { look: 1, noShadow: true }, 2);
     // tên vùng, tên trùm, vùng sắp có
     const halo = night ? 'rgba(20,16,40,0.85)' : null;
     inkText('Làng', M.lang ? M.lang[0] : 36, M.lang ? M.lang[1] : 110, 8, night ? '#e8dcc0' : '#4a3626', halo);
-    for (let r = 0; r < 3; r++) {
+    for (const r of DSV) {
       const q = M.names[r], R = G.REGIONS[r], b = M.nodes[r][4];
       inkText(R.name, q[0], q[1], 10, night ? '#f1e6c6' : q[2], halo);
       const bl = M.bossLab ? M.bossLab[r] : [r === 2 ? 40 : 38, r === 2 ? -6 : 3];
       inkText(R.bossName, b[0] + bl[0], b[1] + bl[1], 6.5, night ? '#e8dcc0' : '#4a3626', halo);
     }
-    for (const q of M.soon) {
+    for (const q of M.soon || []) {
       inkText(q[0], q[1], q[2], 8, night ? '#8a86a8' : '#8a7a58', halo);
       const px = q[3] || q[1], py = q[4] || q[2] + 12;
       ui.font(6.5, true);
@@ -213,7 +221,7 @@
     // 15 thẻ ải mặt trống; ải chưa qua ghi sức mạnh khuyên dùng, tô màu so với sức mạnh của bé (xanh đủ, vàng sát nút, đỏ thiếu)
     const pw = G.power();
     let hit = null, hd = 19;
-    for (let r = 0; r < 3; r++) for (let i = 0; i < 5; i++) {
+    for (const r of DSV) for (let i = 0; i < 5; i++) {
       const q = M.nodes[r][i], st = map[r + '-' + i] || 0, ok = unlocked(r, i, V.diff), boss = i === 4, rad = boss ? 12 : 10;
       const selc = V.sel && V.sel[0] === r && V.sel[1] === i;
       T.stageCard(q[0] - 20, q[1] - rad - 4, 40, 36, i + 1, !ok ? 'lock' : selc ? 'sel' : st ? 'done' : 'open', st, { r: rad, boss, noClick: true, noStars: true });
@@ -224,13 +232,18 @@
     }
     if (hit && !(G.click.x > 246 && G.click.y > 206)) { V.sel = hit; G.click = null; G.sfx('ui'); }
     // em bé đứng ở ải đang chọn
-    if (V.sel) {
+    if (V.sel && trangCua(V.sel[0]) === tr2) {
       const q = M.nodes[V.sel[0]][V.sel[1]], rad = V.sel[1] === 4 ? 12 : 10;
       G.art.hero(G.ux, { x: q[0], y: q[1] - rad + 1, face: 1, key: sv.hero, move: false, t: G.time, atk: -1, dodge: -1, weapon: null, noShadow: true });
       VS.bubble(V.sel[1] === 4 ? G.t('Trùm {0}', G.REGIONS[V.sel[0]].bossName) : G.t('Ải {0}', V.sel[1] + 1), q[0], q[1] - rad - 26, { bg: '#ffe9a8', size: 7.5 });
     }
     VS.bubble(V.msgT > 0 && V.msg ? V.msg : V.sel ? 'Lên đò đi cháu, nước đang êm.' : 'Đi đâu hả cháu?', 40, 198, { maxW: 76, size: 7.5 });
     if (T.sbtn(404, 7, 68, 18, '✕ Về làng', { size: 8, pad: 4 })) { goHub(); return; }
+    // vùng 4: nút sang trang bản đồ Sông sâu / về trang ba vùng đầu (chấm đỏ khi vùng 4 vừa mở mà chưa qua ải nào)
+    if (coTrang2()) {
+      const moi = !tr2 && unlocked(3, 0, 0) && !sv.stars['3-0'];
+      if (T.sbtn(404, 53, 68, 18, tr2 ? '‹ Ba vùng đầu' : G.t('{0} ›', G.REGIONS[3].name), { size: 7.5, pad: 3, dot: moi })) { V.mapTrang = tr2 ? 0 : 1; G.sfx('ui'); return; }
+    }
     // Đợt 6: cổng Ải ngày (js/ai_ngay.js) — mở sau khi hạ trùm vùng 1; chấm đỏ khi hôm nay còn lượt
     if (G.aiNgay && G.aiNgay.bat() && G.aiNgay.mo(sv) && T.sbtn(404, 30, 68, 18, 'Ải ngày', { size: 8, pad: 4, dot: G.aiNgay.coLuot(sv) })) { V.tab = 'aingay'; G.sfx('ui'); return; }
     if (all) {
@@ -256,7 +269,8 @@
       const need = G.stageRec(r, i, V.diff), col = G.powerCol(pw, need);
       ui.text(G.t('Sức mạnh khuyên dùng {0} · bé {1}', need, pw), 256, 240, { size: 7.5, bold: true, color: col });
       // V25: chữ to hơn; dòng thưởng dài quá 2 dòng (ải trùm) thì giữ cỡ nhỏ cũ để không lọt khỏi khung
-      const rw = i === 4 ? G.t('Thưởng: {0} kinh nghiệm, ~{1} vàng, {2} {3}, {4} mảnh {5}, linh khí', b.xp, b.gold, 5 + i, R.mat.toLowerCase(), V.diff ? 4 : 3, R.bossName) : G.t('Thưởng: {0} kinh nghiệm, ~{1} vàng, {2} {3}', b.xp, b.gold, 5 + i, R.mat.toLowerCase());
+      const matTen = (G.matAi ? G.REGIONS[G.matAi(r, i)] : R).mat.toLowerCase(); // vùng 4: nguyên liệu của một vùng cũ theo ải
+      const rw = i === 4 ? G.t('Thưởng: {0} kinh nghiệm, ~{1} vàng, {2} {3}, {4} mảnh {5}, linh khí', b.xp, b.gold, 5 + i, matTen, V.diff ? 4 : 3, R.bossName) : G.t('Thưởng: {0} kinh nghiệm, ~{1} vàng, {2} {3}', b.xp, b.gold, 5 + i, matTen);
       ui.para(rw, 256, 250.5, 144, { size: 6.5, color: SOFT, tiny: ui.wrap(rw, 144, 6.5).length > 2 });
       // 14/10 (bước 1, mục 1): chọn ải là bắt đầu tải ảnh riêng của vùng đó (js/sprite_custom.js SC.taiVung). Chưa đủ ảnh: nút ghi "Đang tải…"
       // và thanh tiến độ dưới nút; bấm vẫn được (vào màn chờ, đủ ảnh thì tự vào ải).

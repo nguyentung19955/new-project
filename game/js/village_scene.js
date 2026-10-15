@@ -1136,7 +1136,8 @@
     // đợt 4: bỏ ô Đá tôi (không còn dùng, đổi ra quặng — G.DA_TOI_QUANG)
     return [['gold', sv.gold, '#ffd23f'], ['ore', sv.ore, '#c9ccd2'],
       ['mat0', sv.mats[0], '#9bd14a'], ['mat1', sv.mats[1], '#7fd4ff'], ['mat2', sv.mats[2], '#ff9a5a'],
-      ['shard0', sv.shards[0], '#c8e8a0'], ['shard1', sv.shards[1], '#a8d8ff'], ['shard2', sv.shards[2], '#ffc0a0']];
+      ['shard0', sv.shards[0], '#c8e8a0'], ['shard1', sv.shards[1], '#a8d8ff'], ['shard2', sv.shards[2], '#ffc0a0']]
+      .concat(G.REGIONS.length > 3 && sv.shards.length > 3 && (sv.shards[3] > 0 || (sv.stars && sv.stars['2-4'])) ? [['shard3', sv.shards[3], '#a8e8d0']] : []); // vùng 4: mảnh Thuồng Luồng
   };
   VS.drawTop = function () {
     const sv = G.save, ui = G.ui, parts = VS.resParts();

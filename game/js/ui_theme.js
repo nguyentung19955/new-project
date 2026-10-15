@@ -1150,7 +1150,7 @@
     if (gb) {
       khungDat(khungLop(gb, 'tren|' + w, w + 20, 17, () => { R(0, 15, w + 20, 1, 'rgba(0,0,0,0.35)'); khungVe(gb, 0, 0, w + 20, 16); }), -mx - 10, 0, w + 20, 17);
       const gv = khungCo('gd-thanh-tren-vach');
-      if (gv && items && items.length === 8) {
+      if (gv && items && items.length >= 8) { // vùng 4: ô mảnh thứ 4 (9 tài nguyên) vẫn chia như cũ
         const size = 7.5, ih = Math.round(size * 1.05 * 2) / 2, gap = 8, vach = [];
         let x = 6; ui.font(size, true);
         items.forEach((q, i) => { const e = x + ih + 1.5 + G.ux.measureText(String(q[1])).width; if (i === 1 || i === 4) vach.push(e + gap / 2); x = e + gap; });
@@ -1257,6 +1257,7 @@
     shard0: { rows: ['....k..', '...kak.', '..kaak.', '.kawak.', '.kaaak.', 'kaaadk.', 'kkkkkk.'], pal: { a: '#8ac84a', w: '#eaffc0', d: '#4a8a2a', k: '#1e3a12' } },
     shard1: { rows: ['....k..', '...kak.', '..kaak.', '.kawak.', '.kaaak.', 'kaaadk.', 'kkkkkk.'], pal: { a: '#5ab0f0', w: '#e0f4ff', d: '#2a6ab0', k: '#12284a' } },
     shard2: { rows: ['....k..', '...kak.', '..kaak.', '.kawak.', '.kaaak.', 'kaaadk.', 'kkkkkk.'], pal: { a: '#ff8a4a', w: '#fff0d0', d: '#c04a1a', k: '#4a1a08' } },
+    shard3: { rows: ['....k..', '...kak.', '..kaak.', '.kawak.', '.kaaak.', 'kaaadk.', 'kkkkkk.'], pal: { a: '#4ac0a0', w: '#d8fff0', d: '#1e7a6a', k: '#0a3a30' } }, // vùng 4 Sông sâu (mảnh Thuồng Luồng)
     xp: { rows: ['...c...', '...c...', '..cwc..', 'ccwwwcc', '..cwc..', '...c...', '...c...'], pal: { c: '#8fd0ff', w: '#ffffff' } },
   };
   T.RES = RES;
@@ -1296,7 +1297,7 @@
     if (RES_RE && RES_LANG === G.LANG) return RES_RE;
     RES_LANG = G.LANG; marked.clear();
     RES_MAP = { 'vàng': 'gold', 'quặng': 'ore', 'đá tôi': 'stone', 'kinh nghiệm': 'xp' };
-    (G.REGIONS || []).forEach((r, i) => { RES_MAP[r.mat.toLowerCase()] = 'mat' + i; RES_MAP['mảnh ' + r.bossName.toLowerCase()] = 'shard' + i; });
+    (G.REGIONS || []).forEach((r, i) => { if (!r.matChung) RES_MAP[r.mat.toLowerCase()] = 'mat' + i; RES_MAP['mảnh ' + r.bossName.toLowerCase()] = 'shard' + i; }); // matChung: vùng 4 không có nguyên liệu riêng
     if (G.LANG !== 'vi') {
       // Ngôn ngữ khác: tên tài nguyên lấy từ từ điển (js/ngon_ngu.js), nhận cả dạng số nhiều có "s" ("3 whetstones").
       const vi = RES_MAP; RES_MAP = {};

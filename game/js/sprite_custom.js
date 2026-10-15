@@ -1619,7 +1619,9 @@
     // phần còn lại 16 (trong đó vùng khác / trùm nền nhiều nhất 3) để hình cần ngay không phải xếp hàng sau tệp lớn.
     const MAX_GAP = 24, MAX = 16, MAX_THAP = 3, WEBP_THU = 'data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA==';
     let webpHong = 0, dang = 0, dangThap = 0, dangGap = 0, choThu = 0, mo = false, coWebp = null, vung = -1, trumMo = false, daXong = 0, ketThuc = false, henGd = 0, keoHen = false;
-    const moVung = [0, 0, 0]; // tải theo vùng: 0 chưa mở, 1 tải trước (rảnh), 2 người chơi đã chọn vùng
+    const moVung = (G.REGIONS || [0, 0, 0]).map(() => 0); // tải theo vùng: 0 chưa mở, 1 tải trước (rảnh), 2 người chơi đã chọn vùng (vùng 4: 4 ô)
+    // Vùng 4 còn mượn hình của vùng khác (G.VUNG4_MUON, bước 3 phiên 1): chọn vùng 4 thì tải luôn ảnh vùng mượn, chờ đủ cả hai.
+    const vungMuon = (r) => (r === 3 && G.VUNG4_MUON != null && G.VUNG4_MUON !== r ? G.VUNG4_MUON : -1);
     let vungChon = -1;
     for (const t of G.customSpriteData) { const src = t && (t.tam || t.anh); if (typeof src === 'string' && Array.isArray(t._u)) theoSrc.set(src, t); }
     AS.tt = 'cho'; AS.tep = 'anh/'; AS.tong = 0; AS.xong = 0;
@@ -1639,7 +1641,7 @@
     // Vùng người chơi đang ở: vùng của ải vừa vào (G.startStage), chưa vào ải thì vùng xa nhất đã có sao (qua ải 5 thì vùng kế).
     const vungNay = () => {
       if (vung >= 0) return vung;
-      try { let r = 0; const st = G.save && G.save.stars; if (st) for (const k in st) { const m = /^(\d+)-(\d+)$/.exec(k); if (m) r = Math.max(r, +m[1] + (+m[2] >= 4 ? 1 : 0)); } return Math.min(2, r); } catch (e) { return 0; }
+      try { let r = 0; const st = G.save && G.save.stars; if (st) for (const k in st) { const m = /^(\d+)-(\d+)$/.exec(k); if (m) r = Math.max(r, +m[1] + (+m[2] >= 4 ? 1 : 0)); } return Math.min(moVung.length - 1, r); } catch (e) { return 0; }
     };
     roiNhan = function (img, src) {
       const t = theoSrc.get(src);
@@ -1648,7 +1650,7 @@
       const u = t._u;
       const ma = G.ANH_MUOT_CU && typeof t.muot_cua === 'string' ? t.muot_cua : t.ma; // ?anhmuotcu=1: tấm cũ mang mã con quái (xem G.ANH_MUOT_CU)
       const it = { img, ma, png: src, webp: typeof t.webp === 'string' && /^anh\/[A-Za-z0-9_.-]{1,90}\.webp$/.test(t.webp) ? t.webp : null,
-        bac: u[0] | 0, co: +u[1] || 0, vung: u[2] | 0, trum: !!u[3], khoa: !!(G.TAI_VUNG && u[4] && (u[2] | 0) >= 0 && (u[2] | 0) <= 2), can: 0, lan: 0, xong: img.onload, hong: img.onerror, dangTai: false, thap: false, ve: false, boWebp: false };
+        bac: u[0] | 0, co: +u[1] || 0, vung: u[2] | 0, trum: !!u[3], khoa: !!(G.TAI_VUNG && u[4] && (u[2] | 0) >= 0 && (u[2] | 0) <= 3), can: 0, lan: 0, xong: img.onload, hong: img.onerror, dangTai: false, thap: false, ve: false, boWebp: false };
       img.onload = null; img.onerror = null;
       theoMa.set(ma, it); hang.push(it); AS.tong++;
       napSauDangChay = true; // hình em bé / đồ về muộn: chỉ xoá hình đã nhớ khi đang dùng (xoaNhoDoKhiCan), như lúc nạp tệp tải sau
@@ -1702,18 +1704,20 @@
       if (!mo || !G.TAI_VUNG || vungChon < 0 || dang || choThu || choApDung.length) return;
       for (const it of hang) if ((it.u == null ? 0 : it.u) < 90) return;
       const k = vungChon + 1;
-      if (k <= 2 && !moVung[k]) { moVung[k] = 1; ketThuc = false; napSauDangChay = true; ghi('Rảnh: tải trước ảnh vùng ' + (k + 1) + '.'); bom(); }
+      if (k < moVung.length && !moVung[k]) { moVung[k] = 1; ketThuc = false; napSauDangChay = true; ghi('Rảnh: tải trước ảnh vùng ' + (k + 1) + '.'); bom(); }
     }
     SC.taiVung = function (r) {
       r = r | 0;
-      if (!G.TAI_VUNG || r < 0 || r > 2) return;
-      if (vungChon !== r || moVung[r] !== 2) { vungChon = r; moVung[r] = 2; ketThuc = false; napSauDangChay = true; bom(); }
+      if (!G.TAI_VUNG || r < 0 || r >= moVung.length) return;
+      const m = vungMuon(r);
+      if (vungChon !== r || moVung[r] !== 2 || (m >= 0 && moVung[m] !== 2)) { vungChon = r; moVung[r] = 2; if (m >= 0) moVung[m] = 2; ketThuc = false; napSauDangChay = true; bom(); }
     };
     // Tiến độ ảnh riêng của vùng r (trum: tính cả trùm vùng và dáng pha). san: đủ ảnh để vào ải.
     SC.vungTien = function (r, trum) {
       let xong = 0, tong = 0, loi = 0;
+      const m = vungMuon(r);
       if (G.TAI_VUNG) for (const it of theoMa.values()) {
-        if (!it.khoa || it.vung !== r || (it.trum && !trum)) continue;
+        if (!it.khoa || (it.vung !== r && it.vung !== m) || (it.trum && !trum)) continue;
         tong++; if (it.ve) xong++; else if (hongDs.indexOf(it) >= 0) loi++;
       }
       return { san: xong >= tong, xong, tong, loi, pct: tong ? Math.floor(xong / tong * 100) : 100 };
@@ -1739,13 +1743,13 @@
         ui.text(tt.xong + '/' + tt.tong, 240, y + 66, { size: 7.5, align: 'center', color: '#d8c8a8' });
         const ranh = tt.loi > 0 && tt.loi + tt.xong >= tt.tong;
         const nut = (bx, chu, chinh) => (T && T.btn ? T.btn(bx, y + 72, 96, 24, G.t(chu), { size: 8.5, primary: chinh }) : ui.btn(bx, y + 72, 96, 24, G.t(chu)));
-        if (ranh && nut(x + 18, 'Thử lại', true)) { if (SC.roiThuLai) { const r = cho.r; SC.roiThuLai((m) => { const it = theoMa.get(m); return !!(it && it.khoa && it.vung === r); }); } }
+        if (ranh && nut(x + 18, 'Thử lại', true)) { if (SC.roiThuLai) { const r = cho.r; SC.roiThuLai((m) => { const it = theoMa.get(m); return !!(it && it.khoa && (it.vung === r || it.vung === vungMuon(r))); }); } }
         if (nut(x + w - 114, 'Về làng', false)) { cho = null; G.setScene(G.Village); }
       },
     };
     if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({ 'Đang tải ảnh {0}': 'Loading {0} images', 'Đang tải…': 'Loading…', 'Thử lại': 'Retry', 'Về làng': 'Back to village' });
     G.choVung = function (r, trum, fn) {
-      r = Math.max(0, Math.min(2, r | 0));
+      r = Math.max(0, Math.min(moVung.length - 1, r | 0));
       SC.taiVung(r);
       if (!G.TAI_VUNG || SC.vungTien(r, trum).san) return fn();
       cho = { r, trum: !!trum, fn };
@@ -1838,7 +1842,7 @@
       const g0 = G.startStage;
       if (typeof g0 === 'function' && !g0.roi) {
         const g1 = function (r, i) {
-          try { vung = Math.max(0, Math.min(2, r | 0)); trumMo = (i | 0) >= 3; } catch (e) { /* bỏ qua */ }
+          try { vung = Math.max(0, Math.min(moVung.length - 1, r | 0)); trumMo = (i | 0) >= 3; } catch (e) { /* bỏ qua */ }
           // tải theo vùng: vùng chưa đủ ảnh (ải trùm: cả trùm vùng) → màn chờ, đủ rồi mới vào ải
           if (G.TAI_VUNG && G.scene !== G.ChoVung) {
             const self = this, args = arguments;
