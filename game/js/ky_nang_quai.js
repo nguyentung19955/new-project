@@ -361,8 +361,8 @@
   }
   const regElGai = () => (H.regEl() === 'poison' ? 'poison' : null); // gai Rừng già có độc như gai cũ
   // 15/10 quai-moi-6-con: tấm Nhím Gai Độc vẽ lại có hàng đánh = cuộn tròn lăn (lặp, "lap_tu") → thân không xoay bằng code nữa (xoay cả vệt bụi).
-  // Tấm cũ (?quaicu=1) hoặc chưa nạp ảnh: xoay như trước.
-  // 15/10 quai-moi-bien: con quái đang dùng tấm vẽ lại (có "can_tam") — tấm cũ (?quaicu=1) không có.
+  // Chưa nạp ảnh: xoay như trước.
+  // 15/10 quai-moi-bien: con quái đang dùng tấm vẽ lại (có "can_tam") (tấm cũ ?quaicu=1 đã bỏ 15/10).
   function anhMoi(q) { const S2 = G.spriteCustom, sp = S2 && S2.get ? S2.get(q.art) : null; return !!(sp && sp.ct); }
   function lanAnh(q) { const S2 = G.spriteCustom, sp = S2 && S2.get ? S2.get(q.art) : null; return !!(sp && sp.dt && sp.dt.atk && sp.dt.atk.lapTu != null); }
   T.nhimDoc = cuonLan;
@@ -427,7 +427,7 @@
     for (const z of W().zones) if (z.src === e && z.t > 0 && !z.pool && !z.knGiu) z.dead = true;
     e.act = null; e.wind = 0;
     // 15/10 quai-moi-bien: tấm Ốc vẽ lại (hàng báo đòn = rút vào vỏ) → cử động 'vo': rút vỏ nhanh rồi giữ khung vỏ rỗng suốt lúc trong vỏ
-    // (js/sprite_custom.js SC.chonQuai). Tấm cũ (?quaicu=1) / chưa nạp ảnh: hàng trúng đòn chạy chậm như trước.
+    // (js/sprite_custom.js SC.chonQuai). Chưa nạp ảnh: hàng trúng đòn chạy chậm như trước.
     const moi = anhMoi(e);
     H.begin(e, 'vo', e.face > 0 ? 0 : PI, 0.01, { keepFace: true, anim1: moi ? 'vo' : 'hit', spd1: moi ? 1 : 0.12, end: S.vo, cd: 0.5 });
     FX('text', e.x, e.y - e.h - 6, 'Rút vỏ!', '#cfe8f5', 8); G.sfx('hit', 0.6);
@@ -719,7 +719,7 @@
     G.sfx('warn', 0.8);
     // 15/10 quai-moi-lau: tấm Hũ Lửa vẽ lại có khung lăn tròn trong hàng đánh (lap_tu..lap_den) → lúc lăn dùng cử động 'lan' (lặp các khung đó,
     // js/sprite_custom.js SC.chonQuai) và KHÔNG xoay thân bằng code (khung lăn đã vẽ hũ đang lăn); lúc vỡ phát hàng đánh (bảng khung: khung đứng lại).
-    // Tấm cũ (?quaicu=1) / chưa nạp ảnh: hàng đánh + xoay như trước.
+    // Chưa nạp ảnh: hàng đánh + xoay như trước.
     const lanMoi = lanAnh(e);
     H.begin(e, 'boom', a, S.bao, { cd: 9, end: S.bao + lan + H.dur(e.art, 'atk') + 0.2, s: 0, vet: S.vet * 0.5, no: false, anim1: lanMoi ? 'lan' : undefined,
       fire: (q) => { q.ghost = true; },

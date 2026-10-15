@@ -529,7 +529,7 @@
     for (const d of duong) { d.s0 = s; d.t0 = T + s / v; s += d.len; d.t1 = T + s / v; }
     const R = tong / v;
     // 15/10 quai-moi-bien: tấm Cá Nóc Chúa vẽ lại có khung lăn tròn trong hàng đánh (lap_tu..lap_den) → cử động 'lan' lặp các khung đó suốt lúc lăn
-    // (js/sprite_custom.js SC.chonQuai) và KHÔNG xoay thân bằng code nữa (khung lăn đã vẽ vệt xoáy). Tấm cũ (?quaicu=1): đứng thở + xoay như trước.
+    // (js/sprite_custom.js SC.chonQuai) và KHÔNG xoay thân bằng code nữa (khung lăn đã vẽ vệt xoáy). Chưa nạp ảnh: đứng thở + xoay như trước.
     const S2 = G.spriteCustom, sp2 = S2 && S2.get ? S2.get(e.art) : null, lanAnh = !!(sp2 && sp2.dt && sp2.dt.atk && sp2.dt.atk.lapTu != null);
     o.ct = tok; o.anim0 = 'chieu1'; o.anim1 = lanAnh ? 'lan' : 'idle'; o.end = T + R + 0.25;
     // 15/10 nam-nhay-mat-o: cùng lỗi với Nhảy dập — choáng / đông giữa lúc lăn: trước vạch báo của đoạn hẹn đúng lúc choáng bị bỏ, hết

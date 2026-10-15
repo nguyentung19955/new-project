@@ -100,13 +100,7 @@
   // đã trắng thành trắng gấp đôi). Nay: viền sáng mảnh quanh thân + nhuộm đỏ nhẹ. Chớp báo ra đòn / đổi pha của trùm (o.baoDon) giữ như cũ.
   // (15/10 don-tep B: bỏ cờ quay lui ?chopcu=1 / G.CHOP_NHE — luôn viền sáng + đỏ nhẹ.)
   // 14/10 (quai-moi-4-con): Heo Rừng Con, Heo Rừng Nanh Dài, Chồn Bóng, Bọ Hung Mai Cứng dựng lại từ ảnh vẽ mới (đủ 6 động tác, net 2, căn tâm).
-  // Tấm cũ giữ trong tệp <mã>-cu.sprite.json (mục "cu_cua": <mã>): bình thường KHÔNG nạp (không tạo ảnh nên không tải, không tính vào vùng).
-  // Cờ ?quaicu=1 (G.QUAI_CU = true): nạp tấm cũ dưới đúng mã con quái, bỏ tấm mới — y như trước phiên này.
-  if (G.QUAI_CU === undefined) {
-    let cu = false;
-    try { cu = typeof location !== 'undefined' && /[?&]quaicu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; }
-    G.QUAI_CU = cu;
-  }
+  // 15/10 don-tep B: bỏ 30 tấm cũ <mã>-cu.sprite.json (mục "cu_cua") cùng cờ ?quaicu=1 (G.QUAI_CU).
   // 15/10 soát mượt (ảnh gen P1–P4, P6, docs/anh-goc/soat-muot/bao-cao.md): 7 tấm (Cá Nóc Chúa, Nhím Biển, Nhím Gai Độc, Heo Nanh Dài, Hổ Lửa pha 2,
   // Nấm Chúa pha 2, Hồ Tinh) thay một hàng bằng ảnh gen mới; tấm có mục "muot". Tấm trước đó giữ ở <mã>-muotcu.sprite.json (mục "muot_cua": <mã>):
   // bình thường KHÔNG nạp. Cờ ?anhmuotcu=1 (G.ANH_MUOT_CU): nạp tấm đó dưới đúng mã, bỏ tấm mới (các vá tạm Phiên 1 tự chạy lại vì tấm cũ không có "bo_va").
@@ -115,12 +109,6 @@
     try { cu = typeof location !== 'undefined' && /[?&]anhmuotcu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; }
     G.ANH_MUOT_CU = cu;
   }
-  // 15/10 (quai-moi-6-con): thêm Nấm Phồng, Nấm Phồng Chúa, Hoa Phun Bào Tử, Sóc Ném Quả Nổ, Nhím Gai Độc, Bầy Ong Vò Vẽ — cùng cách, cùng cờ.
-  // 15/10 (quai-moi-bien): thêm 10 quái Hang biển — Cua Lính, Bầy Cá Con, Ốc Mượn Hồn, Hải Quỳ, Cá Chuồn, Cá Nóc, Sứa Bom, Nhím Biển, Cua Tướng, Cá Nóc Chúa.
-  // 15/10 (quai-moi-lau): thêm 10 quái Lâu đài cổ — Lính Ma, Bầy Dơi Than, Tượng Đá, Đèn Lồng Ma, Mèo Đen, Hũ Lửa, Tiểu Yêu, Nhím Than, Tướng Ma, Hũ Lửa Chúa.
-  const QUAI_MOI = { heoCon: 1, heoNanh: 1, chonBong: 1, boHung: 1, namPhong: 1, namPhongChua: 1, hoaBaoTu: 1, socNo: 1, nhimDoc: 1, ongVo: 1,
-    cua: 1, caCon: 1, oc: 1, haiQuy: 1, caChuon: 1, caNoc: 1, sua: 1, nhim: 1, cuaTuong: 1, caNocChua: 1,
-    linhMa: 1, doiThan: 1, tuongDa: 1, denLong: 1, meoDen: 1, huLua: 1, tieuYeu: 1, nhimThan: 1, tuongMa: 1, huChua: 1 };
   let napSauDangChay = false, trongNapSau = false;
   // Tải nhanh (12/10): ảnh rời. roiNhan(img, src) nhận ảnh anh/<mã>.<mã nội dung>.png vào hàng chờ; roiCan(ma) báo game đang cần hình ma
   // (chưa có thì tải ngay). Chỉ có ở bản 2 tệp ảnh rời (G.ANH_ROI); bản một tệp, công cụ: null, như cũ.
@@ -161,10 +149,6 @@
         if (!G.ANH_MUOT_CU) return null;
         tep = Object.assign({}, tep, { ma: tep.muot_cua });
       } else if (G.ANH_MUOT_CU && tep.muot) return null; // ?anhmuotcu=1: bỏ tấm đã thay hàng
-      if (typeof tep.cu_cua === 'string') { // tấm cũ của quái vẽ lại (xem G.QUAI_CU): chỉ dùng khi bật ?quaicu=1, thay đúng mã con quái
-        if (!G.QUAI_CU || !QUAI_MOI[tep.cu_cua]) return null;
-        tep = Object.assign({}, tep, { ma: tep.cu_cua });
-      } else if (G.QUAI_CU && QUAI_MOI[tep.ma] && tep.doi_tuong === 'quai') return null; // ?quaicu=1: bỏ tấm mới
       if (tep.doi_tuong === 'em-be' && !EM_BE_MA.test(tep.ma)) throw new Error('đã bỏ ở đợt 2: em bé chỉ còn em-be-hunter, em-be-healer, em-be-wrestler');
       if (DO_LOAI[tep.doi_tuong]) return themDo(tep); // vật phẩm
       if (tep.doi_tuong === 'giao-dien') return themGd(tep); // ảnh giao diện (gd-<tên>): biểu tượng, ô phòng, khung bản đồ
@@ -1662,7 +1646,7 @@
       if (!t || typeof src !== 'string') return false;
       theoSrc.delete(src);
       const u = t._u;
-      const ma = G.ANH_MUOT_CU && typeof t.muot_cua === 'string' ? t.muot_cua : G.QUAI_CU && typeof t.cu_cua === 'string' ? t.cu_cua : t.ma; // ?anhmuotcu=1 tương tự // ?quaicu=1: tấm cũ mang mã con quái (xem G.QUAI_CU)
+      const ma = G.ANH_MUOT_CU && typeof t.muot_cua === 'string' ? t.muot_cua : t.ma; // ?anhmuotcu=1: tấm cũ mang mã con quái (xem G.ANH_MUOT_CU)
       const it = { img, ma, png: src, webp: typeof t.webp === 'string' && /^anh\/[A-Za-z0-9_.-]{1,90}\.webp$/.test(t.webp) ? t.webp : null,
         bac: u[0] | 0, co: +u[1] || 0, vung: u[2] | 0, trum: !!u[3], khoa: !!(G.TAI_VUNG && u[4] && (u[2] | 0) >= 0 && (u[2] | 0) <= 2), can: 0, lan: 0, xong: img.onload, hong: img.onerror, dangTai: false, thap: false, ve: false, boWebp: false };
       img.onload = null; img.onerror = null;
