@@ -1,0 +1,137 @@
+{
+ "anh": "doiThan-4-danh.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 6,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 2,
+  "vien_khu": 7435,
+  "nga_mau_nen_trong_hinh": 264
+ },
+ "manh_bo": [],
+ "loi": [],
+ "canh_bao": [],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "atk",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      5,
+      166,
+      371,
+      496
+     ],
+     "chan": [
+      167.5,
+      496
+     ],
+     "rong": 366,
+     "cao": 330,
+     "diem_anh": 48915,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      381,
+      196,
+      741,
+      505
+     ],
+     "chan": [
+      536.5,
+      505
+     ],
+     "rong": 360,
+     "cao": 309,
+     "diem_anh": 47539,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      767,
+      223,
+      1123,
+      498
+     ],
+     "chan": [
+      947.0,
+      498
+     ],
+     "rong": 356,
+     "cao": 275,
+     "diem_anh": 38788,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1135,
+      249,
+      1481,
+      539
+     ],
+     "chan": [
+      1340.0,
+      539
+     ],
+     "rong": 346,
+     "cao": 290,
+     "diem_anh": 37375,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1464,
+      166,
+      1820,
+      530
+     ],
+     "chan": [
+      1654.0,
+      530
+     ],
+     "rong": 356,
+     "cao": 364,
+     "diem_anh": 50594,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1821,
+      165,
+      2168,
+      501
+     ],
+     "chan": [
+      1971.0,
+      501
+     ],
+     "rong": 347,
+     "cao": 336,
+     "diem_anh": 47357,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}
