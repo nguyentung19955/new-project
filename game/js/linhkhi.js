@@ -210,7 +210,7 @@
       if (I.main) ui.rect(x + 0.5, y + 2, HUD.cell - 2, HUD.h - 4, E.dark, E.col2);
       LK.icon(el, x + 5.5, y + 6.5, 0.9, dim, dim ? 0.75 : 1);
       const bx = x + 11, bw = HUD.cell - 15, by = y + 4.5, bh = 4;
-      ui.rect(bx - 0.5, by - 0.5, bw + 1, bh + 1, '#0b0a0a');
+      if (!(T && T.vachLk && T.vachLk(bx, by, bw, bh))) ui.rect(bx - 0.5, by - 0.5, bw + 1, bh + 1, '#0b0a0a'); // 15/10: vỏ ảnh gd-khung-vach-lk
       ui.rect(bx, by, bw, bh, dim ? '#1c2222' : '#13201e');
       const fw = Math.round(bw * G.clamp(I.frac, 0, 1) * 2) / 2;
       const fl = I.near && blink(7) ? '#ffffff' : dim ? '#4f5f5a' : E.col;
@@ -348,13 +348,13 @@
       LK.icon(el, x + 5, y + 6, 1, dim);
       ui.text(E.name, x + 11, y + 8.8, { size: 7.5, bold: I.main, color: dim ? '#7f8f8a' : E.col });
       // vạch ba đoạn
-      ui.rect(bx - 0.5, y + 3.5, bw + 1, 5, '#0b0a0a');
+      if (!(T && T.vachLk && T.vachLk(bx, y + 4, bw, 4))) ui.rect(bx - 0.5, y + 3.5, bw + 1, 5, '#0b0a0a'); // 15/10: vỏ ảnh gd-khung-vach-lk
       ui.rect(bx, y + 4, bw, 4, '#13201e');
       const mk = [0].concat(G.MARKS);
       let fw = 0;
       for (let k = 0; k < 3; k++) { const a = mk[k], b = mk[k + 1]; fw += seg * G.clamp((I.m - a) / (b - a), 0, 1); }
       if (fw > 0) { ui.rect(bx, y + 4, fw, 4, dim ? '#4f5f5a' : I.near && blink(5) ? '#ffffff' : E.col); ui.rect(bx, y + 4, fw, 1, dim ? '#6a7a74' : E.col2); }
-      for (let k = 1; k <= 3; k++) ui.rect(bx + seg * k - 0.5, y + 2.5, 1, 7, I.m >= G.MARKS[k - 1] ? '#ffd23f' : '#5a6a66');
+      for (let k = 1; k <= 3; k++) if (!(T && T.vachLkMoc && T.vachLkMoc(k < 3 ? bx + seg * k : bx + bw - 1, y + 4, 4, I.m >= G.MARKS[k - 1]))) ui.rect(bx + seg * k - 0.5, y + 2.5, 1, 7, I.m >= G.MARKS[k - 1] ? '#ffd23f' : '#5a6a66'); // 15/10: vạch mốc ảnh (mốc cuối nằm trong mép phải)
       ui.text(String(I.m) + (I.next != null ? '/' + I.next : ''), x + wd, y + 8.8, { size: 7, align: 'right', bold: I.main, color: dim ? '#7f8f8a' : '#f1ead9' });
       y += 13;
     });

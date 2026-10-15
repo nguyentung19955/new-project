@@ -61,7 +61,7 @@
     st.y = G.clamp(st.y, 0, st.max);
     if (st.max > 0) { // thanh cuộn nhỏ bên phải
       const th = Math.max(16, (h * h) / (h + st.max)), ty = y + ((h - th) * st.y) / st.max;
-      ui.rect(x + w + 1, y, 3, h, 'rgba(0,0,0,0.45)'); ui.rect(x + w + 1, ty, 3, th, T.C.gold);
+      if (!(T.thanhCuon && T.thanhCuon(x + w + 0.5, y, h, ty, th))) { ui.rect(x + w + 1, y, 3, h, 'rgba(0,0,0,0.45)'); ui.rect(x + w + 1, ty, 3, th, T.C.gold); } // 15/10: ảnh gd-thanh-cuon (+ -num)
     }
     return st;
   }

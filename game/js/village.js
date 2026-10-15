@@ -145,7 +145,10 @@
     for (const q of M.soon) {
       inkText(q[0], q[1], q[2], 8, night ? '#8a86a8' : '#8a7a58', halo);
       const px = q[3] || q[1], py = q[4] || q[2] + 12;
-      ui.font(6.5, true); ui.rect(px - 16, py - 7, 32, 10, 'rgba(74,54,38,0.85)'); ui.text(G.tc('bản đồ', 'sắp có'), px, py + 0.6, { size: 6.5, bold: true, align: 'center', color: '#f0e6c8', shadow: false });
+      ui.font(6.5, true);
+      const go = T && T.theSapCo && T.theSapCo(px - 16, py - 7, 32, 10); // 15/10 (khung-gd-con): tấm gỗ ảnh gd-the-sap-co; chữ vẫn vẽ code (có bóng cho rõ trên gỗ)
+      if (!go) ui.rect(px - 16, py - 7, 32, 10, 'rgba(74,54,38,0.85)');
+      ui.text(G.tc('bản đồ', 'sắp có'), px, py + 0.6, { size: 6.5, bold: true, align: 'center', color: '#f0e6c8', shadow: go ? undefined : false });
     }
     // 15 thẻ ải mặt trống; ải chưa qua ghi sức mạnh khuyên dùng, tô màu so với sức mạnh của bé (xanh đủ, vàng sát nút, đỏ thiếu)
     const pw = G.power();

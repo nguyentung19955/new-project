@@ -815,7 +815,8 @@
       if (a <= 0) continue;
       const bw = elite ? 26 : 16, x = Math.round(e.x - cam - bw / 2), y = Math.round(e.y - (e.h || 24) * (e.art ? 1 : e.scale || 1) - 4); // giữa đỉnh đầu và biểu tượng hệ (js/linhkhi.js)
       c.globalAlpha = ga * a * Math.min(1, gd);
-      if (he) { c.fillStyle = G.lk.VIEN[he]; c.fillRect(x - 1, y - 1, bw + 2, 4); c.fillStyle = '#0e0808'; c.fillRect(x, y, bw, 2); } // viền 1 điểm ảnh màu hệ, lòng thanh vẫn tối
+      if (G.theme.mauQuai && G.theme.mauQuai(x, y, bw, he ? G.lk.VIEN[he] : null)) { /* 15/10 (khung-gd-con): khung ảnh gd-khung-mau-quai (dấu hệ: khung phủ màu hệ) */ }
+      else if (he) { c.fillStyle = G.lk.VIEN[he]; c.fillRect(x - 1, y - 1, bw + 2, 4); c.fillStyle = '#0e0808'; c.fillRect(x, y, bw, 2); } // viền 1 điểm ảnh màu hệ, lòng thanh vẫn tối
       else { c.fillStyle = 'rgba(14,8,8,0.85)'; c.fillRect(x - 1, y - 1, bw + 2, 4); }
       const fw = Math.round(bw * st.shown), lw = Math.round(bw * st.lag);
       if (lw > fw) { c.fillStyle = st.hit > 0 ? '#fff6e0' : '#ffd98a'; c.fillRect(x + fw, y, lw - fw, 2); }
@@ -1009,8 +1010,10 @@
       let tot = 0; for (const q of chips) { q[3] = Math.ceil(G.ux.measureText(q[0]).width) + 8; tot += q[3] + 3; }
       let lx = Math.round(240 - (tot - 3) / 2);
       for (const q of chips) {
-        ui.rect(lx, topY + 1, q[3], 10, q[1], '#1a120a');
-        ui.rect(lx + 1, topY + 1, q[3] - 2, 1, 'rgba(255,240,196,0.25)');
+        if (!(T.theNho && T.theNho(lx, topY + 1, q[3], 10, q[1]))) { // 15/10 (khung-gd-con): thẻ ảnh gd-the-nho nhuộm màu chip; chưa có ảnh thì như cũ
+          ui.rect(lx, topY + 1, q[3], 10, q[1], '#1a120a');
+          ui.rect(lx + 1, topY + 1, q[3] - 2, 1, 'rgba(255,240,196,0.25)');
+        }
         ui.text(q[0], lx + q[3] / 2, topY + 8.5, { size: doc ? 7 : 6.5, bold: true, align: 'center', color: q[2] });
         lx += q[3] + 3;
       }

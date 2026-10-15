@@ -375,6 +375,7 @@
   T.inset = function (x, y, w, h, sel, o) {
     o = o || {};
     const c = G.ux;
+    if (oConAnh(x, y, w, h, sel, o)) return; // 15/10 (khung-gd-con): ô con bằng ảnh gd-o-con / gd-o-con-chon
     c.fillStyle = o.fill || (sel ? '#2f6a60' : '#1b3a3b'); c.fillRect(x, y, w, h);
     c.fillStyle = o.col || (sel ? C.hi : C.brD);
     c.fillRect(x, y, w, 1); c.fillRect(x, y + h - 1, w, 1); c.fillRect(x, y, 1, h); c.fillRect(x + w - 1, y, 1, h);
@@ -388,6 +389,7 @@
     o = o || {};
     x = Math.round(x); y = Math.round(y); w = Math.round(w); h = Math.round(h);
     const a = o.a == null ? 0.84 : o.a, edge = o.edge || C.br;
+    if (khungNhoAnh(x, y, w, h, a)) return; // 15/10 (khung-gd-con): khung nhỏ bằng ảnh gd-khung-nho
     put(layer('pl2|' + w + '|' + h + '|' + a + '|' + edge, w, h, () => {
       rr(0, 0, w, h, C.dk, 1);
       rr(1, 1, w - 2, h - 2, edge, 1);
@@ -410,13 +412,16 @@
   const khungCo = (ma) => (G.KHUNG_ANH === false || !KHUNG_LOP ? null : gdCo(ma));
   // 14/10 (vũ khí cũ còn sót, mục 9): bỏ ô đồ theo bậc màu cũ gd-o-do-1..3 (+ -chon) — ô vũ khí nay theo bậc ép đồ (js/ep_do.js), chỉ còn ô thường bậc 0.
   T.MA_KHUNG = ['gd-o-do-0', 'gd-o-do-0-chon',
-    'gd-khung-mau', 'gd-khung-mana', 'gd-khung-xp', 'gd-khung-trum', 'gd-khung-trum-nho', 'gd-khung-tinh-anh', 'gd-the-thuong']; // cho công cụ và bài kiểm tra
+    'gd-khung-mau', 'gd-khung-mana', 'gd-khung-xp', 'gd-khung-trum', 'gd-khung-trum-nho', 'gd-khung-tinh-anh', 'gd-the-thuong',
+    // 15/10 (khung-gd-con): 9 khung còn vẽ code -> ảnh
+    'gd-khung-nho', 'gd-dai-thong-bao', 'gd-o-con', 'gd-o-con-chon', 'gd-the-nho', 'gd-khung-vach-lk', 'gd-khung-vach-lk-moc',
+    'gd-thanh-cuon', 'gd-thanh-cuon-num', 'gd-khung-canh-bao', 'gd-the-sap-co', 'gd-khung-mau-quai']; // cho công cụ và bài kiểm tra
   // Dựng một lớp w × h (điểm ảnh game) ở đúng độ nét của ảnh ga; ve() vẽ bằng R, rr, frame (toạ độ game) và khungVe.
   function khungLop(ga, key, w, h, ve) {
     let m = KHUNG_LOP.get(ga); if (!m) { m = new Map(); KHUNG_LOP.set(ga, m); }
     let cv = m.get(key);
     if (!cv) {
-      if (m.size > 24) m.clear();
+      if (m.size > 48) m.clear(); // 15/10: 24 -> 48 (T.plate ảnh có nhiều cỡ trong một khung hình)
       const N = ga.net || 1;
       cv = document.createElement('canvas'); cv.width = Math.max(1, Math.round(w * N)); cv.height = Math.max(1, Math.round(h * N));
       g = cv.getContext('2d'); g.imageSmoothingEnabled = false; g.setTransform(N, 0, 0, N, 0, 0);
@@ -454,6 +459,100 @@
   }
   // lớp nút ảnh: bóng đổ như nút code, ảnh 9 mảnh (đang bấm thì thấp xuống 1 điểm)
   const lopNut = (ga, w, h, st) => khungLop(ga, 'nut|' + w + '|' + h + '|' + st, w, h + 3, () => { if (st !== 1) rr(0, 2, w, h, 'rgba(0,0,0,0.5)', 2); khungVeDeu(ga, 0, st === 1 ? 1 : 0, w, h); });
+
+  // ---------- 15/10 (docs/review/ke-hoach-cai-thien/khung-gd-con): 9 khung còn vẽ code -> ảnh AI ----------
+  // Dựng: khung-gd-con/cong-cu/dung-khung-gd-con.py (ảnh gốc docs/anh-goc/giao-dien/dot2/). Chỉ thay KHUNG: chữ, màu lòng thanh (máu, linh khí),
+  // vùng chạm, toạ độ giữ như cũ. Thiếu tệp (ảnh chưa tải) hoặc ?khunganh=0 (G.KHUNG_ANH = false): các hàm dưới trả false -> nơi gọi vẽ code như cũ.
+  //   gd-khung-nho (T.plate) · gd-dai-thong-bao (T.toast / toastFit, popup luc_chien) · gd-o-con, gd-o-con-chon (T.inset) ·
+  //   gd-the-nho (T.theNho: chip kháng / yếu dưới thanh trùm, nhuộm màu chip) · gd-khung-vach-lk + -moc (T.vachLk, T.vachLkMoc: js/linhkhi.js) ·
+  //   gd-thanh-cuon + -num (T.thanhCuon: js/hanh_trang.js) · gd-khung-canh-bao (T.khungCanhBao: js/ep_do.js) ·
+  //   gd-the-sap-co (T.theSapCo: js/village.js bản đồ vùng) · gd-khung-mau-quai (T.mauQuai: js/stage.js mobBars).
+  // Màu lòng của ảnh (lòng đã đục rỗng trong tệp để game đổ màu, cho lòng bán trong suốt / o.fill như code cũ):
+  const LONG_NHO = [24, 49, 23], LONG_O = '#241611'; // gd-khung-nho #183117 · gd-o-con / -chon #241611 (in ra bởi dung-khung-gd-con.py)
+  function khungNhoAnh(x, y, w, h, a) {
+    const gk = khungCo('gd-khung-nho');
+    if (!gk || w < 4 || h < 4) return false;
+    khungDat(khungLop(gk, 'nho|' + w + '|' + h + '|' + a, w, h, () => {
+      R(1, 1, w - 2, h - 2, 'rgba(' + LONG_NHO.join(',') + ',' + a + ')');
+      khungVeDeu(gk, 0, 0, w, h);
+    }), x, y, w, h);
+    return true;
+  }
+  // ô con: lòng màu ảnh (+ o.fill phủ lên như màu lót code), khung ảnh; ô chọn có quầng vàng tràn 0,5 điểm mỗi bên (ảnh 35×34 so với 34×33).
+  // o.col (màu viền báo trạng thái: hệ, đủ điều kiện, tối đa...) vẽ thành một nét 1 điểm ngay trong viền ảnh để không mất nghĩa.
+  function oConAnh(x, y, w, h, sel, o) {
+    const go = khungCo(sel ? 'gd-o-con-chon' : 'gd-o-con');
+    if (!go || w < 6 || h < 6) return false;
+    const c = G.ux;
+    c.fillStyle = LONG_O; c.fillRect(x + 1, y + 1, w - 2, h - 2);
+    if (o.fill) { c.fillStyle = o.fill; c.fillRect(x + 1, y + 1, w - 2, h - 2); }
+    const m = sel ? 0.5 : 0, W = w + m * 2, H = h + m * 2;
+    khungDat(khungLop(go, 'o|' + W + '|' + H, W, H, () => khungVeDeu(go, 0, 0, W, H)), x - m, y - m, W, H);
+    if (o.col && o.col !== C.brD && w > 8 && h > 8) {
+      c.fillStyle = o.col;
+      c.fillRect(x + 2, y + 2, w - 4, 1); c.fillRect(x + 2, y + h - 3, w - 4, 1); c.fillRect(x + 2, y + 3, 1, h - 6); c.fillRect(x + w - 3, y + 3, 1, h - 6);
+    }
+    return true;
+  }
+  // ảnh nhuộm: kieu 'nhan' (nhân màu: ảnh trắng -> màu chip, giữ sáng tối) hoặc 'phu' (phủ màu k phần: viền máu quái theo hệ)
+  function veNhuom(ga, w, h, col, kieu, k) {
+    khungVeDeu(ga, 0, 0, w, h);
+    if (!col) return;
+    g.save();
+    if (kieu === 'nhan') { g.globalCompositeOperation = 'multiply'; g.fillStyle = col; g.fillRect(0, 0, w, h); g.globalCompositeOperation = 'destination-in'; khungVeDeu(ga, 0, 0, w, h); }
+    else { g.globalCompositeOperation = 'source-atop'; g.globalAlpha = k; g.fillStyle = col; g.fillRect(0, 0, w, h); }
+    g.restore();
+  }
+  T.theNho = function (x, y, w, h, col) { // chip kháng / yếu: thẻ trắng nhuộm màu chip
+    const ga = khungCo('gd-the-nho');
+    if (!ga || w < 4) return false;
+    khungDat(khungLop(ga, 'tn|' + w + '|' + h + '|' + col, w, h, () => veNhuom(ga, w, h, col, 'nhan')), x, y, w, h);
+    return true;
+  };
+  // thanh máu nhỏ trên đầu quái: (x, y, bw) là lòng thanh 2 điểm như code; khung ảnh cao 4 (y - 1 .. y + 3), hai núm đầu nằm ngoài lòng 2 điểm.
+  // he: màu hệ của dấu Linh Khí (viền theo hệ như code cũ): khung phủ màu hệ 70%.
+  T.mauQuai = function (x, y, bw, he) {
+    const ga = khungCo('gd-khung-mau-quai');
+    if (!ga) return false;
+    const w = bw + 4;
+    khungDat(khungLop(ga, 'mq|' + w + '|' + (he || ''), w, 4, () => veNhuom(ga, w, 4, he, 'phu', 0.7)), x - 2, y - 1, w, 4);
+    return true;
+  };
+  // vỏ vạch linh khí quanh lòng (x, y, w, h): ảnh cao h + 3, hai đầu (móc) nằm ngoài lòng 3 điểm mỗi bên (theo tỉ lệ khi h khác 4).
+  T.vachLk = function (x, y, w, h) {
+    const ga = khungCo('gd-khung-vach-lk');
+    if (!ga) return false;
+    const H = h + 3, d = Math.round(3 * H / 7 * 2) / 2, W = w + d * 2;
+    khungDat(khungLop(ga, 'lk|' + W + '|' + H, W, H, () => khungVeDeu(ga, 0, 0, W, H)), x - d, y - 1.5, W, H);
+    return true;
+  };
+  // một vạch mốc ở px trên vạch có lòng cao h (từ y): đã đạt thì ảnh như gốc, chưa đạt thì bản tối (như vạch xám code cũ)
+  T.vachLkMoc = function (px, y, h, dat) {
+    const g0 = khungCo('gd-khung-vach-lk-moc');
+    if (!g0) return false;
+    gdVe(dat ? g0 : gdBien(g0, 'toi') || g0, px - 1, y - 1.5, 2, h + 3);
+    return true;
+  };
+  // thanh cuộn dọc: rãnh (x, y, 4, h), nút (x + 0.5, ty, 3, th)
+  T.thanhCuon = function (x, y, h, ty, th) {
+    const gr = khungCo('gd-thanh-cuon'), gn = khungCo('gd-thanh-cuon-num');
+    if (!gr || !gn) return false;
+    gdVe(gr, x, y, 4, h); gdVe(gn, x + 0.5, ty, 3, th);
+    return true;
+  };
+  T.khungCanhBao = function (x, y, w, h) { // hộp cảnh báo đỏ (ép đồ: hỏi trước khi ép có nguy cơ tụt bậc)
+    const ga = khungCo('gd-khung-canh-bao');
+    if (!ga) return false;
+    w = Math.round(w); h = Math.round(h);
+    khungDat(khungLop(ga, 'cb|' + w + '|' + h, w, h, () => khungVeDeu(ga, 0, 0, w, h)), Math.round(x), Math.round(y), w, h);
+    return true;
+  };
+  T.theSapCo = function (x, y, w, h) { // thẻ "Sắp có" trên bản đồ vùng (tấm gỗ; chữ vẽ đè bằng code)
+    const ga = khungCo('gd-the-sap-co');
+    if (!ga) return false;
+    gdVe(ga, x, y, w, h);
+    return true;
+  };
 
   // ---------- thanh máu trùm / tinh anh ----------
   // Phân cấp: trùm vùng (big) khung to có hoa văn, tên chữ to; trùm nhỏ khung vừa; tinh anh khung nhỏ.
@@ -671,14 +770,16 @@
   };
   function toastBody(x, y, w, text, o) {
     const h = 18;
-    const cv = layer('t|' + w, w, h + 2, () => {
+    const gt = khungCo('gd-dai-thong-bao'); // 15/10 (khung-gd-con): dải thông báo bằng ảnh (2 đầu nhọn giữ nguyên, giữa lặp hoa văn)
+    if (gt) khungDat(khungLop(gt, 'toast|' + w, w, h + 2, () => { R(3, 2, w - 6, h, 'rgba(0,0,0,0.35)'); khungVeDeu(gt, 0, 0, w, h); }), x, y, w, h + 2);
+    const cv = gt ? null : layer('t|' + w, w, h + 2, () => {
       for (let j = 0; j < h; j++) { const d = Math.abs(j - (h - 1) / 2) | 0, ins = Math.max(0, d - 2); R(ins, j + 2, w - ins * 2, 1, 'rgba(0,0,0,0.4)'); }
       for (let j = 0; j < h; j++) { const d = Math.abs(j - (h - 1) / 2) | 0, ins = Math.max(0, d - 2); R(ins, j, w - ins * 2, 1, C.dk); R(ins + 1, j, w - ins * 2 - 2, 1, j === 0 || j === h - 1 ? C.dk : C.br); }
       R(8, 1, w - 16, 1, C.hi);
       R(12, 3, w - 24, h - 6, C.patD); frame(12, 3, w - 24, h - 6, C.dk);
       ring(6, 9, 2, 1, C.hi); ring(w - 7, 9, 2, 1, C.hi);
     });
-    put(cv, x, y);
+    if (cv) put(cv, x, y);
     const size = o.size || 8.5;
     txt(text, x + w / 2, y + 9 + size * 0.36, { size, bold: true, align: 'center', color: o.col || C.ink });
   }

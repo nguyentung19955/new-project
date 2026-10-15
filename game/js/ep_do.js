@@ -435,7 +435,7 @@
       else { G.sfx('ui'); U.fx = { k: 'fail', t0: G.time || 0 }; say(kq.bua ? G.t('Bùa giữ bậc đã giữ {0} ở Bậc {1}.', ten, E.tenBac(kq.b1)) : G.t('{0} ép hỏng, giữ Bậc {1}.', ten, E.tenBac(kq.b1))); }
     };
     if (U.hoi === w.id && tu != null) { // hỏi xác nhận khi có nguy cơ tụt bậc
-      ui.rect(rx + 1, yb - 4, rw - 2, 36, 'rgba(20,10,10,0.94)', '#ff9a5a');
+      if (!(T.khungCanhBao && T.khungCanhBao(rx + 1, yb - 4, rw - 2, 36))) ui.rect(rx + 1, yb - 4, rw - 2, 36, 'rgba(20,10,10,0.94)', '#ff9a5a'); // 15/10: ảnh gd-khung-canh-bao
       const coBua = E.bua(sv) > 0;
       ui.para(coBua ? G.t('Thất bại sẽ tụt về Bậc {0} — dùng Bùa giữ bậc?', E.tenBac(tu)) : G.t('Thất bại sẽ tụt về Bậc {0}. Không có Bùa giữ bậc. Vẫn ép?', E.tenBac(tu)), rx + 5, yb + 4, rw - 10, { size: 6.5, color: TXT });
       const yq = yb + 16;
