@@ -73,7 +73,7 @@
 <div id="lk-tai" data-bia="||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAMEBQYH/8QAKRAAAQMCBQMDBQAAAAAAAAAAAQIDEQAEBRIhMUETFGEiQnEVUWKBsf/EABcBAAMBAAAAAAAAAAAAAAAAAAIDBAX/xAAlEQACAQEFCQAAAAAAAAAAAAABAgADBBExUfASEyEyM0FxobH/2gAMAwEAAhEDEQA/AOfNMWj9zbWiEtBsn1ugGTPCvjXajFcBNssNsvoeMxlCgVJqzCbhHftG3aGdcJBUAUn7neRzTMcumxjD0hDSkmFBtWZMjSdR5qamzb4DtHOiimTfxmt/T3UpzLBCTt5q22sWekt0vBvImSF8+KyF5eWDaGFNZlr6YkKGiTPGvzSutZDDX1sF3P0wPUBMzvP62rStACi5TEWB9pizi/H1JsLUo3NhKiZUOfyqbE1Hu3jJkqPNFFRUuprOHU5dZSVwmE6+2mNk9u7r7R/aKKqqQLNifB+T/9k=|||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAgf/xAAmEAACAgEEAQQCAwAAAAAAAAABAgMRAAQSITEFE1FhgSJBcbHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQIDBAX/xAAeEQABBAIDAQAAAAAAAAAAAAAAAQIDEiExBBEyIv/aAAwDAQACEQMRAD8A51EIZIo53EASNwHG07mBPFno9HFyeOhl1Y2yFIbtjVkDnr54yzx2vaLSyII1cELvBQEVu5PyeshTWvFJG6qi7OR+A9/4xoa3yQzWRvzsH8YkWrkCMZYlsoSvJHfWUalzFpI4/TRBZbca3HsUcXqvJvPqpZgEAewAFHAP1mZ9aZIoyqKWVa4jX3P+jByGor8aNDgT0gXvDiHTs1EbjRAsX3jKuEH92Ofs4YYGeim/yLulscHjFuT6YNno/wBnDDGfsEej/9k=" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.15-2307";
+(window.G = window.G || {}).VERSION = "lk-2026.10.15-2315";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -33896,7 +33896,7 @@ MA._xong();
       if (typeof l !== 'string') continue;
       const v = viOf(S.result, l); // nhận loại theo bản tiếng Việt của dòng
       if (v.indexOf('Trong ải') === 0) continue;
-      const k = /vàng/.test(v) ? 'gold' : /quặng/.test(v) ? 'ore' : /đá tôi|đá nâng bậc|bùa giữ bậc/.test(v) ? 'stone' : /mảnh/.test(v) ? 'shard' + S.r : /kinh nghiệm/.test(v) ? 'xp' : /^\+\d+ /.test(v) ? 'mat' + S.r : null;
+      const k = /vàng/.test(v) ? 'gold' : /quặng/.test(v) ? 'ore' : /đá tôi|đá nâng bậc|bùa giữ bậc/.test(v) ? 'stone' : /mảnh/.test(v) ? 'shard' + S.r : /kinh nghiệm/.test(v) ? 'xp' : /^\+\d+ /.test(v) ? 'mat' + (G.matAi ? G.matAi(S.r, S.i) : S.r) : null; // vùng 4: nguyên liệu vùng cũ theo ải
       if (k) items.push({ kind: k, s: l });
     }
     items.forEach((it, i) => {
@@ -42399,8 +42399,8 @@ MA._xong();
   const D = (G.doRoi = {});
   const OL = '#120c08';
   const TAU = Math.PI * 2;
-  const NHAN = { linhkhi: 1, gold: 1, ore: 1, stone: 1, mat0: 1, mat1: 1, mat2: 1, shard0: 1, shard1: 1, shard2: 1, xp: 1 }; // loại hút xa
-  const MAU_TRUM = ['#8ac84a', '#5ab0f0', '#ff8a4a']; // màu mảnh trùm theo vùng (Mộc Tinh, Ngư Tinh, Hồ Tinh)
+  const NHAN = { linhkhi: 1, gold: 1, ore: 1, stone: 1, mat0: 1, mat1: 1, mat2: 1, shard0: 1, shard1: 1, shard2: 1, shard3: 1, xp: 1 }; // shard3: Thuồng Luồng (vùng 4) // loại hút xa
+  const MAU_TRUM = ['#8ac84a', '#5ab0f0', '#ff8a4a', '#4ac0a0']; // màu mảnh trùm theo vùng (Mộc Tinh, Ngư Tinh, Hồ Tinh)
   const cache = new Map();
 
   function canvas(w, h) { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; return cv; }
