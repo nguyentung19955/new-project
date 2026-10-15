@@ -28,3 +28,10 @@ Rồng Việt thân dài không cánh, thân nước đen như mực thấy xư�
 mặt sao trống ốp trán như mắt thứ ba. Pha 1 rắn nước; pha 2 hoá rồng, các mảnh ghép quanh thân, dùng chiêu các trùm trước;
 pha 3 thần trống: vành trống khổng lồ sau đầu như mặt trời đồng, đánh trống → sóng âm vòng, né theo nhịp; nhạc nền là tiếng trống = nhịp ra đòn.
 Thắng: vành trống rơi xuống ghép thành trống đồng lành lặn (cảnh kết).
+
+## Chủ game chốt thêm (15/10/2026, 22:30)
+- **Hắc Long = chính Thuồng Luồng hoá rồng.** Mỗi lần thua, Thuồng Luồng trốn và gom thêm mảnh trống. Đến vùng 8 nó hoá Hắc Long (pha 1 vẫn là rắn nước).
+- **Mảnh mặt trời** (mảnh lớn nhất) Thuồng Luồng giữ tới vùng 8, đội trên trán Hắc Long. Vì vậy các vùng 5–7 mỗi vùng trả về một mảnh KHÁC, không phải mảnh mặt trời.
+  Gợi ý vùng 5: linh khí mảnh mặt trời làm Thần Sét hoá điên; Thuồng Luồng bỏ đi tiếp, để lại Thần Sét. Cu Tí cứu Thần Sét và lấy lại một mảnh nhỏ.
+- **Bé Sen** (con gái Chú Lái Đò) ra mắt ở bến đò ngay từ bây giờ, ngồi cạnh bố và nói vài câu. Tới vùng 4 bé bị bắt nên người chơi đã quen và thấy tiếc.
+- Khi có vùng 4: câu cuối KET_MOI ("…gặp chú, chạm Độ khó 2") đổi thành câu dẫn sang Sông sâu.
