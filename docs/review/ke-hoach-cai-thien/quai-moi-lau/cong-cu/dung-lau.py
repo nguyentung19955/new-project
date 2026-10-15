@@ -90,7 +90,7 @@ def dung(MA_):
         elif ten in c.get('giu_co', []):   # phồng to dần có chủ ý: hệ số đo ở khung 1, không chỉnh riêng
             s, cach, _ = DQ.ti_le_hang(ten, fi, ks[:1], A0); rieng = [1.0] * so; cach = dict(cach, giu_co=True)
         else: s, cach, rieng = DQ.ti_le_hang(ten, fi, ks, A0)
-        if ten in c.get('deu_co', []):   # Dơi Than báo đòn: AI vẽ bầy dơi nhỏ ở khung 1–2 rồi to dần (~1,3 lần) — đưa từng khung về cùng cỡ
+        if ten in c.get('deu_co', []):   # Dơi Than báo đòn: AI vẽ bầy dơi nhỏ ở khung 1–2 rồi to dần (~1,5 lần) — đưa từng khung về cùng cỡ
             dtk = [float((a[..., 3] > 128).sum()) for a in ks]; md = float(np.median(dtk))   # theo diện tích (SIFT khớp kém giữa các khung bầy)
             rieng = [round(min(1.33, max(0.75, float(np.sqrt(v / md)))), 3) for v in dtk]; cach = dict(cach, deu_co=True)
         hang[ten] = []
