@@ -66,7 +66,7 @@
   const anh = (ma, x, y, o) => (!G.noRender && G.fx && G.fx.anh ? G.fx.anh(ma, x, y, o) : false);
   const FA = () => G.fxAnh;
   const coAnh = (ma) => !G.noRender && G.HU_TRUM !== false && !!FA() && FA().co(ma);
-  // 15/10 (hieu-ung-ky-nang): ảnh riêng thay hình vẽ tạm (mảnh san hô, tường tinh thể, vệt dầu, nấm con) — có ảnh và không bật ?fxcu=1
+  // 15/10 (hieu-ung-ky-nang): ảnh riêng thay hình vẽ tạm (mảnh san hô, tường tinh thể, vệt dầu, nấm con) — có ảnh sẵn sàng
   // (js/fx_anh.js G.huKn); không thì như cũ (ảnh tạm dùng lại hu-gai-bang / hu-nam-moc, hoặc vẽ code).
   const KA = (ma) => !!G.huKn && G.huKn(ma);
   const ZK = () => G.ZK || 0.85;
@@ -165,7 +165,7 @@
         if (v > 0 && o.age < T2 + 0.4 && KA('hu-manh-san-ho')) {
           const f = o.age < T2 ? Math.min(3, Math.floor(v * 4)) : 4 + Math.min(1, Math.floor(((o.age - T2) / 0.4) * 2)), mo = o.age > T2 ? clamp(1 - (o.age - T2 - 0.2) / 0.2, 0, 1) : 1;
           M.forEach(([px, py, g], i) => { const d = S.manhDai * v * (0.55 + 0.45 * hh(i, 1)), x = px + Math.cos(g) * d, y = py + Math.sin(g) * d - Math.sin(v * PI) * 10; FA().veK(c, 'hu-manh-san-ho', x, y, f, g, 1, false, mo); });
-        } else if (v > 0 && o.age < T2 + 0.4) { // thiếu ảnh / ?fxcu=1: vẽ tạm bằng code
+        } else if (v > 0 && o.age < T2 + 0.4) { // thiếu ảnh / ảnh chưa tải: vẽ tạm bằng code
           c.save(); c.globalAlpha *= o.age > T2 ? clamp(1 - (o.age - T2) / 0.4, 0, 1) : 1;
           M.forEach(([px, py, g], i) => { const d = S.manhDai * v * (0.55 + 0.45 * hh(i, 1)), x = px + Math.cos(g) * d, y = py + Math.sin(g) * d - Math.sin(v * PI) * 10; p(c, x - 2, y - 2, 4, 3, '#14182e'); p(c, x - 1, y - 2, 3, 2, i % 2 ? '#ff7a8a' : '#ff9eb0'); p(c, x - 1, y - 2, 1, 1, '#ffe0e6'); });
           c.restore();
