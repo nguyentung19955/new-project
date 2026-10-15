@@ -395,10 +395,52 @@
   // w: trọng số [chiêu 1, chiêu 2, đòn thường khi đứng gần]; cd: nghỉ sau chiêu theo pha; lap: được lặp chiêu vừa ra.
   const MINI_NHIP = {
     namChua: { w: [1, 2, 1], wXa: [1, 3, 0], cd: [1.7, 1.35, 1.1], lap: false },
-    cuaDa: { w: [3, 1, 2], wXa: [1, 2, 0], cd: [1.5, 1.2, 1.0], lap: false, combo: { chieu1: 'atk' } },
+    cuaDa: { w: [3, 1, 2], wXa: [1, 2, 0], cd: [1.5, 1.2, 1.0], lap: false, combo: { chieu1: 'atk' } }, // (cua-tuong-kho: giữ nhịp, đổi tầm / hướng chiêu — G.CUA_SO)
     hoLua: { w: [3, 1, 2], wXa: [3, 2, 0], cd: [1.05, 0.85, 0.7], lap: true },
   };
   G.MINI_NHIP = MINI_NHIP;
+
+  // ======================= CUA ĐÁ: KHÔNG CÒN CHỖ ĐỨNG AN TOÀN (15/10 cua-tuong-kho, cờ tắt ?cuade=1 → G.CUA_MOI = false, y hệt cũ) =======================
+  // Mô phỏng Node (docs/review/ke-hoach-cai-thien/cua-tuong-kho/bao-cao.md): đứng sát mép trên / dưới gần như không mất máu vì (1) Cua Đá
+  // chậm (30 điểm/giây, đi dọc chỉ 24) và dừng cách em bé 56 — Kẹp càng tầm 58 chỉ chạm rìa; (2) Đập càng chỉ là vòng quanh thân; (3) Tường
+  // tinh thể cố định giữa phòng, hàng mảnh chỉ từ y ≈ 97 tới 217 (dải sát mép trên / dưới không mảnh nào tới) và khe giữa hai hàng đứng yên được.
+  // Sửa: cua đi ngang nhanh + lướt ngang khi em bé ở xa, đứng sát hơn; Kẹp càng vươn theo em bé (lao tới); Đập càng thêm vết nứt chạy qua chỗ
+  // em bé tới tận mép sàn và đá rơi dọc chân tường khi em bé đứng sát mép; Tường tinh thể (js/chieu_trum.js tuongNhot) nhốt hai bên em bé.
+  const CUA = (b) => G.CUA_MOI !== false && !!b && b.art === 'cuaDa';
+  const CUA_SO = {
+    di: { ngang: 1.8, doc: 1.1, gan: 40 }, // tốc đi × (ngang, dọc) — cũ × (1, 0,8); dừng khi cách em bé gan + 12 = 52 (cũ 56)
+    luot: { xa: 96, dai: 84, giay: 0.3, cd: 2.4 }, // lướt ngang: em bé xa hơn xa thì lao tới dai điểm trong giay giây, nghỉ cd giây
+    kep: { r: 58, rMax: 96, them: 18, span: [2.0, 1.5], satXa: 1.0 }, // Kẹp càng: tầm = cách em bé + them (r..rMax); vươn xa thì quạt hẹp hơn, lao theo, sát thương × satXa (gần: 1,2 như cũ)
+    nut: { rong: 26, tu: 76, tre: 0.55, sat: 0.65 }, // Đập càng: vết nứt từ rìa vòng đập (tu) chạy qua hướng em bé tới tận mép sàn, nổ sau vòng đập tre giây
+    da: { mep: 40, xa: 60, r: 18, cach: 30, so: 5, lui: 4, tre: 0.35, sat: 0.7 }, // em bé đứng xa trùm (> xa) VÀ cách mép < mep: so tảng đá rơi dọc chân tường đó (bước vào trong là né)
+  };
+  G.CUA_SO = CUA_SO; G.cuaMoi = CUA;
+  // Quãng từ (x, y) theo góc a tới mép sàn (vết nứt chạy hết sàn, không bị cắt ngắn).
+  function toiMep(x, y, a) {
+    const w = W(), c = Math.cos(a), s = Math.sin(a);
+    let t = 1e9;
+    if (c > 1e-6) t = Math.min(t, (w.x1 - x) / c); else if (c < -1e-6) t = Math.min(t, (w.x0 - x) / c);
+    if (s > 1e-6) t = Math.min(t, (w.y1 - y) / s); else if (s < -1e-6) t = Math.min(t, (w.y0 - y) / s);
+    return Math.max(0, t === 1e9 ? 0 : t);
+  }
+  function cuaNut(b, g, t) {
+    const S = CUA_SO.nut, L = toiMep(b.x, b.y, g);
+    if (!(S.rong > 0) || L <= S.tu) return; // em bé trong vòng đập, sát mép: vòng đập đã phủ tới mép
+    Z('line', { x: b.x + Math.cos(g) * S.tu, y: b.y + Math.sin(g) * S.tu, ang: g, len: L - S.tu + 6, w: S.rong }, t, b.dmg * S.sat, null);
+  }
+  // Đá rơi dọc chân tường: em bé đứng cách mép nào < da.mep thì một hàng đá rơi dọc mép đó, giữa hàng ngay chỗ em bé (góc: cả hai mép).
+  function cuaDaRoi(b, P, t) {
+    const S = CUA_SO.da, w = W();
+    if (Math.hypot(P.x - b.x, P.y - b.y) <= S.xa) return;
+    const mep = [['tren', P.y - w.y0], ['duoi', w.y1 - P.y], ['trai', P.x - w.x0], ['phai', w.x1 - P.x]].filter((m) => m[1] < S.mep);
+    for (const [m] of mep) for (let i = 0; i < S.so; i++) {
+      const k = (i - (S.so - 1) / 2) * S.cach, ngang = m === 'tren' || m === 'duoi';
+      const x = ngang ? P.x + k : m === 'trai' ? w.x0 + S.lui : w.x1 - S.lui;
+      const y = ngang ? (m === 'tren' ? w.y0 + S.lui : w.y1 - S.lui) : P.y + k * (G.ZK || 0.85);
+      if (x < w.x0 - 8 || x > w.x1 + 8 || y < w.y0 - 8 || y > w.y1 + 8) continue;
+      circle(x, y, S.r, t, b.dmg * S.sat, null, { fxKind: 'spout' });
+    }
+  }
   G.MINI_SK = MINI_SK; // 14/10 ky-nang-trum-rieng: js/chieu_trum.js đổi tên chiêu 2 của Nấm Chúa, Cua Đá (cờ ?chieucu=1 giữ tên cũ)
   function thinkMini(b) {
     const w = W(), P = dichOf(b, w.P), ph = b.phase, id = b.art;
@@ -416,6 +458,8 @@
       opts.push('chieu1', 'chieu2');
       if (gan) opts.push('atk', 'atk');
     }
+    // cua-tuong-kho: Tường tinh thể còn đứng thì không dựng tường mới (trùm vẫn kẹp / đập trong lúc tường đứng)
+    if (CUA(b) && b.cuaTuongHet > b.t) for (let j = opts.length - 1; j >= 0; j--) if (opts[j] === 'chieu2' && opts.length > 1) opts.splice(j, 1);
     // GĐ2 (V38): Chống áp sát — em bé đứng gần thì trùm nhỏ hay ra chiêu 1 hơn (Cua Đá đập sàn quanh mình, Nấm Chúa hàng nấm, Hổ Lửa vồ)
     if (has(b, 'antiMelee') && d < 75) opts.push('chieu1', 'chieu1');
     const B = bangNG(b), k = N && N.lap && !b.dbg ? (b.last = G.pick(opts)) : choose(b, opts), spd = B ? ngPh(B.toc, ph) : [1, 1.08, 1.16][ph];
@@ -426,7 +470,14 @@
       const T = 0.75 / spd;
       play(b, 'tele', 0.7 / 0.75 * spd);
       later(b, T, () => play(b, 'atk', spd));
-      const don = (g, t) => { if (id === 'namChua') Z('cone', { x: b.x, y: b.y, ang: g, r: 64, span: 1.2 }, t, b.dmg * 1.1, 'poison'); else Z('cone', { x: b.x, y: b.y, ang: g, r: 58, span: 2.0 }, t, b.dmg * 1.2, null, { melee: true }); };
+      const don = (g, t) => {
+        if (id === 'namChua') Z('cone', { x: b.x, y: b.y, ang: g, r: 64, span: 1.2 }, t, b.dmg * 1.1, 'poison');
+        else if (CUA(b)) { // Cua Đá (cua-tuong-kho): càng vươn tới chỗ em bé, vươn xa thì lao theo lúc kẹp
+          const K = CUA_SO.kep, rr = clamp(Math.hypot(P.x - b.x, P.y - b.y) + K.them, K.r, K.rMax), xa = rr > K.r + 10;
+          Z('cone', { x: b.x, y: b.y, ang: g, r: rr, span: xa ? K.span[1] : K.span[0] }, t, b.dmg * (xa ? K.satXa : 1.2), null, { melee: true });
+          if (xa) later(b, t, () => { if (!b.dead) lunge(b, g, rr - K.r, 0.18); });
+        } else Z('cone', { x: b.x, y: b.y, ang: g, r: 58, span: 2.0 }, t, b.dmg * 1.2, null, { melee: true });
+      };
       don(a, T);
       b.busy = T + dur(id, 'atk') / spd; b.wind = T;
       // nổi giận: đánh thêm nhát nữa (bảng nhoDon; mặc định tắt), lấy đà lại, báo trước ≥ 0,45 giây
@@ -451,9 +502,14 @@
         // Đập càng rung sàn: sóng chấn động quanh mình, chạy ra ngoài vòng đỏ
         circle(b.x, b.y, 80, T, b.dmg * 1.3, null, { fxKind: 'slam' });
         if (ph >= 1) Z('donut', { x: b.x, y: b.y, r0: 80, r1: 118 }, T + 0.5, b.dmg, null);
+        // cua-tuong-kho: vết nứt chạy qua chỗ em bé tới tận mép sàn + đá rơi dọc chân tường nếu em bé đứng sát mép (G.CUA_SO)
+        if (CUA(b)) { cuaNut(b, a, T + CUA_SO.nut.tre); cuaDaRoi(b, P, T + CUA_SO.da.tre); }
         // nổi giận: đập thêm một lần (sau vòng sóng), báo trước như vùng to
         const n = soNG(b, 'cuaDap', 'dot', 1);
-        for (let j = 1; j < n; j++) lapDot(b, 'chieu1', T + 0.5 + j * 0.55, sanNG(b, true) || 0.6, (wt) => { circle(b.x, b.y, 80, wt, b.dmg * 1.3, null, { fxKind: 'slam' }); });
+        for (let j = 1; j < n; j++) lapDot(b, 'chieu1', T + 0.5 + j * 0.55, sanNG(b, true) || 0.6, (wt) => {
+          circle(b.x, b.y, 80, wt, b.dmg * 1.3, null, { fxKind: 'slam' });
+          if (CUA(b)) { const g = ang(b, W().P); aimFace(b, g); cuaNut(b, g, wt + CUA_SO.nut.tre); } // nứt lại theo chỗ em bé lúc này
+        });
         if (n > 1) xong = T + 0.5 + (n - 1) * 0.55 + 0.2;
       } else if (id === 'cuaDa') {
         // Mưa tinh thể: tinh thể trên lưng bắn lên rồi cắm xuống 5 chỗ
@@ -524,9 +580,11 @@
       lunge(b, Math.atan2(-dy, -dx), 90, 0.25);
       return;
     }
-    const want = b.kind === 'moc' ? 70 : b.kind === 'ngu' ? 85 : b.kind === 'ho' ? 100 : 44;
+    const cua = CUA(b), want = cua ? CUA_SO.di.gan : b.kind === 'moc' ? 70 : b.kind === 'ngu' ? 85 : b.kind === 'ho' ? 100 : 44;
     const BN = bangNG(b), sp = b.speed * Math.max(0.4, 1 - 0.15 * b.st.iceN) * chamOf(b) * (BN ? ngPh(BN.diChuyen, b.phase) : 1); // × nổi giận
-    if (d > want + 12) { b.x += (dx / d) * sp * dt; b.y += (dy / d) * sp * 0.8 * dt; b.moving = true; }
+    // cua-tuong-kho: Cua Đá đi ngang nhanh, em bé ở xa thì lướt ngang một đoạn (đuổi được tới sát mép / góc)
+    if (cua && d > CUA_SO.luot.xa && !(b.luotCd > 0) && !b.lunge) { const L = CUA_SO.luot; lunge(b, Math.atan2(dy, dx), Math.min(L.dai, d - want), L.giay); b.luotCd = L.cd; b.cd = Math.max(b.cd, L.giay + 0.05); b.moving = true; FX('burst', b.x, b.y, '#d8c08a', 6, 50); return; }
+    if (d > want + 12) { b.x += (dx / d) * sp * (cua ? CUA_SO.di.ngang : 1) * dt; b.y += (dy / d) * sp * (cua ? CUA_SO.di.doc : 0.8) * dt; b.moving = true; }
     else if (d < want - 30 && b.kind !== 'mini') { b.x -= (dx / d) * sp * 0.45 * dt; b.y -= (dy / d) * sp * 0.3 * dt; b.moving = true; }
     if (b.kind === 'ho') b.y += Math.sin(b.t * 1.7) * 14 * dt;
   }
@@ -539,6 +597,7 @@
     if (b.wind > 0) b.wind -= dt;
     if (b.tpCd > 0) b.tpCd -= dt;
     if (b.hopCd > 0) b.hopCd -= dt;
+    if (b.luotCd > 0) b.luotCd -= dt;
     if (b.invuln > 0) b.invuln -= dt;
     if (b.busy > 0) b.busy -= dt;
     if (b.tired > 0) b.tired -= dt;

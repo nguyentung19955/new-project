@@ -34,6 +34,7 @@
     "hoPhanThan": { "le": [18, 12], "rong": 34, "sat": 1.1, "dau": 0.3, "buoc": 0.12, "bao": 0.3, "lao": 0.22, "mo": 0.7, "met": 1.0, "ngat": 1.0 },
     "namMe": { "so": 3, "R": 46, "giay": 2.5, "r": 30, "sat": 0.8, "may": 3, "chem": 30 },
     "cuaTuong": { "cach": 70, "nua": 0.36, "day": 10, "satDung": 1.0, "giu": 3.0, "bao": 1.0, "hang": 30, "manhDai": 96, "manhRong": 14, "sat": 1.0 },
+    "cuaNhot": { "le": 42, "mep": 14, "khe": 32, "day": 10, "satDung": 1.0, "giu": 2.6, "bao": 1.0, "loat": 2, "bao2": 0.6, "hang": 36, "dau": 6, "manhRong": 14, "sat": 0.8 },
     "namPhongNhay": { "lan": 3, "dau": 0.2, "cach": 0.4, "bao": 0.6, "bay": 0.35, "xa": 60, "tach": 44, "cao": 26, "r": 24, "sat": 1.0, "may": 3 },
     "caNocLan": { "nay": 3, "giay": 1.9, "tocMin": 120, "tocMax": 260, "r": 14, "le": 12, "baoMin": 0.7, "sat": 0.8, "phong": 1.35 },
     "huDau": { "tay": 70, "rong": 18, "cho": 1.0, "chay": 2.0, "sat": 0.8, "nhip": 0.5, "satChay": 0.3 }
@@ -355,10 +356,65 @@
       for (const t of TU) for (const y0 of hang) { const y = y0 + (d % 2 ? S.hang / 2 : 0); if (y > t.y1 + 2) continue; for (const g of [0, PI]) vung(b, 'line', { x: t.x, y, ang: g, len: Math.min(L, g ? t.x - w.x0 : w.x1 - t.x), w: S.manhRong }, S.bao, b.dmg * S.sat * (d ? satDot() : 1), 'ice', { cancel: true }); } // mảnh bay tới mép sàn là hết
     });
   }
+  // 15/10 cua-tuong-kho (cờ tắt ?cuade=1 → tuongTinhThe cũ ở trên): TƯỜNG TINH THỂ NHỐT EM BÉ. Hai bức tường dọc dựng hai bên chỗ em bé
+  // đứng (cách le; sát mép phòng thì bên đó tường phòng là vách), cao hết sàn, chỉ chừa MỘT khe thoát (khe, trừ vạch chắn còn ≥ 24) ở một
+  // bức. Tường đứng giu giây rồi vỡ: mảnh bắn ngang PHỦ HẾT SÀN (từ tường tới tường, từ tường tới mép phòng) theo loat loạt SO LE (loạt sau
+  // lệch nửa hàng, báo trước bao2 giây ngay khi loạt trước nổ) — đứng yên ở khe giữa hai hàng không còn an toàn: né bằng bước sang hàng vừa
+  // nổ (hoặc lộn). Hàng cách hang, mảnh rộng manhRong → mỗi loạt chừa dải trống ≥ 16. Nổi giận: thêm loạt (G.NOI_GIAN.chieu.cuaTuong).
+  // Trùm vẫn kẹp / đập trong lúc tường đứng (js/boss.js chỉ bỏ chiêu dựng tường mới tới khi tường cũ vỡ hết: b.cuaTuongHet).
+  function tuongNhot(b, P, T, D) {
+    const S = SO.cuaNhot, w = W(), px = clamp(P.x, w.x0, w.x1);
+    const xs = [px - S.le, px + S.le].filter((x) => x > w.x0 + S.mep && x < w.x1 - S.mep);
+    if (!xs.length) xs.push((w.x0 + w.x1) / 2);
+    const coKhe = xs.length > 1 ? (G.rnd() < 0.5 ? 0 : 1) : 0, gy = G.rr(w.y0 + S.khe, w.y1 - S.khe), TU = [];
+    xs.forEach((x, i) => {
+      if (i === coKhe) { TU.push({ x, y0: w.y0 - 4, y1: gy - S.khe / 2 }, { x, y0: gy + S.khe / 2, y1: w.y1 + 4 }); } else TU.push({ x, y0: w.y0 - 4, y1: w.y1 + 4 });
+    });
+    for (const t of TU) vung(b, 'line', { x: t.x, y: t.y0, ang: PI / 2, len: t.y1 - t.y0, w: S.day }, T, b.dmg * S.satDung, 'ice');
+    const nL = S.loat + soNG(b, 'cuaTuong', 'dot', 1) - 1, het = T + S.giu + (nL - 1) * S.bao2;
+    b.cuaTuongHet = b.t + het + 0.2;
+    seq(b, T, () => {
+      if (b.dead) return;
+      const Pp = W().P;
+      for (const t of TU) if (Pp && Math.abs(Pp.x - t.x) < S.day / 2 + 2 && Pp.y > t.y0 - 4 && Pp.y < t.y1 + 4) Pp.x = t.x + (Pp.x >= t.x ? 1 : -1) * (S.day / 2 + 2);
+      vat({ x: px, y: (w.y0 + w.y1) / 2, chan: TU, day: S.day,
+        buoc(o) {
+          if (b.dead) return false;
+          if (o.age >= S.giu) { for (const t of TU) for (let y = Math.max(t.y0, w.y0) + 8; y < Math.min(t.y1, w.y1); y += 22) anh('hu-bang-vo', t.x, y, { sc: 0.6, t: 0.3 }) || FX('burst', t.x, y - 4, '#bfeaff', 6, 70); G.sfx('boom', 1.5); return false; }
+          return true;
+        },
+        ve(c, o) {
+          const f = Math.min(5, Math.floor(o.age / 0.07)), rung = o.age > S.giu - S.bao && Math.floor(o.age * 14) % 2 ? 1 : 0;
+          for (const t of TU) for (let y = Math.max(t.y0, w.y0) + 6; y <= Math.min(t.y1, w.y1) + 0.5; y += 10) {
+            const x = t.x + (rung ? (y % 20 ? 1 : -1) : 0);
+            if (KA('hu-tuong-tinh-the')) { const g = o.age < 0.21 ? Math.floor(o.age / 0.07) : o.age < S.giu - S.bao ? 3 : o.age < S.giu - 0.15 ? 4 : 5; FA().veK(c, 'hu-tuong-tinh-the', x, y, g, 0, 1, (y / 10) % 2 > 1, 1); continue; }
+            if (coAnh('hu-gai-bang')) { FA().veK(c, 'hu-gai-bang', x, y, f, 0, 0.9, (y / 10) % 2 > 1, 1); continue; }
+            const h = Math.round(10 * Math.min(1, o.age / 0.3)) + 4;
+            p(c, x - 4, y - h, 8, h, '#14182e'); p(c, x - 3, y - h + 1, 6, h - 1, '#5fb8e0'); p(c, x - 2, y - h + 1, 2, h - 2, '#d8f6ff'); p(c, x + 1, y - h + 2, 1, 2, '#ffffff');
+          }
+        } });
+    });
+    // Mảnh: mỗi hàng chia theo các bức tường thành đoạn — đoạn ngoài cùng bay từ tường ra mép phòng, đoạn giữa bay từ tường này sang tường kia.
+    // (tên chiêu giữ từ lúc dựng tường: lúc mảnh bay trùm có thể đang ra chiêu khác — bảng thua vẫn ghi đúng "Tường tinh thể")
+    const cot = xs.slice().sort((u, v) => u - v), oM = { cancel: true, skill: b.skillName || null };
+    const manh = (y, t, k) => {
+      const dmg = b.dmg * S.sat * (k ? satDot() : 1);
+      vung(b, 'line', { x: cot[0], y, ang: PI, len: cot[0] - w.x0 + 4, w: S.manhRong }, t, dmg, 'ice', oM);
+      for (let i = 0; i + 1 < cot.length; i++) vung(b, 'line', { x: cot[i], y, ang: 0, len: cot[i + 1] - cot[i], w: S.manhRong }, t, dmg, 'ice', oM);
+      vung(b, 'line', { x: cot[cot.length - 1], y, ang: 0, len: w.x1 - cot[cot.length - 1] + 4, w: S.manhRong }, t, dmg, 'ice', oM);
+    };
+    for (let k = 0; k < nL; k++) {
+      const bao = k ? S.bao2 : S.bao, tNo = T + S.giu + k * S.bao2;
+      seq(b, tNo - bao, () => {
+        if (b.dead) return;
+        for (let y = w.y0 + S.dau + (k % 2 ? S.hang / 2 : 0); y <= w.y1 + 2; y += S.hang) manh(y, bao, k);
+      });
+    }
+  }
   CT.mini = function (b, id, k, P, T, D, a) {
     if (!ON() || k !== 'chieu2' || (id !== 'namChua' && id !== 'cuaDa')) return false;
     if (b.an) b.an.ct = true;
-    if (id === 'namChua') namMe(b, P, T, D, a); else tuongTinhThe(b, P, T, D);
+    if (id === 'namChua') namMe(b, P, T, D, a); else if (G.cuaMoi && G.cuaMoi(b)) tuongNhot(b, P, T, D); else tuongTinhThe(b, P, T, D);
     return true;
   };
 

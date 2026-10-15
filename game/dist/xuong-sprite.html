@@ -1225,6 +1225,9 @@ window.G.LANG = 'vi';
   // 14/10 ky-nang-trum-rieng: 10 chiêu lặp kiểu của trùm vùng / trùm nhỏ / tinh anh đổi sang chiêu mới (js/chieu_trum.js). Cờ tắt: ?chieucu=1
   // (hoặc G.CHIEU_MOI = false) → dùng lại đúng chiêu cũ.
   if (G.CHIEU_MOI === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]chieucu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.CHIEU_MOI = !cu; }
+  // 15/10 cua-tuong-kho (docs/review/ke-hoach-cai-thien/cua-tuong-kho): Cua Đá không còn chỗ đứng an toàn (đuổi tới mép, chiêu nhắm theo em bé,
+  // Tường tinh thể nhốt em bé, đá rơi dọc chân tường). Cờ tắt: ?cuade=1 (hoặc G.CUA_MOI = false) → Cua Đá y hệt cũ. Số liệu: G.CUA_SO (js/boss.js).
+  if (G.CUA_MOI === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]cuade=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.CUA_MOI = !cu; }
   if (G.TRUM_MOI === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]trumcu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.TRUM_MOI = !cu; }
   // 15/10 noi-gian-manh (docs/review/ke-hoach-cai-thien/noi-gian-manh): NỔI GIẬN / HÓA CUỒNG thấy và cảm được — mọi hệ số ở bảng này
   // (js/boss.js, js/chieu_trum.js, js/mobs.js đọc; hình: js/noi_gian.js). Cờ tắt: ?giancu=1 (G.NOI_GIAN_BAT = false) → y hệt cũ.
