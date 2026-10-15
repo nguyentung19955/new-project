@@ -473,7 +473,10 @@
     let s = 0;
     for (const d of duong) { d.s0 = s; d.t0 = T + s / v; s += d.len; d.t1 = T + s / v; }
     const R = tong / v;
-    o.ct = tok; o.anim0 = 'chieu1'; o.anim1 = 'idle'; o.end = T + R + 0.25;
+    // 15/10 quai-moi-bien: tấm Cá Nóc Chúa vẽ lại có khung lăn tròn trong hàng đánh (lap_tu..lap_den) → cử động 'lan' lặp các khung đó suốt lúc lăn
+    // (js/sprite_custom.js SC.chonQuai) và KHÔNG xoay thân bằng code nữa (khung lăn đã vẽ vệt xoáy). Tấm cũ (?quaicu=1): đứng thở + xoay như trước.
+    const S2 = G.spriteCustom, sp2 = S2 && S2.get ? S2.get(e.art) : null, lanAnh = !!(sp2 && sp2.dt && sp2.dt.atk && sp2.dt.atk.lapTu != null);
+    o.ct = tok; o.anim0 = 'chieu1'; o.anim1 = lanAnh ? 'lan' : 'idle'; o.end = T + R + 0.25;
     // 15/10 nam-nhay-mat-o: cùng lỗi với Nhảy dập — choáng / đông giữa lúc lăn: trước vạch báo của đoạn hẹn đúng lúc choáng bị bỏ, hết
     // choáng thân lăn tiếp (cử động đứng yên lúc choáng nên lăn TRỄ) vào đoạn không còn / chưa từng có vạch báo. Nay dừng hẳn (canhChieu),
     // xoá các vạch báo còn lại (đường đó không còn lăn nữa), chữ "Ngắt chiêu!".
@@ -497,7 +500,7 @@
       if (k0.doan != null && k0.doan !== i) { anh('hu-va-cham', d.x0, d.y0 - 6, { sc: 1.2 }) || FX('burst', d.x0, d.y0 - 6, '#a6deff', 8, 60); W().shake = Math.max(W().shake, 0.1); G.sfx('hit', 1.2); }
       k0.doan = i;
       q.x = d.x0 + (d.x1 - d.x0) * u; q.y = d.y0 + (d.y1 - d.y0) * u; q.dirA = d.ang; if (Math.abs(Math.cos(d.ang)) > 0.15) q.face = Math.cos(d.ang) > 0 ? 1 : -1;
-      k0.xoay += (s2 < tong ? v : 0) * dt / S.r * (q.face || 1);
+      if (!lanAnh) k0.xoay += (s2 < tong ? v : 0) * dt / S.r * (q.face || 1);
       k0.phong = s2 < tong ? S.phong : Math.max(1, k0.phong - dt * 2);
       if (s2 < tong && !trung[i] && P2 && Math.hypot(P2.x - q.x, (P2.y - q.y) * 1.3) < S.r + 6) { if (G.hurtPlayer(q.dmg * S.sat, 'ice', q, true)) trung[i] = true; }
     };

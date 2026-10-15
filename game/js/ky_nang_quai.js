@@ -359,6 +359,8 @@
   const regElGai = () => (H.regEl() === 'poison' ? 'poison' : null); // gai Rừng già có độc như gai cũ
   // 15/10 quai-moi-6-con: tấm Nhím Gai Độc vẽ lại có hàng đánh = cuộn tròn lăn (lặp, "lap_tu") → thân không xoay bằng code nữa (xoay cả vệt bụi).
   // Tấm cũ (?quaicu=1) hoặc chưa nạp ảnh: xoay như trước.
+  // 15/10 quai-moi-bien: con quái đang dùng tấm vẽ lại (có "can_tam") — tấm cũ (?quaicu=1) không có.
+  function anhMoi(q) { const S2 = G.spriteCustom, sp = S2 && S2.get ? S2.get(q.art) : null; return !!(sp && sp.ct); }
   function lanAnh(q) { const S2 = G.spriteCustom, sp = S2 && S2.get ? S2.get(q.art) : null; return !!(sp && sp.dt && sp.dt.atk && sp.dt.atk.lapTu != null); }
   T.nhimDoc = cuonLan;
 
@@ -421,7 +423,10 @@
     k.vo = S.vo; k.voCd = S.voHoi; e.invuln = S.vo;
     for (const z of W().zones) if (z.src === e && z.t > 0 && !z.pool && !z.knGiu) z.dead = true;
     e.act = null; e.wind = 0;
-    H.begin(e, 'vo', e.face > 0 ? 0 : PI, 0.01, { keepFace: true, anim1: 'hit', spd1: 0.12, end: S.vo, cd: 0.5 });
+    // 15/10 quai-moi-bien: tấm Ốc vẽ lại (hàng báo đòn = rút vào vỏ) → cử động 'vo': rút vỏ nhanh rồi giữ khung vỏ rỗng suốt lúc trong vỏ
+    // (js/sprite_custom.js SC.chonQuai). Tấm cũ (?quaicu=1) / chưa nạp ảnh: hàng trúng đòn chạy chậm như trước.
+    const moi = anhMoi(e);
+    H.begin(e, 'vo', e.face > 0 ? 0 : PI, 0.01, { keepFace: true, anim1: moi ? 'vo' : 'hit', spd1: moi ? 1 : 0.12, end: S.vo, cd: 0.5 });
     FX('text', e.x, e.y - e.h - 6, 'Rút vỏ!', '#cfe8f5', 8); G.sfx('hit', 0.6);
   }
   function ocTick(e, k, dt) {
@@ -527,7 +532,8 @@
     const S = SO.sua;
     H.keep(e, P, S.giu, sp, dt, 1);
     if (e.cd > 0 || d >= S.tam) return;
-    H.begin(e, 'kn', a, S.bao, { cd: S.hoi, end: S.bao + 0.4, anim1: 'idle', fire: (q) => vungDien(q, q.x, q.y) });
+    // 15/10 quai-moi-bien: tấm Sứa vẽ lại có hàng đánh = phóng điện → phát đúng lúc thả vũng điện. Tấm cũ: đứng thở như trước.
+    H.begin(e, 'kn', a, S.bao, { cd: S.hoi, end: S.bao + 0.4, anim1: anhMoi(e) ? 'atk' : 'idle', fire: (q) => vungDien(q, q.x, q.y) });
   };
   function vungDien(q, x, y) {
     const S = SO.sua, tong = S.nhip.reduce((s, v) => s + v, 0);

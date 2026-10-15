@@ -91,7 +91,9 @@
     G.QUAI_CU = cu;
   }
   // 15/10 (quai-moi-6-con): thêm Nấm Phồng, Nấm Phồng Chúa, Hoa Phun Bào Tử, Sóc Ném Quả Nổ, Nhím Gai Độc, Bầy Ong Vò Vẽ — cùng cách, cùng cờ.
-  const QUAI_MOI = { heoCon: 1, heoNanh: 1, chonBong: 1, boHung: 1, namPhong: 1, namPhongChua: 1, hoaBaoTu: 1, socNo: 1, nhimDoc: 1, ongVo: 1 };
+  // 15/10 (quai-moi-bien): thêm 10 quái Hang biển — Cua Lính, Bầy Cá Con, Ốc Mượn Hồn, Hải Quỳ, Cá Chuồn, Cá Nóc, Sứa Bom, Nhím Biển, Cua Tướng, Cá Nóc Chúa.
+  const QUAI_MOI = { heoCon: 1, heoNanh: 1, chonBong: 1, boHung: 1, namPhong: 1, namPhongChua: 1, hoaBaoTu: 1, socNo: 1, nhimDoc: 1, ongVo: 1,
+    cua: 1, caCon: 1, oc: 1, haiQuy: 1, caChuon: 1, caNoc: 1, sua: 1, nhim: 1, cuaTuong: 1, caNocChua: 1 };
   let napSauDangChay = false, trongNapSau = false;
   // Tải nhanh (12/10): ảnh rời. roiNhan(img, src) nhận ảnh anh/<mã>.<mã nội dung>.png vào hàng chờ; roiCan(ma) báo game đang cần hình ma
   // (chưa có thì tải ngay). Chỉ có ở bản 2 tệp ảnh rời (G.ANH_ROI); bản một tệp, công cụ: null, như cũ.
@@ -146,6 +148,8 @@
         dt[k] = { hang: a.hang | 0, so: Math.max(1, a.so | 0), giay: +a.giay > 0 ? +a.giay : 0.6, lap: !!a.lap, mo: a.mo != null ? +a.mo : null };
         // 15/10 quai-moi-6-con: "lap_tu" (hàng đánh): chạy hết một lượt rồi LẶP các cột lap_tu..so-1 cho tới khi game đổi cử động (Nhím lăn dài).
         if (k === 'atk' && a.lap_tu != null && isFinite(+a.lap_tu)) dt[k].lapTu = clamp(Math.round(+a.lap_tu), 0, dt[k].so - 1);
+        // 15/10 quai-moi-bien: "lap_den" (cột cuối của đoạn lặp, mặc định cột cuối hàng): Nhím Biển xoay bắn gai lặp cột 2–5, Cá Nóc Chúa lăn lặp cột 3–4.
+        if (dt[k].lapTu != null) dt[k].lapDen = a.lap_den != null && isFinite(+a.lap_den) ? clamp(Math.round(+a.lap_den), dt[k].lapTu, dt[k].so - 1) : dt[k].so - 1;
         const bg = docBang(a, dt[k].so); if (bg) dt[k].bang = bg; // "khung" / "cham" (bỏ khung trùng); không có thì không thêm gì
       }
       if (!dt.idle) throw new Error('thiếu động tác đứng thở');
@@ -389,9 +393,14 @@
     if (n === 'tele' || n === 'phase2' || n === 'phase3') return mot('tele', u);
     if (n === 'atk') {
       const a = dt.atk; // "lap_tu": hết một lượt (t >= D) thì lặp các cột lap_tu..so-1, mỗi cột D / so giây (Nhím lăn theo vạch tới khi dừng)
-      if (a && a.lapTu != null && t >= D) { const m = a.so - a.lapTu; return { ten: 'atk', i: a.lapTu + (Math.floor((t - D) / (D / a.so) + 1e-6) % m), u: 1 }; }
+      if (a && a.lapTu != null && t >= D) { const m = a.lapDen - a.lapTu + 1; return { ten: 'atk', i: a.lapTu + (Math.floor((t - D) / (D / a.so) + 1e-6) % m), u: 1 }; }
       return mot('atk', u);
     }
+    // 15/10 quai-moi-bien: hai cử động riêng chỉ có ở tấm vẽ lại (code chỉ gọi khi tấm có, xem js/ky_nang_quai.js ocRut, js/chieu_trum.js caNocLan):
+    //  - 'lan' (Cá Nóc Chúa Phồng lăn): lặp các cột lap_tu..lap_den của hàng đánh (khung lăn tròn), mỗi cột giay / so giây, suốt lúc lăn.
+    //  - 'vo' (Ốc Mượn Hồn trong vỏ): chạy hàng báo đòn (rút vào vỏ) trong 0,3 giây rồi GIỮ khung cuối (vỏ rỗng) suốt lúc trong vỏ.
+    if (n === 'lan') { const a = dt.atk; if (!a || a.lapTu == null) return lap('idle'); return { ten: 'atk', i: a.lapTu + (Math.floor(t / (a.giay / a.so) + 1e-6) % (a.lapDen - a.lapTu + 1)), u: 1 }; }
+    if (n === 'vo') { const a = dt.tele; if (!a) return mot('hit', u); return { ten: 'tele', i: Math.min(a.so - 1, Math.floor((Math.max(0, t) / 0.3) * a.so)), u: 1 }; }
     if (n === 'hit') return mot('hit', u);
     if (n === 'stun') { const r = mot('hit', 0.35 + 0.15 * Math.sin(t * 9)); r.u = 1; return r; }
     if (n === 'die') { const r = mot('die', u); r.alpha = 1 - seg(u, dt.die && dt.die.mo != null ? dt.die.mo : 0.6, 1); return r; }
