@@ -549,6 +549,48 @@ const HU = [
     dat: 'tâm vũng ở CHÍNH GIỮA ô; vũng là hình elip nằm ngang, bề cao bằng khoảng 85% bề ngang. QUAN TRỌNG: vũng nằm cùng chỗ, cùng cỡ, cùng dáng mép ở mọi khung, chỉ bong bóng và vân xoáy bên trong thay đổi; không có gì nhô ra ngoài mép vũng; KHÔNG vẽ vòng tròn báo hiệu quanh vũng', huong: 'nằm yên trên sàn, đối xứng, không nghiêng về bên nào',
     thoi: 'qua 6 khung các bong bóng lần lượt phồng to rồi vỡ, vân xoáy trên mặt vũng quay đi một chút mỗi khung; khung cuối nối tiếp được khung đầu để chạy lặp',
     la: 'vân trên mặt vũng xoáy trôn ốc như vân gỗ lim, và có hai bong bóng dính nhau thành hình củ lạc' },
+  // ===== Bước 3 · Phiên 0 (15/10): hiệu ứng QUÁI vùng 4 Sông sâu (E1–E8 trong docs/ke-hoach/buoc-3/KE-HOACH.md). vung: 'song' → tệp ghi "vung": "song"
+  // (game tải theo vùng, HU_KEYS của game/build.py). Gửi kèm ảnh mẫu docs/anh-goc/vung-4/mau/hieu-ung.png + ảnh mẫu con quái. Hiệu ứng trùm (E9–E13) dựng bằng
+  // docs/review/ke-hoach-cai-thien/trum-moi/cong-cu/dung-hieu-ung-trum.py như các trùm cũ. Cỡ, số khung, giây là số xuất phát: phiên 2A chỉnh khi gắn vào game. =====
+  { ma: 'hu-bot-doc', ten: 'Bọt độc (Cóc Tía, vùng 4)', vung: 'song', nen: 'hong', fw: 14, fh: 14, gx: 7, gy: 7, so: 6, giay: 0.5, canh: 'giua', doc: 'giua', xem: 'dan', bm: ['he_doc', 'quai'],
+    noi: 'Bọt độc Cóc Tía phun ra theo vòng cung: khung 1–3 bay, khung 4–6 vỡ thành giọt (bóng tròn báo chỗ rơi, vũng độc sau khi vỡ vẫn do game vẽ).',
+    mo: 'một bong bóng độc tròn cỡ hạt đậu: vỏ tím nhạt trong, lòng xanh lá sẫm sủi, một đốm sáng trắng ngà ở góc trên bên trái, viền ngoài một nét tối',
+    dat: 'bong bóng ở CHÍNH GIỮA ô', thoi: 'khung 1 đến 3 bong bóng bay, hơi méo qua lại như đang rung; khung 4 vỏ nứt; khung 5 vỡ tung thành bốn năm giọt nhỏ; khung 6 chỉ còn vài giọt nhỏ tan dần',
+    la: 'trên vỏ bọt có một vân xoắn mờ như vân da cóc' },
+  { ma: 'hu-gon-nuoc', ten: 'Gợn nước khi lặn (Rắn Nước, Cá Trê, Thuồng Luồng)', vung: 'song', nen: 'hong', fw: 28, fh: 16, gx: 14, gy: 8, so: 6, giay: 0.6, lap: true, canh: 'giua', doc: 'giua', xem: 'san', bm: ['nuoc', 'quai'],
+    noi: 'Gợn nước hình chữ V chạy trên mặt nước/bùn khi quái đang lặn đuổi theo em bé (vòng đỏ lúc trồi lên vẫn do game vẽ). Game xoay theo hướng chạy.',
+    mo: 'vệt gợn nước hình chữ V nhìn từ trên xuống: hai vệt sóng trắng xanh toả về phía sau từ một mũi nhọn, giữa có vài bong bóng nhỏ, nước xanh đen trong lòng chữ V',
+    dat: 'mũi chữ V ở nửa PHẢI ô, hai nhánh sóng toả về bên TRÁI', huong: 'chạy sang PHẢI', thoi: 'sóng lăn tăn dịch về sau, bong bóng nổi lên rồi vỡ; khung cuối nối tiếp được khung đầu để chạy lặp',
+    la: 'hai nhánh sóng có ngọn cuộn móc câu nhỏ như hoa văn sóng nước trên trống đồng' },
+  { ma: 'hu-no-nuoc', ten: 'Nổ nước lạnh (Ếch Phình)', vung: 'song', nen: 'hong', fw: 48, fh: 40, gx: 24, gy: 30, so: 6, giay: 0.45, canh: 'giua', doc: 'day', xem: 'no', bm: ['he_bang', 'nuoc', 'quai'],
+    noi: 'Ếch Phình Hơi nổ tung; vũng nước lạnh làm chậm sau đó dùng lại hu-vung-quai-bang. Vòng đỏ báo trước vẫn do game vẽ.',
+    mo: 'vụ nổ nước lạnh: bọt nước xanh băng bung tròn, tia nước toé ra mọi phía, vài mảnh băng nhỏ lấp lánh, cuối cùng còn một vòng giọt nước lạnh trên mặt đất',
+    dat: 'tâm vụ nổ ở GIỮA ô theo chiều ngang; mặt đất ở khoảng 3/4 chiều cao ô', thoi: 'khung 1 một quả bóng nước căng phồng, khung 2–3 bung to nhất, khung 4 tia nước rơi xuống, khung 5–6 còn vòng giọt nước mỏng dần',
+    la: 'giữa vụ nổ có hình bóng chiếc bụng ếch xẹp lép như quả bóng xì hơi (vui, không ghê)' },
+  { ma: 'hu-xoay-nuoc', ten: 'Xoáy nước (Ma Da; Thuồng Luồng phóng to)', vung: 'song', nen: 'hong', fw: 44, fh: 26, gx: 22, gy: 13, so: 8, giay: 0.8, lap: true, canh: 'giua', doc: 'giua', xem: 'san', bm: ['nuoc', 'quai'],
+    noi: 'Xoáy nước nhỏ kéo em bé vào tâm (Ma Da ném bầu nước); Thuồng Luồng dùng lại, game phóng to. Vòng đỏ lúc bắn nước vẫn do game vẽ.',
+    mo: 'một xoáy nước hình bầu dục dẹt nhìn từ trên chếch xuống: nước xanh đen ở tâm, các vòng nước xanh rêu xoắn vào trong, vệt bọt trắng chạy theo vòng xoắn',
+    dat: 'tâm xoáy ở CHÍNH GIỮA ô, xoáy nằm cùng chỗ, cùng cỡ ở mọi khung', thoi: 'vệt bọt quay vòng ngược chiều kim đồng hồ, mỗi khung quay thêm một chút; khung cuối nối tiếp được khung đầu để chạy lặp',
+    la: 'tâm xoáy có một chấm tối sâu hình con mắt nhắm' },
+  { ma: 'hu-dan-ngoc', ten: 'Ngọc trai bắn nảy (Trai Sông Gai)', vung: 'song', nen: 'xanh', fw: 10, fh: 10, gx: 5, gy: 5, so: 4, giay: 0.4, lap: true, canh: 'giua', doc: 'giua', xem: 'dan', bm: ['quai'],
+    noi: 'Viên ngọc Trai Sông Gai bắn theo hình quạt, nảy một lần trên sàn (quầng đỏ, chấm đỏ báo nguy hiểm vẫn do game vẽ). Hình tròn nên game không xoay.',
+    mo: 'một viên ngọc trai tròn trắng hồng nhạt, đốm sáng trắng ở góc trên bên trái, mép dưới hồng xám, một vệt sáng nhỏ kéo phía sau',
+    dat: 'viên ngọc ở CHÍNH GIỮA ô, tròn đều', thoi: 'viên ngọc xoay, đốm sáng chạy vòng quanh; khung cuối nối tiếp được khung đầu để chạy lặp' },
+  { ma: 'hu-dia-bam', ten: 'Đỉa bám chân (dấu trạng thái)', vung: 'song', nen: 'hong', fw: 12, fh: 10, gx: 6, gy: 9, so: 4, giay: 0.5, lap: true, canh: 'giua', doc: 'day', xem: 'chan', bm: ['co_cay', 'quai'],
+    noi: 'Dấu nhỏ ở chân em bé khi bị Bầy Đỉa Trâu bám (chậm 20%, mất máu nhỏ 3 giây; lăn né để giũ ra). Không vẽ em bé.',
+    mo: 'hai con đỉa nhỏ màu ô liu sẫm có sọc vàng hai bên, thân béo tròn, mắt tròn to dễ thương, đang ngoe nguẩy như bám vào cổ chân',
+    dat: 'hai con đỉa đứng cạnh nhau ở GIỮA ô theo chiều ngang, ĐÁY thân sát mép dưới ô', thoi: 'hai con đỉa uốn qua uốn lại lệch nhịp nhau; khung cuối nối tiếp được khung đầu để chạy lặp' },
+  { ma: 'hu-luoi-chai', ten: 'Lưới chài (Rái Cá Thủ Lĩnh)', vung: 'song', nen: 'xanh', fw: 48, fh: 48, gx: 24, gy: 24, so: 6, giay: 0.8, canh: 'giua', doc: 'giua', xem: 'san', bm: ['go', 'kim_loai', 'quai'],
+    noi: 'Lưới chài Rái Cá Thủ Lĩnh quăng xuống chỗ em bé: khung 1–3 bung ra trên không, khung 4–6 nằm trên đất giữ em bé 1 giây (vòng đỏ báo trước vẫn do game vẽ).',
+    mo: 'tấm lưới chài tròn nhìn từ trên xuống: mắt lưới nâu nhạt đan ô, vành ngoài treo một vòng chì xám nhỏ, giữa lưới có dây kéo nâu',
+    dat: 'tâm lưới ở CHÍNH GIỮA ô', thoi: 'khung 1 lưới còn cuộn tròn nhỏ, khung 2–3 bung tròn rộng dần, khung 4 lưới chạm đất phẳng to nhất, khung 5–6 lưới nằm yên mờ dần',
+    la: 'vòng chì ở mép lưới là những viên chì hình hạt na' },
+  { ma: 'hu-bun-phun', ten: 'Bùn phụt (Cá Trê)', vung: 'song', nen: 'xanh', fw: 24, fh: 40, gx: 12, gy: 36, so: 6, giay: 0.45, canh: 'giua', doc: 'day', xem: 'no', bm: ['go', 'bong', 'quai'],
+    noi: 'Cột bùn phụt lên: Cá Trê phun bùn và hàng cột bùn chống đứng sát mép (vòng đỏ báo trước, vũng bùn trơn sau đó vẫn do game vẽ).',
+    mo: 'một cột bùn nâu đặc phụt thẳng từ đất lên: chân loe rộng, thân sánh đặc, ngọn toé thành cục bùn tròn, vài giọt bùn bắn ngang',
+    dat: 'cột bùn dựng ĐỨNG ở GIỮA ô theo chiều ngang, CHÂN cột sát gần mép dưới ô', huong: 'thẳng đứng, đối xứng trái phải',
+    thoi: 'khung 1 một ụ bùn trồi lên, khung 2–3 cột bùn vọt cao nhất, khung 4 cục bùn rơi xuống, khung 5–6 còn vũng bùn dẹt lan ra trên mặt đất',
+    la: 'mặt bùn có bong bóng khí nhỏ vỡ lốp bốp' },
 ];
 const NEN = { xanh: ['XANH LÁ #00FF00', [0, 255, 0], 'xanh lá'], duong: ['XANH DƯƠNG #0000FF', [0, 0, 255], 'xanh dương'], hong: ['HỒNG TÍM #FF00FF', [255, 0, 255], 'hồng tím'] };
 const NEN_XEM = [['toi', '#141a1c', 'Tối'], ['co', '#3a4a30', 'Cỏ'], ['dat', '#6a5a46', 'Đất'], ['sang', '#c8c0a8', 'Sáng']];
@@ -723,7 +765,9 @@ const LO_GOP = [
   { id: 'he-lua-8', ten: 'Bản Lửa · Giáo quét vòng (1 hàng)', hang: ['hu-quet-giao-fire'] },
   { id: 'he-8-giao', ten: 'Bản Độc + Băng · Giáo quét vòng', hang: ['hu-quet-giao-poison', 'hu-quet-giao-ice'] },
   { id: 'trum-no-chung-lua', ten: 'Trùm nổ cuối · bản Chung + bản Lửa', hang: ['hu-trum-no', 'hu-trum-no-fire'] },
-  { id: 'trum-no-doc-bang', ten: 'Trùm nổ cuối · bản Độc + bản Băng', hang: ['hu-trum-no-poison', 'hu-trum-no-ice'] },
+  { id: 'trum-no-doc-bang', ten: 'Trùm nổ cuối · bản Độc + bản Băng', hang: ['hu-trum-no-poison', 'hu-trum-no-ice'] },  // Bước 3 · Phiên 0: hiệu ứng quái vùng 4 Sông sâu (6 khung cùng nền thì gộp; xoáy nước 8 khung, ngọc 4 khung, đỉa 4 khung khác nền nên gen lẻ).
+  { id: 'v4-6-hong', ten: 'Vùng 4 · Bọt độc, Gợn nước, Nổ nước lạnh', hang: ['hu-bot-doc', 'hu-gon-nuoc', 'hu-no-nuoc'] },
+  { id: 'v4-6-xanh', ten: 'Vùng 4 · Lưới chài, Bùn phụt', hang: ['hu-luoi-chai', 'hu-bun-phun'] },
 ];
 // Dựng mục đang chọn từ bảng HU (i: thứ tự trong HU; he: '' | 'fire' | 'poison' | 'ice' cho mục có "phe"). Dùng chung cho gen lẻ và lô gộp.
 function taoQ(i, he) {
@@ -1600,6 +1644,7 @@ function taoTep(q, kq) { // bỏ trống = mục đang xem (gen lẻ, hoặc hà
     loai: 'linh-khi-sprite', phien_ban: 1, doi_tuong: 'hieu-ung', ma: q.ma, ten: q.ten,
     tam: kq.cv.toDataURL('image/png'), ...(kq.N > 1 ? { net: kq.N } : {}), khung_rong: q.fw, khung_cao: q.fh, goc: [q.gx, q.gy],
     so: q.so, giay: q.giay, lap: !!q.lap, xoay: !!q.xoay, co: q.co || 1, tron: q.cong ? 'cong' : 'thuong',
+    ...(q.vung ? { vung: q.vung } : {}), // Bước 3 · Phiên 0: hiệu ứng riêng một vùng (game tải theo vùng)
   };
 }
 function napZip() {

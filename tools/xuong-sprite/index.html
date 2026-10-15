@@ -19899,8 +19899,10 @@ MA._xong();
   'use strict';
   const XS = window.XS, G = window.G, MA = G.monsterArt, SC = G.spriteCustom;
   const $ = (id) => document.getElementById(id);
-  const VUNG = { rung: 'Rừng già', bien: 'Hang biển', laudai: 'Lâu đài cổ', moi: 'Quái mới' };
-  const VUNG_SO = { rung: 0, bien: 1, laudai: 2 };
+  const VUNG = { rung: 'Rừng già', bien: 'Hang biển', laudai: 'Lâu đài cổ', song: 'Sông sâu', moi: 'Quái mới' };
+  const VUNG_SO = { rung: 0, bien: 1, laudai: 2, song: 3 };
+  // Bước 3 · Phiên 0: thêm vùng 4 Sông sâu (mã 'song'). Nhóm của vùng chưa có quái nào trong game thì không hiện (game chưa có quái 'song' cho tới phiên 2A).
+  const CAC_VUNG = ['rung', 'bien', 'laudai', 'song'];
   const LOAI = { thuong: 'Quái thường', tinhanh: 'Tinh anh', trumnho: 'Trùm nhỏ', trum: 'Trùm vùng' };
   const EM_BE = [
     // đợt 2 của game: chỉ còn thân ba bạn NPC (em-be chung và em-be-smith Cu Tí đã bỏ, Zed vẽ bằng bộ zed-*)
@@ -20027,7 +20029,8 @@ MA._xong();
     };
     const l0 = nhom('Em bé', 'em-be');
     for (const e of EM_BE) the(l0, { ma: e.ma, ten: e.ten, doi: 'em-be', key: e.key, vung: 'rung' }, (c, x, y) => veEmBeCode(c, e.key, x, y, 0, 1), e.ma === 'em-be' ? 'thay cả 4 em bé' : e.ma);
-    for (const v of ['rung', 'bien', 'laudai']) {
+    for (const v of CAC_VUNG) {
+      if (!MA.list.some((m) => m.vung === v && !m.tuVe)) continue;
       const l = nhom(VUNG[v], 'quai');
       for (const m of MA.list) if (m.vung === v && !m.tuVe) the(l, { ma: m.id, ten: m.ten, doi: 'quai', vung: v }, (c, x, y) => veQuaiCode(c, m.id, x, y, 0), (LOAI[m.loai] || '') + ' · ' + m.id);
     }
@@ -20058,7 +20061,7 @@ MA._xong();
         '<div class="noi-dung"><p class="ghi">Mã chỉ gồm chữ không dấu, số, gạch ngang (ví dụ: rongDat). Tên là tên tiếng Việt.</p>' +
         '<div class="dong"><label>Mã</label><input type="text" id="moiMa" maxlength="40" placeholder="rongDat"></div>' +
         '<div class="dong"><label>Tên</label><input type="text" id="moiTen" maxlength="40" placeholder="Rồng Đất"></div>' +
-        '<div class="dong"><label>Vùng (để xem nền phòng)</label><select id="moiVung"><option value="rung">Rừng già</option><option value="bien">Hang biển</option><option value="laudai">Lâu đài cổ</option></select></div>' +
+        '<div class="dong"><label>Vùng (để xem nền phòng)</label><select id="moiVung"><option value="rung">Rừng già</option><option value="bien">Hang biển</option><option value="laudai">Lâu đài cổ</option><option value="song">Sông sâu</option></select></div>' +
         '<p class="ghi" id="moiLoi" style="color:#ff9a7a"></p></div>' +
         '<div class="thanh" style="justify-content:flex-end"><button class="nut nho phu" id="moiHuy" type="button">Thôi</button><button class="nut nho" id="moiTao" type="button">Tạo</button></div></div>';
       document.body.appendChild(hop);
@@ -20542,7 +20545,8 @@ MA._xong();
   const cv4 = $('cv4'), buf4 = XS.taoCanvas(480, 270);
   const PHONG = {};
   function phong(vung) {
-    const r = VUNG_SO[vung] != null ? VUNG_SO[vung] : 0;
+    let r = VUNG_SO[vung] != null ? VUNG_SO[vung] : 0;
+    if (G.roomArt && G.roomArt.THEMES && !G.roomArt.THEMES[r]) r = 1; // game chưa có phòng vùng này (Sông sâu trước phiên 1/2B của Bước 3): xem tạm trên nền Hang biển (cũng là nước)
     if (!PHONG[r] && G.roomArt) {
       try { const W = { uid: 900 + r, region: r, type: 'fight', seed: 7 + r, geo: G.roomArt.geo(false), doors: [{ dir: 'left', open: true }, { dir: 'right', open: false }] }; PHONG[r] = G.roomArt.get(W).base; } catch (e) { PHONG[r] = null; }
     }
@@ -20664,7 +20668,8 @@ MA._xong();
       const sel = $('thayCho'); sel.innerHTML = '';
       const mau = S.kh && S.kh.mau;
       let goiY = null;
-      for (const v of ['rung', 'bien', 'laudai']) {
+      for (const v of CAC_VUNG) {
+        if (!MA.list.some((m) => m.vung === v && !m.tuVe)) continue;
         const og = document.createElement('optgroup'); og.label = VUNG[v];
         for (const m of MA.list) if (m.vung === v && !m.tuVe) {
           const op = document.createElement('option'); op.value = m.id; op.textContent = m.ten + ' (' + (LOAI[m.loai] || '') + ')'; og.appendChild(op);

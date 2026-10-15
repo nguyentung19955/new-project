@@ -278,8 +278,22 @@ const CUA = [
       ben: 'lối ra ở tường TRÁI của phòng, nhìn từ trên xuống: một bệ đá xám nằm ngang ở đầu TRÊN và một bệ đá ở đầu DƯỚI, giữa là đoạn ngưỡng đá ngập ánh đuốc vàng cam ấm, dọc giữa ngưỡng có năm mấu sắt nhỏ; hình CAO và HẸP, cao gấp khoảng 3 lần rộng',
       'ben-khoa': 'ĐÚNG hai bệ đá ở ô 3 (cùng cỡ, cùng chỗ) nhưng ĐANG KHOÁ: ngưỡng tối lại; năm thanh sắt nằm ngang xếp đều từ trên xuống, đầu bên PHẢI của mỗi thanh là mũi nhọn sáng (chĩa vào trong phòng), hai thanh sắt dọc giữ ở hai mép',
     } },
+  // Bước 3 · Phiên 0 (15/10): vùng 4 Sông sâu (mã 'song', chỉ số vùng 3). Theo prompt D3 của docs/ke-hoach/buoc-3/KE-HOACH.md. Gửi kèm ảnh mẫu docs/anh-goc/vung-4/mau/cua-bien.png.
+  // Lô gộp 'cua-gop' vẫn chỉ 3 vùng cũ (CUA_GOP bên dưới) để prompt và tệp của lô gộp không đổi.
+  { k: 'song', ten: 'Sông sâu', vung: 3, sang: 'vàng đèn dầu ấm #ffc878',
+    chung: 'cửa là CỔNG TRE buộc dây thừng của bến sông, treo MÀNH SẬY đan; vật chắn khi khoá là các KHÚC GỖ ƯỚT bắt chéo, buộc dây thừng',
+    mau: 'tre vàng xám #a89a5a (vừa), #d0c080 (sáng), #6a5a30 (tối); dây thừng nâu nhạt #b08a58; mành sậy #8a7a48; gỗ ướt nâu đen #2e2418, #4a3a28, rêu bám #3e5148',
+    mo: {
+      tren: 'CỔNG TRE nhìn thẳng mặt: hai cột tre to đứng hai bên, một thanh tre ngang trên đỉnh buộc dây thừng ở hai đầu; tấm MÀNH SẬY đan cuộn lên gọn dưới thanh ngang; lòng cổng sáng ánh đèn dầu vàng ấm, sáng nhất ở sát đất; chân cột có vài cọng sậy và một búi rêu',
+      'tren-khoa': 'ĐÚNG cổng tre ở ô 1 (cùng cỡ, cùng chỗ) nhưng ĐANG KHOÁ: lòng cổng tối; mành sậy thả kín xuống, bên ngoài là hai KHÚC GỖ ƯỚT nâu đen bắt chéo hình chữ X buộc dây thừng vào hai cột',
+      duoi: 'lối ra ở tường DƯỚI của phòng, nhìn từ trên xuống: hai CỌC TRE to cắm hai bên (mặt cắt tròn ở đỉnh, quấn dây thừng), giữa là lối ván tre ngập ánh đèn dầu vàng ấm; hình DẸT, rộng gấp khoảng 2,5 lần cao',
+      'duoi-khoa': 'ĐÚNG hai cọc tre ở ô 2 (cùng cỡ, cùng khoảng cách) nhưng ĐANG KHOÁ: lối giữa tối lại; ba khúc gỗ ướt nâu đen xếp chồng nằm ngang chắn giữa hai cọc, buộc dây thừng; khúc gỗ nhô CAO HƠN hai cọc tre một chút',
+      ben: 'lối ra ở tường TRÁI của phòng, nhìn từ trên xuống: một cọc tre ở đầu TRÊN và một cọc tre ở đầu DƯỚI, giữa là đoạn lối ván tre ngập ánh đèn dầu vàng ấm; hình CAO và HẸP, cao gấp khoảng 3 lần rộng',
+      'ben-khoa': 'ĐÚNG hai cọc tre ở ô 3 (cùng cỡ, cùng chỗ) nhưng ĐANG KHOÁ: lối giữa tối lại; ba khúc gỗ ướt nâu đen nằm dọc xếp sát nhau giữa hai cọc, buộc dây thừng',
+    } },
 ];
-for (const V of CUA) LO.push({ id: 'cua-' + V.k, ten: 'Cửa · ' + V.ten + ' · 6 hình', kieu: 'vat', cot: 3, hang: 2, mau: 48, net: 'min', xem: 'cua', nen: 'hong', vung: V.vung, cua: V,
+const CUA_GOP = CUA.filter((V) => V.vung < 3); // lô gộp giữ nguyên 3 vùng cũ
+for (const V of CUA_GOP) LO.push({ id: 'cua-' + V.k, ten: 'Cửa · ' + V.ten + ' · 6 hình', kieu: 'vat', cot: 3, hang: 2, mau: 48, net: 'min', xem: 'cua', nen: 'hong', vung: V.vung, cua: V,
   ds: ['', '-khoa'].flatMap((kh) => CUA_DANG.map(([d, ten]) => ({ ma: 'gd-cua-' + V.k + '-' + d + kh, ten: ten + (kh ? ' · khoá' : ' · mở'), mo: V.mo[d + kh], w: CUA_CO[d][0], h: CUA_CO[d][1] }))) });
 // Lô nhỏ: hai dấu game vẽ đè lên cửa của CẢ ba vùng (kiểu 'icon': ảnh ra đúng cỡ, hình nằm giữa).
 LO.push({ id: 'cua-nho', ten: 'Cửa · ổ khoá và đầu lâu · 2 hình', kieu: 'icon', cot: 2, hang: 1, mau: 24, net: 'min', xem: 'cua', nen: 'hong',
@@ -390,8 +404,32 @@ const TT = [
       ['tham-tron', 'Hoa văn tròn giữa phòng', 60, 60, 'HOA VĂN TRÒN lát trên sàn giữa phòng, nhìn THẲNG từ trên xuống (hình TRÒN ĐỀU, không méo, không nghiêng): vành ngoài đá sẫm, vành trong đá sáng hơn, lòng đá xám nâu; giữa có một dấu thập mảnh màu vàng đồng trầm và một ô vuông nhỏ đỏ rượu có lõi vàng ở chính tâm; màu TRẦM, tương phản thấp vì nhân vật đứng lên trên; hình to gần kín ô', 68],
       ['tham-vuong', 'Tấm thảm giữa phòng', 68, 48, 'TẤM THẢM chữ nhật trải giữa phòng, nhìn THẲNG từ trên xuống (bốn cạnh thẳng, không nghiêng): viền ngoài nâu vàng, thân thảm đỏ rượu sẫm, mảng giữa sáng hơn một chút; hai hàng chấm nâu vàng chạy dọc mép trên và mép dưới; chính giữa một hình vuông nâu vàng có lõi đỏ rượu và một chấm vàng ở tâm; hình chữ nhật NGANG, rộng gấp 1,4 lần cao; màu TRẦM; hình to gần kín ô', 68],
     ] },
+  // Bước 3 · Phiên 0 (15/10): vùng 4 Sông sâu (mã 'song', chỉ số vùng 3), theo prompt D4 của docs/ke-hoach/buoc-3/KE-HOACH.md. Game chưa bày (Phiên 2B làm),
+  // nên mã tệp gd-tt-song-<tên> là đề xuất; phiên 2B đổi tên ở đây nếu cần trước khi chủ game gen.
+  { k: 'song', ten: 'Sông sâu', vung: 3, bm: ['go', 'da_stone', 'nuoc', 'co_cay', 'kim_loai', 'bong'],
+    chung: 'chum sành, bó sậy, đá rêu, khúc gỗ trôi ở góc phòng; thuyền úp và thuyền thúng làm điểm nhấn; cọc tre, lưới chài phơi, bia đá cổ, đèn đá trên bờ sông phía sau (tường sau là bờ bùn có lau sậy); miếu nhỏ ven sông và góc nhà sàn đổ; hai bụi lau tối ở hai góc dưới',
+    hang: 'hàng 1 là bốn món đặt ở góc phòng; hàng 2 là hai chiếc thuyền điểm nhấn, một biến thể chum và đám lá sen; hàng 3 là bốn món đứng sát bờ phía sau; hàng 4 là miếu nhỏ, góc nhà sàn đổ và hai cụm tiền cảnh',
+    mau: 'tông xanh rêu, nâu bùn, vàng đèn dầu: bùn #3e5148, rêu #2f5f34; tre vàng xám #a89a5a, #d0c080, #6a5a30; sành nâu đỏ #7a4a2a, men nâu sẫm #4a2a1a; gỗ ướt nâu đen #2e2418, #4a3a28; lá sen lục trầm #3a6a3a mép sáng #6a9a4a; đá rêu dùng nhóm đá với rêu #3e5148; ánh đèn dầu #ffc878 (chỉ chấm nhỏ); hai cụm tiền cảnh chỉ dùng xanh đen #0b1a1c, #123034, #1b4a4c và viền sáng mỏng #3e5148; KHÔNG dùng lục tươi',
+    ds: [
+      ['chum', 'Chum sành', 12, 13, 'một CHUM SÀNH nước to màu nâu đỏ, miệng tròn tối, bụng phình, men nâu sẫm chảy thành vệt dưới miệng, mép trái sáng; hình gần vuông'],
+      ['bo-say', 'Bó sậy', 10, 14, 'một BỤI LAU SẬY mọc thẳng: năm sáu thân sậy vàng xám cao thấp so le, hai ngọn bông lau nhạt màu, gốc có búi bùn tối; hình CAO, cao hơn rộng'],
+      ['da-reu', 'Đá rêu', 18, 10, 'hai tảng ĐÁ tròn xám nằm sát nhau, mặt trên phủ RÊU xanh trầm, chân tối ướt; hình DẸT'],
+      ['go-troi', 'Khúc gỗ trôi', 20, 8, 'một KHÚC GỖ TRÔI dạt nằm ngang: thân gỗ nâu đen ướt, hai đầu gãy lởm chởm, một nhánh cụt chĩa lên, vài mảng rêu; hình RẤT DẸT'],
+      ['thuyen-up', 'Thuyền úp (điểm nhấn)', 32, 16, 'một CHIẾC THUYỀN gỗ nhỏ ÚP NGƯỢC trên bờ: đáy thuyền cong lên trên, ván gỗ nâu sẫm có ba đường nẹp, hai mũi thuyền vểnh nhẹ, một mái chèo gỗ dựng nghiêng bên phải; hình DẸT, rộng gấp 2 lần cao'],
+      ['thuyen-thung', 'Thuyền thúng (điểm nhấn)', 24, 18, 'một chiếc THUYỀN THÚNG tre đan tròn đặt trên bờ nhìn chếch từ trên: vành tròn tre vàng xám, lòng thúng đan ô tối, quét lớp hắc ín đen bên ngoài, một mái chèo ngắn gác ngang miệng; hình bầu dục'],
+      ['chum-2', 'Chum sành (kiểu 2)', 12, 13, 'biến thể của ô 1 (cùng cỡ, cùng màu): chum bị SỨT một mảng ở miệng, một chiếc gáo dừa nhỏ gác trên miệng'],
+      ['la-sen', 'Lá sen trôi', 16, 8, 'ba chiếc LÁ SEN tròn trôi sát nhau nhìn từ trên xuống, lục trầm mép sáng, mỗi lá có khe xẻ nhỏ, một nụ sen hồng nhạt nhỏ xíu ở giữa; hình DẸT'],
+      ['coc-tre', 'Cọc tre', 6, 20, 'một CỌC TRE cắm thẳng: thân tre vàng xám có ba đốt, đỉnh vát chéo, quấn một vòng dây thừng gần đỉnh; hình RẤT CAO và HẸP'],
+      ['luoi-phoi', 'Lưới chài phơi', 20, 22, 'một tấm LƯỚI CHÀI phơi trên hai sào tre chéo nhau: lưới nâu nhạt rủ xuống thành nếp, mép lưới có hàng chì nhỏ xám; hình gần vuông, hơi cao'],
+      ['bia-da', 'Bia đá cổ', 12, 18, 'một tấm BIA ĐÁ cổ đứng: đá xám rêu, đỉnh bo tròn, mặt bia có vài vạch khắc mờ (KHÔNG viết chữ đọc được), chân bia lún trong bùn; hình CAO'],
+      ['den-da', 'Đèn đá nhỏ', 8, 14, 'một cây ĐÈN ĐÁ nhỏ: chân trụ đá vuông, hộp đèn có ô cửa tối, mái đá nhọn nhỏ trên đỉnh; KHÔNG vẽ lửa (game tự vẽ ánh đèn); hình CAO và HẸP'],
+      ['mieu', 'Miếu nhỏ ven sông', 20, 24, 'một CÁI MIẾU nhỏ ven sông: nền gạch thấp, hai cột gỗ, mái ngói cong hai đầu vểnh, trong lòng tối có một bát hương nhỏ; một khóm sậy bên trái; hình CAO, cao hơn rộng'],
+      ['nha-san', 'Góc nhà sàn đổ', 30, 30, 'GÓC MỘT NHÀ SÀN đổ nát: ba cột gỗ cao thấp (một cột gãy), sàn ván xiêu vẹo, một mảnh mái lá rách vắt trên, dưới chân là nước tối và lau sậy; hình vuông'],
+      ['tien-canh-trai', 'Tiền cảnh góc dưới trái', 40, 36, `CỤM TIỀN CẢNH đặt ở góc DƯỚI BÊN TRÁI phòng, ${TC_TOI}: một bụi LAU SẬY cao và hai cọc tre gãy, màu xanh đen, chỉ có viền sáng mỏng ở ngọn lau và đỉnh cọc; cao nhất sát mép TRÁI, thấp dần sang phải; đáy phẳng`],
+      ['tien-canh-phai', 'Tiền cảnh góc dưới phải', 40, 36, 'cụm tiền cảnh đặt ở góc DƯỚI BÊN PHẢI phòng: cùng kiểu, cùng màu, cùng cỡ với ô 15 nhưng ngược chiều và xếp khác đi: cao nhất sát mép PHẢI, thấp dần sang trái'],
+    ] },
 ];
-for (const V of TT) LO.push({ id: 'tt-' + V.k, ten: 'Trang trí · ' + V.ten + ' · 16 hình', kieu: 'vat', cot: 4, hang: 4, mau: 48, net: 'min', xem: 'tt', nen: 'hong', vung: V.vung, tt: V, bm: V.bm, bmTuy: { rieng: true }, hinhNho: true, locHue: V.locHue,
+for (const V of TT.filter((V) => V.vung < 3)) LO.push({ id: 'tt-' + V.k, ten: 'Trang trí · ' + V.ten + ' · 16 hình', kieu: 'vat', cot: 4, hang: 4, mau: 48, net: 'min', xem: 'tt', nen: 'hong', vung: V.vung, tt: V, bm: V.bm, bmTuy: { rieng: true }, hinhNho: true, locHue: V.locHue,
   ds: V.ds.map(([k, ten, w, h, mo, max]) => ({ ma: 'gd-tt-' + V.k + '-' + k, ten, mo, w, h, max })) });
 // Dải lửa đuốc / nến: MỘT tệp kiểu hieu-ung (hu-lua-duoc), 3 khung 8×12 xếp ngang, điểm neo giữa đáy [4, 12], lặp. Game (js/room_art.js, luaAnh / veLua)
 // vẽ dải này thay ngọn lửa code của đuốc (cỡ thật) và của nến (thu còn một nửa). Ba khung được thu CÙNG một tỉ lệ, gốc lửa đặt ở giữa đáy khung.
@@ -505,7 +543,12 @@ const GAME_LK = 'game Linh Khí (game hành động pixel art nhìn từ trên x
 // Lưới 6 cột × 3 hàng = 18 ô: mỗi HÀNG là một vùng (Rừng già, Hang biển, Lâu đài cổ); trong hàng: cột 1, 2, 3 = cửa trên, dưới, bên khi MỞ; cột 4, 5, 6 = đúng ba cửa đó khi KHOÁ.
 // Mã tệp, tên, cỡ, mô tả lấy nguyên từ CUA (chỉ đổi số ô trong câu "ở ô 1 / 2 / 3" cho khớp lưới 18 ô) nên tệp tải ra giống hệt tệp của ba lô lẻ. Cách cắt và kiểu 'vat' y như ba lô lẻ; ba lô lẻ vẫn giữ để gen lại riêng một vùng.
 LO.push({ id: 'cua-gop', ten: 'Cửa · GỘP cả 3 vùng · 18 hình (một tấm thay 3 tấm)', kieu: 'vat', cot: 6, hang: 3, mau: 48, net: 'min', xem: 'cua', nen: 'hong', cuaGop: true,
-  ds: CUA.flatMap((V, r) => ['', '-khoa'].flatMap((kh) => CUA_DANG.map(([d, ten]) => ({ ma: 'gd-cua-' + V.k + '-' + d + kh, ten: ten + (kh ? ' · khoá' : ' · mở'), vungTen: V.ten, mo: V.mo[d + kh].replace(/ở ô ([123])(?!\d)/g, (_, n) => 'ở ô ' + (6 * r + +n)), w: CUA_CO[d][0], h: CUA_CO[d][1] })))) });
+  ds: CUA_GOP.flatMap((V, r) => ['', '-khoa'].flatMap((kh) => CUA_DANG.map(([d, ten]) => ({ ma: 'gd-cua-' + V.k + '-' + d + kh, ten: ten + (kh ? ' · khoá' : ' · mở'), vungTen: V.ten, mo: V.mo[d + kh].replace(/ở ô ([123])(?!\d)/g, (_, n) => 'ở ô ' + (6 * r + +n)), w: CUA_CO[d][0], h: CUA_CO[d][1] })))) });
+// Bước 3 · Phiên 0: lô vùng 4 Sông sâu đặt ở CUỐI danh sách để số thứ tự lô đã lưu trong máy (tph_lo) của các lô cũ không đổi.
+for (const V of CUA.filter((V) => V.vung >= 3)) LO.push({ id: 'cua-' + V.k, ten: 'Cửa · ' + V.ten + ' · 6 hình', kieu: 'vat', cot: 3, hang: 2, mau: 48, net: 'min', xem: 'cua', nen: 'hong', vung: V.vung, cua: V,
+  ds: ['', '-khoa'].flatMap((kh) => CUA_DANG.map(([d, ten]) => ({ ma: 'gd-cua-' + V.k + '-' + d + kh, ten: ten + (kh ? ' · khoá' : ' · mở'), mo: V.mo[d + kh], w: CUA_CO[d][0], h: CUA_CO[d][1] }))) });
+for (const V of TT.filter((V) => V.vung >= 3)) LO.push({ id: 'tt-' + V.k, ten: 'Trang trí · ' + V.ten + ' · 16 hình', kieu: 'vat', cot: 4, hang: 4, mau: 48, net: 'min', xem: 'tt', nen: 'hong', vung: V.vung, tt: V, bm: V.bm, bmTuy: { rieng: true }, hinhNho: true, locHue: V.locHue,
+  ds: V.ds.map(([k, ten, w, h, mo, max]) => ({ ma: 'gd-tt-' + V.k + '-' + k, ten, mo, w, h, max })) });
 function luoi(L, co) {
   const n = L.ds.length, tong = L.cot * L.hang;
   const ds = L.ds.map((m, i) => `ô ${i + 1}: ${m.ten}${co ? ` (trong game ${m.w}×${m.h})` : ''}: ${m.mo}`).join('; ');
@@ -529,14 +572,14 @@ function promptCua(L) {
 }
 // Đợt 11: prompt của lô gộp cửa 3 vùng. Ghép từ chính các đoạn của promptCua (chung, mau, sang, mo của từng vùng), không viết lại nội dung.
 function promptCuaGop(L) {
-  return `Dùng công cụ tạo ảnh vẽ MỘT tấm ảnh pixel art 2D nằm ngang (tỉ lệ 3:2) gồm ĐÚNG ${L.ds.length} hình CỬA PHÒNG của ba vùng (${CUA.map((V) => V.ten).join(', ')}) trong ${GAME_LK}. Phòng chơi hình chữ nhật nhìn từ trên xuống chếch: tường sau (phía trên) thấy mặt đứng, tường hai bên và tường trước (phía dưới) chỉ là dải viền hẹp. Mỗi phòng có cửa ở tường trên, tường dưới và hai tường bên; mỗi cửa có hai trạng thái MỞ và KHOÁ. Mỗi vùng một kiểu cửa: `
-    + CUA.map((V, r) => `HÀNG ${r + 1} là vùng ${V.ten}: ${V.chung}`).join('; ') + '. '
+  return `Dùng công cụ tạo ảnh vẽ MỘT tấm ảnh pixel art 2D nằm ngang (tỉ lệ 3:2) gồm ĐÚNG ${L.ds.length} hình CỬA PHÒNG của ba vùng (${CUA_GOP.map((V) => V.ten).join(', ')}) trong ${GAME_LK}. Phòng chơi hình chữ nhật nhìn từ trên xuống chếch: tường sau (phía trên) thấy mặt đứng, tường hai bên và tường trước (phía dưới) chỉ là dải viền hẹp. Mỗi phòng có cửa ở tường trên, tường dưới và hai tường bên; mỗi cửa có hai trạng thái MỞ và KHOÁ. Mỗi vùng một kiểu cửa: `
+    + CUA_GOP.map((V, r) => `HÀNG ${r + 1} là vùng ${V.ten}: ${V.chung}`).join('; ') + '. '
     + `BỐ CỤC: lưới ĐỀU đúng 6 cột × 3 hàng = 18 ô bằng nhau (KHÔNG thêm cột, KHÔNG thêm hàng), kẻ lưới mảnh màu tối. Mỗi HÀNG là MỘT vùng. Trong mỗi hàng: cột 1 là cửa TRÊN, cột 2 là cửa DƯỚI, cột 3 là cửa BÊN, cả ba đang MỞ; cột 4, cột 5, cột 6 là ĐÚNG ba cái cửa đó khi KHOÁ (cột 4 là cửa của cột 1, cột 5 là cửa của cột 2, cột 6 là cửa của cột 3). Thứ tự đọc từ trái sang phải, hết hàng trên mới xuống hàng dưới: `
     + L.ds.map((m, i) => `ô ${i + 1}: ${m.vungTen} · ${m.ten} (trong game ${m.w}×${m.h})`).join('; ') + '. '
     + `TỪNG HÌNH: ` + L.ds.map((m, i) => `Ô ${i + 1}: ${m.mo}.`).join(' ') + ' '
     + `CỬA BÊN chỉ vẽ MỘT cái của tường TRÁI (phía ngoài phòng ở bên trái hình, phía trong phòng ở bên phải hình); game tự lật ngang để làm cửa tường phải, nên đừng vẽ chữ hay ký hiệu có chiều trái phải. `
     + `KIỂU VẼ: pixel art rõ từng điểm ảnh, màu phẳng, đổ bóng 3 sắc (tối, vừa, sáng), ánh sáng chiếu từ phía trên bên trái; viền ngoài tối MỘT nét màu #14182e quanh mép từng hình; không chuyển màu mượt, không nhoè, không khử răng cưa. Trong game mỗi cửa rất nhỏ (số trong ngoặc là cỡ rộng×cao tính bằng điểm ảnh), nên khối phải to, rõ, ít chi tiết vụn. Cả ba hàng cùng một kiểu vẽ, cùng cỡ điểm ảnh; mỗi hàng chỉ dùng chất liệu và màu của vùng đó, không lẫn sang hàng khác. `
-    + `BẢNG MÀU (bắt buộc bám theo; mỗi hình chỉ dùng tối đa 3 sắc cho một chất liệu): ${MAU_CUA}; ` + CUA.map((V, r) => `hàng ${r + 1} (${V.ten}): ${V.mau}; ánh sáng trong lòng cửa mở: ${V.sang}`).join('; ') + '. '
+    + `BẢNG MÀU (bắt buộc bám theo; mỗi hình chỉ dùng tối đa 3 sắc cho một chất liệu): ${MAU_CUA}; ` + CUA_GOP.map((V, r) => `hàng ${r + 1} (${V.ten}): ${V.mau}; ánh sáng trong lòng cửa mở: ${V.sang}`).join('; ') + '. '
     + `CỠ TRONG Ô: mỗi hình chiếm khoảng 70% ô (cửa bên cao khoảng 70% ô và hẹp; cửa dưới rộng khoảng 70% ô và dẹt), canh giữa theo chiều ngang, ĐÁY hình nằm gần đáy ô, hình nằm TRỌN trong ô, không chạm đường lưới. Trong cùng một hàng, cửa khoá phải vẽ ĐÚNG cùng một cái cửa với cửa mở tương ứng (cột 4 với cột 1, cột 5 với cột 2, cột 6 với cột 3), cùng cỡ, cùng chỗ đứng trong ô, chỉ khác mở hay khoá. `
     + `KHÔNG vẽ: ổ khoá, đầu lâu, dây xích (game tự vẽ đè lên cửa khoá), chữ, số, nhãn, tên vùng, mũi tên, bảng màu, mảng tường hay sàn phòng quanh cửa, vệt sáng hắt xuống sàn, bóng đổ xuống đất, quầng sáng toả rộng, nhân vật. KHÔNG dùng màu đỏ tươi cho vật chắn (màu đỏ dành cho ổ khoá do game vẽ). `
     + cuoi(L);
@@ -1337,7 +1380,7 @@ $('nutBo').onclick = () => { if (CHON < 0) return; const c = chinhCua(CHON); c.b
 const NGUON_GAME = ['xuong-sprite.html', '../xuong-sprite/index.html', '../../game/dist/xuong-sprite.html'];
 let GAME = null, dangNap = false, hetNguon = false, MAU = 2, SO_CODE = false;
 const DK = {}; // mã -> tệp đang đăng ký trong game xem thử
-const VUNG = ['Rừng già', 'Hang biển', 'Lâu đài cổ'];
+const VUNG = ['Rừng già', 'Hang biển', 'Lâu đài cổ', 'Sông sâu']; // Sông sâu (vùng 4, Bước 3): chỉ xem thử được khi game đã có phòng vùng thứ 4 (G.roomArt.THEMES[3])
 function napGame() {
   if (GAME || dangNap || hetNguon) return; dangNap = true;
   const f = $('khungGame'); let i = 0, cu = false;
@@ -1405,8 +1448,8 @@ function phongNen() {
 // Phòng 1: cửa trên và cửa trái, vật điểm nhấn chính (gốc cổ thụ / mỏ neo / tượng hiệp sĩ), Lâu đài có hoa văn tròn.
 // Phòng 2: chỉ cửa dưới (tường sau trống nên đủ đuốc, cờ xanh, cửa sổ), điểm nhấn kia (khóm hoa dưới cột nắng / vũng nước dưới tia sáng / cửa sổ kính màu), Lâu đài có tấm thảm.
 const TT_PHONG = [
-  { doors: ['up', 'left'], variant: 0, kind: [1, 0, 1], decor: [0, 1, 2, 3], ten: ['có gốc cổ thụ', 'có mỏ neo', 'có tượng hiệp sĩ và hoa văn tròn'] },
-  { doors: ['down'], variant: 2, kind: [0, 1, 0], decor: [3, 2, 1, 0], ten: ['có khóm hoa dưới cột nắng', 'có vũng nước dưới tia sáng', 'có cửa sổ kính màu và tấm thảm'] },
+  { doors: ['up', 'left'], variant: 0, kind: [1, 0, 1, 0], decor: [0, 1, 2, 3], ten: ['có gốc cổ thụ', 'có mỏ neo', 'có tượng hiệp sĩ và hoa văn tròn', 'phòng mẫu 1'] },
+  { doors: ['down'], variant: 2, kind: [0, 1, 0, 1], decor: [3, 2, 1, 0], ten: ['có khóm hoa dưới cột nắng', 'có vũng nước dưới tia sáng', 'có cửa sổ kính màu và tấm thảm', 'phòng mẫu 2'] },
 ];
 function phongTT() {
   const r = L.vung || 0, q = TT_PHONG[(HAT - 1) % TT_PHONG.length], geo = GAME.roomArt.geo(false);
@@ -1450,6 +1493,9 @@ function veXem() {
     : 'Phòng và đồ vật do chính code của game vẽ, dùng ảnh bạn vừa tách: thấy sao thì vào game y vậy. Bóng dưới chân, quầng sáng mời gọi, tia lấp lánh, ánh lửa và biểu tượng nổi trên suối là game tự vẽ thêm. Hình nào chưa có ảnh thì vẫn là hình vẽ code cũ.';
   if (SO_CODE) { SC.gd = {}; GAME.roomArt.luaThu = null; }
   try {
+    // Bước 3 · Phiên 0: lô vùng 4 Sông sâu có trước khi game có phòng vùng 4. Game chưa có thì báo, KHÔNG vẽ phòng vùng khác (dễ nhầm là ảnh đã vào game).
+    $('tenPhong').textContent = VUNG[MAU];
+    if (!(GAME.roomArt.THEMES || [])[MAU]) throw new Error('game chưa có phòng vùng ' + VUNG[MAU] + ' (Bước 3 phiên 1 / 2B thêm). Tệp tách ra ở bước 3 vẫn tải về bình thường.');
     const W = phongMau(MAU);
     if (cv.width !== Math.round(RW * k) || cv.height !== Math.round(RH * k)) { cv.width = Math.round(RW * k); cv.height = Math.round(RH * k); }
     const c = cv.getContext('2d'); c.imageSmoothingEnabled = false; c.setTransform(k, 0, 0, k, -X0 * k, -Y0 * k);
