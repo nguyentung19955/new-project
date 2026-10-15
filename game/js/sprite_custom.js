@@ -82,6 +82,25 @@
     try { tat = typeof location !== 'undefined' && /[?&]nldong=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
     G.NL_DONG = !tat;
   }
+  // 15/10 con-ve-tay (docs/review/ke-hoach-cai-thien/con-ve-tay): ảnh AI của vài trùm có khung trúng đòn bị tô trắng gần hết thân (Cua Đá
+  // hàng hit khung 3, cả hai pha) → lúc trúng đòn / choáng trông như bóng ma. Nay khung đó vẽ bằng khung 2 cùng hàng, phủ trắng nhẹ 25%.
+  // Danh sách đo bằng ảnh (bao-cao.md): mã → { hàng: { cột trắng: cột thay } }. Không sửa tệp ảnh. Tắt: G.KHUNG_TRANG_SUA = false hoặc ?khungtrang=1.
+  const KHUNG_TRANG = { cuaDa: { hit: { 2: 1 } }, 'cuaDa-p2': { hit: { 2: 1 } }, 'mocTinh-p2': { hit: { 2: 1 } }, 'hoTinh-p2': { hit: { 2: 1 } },
+    hoLua: { hit: { 2: 1 } }, namChua: { hit: { 2: 1 } } };
+  const PHU_TRANG = 0.25;
+  if (G.KHUNG_TRANG_SUA === undefined) {
+    let cu = false;
+    try { cu = typeof location !== 'undefined' && /[?&]khungtrang=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; }
+    G.KHUNG_TRANG_SUA = !cu;
+  }
+  // 15/10 con-ve-tay: quái / trùm có ảnh AI trúng đòn KHÔNG còn phủ trắng cả thân (55–85%, cộng thêm 75% đầu hàng trúng đòn — chồng lên khung
+  // đã trắng thành trắng gấp đôi). Nay: viền sáng mảnh quanh thân + nhuộm đỏ nhẹ. Chớp báo ra đòn / đổi pha của trùm (o.baoDon) giữ như cũ.
+  // Tắt: G.CHOP_NHE = false hoặc ?chopcu=1.
+  if (G.CHOP_NHE === undefined) {
+    let cu = false;
+    try { cu = typeof location !== 'undefined' && /[?&]chopcu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; }
+    G.CHOP_NHE = !cu;
+  }
   // 14/10 (quai-moi-4-con): Heo Rừng Con, Heo Rừng Nanh Dài, Chồn Bóng, Bọ Hung Mai Cứng dựng lại từ ảnh vẽ mới (đủ 6 động tác, net 2, căn tâm).
   // Tấm cũ giữ trong tệp <mã>-cu.sprite.json (mục "cu_cua": <mã>): bình thường KHÔNG nạp (không tạo ảnh nên không tải, không tính vào vùng).
   // Cờ ?quaicu=1 (G.QUAI_CU = true): nạp tấm cũ dưới đúng mã con quái, bỏ tấm mới — y như trước phiên này.
@@ -367,6 +386,8 @@
   // o: { alpha, flash (0..1 chớp trắng), tint: [màu, độ đậm], dy, than: { mau, muc, suong } (nhuộm thân theo trạng thái, Đợt 7) }
   SC.veKhung = function (c, sp, ten, i, face, o) {
     o = o || {};
+    let phu = 0; // 15/10 con-ve-tay: khung trắng toàn thân → khung kề + phủ trắng nhẹ (xem KHUNG_TRANG)
+    if (G.KHUNG_TRANG_SUA !== false && KHUNG_TRANG[sp.ma] && sp.dt[ten]) { const t0 = KHUNG_TRANG[sp.ma][ten], j = t0 ? t0[i] : undefined; if (j != null && j < sp.dt[ten].so) { i = j; phu = PHU_TRANG; } }
     const a = sp.dt[ten] || sp.dt.idle, n = sp.net || 1, sx = i * sp.fw * n, sy = a.hang * sp.fh * n, sw = sp.fw * n, sh = sp.fh * n, ga = c.globalAlpha;
     c.save();
     c.imageSmoothingEnabled = false;
@@ -376,9 +397,17 @@
     if (o.alpha != null) c.globalAlpha = ga * clamp(o.alpha, 0, 1);
     const a1 = c.globalAlpha;
     const th = o.than ? khungThan(sp, a.hang, i, o.than) : null; // Đợt 7: thân đã nhuộm theo trạng thái (giữ viền, mắt), không có thì vẽ thân thường
+    const vien = o.chopNhe > 0 ? clamp(o.chopNhe, 0, 1) : 0;
+    if (vien) { // 15/10 con-ve-tay: viền sáng mảnh (bóng trắng dời 1 điểm ảnh bốn phía, vẽ DƯỚI thân) thay cho phủ trắng cả thân
+      c.globalAlpha = a1 * 0.85 * vien;
+      for (let k = 0; k < 4; k++) veNhuom(c, sp, '#fff6e0', sx, sy, sw, sh, dx + (k === 0 ? -1 : k === 1 ? 1 : 0), dy + (k === 2 ? -1 : k === 3 ? 1 : 0), sp.fw, sp.fh);
+      c.globalAlpha = a1;
+    }
     if (th) c.drawImage(th, 0, 0, sw, sh, dx, dy, sp.fw, sp.fh);
     else c.drawImage(sp.img, sx, sy, sw, sh, dx, dy, sp.fw, sp.fh);
+    if (phu > 0) { c.globalAlpha = a1 * phu; veNhuom(c, sp, '#ffffff', sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); }
     if (o.tint && o.tint[1] > 0) { c.globalAlpha = a1 * clamp(o.tint[1], 0, 1); veNhuom(c, sp, o.tint[0], sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); }
+    if (vien) { c.globalAlpha = a1 * 0.3 * vien; veNhuom(c, sp, '#ff4a3a', sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); } // đỏ nhẹ
     if (o.flash > 0) { c.globalAlpha = a1 * clamp(o.flash, 0, 1); veNhuom(c, sp, '#ffffff', sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); }
     c.restore();
   };
@@ -495,6 +524,8 @@
     }
     let flash = o.hit || 0;
     if (s.ten === 'hit' && n === 'hit' && s.u < 0.3) flash = Math.max(flash, 0.75); // chớp trắng đầu cú trúng đòn
+    let chopNhe = 0;
+    if (G.CHOP_NHE !== false) { chopNhe = flash; flash = 0; } // 15/10 con-ve-tay: trúng đòn → viền sáng + đỏ nhẹ, không phủ trắng cả thân (cờ ?chopcu=1)
     if (o.baoDon > 0) flash = Math.max(flash, o.baoDon); // Phiên E2: chớp trắng báo sắp ra đòn (js/boss.js truyền cho trùm vùng có ảnh AI); chỉ là hình
     c.save();
     c.translate(Math.round(x), Math.round(y));
@@ -507,7 +538,7 @@
       c.restore();
     }
     // o.than (Đợt 7): màu nhuộm thân khi quái dính độc / cháy / đóng băng, do js/mobs.js truyền khi cờ G.TRANG_THAI_TREN_THAN bật. Không có thì vẽ y cũ.
-    SC.veKhung(c, ve, s.ten, s.i, face, { alpha: s.alpha, flash, dy: s.dy, than: o.than || null, tint: o.nhuomMa || null }); // o.nhuomMa: phân thân (bóng ma) nhuộm màu
+    SC.veKhung(c, ve, s.ten, s.i, face, { alpha: s.alpha, flash, chopNhe, dy: s.dy, than: o.than || null, tint: o.nhuomMa || null }); // o.nhuomMa: phân thân (bóng ma) nhuộm màu
     c.restore();
     return s;
   };

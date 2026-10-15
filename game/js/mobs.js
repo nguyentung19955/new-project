@@ -651,7 +651,9 @@
       else if (z.shape === 'cone') for (let i = 0; i < 4; i++) { const a = z.ang + (i / 3 - 0.5) * z.span; pts.push([z.x + Math.cos(a) * z.r * 0.7, z.y + Math.sin(a) * z.r * 0.7]); }
       else if (z.shape === 'donut') for (let i = 0; i < 8; i++) { const a = i / 8 * TAU, r = (z.r0 + z.r1) / 2; pts.push([z.x + Math.cos(a) * r, z.y + Math.sin(a) * r * (G.ZK || 1)]); }
       const col = z.el && G.EL[z.el] ? G.EL[z.el].col : '#fff0c8';
-      for (const q of pts) G.fx.burst(q[0], q[1], col, 4, 60);
+      // 15/10 con-ve-tay: có ảnh hu-va-cham thì mỗi điểm là ảnh va chạm nhuộm màu hệ (thay 4 hạt vuông vẽ code); cờ tắt ?vetaycu=1
+      const vc = G.huVt && G.huVt('hu-va-cham');
+      for (const q of pts) if (!(vc && G.fx.anh('hu-va-cham', q[0], q[1] - 3, { sc: 1.1, mau: z.el && G.EL[z.el] ? col : null }))) G.fx.burst(q[0], q[1], col, 4, 60);
       if (G.fx.shake) G.fx.shake(0.15);
     };
   }
@@ -829,11 +831,16 @@
     const n = R.n;
     if (!n[0] && !n[1] && !n[2]) return;
     const D = R.D, f = e.face < 0 ? -1 : 1, F = Math.floor(G.time * 60), s = Math.max(1, Math.round(R.s * k)), ex = Math.round(e.x), ey = Math.round(e.y);
+    // 15/10 con-ve-tay: js/fx.js (fx.entity) đã vẽ ảnh hu-bam-bang / hu-bam-lua / hu-bam-doc trên MỌI quái đang dính hệ → hạt vẽ code ở đây
+    // (mảnh băng ở chân, lưỡi lửa, bong bóng độc VUÔNG xanh lục) chồng thêm một lớp nữa. Có ảnh thì bỏ phần hạt code đó; nhuộm thân giữ.
+    // Cờ tắt ?vetaycu=1 (hoặc ?hudot3=0: không có ảnh hu-bam-* → hạt code như cũ).
+    const coA = (ma) => G.VE_TAY_MOI !== false && !!G.huDot3 && G.huDot3(ma);
+    const boBang = coA('hu-bam-bang'), boLua = coA('hu-bam-lua'), boDoc = coA('hu-bam-doc');
     const tren = (xr) => { if (!D.tren) return D.y0; const i = clamp(Math.round(xr - D.cx0), 0, D.tren.length - 1), v = D.tren[i]; return v > 9999 ? D.y0 : v; };
     const lung = (yr) => { if (!D.sau) return D.x0; const i = clamp(Math.round(yr - D.cy0), 0, D.sau.length - 1), v = D.sau[i]; return v > 9999 ? D.x0 : v; };
     const wx = (xr, rong) => (f > 0 ? ex + xr : ex - xr - rong); // xr: toạ độ khi quái quay phải; quay trái thì lật quanh tâm
     // --- băng: 3 mảnh ở chân (trước thân), khi đông cứng thêm 1–2 mảnh ở vai phía lưng (sau thân). Đứng yên.
-    if (n[0]) {
+    if (n[0] && !boBang) {
       const h = Math.max(2, Math.round(R.s * 1.5 * k)), nhay = F % 40 < 3;
       if (lop === 1) for (let j = 0; j < 3 && j < n[0]; j++) {
         const xr = D.chan[0] + (D.chan[1] - D.chan[0] - s) * (0.06 + 0.44 * j);
@@ -845,7 +852,7 @@
       }
     }
     // --- độc: bong bóng nổi lên 1 px mỗi 4 khung, sống 24 khung rồi co về 1 px, sinh so le. Trên thân: vẽ trước; ở mép lưng: vẽ sau thân (ló ra ngoài viền).
-    if (n[2]) for (let j = 0; j < n[2]; j++) {
+    if (n[2] && !boDoc) for (let j = 0; j < n[2]; j++) {
       const sau = n[2] >= 3 && j === n[2] - 1;
       if ((lop === 0) !== sau) continue;
       const ph = F + Math.round(j * 30 / n[2]) + R.id * 7, a = ph % 30, g = (R.id * 131 + j * 17 + Math.floor(ph / 30) * 7919) | 0;
@@ -855,7 +862,7 @@
       ttBong(c, wx(xr, sz), ey + y0 - sz, sz);
     }
     // --- cháy: lưỡi lửa ở vai và lưng (nửa trên, phía lưng), 3 khung lặp thấp–cao–nghiêng, 6 khung mỗi ảnh. Luôn trước thân.
-    if (n[1] && lop === 1) for (let j = 0; j < n[1]; j++) {
+    if (n[1] && !boLua && lop === 1) for (let j = 0; j < n[1]; j++) {
       const xr = D.x0 + D.w * (0.14 + (n[1] > 1 ? 0.34 * j / (n[1] - 1) : 0.15)), kh = Math.floor((F + j * 5) / 6) % 3;
       const h = Math.max(2, Math.round((kh === 0 ? 1.5 : 2) * s));
       const yb = clamp(tren(xr) + s, D.y0 + 2 * s - 2, D.y0 + D.h * 0.45);

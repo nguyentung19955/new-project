@@ -1649,14 +1649,20 @@
   };
   A.status = function (c, e, x, top) {
     const t = G.time, st = e.st || ST0;
-    if (st.fire > 0) {
+    // 15/10 con-ve-tay: trùm / trùm nhỏ (js/combat.js luôn gọi) dính hệ thì trên đầu hiện hàng ô VUÔNG vẽ code (độc: ô xanh lục).
+    // Có ảnh biểu tượng trạng thái gd-tt-chay / gd-tt-doc / gd-tt-bang (9×9, đang dùng ở thanh trạng thái của em bé, js/stage.js) thì vẽ ảnh,
+    // xếp một hàng giữa đầu. Ảnh nào chưa có thì phần đó vẽ code như cũ. Cờ tắt ?vetaycu=1.
+    const SCt = G.spriteCustom, coGd = G.VE_TAY_MOI !== false && SCt && SCt.gdSan && SCt.veGd;
+    const gF = coGd && st.fire > 0 ? SCt.gdSan('gd-tt-chay') : null, gP = coGd && st.poisonN > 0 ? SCt.gdSan('gd-tt-doc') : null, gI = coGd && (st.iceN > 0 || st.frozen > 0) ? SCt.gdSan('gd-tt-bang') : null;
+    if (gF || gP || gI) { const ds = [gF, gP, gI].filter(Boolean); ds.forEach((g, i) => SCt.veGd(c, g, Math.round(x - (ds.length * 10 - 1) / 2 + i * 10), top - 6, 9, 9)); }
+    if (st.fire > 0 && !gF) {
       const f = Math.floor(t * 12) % 3;
       p(c, x - 4 + f, top - 4, 3, 4, '#ff7a2a');
       p(c, x + 1 - f, top - 6, 2, 5, '#ff7a2a');
       p(c, x - 1, top - 3, 3, 3, '#ffd23f');
       p(c, x + 1 - f, top - 4, 1, 2, '#ffd23f');
     }
-    if (st.poisonN > 0) {
+    if (st.poisonN > 0 && !gP) {
       const f = Math.floor(t * 6) % 4;
       for (let i = 0; i < Math.min(5, st.poisonN); i++) {
         const py = top + 2 - ((f + i) % 3);
@@ -1664,7 +1670,7 @@
         p(c, x - 6 + i * 3, py, 2, 2, '#8fe04a');
       }
     }
-    if (st.iceN > 0 || st.frozen > 0) {
+    if ((st.iceN > 0 || st.frozen > 0) && !gI) {
       const n = Math.max(st.iceN, st.frozen > 0 ? 4 : 0);
       for (let i = 0; i < n; i++) {
         p(c, x - 7 + i * 3, top + 5, 4, 4, '#173a5a');

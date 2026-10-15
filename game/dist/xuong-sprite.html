@@ -2999,14 +2999,20 @@ window.G.LANG = 'vi';
   };
   A.status = function (c, e, x, top) {
     const t = G.time, st = e.st || ST0;
-    if (st.fire > 0) {
+    // 15/10 con-ve-tay: trùm / trùm nhỏ (js/combat.js luôn gọi) dính hệ thì trên đầu hiện hàng ô VUÔNG vẽ code (độc: ô xanh lục).
+    // Có ảnh biểu tượng trạng thái gd-tt-chay / gd-tt-doc / gd-tt-bang (9×9, đang dùng ở thanh trạng thái của em bé, js/stage.js) thì vẽ ảnh,
+    // xếp một hàng giữa đầu. Ảnh nào chưa có thì phần đó vẽ code như cũ. Cờ tắt ?vetaycu=1.
+    const SCt = G.spriteCustom, coGd = G.VE_TAY_MOI !== false && SCt && SCt.gdSan && SCt.veGd;
+    const gF = coGd && st.fire > 0 ? SCt.gdSan('gd-tt-chay') : null, gP = coGd && st.poisonN > 0 ? SCt.gdSan('gd-tt-doc') : null, gI = coGd && (st.iceN > 0 || st.frozen > 0) ? SCt.gdSan('gd-tt-bang') : null;
+    if (gF || gP || gI) { const ds = [gF, gP, gI].filter(Boolean); ds.forEach((g, i) => SCt.veGd(c, g, Math.round(x - (ds.length * 10 - 1) / 2 + i * 10), top - 6, 9, 9)); }
+    if (st.fire > 0 && !gF) {
       const f = Math.floor(t * 12) % 3;
       p(c, x - 4 + f, top - 4, 3, 4, '#ff7a2a');
       p(c, x + 1 - f, top - 6, 2, 5, '#ff7a2a');
       p(c, x - 1, top - 3, 3, 3, '#ffd23f');
       p(c, x + 1 - f, top - 4, 1, 2, '#ffd23f');
     }
-    if (st.poisonN > 0) {
+    if (st.poisonN > 0 && !gP) {
       const f = Math.floor(t * 6) % 4;
       for (let i = 0; i < Math.min(5, st.poisonN); i++) {
         const py = top + 2 - ((f + i) % 3);
@@ -3014,7 +3020,7 @@ window.G.LANG = 'vi';
         p(c, x - 6 + i * 3, py, 2, 2, '#8fe04a');
       }
     }
-    if (st.iceN > 0 || st.frozen > 0) {
+    if ((st.iceN > 0 || st.frozen > 0) && !gI) {
       const n = Math.max(st.iceN, st.frozen > 0 ? 4 : 0);
       for (let i = 0; i < n; i++) {
         p(c, x - 7 + i * 3, top + 5, 4, 4, '#173a5a');
@@ -10095,6 +10101,8 @@ const TRUM = MA.trum = {
       P.over(c => { F.hat(c, 0, cy, 40, 7, v, { v: R * 1.3, cols: [cols[2], cols[1], cols[0]], to: 2 }); for (let i = 0; i < 12; i++) { const a = i / 12 * TAU + .2, r0 = R * .4, r1 = R * (.6 + v * 1.1); F.a(c, 1 - v); F.duong(c, Math.cos(a) * r0, cy + Math.sin(a) * r0, Math.cos(a) * r1, cy + Math.sin(a) * r1, cols[2], 1); } F.a(c, 1); }); } },
   // Choáng: lảo đảo, sao vàng xoay quanh đỉnh đầu (hx, hy là điểm trên hình gốc).
   choang(P, hx, hy) { const u = P.u; P.rot += 5 * sn(u); P.sh += 3 * sn(u + .25); P.sy *= .96 + .02 * sn(u * 2); const q = P.pt(hx, hy);
+    // 15/10 con-ve-tay: có ảnh sao choáng hu-choang (đang dùng cho quái thường ở js/fx.js) thì vẽ ảnh (rộng 40 ≈ vòng sao code), cờ tắt ?vetaycu=1
+    if (G.huVt && G.huVt('hu-choang')) { P.over(c => HT.ve(c, 'hu-choang', q[0], q[1] - 10, Math.floor(G.time / 0.1) % 6, 0, 2)); return; }
     P.over(c => { for (let i = 0; i < 4; i++) { const a = (u + i / 4) * TAU, x = q[0] + Math.cos(a) * 20, y = q[1] - 10 + Math.sin(a) * 6; const truoc = Math.sin(a) > 0; F.a(c, truoc ? 1 : .6); F.sao(c, x, y, truoc ? 3 : 2, i % 2 ? '#ffd23c' : '#fff6b0'); F.dia(c, x, y, 1.2, '#ffffff'); } F.a(c, 1); }); },
   // Chết hoành tráng: rung dữ dội, nổ lốp bốp khắp thân, tia sáng toả, chớp trắng lớn, rồi tan theo kiểu k.
   chetLon(P, k, cols, mauTan) { const u = P.u, B = P.B, bh = B.bh, bw = B.bw, cy = -P.h - bh * .5, R = Math.max(bw, bh) * .6;
@@ -10553,7 +10561,7 @@ def('cuaDa', { ten: 'Cua Đá', vung: 'bien', loai: 'trumnho', tt: 1, luoi: () =
     move: A(.7, P => { const u = P.u; P.h += Math.abs(sn(u * 2)) * 1.2; P.rot += 2 * sn(u); P.x += sn(u * 2) * .8; P.r('chanT', 16 * sn(u * 2)).r('chanP', 16 * sn(u * 2 + .5)); P.r('cangT', 5 * sn(u * 2)).r('cangP', 5 * sn(u * 2 + .3)); }),
     tele: A(.8, P => { const u = P.u, k = kf(u, [[0, 0], [.4, 1, 'back'], [1, 1]]); CH.tele(P); P.r('cangT', 30 * k + rung(u, .4) * 6).m('cangT', 3 * k, -6 * k).r('cangP', -20 * k); }),
     atk: A(.6, P => { const u = P.u, a = kf(u, [[0, 30], [.18, -40, 'in'], [.45, -30], [1, 0, 'back']]); CH.atk(P); P.r('cangT', a).m('cangT', 3 * (1 - seg(u, 0, .2)), -6 * (1 - seg(u, 0, .2))); P.r('cangP', -20 * (1 - u)); }),
-    hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.r('cangT', -15 * k).r('cangP', 15 * k); P.over(c => F.hat(c, 0, -40, 8, 4, P.u, { v: 14, cols: DA })); }),
+    hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.r('cangT', -15 * k).r('cangP', 15 * k); if (!(P.anhAI && G.VE_TAY_MOI !== false)) P.over(c => F.hat(c, 0, -40, 8, 4, P.u, { v: 14, cols: DA })); }), // 15/10 con-ve-tay: thân ảnh AI (hàng hit đã vẽ sẵn đá văng) thì bỏ hạt vuông xám xanh vẽ code (nhấp nháy suốt lúc choáng)
     die: A(1.6, P => { const k = kf(P.u, [[0, 0], [.25, 1, 'nay']]); CH.die(P); P.r('cangT', -40 * k).m('cangT', 0, 8 * k).r('cangP', 40 * k).m('cangP', 0, 8 * k); P.sy *= 1 - .15 * k; }),
     spawn: A(1.3, P => { const u = P.u; CH.spawn(P); P.r('cangT', 30 * sn(u * 3) * (u > .6 ? 1 : 0)).r('cangP', -30 * sn(u * 3) * (u > .6 ? 1 : 0)); }),
     // Chiêu 1: giơ hai càng lên cao rồi đập xuống, sàn nứt và sóng chấn động lan ra (phải chạy ra ngoài vòng đỏ).
@@ -14490,6 +14498,25 @@ MA._xong();
     try { tat = typeof location !== 'undefined' && /[?&]nldong=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; }
     G.NL_DONG = !tat;
   }
+  // 15/10 con-ve-tay (docs/review/ke-hoach-cai-thien/con-ve-tay): ảnh AI của vài trùm có khung trúng đòn bị tô trắng gần hết thân (Cua Đá
+  // hàng hit khung 3, cả hai pha) → lúc trúng đòn / choáng trông như bóng ma. Nay khung đó vẽ bằng khung 2 cùng hàng, phủ trắng nhẹ 25%.
+  // Danh sách đo bằng ảnh (bao-cao.md): mã → { hàng: { cột trắng: cột thay } }. Không sửa tệp ảnh. Tắt: G.KHUNG_TRANG_SUA = false hoặc ?khungtrang=1.
+  const KHUNG_TRANG = { cuaDa: { hit: { 2: 1 } }, 'cuaDa-p2': { hit: { 2: 1 } }, 'mocTinh-p2': { hit: { 2: 1 } }, 'hoTinh-p2': { hit: { 2: 1 } },
+    hoLua: { hit: { 2: 1 } }, namChua: { hit: { 2: 1 } } };
+  const PHU_TRANG = 0.25;
+  if (G.KHUNG_TRANG_SUA === undefined) {
+    let cu = false;
+    try { cu = typeof location !== 'undefined' && /[?&]khungtrang=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; }
+    G.KHUNG_TRANG_SUA = !cu;
+  }
+  // 15/10 con-ve-tay: quái / trùm có ảnh AI trúng đòn KHÔNG còn phủ trắng cả thân (55–85%, cộng thêm 75% đầu hàng trúng đòn — chồng lên khung
+  // đã trắng thành trắng gấp đôi). Nay: viền sáng mảnh quanh thân + nhuộm đỏ nhẹ. Chớp báo ra đòn / đổi pha của trùm (o.baoDon) giữ như cũ.
+  // Tắt: G.CHOP_NHE = false hoặc ?chopcu=1.
+  if (G.CHOP_NHE === undefined) {
+    let cu = false;
+    try { cu = typeof location !== 'undefined' && /[?&]chopcu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; }
+    G.CHOP_NHE = !cu;
+  }
   // 14/10 (quai-moi-4-con): Heo Rừng Con, Heo Rừng Nanh Dài, Chồn Bóng, Bọ Hung Mai Cứng dựng lại từ ảnh vẽ mới (đủ 6 động tác, net 2, căn tâm).
   // Tấm cũ giữ trong tệp <mã>-cu.sprite.json (mục "cu_cua": <mã>): bình thường KHÔNG nạp (không tạo ảnh nên không tải, không tính vào vùng).
   // Cờ ?quaicu=1 (G.QUAI_CU = true): nạp tấm cũ dưới đúng mã con quái, bỏ tấm mới — y như trước phiên này.
@@ -14775,6 +14802,8 @@ MA._xong();
   // o: { alpha, flash (0..1 chớp trắng), tint: [màu, độ đậm], dy, than: { mau, muc, suong } (nhuộm thân theo trạng thái, Đợt 7) }
   SC.veKhung = function (c, sp, ten, i, face, o) {
     o = o || {};
+    let phu = 0; // 15/10 con-ve-tay: khung trắng toàn thân → khung kề + phủ trắng nhẹ (xem KHUNG_TRANG)
+    if (G.KHUNG_TRANG_SUA !== false && KHUNG_TRANG[sp.ma] && sp.dt[ten]) { const t0 = KHUNG_TRANG[sp.ma][ten], j = t0 ? t0[i] : undefined; if (j != null && j < sp.dt[ten].so) { i = j; phu = PHU_TRANG; } }
     const a = sp.dt[ten] || sp.dt.idle, n = sp.net || 1, sx = i * sp.fw * n, sy = a.hang * sp.fh * n, sw = sp.fw * n, sh = sp.fh * n, ga = c.globalAlpha;
     c.save();
     c.imageSmoothingEnabled = false;
@@ -14784,9 +14813,17 @@ MA._xong();
     if (o.alpha != null) c.globalAlpha = ga * clamp(o.alpha, 0, 1);
     const a1 = c.globalAlpha;
     const th = o.than ? khungThan(sp, a.hang, i, o.than) : null; // Đợt 7: thân đã nhuộm theo trạng thái (giữ viền, mắt), không có thì vẽ thân thường
+    const vien = o.chopNhe > 0 ? clamp(o.chopNhe, 0, 1) : 0;
+    if (vien) { // 15/10 con-ve-tay: viền sáng mảnh (bóng trắng dời 1 điểm ảnh bốn phía, vẽ DƯỚI thân) thay cho phủ trắng cả thân
+      c.globalAlpha = a1 * 0.85 * vien;
+      for (let k = 0; k < 4; k++) veNhuom(c, sp, '#fff6e0', sx, sy, sw, sh, dx + (k === 0 ? -1 : k === 1 ? 1 : 0), dy + (k === 2 ? -1 : k === 3 ? 1 : 0), sp.fw, sp.fh);
+      c.globalAlpha = a1;
+    }
     if (th) c.drawImage(th, 0, 0, sw, sh, dx, dy, sp.fw, sp.fh);
     else c.drawImage(sp.img, sx, sy, sw, sh, dx, dy, sp.fw, sp.fh);
+    if (phu > 0) { c.globalAlpha = a1 * phu; veNhuom(c, sp, '#ffffff', sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); }
     if (o.tint && o.tint[1] > 0) { c.globalAlpha = a1 * clamp(o.tint[1], 0, 1); veNhuom(c, sp, o.tint[0], sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); }
+    if (vien) { c.globalAlpha = a1 * 0.3 * vien; veNhuom(c, sp, '#ff4a3a', sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); } // đỏ nhẹ
     if (o.flash > 0) { c.globalAlpha = a1 * clamp(o.flash, 0, 1); veNhuom(c, sp, '#ffffff', sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); }
     c.restore();
   };
@@ -14903,6 +14940,8 @@ MA._xong();
     }
     let flash = o.hit || 0;
     if (s.ten === 'hit' && n === 'hit' && s.u < 0.3) flash = Math.max(flash, 0.75); // chớp trắng đầu cú trúng đòn
+    let chopNhe = 0;
+    if (G.CHOP_NHE !== false) { chopNhe = flash; flash = 0; } // 15/10 con-ve-tay: trúng đòn → viền sáng + đỏ nhẹ, không phủ trắng cả thân (cờ ?chopcu=1)
     if (o.baoDon > 0) flash = Math.max(flash, o.baoDon); // Phiên E2: chớp trắng báo sắp ra đòn (js/boss.js truyền cho trùm vùng có ảnh AI); chỉ là hình
     c.save();
     c.translate(Math.round(x), Math.round(y));
@@ -14915,7 +14954,7 @@ MA._xong();
       c.restore();
     }
     // o.than (Đợt 7): màu nhuộm thân khi quái dính độc / cháy / đóng băng, do js/mobs.js truyền khi cờ G.TRANG_THAI_TREN_THAN bật. Không có thì vẽ y cũ.
-    SC.veKhung(c, ve, s.ten, s.i, face, { alpha: s.alpha, flash, dy: s.dy, than: o.than || null, tint: o.nhuomMa || null }); // o.nhuomMa: phân thân (bóng ma) nhuộm màu
+    SC.veKhung(c, ve, s.ten, s.i, face, { alpha: s.alpha, flash, chopNhe, dy: s.dy, than: o.than || null, tint: o.nhuomMa || null }); // o.nhuomMa: phân thân (bóng ma) nhuộm màu
     c.restore();
     return s;
   };

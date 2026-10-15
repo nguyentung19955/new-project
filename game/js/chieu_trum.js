@@ -611,7 +611,7 @@
         for (const q of w.projs) {
           if (!(q.t > 0)) continue;
           const nx = q.x + (q.vx || 0) * dt, ny = q.y + (q.vy || 0) * dt;
-          if ((q.x - t.x) * (nx - t.x) <= 0 && Math.max(q.y, ny) > t.y0 - 2 && Math.min(q.y, ny) < t.y1 + 2 && q.x !== nx) { q.t = 0; FX('burst', t.x, q.y - 4, '#d8f6ff', 4, 40); }
+          if ((q.x - t.x) * (nx - t.x) <= 0 && Math.max(q.y, ny) > t.y0 - 2 && Math.min(q.y, ny) < t.y1 + 2 && q.x !== nx) { q.t = 0; (G.huVt && G.huVt('hu-va-cham') && anh('hu-va-cham', t.x, q.y - 4, { sc: 0.9, mau: '#7fd4ff' })) || FX('burst', t.x, q.y - 4, '#d8f6ff', 4, 40); } // 15/10 con-ve-tay: đạn chạm tường tinh thể → ảnh va chạm
         }
       }
     }

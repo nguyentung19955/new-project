@@ -327,9 +327,16 @@
   const VD_ANH = /^hu-(chem|dam|quet|ban-cung|ra-chieu|ra-chuong|tram-nguyet|nen-dat|trung|chi-mang|pha-giap)(-|$)/;
   const vetDon = (o) => (VD_TY[o.ty] === 1 || (o.ty === 'anh' && VD_ANH.test(o.ma || '')) || (o.ty === 'he' && !(o.t0 > 0.5)));
   function add(o) {
+    // 15/10 con-ve-tay: chớp "sq" (lõi VUÔNG + 4 ô vuông góc, vẽ code — ô vuông xanh lục ở vùng độc nổ, ô be ở vùng đất đá, cam ở lửa...)
+    // → ảnh va chạm hu-va-cham nhuộm đúng màu chớp, cỡ theo bán kính chớp. Ảnh chưa có / cờ ?vetaycu=1: như cũ.
+    if (o.ty === 'flash' && o.sq && G.huVt && G.huVt('hu-va-cham')) {
+      const h = { ty: 'anh', ma: 'hu-va-cham', x: o.x, y: o.y, t: G.fxAnh.giay('hu-va-cham') || 0.2, f: 1, sc: Math.max(0.7, Math.min(3, (o.r || 7) / 7)), goc: 0, ly: o.ly == null ? 1 : o.ly, d: o.d || 0, mau: o.c2 || null, kieu: '', laChop: true }; // laChop: giữ đậm như chớp cũ (vetDon)
+      if (o.pl != null) h.pl = o.pl;
+      return add(h);
+    }
     o.t0 = o.t; o.d = o.d || 0;
     if (o.pl == null) o.pl = OWN;
-    o.vd = !!o.pl && G.VET_DAM !== false && vetDon(o); // vệt đòn của em bé: đậm, và vẽ SAU viền quanh bé (fx.vienBe)
+    o.vd = !!o.pl && G.VET_DAM !== false && (vetDon(o) || !!o.laChop); // vệt đòn của em bé: đậm, và vẽ SAU viền quanh bé (fx.vienBe)
     o.mo = !!o.pl && !o.vd;
     if (S.E.length >= MAXE) S.E.shift();
     S.E.push(o);
@@ -1307,7 +1314,9 @@
       if (v.stun) {
         // sao choáng xoay trên đầu
         // Ảnh AI sao choáng (hu-choang, chạy lặp): điểm neo là giữa vòng sao, đặt ngay trên đầu.
-        if (coAnh('hu-choang')) G.fxAnh.ve(c, 'hu-choang', x, top - 4, t + id * 0.37, 0, 1);
+        // 15/10 con-ve-tay: trùm vùng choáng đã có sao trên đầu ở cử động 'stun' (js/monster_art.js TRUM.choang, nay cũng là ảnh hu-choang) → không vẽ lần hai
+        if (e.isBoss && e.kind !== 'mini' && G.huVt && G.huVt('hu-choang') && e.art) { /* sao do TRUM.choang vẽ */ }
+        else if (coAnh('hu-choang')) G.fxAnh.ve(c, 'hu-choang', x, top - 4, t + id * 0.37, 0, 1);
         else for (let i = 0; i < 3; i++) { const a = t * 6 + i * 2.094; const sx = x + Math.round(Math.cos(a) * 7), sy = top - 4 + Math.round(Math.sin(a) * 2); if (Math.sin(a) > -0.3) star(c, sx, sy, 1, '#ffd23f', '#ffffff'); else p(c, sx, sy, 1, 1, '#a8742a'); }
       }
     } catch (err) { fail(err); }
