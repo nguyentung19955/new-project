@@ -1,0 +1,123 @@
+{
+ "anh": "nhimThan-5-trung-don.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 4,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 3,
+  "vien_khu": 6567,
+  "nga_mau_nen_trong_hinh": 159
+ },
+ "manh_bo": [
+  {
+   "khung_bao": [
+    930,
+    203,
+    950,
+    224
+   ],
+   "diem_anh": 56
+  },
+  {
+   "khung_bao": [
+    1472,
+    229,
+    1492,
+    253
+   ],
+   "diem_anh": 71
+  }
+ ],
+ "loi": [],
+ "canh_bao": [
+  "Mảnh 56 điểm ảnh ở [930, 203, 950, 224] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 71 điểm ảnh ở [1472, 229, 1492, 253] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "hit",
+   "so_khung": 4,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      26,
+      151,
+      533,
+      591
+     ],
+     "chan": [
+      269.0,
+      591
+     ],
+     "rong": 507,
+     "cao": 440,
+     "diem_anh": 141840,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      536,
+      162,
+      1077,
+      585
+     ],
+     "chan": [
+      841.0,
+      585
+     ],
+     "rong": 541,
+     "cao": 423,
+     "diem_anh": 140607,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      1100,
+      163,
+      1605,
+      585
+     ],
+     "chan": [
+      1374.0,
+      585
+     ],
+     "rong": 505,
+     "cao": 422,
+     "diem_anh": 133487,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1656,
+      151,
+      2151,
+      591
+     ],
+     "chan": [
+      1900.5,
+      591
+     ],
+     "rong": 495,
+     "cao": 440,
+     "diem_anh": 136009,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}

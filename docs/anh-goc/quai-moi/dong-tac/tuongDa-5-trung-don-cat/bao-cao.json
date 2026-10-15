@@ -1,0 +1,133 @@
+{
+ "anh": "tuongDa-5-trung-don.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 4,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 0,
+  "vien_khu": 4336,
+  "nga_mau_nen_trong_hinh": 68
+ },
+ "manh_bo": [
+  {
+   "khung_bao": [
+    901,
+    203,
+    928,
+    250
+   ],
+   "diem_anh": 101
+  },
+  {
+   "khung_bao": [
+    941,
+    248,
+    982,
+    278
+   ],
+   "diem_anh": 82
+  },
+  {
+   "khung_bao": [
+    952,
+    276,
+    989,
+    300
+   ],
+   "diem_anh": 43
+  }
+ ],
+ "loi": [],
+ "canh_bao": [
+  "Mảnh 101 điểm ảnh ở [901, 203, 928, 250] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 82 điểm ảnh ở [941, 248, 982, 278] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không",
+  "Mảnh 43 điểm ảnh ở [952, 276, 989, 300] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "hit",
+   "so_khung": 4,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      29,
+      147,
+      501,
+      624
+     ],
+     "chan": [
+      287.0,
+      624
+     ],
+     "rong": 472,
+     "cao": 477,
+     "diem_anh": 159279,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      585,
+      148,
+      1027,
+      619
+     ],
+     "chan": [
+      852.0,
+      619
+     ],
+     "rong": 442,
+     "cao": 471,
+     "diem_anh": 149526,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      1103,
+      153,
+      1594,
+      623
+     ],
+     "chan": [
+      1404.5,
+      623
+     ],
+     "rong": 491,
+     "cao": 470,
+     "diem_anh": 162856,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1657,
+      147,
+      2132,
+      624
+     ],
+     "chan": [
+      1917.5,
+      624
+     ],
+     "rong": 475,
+     "cao": 477,
+     "diem_anh": 159564,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}

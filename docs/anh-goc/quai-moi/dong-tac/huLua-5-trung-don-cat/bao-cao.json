@@ -1,0 +1,113 @@
+{
+ "anh": "huLua-5-trung-don.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 4,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 1,
+  "vien_khu": 6924,
+  "nga_mau_nen_trong_hinh": 172
+ },
+ "manh_bo": [
+  {
+   "khung_bao": [
+    644,
+    262,
+    675,
+    294
+   ],
+   "diem_anh": 81
+  }
+ ],
+ "loi": [],
+ "canh_bao": [
+  "Mảnh 81 điểm ảnh ở [644, 262, 675, 294] bị bỏ (quá nhỏ để là một khung) — xem debug.png xem có phải chi tiết rời không"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "hit",
+   "so_khung": 4,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      32,
+      152,
+      544,
+      587
+     ],
+     "chan": [
+      274.5,
+      587
+     ],
+     "rong": 512,
+     "cao": 435,
+     "diem_anh": 127443,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      576,
+      137,
+      1074,
+      591
+     ],
+     "chan": [
+      823.5,
+      591
+     ],
+     "rong": 498,
+     "cao": 454,
+     "diem_anh": 130823,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      1112,
+      163,
+      1611,
+      591
+     ],
+     "chan": [
+      1328.0,
+      591
+     ],
+     "rong": 499,
+     "cao": 428,
+     "diem_anh": 119398,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1650,
+      152,
+      2157,
+      587
+     ],
+     "chan": [
+      1887.5,
+      587
+     ],
+     "rong": 507,
+     "cao": 435,
+     "diem_anh": 126727,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}

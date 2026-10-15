@@ -1,0 +1,101 @@
+{
+ "anh": "denLong-5-trung-don.png",
+ "co_anh": [
+  2171,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 4,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 0,
+  "vien_khu": 11153,
+  "nga_mau_nen_trong_hinh": 424
+ },
+ "manh_bo": [],
+ "loi": [],
+ "canh_bao": [],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "hit",
+   "so_khung": 4,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      36,
+      121,
+      506,
+      623
+     ],
+     "chan": [
+      241.0,
+      623
+     ],
+     "rong": 470,
+     "cao": 502,
+     "diem_anh": 121503,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      567,
+      116,
+      1093,
+      620
+     ],
+     "chan": [
+      715.5,
+      620
+     ],
+     "rong": 526,
+     "cao": 504,
+     "diem_anh": 127792,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      1124,
+      117,
+      1597,
+      624
+     ],
+     "chan": [
+      1371.0,
+      624
+     ],
+     "rong": 473,
+     "cao": 507,
+     "diem_anh": 123275,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1682,
+      122,
+      2149,
+      624
+     ],
+     "chan": [
+      1887.0,
+      624
+     ],
+     "rong": 467,
+     "cao": 502,
+     "diem_anh": 121179,
+     "nguon": "cat-tay",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}
