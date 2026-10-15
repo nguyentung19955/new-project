@@ -32,7 +32,7 @@
     const c = G.ux, thu = G.ZED_BO_THU;
     c.save(); c.beginPath(); c.rect(x, y, w, h); c.clip();
     if (!mo) c.globalAlpha *= 0.35;
-    c.translate(x + w / 2 + 3, y + h - 4); c.scale(1.45, 1.45);
+    c.translate(x + w / 2 + 3, y + h - 2); c.scale(2.1, 2.1);
     G.ZED_BO_THU = k;
     try { G.art.hero(c, { x: 0, y: 0, face: 1, key: 'smith', t: G.time, move: false, atk: -1, dodge: -1, weapon: null, noShadow: true }); } catch (e) { /* thiếu hình thì bỏ qua */ } finally { G.ZED_BO_THU = thu; }
     c.restore();

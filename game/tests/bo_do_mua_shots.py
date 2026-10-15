@@ -1,7 +1,8 @@
 """Ảnh soát TĨNH bảng Cô Thợ May sau khi bộ vùng phải mua bằng vàng (15/10, docs/review/ke-hoach-cai-thien/bo-do-mua).
 Không chơi thử: đặt bản lưu rồi vẽ đúng một khung hình (vòng lặp game dừng, như tests/ngon_ngu_shots.py), chụp VI + EN, ghép một ảnh.
 
-  python3 tests/bo_do_mua_shots.py [--out <tệp png>]   (mặc định docs/review/ke-hoach-cai-thien/bo-do-mua/xem-truoc.png)
+  python3 tests/bo_do_mua_shots.py [--out <tệp png>] [--nguon]   (mặc định docs/review/ke-hoach-cai-thien/bo-do-mua/xem-truoc.png)
+  Mặc định mở bản đóng gói dist/linh-khi.html (đủ ảnh thân Zed các bộ; chạy python3 build.py trước); --nguon: mở index.html (mã nguồn, thiếu ảnh).
 
 In thêm: chữ chưa dịch (G.ngonNgu.thieu), số lần chữ bị cắt / thu nhỏ trong khung (G.theme.chuDo), lỗi console."""
 import os, sys
@@ -56,7 +57,7 @@ def main():
         pg.on('pageerror', lambda e: errs.append('PAGEERROR ' + str(e)))
         pg.on('console', lambda m: errs.append(m.text) if m.type == 'error' and 'ERR_' not in m.text and 'net::' not in m.text else None)
         pg.add_init_script(INIT)
-        pg.goto('file://' + ROOT + '/index.html?cloud=0')
+        pg.goto('file://' + ROOT + ('/index.html' if '--nguon' in sys.argv else '/dist/linh-khi.html') + '?cloud=0')
         pg.wait_for_function('window.G && G.scene', timeout=20000)
         pg.add_script_tag(path=os.path.join(HERE, 'setup.js'))
         pg.evaluate(HELP)
