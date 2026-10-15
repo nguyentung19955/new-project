@@ -1,0 +1,141 @@
+{
+ "anh": "meoDen-4-danh.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 6,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 3,
+  "vien_khu": 7096,
+  "nga_mau_nen_trong_hinh": 157
+ },
+ "manh_bo": [],
+ "loi": [],
+ "canh_bao": [
+  "Hàng 1 khung 3 cao 249 (trung vị 295) — lệch cỡ >15%"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "atk",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      19,
+      259,
+      342,
+      546
+     ],
+     "chan": [
+      165.5,
+      546
+     ],
+     "rong": 323,
+     "cao": 287,
+     "diem_anh": 38608,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      373,
+      250,
+      709,
+      549
+     ],
+     "chan": [
+      452.0,
+      549
+     ],
+     "rong": 336,
+     "cao": 299,
+     "diem_anh": 38116,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      715,
+      197,
+      1110,
+      446
+     ],
+     "chan": [
+      924.0,
+      446
+     ],
+     "rong": 395,
+     "cao": 249,
+     "diem_anh": 37176,
+     "nguon": "tu-dong",
+     "ghi_chu": [
+      "cao bất thường"
+     ]
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1106,
+      211,
+      1537,
+      530
+     ],
+     "chan": [
+      1350.0,
+      530
+     ],
+     "rong": 431,
+     "cao": 319,
+     "diem_anh": 42676,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1490,
+      224,
+      1811,
+      544
+     ],
+     "chan": [
+      1755.5,
+      544
+     ],
+     "rong": 321,
+     "cao": 320,
+     "diem_anh": 35108,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1837,
+      259,
+      2157,
+      551
+     ],
+     "chan": [
+      2002.5,
+      551
+     ],
+     "rong": 320,
+     "cao": 292,
+     "diem_anh": 37929,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}
