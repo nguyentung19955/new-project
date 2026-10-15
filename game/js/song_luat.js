@@ -145,6 +145,10 @@
       if (!(z.t > 0 || z.pool || z.wall)) continue;
       try { if (G.inZone(z, { x: x1, y: y1 }, 0) && !G.inZone(z, { x: x0, y: y0 }, 0)) return true; } catch (e) { /* hình lạ: bỏ qua */ }
     }
+    for (const o of W.projs) { // đạn quái: không đẩy em bé vào đường đạn sắp trúng (ô trúng 7 × 8 như js/combat.js, nới 2)
+      if (o.team === 'player' || !(o.t > 0)) continue;
+      if (Math.abs(x1 - o.x) < 9 && Math.abs(y1 - o.y) < 10 && !(Math.abs(x0 - o.x) < 9 && Math.abs(y0 - o.y) < 10)) return true;
+    }
     return false;
   }
   L.vaoVungDo = vaoVungDo;
@@ -162,7 +166,7 @@
     const v = L.dongTai(W, P.x, P.y);
     if (v) {
       const nx = G.clamp(P.x + v[0] * dt, W.x0, xm), ny = G.clamp(P.y + v[1] * dt, W.y0, W.y1);
-      if (!vaoVungDo(W, P.x, P.y, nx, ny)) { P.x = nx; P.y = ny; P.troiT = (P.troiT || 0) + dt; } else W.songChan = (W.songChan || 0) + 1;
+      if (!vaoVungDo(W, P.x, P.y, nx, ny)) { P.truocDay = [P.x, P.y]; P.x = nx; P.y = ny; P.troiT = (P.troiT || 0) + dt; P.troiLuc = G.time || 0; } else W.songChan = (W.songChan || 0) + 1;
     }
     for (const e of W.ents) {
       if (e.dead || e.hidden || e.isBoss || !e.inside) continue;
