@@ -2,13 +2,13 @@
 // Luật (tốc, nghỉ, số đòn, nối chiêu, sát thương, di chuyển, mệt) ở js/boss.js, js/chieu_trum.js, js/mobs.js; mọi hệ số: G.NOI_GIAN (js/data.js).
 // Tệp này: (1) tinh anh nổi giận ở ≤ 35% máu (một lần duy nhất), (2) dấu hiệu nhìn thấy BỀN SUỐT PHA: thân tô đỏ nhẹ có nhịp, quầng đỏ
 // nhấp nháy dưới chân, đốm lửa giận bốc quanh thân (pha 3 / hóa cuồng: nhịp nhanh hơn, đỏ hơn, nhiều đốm hơn), (3) pha 3 của trùm vùng:
-// màn hơi đỏ ở mép (rung nhẹ khi dậm nằm ở js/boss.js). Chỉ là HÌNH (trừ mục 1). Cờ tắt: ?giancu=1 (G.NOI_GIAN_BAT = false) → y hệt cũ.
+// màn hơi đỏ ở mép (rung nhẹ khi dậm nằm ở js/boss.js). Chỉ là HÌNH (trừ mục 1). (15/10 don-tep B: bỏ cờ tắt ?giancu=1 / G.NOI_GIAN_BAT.)
 // Nạp sau js/fx.js, js/mobs.js, js/chieu_trum.js.
 (function () {
   const G = window.G;
   if (!G) return;
   const W = () => G.getWorld();
-  const BAT = () => G.NOI_GIAN_BAT !== false && !!G.NOI_GIAN;
+  const BAT = () => !!G.NOI_GIAN;
   const NG = (G.noiGian = {});
   function FX(n, a, b, c, d, e) { if (G.noRender) return; const f = G.fx && G.fx[n]; if (f) f(a, b, c, d, e); }
 

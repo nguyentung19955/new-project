@@ -73,17 +73,17 @@
   function trong(x, y, m) { const w = W(); m = m || 0; return [clamp(x, w.x0 + m, w.x1 - m), clamp(y, w.y0 + m * 0.5, w.y1 - m * 0.5)]; }
   function moc(id, a) { const m = G.monsterArt, l = m && id && m.list.find((x) => x.id === id), an = l && l.anims.find((x) => x.id === a); return (an && an.moc) || [0.45, 0.75]; }
   function seq(b, t, f) { b.seq.push({ t: Math.max(0, t), f }); }
-  // 15/10 noi-gian-manh: số đòn theo pha (bảng G.NOI_GIAN.chieu, js/data.js; cờ tắt ?giancu=1 → cu) và sàn báo trước khi nổi giận.
+  // 15/10 noi-gian-manh: số đòn theo pha (bảng G.NOI_GIAN.chieu, js/data.js) và sàn báo trước khi nổi giận.
   const soNG = (b, key, f, cu) => (G.noiGianSo ? G.noiGianSo(b, key, f, cu) : cu);
   const sanNG = (b, to) => (G.noiGianSan ? G.noiGianSan(b, to) : 0);
-  const satDot = () => (G.NOI_GIAN_BAT !== false && G.NOI_GIAN && G.NOI_GIAN.satDot) || 1; // × sát thương nhát của đợt thêm
+  const satDot = () => (G.NOI_GIAN && G.NOI_GIAN.satDot) || 1; // × sát thương nhát của đợt thêm
   const theo = (b) => ({ src: b, skill: b.skillName || null });
   function vung(b, shape, geo, t, dmg, el, o) { return G.mobZone(shape, geo, t, dmg, el || null, Object.assign(theo(b), o || {})); }
   function tron(b, x, y, r, t, dmg, el, o) { return G.zoneCircle(x, y, r, t, dmg, el || null, Object.assign(theo(b), o || {})); }
   // Mệt sau chiêu lớn (như tire() của js/boss.js).
   function met(b, t) {
     if (b.dead) return;
-    if (G.noiGianMet) t = G.noiGianMet(b, t); // 15/10 noi-gian-manh: nổi giận mệt ngắn hơn (G.NOI_GIAN, cờ tắt ?giancu=1)
+    if (G.noiGianMet) t = G.noiGianMet(b, t); // 15/10 noi-gian-manh: nổi giận mệt ngắn hơn (G.NOI_GIAN)
     b.tired = t; b.exposed = Math.max(b.exposed || 0, t); b.busy = Math.max(b.busy || 0, t);
     if (b.kind === 'mini' && b.st) b.st.stun = Math.max(b.st.stun || 0, t);
   }

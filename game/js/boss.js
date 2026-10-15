@@ -98,8 +98,8 @@
     return b;
   };
 
-  // ======================= NỔI GIẬN (15/10 noi-gian-manh, bảng G.NOI_GIAN ở js/data.js, cờ tắt ?giancu=1) =======================
-  const NGB = () => (G.NOI_GIAN_BAT !== false && G.NOI_GIAN ? G.NOI_GIAN : null);
+  // ======================= NỔI GIẬN (15/10 noi-gian-manh, bảng G.NOI_GIAN ở js/data.js) =======================
+  const NGB = () => (G.NOI_GIAN ? G.NOI_GIAN : null);
   // Bảng hệ số của trùm này (trùm vùng / trùm nhỏ), null khi cờ tắt.
   function bangNG(b) { const N = NGB(); return N ? (b.kind === 'mini' ? N.nho : N.vung) : null; }
   const ngPh = (a, ph) => a[Math.min(ph | 0, a.length - 1)];

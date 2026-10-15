@@ -291,7 +291,7 @@
     // skill bộ Ninja "Phân thân" (js/bo_skill.js): quái thường đi tới / ngắm đòn vào bóng; P ở đây chỉ dùng toạ độ, đòn trúng vẫn đo trên Zed thật
     const w = W(), P = (G.boSk && G.boSk.dich(e)) || w.P;
     if (e.an) e.an.t += dt * (e.an.spd || 1);
-    if (e.role === 'elite' && G.noiGian) G.noiGian.tinhAnh(e); // 15/10 noi-gian-manh: tinh anh nổi giận ở ≤ 35% máu (js/noi_gian.js, cờ tắt ?giancu=1)
+    if (e.role === 'elite' && G.noiGian) G.noiGian.tinhAnh(e); // 15/10 noi-gian-manh: tinh anh nổi giận ở ≤ 35% máu (js/noi_gian.js)
     if (e.hitT > 0) e.hitT -= dt;
     e.dh = (e.dh || 0) + dt; if (e.duT > 0) e.duT -= dt; if (e.diT > 0) e.diT -= dt; // Phiên 1 soát mượt: đồng hồ chỉ để vẽ
     if (e.reflT > 0) e.reflT -= dt;
@@ -514,7 +514,7 @@
   // ---------- tinh anh ----------
   function thinkElite(e, dt, P, sp, d, a) {
     const w = W(), id = e.art, el = e.el || regEl();
-    // 15/10 noi-gian-manh (js/noi_gian.js, G.NOI_GIAN.tinhAnh, cờ tắt ?giancu=1): nổi giận thì tốc chiêu × toc (báo trước chia tốc nhưng không
+    // 15/10 noi-gian-manh (js/noi_gian.js, G.NOI_GIAN.tinhAnh): nổi giận thì tốc chiêu × toc (báo trước chia tốc nhưng không
     // dưới sàn công bằng 0,45 giây), hồi chiêu riêng × hoi. Chưa giận / cờ tắt: ng = 1, như cũ.
     const NGq = G.noiGian, ng = NGq ? NGq.tinhAnh(e) : 1, bao = (t, to) => (NGq && ng !== 1 ? NGq.baoTinhAnh(e, t, to) : t);
     const fast = (e.trait === 'nhanh' ? 0.75 : 1) / ng;
@@ -996,8 +996,8 @@
     // 14/10 (YEU-CAU-TRUM-NHO): trùm nhỏ có tệp ảnh pha 2 (<mã>-p2, js/sprite_custom.js) thì đổi sang hình pha 2 khi máu dưới 50%.
     // Lúc gục dùng hàng chết của pha 1. Tắt: ?trumnho=0 (G.TRUM_NHO_PHA = false).
     // 15/10 noi-gian-manh: nay là pha 2 THẬT (js/boss.js đổi b.phase ở G.NOI_GIAN.nho.nguong = 50% máu: nhanh hơn, thêm đòn, nối chiêu) → hình theo
-    // đúng b.phase. Cờ ?giancu=1: như cũ (chỉ đổi hình ở 50% máu, chiêu giữ nguyên).
-    if (e.role === 'mini' && e.dying == null && G.TRUM_NHO_PHA !== false && e.maxhp > 0) o.phase = G.NOI_GIAN_BAT !== false && G.NOI_GIAN ? (e.phase >= 1 ? 2 : 1) : e.hp < e.maxhp * 0.5 ? 2 : 1;
+    // đúng b.phase.
+    if (e.role === 'mini' && e.dying == null && G.TRUM_NHO_PHA !== false && e.maxhp > 0) o.phase = G.NOI_GIAN ? (e.phase >= 1 ? 2 : 1) : e.hp < e.maxhp * 0.5 ? 2 : 1;
     if (e.role === 'mini') o.huTrum = true;
     // 15/10 noi-gian-manh (js/noi_gian.js): trùm nhỏ pha 2, tinh anh nổi giận — thân đỏ nhẹ có nhịp (nhuộm hệ có trước thì giữ), quầng đỏ dưới chân, đốm lửa giận
     const NGv = G.noiGian && e.dying == null ? G.noiGian : null;

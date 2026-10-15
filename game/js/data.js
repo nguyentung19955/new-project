@@ -617,13 +617,12 @@
   if (G.CUA_MOI === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]cuade=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.CUA_MOI = !cu; }
   if (G.TRUM_MOI === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]trumcu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.TRUM_MOI = !cu; }
   // 15/10 noi-gian-manh (docs/review/ke-hoach-cai-thien/noi-gian-manh): NỔI GIẬN / HÓA CUỒNG thấy và cảm được — mọi hệ số ở bảng này
-  // (js/boss.js, js/chieu_trum.js, js/mobs.js đọc; hình: js/noi_gian.js). Cờ tắt: ?giancu=1 (G.NOI_GIAN_BAT = false) → y hệt cũ.
+  // (js/boss.js, js/chieu_trum.js, js/mobs.js đọc; hình: js/noi_gian.js). (15/10 don-tep B: bỏ cờ tắt ?giancu=1 / G.NOI_GIAN_BAT.)
   // Mảng [pha 1, pha 2, pha 3] của trùm vùng (pha 2 "nổi giận" ≤ 66% máu, pha 3 "hóa cuồng" ≤ 33%); trùm nhỏ [pha 1, pha 2] (pha 2 ≤ nguong).
   // Mọi hệ số so với pha 1. toc: tốc ra chiêu (cử động + báo trước) · nghi: × nghỉ giữa chiêu của pha 1 · noi: [xác suất nối ≥ 2 chiêu, nối 3 chiêu] ·
   // noiNghi: nghỉ (giây) giữa hai chiêu nối · sat: × sát thương (satTrum: riêng một trùm) · diChuyen: × tốc đi · met: × thời gian mệt sau chiêu lớn · dan: × tốc đạn bay.
   // san: sàn công bằng khi nổi giận — báo trước tối thiểu (giây) của vùng thường / vùng to hoặc nhiều đợt; danMax: trần × tốc đạn.
   // chieu: số đòn mỗi chiêu theo pha (mỗi chiêu một cách tăng: so = số đạn / cột / quả, dot = số đợt, hang = số hàng, vong = số vòng, ...).
-  if (G.NOI_GIAN_BAT === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]giancu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.NOI_GIAN_BAT = !cu; }
   G.NOI_GIAN = {
     // sat, satTrum, dan, satDot, tinhAnh.sat: đã HẠ sau khi đo bằng bot cân bằng (docs/review/ke-hoach-cai-thien/noi-gian-manh/bao-cao.md).
     // Số yêu cầu: sat [1, 1,1, 1,2] / trùm nhỏ [1, 1,1] / tinh anh 1,1, đạn tối đa × 1,25. Với số đó bot (đủ Sức mạnh khuyên dùng) thắng trùm

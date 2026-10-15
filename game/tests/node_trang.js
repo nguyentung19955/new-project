@@ -10,7 +10,7 @@
 'use strict';
 const fs = require('fs'), path = require('path'), vm = require('vm'), readline = require('readline');
 const GAME = path.join(__dirname, '..');
-// 15/10 noi-gian-manh: biến môi trường LK_Q thêm cờ vào địa chỉ trang giả (vd LK_Q=giancu=1 → ?cloud=0&giancu=1) để bot đo bản cũ / mới.
+// 15/10 noi-gian-manh: biến môi trường LK_Q thêm cờ vào địa chỉ trang giả (vd LK_Q=cuade=1 → ?cloud=0&cuade=1) để bot đo bản cũ / mới.
 const Q = process.env.LK_Q ? '&' + String(process.env.LK_Q).replace(/^[?&]+/, '') : '';
 
 function vatGia(ten) { // đối tượng "gì cũng được": mọi thuộc tính là hàm rỗng trả lại chính nó

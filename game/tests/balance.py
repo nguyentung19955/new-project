@@ -13,7 +13,7 @@ import cd_lib
 # 14/10 (bước 1, mục 5): --node chạy luật game trong Node (tests/node_trang.js), không trình duyệt / Playwright.
 NODE = cd_lib.node_mode()
 sys.argv = [a for a in sys.argv if a != '--node']
-# 15/10 noi-gian-manh: --trum in thêm tỉ lệ thắng riêng phòng trùm (đo nổi giận trước / sau; thêm ?giancu=1 qua biến môi trường LK_Q=giancu=1 khi --node)
+# 15/10 noi-gian-manh: --trum in thêm tỉ lệ thắng riêng phòng trùm (thêm cờ qua biến môi trường LK_Q, vd LK_Q=cuade=1, khi --node; ?giancu=1 đã bỏ 15/10)
 TRUM = '--trum' in sys.argv
 sys.argv = [a for a in sys.argv if a != '--trum']
 
