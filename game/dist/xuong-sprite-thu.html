@@ -71,7 +71,7 @@
 <div id="lk-tai" data-bia="||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAMEBQYH/8QAKRAAAQMCBQMDBQAAAAAAAAAAAQIDEQAEBRIhMUETFGEiQnEVUWKBsf/EABcBAAMBAAAAAAAAAAAAAAAAAAIDBAX/xAAlEQACAQEFCQAAAAAAAAAAAAABAgADBBExUfASEyEyM0FxobH/2gAMAwEAAhEDEQA/AOfNMWj9zbWiEtBsn1ugGTPCvjXajFcBNssNsvoeMxlCgVJqzCbhHftG3aGdcJBUAUn7neRzTMcumxjD0hDSkmFBtWZMjSdR5qamzb4DtHOiimTfxmt/T3UpzLBCTt5q22sWekt0vBvImSF8+KyF5eWDaGFNZlr6YkKGiTPGvzSutZDDX1sF3P0wPUBMzvP62rStACi5TEWB9pizi/H1JsLUo3NhKiZUOfyqbE1Hu3jJkqPNFFRUuprOHU5dZSVwmE6+2mNk9u7r7R/aKKqqQLNifB+T/9k=|||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAgf/xAAmEAACAgEEAQQCAwAAAAAAAAABAgMRAAQSITEFE1FhgSJBcbHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQIDBAX/xAAeEQABBAIDAQAAAAAAAAAAAAAAAQIDEiExBBEyIv/aAAwDAQACEQMRAD8A51EIZIo53EASNwHG07mBPFno9HFyeOhl1Y2yFIbtjVkDnr54yzx2vaLSyII1cELvBQEVu5PyeshTWvFJG6qi7OR+A9/4xoa3yQzWRvzsH8YkWrkCMZYlsoSvJHfWUalzFpI4/TRBZbca3HsUcXqvJvPqpZgEAewAFHAP1mZ9aZIoyqKWVa4jX3P+jByGor8aNDgT0gXvDiHTs1EbjRAsX3jKuEH92Ofs4YYGeim/yLulscHjFuT6YNno/wBnDDGfsEej/9k=" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.15-2328";
+(window.G = window.G || {}).VERSION = "lk-2026.10.15-2346";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -2080,7 +2080,9 @@
   // Mảnh trùm trước đây chỉ dùng để nâng bậc Vàng (đã bỏ ở đợt 1) nên đang vô dụng.
   G.BO_MOI = {
     max: 3,
-    gia: [{ lk: 80, vang: 500, manh: 0 }, { lk: 200, vang: 1500, manh: 3 }, { lk: 400, vang: 3000, manh: 6 }],
+    // 15/10 (bo-do-mua): vàng cấp 1 500 → 300 để bù phần vàng phải bỏ ra MUA bộ vùng (G.BO_MUA): mô hình tools/can-bang/tinh.js
+    // (có mua bộ) 33 → 32 lượt so với 30 lượt khi bộ được tặng; bot tests/cay.py --node: tổng thời gian lệch < 2% (bảng ở bo-do-mua/bao-cao.md).
+    gia: [{ lk: 80, vang: 300, manh: 0 }, { lk: 200, vang: 1500, manh: 3 }, { lk: 400, vang: 3000, manh: 6 }],
     vungManh: { ninja: 0, rung: 0, bien: 1, lau: 2 }, // mảnh trùm của vùng nào
   };
   // ===== HỆ THỐNG MỚI ĐỢT 3: SKILL RIÊNG CỦA 4 BỘ TRANG PHỤC (docs/review/ke-hoach-cai-thien/he-thong-moi/YEU-CAU-3-SKILL-BO.md) =====
@@ -32003,7 +32005,8 @@ MA._xong();
   };
 
   // Khung nâng cấp bộ trang phục Zed (bộ đang mặc). ro: chỉ xem. Trả về y cuối.
-  VM.boPanel = function (x, y, wd, ro, say) {
+  // o.boQuaDs: không in dòng "Các bộ: …" (bảng Cô Thợ May có thẻ Mua liệt kê đủ các bộ — 15/10 bo-do-mua, để nút dưới không đè chữ)
+  VM.boPanel = function (x, y, wd, ro, say, o) {
     const T = G.theme, sv = G.save;
     if (!T || !sv || !G.ZED_BO || !G.zedBo) return y;
     say = say || (() => {});
@@ -32038,6 +32041,7 @@ MA._xong();
       }
       y += 17;
     } else { ui.text('Bộ này đã nâng tối đa.', x, y + 9, { size: 7, bold: true, color: GOOD }); y += 13; }
+    if (o && o.boQuaDs) return y;
     const ds = (G.ZED_BO_KEYS || []).map((k) => G.tv(G.ZED_BO[k].ten) + ' ' + (G.zedBoMo(k, sv) ? VM.boCap(sv, k) + '/' + max : G.BO_MUA_BAT !== false && G.zedBoBan(k, sv) ? G.t('(chưa mua)') : G.t('(chưa mở)')));
     y = ui.para(G.t('Các bộ: {0}', ds.join(' · ')), x, y + 6, wd, { size: 6.5, color: TXT });
     return y;
@@ -39275,7 +39279,7 @@ MA._xong();
   function nangThe(y0, coMua) {
     let y = y0;
     if (!coMua) y = ui.para('Quần áo cũ đã đổi ra vàng và linh khí. Cu Tí có 4 bộ, hạ trùm vùng để mở bộ, đổi bộ ở Hành trang › Nhân vật.', CX + 2, y0, CW - 4, { size: 7, color: TXT }); // đợt 3: câu ngắn lại để đủ chỗ cho 3 dòng skill bộ
-    y = VM.boPanel(CX + 2, y + 2, CW - 6, false, VA.say);
+    y = VM.boPanel(CX + 2, y + 2, CW - 6, false, VA.say, { boQuaDs: coMua });
     if (G.hanhTrang && T.sbtn(CX + 2, Math.min(y + 6, 240), 150, 17, 'Mở Hành trang › Nhân vật', { size: 7, pad: 2 })) {
       G.hanhTrang.openVillage(); G.hanhTrang.tab = 'hero';
       return null;
@@ -39289,7 +39293,7 @@ MA._xong();
     const c = G.ux, thu = G.ZED_BO_THU;
     c.save(); c.beginPath(); c.rect(x, y, w, h); c.clip();
     if (!mo) c.globalAlpha *= 0.35;
-    c.translate(x + w / 2 + 3, y + h - 4); c.scale(1.45, 1.45);
+    c.translate(x + w / 2 + 3, y + h - 2); c.scale(2.1, 2.1);
     G.ZED_BO_THU = k;
     try { G.art.hero(c, { x: 0, y: 0, face: 1, key: 'smith', t: G.time, move: false, atk: -1, dodge: -1, weapon: null, noShadow: true }); } catch (e) { /* thiếu hình thì bỏ qua */ } finally { G.ZED_BO_THU = thu; }
     c.restore();
