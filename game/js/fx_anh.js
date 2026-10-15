@@ -83,6 +83,14 @@
   try { thTat = typeof location !== 'undefined' && /[?&]huthem=0\b/i.test(String(location.search || '')); } catch (e) { thTat = false; }
   if (G.HU_THEM == null) G.HU_THEM = !thTat;
   G.huThem = (ma) => G.HU_TRUM !== false && G.HU_THEM !== false && FA.co(ma);
+  // ---------- 9 HIỆU ỨNG KỸ NĂNG (15/10, docs/review/ke-hoach-cai-thien/hieu-ung-ky-nang/YEU-CAU.md) ----------
+  // hu-cau-dat-lan, hu-vet-nhot, hu-vung-dien, hu-bua-tam-giac, hu-vo-oc (js/ky_nang_quai.js); hu-manh-san-ho, hu-tuong-tinh-the, hu-vet-dau,
+  // hu-nam-con (js/chieu_trum.js). Thay hình vẽ tạm bằng code; thiếu tệp / ảnh chưa tải xong thì vẫn vẽ code. Cờ ?fxcu=1 (hoặc G.FX_CU = true)
+  // → dùng lại đúng hình vẽ code cũ (và ảnh cũ dùng tạm: hu-gai-bang cho tường, hu-nam-moc cho nấm con). Chỉ là hình: không đổi vùng, số, thời gian.
+  let fxCu = false;
+  try { fxCu = typeof location !== 'undefined' && /[?&]fxcu=1(&|$)/.test(String(location.search || '')); } catch (e) { fxCu = false; }
+  if (G.FX_CU == null) G.FX_CU = fxCu;
+  G.huKn = (ma) => !G.FX_CU && !G.noRender && FA.co(ma);
   // Nhuộm màu (ảnh trắng-xám, game tự nhuộm): nhân màu rồi cộng lại một phần ảnh gốc cho lõi còn sáng (cùng cách js/fx_he.js nhuộm
   // vòng tụ lực). kieu 'sang': chỉ nhuộm điểm sáng gần trắng (ánh trong khe nứt), phần còn lại giữ màu gốc.
   // Tấm nhuộm làm MỘT lần cho mỗi (mã, màu, kiểu) rồi dùng lại. Lỗi (không có canvas) thì vẽ ảnh gốc.

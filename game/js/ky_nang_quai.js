@@ -89,6 +89,8 @@
   function FX(n, a, b, c, d, e) { if (G.noRender) return; const f = G.fx && G.fx[n]; if (f) f(a, b, c, d, e); }
   const anh = (ma, x, y, o) => (!G.noRender && G.fx && G.fx.anh ? G.fx.anh(ma, x, y, o) : false);
   const FA = () => G.fxAnh;
+  // 15/10 (hieu-ung-ky-nang): ảnh thay hình vẽ tạm — có ảnh sẵn sàng và không bật ?fxcu=1 (js/fx_anh.js G.huKn); không thì vẽ code như cũ.
+  const KA = (ma) => !!G.huKn && G.huKn(ma);
   function trong(x, y) { const w = W(); return [clamp(x, w.x0 + 4, w.x1 - 4), clamp(y, w.y0 + 2, w.y1 - 2)]; }
   function giu(e) { const w = W(); e.x = clamp(e.x, w.x0, w.x1); e.y = clamp(e.y, w.y0, w.y1); }
   // Quãng đi được theo góc a trước khi chạm mép sàn (tối đa max). tuong2: kèm mép nào ('x' trái/phải, 'y' trên/dưới).
@@ -228,9 +230,13 @@
         if (o.s >= o.len) { vo(o); return false; }
         return true;
       },
-      ve(c, o) { // chưa có ảnh: vẽ tạm (prompt hu-cau-dat-lan trong PROMPT-ANH.md)
+      ve(c, o) {
         const r = S.r, x = Math.round(o.x), y = Math.round(o.y);
         elip(c, x, y + 1, r, r * 0.35, 'rgba(0,0,0,0.3)');
+        // ảnh hu-cau-dat-lan: 8 khung một vòng lăn (sang phải), khung theo đúng góc đã lăn (quãng / bán kính); lăn sang trái thì lật.
+        // Ảnh đường kính 18 khi co 1 (= 2 × r 8 + viền) → co theo r.
+        if (KA('hu-cau-dat-lan')) { const f = ((Math.floor((o.quay / TAU) * 8) % 8) + 8) % 8; if (FA().veK(c, 'hu-cau-dat-lan', x, y, f, 0, (2 * r + 2) / 18, c0 < 0, 1)) return; }
+        // thiếu ảnh / ?fxcu=1: vẽ tạm bằng code
         elip(c, x, y - r, r + 1, r + 1, '#14182e'); elip(c, x, y - r, r, r, '#7a5a32'); elip(c, x - 2, y - r - 2, r * 0.55, r * 0.55, '#a07a46');
         for (let i = 0; i < 4; i++) { const g = o.quay + i * PI / 2; p(c, x + Math.cos(g) * r * 0.6 - 1, y - r + Math.sin(g) * r * 0.6 - 1, 2, 2, '#4e3820'); }
       } });
@@ -439,8 +445,11 @@
         if (P && !P.dead && ((P.x - o.x) / r) ** 2 + ((P.y - o.y) / (r * 0.6)) ** 2 <= 1) P.knCham = Math.max(P.knCham || 0, 0.12); // js/combat.js: đi chậm 40%
         return o.age < o.life;
       },
-      ve(c, o) { // chưa có ảnh: vẽ tạm (prompt hu-vet-nhot trong PROMPT-ANH.md)
+      ve(c, o) {
         const k = Math.min(1, o.age / 0.2) * Math.min(1, (o.life - o.age) / 0.6);
+        // ảnh hu-vet-nhot (nhìn từ trên, rộng 24 = 2 × 12 khi co 1 → co theo bán kính vùng làm chậm thật), lặp 6 khung, mỗi vũng lệch pha
+        if (KA('hu-vet-nhot')) { const f = (Math.floor(o.age / 0.15) + Math.abs(o.seed)) % 6; if (FA().veK(c, 'hu-vet-nhot', o.x, o.y, f, 0, r / 12, false, 0.8 * k)) return; }
+        // thiếu ảnh / ?fxcu=1: vẽ tạm bằng code
         elip(c, o.x, o.y, r, r * 0.55, 'rgba(120,200,190,' + (0.38 * k).toFixed(2) + ')');
         elip(c, o.x - 3, o.y - 1, r * 0.45, r * 0.22, 'rgba(220,255,250,' + (0.35 * k).toFixed(2) + ')');
         if ((o.seed + Math.floor(o.age * 4)) % 3 === 0) p(c, o.x + 4, o.y - 2, 1, 1, 'rgba(255,255,255,' + (0.7 * k).toFixed(2) + ')');
@@ -524,8 +533,15 @@
     const S = SO.sua, tong = S.nhip.reduce((s, v) => s + v, 0);
     const o = vat({ x, y, life: tong + 0.3, sang: 0,
       buoc(v, dt) { v.sang -= dt; return v.age < v.life; },
-      ve(c, v) { // chưa có ảnh: vẽ tạm (prompt hu-vung-dien trong PROMPT-ANH.md)
+      ve(c, v) {
         const k = Math.min(1, v.age / 0.2) * Math.min(1, (v.life - v.age) / 0.3), sang = v.sang > 0;
+        // ảnh hu-vung-dien (nhìn từ trên, lòng rộng 52 = 2 × 26 khi co 1 → co theo bán kính vùng thật): khung 1–5 âm ỉ lặp trong lúc vòng đỏ
+        // đầy dần; đúng lúc nhịp nổ (v.sang = 0,25 giây, cùng lúc giật) chạy khung 6–8 (bùng, khung 7 sáng nhất).
+        if (KA('hu-vung-dien')) {
+          const f = sang ? 5 + Math.min(2, Math.floor(((0.25 - v.sang) / 0.25) * 3)) : Math.floor(v.age * 8) % 5;
+          if (FA().veK(c, 'hu-vung-dien', v.x, v.y, f, 0, S.r / 26, false, k)) return;
+        }
+        // thiếu ảnh / ?fxcu=1: vẽ tạm bằng code
         elip(c, v.x, v.y, S.r, S.r * 0.55, sang ? 'rgba(200,240,255,' + (0.55 * k).toFixed(2) + ')' : 'rgba(40,80,150,' + (0.35 * k).toFixed(2) + ')');
         const n = sang ? 8 : 3;
         for (let i = 0; i < n; i++) {
@@ -741,6 +757,19 @@
           c.beginPath(); c.moveTo(o.V[0][0], o.V[0][1]); c.lineTo(o.V[1][0], o.V[1][1]); c.lineTo(o.V[2][0], o.V[2][1]); c.closePath(); c.fill();
         }
         if (o.no) return;
+        // ảnh hu-bua-tam-giac (lá bùa cao 12 khi co 1, neo chân bùa): đang bay khung 1; cắm xuống thì rung (khung 1–3 lặp), 45% cuối thời gian
+        // chờ nổ chạy khung 4–6 (vòng lửa chân to dần, khung 6 đúng lúc nổ).
+        if (KA('hu-bua-tam-giac')) {
+          const kk = dat ? Math.min(1, (o.age - S.bay) / S.cho) : 0;
+          const f = !dat ? 0 : kk < 0.55 ? Math.floor(G.time * 10) % 3 : 3 + Math.min(2, Math.floor(((kk - 0.55) / 0.45) * 3));
+          let ok = true;
+          for (const v of o.V) {
+            const x = dat ? v[0] : o.x0 + (v[0] - o.x0) * u, y = dat ? v[1] : o.y0 + (v[1] - o.y0) * u - Math.sin(u * PI) * 20;
+            ok = FA().veK(c, 'hu-bua-tam-giac', x, y + 1, f, 0, 1, false, 1) && ok;
+          }
+          if (ok) return;
+        }
+        // thiếu ảnh / ?fxcu=1: vẽ tạm bằng code
         for (const v of o.V) {
           const x = dat ? v[0] : o.x0 + (v[0] - o.x0) * u, y = dat ? v[1] : o.y0 + (v[1] - o.y0) * u - Math.sin(u * PI) * 20, f = Math.floor(G.time * 10) % 2;
           p(c, x - 3, y - 8 + f, 6, 9, '#14182e'); p(c, x - 2, y - 7 + f, 4, 7, '#f4e070'); p(c, x - 1, y - 6 + f, 2, 1, '#c8372d'); p(c, x - 1, y - 4 + f, 2, 1, '#c8372d'); p(c, x - 1, y - 2 + f, 2, 1, '#c8372d');
@@ -852,6 +881,10 @@
   };
   function veVo(c, e, k) {
     if (!(k.vo > 0)) return;
+    // ảnh hu-vo-oc (vỏ trùm kín thân ốc: rộng 48 ≈ thân 46 của oc.sprite.json, neo chân), khung theo phần thời gian rút vỏ đã qua:
+    // 1–2 yên, 3–4 rung, 5–6 ló ra (1/3 cuối = sắp bò ra). Ảnh quay phải như ảnh quái; quay trái thì lật.
+    if (KA('hu-vo-oc')) { const u = clamp(1 - k.vo / SO.oc.vo, 0, 0.999); if (FA().veK(c, 'hu-vo-oc', e.x, e.y, Math.floor(u * 6), 0, 1, e.face < 0, 1)) return; }
+    // thiếu ảnh / ?fxcu=1: vẽ tạm bằng code
     const x = Math.round(e.x), y = Math.round(e.y), r = Math.max(7, e.r + 2), bl = k.vo < 0.4 && Math.floor(G.time * 12) % 2;
     for (let i = -r; i <= r; i++) { const h = Math.round(Math.sqrt(Math.max(0, r * r - i * i)) * 0.8); p(c, x + i, y - h - 1, 1, h + 1, bl ? 'rgba(220,230,240,0.5)' : 'rgba(150,160,175,0.55)'); }
     for (let i = -r; i <= r; i += 2) { const h = Math.round(Math.sqrt(Math.max(0, r * r - i * i)) * 0.8); p(c, x + i, y - h - 1, 1, 1, '#ffffff'); }

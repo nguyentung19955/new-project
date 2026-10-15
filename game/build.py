@@ -259,6 +259,8 @@ def vung_rieng(t):
     if d == 'giao-dien':
         m = re.match(r'^gd-(?:nen|cua|tt)-(rung|bien|lau)-', ma)
         return VUNG_TEN_GD[m.group(1)] if m else -1
+    if d == 'hieu-ung':  # 15/10 (hieu-ung-ky-nang): hiệu ứng chỉ của quái / trùm một vùng ghi "vung" trong tệp → tải theo vùng như quái đó
+        return VUNG_SO.get(t.get('vung'), -1)
     quai = d not in ('hieu-ung', 'giao-dien', 'nguoi-lang', 'em-be', 'zed') and d not in DO_LOAI
     return VUNG_SO.get(t.get('vung'), -1) if quai else -1
 
@@ -409,7 +411,7 @@ TOOL_JS = ['xu-ly-anh.js', 'khung.js', 'tu-doan.js', 'do.js', 'giao-dien.js']
 RUNTIME_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'vung', 'thay_cho', 'tam', 'khung_rong', 'khung_cao', 'goc', 'rong', 'cao', 'bong', 'dong_tac',
                 'anh', 'vu_khi', 'trang_phuc', 'vat_pham', 'dung_yen', 'nhun', 'nhun_buoc', 'neo', 'khoac_do', 'cu',
                 'net', 'nhan_vat', 'diem', 'diem_theo', 'cap', 'can_tam', 'cu_cua')  # cu_cua (14/10 quai-moi-4-con): tấm cũ <mã>-cu chỉ nạp khi ?quaicu=1. can_tam (14/10 trum-chet-pha3): độ dời ngang từng khung để tâm thân trùm trùng điểm neo. net: ảnh gấp net lần (thiếu là game đọc thành 1 → hình to gấp đôi, khung bị cắt)
-HU_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'tam', 'khung_rong', 'khung_cao', 'goc', 'so', 'giay', 'lap', 'xoay', 'co', 'tron', 'net')  # hiệu ứng ảnh AI (js/fx_anh.js)
+HU_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'tam', 'khung_rong', 'khung_cao', 'goc', 'so', 'giay', 'lap', 'xoay', 'co', 'tron', 'net', 'vung')  # hiệu ứng ảnh AI (js/fx_anh.js); vung (15/10): tải theo vùng (vung_rieng)
 GD_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'anh', 'net', 'vien', 'lap_canh')  # lap_canh (14/10): cạnh + lòng 9 mảnh lặp thay vì kéo giãn. Ảnh giao diện gd-<tên> (bản đồ, nút; js/sprite_custom.js → SC.gd, js/minimap.js)
 DO_LOAI = ('vat-pham',)  # đồ: một ảnh đứng yên (đợt 2: bỏ vu-khi, trang-phuc)
 DA_BO = {'vu-khi': 'ảnh vũ khí cũ (vk-*)', 'trang-phuc': 'ảnh trang phục cũ (tp-*)', 'ghep': 'hồ sơ ghép trang bị (ghep-*)'}  # đợt 2: game không đọc nữa

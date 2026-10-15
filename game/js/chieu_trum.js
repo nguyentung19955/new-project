@@ -66,6 +66,9 @@
   const anh = (ma, x, y, o) => (!G.noRender && G.fx && G.fx.anh ? G.fx.anh(ma, x, y, o) : false);
   const FA = () => G.fxAnh;
   const coAnh = (ma) => !G.noRender && G.HU_TRUM !== false && !!FA() && FA().co(ma);
+  // 15/10 (hieu-ung-ky-nang): ảnh riêng thay hình vẽ tạm (mảnh san hô, tường tinh thể, vệt dầu, nấm con) — có ảnh và không bật ?fxcu=1
+  // (js/fx_anh.js G.huKn); không thì như cũ (ảnh tạm dùng lại hu-gai-bang / hu-nam-moc, hoặc vẽ code).
+  const KA = (ma) => !!G.huKn && G.huKn(ma);
   const ZK = () => G.ZK || 0.85;
   function trong(x, y, m) { const w = W(); m = m || 0; return [clamp(x, w.x0 + m, w.x1 - m), clamp(y, w.y0 + m * 0.5, w.y1 - m * 0.5)]; }
   function moc(id, a) { const m = G.monsterArt, l = m && id && m.list.find((x) => x.id === id), an = l && l.anims.find((x) => x.id === a); return (an && an.moc) || [0.45, 0.75]; }
@@ -139,9 +142,13 @@
           for (let i = 0; i < n; i++) { const d = i * 6, j = (hh(i, 3) - 0.5) * 4, x = x0 + ca * d - sa * j, y = y0 + sa * d + ca * j; p(c, x - 1, y - 1, 3, 2, '#14182e'); p(c, x, y - 1, 1, 1, '#7fd4ff'); }
           c.restore();
         }
-        // mảnh san hô văng (vẽ tạm; prompt hu-manh-san-ho): bay ra trong 0,2 giây trước mốc moc[1], rơi tan sau đó
+        // mảnh san hô văng: bay ra trong 0,2 giây trước mốc moc[1], rơi tan sau đó
         const v = clamp((o.age - (T2 - 0.2)) / 0.2, 0, 1);
-        if (v > 0 && o.age < T2 + 0.4) {
+        // ảnh hu-manh-san-ho (dài 14 khi co 1, bay sang phải, xoay theo hướng văng g): đang bay khung 1–4, chạm sàn (sau moc[1]) khung 5–6 vỡ tan
+        if (v > 0 && o.age < T2 + 0.4 && KA('hu-manh-san-ho')) {
+          const f = o.age < T2 ? Math.min(3, Math.floor(v * 4)) : 4 + Math.min(1, Math.floor(((o.age - T2) / 0.4) * 2)), mo = o.age > T2 ? clamp(1 - (o.age - T2 - 0.2) / 0.2, 0, 1) : 1;
+          M.forEach(([px, py, g], i) => { const d = S.manhDai * v * (0.55 + 0.45 * hh(i, 1)), x = px + Math.cos(g) * d, y = py + Math.sin(g) * d - Math.sin(v * PI) * 10; FA().veK(c, 'hu-manh-san-ho', x, y, f, g, 1, false, mo); });
+        } else if (v > 0 && o.age < T2 + 0.4) { // thiếu ảnh / ?fxcu=1: vẽ tạm bằng code
           c.save(); c.globalAlpha *= o.age > T2 ? clamp(1 - (o.age - T2) / 0.4, 0, 1) : 1;
           M.forEach(([px, py, g], i) => { const d = S.manhDai * v * (0.55 + 0.45 * hh(i, 1)), x = px + Math.cos(g) * d, y = py + Math.sin(g) * d - Math.sin(v * PI) * 10; p(c, x - 2, y - 2, 4, 3, '#14182e'); p(c, x - 1, y - 2, 3, 2, i % 2 ? '#ff7a8a' : '#ff9eb0'); p(c, x - 1, y - 2, 1, 1, '#ffe0e6'); });
           c.restore();
@@ -264,7 +271,9 @@
           },
           ve(c, o) {
             const u = clamp(o.age / S.giay, 0, 1), nh = 1 + 0.12 * u * Math.abs(Math.sin(o.age * (6 + 14 * u))); // phồng nhịp nhanh dần khi sắp nổ
-            if (coAnh('hu-nam-moc')) { FA().veK(c, 'hu-nam-moc', o.x, o.y, o.age < 0.3 ? Math.floor(o.age / 0.06) : 4, 0, 0.5 * nh, false, 1); return; }
+            // ảnh hu-nam-con (cao 18 ở khung 4 khi co 1, neo chân): trồi khung 1–2 (0,3 giây), nhún khung 3–4, 40% cuối phồng to khung 5 → 6
+            if (KA('hu-nam-con')) { const f = o.age < 0.3 ? Math.floor(o.age / 0.15) : u < 0.6 ? 2 + (Math.floor(o.age * 4) % 2) : u < 0.85 ? 4 : 5; if (FA().veK(c, 'hu-nam-con', o.x, o.y, Math.min(5, f), 0, 1, false, 1)) return; }
+            if (!KA('hu-nam-con') && coAnh('hu-nam-moc')) { FA().veK(c, 'hu-nam-moc', o.x, o.y, o.age < 0.3 ? Math.floor(o.age / 0.06) : 4, 0, 0.5 * nh, false, 1); return; }
             const x = o.x, y = o.y, r = 5 * nh;
             elip(c, x, y, 5, 2, 'rgba(0,0,0,0.3)');
             p(c, x - 1, y - 5, 3, 5, '#e8e0c4');
@@ -299,6 +308,9 @@
           const f = Math.min(5, Math.floor(o.age / 0.07)), rung = o.age > S.giu - S.bao && Math.floor(o.age * 14) % 2 ? 1 : 0; // sắp vỡ: rung
           for (const t of TU) for (let y = t.y0 + 6; y <= t.y1 + 0.5; y += 10) {
             const x = t.x + (rung ? (y % 20 ? 1 : -1) : 0);
+            // ảnh hu-tuong-tinh-the (rộng 16 khi co 1, neo chân, mỗi 10 điểm một khúc như ảnh tạm): trồi khung 1–3 (0,21 giây), đứng khung 4,
+            // lúc rung sắp vỡ (bao giây cuối) khung 5 rạn, 0,15 giây cuối khung 6 vỡ (rồi hu-bang-vo như cũ). Khúc xen kẽ lật cho đỡ lặp.
+            if (KA('hu-tuong-tinh-the')) { const g = o.age < 0.21 ? Math.floor(o.age / 0.07) : o.age < S.giu - S.bao ? 3 : o.age < S.giu - 0.15 ? 4 : 5; FA().veK(c, 'hu-tuong-tinh-the', x, y, g, 0, 1, (y / 10) % 2 > 1, 1); continue; }
             if (coAnh('hu-gai-bang')) { FA().veK(c, 'hu-gai-bang', x, y, f, 0, 0.9, (y / 10) % 2 > 1, 1); continue; }
             const h = Math.round(10 * Math.min(1, o.age / 0.3)) + 4;
             p(c, x - 4, y - h, 8, h, '#14182e'); p(c, x - 3, y - h + 1, 6, h - 1, '#5fb8e0'); p(c, x - 2, y - h + 1, 2, h - 2, '#d8f6ff'); p(c, x + 1, y - h + 2, 1, 2, '#ffffff');
@@ -415,6 +427,9 @@
               const f = i / n, dd = Math.abs(f - 0.5) * 2;
               if (dd > rot) continue; // rót từ giữa ra hai đầu
               const x = g.x + Math.cos(g.ang) * g.len * f, y = g.y + Math.sin(g.ang) * g.len * f;
+              // ảnh hu-vet-dau (nhìn từ trên, rộng 18 = bề rộng vệt khi co 1 → co theo S.rong): đang rót khung 1–2, loang óng ánh khung 3–4,
+              // 0,4 giây cuối trước khi châm lửa khung 5–6 (mép đỏ, tia lửa). Mỗi chấm lệch pha.
+              if (!chay && KA('hu-vet-dau')) { const f = v.age < 0.25 ? Math.floor(v.age / 0.125) : v.age < S.cho - 0.4 ? 2 + ((Math.floor(v.age * 6) + i) % 2) : 4 + ((Math.floor(v.age * 10) + i) % 2); FA().veK(c, 'hu-vet-dau', x, y, f, 0, S.rong / 18, i % 2 === 1, 1); continue; }
               if (!chay) { elip(c, x, y, 7, 4, 'rgba(40,24,10,0.75)'); p(c, x - 2, y - 1, 3, 1, 'rgba(160,130,60,0.8)'); continue; }
               if (coAnh('hu-vung-lua')) { FA().veK(c, 'hu-vung-lua', x, y, (Math.floor(v.age * 10) + i) % 6, 0, 0.42, false, 1); continue; }
               const fl = Math.floor(v.age * 12 + i) % 3;
