@@ -567,7 +567,7 @@
       if (typeof l !== 'string') continue;
       const v = viOf(S.result, l); // nhận loại theo bản tiếng Việt của dòng
       if (v.indexOf('Trong ải') === 0) continue;
-      const k = /vàng/.test(v) ? 'gold' : /quặng/.test(v) ? 'ore' : /đá tôi|đá nâng bậc|bùa giữ bậc/.test(v) ? 'stone' : /mảnh/.test(v) ? 'shard' + S.r : /kinh nghiệm/.test(v) ? 'xp' : /^\+\d+ /.test(v) ? 'mat' + S.r : null;
+      const k = /vàng/.test(v) ? 'gold' : /quặng/.test(v) ? 'ore' : /đá tôi|đá nâng bậc|bùa giữ bậc/.test(v) ? 'stone' : /mảnh/.test(v) ? 'shard' + S.r : /kinh nghiệm/.test(v) ? 'xp' : /^\+\d+ /.test(v) ? 'mat' + (G.matAi ? G.matAi(S.r, S.i) : S.r) : null; // vùng 4: nguyên liệu vùng cũ theo ải
       if (k) items.push({ kind: k, s: l });
     }
     items.forEach((it, i) => {

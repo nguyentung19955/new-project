@@ -10,8 +10,8 @@
   const D = (G.doRoi = {});
   const OL = '#120c08';
   const TAU = Math.PI * 2;
-  const NHAN = { linhkhi: 1, gold: 1, ore: 1, stone: 1, mat0: 1, mat1: 1, mat2: 1, shard0: 1, shard1: 1, shard2: 1, xp: 1 }; // loại hút xa
-  const MAU_TRUM = ['#8ac84a', '#5ab0f0', '#ff8a4a']; // màu mảnh trùm theo vùng (Mộc Tinh, Ngư Tinh, Hồ Tinh)
+  const NHAN = { linhkhi: 1, gold: 1, ore: 1, stone: 1, mat0: 1, mat1: 1, mat2: 1, shard0: 1, shard1: 1, shard2: 1, shard3: 1, xp: 1 }; // shard3: Thuồng Luồng (vùng 4) // loại hút xa
+  const MAU_TRUM = ['#8ac84a', '#5ab0f0', '#ff8a4a', '#4ac0a0']; // màu mảnh trùm theo vùng (Mộc Tinh, Ngư Tinh, Hồ Tinh)
   const cache = new Map();
 
   function canvas(w, h) { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; return cv; }
