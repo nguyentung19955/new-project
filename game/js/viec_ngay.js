@@ -141,18 +141,25 @@
     return v;
   }
   VN.taoViec = function (sv, key) {
-    const o = sv.nv, rng = G.ngay.ngauNhien(G.ngay.bam(key + ':' + o.hat));
-    const mo = [];
+    const o = sv.nv, mo = [];
     for (const t of CF.mau) { const x = dieuKien(t, sv, key); if (x != null) mo.push({ t, x }); }
-    const tranh = new Set(String(o.hom || '').split(',').filter(Boolean)), bo = new Set(), nhomBo = new Set(), ds = [];
-    // chọn ô Khó trước (ít mẫu nhất), rồi Vừa, rồi Dễ; xếp lại Dễ → Khó
-    for (let i = Math.min(CF.soViec, 3) - 1; i >= 0; i--) {
-      const q = chonMau(mo, rng, i, bo, nhomBo, tranh);
-      if (!q) continue;
-      bo.add(q.t.m); nhomBo.add(q.t.nhom);
-      ds.unshift(viecMoi(q, i, sv));
+    const tranh = new Set(String(o.hom || '').split(',').filter(Boolean));
+    // chọn ô Khó trước (ít mẫu nhất), rồi Vừa, rồi Dễ; xếp lại Dễ → Khó. Chọn tham lam có thể kẹt (Khó lấy mất nhóm mà Vừa cần để tránh
+    // việc hôm qua) → thử thêm vài lần với hạt giống phụ, lấy bộ đầu tiên ít trùng hôm qua nhất (vẫn có định: cùng ngày + cùng hạt ra cùng bộ).
+    let tot = null, it = 1e9;
+    for (let lan = 0; lan < 8 && it > 0; lan++) {
+      const rng = G.ngay.ngauNhien(G.ngay.bam(key + ':' + o.hat + (lan ? ':' + lan : '')));
+      const bo = new Set(), nhomBo = new Set(), ds = [];
+      for (let i = Math.min(CF.soViec, 3) - 1; i >= 0; i--) {
+        const q = chonMau(mo, rng, i, bo, nhomBo, tranh);
+        if (!q) continue;
+        bo.add(q.t.m); nhomBo.add(q.t.nhom);
+        ds.unshift({ q, i });
+      }
+      const trung = ds.filter((v) => tranh.has(v.q.t.m)).length;
+      if (trung < it || (trung === it && ds.length > tot.length)) { tot = ds; it = trung; }
     }
-    return ds;
+    return (tot || []).map((v) => viecMoi(v.q, v.i, sv));
   };
 
   // ---------- thưởng ----------

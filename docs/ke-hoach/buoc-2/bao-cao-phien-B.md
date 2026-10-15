@@ -36,7 +36,8 @@ Không sửa `village.js`, `village_scene.js` (Phiên 0 đã nối sẵn hàng t
 - Ngày theo giờ máy (`G.ngay`, trùng ải ngày, đổi lúc 0 giờ). **Ngày lùi giờ máy**: giữ nguyên việc + tiến độ, không ra việc mới (chỉ tiến khi ngày > `nv.cuoi`).
 - Chọn việc theo hạt giống `ngày + nv.hat` (hạt riêng của bản lưu, đi theo lưu mây) → tải lại / đổi máy ra đúng 3 việc. Lọc mẫu hợp tiến độ
   (ví dụ chưa có vũ khí Thức tỉnh thì không ra "phản ứng hệ"; chưa mở ải ngày / hết lượt thì không ra "Thắng 1 lượt Ải ngày").
-  Chọn ô Khó trước, rồi Vừa, rồi Dễ; khác nhóm; tránh mẫu của hôm qua nếu còn mẫu khác; mức thiếu mẫu thì lấy mẫu mức thấp hơn, thưởng vẫn theo ô.
+  Chọn ô Khó trước, rồi Vừa, rồi Dễ; khác nhóm; tránh mẫu của hôm qua nếu còn mẫu khác (chọn tham lam bị kẹt thì thử thêm tối đa 7 hạt giống phụ
+  `ngày:hạt:lần`, lấy bộ đầu tiên ít trùng hôm qua nhất — sửa theo ghi chú của Phiên A khi gộp sổ); mức thiếu mẫu thì lấy mẫu mức thấp hơn, thưởng vẫn theo ô.
 - Đếm từ lúc nhận việc; tính ải thường, ải ngày, độ khó 2; **không tính ải hướng dẫn**; thua ải vẫn giữ số đã làm.
 - Mẫu "Hạ 8 con <quái có trang sổ>" và "Tìm ra điểm yếu của 1 quái mới" đọc `sv.so` của Phiên A: chưa có Sổ yêu quái (hoặc sổ chưa đủ 3 trang ★) thì hai mẫu này tự không ra.
   "Tìm ra điểm yếu" đếm số trang `k = 1` **tăng thêm** từ lúc nhận việc (không phụ thuộc thứ tự nghe sự kiện với Phiên A).
@@ -52,7 +53,9 @@ Không sửa `village.js`, `village_scene.js` (Phiên 0 đã nối sẵn hàng t
 ## 2. Commit
 
 - `ebcd0c4b` — Phiên B: `viec_ngay.js`, khối `G.VIEC_NGAY` cuối `data.js`, nút Tạm dừng, bài Node, ảnh soát, dist.
-- Commit báo cáo này (ngay sau).
+- `071acdd0` — báo cáo này.
+- Commit sửa sau khi gộp Phiên A + C: chọn việc thử thêm hạt giống phụ để không lặp việc hôm qua khi có sổ (bài `viec_ngay.test.js` PASS 36 lại);
+  sau gộp: `su_kien.test.js` 83, `so_yeu_quai.test.js` 41, `thanh_tuu.test.js` 35, `cloud_save_regression` đều PASS.
 
 ## 3. Cờ quay lui
 
