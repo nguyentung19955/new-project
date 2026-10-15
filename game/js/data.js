@@ -390,6 +390,16 @@
   // quanh hình vũ khí (trên tay Zed và trong ô), vệt trắng lướt theo cấp mài. Chỉ đổi HÌNH. Tắt: ?vienvk=0 (như trước).
   G.VIEN_VK = true;
   try { if (typeof location !== 'undefined' && /[?&]vienvk=0(&|$)/.test(location.search || '')) G.VIEN_VK = false; } catch (e) { /* giữ mặc định */ }
+  // NẮM CHUÔI THẬT (15/10/2026, docs/review/ke-hoach-cai-thien/vk-khop-tay/bao-cao.md, js/zed_moi.js): nắm tay ôm chuôi + lớp ngón tay trước;
+  // thương hai tay (tay phải đuôi cán, tay trái thân cán); phi tiêu to ×1,3 và kẹp ở ngón. Chỉ đổi HÌNH. Tắt từng phần như trước:
+  // ?namchuoi=0 (tất cả), ?thuong2tay=0 (hàng thương), ?phitieuto=0 (phi tiêu cầm + bay).
+  G.NAM_CHUOI = true; G.THUONG_2TAY = true; G.PHI_TIEU_TO = true;
+  try {
+    const q = (typeof location !== 'undefined' && location.search) || '';
+    if (/[?&]namchuoi=0(&|$)/.test(q)) G.NAM_CHUOI = false;
+    if (/[?&]thuong2tay=0(&|$)/.test(q)) G.THUONG_2TAY = false;
+    if (/[?&]phitieuto=0(&|$)/.test(q)) G.PHI_TIEU_TO = false;
+  } catch (e) { /* giữ mặc định */ }
   // ĐÒN ZED MỚI QUAY THEO HƯỚNG NHẮM (13/10/2026, docs/review/ke-hoach-cai-thien/zed-8-huong): js/zed_moi.js xoay vũ khí đâm/ném quanh nắm tay
   // theo góc nhắm thật (kẹp ±75°, quá thì nghiêng nhẹ thân trên), chém/quét/nện nghiêng đường vung tối đa ±35°; vệt/hiệu ứng (js/fx.js aimed)
   // xoay cùng góc. Chỉ đổi HÌNH. Tắt: ?huongvk=0 (vũ khí chỉ vẽ ngang theo neo như trước).
