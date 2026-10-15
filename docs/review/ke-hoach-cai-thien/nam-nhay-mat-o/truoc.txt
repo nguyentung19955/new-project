@@ -1,0 +1,30 @@
+namPhongChua  dung             có chiêu  40 · đủ   0 · thiếu/trùng  40 (ô trùng chỗ  40) · báo không nổ   0 · lăn không báo   0 · báo ngắt   0
+namPhongChua  dung+gian        có chiêu  40 · đủ   0 · thiếu/trùng  40 (ô trùng chỗ  40) · báo không nổ   0 · lăn không báo   0 · báo ngắt   0
+namPhongChua  dung+danh        có chiêu  40 · đủ   0 · thiếu/trùng  40 (ô trùng chỗ  13) · báo không nổ  26 · lăn không báo   0 · báo ngắt   0
+namPhongChua  dung+gian+danh   có chiêu  40 · đủ   0 · thiếu/trùng  40 (ô trùng chỗ  15) · báo không nổ  23 · lăn không báo   0 · báo ngắt   0
+namPhongChua  chay             có chiêu  40 · đủ   8 · thiếu/trùng  32 (ô trùng chỗ  32) · báo không nổ   0 · lăn không báo   0 · báo ngắt   0
+namPhongChua  chay+gian        có chiêu  40 · đủ   9 · thiếu/trùng  31 (ô trùng chỗ  31) · báo không nổ   0 · lăn không báo   0 · báo ngắt   0
+namPhongChua  chay+danh        có chiêu  40 · đủ   0 · thiếu/trùng  40 (ô trùng chỗ   7) · báo không nổ  26 · lăn không báo   0 · báo ngắt   0
+namPhongChua  chay+gian+danh   có chiêu  40 · đủ   2 · thiếu/trùng  38 (ô trùng chỗ  11) · báo không nổ  23 · lăn không báo   0 · báo ngắt   0
+namPhongChua  dung+danh muon   có chiêu  40 · đủ   0 · thiếu/trùng  40 (ô trùng chỗ  26) · báo không nổ   8 · lăn không báo   0 · báo ngắt   0
+namPhongChua  chay+gian+danh muon có chiêu  40 · đủ   6 · thiếu/trùng  34 (ô trùng chỗ  28) · báo không nổ   1 · lăn không báo   0 · báo ngắt   0
+caNocChua     dung             có chiêu  40 · đủ  40 · thiếu/trùng   0 (ô trùng chỗ   0) · báo không nổ   0 · lăn không báo   0 · báo ngắt   0
+caNocChua     dung+gian        có chiêu  40 · đủ  40 · thiếu/trùng   0 (ô trùng chỗ   0) · báo không nổ   0 · lăn không báo   0 · báo ngắt   0
+caNocChua     dung+danh        có chiêu  40 · đủ   0 · thiếu/trùng  40 (ô trùng chỗ   0) · báo không nổ  18 · lăn không báo  19 · báo ngắt   0
+caNocChua     dung+gian+danh   có chiêu  40 · đủ   0 · thiếu/trùng  40 (ô trùng chỗ   0) · báo không nổ  11 · lăn không báo  28 · báo ngắt   0
+caNocChua     chay             có chiêu  40 · đủ  40 · thiếu/trùng   0 (ô trùng chỗ   0) · báo không nổ   0 · lăn không báo   0 · báo ngắt   0
+caNocChua     chay+gian        có chiêu  40 · đủ  40 · thiếu/trùng   0 (ô trùng chỗ   0) · báo không nổ   0 · lăn không báo   0 · báo ngắt   0
+caNocChua     chay+danh        có chiêu  40 · đủ   0 · thiếu/trùng  40 (ô trùng chỗ   0) · báo không nổ  18 · lăn không báo  19 · báo ngắt   0
+caNocChua     chay+gian+danh   có chiêu  40 · đủ   0 · thiếu/trùng  40 (ô trùng chỗ   0) · báo không nổ  11 · lăn không báo  28 · báo ngắt   0
+caNocChua     dung+danh muon   có chiêu  40 · đủ   0 · thiếu/trùng  40 (ô trùng chỗ   0) · báo không nổ  11 · lăn không báo  29 · báo ngắt   0
+caNocChua     chay+gian+danh muon có chiêu  40 · đủ   1 · thiếu/trùng  39 (ô trùng chỗ   0) · báo không nổ   2 · lăn không báo  37 · báo ngắt   0
+huChua        dung             có chiêu  40 · đủ  40 · thiếu/trùng   0 (ô trùng chỗ   0) · báo không nổ   0 · lăn không báo   0 · báo ngắt   0
+huChua        dung+gian        có chiêu  40 · đủ  40 · thiếu/trùng   0 (ô trùng chỗ   0) · báo không nổ   0 · lăn không báo   0 · báo ngắt   0
+huChua        dung+danh        có chiêu  14 · đủ  14 · thiếu/trùng   0 (ô trùng chỗ   0) · báo không nổ   0 · lăn không báo   0 · báo ngắt   0
+huChua        dung+gian+danh   có chiêu  25 · đủ  25 · thiếu/trùng   0 (ô trùng chỗ   0) · báo không nổ   0 · lăn không báo   0 · báo ngắt   0
+huChua        chay             có chiêu  40 · đủ  40 · thiếu/trùng   0 (ô trùng chỗ   0) · báo không nổ   0 · lăn không báo   0 · báo ngắt   0
+huChua        chay+gian        có chiêu  40 · đủ  40 · thiếu/trùng   0 (ô trùng chỗ   0) · báo không nổ   0 · lăn không báo   0 · báo ngắt   0
+huChua        chay+danh        có chiêu  14 · đủ  14 · thiếu/trùng   0 (ô trùng chỗ   0) · báo không nổ   0 · lăn không báo   0 · báo ngắt   0
+huChua        chay+gian+danh   có chiêu  25 · đủ  25 · thiếu/trùng   0 (ô trùng chỗ   0) · báo không nổ   0 · lăn không báo   0 · báo ngắt   0
+huChua        dung+danh muon   có chiêu  31 · đủ  31 · thiếu/trùng   0 (ô trùng chỗ   0) · báo không nổ   0 · lăn không báo   0 · báo ngắt   0
+huChua        chay+gian+danh muon có chiêu  38 · đủ  38 · thiếu/trùng   0 (ô trùng chỗ   0) · báo không nổ   0 · lăn không báo   0 · báo ngắt   0

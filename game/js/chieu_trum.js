@@ -34,7 +34,7 @@
     "hoPhanThan": { "le": [18, 12], "rong": 34, "sat": 1.1, "dau": 0.3, "buoc": 0.12, "bao": 0.3, "lao": 0.22, "mo": 0.7, "met": 1.0, "ngat": 1.0 },
     "namMe": { "so": 3, "R": 46, "giay": 2.5, "r": 30, "sat": 0.8, "may": 3, "chem": 30 },
     "cuaTuong": { "cach": 70, "nua": 0.36, "day": 10, "satDung": 1.0, "giu": 3.0, "bao": 1.0, "hang": 30, "manhDai": 96, "manhRong": 14, "sat": 1.0 },
-    "namPhongNhay": { "lan": 3, "dau": 0.2, "cach": 0.4, "bao": 0.6, "bay": 0.35, "xa": 60, "cao": 26, "r": 24, "sat": 1.0, "may": 3 },
+    "namPhongNhay": { "lan": 3, "dau": 0.2, "cach": 0.4, "bao": 0.6, "bay": 0.35, "xa": 60, "tach": 44, "cao": 26, "r": 24, "sat": 1.0, "may": 3 },
     "caNocLan": { "nay": 3, "giay": 1.9, "tocMin": 120, "tocMax": 260, "r": 14, "le": 12, "baoMin": 0.7, "sat": 0.8, "phong": 1.35 },
     "huDau": { "tay": 70, "rong": 18, "cho": 1.0, "chay": 2.0, "sat": 0.8, "nhip": 0.5, "satChay": 0.3 }
   }/*HET-SO*/;
@@ -366,23 +366,87 @@
   // TINH ANH (móc ở thinkElite của js/mobs.js): trả true nếu đã chuẩn bị chiêu mới (o: tuỳ chọn của begin())
   // =====================================================================
   const song = (e, tok) => !e.dead && !!e.act && e.act.ct === tok && !(e.st && (e.st.stun > 0 || e.st.frozen > 0));
+  // 15/10 nam-nhay-mat-o: chiêu nhiều lượt của tinh anh bị CHOÁNG / ĐÔNG giữa chừng thì DỪNG HẲN và báo rõ (chữ "Ngắt chiêu!"), không
+  // bỏ lặng lẽ một lượt rồi chạy tiếp lượt sau như trước (trước: mỗi lượt hẹn giờ G.later tự hỏi song() lúc tới giờ → lượt rơi đúng lúc
+  // choáng bị bỏ, lượt sau vẫn chạy → mất 1 ô / thân lăn trên đoạn chưa có vạch báo). Bộ canh chiêu là một vật tự quản (vat) nên được hỏi
+  // MỖI KHUNG kể cả lúc tinh anh đang choáng (js/mobs.js bỏ qua stepAct khi choáng). kq: hàm dọn riêng của từng chiêu lúc bị ngắt.
+  // Chết thì không báo (vùng có cancel: true tự huỷ theo luật chung). CT.soNgat: đếm số lần ngắt (mô phỏng Node đọc).
+  CT.soNgat = 0;
+  function canhChieu(e, tok, het, kq) {
+    const v = vat({ x: e.x, y: e.y, xong: false,
+      buoc(o) {
+        if (o.xong) return false;
+        if (e.dead || o.age > het) { o.xong = true; return false; }
+        const choang = !!(e.st && (e.st.stun > 0 || e.st.frozen > 0)), conChieu = !!e.act && e.act.ct === tok;
+        if (!choang && conChieu) return true;
+        o.xong = true;
+        if (conChieu) e.act.end = Math.min(e.act.end, e.act.t); // hết chiêu ngay khi hết choáng (không chạy tiếp phần còn lại)
+        if (choang) {
+          CT.soNgat++;
+          FX('text', e.x, e.y - (e.h || 30) - 8, 'Ngắt chiêu!', '#ffd23f', 9); // chuỗi tĩnh, đã có bản dịch (tools/ngon-ngu/tu-dien/chieu-trum.json)
+          FX('burst', e.x, e.y - (e.h || 24) * 0.5, '#ffd23f', 8, 60);
+          G.sfx('hit', 0.8);
+        }
+        if (kq) kq(choang);
+        return false;
+      } });
+    return v;
+  }
   // Nấm Phồng Chúa · NHẢY DẬP: nhảy 3 lần về phía em bé (mỗi lần xa nhất xa), mỗi chỗ đáp có bóng tròn (vùng đỏ) báo trước bao giây rồi nổ
   // vòng khí độc nhỏ, để lại vũng độc như mưa bào tử cũ. Lần đáp đầu đúng lúc quả bào tử đầu cũ rơi (T + dau).
+  // 15/10 nam-nhay-mat-o — sửa "hay mất 1 ô độc":
+  //  1. Chỗ đáp: trước nhảy thẳng tới em bé, tối đa xa → em bé đứng trong tầm (chiêu chỉ tung khi cách < 170, thường 1–2 cú là tới) thì
+  //     cú 2, 3 đáp ĐÚNG CÙNG CHỖ (ô sau đè khít ô trước, nhìn như mất 1 ô); sát tường thì trong() kẹp các ô về một chỗ. Nay mỗi chỗ đáp
+  //     cách MỌI chỗ đáp trước ≥ tach (44, đo trên sàn: trục dọc chia G.ZK) — em bé gần quá thì nhảy VƯỢT qua em bé cho đủ tach; kẹp
+  //     tường mà trùng thì xoay hướng (±30°, ±60°, ±90°, ±130°, quay lại) tới chỗ đủ xa.
+  //  2. Bị choáng / đông giữa chừng (búa "stagger", đông băng): trước lượt nào rơi đúng lúc choáng bị bỏ lặng lẽ, lượt sau chạy tiếp;
+  //     choáng trước mốc ra đòn thì js/mobs.js cancelZones xoá luôn vòng đầu đang báo (vòng đỏ hiện rồi biến, không nổ). Nay: chiêu DỪNG
+  //     HẲN (canhChieu: "Ngắt chiêu!"), không ô mới, không cú nhảy mới; vòng nào ĐÃ hiện vẫn nổ đúng giờ (knGiu: không tắt theo choáng).
+  //  Tinh anh chết: các vòng chưa nổ huỷ như mọi vùng báo (cancel: true).
   function namPhongNhay(e, P, a, T, D, o) {
-    const S = SO.namPhongNhay, tok = {};
+    const S = SO.namPhongNhay, tok = {}, diem = [], lich = [];
     o.ct = tok; o.end = Math.max(D, T + S.dau + (S.lan - 1) * S.cach + 0.15);
-    let lx = e.x, ly = e.y;
-    for (let k = 0; k < S.lan; k++) {
-      const land = T + S.dau + k * S.cach, q = [0, 0];
-      let ok = false;
-      G.later(land - S.bao, () => {
-        if (!song(e, tok)) return;
-        const dx = P.x - lx, dy = P.y - ly, d = Math.hypot(dx, dy) || 1, s = Math.min(1, S.xa / d), t = trong(lx + dx * s, ly + dy * s, 6);
-        q[0] = lx = t[0]; q[1] = ly = t[1]; ok = true;
-        G.mobZone('circle', { x: q[0], y: q[1], r: S.r }, S.bao, e.dmg * S.sat, 'poison', { src: e, cancel: true, then: S.may, onFire: (z) => { if (!anh('hu-no-doc', z.x, z.y, { sc: S.r / 40, t: 0.5, gian: true, mr: true })) FX('burst', z.x, z.y - 4, '#c4f43c', 12, 70); W().shake = Math.max(W().shake, 0.12); } });
-      });
-      G.later(land - S.bay, () => { if (ok && song(e, tok)) { mat(e, Math.atan2(q[1] - e.y, q[0] - e.x)); nhay(e, q[0], q[1], S.bay, S.cao); } });
+    let lx = e.x, ly = e.y, huong = a;
+    const kc = (x0, y0, x1, y1) => Math.hypot(x1 - x0, (y1 - y0) / ZK());
+    const xaDu = (q) => diem.every((d) => kc(q[0], q[1], d[0], d[1]) >= S.tach);
+    function chon() {
+      const dx = P.x - lx, dy = P.y - ly, d = Math.hypot(dx, dy);
+      if (d > 4) huong = Math.atan2(dy, dx);
+      const buoc = clamp(d, S.tach, S.xa); // tới em bé (tối đa xa); gần quá thì vượt qua cho đủ tach
+      let tot = null, xaNhat = -1;
+      for (const lech of [0, 0.5, -0.5, 1, -1, 1.6, -1.6, 2.3, -2.3, PI]) {
+        for (const L of [buoc, S.xa]) {
+          const q = trong(lx + Math.cos(huong + lech) * L, ly + Math.sin(huong + lech) * L, 6);
+          if (xaDu(q) && kc(lx, ly, q[0], q[1]) >= S.tach * 0.9) return q;
+          const m = diem.length ? Math.min(...diem.map((p0) => kc(q[0], q[1], p0[0], p0[1]))) : 1e9;
+          if (m > xaNhat) { xaNhat = m; tot = q; }
+        }
+      }
+      return tot; // phòng quá chật (không xảy ra với sàn thật): chỗ xa các ô trước nhất
     }
+    for (let k = 0; k < S.lan; k++) {
+      const land = T + S.dau + k * S.cach;
+      lich.push({ t: land - S.bao, k, bao: true }, { t: land - S.bay, k, bao: false });
+    }
+    lich.sort((x, y) => x.t - y.t || (x.bao ? -1 : 1));
+    const v = canhChieu(e, tok, o.end + 0.5);
+    const buoc0 = v.buoc;
+    v.buoc = (q, dt, P2) => {
+      if (buoc0(q, dt, P2) === false) return false;
+      while (lich.length && lich[0].t <= q.age + 1e-6) {
+        const m = lich.shift();
+        if (m.bao) {
+          const t = chon();
+          diem[m.k] = t; lx = t[0]; ly = t[1];
+          // báo trước đúng S.bao kể từ mốc hẹn (khung này có thể trễ vài ms so với mốc)
+          G.mobZone('circle', { x: t[0], y: t[1], r: S.r }, Math.max(0.05, S.bao - (q.age - m.t)), e.dmg * S.sat, 'poison', { src: e, cancel: true, knGiu: true, then: S.may, onFire: (z) => { if (!anh('hu-no-doc', z.x, z.y, { sc: S.r / 40, t: 0.5, gian: true, mr: true })) FX('burst', z.x, z.y - 4, '#c4f43c', 12, 70); W().shake = Math.max(W().shake, 0.12); } });
+        } else if (diem[m.k]) {
+          const t = diem[m.k];
+          mat(e, Math.atan2(t[1] - e.y, t[0] - e.x)); nhay(e, t[0], t[1], Math.max(0.05, S.bay - (q.age - m.t)), S.cao);
+        }
+      }
+      return lich.length > 0; // hết lịch (ô 3 đã báo, cú nhảy 3 đã bắt đầu — thân bay nốt dù bị choáng): không còn gì để ngắt
+    };
   }
   // Cá Nóc Chúa · PHỒNG LĂN: phồng tròn (lấy đà T), rồi lăn nảy dội tường 3 lần khắp phòng theo hướng em bé (phản xạ gương ở mép sàn).
   // Mỗi đoạn có đường đỏ báo trước ≥ baoMin giây trước lúc lăn vào; thân lăn chạm em bé thì trúng (một lần mỗi đoạn).
@@ -410,9 +474,15 @@
     for (const d of duong) { d.s0 = s; d.t0 = T + s / v; s += d.len; d.t1 = T + s / v; }
     const R = tong / v;
     o.ct = tok; o.anim0 = 'chieu1'; o.anim1 = 'idle'; o.end = T + R + 0.25;
+    // 15/10 nam-nhay-mat-o: cùng lỗi với Nhảy dập — choáng / đông giữa lúc lăn: trước vạch báo của đoạn hẹn đúng lúc choáng bị bỏ, hết
+    // choáng thân lăn tiếp (cử động đứng yên lúc choáng nên lăn TRỄ) vào đoạn không còn / chưa từng có vạch báo. Nay dừng hẳn (canhChieu),
+    // xoá các vạch báo còn lại (đường đó không còn lăn nữa), chữ "Ngắt chiêu!".
+    let dung = false;
+    const vach = [];
+    canhChieu(e, tok, T + R, () => { dung = true; for (const z of vach) if (z.t > 0) z.dead = true; }); // lăn xong (T + R) thì thôi canh
     duong.forEach((d, k) => {
       const tao = Math.max(0, d.t0 - Math.max(S.baoMin, k ? 0 : T));
-      const mk = (ngay) => { if (ngay ? !e.dead : song(e, tok)) G.mobZone('line', { x: d.x0, y: d.y0, ang: d.ang, len: d.len, w: S.r * 2 }, Math.max(0.05, d.t0 - tao), 0, null, { src: e, cancel: true, ctBao: true }); };
+      const mk = (ngay) => { if (!dung && (ngay ? !e.dead : song(e, tok))) vach.push(G.mobZone('line', { x: d.x0, y: d.y0, ang: d.ang, len: d.len, w: S.r * 2 }, Math.max(0.05, d.t0 - tao), 0, null, { src: e, cancel: true, ctBao: true })); };
       if (tao <= 0) mk(true); else G.later(tao, () => mk(false)); // tạo ngay lúc ra chiêu (begin() chưa gán e.act) hoặc hẹn giờ khi chiêu còn chạy
     });
     const trung = duong.map(() => false);

@@ -1,0 +1,6 @@
+1-1: sức mạnh 100/95 thắng 40/40 |  169s (đánh quái  140s, trùm  32s) | dấu ấn  78.5 | hạ 18.6 quái | mất   28 máu trên 100 | kiểu AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+1-2: sức mạnh 107/105 thắng 40/40 |  207s (đánh quái  169s, trùm  39s) | dấu ấn  20.0 | hạ 20.9 quái | mất   65 máu trên 106 | kiểu BCCCCCBBBCBCBBCBBCCCCCBBCCCBCBCCBBBCBCBC
+1-3: sức mạnh 126/125 thắng 39/40 |  290s (đánh quái  206s, trùm  86s) | dấu ấn  35.2 | hạ 26.2 quái | mất  103 máu trên 123 | kiểu ACCACACCACCACCAAACAAAAACACACCAAACCAAACAC
+1-4: sức mạnh 141/140 thắng 37/40 |  322s (đánh quái  274s, trùm  50s) | dấu ấn  43.6 | hạ 39.1 quái | mất  131 máu trên 136 | kiểu CCACAAAACCAAAAAACACCCAAAACCCAACCAAACAAAC
+1-5: sức mạnh 174/175 thắng 32/40 |  339s (đánh quái  250s, trùm  90s) | dấu ấn  56.6 | hạ 40.2 quái | mất  212 máu trên 156 | kiểu CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+TỔNG: thắng 188/200 | một ải trung bình 261 giây (4.4 phút) | trùm 58 giây | dấu ấn 46.5 mỗi ải | hạ 28.4 quái mỗi ải | mất 78% máu mỗi ải
