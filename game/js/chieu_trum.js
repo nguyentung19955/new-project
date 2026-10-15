@@ -40,8 +40,7 @@
     "huDau": { "tay": 70, "rong": 18, "cho": 1.0, "chay": 2.0, "sat": 0.8, "nhip": 0.5, "satChay": 0.3 }
   }/*HET-SO*/;
   CT.SO = SO;
-  // 15/10 sua-can-bang (bao-cao-C mục 6b): mảnh san hô Bổ rìu Ngư Tinh 1,4 → 1,0 (nhát bổ chính giữ 1,4). ?cbcu=1 (G.CB_CU, js/data.js): số cũ.
-  if (G.CB_CU) SO.nguBoRiu.manhSat = 1.4;
+  // 15/10 sua-can-bang (bao-cao-C mục 6b): mảnh san hô Bổ rìu Ngư Tinh 1,4 → 1,0 (nhát bổ chính giữ 1,4).
   // Chiêu cũ để so (đọc từ js/boss.js, js/mobs.js trước phiên này): hệ số sát thương mỗi lần trúng, cử động, mốc, hết chiêu (giây, pha 1,
   // tinh anh không có tính chất "nhanh"); "dan": đạn cũ còn bay tới lúc này.
   CT.CU = /*CU*/{

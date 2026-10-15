@@ -183,8 +183,7 @@
   // Cờ tắt: ?epdo=0 (G.EP_DO_BAT = false): bậc không có tác dụng (×1), không rơi đá, ẩn thẻ Ép đồ; dữ liệu bậc trong bản lưu giữ nguyên.
   // 15/10 sua-can-bang (docs/review/ke-hoach-cai-thien/sua-can-bang/YEU-CAU.md): 3 mục chủ game chọn — bớt quái thường ải 2-2…2-5, 3-2, 3-4
   // (G.STAGE_K, trùm giữ nguyên), Bổ rìu san hô Ngư Tinh mảnh 1,4 → 1,0 (js/chieu_trum.js), dòng Hút máu giảm nửa (G.EP_DO).
-  // Cờ quay lui chung ?cbcu=1 (G.CB_CU = true): cả 3 mục về số cũ.
-  if (G.CB_CU === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]cbcu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.CB_CU = cu; }
+  // (15/10 don-tep B: bỏ cờ quay lui ?cbcu=1 / G.CB_CU.)
   G.EP_DO = {
     ten: ['Trắng', 'Xanh lam', 'Xanh lục', 'Tím', 'Vàng', 'Đỏ', 'Rực lửa'],
     mau: ['#d6d2c8', '#5aa8ff', '#62d65a', '#c07cff', '#ffd24a', '#ff5a44', '#ff9a2a'],
@@ -209,7 +208,7 @@
       { ma: 'chiMang', ten: 'Chí mạng', goc: 0.04 },
       { ma: 'stChiMang', ten: 'Sát thương chí mạng', goc: 0.15 },
       { ma: 'trum', ten: 'Sát thương lên trùm, tinh anh', goc: 0.08 },
-      { ma: 'hutMau', ten: 'Hút máu', goc: 0.006 }, // sua-can-bang: 0,012 → 0,006 (?cbcu=1: số cũ)
+      { ma: 'hutMau', ten: 'Hút máu', goc: 0.006 }, // sua-can-bang: 0,012 → 0,006
       { ma: 'tocDanh', ten: 'Tốc đánh', goc: 0.04 },
       { ma: 'hoiChieu', ten: 'Giảm hồi chiêu đặc biệt', goc: 0.06 },
       { ma: 'linhKhi', ten: 'Linh khí nhận', goc: 0.05 },
@@ -217,14 +216,13 @@
       { ma: 'giamST', ten: 'Giảm sát thương nhận', goc: 0.03 },
     ],
     heSo: [0, 0, 0, 1, 1.25, 1.6, 2],
-    hutToiDa: 0.01,  // hút máu: mỗi đòn hồi tối đa 1% máu tối đa (sua-can-bang: 0,02 → 0,01; ?cbcu=1: số cũ)
+    hutToiDa: 0.01,  // hút máu: mỗi đòn hồi tối đa 1% máu tối đa (sua-can-bang: 0,02 → 0,01)
     // Đổi dòng (tẩy luyện): luôn thành công, ít đá hơn giá ép lên bậc kế. Theo bậc hiện tại.
     doiDong: [null, null, null, { da: 3, vang: 150 }, { da: 5, vang: 250 }, { da: 8, vang: 400 }, { da: 12, vang: 600 }],
     // Đá nâng bậc rơi từ trùm (mỗi lần hạ; lần đầu hạ ải đó nhiều hơn; độ khó 2 ×1,5). Theo vùng [1, 2, 3].
     roi: { mini: [1, 1, 2], miniDau: [2, 2, 3], vung: [3, 4, 5], vungDau: [6, 8, 10], kho2: 1.5 },
     bua: { trumVung: 0.1, thuongNhan: 600 }, // bùa giữ bậc: trùm vùng 10%; thương nhân trong ải bán 600 vàng (ải ngày Đá Bậc khó: G.AI_NGAY)
   };
-  if (G.CB_CU) { G.EP_DO.dong.forEach((d) => { if (d.ma === 'hutMau') d.goc = 0.012; }); G.EP_DO.hutToiDa = 0.02; } // ?cbcu=1: Hút máu số cũ
   G.EP_DO_BAT = true;
   try { if (typeof location !== 'undefined' && /[?&]epdo=0(&|$)/.test(location.search || '')) G.EP_DO_BAT = false; } catch (e) { /* giữ mặc định */ }
   // ẢI THEO NGÀY: giờ máy người chơi, đổi ngày lúc 00:00. thu: 0 = Chủ nhật … 6 = Thứ 7 (Date.getDay). Mở sau khi hạ trùm vùng 1.
@@ -547,13 +545,12 @@
     // ~150 · 162 · 175 · 188 → ~125 · 135 · 145 · 155 (x0,83; ba ải đầu đã tính cả x1,12 / x1,12 / x1,08 của cột quái).
     boss: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.76], [1.23, 1.67], [1.27, 1.86], [1.32, 2.54], [1.614, 2.861], [1.664, 2.933], [1.612, 3.232], [1.318, 2.706], [1.44, 2.22], [1.452, 2.363], [1.17, 2.11], [1.337, 2.65], [1.29, 2.71]],
   };
-  // sua-can-bang: số cũ của các ải đã bớt quái. Độ khó 2 luôn dùng số cũ (chưa chọn đổi); ?cbcu=1 thì độ khó 1 cũng về số cũ.
+  // sua-can-bang: số cũ của các ải đã bớt quái. Độ khó 2 luôn dùng số cũ (chưa chọn đổi).
   G.STAGE_K_CU = { 6: [[1.58, 2.14], [1.44, 2.54]], 7: [[1.63, 2.27], [1.48, 2.61]], 8: [[1.44, 2.43], [1.31, 2.62]], 9: [[1.4, 2.61], [0.96, 1.98]], 11: [[1.74, 3.25], [1.31, 2.13]], 13: [[1.62, 2.98], [1.18, 2.33]] };
   G.STAGE_K_K2 = { mob: G.STAGE_K.mob.map((x) => x.slice()), boss: G.STAGE_K.boss.map((x) => x.slice()) };
   for (const k in G.STAGE_K_CU) {
     const [m, b] = G.STAGE_K_CU[k];
     G.STAGE_K_K2.mob[k] = m.slice(); G.STAGE_K_K2.boss[k] = b.slice();
-    if (G.CB_CU) { G.STAGE_K.mob[k] = m.slice(); G.STAGE_K.boss[k] = b.slice(); }
   }
   // Độ khó thứ hai: [máu, sát thương] nhân thêm theo vùng. Trước là x2,2 máu, x1,5 sát thương cho mọi vùng; nay quái thường đã mạnh
   // theo ải, nên vùng sau nhân ít hơn để người chơi đã cày đầy (cấp 30, vũ khí Vàng) vẫn với tới được.
