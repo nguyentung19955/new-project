@@ -1196,6 +1196,7 @@
   }
   A.bg = function (cx, reg, seed, cam, width, shrink) {
     try {
+      if (G.vungVe) reg = G.vungVe(reg); // vùng 4 hình tạm: nền như vùng mượn
       if (!(reg >= 0 && reg <= 2)) return oldBg.apply(this, arguments);
       const o = info(reg, seed, width, shrink);
       let room = cache.get(o.key);
@@ -1471,7 +1472,7 @@
     door(o, x, y, t) {
       // cửa gắn vào tường sau, bậc thềm nằm trên sàn
       const yb = Math.min(y, Y + 1), W = G.getWorld ? G.getWorld() : null, S = G.getRun ? G.getRun() : null;
-      const reg = W && W.region != null ? W.region : 2, T = TH[reg] || TH[2];
+      const reg = W && W.region != null ? (G.vungVe ? G.vungVe(W.region) : W.region) : 2, T = TH[reg] || TH[2];
       const dc = /^#[0-9a-f]{6}$/i.test(o.col || '') ? o.col : '#3a2c20', dl = lite(dc, 0.3), dd = dim(dc, 0.4);
       const near = !!(S && S.near === o);
       q(x - 17, yb, 34, y - yb + 3, dim(T.frame, 0.25)); q(x - 17, yb, 34, 1, T.frameHi); q(x - 15, y + 3, 30, 1, 'rgba(0,0,0,0.35)');

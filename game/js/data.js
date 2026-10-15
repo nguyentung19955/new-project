@@ -27,6 +27,9 @@
   // js/room_art.js tileVung), cùng chuẩn bộ Rừng. Thiếu tệp bắt buộc thì vẽ code như cũ. Tắt: ?nentile=0 (hoặc G.NEN_TILE = false).
   G.NEN_TILE = true;
   if (typeof location !== 'undefined' && /[?&]nentile=0(&|$)/.test(location.search || '')) G.NEN_TILE = false;
+  // BƯỚC 3 — VÙNG 4 SÔNG SÂU (docs/ke-hoach/buoc-3/KE-HOACH.md, phiên 1 "khung chạy bằng hình tạm"). G.VUNG4 = true: thêm vùng thứ 4 (mã 'song',
+  // chỉ số 3) vào G.REGIONS và mọi bảng theo vùng / theo ải (15 → 20 ải). Tắt: ?vung4=0 (hoặc G.VUNG4 = false trước khi nạp) → game y hệt 3 vùng.
+  if (G.VUNG4 === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]vung4=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.VUNG4 = !tat; }
 
   G.EL = {
     fire: { name: 'Lửa', col: '#ff7a2a', col2: '#ffd23f', dark: '#a8320a' },
@@ -174,6 +177,8 @@
     aoTrumVung: 110,                                  // trùm vùng trước rơi trang phục Tím (75%) / Vàng (25%)
     bua: 30,                                          // bùa cũ của tinh anh (trang phục Lam)
   };
+  // Vùng 4 (G.VUNG4): phần tử thứ 4 nối theo đường tăng của 3 vùng cũ — số xuất phát, phiên cân bằng (bước 3 phiên 4) đo lại bằng bot.
+  if (G.VUNG4) { const R4 = G.ROI_MOI; R4.vk.vang.push(45); R4.vk.lk.push(10); R4.ruong.lk.push(20); R4.ao.vang.push(30); R4.aoTrum.vang.push(38); }
   // Dòng phụ: bậc Lam có 1, Tím và Vàng có 2.
   // ===== HỆ THỐNG MỚI ĐỢT 6: ÉP ĐỒ (BẬC) + ẢI THEO NGÀY (docs/review/ke-hoach-cai-thien/he-thong-moi/YEU-CAU-6-EP-DO-AI-NGAY.md) =====
   // BẢNG HẰNG SỐ DUY NHẤT của ép đồ. Luật + giao diện: js/ep_do.js (G.epDo). Mô hình số liệu: node tools/can-bang/tinh.js (mục 6).
@@ -221,6 +226,7 @@
     roi: { mini: [1, 1, 2], miniDau: [2, 2, 3], vung: [3, 4, 5], vungDau: [6, 8, 10], kho2: 1.5 },
     bua: { trumVung: 0.1, thuongNhan: 600 }, // bùa giữ bậc: trùm vùng 10%; thương nhân trong ải bán 600 vàng (ải ngày Đá Bậc khó: G.AI_NGAY)
   };
+  if (G.VUNG4) { const R4 = G.EP_DO.roi; R4.mini.push(2); R4.miniDau.push(4); R4.vung.push(6); R4.vungDau.push(12); } // vùng 4: số xuất phát
   G.EP_DO_BAT = true;
   try { if (typeof location !== 'undefined' && /[?&]epdo=0(&|$)/.test(location.search || '')) G.EP_DO_BAT = false; } catch (e) { /* giữ mặc định */ }
   // ẢI THEO NGÀY: giờ máy người chơi, đổi ngày lúc 00:00. thu: 0 = Chủ nhật … 6 = Thứ 7 (Date.getDay). Mở sau khi hạ trùm vùng 1.
@@ -483,6 +489,15 @@
       skin: ['#c0603a', '#8f3f24', '#ffd0a0'], rescue: 'wrestler',
     },
   ];
+  // Vùng 4 Sông sâu (G.VUNG4; KE-HOACH.md mục 1.1). Không thêm nguyên liệu mới (Q2 = A): mat chỉ là chữ chung, ải vùng 4 cho lần lượt nguyên liệu
+  // của 3 vùng cũ (G.matAi). rescue null: ba bạn đã được cứu hết. ma: mã vùng (ảnh gd-*-song-*, quái vung 'song').
+  if (G.VUNG4) G.REGIONS.push({
+    name: 'Sông sâu', ma: 'song', el: 'poison', boss: 'thuong', bossName: 'Thuồng Luồng', mat: 'Nguyên liệu', matChung: true, mini: 'Cá Trê',
+    sky: ['#0b1a1c', '#123034', '#1b4a4c'], ground: '#3e5148', ground2: '#35463e', deco: '#0e2224',
+    skin: ['#4a7a6a', '#2f5248', '#ffc878'], rescue: null,
+  });
+  // Nguyên liệu (chỉ số trong sv.mats) ải i của vùng r cho: 3 vùng cũ cho nguyên liệu của vùng; vùng 4 lần lượt Đá lửa, Gỗ linh, Vảy cá, Đá lửa, Gỗ linh.
+  G.matAi = (r, i) => (r < 3 ? r | 0 : ((i | 0) + 2) % 3);
 
   // Vai trò quái. hp và dmg là hệ số nhân với chỉ số chuẩn của ải.
   G.ROLES = {
@@ -504,6 +519,20 @@
     elite: [['heoNanh', 'namPhongChua'], ['cuaTuong', 'caNocChua'], ['tuongMa', 'huChua']],
     mini: ['namChua', 'cuaDa', 'hoLua'], boss: { moc: 'mocTinh', ngu: 'nguTinh', ho: 'hoTinh' },
   };
+  // Vùng 4 — HÌNH TẠM (phiên 1): mọi vai, tinh anh, trùm nhỏ, trùm vùng MƯỢN con của Hang biển (cùng kỹ năng riêng của con đó: Cá Trê tạm là
+  // Cua Đá, Thuồng Luồng tạm là Ngư Tinh); phòng cũng dựng theo Hang biển (G.vungVe). js/vung4.js nhuộm quái xanh rêu và phủ màu nước đục lên nền.
+  // Các phiên sau thay bằng mã quái / theme mới (raiCa, diaTrau, baBa, cocTia, ranNuoc, echPhinh, maDa, traiGai, raiCaChua, cocChua, caTre,
+  // thuongLuong — KE-HOACH.md mục 2) rồi đặt G.VUNG4_MUON = null.
+  G.VUNG4_MUON = null;
+  if (G.VUNG4) {
+    const M4 = G.MOB_ART;
+    for (const k of ['rusher', 'swarm', 'shield', 'archer', 'nimble', 'kami', 'bomber', 'spiky', 'mini']) M4[k].push(M4[k][1]);
+    M4.elite.push(M4.elite[1].slice());
+    M4.boss.thuong = M4.boss.ngu;
+    G.VUNG4_MUON = 1; // vùng gốc của hình tạm (Hang biển): js/sprite_custom.js tải ảnh vùng này khi chọn vùng 4
+  }
+  // Vùng dùng để VẼ (theme phòng, nền, hình vẽ code dự phòng) của vùng r: vùng 4 còn mượn hình thì vẽ như vùng mượn.
+  G.vungVe = (r) => (r === 3 && G.VUNG4_MUON != null ? G.VUNG4_MUON : r);
   // Dấu hiệu ngẫu nhiên của tinh anh (biểu tượng nhỏ trên đầu).
   G.ELITE_TRAITS = {
     nhanh: { name: 'Nhanh', desc: 'Chạy và ra đòn nhanh hơn' },
@@ -515,6 +544,7 @@
   // Chỉ số chuẩn theo ải. r: vùng 0..2, i: ải 0..4, diff: 0 thường, 1 độ khó thứ hai.
   const HP_RANGE = [[60, 115], [130, 230], [250, 370]];
   const DMG_RANGE = [[8, 12], [12, 17], [18, 24]];
+  if (G.VUNG4) { HP_RANGE.push([390, 520]); DMG_RANGE.push([24, 30]); } // vùng 4: số xuất phát (KE-HOACH.md mục 5)
   // CÂN BẰNG PHẢI CÀY: hệ số riêng của từng ải (15 ải, theo thứ tự 1-1 .. 3-5) nhân thêm vào chỉ số trên.
   // mob: [máu, sát thương] quái thường; boss: [máu, sát thương] trùm nhỏ (ải 1-4) hoặc trùm vùng (ải 5).
   // Phiên cân bằng (báo cáo tester mục 4): sát thương quái thường trước đây răng cưa (ải đầu vùng đánh đau hơn ải cuối vùng trước
@@ -543,6 +573,8 @@
     // ~150 · 162 · 175 · 188 → ~125 · 135 · 145 · 155 (x0,83; ba ải đầu đã tính cả x1,12 / x1,12 / x1,08 của cột quái).
     boss: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.76], [1.23, 1.67], [1.27, 1.86], [1.32, 2.54], [1.614, 2.861], [1.664, 2.933], [1.612, 3.232], [1.318, 2.706], [1.44, 2.22], [1.452, 2.363], [1.17, 2.11], [1.337, 2.65], [1.29, 2.71]],
   };
+  // Vùng 4 (ải 16..20): hệ số ải xuất phát [1,3; 3,0] cho quái thường; cột trùm theo mức vùng ba (đòn trùm nhỏ ~165–210, Thuồng Luồng ~215 gốc).
+  if (G.VUNG4) for (let i = 0; i < 5; i++) { G.STAGE_K.mob.push([1.3, 3.0]); G.STAGE_K.boss.push(i < 4 ? [1.3, 2.3] : [1.3, 2.4]); }
   // sua-can-bang: số cũ của các ải đã bớt quái. Độ khó 2 luôn dùng số cũ (chưa chọn đổi).
   G.STAGE_K_CU = { 6: [[1.58, 2.14], [1.44, 2.54]], 7: [[1.63, 2.27], [1.48, 2.61]], 8: [[1.44, 2.43], [1.31, 2.62]], 9: [[1.4, 2.61], [0.96, 1.98]], 11: [[1.74, 3.25], [1.31, 2.13]], 13: [[1.62, 2.98], [1.18, 2.33]] };
   G.STAGE_K_K2 = { mob: G.STAGE_K.mob.map((x) => x.slice()), boss: G.STAGE_K.boss.map((x) => x.slice()) };
@@ -553,6 +585,7 @@
   // Độ khó thứ hai: [máu, sát thương] nhân thêm theo vùng. Trước là x2,2 máu, x1,5 sát thương cho mọi vùng; nay quái thường đã mạnh
   // theo ải, nên vùng sau nhân ít hơn để người chơi đã cày đầy (cấp 30, vũ khí Vàng) vẫn với tới được.
   G.DIFF2 = [[1.6, 1.5], [1.3, 1.3], [1.1, 1.15]];
+  if (G.VUNG4) G.DIFF2.push([1.1, 1.15]);
   G.stageStats = function (r, i, diff) {
     const t = i / 4;
     const k = diff ? G.DIFF2[r][0] : 1;
@@ -585,10 +618,12 @@
   // riêng quái vùng): Sức mạnh thắng 75% lệch rõ (> 15%) ở 2-2 (217), 2-3 (262), 3-3 (414), 3-5 (524) → nâng; 2-4, 2-5, 3-1, 3-2, 3-4 nâng
   // vừa đủ để dãy vẫn tăng dần (đo 275 / 306 / 350 / 360 / > 418). Cũ: [95, 105, 125, 140, 175, 180, 185, 220, 240, 275, 285, 315, 355, 400, 435].
   G.STAGE_REC = [95, 105, 125, 140, 175, 180, 215, 260, 275, 305, 310, 330, 410, 420, 520];
+  if (G.VUNG4) G.STAGE_REC.push(540, 565, 595, 630, 690); // vùng 4: số xuất phát (bot phiên 4 chốt)
   // Khuyên dùng độ khó 2 = khuyên dùng thường × hệ số theo vùng. Trước: √(máu × sát thương của G.DIFF2) = 1,55 · 1,30 · 1,12.
   // 14/10 (bước 1, mục 5): bot đo (tests/cay.py --kho2 --kd=4) cần ~1,55 · ~1,5 · ~1,33 lần Sức mạnh ải thường cùng chỗ → vùng 2, 3 lệch
   // > 15%: dùng hệ số riêng G.DIFF2_REC (chỉ đổi con số khuyên dùng, quái độ khó 2 giữ nguyên G.DIFF2). null = như cũ.
   G.DIFF2_REC = [null, 1.5, 1.33];
+  if (G.VUNG4) G.DIFF2_REC.push(1.33);
   G.stageRec = function (r, i, diff) {
     const v = G.STAGE_REC[r * 5 + i] || 100;
     const k = G.DIFF2_REC && G.DIFF2_REC[r] ? G.DIFF2_REC[r] : Math.sqrt(G.DIFF2[r][0] * G.DIFF2[r][1]);
@@ -668,6 +703,9 @@
   G.BOSS_HP = 24; // máu boss vùng = hệ số x máu quái thường
   // Hồ Tinh né nhiều nên ít lúc đánh trúng, cho ít máu hơn để trận không kéo quá 3 phút.
   G.BOSS_HP_OF = { moc: 20, ngu: 20, ho: 14 };
+  if (G.VUNG4) G.BOSS_HP_OF.thuong = 20;
+  // Số ải (5 mỗi vùng) và số ải phải qua để mở Độ khó 2 của ba vùng đầu (giữ "hạ Hồ Tinh" như cũ — Q8 = A).
+  G.SO_AI = () => G.REGIONS.length * 5;
 
   // Đợt 2: bỏ G.GEAR (mũ, áo, bùa đời cũ) và G.SETS (bộ 2 món cũ) — bảng hoàn tiền nằm ở js/vk_moi.js.
 

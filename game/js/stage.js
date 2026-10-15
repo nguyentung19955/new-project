@@ -187,7 +187,7 @@
       if (d < R0) { const k = d > 0.5 ? 1 / d : 0; P.x = G.clamp(s.x + (k ? dx * k : 1) * R0, W.x0, W.x1); P.y = G.clamp(s.y + (k ? dy * k : 0) * R0, W.y0, W.y1); }
       // Quái tinh anh cũng học: kháng nhẹ hệ bạn dùng nhiều nhất
       if (s.role === 'elite' && tot > 0 && el[top] / tot > 0.4) e.resist = top;
-      G.burst(s.x, s.y - 6, ['#c2f58a', '#bfeaff', '#ffd0a0'][S.r] || '#ffffff', s.big ? 14 : 7, 60);
+      G.burst(s.x, s.y - 6, ['#c2f58a', '#bfeaff', '#ffd0a0', '#bfe8d0'][S.r] || '#ffffff', s.big ? 14 : 7, 60);
     }
     W.spawns = W.spawns.filter((s) => s.t > 0);
   }
@@ -394,7 +394,7 @@
 
   function chestOptions() {
     // lựa chọn "vũ khí mới" của luật cũ nay là túi linh khí cùng giá trị (G.ROI_MOI.ruong)
-    const lkN = G.ROI_MOI.ruong.lk[G.clamp(S.r | 0, 0, 2)];
+    const lkN = G.ROI_MOI.ruong.lk[G.clamp(S.r | 0, 0, G.ROI_MOI.ruong.lk.length - 1)];
     return [
       { kind: 'lk', n: lkN, label: G.t('{0} linh khí', lkN), sub: 'Dùng để nâng vũ khí (Mầm, Thành hình, Thức tỉnh) và nâng bộ trang phục' },
       { kind: 'ore', n: 5 + S.r * 3, label: G.t('{0} quặng', 5 + S.r * 3), sub: 'Dùng để mài vũ khí ở lò rèn' },
@@ -461,10 +461,11 @@
       const xp = Math.round(S.base.xp * gm);
       let gold = Math.round((S.base.gold + S.loot.kills * 2) * gm);
       const ore = 3 + R.stars + 2 * S.r, mat = 5 + S.i; // cày nâng cấp: vùng sau cho nhiều quặng hơn (mài cao tốn quặng)
-      sv.gold += gold; sv.ore += ore; sv.mats[S.r] += mat;
+      const mi = G.matAi ? G.matAi(S.r, S.i) : S.r, matTen = G.REGIONS[mi].mat; // vùng 4 (Q2 = A): nguyên liệu của một vùng cũ theo ải
+      sv.gold += gold; sv.ore += ore; sv.mats[mi] += mat;
       // kho đổi vàng lấy nguyên liệu (G.DOI_NL, js/upgrade.js): mỗi ải thắng thêm vài lượt đổi
       if (G.DOI_NL) sv.doiNL = Math.min(G.DOI_NL.max, (sv.doiNL | 0) + G.DOI_NL.them);
-      R.lines.push(ln(R, '+{0} kinh nghiệm', xp), ln(R, '+{0} vàng', gold), ln(R, '+{0} quặng', ore), ln(R, '+{0} {1}', mat, reg.mat.toLowerCase()));
+      R.lines.push(ln(R, '+{0} kinh nghiệm', xp), ln(R, '+{0} vàng', gold), ln(R, '+{0} quặng', ore), ln(R, '+{0} {1}', mat, matTen.toLowerCase()));
       if (gm < 1) R.lines.push(ln(R, 'Ải đã quá dễ với sức mạnh của bé: kinh nghiệm và vàng còn {0}%', Math.round(gm * 100)));
       if (big) { const ns = S.diff ? 4 : 3; sv.shards[S.r] += ns; R.lines.push(ln(R, '+{0} mảnh {1}', ns, reg.bossName)); }
       // đợt 6: đá nâng bậc từ trùm nhỏ / trùm vùng (lần đầu qua ải này nhiều hơn), bùa giữ bậc (trùm vùng) — js/ep_do.js
@@ -515,8 +516,9 @@
       // Phiên cân bằng (mục 17): đã vào tới phòng trùm mà thua thì vẫn nhận 30% nguyên liệu vùng và quặng của ải (bỏ ải thì không).
       if (!S.quit && S.W && S.W.type === 'boss') {
         const mat = Math.round((5 + S.i) * 0.3), ore = Math.round((4 + 2 * S.r) * 0.3);
-        sv.mats[S.r] += mat; sv.ore += ore;
-        R.lines.push(ln(R, '+{0} {1}', mat, reg.mat.toLowerCase()), ln(R, '+{0} quặng', ore));
+        const mi = G.matAi ? G.matAi(S.r, S.i) : S.r;
+        sv.mats[mi] += mat; sv.ore += ore;
+        R.lines.push(ln(R, '+{0} {1}', mat, G.REGIONS[mi].mat.toLowerCase()), ln(R, '+{0} quặng', ore));
       }
       R.up = G.addXp(sv.hero, xp);
       // Thua không làm bé mạnh thêm (chủ dự án: sức mạnh chỉ đến từ cày nâng cấp). Thay vào đó bảng thua gợi ý nên cày gì (G.upgradeTips).
@@ -1391,7 +1393,8 @@
     if (lkN) G.lk.resultBlock(S, 84, lkTop, 312);
     if (!R.win && !S.quit) ui.para('Mẹo: về làng mài vũ khí ở lò rèn, hoặc chơi lại ải cũ để lên cấp rồi quay lại.', 86, 196, 308, { size: 7.5, color: '#d9cdb8' });
     // Thắng thì có nút đi thẳng sang ải kế (hoặc vùng kế sau trùm vùng), không phải vòng về làng.
-    const nx = R.win ? (S.i < 4 ? [S.r, S.i + 1] : S.r < G.REGIONS.length - 1 ? [S.r + 1, 0] : null) : null;
+    // vùng 4: độ khó 2 của vùng sau chỉ mở khi đã hạ trùm vùng đó ở độ khó thường (Q8 = A)
+    const nx = R.win ? (S.i < 4 ? [S.r, S.i + 1] : S.r < G.REGIONS.length - 1 && !(S.diff && S.r >= 2 && !G.save.stars[(S.r + 1) + '-4']) ? [S.r + 1, 0] : null) : null;
     if (nx) {
       if (ui.btn(80, 216, 96, 26, 'Về làng', { size: 8.5 })) { S = null; G.setScene(G.Village); return; }
       if (ui.btn(182, 216, 96, 26, 'Chơi lại', { size: 8.5 })) { G.startStage(S.r, S.i, S.diff); return; }

@@ -1707,7 +1707,9 @@
       const g = Object.assign({}, W.geo, { type: W.type, variant: W.variant || 0 });
       if (W.ttThu) g.ttThu = W.ttThu; // chỉ trang công cụ Tách Phòng đặt (phòng xem thử bày đủ đồ trang trí)
       g.doors = doors.map((d) => ({ side: SIDE_OF[d.dir], dir: d.dir, at: d.dir === 'up' || d.dir === 'down' ? g.cx : g.cy, state: d.open ? 'open' : 'locked', gate: !!d.gate, boss: !!d.boss }));
-      const T = THEMES[W.region] || Castle, skey = [W.uid, W.region, W.type, W.seed, W.variant || 0, doors.map((d) => d.dir).join(',')].join('|');
+      const vv = G.vungVe ? G.vungVe(W.region) : W.region; // vùng 4 hình tạm: dựng phòng theo vùng mượn (G.VUNG4_MUON)
+      if (!THEMES[vv] && !RA.baoThieu) { RA.baoThieu = vv; if (window.console) console.warn('[Linh Khí] room_art: vùng ' + vv + ' chưa có theme phòng → tạm dùng Lâu đài cổ'); }
+      const T = THEMES[vv] || Castle, skey = [W.uid, W.region, W.type, W.seed, W.variant || 0, doors.map((d) => d.dir).join(',')].join('|');
       building = true;
       try {
         let shell = shells.get(skey);

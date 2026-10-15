@@ -166,7 +166,7 @@
   G.mobInit = function (e, o) {
     const w = W(), M = G.MOB_ART;
     if (!G.monsterArt || !M || !w || o.noArt) return;
-    const r = clamp(w.region | 0, 0, 2);
+    const r = clamp(w.region | 0, 0, G.REGIONS.length - 1); // vùng 4: không lặng lẽ dùng quái vùng 3
     let id = null;
     if (e.role === 'elite') id = o.art || M.elite[r][G.rnd() < 0.5 ? 0 : 1];
     else if (M[e.role] && typeof M[e.role][r] === 'string') id = o.art || M[e.role][r];

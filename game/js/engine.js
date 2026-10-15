@@ -334,7 +334,7 @@
   };
   G.newSave = function () {
     const s = {
-      v: 1, gold: 0, ore: 0, stones: 0, mats: [0, 0, 0], shards: [0, 0, 0], forge: 1,
+      v: 1, gold: 0, ore: 0, stones: 0, mats: [0, 0, 0], shards: G.REGIONS.map(() => 0), forge: 1, // shards: mỗi vùng một loại mảnh trùm (vùng 4: 4 ô)
       heroes: {}, hero: 'smith', weapons: [], nextId: 1, carry: [null, null],
       stars: {}, stars2: {}, scars: {}, tut: {}, sound: true, wins: 0, bossGold: {},
     };
@@ -396,7 +396,9 @@
       for (const k in base) if (!(k in s)) s[k] = base[k];
       phan('tài nguyên', ['gold', 'ore', 'stones', 'wins', 'mats', 'shards', 'forge'], () => {
       for (const k of ['gold', 'ore', 'stones', 'wins']) s[k] = Math.max(0, Math.floor(num(s[k], 0)));
-      s.mats = arr3(s.mats); s.shards = arr3(s.shards);
+      // mảnh trùm: mỗi vùng một ô (vùng 4 → 4 ô); bản lưu cũ 3 ô thêm ô 0; tắt vùng 4 (?vung4=0) vẫn giữ ô thứ 4 đã có, không xoá
+      const nSh = Math.max(G.REGIONS.length, Math.min(4, Array.isArray(s.shards) ? s.shards.length : 0));
+      s.mats = arr3(s.mats); s.shards = arr3(s.shards).concat(Array.from({ length: Math.max(0, nSh - 3) }, (_, j) => Math.max(0, num(Array.isArray(s.shards) ? s.shards[3 + j] : 0, 0))));
       s.forge = G.clamp(Math.floor(num(s.forge, 1)), 1, G.FORGE_CAP.length - 1);
       });
       phan('cài đặt', [], () => {

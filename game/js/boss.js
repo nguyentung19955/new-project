@@ -46,7 +46,7 @@
 
   // Kích thước thân để đánh trúng (r: nửa bề ngang, hr: độ sâu, h: chiều cao hình)
   const BODY = { mocTinh: [30, 14, 124], nguTinh: [36, 16, 100], hoTinh: [32, 14, 110], cuaDa: [26, 12, 68], namChua: [22, 12, 62], hoLua: [26, 12, 62] };
-  const SPEED = { moc: 16, ngu: 36, ho: 60, mini: 30 };
+  const SPEED = { moc: 16, ngu: 36, ho: 60, mini: 30, thuong: 36 }; // thuong: Thuồng Luồng (vùng 4)
 
   G.makeBoss = function (kind, o) {
     const w = W();
@@ -278,6 +278,9 @@
       } },
     },
   };
+  // Vùng 4 (bước 3 phiên 1, HÌNH TẠM): Thuồng Luồng chưa có chiêu riêng → dùng chung bộ chiêu của Ngư Tinh (cùng đối tượng, nên chiêu mới
+  // js/chieu_trum.js thay cho 'ngu' cũng áp vào). Phiên 3B / 3C thay bằng SK.thuong riêng (KE-HOACH.md mục 2.4).
+  if (G.VUNG4 && !SK.thuong) SK.thuong = SK.ngu;
   G.bossSK = SK; // chỉ để bài kiểm tra đọc thời gian báo trước tối thiểu (tele)
   // Mệt sau chiêu lớn: choáng một lúc, nhận thêm sát thương (cơ hội phản công)
   // Trùm nhỏ không có hình 'stun' riêng: đặt thêm choáng thật (st.stun) để hình lảo đảo (js/mobs.js vẽ 'hit' khi choáng).
@@ -525,7 +528,7 @@
       lunge(b, Math.atan2(-dy, -dx), 90, 0.25);
       return;
     }
-    const cua = CUA(b), want = cua ? CUA_SO.di.gan : b.kind === 'moc' ? 70 : b.kind === 'ngu' ? 85 : b.kind === 'ho' ? 100 : 44;
+    const cua = CUA(b), want = cua ? CUA_SO.di.gan : b.kind === 'moc' ? 70 : b.kind === 'ngu' || b.kind === 'thuong' ? 85 : b.kind === 'ho' ? 100 : 44;
     const BN = bangNG(b), sp = b.speed * Math.max(0.4, 1 - 0.15 * b.st.iceN) * chamOf(b) * (BN ? ngPh(BN.diChuyen, b.phase) : 1); // × nổi giận
     // cua-tuong-kho: Cua Đá đi ngang nhanh, em bé ở xa thì lướt ngang một đoạn (đuổi được tới sát mép / góc)
     if (cua && d > CUA_SO.luot.xa && !(b.luotCd > 0) && !b.lunge) { const L = CUA_SO.luot; lunge(b, Math.atan2(dy, dx), Math.min(L.dai, d - want), L.giay); b.luotCd = L.cd; b.cd = Math.max(b.cd, L.giay + 0.05); b.moving = true; FX('burst', b.x, b.y, '#d8c08a', 6, 50); return; }

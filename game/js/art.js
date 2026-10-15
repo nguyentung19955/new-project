@@ -86,7 +86,7 @@
       c.fillRect(x + hw - w, y + dy, w, 1);
     }
   }
-  const region = () => { const w = G.getWorld && G.getWorld(); return w && w.region != null ? w.region : 0; };
+  const region = () => { const w = G.getWorld && G.getWorld(); return w && w.region != null ? (G.vungVe ? G.vungVe(w.region) : w.region) : 0; }; // vùng 4 hình tạm: vẽ như vùng mượn
 
   // ---------- vũ khí ----------
   A.weaponLook = function (w) {
@@ -2840,7 +2840,7 @@
       c.restore();
       mocWorld(c, b, T);
       drawFx(c, b);
-    } else if (b.kind === 'ngu') nguDraw(c, b, T, el, t);
+    } else if (b.kind === 'ngu' || b.kind === 'thuong') nguDraw(c, b, T, el, t); // thuong: vùng 4 hình tạm
     else hoDraw(c, b, T, el, t);
     cx = pc; OUT = false; OC = DARK; QX = 0; QY = 0;
   };
