@@ -1,7 +1,7 @@
 // Cốt truyện tối thiểu, bỏ qua được. Nạp sau js/village.js và js/stage.js (bọc thêm update/draw của làng và ải, không sửa luật chơi).
 //
 //   Mở đầu        5 khung (≈ 25 giây; canh-truyen 15/10: thêm khung bóng Thuồng Luồng dưới sông, lời theo mạch trống đồng
-//                 docs/cot-truyen/CHUNG.md; mỗi khung tự sang sau 5 giây, chạm để sang nhanh, nút "Bỏ qua"; 15/10 don-tep B: bỏ bản 4 khung cũ
+//                 docs/cot-truyen/CHUNG.md; mỗi khung chờ người chơi chạm mới sang (15/10, ?truyentu=1 = tự sang sau 5 giây), nút "Bỏ qua"; 15/10 don-tep B: bỏ bản 4 khung cũ
 //                 cùng cờ ?truyencu=1). Chỉ chiếu MỘT lần lúc mới vào làng lần đầu
 //                 (G.save.truyen.mo); người chơi cũ đã qua ải 1 thì không chiếu. Xem lại: Anh Mõ > "Âm thanh · Pin · Truyện" > "Xem lại truyện".
 //   Trùm          trùm vùng và trùm nhỏ nói một câu khi ra mắt, một câu khi gục (bong bóng lời trên đầu, KHÔNG dừng trận).
@@ -18,6 +18,7 @@
   const G = window.G, ui = G.ui, T = G.theme, VS = G.villageScene, A = G.art;
   let tatQS = false;
   try { tatQS = /[?&]truyen=0(&|$)/.test(location.search || ''); } catch (e) { tatQS = false; }
+  try { if (/[?&]truyentu=1(&|$)/.test(location.search || '')) G.TRUYEN_TU = true; } catch (e) { /* bỏ qua */ }
   const TR = (G.truyen = { dang: null });
   TR.bat = () => !tatQS && G.TRUYEN !== false && !G.botInput;
 
@@ -208,7 +209,8 @@
     if (kp.Escape) { kp.Escape = false; het(); return; }
     if ((kp.Enter || kp.Space || kp.KeyJ) && d.t > 0.25) { chamTiep(); return; }
     const f = d.ds[d.i];
-    if (d.t > (f.giay || 5)) tiep();
+    // 15/10 chủ game: bỏ tự sang khung (người chơi không kịp đọc) — chỉ sang khi chạm / bấm phím. ?truyentu=1 bật lại tự sang.
+    if (G.TRUYEN_TU && d.t > (f.giay || 5)) tiep();
   };
   const SKIP = [384, 6, 90, 32]; // nút Bỏ qua: cao 32 (khoảng 46 điểm trên iPhone cầm ngang)
   TR.SKIP = SKIP;

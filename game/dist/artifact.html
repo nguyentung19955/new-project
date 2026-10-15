@@ -59,7 +59,7 @@
 <div id="lk-tai" data-bia="||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAMEBQYH/8QAKRAAAQMCBQMDBQAAAAAAAAAAAQIDEQAEBRIhMUETFGEiQnEVUWKBsf/EABcBAAMBAAAAAAAAAAAAAAAAAAIDBAX/xAAlEQACAQEFCQAAAAAAAAAAAAABAgADBBExUfASEyEyM0FxobH/2gAMAwEAAhEDEQA/AOfNMWj9zbWiEtBsn1ugGTPCvjXajFcBNssNsvoeMxlCgVJqzCbhHftG3aGdcJBUAUn7neRzTMcumxjD0hDSkmFBtWZMjSdR5qamzb4DtHOiimTfxmt/T3UpzLBCTt5q22sWekt0vBvImSF8+KyF5eWDaGFNZlr6YkKGiTPGvzSutZDDX1sF3P0wPUBMzvP62rStACi5TEWB9pizi/H1JsLUo3NhKiZUOfyqbE1Hu3jJkqPNFFRUuprOHU5dZSVwmE6+2mNk9u7r7R/aKKqqQLNifB+T/9k=|||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAgf/xAAmEAACAgEEAQQCAwAAAAAAAAABAgMRAAQSITEFE1FhgSJBcbHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQIDBAX/xAAeEQABBAIDAQAAAAAAAAAAAAAAAQIDEiExBBEyIv/aAAwDAQACEQMRAD8A51EIZIo53EASNwHG07mBPFno9HFyeOhl1Y2yFIbtjVkDnr54yzx2vaLSyII1cELvBQEVu5PyeshTWvFJG6qi7OR+A9/4xoa3yQzWRvzsH8YkWrkCMZYlsoSvJHfWUalzFpI4/TRBZbca3HsUcXqvJvPqpZgEAewAFHAP1mZ9aZIoyqKWVa4jX3P+jByGor8aNDgT0gXvDiHTs1EbjRAsX3jKuEH92Ofs4YYGeim/yLulscHjFuT6YNno/wBnDDGfsEej/9k=" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.15-2301";
+(window.G = window.G || {}).VERSION = "lk-2026.10.15-2304";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -34537,7 +34537,9 @@ MA._xong();
         G.sfx('pick');
       }
       if (o.kind === 'charm') { const gb = gdAnh('gd-bua-' + o.el); if (gb) G.spriteCustom.veGd(G.ux, gb, x + 42, 97, 24, 24); } // hình lá bùa hệ (ảnh AI, phiên C2); chưa có tệp thì chỉ có chữ như cũ
-      ui.para(o.sub, x + 6, 160, 96, { size: 6.5, color: '#f0d9b0' });
+      // 15/10 chủ game báo chữ mô tả tràn ra dưới thẻ: đặt trong dải dưới của thẻ (y 145–182), tự thu cỡ, tối đa 4 dòng
+      if (G.theme && G.theme.chuTrongKhung) G.theme.chuTrongKhung(o.sub, x + 4, 145, 100, 37, { size: 6.5, min: 5, dong: 4, gian: 1.5, bold: false, color: '#f0d9b0', vien: [0, 0, 0, 0] });
+      else ui.para(o.sub, x + 6, 160, 96, { size: 6.5, color: '#f0d9b0' });
     });
   }
   // Cắt một dòng chữ cho vừa bề rộng wd (thêm "…"). Đo bằng ui.font nên theo đúng sàn cỡ chữ (V25).
@@ -44588,7 +44590,7 @@ window.FIREBASE_CONFIG = {
 // Cốt truyện tối thiểu, bỏ qua được. Nạp sau js/village.js và js/stage.js (bọc thêm update/draw của làng và ải, không sửa luật chơi).
 //
 //   Mở đầu        5 khung (≈ 25 giây; canh-truyen 15/10: thêm khung bóng Thuồng Luồng dưới sông, lời theo mạch trống đồng
-//                 docs/cot-truyen/CHUNG.md; mỗi khung tự sang sau 5 giây, chạm để sang nhanh, nút "Bỏ qua"; 15/10 don-tep B: bỏ bản 4 khung cũ
+//                 docs/cot-truyen/CHUNG.md; mỗi khung chờ người chơi chạm mới sang (15/10, ?truyentu=1 = tự sang sau 5 giây), nút "Bỏ qua"; 15/10 don-tep B: bỏ bản 4 khung cũ
 //                 cùng cờ ?truyencu=1). Chỉ chiếu MỘT lần lúc mới vào làng lần đầu
 //                 (G.save.truyen.mo); người chơi cũ đã qua ải 1 thì không chiếu. Xem lại: Anh Mõ > "Âm thanh · Pin · Truyện" > "Xem lại truyện".
 //   Trùm          trùm vùng và trùm nhỏ nói một câu khi ra mắt, một câu khi gục (bong bóng lời trên đầu, KHÔNG dừng trận).
@@ -44605,6 +44607,7 @@ window.FIREBASE_CONFIG = {
   const G = window.G, ui = G.ui, T = G.theme, VS = G.villageScene, A = G.art;
   let tatQS = false;
   try { tatQS = /[?&]truyen=0(&|$)/.test(location.search || ''); } catch (e) { tatQS = false; }
+  try { if (/[?&]truyentu=1(&|$)/.test(location.search || '')) G.TRUYEN_TU = true; } catch (e) { /* bỏ qua */ }
   const TR = (G.truyen = { dang: null });
   TR.bat = () => !tatQS && G.TRUYEN !== false && !G.botInput;
 
@@ -44794,7 +44797,8 @@ window.FIREBASE_CONFIG = {
     if (kp.Escape) { kp.Escape = false; het(); return; }
     if ((kp.Enter || kp.Space || kp.KeyJ) && d.t > 0.25) { chamTiep(); return; }
     const f = d.ds[d.i];
-    if (d.t > (f.giay || 5)) tiep();
+    // 15/10 chủ game: bỏ tự sang khung (người chơi không kịp đọc) — chỉ sang khi chạm / bấm phím. ?truyentu=1 bật lại tự sang.
+    if (G.TRUYEN_TU && d.t > (f.giay || 5)) tiep();
   };
   const SKIP = [384, 6, 90, 32]; // nút Bỏ qua: cao 32 (khoảng 46 điểm trên iPhone cầm ngang)
   TR.SKIP = SKIP;
