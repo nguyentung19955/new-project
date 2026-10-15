@@ -1,6 +1,7 @@
 // Cốt truyện tối thiểu, bỏ qua được. Nạp sau js/village.js và js/stage.js (bọc thêm update/draw của làng và ải, không sửa luật chơi).
 //
-//   Mở đầu        4 khung (≈ 20 giây, mỗi khung tự sang sau 5 giây, chạm để sang nhanh, nút "Bỏ qua"): linh khí làng cạn, ba yêu tinh
+//   Mở đầu        5 khung (≈ 25 giây; canh-truyen 15/10: thêm khung bóng Thuồng Luồng dưới sông, lời theo mạch trống đồng
+//                 docs/cot-truyen/CHUNG.md; ?truyencu=1 = 4 khung, lời và nền vẽ code cũ). Cũ: 4 khung (≈ 20 giây, mỗi khung tự sang sau 5 giây, chạm để sang nhanh, nút "Bỏ qua"): linh khí làng cạn, ba yêu tinh
 //                 thức dậy, ba em bé bị bắt, Cụ Đồ trao vũ khí sống cho Zed, bạn thân của ba em, lên đường cứu bạn. Chỉ chiếu MỘT lần lúc mới vào làng lần đầu
 //                 (G.save.truyen.mo); người chơi cũ đã qua ải 1 thì không chiếu. Xem lại: Anh Mõ > "Âm thanh · Pin · Truyện" > "Xem lại truyện".
 //   Trùm          trùm vùng và trùm nhỏ nói một câu khi ra mắt, một câu khi gục (bong bóng lời trên đầu, KHÔNG dừng trận).
@@ -8,23 +9,28 @@
 //   Người làng    mỗi người có một câu mới sau mỗi trùm vùng (3 mốc), nói một lần khi mở bảng của người đó.
 // Bản lưu: G.save.truyen = { mo: 1 đã xem mở đầu, v: số đoạn kết vùng đã xem (0..3), n: { người: mốc đã nghe } }. Trường MỚI, tuỳ chọn:
 // bản lưu cũ chưa có thì dựng theo tiến độ đang có (không chiếu lại những gì đã qua).
+// Ảnh cảnh truyện (15/10): mỗi khung có ảnh nền (bảng ANH bên dưới, ảnh ở game/art/truyen, dựng bằng tools/anh-truyen/dung.py),
+// TẢI LƯỜI khi mở truyện (không vào gói tải đầu), phóng chậm (Ken Burns) + chữ trên dải tối dưới ảnh. Ảnh chưa về / không có
+// (B4 trao vũ khí, B5 hội làng chưa vẽ): nền vẽ code như cũ + khung thoại cũ. Thả ảnh mới vào là game tự dùng, không sửa code.
 // Tắt: ?truyen=0 hoặc G.TRUYEN = false. Bot kiểm thử (G.botInput) không bao giờ gặp khung truyện.
 (function () {
   'use strict';
   const G = window.G, ui = G.ui, T = G.theme, VS = G.villageScene, A = G.art;
-  let tatQS = false;
+  let tatQS = false, CU = false;
   try { tatQS = /[?&]truyen=0(&|$)/.test(location.search || ''); } catch (e) { tatQS = false; }
+  try { CU = /[?&]truyencu=1(&|$)/.test(location.search || ''); } catch (e) { CU = false; } // nền vẽ code + lời cũ (trước mạch trống đồng)
   const TR = (G.truyen = { dang: null });
   TR.bat = () => !tatQS && G.TRUYEN !== false && !G.botInput;
 
   // ---------- lời thoại ----------
-  const MO_DAU = [
+  // Bản CŨ (trước 15/10), chỉ dùng khi ?truyencu=1
+  const MO_DAU_CU = [
     { nen: 'cayda', loi: 'Làng ven sông sống nhờ linh khí của cây đa nghìn tuổi. Một sáng, lá đa úa vàng, linh khí cạn dần.' },
     { nen: 'yeu', loi: 'Ba yêu tinh thức dậy: Mộc Tinh, cây cổ thụ ở Rừng già; Ngư Tinh, mực khổng lồ cầm rìu san hô ở Hang biển; Hồ Tinh, cáo chín đuôi đeo mặt nạ ở Lâu đài cổ.' },
     { nen: 'emBe', loi: 'Cu Tèo, Cái Bống, Cu Lì, ba bạn thân của Cu Tí, đi tìm linh khí cho làng rồi bị yêu tinh bắt mất.' },
     { nen: 'cuti', ai: 'do', loi: 'Cu Tí ơi, ba bạn đang chờ cháu. Cầm lấy vũ khí sống này: nó lớn lên theo cháu. Đi cứu bạn đi, Chú Lái Đò chờ ở bến!' },
   ];
-  const VUNG = [
+  const VUNG_CU = [
     [
       { ai: 'hunter', loi: 'Cu Tí ơi! Rễ cây quấn tớ cả tuần, may mà cậu tới!' },
       { ai: 'do', loi: 'Rừng già thở lại rồi, cây đa đã nhú chồi. Nhưng gió biển lạnh lắm: Cái Bống còn kẹt ở Hang biển.' },
@@ -41,10 +47,41 @@
       { loi: 'Cu Lì đã về làng. Bạn ấy dạy Cu Tí gồng chịu đòn và chưởng to: xem ở Ông Từ.' },
     ],
   ];
-  const KET = [
+  const KET_CU = [
     { nen: 'hoi', loi: 'Tối ấy cả làng mở hội dưới gốc đa, mừng ba bạn trở về. Ai cũng cảm ơn Cu Tí đã cứu bạn. Hết truyện... mà chưa hết đâu!' },
     { nen: 'hoi', ai: 'lai', loi: 'Đêm xuống, yêu tinh có thể thức dậy mạnh hơn. Muốn thử sức thì gặp chú, chạm "Độ khó 2" nhé!' },
   ];
+  // Bản MỚI (15/10, mạch trống đồng — docs/cot-truyen/CHUNG.md): làng giữ trống đồng trấn yêu; Thuồng Luồng dưới sông đập vỡ trống,
+  // hút linh khí cây đa qua rễ, đánh thức ba yêu tinh; mỗi trùm vùng giữ một mảnh trống. Truyện MỞ: thêm vùng = thêm một khối vào VUNG.
+  const MO_DAU_MOI = [
+    { nen: 'cayda', loi: 'Làng ven sông có cây đa nghìn tuổi và một trống đồng thiêng trấn yêu. Một đêm, trống bị đập vỡ. Lá đa úa vàng, linh khí cạn dần.' },
+    { nen: 'yeu', loi: 'Mất tiếng trống, ba yêu tinh thức dậy: Mộc Tinh ở Rừng già, Ngư Tinh ở Hang biển, Hồ Tinh ở Lâu đài cổ. Mỗi đứa ôm một mảnh trống vỡ.' },
+    { nen: 'song', loi: 'Dưới đáy sông có một cái bóng dài. Chính nó đập vỡ trống, hút linh khí cây đa qua rễ, rồi đánh thức yêu tinh để làng không để ý.' },
+    { nen: 'emBe', loi: 'Cu Tèo, Cái Bống, Cu Lì, ba bạn thân của Cu Tí, đi nhặt mảnh trống cho làng rồi bị yêu tinh bắt mất.' },
+    { nen: 'cuti', ai: 'do', loi: 'Cu Tí ơi, ba bạn đang chờ cháu. Cầm lấy vũ khí sống này: nó lớn lên theo cháu. Cứu bạn, lấy lại mảnh trống. Chú Lái Đò chờ ở bến!' },
+  ];
+  const VUNG_MOI = [
+    [
+      { ai: 'hunter', loi: 'Cu Tí ơi! Rễ cây quấn tớ cả tuần, may mà cậu tới!' },
+      { ai: 'do', loi: 'Cháu lấy lại được một mảnh trống rồi! Rừng già thở lại, cây đa đã nhú chồi. Nhưng Cái Bống còn kẹt ở Hang biển.' },
+      { loi: 'Cu Tèo đã về làng, ngồi chơi ở sân đình. Bạn ấy dạy Cu Tí đánh hiểm và bắn chưởng xa: xem ở Ông Từ.' },
+    ],
+    [
+      { ai: 'healer', loi: 'Nước dưới hang lạnh buốt... Cảm ơn Cu Tí đã lặn xuống tìm tớ!' },
+      { ai: 'lai', loi: 'Thêm một mảnh trống về làng! Biển êm, đò lại chạy. Bên kia sông, Lâu đài cổ đỏ rực lửa: Cu Lì ở trong đó.' },
+      { loi: 'Cái Bống đã về làng, ngồi chơi ở sân đình. Bạn ấy dạy Cu Tí giữ hiệu ứng lâu và chưởng hồi máu: xem ở Ông Từ.' },
+    ],
+    [
+      { ai: 'wrestler', loi: 'Con cáo chín đuôi bắt tớ canh lửa cả tháng! Về nhà thôi, đói lắm rồi!' },
+      { ai: 'do', loi: 'Mảnh trống thứ ba đã về. Ba yêu tinh ngủ lại, linh khí về làng, cây đa xanh lá.' },
+      { loi: 'Cu Lì đã về làng. Bạn ấy dạy Cu Tí gồng chịu đòn và chưởng to: xem ở Ông Từ.' },
+    ],
+  ];
+  const KET_MOI = [
+    { nen: 'hoi', loi: 'Tối ấy cả làng mở hội dưới gốc đa, mừng ba bạn trở về. Ba mảnh trống đã về đình, nhưng trống vẫn chưa lành. Hết truyện... mà chưa hết đâu!' },
+    { nen: 'hoi', ai: 'lai', loi: 'Đêm xuống, mặt sông lại gợn sóng, như có gì dưới đáy chưa ngủ. Muốn thử sức thì gặp chú, chạm "Độ khó 2" nhé!' },
+  ];
+  const MO_DAU = CU ? MO_DAU_CU : MO_DAU_MOI, VUNG = CU ? VUNG_CU : VUNG_MOI, KET = CU ? KET_CU : KET_MOI;
   // Trùm: [câu ra mắt, câu khi gục]. Trùm nhỏ theo vùng.
   const TRUM = {
     moc: ['Ta là cây cổ thụ thành tinh, nấm độc mọc đầy thân. Linh khí của làng đã chảy vào rễ ta!', 'Lá rụng về cội... Rừng ơi, xanh lại đi...'],
@@ -67,6 +104,7 @@
   // ZED: nhân vật chính là Zed. Ba bạn vẫn bị bắt, vẫn được cứu, nhưng về làng thì DẠY Zed (lời Zed đã ghi thẳng vào các bảng trên;
   // bản Cu Tí / "đổi em bé" của cờ ?zed=0 đã xoá khi dọn code 13/10).
   TR.LOI = { MO_DAU, VUNG, KET, TRUM, LANG };
+  TR.CU = CU;
   // Bản tiếng Anh của mọi câu ở đây và ở bảng Cài đặt mới: tools/ngon-ngu/tu-dien/truyen-am-thanh.json (gộp vào js/ngon_ngu_en.js bằng tools/ngon-ngu/gop.py).
 
 
@@ -90,7 +128,85 @@
     if (!ds || !ds.length) return;
     TR.dang = { ds, i: 0, t: 0, o: o || {} };
     G.click = null; if (G.stalePointers) G.stalePointers();
+    try { ds.forEach((f) => anhCua(f)); } catch (e) { /* ảnh lỗi thì vẽ nền code */ } // TẢI LƯỜI: chỉ bắt đầu tải ảnh khi mở truyện
   };
+
+  // ---------- ảnh cảnh truyện (canh-truyen 15/10): tải lười, Ken Burns, chữ trên dải tối ----------
+  // Khoá nền (f.nen) → tên ảnh trong game/art/truyen (docs/anh-goc/truyen). B4 'cuti' và B5 'hoi' chưa có ảnh: chỉ cần dựng
+  // b4-trao-vu-khi / b5-hoi-lang bằng tools/anh-truyen/dung.py rồi đóng gói lại, game tự dùng (chưa có thì vẽ nền code).
+  const ANH = { cayda: 'b1-trong-vo-cay-da-ua', yeu: 'b2-ba-yeu-tinh', song: 'b2b-bong-duoi-song', emBe: 'b3-ba-ban-bi-bat', cuti: 'b4-trao-vu-khi', hoi: 'b5-hoi-lang', lang: 'b6-nen-lang' };
+  TR.ANH = ANH;
+  const kho = {}; // tên ảnh → { img, ok, hong, t: lúc tải xong (giây) }
+  TR.khoAnh = kho;
+  const bayGio = () => (typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now()) / 1000;
+  function nguon(ten) {
+    const B = G.TRUYEN_ANH;
+    if (B && typeof B === 'object') return B[ten] || null; // bản đóng gói (build.py): chỉ ảnh có thật; bản một tệp là data:
+    // chạy thẳng game/index.html trong repo: qua máy chủ thử (http) thì tải art/truyen/; mở tệp (file://, các bài kiểm) thì không
+    // (ảnh file:// làm bẩn canvas và ảnh B4/B5 chưa có sẽ báo lỗi tải) → nền vẽ code như cũ
+    try { if (location.protocol === 'file:') return null; } catch (e) { return null; }
+    return { webp: 'art/truyen/' + ten + '.webp', jpg: 'art/truyen/' + ten + '.jpg' };
+  }
+  function taiAnh(ten) {
+    if (kho[ten]) return kho[ten];
+    const e = (kho[ten] = { img: null, ok: false, hong: false, t: 0 }), n = nguon(ten);
+    const ds = n ? [n.webp, n.jpg].filter((u) => typeof u === 'string' && u) : [];
+    if (!ds.length || typeof Image === 'undefined') { e.hong = true; return e; }
+    let i = 0;
+    const thu = () => { // WebP trước, trình duyệt không đọc được thì JPEG; hỏng cả hai: nền vẽ code
+      if (i >= ds.length) { e.hong = true; return; }
+      const im = new Image();
+      try { im.decoding = 'async'; } catch (er) { /* bỏ qua */ }
+      im.onload = () => { if (im.naturalWidth > 0) { e.img = im; e.ok = true; e.t = bayGio(); } else { i++; thu(); } };
+      im.onerror = () => { i++; thu(); };
+      im.src = ds[i];
+    };
+    thu();
+    return e;
+  }
+  function anhCua(f) {
+    if (CU || !f) return null;
+    const ten = ANH[f.nen || 'lang'];
+    return ten ? taiAnh(ten) : null;
+  }
+  // Ken Burns nhẹ: phóng 1,02 → 1,07 trong thời gian khung, trượt ngang chậm (khung chẵn sang phải, khung lẻ sang trái)
+  function veAnh(c, im, t, giay, i) {
+    const p0 = G.clamp(t / Math.max(1, giay), 0, 1), p = p0 * p0 * (3 - 2 * p0);
+    const s = 1.02 + 0.05 * p, w = 480 * s, h = 270 * s, mx = (w - 480) / 2, my = (h - 270) / 2, huong = i % 2 ? -1 : 1;
+    const x = -mx + huong * mx * 0.8 * (2 * p - 1), y = -my - my * 0.4 * (2 * p - 1);
+    G.wxDat(c, 0, 0);
+    const sm = c.imageSmoothingEnabled;
+    c.imageSmoothingEnabled = true;
+    try { c.imageSmoothingQuality = 'high'; } catch (e) { /* bỏ qua */ }
+    c.drawImage(im, x, y, w, h);
+    c.imageSmoothingEnabled = sm;
+  }
+  // Chữ trên dải tối dưới ảnh: luôn nằm trong khung 480×270 (lề 20, rộng 440), dài thì thu cỡ chữ (9,5 → 8) trước khi thêm dòng.
+  // Đo bằng chính ui.wrap (tự dịch tiếng Anh) và cùng cỡ chữ sẽ vẽ, nên không dòng nào tràn ngang.
+  const DAI = { x: 20, w: 440, day: 265 };
+  TR.DAI = DAI;
+  function boChu(f) {
+    const ten = f.ai ? tenAi(f.ai) : null;
+    let size = 9.5, lines = ui.wrap(f.loi, DAI.w, size, false);
+    while (lines.length > 3 && size > 8) { size -= 0.5; lines = ui.wrap(f.loi, DAI.w, size, false); }
+    const lh = size + 4, hTen = ten ? 12 : 0, h = hTen + size + 2 + (lines.length - 1) * lh + 6;
+    return { ten, size, lines, lh, hTen, h, y0: DAI.day - h };
+  }
+  TR.boChu = boChu;
+  function veDai(f, d) {
+    const c = G.ux, b = boChu(f), y0 = b.y0;
+    const g = c.createLinearGradient(0, y0 - 26, 0, 270);
+    g.addColorStop(0, 'rgba(8,6,12,0)'); g.addColorStop(0.3, 'rgba(8,6,12,0.6)'); g.addColorStop(1, 'rgba(8,6,12,0.88)');
+    c.fillStyle = g; c.fillRect(0, y0 - 26, 480, 270 - y0 + 26);
+    const g2 = c.createLinearGradient(0, 0, 0, 46); // dải mờ trên cùng cho chấm tiến độ, tên khung, nút Bỏ qua
+    g2.addColorStop(0, 'rgba(8,6,12,0.55)'); g2.addColorStop(1, 'rgba(8,6,12,0)');
+    c.fillStyle = g2; c.fillRect(0, 0, 480, 46);
+    const ga = c.globalAlpha; c.globalAlpha = ga * Math.min(1, d.t / 0.3 + 0.2);
+    if (b.ten) ui.text(b.ten, DAI.x, y0 + 9, { size: 8.5, bold: true, color: '#f6dc92' });
+    b.lines.forEach((l, k) => ui.text(l, DAI.x, y0 + b.hTen + b.size + 2 + k * b.lh, { size: b.size, color: '#f6efdc' }));
+    c.globalAlpha = ga;
+    return y0;
+  }
   function het() {
     const d = TR.dang; TR.dang = null;
     G.click = null; if (G.stalePointers) G.stalePointers();
@@ -116,17 +232,26 @@
     const d = TR.dang;
     if (!d) return;
     G.syncTaps = [];
-    const f = d.ds[d.i], c = G.wx;
-    try { veNen(f, d.t); } catch (e) { G.wxDat(c, 0, 0); c.fillStyle = '#120d10'; c.fillRect(0, 0, 480, 270); }
+    const f = d.ds[d.i], c = G.wx, a = anhCua(f), coAnh = !!(a && a.ok), mo = coAnh ? G.clamp((bayGio() - a.t) / 0.5, 0, 1) : 0;
+    if (mo < 1) { try { veNen(f, d.t); } catch (e) { G.wxDat(c, 0, 0); c.fillStyle = '#120d10'; c.fillRect(0, 0, 480, 270); } }
+    if (coAnh) { // ảnh về giữa khung thì hiện dần đè lên nền code (0,5 giây)
+      try {
+        c.globalAlpha = mo; veAnh(c, a.img, d.t, f.giay || 5, d.i); c.globalAlpha = 1;
+        if (f.ai && (f.nen || 'lang') === 'lang') veNguoiNoi(c, f);
+      } catch (e) { c.globalAlpha = 1; }
+    }
     G.wxDat(c, 0, 0);
     if (d.t < 0.35) { c.globalAlpha = 1 - d.t / 0.35; c.fillStyle = '#000'; c.fillRect(0, 0, 480, 270); c.globalAlpha = 1; }
-    // khung chữ dưới đáy
-    const size = 9, w = 448, x = 16, ten = f.ai ? tenAi(f.ai) : null;
-    const lines = ui.wrap(f.loi, w - 14, size, true), h = Math.max(24, lines.length * (size + 3) + 15);
-    const y = 260 - h;
-    const ga = G.ux.globalAlpha; G.ux.globalAlpha = ga * Math.min(1, d.t / 0.3 + 0.2);
-    T.dialog(x, y, w, ten, f.loi, { size, tail: f.ai ? 54 : -1 });
-    G.ux.globalAlpha = ga;
+    let y;
+    if (coAnh) y = veDai(f, d); // chữ trên dải tối dưới ảnh
+    else { // khung chữ dưới đáy (như cũ: chưa có ảnh, ảnh chưa về, hoặc ?truyencu=1)
+      const size = 9, w = 448, x = 16, ten = f.ai ? tenAi(f.ai) : null;
+      const lines = ui.wrap(f.loi, w - 14, size, true), h = Math.max(24, lines.length * (size + 3) + 15);
+      y = 260 - h;
+      const ga = G.ux.globalAlpha; G.ux.globalAlpha = ga * Math.min(1, d.t / 0.3 + 0.2);
+      T.dialog(x, y, w, ten, f.loi, { size, tail: f.ai ? 54 : -1 });
+      G.ux.globalAlpha = ga;
+    }
     ui.text('Chạm để tiếp ›', 462, y - 5, { size: 7.5, align: 'right', color: '#f6dc92' });
     // chấm tiến độ
     const n = d.ds.length;
@@ -228,20 +353,30 @@
         c.fillStyle = i % 3 ? '#e04a2a' : '#f0b030'; c.fillRect(x - 4, y - 5, 8, 10); c.fillStyle = '#ffd27a'; c.fillRect(x - 2, y - 3, 4, 6);
       }
       ['smith', 'hunter', 'healer', 'wrestler'].forEach((h, i) => emBe(c, h, 190 + i * 46, 190, 2, -1)); // ngồi quanh Cụ Đồ ở gốc đa
+    } else if (k === 'song') { // nền tạm khi ảnh b2b chưa về: mặt sông đêm, bóng dài cuộn dưới nước, hai mắt xanh
+      G.wxDat(c, 0, 0);
+      const gr = c.createLinearGradient(0, 0, 0, 270); gr.addColorStop(0, '#060b14'); gr.addColorStop(0.45, '#0c2230'); gr.addColorStop(1, '#03080c');
+      c.fillStyle = gr; c.fillRect(0, 0, 480, 270);
+      c.strokeStyle = 'rgba(60,140,150,0.35)'; c.lineWidth = 6;
+      c.beginPath(); for (let x = 40; x <= 440; x += 8) { const yy = 190 + Math.sin(x / 38 + t * 0.8) * 22; if (x === 40) c.moveTo(x, yy); else c.lineTo(x, yy); } c.stroke();
+      c.fillStyle = 'rgba(120,230,255,' + (0.6 + 0.3 * Math.sin(t * 2)) + ')'; c.fillRect(226, 222, 5, 3); c.fillRect(250, 222, 5, 3);
     } else {
       lang(240, 0.45); // nhìn về phía cây đa, khuất sân đình (không thấy em bé đang được kể là bị bắt)
     }
-    if (f.ai && k === 'lang') { // người đang nói đứng to bên trái
-      G.wxDat(c, 0, 0);
-      const gl = c.createRadialGradient(70, 150, 4, 70, 150, 70); gl.addColorStop(0, 'rgba(255,230,170,0.22)'); gl.addColorStop(1, 'rgba(255,230,170,0)');
-      c.fillStyle = gl; c.fillRect(0, 70, 150, 140);
-      nguoi(c, f.ai, 70, 196, 3);
-    }
+    if (f.ai && k === 'lang') veNguoiNoi(c, f);
+    G.wxDat(c, 0, 0);
+  }
+  function veNguoiNoi(c, f) { // người đang nói đứng to bên trái
+    G.wxDat(c, 0, 0);
+    const gl = c.createRadialGradient(70, 150, 4, 70, 150, 70); gl.addColorStop(0, 'rgba(255,230,170,0.22)'); gl.addColorStop(1, 'rgba(255,230,170,0)');
+    c.fillStyle = gl; c.fillRect(0, 70, 150, 140);
+    nguoi(c, f.ai, 70, 196, 3);
     G.wxDat(c, 0, 0);
   }
 
   // ---------- khi nào chiếu ----------
-  function moDau() { return MO_DAU.map((f, i) => Object.assign({ tieuDe: ['Linh khí cạn', 'Ba yêu tinh', 'Bị bắt', 'Lên đường'][i] }, f)); }
+  const TIEU_DE = CU ? ['Linh khí cạn', 'Ba yêu tinh', 'Bị bắt', 'Lên đường'] : ['Trống đồng vỡ', 'Ba yêu tinh', 'Bóng dưới sông', 'Bị bắt', 'Lên đường'];
+  function moDau() { return MO_DAU.map((f, i) => Object.assign({ tieuDe: TIEU_DE[i] }, f)); }
   function doanVung(r) {
     const ds = VUNG[r].map((f) => Object.assign({ nen: 'lang', giay: 5 }, f));
     return r === 2 ? ds.concat(KET.map((f) => Object.assign({ giay: 6 }, f))) : ds;

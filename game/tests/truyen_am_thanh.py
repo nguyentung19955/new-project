@@ -48,13 +48,14 @@ def main():
         # 1. Người mới: chạm màn chào -> vào làng -> mở đầu
         tap(240, 200, 700)
         d = pg.evaluate("G.truyen.dang && { i: G.truyen.dang.i, n: G.truyen.dang.ds.length }")
-        check('mở đầu hiện khi vào làng lần đầu', d and d['n'] == 4, d)
+        check('mở đầu hiện khi vào làng lần đầu', d and d['n'] == 5, d)  # canh-truyen 15/10: thêm khung bóng dưới sông
         pg.wait_for_timeout(600)
         shot('01-mo-dau-1-linh-khi-can')
         tap(240, 120, 900); shot('02-mo-dau-2-ba-yeu-tinh')
-        tap(240, 120, 900); shot('03-mo-dau-3-em-be-bi-bat')
-        tap(240, 120, 900); shot('04-mo-dau-4-cu-ti-len-duong')
-        check('chạm để sang khung', pg.evaluate('G.truyen.dang && G.truyen.dang.i') == 3)
+        tap(240, 120, 900); shot('03-mo-dau-3-bong-duoi-song')
+        tap(240, 120, 900); shot('03b-mo-dau-4-em-be-bi-bat')
+        tap(240, 120, 900); shot('04-mo-dau-5-cu-ti-len-duong')
+        check('chạm để sang khung', pg.evaluate('G.truyen.dang && G.truyen.dang.i') == 4)
         pg.evaluate("G.audioStart()")
         pg.wait_for_timeout(400)
         check('nhạc làng trong lúc chiếu truyện', pg.evaluate('G.nhac.ten') == 'lang', pg.evaluate('[G.nhac.ten, G.amThanh.ac() && G.amThanh.ac().state]'))
@@ -176,7 +177,7 @@ def main():
         pg.evaluate("G.truyen.het()")
         # 8. Tiếng Anh: không còn câu tiếng Việt chưa dịch trong các màn mới
         pg.evaluate("G.ngonNgu.dat('en', false); G.ngonNgu.thieu.clear(); G.truyen.xemLai()")
-        for _ in range(4):
+        for _ in range(5):
             pg.wait_for_timeout(250); pg.evaluate("G.truyen.tiep()")
         pg.evaluate("G.truyen.choi(G.truyen.LOI.VUNG[0].concat(G.truyen.LOI.KET).map(f => Object.assign({nen:'lang'}, f)))")
         pg.wait_for_timeout(300)

@@ -1654,5 +1654,18 @@
 "Nối chiêu!": "Combo!",
 "Nổi giận!": "Enraged!",
 "Ra chiêu nhanh hơn, nối chiêu": "Faster attacks, chained skills",
-"Nhanh hơn nữa, nối chiêu dồn dập": "Even faster, relentless combos"
+"Nhanh hơn nữa, nối chiêu dồn dập": "Even faster, relentless combos",
+// canh-truyen 15/10: lời truyện mạch trống đồng (nguồn: tools/ngon-ngu/tu-dien/truyen-am-thanh.json)
+"Trống đồng vỡ": "The broken drum",
+"Bóng dưới sông": "Shadow in the river",
+"Làng ven sông có cây đa nghìn tuổi và một trống đồng thiêng trấn yêu. Một đêm, trống bị đập vỡ. Lá đa úa vàng, linh khí cạn dần.": "The riverside village has a thousand-year-old banyan and a sacred bronze drum that keeps demons away. One night, the drum was smashed. The banyan's leaves turned yellow and its energy began to fade.",
+"Mất tiếng trống, ba yêu tinh thức dậy: Mộc Tinh ở Rừng già, Ngư Tinh ở Hang biển, Hồ Tinh ở Lâu đài cổ. Mỗi đứa ôm một mảnh trống vỡ.": "With the drum silent, three demons woke up: Moc Tinh in the Old Forest, Ngu Tinh in the Sea Cave, Ho Tinh in the Ancient Castle. Each one grabbed a piece of the broken drum.",
+"Dưới đáy sông có một cái bóng dài. Chính nó đập vỡ trống, hút linh khí cây đa qua rễ, rồi đánh thức yêu tinh để làng không để ý.": "Deep in the river lies a long shadow. It smashed the drum, sucks the banyan's energy through its roots, and woke the demons so the village would not notice.",
+"Cu Tèo, Cái Bống, Cu Lì, ba bạn thân của Cu Tí, đi nhặt mảnh trống cho làng rồi bị yêu tinh bắt mất.": "Cu Teo, Cai Bong and Cu Li, Cu Ti's best friends, went to gather the drum pieces for the village and were caught by the demons.",
+"Cu Tí ơi, ba bạn đang chờ cháu. Cầm lấy vũ khí sống này: nó lớn lên theo cháu. Cứu bạn, lấy lại mảnh trống. Chú Lái Đò chờ ở bến!": "Cu Ti, your three friends are waiting for you. Take this living weapon: it grows with you. Save them and bring back the drum pieces. The Ferryman waits at the dock!",
+"Cháu lấy lại được một mảnh trống rồi! Rừng già thở lại, cây đa đã nhú chồi. Nhưng Cái Bống còn kẹt ở Hang biển.": "You brought back a piece of the drum! The Old Forest breathes again, and the banyan has new buds. But Cai Bong is still trapped in the Sea Cave.",
+"Thêm một mảnh trống về làng! Biển êm, đò lại chạy. Bên kia sông, Lâu đài cổ đỏ rực lửa: Cu Lì ở trong đó.": "Another drum piece is home! The sea is calm, the ferry runs again. Across the river the Ancient Castle glows red with fire: Cu Li is in there.",
+"Mảnh trống thứ ba đã về. Ba yêu tinh ngủ lại, linh khí về làng, cây đa xanh lá.": "The third drum piece is back. The three demons sleep again, the energy returns, and the banyan is green.",
+"Tối ấy cả làng mở hội dưới gốc đa, mừng ba bạn trở về. Ba mảnh trống đã về đình, nhưng trống vẫn chưa lành. Hết truyện... mà chưa hết đâu!": "That night the village held a festival under the banyan to welcome the three friends home. Three drum pieces are back at the shrine, but the drum is still not whole. The end... or is it?",
+"Đêm xuống, mặt sông lại gợn sóng, như có gì dưới đáy chưa ngủ. Muốn thử sức thì gặp chú, chạm \"Độ khó 2\" nhé!": "At night the river ripples again, as if something down deep is still awake. If you want a real test, come to me and tap \"Difficulty 2\"!"
 }); })();

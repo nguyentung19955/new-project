@@ -1777,6 +1777,9 @@
         if (typeof caches === 'undefined' || !caches.keys) return;
         const giu = new Set();
         for (const it of theoMa.values()) { giu.add(it.png); if (it.webp) giu.add(it.webp); }
+        // canh-truyen 15/10: ảnh cảnh truyện anh/truyen-*.webp|jpg (js/truyen.js tải lười) cũng là ảnh của bản này
+        const TA = G.TRUYEN_ANH;
+        if (TA && typeof TA === 'object') for (const k in TA) { const v = TA[k] || {}; for (const d in v) if (typeof v[d] === 'string') giu.add(v[d]); }
         caches.keys().then((ten) => ten.forEach((n) => caches.open(n).then((c) => c.keys().then((ks) => ks.forEach((k) => {
           const m = /\/(anh\/[^/?#]+)(\?|#|$)/.exec(k.url);
           if ((m && !giu.has(m[1])) || /\/linh-khi-anh\.[0-9a-f]+\.json(\?|$)/.test(k.url)) c.delete(k);
