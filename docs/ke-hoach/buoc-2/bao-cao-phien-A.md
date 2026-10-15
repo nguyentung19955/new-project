@@ -124,11 +124,19 @@ không dư thêm (1.868 < 2.081). **Chưa bù** bằng cách bớt thưởng ch�
 Nếu Phiên E thấy cần bù, nút vặn gọn nhất nằm ở `G.SO_YQ` cuối `data.js`: `vang` (★, phần lớn vàng của sổ) và `vungDa`.
 
 ## 6. Commit
-- `c9d9af82` Bước 2 Phiên A: Sổ yêu quái — code, bảng `G.SO_YQ`, bài kiểm, ảnh soát, báo cáo. Đã `pull --rebase` lên commit Phiên B (`ebcd0c4b`):
-  `data.js` giữ cả hai khối (khối Phiên B rồi khối Phiên A ở cuối tệp), `dist/` sinh lại bằng `build.py` sau khi gộp.
-- Commit sau: cập nhật báo cáo này (mã commit, ghi chú mục 7).
+- `b50cabb4` Bước 2 Phiên A: Sổ yêu quái — code, bảng `G.SO_YQ`, bài kiểm, ảnh soát, báo cáo. Đã `pull --rebase` lên Phiên B (`ebcd0c4b`)
+  và Phiên C (`a5740a1c`): `data.js` giữ cả ba khối ở cuối tệp (B → C → A), `index.html` có đủ `viec_ngay.js`, `so_yeu_quai.js`, `thanh_tuu.js`,
+  `dist/` sinh lại bằng `build.py` sau khi gộp.
+- `c474111f` + commit cuối: cập nhật báo cáo này.
 
-Sau khi gộp với Phiên B đã chạy lại: `so_yeu_quai.test.js` PASS 41, `su_kien.test.js` PASS 83, `cloud_save_regression.test.js` 7 PASS, `build.py` không lỗi.
+Sửa nhỏ khi gộp với Phiên C (để ba hệ chạy cùng nhau):
+- Khối A trong `data.js` thêm `G.SO_YQ.ds = [{ ma, vung, loai, he }]` (cùng bảng, dạng danh sách): `thanh_tuu.js` đếm trang sổ qua `G.SO_YQ.ds[i].ma`
+  — trước đó nó không nhận ra dạng bảng `trang` nên "Chép sổ" / "Sổ đủ trang" luôn 0.
+- `tests/thanh_tuu.test.js`: 2 điều kiện so danh sách thẻ Ông Từ đúng bằng `'hero,thanhTuu'` / `'hero'` → bỏ thẻ `so` trước khi so (thẻ Sổ mở từ đầu).
+- `tests/so_yeu_quai.test.js`: kiểm thẻ Ông Từ theo thứ tự `hero, so, …` (có thể có `thanhTuu`).
+
+Sau khi gộp đã chạy lại: `so_yeu_quai.test.js` PASS 41, `su_kien.test.js` PASS 83, `thanh_tuu.test.js` PASS 35, `cloud_save_regression.test.js` 7 PASS,
+`build.py` không lỗi, ảnh soát chụp lại (Ông Từ: Cu Tí | Sổ | Thành tựu). `viec_ngay.test.js`: hỏng 1 điều kiện — xem mục 7.
 
 ## 7. Lưu ý cho phiên sau
 - **Phiên C**: gộp `G.soYQ.danhHieu(sv)` vào danh sách danh hiệu (6 danh hiệu sổ); thành tựu 27–28 đọc `G.soYQ.dem(sv)`.
