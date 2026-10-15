@@ -1671,5 +1671,11 @@
 "Thêm một mảnh trống về làng! Biển êm, đò lại chạy. Bên kia sông, Lâu đài cổ đỏ rực lửa: Cu Lì ở trong đó.": "Another drum piece is home! The sea is calm, the ferry runs again. Across the river the Ancient Castle glows red with fire: Cu Li is in there.",
 "Mảnh trống thứ ba đã về. Ba yêu tinh ngủ lại, linh khí về làng, cây đa xanh lá.": "The third drum piece is back. The three demons sleep again, the energy returns, and the banyan is green.",
 "Tối ấy cả làng mở hội dưới gốc đa, mừng ba bạn trở về. Ba mảnh trống đã về đình, nhưng trống vẫn chưa lành. Hết truyện... mà chưa hết đâu!": "That night the village held a festival under the banyan to welcome the three friends home. Three drum pieces are back at the shrine, but the drum is still not whole. The end... or is it?",
-"Đêm xuống, mặt sông lại gợn sóng, như có gì dưới đáy chưa ngủ. Muốn thử sức thì gặp chú, chạm \"Độ khó 2\" nhé!": "At night the river ripples again, as if something down deep is still awake. If you want a real test, come to me and tap \"Difficulty 2\"!"
+"Đêm xuống, mặt sông lại gợn sóng, như có gì dưới đáy chưa ngủ. Muốn thử sức thì gặp chú, chạm \"Độ khó 2\" nhé!": "At night the river ripples again, as if something down deep is still awake. If you want a real test, come to me and tap \"Difficulty 2\"!",
+// 15/10 be-sen: thêm tay 5 câu Bé Sen (cũng có trong tools/ngon-ngu/tu-dien/lang.json; tệp này đang lệch với tu-dien nên không chạy lại gop.py)
+"Bé Sen": "Little Sen",
+"Bố tớ chèo đò giỏi nhất làng đấy!": "My dad's the best boatman in the village!",
+"Tớ ngồi đây đếm cá nhảy, được bảy con rồi!": "I'm counting jumping fish. Seven so far!",
+"Cu Tí đi ải nhớ cẩn thận nha, về kể tớ nghe!": "Be careful out there, Cu Tí! Then tell me all about it!",
+"Đêm nay sông đục lạ... Bố dặn tớ đừng thò chân xuống nước.": "The river's strangely murky tonight... Dad says keep my feet out of the water."
 }); })();

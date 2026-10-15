@@ -537,6 +537,21 @@
     const keys = (G.HKEYS || []).filter((k) => G.save && k !== G.save.hero);
     return keys.slice(0, 3).map((k, i) => ({ key: k, x: B.be[i][0], y: B.be[i][1] }));
   }
+  // ---------- Bé Sen (15/10, docs/cot-truyen/CHUNG.md "Chủ game chốt thêm"): con gái Chú Lái Đò, ngồi ở bến đò cạnh bố ----------
+  // Ảnh: game/art/custom/nl-sen.sprite.json (hàng 'ngoi'). Chưa có ảnh thì không vẽ, không chạm được. Chạm: nói lần lượt 1 trong 4 câu.
+  // Không mở chức năng gì, không đổi số liệu.
+  // VÙNG 4 (G.VUNG4): khi có cảnh Bé Sen bị bắt thì ẩn bé cho tới khi hạ Thuồng Luồng. Phiên 2C vùng 4 nối bằng cách gán
+  //   VS.senVang = () => <đã chiếu mở vùng 4 mà chưa hạ Thuồng Luồng>; trả true là bé vắng mặt (không vẽ, không chạm, không chắn đường).
+  const SEN = { x: 670, y: 160, face: -1 }; // đầu cầu bến (cầu x 636–677), quay về phía bố; Cu Tí từ ải về lên bờ ở (662, 160) vẫn không vướng
+  const SEN_LOI = [
+    'Bố tớ chèo đò giỏi nhất làng đấy!',
+    'Tớ ngồi đây đếm cá nhảy, được bảy con rồi!',
+    'Cu Tí đi ải nhớ cẩn thận nha, về kể tớ nghe!',
+    'Đêm nay sông đục lạ... Bố dặn tớ đừng thò chân xuống nước.',
+  ];
+  const senSp = () => (G.spriteCustom && G.spriteCustom.get ? G.spriteCustom.get('nl-sen') : null);
+  const senO = () => { const sp = senSp(); return !!(sp && sp.img && sp.dt.ngoi) && !(VS.senVang && VS.senVang()); };
+  VS.SEN = SEN; VS.senO = senO;
   function blocked(x, y) {
     if (x < 8 || y < 62 || y > 250) return true;
     const onDock = x >= B.cau[0] - 2 && x <= B.cau[0] + B.cau[2] - 5 && y >= B.cau[1] - 5 && y <= B.cau[1] + 9;
@@ -550,6 +565,7 @@
     if (ro && x >= 336 && x <= 360 && y >= 146 && y <= 156) return true; // án thư Cụ Đồ
     for (const k of ORDER) { const q = NPCS[k].pos; if (Math.hypot(x - q[0], (y - q[1]) * 1.5) < rn) return true; }
     for (const q of B.be) if (Math.hypot(x - q[0], (y - q[1]) * 1.5) < rb) return true;
+    if (senO() && Math.hypot(x - SEN.x, (y - SEN.y) * 1.5) < rb) return true; // Bé Sen ngồi ở bến
     return false;
   }
   VS.blocked = blocked;
@@ -738,6 +754,10 @@
       if (!Hh || !D) return;
       if (G.zedHoc(g.id)) { say(G.t('{0}: "Nhớ chiêu tớ dạy nhé: {1}"', Hh.name, G.tv(D.ngan[0])), 3.5); G.sfx && G.sfx('pick'); }
       else { say(G.t('{0} còn bị {1} bắt. Hạ {1} để cứu bạn ấy.', Hh.name, D.boss), 3.5); G.sfx && G.sfx('warn'); }
+    } else if (g.kind === 'sen') { // Bé Sen: lần lượt từng câu, không mở bảng nào
+      S.face = SEN.x >= S.x ? 1 : -1;
+      S.senI = ((S.senI | 0) + 1) % SEN_LOI.length;
+      S.bubble = { at: [SEN.x, SEN.y - 26], s: SEN_LOI[S.senI], t: 3.2 }; G.sfx && G.sfx('pick', 0.6);
     } else if (g.kind === 'weapon') {
       G.sfx && G.sfx('ui');
       if (VS.onWeapon) VS.onWeapon(g.id); else { const w = G.weaponById(g.id); if (w) say(G.wName ? G.wName(w) : 'Vũ khí sống'); }
@@ -755,6 +775,7 @@
     let best = null, bd = 1e9;
     for (const k of ORDER) { if (!shown(k)) continue; const q = NPCS[k].pos; if (Math.abs(wx - q[0]) < halfW(k) && wy > q[1] - Math.max(40, 4 - topOf(k)) && wy < q[1] + 10) { const d = Math.hypot(wx - q[0], wy - q[1] + 14); if (d < bd) { bd = d; best = { kind: 'npc', id: k }; } } }
     for (const st of seats()) if (Math.abs(wx - st.x) < 14 && wy > st.y - 32 && wy < st.y + 8) { const d = Math.hypot(wx - st.x, wy - st.y + 12); if (d < bd) { bd = d; best = { kind: 'kid', id: st.key, x: st.x, y: st.y }; } }
+    if (senO() && Math.abs(wx - SEN.x) < 12 && wy > SEN.y - 26 && wy < SEN.y + 6) { const d = Math.hypot(wx - SEN.x, wy - SEN.y + 10); if (d < bd) { bd = d; best = { kind: 'sen', x: SEN.x, y: SEN.y }; } }
     if (!best && S.frogT <= 0 && Math.abs(wx - (B.gieng[0] - 9)) < 9 && Math.abs(wy - (B.gieng[1] - 12)) < 9) return { kind: 'frog' };
     return best;
   }
@@ -764,6 +785,7 @@
     if (h.kind === 'frog') { S.frogT = 6; S.bubble = { at: [B.gieng[0] - 9, B.gieng[1] - 20], s: 'Ộp!', t: 1 }; G.sfx && G.sfx('pick', 0.6); return; }
     if (h.kind === 'weapon') { interact(h); return; }
     if (h.kind === 'npc') { VS.goNpc(h.id); return; }
+    if (h.kind === 'sen') { if (!goTo(SEN.x - 14, SEN.y, h, true)) interact(h); return; } // Bé Sen: chạy tới cạnh bé rồi nghe bé nói
     if (!goTo(h.x, h.y + 13, h, true)) interact(h);
   }
 
@@ -828,6 +850,7 @@
       let bd = 30;
       for (const k of ORDER) { if (!shown(k)) continue; const q = NPCS[k].pos, d = Math.hypot(S.x - q[0], (S.y - q[1]) * 1.6); if (d < bd) { bd = d; S.near = { kind: 'npc', id: k }; } }
       for (const st of seats()) { const d = Math.hypot(S.x - st.x, (S.y - st.y) * 1.6) + 6; if (d < bd) { bd = d; S.near = { kind: 'kid', id: st.key }; } }
+      if (senO()) { const d = Math.hypot(S.x - SEN.x, (S.y - SEN.y) * 1.6) + 6; if (d < bd) { bd = d; S.near = { kind: 'sen' }; } }
     }
     // vũ khí sống bay theo sau
     for (let i = 0; i < 2; i++) {
@@ -1031,6 +1054,13 @@
       const ngoi = !!(G.spriteCustom && G.spriteCustom.caoNgoi && G.spriteCustom.caoNgoi(st.key));
       L.push([st.y, () => drawKid(c, st.key, st.x - cam, st.y, st.x > B.dinh[0] ? -1 : 1, { alpha: un ? null : 0.45, ngoi, move: !ngoi && un && Math.sin(t * 1.1 + st.x) > 0.75 })]);
     }
+    // Bé Sen ngồi ở bến đò cạnh bố (ảnh nl-sen hàng 'ngoi'), quay về phía làng
+    if (senO()) { const sp = senSp(); L.push([SEN.y, () => {
+      ell(c, SEN.x - cam, SEN.y, 7, 2, 'rgba(0,0,0,0.22)');
+      c.save(); c.translate(Math.round(SEN.x - cam), Math.round(SEN.y));
+      G.spriteCustom.veKhung(c, sp, 'ngoi', G.spriteCustom.khungLap(sp.dt.ngoi, t + 0.4), SEN.face, {});
+      c.restore();
+    }]); }
     if (!o.hideHero) {
       L.push([S.y, () => drawKid(c, sv.hero, S.x - cam, S.y, S.face, { move: S.moving })]);
     }
@@ -1129,6 +1159,7 @@
     // bong bóng tên chức năng trên đầu người đang ở gần
     if (S.near && S.near.kind === 'npc' && !S.bubble) { const N = NPCS[S.near.id]; VS.bubble(G.t(N.viec) + (S.news[S.near.id] ? '  !' : ''), N.pos[0] - cam, N.pos[1] + topOf(S.near.id) - 12 + OY, { bg: '#ffe9a8' }); }
     if (S.near && S.near.kind === 'kid') { const st = seats().find((q) => q.key === S.near.id); if (st) VS.bubble(G.HEROES[st.key].name, st.x - cam, st.y - ((G.spriteCustom && G.spriteCustom.caoNgoi && G.spriteCustom.caoNgoi(st.key)) ? G.spriteCustom.caoNgoi(st.key) + 2 : 30) + OY, { bg: '#ffe9a8', size: 7.5 }); }
+    if (S.near && S.near.kind === 'sen' && !S.bubble) VS.bubble('Bé Sen', SEN.x - cam, SEN.y - 24 + OY, { bg: '#ffe9a8', size: 7.5 });
     if (S.bubble) { const bq = S.bubble.who ? [NPCS[S.bubble.who].pos[0], NPCS[S.bubble.who].pos[1] + topOf(S.bubble.who) - 12] : S.bubble.at; VS.bubble(S.bubble.s, bq[0] - cam, bq[1] + OY, { maxW: 130 }); }
     // cần điều khiển
     const BA = G.btnArt;
