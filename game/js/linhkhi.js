@@ -87,8 +87,8 @@
   };
   // Hệ mà quái này sẽ cho dấu ấn nếu bị kết liễu bây giờ (giống luật trong G.kill), hoặc null.
   LK.markEl = function (e) {
-    if (!e || !e.st || e.illusion || e.marks === 0 || !G.hasStatus(e)) return null;
-    const s = e.st, on = { fire: s.fire > 0, poison: s.poisonN > 0, ice: s.iceN > 0 || s.frozen > 0 };
+    if (!e || !e.st || e.illusion || e.marks === 0 || !(G.hasStatus(e) || (G.bangBuaCon && G.bangBuaCon(e.st)))) return null;
+    const s = e.st, on = { fire: s.fire > 0, poison: s.poisonN > 0, ice: s.iceN > 0 || s.frozen > 0 || (G.bangBuaCon ? G.bangBuaCon(s) : false) }; // bua-bang: vừa tan băng do búa
     // Phiên linh-khi-theo-thay: cùng luật với G.kill (bỏ hiệu ứng do chưởng, chọn hệ đang thấy rõ nhất). Cờ tắt: như cũ.
     if (G.LK_THEO_THAY !== false && G.lkHeThay) {
       const ch = s.ch || {};

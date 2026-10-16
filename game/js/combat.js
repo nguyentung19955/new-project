@@ -248,6 +248,11 @@
   }
   // vu-khi-4 (16/10): cờ quay lui tỉ lệ gây hệ theo nhịp vũ khí (playerHit). ?hetheonhip=0 → G.HE_THEO_NHIP = false.
   if (G.HE_THEO_NHIP === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]hetheonhip=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.HE_THEO_NHIP = !tat; }
+  // bua-bang (16/10): quái thường bị ĐÓNG BĂNG BỞI NHÁT BÚA (playerHit) miễn đóng băng 3 giây thay vì 5 (trùm không đổi: choáng 0,5 giây,
+  // miễn 5 giây); quái vừa tan băng do búa (st.bangBua, freezeImm > 0) bị hạ vẫn tính dấu ấn Băng. ?buabang=0 → G.BUA_BANG = false (luật cũ).
+  if (G.BUA_BANG === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]buabang=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.BUA_BANG = !tat; }
+  const BUA_O = { bua: true };
+  G.bangBuaCon = (st) => G.BUA_BANG !== false && !!st.bangBua && st.freezeImm > 0;
   if (G.LK_THEO_THAY === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]lkthay=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.LK_THEO_THAY = !tat; }
   G.lkHeThay = function (st, on) {
     if (G.LK_THEO_THAY === false) return st.last && on[st.last] ? st.last : on.fire ? 'fire' : on.poison ? 'poison' : 'ice';
@@ -351,7 +356,7 @@
     return d;
   };
 
-  G.applyStatus = function (t, el, src, stacks) {
+  G.applyStatus = function (t, el, src, stacks, ao) { // ao: { bua: true } khi do nhát búa gây (playerHit)
     if (t.dead || t.hidden) return;
     const st = t.st, P = W.P;
     const dur = P.statusDur;
@@ -373,7 +378,7 @@
       } else if ((el === 'fire' && has.ice) || (el === 'ice' && has.fire)) {
         st.comboCd = 0.6;
         G.damage(t, 2.5 * src * P.comboMult, { el: 'fire', src: 'combo' });
-        st.fire = 0; st.fireDmg = 0; st.iceN = 0; st.iceT = 0; st.frozen = Math.min(st.frozen, 0);
+        st.fire = 0; st.fireDmg = 0; st.iceN = 0; st.iceT = 0; st.frozen = Math.min(st.frozen, 0); st.bangBua = false; // bua-bang: Sốc nhiệt tiêu băng
         FX('combo', 'shock', t);
         G.sfx('boom', 1.6);
         return;
@@ -400,7 +405,9 @@
       if (st.freezeImm > 0) st.iceN = Math.min(4, st.iceN);
       else if (st.iceN >= 5) {
         st.iceN = 0;
-        st.freezeImm = 5;
+        const bua = !!(ao && ao.bua) && !t.isBoss && G.BUA_BANG !== false;
+        st.freezeImm = bua ? 3 : 5;
+        st.bangBua = bua;
         if (t.isBoss) st.stun = Math.max(st.stun, 0.5); else st.frozen = 1.5 * dur;
         FX('freeze', t);
       }
@@ -446,7 +453,7 @@
     // Linh khí chỉ đến từ vũ khí: hiệu ứng do chưởng gây (e.st.ch) không tính hệ, quái thường bị chưởng kết liễu không cho dấu ấn.
     // Tinh anh, trùm gục vì chưởng vẫn cho phần thưởng linh khí của nó cho vũ khí đang cầm (hệ theo hiệu ứng của vũ khí, không thì của vùng).
     const chs = e.st.ch || {};
-    const on = { fire: e.st.fire > 0 && !chs.fire, poison: e.st.poisonN > 0 && !chs.poison, ice: (e.st.iceN > 0 || e.st.frozen > 0) && !chs.ice };
+    const on = { fire: e.st.fire > 0 && !chs.fire, poison: e.st.poisonN > 0 && !chs.poison, ice: (e.st.iceN > 0 || e.st.frozen > 0 || G.bangBuaCon(e.st)) && !chs.ice };
     const hasW = on.fire || on.poison || on.ice;
     if ((hasW && !(o && o.ch)) || (big && L)) {
       // Hệ của dấu ấn: hiệu ứng gây sau cùng nếu nó còn hiệu lực, không thì hiệu ứng đang có; tinh anh, trùm không dính gì thì hệ của vùng.
@@ -535,7 +542,7 @@
       // không nhích (Băng bị giới hạn bởi miễn đóng băng 5 giây, không phải số tầng) → bỏ. Xem docs/review/ke-hoach-cai-thien/vu-khi-4.
       if (G.HE_THEO_NHIP !== false) chance = Math.min(1, chance * Math.max(1, (T.cd || 0.36) / 0.36));
       if (P.firstHit && P.swapProc) chance = 1;
-      if (G.rnd() < chance) G.applyStatus(e, el, d, 1);
+      if (G.rnd() < chance) G.applyStatus(e, el, d, 1, w.type === 'hammer' ? BUA_O : undefined);
     }
     P.firstHit = false;
   }
