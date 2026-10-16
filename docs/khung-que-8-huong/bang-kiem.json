@@ -101,6 +101,75 @@
   ]
  },
  {
+  "ma": "05-trung-don",
+  "ten": "Trúng đòn",
+  "so": 4,
+  "giay": 0.2,
+  "lap": false,
+  "cham": null,
+  "max_khop": "khuỷu trái",
+  "max_goc": 30.0,
+  "giua": [
+   2,
+   3
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 46.8,
+  "max2d_huong": "e",
+  "max2d_cho": [
+   2,
+   3,
+   "vai_t-khuyu_t"
+  ]
+ },
+ {
+  "ma": "06-chet",
+  "ten": "Chết",
+  "so": 8,
+  "giay": 0.6,
+  "lap": false,
+  "cham": null,
+  "max_khop": "gối phải",
+  "max_goc": 28.0,
+  "giua": [
+   1,
+   2
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 52.6,
+  "max2d_huong": "ne",
+  "max2d_cho": [
+   2,
+   3,
+   "hong_p-goi_p"
+  ]
+ },
+ {
+  "ma": "07-chuong",
+  "ten": "Chưởng",
+  "so": 6,
+  "giay": 0.3,
+  "lap": false,
+  "cham": 4,
+  "max_khop": "khuỷu phải",
+  "max_goc": 44.0,
+  "giua": [
+   3,
+   4
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 42.5,
+  "max2d_huong": "e",
+  "max2d_cho": [
+   3,
+   4,
+   "vai_p-khuyu_p"
+  ]
+ },
+ {
   "ma": "08-kiem-1",
   "ten": "Kiếm nhát 1",
   "so": 5,
@@ -167,6 +236,397 @@
    2,
    3,
    "khuyu_t-co_tay_t"
+  ]
+ },
+ {
+  "ma": "11-thuong-1",
+  "ten": "Thương nhát 1",
+  "so": 6,
+  "giay": 0.38,
+  "lap": false,
+  "cham": 3,
+  "max_khop": "vai phải",
+  "max_goc": 45.0,
+  "giua": [
+   2,
+   3
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 56.7,
+  "max2d_huong": "s",
+  "max2d_cho": [
+   2,
+   3,
+   "khuyu_t-co_tay_t"
+  ]
+ },
+ {
+  "ma": "12-thuong-2",
+  "ten": "Thương nhát 2",
+  "so": 6,
+  "giay": 0.34,
+  "lap": false,
+  "cham": 3,
+  "max_khop": "vai phải",
+  "max_goc": 45.0,
+  "giua": [
+   2,
+   3
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 56.7,
+  "max2d_huong": "s",
+  "max2d_cho": [
+   2,
+   3,
+   "khuyu_t-co_tay_t"
+  ]
+ },
+ {
+  "ma": "13-thuong-3",
+  "ten": "Thương nhát 3",
+  "so": 6,
+  "giay": 0.34,
+  "lap": false,
+  "cham": 3,
+  "max_khop": "vai phải",
+  "max_goc": 45.0,
+  "giua": [
+   2,
+   3
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 58.8,
+  "max2d_huong": "s",
+  "max2d_cho": [
+   2,
+   3,
+   "khuyu_t-co_tay_t"
+  ]
+ },
+ {
+  "ma": "14-thuong-quet",
+  "ten": "Thương quét",
+  "so": 6,
+  "giay": 0.52,
+  "lap": false,
+  "cham": 3,
+  "max_khop": "vai phải",
+  "max_goc": 40.0,
+  "giua": [
+   2,
+   3
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 90.3,
+  "max2d_huong": "s",
+  "max2d_cho": [
+   3,
+   4,
+   "khuyu_p-co_tay_p"
+  ]
+ },
+ {
+  "ma": "15-thuong-giu",
+  "ten": "Thương giữ (tụ lực)",
+  "so": 3,
+  "giay": 0.45,
+  "lap": true,
+  "cham": null,
+  "max_khop": "eo (thân trên)",
+  "max_goc": 2.0,
+  "giua": [
+   2,
+   3
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 2.2,
+  "max2d_huong": "ne",
+  "max2d_cho": [
+   2,
+   3,
+   "vai_p-khuyu_p"
+  ]
+ },
+ {
+  "ma": "16-thuong-xoc",
+  "ten": "Thương xốc (lướt đâm)",
+  "so": 4,
+  "giay": 0.16,
+  "lap": false,
+  "cham": 2,
+  "max_khop": "gối phải",
+  "max_goc": 30.0,
+  "giua": [
+   3,
+   4
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 50.8,
+  "max2d_huong": "se",
+  "max2d_cho": [
+   3,
+   4,
+   "goi_p-co_chan_p"
+  ]
+ },
+ {
+  "ma": "17-bua-nen",
+  "ten": "Búa nện",
+  "so": 8,
+  "giay": 0.8,
+  "lap": false,
+  "cham": 3,
+  "max_khop": "vai phải",
+  "max_goc": 45.0,
+  "giua": [
+   1,
+   2
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 180.0,
+  "max2d_huong": "se",
+  "max2d_cho": [
+   2,
+   3,
+   "khuyu_t-co_tay_t"
+  ]
+ },
+ {
+  "ma": "18-bua-giu",
+  "ten": "Búa giữ (tụ lực)",
+  "so": 4,
+  "giay": 0.5,
+  "lap": true,
+  "cham": null,
+  "max_khop": "gối phải",
+  "max_goc": 2.0,
+  "giua": [
+   2,
+   3
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 4.0,
+  "max2d_huong": "ne",
+  "max2d_cho": [
+   1,
+   2,
+   "khuyu_t-co_tay_t"
+  ]
+ },
+ {
+  "ma": "19-bua-nen-dat",
+  "ten": "Búa nện đất",
+  "so": 6,
+  "giay": 0.7,
+  "lap": false,
+  "cham": 3,
+  "max_khop": "vai phải",
+  "max_goc": 40.0,
+  "giua": [
+   1,
+   2
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 126.0,
+  "max2d_huong": "e",
+  "max2d_cho": [
+   1,
+   2,
+   "khuyu_t-co_tay_t"
+  ]
+ },
+ {
+  "ma": "20-phi-tieu",
+  "ten": "Phi tiêu",
+  "so": 6,
+  "giay": 0.38,
+  "lap": false,
+  "cham": 3,
+  "max_khop": "khuỷu phải",
+  "max_goc": 45.0,
+  "giua": [
+   2,
+   3
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 77.9,
+  "max2d_huong": "ne",
+  "max2d_cho": [
+   1,
+   2,
+   "vai_t-khuyu_t"
+  ]
+ },
+ {
+  "ma": "21-phi-tieu-ngam",
+  "ten": "Phi tiêu ngắm",
+  "so": 3,
+  "giay": 0.45,
+  "lap": true,
+  "cham": null,
+  "max_khop": "eo (thân trên)",
+  "max_goc": 2.0,
+  "giua": [
+   2,
+   3
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 4.0,
+  "max2d_huong": "n",
+  "max2d_cho": [
+   2,
+   3,
+   "vai_t-khuyu_t"
+  ]
+ },
+ {
+  "ma": "22-phi-tieu-chum",
+  "ten": "Phi tiêu chùm",
+  "so": 6,
+  "giay": 0.5,
+  "lap": false,
+  "cham": 2,
+  "max_khop": "khuỷu phải",
+  "max_goc": 45.0,
+  "giua": [
+   1,
+   2
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 73.0,
+  "max2d_huong": "ne",
+  "max2d_cho": [
+   2,
+   3,
+   "khuyu_p-co_tay_p"
+  ]
+ },
+ {
+  "ma": "23-tram-nguyet",
+  "ten": "Trảm nguyệt (chiêu kiếm)",
+  "so": 6,
+  "giay": 0.35,
+  "lap": false,
+  "cham": 2,
+  "max_khop": "eo (thân trên)",
+  "max_goc": 41.2,
+  "giua": [
+   1,
+   2
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 69.0,
+  "max2d_huong": "se",
+  "max2d_cho": [
+   1,
+   2,
+   "khuyu_p-co_tay_p"
+  ]
+ },
+ {
+  "ma": "24-phi-thuong",
+  "ten": "Phi thương (chiêu thương)",
+  "so": 6,
+  "giay": 0.35,
+  "lap": false,
+  "cham": 2,
+  "max_khop": "khuỷu phải",
+  "max_goc": 45.0,
+  "giua": [
+   1,
+   2
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 58.5,
+  "max2d_huong": "se",
+  "max2d_cho": [
+   2,
+   3,
+   "khuyu_p-co_tay_p"
+  ]
+ },
+ {
+  "ma": "25-dia-chan",
+  "ten": "Địa chấn (chiêu búa)",
+  "so": 6,
+  "giay": 0.35,
+  "lap": false,
+  "cham": 2,
+  "max_khop": "vai phải",
+  "max_goc": 45.0,
+  "giua": [
+   1,
+   2
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 177.1,
+  "max2d_huong": "se",
+  "max2d_cho": [
+   1,
+   2,
+   "khuyu_t-co_tay_t"
+  ]
+ },
+ {
+  "ma": "26-mua-phi-tieu",
+  "ten": "Mưa phi tiêu (chiêu phi tiêu)",
+  "so": 6,
+  "giay": 0.35,
+  "lap": false,
+  "cham": 2,
+  "max_khop": "vai phải",
+  "max_goc": 43.0,
+  "giua": [
+   4,
+   5
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 70.7,
+  "max2d_huong": "se",
+  "max2d_cho": [
+   4,
+   5,
+   "vai_p-khuyu_p"
+  ]
+ },
+ {
+  "ma": "27-dam",
+  "ten": "Đấm (tay không)",
+  "so": 5,
+  "giay": 0.3,
+  "lap": false,
+  "cham": 3,
+  "max_khop": "khuỷu phải",
+  "max_goc": 45.0,
+  "giua": [
+   2,
+   3
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 56.0,
+  "max2d_huong": "ne",
+  "max2d_cho": [
+   2,
+   3,
+   "vai_t-khuyu_t"
   ]
  }
 ]

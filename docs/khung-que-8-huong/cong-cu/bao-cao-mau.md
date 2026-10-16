@@ -81,7 +81,7 @@ Prompt từng khung ghi sẵn "orange arm FRONT / purple arm BEHIND body…" tí
 
 {{BANG}}
 
-Cột **2D** đo góc xoay của từng đoạn xương *trên màn hình* (không tính vũ khí). Với đòn nhanh (kiếm 0,3 giây, 5 khung, khung chạm ở khung 3) cẳng tay và lưỡi kiếm vẫn quét 90–170° giữa khung lấy đà và khung chạm, vì vai + khuỷu + cổ tay + eo cùng xoay (mỗi khớp ≤ 45°). Đây là giới hạn khi **giữ nguyên số khung**; game đã xoay vũ khí nội suy êm giữa 2 khung và có vệt chém che chỗ này. Đi, chạy, đứng: mọi đoạn xương trên màn hình đổi ≤ ~45°.
+Cột **2D** (tham khảo) đo góc xoay của từng đoạn xương *trên màn hình* (không tính vũ khí). Với đòn nhanh (kiếm, búa, các chiêu: 0,3–0,5 giây, khung chạm ở khung 2–3) cẳng tay vẫn quét 60–180° trên màn hình giữa khung lấy đà và khung chạm, vì vai + khuỷu + cổ tay + eo cùng xoay (mỗi khớp ≤ 45°). Đây là giới hạn khi **giữ nguyên số khung**; game đã xoay vũ khí nội suy êm giữa 2 khung và có vệt chém che chỗ này. Đi, chạy, đứng: mọi đoạn xương trên màn hình đổi ≤ ~45°.
 
 Đã lo thêm cho mượt: vòng lặp (đứng, đi, chạy, giữ thương, giữ búa, ngắm phi tiêu) có khung cuối nối khung đầu; đi/chạy tay vung **ngược pha** chân (chân phải tới thì tay trái tới), vai xoay ngược hông; mỗi đòn có **khung lấy đà** (vặn eo, dồn trọng tâm ra sau) và **khung dư** (vũ khí đi tiếp theo cung rồi mới hồi) nằm trong số khung sẵn có; đòn đánh lấy đà chủ yếu bằng eo và chân để tay không phải giật xa.
 
