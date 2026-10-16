@@ -36,10 +36,32 @@
 // vẽ sau vũ khí), chọn góc gần góc vũ khí nhất, xoay phần lệch còn lại; thiếu ảnh thì về lớp ngón tự vẽ. Tắt: ?ngonanh=0 (G.NGON_ANH).
 // Chạy cầm thương / búa dùng hàng chay2tay (ảnh moi/03-chay-2tay.png: hai nắm tay trước ngực, cả 12 khung cầm hai tay); kiếm / phi tiêu
 // và các bộ trang phục chưa có ảnh giữ hàng chạy cũ. Tắt: ?chay2tay=0 (G.CHAY_2TAY).
+// CU TÍ TO + MƯỢT (16/10/2026, docs/review/ke-hoach-cai-thien/cu-ti-to-muot/bao-cao.md) — CHỈ HÌNH, không đổi va chạm / vùng trúng / nhịp đòn:
+//  - TO HƠN (?cotiTo=0 về cỡ cũ; ?cotiTo=1.25 thử cỡ khác, 1..1,5): trong trận (lần vẽ có o.p) cả người + vũ khí + nắm tay được dựng ở
+//    cỡ cũ vào canvas phụ (nét ×2 như nền), rồi vẽ ra ×G.COTI_TO quanh CHÂN (chân không rời bóng). Canvas phụ đặt đúng lưới điểm ảnh thật nên
+//    phép phóng 1,2 lặp đều mỗi 5 điểm ảnh (không nhoè, không rung khi đi). Bóng chân, mũi vũ khí cho vệt chém (doiTip) phóng theo. Hình ở
+//    giao diện (chân dung, làng, truyện) giữ cỡ cũ. Hộp va chạm, vùng trúng, tầm đánh của Tí và cỡ quái KHÔNG đổi.
+//  - MƯỢT (?muot2=0 tắt cả nhóm): (a) giữ khung cuối của đòn ~0,06 giây rồi mới về đứng; (b) mờ chuyển 0,1 giây khi vào đứng / bước
+//    (khung cũ — chính ảnh vừa vẽ — mờ dần đè lên khung mới); (c) đứng thở luôn bắt đầu từ khung 1 sau mỗi động tác; (d) chân chạy / đi
+//    theo QUÃNG ĐƯỜNG thật (sải chân đo trên ảnh × cỡ hiển thị) → hết trượt chân, chạy chậm khi vừa chạy vừa chém thì bước chậm theo;
+//    (e) góc vũ khí nối êm 0,1 giây mỗi khi đổi hàng ảnh (vào chiêu đặc biệt, thả búa / thương đang giữ…), không bật 150–180°;
+//    (f) đổi vũ khí: món mới hiện dần 0,12 giây.
 (function () {
   const G = window.G;
   const SC = G.spriteCustom;
   if (!SC) return;
+  const QS = (() => { try { return (typeof location !== 'undefined' && location.search) || ''; } catch (e) { return ''; } })();
+  if (G.COTI_TO === undefined) {
+    const m = /[?&]coti[Tt]o=([0-9.]+)(&|$)/.exec(QS);
+    let k = 1.2;
+    if (m) { k = parseFloat(m[1]); if (!(k >= 1)) k = 1; if (k > 1.5) k = 1.5; }
+    G.COTI_TO = k;
+  }
+  if (G.MUOT2 === undefined) G.MUOT2 = !/[?&]muot2=0(&|$)/.test(QS);
+  const muot2 = () => G.MUOT2 !== false;
+  // Cỡ hiển thị của một lần vẽ: o.to (ép), hoặc G.COTI_TO khi vẽ trong trận (có o.p), còn lại 1. G.cotiTo(): cỡ trong trận (js/fx_he.js đọc).
+  const toCua = (o) => { const k = o && o.to != null ? +o.to : o && o.p ? +G.COTI_TO || 1 : 1; return k > 0 ? k : 1; };
+  G.cotiTo = () => +G.COTI_TO || 1;
   const laZed = (o) => !!o && (o.key === 'smith' || !o.key);
   const lay = (ma) => {
     const z = SC.zed && SC.zed[ma];
@@ -139,8 +161,9 @@
   // bao-cao-B (16/10): búa báo trước rõ hơn — khung 2 (búa giơ cao quá đầu) giữ từ 0,05 tới đúng lúc nện 0,35 (~0,24 giây) thay vì chỉ
   // 0,16 giây; khung 1 (vào thế) rút còn 0,04 giây. Chỉ dời mốc khung ảnh có sẵn, thời lượng đòn và lúc chạm không đổi. Tắt: ?camgiac=0.
   const MOC_BUA_BT = [0, 0.05, 0.35, 0.5, 0.62, 0.74, 0.85, 0.93];
+  const mocCua = (ten) => (ten === 'bua_nen' && G.CAM_GIAC_VK !== false ? MOC_BUA_BT : MOC[ten]);
   function khungMot(D, ten, u) {
-    const a = D.dong_tac[ten], m = ten === 'bua_nen' && G.CAM_GIAC_VK !== false ? MOC_BUA_BT : MOC[ten];
+    const a = D.dong_tac[ten], m = mocCua(ten);
     u = kep(u || 0, 0, 1);
     if (m && m.length === a.so) { let i = 0; while (i < a.so - 1 && u + 1e-6 >= m[i + 1]) i++; return i; }
     return Math.min(a.so - 1, Math.floor(u * a.so));
@@ -169,6 +192,11 @@
   const BUOC = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
   const BUOC_VAO = 0.65, BUOC_RA = 0.55;
   const buocCua = (o) => (G.NHIP_CUTI !== false && BUOC && o.p && (o.t == null || o.t === o.p.t) ? o.p : null);
+  // cu-ti-to-muot (d): SẢI CHÂN một vòng hàng ảnh, điểm ảnh game ở cỡ cũ (đo trên tấm zed-moi: bàn chân trụ lùi 24,5 / 29,5 điểm ảnh nguồn
+  // qua 4 khung chạm đất của hàng chạy / chạy hai tay → 12 khung = 36,8 / 44,3; đi bộ: hai lần dạng chân mỗi vòng ≈ 31). Pha bước tăng theo
+  // quãng đường đã đi / (sải × cỡ hiển thị) → bàn chân trụ đứng yên trên nền. Đứng sát tường (đẩy cần mà không đi được): vẫn bước chậm
+  // bằng 35% nhịp cũ. Lướt kiếm (nhan 2) giữ nhịp theo thời gian như cũ.
+  const SAI = { chay: 36.8, chay2tay: 44.3, di: 31 };
   function buoc(o, D, ten0, nhan) { // ten0: ép hàng ('chay'), không thì chọn đi / chạy theo P.diTL có vùng đệm; nhan: hệ số nhịp
     const p = buocCua(o);
     if (!p) return null;
@@ -177,6 +205,9 @@
     if (!b) BUOC.set(p, (b = { ph: 0, t, chay: true, di: false }));
     const dt = b.di ? kep(t - b.t, 0, 0.1) : 0;
     if (!b.di) b.ph = 0; // vừa bắt đầu bước: khung 1
+    let qd = 0; // quãng đường (điểm ảnh game, dọc quy về sàn ÷0,75) từ lần vẽ trước
+    if (b.di && b.x != null && t > b.t) { qd = Math.hypot((o.x || 0) - b.x, ((o.y || 0) - b.y) / 0.75); if (!(qd < 30)) qd = 0; } // dời quá xa: dịch chuyển
+    if (t > b.t || !b.di) { b.x = o.x || 0; b.y = o.y || 0; }
     b.di = true; b.t = t;
     const tl = p.diTL;
     if (tl == null) b.chay = true;
@@ -184,7 +215,10 @@
     else if (!b.chay && tl > BUOC_VAO) b.chay = true;
     const ten = ten0 || (b.chay || !D.dong_tac.di ? 'chay' : 'di'), a = D.dong_tac[ten];
     if (!a) return null;
-    b.ph = (b.ph + (dt * (nhan || 1)) / giayLap(ten, a)) % 1;
+    if (muot2() && (nhan || 1) <= 1) {
+      const sai = (ten === 'chay' && chay2(o, D) ? SAI.chay2tay : SAI[ten] || SAI.chay) * toCua(o);
+      b.ph = (b.ph + Math.max(qd / sai, (dt * 0.35) / giayLap(ten, a))) % 1;
+    } else b.ph = (b.ph + (dt * (nhan || 1)) / giayLap(ten, a)) % 1;
     const v = b.ph * a.so, i = Math.floor(v) % a.so;
     return { ten, i, fl: v - Math.floor(v), i2: (i + 1) % a.so };
   }
@@ -214,7 +248,18 @@
     const w = o.weapon, l = w && VK_LOAI[w.type];
     return G.CHAY_2TAY !== false && G.CAM_VK !== false && (l === 'thuong' || l === 'bua') && !!D.dong_tac.chay2tay && !!D.dong_tac['chay2tay_' + l];
   }
+  // cu-ti-to-muot (a) + (c): trạng thái theo em bé (chỉ lần vẽ của chính em bé, o.t = P.t; mọi lần hỏi trong cùng G.time cho cùng kết quả).
+  //  cuoi: khung cuối của động tác một lần (đòn, lộn, trúng đòn, chưởng, chiêu đặc biệt) vừa vẽ — về đứng thì giữ thêm GIU_CUOI giây;
+  //  dung0: lúc bắt đầu đứng (đứng thở chạy từ khung 1 thay vì khung bất kỳ theo đồng hồ chung).
+  const TT = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  const GIU_CUOI = 0.06;
+  const ttCua = (o) => { const p = buocCua(o); if (!p || !TT || !muot2()) return null; let r = TT.get(p); if (!r) TT.set(p, (r = { cuoi: null, dung0: 0, dungT: null })); return r; };
   function chon0(o, D) {
+    const s = chon1(o, D), r = s && ttCua(o);
+    if (r && !s.giuCuoi && s.u != null && !D.dong_tac[s.ten].lap && s.ten !== 'chet') r.cuoi = { ten: s.ten, t: G.time || 0, f: o.face < 0 ? -1 : 1 };
+    return s;
+  }
+  function chon1(o, D) {
     const p = o.p, t = (o.t != null ? o.t : G.time) || 0, tc = o.tc != null && isFinite(o.tc) ? o.tc : t;
     const mv = p && p.mv, wt = o.weapon && o.weapon.type;
     let goc = wt; // loại vũ khí thật (giáo đang bay thì o.weapon là 'fist' nhưng chiêu đặc biệt vẫn là của giáo)
@@ -248,6 +293,16 @@
     }
     if ((p && p.hurtT > 0) || (!p && o.flash)) return mot('trung', p ? 1 - p.hurtT / 0.2 : 0.3);
     if (o.move) return buocB() || lap(p && p.diTL != null && p.diTL < DI_BO ? 'di' : 'chay', tc);
+    const r = ttCua(o);
+    if (r) {
+      const c = r.cuoi, now = G.time || 0;
+      // (a) vừa hết động tác một lần, đứng yên, cùng mặt: giữ khung cuối thêm GIU_CUOI giây (khung cuối = thế thu tay của chính ảnh đó)
+      if (c && now - c.t <= GIU_CUOI && c.f === (o.face < 0 ? -1 : 1) && D.dong_tac[c.ten]) return Object.assign(mot(c.ten, 1), { giuCuoi: 1 });
+      // (c) đứng thở từ khung 1
+      if (r.dungT == null || now - r.dungT > 0.05) r.dung0 = now;
+      r.dungT = now;
+      return lap('dung', now - r.dung0);
+    }
     return lap('dung', t);
   }
 
@@ -373,7 +428,46 @@
     let H = huongCua(o, T, wa);
     if (H && ve) H = hvMuot(H);
     const g = H ? H.g : 0, lean = H && !s.theo ? H.lean : 0; // chạy kiểu cũ (thân hàng chạy, s.theo): không nghiêng thân chạy
-    return { da, n, wa, B, cap: capVk(w), he: heVk(w), ang: gocMuot(o, da, wa, n, g, B.neo), cam: !!wa.cam, lean, hv: !!H, w };
+    let ang = gocMuot(o, da, wa, n, g, B.neo), mo = 1;
+    if (muot2()) {
+      ang = noiHang(o, wa.ten, ang, ve);
+      const p = o.p, t = G.time || 0; // (f) vừa đổi vũ khí (P.swapAt, js/combat.js): món mới hiện dần
+      if (p && p.swapAt != null && t - p.swapAt >= 0 && t - p.swapAt < DOI_MO) mo = 0.3 + 0.7 * ss((t - p.swapAt) / DOI_MO);
+    }
+    return { da, n, wa, B, cap: capVk(w), he: heVk(w), ang, cam: !!wa.cam, lean, hv: !!H, w, mo };
+  }
+  // cu-ti-to-muot (e): đổi HÀNG ảnh có vũ khí (đứng → chiêu đặc biệt, búa giữ → nện đất, thương giữ → xốc / quét…) mà góc vừa vẽ lệch
+  // quá 20° so với góc mới → trong NOI_HANG giây đầu góc đi dần (đường ngắn nhất, chậm–nhanh–chậm) từ góc vừa vẽ. Lần đo của fx (ve = false)
+  // chỉ đọc. Nối sẵn có (vào thế đầu đòn VAO, về thế cầm RA) vẫn chạy như cũ; nối này chỉ phủ các chỗ hai nối kia không phủ.
+  const NOI_HANG = 0.1, DOI_MO = 0.12;
+  function noiHang(o, ten, a, ve) {
+    const p = o.p, r = p && NHO ? NHO.get(p) : null;
+    if (!r || r.ve == null) return a;
+    const t = G.time || 0, f = o.face < 0 ? -1 : 1;
+    if (ve && !NOI_BO[ten] && r.ten != null && r.ten !== ten && r.f === f && t - r.t < 0.15 && t > r.t) { const d = gocGan(a, r.ve) - a; if (Math.abs(d) > 20) r.nh = { d, t0: t, ten }; }
+    const q = r.nh;
+    if (!q || q.ten !== ten || r.f !== f || !(t - q.t0 < NOI_HANG)) return a;
+    // lệch ban đầu d (góc cũ − góc mới) giảm dần về 0: góc mới tự quay theo ảnh thì góc vẽ vẫn liền (không đổi phía ±180° giữa chừng)
+    return a + q.d * (0.5 + 0.5 * Math.cos((Math.PI * (t - q.t0)) / NOI_HANG));
+  }
+  // Hàng KHÔNG nối: Địa chấn và thả búa nện đất — thân ảnh khung đầu đã ở thế búa giơ sau đầu, vũ khí khớp ngay thân rồi vung qua đầu
+  // (QUA bên dưới); nối 0,1 giây ở đây sẽ kéo búa đi ngược chiều cú nện.
+  const NOI_BO = { db_bua: 1, bua_nen_dat: 1 };
+  // Nối góc g0 → a theo tiến độ e (0..1), đường ngắn nhất như cũ; nhưng nếu giữa chừng góc đích a (tự quay theo ảnh) đi qua phía đối diện g0
+  // thì "đường ngắn nhất" đổi phía và góc vẽ bật 360°×(1−e) (thấy rõ ở quét thương: +144° trong 1 nhịp) → giữ phía cũ: mỗi nhịp mới chọn
+  // nhánh (−1, 0, +1 vòng) cho góc gần góc nhịp trước nhất. Nhớ theo khoá k + mã lần nối id (đổi lần nối thì về nhánh 0).
+  function noiLien(r, k, id, a, g0, e) {
+    const t = G.time || 0;
+    let s = r[k];
+    if (!s || s.id !== id) r[k] = s = { id, br: 0, x: null, t: -1 };
+    const tinh = (br) => { const a0 = gocGan(a, g0) + 360 * br; return a0 + (a - a0) * e; };
+    let x = tinh(s.br);
+    if (s.x != null && t > s.t) {
+      let bd = Math.abs(gocGan(s.x, x) - s.x);
+      for (const br of [s.br - 1, s.br + 1]) { const y = tinh(br), d = Math.abs(gocGan(s.x, y) - s.x); if (d + 1 < bd) { bd = d; x = y; s.br = br; } }
+    }
+    if (t > s.t) { s.x = x; s.t = t; }
+    return x;
   }
   // Trục nghiêng thân trên (toạ độ vẽ đã lật, điểm ảnh game tính từ chân) hoặc null.
   function trucNghieng(T, s, v, E) {
@@ -406,7 +500,11 @@
     const p = o.p, r = p && NHO ? NHO.get(p) : null, f = o.face < 0 ? -1 : 1, t = G.time || 0;
     if (r) {
       if (!r.cam && r.ve != null && r.f === f && t - r.t < 0.2) { r.raA = r.ve; r.raT = t; }
-      if (r.raT != null && t - r.raT < RA && r.f === f) { const a0 = gocGan(a, r.raA), k = (t - r.raT) / RA; a = a0 + (a - a0) * (0.5 - 0.5 * Math.cos(Math.PI * k)); }
+      if (r.raT != null && t - r.raT < RA && r.f === f) {
+        const k = (t - r.raT) / RA, e = 0.5 - 0.5 * Math.cos(Math.PI * k);
+        if (muot2()) a = noiLien(r, 'lRa', r.raT, a, r.raA, e); // cu-ti-to-muot: không bật khi đường ngắn nhất đổi phía giữa chừng
+        else { const a0 = gocGan(a, r.raA); a = a0 + (a - a0) * e; }
+      }
     }
     return a;
   }
@@ -417,24 +515,57 @@
     // đâm/ném: góc cuối (ảnh + lệch) không quá ±90° so với mặt → mũi không bao giờ chĩa ra sau lưng (thương 2 ảnh đã chếch -35°)
     const kd = (x) => (g && HV_DAM[wa.ten] ? kep(x, -90, 90) : x);
     if (G.CHAY_DANH_MOI === false || wa.u == null || da.lap) return kd(n[2] + g);
-    const m = MOC[wa.ten], u = wa.u, i = wa.i;
+    const m = muot2() ? mocCua(wa.ten) : MOC[wa.ten], u = wa.u, i = wa.i; // muot2: cùng mốc với khung thân (búa báo trước dùng MOC_BUA_BT)
     let a = n[2];
     if (m && m.length === da.so && i + 1 < da.so && N[i + 1]) {
-      const fr = kep((u - m[i]) / Math.max(1e-6, m[i + 1] - m[i]), 0, 1), e = fr * fr * (3 - 2 * fr);
-      a = n[2] + (gocGan(n[2], N[i + 1][2]) - n[2]) * e;
+      const fr = phanGoc(da, m, i, u), e = fr * fr * (3 - 2 * fr);
+      a = n[2] + (buocGoc(wa.ten, i, n[2], N[i + 1][2]) - n[2]) * e;
     }
     a = kd(a + g);
     const p = o.p, r = p && NHO ? NHO.get(p) : null, f = o.face < 0 ? -1 : 1;
     if (r && p.lastAtk != null) {
       if (r.id !== p.lastAtk) { r.id = p.lastAtk; r.dau = r.ve != null && r.f === f && (G.time || 0) - r.t < 0.2 ? r.ve : null; }
-      if (r.dau != null && u < VAO) { const a0 = gocGan(a, r.dau), k = u / VAO; a = a0 + (a - a0) * (0.5 - 0.5 * Math.cos(Math.PI * k)); }
+      if (r.dau != null && u < VAO) {
+        const k = u / VAO, e = 0.5 - 0.5 * Math.cos(Math.PI * k);
+        if (muot2() && m && m.length === da.so && !(g && HV_DAM[wa.ten])) {
+          // cu-ti-to-muot: đi trên đường vung LIỀN (cộng dồn góc khung này → khung sau, không quy về ±180°); góc đầu = góc vừa vẽ, quy về
+          // phía gần góc đường vung ở CUỐI đoạn nối (u = VAO) → không đổi phía giữa chừng (quét thương trước bật +144° trong 1 nhịp).
+          const aU = duongVung(m, N, da, u, wa.ten) + g, a0 = gocGan(duongVung(m, N, da, VAO, wa.ten) + g, r.dau);
+          a = a0 + (aU - a0) * e;
+        } else { const a0 = gocGan(a, r.dau); a = a0 + (a - a0) * e; }
+      }
     }
     return a;
   }
-  function ghiGoc(o, a, cam) { // sau khi vẽ: nhớ góc vừa vẽ (nối vào thế nhát sau; cam = góc của hàng cầm đứng/đi/chạy)
+  // Góc đường vung liền tại tiến độ uu (mốc m của hàng, neo N): góc khung đầu, cộng dồn bước ngắn nhất sang từng khung kế, nội suy như gocMuot.
+  function duongVung(m, N, da, uu, ten) {
+    let acc = N[0] ? N[0][2] : 0, j = 0;
+    while (j < da.so - 1 && uu + 1e-6 >= m[j + 1] && N[j + 1]) { acc = buocGoc(ten, j, acc, N[j + 1][2]); j++; }
+    if (j + 1 < da.so && N[j + 1]) { const fr = phanGoc(da, m, j, uu), e2 = fr * fr * (3 - 2 * fr); acc += (buocGoc(ten, j, acc, N[j + 1][2]) - acc) * e2; }
+    return acc;
+  }
+  // cu-ti-to-muot: chiều quay ÉP giữa khung j → j+1 (+1 = theo chiều kim đồng hồ trên màn = vòng QUA ĐẦU khi mặt phải). Đường ngắn nhất
+  // của búa nện (170° → 40°), nện đất, Địa chấn (170° → 20° / 60°) đi VÒNG DƯỚI: đầu búa quét qua bụng / chân trước khi chạm đất → ép
+  // vòng qua đầu như ảnh vẽ (giơ cao → nện xuống).
+  const QUA = { bua_nen: { 1: 1 }, bua_nen_dat: { 0: 1 }, db_bua: { 0: 1 } };
+  function buocGoc(ten, j, a, b) {
+    let d = gocGan(a, b) - a;
+    const sg = muot2() && QUA[ten] && QUA[ten][j];
+    if (sg && d * sg < 0) d += 360 * sg;
+    return a + d;
+  }
+  // Tiến độ nội suy góc trong khung i (0..1). muot2: khung DÀI (giữ thế, như búa giơ cao 0,24 giây) thì vũ khí đứng yên, chỉ quay
+  // trong 0,09 giây cuối khung → giữ thế rõ rồi mới vung (trước: búa trôi dần xuống suốt lúc giữ). Khung ngắn: như cũ (cả khung).
+  const QUAY_CUOI = 0.09;
+  function phanGoc(da, m, i, u) {
+    const L = Math.max(1e-6, m[i + 1] - m[i]), giay = (da.giay || 0.3) * L;
+    if (muot2() && giay > QUAY_CUOI * 1.4) { const w = (QUAY_CUOI / giay) * L; return kep((u - (m[i + 1] - w)) / w, 0, 1); }
+    return kep((u - m[i]) / L, 0, 1);
+  }
+  function ghiGoc(o, a, cam, ten) { // sau khi vẽ: nhớ góc vừa vẽ (nối vào thế nhát sau; cam = góc của hàng cầm đứng/đi/chạy; ten = hàng neo)
     const p = o.p; if (!p || !NHO) return;
     let r = NHO.get(p); if (!r) NHO.set(p, (r = { id: p.lastAtk, dau: null, ve: null, t: 0, f: 1 }));
-    r.ve = a; r.t = G.time || 0; r.f = o.face < 0 ? -1 : 1; r.cam = !!cam;
+    r.ve = a; r.t = G.time || 0; r.f = o.face < 0 ? -1 : 1; r.cam = !!cam; r.ten = ten;
   }
   function veVk(c, V, v) {
     if (v.nt) veNamTay(c, V, v, 'sau'); // nắm tay từ ảnh: lòng bàn tay nằm SAU cán
@@ -446,7 +577,8 @@
     // 15/10 viền + hào quang theo bậc ép đồ, ánh lướt theo cấp mài (js/vien_vk.js; ?vienvk=0 tắt): vẽ cùng hệ toạ độ đã xoay/lật của ảnh
     const VV = G.vienVk, r0 = VV && VV.co(v.w) ? V.tep.vk[da.vk][v.cap] : null, kv = r0 ? 'zed-vk:' + da.vk + v.cap : null;
     if (r0) { try { VV.truoc(c, v.w, V.img, r0[0], r0[1], r0[2], r0[3], kv, -g[0], -g[1], 1 / F); } catch (e) { ghiLoi(e); } }
-    c.drawImage(a.img, a.x, a.y, a.w, a.h, -g[0], -g[1], a.w, a.h);
+    if (v.mo != null && v.mo < 1) { const ga = c.globalAlpha; c.globalAlpha = ga * v.mo; c.drawImage(a.img, a.x, a.y, a.w, a.h, -g[0], -g[1], a.w, a.h); c.globalAlpha = ga; } // (f) đổi vũ khí: hiện dần
+    else c.drawImage(a.img, a.x, a.y, a.w, a.h, -g[0], -g[1], a.w, a.h);
     if (r0) { try { VV.sau(c, v.w, V.img, r0[0], r0[1], r0[2], r0[3], kv, -g[0], -g[1], 1 / F); } catch (e) { ghiLoi(e); } }
     c.restore();
   }
@@ -511,12 +643,13 @@
     if (!T) return false;
     const D = T.tep, s = chon(o, D), a = D.dong_tac[s.ten];
     if (!a) return false;
+    sVe = s;
     const V = lay('zed-vk'), v = V ? vkCua(o, D, s, T, true) : null;
     // Hàng tay không (ném phi tiêu, đấm): không có vũ khí để xoay → xoay cánh tay duỗi (TAY) + nghiêng thân trên như đòn đâm.
     let Hb = null;
     if (!v && !s.theo && !s.cam && HV_DAM[s.ten]) { Hb = huongCua(o, T, s); if (Hb) Hb = hvMuot(Hb); }
     if (!(v && v.hv) && !Hb) hvNghi(o);
-    if (v) { ghiGoc(o, v.ang, v.cam); v.nt = namTayCua(V, v); }
+    if (v) { ghiGoc(o, v.ang, v.cam, v.wa.ten); v.nt = namTayCua(V, v); }
     const E = s.eo ? eoTinh(T, s, o) : null;
     // Nghiêng thân trên quanh eo (đâm/ném nhắm gần thẳng lên/xuống, zed-8-huong): N = trục eo, null = không nghiêng (như cũ).
     const N = trucNghieng(T, s, v || (Hb ? { lean: Hb.lean, wa: s } : null), E), lean = v ? v.lean : Hb ? Hb.lean : 0;
@@ -611,15 +744,22 @@
     return veLop(c, o, lop);
   }
   // Vẽ bóng + lật theo mặt + nhuộm (trúng đòn, băng, độc) + hào quang Gồng quanh một hàm vẽ người lop(q) (toạ độ tính từ chân).
+  // cu-ti-to-muot: phóng ×toCua(o) quanh chân qua canvas phụ (xem đầu tệp) + mờ chuyển (b).
+  let sVe = null; // khung vừa chọn ở ve() (hàng ảnh, cho mờ chuyển)
+  const MO = { t: -1, nhom: null, f: 1, t0: -1, anh: null, dang: false }; // mờ chuyển của lần vẽ chính (một em bé chính mỗi trận)
+  const MO_GIAY = 0.1, MO_DAU = 0.5;
+  // Nhóm hàng ảnh để biết lúc nào "đổi động tác": đứng / bước (đi, chạy) / ghép eo / từng động tác một lần.
+  const nhomCua = (s) => (!s ? null : s.giuCuoi ? 'giu:' + s.ten : s.eo ? 'eo' : /^dung/.test(s.ten) ? 'dung' : /^(di|chay)/.test(s.ten) && !s.theo ? 'buoc' : s.ten);
+  const laChinh = (o) => { const p = o.p; let W = null; try { W = G.getWorld ? G.getWorld() : null; } catch (e) { W = null; } return !!(p && W && W.P === p && !o.noShadow && (o.t == null || o.t === p.t)); };
   function veLop(c, o, lop) {
     const R = G.lamTron || Math.round; // soát mượt phiên 3 mục 1: cùng kiểu làm tròn với camera (nửa điểm ảnh; ?noisuy=0 như cũ)
     const x = R(o.x), y = R(o.y), f = o.face < 0 ? -1 : 1, t = (o.t != null ? o.t : G.time) || 0;
-    const p = o.p, chet = !!(p && p.dead);
+    const p = o.p, chet = !!(p && p.dead), K = toCua(o);
     c.save();
     if (o.alpha != null) c.globalAlpha = c.globalAlpha * o.alpha;
     c.imageSmoothingEnabled = false;
     if (!o.noShadow) {
-      const sw = chet ? 12 : 8, sx = chet ? x - f * 6 : x;
+      const sw = Math.round((chet ? 12 : 8) * K), sx = chet ? x - f * Math.round(6 * K) : x; // bóng chân to theo cỡ hiển thị
       if (G.bongAnh && G.bongAnh(c, sx, y, sw + 1)) { /* 16/10 vẽ tay 6: ảnh hu-bong-chan khi đang chặn hình code */ }
       else if (o.roundShadow && G.art && G.art.ellipse) G.art.ellipse(c, sx, y, sw + 1, Math.max(2, Math.round((sw + 1) * 0.45)), 'rgba(0,0,0,0.3)');
       else { c.fillStyle = 'rgba(0,0,0,0.3)'; c.fillRect(sx - sw + 2, y - 1, sw * 2 - 4, 1); c.fillRect(sx - sw, y, sw * 2, 1); c.fillRect(sx - sw + 2, y + 1, sw * 2 - 4, 1); }
@@ -627,19 +767,40 @@
     c.translate(x + (f < 0 ? 1 : 0), y);
     c.scale(f, 1);
     const tint = SC.emBeTint ? SC.emBeTint(o) : null;
-    if (tint && typeof document !== 'undefined') {
-      // vùng 160×160 điểm ảnh game quanh chân (vũ khí dài vẫn lọt), nét ×2
+    // mờ chuyển (b): chỉ lần vẽ chính của em bé trong trận; mỗi G.time tính một lần
+    const chinh = muot2() && typeof document !== 'undefined' && laChinh(o);
+    let moA = 0;
+    if (chinh) {
+      const nhom = nhomCua(sVe), now = G.time || 0;
+      if (MO.t !== now) {
+        const vao = nhom === 'dung' || nhom === 'buoc'; // vào đứng / bước (giữ khung cuối thì chưa: cùng ảnh với khung đòn)
+        if (MO.nhom && nhom !== MO.nhom && vao && MO.f === f && MO.anh && now - MO.t < 0.1 && !chet) { MO.t0 = now; MO.dang = true; }
+        else if (MO.dang && (!vao || MO.f !== f || now - MO.t0 >= MO_GIAY)) MO.dang = false;
+        MO.nhom = nhom; MO.f = f; MO.t = now;
+      }
+      if (MO.dang && now - MO.t0 < MO_GIAY) moA = MO_DAU * (1 - ss((now - MO.t0) / MO_GIAY));
+    }
+    if ((tint || K !== 1 || chinh) && typeof document !== 'undefined') {
+      // vùng 160×160 điểm ảnh game quanh chân (vũ khí dài vẫn lọt), nét ×2; vẽ ra ×K quanh chân (đúng lưới điểm ảnh thật)
       tam = tam || document.createElement('canvas');
       if (tam.width !== 320) { tam.width = 320; tam.height = 320; }
       const q = tam.getContext('2d');
       q.setTransform(1, 0, 0, 1, 0, 0); q.globalCompositeOperation = 'source-over'; q.globalAlpha = 1; q.clearRect(0, 0, 320, 320);
       q.imageSmoothingEnabled = false; q.setTransform(2, 0, 0, 2, 160, 220);
       lop(q);
-      q.setTransform(1, 0, 0, 1, 0, 0); q.globalCompositeOperation = 'source-atop'; q.globalAlpha = tint[1]; q.fillStyle = tint[0]; q.fillRect(0, 0, 320, 320);
+      q.setTransform(1, 0, 0, 1, 0, 0);
+      if (chinh && !MO.dang) { // nhớ ảnh khung này (chưa nhuộm) làm khung cũ cho lần mờ chuyển sau
+        MO.anh = MO.anh || document.createElement('canvas');
+        if (MO.anh.width !== 320) { MO.anh.width = 320; MO.anh.height = 320; }
+        const m = MO.anh.getContext('2d'); m.setTransform(1, 0, 0, 1, 0, 0); m.clearRect(0, 0, 320, 320); m.drawImage(tam, 0, 0);
+      }
+      if (moA > 0.01 && MO.anh) { q.globalAlpha = moA; q.drawImage(MO.anh, 0, 0); q.globalAlpha = 1; } // khung cũ mờ dần đè lên khung mới
+      if (tint) { q.globalCompositeOperation = 'source-atop'; q.globalAlpha = tint[1]; q.fillStyle = tint[0]; q.fillRect(0, 0, 320, 320); }
       q.globalCompositeOperation = 'source-over'; q.globalAlpha = 1;
-      c.drawImage(tam, -80, -110, 160, 160);
+      c.drawImage(tam, -80 * K, -110 * K, 160 * K, 160 * K);
     } else lop(c);
     if (o.gong) { // hào quang lúc Gồng (như js/hero_tinhlinh.js)
+      if (K !== 1) c.scale(K, K);
       for (let i = 0; i < 6; i++) {
         const ph = (t * 1.6 + i * 0.37) % 1, sx = Math.round(-10 + i * 4) + (i % 2), sy = Math.round(-4 - ph * 30);
         c.fillStyle = i % 2 ? '#fff3b0' : '#ffd27a';
@@ -656,17 +817,21 @@
     const T = layThan(), V = lay('zed-vk');
     if (!T || !V) return;
     const D = T.tep, s = chon(o, D), v = vkCua(o, D, s, T, false);
-    if (!v || v.cam) return; // vũ khí cầm lúc đứng/đi/chạy (cả lướt sau lộn): giữ mũi của bản cũ cho vệt/hiệu ứng
     const f = o.face < 0 ? -1 : 1, X0 = (G.lamTron || Math.round)(o.x) + (f < 0 ? 1 : 0), Y0 = (G.lamTron || Math.round)(o.y);
+    if (!v || v.cam) { // vũ khí cầm lúc đứng/đi/chạy (cả lướt sau lộn): giữ mũi của bản cũ cho vệt/hiệu ứng (cu-ti-to-muot: phóng ×K quanh chân)
+      const K0 = toCua(o);
+      if (K0 !== 1 && isFinite(q.gx) && isFinite(q.gy)) { q.gx = X0 + (q.gx - X0) * K0; q.gy = Y0 + (q.gy - Y0) * K0; if (isFinite(q.L)) q.L *= K0; }
+      return;
+    }
     const R = V.tep.vk[v.da.vk][v.cap], g = v.B.cam[v.cap];
     const E = s.eo ? eoTinh(T, s, o) : null, ox = E ? E.ox : 0, oy = E ? E.oy : 0; // chạy + chém: vũ khí dời theo nửa trên đã khớp eo
     let gx = v.n[0] / 2 - 24 + ox, gy = v.n[1] / 2 - 45 + oy, ang = v.ang != null ? v.ang : v.n[2];
     const N = trucNghieng(T, s, v, E); // nghiêng thân trên (zed-8-huong): nắm tay xoay quanh eo, hướng vũ khí cộng thêm góc nghiêng
     if (N) { const b = (v.lean * Math.PI) / 180, cx = gx - N[0], cy = gy - N[1]; gx = N[0] + cx * Math.cos(b) - cy * Math.sin(b); gy = N[1] + cx * Math.sin(b) + cy * Math.cos(b); ang += v.lean; }
-    const r = (ang * Math.PI) / 180;
-    q.gx = X0 + f * gx; q.gy = Y0 + gy;
+    const r = (ang * Math.PI) / 180, K = toCua(o); // cu-ti-to-muot: Tí vẽ ×K quanh chân → nắm tay và độ dài lưỡi cũng ×K
+    q.gx = X0 + f * gx * K; q.gy = Y0 + gy * K;
     q.dx = f * Math.cos(r); q.dy = Math.sin(r);
-    q.L = Math.max(4, (R[2] - g[0]) * v.B.tl);
+    q.L = Math.max(4, (R[2] - g[0]) * v.B.tl) * K;
     q.front = !v.n[3];
   }
 

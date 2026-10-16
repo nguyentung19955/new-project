@@ -2617,7 +2617,7 @@
   // đến đâu vẫn thấy dáng bé. Em bé vẽ vào một khung nhỏ quanh bé (không bóng đổ), lấy hình bóng một màu dời 4 hướng làm viền,
   // khoét phần thân ra để chỉ còn viền; rồi dán viền (DOC.vienA) và thân mờ (DOC.bongBe). Cờ tắt: G.DOC_TRAN2 = false.
   let VB = null, VB2 = null, VB3 = null;
-  const VBW = 120, VBH = 100, VBX = 60, VBY = 78; // khung quanh bé (điểm ảnh thế giới), chân bé ở (VBX, VBY)
+  const VBW = 150, VBH = 120, VBX = 75, VBY = 96; // khung quanh bé (điểm ảnh thế giới), chân bé ở (VBX, VBY); cu-ti-to-muot: nới cho Tí ×1,2 (trước 120×100, chân 60,78)
   const D4 = [[-1, 0], [1, 0], [0, -1], [0, 1]], D8 = [[-2, 0], [2, 0], [0, -2], [0, 2], [-1, -1], [1, -1], [-1, 1], [1, 1]];
   // Sửa vệt chém 12/10: viền và bóng mờ của bé từng phủ lên vệt chém (nhất là kiếm, búa vung sát đầu) nên vệt gần như mất. Nay vệt đòn
   // của bé (o.vd) vẽ SAU viền: drawOver bỏ chúng (SAU = 1) và hàm dưới vẽ lại ngay sau viền. Không bật viền thì drawOver vẽ như cũ.

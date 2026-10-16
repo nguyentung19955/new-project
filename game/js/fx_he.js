@@ -899,7 +899,7 @@
     if (!mv || !mv.holding || P.dead) return;
     const w = G.curW(P), cfg = G.MOVES[w.type], ch = cfg && cfg.charge;
     if (!ch) return;
-    const S = K.S(), x = Math.round(P.x) - 13, y = Math.round(P.y) - 42, BW = 26;
+    const S = K.S(), x = Math.round(P.x) - 13, y = Math.round(P.y) - 42 - Math.round(31 * ((G.cotiTo ? G.cotiTo() : 1) - 1)), BW = 26; // cu-ti-to-muot: Tí cao ~31 điểm ảnh, to ×K thì vạch nhích lên
     const full = mv.charge >= 1, blink = full && ((S.t * 12) | 0) % 2;
     // 16/10 vẽ tay 6: vạch lấy đà vẽ code bị chặn → vòng tụ lực hu-tu-luc-vong ở đúng chỗ vạch (trên đầu, rộng ~26 như vạch): đang lấy đà
     // thì vòng co dần theo mức đà (khung 1–4), đầy thì nảy sáng (khung 4–6 lặp) nhấp nháy vàng; màu như vạch cũ.
