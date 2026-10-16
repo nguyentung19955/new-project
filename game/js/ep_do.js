@@ -21,7 +21,6 @@
   if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({
     'Ép đồ': 'Refine', 'Bậc {0}': '{0} tier', 'Trắng': 'White', 'Xanh lam': 'Blue', 'Xanh lục': 'Green', 'Tím': 'Purple', 'Vàng': 'Gold', 'Đỏ': 'Red', 'Rực lửa': 'Blazing',
     'Đá nâng bậc': 'Tier stones', 'Bùa giữ bậc': 'Tier ward', '{0} đá nâng bậc': '{0} tier stones', '{0} bùa giữ bậc': '{0} tier wards',
-    'Đá nâng bậc: {0} · Bùa giữ bậc: {1}': 'Tier stones: {0} · Tier wards: {1}',
     'Chí mạng': 'Crit chance', 'Sát thương chí mạng': 'Crit damage', 'Sát thương lên trùm, tinh anh': 'Damage vs bosses, elites', 'Hút máu': 'Life steal',
     'Tốc đánh': 'Attack speed', 'Giảm hồi chiêu đặc biệt': 'Special cooldown', 'Linh khí nhận': 'Spirit gain', 'Sát thương hệ': 'Element damage', 'Giảm sát thương nhận': 'Damage taken',
     'tốc đánh': 'attack speed', 'tầm đánh': 'reach', 'thời gian choáng': 'stun time', 'sát thương xuyên': 'pierce damage',

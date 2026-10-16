@@ -16,6 +16,7 @@ Chạy: python3 tests/cay.py [số lượt chiến dịch, mặc định 12] [kh
       [--kho2: qua 15 ải rồi chơi tiếp 15 ải độ khó 2; với --kd đo cả Sức mạnh khuyên dùng độ khó 2 (G.stageRec(r, i, 1), G.DIFF2)]
       [--kd=R: đo lại Sức mạnh khuyên dùng — mỗi bản lưu lúc vừa tới một ải (của kiểu khuyen và kiểu lieu) chơi lại ải đó R lần,
        tìm Sức mạnh mà bot thắng 75%] [--json=tệp: ghi số liệu thô] [--pre=<mã JS>: chạy trước khi đo, thử số trong bộ nhớ]
+      [--vung4: đi tiếp 5 ải vùng 4 (20 ải; --kd đo cả 4-1..4-5)]
       [--viec: mỗi lần về làng bot bấm Nhận hết Việc hôm nay / Sổ yêu quái / Thành tựu (Bước 2), in thu nhập mỗi ngày giả]
 Thoát mã 1 nếu: có luật hỏng, có lượt chiến dịch bị kẹt, có ải trung bình phải chơi quá 9 lần (8 lượt cày + 1 lượt thử), có lỗi trang."""
 import sys, json, os, math
@@ -176,6 +177,8 @@ def main():
     n = int(args[0]) if args else 12
     mode = args[1] if len(args) > 1 else 'khuyen'
     upto = 5 if '--nhanh' in sys.argv else 15
+    if '--vung4' in sys.argv:
+        upto = 20  # 16/10 Luyện phiên 3: đi tiếp vùng 4 Sông sâu (4-1..4-5; cần G.VUNG4, mặc định bật)
     kd = [int(a.split('=', 1)[1]) for a in sys.argv if a.startswith('--kd=')]
     jout = [a.split('=', 1)[1] for a in sys.argv if a.startswith('--json=')]
     vk = [a.split('=', 1)[1] for a in sys.argv if a.startswith('--vk=')]
@@ -289,14 +292,15 @@ def main():
     print('|---|---|---|---|---|---|---|---|---|---|---|---|---|---|')
     for k in range(upto + (15 if kho2 and upto == 15 else 0)):
         avg = lambda key: sum(r['st'][k][key] for r in ok) / m
-        lo, hi = muc_tieu(k % 15)
+        k2 = kho2 and k >= 15  # --vung4: ải 16..20 là 4-1..4-5 (không phải độ khó 2)
+        lo, hi = muc_tieu(k % 15 if k2 else k)
         pl = avg('plays')
         flag = ' ✗' if pl > 9 else ''
         if flag and mode == 'khuyen': bad = 1
         plays = sum(r['st'][k]['plays'] for r in ok)
         hp = [r['st'][k]['hp'] for r in ok if r['st'][k]['hp'] is not None]
         bh = [r['st'][k]['bossHit'] for r in ok if r['st'][k]['bossHit']]
-        print(f"| {('K2 ' + ten(k - 15)) if k >= 15 else ten(k)} | {pl:.1f}{flag} ({med([r['st'][k]['plays'] for r in ok]):g}) | {avg('grind'):.1f} | {avg('tries'):.1f} | {avg('fails'):.1f} | {avg('t')/60:.0f} | {avg('tWin'):.0f} | {avg('lvl'):.0f} | {avg('pw'):.0f} / {avg('rec'):.0f} | "
+        print(f"| {('K2 ' + ten(k - 15)) if k2 else ten(k)} | {pl:.1f}{flag} ({med([r['st'][k]['plays'] for r in ok]):g}) | {avg('grind'):.1f} | {avg('tries'):.1f} | {avg('fails'):.1f} | {avg('t')/60:.0f} | {avg('tWin'):.0f} | {avg('lvl'):.0f} | {avg('pw'):.0f} / {avg('rec'):.0f} | "
               f"{(sum(hp)/len(hp)*100 if hp else 0):.0f}% | {(max(bh)*100 if bh else 0):.0f}% (TB {(sum(bh)/len(bh)*100 if bh else 0):.0f}%) | "
               f"{sum(r['st'][k]['lk'] for r in ok)/max(1,plays):.0f} | {sum(r['st'][k]['gold'] for r in ok)/max(1,plays):.0f} | {lo:g}-{hi:g} |")
     tt = sum(r['t'] for r in ok) / m / 60
@@ -329,7 +333,7 @@ def main():
                   f"{B['da']:.1f} đá, {B['bua']:.2f} bùa; rương ngày {B['ruong']:.1f}, rương tuần {B['tuan']:.1f}" + (' — LỖI: ' + str([q.get('loi') for q in b2 if q.get('loi')][:1]) if any(q.get('loi') for q in b2) else ''))
     cu = [r['cuoi'] for r in ok if r.get('cuoi')]
     if cu:
-        print(f"Lúc qua 3-5 (trung bình): cấp {sum(c['cap'] for c in cu)/len(cu):.0f}, Sức mạnh {sum(c['sm'] for c in cu)/len(cu):.0f}, vàng còn {sum(c['vang'] for c in cu)/len(cu):.0f}, "
+        print(f"Lúc qua {ten(upto - 1)} (trung bình): cấp {sum(c['cap'] for c in cu)/len(cu):.0f}, Sức mạnh {sum(c['sm'] for c in cu)/len(cu):.0f}, vàng còn {sum(c['vang'] for c in cu)/len(cu):.0f}, "
               f"linh khí còn {sum(c['lk'] for c in cu)/len(cu):.0f}, quặng {sum(c['quang'] for c in cu)/len(cu):.0f}, nguyên liệu {'/'.join('%.0f' % (sum(c['nl'][i] for c in cu)/len(cu)) for i in range(3))}, "
               f"mảnh {'/'.join('%.1f' % (sum(c['manh'][i] for c in cu)/len(cu)) for i in range(3))}")
     # mốc nâng cấp: ải đang tới lúc đạt (trung vị qua các lượt có đạt)
@@ -338,7 +342,7 @@ def main():
         for kk in r['moc']:
             if kk not in keys: keys.append(kk)
     so = lambda lab: (15 if lab.startswith('K2 ') else 0) + (int(lab[-3]) - 1) * 5 + int(lab[-1]) - 1  # '2-3' → 7, 'K2 1-2' → 16
-    ten2 = lambda x: ('K2 ' + ten(x - 15)) if x >= 15 else ten(x)
+    ten2 = lambda x: ('K2 ' + ten(x - 15)) if x >= 15 and kho2 else ten(x)  # --vung4: 15..19 là 4-1..4-5
     order = lambda kk: med([so(r['moc'][kk]) for r in ok if kk in r['moc']])
     print('\nMốc nâng cấp (ải đang tới lúc đủ để nâng; trung vị, số lượt chiến dịch có đạt):')
     for kk in sorted(keys, key=order):

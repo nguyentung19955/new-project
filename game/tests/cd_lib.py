@@ -108,7 +108,7 @@ def campaign(pg, mode='khuyen', upto=15, cay='hoa', saves=None, guard_max=220, c
     pg.evaluate("(c) => { G.resetSave(); G.save.sound = false; Object.assign(G.botCfg, c); G.botMoc = {}; }", BOT)
     pg.evaluate("(v) => G.botDatVk(v)", chinh)
     pg.evaluate("(c) => { if (G.chuong) { const hs = G.save.heroes.smith; G.chuong.use(hs, c, 'smith'); hs.ch.cay = c; } }", cay)
-    nst = 30 if kho2 else 15
+    nst = 30 if kho2 else max(15, upto)  # --vung4: 20 ải
     st = [{'plays': 0, 'tries': 0, 'fails': 0, 'grind': 0, 't': 0, 'lvl': 0, 'pw': 0, 'rec': 0, 'hp': None, 'bossHit': 0,
            'tWin': 0, 'lk': 0, 'gold': 0, 'att': []} for _ in range(nst)]
     tot = {'t': 0, 'luot': 0, 'ngay': 0}

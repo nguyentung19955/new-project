@@ -37,7 +37,6 @@
     '+10% tốc đánh': '+10% attack speed', '+12% tầm đánh': '+12% reach', '+30% thời gian choáng': '+30% stun time', '+20% sát thương xuyên, xuyên thêm 1 quái': '+20% pierce damage, +1 pierce',
     '{0} Lv {1} → {2}: đòn +{3}': '{0} Lv {1} → {2}: hit +{3}', '{0} theo hệ {1}.': '{0} now uses {1}.', 'Đã chọn dòng: {0}': 'Line set: {0}', 'Cầm đầu': 'Lead', 'Đang cầm đầu': 'Leading',
     'Vào ải sẽ cầm {0} trước.': 'You will start with {0}.', 'Chọn một vũ khí để luyện.': 'Pick a weapon to temper.',
-    'Luyện vũ khí: mỗi cấp chắc chắn thành công, không tụt cấp.': 'Tempering always succeeds and never drops a level.',
     'Lò rèn đã gộp thành Luyện vũ khí.': 'The forge now has a single Temper track.', 'Hoàn: {0}.': 'Refund: {0}.', 'lò rèn': 'forge',
     'Ải Rèn': 'Forge Trial', 'Tinh luyện': 'Refined', 'Viên mãn': 'Perfected', 'Đủ bộ': 'Full set',
     'Luyện 1 vũ khí lên cấp 3': 'Temper 1 weapon to Lv 3', 'Luyện 1 vũ khí lên cấp 9': 'Temper 1 weapon to Lv 9', 'Luyện 1 vũ khí lên cấp 12': 'Temper 1 weapon to Lv 12',

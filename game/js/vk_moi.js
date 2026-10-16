@@ -35,7 +35,6 @@
     'Lộn để lại bóng mờ {0} giây, quái nhắm vào bóng; hồi {1} giây': 'Dodge leaves a decoy for {0}s that monsters target; {1}s cooldown',
     'Mỗi {0} giây có 1 lớp khiên chặn 1 đòn (tối đa {1}% máu)': 'Every {0}s a shield blocks one hit (up to {1}% HP)',
     'Khiên vỡ!': 'Shield broke!',
-    'Mài, nâng lò, nâng bộ trang phục, đổi nguyên liệu, đặt lại điểm kỹ năng': 'Sharpen, upgrade the forge, upgrade outfits, buy materials, reset skill points',
     'Qua ải, hạ quái, tinh anh, trùm, phòng thử thách': 'Clear stages, kill monsters, elites, bosses, challenge rooms',
     'Mài vũ khí, nâng lò cấp 4': 'Sharpen weapons, forge Lv 4',
     'Nâng lò cấp 2, mài +5 lên +6': 'Forge Lv 2, sharpen +5 to +6',
