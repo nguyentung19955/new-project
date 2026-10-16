@@ -1,0 +1,643 @@
+{
+ "ghi_chu": [
+  "Chỉnh tay sau khi soát bằng mắt ảnh ×4/×5 có lưới (crop thân và chân từng khung). Toạ độ ô que (gốc góc trên-trái, đất y=248).",
+  "Giữ kết quả tự động cho đỉnh đầu, tâm đầu, cằm (soát: khớp). Mọi khớp còn lại ghi đè ở đây.",
+  "Lý do chung: (1) eo tự động lấy cả đuôi khăn đỏ → lệch sau lưng; đặt lại eo trên trục cổ–hông, ngang đai (70% từ cổ xuống hông như dáng đứng).",
+  "(2) tay trái (xa) hay bị nhận nhầm (mép ngực, bụng, ngón chân); (3) cổ chân tự động = tâm mảng da ngón chân → quá xa về phía mũi, đặt lại ở chỗ ống quần gặp dép;",
+  "(4) gối/khuỷu nằm trong quần thụng/ống tay: đặt theo chỗ gập của khối quần, sai số ±5 px; (5) cổ: chỗ khăn quấn giữa gáy và đỉnh ngực."
+ ],
+ "khung": {
+  "1": {
+   "_ghi_chu": "tay trái (xa) ló dưới tay phải: nắm tay nhỏ ở (164,177)",
+   "co": [
+    148,
+    140
+   ],
+   "hong": [
+    124,
+    190
+   ],
+   "hong_phai": [
+    128,
+    192
+   ],
+   "hong_trai": [
+    118,
+    188
+   ],
+   "vai_phai": [
+    147,
+    141
+   ],
+   "khuyu_phai": [
+    156,
+    160
+   ],
+   "co_tay_phai": [
+    178,
+    166
+   ],
+   "nam_tay_phai": [
+    187,
+    166
+   ],
+   "vai_trai": [
+    132,
+    140
+   ],
+   "khuyu_trai": [
+    140,
+    162
+   ],
+   "co_tay_trai": [
+    158,
+    172
+   ],
+   "nam_tay_trai": [
+    164,
+    177
+   ],
+   "goi_phai": [
+    158,
+    206
+   ],
+   "co_chan_phai": [
+    155,
+    233
+   ],
+   "mui_chan_phai": [
+    186,
+    228
+   ],
+   "goi_trai": [
+    92,
+    198
+   ],
+   "co_chan_trai": [
+    72,
+    196
+   ],
+   "mui_chan_trai": [
+    52,
+    212
+   ],
+   "eo": [
+    131,
+    175
+   ]
+  },
+  "2": {
+   "_ghi_chu": "tay trái (xa) ló dưới tay phải (155,180); mảng da (116,154) là mép ngực, máy nhận nhầm là tay",
+   "co": [
+    138,
+    141
+   ],
+   "hong": [
+    114,
+    191
+   ],
+   "hong_phai": [
+    118,
+    193
+   ],
+   "hong_trai": [
+    108,
+    189
+   ],
+   "vai_phai": [
+    140,
+    142
+   ],
+   "khuyu_phai": [
+    146,
+    162
+   ],
+   "co_tay_phai": [
+    166,
+    166
+   ],
+   "nam_tay_phai": [
+    175,
+    164
+   ],
+   "vai_trai": [
+    125,
+    140
+   ],
+   "khuyu_trai": [
+    133,
+    163
+   ],
+   "co_tay_trai": [
+    149,
+    176
+   ],
+   "nam_tay_trai": [
+    155,
+    180
+   ],
+   "goi_phai": [
+    150,
+    207
+   ],
+   "co_chan_phai": [
+    148,
+    232
+   ],
+   "mui_chan_phai": [
+    178,
+    228
+   ],
+   "goi_trai": [
+    84,
+    203
+   ],
+   "co_chan_trai": [
+    64,
+    212
+   ],
+   "mui_chan_trai": [
+    42,
+    226
+   ],
+   "eo": [
+    121,
+    176
+   ]
+  },
+  "3": {
+   "_ghi_chu": "bay (2 chân không chạm đất); tay trái vung ra sau lưng, nắm tay (78,160); chân phải co gập dưới bụng",
+   "co": [
+    140,
+    133
+   ],
+   "hong": [
+    112,
+    184
+   ],
+   "hong_phai": [
+    116,
+    186
+   ],
+   "hong_trai": [
+    106,
+    182
+   ],
+   "vai_phai": [
+    136,
+    133
+   ],
+   "khuyu_phai": [
+    145,
+    155
+   ],
+   "co_tay_phai": [
+    169,
+    156
+   ],
+   "nam_tay_phai": [
+    177,
+    155
+   ],
+   "vai_trai": [
+    118,
+    130
+   ],
+   "khuyu_trai": [
+    98,
+    148
+   ],
+   "co_tay_trai": [
+    84,
+    158
+   ],
+   "nam_tay_trai": [
+    78,
+    160
+   ],
+   "goi_phai": [
+    150,
+    186
+   ],
+   "co_chan_phai": [
+    114,
+    200
+   ],
+   "mui_chan_phai": [
+    145,
+    215
+   ],
+   "goi_trai": [
+    78,
+    196
+   ],
+   "co_chan_trai": [
+    46,
+    200
+   ],
+   "mui_chan_trai": [
+    32,
+    222
+   ],
+   "eo": [
+    120,
+    169
+   ]
+  },
+  "4": {
+   "_ghi_chu": "tay trái sau lưng (74,142); máy nhận nhầm ngón chân sau là tay",
+   "co": [
+    144,
+    138
+   ],
+   "hong": [
+    112,
+    186
+   ],
+   "hong_phai": [
+    116,
+    188
+   ],
+   "hong_trai": [
+    106,
+    184
+   ],
+   "vai_phai": [
+    142,
+    138
+   ],
+   "khuyu_phai": [
+    152,
+    160
+   ],
+   "co_tay_phai": [
+    176,
+    156
+   ],
+   "nam_tay_phai": [
+    185,
+    155
+   ],
+   "vai_trai": [
+    122,
+    136
+   ],
+   "khuyu_trai": [
+    96,
+    146
+   ],
+   "co_tay_trai": [
+    80,
+    143
+   ],
+   "nam_tay_trai": [
+    74,
+    142
+   ],
+   "goi_phai": [
+    140,
+    192
+   ],
+   "co_chan_phai": [
+    148,
+    208
+   ],
+   "mui_chan_phai": [
+    176,
+    210
+   ],
+   "goi_trai": [
+    72,
+    190
+   ],
+   "co_chan_trai": [
+    44,
+    188
+   ],
+   "mui_chan_trai": [
+    28,
+    204
+   ],
+   "eo": [
+    122,
+    172
+   ]
+  },
+  "5": {
+   "_ghi_chu": "tay trái sau lưng (81,149); mảng da sáng (147,174) dưới găng là khớp ngón tay phải, không phải tay trái",
+   "co": [
+    140,
+    144
+   ],
+   "hong": [
+    112,
+    190
+   ],
+   "hong_phai": [
+    116,
+    192
+   ],
+   "hong_trai": [
+    106,
+    188
+   ],
+   "vai_phai": [
+    128,
+    140
+   ],
+   "khuyu_phai": [
+    135,
+    163
+   ],
+   "co_tay_phai": [
+    160,
+    166
+   ],
+   "nam_tay_phai": [
+    169,
+    165
+   ],
+   "vai_trai": [
+    112,
+    138
+   ],
+   "khuyu_trai": [
+    96,
+    150
+   ],
+   "co_tay_trai": [
+    87,
+    150
+   ],
+   "nam_tay_trai": [
+    81,
+    149
+   ],
+   "goi_phai": [
+    140,
+    205
+   ],
+   "co_chan_phai": [
+    134,
+    232
+   ],
+   "mui_chan_phai": [
+    166,
+    230
+   ],
+   "goi_trai": [
+    82,
+    198
+   ],
+   "co_chan_trai": [
+    54,
+    194
+   ],
+   "mui_chan_trai": [
+    36,
+    212
+   ],
+   "eo": [
+    120,
+    176
+   ]
+  },
+  "6": {
+   "_ghi_chu": "bay; tay trái sau lưng (80,145); chân phải co gập",
+   "co": [
+    140,
+    132
+   ],
+   "hong": [
+    114,
+    186
+   ],
+   "hong_phai": [
+    118,
+    188
+   ],
+   "hong_trai": [
+    108,
+    184
+   ],
+   "vai_phai": [
+    140,
+    134
+   ],
+   "khuyu_phai": [
+    150,
+    156
+   ],
+   "co_tay_phai": [
+    172,
+    153
+   ],
+   "nam_tay_phai": [
+    181,
+    152
+   ],
+   "vai_trai": [
+    120,
+    132
+   ],
+   "khuyu_trai": [
+    100,
+    140
+   ],
+   "co_tay_trai": [
+    86,
+    144
+   ],
+   "nam_tay_trai": [
+    80,
+    145
+   ],
+   "goi_phai": [
+    150,
+    186
+   ],
+   "co_chan_phai": [
+    116,
+    198
+   ],
+   "mui_chan_phai": [
+    146,
+    214
+   ],
+   "goi_trai": [
+    80,
+    197
+   ],
+   "co_chan_trai": [
+    48,
+    200
+   ],
+   "mui_chan_trai": [
+    30,
+    226
+   ],
+   "eo": [
+    122,
+    170
+   ]
+  },
+  "7": {
+   "_ghi_chu": "tay trái ló dưới tay phải (147,177)",
+   "co": [
+    136,
+    142
+   ],
+   "hong": [
+    114,
+    190
+   ],
+   "hong_phai": [
+    118,
+    192
+   ],
+   "hong_trai": [
+    108,
+    188
+   ],
+   "vai_phai": [
+    128,
+    140
+   ],
+   "khuyu_phai": [
+    134,
+    163
+   ],
+   "co_tay_phai": [
+    160,
+    162
+   ],
+   "nam_tay_phai": [
+    170,
+    161
+   ],
+   "vai_trai": [
+    112,
+    138
+   ],
+   "khuyu_trai": [
+    122,
+    163
+   ],
+   "co_tay_trai": [
+    140,
+    174
+   ],
+   "nam_tay_trai": [
+    147,
+    177
+   ],
+   "goi_phai": [
+    154,
+    205
+   ],
+   "co_chan_phai": [
+    150,
+    230
+   ],
+   "mui_chan_phai": [
+    180,
+    224
+   ],
+   "goi_trai": [
+    86,
+    197
+   ],
+   "co_chan_trai": [
+    60,
+    194
+   ],
+   "mui_chan_trai": [
+    40,
+    212
+   ],
+   "eo": [
+    121,
+    176
+   ]
+  },
+  "8": {
+   "_ghi_chu": "tay trái ló dưới tay phải (152,175), mảng da (121,162) là bụng",
+   "co": [
+    142,
+    144
+   ],
+   "hong": [
+    124,
+    193
+   ],
+   "hong_phai": [
+    128,
+    195
+   ],
+   "hong_trai": [
+    118,
+    191
+   ],
+   "vai_phai": [
+    134,
+    142
+   ],
+   "khuyu_phai": [
+    140,
+    165
+   ],
+   "co_tay_phai": [
+    166,
+    164
+   ],
+   "nam_tay_phai": [
+    176,
+    163
+   ],
+   "vai_trai": [
+    118,
+    140
+   ],
+   "khuyu_trai": [
+    128,
+    165
+   ],
+   "co_tay_trai": [
+    146,
+    173
+   ],
+   "nam_tay_trai": [
+    152,
+    175
+   ],
+   "goi_phai": [
+    162,
+    208
+   ],
+   "co_chan_phai": [
+    163,
+    234
+   ],
+   "mui_chan_phai": [
+    192,
+    230
+   ],
+   "goi_trai": [
+    98,
+    200
+   ],
+   "co_chan_trai": [
+    70,
+    198
+   ],
+   "mui_chan_trai": [
+    50,
+    222
+   ],
+   "eo": [
+    129,
+    178
+   ]
+  }
+ }
+}
