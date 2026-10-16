@@ -109,6 +109,9 @@ DONG = [
     # người đặc, tay phải trống; neo kiếm gan-vk/neo-kiem-16-10.py. Game dùng thay kiem_1 / kiem_3 cũ (tắt ?kiemmoi=0, hoặc ?hangcu=1).
     # Kiếm 3 mới: khung 4 là đòn đâm → game dời mốc khung (MOC16 trong zed_moi.js) để khung 4 rơi đúng lúc chạm cũ (u 0,45).
     ('kiem_1~16', '08-kiem-1-5k-v2', 0.3, False), ('kiem_3~16', '10-kiem-3-6k-v2', 0.46, False),
+    # KIẾM 2 MỚI (docs/review/ke-hoach-cai-thien/ve-tay-8-gop-giao-dien/bao-cao.md): 5 khung chém hất lên, ★ khung 3 — cùng số khung, cùng
+    # giây, cùng khung chạm với kiem_2 cũ → mốc khung giữ nguyên (MOC.kiem_2). Tắt cùng cờ ?kiemmoi=0.
+    ('kiem_2~16', '09-kiem-2-5k-v2', 0.3, False),
     # CHẠY MỚI 16/10 (docs/review/ke-hoach-cai-thien/ve-tay-8-dot-1/bao-cao.md): 12 khung gen theo khung người đặc chay-e.png, cắt bằng
     # moi16/cat-chay-12k.py (khung sát nhau) + sửa khung 2 moi16/sua-chay-k2.py; neo vũ khí gan-vk/neo-chay-16-10.py. Game dùng thay 'chay'
     # (cả chay_<loại>); tắt ?chaymoi=0 (hoặc ?hangcu=1). Chạy cầm thương / búa vẫn dùng hàng hai tay cũ 03-chay-2tay (xem báo cáo).
@@ -119,14 +122,14 @@ DONG = [
     # "co_dinh" (gan-vk/neo-bua-16-10.py: tâm cụm nắm tay + góc cán theo ve-bua.py). ?buamoi=0 về hàng cũ. Chỉ bộ ninja.
     ('bua_nen~16', '17-bua-nen-8k', 0.8, False),
 ]
-CHI_NINJA = {'03-chay-2tay', '01-dung-8k', '04-lon-6k', '05-trung-don-4k', '08-kiem-1-5k-v2', '10-kiem-3-6k-v2', '03-chay-12k-v2', '17-bua-nen-8k'}   # hàng chỉ có ảnh bộ ninja: dung_bo bỏ qua
+CHI_NINJA = {'03-chay-2tay', '01-dung-8k', '04-lon-6k', '05-trung-don-4k', '08-kiem-1-5k-v2', '10-kiem-3-6k-v2', '03-chay-12k-v2', '17-bua-nen-8k', '09-kiem-2-5k-v2'}   # hàng chỉ có ảnh bộ ninja: dung_bo bỏ qua
 MOI16 = os.path.join(DAY, 'moi16')
-GOC_RIENG = {t: os.path.join(MOI16, t + '-gif') for t in ('01-dung-8k', '04-lon-6k', '05-trung-don-4k', '08-kiem-1-5k-v2', '10-kiem-3-6k-v2', '03-chay-12k-v2', '17-bua-nen-8k')}
+GOC_RIENG = {t: os.path.join(MOI16, t + '-gif') for t in ('01-dung-8k', '04-lon-6k', '05-trung-don-4k', '08-kiem-1-5k-v2', '10-kiem-3-6k-v2', '03-chay-12k-v2', '17-bua-nen-8k', '09-kiem-2-5k-v2')}
 # Căn theo BÀN CHÂN TRƯỚC (kiếm mới 16/10): khung 1 (và kiếm 3 khung 5–6) đứng hẹp chân hơn các khung khác → căn theo điểm giữa hai
 # bàn chân thì cả hai chân trượt. Các hàng này: tâm bàn chân trước (khối bên phải ở đáy hình) đặt đúng chỗ bàn chân trước của hàng
 # đứng mới (trung vị, ô 96) → vào đòn từ thế đứng chân trước không trượt; chân sau lùi/tiến theo ảnh.
 # Cỡ: co sao cho CAO ĐẦU bằng đúng hàng đứng mới (lần đầu theo trung bình đầu + mặt thì kiếm 1 to hơn đứng ~3 %, cao 67 so với 64).
-CHAN_TRUOC = {'08-kiem-1-5k-v2', '10-kiem-3-6k-v2', '17-bua-nen-8k'}
+CHAN_TRUOC = {'08-kiem-1-5k-v2', '10-kiem-3-6k-v2', '17-bua-nen-8k', '09-kiem-2-5k-v2'}
 
 
 def chan_truoc(im):

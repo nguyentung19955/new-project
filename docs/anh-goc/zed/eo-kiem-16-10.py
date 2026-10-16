@@ -14,8 +14,10 @@ from PIL import Image
 DAY = os.path.dirname(os.path.abspath(__file__))
 sp = importlib.util.spec_from_file_location('cat_than', os.path.join(DAY, 'cat-than.py'))
 CT = importlib.util.module_from_spec(sp); sp.loader.exec_module(CT)
-HANG = ['kiem_1~16']
+HANG = ['kiem_1~16', 'kiem_2~16']  # kiem_2~16: thêm ở phiên ve-tay-8-gop-giao-dien (16/10)
 RA_XEM = os.path.join(CT.GOC, 'docs', 'review', 'ke-hoach-cai-thien', 'kiem-moi-16-10')
+XEM = {'kiem_1~16': (RA_XEM, 'ghep-eo-kiem-1.png'),
+       'kiem_2~16': (os.path.join(CT.GOC, 'docs', 'review', 'ke-hoach-cai-thien', 've-tay-8-gop-giao-dien'), 'ghep-eo-kiem-2.png')}
 
 
 def main():
@@ -43,13 +45,13 @@ def main():
             fa, fr = CT.khung(a, dt['hang'], i), CT.khung(a, dc['hang'], j)
             cv.alpha_composite(Image.fromarray(fa), (CT.O * i * 2, 0))
             cv.alpha_composite(CT.ghep_moi(fa, ds[i], fr, ec[j]), (CT.O * (i * 2 + 1), 0))
-    open(CT.RA_JS, 'w', encoding='utf-8', newline='\n').write(src[:dau] + json.dumps(Z, ensure_ascii=False, separators=(',', ':')) + src[sau:])
-    print('Đã chèn vào', os.path.relpath(CT.RA_JS, CT.GOC))
-    if cv:
-        os.makedirs(RA_XEM, exist_ok=True)
-        p = os.path.join(RA_XEM, 'ghep-eo-kiem-1.png')
+        tm, tt = XEM[ten]
+        os.makedirs(tm, exist_ok=True)
+        p = os.path.join(tm, tt)
         cv.resize((cv.width * 3, cv.height * 3), Image.NEAREST).save(p, optimize=True)
         print('Đã ghi', os.path.relpath(p, CT.GOC))
+    open(CT.RA_JS, 'w', encoding='utf-8', newline='\n').write(src[:dau] + json.dumps(Z, ensure_ascii=False, separators=(',', ':')) + src[sau:])
+    print('Đã chèn vào', os.path.relpath(CT.RA_JS, CT.GOC))
 
 
 if __name__ == '__main__':

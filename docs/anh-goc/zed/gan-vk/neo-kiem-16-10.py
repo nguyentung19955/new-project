@@ -33,6 +33,11 @@ HANG = {
                         [(25, 180), (86, 270), (303, 160), (336, 180), (218, 288), (220, 288)],
                         # khung 2: lưỡi chĩa xuống sau, nằm sau chân sau → vẽ sau thân
                         [0, 1, 0, 0, 0, 0], [None, None, None, 0, None, None]),
+    # KIẾM 2 MỚI (phiên ve-tay-8-gop-giao-dien, 16/10): 09-kiem-2-5k-v2.png, 5 khung, chém hất lên, ★ chạm khung 3 (khung người đặc kiem-2-e.png,
+    # ve-tu-the.py K2 blade -135 / -25 / 55 / 115 / 45 → góc game 135 / 25 / -55 / -115 / -45). Kiếm vẽ trước thân mọi khung.
+    '09-kiem-2-5k-v2': ('../moi16/09-kiem-2-5k-v2-gif/kiem2', 'kiem-2-e.png', 5,
+                        [(35, 300), (372, 330), (364, 185), (135, 60), (176, 325)],
+                        [0, 0, 0, 0, 0], [None] * 5),
 }
 
 

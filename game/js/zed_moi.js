@@ -92,7 +92,7 @@
   // chỗ). ?buamoi=0: về búa nện cũ (các hàng mới khác vẫn dùng).
   const HANG_CU = /[?&]hangcu=1(&|$)/.test(QS);
   const KIEM_MOI = !/[?&]kiemmoi=0(&|$)/.test(QS);
-  const KIEM16 = { 'kiem_1~16': 1, 'kiem_3~16': 1 };
+  const KIEM16 = { 'kiem_1~16': 1, 'kiem_2~16': 1, 'kiem_3~16': 1 }; // kiem_2~16: phiên ve-tay-8-gop-giao-dien (5 khung, ★ khung 3, mốc cũ MOC.kiem_2)
   // CHẠY MỚI 16/10 (docs/review/ke-hoach-cai-thien/ve-tay-8-dot-1/bao-cao.md): chay~16 (12 khung gen theo khung người đặc, bộ ninja) thay
   // hàng chạy cũ, cả chay~16_<loại> (cầm kiếm / thương / búa / phi tiêu, neo tay từng khung). Nhịp chân theo quãng đường (cu-ti-to-muot (d))
   // dùng sải đo lại trên hàng mới (SAI.chay16). Chạy cầm thương / búa vẫn dùng hàng hai tay cũ chay2tay (hàng mới hai nắm tay đánh xa nhau,
