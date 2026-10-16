@@ -62,7 +62,7 @@
   const THE = { skill: 'kyNang', chuong: 'chuong', rank: 'bangVang', so: 'so', thanhTuu: 'thanhTuu', viecNgay: 'viecNgay', outfit: 'thoMay', gear: 'hangXen', forge: 'ren' };
   MD.the = (tab, sv) => !THE[tab] || MD.co(THE[tab], sv);
   // Thẻ của lò rèn
-  const FTAB = { sharpen: 'ren', vk: 'linhKhi', ep: 'epDo', up: 'nangLo' };
+  const FTAB = { sharpen: 'ren', vk: 'linhKhi', ep: 'epDo', up: 'nangLo', luyen: 'ren' }; // luyen: thẻ Luyện (js/luyen.js) mở cùng lò rèn
   MD.ftab = (t, sv) => !FTAB[t] || MD.co(FTAB[t], sv);
 
   // ---------- dòng báo ở làng ----------

@@ -43,10 +43,13 @@
     if (!sv.zed || typeof sv.zed !== 'object') sv.zed = { v: 1, hoc: {} };
     if (best === 'ninja') delete sv.zed.bo; else sv.zed.bo = best;
   }
-  const choVk = (sv) => Math.min(...[CHINH, PHU].map((t) => { const c = VM.gia(G.wStage(wOf(sv, t))); return c == null ? Infinity : c; }));
+  // 16/10 Luyện (js/luyen.js): giá linh khí của lần Luyện kế (luật cũ: lần nâng hệ kế)
+  const LY = () => !!(G.luyen && G.luyen.bat());
+  const choVk = (sv) => Math.min(...[CHINH, PHU].map((t) => { const w = wOf(sv, t); if (LY()) { const c = G.luyen.gia(G.luyen.cap(w) + 1); return c ? c.lk | 0 : Infinity; } const c = VM.gia(G.wStage(w)); return c == null ? Infinity : c; }));
   // ghi mốc: lần đầu một vũ khí đạt cấp, một bộ đạt cấp
   function ghiMoc(sv, moc, ai) {
     for (const t of [CHINH, PHU]) { const st = G.wStage(wOf(sv, t)); for (let s = 1; s <= st; s++) { const k = t + ' ' + G.STAGE_NAMES[s]; if (!(k in moc)) moc[k] = ai; } }
+    if (LY()) for (const t of [CHINH, PHU]) { const lv = G.luyen.cap(wOf(sv, t)); for (let s = 2; s <= lv; s++) { const k = t + ' Lv' + s; if (!(k in moc)) moc[k] = ai; } }
     for (const k of G.ZED_BO_KEYS) { const c = VM.boCap(sv, k); for (let s = 1; s <= c; s++) { const q = 'bộ ' + k + ' ' + s; if (!(q in moc)) moc[q] = ai; } }
   }
   // ---------- ÉP ĐỒ (14/10, bước 1 mục 5; js/ep_do.js) ----------
@@ -87,12 +90,12 @@
       let thua = 0;
       for (let k = 0; k < 6 && thua < 2 && A.duoc(loai, muc, sv) === ''; k++) {
         G.botNang(G.botAiHien || '1-1'); // mốc nâng cấp ghi theo ải thường đang tới
-        const truoc = { lk: VM.lk(sv), gold: sv.gold, ore: sv.ore, da: G.epDo ? G.epDo.da(sv) : 0 };
+        const truoc = { lk: VM.lk(sv), gold: sv.gold, ore: sv.ore, da: G.epDo ? G.epDo.da(sv) : 0, nlr: sv.nlr | 0 };
         A.vao(loai, muc);
         const r = G.probeRun(600);
         const win = !!r.win;
         if (!win) thua++; else thua = 0;
-        out.push({ loai, muc, win, t: r.t || 0, gold: sv.gold - truoc.gold, ore: sv.ore - truoc.ore, da: (G.epDo ? G.epDo.da(sv) : 0) - truoc.da, lk: VM.lk(sv) - truoc.lk });
+        out.push({ loai, muc, win, t: r.t || 0, gold: sv.gold - truoc.gold, ore: sv.ore - truoc.ore, da: (G.epDo ? G.epDo.da(sv) : 0) - truoc.da, lk: VM.lk(sv) - truoc.lk, nlr: (sv.nlr | 0) - truoc.nlr });
       }
     }
     return out;
@@ -137,7 +140,7 @@
     mac(sv);
     ghiMoc(sv, moc, ai);
     const hs = sv.heroes[sv.hero], P = G.buildPlayer();
-    const vk = (t) => { const w = wOf(sv, t); return G.STAGE_NAMES[G.wStage(w)] + (w.branch ? '/' + G.EL[w.branch].name : '') + ' +' + w.sharpen + (G.epDo && G.epDo.bac(w) ? ' ' + G.EP_DO.ten[G.epDo.bac(w)] : ''); };
+    const vk = (t) => { const w = wOf(sv, t); if (LY()) return 'Lv' + G.luyen.cap(w) + ' ' + G.STAGE_NAMES[G.wStage(w)] + (w.branch ? '/' + G.EL[w.branch].name : ''); return G.STAGE_NAMES[G.wStage(w)] + (w.branch ? '/' + G.EL[w.branch].name : '') + ' +' + w.sharpen + (G.epDo && G.epDo.bac(w) ? ' ' + G.EP_DO.ten[G.epDo.bac(w)] : ''); };
     const bo = G.zedBo(sv);
     let nx = null;
     // bộ đang nhắm còn thiếu mảnh trùm (cấp 2, 3) mà trùm vùng đó đã hạ: lượt cày nào cũng đánh lại trùm vùng đó (cho cả linh khí nhiều
@@ -145,7 +148,7 @@
     const bn = boNham(sv), gb = bn && VM.boGia(VM.boCap(sv, bn));
     if (gb && gb.manh > VM.manh(sv, bn) && sv.stars[VM.boVungManh(bn) + '-4']) nx = [VM.boVungManh(bn), 4];
     if (!nx) nx = U.grindTarget(sv);
-    return { lvl: hs.lvl, power: G.power(), hp: P.maxhp, gold: Math.floor(sv.gold), lk: Math.floor(VM.lk(sv)), ore: sv.ore, forge: sv.forge,
+    return { lvl: hs.lvl, power: G.power(), hp: P.maxhp, gold: Math.floor(sv.gold), lk: Math.floor(VM.lk(sv)), ore: LY() ? sv.nlr | 0 : sv.ore, nlr: sv.nlr | 0, forge: sv.forge,
       mats: sv.mats.join('/'), shards: sv.shards.join('/'), chinh: vk(CHINH), phu: vk(PHU), bo: bo + VM.boCap(sv, bo),
       where: nx ? nx[0] * 5 + nx[1] : null, did, da: G.epDo ? G.epDo.da(sv) : 0, bua: G.epDo ? G.epDo.bua(sv) : 0 };
   };

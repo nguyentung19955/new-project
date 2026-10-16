@@ -248,6 +248,63 @@
   };
   G.AI_NGAY_BAT = true;
   try { if (typeof location !== 'undefined' && /[?&]aingay=0(&|$)/.test(location.search || '')) G.AI_NGAY_BAT = false; } catch (e) { /* giữ mặc định */ }
+  // ===== LUYỆN VŨ KHÍ 1–15 (16/10, docs/review/ke-hoach-cai-thien/luyen-vu-khi/THIET-KE.md; chủ game chọn Q1-A, Q2-A, Q3-A) =====
+  // MỘT đường nâng mỗi vũ khí (luyện riêng từng món) thay cho cấp hệ + mài + lò + ép đồ. Luôn thành công, không tụt cấp, không bùa.
+  // Luật + chuyển bản lưu + bảng tối thiểu: js/luyen.js (G.luyen). Mô hình số: tools/can-bang/tinh.js --luyen (và mo_hinh.js của bản thiết kế).
+  // cap[L]: M = sức mạnh vũ khí so với Luyện 1 (thay STAGE_MULT × (1 + 0,08 × mài) × bậc ép); giá để lên cấp L từ L − 1: v vàng,
+  // lk linh khí, r nguyên liệu rèn (NLR), nl [vùng, số] nguyên liệu vùng, m [vùng, số] mảnh trùm. Trần ×5,7 (Q1-A: giữ đường sức mạnh như nay).
+  // Cờ tắt: ?luyen=0 (G.LUYEN_BAT = false) → luật, ví, giao diện cũ y như trước (bản lưu giữ cả trường cũ).
+  G.LUYEN = {
+    cap: [
+      null,
+      { M: 1.00 },
+      { M: 1.15, v: 100, lk: 10, r: 5 },
+      { M: 1.35, v: 150, lk: 80, r: 10, nl: [0, 4] },               // 3: Mầm — chọn hệ
+      { M: 1.55, v: 250, lk: 40, r: 15, nl: [0, 3] },
+      { M: 1.75, v: 350, lk: 50, r: 20, nl: [0, 3] },               // trần trước Mộc Tinh
+      { M: 2.05, v: 500, lk: 160, r: 28, nl: [0, 6], m: [0, 1] },   // 6: Thành hình — cần mảnh Mộc Tinh
+      { M: 2.35, v: 600, lk: 60, r: 32, nl: [1, 4] },
+      { M: 2.65, v: 700, lk: 70, r: 38, nl: [1, 4] },
+      { M: 3.00, v: 850, lk: 100, r: 45, nl: [1, 8] },              // 9: Tinh luyện (phần phụ của loại); trần trước Ngư Tinh
+      { M: 3.35, v: 950, lk: 80, r: 50, nl: [1, 4], m: [1, 1] },    // cần mảnh Ngư Tinh
+      { M: 3.70, v: 1000, lk: 90, r: 55, nl: [2, 5] },
+      { M: 4.50, v: 1350, lk: 290, r: 65, nl: [2, 10] },            // 12: Thức tỉnh; trần trước Hồ Tinh (bot phiên 1: xem dưới)
+      { M: 4.90, v: 1300, lk: 100, r: 70, nl: [2, 6], m: [2, 1] },  // cần mảnh Hồ Tinh; trần trước Thuồng Luồng
+      { M: 5.30, v: 1450, lk: 120, r: 75, nl: [0, 6], m: [3, 1] },  // cần mảnh Thuồng Luồng (vùng 4 không có nguyên liệu riêng: Gỗ linh)
+      { M: 5.70, v: 1850, lk: 200, r: 90, nl: [1, 10], m: [3, 2] }, // 15: Viên mãn (Vảy cá)
+    ],
+    // Cấp Luyện tối đa theo số trùm vùng đã hạ (0..4: chưa hạ, Mộc Tinh, Ngư Tinh, Hồ Tinh, Thuồng Luồng); cấp đầu tiên vượt mỗi mốc
+    // (6, 10, 13, 14) cần mảnh của trùm đó. Phiên 1 (bot 8 lượt, sau luật trùm công bằng của tư vấn 2): thiết kế 11 trước Hồ Tinh và cấp 12
+    // cần mảnh Hồ Tinh làm bot kẹt ở cấp 11 cả vùng 3 (ải 3-5 chơi 9,1 lần > 9, tổng 44 lần so với 39) vì bot thật lên Thức tỉnh từ 3-2 →
+    // trần trước Hồ Tinh 12, mảnh Hồ Tinh chuyển sang cấp 13 (39 lần, 181 phút; luật cũ 39 lần, 184 phút). Bảng: luyen-vu-khi/bao-cao-1.md.
+    tran: [5, 9, 12, 13, 15],
+    hinhThai: [3, 6, 12],       // cấp lên Mầm (chọn hệ), Thành hình, Thức tỉnh
+    phuTu: 9,                   // từ cấp 9 (Tinh luyện): phần phụ của loại
+    phu: { sword: 0.10, spear: 0.12, hammer: 0.30, bow: 0.20 }, // tốc đánh / tầm / choáng / sát thương xuyên (phi tiêu xuyên thêm xuyenThem quái)
+    xuyenThem: 1,
+    phuSt: 0.06,                // phần phụ chiếm ~6% trong M (sát thương = M / 1,06 từ cấp 9, như ép đồ: tổng / (1 + phần phụ))
+    vm: { chiMang: 0.08, trum: 0.16, hoiChieu: 0.12 }, // dòng Viên mãn (cấp 15): chí mạng / sát thương lên trùm, tinh anh / giảm hồi chiêu đặc biệt
+    vmMacDinh: 'chiMang',
+    khung: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 6], // màu khung ô (ảnh gd-o-ep-0..6) theo cấp Luyện
+    manhDau: 2,                 // hạ trùm vùng LẦN ĐẦU (độ khó 1): thêm bấy nhiêu mảnh (3 → 5), thưởng bảo đảm
+    buaTrum: 0.1,               // trùm vùng: 10% thêm 6 NLR (bùa giữ bậc cũ quy ra NLR)
+    tutToiDa: 0.07,             // chuyển bản lưu cũ: không ai tụt Sức mạnh quá 7%
+  };
+  G.LUYEN_TRAN = G.LUYEN.tran; // tên trong THIET-KE.md mục 5.2
+  G.QUY_DOI = { da: 2, bua: 6 };  // 1 đá nâng bậc = 2 NLR, 1 bùa giữ bậc = 6 NLR (quặng 1:1)
+  // Ải Rèn (gộp Ải Đá Bậc + Ải Đá Mài): T2, T3, T4, T6, T7, CN; NLR theo mức Dễ / Vừa / Khó
+  G.AI_NGAY.ai.ren = { ten: 'Ải Rèn', thu: [1, 2, 3, 5, 6, 0], thuong: { nlr: [14, 19, 25] } };
+  G.LUYEN_BAT = true;
+  try { if (typeof location !== 'undefined' && /[?&]luyen=0(&|$)/.test(location.search || '')) G.LUYEN_BAT = false; } catch (e) { /* giữ mặc định */ }
+  if (G.LUYEN_BAT) G.AI_NGAY.thuTu = ['ren', 'vang'];
+  // Bỏ tụt bậc cho CẢ luật cũ (ép hỏng từ Vàng trở lên chỉ giữ bậc), ẩn bùa (không rơi ở trùm / Ải Đá Bậc, thương nhân không bán).
+  // Cờ bật lại: ?tutbac=1 (G.TUT_BAC = true).
+  G.TUT_BAC = false;
+  try { if (typeof location !== 'undefined' && /[?&]tutbac=1(&|$)/.test(location.search || '')) G.TUT_BAC = true; } catch (e) { /* giữ mặc định */ }
+  if (!G.TUT_BAC) { G.EP_DO.tutTu = 99; G.EP_DO.bua.trumVung = 0; G.AI_NGAY.ai.da.thuong.bua = [0, 0, 0]; }
+  // Cộng quặng (thưởng ải, rương, thương nhân, việc ngày, thành tựu…): js/luyen.js thay bằng bản đổi ra NLR khi cờ Luyện bật
+  G.themQuang = function (sv, n) { if (sv && n > 0) sv.ore = (typeof sv.ore === 'number' && isFinite(sv.ore) ? sv.ore : 0) + n; };
+  G.chuQuang = () => '+{0} quặng';
   G.AFFIX = {
     mana: 'Mỗi đòn trúng hồi thêm 1 mana',
     crit: '10% cơ hội gây gấp đôi sát thương',

@@ -8,23 +8,27 @@
   const G = window.G;
   const U = (G.upg = {});
   // Quy mọi thứ ra vàng để so "rẻ" hay "đắt".
-  U.VAL = { gold: 1, ore: 12, stones: 120, mat: 20, shard: 150, xp: 0.35, lk: 4 };
+  U.VAL = { gold: 1, ore: 12, stones: 120, mat: 20, shard: 150, xp: 0.35, lk: 4, nlr: 12 }; // nlr: nguyên liệu rèn (Luyện, js/luyen.js)
   U.costVal = function (c) {
     if (!c) return 0;
-    let v = (c.gold || 0) * U.VAL.gold + (c.ore || 0) * U.VAL.ore + (c.stones || 0) * U.VAL.stones + (c.xp || 0) * U.VAL.xp + (c.lk || 0) * U.VAL.lk;
-    for (let i = 0; i < 3; i++) v += ((c.mat && c.mat[i]) || 0) * U.VAL.mat + ((c.shard && c.shard[i]) || 0) * U.VAL.shard;
+    let v = (c.gold || 0) * U.VAL.gold + (c.ore || 0) * U.VAL.ore + (c.stones || 0) * U.VAL.stones + (c.xp || 0) * U.VAL.xp + (c.lk || 0) * U.VAL.lk + (c.nlr || 0) * U.VAL.nlr;
+    for (let i = 0; i < 4; i++) v += ((c.mat && c.mat[i]) || 0) * U.VAL.mat + ((c.shard && c.shard[i]) || 0) * U.VAL.shard;
     return v;
   };
   // Phần còn thiếu của giá c so với bản lưu sv (null nếu đủ).
   U.missing = function (sv, c) {
     if (!c) return null;
-    const m = { gold: Math.max(0, (c.gold || 0) - sv.gold), ore: Math.max(0, (c.ore || 0) - sv.ore), stones: Math.max(0, (c.stones || 0) - sv.stones), mat: [0, 0, 0], shard: [0, 0, 0] };
-    let any = m.gold || m.ore || m.stones;
-    for (let i = 0; i < 3; i++) {
-      m.mat[i] = Math.max(0, ((c.mat && c.mat[i]) || 0) - sv.mats[i]);
-      m.shard[i] = Math.max(0, ((c.shard && c.shard[i]) || 0) - sv.shards[i]);
+    const m = { gold: Math.max(0, (c.gold || 0) - sv.gold), ore: Math.max(0, (c.ore || 0) - sv.ore), stones: Math.max(0, (c.stones || 0) - sv.stones), mat: [0, 0, 0], shard: [0, 0, 0, 0] };
+    // Luyện (js/luyen.js): giá có thêm nguyên liệu rèn (nlr) và linh khí (lk); mảnh trùm tới vùng 4
+    m.nlr = Math.max(0, (c.nlr || 0) - (sv.nlr | 0));
+    m.lk = Math.max(0, (c.lk || 0) - (G.vkMoi ? G.vkMoi.lk(sv) : sv.linhKhi || 0));
+    let any = m.gold || m.ore || m.stones || m.nlr || m.lk;
+    for (let i = 0; i < 4; i++) {
+      m.mat[i] = i < 3 ? Math.max(0, ((c.mat && c.mat[i]) || 0) - sv.mats[i]) : 0;
+      m.shard[i] = Math.max(0, ((c.shard && c.shard[i]) || 0) - (sv.shards[i] || 0));
       if (m.mat[i] || m.shard[i]) any = true;
     }
+    m.mat.length = 3;
     return any ? m : null;
   };
   // ---------- đổi vàng lấy nguyên liệu vùng đã qua (phiên cân bằng, mục 3; số liệu G.DOI_NL ở data.js) ----------
@@ -71,7 +75,7 @@
   U.bqMua = function (sv, n) {
     n = n || 1;
     let k = 0;
-    for (; k < n && U.bqDuoc(sv) === ''; k++) { sv.gold -= U.bqGia(); sv.ore = (sv.ore | 0) + 1; sv.banQuang.n++; }
+    for (; k < n && U.bqDuoc(sv) === ''; k++) { sv.gold -= U.bqGia(); if (G.luyen && G.luyen.bat()) sv.nlr = (sv.nlr | 0) + 1; else sv.ore = (sv.ore | 0) + 1; sv.banQuang.n++; } // Luyện: bán nguyên liệu rèn
     return k;
   };
 
@@ -83,8 +87,9 @@
   };
   // Phần thiếu m chỉ còn là nguyên liệu vùng đã qua mà đổi được ngay bằng vàng (đủ vàng, đủ lượt)? Trả về số món mỗi vùng, hoặc null.
   U.doiDu = function (sv, m, giaThem) {
-    if (!m || !G.DOI_NL || m.ore || m.stones || m.gold) return null;
+    if (!m || !G.DOI_NL || m.ore || m.stones || m.gold || m.nlr || m.lk) return null;
     let n = 0;
+    if (m.shard[3]) return null;
     for (let i = 0; i < 3; i++) { if (m.shard[i]) return null; if (m.mat[i]) { if (!U.daQua(sv, i)) return null; n += m.mat[i]; } }
     if (!n || n > (sv.doiNL | 0) || sv.gold < n * U.doiGia() + (giaThem || 0)) return null;
     return m.mat.slice();
@@ -105,8 +110,9 @@
   // Ải nên chơi lại để kiếm phần thiếu m (mảnh trùm: đánh lại trùm; nguyên liệu: ải cao nhất đã qua của vùng đó; còn lại: ải cao nhất đã qua).
   U.where = function (sv, m) {
     if (m) {
-      for (let i = 0; i < 3; i++) if (m.shard[i] && !sv.stars[i + '-4']) return null; // cần mảnh của trùm chưa hạ: chưa cày được
-      for (let i = 0; i < 3; i++) if (m.shard[i]) return [i, 4];
+      const nS = Math.min(m.shard.length, G.REGIONS.length);
+      for (let i = 0; i < m.shard.length; i++) if (m.shard[i] && (i >= nS || !sv.stars[i + '-4'])) return null; // cần mảnh của trùm chưa hạ: chưa cày được
+      for (let i = 0; i < nS; i++) if (m.shard[i]) return [i, 4];
       for (let i = 0; i < 3; i++) if (m.mat[i]) return U.grindStage(sv, i);
     }
     return U.grindStage(sv);
@@ -115,7 +121,7 @@
   U.missText = function (sv, m) {
     const a = [];
     let where = null;
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < Math.min(m.shard.length, G.REGIONS.length); i++) {
       if (m.shard[i]) { a.push(G.t('{0} mảnh {1}', m.shard[i], G.REGIONS[i].bossName)); where = where || G.t(sv.stars[i + '-4'] ? 'đánh lại trùm {0}' : 'hạ trùm {0}', G.REGIONS[i].bossName); }
     }
     for (let i = 0; i < 3; i++) {
@@ -128,8 +134,10 @@
     }
     if (m.gold) a.push(G.t('{0} vàng', m.gold));
     if (m.ore) a.push(G.t('{0} quặng', m.ore));
+    if (m.nlr) a.push(G.t('{0} nguyên liệu rèn', m.nlr));
+    if (m.lk) { a.push(G.t('{0} linh khí', m.lk)); where = where || G.t('hạ tinh anh, trùm'); }
     if (m.stones) { a.push(G.t('{0} đá tôi', m.stones)); where = where || G.t('đá tôi rơi từ rương, sao thứ ba lần đầu'); }
-    if (!where && (m.gold || m.ore)) { const g = U.grindStage(sv); if (g) where = G.t('chơi lại {0}', stName(g[0], g[1])); }
+    if (!where && (m.gold || m.ore || m.nlr)) { const g = U.grindStage(sv); if (g) where = G.t('chơi lại {0}', stName(g[0], g[1])); }
     return G.t('thiếu {0}', a.join(', ')) + (where ? ' — ' + where : '');
   };
 
@@ -156,10 +164,20 @@
       const coHoc = cp.left > 0 && G.CHUONG.trees[hs.ch.cay] && G.CHUONG.trees[hs.ch.cay].nodes.some((nd) => !G.chuong.why(hs, nd.id, sv.hero));
       if (coHoc) out.push({ kind: 'chuong', key: 'chuong', title: G.t('Còn {0} điểm chưởng chưa học ({1})', cp.left, G.CHUONG.trees[hs.ch.cay].name), cost: {}, apply: (s) => { const h = s.heroes[s.hero]; G.chuong.autoLearn(h, s.hero); }, go: { who: 'do', tab: 'chuong' } });
     }
+    // 16/10 Luyện (js/luyen.js): một đường duy nhất — Luyện từng vũ khí đang mang (thay mài, nâng hệ bằng linh khí, lò, ép đồ)
+    const LY = G.luyen && G.luyen.bat();
+    if (LY) for (const id of sv.carry) {
+      const w = wById(sv, id), Lz = G.luyen;
+      if (!w) continue;
+      const lv = Lz.cap(w), cost = Lz.giaUpg(lv + 1);
+      if (!cost || lv + 1 > Lz.tran(sv)) continue;
+      const el = w.branch || U.heMam(sv, w);
+      out.push({ kind: 'luyen', key: 'ly' + id, title: G.t('Luyện {0} lên {1}', wNameOf(w), lv + 1), cost, apply: (s) => { Lz.nang(s, wById(s, id), el, true); }, go: { who: 'ren', ftab: 'luyen', sel: id } });
+    }
     // vũ khí đang mang: mài, nâng cấp bằng linh khí, nâng lò
     const cap = G.FORGE_CAP[sv.forge];
     let needForge = false;
-    for (const id of sv.carry) {
+    for (const id of LY ? [] : sv.carry) {
       const w = wById(sv, id);
       if (!w) continue;
       const nm = wNameOf(w);
@@ -175,7 +193,7 @@
       }
     }
     const up = G.FORGE_UP[sv.forge];
-    if (up && needForge) {
+    if (up && needForge && !LY) {
       const main = sv.carry.map((id) => wById(sv, id)).filter(Boolean).sort((a, b) => b.sharpen - a.sharpen)[0];
       out.push({ kind: 'forge', key: 'forge', title: G.t('Nâng lò lên cấp {0} (mài tới +{1})', sv.forge + 1, G.FORGE_CAP[sv.forge + 1]), cost: up,
         apply: (s) => { s.forge++; }, sim: (s) => { s.forge++; if (main) wById(s, main.id).sharpen++; }, extra: main ? G.sharpenFull(main.sharpen) : null, go: { who: 'ren', ftab: 'up' } });
@@ -211,13 +229,16 @@
     return list;
   };
   function addCost(a, b) {
-    const c = { gold: (a.gold || 0) + (b.gold || 0), ore: (a.ore || 0) + (b.ore || 0), stones: (a.stones || 0) + (b.stones || 0), mat: [0, 0, 0], shard: [0, 0, 0] };
-    for (let i = 0; i < 3; i++) { c.mat[i] = ((a.mat && a.mat[i]) || 0) + ((b.mat && b.mat[i]) || 0); c.shard[i] = ((a.shard && a.shard[i]) || 0) + ((b.shard && b.shard[i]) || 0); }
+    const c = { gold: (a.gold || 0) + (b.gold || 0), ore: (a.ore || 0) + (b.ore || 0), stones: (a.stones || 0) + (b.stones || 0), nlr: (a.nlr || 0) + (b.nlr || 0), lk: (a.lk || 0) + (b.lk || 0), mat: [0, 0, 0], shard: [0, 0, 0, 0] };
+    for (let i = 0; i < 4; i++) { c.mat[i] = ((a.mat && a.mat[i]) || 0) + ((b.mat && b.mat[i]) || 0); c.shard[i] = ((a.shard && a.shard[i]) || 0) + ((b.shard && b.shard[i]) || 0); }
     return c;
   }
   function pay(sv, c) {
     sv.gold -= c.gold || 0; sv.ore -= c.ore || 0; sv.stones -= c.stones || 0;
-    for (let i = 0; i < 3; i++) { sv.mats[i] -= (c.mat && c.mat[i]) || 0; sv.shards[i] -= (c.shard && c.shard[i]) || 0; }
+    if (c.nlr) sv.nlr = (sv.nlr | 0) - c.nlr; // Luyện
+    if (c.lk) sv.linhKhi = Math.round(((G.vkMoi ? G.vkMoi.lk(sv) : sv.linhKhi || 0) - c.lk) * 10) / 10;
+    for (let i = 0; i < 3; i++) sv.mats[i] -= (c.mat && c.mat[i]) || 0;
+    for (let i = 0; i < sv.shards.length; i++) sv.shards[i] -= (c.shard && c.shard[i]) || 0;
   }
   // Làm một đường nâng cấp trên bản lưu thật.
   U.doIt = function (sv, o) {

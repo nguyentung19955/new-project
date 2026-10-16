@@ -189,6 +189,7 @@
         let cs = null;
         try { cs = d && d.save ? JSON.parse(d.save) : null; } catch (e) { cs = null; }
         if (cs) {
+          const chuaLuyen = cs.luyenChuyen !== 1; // 16/10 Luyện vũ khí (js/luyen.js): bản trên mây chưa chuyển → G.fixSave chuyển một lần
           const cloud = G.fixSave(cs);
           const cloudNewer = (d.updatedAt || 0) > (local.savedAt || 0);
           if (other || cloudNewer) {
@@ -199,7 +200,12 @@
             // và đã qua ít nhất 1 ải → LUÔN hỏi chọn bản, không tự lấy bản mây dù chênh lệch nhỏ. Bản trắng (chưa qua ải) thì không hỏi.
             const hoiKhach = other && far(local) >= 1;
             if ((lp >= cp + 8 || hoiKhach) && G.cloudUI && G.cloudUI.conflict) use = await G.cloudUI.conflict(summary(local), summary(cloud), d.updatedAt || 0);
-            if (use === 'cloud') { this.apply(cloud, d.updatedAt || Date.now()); this.lastSync = Date.now(); return; }
+            if (use === 'cloud') {
+              this.apply(cloud, d.updatedAt || Date.now()); this.lastSync = Date.now();
+              // bản trên mây vừa được chuyển sang Luyện: đẩy bản đã chuyển lên ngay (máy khác nạp không phải chuyển lại; cùng mốc giờ, không đổi nội dung chơi)
+              if (chuaLuyen && G.save === cloud && cloud.luyenChuyen === 1) await this.push(true);
+              return;
+            }
           } else if ((d.updatedAt || 0) === (local.savedAt || 0)) { this.lastSync = d.updatedAt || Date.now(); this._own(); return; }
           else if (progress(cloud) >= progress(local) + 8 && G.cloudUI && G.cloudUI.conflict) {
             // V2: bản trên máy mới hơn theo giờ (giờ mỗi máy một khác) nhưng bản trên mây đi xa hơn rõ rệt → hỏi, không ghi đè mây ngay

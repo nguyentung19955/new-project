@@ -39,7 +39,8 @@ const sx = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Ar
 
 (async () => {
   // Bước 2 Phiên E: bài này kiểm luật với bảng thưởng GỐC (?thuongb2=goc); số đã chỉnh kiểm ở tests/thuong_b2.test.js
-  const A = moTrang('thuongb2=goc'), B = moTrang('thanhtuu=0&thuongb2=goc');
+  // 16/10 Luyện vũ khí: bài này kiểm thưởng đá / bùa / quặng và điều kiện mài / ép của luật cũ → chạy luật cũ (?luyen=0); luật Luyện: tests/luyen.test.js
+  const A = moTrang('luyen=0&thuongb2=goc'), B = moTrang('luyen=0&thanhtuu=0&thuongb2=goc');
   try {
     console.log('0. Nạp game');
     const nap = await A.goi(() => ({ tt: !!G.thanhTuu, bat: G.THANH_TUU_BAT, n: G.THANH_TUU.DS.length, dh: Object.keys(G.THANH_TUU.DH).length,

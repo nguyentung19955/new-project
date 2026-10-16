@@ -297,11 +297,16 @@
     if (G.LANG === 'vi') ui.text(G.wName(w), 96, 68, { size: 10.5, bold: true, color: rar.col });
     else { const q = T.vua(G.wName(w), 150, 10.5, true); ui.text(q[0], 96, 68 + (q[1] - 10.5) * 0.36, { size: q[1], bold: true, color: rar.col }); } // tên tiếng Anh dài: thu cỡ chữ cho khỏi lấn cột bên phải
     ui.text(G.t('{0} · {1}', G.WTYPES[w.type].name, G.STAGE_NAMES[st]), 96, 80, { size: 7.5, color: SOFT });
-    ui.text(G.t('Sát thương mỗi đòn {0} · mài +{1}', G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1).replace('.', dp()), w.sharpen | 0), 96, 102, { size: 7.5 });
+    const LY = !!(G.luyen && G.luyen.bat()); // 16/10 Luyện (js/luyen.js)
+    ui.text(LY ? G.t('Sát thương mỗi đòn {0} · Luyện {1}/{2}', G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1).replace('.', dp()), G.luyen.cap(w), G.luyen.MAX) : G.t('Sát thương mỗi đòn {0} · mài +{1}', G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1).replace('.', dp()), w.sharpen | 0), 96, 102, { size: 7.5 });
     const mi = G.markInfo(w);
     ui.text(mi.txt, 96, 113, { size: 7.5, color: mi.col });
     ui.bar(96, 117, 146, 4, mi.frac, mi.col);
-    if (G.vkMoi) { // túi linh khí chung, nâng ở Ông Thợ Rèn
+    if (LY) { // Luyện: cấp kế mở gì
+      const mk = G.luyen.mocKe(w);
+      ui.text(G.t('Linh khí đang có: {0}', Math.floor(G.vkMoi ? G.vkMoi.lk(sv) : 0)), 18, 140, { size: 8, bold: true, color: GOLD });
+      ui.para(mk ? G.t('Cấp {0} mở: {1}', mk, G.luyen.moGi(w, mk)) : G.tv('Đã tối đa (cấp 15)'), 18, 152, 224, { size: 7, color: TXT });
+    } else if (G.vkMoi) { // túi linh khí chung, nâng ở Ông Thợ Rèn
       const c = G.vkMoi.gia(st);
       ui.text(G.t('Linh khí đang có: {0}', Math.floor(G.vkMoi.lk(sv))), 18, 140, { size: 8, bold: true, color: GOLD });
       ui.para(c == null ? 'Vũ khí đã Thức tỉnh, mở đủ hai đặc trưng hệ.' : G.t('{0}. Cần {1} linh khí, nâng ở Ông Thợ Rèn, thẻ Linh khí.', G.vkMoi.moTiep(w), c), 18, 152, 224, { size: 7, color: TXT });
@@ -310,7 +315,7 @@
     const x0 = 250;
     T.head('Đặc trưng hệ theo cấp', x0, 68);
     const el = w.branch, E = el ? G.EL[el] : null;
-    if (!el) ui.para(G.t('Chưa có hệ. Lên Mầm bằng {0} linh khí ở Ông Thợ Rèn và chọn Lửa, Độc hoặc Băng.', G.VK_MOI.gia[0]), x0, 80, 212, { size: 7, color: SOFT });
+    if (!el) ui.para(LY ? G.tv('Chưa có hệ. Luyện lên cấp 3 (Mầm) ở Ông Thợ Rèn và chọn Lửa, Độc hoặc Băng.') : G.t('Chưa có hệ. Lên Mầm bằng {0} linh khí ở Ông Thợ Rèn và chọn Lửa, Độc hoặc Băng.', G.VK_MOI.gia[0]), x0, 80, 212, { size: 7, color: SOFT });
     const rows = [
       ['Trắng', 'Chưa mang hệ. Hạ tinh anh, trùm hoặc nhặt viên linh khí quái thường rơi để có linh khí, rồi lên Mầm ở Ông Thợ Rèn.'],
       ['Mầm', G.t('Chỉ số tăng. {0}% mỗi đòn gây {1}, vệt chém nhuốm màu hệ. Chưa có luật hệ.', Math.round(G.PROC[1] * 100), el ? (el === 'fire' ? 'cháy' : el === 'poison' ? 'độc' : 'chậm') : 'hiệu ứng hệ')],
@@ -323,7 +328,7 @@
       const h = i < 2 ? (el ? (i ? 34 : 23) : 0) : (el ? 44 : 38);
       if (!h) return;
       T.inset(x0, ry, 214, h - 2, false, { fill: got ? '#24484a' : '#17302f', col: got && E ? E.dark : T.C.brD });
-      const trangThai = locked ? 'Chưa mở' : got ? 'Đã mở' : i === st + 1 && G.vkMoi ? G.t('Sắp mở: {0} linh khí', G.vkMoi.gia(st)) : 'Chưa mở';
+      const trangThai = locked ? 'Chưa mở' : got ? 'Đã mở' : LY ? G.t('Luyện cấp {0}', [1, G.LUYEN.hinhThai[0], G.LUYEN.hinhThai[1], G.LUYEN.hinhThai[2]][i]) : i === st + 1 && G.vkMoi ? G.t('Sắp mở: {0} linh khí', G.vkMoi.gia(st)) : 'Chưa mở';
       { // chu-lech-khung: tên cấp (trái) và trạng thái (phải) trong dải trên của lòng ô, tránh núm góc
         T.chuO(q[0], x0, ry, 214, h - 2, { align: 'left', vung: [x0, ry, 60, 14], size: 8, min: 7, bold: true, color: got && E ? E.col : SOFT });
         T.chuO(trangThai, x0, ry, 214, h - 2, { align: 'right', vung: [x0 + 120, ry, 94, 14], size: 6.5, bold: got, color: locked ? WARN : got ? GOOD : SOFT });
@@ -363,23 +368,28 @@
   function forge() {
     const sv = G.save;
     let line = null; // câu ông thợ rèn nói
-    frame(G.t('Lò rèn cấp {0}', sv.forge));
+    const LY = !!(G.luyen && G.luyen.bat()); // 16/10 Luyện (js/luyen.js): một thẻ Luyện thay Mài / Linh khí / Ép đồ / Nâng lò
+    frame(LY ? G.tv('Lò rèn') : G.t('Lò rèn cấp {0}', sv.forge));
     // Thẻ Linh khí nâng cấp 4 vũ khí (chọn hệ, đổi hệ; js/vk_moi.js). Đợt 2: bỏ hẳn Nâng bậc, Tôi lại, Rèn đồ của luật cũ.
     // Đợt 6: thêm thẻ "Ép đồ" (bậc vũ khí, js/ep_do.js); ?epdo=0 thì ẩn
     const coEp = !!(G.epDo && G.epDo.bat());
     // Tư vấn 16/10 (js/mo_dan.js): thẻ chưa tới mốc thì ẩn (Mài sau Rừng già 1, Linh khí sau Rừng già 3, Ép đồ + Nâng lò sau Mộc Tinh)
     const md = (t) => !G.moDan || G.moDan.ftab(t[0]);
-    const tabs = (coEp ? [['sharpen', 'Mài'], ['vk', 'Linh khí'], ['ep', 'Ép đồ'], ['up', 'Nâng lò']] : [['sharpen', 'Mài'], ['vk', 'Linh khí'], ['up', 'Nâng lò']]).filter(md);
-    if (!tabs.length) tabs.push(['sharpen', 'Mài']);
+    const tabs = (LY ? [['luyen', 'Luyện']] : coEp ? [['sharpen', 'Mài'], ['vk', 'Linh khí'], ['ep', 'Ép đồ'], ['up', 'Nâng lò']] : [['sharpen', 'Mài'], ['vk', 'Linh khí'], ['up', 'Nâng lò']]).filter(md);
+    if (!tabs.length) tabs.push(LY ? ['luyen', 'Luyện'] : ['sharpen', 'Mài']);
     if (!tabs.some((t) => t[0] === V.ftab)) V.ftab = tabs.some((t) => t[0] === 'vk') ? 'vk' : tabs[0][0];
     const tp = tabs.length === 4 ? 76 : tabs.length === 3 ? 102 : Math.floor((CW + 3) / tabs.length), tw = tp - (tabs.length === 4 ? 3 : 4);
     tabs.forEach((t, i) => {
       if (T.tab(CX + i * tp, PY + 23, tw, 22, t[1], V.ftab === t[0], { pad: 2 })) { V.ftab = t[0]; V.sel = null; V.page = 0; }
     });
-    if (V.ftab !== 'up' && V.ftab !== 'vk' && V.ftab !== 'ep') T.inset(CX, DET_Y, CW, 52, false);
-    if (V.ftab === 'ep' && coEp) {
+    if (V.ftab !== 'up' && V.ftab !== 'vk' && V.ftab !== 'ep' && V.ftab !== 'luyen') T.inset(CX, DET_Y, CW, 52, false);
+    if (V.ftab === 'luyen' && LY) {
+      if (V.sel != null && sv.weapons.some((w) => w.id === V.sel)) { G.luyen.ui.sel = V.sel; V.sel = null; } // đi từ gợi ý nâng cấp (go.sel)
+      G.luyen.panel(CX, LIST_Y - 1, CW, { h: 170, say });
+      line = G.luyen.coTheLuyen(sv) ? 'Đủ đồ rồi! Chọn vũ khí rồi bấm Luyện, lần nào cũng thành công.' : 'Luyện vũ khí cần vàng, linh khí, nguyên liệu rèn và nguyên liệu vùng. Qua ải, Ải Rèn và trùm để gom.';
+    } else if (V.ftab === 'ep' && coEp) {
       G.epDo.panel(CX, LIST_Y - 1, CW, { h: 170, say });
-      line = G.epDo.coTheEp(sv) ? 'Đủ đá rồi! Ép lên bậc cao thì có thể hỏng, từ Vàng trở lên hỏng là tụt bậc.' : 'Đá nâng bậc rơi từ trùm và Ải Đá Bậc. Từ bậc Tím vũ khí có dòng hiệu ứng.';
+      line = G.epDo.coTheEp(sv) ? (G.TUT_BAC === false ? 'Đủ đá rồi! Ép lên bậc cao thì có thể hỏng, hỏng chỉ mất đá, không tụt bậc.' : 'Đủ đá rồi! Ép lên bậc cao thì có thể hỏng, từ Vàng trở lên hỏng là tụt bậc.') : 'Đá nâng bậc rơi từ trùm và Ải Đá Bậc. Từ bậc Tím vũ khí có dòng hiệu ứng.';
     } else if (V.ftab === 'vk' && G.vkMoi) {
       G.vkMoi.vkPanel(CX, LIST_Y - 1, CW, { rowH: 39, say, lo: true }); // lo: bảng hình thái (js/hinh_thai.js; ?hinhthai=0 → bảng cũ)
       line = G.vkMoi.coTheNang(sv) ? 'Đủ linh khí rồi! Chọn vũ khí để nâng cấp, lên Mầm thì chọn hệ.' : 'Linh khí nâng vũ khí: Trắng, Mầm, Thành hình, Thức tỉnh. Hạ tinh anh và trùm để gom linh khí.';
@@ -425,7 +435,7 @@
   function xenTabs() {
     // Phiên cân bằng (mục 3): thẻ Nguyên liệu (đổi vàng lấy nguyên liệu vùng đã qua, js/upgrade.js U.doi) trên băng tiêu đề.
     const tabs = [['nl', 'Nguyên liệu', 48]];
-    if (G.BAN_QUANG && G.BAN_QUANG_BAT !== false && G.upg && G.upg.bqMua) tabs.push(['quang', 'Quặng', 34]); // 14/10 (bước 1, mục 4)
+    if (G.BAN_QUANG && G.BAN_QUANG_BAT !== false && G.upg && G.upg.bqMua) tabs.push(['quang', G.luyen && G.luyen.bat() ? 'NLR' : 'Quặng', 34]); // 14/10 (bước 1, mục 4); Luyện: bán nguyên liệu rèn
     // Rà soát C: thẻ rộng theo chữ (phông thật trên iPhone rộng hơn, "Nguyên liệu" chạm viền thẻ) nếu băng tiêu đề còn chỗ
     if (G.RSC !== false) {
       ui.font(7.5, true);
@@ -451,19 +461,20 @@
     frame('Hàng xén');
     if (xenTabs()) return null;
     if (V.gtab !== 'quang') return nguyenLieu();
-    const con = U.bqCon(sv), why = U.bqDuoc(sv);
-    ui.para(G.t('{0} vàng một quặng. Mỗi ngày bà bán tối đa {1} quặng; hôm nay còn {2}.', D.gia, D.moiNgay, con), CX + 2, 78, CW - 4, { size: 7, color: SOFT });
+    const con = U.bqCon(sv), why = U.bqDuoc(sv), LY = !!(G.luyen && G.luyen.bat());
+    if (LY) ui.para(G.t('{0} vàng một nguyên liệu rèn. Mỗi ngày bà bán tối đa {1}; hôm nay còn {2}.', D.gia, D.moiNgay, con), CX + 2, 78, CW - 4, { size: 7, color: SOFT });
+    else ui.para(G.t('{0} vàng một quặng. Mỗi ngày bà bán tối đa {1} quặng; hôm nay còn {2}.', D.gia, D.moiNgay, con), CX + 2, 78, CW - 4, { size: 7, color: SOFT });
     const y = 100;
     T.inset(CX, y, CW, 40, false);
-    ui.text(G.tv('Quặng'), CX + 8, y + 15, { size: 9, bold: true, color: TXT });
-    ui.text(G.t('Đang có {0} · dùng để mài vũ khí, nâng lò', sv.ore | 0), CX + 8, y + 29, { size: 7, color: SOFT });
+    ui.text(G.tv(LY ? 'Nguyên liệu rèn' : 'Quặng'), CX + 8, y + 15, { size: 9, bold: true, color: TXT });
+    ui.text(LY ? G.t('Đang có {0} · dùng để luyện vũ khí', sv.nlr | 0) : G.t('Đang có {0} · dùng để mài vũ khí, nâng lò', sv.ore | 0), CX + 8, y + 29, { size: 7, color: SOFT });
     if (T.sbtn(CX + CW - 168, y + 10, 76, 20, why || G.t('Mua 1 ({0})', D.gia), { size: 7.5, pad: 2, disabled: !!why })) {
-      if (U.bqMua(sv, 1)) { G.persist(); G.sfx('pick'); say(G.t('Của cháu đây, {0} quặng.', 1)); }
+      if (U.bqMua(sv, 1)) { G.persist(); G.sfx('pick'); say(G.t(LY ? 'Của cháu đây, {0} nguyên liệu rèn.' : 'Của cháu đây, {0} quặng.', 1)); }
     }
     const k5 = Math.max(1, Math.min(5, con));
     if (T.sbtn(CX + CW - 86, y + 10, 80, 20, G.t('Mua {0} ({1})', k5, k5 * D.gia), { size: 7.5, pad: 2, disabled: !!why || k5 < 2 || sv.gold < k5 * D.gia })) {
       const got = U.bqMua(sv, k5);
-      if (got) { G.persist(); G.sfx('pick'); say(G.t('Của cháu đây, {0} quặng.', got)); }
+      if (got) { G.persist(); G.sfx('pick'); say(G.t(LY ? 'Của cháu đây, {0} nguyên liệu rèn.' : 'Của cháu đây, {0} quặng.', got)); }
     }
     ui.para('Quặng vẫn rơi nhiều nhất khi thắng ải; bà chỉ bán thêm chút ít cho cháu khỏi thiếu lúc mài.', CX + 2, y + 50, CW - 4, { size: 7, color: SOFT });
     return con > 0 ? 'Thiếu quặng mài vũ khí thì mua của bà, mỗi ngày bà có ít hàng thôi.' : 'Hôm nay bà bán hết quặng rồi, mai cháu quay lại nhé.';

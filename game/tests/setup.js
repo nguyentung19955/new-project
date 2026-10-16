@@ -26,6 +26,12 @@
         if (w.marks[o.branch] >= G.MARKS[0]) w.branch = o.branch;
       }
     }
+    // 16/10 Luyện vũ khí (js/luyen.js, cờ bật): mài / cấp hệ của bài kiểm tra cũ đổi ra cấp Luyện tương đương (cách chuyển bản lưu cũ);
+    // o.luyen: đặt thẳng cấp Luyện. Hình thái (dấu ấn) giữ như bài đặt.
+    if (G.luyen && G.luyen.bat()) for (const w of [a, b]) {
+      const st = G.wStage(w);
+      w.luyen = o.luyen || G.luyen.capTuongDuong(G.luyen.Mcu(st, w.sharpen | 0, 0), 0, 0); // cấp có M gần nhất (không nâng theo hình thái); hình thái giữ như bài đặt (không dongBo)
+    }
     sv.carry = [a.id, b.id];
     if (o.armor) { sv.owned.armor.push(o.armor); sv.armor = o.armor; }
     if (o.helm) { sv.owned.helm.push(o.helm); sv.helm = o.helm; }

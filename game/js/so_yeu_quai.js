@@ -345,7 +345,7 @@
     const a = [];
     if (q.vang) a.push(G.t('{0} vàng', q.vang));
     if (q.lk) a.push(G.t('{0} linh khí', q.lk));
-    if (q.da) a.push(G.t('{0} đá nâng bậc', q.da));
+    if (q.da) a.push(G.luyen && G.luyen.bat() ? G.t('{0} nguyên liệu rèn', q.da * G.QUY_DOI.da) : G.t('{0} đá nâng bậc', q.da)); // Luyện: đá → NLR
     return a.join(' · ');
   }
 

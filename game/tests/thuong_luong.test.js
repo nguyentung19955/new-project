@@ -17,6 +17,8 @@ const TRANG = path.join(__dirname, 'node_trang.js');
 
 function moTrang(q) {
   const env = Object.assign({}, process.env);
+  // 16/10 Luyện vũ khí: bài này đo chiêu trùm theo diễn biến trận của bản lưu thử luật cũ (mài +15) → chạy luật cũ (?luyen=0)
+  q = 'luyen=0' + (q ? '&' + q : '');
   if (q) env.LK_Q = q; else delete env.LK_Q;
   const p = spawn(process.execPath, [TRANG], { env, stdio: ['pipe', 'pipe', 'pipe'] });
   let buf = '', loi = '';

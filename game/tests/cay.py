@@ -47,10 +47,19 @@ LUAT = r"""
   ok(G.stageRec(2, 4, 1) > G.stageRec(2, 4, 0), 'độ khó thứ hai cần Sức mạnh cao hơn');
   ok(G.grindMult(100, 100) === 1 && G.grindMult(130, 100) === 1 && G.grindMult(160, 100) < 1 && G.grindMult(400, 100) === 0.4, 'thưởng khi cày: đủ khi chưa quá 130%, giảm dần, thấp nhất 40%');
   // Sức mạnh tăng theo cấp, mài, cấp vũ khí (linh khí)
+  // 16/10 Luyện vũ khí (js/luyen.js, mặc định bật; ?luyen=0 luật cũ): Sức mạnh tăng theo cấp, Luyện 2, Luyện 3 (Mầm, chọn hệ)
+  const LY = !!(G.luyen && G.luyen.bat());
   const p0 = G.power(); G.save.heroes.smith.lvl = 10; const p1 = G.power();
-  const w = G.weaponById(G.save.carry[0]); w.sharpen = 3; const p2 = G.power();
+  const w = G.weaponById(G.save.carry[0]);
+  if (LY) {
+    const sv0 = G.save; sv0.gold = 250; sv0.linhKhi = 90; sv0.nlr = 15; sv0.mats = [4, 0, 0];
+    G.luyen.nang(sv0, w); const p2 = G.power(); G.luyen.nang(sv0, w, 'fire'); const p3 = G.power();
+    ok(p1 > p0 && p2 > p1 && p3 > p2 && sv0.gold === 0 && sv0.linhKhi === 0 && sv0.nlr === 0 && sv0.mats[0] === 0 && G.luyen.cap(w) === 3 && G.wStage(w) === 1 && w.branch === 'fire', 'Sức mạnh tăng theo cấp, Luyện 2, Luyện 3 (Mầm, hệ Lửa) đúng giá bảng G.LUYEN: ' + [p0, p1, p2, p3].join(' < '));
+  } else {
+  w.sharpen = 3; const p2 = G.power();
   G.save.linhKhi = 100; VM.nang(G.save, w, 'fire'); const p3 = G.power();
   ok(p1 > p0 && p2 > p1 && p3 > p2 && G.save.linhKhi === 0 && G.wStage(w) === 1 && w.branch === 'fire', 'Sức mạnh tăng theo cấp, mài, nâng Mầm bằng 100 linh khí: ' + [p0, p1, p2, p3].join(' < '));
+  }
   // không còn "Quyết tâm"
   G.resetSave(); G.save.sound = false; G.save.tut.done = true;
   const P0 = G.buildPlayer(), pw0 = G.power();
@@ -66,17 +75,19 @@ LUAT = r"""
   const sv = G.save, hs = sv.heroes.smith;
   hs.lvl = 40; hs.sk = { atk: 5, def: 5, elem: 3 }; sv.forge = 4;
   if (G.chuong) G.chuong.autoLearn(hs, 'smith');
-  for (const t of ['sword', 'bow']) { const x = sv.weapons.find((q) => q.type === t); x.sharpen = 15; VM.datCap(x, 3, t === 'sword' ? 'fire' : 'ice'); }
+  for (const t of ['sword', 'bow']) { const x = sv.weapons.find((q) => q.type === t); x.sharpen = 15; VM.datCap(x, 3, t === 'sword' ? 'fire' : 'ice'); if (LY) { x.luyen = 12; G.luyen.dongBo(x); } }
   const top0 = G.power();
   // 14/10 (bước 1, mục 5): trần tính cả ép đồ (đá nâng bậc rơi từ trùm + Ải Đá Bậc): hai món bậc Vàng (bot qua 3-5 thường đã có Vàng / Tím)
-  if (G.epDo) for (const t of ['sword', 'bow']) { const x = sv.weapons.find((q) => q.type === t); x.ep = { b: 4, d: [], may: {} }; }
+  if (G.epDo && !LY) for (const t of ['sword', 'bow']) { const x = sv.weapons.find((q) => q.type === t); x.ep = { b: 4, d: [], may: {} }; }
+  if (LY) for (const t of ['sword', 'bow']) { const x = sv.weapons.find((q) => q.type === t); x.luyen = 13; } // Luyện: trần sau Hồ Tinh (G.LUYEN.tran[3]) ≈ Thức tỉnh +15 bậc Vàng
   const top = G.power(), need = G.STAGE_REC[14];
-  ok(top >= need * 1.15, 'trần trước Hồ Tinh (cấp 40, kiếm + phi tiêu Thức tỉnh +15 bậc ép Vàng, cây chưởng đầy): Sức mạnh ' + top + ' (chưa ép ' + top0 + ') >= 1,15 x khuyên dùng Hồ Tinh ' + need);
+  ok(top >= need * 1.15, LY ? 'trần trước Hồ Tinh (cấp 40, kiếm + phi tiêu Luyện 13, cây chưởng đầy): Sức mạnh ' + top + ' (Luyện 12: ' + top0 + ') >= 1,15 x khuyên dùng Hồ Tinh ' + need : 'trần trước Hồ Tinh (cấp 40, kiếm + phi tiêu Thức tỉnh +15 bậc ép Vàng, cây chưởng đầy): Sức mạnh ' + top + ' (chưa ép ' + top0 + ') >= 1,15 x khuyên dùng Hồ Tinh ' + need);
   // cây chưởng đã đầy: không gợi ý / không "học" mãi điểm thừa (G.upg.auto vẫn làm việc khác)
   ok(!G.upg.list(sv).some((q) => q.kind === 'chuong'), 'cây chưởng đã học hết nút: không còn mục "điểm chưởng chưa học" (cấp 40 > tổng bậc của cây)');
-  sv.gold = 5000; sv.ore = 200; sv.mats = [50, 50, 50]; const xw = sv.weapons.find((q) => q.type === 'sword'); xw.sharpen = 10;
+  sv.gold = 5000; sv.ore = 200; sv.nlr = 200; sv.linhKhi = 1000; sv.mats = [50, 50, 50]; sv.shards = sv.shards.map(() => 5); const xw = sv.weapons.find((q) => q.type === 'sword'); xw.sharpen = 10;
+  if (LY) { xw.luyen = 9; for (let r = 0; r < 3; r++) sv.stars[r + '-4'] = 3; }
   const d0 = G.upg.auto(sv);
-  ok(xw.sharpen > 10, 'cây chưởng đầy mà G.upg.auto vẫn mài tiếp: ' + d0.slice(0, 3).join('; '));
+  ok(LY ? G.luyen.cap(xw) > 9 : xw.sharpen > 10, LY ? 'cây chưởng đầy mà G.upg.auto vẫn luyện tiếp: ' + d0.slice(0, 3).join('; ') : 'cây chưởng đầy mà G.upg.auto vẫn mài tiếp: ' + d0.slice(0, 3).join('; '));
   // GỢI Ý Ở BẢNG THUA
   G.resetSave(); G.save.tut.done = true;
   const s2 = G.save; s2.heroes.smith.lvl = 7; s2.gold = 120; s2.ore = 3; s2.mats = [2, 0, 0]; s2.stars = { '0-0': 3, '0-1': 2, '0-2': 2, '0-3': 1 };
@@ -87,9 +98,9 @@ LUAT = r"""
   ok(T && T.tips.every((t) => (t.gain > 0 || t.kind === 'skill' || t.kind === 'chuong') && t.go && (t.go.who || t.go.weapon != null)), 'gợi ý nào cũng tăng Sức mạnh (hoặc là điểm chưa học) và có chỗ để đi tới');
   G.villageApi && G.setScene(G.Village); G.villageApi && G.villageApi.goHub && G.villageApi.goHub();
   // bot nâng cấp tự động chỉ tiêu tài nguyên đang có, không bao giờ âm; nâng bằng linh khí chọn hệ của G.upg.heMam
-  G.resetSave(); const s5 = G.save; s5.heroes.smith.lvl = 9; s5.gold = 2000; s5.ore = 40; s5.mats = [30, 10, 0]; s5.linhKhi = 150;
+  G.resetSave(); const s5 = G.save; s5.heroes.smith.lvl = 9; s5.gold = 2000; s5.ore = 40; s5.nlr = 40; s5.mats = [30, 10, 0]; s5.linhKhi = 150;
   const pb = G.power(), did = G.upg.auto(s5), pa = G.power();
-  ok(pa > pb && s5.gold >= 0 && s5.ore >= 0 && s5.mats.every((x) => x >= 0) && VM.lk(s5) >= 0 && s5.weapons.some((x) => G.wStage(x) === 1), 'nâng cấp tự động: Sức mạnh ' + pb + ' -> ' + pa + ' sau ' + did.length + ' việc, có nâng Mầm, không tiêu quá số có');
+  ok(pa > pb && s5.gold >= 0 && s5.ore >= 0 && (s5.nlr | 0) >= 0 && s5.mats.every((x) => x >= 0) && VM.lk(s5) >= 0 && s5.weapons.some((x) => G.wStage(x) === 1), 'nâng cấp tự động: Sức mạnh ' + pb + ' -> ' + pa + ' sau ' + did.length + ' việc, có nâng Mầm, không tiêu quá số có');
   // nâng bộ: cấp 2 cần mảnh trùm
   G.resetSave(); const s6 = G.save; s6.linhKhi = 1000; s6.gold = 5000;
   const b1 = VM.nangBo(s6, 'ninja'), b2why = VM.boDuoc(s6, 'ninja'); s6.shards[0] = 3; const b2 = VM.nangBo(s6, 'ninja');

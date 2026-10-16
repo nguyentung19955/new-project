@@ -14,7 +14,9 @@
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const GOC = process.env.LK_GOC || path.join(__dirname, '..', '..', 'game', 'js'); // LK_GOC=thư mục js khác (so bản cũ)
 // 15/10 Bước 2 Phiên E: --b2-goc → nạp data.js với ?thuongb2=goc (số thưởng ba hệ gốc của Phiên A / B / C, trước khi Phiên E chỉnh)
-const ctx = { window: {}, location: { search: process.argv.includes('--b2-goc') ? '?thuongb2=goc' : '' }, console, Math };
+// 16/10 Luyện vũ khí: data.js nạp với ?luyen=0&tutbac=1 → mọi bảng cũ (mục 1–7) giữ đúng luật cũ như trước (cấp hệ + mài + lò + ép có tụt bậc);
+// chiến dịch luật Luyện (G.LUYEN, cùng tệp data.js): --luyen (mục 8).
+const ctx = { window: {}, location: { search: (process.argv.includes('--b2-goc') ? '?thuongb2=goc&' : '?') + 'luyen=0&tutbac=1' }, console, Math };
 ctx.window.G = undefined;
 vm.createContext(ctx);
 vm.runInContext(fs.readFileSync(path.join(GOC, 'data.js'), 'utf8'), ctx);
@@ -23,6 +25,7 @@ const G = ctx.window.G;
 try { vm.runInContext(fs.readFileSync(path.join(GOC, 'bo_skill.js'), 'utf8'), ctx); } catch (e) { /* bản cũ không có: bỏ qua phần skill bộ */ }
 const quyBo = (bo, cap) => (G.boSk && G.boSk.quyDoi && G.boSkill ? G.boSk.quyDoi({ boSkill: G.boSkill(bo, cap) }) : { off: 1, ehp: 1 });
 const JSON_OUT = process.argv.includes('--json');
+const LUYEN_CD = process.argv.includes('--luyen'); // 16/10: chỉ in mục 8 (chiến dịch luật Luyện so luật cũ)
 // 15/10 Bước 2 Phiên E (mục 7): --khong-buoc2 → mọi chiến dịch không tính Việc hôm nay / Sổ yêu quái / Thành tựu (như trước Bước 2)
 const KHONG_B2 = process.argv.includes('--khong-buoc2');
 // Thử số khác không sửa tệp: --dat LVL_HP=0.06 --dat 'STAGE_MULT=[1,1.2,1.45,1.75]' (đặt đè lên G sau khi nạp data.js)
@@ -352,7 +355,7 @@ function aiNgay(o) {
   return { muc, luotNgay: { da: ngay('da'), mai: ngay('mai'), vang: ngay('vang') }, luotThuong };
 }
 
-if (require.main === module) {
+if (require.main === module && !LUYEN_CD) {
   const b1 = bang1(), cd = chienDich(), cd1 = chienDich({ motMon: true }), cdBo = chienDich({ bo: true }), b2 = bang2(cd);
   const cdBoCu = chienDich({ bo: true, muaBo: false }); // 15/10 bo-do-mua: bộ tặng khi hạ trùm như cũ (?bocu=1)
   const cdCu = chienDich({ ep: false, aiNgay: false, banQuang: false }); // luật trước bước 1 (không ép, không ải ngày, không mua quặng)
@@ -398,7 +401,7 @@ function buoc2(o) {
   const moiNgay = (cd) => ({ luot: cd.p.luot, ngay: +ngay(cd).toFixed(1), vang: Math.round(cd.p.vangTong / ngay(cd)), lk: Math.round(cd.p.lkTong / ngay(cd)), da: +(cd.p.daTong / ngay(cd)).toFixed(1) });
   return { co, khong, a: moiNgay(co), b: moiNgay(khong), b2: co.p.b2 };
 }
-if (require.main === module && !JSON_OUT) {
+if (require.main === module && !JSON_OUT && !LUYEN_CD) {
   const pad = (s, n) => String(s).padEnd(n);
   const r = buoc2(), B = r.b2;
   console.log('\n== 7. BƯỚC 2: Việc hôm nay + Sổ yêu quái + Thành tựu (có mua bộ; việc xong 3/3 ở 80% số ngày, bé bấm Nhận hết)' + (KHONG_B2 ? ' — ĐANG TẮT (--khong-buoc2)' : '') + ' ==');
@@ -410,4 +413,150 @@ if (require.main === module && !JSON_OUT) {
   console.log('Ba hệ cộng cả chiến dịch:', Math.round(B.vang), 'vàng (việc', Math.round(B.viec) + ', sổ', Math.round(B.so) + ', thành tựu', Math.round(B.tt) + '),', Math.round(B.quang), 'quặng,', Math.round(B.lk), 'linh khí,', B.da.toFixed(1), 'đá,', B.bua.toFixed(2), 'bùa',
     '| phần vàng ba hệ / vàng cả chiến dịch:', (B.vang / r.co.p.vangTong * 100).toFixed(0) + '%', '| đá:', (B.da / Math.max(1, r.co.p.daTong) * 100).toFixed(0) + '%', '| vàng mua bộ', r.co.p.muaBoVang + '/' + r.khong.p.muaBoVang);
 }
-module.exports = { G, bang1, chienDich, bang2, thuNhap, soQuai, nguoi, epDo, aiNgay, buoc2 };
+
+// ---------- 8. LUYỆN VŨ KHÍ 1–15 (16/10, docs/review/ke-hoach-cai-thien/luyen-vu-khi/THIET-KE.md; lấy từ mo_hinh.js của bản thiết kế) ----------
+// Bảng đọc thẳng G.LUYEN (game/js/data.js). Thu nhập y hệt chienDich (thuNhap), chỉ đổi ví + cách tiêu: quặng + đá (×2) + bùa (×6) → NLR;
+// mài + lò + cấp hệ + ép đồ → một bảng Luyện; ải ngày Đá Bậc + Đá Mài → Ải Rèn (G.AI_NGAY.ai.ren). Món chính kiếm, phi tiêu theo sau ≤ o.lech cấp.
+// Chạy: node tools/can-bang/tinh.js --luyen [--json]
+function chienDichLuyen(o) {
+  o = o || {};
+  const LY = G.LUYEN, CAP = LY.cap, TRAN = LY.tran, MANH_DAU = LY.manhDau | 0, PHU = LY.phuSt, DA_NLR = G.QUY_DOI.da, BUA_NLR = G.QUY_DOI.bua;
+  const AI_REN = G.AI_NGAY.ai.ren, NGAY_LUOT = 8, TL = 0.8, BQ = G.BAN_QUANG;
+  const nguoiL = (p) => {
+    const sk = { atk: 0, def: 0, elem: 0 };
+    for (let k = 0; k < Math.min(SK_THU.length, Math.floor(p.lvl / 3)); k++) sk[SK_THU[k]]++;
+    let maxhp = 100 * (1 + G.LVL_HP * (p.lvl - 1)); if (sk.def >= 1) maxhp *= 1.1;
+    const drNT = p.hoc.wrestler ? G.ZED_DAY.wrestler.dr : 0;
+    const dmgMult = 1 + (sk.atk >= 1 ? 0.08 : 0) + (sk.atk >= 4 ? 0.08 : 0), crit = sk.atk >= 5 ? 0.1 : 0;
+    const fav = ['sword', 'hammer'].concat(p.hoc.hunter ? ['bow'] : [], p.hoc.healer ? ['spear'] : []);
+    const mDmg = (L) => CAP[L].M / (L >= LY.phuTu ? 1 + PHU : 1);
+    const don = (t) => G.WTYPES[t].dmg * mDmg(p.vk[t].L) * (1 + G.LVL_DMG * (p.lvl - 1)) * dmgMult * (fav.includes(t) ? 1.1 : 1);
+    const offs = ['sword', 'bow'].map((t) => (don(t) / G.WTYPES[t].dmg) * 10).sort((a, b) => b - a);
+    let off = offs[0] * 0.75 + offs[1] * 0.25;
+    off *= 1 + crit; off *= 1 + 0.004 * Math.min(p.lvl, 28);
+    const res = sk.def >= 4 ? 0.3 : 0, dr = (sk.def >= 5 ? 0.1 : 0) + drNT;
+    let ehp = (Math.round(maxhp) / (1 - Math.min(0.75, dr - drNT / 2))) * (1 + 0.25 * res);
+    if (p.bo) {
+      const ds = ['ninja', 'rung', 'bien', 'lau'].filter((k) => p.bo[k] != null); let mac = ds[0];
+      for (const k of ds) if (p.bo[k] >= p.bo[mac]) mac = k;
+      const q = quyBo(mac, p.bo[mac] | 0); off *= q.off; ehp *= q.ehp;
+    }
+    return Math.round(3 * Math.sqrt(off * ehp));
+  };
+  const p = { lvl: 1, xp: 0, vang: 0, nlr: 0, nl: [0, 0, 0, 0], manh: [0, 0, 0, 0], lk: 0, hoc: {}, vk: { sword: { L: 1 }, bow: { L: 1 }, spear: { L: 1 }, hammer: { L: 1 } },
+    bo: { ninja: 0 }, ban: {}, muaBoVang: 0, power: 98, luot: 0, ngay: 0, muaHom: 0, muaNlr: 0, trum: 0, quai: 0, tinhAnh: 0, ruongNgay: 0, ttXong: {},
+    thu: { vang: 0, lk: 0, nlr: 0 }, chi: { vang: 0, lk: 0, nlr: 0 } };
+  const ds = [], moc = {};
+  const cong = (k, n) => { p[k] += n; if (p.thu[k] != null) p.thu[k] += n; };
+  const muaBo = (k, cap) => {
+    const g = G.BO_MOI.gia[cap], vm = (G.BO_MOI.vungManh || {})[k] | 0;
+    if (!g || p.lk < g.lk || p.vang < g.vang || p.manh[vm] < (g.manh | 0)) return false;
+    p.lk -= g.lk; p.vang -= g.vang; p.manh[vm] -= g.manh | 0; p.bo[k] = cap + 1; return true;
+  };
+  const duoc = (w) => {
+    const L = w.L + 1, c = CAP[L];
+    if (!c || L > TRAN[p.trum]) return null;
+    if (p.lk < (c.lk | 0) || (c.nl && p.nl[c.nl[0]] < c.nl[1]) || (c.m && p.manh[c.m[0]] < c.m[1])) return null;
+    return { c, thieu: { r: Math.max(0, (c.r | 0) - p.nlr) } };
+  };
+  const lech = o.lech == null ? 2 : o.lech;
+  const tieu = () => {
+    for (const k of ['rung', 'bien', 'lau']) {
+      if (!p.ban[k] || p.bo[k] != null) continue;
+      const gia = G.zedBoGia ? G.zedBoGia(k) : 0;
+      if (p.vang < gia) continue;
+      p.vang -= gia; p.bo[k] = 0; p.muaBoVang += gia;
+    }
+    const banCho = ['rung', 'bien', 'lau'].filter((k) => p.ban[k] && p.bo[k] == null);
+    const deDanh = banCho.length ? Math.min(p.vang, Math.min(...banCho.map((k) => G.zedBoGia(k)))) : 0;
+    p.vang -= deDanh;
+    for (const k of ['rung', 'bien', 'lau']) if (p.bo[k] === 0) muaBo(k, 0);
+    for (let g = 0; g < 40; g++) {
+      const c = p.vk.sword, f = p.vk.bow, uu = f.L + lech < c.L ? [f, c] : [c, f];
+      let ww = null, q = null;
+      for (const w of uu) {
+        if (w === f && f.L >= c.L) continue;
+        const t = duoc(w); if (!t) continue;
+        if (t.thieu.r > 0 && BQ && t.thieu.r <= BQ.moiNgay - p.muaHom && p.vang >= (t.c.v | 0) + t.thieu.r * BQ.gia) {
+          p.vang -= t.thieu.r * BQ.gia; p.nlr += t.thieu.r; p.muaHom += t.thieu.r; p.muaNlr += t.thieu.r; t.thieu.r = 0;
+        }
+        if (p.vang >= (t.c.v | 0) && p.nlr >= (t.c.r | 0)) { ww = w; q = t; break; }
+      }
+      if (!ww) break;
+      p.vang -= q.c.v | 0; p.lk -= q.c.lk | 0; p.nlr -= q.c.r | 0; if (q.c.nl) p.nl[q.c.nl[0]] -= q.c.nl[1]; if (q.c.m) p.manh[q.c.m[0]] -= q.c.m[1];
+      p.chi.vang += q.c.v | 0; p.chi.lk += q.c.lk | 0; p.chi.nlr += q.c.r | 0;
+      ww.L++;
+      const ten = (ww === c ? 'kiếm' : 'phi tiêu') + ' L' + ww.L;
+      if (!moc[ten]) moc[ten] = { luot: p.luot, ai: ds.length + 1 };
+    }
+    { const k = ['lau', 'bien', 'rung', 'ninja'].find((x) => p.bo[x] != null); if (p.bo[k] >= 1) muaBo(k, p.bo[k]); }
+    p.vang += deDanh;
+  };
+  const b2 = (t) => { cong('vang', t.vang || 0); cong('nlr', (t.quang || 0) + DA_NLR * (t.da || 0) + BUA_NLR * (t.bua || 0)); cong('lk', t.lk || 0); };
+  const TT_DK = {
+    buocDau: () => ds.length >= 1, cuuTeo: () => p.hoc.hunter, cuuBong: () => p.hoc.healer, cuuLi: () => p.hoc.wrestler,
+    quai100: () => p.quai >= 100, quai1000: () => p.quai >= 1000, tinhAnh50: () => p.tinhAnh >= 50, sao15: () => ds.length * 2.4 >= 15,
+    khongBinh: () => p.luot >= 20, khacChe: () => p.luot >= 30, mam: () => p.vk.sword.L >= 3, thucTinh1: () => p.vk.sword.L >= 12,
+    epTim: () => p.vk.sword.L >= 9, mai10: () => ['sword', 'bow', 'spear', 'hammer'].every((t) => p.vk[t].L >= 6), cap20: () => p.lvl >= 20, so12: () => p.hoc.hunter, viec7: () => p.ruongNgay >= 7,
+  };
+  const kiemTT = () => { for (const a of G.THANH_TUU.DS) { const f = TT_DK[a.ma]; if (f && !p.ttXong[a.ma] && f()) { p.ttXong[a.ma] = 1; b2(a.th); } } };
+  const choi = (n, dau) => {
+    const q = thuNhap(n, { power: p.power, vk: { sword: { st: p.vk.sword.L >= 3 ? 1 : 0 } } }, dau);
+    p.luot++; p.quai += q.kills + 2; p.tinhAnh += 1;
+    p.xp += q.xp; while (p.lvl < G.MAX_LEVEL && p.xp >= G.xpNeed(p.lvl)) { p.xp -= G.xpNeed(p.lvl); p.lvl++; }
+    cong('vang', q.vang); cong('nlr', q.quang + DA_NLR * (q.da || 0)); p.nl[G.matAi ? G.matAi(Math.floor(n / 5), n % 5) : Math.floor(n / 5)] += q.nl;
+    p.manh[Math.floor(n / 5)] += q.manh + (dau && q.manh ? MANH_DAU : 0); cong('lk', q.lk);
+    if (p.luot % NGAY_LUOT === 0) {
+      const thu = (1 + p.ngay) % 7; p.ngay++; p.muaHom = 0;
+      const k = Math.min(2, Math.floor((ds.length + (n % 5 === 4 && dau ? 1 : 0)) / 5) - 1);
+      if (k >= 0) {
+        const L = G.AI_NGAY.luot;
+        if (AI_REN.thu.indexOf(thu) >= 0) cong('nlr', L * AI_REN.thuong.nlr[k]);
+        if (G.AI_NGAY.ai.vang.thu.indexOf(thu) >= 0) cong('vang', L * G.AI_NGAY.ai.vang.thuong.vang[k]);
+        const soAi = (AI_REN.thu.indexOf(thu) >= 0 ? 1 : 0) + (G.AI_NGAY.ai.vang.thu.indexOf(thu) >= 0 ? 1 : 0);
+        p.xp += soAi * L * Math.round(G.stageStats(k, 4, 0).xp * (G.AI_NGAY.xp || 0));
+      }
+      if (ds.length >= 2 && !KHONG_B2) {
+        const V = G.VIEC_NGAY, mu = Math.min(2, ['hunter', 'healer'].filter((x) => p.hoc[x]).length);
+        for (let d = 0; d < 3; d++) b2({ vang: TL * V.thuong[d][mu].v, quang: TL * V.thuong[d][mu].q });
+        b2({ da: TL * V.ruongNgay[mu].da, lk: TL * V.ruongNgay[mu].lk }); p.ruongNgay += TL;
+        if (p.ngay % 7 === 0) { let pt = 0; for (let j = V.tuanCan; j <= 7; j++) { let c = 1; for (let x = 0; x < j; x++) c = (c * (7 - x)) / (x + 1); pt += c * Math.pow(TL, j) * Math.pow(1 - TL, 7 - j); } b2({ bua: pt * V.ruongTuan[mu].bua, da: pt * V.ruongTuan[mu].da }); }
+      }
+    }
+    if (dau && n % 5 === 4) {
+      const r = Math.floor(n / 5); p.hoc[G.REGIONS[r].rescue] = 1; p.ban[['rung', 'bien', 'lau'][r]] = 1; p.trum = Math.max(p.trum, r + 1);
+      if (!KHONG_B2) {
+        const Y = G.SO_YQ, t = { vang: 0, lk: 0, da: 0 };
+        for (const tr of Y.trang) if (tr[1] === r) { t.vang += Y.vang[tr[2]][r]; t.lk += 0.7 * Y.lk[tr[2]]; if (tr[2] === 'tinhanh' || tr[2] === 'trumnho') t.da += Y.da[tr[2]]; }
+        b2(t);
+      }
+    }
+    if (!KHONG_B2) kiemTT();
+    tieu();
+    p.power = nguoiL(p);
+  };
+  const SO = o.vung4 && G.STAGE_REC.length >= 20 ? 20 : 15;
+  for (let n = 0; n < SO; n++) {
+    const rec = G.STAGE_REC[n]; let cay = 0;
+    while (p.power < rec * 0.9 && n > 0 && cay < 30) { choi(n - 1, false); cay++; }
+    const vao = { ai: (Math.floor(n / 5) + 1) + '-' + (n % 5 + 1), rec, power: p.power, lvl: p.lvl, cay, kiem: p.vk.sword.L, pt: p.vk.bow.L, Mk: CAP[p.vk.sword.L].M };
+    choi(n, true);
+    vao.du = { vang: Math.round(p.vang), lk: Math.round(p.lk), nlr: Math.round(p.nlr) };
+    ds.push(vao);
+  }
+  return { ds, moc, p };
+}
+if (require.main === module && LUYEN_CD) {
+  const cu = chienDich({ bo: true }), moi = chienDichLuyen(), moi1 = chienDichLuyen({ lech: 1 }), v4 = chienDichLuyen({ vung4: true });
+  if (JSON_OUT) { console.log(JSON.stringify({ cu: cu.ds, moi: moi.ds, mocMoi: moi.moc, v4: v4.ds }, null, 1)); process.exit(0); }
+  const pad = (s, n) => String(s).padEnd(n);
+  console.log('== 8. LUYỆN VŨ KHÍ: chiến dịch 15 ải — luật cũ (có mua bộ) | luật Luyện (G.LUYEN; phi tiêu theo sau ≤ 2 cấp) ==');
+  console.log(pad('ải', 5), pad('KD', 4), pad('cày cũ/mới', 11), pad('SM cũ/mới', 10), pad('cấp cũ/mới', 11), pad('kiếm cũ', 24), pad('kiếm mới', 10), pad('p.tiêu mới', 10), 'dư mới vàng/LK/NLR');
+  let sCu = 0, sMoi = 0;
+  cu.ds.forEach((v, k) => { const w = moi.ds[k]; sCu += v.cay; sMoi += w.cay;
+    console.log(pad(v.ai, 5), pad(v.rec, 4), pad(v.cay + '/' + w.cay, 11), pad(v.power + '/' + w.power, 10), pad(v.lvl + '/' + w.lvl, 11), pad(v.sword, 24), pad('L' + w.kiem + ' ×' + w.Mk.toFixed(2), 10), pad('L' + w.pt, 10), w.du.vang + '/' + w.du.lk + '/' + w.du.nlr); });
+  console.log('Tổng lượt cũ / Luyện / Luyện (phi tiêu bám sát ≤ 1 cấp):', cu.p.luot, '/', moi.p.luot, '/', moi1.p.luot, '| lượt cày thêm:', sCu, '/', sMoi);
+  console.log('Luyện thu cả chiến dịch: vàng', Math.round(moi.p.thu.vang), '· LK', Math.round(moi.p.thu.lk), '· NLR', Math.round(moi.p.thu.nlr), '| chi cho Luyện: vàng', moi.p.chi.vang, '· LK', moi.p.chi.lk, '· NLR', moi.p.chi.nlr);
+  if (v4.ds.length > 15) console.log('Vùng 4 (luật Luyện):', v4.ds.slice(15).map((v) => v.ai + ' cày ' + v.cay + ' SM ' + v.power + '/' + v.rec + ' L' + v.kiem + '/' + v.pt).join(' · '), '| tổng 20 ải', v4.p.luot, 'lượt');
+}
+module.exports = { G, bang1, chienDich, bang2, thuNhap, soQuai, nguoi, epDo, aiNgay, buoc2, chienDichLuyen };

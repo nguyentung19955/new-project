@@ -381,7 +381,7 @@
       const ok = S.challenge.t > 0;
       if (ok) {
         // đợt 4: đá tôi bỏ hẳn — nửa phần thưởng trước là 1 đá tôi nay cũng là quặng (G.DA_TOI_QUANG)
-        { const q = G.rnd() < 0.5 ? G.DA_TOI_QUANG || 6 : 6; G.save.ore += q; S.got.push(G.t('{0} quặng', q)); }
+        { const q = G.rnd() < 0.5 ? G.DA_TOI_QUANG || 6 : 6; G.themQuang(G.save, q); S.got.push(G.t(G.chuQuang().slice(1), q)); } // Luyện (js/luyen.js): quặng → nguyên liệu rèn
         G.save.gold += 80;
         W.banner = { s: G.t('Vượt thử thách! Nhận {0} và 80 vàng', S.got[S.got.length - 1]), col: '#ffd23f', t: 3 };
       } else W.banner = { s: 'Hết giờ, không có thưởng', col: '#b8b0a0', t: 2.5 };
@@ -430,7 +430,7 @@
     const lkN = G.ROI_MOI.ruong.lk[G.clamp(S.r | 0, 0, G.ROI_MOI.ruong.lk.length - 1)];
     return [
       { kind: 'lk', n: lkN, label: G.t('{0} linh khí', lkN), sub: 'Dùng để nâng vũ khí (Mầm, Thành hình, Thức tỉnh) và nâng bộ trang phục' },
-      { kind: 'ore', n: 5 + S.r * 3, label: G.t('{0} quặng', 5 + S.r * 3), sub: 'Dùng để mài vũ khí ở lò rèn' },
+      { kind: 'ore', n: 5 + S.r * 3, label: G.t(G.chuQuang().slice(1), 5 + S.r * 3), sub: G.luyen && G.luyen.bat() ? 'Dùng để luyện vũ khí ở lò rèn' : 'Dùng để mài vũ khí ở lò rèn' },
       { kind: 'charm', el: S.tut ? 'fire' : G.pick(G.ELS), label: '', sub: 'Phủ hệ lên cả hai vũ khí trong 60 giây' },
     ].map((o) => { if (o.kind === 'charm') o.label = G.t('Bùa {0}', G.EL[o.el].name); return o; });
   }
@@ -495,16 +495,17 @@
       let gold = Math.round((S.base.gold + S.loot.kills * 2) * gm);
       const ore = 3 + R.stars + 2 * S.r, mat = 5 + S.i; // cày nâng cấp: vùng sau cho nhiều quặng hơn (mài cao tốn quặng)
       const mi = G.matAi ? G.matAi(S.r, S.i) : S.r, matTen = G.REGIONS[mi].mat; // vùng 4 (Q2 = A): nguyên liệu của một vùng cũ theo ải
-      sv.gold += gold; sv.ore += ore; sv.mats[mi] += mat;
+      sv.gold += gold; G.themQuang(sv, ore); sv.mats[mi] += mat; // Luyện: quặng → nguyên liệu rèn (js/luyen.js)
       // kho đổi vàng lấy nguyên liệu (G.DOI_NL, js/upgrade.js): mỗi ải thắng thêm vài lượt đổi
       if (G.DOI_NL) sv.doiNL = Math.min(G.DOI_NL.max, (sv.doiNL | 0) + G.DOI_NL.them);
-      R.lines.push(ln(R, '+{0} kinh nghiệm', xp), ln(R, '+{0} vàng', gold), ln(R, '+{0} quặng', ore), ln(R, '+{0} {1}', mat, matTen.toLowerCase()));
+      R.lines.push(ln(R, '+{0} kinh nghiệm', xp), ln(R, '+{0} vàng', gold), ln(R, G.chuQuang(), ore), ln(R, '+{0} {1}', mat, matTen.toLowerCase()));
       if (gm < 1) R.lines.push(ln(R, 'Ải đã quá dễ với sức mạnh của bé: kinh nghiệm và vàng còn {0}%', Math.round(gm * 100)));
-      if (big) { const ns = S.diff ? 4 : 3; sv.shards[S.r] += ns; R.lines.push(ln(R, '+{0} mảnh {1}', ns, reg.bossName)); }
+      // Luyện (js/luyen.js): hạ trùm vùng LẦN ĐẦU (độ khó 1) được thêm G.LUYEN.manhDau mảnh (3 → 5), thưởng bảo đảm
+      if (big) { const ns = (S.diff ? 4 : 3) + (!S.diff && !prev && G.luyen && G.luyen.bat() ? G.LUYEN.manhDau | 0 : 0); sv.shards[S.r] += ns; R.lines.push(ln(R, '+{0} mảnh {1}', ns, reg.bossName)); }
       // đợt 6: đá nâng bậc từ trùm nhỏ / trùm vùng (lần đầu qua ải này nhiều hơn), bùa giữ bậc (trùm vùng) — js/ep_do.js
       if (G.epDo) for (const q of G.epDo.thuongTrum(sv, S.r, big, !prev, S.diff)) R.lines.push(ln(R, q[0], q[1]));
       // đợt 4: đá tôi bỏ hẳn (Tôi lại, nâng bậc đã bỏ) — thay bằng quặng (G.DA_TOI_QUANG)
-      if ((R.stars === 3 && prev < 3) || (!big && G.rnd() < 0.15)) { const q = G.DA_TOI_QUANG || 6; sv.ore += q; R.lines.push(ln(R, '+{0} quặng', q)); }
+      if ((R.stars === 3 && prev < 3) || (!big && G.rnd() < 0.15)) { const q = G.DA_TOI_QUANG || 6; G.themQuang(sv, q); R.lines.push(ln(R, G.chuQuang(), q)); }
       // Không rơi vũ khí / trang phục (đợt 1, js/vk_moi.js): trùm vùng và ải thường (G.DROP.stage) cho vàng + linh khí cùng giá trị.
       if (G.vkMoi) {
         const q = big ? G.vkMoi.thuongTrum(S.r) : G.rnd() < G.DROP.stage ? G.vkMoi.thuongVk(S.r) : null;
@@ -559,8 +560,8 @@
       if (!S.quit && S.W && S.W.type === 'boss') {
         const mat = Math.round((5 + S.i) * 0.3), ore = Math.round((4 + 2 * S.r) * 0.3);
         const mi = G.matAi ? G.matAi(S.r, S.i) : S.r;
-        sv.mats[mi] += mat; sv.ore += ore;
-        R.lines.push(ln(R, '+{0} {1}', mat, G.REGIONS[mi].mat.toLowerCase()), ln(R, '+{0} quặng', ore));
+        sv.mats[mi] += mat; G.themQuang(sv, ore);
+        R.lines.push(ln(R, '+{0} {1}', mat, G.REGIONS[mi].mat.toLowerCase()), ln(R, G.chuQuang(), ore));
       }
       R.up = G.addXp(sv.hero, xp);
       // Thua không làm bé mạnh thêm (chủ dự án: sức mạnh chỉ đến từ cày nâng cấp). Thay vào đó bảng thua gợi ý nên cày gì (G.upgradeTips).
@@ -1351,7 +1352,7 @@
     S.opts.forEach((o, i) => {
       const x = 72 + i * 114;
       if (ui.btn(x, 84, 108, 100, o.label, { sub: '', size: 10 })) {
-        if (o.kind === 'ore') { G.save.ore += o.n; S.got.push(G.t('{0} quặng', o.n)); }
+        if (o.kind === 'ore') { G.themQuang(G.save, o.n); S.got.push(G.t(G.chuQuang().slice(1), o.n)); }
         if (o.kind === 'lk' && G.vkMoi) { G.vkMoi.themLk(G.save, o.n); S.got.push(G.t('{0} linh khí', o.n)); }
         if (o.kind === 'charm') G.addCoat(o.el, 60);
         S.prop.used = true;
@@ -1397,12 +1398,13 @@
     const items = [
       { id: 'potion', label: 'Bình máu', sub: 'Hồi 30% máu', cost: 60, ok: P.potions < 3, f: () => { P.potions++; } },
       { id: 'charm', label: G.t('Bùa {0}', G.EL[sh.el].name), sub: 'Phủ hệ 60 giây', cost: 80, ok: true, f: () => G.addCoat(sh.el, 60) },
-      { id: 'ore', label: '3 quặng', sub: 'Để mài vũ khí', cost: 100, ok: true, f: () => { sv.ore += 3; S.got.push('3 quặng'); } },
+      { id: 'ore', label: G.t(G.chuQuang().slice(1), 3), sub: G.luyen && G.luyen.bat() ? 'Để luyện vũ khí' : 'Để mài vũ khí', cost: 100, ok: true, f: () => { G.themQuang(sv, 3); S.got.push(G.t(G.chuQuang().slice(1), 3)); } },
     ];
     // Phiên cân bằng (mục 3): bán thêm 1 nguyên liệu của vùng đã qua (vùng đang thiếu nhất), dùng chung kho lượt đổi với Bà Hàng Xén.
     const U = G.upg, mr = U && U.doiVung ? U.doiVung(sv) : null;
     // đợt 6: Bùa giữ bậc (ép đồ, js/ep_do.js) — giá cao
-    if (G.epDo && G.epDo.bat() && G.EP_DO.bua) items.push({ id: 'buaBac', label: 'Bùa giữ bậc', sub: 'Ép không tụt bậc', cost: G.EP_DO.bua.thuongNhan, ok: true, f: () => { G.epDo.themBua(sv, 1); S.got.push(G.t('{0} bùa giữ bậc', 1)); } });
+    // 16/10 (Luyện): bỏ tụt bậc (?tutbac=1 bật lại) → không bán bùa; luật Luyện không có bùa
+    if (G.epDo && G.epDo.bat() && G.EP_DO.bua && G.TUT_BAC && !(G.luyen && G.luyen.bat())) items.push({ id: 'buaBac', label: 'Bùa giữ bậc', sub: 'Ép không tụt bậc', cost: G.EP_DO.bua.thuongNhan, ok: true, f: () => { G.epDo.themBua(sv, 1); S.got.push(G.t('{0} bùa giữ bậc', 1)); } });
     if (mr != null) items.push({ id: 'mat', label: G.t('1 {0}', G.REGIONS[mr].mat.toLowerCase()), sub: G.t('Còn {0} lượt đổi', sv.doiNL | 0), cost: U.doiGia(), ok: U.doiDuoc(sv, mr) === '', f: () => { if (U.doi(sv, mr)) S.got.push(G.t('1 {0}', G.REGIONS[mr].mat.toLowerCase())); } });
     const bw = items.length > 4 ? 60 : items.length > 3 ? 76 : 100, bs = items.length > 4 ? 64 : items.length > 3 ? 81 : 108;
     items.forEach((it, i) => {

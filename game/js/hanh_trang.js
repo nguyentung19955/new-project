@@ -179,12 +179,14 @@
     // 4 vũ khí cố định, nâng bằng linh khí ngay tại đây (js/vk_moi.js; trong ải chỉ xem)
     if (!G.vkMoi) return;
     region('weapon', CX, CY, CW - 4, CH, (y) => {
-      y = G.vkMoi.vkPanel(CX, y + 2, CW - 8, { ro: RO, say: VA.say });
+      // 16/10 Luyện (js/luyen.js): bảng Luyện thay bảng linh khí + ép đồ
+      const LY = !!(G.luyen && G.luyen.bat());
+      y = LY ? G.luyen.panel(CX, y + 2, CW - 8, { ro: RO, say: VA.say }) : G.vkMoi.vkPanel(CX, y + 2, CW - 8, { ro: RO, say: VA.say });
       // Đợt 6: ép đồ (bậc vũ khí, js/ep_do.js) ngay dưới; trong ải chỉ xem
-      if (G.epDo && G.epDo.bat()) { T.head('Ép đồ', CX, y + 10); y = G.epDo.panel(CX, y + 14, CW - 8, { ro: RO, say: VA.say, h: 168 }); }
+      if (!LY && G.epDo && G.epDo.bat()) { T.head('Ép đồ', CX, y + 10); y = G.epDo.panel(CX, y + 14, CW - 8, { ro: RO, say: VA.say, h: 168 }); }
       if (RO) { roNote(CX, y + 10); return y + 14; }
       y += 2;
-      if (goBtn(CX, y, 214, 'ren', 'Đến Ông Thợ Rèn: mài, nâng lò')) return y;
+      if (goBtn(CX, y, 214, 'ren', LY ? 'Đến Ông Thợ Rèn: luyện vũ khí' : 'Đến Ông Thợ Rèn: mài, nâng lò')) return y;
       return y + 20;
     });
   }
@@ -248,7 +250,7 @@
     return a;
   }
   function resTab(sv) {
-    const val = { gold: sv.gold, ore: sv.ore, stone: sv.stones };
+    const val = { gold: sv.gold, ore: G.luyen && G.luyen.bat() ? sv.nlr | 0 : sv.ore, stone: sv.stones }; // Luyện: ô quặng hiện nguyên liệu rèn
     for (let i = 0; i < 3; i++) val['mat' + i] = sv.mats[i];
     for (let i = 0; i < sv.shards.length; i++) val['shard' + i] = sv.shards[i]; // vùng 4: ô mảnh trùm thứ 4
     region('res', CX, CY, CW - 4, CH, (y) => {

@@ -654,7 +654,8 @@
       // thợ rèn: đủ nguyên liệu để mài một món đang mang, nâng lò, hoặc đủ linh khí nâng một vũ khí
       const pay = G.villageApi && G.villageApi.canPay;
       n.ren = false;
-      if (pay) {
+      if (G.luyen && G.luyen.bat()) n.ren = G.luyen.coTheLuyen(sv); // Luyện: đủ đồ luyện một vũ khí
+      else if (pay) {
         const up = G.FORGE_UP && G.FORGE_UP[sv.forge];
         if (up && pay(up)) n.ren = true;
         for (const id of sv.carry) {
@@ -823,6 +824,7 @@
     if (!locked && G.save && G.save.zed && G.save.zed.bao === 1) zedBao(); // ZED: báo một lần bản lưu cũ đã chuyển sang Zed
     else if (!locked && G.save && G.save.zed && G.save.zed.boBao === 1) zedBoBao(); // trang phục Zed vừa mở: báo một lần
     else if (!locked && G.save && G.save.zed && G.save.zed.boBanBao === 1) zedBoBanBao(); // bộ vừa mở bán ở Cô Thợ May: báo một lần
+    else if (!locked && G.luyen && G.save && G.save.luyenBao) { const s = G.luyen.bao(G.save); if (s) say(s, 10); G.persist(); } // Luyện: báo một lần đã chuyển bản lưu cũ
     else if (!locked && G.vkMoi && G.save && (G.save.heMoiBao || G.save.canLaiBao)) { const s = G.vkMoi.baoChuyen(G.save); if (s) say(s, 9); G.persist(); } // hệ thống mới: báo một lần đã chuyển bản lưu cũ / đã cân lại đồ (đợt 4)
     let mx = 0, my = 0;
     if (!locked) {
@@ -1158,7 +1160,7 @@
   VS.resParts = function () {
     const sv = G.save;
     // đợt 4: bỏ ô Đá tôi (không còn dùng, đổi ra quặng — G.DA_TOI_QUANG)
-    return [['gold', sv.gold, '#ffd23f'], ['ore', sv.ore, '#c9ccd2'],
+    return [['gold', sv.gold, '#ffd23f'], ['ore', G.luyen && G.luyen.bat() ? sv.nlr | 0 : sv.ore, '#c9ccd2'], // Luyện: ô quặng hiện nguyên liệu rèn (phiên 2 đổi biểu tượng, gọn 3 ô)
       ['mat0', sv.mats[0], '#9bd14a'], ['mat1', sv.mats[1], '#7fd4ff'], ['mat2', sv.mats[2], '#ff9a5a'],
       ['shard0', sv.shards[0], '#c8e8a0'], ['shard1', sv.shards[1], '#a8d8ff'], ['shard2', sv.shards[2], '#ffc0a0']]
       .concat(G.REGIONS.length > 3 && sv.shards.length > 3 && (sv.shards[3] > 0 || (sv.stars && sv.stars['2-4'])) ? [['shard3', sv.shards[3], '#a8e8d0']] : []); // vùng 4: mảnh Thuồng Luồng

@@ -334,10 +334,11 @@
 
   // ---------- nâng cấp ở làng: bọc G.persist, so dấu vân tay các thứ nâng được (mài, cấp vũ khí, bậc ép, lò, điểm kỹ năng, chưởng, bộ) ----------
   function vanTay(sv) {
-    const v = { mai: 0, vk: 0, ep: 0, lo: num(sv.forge, 0), diem: 0, chuong: 0, bo: 0, da: num(sv.daBac, 0) };
+    const v = { mai: 0, vk: 0, ep: 0, lo: num(sv.forge, 0), diem: 0, chuong: 0, bo: 0, da: num(sv.daBac, 0), luyen: 0 };
     for (const w of sv.weapons || []) {
       if (!w) continue;
       v.mai += num(w.sharpen, 0);
+      v.luyen += num(w.luyen, 0); // Luyện (js/luyen.js)
       try { v.vk += G.wStage ? G.wStage(w) : 0; } catch (e) { /* bỏ qua */ }
       v.ep += G.epDo && G.epDo.bac ? G.epDo.bac(w) : 0;
     }
@@ -358,7 +359,7 @@
         if (G.scene === G.Village && obj(sv)) {
           const vt = vanTay(sv);
           if (vtCu && svCu === sv) {
-            const loai = ['mai', 'vk', 'ep', 'lo', 'diem', 'chuong', 'bo'].filter((k) => vt[k] > vtCu[k]);
+            const loai = ['mai', 'vk', 'ep', 'lo', 'diem', 'chuong', 'bo', 'luyen'].filter((k) => vt[k] > vtCu[k]);
             if (!loai.length && vt.da < vtCu.da) loai.push('ep'); // ép hỏng / giữ bậc: không lên bậc nhưng đã tốn đá
             vtCu = vt;
             if (loai.length) phat('nangCap', { loai });

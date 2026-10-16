@@ -82,7 +82,9 @@
     o.luot[an.loai]--;
     if (T.da) { const n = T.da[k] | 0; if (G.epDo) G.epDo.themDa(sv, n); else sv.daBac = Math.max(0, num(sv.daBac, 0)) + n; R.lines.push(ln('+{0} đá nâng bậc', n)); }
     if (T.bua && Math.random() < (T.bua[k] || 0)) { if (G.epDo) G.epDo.themBua(sv, 1); else sv.buaBac = Math.max(0, num(sv.buaBac, 0)) + 1; R.lines.push(ln('+{0} bùa giữ bậc', 1)); }
-    if (T.quang) { const n = T.quang[k] | 0; sv.ore += n; R.lines.push(ln('+{0} quặng', n)); }
+    if (T.quang) { const n = T.quang[k] | 0; G.themQuang(sv, n); R.lines.push(ln(G.chuQuang(), n)); }
+    // 16/10 Luyện: Ải Rèn (gộp Ải Đá Bậc + Ải Đá Mài) cho nguyên liệu rèn
+    if (T.nlr) { const n = T.nlr[k] | 0; if (G.themNlr) G.themNlr(sv, n); else sv.nlr = Math.max(0, num(sv.nlr, 0)) + n; R.lines.push(ln('+{0} nguyên liệu rèn', n)); }
     if (T.vang) { const n = T.vang[k] | 0; sv.gold += n; R.lines.push(ln('+{0} vàng', n)); }
     const xp = Math.round(G.stageStats(k, 4, 0).xp * (CF.xp || 0));
     if (xp > 0) { R.lines.push(ln('+{0} kinh nghiệm', xp)); R.up = G.addXp(sv.hero, xp); }
@@ -93,6 +95,7 @@
     const T = CF.ai[loai].thuong;
     if (T.da) return G.t('{0} đá', T.da[k]);
     if (T.quang) return G.t('{0} quặng', T.quang[k]);
+    if (T.nlr) return G.t('{0} NLR', T.nlr[k]);
     return G.t('{0} vàng', T.vang[k]);
   };
   // Bản lưu: sửa trường aiNgay mỗi lần nạp (bọc G.fixSave; nạp sau js/ep_do.js)
@@ -109,7 +112,7 @@
   // ---------- màn chọn ải ngày (G.Village tab 'aingay') ----------
   const gd = (ma) => { const s = G.spriteCustom; return s && s.gdSan ? s.gdSan(ma) : null; };
   const veGd = (ma, x, y, w, h) => { const g = gd(ma); return !!(g && G.spriteCustom.veGd(G.ux, g, x, y, w, h)); };
-  const MAU = { da: '#b06aff', mai: '#9aa4b0', vang: '#ffd24a' };
+  const MAU = { da: '#b06aff', mai: '#9aa4b0', vang: '#ffd24a', ren: '#c9ccd2' };
   function veCong(x, y, w, h) {
     if (veGd('gd-cong-ai-ngay', x, y, w, h)) return;
     const c = G.ux, t = G.time || 0;
@@ -119,7 +122,7 @@
     for (let i = 0; i < 7; i++) ui.rect(x + 12 + i * ((w - 24) / 7), y + 12, (w - 24) / 7 - 2, 8, '#5a7a74', '#1a2422');
   }
   function veIcon(loai, x, y, s) {
-    if (veGd('gd-ai-ngay-' + loai, x, y, s, s)) return;
+    if (veGd('gd-ai-ngay-' + (loai === 'ren' ? 'mai' : loai), x, y, s, s)) return; // Ải Rèn dùng lại ảnh nút Ải Đá Mài
     const c = G.ux; c.fillStyle = '#1a1a22'; c.beginPath(); c.arc(x + s / 2, y + s / 2, s / 2, 0, 7); c.fill();
     c.fillStyle = MAU[loai]; c.beginPath(); c.arc(x + s / 2, y + s / 2, s / 2 - 3, 0, 7); c.fill();
   }

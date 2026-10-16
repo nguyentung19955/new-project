@@ -398,7 +398,7 @@
     const U = E.ui;
     // dải tài nguyên
     E.iconDa(x + 6, y + 6, 12); ui.text(String(E.da(sv)), x + 14, y + 9.5, { size: 8, bold: true, color: '#d9b0ff' });
-    E.iconBua(x + 48, y + 6, 12); ui.text(String(E.bua(sv)), x + 56, y + 9.5, { size: 8, bold: true, color: GOLD });
+    if (G.TUT_BAC !== false) { E.iconBua(x + 48, y + 6, 12); ui.text(String(E.bua(sv)), x + 56, y + 9.5, { size: 8, bold: true, color: GOLD }); } // 16/10: bỏ tụt bậc → ẩn bùa (?tutbac=1 hiện lại)
     tx(E.bat() ? 'Đá nâng bậc rơi từ trùm và Ải Đá Bậc (ải ngày).' : 'Ép đồ đang tắt (?epdo=0)', x + 76, y + 9.5, wd - 78, { size: 6.5, color: E.bat() ? SOFT : WARN });
     y += 15;
     // cột trái: 4 vũ khí

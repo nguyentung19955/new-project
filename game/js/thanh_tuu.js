@@ -150,6 +150,7 @@
       if (k === 'baHe') return [demBit(dem(o, 'heTT') | 0), 3];
       if (k === 'ep') return [dsVk(sv).reduce((m, w) => Math.max(m, bacEp(w)), 0), d.bac];
       if (k === 'mai') return [dsVk(sv).reduce((m, w) => Math.max(m, num(w.sharpen, 0)), 0), d.can];
+      if (k === 'luyen') return [dsVk(sv).filter((w) => (G.luyen ? G.luyen.cap(w) : 1) >= d.cap).length, d.so]; // 16/10 Luyện (js/luyen.js đổi điều kiện)
       if (k === 'cap') { const h = hs(sv); return [h ? num(h.lvl, 1) : 1, d.can]; }
       if (k === 'boDo') return [G.ZED_BO_KEYS && G.zedBoMo ? G.ZED_BO_KEYS.filter((b) => G.zedBoMo(b, sv)).length : 1, d.can];
       if (k === 'chuongDay') return [dem(o, 'chuongDay') ? 1 : 0, 1];
@@ -183,9 +184,11 @@
     const a = [];
     if (th.vang) a.push(G.t('{0} vàng', th.vang));
     if (th.lk) a.push(G.t('{0} linh khí', th.lk));
-    if (th.da) a.push(G.t('{0} đá nâng bậc', th.da));
-    if (th.bua) a.push(G.t('{0} bùa giữ bậc', th.bua));
-    if (th.quang) a.push(G.t('{0} quặng', th.quang));
+    const LY = G.luyen && G.luyen.bat(), nlr = LY ? (th.da | 0) * G.QUY_DOI.da + (th.bua | 0) * G.QUY_DOI.bua + (th.quang | 0) : 0; // Luyện: đá, bùa, quặng → NLR
+    if (nlr) a.push(G.t('{0} nguyên liệu rèn', nlr));
+    if (th.da && !LY) a.push(G.t('{0} đá nâng bậc', th.da));
+    if (th.bua && !LY) a.push(G.t('{0} bùa giữ bậc', th.bua));
+    if (th.quang && !LY) a.push(G.t('{0} quặng', th.quang));
     if (th.dh && D.DH[th.dh]) a.push(G.t('danh hiệu "{0}"', G.tv(D.DH[th.dh].ten)));
     return a.join(', ');
   }
@@ -203,7 +206,7 @@
     if (th.lk) { if (G.vkMoi && G.vkMoi.themLk) G.vkMoi.themLk(sv, th.lk); else sv.linhKhi = num(sv.linhKhi, 0) + th.lk; }
     if (th.da) { if (G.epDo && G.epDo.themDa) G.epDo.themDa(sv, th.da); else sv.daBac = num(sv.daBac, 0) + th.da; }
     if (th.bua) { if (G.epDo && G.epDo.themBua) G.epDo.themBua(sv, th.bua); else sv.buaBac = num(sv.buaBac, 0) + th.bua; }
-    if (th.quang) sv.ore = num(sv.ore, 0) + th.quang;
+    if (th.quang) { if (G.themQuang) G.themQuang(sv, th.quang); else sv.ore = num(sv.ore, 0) + th.quang; }
     if (th.dh && D.DH[th.dh] && !(o.dh && TT.coDh(o.dh, sv))) o.dh = th.dh;
     return true;
   };

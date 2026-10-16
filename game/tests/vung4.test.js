@@ -156,7 +156,9 @@ const BANG = () => ({
     const c5 = await choi(3, 4);
     dat(!c5.loi && c5.info.boss === null || (c5.info.boss && c5.info.boss.kind === 'thuong'), 'ải 4-5: trùm kind thuong' + (c5.loi ? ' — ' + c5.loi : ''));
     dat(c5.out && !c5.out.bad.length, 'trận Thuồng Luồng: không số NaN' + (c5.out && c5.out.bad.length ? ': ' + c5.out.bad.slice(0, 3).join(', ') : ''));
-    dat(c5.out.win === true && c5.shards[3] === c5.shards0[3] + 3, 'hạ Thuồng Luồng: +3 mảnh Thuồng Luồng (' + c5.shards0[3] + ' → ' + c5.shards[3] + ')');
+    // 16/10 Luyện (js/luyen.js): hạ trùm vùng LẦN ĐẦU được thêm G.LUYEN.manhDau mảnh (3 → 5)
+    const mDau = await A.goi(() => (G.luyen && G.luyen.bat() ? G.LUYEN.manhDau | 0 : 0));
+    dat(c5.out.win === true && c5.shards[3] === c5.shards0[3] + 3 + mDau, 'hạ Thuồng Luồng lần đầu: +' + (3 + mDau) + ' mảnh Thuồng Luồng (' + c5.shards0[3] + ' → ' + c5.shards[3] + ')');
     dat(c5.recB && c5.recB.thuong > 0, 'kỷ lục thời gian hạ Thuồng Luồng (b.thuong = ' + (c5.recB && c5.recB.thuong) + ' giây)');
     const nhac = await A.goi(() => { const S = { r: 3, W: { type: 'fight' }, mode: 'play' }; const g0 = G.getRun, sc0 = G.scene; G.getRun = () => S; G.scene = G.StageScene; let v; try { v = G.nhac && G.nhac.chonBai ? G.nhac.chonBai() : 'khong'; } catch (e) { v = 'loi ' + e; } G.getRun = g0; G.scene = sc0; return v; });
     dat(typeof nhac === 'string' && /^vung[0-3]$|^khong$/.test(nhac), 'nhạc vùng 4 chọn được bài (' + nhac + ')');

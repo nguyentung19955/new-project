@@ -168,16 +168,18 @@
   const themLk = (sv, n) => { if (!(n > 0)) return; if (G.vkMoi && G.vkMoi.themLk) G.vkMoi.themLk(sv, n); else sv.linhKhi = Math.max(0, num(sv.linhKhi, 0)) + n; };
   function phat(sv, t) { // t: { v vàng, q quặng, da, lk, bua }
     if (t.v) sv.gold = num(sv.gold, 0) + t.v;
-    if (t.q) sv.ore = num(sv.ore, 0) + t.q;
+    if (t.q) { if (G.themQuang) G.themQuang(sv, t.q); else sv.ore = num(sv.ore, 0) + t.q; } // Luyện: quặng → NLR
     themDa(sv, t.da | 0); themLk(sv, t.lk | 0); themBua(sv, t.bua | 0);
   }
   const cong = (a, t) => { for (const k of ['v', 'q', 'da', 'lk', 'bua']) if (t[k]) a[k] = (a[k] | 0) + t[k]; return a; };
   VN.chuThuong = function (t) {
     const a = [];
     if (t.v) a.push(G.t('{0} vàng', t.v));
-    if (t.q) a.push(G.t('{0} quặng', t.q));
-    if (t.bua) a.push(G.t('{0} bùa', t.bua));
-    if (t.da) a.push(G.t('{0} đá', t.da));
+    const LY = G.luyen && G.luyen.bat(), nlr = LY ? (t.q | 0) + (t.da | 0) * G.QUY_DOI.da + (t.bua | 0) * G.QUY_DOI.bua : 0; // Luyện: quặng, đá, bùa → NLR
+    if (nlr) a.push(G.t('{0} nguyên liệu rèn', nlr));
+    if (t.q && !LY) a.push(G.t('{0} quặng', t.q));
+    if (t.bua && !LY) a.push(G.t('{0} bùa', t.bua));
+    if (t.da && !LY) a.push(G.t('{0} đá', t.da));
     if (t.lk) a.push(G.t('{0} linh khí', t.lk));
     return a.join(', ');
   };
