@@ -664,5 +664,161 @@
    }
   }
  },
- "boneFrac": "boneFrac (tuỳ chọn, mặc định 1): khớp cuối dùng để gắn = from + (to − from) × boneFrac. Giáp ngực dùng 0,6 của đoạn cổ → giữa hông."
+ "boneFrac": "boneFrac (tuỳ chọn, mặc định 1): khớp cuối dùng để gắn = from + (to − from) × boneFrac. Giáp ngực dùng 0,6 của đoạn cổ → giữa hông.",
+ "armBlend": 0.35,
+ "angleHold": 8,
+ "shoulderMount": "Giáp vai (group \"vai\") có 2 kiểu gắn, chọn trong trang: \"xuong\" = theo bắp tay (vai → khuỷu, kéo giãn theo xương, như cũ); \"tron\" (mặc định) = neo tại khớp vai, KHÔNG kéo giãn, góc = góc thân (neck → hipCenter) + armBlend × (góc bắp tay − góc thân); vị trí neo làm tròn về điểm ảnh nguyên; góc đổi < angleHold° so với khung trước thì giữ góc cũ.",
+ "jointOverrides": {
+  "chay": "khop-chinh/chay.json"
+ },
+ "jointOverridesNote": "Rig đọc ../data.json rồi ĐÈ bằng khop-chinh/chay.json (offsetFix + khớp đánh lại). data.json không bị sửa.",
+ "actionsDir": "dong-tac",
+ "actionsNote": "Mọi thư mục dong-tac/<ten>/ có đủ sheet.png (ô 96, ngang) + khop.json ({action, frameCount, fps, frames[{frame, joints}], source, hidden}) được tao-rig.py tự nhận. Động tác này dùng sheet cả người (CÁCH TẠM): mảnh bên SAU vẽ trước sheet, bên TRƯỚC vẽ sau sheet. Khớp trong hidden ở khung nào thì mảnh gắn vào khớp đó tạm ẩn ở khung đó (không tính hở).",
+ "capVariants": {
+  "may": {
+   "chup-vai": [
+    {
+     "d": 6,
+     "file": "chup/may/chup-vai-d6.png",
+     "anchor": [
+      3.0,
+      3.0
+     ]
+    },
+    {
+     "d": 7,
+     "file": "chup/may/chup-vai-d7.png",
+     "anchor": [
+      3.5,
+      3.5
+     ]
+    }
+   ],
+   "chup-goi": [
+    {
+     "d": 5,
+     "file": "chup/may/chup-goi-d5.png",
+     "anchor": [
+      2.5,
+      2.5
+     ]
+    },
+    {
+     "d": 6,
+     "file": "chup/may/chup-goi-d6.png",
+     "anchor": [
+      3.0,
+      3.0
+     ]
+    },
+    {
+     "d": 7,
+     "file": "chup/may/chup-goi-d7.png",
+     "anchor": [
+      3.5,
+      3.5
+     ]
+    }
+   ],
+   "chup-khuyu": [
+    {
+     "d": 5,
+     "file": "chup/may/chup-khuyu-d5.png",
+     "anchor": [
+      2.5,
+      2.5
+     ]
+    },
+    {
+     "d": 6,
+     "file": "chup/may/chup-khuyu-d6.png",
+     "anchor": [
+      3.0,
+      3.0
+     ]
+    },
+    {
+     "d": 7,
+     "file": "chup/may/chup-khuyu-d7.png",
+     "anchor": [
+      3.5,
+      3.5
+     ]
+    }
+   ]
+  },
+  "gen": {
+   "chup-vai": [
+    {
+     "d": 6,
+     "file": "chup/gen/chup-vai-d6.png",
+     "anchor": [
+      3.0,
+      3.0
+     ]
+    },
+    {
+     "d": 7,
+     "file": "chup/gen/chup-vai-d7.png",
+     "anchor": [
+      3.5,
+      3.5
+     ]
+    }
+   ],
+   "chup-goi": [
+    {
+     "d": 5,
+     "file": "chup/gen/chup-goi-d5.png",
+     "anchor": [
+      2.5,
+      2.5
+     ]
+    },
+    {
+     "d": 6,
+     "file": "chup/gen/chup-goi-d6.png",
+     "anchor": [
+      3.0,
+      3.0
+     ]
+    },
+    {
+     "d": 7,
+     "file": "chup/gen/chup-goi-d7.png",
+     "anchor": [
+      3.5,
+      3.5
+     ]
+    }
+   ],
+   "chup-khuyu": [
+    {
+     "d": 5,
+     "file": "chup/gen/chup-khuyu-d5.png",
+     "anchor": [
+      2.5,
+      2.5
+     ]
+    },
+    {
+     "d": 6,
+     "file": "chup/gen/chup-khuyu-d6.png",
+     "anchor": [
+      3.0,
+      3.0
+     ]
+    },
+    {
+     "d": 7,
+     "file": "chup/gen/chup-khuyu-d7.png",
+     "anchor": [
+      3.5,
+      3.5
+     ]
+    }
+   ]
+  }
+ },
+ "capRule": "Luật chụp khớp (hở về 0): đo điểm ảnh tay/chân trong bán kính 2đ quanh khớp mà mảnh xương cùng bên không che (cả 2 chế độ xoay). Chọn cỡ chụp NHỎ NHẤT (gốc, rồi Ø5/6/7 trong capVariants) mà ở MỌI khung của động tác, dời chụp ≤1đ quanh vị trí làm tròn là che kín; không cỡ nào che kín cả động tác thì chọn theo từng khung. Chụp không xoay nên không méo."
 }
