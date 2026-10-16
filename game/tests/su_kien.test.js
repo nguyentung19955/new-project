@@ -128,6 +128,7 @@ const sx = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Ar
       let d = null; const g = G.suKien.on('hetAi', (x) => { d = x; });
       G.testSave({ lvl: 30, sharpen: 6 });
       G.save.stars['0-4'] = 3;
+      G.save.stars['1-0'] = 1; // mở dần (Tư vấn 1, js/mo_dan.js): người mới có Ải ngày khi đã qua Hang biển 1
       const loai = G.AI_NGAY.thuTu.find((k) => G.aiNgay.moHomNay(k));
       const vao = G.aiNgay.vao(loai, 0);
       const out = G.probeRun(400);
@@ -214,6 +215,8 @@ const sx = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Ar
       // Phiên A / B / C đã điền hàm thật: tạm thay bằng hàm rỗng (.rong) để kiểm đúng trạng thái Phiên 0, cuối mục trả lại
       const that = { so: P.so, thanhTuu: P.thanhTuu, viecNgay: P.viecNgay };
       for (const k of Object.keys(that)) if (!P[k].rong) { const f = function () { return ''; }; f.rong = true; P[k] = f; }
+      // mở dần (Tư vấn 1, js/mo_dan.js) còn ẩn thẻ theo mốc của người mới: mục này kiểm khung thẻ → bản lưu kiểu người chơi cũ (mở hết)
+      const md0 = G.save.moDan; G.save.moDan = { cu: 1 };
       G.noRender = false;
       const ve = () => { try { G.Village.draw(); return true; } catch (e) { return String(e && e.stack || e); } };
       r.rong = [P.so.rong, P.thanhTuu.rong, P.viecNgay.rong];
@@ -237,6 +240,7 @@ const sx = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Ar
       P.so.cham = () => false; P.viecNgay.cham = () => false;
       G.villageScene.checkNews(); r.cham2 = [G.villageScene.state.news.tu, G.villageScene.state.news.mo];
       Object.assign(P, that); VA.goHub();
+      G.save.moDan = md0;
       G.noRender = true;
       return r;
     });
@@ -256,7 +260,8 @@ const sx = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Ar
       'C.pull().then(() => { window.__xong = "ok"; }, (e) => { window.__xong = String(e); }); return true; }', cu[cu.length - 1]);
     dat(may0, 'gọi C.pull với Firestore giả');
     await A.goi('1'); await A.goi('1');
-    const may = await A.goi('function (r) { const c = JSON.parse(r), s = G.save; return { xong: window.__xong, sao: JSON.stringify(s.stars) === JSON.stringify(c.stars), vang: s.gold === c.gold, so: !!(s.so && s.nv && s.tt), owner: s.owner }; }', cu[cu.length - 1]);
+    // Luyện vũ khí phiên 1: bản lưu cũ chuyển sang Luyện một lần khi nạp, hoàn vàng phần thừa (s.luyenBao.vang) → vàng = bản mây + phần hoàn
+    const may = await A.goi('function (r) { const c = JSON.parse(r), s = G.save; return { xong: window.__xong, sao: JSON.stringify(s.stars) === JSON.stringify(c.stars), vang: s.gold === c.gold + (G.luyen && G.luyen.bat() && s.luyenBao ? s.luyenBao.vang | 0 : 0), so: !!(s.so && s.nv && s.tt), owner: s.owner }; }', cu[cu.length - 1]);
     dat(may.xong === 'ok' && may.sao && may.vang && may.so && may.owner === 'u1', 'dùng bản mây: tiến độ giữ nguyên, có so / nv / tt');
     const day = await A.goi(() => { const C = G.cloud; G.save.gold += 1; G.persist(); return C.push(true).then ? 'p' : 'x'; });
     await A.goi('1');
