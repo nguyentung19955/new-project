@@ -109,10 +109,14 @@ DONG = [
     # người đặc, tay phải trống; neo kiếm gan-vk/neo-kiem-16-10.py. Game dùng thay kiem_1 / kiem_3 cũ (tắt ?kiemmoi=0, hoặc ?hangcu=1).
     # Kiếm 3 mới: khung 4 là đòn đâm → game dời mốc khung (MOC16 trong zed_moi.js) để khung 4 rơi đúng lúc chạm cũ (u 0,45).
     ('kiem_1~16', '08-kiem-1-5k-v2', 0.3, False), ('kiem_3~16', '10-kiem-3-6k-v2', 0.46, False),
+    # CHẠY MỚI 16/10 (docs/review/ke-hoach-cai-thien/ve-tay-8-dot-1/bao-cao.md): 12 khung gen theo khung người đặc chay-e.png, cắt bằng
+    # moi16/cat-chay-12k.py (khung sát nhau) + sửa khung 2 moi16/sua-chay-k2.py; neo vũ khí gan-vk/neo-chay-16-10.py. Game dùng thay 'chay'
+    # (cả chay_<loại>); tắt ?chaymoi=0 (hoặc ?hangcu=1). Chạy cầm thương / búa vẫn dùng hàng hai tay cũ 03-chay-2tay (xem báo cáo).
+    ('chay~16', '03-chay-12k-v2', 0.6, True),
 ]
-CHI_NINJA = {'03-chay-2tay', '01-dung-8k', '04-lon-6k', '05-trung-don-4k', '08-kiem-1-5k-v2', '10-kiem-3-6k-v2'}   # hàng chỉ có ảnh bộ ninja: dung_bo bỏ qua
+CHI_NINJA = {'03-chay-2tay', '01-dung-8k', '04-lon-6k', '05-trung-don-4k', '08-kiem-1-5k-v2', '10-kiem-3-6k-v2', '03-chay-12k-v2'}   # hàng chỉ có ảnh bộ ninja: dung_bo bỏ qua
 MOI16 = os.path.join(DAY, 'moi16')
-GOC_RIENG = {t: os.path.join(MOI16, t + '-gif') for t in ('01-dung-8k', '04-lon-6k', '05-trung-don-4k', '08-kiem-1-5k-v2', '10-kiem-3-6k-v2')}
+GOC_RIENG = {t: os.path.join(MOI16, t + '-gif') for t in ('01-dung-8k', '04-lon-6k', '05-trung-don-4k', '08-kiem-1-5k-v2', '10-kiem-3-6k-v2', '03-chay-12k-v2')}
 # Căn theo BÀN CHÂN TRƯỚC (kiếm mới 16/10): khung 1 (và kiếm 3 khung 5–6) đứng hẹp chân hơn các khung khác → căn theo điểm giữa hai
 # bàn chân thì cả hai chân trượt. Các hàng này: tâm bàn chân trước (khối bên phải ở đáy hình) đặt đúng chỗ bàn chân trước của hàng
 # đứng mới (trung vị, ô 96) → vào đòn từ thế đứng chân trước không trượt; chân sau lùi/tiến theo ảnh.
@@ -130,7 +134,7 @@ def chan_truoc(im):
 # Co theo CHIỀU CAO thay vì cỡ đầu (16/10): tóc bay của ảnh mới làm đo đầu sai (trúng đòn đo đầu to hơn 15% → người co nhỏ hơn
 # đứng 7 điểm ảnh ô 96). Các khung ghi ở đây (đếm từ 0, tư thế đứng thẳng) co cho cao bằng trung vị hàng dung~16.
 R_CAO = {'04-lon-6k': [5], '05-trung-don-4k': [2, 3]}
-NEO_DAU = ('dung', 'di', 'chay', 'chay2tay', 'dung~16')
+NEO_DAU = ('dung', 'di', 'chay', 'chay2tay', 'dung~16', 'chay~16')
 DAU_X = 49  # hoành độ tâm đầu trong ô 96 cho các hàng NEO_DAU
 VK = [('kiem', 'vk-kiem-moi'), ('thuong', 'vk-thuong'), ('bua', 'vk-bua'), ('phitieu', 'vk-phi-tieu')]
 VK_THU_MUC = dict((b, a) for a, b in VK)

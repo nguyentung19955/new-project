@@ -714,6 +714,10 @@
   function gem(x, y, s) { // viên linh khí (hình thoi vàng)
     s = s || 1;
     const c = G.ux;
+    // vẽ tay 8 đợt 1 (docs/review/ke-hoach-cai-thien/ve-tay-8-dot-1): ảnh gd-icon-linh-khi (8×10 điểm game, tâm tại x, y) thay hình thoi code.
+    // ?vecode=1 hoặc chưa có ảnh: vẽ code như cũ.
+    const SC = G.spriteCustom, ga = G.VE_CODE !== true && SC && SC.gdSan && SC.veGd ? SC.gdSan('gd-icon-linh-khi') : null;
+    if (ga && SC.veGd(c, ga, x - 4 * s, y - 5 * s, 8 * s, 10 * s)) return;
     c.fillStyle = '#7a4a10'; c.beginPath(); c.moveTo(x, y - 5 * s); c.lineTo(x + 4 * s, y); c.lineTo(x, y + 5 * s); c.lineTo(x - 4 * s, y); c.closePath(); c.fill();
     c.fillStyle = '#ffd23f'; c.beginPath(); c.moveTo(x, y - 4 * s); c.lineTo(x + 3 * s, y); c.lineTo(x, y + 4 * s); c.lineTo(x - 3 * s, y); c.closePath(); c.fill();
     c.fillStyle = '#fff6c8'; c.fillRect(x - 1 * s, y - 2 * s, 1 * s, 2 * s);

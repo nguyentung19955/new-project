@@ -1,0 +1,73 @@
+{
+ "chay": {
+  "truoc_%": 20.4,
+  "sau_%": 15.0,
+  "nhip_do": [
+   4,
+   5
+  ],
+  "hang_sau": [
+   "chay"
+  ]
+ },
+ "chay-bua": {
+  "truoc_%": 76.5,
+  "sau_%": 76.5,
+  "nhip_do": [
+   6,
+   6
+  ],
+  "hang_sau": [
+   "chay2tay"
+  ]
+ },
+ "chay-chem": {
+  "truoc_%": 33.3,
+  "sau_%": 25.7,
+  "nhip_do": [
+   7,
+   9
+  ],
+  "hang_sau": [
+   "chay",
+   "dung",
+   "kiem_1",
+   "kiem_2"
+  ]
+ },
+ "chay-nguoc-chem": {
+  "truoc_%": 32.1,
+  "sau_%": 46.5,
+  "nhip_do": [
+   3,
+   6
+  ],
+  "hang_sau": [
+   "chay",
+   "dung",
+   "kiem_1"
+  ]
+ },
+ "chay-phitieu": {
+  "truoc_%": 20.4,
+  "sau_%": 15.0,
+  "nhip_do": [
+   4,
+   5
+  ],
+  "hang_sau": [
+   "chay"
+  ]
+ },
+ "chay-thuong": {
+  "truoc_%": 76.5,
+  "sau_%": 76.5,
+  "nhip_do": [
+   6,
+   6
+  ],
+  "hang_sau": [
+   "chay2tay"
+  ]
+ }
+}

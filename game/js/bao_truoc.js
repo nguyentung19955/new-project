@@ -474,6 +474,27 @@
     const da = d[i + 3] / 255, oa = a + da * (1 - a), k = a / oa;
     d[i] += (r - d[i]) * k; d[i + 1] += (g - d[i + 1]) * k; d[i + 2] += (b - d[i + 2]) * k; d[i + 3] = oa * 255;
   }
+  // VẼ TAY 8 ĐỢT 1 (16/10, docs/review/ke-hoach-cai-thien/ve-tay-8-dot-1/bao-cao.md): kiểu điểm ảnh (vùng chưa có ảnh hoạt ảnh, hoặc
+  // ?baoanh=0) lấy hoạ tiết từ ẢNH thay hình code: hu-bao-vung-soc (sọc chéo lặp 16×16 điểm game, 4 khung sáng dần) thay chấm lưới thưa
+  // (vẫn là dấu hiệu bằng hình cho người khó phân biệt đỏ–lục); vùng TRÒN lấy thêm hu-bao-vung-vong (vòng đỏ, lòng đầy dần 6 khung theo
+  // tiến độ báo trước) thay phần đỏ đậm lấp dần. Chỉ đổi màu điểm ảnh BÊN TRONG mặt nạ vùng (vùng va chạm, thời gian không đổi).
+  // ?vecode=1 hoặc chưa có ảnh: như cũ.
+  const TEX = {};
+  function tex(ma) {
+    if (G.VE_CODE === true) return null;
+    const FA = G.fxAnh, a = FA && FA.get ? FA.get(ma) : null;
+    if (!a || !a.img) return null;
+    let t = TEX[ma];
+    if (t && t.img === a.img) return t.d ? t : null;
+    t = { img: a.img, d: null };
+    try {
+      const W = a.img.width, H = a.img.height, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+      const x = cv.getContext('2d', { willReadFrequently: true }); x.drawImage(a.img, 0, 0);
+      Object.assign(t, { W, H, d: x.getImageData(0, 0, W, H).data, fw: a.fw * a.net, fh: a.fh * a.net, so: a.so, net: a.net, gw: a.fw });
+    } catch (e) { t.d = null; }
+    TEX[ma] = t;
+    return t.d ? t : null;
+  }
   // mode: 0 báo trước, 1 chớp lúc nổ, 2 đòn bị huỷ (mờ dần)
   function pxItem(d, DW, X0, Y0, it, mode, f) {
     const M = maskOf(it);
@@ -488,6 +509,8 @@
     let cL = 0, cS = 0, ca = 0, sa = 0, cph = 0;
     if (chev) { cL = it.k === 'line' ? it.len : it.r; cS = Math.round(it.k === 'line' ? Math.min(6, it.w * 0.3) : Math.min(7, it.r * 0.11)); ca = Math.cos(it.ang); sa = Math.sin(it.ang); cph = (Math.floor(G.time * (8 + 10 * late)) / 8) % 1; if (cL < 24 || cS < 2) cS = 0; }
     const m = M.m, p = M.p, w = M.w;
+    const SOC = mode !== 1 ? tex('hu-bao-vung-soc') : null, sf = SOC ? Math.floor(G.time * 8) % SOC.so : 0, sg = SOC ? SOC.gw : 16;
+    const VONG = mode !== 1 && it.k === 'circle' ? tex('hu-bao-vung-vong') : null, vf = VONG ? clamp(Math.floor(u * VONG.so), 0, VONG.so - 1) : 0;
     for (let j = 0; j < M.h; j++) {
       const wy = M.y0 + j, ry = wy - Y0;
       if (ry < 0 || ry >= DW[1]) continue;
@@ -517,12 +540,19 @@
         }
         const pn = p[o] / 255;
         put(d, di, C.base[0], C.base[1], C.base[2], aIn * dim);
-        if (u > 0 && pn <= u) {
+        if (VONG) { // vòng đỏ đầy dần (ảnh): toạ độ trong elip vùng → điểm ảnh khung vf
+          const ix = clamp(Math.floor(((wx + 0.5 - it.x) / it.r + 1) * 0.5 * VONG.fw), 0, VONG.fw - 1), iy = clamp(Math.floor(((wy + 0.5 - it.y) / (it.r * it.ky) + 1) * 0.5 * VONG.fh), 0, VONG.fh - 1);
+          const si = (iy * VONG.W + vf * VONG.fw + ix) * 4;
+          if (VONG.d[si + 3] > 0) put(d, di, VONG.d[si], VONG.d[si + 1], VONG.d[si + 2], (0.5 + 0.12 * late) * dim);
+        } else if (u > 0 && pn <= u) {
           put(d, di, C.deep[0], C.deep[1], C.deep[2], aDeep * dim);
           if (u < 1 && pn > u - band) put(d, di, C.rim[0], C.rim[1], C.rim[2], 0.45 * (1 - late * 0.5) * dim); // mép trước phần đang lấp
         }
         // chấm lưới thưa (1/8 điểm ảnh, so le) thay cho sọc chéo: dấu hiệu bằng hình cho người khó phân biệt đỏ–lục
-        if (v === 2 && (wy & 1) === 0 && ((wx + ((wy >> 1) & 1) * 2) & 3) === 0) put(d, di, 40, 6, 4, (0.32 + 0.1 * late) * dim);
+        if (v === 2 && SOC) { // sọc chéo (ảnh, lặp sg×sg điểm game)
+          const si = ((((wy % sg) + sg) % sg) * SOC.net * SOC.W + sf * SOC.fw + (((wx % sg) + sg) % sg) * SOC.net) * 4;
+          if (SOC.d[si + 3] > 0) put(d, di, SOC.d[si], SOC.d[si + 1], SOC.d[si + 2], (0.26 + 0.1 * late) * dim);
+        } else if (v === 2 && (wy & 1) === 0 && ((wx + ((wy >> 1) & 1) * 2) & 3) === 0) put(d, di, 40, 6, 4, (0.32 + 0.1 * late) * dim);
         if (pre > 0) put(d, di, 255, 236, 214, 0.16 * pre * dim);
         if (v === 3) {
           put(d, di, C.rim[0], C.rim[1], C.rim[2], (0.8 + 0.2 * blink * late) * dim);

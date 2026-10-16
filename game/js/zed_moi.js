@@ -90,13 +90,18 @@
   const HANG_CU = /[?&]hangcu=1(&|$)/.test(QS);
   const KIEM_MOI = !/[?&]kiemmoi=0(&|$)/.test(QS);
   const KIEM16 = { 'kiem_1~16': 1, 'kiem_3~16': 1 };
+  // CHẠY MỚI 16/10 (docs/review/ke-hoach-cai-thien/ve-tay-8-dot-1/bao-cao.md): chay~16 (12 khung gen theo khung người đặc, bộ ninja) thay
+  // hàng chạy cũ, cả chay~16_<loại> (cầm kiếm / thương / búa / phi tiêu, neo tay từng khung). Nhịp chân theo quãng đường (cu-ti-to-muot (d))
+  // dùng sải đo lại trên hàng mới (SAI.chay16). Chạy cầm thương / búa vẫn dùng hàng hai tay cũ chay2tay (hàng mới hai nắm tay đánh xa nhau,
+  // cán không ôm được). Chạy + chém: điểm eo đo trên khung chạy mới (G.ZED_EO.bo.moi['chay~16']). Chỉ HÌNH. ?chaymoi=0: hàng chạy cũ.
+  const CHAY_MOI = !/[?&]chaymoi=0(&|$)/.test(QS);
   function hang16(D) {
     if (!D || !D.dong_tac || D._hang16) return;
     D._hang16 = 1;
     if (HANG_CU) return;
     const dt = D.dong_tac;
     Object.keys(dt).forEach((k) => {
-      if (k.indexOf('~16') < 0 || (KIEM16[k] && !KIEM_MOI)) return;
+      if (k.indexOf('~16') < 0 || (KIEM16[k] && !KIEM_MOI) || (!CHAY_MOI && k.indexOf('chay~16') === 0)) return;
       const goc = k.replace('~16', ''), a = Object.assign({}, dt[k], { moi16: 1, eo16: k });
       if (a.cam_vk) a.cam_vk = a.cam_vk.replace('~16', '');
       if (MOC16[goc]) a.moc = MOC16[goc];
@@ -134,7 +139,7 @@
   // hệ toạ độ đã lật theo mặt); rel = -1 khi chân quay ngược mặt (chạy ngược hướng chém); kc = bù 1 điểm ảnh khi lật chân.
   function eoTinh(T, s, o) {
     const B = G.ZED_EO.bo[BO_MA[T._ma] || 'moi'] || G.ZED_EO.bo.moi;
-    const te = eoTen(T, B, s.ten), eA = B[te] && B[te][s.i], eR = B.chay && B.chay[s.eo.i];
+    const te = eoTen(T, B, s.ten), eA = B[te] && B[te][s.i], tc = eoTen(T, B, 'chay'), eR = B[tc] && B[tc][s.eo.i]; // chạy mới 16/10: eo đo trên khung chạy mới
     if (!eA || !eR) return null;
     // cách mới: chân không lật (luôn cùng hướng thân trên), ngang khớp tâm hông, dọc khớp đường cắt giữa đùi
     if (s.eo.moi && eA.length >= 5 && eR.length >= 5) {
@@ -226,7 +231,9 @@
   // qua 4 khung chạm đất của hàng chạy / chạy hai tay → 12 khung = 36,8 / 44,3; đi bộ: hai lần dạng chân mỗi vòng ≈ 31). Pha bước tăng theo
   // quãng đường đã đi / (sải × cỡ hiển thị) → bàn chân trụ đứng yên trên nền. Đứng sát tường (đẩy cần mà không đi được): vẫn bước chậm
   // bằng 35% nhịp cũ. Lướt kiếm (nhan 2) giữ nhịp theo thời gian như cũ.
-  const SAI = { chay: 36.8, chay2tay: 44.3, di: 31 };
+  // ve-tay-8-dot-1: hàng chạy mới (chay~16): bàn trụ lùi trung bình gần bằng hàng cũ (do-sai.py: 4,0 / 3,94 điểm ảnh ô 96 mỗi khung →
+  // ~37); thử nhịp trên chính các khung (trượt ròng ít nhất ở 32–36 với mọi tốc độ chạy) → chọn 34. Đo trong game: báo cáo mục 1.
+  const SAI = { chay: 36.8, chay16: 34, chay2tay: 44.3, di: 31 };
   function buoc(o, D, ten0, nhan) { // ten0: ép hàng ('chay'), không thì chọn đi / chạy theo P.diTL có vùng đệm; nhan: hệ số nhịp
     const p = buocCua(o);
     if (!p) return null;
@@ -246,7 +253,7 @@
     const ten = ten0 || (b.chay || !D.dong_tac.di ? 'chay' : 'di'), a = D.dong_tac[ten];
     if (!a) return null;
     if (muot2() && (nhan || 1) <= 1) {
-      const sai = (ten === 'chay' && chay2(o, D) ? SAI.chay2tay : SAI[ten] || SAI.chay) * toCua(o);
+      const sai = (ten === 'chay' && chay2(o, D) ? SAI.chay2tay : ten === 'chay' && a.moi16 ? SAI.chay16 : SAI[ten] || SAI.chay) * toCua(o);
       b.ph = (b.ph + Math.max(qd / sai, (dt * 0.35) / giayLap(ten, a))) % 1;
     } else b.ph = (b.ph + (dt * (nhan || 1)) / giayLap(ten, a)) % 1;
     const v = b.ph * a.so, i = Math.floor(v) % a.so;

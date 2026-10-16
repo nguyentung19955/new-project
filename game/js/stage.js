@@ -929,9 +929,14 @@
       else if (he) { c.fillStyle = G.lk.VIEN[he]; c.fillRect(x - 1, y - 1, bw + 2, 4); c.fillStyle = '#0e0808'; c.fillRect(x, y, bw, 2); } // viền 1 điểm ảnh màu hệ, lòng thanh vẫn tối
       else { c.fillStyle = 'rgba(14,8,8,0.85)'; c.fillRect(x - 1, y - 1, bw + 2, 4); }
       const fw = Math.round(bw * st.shown), lw = Math.round(bw * st.lag);
-      if (lw > fw) { c.fillStyle = st.hit > 0 ? '#fff6e0' : '#ffd98a'; c.fillRect(x + fw, y, lw - fw, 2); }
-      c.fillStyle = elite ? '#ff8a3a' : '#e8483a'; c.fillRect(x, y, fw, 2);
-      c.fillStyle = elite ? '#ffc890' : '#ff9a8a'; c.fillRect(x, y, fw, 1);
+      // vẽ tay 8 đợt 1 (docs/review/ke-hoach-cai-thien/ve-tay-8-dot-1): ruột thanh = ảnh gd-mau-quai-nho (đỏ / cam tinh anh / vàng nhạt
+      // phần vừa mất; vừa trúng đòn: dải trắng gd-ruot-thanh), lặp ngang. ?vecode=1 hoặc chưa có ảnh: tô code như cũ.
+      const dA = G.theme.daiAnh;
+      if (lw > fw && !(dA && (st.hit > 0 ? dA('gd-ruot-thanh', 5, 4, x + fw, y, lw - fw, 2, c) : dA('gd-mau-quai-nho', 3, 2, x + fw, y, lw - fw, 2, c)))) { c.fillStyle = st.hit > 0 ? '#fff6e0' : '#ffd98a'; c.fillRect(x + fw, y, lw - fw, 2); }
+      if (!(fw > 0 && dA && dA('gd-mau-quai-nho', 3, elite ? 1 : 0, x, y, fw, 2, c))) {
+        c.fillStyle = elite ? '#ff8a3a' : '#e8483a'; c.fillRect(x, y, fw, 2);
+        c.fillStyle = elite ? '#ffc890' : '#ff9a8a'; c.fillRect(x, y, fw, 1);
+      }
     }
     c.globalAlpha = ga;
   }

@@ -929,6 +929,22 @@
   // ---------- thanh máu, mana, kinh nghiệm, máu trùm ----------
   // kind: 'hp' | 'mana' | 'xp' | 'boss' (hoặc o.col, o.hi để tự chọn màu). label: chữ giữa thanh. o: { h, col, hi, marks: số vạch khắc }
   const BARC = { hp: ['#d0482f', '#f08a5a'], mana: ['#3f8fe0', '#8fc6ff'], xp: ['#d9a441', '#f6dc92'], boss: ['#b8452f', '#ff9a6a'] };
+  // VẼ TAY 8 ĐỢT 1 (16/10, docs/review/ke-hoach-cai-thien/ve-tay-8-dot-1/bao-cao.md): RUỘT thanh là ẢNH dải lặp ngang thay mảng màu
+  // code. gd-ruot-thanh: 5 hàng (đỏ máu, lam mana, vàng tiến độ, xanh lá hồi máu, trắng chớp), mỗi hàng 32×4 điểm game;
+  // gd-mau-quai-nho: 3 hàng (đỏ quái thường, cam tinh anh, vàng nhạt phần vừa mất), mỗi hàng 16×2. Ảnh co dọc theo bề dày thanh, lặp
+  // theo bề ngang, cạnh điểm ảnh sắc. Thanh trùm ('boss') và thanh tự chọn màu (o.col) vẫn tô code. ?vecode=1 hoặc chưa có ảnh: như cũ.
+  const RUOT = { hp: 0, mana: 1, xp: 2 };
+  function daiAnh(ma, so, hang, x, y, w, h, c) {
+    if (G.VE_CODE === true || !(w > 0) || !(h > 0)) return false;
+    const g = gdCo(ma); if (!g || !g.img) return false;
+    c = c || G.ux;
+    const N = g.net, sh = g.ph / so, tw = g.pw / N, sm = c.imageSmoothingEnabled;
+    c.imageSmoothingEnabled = false;
+    for (let xx = 0; xx < w; xx += tw) { const ww = Math.min(tw, w - xx); c.drawImage(g.img, 0, hang * sh, ww * N, sh, x + xx, y, ww, h); }
+    c.imageSmoothingEnabled = sm;
+    return true;
+  }
+  T.daiAnh = daiAnh; // js/stage.js (thanh máu quái nhỏ) dùng chung
   // Thanh máu tụt dần (VFX Phase 5): mất máu thì phần vừa mất còn hiện màu sáng một chút rồi rút theo sau;
   // hồi máu thì phần được thêm hiện màu xanh lá rồi phần đỏ lấp dần vào, cả thanh sáng nhẹ lên.
   // o.lag: khoá riêng của thanh (tên, hoặc chính đối tượng em bé / trùm / quái) để nhớ trạng thái giữa các khung hình. Cường độ theo G.VFX.giaoDien.
@@ -976,7 +992,8 @@
     // Soát mượt phiên 3 mục 22 (?venhe=0: như cũ): tấm nhớ chỉ là KHUNG thanh (không có độ dài máu trong khoá) + một tấm vạch khắc;
     // phần đổ màu tô thẳng bằng fillRect. Hình y hệt (cùng thứ tự lớp), nhưng máu đổi không còn sinh tấm mới mỗi lần.
     const nhe = G.VE_NHE !== false, U = G.ux;
-    const doMau = (px, py, pw, ph, hi) => { if (pw <= 0 || ph <= 0) return; U.fillStyle = cols[0]; U.fillRect(px, py, pw, ph); if (hi) { U.fillStyle = cols[1]; U.fillRect(px, py, pw, 1); } };
+    const kR = o.col ? null : RUOT[kind]; // vẽ tay 8 đợt 1: ruột thanh bằng ảnh gd-ruot-thanh (máu / mana / tiến độ)
+    const doMau = (px, py, pw, ph, hi) => { if (pw <= 0 || ph <= 0) return; if (kR != null && daiAnh('gd-ruot-thanh', 5, kR, px, py, pw, ph, U)) return; U.fillStyle = cols[0]; U.fillRect(px, py, pw, ph); if (hi) { U.fillStyle = cols[1]; U.fillRect(px, py, pw, 1); } };
     const vach = (n) => layer('barM|' + inner + '|' + h + '|' + n, inner, h - 4, () => { for (let k = 1; k < n; k++) { const px = Math.round((inner * k) / n); P(px, 0, C.dk); P(px, h - 5, C.dk); if (k * 2 === n) R(px, 0, 1, h - 4, 'rgba(0,0,0,0.5)'); } });
     if (h < 6 && nhe) {
       const iw = Math.round((w - 2) * G.clamp(frac || 0, 0, 1));
@@ -1025,16 +1042,21 @@
     if (ls) {
       const c = G.ux, ga = c.globalAlpha, lw = Math.round(inner * G.clamp(ls.lag, 0, 1)), tw = Math.round(inner * G.clamp(trueFrac || 0, 0, 1));
       if (lw > fw) { // phần vừa mất: chớp trắng rồi vàng nhạt, rút dần về
-        c.fillStyle = ls.hit > 0 ? '#fff6e0' : '#ffd98a'; c.globalAlpha = ga * Math.min(1, 0.9 * gd);
-        c.fillRect(x + cap + fw, y + 2, lw - fw, h - 4);
-        c.fillStyle = '#ffffff'; c.globalAlpha = ga * 0.5 * Math.min(1, gd); c.fillRect(x + cap + fw, y + 2, lw - fw, 1);
+        c.globalAlpha = ga * Math.min(1, 0.9 * gd);
+        if (!(kR != null && (ls.hit > 0 ? daiAnh('gd-ruot-thanh', 5, 4, x + cap + fw, y + 2, lw - fw, h - 4, c) : daiAnh('gd-mau-quai-nho', 3, 2, x + cap + fw, y + 2, lw - fw, h - 4, c)))) {
+          c.fillStyle = ls.hit > 0 ? '#fff6e0' : '#ffd98a'; c.fillRect(x + cap + fw, y + 2, lw - fw, h - 4);
+          c.fillStyle = '#ffffff'; c.globalAlpha = ga * 0.5 * Math.min(1, gd); c.fillRect(x + cap + fw, y + 2, lw - fw, 1);
+        }
       }
       if (tw > fw) { // phần đang hồi: xanh lá, lấp dần
-        c.fillStyle = '#7fe060'; c.globalAlpha = ga * Math.min(1, 0.85 * gd); c.fillRect(x + cap + fw, y + 2, tw - fw, h - 4);
-        c.fillStyle = '#d8ffc0'; c.globalAlpha = ga * Math.min(1, gd); c.fillRect(x + cap + fw, y + 2, tw - fw, 1);
+        c.globalAlpha = ga * Math.min(1, 0.85 * gd);
+        if (!(kR != null && daiAnh('gd-ruot-thanh', 5, 3, x + cap + fw, y + 2, tw - fw, h - 4, c))) {
+          c.fillStyle = '#7fe060'; c.fillRect(x + cap + fw, y + 2, tw - fw, h - 4);
+          c.fillStyle = '#d8ffc0'; c.globalAlpha = ga * Math.min(1, gd); c.fillRect(x + cap + fw, y + 2, tw - fw, 1);
+        }
       }
       if (ls.heal > 0 && fw > 0) { c.fillStyle = '#c8ffb0'; c.globalAlpha = ga * 0.3 * Math.min(1, gd) * Math.sin((ls.heal / 0.7) * Math.PI); c.fillRect(x + cap, y + 2, fw, h - 4); }
-      if (ls.hit > 0 && fw > 0) { c.fillStyle = '#ffffff'; c.globalAlpha = ga * 0.35 * Math.min(1, gd) * (ls.hit / 0.14); c.fillRect(x + cap, y + 2, fw, h - 4); }
+      if (ls.hit > 0 && fw > 0) { c.globalAlpha = ga * 0.35 * Math.min(1, gd) * (ls.hit / 0.14); if (!(kR != null && daiAnh('gd-ruot-thanh', 5, 4, x + cap, y + 2, fw, h - 4, c))) { c.fillStyle = '#ffffff'; c.fillRect(x + cap, y + 2, fw, h - 4); } }
       c.globalAlpha = ga;
     }
     if (label) txt(label, x + w / 2, y + h / 2 + 2.6, { size: o.size || 6.5, bold: true, align: 'center', color: '#fff' });
