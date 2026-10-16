@@ -110,6 +110,8 @@ const SLOT_CUA = {};                                // lớp đồ → ô (ao / 
 for (const [slot, ls] of Object.entries(DATA.outfitSlots)) ls.forEach(l => SLOT_CUA[l] = slot);
 const ARMOR = DATA.armorSets || { 'may-ve': { name: 'Giáp mẫu máy vẽ', sheets: Object.fromEntries((DATA.armorLayers || []).map(l => [l, DATA.sheets[l]])) } };
 const PRESETS = DATA.presets || [];
+const BASES = DATA.bodyBases || { cu: { name: 'Máy dựng cũ', sheets: {} } };   // bản thân nền: cu | to-da
+let thanNen = BASES[DATA.defaultBodyBase] ? DATA.defaultBodyBase : 'cu';
 const anh = {};                                     // đường dẫn sheet → Image đã kiểm
 const loiTai = [];
 const bat = {}; LAYER_ORDER.forEach(l => bat[l] = true);
@@ -123,7 +125,7 @@ const fps = DATA.fps || 20;
 function duongSheet(l) {
   if (KIND[l] === 'do') { const b = mac[SLOT_CUA[l]]; return b ? DATA.outfits[b].sheets[l] : null; }
   if (KIND[l] === 'giap') return giap && ARMOR[giap] ? (ARMOR[giap].sheets[l] || null) : null;
-  return DATA.sheets[l];
+  return (BASES[thanNen] && BASES[thanNen].sheets[l]) || DATA.sheets[l];
 }
 function character() {
   const layers = {};
@@ -300,6 +302,13 @@ for (const [t, p] of Object.entries(DATA.genFullRows || {})) themNut(presetNut, 
 
 // chọn riêng: áo / quần / giáp
 const doNut = document.getElementById('doNut');
+{
+  const hang = document.createElement('div'); hang.className = 'hang';
+  const t = document.createElement('span'); t.className = 'nhom'; t.textContent = 'Thân nền:'; hang.appendChild(t);
+  const TEN_NEN = { cu: 'Máy dựng cũ', 'to-da': 'Tô da (mới)' };
+  for (const [b, v] of Object.entries(BASES)) { const n = themNut(hang, TEN_NEN[b] || b, () => { tho = ''; thanNen = b; capNut(); ve(); }, { than: b }); n.title = v.name; }
+  doNut.appendChild(hang);
+}
 const tenBo = b => b === 'goc' ? 'Gốc' : b === 'moi' ? 'Máy vẽ' : b === 'gen-xanh' ? 'Xanh (gen)' : b;
 for (const slot of Object.keys(DATA.outfitSlots)) {
   const hang = document.createElement('div'); hang.className = 'hang';
@@ -317,6 +326,7 @@ for (const slot of Object.keys(DATA.outfitSlots)) {
 }
 function capNut() {
   doNut.querySelectorAll('button[data-slot]').forEach(b => b.classList.toggle('bat', !tho && mac[b.dataset.slot] === b.dataset.bo));
+  doNut.querySelectorAll('button[data-than]').forEach(b => b.classList.toggle('bat', !tho && thanNen === b.dataset.than));
   doNut.querySelectorAll('button[data-giap]').forEach(b => b.classList.toggle('bat', !tho && giap === b.dataset.giap));
   presetNut.querySelectorAll('button[data-preset]').forEach(b => {
     const p = PRESETS.find(x => x.id === b.dataset.preset);
@@ -334,6 +344,10 @@ capNut();
   for (const b of Object.keys(DATA.outfits)) {
     const key = 'ao_' + b + '+quan_' + b;
     if (b !== 'goc' && ck[0] && ck[0][key]) dong.push(tenBo(b) + ': lộ đồ cũ ' + cong(x => x[key].doGocKhongDuocPhu) + ', lộ thân trần ' + cong(x => x[key].thanTranLo) + ' điểm ảnh.');
+  }
+  if (ck[0] && ck[0].toDa) {
+    const lo = ck.reduce((a, x) => a + Object.values(x.toDa.lo).reduce((p, q) => p + q, 0), 0);
+    dong.push('Thân nền tô da: hình bóng lệch game ' + cong(x => x.toDa.hinhBongLech) + ' điểm ảnh; lộ dưới mọi bộ đồ ' + lo + ' điểm (' + Object.keys(ck[0].toDa.lo).length + ' tổ hợp đồ × ' + ck.length + ' khung).');
   }
   const gi = DATA.genImport;
   if (gi && gi.doXanh) dong.push('Đồ xanh (gen): ' + gi.doXanh.reduce((a, x) => a + x.lapConThay, 0) + ' / ' + gi.doXanh.reduce((a, x) => a + x.diemDoNhinThay, 0) + ' điểm đồ phải lấp vì ảnh gen lệch dáng.');
@@ -371,6 +385,7 @@ function baoLoi(msg) {
 const canTai = new Set(Object.values(DATA.sheets));
 for (const b of Object.values(DATA.outfits)) Object.values(b.sheets).forEach(p => canTai.add(p));
 for (const b of Object.values(ARMOR)) Object.values(b.sheets).forEach(p => canTai.add(p));
+for (const b of Object.values(BASES)) Object.values(b.sheets).forEach(p => canTai.add(p));
 Object.values(DATA.genFullRows || {}).forEach(p => canTai.add(p));
 for (const l of LAYER_ORDER) {
   if (KIND[l] === 'do') { for (const b of Object.keys(DATA.outfits)) if ((DATA.outfits[b].slots || []).includes(SLOT_CUA[l]) && !DATA.outfits[b].sheets[l]) baoLoi('bộ "' + b + '" thiếu lớp ' + l); }
