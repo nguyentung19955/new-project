@@ -44,7 +44,7 @@
     dop: { gan: 84, r: 80, span: 1.5, bao: 0.6, sat: 1.5, lai: 0.55, bao2: 0.5 }, // Đớp: em bé đứng gần đầu (< gan) thì hay đớp (quạt trước mặt, báo trước bao giây);
                                                        // em bé còn đứng gần thì đớp lần hai (nhắm lại, báo trước bao2)
     duoi: { phan: 0.33, bao: 1.15, lai: 0.55, sat: 1.6, lo: 0.3 }, // Quật đuôi: dải sát mép dày 33% bề dọc sân, quét mép phía em bé (báo trước bao) rồi quất ngược
-                                                       // sang mép kia sau lai giây (hai dải hiện cùng lúc từ đầu chiêu) — giữa sân (28%) luôn an toàn; mệt sau quét
+                                                       // sang mép kia sau lai giây (hai dải hiện cùng lúc từ đầu chiêu) — giữa sân (34%) luôn an toàn; mệt sau quét
     phun: { bao: 0.8, rong: 22, them: 30, sat: 1.3, so: 3, lan2: 0.5, bao2: 0.55, vet: { rong: 16, giay: 3, sat: 0.5 } }, // Phun nước đen (so lần: mỗi lần sau nhắm lại sau lan2 giây,
                                                        // báo trước bao2) + vệt độc (vũng: 0,3 × sat mỗi 0,5 giây)
     vom: { so: 3, rx: 30, giu: 2.0, sat: 1.5, chan: 7, cach: 64, gaiR: 44, gaiBao: 0.6, gaiSat: 1.0, phun: 1.1 }, // Vòng thân; gai: chống áp sát;
