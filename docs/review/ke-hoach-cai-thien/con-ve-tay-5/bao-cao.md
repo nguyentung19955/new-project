@@ -218,6 +218,37 @@ Pixel art, 1 row of 4 frames, flat #00FF00 background, 3/4 view: a bamboo pole w
 
 12. **Bốn quái Sông sâu** (`raiCa`, `diaTrau`, `cocTia`, `baBa`): bộ quái cùng quy cách sprite quái hiện có. Đây là việc lớn, theo phiên quái mới, không gen theo prompt ngắn.
 
+### Bổ sung (điều phối): các nhóm đã tắt mà mục trên chưa có prompt
+
+Chủ game dặn: mọi hình bị tắt đều phải có prompt.
+
+13. **`hu-sao-chop`**: sao chớp / tia lóe khi trúng, đổi vũ khí (thay `star`). Trắng để nhuộm.
+```
+Pixel art, 1 row of 5 frames, flat #00FF00 background: a small 4-point white star flash (#ffffff, #c8d0dc) popping open then shrinking to a dot, 20x20 px per frame, no outline, no text.
+```
+
+14. **`hu-vet-luot`**: vệt kéo theo khi lướt / lộn / vung (thay `quad` / `trailDraw`). Trắng để nhuộm, game xoay theo hướng.
+```
+Pixel art, 1 row of 4 frames, flat #00FF00 background, facing right: a white motion streak of 3 thin speed lines (#ffffff, #c8d0dc) tapering to the left and fading out, 40x16 px per frame, no outline, no text.
+```
+
+15. **`hu-tu-luc-vong`**: vòng tụ lực / nhịp lấy đà quanh chân Zed (thay `drawCharge` / `drawThrob`). Trắng để nhuộm.
+```
+Pixel art, 1 row of 6 looping frames, flat #00FF00 background, top-down: a white energy ring on the floor shrinking inward with small sparks, pulsing brighter each loop (#ffffff, #c8d0dc), 48x24 px per frame, no outline, no text.
+```
+
+16. **`hu-khoi-tron`**: khói tròn / mây hơi (thay `puffs`).
+```
+Pixel art, 1 row of 6 frames, flat #00FF00 background: a small round puff of grey-white smoke (#e8ecf0, #a8b0bc) expanding and fading away, 24x24 px per frame, dark outline #3a3f4a on the first 3 frames only, no text.
+```
+
+17. **`gd-cot-nang-<rung|bien|lau|song>`**: cột nắng chéo / quầng sáng trên sàn (thay `lightPass` / `shaft` / `glow`).
+```
+Pixel art, 1 frame, flat #00FF00 background, top-down: a soft diagonal sunbeam falling on a forest floor, warm pale yellow (#fff4b0) at 25% opacity in 3 hard pixel steps, 48x96 px, no outline, no text.
+```
+
+Viền sáng quanh Zed (`vienBe`) không cần ảnh: thân Zed đã có viền tối trong sprite.
+
 ## 5. Ảnh soát (thư mục này)
 
 - `truoc-sau-canh-chu-nhan.png`, `canh-chu-nhan-truoc.png`, `canh-chu-nhan-sau.png`: cảnh như ảnh chụp.
