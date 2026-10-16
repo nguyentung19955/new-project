@@ -1,0 +1,421 @@
+{
+ "action": "trung",
+ "gameKey": "trung",
+ "gameRow": {
+  "key": "trung",
+  "hang": 4,
+  "so": 4,
+  "giay": 0.2,
+  "lap": false
+ },
+ "frameCount": 4,
+ "fps": 20.0,
+ "frameWidth": 96,
+ "frameHeight": 96,
+ "pivot": [
+  48,
+  90
+ ],
+ "coordinateSystem": "Điểm ảnh ô 96×96, gốc góc trên-trái, x phải, y xuống; chân (48,90). Quy đổi từ ảnh nguồn như tach_lop.doi_diem: X96 = dx + (x+0.5)·sx − 0.5 (sx, dx, dy của chính khung đó, lấy lại từ dung-zed-game.py).",
+ "frames": [
+  {
+   "frame": 0,
+   "joints": {
+    "neck": [
+     35.0,
+     52.7
+    ],
+    "head": [
+     33.6,
+     46.4
+    ],
+    "headTop": [
+     23.0,
+     34.7
+    ],
+    "chin": [
+     38.3,
+     49.7
+    ],
+    "shoulderFront": [
+     29.6,
+     58.2
+    ],
+    "elbowFront": [
+     27.4,
+     63.1
+    ],
+    "wristFront": [
+     32.8,
+     65.8
+    ],
+    "handFront": [
+     35.0,
+     67.1
+    ],
+    "shoulderBack": [
+     43.1,
+     54.4
+    ],
+    "elbowBack": [
+     49.7,
+     56.2
+    ],
+    "wristBack": [
+     56.2,
+     56.5
+    ],
+    "handBack": [
+     60.0,
+     56.2
+    ],
+    "hipFront": [
+     37.2,
+     70.2
+    ],
+    "kneeFront": [
+     33.9,
+     77.3
+    ],
+    "ankleFront": [
+     32.8,
+     83.8
+    ],
+    "toeFront": [
+     32.3,
+     87.8
+    ],
+    "hipBack": [
+     46.4,
+     70.2
+    ],
+    "kneeBack": [
+     52.9,
+     76.7
+    ],
+    "ankleBack": [
+     58.3,
+     83.8
+    ],
+    "toeBack": [
+     65.4,
+     87.1
+    ],
+    "hipCenter": [
+     41.8,
+     70.2
+    ],
+    "beltTop": [
+     41.8,
+     59.0
+    ],
+    "waist": [
+     37.4,
+     59.0
+    ]
+   }
+  },
+  {
+   "frame": 1,
+   "joints": {
+    "neck": [
+     36.5,
+     52.5
+    ],
+    "head": [
+     34.0,
+     46.2
+    ],
+    "headTop": [
+     22.4,
+     36.9
+    ],
+    "chin": [
+     40.3,
+     50.0
+    ],
+    "shoulderFront": [
+     32.1,
+     58.7
+    ],
+    "elbowFront": [
+     30.2,
+     64.7
+    ],
+    "wristFront": [
+     34.9,
+     68.0
+    ],
+    "handFront": [
+     36.5,
+     69.3
+    ],
+    "shoulderBack": [
+     48.4,
+     54.9
+    ],
+    "elbowBack": [
+     53.8,
+     57.3
+    ],
+    "wristBack": [
+     60.3,
+     58.2
+    ],
+    "handBack": [
+     63.0,
+     57.3
+    ],
+    "hipFront": [
+     37.6,
+     72.4
+    ],
+    "kneeFront": [
+     34.5,
+     79.0
+    ],
+    "ankleFront": [
+     33.2,
+     85.5
+    ],
+    "toeFront": [
+     32.1,
+     89.4
+    ],
+    "hipBack": [
+     48.4,
+     71.3
+    ],
+    "kneeBack": [
+     59.2,
+     77.9
+    ],
+    "ankleBack": [
+     62.5,
+     85.0
+    ],
+    "toeBack": [
+     69.0,
+     88.8
+    ],
+    "hipCenter": [
+     43.0,
+     71.8
+    ],
+    "beltTop": [
+     43.0,
+     59.3
+    ],
+    "waist": [
+     38.8,
+     59.3
+    ]
+   }
+  },
+  {
+   "frame": 2,
+   "joints": {
+    "neck": [
+     50.8,
+     56.5
+    ],
+    "head": [
+     51.1,
+     49.7
+    ],
+    "headTop": [
+     48.1,
+     30.3
+    ],
+    "chin": [
+     55.2,
+     54.7
+    ],
+    "shoulderFront": [
+     37.8,
+     57.2
+    ],
+    "elbowFront": [
+     34.5,
+     60.5
+    ],
+    "wristFront": [
+     41.6,
+     62.3
+    ],
+    "handFront": [
+     43.2,
+     63.4
+    ],
+    "shoulderBack": [
+     51.9,
+     58.0
+    ],
+    "elbowBack": [
+     56.3,
+     62.9
+    ],
+    "wristBack": [
+     59.0,
+     59.9
+    ],
+    "handBack": [
+     61.1,
+     57.2
+    ],
+    "hipFront": [
+     43.8,
+     71.8
+    ],
+    "kneeFront": [
+     38.3,
+     78.3
+    ],
+    "ankleFront": [
+     34.5,
+     84.2
+    ],
+    "toeFront": [
+     32.9,
+     88.0
+    ],
+    "hipBack": [
+     53.5,
+     71.8
+    ],
+    "kneeBack": [
+     60.1,
+     77.2
+    ],
+    "ankleBack": [
+     56.3,
+     84.2
+    ],
+    "toeBack": [
+     61.1,
+     88.0
+    ],
+    "hipCenter": [
+     48.6,
+     71.8
+    ],
+    "beltTop": [
+     48.6,
+     64.0
+    ],
+    "waist": [
+     48.7,
+     64.0
+    ]
+   }
+  },
+  {
+   "frame": 3,
+   "joints": {
+    "neck": [
+     51.4,
+     56.1
+    ],
+    "head": [
+     53.4,
+     50.2
+    ],
+    "headTop": [
+     49.3,
+     29.9
+    ],
+    "chin": [
+     55.2,
+     54.0
+    ],
+    "shoulderFront": [
+     41.1,
+     57.5
+    ],
+    "elbowFront": [
+     40.0,
+     62.1
+    ],
+    "wristFront": [
+     48.2,
+     59.9
+    ],
+    "handFront": [
+     50.9,
+     58.8
+    ],
+    "shoulderBack": [
+     54.7,
+     58.0
+    ],
+    "elbowBack": [
+     57.4,
+     62.6
+    ],
+    "wristBack": [
+     61.2,
+     59.9
+    ],
+    "handBack": [
+     63.2,
+     57.2
+    ],
+    "hipFront": [
+     44.9,
+     71.8
+    ],
+    "kneeFront": [
+     38.4,
+     77.7
+    ],
+    "ankleFront": [
+     35.1,
+     84.2
+    ],
+    "toeFront": [
+     32.9,
+     88.0
+    ],
+    "hipBack": [
+     55.8,
+     71.8
+    ],
+    "kneeBack": [
+     61.2,
+     77.2
+    ],
+    "ankleBack": [
+     58.0,
+     84.2
+    ],
+    "toeBack": [
+     62.3,
+     88.0
+    ],
+    "hipCenter": [
+     50.3,
+     71.8
+    ],
+    "beltTop": [
+     50.3,
+     64.0
+    ],
+    "waist": [
+     49.8,
+     64.0
+    ]
+   }
+  }
+ ],
+ "source": {
+  "sheet": "game/art/custom/zed-moi.sprite.json, dong_tac.trung (hàng 4, 4 khung, 0.20 giây/lượt, không lặp)",
+  "highRes": "docs/anh-goc/zed/moi/05-trung-don-gif/05-trung-don/khung-01..04.png",
+  "manual": "rig/dong-tac/trung/khop-tay.json",
+  "auto": "head = tâm mảng da mặt (như dung-zed-game.do_dau) trừ khi khop-tay ghi \"dau\"; hipCenter = giữa 2 hông nếu không ghi; beltTop/waist như tao-bo.khop_va_neo"
+ },
+ "hidden": {},
+ "notes": [
+  "Khung 1–2: đầu bật ngửa ra sau (đỉnh đầu lệch hẳn sang trái, cằm hếch lên); khung 3–4: đầu cúi lại, tay sau giơ nắm đấm thủ thế.",
+  "Khung 4: tâm mặt ghi tay (máy dò mảng da lấy nhầm tai). Không khớp nào bị che hẳn; khuỷu tay sau là chỗ kém chắc nhất (bắp tay và cẳng tay gần thẳng hàng)."
+ ]
+}

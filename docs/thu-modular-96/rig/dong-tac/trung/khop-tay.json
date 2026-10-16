@@ -1,0 +1,22 @@
+{
+  "ghi_chu": "Khớp đánh tay (bằng mắt, lưới 10 điểm ảnh) trên ẢNH NGUỒN CAO docs/anh-goc/zed/moi/05-trung-don-gif/05-trung-don/khung-XX.png (toạ độ điểm ảnh ảnh khung, gốc trên-trái). Tay TRƯỚC = tay lộ bắp tay trần bên trái, vẽ đè lên thân, nắm tay trước bụng/ngực; tay SAU = tay giơ sang phải (nắm tay xa). Hai chân dạng ra, không chồng nhau: chân TRƯỚC = chân bên trái hình (cùng phía tay trước, phía gần người xem khi thân xoay 3/4), chân SAU = chân bên phải.",
+  "khung": [
+    {"dinh":[115,75],"cam":[255,212],"co":[225,240],"daiTren":298,
+     "vaiT":[175,290],"khuyuT":[155,335],"coTayT":[205,360],"banTayT":[225,372],"vaiS":[300,255],"khuyuS":[360,272],"coTayS":[420,275],"banTayS":[455,272],
+     "hongT":[245,400],"goiT":[215,465],"coChanT":[205,525],"muiChanT":[200,562],"hongS":[330,400],"goiS":[390,460],"coChanS":[440,525],"muiChanS":[505,555]},
+    {"dinh":[100,85],"cam":[265,205],"co":[230,228],"daiTren":290,
+     "vaiT":[190,285],"khuyuT":[172,340],"coTayT":[215,370],"banTayT":[230,382],"vaiS":[340,250],"khuyuS":[390,272],"coTayS":[450,280],"banTayS":[475,272],
+     "hongT":[240,410],"goiT":[212,470],"coChanT":[200,530],"muiChanT":[190,565],"hongS":[340,400],"goiS":[440,460],"coChanS":[470,525],"muiChanS":[530,560]},
+    {"dinh":[180,25],"cam":[245,252],"co":[205,268],"daiTren":338,
+     "vaiT":[85,275],"khuyuT":[55,305],"coTayT":[120,322],"banTayT":[135,332],"vaiS":[215,282],"khuyuS":[255,328],"coTayS":[280,300],"banTayS":[300,275],
+     "hongT":[140,410],"goiT":[90,470],"coChanT":[55,525],"muiChanT":[40,560],"hongS":[230,410],"goiS":[290,460],"coChanS":[255,525],"muiChanS":[300,560]},
+    {"dau":[228,210],"dinh":[190,22],"cam":[245,245],"co":[210,265],"daiTren":338,
+     "vaiT":[115,278],"khuyuT":[105,320],"coTayT":[180,300],"banTayT":[205,290],"vaiS":[240,282],"khuyuS":[265,325],"coTayS":[300,300],"banTayS":[318,275],
+     "hongT":[150,410],"goiT":[90,465],"coChanT":[60,525],"muiChanT":[40,560],"hongS":[250,410],"goiS":[300,460],"coChanS":[270,525],"muiChanS":[310,560]}
+  ],
+  "an": {},
+  "ghi_chu_ra": [
+    "Khung 1–2: đầu bật ngửa ra sau (đỉnh đầu lệch hẳn sang trái, cằm hếch lên); khung 3–4: đầu cúi lại, tay sau giơ nắm đấm thủ thế.",
+    "Khung 4: tâm mặt ghi tay (máy dò mảng da lấy nhầm tai). Không khớp nào bị che hẳn; khuỷu tay sau là chỗ kém chắc nhất (bắp tay và cẳng tay gần thẳng hàng)."
+  ]
+}
