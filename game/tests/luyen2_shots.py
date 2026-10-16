@@ -1,7 +1,7 @@
 """Ảnh soát TĨNH giao diện Luyện vũ khí phiên 2 (docs/review/ke-hoach-cai-thien/luyen-vu-khi/bao-cao-2.md). Không chơi thử: đặt bản lưu rồi vẽ
 đúng một khung hình (vòng lặp game dừng, như tests/luyen_shots.py), chụp VI + EN, mỗi cảnh một ảnh.
 
-  python3 tests/luyen2_shots.py [--out <thư mục>] [--nguon]   (mặc định docs/review/ke-hoach-cai-thien/luyen-vu-khi/anh-phien-2/)
+  python3 tests/luyen2_shots.py [--out <thư mục>] [--nguon]   (mặc định docs/review/ke-hoach-cai-thien/luyen-vu-khi/anh-phien-2/, ảnh JPG)
   Mặc định mở dist/linh-khi.html (chạy python3 build.py trước); --nguon: mở index.html (mã nguồn, thiếu ảnh).
 
 Cảnh: Ông Thợ Rèn ở cấp 2 / 5 (khoá trần) / 8 / 14 / 15, khoá thiếu mảnh, 3 kiểu ăn mừng, Hành trang › Vũ khí, thanh tài nguyên ở làng,
@@ -140,6 +140,11 @@ def main():
         chup(pg3, "LK.dat('%s', 1, 7, 'fire', (V, A) => { A.goHub(); })", 'vi', 'luyen0-thanh-lang', OUT)
         print('chụp ?luyen=0 (thanh làng %d ô)' % top0)
         br.close()
+    # đổi ra JPG (nhẹ hơn PNG ~4 lần) cho thư mục docs
+    for f in sorted(os.listdir(OUT)):
+        if f.endswith('.png'):
+            Image.open(os.path.join(OUT, f)).convert('RGB').save(os.path.join(OUT, f[:-4] + '.jpg'), quality=88)
+            os.remove(os.path.join(OUT, f))
     print('--- chữ chưa dịch: %d' % len(th))
     for s in th: print('  ', s)
     print('--- chữ bị cắt "…" (T.chuDo.cat): %s' % cat)

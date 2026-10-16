@@ -48,7 +48,7 @@
     'Đã luyện tối đa': 'Fully tempered', 'Đến Ông Thợ Rèn để chọn hệ': 'Pick an element at the Smith',
     'Lò rèn đã gộp thành Luyện vũ khí': 'The forge is now Tempering', 'Vũ khí của Cu Tí': "Cu Tí's weapons", 'Được hoàn lại': 'Refunded',
     'Quặng, đá, bùa cũ đổi ra': 'Old ore, stones, wards became', 'Luyện chắc chắn thành công, không tụt cấp. Mở bảng ở Ông Thợ Rèn.': 'Tempering always succeeds and never drops a level. Open it at the Smith.',
-    'Đã hiểu': 'Got it', 'Trùm +16%': 'Boss +16%', 'Hồi chiêu −12%': 'CD −12%', 'Không có gì để hoàn.': 'Nothing to refund.', 'Nguyên liệu rèn': 'Forge materials', 'Linh khí': 'Spirit',
+    'Đã hiểu': 'Got it', 'Chí mạng': 'Crit', 'Trùm': 'Bosses', 'Hồi chiêu': 'Cooldown', 'Không có gì để hoàn.': 'Nothing to refund.', 'Nguyên liệu rèn': 'Forge materials', 'Linh khí': 'Spirit',
   });
 
   if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({
@@ -160,10 +160,11 @@
     c.fillStyle = '#d8c9a0'; c.fillRect(x - 4.5, y - 2, 9, 7);
     c.fillStyle = '#3a2a1a'; c.fillRect(x - 0.7, y, 1.4, 3);
   }
+  function muiLen(x, y) { const c = G.ux; c.fillStyle = GOOD; c.beginPath(); c.moveTo(x, y); c.lineTo(x + 3.5, y + 5); c.lineTo(x - 3.5, y + 5); c.closePath(); c.fill(); }
   // Ô vũ khí hiện tại (khung theo cấp + hình + số góc tự vẽ qua VM.icon)
   function veO(w, x, y, s, icon) { G.oBacVk(x, y, s, w); if (G.art && G.art.weaponIcon) G.art.weaponIcon(G.ux, w, x + s / 2, y + s / 2, icon || s - 6); }
 
-  const VM_NGAN = { chiMang: 'Chí mạng +8%', trum: 'Trùm +16%', hoiChieu: 'Hồi chiêu −12%' }; // chữ trên nút dòng Viên mãn (dòng đầy đủ ở trên nút)
+  const VM_NGAN = { chiMang: 'Chí mạng', trum: 'Trùm', hoiChieu: 'Hồi chiêu' }; // chữ trên nút dòng Viên mãn (dòng đã chọn ghi đủ ở trên)
   // ---------- 1. bảng Ông Thợ Rèn ----------
   const U = L.ui; // { sel } của phiên 1
   U.doi = null; U.nut = {};
@@ -186,10 +187,11 @@
       const du = L.duoc(sv, w, w.branch || 'fire') === '' || L.choChonHe(w);
       Th.inset(x, ty, lw, th, chon);
       veO(w, x + 3, ty + 4, 29, 23);
-      chu(HT && HT.tenW ? G.tv(HT.tenW(w)) : tenLoai(w), x + 35, ty + 3, lw - 38, 17, { size: 7, min: 5.5, bold: true, dong: 2, color: mauKhung(lv) });
-      chu(G.t('Lv {0}/{1}', lv, MAX) + (Eh ? ' · ' + G.tv(Eh.name) : ''), x + 35, ty + 20, lw - 38, 9, { size: 6.2, min: 5, color: SOFT });
-      ui.bar(x + 35, ty + 30, lw - 40, 3, td.frac, td.mk ? (du ? '#ffd23f' : '#c9a24a') : GOOD);
-      if (du) ui.text('▲', x + lw - 4, ty + 10, { size: 7.5, bold: true, align: 'right', color: GOOD });
+      // tên (1–2 dòng) + "Lv N/15 · hệ" là một khối nằm giữa lòng ô (T.chuO, can-chu-khung); thanh tiến độ tới mốc ở thẻ phải
+      Th.chuO(HT && HT.tenW ? G.tv(HT.tenW(w)) : tenLoai(w), x, ty, lw, th, { sel: chon, vung: [x + 35, ty, lw - 38, th], align: 'left', size: 7, min: 5.5, bold: true, dong: 2, gian: 1, color: mauKhung(lv),
+        phu: { s: G.t('Lv {0}/{1}', lv, MAX) + (Eh ? ' · ' + G.tv(Eh.name) : ''), size: 6.3, bold: false, color: SOFT } });
+      void td;
+      if (du) muiLen(x + lw - 7, ty + 6); // dấu "luyện được" (hình, không phải chữ: không tính vào khối chữ giữa ô)
       if (bam(x, ty, lw, th)) { if (U.sel !== w.id) { U.sel = w.id; U.doi = null; if (G.sfx) G.sfx('ui'); } }
     });
     // thẻ phải
@@ -199,7 +201,7 @@
     const lv = L.cap(w), c = L.gia(lv + 1), st = G.wStage(w), el = st > 0 && G.EL[w.branch] ? w.branch : null, Eh = el ? G.EL[el] : null;
     const lvl = sv.heroes && sv.heroes[sv.hero] ? sv.heroes[sv.hero].lvl : 1, d0 = G.wBase(w, lvl);
     const why = c ? L.duoc(sv, w, w.branch || 'fire') : 'max', khoa = c ? L.khoa(sv, w) : '', td = L.tienDo(w), mk = td.mk;
-    chu(G.wName(w), cx + 5, top + 2, cw - 10, 11, { size: 8, min: 6.5, bold: true, color: mauKhung(lv) });
+    Th.chuO(G.wName(w), cx, top, cw, ch, { align: 'left', vung: [cx + 4, top, cw - 8, 13], size: 8, min: 6.5, bold: true, color: mauKhung(lv) }); // dòng đầu trong lòng ô (không đè đinh góc)
     chu([G.tv(G.STAGE_NAMES[st]) + (Eh ? ' · ' + G.tv(Eh.name) : ''), G.t('Lv {0}/{1}', lv, MAX), G.t('Đòn {0}', so1(d0))].join(' · '), cx + 5, top + 13, cw - 10, 9, { size: 6.3, min: 5, color: SOFT });
     // hình hiện tại ▶ hình mốc kế
     const iy = top + 23, ih = 34, ix1 = cx + 8, ix2 = cx + cw - 8 - ih;
@@ -237,19 +239,19 @@
       chu(G.t('Đã chọn dòng: {0}', L.chuDong(dong)), cx + 6, yd + 8.5, cw - 12, 10, { size: 6.3, min: 5, color: GOLD });
     }
     // dòng giá / khoá
-    const yg = top + ch - 48, b1 = top + ch - 36, b2 = top + ch - 18, bx = cx + 5, bw = cw - 10;
+    const yg = top + ch - 50, b1 = top + ch - 38, b2 = top + ch - 19, bx = cx + 5, bw = cw - 10, H1 = 18, H2 = 17; // nút cao 17–18: chữ có dấu không chạm viền (can-chu-khung)
     if (o.ro) return top + ch;
     const doiHe = U.doi === w.id && st >= 1 && VM;
     if (doiHe) {
       const cd = VM.giaDoiHe(st), hw = (bw - 4) / 2;
       chu(G.t('Đổi hệ: {0} linh khí', cd), bx, yg, bw, 10, { size: 6.5, color: lk(sv) < cd ? WARN : SOFT });
       ELS.filter((e) => e !== w.branch).forEach((e, i) => {
-        ghiNut('doi-' + e, bx + i * (hw + 4), b1, hw, 15);
-        if (Th.sbtn(bx + i * (hw + 4), b1, hw, 15, G.t('{0} · {1}', G.tv(G.EL[e].name), cd), { size: 7, pad: 1, primary: true, disabled: lk(sv) < cd })) {
+        ghiNut('doi-' + e, bx + i * (hw + 4), b1, hw, H1);
+        if (Th.sbtn(bx + i * (hw + 4), b1, hw, H1, G.t('{0} · {1}', G.tv(G.EL[e].name), cd), { size: 7, pad: 1, primary: true, disabled: lk(sv) < cd })) {
           if (VM.doiHe(sv, w, e)) { U.doi = null; G.persist(); if (G.sfx) G.sfx('evolve'); say(G.t('{0} theo hệ {1}.', tenLoai(w), G.tv(G.EL[e].name))); }
         }
       });
-      if (Th.sbtn(bx, b2, hw, 15, 'Thôi', { size: 7, pad: 1 })) U.doi = null;
+      if (Th.sbtn(bx, b2, hw, H2, 'Thôi', { size: 7, pad: 1 })) U.doi = null;
       return top + ch;
     }
     const lam = (e) => {
@@ -264,15 +266,15 @@
       const hw = (bw - 8) / 3;
       Object.keys(CF.vm).forEach((m, i) => {
         const on = L.dongVM(w) === m;
-        ghiNut('vm-' + m, bx + i * (hw + 4), b1, hw, 15);
-        if (Th.sbtn(bx + i * (hw + 4), b1, hw, 15, VM_NGAN[m] || L.chuDong(m), { size: 6.5, pad: 1, sel: on }) && !on) { L.datDong(w, m); G.persist(); say(G.t('Đã chọn dòng: {0}', L.chuDong(m))); }
+        ghiNut('vm-' + m, bx + i * (hw + 4), b1, hw, H1);
+        if (Th.sbtn(bx + i * (hw + 4), b1, hw, H1, VM_NGAN[m] || L.chuDong(m), { size: 7, pad: 1, sel: on }) && !on) { L.datDong(w, m); G.persist(); say(G.t('Đã chọn dòng: {0}', L.chuDong(m))); }
       });
     } else if (L.choChonHe(w)) { // bản lưu cũ Trắng đổi lên ≥ 3: chọn hệ miễn phí
       chu('Chọn hệ cho vũ khí (miễn phí)', bx, yg, bw, 10, { size: 6.5, bold: true, color: GOLD });
       const hw = (bw - 8) / 3;
       ELS.forEach((e, i) => {
-        ghiNut('he-' + e, bx + i * (hw + 4), b1, hw, 15);
-        if (Th.sbtn(bx + i * (hw + 4), b1, hw, 15, G.tv(G.EL[e].name), { size: 7, pad: 1, primary: true })) {
+        ghiNut('he-' + e, bx + i * (hw + 4), b1, hw, H1);
+        if (Th.sbtn(bx + i * (hw + 4), b1, hw, H1, G.tv(G.EL[e].name), { size: 7, pad: 1, primary: true })) {
           if (L.chonHe(sv, w, e)) { G.persist(); if (G.sfx) G.sfx('evolve'); say(G.t('{0} theo hệ {1}.', tenLoai(w), G.tv(G.EL[e].name))); }
         }
       });
@@ -288,19 +290,19 @@
         const hw = (bw - 8) / 3;
         ELS.forEach((e, i) => {
           const r = L.duoc(sv, w, e);
-          ghiNut('luyen-' + e, bx + i * (hw + 4), b1, hw, 16);
-          if (Th.sbtn(bx + i * (hw + 4), b1, hw, 16, G.t('Luyện · {0}', G.tv(G.EL[e].name)), { size: 7, pad: 1, primary: !r, disabled: !!r })) lam(e);
+          ghiNut('luyen-' + e, bx + i * (hw + 4), b1, hw, H1); // lên Mầm: nút là tên hệ (dòng trên đã ghi "Lên Lv 3" và giá)
+          if (Th.sbtn(bx + i * (hw + 4), b1, hw, H1, G.tv(G.EL[e].name), { size: 7.5, pad: 1, primary: !r, disabled: !!r })) lam(e);
         });
       } else {
-        ghiNut('luyen', bx, b1, bw, 16);
-        if (Th.sbtn(bx, b1, bw, 16, G.t('Luyện lên {0} · {1}', lv + 1, gia), { size: 7.5, pad: 1, primary: !why, disabled: !!why })) lam(null);
+        ghiNut('luyen', bx, b1, bw, H1);
+        if (Th.sbtn(bx, b1, bw, H1, G.t('Luyện lên {0} · {1}', lv + 1, gia), { size: 7, pad: 1, primary: !why, disabled: !!why })) lam(null);
       }
     }
     // hàng dưới: đổi hệ · cầm đầu
     const hw = (bw - 4) / 2, dau = sv.carry && sv.carry[0] === w.id;
-    if (st >= 1 && VM) { ghiNut('doiHe', bx, b2, hw, 15); if (Th.sbtn(bx, b2, hw, 15, G.t('Đổi hệ · {0}', VM.giaDoiHe(st)), { size: 7, pad: 1 })) U.doi = w.id; }
-    if (dau) chu('Đang cầm đầu', bx + hw + 4, b2 + 2, hw, 11, { size: 6.5, bold: true, color: GOOD, align: 'center' });
-    else if (VM) { ghiNut('camDau', bx + hw + 4, b2, hw, 15); if (Th.sbtn(bx + hw + 4, b2, hw, 15, 'Cầm đầu', { size: 7, pad: 1 })) { VM.camDau(sv, w.type); G.persist(); if (G.sfx) G.sfx('pick'); say(G.t('Vào ải sẽ cầm {0} trước.', tenLoai(w))); } }
+    if (st >= 1 && VM) { ghiNut('doiHe', bx, b2, hw, H2); if (Th.sbtn(bx, b2, hw, H2, G.t('Đổi hệ · {0}', VM.giaDoiHe(st)), { size: 7, pad: 1 })) U.doi = w.id; }
+    if (dau) chu('Đang cầm đầu', bx + hw + 4, b2 + 3, hw, 11, { size: 6.5, bold: true, color: GOOD, align: 'center' });
+    else if (VM) { ghiNut('camDau', bx + hw + 4, b2, hw, H2); if (Th.sbtn(bx + hw + 4, b2, hw, H2, 'Cầm đầu', { size: 7, pad: 1 })) { VM.camDau(sv, w.type); G.persist(); if (G.sfx) G.sfx('pick'); say(G.t('Vào ải sẽ cầm {0} trước.', tenLoai(w))); } }
     return top + ch;
   }
 
@@ -469,10 +471,10 @@
       Th.resIcon('nlr', xi, yy + 1, 8); ui.text(soN(b.vi), xi + 10, yy + 8, { size: 7, bold: true, color: TXT, tiny: true });
       yy += 12;
     }
-    ghiNut('baoOk', x + W / 2 - 45, y + H - 22, 90, 16);
-    const ok = ck && G.inRect(ck, x + W / 2 - 45 - 3, y + H - 22 - 3, 96, 22);
+    ghiNut('baoOk', x + W / 2 - 45, y + H - 24, 90, 18);
+    const ok = ck && G.inRect(ck, x + W / 2 - 45 - 3, y + H - 24 - 3, 96, 24);
     G.click = ck && ok ? ck : null;
-    const bam1 = Th.sbtn(x + W / 2 - 45, y + H - 22, 90, 16, 'Đã hiểu', { size: 8, pad: 1, primary: true });
+    const bam1 = Th.sbtn(x + W / 2 - 45, y + H - 24, 90, 18, 'Đã hiểu', { size: 8, pad: 1, primary: true });
     G.click = null;
     return bam1 || ok;
   };
