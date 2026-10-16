@@ -1,0 +1,5420 @@
+{
+ "crop": {
+  "x": 14,
+  "y": 20,
+  "w": 56,
+  "h": 74
+ },
+ "pieces": [
+  {
+   "id": "vaiSau",
+   "name": "Giáp vai sau",
+   "ok": true,
+   "image": "giap-vai",
+   "x2": true
+  },
+  {
+   "id": "cangTaySau",
+   "name": "Giáp cẳng tay sau",
+   "ok": true,
+   "image": "giap-cang-tay",
+   "x2": true
+  },
+  {
+   "id": "chupVaiSau",
+   "name": "Chụp vai sau",
+   "ok": true,
+   "image": "chup-vai",
+   "x2": true
+  },
+  {
+   "id": "chupKhuyuSau",
+   "name": "Chụp khuỷu sau",
+   "ok": true,
+   "image": "chup-khuyu",
+   "x2": true
+  },
+  {
+   "id": "ongChanSau",
+   "name": "Giáp ống chân sau",
+   "ok": true,
+   "image": "giap-ong-chan",
+   "x2": true
+  },
+  {
+   "id": "chupGoiSau",
+   "name": "Chụp gối sau",
+   "ok": true,
+   "image": "chup-goi",
+   "x2": true
+  },
+  {
+   "id": "nguc",
+   "name": "Giáp ngực nhỏ",
+   "ok": true,
+   "image": "giap-nguc",
+   "x2": true
+  },
+  {
+   "id": "ongChanTruoc",
+   "name": "Giáp ống chân trước",
+   "ok": true,
+   "image": "giap-ong-chan",
+   "x2": true
+  },
+  {
+   "id": "chupGoiTruoc",
+   "name": "Chụp gối trước",
+   "ok": true,
+   "image": "chup-goi",
+   "x2": true
+  },
+  {
+   "id": "cangTayTruoc",
+   "name": "Giáp cẳng tay trước",
+   "ok": true,
+   "image": "giap-cang-tay",
+   "x2": true
+  },
+  {
+   "id": "vaiTruoc",
+   "name": "Giáp vai trước",
+   "ok": true,
+   "image": "giap-vai",
+   "x2": true
+  },
+  {
+   "id": "chupKhuyuTruoc",
+   "name": "Chụp khuỷu trước",
+   "ok": true,
+   "image": "chup-khuyu",
+   "x2": true
+  },
+  {
+   "id": "chupVaiTruoc",
+   "name": "Chụp vai trước",
+   "ok": true,
+   "image": "chup-vai",
+   "x2": true
+  }
+ ],
+ "warns": [],
+ "summary": {
+  "may": {
+   "frames": 12,
+   "bamOk": 9,
+   "rung": 8,
+   "nhay8": 2,
+   "meo": 10,
+   "ho": 9,
+   "gapBefore": 48,
+   "gapAfter": 12
+  },
+  "gen": {
+   "frames": 12,
+   "bamOk": 4,
+   "rung": 11,
+   "nhay8": 9,
+   "meo": 12,
+   "ho": 7,
+   "gapBefore": 45,
+   "gapAfter": 8
+  }
+ },
+ "frames": {
+  "may": [
+   {
+    "frame": 1,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [],
+      "rung": [
+       "Giáp ống chân sau xoay gắt 74°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 42.1844433157888,
+        "used": 42.1844433157888,
+        "sx": 0.75,
+        "raw": 0.7197607627229722,
+        "clamped": true,
+        "lost": 0,
+        "total": 44,
+        "px": 46,
+        "endErr": 0.18143480534143355,
+        "dPrev": 1.8703431552915006
+       },
+       "cangTaySau": {
+        "theta": -13.736268305622588,
+        "used": -13.736268305622588,
+        "sx": 0.8422716234109433,
+        "raw": 0.8422716234109433,
+        "clamped": false,
+        "lost": -3,
+        "total": 26,
+        "px": 29,
+        "endErr": 1.7028844312741058e-06,
+        "dPrev": -1.8476102659945894
+       },
+       "ongChanSau": {
+        "theta": -136.7013546053262,
+        "used": -136.7013546053262,
+        "sx": 1.0207040387369282,
+        "raw": 1.0207040387369282,
+        "clamped": false,
+        "lost": -8,
+        "total": 38,
+        "px": 51,
+        "endErr": 2.103718861181288e-06,
+        "dPrev": 74.39595828045321
+       },
+       "ongChanTruoc": {
+        "theta": 81.86989764584405,
+        "used": 81.86989764584405,
+        "sx": 0.9091372900969912,
+        "raw": 0.9091372900969912,
+        "clamped": false,
+        "lost": -5,
+        "total": 38,
+        "px": 43,
+        "endErr": 1.601205004091046e-06,
+        "dPrev": -19.64393353864294
+       },
+       "cangTayTruoc": {
+        "theta": 98.13010235415601,
+        "used": 98.13010235415601,
+        "sx": 0.8999540851465162,
+        "raw": 0.8999540851465162,
+        "clamped": false,
+        "lost": -7,
+        "total": 26,
+        "px": 33,
+        "endErr": 7.668929277040369e-07,
+        "dPrev": -3.814074834290338
+       },
+       "vaiTruoc": {
+        "theta": 145.61965527615513,
+        "used": 145.61965527615513,
+        "sx": 1.151086443322133,
+        "raw": 1.151086443322133,
+        "clamped": false,
+        "lost": -9,
+        "total": 44,
+        "px": 60,
+        "endErr": 2.1207717795850913e-06,
+        "dPrev": 7.606867771971764
+       }
+      }
+     },
+     {
+      "bam": [],
+      "meo": [],
+      "rung": [
+       "Giáp ống chân sau xoay gắt 90°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 42.1844433157888,
+        "used": 45,
+        "sx": 0.75,
+        "raw": 0.7197607627229722,
+        "clamped": true,
+        "lost": 4,
+        "total": 44,
+        "px": 46,
+        "endErr": 0.2825565396883823,
+        "dPrev": 0
+       },
+       "cangTaySau": {
+        "theta": -13.736268305622588,
+        "used": -0.0,
+        "sx": 0.8422716234109433,
+        "raw": 0.8422716234109433,
+        "clamped": false,
+        "lost": 4,
+        "total": 26,
+        "px": 22,
+        "endErr": 1.1079492514849392,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": -136.7013546053262,
+        "used": -135,
+        "sx": 1.0207040387369282,
+        "raw": 1.0207040387369282,
+        "clamped": false,
+        "lost": -8,
+        "total": 38,
+        "px": 52,
+        "endErr": 0.21215544861780883,
+        "dPrev": 90
+       },
+       "ongChanTruoc": {
+        "theta": 81.86989764584405,
+        "used": 90,
+        "sx": 0.9091372900969912,
+        "raw": 0.9091372900969912,
+        "clamped": false,
+        "lost": 4,
+        "total": 38,
+        "px": 34,
+        "endErr": 0.9022690627134877,
+        "dPrev": 0
+       },
+       "cangTayTruoc": {
+        "theta": 98.13010235415601,
+        "used": 90,
+        "sx": 0.8999540851465162,
+        "raw": 0.8999540851465162,
+        "clamped": false,
+        "lost": 2,
+        "total": 26,
+        "px": 24,
+        "endErr": 0.7017662546893155,
+        "dPrev": 0
+       },
+       "vaiTruoc": {
+        "theta": 145.61965527615513,
+        "used": 135,
+        "sx": 1.151086443322133,
+        "raw": 1.151086443322133,
+        "clamped": false,
+        "lost": -6,
+        "total": 44,
+        "px": 60,
+        "endErr": 1.278277303592147,
+        "dPrev": 0
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 3
+     },
+     {
+      "name": "gối sau",
+      "before": 1,
+      "after": 1,
+      "total": 13
+     },
+     {
+      "name": "gối trước",
+      "before": 3,
+      "after": 0,
+      "total": 13
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 0,
+      "after": 0,
+      "total": 11
+     },
+     {
+      "name": "vai trước",
+      "before": 0,
+      "after": 0,
+      "total": 4
+     }
+    ]
+   },
+   {
+    "frame": 2,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [],
+      "rung": [
+       "Giáp cẳng tay trước xoay gắt -79°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 43.72696997994327,
+        "used": 43.72696997994327,
+        "sx": 0.75,
+        "raw": 0.5304610154279841,
+        "clamped": true,
+        "lost": 5,
+        "total": 44,
+        "px": 39,
+        "endErr": 1.3172333321301304,
+        "dPrev": 1.5425266641544724
+       },
+       "cangTaySau": {
+        "theta": -14.420773127510962,
+        "used": -14.420773127510962,
+        "sx": 0.75,
+        "raw": 0.6570658545306418,
+        "clamped": true,
+        "lost": -4,
+        "total": 26,
+        "px": 30,
+        "endErr": 0.5111388978813132,
+        "dPrev": -0.6845048218883747
+       },
+       "ongChanSau": {
+        "theta": -127.77568430595468,
+        "used": -127.77568430595468,
+        "sx": 0.75,
+        "raw": 0.7229474816502856,
+        "clamped": true,
+        "lost": -1,
+        "total": 38,
+        "px": 39,
+        "endErr": 0.1893652163019183,
+        "dPrev": 8.925670299371518
+       },
+       "ongChanTruoc": {
+        "theta": 118.35496178532401,
+        "used": 118.35496178532401,
+        "sx": 1.0227015045197407,
+        "raw": 1.0227015045197407,
+        "clamped": false,
+        "lost": -5,
+        "total": 38,
+        "px": 50,
+        "endErr": 1.7168080787047442e-06,
+        "dPrev": 36.48506413947996
+       },
+       "cangTayTruoc": {
+        "theta": 19.440034828176255,
+        "used": 19.440034828176255,
+        "sx": 0.9833321660356327,
+        "raw": 0.9833321660356327,
+        "clamped": false,
+        "lost": -11,
+        "total": 26,
+        "px": 37,
+        "endErr": 1.0587595393047618e-06,
+        "dPrev": -78.69006752597976
+       },
+       "vaiTruoc": {
+        "theta": 119.14807184571305,
+        "used": 119.14807184571305,
+        "sx": 0.9923317097736124,
+        "raw": 0.9923317097736124,
+        "clamped": false,
+        "lost": -7,
+        "total": 44,
+        "px": 54,
+        "endErr": 2.205921229922437e-06,
+        "dPrev": -26.47158343044208
+       }
+      }
+     },
+     {
+      "bam": [],
+      "meo": [
+       "Giáp cẳng tay sau mất 6/26"
+      ],
+      "rung": [
+       "Giáp cẳng tay trước xoay gắt -90°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 43.72696997994327,
+        "used": 45,
+        "sx": 0.75,
+        "raw": 0.5304610154279841,
+        "clamped": true,
+        "lost": 4,
+        "total": 44,
+        "px": 40,
+        "endErr": 1.319914455084176,
+        "dPrev": 0
+       },
+       "cangTaySau": {
+        "theta": -14.420773127510962,
+        "used": -0.0,
+        "sx": 0.75,
+        "raw": 0.6570658545306418,
+        "clamped": true,
+        "lost": 6,
+        "total": 26,
+        "px": 20,
+        "endErr": 1.0957324737066627,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": -127.77568430595468,
+        "used": -135,
+        "sx": 0.75,
+        "raw": 0.7229474816502856,
+        "clamped": true,
+        "lost": 4,
+        "total": 38,
+        "px": 36,
+        "endErr": 0.6765288009160709,
+        "dPrev": 0
+       },
+       "ongChanTruoc": {
+        "theta": 118.35496178532401,
+        "used": 135,
+        "sx": 1.0227015045197407,
+        "raw": 1.0227015045197407,
+        "clamped": false,
+        "lost": -5,
+        "total": 38,
+        "px": 52,
+        "endErr": 2.072436043838929,
+        "dPrev": 45
+       },
+       "cangTayTruoc": {
+        "theta": 19.440034828176255,
+        "used": 0,
+        "sx": 0.9833321660356327,
+        "raw": 0.9833321660356327,
+        "clamped": false,
+        "lost": 0,
+        "total": 26,
+        "px": 26,
+        "endErr": 1.82621679713443,
+        "dPrev": -90
+       },
+       "vaiTruoc": {
+        "theta": 119.14807184571305,
+        "used": 135,
+        "sx": 0.9923317097736124,
+        "raw": 0.9923317097736124,
+        "clamped": false,
+        "lost": -2,
+        "total": 44,
+        "px": 52,
+        "endErr": 1.642033915167586,
+        "dPrev": 0
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "gối sau",
+      "before": 2,
+      "after": 0,
+      "total": 14
+     },
+     {
+      "name": "gối trước",
+      "before": 2,
+      "after": 0,
+      "total": 13
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 0,
+      "after": 0,
+      "total": 13
+     },
+     {
+      "name": "vai trước",
+      "before": 0,
+      "after": 0,
+      "total": 5
+     }
+    ]
+   },
+   {
+    "frame": 3,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [
+       "Giáp vai sau lố 1.6đ ở khớp cuối (xương ×0.49, giáp chỉ ×0.75)"
+      ],
+      "rung": [],
+      "ang": {
+       "vaiSau": {
+        "theta": 38.047042531826186,
+        "used": 38.047042531826186,
+        "sx": 0.75,
+        "raw": 0.48676939555034116,
+        "clamped": true,
+        "lost": 2,
+        "total": 44,
+        "px": 42,
+        "endErr": 1.5793831564921796,
+        "dPrev": -5.679927448117084
+       },
+       "cangTaySau": {
+        "theta": -10.175510843043233,
+        "used": -10.175510843043233,
+        "sx": 0.75,
+        "raw": 0.7204222820421446,
+        "clamped": true,
+        "lost": -2,
+        "total": 26,
+        "px": 28,
+        "endErr": 0.16267696740507223,
+        "dPrev": 4.24526228446773
+       },
+       "ongChanSau": {
+        "theta": -166.50426671920417,
+        "used": -166.50426671920417,
+        "sx": 0.75,
+        "raw": 0.7345691504104258,
+        "clamped": true,
+        "lost": 3,
+        "total": 38,
+        "px": 36,
+        "endErr": 0.10801520525452744,
+        "dPrev": -38.728582413249484
+       },
+       "ongChanTruoc": {
+        "theta": 119.95360816780148,
+        "used": 119.95360816780148,
+        "sx": 0.9727931592133272,
+        "raw": 0.9727931592133272,
+        "clamped": false,
+        "lost": -8,
+        "total": 38,
+        "px": 49,
+        "endErr": 2.1531674883349416e-06,
+        "dPrev": 1.5986463824774688
+       },
+       "cangTayTruoc": {
+        "theta": 0,
+        "used": 0,
+        "sx": 1.1454545454545462,
+        "raw": 1.1454545454545462,
+        "clamped": false,
+        "lost": 0,
+        "total": 26,
+        "px": 30,
+        "endErr": 1.716655157337446e-06,
+        "dPrev": -19.440034828176255
+       },
+       "vaiTruoc": {
+        "theta": 120.52970589993414,
+        "used": 120.52970589993414,
+        "sx": 0.7546154281781191,
+        "raw": 0.7546154281781191,
+        "clamped": false,
+        "lost": 4,
+        "total": 44,
+        "px": 42,
+        "endErr": 1.0912489244147353e-06,
+        "dPrev": 1.3816340542210952
+       }
+      }
+     },
+     {
+      "bam": [],
+      "meo": [
+       "Giáp vai sau lố 1.6đ ở khớp cuối (xương ×0.49, giáp chỉ ×0.75)",
+       "Giáp cẳng tay sau mất 8/26",
+       "Giáp ống chân sau mất 14/38"
+      ],
+      "rung": [],
+      "ang": {
+       "vaiSau": {
+        "theta": 38.047042531826186,
+        "used": 45,
+        "sx": 0.75,
+        "raw": 0.48676939555034116,
+        "clamped": true,
+        "lost": 3,
+        "total": 44,
+        "px": 43,
+        "endErr": 1.6394382164272154,
+        "dPrev": 0
+       },
+       "cangTaySau": {
+        "theta": -10.175510843043233,
+        "used": -0.0,
+        "sx": 0.75,
+        "raw": 0.7204222820421446,
+        "clamped": true,
+        "lost": 8,
+        "total": 26,
+        "px": 18,
+        "endErr": 0.7352703723459069,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": -166.50426671920417,
+        "used": -180,
+        "sx": 0.75,
+        "raw": 0.7345691504104258,
+        "clamped": true,
+        "lost": 14,
+        "total": 38,
+        "px": 30,
+        "endErr": 1.2257649116086096,
+        "dPrev": -45
+       },
+       "ongChanTruoc": {
+        "theta": 119.95360816780148,
+        "used": 135,
+        "sx": 0.9727931592133272,
+        "raw": 0.9727931592133272,
+        "clamped": false,
+        "lost": -4,
+        "total": 38,
+        "px": 47,
+        "endErr": 1.783118270293163,
+        "dPrev": 0
+       },
+       "cangTayTruoc": {
+        "theta": 0,
+        "used": 0,
+        "sx": 1.1454545454545462,
+        "raw": 1.1454545454545462,
+        "clamped": false,
+        "lost": 0,
+        "total": 26,
+        "px": 30,
+        "endErr": 1.716655157337446e-06,
+        "dPrev": 0
+       },
+       "vaiTruoc": {
+        "theta": 120.52970589993414,
+        "used": 135,
+        "sx": 0.7546154281781191,
+        "raw": 0.7546154281781191,
+        "clamped": false,
+        "lost": 5,
+        "total": 44,
+        "px": 42,
+        "endErr": 1.1404514081406196,
+        "dPrev": 0
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 2
+     },
+     {
+      "name": "gối sau",
+      "before": 4,
+      "after": 0,
+      "total": 14
+     },
+     {
+      "name": "gối trước",
+      "before": 0,
+      "after": 0,
+      "total": 13
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 1,
+      "after": 0,
+      "total": 11
+     },
+     {
+      "name": "vai trước",
+      "before": 0,
+      "after": 0,
+      "total": 5
+     }
+    ]
+   },
+   {
+    "frame": 4,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [],
+      "rung": [],
+      "ang": {
+       "vaiSau": {
+        "theta": 26.56505117707794,
+        "used": 26.56505117707794,
+        "sx": 0.75,
+        "raw": 0.6335525936249399,
+        "clamped": true,
+        "lost": 4,
+        "total": 44,
+        "px": 40,
+        "endErr": 0.6986844382524365,
+        "dPrev": -11.481991354748246
+       },
+       "cangTaySau": {
+        "theta": -5.572197803963774,
+        "used": -5.572197803963774,
+        "sx": 0.75,
+        "raw": 0.7489938154198541,
+        "clamped": true,
+        "lost": -2,
+        "total": 26,
+        "px": 28,
+        "endErr": 0.005532570678056086,
+        "dPrev": 4.603313039079459
+       },
+       "ongChanSau": {
+        "theta": 156.03751102542176,
+        "used": 156.03751102542176,
+        "sx": 1.2662817173737857,
+        "raw": 1.2662817173737857,
+        "clamped": false,
+        "lost": -12,
+        "total": 38,
+        "px": 58,
+        "endErr": 3.44777001954124e-06,
+        "dPrev": -37.45822225537404
+       },
+       "ongChanTruoc": {
+        "theta": 124.75591255354134,
+        "used": 124.75591255354134,
+        "sx": 0.8520084314999117,
+        "raw": 0.8520084314999117,
+        "clamped": false,
+        "lost": -2,
+        "total": 38,
+        "px": 43,
+        "endErr": 1.8127788243752876e-06,
+        "dPrev": 4.802304385739859
+       },
+       "cangTayTruoc": {
+        "theta": 3.5763343749973395,
+        "used": 3.5763343749973395,
+        "sx": 1.1659068757731923,
+        "raw": 1.1659068757731923,
+        "clamped": false,
+        "lost": -12,
+        "total": 26,
+        "px": 41,
+        "endErr": 9.296237150840721e-07,
+        "dPrev": 3.5763343749973395
+       },
+       "vaiTruoc": {
+        "theta": 116.56505117707799,
+        "used": 116.56505117707799,
+        "sx": 0.75,
+        "raw": 0.708088192874933,
+        "clamped": true,
+        "lost": 5,
+        "total": 44,
+        "px": 40,
+        "endErr": 0.25147220754007377,
+        "dPrev": -3.964654722856153
+       }
+      }
+     },
+     {
+      "bam": [
+       "Giáp ống chân sau (cuối)"
+      ],
+      "meo": [
+       "Giáp cẳng tay sau mất 8/26"
+      ],
+      "rung": [],
+      "ang": {
+       "vaiSau": {
+        "theta": 26.56505117707794,
+        "used": 45,
+        "sx": 0.75,
+        "raw": 0.6335525936249399,
+        "clamped": true,
+        "lost": 5,
+        "total": 44,
+        "px": 39,
+        "endErr": 1.4979298675917483,
+        "dPrev": 0
+       },
+       "cangTaySau": {
+        "theta": -5.572197803963774,
+        "used": -0.0,
+        "sx": 0.75,
+        "raw": 0.7489938154198541,
+        "clamped": true,
+        "lost": 8,
+        "total": 26,
+        "px": 18,
+        "endErr": 0.4007796319143522,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": 156.03751102542176,
+        "used": 135,
+        "sx": 1.2662817173737857,
+        "raw": 1.2662817173737857,
+        "clamped": false,
+        "lost": -11,
+        "total": 38,
+        "px": 56,
+        "endErr": 3.2363686729375436,
+        "dPrev": -45
+       },
+       "ongChanTruoc": {
+        "theta": 124.75591255354134,
+        "used": 135,
+        "sx": 0.8520084314999117,
+        "raw": 0.8520084314999117,
+        "clamped": false,
+        "lost": -1,
+        "total": 38,
+        "px": 41,
+        "endErr": 1.0649141360236904,
+        "dPrev": 0
+       },
+       "cangTayTruoc": {
+        "theta": 3.5763343749973395,
+        "used": 0,
+        "sx": 1.1659068757731923,
+        "raw": 1.1659068757731923,
+        "clamped": false,
+        "lost": 0,
+        "total": 26,
+        "px": 30,
+        "endErr": 0.40019497302832174,
+        "dPrev": 0
+       },
+       "vaiTruoc": {
+        "theta": 116.56505117707799,
+        "used": 135,
+        "sx": 0.75,
+        "raw": 0.708088192874933,
+        "clamped": true,
+        "lost": 5,
+        "total": 44,
+        "px": 39,
+        "endErr": 1.4231743021865537,
+        "dPrev": 0
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 4
+     },
+     {
+      "name": "gối sau",
+      "before": 2,
+      "after": 1,
+      "total": 13
+     },
+     {
+      "name": "gối trước",
+      "before": 2,
+      "after": 1,
+      "total": 12
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 0,
+      "after": 0,
+      "total": 8
+     },
+     {
+      "name": "vai trước",
+      "before": 0,
+      "after": 0,
+      "total": 4
+     }
+    ]
+   },
+   {
+    "frame": 5,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [],
+      "rung": [
+       "Giáp cẳng tay trước xoay gắt 100°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 36.326825952120245,
+        "used": 36.326825952120245,
+        "sx": 0.75,
+        "raw": 0.7033649282003062,
+        "clamped": true,
+        "lost": 3,
+        "total": 44,
+        "px": 41,
+        "endErr": 0.2798095268847638,
+        "dPrev": 9.761774775042305
+       },
+       "cangTaySau": {
+        "theta": -15.376251248826206,
+        "used": -15.376251248826206,
+        "sx": 0.7542715822796925,
+        "raw": 0.7542715822796925,
+        "clamped": false,
+        "lost": -2,
+        "total": 26,
+        "px": 28,
+        "endErr": 2.084654166192953e-06,
+        "dPrev": -9.804053444862433
+       },
+       "ongChanSau": {
+        "theta": 143.68635458123663,
+        "used": 143.68635458123663,
+        "sx": 1.3,
+        "raw": 1.4714979179220689,
+        "clamped": true,
+        "lost": -17,
+        "total": 38,
+        "px": 63,
+        "endErr": 1.2004845667443769,
+        "dPrev": -12.351156444185136
+       },
+       "ongChanTruoc": {
+        "theta": 129.88958243896883,
+        "used": 129.88958243896883,
+        "sx": 1.247446371183783,
+        "raw": 1.247446371183783,
+        "clamped": false,
+        "lost": -9,
+        "total": 38,
+        "px": 59,
+        "endErr": 1.7885882268770569e-06,
+        "dPrev": 5.133669885427494
+       },
+       "cangTayTruoc": {
+        "theta": 103.7362683056226,
+        "used": 103.7362683056226,
+        "sx": 0.8422716234109433,
+        "raw": 0.8422716234109433,
+        "clamped": false,
+        "lost": -6,
+        "total": 26,
+        "px": 32,
+        "endErr": 2.170082682573883e-06,
+        "dPrev": 100.15993393062526
+       },
+       "vaiTruoc": {
+        "theta": 139.30446896050802,
+        "used": 139.30446896050802,
+        "sx": 1.0991158062531696,
+        "raw": 1.0991158062531696,
+        "clamped": false,
+        "lost": -6,
+        "total": 44,
+        "px": 59,
+        "endErr": 2.1916162422287986e-06,
+        "dPrev": 22.739417783430028
+       }
+      }
+     },
+     {
+      "bam": [],
+      "meo": [
+       "Giáp cẳng tay sau mất 8/26",
+       "Giáp ống chân sau hụt 1.9đ ở khớp cuối (xương ×1.47, giáp chỉ ×1.30)"
+      ],
+      "rung": [
+       "Giáp cẳng tay trước xoay gắt 90°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 36.326825952120245,
+        "used": 45,
+        "sx": 0.75,
+        "raw": 0.7033649282003062,
+        "clamped": true,
+        "lost": 5,
+        "total": 44,
+        "px": 41,
+        "endErr": 0.7159803333592928,
+        "dPrev": 0
+       },
+       "cangTaySau": {
+        "theta": -15.376251248826206,
+        "used": -0.0,
+        "sx": 0.7542715822796925,
+        "raw": 0.7542715822796925,
+        "clamped": false,
+        "lost": 8,
+        "total": 26,
+        "px": 18,
+        "endErr": 1.1099762093070926,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": 143.68635458123663,
+        "used": 135,
+        "sx": 1.3,
+        "raw": 1.4714979179220689,
+        "clamped": true,
+        "lost": -11,
+        "total": 38,
+        "px": 62,
+        "endErr": 1.8951148772873816,
+        "dPrev": 0
+       },
+       "ongChanTruoc": {
+        "theta": 129.88958243896883,
+        "used": 135,
+        "sx": 1.247446371183783,
+        "raw": 1.247446371183783,
+        "clamped": false,
+        "lost": -10,
+        "total": 38,
+        "px": 62,
+        "endErr": 0.778590576482721,
+        "dPrev": 0
+       },
+       "cangTayTruoc": {
+        "theta": 103.7362683056226,
+        "used": 90,
+        "sx": 0.8422716234109433,
+        "raw": 0.8422716234109433,
+        "clamped": false,
+        "lost": 4,
+        "total": 26,
+        "px": 22,
+        "endErr": 1.1079493184870037,
+        "dPrev": 90
+       },
+       "vaiTruoc": {
+        "theta": 139.30446896050802,
+        "used": 135,
+        "sx": 1.0991158062531696,
+        "raw": 1.0991158062531696,
+        "clamped": false,
+        "lost": -5,
+        "total": 44,
+        "px": 59,
+        "endErr": 0.49532201561550315,
+        "dPrev": 0
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 7
+     },
+     {
+      "name": "gối sau",
+      "before": 1,
+      "after": 0,
+      "total": 13
+     },
+     {
+      "name": "gối trước",
+      "before": 1,
+      "after": 0,
+      "total": 12
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 0,
+      "after": 0,
+      "total": 10
+     },
+     {
+      "name": "vai trước",
+      "before": 0,
+      "after": 0,
+      "total": 4
+     }
+    ]
+   },
+   {
+    "frame": 6,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [],
+      "rung": [
+       "Giáp cẳng tay trước xoay gắt -108°",
+       "Giáp vai trước xoay gắt -62°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 21.801409486351783,
+        "used": 21.801409486351783,
+        "sx": 0.8077747210701753,
+        "raw": 0.8077747210701753,
+        "clamped": false,
+        "lost": 3,
+        "total": 44,
+        "px": 42,
+        "endErr": 7.66341181949173e-07,
+        "dPrev": -14.525416465768462
+       },
+       "cangTaySau": {
+        "theta": -5.079607860014552,
+        "used": -5.079607860014552,
+        "sx": 0.8214077816782921,
+        "raw": 0.8214077816782921,
+        "clamped": false,
+        "lost": -2,
+        "total": 26,
+        "px": 28,
+        "endErr": 7.300754975648395e-08,
+        "dPrev": 10.296643388811653
+       },
+       "ongChanSau": {
+        "theta": 101.6893691754392,
+        "used": 101.6893691754392,
+        "sx": 0.8461195939977645,
+        "raw": 0.8461195939977645,
+        "clamped": false,
+        "lost": 1,
+        "total": 38,
+        "px": 37,
+        "endErr": 1.7828525516387669e-06,
+        "dPrev": -41.99698540579743
+       },
+       "ongChanTruoc": {
+        "theta": 147.26477372789236,
+        "used": 147.26477372789236,
+        "sx": 0.9510466844053288,
+        "raw": 0.9510466844053288,
+        "clamped": false,
+        "lost": -6,
+        "total": 38,
+        "px": 45,
+        "endErr": 3.141321093619085e-06,
+        "dPrev": 17.37519128892353
+       },
+       "cangTayTruoc": {
+        "theta": -4.205357001708589,
+        "used": -4.205357001708589,
+        "sx": 1.2397013769986018,
+        "raw": 1.2397013769986018,
+        "clamped": false,
+        "lost": -15,
+        "total": 26,
+        "px": 44,
+        "endErr": 7.717298507249747e-07,
+        "dPrev": -107.9416253073312
+       },
+       "vaiTruoc": {
+        "theta": 77.59258147259924,
+        "used": 77.59258147259924,
+        "sx": 0.8532617157446803,
+        "raw": 0.8532617157446803,
+        "clamped": false,
+        "lost": 0,
+        "total": 44,
+        "px": 45,
+        "endErr": 1.715990387012521e-06,
+        "dPrev": -61.71188748790878
+       }
+      }
+     },
+     {
+      "bam": [],
+      "meo": [],
+      "rung": [
+       "Giáp vai sau nhảy -45° (xương chỉ -15°)",
+       "Giáp cẳng tay trước xoay gắt -90°",
+       "Giáp vai trước xoay gắt -45°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 21.801409486351783,
+        "used": 0,
+        "sx": 0.8077747210701753,
+        "raw": 0.8077747210701753,
+        "clamped": false,
+        "lost": 6,
+        "total": 44,
+        "px": 38,
+        "endErr": 1.8330745149231227,
+        "dPrev": -45
+       },
+       "cangTaySau": {
+        "theta": -5.079607860014552,
+        "used": -0.0,
+        "sx": 0.8214077816782921,
+        "raw": 0.8214077816782921,
+        "clamped": false,
+        "lost": 4,
+        "total": 26,
+        "px": 22,
+        "endErr": 0.4003933396504086,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": 101.6893691754392,
+        "used": 90,
+        "sx": 0.8461195939977645,
+        "raw": 0.8461195939977645,
+        "clamped": false,
+        "lost": 5,
+        "total": 38,
+        "px": 33,
+        "endErr": 1.206271281288135,
+        "dPrev": -45
+       },
+       "ongChanTruoc": {
+        "theta": 147.26477372789236,
+        "used": 135,
+        "sx": 0.9510466844053288,
+        "raw": 0.9510466844053288,
+        "clamped": false,
+        "lost": 0,
+        "total": 38,
+        "px": 45,
+        "endErr": 1.4223552954438232,
+        "dPrev": 0
+       },
+       "cangTayTruoc": {
+        "theta": -4.205357001708589,
+        "used": -0.0,
+        "sx": 1.2397013769986018,
+        "raw": 1.2397013769986018,
+        "clamped": false,
+        "lost": 0,
+        "total": 26,
+        "px": 30,
+        "endErr": 0.5003361666292612,
+        "dPrev": -90
+       },
+       "vaiTruoc": {
+        "theta": 77.59258147259924,
+        "used": 90,
+        "sx": 0.8532617157446803,
+        "raw": 0.8532617157446803,
+        "clamped": false,
+        "lost": 8,
+        "total": 44,
+        "px": 36,
+        "endErr": 1.1064779738283097,
+        "dPrev": -45
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 2
+     },
+     {
+      "name": "gối sau",
+      "before": 3,
+      "after": 0,
+      "total": 13
+     },
+     {
+      "name": "gối trước",
+      "before": 3,
+      "after": 1,
+      "total": 13
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 0,
+      "after": 0,
+      "total": 14
+     },
+     {
+      "name": "vai trước",
+      "before": 0,
+      "after": 0,
+      "total": 4
+     }
+    ]
+   },
+   {
+    "frame": 7,
+    "modes": [
+     {
+      "bam": [
+       "Giáp cẳng tay trước (cuối)"
+      ],
+      "meo": [
+       "Giáp cẳng tay trước hụt 1.9đ ở khớp cuối (xương ×1.64, giáp chỉ ×1.30)"
+      ],
+      "rung": [
+       "Giáp ống chân trước xoay gắt 64°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 28.610459665965145,
+        "used": 28.610459665965145,
+        "sx": 0.75,
+        "raw": 0.6264982043070838,
+        "clamped": true,
+        "lost": 4,
+        "total": 44,
+        "px": 42,
+        "endErr": 0.7410101043764218,
+        "dPrev": 6.809050179613362
+       },
+       "cangTaySau": {
+        "theta": -6.340191745909909,
+        "used": -6.340191745909909,
+        "sx": 0.8232168307397653,
+        "raw": 0.8232168307397653,
+        "clamped": false,
+        "lost": -5,
+        "total": 26,
+        "px": 31,
+        "endErr": 1.5932529427465113e-06,
+        "dPrev": -1.2605838858953566
+       },
+       "ongChanSau": {
+        "theta": 86.05481377096245,
+        "used": 86.05481377096245,
+        "sx": 0.8305395344999214,
+        "raw": 0.8305395344999214,
+        "clamped": false,
+        "lost": -1,
+        "total": 38,
+        "px": 39,
+        "endErr": 3.1212095250001957e-06,
+        "dPrev": -15.634555404476743
+       },
+       "ongChanTruoc": {
+        "theta": -148.7362683056225,
+        "used": -148.7362683056225,
+        "sx": 0.9359051059519544,
+        "raw": 0.9359051059519544,
+        "clamped": false,
+        "lost": -5,
+        "total": 38,
+        "px": 46,
+        "endErr": 2.2057988123224824e-06,
+        "dPrev": 63.998957966485136
+       },
+       "cangTayTruoc": {
+        "theta": 2.5448043798130864,
+        "used": 2.5448043798130864,
+        "sx": 1.3,
+        "raw": 1.6379790006625756,
+        "clamped": true,
+        "lost": -10,
+        "total": 26,
+        "px": 44,
+        "endErr": 1.8588863580292312,
+        "dPrev": 6.750161381521675
+       },
+       "vaiTruoc": {
+        "theta": 113.86017519134232,
+        "used": 113.86017519134232,
+        "sx": 0.947657931721967,
+        "raw": 0.947657931721967,
+        "clamped": false,
+        "lost": -4,
+        "total": 44,
+        "px": 51,
+        "endErr": 2.182705441027903e-06,
+        "dPrev": 36.267593718743086
+       }
+      }
+     },
+     {
+      "bam": [
+       "Giáp cẳng tay trước (cuối)"
+      ],
+      "meo": [
+       "Giáp ống chân sau mất 11/38",
+       "Giáp cẳng tay trước hụt 1.9đ ở khớp cuối (xương ×1.64, giáp chỉ ×1.30)"
+      ],
+      "rung": [
+       "Giáp vai sau nhảy 45° (xương chỉ 7°)",
+       "Giáp ống chân trước xoay gắt 90°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 28.610459665965145,
+        "used": 45,
+        "sx": 0.75,
+        "raw": 0.6264982043070838,
+        "clamped": true,
+        "lost": 4,
+        "total": 44,
+        "px": 42,
+        "endErr": 1.3870107871323476,
+        "dPrev": 45
+       },
+       "cangTaySau": {
+        "theta": -6.340191745909909,
+        "used": -0.0,
+        "sx": 0.8232168307397653,
+        "raw": 0.8232168307397653,
+        "clamped": false,
+        "lost": 4,
+        "total": 26,
+        "px": 22,
+        "endErr": 0.5007655283762432,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": 86.05481377096245,
+        "used": 90,
+        "sx": 0.8305395344999214,
+        "raw": 0.8305395344999214,
+        "clamped": false,
+        "lost": 11,
+        "total": 38,
+        "px": 33,
+        "endErr": 0.4002370705112742,
+        "dPrev": 0
+       },
+       "ongChanTruoc": {
+        "theta": -148.7362683056225,
+        "used": -135,
+        "sx": 0.9359051059519544,
+        "raw": 0.9359051059519544,
+        "clamped": false,
+        "lost": -3,
+        "total": 38,
+        "px": 46,
+        "endErr": 1.5668785706567563,
+        "dPrev": 90
+       },
+       "cangTayTruoc": {
+        "theta": 2.5448043798130864,
+        "used": 0,
+        "sx": 1.3,
+        "raw": 1.6379790006625756,
+        "clamped": true,
+        "lost": 0,
+        "total": 26,
+        "px": 34,
+        "endErr": 1.8927506941950787,
+        "dPrev": 0
+       },
+       "vaiTruoc": {
+        "theta": 113.86017519134232,
+        "used": 135,
+        "sx": 0.947657931721967,
+        "raw": 0.947657931721967,
+        "clamped": false,
+        "lost": -2,
+        "total": 44,
+        "px": 52,
+        "endErr": 2.0860032890007254,
+        "dPrev": 45
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 2
+     },
+     {
+      "name": "gối sau",
+      "before": 2,
+      "after": 1,
+      "total": 14
+     },
+     {
+      "name": "gối trước",
+      "before": 2,
+      "after": 0,
+      "total": 11
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 0,
+      "after": 0,
+      "total": 9
+     },
+     {
+      "name": "vai trước",
+      "before": 0,
+      "after": 0,
+      "total": 3
+     }
+    ]
+   },
+   {
+    "frame": 8,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [],
+      "rung": [
+       "Giáp cẳng tay trước xoay gắt 99°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 51.58194465517801,
+        "used": 51.58194465517801,
+        "sx": 0.75,
+        "raw": 0.6168918507773927,
+        "clamped": true,
+        "lost": 5,
+        "total": 44,
+        "px": 40,
+        "endErr": 0.7986492457491845,
+        "dPrev": 22.97148498921287
+       },
+       "cangTaySau": {
+        "theta": -21.501434324047988,
+        "used": -21.501434324047988,
+        "sx": 0.75,
+        "raw": 0.6448781036715707,
+        "clamped": true,
+        "lost": -2,
+        "total": 26,
+        "px": 29,
+        "endErr": 0.578170860016466,
+        "dPrev": -15.16124257813808
+       },
+       "ongChanSau": {
+        "theta": 127.8065299447045,
+        "used": 127.8065299447045,
+        "sx": 1.0487115515561685,
+        "raw": 1.0487115515561685,
+        "clamped": false,
+        "lost": -6,
+        "total": 38,
+        "px": 51,
+        "endErr": 2.1482811872836073e-06,
+        "dPrev": 41.75171617374204
+       },
+       "ongChanTruoc": {
+        "theta": -135.00000000000006,
+        "used": -135.00000000000006,
+        "sx": 0.7677159338596803,
+        "raw": 0.7677159338596803,
+        "clamped": false,
+        "lost": -1,
+        "total": 38,
+        "px": 42,
+        "endErr": 1.6996293477810637e-06,
+        "dPrev": 13.736268305622445
+       },
+       "cangTayTruoc": {
+        "theta": 101.888658039628,
+        "used": 101.888658039628,
+        "sx": 1.0590811548516879,
+        "raw": 1.0590811548516879,
+        "clamped": false,
+        "lost": -10,
+        "total": 26,
+        "px": 39,
+        "endErr": 2.3063306604817796e-07,
+        "dPrev": 99.34385365981491
+       },
+       "vaiTruoc": {
+        "theta": 141.21563589970268,
+        "used": 141.21563589970268,
+        "sx": 1.1973350037107877,
+        "raw": 1.1973350037107877,
+        "clamped": false,
+        "lost": -10,
+        "total": 44,
+        "px": 66,
+        "endErr": 1.5310092427838321e-06,
+        "dPrev": 27.355460708360354
+       }
+      }
+     },
+     {
+      "bam": [],
+      "meo": [
+       "Giáp cẳng tay sau mất 8/26",
+       "Giáp cẳng tay sau lố 1.5đ ở khớp cuối (xương ×0.64, giáp chỉ ×0.75)"
+      ],
+      "rung": [
+       "Giáp cẳng tay trước xoay gắt 90°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 51.58194465517801,
+        "used": 45,
+        "sx": 0.75,
+        "raw": 0.6168918507773927,
+        "clamped": true,
+        "lost": 4,
+        "total": 44,
+        "px": 42,
+        "endErr": 0.9259616092448332,
+        "dPrev": 0
+       },
+       "cangTaySau": {
+        "theta": -21.501434324047988,
+        "used": -0.0,
+        "sx": 0.75,
+        "raw": 0.6448781036715707,
+        "clamped": true,
+        "lost": 8,
+        "total": 26,
+        "px": 18,
+        "endErr": 1.5396844619901324,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": 127.8065299447045,
+        "used": 135,
+        "sx": 1.0487115515561685,
+        "raw": 1.0487115515561685,
+        "clamped": false,
+        "lost": -6,
+        "total": 38,
+        "px": 51,
+        "endErr": 0.9210508496628325,
+        "dPrev": 45
+       },
+       "ongChanTruoc": {
+        "theta": -135.00000000000006,
+        "used": -135,
+        "sx": 0.7677159338596803,
+        "raw": 0.7677159338596803,
+        "clamped": false,
+        "lost": -1,
+        "total": 38,
+        "px": 42,
+        "endErr": 1.699629351031032e-06,
+        "dPrev": 0
+       },
+       "cangTayTruoc": {
+        "theta": 101.888658039628,
+        "used": 90,
+        "sx": 1.0590811548516879,
+        "raw": 1.0590811548516879,
+        "clamped": false,
+        "lost": 0,
+        "total": 26,
+        "px": 28,
+        "endErr": 1.206487317974289,
+        "dPrev": 90
+       },
+       "vaiTruoc": {
+        "theta": 141.21563589970268,
+        "used": 135,
+        "sx": 1.1973350037107877,
+        "raw": 1.1973350037107877,
+        "clamped": false,
+        "lost": -8,
+        "total": 44,
+        "px": 64,
+        "endErr": 0.7789620758046035,
+        "dPrev": 0
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 10
+     },
+     {
+      "name": "gối sau",
+      "before": 2,
+      "after": 1,
+      "total": 13
+     },
+     {
+      "name": "gối trước",
+      "before": 0,
+      "after": 0,
+      "total": 11
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 0,
+      "after": 0,
+      "total": 12
+     },
+     {
+      "name": "vai trước",
+      "before": 0,
+      "after": 0,
+      "total": 4
+     }
+    ]
+   },
+   {
+    "frame": 9,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [
+       "Giáp vai sau lố 1.7đ ở khớp cuối (xương ×0.47, giáp chỉ ×0.75)"
+      ],
+      "rung": [
+       "Giáp cẳng tay trước xoay gắt -102°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 39.28940686250028,
+        "used": 39.28940686250028,
+        "sx": 0.75,
+        "raw": 0.47375568011839664,
+        "clamped": true,
+        "lost": 4,
+        "total": 44,
+        "px": 41,
+        "endErr": 1.6574643625630225,
+        "dPrev": -12.292537792677734
+       },
+       "cangTaySau": {
+        "theta": -6.709836807756913,
+        "used": -6.709836807756913,
+        "sx": 0.75,
+        "raw": 0.6224451915863157,
+        "clamped": true,
+        "lost": 1,
+        "total": 26,
+        "px": 25,
+        "endErr": 0.7015512679913108,
+        "dPrev": 14.791597516291075
+       },
+       "ongChanSau": {
+        "theta": 122.39984017391929,
+        "used": 122.39984017391929,
+        "sx": 0.879819090866447,
+        "raw": 0.879819090866447,
+        "clamped": false,
+        "lost": -3,
+        "total": 38,
+        "px": 41,
+        "endErr": 1.5100802721436722e-06,
+        "dPrev": -5.406689770785206
+       },
+       "ongChanTruoc": {
+        "theta": -168.8869594640516,
+        "used": -168.8869594640516,
+        "sx": 0.815287604193159,
+        "raw": 0.815287604193159,
+        "clamped": false,
+        "lost": -1,
+        "total": 38,
+        "px": 39,
+        "endErr": 2.1042399016770964e-06,
+        "dPrev": -33.88695946405156
+       },
+       "cangTayTruoc": {
+        "theta": 0,
+        "used": 0,
+        "sx": 1.2181818181818187,
+        "raw": 1.2181818181818187,
+        "clamped": false,
+        "lost": 0,
+        "total": 26,
+        "px": 34,
+        "endErr": 8.425997253943793e-07,
+        "dPrev": -101.888658039628
+       },
+       "vaiTruoc": {
+        "theta": 113.7026459509663,
+        "used": 113.7026459509663,
+        "sx": 0.75,
+        "raw": 0.7462871059079376,
+        "clamped": true,
+        "lost": 1,
+        "total": 44,
+        "px": 44,
+        "endErr": 0.022276580869353465,
+        "dPrev": -27.512989948736376
+       }
+      }
+     },
+     {
+      "bam": [],
+      "meo": [
+       "Giáp vai sau lố 1.7đ ở khớp cuối (xương ×0.47, giáp chỉ ×0.75)",
+       "Giáp ống chân trước mất 8/38",
+       "Giáp vai trước lố 1.7đ ở khớp cuối (xương ×0.75, giáp chỉ ×0.75)"
+      ],
+      "rung": [
+       "Giáp cẳng tay trước xoay gắt -90°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 39.28940686250028,
+        "used": 45,
+        "sx": 0.75,
+        "raw": 0.47375568011839664,
+        "clamped": true,
+        "lost": 4,
+        "total": 44,
+        "px": 48,
+        "endErr": 1.69533187353804,
+        "dPrev": 0
+       },
+       "cangTaySau": {
+        "theta": -6.709836807756913,
+        "used": -0.0,
+        "sx": 0.75,
+        "raw": 0.6224451915863157,
+        "clamped": true,
+        "lost": 4,
+        "total": 26,
+        "px": 22,
+        "endErr": 0.8280254952025664,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": 122.39984017391929,
+        "used": 135,
+        "sx": 0.879819090866447,
+        "raw": 0.879819090866447,
+        "clamped": false,
+        "lost": -2,
+        "total": 38,
+        "px": 43,
+        "endErr": 1.3516646739127312,
+        "dPrev": 0
+       },
+       "ongChanTruoc": {
+        "theta": -168.8869594640516,
+        "used": -180,
+        "sx": 0.815287604193159,
+        "raw": 0.815287604193159,
+        "clamped": false,
+        "lost": 8,
+        "total": 38,
+        "px": 30,
+        "endErr": 1.1051947762946783,
+        "dPrev": -45
+       },
+       "cangTayTruoc": {
+        "theta": 0,
+        "used": 0,
+        "sx": 1.2181818181818187,
+        "raw": 1.2181818181818187,
+        "clamped": false,
+        "lost": 0,
+        "total": 26,
+        "px": 34,
+        "endErr": 8.425997253943793e-07,
+        "dPrev": -90
+       },
+       "vaiTruoc": {
+        "theta": 113.7026459509663,
+        "used": 135,
+        "sx": 0.75,
+        "raw": 0.7462871059079376,
+        "clamped": true,
+        "lost": 4,
+        "total": 44,
+        "px": 40,
+        "endErr": 1.6591072714089183,
+        "dPrev": 0
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 2
+     },
+     {
+      "name": "gối sau",
+      "before": 3,
+      "after": 2,
+      "total": 12
+     },
+     {
+      "name": "gối trước",
+      "before": 4,
+      "after": 0,
+      "total": 13
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 1,
+      "after": 0,
+      "total": 13
+     },
+     {
+      "name": "vai trước",
+      "before": 0,
+      "after": 0,
+      "total": 4
+     }
+    ]
+   },
+   {
+    "frame": 10,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [],
+      "rung": [],
+      "ang": {
+       "vaiSau": {
+        "theta": 30.650667957052928,
+        "used": 30.650667957052928,
+        "sx": 0.75,
+        "raw": 0.5230784942158401,
+        "clamped": true,
+        "lost": 5,
+        "total": 44,
+        "px": 41,
+        "endErr": 1.3615304689523404,
+        "dPrev": -8.638738905447351
+       },
+       "cangTaySau": {
+        "theta": -5.710593137499623,
+        "used": -5.710593137499623,
+        "sx": 0.75,
+        "raw": 0.7309000451724283,
+        "clamped": true,
+        "lost": -1,
+        "total": 26,
+        "px": 27,
+        "endErr": 0.10505126985800993,
+        "dPrev": 0.9992436702572904
+       },
+       "ongChanSau": {
+        "theta": 124.21570213243739,
+        "used": 124.21570213243739,
+        "sx": 0.8637837975903412,
+        "raw": 0.8637837975903412,
+        "clamped": false,
+        "lost": 0,
+        "total": 38,
+        "px": 41,
+        "endErr": 1.5615914434271236e-06,
+        "dPrev": 1.8158619585180986
+       },
+       "ongChanTruoc": {
+        "theta": 147.9946167919165,
+        "used": 147.9946167919165,
+        "sx": 1.2129404312644199,
+        "raw": 1.2129404312644199,
+        "clamped": false,
+        "lost": -14,
+        "total": 38,
+        "px": 59,
+        "endErr": 1.9998845172100593e-06,
+        "dPrev": -43.11842374403187
+       },
+       "cangTayTruoc": {
+        "theta": 0,
+        "used": 0,
+        "sx": 1.0727272727272725,
+        "raw": 1.0727272727272725,
+        "clamped": false,
+        "lost": 0,
+        "total": 26,
+        "px": 26,
+        "endErr": 1.9002200080313031e-06,
+        "dPrev": 0
+       },
+       "vaiTruoc": {
+        "theta": 113.70264595096621,
+        "used": 113.70264595096621,
+        "sx": 0.75,
+        "raw": 0.7462871059079371,
+        "clamped": true,
+        "lost": 3,
+        "total": 44,
+        "px": 43,
+        "endErr": 0.02227605260995999,
+        "dPrev": -8.526512829121202e-14
+       }
+      }
+     },
+     {
+      "bam": [],
+      "meo": [
+       "Giáp vai sau lố 1.7đ ở khớp cuối (xương ×0.52, giáp chỉ ×0.75)",
+       "Giáp cẳng tay sau mất 8/26",
+       "Giáp vai trước lố 1.7đ ở khớp cuối (xương ×0.75, giáp chỉ ×0.75)"
+      ],
+      "rung": [],
+      "ang": {
+       "vaiSau": {
+        "theta": 30.650667957052928,
+        "used": 45,
+        "sx": 0.75,
+        "raw": 0.5230784942158401,
+        "clamped": true,
+        "lost": 5,
+        "total": 44,
+        "px": 39,
+        "endErr": 1.6537754174460357,
+        "dPrev": 0
+       },
+       "cangTaySau": {
+        "theta": -5.710593137499623,
+        "used": -0.0,
+        "sx": 0.75,
+        "raw": 0.7309000451724283,
+        "clamped": true,
+        "lost": 8,
+        "total": 26,
+        "px": 18,
+        "endErr": 0.4190768204900554,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": 124.21570213243739,
+        "used": 135,
+        "sx": 0.8637837975903412,
+        "raw": 0.8637837975903412,
+        "clamped": false,
+        "lost": 1,
+        "total": 38,
+        "px": 43,
+        "endErr": 1.1363991891103191,
+        "dPrev": 0
+       },
+       "ongChanTruoc": {
+        "theta": 147.9946167919165,
+        "used": 135,
+        "sx": 1.2129404312644199,
+        "raw": 1.2129404312644199,
+        "clamped": false,
+        "lost": -11,
+        "total": 38,
+        "px": 61,
+        "endErr": 1.921529738782217,
+        "dPrev": -45
+       },
+       "cangTayTruoc": {
+        "theta": 0,
+        "used": 0,
+        "sx": 1.0727272727272725,
+        "raw": 1.0727272727272725,
+        "clamped": false,
+        "lost": 0,
+        "total": 26,
+        "px": 26,
+        "endErr": 1.9002200080313031e-06,
+        "dPrev": 0
+       },
+       "vaiTruoc": {
+        "theta": 113.70264595096621,
+        "used": 135,
+        "sx": 0.75,
+        "raw": 0.7462871059079371,
+        "clamped": true,
+        "lost": 5,
+        "total": 44,
+        "px": 39,
+        "endErr": 1.65910430724351,
+        "dPrev": 0
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 6
+     },
+     {
+      "name": "gối sau",
+      "before": 3,
+      "after": 1,
+      "total": 13
+     },
+     {
+      "name": "gối trước",
+      "before": 0,
+      "after": 0,
+      "total": 11
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 0,
+      "after": 0,
+      "total": 4
+     },
+     {
+      "name": "vai trước",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     }
+    ]
+   },
+   {
+    "frame": 11,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [
+       "Giáp ống chân trước hụt 1.9đ ở khớp cuối (xương ×1.57, giáp chỉ ×1.30)"
+      ],
+      "rung": [
+       "Giáp cẳng tay trước xoay gắt 85°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 52.52382043863866,
+        "used": 52.52382043863866,
+        "sx": 0.75,
+        "raw": 0.6300352723811931,
+        "clamped": true,
+        "lost": 3,
+        "total": 44,
+        "px": 42,
+        "endErr": 0.7197900408565432,
+        "dPrev": 21.87315248158573
+       },
+       "cangTaySau": {
+        "theta": -21.801409486351783,
+        "used": -21.801409486351783,
+        "sx": 0.8812087866220094,
+        "raw": 0.8812087866220094,
+        "clamped": false,
+        "lost": -8,
+        "total": 26,
+        "px": 34,
+        "endErr": 1.545373122840945e-06,
+        "dPrev": -16.09081634885216
+       },
+       "ongChanSau": {
+        "theta": 132.55295135767636,
+        "used": 132.55295135767636,
+        "sx": 1.182957207637725,
+        "raw": 1.182957207637725,
+        "clamped": false,
+        "lost": -11,
+        "total": 38,
+        "px": 57,
+        "endErr": 2.874865447382367e-06,
+        "dPrev": 8.337249225238978
+       },
+       "ongChanTruoc": {
+        "theta": 141.6666598909014,
+        "used": 141.6666598909014,
+        "sx": 1.3,
+        "raw": 1.566225151276085,
+        "clamped": true,
+        "lost": -14,
+        "total": 38,
+        "px": 63,
+        "endErr": 1.8635782855289362,
+        "dPrev": -6.3279569010151135
+       },
+       "cangTayTruoc": {
+        "theta": 84.92039213998545,
+        "used": 84.92039213998545,
+        "sx": 0.8214077816782921,
+        "raw": 0.8214077816782921,
+        "clamped": false,
+        "lost": -3,
+        "total": 26,
+        "px": 29,
+        "endErr": 8.356852738165422e-07,
+        "dPrev": 84.92039213998545
+       },
+       "vaiTruoc": {
+        "theta": 124.56252464888185,
+        "used": 124.56252464888185,
+        "sx": 0.9107384061542835,
+        "raw": 0.9107384061542835,
+        "clamped": false,
+        "lost": -4,
+        "total": 44,
+        "px": 50,
+        "endErr": 1.7186677584330745e-06,
+        "dPrev": 10.859878697915633
+       }
+      }
+     },
+     {
+      "bam": [
+       "Giáp ống chân trước (cuối)"
+      ],
+      "meo": [
+       "Giáp ống chân trước hụt 2.2đ ở khớp cuối (xương ×1.57, giáp chỉ ×1.30)"
+      ],
+      "rung": [
+       "Giáp cẳng tay trước xoay gắt 90°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 52.52382043863866,
+        "used": 45,
+        "sx": 0.75,
+        "raw": 0.6300352723811931,
+        "clamped": true,
+        "lost": 5,
+        "total": 44,
+        "px": 40,
+        "endErr": 0.9005600693793344,
+        "dPrev": 0
+       },
+       "cangTaySau": {
+        "theta": -21.801409486351783,
+        "used": -0.0,
+        "sx": 0.8812087866220094,
+        "raw": 0.8812087866220094,
+        "clamped": false,
+        "lost": 4,
+        "total": 26,
+        "px": 22,
+        "endErr": 1.8330764975592346,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": 132.55295135767636,
+        "used": 135,
+        "sx": 1.182957207637725,
+        "raw": 1.182957207637725,
+        "clamped": false,
+        "lost": -12,
+        "total": 38,
+        "px": 58,
+        "endErr": 0.3536319022787187,
+        "dPrev": 0
+       },
+       "ongChanTruoc": {
+        "theta": 141.6666598909014,
+        "used": 135,
+        "sx": 1.3,
+        "raw": 1.566225151276085,
+        "clamped": true,
+        "lost": -14,
+        "total": 38,
+        "px": 61,
+        "endErr": 2.195931418194857,
+        "dPrev": 0
+       },
+       "cangTayTruoc": {
+        "theta": 84.92039213998545,
+        "used": 90,
+        "sx": 0.8214077816782921,
+        "raw": 0.8214077816782921,
+        "clamped": false,
+        "lost": 4,
+        "total": 26,
+        "px": 22,
+        "endErr": 0.4003933523290752,
+        "dPrev": 90
+       },
+       "vaiTruoc": {
+        "theta": 124.56252464888185,
+        "used": 135,
+        "sx": 0.9107384061542835,
+        "raw": 0.9107384061542835,
+        "clamped": false,
+        "lost": -2,
+        "total": 44,
+        "px": 50,
+        "endErr": 0.9940708932817415,
+        "dPrev": 0
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 3
+     },
+     {
+      "name": "gối sau",
+      "before": 2,
+      "after": 1,
+      "total": 14
+     },
+     {
+      "name": "gối trước",
+      "before": 0,
+      "after": 0,
+      "total": 10
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 0,
+      "after": 0,
+      "total": 11
+     },
+     {
+      "name": "vai trước",
+      "before": 0,
+      "after": 0,
+      "total": 4
+     }
+    ]
+   },
+   {
+    "frame": 12,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [],
+      "rung": [],
+      "ang": {
+       "vaiSau": {
+        "theta": 40.3141001604973,
+        "used": 40.3141001604973,
+        "sx": 0.75,
+        "raw": 0.721302833612746,
+        "clamped": true,
+        "lost": 3,
+        "total": 44,
+        "px": 41,
+        "endErr": 0.1721840736764674,
+        "dPrev": -12.209720278141361
+       },
+       "cangTaySau": {
+        "theta": -11.888658039627998,
+        "used": -11.888658039627998,
+        "sx": 1.0590811548516879,
+        "raw": 1.0590811548516879,
+        "clamped": false,
+        "lost": -12,
+        "total": 26,
+        "px": 41,
+        "endErr": 2.3063306604817796e-07,
+        "dPrev": 9.912751446723785
+       },
+       "ongChanSau": {
+        "theta": 148.90268711422058,
+        "used": 148.90268711422058,
+        "sx": 1.0510441843952234,
+        "raw": 1.0510441843952234,
+        "clamped": false,
+        "lost": -9,
+        "total": 38,
+        "px": 51,
+        "endErr": 3.659486473469263e-06,
+        "dPrev": 16.34973575654422
+       },
+       "ongChanTruoc": {
+        "theta": 101.51383118448699,
+        "used": 101.51383118448699,
+        "sx": 0.7872711847688476,
+        "raw": 0.7872711847688476,
+        "clamped": false,
+        "lost": 1,
+        "total": 38,
+        "px": 37,
+        "endErr": 3.0397420459182636e-06,
+        "dPrev": -40.15282870641441
+       },
+       "cangTayTruoc": {
+        "theta": 101.94417718844635,
+        "used": 101.94417718844635,
+        "sx": 0.966376892066787,
+        "raw": 0.966376892066787,
+        "clamped": false,
+        "lost": -8,
+        "total": 26,
+        "px": 37,
+        "endErr": 1.6769216929458784e-06,
+        "dPrev": 17.023785048460894
+       },
+       "vaiTruoc": {
+        "theta": 138.01278750418336,
+        "used": 138.01278750418336,
+        "sx": 1.1211353372561426,
+        "raw": 1.1211353372561426,
+        "clamped": false,
+        "lost": -9,
+        "total": 44,
+        "px": 62,
+        "endErr": 1.6091184328409376e-06,
+        "dPrev": 13.450262855301517
+       }
+      }
+     },
+     {
+      "bam": [],
+      "meo": [
+       "Giáp ống chân trước mất 9/38"
+      ],
+      "rung": [],
+      "ang": {
+       "vaiSau": {
+        "theta": 40.3141001604973,
+        "used": 45,
+        "sx": 0.75,
+        "raw": 0.721302833612746,
+        "clamped": true,
+        "lost": 6,
+        "total": 44,
+        "px": 38,
+        "endErr": 0.39979759332976533,
+        "dPrev": 0
+       },
+       "cangTaySau": {
+        "theta": -11.888658039627998,
+        "used": -0.0,
+        "sx": 1.0590811548516879,
+        "raw": 1.0590811548516879,
+        "clamped": false,
+        "lost": 0,
+        "total": 26,
+        "px": 26,
+        "endErr": 1.2064872315554702,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": 148.90268711422058,
+        "used": 135,
+        "sx": 1.0510441843952234,
+        "raw": 1.0510441843952234,
+        "clamped": false,
+        "lost": -4,
+        "total": 38,
+        "px": 52,
+        "endErr": 1.7808590232533899,
+        "dPrev": 0
+       },
+       "ongChanTruoc": {
+        "theta": 101.51383118448699,
+        "used": 90,
+        "sx": 0.7872711847688476,
+        "raw": 0.7872711847688476,
+        "clamped": false,
+        "lost": 9,
+        "total": 38,
+        "px": 29,
+        "endErr": 1.1055750098007802,
+        "dPrev": -45
+       },
+       "cangTayTruoc": {
+        "theta": 101.94417718844635,
+        "used": 90,
+        "sx": 0.966376892066787,
+        "raw": 0.966376892066787,
+        "clamped": false,
+        "lost": 0,
+        "total": 26,
+        "px": 26,
+        "endErr": 1.1060040533481756,
+        "dPrev": 0
+       },
+       "vaiTruoc": {
+        "theta": 138.01278750418336,
+        "used": 135,
+        "sx": 1.1211353372561426,
+        "raw": 1.1211353372561426,
+        "clamped": false,
+        "lost": -4,
+        "total": 44,
+        "px": 63,
+        "endErr": 0.3536761211303632,
+        "dPrev": 0
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 1
+     },
+     {
+      "name": "gối sau",
+      "before": 2,
+      "after": 1,
+      "total": 13
+     },
+     {
+      "name": "gối trước",
+      "before": 1,
+      "after": 1,
+      "total": 13
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 0,
+      "after": 0,
+      "total": 4
+     },
+     {
+      "name": "vai trước",
+      "before": 1,
+      "after": 0,
+      "total": 9
+     }
+    ]
+   }
+  ],
+  "gen": [
+   {
+    "frame": 1,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [],
+      "rung": [
+       "Giáp ống chân sau xoay gắt 74°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 42.1844433157888,
+        "used": 42.1844433157888,
+        "sx": 0.7711722457746131,
+        "raw": 0.7711722457746131,
+        "clamped": false,
+        "lost": 6,
+        "total": 44,
+        "px": 39,
+        "endErr": 1.7660890891841564e-06,
+        "dPrev": 1.8703431552915006
+       },
+       "cangTaySau": {
+        "theta": -13.736268305622588,
+        "used": -13.736268305622588,
+        "sx": 0.7619233435460836,
+        "raw": 0.7619233435460836,
+        "clamped": false,
+        "lost": -1,
+        "total": 25,
+        "px": 26,
+        "endErr": 1.673645948269784e-06,
+        "dPrev": -1.8476102659945894
+       },
+       "ongChanSau": {
+        "theta": -136.7013546053262,
+        "used": -136.7013546053262,
+        "sx": 1.0445801566021193,
+        "raw": 1.0445801566021193,
+        "clamped": false,
+        "lost": -4,
+        "total": 34,
+        "px": 44,
+        "endErr": 1.7396138232382448e-06,
+        "dPrev": 74.39595828045321
+       },
+       "nguc": {
+        "theta": 108.86899945506143,
+        "used": 108.86899945506143,
+        "sx": 0.9174343500985409,
+        "raw": 0.9174343500985409,
+        "clamped": false,
+        "lost": 8,
+        "total": 121,
+        "px": 115,
+        "endErr": 1.8014791132403805e-06,
+        "dPrev": -3.2761805831618744
+       },
+       "ongChanTruoc": {
+        "theta": 81.86989764584405,
+        "used": 81.86989764584405,
+        "sx": 0.9304036594559851,
+        "raw": 0.9304036594559851,
+        "clamped": false,
+        "lost": -5,
+        "total": 34,
+        "px": 40,
+        "endErr": 1.7940909604903261e-06,
+        "dPrev": -19.64393353864294
+       },
+       "cangTayTruoc": {
+        "theta": 98.13010235415601,
+        "used": 98.13010235415601,
+        "sx": 0.8141032020239867,
+        "raw": 0.8141032020239867,
+        "clamped": false,
+        "lost": -4,
+        "total": 25,
+        "px": 29,
+        "endErr": 7.780914431452562e-07,
+        "dPrev": -3.814074834290338
+       },
+       "vaiTruoc": {
+        "theta": 145.61965527615513,
+        "used": 145.61965527615513,
+        "sx": 1.2333069035594284,
+        "raw": 1.2333069035594284,
+        "clamped": false,
+        "lost": -9,
+        "total": 44,
+        "px": 65,
+        "endErr": 2.3193597711975586e-06,
+        "dPrev": 7.606867771971764
+       }
+      }
+     },
+     {
+      "bam": [
+       "Giáp ống chân trước (cuối)"
+      ],
+      "meo": [
+       "Giáp cẳng tay sau mất 7/25",
+       "Giáp cẳng tay trước mất 6/25"
+      ],
+      "rung": [
+       "Giáp ống chân sau xoay gắt 90°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 42.1844433157888,
+        "used": 45,
+        "sx": 0.7711722457746131,
+        "raw": 0.7711722457746131,
+        "clamped": false,
+        "lost": 6,
+        "total": 44,
+        "px": 38,
+        "endErr": 0.2121976838353568,
+        "dPrev": 0
+       },
+       "cangTaySau": {
+        "theta": -13.736268305622588,
+        "used": -0.0,
+        "sx": 0.7619233435460836,
+        "raw": 0.7619233435460836,
+        "clamped": false,
+        "lost": 7,
+        "total": 25,
+        "px": 18,
+        "endErr": 1.1079491988813868,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": -136.7013546053262,
+        "used": -135,
+        "sx": 1.0445801566021193,
+        "raw": 1.0445801566021193,
+        "clamped": false,
+        "lost": -3,
+        "total": 34,
+        "px": 44,
+        "endErr": 0.21215544320577073,
+        "dPrev": 90
+       },
+       "nguc": {
+        "theta": 108.86899945506143,
+        "used": 90,
+        "sx": 0.9174343500985409,
+        "raw": 0.9174343500985409,
+        "clamped": false,
+        "lost": 10,
+        "total": 121,
+        "px": 111,
+        "endErr": 3.284425312910649,
+        "dPrev": 0
+       },
+       "ongChanTruoc": {
+        "theta": 81.86989764584405,
+        "used": 90,
+        "sx": 0.9304036594559851,
+        "raw": 0.9304036594559851,
+        "clamped": false,
+        "lost": 2,
+        "total": 34,
+        "px": 32,
+        "endErr": 0.9022690460243342,
+        "dPrev": 0
+       },
+       "cangTayTruoc": {
+        "theta": 98.13010235415601,
+        "used": 90,
+        "sx": 0.8141032020239867,
+        "raw": 0.8141032020239867,
+        "clamped": false,
+        "lost": 6,
+        "total": 25,
+        "px": 19,
+        "endErr": 0.7017662508572893,
+        "dPrev": 0
+       },
+       "vaiTruoc": {
+        "theta": 145.61965527615513,
+        "used": 135,
+        "sx": 1.2333069035594284,
+        "raw": 1.2333069035594284,
+        "clamped": false,
+        "lost": -8,
+        "total": 44,
+        "px": 64,
+        "endErr": 1.2782772849121111,
+        "dPrev": 0
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 3
+     },
+     {
+      "name": "gối sau",
+      "before": 2,
+      "after": 1,
+      "total": 13
+     },
+     {
+      "name": "gối trước",
+      "before": 3,
+      "after": 0,
+      "total": 13
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 0,
+      "after": 0,
+      "total": 11
+     },
+     {
+      "name": "vai trước",
+      "before": 0,
+      "after": 0,
+      "total": 4
+     }
+    ]
+   },
+   {
+    "frame": 2,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [],
+      "rung": [
+       "Giáp cẳng tay trước xoay gắt -79°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 43.72696997994327,
+        "used": 43.72696997994327,
+        "sx": 0.75,
+        "raw": 0.5683510879585544,
+        "clamped": true,
+        "lost": 5,
+        "total": 44,
+        "px": 40,
+        "endErr": 1.0172332963676345,
+        "dPrev": 1.5425266641544724
+       },
+       "cangTaySau": {
+        "theta": -14.420773127510962,
+        "used": -14.420773127510962,
+        "sx": 0.75,
+        "raw": 0.5943852302497582,
+        "clamped": true,
+        "lost": -1,
+        "total": 25,
+        "px": 26,
+        "endErr": 0.9461389139730177,
+        "dPrev": -0.6845048218883747
+       },
+       "ongChanSau": {
+        "theta": -127.77568430595468,
+        "used": -127.77568430595468,
+        "sx": 0.75,
+        "raw": 0.7398585338526315,
+        "clamped": true,
+        "lost": 2,
+        "total": 34,
+        "px": 33,
+        "endErr": 0.06936518413136547,
+        "dPrev": 8.925670299371518
+       },
+       "nguc": {
+        "theta": 115.88299078390534,
+        "used": 115.88299078390534,
+        "sx": 1.0321045031146767,
+        "raw": 1.0321045031146767,
+        "clamped": false,
+        "lost": 1,
+        "total": 121,
+        "px": 131,
+        "endErr": 1.7069060273917714e-06,
+        "dPrev": 7.013991328843915
+       },
+       "ongChanTruoc": {
+        "theta": 118.35496178532401,
+        "used": 118.35496178532401,
+        "sx": 1.0466243467307288,
+        "raw": 1.0466243467307288,
+        "clamped": false,
+        "lost": -5,
+        "total": 34,
+        "px": 42,
+        "endErr": 1.9250537978462854e-06,
+        "dPrev": 36.48506413947996
+       },
+       "cangTayTruoc": {
+        "theta": 19.440034828176255,
+        "used": 19.440034828176255,
+        "sx": 0.8895274528282862,
+        "raw": 0.8895274528282862,
+        "clamped": false,
+        "lost": -5,
+        "total": 25,
+        "px": 30,
+        "endErr": 1.0550490188386158e-06,
+        "dPrev": -78.69006752597976
+       },
+       "vaiTruoc": {
+        "theta": 119.14807184571305,
+        "used": 119.14807184571305,
+        "sx": 1.0632125461860134,
+        "raw": 1.0632125461860134,
+        "clamped": false,
+        "lost": -1,
+        "total": 44,
+        "px": 53,
+        "endErr": 2.232240559013854e-06,
+        "dPrev": -26.47158343044208
+       }
+      }
+     },
+     {
+      "bam": [
+       "Giáp ống chân trước (cuối)",
+       "Giáp cẳng tay trước (cuối)"
+      ],
+      "meo": [
+       "Giáp cẳng tay sau mất 7/25"
+      ],
+      "rung": [
+       "Giáp ngực nhỏ nhảy 45° (xương chỉ 7°)",
+       "Giáp cẳng tay trước xoay gắt -90°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 43.72696997994327,
+        "used": 45,
+        "sx": 0.75,
+        "raw": 0.5683510879585544,
+        "clamped": true,
+        "lost": 7,
+        "total": 44,
+        "px": 38,
+        "endErr": 1.020471816767742,
+        "dPrev": 0
+       },
+       "cangTaySau": {
+        "theta": -14.420773127510962,
+        "used": -0.0,
+        "sx": 0.75,
+        "raw": 0.5943852302497582,
+        "clamped": true,
+        "lost": 7,
+        "total": 25,
+        "px": 18,
+        "endErr": 1.3905406838913827,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": -127.77568430595468,
+        "used": -135,
+        "sx": 0.75,
+        "raw": 0.7398585338526315,
+        "clamped": true,
+        "lost": 2,
+        "total": 34,
+        "px": 32,
+        "endErr": 0.6457566758926225,
+        "dPrev": 0
+       },
+       "nguc": {
+        "theta": 115.88299078390534,
+        "used": 135,
+        "sx": 1.0321045031146767,
+        "raw": 1.0321045031146767,
+        "clamped": false,
+        "lost": 11,
+        "total": 121,
+        "px": 130,
+        "endErr": 3.7430623125320666,
+        "dPrev": 45
+       },
+       "ongChanTruoc": {
+        "theta": 118.35496178532401,
+        "used": 135,
+        "sx": 1.0466243467307288,
+        "raw": 1.0466243467307288,
+        "clamped": false,
+        "lost": -5,
+        "total": 34,
+        "px": 43,
+        "endErr": 2.0724359966159627,
+        "dPrev": 45
+       },
+       "cangTayTruoc": {
+        "theta": 19.440034828176255,
+        "used": 0,
+        "sx": 0.8895274528282862,
+        "raw": 0.8895274528282862,
+        "clamped": false,
+        "lost": 4,
+        "total": 25,
+        "px": 21,
+        "endErr": 1.8262169758580211,
+        "dPrev": -90
+       },
+       "vaiTruoc": {
+        "theta": 119.14807184571305,
+        "used": 135,
+        "sx": 1.0632125461860134,
+        "raw": 1.0632125461860134,
+        "clamped": false,
+        "lost": -3,
+        "total": 44,
+        "px": 54,
+        "endErr": 1.6420339048890609,
+        "dPrev": 0
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "gối sau",
+      "before": 3,
+      "after": 0,
+      "total": 14
+     },
+     {
+      "name": "gối trước",
+      "before": 1,
+      "after": 0,
+      "total": 13
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 0,
+      "after": 0,
+      "total": 13
+     },
+     {
+      "name": "vai trước",
+      "before": 0,
+      "after": 0,
+      "total": 5
+     }
+    ]
+   },
+   {
+    "frame": 3,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [],
+      "rung": [],
+      "ang": {
+       "vaiSau": {
+        "theta": 38.047042531826186,
+        "used": 38.047042531826186,
+        "sx": 0.75,
+        "raw": 0.5215386380896513,
+        "clamped": true,
+        "lost": 7,
+        "total": 44,
+        "px": 38,
+        "endErr": 1.279383120729425,
+        "dPrev": -5.679927448117084
+       },
+       "cangTaySau": {
+        "theta": -10.175510843043233,
+        "used": -10.175510843043233,
+        "sx": 0.75,
+        "raw": 0.6516977880315453,
+        "clamped": true,
+        "lost": -1,
+        "total": 25,
+        "px": 26,
+        "endErr": 0.5976769834923352,
+        "dPrev": 4.24526228446773
+       },
+       "ongChanSau": {
+        "theta": -166.50426671920417,
+        "used": -166.50426671920417,
+        "sx": 0.7517520545135936,
+        "raw": 0.7517520545135936,
+        "clamped": false,
+        "lost": 2,
+        "total": 34,
+        "px": 32,
+        "endErr": 6.35300658931148e-07,
+        "dPrev": -38.728582413249484
+       },
+       "nguc": {
+        "theta": 114.99764733185948,
+        "used": 114.99764733185948,
+        "sx": 0.9881711941257408,
+        "raw": 0.9881711941257408,
+        "clamped": false,
+        "lost": 6,
+        "total": 121,
+        "px": 128,
+        "endErr": 2.286462001170116e-06,
+        "dPrev": -0.8853434520458592
+       },
+       "ongChanTruoc": {
+        "theta": 119.95360816780148,
+        "used": 119.95360816780148,
+        "sx": 0.9955485547504811,
+        "raw": 0.9955485547504811,
+        "clamped": false,
+        "lost": -3,
+        "total": 34,
+        "px": 41,
+        "endErr": 2.1861422710582317e-06,
+        "dPrev": 1.5986463824774688
+       },
+       "cangTayTruoc": {
+        "theta": 0,
+        "used": 0,
+        "sx": 1.0361842105263164,
+        "raw": 1.0361842105263164,
+        "clamped": false,
+        "lost": 0,
+        "total": 25,
+        "px": 29,
+        "endErr": 2.6307586132400593e-06,
+        "dPrev": -19.440034828176255
+       },
+       "vaiTruoc": {
+        "theta": 120.52970589993414,
+        "used": 120.52970589993414,
+        "sx": 0.808516530190842,
+        "raw": 0.808516530190842,
+        "clamped": false,
+        "lost": 4,
+        "total": 44,
+        "px": 41,
+        "endErr": 1.2680173254153191e-06,
+        "dPrev": 1.3816340542210952
+       }
+      }
+     },
+     {
+      "bam": [
+       "Giáp ống chân trước (cuối)"
+      ],
+      "meo": [
+       "Giáp cẳng tay sau mất 6/25",
+       "Giáp ống chân sau mất 7/34"
+      ],
+      "rung": [],
+      "ang": {
+       "vaiSau": {
+        "theta": 38.047042531826186,
+        "used": 45,
+        "sx": 0.75,
+        "raw": 0.5215386380896513,
+        "clamped": true,
+        "lost": 5,
+        "total": 44,
+        "px": 39,
+        "endErr": 1.348050658485761,
+        "dPrev": 0
+       },
+       "cangTaySau": {
+        "theta": -10.175510843043233,
+        "used": -0.0,
+        "sx": 0.75,
+        "raw": 0.6516977880315453,
+        "clamped": true,
+        "lost": 6,
+        "total": 25,
+        "px": 19,
+        "endErr": 0.9620786066468743,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": -166.50426671920417,
+        "used": -180,
+        "sx": 0.7517520545135936,
+        "raw": 0.7517520545135936,
+        "clamped": false,
+        "lost": 7,
+        "total": 34,
+        "px": 27,
+        "endErr": 1.2083705111070489,
+        "dPrev": -45
+       },
+       "nguc": {
+        "theta": 114.99764733185948,
+        "used": 135,
+        "sx": 0.9881711941257408,
+        "raw": 0.9881711941257408,
+        "clamped": false,
+        "lost": 14,
+        "total": 121,
+        "px": 128,
+        "endErr": 3.7480500242488275,
+        "dPrev": 0
+       },
+       "ongChanTruoc": {
+        "theta": 119.95360816780148,
+        "used": 135,
+        "sx": 0.9955485547504811,
+        "raw": 0.9955485547504811,
+        "clamped": false,
+        "lost": -4,
+        "total": 34,
+        "px": 43,
+        "endErr": 1.7831182547104087,
+        "dPrev": 0
+       },
+       "cangTayTruoc": {
+        "theta": 0,
+        "used": 0,
+        "sx": 1.0361842105263164,
+        "raw": 1.0361842105263164,
+        "clamped": false,
+        "lost": 0,
+        "total": 25,
+        "px": 29,
+        "endErr": 2.6307586132400593e-06,
+        "dPrev": 0
+       },
+       "vaiTruoc": {
+        "theta": 120.52970589993414,
+        "used": 135,
+        "sx": 0.808516530190842,
+        "raw": 0.808516530190842,
+        "clamped": false,
+        "lost": 5,
+        "total": 44,
+        "px": 43,
+        "endErr": 1.140451385269242,
+        "dPrev": 0
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 2
+     },
+     {
+      "name": "gối sau",
+      "before": 3,
+      "after": 0,
+      "total": 14
+     },
+     {
+      "name": "gối trước",
+      "before": 1,
+      "after": 0,
+      "total": 13
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 0,
+      "after": 0,
+      "total": 11
+     },
+     {
+      "name": "vai trước",
+      "before": 0,
+      "after": 0,
+      "total": 5
+     }
+    ]
+   },
+   {
+    "frame": 4,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [],
+      "rung": [],
+      "ang": {
+       "vaiSau": {
+        "theta": 26.56505117707794,
+        "used": 26.56505117707794,
+        "sx": 0.75,
+        "raw": 0.6788063503124356,
+        "clamped": true,
+        "lost": 5,
+        "total": 44,
+        "px": 40,
+        "endErr": 0.39868440249122067,
+        "dPrev": -11.481991354748246
+       },
+       "cangTaySau": {
+        "theta": -5.572197803963774,
+        "used": -5.572197803963774,
+        "sx": 0.75,
+        "raw": 0.6775437475015128,
+        "clamped": true,
+        "lost": -1,
+        "total": 25,
+        "px": 26,
+        "endErr": 0.4405325866978139,
+        "dPrev": 4.603313039079459
+       },
+       "ongChanSau": {
+        "theta": 156.03751102542176,
+        "used": 156.03751102542176,
+        "sx": 1.2959023423415934,
+        "raw": 1.2959023423415934,
+        "clamped": false,
+        "lost": -11,
+        "total": 34,
+        "px": 53,
+        "endErr": 3.523677787325835e-06,
+        "dPrev": -37.45822225537404
+       },
+       "nguc": {
+        "theta": 105.62959558978062,
+        "used": 105.62959558978062,
+        "sx": 0.9585195937574535,
+        "raw": 0.9585195937574535,
+        "clamped": false,
+        "lost": 2,
+        "total": 121,
+        "px": 123,
+        "endErr": 1.7999550763527469e-06,
+        "dPrev": -9.368051742078862
+       },
+       "ongChanTruoc": {
+        "theta": 124.75591255354134,
+        "used": 124.75591255354134,
+        "sx": 0.8719384532893832,
+        "raw": 0.8719384532893832,
+        "clamped": false,
+        "lost": -1,
+        "total": 34,
+        "px": 37,
+        "endErr": 1.679584674123477e-06,
+        "dPrev": 4.802304385739859
+       },
+       "cangTayTruoc": {
+        "theta": 3.5763343749973395,
+        "used": 3.5763343749973395,
+        "sx": 1.0546854961764074,
+        "raw": 1.0546854961764074,
+        "clamped": false,
+        "lost": -5,
+        "total": 25,
+        "px": 32,
+        "endErr": 6.476110708676526e-07,
+        "dPrev": 3.5763343749973395
+       },
+       "vaiTruoc": {
+        "theta": 116.56505117707799,
+        "used": 116.56505117707799,
+        "sx": 0.7586659209374282,
+        "raw": 0.7586659209374282,
+        "clamped": false,
+        "lost": 7,
+        "total": 44,
+        "px": 39,
+        "endErr": 1.6699468800098274e-06,
+        "dPrev": -3.964654722856153
+       }
+      }
+     },
+     {
+      "bam": [],
+      "meo": [
+       "Giáp cẳng tay sau mất 6/25"
+      ],
+      "rung": [
+       "Giáp ngực nhỏ nhảy -45° (xương chỉ -9°)"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 26.56505117707794,
+        "used": 45,
+        "sx": 0.75,
+        "raw": 0.6788063503124356,
+        "clamped": true,
+        "lost": 6,
+        "total": 44,
+        "px": 39,
+        "endErr": 1.3407240282300512,
+        "dPrev": 0
+       },
+       "cangTaySau": {
+        "theta": -5.572197803963774,
+        "used": -0.0,
+        "sx": 0.75,
+        "raw": 0.6775437475015128,
+        "clamped": true,
+        "lost": 6,
+        "total": 25,
+        "px": 19,
+        "endErr": 0.6095874529557626,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": 156.03751102542176,
+        "used": 135,
+        "sx": 1.2959023423415934,
+        "raw": 1.2959023423415934,
+        "clamped": false,
+        "lost": -7,
+        "total": 34,
+        "px": 52,
+        "endErr": 3.236368690640916,
+        "dPrev": -45
+       },
+       "nguc": {
+        "theta": 105.62959558978062,
+        "used": 90,
+        "sx": 0.9585195937574535,
+        "raw": 0.9585195937574535,
+        "clamped": false,
+        "lost": 0,
+        "total": 121,
+        "px": 121,
+        "endErr": 2.8464369305312394,
+        "dPrev": -45
+       },
+       "ongChanTruoc": {
+        "theta": 124.75591255354134,
+        "used": 135,
+        "sx": 0.8719384532893832,
+        "raw": 0.8719384532893832,
+        "clamped": false,
+        "lost": -1,
+        "total": 34,
+        "px": 38,
+        "endErr": 1.06491415928956,
+        "dPrev": 0
+       },
+       "cangTayTruoc": {
+        "theta": 3.5763343749973395,
+        "used": 0,
+        "sx": 1.0546854961764074,
+        "raw": 1.0546854961764074,
+        "clamped": false,
+        "lost": 0,
+        "total": 25,
+        "px": 27,
+        "endErr": 0.40019493850183335,
+        "dPrev": 0
+       },
+       "vaiTruoc": {
+        "theta": 116.56505117707799,
+        "used": 135,
+        "sx": 0.7586659209374282,
+        "raw": 0.7586659209374282,
+        "clamped": false,
+        "lost": 5,
+        "total": 44,
+        "px": 39,
+        "endErr": 1.3610786442770038,
+        "dPrev": 0
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 4
+     },
+     {
+      "name": "gối sau",
+      "before": 2,
+      "after": 0,
+      "total": 13
+     },
+     {
+      "name": "gối trước",
+      "before": 1,
+      "after": 1,
+      "total": 12
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 0,
+      "after": 0,
+      "total": 8
+     },
+     {
+      "name": "vai trước",
+      "before": 0,
+      "after": 0,
+      "total": 4
+     }
+    ]
+   },
+   {
+    "frame": 5,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [],
+      "rung": [
+       "Giáp cẳng tay trước xoay gắt 100°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 36.326825952120245,
+        "used": 36.326825952120245,
+        "sx": 0.7536052802146138,
+        "raw": 0.7536052802146138,
+        "clamped": false,
+        "lost": 6,
+        "total": 44,
+        "px": 38,
+        "endErr": 1.463784299116519e-06,
+        "dPrev": 9.761774775042305
+       },
+       "cangTaySau": {
+        "theta": -15.376251248826206,
+        "used": -15.376251248826206,
+        "sx": 0.75,
+        "raw": 0.6823180431806428,
+        "clamped": true,
+        "lost": -4,
+        "total": 25,
+        "px": 29,
+        "endErr": 0.4115081894136866,
+        "dPrev": -9.804053444862433
+       },
+       "ongChanSau": {
+        "theta": 143.68635458123663,
+        "used": 143.68635458123663,
+        "sx": 1.3,
+        "raw": 1.5059189218500706,
+        "clamped": true,
+        "lost": -9,
+        "total": 34,
+        "px": 51,
+        "endErr": 1.408484614904405,
+        "dPrev": -12.351156444185136
+       },
+       "nguc": {
+        "theta": 111.49204003334458,
+        "used": 111.49204003334458,
+        "sx": 0.9448153286824722,
+        "raw": 0.9448153286824722,
+        "clamped": false,
+        "lost": 6,
+        "total": 121,
+        "px": 120,
+        "endErr": 8.215767703102678e-07,
+        "dPrev": 5.862444443563959
+       },
+       "ongChanTruoc": {
+        "theta": 129.88958243896883,
+        "used": 129.88958243896883,
+        "sx": 1.2766264032582577,
+        "raw": 1.2766264032582577,
+        "clamped": false,
+        "lost": -10,
+        "total": 34,
+        "px": 53,
+        "endErr": 1.2277128117860833e-06,
+        "dPrev": 5.133669885427494
+       },
+       "cangTayTruoc": {
+        "theta": 103.7362683056226,
+        "used": 103.7362683056226,
+        "sx": 0.7619233435460836,
+        "raw": 0.7619233435460836,
+        "clamped": false,
+        "lost": -2,
+        "total": 25,
+        "px": 27,
+        "endErr": 2.3258237952984964e-06,
+        "dPrev": 100.15993393062526
+       },
+       "vaiTruoc": {
+        "theta": 139.30446896050802,
+        "used": 139.30446896050802,
+        "sx": 1.177624078128396,
+        "raw": 1.177624078128396,
+        "clamped": false,
+        "lost": -8,
+        "total": 44,
+        "px": 58,
+        "endErr": 2.1679869882821383e-06,
+        "dPrev": 22.739417783430028
+       }
+      }
+     },
+     {
+      "bam": [],
+      "meo": [
+       "Giáp cẳng tay sau mất 6/25",
+       "Giáp ống chân sau hụt 2.0đ ở khớp cuối (xương ×1.51, giáp chỉ ×1.30)",
+       "Giáp cẳng tay trước mất 6/25"
+      ],
+      "rung": [
+       "Giáp cẳng tay trước xoay gắt 90°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 36.326825952120245,
+        "used": 45,
+        "sx": 0.7536052802146138,
+        "raw": 0.7536052802146138,
+        "clamped": false,
+        "lost": 6,
+        "total": 44,
+        "px": 42,
+        "endErr": 0.6382221543246269,
+        "dPrev": 0
+       },
+       "cangTaySau": {
+        "theta": -15.376251248826206,
+        "used": -0.0,
+        "sx": 0.75,
+        "raw": 0.6823180431806428,
+        "clamped": true,
+        "lost": 6,
+        "total": 25,
+        "px": 19,
+        "endErr": 1.2343407085832119,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": 143.68635458123663,
+        "used": 135,
+        "sx": 1.3,
+        "raw": 1.5059189218500706,
+        "clamped": true,
+        "lost": -9,
+        "total": 34,
+        "px": 53,
+        "endErr": 2.021132467209132,
+        "dPrev": 0
+       },
+       "nguc": {
+        "theta": 111.49204003334458,
+        "used": 90,
+        "sx": 0.9448153286824722,
+        "raw": 0.9448153286824722,
+        "clamped": false,
+        "lost": 3,
+        "total": 121,
+        "px": 118,
+        "endErr": 3.847471033241511,
+        "dPrev": 0
+       },
+       "ongChanTruoc": {
+        "theta": 129.88958243896883,
+        "used": 135,
+        "sx": 1.2766264032582577,
+        "raw": 1.2766264032582577,
+        "clamped": false,
+        "lost": -11,
+        "total": 34,
+        "px": 52,
+        "endErr": 0.7785905427893718,
+        "dPrev": 0
+       },
+       "cangTayTruoc": {
+        "theta": 103.7362683056226,
+        "used": 90,
+        "sx": 0.7619233435460836,
+        "raw": 0.7619233435460836,
+        "clamped": false,
+        "lost": 6,
+        "total": 25,
+        "px": 19,
+        "endErr": 1.1079493399725746,
+        "dPrev": 90
+       },
+       "vaiTruoc": {
+        "theta": 139.30446896050802,
+        "used": 135,
+        "sx": 1.177624078128396,
+        "raw": 1.177624078128396,
+        "clamped": false,
+        "lost": -5,
+        "total": 44,
+        "px": 58,
+        "endErr": 0.49532200992509917,
+        "dPrev": 0
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 7
+     },
+     {
+      "name": "gối sau",
+      "before": 1,
+      "after": 0,
+      "total": 13
+     },
+     {
+      "name": "gối trước",
+      "before": 1,
+      "after": 0,
+      "total": 12
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 0,
+      "after": 0,
+      "total": 10
+     },
+     {
+      "name": "vai trước",
+      "before": 0,
+      "after": 0,
+      "total": 4
+     }
+    ]
+   },
+   {
+    "frame": 6,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [],
+      "rung": [
+       "Giáp cẳng tay trước xoay gắt -108°",
+       "Giáp vai trước xoay gắt -62°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 21.801409486351783,
+        "used": 21.801409486351783,
+        "sx": 0.8654729154323307,
+        "raw": 0.8654729154323307,
+        "clamped": false,
+        "lost": 0,
+        "total": 44,
+        "px": 46,
+        "endErr": 7.439378060253154e-07,
+        "dPrev": -14.525416465768462
+       },
+       "cangTaySau": {
+        "theta": -5.079607860014552,
+        "used": -5.079607860014552,
+        "sx": 0.75,
+        "raw": 0.7430498025050339,
+        "clamped": true,
+        "lost": 0,
+        "total": 25,
+        "px": 25,
+        "endErr": 0.0422572168626478,
+        "dPrev": 10.296643388811653
+       },
+       "ongChanSau": {
+        "theta": 101.6893691754392,
+        "used": 101.6893691754392,
+        "sx": 0.8659118652023906,
+        "raw": 0.8659118652023906,
+        "clamped": false,
+        "lost": -2,
+        "total": 34,
+        "px": 37,
+        "endErr": 1.8999952819367811e-06,
+        "dPrev": -41.99698540579743
+       },
+       "nguc": {
+        "theta": 111.8588200678527,
+        "used": 111.8588200678527,
+        "sx": 1.01826395898028,
+        "raw": 1.01826395898028,
+        "clamped": false,
+        "lost": 5,
+        "total": 121,
+        "px": 128,
+        "endErr": 1.014625233777367e-06,
+        "dPrev": 0.3667800345081247
+       },
+       "ongChanTruoc": {
+        "theta": 147.26477372789236,
+        "used": 147.26477372789236,
+        "sx": 0.9732933904732898,
+        "raw": 0.9732933904732898,
+        "clamped": false,
+        "lost": -4,
+        "total": 34,
+        "px": 41,
+        "endErr": 2.986074029723871e-06,
+        "dPrev": 17.37519128892353
+       },
+       "cangTayTruoc": {
+        "theta": -4.205357001708589,
+        "used": -4.205357001708589,
+        "sx": 1.1214403903770247,
+        "raw": 1.1214403903770247,
+        "clamped": false,
+        "lost": -9,
+        "total": 25,
+        "px": 36,
+        "endErr": 7.875128784951786e-07,
+        "dPrev": -107.9416253073312
+       },
+       "vaiTruoc": {
+        "theta": 77.59258147259924,
+        "used": 77.59258147259924,
+        "sx": 0.9142089811550148,
+        "raw": 0.9142089811550148,
+        "clamped": false,
+        "lost": -2,
+        "total": 44,
+        "px": 48,
+        "endErr": 1.6828386935256967e-06,
+        "dPrev": -61.71188748790878
+       }
+      }
+     },
+     {
+      "bam": [],
+      "meo": [
+       "Giáp cẳng tay sau mất 6/25"
+      ],
+      "rung": [
+       "Giáp vai sau nhảy -45° (xương chỉ -15°)",
+       "Giáp cẳng tay trước xoay gắt -90°",
+       "Giáp vai trước xoay gắt -45°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 21.801409486351783,
+        "used": 0,
+        "sx": 0.8654729154323307,
+        "raw": 0.8654729154323307,
+        "clamped": false,
+        "lost": 4,
+        "total": 44,
+        "px": 40,
+        "endErr": 1.8330747211952703,
+        "dPrev": -45
+       },
+       "cangTaySau": {
+        "theta": -5.079607860014552,
+        "used": -0.0,
+        "sx": 0.75,
+        "raw": 0.7430498025050339,
+        "clamped": true,
+        "lost": 6,
+        "total": 25,
+        "px": 19,
+        "endErr": 0.4044747872452795,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": 101.6893691754392,
+        "used": 90,
+        "sx": 0.8659118652023906,
+        "raw": 0.8659118652023906,
+        "clamped": false,
+        "lost": 4,
+        "total": 34,
+        "px": 30,
+        "endErr": 1.2062712690065935,
+        "dPrev": -45
+       },
+       "nguc": {
+        "theta": 111.8588200678527,
+        "used": 90,
+        "sx": 1.01826395898028,
+        "raw": 1.01826395898028,
+        "clamped": false,
+        "lost": 0,
+        "total": 121,
+        "px": 121,
+        "endErr": 4.216481400504374,
+        "dPrev": 0
+       },
+       "ongChanTruoc": {
+        "theta": 147.26477372789236,
+        "used": 135,
+        "sx": 0.9732933904732898,
+        "raw": 0.9732933904732898,
+        "clamped": false,
+        "lost": -1,
+        "total": 34,
+        "px": 42,
+        "endErr": 1.4223552560884043,
+        "dPrev": 0
+       },
+       "cangTayTruoc": {
+        "theta": -4.205357001708589,
+        "used": -0.0,
+        "sx": 1.1214403903770247,
+        "raw": 1.1214403903770247,
+        "clamped": false,
+        "lost": 0,
+        "total": 25,
+        "px": 28,
+        "endErr": 0.5003360899115785,
+        "dPrev": -90
+       },
+       "vaiTruoc": {
+        "theta": 77.59258147259924,
+        "used": 90,
+        "sx": 0.9142089811550148,
+        "raw": 0.9142089811550148,
+        "clamped": false,
+        "lost": 6,
+        "total": 44,
+        "px": 38,
+        "endErr": 1.106477989728945,
+        "dPrev": -45
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 2
+     },
+     {
+      "name": "gối sau",
+      "before": 3,
+      "after": 0,
+      "total": 13
+     },
+     {
+      "name": "gối trước",
+      "before": 2,
+      "after": 0,
+      "total": 13
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 0,
+      "after": 0,
+      "total": 14
+     },
+     {
+      "name": "vai trước",
+      "before": 0,
+      "after": 0,
+      "total": 4
+     }
+    ]
+   },
+   {
+    "frame": 7,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [],
+      "rung": [
+       "Giáp ống chân trước xoay gắt 64°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 28.610459665965145,
+        "used": 28.610459665965145,
+        "sx": 0.75,
+        "raw": 0.6712480760433042,
+        "clamped": true,
+        "lost": 7,
+        "total": 44,
+        "px": 38,
+        "endErr": 0.4410100686136913,
+        "dPrev": 6.809050179613362
+       },
+       "cangTaySau": {
+        "theta": -6.340191745909909,
+        "used": -6.340191745909909,
+        "sx": 0.75,
+        "raw": 0.7446862778073534,
+        "clamped": true,
+        "lost": -1,
+        "total": 25,
+        "px": 26,
+        "endErr": 0.03230601474417559,
+        "dPrev": -1.2605838858953566
+       },
+       "ongChanSau": {
+        "theta": 86.05481377096245,
+        "used": 86.05481377096245,
+        "sx": 0.8499673598683406,
+        "raw": 0.8499673598683406,
+        "clamped": false,
+        "lost": 2,
+        "total": 34,
+        "px": 32,
+        "endErr": 3.0838622383236892e-06,
+        "dPrev": -15.634555404476743
+       },
+       "nguc": {
+        "theta": 119.89890183861453,
+        "used": 119.89890183861453,
+        "sx": 1.0140898457195011,
+        "raw": 1.0140898457195011,
+        "clamped": false,
+        "lost": 8,
+        "total": 121,
+        "px": 130,
+        "endErr": 2.1126372555046047e-06,
+        "dPrev": 8.04008177076183
+       },
+       "ongChanTruoc": {
+        "theta": -148.7362683056225,
+        "used": -148.7362683056225,
+        "sx": 0.9577976230502457,
+        "raw": 0.9577976230502457,
+        "clamped": false,
+        "lost": -1,
+        "total": 34,
+        "px": 40,
+        "endErr": 2.042085747990285e-06,
+        "dPrev": 63.998957966485136
+       },
+       "cangTayTruoc": {
+        "theta": 2.5448043798130864,
+        "used": 2.5448043798130864,
+        "sx": 1.3,
+        "raw": 1.4817244249414747,
+        "clamped": true,
+        "lost": -13,
+        "total": 25,
+        "px": 43,
+        "endErr": 1.1048863577912036,
+        "dPrev": 6.750161381521675
+       },
+       "vaiTruoc": {
+        "theta": 113.86017519134232,
+        "used": 113.86017519134232,
+        "sx": 1.0153477839878218,
+        "raw": 1.0153477839878218,
+        "clamped": false,
+        "lost": -2,
+        "total": 44,
+        "px": 50,
+        "endErr": 2.2630146905292655e-06,
+        "dPrev": 36.267593718743086
+       }
+      }
+     },
+     {
+      "bam": [
+       "Giáp ống chân trước (cuối)"
+      ],
+      "meo": [
+       "Giáp cẳng tay sau mất 6/25",
+       "Giáp ống chân sau mất 8/34"
+      ],
+      "rung": [
+       "Giáp vai sau nhảy 45° (xương chỉ 7°)",
+       "Giáp ngực nhỏ nhảy 45° (xương chỉ 8°)",
+       "Giáp ống chân trước xoay gắt 90°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 28.610459665965145,
+        "used": 45,
+        "sx": 0.75,
+        "raw": 0.6712480760433042,
+        "clamped": true,
+        "lost": 7,
+        "total": 44,
+        "px": 39,
+        "endErr": 1.215543481440083,
+        "dPrev": 45
+       },
+       "cangTaySau": {
+        "theta": -6.340191745909909,
+        "used": -0.0,
+        "sx": 0.75,
+        "raw": 0.7446862778073534,
+        "clamped": true,
+        "lost": 6,
+        "total": 25,
+        "px": 19,
+        "endErr": 0.503586047740435,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": 86.05481377096245,
+        "used": 90,
+        "sx": 0.8499673598683406,
+        "raw": 0.8499673598683406,
+        "clamped": false,
+        "lost": 8,
+        "total": 34,
+        "px": 26,
+        "endErr": 0.40023707179948664,
+        "dPrev": 0
+       },
+       "nguc": {
+        "theta": 119.89890183861453,
+        "used": 135,
+        "sx": 1.0140898457195011,
+        "raw": 1.0140898457195011,
+        "clamped": false,
+        "lost": 10,
+        "total": 121,
+        "px": 133,
+        "endErr": 2.9102271701729983,
+        "dPrev": 45
+       },
+       "ongChanTruoc": {
+        "theta": -148.7362683056225,
+        "used": -135,
+        "sx": 0.9577976230502457,
+        "raw": 0.9577976230502457,
+        "clamped": false,
+        "lost": -2,
+        "total": 34,
+        "px": 41,
+        "endErr": 1.5668785908309513,
+        "dPrev": 90
+       },
+       "cangTayTruoc": {
+        "theta": 2.5448043798130864,
+        "used": 0,
+        "sx": 1.3,
+        "raw": 1.4817244249414747,
+        "clamped": true,
+        "lost": 0,
+        "total": 25,
+        "px": 31,
+        "endErr": 1.1667149221141144,
+        "dPrev": 0
+       },
+       "vaiTruoc": {
+        "theta": 113.86017519134232,
+        "used": 135,
+        "sx": 1.0153477839878218,
+        "raw": 1.0153477839878218,
+        "clamped": false,
+        "lost": 1,
+        "total": 44,
+        "px": 51,
+        "endErr": 2.086003323854008,
+        "dPrev": 45
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 2
+     },
+     {
+      "name": "gối sau",
+      "before": 2,
+      "after": 1,
+      "total": 14
+     },
+     {
+      "name": "gối trước",
+      "before": 2,
+      "after": 0,
+      "total": 11
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 0,
+      "after": 0,
+      "total": 9
+     },
+     {
+      "name": "vai trước",
+      "before": 0,
+      "after": 0,
+      "total": 3
+     }
+    ]
+   },
+   {
+    "frame": 8,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [],
+      "rung": [
+       "Giáp cẳng tay trước xoay gắt 99°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 51.58194465517801,
+        "used": 51.58194465517801,
+        "sx": 0.75,
+        "raw": 0.6609555544043494,
+        "clamped": true,
+        "lost": 6,
+        "total": 44,
+        "px": 40,
+        "endErr": 0.49864920998744583,
+        "dPrev": 22.97148498921287
+       },
+       "cangTaySau": {
+        "theta": -21.501434324047988,
+        "used": -21.501434324047988,
+        "sx": 0.75,
+        "raw": 0.5833601266765854,
+        "clamped": true,
+        "lost": 1,
+        "total": 25,
+        "px": 27,
+        "endErr": 1.0131708761093543,
+        "dPrev": -15.16124257813808
+       },
+       "ongChanSau": {
+        "theta": 127.8065299447045,
+        "used": 127.8065299447045,
+        "sx": 1.0732428159200553,
+        "raw": 1.0732428159200553,
+        "clamped": false,
+        "lost": -3,
+        "total": 34,
+        "px": 43,
+        "endErr": 2.140935346561347e-06,
+        "dPrev": 41.75171617374204
+       },
+       "nguc": {
+        "theta": 109.16545651719089,
+        "used": 109.16545651719089,
+        "sx": 0.9539733798779501,
+        "raw": 0.9539733798779501,
+        "clamped": false,
+        "lost": -1,
+        "total": 121,
+        "px": 123,
+        "endErr": 1.7579596204933457e-06,
+        "dPrev": -10.733445321423645
+       },
+       "ongChanTruoc": {
+        "theta": -135.00000000000006,
+        "used": -135.00000000000006,
+        "sx": 0.7856742013183863,
+        "raw": 0.7856742013183863,
+        "clamped": false,
+        "lost": 1,
+        "total": 34,
+        "px": 34,
+        "endErr": 1.7243420412107665e-06,
+        "dPrev": 13.736268305622445
+       },
+       "cangTayTruoc": {
+        "theta": 101.888658039628,
+        "used": 101.888658039628,
+        "sx": 0.9580503867901782,
+        "raw": 0.9580503867901782,
+        "clamped": false,
+        "lost": -5,
+        "total": 25,
+        "px": 33,
+        "endErr": 8.02112199560164e-08,
+        "dPrev": 99.34385365981491
+       },
+       "vaiTruoc": {
+        "theta": 141.21563589970268,
+        "used": 141.21563589970268,
+        "sx": 1.2828589325472726,
+        "raw": 1.2828589325472726,
+        "clamped": false,
+        "lost": -7,
+        "total": 44,
+        "px": 62,
+        "endErr": 1.6342259117619424e-06,
+        "dPrev": 27.355460708360354
+       }
+      }
+     },
+     {
+      "bam": [
+       "Giáp ống chân sau (cuối)"
+      ],
+      "meo": [
+       "Giáp cẳng tay sau mất 6/25",
+       "Giáp cẳng tay sau lố 1.8đ ở khớp cuối (xương ×0.58, giáp chỉ ×0.75)"
+      ],
+      "rung": [
+       "Giáp ngực nhỏ nhảy -45° (xương chỉ -11°)",
+       "Giáp cẳng tay trước xoay gắt 90°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 51.58194465517801,
+        "used": 45,
+        "sx": 0.75,
+        "raw": 0.6609555544043494,
+        "clamped": true,
+        "lost": 6,
+        "total": 44,
+        "px": 38,
+        "endErr": 0.673481772580677,
+        "dPrev": 0
+       },
+       "cangTaySau": {
+        "theta": -21.501434324047988,
+        "used": -0.0,
+        "sx": 0.75,
+        "raw": 0.5833601266765854,
+        "clamped": true,
+        "lost": 6,
+        "total": 25,
+        "px": 19,
+        "endErr": 1.810414546472416,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": 127.8065299447045,
+        "used": 135,
+        "sx": 1.0732428159200553,
+        "raw": 1.0732428159200553,
+        "clamped": false,
+        "lost": -5,
+        "total": 34,
+        "px": 46,
+        "endErr": 0.9210508386967097,
+        "dPrev": 45
+       },
+       "nguc": {
+        "theta": 109.16545651719089,
+        "used": 90,
+        "sx": 0.9539733798779501,
+        "raw": 0.9539733798779501,
+        "clamped": false,
+        "lost": 10,
+        "total": 121,
+        "px": 111,
+        "endErr": 3.4683954211145367,
+        "dPrev": -45
+       },
+       "ongChanTruoc": {
+        "theta": -135.00000000000006,
+        "used": -135,
+        "sx": 0.7856742013183863,
+        "raw": 0.7856742013183863,
+        "clamped": false,
+        "lost": 1,
+        "total": 34,
+        "px": 34,
+        "endErr": 1.724342042701805e-06,
+        "dPrev": 0
+       },
+       "cangTayTruoc": {
+        "theta": 101.888658039628,
+        "used": 90,
+        "sx": 0.9580503867901782,
+        "raw": 0.9580503867901782,
+        "clamped": false,
+        "lost": 4,
+        "total": 25,
+        "px": 21,
+        "endErr": 1.2064872857825828,
+        "dPrev": 90
+       },
+       "vaiTruoc": {
+        "theta": 141.21563589970268,
+        "used": 135,
+        "sx": 1.2828589325472726,
+        "raw": 1.2828589325472726,
+        "clamped": false,
+        "lost": -10,
+        "total": 44,
+        "px": 66,
+        "endErr": 0.7789620828290952,
+        "dPrev": 0
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 10
+     },
+     {
+      "name": "gối sau",
+      "before": 2,
+      "after": 1,
+      "total": 13
+     },
+     {
+      "name": "gối trước",
+      "before": 1,
+      "after": 0,
+      "total": 11
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 0,
+      "after": 0,
+      "total": 12
+     },
+     {
+      "name": "vai trước",
+      "before": 0,
+      "after": 0,
+      "total": 4
+     }
+    ]
+   },
+   {
+    "frame": 9,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [],
+      "rung": [
+       "Giáp cẳng tay trước xoay gắt -102°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 39.28940686250028,
+        "used": 39.28940686250028,
+        "sx": 0.75,
+        "raw": 0.507595371555425,
+        "clamped": true,
+        "lost": 6,
+        "total": 44,
+        "px": 39,
+        "endErr": 1.3574643268002722,
+        "dPrev": -12.292537792677734
+       },
+       "cangTaySau": {
+        "theta": -6.709836807756913,
+        "used": -6.709836807756913,
+        "sx": 0.75,
+        "raw": 0.5630671963363054,
+        "clamped": true,
+        "lost": 0,
+        "total": 25,
+        "px": 25,
+        "endErr": 1.136551284083937,
+        "dPrev": 14.791597516291075
+       },
+       "ongChanSau": {
+        "theta": 122.39984017391929,
+        "used": 122.39984017391929,
+        "sx": 0.9003996543954867,
+        "raw": 0.9003996543954867,
+        "clamped": false,
+        "lost": 0,
+        "total": 34,
+        "px": 36,
+        "endErr": 1.6653467354529733e-06,
+        "dPrev": -5.406689770785206
+       },
+       "nguc": {
+        "theta": 114.18493403363269,
+        "used": 114.18493403363269,
+        "sx": 1.005869743229892,
+        "raw": 1.005869743229892,
+        "clamped": false,
+        "lost": 5,
+        "total": 121,
+        "px": 129,
+        "endErr": 1.5562672583992224e-06,
+        "dPrev": 5.019477516441796
+       },
+       "ongChanTruoc": {
+        "theta": -168.8869594640516,
+        "used": -168.8869594640516,
+        "sx": 0.8343586592620049,
+        "raw": 0.8343586592620049,
+        "clamped": false,
+        "lost": 1,
+        "total": 34,
+        "px": 35,
+        "endErr": 2.0441957939881924e-06,
+        "dPrev": -33.88695946405156
+       },
+       "cangTayTruoc": {
+        "theta": 0,
+        "used": 0,
+        "sx": 1.1019736842105268,
+        "raw": 1.1019736842105268,
+        "clamped": false,
+        "lost": 0,
+        "total": 25,
+        "px": 29,
+        "endErr": 2.0542773454160417e-06,
+        "dPrev": -101.888658039628
+       },
+       "vaiTruoc": {
+        "theta": 113.7026459509663,
+        "used": 113.7026459509663,
+        "sx": 0.7995933277585046,
+        "raw": 0.7995933277585046,
+        "clamped": false,
+        "lost": 7,
+        "total": 44,
+        "px": 39,
+        "endErr": 2.168533557904474e-06,
+        "dPrev": -27.512989948736376
+       }
+      }
+     },
+     {
+      "bam": [
+       "Giáp ống chân sau (cuối)"
+      ],
+      "meo": [
+       "Giáp cẳng tay sau mất 6/25"
+      ],
+      "rung": [
+       "Giáp ngực nhỏ nhảy 45° (xương chỉ 5°)",
+       "Giáp cẳng tay trước xoay gắt -90°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 39.28940686250028,
+        "used": 45,
+        "sx": 0.75,
+        "raw": 0.507595371555425,
+        "clamped": true,
+        "lost": 4,
+        "total": 44,
+        "px": 40,
+        "endErr": 1.4004311154936189,
+        "dPrev": 0
+       },
+       "cangTaySau": {
+        "theta": -6.709836807756913,
+        "used": -0.0,
+        "sx": 0.75,
+        "raw": 0.5630671963363054,
+        "clamped": true,
+        "lost": 6,
+        "total": 25,
+        "px": 19,
+        "endErr": 1.2270282754181745,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": 122.39984017391929,
+        "used": 135,
+        "sx": 0.9003996543954867,
+        "raw": 0.9003996543954867,
+        "clamped": false,
+        "lost": 0,
+        "total": 34,
+        "px": 38,
+        "endErr": 1.3516646445561333,
+        "dPrev": 0
+       },
+       "nguc": {
+        "theta": 114.18493403363269,
+        "used": 135,
+        "sx": 1.005869743229892,
+        "raw": 1.005869743229892,
+        "clamped": false,
+        "lost": 13,
+        "total": 121,
+        "px": 126,
+        "endErr": 3.9685218796452393,
+        "dPrev": 45
+       },
+       "ongChanTruoc": {
+        "theta": -168.8869594640516,
+        "used": -180,
+        "sx": 0.8343586592620049,
+        "raw": 0.8343586592620049,
+        "clamped": false,
+        "lost": 2,
+        "total": 34,
+        "px": 32,
+        "endErr": 1.1051947647475346,
+        "dPrev": -45
+       },
+       "cangTayTruoc": {
+        "theta": 0,
+        "used": 0,
+        "sx": 1.1019736842105268,
+        "raw": 1.1019736842105268,
+        "clamped": false,
+        "lost": 0,
+        "total": 25,
+        "px": 29,
+        "endErr": 2.0542773454160417e-06,
+        "dPrev": -90
+       },
+       "vaiTruoc": {
+        "theta": 113.7026459509663,
+        "used": 135,
+        "sx": 0.7995933277585046,
+        "raw": 0.7995933277585046,
+        "clamped": false,
+        "lost": 3,
+        "total": 44,
+        "px": 44,
+        "endErr": 1.6548462562552744,
+        "dPrev": 0
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 2
+     },
+     {
+      "name": "gối sau",
+      "before": 2,
+      "after": 2,
+      "total": 12
+     },
+     {
+      "name": "gối trước",
+      "before": 3,
+      "after": 0,
+      "total": 13
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 0,
+      "after": 0,
+      "total": 13
+     },
+     {
+      "name": "vai trước",
+      "before": 0,
+      "after": 0,
+      "total": 4
+     }
+    ]
+   },
+   {
+    "frame": 10,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [],
+      "rung": [],
+      "ang": {
+       "vaiSau": {
+        "theta": 30.650667957052928,
+        "used": 30.650667957052928,
+        "sx": 0.75,
+        "raw": 0.5604412438026858,
+        "clamped": true,
+        "lost": 7,
+        "total": 44,
+        "px": 39,
+        "endErr": 1.061530433189637,
+        "dPrev": -8.638738905447351
+       },
+       "cangTaySau": {
+        "theta": -5.710593137499623,
+        "used": -5.710593137499623,
+        "sx": 0.75,
+        "raw": 0.6611760277053217,
+        "clamped": true,
+        "lost": 1,
+        "total": 25,
+        "px": 24,
+        "endErr": 0.5400512859511768,
+        "dPrev": 0.9992436702572904
+       },
+       "ongChanSau": {
+        "theta": 124.21570213243739,
+        "used": 124.21570213243739,
+        "sx": 0.8839892665398229,
+        "raw": 0.8839892665398229,
+        "clamped": false,
+        "lost": 0,
+        "total": 34,
+        "px": 38,
+        "endErr": 1.7223620209126508e-06,
+        "dPrev": 1.8158619585180986
+       },
+       "nguc": {
+        "theta": 109.73918083589487,
+        "used": 109.73918083589487,
+        "sx": 0.992378272592431,
+        "raw": 0.992378272592431,
+        "clamped": false,
+        "lost": 0,
+        "total": 121,
+        "px": 128,
+        "endErr": 1.7887978759165595e-06,
+        "dPrev": -4.445753197737815
+       },
+       "ongChanTruoc": {
+        "theta": 147.9946167919165,
+        "used": 147.9946167919165,
+        "sx": 1.2413133068495525,
+        "raw": 1.2413133068495525,
+        "clamped": false,
+        "lost": -9,
+        "total": 34,
+        "px": 53,
+        "endErr": 2.0006793478714236e-06,
+        "dPrev": -43.11842374403187
+       },
+       "cangTayTruoc": {
+        "theta": 0,
+        "used": 0,
+        "sx": 0.970394736842105,
+        "raw": 0.970394736842105,
+        "clamped": false,
+        "lost": 2,
+        "total": 25,
+        "px": 23,
+        "endErr": 2.687670129490557e-06,
+        "dPrev": 0
+       },
+       "vaiTruoc": {
+        "theta": 113.70264595096621,
+        "used": 113.70264595096621,
+        "sx": 0.7995933277585041,
+        "raw": 0.7995933277585041,
+        "clamped": false,
+        "lost": 4,
+        "total": 44,
+        "px": 41,
+        "endErr": 1.7282070401323338e-06,
+        "dPrev": -8.526512829121202e-14
+       }
+      }
+     },
+     {
+      "bam": [
+       "Giáp ống chân sau (cuối)"
+      ],
+      "meo": [
+       "Giáp cẳng tay sau mất 6/25"
+      ],
+      "rung": [
+       "Giáp ngực nhỏ nhảy -45° (xương chỉ -4°)"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 30.650667957052928,
+        "used": 45,
+        "sx": 0.75,
+        "raw": 0.5604412438026858,
+        "clamped": true,
+        "lost": 5,
+        "total": 44,
+        "px": 39,
+        "endErr": 1.3961760536611925,
+        "dPrev": 0
+       },
+       "cangTaySau": {
+        "theta": -5.710593137499623,
+        "used": -0.0,
+        "sx": 0.75,
+        "raw": 0.6611760277053217,
+        "clamped": true,
+        "lost": 6,
+        "total": 25,
+        "px": 19,
+        "endErr": 0.688186269695182,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": 124.21570213243739,
+        "used": 135,
+        "sx": 0.8839892665398229,
+        "raw": 0.8839892665398229,
+        "clamped": false,
+        "lost": -2,
+        "total": 34,
+        "px": 41,
+        "endErr": 1.1363992043654731,
+        "dPrev": 0
+       },
+       "nguc": {
+        "theta": 109.73918083589487,
+        "used": 90,
+        "sx": 0.992378272592431,
+        "raw": 0.992378272592431,
+        "clamped": false,
+        "lost": 3,
+        "total": 121,
+        "px": 121,
+        "endErr": 3.7149803857945596,
+        "dPrev": -45
+       },
+       "ongChanTruoc": {
+        "theta": 147.9946167919165,
+        "used": 135,
+        "sx": 1.2413133068495525,
+        "raw": 1.2413133068495525,
+        "clamped": false,
+        "lost": -8,
+        "total": 34,
+        "px": 54,
+        "endErr": 1.921529738689504,
+        "dPrev": -45
+       },
+       "cangTayTruoc": {
+        "theta": 0,
+        "used": 0,
+        "sx": 0.970394736842105,
+        "raw": 0.970394736842105,
+        "clamped": false,
+        "lost": 2,
+        "total": 25,
+        "px": 23,
+        "endErr": 2.687670129490557e-06,
+        "dPrev": 0
+       },
+       "vaiTruoc": {
+        "theta": 113.70264595096621,
+        "used": 135,
+        "sx": 0.7995933277585041,
+        "raw": 0.7995933277585041,
+        "clamped": false,
+        "lost": 3,
+        "total": 44,
+        "px": 44,
+        "endErr": 1.6548433062448307,
+        "dPrev": 0
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 6
+     },
+     {
+      "name": "gối sau",
+      "before": 2,
+      "after": 1,
+      "total": 13
+     },
+     {
+      "name": "gối trước",
+      "before": 0,
+      "after": 0,
+      "total": 11
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 0,
+      "after": 0,
+      "total": 4
+     },
+     {
+      "name": "vai trước",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     }
+    ]
+   },
+   {
+    "frame": 11,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [
+       "Giáp ống chân trước hụt 2.1đ ở khớp cuối (xương ×1.60, giáp chỉ ×1.30)"
+      ],
+      "rung": [
+       "Giáp cẳng tay trước xoay gắt 85°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 52.52382043863866,
+        "used": 52.52382043863866,
+        "sx": 0.75,
+        "raw": 0.6750377918369926,
+        "clamped": true,
+        "lost": 5,
+        "total": 44,
+        "px": 40,
+        "endErr": 0.4197900050938105,
+        "dPrev": 21.87315248158573
+       },
+       "cangTaySau": {
+        "theta": -21.801409486351783,
+        "used": -21.801409486351783,
+        "sx": 0.797146106319252,
+        "raw": 0.797146106319252,
+        "clamped": false,
+        "lost": -4,
+        "total": 25,
+        "px": 30,
+        "endErr": 1.579317237490451e-06,
+        "dPrev": -16.09081634885216
+       },
+       "ongChanSau": {
+        "theta": 132.55295135767636,
+        "used": 132.55295135767636,
+        "sx": 1.2106287212666775,
+        "raw": 1.2106287212666775,
+        "clamped": false,
+        "lost": -10,
+        "total": 34,
+        "px": 52,
+        "endErr": 3.149121390144284e-06,
+        "dPrev": 8.337249225238978
+       },
+       "nguc": {
+        "theta": 115.58453454403701,
+        "used": 115.58453454403701,
+        "sx": 1.005149163057489,
+        "raw": 1.005149163057489,
+        "clamped": false,
+        "lost": 8,
+        "total": 121,
+        "px": 126,
+        "endErr": 1.2063777285173126e-06,
+        "dPrev": 5.845353708142142
+       },
+       "ongChanTruoc": {
+        "theta": 141.6666598909014,
+        "used": 141.6666598909014,
+        "sx": 1.3,
+        "raw": 1.6028619969199702,
+        "clamped": true,
+        "lost": -10,
+        "total": 34,
+        "px": 54,
+        "endErr": 2.071578333689331,
+        "dPrev": -6.3279569010151135
+       },
+       "cangTayTruoc": {
+        "theta": 84.92039213998545,
+        "used": 84.92039213998545,
+        "sx": 0.75,
+        "raw": 0.7430498025050339,
+        "clamped": true,
+        "lost": 0,
+        "total": 25,
+        "px": 26,
+        "endErr": 0.042257976805814716,
+        "dPrev": 84.92039213998545
+       },
+       "vaiTruoc": {
+        "theta": 124.56252464888185,
+        "used": 124.56252464888185,
+        "sx": 0.9757911494510181,
+        "raw": 0.9757911494510181,
+        "clamped": false,
+        "lost": -1,
+        "total": 44,
+        "px": 52,
+        "endErr": 1.6987908386120441e-06,
+        "dPrev": 10.859878697915633
+       }
+      }
+     },
+     {
+      "bam": [],
+      "meo": [
+       "Giáp ống chân trước hụt 2.4đ ở khớp cuối (xương ×1.60, giáp chỉ ×1.30)",
+       "Giáp cẳng tay trước mất 6/25"
+      ],
+      "rung": [
+       "Giáp ngực nhỏ nhảy 45° (xương chỉ 6°)",
+       "Giáp cẳng tay trước xoay gắt 90°"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 52.52382043863866,
+        "used": 45,
+        "sx": 0.75,
+        "raw": 0.6750377918369926,
+        "clamped": true,
+        "lost": 6,
+        "total": 44,
+        "px": 41,
+        "endErr": 0.670527403852208,
+        "dPrev": 0
+       },
+       "cangTaySau": {
+        "theta": -21.801409486351783,
+        "used": -0.0,
+        "sx": 0.797146106319252,
+        "raw": 0.797146106319252,
+        "clamped": false,
+        "lost": 4,
+        "total": 25,
+        "px": 21,
+        "endErr": 1.8330770462642636,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": 132.55295135767636,
+        "used": 135,
+        "sx": 1.2106287212666775,
+        "raw": 1.2106287212666775,
+        "clamped": false,
+        "lost": -7,
+        "total": 34,
+        "px": 51,
+        "endErr": 0.35363191033531105,
+        "dPrev": 0
+       },
+       "nguc": {
+        "theta": 115.58453454403701,
+        "used": 135,
+        "sx": 1.005149163057489,
+        "raw": 1.005149163057489,
+        "clamped": false,
+        "lost": 12,
+        "total": 121,
+        "px": 129,
+        "endErr": 3.701675385567233,
+        "dPrev": 45
+       },
+       "ongChanTruoc": {
+        "theta": 141.6666598909014,
+        "used": 135,
+        "sx": 1.3,
+        "raw": 1.6028619969199702,
+        "clamped": true,
+        "lost": -6,
+        "total": 34,
+        "px": 55,
+        "endErr": 2.3684992939315475,
+        "dPrev": 0
+       },
+       "cangTayTruoc": {
+        "theta": 84.92039213998545,
+        "used": 90,
+        "sx": 0.75,
+        "raw": 0.7430498025050339,
+        "clamped": true,
+        "lost": 6,
+        "total": 25,
+        "px": 19,
+        "endErr": 0.4044750838859304,
+        "dPrev": 90
+       },
+       "vaiTruoc": {
+        "theta": 124.56252464888185,
+        "used": 135,
+        "sx": 0.9757911494510181,
+        "raw": 0.9757911494510181,
+        "clamped": false,
+        "lost": 0,
+        "total": 44,
+        "px": 50,
+        "endErr": 0.9940708912180912,
+        "dPrev": 0
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 3
+     },
+     {
+      "name": "gối sau",
+      "before": 1,
+      "after": 0,
+      "total": 14
+     },
+     {
+      "name": "gối trước",
+      "before": 0,
+      "after": 0,
+      "total": 10
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 0,
+      "after": 0,
+      "total": 11
+     },
+     {
+      "name": "vai trước",
+      "before": 0,
+      "after": 0,
+      "total": 4
+     }
+    ]
+   },
+   {
+    "frame": 12,
+    "modes": [
+     {
+      "bam": [],
+      "meo": [],
+      "rung": [],
+      "ang": {
+       "vaiSau": {
+        "theta": 40.3141001604973,
+        "used": 40.3141001604973,
+        "sx": 0.7728244645850851,
+        "raw": 0.7728244645850851,
+        "clamped": false,
+        "lost": 7,
+        "total": 44,
+        "px": 39,
+        "endErr": 1.0514060535299631e-06,
+        "dPrev": -12.209720278141361
+       },
+       "cangTaySau": {
+        "theta": -11.888658039627998,
+        "used": -11.888658039627998,
+        "sx": 0.9580503867901782,
+        "raw": 0.9580503867901782,
+        "clamped": false,
+        "lost": -7,
+        "total": 25,
+        "px": 32,
+        "endErr": 8.02112269090308e-08,
+        "dPrev": 9.912751446723785
+       },
+       "ongChanSau": {
+        "theta": 148.90268711422058,
+        "used": 148.90268711422058,
+        "sx": 1.0756300132699654,
+        "raw": 1.0756300132699654,
+        "clamped": false,
+        "lost": -5,
+        "total": 34,
+        "px": 46,
+        "endErr": 3.6980699290168135e-06,
+        "dPrev": 16.34973575654422
+       },
+       "nguc": {
+        "theta": 112.1451800382233,
+        "used": 112.1451800382233,
+        "sx": 1.0203224212255877,
+        "raw": 1.0203224212255877,
+        "clamped": false,
+        "lost": 2,
+        "total": 121,
+        "px": 134,
+        "endErr": 8.398919641756439e-07,
+        "dPrev": -3.4393545058137107
+       },
+       "ongChanTruoc": {
+        "theta": 101.51383118448699,
+        "used": 101.51383118448699,
+        "sx": 0.8056868849973586,
+        "raw": 0.8056868849973586,
+        "clamped": false,
+        "lost": 1,
+        "total": 34,
+        "px": 34,
+        "endErr": 3.1393463372953426e-06,
+        "dPrev": -40.15282870641441
+       },
+       "cangTayTruoc": {
+        "theta": 101.94417718844635,
+        "used": 101.94417718844635,
+        "sx": 0.8741896227577843,
+        "raw": 0.8741896227577843,
+        "clamped": false,
+        "lost": -3,
+        "total": 25,
+        "px": 29,
+        "endErr": 1.722856714778448e-06,
+        "dPrev": 17.023785048460894
+       },
+       "vaiTruoc": {
+        "theta": 138.01278750418336,
+        "used": 138.01278750418336,
+        "sx": 1.2012164327744386,
+        "raw": 1.2012164327744386,
+        "clamped": false,
+        "lost": -2,
+        "total": 44,
+        "px": 60,
+        "endErr": 1.618326206205048e-06,
+        "dPrev": 13.450262855301517
+       }
+      }
+     },
+     {
+      "bam": [
+       "Giáp ngực nhỏ (cuối)"
+      ],
+      "meo": [
+       "Giáp ống chân trước mất 8/34"
+      ],
+      "rung": [
+       "Giáp ngực nhỏ nhảy -45° (xương chỉ -3°)"
+      ],
+      "ang": {
+       "vaiSau": {
+        "theta": 40.3141001604973,
+        "used": 45,
+        "sx": 0.7728244645850851,
+        "raw": 0.7728244645850851,
+        "clamped": false,
+        "lost": 3,
+        "total": 44,
+        "px": 45,
+        "endErr": 0.35384924057350897,
+        "dPrev": 0
+       },
+       "cangTaySau": {
+        "theta": -11.888658039627998,
+        "used": -0.0,
+        "sx": 0.9580503867901782,
+        "raw": 0.9580503867901782,
+        "clamped": false,
+        "lost": 0,
+        "total": 25,
+        "px": 25,
+        "endErr": 1.2064873903196247,
+        "dPrev": 0
+       },
+       "ongChanSau": {
+        "theta": 148.90268711422058,
+        "used": 135,
+        "sx": 1.0756300132699654,
+        "raw": 1.0756300132699654,
+        "clamped": false,
+        "lost": -6,
+        "total": 34,
+        "px": 45,
+        "endErr": 1.7808590286316535,
+        "dPrev": 0
+       },
+       "nguc": {
+        "theta": 112.1451800382233,
+        "used": 90,
+        "sx": 1.0203224212255877,
+        "raw": 1.0203224212255877,
+        "clamped": false,
+        "lost": 0,
+        "total": 121,
+        "px": 121,
+        "endErr": 4.279668148267094,
+        "dPrev": -45
+       },
+       "ongChanTruoc": {
+        "theta": 101.51383118448699,
+        "used": 90,
+        "sx": 0.8056868849973586,
+        "raw": 0.8056868849973586,
+        "clamped": false,
+        "lost": 8,
+        "total": 34,
+        "px": 26,
+        "endErr": 1.1055749986798753,
+        "dPrev": -45
+       },
+       "cangTayTruoc": {
+        "theta": 101.94417718844635,
+        "used": 90,
+        "sx": 0.8741896227577843,
+        "raw": 0.8741896227577843,
+        "clamped": false,
+        "lost": 4,
+        "total": 25,
+        "px": 21,
+        "endErr": 1.1060040456255547,
+        "dPrev": 0
+       },
+       "vaiTruoc": {
+        "theta": 138.01278750418336,
+        "used": 135,
+        "sx": 1.2012164327744386,
+        "raw": 1.2012164327744386,
+        "clamped": false,
+        "lost": -5,
+        "total": 44,
+        "px": 59,
+        "endErr": 0.353676120878173,
+        "dPrev": 0
+       }
+      }
+     }
+    ],
+    "gaps": [
+     {
+      "name": "vai sau",
+      "before": 0,
+      "after": 0,
+      "total": 0
+     },
+     {
+      "name": "khuỷu sau",
+      "before": 0,
+      "after": 0,
+      "total": 1
+     },
+     {
+      "name": "gối sau",
+      "before": 2,
+      "after": 0,
+      "total": 13
+     },
+     {
+      "name": "gối trước",
+      "before": 2,
+      "after": 1,
+      "total": 13
+     },
+     {
+      "name": "khuỷu trước",
+      "before": 0,
+      "after": 0,
+      "total": 4
+     },
+     {
+      "name": "vai trước",
+      "before": 3,
+      "after": 0,
+      "total": 9
+     }
+    ]
+   }
+  ]
+ }
+}
