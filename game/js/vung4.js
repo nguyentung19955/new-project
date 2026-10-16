@@ -100,6 +100,8 @@
     const d0 = MA.draw;
     MA.draw = function (c) {
       if (!V4.dangVe || !c || !('filter' in c)) return d0.apply(this, arguments);
+      // 16/10 vẽ tay 9: nhuộm nhanh (G.locVe, js/fx_anh.js; ?songnhanh=0 như cũ)
+      if (G.locVe) { const f0 = G.locHien(c), th = this, ar = arguments; return G.locVe(c, f0 ? f0 + ' ' + V4.LOC : V4.LOC, () => d0.apply(th, ar)); }
       const f0 = c.filter;
       c.filter = f0 && f0 !== 'none' ? f0 + ' ' + V4.LOC : V4.LOC;
       try { return d0.apply(this, arguments); } finally { c.filter = f0; }

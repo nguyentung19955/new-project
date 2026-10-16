@@ -307,8 +307,37 @@
   };
   // Viền màu bậc nhuộm bằng code (ô vũ khí trong trận, ô dự phòng khi thiếu ảnh). Rực lửa: lửa chạy quanh viền.
   // trang: vẽ cả viền bậc Trắng (ô vũ khí trong trận: khung ảnh không còn theo bậc màu cũ G.RARITY, viền luôn theo bậc ép đồ)
+  // 16/10 vẽ tay 9 (?noi9=0 tắt): viền ô vũ khí TRONG TRẬN bằng ảnh có sẵn gd-o-ep-<bậc> — khoét lòng ảnh (lòng giữ khung ô gd-o-vk-0
+  // và nút nạp / chớp đổi bên dưới), cắt 9 mảnh: góc ảnh 7 điểm thu còn 5 điểm cho vừa ô 54 × 35. Dựng sẵn một lần cho mỗi (bậc, cỡ).
+  const VIEN9 = new Map();
+  function vienAnh(c, x, y, w, h, b) {
+    if (G.NOI9 === false || typeof document === 'undefined') return false;
+    const g = gd('gd-o-ep-' + b);
+    if (!g || !g.img || !(w > 12 && h > 12)) return false;
+    const key = b + '|' + w + 'x' + h;
+    let cv = VIEN9.get(key);
+    if (!cv || cv.__img !== g.img) {
+      const N = 4, W = Math.round(w * N), H = Math.round(h * N), im = g.img, pw = im.naturalWidth || im.width, ph = im.naturalHeight || im.height;
+      const s0 = Math.round(pw * 7 / 30), d0 = 5 * N; // viền nguồn 7/30 bề ảnh, viền đích 5 điểm game
+      cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+      const q = cv.getContext('2d'); if (!q) return false;
+      q.imageSmoothingEnabled = false;
+      const sx = [0, s0, pw - s0], sw = [s0, pw - 2 * s0, s0], dx = [0, d0, W - d0], dw = [d0, W - 2 * d0, d0];
+      const sy = [0, s0, ph - s0], sh = [s0, ph - 2 * s0, s0], dy = [0, d0, H - d0], dh = [d0, H - 2 * d0, d0];
+      for (let j = 0; j < 3; j++) for (let i = 0; i < 3; i++) { if (i === 1 && j === 1) continue; if (dw[i] > 0 && dh[j] > 0) q.drawImage(im, sx[i], sy[j], sw[i], sh[j], dx[i], dy[j], dw[i], dh[j]); }
+      cv.__img = g.img;
+      if (VIEN9.size > 16) VIEN9.clear();
+      VIEN9.set(key, cv);
+    }
+    const sm = c.imageSmoothingEnabled; c.imageSmoothingEnabled = false;
+    c.drawImage(cv, x, y, w, h);
+    c.imageSmoothingEnabled = sm;
+    return true;
+  }
+  E.vienAnh = vienAnh;
   E.vien = function (c, x, y, w, h, b, luonVe, trang) {
     if (!E.bat() || (!b && !luonVe && !trang)) return;
+    if (trang && !luonVe && vienAnh(c, x, y, w, h, b | 0)) return;
     c.save();
     c.strokeStyle = E.mauBac(b); c.lineWidth = 1.5; c.strokeRect(x + 1, y + 1, w - 2, h - 2);
     if (luonVe) { c.strokeStyle = 'rgba(0,0,0,0.6)'; c.lineWidth = 1; c.strokeRect(x + 3.5, y + 3.5, w - 7, h - 7); }

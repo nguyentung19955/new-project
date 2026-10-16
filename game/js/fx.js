@@ -2447,6 +2447,8 @@
         }
         case 'thrust': {
           const L = o.len * Math.min(1, k * 4 + 0.3), s0 = o.len * Math.max(0, (k - 0.35) / 0.65), PL = o.pl, f = o.f;
+          // 16/10 vẽ tay 9 (?noi9=0 tắt): đang chặn → chỉ còn chớp sao ở mũi đâm bằng ảnh hu-sao-chop (phần vệt đã có ảnh hu-dam-giao)
+          if (G.chanVe > 0 && G.NOI9 !== false && coAnh('hu-sao-chop')) { if (k < 0.65) { const a = G.fxAnh.get('hu-sao-chop'); G.fxAnh.veK(c, 'hu-sao-chop', x + f * L, y, Math.min(a.so - 1, Math.floor(k / 0.65 * a.so)), 0, kep(((o.big ? 7 : 5) * (1 - k)) / 9, 0.3, 1.5), false, 1, PL && laHex(PL.c2) ? PL.c2 : null); } break; }
           const seg = (a, b, h, col, dth) => { if (b <= a) return; const xa = f > 0 ? x + a : x - b; if (dth) { for (let q = 0; q < b - a; q += 2) p(c, Math.round(xa + q), y - (h >> 1), 1, h, col); } else p(c, Math.round(xa), y - (h >> 1), Math.round(b - a), h, col); };
           seg(s0, L, o.big ? 5 : 3, PL.d, k > 0.6);
           seg(s0 + (L - s0) * 0.3, L, o.big ? 3 : 3, PL.c, k > 0.75);

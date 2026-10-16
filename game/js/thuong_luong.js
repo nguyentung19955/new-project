@@ -950,8 +950,14 @@
     } finally { c = pv; }
     const V4 = G.vung4, dv = V4 ? V4.dangVe : false, nh = b.tl.nhuom && 'filter' in cx;
     let f0 = null;
+    if (nh && G.locVe) { // 16/10 vẽ tay 9: nhuộm nhanh (G.locVe, js/fx_anh.js; ?songnhanh=0 như cũ)
+      if (V4) V4.dangVe = false;
+      const th = this, ar = arguments;
+      try { G.locVe(cx, NHUOM[b.el] || '', () => boss0.apply(th, ar)); } finally { if (V4) V4.dangVe = dv; }
+    } else {
     if (nh) { f0 = cx.filter; cx.filter = NHUOM[b.el] || 'none'; if (V4) V4.dangVe = false; }
     try { boss0.apply(this, arguments); } finally { if (nh) { cx.filter = f0; if (V4) V4.dangVe = dv; } }
+    }
     if (b.dying == null && !b.hidden) {
       c = cx;
       try {

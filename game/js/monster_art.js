@@ -1294,6 +1294,33 @@ F.song = (c, x, y, r, u, cols, th) => { cols = cols || ['#ffffff', '#9fd8f5']; c
 // Vẽ một lưới hình nhỏ (đạn, mảnh...) tâm tại (x, y), xoay rot radian, phóng s
 F.luoi = (c, g, x, y, o) => { o = o || {}; const rot = o.rot || 0, s = o.s || 1, b = g.bb || (g.bb = bbox(g)), mx = (b.x0 + b.x1 + 1) / 2, my = (b.y0 + b.y1 + 1) / 2, R = Math.ceil(Math.hypot(b.w, b.h) / 2 * s) + 1, cr = Math.cos(-rot), sr = Math.sin(-rot); let last = null;
   for (let j = -R; j <= R; j++) for (let i = -R; i <= R; i++) { let ux = (i * cr - j * sr) / s, uy = (i * sr + j * cr) / s; if (o.lat) ux = -ux; const gx = Math.floor(mx + ux), gy = Math.floor(my + uy); if (gx < 0 || gy < 0 || gx >= g.w || gy >= g.h) continue; const col = g.d[gy * g.w + gx]; if (!col) continue; if (col !== last) { c.fillStyle = o.mau || col; last = col; } c.fillRect(Math.round(x) + i, Math.round(y) + j, 1, 1); } };
+// ---------- 16/10 VẼ TAY 9 (docs/review/ke-hoach-cai-thien/con-ve-tay-9/bao-cao.md, cờ ?trum9=0): hiệu ứng code của trùm / quái ----------
+// Trước phiên này các hình F.hat / F.song / F.khoi / F.lua... của trùm lọt qua chặn vẽ (bút giả js/sprite_custom.js nhớ hàm tô cũ). Nay đã chặn;
+// khi đang chặn (G.chanVe > 0), các hàm dưới vẽ ẢNH có sẵn gần nhất thay cho hình code (ảnh vẽ bằng bút thật c.__that như HT.ve).
+// Ảnh chưa tải: không vẽ gì. ?vecode=1 (không chặn) / trang công cụ: vẽ code như cũ. Chỉ là hình: không đổi vùng, sát thương, thời gian.
+const VT9 = () => G.chanVe > 0 && G.TRUM9 !== false && !!G.fxAnh;
+MA.vt9 = VT9;
+const hex9 = (m) => typeof m === 'string' && /^#[0-9a-fA-F]{6}$/.test(m);
+// vẽ khung f của ảnh ma tại (x, y), cỡ co, dẹt theo chiều dọc sy (1 = không). Luôn trả true (đang chặn: hình code không hiện dù có ảnh hay không).
+const anh9 = (c, ma, x, y, f, co, lat, mo, mau, sy) => { const FA = G.fxAnh, a = FA && FA.get(ma); if (!a || !(co > 0)) return true; const cc = (c && c.__that) || c; f = Math.max(0, Math.min(a.so - 1, f | 0)); mau = hex9(mau) ? mau : null;
+  if (sy && Math.abs(sy - 1) > .01) { cc.save(); try { cc.translate(Math.round(x), Math.round(y)); cc.scale(1, sy); FA.veK(cc, ma, 0, 0, f, 0, co, lat, mo, mau); } finally { cc.restore(); } } else FA.veK(cc, ma, x, y, f, 0, co, lat, mo, mau); return true; };
+MA.anh9 = anh9;
+// vòng sóng dẹt bán kính ngang rx, dọc ry, tiến độ k (ảnh hu-vong-song: bán kính từng khung ghi trong tệp)
+const vong9 = (c, x, y, rx, ry, k, mau, mo) => { const FA = G.fxAnh, a = FA && FA.get('hu-vong-song'); if (!a || !(rx >= 1)) return true; const f = Math.max(0, Math.min(a.so - 1, Math.floor(k * a.so))), rf = (a.bk && a.bk[f]) || a.fw / 2 - 1;
+  return anh9(c, 'hu-vong-song', x, y, f, rx / rf, false, (mo == null ? 1 : mo) * clamp(60 / rx, .5, 1), mau, ry / rx / (a.det || 1)); }; // vòng to (ảnh phóng lớn, nét dày): nhạt bớt
+MA.vong9 = vong9;
+{ const hat0 = F.hat, song0 = F.song, khoi0 = F.khoi, lua0 = F.lua;
+  // chùm hạt → hu-hat-no (nổ tia), cỡ theo quãng bay, lệch về hướng bắn khi chùm hẹp; màu giữa dải màu hạt
+  F.hat = (c, x, y, n, seed, u, o) => { if (!VT9()) return hat0(c, x, y, n, seed, u, o); if (!(u > 0 && u < 1) || !(n > 0)) return; o = o || {}; const v = o.v || 16, xoe = o.xoe == null ? TAU : o.xoe, g = o.goc || 0, cols = o.cols || ['#ffffff'];
+    let cx = x, cy = y + (o.g || 0) * u * u * .4; if (xoe < 5) { cx += Math.cos(g) * v * .4 * u; cy += Math.sin(g) * v * .4 * u * (o.det || 1); }
+    const a = G.fxAnh.get('hu-hat-no'), so = a ? a.so : 5; anh9(c, 'hu-hat-no', cx, cy, Math.floor(u * so), clamp(v / 13 * (n < 6 ? .7 : 1), .35, 4), (seed | 0) % 2 === 1, 1, cols[Math.min(cols.length - 1, cols.length >> 1)]); };
+  // vòng sóng lan → hu-vong-song, bán kính r·u, dẹt theo MA.det, mờ như cũ
+  F.song = (c, x, y, r, u, cols, th) => { if (!VT9()) return song0(c, x, y, r, u, cols, th); if (!(u > 0 && u < 1)) return; cols = cols || ['#ffffff']; vong9(c, x, y, Math.max(1, r * u), Math.max(1, r * u) * MA.det, u, cols[0], Math.min(1, (1 - u) * 1.6)); };
+  // cụm khói → hu-khoi-tron (nở rồi tan theo u), bay lên như cũ
+  F.khoi = (c, x, y, r, u, cols, seed, n) => { if (!VT9()) return khoi0(c, x, y, r, u, cols, seed, n); if (!(u >= 0 && u < 1)) return; cols = cols || ['#8a8290']; anh9(c, 'hu-khoi-tron', x, y - u * r * .5, Math.floor(u * 6), clamp(r / 10, .3, 4), (seed | 0) % 2 === 1, 1, cols[0]); };
+  // ngọn lửa → hu-bam-lua (lửa cháy lặp 4 khung, đáy ảnh ở gốc lửa), cao theo h
+  F.lua = (c, x, y, w, h, t, cols, seed) => { if (!VT9()) return lua0(c, x, y, w, h, t, cols, seed); if (!(h >= 1)) return; const a = G.fxAnh.get('hu-bam-lua'), so = a ? a.so : 4; anh9(c, 'hu-bam-lua', x, y, Math.floor((t || 0) * 9 + (seed || 0) * 1.7) % so, clamp(h / 28, .2, 3), (seed | 0) % 2 === 1, .95); };
+}
 // --- vùng báo trước trên sàn (đỏ, đầy dần theo u, chớp sáng khi sắp ra đòn) ---
 MA.mauBao = ['rgba(255,60,40,.16)', 'rgba(255,70,45,.34)', '#ff5a46', '#ffe9c8'];
 function baoTo(c, x0, y0, x1, y1, trong, u, r0) { const m = MA.mauBao, chop = u > .78 && ((u * 24) | 0) % 2 === 0;
@@ -1528,7 +1555,7 @@ MA.draw = function (c, id, x, y, o) {
   // (bút giả chỉ lấy lệnh drawImage đầu tiên để dán ảnh AI), nên bỏ hẳn bước dựng khung (veKhung/ghepHinh) — chỉ còn Pose, bóng, hiệu ứng.
   const key = bo || P.khongNho ? null : id + '|' + ph + '|' + (hv || '') + '|' + nm + '|' + fi + '|' + P.aim + (P.khoa || ''), fr = bo ? null : veKhung(B, P, key);
   c.save(); c.translate(Math.round(x), Math.round(y)); c.imageSmoothingEnabled = false; const ga = c.globalAlpha;
-  if (P.bong > 0 && d.bong !== 0) { const bw = (d.bong || B.bw * .62) * (1 - Math.min(.5, P.h / 80)) * Math.min(1, P.bong + .3); if (!(G.bongAnh && G.bongAnh(c.__that || c, o.bongGoc ? 0 : P.x, P.y, bw / 2, Math.min(1, P.bong)))) { c.globalAlpha = ga * .28 * Math.min(1, P.bong); F.elip(c, o.bongGoc ? 0 : P.x, P.y, bw / 2, Math.max(1.5, bw * .14), '#000000'); c.globalAlpha = ga; } } // o.bongGoc (14/10): thân là ảnh AI đứng yên tại chân → bóng không rung theo P.x của dáng vẽ code
+  if (P.bong > 0 && d.bong !== 0 && !o.khongBong) { const bw = (d.bong || B.bw * .62) * (1 - Math.min(.5, P.h / 80)) * Math.min(1, P.bong + .3); if (!(G.bongAnh && G.bongAnh(c.__that || c, o.bongGoc ? 0 : P.x, P.y, bw / 2, Math.min(1, P.bong))) && !(o.bongAnh && G.bongLang && G.bongLang(c.__that || c, o.bongGoc ? 0 : P.x, P.y, bw / 2, Math.min(1, P.bong)))) { c.globalAlpha = ga * .28 * Math.min(1, P.bong); F.elip(c, o.bongGoc ? 0 : P.x, P.y, bw / 2, Math.max(1.5, bw * .14), '#000000'); c.globalAlpha = ga; } } // o.bongGoc (14/10): thân là ảnh AI đứng yên tại chân → bóng không rung theo P.x của dáng vẽ code
   if (o.fx !== false) for (const f of P._u) { c.save(); f(c, P); c.restore(); }
   const sx = Math.round(P.x), sy = Math.round(P.y - P.h);
   const ve = (img, dx, dy, a) => { c.save(); c.globalAlpha = ga * a; c.translate(sx + dx, sy + dy); if (face > 0) c.scale(-1, 1); if (bo) c.drawImage(); else c.drawImage(img, -fr.ox, -fr.oy); c.restore(); };
@@ -1716,7 +1743,7 @@ def('socNo', { ten: 'Sóc Ném Quả Nổ', vung: 'rung', loai: 'thuong', tt: 7,
     tele: A(.75, P => { const u = P.u, k = kf(u, [[0, 0], [.4, 1, 'back'], [1, 1]]); CH.tele(P); P.r('qua', 70 * k).m('qua', 6 * k, -10 * k).r('dau', 8 * k).b('duoi', 15 * k); }),
     atk: A(.75, P => { const u = P.u, a = kf(u, [[0, 70], [.1, -50, 'in'], [.3, -30], [1, 0, 'back']]); CH.atk(P); P.r('qua', a).m('qua', 6 * (1 - seg(u, 0, .15)), -10 * (1 - seg(u, 0, .15))); P.s('qua', u > .08 && u < .9 ? 0 : 1); P.b('duoi', -10 * (1 - u)); }),
     hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.r('dau', 15 * k).b('duoi', 25 * k).m('qua', 2 * k, -2 * k); }),
-    die: A(1.2, P => { const k = kf(P.u, [[0, 0], [.25, 1, 'nay']]); CH.die(P); P.r('dau', 25 * k).b('duoi', 35 * k).r('qua', -40 * k); if (P.u < .3) P.over(c => { const m = P.pt(10, 28); F.dia(c, m[0], m[1], 2 + P.u * 30, P.u < .15 ? '#fff6b0' : '#ff8a1e'); }); }),
+    die: A(1.2, P => { const k = kf(P.u, [[0, 0], [.25, 1, 'nay']]); CH.die(P); P.r('dau', 25 * k).b('duoi', 35 * k).r('qua', -40 * k); if (P.u < .3) P.over(c => { const m = P.pt(10, 28); if (VT9()) { anh9(c, 'hu-no-nho-fire', m[0], m[1], Math.floor(P.u / .3 * 5), .6, false, 1); return; } F.dia(c, m[0], m[1], 2 + P.u * 30, P.u < .15 ? '#fff6b0' : '#ff8a1e'); }); }), // vẽ tay 9: chớp nổ lúc chết → ảnh hu-no-nho-fire
   } });
 // ---- Nhím Gai Độc: lúc báo trước và ra đòn thì xù gai (đổi sang hình xù), bắn gai độc ----
 def('nhimDoc', { ten: 'Nhím Gai Độc', vung: 'rung', loai: 'thuong', tt: 8, luoi: (p, hv) => QR.nhim(hv === 'xu'), don: { kieu: 'gai', tam: 36, so: 10, mau: [TIMD[1], DOCX[2], '#ffffff'] }, chet: { k: 'tan', mau: [TIMD[2], NAUG[2], DOCX[2]] }, hien: { k: 'ghep', mau: [NAUG[1], TIMD[2]] },
@@ -1981,9 +2008,9 @@ def('nguTinh', { ten: 'Ngư Tinh', vung: 'bien', loai: 'trum', tt: 1, pha: 3, lu
     intro: A(2.8, P => { const u = P.u, C = mauPha(P), q = seg(u, .25, .62), e = EASE.back(q);
       P.tan = q < 1 ? { k: 'chim', u: clamp(1 - e, 0, 1) } : null; if (e > 1) P.h += (e - 1) * 30; if (u < .62) P.x += ((u * 30) | 0) % 2 ? .8 : -.8;
       const g = kf(u, [[.62, 0], [.72, 1, 'out'], [.9, 1], [1, 0]]); P.r('ham', -22 * g).b('rau', 20 * g).r('vay', -10 * g); P.sy *= 1 + .06 * g; if (u > .7 && u < .9) P.x += ((u * 40) | 0) % 2 ? 1 : -1;
-      P.under(c => { for (let i = 0; i < 3; i++) { const q2 = (u * 2 + i / 3) % 1; F.a(c, (1 - q2) * (1 - seg(u, .6, .8))); F.vong(c, 0, 0, 30 + q2 * 50, 8 + q2 * 14, C[i % 2], 1); } F.a(c, 1); if (u > .62) F.song(c, 0, 0, 110, seg(u, .66, 1), [C[2], C[1]], 3); });
-      P.over(c => { if (u < .3) for (let i = 0; i < 10; i++) { const q2 = (u * 3 + hh(i, 1, 1)) % 1; F.vong(c, (hh(i, 2, 1) - .5) * 80, -q2 * 20, 1 + q2 * 1.5, 1 + q2 * 1.5, C[2], 1); }
-        if (u > .25 && u < .8) for (let i = 0; i < 5; i++) { const x = (i - 2) * 26, e2 = seg(u, .25 + i * .03, .7 + i * .02); if (e2 > 0 && e2 < 1) { F.a(c, 1 - e2); F.px(c, x - 3, -Math.sin(e2 * PI) * 70, C[1], 6, Math.sin(e2 * PI) * 70); F.px(c, x - 1, -Math.sin(e2 * PI) * 74, C[2], 2, Math.sin(e2 * PI) * 74); F.a(c, 1); tungNuoc(c, x, 0, e2, i, 22, C); } } }); }, { nhan: 'Ra mắt' }),
+      P.under(c => { const v9 = VT9(); for (let i = 0; i < 3; i++) { const q2 = (u * 2 + i / 3) % 1, mo = (1 - q2) * (1 - seg(u, .6, .8)); if (v9) { if (mo > .02) vong9(c, 0, 0, 30 + q2 * 50, 8 + q2 * 14, q2, C[i % 2], mo); continue; } F.a(c, mo); F.vong(c, 0, 0, 30 + q2 * 50, 8 + q2 * 14, C[i % 2], 1); } F.a(c, 1); if (u > .62) F.song(c, 0, 0, 110, seg(u, .66, 1), [C[2], C[1]], 3); }); // vẽ tay 9: vòng nước lan → ảnh hu-vong-song
+      P.over(c => { if (u < .3) for (let i = 0; i < 10; i++) { const q2 = (u * 3 + hh(i, 1, 1)) % 1; if (VT9()) { anh9(c, 'hu-dan-bot', (hh(i, 2, 1) - .5) * 80, -q2 * 20, i % 4, .3 + q2 * .25, false, 1 - q2 * .6); continue; } F.vong(c, (hh(i, 2, 1) - .5) * 80, -q2 * 20, 1 + q2 * 1.5, 1 + q2 * 1.5, C[2], 1); } // vẽ tay 9: bọt nổi → ảnh hu-dan-bot
+        if (u > .25 && u < .8) for (let i = 0; i < 5; i++) { const x = (i - 2) * 26, e2 = seg(u, .25 + i * .03, .7 + i * .02); if (e2 > 0 && e2 < 1) { if (VT9()) { const ac = G.fxAnh.get('hu-cot-nuoc'); anh9(c, 'hu-cot-nuoc', x, 0, Math.floor(e2 * (ac ? ac.so : 6)), 1.2, i % 2 === 1, 1); tungNuoc(c, x, 0, e2, i, 22, C); continue; } F.a(c, 1 - e2); F.px(c, x - 3, -Math.sin(e2 * PI) * 70, C[1], 6, Math.sin(e2 * PI) * 70); F.px(c, x - 1, -Math.sin(e2 * PI) * 74, C[2], 2, Math.sin(e2 * PI) * 74); F.a(c, 1); tungNuoc(c, x, 0, e2, i, 22, C); } } }); }, { nhan: 'Ra mắt' }),
     idle: A(2, P => { const u = P.u; nhapNho(P, sn(u) * 2.5); P.rot += 1.5 * sn(u + .1); P.w('song', 3, -u * 2, .25); P.w('duoi', 6, -u, .15).r('vay', 4 * sn(u)).b('rau', 12 * sn(u + .3)).r('ham', -3 - 3 * sn(u * 2)).r('vayBung', 8 * sn(u + .2)); }),
     move: A(1.2, P => { const u = P.u; nhapNho(P, sn(u * 2) * 2); P.rot += -3; P.w('song', 4, -u * 3, .25); P.w('duoi', 12, -u * 2, .15).b('rau', 25 + 8 * sn(u * 2)).r('vay', -6).r('vayBung', 15 * sn(u * 2)); P.under(c => { F.hat(c, 60 * -P.face, -6, 10, (u * 4) | 0, (u * 4) % 1, { v: 14, goc: -PI / 2 + (P.face > 0 ? -1 : 1) * .6, xoe: 1, g: 8, cols: [NUOC[2], NUOC[1]] }); }); }),
     // Chiêu 1: ĐỚP. Lùi lại há miệng (vệt đỏ thẳng), lao tới đớp, nước bắn tung toé.
@@ -2039,9 +2066,10 @@ const LAX = [LUCR[1], LUCR[2], LUCR[3]], GO = [NAUG[1], NAUG[2], NAUG[3]], GIAN 
 const mauLa = P => P.phase === 3 ? TIM : LAX;
 const khiDoc = (c, x, y, r, e, s) => { if (MA._vt2) return khoiDoc3(c, x, y, r, e, s); F.a(c, (1 - e) * .5); F.khoi(c, x, y, r, e * .7, [DOCX[2], DOCX[1], TIMD[3]], s, 7); F.a(c, 1); };
 // lá rơi lả tả
-const laRoi = (c, x, y, n, s, e, C, R) => { for (let i = 0; i < n; i++) { const r1 = hh(i, s, 1), r2 = hh(i, s, 2); if (e > .6 + r2 * .4) continue; const px = x + (r1 - .5) * (R || 90) + Math.sin(e * 9 + i) * 5, py = y + e * 60 * (.5 + r2) - 30 * r2; c.fillStyle = C[i % 3]; c.fillRect(Math.round(px), Math.round(py), 2, 1); c.fillRect(Math.round(px) + ((e * 9 + i) | 0) % 2, Math.round(py) + 1, 1, 1); } };
+const laRoi = (c, x, y, n, s, e, C, R) => { const v9 = VT9(); for (let i = 0; i < n; i++) { const r1 = hh(i, s, 1), r2 = hh(i, s, 2); if (e > .6 + r2 * .4) continue; const px = x + (r1 - .5) * (R || 90) + Math.sin(e * 9 + i) * 5, py = y + e * 60 * (.5 + r2) - 30 * r2; if (v9) { anh9(c, 'hu-moi-truong-rung-la', px, py, ((e * 9 + i) | 0) % 3, .7, i % 2 === 1, 1); continue; } c.fillStyle = C[i % 3]; c.fillRect(Math.round(px), Math.round(py), 2, 1); c.fillRect(Math.round(px) + ((e * 9 + i) | 0) % 2, Math.round(py) + 1, 1, 1); } };
 // gai rễ nhọn trồi lên từ đất
-function gaiRe(c, x, y, h, nghieng) { if (h < 1) return; const C = [NAUG[0], NAUG[1], NAUG[2], NAUG[3]]; for (let j = 0; j < h; j++) { const f = j / h, w = Math.max(1, Math.round(5 * (1 - f))), ox = (nghieng || 0) * f * h * .3; c.fillStyle = C[0]; c.fillRect(Math.round(x + ox - w / 2 - 1), Math.round(y - j), w + 2, 1); c.fillStyle = f < .7 ? C[1] : C[2]; c.fillRect(Math.round(x + ox - w / 2), Math.round(y - j), w, 1); if (w > 2) { c.fillStyle = C[2]; c.fillRect(Math.round(x + ox - w / 2), Math.round(y - j), 1, 1); } } F.px(c, x + (nghieng || 0) * h * .3, y - h, C[3]); F.px(c, x - 3, y, C[0], 7, 1); }
+function gaiRe(c, x, y, h, nghieng) { if (h < 1) return; if (VT9()) { anh9(c, 'hu-gai-re', x, y, h < 5 ? 0 : h < 10 ? 1 : 2, clamp(h / 14, .3, 1) * .45, (nghieng || 0) < 0, 1); return; } // vẽ tay 9: gai rễ → ảnh hu-gai-re
+  const C = [NAUG[0], NAUG[1], NAUG[2], NAUG[3]]; for (let j = 0; j < h; j++) { const f = j / h, w = Math.max(1, Math.round(5 * (1 - f))), ox = (nghieng || 0) * f * h * .3; c.fillStyle = C[0]; c.fillRect(Math.round(x + ox - w / 2 - 1), Math.round(y - j), w + 2, 1); c.fillStyle = f < .7 ? C[1] : C[2]; c.fillRect(Math.round(x + ox - w / 2), Math.round(y - j), w, 1); if (w > 2) { c.fillStyle = C[2]; c.fillRect(Math.round(x + ox - w / 2), Math.round(y - j), 1, 1); } } F.px(c, x + (nghieng || 0) * h * .3, y - h, C[3]); F.px(c, x - 3, y, C[0], 7, 1); }
 // lá bùa giấy vàng chữ đỏ, nghiêng góc a
 function bua(c, x, y, a, s) { s = s || 1; const ca = Math.cos(a), sa = Math.sin(a); for (let j = -4; j <= 4; j++) for (let i = -2; i <= 2; i++) { const col = (Math.abs(i) === 2 || Math.abs(j) === 4) ? '#8a5a10' : ((i === 0 && j % 2 === 0) || (j === 1 && Math.abs(i) === 1)) ? '#c0261a' : '#ffd23c'; c.fillStyle = col; c.fillRect(Math.round(x + (i * ca - j * sa) * s), Math.round(y + (i * sa + j * ca) * s), 1, 1); } }
 function hangNo(P, n, buoc, rong, ve) { const u = P.u, ex = Math.cos(P.dir), ey = Math.sin(P.dir) * MA.det;
@@ -2059,7 +2087,7 @@ def('mocTinh', { ten: 'Mộc Tinh', vung: 'rung', loai: 'trum', tt: 1, pha: 3, l
     intro: A(3, P => { const u = P.u, C = mauLa(P), q = seg(u, .25, .7), e = EASE.out(q);
       P.tan = q < 1 ? { k: 'chim', u: clamp(1 - e, 0, 1) } : null; if (u < .75) P.x += (((u * 36) | 0) % 2 ? 1 : -1) * (u < .25 ? u * 4 : 1);
       const g = kf(u, [[.7, 0], [.78, 1, 'out'], [.92, 1], [1, 0]]); P.r('canhT', -18 * g).r('canhP', 18 * g).r('ham', 0).m('ham', 0, 4 * g); P.s('tan', 1 + .05 * g); P.flash = u > .7 && u < .76 ? .6 : 0; P.bong = seg(u, .25, .7);
-      P.under(c => { const cr = Math.min(1, u * 3); for (let i = 0; i < 8; i++) { const a = i / 8 * TAU + .2; F.set(c, 0, 0, Math.cos(a) * 80 * cr, Math.sin(a) * 30 * cr, i + 1, NAUG[0], 1, 6); } if (u > .1 && u < .4) for (let i = 0; i < 5; i++) gaiRe(c, (i - 2) * 30, 0, 14 * Math.sin(seg(u, .1 + i * .03, .4) * PI), i - 2); });
+      P.under(c => { const cr = Math.min(1, u * 3); if (VT9()) { if (cr > .05) anh9(c, 'hu-nut-san', 0, 0, 0, 80 * cr / 31, false, 1 - seg(u, .7, .95), null, 30 / 80); } else for (let i = 0; i < 8; i++) { const a = i / 8 * TAU + .2; F.set(c, 0, 0, Math.cos(a) * 80 * cr, Math.sin(a) * 30 * cr, i + 1, NAUG[0], 1, 6); } if (u > .1 && u < .4) for (let i = 0; i < 5; i++) gaiRe(c, (i - 2) * 30, 0, 14 * Math.sin(seg(u, .1 + i * .03, .4) * PI), i - 2); });
       P.over(c => { if (u > .25 && u < .75) F.hat(c, 0, 0, 30, 2, seg(u, .25, .75), { v: 70, goc: -PI / 2, xoe: 2.4, g: 60, cols: [NAUG[2], NAUG[1], NAUG[3]], to: 2 }); if (u > .7) laRoi(c, 0, -110, 40, 3, seg(u, .7, 1), C, 150); }); }, { nhan: 'Ra mắt' }),
     idle: A(2.4, P => { const u = P.u; P.tho(.012); P.s('tan', 1 + .025 * sn(u), 1 + .02 * sn(u + .25)); P.m('tan', 1.5 * sn(u), 0); P.r('canhT', -4 * sn(u)).r('canhP', 4 * sn(u + .1)); P.r('reT', 2 * sn(u)).r('reP', -2 * sn(u)); P.r('ham', 0).m('ham', 0, 1 + sn(u * 2)); if (P.phase === 3) P.under(c => khiDoc(c, 0, -6, 45, (u * 2) % 1, (u * 2) | 0)); }),
     // Di chuyển: rễ bò như chân, cả cây lắc lư.
@@ -2277,7 +2305,8 @@ ctPhan('sua', [
   { n: 'tuaT', m: [[5, 22, 19, 40]], mau: ['#3fa8d8', '#c8f2ff', '#ff5a46', '#0f437a', '#ff7a5c'], pv: [13, 22], keep: 0 },
   { n: 'tuaP', m: [[30, 22, 41, 40]], mau: ['#3fa8d8', '#c8f2ff', '#ff5a46', '#0f437a', '#ff7a5c'], pv: [33, 22], keep: 0 },
   { n: 'bom', m: [[19, 22, 30, 40]], pv: [25, 22], keep: 0 }]);
-const tiaNgoi = (P) => ctPhu(P, 26, 27, (c, x, y) => { const f = ((P.t * 14) | 0) % 3; F.px(c, x - 1 + (f === 1 ? 1 : 0), y - 1 - (f === 2 ? 1 : 0), f ? '#fff6b0' : '#ff8a1e', f ? 1 : 2, f ? 1 : 2); F.px(c, x + (f - 1) * 2, y - 2 - f, '#ffd23c'); });
+const tiaNgoi = (P) => ctPhu(P, 26, 27, (c, x, y) => { const f = ((P.t * 14) | 0) % 3; if (VT9()) { anh9(c, 'hu-sao-chop', x, y - 1, f, .3, false, 1, '#ffd23c'); return; } // vẽ tay 9: tia lửa ngòi → ảnh hu-sao-chop
+  F.px(c, x - 1 + (f === 1 ? 1 : 0), y - 1 - (f === 2 ? 1 : 0), f ? '#fff6b0' : '#ff8a1e', f ? 1 : 2, f ? 1 : 2); F.px(c, x + (f - 1) * 2, y - 2 - f, '#ffd23c'); });
 ctAnim('sua', {
   spawn: P => { if (P.u > .6) tiaNgoi(P); },
   idle: P => { tiaNgoi(P); const u = P.u; P.w('tuaT', 12, -u, .45).w('tuaP', 12, -u + .5, .45).r('bom', 7 * sn(u + .1)); P.sy *= 1 + .05 * sn(u); P.sx *= 1 - .04 * sn(u); },
@@ -2417,7 +2446,8 @@ ctHinh('denLong', g => {
   for (let x = 22; x <= 32; x += 2) ctDiem(g, x, 29, '#ffd23c', true); // viền vàng đáy đèn
 });
 ctPhan('denLong', [{ n: 'quai', m: [[25, 6, 34, 10]], pv: [29, 10], keep: 0 }]);
-const lepLua = P => ctPhu(P, 27, 24, (c, x, y) => { const f = ((P.t * 10) | 0) % 4; F.a(c, .55 + .15 * (f % 2)); F.px(c, x - 1, y - (f === 3 ? 1 : 0), '#fff6b0', 2 + (f === 1 ? 1 : 0), 1); F.a(c, 1); });
+const lepLua = P => ctPhu(P, 27, 24, (c, x, y) => { const f = ((P.t * 10) | 0) % 4; if (VT9()) { anh9(c, 'hu-lua-duoc', x, y + 1, f % 3, .5, false, .7); return; } // vẽ tay 9: lửa lép bép → ảnh hu-lua-duoc
+  F.a(c, .55 + .15 * (f % 2)); F.px(c, x - 1, y - (f === 3 ? 1 : 0), '#fff6b0', 2 + (f === 1 ? 1 : 0), 1); F.a(c, 1); });
 ctAnim('denLong', {
   idle: P => { lepLua(P); P.r('quai', 14 * sn(P.u)); }, move: P => { lepLua(P); P.r('quai', 20 * sn(P.u * 2)); },
   tele: P => { P.r('quai', 25 * sn(P.u * 3)); }, hit: P => { P.r('quai', 30 * kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]])); },
@@ -2436,7 +2466,8 @@ ctPhan('nhimThan', (ph, hv) => hv ? [] : [
   { n: 'gaiT', m: [[20, 31, 27, 44]], mau: ['#f0506e', '#ffb070', '#26222c', '#0e0c12'], pv: [30, 38], keep: 0 },
   { n: 'gaiP', m: [[41, 31, 50, 44]], mau: ['#f0506e', '#ffb070', '#26222c', '#0e0c12'], pv: [38, 38], keep: 0 },
   { n: 'chanT', m: [[25, 45, 31, 48]], pv: [29, 45], z: -1 }, { n: 'chanS', m: [[38, 45, 44, 48]], pv: [40, 45], z: -1 }]);
-const tanThan = P => ctPhu(P, 33, 30, (c, x, y) => { for (let i = 0; i < 2; i++) { const q = (P.t * .8 + i / 2) % 1; F.a(c, 1 - q); F.px(c, x + (i ? 5 : -6) + Math.sin(q * 6) * 2, y - q * 12, q < .4 ? '#ffd23c' : '#f0582a', 1, 1); } F.a(c, 1); });
+const tanThan = P => ctPhu(P, 33, 30, (c, x, y) => { for (let i = 0; i < 2; i++) { const q = (P.t * .8 + i / 2) % 1; if (VT9()) { anh9(c, 'hu-lua-duoc', x + (i ? 5 : -6) + Math.sin(q * 6) * 2, y - q * 12, (((P.t * 9) | 0) + i) % 3, .3, false, 1 - q); continue; } // vẽ tay 9: tàn lửa → ảnh hu-lua-duoc
+  F.a(c, 1 - q); F.px(c, x + (i ? 5 : -6) + Math.sin(q * 6) * 2, y - q * 12, q < .4 ? '#ffd23c' : '#f0582a', 1, 1); } F.a(c, 1); });
 ctAnim('nhimThan', {
   idle: P => { tanThan(P); const u = P.u; P.s('gaiTren', 1 + .08 * sn(u)).s('gaiT', 1 + .08 * sn(u + .33)).s('gaiP', 1 + .08 * sn(u + .66)); },
   move: P => { tanThan(P); P.r('chanT', 28 * sn(P.u * 2)).r('chanS', -28 * sn(P.u * 2)).r('gaiTren', 4 * sn(P.u * 2)); },

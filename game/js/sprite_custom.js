@@ -585,7 +585,10 @@
         const v = o[k];
         if (typeof v !== 'function') return v;
         let f = nho.get(k);
-        if (!f) { f = v.bind(o); nho.set(k, f); }
+        // 16/10 vẽ tay 9: nhớ theo CHÍNH hàm gốc. Bút thật có thể được G.ganChan (js/fx_anh.js) bọc SAU lần mượn đầu (làng / màn chào vẽ
+        // trước trận) — nhớ bản cũ thì lệnh tô code của trùm lọt qua chặn. Hàm gốc đổi → buộc lại.
+        if (!f || (f.__goc !== v && G.TRUM9 !== false)) { // ?trum9=0: nhớ hàm như cũ
+          f = v.bind(o); f.__goc = v; nho.set(k, f); }
         return f;
       },
       set(o, k, v) { o[k] = v; return true; },
@@ -607,7 +610,10 @@
         const v = o[k];
         if (typeof v !== 'function') return v;
         let f = nho.get(k);
-        if (!f) { f = v.bind(o); nho.set(k, f); }
+        // 16/10 vẽ tay 9: nhớ theo CHÍNH hàm gốc. Bút thật có thể được G.ganChan (js/fx_anh.js) bọc SAU lần mượn đầu (làng / màn chào vẽ
+        // trước trận) — nhớ bản cũ thì lệnh tô code của trùm lọt qua chặn. Hàm gốc đổi → buộc lại.
+        if (!f || (f.__goc !== v && G.TRUM9 !== false)) { // ?trum9=0: nhớ hàm như cũ
+          f = v.bind(o); f.__goc = v; nho.set(k, f); }
         return f;
       },
       set(o, k, v) { o[k] = v; return true; },

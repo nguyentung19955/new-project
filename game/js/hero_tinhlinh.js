@@ -1438,7 +1438,8 @@
     c.imageSmoothingEnabled = false;
     if (!o.noShadow) {
       const sw = fr.dead ? 12 : Math.round(fr.sh * (1 - 0.4 * fr.air)), sx = fr.dead ? x - f * 12 : x;
-      if (o.roundShadow && A && A.ellipse) A.ellipse(c, sx, y, sw + 1, Math.max(2, Math.round((sw + 1) * 0.45)), 'rgba(0,0,0,0.3)'); // ghép đợt 2: bóng tròn cho sàn nhìn từ trên
+      if (G.langVe > 0 && G.bongLang && G.bongLang(c, sx, y, sw + 1)) { /* 16/10 vẽ tay 9: ảnh hu-bong-chan ở làng */ }
+      else if (o.roundShadow && A && A.ellipse) A.ellipse(c, sx, y, sw + 1, Math.max(2, Math.round((sw + 1) * 0.45)), 'rgba(0,0,0,0.3)'); // ghép đợt 2: bóng tròn cho sàn nhìn từ trên
       else { c.fillStyle = 'rgba(0,0,0,0.3)'; c.fillRect(sx - sw + 2, y - 1, sw * 2 - 4, 1); c.fillRect(sx - sw, y, sw * 2, 1); c.fillRect(sx - sw + 2, y + 1, sw * 2 - 4, 1); }
     }
     const nb = G.spriteCustom && G.spriteCustom.nhunBuoc ? G.spriteCustom.nhunBuoc(o) : 0; // nhún theo bước (sprite_custom.js, G.NHUN_BUOC)

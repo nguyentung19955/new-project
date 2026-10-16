@@ -2016,6 +2016,9 @@
     // 16/10 vẽ tay 6: Rừng già có ảnh đom đóm / lá rơi (hu-moi-truong-rung-*); vùng khác chưa có ảnh thì để trống (code đã bị chặn)
     const FA = G.fxAnh, rung = room.T === Forest && G.dangChan && G.dangChan() && FA;
     const aDom = rung && FA.get('hu-moi-truong-rung-domdom'), aLa = rung && FA.get('hu-moi-truong-rung-la');
+    // 16/10 vẽ tay 9 (?noi9=0 tắt): Sông sâu dùng ảnh đom đóm có sẵn; tinh thể Hang biển loé bằng ảnh hu-sao-chop
+    const chan9 = G.NOI9 !== false && G.dangChan && G.dangChan() && FA;
+    const aDom9 = aDom || (chan9 && room.T && room.T.reg === 3 && FA.get('hu-moi-truong-rung-domdom')), aSao9 = chan9 && FA.get('hu-sao-chop');
     for (const a of list) {
       switch (a.k) {
         case 'mote': { // lớp xa (0): chậm, mờ; lớp gần (1): nhanh hơn, rõ hơn
@@ -2031,7 +2034,7 @@
           const k = Math.sin(t * 1.6 * a.sp + a.ph);
           if (k < -0.2) break;
           const b = (0.3 + 0.7 * Math.max(0, k)) * M;
-          if (aDom) { FA.ve(c, 'hu-moi-truong-rung-domdom', x, y, t * a.sp + a.ph, 0, 0.7, false, Math.min(1, b) * 0.7); break; } // ảnh: 2 đom đóm (co 0,7, nhạt 70% cho gần độ nổi của chấm cũ), nháy theo nhịp cũ
+          if (aDom9) { FA.ve(c, 'hu-moi-truong-rung-domdom', x, y, t * a.sp + a.ph, 0, 0.7, false, Math.min(1, b) * 0.7); break; } // ảnh: 2 đom đóm (co 0,7, nhạt 70% cho gần độ nổi của chấm cũ), nháy theo nhịp cũ
           r(x - 1, y - 1, 3, 3, acol('#d2ff78', 0.18 * b)); r(x, y, 1, 1, acol('#f4ffb0', 0.95 * b));
           break;
         }
@@ -2089,6 +2092,7 @@
         case 'cry': { // tinh thể chân vách sáng lên tối xuống rất chậm, chóp loé sáng
           const k = 0.5 + 0.5 * Math.sin(t * 0.9 + a.ph);
           ell(a.x, a.y, 5 * a.s + 2, 4 * a.s + 1, acol('#58c8ea', (0.03 + 0.06 * k) * M));
+          if (aSao9) { const q = (t * 0.5 + a.ph) % 4; if (q < 0.18) FA.veK(c, 'hu-sao-chop', a.x, a.y - 4 * a.s - 2, Math.min(aSao9.so - 1, Math.floor(q / 0.18 * aSao9.so)), 0, 0.22 + 0.08 * a.s, false, 1, '#d8f6ff'); break; } // vẽ tay 9
           if (((t * 0.5 + a.ph) % 4) < 0.18) { r(a.x, a.y - 4 * a.s - 3, 1, 3, '#ffffff'); r(a.x - 1, a.y - 4 * a.s - 2, 3, 1, '#ffffff'); }
           break;
         }
@@ -2191,12 +2195,15 @@
       ambLive(room, t);
       if (RA.lopSan) (G.moVe || ((f) => f()))(() => RA.lopSan(cx, W, room, t)); // 16/10: địa hình Sông sâu (dòng chảy, cầu, vũng sâu) ảnh hưởng chơi, chưa có ảnh → giữ vẽ code // luật Sông sâu (js/song_luat.js): dòng chảy, cầu tre, vũng nước sâu — trên sàn, dưới dấu quái sắp mọc
       const la = luaAnh(); // dải lửa hu-lua-duoc: thay ngọn lửa code của đuốc và nến
+      const FA9 = G.NOI9 !== false && G.dangChan && G.dangChan() && G.fxAnh, sao9 = FA9 && FA9.get('hu-sao-chop'), dom9 = FA9 && FA9.get('hu-moi-truong-rung-domdom'); // vẽ tay 9: lấp lánh / đom đóm đèn
       for (const l of g.lights) {
         const f = Math.floor(t * 9 + l.x) % 3;
         if (la && l.k === 'torch') veLua(la, l.x, l.y + 1, 1, t, l.x);
         else if (la && l.k === 'candle') { veLua(la, l.x, l.y + 2, 0.5, t, l.x); r(l.x - 3, l.y - 2, 6, 6, 'rgba(255,200,80,0.10)'); }
         else if (l.k === 'torch') { r(l.x - 2 + (f === 1 ? 1 : 0), l.y - 9 - f, 3, 3, '#ff7a2a'); r(l.x - 1, l.y - 7 - (f === 2 ? 2 : 0), 2, 3, '#ffd23f'); r(l.x + (f - 1), l.y - 12 - f, 1, 1, '#ffd23f'); }
         else if (l.k === 'candle') { r(l.x - 1, l.y - (f === 0 ? 1 : 0), 2, 3, '#ffd23f'); r(l.x - 1, l.y + 1, 2, 1, '#ff7a2a'); r(l.x - 3, l.y - 2, 6, 6, 'rgba(255,200,80,0.10)'); }
+        else if (l.k === 'twinkle' && sao9) { const q = (t * 2 + l.x * 0.37) % 4; if (q < 1) FA9.veK(c, 'hu-sao-chop', l.x, l.y, Math.min(sao9.so - 1, Math.floor(q * sao9.so)), 0, 0.3, false, 1, '#ffffff'); }
+        else if (l.k === 'firefly' && dom9) FA9.ve(c, 'hu-moi-truong-rung-domdom', l.x + Math.sin(t * 1.3 + l.x) * 7, l.y + Math.cos(t * 1.7 + l.y) * 4, t + l.x * 0.1, 0, 0.5, false, 0.8);
         else if (l.k === 'twinkle') { if (Math.floor(t * 2 + l.x * 0.37) % 4 === 0) { r(l.x, l.y - 2, 1, 5, '#ffffff'); r(l.x - 2, l.y, 5, 1, '#ffffff'); } }
         else if (l.k === 'firefly') { const fx = l.x + Math.sin(t * 1.3 + l.x) * 7, fy = l.y + Math.cos(t * 1.7 + l.y) * 4; r(fx, fy, 1, 1, Math.floor(t * 3 + l.x) % 3 ? '#f8ffd0' : 'rgba(248,255,208,0.3)'); }
       }

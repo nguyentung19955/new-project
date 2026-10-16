@@ -356,6 +356,8 @@
     if (!MA || !MA._defs || !MA._defs[ma]) return;
     const cao = Math.max(12, num(MA.cao ? MA.cao(ma) : 0, 24)), s = Math.min(1.1, (h - 5) / cao, (w - 2) / Math.max(cao * 0.9, 16));
     const o = { anim: 'idle', t: den ? 0 : G.time || 0, face: 1, dir: 0, phase: 1, bao: false, fx: false };
+    // 16/10 vẽ tay 9 (?noi9=0 tắt): bóng đen ô chưa gặp không còn elip bóng chân vẽ code; ô đã gặp: bóng chân bằng ảnh hu-bong-chan
+    if (G.NOI9 !== false) { if (den) o.khongBong = true; else o.bongAnh = true; }
     const c = G.ux;
     if (!den) {
       c.save(); c.beginPath(); c.rect(x, y, w, h); c.clip();
@@ -435,7 +437,7 @@
     if (gap) for (let j = 0; j < 3; j++) veSao(x + 2 + j * 7, y + s - 8, 6.5, m & (1 << j) ? j + 1 : 0);
     if (gap && t && t.k && D.he) veDau(x + 6, y + 6, 4, D.he);
     if (cho) { const c = G.ux; c.beginPath(); c.arc(x + s - 3, y + 3, 2.6, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.7; c.strokeStyle = '#14182e'; c.stroke(); }
-    if (chon) { const c = G.ux; c.lineWidth = 1; c.strokeStyle = '#fff0a8'; c.strokeRect(x - 0.5, y - 0.5, s + 1, s + 1); }
+    if (chon && !(G.NOI9 !== false && veGd('gd-o-con-chon', x - 2, y - 2, s + 4, s + 4))) { const c = G.ux; c.lineWidth = 1; c.strokeStyle = '#fff0a8'; c.strokeRect(x - 0.5, y - 0.5, s + 1, s + 1); } // vẽ tay 9: viền chọn = ảnh gd-o-con-chon
   }
 
   function vungMacDinh(sv) {

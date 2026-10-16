@@ -178,7 +178,7 @@
   function putNpc(c, kind, x, y, f, o, s) {
     s = s || 1;
     if (!(VS.coAnh && VS.coAnh(kind))) return; // 14/10 (mục 7): ảnh nl-* chưa tải xong thì không vẽ người làng code kiểu cũ
-    if (!(o && o.noShadow)) { // bóng chân tròn, cùng kiểu với em bé và quái trong ải
+    if (!(o && o.noShadow) && !(G.bongLang && G.bongLang(c, x, y + 0.5 * s, (NPCS[kind] && NPCS[kind].sit ? 11 : 8) * s))) { // bóng chân tròn, cùng kiểu với em bé và quái trong ải (vẽ tay 9: ảnh hu-bong-chan)
       const ga = c.globalAlpha; c.globalAlpha = ga * 0.3;
       ell(c, x, y + 0.5 * s, (NPCS[kind] && NPCS[kind].sit ? 11 : 8) * s, 2.4 * s, '#000000');
       c.globalAlpha = ga;
@@ -939,13 +939,16 @@
     const fr = 0.5 + 0.3 * Math.sin(t * 8.3) + 0.2 * Math.sin(t * 15.1), rx = B.ren[0] - 16 - cam;
     if (rx > -60 && rx < 540) ell(c, rx, B.ren[1] - 2, 26 + fr * 6, 10 + fr * 2, ac(255, 120, 40, (0.03 + 0.05 * fr) * M));
   }
+  // 16/10 vẽ tay 9 (?noi9=0 tắt): lá rơi / đom đóm làng bằng ảnh có sẵn hu-moi-truong-rung-la / -domdom (đường bay, nhịp giữ như cũ)
+  const anhLang = (ma) => (G.NOI9 !== false && G.fxAnh && G.fxAnh.get(ma)) || null;
   function ambTop(c, cam, t, M) { // lá đa rụng chậm, xoay lật, nằm lại một chút rồi mờ
+    const aLa = anhLang('hu-moi-truong-rung-la');
     for (let i = 0; i < 3; i++) {
       const per = 8 + i * 2.5, u = (t + i * 3.7) % per, cyc = Math.floor((t + i * 3.7) / per), fall = 5.5;
       const sx = B.da[0] - 36 + ((cyc * 41 + i * 29) % 72), y0 = B.da[1] - 64 + ((cyc * 13) % 14), y1 = B.da[1] + 4 + ((cyc * 7 + i * 5) % 14);
       const col = ['#58a05a', '#c8963a', '#44884f'][(cyc + i) % 3];
-      if (u < fall) { const k = u / fall, x = sx + Math.sin(u * 1.8 + i) * 7 * M - cam, y = y0 + (y1 - y0) * k, fl = Math.floor(u * 3 + i) % 2; p(c, x, y, fl ? 2 : 1, fl ? 1 : 2, tc(col)); }
-      else if (u < fall + 1.5) { const x = sx + Math.sin(fall * 1.8 + i) * 7 * M - cam; c.globalAlpha = 1 - (u - fall) / 1.5; p(c, x, y1, 2, 1, tc(col)); c.globalAlpha = 1; }
+      if (u < fall) { const k = u / fall, x = sx + Math.sin(u * 1.8 + i) * 7 * M - cam, y = y0 + (y1 - y0) * k, fl = Math.floor(u * 3 + i) % 2; if (aLa) G.fxAnh.veK(c, 'hu-moi-truong-rung-la', x, y, Math.floor(u * 3 + i) % 3, 0, 0.75, fl === 1, 1); else p(c, x, y, fl ? 2 : 1, fl ? 1 : 2, tc(col)); }
+      else if (u < fall + 1.5) { const x = sx + Math.sin(fall * 1.8 + i) * 7 * M - cam, mo = 1 - (u - fall) / 1.5; if (aLa) G.fxAnh.veK(c, 'hu-moi-truong-rung-la', x, y1, 3 + Math.min(4, Math.floor((u - fall) / 1.5 * 5)), 0, 0.75, false, mo); else { c.globalAlpha = mo; p(c, x, y1, 2, 1, tc(col)); c.globalAlpha = 1; } }
     }
   }
   function luaKhung(c, x, y, f) { p(c, x - 19 + f, y - 13 + (f % 2), 6 - f, 5, '#fff3b0'); p(c, x - 22 + f * 3, y - 21 - (f % 2), 2, 3, '#ffd23f'); p(c, x - 12 - f, y - 19, 2, 2 + f, '#ffb040'); }
@@ -1082,7 +1085,7 @@
     }
     // Bé Sen ngồi ở bến đò cạnh bố (ảnh nl-sen hàng 'ngoi'), quay về phía làng
     if (senO()) { const sp = senSp(); L.push([SEN.y, () => {
-      ell(c, SEN.x - cam, SEN.y, 7, 2, 'rgba(0,0,0,0.22)');
+      if (!(G.bongLang && G.bongLang(c, SEN.x - cam, SEN.y, 7, 0.75))) ell(c, SEN.x - cam, SEN.y, 7, 2, 'rgba(0,0,0,0.22)'); // vẽ tay 9: ảnh bóng
       c.save(); c.translate(Math.round(SEN.x - cam), Math.round(SEN.y));
       G.spriteCustom.veKhung(c, sp, 'ngoi', G.spriteCustom.khungLap(sp.dt.ngoi, t + 0.4), SEN.face, {});
       c.restore();
@@ -1104,16 +1107,20 @@
     // quầng sáng và đom đóm
     ambTop(c, cam, t, M);
     c.globalCompositeOperation = 'lighter'; c.drawImage(Bt.light, -cam, 0); if (M > 0) ambLight(c, Bt, cam, t, M, tb); c.globalCompositeOperation = 'source-over';
+    const aDom = anhLang('hu-moi-truong-rung-domdom');
     for (const fl of Bt.flies) {
       const x = Math.round(fl[0] + Math.sin(t * 0.5 * fl[3] + fl[2]) * 8 - cam), y = Math.round(fl[1] + Math.cos(t * 0.37 * fl[3] + fl[2]) * 5);
       if (x < -2 || x > 482) continue;
       const a = 0.5 + 0.5 * Math.sin(t * 2 * fl[3] + fl[2]);
       if (a < 0.25) continue;
+      if (aDom) { G.fxAnh.ve(c, 'hu-moi-truong-rung-domdom', x, y, t * 0.5 * fl[3] + fl[2], 0, 0.6, false, Math.min(1, a) * 0.6); continue; } // vẽ tay 9: ảnh đom đóm
       c.fillStyle = 'rgba(210,255,120,' + (0.22 * a).toFixed(2) + ')'; c.fillRect(x - 1, y - 1, 3, 3); p(c, x, y, 1, 1, '#eaff9a');
     }
     G.wxDat(c, 0, 0);
     if (o.dim) { c.fillStyle = 'rgba(10,8,16,' + o.dim + ')'; c.fillRect(0, 0, 480, H); }
   };
+  // 16/10 vẽ tay 9 (?noi9=0 tắt): trong lúc vẽ làng G.langVe > 0 → bóng chân (G.bongAnh / G.bongLang, js/fx_anh.js) dùng ảnh hu-bong-chan
+  { const dw0 = VS.drawWorld; VS.drawWorld = function () { G.langVe = (G.langVe || 0) + 1; try { return dw0.apply(this, arguments); } finally { G.langVe = Math.max(0, G.langVe - 1); } }; }
   // Đổi một điểm trong làng sang toạ độ màn hình
   VS.screen = (wx, wy) => [wx - S.cam, wy + OY];
 

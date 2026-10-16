@@ -114,11 +114,103 @@
   // Bóng dưới chân (hu-bong-chan, ảnh 32 điểm bề ngang khi co 1, đã có 3 nấc alpha 45/30/15%): thay elip bóng vẽ code. rx: nửa bề ngang bóng
   // cũ → co = rx / 16 (co theo cỡ thân). mo: độ đậm thêm (bóng nhạt dần lúc nhảy / chết). Trả true nếu đã vẽ (nơi gọi bỏ lệnh elip code).
   G.bongAnh = function (c, x, y, rx, mo) {
-    if (!(G.chanVe > 0) || !c || !(rx > 0)) return false;
+    if (!(G.chanVe > 0 || (G.langVe > 0 && G.NOI9 !== false)) || !c || !(rx > 0)) return false; // vẽ tay 9: cả ở làng (G.langVe)
     const a = FA.get('hu-bong-chan');
     if (!a) return false;
     if (mo != null && !(mo > 0.01)) return true;
     return veF(c, a, 0, x, y, 0, rx / 16, false, mo == null ? 1 : mo);
+  };
+  // ---------- CÒN VẼ TAY 9 (16/10, docs/review/ke-hoach-cai-thien/con-ve-tay-9/bao-cao.md) ----------
+  // Ba cờ, mỗi cờ tắt một phần (bật lại bản trước phiên này); ?vt9=0 tắt cả ba. ?vecode=1 cũng tắt cả ba (vẽ code như cũ để so).
+  //   ?noi9=0     G.NOI9     7 hàng "có sẵn hình" của kiểm kê vẽ tay 8 (viền ô vũ khí, bóng / lá / đom đóm ở làng, sổ yêu quái, tinh thể / đom đóm phòng…)
+  //   ?trum9=0    G.TRUM9    hiệu ứng code của trùm / quái lọt qua chặn vẽ (bút giả nhớ hàm cũ) + ảnh thay cho các hiệu ứng đó
+  //   ?songnhanh=0 G.SONG9   nhuộm màu bằng ctx.filter kiểu cũ (lọc cả canvas trận mỗi lệnh vẽ: phòng trùm Sông sâu rất chậm)
+  {
+    let q = '';
+    try { q = typeof location !== 'undefined' ? String(location.search || '') : ''; } catch (e) { q = ''; }
+    const tat = (k) => new RegExp('[?&]' + k + '=0\\b', 'i').test(q);
+    const het = tat('vt9') || G.VE_CODE === true;
+    if (G.NOI9 == null) G.NOI9 = !het && !tat('noi9');
+    if (G.TRUM9 == null) G.TRUM9 = !het && !tat('trum9');
+    if (G.SONG9 == null) G.SONG9 = !tat('vt9') && !tat('songnhanh');
+  }
+  // Bóng dưới chân ở LÀNG (lớp làng không bị chặn vẽ): ảnh hu-bong-chan khi G.NOI9. Trả true nếu đã vẽ.
+  G.bongLang = function (c, x, y, rx, mo) {
+    if (G.NOI9 === false || !c || !(rx > 0)) return false;
+    const a = FA.get('hu-bong-chan');
+    if (!a) return false;
+    if (mo != null && !(mo > 0.01)) return true;
+    return veF(c, a, 0, x, y, 0, rx / 16, false, mo == null ? 1 : mo);
+  };
+  // Nhuộm màu NHANH thay cho ctx.filter trên canvas lớn (js/vung4.js, js/thuong_luong.js, js/ky_nang_quai.js KN.veTam).
+  // Đo (headless, phòng trùm Sông sâu): mỗi lệnh vẽ khi ctx.filter đang bật bắt trình duyệt lọc cả một lớp bằng cỡ canvas trận.
+  // G.locVe(c, css, fn): trong fn, "filter hiệu lực" của c là css (thay hẳn, như gán c.filter). Lệnh drawImage được lọc trên một tấm NHỎ
+  // bằng đúng ô nguồn (ảnh: nhớ lại, canvas: tấm nháp dùng lại) rồi mới dán; lệnh tô code (fill / stroke) vẫn bật ctx.filter thật (đúng màu).
+  // G.locHien(c): filter hiệu lực hiện tại (chuỗi rỗng = không lọc). Bộ lọc màu (hue / saturate / brightness / sepia) tính theo từng điểm
+  // ảnh nên lọc ô nguồn trước rồi dán = lọc lúc dán (cùng kết quả).
+  G.locHien = (c) => (c && c.__loc != null ? c.__loc : c && 'filter' in c && c.filter && c.filter !== 'none' ? c.filter : '');
+  const LOC_NHO = new WeakMap();
+  let nhap = null;
+  function locNguon(src, sx, sy, sw, sh, css) {
+    const w = Math.ceil(sw), h = Math.ceil(sh);
+    if (!(w > 0 && h > 0) || w > 2048 || h > 2048) return null;
+    const anh = typeof HTMLImageElement !== 'undefined' && src instanceof HTMLImageElement;
+    let m = null, key = '';
+    if (anh) {
+      m = LOC_NHO.get(src); if (!m) { m = new Map(); LOC_NHO.set(src, m); }
+      key = css + '|' + sx + '|' + sy + '|' + sw + '|' + sh;
+      const o = m.get(key); if (o) return o;
+    }
+    let cv;
+    if (anh) cv = document.createElement('canvas');
+    else { if (!nhap) nhap = document.createElement('canvas'); cv = nhap; }
+    if (cv.width < w || cv.height < h || anh) { cv.width = anh ? w : Math.max(w, cv.width); cv.height = anh ? h : Math.max(h, cv.height); }
+    const g = cv.getContext('2d');
+    if (!g || !('filter' in g)) return null;
+    g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.filter = 'none';
+    if (!anh) g.clearRect(0, 0, w, h);
+    g.imageSmoothingEnabled = false; g.filter = css;
+    g.drawImage(src, sx, sy, sw, sh, 0, 0, sw, sh);
+    g.filter = 'none';
+    if (anh) { if (m.size > 48) m.delete(m.keys().next().value); m.set(key, cv); }
+    return cv;
+  }
+  function bocLoc(c) {
+    if (c.__locBoc) return;
+    c.__locBoc = true;
+    c.__loc = null;
+    const di = c.drawImage;
+    c.drawImage = function (src) {
+      const css = c.__loc;
+      if (!css || !src || typeof src !== 'object') return di.apply(this, arguments);
+      const n = arguments.length, a = arguments;
+      const W0 = src.naturalWidth || src.videoWidth || src.width, H0 = src.naturalHeight || src.videoHeight || src.height;
+      let sx = 0, sy = 0, sw = W0, sh = H0, dx, dy, dw, dh;
+      if (n === 3) { dx = a[1]; dy = a[2]; dw = W0; dh = H0; } else if (n === 5) { dx = a[1]; dy = a[2]; dw = a[3]; dh = a[4]; } else { sx = a[1]; sy = a[2]; sw = a[3]; sh = a[4]; dx = a[5]; dy = a[6]; dw = a[7]; dh = a[8]; }
+      let t = null;
+      if (sw > 0 && sh > 0 && sx >= 0 && sy >= 0 && sx + sw <= W0 + 0.01 && sy + sh <= H0 + 0.01) { try { t = locNguon(src, sx, sy, sw, sh, css); } catch (e) { t = null; } }
+      if (!t) { const f0 = c.filter; c.filter = css; try { return di.apply(this, arguments); } finally { c.filter = f0; } }
+      return di.call(this, t, 0, 0, sw, sh, dx, dy, dw, dh);
+    };
+    for (const m of ['fill', 'fillRect', 'stroke', 'strokeRect', 'fillText', 'strokeText']) {
+      const g0 = c[m];
+      if (typeof g0 !== 'function') continue;
+      c[m] = function () {
+        const css = c.__loc;
+        if (!css) return g0.apply(this, arguments);
+        const f0 = c.filter; c.filter = css;
+        try { return g0.apply(this, arguments); } finally { c.filter = f0; }
+      };
+    }
+  }
+  G.locVe = function (c, css, fn) {
+    if (!c || !('filter' in c)) return fn();
+    css = css && css !== 'none' ? String(css) : '';
+    if (G.SONG9 === false || typeof document === 'undefined') { const f0 = c.filter; c.filter = css || 'none'; try { return fn(); } finally { c.filter = f0; } }
+    try { bocLoc(c); } catch (e) { const f0 = c.filter; c.filter = css || 'none'; try { return fn(); } finally { c.filter = f0; } }
+    const truoc = c.__loc;
+    c.__loc = css;
+    try { return fn(); } finally { c.__loc = truoc; }
   };
   // ---------- HIỆU ỨNG CHIÊU TRÙM VÙNG (14/10, docs/review/ke-hoach-cai-thien/trum-moi/YEU-CAU-MOC-HO-HIEU-UNG-NEN.md) ----------
   // hu-song-than, hu-bang-nhon-roi, hu-xoay-nuoc, hu-phun-bang (Ngư Tinh), hu-gai-re, hu-qua-doc-roi, hu-la-chem (Mộc Tinh),

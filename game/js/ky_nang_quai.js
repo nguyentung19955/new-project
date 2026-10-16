@@ -1230,9 +1230,11 @@
       const sp = S2 && S2.get ? S2.get(T.muon) : null;
       if (!sp || !c || !('filter' in c)) return false;
       const f0 = c.filter, bo = G.vung4 && G.vung4.LOC;
-      let goc = f0 && f0 !== 'none' ? String(f0) : '';
+      let goc = G.locHien ? G.locHien(c) : f0 && f0 !== 'none' ? String(f0) : ''; // 16/10 vẽ tay 9: filter hiệu lực (có thể đang nhuộm nhanh G.locVe)
       if (bo && goc.endsWith(bo)) goc = goc.slice(0, -bo.length).trim();
-      c.filter = (goc ? goc + ' ' : '') + (T.css || (T.css = MAx.locCss(T.loc)));
+      const css = (goc ? goc + ' ' : '') + (T.css || (T.css = MAx.locCss(T.loc)));
+      if (G.locVe) { G.locVe(c, css, () => d0.call(MAx, c, T.muon, x, y, o)); return true; }
+      c.filter = css;
       try { d0.call(MAx, c, T.muon, x, y, o); } finally { c.filter = f0; }
       return true;
     };
