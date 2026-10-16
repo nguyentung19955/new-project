@@ -1,0 +1,193 @@
+<title>Demo – Xem tileset</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&display=swap">
+<style>
+  /* Bố cục: một dải điều khiển gọn ở trên, khung xem pixel chiếm phần còn lại; tông gỗ tối của Làng Chuông */
+  :root {
+    --nen: #120d0a;
+    --mat: #1d1510;
+    --vien: #3a2a1e;
+    --chu: #ead9bd;
+    --chu-phu: #a8916f;
+    --dong: #e1b85a;
+    --font: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color-scheme: dark;
+  }
+  html, body { background: var(--nen); color: var(--chu); font-family: var(--font); }
+  body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 16px 24px; }
+  .dau { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; margin-bottom: 12px; }
+  h1 { font-size: 20px; font-weight: 800; margin: 0; letter-spacing: .01em; text-wrap: balance; }
+  .ghi { color: var(--chu-phu); font-size: 13px; margin: 0; max-width: 62ch; }
+  .dk { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin-bottom: 12px; }
+  .nhom { display: flex; gap: 0; border: 1px solid var(--vien); border-radius: 6px; overflow: hidden; }
+  .nhom button { font: 600 14px var(--font); color: var(--chu-phu); background: var(--mat); border: 0; padding: 9px 14px; min-height: 40px; cursor: pointer; }
+  .nhom button + button { border-left: 1px solid var(--vien); }
+  .nhom button[aria-pressed="true"] { color: #1a1206; background: var(--dong); }
+  .nhom button:focus-visible { outline: 2px solid var(--dong); outline-offset: -2px; }
+  .nhan { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--chu-phu); margin-right: 6px; }
+  .khung { overflow: auto; border: 1px solid var(--vien); border-radius: 6px; background: #0c0f14; max-width: 100%; -webkit-overflow-scrolling: touch; }
+  canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
+  #luoiLat { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--o, 64px), 1fr)); gap: 12px; padding: 12px; }
+  .the { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; min-width: 0; }
+  .the span { font-size: 10px; color: var(--chu-phu); font-variant-numeric: tabular-nums; word-break: break-all; }
+  .chuthich { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--chu-phu); }
+  .chuthich b { color: var(--chu); font-family: ui-monospace, Menlo, monospace; font-weight: 600; }
+  .loi { color: #ff9b8a; }
+</style>
+
+<div class="dau">
+  <h1>Tileset Làng Chuông</h1>
+  <p class="ghi">Ô 16×16 vẽ bằng code, tự chọn mép và góc. Bấm vào công tắc trên bản đồ để mở cửa chuông.</p>
+</div>
+
+<div class="dk">
+  <div><span class="nhan">Xem</span>
+    <span class="nhom" role="group" aria-label="Chế độ xem">
+      <button id="cdBanDo" aria-pressed="true">Bản đồ mẫu</button>
+      <button id="cdLat" aria-pressed="false">Lát 3×3</button>
+    </span>
+  </div>
+  <div><span class="nhan">Phóng</span>
+    <span class="nhom" role="group" aria-label="Phóng to">
+      <button data-z="1" aria-pressed="false">1×</button>
+      <button data-z="2" aria-pressed="true">2×</button>
+      <button data-z="4" aria-pressed="false">4×</button>
+    </span>
+  </div>
+</div>
+
+<div class="khung" id="khungBanDo"><canvas id="cv"></canvas></div>
+<div class="khung" id="khungLat" hidden><div id="luoiLat"></div></div>
+
+<div class="chuthich">
+  <span><b>#</b> đất</span><span><b>S</b> đá</span><span><b>W</b> tường leo</span><span><b>=</b> ván một chiều</span>
+  <span><b>H</b> thang</span><span><b>|</b> dây</span><span><b>^</b> gai</span><span><b>o/O</b> công tắc</span><span><b>D/d</b> cửa chuông</span>
+</div>
+<p class="ghi loi" id="loi" hidden></p>
+
+<script>
+  // Nạp ../lib/tiles.js (đúng cấu trúc repo); nếu không có thì thử lib/tiles.js (bản đăng trực tuyến).
+  (function nap(ds) {
+    var s = document.createElement('script');
+    s.src = ds[0];
+    s.onload = function () { if (window.TV && TV.tiles) batDau(); else if (ds.length > 1) nap(ds.slice(1)); };
+    s.onerror = function () {
+      if (ds.length > 1) nap(ds.slice(1));
+      else { var e = document.getElementById('loi'); e.hidden = false; e.textContent = 'Không nạp được tiles.js. Kiểm tra file game/lib/tiles.js.'; }
+    };
+    document.head.appendChild(s);
+  })(['../lib/tiles.js', 'lib/tiles.js']);
+
+  var BAN_DO = [
+    '........................................................',
+    '..............................................|.........',
+    '...######.................SSSSSS..............|.........',
+    '..########.......====.....SSSSSS..............|.........',
+    '...######.................SS..SS..............|.........',
+    '....##.....H..............S....S.......########.........',
+    '...........H...........................#......#.........',
+    '...........H...........................#.D....#....H....',
+    '.###.....######....##########..........#.D....#....H....',
+    '.###.....######...##........##.........#.D....#....H....',
+    '####.....######..##....o.....##......###########...H....',
+    '####^^^^^######..#S..........S#.....W###########...H....',
+    '###############..#SSSSSSSSSSSS#.....W###########.=====..',
+    '###############..##############.....W##########.........',
+    '###########################.....^^^^W##########......###',
+    '###########################SSSSSSSSSS##################',
+    '########################################################',
+    '########################################################'
+  ];
+  BAN_DO = BAN_DO.map(function (d) { return d.padEnd(56, d.charAt(d.length - 1) === '#' ? '#' : '.'); });
+
+  var zoom = 2, cheDo = 'banDo';
+  var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+
+  // Nền parallax giả lập (tối, ấm) để so độ nổi của lối đi
+  function veNen(g, w, h) {
+    var gr = g.createLinearGradient(0, 0, 0, h);
+    gr.addColorStop(0, '#24170f'); gr.addColorStop(1, '#170f0a');
+    g.fillStyle = gr; g.fillRect(0, 0, w, h);
+    var than = [[20, 70], [190, 90], [420, 60], [640, 110], [820, 70]];
+    than.forEach(function (t, i) {
+      g.fillStyle = i % 2 ? '#2b1c13' : '#2f2016';
+      g.fillRect(t[0], 0, t[1], h);
+      g.fillStyle = '#25180f';
+      for (var y = 0; y < h; y += 6) g.fillRect(t[0] + ((y * 7 + i * 13) % t[1]), y, 2, 4);
+    });
+    g.fillStyle = '#3a2618';
+    for (var x = 0; x < w; x += 4) g.fillRect(x, 70 + ((x / 4) % 3), 4, 3); // cầu xa
+    [[110, 40], [330, 96], [560, 30], [740, 120]].forEach(function (l) {
+      g.fillStyle = 'rgba(225,184,90,0.10)'; g.fillRect(l[0] - 6, l[1] - 6, 15, 17);
+      g.fillStyle = '#9c6b30'; g.fillRect(l[0], l[1], 3, 5);
+      g.fillStyle = '#e1b85a'; g.fillRect(l[0] + 1, l[1] + 1, 1, 3);
+    });
+  }
+
+  function veBanDo() {
+    var T = TV.tiles.KICH_THUOC, w = BAN_DO[0].length * T, h = BAN_DO.length * T;
+    cv.width = w; cv.height = h;
+    cv.style.width = (w * zoom) + 'px'; cv.style.height = (h * zoom) + 'px';
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.imageSmoothingEnabled = false;
+    veNen(ctx, w, h);
+    TV.tiles.veBanDo(ctx, BAN_DO, 0, 0);
+  }
+
+  function veLat() {
+    var T = TV.tiles.KICH_THUOC, a = TV.tiles.taoAtlas(), ds = TV.tiles.danhSach();
+    var hop = document.getElementById('luoiLat');
+    hop.style.setProperty('--o', (T * 3 * zoom) + 'px');
+    hop.innerHTML = '';
+    ds.forEach(function (it) {
+      var the = document.createElement('div'); the.className = 'the';
+      var c = document.createElement('canvas'); c.width = T * 3; c.height = T * 3;
+      c.style.width = (T * 3 * zoom) + 'px'; c.style.height = (T * 3 * zoom) + 'px';
+      var g = c.getContext('2d'); g.fillStyle = '#24170f'; g.fillRect(0, 0, T * 3, T * 3);
+      var la = /_gt_/.test(it.ten);
+      var nen = la ? it.ten.split('_')[0] + '_15_0' : null; // góc trong: vẽ trên phần đặc
+      for (var y = 0; y < 3; y++) for (var x = 0; x < 3; x++) {
+        if (nen) TV.tiles.ve1(g, nen, x * T, y * T);
+        TV.tiles.ve1(g, it.ten, x * T, y * T);
+      }
+      var s = document.createElement('span'); s.textContent = it.ten;
+      the.appendChild(c); the.appendChild(s); hop.appendChild(the);
+    });
+  }
+
+  function ve() { if (cheDo === 'banDo') veBanDo(); else veLat(); }
+
+  function batDau() {
+    TV.tiles.taoAtlas();
+    document.querySelectorAll('[data-z]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        zoom = +b.dataset.z;
+        document.querySelectorAll('[data-z]').forEach(function (o) { o.setAttribute('aria-pressed', o === b); });
+        ve();
+      });
+    });
+    var bd = document.getElementById('cdBanDo'), lt = document.getElementById('cdLat');
+    function chon(m) {
+      cheDo = m;
+      bd.setAttribute('aria-pressed', m === 'banDo'); lt.setAttribute('aria-pressed', m === 'lat');
+      document.getElementById('khungBanDo').hidden = m !== 'banDo';
+      document.getElementById('khungLat').hidden = m !== 'lat';
+      ve();
+    }
+    bd.addEventListener('click', function () { chon('banDo'); });
+    lt.addEventListener('click', function () { chon('lat'); });
+    cv.addEventListener('click', function (e) {
+      var r = cv.getBoundingClientRect(), T = TV.tiles.KICH_THUOC;
+      var cx = Math.floor((e.clientX - r.left) / zoom / T), cy = Math.floor((e.clientY - r.top) / zoom / T);
+      var ch = (BAN_DO[cy] || '').charAt(cx);
+      if (ch !== 'o' && ch !== 'O') return;
+      var bat = ch === 'o';
+      BAN_DO = BAN_DO.map(function (dong) {
+        return bat ? dong.replace(/o/g, 'O').replace(/D/g, 'd') : dong.replace(/O/g, 'o').replace(/d/g, 'D');
+      });
+      ve();
+    });
+    ve();
+  }
+</script>
