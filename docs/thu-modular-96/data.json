@@ -148,6 +148,43 @@
   "ao": "goc",
   "quan": "goc"
  },
+ "bodyBases": {
+  "cu": {
+   "name": "Máy dựng cũ (da phẳng + khố xám)",
+   "sheets": {}
+  },
+  "to-da": {
+   "name": "Tô da (mới): tô da lên đúng hình bóng sprite game",
+   "sheets": {
+    "rearLeg": "sheets/nen-to-da/rearLeg.png",
+    "body": "sheets/nen-to-da/body.png",
+    "frontLeg": "sheets/nen-to-da/frontLeg.png"
+   },
+   "skinPalette": [
+    [
+     97,
+     42,
+     30
+    ],
+    [
+     198,
+     105,
+     69
+    ],
+    [
+     246,
+     162,
+     111
+    ],
+    [
+     253,
+     191,
+     136
+    ]
+   ]
+  }
+ },
+ "defaultBodyBase": "to-da",
  "armorSets": {
   "may-ve": {
    "name": "Giáp mẫu máy vẽ",
@@ -991,6 +1028,7 @@
   "Chân TRƯỚC/SAU giữ cùng một chân suốt 12 khung (chân trước = chân trụ ở khung 0).",
   "Nền cơ thể (bodyLayers) = điểm ảnh gốc của đầu, tóc, tay, bàn chân, cổ + thân/chân trần dựng thêm (da + khố) ở đúng hình bóng áo/quần gốc từng khung.",
   "Trang phục (outfitLayers) thay theo 2 ô: ao = torsoOutfit + belt, quan = rearPants + pants + frontPants. Mỗi bộ trong outfits có đủ 5 lớp.",
+  "Thân nền có 2 bản (bodyBases): \"cu\" = sheets/<lớp>.png (da phẳng + khố, ghép với đồ gốc ra đúng từng điểm ảnh game); \"to-da\" = thay 3 lớp rearLeg/body/frontLeg bằng sheets/nen-to-da/ (tô da có đổ bóng lên đúng hình bóng sprite, quần đùi xám). Lớp nào bản to-da không có thì dùng sheets chung.",
   "Giáp vai trước tách 2 lớp: frontShoulderArmor (dưới tay trước, chỉ phần cẳng tay đi ngang qua) và frontShoulderArmorTop (trên bắp tay)."
  ],
  "checks": [
@@ -1028,6 +1066,21 @@
     "may-ve": 19,
     "gen-mot-anh": 44,
     "gen-tach": 54
+   },
+   "toDa": {
+    "hinhBongLech": 0,
+    "daiBayNgoaiNguoi": 7,
+    "diemToDa": 415,
+    "voiDoGocKhacGameChiOVienMo": 93,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
    }
   },
   {
@@ -1064,6 +1117,21 @@
     "may-ve": 24,
     "gen-mot-anh": 37,
     "gen-tach": 41
+   },
+   "toDa": {
+    "hinhBongLech": 0,
+    "daiBayNgoaiNguoi": 31,
+    "diemToDa": 398,
+    "voiDoGocKhacGameChiOVienMo": 102,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
    }
   },
   {
@@ -1100,6 +1168,21 @@
     "may-ve": 23,
     "gen-mot-anh": 22,
     "gen-tach": 37
+   },
+   "toDa": {
+    "hinhBongLech": 0,
+    "daiBayNgoaiNguoi": 21,
+    "diemToDa": 384,
+    "voiDoGocKhacGameChiOVienMo": 92,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
    }
   },
   {
@@ -1136,6 +1219,21 @@
     "may-ve": 25,
     "gen-mot-anh": 22,
     "gen-tach": 35
+   },
+   "toDa": {
+    "hinhBongLech": 0,
+    "daiBayNgoaiNguoi": 50,
+    "diemToDa": 357,
+    "voiDoGocKhacGameChiOVienMo": 84,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
    }
   },
   {
@@ -1172,6 +1270,21 @@
     "may-ve": 15,
     "gen-mot-anh": 38,
     "gen-tach": 45
+   },
+   "toDa": {
+    "hinhBongLech": 0,
+    "daiBayNgoaiNguoi": 23,
+    "diemToDa": 425,
+    "voiDoGocKhacGameChiOVienMo": 97,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
    }
   },
   {
@@ -1208,6 +1321,21 @@
     "may-ve": 22,
     "gen-mot-anh": 32,
     "gen-tach": 47
+   },
+   "toDa": {
+    "hinhBongLech": 0,
+    "daiBayNgoaiNguoi": 24,
+    "diemToDa": 464,
+    "voiDoGocKhacGameChiOVienMo": 108,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
    }
   },
   {
@@ -1244,6 +1372,21 @@
     "may-ve": 25,
     "gen-mot-anh": 19,
     "gen-tach": 44
+   },
+   "toDa": {
+    "hinhBongLech": 0,
+    "daiBayNgoaiNguoi": 29,
+    "diemToDa": 399,
+    "voiDoGocKhacGameChiOVienMo": 105,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
    }
   },
   {
@@ -1280,6 +1423,21 @@
     "may-ve": 20,
     "gen-mot-anh": 47,
     "gen-tach": 42
+   },
+   "toDa": {
+    "hinhBongLech": 0,
+    "daiBayNgoaiNguoi": 29,
+    "diemToDa": 409,
+    "voiDoGocKhacGameChiOVienMo": 81,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
    }
   },
   {
@@ -1316,6 +1474,21 @@
     "may-ve": 27,
     "gen-mot-anh": 31,
     "gen-tach": 47
+   },
+   "toDa": {
+    "hinhBongLech": 0,
+    "daiBayNgoaiNguoi": 29,
+    "diemToDa": 383,
+    "voiDoGocKhacGameChiOVienMo": 91,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
    }
   },
   {
@@ -1352,6 +1525,21 @@
     "may-ve": 27,
     "gen-mot-anh": 22,
     "gen-tach": 41
+   },
+   "toDa": {
+    "hinhBongLech": 0,
+    "daiBayNgoaiNguoi": 49,
+    "diemToDa": 375,
+    "voiDoGocKhacGameChiOVienMo": 84,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
    }
   },
   {
@@ -1388,6 +1576,21 @@
     "may-ve": 25,
     "gen-mot-anh": 44,
     "gen-tach": 50
+   },
+   "toDa": {
+    "hinhBongLech": 0,
+    "daiBayNgoaiNguoi": 21,
+    "diemToDa": 454,
+    "voiDoGocKhacGameChiOVienMo": 110,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
    }
   },
   {
@@ -1424,6 +1627,21 @@
     "may-ve": 27,
     "gen-mot-anh": 50,
     "gen-tach": 69
+   },
+   "toDa": {
+    "hinhBongLech": 0,
+    "daiBayNgoaiNguoi": 33,
+    "diemToDa": 511,
+    "voiDoGocKhacGameChiOVienMo": 117,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
    }
   }
  ],
