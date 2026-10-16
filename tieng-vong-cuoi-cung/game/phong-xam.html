@@ -58,6 +58,20 @@ body.touch .tc{display:block}
 .ab.on{background:rgba(225,184,90,.55);border-color:var(--bell)}
 #b-v{left:58px;top:0;border-color:rgba(206,240,214,.6);color:var(--echo)}
 #b-v.on{background:rgba(206,240,214,.45)}
+#b-v.rec{background:var(--echo);border-color:#fff;color:var(--night);box-shadow:0 0 0 5px rgba(206,240,214,.45)}
+/* Đang ghi vọng: viền màn hình nhấp nháy + chấm đỏ + thanh thời gian chạy ngược */
+#recfx{position:absolute;inset:0;pointer-events:none;border:4px solid var(--echo);box-shadow:inset 0 0 22px rgba(206,240,214,.55);animation:recblink .7s ease-in-out infinite}
+@keyframes recblink{50%{opacity:.25}}
+#recbar{position:absolute;top:calc(env(safe-area-inset-top,0px) + 46px);right:max(8px,calc(env(safe-area-inset-right,0px) + 6px));display:flex;align-items:center;gap:8px;
+  padding:4px 10px;border-radius:8px;background:rgba(12,15,20,.85);border:1px solid var(--echo);color:var(--echo);font-weight:700;font-size:14px;pointer-events:none}
+#recbar .dot{color:#e06a5a;animation:recblink .7s ease-in-out infinite}
+#recbar .bar{width:72px;height:7px;border-radius:4px;background:#2a2e35;overflow:hidden}
+#recfill{height:100%;background:var(--echo)}
+#recsec{font-variant-numeric:tabular-nums;font-size:12px;min-width:30px}
+.seg{display:flex;gap:6px;grid-column:1 / -1}
+.seg button{flex:1;height:34px;border-radius:8px;border:1px solid var(--line);background:#212835;color:var(--ink);font-weight:700;font-size:13px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--green);border-color:var(--green)}
+@media (prefers-reduced-motion:reduce){ #recfx,#recbar .dot{animation:none} }
 #b-a{left:0;top:56px}
 #b-s{right:0;top:56px}
 #b-j{left:52px;bottom:0;width:72px;height:72px;font-size:14px}
@@ -94,7 +108,9 @@ body.touch .tc{display:block}
     <div class="ab" id="b-s" data-k="s">Lướt</div>
     <div class="ab" id="b-j" data-k="j">Nhảy</div>
   </div>
-  <div id="keys">←→↑↓ / WASD di chuyển · Z nhảy · X chém · C lướt · V vọng · R chơi lại phòng</div>
+  <div id="keys">←→↑↓ / WASD di chuyển · Z nhảy · X chém · C lướt · V vọng (bấm bật/tắt) · R chơi lại phòng</div>
+  <div id="recfx" hidden></div>
+  <div id="recbar" hidden><span class="dot">●</span>Đang ghi<span class="bar"><span id="recfill" style="display:block;width:100%"></span></span><span id="recsec"></span></div>
   <div id="toast"></div>
   <div id="ok">Đạt!</div>
   <div id="next" hidden>Đi tiếp →</div>
@@ -108,6 +124,7 @@ body.touch .tc{display:block}
       <label class="row" for="c-echo">Thời gian ghi vọng <output id="o-echo"></output><input id="c-echo" type="range" min="1" max="6" step="0.5"></label>
       <label class="row" for="c-wjx">Lực bật ngang (bật tường) <output id="o-wjx"></output><input id="c-wjx" type="range" min="1.2" max="4.6" step="0.1"></label>
       <label class="row" for="c-stick">Thời gian bám tường <output id="o-stick"></output><input id="c-stick" type="range" min="0" max="24" step="1"></label>
+      <div class="row">Kiểu Vọng<span></span><div class="seg"><button id="c-mode-tap" type="button" aria-pressed="true">Bấm 1 lần</button><button id="c-mode-hold" type="button" aria-pressed="false">Giữ</button></div></div>
       <div class="btns"><button id="cfg-def" type="button">Mặc định</button><button id="cfg-close" type="button" class="pri">Chơi tiếp</button></div>
     </div>
   </div>
@@ -117,7 +134,7 @@ body.touch .tc{display:block}
 <script>
 'use strict';
 /* ================= THAM SỐ (chỉnh cảm giác ở đây) ================= */
-const DEF = { runSpeed:2.2, jumpHeight:56, gravity:0.32, echoSeconds:3, wallJumpVx:2.7, wallStick:6 };
+const DEF = { runSpeed:2.2, jumpHeight:56, gravity:0.32, echoSeconds:3, wallJumpVx:2.7, wallStick:6, echoHold:0 };  // echoHold 0 = bấm Vọng 1 lần bật/tắt, 1 = giữ Vọng
 const P = Object.assign({}, DEF, {
   accelFrames:6,      // số khung để đạt tốc chạy
   decelFrames:5,      // số khung phanh (trượt nhẹ)
@@ -188,8 +205,8 @@ function rEnts(t){ return ents.filter(e=>e.room===S.room&&(!t||e.type===t)); }
 }
 { // 4. câu đố 1
   const r=makeRoom(28,'Câu đố 1',[
-    {t:'Giữ {V}, đi lên công tắc', ok:()=>rec && rEnts('switch').some(s=>s.pressed)},
-    {t:'Thả {V}: bóng làm lại và giữ công tắc', ok:()=>echo && rEnts('door').some(d=>d.open>=1)},
+    {t:'Bấm {V} → đứng lên công tắc', ok:()=>rec && rEnts('switch').some(s=>s.pressed)},
+    {t:'Bấm {V} lần nữa: bóng giữ công tắc', ok:()=>echo && rEnts('door').some(d=>d.open>=1)},
     GO]);
   r.ents.push({type:'switch', id:'a', tx:7, ty:13});
   r.fill(18,1,18,10); r.ents.push({type:'door', tx:18, ty0:11, ty1:13, needs:['a'], latch:false});
@@ -197,7 +214,8 @@ function rEnts(t){ return ents.filter(e=>e.room===S.room&&(!t||e.type===t)); }
 }
 { // 5. câu đố 2
   const r=makeRoom(34,'Câu đố 2',[
-    {t:'Giữ {V}, lên một công tắc, rồi thả {V}', ok:()=>echo && echo.done && rEnts('switch').some(s=>s.byEcho)},
+    {t:'Bấm {V} → lên một công tắc', ok:()=>rec && rEnts('switch').some(s=>s.pressed)},
+    {t:'Bấm {V} lần nữa, chờ bóng đứng lại', ok:()=>echo && echo.done && rEnts('switch').some(s=>s.byEcho)},
     {t:'Bạn đứng lên công tắc còn lại', ok:()=>rEnts('door').some(d=>d.latched)},
     GO]);
   r.ents.push({type:'switch', id:'b', tx:5, ty:13});
@@ -225,9 +243,11 @@ function rEnts(t){ return ents.filter(e=>e.room===S.room&&(!t||e.type===t)); }
 { // 8. chém cùng bóng
   const r=makeRoom(34,'Chém cùng bóng',[
     {t:'Đứng cạnh hình nộm xanh', ok:()=>pl.onGround && rEnts('twin').some(e=>e.alive && Math.abs(pl.x+pl.w/2-(e.x+e.w/2))<30)},
-    {t:'Giữ {V}, bấm {A}', ok:()=>rec && pl.atk},
-    {t:'Thả {V}', ok:()=>echo && !rec},
-    {t:'Bấm {A} cùng lúc với bóng', ok:()=>rEnts('twin').every(e=>!e.alive),
+    {t:'Bấm {V} để ghi', ok:()=>!!rec},
+    {t:'Bấm {A}', ok:()=>rec && pl.atk,
+      back:()=>(!rec && !pl.atk) ? 1 : null, backMsg:'Chưa chém lúc ghi, ghi lại'},
+    {t:'Bấm {V} lần nữa', ok:()=>echo && !rec},
+    {t:'Chém khi bóng chém (có dấu !)', ok:()=>rEnts('twin').every(e=>!e.alive),
       back:()=>(echo && echo.done && rEnts('twin').some(e=>e.alive)) ? 1 : null},
     {t:'Xong! Bạn đã qua cả 8 phòng thử'}]);
   r.strict=true;
@@ -515,6 +535,12 @@ function updateEcho(){
   if(!echo) return;
   if(echo.i<echo.frames.length){ echo.cur=echo.frames[echo.i++]; }
   else if(!echo.done){ echo.done=true; echo.cur=Object.assign({},echo.cur,{hb:null,n:0,st:'idle'}); }
+  // dấu "!": bóng sắp chém trong 18 khung (0,3 giây) tới, giữ tới lúc nhát chém trúng
+  echo.warn=false;
+  if(!echo.done){
+    if(echo.cur.hb) echo.warn=true;
+    else for(let j=echo.i;j<Math.min(echo.frames.length,echo.i+18);j++) if(echo.frames[j].hb){ echo.warn=true; break; }
+  }
 }
 
 /* ================= ĐÒN ĐÁNH ================= */
@@ -529,7 +555,7 @@ function applyHits(hb,key,src,face){
     else if(e.type==='walker'){ e.hp--; e.stun=14; moveX(e,(face||1)*5,false); if(e.hp<=0){ e.alive=false; shatter(cx,cy,'#C8452F','#3a120c'); } }
     else if(e.type==='twin'){
       if(src==='e') e.lastE=S.frame; else e.lastP=S.frame;
-      if(Math.abs(e.lastP-e.lastE)<=10){ e.alive=false; shatter(cx,cy,'#83CC93','#1d3a26'); burst(cx,cy,'#CEF0D6',20,2.6); }
+      if(Math.abs(e.lastP-e.lastE)<=12){ e.alive=false; shatter(cx,cy,'#83CC93','#1d3a26'); burst(cx,cy,'#CEF0D6',20,2.6); }
       else e.need=50;
     }
   }
@@ -553,8 +579,8 @@ function step(){
   if(pressed('j')) pl.jumpBuf=P.jumpBuffer;
   if(pressed('a')) pl.atkBuf=8;
   if(pressed('s')) pl.dashBuf=4;
-  if(pressed('v') && !rec) startRec();
-  if(rec && !I.v) stopRec();
+  if(P.echoHold){ if(pressed('v') && !rec) startRec(); if(rec && !I.v) stopRec(); }
+  else if(pressed('v')){ if(rec) stopRec(); else startRec(); }   // bấm 1 lần: bật ghi / thả bóng; bấm khi bóng đang chạy = ghi mới
   if(S.sht>0) S.sht--;
   if(S.hitstop>0){ S.hitstop--; return; }
   S.frame++;
@@ -704,7 +730,9 @@ function render(){
   // dấu điểm bắt đầu ghi
   if(rec){ ctx.strokeStyle=C.echo; ctx.globalAlpha=0.5+0.3*Math.sin(S.frame*0.3); ctx.lineWidth=1; ctx.strokeRect(Math.round(rec.sx-ox)+0.5,Math.round(rec.sy-oy)+0.5,9,14); ctx.globalAlpha=1; }
   // bóng
-  if(echo){ drawChar(echo.cur,echo.done?0.45:0.6,true,false); drawSlash(echo.cur,C.echo,0.8); }
+  if(echo){ drawChar(echo.cur,echo.done?0.45:0.6,true,false); drawSlash(echo.cur,C.echo,0.8);
+    if(echo.warn){ const wx=Math.round(echo.cur.x-ox)+5, wy=Math.round(echo.cur.y-oy)-12;
+      ctx.fillStyle='#0C0F14'; ctx.fillRect(wx-4,wy-1,9,12); ctx.fillStyle=C.bell; ctx.fillRect(wx-1,wy+1,3,6); ctx.fillRect(wx-1,wy+8,3,2); } }
   // vệt lướt
   for(const t of trail){ ctx.globalAlpha=t.t/14; ctx.fillStyle=C.edge; ctx.fillRect(Math.round(t.x-ox),Math.round(t.y-oy)+3,12,12); }
   ctx.globalAlpha=1;
@@ -729,6 +757,15 @@ function render(){
   if(rec){ ctx.fillStyle='#e06a5a'; ctx.fillRect(bx+bw+4,by,5,5); }
   ctx.textBaseline='top';
   if(S.paused){ ctx.fillStyle='rgba(12,15,20,.35)'; ctx.fillRect(0,0,W,H); }
+  updRecUI();
+}
+const recfx=document.getElementById('recfx'), recbar=document.getElementById('recbar'), recfill=document.getElementById('recfill'), recsec=document.getElementById('recsec'), bV=document.getElementById('b-v');
+let recShown=false;
+function updRecUI(){
+  const on=!!rec;
+  if(on!==recShown){ recShown=on; recfx.hidden=!on; recbar.hidden=!on; bV.classList.toggle('rec',on); }
+  if(on){ const max=Math.round(P.echoSeconds*60), left=Math.max(0,1-rec.frames.length/max);
+    recfill.style.width=(left*100)+'%'; recsec.textContent=(left*P.echoSeconds).toFixed(1)+'s'; }
 }
 
 /* ================= KHUNG HÌNH ================= */
@@ -747,8 +784,10 @@ const CHIP={J:['Nhảy','','b-j'],A:['Chém','','b-a'],S:['Lướt','','b-s'],V:
 function showStep(){
   const r=rooms[S.room], k=S.steps[S.room]||0, st=r.steps[k], last=k===r.steps.length-1;
   roomName.textContent=(S.room+1)+'/'+rooms.length+' '+r.name;
-  roomHint.innerHTML=st.t.replace(/\{(.)\}/g,(m,c)=>{ const q=CHIP[c]; return q?'<span class="k'+q[1]+'">'+q[0]+'</span>':m; });
-  const want=new Set((st.t.match(/\{(.)\}/g)||[]).map(m=>CHIP[m[1]]&&CHIP[m[1]][2]));
+  let txt=st.t;
+  if(P.echoHold) txt=txt.replace('Bấm {V} lần nữa','Thả {V}').replace('Bấm {V} để ghi','Giữ {V}').replace('Bấm {V}','Giữ {V}');
+  roomHint.innerHTML=txt.replace(/\{(.)\}/g,(m,c)=>{ const q=CHIP[c]; return q?'<span class="k'+q[1]+'">'+q[0]+'</span>':m; });
+  const want=new Set((txt.match(/\{(.)\}/g)||[]).map(m=>CHIP[m[1]]&&CHIP[m[1]][2]));
   ['b-j','b-a','b-s','b-v','dpad'].forEach(id=>document.getElementById(id).classList.toggle('pulse',want.has(id)));
   nextEl.hidden=!(last && S.room<rooms.length-1);
 }
@@ -772,7 +811,7 @@ function checkSteps(){
   if(k>=st.length-1) return;
   let nk=k; const lim=r.strict?k:st.length-2;
   for(let i=k;i<=lim;i++) if(st[i].ok && st[i].ok()) nk=i+1;
-  if(nk===k && st[k].back){ const b=st[k].back(); if(b!=null){ S.steps[S.room]=b; showStep(); toast('Chưa trùng lúc, thử lại'); return; } }
+  if(nk===k && st[k].back){ const b=st[k].back(); if(b!=null){ S.steps[S.room]=b; showStep(); toast(st[k].backMsg||'Chưa trùng lúc, thử lại'); return; } }
   if(nk!==k){ S.steps[S.room]=nk; good(); showStep(); if(nk===st.length-1 && S.room===rooms.length-1) toast('Bạn đã qua cả 8 phòng thử!'); }
 }
 
@@ -781,7 +820,11 @@ const cfgEl=document.getElementById('cfg');
 const CFG=[['c-run','o-run','runSpeed',v=>v.toFixed(1)],['c-jump','o-jump','jumpHeight',v=>(v/T).toFixed(1)+' ô'],
   ['c-grav','o-grav','gravity',v=>v.toFixed(2)],['c-echo','o-echo','echoSeconds',v=>v.toFixed(1)+' giây'],
   ['c-wjx','o-wjx','wallJumpVx',v=>v.toFixed(1)],['c-stick','o-stick','wallStick',v=>(v/60).toFixed(2)+' giây']];
-function syncCfg(){ CFG.forEach(([i,o,k,fmt])=>{ document.getElementById(i).value=P[k]; document.getElementById(o).textContent=fmt(P[k]); }); }
+const mTap=document.getElementById('c-mode-tap'), mHold=document.getElementById('c-mode-hold');
+function syncMode(){ mTap.setAttribute('aria-pressed',String(!P.echoHold)); mHold.setAttribute('aria-pressed',String(!!P.echoHold)); }
+function syncCfg(){ CFG.forEach(([i,o,k,fmt])=>{ document.getElementById(i).value=P[k]; document.getElementById(o).textContent=fmt(P[k]); }); syncMode(); }
+function setMode(h){ P.echoHold=h; rec=null; syncMode(); saveCfg(); showStep(); }
+mTap.addEventListener('click',()=>setMode(0)); mHold.addEventListener('click',()=>setMode(1));
 function saveCfg(){ try{ localStorage.setItem('tv-phongxam',JSON.stringify(Object.fromEntries(Object.keys(DEF).map(k=>[k,P[k]])))); }catch(e){} }
 try{ const s=JSON.parse(localStorage.getItem('tv-phongxam')||'null'); if(s) for(const k in DEF) if(typeof s[k]==='number') P[k]=s[k]; }catch(e){}
 derive();
@@ -790,7 +833,7 @@ function openCfg(){ syncCfg(); cfgEl.hidden=false; S.paused=true; KEYS.forEach(k
 function closeCfg(){ cfgEl.hidden=true; S.paused=false; }
 document.getElementById('btn-cfg').addEventListener('click',()=>cfgEl.hidden?openCfg():closeCfg());
 document.getElementById('cfg-close').addEventListener('click',closeCfg);
-document.getElementById('cfg-def').addEventListener('click',()=>{ Object.assign(P,DEF); derive(); syncCfg(); saveCfg(); });
+document.getElementById('cfg-def').addEventListener('click',()=>{ Object.assign(P,DEF); derive(); syncCfg(); saveCfg(); showStep(); });
 cfgEl.addEventListener('click',e=>{ if(e.target===cfgEl) closeCfg(); });
 document.getElementById('btn-reset').addEventListener('click',e=>{ resetRoom(S.room); toast('Chơi lại phòng'); e.currentTarget.blur(); });
 
