@@ -71,7 +71,7 @@
 <div id="lk-tai" data-bia="||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAMEBQYH/8QAKRAAAQMCBQMDBQAAAAAAAAAAAQIDEQAEBRIhMUETFGEiQnEVUWKBsf/EABcBAAMBAAAAAAAAAAAAAAAAAAIDBAX/xAAlEQACAQEFCQAAAAAAAAAAAAABAgADBBExUfASEyEyM0FxobH/2gAMAwEAAhEDEQA/AOfNMWj9zbWiEtBsn1ugGTPCvjXajFcBNssNsvoeMxlCgVJqzCbhHftG3aGdcJBUAUn7neRzTMcumxjD0hDSkmFBtWZMjSdR5qamzb4DtHOiimTfxmt/T3UpzLBCTt5q22sWekt0vBvImSF8+KyF5eWDaGFNZlr6YkKGiTPGvzSutZDDX1sF3P0wPUBMzvP62rStACi5TEWB9pizi/H1JsLUo3NhKiZUOfyqbE1Hu3jJkqPNFFRUuprOHU5dZSVwmE6+2mNk9u7r7R/aKKqqQLNifB+T/9k=|||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAgf/xAAmEAACAgEEAQQCAwAAAAAAAAABAgMRAAQSITEFE1FhgSJBcbHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQIDBAX/xAAeEQABBAIDAQAAAAAAAAAAAAAAAQIDEiExBBEyIv/aAAwDAQACEQMRAD8A51EIZIo53EASNwHG07mBPFno9HFyeOhl1Y2yFIbtjVkDnr54yzx2vaLSyII1cELvBQEVu5PyeshTWvFJG6qi7OR+A9/4xoa3yQzWRvzsH8YkWrkCMZYlsoSvJHfWUalzFpI4/TRBZbca3HsUcXqvJvPqpZgEAewAFHAP1mZ9aZIoyqKWVa4jX3P+jByGor8aNDgT0gXvDiHTs1EbjRAsX3jKuEH92Ofs4YYGeim/yLulscHjFuT6YNno/wBnDDGfsEej/9k=" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.16-2332";
+(window.G = window.G || {}).VERSION = "lk-2026.10.17-0019";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -2382,15 +2382,17 @@
       { M: 3.35, v: 950, lk: 80, r: 50, nl: [1, 4], m: [1, 1] },    // cần mảnh Ngư Tinh
       { M: 3.70, v: 1000, lk: 90, r: 55, nl: [2, 5] },
       { M: 4.50, v: 1350, lk: 290, r: 65, nl: [2, 10] },            // 12: Thức tỉnh; trần trước Hồ Tinh (bot phiên 1: xem dưới)
-      { M: 4.90, v: 1300, lk: 100, r: 70, nl: [2, 6], m: [2, 1] },  // cần mảnh Hồ Tinh; trần trước Thuồng Luồng
-      { M: 5.30, v: 1450, lk: 120, r: 75, nl: [0, 6], m: [3, 1] },  // cần mảnh Thuồng Luồng (vùng 4 không có nguyên liệu riêng: Gỗ linh)
+      { M: 4.90, v: 1300, lk: 100, r: 70, nl: [2, 6], m: [2, 1] },  // cần mảnh Hồ Tinh
+      { M: 5.30, v: 1450, lk: 120, r: 75, nl: [0, 6] },             // trần trước Thuồng Luồng (phiên 3: bỏ mảnh TL, xem tran); vùng 4 không có nguyên liệu riêng: Gỗ linh
       { M: 5.70, v: 1850, lk: 200, r: 90, nl: [1, 10], m: [3, 2] }, // 15: Viên mãn (Vảy cá)
     ],
     // Cấp Luyện tối đa theo số trùm vùng đã hạ (0..4: chưa hạ, Mộc Tinh, Ngư Tinh, Hồ Tinh, Thuồng Luồng); cấp đầu tiên vượt mỗi mốc
-    // (6, 10, 13, 14) cần mảnh của trùm đó. Phiên 1 (bot 8 lượt, sau luật trùm công bằng của tư vấn 2): thiết kế 11 trước Hồ Tinh và cấp 12
+    // (6, 10, 13, 15) cần mảnh của trùm đó. Phiên 1 (bot 8 lượt, sau luật trùm công bằng của tư vấn 2): thiết kế 11 trước Hồ Tinh và cấp 12
     // cần mảnh Hồ Tinh làm bot kẹt ở cấp 11 cả vùng 3 (ải 3-5 chơi 9,1 lần > 9, tổng 44 lần so với 39) vì bot thật lên Thức tỉnh từ 3-2 →
     // trần trước Hồ Tinh 12, mảnh Hồ Tinh chuyển sang cấp 13 (39 lần, 181 phút; luật cũ 39 lần, 184 phút). Bảng: luyen-vu-khi/bao-cao-1.md.
-    tran: [5, 9, 12, 13, 15],
+    // Phiên 3 (bot 8 lượt --vung4): trần 13 trước Thuồng Luồng làm 4-5 chơi 11,2 lần (> 9; luật cũ 7,2), vàng dồn 9.956 → trần trước
+    // Thuồng Luồng 14, cấp 14 không cần mảnh, cấp 15 cần 2 mảnh Thuồng Luồng. Bảng: luyen-vu-khi/bao-cao-3.md.
+    tran: [5, 9, 12, 14, 15],
     hinhThai: [3, 6, 12],       // cấp lên Mầm (chọn hệ), Thành hình, Thức tỉnh
     phuTu: 9,                   // từ cấp 9 (Tinh luyện): phần phụ của loại
     phu: { sword: 0.10, spear: 0.12, hammer: 0.30, bow: 0.20 }, // tốc đánh / tầm / choáng / sát thương xuyên (phi tiêu xuyên thêm xuyenThem quái)
@@ -33575,7 +33577,6 @@ G.CAM_CHUAN_DATA = {"phien":1,"ghi_chu":"cam-vk-chuan 16/10: neo sửa theo LUAT
     'Lộn để lại bóng mờ {0} giây, quái nhắm vào bóng; hồi {1} giây': 'Dodge leaves a decoy for {0}s that monsters target; {1}s cooldown',
     'Mỗi {0} giây có 1 lớp khiên chặn 1 đòn (tối đa {1}% máu)': 'Every {0}s a shield blocks one hit (up to {1}% HP)',
     'Khiên vỡ!': 'Shield broke!',
-    'Mài, nâng lò, nâng bộ trang phục, đổi nguyên liệu, đặt lại điểm kỹ năng': 'Sharpen, upgrade the forge, upgrade outfits, buy materials, reset skill points',
     'Qua ải, hạ quái, tinh anh, trùm, phòng thử thách': 'Clear stages, kill monsters, elites, bosses, challenge rooms',
     'Mài vũ khí, nâng lò cấp 4': 'Sharpen weapons, forge Lv 4',
     'Nâng lò cấp 2, mài +5 lên +6': 'Forge Lv 2, sharpen +5 to +6',
@@ -34833,7 +34834,6 @@ G.CAM_CHUAN_DATA = {"phien":1,"ghi_chu":"cam-vk-chuan 16/10: neo sửa theo LUAT
   if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({
     'Ép đồ': 'Refine', 'Bậc {0}': '{0} tier', 'Trắng': 'White', 'Xanh lam': 'Blue', 'Xanh lục': 'Green', 'Tím': 'Purple', 'Vàng': 'Gold', 'Đỏ': 'Red', 'Rực lửa': 'Blazing',
     'Đá nâng bậc': 'Tier stones', 'Bùa giữ bậc': 'Tier ward', '{0} đá nâng bậc': '{0} tier stones', '{0} bùa giữ bậc': '{0} tier wards',
-    'Đá nâng bậc: {0} · Bùa giữ bậc: {1}': 'Tier stones: {0} · Tier wards: {1}',
     'Chí mạng': 'Crit chance', 'Sát thương chí mạng': 'Crit damage', 'Sát thương lên trùm, tinh anh': 'Damage vs bosses, elites', 'Hút máu': 'Life steal',
     'Tốc đánh': 'Attack speed', 'Giảm hồi chiêu đặc biệt': 'Special cooldown', 'Linh khí nhận': 'Spirit gain', 'Sát thương hệ': 'Element damage', 'Giảm sát thương nhận': 'Damage taken',
     'tốc đánh': 'attack speed', 'tầm đánh': 'reach', 'thời gian choáng': 'stun time', 'sát thương xuyên': 'pierce damage',
@@ -39163,7 +39163,7 @@ G.CAM_CHUAN_DATA = {"phien":1,"ghi_chu":"cam-vk-chuan 16/10: neo sửa theo LUAT
   VS.resParts = function () {
     const sv = G.save;
     // đợt 4: bỏ ô Đá tôi (không còn dùng, đổi ra quặng — G.DA_TOI_QUANG)
-    return [['gold', sv.gold, '#ffd23f'], ['ore', G.luyen && G.luyen.bat() ? sv.nlr | 0 : sv.ore, '#c9ccd2'], // Luyện: ô quặng hiện nguyên liệu rèn (phiên 2 đổi biểu tượng, gọn 3 ô)
+    return [['gold', sv.gold, '#ffd23f'], ['ore', sv.ore, '#c9ccd2'], // Luyện bật: js/luyen_ui.js thay cả hàm này (3 ô: vàng, NLR, linh khí)
       ['mat0', sv.mats[0], '#9bd14a'], ['mat1', sv.mats[1], '#7fd4ff'], ['mat2', sv.mats[2], '#ff9a5a'],
       ['shard0', sv.shards[0], '#c8e8a0'], ['shard1', sv.shards[1], '#a8d8ff'], ['shard2', sv.shards[2], '#ffc0a0']]
       .concat(G.REGIONS.length > 3 && sv.shards.length > 3 && (sv.shards[3] > 0 || (sv.stars && sv.stars['2-4'])) ? [['shard3', sv.shards[3], '#a8e8d0']] : []); // vùng 4: mảnh Thuồng Luồng
@@ -40794,7 +40794,7 @@ G.CAM_CHUAN_DATA = {"phien":1,"ghi_chu":"cam-vk-chuan 16/10: neo sửa theo LUAT
       matUse = ['Luyện cấp 3–6 và cấp 14', 'Luyện cấp 7–10 và cấp 15', 'Luyện cấp 11–13'];
     }
     R.forEach((r, i) => { if (!r.matChung) a.push(['mat' + i, matUse[i] || 'Nguyên liệu vùng', G.t('Qua ải {0}', r.name)]); }); // vùng 4 không có nguyên liệu riêng (Q2 = A)
-    const LY = !!(G.luyen && G.luyen.bat()), qua = ['Luyện lên cấp 6', 'Luyện lên cấp 10', 'Luyện lên cấp 13', 'Luyện lên cấp 14 và 15'];
+    const LY = !!(G.luyen && G.luyen.bat()), qua = ['Luyện lên cấp 6', 'Luyện lên cấp 10', 'Luyện lên cấp 13', 'Luyện lên cấp 15'];
     R.forEach((r, i) => a.push(['shard' + i, LY ? (i >= 3 ? qua[3] : G.t('{0}; nâng bộ trang phục', qua[i])) : i === 0 ? 'Nâng bộ Ninja và bộ Rừng lên cấp 2, 3' : i >= 3 ? 'Để dành (chưa có bộ trang phục vùng này)' : 'Nâng bộ của vùng này lên cấp 2, 3', G.t('Hạ trùm vùng {0} (ải 5 {1})', r.bossName, r.name)]));
     return a;
   }
@@ -43019,7 +43019,6 @@ G.CAM_CHUAN_DATA = {"phien":1,"ghi_chu":"cam-vk-chuan 16/10: neo sửa theo LUAT
     '+10% tốc đánh': '+10% attack speed', '+12% tầm đánh': '+12% reach', '+30% thời gian choáng': '+30% stun time', '+20% sát thương xuyên, xuyên thêm 1 quái': '+20% pierce damage, +1 pierce',
     '{0} Lv {1} → {2}: đòn +{3}': '{0} Lv {1} → {2}: hit +{3}', '{0} theo hệ {1}.': '{0} now uses {1}.', 'Đã chọn dòng: {0}': 'Line set: {0}', 'Cầm đầu': 'Lead', 'Đang cầm đầu': 'Leading',
     'Vào ải sẽ cầm {0} trước.': 'You will start with {0}.', 'Chọn một vũ khí để luyện.': 'Pick a weapon to temper.',
-    'Luyện vũ khí: mỗi cấp chắc chắn thành công, không tụt cấp.': 'Tempering always succeeds and never drops a level.',
     'Lò rèn đã gộp thành Luyện vũ khí.': 'The forge now has a single Temper track.', 'Hoàn: {0}.': 'Refund: {0}.', 'lò rèn': 'forge',
     'Ải Rèn': 'Forge Trial', 'Tinh luyện': 'Refined', 'Viên mãn': 'Perfected', 'Đủ bộ': 'Full set',
     'Luyện 1 vũ khí lên cấp 3': 'Temper 1 weapon to Lv 3', 'Luyện 1 vũ khí lên cấp 9': 'Temper 1 weapon to Lv 9', 'Luyện 1 vũ khí lên cấp 12': 'Temper 1 weapon to Lv 12',
@@ -43589,7 +43588,7 @@ G.CAM_CHUAN_DATA = {"phien":1,"ghi_chu":"cam-vk-chuan 16/10: neo sửa theo LUAT
     'Luyện vũ khí ở Ông Thợ Rèn': 'Temper weapons at the Smith',
     'Qua ải, rương báu, phòng thử thách, thương nhân, trùm, Ải Rèn, Bà Hàng Xén (thẻ NLR)': 'Stages, chests, challenge rooms, merchants, bosses, Forge Trial, the Grocer',
     'Luyện cấp 3–6 và cấp 14': 'Temper Lv 3–6 and Lv 14', 'Luyện cấp 7–10 và cấp 15': 'Temper Lv 7–10 and Lv 15', 'Luyện cấp 11–13': 'Temper Lv 11–13',
-    'Luyện lên cấp 6': 'Temper to Lv 6', 'Luyện lên cấp 10': 'Temper to Lv 10', 'Luyện lên cấp 13': 'Temper to Lv 13', 'Luyện lên cấp 14 và 15': 'Temper to Lv 14 and 15', '{0}; nâng bộ trang phục': '{0}; upgrade outfits',
+    'Luyện lên cấp 6': 'Temper to Lv 6', 'Luyện lên cấp 10': 'Temper to Lv 10', 'Luyện lên cấp 13': 'Temper to Lv 13', 'Luyện lên cấp 15': 'Temper to Lv 15', '{0}; nâng bộ trang phục': '{0}; upgrade outfits',
     'Linh khí vào một túi chung. Cu Tí mang đủ 4 vũ khí (Kiếm, Thương, Búa, Phi tiêu); ở Ông Thợ Rèn luyện từng món từ cấp 1 lên 15: cấp 3 thành Mầm (chọn Lửa, Độc hoặc Băng), cấp 6 Thành hình, cấp 12 Thức tỉnh.':
       'Spirit goes into one shared pouch. Cu Tí carries all 4 weapons (Sword, Spear, Hammer, Shuriken); at the Smith, temper each from Lv 1 to 15: Lv 3 Sprout (pick Fire, Poison or Ice), Lv 6 Formed, Lv 12 Awakened.',
     'Luyện vũ khí ở Ông Thợ Rèn lần nào cũng thành công, không tụt cấp. Khung ô đổi màu theo cấp: Trắng, Xanh lam, Xanh lục, Tím, Vàng, Đỏ, Rực lửa.':
