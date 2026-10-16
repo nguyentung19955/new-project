@@ -716,6 +716,7 @@
     if (B.anh && FA && FA.co(B.anh)) FA.ve(c, B.anh, x, by, gone, 0, 1); // ảnh riêng của vật ném (js/ky_nang_quai.js: hạt bào tử hu-dan-bao-tu)
     else if (B.art === 'socNo' && FA && FA.co('hu-dan-qua-no')) FA.ve(c, 'hu-dan-qua-no', x, by, gone, 0, 1);
     else if (anhBom) { FA.ve(c, maBom, x, y - lift, gone, 0, 1); dinh = Math.round(y - lift - (anhBom.ay - 2) * anhBom.co); }
+    else if (G.gop8 && G.gop8('hu-bom-song') && G.getWorld && (G.getWorld() || {}).region === 3) { FA.ve(c, 'hu-bom-song', x, by, gone, 0, B.big ? 1.4 : 1); dinh = by - 4; } // vẽ tay 8 gộp: bầu bọc rong của quái Sông sâu (Ma Da...)
     else {
       p(c, x - s, by - s + 1, s * 2, s * 2 - 2, '#14182e'); p(c, x - s + 1, by - s, s * 2 - 2, s * 2, '#14182e');
       p(c, x - s + 1, by - s + 1, s * 2 - 2, s * 2 - 2, col[1]); p(c, x - s + 1, by - s + 1, 2, 2, col[2]);

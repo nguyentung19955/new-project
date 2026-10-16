@@ -1747,6 +1747,7 @@
       if (g.amb) {
         g.amb.push({ k: 'pud', x: sx, y: sy, rx: 12, ry: 5, ph: rn() * 9, big: 1 });
         for (let i = 0; i < 4; i++) g.amb.push({ k: 'beam', bx, y0: g.fy0 - g.wh, y1: sy, ph: rn() * 20, sp: 0.5 + rn() * 0.5, col: '#d8f6ff' });
+        g.amb.push({ k: 'nang', bx, yt: g.fy0 - g.wh - g.cap + 2, yb: g.fy0 + 44, ma: 'gd-cot-nang-bien' }); // vẽ tay 8 gộp: ảnh thay shaft (đã chặn)
       }
       return () => {
         shaft(g, bx, '#cfefff', 0.16);
@@ -1760,6 +1761,7 @@
       if (g.amb) {
         g.amb.push({ k: 'win', x: bx, y: wy + 6, ph: rn() * 9 });
         for (let i = 0; i < 5; i++) g.amb.push({ k: 'beam', bx, y0: wy + 10, y1: sy, ph: rn() * 20, sp: 0.5 + rn() * 0.5, col: '#ffe6b8' });
+        g.amb.push({ k: 'nang', bx, yt: wy + 10, yb: sy, ma: 'gd-cot-nang-lau' }); // vẽ tay 8 gộp: ảnh thay shaft (đã chặn)
       }
       return () => {
         if (!ttMot('lau', 'cua-so-kinh', bx, wy + 28)) { // ảnh AI: cửa sổ kính màu trên tường sau, đáy ảnh = đáy bệ cửa sổ
@@ -2024,6 +2026,10 @@
     // 16/10 vẽ tay 9 (?noi9=0 tắt): Sông sâu dùng ảnh đom đóm có sẵn; tinh thể Hang biển loé bằng ảnh hu-sao-chop
     const chan9 = G.NOI9 !== false && G.dangChan && G.dangChan() && FA;
     const aDom9 = aDom || (chan9 && room.T && room.T.reg === 3 && FA.get('hu-moi-truong-rung-domdom')), aSao9 = chan9 && FA.get('hu-sao-chop');
+    // 16/10 vẽ tay 8 gộp (?gop8=0 tắt): bụi trôi, sương, khóm cỏ lay, gợn vũng nước bằng ảnh (code đã bị chặn nên trước đây không hiện)
+    const g8 = G.dangChan && G.dangChan() && G.gop8Bat && G.gop8Bat() && FA, co8 = (ma) => !!(g8 && FA.co(ma));
+    const aBui = co8('hu-hat-bui'), aSuong = co8('hu-suong-dai'), aCo = co8('hu-moi-truong-rung-co-lay'), aGon = co8('hu-gon-nuoc');
+    const suong = (x, y, w, h, col, mo, doc) => { if (w > 0 && h > 0) FA.veO(c, 'hu-suong-dai', Math.floor(t * 0.5 + x * 0.01) % 4, x, y, w, h, Math.min(1, mo), col, doc); };
     for (const a of list) {
       switch (a.k) {
         case 'mote': { // lớp xa (0): chậm, mờ; lớp gần (1): nhanh hơn, rõ hơn
@@ -2031,6 +2037,7 @@
           let x = a.x + ((t * v * a.sp + a.ph * 13) % fw);
           if (x > fx1) x -= fw;
           const y = a.y + Math.sin(t * 0.6 * a.sp + a.ph) * amp, k = 0.5 + 0.5 * Math.sin(t * 1.1 * a.sp + a.ph * 2);
+          if (aBui) { FA.veK(c, 'hu-hat-bui', x, y, Math.floor(t * 2 * a.sp + a.ph) % 8, 0, a.layer ? 0.5 : 0.35, false, Math.min(1, (a.layer ? 0.9 : 0.6) * k * M), a.col); break; }
           r(x, y, 1, 1, acol(a.col, (a.layer ? 0.55 : 0.32) * k * M));
           break;
         }
@@ -2060,6 +2067,7 @@
         }
         case 'tuft': { // khóm cỏ sát tường lay theo một làn gió chạy ngang phòng
           const wv = Math.sin(t * 1.4 - a.x * 0.045 + a.ph * 0.2) * M, dx = wv > 0.55 ? 1 : wv < -0.75 ? -1 : 0;
+          if (aCo) { FA.veK(c, 'hu-moi-truong-rung-co-lay', a.x, a.y + 1, dx < 0 ? 0 : dx > 0 ? 2 : (Math.floor(t + a.ph) % 2 ? 1 : 3), 0, Math.max(0.6, Math.min(1.4, a.h / 4)), false, 1); break; }
           r(a.x, a.y - a.h + 1, 1, a.h - 1, F.moss); r(a.x + dx, a.y - a.h, 1, 1, F.mossL);
           r(a.x + 2, a.y - a.h + 2, 1, a.h - 2, F.leafL); r(a.x + 2 + dx, a.y - a.h + 1, 1, 1, F.leafH);
           r(a.x - 2, a.y - a.h + 3, 1, a.h - 3, F.moss); r(a.x - 2 + dx, a.y - a.h + 2, 1, 1, F.leafL);
@@ -2074,7 +2082,8 @@
         }
         case 'pud': { // vũng nước: thỉnh thoảng có vòng gợn lan ra, vệt sáng trên mặt nước khẽ trôi
           const P = a.big ? 2.6 : 4 + (a.ph % 2), u = (t + a.ph) % P;
-          if (u < 1.3) {
+          if (u < 1.3 && aGon) { const q = u / 1.3, an = FA.ds['hu-gon-nuoc']; FA.veK(c, 'hu-gon-nuoc', a.x, a.y, Math.min(an.so - 1, Math.floor(q * an.so)), 0, Math.max(0.4, (a.rx * 1.5 + 3) / an.fw), false, M); }
+          else if (u < 1.3) {
             const q = u / 1.3, rx = 1.5 + q * a.rx * 0.75, ry = Math.max(1, rx * (a.ry / a.rx)), col = acol('#8fd0ea', 0.55 * (1 - q) * M);
             const n = Math.max(8, Math.round(rx * 1.6));
             for (let i = 0; i < n; i++) { const an = (i / n) * 6.2832; r(a.x + Math.cos(an) * rx, a.y + Math.sin(an) * ry, 1, 1, col); }
@@ -2110,15 +2119,16 @@
         case 'beam': { // hạt bụi/phấn lấp lánh trôi chậm trong cột sáng
           const P = 7 / a.sp, u = ((t + a.ph) % P) / P, y = a.y0 + (a.y1 - a.y0) * u;
           const q = (y - (a.y0 - 7)) / (a.y1 - a.y0 + 7), x = a.bx - q * 26 + Math.sin(t * 0.8 + a.ph) * 4;
+          if (aBui) { FA.veK(c, 'hu-hat-bui', x, y, Math.floor(t * 3 + a.ph) % 8, 0, 0.4, false, Math.min(1, 0.9 * Math.sin(u * 3.1416) * M), a.col || '#fbffd8'); break; }
           r(x, y, 1, 1, acol(a.col || '#fbffd8', 0.75 * Math.sin(u * 3.1416) * M));
           break;
         }
         case 'emist': { // sương mỏng ở rìa phòng (Rừng già): dải ngắn trôi dọc theo tường, không đi qua giữa phòng
           const per = a.len + 40, off = (t * a.sp + a.ph) % per;
           if (a.v) { // dọc tường trái/phải
-            for (let y = fy0 - per + off; y < fy1; y += per) { const y0 = Math.max(fy0 + 4, y), y1 = Math.min(fy1 - 4, y + a.len); if (y1 > y0) { r(a.x, y0, a.w, y1 - y0, acol(a.col, 0.05 * M)); r(a.x + (a.x < (fx0 + fx1) / 2 ? 0 : a.w - 3), y0 + 4, 3, Math.max(0, y1 - y0 - 8), acol(a.col, 0.04 * M)); } }
+            for (let y = fy0 - per + off; y < fy1; y += per) { const y0 = Math.max(fy0 + 4, y), y1 = Math.min(fy1 - 4, y + a.len); if (y1 > y0 && aSuong) { suong(a.x, y0, a.w, y1 - y0, a.col, M, true); continue; } if (y1 > y0) { r(a.x, y0, a.w, y1 - y0, acol(a.col, 0.05 * M)); r(a.x + (a.x < (fx0 + fx1) / 2 ? 0 : a.w - 3), y0 + 4, 3, Math.max(0, y1 - y0 - 8), acol(a.col, 0.04 * M)); } }
           } else {
-            for (let x = fx0 - per + off; x < fx1; x += per) { const x0 = Math.max(fx0 + 2, x), x1 = Math.min(fx1 - 2, x + a.len); if (x1 > x0) { r(x0, a.y, x1 - x0, a.h, acol(a.col, 0.05 * M)); r(x0 + 6, a.y + 1, Math.max(0, x1 - x0 - 12), a.h - 2, acol(a.col, 0.035 * M)); } }
+            for (let x = fx0 - per + off; x < fx1; x += per) { const x0 = Math.max(fx0 + 2, x), x1 = Math.min(fx1 - 2, x + a.len); if (x1 > x0 && aSuong) { suong(x0, a.y, x1 - x0, a.h, a.col, M); continue; } if (x1 > x0) { r(x0, a.y, x1 - x0, a.h, acol(a.col, 0.05 * M)); r(x0 + 6, a.y + 1, Math.max(0, x1 - x0 - 12), a.h - 2, acol(a.col, 0.035 * M)); } }
           }
           break;
         }
@@ -2128,6 +2138,7 @@
           for (let x = fx0 - per + off; x < fx1; x += per) {
             const x0 = Math.max(fx0 + 2, x), x1 = Math.min(fx1 - 2, x + segW);
             if (x1 <= x0) continue;
+            if (aSuong) { suong(x0, a.y, x1 - x0, a.h, '#cfe8f0', M); continue; }
             r(x0, a.y, x1 - x0, a.h, acol('#cfe8f0', 0.05 * M));
             const i0 = Math.max(fx0 + 2, x + 8), i1 = Math.min(fx1 - 2, x + segW - 8);
             if (i1 > i0) r(i0, a.y + 2, i1 - i0, a.h - 4, acol('#e4f4f8', 0.045 * M));
@@ -2140,6 +2151,7 @@
     for (const l of g.lights) {
       if (l.k !== 'torch') continue;
       const f = 0.5 + 0.3 * Math.sin(t * 7.3 + l.x) + 0.2 * Math.sin(t * 12.7 + l.x * 1.7);
+      if (co8('hu-quang-den')) { const aq = FA.ds['hu-quang-den']; FA.veK(c, 'hu-quang-den', l.x, l.y - 5, Math.floor(t * 5 + l.x) % aq.so, 0, (18 + f * 6) / aq.fw, false, Math.min(1, (0.25 + 0.3 * f) * M), '#ff9a40'); FA.veK(c, 'hu-quang-den', l.x, fy0 + 12, 0, 0, (44 + f * 8) / aq.fw, false, Math.min(1, (0.1 + 0.12 * f) * M), '#ff9a40'); continue; }
       ell(l.x, l.y - 5, 9 + f * 3, 8 + f * 2, acol('#ff9a40', (0.04 + 0.05 * f) * M));
       ell(l.x, fy0 + 12, 22 + f * 4, 10 + f * 2, acol('#ff9a40', (0.015 + 0.025 * f) * M));
     }
@@ -2162,6 +2174,14 @@
   // Cột nắng gd-cot-nang-rung (ảnh ngả xuống bên PHẢI, cao 98 gồm lề; dải sáng từ hàng 1 tới 97; vẽ tay 7 gen lại rộng, đứng hơn: giữa dải ở đỉnh x = 6,2, ở đáy x = 19,5 —
   // so-do.json của cong-cu/dung-dot6.py). Lật ngang cho ngả trái như cột cũ (shaft): đỉnh giữa dải đặt ở bx, nóc tường → vệt trên sàn (yt → yb).
   function cotNangAnh(o) {
+    if (o.ma) { // 16/10 vẽ tay 8 gộp: cột sáng Hang biển / Lâu đài (ảnh gen thấp hơn cột cũ: kéo dọc cho đủ cao, ngang ×1,2; đỉnh dải ở x 3,25)
+      const b = G.gop8Bat && G.gop8Bat() ? gdA(o.ma) : null;
+      if (!b) return;
+      const w = b.rong * 1.2, h = o.yb - o.yt, sm = c.imageSmoothingEnabled;
+      c.save();
+      try { c.imageSmoothingEnabled = false; c.translate(bam(o.bx + 3.25 * 1.2), bam(o.yt)); c.scale(-1, 1); c.drawImage(b.img, 0, 0, w, h); } finally { c.restore(); c.imageSmoothingEnabled = sm; }
+      return;
+    }
     const a = gdA('gd-cot-nang-rung');
     if (!a) return;
     const s = (o.yb - o.yt) / 96, w = a.rong * s, h = a.cao * s, sm = c.imageSmoothingEnabled;
@@ -2226,7 +2246,22 @@
       // nước dâng (trận Ngư Tinh): phủ phần sàn không còn đứng được
       const s = W.shrink;
       // 16/10 con-ve-tay-5: nước dâng = phần sàn không đứng được (ảnh hưởng chơi) → vẽ code dự phòng vẫn mở trong lúc chặn hình code
-      if (s) (G.moVe || ((f) => f()))(() => {
+      // 16/10 vẽ tay 8 gộp (?gop8=0 tắt): đang chặn → ô lặp hu-nuoc-dang (mép bọt quay về phía sàn còn đứng được), đậm 70%; vùng như cũ
+      const nd = s && G.dangChan && G.dangChan() && G.gop8 && G.gop8('hu-nuoc-dang') ? G.fxAnh.ds['hu-nuoc-dang'] : null;
+      if (nd) {
+        const y0 = Math.round(s.y0), y1 = Math.round(s.y1), x0 = Math.round(s.x0 || 0), f = Math.floor(t * 5) % nd.so, TW = nd.fw, TH = nd.fh;
+        const lat = (rx, ry, rw, rh, lat) => {
+          if (rw <= 0 || rh <= 0) return;
+          c.save();
+          try {
+            c.beginPath(); c.rect(rx, ry, rw, rh); c.clip();
+            if (lat) { c.translate(0, ry * 2 + rh); c.scale(1, -1); }
+            for (let yy = ry; yy < ry + rh; yy += TH) for (let xx = rx - ((t * 6) % TW); xx < rx + rw; xx += TW) G.fxAnh.veO(c, 'hu-nuoc-dang', f, Math.floor(xx), yy, TW, TH, 0.7);
+          } finally { c.restore(); }
+        };
+        lat(g.fx0, g.fy0, g.fx1 - g.fx0, y0 - g.fy0, true); lat(g.fx0, y1, g.fx1 - g.fx0, g.fy1 - y1, false);
+        if (x0 > g.fx0) lat(g.fx0, y0, x0 - g.fx0, y1 - y0, false);
+      } else if (s) (G.moVe || ((f) => f()))(() => {
         const wc = 'rgba(50,130,185,0.62)', foam = 'rgba(220,245,255,0.8)', f = Math.floor(t * 3) % 2;
         const y0 = Math.round(s.y0), y1 = Math.round(s.y1), x0 = Math.round(s.x0 || 0);
         r(g.fx0, g.fy0, g.fx1 - g.fx0, y0 - g.fy0, wc); r(g.fx0, y1, g.fx1 - g.fx0, g.fy1 - y1, wc);

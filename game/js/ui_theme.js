@@ -907,9 +907,17 @@
     // hoa văn hai bên tên trùm vùng: gạch đồng + chấm vàng (pixel, không chữ)
     if (big) {
       const c = G.ux, l = Math.round(cx - tw / 2 - 8), r = Math.round(cx + tw / 2 + 8);
+      const vt = G.gop8Bat && G.gop8Bat() ? gdCo('gd-trum-vach-ten') : null; // vẽ tay 8 gộp: vạch đồng có núm ngọc, núm quay vào tên (?gop8=0: code)
+      if (vt && vt.img) {
+        const vh = vt.ph / vt.net, sm = c.imageSmoothingEnabled; c.imageSmoothingEnabled = false;
+        c.drawImage(vt.img, x + 8, ny - 4 - vh / 2 + 0.5, l + 1 - x - 8, vh);
+        c.save(); c.translate(x + w - 8, 0); c.scale(-1, 1); c.drawImage(vt.img, 0, ny - 4 - vh / 2 + 0.5, x + w - 8 - r + 1, vh); c.restore();
+        c.imageSmoothingEnabled = sm;
+      } else {
       c.fillStyle = C.br; c.fillRect(x + 8, ny - 4, l - x - 10, 1); c.fillRect(r + 2, ny - 4, x + w - 10 - r, 1);
       c.fillStyle = C.hi; c.fillRect(l - 2, ny - 5, 3, 3); c.fillRect(r - 1, ny - 5, 3, 3);
       c.fillStyle = C.dk; c.fillRect(l - 1, ny - 4, 1, 1); c.fillRect(r, ny - 4, 1, 1);
+      }
     }
     const by = y + ph - bh - (big ? 5 : 4), bw = w - (big ? 12 : 10);
     { // chu-lech-khung: tên (và dấu hiệu) trong lòng tấm khung, phía trên thanh máu
@@ -993,7 +1001,8 @@
     // phần đổ màu tô thẳng bằng fillRect. Hình y hệt (cùng thứ tự lớp), nhưng máu đổi không còn sinh tấm mới mỗi lần.
     const nhe = G.VE_NHE !== false, U = G.ux;
     const kR = o.col ? null : RUOT[kind]; // vẽ tay 8 đợt 1: ruột thanh bằng ảnh gd-ruot-thanh (máu / mana / tiến độ)
-    const doMau = (px, py, pw, ph, hi) => { if (pw <= 0 || ph <= 0) return; if (kR != null && daiAnh('gd-ruot-thanh', 5, kR, px, py, pw, ph, U)) return; U.fillStyle = cols[0]; U.fillRect(px, py, pw, ph); if (hi) { U.fillStyle = cols[1]; U.fillRect(px, py, pw, 1); } };
+    const kT = !o.col && kind === 'boss' && G.gop8Bat && G.gop8Bat(); // vẽ tay 8 gộp: ruột thanh máu trùm bằng ảnh gd-ruot-thanh-trum (?gop8=0 tắt)
+    const doMau = (px, py, pw, ph, hi) => { if (pw <= 0 || ph <= 0) return; if (kR != null && daiAnh('gd-ruot-thanh', 5, kR, px, py, pw, ph, U)) return; if (kT && daiAnh('gd-ruot-thanh-trum', 1, 0, px, py, pw, ph, U)) return; U.fillStyle = cols[0]; U.fillRect(px, py, pw, ph); if (hi) { U.fillStyle = cols[1]; U.fillRect(px, py, pw, 1); } };
     const vach = (n) => layer('barM|' + inner + '|' + h + '|' + n, inner, h - 4, () => { for (let k = 1; k < n; k++) { const px = Math.round((inner * k) / n); P(px, 0, C.dk); P(px, h - 5, C.dk); if (k * 2 === n) R(px, 0, 1, h - 4, 'rgba(0,0,0,0.5)'); } });
     if (h < 6 && nhe) {
       const iw = Math.round((w - 2) * G.clamp(frac || 0, 0, 1));

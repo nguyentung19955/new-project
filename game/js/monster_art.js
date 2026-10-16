@@ -1321,6 +1321,14 @@ MA.vong9 = vong9;
   // ngọn lửa → hu-bam-lua (lửa cháy lặp 4 khung, đáy ảnh ở gốc lửa), cao theo h
   F.lua = (c, x, y, w, h, t, cols, seed) => { if (!VT9()) return lua0(c, x, y, w, h, t, cols, seed); if (!(h >= 1)) return; const a = G.fxAnh.get('hu-bam-lua'), so = a ? a.so : 4; anh9(c, 'hu-bam-lua', x, y, Math.floor((t || 0) * 9 + (seed || 0) * 1.7) % so, clamp(h / 28, .2, 3), (seed | 0) % 2 === 1, .95); };
 }
+// ---------- 16/10 VẼ TAY 8 GỘP (docs/review/ke-hoach-cai-thien/ve-tay-8-gop-tran/bao-cao.md, cờ ?gop8=0) ----------
+// F.lua (Hồ Tinh / Hổ Lửa: lửa bùng, vệt lửa, cột lửa) → ảnh hu-lua-bung (thay ảnh tạm hu-bam-lua của vẽ tay 9), đáy ảnh ở gốc lửa, cao theo h.
+// F.set (tia gãy nối hai điểm) → ảnh hu-tia-gay kéo theo đoạn, nhuộm màu cũ. Chỉ khi đang chặn (như vẽ tay 9); ảnh chưa tải: như vẽ tay 9.
+{ const lua9 = F.lua, set9 = F.set, G8 = (ma) => VT9() && G.gop8 && G.gop8(ma);
+  F.lua = (c, x, y, w, h, t, cols, seed) => { if (!G8('hu-lua-bung')) return lua9(c, x, y, w, h, t, cols, seed); if (!(h >= 1)) return; const a = G.fxAnh.get('hu-lua-bung'); anh9(c, 'hu-lua-bung', x, y, Math.floor((t || 0) * 10 + (seed || 0) * 1.7) % a.so, clamp(h / (a.fh - 1), .2, 3), (seed | 0) % 2 === 1, .95); };
+  F.set = (c, x0, y0, x1, y1, seed, col, th, lech) => { if (!G8('hu-tia-gay')) return set9(c, x0, y0, x1, y1, seed, col, th, lech); const L = Math.hypot(x1 - x0, y1 - y0); if (!(L >= 2)) return; const FA = G.fxAnh, a = FA.get('hu-tia-gay'), cc = (c && c.__that) || c, h = Math.max(3, (lech || 6) * 1.2);
+    cc.save(); try { cc.translate(Math.round(x0), Math.round(y0)); cc.rotate(Math.atan2(y1 - y0, x1 - x0)); FA.veO(cc, 'hu-tia-gay', (seed | 0) % a.so, 0, -h / 2, L, h, 1, hex9(col) ? col : null); } finally { cc.restore(); } };
+}
 // --- vùng báo trước trên sàn (đỏ, đầy dần theo u, chớp sáng khi sắp ra đòn) ---
 MA.mauBao = ['rgba(255,60,40,.16)', 'rgba(255,70,45,.34)', '#ff5a46', '#ffe9c8'];
 function baoTo(c, x0, y0, x1, y1, trong, u, r0) { const m = MA.mauBao, chop = u > .78 && ((u * 24) | 0) % 2 === 0;

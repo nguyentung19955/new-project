@@ -1102,6 +1102,20 @@
   function trailDraw(c) {
     if (S.trN < 2) return;
     const crit = S.trCrit > 0, vet = Math.min(1.5, VX('vet'));
+    // 16/10 vẽ tay 8 gộp (?gop8=0 tắt): đang chặn hình code → ảnh hu-vet-vung (dải cong trắng, nhuộm màu hệ) theo hướng lưỡi mới nhất,
+    // khung theo tuổi vệt; vẽ thêm một lần ở mẫu cũ hơn cho vệt có đuôi. Chỉ là hình.
+    if (G.dangChan && G.dangChan() && G.gop8 && G.gop8('hu-vet-vung')) {
+      const a = G.fxAnh.ds['hu-vet-vung'];
+      for (const i of [Math.min(S.trN - 1, 4), 1]) {
+        const B = TR[(S.trI - i + TRN * 2) % TRN];
+        if (!B || B.brk) continue;
+        const q = Math.min(1, B.age / B.life);
+        if (q >= 1) continue;
+        const L = B.L * B.m, PL = crit ? PAL.gold : B.pl, co = Math.max(0.3, Math.min(2.5, L / (a.fw * 0.75)));
+        G.fxAnh.veK(c, 'hu-vet-vung', B.gx + Math.cos(B.a) * L * 0.55, B.gy + Math.sin(B.a) * L * 0.55, Math.floor(q * a.so), B.a, co, false, i === 1 ? 0.9 : 0.5, PL.c2 || PL.c);
+      }
+      return;
+    }
     for (let i = S.trN - 1; i >= 1; i--) {
       const A = TR[(S.trI - 1 - i + TRN * 2) % TRN], B = TR[(S.trI - i + TRN * 2) % TRN];
       if (B.brk) continue;
@@ -1446,6 +1460,8 @@
   // Một lưỡi lửa: ba khúc hẹp dần, cao thấp theo nhịp riêng
   function tongue(c, x, y, h, w) {
     if (h < 2) return;
+    // 16/10 vẽ tay 8 gộp (?gop8=0 tắt): đang chặn hình code → ảnh hu-luoi-lua (đáy ảnh ở gốc lưỡi, cao theo h), nhịp lệch theo chỗ
+    if (G.dangChan && G.dangChan() && G.gop8 && G.gop8('hu-luoi-lua')) { const a = G.fxAnh.ds['hu-luoi-lua']; G.fxAnh.veK(c, 'hu-luoi-lua', x + 0.5, y + 1, Math.floor((S ? S.t : 0) * 10 + x * 0.37) % a.so, 0, Math.max(0.4, Math.min(3, (h + 1) / (a.fh - 1))) * (w > 1 ? 1 : 0.8), false, 1); return; }
     p(c, x - w, y - (h * 0.45 | 0), w * 2 + 1, (h * 0.45 | 0) + 1, '#ff7a2a');
     p(c, x - w + 1, y - (h * 0.8 | 0), Math.max(1, w * 2 - 1), (h * 0.4 | 0) + 1, '#ff7a2a');
     p(c, x, y - h, 1, (h * 0.3 | 0) + 1, '#ffa53a');
@@ -2750,7 +2766,7 @@
       side(0, 0, 0, d * 0.7, 0, 0, W, d * 0.7); side(0, H, 0, H - d * 0.7, 0, H - d * 0.7, W, d * 0.7);
     }
     c.globalAlpha = Math.min(1, a);
-    c.drawImage(VIG, 0, 0, G.W, G.H);
+    c.drawImage((G.vienManDo && G.vienManDo()) || VIG, 0, 0, G.W, G.H); // vẽ tay 8 gộp: ảnh viền đỏ (?gop8=0: canvas cũ)
     c.globalAlpha = 1;
   }
   // Bộ đồ nghề cho js/fx_he.js: dùng chung kho hạt, bảng màu và các hàm vẽ điểm ảnh ở trên.

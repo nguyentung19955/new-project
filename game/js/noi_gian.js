@@ -84,7 +84,7 @@
     }
     const ga = c.globalAlpha;
     c.globalAlpha = Math.min(1, a);
-    c.drawImage(VIG, 0, 0, G.W, G.H);
+    c.drawImage((G.vienManDo && G.vienManDo()) || VIG, 0, 0, G.W, G.H); // vẽ tay 8 gộp: ảnh viền đỏ (?gop8=0: canvas cũ)
     c.globalAlpha = ga;
   }
   NG.veMep = function () {

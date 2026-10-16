@@ -146,6 +146,8 @@
   }
   G.gop8Bat = () => G.GOP8 !== false && G.VE_CODE !== true && !G.noRender;
   G.gop8 = (ma) => G.gop8Bat() && FA.co(ma);
+  // Viền đỏ màn hình (js/fx.js vignette, js/noi_gian.js vien): ảnh gd-vien-man-do (alpha đã giải khỏi nền xanh) hoặc null → canvas chuyển màu cũ
+  G.vienManDo = () => { const S = G.spriteCustom, a = G.gop8Bat() && S && S.gdSan ? S.gdSan('gd-vien-man-do') : null; return a ? a.img : null; };
   // Bóng dưới chân ở LÀNG (lớp làng không bị chặn vẽ): ảnh hu-bong-chan khi G.NOI9. Trả true nếu đã vẽ.
   G.bongLang = function (c, x, y, rx, mo) {
     if (G.NOI9 === false || !c || !(rx > 0)) return false;
