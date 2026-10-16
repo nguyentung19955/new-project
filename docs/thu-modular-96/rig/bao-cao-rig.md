@@ -2,6 +2,165 @@
 
 > Mới: đã thử **giáp gen thật** (4 mảnh). Xem mục **"Giáp gen thật"** ngay dưới phần "Nói ngắn gọn" của bộ máy vẽ.
 
+> Mới nhất (16/10 chiều): **sửa lệch vai, hở khớp về 0, thêm 8 động tác**. Xem 3 mục **"Sửa lệch vai"**, **"Hở khớp về 0"**, **"Nhiều động tác"** ngay dưới đây.
+
+## Sửa lệch vai (hàng chạy)
+
+### Nói ngắn gọn
+
+- **Nguyên nhân lệch có 2 phần:**
+  1. **Khớp vai trước đánh sai ở cả 12 khung.** Vai được chấm ở mép thân hoặc ra ngoài hình người, không nằm ở đầu bắp tay. Nặng nhất là khung 2, 6, 7, 8, 12: lệch 7–13 điểm ảnh trên ảnh nguồn cao, tức khoảng 2 điểm ảnh ở ô 96. Khung 7 chấm hẳn ra nền.
+  2. **Toàn bộ khớp trong `data.json` lệch lên-trái 0,5 điểm ảnh.** Công thức đổi toạ độ (`tach_lop.doi_diem`) trừ 0,5, trong khi trang vẽ lại coi "x,5 = tâm điểm ảnh". Lỗi này có ở mọi khớp, mọi khung. Phiên R2 cũng dùng cùng công thức.
+- **Đã sửa trong tệp riêng** `khop-chinh/chay.json`, **không đụng `../data.json`**. Rig đọc `data.json` rồi đè lên bằng tệp này: cộng 0,5 cho mọi khớp, rồi thay 18 khớp đánh lại trên ảnh nguồn cao. Cụ thể là vai trước ở 12 khung, khuỷu trước ở khung 8 và 12, cổ tay + nắm tay trước ở khung 11 và 12 (cổ tay khung 12 trước đây chấm ra nền). Lý do từng khung ghi ngay trong tệp.
+- **Thêm kiểu gắn giáp vai "Trộn thân+tay"** (mặc định). Chọn trong trang ở dòng **Giáp vai: Theo bắp tay / Trộn thân+tay** để so.
+  - Giáp neo **tại khớp vai**, không kéo giãn theo bắp tay.
+  - Góc giáp = góc thân (cổ → giữa hông) + **35%** độ lệch giữa bắp tay và thân. Con số 35% khai báo ở `armBlend` trong `rig.json`.
+  - Vị trí neo **làm tròn về điểm ảnh nguyên**. Nếu góc đổi **dưới 8°** so với khung trước thì giữ nguyên góc cũ (`angleHold: 8`).
+
+### Đo trước / sau (giáp vai trước, hàng chạy)
+
+| | Trước (khớp cũ + theo bắp tay) | Sau (khớp chỉnh + trộn) |
+|---|---|---|
+| Lệch điểm neo so với khớp vai đúng, trung bình | **1,6 điểm ảnh** | **0,3 điểm ảnh** |
+| Lệch lớn nhất | **2,6 điểm ảnh** (khung 2) | **0,5 điểm ảnh** (chỉ do làm tròn) |
+| Khung "lấp lánh" (góc đổi 0–8°, điểm ảnh nhảy lung tung) | 3 | **0** |
+| Khung "lật gắt" (góc đổi ≥ 30° giữa 2 khung) | 2 (khung 6 → 7: 77° → 113°) | **0** |
+| Góc giáp qua 12 khung | 77°–145° (lắc 68°) | 106°–124° (lắc 18°) |
+
+Lệch theo từng khung (điểm ảnh ô 96, trước → sau): 1: 1,2 → 0,5 · 2: 2,6 → 0,2 · 3: 1,0 → 0,4 · 4: 0,9 → 0,4 · 5: 1,2 → 0,4 · 6: 2,2 → 0,5 · 7: 2,2 → 0,1 · 8: 2,0 → 0,2 · 9: 1,0 → 0,1 · 10: 1,5 → 0,3 · 11: 1,3 → 0,5 · 12: 2,5 → 0,3.
+
+- **Giáp vai sau:** lệch 0,7 → 0,3 điểm ảnh (chỉ là lỗi 0,5). Số khung lấp lánh 4 → 0. Mảnh này gần như bị thân che hết.
+- **Ảnh soát:**
+  - `soat/vai-truoc-sau.png`: 12 khung phóng ×6 quanh vai, 4 hàng = Máy vẽ/Gen × trước/sau. Chấm đỏ là khớp vai đúng.
+  - `soat/vai-truoc-sau.gif`: chạy cạnh nhau trước | sau.
+  - `khop-chinh/soat-chay.png`: que xương đã chỉnh chồng lên ảnh nguồn cao và ô 96.
+- **Đánh đổi:** ở kiểu "trộn", giáp vai không còn chạm tới khuỷu (chỉ ôm vai). Chỗ khuỷu do chụp khuỷu và giáp cẳng tay che, nên hở vẫn bằng 0. Muốn giáp vai đi theo tay nhiều hơn thì tăng `armBlend` (1 = như cũ).
+
+## Hở khớp về 0
+
+### Nói ngắn gọn
+
+- **Hở = 0 ở MỌI khung** của cả 9 động tác. Tính cho cả 2 bộ (Máy vẽ, Gen), cả 2 chế độ xoay (liên tục, 8 hướng), cả 2 kiểu giáp vai (trộn, theo bắp tay).
+- Cách đo vẫn như bảng "Tự kiểm" cũ: đếm điểm ảnh tay/chân trong bán kính 2 điểm ảnh quanh vai, khuỷu, gối mà không có giáp che. Có thêm 2 điểm mới:
+  - Đo **cả chế độ 8 hướng** (trước đây chỉ đo xoay liên tục).
+  - Với động tác dùng sheet cả người, "điểm ảnh tay/chân" là mọi điểm ảnh của người trong vòng đó.
+- **Script dựng trang tự dừng lỗi thật.** `tao-rig.py` mở trang bằng Chromium, đọc kết quả tự kiểm (`kiem_ho.py`). Nếu còn 1 điểm ảnh hở ở bất kỳ khung nào thì in ra động tác/bộ/khung/khớp/toạ độ và **thoát mã 1**.
+- **Trang cũng báo:** hiện khung đỏ ghi rõ "[động tác · bộ] Hở khớp kneeFront ở khung 4: 2 điểm ảnh (liên tục 1, 8 hướng 1)".
+  - Ô "Thử báo lỗi → Tắt luật chụp khớp" cho xem khung đỏ này: 178 dòng báo, xem `soat/bao-loi-ho.png`.
+
+### Cách sửa đã chọn
+
+1. **Luật chụp khớp chung** (không dùng `frameOverrides` nào):
+   - Với mỗi chụp khớp, thử cỡ **nhỏ nhất trước**: ảnh gốc (vai 5×5, khuỷu/gối 4×4), rồi đến chụp tròn Ø5, Ø6, Ø7.
+   - Chọn cỡ đầu tiên che kín ở **mọi khung** của động tác, cho phép dời chụp tối đa 1 điểm ảnh quanh vị trí làm tròn ("chụp khớp theo khung").
+   - Chỉ khi không cỡ nào che kín cả động tác mới chọn cỡ theo từng khung. Thực tế **chưa phải dùng tới**.
+   - Chụp to được vẽ bằng code đúng kiểu chụp cũ: viền tối, sáng góc trên-trái. Bộ Gen tô bằng chính màu chụp gen. Ảnh ở `chup/may/`, `chup/gen/`, khai báo ở `capVariants` trong `rig.json`.
+   - Chụp không xoay nên không bao giờ méo.
+2. **Kết quả:**
+   - Đa số khớp vẫn dùng chụp gốc, chỉ dời 0–1 điểm ảnh tuỳ khung.
+   - Cần chụp **Ø5** ở: gối trước/sau (bộ Máy vẽ: chạy, trúng đòn, lăn), gối sau (Máy vẽ: chạy cầm thương, đi), gối trước (Máy vẽ: phi tiêu, chết), khuỷu sau (chết, cả 2 bộ), khuỷu trước (Máy vẽ: lăn).
+   - Bộ Gen chỉ cần Ø5 ở hàng chết. Lý do: giáp ống chân gen dày hơn nên đã che gần hết gối.
+3. **Không cần** kéo đầu mảnh giáp chồng qua khớp, cũng không cần chụp ở cổ tay/cổ chân. Bàn tay, bàn chân lộ ra là đúng hình, không tính là hở.
+4. **Khớp bị che** (`hidden`): mảnh giáp gắn vào khớp đó **ẩn ở khung đó** và không tính hở.
+
+| Động tác | Hở trước → sau (Máy vẽ) | Hở trước → sau (Gen) |
+|---|---|---|
+| Chạy | 90 → **0** | 121 → **0** |
+| Chạy cầm thương | 246 → **0** | 270 → **0** |
+| Đi | 178 → **0** | 193 → **0** |
+| Đứng | 189 → **0** | 190 → **0** |
+| Chém kiếm 1 | 104 → **0** | 86 → **0** |
+| Lăn | 80 → **0** | 72 → **0** |
+| Trúng đòn | 95 → **0** | 80 → **0** |
+| Phi tiêu | 138 → **0** | 135 → **0** |
+| Chết | 195 → **0** | 176 → **0** |
+
+- "Trước" = chỉ có mảnh xương, không có chụp. Số cộng cả chu kỳ và cả 2 chế độ xoay, đo với giáp vai kiểu trộn. Chi tiết từng khung (cả kiểu theo bắp tay) có trong `soat/tu-kiem-dong-tac.json`.
+- Số "trước" của hàng chạy (90) lớn hơn số cũ (48), vì giờ cộng cả 8 hướng và giáp vai trộn không còn che khuỷu.
+
+## Nhiều động tác
+
+### Nói ngắn gọn
+
+- **Trang có hàng nút "Động tác"** gồm 9 động tác: Chạy, Chạy cầm thương, Chết, Đi, Đứng, Chém kiếm 1, Lăn, Phi tiêu, Trúng đòn. Có thêm bảng **"Tóm tắt theo động tác"** (bấm 1 dòng để mở động tác đó).
+- **Tôi làm 3 động tác: Đứng (`dung`), Đi (`di`), Chém kiếm 1 (`kiem_1`).** Phiên R2 làm 5 động tác còn lại; trang tự nạp hết.
+- **Trang tự nhận** mọi thư mục `dong-tac/<tên>/` có đủ `sheet.png` và `khop.json`: `tao-rig.py` quét thư mục mỗi lần chạy. Lần dựng cuối đã gồm cả 5 động tác R2 đã đẩy lên.
+- **Hàng chạy vẫn dùng lớp tách** như cũ. Các động tác mới dùng **sheet cả người**, đây là **cách tạm**: mảnh giáp bên SAU vẽ trước sheet (bị người che), bên TRƯỚC vẽ sau sheet (đè lên người, kể cả chỗ lẽ ra bị che). Trang có ghi chú vàng nói rõ điều này khi chọn các động tác đó.
+
+### Cách làm 3 động tác của tôi
+
+- **Sheet:** cắt **nguyên hàng thân** từ tấm game `zed-moi.sprite.json` (hàng 0, 1, 7), nên y như game vẽ thân.
+  - Script dựng lại hàng từ ảnh nguồn bằng đúng phép co/dời của `dung-zed-game.py` và kiểm: kênh alpha **trùng 100%** với tấm game.
+  - Kiếm và ngón tay đè lên cán là lớp riêng của game, **không có** trong sheet.
+- **Khớp:** chấm tay trên ảnh nguồn cao (`docs/anh-goc/zed/moi/01-dung-gif`, `02-di-gif`, `08-kiem-1-tp-gif`), ghi ở `dong-tac/<tên>/khop-nguon.json`, rồi đổi sang ô 96. Sai số ước chừng ≤ 1 điểm ảnh ô 96.
+  - **Đứng:** chấm khung 1, khung 2–8 dò theo bằng so khớp mảng ảnh (đứng thở, dời ≤ 3 điểm ảnh nguồn).
+  - **Đi:** chấm khung 1–4. Khung 5–8 là ảnh lặp lại khung 1–4 nhưng đổi chân, nên lấy lại khớp, dời theo độ lệch hình và đổi tên chân trước/sau.
+  - **Chém kiếm 1:** chấm cả 5 khung. Tay nắm trước bụng có bắp tay và khuỷu bị thân che cả 5 khung (ghi `hidden`); khung 4 không thấy cả nắm tay.
+- **Quy ước trước/sau:** giống hàng chạy và README-R2. Tay TRƯỚC = tay lộ bắp tay trần (bên trái hình khi đứng); chân TRƯỚC = chân bên trái hình (Đi: chân bước tới ở khung 1).
+- **Ảnh soát:** `dong-tac/<tên>/soat.png` (que xương chồng lên ảnh nguồn cao và ô 96 ×4), `soat/luoi-dong-tac.png` (mọi động tác × 2 bộ × 2 chế độ xoay), `soat/dien-thoai-390-dt-<tên>.png` (chụp trang điện thoại).
+- **Định dạng chung với R2:** `hidden` dùng số khung **đếm từ 1**.
+  - R2 đổi toạ độ bằng công thức trừ 0,5 (giống `data.json`), nên `tao-rig.py` tự cộng 0,5 cho các tệp đó.
+  - Tệp của tôi ghi `"coordinateConvention": "canh"` nên không bị cộng.
+
+### Tự kiểm theo động tác (giáp vai trộn)
+
+"Bám" = mọi mảnh sát cả 2 khớp, xoay liên tục / tính cả 8 hướng. Ô ghi "Máy vẽ · Gen". Số khung rung/méo đếm theo bảng tự kiểm cũ.
+
+| Động tác | Khung | Bám liên tục | Bám cả 8 hướng | Rung | Méo | Hở |
+|---|---|---|---|---|---|---|
+| Chạy (lớp tách) | 12 | 12 · 12 | 10 · 4 | 9 · 12 | 8 · 12 | 0 |
+| Chạy cầm thương | 12 | 10 · 10 | 6 · 6 | 3 · 6 | 5 · 8 | 0 |
+| Đi | 8 | 8 · 8 | 8 · 2 | 4 · 4 | 2 · 6 | 0 |
+| Đứng | 8 | 8 · 8 | 6 · 0 | 0 · 0 | 2 · 8 | 0 |
+| Chém kiếm 1 | 5 | 5 · 5 | 3 · 3 | 3 · 3 | 0 · 0 | 0 |
+| Lăn | 6 | 6 · 6 | 5 · 4 | 2 · 2 | 2 · 2 | 0 |
+| Trúng đòn | 4 | 4 · 4 | 2 · 2 | 1 · 1 | 1 · 0 | 0 |
+| Phi tiêu | 6 | 6 · 6 | 1 · 2 | 4 · 4 | 3 · 6 | 0 |
+| Chết | 8 | **3 · 3** | 1 · 2 | 4 · 4 | 8 · 5 | 0 |
+
+### Động tác nào giáp bám tốt / kém, vì sao
+
+- **Tốt: Chạy, Đi, Đứng, Chém kiếm 1, Trúng đòn, Lăn** (xoay liên tục bám đủ mọi khung).
+  - Tay chân ở các động tác này duỗi rõ, độ dài xương ổn định, nên mảnh giáp chỉ cần kéo/ép trong khoảng 0,75–1,3 lần.
+  - Đứng gần như không rung (0 khung) vì dáng gần như không đổi.
+  - **Lăn bám đủ là nhờ ẩn:** ở khung 3–4 (cuộn tròn) R2 ghi gần hết khớp là bị che, nên giáp tay/chân **ẩn hẳn** ở 2 khung đó. Giáp không sai, nhưng cũng không có giáp.
+- **Khá: Chạy cầm thương, Phi tiêu.**
+  - Chạy cầm thương: ở khung 2 và 8, xương ống chân trước dài gấp **2,2 lần** trung bình (giáp chỉ kéo tới 1,3), nên giáp hụt cổ chân khoảng 6 điểm ảnh. Dài bất thường như vậy có thể do cổ chân chấm xa, nên soát lại 2 khung này.
+  - Phi tiêu: xoay liên tục bám đủ 6/6. Nhưng ở 8 hướng, giáp ống chân sau lệch đuôi ở 5/6 khung (làm tròn góc về bội số 45°), khung 4 thêm ống chân trước hụt (xương dài ×1,7).
+- **Kém: Chết** (bám 3/8 khung).
+  - Cẳng tay trước dài gấp 1,7–2,2 lần trung bình ở 6/8 khung (tay duỗi thẳng khi ngã, rồi nằm úp), ống chân hụt ở 5 khung. Giáp chỉ kéo tới 1,3 nên hụt khớp cuối 2–5 điểm ảnh.
+  - Ở khung 6–8, R2 ghi che 13 khớp, nên phần lớn giáp ẩn.
+  - **Không nên** dùng giáp xoay theo khớp cho hàng chết.
+- **Vấn đề chung của sheet cả người (cách tạm):**
+  - **Giáp bên SAU gần như không thấy**, vì người vẽ đè lên. Ví dụ ở Đứng, tay phải và chân phải (bên sau) lộ hẳn ra mà không có giáp.
+  - **Giáp bên TRƯỚC luôn nằm trên cùng**, kể cả ở khung mà tay/chân đó lẽ ra khuất sau thân hoặc sau tay chân kia.
+  - Muốn đúng thì phải **tách lớp** các động tác này như hàng chạy, hoặc dùng mặt nạ trước/sau theo khung. Phiên khác đã lưu một đề xuất ở `de-xuat-chatgpt/chatgpt-sua.patch` (tách ảnh trước/sau), tôi **chưa áp dụng**.
+- **Chế độ 8 hướng vẫn kém với bộ Gen** ở mọi động tác: Đứng 0/8, Đi 2/8, Chạy 4/12. Đúng như nhận xét cũ: không nên dùng 8 hướng với bộ Gen.
+
+### Xem ở đâu (phần mới)
+
+| Tệp | Là gì |
+|---|---|
+| `kiem-tra-rig.html` | Trang kiểm tra. Có thêm nút **Động tác**, nút **Giáp vai**, bảng **Tóm tắt theo động tác**, bảng **Sửa lệch vai**. |
+| `khop-chinh/chay.json` | Tệp chỉnh khớp hàng chạy (đè lên `data.json`), có lý do từng khung. |
+| `dong-tac/{dung,di,kiem_1}/` | `sheet.png`, `khop.json`, `khop-nguon.json` (khớp chấm tay trên ảnh nguồn), `soat.png`. |
+| `chup/may`, `chup/gen` | Chụp khớp cỡ Ø5/6/7 cho luật chụp. |
+| `soat/vai-truoc-sau.png/.gif` | Vai trước/sau. |
+| `soat/luoi-dong-tac.png` | Lưới mọi động tác. |
+| `soat/dien-thoai-390-dt-*.png` | Chụp trang điện thoại 390×844 (DPR 3) từng động tác, bản debug, cả trang. |
+| `soat/bao-loi-ho.png` | Khung đỏ khi cố ý tắt luật chụp. |
+| `soat/tu-kiem-dong-tac.json` | Số tự kiểm của mọi động tác × bộ × kiểu giáp vai. |
+
+Chạy lại (theo thứ tự):
+
+```
+python3 docs/thu-modular-96/rig/do-khop.py         # tệp chỉnh hàng chạy + dung/di/kiem_1 (sheet, khop.json, soat.png)
+python3 docs/thu-modular-96/rig/tao-rig.py         # dựng trang + tự kiểm hở trên Chromium (còn hở → mã 1)
+python3 docs/thu-modular-96/rig/soat-dong-tac.py   # ảnh soát + chụp điện thoại
+```
+
+**Gửi phiên khác:** `data.json` (và `tach_lop.doi_diem`) lệch 0,5 điểm ảnh so với quy ước "x,5 = tâm điểm ảnh" ghi trong chính tệp đó. Tôi không sửa `data.json`, chỉ bù trong rig. Phiên nào sửa `data.json` thì nhớ bỏ `offsetFix` trong `khop-chinh/chay.json`.
+
 Mọi thứ nằm trong `docs/thu-modular-96/rig/`. **Không sửa code game, không sửa ảnh nguồn, không sửa tệp nào ngoài thư mục `rig/`** (chỉ đọc `../data.json` và `../sheets/`).
 
 ## Nói ngắn gọn
