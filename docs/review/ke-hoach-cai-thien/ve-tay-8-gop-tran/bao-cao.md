@@ -82,7 +82,7 @@ Ghi chú về tên và cách cắt:
 
 - `node --check` mọi `game/js/*.js`: đạt.
 - `python3 game/build.py`: bản một tệp 29,35 / 30 MB.
-- `python3 game/build.py --hai-tep`: **người chơi tải 16,63 / 20 MB** (trước 16,50). Sông sâu tải riêng 0,27 MB.
+- `python3 game/build.py --hai-tep`: **người chơi tải 16,63 / 20 MB** (trước 16,50; ảnh phiên này ~0,13 MB). Sau khi kéo commit của phiên khác về: 16,80 / 20 MB. Sông sâu tải riêng 0,27 MB.
 - `tests/smoke.py`: `errors: []`.
 - `song_luat.test.js`, `vung4.test.js`, `cloud_save_regression.test.js`: PASS.
 - `tools/kiem-alpha.py`: ĐẠT.

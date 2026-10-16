@@ -73,7 +73,7 @@
 <div id="lk-tai" data-bia="||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAMEBQYH/8QAKRAAAQMCBQMDBQAAAAAAAAAAAQIDEQAEBRIhMUETFGEiQnEVUWKBsf/EABcBAAMBAAAAAAAAAAAAAAAAAAIDBAX/xAAlEQACAQEFCQAAAAAAAAAAAAABAgADBBExUfASEyEyM0FxobH/2gAMAwEAAhEDEQA/AOfNMWj9zbWiEtBsn1ugGTPCvjXajFcBNssNsvoeMxlCgVJqzCbhHftG3aGdcJBUAUn7neRzTMcumxjD0hDSkmFBtWZMjSdR5qamzb4DtHOiimTfxmt/T3UpzLBCTt5q22sWekt0vBvImSF8+KyF5eWDaGFNZlr6YkKGiTPGvzSutZDDX1sF3P0wPUBMzvP62rStACi5TEWB9pizi/H1JsLUo3NhKiZUOfyqbE1Hu3jJkqPNFFRUuprOHU5dZSVwmE6+2mNk9u7r7R/aKKqqQLNifB+T/9k=|||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAgf/xAAmEAACAgEEAQQCAwAAAAAAAAABAgMRAAQSITEFE1FhgSJBcbHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQIDBAX/xAAeEQABBAIDAQAAAAAAAAAAAAAAAQIDEiExBBEyIv/aAAwDAQACEQMRAD8A51EIZIo53EASNwHG07mBPFno9HFyeOhl1Y2yFIbtjVkDnr54yzx2vaLSyII1cELvBQEVu5PyeshTWvFJG6qi7OR+A9/4xoa3yQzWRvzsH8YkWrkCMZYlsoSvJHfWUalzFpI4/TRBZbca3HsUcXqvJvPqpZgEAewAFHAP1mZ9aZIoyqKWVa4jX3P+jByGor8aNDgT0gXvDiHTs1EbjRAsX3jKuEH92Ofs4YYGeim/yLulscHjFuT6YNno/wBnDDGfsEej/9k=" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.16-2241";
+(window.G = window.G || {}).VERSION = "lk-2026.10.16-2252";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -31876,7 +31876,8 @@ MA._xong();
     if (gp) {
       const kp = T.kBang(w, h);
       khungDat(khungLop(gp, 'bang|' + w + '|' + h + '|' + (title ? 1 : 0) + '|' + kp, w + 6, h + 7, () => {
-        R(2, 3, w + 4, h + 4, 'rgba(0,0,0,0.45)');
+        const gb = G.gop8Bat && G.gop8Bat() ? khungCo('gd-bong-khung') : null; // vẽ tay 8 gộp: bóng đổ 9 mảnh (?gop8=0: mảng tối phẳng)
+        if (gb) khungVe(gb, 2, 3, w + 4, h + 4); else R(2, 3, w + 4, h + 4, 'rgba(0,0,0,0.45)');
         khungVeK(gp, 0, 0, w + 6, h + 6, kp);
         if (title) R(3 + 12, 3 + 19, w - 24, 1, C.br);
       }), x - 3, y - 3, w + 6, h + 7);
@@ -38818,6 +38819,8 @@ MA._xong();
   const AC = new Map();
   function ac(r, g, b, a) { const q = Math.max(0, Math.min(20, Math.round(a * 20))), k = r + ',' + g + ',' + b + ',' + q; let v = AC.get(k); if (!v) { v = 'rgba(' + k.slice(0, k.lastIndexOf(',')) + ',' + (q / 20).toFixed(2) + ')'; AC.set(k, v); } return v; }
   const gio = (t, x) => Math.sin(t * 1.5 - x * 0.03) + 0.35 * Math.sin(t * 3.7 + x * 0.11); // làn gió chạy ngang làng
+  // 16/10 vẽ tay 8 gộp (?gop8=0 / ?vecode=1: code như cũ): gợn nước, quầng đèn / lò, tia lửa + khói lò rèn bằng ảnh gen
+  const anh8 = (ma) => (G.gop8 && G.gop8(ma) && G.fxAnh.ds[ma]) || null;
   function ambGround(c, cam, t, M) {
     // vệt nước trôi xuôi dòng: lớp xa mờ và chậm, lớp gần rõ và nhanh hơn
     for (let i = 0; i < 12; i++) {
@@ -38826,7 +38829,8 @@ MA._xong();
       p(c, x, y, near ? 6 : 4, 1, near ? ac(120, 170, 205, 0.5) : ac(90, 140, 175, 0.4));
     }
     // vòng gợn trên sông (cá đớp) và ao sen
-    const ring = (cx, cy, k, rmax, col) => { const rx = 1 + k * rmax, ry = Math.max(1, rx * 0.4), n = Math.max(8, Math.round(rx * 1.8)); for (let i = 0; i < n; i++) { const an = (i / n) * 6.2832; p(c, cx + Math.cos(an) * rx, cy + Math.sin(an) * ry, 1, 1, col); } };
+    const aGon = anh8('hu-gon-nuoc');
+    const ring = (cx, cy, k, rmax, col) => { if (aGon) { G.fxAnh.veK(c, 'hu-gon-nuoc', cx, cy, Math.min(aGon.so - 1, Math.floor(k * aGon.so)), 0, (rmax * 2 + 3) / aGon.fw, false, M); return; } const rx = 1 + k * rmax, ry = Math.max(1, rx * 0.4), n = Math.max(8, Math.round(rx * 1.8)); for (let i = 0; i < n; i++) { const an = (i / n) * 6.2832; p(c, cx + Math.cos(an) * rx, cy + Math.sin(an) * ry, 1, 1, col); } };
     for (let i = 0; i < 3; i++) {
       const per = 4.5 + i * 1.3, u = (t + i * 2.1) % per; if (u > 1.4) continue;
       const cyc = Math.floor((t + i * 2.1) / per), y = 30 + ((cyc * 97 + i * 61) % 220), x = bo(y) + 14 + ((cyc * 37 + i * 23) % 40) - cam;
@@ -38840,6 +38844,8 @@ MA._xong();
     for (let i = 0; i < Bt.lants.length; i++) {
       const q = Bt.lants[i], x = q[0] - cam; if (x < -12 || x > 492) continue;
       const f = 0.55 + 0.3 * Math.sin(t * 6.1 + i * 2.7) + 0.15 * Math.sin(t * 13.3 + i);
+      const aq = anh8('hu-quang-den');
+      if (aq) { G.fxAnh.veK(c, 'hu-quang-den', x, q[1] + 3, Math.floor(t * 4 + i) % aq.so, 0, (9 + f * 3) / aq.fw, false, Math.min(1, (0.3 + 0.4 * f) * M), '#ff9640'); continue; }
       ell(c, x, q[1] + 3, 4 + f * 1.5, 4 + f, ac(255, 150, 60, (0.06 + 0.1 * f) * M));
     }
     // đèn trên đò in bóng xuống nước, vỡ ra theo gợn sóng
@@ -38847,7 +38853,9 @@ MA._xong();
     if (bx > -10 && bx < 490) for (let j = 0; j < 4; j++) { const wv = Math.round(Math.sin(t * 2.6 + j * 1.3) * 1.5); p(c, bx - 1 + wv, by + j * 2, 3 - (j >> 1), 1, ac(255, 170, 70, (0.35 - j * 0.07) * M)); }
     // lò rèn bập bùng: hắt sáng ra sân mạnh yếu theo ngọn lửa
     const fr = 0.5 + 0.3 * Math.sin(t * 8.3) + 0.2 * Math.sin(t * 15.1), rx = B.ren[0] - 16 - cam;
-    if (rx > -60 && rx < 540) ell(c, rx, B.ren[1] - 2, 26 + fr * 6, 10 + fr * 2, ac(255, 120, 40, (0.03 + 0.05 * fr) * M));
+    const aq = anh8('hu-quang-den');
+    if (aq && rx > -60 && rx < 540) G.fxAnh.veK(c, 'hu-quang-den', rx, B.ren[1] - 2, Math.floor(t * 6) % aq.so, 0, (52 + fr * 12) / aq.fw, false, Math.min(1, (0.15 + 0.25 * fr) * M), '#ff7828');
+    else if (rx > -60 && rx < 540) ell(c, rx, B.ren[1] - 2, 26 + fr * 6, 10 + fr * 2, ac(255, 120, 40, (0.03 + 0.05 * fr) * M));
   }
   // 16/10 vẽ tay 9 (?noi9=0 tắt): lá rơi / đom đóm làng bằng ảnh có sẵn hu-moi-truong-rung-la / -domdom (đường bay, nhịp giữ như cũ)
   const anhLang = (ma) => (G.NOI9 !== false && G.fxAnh && G.fxAnh.get(ma)) || null;
@@ -38866,6 +38874,9 @@ MA._xong();
   function luaLo(c, cam, t) { // lửa lò rèn bập bùng, khói bay (vẽ đè lên lò, cả khi lò là ảnh AI)
     const x = B.ren[0] - cam, y = B.ren[1], f = Math.floor(t * 7) % 3, a = huLang('lua-lo');
     if (a) veDai(c, a, a.img, Math.floor(t * 7), x + LUA[0], y + LUA[1]); // 14/10: chờ ảnh thì không vẽ lửa code
+    const aTia = anh8('hu-lang-tia-lo'), aKhoi = anh8('hu-khoi-tron');
+    if (aTia) G.fxAnh.ve(c, 'hu-lang-tia-lo', x - 19, y - 18, t, 0, 1, false, 0.9);
+    if (aKhoi) { for (let i = 0; i < 3; i++) { const ph = (t * 0.35 + i / 3) % 1; G.fxAnh.veK(c, 'hu-khoi-tron', x - 19 + Math.round(ph * 12 + Math.sin(ph * 6 + i) * 2), y - 74 - Math.round(ph * 22), Math.min(aKhoi.so - 1, 1 + Math.floor(ph * (aKhoi.so - 1))), 0, 0.35 + ph * 0.3, i % 2 === 1, 0.45 * (1 - ph), '#c8bec8'); } return; }
     for (let i = 0; i < 3; i++) { const ph = (t * 0.35 + i / 3) % 1; c.globalAlpha = 0.45 * (1 - ph); ell(c, x - 19 + Math.round(ph * 12 + Math.sin(ph * 6 + i) * 2), y - 74 - Math.round(ph * 22), 3 + Math.round(ph * 3), 2 + Math.round(ph), '#c8bec8'); }
     c.globalAlpha = 1;
   }
@@ -39371,6 +39382,7 @@ MA._xong();
       for (const d of H.dom) { // đom đóm: trôi chậm theo vòng nhỏ, sáng mờ theo nhịp
         const px = d.x + Math.sin(t * d.v + d.p) * d.b, py = d.y + Math.sin(t * d.v * 0.7 + d.p * 1.3) * d.b * 0.6;
         const k = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * 1.7 + d.p * 3));
+        if (G.gop8 && G.gop8('hu-bia-hat')) { G.fxAnh.ve(c, 'hu-bia-hat', px, py, t + d.p, 0, 0.5, false, 0.85 * k); continue; } // vẽ tay 8 gộp (?gop8=0 tắt)
         c.fillStyle = 'rgba(255,224,130,' + (0.18 * k).toFixed(3) + ')';
         c.fillRect(px - 1.5, py - 1.5, 3, 3);
         c.fillStyle = 'rgba(255,246,190,' + (0.85 * k).toFixed(3) + ')';
@@ -47121,6 +47133,13 @@ MA._xong();
         }
         case 'drip': { // giọt nước đọng ở chóp nhũ đá, rơi xuống chân vách và toé nhẹ
           const P = 3.2 / a.sp, u = (t + a.ph) % P, fallT = 0.42;
+          if (co8('hu-moi-truong-bien-giot')) { // vẽ tay 8 gộp: đọng (khung 1–2, ở chóp), rơi (khung 3, trượt theo đường rơi cũ), toé (khung 5–6, đáy ảnh ở chân vách)
+            const ag = FA.ds['hu-moi-truong-bien-giot'], hg = ag.fh;
+            if (u < P - fallT - 0.35) { if (u > P * 0.35) FA.veK(c, 'hu-moi-truong-bien-giot', a.x + 0.5, a.y - 3, u > P * 0.55 ? 1 : 0, 0, 1, false, 0.9); }
+            else if (u < P - 0.35) { const q = (u - (P - fallT - 0.35)) / fallT; FA.veK(c, 'hu-moi-truong-bien-giot', a.x + 0.5, a.y - 3 + (a.y1 - a.y) * q * q - hg * 0.4, 2, 0, 1, false, 0.9); }
+            else { const q = (u - (P - 0.35)) / 0.35; FA.veK(c, 'hu-moi-truong-bien-giot', a.x + 0.5, a.y1 + 1 - hg, q < 0.5 ? 4 : 5, 0, 1, false, Math.min(1, 1.4 * (1 - q) * M)); }
+            break;
+          }
           if (u < P - fallT - 0.35) { if (u > P * 0.35) r(a.x, a.y, 1, u > P * 0.55 ? 2 : 1, acol('#9fdcff', 0.8)); }
           else if (u < P - 0.35) { const q = (u - (P - fallT - 0.35)) / fallT; r(a.x, a.y + (a.y1 - a.y) * q * q, 1, 2, '#9fdcff'); }
           else {
