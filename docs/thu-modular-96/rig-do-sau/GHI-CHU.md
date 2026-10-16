@@ -1,3 +1,10 @@
+# rig-do-sau — ghi chú
+
+Thư mục này KHỞI ĐẦU từ bản copy rig-chatgpt/ (commit 559067c4), sau đó viết lại để có nhãn back/front theo vùng,
+quy tắc đổi lớp theo khung và phép đo khe đúng vùng khớp. Xem BAO-CAO.md. Ghi chú gốc của bản ChatGPT giữ bên dưới để đối chiếu.
+
+---
+
 # Bản rig do ChatGPT sửa (chủ game gửi 16/10 11:10)
 
 Lưu nguyên bản ChatGPT trả về (dựa trên rig bản 7191fd99, TRƯỚC phiên R1/R3) để so. Không trộn vào rig/.
