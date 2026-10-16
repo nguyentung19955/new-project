@@ -10356,6 +10356,11 @@ MA.anh9 = anh9;
 const vong9 = (c, x, y, rx, ry, k, mau, mo) => { const FA = G.fxAnh, a = FA && FA.get('hu-vong-song'); if (!a || !(rx >= 1)) return true; const f = Math.max(0, Math.min(a.so - 1, Math.floor(k * a.so))), rf = (a.bk && a.bk[f]) || a.fw / 2 - 1;
   return anh9(c, 'hu-vong-song', x, y, f, rx / rf, false, (mo == null ? 1 : mo) * clamp(60 / rx, .5, 1), mau, ry / rx / (a.det || 1)); }; // vòng to (ảnh phóng lớn, nét dày): nhạt bớt
 MA.vong9 = vong9;
+// 16/10 vẽ tay 9 lần 2: nứt đất Mộc Tinh trồi lên → hu-nut-re-moc (4 khung to dần, elip 160 x 60 = bán kính 80 x 30 như vết nứt cũ).
+// Chọn khung theo độ lan cr (0..1), phóng cho bán kính đúng 80·cr. Chưa có ảnh: dùng hu-nut-san như trước.
+const NUT9 = [.5, .73, .94, 1]; // bán kính khung / bán kính khung cuối (đo trên ảnh gốc)
+const nutMoc9 = (c, cr, mo) => { if (!G.fxAnh.get('hu-nut-re-moc')) return anh9(c, 'hu-nut-san', 0, 0, 0, 80 * cr / 31, false, mo, null, 30 / 80);
+  const f = cr < .6 ? 0 : cr < .84 ? 1 : cr < .97 ? 2 : 3; return anh9(c, 'hu-nut-re-moc', 0, 0, f, cr / NUT9[f], false, mo); };
 { const hat0 = F.hat, song0 = F.song, khoi0 = F.khoi, lua0 = F.lua;
   // chùm hạt → hu-hat-no (nổ tia), cỡ theo quãng bay, lệch về hướng bắn khi chùm hẹp; màu giữa dải màu hạt
   F.hat = (c, x, y, n, seed, u, o) => { if (!VT9()) return hat0(c, x, y, n, seed, u, o); if (!(u > 0 && u < 1) || !(n > 0)) return; o = o || {}; const v = o.v || 16, xoe = o.xoe == null ? TAU : o.xoe, g = o.goc || 0, cols = o.cols || ['#ffffff'];
@@ -11151,7 +11156,7 @@ def('mocTinh', { ten: 'Mộc Tinh', vung: 'rung', loai: 'trum', tt: 1, pha: 3, l
     intro: A(3, P => { const u = P.u, C = mauLa(P), q = seg(u, .25, .7), e = EASE.out(q);
       P.tan = q < 1 ? { k: 'chim', u: clamp(1 - e, 0, 1) } : null; if (u < .75) P.x += (((u * 36) | 0) % 2 ? 1 : -1) * (u < .25 ? u * 4 : 1);
       const g = kf(u, [[.7, 0], [.78, 1, 'out'], [.92, 1], [1, 0]]); P.r('canhT', -18 * g).r('canhP', 18 * g).r('ham', 0).m('ham', 0, 4 * g); P.s('tan', 1 + .05 * g); P.flash = u > .7 && u < .76 ? .6 : 0; P.bong = seg(u, .25, .7);
-      P.under(c => { const cr = Math.min(1, u * 3); if (VT9()) { if (cr > .05) anh9(c, 'hu-nut-san', 0, 0, 0, 80 * cr / 31, false, 1 - seg(u, .7, .95), null, 30 / 80); } else for (let i = 0; i < 8; i++) { const a = i / 8 * TAU + .2; F.set(c, 0, 0, Math.cos(a) * 80 * cr, Math.sin(a) * 30 * cr, i + 1, NAUG[0], 1, 6); } if (u > .1 && u < .4) for (let i = 0; i < 5; i++) gaiRe(c, (i - 2) * 30, 0, 14 * Math.sin(seg(u, .1 + i * .03, .4) * PI), i - 2); });
+      P.under(c => { const cr = Math.min(1, u * 3); if (VT9()) { if (cr > .05) nutMoc9(c, cr, 1 - seg(u, .7, .95)); } else for (let i = 0; i < 8; i++) { const a = i / 8 * TAU + .2; F.set(c, 0, 0, Math.cos(a) * 80 * cr, Math.sin(a) * 30 * cr, i + 1, NAUG[0], 1, 6); } if (u > .1 && u < .4) for (let i = 0; i < 5; i++) gaiRe(c, (i - 2) * 30, 0, 14 * Math.sin(seg(u, .1 + i * .03, .4) * PI), i - 2); });
       P.over(c => { if (u > .25 && u < .75) F.hat(c, 0, 0, 30, 2, seg(u, .25, .75), { v: 70, goc: -PI / 2, xoe: 2.4, g: 60, cols: [NAUG[2], NAUG[1], NAUG[3]], to: 2 }); if (u > .7) laRoi(c, 0, -110, 40, 3, seg(u, .7, 1), C, 150); }); }, { nhan: 'Ra mắt' }),
     idle: A(2.4, P => { const u = P.u; P.tho(.012); P.s('tan', 1 + .025 * sn(u), 1 + .02 * sn(u + .25)); P.m('tan', 1.5 * sn(u), 0); P.r('canhT', -4 * sn(u)).r('canhP', 4 * sn(u + .1)); P.r('reT', 2 * sn(u)).r('reP', -2 * sn(u)); P.r('ham', 0).m('ham', 0, 1 + sn(u * 2)); if (P.phase === 3) P.under(c => khiDoc(c, 0, -6, 45, (u * 2) % 1, (u * 2) | 0)); }),
     // Di chuyển: rễ bò như chân, cả cây lắc lư.

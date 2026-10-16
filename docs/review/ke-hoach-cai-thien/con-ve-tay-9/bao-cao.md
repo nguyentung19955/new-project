@@ -126,3 +126,18 @@ Bản trước dùng để so: `git show 2b4be365:game/dist/linh-khi.html`.
 - Vòng sóng lớn (Ngư Tinh ra mắt, r 110) là ảnh phóng ~3,4 lần nên nét thô. Gen `hu-ngu-tinh-mo-man` sẽ đẹp hơn.
 - Các dòng khác của kiểm kê 8 (ruột thanh máu, nền Sông sâu...) chưa làm: vẫn cần gen.
 - Quay lui: `?vt9=0`, hoặc `git revert` commit này.
+
+## Lần 2 (16/10): nứt đất Mộc Tinh bằng ảnh riêng
+
+Chờ phiên cắt ảnh gộp trận (`../ve-tay-8-gop-tran/bao-cao.md`) xong rồi mới làm.
+
+1. **Nứt đất Mộc Tinh trồi lên:** ảnh gốc `docs/anh-goc/ve-tay-8-gop/hu-nut-re-moc.png` (4 khung, nền xanh) cắt thành `game/art/custom/hu-nut-re-moc.sprite.json`. Mỗi khung ép dẹt thành elip 160 × 60 (nhìn từ trên), bỏ nền xanh, gom về 4 màu nâu của ảnh. Ngang lấy điểm gần nhất; dọc ép ~9 lần, mỗi điểm lấy màu nứt nhiều nhất trong dải (để nét nứt ngang không mất). Game chọn khung theo độ lan và phóng cho đúng bán kính 80 × 30 như vết nứt cũ, mờ dần như cũ. Thay `hu-nut-san` đang mượn; ảnh chưa tải thì vẫn dùng `hu-nut-san`. Công cụ: `cong-cu/cat_nut_re_moc.py`.
+2. **Lửa Hồ Tinh (`hu-lua-bung`):** phiên gộp trận đã nối vào `F.lua` (cờ `?gop8=0`). Lần này không làm thêm.
+
+Cờ: `?trum9=0` (hoặc `?vt9=0`) về bản cũ như trước.
+
+Kiểm (chưa chơi thử, chỉ headless): `node --check` mọi `game/js/*.js` đạt; `python3 game/build.py` và `--hai-tep` đạt (sau khi kéo bản mới nhất: người chơi tải 17,14 / 20 MB; bản một tệp 30,26 / 30 MB — đã vượt trần ở commit trước đó `bd50470d` (ảnh quái Sông sâu mới), lần này chỉ thêm ~6 KB; trần này chỉ cảnh báo, web chạy bản hai tệp); `smoke.py` `errors: []`; lượt chụp 0 lỗi trang.
+
+Ảnh soát (trên: bản trước lần 2, dưới: bản mới): `anh-soat/truoc-sau-moc-tinh-ra-mat-lan2.png` (khung 2–3: vết nứt nâu toả elip dưới gốc cây), `anh-soat/truoc-sau-ho-tinh-danh-lan2.png` (giống nhau, vì lửa đã đổi ở phiên gộp trận).
+
+Rủi ro: nét nứt mảnh, trên cỏ tối nhìn hơi nhạt. Quay lui: `?trum9=0` hoặc `git revert` commit này.

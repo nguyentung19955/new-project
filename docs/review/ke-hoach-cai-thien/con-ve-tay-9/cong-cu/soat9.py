@@ -49,7 +49,7 @@ def ghep(tr, sa, ten):
     for i, (a, bb) in enumerate(zip(tr, sa)):
         im.paste(a.resize((w, h), Image.LANCZOS if k < 1 else Image.NEAREST), (i * (w + 4), 14)); im.paste(bb.resize((w, h), Image.LANCZOS if k < 1 else Image.NEAREST), (i * (w + 4), h + 30))
     d.text((4, 1), ten + ' - TRUOC (tren)', fill=(255, 220, 160)); d.text((4, h + 17), 'SAU (duoi)', fill=(160, 255, 200))
-    im.save(os.path.join(OUT, 'truoc-sau-%s.png' % ten), optimize=True)
+    im.save(os.path.join(OUT, 'truoc-sau-%s%s.png' % (ten, os.environ.get('HAU', ''))), optimize=True)  # HAU=-lan2: không ghi đè ảnh lần 1
 with sync_playwright() as pw:
     for ten in CANH:
         if CHON and ten not in CHON: continue
