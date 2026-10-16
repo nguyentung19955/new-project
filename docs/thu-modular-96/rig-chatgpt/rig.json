@@ -1,0 +1,834 @@
+{
+ "version": 1,
+ "about": "Thử rig: mỗi mảnh giáp có hai ảnh pass sau/trước cùng canvas và neo, dùng lại qua 12 khung.",
+ "coordinates": "anchorStart/anchorEnd/anchor: tọa độ trong ảnh giáp đã pad 2 px dọc trục xương. place giữ stretch trong min/max (mặc định ±15%); pixel mép được nối dài để chồng khớp mà không co giãn quá ngưỡng. Chụp khớp che phần nối còn lệch. thicknessScale nhân bề dày. tint<1 làm tối bản bên sau.",
+ "images": {
+  "giap-vai": "giap/giap-vai.png",
+  "giap-vai-back": "giap/giap-vai-back.png",
+  "giap-vai-front": "giap/giap-vai-front.png",
+  "giap-cang-tay": "giap/giap-cang-tay.png",
+  "giap-cang-tay-back": "giap/giap-cang-tay-back.png",
+  "giap-cang-tay-front": "giap/giap-cang-tay-front.png",
+  "giap-ong-chan": "giap/giap-ong-chan.png",
+  "giap-ong-chan-back": "giap/giap-ong-chan-back.png",
+  "giap-ong-chan-front": "giap/giap-ong-chan-front.png",
+  "chup-vai": "giap/chup-vai.png",
+  "chup-vai-back": "giap/chup-vai-back.png",
+  "chup-vai-front": "giap/chup-vai-front.png",
+  "chup-khuyu": "giap/chup-khuyu.png",
+  "chup-khuyu-back": "giap/chup-khuyu-back.png",
+  "chup-khuyu-front": "giap/chup-khuyu-front.png",
+  "chup-goi": "giap/chup-goi.png",
+  "chup-goi-back": "giap/chup-goi-back.png",
+  "chup-goi-front": "giap/chup-goi-front.png"
+ },
+ "imageSources": {
+  "giap-vai": "vẽ pixel tối giản bằng tao-rig.py (không lấy từ ảnh gen)",
+  "giap-cang-tay": "vẽ pixel tối giản bằng tao-rig.py (không lấy từ ảnh gen)",
+  "giap-ong-chan": "vẽ pixel tối giản bằng tao-rig.py (không lấy từ ảnh gen)",
+  "chup-vai": "vẽ pixel tối giản bằng tao-rig.py (không lấy từ ảnh gen)",
+  "chup-khuyu": "vẽ pixel tối giản bằng tao-rig.py (không lấy từ ảnh gen)",
+  "chup-goi": "vẽ pixel tối giản bằng tao-rig.py (không lấy từ ảnh gen)"
+ },
+ "layering": "Mảnh giáp được chèn NGAY SAU lớp insertAfter (tên lấy từ DATA.layerOrder). Nhiều mảnh cùng insertAfter thì vẽ theo thứ tự trong danh sách pieces. Muốn giáp ôm quanh chi mà chi che mép trong, tách ảnh thành backImage/frontImage (cùng canvas và neo; phần còn lại alpha trong suốt), đặt backAfter/frontAfter ở hai lớp sâu/nông. frameOverrides: {\"<khung>\": {\"insertAfter\": \"...\"}} để ghi đè theo khung.",
+ "skipLayerKinds": [
+  "giap"
+ ],
+ "outfit": "goc",
+ "pieces": [
+  {
+   "id": "vaiSau",
+   "name": "Giáp vai sau",
+   "group": "vai",
+   "side": "sau",
+   "kind": "bone",
+   "image": "giap-vai",
+   "to": "elbowBack",
+   "anchorStart": [
+    3.5,
+    3.0
+   ],
+   "anchorEnd": [
+    9.5,
+    3.0
+   ],
+   "thicknessScale": 1.0,
+   "stretch": {
+    "min": 0.85,
+    "max": 1.15
+   },
+   "overlapStart": 2.0,
+   "overlapEnd": 2.0,
+   "insertAfter": "rearArm",
+   "tint": 0.72,
+   "from": "shoulderBack",
+   "backImage": "giap-vai-back",
+   "frontImage": "giap-vai-front",
+   "backAfter": "rearArm",
+   "frontAfter": "backShoulderArmor"
+  },
+  {
+   "id": "cangTaySau",
+   "name": "Giáp cẳng tay sau",
+   "group": "cangTay",
+   "side": "sau",
+   "kind": "bone",
+   "image": "giap-cang-tay",
+   "to": "wristBack",
+   "anchorStart": [
+    3.0,
+    2.0
+   ],
+   "anchorEnd": [
+    8.5,
+    2.0
+   ],
+   "thicknessScale": 1.0,
+   "stretch": {
+    "min": 0.85,
+    "max": 1.15
+   },
+   "overlapStart": 2.0,
+   "overlapEnd": 2.0,
+   "insertAfter": "rearArm",
+   "tint": 0.72,
+   "from": "elbowBack",
+   "backImage": "giap-cang-tay-back",
+   "frontImage": "giap-cang-tay-front",
+   "backAfter": "rearArm",
+   "frontAfter": "backShoulderArmor"
+  },
+  {
+   "id": "chupVaiSau",
+   "name": "Chụp vai sau",
+   "group": "chupVai",
+   "side": "sau",
+   "kind": "cap",
+   "image": "chup-vai",
+   "at": "shoulderBack",
+   "anchor": [
+    3.5,
+    3.5
+   ],
+   "insertAfter": "rearArm",
+   "maskLayers": [
+    "rearArm"
+   ],
+   "tint": 0.72,
+   "backImage": "chup-vai-back",
+   "frontImage": "chup-vai-front",
+   "backAfter": "rearArm",
+   "frontAfter": "backShoulderArmor"
+  },
+  {
+   "id": "chupKhuyuSau",
+   "name": "Chụp khuỷu sau",
+   "group": "chupKhuyu",
+   "side": "sau",
+   "kind": "cap",
+   "image": "chup-khuyu",
+   "at": "elbowBack",
+   "anchor": [
+    3.5,
+    3.5
+   ],
+   "insertAfter": "rearArm",
+   "maskLayers": [
+    "rearArm"
+   ],
+   "tint": 0.72,
+   "backImage": "chup-khuyu-back",
+   "frontImage": "chup-khuyu-front",
+   "backAfter": "rearArm",
+   "frontAfter": "backShoulderArmor"
+  },
+  {
+   "id": "ongChanSau",
+   "name": "Giáp ống chân sau",
+   "group": "ongChan",
+   "side": "sau",
+   "kind": "bone",
+   "image": "giap-ong-chan",
+   "to": "ankleBack",
+   "anchorStart": [
+    3.0,
+    2.5
+   ],
+   "anchorEnd": [
+    10.0,
+    2.5
+   ],
+   "thicknessScale": 1.0,
+   "stretch": {
+    "min": 0.85,
+    "max": 1.15
+   },
+   "overlapStart": 2.0,
+   "overlapEnd": 2.0,
+   "insertAfter": "rearPants",
+   "tint": 0.72,
+   "from": "kneeBack",
+   "backImage": "giap-ong-chan-back",
+   "frontImage": "giap-ong-chan-front",
+   "backAfter": "rearPants",
+   "frontAfter": "rearArm"
+  },
+  {
+   "id": "chupGoiSau",
+   "name": "Chụp gối sau",
+   "group": "chupGoi",
+   "side": "sau",
+   "kind": "cap",
+   "image": "chup-goi",
+   "at": "kneeBack",
+   "anchor": [
+    3.5,
+    3.5
+   ],
+   "insertAfter": "rearPants",
+   "maskLayers": [
+    "rearLeg",
+    "rearPants"
+   ],
+   "tint": 0.72,
+   "backImage": "chup-goi-back",
+   "frontImage": "chup-goi-front",
+   "backAfter": "rearArm",
+   "frontAfter": "backShoulderArmor"
+  },
+  {
+   "id": "ongChanTruoc",
+   "name": "Giáp ống chân trước",
+   "group": "ongChan",
+   "side": "truoc",
+   "kind": "bone",
+   "image": "giap-ong-chan",
+   "to": "ankleFront",
+   "anchorStart": [
+    3.0,
+    2.5
+   ],
+   "anchorEnd": [
+    10.0,
+    2.5
+   ],
+   "thicknessScale": 1.0,
+   "stretch": {
+    "min": 0.85,
+    "max": 1.15
+   },
+   "overlapStart": 2.0,
+   "overlapEnd": 2.0,
+   "insertAfter": "frontPants",
+   "tint": 1.0,
+   "from": "kneeFront",
+   "backImage": "giap-ong-chan-back",
+   "frontImage": "giap-ong-chan-front",
+   "backAfter": "frontLeg",
+   "frontAfter": "frontPants"
+  },
+  {
+   "id": "chupGoiTruoc",
+   "name": "Chụp gối trước",
+   "group": "chupGoi",
+   "side": "truoc",
+   "kind": "cap",
+   "image": "chup-goi",
+   "at": "kneeFront",
+   "anchor": [
+    3.5,
+    3.5
+   ],
+   "insertAfter": "frontPants",
+   "maskLayers": [
+    "frontLeg",
+    "frontPants"
+   ],
+   "tint": 1.0,
+   "backImage": "chup-goi-back",
+   "frontImage": "chup-goi-front",
+   "backAfter": "body",
+   "frontAfter": "frontArm"
+  },
+  {
+   "id": "cangTayTruoc",
+   "name": "Giáp cẳng tay trước",
+   "group": "cangTay",
+   "side": "truoc",
+   "kind": "bone",
+   "image": "giap-cang-tay",
+   "to": "wristFront",
+   "anchorStart": [
+    3.0,
+    2.0
+   ],
+   "anchorEnd": [
+    8.5,
+    2.0
+   ],
+   "thicknessScale": 1.0,
+   "stretch": {
+    "min": 0.85,
+    "max": 1.15
+   },
+   "overlapStart": 2.0,
+   "overlapEnd": 2.0,
+   "insertAfter": "frontArm",
+   "tint": 1.0,
+   "from": "elbowFront",
+   "backImage": "giap-cang-tay-back",
+   "frontImage": "giap-cang-tay-front",
+   "backAfter": "body",
+   "frontAfter": "frontArm"
+  },
+  {
+   "id": "vaiTruoc",
+   "name": "Giáp vai trước",
+   "group": "vai",
+   "side": "truoc",
+   "kind": "bone",
+   "image": "giap-vai",
+   "to": "elbowFront",
+   "anchorStart": [
+    3.5,
+    3.0
+   ],
+   "anchorEnd": [
+    9.5,
+    3.0
+   ],
+   "thicknessScale": 1.0,
+   "stretch": {
+    "min": 0.85,
+    "max": 1.15
+   },
+   "overlapStart": 2.0,
+   "overlapEnd": 2.0,
+   "insertAfter": "frontArm",
+   "tint": 1.0,
+   "from": "shoulderFront",
+   "backImage": "giap-vai-back",
+   "frontImage": "giap-vai-front",
+   "backAfter": "body",
+   "frontAfter": "frontArm"
+  },
+  {
+   "id": "chupKhuyuTruoc",
+   "name": "Chụp khuỷu trước",
+   "group": "chupKhuyu",
+   "side": "truoc",
+   "kind": "cap",
+   "image": "chup-khuyu",
+   "at": "elbowFront",
+   "anchor": [
+    3.5,
+    3.5
+   ],
+   "insertAfter": "frontArm",
+   "maskLayers": [
+    "frontArm"
+   ],
+   "tint": 1.0,
+   "backImage": "chup-khuyu-back",
+   "frontImage": "chup-khuyu-front",
+   "backAfter": "body",
+   "frontAfter": "frontArm"
+  },
+  {
+   "id": "chupVaiTruoc",
+   "name": "Chụp vai trước",
+   "group": "chupVai",
+   "side": "truoc",
+   "kind": "cap",
+   "image": "chup-vai",
+   "at": "shoulderFront",
+   "anchor": [
+    3.5,
+    3.5
+   ],
+   "insertAfter": "frontArm",
+   "maskLayers": [
+    "frontArm"
+   ],
+   "tint": 1.0,
+   "backImage": "chup-vai-back",
+   "frontImage": "chup-vai-front",
+   "backAfter": "body",
+   "frontAfter": "frontArm"
+  }
+ ],
+ "groupNames": {
+  "vai": "Giáp vai",
+  "cangTay": "Giáp cẳng tay",
+  "ongChan": "Giáp ống chân",
+  "chupVai": "Chụp vai",
+  "chupKhuyu": "Chụp khuỷu",
+  "chupGoi": "Chụp gối"
+ },
+ "frameOverrides": {},
+ "armorSets": {
+  "may": {
+   "name": "Máy vẽ",
+   "about": "bộ vẽ tối giản bằng mã (dùng images/pieces ở trên)",
+   "usesTopLevel": true
+  },
+  "gen": {
+   "name": "Gen",
+   "about": "Ảnh gen thật docs/thu-modular-96/anh-gen/giap-roi-4-manh.png: 4 mảnh cắt + thu nhỏ giữ nét bằng tao-giap-gen.py; 3 chụp khớp là hình bộ máy vẽ tô bằng bảng màu gen.",
+   "images": {
+    "giap-vai": "giap-gen/giap-vai.png",
+    "giap-vai-back": "giap-gen/giap-vai-back.png",
+    "giap-vai-front": "giap-gen/giap-vai-front.png",
+    "giap-cang-tay": "giap-gen/giap-cang-tay.png",
+    "giap-cang-tay-back": "giap-gen/giap-cang-tay-back.png",
+    "giap-cang-tay-front": "giap-gen/giap-cang-tay-front.png",
+    "giap-ong-chan": "giap-gen/giap-ong-chan.png",
+    "giap-ong-chan-back": "giap-gen/giap-ong-chan-back.png",
+    "giap-ong-chan-front": "giap-gen/giap-ong-chan-front.png",
+    "giap-nguc": "giap-gen/giap-nguc.png",
+    "giap-nguc-back": "giap-gen/giap-nguc-back.png",
+    "giap-nguc-front": "giap-gen/giap-nguc-front.png",
+    "chup-vai": "giap-gen/chup-vai.png",
+    "chup-vai-back": "giap-gen/chup-vai-back.png",
+    "chup-vai-front": "giap-gen/chup-vai-front.png",
+    "chup-khuyu": "giap-gen/chup-khuyu.png",
+    "chup-khuyu-back": "giap-gen/chup-khuyu-back.png",
+    "chup-khuyu-front": "giap-gen/chup-khuyu-front.png",
+    "chup-goi": "giap-gen/chup-goi.png",
+    "chup-goi-back": "giap-gen/chup-goi-back.png",
+    "chup-goi-front": "giap-gen/chup-goi-front.png"
+   },
+   "imagesX2": {
+    "giap-vai": "giap-gen/giap-vai-x2.png",
+    "giap-cang-tay": "giap-gen/giap-cang-tay-x2.png",
+    "giap-ong-chan": "giap-gen/giap-ong-chan-x2.png",
+    "giap-nguc": "giap-gen/giap-nguc-x2.png",
+    "chup-vai": "giap-gen/chup-vai-x2.png",
+    "chup-khuyu": "giap-gen/chup-khuyu-x2.png",
+    "chup-goi": "giap-gen/chup-goi-x2.png",
+    "giap-vai-back": "giap-gen/giap-vai-x2-back.png",
+    "giap-cang-tay-back": "giap-gen/giap-cang-tay-x2-back.png",
+    "giap-ong-chan-back": "giap-gen/giap-ong-chan-x2-back.png",
+    "giap-nguc-back": "giap-gen/giap-nguc-x2-back.png",
+    "chup-vai-back": "giap-gen/chup-vai-x2-back.png",
+    "chup-khuyu-back": "giap-gen/chup-khuyu-x2-back.png",
+    "chup-goi-back": "giap-gen/chup-goi-x2-back.png",
+    "giap-vai-front": "giap-gen/giap-vai-x2-front.png",
+    "giap-cang-tay-front": "giap-gen/giap-cang-tay-x2-front.png",
+    "giap-ong-chan-front": "giap-gen/giap-ong-chan-x2-front.png",
+    "giap-nguc-front": "giap-gen/giap-nguc-x2-front.png",
+    "chup-vai-front": "giap-gen/chup-vai-x2-front.png",
+    "chup-khuyu-front": "giap-gen/chup-khuyu-x2-front.png",
+    "chup-goi-front": "giap-gen/chup-goi-x2-front.png"
+   },
+   "imagesX2Note": "Bản ×2 CHỈ dùng cho chế độ xem \"Phóng to nhân vật ×2 (192)\". Điểm neo ghi theo cỡ ×1; bản ×2 đúng gấp đôi cỡ nên neo ×2.",
+   "imageSources": {
+    "giap-vai": "cắt từ ảnh gen, gốc cắt: giap-gen/goc-giap-vai.png",
+    "giap-cang-tay": "cắt từ ảnh gen, gốc cắt: giap-gen/goc-giap-cang-tay.png",
+    "giap-ong-chan": "cắt từ ảnh gen, gốc cắt: giap-gen/goc-giap-ong-chan.png",
+    "giap-nguc": "cắt từ ảnh gen, gốc cắt: giap-gen/goc-giap-nguc.png",
+    "chup-vai": "hình chụp khớp của bộ máy vẽ, tô bằng bảng màu gen (ảnh gen không có chụp khớp)",
+    "chup-khuyu": "hình chụp khớp của bộ máy vẽ, tô bằng bảng màu gen (ảnh gen không có chụp khớp)",
+    "chup-goi": "hình chụp khớp của bộ máy vẽ, tô bằng bảng màu gen (ảnh gen không có chụp khớp)"
+   },
+   "palette": [
+    {
+     "rgb": "#050403",
+     "role": "viền"
+    },
+    {
+     "rgb": "#231714",
+     "role": "thép/tối"
+    },
+    {
+     "rgb": "#352f31",
+     "role": "thép/tối"
+    },
+    {
+     "rgb": "#4b5666",
+     "role": "thép/tối"
+    },
+    {
+     "rgb": "#944a1d",
+     "role": "đồng"
+    },
+    {
+     "rgb": "#748293",
+     "role": "thép/tối"
+    },
+    {
+     "rgb": "#dd8940",
+     "role": "đồng"
+    },
+    {
+     "rgb": "#e0c7a6",
+     "role": "đồng"
+    }
+   ],
+   "pieces": [
+    {
+     "id": "vaiSau",
+     "name": "Giáp vai sau",
+     "group": "vai",
+     "side": "sau",
+     "kind": "bone",
+     "image": "giap-vai",
+     "to": "elbowBack",
+     "anchorStart": [
+      3.2,
+      4.0
+     ],
+     "anchorEnd": [
+      8.8,
+      4.0
+     ],
+     "thicknessScale": 1.0,
+     "stretch": {
+      "min": 0.85,
+      "max": 1.15
+     },
+     "overlapStart": 2.0,
+     "overlapEnd": 2.0,
+     "insertAfter": "rearArm",
+     "tint": 0.72,
+     "from": "shoulderBack",
+     "backImage": "giap-vai-back",
+     "frontImage": "giap-vai-front",
+     "backAfter": "rearArm",
+     "frontAfter": "backShoulderArmor"
+    },
+    {
+     "id": "cangTaySau",
+     "name": "Giáp cẳng tay sau",
+     "group": "cangTay",
+     "side": "sau",
+     "kind": "bone",
+     "image": "giap-cang-tay",
+     "to": "wristBack",
+     "anchorStart": [
+      2.96,
+      2.0
+     ],
+     "anchorEnd": [
+      9.04,
+      2.0
+     ],
+     "thicknessScale": 1.0,
+     "stretch": {
+      "min": 0.85,
+      "max": 1.15
+     },
+     "overlapStart": 2.0,
+     "overlapEnd": 2.0,
+     "insertAfter": "rearArm",
+     "tint": 0.72,
+     "from": "elbowBack",
+     "backImage": "giap-cang-tay-back",
+     "frontImage": "giap-cang-tay-front",
+     "backAfter": "rearArm",
+     "frontAfter": "backShoulderArmor"
+    },
+    {
+     "id": "chupVaiSau",
+     "name": "Chụp vai sau",
+     "group": "chupVai",
+     "side": "sau",
+     "kind": "cap",
+     "image": "chup-vai",
+     "at": "shoulderBack",
+     "anchor": [
+      3.5,
+      3.5
+     ],
+     "insertAfter": "rearArm",
+     "maskLayers": [
+      "rearArm"
+     ],
+     "tint": 0.72,
+     "backImage": "chup-vai-back",
+     "frontImage": "chup-vai-front",
+     "backAfter": "rearArm",
+     "frontAfter": "backShoulderArmor"
+    },
+    {
+     "id": "chupKhuyuSau",
+     "name": "Chụp khuỷu sau",
+     "group": "chupKhuyu",
+     "side": "sau",
+     "kind": "cap",
+     "image": "chup-khuyu",
+     "at": "elbowBack",
+     "anchor": [
+      3.5,
+      3.5
+     ],
+     "insertAfter": "rearArm",
+     "maskLayers": [
+      "rearArm"
+     ],
+     "tint": 0.72,
+     "backImage": "chup-khuyu-back",
+     "frontImage": "chup-khuyu-front",
+     "backAfter": "rearArm",
+     "frontAfter": "backShoulderArmor"
+    },
+    {
+     "id": "ongChanSau",
+     "name": "Giáp ống chân sau",
+     "group": "ongChan",
+     "side": "sau",
+     "kind": "bone",
+     "image": "giap-ong-chan",
+     "to": "ankleBack",
+     "anchorStart": [
+      3.08,
+      3.0
+     ],
+     "anchorEnd": [
+      9.92,
+      3.0
+     ],
+     "thicknessScale": 1.0,
+     "stretch": {
+      "min": 0.85,
+      "max": 1.15
+     },
+     "overlapStart": 2.0,
+     "overlapEnd": 2.0,
+     "insertAfter": "rearPants",
+     "tint": 0.72,
+     "from": "kneeBack",
+     "backImage": "giap-ong-chan-back",
+     "frontImage": "giap-ong-chan-front",
+     "backAfter": "rearPants",
+     "frontAfter": "rearArm"
+    },
+    {
+     "id": "chupGoiSau",
+     "name": "Chụp gối sau",
+     "group": "chupGoi",
+     "side": "sau",
+     "kind": "cap",
+     "image": "chup-goi",
+     "at": "kneeBack",
+     "anchor": [
+      3.5,
+      3.5
+     ],
+     "insertAfter": "rearPants",
+     "maskLayers": [
+      "rearLeg",
+      "rearPants"
+     ],
+     "tint": 0.72,
+     "backImage": "chup-goi-back",
+     "frontImage": "chup-goi-front",
+     "backAfter": "rearArm",
+     "frontAfter": "backShoulderArmor"
+    },
+    {
+     "id": "nguc",
+     "name": "Giáp ngực nhỏ",
+     "group": "nguc",
+     "side": "truoc",
+     "kind": "bone",
+     "image": "giap-nguc",
+     "to": "hipCenter",
+     "anchorStart": [
+      3.04,
+      6.5
+     ],
+     "anchorEnd": [
+      13.96,
+      6.5
+     ],
+     "thicknessScale": 1.0,
+     "stretch": {
+      "min": 0.85,
+      "max": 1.15
+     },
+     "overlapStart": 2.0,
+     "overlapEnd": 2.0,
+     "insertAfter": "chestArmor",
+     "tint": 1.0,
+     "from": "neck",
+     "boneFrac": 0.6,
+     "backImage": "giap-nguc-back",
+     "frontImage": "giap-nguc-front",
+     "backAfter": "backShoulderArmor",
+     "frontAfter": "chestArmor"
+    },
+    {
+     "id": "ongChanTruoc",
+     "name": "Giáp ống chân trước",
+     "group": "ongChan",
+     "side": "truoc",
+     "kind": "bone",
+     "image": "giap-ong-chan",
+     "to": "ankleFront",
+     "anchorStart": [
+      3.08,
+      3.0
+     ],
+     "anchorEnd": [
+      9.92,
+      3.0
+     ],
+     "thicknessScale": 1.0,
+     "stretch": {
+      "min": 0.85,
+      "max": 1.15
+     },
+     "overlapStart": 2.0,
+     "overlapEnd": 2.0,
+     "insertAfter": "frontPants",
+     "tint": 1.0,
+     "from": "kneeFront",
+     "backImage": "giap-ong-chan-back",
+     "frontImage": "giap-ong-chan-front",
+     "backAfter": "frontLeg",
+     "frontAfter": "frontPants"
+    },
+    {
+     "id": "chupGoiTruoc",
+     "name": "Chụp gối trước",
+     "group": "chupGoi",
+     "side": "truoc",
+     "kind": "cap",
+     "image": "chup-goi",
+     "at": "kneeFront",
+     "anchor": [
+      3.5,
+      3.5
+     ],
+     "insertAfter": "frontPants",
+     "maskLayers": [
+      "frontLeg",
+      "frontPants"
+     ],
+     "tint": 1.0,
+     "backImage": "chup-goi-back",
+     "frontImage": "chup-goi-front",
+     "backAfter": "body",
+     "frontAfter": "frontArm"
+    },
+    {
+     "id": "cangTayTruoc",
+     "name": "Giáp cẳng tay trước",
+     "group": "cangTay",
+     "side": "truoc",
+     "kind": "bone",
+     "image": "giap-cang-tay",
+     "to": "wristFront",
+     "anchorStart": [
+      2.96,
+      2.0
+     ],
+     "anchorEnd": [
+      9.04,
+      2.0
+     ],
+     "thicknessScale": 1.0,
+     "stretch": {
+      "min": 0.85,
+      "max": 1.15
+     },
+     "overlapStart": 2.0,
+     "overlapEnd": 2.0,
+     "insertAfter": "frontArm",
+     "tint": 1.0,
+     "from": "elbowFront",
+     "backImage": "giap-cang-tay-back",
+     "frontImage": "giap-cang-tay-front",
+     "backAfter": "body",
+     "frontAfter": "frontArm"
+    },
+    {
+     "id": "vaiTruoc",
+     "name": "Giáp vai trước",
+     "group": "vai",
+     "side": "truoc",
+     "kind": "bone",
+     "image": "giap-vai",
+     "to": "elbowFront",
+     "anchorStart": [
+      3.2,
+      4.0
+     ],
+     "anchorEnd": [
+      8.8,
+      4.0
+     ],
+     "thicknessScale": 1.0,
+     "stretch": {
+      "min": 0.85,
+      "max": 1.15
+     },
+     "overlapStart": 2.0,
+     "overlapEnd": 2.0,
+     "insertAfter": "frontArm",
+     "tint": 1.0,
+     "from": "shoulderFront",
+     "backImage": "giap-vai-back",
+     "frontImage": "giap-vai-front",
+     "backAfter": "body",
+     "frontAfter": "frontArm"
+    },
+    {
+     "id": "chupKhuyuTruoc",
+     "name": "Chụp khuỷu trước",
+     "group": "chupKhuyu",
+     "side": "truoc",
+     "kind": "cap",
+     "image": "chup-khuyu",
+     "at": "elbowFront",
+     "anchor": [
+      3.5,
+      3.5
+     ],
+     "insertAfter": "frontArm",
+     "maskLayers": [
+      "frontArm"
+     ],
+     "tint": 1.0,
+     "backImage": "chup-khuyu-back",
+     "frontImage": "chup-khuyu-front",
+     "backAfter": "body",
+     "frontAfter": "frontArm"
+    },
+    {
+     "id": "chupVaiTruoc",
+     "name": "Chụp vai trước",
+     "group": "chupVai",
+     "side": "truoc",
+     "kind": "cap",
+     "image": "chup-vai",
+     "at": "shoulderFront",
+     "anchor": [
+      3.5,
+      3.5
+     ],
+     "insertAfter": "frontArm",
+     "maskLayers": [
+      "frontArm"
+     ],
+     "tint": 1.0,
+     "backImage": "chup-vai-back",
+     "frontImage": "chup-vai-front",
+     "backAfter": "body",
+     "frontAfter": "frontArm"
+    }
+   ],
+   "groupNames": {
+    "vai": "Giáp vai",
+    "cangTay": "Giáp cẳng tay",
+    "ongChan": "Giáp ống chân",
+    "chupVai": "Chụp vai",
+    "chupKhuyu": "Chụp khuỷu",
+    "chupGoi": "Chụp gối",
+    "nguc": "Giáp ngực nhỏ"
+   }
+  }
+ },
+ "boneFrac": "boneFrac (tuỳ chọn, mặc định 1): khớp cuối dùng để gắn = from + (to − from) × boneFrac. Giáp ngực dùng 0,6 của đoạn cổ → giữa hông."
+}
