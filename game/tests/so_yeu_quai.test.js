@@ -42,9 +42,16 @@ const sx = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Ar
   try {
     // ---------- 0. nạp ----------
     console.log('0. Nạp game');
-    const nap = await A.goi(() => ({ co: !!G.soYQ, bat: G.soYQ.bat(), rong: !!G.villageApi.PANELS.so.rong, fix: !!G.fixSave.soYqBoc, the: G.villageApi.theCua('tu').map((t) => t[0]) }));
+    // Tư vấn 1 (16/10, js/mo_dan.js "mở dần"): thẻ Sổ chỉ hiện cho người mới khi đã qua Hang biển 1 (ải 1-0); bản lưu cũ có tiến độ thì mở luôn.
+    const nap = await A.goi(() => {
+      const r = { co: !!G.soYQ, bat: G.soYQ.bat(), rong: !!G.villageApi.PANELS.so.rong, fix: !!G.fixSave.soYqBoc };
+      G.testSave({ lvl: 14 }); G.save.stars = { '0-0': 3, '0-1': 3 }; r.moi = G.villageApi.theCua('tu').map((t) => t[0]);
+      G.save.stars['1-0'] = 1; r.the = G.villageApi.theCua('tu').map((t) => t[0]);
+      return r;
+    });
     dat(nap.co && nap.bat && !nap.rong && nap.fix, 'G.soYQ bật; PANELS.so là hàm thật (không còn .rong); đã bọc G.fixSave');
-    dat(nap.the[0] === 'hero' && nap.the[1] === 'so', 'Ông Từ có thẻ Cu Tí | Sổ (| Thành tựu khi Phiên C mở): ' + nap.the.join());
+    dat(!nap.moi.includes('so'), 'mở dần: người mới chưa qua Hang biển 1 chưa thấy thẻ Sổ: ' + nap.moi.join());
+    dat(nap.the[0] === 'hero' && nap.the[1] === 'so', 'qua Hang biển 1: Ông Từ có thẻ Cu Tí | Sổ (| Thành tựu khi Phiên C mở): ' + nap.the.join());
 
     // ---------- 1. bảng ----------
     console.log('1. Bảng G.SO_YQ');
@@ -212,11 +219,13 @@ const sx = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Ar
     const nh = await A.goi(() => {
       G.testSave({ lvl: 20 });
       const sv = G.save; sv.gold = 1000; sv.linhKhi = 0; sv.daBac = 0;
+      sv.moDan = { cu: 1 }; // mở dần (Tư vấn 1, js/mo_dan.js): bản lưu kiểu người chơi cũ → thẻ Sổ đã mở, mới có chấm đỏ
       const Y = G.soYQ, r = {};
       Y.nhanHet(sv); // dọn
       sv.so.q = {}; sv.so.vung = {};
       sv.gold = 1000; sv.linhKhi = 0;
-      const da0 = () => (G.epDo && G.epDo.da ? G.epDo.da(sv) : sv.daBac | 0);
+      // Luyện vũ khí phiên 1 (?luyen=0 tắt): đá nâng bậc nhận về thành nguyên liệu rèn, 1 đá = G.QUY_DOI.da NLR → đếm theo số đá quy đổi
+      const da0 = () => (G.luyen && G.luyen.bat() ? (sv.nlr | 0) / G.QUY_DOI.da : G.epDo && G.epDo.da ? G.epDo.da(sv) : sv.daBac | 0);
       const d0 = da0();
       sv.so.q.cuaTuong = { g: 1, h: 10, k: 1, n: 0 }; // tinh anh vùng 2: 80 V, 6 LK, 1 Đ
       r.cham = !!(G.villageApi.PANELS.so.cham(sv)) && G.suKien.chamNguoi('tu', sv);
@@ -248,6 +257,7 @@ const sx = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Ar
       G.testSave({ lvl: 20 }); G.save.tut.done = true;
       G.save = G.fixSave(G.save);
       const sv = G.save;
+      sv.moDan = { cu: 1 }; // mở dần (Tư vấn 1): coi như người chơi cũ → thẻ Sổ đã mở để vẽ / nhớ thẻ
       sv.so.q = { heoCon: { g: 1, h: 31, k: 1, n: 1 }, ongVo: { g: 1, h: 0, k: 0, n: 0 }, mocTinh: { g: 1, h: 2, k: 1, n: 0, l: 41 }, cua: { g: 1, h: 3, k: 0, n: 0 } };
       sv.scars = { moc: 'fire' }; sv.rec = { power: 1, b: { moc: 41.5 } }; sv.stars['0-4'] = 3;
       G.setScene(G.Village);

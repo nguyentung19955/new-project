@@ -2,7 +2,7 @@
 // BƯỚC 2 — PHIÊN B: kiểm "Việc hôm nay" (js/viec_ngay.js) không cần trình duyệt (docs/ke-hoach/buoc-2/KE-HOACH.md mục 4 "Phiên B").
 // Chạy hai bản game trong Node qua tests/node_trang.js (DOM / canvas giả, ?cloud=0): bản thường và bản ?viecngay=0 (cờ quay lui).
 // Ngày giả: thay Date trong trang (window.__ngay('2026-10-15') đặt giờ máy giả lúc 10 giờ sáng ngày đó).
-//   1. Mở sau ải Rừng già 2; thẻ ở Anh Mõ hiện / ẩn đúng.
+//   1. Mở sau ải Rừng già 2 (bản lưu cũ) / Hang biển 1 (người mới, mở dần); thẻ ở Anh Mõ hiện / ẩn đúng.
 //   2. Cùng hạt giống + cùng ngày → cùng 3 việc (Dễ / Vừa / Khó, khác nhóm); khác hạt giống → khác; sang ngày mới → việc mới, tránh việc hôm qua.
 //   3. Ngày lùi giờ máy → giữ nguyên việc, không ra việc mới.
 //   4. Đếm tiến độ từ sự kiện (bỏ ải hướng dẫn); bot thắng ải thật → số quái đếm đúng, bảng kết quả có dòng "Việc hôm nay: x/3".
@@ -52,6 +52,9 @@ const CAI = function () {
     G.testSave({ lvl: 20, sharpen: 4 });
     const s = G.save;
     s.stars = sao || { '0-0': 3, '0-1': 3 };
+    // Tư vấn 1 (16/10, js/mo_dan.js "mở dần"): người mới chỉ thấy Việc hôm nay sau Hang biển 1 (1-0). Bài này kiểm luật Việc hôm nay
+    // nên mặc định dùng bản lưu kiểu người chơi cũ (moDan.cu: mở hết, chỉ còn mốc cũ Rừng già 2); mục 1 kiểm riêng cả người mới.
+    s.moDan = { cu: 1 };
     G.suKien.suaBanLuu(s);
     s.nv.hat = hat || 777; s.nv.cuoi = ''; s.nv.ds = []; s.nv.hom = ''; s.nv.tuan = { ma: '', ngay: [] }; s.nv.tuanNhan = 0; s.nv.demRuong = 0; delete s.nv.quen;
     return s;
@@ -62,7 +65,10 @@ const CAI = function () {
 
 (async () => {
   // Bước 2 Phiên E: bài này kiểm luật với bảng thưởng GỐC (?thuongb2=goc); số đã chỉnh kiểm ở tests/thuong_b2.test.js
-  const A = moTrang('thuongb2=goc'), B = moTrang('viecngay=0&thuongb2=goc');
+  // Luyện vũ khí phiên 1 (16/10): quặng / đá / bùa nhận về đổi thành nguyên liệu rèn (NLR). Mục 1–9 kiểm luật Việc hôm nay theo đơn vị cũ
+  // (?luyen=0, như ?thuongb2=goc giữ bảng gốc); mục 10 kiểm cùng phần thưởng ở luật mới (Luyện bật) ra đúng số NLR quy đổi.
+  const A = moTrang('thuongb2=goc&luyen=0'), B = moTrang('viecngay=0&thuongb2=goc&luyen=0');
+  let C = null;
   try {
     await A.goi(CAI); await B.goi(CAI);
     // ---------- 1. mở khoá, thẻ ----------
@@ -76,10 +82,17 @@ const CAI = function () {
       __moi();
       r.mo1 = G.viecNgay.mo(); r.the1 = VA.theCua('mo').map((t) => t[0]).join(','); r.rong = !!VA.PANELS.viecNgay.rong;
       VA.open('mo'); r.tab = VA.V.tab; VA.goHub();
+      // người mới (mở dần): qua Rừng già 2 chưa đủ, phải qua Hang biển 1
+      __moi(); G.save.moDan = { bao: {} };
+      r.moiMo = G.viecNgay.mo(); r.moiThe = VA.theCua('mo').map((t) => t[0]).join(',');
+      G.save.stars['1-0'] = 1;
+      r.moiMo2 = G.viecNgay.mo(); r.moiThe2 = VA.theCua('mo').map((t) => t[0]).join(',');
+      __moi();
       return r;
     });
     dat(!m1.mo0 && m1.the0 === 'settings' && m1.ds0 === 0, 'chưa qua ải Rừng già 2: chưa mở, Anh Mõ chỉ có Cài đặt, không ra việc');
     dat(m1.mo1 && !m1.rong && m1.the1 === 'viecNgay,settings' && m1.tab === 'viecNgay', 'qua ải Rừng già 2: thẻ "Việc hôm nay" hiện trước Cài đặt, Anh Mõ mở thẻ này trước');
+    dat(!m1.moiMo && m1.moiThe === 'settings' && m1.moiMo2 && m1.moiThe2 === 'viecNgay,settings', 'mở dần: người mới qua Rừng già 2 chưa có thẻ, qua Hang biển 1 mới có');
 
     // ---------- 2. hạt giống ----------
     console.log('2. Chọn 3 việc theo hạt giống');
@@ -291,9 +304,25 @@ const CAI = function () {
     });
     dat(m9.bat === false && m9.rong && m9.the === 'settings', 'thẻ ẩn, Anh Mõ chỉ có Cài đặt');
     dat(m9.ds === 0 && m9.d === 0 && !m9.nut && !m9.dong && m9.win, 'không ra việc, không đếm, không nút Tạm dừng, không dòng ở bảng kết quả; dữ liệu nv giữ nguyên');
+
+    // ---------- 10. luật mới: Luyện vũ khí bật (ví NLR) ----------
+    console.log('10. Luyện vũ khí bật: thưởng ra nguyên liệu rèn');
+    C = moTrang('thuongb2=goc'); await C.goi(CAI);
+    const m10 = await C.goi(() => {
+      const VN = G.viecNgay, r = { bat: !!(G.luyen && G.luyen.bat()), qd: G.QUY_DOI };
+      __moi(null, 777); __ngay('2026-10-12');
+      const sv = G.save; sv.gold = 0; sv.ore = 0; sv.daBac = 0; sv.linhKhi = 0; sv.buaBac = 0; sv.nlr = 0;
+      VN.capNhat(); for (const v of sv.nv.ds) v.d = v.can; G.suKien.phat('nangCap', { loai: ['mai'] });
+      VN.nhan(0); VN.nhan(1); VN.nhan(2); r.vang = sv.gold; r.nlrViec = sv.nlr;
+      const n0 = sv.nlr; r.rg = VN.moRuong(); r.nlrRuong = sv.nlr - n0; r.lk = sv.linhKhi;
+      r.cu = sv.ore + sv.daBac + sv.buaBac;
+      return r;
+    });
+    dat(m10.bat && m10.vang === 270 && m10.nlrViec === 9, 'nhận 3 việc mức 1: 270 vàng, 2 + 3 + 4 quặng → 9 NLR (1:1)');
+    dat(m10.rg && m10.rg.da === 2 && m10.nlrRuong === 2 * m10.qd.da && m10.lk === 8 && m10.cu === 0, 'rương ngày mức 1: 2 đá → ' + m10.nlrRuong + ' NLR (1 đá = ' + m10.qd.da + ' NLR), 8 linh khí; ví cũ không đổi');
     console.log('\nPASS — ' + soDat + ' điều kiện');
   } catch (e) {
     console.error(e.message || e);
     process.exitCode = 1;
-  } finally { A.dong(); B.dong(); }
+  } finally { A.dong(); B.dong(); if (C) C.dong(); }
 })();
