@@ -310,7 +310,7 @@ Xem nhanh:
 
 - **Nền tô da + đồ gốc khác ảnh game ở 81–117 điểm ảnh mỗi khung, toàn bộ ở viền mờ ngoài cùng của áo/quần.** Nền tô da phủ cả viền mờ để hình bóng trùng 100%, nên khi mặc đồ gốc thì viền ngoài đậm hơn một chút, nhìn bằng mắt gần như không thấy. Muốn đúng từng điểm ảnh game thì bấm **Máy dựng cũ**.
 - **Da vẫn là "đổ bóng theo nếp vải"**, không phải cơ bắp vẽ tay. Ở vài khung, chỗ nếp áo gốc nhiều thì da hơi lốm đốm; nét ngực/bụng chỉ vài điểm ảnh, ở cỡ 48×48 gần như chỉ còn mảng sáng tối.
-- **Mảng đen ở sau lưng một số khung (khung 2, 3, 5, 6, 8, 9)** là bao cổ tay/nắm tay sau và một mẩu tay áo nằm trong lớp tay sau (`rearArm`) từ lần tách cũ. Mình giữ nguyên lớp tay để ghép đồ gốc vẫn đúng.
+- **Mảng đen ở sau lưng một số khung** là bao cổ tay/nắm tay sau và một mẩu tay áo nằm trong lớp tay sau (`rearArm`) từ lần tách cũ. Mình giữ nguyên lớp tay để ghép đồ gốc vẫn đúng.
 - Bao cổ tay đen vẫn thuộc nền (như trước).
 
 ## Vì sao gen cả hàng không khớp dáng
