@@ -129,8 +129,13 @@
     const L = clamp(Math.hypot(P.x - b.x, P.y - b.y) + S.them, S.dai[0], S.dai[1]), x0 = b.x, y0 = b.y, ca = Math.cos(a), sa = Math.sin(a);
     vung(b, 'line', { x: x0, y: y0, ang: a, len: L, w: S.rong }, T, b.dmg * S.sat, 'ice', { melee: true, onFire: () => { W().shake = Math.max(W().shake, 0.25); G.sfx('boom', 1.3); } });
     const M = [];
+    for (const f of S.manhDiem) {
+      const px = x0 + ca * L * f, py = y0 + sa * L * f;
+      for (const s of [-1, 1]) { const g = a + (s * PI) / 2; M.push([px, py, g]); vung(b, 'line', { x: px, y: py, ang: g, len: S.manhDai, w: S.manhRong }, T2, b.dmg * S.manhSat, 'ice'); }
+    }
     // 15/10 noi-gian-manh: nổi giận thì BỔ THÊM (đợt 2, 3): mỗi nhát một vết nứt mới (không văng mảnh), nhắm lại chỗ em bé, báo trước như vùng
     // to, sau lúc mảnh văng. (Thử thêm điểm văng mảnh trên cùng vết nứt: mảnh phủ kín hai bên vết nứt, không còn chỗ né → bỏ.)
+    // (16/10 luật công bằng: đợt bổ thêm xếp SAU mảnh văng để G.congBang.dot thấy lúc mảnh nổ — thứ tự này không đổi gì khi cờ tắt)
     const nD = soNG(b, 'nguRiu', 'dot', 1), gap = 0.7;
     if (nD > 1 && G.noiGianLapDot) {
       for (let k = 1; k < nD; k++) G.noiGianLapDot(b, 'c1', T2 + k * gap, sanNG(b, true) || 0.6, (w) => {
@@ -138,12 +143,8 @@
         b.dirA = g; if (Math.abs(Math.cos(g)) > 0.15) b.face = Math.cos(g) > 0 ? 1 : -1;
         vung(b, 'line', { x: b.x, y: b.y, ang: g, len: L2, w: S.rong }, w, b.dmg * S.sat, 'ice', { melee: true, onFire: () => { W().shake = Math.max(W().shake, 0.2); G.sfx('boom', 1.3); } });
         if (b.an) b.an.ct = true;
-      });
+      }, 'nguRiu');
       giuBan(b, T2 + (nD - 1) * gap + 0.3);
-    }
-    for (const f of S.manhDiem) {
-      const px = x0 + ca * L * f, py = y0 + sa * L * f;
-      for (const s of [-1, 1]) { const g = a + (s * PI) / 2; M.push([px, py, g]); vung(b, 'line', { x: px, y: py, ang: g, len: S.manhDai, w: S.manhRong }, T2, b.dmg * S.manhSat, 'ice'); }
     }
     vat({ x: x0, y: y0, buoc: (o) => !b.dead && b.phase === ph && o.age < T2 + 0.7,
       ve(c, o) {
@@ -175,10 +176,13 @@
   // Ngư Tinh c4 · CỘT NƯỚC ĐUỔI: 6 cột nước phun nối tiếp đúng vết chân em bé — mỗi cột lấy chỗ bé đứng, báo trước 0,6 giây rồi phun;
   // cột sau trễ 0,25 giây (pha 2, 3: chia tốc pha). Đứng yên là trúng, phải chạy liên tục. Cột đầu phun đúng mốc ra đòn cũ (moc[0]).
   function cotNuoc(b, P, T, D, a, sp) {
-    const S = SO.nguCotNuoc, cach = S.cach / (sp || 1), bat = Math.max(0, T - S.bao), ph = b.phase;
+    // 16/10 luật công bằng (G.congBang): mỗi cột nhắm thẳng chỗ Cu Tí nên cột sau chỉ báo khi cột trước đã phun + nghiNham (cũ: 3 cột báo
+    // chồng nhau, 0,25 giây một cột); số cột chia G.CONG_BANG.cotChia (làm tròn lên) để chiêu không dài quá.
+    const CBo = G.congBang && G.congBang.on();
+    const S = SO.nguCotNuoc, cach = CBo ? S.bao + G.CONG_BANG.nghiNham : S.cach / (sp || 1), bat = Math.max(0, T - S.bao), ph = b.phase;
     if (b.an) b.an.ct = true;
     let het = 0;
-    const so = soNG(b, 'nguCot', 'so', S.so); // nổi giận: thêm cột
+    const so0 = soNG(b, 'nguCot', 'so', S.so), so = CBo ? Math.ceil(so0 / (G.CONG_BANG.cotChia || 1)) : so0; // nổi giận: thêm cột
     for (let k = 0; k < so; k++) {
       const tk = bat + k * cach;
       het = tk + S.bao;
@@ -226,9 +230,11 @@
     };
     mot(T);
     // Lần nhảy sau: nhắm lại ngay khi lần trước đáp + lan2 (nổi giận: nhiều lần hơn, nghỉ giữa hai lần chia tốc pha; báo trước vẫn bao2).
-    const lan = soNG(b, 'hoVo', 'lan', b.phase >= 1 ? 2 : 1), nghi = G.noiGianSo && lan > 2 ? S.lan2 / Math.max(1, sp || 1) : S.lan2;
-    for (let j = 1; j < lan; j++) seq(b, T + j * nghi + (j - 1) * S.bao2, () => { if (b.dead || b.phase !== ph) return; mat(b, Math.atan2(P.y - b.y, P.x - b.x)); mot(S.bao2, j >= 2 ? satDot() : 1); }); // lần nhảy thêm (thứ 3, 4): × satDot
-    if (lan > 2) giuBan(b, T + (lan - 1) * (nghi + S.bao2) + 0.3);
+    // 16/10 luật công bằng (G.congBang): mỗi cú nhảy là đòn nặng nhắm thẳng → báo trước ≥ 0,7 giây, nghỉ sau cú trước ≥ 0,65 giây (không chia tốc).
+    const CBo = G.congBang && G.congBang.on(), bao2 = CBo ? Math.max(S.bao2, G.CONG_BANG.baoNang) : S.bao2;
+    const lan = soNG(b, 'hoVo', 'lan', b.phase >= 1 ? 2 : 1), nghi = CBo ? Math.max(S.lan2, G.CONG_BANG.nghiHut) : G.noiGianSo && lan > 2 ? S.lan2 / Math.max(1, sp || 1) : S.lan2;
+    for (let j = 1; j < lan; j++) seq(b, T + j * nghi + (j - 1) * bao2, () => { if (b.dead || b.phase !== ph) return; mat(b, Math.atan2(P.y - b.y, P.x - b.x)); mot(bao2, j >= 2 ? satDot() : 1); }); // lần nhảy thêm (thứ 3, 4): × satDot
+    if (lan > 2 || (CBo && lan > 1)) giuBan(b, T + (lan - 1) * (nghi + bao2) + 0.3);
   }
   // Hồ Tinh c4 · HỒ LY PHÂN THÂN: trùm biến mất, 4 bóng cáo hiện ở 4 góc sàn (đối xứng qua tâm sàn), lần lượt lao chéo qua tâm sang góc
   // đối diện (đường đỏ báo trước từng đường). Một bóng là thật (thân trùm); đánh trúng thân thật trước lúc nó lao thì ngắt chiêu (trùm choáng).
@@ -372,6 +378,10 @@
     for (const t of TU) vung(b, 'line', { x: t.x, y: t.y0, ang: PI / 2, len: t.y1 - t.y0, w: S.day }, T, b.dmg * S.satDung, 'ice');
     const nL = S.loat + soNG(b, 'cuaTuong', 'dot', 1) - 1, het = T + S.giu + (nL - 1) * S.bao2;
     b.cuaTuongHet = b.t + het + 0.2;
+    // 16/10 luật công bằng: mảnh tường chỉ bắt đầu báo khi Cua Đá không đang ra chiêu khác (vùng mảnh phủ ngang cả sàn — chồng lên Đập càng
+    // thì không còn chỗ né); tường vỡ (hình) đúng lúc loạt đầu nổ. Cờ tắt: như cũ.
+    const CBo = G.congBang && G.congBang.on(), stT = { vo: !CBo };
+    const banKhac = () => b.busy > 0 || (G.time || 0) < (b.cbNghiDen || 0) || W().zones.some((z) => z.src === b && z.t > 0 && z.dmg && !z.pool && !z.cuaManh);
     seq(b, T, () => {
       if (b.dead) return;
       const Pp = W().P;
@@ -379,7 +389,7 @@
       vat({ x: px, y: (w.y0 + w.y1) / 2, chan: TU, day: S.day,
         buoc(o) {
           if (b.dead) return false;
-          if (o.age >= S.giu) { for (const t of TU) for (let y = Math.max(t.y0, w.y0) + 8; y < Math.min(t.y1, w.y1); y += 22) anh('hu-bang-vo', t.x, y, { sc: 0.6, t: 0.3 }) || FX('burst', t.x, y - 4, '#bfeaff', 6, 70); G.sfx('boom', 1.5); return false; }
+          if (o.age >= S.giu && stT.vo) { for (const t of TU) for (let y = Math.max(t.y0, w.y0) + 8; y < Math.min(t.y1, w.y1); y += 22) anh('hu-bang-vo', t.x, y, { sc: 0.6, t: 0.3 }) || FX('burst', t.x, y - 4, '#bfeaff', 6, 70); G.sfx('boom', 1.5); return false; }
           return true;
         },
         ve(c, o) {
@@ -395,14 +405,24 @@
     });
     // Mảnh: mỗi hàng chia theo các bức tường thành đoạn — đoạn ngoài cùng bay từ tường ra mép phòng, đoạn giữa bay từ tường này sang tường kia.
     // (tên chiêu giữ từ lúc dựng tường: lúc mảnh bay trùm có thể đang ra chiêu khác — bảng thua vẫn ghi đúng "Tường tinh thể")
-    const cot = xs.slice().sort((u, v) => u - v), oM = { cancel: true, skill: b.skillName || null };
+    const cot = xs.slice().sort((u, v) => u - v), oM = { cancel: true, skill: b.skillName || null, cuaManh: true };
     const manh = (y, t, k) => {
       const dmg = b.dmg * S.sat * (k ? satDot() : 1);
       vung(b, 'line', { x: cot[0], y, ang: PI, len: cot[0] - w.x0 + 4, w: S.manhRong }, t, dmg, 'ice', oM);
       for (let i = 0; i + 1 < cot.length; i++) vung(b, 'line', { x: cot[i], y, ang: 0, len: cot[i + 1] - cot[i], w: S.manhRong }, t, dmg, 'ice', oM);
       vung(b, 'line', { x: cot[cot.length - 1], y, ang: 0, len: w.x1 - cot[cot.length - 1] + 4, w: S.manhRong }, t, dmg, 'ice', oM);
     };
-    for (let k = 0; k < nL; k++) {
+    if (CBo) {
+      const loat = (k) => {
+        if (b.dead) return;
+        if (banKhac()) { b.cuaTuongHet = Math.max(b.cuaTuongHet, b.t + 0.1 + (nL - k) * S.bao2 + 0.2); seq(b, 0.1, () => loat(k)); return; }
+        const bao = k ? S.bao2 : S.bao;
+        for (let y = w.y0 + S.dau + (k % 2 ? S.hang / 2 : 0); y <= w.y1 + 2; y += S.hang) manh(y, bao, k);
+        if (k === 0) seq(b, bao, () => { stT.vo = true; });
+        if (k + 1 < nL) seq(b, bao, () => loat(k + 1));
+      };
+      seq(b, T + S.giu - S.bao, () => loat(0));
+    } else for (let k = 0; k < nL; k++) {
       const bao = k ? S.bao2 : S.bao, tNo = T + S.giu + k * S.bao2;
       seq(b, tNo - bao, () => {
         if (b.dead) return;
@@ -460,7 +480,9 @@
   //  Tinh anh chết: các vòng chưa nổ huỷ như mọi vùng báo (cancel: true).
   function namPhongNhay(e, P, a, T, D, o) {
     const S = SO.namPhongNhay, tok = {}, diem = [], lich = [];
-    o.ct = tok; o.end = Math.max(D, T + S.dau + (S.lan - 1) * S.cach + 0.15);
+    // 16/10 luật công bằng: cú nhảy sau chỉ báo chỗ đáp sau khi cú trước đáp + nghiNham (cũ: báo trước cả lúc cú trước đáp).
+    const cach = G.congBang && G.congBang.on() ? Math.max(S.cach, S.bao + G.CONG_BANG.nghiNham) : S.cach;
+    o.ct = tok; o.end = Math.max(D, T + S.dau + (S.lan - 1) * cach + 0.15);
     let lx = e.x, ly = e.y, huong = a;
     const kc = (x0, y0, x1, y1) => Math.hypot(x1 - x0, (y1 - y0) / ZK());
     const xaDu = (q) => diem.every((d) => kc(q[0], q[1], d[0], d[1]) >= S.tach);
@@ -480,7 +502,7 @@
       return tot; // phòng quá chật (không xảy ra với sàn thật): chỗ xa các ô trước nhất
     }
     for (let k = 0; k < S.lan; k++) {
-      const land = T + S.dau + k * S.cach;
+      const land = T + S.dau + k * cach;
       lich.push({ t: land - S.bao, k, bao: true }, { t: land - S.bay, k, bao: false });
     }
     lich.sort((x, y) => x.t - y.t || (x.bao ? -1 : 1));
@@ -679,7 +701,14 @@
       onFire: (z) => {
         FX('burst', z.x, z.y - 4, '#e6d6aa', 12, 60); G.sfx('swing', 0.7);
         if (!song(e, tok)) return;
-        const Q = W().P, bao = Q && Q.luoiT > 0 ? Q.luoiT + S.sauLuoi : S.nonBao, g = Math.atan2(Q.y - e.y, Q.x - e.x);
+        const Q = W().P, bao = Q && Q.luoiT > 0 ? Q.luoiT + S.sauLuoi : S.nonBao;
+        // 16/10 luật công bằng: lưới hụt thì đuốc (đòn nặng nhắm thẳng) chỉ báo sau lưới nổ nghiNham giây, nhắm lại lúc đó (cũ: báo ngay)
+        const cbTre = G.congBang && G.congBang.on() && !(Q && Q.luoiT > 0) ? G.CONG_BANG.nghiNham : 0;
+        if (cbTre && e.act && e.act.ct === tok) e.act.end = Math.max(e.act.end, e.act.t + cbTre + bao + 0.45);
+        if (cbTre) G.later(cbTre, () => { if (song(e, tok)) quet(Q, bao); }); else quet(Q, bao);
+      } });
+    function quet(Q, bao) {
+        const g = Math.atan2(Q.y - e.y, Q.x - e.x);
         mat(e, g); if (e.act) e.act.a = g;
         duoc = G.mobZone('cone', { x: e.x, y: e.y, ang: g, r: S.nonR, span: S.span }, bao, e.dmg * S.nonSat, 'fire', { src: e, cancel: true, melee: true, skill: TEN3A.raiCaDuoc,
           onFire: () => {
@@ -688,7 +717,7 @@
             for (let i = 0; i < S.vet; i++) { const d0 = S.nonR * (0.35 + 0.55 * (i / Math.max(1, S.vet - 1))), xx = clamp(e.x + Math.cos(g) * d0, w.x0, w.x1), yy = clamp(e.y + Math.sin(g) * d0, w.y0, w.y1); G.zoneCircle(xx, yy, S.vetR, 0, e.dmg * S.vetSat, 'fire', { pool: true, life: S.vetGiay, tick: 0.3, src: e }); }
           } });
         if (e.act && e.act.ct === tok) e.act.end = Math.max(e.act.t + bao + 0.45, 0); // chiêu hết ngay sau cú quét (không đứng chờ thừa)
-      } });
+    }
     // nổi giận: gọi 2 Rái Cá con một lần (quái phụ: tan khi dọn phòng, như bầy được gọi của Xạ thủ)
     if (e.ngGian && !e.goiCon && w.ents.length < 9 && H3()) {
       e.goiCon = true;
@@ -739,12 +768,13 @@
   // Quất râu (pha 1): 4 vạch đỏ hình chữ X quanh thân. Pha 2: bánh xe 4 nan quay chậm — lan đợt, mỗi đợt nan lệch buoc rad, đợt sau báo trước bao2 giây ngay khi đợt trước nổ.
   function treRau(b, P, a, spd) {
     const S = S3A.caTreRau, ph = b.phase | 0, n = ph >= 1 ? soNG(b, 'caTreXoay', 'lan', S.lan) : 1;
-    const T = Math.max(S.bao / spd, sanNG(b, true)), x = b.x, y = b.y, chieu = G.rnd() < 0.5 ? 1 : -1;
+    const T = Math.max(S.bao / spd, sanNG(b, true), G.congBang ? G.congBang.baoNang() : 0), x = b.x, y = b.y, chieu = G.rnd() < 0.5 ? 1 : -1; // luật công bằng: Quất râu (nặng) ≥ 0,7 giây
     b.skillName = ph >= 1 ? TEN3A.caTreXoay : TEN3A.caTreRau;
     const nan = (g0, t, dai, sat) => { for (let k = 0; k < 4; k++) vung(b, 'line', { x, y, ang: g0 + PI / 4 + (k * PI) / 2, len: dai, w: S.rong }, t, b.dmg * sat, null, { melee: true }); };
     nan(a, T, ph >= 1 ? S.dai2 : S.dai, ph >= 1 ? S.sat2 : S.sat);
-    for (let j = 1; j < n; j++) { const t0 = T + (j - 1) * S.cach; seq(b, t0, () => { if (b.dead || (b.phase | 0) !== ph) return; nan(a + chieu * j * S.buoc, Math.max(S.bao2, sanNG(b, true)), S.dai2, S.sat2 * (j >= 2 ? satDot() : 1)); }); }
-    const het = T + (n - 1) * S.cach + (n > 1 ? Math.max(S.bao2, sanNG(b, true)) - S.cach : 0) + 0.35;
+    const cach = G.congBang && G.congBang.on() ? Math.max(S.cach, S.bao2, sanNG(b, true)) : S.cach; // luật công bằng: đợt sau chỉ hiện khi đợt trước đã nổ
+    for (let j = 1; j < n; j++) { const t0 = T + (j - 1) * cach; seq(b, t0, () => { if (b.dead || (b.phase | 0) !== ph) return; nan(a + chieu * j * S.buoc, Math.max(S.bao2, sanNG(b, true)), S.dai2, S.sat2 * (j >= 2 ? satDot() : 1)); }); }
+    const het = T + (n - 1) * cach + (n > 1 ? Math.max(S.bao2, sanNG(b, true)) - cach : 0) + 0.35;
     const du = dur(b.art, 'chieu1');
     choiB(b, 'chieu1', clamp((0.5 * du) / T, 0.5, 3));
     b.busy = Math.max(T + 0.4, het); b.wind = T;
@@ -774,7 +804,7 @@
   // Lặn bùn: chui xuống bùn (xuong), gợn bùn đuổi theo bé duoi giây (toc < tốc chạy của bé), dừng lại → vòng đỏ bao giây → trồi lên đớp.
   // Pha 2: lặn lan2 lần liền. Trồi lần cuối: lộ bụng trắng lo giây (choáng, nhận thêm sát thương như "mệt sau chiêu").
   function treLan(b, P, a, spd) {
-    const S = S3A.caTreLan, ph = b.phase | 0, n = ph >= 1 ? soNG(b, 'caTreLan', 'lan', S.lan2) : 1, bao = Math.max(S.bao / Math.max(1, spd * 0.9), sanNG(b, true) || 0.45);
+    const S = S3A.caTreLan, ph = b.phase | 0, n = ph >= 1 ? soNG(b, 'caTreLan', 'lan', S.lan2) : 1, bao = Math.max(S.bao / Math.max(1, spd * 0.9), sanNG(b, true) || 0.45, G.congBang ? G.congBang.baoNang() : 0); // luật công bằng: trồi đớp (nặng) ≥ 0,7 giây
     b.skillName = TEN3A.caTreLan;
     const mot = S.xuong + S.duoi + bao + 0.35, tong = n * mot;
     b.busy = tong + 0.05; b.wind = S.xuong + S.duoi + bao;
@@ -831,6 +861,7 @@
     if (!mep.length) { b.satMep = 0; return; }
     b.satMep = (b.satMep || 0) + dt;
     if (b.satMep < S.giu || b.nghiMep > 0) return;
+    if (G.congBang && G.congBang.on() && (b.busy > 0 || G.congBang.cho(b))) return; // 16/10 luật công bằng: không phụt bùn giữa chiêu / khi đòn khác đang báo, đang nghỉ
     b.satMep = 0; b.nghiMep = S.nghi;
     const ten = b.skillName; b.skillName = TEN3A.caTreMep;
     for (const [m] of mep) for (let i = 0; i < S.so; i++) {

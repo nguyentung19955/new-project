@@ -1856,5 +1856,14 @@
 "Đã Thức tỉnh": "Awakened",
 "Đủ linh khí rồi! Chọn vũ khí để nâng cấp, lên Mầm thì chọn hệ.": "You have enough Linh Khí! Pick a weapon to upgrade; at Sprout you choose an element.",
 "Linh khí nâng vũ khí: Trắng, Mầm, Thành hình, Thức tỉnh. Hạ tinh anh và trùm để gom linh khí.": "Linh Khí upgrades weapons: White, Sprout, Formed, Awakened. Defeat elites and bosses to gather it.",
-"+{0} linh khí trận này · đang có {1}": "+{0} Linh Khí this run · have {1}"
+"+{0} linh khí trận này · đang có {1}": "+{0} Linh Khí this run · have {1}",
+"Đổi vũ khí mang theo": "Carried weapons changed",
+"{0}: đòn {1} sát thương": "{0}: hit {1} damage",
+"Máu {0}": "HP {0}",
+"Mana {0}": "Mana {0}",
+"Chí mạng {0}": "Crit {0}",
+"Giảm sát thương {0}": "Damage reduction {0}",
+"Hồi chiêu nhanh {0}": "Cooldown {0}",
+"Tốc chạy {0}": "Move speed {0}",
+"Kháng {0} {1}": "{0} resist {1}"
 }); })();

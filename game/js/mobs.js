@@ -292,6 +292,7 @@
     const w = W(), P = (G.boSk && G.boSk.dich(e)) || w.P;
     if (e.an) e.an.t += dt * (e.an.spd || 1);
     if (e.role === 'elite' && G.noiGian) G.noiGian.tinhAnh(e); // 15/10 noi-gian-manh: tinh anh nổi giận ở ≤ 35% máu (js/noi_gian.js)
+    if (e.role === 'elite' && G.congBang) G.congBang.theo(e); // 16/10 luật công bằng (js/boss.js): theo dõi vùng của tinh anh mỗi khung
     if (e.hitT > 0) e.hitT -= dt;
     e.dh = (e.dh || 0) + dt; if (e.duT > 0) e.duT -= dt; if (e.diT > 0) e.diT -= dt; // Phiên 1 soát mượt: đồng hồ chỉ để vẽ
     if (e.reflT > 0) e.reflT -= dt;
@@ -518,9 +519,15 @@
     const NGq = G.noiGian, ng = NGq ? NGq.tinhAnh(e) : 1, bao = (t, to) => (NGq && ng !== 1 ? NGq.baoTinhAnh(e, t, to) : t);
     const fast = (e.trait === 'nhanh' ? 0.75 : 1) / ng;
     e.skCd -= dt;
-    if (e.skCd <= 0 && d < 170) {
+    // 16/10 luật công bằng (G.congBang, js/boss.js): theo dõi vùng của mình (tiếng báo đòn nặng, nghỉ sau đòn nặng hụt); đang phải chờ thì
+    // không ra đòn mới (vẫn đi). Nổi giận: bung chiêu riêng ngay (đổi nhịp) thay vì chỉ nhanh hơn.
+    const CBq = G.congBang && G.congBang.on() ? G.congBang : null;
+    if (CBq) { if (e.ngGian && !e.cbBung) { e.cbBung = true; e.skCd = Math.min(e.skCd, G.CONG_BANG.ng.tinhAnh.bung); } }
+    const cho = !!CBq && CBq.cho(e);
+    if (e.skCd <= 0 && d < 170 && !cho) {
       e.skCd = G.rr(6, 7.5) * (e.trait === 'nhanh' ? 0.75 : 1) * (NGq ? NGq.hoiTinhAnh(e) : 1);
-      const T = bao(0.7 * (e.trait === 'nhanh' ? 0.85 : 1), true), D = dur(id, 'chieu1') / ng;
+      e.cbAm = G.time || 0; e.cbSoChieu = (e.cbSoChieu || 0) + 1;
+      const T = Math.max(bao(0.7 * (e.trait === 'nhanh' ? 0.85 : 1), true), CBq ? G.CONG_BANG.baoNang : 0), D = dur(id, 'chieu1') / ng; // luật công bằng: chiêu riêng ≥ 0,7 giây
       const o = { cd: 1.2 * fast, anim0: 'chieu1', anim1: 'chieu1', end: D };
       if (ng !== 1) { o.spd0 = ng; o.spd1 = ng; } // cử động chiêu chạy nhanh theo
       // Chiêu riêng chạy trọn cử động chieu1 (đã gồm báo trước trong hình); vùng báo của luật chơi nổ ở mốc T.
@@ -533,13 +540,17 @@
         for (const s of [-1, 1]) { const b = a + s * PI / 4; addZone('line', { x: P.x - Math.cos(b) * L / 2, y: P.y - Math.sin(b) * L / 2, ang: b, len: L, w: 14 }, T + 0.1, e.dmg * 1.3, el, { src: e, cancel: true, melee: true }); }
       } else if (id === 'heoNanh') {
         // Húc ba lần zíc zắc: mỗi lần nhắm lại theo chỗ em bé
-        o.end = 0.5 + 3 * 0.55; o.anim1 = 'atk';
-        for (let j = 0; j < 3; j++) G.later(j * 0.55, () => {
+        // 16/10 luật công bằng: mỗi cú húc (nặng, nhắm thẳng) báo trước 0,7 giây với tư thế lấy đà ('tele'), cú sau chỉ báo sau khi cú trước
+        // húc xong + nghỉ 0,65 giây (cũ: báo 0,45 giây, cú sau hiện ngay 0,1 giây sau cú trước).
+        const hb = CBq ? G.CONG_BANG.baoNang : 0.45, hg = CBq ? hb + G.CONG_BANG.nghiHut : 0.55;
+        o.end = 0.5 + 3 * hg; o.anim1 = 'atk';
+        for (let j = 0; j < 3; j++) G.later(j * hg, () => {
           if (e.dead || !e.act || e.act.k !== 'sk') return;
           const b = angTo(e, P) + (j - 1) * 0.35; e.act.a = b; e.dirA = b; if (Math.abs(Math.cos(b)) > 0.15) e.face = Math.cos(b) > 0 ? 1 : -1;
-          addZone('line', { x: e.x, y: e.y, ang: b, len: 66, w: 22 }, 0.45, e.dmg * 1.2, null, { src: e, cancel: true, melee: true, onFire: () => { if (!e.dead && e.act) { e.lungeT = 0.15; e.lv = 52 / 0.15; play(e, 'atk', 1.4); } } });
+          if (CBq && j > 0) play(e, 'tele', dur(id, 'tele') / hb);
+          addZone('line', { x: e.x, y: e.y, ang: b, len: 66, w: 22 }, hb, e.dmg * 1.2, null, { src: e, cancel: true, melee: true, onFire: () => { if (!e.dead && e.act) { e.lungeT = 0.15; e.lv = 52 / 0.15; play(e, 'atk', 1.4); } } });
         });
-        o.anim0 = 'tele'; o.T = 0.45;
+        o.anim0 = 'tele'; o.T = hb;
       } else if (id === 'tuongMa') {
         // Đao xoáy: xoay hai vòng chém quanh mình
         for (let j = 0; j < 2; j++) addZone('circle', { x: e.x, y: e.y, r: 50 }, T + j * 0.45, e.dmg * 1.1, null, { src: e, cancel: true, melee: true });
@@ -552,14 +563,14 @@
     const k = e.don.kieu;
     if (k === 'gai' || k === 'no') {
       keep(e, P, reach * 0.7, sp, dt, 1);
-      if (e.cd <= 0 && d < reach + 8) {
+      if (e.cd <= 0 && d < reach + 8 && !cho) {
         if (k === 'gai') begin(e, 'gai', a, bao(0.6 * fast * ng), { cd: 1.8 * fast, fire: (q) => { for (let i = 0; i < 8; i++) shoot(q, i / 8 * TAU, 100, { kind: 'spike', dmg: q.dmg * 0.8, el: 'ice', t: 1.3 }); } });
         else begin(e, 'no', a, bao(0.7 * fast * ng), { cd: 1.9 * fast, zone: addZone('circle', { x: e.x, y: e.y, r: (e.don.tam || 40) }, bao(0.7 * fast * ng), e.dmg * 1.1, el, { src: e, cancel: true, melee: true }) });
       }
       return;
     }
     if (d > reach * 0.85) moveTo(e, P.x, P.y, sp, dt);
-    if (e.cd <= 0 && d < reach + 8) melee(e, a, bao(0.6 * fast * ng), 1.5 * fast);
+    if (e.cd <= 0 && d < reach + 8 && !cho) melee(e, a, bao(0.6 * fast * ng), 1.5 * fast);
   }
   function near(x, y, dx, dy) { const w = W(); return [clamp(x + G.rr(-dx, dx), w.x0 + 6, w.x1 - 6), clamp(y + G.rr(-dy, dy), w.y0, w.y1)]; }
   G.mobNear = near;

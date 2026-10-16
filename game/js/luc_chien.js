@@ -25,11 +25,19 @@
 //   Em bé mới (Cu Tí cấp 1, Kiếm Rèn + Cung Tre Thường) ≈ 400; cuối game (cấp 40, Vàng +15, Thức tỉnh, đồ bộ) ≈ 4.000.
 //
 // Cờ tắt: G.LUC_CHIEN = false hoặc ?lucchien=0 → không hiện con số lẫn thông báo (game như trước).
+//
+// 16/10 tư vấn 2 (docs/review/ke-hoach-cai-thien/tu-van-2/bao-cao.md) — GỘP: người chơi chỉ thấy MỘT con số "Sức mạnh" (G.power, js/combat.js:
+// thang đã cân bằng bot, so thẳng với "Sức mạnh khuyên dùng" của ải; bảng xếp hạng vốn đã dùng số này). Lực chiến không hiện riêng nữa
+// (hàm G.lucChien giữ để đo / so). Dải thông báo đổi thành "Sức mạnh 123 ▲ +5" + một dòng nói rõ đổi gì ("Kiếm: đòn +2 sát thương ·
+// Máu +18"). Cờ tắt: ?gopsucmanh=0 (G.GOP_SUC_MANH = false) → hai con số và dải "Lực chiến" như trước.
 (function () {
   const G = window.G;
   const LC = (G.lucChienUI = {});
   if (G.LUC_CHIEN === undefined) { let tat = false; try { tat = /[?&]lucchien=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.LUC_CHIEN = !tat; }
-  LC.on = () => G.LUC_CHIEN !== false;
+  if (G.GOP_SUC_MANH === undefined) { let tat = false; try { tat = /[?&]gopsucmanh=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.GOP_SUC_MANH = !tat; }
+  LC.gop = () => G.GOP_SUC_MANH !== false;
+  LC.on = () => G.LUC_CHIEN !== false && !LC.gop(); // hiện Lực chiến RIÊNG (bảng nhân vật, thanh trên cùng): chỉ khi không gộp
+  LC.baoOn = () => (LC.gop() ? true : LC.on()); // dải thông báo đổi số
 
   // ---------- nhịp đánh: hệ số sát thương mỗi giây so với một đòn (đọc G.MOVES, thiếu thì dùng cd) ----------
   const RATE = {};
@@ -123,7 +131,35 @@
     const s = String(Math.round(Math.abs(n))).replace(/\B(?=(\d{3})+(?!\d))/g, G.LANG === 'en' ? ',' : '.');
     return (n < 0 ? '−' : '') + s;
   };
-  LC.chu = (v) => G.t('Lực chiến {0}', G.soNghin(v));
+  LC.chu = (v) => (LC.gop() ? G.t('Sức mạnh {0}', G.soNghin(v)) : G.t('Lực chiến {0}', G.soNghin(v)));
+  // Con số của dải thông báo: gộp → Sức mạnh (G.power, theo G.save); không gộp → Lực chiến.
+  LC.giaTri = (sv) => { if (!LC.gop()) return G.lucChien(sv); try { return G.power ? G.power() : 0; } catch (e) { return 0; } };
+  // Ảnh chụp các chỉ số người chơi thấy được (để nói rõ đổi gì sau mỗi nâng cấp). Không đổi bản lưu.
+  LC.chup = function (sv) {
+    try {
+      const P = G.buildPlayer(), vk = {};
+      for (const w of P.weapons) vk[w.id] = { ten: G.WTYPES[w.type] ? G.tv(G.WTYPES[w.type].name) : '?', d: Math.round(G.pDamage(P, w)) };
+      const res = {}; for (const e of G.ELS) res[e] = Math.round((P.resist[e] || 0) * 100);
+      return { vk, ids: P.weapons.map((w) => w.id).join(','), hp: Math.round(P.maxhp), mana: Math.round(P.maxmana || 0), crit: Math.round((P.crit || 0) * 100),
+        dr: Math.round(Math.min(0.75, P.dr || 0) * 100), sp: Math.round(((P.speed || 72) / 72) * 100), cd: Math.round((1 - (P.cdMul || 1)) * 100), res };
+    } catch (e) { return null; }
+  };
+  const dau = (n, pc) => (n > 0 ? '+' : '−') + Math.abs(n) + (pc ? '%' : '');
+  // Các dòng "đổi gì" giữa hai ảnh chụp (tối đa 3 mục, còn nữa thì "…").
+  LC.doiGi = function (a, b) {
+    if (!a || !b) return '';
+    const L = [];
+    if (a.ids !== b.ids) L.push(G.t('Đổi vũ khí mang theo'));
+    else for (const id of Object.keys(b.vk)) { const d = b.vk[id].d - (a.vk[id] ? a.vk[id].d : b.vk[id].d); if (d) L.push(G.t('{0}: đòn {1} sát thương', b.vk[id].ten, dau(d))); }
+    if (b.hp !== a.hp) L.push(G.t('Máu {0}', dau(b.hp - a.hp)));
+    if (b.mana !== a.mana) L.push(G.t('Mana {0}', dau(b.mana - a.mana)));
+    if (b.crit !== a.crit) L.push(G.t('Chí mạng {0}', dau(b.crit - a.crit, true)));
+    if (b.dr !== a.dr) L.push(G.t('Giảm sát thương {0}', dau(b.dr - a.dr, true)));
+    if (b.cd !== a.cd) L.push(G.t('Hồi chiêu nhanh {0}', dau(b.cd - a.cd, true)));
+    if (b.sp !== a.sp) L.push(G.t('Tốc chạy {0}', dau(b.sp - a.sp, true)));
+    for (const e of G.ELS) if (b.res[e] !== a.res[e]) L.push(G.t('Kháng {0} {1}', G.EL[e].name, dau(b.res[e] - a.res[e], true)));
+    return L.length > 3 ? L.slice(0, 3).join(' · ') + ' …' : L.join(' · ');
+  };
   LC.delta = (d) => (d > 0 ? '▲ +' : '▼ −') + G.soNghin(Math.abs(d));
 
   // ---------- dải thông báo ----------
@@ -142,30 +178,33 @@
     return false;
   }
   LC.dangHien = () => !!(st.toast && nowS() < st.toast.end);
-  LC.baoDoi = function (from, to) { // hiện (hoặc gộp vào) dải thông báo từ giá trị from sang to
+  LC.baoDoi = function (from, to, snap0, snap1) { // hiện (hoặc gộp vào) dải thông báo từ giá trị from sang to
     const t = nowS(), q = st.toast;
     if (q && t < q.end) {
       const shown = q.from + (q.to - q.from) * ease(Math.min(1, (t - q.t0) / CHAY));
-      q.from = shown; q.to = to; q.t0 = t; q.end = t + CHAY + HIEN;
-    } else st.toast = { base: from, from, to, t0: t, born: t, end: t + CHAY + HIEN };
+      q.from = shown; q.to = to; q.t0 = t; q.end = t + CHAY + HIEN + (q.chiTiet ? 0.8 : 0);
+    } else st.toast = { base: from, from, to, t0: t, born: t, end: t + CHAY + HIEN, snap0 };
+    // gộp: dòng nói rõ đổi gì, so với lúc dải bắt đầu (các nâng cấp liền nhau cộng dồn)
+    if (LC.gop() && snap1) { st.toast.chiTiet = LC.doiGi(st.toast.snap0, snap1); if (st.toast.chiTiet && st.toast.end - t < CHAY + HIEN + 0.8) st.toast.end = t + CHAY + HIEN + 0.8; }
     const up = to > (st.toast.base);
     if (t - st.sfxT > 0.35) { st.sfxT = t; try { G.sfx(up ? 'mark' : 'pick', up ? 1.25 : 0.62); } catch (e) { /* bỏ qua */ } }
   };
   const ease = (k) => 1 - Math.pow(1 - k, 3);
   LC.kiem = function (force) {
-    if (!LC.on() || !dangXem()) return;
+    if (!LC.baoOn() || !dangXem()) return;
     const sv = G.save;
     if (!sv || !sv.heroes) return;
     const t = nowS();
     if (!force && t - st.chk < 0.15) return;
     st.chk = t;
-    const v = G.lucChien(sv);
-    if (st.sv !== sv || st.hero !== sv.hero || st.v == null || !v) { st.sv = sv; st.hero = sv.hero; st.v = v; return; }
-    if (v !== st.v) { const old = st.v; st.v = v; LC.baoDoi(old, v); }
+    const v = LC.giaTri(sv);
+    if (st.sv !== sv || st.hero !== sv.hero || st.v == null || !v) { st.sv = sv; st.hero = sv.hero; st.v = v; st.snap = LC.gop() ? LC.chup(sv) : null; return; }
+    if (v !== st.v) { const old = st.v, s0 = st.snap; st.v = v; st.snap = LC.gop() ? LC.chup(sv) : null; LC.baoDoi(old, v, s0, st.snap); }
+    else if (LC.gop() && st.toast && t < st.toast.end) st.snap = LC.chup(sv); // trong lúc dải còn hiện: giữ ảnh chụp mới nhất
   };
   LC.ve = function () {
     const q = st.toast;
-    if (!q || !LC.on()) return;
+    if (!q || !LC.baoOn()) return;
     const t = nowS();
     if (t >= q.end) { st.toast = null; return; }
     if (!dangXem()) return;
@@ -193,6 +232,14 @@
     const pop = k >= 1 && t - q.t0 - CHAY < 0.18 ? 1 : 0;
     ui.text(s2, tx0 + w1 + 10, ty - pop, { size, bold: true, color: up ? '#9be07a' : '#ff8f7f' });
     c.globalAlpha = ga0;
+    // gộp: dòng thứ hai nói rõ đổi gì (cùng khung dải thông báo có sẵn), ngay dưới dải số
+    if (q.chiTiet) {
+      const s3 = q.chiTiet, z = 7.5;
+      ui.font(z, true); const w3 = Math.min(470, Math.ceil(c.measureText(s3).width + 30));
+      const x3 = Math.round(240 - w3 / 2), y3 = y + 20;
+      if (T && T.toast) T.toast(x3, y3, w3, s3, { age: Math.max(0, age - 0.1), left, size: z, col: up ? '#d8f5c0' : '#ffd0c8' });
+      else { ui.rect(x3, y3, w3, 18, 'rgba(10,8,6,0.88)', '#ffd27a'); ui.text(s3, 240, y3 + 12, { size: z, bold: true, align: 'center', color: '#f1e6c6' }); }
+    }
   };
   // Gắn vào cuối mỗi khung hình (sau khi cảnh đã vẽ): js/ui_theme.js gọi T.endFrame ở engine.js. Không nhận chạm nên không chặn nút nào.
   const T = G.theme;

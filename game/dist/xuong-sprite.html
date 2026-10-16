@@ -1380,6 +1380,32 @@ window.G.LANG = 'vi';
       hoPhun: { dot: [1, 2] }, // Hổ Lửa Gầm phun lửa: phun thêm một lần (cùng hướng)
     },
   };
+  // 16/10 tư vấn 2 (docs/review/ke-hoach-cai-thien/tu-van-2/bao-cao.md): LUẬT CÔNG BẰNG cho trùm vùng, trùm nhỏ, tinh anh. Cờ tắt:
+  // ?trumcongbang=0 (G.TRUM_CONG_BANG = false) → y hệt trước. Luật (js/boss.js G.congBang + chỗ gọi ở js/chieu_trum.js, js/mobs.js,
+  // js/thuong_luong.js): đòn NẶNG (≥ nang × sát thương gốc) báo trước ≥ baoNang giây (đòn nhẹ giữ như cũ); đòn nặng hụt → trùm nghỉ
+  // nghiSauHut giây không ra đòn mới; hai đòn nhắm lại chỗ Cu Tí trong một chiêu cách nhau ≥ nghiNham (nhẹ) / nghiHut (nặng) giây tính từ
+  // lúc đòn trước nổ; không ra chiêu mới khi vùng báo của chính nó (báo ≤ choTre giây; dài hơn là bẫy: nấm con, vòm thân) còn chưa nổ và chưa qua nghiNham giây sau lần nổ cuối.
+  // ng: nổi giận / hóa cuồng đổi nhịp chứ không chỉ nhanh hơn — tốc ra chiêu tối đa +15%, nghỉ giữa chiêu ngắn đi tối đa ~13%; nối chiêu
+  // (dồn 2–3 chiêu, nghỉ noiNghi) xong thì nghỉ dài hơn (× (1 + sauNoi × số chiêu đã nối)). mau: × máu trùm bù lại sau khi đo bot.
+  if (G.TRUM_CONG_BANG === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]trumcongbang=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.TRUM_CONG_BANG = !tat; }
+  G.CONG_BANG = {
+    nang: 1.2, baoNang: 0.7, cotChia: 2, // cotChia: Cột nước đuổi (Ngư Tinh) — cột sau chỉ báo khi cột trước đã phun, số cột ÷ cotChia cho chiêu không quá dài
+    nghiSauHut: 0.7, nghiHut: 0.65, nghiNham: 0.35, choTre: 1.6,
+    ng: {
+      vung: { toc: [1, 1.08, 1.15], nghi: [1, 0.92, 0.87], diChuyen: [1, 1.08, 1.15], met: [1, 0.9, 0.85], noiNghi: 0.45 },
+      nho: { toc: [1, 1.12], nghi: [1, 0.9], noiNghi: 0.45 },
+      tinhAnh: { toc: 1.12, hoi: 0.95, bung: 0.8 }, // bung: nổi giận thì bung chiêu riêng sau tối đa bấy nhiêu giây (đổi nhịp)
+      sauNoi: 0.5, baoTo: 0.7,
+    },
+    // Bù máu sau khi đo bot (docs/review/ke-hoach-cai-thien/tu-van-2/bao-cao.md mục 6): trùm vùng theo loại, trùm nhỏ theo hình (mini: còn lại).
+    mau: { moc: 1.45, ngu: 1.4, ho: 1.3, thuong: 1.3, cuaDa: 1.15, caTre: 1.2, mini: 1 },
+  };
+  if (G.TRUM_CONG_BANG) {
+    const N = G.NOI_GIAN, C = G.CONG_BANG.ng;
+    Object.assign(N.vung, C.vung); Object.assign(N.nho, C.nho);
+    N.tinhAnh.toc = C.tinhAnh.toc; N.tinhAnh.hoi = C.tinhAnh.hoi;
+    N.san.baoTo = C.baoTo; // đợt thêm của chiêu (vùng to / nhiều đợt) khi nổi giận: báo trước ≥ 0,7 giây
+  }
   // Lăn né: tốc độ ngang (điểm ảnh mỗi giây) và tỉ lệ chiều dọc so với chiều ngang (bằng tỉ lệ lúc đi bộ).
   G.DODGE = { vx: 195, ky: 0.75 };
   G.MINI_HP = 12; // máu trùm nhỏ = hệ số x máu quái thường

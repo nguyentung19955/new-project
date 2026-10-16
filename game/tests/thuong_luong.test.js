@@ -118,10 +118,12 @@ const CAI = () => {
       out.c2 = zl ? { t: zl.t, w: zl.w, trung: G.inZone(zl, W.P), ngang: !G.inZone(zl, { x: W.P.x, y: W.P.y + zl.w / 2 + 6 }), ra: (zl.w / 2 + 4) / (vMin * 0.75), el: zl.el } : null;
       // lần phun 2, 3: nhắm lại chỗ em bé lúc đó (em bé đã dời đi 40 điểm ảnh), báo trước riêng
       const Q2 = [W.x0 + 60, (W.y0 + W.y1) / 2 - 40]; let z2l = null;
-      for (let i = 0; i < 60 && !z2l; i++) { W.P.x = Q2[0]; W.P.y = Q2[1]; G.sim(1); z2l = W.zones.find((z) => z.src === b && z.shape === 'line' && z.t > 0 && z !== zl); }
+      for (let i = 0; i < 150 && !z2l; i++) { W.P.x = Q2[0]; W.P.y = Q2[1]; G.sim(1); z2l = W.zones.find((z) => z.src === b && z.shape === 'line' && z.t > 0 && z !== zl); }
       out.c2b = z2l ? { t: z2l.t, trung: G.inZone(z2l, W.P) } : null;
-      for (let i = 0; i < 90 && !W.zones.some((z) => z.tlVet); i++) G.sim(1);
-      const vet = W.zones.find((z) => z.tlVet);
+      // vệt của lần phun SAU (16/10 luật công bằng: lần phun sau hiện muộn hơn — vệt lần đầu đã cũ)
+      const vetCu = new Set(W.zones.filter((z) => z.tlVet));
+      for (let i = 0; i < 150 && !W.zones.some((z) => z.tlVet && !vetCu.has(z)); i++) G.sim(1);
+      const vet = W.zones.find((z) => z.tlVet && !vetCu.has(z));
       out.vet = vet ? { life: vet.life, pool: vet.pool, el: vet.el } : null;
       H.cho(240);
       // Vòng thân: 3 vòm, vòm đầu ngay chỗ em bé, đầu trườn lên đá lộ điểm yếu, chân vòm chắn, thân vòm chắn đạn
@@ -157,7 +159,7 @@ const CAI = () => {
       const zc = r.zs.find((z) => z.shape === 'cone');
       out.dop = zc ? { t: zc.t, ten: zc.skill, trung: G.inZone(zc, W.P), r: zc.r } : null;
       let z2c = null;
-      for (let i = 0; i < 80 && !z2c; i++) { W.P.x = sat[0]; W.P.y = sat[1]; G.sim(1); z2c = W.zones.find((z) => z.src === b && z.shape === 'cone' && z.t > 0 && z !== zc); }
+      for (let i = 0; i < 150 && !z2c; i++) { W.P.x = sat[0]; W.P.y = sat[1]; G.sim(1); z2c = W.zones.find((z) => z.src === b && z.shape === 'cone' && z.t > 0 && z !== zc); }
       out.dop2 = z2c ? { t: z2c.t } : null;
       H.cho(200);
       // Lặn đổi chỗ: đầu lặn (không nhắm / đánh trúng được) rồi trồi chỗ khác dọc mép phải

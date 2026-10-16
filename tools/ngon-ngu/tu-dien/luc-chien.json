@@ -3,5 +3,14 @@
 "lực chiến {0}": "CP {0}",
 "(ô {0})": "(slot {0})",
 "Tháo ra: Lực chiến {0}": "Unequip: Combat Power {0}",
-"Mặc vào: Lực chiến {0}": "Equip: Combat Power {0}"
+"Mặc vào: Lực chiến {0}": "Equip: Combat Power {0}",
+"Đổi vũ khí mang theo": "Carried weapons changed",
+"{0}: đòn {1} sát thương": "{0}: hit {1} damage",
+"Máu {0}": "HP {0}",
+"Mana {0}": "Mana {0}",
+"Chí mạng {0}": "Crit {0}",
+"Giảm sát thương {0}": "Damage reduction {0}",
+"Hồi chiêu nhanh {0}": "Cooldown {0}",
+"Tốc chạy {0}": "Move speed {0}",
+"Kháng {0} {1}": "{0} resist {1}"
 }

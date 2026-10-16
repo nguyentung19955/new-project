@@ -74,6 +74,16 @@
                                                        // (đo bằng bot: do_trum.py) nên mỗi đòn trúng nặng hơn — vẫn không đòn nào một phát chết
     tron: { giay: 3.4, nha: [0.5, 1.0], ngoam: 1.0, lan: [1.8, 3.0] }, // cảnh bỏ trốn: nhả mảnh nhỏ, ngoạm mảnh mặt trời, lặn mất (giây từ lúc gục)
   };
+  // 16/10 luật công bằng (G.CONG_BANG, js/data.js; cờ tắt ?trumcongbang=0): đòn nặng nhắm thẳng báo trước ≥ 0,7 giây; cú nhắm lại sau chỉ
+  // báo khi cú trước đã nổ + nghỉ 0,65 giây (Đớp lần hai, Phun nước đen, Đớp liên hoàn, Mưa mảnh đồng đợt sau); Lặn – trồi đớp báo 0,7.
+  if (G.TRUM_CONG_BANG !== false && G.CONG_BANG) {
+    const bn = G.CONG_BANG.baoNang, ng = G.CONG_BANG.nghiHut;
+    CFG.dop.bao = Math.max(CFG.dop.bao, bn); CFG.dop.bao2 = Math.max(CFG.dop.bao2, bn); CFG.dop.lai = Math.max(CFG.dop.lai, CFG.dop.bao2 + ng);
+    CFG.phun.bao2 = Math.max(CFG.phun.bao2, bn); CFG.phun.lan2 = Math.max(CFG.phun.lan2, CFG.phun.bao2 + ng);
+    CFG.lienHoan.bao = CFG.lienHoan.bao.map((x) => Math.max(x, bn)); CFG.lienHoan.cach = Math.max(CFG.lienHoan.cach, bn + ng);
+    CFG.troi.bao = Math.max(CFG.troi.bao, bn);
+    CFG.manh.bao2 = Math.max(CFG.manh.bao2, bn); CFG.manh.gian = Math.max(CFG.manh.gian, CFG.manh.bao2 + ng + (CFG.manh.so - 1) * 0.06); // các mảnh nổ lệch nhau 0,06 giây
+  }
   const TL = (G.thuongLuong = { CFG });
   if (G.TL_3C !== false && G.NOI_GIAN && G.NOI_GIAN.vung) G.NOI_GIAN.vung.satTrum = Object.assign({}, G.NOI_GIAN.vung.satTrum || {}, { thuong: CFG.satPha }); // 3C (cờ ?tl3c=0: như 3B)
   const TEN = { duoi: 'Quật đuôi', phun: 'Phun nước đen', vom: 'Vòng thân', mep: 'Vỗ sóng bờ', gai: 'Vảy dựng gai', dop: 'Đớp',
@@ -255,6 +265,7 @@
     if (!ben.length) { T.mepT = Math.max(0, T.mepT - dt * 2); return; }
     T.mepT += dt;
     if (T.mepT < C.giay || T.mepCd > 0) return;
+    if (G.congBang && G.congBang.on() && (b.busy > 0 || G.congBang.cho(b))) return; // luật công bằng: không vỗ sóng giữa chiêu / khi đòn khác đang báo / đang nghỉ
     T.mepT = 0; T.mepCd = C.nghi + C.bao;
     const t0 = G.time || 0;
     for (const s of ben) {
@@ -465,6 +476,7 @@
     const S = b.tl.siet, C = CFG.siet;
     if (S.hen == null || b.invuln > 0) return;
     S.hen -= dt;
+    if (S.hen <= 0 && G.congBang && G.congBang.on() && (b.busy > 0 || G.congBang.cho(b))) { S.hen = 0.05; return; } // luật công bằng: không quét mép chồng lên đòn đang báo
     if (S.hen <= 0) { S.hen = C.moi + C.baoMoi; quetMep(b, C.baoMoi); }
   }
   // p3 · ĐỚP LIÊN HOÀN: 3 cú đớp thẳng nối nhau, mỗi cú nhắm lại chỗ em bé (vạch đỏ), đầu chồm tới; xong nằm mệt (lộ điểm yếu) rồi trườn về.

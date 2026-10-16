@@ -208,7 +208,8 @@ const CAI = () => {
       out.m3.day = Math.hypot(W.P.x - o.x, (W.P.y - o.y) / ZK);
       const thay = new Set(b.tl.manh); let t = 0, het = null;
       for (let i = 0; i < 600 && b.tl.manh.length; i++) { b.cd = 99; G.sim(1); t += 1 / 60; for (const m of b.tl.manh) thay.add(m); if (het == null && !b.tl.manh.includes(o)) het = t; }
-      out.m3.dot = Math.round(thay.size / 6); out.m3.giu = +(o.het - o.t0).toFixed(2); out.m3.mat = het != null;
+      // số đợt = số cụm lúc rơi (16/10 luật công bằng: đợt sau rơi khi đợt trước đã nằm → tránh chỗ mảnh cũ, có thể ít hơn 6 mảnh)
+      out.m3.dot = (() => { const ts = [...thay].map((m) => m.t0).sort((u, v) => u - v); let n = ts.length ? 1 : 0; for (let k = 1; k < ts.length; k++) if (ts[k] - ts[k - 1] > 0.4) n++; return n; })(); out.m3.giu = +(o.het - o.t0).toFixed(2); out.m3.mat = het != null;
       b.cd = 0;
       // Siết sân: 3 dải mép trong, giữa sân an toàn; sân hẹp lại; quét lại mỗi 6 giây; tối đa 2 lần thu
       const giua = [(W.x0 + W.x1) / 2 - 30, (W.y0 + W.y1) / 2];
