@@ -272,3 +272,58 @@ Game có **28 hàng động tác, 173 khung** (đứng 8, đi 8, chạy 12, lộ
   - Ảnh gen Cu Tí giáp bám dáng tốt (0,89–0,92) vì gần như vẽ đè lên Cu Tí gốc → **gen "Cu Tí gốc + món đồ" theo đúng tấm gốc** cho kết quả dễ tách nhất.
   - Nên gen to (như tấm gốc 2172×724, người cao khoảng 290 điểm ảnh), không nhỏ như ảnh giáp (120 điểm), để tách đỡ vụn.
 - Gợi ý ưu tiên: hàng đứng, đi, chạy, kiếm trước (dùng nhiều nhất), các hàng hiếm (lộn, chết, phi tiêu chùm) dùng đổi màu hoặc để đồ gốc.
+
+## Thân nền tô da (16/10)
+
+**Đã làm lại lớp thân nền: tô da lên chính hình bóng nhân vật trong game, nên dáng đúng 100% ở cả 12 khung.** Thân trần giờ có đổ bóng, có nét gợi xương đòn/ngực/bụng, mặc quần đùi xám tới giữa đùi. Bản cũ (da phẳng + khố xám) vẫn giữ để so.
+
+Xem nhanh:
+
+- **`kiem-tra.html`** → khung "Chọn riêng từng phần" → hàng **Thân nền: Máy dựng cũ / Tô da (mới)** (mặc định: Tô da). Bấm **Áo: Không (nền)** và **Quần: Không (nền)** để thấy rõ thân.
+- **`so-sanh-nen.png`**: 12 khung, phóng ×4. Các hàng: ảnh game gốc, nền cũ, nền tô da, tô da + đồ máy vẽ (đồ vẫn phủ kín), và hàng so hình bóng (đỏ = lệch; hiện **0 điểm đỏ**).
+- **`nen-to-da.gif`**: chạy 3 bản cạnh nhau: game gốc, nền cũ, nền tô da.
+
+### Cách làm
+
+1. Làm trên **ảnh nguồn lớn** của hàng chạy (`docs/anh-goc/zed/moi/03-chay-v4-gif/03-chay-v4/khung-01..12.png`), dùng lại mặt nạ áo/đai/quần đã tách từ lần 2.
+2. **Áo đen + đai → da.** Độ sáng của vải gốc (làm mịn nhẹ) được dùng làm bản đồ sáng/tối: chỗ nếp áo sáng → da sáng, chỗ tối → da tối. Màu da lấy từ chính mặt và tay Cu Tí: 3 sắc độ + 1 màu nét viền nâu đậm.
+3. **Viền ngoài giữ nét tối** như sprite: dày khoảng 1 điểm ảnh ô 96, chỗ thân giáp nền trong suốt hoặc giáp phần nằm phía sau (tay sau, chân sau).
+4. **Nét gợi cơ thể**: xương đòn, chân ngực, đường giữa bụng, rốn, vẽ đối xứng hai bên đường giữa thân của từng khung.
+5. **Quần → quần đùi xám trơn** tới giữa đùi (cùng cách đổ bóng, có nét gấu/cạp). Đùi và cẳng chân dưới quần → da. **Bàn chân, dép giữ nguyên.**
+6. **Thu về ô 96 đúng như sprite game**: co cùng tỉ lệ, đặt cùng chỗ như `tao-bo.py` làm với sprite gốc (BOX theo SK, đặt theo DAT). Mỗi lớp nền (`body`, `rearLeg`, `frontLeg`) thu riêng để màu lớp này không lem sang lớp kia.
+7. Chỉ thay những điểm ảnh "dựng thêm" nằm dưới đồ; **độ trong suốt lấy đúng từ sprite game**, kể cả viền mờ. Đầu, tóc, tay, cổ, bàn chân vẫn là điểm ảnh gốc.
+8. Code ở `nen_to_da.py` (mới), `tao-bo.py` gọi. Sheet mới: `sheets/nen-to-da/body.png`, `rearLeg.png`, `frontLeg.png`. Các lớp nền khác dùng chung. Trong `data.json` có mục `bodyBases` (`cu` / `to-da`) và `defaultBodyBase`.
+
+### Kết quả kiểm (tao-bo.py tự chạy, sai là dừng với mã thoát 1)
+
+| Kiểm tra | Kết quả |
+|---|---|
+| Hình bóng nền tô da so với sprite game (so từng điểm ảnh độ trong suốt) | **trùng 100%, 0 điểm lệch, 12/12 khung** (trừ dải đai bay ngoài người, vốn thuộc bộ áo) |
+| Thân tô da lộ ra dưới đồ: đồ gốc, đồ máy vẽ, đồ xanh (gen); đổi riêng áo, riêng quần, cả bộ | **0 điểm, 7 tổ hợp × 12 khung** |
+| Nền cũ + đồ gốc = ảnh game | vẫn đúng từng điểm ảnh (giữ nguyên) |
+| Sheet tô da: 1152×96, có alpha, nền trong suốt, không lệch khung | đạt |
+
+- Đã thử cố ý đục 20 điểm ảnh ở khung 5: script dừng, mã thoát 1, báo "khung 5: hình bóng nền tô da lệch hình bóng game 20 điểm ảnh".
+- Mở trang bằng Chromium giả điện thoại 390×844 (DPR 3): nút mới bấm được, canvas vẫn nét (936×1260 điểm thật cho 312 điểm CSS), không tràn ngang, không lỗi JavaScript.
+
+### Giới hạn
+
+- **Nền tô da + đồ gốc khác ảnh game ở 81–117 điểm ảnh mỗi khung, toàn bộ ở viền mờ ngoài cùng của áo/quần.** Nền tô da phủ cả viền mờ để hình bóng trùng 100%, nên khi mặc đồ gốc thì viền ngoài đậm hơn một chút, nhìn bằng mắt gần như không thấy. Muốn đúng từng điểm ảnh game thì bấm **Máy dựng cũ**.
+- **Da vẫn là "đổ bóng theo nếp vải"**, không phải cơ bắp vẽ tay. Ở vài khung, chỗ nếp áo gốc nhiều thì da hơi lốm đốm; nét ngực/bụng chỉ vài điểm ảnh, ở cỡ 48×48 gần như chỉ còn mảng sáng tối.
+- **Mảng đen ở sau lưng một số khung (khung 2, 3, 5, 6, 8, 9)** là bao cổ tay/nắm tay sau và một mẩu tay áo nằm trong lớp tay sau (`rearArm`) từ lần tách cũ. Mình giữ nguyên lớp tay để ghép đồ gốc vẫn đúng.
+- Bao cổ tay đen vẫn thuộc nền (như trước).
+
+## Vì sao gen cả hàng không khớp dáng
+
+- Ảnh `anh-gen/cu-ti-than-tran-chay-12.png` (gen cả hàng 12 khung) chỉ trùng hình bóng game **45–65%** (`so-khop-than-tran.png`). Bản sửa lại cả hàng (`cu-ti-than-tran-sua-chay-12.png`) tốt hơn, khoảng **92–94%**, nhưng vẫn chưa trùng hết.
+- Lý do: máy gen ảnh **vẽ lại cả hình** chứ không tô lên hình có sẵn. Nó hiểu "một cậu bé đang chạy" rồi tự vẽ 12 dáng chạy của nó: tay chân lệch vài độ, đầu to/nhỏ hơn, chân sau đặt chỗ khác. Càng nhiều khung trong một ảnh thì càng dễ lệch, và lệch mỗi khung một kiểu.
+- Trong game chỉ cần lệch 1–2 điểm ảnh là nhân vật "rung" khi chạy, và đồ sẽ không khớp với nền. Vì vậy thân nền nên **tô lên sprite game** như mục trên, đừng thay bằng ảnh gen.
+
+**Nếu vẫn muốn gen** (ví dụ cần cơ bắp đẹp hơn): **sửa TỪNG KHUNG một**, mỗi lần gửi đúng 1 khung game làm ảnh gốc.
+
+- Ảnh gửi kèm đã cắt sẵn ở **`anh-gen/khung-le/`**: `khung-01.png` … `khung-12.png`. Mỗi tệp là 1 khung game, phóng ×4 (384×384), nền xanh #00FF00.
+- Prompt ngắn (dùng chung cho cả 12 lần, mỗi lần gửi 1 ảnh):
+
+> Edit this exact pixel-art image. Keep the pose, outline, size and position exactly the same, pixel for pixel. Only change the black shirt and red sash into bare skin with simple shading, and the black trousers into plain grey shorts ending mid-thigh (legs below are bare skin). Keep the head, hair, hands, wrist wraps and sandals unchanged. Keep the flat #00FF00 background.
+
+- Gen xong 12 ảnh thì gửi lại, mình sẽ ghép thành hàng, so hình bóng từng khung với game, và chỉ lấy màu da từ ảnh gen (hình bóng vẫn giữ của game) để dáng không lệch.
