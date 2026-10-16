@@ -245,13 +245,19 @@
       ['gold', 'Mài, nâng lò, mua và nâng bộ trang phục, ép đồ, đổi nguyên liệu, mua quặng, đặt lại điểm kỹ năng', 'Qua ải, hạ quái, tinh anh, trùm, phòng thử thách, Ải Vàng (ải ngày)'],
       ['ore', 'Mài vũ khí, nâng lò cấp 4', 'Qua ải (nhiều sao được nhiều hơn), rương báu, phòng thử thách, thương nhân, Ải Đá Mài (ải ngày), Bà Hàng Xén (thẻ Quặng)'],
     ];
-    const matUse = ['Nâng lò cấp 2, mài +5 lên +6', 'Mài từ +6 tới +9, nâng lò cấp 3', 'Mài từ +9 trở lên, nâng lò cấp 4'];
+    let matUse = ['Nâng lò cấp 2, mài +5 lên +6', 'Mài từ +6 tới +9, nâng lò cấp 3', 'Mài từ +9 trở lên, nâng lò cấp 4'];
+    if (G.luyen && G.luyen.bat()) { // 16/10 Luyện phiên 2 (js/luyen_ui.js): chữ "dùng / kiếm" theo Luyện; ô quặng thành nguyên liệu rèn
+      a[0][1] = 'Luyện vũ khí, mua và nâng bộ trang phục, đổi nguyên liệu, mua NLR, đặt lại điểm kỹ năng';
+      a[1] = ['nlr', 'Luyện vũ khí ở Ông Thợ Rèn', 'Qua ải, rương báu, phòng thử thách, thương nhân, trùm, Ải Rèn, Bà Hàng Xén (thẻ NLR)'];
+      matUse = ['Luyện cấp 3–6 và cấp 14', 'Luyện cấp 7–10 và cấp 15', 'Luyện cấp 11–13'];
+    }
     R.forEach((r, i) => { if (!r.matChung) a.push(['mat' + i, matUse[i] || 'Nguyên liệu vùng', G.t('Qua ải {0}', r.name)]); }); // vùng 4 không có nguyên liệu riêng (Q2 = A)
-    R.forEach((r, i) => a.push(['shard' + i, i === 0 ? 'Nâng bộ Ninja và bộ Rừng lên cấp 2, 3' : i >= 3 ? 'Để dành (chưa có bộ trang phục vùng này)' : 'Nâng bộ của vùng này lên cấp 2, 3', G.t('Hạ trùm vùng {0} (ải 5 {1})', r.bossName, r.name)]));
+    const LY = !!(G.luyen && G.luyen.bat()), qua = ['Luyện lên cấp 6', 'Luyện lên cấp 10', 'Luyện lên cấp 13', 'Luyện lên cấp 14 và 15'];
+    R.forEach((r, i) => a.push(['shard' + i, LY ? (i >= 3 ? qua[3] : G.t('{0}; nâng bộ trang phục', qua[i])) : i === 0 ? 'Nâng bộ Ninja và bộ Rừng lên cấp 2, 3' : i >= 3 ? 'Để dành (chưa có bộ trang phục vùng này)' : 'Nâng bộ của vùng này lên cấp 2, 3', G.t('Hạ trùm vùng {0} (ải 5 {1})', r.bossName, r.name)]));
     return a;
   }
   function resTab(sv) {
-    const val = { gold: sv.gold, ore: G.luyen && G.luyen.bat() ? sv.nlr | 0 : sv.ore, stone: sv.stones }; // Luyện: ô quặng hiện nguyên liệu rèn
+    const val = { gold: sv.gold, ore: sv.ore, nlr: sv.nlr | 0, stone: sv.stones }; // Luyện: ô nguyên liệu rèn (biểu tượng mượn ảnh quặng, js/luyen_ui.js)
     for (let i = 0; i < 3; i++) val['mat' + i] = sv.mats[i];
     for (let i = 0; i < sv.shards.length; i++) val['shard' + i] = sv.shards[i]; // vùng 4: ô mảnh trùm thứ 4
     region('res', CX, CY, CW - 4, CH, (y) => {

@@ -660,7 +660,9 @@
       try { VV.sau(c, w, V.img, r0[0], r0[1], r0[2], r0[3], kv, dx, dy, 1 / k); } catch (e) { /* bỏ qua */ }
     } else c.drawImage(a.img, a.x, a.y, a.w, a.h, (-a.w * k) / 2, (-a.h * k) / 2, a.w * k, a.h * k);
     c.restore();
-    if (oK && bK > 0) { try { const p = oK.so || [oK.x + oK.w - 1, oK.y + oK.h - 1]; E.soBac(c, p[0], p[1], bK, Math.min(oK.w, oK.h) < 24); } catch (e) { /* bỏ qua */ } }
+    // Luyện vũ khí (js/luyen.js): số góc ô là cấp Luyện 1–15 (cả cấp Trắng 1–2), màu theo khung
+    const soL = G.luyen && G.luyen.bat() && w ? G.luyen.cap(w) : null;
+    if (oK && (bK > 0 || soL != null)) { try { const p = oK.so || [oK.x + oK.w - 1, oK.y + oK.h - 1]; E.soBac(c, p[0], p[1], bK, Math.min(oK.w, oK.h) < 24, soL); } catch (e) { /* bỏ qua */ } }
     return true;
   };
   // Ô zed-vk của một vũ khí (đúng loại, cấp, nhuộm hệ như ô đồ): { img, x, y, w, h } hoặc null khi ảnh chưa tải xong.

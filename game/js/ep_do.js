@@ -291,9 +291,10 @@
     return null;
   };
   // Số bậc (1..6 = Xanh lam..Rực lửa) trong một miếng nền sẫm nhỏ; (x, y) = góc dưới phải. c: bút đang vẽ.
-  E.soBac = function (c, x, y, b, nho) {
-    if (!(b > 0)) return;
-    const s = String(b), sz = nho ? 5.5 : 6.5;
+  // so (tuỳ chọn): số ghi thay bậc — Luyện vũ khí ghi cấp Luyện 1–15 (js/luyen.js), màu vẫn theo bậc khung b; 2 chữ số thì chữ nhỏ hơn 0,5
+  E.soBac = function (c, x, y, b, nho, so) {
+    if (!(b > 0) && so == null) return;
+    const s = String(so == null ? b : so), sz = (nho ? 5.5 : 6.5) - (s.length > 1 ? 0.5 : 0);
     const ux = G.ux; G.ux = c;
     c.save();
     try {

@@ -14,6 +14,7 @@
 //   7. Lưu / mây: trường mới qua G.fixSave + JSON nguyên vẹn (đường nạp mây cũng là G.fixSave).
 //   8. Giao diện tối thiểu: Ông Thợ Rèn thẻ Luyện, Hành trang, HUD, màn kết quả, tiếng Anh — vẽ không lỗi, bấm Luyện được.
 //   9. Bot: G.upg.auto luyện (không mài / ép), không tiêu âm.
+//  10. Giao diện phiên 2 (js/luyen_ui.js): ăn mừng 3 kiểu, thanh làng 3 ô, dòng kết quả, dòng khoá, gợi ý, bảng báo; ?luyen=0 như cũ.
 // Chạy: node game/tests/luyen.test.js
 'use strict';
 const path = require('path'), { spawn } = require('child_process');
@@ -274,10 +275,12 @@ const CA = [
       VA.open('ren'); r.ve0 = ve(); r.tab = V.ftab;
       const w = s.weapons.find((x) => x.type === 'sword');
       G.luyen.ui.sel = w.id; r.ve1 = ve();
-      // nút "Luyện · Lửa" (lên Mầm): cột phải x = 160 + 106, hàng nút dưới cùng
-      const rx = 160 + 106, rw = 304 - 106, bw = Math.floor((rw - 14) / 3), y0 = 93 + 13, yb = y0 + (170 - 14) - 30;
-      G.click = { x: rx + 6 + bw / 2, y: yb + 10 + 8 }; r.ve2 = ve(); r.L = G.luyen.cap(w); r.he = w.branch; r.msg = V.msg;
-      G.click = { x: rx + rw - 82 + 38, y: yb + 10 + 8 }; r.ve3 = ve(); r.L2 = G.luyen.cap(w);
+      // nút "Luyện · Lửa" (lên Mầm), rồi "Luyện lên 4": bấm giữa nút theo vị trí bảng ghi lại (phiên 2: G.luyen.ui.nut, js/luyen_ui.js)
+      const giua = (k) => { const b = G.luyen.ui.nut[k]; return b ? { x: b[0] + b[2] / 2, y: b[1] + b[3] / 2 } : { x: -99, y: -99 }; };
+      r.nut = Object.keys(G.luyen.ui.nut || {}).join(',');
+      G.click = giua('luyen-fire'); r.ve2 = ve(); r.L = G.luyen.cap(w); r.he = w.branch; r.msg = V.msg;
+      G.luyen.anMung.on = null; if (G.hinhThai && G.hinhThai.am) G.hinhThai.am.on = null; r.ve2b = ve();
+      G.click = giua('luyen'); r.ve3 = ve(); r.L2 = G.luyen.cap(w);
       V.tab = 'bag'; if (G.hanhTrang && G.hanhTrang.reset) G.hanhTrang.reset(); r.ve4 = ve();
       s.luyenBao = { vk: [['sword', 4]], vang: 10, lk: 0, nlr: 3, nl: [0, 0, 0], lo: 0, vi: 0 }; VA.goHub(); G.villageScene.update(0.1, false); r.bao = !s.luyenBao;
       G.ngonNgu.dat('en', false); VA.open('ren'); r.ve5 = ve(); V.tab = 'bag'; r.ve6 = ve(); G.ngonNgu.dat('vi', false);
@@ -290,7 +293,7 @@ const CA = [
       return r;
     });
     dat(gd.ve0 === true && gd.tab === 'luyen' && gd.ve1 === true, 'Ông Thợ Rèn: một thẻ Luyện, vẽ không lỗi' + (gd.ve0 !== true ? ': ' + gd.ve0 : ''));
-    dat(gd.ve2 === true && gd.L === 3 && gd.he === 'fire' && /Lv 2 → 3/.test(gd.msg || ''), 'bấm "Luyện · Lửa": Luyện 3 hệ Lửa, báo "' + gd.msg + '"');
+    dat(gd.ve2 === true && gd.L === 3 && gd.he === 'fire' && /Lv 2 → 3/.test(gd.msg || ''), 'bấm "Luyện · Lửa": Luyện 3 hệ Lửa, báo "' + gd.msg + '" (nút: ' + gd.nut + ')');
     dat(gd.ve3 === true && gd.L2 === 4, 'bấm "Luyện lên 4": Luyện 4');
     dat(gd.ve4 === true && gd.bao, 'Hành trang (bảng Luyện) vẽ không lỗi; câu báo chuyển bản lưu hiện một lần ở làng');
     dat(gd.ve5 === true && gd.ve6 === true && !gd.thieu.length, 'tiếng Anh vẽ được, không sót chữ Luyện chưa dịch (' + gd.thieu.join(' | ') + ')');
@@ -304,6 +307,41 @@ const CA = [
       return { p0, p1, did, am: s.gold < 0 || s.nlr < 0 || s.linhKhi < 0 || s.mats.some((x) => x < 0), ore: s.ore, sh: s.weapons.map((w) => w.sharpen).join(','), L: s.weapons.map((w) => G.luyen.cap(w)).join(',') };
     });
     dat(bot.p1 > bot.p0 && !bot.am && bot.ore === 99 && bot.sh === '0,0,0,0' && bot.did.every((t) => !/Mài|lò|Nâng .* lên Mầm/.test(t)), 'G.upg.auto chỉ Luyện (không mài / lò / nâng hệ bằng linh khí), không tiêu âm: Sức mạnh ' + bot.p0 + ' → ' + bot.p1 + ', cấp ' + bot.L);
+
+    // ---------- 10. giao diện phiên 2 (js/luyen_ui.js) ----------
+    console.log('10. Giao diện phiên 2');
+    const g2 = await A.goi(() => {
+      const VA = G.villageApi, r = {}, L = G.luyen;
+      G.noRender = false;
+      G.testSave({ lvl: 12, luyen: 1 }); const s = G.save; for (let k = 0; k < 5; k++) s.stars['0-' + k] = 3; for (let k = 0; k < 5; k++) s.stars['1-' + k] = 3;
+      s.gold = 99999; s.linhKhi = 9999; s.nlr = 999; s.mats = [99, 99, 99]; s.shards = s.shards.map(() => 9);
+      G.setScene(G.Village); VA.open('ren');
+      const w = s.weapons.find((x) => x.type === 'sword'); w.branch = 'fire'; w.luyen = 5; L.dongBo(w);
+      const kieu = () => { const a = G.hinhThai.am.on, b = L.anMung.on; const k = a && a.luyen ? 'dai' + a.luyen : b ? b.kieu + b.L1 + '/' + b.het : '-'; G.hinhThai.am.on = null; L.anMung.on = null; return k; };
+      L.nang(s, w, 'fire'); r.k6 = kieu(); L.nang(s, w); r.k7 = kieu(); L.nang(s, w); r.k8 = kieu(); L.nang(s, w); r.k9 = kieu();
+      w.luyen = 14; L.dongBo(w); L.nang(s, w, null, true); r.k15 = kieu();
+      r.tg = [G.hinhThai.TG.het, L.TG.ngan, L.TG.mot].join(',');
+      r.top = G.villageScene.resParts().map((q) => q[0]).join(',');
+      w.luyen = 4; L.dongBo(w); s.gold = 0; r.kq = L.chuKetQua(s, w).s;
+      G.testSave({ lvl: 6, luyen: 1 }); const s2 = G.save; const w2 = s2.weapons.find((x) => x.type === 'sword'); w2.branch = 'fire'; w2.luyen = 5; L.dongBo(w2);
+      r.khoa = L.khoa(s2, w2); r.ht7 = G.HINTS[7];
+      s2.luyenBao = { vk: [['sword', 5]], vang: 10, lk: 0, nlr: 3, nl: [0, 0, 0], lo: 0, vi: 4 };
+      if (s2.zed) { delete s2.zed.bao; delete s2.zed.boBao; delete s2.zed.boBanBao; } delete s2.heMoiBao; delete s2.canLaiBao;
+      G.setScene(G.Village); VA.goHub(); G.villageScene.update(0.1, false); r.bao = !!L.baoBang.on && !s2.luyenBao;
+      let ve = true; try { G.ui.begin(); G.time += 1; G.Village.draw(); const b = L.ui.nut.baoOk; G.click = { x: b[0] + b[2] / 2, y: b[1] + b[3] / 2 }; G.ui.begin(); G.Village.draw(); } catch (e) { ve = String(e && e.stack || e); }
+      r.ve = ve; r.dong = !L.baoBang.on;
+      G.noRender = true;
+      return r;
+    });
+    dat(g2.k6 === 'dai6' && g2.k7 === 'mot7/0.5' && g2.k8 === 'mot8/0.5' && g2.k9 === 'ngan9/0.9' && g2.k15 === 'ngan15/0.9' && g2.tg === '1.45,0.9,0.5',
+      'ăn mừng 3 kiểu: cấp 6 dài 1,45 s, cấp 9 / 15 ngắn 0,9 s, cấp thường dải +1 0,5 s (' + [g2.k6, g2.k7, g2.k8, g2.k9, g2.k15].join(' ') + ')');
+    dat(g2.top === 'gold,nlr,lk', 'thanh tài nguyên ở làng 3 ô: vàng, nguyên liệu rèn, linh khí');
+    dat(/Lv 4 → .*\(Lv 6\): còn 2 cấp · thiếu 350 vàng/.test(g2.kq), 'dòng màn kết quả: "' + g2.kq + '"');
+    dat(g2.khoa === 'Cần 1 mảnh Mộc Tinh — hạ Mộc Tinh ở Rừng già 5', 'dòng khoá: "' + g2.khoa + '"');
+    dat(/Luyện/.test(g2.ht7), 'gợi ý G.HINTS[7] nói về Luyện');
+    dat(g2.bao && g2.ve === true && g2.dong, 'bảng báo chuyển bản lưu: mở một lần, vẽ không lỗi, bấm "Đã hiểu" thì đóng' + (g2.ve !== true ? ': ' + g2.ve : ''));
+    const g0 = await B.goi(() => ({ top: G.villageScene.resParts().map((q) => q[0]).join(','), ht7: G.HINTS[7], tabs: (() => { G.testSave({ lvl: 12 }); G.setScene(G.Village); G.villageApi.open('ren'); try { G.ui.begin(); G.Village.draw(); } catch (e) { return String(e); } return G.villageApi.V.ftab; })() }));
+    dat(!/nlr|lk/.test(g0.top) && /ore/.test(g0.top) && /ép đồ/.test(g0.ht7) && g0.tabs !== 'luyen', '?luyen=0: thanh làng, gợi ý, thẻ lò rèn như cũ (' + g0.top + ' · thẻ ' + g0.tabs + ')');
 
     const loi = await A.goi(() => (window.__loiNgam || []).filter((s) => /luyen|Luyện/.test(s)));
     dat(!loi.length, 'không có lỗi ngầm nào từ js/luyen.js' + (loi.length ? ': ' + loi.slice(0, 2).join(' | ') : ''));
