@@ -307,7 +307,7 @@
     if (!S.chon && ph >= 2) opts.push('c5');
     // Chống áp sát: em bé đứng sát thì trùm hay dùng chiêu đánh quanh mình hơn
     if (has(b, 'antiMelee') && Math.hypot(P.x - b.x, P.y - b.y) < 75) for (const k of opts.slice()) if (S[k].near) opts.push(k, k);
-    const k = choose(b, opts), sk = S[k] || S.c1;
+    const k0 = choose(b, opts), sk = S[k0] || S.c1, k = sk.anim || k0; // sk.anim: chiêu mượn cử động khác (vd Đớp của Thuồng Luồng dùng 'atk')
     const B = bangNG(b), spd = B ? ngPh(B.toc, ph) : [1, 1.1, 1.2][ph], a = ang(b, P);
     let D = dur(b.art, k) / spd, T = moc(b.art, k)[0] * D, aspd = spd;
     b.skillName = sk.name; // tên chiêu đang ra: bảng thua (js/stage.js) đọc
@@ -327,7 +327,8 @@
     // Bắt bài lăn né: thêm một vùng đỏ đúng chỗ em bé sẽ lăn tới
     if (has(b, 'antiDodge')) later(b, T + 0.3, () => { const P2 = W().P; circle(clamp(P2.x + (P2.ddx || 0) * 46, w.x0, w.x1), clamp(P2.y + (P2.ddy || 0) * 34, w.y0, w.y1), 18, 0.6, b.dmg, null); });
     if (B && ph >= 2) later(b, T, () => { W().shake = Math.max(W().shake, 0.12); }); // hóa cuồng: dậm rung nhẹ
-    b.cd = nghiNG(b, [1.3, 1.0, 0.8][ph], 1.3);
+    const NG0 = S.nghi || [1.3, 1.0, 0.8]; // S.nghi: nghỉ sau chiêu theo pha của riêng trùm này (Thuồng Luồng, js/thuong_luong.js)
+    b.cd = nghiNG(b, NG0[ph], NG0[0]);
   }
   // Nổi giận: nghỉ sau chiêu (× nghi) và NỐI CHIÊU — đầu mỗi chuỗi gieo số chiêu liền nhau (noi: [xác suất ≥ 2, xác suất 3]); chiêu chưa phải
   // chiêu cuối của chuỗi thì nghỉ noiNghi (0,3 giây) rồi ra chiêu kế. Chuỗi đang dở mà đổi pha thì bỏ (b.ngConLai = 0 ở chỗ đổi pha).
