@@ -391,3 +391,10 @@ Cờ là `G.LUYEN_BAT`. Đặt false thì toàn bộ luật, ví và giao diện
 
 - **A (khuyên):** mỗi vũ khí một cấp Luyện riêng, như bây giờ. Người chơi tự chọn món chính. Thành tựu "Luyện cả 4 món lên cấp 6" khuyến khích dùng đủ 4 món.
 - **B:** một cấp Luyện chung cho cả 4 món. Giá mỗi cấp khoảng ×1,7 so với bảng trên. Đổi vũ khí không bao giờ thiệt. Phải tính lại mô hình và bỏ luật "mỗi món một hệ" hoặc giữ hệ riêng từng món.
+
+
+## Quyết định chủ game (16/10 19:5x)
+- Q1: A — trần ×5,7, giữ đường sức mạnh như nay.
+- Q2: A — giữ máu +6%/cấp.
+- Q3: A — luyện riêng từng món.
+→ Làm code theo mục 5.2 (phiên 1 → 2 → 3).
