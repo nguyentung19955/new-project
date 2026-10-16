@@ -269,7 +269,7 @@
       // thảm ngắn dẫn vào từng cửa và một hoa văn tròn giữa phòng: nhìn là biết phòng có bốn lối
       const cc = '#4e2a32', ed = '#77593a', L = Math.min(46, (g.fy1 - g.fy0) * 0.24);
       const cx = (g.fx0 + g.fx1) >> 1, cy = (g.fy0 + g.fy1) >> 1;
-      for (const d of g.doors) {
+      if (!thamAnh(g, L)) for (const d of g.doors) {
         if (d.side === 'top' || d.side === 'bottom') {
           const y0 = d.side === 'top' ? g.fy0 : g.fy1 - L;
           r(d.at - 11, y0, 22, L, cc); r(d.at - 9, y0, 1, L, ed); r(d.at + 8, y0, 1, L, ed);
@@ -817,6 +817,27 @@
     for (const d of g.doors) if (d.side === 'bottom') segs = segs.flatMap(([a, b]) => [[a, Math.min(b, d.at - 17)], [Math.max(a, d.at + 17), b]]);
     for (const [a, b] of segs) if (b > a) clipRect(a, y, b - a, t.mep.height, () => trDai(t.mep, g.fx0, y, g.fx1 - g.fx0, t.mep.height, false, lech));
   }
+  // Ảnh lối mòn gd-loi-mon-rung (ô lặp dọc 32×32, giữa là đất, hai bên rêu / lá): lấy DẢI ĐẤT giữa ô (cột ≥ 75% điểm nâu đất) làm vân màu;
+  // ngang thì soi gương qua lại trong dải (liền mạch), dọc lặp theo ô. null: không có ảnh / ?vecode=1 → màu phẳng #7a6a48 như cũ.
+  let loiMon = null;
+  function datLoiMon() {
+    const a = G.VE_CODE === true ? null : gdA('gd-loi-mon-rung');
+    if (!a) return null;
+    if (loiMon && loiMon.img === a.img) return loiMon.tx;
+    let tx = null;
+    try {
+      const w = a.pw, h = a.ph, x = mk(w, h); x.drawImage(a.img, 0, 0);
+      const d = x.getImageData(0, 0, w, h).data, cot = [];
+      for (let i = 0; i < w; i++) {
+        let n = 0;
+        for (let j = 0; j < h; j++) { const q = (j * w + i) * 4; if (d[q] - d[q + 1] > 15 && d[q + 1] - d[q + 2] > 5 && d[q] > 90) n++; }
+        if (n >= h * 0.75) cot.push(i);
+      }
+      if (cot.length >= 2) tx = { d, w, h, x0: cot[0], n: cot[cot.length - 1] - cot[0] + 1 };
+    } catch (e) { tx = null; }
+    loiMon = { img: a.img, tx };
+    return tx;
+  }
   // Sàn: rải theo hạt giống của phòng. Mỗi khối chọn 1 trong 3 mảng (kiểu phòng `variant` quyết định mảng nào chiếm nhiều) × lật.
   function trSan(t, g, rn, variant, tv) {
     const latOK = !tv || tv.lat !== false, DUONG = tv && tv.duong != null ? tv.duong : TR.duong;
@@ -855,13 +876,16 @@
     // lối mòn nối tâm phòng với từng cửa (đúng trường pathField của sàn code): lớp nâu nhạt mờ, 3 nấc, chuyển nấc bằng lưới chấm
     if (DUONG > 0) {
       const pf = grid2(g, pf0), id = c.getImageData(fx, fy, w, h), d = id.data, P = hex('#7a6a48'), NAC = 3;
+      const TX = tv ? null : datLoiMon(); // 16/10 (ve-tay-8-gop-giao-dien): Rừng già — màu đất lấy từ ảnh gd-loi-mon-rung thay màu phẳng (cùng 3 nấc, cùng trường lối mòn)
       for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
         const gx = fx + x, gy = fy + y, p = pf(gx, gy);
         if (p <= 0.02) continue;
         const a = (Math.min(NAC, Math.floor(sharp(p * NAC) + bay(gx, gy))) / NAC) * DUONG;
         if (a <= 0) continue;
         const o = (y * w + x) * 4;
-        d[o] += (P[0] - d[o]) * a; d[o + 1] += (P[1] - d[o + 1]) * a; d[o + 2] += (P[2] - d[o + 2]) * a;
+        let M = P;
+        if (TX) { const k = gx % (TX.n * 2), u = TX.x0 + (k < TX.n ? k : TX.n * 2 - 1 - k), q = ((gy % TX.h) * TX.w + u) * 4; M = [TX.d[q], TX.d[q + 1], TX.d[q + 2]]; }
+        d[o] += (M[0] - d[o]) * a; d[o + 1] += (M[1] - d[o + 1]) * a; d[o + 2] += (M[2] - d[o + 2]) * a;
       }
       c.putImageData(id, fx, fy);
     }
@@ -1075,9 +1099,31 @@
   // BIẾN THỂ SÀN VÀ ĐỒ TRANG TRÍ: để các phòng trong một ải không giống hệt nhau
   // ====================================================================
   const fw_ = (g) => g.fx1 - g.fx0, fh_ = (g) => g.fy1 - g.fy0;
+  // 16/10 (ve-tay-8-gop-giao-dien): thảm dẫn cửa bằng ảnh gd-tham-lau (đỏ viền vàng, lặp dọc; cửa trái / phải xoay ngang), đúng dải 22 × L
+  // của thảm code, bắt đầu lặp từ mép tường cửa. Trả false khi không có ảnh hoặc ?vecode=1 → nơi gọi vẽ code như cũ.
+  function thamAnh(g, L) {
+    const a = G.VE_CODE === true ? null : gdA('gd-tham-lau');
+    if (!a) return false;
+    const cv = ttNho(a), th = cv.height;
+    for (const d of g.doors) {
+      if (d.side === 'top' || d.side === 'bottom') {
+        const y0 = d.side === 'top' ? g.fy0 : g.fy1 - L;
+        clipRect(d.at - 11, y0, 22, L, () => { for (let p = 0; p < L; p += th) c.drawImage(cv, d.at - 11, d.side === 'top' ? y0 + p : g.fy1 - p - th); });
+      } else {
+        const x0 = d.side === 'left' ? g.fx0 : g.fx1 - L;
+        clipRect(x0, d.at - 11, L, 22, () => {
+          c.save(); c.translate(x0, d.at + 11); c.rotate(-Math.PI / 2); // trục ảnh dọc → ngang: bề rộng thảm theo chiều dọc màn
+          for (let p = 0; p < L; p += th) c.drawImage(cv, 0, d.side === 'left' ? p : L - p - th);
+          c.restore();
+        });
+      }
+    }
+    return true;
+  }
   // Thảm ngắn dẫn vào từng cửa
   function runners(g, cc, ed) {
     const L = Math.min(40, fh_(g) * 0.2);
+    if (thamAnh(g, L)) return;
     for (const d of g.doors) {
       if (d.side === 'top' || d.side === 'bottom') {
         const y0 = d.side === 'top' ? g.fy0 : g.fy1 - L;

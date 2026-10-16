@@ -1375,6 +1375,27 @@
     return g;
   }
   SC.gdSan = (ma) => { const g = SC.gd[ma]; if (g && !g.ready && roiCan) roiCan(ma); return g && g.ready ? g : null; };
+  // 16/10 (ve-tay-8-gop-giao-dien): ảnh THAY hình vẽ code — có ảnh và không ?vecode=1 (G.VE_CODE) thì trả ảnh, không thì null (nơi gọi vẽ code y cũ).
+  SC.gdThay = (ma) => (G.VE_CODE === true ? null : SC.gdSan(ma));
+  // Bản nhuộm của ảnh giao diện: điểm có màu gần `tu` (lòng ảnh) đổi thành màu `den` — dùng như ảnh gốc với SC.veGd (giữ vien / 9 mảnh).
+  const NHUOM = new Map();
+  SC.gdNhuom = function (g, tu, den) {
+    if (!g || !g.ready || !den || den === tu) return g;
+    const key = g.ma + '|' + den;
+    let o = NHUOM.get(key);
+    if (o && o.img0 === g.img) return o;
+    const cv = document.createElement('canvas'); cv.width = g.pw; cv.height = g.ph;
+    const x = cv.getContext('2d'); x.drawImage(g.img, 0, 0);
+    try {
+      const id = x.getImageData(0, 0, g.pw, g.ph), d = id.data, hx = (s) => [1, 3, 5].map((i) => parseInt(s.slice(i, i + 2), 16)), A = hx(tu), B = hx(den);
+      for (let i = 0; i < d.length; i += 4) if (d[i + 3] && Math.abs(d[i] - A[0]) + Math.abs(d[i + 1] - A[1]) + Math.abs(d[i + 2] - A[2]) < 60) { d[i] = B[0]; d[i + 1] = B[1]; d[i + 2] = B[2]; }
+      x.putImageData(id, 0, 0);
+    } catch (e) { return g; }
+    o = Object.assign({}, g, { img: cv, img0: g.img, ghep9: new Map() });
+    if (NHUOM.size > 16) NHUOM.clear();
+    NHUOM.set(key, o);
+    return o;
+  };
   // Ảnh 9 mảnh dựng sẵn cho cỡ đích (w x h điểm ảnh game): một canvas w*net x h*net, nhớ lại để lần sau vẽ một phát.
   function gdGhep9(g, w, h) {
     const N = g.net, W = Math.max(1, Math.round(w * N)), H = Math.max(1, Math.round(h * N)), key = W + 'x' + H;

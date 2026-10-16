@@ -87,7 +87,11 @@
       CH.LAYOUT.forEach((row, ri) => {
         const ry = top + titleH + 2 + ri * rowH, bw = row.length === 2 ? Math.floor((w - 9) / 2) : w - 6;
         // đường nối giữa các hàng
-        if (ri > 0) { const c = G.ux; c.fillStyle = on && spentHere >= Tr.nodes[row[0]].need ? E.col : '#2f4644'; c.fillRect(x + (w >> 1), ry - 3, 1, 3); }
+        if (ri > 0) { // 16/10 (ve-tay-8-gop-giao-dien): vạch nối ảnh gd-chuong-o-noi (đã mở: nhuộm màu hệ như code); ?vecode=1 / chưa có ảnh: code
+          const c = G.ux, sang = on && spentHere >= Tr.nodes[row[0]].need, SCg = G.spriteCustom, vn = SCg && SCg.gdThay ? SCg.gdThay('gd-chuong-o-noi') : null;
+          if (vn) SCg.veGd(c, sang ? SCg.gdNhuom(vn, '#08141e', E.col) : vn, x + (w >> 1), ry - 3, 1, 3);
+          else { c.fillStyle = sang ? E.col : '#2f4644'; c.fillRect(x + (w >> 1), ry - 3, 1, 3); }
+        }
         row.forEach((ni, k) => {
           const nd = Tr.nodes[ni], bx = x + 3 + k * (bw + 3), bh = rowH - 3, r = on ? st.n[nd.id] | 0 : 0;
           const open = on && spentHere >= nd.need, sel = U.sel && U.sel.cay === cay && U.sel.id === nd.id;
@@ -113,7 +117,10 @@
               }
             }
             T.chuO(nd.name, bx, ry, bw, bh, { sel, align: 'left', vung: vTen, size: 6.5, min: 6, bold: true, color: r > 0 ? GOLD : open ? TXT : LOCK });
-            if (open) for (let j = 0; j < nd.max; j++) { const c = G.ux; c.fillStyle = j < r ? '#ffd23f' : open ? '#0d1716' : '#1a2423'; c.fillRect(px0 + j * 5, py, 4, 3); }
+            if (open) for (let j = 0; j < nd.max; j++) { // 16/10 (ve-tay-8-gop-giao-dien): chấm bậc ảnh gd-chuong-o / -trong; ?vecode=1 / chưa có ảnh: code
+              const c = G.ux, SCg = G.spriteCustom, cb = SCg && SCg.gdThay ? SCg.gdThay(j < r ? 'gd-chuong-o' : 'gd-chuong-o-trong') : null;
+              if (cb) SCg.veGd(c, cb, px0 + j * 5, py, 4, 3); else { c.fillStyle = j < r ? '#ffd23f' : open ? '#0d1716' : '#1a2423'; c.fillRect(px0 + j * 5, py, 4, 3); }
+            }
             if (nhanPhai === '+') T.chuO('+', bx, ry, bw, bh, { sel, align: low ? 'center' : 'right', vung: low ? [px0 - 10, ry, 9, bh] : [bx + bw - rW - 3, ry + bh - 10, rW + 3, 10], size: 8, min: 6.5, bold: true, color: GOOD });
             else if (nhanPhai) T.chuO(nhanPhai, bx, ry, bw, bh, { sel, align: 'right', vung: vCan || (low ? [bx + bw - rW - 3, ry, rW + 3, bh] : [bx + bw - rW - 3, ry + bh - 10, rW + 3, 10]), size: 6.5, min: 6, bold: false, color: LOCK });
           }

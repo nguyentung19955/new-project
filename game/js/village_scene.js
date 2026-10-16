@@ -1136,28 +1136,48 @@
     const pad = 5, bw = w + pad * 2, bh = ls.length * (size + 2.5) + 6;
     let by = y - bh - 5; if (by < 17) { y += 17 - by; by = 17; }
     const bx = G.clamp(x - bw / 2, 3, 477 - bw);
-    c.save();
-    rrect(c, bx, by, bw, bh, 4); c.fillStyle = o.bg || '#fbf7ee'; c.fill(); c.lineWidth = 1.2; c.strokeStyle = INK; c.stroke();
-    c.beginPath(); c.moveTo(x - 3.5, by + bh - 0.6); c.lineTo(x, y); c.lineTo(x + 3.5, by + bh - 0.6); c.fillStyle = o.bg || '#fbf7ee'; c.fill();
-    c.beginPath(); c.moveTo(x - 3.5, by + bh); c.lineTo(x, y); c.lineTo(x + 3.5, by + bh); c.stroke();
-    c.restore();
-    ls.forEach((l, i) => ui.text(l, bx + bw / 2, by + 4 + size * 0.86 + i * (size + 2.5), { size, bold: true, align: 'center', color: INK, shadow: false }));
+    // 16/10 (ve-tay-8-gop-giao-dien): ảnh gd-bong-thoai (thân 9 mảnh, cùng khung bx..by như code) + gd-bong-thoai-duoi (đuôi, mũi đuôi tại x, y);
+    // nền vàng (o.bg) thì nhuộm lòng ảnh. ?vecode=1 hoặc chưa có ảnh: vẽ code như cũ.
+    const SCg = G.spriteCustom, than = SCg && SCg.gdThay ? SCg.gdThay('gd-bong-thoai') : null, duoi = than ? SCg.gdThay('gd-bong-thoai-duoi') : null;
+    if (than && duoi) {
+      const LONG = '#fcf5e7', nh = (g) => (o.bg ? SCg.gdNhuom(g, LONG, o.bg) : g);
+      SCg.veGd(c, nh(than), bx, by, bw, bh);
+      SCg.veGd(c, nh(duoi), x - 1, by + bh - 1, duoi.rong, Math.max(2, y - (by + bh) + 1));
+    } else {
+      c.save();
+      rrect(c, bx, by, bw, bh, 4); c.fillStyle = o.bg || '#fbf7ee'; c.fill(); c.lineWidth = 1.2; c.strokeStyle = INK; c.stroke();
+      c.beginPath(); c.moveTo(x - 3.5, by + bh - 0.6); c.lineTo(x, y); c.lineTo(x + 3.5, by + bh - 0.6); c.fillStyle = o.bg || '#fbf7ee'; c.fill();
+      c.beginPath(); c.moveTo(x - 3.5, by + bh); c.lineTo(x, y); c.lineTo(x + 3.5, by + bh); c.stroke();
+      c.restore();
+    }
+    // ảnh khung: chữ đặt bằng T.chuTrongKhung theo lòng đo sẵn của gd-bong-thoai (can-chu-khung: khối chữ giữa lòng), cùng cỡ, cùng số dòng
+    const T = G.theme;
+    if (than && duoi && T && T.chuTrongKhung) T.chuTrongKhung(s, bx, by, bw, bh, { khung: 'gd-bong-thoai', size, min: size, bold: true, dong: ls.length, gian: 2.5, dem: 1, align: 'center', color: INK, shadow: false });
+    else ls.forEach((l, i) => ui.text(l, bx + bw / 2, by + 4 + size * 0.86 + i * (size + 2.5), { size, bold: true, align: 'center', color: INK, shadow: false }));
   };
   // Dải bảy khuôn mặt lối tắt. sel: người đang được chọn. Trả về mã người vừa được chạm (khi clickable).
   VS.drawStrip = function (sel, clickable, compact) {
     const ui = G.ui, c = G.ux, n = ORDER.length, a = stripAt(0), b = stripAt(n - 1);
     let hit = null;
-    c.save();
-    rrect(c, a[0] - 16, 16.5, b[0] - a[0] + 32, compact ? 23.5 : 33, 9); c.fillStyle = 'rgba(10,22,22,0.72)'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = 'rgba(168,117,47,0.9)'; c.stroke();
-    c.restore();
+    // 16/10 (ve-tay-8-gop-giao-dien): dải nền, đĩa chân dung (thường / chọn) và chấm "có mới" bằng ảnh gd-lang-thanh-duoi, gd-lang-dia(-chon),
+    // gd-cham-moi — cùng chỗ, cùng cỡ hình code. ?vecode=1 hoặc chưa có ảnh: vẽ code như cũ.
+    const SCg = G.spriteCustom, anh = (m) => (SCg && SCg.gdThay ? SCg.gdThay(m) : null), thanh = anh('gd-lang-thanh-duoi');
+    if (thanh) SCg.veGd(c, thanh, a[0] - 16, 16.5, b[0] - a[0] + 32, compact ? 23.5 : 36); // vành ảnh dày ~3 điểm: dải đầy đủ dài thêm 3 cho tên dưới mặt không đè vành
+    else {
+      c.save();
+      rrect(c, a[0] - 16, 16.5, b[0] - a[0] + 32, compact ? 23.5 : 33, 9); c.fillStyle = 'rgba(10,22,22,0.72)'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = 'rgba(168,117,47,0.9)'; c.stroke();
+      c.restore();
+    }
     ORDER.forEach((k, i) => {
       const q = stripAt(i), cx = q[0], cy = q[1], on = sel === k;
       c.save();
       if (!shown(k)) c.globalAlpha = 0.3; // V53: ô mặt mờ (chạm vào thì được báo khi nào cô về)
-      c.beginPath(); c.arc(cx, cy, STRIP.r, 0, 7); c.fillStyle = on ? '#8a2f22' : '#1f4f4a'; c.fill(); c.lineWidth = on ? 1.6 : 1; c.strokeStyle = on ? '#f6dc92' : '#a8752f'; c.stroke();
+      const dia = anh(on ? 'gd-lang-dia-chon' : 'gd-lang-dia');
+      if (dia) SCg.veGd(c, dia, cx - STRIP.r - 1, cy - STRIP.r - 1, STRIP.r * 2 + 2, STRIP.r * 2 + 2);
+      else { c.beginPath(); c.arc(cx, cy, STRIP.r, 0, 7); c.fillStyle = on ? '#8a2f22' : '#1f4f4a'; c.fill(); c.lineWidth = on ? 1.6 : 1; c.strokeStyle = on ? '#f6dc92' : '#a8752f'; c.stroke(); }
       c.beginPath(); c.arc(cx, cy, STRIP.r - 1, 0, 7); c.clip(); VS.face(c, k, cx, cy + 1, 1);
       c.restore();
-      if (S.news[k]) { c.save(); c.beginPath(); c.arc(cx + 7.5, cy - 7.5, 3, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = INK; c.stroke(); c.restore(); }
+      if (S.news[k]) { const dm = anh('gd-cham-moi'); if (dm) SCg.veGd(c, dm, cx + 7.5 - 3.5, cy - 7.5 - 3.5, 7, 7); else { c.save(); c.beginPath(); c.arc(cx + 7.5, cy - 7.5, 3, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = INK; c.stroke(); c.restore(); } }
       if (!compact) ui.text(NPCS[k].ngan, cx, 46.5, { size: 6.5, bold: true, tiny: true, align: 'center', color: on ? '#f6dc92' : '#e8dcc0' });
       if (clickable && G.click && Math.abs(G.click.x - cx) <= STRIP.gap / 2 && G.click.y >= 14 && G.click.y <= (compact ? 43 : 50)) { hit = k; G.click = null; G.sfx && G.sfx('ui'); }
     });
@@ -1305,6 +1325,14 @@
     vienTranh(c);
   }
   // Đường nét đứt nối hai điểm trên tranh
-  VS.mapDash = function (c, a, b, col) { const n = Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / 4); for (let j = 1; j < n; j++) if (j % 2) p(c, a[0] + ((b[0] - a[0]) * j) / n, a[1] + ((b[1] - a[1]) * j) / n, 2, 2, col); };
+  // 16/10 (ve-tay-8-gop-giao-dien): khoa (tuỳ chọn) = đoạn chưa mở → chấm ảnh gd-ban-do-cham-khoa, không thì gd-ban-do-cham (2×2 như chấm code).
+  VS.mapDash = function (c, a, b, col, khoa) {
+    const SCg = G.spriteCustom, g = SCg && SCg.gdThay ? SCg.gdThay(khoa ? 'gd-ban-do-cham-khoa' : 'gd-ban-do-cham') : null;
+    const n = Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / 4);
+    for (let j = 1; j < n; j++) if (j % 2) {
+      const x = a[0] + ((b[0] - a[0]) * j) / n, y = a[1] + ((b[1] - a[1]) * j) / n;
+      if (g) SCg.veGd(c, g, Math.round(x), Math.round(y), 2, 2); else p(c, x, y, 2, 2, col);
+    }
+  };
   VS.putNpc = putNpc;
 })();

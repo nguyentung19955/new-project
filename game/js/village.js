@@ -196,11 +196,11 @@
     const ink = night ? '#3a2a4a' : '#7a4a30', faint = night ? '#6a6488' : '#b8a880';
     for (const r of DSV) {
       const n = M.nodes[r];
-      VS.mapDash(c, M.from[r], n[0], unlocked(r, 0, V.diff) ? ink : faint);
-      if (r === 2) VS.mapDash(c, M.nodes[1][4], n[0], unlocked(2, 0, V.diff) ? ink : faint);
-      for (let i = 0; i < 4; i++) VS.mapDash(c, n[i], n[i + 1], unlocked(r, i + 1, V.diff) ? ink : faint);
+      VS.mapDash(c, M.from[r], n[0], unlocked(r, 0, V.diff) ? ink : faint, !unlocked(r, 0, V.diff));
+      if (r === 2) VS.mapDash(c, M.nodes[1][4], n[0], unlocked(2, 0, V.diff) ? ink : faint, !unlocked(2, 0, V.diff));
+      for (let i = 0; i < 4; i++) VS.mapDash(c, n[i], n[i + 1], unlocked(r, i + 1, V.diff) ? ink : faint, !unlocked(r, i + 1, V.diff));
     }
-    for (const d of tr2 ? [] : M.soonDash || []) VS.mapDash(c, M.nodes[d[0]][d[1]], d[2], faint);
+    for (const d of tr2 ? [] : M.soonDash || []) VS.mapDash(c, M.nodes[d[0]][d[1]], d[2], faint, true);
     VS.putNpc(c, 'lai', 32, 264, Math.floor(G.time * 2) % 3, { look: 1, noShadow: true }, 2);
     // tên vùng, tên trùm, vùng sắp có
     const halo = night ? 'rgba(20,16,40,0.85)' : null;
@@ -582,7 +582,10 @@
       const y0 = 109 + r * 42, n = hs.sk[b], Bk = G.SKILLS[b];
       T.inset(CX, y0, CW, 39, false);
       ui.text(Bk.name, CX + 6, y0 + 12, { size: 9, bold: true, color: GOLD });
-      for (let j = 0; j < 5; j++) { ui.rect(CX + 46 + j * 12, y0 + 5, 9, 8, j < n ? '#ffd23f' : '#0d1716', j < n ? '#fff0a8' : T.C.brD); }
+      for (let j = 0; j < 5; j++) { // 16/10 (ve-tay-8-gop-giao-dien): ô điểm bằng ảnh gd-o-diem / gd-o-diem-trong (9×9 quanh ô code 9×8)
+        const SCg = G.spriteCustom, od = SCg && SCg.gdThay ? SCg.gdThay(j < n ? 'gd-o-diem' : 'gd-o-diem-trong') : null;
+        if (od) SCg.veGd(G.ux, od, CX + 46 + j * 12, y0 + 4.5, 9, 9); else ui.rect(CX + 46 + j * 12, y0 + 5, 9, 8, j < n ? '#ffd23f' : '#0d1716', j < n ? '#fff0a8' : T.C.brD);
+      }
       if (n < 5) {
         ui.para(G.t('Tiếp: {0}', Bk.nodes[n]), CX + 6, y0 + 24, 236, { size: 7, color: TXT });
         // V21: học thêm một điểm nhánh này thì Sức mạnh tăng bao nhiêu (nút như hồi máu mỗi phòng không đổi con số thì không ghi)
@@ -952,7 +955,12 @@
     // dòng phụ: chữ giãn rộng, hai gạch đồng hai bên
     ui.font(9, true);
     const sub = 'S P I R I T B L A D E', sw = u.measureText(sub).width;
-    u.fillStyle = '#a8752f'; u.fillRect(Math.round(240 - sw / 2 - 26), 98 + dy, 18, 1); u.fillRect(Math.round(240 + sw / 2 + 8), 98 + dy, 18, 1);
+    const gach = SC && SC.gdThay ? SC.gdThay('gd-bia-gach') : null; // 16/10 (ve-tay-8-gop-giao-dien): gạch đồng ảnh, núm thoi ở đầu trong (gạch trái lật ngang)
+    if (gach) {
+      const xp = Math.round(240 + sw / 2 + 8), xt = Math.round(240 - sw / 2 - 8);
+      SC.veGd(u, gach, xp, 97.5 + dy, 18, 2);
+      u.save(); u.translate(xt, 0); u.scale(-1, 1); SC.veGd(u, gach, 0, 97.5 + dy, 18, 2); u.restore();
+    } else { u.fillStyle = '#a8752f'; u.fillRect(Math.round(240 - sw / 2 - 26), 98 + dy, 18, 1); u.fillRect(Math.round(240 + sw / 2 + 8), 98 + dy, 18, 1); }
     ui.text(sub, 240, 101.5 + dy, { size: 9, bold: true, align: 'center', color: '#d9a441' });
     // câu giới thiệu: trên ảnh bìa đặt trong ô cố định bằng hàm chung T.chuTrongKhung (tiếng Anh dài hơn thì tự thu cỡ, không tràn)
     if (bia && T.chuTrongKhung) T.chuTrongKhung('Vũ khí lớn lên theo bạn. Yêu tinh học theo bạn.', 90, 106 + dy, 300, 14, { vien: [0, 0, 0, 0], size: 8, min: 6.5, bold: false, color: TXT, shadow: true });

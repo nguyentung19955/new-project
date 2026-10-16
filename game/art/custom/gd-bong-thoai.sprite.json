@@ -1,0 +1,17 @@
+{
+ "loai": "linh-khi-sprite",
+ "phien_ban": 1,
+ "ma": "gd-bong-thoai",
+ "ten": "Bong bóng thoại (thân, 9 mảnh)",
+ "doi_tuong": "giao-dien",
+ "rong": 64,
+ "cao": 28,
+ "net": 1,
+ "vien": [
+  5,
+  5,
+  5,
+  5
+ ],
+ "anh": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAcCAYAAADRJblSAAACYklEQVR42uWZzYpcVRSFv7XPvber2nSqE9uU8Q9MIBBCMKDOfAQfyRdw6tyxg4DDgJIHEOJAfYGA6UCRpIkmVtfPrbuXg1vtyCfosybncODsw/7Y54+lWE+RAjDateRuy+TmNdNMGAgyl9hJlAkQkD1GgIFE0ez7DZLIoQdAMvYACCmQOkwCA1jgJG0iCjaACQkLRPw3Fxs7IQKpjLEJnDuMgQGThA72azVkbsA7IiYIM7AGw7A4E01LoyAZsJImDCnT+YD+Tufy4ojF08ccXptx2XT1vS/tUuj/fq62n7KlJ+ygbIVvFH/3zbes/npyKZMHePPyCW8Xv8Dxu+5yrK4mwhzfv8nkaMK9j69Tg250M17cCh8+RYpXQfvRiZdnv1OTrsw/ZXO6kw6uz7189hs16p3bnxEeglrlzYqwVC0AmmNCtPUCGJaE6esFoEKgrBhAQ0CpF0D2hHDdAGBX8S3QEa55C9AQqKv4GtwSyk3FFZAENatMCceVegG4J/Cq4odQEuS65iOAKO1JvQVAQ/jnPzX78G51yc9vPSB+LWrizpT01eoArFbnrOc9sdESt//w6OFjnj87rSL5Rz88ZHt+ThMFlfUBsYFhduwff/qer7/6/NIDmH3yBXl6pi1GsRmfwjEA7088KSf067csX/1x6RI/nD8gZPrFa9HsXahYd2AREp0a+m5gevKB/3/fvGGXO6I5AreYRKyBxA6kwL6wzS5sMaGI8dPtxGmEsEZjAjy2Egrt57OPse87kQTSOOYc7TJptMsuYjmxYjTucgA1SC14hXVOWWw1lC1Bi5UY8y/b/hFu62/HWQAAAABJRU5ErkJggg=="
+}

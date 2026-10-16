@@ -21,7 +21,8 @@ THEME = os.path.join(REPO, 'game', 'js', 'ui_theme.js')
 # Khung có chữ nằm trong / trên
 MA = ['gd-nut-thuong', 'gd-nut-chinh', 'gd-nut-nguy', 'gd-nut-chon', 'gd-khung-bang', 'gd-khung-thoai', 'gd-khung-nho',
       'gd-dai-thong-bao', 'gd-the-thuong', 'gd-the-nho', 'gd-the-sap-co', 'gd-thanh-tren', 'gd-khung-canh-bao', 'gd-o-con',
-      'gd-o-con-chon', 'gd-khung-trum', 'gd-khung-trum-nho', 'gd-khung-tinh-anh', 'gd-o-do-0', 'gd-khung-ban-do']
+      'gd-o-con-chon', 'gd-khung-trum', 'gd-khung-trum-nho', 'gd-khung-tinh-anh', 'gd-o-do-0', 'gd-khung-ban-do',
+      'gd-bong-thoai']  # gd-bong-thoai: thêm 16/10 (ve-tay-8-gop-giao-dien)
 
 
 def lum(p):
