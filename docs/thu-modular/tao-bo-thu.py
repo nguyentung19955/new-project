@@ -586,7 +586,25 @@ def lam_html(do):
     hinh = Image.open(os.path.join(RA, 'nhan-vat-zed-dung.png')); zx, zy = cell(HOP[:2])
     data = {'que': que, 'do': ds, 'A0': {k: round(v, 2) for k, v in A0.items()},
             'doan': [[l, a, b, '#%02x%02x%02x' % c] for l, a, b, c in DOAN_VE],
-            'zed': {'uri': uri(hinh), 'x': zx, 'y': zy, 'w': hinh.width, 'h': hinh.height}}
+            'zed': {'uri': uri(hinh), 'x': zx, 'y': zy, 'w': hinh.width, 'h': hinh.height},
+            'zed_khung': {}, 'bp_khung': {}}
+    # phiên 2: dáng chạy THẬT (do-chay-that.py) + ảnh Zed thật và bản đồ bộ phận từng khung (ô 256, đặt tại 0,0)
+    if os.path.exists(os.path.join(RA, 'que-chay-that.json')):
+        with open(os.path.join(RA, 'que-chay-that.json'), encoding='utf-8') as f: que['chay-that'] = json.load(f)
+        hang = Image.open(os.path.join(RA, 'zed-chay-that-hang.png')).convert('RGBA')
+        zk, bk = [], []
+        for i in range(que['chay-that']['so_khung']):
+            o = hang.crop((i * O, 0, (i + 1) * O, O)); px = o.load()
+            for y in range(O):
+                for x in range(O):
+                    r, g, b, _ = px[x, y]
+                    if (g > 150 and r < 120 and b < 120) or g > max(r, b) + 45: px[x, y] = (0, 0, 0, 0)
+            zk.append(uri(o))
+            p = os.path.join(RA, 'bo-phan-chay', f'ban-do-{i + 1:02d}.png')
+            if os.path.exists(p): bk.append(uri(Image.open(p)))
+        data['zed_khung']['chay-that'] = zk
+        if bk: data['bp_khung']['chay-that'] = bk
+    data['zed_khung']['dung'] = None   # dáng đứng dùng data.zed (giữ như cũ)
     with open(os.path.join(RA, 'kiem-tra.tmpl.html'), encoding='utf-8') as f: t = f.read()
     with open(os.path.join(RA, 'kiem-tra.html'), 'w', encoding='utf-8') as f:
         f.write(t.replace('__DATA__', json.dumps(data, ensure_ascii=False, separators=(',', ':'))))
