@@ -7,7 +7,8 @@
   "Mỗi ảnh bo-phan/<dong>/<bo-phan>.png là một hàng ô cùng cỡ ô que (dung: 1 ô 320×544, chay: 12 ô 256×320), cùng toạ độ que-*.json → chồng tất cả ảnh theo lớp (số nhỏ trước) sẽ ra lại đúng Cu Tí.",
   "Cách tách: điểm ảnh nằm trong vùng nhiều bộ phận → bộ phận lớp cao nhất; ngoài tất cả → bộ phận gần nhất. Đầu = phía trên đường cổ. Thân = tứ giác vai–hông. Tay/chân = dải quanh xương, bán kính ở dáng đứng × ti_le.",
   "Chỗ chồng lấn (tay gần đè thân, ống quần rộng, đai bay) tách xấp xỉ, sai vài điểm ảnh ở mép — để thử, không phải asset.",
-  "_ban-do-mau.png: tô mỗi bộ phận một màu (bảng mau_ban_do) để soát nhanh."
+  "_ban-do-mau.png: tô mỗi bộ phận một màu (bảng mau_ban_do) để soát nhanh.",
+  "Đã kiểm khi sinh: mỗi điểm ảnh đặc của Cu Tí thuộc ĐÚNG MỘT bộ phận ở mọi khung → ráp lại trùng ảnh gốc 100%."
  ],
  "dong_tac": {
   "dung": {
@@ -45,7 +46,7 @@
         283,
         258
        ],
-       "so_diem_anh": 34974
+       "so_diem_anh": 35108
       }
      ]
     },
@@ -103,11 +104,11 @@
        "do_dai_px": 57.2,
        "hop_px": [
         50,
-        244,
+        252,
         111,
         315
        ],
-       "so_diem_anh": 2290
+       "so_diem_anh": 2156
       }
      ]
     },
@@ -489,7 +490,7 @@
         223,
         175
        ],
-       "so_diem_anh": 11136
+       "so_diem_anh": 11271
       },
       {
        "khung": 2,
@@ -511,7 +512,7 @@
         225,
         175
        ],
-       "so_diem_anh": 11181
+       "so_diem_anh": 11341
       },
       {
        "khung": 3,
@@ -528,12 +529,12 @@
        "goc_do": -92.5,
        "do_dai_px": 114.1,
        "hop_px": [
-        86,
+        84,
         37,
         223,
         178
        ],
-       "so_diem_anh": 10783
+       "so_diem_anh": 11236
       },
       {
        "khung": 4,
@@ -555,7 +556,7 @@
         223,
         173
        ],
-       "so_diem_anh": 11005
+       "so_diem_anh": 11252
       },
       {
        "khung": 5,
@@ -577,7 +578,7 @@
         224,
         169
        ],
-       "so_diem_anh": 11219
+       "so_diem_anh": 11411
       },
       {
        "khung": 6,
@@ -599,7 +600,7 @@
         224,
         171
        ],
-       "so_diem_anh": 11033
+       "so_diem_anh": 11263
       },
       {
        "khung": 7,
@@ -621,7 +622,7 @@
         225,
         174
        ],
-       "so_diem_anh": 11436
+       "so_diem_anh": 11696
       },
       {
        "khung": 8,
@@ -643,7 +644,7 @@
         229,
         174
        ],
-       "so_diem_anh": 11517
+       "so_diem_anh": 11802
       },
       {
        "khung": 9,
@@ -660,12 +661,12 @@
        "goc_do": -92.5,
        "do_dai_px": 114.1,
        "hop_px": [
-        88,
+        85,
         27,
         229,
         168
        ],
-       "so_diem_anh": 11101
+       "so_diem_anh": 11614
       },
       {
        "khung": 10,
@@ -687,7 +688,7 @@
         228,
         167
        ],
-       "so_diem_anh": 11253
+       "so_diem_anh": 11639
       },
       {
        "khung": 11,
@@ -709,7 +710,7 @@
         228,
         167
        ],
-       "so_diem_anh": 11443
+       "so_diem_anh": 11700
       },
       {
        "khung": 12,
@@ -731,7 +732,7 @@
         228,
         177
        ],
-       "so_diem_anh": 11462
+       "so_diem_anh": 11788
       }
      ]
     },
@@ -758,11 +759,11 @@
        "do_dai_px": 67.1,
        "hop_px": [
         112,
-        142,
+        148,
         157,
         198
        ],
-       "so_diem_anh": 1223
+       "so_diem_anh": 1183
       },
       {
        "khung": 2,
@@ -780,11 +781,11 @@
        "do_dai_px": 68.0,
        "hop_px": [
         123,
-        141,
+        148,
         158,
         181
        ],
-       "so_diem_anh": 694
+       "so_diem_anh": 646
       },
       {
        "khung": 3,
@@ -802,11 +803,11 @@
        "do_dai_px": 71.6,
        "hop_px": [
         108,
-        141,
+        151,
         156,
         203
        ],
-       "so_diem_anh": 1280
+       "so_diem_anh": 1199
       },
       {
        "khung": 4,
@@ -824,11 +825,11 @@
        "do_dai_px": 72.7,
        "hop_px": [
         112,
-        140,
+        145,
         156,
         200
        ],
-       "so_diem_anh": 1182
+       "so_diem_anh": 1144
       },
       {
        "khung": 5,
@@ -846,11 +847,11 @@
        "do_dai_px": 73.8,
        "hop_px": [
         107,
-        135,
+        141,
         158,
         197
        ],
-       "so_diem_anh": 1468
+       "so_diem_anh": 1401
       },
       {
        "khung": 6,
@@ -868,11 +869,11 @@
        "do_dai_px": 83.9,
        "hop_px": [
         109,
-        136,
+        144,
         158,
         207
        ],
-       "so_diem_anh": 996
+       "so_diem_anh": 885
       },
       {
        "khung": 7,
@@ -890,11 +891,11 @@
        "do_dai_px": 74.8,
        "hop_px": [
         112,
-        133,
+        141,
         160,
         198
        ],
-       "so_diem_anh": 1278
+       "so_diem_anh": 1239
       },
       {
        "khung": 8,
@@ -912,11 +913,11 @@
        "do_dai_px": 75.3,
        "hop_px": [
         107,
-        131,
+        139,
         163,
         198
        ],
-       "so_diem_anh": 1538
+       "so_diem_anh": 1477
       },
       {
        "khung": 9,
@@ -934,11 +935,11 @@
        "do_dai_px": 82.7,
        "hop_px": [
         110,
-        133,
+        140,
         161,
         202
        ],
-       "so_diem_anh": 1324
+       "so_diem_anh": 1311
       },
       {
        "khung": 10,
@@ -960,7 +961,7 @@
         160,
         191
        ],
-       "so_diem_anh": 1062
+       "so_diem_anh": 1058
       },
       {
        "khung": 11,
@@ -978,11 +979,11 @@
        "do_dai_px": 77.9,
        "hop_px": [
         111,
-        131,
+        138,
         160,
         190
        ],
-       "so_diem_anh": 1423
+       "so_diem_anh": 1308
       },
       {
        "khung": 12,
@@ -1000,11 +1001,11 @@
        "do_dai_px": 84.9,
        "hop_px": [
         118,
-        132,
+        141,
         165,
         202
        ],
-       "so_diem_anh": 1567
+       "so_diem_anh": 1440
       }
      ]
     },
@@ -1031,11 +1032,11 @@
        "do_dai_px": 26.2,
        "hop_px": [
         92,
-        125,
-        133,
+        144,
+        131,
         181
        ],
-       "so_diem_anh": 703
+       "so_diem_anh": 659
       },
       {
        "khung": 2,
@@ -1052,12 +1053,12 @@
        "goc_do": 113.5,
        "do_dai_px": 25.1,
        "hop_px": [
-        101,
-        125,
-        135,
+        106,
+        145,
+        132,
         193
        ],
-       "so_diem_anh": 470
+       "so_diem_anh": 409
       },
       {
        "khung": 3,
@@ -1074,12 +1075,12 @@
        "goc_do": 121.0,
        "do_dai_px": 29.2,
        "hop_px": [
-        84,
-        107,
-        132,
+        95,
+        149,
+        127,
         194
        ],
-       "so_diem_anh": 692
+       "so_diem_anh": 432
       },
       {
        "khung": 4,
@@ -1096,12 +1097,12 @@
        "goc_do": 116.6,
        "do_dai_px": 17.9,
        "hop_px": [
-        91,
-        113,
-        130,
+        108,
+        143,
+        128,
         187
        ],
-       "so_diem_anh": 441
+       "so_diem_anh": 337
       },
       {
        "khung": 5,
@@ -1119,11 +1120,11 @@
        "do_dai_px": 26.2,
        "hop_px": [
         90,
-        119,
-        129,
+        140,
+        128,
         178
        ],
-       "so_diem_anh": 705
+       "so_diem_anh": 631
       },
       {
        "khung": 6,
@@ -1140,12 +1141,12 @@
        "goc_do": 113.5,
        "do_dai_px": 25.1,
        "hop_px": [
-        91,
-        111,
-        133,
+        102,
+        141,
+        131,
         195
        ],
-       "so_diem_anh": 568
+       "so_diem_anh": 455
       },
       {
        "khung": 7,
@@ -1162,12 +1163,12 @@
        "goc_do": 129.1,
        "do_dai_px": 20.6,
        "hop_px": [
-        90,
-        110,
-        130,
+        100,
+        136,
+        129,
         187
        ],
-       "so_diem_anh": 563
+       "so_diem_anh": 441
       },
       {
        "khung": 8,
@@ -1185,11 +1186,11 @@
        "do_dai_px": 25.1,
        "hop_px": [
         89,
-        109,
-        130,
+        140,
+        128,
         180
        ],
-       "so_diem_anh": 832
+       "so_diem_anh": 712
       },
       {
        "khung": 9,
@@ -1206,12 +1207,12 @@
        "goc_do": 117.6,
        "do_dai_px": 25.9,
        "hop_px": [
-        85,
-        98,
-        128,
+        96,
+        145,
+        126,
         195
        ],
-       "so_diem_anh": 756
+       "so_diem_anh": 472
       },
       {
        "khung": 10,
@@ -1228,12 +1229,12 @@
        "goc_do": 115.0,
        "do_dai_px": 16.6,
        "hop_px": [
-        93,
-        105,
-        129,
+        109,
+        139,
+        128,
         183
        ],
-       "so_diem_anh": 520
+       "so_diem_anh": 319
       },
       {
        "khung": 11,
@@ -1250,12 +1251,12 @@
        "goc_do": 136.6,
        "do_dai_px": 24.8,
        "hop_px": [
-        92,
-        108,
+        93,
         133,
+        131,
         180
        ],
-       "so_diem_anh": 777
+       "so_diem_anh": 651
       },
       {
        "khung": 12,
@@ -1273,11 +1274,11 @@
        "do_dai_px": 20.6,
        "hop_px": [
         91,
-        107,
-        136,
+        140,
+        134,
         179
        ],
-       "so_diem_anh": 725
+       "so_diem_anh": 526
       }
      ]
     },
@@ -1849,12 +1850,12 @@
        "goc_do": 60.5,
        "do_dai_px": 26.4,
        "hop_px": [
-        136,
-        143,
+        140,
+        151,
         165,
         190
        ],
-       "so_diem_anh": 354
+       "so_diem_anh": 303
       },
       {
        "khung": 2,
@@ -1871,12 +1872,12 @@
        "goc_do": 66.5,
        "do_dai_px": 25.1,
        "hop_px": [
-        138,
-        143,
+        146,
+        153,
         163,
         183
        ],
-       "so_diem_anh": 325
+       "so_diem_anh": 274
       },
       {
        "khung": 3,
@@ -1893,12 +1894,12 @@
        "goc_do": 113.5,
        "do_dai_px": 25.1,
        "hop_px": [
-        132,
-        141,
+        139,
+        158,
         157,
         197
        ],
-       "so_diem_anh": 198
+       "so_diem_anh": 86
       },
       {
        "khung": 4,
@@ -1915,12 +1916,12 @@
        "goc_do": 111.0,
        "do_dai_px": 27.9,
        "hop_px": [
-        131,
-        138,
+        137,
+        150,
         158,
         171
        ],
-       "so_diem_anh": 228
+       "so_diem_anh": 123
       },
       {
        "khung": 5,
@@ -1937,12 +1938,12 @@
        "goc_do": 74.7,
        "do_dai_px": 22.8,
        "hop_px": [
-        137,
-        138,
+        140,
+        146,
         160,
         189
        ],
-       "so_diem_anh": 261
+       "so_diem_anh": 210
       },
       {
        "khung": 6,
@@ -1960,11 +1961,11 @@
        "do_dai_px": 24.4,
        "hop_px": [
         146,
-        143,
+        147,
         159,
         176
        ],
-       "so_diem_anh": 190
+       "so_diem_anh": 184
       },
       {
        "khung": 7,
@@ -1981,12 +1982,12 @@
        "goc_do": 85.2,
        "do_dai_px": 24.1,
        "hop_px": [
-        132,
-        134,
+        138,
+        146,
         163,
         192
        ],
-       "so_diem_anh": 383
+       "so_diem_anh": 284
       },
       {
        "khung": 8,
@@ -2003,12 +2004,12 @@
        "goc_do": 67.8,
        "do_dai_px": 23.8,
        "hop_px": [
-        135,
-        133,
+        140,
+        145,
         166,
         189
        ],
-       "so_diem_anh": 449
+       "so_diem_anh": 345
       },
       {
        "khung": 9,
@@ -2025,12 +2026,12 @@
        "goc_do": 120.6,
        "do_dai_px": 25.6,
        "hop_px": [
-        128,
-        126,
+        132,
+        141,
         161,
         196
        ],
-       "so_diem_anh": 494
+       "so_diem_anh": 278
       },
       {
        "khung": 10,
@@ -2047,12 +2048,12 @@
        "goc_do": 117.6,
        "do_dai_px": 23.7,
        "hop_px": [
-        128,
-        125,
+        130,
+        138,
         161,
         190
        ],
-       "so_diem_anh": 440
+       "so_diem_anh": 259
       },
       {
        "khung": 11,
@@ -2070,11 +2071,11 @@
        "do_dai_px": 22.8,
        "hop_px": [
         141,
-        136,
+        143,
         160,
         188
        ],
-       "so_diem_anh": 274
+       "so_diem_anh": 258
       },
       {
        "khung": 12,

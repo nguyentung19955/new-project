@@ -328,18 +328,20 @@ def kc_doan(xx, yy, a, b):
 
 def tach_lop(F, tl):
     """Gán mỗi điểm ảnh của khung cho 1 bộ phận: trong nhiều bộ phận → lấy lớp trên cùng; ngoài tất cả → bộ phận gần nhất.
-    Đầu = mọi điểm ảnh phía trên đường cổ (vuông góc trục thân, qua 'co' lùi 4%). Thân = tứ giác vai–hông nở 8%."""
+    Đầu = mọi điểm ảnh phía trên đường cổ (vuông góc trục thân, qua 'co' lùi 4%) + tóc trong vòng đầu cao hơn cổ. Thân = tứ giác vai–hông nở 8%."""
     im = F['im']; a = np.array(im); H, W = a.shape[:2]; J = F['J']
     yy, xx = np.mgrid[:H, :W].astype(float); dac = a[..., 3] > 0
     ux, uy = J['co'][0] - J['hong'][0], J['co'][1] - J['hong'][1]; L = math.hypot(ux, uy); ux, uy = ux / L, uy / L
     chieu = (xx - J['co'][0]) * ux + (yy - J['co'][1]) * uy           # > 0: phía trên cổ theo trục thân
     kc = {}
-    kc['dau'] = np.where(chieu > -0.04 * L, 0.0, 1e3)
+    R = dai(J['tam_dau'], J['dinh_dau'])          # tóc tua phía sau gáy (thấp hơn đường cổ nhưng còn trong vòng đầu, trên cổ) cũng là đầu
+    la_dau = (chieu > -0.04 * L) | ((np.hypot(xx - J['tam_dau'][0], yy - J['tam_dau'][1]) < R * 1.05) & (yy < J['co'][1] - 0.02 * L)) | (yy < J['co'][1] - 0.15 * L)
+    kc['dau'] = np.where(la_dau, 0.0, 1e3)
     m = Image.new('L', (W, H), 0); pts = [J['vai_phai'], J['co'], J['vai_trai'], J['hong_trai'], J['hong_phai']]
     cx = sum(p[0] for p in pts) / 5; cy = sum(p[1] for p in pts) / 5
     ImageDraw.Draw(m).polygon([(cx + (p[0] - cx) * 1.08, cy + (p[1] - cy) * 1.08) for p in pts], fill=1)
     tg = np.array(m) > 0
-    kc['than'] = np.where(tg, 0.0, ndimage.distance_transform_edt(~tg)) + np.where(chieu > -0.04 * L, 1e3, 0)
+    kc['than'] = np.where(tg, 0.0, ndimage.distance_transform_edt(~tg)) + np.where(la_dau, 1e3, 0)
     for ten, a_, b_, r, lop, _ in BO_PHAN[2:]:
         kc[ten] = kc_doan(xx, yy, J[a_], J[b_]) - r * tl
     ten_ds = [b[0] for b in BO_PHAN]; lop = np.array([b[4] for b in BO_PHAN])
@@ -347,6 +349,7 @@ def tach_lop(F, tl):
     trong = K <= 0
     diem_trong = np.where(trong, lop[:, None, None], -1)
     chon = np.where(trong.any(0), diem_trong.argmax(0), K.argmin(0))
+    chon = np.where(la_dau, 0, chon)                     # vùng đầu luôn là đầu (tóc tua sau gáy không lọt sang vai)
     return {t: (chon == j) & dac for j, t in enumerate(ten_ds)}
 
 def lam_bo_phan(Ds, D0):
@@ -375,6 +378,8 @@ def lam_bo_phan(Ds, D0):
                                   'hop_px': [bb[0] + ox, bb[1] + oy, bb[2] + ox, bb[3] + oy] if bb else None,
                                   'so_diem_anh': int(M[ten].sum())})
             bd.alpha_composite(Image.fromarray(mau), (i * W + ox, oy))
+            gom = sum(M[b[0]].astype(int) for b in BO_PHAN); dac = a[..., 3] > 0
+            assert (gom[dac] == 1).all() and (gom[~dac] == 0).all(), f'{k} khung {i + 1}: tách lớp sót/trùng điểm ảnh'
         for ten in strip: strip[ten].save(os.path.join(thu, ten + '.png'))
         bd.save(os.path.join(thu, '_ban-do-mau.png')); ban_do[k] = bd
         out[k] = {'thu_muc': f'bo-phan/{k}/', 'o': [W, H], 'so_khung': n,
@@ -388,7 +393,8 @@ def lam_bo_phan(Ds, D0):
                     'Cách tách: điểm ảnh nằm trong vùng nhiều bộ phận → bộ phận lớp cao nhất; ngoài tất cả → bộ phận gần nhất. '
                     'Đầu = phía trên đường cổ. Thân = tứ giác vai–hông. Tay/chân = dải quanh xương, bán kính ở dáng đứng × ti_le.',
                     'Chỗ chồng lấn (tay gần đè thân, ống quần rộng, đai bay) tách xấp xỉ, sai vài điểm ảnh ở mép — để thử, không phải asset.',
-                    '_ban-do-mau.png: tô mỗi bộ phận một màu (bảng mau_ban_do) để soát nhanh.'],
+                    '_ban-do-mau.png: tô mỗi bộ phận một màu (bảng mau_ban_do) để soát nhanh.',
+                    'Đã kiểm khi sinh: mỗi điểm ảnh đặc của Cu Tí thuộc ĐÚNG MỘT bộ phận ở mọi khung → ráp lại trùng ảnh gốc 100%.'],
         'dong_tac': out})
     # ảnh tổng: bản đồ màu từng khung + bung rời dáng đứng
     S = 1; D = Ds['chay']; W, H = D['W'], D['H']
@@ -422,6 +428,34 @@ def lam_bo_phan(Ds, D0):
     d.text((820, y0 + 64), 'bo-phan/dung/*.png, bo-phan/chay/*.png', fill=DEN, font=font(14))
     o = o.crop((0, 0, o.width, y0 + 30 + round(Ds['dung']['H'] * k_) + 10)); o.save(os.path.join(RA, 'bo-phan.png'))
     return out
+
+MON_GEN = [  # (tệp, tên món, các bộ phận phủ, màu)
+    ('mu', 'mũ / nón / tóc giả', ['dau'], (255, 170, 0)),
+    ('ao', 'áo (thân + tay áo)', ['than', 'canh-tay-tren-phai', 'canh-tay-tren-trai'], (0, 170, 110)),
+    ('quan', 'quần (đùi + ống)', ['dui-phai', 'dui-trai', 'cang-chan-phai', 'cang-chan-trai'], (40, 90, 230)),
+    ('gang', 'găng / bao tay', ['ban-tay-phai', 'ban-tay-trai', 'canh-tay-duoi-phai', 'canh-tay-duoi-trai'], (220, 40, 40)),
+    ('giay', 'giày / dép', ['ban-chan-phai', 'ban-chan-trai'], (160, 60, 200)),
+]
+def lam_mau_gen(Ds):
+    """mau-gen/vung-<món>.png: 12 ô chạy (cùng ô que-chay-12.png) + ô đứng, Cu Tí MỚI mờ, vùng món đó tô màu.
+    Gửi kèm prompt để AI biết vẽ món ở đâu trong từng khung."""
+    os.makedirs(os.path.join(RA, 'mau-gen'), exist_ok=True); D0 = Ds['dung']
+    tach = {k: [tach_lop(F, D0['fr'][0]['sx'] / F['sx']) for F in D['fr']] for k, D in Ds.items()}
+    for tep, ten, bp, col in MON_GEN:
+        for k, D in Ds.items():
+            n = len(D['fr']); W, H = D['W'], D['H']
+            o = Image.new('RGB', (n * W, H), TRANG)
+            for i, F in enumerate(D['fr']):
+                c = Image.new('RGB', (W, H), TRANG); ImageDraw.Draw(c).line([(0, D['GY']), (W, D['GY'])], fill=(170, 170, 170))
+                dan_hinh(c, F, 1, mo=0.35)
+                m = np.zeros(F['im'].size[::-1], bool)
+                for b in bp: m |= tach[k][i][b]
+                lop = np.zeros(m.shape + (4,), np.uint8); lop[m] = list(col) + [210]
+                li = Image.fromarray(lop); c.paste(li, F['off'], li)
+                ImageDraw.Draw(c).rectangle([0, 0, W - 1, H - 1], outline=(190, 190, 190))
+                ImageDraw.Draw(c).text((4, 4), str(i + 1), fill=(200, 0, 0), font=font(14, True))
+                o.paste(c, (i * W, 0))
+            o.save(os.path.join(RA, 'mau-gen', f'vung-{tep}-{k}.png'))
 
 # ---------------------------------------------------------------- 6. ĐỒ THỬ (máy vẽ hình đơn giản, đặt theo neo từng khung)
 DO_THU = [  # (mã, tên, lớp, màu)
@@ -553,6 +587,7 @@ def main():
     tam_o(D, S=2, cot=6, ham=lambda c, F, S: ve_neo(c, F, S, Q['chay'])).save(os.path.join(RA, 'neo-do-chay-12.png'))
     tam_o(D0, S=1, ham=lambda c, F, S: ve_neo(c, F, S, Q['dung']), nhan=['đứng']).save(os.path.join(RA, 'neo-do-dung.png'))
     BP = lam_bo_phan(Ds, D0)
+    lam_mau_gen(Ds)
     lam_ghep(Ds)
     lam_so_sanh(Ds)
     lam_html(Ds, Q, BP)
