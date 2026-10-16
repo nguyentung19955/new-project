@@ -21,6 +21,28 @@ Oct 16, 2026 · @TÙNG
 2. **Thế giới dọc.** Toàn bộ bản đồ là một cái cây khổng lồ: leo lên là trời, đào xuống là vực. Leo trèo, trượt tường, đi thang không phải phụ kiện mà là ngôn ngữ chính của game.
 3. **Cái chết để lại dấu vết.** Mỗi lần chết, bạn và người chơi khác thấy được tiếng vọng 5 giây cuối của nhau — vừa là cảnh báo, vừa là gợi ý, vừa là trò cười cộng đồng.
 
+## Phạm vi bản demo (ưu tiên hiện tại)
+
+Mục tiêu hiện tại là một bản demo 30–60 phút chơi, đủ để thử cơ chế Tiếng Vọng trước khi mở rộng.
+
+| Hạng mục | Trong demo |
+| --- | --- |
+| Vùng | 1 vùng nhỏ: một đoạn Làng Chuông nối sang Rễ Mục |
+| Vũ khí | 1 — kiếm |
+| Động tác | Chạy, nhảy, trượt tường, bật tường, leo thang, lướt, combo 3 nhát (chém thẳng → chéo lên → bổ xuống), đỡ đòn |
+| Tiếng Vọng | 1 loại: một bóng, ghi 3 giây, phát lại; dùng để giữ công tắc và đánh thêm một nhát |
+| Địch | 2–3 loại, có Quái Chuông Gỗ |
+| Boss | 1 |
+| Câu đố | Vài câu đố tiếng vọng |
+
+**Chưa làm trong demo:** online, tiếng vọng cộng đồng, bảng xếp hạng, mùa giải, NG+, endgame Vực Lặng, các biến thể tiếng vọng (Đổi Chỗ, Cộng Hưởng, Vọng Kép, Vọng Ngược, Hợp Xướng), hầu hết Âm Phù và các chuông khác.
+
+### Thứ tự làm
+
+1. **Phòng xám:** kiểm tra chạy, nhảy, đánh, ghi/phát tiếng vọng.
+2. **Cho người khác thử, không hướng dẫn:** xem họ có hiểu và muốn dùng tiếng vọng không; sửa luật trước khi thêm biến thể.
+3. **Vertical slice nhỏ:** chỉ mở rộng khi phần này chơi ổn.
+
 ## 2. Bối cảnh & cốt truyện
 
 **Thế giới — Cây Chuông Vĩnh Hằng.** Một cái cây cao hàng nghìn trượng, thân cây rỗng chứa cả một nền văn minh. Trên mỗi tầng treo những quả chuông cổ; tiếng chuông giữ cho mọi sinh vật nhớ được mình là ai. Từ đáy vực, một thứ gọi là **Sự Lặng** đang bò lên: nơi nó đi qua, âm thanh tắt, ký ức tan, và sinh vật biến thành những cái vỏ rỗng hung dữ.
@@ -29,7 +51,9 @@ Oct 16, 2026 · @TÙNG
 
 ### Nhân vật chính
 
-**Lam** — cô bé học việc giữ chuông, câm từ lúc tỉnh dậy, mang cây gậy chuông bằng đồng. Cô không nói được, chỉ "vọng lại" được. Khăn quàng đỏ dài là điểm nhận diện và là chuyển động phụ (secondary motion) đẹp nhất trên màn hình.
+**Lam** — "Thợ săn chuông", cô bé học việc giữ chuông, câm từ lúc tỉnh dậy. Ngoại hình: mũ trùm nhọn tối màu, áo choàng ngắn viền xanh lá, cầm kiếm một tay, chuông vàng đồng đeo sau vai trái. Cô không nói được, chỉ "vọng lại" được. Vạt áo choàng là chuyển động phụ (secondary motion) đẹp nhất trên màn hình.
+
+**Bảng màu chuẩn:** `#0C0F14` `#212835` `#1A212B` `#21413A` `#32804F` `#83CC93` `#CEF0D6` `#4A5A6E`. Điểm nhấn ấm duy nhất là `#E1B85A` / `#9C6B30` / `#F3E6C8`, chỉ dùng cho chuông và chắn kiếm. `#CEF0D6` dành cho hiệu ứng tiếng vọng.
 
 ### Dàn nhân vật phụ
 
@@ -110,7 +134,7 @@ Lam có 27 động tác chính, chia 2 nhóm, cộng bộ chỉ số cảm giác
 | ★ Nhảy đôi | Nhảy lần hai trên không bằng sóng âm | Vùng 4 |
 | ★ Đu xà trần | Treo người di chuyển dưới dây leo, trần sắt | Vùng 4 |
 | ★ Bơi & lặn | Bơi 8 hướng, lướt dưới nước | Vùng 5 |
-| ★ Lượn | Dang khăn quàng lượn chậm, cưỡi luồng gió | Vùng 6 |
+| ★ Lượn | Dang vạt áo choàng lượn chậm, cưỡi luồng gió | Vùng 6 |
 | ★ Đập đất | Lao thẳng xuống, phá sàn nứt, nảy lên cao | Vùng 7 |
 
 ### Chiến đấu
@@ -125,7 +149,7 @@ Lam có 27 động tác chính, chia 2 nhóm, cộng bộ chỉ số cảm giác
 | Ngân (parry) | Nhấn đúng 8 khung trước khi trúng đòn: chuông vang, địch choáng, tự tạo 1 tiếng vọng miễn phí |
 | Lăn né | Né trên đất, 10 khung bất tử |
 | Kết liễu | Địch choáng → nhấn đánh để chơi animation kết liễu riêng cho từng loại địch |
-| Ném chuông | Ném gậy chuông như boomerang, kéo về bằng xích |
+| Ném chuông | Ném chuông như boomerang, kéo về bằng xích |
 
 ### Chỉ số cảm giác điều khiển (bắt buộc đạt)
 
@@ -144,12 +168,12 @@ Game chạy logic 60 FPS, sprite vẽ ở nhịp 12 FPS cho chuyển động th�
 
 | Animation | Số khung | Ghi chú |
 | --- | --- | --- |
-| Đứng yên | 8 | Thở, khăn bay nhẹ; sau 10 giây có animation chờ riêng (ngồi xuống gõ chuông) |
+| Đứng yên | 8 | Thở, vạt áo choàng bay nhẹ; sau 10 giây có animation chờ riêng (ngồi xuống gõ chuông) |
 | Chạy | 8 | Chu kỳ đủ 2 bước, có khung tiếp đất nặng |
 | Bắt đầu chạy / phanh | 3 / 4 | Không bao giờ nhảy thẳng từ đứng sang chạy |
 | Nhảy | 2 chuẩn bị + 3 bay lên + 2 đỉnh + 3 rơi + 3 tiếp đất | Co giãn (squash & stretch) ở chuẩn bị và tiếp đất |
 | Trượt tường | 4 lặp | Bụi / tia lửa rơi theo vật liệu tường |
-| Bật tường | 5 | Khung đầu xoay người, tóc và khăn đổi hướng trễ 2 khung |
+| Bật tường | 5 | Khung đầu xoay người, tóc và vạt áo choàng đổi hướng trễ 2 khung |
 | Leo tường | 6 lặp | Tay chân luân phiên, chậm dần khi Sức Bám gần hết, run tay ở 20% |
 | Đi thang | 6 lặp | Khung riêng cho lên đầu thang và tuột nhanh |
 | Bám mép + đu lên | 7 | Nhân vật trượt ngược 1 px trước khi kéo người — cảm giác có trọng lượng |
@@ -159,12 +183,12 @@ Game chạy logic 60 FPS, sprite vẽ ở nhịp 12 FPS cho chuyển động th�
 
 ### Nguyên tắc bắt buộc
 
-- **Khăn quàng, tóc, dây xích** chạy vật lý riêng (verlet 6 điểm) — đây là thứ khiến pixel art trông "sống"
+- **Vạt áo choàng, tóc, dây xích** chạy vật lý riêng (verlet 6 điểm) — đây là thứ khiến pixel art trông "sống"
 - **Hit stop**: đòn nhẹ 3 khung, đòn nặng 6 khung, Hòa Âm 10 khung
 - **Rung màn hình** có hướng theo đòn, không rung ngẫu nhiên
 - **Kết liễu**: mỗi loại địch có animation chết riêng, rơi ra đúng hình dạng các mảnh
 - Animation chuyển tiếp ưu tiên cảm giác điều khiển: khi người chơi bấm, nhân vật phản hồi trong khung kế tiếp, animation chỉ được "đuổi theo" chứ không được chặn input
-- Cảnh nền có 4–6 lớp parallax, lá rơi, côn trùng, đèn lồng đung đưa; ánh sáng 2D động cho hang tối
+- Cảnh nền có 4–6 lớp parallax, lá rơi, côn trùng, đèn lồng đung đưa; ánh sáng 2D động cho hang tối. Trong game, các lớp nền được làm tối và giảm độ bão hòa để lối đi và nhân vật nổi bật; lớp gần chỉ là khung rễ cây
 
 ## 6. Skill, vũ khí & build
 
@@ -296,9 +320,11 @@ Một chế độ roguelite mở sau khi xong cốt truyện. Mỗi lần xuốn
 
 Mục tiêu: bản chơi thử dọc (vertical slice) sau 4 tháng, phát hành sau khoảng 24 tháng với đội 8–10 người. Nếu đội nhỏ hơn, cắt Vực Lặng xuống 15 tầng và giảm còn 6 vùng — cơ chế Tiếng Vọng thì giữ nguyên.
 
+*Ghi chú: bảng đội ngũ 8–10 người và mốc 24 tháng là cho bản đầy đủ. Hiện tại làm một mình cùng AI; mốc gần là bản demo (xem mục Phạm vi bản demo).*
+
 ### Kỹ thuật
 
-- **Engine:** Godot 4 (miễn phí, mạnh cho 2D pixel perfect) hoặc Unity
+- **Công cụ làm game:** web HTML5, chạy được ngay trên điện thoại bằng một đường link; có thể đóng gói bản web lên Steam sau
 - **Độ phân giải gốc:** 480×270, phóng nguyên lần lên 1080p / 4K
 - **Công cụ vẽ:** Aseprite cho sprite, LDtk hoặc Tiled cho bản đồ
 - **Ghi tiếng vọng:** lưu trạng thái input + vị trí mỗi khung (≈180 khung / 3 giây), phát lại tất định (deterministic)
