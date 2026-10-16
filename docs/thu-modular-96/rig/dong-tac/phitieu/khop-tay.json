@@ -1,0 +1,29 @@
+{
+  "ghi_chu": "Khớp đánh tay (bằng mắt, lưới 10 điểm ảnh) trên ẢNH NGUỒN CAO docs/anh-goc/zed/moi/20-phi-tieu-gif/20-phi-tieu/khung-XX.png (toạ độ điểm ảnh ảnh khung, gốc trên-trái). Tay TRƯỚC = tay lộ bắp tay trần bên trái, vẽ đè lên thân, nắm tay trước bụng (khung 2: giơ lên sau đầu để lấy đà); tay SAU = tay nắm đấm bên phải, khung 3–4 là tay duỗi ra ném. Chân TRƯỚC = chân bên trái hình, chân SAU = chân bên phải (thế đứng tấn, hai chân không chồng nhau).",
+  "khung": [
+    {"dinh":[150,15],"cam":[180,183],"co":[160,195],"daiTren":250,
+     "vaiT":[72,200],"khuyuT":[50,240],"coTayT":[80,258],"banTayT":[90,265],"vaiS":[185,210],"khuyuS":[200,255],"coTayS":[225,250],"banTayS":[245,245],
+     "hongT":[100,300],"goiT":[60,350],"coChanT":[45,400],"muiChanT":[35,422],"hongS":[175,300],"goiS":[215,340],"coChanS":[205,400],"muiChanS":[245,420]},
+    {"dinh":[175,15],"cam":[200,190],"co":[180,205],"daiTren":262,
+     "vaiT":[90,200],"khuyuT":[45,198],"coTayT":[60,165],"banTayT":[78,152],"vaiS":[195,215],"khuyuS":[215,252],"coTayS":[245,248],"banTayS":[268,235],
+     "hongT":[120,310],"goiT":[70,360],"coChanT":[55,405],"muiChanT":[40,425],"hongS":[200,310],"goiS":[245,345],"coChanS":[225,405],"muiChanS":[265,425]},
+    {"dinh":[200,15],"cam":[240,180],"co":[205,190],"daiTren":245,
+     "vaiT":[165,205],"khuyuT":[180,250],"coTayT":[228,252],"banTayT":[245,252],"vaiS":[235,185],"khuyuS":[285,190],"coTayS":[330,190],"banTayS":[360,183],
+     "hongT":[150,300],"goiT":[90,340],"coChanT":[45,395],"muiChanT":[35,420],"hongS":[240,300],"goiS":[270,330],"coChanS":[240,395],"muiChanS":[285,415]},
+    {"dinh":[250,20],"cam":[290,190],"co":[255,205],"daiTren":240,
+     "vaiT":[150,200],"khuyuT":[135,228],"coTayT":[220,250],"banTayT":[235,248],"vaiS":[265,200],"khuyuS":[305,228],"coTayS":[338,250],"banTayS":[358,265],
+     "hongT":[180,300],"goiT":[110,340],"coChanT":[45,390],"muiChanT":[35,415],"hongS":[260,300],"goiS":[275,340],"coChanS":[255,395],"muiChanS":[285,410]},
+    {"dinh":[165,15],"cam":[195,192],"co":[170,200],"daiTren":262,
+     "vaiT":[100,210],"khuyuT":[95,255],"coTayT":[135,240],"banTayT":[148,232],"vaiS":[190,215],"khuyuS":[205,255],"coTayS":[235,250],"banTayS":[258,245],
+     "hongT":[120,310],"goiT":[70,360],"coChanT":[45,410],"muiChanT":[35,428],"hongS":[200,310],"goiS":[235,350],"coChanS":[215,410],"muiChanS":[250,425]},
+    {"dinh":[150,15],"cam":[185,190],"co":[160,200],"daiTren":262,
+     "vaiT":[95,210],"khuyuT":[80,255],"coTayT":[125,245],"banTayT":[138,235],"vaiS":[180,215],"khuyuS":[190,255],"coTayS":[218,252],"banTayS":[240,245],
+     "hongT":[110,310],"goiT":[60,360],"coChanT":[40,410],"muiChanT":[30,428],"hongS":[190,310],"goiS":[225,350],"coChanS":[210,410],"muiChanS":[245,425]}
+  ],
+  "an": {"3": ["shoulderFront", "elbowFront"], "4": ["elbowFront"]},
+  "ghi_chu_ra": [
+    "Ảnh gen KHÔNG giữ đúng tay ném: khung 2 tay TRƯỚC (bắp tay trái) giơ ra sau đầu lấy đà, nhưng khung 3–4 tay duỗi ra ném lại là tay SAU (tay phải), còn tay trước đã về trước bụng. Khớp ghi đúng như hình vẽ từng khung.",
+    "Khung 3: vai + khuỷu tay trước khuất sau thân (chỉ thấy nắm tay trước bụng); khung 4: khuỷu tay trước khuất.",
+    "Phi tiêu không vẽ trong tấm thân (game vẽ riêng), sheet chỉ có người."
+  ]
+}
