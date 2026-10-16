@@ -96,7 +96,8 @@ Chỉ đổi điểm neo, góc, tay thứ hai, điểm cầm trên ảnh kiếm.
 ## Kiểm
 
 - `node --check` mọi `game/js/*.js`: đạt.
-- `python3 game/build.py` và `--hai-tep`: đạt (số dung lượng ở dưới).
+- `python3 game/build.py` và `--hai-tep`: đạt. Người chơi tải 17,14 / 20 MB. Phần của phiên này chỉ thêm khoảng 4 KB.
+- **Cần để ý**: bản một tệp 30,27 / 30 MB, vượt trần. Đã vượt từ trước phiên này (bản trên nhánh lúc gộp đã 30,26 MB, do các phiên ảnh chạy song song). Bản này chỉ dùng cho trang công cụ, web chạy bản hai tệp.
 - Chạy hàm vẽ của game bằng node (không mở trình duyệt): mặc định dùng điểm cầm / góc mới, `?camchuan=0` ra đúng số cũ, `G.zedMoi.loi` rỗng.
 - Nạp trang `?cloud=0` (không bấm phím) và `?cloud=0&camchuan=0`: 0 lỗi JS.
 - Không đụng đăng nhập Google / lưu mây / `?cloud=0`.

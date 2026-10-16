@@ -71,7 +71,7 @@
 <div id="lk-tai" data-bia="||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAMEBQYH/8QAKRAAAQMCBQMDBQAAAAAAAAAAAQIDEQAEBRIhMUETFGEiQnEVUWKBsf/EABcBAAMBAAAAAAAAAAAAAAAAAAIDBAX/xAAlEQACAQEFCQAAAAAAAAAAAAABAgADBBExUfASEyEyM0FxobH/2gAMAwEAAhEDEQA/AOfNMWj9zbWiEtBsn1ugGTPCvjXajFcBNssNsvoeMxlCgVJqzCbhHftG3aGdcJBUAUn7neRzTMcumxjD0hDSkmFBtWZMjSdR5qamzb4DtHOiimTfxmt/T3UpzLBCTt5q22sWekt0vBvImSF8+KyF5eWDaGFNZlr6YkKGiTPGvzSutZDDX1sF3P0wPUBMzvP62rStACi5TEWB9pizi/H1JsLUo3NhKiZUOfyqbE1Hu3jJkqPNFFRUuprOHU5dZSVwmE6+2mNk9u7r7R/aKKqqQLNifB+T/9k=|||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAgf/xAAmEAACAgEEAQQCAwAAAAAAAAABAgMRAAQSITEFE1FhgSJBcbHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQIDBAX/xAAeEQABBAIDAQAAAAAAAAAAAAAAAQIDEiExBBEyIv/aAAwDAQACEQMRAD8A51EIZIo53EASNwHG07mBPFno9HFyeOhl1Y2yFIbtjVkDnr54yzx2vaLSyII1cELvBQEVu5PyeshTWvFJG6qi7OR+A9/4xoa3yQzWRvzsH8YkWrkCMZYlsoSvJHfWUalzFpI4/TRBZbca3HsUcXqvJvPqpZgEAewAFHAP1mZ9aZIoyqKWVa4jX3P+jByGor8aNDgT0gXvDiHTs1EbjRAsX3jKuEH92Ofs4YYGeim/yLulscHjFuT6YNno/wBnDDGfsEej/9k=" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.16-2306";
+(window.G = window.G || {}).VERSION = "lk-2026.10.16-2332";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -2583,6 +2583,11 @@
     if (/[?&]ngonanh=0(&|$)/.test(q)) G.NGON_ANH = false;
     if (/[?&]chay2tay=0(&|$)/.test(q)) G.CHAY_2TAY = false;
   } catch (e) { /* giữ mặc định */ }
+  // CẦM VŨ KHÍ CHUẨN (16/10/2026, docs/review/ke-hoach-cai-thien/cam-vk-chuan/bao-cao.md, js/cam_chuan_data.js + js/zed_moi.js): neo cầm vũ khí theo
+  // luật cầm nắm của chủ game (điểm cầm đúng tâm nắm tay, cán qua hai nắm tay, phi tiêu theo cẳng tay, chuôi kiếm khuất dưới nắm tay rồi đốc → lưỡi).
+  // Chỉ đổi HÌNH. Tắt: ?camchuan=0 (về neo cũ).
+  G.CAM_CHUAN = true;
+  try { if (typeof location !== 'undefined' && /[?&]camchuan=0(&|$)/.test(location.search || '')) G.CAM_CHUAN = false; } catch (e) { /* giữ mặc định */ }
   // ĐÒN ZED MỚI QUAY THEO HƯỚNG NHẮM (13/10/2026, docs/review/ke-hoach-cai-thien/zed-8-huong): js/zed_moi.js xoay vũ khí đâm/ném quanh nắm tay
   // theo góc nhắm thật (kẹp ±75°, quá thì nghiêng nhẹ thân trên), chém/quét/nện nghiêng đường vung tối đa ±35°; vệt/hiệu ứng (js/fx.js aimed)
   // xoay cùng góc. Chỉ đổi HÌNH. Tắt: ?huongvk=0 (vũ khí chỉ vẽ ngang theo neo như trước).
@@ -29545,6 +29550,14 @@ MA._xong();
 // TỰ SINH bởi docs/anh-goc/zed/cat-than.py — đừng sửa tay. Điểm eo từng khung để ghép chạy + chém (js/zed_moi.js).
 (window.G = window.G || {}).ZED_EO = {"phien_ban":2,"vung_noi":5,"keo_toi_da":1.8,"doi_toi_da":10,"ghi_chu":"Dựng bằng docs/anh-goc/zed/cat-than.py. Mỗi khung [y, x, c, l, r] ô 96×96 nguồn: y = đáy đai (cắt cũ, trục nghiêng), x = tâm hông; c = đường cắt giữa đùi (zed-eo-sua), l/r = mép trái/phải hình ở hàng c (−1: không đo được).","hang":["kiem_1","kiem_2","thuong_1","thuong_2","thuong_3","phitieu","phitieu_chum","phitieu_ngam","thuong_giu","dam","chuong"],"bo":{"moi":{"chay":[[65,39,74,32,49],[67,43,75,32,48],[65,40,74,32,45],[64,41,73,33,49],[64,43,73,31,49],[66,43,74,44,51],[64,43,73,24,49],[64,42,73,25,45],[64,42,73,28,46],[64,42,73,33,49],[64,43,73,31,49],[64,44,73,34,53]],"kiem_1":[[64,45,73,35,63],[64,44,73,34,63],[63,44,72,35,63],[63,44,72,35,63],[64,44,73,34,63]],"kiem_2":[[67,44,75,35,62],[72,54,78,33,65],[66,45,74,35,62],[66,44,74,35,63],[67,44,75,35,62]],"thuong_1":[[62,45,72,34,62],[62,46,72,34,63],[62,50,72,30,50],[62,50,72,30,50],[61,45,71,33,63],[62,44,72,34,62]],"thuong_2":[[66,44,74,31,46],[63,46,72,34,64],[62,45,72,33,64],[62,44,72,33,63],[63,44,72,33,63],[63,46,72,35,65]],"thuong_3":[[61,46,71,36,62],[61,44,71,36,61],[62,48,72,29,73],[61,48,71,32,73],[61,44,71,34,63],[61,44,71,35,61]],"phitieu":[[66,46,74,36,62],[66,46,74,35,63],[66,47,74,35,64],[65,47,74,35,64],[66,45,74,35,62],[66,46,74,36,62]],"phitieu_chum":[[64,45,73,33,65],[64,47,73,32,67],[64,47,73,33,65],[64,45,73,35,59],[64,44,73,36,60],[64,45,73,36,60]],"phitieu_ngam":[[67,45,75,34,63],[67,45,75,34,63],[66,46,74,36,64]],"thuong_giu":[[70,44,77,32,64],[70,45,77,32,64],[70,44,77,32,64]],"dam":[[68,44,76,35,60],[68,45,76,35,62],[68,44,76,35,62],[68,44,76,35,62],[67,44,75,36,60]],"chuong":[[67,45,75,36,61],[67,47,75,36,64],[67,47,75,36,64],[67,46,75,35,64],[67,45,75,35,60],[66,45,74,36,60]],"kiem_1~16":[[64,43,73,33,59],[64,40,73,31,57],[64,42,73,32,59],[64,42,73,32,64],[64,42,73,32,58]],"chay~16":[[65,44,74,36,55],[66,43,74,38,53],[65,49,74,36,55],[65,54,74,51,55],[69,53,76,33,58],[66,43,74,27,58],[65,46,74,36,56],[69,42,76,39,52],[64,50,73,52,58],[64,54,73,38,57],[69,53,76,35,58],[66,43,74,26,58]],"kiem_2~16":[[59,40,70,38,53],[58,44,69,38,50],[68,42,76,31,60],[65,44,74,35,60],[68,42,76,32,60]]},"rung":{"chay":[[63,39,72,30,49],[66,42,74,31,48],[63,40,72,31,45],[63,41,72,33,49],[62,42,72,31,49],[65,43,74,45,52],[62,43,72,23,50],[62,38,72,23,45],[62,40,72,26,45],[62,41,72,31,49],[61,39,71,30,49],[62,42,72,32,51]],"kiem_1":[[63,46,72,36,62],[63,45,72,35,63],[63,46,72,35,63],[63,44,72,34,63],[63,45,72,35,62]],"kiem_2":[[67,45,75,35,62],[72,54,78,33,65],[67,44,75,35,63],[67,44,75,34,63],[67,44,75,35,62]],"thuong_1":[[60,45,70,35,61],[60,44,70,35,62],[61,51,71,31,52],[61,50,71,32,74],[60,45,70,34,63],[60,45,70,35,62]],"thuong_2":[[66,44,74,31,46],[63,46,72,35,64],[62,44,72,33,64],[62,44,72,33,64],[66,43,74,31,46],[65,44,74,31,46]],"thuong_3":[[61,45,71,36,63],[61,45,71,36,62],[62,52,72,29,73],[61,50,71,30,73],[65,44,74,33,46],[65,43,74,33,45]],"phitieu":[[66,45,74,36,62],[66,46,74,36,64],[66,48,74,36,65],[66,48,74,36,64],[66,46,74,36,62],[66,45,74,36,61]],"phitieu_chum":[[63,43,72,32,65],[64,50,73,31,67],[64,48,73,31,65],[64,44,73,36,60],[64,44,73,35,61],[64,44,73,35,60]],"phitieu_ngam":[[65,44,74,33,63],[65,44,74,33,64],[65,44,74,34,64]],"thuong_giu":[[70,46,77,33,64],[70,46,77,33,64],[70,46,77,33,64]],"dam":[[68,44,76,35,61],[68,45,76,34,63],[68,43,76,34,62],[68,43,76,34,61],[68,45,76,35,61]],"chuong":[[67,45,75,35,61],[67,46,75,35,64],[67,46,75,35,64],[67,46,75,35,64],[67,45,75,35,61],[66,45,74,36,60]]},"bien":{"chay":[[68,42,76,46,53],[67,41,75,35,49],[68,41,76,35,45],[64,41,73,31,49],[63,40,72,31,50],[64,41,73,28,51],[64,43,73,32,50],[63,38,72,24,46],[68,39,76,35,44],[67,40,75,29,42],[67,39,75,27,43],[64,44,73,30,52]],"kiem_1":[[64,45,73,35,63],[64,44,73,34,64],[63,44,72,35,63],[67,43,75,32,45],[64,44,73,34,63]],"kiem_2":[[65,45,74,34,64],[72,54,78,53,67],[66,45,74,33,66],[66,44,74,32,64],[65,45,74,34,64]],"thuong_1":[[62,45,72,33,62],[60,50,70,35,62],[62,50,72,30,50],[62,49,72,29,49],[61,45,71,34,64],[62,44,72,33,62]],"thuong_2":[[66,45,74,31,46],[63,46,72,35,65],[62,45,72,32,64],[62,44,72,33,64],[63,44,72,33,64],[66,43,74,31,45]],"thuong_3":[[61,46,71,36,62],[61,44,71,35,60],[63,46,72,31,73],[61,48,71,33,73],[61,44,71,36,63],[61,44,71,37,63]],"phitieu":[[65,44,74,35,62],[65,42,74,35,63],[66,45,74,35,65],[66,44,74,35,65],[65,46,74,35,63],[65,46,74,35,62]],"phitieu_chum":[[64,48,73,33,64],[64,47,73,33,67],[64,47,73,35,65],[64,45,73,37,59],[64,44,73,37,60],[64,45,73,37,59]],"phitieu_ngam":[[67,45,75,34,63],[67,45,75,33,63],[66,46,74,35,63]],"thuong_giu":[[70,44,77,32,64],[70,45,77,32,64],[70,44,77,32,64]],"dam":[[71,44,78,34,46],[68,42,76,35,62],[68,42,76,35,62],[68,40,76,35,61],[71,44,78,34,46]],"chuong":[[66,41,74,37,60],[70,45,77,34,64],[70,45,77,34,46],[70,45,77,33,46],[70,45,77,34,46],[66,45,74,36,60]]},"lau":{"chay":[[63,40,72,25,51],[67,43,75,34,49],[65,40,74,24,44],[63,43,72,29,49],[63,41,72,27,48],[63,44,72,27,51],[64,43,73,22,51],[63,38,72,23,48],[65,40,74,26,46],[63,39,72,27,48],[63,40,72,27,48],[64,44,73,28,53]],"kiem_1":[[63,49,72,35,63],[65,46,74,34,64],[65,44,74,33,64],[63,44,72,33,63],[64,46,73,34,63]],"kiem_2":[[67,44,75,33,63],[72,54,78,34,66],[63,47,72,35,60],[63,48,72,36,62],[63,48,72,36,61]],"thuong_1":[[64,46,73,32,64],[64,46,73,32,46],[62,50,72,28,49],[62,50,72,29,49],[64,42,73,31,46],[63,46,72,33,63]],"thuong_2":[[65,43,74,30,45],[65,46,74,31,46],[64,42,73,31,45],[64,45,73,31,46],[65,44,74,30,44],[65,44,74,30,45]],"thuong_3":[[64,44,73,34,63],[64,44,73,34,63],[63,49,72,31,73],[63,44,72,30,73],[63,46,72,34,64],[64,44,73,33,63]],"phitieu":[[63,49,72,37,62],[63,48,72,36,63],[66,47,74,35,66],[65,47,74,35,65],[63,49,72,36,63],[67,49,75,33,63]],"phitieu_chum":[[65,48,74,51,64],[65,43,74,30,47],[64,47,73,30,65],[67,46,75,34,61],[67,44,75,34,61],[65,46,74,34,60]],"phitieu_ngam":[[66,45,74,32,63],[67,45,75,30,44],[66,46,74,32,44]],"thuong_giu":[[70,44,77,30,64],[70,45,77,30,64],[70,44,77,30,64]],"dam":[[68,44,76,34,60],[68,45,76,34,63],[66,46,74,35,60],[68,44,76,34,61],[63,40,72,38,58]],"chuong":[[67,45,75,36,62],[63,48,72,37,62],[63,49,72,37,62],[63,49,72,37,62],[68,44,76,33,61],[64,48,73,36,60]]}},"loai":{"rung":["kiem_2#1 [73, 44]→ninja [72, 54]"],"bien":["chay#3 None→ninja [64, 41]","chay#6 [64, 36]→ninja [64, 43]","chay#11 [64, 34]→ninja [64, 44]","kiem_1#0 [63, 36]→ninja [64, 45]","kiem_1#1 [63, 56]→ninja [64, 44]","kiem_1#2 [63, 53]→ninja [63, 44]","kiem_1#4 [63, 36]→ninja [64, 44]","kiem_2#1 [69, 59]→ninja [72, 54]","kiem_2#2 [65, 51]→ninja [66, 45]","kiem_2#3 [65, 53]→ninja [66, 44]","thuong_1#0 [61, 50]→ninja [62, 45]","thuong_1#4 [60, 52]→ninja [61, 45]","thuong_1#5 [61, 50]→ninja [62, 44]","thuong_2#1 None→ninja [63, 46]","thuong_2#2 None→ninja [62, 45]","thuong_2#3 None→ninja [62, 44]","thuong_2#4 None→ninja [63, 44]","thuong_3#0 [66, 44]→ninja [61, 46]","thuong_3#1 None→ninja [61, 44]","thuong_3#3 [62, 53]→ninja [61, 48]","thuong_3#4 [62, 53]→ninja [61, 44]","thuong_3#5 None→ninja [61, 44]","phitieu_chum#1 [65, 57]→ninja [64, 47]","phitieu_chum#2 [65, 54]→ninja [64, 47]","phitieu_chum#3 [65, 54]→ninja [64, 45]","phitieu_chum#4 None→ninja [64, 44]","phitieu_chum#5 None→ninja [64, 45]","phitieu_ngam#0 [65, 56]→ninja [67, 45]","phitieu_ngam#1 [65, 54]→ninja [67, 45]","phitieu_ngam#2 [65, 54]→ninja [66, 46]","thuong_giu#0 [69, 60]→ninja [70, 44]","thuong_giu#1 [69, 60]→ninja [70, 45]","thuong_giu#2 [69, 60]→ninja [70, 44]","chuong#5 None→ninja [66, 45]"],"lau":["chay#1 [64, 38]→ninja [67, 43]","chay#2 [63, 33]→ninja [65, 40]","chay#11 [63, 39]→ninja [64, 44]","kiem_2#0 [63, 49]→ninja [67, 44]","kiem_2#1 [64, 50]→ninja [72, 54]","thuong_1#2 [64, 44]→ninja [62, 50]","thuong_1#3 [64, 45]→ninja [62, 50]","phitieu#2 [63, 56]→ninja [66, 47]","phitieu#3 [63, 52]→ninja [65, 47]","phitieu_chum#2 [63, 53]→ninja [64, 47]","phitieu_ngam#1 [66, 50]→ninja [67, 45]","phitieu_ngam#2 [66, 51]→ninja [66, 46]","thuong_giu#0 [64, 46]→ninja [70, 44]","thuong_giu#1 [64, 46]→ninja [70, 45]","thuong_giu#2 [63, 47]→ninja [70, 44]","dam#0 [63, 39]→ninja [68, 44]","dam#1 [63, 44]→ninja [68, 45]","dam#3 [70, 52]→ninja [68, 44]","chuong#0 [63, 52]→ninja [67, 45]"]}};
 
+// ===== js/cam_chuan_data.js =====
+// CẦM VŨ KHÍ CHUẨN (16/10/2026, docs/review/ke-hoach-cai-thien/cam-vk-chuan/LUAT.md + bao-cao.md) — TỆP DỰNG TỰ ĐỘNG bằng
+// docs/review/ke-hoach-cai-thien/cam-vk-chuan/sua.py, đừng sửa tay. js/zed_moi.js (bienThe) dùng thay neo / điểm cầm vũ khí của
+// biến thể nắm chuôi: điểm cầm đúng tâm nắm tay, cán qua hai nắm tay, phi tiêu theo cẳng tay, chuôi kiếm khuất dưới nắm tay rồi
+// đốc → lưỡi. Chỉ HÌNH. Tắt: ?camchuan=0 (G.CAM_CHUAN, js/data.js).
+window.G = window.G || {};
+G.CAM_CHUAN_DATA = {"phien":1,"ghi_chu":"cam-vk-chuan 16/10: neo sửa theo LUAT.md (sua.py); khoá = khoá dong_tac gốc; goc = neo gốc để nhận ra tấm đã dựng lại","vk_cam":{"kiem":{"cu":[[19.94,16.5],[21.48,24.0],[12.02,35.5],[13.04,46.5]],"moi":[[21.58,16.5],[18.58,24.0],[20.58,35.5],[20.58,46.5]]}},"bo":{"zed-moi":{"dung~16_phitieu":{"so":8,"goc":[39.65,66.96,55],"neo":{"0":[39.65,66.96,70,0],"1":[39.66,66.95,70,0],"2":[39.3,67.03,75,0],"3":[39.49,67.06,75,0],"4":[39.3,66.81,75,0],"5":[39.55,66.98,75,0],"6":[39.42,67.0,75,0],"7":[39.54,67.3,75,0]}},"di_phitieu":{"so":8,"goc":[34.99,67.59,55],"neo":{"0":[34.99,67.59,110,0],"1":[37.73,69.07,90,0],"2":[40.83,68.96,90,0],"3":[34.1,67.46,110,0],"4":[34.82,67.58,105,0],"5":[37.78,69.07,90,0],"6":[40.54,68.93,90,0],"7":[33.88,67.51,110,0]}},"chay~16_phitieu":{"so":12,"goc":[33.22,65.91,55],"neo":{"0":[33.22,65.91,120,0],"1":[37.01,69.46,100,0],"2":[33.87,66.05,120,0],"3":[35.72,65.48,120,0],"4":[33.23,69.73,125,0],"5":[34.19,66.95,125,0],"6":[36.0,68.23,110,0],"7":[54.3,63.82,15,0],"8":[36.24,66.26,115,0],"9":[35.16,64.85,120,0],"10":[33.64,69.52,125,0],"11":[33.94,66.5,125,0]}},"bua_nen~16":{"so":8,"goc":[37.86,43.68,-150],"neo":{"7":[52.69,64.75,-20.2,0,[57.0,63.17]]}},"bua_nen_dat":{"so":6,"goc":[63.76,26.97,170],"neo":{"4":[64.44,70.01,2.6,0,[70.77,70.3]]}},"db_bua":{"so":6,"goc":[37.33,26.95,170],"neo":{"4":[51.23,66.15,-50,0,[55.73,60.78]]}}}},"gen_lai":[]};
+
 // ===== js/zed_moi.js =====
 // BỘ ZED MỚI (13/10/2026) — docs/review/ke-hoach-cai-thien/zed-tich-hop/YEU-CAU.md
 // Vẽ Zed bằng bộ ảnh mới: thân (game/art/custom/zed-moi.sprite.json, mỗi động tác 1 hàng, khung 48×48 game, net 2, chân [24,45])
@@ -29623,7 +29636,7 @@ MA._xong();
     let ma = 'zed-moi';
     try { const b = G.zedBo ? G.zedBo() : 'ninja'; if (G.ZED_BO && G.ZED_BO[b]) ma = G.ZED_BO[b].tam; } catch (e) { ma = 'zed-moi'; }
     const z = (ma !== 'zed-moi' && lay(ma)) || lay('zed-moi');
-    if (z) { z._ma = z === SC.zed['zed-moi'] ? 'zed-moi' : ma; hang16(z.tep); }
+    if (z) { z._ma = z === SC.zed['zed-moi'] ? 'zed-moi' : ma; hang16(z.tep, z._ma); }
     return z;
   };
   // HÀNG MỚI 16/10 (docs/review/ke-hoach-cai-thien/hang-moi-16-10/bao-cao.md): tấm có khoá "<hàng>~16" (chủ game gen lại: đứng thở 8 khung,
@@ -29647,11 +29660,12 @@ MA._xong();
   // cán không ôm được). Chạy + chém: điểm eo đo trên khung chạy mới (G.ZED_EO.bo.moi['chay~16']). Chỉ HÌNH. ?chaymoi=0: hàng chạy cũ.
   const CHAY_MOI = !/[?&]chaymoi=0(&|$)/.test(QS);
   const BUA_MOI = !/[?&]buamoi=0(&|$)/.test(QS);
-  function hang16(D) {
+  function hang16(D, ma) {
     if (!D || !D.dong_tac || D._hang16) return;
     D._hang16 = 1;
-    if (HANG_CU) return;
     const dt = D.dong_tac;
+    Object.keys(dt).forEach((k) => { if (dt[k] && typeof dt[k] === 'object') { dt[k]._khoa = k; dt[k]._ma = ma || 'zed-moi'; } }); // cam-vk-chuan: khoá gốc + tấm
+    if (HANG_CU) return;
     Object.keys(dt).forEach((k) => {
       if (k.indexOf('~16') < 0 || (KIEM16[k] && !KIEM_MOI) || (!CHAY_MOI && k.indexOf('chay~16') === 0) || (k === 'bua_nen~16' && !BUA_MOI)) return;
       const goc = k.replace('~16', ''), a = Object.assign({}, dt[k], { moi16: 1, eo16: k });
@@ -29715,8 +29729,31 @@ MA._xong();
     if (m && G.NAM_CHUOI !== false && !(da.vk === 'thuong' && G.THUONG_2TAY === false) && !(da.vk === 'phitieu' && G.PHI_TIEU_TO === false)) {
       b = { neo: m.neo, ht: m.hang_tay, tl: m.vk_tl || da.vk_tl, cam: m.vk_cam || da.vk_cam, nam: true };
     } else b = { neo: da.neo, ht: da.hang_tay, tl: da.vk_tl, cam: da.vk_cam, nam: false };
+    if (b.nam) b = camChuan(da, b);
     if (BT) BT.set(da, b);
     return b;
+  }
+  // CẦM VŨ KHÍ CHUẨN (16/10/2026, docs/review/ke-hoach-cai-thien/cam-vk-chuan/LUAT.md + bao-cao.md): bảng G.CAM_CHUAN_DATA (js/cam_chuan_data.js,
+  // dựng bằng cam-vk-chuan/sua.py) thay neo từng khung (điểm cầm đúng tâm nắm tay, cán qua hai nắm tay, thêm tay thứ hai đang nằm trên cán,
+  // phi tiêu theo hướng cẳng tay) và điểm cầm trên ảnh kiếm (chuôi khuất dưới nắm tay, đốc chắn ngay mép nắm tay rồi lưỡi). Chỉ thay khi
+  // tấm còn đúng bản đã đo (neo gốc / điểm cầm gốc khớp) — tấm dựng lại thì tự về số của tấm. Chỉ HÌNH. Tắt: ?camchuan=0 (G.CAM_CHUAN).
+  function camChuan(da, b) {
+    const C = G.CAM_CHUAN !== false && G.CAM_CHUAN_DATA;
+    if (!C) return b;
+    try {
+      let neo = b.neo, cam = b.cam;
+      const R = C.bo && C.bo[da._ma || 'zed-moi'] && C.bo[da._ma || 'zed-moi'][da._khoa];
+      if (R && neo && R.so === neo.length) {
+        const g0 = neo.find((x) => x);
+        if (g0 && Math.abs(g0[0] - R.goc[0]) < 0.02 && Math.abs(g0[1] - R.goc[1]) < 0.02 && g0[2] === R.goc[2]) {
+          neo = neo.slice();
+          Object.keys(R.neo).forEach((i) => { neo[+i] = R.neo[i]; });
+        }
+      }
+      const vc = C.vk_cam && C.vk_cam[da.vk];
+      if (vc && cam && cam.length === vc.cu.length && vc.cu.every((p, j) => cam[j] && Math.abs(cam[j][0] - p[0]) < 0.02 && Math.abs(cam[j][1] - p[1]) < 0.02)) cam = vc.moi;
+      return neo === b.neo && cam === b.cam ? b : Object.assign({}, b, { neo, cam });
+    } catch (e) { return b; }
   }
   // Mốc tiến độ u bắt đầu từng khung. ★ = khung đứng ở mốc hitAt (đánh dấu trong chú thích).
   const MOC = {
