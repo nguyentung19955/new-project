@@ -113,15 +113,20 @@ DONG = [
     # moi16/cat-chay-12k.py (khung sát nhau) + sửa khung 2 moi16/sua-chay-k2.py; neo vũ khí gan-vk/neo-chay-16-10.py. Game dùng thay 'chay'
     # (cả chay_<loại>); tắt ?chaymoi=0 (hoặc ?hangcu=1). Chạy cầm thương / búa vẫn dùng hàng hai tay cũ 03-chay-2tay (xem báo cáo).
     ('chay~16', '03-chay-12k-v2', 0.6, True),
+    # BÚA NỆN MỚI 16/10 (docs/review/ke-hoach-cai-thien/bua-moi-16-10/bao-cao.md): 8 khung gen theo khung người đặc bua-e.png, cắt TAY
+    # (moi16/17-bua-nen-8k-cat-tay.json: khung dính / sát nhau theo cột nền). Cùng số khung + cùng giây với bua_nen → game thay thẳng,
+    # ★ khung 3 giữ mốc cũ (MOC_BUA_BT). Cỡ đầu = đầu hàng đứng mới, căn bàn chân trước (CHAN_TRUOC) như kiếm mới. Neo HAI TAY
+    # "co_dinh" (gan-vk/neo-bua-16-10.py: tâm cụm nắm tay + góc cán theo ve-bua.py). ?buamoi=0 về hàng cũ. Chỉ bộ ninja.
+    ('bua_nen~16', '17-bua-nen-8k', 0.8, False),
 ]
-CHI_NINJA = {'03-chay-2tay', '01-dung-8k', '04-lon-6k', '05-trung-don-4k', '08-kiem-1-5k-v2', '10-kiem-3-6k-v2', '03-chay-12k-v2'}   # hàng chỉ có ảnh bộ ninja: dung_bo bỏ qua
+CHI_NINJA = {'03-chay-2tay', '01-dung-8k', '04-lon-6k', '05-trung-don-4k', '08-kiem-1-5k-v2', '10-kiem-3-6k-v2', '03-chay-12k-v2', '17-bua-nen-8k'}   # hàng chỉ có ảnh bộ ninja: dung_bo bỏ qua
 MOI16 = os.path.join(DAY, 'moi16')
-GOC_RIENG = {t: os.path.join(MOI16, t + '-gif') for t in ('01-dung-8k', '04-lon-6k', '05-trung-don-4k', '08-kiem-1-5k-v2', '10-kiem-3-6k-v2', '03-chay-12k-v2')}
+GOC_RIENG = {t: os.path.join(MOI16, t + '-gif') for t in ('01-dung-8k', '04-lon-6k', '05-trung-don-4k', '08-kiem-1-5k-v2', '10-kiem-3-6k-v2', '03-chay-12k-v2', '17-bua-nen-8k')}
 # Căn theo BÀN CHÂN TRƯỚC (kiếm mới 16/10): khung 1 (và kiếm 3 khung 5–6) đứng hẹp chân hơn các khung khác → căn theo điểm giữa hai
 # bàn chân thì cả hai chân trượt. Các hàng này: tâm bàn chân trước (khối bên phải ở đáy hình) đặt đúng chỗ bàn chân trước của hàng
 # đứng mới (trung vị, ô 96) → vào đòn từ thế đứng chân trước không trượt; chân sau lùi/tiến theo ảnh.
 # Cỡ: co sao cho CAO ĐẦU bằng đúng hàng đứng mới (lần đầu theo trung bình đầu + mặt thì kiếm 1 to hơn đứng ~3 %, cao 67 so với 64).
-CHAN_TRUOC = {'08-kiem-1-5k-v2', '10-kiem-3-6k-v2'}
+CHAN_TRUOC = {'08-kiem-1-5k-v2', '10-kiem-3-6k-v2', '17-bua-nen-8k'}
 
 
 def chan_truoc(im):
@@ -335,8 +340,11 @@ def dung_than(dong, neo_all, s, vk_cua, neo_cua, neo_nam=None, r0=28):
                     else:
                         x, y, t2 = neo_cua(thu, i, f, k2)
                         r0_ = NC.R0_HANG.get(thu, r0)
-                        xn, yn = NC.tam_nam(im, x, y, r0_)
-                        tn = NC.tam_nam(im, t2[0], t2[1], r0_) if t2 else None
+                        if NC.co_dinh(k2):  # neo đo tay (búa mới 16/10): đúng hai điểm + góc ghi trong neo.json
+                            (xn, yn), tn = (x, y), (tuple(t2) if t2 else None)
+                        else:
+                            xn, yn = NC.tam_nam(im, x, y, r0_)
+                            tn = NC.tam_nam(im, t2[0], t2[1], r0_) if t2 else None
                         g = k2[2]
                         if tn and len(k2) > 5 and isinstance(k2[5], dict) and k2[5].get('hai'):
                             g = round(math.degrees(math.atan2(tn[1] - yn, tn[0] - xn)), 1)
@@ -475,6 +483,8 @@ def main():
         return d
 
     def neo_ninja(thu, i, f, kk):
+        if NC.co_dinh(kk):  # neo đo tay (búa mới 16/10): không kéo về khối da
+            return float(kk[0]), float(kk[1]), (tuple(float(v) for v in kk[4]) if len(kk) > 4 and kk[4] else None)
         r_ = NC.R0_HANG.get(thu, 28)
         x, y = chinh_nam(f['im'], kk[0], kk[1], r_)
         return x, y, (chinh_nam(f['im'], *kk[4], r_) if len(kk) > 4 else None)

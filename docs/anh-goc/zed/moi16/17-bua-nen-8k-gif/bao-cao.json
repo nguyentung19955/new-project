@@ -1,0 +1,202 @@
+{
+ "anh": "cu-ti-hang-moi-16-10/17-bua-nen-8k-v2.png",
+ "co_anh": [
+  2172,
+  724
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 8,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 0,
+  "vien_khu": 9120,
+  "nga_mau_nen_trong_hinh": 142
+ },
+ "manh_bo": [],
+ "loi": [],
+ "canh_bao": [
+  "Hàng 1 khung 4 cao 327 (trung vị 418) — lệch cỡ >15%",
+  "Hàng 1 khung 5 cao 321 (trung vị 418) — lệch cỡ >15%"
+ ],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "bua",
+   "so_khung": 8,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      14,
+      180,
+      271,
+      601
+     ],
+     "chan": [
+      133.5,
+      601
+     ],
+     "rong": 257,
+     "cao": 421,
+     "diem_anh": 62168,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "chan x = giữa tâm hai bàn chân (sửa tay 16/10, bua-moi-16-10/bao-cao.md); chan_hop = giữa khung bao cũ"
+     ],
+     "chan_hop": 138.5
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      293,
+      146,
+      534,
+      601
+     ],
+     "chan": [
+      408.0,
+      601
+     ],
+     "rong": 241,
+     "cao": 455,
+     "diem_anh": 61989,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "chan x = giữa tâm hai bàn chân (sửa tay 16/10, bua-moi-16-10/bao-cao.md); chan_hop = giữa khung bao cũ"
+     ],
+     "chan_hop": 413.0
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      545,
+      189,
+      814,
+      601
+     ],
+     "chan": [
+      663.8,
+      601
+     ],
+     "rong": 269,
+     "cao": 412,
+     "diem_anh": 62799,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "chan x = giữa tâm hai bàn chân (sửa tay 16/10, bua-moi-16-10/bao-cao.md); chan_hop = giữa khung bao cũ"
+     ],
+     "chan_hop": 669.0
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      817,
+      274,
+      1088,
+      601
+     ],
+     "chan": [
+      932.5,
+      601
+     ],
+     "rong": 271,
+     "cao": 327,
+     "diem_anh": 53495,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "cao bất thường",
+      "chan x = giữa tâm hai bàn chân (sửa tay 16/10, bua-moi-16-10/bao-cao.md); chan_hop = giữa khung bao cũ"
+     ],
+     "chan_hop": 937.5
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1098,
+      280,
+      1367,
+      601
+     ],
+     "chan": [
+      1213.0,
+      601
+     ],
+     "rong": 269,
+     "cao": 321,
+     "diem_anh": 51633,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "cao bất thường",
+      "chan x = giữa tâm hai bàn chân (sửa tay 16/10, bua-moi-16-10/bao-cao.md); chan_hop = giữa khung bao cũ"
+     ],
+     "chan_hop": 1218.5
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1369,
+      185,
+      1628,
+      601
+     ],
+     "chan": [
+      1486.8,
+      601
+     ],
+     "rong": 259,
+     "cao": 416,
+     "diem_anh": 61477,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "chan x = giữa tâm hai bàn chân (sửa tay 16/10, bua-moi-16-10/bao-cao.md); chan_hop = giữa khung bao cũ"
+     ],
+     "chan_hop": 1492.5
+    },
+    {
+     "stt": 7,
+     "khung_bao": [
+      1649,
+      176,
+      1896,
+      601
+     ],
+     "chan": [
+      1766.8,
+      601
+     ],
+     "rong": 247,
+     "cao": 425,
+     "diem_anh": 59437,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "chan x = giữa tâm hai bàn chân (sửa tay 16/10, bua-moi-16-10/bao-cao.md); chan_hop = giữa khung bao cũ"
+     ],
+     "chan_hop": 1772.0
+    },
+    {
+     "stt": 8,
+     "khung_bao": [
+      1911,
+      174,
+      2158,
+      601
+     ],
+     "chan": [
+      2028.8,
+      601
+     ],
+     "rong": 247,
+     "cao": 427,
+     "diem_anh": 60530,
+     "nguon": "cat-tay",
+     "ghi_chu": [
+      "chan x = giữa tâm hai bàn chân (sửa tay 16/10, bua-moi-16-10/bao-cao.md); chan_hop = giữa khung bao cũ"
+     ],
+     "chan_hop": 2034.0
+    }
+   ]
+  }
+ ]
+}

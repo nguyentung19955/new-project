@@ -1,0 +1,202 @@
+{
+ "cu": {
+  "khung": [
+   {
+    "tam": [
+     49.45503718728871,
+     56.36511156186612
+    ],
+    "cao": 65,
+    "dat": 89,
+    "chan_sau": 31,
+    "chan_truoc": 64,
+    "rong_chan": 34
+   },
+   {
+    "tam": [
+     46.365284974093264,
+     54.192357512953365
+    ],
+    "cao": 68,
+    "dat": 89,
+    "chan_sau": 31,
+    "chan_truoc": 64,
+    "rong_chan": 34
+   },
+   {
+    "tam": [
+     56.275938189845476,
+     68.12141280353201
+    ],
+    "cao": 46,
+    "dat": 89,
+    "chan_sau": 25,
+    "chan_truoc": 67,
+    "rong_chan": 43
+   },
+   {
+    "tam": [
+     53.76602316602317,
+     67.60308880308881
+    ],
+    "cao": 47,
+    "dat": 89,
+    "chan_sau": 27,
+    "chan_truoc": 65,
+    "rong_chan": 39
+   },
+   {
+    "tam": [
+     53.84911470361817,
+     67.59892224788298
+    ],
+    "cao": 47,
+    "dat": 89,
+    "chan_sau": 27,
+    "chan_truoc": 65,
+    "rong_chan": 39
+   },
+   {
+    "tam": [
+     54.99415584415584,
+     58.6487012987013
+    ],
+    "cao": 62,
+    "dat": 89,
+    "chan_sau": 29,
+    "chan_truoc": 66,
+    "rong_chan": 38
+   },
+   {
+    "tam": [
+     49.9356401384083,
+     56.08442906574395
+    ],
+    "cao": 65,
+    "dat": 89,
+    "chan_sau": 31,
+    "chan_truoc": 64,
+    "rong_chan": 34
+   },
+   {
+    "tam": [
+     49.8353825136612,
+     56.240437158469945
+    ],
+    "cao": 65,
+    "dat": 89,
+    "chan_sau": 31,
+    "chan_truoc": 64,
+    "rong_chan": 34
+   }
+  ],
+  "bat_tam_ngang": 9.91,
+  "bat_tam_doc": 13.93,
+  "truot_chan_sau": 6,
+  "truot_chan_truoc": 3,
+  "truot_chan_sau_tong": 6,
+  "truot_chan_truoc_tong": 3,
+  "rong_chan_lech_pt": 25.0,
+  "duong_dat": 0
+ },
+ "moi": {
+  "khung": [
+   {
+    "tam": [
+     49.02437223042836,
+     58.08862629246676
+    ],
+    "cao": 60,
+    "dat": 89,
+    "chan_sau": 31,
+    "chan_truoc": 65,
+    "rong_chan": 35
+   },
+   {
+    "tam": [
+     48.92324723247233,
+     57.27011070110701
+    ],
+    "cao": 64,
+    "dat": 89,
+    "chan_sau": 32,
+    "chan_truoc": 65,
+    "rong_chan": 34
+   },
+   {
+    "tam": [
+     50.46994931209269,
+     60.42650253439537
+    ],
+    "cao": 58,
+    "dat": 89,
+    "chan_sau": 31,
+    "chan_truoc": 66,
+    "rong_chan": 36
+   },
+   {
+    "tam": [
+     51.464069264069266,
+     66.96190476190476
+    ],
+    "cao": 46,
+    "dat": 89,
+    "chan_sau": 32,
+    "chan_truoc": 65,
+    "rong_chan": 34
+   },
+   {
+    "tam": [
+     51.63475177304964,
+     67.77482269503547
+    ],
+    "cao": 45,
+    "dat": 89,
+    "chan_sau": 32,
+    "chan_truoc": 66,
+    "rong_chan": 35
+   },
+   {
+    "tam": [
+     50.1703056768559,
+     59.708879184861715
+    ],
+    "cao": 59,
+    "dat": 89,
+    "chan_sau": 31,
+    "chan_truoc": 66,
+    "rong_chan": 36
+   },
+   {
+    "tam": [
+     48.23668188736682,
+     58.58675799086758
+    ],
+    "cao": 60,
+    "dat": 89,
+    "chan_sau": 31,
+    "chan_truoc": 65,
+    "rong_chan": 35
+   },
+   {
+    "tam": [
+     47.66791604197901,
+     58.52548725637181
+    ],
+    "cao": 60,
+    "dat": 89,
+    "chan_sau": 31,
+    "chan_truoc": 65,
+    "rong_chan": 35
+   }
+  ],
+  "bat_tam_ngang": 1.93,
+  "bat_tam_doc": 8.07,
+  "truot_chan_sau": 1,
+  "truot_chan_truoc": 1,
+  "truot_chan_sau_tong": 1,
+  "truot_chan_truoc_tong": 1,
+  "rong_chan_lech_pt": 5.7,
+  "duong_dat": 0
+ }
+}

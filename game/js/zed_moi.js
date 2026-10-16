@@ -87,6 +87,9 @@
   // nguyên. Kiếm 3 mới có đòn đâm ở khung 4 → mốc khung riêng MOC16 (khung 4 rơi đúng u 0,45 = lúc chạm cũ). Chạy + chém kiếm 1 mới
   // dùng điểm eo đo trên khung mới (G.ZED_EO.bo.moi['kiem_1~16'], docs/anh-goc/zed/eo-kiem-16-10.py). Kiếm 2 giữ hàng cũ.
   // ?kiemmoi=0: về kiếm 1 / kiếm 3 cũ (đứng / lộn / trúng đòn mới vẫn dùng).
+  // BÚA NỆN MỚI 16/10 (docs/review/ke-hoach-cai-thien/bua-moi-16-10/bao-cao.md): bua_nen~16 (8 khung, cùng số khung + giây với bua_nen →
+  // MOC_BUA_BT, ★ khung 3 ở 0,35 giữ nguyên) thay bua_nen; búa cầm HAI TAY (neo tay trái dưới + tay phải trên, nắm tay ôm cán ở cả hai
+  // chỗ). ?buamoi=0: về búa nện cũ (các hàng mới khác vẫn dùng).
   const HANG_CU = /[?&]hangcu=1(&|$)/.test(QS);
   const KIEM_MOI = !/[?&]kiemmoi=0(&|$)/.test(QS);
   const KIEM16 = { 'kiem_1~16': 1, 'kiem_3~16': 1 };
@@ -95,13 +98,14 @@
   // dùng sải đo lại trên hàng mới (SAI.chay16). Chạy cầm thương / búa vẫn dùng hàng hai tay cũ chay2tay (hàng mới hai nắm tay đánh xa nhau,
   // cán không ôm được). Chạy + chém: điểm eo đo trên khung chạy mới (G.ZED_EO.bo.moi['chay~16']). Chỉ HÌNH. ?chaymoi=0: hàng chạy cũ.
   const CHAY_MOI = !/[?&]chaymoi=0(&|$)/.test(QS);
+  const BUA_MOI = !/[?&]buamoi=0(&|$)/.test(QS);
   function hang16(D) {
     if (!D || !D.dong_tac || D._hang16) return;
     D._hang16 = 1;
     if (HANG_CU) return;
     const dt = D.dong_tac;
     Object.keys(dt).forEach((k) => {
-      if (k.indexOf('~16') < 0 || (KIEM16[k] && !KIEM_MOI) || (!CHAY_MOI && k.indexOf('chay~16') === 0)) return;
+      if (k.indexOf('~16') < 0 || (KIEM16[k] && !KIEM_MOI) || (!CHAY_MOI && k.indexOf('chay~16') === 0) || (k === 'bua_nen~16' && !BUA_MOI)) return;
       const goc = k.replace('~16', ''), a = Object.assign({}, dt[k], { moi16: 1, eo16: k });
       if (a.cam_vk) a.cam_vk = a.cam_vk.replace('~16', '');
       if (MOC16[goc]) a.moc = MOC16[goc];

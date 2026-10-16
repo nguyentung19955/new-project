@@ -173,6 +173,11 @@ def gan_mat(im, t, r=24):
     return bool(len(xx)) and float(np.min((xx - t[0]) ** 2 + (yy - t[1]) ** 2)) < r * r
 
 
+def co_dinh(k):
+    """Khung neo ghi {"co_dinh": 1} ở phần tử thứ 6 (búa nện mới 16/10, neo-bua-16-10.py): hai điểm tay + góc dùng nguyên như đo."""
+    return bool(k) and len(k) > 5 and isinstance(k[5], dict) and bool(k[5].get('co_dinh'))
+
+
 def doc_chinh_tay():
     try:
         return json.load(open(CHINH_TAY, encoding='utf-8')).get('hang', {})
@@ -197,7 +202,7 @@ def chuan_bi(neo_all, khung_ninja, L_VK, bat_thuong=True, bat_phi=True):
         if loai == 'vk-phi-tieu' and bat_phi:
             e2['dai'] = round(e['dai'] * PHI_TO, 4); e2['cam'] = PHI_CAM
         for i, k in enumerate(e['khung']):
-            if not k:
+            if not k or co_dinh(k):
                 kh.append(k); continue
             k = list(k) + [0] * max(0, 4 - len(k))
             sua = ct.get(key, {}).get(str(i + 1)) or ct.get(thu, {}).get(str(i + 1)) or {}
