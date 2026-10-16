@@ -327,3 +327,80 @@ Xem nhanh:
 > Edit this exact pixel-art image. Keep the pose, outline, size and position exactly the same, pixel for pixel. Only change the black shirt and red sash into bare skin with simple shading, and the black trousers into plain grey shorts ending mid-thigh (legs below are bare skin). Keep the head, hair, hands, wrist wraps and sandals unchanged. Keep the flat #00FF00 background.
 
 - Gen xong 12 ảnh thì gửi lại, mình sẽ ghép thành hàng, so hình bóng từng khung với game, và chỉ lấy màu da từ ảnh gen (hình bóng vẫn giữ của game) để dáng không lệch.
+
+## Thân nền gen sửa (16/10)
+
+**Đã đưa ảnh gen thân trần (bản SỬA từ hàng chạy gốc) vào làm bản nền thứ 3: "Gen sửa".** Thân, tay, chân lấy màu từ ảnh gen. Đầu, tóc, mặt giữ nguyên sprite gốc nên mặt không đổi. Hình bóng vẫn trùng game 100%, mọi bộ đồ vẫn phủ kín.
+
+Xem nhanh:
+
+- **`kiem-tra.html`** → hàng **Nền: Máy dựng / Tô da / Gen sửa**. Bấm **Áo: Không (nền)** và **Quần: Không (nền)** để thấy rõ thân. Trong "Bộ chọn nhanh" có thêm nút **Ảnh gen thô: thân trần sửa** (ảnh gen đã kéo về ô 96, chưa ghép lớp).
+- **`so-sanh-nen.png`**: thêm 3 hàng: *Ảnh gen sửa về ô 96* (đỏ = chỗ gen lố ra ngoài, đã cắt; vàng = chỗ gen hụt, đã lấp), *Nền gen sửa*, *Gen sửa + đồ máy vẽ*.
+- **`nen-to-da.gif`**: giờ chạy 4 cột: game gốc, Máy dựng, Tô da, Gen sửa.
+
+### Cách làm
+
+1. **Cắt 12 khung** từ `anh-gen/cu-ti-than-tran-sua-chay-12.png` bằng đúng toạ độ khung của tấm gốc (`khung_bao` trong `moi/03-chay-v4-gif/bao-cao.json`). Mỗi khung cắt ra cùng cỡ với ảnh nguồn `khung-XX.png`.
+2. **Tách nền xanh**, bỏ luôn viền ngả xanh sát nền và khử ánh xanh còn sót. Bỏ mẩu của khung bên cạnh lấn vào.
+3. **Thu về ô 96 đúng như sprite game**: co cùng tỉ lệ, đặt cùng chỗ (như `tao-bo.py` / `dung-zed-game.py`). Lúc co có tính độ trong suốt để viền không bị ám xanh.
+4. **Căn khớp**: thử dời cả khung ±3 điểm ảnh, chọn chỗ hình bóng trùng nhiều nhất. Kết quả: **cả 12 khung đều đứng yên (dời 0, 0)**, tức ảnh gen giữ đúng vị trí của tấm gốc.
+5. **Ghép lớp** (7 lớp nền theo `layerOrder`: rearLeg, rearArm, body, frontLeg, frontArm, head, hair):
+   - Hình dạng từng lớp **giữ y như bản Tô da** (tách tay/chân trước/sau bằng mặt nạ lớp có sẵn của sprite gốc).
+   - Chỉ đổi **màu** ở chỗ lớp thân/tay/chân đang nhìn thấy mà ảnh gen có hình.
+   - Chỗ gen **lố** ra ngoài hình bóng → cắt bỏ.
+   - Chỗ gen **hụt** → giữ màu Tô da (thân, chân) hoặc màu sprite gốc (tay). Chỗ đai bay cũ không thuộc nền nên để trống, như bản Tô da.
+   - Bao cổ tay đen và dép lấy theo ảnh gen (vẫn coi là một phần nền).
+6. Code ở `nen_gen_sua.py` (mới), `tao-bo.py` gọi. Sheet mới nằm ở `sheets/nen-gen-sua/` (5 lớp); đầu và tóc dùng sheet sprite gốc. Trong `data.json`, `bodyBases` có thêm `gen-sua`; mỗi khung trong `checks` có thêm mục `genSua`.
+
+### Số đo khớp từng khung
+
+"Trùng" là phần hình bóng trùng nhau, so ở ô 96 với hình bóng nền (= sprite game trừ dải đai bay). "Lấy từ gen", "Hụt" và "Lố" đếm bằng điểm ảnh ô 96.
+
+| Khung | Trùng trước căn | Trùng sau căn | Dời (x, y) | Lấy từ gen | Hụt (đã lấp) | Lố (đã cắt) |
+|---|---|---|---|---|---|---|
+| 0 | 89% | 89% | 0, 0 | 568 | 34 | 5 |
+| 1 | 88% | 88% | 0, 0 | 509 | 34 | 9 |
+| 2 | 89% | 89% | 0, 0 | 454 | 41 | 5 |
+| 3 | 89% | 89% | 0, 0 | 456 | 21 | 14 |
+| 4 | 89% | 89% | 0, 0 | 547 | 27 | 10 |
+| 5 | 89% | 89% | 0, 0 | 589 | 26 | 4 |
+| 6 | 87% | 87% | 0, 0 | 516 | 55 | 6 |
+| 7 | 87% | 87% | 0, 0 | 552 | 38 | 20 |
+| 8 | 88% | 88% | 0, 0 | 474 | 38 | 8 |
+| 9 | 89% | 89% | 0, 0 | 490 | 23 | 10 |
+| 10 | 89% | 89% | 0, 0 | 572 | 39 | 5 |
+| 11 | 88% | 88% | 0, 0 | 656 | 46 | 5 |
+
+- Ở cỡ ảnh lớn, ảnh gen trùng ảnh nguồn **91–95%**, đúng như số đã đo (92–94%). Về ô 96 thì còn **87–89%**, vì ở cỡ nhỏ một điểm viền chiếm phần lớn hơn.
+- Phần hụt chủ yếu là **vệt viền 1 điểm ảnh** quanh tay, chân và mép quần đùi. Mỗi khung chỉ 21–55 điểm, chưa tới 1/10 phần thân/tay/chân nhìn thấy. Chỗ này lấy viền tối của bản Tô da nên nhìn vẫn liền.
+
+### Kết quả kiểm (tao-bo.py tự chạy, sai là dừng với mã thoát 1)
+
+| Kiểm tra | Kết quả |
+|---|---|
+| Hình bóng nền gen sửa so với sprite game | **trùng 100%, 0 điểm lệch, 12/12 khung** (trừ dải đai bay, thuộc bộ áo) |
+| Từng lớp gen sửa có cùng độ trong suốt với lớp Tô da | đạt, 12/12 khung |
+| Thân lộ ra dưới đồ: áo/quần gốc, đồ mới máy vẽ, đồ xanh (gen); đổi riêng áo, riêng quần, cả bộ | **0 điểm, 7 tổ hợp × 12 khung** |
+| Bản Máy dựng + đồ gốc = ảnh game; bản Tô da | vẫn đúng như trước |
+
+- Đã thử cố ý xoá lớp thân ở khung 5: script dừng, **mã thoát 1**, báo "khung 5: hình bóng nền gen sửa lệch hình bóng game 188 điểm ảnh".
+- Mở trang bằng Chromium giả điện thoại 390×844 (DPR 3) và máy tính 1280×800: bấm được Gen sửa, canvas vẫn nét (936×1260 điểm thật cho 312 điểm CSS), không tràn ngang, không lỗi JavaScript. Trang vẫn là 1 tệp tự chứa.
+
+### So với Tô da bằng code
+
+| | Tô da (code) | Gen sửa |
+|---|---|---|
+| Nhìn | Da đổ bóng theo nếp áo cũ, hơi lốm đốm; cơ ngực/bụng chỉ là vài nét | **Như vẽ tay**: có cơ ngực/bụng, bắp tay chân tròn, quần đùi xám có nếp, hợp nét vẽ của sprite |
+| Hình bóng / phủ đồ | Trùng 100%, 0 điểm lộ | Trùng 100%, 0 điểm lộ (vì giữ hình dạng lớp của Tô da) |
+| Chỗ thiếu | Không thiếu (tự tô hết) | Hụt viền 21–55 điểm/khung, lấp bằng Tô da |
+| Chỗ bị đồ che | Có | Lấy theo Tô da (ảnh gen không vẽ chỗ khuất) |
+| Làm động tác khác | Chạy lại code là có, không tốn ảnh gen | Mỗi hàng động tác cần 1 ảnh gen sửa, rồi chạy lại để kiểm |
+| Rủi ro | Thấp | Ảnh gen lệch dáng thì nhiều điểm bị lấp hoặc cắt (số đo ở bảng trên sẽ báo) |
+
+**Đề xuất: lấy "Gen sửa" làm bản chuẩn cho hàng chạy**, còn Tô da làm lớp đỡ phía dưới (lấp chỗ hụt, chỗ khuất). Với động tác chưa có ảnh gen thì dùng Tô da. Hiện trang vẫn mặc định Tô da; nếu đồng ý thì đổi `defaultBodyBase` thành `gen-sua`.
+
+### Bài học
+
+- Gen theo kiểu **"SỬA ảnh gốc, giữ dáng"** (gửi đúng tấm hàng chạy gốc, bảo máy chỉ đổi áo quần thành da) khớp hình bóng **92–94%**, đủ để ghép thẳng vào khung.
+- Gen theo kiểu **"vẽ lại theo khung que"** chỉ khớp **45–65%**, không dùng được.
+- Vì vậy khi gen lớp nền hay đồ cho các hàng khác (đứng, đánh, nhảy…), **luôn gửi chính tấm sprite gốc của hàng đó và bảo máy SỬA**, giữ cùng cỡ tấm, cùng bố cục và nền #00FF00. Khi đó `nen_gen_sua.py` chỉ cần đổi đường dẫn ảnh và bảng toạ độ khung.
