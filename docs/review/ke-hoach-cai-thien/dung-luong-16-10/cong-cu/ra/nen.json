@@ -1,0 +1,8430 @@
+{
+ "tong_truoc": 19463587,
+ "tong_sau": 17957932,
+ "tam": [
+  {
+   "ma": "gd-so-trang",
+   "truoc": 199541,
+   "sau": 73776,
+   "cach": "không mất, 256 màu (từ 20662 màu)",
+   "sai_so": [
+    0.65,
+    5.0,
+    0
+   ],
+   "so_mau": 20662,
+   "co": [
+    332,
+    346
+   ]
+  },
+  {
+   "ma": "hu-song-dong",
+   "truoc": 78057,
+   "sau": 32949,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    448,
+    112
+   ]
+  },
+  {
+   "ma": "hu-ep-thanh-cong",
+   "truoc": 49515,
+   "sau": 18135,
+   "cach": "không mất, 256 màu (từ 12178 màu)",
+   "sai_so": [
+    1.91,
+    17.0,
+    0
+   ],
+   "so_mau": 12178,
+   "co": [
+    360,
+    96
+   ]
+  },
+  {
+   "ma": "gd-nen-song-san-tl",
+   "truoc": 64428,
+   "sau": 33115,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    256,
+    256
+   ]
+  },
+  {
+   "ma": "hu-ep-that-bai",
+   "truoc": 45833,
+   "sau": 16074,
+   "cach": "không mất, 256 màu (từ 13741 màu)",
+   "sai_so": [
+    2.43,
+    18.0,
+    0
+   ],
+   "so_mau": 13741,
+   "co": [
+    320,
+    96
+   ]
+  },
+  {
+   "ma": "gd-nen-song-tuong-sau",
+   "truoc": 44231,
+   "sau": 15632,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 41,
+   "co": [
+    330,
+    98
+   ]
+  },
+  {
+   "ma": "hu-ra-chieu-fire",
+   "truoc": 39404,
+   "sau": 10947,
+   "cach": "không mất, 256 màu (từ 483 màu)",
+   "sai_so": [
+    2.29,
+    24.0,
+    9
+   ],
+   "so_mau": 483,
+   "co": [
+    480,
+    96
+   ]
+  },
+  {
+   "ma": "hu-ra-chuong-fire",
+   "truoc": 39059,
+   "sau": 11270,
+   "cach": "không mất, 256 màu (từ 481 màu)",
+   "sai_so": [
+    1.56,
+    23.0,
+    11
+   ],
+   "so_mau": 481,
+   "co": [
+    480,
+    96
+   ]
+  },
+  {
+   "ma": "hu-tu-luc",
+   "truoc": 41824,
+   "sau": 14218,
+   "cach": "không mất, 256 màu (từ 1084 màu)",
+   "sai_so": [
+    0.62,
+    3.0,
+    0
+   ],
+   "so_mau": 1084,
+   "co": [
+    624,
+    126
+   ]
+  },
+  {
+   "ma": "hu-dong-bang",
+   "truoc": 40724,
+   "sau": 13239,
+   "cach": "không mất, 256 màu (từ 486 màu)",
+   "sai_so": [
+    1.74,
+    31.0,
+    11
+   ],
+   "so_mau": 486,
+   "co": [
+    576,
+    96
+   ]
+  },
+  {
+   "ma": "hu-huy-hieu",
+   "truoc": 41673,
+   "sau": 14617,
+   "cach": "không mất, 256 màu (từ 9632 màu)",
+   "sai_so": [
+    1.64,
+    11.0,
+    0
+   ],
+   "so_mau": 9632,
+   "co": [
+    432,
+    80
+   ]
+  },
+  {
+   "ma": "hu-ra-chieu-ice",
+   "truoc": 37738,
+   "sau": 11047,
+   "cach": "không mất, 256 màu (từ 502 màu)",
+   "sai_so": [
+    1.56,
+    27.0,
+    12
+   ],
+   "so_mau": 502,
+   "co": [
+    480,
+    96
+   ]
+  },
+  {
+   "ma": "hu-song-doi",
+   "truoc": 41813,
+   "sau": 15346,
+   "cach": "không mất, 256 màu (từ 10346 màu)",
+   "sai_so": [
+    2.05,
+    15.0,
+    0
+   ],
+   "so_mau": 10346,
+   "co": [
+    640,
+    96
+   ]
+  },
+  {
+   "ma": "hu-ra-chuong-ice",
+   "truoc": 35150,
+   "sau": 11103,
+   "cach": "không mất, 256 màu (từ 487 màu)",
+   "sai_so": [
+    1.91,
+    26.0,
+    10
+   ],
+   "so_mau": 487,
+   "co": [
+    480,
+    96
+   ]
+  },
+  {
+   "ma": "hu-tram-nguyet-fire",
+   "truoc": 34217,
+   "sau": 10811,
+   "cach": "không mất, 256 màu (từ 472 màu)",
+   "sai_so": [
+    1.92,
+    27.0,
+    9
+   ],
+   "so_mau": 472,
+   "co": [
+    384,
+    96
+   ]
+  },
+  {
+   "ma": "hu-khien-nuoc",
+   "truoc": 35492,
+   "sau": 12197,
+   "cach": "không mất, 256 màu (từ 7746 màu)",
+   "sai_so": [
+    1.9,
+    12.539999999999054,
+    0
+   ],
+   "so_mau": 7746,
+   "co": [
+    384,
+    68
+   ]
+  },
+  {
+   "ma": "hu-nhan-thuong",
+   "truoc": 36202,
+   "sau": 12911,
+   "cach": "không mất, 256 màu (từ 9148 màu)",
+   "sai_so": [
+    2.74,
+    25.0,
+    0
+   ],
+   "so_mau": 9148,
+   "co": [
+    372,
+    88
+   ]
+  },
+  {
+   "ma": "hu-khi-the",
+   "truoc": 37371,
+   "sau": 14518,
+   "cach": "không mất, 256 màu (từ 9804 màu)",
+   "sai_so": [
+    1.75,
+    15.0,
+    0
+   ],
+   "so_mau": 9804,
+   "co": [
+    408,
+    102
+   ]
+  },
+  {
+   "ma": "hu-hoi-mau",
+   "truoc": 30353,
+   "sau": 9627,
+   "cach": "không mất, 256 màu (từ 539 màu)",
+   "sai_so": [
+    2.02,
+    18.0,
+    8
+   ],
+   "so_mau": 539,
+   "co": [
+    480,
+    96
+   ]
+  },
+  {
+   "ma": "hu-ep-tut-bac",
+   "truoc": 30792,
+   "sau": 10882,
+   "cach": "không mất, 256 màu (từ 7946 màu)",
+   "sai_so": [
+    3.09,
+    20.0,
+    0
+   ],
+   "so_mau": 7946,
+   "co": [
+    408,
+    80
+   ]
+  },
+  {
+   "ma": "hu-tram-nguyet",
+   "truoc": 28929,
+   "sau": 9542,
+   "cach": "không mất, 256 màu (từ 523 màu)",
+   "sai_so": [
+    0.8,
+    12.0,
+    0
+   ],
+   "so_mau": 523,
+   "co": [
+    384,
+    96
+   ]
+  },
+  {
+   "ma": "hu-ra-chuong",
+   "truoc": 28385,
+   "sau": 9901,
+   "cach": "không mất, 256 màu (từ 458 màu)",
+   "sai_so": [
+    0.53,
+    8.0,
+    0
+   ],
+   "so_mau": 458,
+   "co": [
+    480,
+    96
+   ]
+  },
+  {
+   "ma": "hu-ra-chieu",
+   "truoc": 25882,
+   "sau": 8526,
+   "cach": "không mất, 256 màu (từ 537 màu)",
+   "sai_so": [
+    0.8,
+    11.0,
+    0
+   ],
+   "so_mau": 537,
+   "co": [
+    480,
+    96
+   ]
+  },
+  {
+   "ma": "hu-day-leo",
+   "truoc": 26224,
+   "sau": 9408,
+   "cach": "không mất, 256 màu (từ 6472 màu)",
+   "sai_so": [
+    1.7,
+    14.0,
+    0
+   ],
+   "so_mau": 6472,
+   "co": [
+    360,
+    72
+   ]
+  },
+  {
+   "ma": "gd-nen-song-ngoai",
+   "truoc": 27512,
+   "sau": 11532,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    128,
+    128
+   ]
+  },
+  {
+   "ma": "gd-the-viec-xong",
+   "truoc": 24330,
+   "sau": 8924,
+   "cach": "không mất, 256 màu (từ 6780 màu)",
+   "sai_so": [
+    0.75,
+    10.0,
+    0
+   ],
+   "so_mau": 6780,
+   "co": [
+    298,
+    68
+   ]
+  },
+  {
+   "ma": "hu-vung-luc-binh",
+   "truoc": 19889,
+   "sau": 6974,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 65,
+   "co": [
+    564,
+    52
+   ]
+  },
+  {
+   "ma": "gd-bang-viec",
+   "truoc": 21903,
+   "sau": 9390,
+   "cach": "không mất, 256 màu (từ 5582 màu)",
+   "sai_so": [
+    0.79,
+    6.0,
+    0
+   ],
+   "so_mau": 5582,
+   "co": [
+    124,
+    120
+   ]
+  },
+  {
+   "ma": "hu-phan-don",
+   "truoc": 18448,
+   "sau": 6820,
+   "cach": "không mất, 256 màu (từ 4341 màu)",
+   "sai_so": [
+    2.76,
+    17.0,
+    0
+   ],
+   "so_mau": 4341,
+   "co": [
+    384,
+    62
+   ]
+  },
+  {
+   "ma": "hu-phi-tieu-chum",
+   "truoc": 18895,
+   "sau": 7547,
+   "cach": "không mất, 256 màu (từ 1146 màu)",
+   "sai_so": [
+    0.19,
+    2.0,
+    0
+   ],
+   "so_mau": 1146,
+   "co": [
+    400,
+    80
+   ]
+  },
+  {
+   "ma": "gd-nen-song-san-nhan",
+   "truoc": 20379,
+   "sau": 9274,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    128,
+    128
+   ]
+  },
+  {
+   "ma": "hu-song-vung-sau",
+   "truoc": 18686,
+   "sau": 7868,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 41,
+   "co": [
+    416,
+    52
+   ]
+  },
+  {
+   "ma": "gd-phuc-lanh-song",
+   "truoc": 16870,
+   "sau": 6517,
+   "cach": "không mất, 256 màu (từ 4908 màu)",
+   "sai_so": [
+    1.95,
+    17.0,
+    0
+   ],
+   "so_mau": 4908,
+   "co": [
+    90,
+    90
+   ]
+  },
+  {
+   "ma": "gd-phuc-lanh-hoa",
+   "truoc": 16702,
+   "sau": 6388,
+   "cach": "không mất, 256 màu (từ 4849 màu)",
+   "sai_so": [
+    2.47,
+    22.0,
+    0
+   ],
+   "so_mau": 4849,
+   "co": [
+    90,
+    90
+   ]
+  },
+  {
+   "ma": "gd-the-viec",
+   "truoc": 18308,
+   "sau": 8010,
+   "cach": "không mất, 256 màu (từ 3465 màu)",
+   "sai_so": [
+    0.4,
+    6.0,
+    0
+   ],
+   "so_mau": 3465,
+   "co": [
+    292,
+    68
+   ]
+  },
+  {
+   "ma": "hu-nut-dat",
+   "truoc": 15994,
+   "sau": 5881,
+   "cach": "không mất, 256 màu (từ 3917 màu)",
+   "sai_so": [
+    2.43,
+    16.0,
+    0
+   ],
+   "so_mau": 3917,
+   "co": [
+    312,
+    56
+   ]
+  },
+  {
+   "ma": "gd-nen-song-san1",
+   "truoc": 19052,
+   "sau": 8975,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    128,
+    128
+   ]
+  },
+  {
+   "ma": "hu-bam-bang",
+   "truoc": 16829,
+   "sau": 6870,
+   "cach": "không mất, 256 màu (từ 4224 màu)",
+   "sai_so": [
+    1.61,
+    14.0,
+    0
+   ],
+   "so_mau": 4224,
+   "co": [
+    248,
+    60
+   ]
+  },
+  {
+   "ma": "gd-nen-song-san2",
+   "truoc": 18739,
+   "sau": 8790,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    128,
+    128
+   ]
+  },
+  {
+   "ma": "gd-phuc-lanh-trong",
+   "truoc": 15681,
+   "sau": 5858,
+   "cach": "không mất, 256 màu (từ 4409 màu)",
+   "sai_so": [
+    2.43,
+    16.0,
+    0
+   ],
+   "so_mau": 4409,
+   "co": [
+    90,
+    90
+   ]
+  },
+  {
+   "ma": "gd-nen-song-san0",
+   "truoc": 18257,
+   "sau": 8654,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    128,
+    128
+   ]
+  },
+  {
+   "ma": "hu-chuong-lua",
+   "truoc": 14048,
+   "sau": 4696,
+   "cach": "không mất, 256 màu (từ 378 màu)",
+   "sai_so": [
+    1.77,
+    24.0,
+    0
+   ],
+   "so_mau": 378,
+   "co": [
+    256,
+    40
+   ]
+  },
+  {
+   "ma": "gd-phuc-lanh-suong",
+   "truoc": 15129,
+   "sau": 5806,
+   "cach": "không mất, 256 màu (từ 3972 màu)",
+   "sai_so": [
+    2.13,
+    19.0,
+    0
+   ],
+   "so_mau": 3972,
+   "co": [
+    90,
+    90
+   ]
+  },
+  {
+   "ma": "gd-phuc-lanh-noc",
+   "truoc": 14923,
+   "sau": 5736,
+   "cach": "không mất, 256 màu (từ 4388 màu)",
+   "sai_so": [
+    2.73,
+    27.0,
+    0
+   ],
+   "so_mau": 4388,
+   "co": [
+    90,
+    90
+   ]
+  },
+  {
+   "ma": "gd-phuc-lanh-ngan",
+   "truoc": 14981,
+   "sau": 5824,
+   "cach": "không mất, 256 màu (từ 4523 màu)",
+   "sai_so": [
+    2.56,
+    22.0,
+    0
+   ],
+   "so_mau": 4523,
+   "co": [
+    90,
+    90
+   ]
+  },
+  {
+   "ma": "gd-phuc-lanh-nui",
+   "truoc": 15085,
+   "sau": 5938,
+   "cach": "không mất, 256 màu (từ 4641 màu)",
+   "sai_so": [
+    2.23,
+    16.0,
+    0
+   ],
+   "so_mau": 4641,
+   "co": [
+    90,
+    90
+   ]
+  },
+  {
+   "ma": "hu-vat-luc-binh",
+   "truoc": 12095,
+   "sau": 3695,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 65,
+   "co": [
+    224,
+    42
+   ]
+  },
+  {
+   "ma": "gd-phuc-lanh-ngua",
+   "truoc": 13822,
+   "sau": 5511,
+   "cach": "không mất, 256 màu (từ 4158 màu)",
+   "sai_so": [
+    2.12,
+    17.0,
+    0
+   ],
+   "so_mau": 4158,
+   "co": [
+    90,
+    90
+   ]
+  },
+  {
+   "ma": "hu-phan-than",
+   "truoc": 13547,
+   "sau": 5401,
+   "cach": "không mất, 256 màu (từ 3329 màu)",
+   "sai_so": [
+    1.23,
+    13.86999999999989,
+    0
+   ],
+   "so_mau": 3329,
+   "co": [
+    250,
+    60
+   ]
+  },
+  {
+   "ma": "hu-trung",
+   "truoc": 11218,
+   "sau": 4075,
+   "cach": "không mất, 256 màu (từ 477 màu)",
+   "sai_so": [
+    1.93,
+    22.0,
+    0
+   ],
+   "so_mau": 477,
+   "co": [
+    320,
+    64
+   ]
+  },
+  {
+   "ma": "gd-phuc-lanh-riu",
+   "truoc": 11737,
+   "sau": 4655,
+   "cach": "không mất, 256 màu (từ 3285 màu)",
+   "sai_so": [
+    2.08,
+    16.0,
+    0
+   ],
+   "so_mau": 3285,
+   "co": [
+    90,
+    90
+   ]
+  },
+  {
+   "ma": "hu-song-dat",
+   "truoc": 11701,
+   "sau": 4625,
+   "cach": "không mất, 256 màu (từ 2920 màu)",
+   "sai_so": [
+    1.4,
+    15.0,
+    0
+   ],
+   "so_mau": 2920,
+   "co": [
+    248,
+    44
+   ]
+  },
+  {
+   "ma": "hu-bam-lua",
+   "truoc": 11458,
+   "sau": 5168,
+   "cach": "không mất, 256 màu (từ 2906 màu)",
+   "sai_so": [
+    1.01,
+    12.0,
+    0
+   ],
+   "so_mau": 2906,
+   "co": [
+    176,
+    60
+   ]
+  },
+  {
+   "ma": "gd-phuc-lanh-ca",
+   "truoc": 10472,
+   "sau": 4273,
+   "cach": "không mất, 256 màu (từ 2844 màu)",
+   "sai_so": [
+    3.04,
+    26.0,
+    0
+   ],
+   "so_mau": 2844,
+   "co": [
+    90,
+    90
+   ]
+  },
+  {
+   "ma": "gd-danh-hieu-vang",
+   "truoc": 11407,
+   "sau": 5226,
+   "cach": "không mất, 256 màu (từ 3746 màu)",
+   "sai_so": [
+    0.9,
+    7.0,
+    0
+   ],
+   "so_mau": 3746,
+   "co": [
+    202,
+    32
+   ]
+  },
+  {
+   "ma": "hu-trung-nang",
+   "truoc": 28259,
+   "sau": 22095,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 599,
+   "co": [
+    480,
+    80
+   ]
+  },
+  {
+   "ma": "hu-vung-dau-chay",
+   "truoc": 9381,
+   "sau": 3393,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 41,
+   "co": [
+    384,
+    26
+   ]
+  },
+  {
+   "ma": "gd-danh-hieu-bac",
+   "truoc": 11283,
+   "sau": 5296,
+   "cach": "không mất, 256 màu (từ 2408 màu)",
+   "sai_so": [
+    0.37,
+    2.4200000000000728,
+    0
+   ],
+   "so_mau": 2408,
+   "co": [
+    202,
+    32
+   ]
+  },
+  {
+   "ma": "hu-ra-chieu-poison",
+   "truoc": 37688,
+   "sau": 31819,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 520,
+   "co": [
+    480,
+    96
+   ]
+  },
+  {
+   "ma": "gd-danh-hieu-dong",
+   "truoc": 10960,
+   "sau": 5206,
+   "cach": "không mất, 256 màu (từ 3487 màu)",
+   "sai_so": [
+    0.7,
+    6.0,
+    0
+   ],
+   "so_mau": 3487,
+   "co": [
+    202,
+    32
+   ]
+  },
+  {
+   "ma": "hu-vat-den-dau",
+   "truoc": 8600,
+   "sau": 2850,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 65,
+   "co": [
+    176,
+    52
+   ]
+  },
+  {
+   "ma": "gd-phuc-lanh-no",
+   "truoc": 9708,
+   "sau": 4043,
+   "cach": "không mất, 256 màu (từ 2677 màu)",
+   "sai_so": [
+    2.07,
+    16.0,
+    0
+   ],
+   "so_mau": 2677,
+   "co": [
+    90,
+    90
+   ]
+  },
+  {
+   "ma": "hu-am-sat",
+   "truoc": 9499,
+   "sau": 3944,
+   "cach": "không mất, 256 màu (từ 2178 màu)",
+   "sai_so": [
+    1.96,
+    22.0,
+    0
+   ],
+   "so_mau": 2178,
+   "co": [
+    320,
+    46
+   ]
+  },
+  {
+   "ma": "gd-phuc-lanh-guom",
+   "truoc": 9383,
+   "sau": 4017,
+   "cach": "không mất, 256 màu (từ 2690 màu)",
+   "sai_so": [
+    1.92,
+    16.0,
+    0
+   ],
+   "so_mau": 2690,
+   "co": [
+    90,
+    90
+   ]
+  },
+  {
+   "ma": "gd-song-cau",
+   "truoc": 8135,
+   "sau": 2840,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 41,
+   "co": [
+    124,
+    44
+   ]
+  },
+  {
+   "ma": "gd-cua-song-duoi-khoa",
+   "truoc": 7733,
+   "sau": 2449,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 41,
+   "co": [
+    92,
+    52
+   ]
+  },
+  {
+   "ma": "hu-lon",
+   "truoc": 8863,
+   "sau": 3839,
+   "cach": "không mất, 256 màu (từ 2000 màu)",
+   "sai_so": [
+    1.19,
+    12.309999999999945,
+    0
+   ],
+   "so_mau": 2000,
+   "co": [
+    400,
+    40
+   ]
+  },
+  {
+   "ma": "hu-bam-doc",
+   "truoc": 9419,
+   "sau": 4398,
+   "cach": "không mất, 256 màu (từ 2367 màu)",
+   "sai_so": [
+    1.23,
+    12.0,
+    0
+   ],
+   "so_mau": 2367,
+   "co": [
+    232,
+    60
+   ]
+  },
+  {
+   "ma": "hu-bao-vung-vong",
+   "truoc": 8569,
+   "sau": 3572,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    384,
+    40
+   ]
+  },
+  {
+   "ma": "hu-gai-bang",
+   "truoc": 8940,
+   "sau": 4027,
+   "cach": "không mất, 256 màu (từ 2157 màu)",
+   "sai_so": [
+    1.57,
+    12.440000000000055,
+    0
+   ],
+   "so_mau": 2157,
+   "co": [
+    264,
+    46
+   ]
+  },
+  {
+   "ma": "hu-nhua-rung",
+   "truoc": 9045,
+   "sau": 4194,
+   "cach": "không mất, 256 màu (từ 2236 màu)",
+   "sai_so": [
+    1.25,
+    11.0,
+    0
+   ],
+   "so_mau": 2236,
+   "co": [
+    224,
+    64
+   ]
+  },
+  {
+   "ma": "hu-nuoc-dang",
+   "truoc": 8422,
+   "sau": 3623,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    192,
+    24
+   ]
+  },
+  {
+   "ma": "gd-phuc-lanh-than",
+   "truoc": 8749,
+   "sau": 3988,
+   "cach": "không mất, 256 màu (từ 2861 màu)",
+   "sai_so": [
+    2.02,
+    18.0,
+    0
+   ],
+   "so_mau": 2861,
+   "co": [
+    90,
+    90
+   ]
+  },
+  {
+   "ma": "gd-cua-song-tren-khoa",
+   "truoc": 7017,
+   "sau": 2315,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 41,
+   "co": [
+    84,
+    56
+   ]
+  },
+  {
+   "ma": "hu-bang-vo",
+   "truoc": 48277,
+   "sau": 43583,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 473,
+   "co": [
+    672,
+    112
+   ]
+  },
+  {
+   "ma": "gd-tham-lau",
+   "truoc": 8832,
+   "sau": 4401,
+   "cach": "không mất, 256 màu (từ 2771 màu)",
+   "sai_so": [
+    0.84,
+    8.0,
+    0
+   ],
+   "so_mau": 2771,
+   "co": [
+    44,
+    80
+   ]
+  },
+  {
+   "ma": "gd-cua-song-duoi",
+   "truoc": 6689,
+   "sau": 2278,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 41,
+   "co": [
+    92,
+    54
+   ]
+  },
+  {
+   "ma": "gd-cua-song-tren",
+   "truoc": 6293,
+   "sau": 2113,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 41,
+   "co": [
+    84,
+    54
+   ]
+  },
+  {
+   "ma": "gd-nen-song-mep",
+   "truoc": 6563,
+   "sau": 2384,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    128,
+    24
+   ]
+  },
+  {
+   "ma": "gd-nen-song-tuong-truoc",
+   "truoc": 5683,
+   "sau": 1635,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 41,
+   "co": [
+    96,
+    24
+   ]
+  },
+  {
+   "ma": "gd-so-o-2",
+   "truoc": 7390,
+   "sau": 3355,
+   "cach": "không mất, 256 màu (từ 2036 màu)",
+   "sai_so": [
+    1.07,
+    10.0,
+    0
+   ],
+   "so_mau": 2036,
+   "co": [
+    62,
+    62
+   ]
+  },
+  {
+   "ma": "gd-so-bia",
+   "truoc": 7699,
+   "sau": 3687,
+   "cach": "không mất, 256 màu (từ 2545 màu)",
+   "sai_so": [
+    1.07,
+    8.38000000000011,
+    0
+   ],
+   "so_mau": 2545,
+   "co": [
+    64,
+    64
+   ]
+  },
+  {
+   "ma": "gd-tt-song-tien-canh-trai",
+   "truoc": 5870,
+   "sau": 1941,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 37,
+   "co": [
+    80,
+    70
+   ]
+  },
+  {
+   "ma": "hu-doc-toe",
+   "truoc": 7438,
+   "sau": 3512,
+   "cach": "không mất, 256 màu (từ 1735 màu)",
+   "sai_so": [
+    1.52,
+    12.0,
+    0
+   ],
+   "so_mau": 1735,
+   "co": [
+    360,
+    44
+   ]
+  },
+  {
+   "ma": "gd-tt-song-tien-canh-phai",
+   "truoc": 5856,
+   "sau": 1945,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 39,
+   "co": [
+    80,
+    70
+   ]
+  },
+  {
+   "ma": "gd-huy-khung-bac",
+   "truoc": 6882,
+   "sau": 3059,
+   "cach": "không mất, 256 màu (từ 1070 màu)",
+   "sai_so": [
+    0.2,
+    2.0,
+    0
+   ],
+   "so_mau": 1070,
+   "co": [
+    56,
+    56
+   ]
+  },
+  {
+   "ma": "hu-tich-chuong",
+   "truoc": 7285,
+   "sau": 3490,
+   "cach": "không mất, 256 màu (từ 763 màu)",
+   "sai_so": [
+    0.19,
+    2.0,
+    0
+   ],
+   "so_mau": 763,
+   "co": [
+    264,
+    50
+   ]
+  },
+  {
+   "ma": "gd-ai-ngay-vang",
+   "truoc": 7387,
+   "sau": 3594,
+   "cach": "không mất, 256 màu (từ 2361 màu)",
+   "sai_so": [
+    1.35,
+    14.0,
+    0
+   ],
+   "so_mau": 2361,
+   "co": [
+    64,
+    64
+   ]
+  },
+  {
+   "ma": "gd-ai-ngay-da",
+   "truoc": 7428,
+   "sau": 3676,
+   "cach": "không mất, 256 màu (từ 2374 màu)",
+   "sai_so": [
+    1.29,
+    13.63000000000011,
+    0
+   ],
+   "so_mau": 2374,
+   "co": [
+    64,
+    64
+   ]
+  },
+  {
+   "ma": "hu-dan-ten-poison",
+   "truoc": 6567,
+   "sau": 2852,
+   "cach": "không mất, 256 màu (từ 1601 màu)",
+   "sai_so": [
+    2.83,
+    20.0,
+    0
+   ],
+   "so_mau": 1601,
+   "co": [
+    160,
+    30
+   ]
+  },
+  {
+   "ma": "gd-huy-khung-vang",
+   "truoc": 6719,
+   "sau": 3006,
+   "cach": "không mất, 256 màu (từ 1757 màu)",
+   "sai_so": [
+    0.96,
+    8.0,
+    0
+   ],
+   "so_mau": 1757,
+   "co": [
+    56,
+    56
+   ]
+  },
+  {
+   "ma": "gd-ruong-ngay-mo",
+   "truoc": 7100,
+   "sau": 3406,
+   "cach": "không mất, 256 màu (từ 2281 màu)",
+   "sai_so": [
+    1.62,
+    14.0,
+    0
+   ],
+   "so_mau": 2281,
+   "co": [
+    64,
+    56
+   ]
+  },
+  {
+   "ma": "gd-huy-khung-dong",
+   "truoc": 6622,
+   "sau": 2946,
+   "cach": "không mất, 256 màu (từ 1710 màu)",
+   "sai_so": [
+    0.65,
+    7.0,
+    0
+   ],
+   "so_mau": 1710,
+   "co": [
+    56,
+    56
+   ]
+  },
+  {
+   "ma": "hu-ra-chuong-poison",
+   "truoc": 34425,
+   "sau": 30753,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 566,
+   "co": [
+    480,
+    96
+   ]
+  },
+  {
+   "ma": "gd-ai-ngay-mai",
+   "truoc": 7258,
+   "sau": 3605,
+   "cach": "không mất, 256 màu (từ 2338 màu)",
+   "sai_so": [
+    1.32,
+    15.0,
+    0
+   ],
+   "so_mau": 2338,
+   "co": [
+    64,
+    64
+   ]
+  },
+  {
+   "ma": "hu-lua-bung",
+   "truoc": 6032,
+   "sau": 2385,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 41,
+   "co": [
+    192,
+    42
+   ]
+  },
+  {
+   "ma": "gd-huy-khung-khoa",
+   "truoc": 6852,
+   "sau": 3224,
+   "cach": "không mất, 256 màu (từ 869 màu)",
+   "sai_so": [
+    0.16,
+    1.0,
+    0
+   ],
+   "so_mau": 869,
+   "co": [
+    56,
+    56
+   ]
+  },
+  {
+   "ma": "gd-so-o-1",
+   "truoc": 6957,
+   "sau": 3514,
+   "cach": "không mất, 256 màu (từ 1874 màu)",
+   "sai_so": [
+    0.44,
+    5.0,
+    0
+   ],
+   "so_mau": 1874,
+   "co": [
+    62,
+    62
+   ]
+  },
+  {
+   "ma": "hu-lap-lanh",
+   "truoc": 21278,
+   "sau": 17872,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 529,
+   "co": [
+    480,
+    80
+   ]
+  },
+  {
+   "ma": "gd-phuc-lanh-tre",
+   "truoc": 6508,
+   "sau": 3157,
+   "cach": "không mất, 256 màu (từ 1727 màu)",
+   "sai_so": [
+    1.55,
+    14.059999999999945,
+    0
+   ],
+   "so_mau": 1727,
+   "co": [
+    90,
+    90
+   ]
+  },
+  {
+   "ma": "gd-so-o-0",
+   "truoc": 6951,
+   "sau": 3733,
+   "cach": "không mất, 256 màu (từ 1825 màu)",
+   "sai_so": [
+    0.35,
+    3.5900000000001455,
+    0
+   ],
+   "so_mau": 1825,
+   "co": [
+    62,
+    62
+   ]
+  },
+  {
+   "ma": "gd-nen-song-tuong-ben",
+   "truoc": 5010,
+   "sau": 1926,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 41,
+   "co": [
+    28,
+    128
+   ]
+  },
+  {
+   "ma": "gd-ruong-ngay",
+   "truoc": 6059,
+   "sau": 3025,
+   "cach": "không mất, 256 màu (từ 1912 màu)",
+   "sai_so": [
+    1.24,
+    12.0,
+    0
+   ],
+   "so_mau": 1912,
+   "co": [
+    64,
+    56
+   ]
+  },
+  {
+   "ma": "hu-dan-ten-ice",
+   "truoc": 5723,
+   "sau": 2743,
+   "cach": "không mất, 256 màu (từ 1452 màu)",
+   "sai_so": [
+    1.65,
+    13.0,
+    0
+   ],
+   "so_mau": 1452,
+   "co": [
+    160,
+    28
+   ]
+  },
+  {
+   "ma": "hu-dong-dau",
+   "truoc": 5863,
+   "sau": 2897,
+   "cach": "không mất, 256 màu (từ 1411 màu)",
+   "sai_so": [
+    1.98,
+    17.0,
+    0
+   ],
+   "so_mau": 1411,
+   "co": [
+    190,
+    60
+   ]
+  },
+  {
+   "ma": "hu-dan-ten-fire",
+   "truoc": 5544,
+   "sau": 2675,
+   "cach": "không mất, 256 màu (từ 1429 màu)",
+   "sai_so": [
+    2.05,
+    15.0,
+    0
+   ],
+   "so_mau": 1429,
+   "co": [
+    160,
+    28
+   ]
+  },
+  {
+   "ma": "hu-xoc-toi",
+   "truoc": 6159,
+   "sau": 3394,
+   "cach": "không mất, 256 màu (từ 359 màu)",
+   "sai_so": [
+    0.03,
+    1.0,
+    0
+   ],
+   "so_mau": 359,
+   "co": [
+    520,
+    42
+   ]
+  },
+  {
+   "ma": "gd-o-ep-4",
+   "truoc": 5495,
+   "sau": 2797,
+   "cach": "không mất, 256 màu (từ 1380 màu)",
+   "sai_so": [
+    0.87,
+    10.0,
+    0
+   ],
+   "so_mau": 1380,
+   "co": [
+    60,
+    60
+   ]
+  },
+  {
+   "ma": "gd-o-ep-0",
+   "truoc": 5546,
+   "sau": 2872,
+   "cach": "không mất, 256 màu (từ 1310 màu)",
+   "sai_so": [
+    0.48,
+    4.0,
+    0
+   ],
+   "so_mau": 1310,
+   "co": [
+    60,
+    60
+   ]
+  },
+  {
+   "ma": "hu-tram-nguyet-poison",
+   "truoc": 36810,
+   "sau": 34151,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 499,
+   "co": [
+    384,
+    96
+   ]
+  },
+  {
+   "ma": "gd-o-ep-6",
+   "truoc": 5448,
+   "sau": 2793,
+   "cach": "không mất, 256 màu (từ 1449 màu)",
+   "sai_so": [
+    1.36,
+    15.789999999999964,
+    0
+   ],
+   "so_mau": 1449,
+   "co": [
+    60,
+    60
+   ]
+  },
+  {
+   "ma": "hu-tram-nguyet-ice",
+   "truoc": 38227,
+   "sau": 35573,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 508,
+   "co": [
+    384,
+    96
+   ]
+  },
+  {
+   "ma": "gd-o-ep-3",
+   "truoc": 5529,
+   "sau": 2884,
+   "cach": "không mất, 256 màu (từ 1354 màu)",
+   "sai_so": [
+    0.75,
+    10.0,
+    0
+   ],
+   "so_mau": 1354,
+   "co": [
+    60,
+    60
+   ]
+  },
+  {
+   "ma": "gd-o-ep-1",
+   "truoc": 5410,
+   "sau": 2823,
+   "cach": "không mất, 256 màu (từ 1363 màu)",
+   "sai_so": [
+    0.85,
+    9.0,
+    0
+   ],
+   "so_mau": 1363,
+   "co": [
+    60,
+    60
+   ]
+  },
+  {
+   "ma": "gd-cua-song-ben-khoa",
+   "truoc": 3774,
+   "sau": 1270,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 41,
+   "co": [
+    30,
+    74
+   ]
+  },
+  {
+   "ma": "hu-trung-phi-tieu",
+   "truoc": 5469,
+   "sau": 3010,
+   "cach": "không mất, 256 màu (từ 664 màu)",
+   "sai_so": [
+    0.17,
+    2.0,
+    0
+   ],
+   "so_mau": 664,
+   "co": [
+    256,
+    64
+   ]
+  },
+  {
+   "ma": "gd-o-ep-2",
+   "truoc": 5297,
+   "sau": 2841,
+   "cach": "không mất, 256 màu (từ 1354 màu)",
+   "sai_so": [
+    0.76,
+    11.0,
+    0
+   ],
+   "so_mau": 1354,
+   "co": [
+    60,
+    60
+   ]
+  },
+  {
+   "ma": "gd-o-ep-5",
+   "truoc": 5240,
+   "sau": 2823,
+   "cach": "không mất, 256 màu (từ 1367 màu)",
+   "sai_so": [
+    0.85,
+    12.0,
+    0
+   ],
+   "so_mau": 1367,
+   "co": [
+    60,
+    60
+   ]
+  },
+  {
+   "ma": "hu-ban-cung-poison",
+   "truoc": 4585,
+   "sau": 2334,
+   "cach": "không mất, 256 màu (từ 1085 màu)",
+   "sai_so": [
+    2.56,
+    18.74000000000001,
+    0
+   ],
+   "so_mau": 1085,
+   "co": [
+    256,
+    28
+   ]
+  },
+  {
+   "ma": "hu-ban-cung-fire",
+   "truoc": 4484,
+   "sau": 2456,
+   "cach": "không mất, 256 màu (từ 1213 màu)",
+   "sai_so": [
+    1.36,
+    10.0,
+    0
+   ],
+   "so_mau": 1213,
+   "co": [
+    256,
+    30
+   ]
+  },
+  {
+   "ma": "hu-doi-vk",
+   "truoc": 4595,
+   "sau": 2568,
+   "cach": "không mất, 256 màu (từ 340 màu)",
+   "sai_so": [
+    0.05,
+    1.0,
+    0
+   ],
+   "so_mau": 340,
+   "co": [
+    260,
+    48
+   ]
+  },
+  {
+   "ma": "gd-cot-nang-lau",
+   "truoc": 3890,
+   "sau": 1887,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 85,
+   "co": [
+    56,
+    80
+   ]
+  },
+  {
+   "ma": "hu-chuong-bang",
+   "truoc": 9630,
+   "sau": 7707,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 419,
+   "co": [
+    256,
+    32
+   ]
+  },
+  {
+   "ma": "gd-cot-nang-bien",
+   "truoc": 3933,
+   "sau": 2018,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 80,
+   "co": [
+    56,
+    78
+   ]
+  },
+  {
+   "ma": "gd-cua-song-ben",
+   "truoc": 2888,
+   "sau": 1063,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 41,
+   "co": [
+    30,
+    74
+   ]
+  },
+  {
+   "ma": "gd-da-nang-bac",
+   "truoc": 3842,
+   "sau": 2101,
+   "cach": "không mất, 256 màu (từ 1062 màu)",
+   "sai_so": [
+    2.12,
+    18.579999999999927,
+    0
+   ],
+   "so_mau": 1062,
+   "co": [
+    48,
+    48
+   ]
+  },
+  {
+   "ma": "hu-vet-vung",
+   "truoc": 2739,
+   "sau": 1052,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 39,
+   "co": [
+    256,
+    24
+   ]
+  },
+  {
+   "ma": "hu-nut-re-moc",
+   "truoc": 3643,
+   "sau": 1963,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 5,
+   "co": [
+    640,
+    60
+   ]
+  },
+  {
+   "ma": "gd-icon-viec-7",
+   "truoc": 3567,
+   "sau": 2045,
+   "cach": "không mất, 256 màu (từ 817 màu)",
+   "sai_so": [
+    0.78,
+    7.0,
+    0
+   ],
+   "so_mau": 817,
+   "co": [
+    44,
+    44
+   ]
+  },
+  {
+   "ma": "gd-icon-viec-9",
+   "truoc": 3690,
+   "sau": 2172,
+   "cach": "không mất, 256 màu (từ 1099 màu)",
+   "sai_so": [
+    0.92,
+    8.0,
+    0
+   ],
+   "so_mau": 1099,
+   "co": [
+    44,
+    44
+   ]
+  },
+  {
+   "ma": "hu-ban-cung-ice",
+   "truoc": 3606,
+   "sau": 2202,
+   "cach": "không mất, 256 màu (từ 868 màu)",
+   "sai_so": [
+    1.0,
+    10.0,
+    0
+   ],
+   "so_mau": 868,
+   "co": [
+    256,
+    26
+   ]
+  },
+  {
+   "ma": "gd-bua-giu-bac",
+   "truoc": 3329,
+   "sau": 2021,
+   "cach": "không mất, 256 màu (từ 905 màu)",
+   "sai_so": [
+    1.26,
+    15.139999999999986,
+    0
+   ],
+   "so_mau": 905,
+   "co": [
+    48,
+    48
+   ]
+  },
+  {
+   "ma": "gd-lang-thanh-duoi",
+   "truoc": 5361,
+   "sau": 4068,
+   "cach": "không mất, 256 màu (từ 798 màu)",
+   "sai_so": [
+    0.16,
+    3.0,
+    0
+   ],
+   "so_mau": 798,
+   "co": [
+    130,
+    34
+   ]
+  },
+  {
+   "ma": "gd-icon-viec-11",
+   "truoc": 3260,
+   "sau": 1989,
+   "cach": "không mất, 256 màu (từ 916 màu)",
+   "sai_so": [
+    0.79,
+    6.0,
+    0
+   ],
+   "so_mau": 916,
+   "co": [
+    44,
+    44
+   ]
+  },
+  {
+   "ma": "gd-icon-viec-0",
+   "truoc": 3110,
+   "sau": 1845,
+   "cach": "không mất, 256 màu (từ 686 màu)",
+   "sai_so": [
+    0.67,
+    6.419999999999959,
+    0
+   ],
+   "so_mau": 686,
+   "co": [
+    44,
+    44
+   ]
+  },
+  {
+   "ma": "gd-icon-viec-4",
+   "truoc": 3326,
+   "sau": 2102,
+   "cach": "không mất, 256 màu (từ 845 màu)",
+   "sai_so": [
+    0.65,
+    10.049999999999955,
+    0
+   ],
+   "so_mau": 845,
+   "co": [
+    44,
+    44
+   ]
+  },
+  {
+   "ma": "gd-o-tuan-dau",
+   "truoc": 3308,
+   "sau": 2105,
+   "cach": "không mất, 256 màu (từ 1118 màu)",
+   "sai_so": [
+    0.93,
+    7.0,
+    0
+   ],
+   "so_mau": 1118,
+   "co": [
+    36,
+    36
+   ]
+  },
+  {
+   "ma": "gd-icon-viec-1",
+   "truoc": 3030,
+   "sau": 1857,
+   "cach": "không mất, 256 màu (từ 744 màu)",
+   "sai_so": [
+    0.77,
+    6.0,
+    0
+   ],
+   "so_mau": 744,
+   "co": [
+    44,
+    44
+   ]
+  },
+  {
+   "ma": "gd-loi-mon-rung",
+   "truoc": 3025,
+   "sau": 1917,
+   "cach": "không mất, 256 màu (từ 1015 màu)",
+   "sai_so": [
+    1.18,
+    12.0,
+    0
+   ],
+   "so_mau": 1015,
+   "co": [
+    32,
+    32
+   ]
+  },
+  {
+   "ma": "gd-icon-viec-2",
+   "truoc": 3079,
+   "sau": 1978,
+   "cach": "không mất, 256 màu (từ 852 màu)",
+   "sai_so": [
+    0.76,
+    9.080000000000041,
+    0
+   ],
+   "so_mau": 852,
+   "co": [
+    44,
+    44
+   ]
+  },
+  {
+   "ma": "hu-moi-truong-rung-nam-sang",
+   "truoc": 1960,
+   "sau": 896,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 65,
+   "co": [
+    144,
+    18
+   ]
+  },
+  {
+   "ma": "gd-icon-viec-6",
+   "truoc": 2830,
+   "sau": 1795,
+   "cach": "không mất, 256 màu (từ 622 màu)",
+   "sai_so": [
+    0.65,
+    7.0,
+    0
+   ],
+   "so_mau": 622,
+   "co": [
+    44,
+    44
+   ]
+  },
+  {
+   "ma": "gd-icon-viec-10",
+   "truoc": 2812,
+   "sau": 1843,
+   "cach": "không mất, 256 màu (từ 721 màu)",
+   "sai_so": [
+    0.72,
+    9.0,
+    0
+   ],
+   "so_mau": 721,
+   "co": [
+    44,
+    44
+   ]
+  },
+  {
+   "ma": "gd-icon-viec-5",
+   "truoc": 2608,
+   "sau": 1725,
+   "cach": "không mất, 256 màu (từ 605 màu)",
+   "sai_so": [
+    1.0,
+    12.0,
+    0
+   ],
+   "so_mau": 605,
+   "co": [
+    44,
+    44
+   ]
+  },
+  {
+   "ma": "gd-nut-dac-biet-bow",
+   "truoc": 2480,
+   "sau": 1633,
+   "cach": "không mất, 256 màu (từ 416 màu)",
+   "sai_so": [
+    0.36,
+    6.0,
+    0
+   ],
+   "so_mau": 416,
+   "co": [
+    48,
+    48
+   ]
+  },
+  {
+   "ma": "gd-so-dau-ice",
+   "truoc": 2557,
+   "sau": 1720,
+   "cach": "không mất, 256 màu (từ 600 màu)",
+   "sai_so": [
+    0.74,
+    7.0,
+    0
+   ],
+   "so_mau": 600,
+   "co": [
+    36,
+    36
+   ]
+  },
+  {
+   "ma": "gd-huy-hinh-13",
+   "truoc": 2574,
+   "sau": 1743,
+   "cach": "không mất, 256 màu (từ 747 màu)",
+   "sai_so": [
+    0.71,
+    7.0,
+    0
+   ],
+   "so_mau": 747,
+   "co": [
+    36,
+    36
+   ]
+  },
+  {
+   "ma": "gd-icon-viec-8",
+   "truoc": 2494,
+   "sau": 1664,
+   "cach": "không mất, 256 màu (từ 598 màu)",
+   "sai_so": [
+    0.65,
+    7.0,
+    0
+   ],
+   "so_mau": 598,
+   "co": [
+    44,
+    44
+   ]
+  },
+  {
+   "ma": "hu-bom-song",
+   "truoc": 1371,
+   "sau": 551,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 41,
+   "co": [
+    56,
+    16
+   ]
+  },
+  {
+   "ma": "gd-nen-rung-tuong-sau",
+   "truoc": 3898,
+   "sau": 3090,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 10,
+   "co": [
+    128,
+    98
+   ]
+  },
+  {
+   "ma": "gd-the-thanh-tuu",
+   "truoc": 2556,
+   "sau": 1749,
+   "cach": "không mất, 256 màu (từ 771 màu)",
+   "sai_so": [
+    1.0,
+    11.889999999999986,
+    0
+   ],
+   "so_mau": 771,
+   "co": [
+    32,
+    32
+   ]
+  },
+  {
+   "ma": "gd-nen-rung-tuong-ben",
+   "truoc": 2052,
+   "sau": 1252,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 8,
+   "co": [
+    28,
+    128
+   ]
+  },
+  {
+   "ma": "gd-nen-rung-ngoai",
+   "truoc": 3964,
+   "sau": 3192,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 4,
+   "co": [
+    128,
+    128
+   ]
+  },
+  {
+   "ma": "gd-nen-rung-san1",
+   "truoc": 4026,
+   "sau": 3256,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 6,
+   "co": [
+    128,
+    128
+   ]
+  },
+  {
+   "ma": "gd-nen-rung-san0",
+   "truoc": 4190,
+   "sau": 3422,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 6,
+   "co": [
+    128,
+    128
+   ]
+  },
+  {
+   "ma": "gd-nen-rung-san2",
+   "truoc": 5560,
+   "sau": 4792,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 6,
+   "co": [
+    128,
+    128
+   ]
+  },
+  {
+   "ma": "gd-nen-rung-tuong-truoc",
+   "truoc": 1852,
+   "sau": 1085,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 8,
+   "co": [
+    128,
+    24
+   ]
+  },
+  {
+   "ma": "gd-icon-viec-3",
+   "truoc": 2462,
+   "sau": 1697,
+   "cach": "không mất, 256 màu (từ 573 màu)",
+   "sai_so": [
+    0.55,
+    5.789999999999964,
+    0
+   ],
+   "so_mau": 573,
+   "co": [
+    44,
+    44
+   ]
+  },
+  {
+   "ma": "gd-nen-rung-san-nhan",
+   "truoc": 5500,
+   "sau": 4736,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 8,
+   "co": [
+    128,
+    128
+   ]
+  },
+  {
+   "ma": "gd-nen-rung-mep",
+   "truoc": 1671,
+   "sau": 918,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 7,
+   "co": [
+    128,
+    24
+   ]
+  },
+  {
+   "ma": "vp-linhkhi-fire",
+   "truoc": 1255,
+   "sau": 506,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 9,
+   "co": [
+    34,
+    36
+   ]
+  },
+  {
+   "ma": "vp-linhkhi-ice",
+   "truoc": 1232,
+   "sau": 483,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 9,
+   "co": [
+    32,
+    36
+   ]
+  },
+  {
+   "ma": "gd-bua-ice",
+   "truoc": 1208,
+   "sau": 464,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 12,
+   "co": [
+    48,
+    48
+   ]
+  },
+  {
+   "ma": "gd-o-phong-cur",
+   "truoc": 1253,
+   "sau": 510,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 12,
+   "co": [
+    72,
+    56
+   ]
+  },
+  {
+   "ma": "gd-bua-fire",
+   "truoc": 1248,
+   "sau": 507,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 13,
+   "co": [
+    48,
+    48
+   ]
+  },
+  {
+   "ma": "gd-bua-poison",
+   "truoc": 1325,
+   "sau": 584,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 13,
+   "co": [
+    48,
+    48
+   ]
+  },
+  {
+   "ma": "gd-o-phong",
+   "truoc": 1533,
+   "sau": 792,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 13,
+   "co": [
+    72,
+    56
+   ]
+  },
+  {
+   "ma": "vp-stone",
+   "truoc": 1201,
+   "sau": 465,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 9,
+   "co": [
+    36,
+    36
+   ]
+  },
+  {
+   "ma": "gd-khung-trum",
+   "truoc": 1736,
+   "sau": 1002,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 17,
+   "co": [
+    120,
+    60
+   ]
+  },
+  {
+   "ma": "gd-o-do-0",
+   "truoc": 1404,
+   "sau": 670,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 17,
+   "co": [
+    64,
+    64
+   ]
+  },
+  {
+   "ma": "gd-khung-trum-nho",
+   "truoc": 1318,
+   "sau": 585,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 17,
+   "co": [
+    104,
+    52
+   ]
+  },
+  {
+   "ma": "gd-nut-binh-mau",
+   "truoc": 1385,
+   "sau": 652,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 17,
+   "co": [
+    48,
+    48
+   ]
+  },
+  {
+   "ma": "gd-nut-chuong-fire",
+   "truoc": 1290,
+   "sau": 557,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 17,
+   "co": [
+    48,
+    48
+   ]
+  },
+  {
+   "ma": "gd-nut-chuong-ice",
+   "truoc": 1151,
+   "sau": 418,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 17,
+   "co": [
+    48,
+    48
+   ]
+  },
+  {
+   "ma": "gd-nut-chuong-poison",
+   "truoc": 1471,
+   "sau": 738,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 17,
+   "co": [
+    48,
+    48
+   ]
+  },
+  {
+   "ma": "gd-nut-ne",
+   "truoc": 1453,
+   "sau": 720,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 17,
+   "co": [
+    48,
+    48
+   ]
+  },
+  {
+   "ma": "gd-o-do-0-chon",
+   "truoc": 1336,
+   "sau": 603,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 17,
+   "co": [
+    64,
+    64
+   ]
+  },
+  {
+   "ma": "gd-o-vk-0",
+   "truoc": 1326,
+   "sau": 593,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 17,
+   "co": [
+    108,
+    70
+   ]
+  },
+  {
+   "ma": "gd-the-thuong",
+   "truoc": 1349,
+   "sau": 616,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 17,
+   "co": [
+    64,
+    64
+   ]
+  },
+  {
+   "ma": "hu-lang-lua-lo",
+   "truoc": 1454,
+   "sau": 721,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 17,
+   "co": [
+    72,
+    30
+   ]
+  },
+  {
+   "ma": "gd-nut-danh-bow",
+   "truoc": 2315,
+   "sau": 1588,
+   "cach": "không mất, 256 màu (từ 406 màu)",
+   "sai_so": [
+    0.3,
+    6.019999999999982,
+    0
+   ],
+   "so_mau": 406,
+   "co": [
+    48,
+    48
+   ]
+  },
+  {
+   "ma": "gd-vong-poison",
+   "truoc": 4444,
+   "sau": 3721,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 22,
+   "co": [
+    152,
+    152
+   ]
+  },
+  {
+   "ma": "gd-khung-ban-do",
+   "truoc": 24068,
+   "sau": 23348,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 24,
+   "co": [
+    760,
+    484
+   ]
+  },
+  {
+   "ma": "gd-vong-ice",
+   "truoc": 4111,
+   "sau": 3391,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 24,
+   "co": [
+    152,
+    152
+   ]
+  },
+  {
+   "ma": "gd-can-num",
+   "truoc": 1842,
+   "sau": 1123,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 24,
+   "co": [
+    60,
+    60
+   ]
+  },
+  {
+   "ma": "gd-vong-fire",
+   "truoc": 4975,
+   "sau": 4256,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 24,
+   "co": [
+    152,
+    152
+   ]
+  },
+  {
+   "ma": "gd-vong-sat",
+   "truoc": 3616,
+   "sau": 2897,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 24,
+   "co": [
+    112,
+    112
+   ]
+  },
+  {
+   "ma": "gd-can-de",
+   "truoc": 3266,
+   "sau": 2548,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 25,
+   "co": [
+    132,
+    132
+   ]
+  },
+  {
+   "ma": "gd-nut-vuong",
+   "truoc": 2310,
+   "sau": 1592,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 25,
+   "co": [
+    84,
+    84
+   ]
+  },
+  {
+   "ma": "gd-vong-ngoc",
+   "truoc": 3172,
+   "sau": 2454,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 25,
+   "co": [
+    112,
+    112
+   ]
+  },
+  {
+   "ma": "gd-vong-thuong",
+   "truoc": 5366,
+   "sau": 4648,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 25,
+   "co": [
+    152,
+    152
+   ]
+  },
+  {
+   "ma": "vp-ore",
+   "truoc": 1158,
+   "sau": 449,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 9,
+   "co": [
+    34,
+    36
+   ]
+  },
+  {
+   "ma": "hu-tia-gay",
+   "truoc": 1403,
+   "sau": 695,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 36,
+   "co": [
+    256,
+    10
+   ]
+  },
+  {
+   "ma": "gd-lang-do",
+   "truoc": 2141,
+   "sau": 1437,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 32,
+   "co": [
+    88,
+    52
+   ]
+  },
+  {
+   "ma": "gd-lang-gieng",
+   "truoc": 1817,
+   "sau": 1113,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 32,
+   "co": [
+    64,
+    36
+   ]
+  },
+  {
+   "ma": "gd-lang-de",
+   "truoc": 1187,
+   "sau": 484,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 32,
+   "co": [
+    36,
+    26
+   ]
+  },
+  {
+   "ma": "gd-lang-cay-rom",
+   "truoc": 2147,
+   "sau": 1445,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    54,
+    58
+   ]
+  },
+  {
+   "ma": "gd-lang-day-phoi",
+   "truoc": 1382,
+   "sau": 680,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    72,
+    52
+   ]
+  },
+  {
+   "ma": "gd-nut-noi-chuyen-sang",
+   "truoc": 5544,
+   "sau": 4842,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    128,
+    128
+   ]
+  },
+  {
+   "ma": "gd-nut-noi-chuyen",
+   "truoc": 5891,
+   "sau": 5189,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    128,
+    128
+   ]
+  },
+  {
+   "ma": "hu-lang-khung-cui",
+   "truoc": 2002,
+   "sau": 1300,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    168,
+    44
+   ]
+  },
+  {
+   "ma": "gd-lang-bang-tranh",
+   "truoc": 1498,
+   "sau": 797,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    46,
+    46
+   ]
+  },
+  {
+   "ma": "gd-logo",
+   "truoc": 4800,
+   "sau": 4099,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    400,
+    80
+   ]
+  },
+  {
+   "ma": "gd-nut-dac-biet-hammer",
+   "truoc": 2306,
+   "sau": 1605,
+   "cach": "không mất, 256 màu (từ 471 màu)",
+   "sai_so": [
+    0.45,
+    5.0,
+    0
+   ],
+   "so_mau": 471,
+   "co": [
+    48,
+    48
+   ]
+  },
+  {
+   "ma": "gd-nut-noi-chuyen-bam",
+   "truoc": 5955,
+   "sau": 5254,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    128,
+    128
+   ]
+  },
+  {
+   "ma": "gd-trong-dong",
+   "truoc": 3847,
+   "sau": 3146,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    84,
+    84
+   ]
+  },
+  {
+   "ma": "hu-lua-duoc",
+   "truoc": 1262,
+   "sau": 566,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 36,
+   "co": [
+    48,
+    24
+   ]
+  },
+  {
+   "ma": "gd-the-zed",
+   "truoc": 2403,
+   "sau": 1719,
+   "cach": "không mất, 256 màu (từ 711 màu)",
+   "sai_so": [
+    0.91,
+    12.0,
+    0
+   ],
+   "so_mau": 711,
+   "co": [
+    32,
+    32
+   ]
+  },
+  {
+   "ma": "hu-be-trung-poison",
+   "truoc": 5188,
+   "sau": 4505,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    400,
+    80
+   ]
+  },
+  {
+   "ma": "hu-trum-no-fire",
+   "truoc": 74516,
+   "sau": 73833,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    2304,
+    320
+   ]
+  },
+  {
+   "ma": "hu-trum-no",
+   "truoc": 72728,
+   "sau": 72045,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    2304,
+    320
+   ]
+  },
+  {
+   "ma": "hu-nen-dat-fire",
+   "truoc": 7755,
+   "sau": 7073,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    960,
+    96
+   ]
+  },
+  {
+   "ma": "gd-tt-lau-cua-so-kinh",
+   "truoc": 1372,
+   "sau": 693,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 45,
+   "co": [
+    32,
+    34
+   ]
+  },
+  {
+   "ma": "hu-chem-luot-fire",
+   "truoc": 4553,
+   "sau": 3874,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    768,
+    56
+   ]
+  },
+  {
+   "ma": "hu-dan-phao",
+   "truoc": 1297,
+   "sau": 618,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 46,
+   "co": [
+    112,
+    28
+   ]
+  },
+  {
+   "ma": "gd-vat-chau-than",
+   "truoc": 1542,
+   "sau": 865,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 47,
+   "co": [
+    36,
+    46
+   ]
+  },
+  {
+   "ma": "hu-bom-to",
+   "truoc": 2296,
+   "sau": 1619,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    160,
+    44
+   ]
+  },
+  {
+   "ma": "hu-trum-no-ice",
+   "truoc": 60716,
+   "sau": 60039,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    2304,
+    320
+   ]
+  },
+  {
+   "ma": "gd-tt-lau-tien-canh-phai",
+   "truoc": 2556,
+   "sau": 1880,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    80,
+    56
+   ]
+  },
+  {
+   "ma": "gd-tt-lau-tuong-hiep-si",
+   "truoc": 1960,
+   "sau": 1284,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    32,
+    64
+   ]
+  },
+  {
+   "ma": "gd-tt-rung-hoa-nang",
+   "truoc": 1439,
+   "sau": 763,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    42,
+    24
+   ]
+  },
+  {
+   "ma": "gd-tt-rung-tan-la-3",
+   "truoc": 1544,
+   "sau": 868,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    40,
+    28
+   ]
+  },
+  {
+   "ma": "hu-chem-kiem",
+   "truoc": 6004,
+   "sau": 5328,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    672,
+    96
+   ]
+  },
+  {
+   "ma": "hu-cot-nuoc",
+   "truoc": 6051,
+   "sau": 5375,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    384,
+    128
+   ]
+  },
+  {
+   "ma": "hu-dan-bot",
+   "truoc": 1440,
+   "sau": 764,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 47,
+   "co": [
+    112,
+    28
+   ]
+  },
+  {
+   "ma": "hu-dan-bua",
+   "truoc": 1418,
+   "sau": 742,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    112,
+    28
+   ]
+  },
+  {
+   "ma": "hu-no-nho-fire",
+   "truoc": 6496,
+   "sau": 5820,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    400,
+    80
+   ]
+  },
+  {
+   "ma": "hu-no-nho-poison",
+   "truoc": 5633,
+   "sau": 4957,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    400,
+    80
+   ]
+  },
+  {
+   "ma": "hu-quai-cao-fire",
+   "truoc": 3343,
+   "sau": 2667,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    320,
+    64
+   ]
+  },
+  {
+   "ma": "hu-quet-giao-fire",
+   "truoc": 5859,
+   "sau": 5183,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    1664,
+    72
+   ]
+  },
+  {
+   "ma": "gd-cua-bien-duoi",
+   "truoc": 2419,
+   "sau": 1744,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 47,
+   "co": [
+    92,
+    40
+   ]
+  },
+  {
+   "ma": "gd-tt-lau-tien-canh-trai",
+   "truoc": 2816,
+   "sau": 2141,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    80,
+    68
+   ]
+  },
+  {
+   "ma": "gd-tt-rung-tan-la-2",
+   "truoc": 1516,
+   "sau": 841,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    40,
+    28
+   ]
+  },
+  {
+   "ma": "gd-vat-be-thu-thach-het",
+   "truoc": 1858,
+   "sau": 1183,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    40,
+    62
+   ]
+  },
+  {
+   "ma": "hu-be-trung-fire",
+   "truoc": 6130,
+   "sau": 5455,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    400,
+    80
+   ]
+  },
+  {
+   "ma": "hu-chem-luot-poison",
+   "truoc": 4468,
+   "sau": 3793,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    768,
+    56
+   ]
+  },
+  {
+   "ma": "hu-cot-lua",
+   "truoc": 6899,
+   "sau": 6224,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    384,
+    128
+   ]
+  },
+  {
+   "ma": "hu-quai-chet",
+   "truoc": 11019,
+   "sau": 10344,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    768,
+    96
+   ]
+  },
+  {
+   "ma": "hu-vung-quai-do",
+   "truoc": 13786,
+   "sau": 13111,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    624,
+    104
+   ]
+  },
+  {
+   "ma": "gd-tt-bien-tinh-the-to-2",
+   "truoc": 1481,
+   "sau": 807,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    34,
+    36
+   ]
+  },
+  {
+   "ma": "gd-tt-bien-vung-nuoc",
+   "truoc": 1290,
+   "sau": 616,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    34,
+    20
+   ]
+  },
+  {
+   "ma": "gd-tt-lau-cot-da",
+   "truoc": 1568,
+   "sau": 894,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    24,
+    60
+   ]
+  },
+  {
+   "ma": "gd-tt-rung-bui-qua",
+   "truoc": 1428,
+   "sau": 754,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    40,
+    24
+   ]
+  },
+  {
+   "ma": "gd-tt-rung-co-thu",
+   "truoc": 1731,
+   "sau": 1057,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    42,
+    40
+   ]
+  },
+  {
+   "ma": "gd-vat-be-thu-thach",
+   "truoc": 1786,
+   "sau": 1112,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 47,
+   "co": [
+    40,
+    62
+   ]
+  },
+  {
+   "ma": "gd-vat-chau-than-tat",
+   "truoc": 1371,
+   "sau": 697,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    32,
+    26
+   ]
+  },
+  {
+   "ma": "gd-vat-ruong-do",
+   "truoc": 1928,
+   "sau": 1254,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    48,
+    56
+   ]
+  },
+  {
+   "ma": "hu-be-trung-ice",
+   "truoc": 5182,
+   "sau": 4508,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    400,
+    80
+   ]
+  },
+  {
+   "ma": "hu-be-trung",
+   "truoc": 4939,
+   "sau": 4265,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    400,
+    80
+   ]
+  },
+  {
+   "ma": "hu-bom-phao",
+   "truoc": 1912,
+   "sau": 1238,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    128,
+    36
+   ]
+  },
+  {
+   "ma": "hu-chem-bua",
+   "truoc": 8116,
+   "sau": 7442,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    672,
+    112
+   ]
+  },
+  {
+   "ma": "hu-dan-bao-tu",
+   "truoc": 1715,
+   "sau": 1041,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    112,
+    28
+   ]
+  },
+  {
+   "ma": "hu-dan-gai-bang",
+   "truoc": 1209,
+   "sau": 535,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    128,
+    16
+   ]
+  },
+  {
+   "ma": "hu-quai-cao-ice",
+   "truoc": 3221,
+   "sau": 2547,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    320,
+    64
+   ]
+  },
+  {
+   "ma": "hu-quet-giao-ice",
+   "truoc": 5398,
+   "sau": 4724,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    1664,
+    72
+   ]
+  },
+  {
+   "ma": "hu-vung-quai-lua",
+   "truoc": 13476,
+   "sau": 12802,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    624,
+    104
+   ]
+  },
+  {
+   "ma": "gd-cua-lau-ben-khoa",
+   "truoc": 2001,
+   "sau": 1328,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    32,
+    88
+   ]
+  },
+  {
+   "ma": "gd-cua-rung-ben-khoa",
+   "truoc": 2240,
+   "sau": 1567,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    32,
+    78
+   ]
+  },
+  {
+   "ma": "gd-tt-bien-dong-da-2",
+   "truoc": 1216,
+   "sau": 543,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    28,
+    20
+   ]
+  },
+  {
+   "ma": "gd-tt-rung-tan-la",
+   "truoc": 1568,
+   "sau": 895,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    42,
+    28
+   ]
+  },
+  {
+   "ma": "gd-tt-rung-tien-canh-phai",
+   "truoc": 3295,
+   "sau": 2622,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    78,
+    72
+   ]
+  },
+  {
+   "ma": "gd-vat-nam-doc",
+   "truoc": 1731,
+   "sau": 1058,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    46,
+    42
+   ]
+  },
+  {
+   "ma": "hu-chem-luot-ice",
+   "truoc": 4670,
+   "sau": 3997,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    768,
+    56
+   ]
+  },
+  {
+   "ma": "hu-nen-dat-poison",
+   "truoc": 10495,
+   "sau": 9822,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    960,
+    96
+   ]
+  },
+  {
+   "ma": "hu-no-nho-ice",
+   "truoc": 5721,
+   "sau": 5048,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    400,
+    80
+   ]
+  },
+  {
+   "ma": "hu-quai-cao-poison",
+   "truoc": 3154,
+   "sau": 2481,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    320,
+    64
+   ]
+  },
+  {
+   "ma": "hu-quet-giao-poison",
+   "truoc": 5262,
+   "sau": 4589,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    1664,
+    72
+   ]
+  },
+  {
+   "ma": "hu-quet-giao",
+   "truoc": 8212,
+   "sau": 7539,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    1664,
+    72
+   ]
+  },
+  {
+   "ma": "hu-vung-lua",
+   "truoc": 10788,
+   "sau": 10115,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    528,
+    88
+   ]
+  },
+  {
+   "ma": "hu-vung-quai-bang",
+   "truoc": 6942,
+   "sau": 6269,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    408,
+    68
+   ]
+  },
+  {
+   "ma": "hu-vung-quai-doc",
+   "truoc": 23044,
+   "sau": 22371,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    864,
+    144
+   ]
+  },
+  {
+   "ma": "gd-cua-bien-ben",
+   "truoc": 2075,
+   "sau": 1403,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    32,
+    74
+   ]
+  },
+  {
+   "ma": "gd-cua-lau-ben",
+   "truoc": 2146,
+   "sau": 1474,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    32,
+    96
+   ]
+  },
+  {
+   "ma": "gd-cua-lau-duoi-khoa",
+   "truoc": 2533,
+   "sau": 1861,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    92,
+    46
+   ]
+  },
+  {
+   "ma": "gd-cua-rung-ben",
+   "truoc": 2224,
+   "sau": 1552,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    32,
+    78
+   ]
+  },
+  {
+   "ma": "gd-cua-rung-duoi-khoa",
+   "truoc": 2787,
+   "sau": 2115,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    92,
+    52
+   ]
+  },
+  {
+   "ma": "gd-lang-cong",
+   "truoc": 4138,
+   "sau": 3466,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    124,
+    112
+   ]
+  },
+  {
+   "ma": "gd-tt-bien-dong-da",
+   "truoc": 1243,
+   "sau": 571,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    30,
+    20
+   ]
+  },
+  {
+   "ma": "gd-tt-bien-mo-neo",
+   "truoc": 2087,
+   "sau": 1415,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    52,
+    52
+   ]
+  },
+  {
+   "ma": "gd-tt-bien-tien-canh-phai",
+   "truoc": 2773,
+   "sau": 2101,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    80,
+    70
+   ]
+  },
+  {
+   "ma": "gd-tt-lau-cua-so",
+   "truoc": 1443,
+   "sau": 771,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    22,
+    44
+   ]
+  },
+  {
+   "ma": "gd-tt-lau-thung-go",
+   "truoc": 1254,
+   "sau": 582,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    24,
+    26
+   ]
+  },
+  {
+   "ma": "gd-tt-rung-tien-canh-trai",
+   "truoc": 3526,
+   "sau": 2854,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    80,
+    72
+   ]
+  },
+  {
+   "ma": "gd-vat-ban-tho-het",
+   "truoc": 1805,
+   "sau": 1133,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    52,
+    36
+   ]
+  },
+  {
+   "ma": "gd-vat-ruong",
+   "truoc": 1912,
+   "sau": 1240,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    56,
+    42
+   ]
+  },
+  {
+   "ma": "gd-vat-suoi-mau",
+   "truoc": 2128,
+   "sau": 1456,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    60,
+    60
+   ]
+  },
+  {
+   "ma": "hu-chem-luot",
+   "truoc": 5145,
+   "sau": 4473,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    768,
+    56
+   ]
+  },
+  {
+   "ma": "hu-choang",
+   "truoc": 1272,
+   "sau": 600,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    240,
+    20
+   ]
+  },
+  {
+   "ma": "hu-dam-giao",
+   "truoc": 3837,
+   "sau": 3165,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    560,
+    40
+   ]
+  },
+  {
+   "ma": "hu-dan-cau",
+   "truoc": 1449,
+   "sau": 777,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    96,
+    24
+   ]
+  },
+  {
+   "ma": "hu-dan-qua-no",
+   "truoc": 1814,
+   "sau": 1142,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    128,
+    36
+   ]
+  },
+  {
+   "ma": "hu-pha-giap",
+   "truoc": 10525,
+   "sau": 9853,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    576,
+    96
+   ]
+  },
+  {
+   "ma": "hu-trum-no-poison",
+   "truoc": 64312,
+   "sau": 63640,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    2304,
+    320
+   ]
+  },
+  {
+   "ma": "gd-cua-bien-tren-khoa",
+   "truoc": 3410,
+   "sau": 2739,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    80,
+    76
+   ]
+  },
+  {
+   "ma": "gd-cua-lau-tren-khoa",
+   "truoc": 3305,
+   "sau": 2634,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    80,
+    80
+   ]
+  },
+  {
+   "ma": "gd-cua-rung-duoi",
+   "truoc": 2594,
+   "sau": 1923,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    92,
+    42
+   ]
+  },
+  {
+   "ma": "gd-cua-rung-tren",
+   "truoc": 3428,
+   "sau": 2757,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    80,
+    76
+   ]
+  },
+  {
+   "ma": "gd-lang-cay-da",
+   "truoc": 9317,
+   "sau": 8646,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    206,
+    162
+   ]
+  },
+  {
+   "ma": "gd-tt-bien-tien-canh-trai",
+   "truoc": 2752,
+   "sau": 2081,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    80,
+    70
+   ]
+  },
+  {
+   "ma": "gd-tt-bien-tinh-the-to",
+   "truoc": 1462,
+   "sau": 791,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    32,
+    36
+   ]
+  },
+  {
+   "ma": "gd-tt-lau-co-do",
+   "truoc": 1540,
+   "sau": 869,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    32,
+    50
+   ]
+  },
+  {
+   "ma": "gd-tt-lau-tham-tron",
+   "truoc": 6355,
+   "sau": 5684,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    120,
+    120
+   ]
+  },
+  {
+   "ma": "gd-vat-suoi-mana",
+   "truoc": 2300,
+   "sau": 1629,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    60,
+    58
+   ]
+  },
+  {
+   "ma": "gd-vat-suoi-mau-het",
+   "truoc": 2270,
+   "sau": 1599,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    60,
+    50
+   ]
+  },
+  {
+   "ma": "gd-vat-tinh-the",
+   "truoc": 1924,
+   "sau": 1253,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    46,
+    50
+   ]
+  },
+  {
+   "ma": "hu-bom-bang",
+   "truoc": 1960,
+   "sau": 1289,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    128,
+    36
+   ]
+  },
+  {
+   "ma": "hu-cong",
+   "truoc": 15596,
+   "sau": 14925,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    672,
+    80
+   ]
+  },
+  {
+   "ma": "hu-may-doc",
+   "truoc": 31669,
+   "sau": 30998,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    1152,
+    192
+   ]
+  },
+  {
+   "ma": "hu-nen-dat-ice",
+   "truoc": 10033,
+   "sau": 9362,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    960,
+    96
+   ]
+  },
+  {
+   "ma": "hu-nen-dat",
+   "truoc": 10523,
+   "sau": 9852,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    960,
+    96
+   ]
+  },
+  {
+   "ma": "hu-no-khoi",
+   "truoc": 30429,
+   "sau": 29758,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    1536,
+    160
+   ]
+  },
+  {
+   "ma": "hu-no-nho",
+   "truoc": 6304,
+   "sau": 5633,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    400,
+    80
+   ]
+  },
+  {
+   "ma": "hu-quai-cao",
+   "truoc": 3301,
+   "sau": 2630,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    320,
+    64
+   ]
+  },
+  {
+   "ma": "hu-vung-doc",
+   "truoc": 30757,
+   "sau": 30086,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    1152,
+    192
+   ]
+  },
+  {
+   "ma": "vp-shard2",
+   "truoc": 1100,
+   "sau": 429,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 9,
+   "co": [
+    30,
+    36
+   ]
+  },
+  {
+   "ma": "gd-cua-bien-duoi-khoa",
+   "truoc": 2683,
+   "sau": 2013,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    92,
+    46
+   ]
+  },
+  {
+   "ma": "gd-cua-bien-tren",
+   "truoc": 3206,
+   "sau": 2536,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    80,
+    74
+   ]
+  },
+  {
+   "ma": "gd-cua-lau-tren",
+   "truoc": 3181,
+   "sau": 2511,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    80,
+    80
+   ]
+  },
+  {
+   "ma": "gd-cua-rung-tren-khoa",
+   "truoc": 3611,
+   "sau": 2941,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    80,
+    78
+   ]
+  },
+  {
+   "ma": "gd-lang-dinh",
+   "truoc": 8458,
+   "sau": 7788,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    238,
+    140
+   ]
+  },
+  {
+   "ma": "gd-lang-lo-ren",
+   "truoc": 7899,
+   "sau": 7229,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    168,
+    136
+   ]
+  },
+  {
+   "ma": "gd-lang-nha-may",
+   "truoc": 6447,
+   "sau": 5777,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    154,
+    102
+   ]
+  },
+  {
+   "ma": "gd-tt-bien-vung-sang",
+   "truoc": 1542,
+   "sau": 872,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    50,
+    28
+   ]
+  },
+  {
+   "ma": "gd-tt-lau-co-xanh",
+   "truoc": 1462,
+   "sau": 792,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    32,
+    48
+   ]
+  },
+  {
+   "ma": "gd-vat-ban-tho",
+   "truoc": 1759,
+   "sau": 1089,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    52,
+    54
+   ]
+  },
+  {
+   "ma": "gd-vat-ruong-mo",
+   "truoc": 1934,
+   "sau": 1264,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    48,
+    52
+   ]
+  },
+  {
+   "ma": "gd-vat-suoi-mana-het",
+   "truoc": 2217,
+   "sau": 1547,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    60,
+    50
+   ]
+  },
+  {
+   "ma": "hu-chuong-doc",
+   "truoc": 3529,
+   "sau": 2859,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    256,
+    40
+   ]
+  },
+  {
+   "ma": "vp-shard1",
+   "truoc": 1083,
+   "sau": 413,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 9,
+   "co": [
+    30,
+    36
+   ]
+  },
+  {
+   "ma": "gd-cua-bien-ben-khoa",
+   "truoc": 2081,
+   "sau": 1412,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    32,
+    74
+   ]
+  },
+  {
+   "ma": "gd-cua-lau-duoi",
+   "truoc": 2279,
+   "sau": 1610,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    92,
+    40
+   ]
+  },
+  {
+   "ma": "gd-tt-lau-tham-vuong",
+   "truoc": 5637,
+   "sau": 4968,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    136,
+    84
+   ]
+  },
+  {
+   "ma": "gd-vat-thuong-nhan",
+   "truoc": 2599,
+   "sau": 1930,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    72,
+    68
+   ]
+  },
+  {
+   "ma": "hu-dan-hat-doc",
+   "truoc": 1156,
+   "sau": 487,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    128,
+    16
+   ]
+  },
+  {
+   "ma": "gd-khung-tinh-anh",
+   "truoc": 1079,
+   "sau": 412,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 17,
+   "co": [
+    88,
+    44
+   ]
+  },
+  {
+   "ma": "gd-so-dau-fire",
+   "truoc": 2412,
+   "sau": 1745,
+   "cach": "không mất, 256 màu (từ 605 màu)",
+   "sai_so": [
+    0.66,
+    7.42999999999995,
+    0
+   ],
+   "so_mau": 605,
+   "co": [
+    36,
+    36
+   ]
+  },
+  {
+   "ma": "vp-mat1",
+   "truoc": 1095,
+   "sau": 428,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 9,
+   "co": [
+    30,
+    36
+   ]
+  },
+  {
+   "ma": "gd-tt-rung-day-leo-3",
+   "truoc": 1158,
+   "sau": 498,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    12,
+    40
+   ]
+  },
+  {
+   "ma": "vp-mat2",
+   "truoc": 1071,
+   "sau": 426,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 9,
+   "co": [
+    30,
+    36
+   ]
+  },
+  {
+   "ma": "gd-nen-bien-mep",
+   "truoc": 2654,
+   "sau": 2010,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 63,
+   "co": [
+    128,
+    24
+   ]
+  },
+  {
+   "ma": "vp-linhkhi-poison",
+   "truoc": 1067,
+   "sau": 424,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 9,
+   "co": [
+    32,
+    36
+   ]
+  },
+  {
+   "ma": "vp-shard0",
+   "truoc": 1082,
+   "sau": 439,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 9,
+   "co": [
+    30,
+    36
+   ]
+  },
+  {
+   "ma": "gd-nen-bien-tuong-ben",
+   "truoc": 3129,
+   "sau": 2490,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    28,
+    128
+   ]
+  },
+  {
+   "ma": "gd-nen-lau-mep",
+   "truoc": 2537,
+   "sau": 1898,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    128,
+    24
+   ]
+  },
+  {
+   "ma": "gd-tt-rung-nam-do",
+   "truoc": 1126,
+   "sau": 493,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    22,
+    20
+   ]
+  },
+  {
+   "ma": "gd-lang-hang-xen",
+   "truoc": 3501,
+   "sau": 2873,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 47,
+   "co": [
+    144,
+    110
+   ]
+  },
+  {
+   "ma": "vp-xp",
+   "truoc": 1031,
+   "sau": 408,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 9,
+   "co": [
+    32,
+    36
+   ]
+  },
+  {
+   "ma": "gd-lang-nen",
+   "truoc": 102902,
+   "sau": 102297,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 128,
+   "co": [
+    720,
+    270
+   ]
+  },
+  {
+   "ma": "hoTinh",
+   "truoc": 1046325,
+   "sau": 1045726,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 146,
+   "co": [
+    2988,
+    2520
+   ]
+  },
+  {
+   "ma": "gd-the-viec-ngay",
+   "truoc": 2341,
+   "sau": 1743,
+   "cach": "không mất, 256 màu (từ 755 màu)",
+   "sai_so": [
+    0.8,
+    9.899999999999977,
+    0
+   ],
+   "so_mau": 755,
+   "co": [
+    32,
+    32
+   ]
+  },
+  {
+   "ma": "gd-nut-dac-biet-sword",
+   "truoc": 2214,
+   "sau": 1620,
+   "cach": "không mất, 256 màu (từ 467 màu)",
+   "sai_so": [
+    0.41,
+    6.0,
+    0
+   ],
+   "so_mau": 467,
+   "co": [
+    48,
+    48
+   ]
+  },
+  {
+   "ma": "gd-so-dau-poison",
+   "truoc": 2278,
+   "sau": 1684,
+   "cach": "không mất, 256 màu (từ 549 màu)",
+   "sai_so": [
+    0.67,
+    8.0,
+    0
+   ],
+   "so_mau": 549,
+   "co": [
+    36,
+    36
+   ]
+  },
+  {
+   "ma": "gd-tt-rung-nam-sang",
+   "truoc": 1065,
+   "sau": 476,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    22,
+    18
+   ]
+  },
+  {
+   "ma": "gd-tt-song-coc",
+   "truoc": 1056,
+   "sau": 469,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 40,
+   "co": [
+    20,
+    28
+   ]
+  },
+  {
+   "ma": "hu-dan-gai",
+   "truoc": 1031,
+   "sau": 444,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    128,
+    16
+   ]
+  },
+  {
+   "ma": "hu-bao-vung-soc",
+   "truoc": 1176,
+   "sau": 590,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    128,
+    32
+   ]
+  },
+  {
+   "ma": "vp-gold",
+   "truoc": 968,
+   "sau": 386,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 9,
+   "co": [
+    30,
+    36
+   ]
+  },
+  {
+   "ma": "gd-tt-bien-nhu-da",
+   "truoc": 1095,
+   "sau": 517,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    16,
+    36
+   ]
+  },
+  {
+   "ma": "gd-huy-hinh-14",
+   "truoc": 2223,
+   "sau": 1647,
+   "cach": "không mất, 256 màu (từ 674 màu)",
+   "sai_so": [
+    0.69,
+    6.889999999999986,
+    0
+   ],
+   "so_mau": 674,
+   "co": [
+    36,
+    36
+   ]
+  },
+  {
+   "ma": "vp-potion",
+   "truoc": 972,
+   "sau": 398,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 9,
+   "co": [
+    30,
+    36
+   ]
+  },
+  {
+   "ma": "gd-the-so",
+   "truoc": 2312,
+   "sau": 1740,
+   "cach": "không mất, 256 màu (từ 756 màu)",
+   "sai_so": [
+    0.77,
+    9.879999999999995,
+    0
+   ],
+   "so_mau": 756,
+   "co": [
+    32,
+    32
+   ]
+  },
+  {
+   "ma": "gd-tt-lau-hom-go",
+   "truoc": 1095,
+   "sau": 524,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    28,
+    16
+   ]
+  },
+  {
+   "ma": "gd-tt-rung-khuc-go",
+   "truoc": 1055,
+   "sau": 496,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    30,
+    14
+   ]
+  },
+  {
+   "ma": "gd-ruot-thanh",
+   "truoc": 1691,
+   "sau": 1135,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 57,
+   "co": [
+    64,
+    40
+   ]
+  },
+  {
+   "ma": "gd-tt-rung-day-leo",
+   "truoc": 1024,
+   "sau": 471,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    12,
+    36
+   ]
+  },
+  {
+   "ma": "gd-nut-tam-dung",
+   "truoc": 946,
+   "sau": 394,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 17,
+   "co": [
+    48,
+    48
+   ]
+  },
+  {
+   "ma": "gd-tt-rung-goc-cay",
+   "truoc": 1032,
+   "sau": 487,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    24,
+    18
+   ]
+  },
+  {
+   "ma": "gd-lang-chum",
+   "truoc": 997,
+   "sau": 454,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    22,
+    24
+   ]
+  },
+  {
+   "ma": "gd-vien-man-do",
+   "truoc": 1199,
+   "sau": 658,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 6,
+   "co": [
+    240,
+    136
+   ]
+  },
+  {
+   "ma": "vp-mat0",
+   "truoc": 872,
+   "sau": 355,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 9,
+   "co": [
+    28,
+    30
+   ]
+  },
+  {
+   "ma": "gd-tt-rung-nam-sang-2",
+   "truoc": 959,
+   "sau": 443,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 47,
+   "co": [
+    22,
+    16
+   ]
+  },
+  {
+   "ma": "gd-cua-dau-lau",
+   "truoc": 879,
+   "sau": 371,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 25,
+   "co": [
+    22,
+    22
+   ]
+  },
+  {
+   "ma": "gd-tt-song-da-bun",
+   "truoc": 850,
+   "sau": 356,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 19,
+   "co": [
+    30,
+    18
+   ]
+  },
+  {
+   "ma": "gd-huy-hinh-8",
+   "truoc": 1992,
+   "sau": 1503,
+   "cach": "không mất, 256 màu (từ 503 màu)",
+   "sai_so": [
+    1.2,
+    11.0,
+    0
+   ],
+   "so_mau": 503,
+   "co": [
+    36,
+    36
+   ]
+  },
+  {
+   "ma": "gd-cua-o-khoa",
+   "truoc": 847,
+   "sau": 365,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 24,
+   "co": [
+    24,
+    30
+   ]
+  },
+  {
+   "ma": "hu-va-cham",
+   "truoc": 2165,
+   "sau": 1690,
+   "cach": "không mất, 256 màu (từ 263 màu)",
+   "sai_so": [
+    0.01,
+    1.0,
+    0
+   ],
+   "so_mau": 263,
+   "co": [
+    208,
+    36
+   ]
+  },
+  {
+   "ma": "gd-lang-cot-den",
+   "truoc": 866,
+   "sau": 398,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    18,
+    36
+   ]
+  },
+  {
+   "ma": "gd-huy-hinh-2",
+   "truoc": 1955,
+   "sau": 1488,
+   "cach": "không mất, 256 màu (từ 474 màu)",
+   "sai_so": [
+    0.57,
+    5.0,
+    0
+   ],
+   "so_mau": 474,
+   "co": [
+    36,
+    36
+   ]
+  },
+  {
+   "ma": "gd-tt-rung-day-leo-2",
+   "truoc": 894,
+   "sau": 446,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    12,
+    34
+   ]
+  },
+  {
+   "ma": "gd-huy-hinh-5",
+   "truoc": 1892,
+   "sau": 1450,
+   "cach": "không mất, 256 màu (từ 387 màu)",
+   "sai_so": [
+    0.39,
+    5.0,
+    0
+   ],
+   "so_mau": 387,
+   "co": [
+    36,
+    36
+   ]
+  },
+  {
+   "ma": "gd-tt-bien-tinh-the",
+   "truoc": 882,
+   "sau": 446,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    16,
+    20
+   ]
+  },
+  {
+   "ma": "gd-tui",
+   "truoc": 752,
+   "sau": 320,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 13,
+   "co": [
+    26,
+    26
+   ]
+  },
+  {
+   "ma": "gd-sao",
+   "truoc": 733,
+   "sau": 305,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 13,
+   "co": [
+    24,
+    24
+   ]
+  },
+  {
+   "ma": "gd-tt-bien-nhu-da-4",
+   "truoc": 882,
+   "sau": 459,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    16,
+    28
+   ]
+  },
+  {
+   "ma": "gd-tt-lau-xuong-so",
+   "truoc": 850,
+   "sau": 430,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    24,
+    14
+   ]
+  },
+  {
+   "ma": "hu-moi-truong-bien-giot",
+   "truoc": 903,
+   "sau": 483,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 40,
+   "co": [
+    72,
+    22
+   ]
+  },
+  {
+   "ma": "gd-tt-bien-tinh-the-2",
+   "truoc": 858,
+   "sau": 442,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    16,
+    20
+   ]
+  },
+  {
+   "ma": "gd-o-tuan",
+   "truoc": 2235,
+   "sau": 1820,
+   "cach": "không mất, 256 màu (từ 640 màu)",
+   "sai_so": [
+    0.3,
+    3.0,
+    0
+   ],
+   "so_mau": 640,
+   "co": [
+    36,
+    36
+   ]
+  },
+  {
+   "ma": "gd-khung-mau",
+   "truoc": 759,
+   "sau": 350,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 16,
+   "co": [
+    66,
+    22
+   ]
+  },
+  {
+   "ma": "gd-sao-rong",
+   "truoc": 687,
+   "sau": 285,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 11,
+   "co": [
+    24,
+    24
+   ]
+  },
+  {
+   "ma": "gd-huy-hinh-10",
+   "truoc": 1906,
+   "sau": 1506,
+   "cach": "không mất, 256 màu (từ 503 màu)",
+   "sai_so": [
+    0.51,
+    4.0,
+    0
+   ],
+   "so_mau": 503,
+   "co": [
+    36,
+    36
+   ]
+  },
+  {
+   "ma": "gd-huy-chuong-3",
+   "truoc": 657,
+   "sau": 280,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 12,
+   "co": [
+    22,
+    20
+   ]
+  },
+  {
+   "ma": "gd-quai-giap",
+   "truoc": 658,
+   "sau": 283,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 13,
+   "co": [
+    24,
+    24
+   ]
+  },
+  {
+   "ma": "gd-quai-hut",
+   "truoc": 654,
+   "sau": 282,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 11,
+   "co": [
+    24,
+    24
+   ]
+  },
+  {
+   "ma": "gd-huy-chuong-2",
+   "truoc": 662,
+   "sau": 291,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 13,
+   "co": [
+    22,
+    20
+   ]
+  },
+  {
+   "ma": "gd-huy-hinh-1",
+   "truoc": 1795,
+   "sau": 1424,
+   "cach": "không mất, 256 màu (từ 388 màu)",
+   "sai_so": [
+    0.42,
+    6.509999999999991,
+    0
+   ],
+   "so_mau": 388,
+   "co": [
+    36,
+    36
+   ]
+  },
+  {
+   "ma": "gd-quai-nhanh",
+   "truoc": 624,
+   "sau": 254,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 11,
+   "co": [
+    24,
+    24
+   ]
+  },
+  {
+   "ma": "gd-quai-gai",
+   "truoc": 646,
+   "sau": 279,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 12,
+   "co": [
+    24,
+    24
+   ]
+  },
+  {
+   "ma": "gd-huy-hinh-6",
+   "truoc": 1829,
+   "sau": 1463,
+   "cach": "không mất, 256 màu (từ 447 màu)",
+   "sai_so": [
+    0.48,
+    4.0,
+    0
+   ],
+   "so_mau": 447,
+   "co": [
+    36,
+    36
+   ]
+  },
+  {
+   "ma": "gd-huy-hinh-12",
+   "truoc": 1905,
+   "sau": 1551,
+   "cach": "không mất, 256 màu (từ 592 màu)",
+   "sai_so": [
+    0.56,
+    5.0,
+    0
+   ],
+   "so_mau": 592,
+   "co": [
+    36,
+    36
+   ]
+  },
+  {
+   "ma": "gd-vat-nam-doc-vo",
+   "truoc": 751,
+   "sau": 397,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 48,
+   "co": [
+    26,
+    10
+   ]
+  },
+  {
+   "ma": "gd-huy-chuong-1",
+   "truoc": 620,
+   "sau": 270,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 12,
+   "co": [
+    22,
+    20
+   ]
+  },
+  {
+   "ma": "hu-bia-hat",
+   "truoc": 1087,
+   "sau": 746,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    120,
+    24
+   ]
+  },
+  {
+   "ma": "gd-tt-bien-nhu-da-2",
+   "truoc": 755,
+   "sau": 420,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    14,
+    22
+   ]
+  },
+  {
+   "ma": "zed-lau",
+   "truoc": 280642,
+   "sau": 280307,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 256,
+   "co": [
+    1152,
+    7776
+   ]
+  },
+  {
+   "ma": "gd-huy-hinh-4",
+   "truoc": 1804,
+   "sau": 1479,
+   "cach": "không mất, 256 màu (từ 504 màu)",
+   "sai_so": [
+    0.66,
+    7.0,
+    0
+   ],
+   "so_mau": 504,
+   "co": [
+    36,
+    36
+   ]
+  },
+  {
+   "ma": "gd-nut-dac-biet-spear",
+   "truoc": 1739,
+   "sau": 1417,
+   "cach": "không mất, 256 màu (từ 356 màu)",
+   "sai_so": [
+    0.56,
+    9.0,
+    0
+   ],
+   "so_mau": 356,
+   "co": [
+    48,
+    48
+   ]
+  },
+  {
+   "ma": "gd-quai-no",
+   "truoc": 584,
+   "sau": 268,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 12,
+   "co": [
+    24,
+    24
+   ]
+  },
+  {
+   "ma": "gd-huy-hinh-3",
+   "truoc": 1739,
+   "sau": 1427,
+   "cach": "không mất, 256 màu (từ 439 màu)",
+   "sai_so": [
+    0.54,
+    5.079999999999984,
+    0
+   ],
+   "so_mau": 439,
+   "co": [
+    36,
+    36
+   ]
+  },
+  {
+   "ma": "gd-khung-mana",
+   "truoc": 607,
+   "sau": 299,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 17,
+   "co": [
+    64,
+    16
+   ]
+  },
+  {
+   "ma": "gd-huy-hinh-15",
+   "truoc": 1793,
+   "sau": 1488,
+   "cach": "không mất, 256 màu (từ 472 màu)",
+   "sai_so": [
+    0.53,
+    6.0,
+    0
+   ],
+   "so_mau": 472,
+   "co": [
+    36,
+    36
+   ]
+  },
+  {
+   "ma": "zed-rung",
+   "truoc": 270057,
+   "sau": 269753,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 256,
+   "co": [
+    1152,
+    7776
+   ]
+  },
+  {
+   "ma": "hu-mua-phi-tieu",
+   "truoc": 41992,
+   "sau": 41689,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 256,
+   "co": [
+    1152,
+    200
+   ]
+  },
+  {
+   "ma": "gd-khung-xp",
+   "truoc": 597,
+   "sau": 296,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 16,
+   "co": [
+    56,
+    14
+   ]
+  },
+  {
+   "ma": "gd-bt-vanh",
+   "truoc": 55373,
+   "sau": 55074,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 128,
+   "co": [
+    1472,
+    184
+   ]
+  },
+  {
+   "ma": "gd-nut-danh-hammer",
+   "truoc": 1652,
+   "sau": 1354,
+   "cach": "không mất, 256 màu (từ 346 màu)",
+   "sai_so": [
+    0.2,
+    3.0,
+    0
+   ],
+   "so_mau": 346,
+   "co": [
+    48,
+    48
+   ]
+  },
+  {
+   "ma": "zed-moi",
+   "truoc": 361930,
+   "sau": 361638,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 256,
+   "co": [
+    1152,
+    11328
+   ]
+  },
+  {
+   "ma": "gd-tt-bang",
+   "truoc": 539,
+   "sau": 250,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 12,
+   "co": [
+    18,
+    18
+   ]
+  },
+  {
+   "ma": "mocTinh",
+   "truoc": 930874,
+   "sau": 930588,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    2016,
+    1836
+   ]
+  },
+  {
+   "ma": "hoLua-p2",
+   "truoc": 273056,
+   "sau": 272773,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 146,
+   "co": [
+    1536,
+    792
+   ]
+  },
+  {
+   "ma": "zed-bien",
+   "truoc": 272473,
+   "sau": 272194,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 256,
+   "co": [
+    1152,
+    7776
+   ]
+  },
+  {
+   "ma": "nguTinh",
+   "truoc": 590056,
+   "sau": 589778,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    2272,
+    1752
+   ]
+  },
+  {
+   "ma": "hu-ban-cung",
+   "truoc": 1828,
+   "sau": 1555,
+   "cach": "không mất, 256 màu (từ 263 màu)",
+   "sai_so": [
+    0.0,
+    0.9099999999999682,
+    0
+   ],
+   "so_mau": 263,
+   "co": [
+    256,
+    26
+   ]
+  },
+  {
+   "ma": "gd-lang-coc",
+   "truoc": 590,
+   "sau": 320,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    16,
+    12
+   ]
+  },
+  {
+   "ma": "gd-cong-ai-ngay",
+   "truoc": 22727,
+   "sau": 22458,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 256,
+   "co": [
+    184,
+    192
+   ]
+  },
+  {
+   "ma": "gd-icon-linh-khi",
+   "truoc": 613,
+   "sau": 348,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 32,
+   "co": [
+    16,
+    20
+   ]
+  },
+  {
+   "ma": "gd-tt-doc",
+   "truoc": 498,
+   "sau": 233,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 12,
+   "co": [
+    18,
+    18
+   ]
+  },
+  {
+   "ma": "gd-ngoc-ice",
+   "truoc": 505,
+   "sau": 241,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 13,
+   "co": [
+    18,
+    16
+   ]
+  },
+  {
+   "ma": "hu-dan-lua",
+   "truoc": 1746,
+   "sau": 1483,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 185,
+   "co": [
+    128,
+    20
+   ]
+  },
+  {
+   "ma": "gd-bt-tron",
+   "truoc": 57826,
+   "sau": 57570,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 128,
+   "co": [
+    1472,
+    184
+   ]
+  },
+  {
+   "ma": "gd-tt-lau-chan-nen",
+   "truoc": 626,
+   "sau": 372,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 47,
+   "co": [
+    10,
+    30
+   ]
+  },
+  {
+   "ma": "gd-vat-tinh-the-vo",
+   "truoc": 629,
+   "sau": 375,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    26,
+    8
+   ]
+  },
+  {
+   "ma": "gd-the-ai-khoa",
+   "truoc": 2206,
+   "sau": 1953,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 78,
+   "co": [
+    70,
+    67
+   ]
+  },
+  {
+   "ma": "gd-huy-hinh-11",
+   "truoc": 1669,
+   "sau": 1419,
+   "cach": "không mất, 256 màu (từ 443 màu)",
+   "sai_so": [
+    0.42,
+    4.0,
+    0
+   ],
+   "so_mau": 443,
+   "co": [
+    36,
+    36
+   ]
+  },
+  {
+   "ma": "gd-ngoc-fire",
+   "truoc": 479,
+   "sau": 233,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 13,
+   "co": [
+    18,
+    16
+   ]
+  },
+  {
+   "ma": "gd-tt-troi",
+   "truoc": 451,
+   "sau": 208,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 12,
+   "co": [
+    24,
+    14
+   ]
+  },
+  {
+   "ma": "hu-gon-nuoc",
+   "truoc": 803,
+   "sau": 560,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 31,
+   "co": [
+    240,
+    20
+   ]
+  },
+  {
+   "ma": "gd-he-poison",
+   "truoc": 472,
+   "sau": 230,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 12,
+   "co": [
+    16,
+    16
+   ]
+  },
+  {
+   "ma": "gd-tt-chay",
+   "truoc": 469,
+   "sau": 231,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 13,
+   "co": [
+    18,
+    18
+   ]
+  },
+  {
+   "ma": "cuaDa",
+   "truoc": 465758,
+   "sau": 465523,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    1712,
+    1296
+   ]
+  },
+  {
+   "ma": "zed-vk",
+   "truoc": 53653,
+   "sau": 53421,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 256,
+   "co": [
+    523,
+    481
+   ]
+  },
+  {
+   "ma": "gd-ngoc-poison",
+   "truoc": 464,
+   "sau": 236,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 13,
+   "co": [
+    18,
+    16
+   ]
+  },
+  {
+   "ma": "gd-he-ice",
+   "truoc": 463,
+   "sau": 237,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 13,
+   "co": [
+    16,
+    16
+   ]
+  },
+  {
+   "ma": "namChua-p2",
+   "truoc": 225160,
+   "sau": 224935,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 146,
+   "co": [
+    1106,
+    768
+   ]
+  },
+  {
+   "ma": "gd-cham-than",
+   "truoc": 461,
+   "sau": 240,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 12,
+   "co": [
+    18,
+    26
+   ]
+  },
+  {
+   "ma": "hu-luoi-lua",
+   "truoc": 587,
+   "sau": 376,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 40,
+   "co": [
+    24,
+    14
+   ]
+  },
+  {
+   "ma": "gd-he-fire",
+   "truoc": 432,
+   "sau": 224,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 13,
+   "co": [
+    16,
+    16
+   ]
+  },
+  {
+   "ma": "gd-tt-bien-nhu-da-3",
+   "truoc": 576,
+   "sau": 373,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    12,
+    16
+   ]
+  },
+  {
+   "ma": "gd-lang-ga",
+   "truoc": 490,
+   "sau": 291,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    14,
+    14
+   ]
+  },
+  {
+   "ma": "hoTinh-p3",
+   "truoc": 1105423,
+   "sau": 1105224,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    2976,
+    1630
+   ]
+  },
+  {
+   "ma": "namChua",
+   "truoc": 312135,
+   "sau": 311936,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    1280,
+    1368
+   ]
+  },
+  {
+   "ma": "gd-phong-boss",
+   "truoc": 389,
+   "sau": 191,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 6,
+   "co": [
+    14,
+    14
+   ]
+  },
+  {
+   "ma": "hu-suong-dai",
+   "truoc": 605,
+   "sau": 407,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 4,
+   "co": [
+    256,
+    8
+   ]
+  },
+  {
+   "ma": "hoLua",
+   "truoc": 312752,
+   "sau": 312555,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    1360,
+    972
+   ]
+  },
+  {
+   "ma": "gd-phong-portal",
+   "truoc": 387,
+   "sau": 192,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 6,
+   "co": [
+    14,
+    14
+   ]
+  },
+  {
+   "ma": "mocTinh-p2",
+   "truoc": 809551,
+   "sau": 809356,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    2336,
+    1470
+   ]
+  },
+  {
+   "ma": "gd-lang-den-long",
+   "truoc": 486,
+   "sau": 292,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 32,
+   "co": [
+    10,
+    20
+   ]
+  },
+  {
+   "ma": "gd-phong-chest",
+   "truoc": 383,
+   "sau": 191,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 7,
+   "co": [
+    14,
+    14
+   ]
+  },
+  {
+   "ma": "gd-phong-challenge",
+   "truoc": 363,
+   "sau": 174,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 6,
+   "co": [
+    14,
+    14
+   ]
+  },
+  {
+   "ma": "gd-phong-curse",
+   "truoc": 371,
+   "sau": 182,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 7,
+   "co": [
+    14,
+    14
+   ]
+  },
+  {
+   "ma": "gd-the-trum-khoa",
+   "truoc": 3686,
+   "sau": 3497,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 96,
+   "co": [
+    80,
+    82
+   ]
+  },
+  {
+   "ma": "hu-moi-truong-rung-co-lay",
+   "truoc": 636,
+   "sau": 448,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 61,
+   "co": [
+    40,
+    8
+   ]
+  },
+  {
+   "ma": "gd-nut-danh-spear",
+   "truoc": 1159,
+   "sau": 975,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 190,
+   "co": [
+    48,
+    48
+   ]
+  },
+  {
+   "ma": "gd-lang-ga-mo",
+   "truoc": 462,
+   "sau": 283,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    14,
+    12
+   ]
+  },
+  {
+   "ma": "cuaDa-p2",
+   "truoc": 289011,
+   "sau": 288834,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    1664,
+    744
+   ]
+  },
+  {
+   "ma": "gd-phong-start",
+   "truoc": 349,
+   "sau": 178,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 7,
+   "co": [
+    14,
+    14
+   ]
+  },
+  {
+   "ma": "hoTinh-p2",
+   "truoc": 972522,
+   "sau": 972357,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    2848,
+    1710
+   ]
+  },
+  {
+   "ma": "nguTinh-p2",
+   "truoc": 635893,
+   "sau": 635730,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    2272,
+    1460
+   ]
+  },
+  {
+   "ma": "gd-phong-lock",
+   "truoc": 332,
+   "sau": 174,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 6,
+   "co": [
+    14,
+    14
+   ]
+  },
+  {
+   "ma": "gd-phong-merchant",
+   "truoc": 335,
+   "sau": 179,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 6,
+   "co": [
+    14,
+    14
+   ]
+  },
+  {
+   "ma": "hu-xoay-nuoc",
+   "truoc": 164677,
+   "sau": 164524,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    2208,
+    204
+   ]
+  },
+  {
+   "ma": "mocTinh-p3",
+   "truoc": 824981,
+   "sau": 824830,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    2288,
+    2410
+   ]
+  },
+  {
+   "ma": "gd-phong-elite",
+   "truoc": 334,
+   "sau": 186,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 7,
+   "co": [
+    14,
+    14
+   ]
+  },
+  {
+   "ma": "hu-no-doc",
+   "truoc": 40461,
+   "sau": 40314,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 242,
+   "co": [
+    1536,
+    160
+   ]
+  },
+  {
+   "ma": "gd-phong-key",
+   "truoc": 308,
+   "sau": 166,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 6,
+   "co": [
+    14,
+    14
+   ]
+  },
+  {
+   "ma": "gd-tt-lau-duoc",
+   "truoc": 491,
+   "sau": 349,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    8,
+    22
+   ]
+  },
+  {
+   "ma": "hu-doi-pha",
+   "truoc": 118820,
+   "sau": 118678,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    2752,
+    328
+   ]
+  },
+  {
+   "ma": "hu-la-chem",
+   "truoc": 34844,
+   "sau": 34703,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    1060,
+    172
+   ]
+  },
+  {
+   "ma": "hu-khoi-tron",
+   "truoc": 4792,
+   "sau": 4652,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    312,
+    54
+   ]
+  },
+  {
+   "ma": "hu-nam-con",
+   "truoc": 4713,
+   "sau": 4573,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    276,
+    56
+   ]
+  },
+  {
+   "ma": "hu-quang-dan",
+   "truoc": 1505,
+   "sau": 1365,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    216,
+    20
+   ]
+  },
+  {
+   "ma": "gd-phong-fountain",
+   "truoc": 313,
+   "sau": 174,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 7,
+   "co": [
+    14,
+    14
+   ]
+  },
+  {
+   "ma": "gd-quai-sap-danh",
+   "truoc": 340,
+   "sau": 201,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 13,
+   "co": [
+    8,
+    20
+   ]
+  },
+  {
+   "ma": "hu-tuong-song",
+   "truoc": 24361,
+   "sau": 24222,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    660,
+    102
+   ]
+  },
+  {
+   "ma": "gd-tt-bien-vo-so",
+   "truoc": 475,
+   "sau": 337,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    12,
+    10
+   ]
+  },
+  {
+   "ma": "hu-gai-re",
+   "truoc": 10074,
+   "sau": 9936,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    432,
+    94
+   ]
+  },
+  {
+   "ma": "hu-cao-quai",
+   "truoc": 6050,
+   "sau": 5913,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    400,
+    70
+   ]
+  },
+  {
+   "ma": "hu-hat-linh-khi",
+   "truoc": 1918,
+   "sau": 1781,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    176,
+    30
+   ]
+  },
+  {
+   "ma": "hu-khoi-doc-nho",
+   "truoc": 3042,
+   "sau": 2905,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    216,
+    54
+   ]
+  },
+  {
+   "ma": "hu-manh-san-ho",
+   "truoc": 1887,
+   "sau": 1750,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    228,
+    28
+   ]
+  },
+  {
+   "ma": "hu-ray-bang",
+   "truoc": 1397,
+   "sau": 1260,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    180,
+    50
+   ]
+  },
+  {
+   "ma": "hu-song-than",
+   "truoc": 11412,
+   "sau": 11275,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    372,
+    80
+   ]
+  },
+  {
+   "ma": "hu-tuong-tinh-the",
+   "truoc": 3693,
+   "sau": 3556,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    240,
+    38
+   ]
+  },
+  {
+   "ma": "hu-vet-luot",
+   "truoc": 1693,
+   "sau": 1556,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    336,
+    24
+   ]
+  },
+  {
+   "ma": "hu-dap-san",
+   "truoc": 98315,
+   "sau": 98179,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    1944,
+    294
+   ]
+  },
+  {
+   "ma": "hu-phun-bang",
+   "truoc": 65827,
+   "sau": 65691,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    1512,
+    230
+   ]
+  },
+  {
+   "ma": "hu-vung-dien",
+   "truoc": 29538,
+   "sau": 29402,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    1024,
+    84
+   ]
+  },
+  {
+   "ma": "gd-bt-quat",
+   "truoc": 17793,
+   "sau": 17658,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 128,
+   "co": [
+    648,
+    138
+   ]
+  },
+  {
+   "ma": "gd-the-ai-chon",
+   "truoc": 3368,
+   "sau": 3233,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 128,
+   "co": [
+    70,
+    67
+   ]
+  },
+  {
+   "ma": "hu-cau-lua-ma",
+   "truoc": 7353,
+   "sau": 7218,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    248,
+    76
+   ]
+  },
+  {
+   "ma": "hu-moi-truong-rung-la",
+   "truoc": 1202,
+   "sau": 1067,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 128,
+   "co": [
+    176,
+    22
+   ]
+  },
+  {
+   "ma": "hu-vet-chay",
+   "truoc": 5762,
+   "sau": 5627,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    280,
+    40
+   ]
+  },
+  {
+   "ma": "hu-vong-song",
+   "truoc": 5532,
+   "sau": 5397,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    660,
+    60
+   ]
+  },
+  {
+   "ma": "gd-dau-phong-thu-thach",
+   "truoc": 6112,
+   "sau": 5978,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    148,
+    148
+   ]
+  },
+  {
+   "ma": "gd-the-ai",
+   "truoc": 2483,
+   "sau": 2349,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 128,
+   "co": [
+    70,
+    67
+   ]
+  },
+  {
+   "ma": "hu-bot-doc",
+   "truoc": 2124,
+   "sau": 1990,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    180,
+    36
+   ]
+  },
+  {
+   "ma": "hu-giot-he-fire",
+   "truoc": 3499,
+   "sau": 3365,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    240,
+    52
+   ]
+  },
+  {
+   "ma": "hu-nam-moc",
+   "truoc": 15779,
+   "sau": 15645,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    576,
+    116
+   ]
+  },
+  {
+   "ma": "hu-quai-dap",
+   "truoc": 9540,
+   "sau": 9406,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    590,
+    72
+   ]
+  },
+  {
+   "ma": "hu-sao-chop",
+   "truoc": 1701,
+   "sau": 1567,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    230,
+    44
+   ]
+  },
+  {
+   "ma": "gd-dau-phong-nguyen",
+   "truoc": 3820,
+   "sau": 3687,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    108,
+    108
+   ]
+  },
+  {
+   "ma": "hu-bang-nhon-roi",
+   "truoc": 12262,
+   "sau": 12129,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    552,
+    168
+   ]
+  },
+  {
+   "ma": "hu-bua-tam-giac",
+   "truoc": 2472,
+   "sau": 2339,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    192,
+    34
+   ]
+  },
+  {
+   "ma": "hu-gai-toa",
+   "truoc": 7365,
+   "sau": 7232,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    792,
+    136
+   ]
+  },
+  {
+   "ma": "hu-giot-doc-san",
+   "truoc": 2521,
+   "sau": 2388,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    180,
+    34
+   ]
+  },
+  {
+   "ma": "hu-giot-he-ice",
+   "truoc": 4091,
+   "sau": 3958,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    280,
+    52
+   ]
+  },
+  {
+   "ma": "hu-hat-no",
+   "truoc": 2220,
+   "sau": 2087,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    260,
+    52
+   ]
+  },
+  {
+   "ma": "hu-manh-da",
+   "truoc": 2423,
+   "sau": 2290,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    312,
+    64
+   ]
+  },
+  {
+   "ma": "hu-nut-san",
+   "truoc": 3786,
+   "sau": 3653,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    124,
+    106
+   ]
+  },
+  {
+   "ma": "hu-tu-luc-vong",
+   "truoc": 5308,
+   "sau": 5175,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    456,
+    54
+   ]
+  },
+  {
+   "ma": "hu-vet-dau",
+   "truoc": 2798,
+   "sau": 2665,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    252,
+    26
+   ]
+  },
+  {
+   "ma": "gd-dau-phong-tinh-anh",
+   "truoc": 5113,
+   "sau": 4981,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    132,
+    130
+   ]
+  },
+  {
+   "ma": "hu-lao-bui",
+   "truoc": 3195,
+   "sau": 3063,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 128,
+   "co": [
+    310,
+    38
+   ]
+  },
+  {
+   "ma": "hu-qua-doc-roi",
+   "truoc": 11510,
+   "sau": 11378,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    480,
+    126
+   ]
+  },
+  {
+   "ma": "hu-vet-nhot",
+   "truoc": 5194,
+   "sau": 5062,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    336,
+    32
+   ]
+  },
+  {
+   "ma": "hu-vo-oc",
+   "truoc": 28743,
+   "sau": 28612,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    672,
+    104
+   ]
+  },
+  {
+   "ma": "hu-giot-he-poison",
+   "truoc": 3541,
+   "sau": 3411,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    280,
+    54
+   ]
+  },
+  {
+   "ma": "hu-cau-dat-lan",
+   "truoc": 8123,
+   "sau": 7994,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    352,
+    44
+   ]
+  },
+  {
+   "ma": "hu-phun-lua-quat",
+   "truoc": 45242,
+   "sau": 45113,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    1152,
+    188
+   ]
+  },
+  {
+   "ma": "hu-hao-quang-gian",
+   "truoc": 13469,
+   "sau": 13341,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    600,
+    94
+   ]
+  },
+  {
+   "ma": "gd-dau-phong-trum",
+   "truoc": 14063,
+   "sau": 13936,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    246,
+    240
+   ]
+  },
+  {
+   "ma": "hu-quai-hien",
+   "truoc": 34747,
+   "sau": 34620,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    816,
+    192
+   ]
+  },
+  {
+   "ma": "gd-the-trum",
+   "truoc": 4458,
+   "sau": 4334,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 128,
+   "co": [
+    80,
+    82
+   ]
+  },
+  {
+   "ma": "hu-quang-den",
+   "truoc": 421,
+   "sau": 297,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 5,
+   "co": [
+    160,
+    12
+   ]
+  },
+  {
+   "ma": "hu-tien-hoa-poison",
+   "truoc": 84758,
+   "sau": 84634,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 246,
+   "co": [
+    1536,
+    360
+   ]
+  },
+  {
+   "ma": "gd-phong-fight",
+   "truoc": 274,
+   "sau": 154,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 6,
+   "co": [
+    14,
+    14
+   ]
+  },
+  {
+   "ma": "caNocChua",
+   "truoc": 234476,
+   "sau": 234363,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 66,
+   "co": [
+    1164,
+    1332
+   ]
+  },
+  {
+   "ma": "gd-nut-danh-sword",
+   "truoc": 1390,
+   "sau": 1279,
+   "cach": "không mất, 256 màu (từ 257 màu)",
+   "sai_so": [
+    0.0,
+    0.0,
+    0
+   ],
+   "so_mau": 257,
+   "co": [
+    48,
+    48
+   ]
+  },
+  {
+   "ma": "gd-lang-dia",
+   "truoc": 1172,
+   "sau": 1062,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 264,
+   "co": [
+    22,
+    22
+   ]
+  },
+  {
+   "ma": "gd-trum-vach-ten",
+   "truoc": 329,
+   "sau": 220,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 18,
+   "co": [
+    48,
+    6
+   ]
+  },
+  {
+   "ma": "hu-no-bang",
+   "truoc": 38992,
+   "sau": 38883,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 250,
+   "co": [
+    1536,
+    160
+   ]
+  },
+  {
+   "ma": "gd-lang-dia-chon",
+   "truoc": 1186,
+   "sau": 1078,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 286,
+   "co": [
+    22,
+    22
+   ]
+  },
+  {
+   "ma": "em-be-healer",
+   "truoc": 13288,
+   "sau": 13185,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 97,
+   "co": [
+    288,
+    132
+   ]
+  },
+  {
+   "ma": "gd-mui-ten-cua",
+   "truoc": 692,
+   "sau": 589,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 104,
+   "co": [
+    48,
+    16
+   ]
+  },
+  {
+   "ma": "hu-vong-phep",
+   "truoc": 47511,
+   "sau": 47408,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 247,
+   "co": [
+    1536,
+    128
+   ]
+  },
+  {
+   "ma": "nl-lai",
+   "truoc": 23342,
+   "sau": 23239,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 97,
+   "co": [
+    420,
+    184
+   ]
+  },
+  {
+   "ma": "nl-ren",
+   "truoc": 27618,
+   "sau": 27515,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 97,
+   "co": [
+    444,
+    184
+   ]
+  },
+  {
+   "ma": "nl-xen",
+   "truoc": 19854,
+   "sau": 19752,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 97,
+   "co": [
+    384,
+    148
+   ]
+  },
+  {
+   "ma": "em-be-hunter",
+   "truoc": 14534,
+   "sau": 14433,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 97,
+   "co": [
+    360,
+    132
+   ]
+  },
+  {
+   "ma": "nl-mo",
+   "truoc": 24392,
+   "sau": 24292,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 97,
+   "co": [
+    408,
+    176
+   ]
+  },
+  {
+   "ma": "nl-tu",
+   "truoc": 23061,
+   "sau": 22961,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 97,
+   "co": [
+    360,
+    200
+   ]
+  },
+  {
+   "ma": "gd-khung-bang",
+   "truoc": 22300,
+   "sau": 22201,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 97,
+   "co": [
+    352,
+    104
+   ]
+  },
+  {
+   "ma": "em-be-wrestler",
+   "truoc": 12918,
+   "sau": 12820,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 95,
+   "co": [
+    360,
+    136
+   ]
+  },
+  {
+   "ma": "nl-do",
+   "truoc": 18364,
+   "sau": 18267,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 97,
+   "co": [
+    408,
+    132
+   ]
+  },
+  {
+   "ma": "nl-sen",
+   "truoc": 10924,
+   "sau": 10827,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 97,
+   "co": [
+    312,
+    136
+   ]
+  },
+  {
+   "ma": "gd-khung-thoai",
+   "truoc": 11204,
+   "sau": 11108,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 97,
+   "co": [
+    274,
+    80
+   ]
+  },
+  {
+   "ma": "nl-may",
+   "truoc": 24998,
+   "sau": 24903,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 97,
+   "co": [
+    420,
+    176
+   ]
+  },
+  {
+   "ma": "cuaTuong",
+   "truoc": 257405,
+   "sau": 257313,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    1368,
+    1212
+   ]
+  },
+  {
+   "ma": "gd-bia-gach",
+   "truoc": 354,
+   "sau": 263,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 72,
+   "co": [
+    36,
+    4
+   ]
+  },
+  {
+   "ma": "gd-the-trum-chon",
+   "truoc": 5096,
+   "sau": 5007,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 128,
+   "co": [
+    80,
+    82
+   ]
+  },
+  {
+   "ma": "hu-tien-hoa",
+   "truoc": 59989,
+   "sau": 59900,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 249,
+   "co": [
+    1536,
+    360
+   ]
+  },
+  {
+   "ma": "gd-ruot-thanh-trum",
+   "truoc": 378,
+   "sau": 292,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 20,
+   "co": [
+    64,
+    10
+   ]
+  },
+  {
+   "ma": "heoNanh",
+   "truoc": 158141,
+   "sau": 158055,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 50,
+   "co": [
+    1140,
+    768
+   ]
+  },
+  {
+   "ma": "hu-len-cap",
+   "truoc": 25949,
+   "sau": 25863,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 250,
+   "co": [
+    1920,
+    80
+   ]
+  },
+  {
+   "ma": "nguTinh-p3",
+   "truoc": 640291,
+   "sau": 640205,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 129,
+   "co": [
+    2272,
+    1460
+   ]
+  },
+  {
+   "ma": "hu-ngu-tinh-mo-man",
+   "truoc": 17959,
+   "sau": 17875,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 5,
+   "co": [
+    2400,
+    310
+   ]
+  },
+  {
+   "ma": "hu-no-lua",
+   "truoc": 45037,
+   "sau": 44953,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 253,
+   "co": [
+    1536,
+    160
+   ]
+  },
+  {
+   "ma": "hu-tien-hoa-fire",
+   "truoc": 66416,
+   "sau": 66336,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 245,
+   "co": [
+    1536,
+    360
+   ]
+  },
+  {
+   "ma": "gd-huy-hinh-9",
+   "truoc": 1437,
+   "sau": 1358,
+   "cach": "không mất, 256 màu (từ 412 màu)",
+   "sai_so": [
+    0.4,
+    4.0,
+    0
+   ],
+   "so_mau": 412,
+   "co": [
+    36,
+    36
+   ]
+  },
+  {
+   "ma": "nhim",
+   "truoc": 37620,
+   "sau": 37541,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 66,
+   "co": [
+    456,
+    528
+   ]
+  },
+  {
+   "ma": "nhimDoc",
+   "truoc": 69196,
+   "sau": 69117,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 66,
+   "co": [
+    600,
+    480
+   ]
+  },
+  {
+   "ma": "gd-huy-hinh-0",
+   "truoc": 1357,
+   "sau": 1279,
+   "cach": "không mất, 256 màu (từ 308 màu)",
+   "sai_so": [
+    0.19,
+    3.6100000000000136,
+    0
+   ],
+   "so_mau": 308,
+   "co": [
+    36,
+    36
+   ]
+  },
+  {
+   "ma": "hu-lang-tia-lo",
+   "truoc": 458,
+   "sau": 382,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    72,
+    24
+   ]
+  },
+  {
+   "ma": "hu-tien-hoa-ice",
+   "truoc": 86369,
+   "sau": 86294,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 254,
+   "co": [
+    1536,
+    360
+   ]
+  },
+  {
+   "ma": "meoDen",
+   "truoc": 66728,
+   "sau": 66654,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    804,
+    636
+   ]
+  },
+  {
+   "ma": "hu-chi-mang",
+   "truoc": 16709,
+   "sau": 16636,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 250,
+   "co": [
+    672,
+    112
+   ]
+  },
+  {
+   "ma": "hu-vong-hoi-quai",
+   "truoc": 29823,
+   "sau": 29750,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 175,
+   "co": [
+    1272,
+    226
+   ]
+  },
+  {
+   "ma": "huChua",
+   "truoc": 101939,
+   "sau": 101866,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    660,
+    876
+   ]
+  },
+  {
+   "ma": "gd-khung-canh-bao",
+   "truoc": 2734,
+   "sau": 2668,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 65,
+   "co": [
+    168,
+    38
+   ]
+  },
+  {
+   "ma": "oc",
+   "truoc": 122076,
+   "sau": 122010,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    864,
+    696
+   ]
+  },
+  {
+   "ma": "caChuon",
+   "truoc": 67038,
+   "sau": 66973,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    648,
+    672
+   ]
+  },
+  {
+   "ma": "gd-nut-chon",
+   "truoc": 3117,
+   "sau": 3053,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 65,
+   "co": [
+    126,
+    48
+   ]
+  },
+  {
+   "ma": "gd-nut-nguy",
+   "truoc": 3130,
+   "sau": 3066,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 65,
+   "co": [
+    126,
+    48
+   ]
+  },
+  {
+   "ma": "gd-nut-thuong",
+   "truoc": 3092,
+   "sau": 3028,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 65,
+   "co": [
+    126,
+    48
+   ]
+  },
+  {
+   "ma": "gd-thanh-tren",
+   "truoc": 2401,
+   "sau": 2337,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 65,
+   "co": [
+    122,
+    32
+   ]
+  },
+  {
+   "ma": "hoaBaoTu",
+   "truoc": 69292,
+   "sau": 69228,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    756,
+    660
+   ]
+  },
+  {
+   "ma": "gd-dai-thong-bao",
+   "truoc": 3796,
+   "sau": 3733,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 65,
+   "co": [
+    218,
+    36
+   ]
+  },
+  {
+   "ma": "gd-nut-chinh",
+   "truoc": 2986,
+   "sau": 2923,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 65,
+   "co": [
+    126,
+    48
+   ]
+  },
+  {
+   "ma": "haiQuy",
+   "truoc": 99527,
+   "sau": 99464,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    672,
+    600
+   ]
+  },
+  {
+   "ma": "hu-tam-giac-bua",
+   "truoc": 24975,
+   "sau": 24912,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 125,
+   "co": [
+    876,
+    164
+   ]
+  },
+  {
+   "ma": "sua",
+   "truoc": 75100,
+   "sau": 75037,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    576,
+    624
+   ]
+  },
+  {
+   "ma": "doiThan",
+   "truoc": 70204,
+   "sau": 70142,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    768,
+    576
+   ]
+  },
+  {
+   "ma": "hu-moi-truong-rung-domdom",
+   "truoc": 4553,
+   "sau": 4492,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 241,
+   "co": [
+    416,
+    54
+   ]
+  },
+  {
+   "ma": "diaTrau",
+   "truoc": 73729,
+   "sau": 73669,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    708,
+    492
+   ]
+  },
+  {
+   "ma": "nhimThan",
+   "truoc": 43634,
+   "sau": 43574,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 50,
+   "co": [
+    504,
+    444
+   ]
+  },
+  {
+   "ma": "tuongMa",
+   "truoc": 104751,
+   "sau": 104691,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    780,
+    792
+   ]
+  },
+  {
+   "ma": "cua",
+   "truoc": 87642,
+   "sau": 87583,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    960,
+    576
+   ]
+  },
+  {
+   "ma": "gd-bong-thoai",
+   "truoc": 667,
+   "sau": 609,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 126,
+   "co": [
+    64,
+    28
+   ]
+  },
+  {
+   "ma": "hu-soc-nhiet",
+   "truoc": 43604,
+   "sau": 43546,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 256,
+   "co": [
+    1536,
+    160
+   ]
+  },
+  {
+   "ma": "namPhongChua",
+   "truoc": 189704,
+   "sau": 189648,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    1488,
+    1248
+   ]
+  },
+  {
+   "ma": "gd-long-khung",
+   "truoc": 1972,
+   "sau": 1917,
+   "cach": "không mất, 256 màu (từ 613 màu)",
+   "sai_so": [
+    0.17,
+    1.0,
+    0
+   ],
+   "so_mau": 613,
+   "co": [
+    32,
+    32
+   ]
+  },
+  {
+   "ma": "gd-tt-lau-nen",
+   "truoc": 367,
+   "sau": 314,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    8,
+    12
+   ]
+  },
+  {
+   "ma": "caCon",
+   "truoc": 63239,
+   "sau": 63187,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    696,
+    516
+   ]
+  },
+  {
+   "ma": "gd-the-sap-co",
+   "truoc": 1140,
+   "sau": 1090,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    64,
+    20
+   ]
+  },
+  {
+   "ma": "namPhong",
+   "truoc": 38502,
+   "sau": 38452,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    564,
+    492
+   ]
+  },
+  {
+   "ma": "gd-ban-do-vung",
+   "truoc": 102963,
+   "sau": 102914,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 256,
+   "co": [
+    480,
+    270
+   ]
+  },
+  {
+   "ma": "gd-khung-nho",
+   "truoc": 854,
+   "sau": 805,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    128,
+    38
+   ]
+  },
+  {
+   "ma": "gd-khung-vach-lk",
+   "truoc": 765,
+   "sau": 716,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    64,
+    14
+   ]
+  },
+  {
+   "ma": "gd-o-con-chon",
+   "truoc": 1532,
+   "sau": 1483,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    70,
+    68
+   ]
+  },
+  {
+   "ma": "gd-o-con",
+   "truoc": 1488,
+   "sau": 1439,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    68,
+    66
+   ]
+  },
+  {
+   "ma": "denLong",
+   "truoc": 47866,
+   "sau": 47819,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 49,
+   "co": [
+    480,
+    516
+   ]
+  },
+  {
+   "ma": "gd-thanh-tren-vach",
+   "truoc": 498,
+   "sau": 451,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 32,
+   "co": [
+    14,
+    32
+   ]
+  },
+  {
+   "ma": "baBa",
+   "truoc": 87099,
+   "sau": 87053,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    936,
+    432
+   ]
+  },
+  {
+   "ma": "heoCon",
+   "truoc": 80671,
+   "sau": 80625,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    780,
+    576
+   ]
+  },
+  {
+   "ma": "cocTia",
+   "truoc": 107475,
+   "sau": 107430,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    900,
+    672
+   ]
+  },
+  {
+   "ma": "gd-dau-phong",
+   "truoc": 3447,
+   "sau": 3404,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 141,
+   "co": [
+    92,
+    60
+   ]
+  },
+  {
+   "ma": "gd-loi-noi",
+   "truoc": 202,
+   "sau": 159,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 10,
+   "co": [
+    24,
+    10
+   ]
+  },
+  {
+   "ma": "socNo",
+   "truoc": 77397,
+   "sau": 77354,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    948,
+    696
+   ]
+  },
+  {
+   "ma": "tuongDa",
+   "truoc": 66196,
+   "sau": 66153,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    492,
+    588
+   ]
+  },
+  {
+   "ma": "ongVo",
+   "truoc": 37249,
+   "sau": 37207,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    564,
+    468
+   ]
+  },
+  {
+   "ma": "boHung",
+   "truoc": 58626,
+   "sau": 58586,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    744,
+    528
+   ]
+  },
+  {
+   "ma": "gd-khung-vach-lk-moc",
+   "truoc": 180,
+   "sau": 140,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 17,
+   "co": [
+    4,
+    14
+   ]
+  },
+  {
+   "ma": "gd-bt-dai",
+   "truoc": 11532,
+   "sau": 11494,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 128,
+   "co": [
+    1360,
+    28
+   ]
+  },
+  {
+   "ma": "hu-tia-mom",
+   "truoc": 1823,
+   "sau": 1786,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 141,
+   "co": [
+    160,
+    38
+   ]
+  },
+  {
+   "ma": "raiCa",
+   "truoc": 59498,
+   "sau": 59462,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    768,
+    588
+   ]
+  },
+  {
+   "ma": "huLua",
+   "truoc": 37912,
+   "sau": 37878,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    444,
+    480
+   ]
+  },
+  {
+   "ma": "tieuYeu",
+   "truoc": 65375,
+   "sau": 65341,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    588,
+    600
+   ]
+  },
+  {
+   "ma": "caNoc",
+   "truoc": 44046,
+   "sau": 44013,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    600,
+    588
+   ]
+  },
+  {
+   "ma": "chonBong",
+   "truoc": 62305,
+   "sau": 62272,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    624,
+    480
+   ]
+  },
+  {
+   "ma": "gd-thanh-cuon",
+   "truoc": 472,
+   "sau": 439,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    8,
+    64
+   ]
+  },
+  {
+   "ma": "gd-the-nho",
+   "truoc": 776,
+   "sau": 743,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    78,
+    20
+   ]
+  },
+  {
+   "ma": "gd-khung-mau-quai",
+   "truoc": 626,
+   "sau": 594,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    164,
+    8
+   ]
+  },
+  {
+   "ma": "linhMa",
+   "truoc": 39545,
+   "sau": 39513,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 33,
+   "co": [
+    576,
+    540
+   ]
+  },
+  {
+   "ma": "hu-hat-bui",
+   "truoc": 222,
+   "sau": 191,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 2,
+   "co": [
+    96,
+    12
+   ]
+  },
+  {
+   "ma": "gd-thanh-cuon-num",
+   "truoc": 270,
+   "sau": 247,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 25,
+   "co": [
+    6,
+    18
+   ]
+  },
+  {
+   "ma": "gd-nen-lau-san2",
+   "truoc": 12075,
+   "sau": 12054,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    128,
+    128
+   ]
+  },
+  {
+   "ma": "gd-bong-thoai-duoi",
+   "truoc": 173,
+   "sau": 154,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 14,
+   "co": [
+    7,
+    6
+   ]
+  },
+  {
+   "ma": "gd-nen-bien-san0",
+   "truoc": 12137,
+   "sau": 12118,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    128,
+    128
+   ]
+  },
+  {
+   "ma": "gd-nen-bien-tuong-sau",
+   "truoc": 9141,
+   "sau": 9123,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    128,
+    98
+   ]
+  },
+  {
+   "ma": "gd-nen-lau-ngoai",
+   "truoc": 10949,
+   "sau": 10931,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    128,
+    128
+   ]
+  },
+  {
+   "ma": "gd-chuong-o",
+   "truoc": 229,
+   "sau": 214,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 47,
+   "co": [
+    8,
+    6
+   ]
+  },
+  {
+   "ma": "gd-nen-bien-ngoai",
+   "truoc": 11166,
+   "sau": 11153,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    128,
+    128
+   ]
+  },
+  {
+   "ma": "gd-nen-bien-san1",
+   "truoc": 12148,
+   "sau": 12135,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    128,
+    128
+   ]
+  },
+  {
+   "ma": "gd-so-sao-0",
+   "truoc": 422,
+   "sau": 411,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 55,
+   "co": [
+    20,
+    20
+   ]
+  },
+  {
+   "ma": "gd-ban-do-cham-khoa",
+   "truoc": 136,
+   "sau": 128,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 13,
+   "co": [
+    4,
+    4
+   ]
+  },
+  {
+   "ma": "gd-nen-bien-san2",
+   "truoc": 12096,
+   "sau": 12088,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    128,
+    128
+   ]
+  },
+  {
+   "ma": "gd-nen-lau-san1",
+   "truoc": 11685,
+   "sau": 11678,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    128,
+    128
+   ]
+  },
+  {
+   "ma": "gd-ban-do-cham",
+   "truoc": 136,
+   "sau": 130,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 14,
+   "co": [
+    4,
+    4
+   ]
+  },
+  {
+   "ma": "gd-o-diem-trong",
+   "truoc": 278,
+   "sau": 273,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 70,
+   "co": [
+    10,
+    10
+   ]
+  },
+  {
+   "ma": "gd-bong-khung",
+   "truoc": 149,
+   "sau": 145,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 4,
+   "co": [
+    48,
+    48
+   ]
+  },
+  {
+   "ma": "gd-cham-moi",
+   "truoc": 267,
+   "sau": 264,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 53,
+   "co": [
+    8,
+    8
+   ]
+  },
+  {
+   "ma": "gd-nen-lau-tuong-ben",
+   "truoc": 2626,
+   "sau": 2623,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    28,
+    128
+   ]
+  },
+  {
+   "ma": "gd-o-diem",
+   "truoc": 316,
+   "sau": 313,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 93,
+   "co": [
+    10,
+    10
+   ]
+  },
+  {
+   "ma": "gd-nen-lau-tuong-truoc",
+   "truoc": 1827,
+   "sau": 1825,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    128,
+    24
+   ]
+  },
+  {
+   "ma": "gd-nen-bien-tuong-truoc",
+   "truoc": 2295,
+   "sau": 2294,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 64,
+   "co": [
+    128,
+    24
+   ]
+  },
+  {
+   "ma": "hu-bong-chan",
+   "truoc": 471,
+   "sau": 470,
+   "cach": "không mất",
+   "sai_so": null,
+   "so_mau": 35,
+   "co": [
+    68,
+    20
+   ]
+  }
+ ]
+}
