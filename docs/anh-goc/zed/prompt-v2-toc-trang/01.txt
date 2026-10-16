@@ -1,6 +1,0 @@
-Kiếm nhát 1
-
-Nhân vật Zed như ảnh gửi kèm (giữ y hệt: tóc trắng bù xù, hai sừng cong đỏ sẫm, mắt đỏ, khăn quàng đỏ, quấn tay đỏ đen, quần đen rộng, đai đỏ, giày đen). Pixel art chibi, viền tối một nét, quay mặt sang phải, cùng cỡ người và vị trí chân ở mọi ô, không bóng dưới chân.
-Tay KHÔNG cầm vũ khí (vũ khí là ảnh riêng): bàn tay nắm như đang cầm cán, tay không che mặt.
-Chém kiếm nhát 1: 1 thế thủ, 2 giơ tay lên trên vai phải phía sau, 3 vung chéo xuống trước, 4 tay duỗi hết về dưới-trước, 5–6 giữ, 7–8 thu về thế thủ.
-Một hàng 8 khung đều nhau từ trái sang, nhân vật nằm trọn trong ô. Nền trơn xanh lá #00FF00, không lưới, không chữ, không quầng sáng.

@@ -1,6 +1,0 @@
-Gửi kèm: zed-canonical.png (để đúng cỡ và nét vẽ).
-Vẽ MỘT cái GÙI TRE nhìn ngang (như đang đeo sau lưng Zed quay phải): mặt áp lưng ở bên PHẢI hình, đáy hẹp, miệng loe, nan tre đan chéo vàng nâu.
-Cao khoảng 0,5 lần chiều cao Zed; trong miệng gùi có vài nhánh lá thò ra.
-Chỉ có cái gùi, KHÔNG quai đeo, không người. Cùng độ to điểm ảnh, viền tối như canonical.
-Đặt giữa ảnh vuông, chừa lề rộng.
-Nền xanh lá thuần #00FF00 phủ kín cả ảnh. KHÔNG kẻ lưới, KHÔNG chữ, KHÔNG số khung, KHÔNG bóng đổ, KHÔNG quầng sáng, KHÔNG hiệu ứng.

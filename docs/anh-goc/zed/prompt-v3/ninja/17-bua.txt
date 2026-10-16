@@ -1,6 +1,0 @@
-Gửi kèm: zed-canonical.png (để đúng cỡ và nét vẽ).
-Vẽ MỘT cây BÚA chiến nằm NGANG: cán bên trái, đầu búa bên phải.
-Cán gỗ dài khoảng 0,9 lần chiều cao Zed; đầu búa sắt to khối vuông (cao bằng đầu Zed), đai đồng quanh đầu búa, chuôi quấn vải đỏ.
-Cùng độ to điểm ảnh, viền tối như canonical. Chỉ có cây búa, không tay, không người.
-Búa nằm giữa ảnh, chừa lề rộng.
-Nền xanh lá thuần #00FF00 phủ kín cả ảnh. KHÔNG kẻ lưới, KHÔNG chữ, KHÔNG số khung, KHÔNG bóng đổ, KHÔNG quầng sáng, KHÔNG hiệu ứng.

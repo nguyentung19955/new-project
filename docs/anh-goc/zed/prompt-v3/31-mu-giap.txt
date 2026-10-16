@@ -1,6 +1,0 @@
-Gửi kèm: zed-v2-canonical.png (để đúng cỡ đầu và nét vẽ).
-Vẽ MỘT chiếc MŨ GIÁP ĐỎ (Bộ Giáp Đỏ) nhìn ngang quay phải: mũ thép tròn sơn đỏ sẫm, vành che gáy bằng lá thép, dải đồng trên trán, chừa hở cả khuôn mặt.
-Mũ ôm trọn đầu Zed trong canonical (rộng khoảng 1,1 lần bề ngang đầu). Mũ che kín tóc nhưng có HAI LỖ viền đồng cho hai sừng nhô qua (vị trí như canonical).
-Chỉ có chiếc mũ, không đầu, không tóc, không sừng, không người. Cùng độ to điểm ảnh, viền tối như canonical.
-Đặt giữa ảnh vuông, chừa lề rộng.
-Nền xanh lá thuần #00FF00 phủ kín cả ảnh. KHÔNG kẻ lưới, KHÔNG chữ, KHÔNG số khung, KHÔNG bóng đổ, KHÔNG quầng sáng, KHÔNG hiệu ứng.

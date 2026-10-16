@@ -1,6 +1,0 @@
-Thương quét vòng
-
-Nhân vật Zed như ảnh gửi kèm (giữ y hệt: tóc trắng bù xù, hai sừng cong đỏ sẫm, mắt đỏ, khăn quàng đỏ, quấn tay đỏ đen, quần đen rộng, đai đỏ, giày đen). Pixel art chibi, viền tối một nét, quay mặt sang phải, cùng cỡ người và vị trí chân ở mọi ô, không bóng dưới chân.
-Tay KHÔNG cầm vũ khí (vũ khí là ảnh riêng): bàn tay nắm như đang cầm cán, tay không che mặt. Hai tay cầm cán dài.
-Quét thương vòng: 1 thế thủ, 2 xoay người kéo cán ra sau, 3–5 quét ngang một vòng quanh người (khung 4 quay lưng), 6 quay về bên phải, 7 đâm mạnh tới, 8 thu về.
-Một hàng 8 khung đều nhau từ trái sang, nhân vật nằm trọn trong ô. Nền trơn xanh lá #00FF00, không lưới, không chữ, không quầng sáng.

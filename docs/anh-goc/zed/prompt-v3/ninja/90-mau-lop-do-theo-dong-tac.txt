@@ -1,8 +1,0 @@
-MẪU (thay chữ trong <>): dùng khi một món đồ ôm người (áo, quần, giáp, găng, giày, đai, quai) cần thêm bộ động tác khác.
-Gửi kèm: (1) ảnh THÂN của bộ động tác đó (09 kiếm / 13 lộn-trúng-chết-chưởng / 16 thương / 19 búa / 23 phi tiêu), (2) ảnh đứng-đi-chạy của món <NN-ten-mon> (để đúng hình món), (3) zed-canonical.png.
-Vẽ CHỈ <tên món> khớp từng ô của ảnh thân (1).
-CHỈ vẽ món đồ, đúng chỗ nó nằm trên người Zed ở từng ô; cả người Zed (đầu, tóc, da, đồ lót) tô #00FF00. Chỗ tay hoặc tóc che món đồ thì để trống (xanh).
-Món bám đúng bộ phận ở mọi khung, cùng cỡ và màu như ảnh (2); phần mềm (tà áo, đuôi khăn, túi) theo hướng chuyển động nhưng không chạm ranh ô.
-Ô trống của ảnh thân (1) cũng để trống.
-Giữ nguyên bố cục <số cột> cột × <số hàng> hàng như ảnh (1), cỡ người, vị trí chân.
-Nền xanh lá thuần #00FF00 phủ kín cả ảnh. KHÔNG kẻ lưới, KHÔNG chữ, KHÔNG số khung, KHÔNG bóng đổ, KHÔNG quầng sáng, KHÔNG hiệu ứng.

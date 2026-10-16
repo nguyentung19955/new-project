@@ -1,7 +1,0 @@
-Gửi kèm: zed-v2-canonical.png (để đúng cỡ đầu và nét vẽ).
-Vẽ MỘT chiếc NÓN LÁ Việt Nam nhìn ngang, hơi nghiêng như đang đội trên đầu Zed quay phải.
-Nón rộng bằng khoảng 1,3 lần bề ngang đầu Zed trong canonical; màu lá cọ vàng nhạt, vài vòng nan mảnh, quai đỏ thả xuống.
-Cùng độ to điểm ảnh, viền tối, cách tô bóng như canonical.
-Khoét HAI LỖ trên mặt nón cho hai sừng của Zed nhô qua (vị trí sừng như canonical). Chỉ có chiếc nón, KHÔNG có đầu, tóc, sừng hay người.
-Nón đặt giữa ảnh vuông, chừa lề rộng quanh nón.
-Nền xanh lá thuần #00FF00 phủ kín cả ảnh. KHÔNG kẻ lưới, KHÔNG chữ, KHÔNG số khung, KHÔNG bóng đổ, KHÔNG quầng sáng, KHÔNG hiệu ứng.

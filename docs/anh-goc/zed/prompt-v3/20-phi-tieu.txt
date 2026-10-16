@@ -1,6 +1,0 @@
-Gửi kèm: zed-v2-canonical.png (để đúng cỡ và nét vẽ).
-Vẽ MỘT chiếc PHI TIÊU ninja hình sao 4 cánh nhìn thẳng (như đang kẹp giữa ngón tay).
-Rộng khoảng bằng bàn tay Zed (rất nhỏ so với người); thép xám, lỗ tròn ở giữa, viền tối 1 điểm ảnh.
-Cùng độ to điểm ảnh như canonical, không quầng sáng.
-Chỉ có phi tiêu, đặt giữa ảnh vuông, chừa lề rộng.
-Nền xanh lá thuần #00FF00 phủ kín cả ảnh. KHÔNG kẻ lưới, KHÔNG chữ, KHÔNG số khung, KHÔNG bóng đổ, KHÔNG quầng sáng, KHÔNG hiệu ứng.

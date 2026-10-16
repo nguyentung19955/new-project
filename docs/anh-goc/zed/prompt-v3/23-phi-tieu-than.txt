@@ -1,5 +1,0 @@
-Gửi kèm: ảnh 22 (Zed ném phi tiêu) đã đạt. SỬA ảnh này.
-XOÁ mọi phi tiêu; giữ ngón tay ở tư thế kẹp/ném như cũ.
-Giữ nguyên mọi thứ khác: tư thế, vị trí, cỡ người. Không thêm vật gì.
-Ảnh 6 cột × 2 hàng ô bằng nhau, mỗi ô 1 khung, đọc trái sang phải. Chừa lề ≥ 8% mỗi phía: tóc, khăn, đồ, vũ khí KHÔNG chạm ranh ô.
-Nền xanh lá thuần #00FF00 phủ kín cả ảnh. KHÔNG kẻ lưới, KHÔNG chữ, KHÔNG số khung, KHÔNG bóng đổ, KHÔNG quầng sáng, KHÔNG hiệu ứng.

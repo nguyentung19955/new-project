@@ -1,5 +1,0 @@
-Trúng đòn
-
-Nhân vật Zed như ảnh gửi kèm (giữ y hệt: tóc trắng bù xù, hai sừng cong đỏ sẫm, mắt đỏ, khăn quàng đỏ, quấn tay đỏ đen, quần đen rộng, đai đỏ, giày đen). Pixel art chibi, viền tối một nét, quay mặt sang phải, cùng cỡ người và vị trí chân ở mọi ô, không bóng dưới chân.
-Trúng đòn: 1–2 giật đầu, người ngả ra sau, nhăn mặt nhắm mắt; 3–4 lùi một bước; 5–8 trở về thế đứng.
-Một hàng 8 khung đều nhau từ trái sang, nhân vật nằm trọn trong ô. Nền trơn xanh lá #00FF00, không lưới, không chữ, không quầng sáng.

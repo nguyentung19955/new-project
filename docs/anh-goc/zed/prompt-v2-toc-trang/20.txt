@@ -1,6 +1,0 @@
-Ném phi tiêu
-
-Nhân vật Zed như ảnh gửi kèm (giữ y hệt: tóc trắng bù xù, hai sừng cong đỏ sẫm, mắt đỏ, khăn quàng đỏ, quấn tay đỏ đen, quần đen rộng, đai đỏ, giày đen). Pixel art chibi, viền tối một nét, quay mặt sang phải, cùng cỡ người và vị trí chân ở mọi ô, không bóng dưới chân.
-Tay phải cầm phi tiêu nhỏ (không vẽ phi tiêu, game tự vẽ), tay trái giữ thăng bằng.
-Ném phi tiêu: 1 thế thủ, 2 tay phải rút từ thắt lưng, 3 kéo tay ra sau vai, 4 vung tay ném mạnh ra trước, 5 tay duỗi hết theo đà, 6 giữ, 7–8 thu về.
-Một hàng 8 khung đều nhau từ trái sang, nhân vật nằm trọn trong ô. Nền trơn xanh lá #00FF00, không lưới, không chữ, không quầng sáng.

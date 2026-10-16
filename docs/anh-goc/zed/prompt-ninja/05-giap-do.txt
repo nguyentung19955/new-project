@@ -1,3 +1,0 @@
-Ảnh gửi kèm là tấm Zed 8×3 (đứng, đi, chạy). Vẽ lại ĐÚNG 24 tư thế đó nhưng CHỈ vẽ bộ giáp đỏ viền vàng (giáp ngực + giáp vai) như đang mặc trên một người vô hình; không vẽ đầu, tay, chân, quần, khăn. Giáp ở đúng chỗ ngực/vai của Zed trong từng ô, đung đưa theo bước chân.
-Pixel art chibi, viền tối một nét.
-Lưới 8 cột × 3 hàng đều nhau, khớp từng ô với tấm Zed gửi kèm (hàng 1 đứng, hàng 2 đi, hàng 3 chạy). Nền trơn xanh lá #00FF00, không lưới, không chữ, không quầng sáng.

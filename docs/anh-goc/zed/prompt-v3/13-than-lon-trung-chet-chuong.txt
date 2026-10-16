@@ -1,9 +1,0 @@
-Gửi kèm: (1) ảnh thân trơn 01, (2) zed-v2-canonical.png. Zed thân trơn, TAY KHÔNG.
-Pixel art chibi y hệt ảnh gửi kèm: cùng mặt, tóc trắng bù xù, HAI SỪNG cong đỏ sẫm, tai nhọn, mắt đỏ, tỉ lệ đầu/thân, độ to điểm ảnh, viền tối, cách tô bóng. Quay mặt sang phải.
-Hàng 1 Lộn né (6 khung): 1 cúi người lấy đà; 2 cuộn tròn bật đi; 3 lộn ngược; 4 lộn tiếp; 5 chạm đất một gối; 6 đứng dậy. Cả 6 khung trong ô, tiến nhẹ sang phải.
-Hàng 2 Trúng đòn (3 khung): 1 giật người ra sau, nhắm mắt; 2 ngả sau nhất; 3 đứng vững lại. Ô 4–8 TRỐNG.
-Hàng 3 Gục (8 khung): 1 loạng choạng; 2 khuỵu gối; 3 quỳ; 4 ngã ngửa; 5 chạm đất; 6 nảy nhẹ; 7–8 nằm im (nằm trọn trong ô).
-Hàng 4 Chưởng (6 khung): 1 kéo hai bàn tay về hông; 2 tụ lực; 3 hai bàn tay mở ra; 4 ★ đẩy mạnh hai lòng bàn tay ra trước; 5 giữ; 6 thu về. Không vẽ luồng chưởng.
-Cùng cỡ người ở mọi ô, chân đặt cùng đường đất (trừ lúc lộn).
-Ảnh 8 cột × 4 hàng ô bằng nhau, mỗi ô 1 khung, đọc trái sang phải. Chừa lề ≥ 8% mỗi phía: tóc, khăn, đồ, vũ khí KHÔNG chạm ranh ô.
-Nền xanh lá thuần #00FF00 phủ kín cả ảnh. KHÔNG kẻ lưới, KHÔNG chữ, KHÔNG số khung, KHÔNG bóng đổ, KHÔNG quầng sáng, KHÔNG hiệu ứng.

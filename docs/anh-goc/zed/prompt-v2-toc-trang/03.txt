@@ -1,6 +1,0 @@
-Kiếm nhát cuối
-
-Nhân vật Zed như ảnh gửi kèm (giữ y hệt: tóc trắng bù xù, hai sừng cong đỏ sẫm, mắt đỏ, khăn quàng đỏ, quấn tay đỏ đen, quần đen rộng, đai đỏ, giày đen). Pixel art chibi, viền tối một nét, quay mặt sang phải, cùng cỡ người và vị trí chân ở mọi ô, không bóng dưới chân.
-Tay KHÔNG cầm vũ khí (vũ khí là ảnh riêng): bàn tay nắm như đang cầm cán, tay không che mặt.
-Chém kiếm nhát cuối thật mạnh: 1 lùi chân lấy đà, 2 xoay người giơ tay qua đầu, 3 nhảy nhẹ bước tới, 4 bổ thẳng xuống, 5 tay xuống thấp trước mặt, khuỵu gối, 6 giữ, 7–8 đứng lên thu về.
-Một hàng 8 khung đều nhau từ trái sang, nhân vật nằm trọn trong ô. Nền trơn xanh lá #00FF00, không lưới, không chữ, không quầng sáng.

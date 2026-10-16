@@ -1,9 +1,0 @@
-Gửi kèm: (1) ảnh thân trơn 01, (2) ảnh thương 14. Zed cầm thương HAI TAY, tay gần người xem ở sau, tay xa ở trước.
-Pixel art chibi y hệt ảnh gửi kèm: cùng mặt, tóc đen buộc cao dây đỏ, tỉ lệ đầu/thân, độ to điểm ảnh, viền tối, cách tô bóng. Quay mặt sang phải. KHÔNG sừng.
-Hàng 1–3 Đâm (mỗi hàng 4 khung, ba hàng hơi khác nhau): 1 thủ thế mũi ngang ngực; 2 kéo thương lùi ra sau; 3 ★ đâm thẳng, tay duỗi, chân trước bước tới; 4 thu về. Hàng 2 đâm hơi cao, hàng 3 đâm hơi thấp.
-Hàng 4 Quét vòng (6 khung): 1 kéo thương sang sau; 2 xoay hông; 3 quét ngang thấp; 4 ★ mũi thương ra trước xa nhất; 5 quét tiếp ra sau; 6 thu về thủ thế.
-Hàng 5: ô 1 thủ thế lấy đà (ngả sau, mũi chĩa trước); ô 2 lấy đà căng hơn; ô 3 lao người tới đâm; ô 4 thu chân. Ô 5–6 TRỐNG.
-Cây thương CÙNG chiều dài ở mọi khung, cán thẳng, không xuyên đầu/thân. Ô trống hàng 1–3 (ô 5–6) để trống.
-Chân đặt cố định (trừ ô lao). Không vệt đâm, không hiệu ứng.
-Ảnh 6 cột × 5 hàng ô bằng nhau, mỗi ô 1 khung, đọc trái sang phải. Chừa lề ≥ 8% mỗi phía: tóc, khăn, đồ, vũ khí KHÔNG chạm ranh ô.
-Nền xanh lá thuần #00FF00 phủ kín cả ảnh. KHÔNG kẻ lưới, KHÔNG chữ, KHÔNG số khung, KHÔNG bóng đổ, KHÔNG quầng sáng, KHÔNG hiệu ứng.

@@ -1,7 +1,0 @@
-Gửi kèm: zed-v2-canonical.png (để đúng cỡ người và nét vẽ).
-Vẽ ĐÔI CÁNH LÁ (hai cánh như lá non xanh lục pha vàng, gân lá rõ) nhìn ngang, gốc cánh ở bên TRÁI mỗi ô (chỗ chạm lưng Zed quay phải), cánh xoè ra sau và lên trên.
-Mỗi cánh dài khoảng 0,8 lần chiều cao Zed; cánh xa người xem tối hơn, nằm sau cánh gần.
-1 hàng 8 khung vỗ cánh lặp: 1 xoè thấp, 2–3 nâng dần, 4 cao nhất, 5–7 hạ dần, 8 về gần như khung 1. Gốc cánh đứng YÊN một chỗ ở mọi khung.
-Chỉ có cánh, KHÔNG có người. Không phát sáng, không hạt bay.
-Ảnh 8 cột × 1 hàng ô bằng nhau, mỗi ô 1 khung, đọc trái sang phải. Chừa lề ≥ 8% mỗi phía: tóc, khăn, đồ, vũ khí KHÔNG chạm ranh ô.
-Nền xanh lá thuần #00FF00 phủ kín cả ảnh. KHÔNG kẻ lưới, KHÔNG chữ, KHÔNG số khung, KHÔNG bóng đổ, KHÔNG quầng sáng, KHÔNG hiệu ứng.

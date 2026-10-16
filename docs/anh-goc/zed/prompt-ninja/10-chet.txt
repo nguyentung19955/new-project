@@ -1,3 +1,0 @@
-Nhân vật Zed như ảnh gửi kèm (giữ y hệt mặt, tóc buộc dây đỏ, khăn đỏ, áo tối, quần rộng, giày nâu). Pixel art chibi, viền tối một nét, quay mặt sang phải, cùng cỡ người và vị trí chân ở mọi ô, không bóng dưới chân.
-Ngã chết: 1 trúng đòn ngửa ra, 2–3 loạng choạng, 4 khuỵu gối, 5 đổ người về trước, 6 chạm đất, 7–8 nằm sấp bất động (giống nhau).
-Một hàng 8 khung đều nhau từ trái sang, nhân vật nằm trọn trong ô. Nền trơn xanh lá #00FF00, không lưới, không chữ, không quầng sáng.

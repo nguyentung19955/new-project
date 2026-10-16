@@ -1,5 +1,0 @@
-Lớp mũ: nón lá (chỉ mũ)
-
-Ảnh gửi kèm là tấm Zed 8×3 đứng, đi, chạy . Vẽ CHỈ chiếc nón lá có dây đỏ, đội đúng vị trí trên đầu Zed ở từng ô (theo đầu nhấp nhô khi đi/chạy), chừa lỗ cho hai sừng nhô lên; không vẽ người, không vẽ tóc, không vẽ sừng.
-Pixel art chibi, viền tối một nét.
-Lưới 8 cột × 3 hàng đều nhau, khớp từng ô với tấm Zed gửi kèm (hàng 1 đứng, hàng 2 đi, hàng 3 chạy). Nền trơn xanh lá #00FF00, không lưới, không chữ, không quầng sáng.

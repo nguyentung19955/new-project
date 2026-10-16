@@ -1,6 +1,0 @@
-Gửi kèm: zed-v2-canonical.png (để đúng cỡ và nét vẽ).
-Vẽ MỘT cây THƯƠNG nằm NGANG: đuôi cán bên trái, mũi chỉ sang phải.
-Dài khoảng 1,6 lần chiều cao Zed; cán gỗ nâu thẳng, mũi thép hình lá, tua đỏ dưới mũi, đuôi cán bịt đồng.
-Cùng độ to điểm ảnh, viền tối như canonical. Chỉ có cây thương, không tay, không người.
-Thương nằm giữa ảnh dài, chừa lề hai đầu.
-Nền xanh lá thuần #00FF00 phủ kín cả ảnh. KHÔNG kẻ lưới, KHÔNG chữ, KHÔNG số khung, KHÔNG bóng đổ, KHÔNG quầng sáng, KHÔNG hiệu ứng.
