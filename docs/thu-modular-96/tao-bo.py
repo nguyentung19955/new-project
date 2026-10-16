@@ -202,6 +202,21 @@ def bo_gen():
     return out
 
 
+def bo_giap_gen():
+    """Bộ giáp nạp từ ảnh gen (giap-gen/<tên>/<lớp giáp>.png, tạo bằng nap-do-gen-that.py)."""
+    goc = os.path.join(DAY, 'giap-gen')
+    out = {}
+    if not os.path.isdir(goc): return out
+    for ten in sorted(os.listdir(goc)):
+        d = os.path.join(goc, ten)
+        if not os.path.isdir(d): continue
+        lop = {l: np.array(Image.open(os.path.join(d, l + '.png')).convert('RGBA')) for l in GIAP if os.path.exists(os.path.join(d, l + '.png'))}
+        if lop:
+            nhan = open(os.path.join(d, 'ten.txt'), encoding='utf-8').read().strip() if os.path.exists(os.path.join(d, 'ten.txt')) else 'Giáp gen: ' + ten
+            out['gen-' + ten] = (nhan, lop)
+    return out
+
+
 def main():
     game = T.hang_game()
     kh_nguon = json.load(open(os.path.join(DAY, 'khop-nguon.json')))['khung']
@@ -248,6 +263,9 @@ def main():
         BO[key] = nhan
         bo[key] = {l: lop[l] for l in lop}
         bo_slots[key] = slots
+    # bộ giáp: máy vẽ (sheets/<lớp giáp>.png) + các bộ giáp gen
+    giap_bo = {'may-ve': ('Giáp mẫu máy vẽ', {l: nen[l] for l in GIAP})}
+    giap_bo.update(bo_giap_gen())
 
     # ===== KIỂM TRA (lỗi → dừng, mã thoát 1) =====
     kq = []
@@ -279,6 +297,15 @@ def main():
         g_nen, _ = TP.ghep(lay(None, None))
         r['lỗTrongSuốtKhiChỉCóNền'] = int(((gk[:, :, 3] == 255) & (g_nen[:, :, 3] == 0) & ~f['own']['belt']).sum())
         r['daiBayNgoaiThan'] = int(((g_nen[:, :, 3] == 0) & f['own']['belt']).sum())
+        # giáp trên đồ gốc: còn bao nhiêu điểm ảnh áo đen (đồ cũ) lộ ở thân trên (cổ → mép trên đai)
+        yy = np.mgrid[0:O, 0:O][0]
+        than_tren = f['own']['torsoOutfit'] & (yy <= f['k']['beltTop'][1])
+        r['aoDenThanTren'] = int(than_tren.sum())
+        r['aoDenLoKhiCoGiap'] = {}
+        for gb, (_, glop) in giap_bo.items():
+            lay_g = lay('goc', 'goc'); lay_g.update({l: a[:, sl] for l, a in glop.items()})
+            _, tg = TP.ghep(lay_g)
+            r['aoDenLoKhiCoGiap'][gb] = int((than_tren & (tg == TP.IDX['torsoOutfit'])).sum())
         kq.append(r)
     if loi:
         print('LỖI:'); [print('  -', x) for x in loi]
@@ -294,6 +321,20 @@ def main():
     for l, s in nen.items(): luu(s, duong[l])
     for b in bo:
         for l in bo[b]: luu(bo[b][l], duong_bo[b][l])
+    duong_giap = {gb: {l: (duong[l] if gb == 'may-ve' else 'sheets/giap-%s/%s.png' % (gb, l)) for l in glop} for gb, (_, glop) in giap_bo.items()}
+    for gb, (_, glop) in giap_bo.items():
+        if gb == 'may-ve': continue
+        for l, a in glop.items(): luu(a, duong_giap[gb][l])
+    presets = [
+        {'id': 'goc', 'name': 'Gốc', 'ao': 'goc', 'quan': 'goc', 'armor': ''},
+        {'id': 'xanh', 'name': 'Đồ xanh (gen)', 'ao': 'gen-xanh', 'quan': 'gen-xanh', 'armor': ''},
+        {'id': 'giap-gen', 'name': 'Giáp (gen, tách từ cu-ti-giap)', 'ao': 'goc', 'quan': 'goc', 'armor': 'gen-tach'},
+        {'id': 'giap-1-anh', 'name': 'Giáp 1 ảnh + neo', 'ao': 'goc', 'quan': 'goc', 'armor': 'gen-mot-anh'},
+        {'id': 'may-ve', 'name': 'Đồ máy vẽ (lần 2)', 'ao': 'moi', 'quan': 'moi', 'armor': ''},
+        {'id': 'may-ve-giap', 'name': 'Máy vẽ + giáp máy vẽ', 'ao': 'moi', 'quan': 'moi', 'armor': 'may-ve'},
+    ]
+    presets = [p for p in presets if p['ao'] in bo and p['quan'] in bo and (not p['armor'] or p['armor'] in giap_bo)]
+    gen_so = json.load(open(os.path.join(DAY, 'nap-gen-that.json'), encoding='utf-8')) if os.path.exists(os.path.join(DAY, 'nap-gen-that.json')) else None
 
     data = {
         'name': 'Cu Tí mới (zed-moi) — chạy sang phải',
@@ -307,6 +348,10 @@ def main():
         'sheets': duong,
         'outfits': {b: {'name': BO[b], 'slots': bo_slots[b], 'sheets': duong_bo[b]} for b in bo},
         'defaultOutfit': {'ao': 'goc', 'quan': 'goc'},
+        'armorSets': {gb: {'name': giap_bo[gb][0], 'sheets': duong_giap[gb]} for gb in giap_bo},
+        'presets': presets,
+        'genImport': gen_so,
+        'genFullRows': {t: 'anh-gen-96/%s.png' % t for t in ('cu-ti-do-xanh-chay-12', 'cu-ti-giap-chay-12') if os.path.exists(os.path.join(DAY, 'anh-gen-96', t + '.png'))},
         'source': {
             'gameSheet': 'game/art/custom/zed-moi.sprite.json, dong_tac.chay (hàng 2, 12 khung, 0,6 giây/vòng)',
             'highResFrames': 'docs/anh-goc/zed/moi/03-chay-v4-gif/03-chay-v4/khung-01..12.png (ảnh nguồn của chính hàng đó)',
@@ -351,6 +396,9 @@ def main():
     luoi(anh, data)
     so_sanh(anh, data, game)
     gif(anh, data)
+    if 'gen-xanh' in data['outfits'] or len(data['armorSets']) > 1:
+        so_sanh_gen(anh, data, game)
+        gif_gen(anh, data)
     mau_gen(anh, data)
     html(data)
     print('xong: nền + đồ gốc = ảnh game 12/12 khung; đồ mới phủ kín (0 điểm lộ) ở 12/12 khung; %d sheet hợp lệ.' % len(tat_ca_duong(data)))
@@ -365,6 +413,7 @@ def luu(s, p):
 def tat_ca_duong(data):
     ds = list(data['sheets'].values())
     for b in data['outfits'].values(): ds += list(b['sheets'].values())
+    for b in data.get('armorSets', {}).values(): ds += [p for p in b['sheets'].values() if p not in ds]
     return ds
 
 
@@ -376,6 +425,7 @@ def kiem_sheets(data, game):
     vung = {r: np.concatenate([ndimage.binary_dilation(bong[:, i * O:(i + 1) * O], iterations=r) if r else bong[:, i * O:(i + 1) * O]
                                for i in range(N)], 1) for r in (0, 4, 8)}
     co_the_trong = {'frontShoulderArmor'}            # phần giáp vai dưới cẳng tay: chỉ có ở khung tay vung ngang vai
+    giap_gen = {p for gb, b in data.get('armorSets', {}).items() if gb != 'may-ve' for p in b['sheets'].values()}
     for p in tat_ca_duong(data):
         ten = os.path.splitext(os.path.basename(p))[0]
         fp = os.path.join(DAY, p)
@@ -386,7 +436,7 @@ def kiem_sheets(data, game):
         a = np.array(im)[:, :, 3]
         if a.min() != 0: loi.append('%s: không có nền trong suốt' % p)
         for i in range(N):
-            if ten not in co_the_trong and not a[:, i * O:(i + 1) * O].any(): loi.append('%s: khung %d trống' % (p, i))
+            if ten not in co_the_trong and p not in giap_gen and not a[:, i * O:(i + 1) * O].any(): loi.append('%s: khung %d trống' % (p, i))
         r = 0 if ten in TP.NEN else 8 if ten in GIAP else 4
         ngoai = int(((a > 0) & ~vung[r]).sum())
         if ngoai: loi.append('%s: %d điểm ảnh nằm ngoài nhân vật (lệch khung/pivot?)' % (p, ngoai))
@@ -513,6 +563,100 @@ def gif(anh, data):
     fr[0].save(os.path.join(DAY, 'chay-goc-moi.gif'), save_all=True, append_images=fr[1:], duration=int(1000 / data['fps']), loop=0, disposal=1)
 
 
+def ghep_preset(anh, data, i, p):
+    """Ghép khung i theo một bộ chọn nhanh (preset: áo, quần, bộ giáp)."""
+    lay = {}
+    gs = data['armorSets'].get(p['armor'], {}).get('sheets', {}) if p['armor'] else {}
+    for l in LOP:
+        kind = data['layerKinds'][l]
+        if kind == 'nen': q = data['sheets'][l]
+        elif kind == 'do': q = data['outfits'][p['ao'] if l in TP.SLOT['ao'] else p['quan']]['sheets'][l]
+        else: q = gs.get(l)
+        if q: lay[l] = anh[q][:, i * O:(i + 1) * O]
+    return TP.ghep(lay)
+
+
+def so_sanh_gen(anh, data, game):
+    """Ảnh soát đồ gen thật: gốc / ảnh gen kéo về 96 / đồ xanh / giáp tách / giáp 1 ảnh + neo / áo đen còn lộ — 12 khung, ×4."""
+    Z = 4; CW, CH = (X1 - X0) * Z, (Y1 - Y0) * Z; LW = 260; TOP = 26
+    P = {p['id']: p for p in data['presets']}
+    gi = data.get('genImport') or {}
+    rgen = {t: np.array(Image.open(os.path.join(DAY, q)).convert('RGBA')) for t, q in data.get('genFullRows', {}).items()}
+    kh = gi.get('khopHinh', {})
+    def nh_iou(t):
+        s = kh.get(t, [])
+        lech = [x['khung'] for x in s if x['lechDang']]
+        return 'IoU hình bóng %.2f–%.2f' % (min(x['iou96'] for x in s), max(x['iou96'] for x in s)) + ('\nlệch dáng: khung ' + ', '.join(map(str, lech)) if lech else '\nkhông khung nào lệch rõ') if s else ''
+    rows = [('Gốc (ảnh game)', 'game')]
+    if 'cu-ti-do-xanh-chay-12' in rgen: rows.append(('Ảnh gen đồ xanh\nkéo về ô 96\n' + nh_iou('cu-ti-do-xanh-chay-12'), ('gen', 'cu-ti-do-xanh-chay-12')))
+    if 'xanh' in P: rows.append(('Đồ xanh (gen) trên\nnền cơ thể game', ('p', 'xanh')))
+    if 'xanh' in P and gi.get('doXanh'): rows.append(('Chỗ ảnh gen không phủ\nvùng đồ gốc, đã lấp\n(vàng, còn nhìn thấy):\n%d / %d điểm đồ' % (sum(x['lapConThay'] for x in gi['doXanh']), sum(x['diemDoNhinThay'] for x in gi['doXanh'])), 'lap'))
+    if 'cu-ti-giap-chay-12' in rgen: rows.append(('Ảnh gen Cu Tí giáp\nkéo về ô 96\n' + nh_iou('cu-ti-giap-chay-12'), ('gen', 'cu-ti-giap-chay-12')))
+    P['_may-ve-tren-goc'] = {'id': '_', 'name': 'Giáp máy vẽ (trên đồ gốc)', 'ao': 'goc', 'quan': 'goc', 'armor': 'may-ve'}
+    for pid, ab in (('giap-gen', 'gen-tach'), ('giap-1-anh', 'gen-mot-anh'), ('_may-ve-tren-goc', 'may-ve')):
+        if pid not in P or ab not in data['armorSets']: continue
+        tong = sum(c['aoDenLoKhiCoGiap'][ab] for c in data['checks'])
+        tong0 = sum(c['aoDenThanTren'] for c in data['checks'])
+        rows.append((P[pid]['name'] + '\náo đen còn lộ (đỏ):\n%d / %d điểm' % (tong, tong0), ('lo', pid, ab)))
+    img = Image.new('RGB', (LW + N * CW, TOP + len(rows) * CH), (250, 250, 250))
+    d = ImageDraw.Draw(img)
+    for c in range(N): d.text((LW + c * CW + 6, 6), 'khung %d' % c, fill=(0, 0, 0), font=FNT)
+    for r, (ten, cfg) in enumerate(rows):
+        d.multiline_text((8, TOP + r * CH + 10), ten, fill=(0, 0, 0), font=FNT, spacing=3)
+        for c in range(N):
+            ch = o_ca_ro(O, O, 4)
+            if cfg == 'game': f = game[:, c * O:(c + 1) * O]
+            elif cfg[0] == 'gen': f = rgen[cfg[1]][:, c * O:(c + 1) * O]
+            elif cfg[0] == 'p': f = ghep_preset(anh, data, c, P[cfg[1]])[0]
+            elif cfg == 'lap':
+                f = ghep_preset(anh, data, c, P['xanh'])[0].copy()
+                f[:, :, 3] = (f[:, :, 3] * 0.45).astype(np.uint8)
+                lap = lap_mask(anh, data, c, rgen.get('cu-ti-do-xanh-chay-12'))
+                f[lap] = (255, 200, 0, 255)
+            else:
+                g, top = ghep_preset(anh, data, c, P[cfg[1]])
+                f = g.copy()
+                yy = np.mgrid[0:O, 0:O][0]
+                ao = anh[data['outfits']['goc']['sheets']['torsoOutfit']][:, c * O:(c + 1) * O, 3] > 0
+                lo = ao & (top == TP.IDX['torsoOutfit']) & (yy <= data['frames'][c]['joints']['beltTop'][1])
+                f[lo] = (255, 0, 0, 255)
+            ch.alpha_composite(Image.fromarray(np.ascontiguousarray(f)))
+            x0, y0 = LW + c * CW, TOP + r * CH
+            img.paste(ch.crop((X0, Y0, X1, Y1)).resize((CW, CH), Image.NEAREST), (x0, y0))
+            d.rectangle([x0, y0, x0 + CW - 1, y0 + CH - 1], outline=(190, 190, 190))
+    img.save(os.path.join(DAY, 'so-sanh-gen.png'), optimize=True)
+
+
+def lap_mask(anh, data, c, G):
+    """Điểm ảnh của bộ đồ xanh không lấy từ ảnh gen cùng chỗ (đã lấp bằng màu gần nhất)."""
+    m = np.zeros((O, O), bool)
+    if G is None: return m
+    g = G[:, c * O:(c + 1) * O]
+    _, top = ghep_preset(anh, data, c, {'ao': 'gen-xanh', 'quan': 'gen-xanh', 'armor': ''})
+    for l in TP.DO:
+        a = anh[data['outfits']['gen-xanh']['sheets'][l]][:, c * O:(c + 1) * O]
+        m |= (top == TP.IDX[l]) & ((g[:, :, 3] == 0) | (np.abs(a[:, :, :3].astype(int) - g[:, :, :3].astype(int)).sum(2) > 0))
+    return m
+
+
+def gif_gen(anh, data):
+    """GIF chạy: gốc | đồ xanh (gen) | giáp (gen tách) | giáp 1 ảnh + neo (×4)."""
+    Z = 4; W, H = (X1 - X0), (Y1 - Y0)
+    P = {p['id']: p for p in data['presets']}
+    cot = [(t, P[k]) for t, k in (('gốc', 'goc'), ('đồ xanh (gen)', 'xanh'), ('giáp gen tách', 'giap-gen'), ('giáp 1 ảnh+neo', 'giap-1-anh')) if k in P]
+    fr = []
+    for c in range(N):
+        im = Image.new('RGB', (len(cot) * (W * Z + 8) - 8, H * Z + 24), (236, 233, 224))
+        d = ImageDraw.Draw(im)
+        for j, (nhan, p) in enumerate(cot):
+            ch = Image.new('RGBA', (O, O), (236, 233, 224, 255))
+            ch.alpha_composite(Image.fromarray(ghep_preset(anh, data, c, p)[0]))
+            im.paste(ch.crop((X0, Y0, X1, Y1)).convert('RGB').resize((W * Z, H * Z), Image.NEAREST), (j * (W * Z + 8), 24))
+            d.text((j * (W * Z + 8) + 6, 4), nhan, fill=(0, 0, 0), font=FNT)
+        fr.append(im.quantize(colors=255, method=Image.MEDIANCUT, dither=Image.NONE))
+    fr[0].save(os.path.join(DAY, 'chay-gen.gif'), save_all=True, append_images=fr[1:], duration=int(1000 / data['fps']), loop=0, disposal=1)
+
+
 XANH = (0, 255, 0, 255)
 
 
@@ -545,7 +689,7 @@ def mau_gen(anh, data):
 def html(data):
     tmpl = open(os.path.join(DAY, 'kiem-tra.tmpl.html'), encoding='utf-8').read()
     anh = {}
-    for p in tat_ca_duong(data):
+    for p in tat_ca_duong(data) + list(data.get('genFullRows', {}).values()):
         anh[p] = 'data:image/png;base64,' + base64.b64encode(open(os.path.join(DAY, p), 'rb').read()).decode()
     out = tmpl.replace('/*__DATA__*/null', json.dumps(data, ensure_ascii=False)).replace('/*__ANH__*/null', json.dumps(anh))
     open(os.path.join(DAY, 'kiem-tra.html'), 'w', encoding='utf-8').write(out)
