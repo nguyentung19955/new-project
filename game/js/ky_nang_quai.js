@@ -95,6 +95,9 @@
     echPhinh: 'Ếch Phình phình to rồi nảy tới nổ ở vòng đỏ: chạy ra xa. Đánh nổ nó sớm thì nó nổ trúng quái đứng gần.',
     maDa: 'Ma Da ném bầu nước, chỗ rơi thành xoáy nước kéo bạn vào rồi bắn nước: chạy ngược ra ngoài vòng đỏ.',
     traiGai: 'Trai Sông Gai khép vỏ thì không ăn đòn phía trước; há vỏ thì bắn năm viên ngọc nảy theo vạch đỏ: né vạch, đánh từ phía sau.',
+    // Vùng 4 tinh anh (bước 3 phiên 3A): cùng câu với js/chieu_trum.js MEO3A (bảng thua đọc ở đây)
+    raiCaChua: 'Rái Cá Thủ Lĩnh quăng lưới vào vòng đỏ: chạy ra khỏi vòng. Mắc lưới thì bấm Né liên tục để giãy, rồi tránh nón lửa của đuốc.',
+    cocChua: 'Cóc Tía Chúa thè lưỡi theo vạch đỏ kéo bạn lại rồi dậm lá sen: bị kéo thì lăn ra khỏi vòng. Mưa bọt rơi thành vòng quanh bạn: đứng yên giữa vòng, nổi giận thì bước ra.',
   };
   const tenQuai = (id) => { const d = G.monsterArt && G.monsterArt._defs && G.monsterArt._defs[id]; return (d && d.ten) || id; };
   // js/stage.js (bảng thua): khoá W.hurtBy là mã hình (js/combat.js hurtKey) → [tên con, mẹo]

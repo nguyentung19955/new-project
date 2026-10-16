@@ -583,6 +583,10 @@
       const MOI = { rusher: 'raiCa', swarm: 'diaTrau', shield: 'baBa', archer: 'cocTia', nimble: 'ranNuoc', kami: 'echPhinh', bomber: 'maDa', spiky: 'traiGai' };
       for (const k in MOI) M4[k][3] = MOI[k];
     }
+    // Bước 3 phiên 3A (docs/review/ke-hoach-cai-thien/vung-4-3a/bao-cao.md): 2 tinh anh + trùm nhỏ vùng 4 có mã + chiêu riêng (js/chieu_trum.js,
+    // js/boss.js khối trùm nhỏ), hình tạm = con gần giống nhuộm màu (MA.hinhTam). Tắt riêng: ?trumsong=0 (G.TRUM_SONG = false) → mượn Hang biển như phiên 1.
+    if (G.TRUM_SONG === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]trumsong=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.TRUM_SONG = !tat; }
+    if (G.TRUM_SONG) { M4.elite[3] = ['raiCaChua', 'cocChua']; M4.mini[3] = 'caTre'; }
   }
   // Vùng dùng để VẼ (theme phòng, nền, hình vẽ code dự phòng) của vùng r: vùng 4 còn mượn hình thì vẽ như vùng mượn.
   G.vungVe = (r) => (r === 3 && G.VUNG4_MUON != null ? G.VUNG4_MUON : r);

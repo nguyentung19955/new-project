@@ -53,7 +53,7 @@ const sx = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Ar
       const tatCa = [];
       // 3 vùng đầu (Sổ chưa có trang vùng 4 Sông sâu — bước 3 phiên 2A: 8 quái mới chưa vào sổ, xem docs/review/ke-hoach-cai-thien/vung-4-2a/bao-cao.md)
       for (const k of ['rusher', 'swarm', 'shield', 'archer', 'nimble', 'kami', 'bomber', 'spiky']) tatCa.push(...M[k].slice(0, 3));
-      M.elite.forEach((a) => tatCa.push(...a)); tatCa.push(...M.mini, ...Object.values(M.boss));
+      M.elite.slice(0, 3).forEach((a) => tatCa.push(...a)); tatCa.push(...M.mini.slice(0, 3), ...Object.values(M.boss)); // tinh anh / trùm nhỏ vùng 4 (bước 3 phiên 3A) chưa vào sổ
       const loai = {}; CF.trang.forEach((t) => { loai[t[2]] = (loai[t[2]] || 0) + 1; });
       const heDung = CF.trang.every((t) => (t[2] === 'trum' ? t[3] === null : G.ELS.includes(t[3])));
       // tổng thưởng cả game

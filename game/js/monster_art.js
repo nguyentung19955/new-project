@@ -2513,5 +2513,37 @@ for (const id of Object.keys(MA.hinhTam)) {
 }
 })(); } catch (e) { MA.loi.push('song: ' + (e && e.stack || e)); if (typeof console !== 'undefined') console.error('monster_art song', e); }
 // ----- hết song -----
+// ----- song3a (bước 3 vùng 4, phiên 3A — docs/review/ke-hoach-cai-thien/vung-4-3a/bao-cao.md) -----
+// 2 tinh anh + trùm nhỏ vùng 4 CHƯA CÓ ẢNH: cùng cách làm hình tạm với khối "song" ở trên (MA.hinhTam + đổi màu lưới, js/ky_nang_quai.js KN.veTam
+// vẽ ảnh con mượn qua ctx.filter). locP2: phép lọc riêng cho pha 2 của trùm nhỏ (js/chieu_trum.js đổi lúc vẽ). Chiêu: js/chieu_trum.js, js/boss.js.
+// Có ảnh thật (game/art/custom/<mã>.sprite.json) thì ảnh đó tự thay, hết nhuộm. Tệp nguồn ghép chưa có khối này: ghép lại thì chép theo.
+try { (function () {
+if (!MA.hinhTam || !MA._doiMau) return;
+const MOI = {
+  raiCaChua: { muon: 'tuongMa', loai: 'tinhanh', ten: 'Rái Cá Thủ Lĩnh', loc: [['sep', 0.75], ['hue', -10], ['sat', 1.3], ['bri', 0.88]] },     // ← Tướng Ma (đứng 2 chân, cầm vũ khí lửa)
+  cocChua: { muon: 'namPhongChua', loai: 'tinhanh', ten: 'Cóc Tía Chúa', loc: [['hue', 55], ['sat', 0.9], ['bri', 0.82]] },                 // ← Nấm Phồng Chúa (ngồi, tròn, nhảy dập)
+  caTre: { muon: 'cuaDa', loai: 'trumnho', ten: 'Cá Trê Râu Roi', loc: [['sep', 0.55], ['sat', 0.45], ['bri', 0.5], ['con', 1.25]],           // ← Cua Đá (thân dẹt, bò sát đất)
+    locP2: [['sep', 0.9], ['hue', -15], ['sat', 1.7], ['bri', 0.62], ['con', 1.2]] },                                                        //   pha 2: ánh cam (râu sáng cam)
+};
+let tt = 0;
+for (const id of Object.keys(MOI)) {
+  const T = MOI[id], g0 = DEFS[T.muon];
+  tt++;
+  if (!g0) { MA.loi.push('song3a: thiếu con mượn ' + T.muon + ' cho ' + id); continue; }
+  MA.hinhTam[id] = { muon: T.muon, loc: T.loc, locP2: T.locP2 || null };
+  const dm = MA._doiMau(T.loc), luoi0 = g0.luoi;
+  const d = Object.assign({}, g0, { ten: T.ten, vung: 'song', loai: T.loai, tt, hinhTam: T.muon });
+  d.luoi = function (ph, hv) {
+    const g = luoi0(ph, hv), h = Object.assign({}, g);
+    for (const k of ['d', 'pre', 'sauVien']) if (Array.isArray(g[k])) h[k] = g[k].map(dm);
+    h.bb = null; return h;
+  };
+  const p0 = g0.parts, doiP = (a) => (a || []).map((q) => (q && (q.mau || q.kmau) ? Object.assign({}, q, q.mau ? { mau: q.mau.map(dm) } : {}, q.kmau ? { kmau: q.kmau.map(dm) } : {}) : q));
+  d.parts = typeof p0 === 'function' ? (ph, hv) => doiP(p0(ph, hv)) : doiP(p0);
+  d.anims = {}; for (const k of Object.keys(g0.anims || {})) d.anims[k] = typeof g0.anims[k] === 'function' ? g0.anims[k] : Object.assign({}, g0.anims[k]);
+  def(id, d);
+}
+})(); } catch (e) { MA.loi.push('song3a: ' + (e && e.stack || e)); if (typeof console !== 'undefined') console.error('monster_art song3a', e); }
+// ----- hết song3a -----
 MA._xong();
 })();

@@ -602,8 +602,273 @@
         } });
     };
   }
+  // =====================================================================
+  // VÙNG 4 SÔNG SÂU — PHIÊN 3A (docs/review/ke-hoach-cai-thien/vung-4-3a/bao-cao.md; KE-HOACH bước 3 mục 2.2, 2.3)
+  // Rái Cá Thủ Lĩnh (tinh anh, Lửa): Quăng lưới chài → Quét đuốc. Cóc Tía Chúa (tinh anh, Độc): Lưỡi kéo → Dậm lá sen; Mưa bọt.
+  // Cá Trê Râu Roi (trùm nhỏ, 2 pha): Quất râu (X / pha 2 bánh xe xoay), Phun bùn (vũng trơn), Lặn bùn (gợn đuổi, trồi lộ bụng),
+  // chống đứng sát mép (bùn phụt dọc chân tường). Mọi đòn có vùng đỏ báo trước; lưới / kéo không bao giờ dồn bé vào đòn không kịp né:
+  // đòn kế tiếp luôn báo trước tới SAU lúc bé được thả + sauLuoi / sau lúc kéo xong + dap.bao.
+  // Tắt: ?trumsong=0 (js/data.js G.TRUM_SONG: vùng 4 dùng tinh anh / trùm nhỏ mượn Hang biển như phiên 1). Số: bảng S3A (giây, điểm ảnh, × sát thương).
+  const S3A = /*S3A*/{
+    "raiCaLuoi": { "r": 34, "bao": 1.0, "sat": 0.6, "giu": 1.0, "giay": 0.35, "sauLuoi": 0.9, "nonBao": 0.7, "nonR": 92, "span": 1.1, "nonSat": 1.2, "vet": 3, "vetR": 14, "vetSat": 0.5, "vetGiay": 2.5, "con": 2, "conHp": 0.45 },
+    "cocLuoi": { "dai": 150, "min": 60, "rong": 16, "bao": 0.7, "sat": 0.5, "keo": 0.25, "cach": 26, "dapR": 56, "dapBao": 0.9, "dapSat": 1.2 },
+    "cocBot": { "so": 6, "R": 46, "r": 16, "bao": 1.0, "cach": 0.1, "sat": 0.8, "giua": 0.6 },
+    "caTreRau": { "dai": 112, "rong": 18, "bao": 0.7, "sat": 1.2, "lan": 3, "buoc": 0.5236, "bao2": 0.6, "cach": 0.6, "dai2": 120, "sat2": 1.0 },
+    "caTreBun": { "so": 3, "r": 18, "bay": 0.8, "lech": 38, "sat": 0.8, "vung": 3.0, "vr": 22 },
+    "caTreLan": { "xuong": 0.35, "duoi": 1.5, "toc": 52, "bao": 0.6, "r": 30, "sat": 1.3, "lo": 1.5, "lan2": 2 },
+    "caTreMep": { "mep": 40, "giu": 1.5, "so": 5, "cach": 30, "sau": 20, "r": 24, "bao": 0.8, "sat": 0.7, "nghi": 3.0 }
+  }/*HET-S3A*/;
+  CT.S3A = S3A;
+  const TEN3A = { raiCaLuoi: 'Quăng lưới chài', raiCaDuoc: 'Quét đuốc', cocLuoi: 'Lưỡi kéo', cocDap: 'Dậm lá sen', cocBot: 'Mưa bọt',
+    caTreRau: 'Quất râu', caTreXoay: 'Quất râu xoay', caTreBun: 'Phun bùn', caTreLan: 'Lặn bùn', caTreMep: 'Bùn phụt' };
+  CT.TEN3A = TEN3A;
+  const H3 = () => (G.mob && G.mob.H) || null;
+  const dur = (id, a) => { const m = G.monsterArt; return (m && id && m.dur(id, a)) || 0.6; };
+  const choiE = (e, n, spd) => { const H = H3(); if (H && H.play) H.play(e, n, spd); else e.an = { n, t: 0, spd: spd || 1 }; };
+  // vệt chuyển động kéo / thả: bỏ bước nếu sẽ đưa bé vào vùng đỏ sắp nổ (< 0,25 giây) mà bé đang đứng ngoài (như keo() ở trên)
+  function datBe(P, x, y) {
+    const w = W(), Q = { x: clamp(x, w.x0, w.px1 != null ? w.px1 : w.x1), y: clamp(y, w.y0, w.y1) };
+    for (const z of w.zones) if (z.team !== 'player' && z.team !== 'fx' && z.dmg && z.t > 0 && z.t < 0.25 && !z.wall && !z.ct && G.inZone(z, Q) && !G.inZone(z, P)) return false;
+    P.x = Q.x; P.y = Q.y; return true;
+  }
+  // ---------- Lưới chài trên em bé: đứng yên tại chỗ P.luoiT giây, mỗi lần bấm Né (cú lộn bị huỷ) bớt S.giay giây ----------
+  function batLuoi(P, giu) {
+    if (!P || P.dead) return;
+    const moi = !(P.luoiT > 0);
+    P.luoiT = Math.max(P.luoiT || 0, giu); P.luoiX = P.x; P.luoiY = P.y; P.luoiInv = P.inv || 0;
+    if (moi) {
+      FX('text', P.x, P.y - 50, 'Mắc lưới! Bấm Né để giãy', '#ffd23f', 8); // chuỗi tĩnh: dịch lúc vẽ (js/ngon_ngu_en.js)
+      vat({ x: P.x, y: P.y, buoc: (o) => { const Q = W().P; if (Q) { o.x = Q.x; o.y = Q.y; } return !!Q && Q.luoiT > 0 && !Q.dead; },
+        ve(c, o) { // lưới: vòng dây + ô mắt lưới quanh chân bé, rung khi giãy
+          const Q = W().P, j = Q && Q.luoiGiay > 0 ? (Math.floor(G.time * 30) % 2 ? 1 : -1) : 0, x = o.x + j, y = o.y;
+          for (let i = -12; i <= 12; i += 4) { p(c, x + i, y - 26 + Math.abs(i) * 0.5, 1, 26 - Math.abs(i) * 0.5, 'rgba(230,214,170,0.75)'); }
+          for (let k = 0; k < 6; k++) { const yy = y - 24 + k * 4.5; p(c, x - 12 + k, yy, 24 - 2 * k, 1, 'rgba(230,214,170,0.75)'); }
+          elip(c, x, y, 15, 5, 'rgba(120,96,60,0.45)');
+          for (let k = 0; k < 6; k++) { const g = (k / 6) * TAU; p(c, x + Math.cos(g) * 14 - 1, y + Math.sin(g) * 4.5 - 1, 3, 2, '#5a4a30'); } // chì lưới
+        } });
+    }
+  }
+  function tickLuoi(P, dt) {
+    if (!P) return;
+    if (P.luoiGiay > 0) P.luoiGiay -= dt;
+    if (!(P.luoiT > 0)) return;
+    const w = W();
+    if (P.dead || w.over || w.safe) { P.luoiT = 0; return; }
+    P.luoiT -= dt;
+    if (P.dodgeT > 0) { // bấm Né lúc mắc lưới: không lộn được, giãy bớt thời gian bị giữ (không được bất tử của cú lộn)
+      P.dodgeT = 0; P.dodgeCd = 0; P.inv = Math.min(P.inv, P.luoiInv); P.luoiT -= S3A.raiCaLuoi.giay; P.luoiGiay = 0.15;
+      FX('burst', P.x, P.y - 14, '#e6d6aa', 5, 40);
+    }
+    P.luoiInv = P.inv || 0;
+    P.dashT = 0; P.slideT = 0;
+    P.x = P.luoiX; P.y = P.luoiY; P.moving = false;
+    if (P.luoiT <= 0) { P.luoiT = 0; FX('burst', P.x, P.y - 14, '#e6d6aa', 10, 70); }
+  }
+  // ---------- Rái Cá Thủ Lĩnh · QUĂNG LƯỚI CHÀI → QUÉT ĐUỐC ----------
+  // Vòng đỏ to ở chỗ bé (bao giây); trúng thì mắc lưới giu giây. Lúc lưới rơi: đuốc quét hình nón về phía bé, báo trước nonBao giây
+  // (mắc lưới: tới SAU lúc được thả + sauLuoi). Đuốc quét xong để lại vệt lửa dầu (vết vũng lửa nhỏ). Nổi giận (≤ 35% máu): gọi 2 Rái Cá con (một lần).
+  function raiCaLuoi(e, P, a, T, D, o) {
+    const S = S3A.raiCaLuoi, tok = {}, w = W(), q = trong(P.x, P.y, 8);
+    e.skillName = TEN3A.raiCaLuoi;
+    o.ct = tok; o.T = Math.max(T, (G.noiGian && G.noiGian.baoTinhAnh ? G.noiGian.baoTinhAnh(e, S.bao, true) : S.bao)); o.anim1 = 'atk';
+    o.end = o.T + S.giu + S.sauLuoi + 0.5;
+    let duoc = null;
+    canhChieu(e, tok, o.end + 0.2, (choang) => { if (choang && duoc && duoc.t > 0) duoc.dead = true; });
+    G.mobZone('circle', { x: q[0], y: q[1], r: S.r }, o.T, e.dmg * S.sat, null, { src: e, cancel: true, skill: TEN3A.raiCaLuoi,
+      onHit: () => batLuoi(W().P, S.giu),
+      onFire: (z) => {
+        FX('burst', z.x, z.y - 4, '#e6d6aa', 12, 60); G.sfx('swing', 0.7);
+        if (!song(e, tok)) return;
+        const Q = W().P, bao = Q && Q.luoiT > 0 ? Q.luoiT + S.sauLuoi : S.nonBao, g = Math.atan2(Q.y - e.y, Q.x - e.x);
+        mat(e, g); if (e.act) e.act.a = g;
+        duoc = G.mobZone('cone', { x: e.x, y: e.y, ang: g, r: S.nonR, span: S.span }, bao, e.dmg * S.nonSat, 'fire', { src: e, cancel: true, melee: true, skill: TEN3A.raiCaDuoc,
+          onFire: () => {
+            if (e.dead) return;
+            choiE(e, 'atk', 1.2); G.sfx('swing', 1.1);
+            for (let i = 0; i < S.vet; i++) { const d0 = S.nonR * (0.35 + 0.55 * (i / Math.max(1, S.vet - 1))), xx = clamp(e.x + Math.cos(g) * d0, w.x0, w.x1), yy = clamp(e.y + Math.sin(g) * d0, w.y0, w.y1); G.zoneCircle(xx, yy, S.vetR, 0, e.dmg * S.vetSat, 'fire', { pool: true, life: S.vetGiay, tick: 0.3, src: e }); }
+          } });
+        if (e.act && e.act.ct === tok) e.act.end = Math.max(e.act.t + bao + 0.45, 0); // chiêu hết ngay sau cú quét (không đứng chờ thừa)
+      } });
+    // nổi giận: gọi 2 Rái Cá con một lần (quái phụ: tan khi dọn phòng, như bầy được gọi của Xạ thủ)
+    if (e.ngGian && !e.goiCon && w.ents.length < 9 && H3()) {
+      e.goiCon = true;
+      for (let i = 0; i < S.con; i++) { const g2 = a + PI + (i ? 0.9 : -0.9); H3().summon('rusher', e.x + Math.cos(g2) * 30, e.y + Math.sin(g2) * 22, { hpMult: S.conHp, sumBy: e }); }
+      FX('text', e.x, e.y - (e.h || 30) - 18, 'Gọi đàn!', '#ffb070', 8);
+    }
+  }
+  // ---------- Cóc Tía Chúa · LƯỠI KÉO → DẬM LÁ SEN ----------
+  // Đường đỏ thẳng từ cóc tới bé (bao giây). Trúng: bé bị kéo về sát cóc trong keo giây (không mất máu thêm khi kéo), rồi vòng đỏ dậm lá sen
+  // quanh cóc dapBao giây (tính TỪ LÚC KÉO XONG) — lăn hoặc đi ra ngoài vòng là né. Không trúng: vẫn dậm (bé đứng xa thì chẳng sao).
+  function cocLuoi(e, P, a, T, D, o) {
+    const S = S3A.cocLuoi, tok = {}, L = clamp(Math.hypot(P.x - e.x, P.y - e.y) + 20, S.min, S.dai);
+    e.skillName = TEN3A.cocLuoi;
+    o.ct = tok; o.T = T; o.end = T + S.keo + S.dapBao + 0.45;
+    let keo = null;
+    canhChieu(e, tok, o.end + 0.2);
+    G.mobZone('line', { x: e.x, y: e.y, ang: a, len: L, w: S.rong }, T, e.dmg * S.sat, 'poison', { src: e, cancel: true, skill: TEN3A.cocLuoi,
+      onHit: () => { const Q = W().P; if (Q && !Q.dead && !(Q.luoiT > 0)) keo = { x0: Q.x, y0: Q.y }; },
+      onFire: () => {
+        G.sfx('swing', 1.4);
+        const tre = keo ? S.keo : 0;
+        // lưỡi thè ra (hình): vạch hồng từ miệng cóc tới cuối đường, co về
+        vat({ x: e.x, y: e.y, buoc: (v) => v.age < 0.3 + tre, ve(c, v) { const u = v.age < 0.08 ? v.age / 0.08 : clamp(1 - (v.age - 0.08) / (0.22 + tre), 0, 1), n = Math.round((L * u) / 3); for (let i = 0; i < n; i++) p(c, e.x + Math.cos(a) * i * 3 - 1, e.y - 8 + Math.sin(a) * i * 3, 3, 2, i % 3 ? '#e86a9a' : '#ffb0c8'); } });
+        if (keo) { const Q = W().P, x1 = e.x + Math.cos(a) * S.cach, y1 = e.y + Math.sin(a) * S.cach; vat({ x: Q.x, y: Q.y, buoc: (v) => { if (e.dead || Q.dead) return false; const u = clamp(v.age / S.keo, 0, 1); datBe(Q, keo.x0 + (x1 - keo.x0) * u, keo.y0 + (y1 - keo.y0) * u); return u < 1; } }); FX('text', Q.x, Q.y - 46, 'Bị kéo!', '#ff9ac0', 8); }
+        if (!song(e, tok)) return;
+        G.mobZone('circle', { x: e.x, y: e.y, r: S.dapR }, tre + S.dapBao, e.dmg * S.dapSat, 'poison', { src: e, cancel: true, melee: true, skill: TEN3A.cocDap,
+          onFire: (z) => { W().shake = Math.max(W().shake, 0.15); if (!anh('hu-dap-san', z.x, z.y, { sc: S.dapR / 40, t: 0.4, gian: true })) FX('burst', z.x, z.y - 4, '#b46ad4', 16, 80); } });
+        seq0(e, tok, tre + S.dapBao * 0.6, () => choiE(e, 'chieu1', 1.4));
+      } });
+  }
+  // hẹn giờ của tinh anh (G.later), chỉ chạy khi chiêu còn sống
+  function seq0(e, tok, t, f) { G.later(Math.max(0, t), () => { if (song(e, tok)) f(); }); }
+  // ---------- Cóc Tía Chúa · MƯA BỌT: 6 bọt độc rơi thành vòng quanh chỗ bé (giữa vòng trống). Nổi giận: thêm 1 bọt rơi giữa vòng sau giua giây ----------
+  function cocBot(e, P, a, T, D, o) {
+    const S = S3A.cocBot, tok = {}, c0 = trong(P.x, P.y, 6), g0 = G.rnd() * TAU;
+    e.skillName = TEN3A.cocBot;
+    o.ct = tok; o.T = T;
+    // bọt k rơi sau t0 + k × cach giây kể từ lúc ra chiêu (báo trước ≥ bao); bọt giữa rơi sau bọt cuối giua giây
+    const t0 = Math.max(S.bao, T + 0.3), giua = e.ngGian ? 1 : 0, cuoi = t0 + (S.so - 1) * S.cach;
+    o.end = Math.max(D, T + 0.4);
+    const bot = (x, y, t) => G.mobZone('circle', { x, y, r: S.r }, t, e.dmg * S.sat, 'poison', { src: e, knGiu: true, skill: TEN3A.cocBot, onFire: (z) => { if (!anh('hu-no-doc', z.x, z.y, { sc: S.r / 40, t: 0.4, gian: true, mr: true })) FX('burst', z.x, z.y - 4, '#c47ae8', 10, 60); } });
+    for (let k = 0; k < S.so; k++) { const g = g0 + (k / S.so) * TAU, q = trong(c0[0] + Math.cos(g) * S.R, c0[1] + Math.sin(g) * S.R * ZK(), 4); bot(q[0], q[1], t0 + k * S.cach); }
+    if (giua) bot(c0[0], c0[1], cuoi + S.giua);
+  }
+  // ---------- Cá Trê Râu Roi (trùm nhỏ): móc ở thinkMini của js/boss.js — trả true nếu đã ra chiêu ----------
+  const treB = (b) => !!b && b.art === 'caTre' && G.TRUM_SONG !== false;
+  function choiB(b, n, spd, o) { b.an = Object.assign({ n, t: 0, spd: spd || 1 }, o || {}); }
+  // Quất râu (pha 1): 4 vạch đỏ hình chữ X quanh thân. Pha 2: bánh xe 4 nan quay chậm — lan đợt, mỗi đợt nan lệch buoc rad, đợt sau báo trước bao2 giây ngay khi đợt trước nổ.
+  function treRau(b, P, a, spd) {
+    const S = S3A.caTreRau, ph = b.phase | 0, n = ph >= 1 ? soNG(b, 'caTreXoay', 'lan', S.lan) : 1;
+    const T = Math.max(S.bao / spd, sanNG(b, true)), x = b.x, y = b.y, chieu = G.rnd() < 0.5 ? 1 : -1;
+    b.skillName = ph >= 1 ? TEN3A.caTreXoay : TEN3A.caTreRau;
+    const nan = (g0, t, dai, sat) => { for (let k = 0; k < 4; k++) vung(b, 'line', { x, y, ang: g0 + PI / 4 + (k * PI) / 2, len: dai, w: S.rong }, t, b.dmg * sat, null, { melee: true }); };
+    nan(a, T, ph >= 1 ? S.dai2 : S.dai, ph >= 1 ? S.sat2 : S.sat);
+    for (let j = 1; j < n; j++) { const t0 = T + (j - 1) * S.cach; seq(b, t0, () => { if (b.dead || (b.phase | 0) !== ph) return; nan(a + chieu * j * S.buoc, Math.max(S.bao2, sanNG(b, true)), S.dai2, S.sat2 * (j >= 2 ? satDot() : 1)); }); }
+    const het = T + (n - 1) * S.cach + (n > 1 ? Math.max(S.bao2, sanNG(b, true)) - S.cach : 0) + 0.35;
+    const du = dur(b.art, 'chieu1');
+    choiB(b, 'chieu1', clamp((0.5 * du) / T, 0.5, 3));
+    b.busy = Math.max(T + 0.4, het); b.wind = T;
+    seq(b, b.busy, () => met(b, 0.8)); // như trùm nhỏ cũ: mệt ngắn sau chiêu 1
+    return b.busy;
+  }
+  // Phun bùn: 3 cục bùn bay vòng cung tới chỗ bé (+ hai bên), bóng tròn báo chỗ rơi bay giây; rơi thành vũng bùn trơn vung giây (đi chậm 40%).
+  function treBun(b, P, a, spd) {
+    const S = S3A.caTreBun, T = Math.max(S.bay / spd, 0.6), c0 = trong(P.x, P.y, 6), nx = -Math.sin(a), ny = Math.cos(a), x0 = b.x, y0 = b.y;
+    b.skillName = TEN3A.caTreBun;
+    const so = soNG(b, 'caTreBun', 'so', S.so);
+    for (let k = 0; k < so; k++) {
+      const off = (k - (so - 1) / 2) * S.lech, q = trong(c0[0] + nx * off, c0[1] + ny * off * ZK(), 6), tk = T + k * 0.06;
+      tron(b, q[0], q[1], S.r, tk, b.dmg * S.sat, null, { cancel: true, onFire: (z) => {
+        FX('burst', z.x, z.y - 3, '#6a5634', 8, 50);
+        vat({ x: z.x, y: z.y, buoc: (v) => { const Q = W().P; if (Q && !Q.dead && ((Q.x - v.x) / S.vr) ** 2 + ((Q.y - v.y) / (S.vr * 0.6)) ** 2 <= 1) Q.knCham = Math.max(Q.knCham || 0, 0.12); return v.age < S.vung; },
+          ve(c, v) { const m = clamp((S.vung - v.age) / 0.4, 0, 1); c.save(); c.globalAlpha *= m; elip(c, v.x, v.y, S.vr, S.vr * 0.6, 'rgba(70,54,30,0.7)'); elip(c, v.x - 3, v.y - 1, S.vr * 0.55, S.vr * 0.25, 'rgba(140,116,70,0.55)'); p(c, v.x + 4, v.y - 2, 2, 1, '#c8b080'); c.restore(); } });
+      } });
+      // cục bùn đang bay (hình)
+      vat({ x: x0, y: y0, buoc: (v) => !b.dead && v.age < tk, ve(c, v) { const u = clamp(v.age / tk, 0, 1), xx = x0 + (q[0] - x0) * u, yy = y0 + (q[1] - y0) * u - Math.sin(u * PI) * 34 - 10; elip(c, xx, yy, 4, 3, '#4a3a20'); p(c, xx - 1, yy - 2, 2, 1, '#8a7448'); } });
+    }
+    choiB(b, 'tele', 0.7 / Math.max(0.3, T * 0.6));
+    seq(b, T * 0.6, () => choiB(b, 'atk', spd));
+    b.busy = T * 0.6 + dur(b.art, 'atk') / spd; b.wind = T;
+    return b.busy;
+  }
+  // Lặn bùn: chui xuống bùn (xuong), gợn bùn đuổi theo bé duoi giây (toc < tốc chạy của bé), dừng lại → vòng đỏ bao giây → trồi lên đớp.
+  // Pha 2: lặn lan2 lần liền. Trồi lần cuối: lộ bụng trắng lo giây (choáng, nhận thêm sát thương như "mệt sau chiêu").
+  function treLan(b, P, a, spd) {
+    const S = S3A.caTreLan, ph = b.phase | 0, n = ph >= 1 ? soNG(b, 'caTreLan', 'lan', S.lan2) : 1, bao = Math.max(S.bao / Math.max(1, spd * 0.9), sanNG(b, true) || 0.45);
+    b.skillName = TEN3A.caTreLan;
+    const mot = S.xuong + S.duoi + bao + 0.35, tong = n * mot;
+    b.busy = tong + 0.05; b.wind = S.xuong + S.duoi + bao;
+    const st = { ph };
+    for (let j = 0; j < n; j++) {
+      const t0 = j * mot;
+      seq(b, t0, () => { if (b.dead || (b.phase | 0) !== ph) return; choiB(b, 'spawn', dur(b.art, 'spawn') / S.xuong, { rev: true }); FX('burst', b.x, b.y, '#6a5634', 10, 60); G.sfx('swing', 0.6); });
+      seq(b, t0 + S.xuong, () => {
+        if (b.dead || (b.phase | 0) !== ph) return;
+        b.hidden = true; b.treLan = st;
+        const g = vat({ x: b.x, y: b.y,
+          buoc(v, dt, Q) {
+            if (b.dead || (b.phase | 0) !== ph || b.treLan !== st) { b.hidden = false; return false; }
+            if (v.age < S.duoi && Q && !Q.dead) { const dx = Q.x - v.x, dy = Q.y - v.y, l = Math.hypot(dx, dy); if (l > 2) { const k = Math.min(l, S.toc * dt); v.x += (dx / l) * k; v.y += (dy / l) * k * 0.8; } }
+            const w = W(); v.x = clamp(v.x, w.x0 + 6, w.x1 - 6); v.y = clamp(v.y, w.y0 + 2, w.y1 - 2);
+            b.x = v.x; b.y = v.y;
+            return v.age < S.duoi + bao + 0.02;
+          },
+          ve(c, v) { // gợn bùn: 3 vòng lăn tăn + bọt
+            for (let i = 0; i < 3; i++) { const u = ((v.age * 1.6 + i / 3) % 1), r = 6 + u * 14; c.save(); c.globalAlpha *= 1 - u; c.strokeStyle = '#8a7448'; c.lineWidth = 1; c.beginPath(); c.ellipse(Math.round(v.x), Math.round(v.y), r, r * 0.45, 0, 0, TAU); c.stroke(); c.restore(); }
+            p(c, v.x - 6 + (Math.floor(G.time * 12) % 3), v.y - 1, 4, 1, '#3a2c18'); p(c, v.x + 2 - (Math.floor(G.time * 12) % 3), v.y + 1, 4, 1, '#3a2c18');
+            for (let k = 0; k < 4; k++) { const g2 = G.time * 3 + k * 1.6; p(c, v.x + Math.cos(g2) * 7, v.y - 2 + Math.sin(g2) * 3, 1, 1, '#c8b080'); }
+          } });
+        // dừng đuổi → vòng đỏ ở chỗ gợn, nổ đúng lúc trồi lên
+        seq(b, S.duoi, () => {
+          if (b.dead || (b.phase | 0) !== ph || b.treLan !== st) return;
+          tron(b, g.x, g.y, S.r, bao, b.dmg * S.sat * (j >= 1 ? satDot() : 1), null, { melee: true, onFire: (z) => { if (!anh('hu-no-bang', z.x, z.y, { sc: S.r / 40, t: 0.35, gian: true, mr: true })) FX('burst', z.x, z.y - 6, '#8a7448', 16, 90); W().shake = Math.max(W().shake, 0.15); } });
+          seq(b, bao, () => {
+            if (b.dead || b.treLan !== st) { b.hidden = false; return; }
+            b.hidden = false; b.treLan = null; b.x = g.x; b.y = g.y;
+            choiB(b, 'spawn', 1.6);
+            if (j === n - 1) seq(b, 0.3, () => { met(b, S.lo); if (!b.dead) FX('text', b.x, b.y - (b.h || 50) - 8, 'Lộ bụng!', '#fff6c8', 9); });
+          });
+        });
+      });
+    }
+    return b.busy;
+  }
+  CT.caTre = function (b, k, P, d, a, spd) {
+    if (!treB(b)) return false;
+    if (b.an) b.an.ct = true;
+    if (k === 'atk') treBun(b, P, a, spd);
+    else if (k === 'chieu1') treRau(b, P, a, spd);
+    else treLan(b, P, a, spd);
+    if (b.an) b.an.ct = true;
+    return true;
+  };
+  // Chống đứng sát mép: bé đứng cách một mép < mep quá giu giây → bùn phụt so cột dọc chân tường mép đó (giữa hàng ngay chỗ bé), báo trước bao giây.
+  function treMep(b, P, dt) {
+    const S = S3A.caTreMep, w = W();
+    if (b.nghiMep > 0) b.nghiMep -= dt;
+    if (b.dead || !P || P.dead || w.over || (b.intro > 0 && b.invuln > 0)) { b.satMep = 0; return; }
+    const mep = [['tren', P.y - w.y0], ['duoi', w.y1 - P.y], ['trai', P.x - w.x0], ['phai', (w.px1 != null ? w.px1 : w.x1) - P.x]].filter((m) => m[1] < S.mep);
+    if (!mep.length) { b.satMep = 0; return; }
+    b.satMep = (b.satMep || 0) + dt;
+    if (b.satMep < S.giu || b.nghiMep > 0) return;
+    b.satMep = 0; b.nghiMep = S.nghi;
+    const ten = b.skillName; b.skillName = TEN3A.caTreMep;
+    for (const [m] of mep) for (let i = 0; i < S.so; i++) {
+      const k = (i - (S.so - 1) / 2) * S.cach, ngang = m === 'tren' || m === 'duoi';
+      const x = ngang ? P.x + k : m === 'trai' ? w.x0 + S.sau : (w.px1 != null ? w.px1 : w.x1) - S.sau;
+      const y = ngang ? (m === 'tren' ? w.y0 + S.sau * ZK() : w.y1 - S.sau * ZK()) : P.y + k * ZK();
+      if (x < w.x0 - 8 || x > w.x1 + 8 || y < w.y0 - 8 || y > w.y1 + 8) continue;
+      tron(b, x, y, S.r, S.bao + i * 0.04, b.dmg * S.sat, null, { fxKind: 'spout', skill: TEN3A.caTreMep, onFire: (z) => FX('burst', z.x, z.y - 8, '#6a5634', 8, 80) });
+    }
+    b.skillName = ten;
+    G.sfx('warn', 0.8);
+  }
+  CT.treMep = treMep;
+  // Tinh anh vùng 4: tên con cho bảng thua (js/combat.js hurtKey đọc e.knTen → mẹo riêng ở js/ky_nang_quai.js MEO) + dòng mẹo lần đầu gặp.
+  const MEO3A = {
+    raiCaChua: 'Rái Cá Thủ Lĩnh quăng lưới vào vòng đỏ: chạy ra khỏi vòng. Mắc lưới thì bấm Né liên tục để giãy, rồi tránh nón lửa của đuốc.',
+    cocChua: 'Cóc Tía Chúa thè lưỡi theo vạch đỏ kéo bạn lại rồi dậm lá sen: bị kéo thì lăn ra khỏi vòng. Mưa bọt rơi thành vòng quanh bạn: đứng yên giữa vòng, nổi giận thì bước ra.',
+  };
+  CT.MEO3A = MEO3A;
+  const daGap3A = new Set();
+  if (typeof G.mobInit === 'function') {
+    const init0 = G.mobInit;
+    G.mobInit = function (e, o) {
+      const kq = init0.apply(this, arguments);
+      if (e && MEO3A[e.art] && G.TRUM_SONG !== false) {
+        const d = G.monsterArt && G.monsterArt._defs && G.monsterArt._defs[e.art];
+        e.knTen = (d && d.ten) || e.art;
+        const w = W();
+        if (!daGap3A.has(e.art) && w && !w.banner && !G.noRender) { daGap3A.add(e.art); w.banner = { s: MEO3A[e.art], col: '#f1e6c6', t: 5, tip: true }; }
+      }
+      return kq;
+    };
+  }
+
   CT.elite = function (e, id, P, a, T, D, o) {
-    if (id === 'namPhongChua') namPhongNhay(e, P, a, T, D, o);
+    if (G.TRUM_SONG !== false && id === 'raiCaChua') raiCaLuoi(e, P, a, T, D, o);
+    else if (G.TRUM_SONG !== false && id === 'cocChua') { e.cocLuot = (e.cocLuot == null ? (G.rnd() < 0.5 ? 0 : 1) : e.cocLuot + 1) % 2; if (e.cocLuot) cocBot(e, P, a, T, D, o); else cocLuoi(e, P, a, T, D, o); }
+    else if (id === 'namPhongChua') namPhongNhay(e, P, a, T, D, o);
     else if (id === 'caNocChua') caNocLan(e, P, a, T, D, o);
     else if (id === 'huChua') huDau(e, P, a, T, D, o);
     else return false;
@@ -640,6 +905,8 @@
       else { z.x = o.x; z.y = o.y; if (o.chan) chan.push(o); }
     }
     const b = w.boss;
+    tickLuoi(P, dt); // vùng 4: lưới chài của Rái Cá Thủ Lĩnh giữ em bé
+    if (b && treB(b) && b.kind === 'mini') treMep(b, P, dt); // vùng 4: Cá Trê chống đứng sát mép
     if (b) {
       buocThan(b, dt);
       const st = b.ctPT;
@@ -725,6 +992,16 @@
     }
     return boss0(c, b);
   };
+  // Vùng 4 (phiên 3A), chỉ là hình: Cá Trê pha 2 nhuộm ánh cam (MA.hinhTam.caTre.locP2) thay màu pha 1 — js/ky_nang_quai.js KN.veTam đọc T.css.
+  const MAv = G.monsterArt;
+  if (MAv && MAv.hinhTam && MAv.locCss && typeof MAv.draw === 'function') {
+    const draw0 = MAv.draw;
+    MAv.draw = function (c, id, x, y, o) {
+      const T = MAv.hinhTam[id];
+      if (T && T.locP2) { T.css1 = T.css1 || MAv.locCss(T.loc); T.css2 = T.css2 || MAv.locCss(T.locP2); T.css = o && o.phase >= 2 ? T.css2 : T.css1; }
+      return draw0.apply(this, arguments);
+    };
+  }
   const enemy0 = A.enemy;
   A.enemy = function (c, e) {
     const k = e && e.ct, cao = (e && e.ctCao) || 0;

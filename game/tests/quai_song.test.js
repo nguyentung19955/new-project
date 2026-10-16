@@ -89,7 +89,7 @@ const LIB = `(() => {
     const bang = () => ({ art: G.MOB_ART, so: Object.keys(G.knQuai.SO), meo: G.knQuai.meo ? Object.keys(G.knQuai.SO).map((k) => G.knQuai.meo(k) && G.knQuai.meo(k)[1]) : [], q: G.QUAI_SONG, muon: G.VUNG4_MUON });
     const a = await A.goi(bang), b = await B.goi(bang), c = await C.goi(bang);
     dat(VAI.every((v, i) => a.art[v][3] === MA8[i]), 'bản thường: 8 vai vùng 4 = ' + MA8.join(', '));
-    dat(a.art.elite[3].join() === 'cuaTuong,caNocChua' && a.art.mini[3] === 'cuaDa' && a.art.boss.thuong === 'nguTinh' && a.muon === 1, 'tinh anh / trùm nhỏ / trùm vùng 4 vẫn mượn Hang biển (phiên 3A / 3B làm), VUNG4_MUON giữ 1');
+    dat(a.art.elite[3].join() === 'raiCaChua,cocChua' && a.art.mini[3] === 'caTre' && a.muon === 1, 'tinh anh / trùm nhỏ vùng 4 riêng (phiên 3A, tests/trum_song.test.js); VUNG4_MUON giữ 1 (trùm vùng: phiên 3B)');
     dat(b.q === false && VAI.every((v) => b.art[v][3] === b.art[v][1]), '?quaisong=0: 8 vai vùng 4 mượn Hang biển như phiên 1');
     dat(VAI.every((v) => c.art[v].length === 3) && c.q === undefined, '?vung4=0: 3 vùng, không có mã mới');
     dat(VAI.every((v) => JSON.stringify(a.art[v].slice(0, 3)) === JSON.stringify(c.art[v])) && JSON.stringify(a.art.elite.slice(0, 3)) === JSON.stringify(c.art.elite), 'mã quái 3 vùng cũ giống hệt ?vung4=0');

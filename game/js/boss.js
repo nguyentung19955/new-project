@@ -45,7 +45,7 @@
   const has = (b, type) => b.layers.some((l) => l.type === type);
 
   // Kích thước thân để đánh trúng (r: nửa bề ngang, hr: độ sâu, h: chiều cao hình)
-  const BODY = { mocTinh: [30, 14, 124], nguTinh: [36, 16, 100], hoTinh: [32, 14, 110], cuaDa: [26, 12, 68], namChua: [22, 12, 62], hoLua: [26, 12, 62] };
+  const BODY = { mocTinh: [30, 14, 124], nguTinh: [36, 16, 100], hoTinh: [32, 14, 110], cuaDa: [26, 12, 68], caTre: [26, 12, 68], namChua: [22, 12, 62], hoLua: [26, 12, 62] };
   const SPEED = { moc: 16, ngu: 36, ho: 60, mini: 30, thuong: 36 }; // thuong: Thuồng Luồng (vùng 4)
 
   G.makeBoss = function (kind, o) {
@@ -344,6 +344,7 @@
     cuaDa: { atk: 'Kẹp càng', chieu1: 'Đập càng rung sàn', chieu2: 'Tường tinh thể' }, // chiêu 2 (Cua Đá, Nấm Chúa): js/chieu_trum.js
     namChua: { atk: 'Phun bào tử', chieu1: 'Hàng nấm độc', chieu2: 'Nấm mẹ đẻ con' },
     hoLua: { atk: 'Cào', chieu1: 'Vồ lửa', chieu2: 'Gầm phun lửa' },
+    caTre: { atk: 'Phun bùn', chieu1: 'Quất râu', chieu2: 'Lặn bùn' }, // vùng 4 (phiên 3A): thân chiêu ở js/chieu_trum.js CT.caTre
   };
   // Phiên cân bằng (mục 11): mỗi trùm nhỏ một nhịp riêng (trước ba con dùng chung một kịch bản, 12 chiêu đầu gần như giống hệt).
   //  - Nấm Chúa: đứng xa rải bào tử, ưa Bão bào tử, nghỉ lâu giữa hai chiêu.
@@ -354,6 +355,8 @@
     namChua: { w: [1, 2, 1], wXa: [1, 3, 0], cd: [1.7, 1.35, 1.1], lap: false },
     cuaDa: { w: [3, 1, 2], wXa: [1, 2, 0], cd: [1.5, 1.2, 1.0], lap: false, combo: { chieu1: 'atk' } }, // (cua-tuong-kho: giữ nhịp, đổi tầm / hướng chiêu — G.CUA_SO)
     hoLua: { w: [3, 1, 2], wXa: [3, 2, 0], cd: [1.05, 0.85, 0.7], lap: true },
+    // Cá Trê Râu Roi (vùng 4, phiên 3A): gần thì hay quất râu, xa thì phun bùn / lặn bùn đuổi tới; nghỉ vừa (KE-HOACH bước 3 mục 2.3).
+    caTre: { w: [3, 1, 1], wXa: [0, 2, 2], cd: [1.4, 1.1, 0.9], lap: false },
   };
   G.MINI_NHIP = MINI_NHIP;
 
@@ -423,7 +426,9 @@
     b.skillName = (MINI_SK[id] && MINI_SK[id][k]) || (k === 'atk' ? 'Đòn thường' : k === 'chieu1' ? 'Chiêu 1' : 'Chiêu 2');
     aimFace(b, a);
     G.sfx('warn');
-    if (k === 'atk') {
+    // Vùng 4 (phiên 3A): Cá Trê Râu Roi — cả ba chiêu ở js/chieu_trum.js (CT.caTre đặt b.busy / b.wind, mệt sau chiêu); cờ ?trumsong=0 thì không có con này.
+    if (id === 'caTre' && G.chieuTrum && G.chieuTrum.caTre && G.chieuTrum.caTre(b, k, P, d, a, spd)) { /* chiêu riêng */ }
+    else if (k === 'atk') {
       const T = 0.75 / spd;
       play(b, 'tele', 0.7 / 0.75 * spd);
       later(b, T, () => play(b, 'atk', spd));
