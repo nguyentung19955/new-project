@@ -9,6 +9,7 @@
 //   5. Bot bất tử hạ Thuồng Luồng: không NaN, không lỗi; hạ xong trả lại sàn cũ (đi tới cửa / nhặt đồ được).
 //   6. Vẽ (VI + EN): phòng trùm lúc báo đuôi, sóng bờ, vòm, vệt độc, đổi pha, hạ xong — không lỗi; tên chiêu có tiếng Anh.
 //   7. Cờ: ?tlrieng=0 → Thuồng Luồng như phiên 1 (chiêu Ngư Tinh, sân thường); ?vung4=0 → không có gì.
+// Phiên 3C: chạy trên ?tl3c=0 (bản 3B); bản 3C có bài riêng tests/thuong_luong_3c.test.js.
 // Chạy: node game/tests/thuong_luong.test.js
 'use strict';
 const path = require('path'), { spawn } = require('child_process');
@@ -76,7 +77,8 @@ const CAI = () => {
 };
 
 (async () => {
-  const A = moTrang(''), B = moTrang('tldoihe=0'), Cq = moTrang('tlrieng=0'), D = moTrang('vung4=0');
+  // Phiên 3C: bài này giữ đo bản 3B (?tl3c=0 — pha 2, 3 mượn chiêu Ngư Tinh); bản mới (pha 2, 3 riêng, cảnh bỏ trốn): tests/thuong_luong_3c.test.js.
+  const A = moTrang('tl3c=0'), B = moTrang('tldoihe=0&tl3c=0'), Cq = moTrang('tlrieng=0'), D = moTrang('vung4=0');
   try {
     for (const T of [A, B, Cq]) await T.goi(CAI);
 
