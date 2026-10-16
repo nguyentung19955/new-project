@@ -4,8 +4,9 @@
 Vừa đi / chạy vừa ra đòn (js/zed_moi.js, G.CHAN_DON): thân trên khung ĐÒN (tới đáy đai) đặt lên chân khung ĐI / CHẠY (từ đáy đai),
 khớp TÂM ĐAI (không còn cắt giữa đùi + kéo giãn vùng nối như zed-eo-sua). Script này:
   1. đo hàng `di` (đi bộ) cả 4 bộ + `chay2tay` (chạy cầm thương / búa, bộ có hàng này) bằng do_eo / do_cat của cat-than.py → bo.<bộ>.di (trước đây đi + đánh mượn chân hàng chạy);
-  2. thêm vào MỖI khung đã có [y, x, c, l, r] hai số: [5] = tâm đai (cột nguồn, có thể .5), [6] = bề rộng đai — đo ở 3 hàng đai
-     (y−2..y), đoạn MÀU ĐAI liền dài nhất (nối khe ≤ 2). Đai bị tay che (rộng < 7 hoặc > 18) → dùng trung vị hàng đó;
+  2. thêm vào MỖI khung đã có [y, x, c, l, r] ba số: [5] = tâm đai (cột nguồn, có thể .5), [6] = bề rộng đai — mép trái / phải các
+     điểm MÀU ĐAI ở 4 hàng y−3..y. Đai bị tay che (rộng < 3 hoặc > 22) → dùng trung vị hàng đó;
+     hàng chân (chay, chay~16, di, chay2tay) dùng MỘT tâm chung cả hàng (trung vị) — thân không lắc theo đuôi đai bay;
      [7] = đáy đai đo lại (≥ 4 điểm màu đai / hàng; [0] cũ có khung bắt nhầm mắt đỏ — giữ [0] cho ?chandon=0).
 Các số cũ [0..4] giữ nguyên từng chữ (game cũ và ?chandon=0 vẫn đọc như trước). Chạy lại được nhiều lần.
 Chạy:  python3 docs/anh-goc/zed/eo-dai-17-10.py
@@ -16,7 +17,8 @@ import numpy as np
 DAY = os.path.dirname(os.path.abspath(__file__))
 sp = importlib.util.spec_from_file_location('cat_than', os.path.join(DAY, 'cat-than.py'))
 CT = importlib.util.module_from_spec(sp); sp.loader.exec_module(CT)
-RONG_MIN, RONG_MAX = 7, 18
+RONG_MIN, RONG_MAX = 3, 22
+HANG_CHAN = ('chay', 'chay~16', 'di', 'chay2tay')
 
 
 def day_dai(f, bo, y_cu):
@@ -34,28 +36,13 @@ def day_dai(f, bo, y_cu):
 
 
 def tam_dai(f, y, bo):
+    """(tâm, bề rộng) ĐAI: mép trái / phải các điểm MÀU ĐAI ở 4 hàng y−3..y (đai nhìn nghiêng chỉ vài điểm ảnh mỗi hàng nên lấy cả dải)."""
     al = f[..., 3] > 100
     h, s, v = CT.hsv(f)
-    dai = al & CT.MAU_DAI[bo](h, s, v)
-    L, R = [], []
-    for yy in (y - 2, y - 1, y):
-        row = dai[yy].copy()
-        for x in range(1, CT.O - 2):  # nối khe ≤ 2 điểm ảnh (nút / nếp đai)
-            if not row[x] and row[x - 1] and (row[x + 1] or row[x + 2]):
-                row[x] = True
-        best, j = (0, 0, 0), 0
-        while j < CT.O:
-            if row[j]:
-                j0 = j
-                while j < CT.O and row[j]:
-                    j += 1
-                if j - j0 > best[0]:
-                    best = (j - j0, j0, j - 1)
-            else:
-                j += 1
-        L.append(best[1]); R.append(best[2])
-    l, r = float(np.median(L)), float(np.median(R))
-    return (l + r) / 2, r - l + 1
+    xs = np.nonzero((al & CT.MAU_DAI[bo](h, s, v))[y - 3:y + 1].any(0))[0]
+    if not len(xs):
+        return 0.0, 0
+    return (xs.min() + xs.max()) / 2, int(xs.max() - xs.min() + 1)
 
 
 def main():
@@ -88,8 +75,8 @@ def main():
             tot = [c for c, w in do if RONG_MIN <= w <= RONG_MAX]
             med = float(np.median(tot)) if tot else float(np.median([c for c, w in do]))
             for i, (c, w) in enumerate(do):
-                if not (RONG_MIN <= w <= RONG_MAX):
-                    c = med
+                if not (RONG_MIN <= w <= RONG_MAX) or ten in HANG_CHAN:
+                    c = med  # hàng chân (đi / chạy): thân gần như đứng yên theo chiều ngang → một số chung cả hàng, khỏi lắc theo đuôi đai bay
                 ds[i] = ds[i][:5] + [round(c * 2) / 2, int(w), int(yy[i])]
             print(bo, ten, [x[5] for x in ds])
     Z['dai'] = 1
