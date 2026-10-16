@@ -169,6 +169,7 @@
       b = { neo: m.neo, ht: m.hang_tay, tl: m.vk_tl || da.vk_tl, cam: m.vk_cam || da.vk_cam, nam: true };
     } else b = { neo: da.neo, ht: da.hang_tay, tl: da.vk_tl, cam: da.vk_cam, nam: false };
     if (b.nam) b = camChuan(da, b);
+    if (b.nam && da.vk === 'thuong') b = thuongCao(da, b);
     if (BT) BT.set(da, b);
     return b;
   }
@@ -193,6 +194,61 @@
       if (vc && cam && cam.length === vc.cu.length && vc.cu.every((p, j) => cam[j] && Math.abs(cam[j][0] - p[0]) < 0.02 && Math.abs(cam[j][1] - p[1]) < 0.02)) cam = vc.moi;
       return neo === b.neo && cam === b.cam ? b : Object.assign({}, b, { neo, cam });
     } catch (e) { return b; }
+  }
+  // THƯƠNG: NÂNG TAY TRÁI (17/10/2026, docs/review/ke-hoach-cai-thien/thuong-tay-trai-cao/bao-cao.md): bảng G.THUONG_CAO_DATA
+  // (js/thuong_cao_data.js, dựng bằng thuong-tay-trai-cao/sua.py). Khung cầm thương hai tay: tay thứ hai (neo[4]) dời lên 2–3 điểm game,
+  // góc cán = đường nối tay phải (giữ nguyên) → tay trái mới. Khung thân dựng lại một lần trên canvas phụ từ tấm thân (anhCao): mỗi cột
+  // cẳng tay + nắm tay trái dời lên theo bảng "cot" (đúng điểm ảnh sẵn có, nét / màu / viền giữ nguyên), hàng nắm tay thân dời theo.
+  // Chỉ thay khi neo đang dùng khớp "cu" (tấm dựng lại → như cũ). Cần nắm tay từ ảnh (?ngonanh=0 thì thôi). Chỉ HÌNH. Tắt: ?thuongcao=0.
+  function thuongCao(da, b) {
+    const C = G.THUONG_CAO !== false && G.NGON_ANH !== false && typeof document !== 'undefined' && G.THUONG_CAO_DATA;
+    if (!C) return b;
+    try {
+      const R = C.bo && C.bo[da._ma || 'zed-moi'] && C.bo[da._ma || 'zed-moi'][da._khoa];
+      if (!R || !b.neo || R.so !== b.neo.length) return b;
+      const neo = b.neo.slice(), k = {};
+      let co = false;
+      Object.keys(R.khung).forEach((i) => {
+        const r = R.khung[i], n = neo[+i];
+        if (n && Math.abs(n[0] - r.cu[0]) < 0.02 && Math.abs(n[1] - r.cu[1]) < 0.02 && Math.abs(n[2] - r.cu[2]) < 0.05) { neo[+i] = r.neo; k[+i] = r.cot; co = true; }
+      });
+      return co ? Object.assign({}, b, { neo, cao: { k, khoa: da._khoa, hang: da.hang } }) : b;
+    } catch (e) { return b; }
+  }
+  // Canvas khung đã nâng tay của một hàng (hàng 0: thân, hàng 1: nắm tay thân hang_tay), nhớ theo tấm ảnh + khoá hàng. null: chưa dựng được.
+  const CAO = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  function anhCao(T, B) {
+    if (!CAO || !B.cao || typeof document === 'undefined') return null;
+    let m = CAO.get(T.img);
+    if (!m) CAO.set(T.img, (m = {}));
+    const key = B.cao.khoa;
+    if (m[key] !== undefined) return m[key];
+    let cv = null;
+    try {
+      const so = B.neo.length;
+      cv = document.createElement('canvas'); cv.width = so * 96; cv.height = 192;
+      const q = cv.getContext('2d');
+      q.imageSmoothingEnabled = false;
+      const lop = [B.cao.hang, B.ht];
+      Object.keys(B.cao.k).forEach((i) => {
+        const x0 = +i * 96, ct = B.cao.k[i];
+        lop.forEach((h, j) => {
+          if (h == null) return;
+          const y0 = j * 96;
+          q.drawImage(T.img, x0, h * 96, 96, 96, x0, y0, 96, 96);
+          for (let c = 0; c < ct.length; c += 4) q.clearRect(x0 + ct[c], y0 + ct[c + 1], 1, ct[c + 2] - ct[c + 1] + 1);
+          for (let c = 0; c < ct.length; c += 4) { const x = ct[c], a = ct[c + 1], n = ct[c + 2] - a + 1; q.drawImage(T.img, x0 + x, h * 96 + a, 1, n, x0 + x, y0 + a - ct[c + 3], 1, n); }
+        });
+      });
+    } catch (e) { cv = null; ghiLoi(e); }
+    m[key] = cv;
+    return cv;
+  }
+  // Khung thân / nắm tay đang vẽ có bản nâng tay không: { img, hang: 0, ht: 1 } hoặc null.
+  function caoCua(T, s, v) {
+    if (!v || s.theo || !v.B.cao || !v.B.cao.k[v.wa.i] || v.wa.i !== s.i) return null;
+    const cv = anhCao(T, v.B);
+    return cv ? { img: cv, hang: 0, ht: v.B.ht != null ? 1 : null } : null;
   }
   // Mốc tiến độ u bắt đầu từng khung. ★ = khung đứng ở mốc hitAt (đánh dấu trong chú thích).
   const MOC = {
@@ -718,13 +774,14 @@
     if (!v && !s.theo && !s.cam && HV_DAM[s.ten]) { Hb = huongCua(o, T, s); if (Hb) Hb = hvMuot(Hb); }
     if (!(v && v.hv) && !Hb) hvNghi(o);
     if (v) { ghiGoc(o, v.ang, v.cam, v.wa.ten); v.nt = namTayCua(V, v); }
+    const Cc = caoCua(T, s, v), TI = Cc ? Cc.img : T.img, AH = Cc ? Cc.hang : a.hang, HT = Cc ? Cc.ht : v && v.B.ht; // thương: tay trái nâng cao
     const E = s.eo ? eoTinh(T, s, o) : null;
     // Nghiêng thân trên quanh eo (đâm/ném nhắm gần thẳng lên/xuống, zed-8-huong): N = trục eo, null = không nghiêng (như cũ).
     const N = trucNghieng(T, s, v || (Hb ? { lean: Hb.lean, wa: s } : null), E), lean = v ? v.lean : Hb ? Hb.lean : 0;
     const tay = Hb && Math.abs(Hb.g) > 0.05 ? tayKhung(T, s.ten, s.i) : null, gTay = Hb ? Hb.g : 0;
     // Vẽ phần trên (hàng nguồn 0..h) của khung thân dời (ox, oy); có tay thì cánh tay duỗi được khoét ra và vẽ lại xoay quanh gốc tay.
     const veTren = (q, h, ox, oy) => {
-      const ve0 = () => q.drawImage(T.img, s.i * 96, a.hang * 96, 96, h, -24 + ox, -45 + oy, 48, h / 2);
+      const ve0 = () => q.drawImage(TI, s.i * 96, AH * 96, 96, h, -24 + ox, -45 + oy, 48, h / 2);
       if (!tay) { ve0(); return; }
       const x0 = tay[2] / 2 - 24 + ox, y0 = tay[3] / 2 - 45 + oy, w = (tay[4] - tay[2]) / 2, hh = (tay[5] - tay[3]) / 2;
       q.save(); q.beginPath(); q.rect(-24 + ox, -45 + oy, 48, h / 2); q.rect(x0, y0, w, hh); q.clip('evenodd'); ve0(); q.restore();
@@ -735,10 +792,11 @@
       const aC = D.dong_tac.chay, cA = E.eA[2], cR = E.eR[2], yA = cA + 1, yB = E.eA[0] + 1, K = E.K, S = G.ZED_EO.vung_noi || 5;
       const dx = E.eR[1] - E.eA[1];
       // một hàng nguồn sy (cột x0 = toạ độ cột khung chạy của cột 0), kéo theo K với mức t (0 = giữ nguyên, 1 = khớp hẳn mép đích)
-      const hang = (q, sx, sy, x0, yD, t) => {
-        if (!K || !(t > 0)) { q.drawImage(T.img, sx, sy, 96, 1, x0 / 2 - 24, yD, 48, 0.5); return; }
+      const hang = (q, sx, sy, x0, yD, t, im) => {
+        im = im || T.img;
+        if (!K || !(t > 0)) { q.drawImage(im, sx, sy, 96, 1, x0 / 2 - 24, yD, 48, 0.5); return; }
         const tl = K.l + t * (K.L - K.l), tr = K.r + t * (K.R - K.r), k = (tr - tl + 1) / (K.r - K.l + 1);
-        q.drawImage(T.img, sx, sy, 96, 1, (tl + (x0 - K.l) * k) / 2 - 24, yD, 48 * k, 0.5);
+        q.drawImage(im, sx, sy, 96, 1, (tl + (x0 - K.l) * k) / 2 - 24, yD, 48 * k, 0.5);
       };
       const tKeo = (k) => (k >= 0 && k < S ? (S - k) / S : 0); // k = số hàng tính từ mép nối
       // đang nghiêng: chỉ phần từ đai trở lên xoay, dải hông + đùi trên (dưới đai) đứng yên như chân; không nghiêng: vẽ liền tới vùng kéo
@@ -752,15 +810,15 @@
         if (K && !K.tren) for (let y = cR; y < y0 && y < 96; y++) hang(q, s.eo.i * 96, aC.hang * 96 + y, 0, -45 + y / 2, y === cR ? 1 : tKeo(y - cR - 1));
         if (y0 < 96) q.drawImage(T.img, s.eo.i * 96, aC.hang * 96 + y0, 96, 96 - y0, -24, -45 + y0 / 2, 48, (96 - y0) / 2);
         // đang nghiêng: lót dải đai (6 hàng nguồn ngay trên đai, không xoay) để chỗ nối không hở
-        if (N) q.drawImage(T.img, s.i * 96, a.hang * 96 + yB - 6, 96, 6, -24 + E.ox, -45 + E.oy + (yB - 6) / 2, 48, 3);
+        if (N) q.drawImage(TI, s.i * 96, AH * 96 + yB - 6, 96, 6, -24 + E.ox, -45 + E.oy + (yB - 6) / 2, 48, 3);
         // dải dưới (hàng yT..cA của khung đòn): không xoay; vùng nối kéo nếu nửa trên hẹp hơn
-        for (let y = yT; y < yA; y++) hang(q, s.i * 96, a.hang * 96 + y, dx, -45 + E.oy + y / 2, K && K.tren ? tKeo(cA - y) : 0);
+        for (let y = yT; y < yA; y++) hang(q, s.i * 96, AH * 96 + y, dx, -45 + E.oy + y / 2, K && K.tren ? tKeo(cA - y) : 0, TI);
         // nửa trên: đai + thân + tay khung đòn (hàng 0..yT−1), dời về khung chạy; xoay quanh eo khi nghiêng
         xoay(() => {
           veTren(q, yT, E.ox, E.oy);
           if (v && !v.n[3]) vk();
           if (v && v.B.ht != null) { // nắm tay đè lên cán, rồi lớp ngón (nắm chuôi)
-            if (coHt(v)) q.drawImage(T.img, v.wa.i * 96, v.B.ht * 96, 96, yA, -24 + E.ox, -45 + E.oy, 48, yA / 2);
+            if (coHt(v)) q.drawImage(TI, v.wa.i * 96, HT * 96, 96, yA, -24 + E.ox, -45 + E.oy, 48, yA / 2);
             q.save(); q.translate(E.ox, E.oy); veNgon(q, V, v); q.restore();
           }
         });
@@ -779,13 +837,13 @@
         q.drawImage(T.img, s.eo.i * 96, aC.hang * 96 + yR, 96, 96 - yR, -24, -45 + yR / 2, 48, (96 - yR) / 2);
         q.restore();
         // đang nghiêng: lót dải đai (6 hàng nguồn ngay trên eo, không xoay) để chỗ nối không hở
-        if (N) q.drawImage(T.img, s.i * 96, a.hang * 96 + yA - 6, 96, 6, -24 + E.ox, -45 + E.oy + (yA - 6) / 2, 48, 3);
+        if (N) q.drawImage(TI, s.i * 96, AH * 96 + yA - 6, 96, 6, -24 + E.ox, -45 + E.oy + (yA - 6) / 2, 48, 3);
         // nửa trên: đai + thân + tay khung đòn, dời về điểm eo của khung chạy
         xoay(() => {
           veTren(q, yA, E.ox, E.oy);
           if (v && !v.n[3]) vk();
           if (v && v.B.ht != null) { // nắm tay đè lên cán, rồi lớp ngón (nắm chuôi)
-            if (coHt(v)) q.drawImage(T.img, v.wa.i * 96, v.B.ht * 96, 96, yA, -24 + E.ox, -45 + E.oy, 48, yA / 2);
+            if (coHt(v)) q.drawImage(TI, v.wa.i * 96, HT * 96, 96, yA, -24 + E.ox, -45 + E.oy, 48, yA / 2);
             q.save(); q.translate(E.ox, E.oy); veNgon(q, V, v); q.restore();
           }
         });
@@ -796,18 +854,18 @@
       if (N) { // nửa dưới đứng yên (lấn lên 6 hàng nguồn để chỗ nối không hở), nửa trên + vũ khí + nắm tay xoay quanh eo
         const e = eoKhung(T, s.ten, s.i), yC = e[0] + 1, yL = Math.max(0, yC - 6);
         if (v && v.n[3]) nghieng(q, N, lean, () => veVk(q, V, v));
-        q.drawImage(T.img, s.i * 96, a.hang * 96 + yL, 96, 96 - yL, -24, -45 + yL / 2, 48, (96 - yL) / 2);
+        q.drawImage(TI, s.i * 96, AH * 96 + yL, 96, 96 - yL, -24, -45 + yL / 2, 48, (96 - yL) / 2);
         nghieng(q, N, lean, () => {
           veTren(q, yC, 0, 0);
           if (v && !v.n[3]) veVk(q, V, v);
-          if (v && !s.theo && v.B.ht != null) { if (coHt(v)) q.drawImage(T.img, v.wa.i * 96, v.B.ht * 96, 96, 96, -24, -45, 48, 48); veNgon(q, V, v); } // nắm tay + ngón đè lên cán
+          if (v && !s.theo && v.B.ht != null) { if (coHt(v)) q.drawImage(TI, v.wa.i * 96, HT * 96, 96, 96, -24, -45, 48, 48); veNgon(q, V, v); } // nắm tay + ngón đè lên cán
         });
         return;
       }
       if (v && v.n[3]) veVk(q, V, v);
       veTren(q, 96, 0, 0);
       if (v && !v.n[3]) veVk(q, V, v);
-      if (v && !s.theo && v.B.ht != null) { if (coHt(v)) q.drawImage(T.img, v.wa.i * 96, v.B.ht * 96, 96, 96, -24, -45, 48, 48); veNgon(q, V, v); } // nắm tay + ngón đè lên cán
+      if (v && !s.theo && v.B.ht != null) { if (coHt(v)) q.drawImage(TI, v.wa.i * 96, HT * 96, 96, 96, -24, -45, 48, 48); veNgon(q, V, v); } // nắm tay + ngón đè lên cán
     };
     return veLop(c, o, lop);
   }

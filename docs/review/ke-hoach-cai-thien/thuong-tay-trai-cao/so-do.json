@@ -1,0 +1,802 @@
+[
+ {
+  "hang": "dung~16_thuong",
+  "khung": 1,
+  "dy": 4,
+  "goc_cu": -17.3,
+  "goc_moi": -29.8,
+  "tay2_cu": [
+   55.26,
+   62.01
+  ],
+  "tay2_moi": [
+   55.26,
+   58.01
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "dung~16_thuong",
+  "khung": 2,
+  "dy": 4,
+  "goc_cu": -17.4,
+  "goc_moi": -29.9,
+  "tay2_cu": [
+   55.37,
+   61.92
+  ],
+  "tay2_moi": [
+   55.37,
+   57.92
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "dung~16_thuong",
+  "khung": 3,
+  "dy": 4,
+  "goc_cu": -18.0,
+  "goc_moi": -30.1,
+  "tay2_cu": [
+   55.25,
+   61.8
+  ],
+  "tay2_moi": [
+   55.25,
+   57.8
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "dung~16_thuong",
+  "khung": 4,
+  "dy": 4,
+  "goc_cu": -18.2,
+  "goc_moi": -30.2,
+  "tay2_cu": [
+   55.54,
+   61.71
+  ],
+  "tay2_moi": [
+   55.54,
+   57.71
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "dung~16_thuong",
+  "khung": 5,
+  "dy": 4,
+  "goc_cu": -18.9,
+  "goc_moi": -30.9,
+  "tay2_cu": [
+   55.43,
+   61.17
+  ],
+  "tay2_moi": [
+   55.43,
+   57.17
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "dung~16_thuong",
+  "khung": 6,
+  "dy": 4,
+  "goc_cu": -17.6,
+  "goc_moi": -30.1,
+  "tay2_cu": [
+   55.19,
+   61.92
+  ],
+  "tay2_moi": [
+   55.19,
+   57.92
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "dung~16_thuong",
+  "khung": 7,
+  "dy": 4,
+  "goc_cu": -17.4,
+  "goc_moi": -29.8,
+  "tay2_cu": [
+   55.09,
+   62.02
+  ],
+  "tay2_moi": [
+   55.09,
+   58.02
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "dung~16_thuong",
+  "khung": 8,
+  "dy": 4,
+  "goc_cu": -16.9,
+  "goc_moi": -29.4,
+  "tay2_cu": [
+   55.16,
+   62.49
+  ],
+  "tay2_moi": [
+   55.16,
+   58.49
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "di_thuong",
+  "khung": 1,
+  "dy": 5,
+  "goc_cu": -5.6,
+  "goc_moi": -16.0,
+  "tay2_cu": [
+   61.64,
+   64.95
+  ],
+  "tay2_moi": [
+   61.64,
+   59.95
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "di_thuong",
+  "khung": 2,
+  "dy": 5,
+  "goc_cu": -7.8,
+  "goc_moi": -22.9,
+  "tay2_cu": [
+   55.33,
+   66.65
+  ],
+  "tay2_moi": [
+   55.33,
+   61.65
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "di_thuong",
+  "khung": 3,
+  "dy": 5,
+  "goc_cu": -16.7,
+  "goc_moi": -31.2,
+  "tay2_cu": [
+   57.21,
+   64.05
+  ],
+  "tay2_moi": [
+   57.21,
+   59.05
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "di_thuong",
+  "khung": 4,
+  "dy": 5,
+  "goc_cu": -8.0,
+  "goc_moi": -18.9,
+  "tay2_cu": [
+   59.04,
+   63.93
+  ],
+  "tay2_moi": [
+   59.04,
+   58.93
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "di_thuong",
+  "khung": 5,
+  "dy": 5,
+  "goc_cu": -5.9,
+  "goc_moi": -16.1,
+  "tay2_cu": [
+   61.85,
+   64.8
+  ],
+  "tay2_moi": [
+   61.85,
+   59.8
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "di_thuong",
+  "khung": 6,
+  "dy": 5,
+  "goc_cu": -6.5,
+  "goc_moi": -21.8,
+  "tay2_cu": [
+   55.26,
+   67.07
+  ],
+  "tay2_moi": [
+   55.26,
+   62.07
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "di_thuong",
+  "khung": 7,
+  "dy": 5,
+  "goc_cu": -15.8,
+  "goc_moi": -30.1,
+  "tay2_cu": [
+   57.34,
+   64.19
+  ],
+  "tay2_moi": [
+   57.34,
+   59.19
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "di_thuong",
+  "khung": 8,
+  "dy": 5,
+  "goc_cu": -7.9,
+  "goc_moi": -18.6,
+  "tay2_cu": [
+   59.2,
+   63.98
+  ],
+  "tay2_moi": [
+   59.2,
+   58.98
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "chay2tay_thuong",
+  "khung": 1,
+  "dy": 4,
+  "goc_cu": -5.4,
+  "goc_moi": -22.5,
+  "tay2_cu": [
+   59.47,
+   59.74
+  ],
+  "tay2_moi": [
+   59.47,
+   55.74
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "chay2tay_thuong",
+  "khung": 2,
+  "dy": 4,
+  "goc_cu": -6.4,
+  "goc_moi": -24.3,
+  "tay2_cu": [
+   58.96,
+   59.43
+  ],
+  "tay2_moi": [
+   58.96,
+   55.43
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "chay2tay_thuong",
+  "khung": 3,
+  "dy": 4,
+  "goc_cu": -3.1,
+  "goc_moi": -30.5,
+  "tay2_cu": [
+   56.65,
+   59.54
+  ],
+  "tay2_moi": [
+   56.65,
+   55.54
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "chay2tay_thuong",
+  "khung": 4,
+  "dy": 4,
+  "goc_cu": 0.0,
+  "goc_moi": -24.1,
+  "tay2_cu": [
+   58.3,
+   59.87
+  ],
+  "tay2_moi": [
+   58.3,
+   55.87
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "chay2tay_thuong",
+  "khung": 5,
+  "dy": 4,
+  "goc_cu": -5.1,
+  "goc_moi": -24.0,
+  "tay2_cu": [
+   58.92,
+   59.89
+  ],
+  "tay2_moi": [
+   58.92,
+   55.89
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "chay2tay_thuong",
+  "khung": 6,
+  "dy": 4,
+  "goc_cu": -5.1,
+  "goc_moi": -23.3,
+  "tay2_cu": [
+   58.52,
+   59.96
+  ],
+  "tay2_moi": [
+   58.52,
+   55.96
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "chay2tay_thuong",
+  "khung": 7,
+  "dy": 4,
+  "goc_cu": -5.1,
+  "goc_moi": -24.0,
+  "tay2_cu": [
+   57.46,
+   59.92
+  ],
+  "tay2_moi": [
+   57.46,
+   55.92
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "chay2tay_thuong",
+  "khung": 8,
+  "dy": 4,
+  "goc_cu": -4.6,
+  "goc_moi": -23.5,
+  "tay2_cu": [
+   57.45,
+   59.8
+  ],
+  "tay2_moi": [
+   57.45,
+   55.8
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "chay2tay_thuong",
+  "khung": 9,
+  "dy": 4,
+  "goc_cu": -4.9,
+  "goc_moi": -24.6,
+  "tay2_cu": [
+   58.07,
+   59.17
+  ],
+  "tay2_moi": [
+   58.07,
+   55.17
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "chay2tay_thuong",
+  "khung": 10,
+  "dy": 4,
+  "goc_cu": -5.5,
+  "goc_moi": -25.6,
+  "tay2_cu": [
+   57.84,
+   59.15
+  ],
+  "tay2_moi": [
+   57.84,
+   55.15
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "chay2tay_thuong",
+  "khung": 11,
+  "dy": 4,
+  "goc_cu": -4.5,
+  "goc_moi": -23.4,
+  "tay2_cu": [
+   58.03,
+   59.17
+  ],
+  "tay2_moi": [
+   58.03,
+   55.17
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "chay2tay_thuong",
+  "khung": 12,
+  "dy": 4,
+  "goc_cu": -5.4,
+  "goc_moi": -23.4,
+  "tay2_cu": [
+   58.85,
+   59.66
+  ],
+  "tay2_moi": [
+   58.85,
+   55.66
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "thuong_1",
+  "khung": 1,
+  "dy": 6,
+  "goc_cu": -9.8,
+  "goc_moi": -20.0,
+  "tay2_cu": [
+   70.33,
+   58.48
+  ],
+  "tay2_moi": [
+   70.33,
+   52.48
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "thuong_1",
+  "khung": 2,
+  "dy": 4,
+  "goc_cu": -0.8,
+  "goc_moi": -13.1,
+  "tay2_cu": [
+   66.21,
+   56.18
+  ],
+  "tay2_moi": [
+   66.21,
+   52.18
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "thuong_1",
+  "khung": 3,
+  "dy": 0,
+  "goc_cu": -2.8,
+  "goc_moi": -2.8,
+  "tay2_cu": [
+   90.7,
+   53.07
+  ],
+  "tay2_moi": [
+   90.7,
+   53.07
+  ],
+  "ly_do": "khung đâm trúng"
+ },
+ {
+  "hang": "thuong_1",
+  "khung": 4,
+  "dy": 0,
+  "goc_cu": -4.4,
+  "goc_moi": -4.4,
+  "tay2_cu": [
+   91.49,
+   52.68
+  ],
+  "tay2_moi": [
+   91.49,
+   52.68
+  ],
+  "ly_do": "khung đâm trúng"
+ },
+ {
+  "hang": "thuong_1",
+  "khung": 5,
+  "dy": 6,
+  "goc_cu": -2.1,
+  "goc_moi": -13.8,
+  "tay2_cu": [
+   66.83,
+   55.59
+  ],
+  "tay2_moi": [
+   66.83,
+   49.59
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "thuong_1",
+  "khung": 6,
+  "dy": 6,
+  "goc_cu": -9.4,
+  "goc_moi": -19.6,
+  "tay2_cu": [
+   70.26,
+   58.73
+  ],
+  "tay2_moi": [
+   70.26,
+   52.73
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "thuong_2",
+  "khung": 1,
+  "dy": 5,
+  "goc_cu": 8.5,
+  "goc_moi": -3.7,
+  "tay2_cu": [
+   76.43,
+   63.2
+  ],
+  "tay2_moi": [
+   76.43,
+   58.2
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "thuong_2",
+  "khung": 2,
+  "dy": 4,
+  "goc_cu": 3.1,
+  "goc_moi": -10.5,
+  "tay2_cu": [
+   63.33,
+   62.19
+  ],
+  "tay2_moi": [
+   63.33,
+   58.19
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "thuong_2",
+  "khung": 3,
+  "dy": 0,
+  "goc_cu": -37.7,
+  "goc_moi": -37.7,
+  "tay2_cu": [
+   76.01,
+   33.19
+  ],
+  "tay2_moi": [
+   76.01,
+   33.19
+  ],
+  "ly_do": "khung hất trúng"
+ },
+ {
+  "hang": "thuong_2",
+  "khung": 4,
+  "dy": 0,
+  "goc_cu": -37.8,
+  "goc_moi": -37.8,
+  "tay2_cu": [
+   76.86,
+   33.2
+  ],
+  "tay2_moi": [
+   76.86,
+   33.2
+  ],
+  "ly_do": "khung hất trúng"
+ },
+ {
+  "hang": "thuong_2",
+  "khung": 5,
+  "dy": 4,
+  "goc_cu": -23.2,
+  "goc_moi": -33.9,
+  "tay2_cu": [
+   71.16,
+   46.18
+  ],
+  "tay2_moi": [
+   71.16,
+   42.18
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "thuong_2",
+  "khung": 6,
+  "dy": 5,
+  "goc_cu": -6.9,
+  "goc_moi": -20.0,
+  "tay2_cu": [
+   73.58,
+   55.35
+  ],
+  "tay2_moi": [
+   73.58,
+   50.35
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "thuong_3",
+  "khung": 1,
+  "dy": 4,
+  "goc_cu": -2.7,
+  "goc_moi": -14.9,
+  "tay2_cu": [
+   65.79,
+   57.28
+  ],
+  "tay2_moi": [
+   65.79,
+   53.28
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "thuong_3",
+  "khung": 2,
+  "dy": 4,
+  "goc_cu": -2.5,
+  "goc_moi": -17.2,
+  "tay2_cu": [
+   62.03,
+   57.5
+  ],
+  "tay2_moi": [
+   62.03,
+   53.5
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "thuong_3",
+  "khung": 3,
+  "dy": 0,
+  "goc_cu": -3.9,
+  "goc_moi": -3.9,
+  "tay2_cu": [
+   92.51,
+   52.64
+  ],
+  "tay2_moi": [
+   92.51,
+   52.64
+  ],
+  "ly_do": "khung đâm trúng"
+ },
+ {
+  "hang": "thuong_3",
+  "khung": 4,
+  "dy": 0,
+  "goc_cu": -3.2,
+  "goc_moi": -3.2,
+  "tay2_cu": [
+   92.59,
+   52.73
+  ],
+  "tay2_moi": [
+   92.59,
+   52.73
+  ],
+  "ly_do": "khung đâm trúng"
+ },
+ {
+  "hang": "thuong_3",
+  "khung": 5,
+  "dy": 5,
+  "goc_cu": -4.6,
+  "goc_moi": -18.3,
+  "tay2_cu": [
+   67.61,
+   56.81
+  ],
+  "tay2_moi": [
+   67.61,
+   51.81
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "thuong_3",
+  "khung": 6,
+  "dy": 5,
+  "goc_cu": -3.4,
+  "goc_moi": -17.1,
+  "tay2_cu": [
+   65.62,
+   57.31
+  ],
+  "tay2_moi": [
+   65.62,
+   52.31
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "thuong_quet",
+  "khung": 6,
+  "dy": 0,
+  "goc_cu": -6.0,
+  "goc_moi": -6.0,
+  "tay2_cu": [
+   68.83,
+   60.08
+  ],
+  "tay2_moi": [
+   68.83,
+   60.08
+  ],
+  "ly_do": "hai tay quá gần (3 điểm game): cán dựng 30°, hai nắm tay chồng nhau"
+ },
+ {
+  "hang": "thuong_giu",
+  "khung": 1,
+  "dy": 6,
+  "goc_cu": -0.5,
+  "goc_moi": -12.2,
+  "tay2_cu": [
+   69.36,
+   69.85
+  ],
+  "tay2_moi": [
+   69.36,
+   63.85
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "thuong_giu",
+  "khung": 2,
+  "dy": 6,
+  "goc_cu": -0.3,
+  "goc_moi": -12.0,
+  "tay2_cu": [
+   70.2,
+   69.92
+  ],
+  "tay2_moi": [
+   70.2,
+   63.92
+  ],
+  "ly_do": ""
+ },
+ {
+  "hang": "thuong_giu",
+  "khung": 3,
+  "dy": 6,
+  "goc_cu": -0.2,
+  "goc_moi": -11.9,
+  "tay2_cu": [
+   69.2,
+   70.01
+  ],
+  "tay2_moi": [
+   69.2,
+   64.01
+  ],
+  "ly_do": ""
+ }
+]

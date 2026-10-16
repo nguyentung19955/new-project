@@ -1099,6 +1099,11 @@ window.G.LANG = 'vi';
   // Chỉ đổi HÌNH. Tắt: ?camchuan=0 (về neo cũ).
   G.CAM_CHUAN = true;
   try { if (typeof location !== 'undefined' && /[?&]camchuan=0(&|$)/.test(location.search || '')) G.CAM_CHUAN = false; } catch (e) { /* giữ mặc định */ }
+  // THƯƠNG: NÂNG TAY TRÁI (17/10/2026, docs/review/ke-hoach-cai-thien/thuong-tay-trai-cao/bao-cao.md, js/thuong_cao_data.js + js/zed_moi.js):
+  // Cu Tí cầm thương hai tay thì nắm tay trái nâng cao 2–3 điểm game, cán chếch lên qua tay phải (giữ nguyên) và tay trái mới → thế cầm
+  // rộng, thoáng hơn. Khung đâm trúng giữ nguyên (mũi, hướng đâm, vùng trúng không đổi). Chỉ đổi HÌNH. Tắt: ?thuongcao=0 (về như cũ).
+  G.THUONG_CAO = true;
+  try { if (typeof location !== 'undefined' && /[?&]thuongcao=0(&|$)/.test(location.search || '')) G.THUONG_CAO = false; } catch (e) { /* giữ mặc định */ }
   // ĐÒN ZED MỚI QUAY THEO HƯỚNG NHẮM (13/10/2026, docs/review/ke-hoach-cai-thien/zed-8-huong): js/zed_moi.js xoay vũ khí đâm/ném quanh nắm tay
   // theo góc nhắm thật (kẹp ±75°, quá thì nghiêng nhẹ thân trên), chém/quét/nện nghiêng đường vung tối đa ±35°; vệt/hiệu ứng (js/fx.js aimed)
   // xoay cùng góc. Chỉ đổi HÌNH. Tắt: ?huongvk=0 (vũ khí chỉ vẽ ngang theo neo như trước).

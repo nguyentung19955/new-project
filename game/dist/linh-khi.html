@@ -2604,6 +2604,11 @@
   // Chỉ đổi HÌNH. Tắt: ?camchuan=0 (về neo cũ).
   G.CAM_CHUAN = true;
   try { if (typeof location !== 'undefined' && /[?&]camchuan=0(&|$)/.test(location.search || '')) G.CAM_CHUAN = false; } catch (e) { /* giữ mặc định */ }
+  // THƯƠNG: NÂNG TAY TRÁI (17/10/2026, docs/review/ke-hoach-cai-thien/thuong-tay-trai-cao/bao-cao.md, js/thuong_cao_data.js + js/zed_moi.js):
+  // Cu Tí cầm thương hai tay thì nắm tay trái nâng cao 2–3 điểm game, cán chếch lên qua tay phải (giữ nguyên) và tay trái mới → thế cầm
+  // rộng, thoáng hơn. Khung đâm trúng giữ nguyên (mũi, hướng đâm, vùng trúng không đổi). Chỉ đổi HÌNH. Tắt: ?thuongcao=0 (về như cũ).
+  G.THUONG_CAO = true;
+  try { if (typeof location !== 'undefined' && /[?&]thuongcao=0(&|$)/.test(location.search || '')) G.THUONG_CAO = false; } catch (e) { /* giữ mặc định */ }
   // ĐÒN ZED MỚI QUAY THEO HƯỚNG NHẮM (13/10/2026, docs/review/ke-hoach-cai-thien/zed-8-huong): js/zed_moi.js xoay vũ khí đâm/ném quanh nắm tay
   // theo góc nhắm thật (kẹp ±75°, quá thì nghiêng nhẹ thân trên), chém/quét/nện nghiêng đường vung tối đa ±35°; vệt/hiệu ứng (js/fx.js aimed)
   // xoay cùng góc. Chỉ đổi HÌNH. Tắt: ?huongvk=0 (vũ khí chỉ vẽ ngang theo neo như trước).
@@ -29574,6 +29579,14 @@ MA._xong();
 window.G = window.G || {};
 G.CAM_CHUAN_DATA = {"phien":1,"ghi_chu":"cam-vk-chuan 16/10: neo sửa theo LUAT.md (sua.py); khoá = khoá dong_tac gốc; goc = neo gốc để nhận ra tấm đã dựng lại","vk_cam":{"kiem":{"cu":[[19.94,16.5],[21.48,24.0],[12.02,35.5],[13.04,46.5]],"moi":[[21.58,16.5],[18.58,24.0],[20.58,35.5],[20.58,46.5]]}},"bo":{"zed-moi":{"dung~16_phitieu":{"so":8,"goc":[39.65,66.96,55],"neo":{"0":[39.65,66.96,70,0],"1":[39.66,66.95,70,0],"2":[39.3,67.03,75,0],"3":[39.49,67.06,75,0],"4":[39.3,66.81,75,0],"5":[39.55,66.98,75,0],"6":[39.42,67.0,75,0],"7":[39.54,67.3,75,0]}},"di_phitieu":{"so":8,"goc":[34.99,67.59,55],"neo":{"0":[34.99,67.59,110,0],"1":[37.73,69.07,90,0],"2":[40.83,68.96,90,0],"3":[34.1,67.46,110,0],"4":[34.82,67.58,105,0],"5":[37.78,69.07,90,0],"6":[40.54,68.93,90,0],"7":[33.88,67.51,110,0]}},"chay~16_phitieu":{"so":12,"goc":[33.22,65.91,55],"neo":{"0":[33.22,65.91,120,0],"1":[37.01,69.46,100,0],"2":[33.87,66.05,120,0],"3":[35.72,65.48,120,0],"4":[33.23,69.73,125,0],"5":[34.19,66.95,125,0],"6":[36.0,68.23,110,0],"7":[54.3,63.82,15,0],"8":[36.24,66.26,115,0],"9":[35.16,64.85,120,0],"10":[33.64,69.52,125,0],"11":[33.94,66.5,125,0]}},"bua_nen~16":{"so":8,"goc":[37.86,43.68,-150],"neo":{"7":[52.69,64.75,-20.2,0,[57.0,63.17]]}},"bua_nen_dat":{"so":6,"goc":[63.76,26.97,170],"neo":{"4":[64.44,70.01,2.6,0,[70.77,70.3]]}},"db_bua":{"so":6,"goc":[37.33,26.95,170],"neo":{"4":[51.23,66.15,-50,0,[55.73,60.78]]}}}},"gen_lai":[]};
 
+// ===== js/thuong_cao_data.js =====
+// THƯƠNG: NÂNG TAY TRÁI (17/10/2026, docs/review/ke-hoach-cai-thien/thuong-tay-trai-cao/bao-cao.md) — TỆP DỰNG TỰ ĐỘNG bằng
+// docs/review/ke-hoach-cai-thien/thuong-tay-trai-cao/sua.py, đừng sửa tay. js/zed_moi.js (thuongCao): khi Cu Tí cầm thương hai tay,
+// dựng lại khung thân với cẳng tay + nắm tay trái dời lên (dời đúng điểm ảnh sẵn có theo cột, không vẽ mới), tay thứ hai dời lên,
+// cán đi thẳng qua tay phải (giữ nguyên) và tay trái mới. Chỉ HÌNH. Tắt: ?thuongcao=0 (G.THUONG_CAO, js/data.js).
+window.G = window.G || {};
+G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm tay trái khi cầm thương hai tay (sua.py); khoá = khoá dong_tac gốc; cu = neo đang dùng (sau cam-vk-chuan) để nhận ra tấm đã dựng lại; cot = [x, y0, y1, dời lên] trên ô 96 của hàng thân và hàng nắm tay","bo":{"zed-moi":{"dung~16_thuong":{"so":8,"khung":{"0":{"cu":[39.65,66.96,-17.3],"neo":[39.65,66.96,-29.8,0,[55.26,58.01]],"cot":[56,55,65,1,57,61,66,3,58,61,66,4,59,61,67,4,60,61,67,4,61,61,66,4,62,62,64,4]},"1":{"cu":[39.66,66.95,-17.4],"neo":[39.66,66.95,-29.9,0,[55.37,57.92]],"cot":[55,54,64,1,56,55,65,2,57,61,65,3,58,61,66,4,59,61,67,4,60,61,67,4,61,61,66,4,62,62,64,4]},"2":{"cu":[39.3,67.03,-18.0],"neo":[39.3,67.03,-30.1,0,[55.25,57.8]],"cot":[56,54,64,1,57,60,65,3,58,61,66,4,59,60,66,4,60,60,66,4,61,61,66,4,62,62,64,4]},"3":{"cu":[39.49,67.06,-18.2],"neo":[39.49,67.06,-30.2,0,[55.54,57.71]],"cot":[56,54,64,1,57,60,65,3,58,61,66,4,59,60,66,4,60,60,66,4,61,60,66,4,62,61,64,4]},"4":{"cu":[39.3,66.81,-18.9],"neo":[39.3,66.81,-30.9,0,[55.43,57.17]],"cot":[57,60,64,2,58,60,65,4,59,60,66,4,60,60,66,4,61,60,65,4,62,61,64,4]},"5":{"cu":[39.55,66.98,-17.6],"neo":[39.55,66.98,-30.1,0,[55.19,57.92]],"cot":[55,54,64,1,56,56,65,3,57,61,66,4,58,61,66,4,59,61,67,4,60,61,67,4,61,61,66,4,62,62,64,4]},"6":{"cu":[39.42,67.0,-17.4],"neo":[39.42,67.0,-29.8,0,[55.09,58.02]],"cot":[56,56,65,2,57,61,66,4,58,61,67,4,59,61,67,4,60,61,67,4,61,61,66,4,62,62,64,4]},"7":{"cu":[39.54,67.3,-16.9],"neo":[39.54,67.3,-29.4,0,[55.16,58.49]],"cot":[56,56,65,1,57,61,66,3,58,62,66,4,59,61,67,4,60,61,67,4,61,61,66,4,62,62,64,4]}}},"di_thuong":{"so":8,"khung":{"0":{"cu":[34.99,67.59,-5.6],"neo":[34.99,67.59,-16.0,0,[61.64,59.95]],"cot":[56,58,65,1,57,61,66,2,58,62,66,4,59,62,67,5,60,62,67,5,61,62,67,5,62,62,67,5,63,63,66,5]},"1":{"cu":[37.73,69.07,-7.8],"neo":[37.73,69.07,-22.9,0,[55.33,61.65]],"cot":[53,63,69,5,54,64,69,5,55,64,69,5,56,64,68,5,57,65,67,5]},"2":{"cu":[40.83,68.96,-16.7],"neo":[40.83,68.96,-31.2,0,[57.21,59.05]],"cot":[57,61,66,5,58,61,66,5,59,62,65,5]},"3":{"cu":[34.1,67.46,-8.0],"neo":[34.1,67.46,-18.9,0,[59.04,58.93]],"cot":[54,58,65,1,55,61,65,2,56,61,65,4,57,62,66,5,58,61,66,5,59,61,66,5,60,62,65,5]},"4":{"cu":[34.82,67.58,-5.9],"neo":[34.82,67.58,-16.1,0,[61.85,59.8]],"cot":[55,57,65,1,56,58,65,2,57,61,66,3,58,62,66,4,59,62,67,5,60,62,67,5,61,62,67,5,62,62,67,5,63,63,66,5]},"5":{"cu":[37.78,69.07,-6.5],"neo":[37.78,69.07,-21.8,0,[55.26,62.07]],"cot":[53,63,68,5,54,64,69,5,55,64,69,5,56,64,68,5,57,65,67,5]},"6":{"cu":[40.54,68.93,-15.8],"neo":[40.54,68.93,-30.1,0,[57.34,59.19]],"cot":[57,60,66,5,58,61,66,5,59,62,64,5]},"7":{"cu":[33.88,67.51,-7.9],"neo":[33.88,67.51,-18.6,0,[59.2,58.98]],"cot":[54,58,65,1,55,61,65,2,56,61,65,4,57,62,66,5,58,61,66,5,59,61,66,5,60,62,66,5,61,63,64,5]}}},"chay2tay_thuong":{"so":12,"khung":{"0":{"cu":[46.84,60.96,-5.4],"neo":[46.84,60.96,-22.5,0,[59.47,55.74]],"cot":[52,52,60,1,53,54,61,1,54,57,61,2,55,57,61,3,56,57,61,3,57,58,62,4,58,57,62,4,59,57,62,4,60,57,62,4,61,58,61,4]},"1":{"cu":[47.16,60.76,-6.4],"neo":[47.16,60.76,-24.3,0,[58.96,55.43]],"cot":[52,52,60,1,53,54,60,1,54,56,61,2,55,57,61,3,56,57,61,3,57,57,61,4,58,56,62,4,59,56,62,4,60,57,61,4]},"2":{"cu":[49.17,59.94,-3.1],"neo":[49.17,59.94,-30.5,0,[56.65,55.54]],"cot":[52,56,61,1,53,57,61,3,54,57,62,4,55,57,62,4,56,57,62,4,57,57,62,4,58,58,60,4]},"3":{"cu":[49.35,59.87,0.0],"neo":[49.35,59.87,-24.1,0,[58.3,55.87]],"cot":[52,54,61,1,53,57,61,2,54,57,61,2,55,57,62,3,56,58,62,4,57,57,62,4,58,57,62,4,59,58,62,4,60,58,60,4]},"4":{"cu":[47.7,60.89,-5.1],"neo":[47.7,60.89,-24.0,0,[58.92,55.89]],"cot":[53,54,61,1,54,57,61,2,55,57,61,2,56,58,62,3,57,57,62,4,58,57,62,4,59,57,62,4,60,58,61,4]},"5":{"cu":[46.82,61.0,-5.1],"neo":[46.82,61.0,-23.3,0,[58.52,55.96]],"cot":[52,53,61,1,53,56,61,2,54,57,61,2,55,57,61,3,56,58,62,4,57,57,62,4,58,57,62,4,59,57,62,4,60,58,61,4]},"6":{"cu":[46.21,60.93,-5.1],"neo":[46.21,60.93,-24.0,0,[57.46,55.92]],"cot":[51,54,61,1,52,57,61,2,53,57,61,2,54,57,62,3,55,57,62,4,56,57,62,4,57,57,62,4,58,57,62,4,59,58,60,4]},"7":{"cu":[46.19,60.7,-4.6],"neo":[46.19,60.7,-23.5,0,[57.45,55.8]],"cot":[51,54,61,1,52,57,61,2,53,57,61,2,54,57,62,3,55,57,62,4,56,57,62,4,57,57,62,4,58,57,62,4,59,58,60,4]},"8":{"cu":[47.34,60.09,-4.9],"neo":[47.34,60.09,-24.6,0,[58.07,55.17]],"cot":[52,56,60,1,53,56,60,2,54,56,61,2,55,57,61,3,56,57,62,4,57,56,62,4,58,56,62,4,59,57,61,4,60,58,59,4]},"9":{"cu":[47.35,60.18,-5.5],"neo":[47.35,60.18,-25.6,0,[57.84,55.15]],"cot":[51,52,60,1,52,56,60,2,53,56,60,2,54,56,61,3,55,57,61,4,56,56,62,4,57,56,62,4,58,56,62,4,59,57,60,4]},"10":{"cu":[46.69,60.07,-4.5],"neo":[46.69,60.07,-23.4,0,[58.03,55.17]],"cot":[52,54,60,1,53,56,60,2,54,56,60,2,55,57,61,3,56,57,61,4,57,56,62,4,58,56,62,4,59,57,61,4]},"11":{"cu":[47.02,60.77,-5.4],"neo":[47.02,60.77,-23.4,0,[58.85,55.66]],"cot":[52,53,61,1,53,56,61,1,54,57,61,2,55,57,61,3,56,58,62,3,57,57,62,4,58,57,62,4,59,57,62,4,60,58,61,4]}}},"thuong_1":{"so":6,"khung":{"0":{"cu":[38.91,63.91,-9.8],"neo":[38.91,63.91,-20.0,0,[70.33,52.48]],"cot":[55,50,58,0,56,50,58,1,57,51,59,1,58,52,59,2,59,53,60,2,60,55,60,3,61,55,60,3,62,55,61,3,63,56,61,4,64,56,61,4,65,57,61,5,66,56,61,5,67,56,61,6,68,55,61,6,69,55,62,6,70,55,62,6,71,56,62,6,72,57,60,6]},"1":{"cu":[47.97,56.44,-0.8],"neo":[47.97,56.44,-13.1,0,[66.21,52.18]],"cot":[57,50,60,0,58,53,60,1,59,55,60,2,60,55,60,2,61,55,60,2,62,55,59,3,63,54,59,4,64,53,59,4,65,53,59,4,66,53,59,4,67,53,59,4,68,54,57,4]},"4":{"cu":[38.02,56.64,-2.1],"neo":[38.02,56.64,-13.8,0,[66.83,49.59]],"cot":[57,50,59,1,58,51,59,1,59,53,59,2,60,55,59,3,61,55,59,3,62,55,59,4,63,54,58,5,64,53,58,5,65,53,59,6,66,53,59,6,67,53,59,6,68,53,58,6,69,54,55,6]},"5":{"cu":[38.7,63.98,-9.4],"neo":[38.7,63.98,-19.6,0,[70.26,52.73]],"cot":[55,50,58,0,56,51,58,1,57,52,59,1,58,52,60,2,59,53,60,2,60,55,60,3,61,55,61,3,62,55,61,3,63,56,61,4,64,56,61,4,65,56,61,5,66,56,61,5,67,56,61,6,68,55,62,6,69,55,62,6,70,55,62,6,71,56,62,6,72,57,60,6]}}},"thuong_2":{"so":6,"khung":{"0":{"cu":[52.93,59.71,8.5],"neo":[52.93,59.71,-3.7,0,[76.43,58.2]],"cot":[60,52,59,0,61,53,59,1,62,53,60,1,63,54,60,1,64,56,61,2,65,56,62,2,66,57,62,2,67,57,63,3,68,57,63,3,69,58,63,3,70,59,63,4,71,59,64,4,72,60,65,4,73,60,65,5,74,60,66,5,75,60,66,5,76,60,66,5,77,60,66,5,78,61,64,5]},"1":{"cu":[46.61,61.29,3.1],"neo":[46.61,61.29,-10.5,0,[63.33,58.19]],"cot":[59,60,64,1,60,60,64,3,61,59,65,4,62,59,65,4,63,59,65,4,64,59,64,4,65,60,63,4]},"4":{"cu":[54.57,53.32,-23.2],"neo":[54.57,53.32,-33.9,0,[71.16,42.18]],"cot":[57,49,56,0,58,49,54,1,59,50,54,1,60,50,54,1,61,49,54,2,62,49,54,2,63,48,54,2,64,48,53,2,65,48,53,3,66,47,52,3,67,47,52,3,68,45,51,4,69,44,50,4,70,44,50,4,71,44,50,4,72,44,50,4,73,44,49,4]},"5":{"cu":[52.99,57.83,-6.9],"neo":[52.99,57.83,-20.0,0,[73.58,50.35]],"cot":[58,51,58,0,59,52,58,1,60,52,58,1,61,53,58,1,62,54,58,2,63,54,59,2,64,54,59,2,65,54,59,3,66,54,59,3,67,54,58,4,68,54,58,4,69,54,58,4,70,54,58,5,71,53,58,5,72,53,59,5,73,53,59,5,74,53,59,5,75,53,58,5]}}},"thuong_3":{"so":6,"khung":{"0":{"cu":[47.51,58.14,-2.7],"neo":[47.51,58.14,-14.9,0,[65.79,53.28]],"cot":[55,49,58,0,56,50,59,1,57,51,59,1,58,53,59,2,59,55,59,2,60,55,59,3,61,55,59,3,62,56,59,4,63,55,60,4,64,54,60,4,65,54,61,4,66,54,60,4,67,55,59,4]},"1":{"cu":[47.06,58.14,-2.5],"neo":[47.06,58.14,-17.2,0,[62.03,53.5]],"cot":[56,50,60,1,57,53,60,2,58,56,60,2,59,56,60,3,60,55,60,4,61,55,61,4,62,55,61,4,63,55,60,4,64,56,58,4]},"4":{"cu":[47.78,58.37,-4.6],"neo":[47.78,58.37,-18.3,0,[67.61,51.81]],"cot":[56,49,58,0,57,51,59,1,58,52,59,2,59,54,59,2,60,55,59,2,61,55,59,3,62,55,59,4,63,55,59,4,64,55,60,4,65,54,60,5,66,54,61,5,67,54,61,5,68,54,60,5,69,55,59,5]},"5":{"cu":[45.56,58.48,-3.4],"neo":[45.56,58.48,-17.1,0,[65.62,52.31]],"cot":[55,49,58,1,56,51,59,1,57,52,59,2,58,53,60,2,59,55,60,3,60,55,59,3,61,55,59,4,62,56,59,4,63,55,60,5,64,54,61,5,65,54,61,5,66,55,60,5,67,55,59,5]}}},"thuong_giu":{"so":3,"khung":{"0":{"cu":[40.34,70.13,-0.5],"neo":[40.34,70.13,-12.2,0,[69.36,63.85]],"cot":[60,62,70,1,61,65,70,2,62,65,70,3,63,66,71,3,64,66,71,4,65,67,72,5,66,67,73,6,67,66,73,6,68,66,73,6,69,66,73,6,70,67,72,6,71,68,70,6]},"1":{"cu":[41.33,70.05,-0.3],"neo":[41.33,70.05,-12.0,0,[70.2,63.92]],"cot":[61,62,70,1,62,65,70,2,63,65,70,3,64,66,71,3,65,66,71,4,66,67,72,5,67,67,72,6,68,66,73,6,69,66,73,6,70,66,73,6,71,67,72,6,72,68,70,6]},"2":{"cu":[40.28,70.13,-0.2],"neo":[40.28,70.13,-11.9,0,[69.2,64.01]],"cot":[60,62,70,1,61,65,70,2,62,65,70,3,63,66,71,3,64,66,71,4,65,67,72,5,66,67,72,6,67,66,73,6,68,66,73,6,69,66,73,6,70,67,72,6,71,68,70,6]}}}}}};
+
 // ===== js/zed_moi.js =====
 // BỘ ZED MỚI (13/10/2026) — docs/review/ke-hoach-cai-thien/zed-tich-hop/YEU-CAU.md
 // Vẽ Zed bằng bộ ảnh mới: thân (game/art/custom/zed-moi.sprite.json, mỗi động tác 1 hàng, khung 48×48 game, net 2, chân [24,45])
@@ -29746,6 +29759,7 @@ G.CAM_CHUAN_DATA = {"phien":1,"ghi_chu":"cam-vk-chuan 16/10: neo sửa theo LUAT
       b = { neo: m.neo, ht: m.hang_tay, tl: m.vk_tl || da.vk_tl, cam: m.vk_cam || da.vk_cam, nam: true };
     } else b = { neo: da.neo, ht: da.hang_tay, tl: da.vk_tl, cam: da.vk_cam, nam: false };
     if (b.nam) b = camChuan(da, b);
+    if (b.nam && da.vk === 'thuong') b = thuongCao(da, b);
     if (BT) BT.set(da, b);
     return b;
   }
@@ -29770,6 +29784,61 @@ G.CAM_CHUAN_DATA = {"phien":1,"ghi_chu":"cam-vk-chuan 16/10: neo sửa theo LUAT
       if (vc && cam && cam.length === vc.cu.length && vc.cu.every((p, j) => cam[j] && Math.abs(cam[j][0] - p[0]) < 0.02 && Math.abs(cam[j][1] - p[1]) < 0.02)) cam = vc.moi;
       return neo === b.neo && cam === b.cam ? b : Object.assign({}, b, { neo, cam });
     } catch (e) { return b; }
+  }
+  // THƯƠNG: NÂNG TAY TRÁI (17/10/2026, docs/review/ke-hoach-cai-thien/thuong-tay-trai-cao/bao-cao.md): bảng G.THUONG_CAO_DATA
+  // (js/thuong_cao_data.js, dựng bằng thuong-tay-trai-cao/sua.py). Khung cầm thương hai tay: tay thứ hai (neo[4]) dời lên 2–3 điểm game,
+  // góc cán = đường nối tay phải (giữ nguyên) → tay trái mới. Khung thân dựng lại một lần trên canvas phụ từ tấm thân (anhCao): mỗi cột
+  // cẳng tay + nắm tay trái dời lên theo bảng "cot" (đúng điểm ảnh sẵn có, nét / màu / viền giữ nguyên), hàng nắm tay thân dời theo.
+  // Chỉ thay khi neo đang dùng khớp "cu" (tấm dựng lại → như cũ). Cần nắm tay từ ảnh (?ngonanh=0 thì thôi). Chỉ HÌNH. Tắt: ?thuongcao=0.
+  function thuongCao(da, b) {
+    const C = G.THUONG_CAO !== false && G.NGON_ANH !== false && typeof document !== 'undefined' && G.THUONG_CAO_DATA;
+    if (!C) return b;
+    try {
+      const R = C.bo && C.bo[da._ma || 'zed-moi'] && C.bo[da._ma || 'zed-moi'][da._khoa];
+      if (!R || !b.neo || R.so !== b.neo.length) return b;
+      const neo = b.neo.slice(), k = {};
+      let co = false;
+      Object.keys(R.khung).forEach((i) => {
+        const r = R.khung[i], n = neo[+i];
+        if (n && Math.abs(n[0] - r.cu[0]) < 0.02 && Math.abs(n[1] - r.cu[1]) < 0.02 && Math.abs(n[2] - r.cu[2]) < 0.05) { neo[+i] = r.neo; k[+i] = r.cot; co = true; }
+      });
+      return co ? Object.assign({}, b, { neo, cao: { k, khoa: da._khoa, hang: da.hang } }) : b;
+    } catch (e) { return b; }
+  }
+  // Canvas khung đã nâng tay của một hàng (hàng 0: thân, hàng 1: nắm tay thân hang_tay), nhớ theo tấm ảnh + khoá hàng. null: chưa dựng được.
+  const CAO = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  function anhCao(T, B) {
+    if (!CAO || !B.cao || typeof document === 'undefined') return null;
+    let m = CAO.get(T.img);
+    if (!m) CAO.set(T.img, (m = {}));
+    const key = B.cao.khoa;
+    if (m[key] !== undefined) return m[key];
+    let cv = null;
+    try {
+      const so = B.neo.length;
+      cv = document.createElement('canvas'); cv.width = so * 96; cv.height = 192;
+      const q = cv.getContext('2d');
+      q.imageSmoothingEnabled = false;
+      const lop = [B.cao.hang, B.ht];
+      Object.keys(B.cao.k).forEach((i) => {
+        const x0 = +i * 96, ct = B.cao.k[i];
+        lop.forEach((h, j) => {
+          if (h == null) return;
+          const y0 = j * 96;
+          q.drawImage(T.img, x0, h * 96, 96, 96, x0, y0, 96, 96);
+          for (let c = 0; c < ct.length; c += 4) q.clearRect(x0 + ct[c], y0 + ct[c + 1], 1, ct[c + 2] - ct[c + 1] + 1);
+          for (let c = 0; c < ct.length; c += 4) { const x = ct[c], a = ct[c + 1], n = ct[c + 2] - a + 1; q.drawImage(T.img, x0 + x, h * 96 + a, 1, n, x0 + x, y0 + a - ct[c + 3], 1, n); }
+        });
+      });
+    } catch (e) { cv = null; ghiLoi(e); }
+    m[key] = cv;
+    return cv;
+  }
+  // Khung thân / nắm tay đang vẽ có bản nâng tay không: { img, hang: 0, ht: 1 } hoặc null.
+  function caoCua(T, s, v) {
+    if (!v || s.theo || !v.B.cao || !v.B.cao.k[v.wa.i] || v.wa.i !== s.i) return null;
+    const cv = anhCao(T, v.B);
+    return cv ? { img: cv, hang: 0, ht: v.B.ht != null ? 1 : null } : null;
   }
   // Mốc tiến độ u bắt đầu từng khung. ★ = khung đứng ở mốc hitAt (đánh dấu trong chú thích).
   const MOC = {
@@ -30295,13 +30364,14 @@ G.CAM_CHUAN_DATA = {"phien":1,"ghi_chu":"cam-vk-chuan 16/10: neo sửa theo LUAT
     if (!v && !s.theo && !s.cam && HV_DAM[s.ten]) { Hb = huongCua(o, T, s); if (Hb) Hb = hvMuot(Hb); }
     if (!(v && v.hv) && !Hb) hvNghi(o);
     if (v) { ghiGoc(o, v.ang, v.cam, v.wa.ten); v.nt = namTayCua(V, v); }
+    const Cc = caoCua(T, s, v), TI = Cc ? Cc.img : T.img, AH = Cc ? Cc.hang : a.hang, HT = Cc ? Cc.ht : v && v.B.ht; // thương: tay trái nâng cao
     const E = s.eo ? eoTinh(T, s, o) : null;
     // Nghiêng thân trên quanh eo (đâm/ném nhắm gần thẳng lên/xuống, zed-8-huong): N = trục eo, null = không nghiêng (như cũ).
     const N = trucNghieng(T, s, v || (Hb ? { lean: Hb.lean, wa: s } : null), E), lean = v ? v.lean : Hb ? Hb.lean : 0;
     const tay = Hb && Math.abs(Hb.g) > 0.05 ? tayKhung(T, s.ten, s.i) : null, gTay = Hb ? Hb.g : 0;
     // Vẽ phần trên (hàng nguồn 0..h) của khung thân dời (ox, oy); có tay thì cánh tay duỗi được khoét ra và vẽ lại xoay quanh gốc tay.
     const veTren = (q, h, ox, oy) => {
-      const ve0 = () => q.drawImage(T.img, s.i * 96, a.hang * 96, 96, h, -24 + ox, -45 + oy, 48, h / 2);
+      const ve0 = () => q.drawImage(TI, s.i * 96, AH * 96, 96, h, -24 + ox, -45 + oy, 48, h / 2);
       if (!tay) { ve0(); return; }
       const x0 = tay[2] / 2 - 24 + ox, y0 = tay[3] / 2 - 45 + oy, w = (tay[4] - tay[2]) / 2, hh = (tay[5] - tay[3]) / 2;
       q.save(); q.beginPath(); q.rect(-24 + ox, -45 + oy, 48, h / 2); q.rect(x0, y0, w, hh); q.clip('evenodd'); ve0(); q.restore();
@@ -30312,10 +30382,11 @@ G.CAM_CHUAN_DATA = {"phien":1,"ghi_chu":"cam-vk-chuan 16/10: neo sửa theo LUAT
       const aC = D.dong_tac.chay, cA = E.eA[2], cR = E.eR[2], yA = cA + 1, yB = E.eA[0] + 1, K = E.K, S = G.ZED_EO.vung_noi || 5;
       const dx = E.eR[1] - E.eA[1];
       // một hàng nguồn sy (cột x0 = toạ độ cột khung chạy của cột 0), kéo theo K với mức t (0 = giữ nguyên, 1 = khớp hẳn mép đích)
-      const hang = (q, sx, sy, x0, yD, t) => {
-        if (!K || !(t > 0)) { q.drawImage(T.img, sx, sy, 96, 1, x0 / 2 - 24, yD, 48, 0.5); return; }
+      const hang = (q, sx, sy, x0, yD, t, im) => {
+        im = im || T.img;
+        if (!K || !(t > 0)) { q.drawImage(im, sx, sy, 96, 1, x0 / 2 - 24, yD, 48, 0.5); return; }
         const tl = K.l + t * (K.L - K.l), tr = K.r + t * (K.R - K.r), k = (tr - tl + 1) / (K.r - K.l + 1);
-        q.drawImage(T.img, sx, sy, 96, 1, (tl + (x0 - K.l) * k) / 2 - 24, yD, 48 * k, 0.5);
+        q.drawImage(im, sx, sy, 96, 1, (tl + (x0 - K.l) * k) / 2 - 24, yD, 48 * k, 0.5);
       };
       const tKeo = (k) => (k >= 0 && k < S ? (S - k) / S : 0); // k = số hàng tính từ mép nối
       // đang nghiêng: chỉ phần từ đai trở lên xoay, dải hông + đùi trên (dưới đai) đứng yên như chân; không nghiêng: vẽ liền tới vùng kéo
@@ -30329,15 +30400,15 @@ G.CAM_CHUAN_DATA = {"phien":1,"ghi_chu":"cam-vk-chuan 16/10: neo sửa theo LUAT
         if (K && !K.tren) for (let y = cR; y < y0 && y < 96; y++) hang(q, s.eo.i * 96, aC.hang * 96 + y, 0, -45 + y / 2, y === cR ? 1 : tKeo(y - cR - 1));
         if (y0 < 96) q.drawImage(T.img, s.eo.i * 96, aC.hang * 96 + y0, 96, 96 - y0, -24, -45 + y0 / 2, 48, (96 - y0) / 2);
         // đang nghiêng: lót dải đai (6 hàng nguồn ngay trên đai, không xoay) để chỗ nối không hở
-        if (N) q.drawImage(T.img, s.i * 96, a.hang * 96 + yB - 6, 96, 6, -24 + E.ox, -45 + E.oy + (yB - 6) / 2, 48, 3);
+        if (N) q.drawImage(TI, s.i * 96, AH * 96 + yB - 6, 96, 6, -24 + E.ox, -45 + E.oy + (yB - 6) / 2, 48, 3);
         // dải dưới (hàng yT..cA của khung đòn): không xoay; vùng nối kéo nếu nửa trên hẹp hơn
-        for (let y = yT; y < yA; y++) hang(q, s.i * 96, a.hang * 96 + y, dx, -45 + E.oy + y / 2, K && K.tren ? tKeo(cA - y) : 0);
+        for (let y = yT; y < yA; y++) hang(q, s.i * 96, AH * 96 + y, dx, -45 + E.oy + y / 2, K && K.tren ? tKeo(cA - y) : 0, TI);
         // nửa trên: đai + thân + tay khung đòn (hàng 0..yT−1), dời về khung chạy; xoay quanh eo khi nghiêng
         xoay(() => {
           veTren(q, yT, E.ox, E.oy);
           if (v && !v.n[3]) vk();
           if (v && v.B.ht != null) { // nắm tay đè lên cán, rồi lớp ngón (nắm chuôi)
-            if (coHt(v)) q.drawImage(T.img, v.wa.i * 96, v.B.ht * 96, 96, yA, -24 + E.ox, -45 + E.oy, 48, yA / 2);
+            if (coHt(v)) q.drawImage(TI, v.wa.i * 96, HT * 96, 96, yA, -24 + E.ox, -45 + E.oy, 48, yA / 2);
             q.save(); q.translate(E.ox, E.oy); veNgon(q, V, v); q.restore();
           }
         });
@@ -30356,13 +30427,13 @@ G.CAM_CHUAN_DATA = {"phien":1,"ghi_chu":"cam-vk-chuan 16/10: neo sửa theo LUAT
         q.drawImage(T.img, s.eo.i * 96, aC.hang * 96 + yR, 96, 96 - yR, -24, -45 + yR / 2, 48, (96 - yR) / 2);
         q.restore();
         // đang nghiêng: lót dải đai (6 hàng nguồn ngay trên eo, không xoay) để chỗ nối không hở
-        if (N) q.drawImage(T.img, s.i * 96, a.hang * 96 + yA - 6, 96, 6, -24 + E.ox, -45 + E.oy + (yA - 6) / 2, 48, 3);
+        if (N) q.drawImage(TI, s.i * 96, AH * 96 + yA - 6, 96, 6, -24 + E.ox, -45 + E.oy + (yA - 6) / 2, 48, 3);
         // nửa trên: đai + thân + tay khung đòn, dời về điểm eo của khung chạy
         xoay(() => {
           veTren(q, yA, E.ox, E.oy);
           if (v && !v.n[3]) vk();
           if (v && v.B.ht != null) { // nắm tay đè lên cán, rồi lớp ngón (nắm chuôi)
-            if (coHt(v)) q.drawImage(T.img, v.wa.i * 96, v.B.ht * 96, 96, yA, -24 + E.ox, -45 + E.oy, 48, yA / 2);
+            if (coHt(v)) q.drawImage(TI, v.wa.i * 96, HT * 96, 96, yA, -24 + E.ox, -45 + E.oy, 48, yA / 2);
             q.save(); q.translate(E.ox, E.oy); veNgon(q, V, v); q.restore();
           }
         });
@@ -30373,18 +30444,18 @@ G.CAM_CHUAN_DATA = {"phien":1,"ghi_chu":"cam-vk-chuan 16/10: neo sửa theo LUAT
       if (N) { // nửa dưới đứng yên (lấn lên 6 hàng nguồn để chỗ nối không hở), nửa trên + vũ khí + nắm tay xoay quanh eo
         const e = eoKhung(T, s.ten, s.i), yC = e[0] + 1, yL = Math.max(0, yC - 6);
         if (v && v.n[3]) nghieng(q, N, lean, () => veVk(q, V, v));
-        q.drawImage(T.img, s.i * 96, a.hang * 96 + yL, 96, 96 - yL, -24, -45 + yL / 2, 48, (96 - yL) / 2);
+        q.drawImage(TI, s.i * 96, AH * 96 + yL, 96, 96 - yL, -24, -45 + yL / 2, 48, (96 - yL) / 2);
         nghieng(q, N, lean, () => {
           veTren(q, yC, 0, 0);
           if (v && !v.n[3]) veVk(q, V, v);
-          if (v && !s.theo && v.B.ht != null) { if (coHt(v)) q.drawImage(T.img, v.wa.i * 96, v.B.ht * 96, 96, 96, -24, -45, 48, 48); veNgon(q, V, v); } // nắm tay + ngón đè lên cán
+          if (v && !s.theo && v.B.ht != null) { if (coHt(v)) q.drawImage(TI, v.wa.i * 96, HT * 96, 96, 96, -24, -45, 48, 48); veNgon(q, V, v); } // nắm tay + ngón đè lên cán
         });
         return;
       }
       if (v && v.n[3]) veVk(q, V, v);
       veTren(q, 96, 0, 0);
       if (v && !v.n[3]) veVk(q, V, v);
-      if (v && !s.theo && v.B.ht != null) { if (coHt(v)) q.drawImage(T.img, v.wa.i * 96, v.B.ht * 96, 96, 96, -24, -45, 48, 48); veNgon(q, V, v); } // nắm tay + ngón đè lên cán
+      if (v && !s.theo && v.B.ht != null) { if (coHt(v)) q.drawImage(TI, v.wa.i * 96, HT * 96, 96, 96, -24, -45, 48, 48); veNgon(q, V, v); } // nắm tay + ngón đè lên cán
     };
     return veLop(c, o, lop);
   }
