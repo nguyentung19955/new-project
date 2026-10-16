@@ -109,7 +109,7 @@ const CAI = () => {
       H.tha();
       return out;
     });
-    dat(s1.chon[0] === 'c1,c2,c3' && s1.chon[1] === 'c1,c2,c3,x2,l2,d2' && s1.chon[2] === 'c1,c2,x2,l2,m3,s3,dl', 'chọn chiêu theo pha: ' + s1.chon.join(' | ') + ' (không còn chiêu Ngư Tinh tạm n1, n2, c4, c5)');
+    dat(s1.chon[0] === 'c1,c2,c3' && s1.chon[1] === 'c1,c2,c2,c3,x2,l2,d2' && s1.chon[2] === 'c1,c2,c2,x2,l2,m3,s3,dl', 'chọn chiêu theo pha: ' + s1.chon.join(' | ') + ' (không còn chiêu Ngư Tinh tạm n1, n2, c4, c5)');
     dat(s1.sk.join() === 'Xoáy nước,Lặn – trồi đớp,Dòng nước đổi chiều,Mưa mảnh đồng,Siết sân,Đớp liên hoàn', 'tên chiêu: ' + s1.sk.join(', '));
     dat(s1.dong0 === 0 && s1.dong && s1.dong.h >= 30 && s1.el === 'ice' && s1.el3 === 'fire' && s1.dong3 === 1, 'pha 1 không có dải; pha 2 (Băng) mở một dải Dòng nước cao ' + (s1.dong && s1.dong.h) + ', còn ở pha 3 (Lửa)');
     dat(s1.day > 20 && s1.day < 35 && Math.abs(s1.ngoai) < 1, 'dải đẩy em bé ' + Math.round(s1.day) + ' điểm ảnh/giây theo mũi tên (≈ 43% tốc chạy chậm nhất), ngoài dải không trôi');
@@ -150,13 +150,15 @@ const CAI = () => {
       }
       out.l2 = { an, khong, gonV, vong: vong ? { t: vong.t, r: vong.r, trung: G.inZone(vong, W.P) } : null };
       let lo = 0, xLo = 0;
-      for (let i = 0; i < 200; i++) { H.cho(1, P1); if (!b.hidden && b.tl.troi) { lo = Math.max(lo, b.exposed); xLo = b.x; } if (!b.tl.troi && i > 60) break; }
+      let lan = 0, an0 = true;
+      for (let i = 0; i < 600; i++) { H.cho(1, P1); if (!b.hidden && b.tl.troi) { lo = Math.max(lo, b.exposed); xLo = b.x; } if (an0 && !b.hidden && b.tl.troi) lan++; an0 = b.hidden; if (!b.tl.troi && i > 60) break; }
+      out.l2.lan = lan;
       out.l2.lo = lo; out.l2.xLo = Math.round(xLo); out.l2.ve = [Math.round(b.x), W.x1, b.hidden, b.tl.raKhoi];
       // chạy thẳng ra xa gợn (tốc chậm nhất, chiều ngang): gợn không đuổi kịp
       r = H.ra('l2', [W.x0 + 150, (W.y0 + W.y1) / 2]);
-      for (let i = 0; i < 40 && !b.hidden; i++) G.sim(1);
+      for (let i = 0; i < 300 && !(b.tl.troi && b.tl.troi.pha === 'duoi'); i++) { W.P.x = W.x0 + 150; W.P.y = (W.y0 + W.y1) / 2; G.sim(1); }
       let dmin = 1e9; const d1 = Math.hypot(W.P.x - b.x, W.P.y - b.y);
-      for (let i = 0; i < 90 && b.tl.troi && b.tl.troi.pha === 'duoi'; i++) { W.P.x = Math.max(W.x0, W.P.x - out.vMin / 60); G.sim(1); dmin = Math.min(dmin, Math.hypot(W.P.x - b.x, W.P.y - b.y)); }
+      for (let i = 0; i < 90 && b.tl.troi && b.tl.troi.pha === 'duoi'; i++) { H.chay(1, { mx: -1 }); dmin = Math.min(dmin, Math.hypot(W.P.x - b.x, W.P.y - b.y)); }
       out.l2.chay = [Math.round(d1), Math.round(dmin)];
       for (let i = 0; i < 400 && (b.tl.troi || b.busy > 0); i++) G.sim(1);
       // Dòng nước đổi chiều: tự đổi mỗi 10 giây (cảnh báo trước 1,5 giây); chiêu: vùng đỏ phủ dải, đổi chiều lúc nổ
@@ -181,8 +183,8 @@ const CAI = () => {
     dat(x2.keo > 8 && x2.keo < s2.vMin * 0.75 * 0.5 && x2.thoat && x2.tan, 'Xoáy nước: đứng yên bị kéo ' + x2.keo.toFixed(1) + ' điểm ảnh/giây (< nửa tốc chạy dọc chậm nhất ' + (s2.vMin * 0.75).toFixed(1) + '), chạy ngược chiều kéo là thoát; xoáy tự tan');
     const l2 = s2.l2;
     dat(l2.an && l2.khong && l2.gonV <= 44 && l2.gonV < s2.vMin * 0.75, 'Lặn – trồi đớp: lặn hẳn (không nhắm được), gợn nước đuổi ' + Math.round(l2.gonV) + ' điểm ảnh/giây (chậm hơn tốc chạy dọc chậm nhất ' + (s2.vMin * 0.75).toFixed(1) + ')');
-    dat(l2.vong && l2.vong.trung && l2.vong.t >= 0.65 && (l2.vong.r + 4) / s2.vMin < l2.vong.t, 'Lặn – trồi đớp: gợn dừng → vòng đỏ r ' + (l2.vong && l2.vong.r) + ' ngay chỗ em bé, báo trước ' + (l2.vong && l2.vong.t.toFixed(2)) + ' giây (đi ra mất ' + ((l2.vong.r + 4) / s2.vMin).toFixed(2) + ')');
-    dat(l2.lo >= 1 && l2.xLo < l2.ve[1] - 60 && l2.ve[0] >= l2.ve[1] - 8 && !l2.ve[2] && !l2.ve[3], 'Lặn – trồi đớp: đầu trồi giữa bãi đá (x ' + l2.xLo + ') lộ điểm yếu ' + l2.lo.toFixed(2) + ' giây, rồi lặn về mép phải (x ' + l2.ve[0] + ')');
+    dat(l2.vong && l2.vong.trung && l2.vong.t >= 0.62 && (l2.vong.r + 4) / s2.vMin < l2.vong.t, 'Lặn – trồi đớp: gợn dừng → vòng đỏ r ' + (l2.vong && l2.vong.r) + ' ngay chỗ em bé, báo trước ' + (l2.vong && l2.vong.t.toFixed(2)) + ' giây (đi ra mất ' + ((l2.vong.r + 4) / s2.vMin).toFixed(2) + ')');
+    dat(l2.lan === 2 && l2.lo >= 1 && l2.xLo < l2.ve[1] - 60 && l2.ve[0] >= l2.ve[1] - 8 && !l2.ve[2] && !l2.ve[3], 'Lặn – trồi đớp: trồi đớp ' + l2.lan + ' lần (pha 2, 3), đầu trồi giữa bãi đá (x ' + l2.xLo + ') lộ điểm yếu ' + l2.lo.toFixed(2) + ' giây, rồi lặn về mép phải (x ' + l2.ve[0] + ')');
     dat(l2.chay[1] >= l2.chay[0] - 5, 'Lặn – trồi đớp: chạy thẳng ra xa gợn (tốc chậm nhất) thì gợn không đuổi kịp (cách ' + l2.chay.join(' → ') + ')');
     const d2 = s2.d2;
     dat(d2.doi && d2.canh >= 1.45 && d2.canh <= 1.6, 'Dòng nước tự đổi chiều; mũi tên báo đổi trước ' + d2.canh + ' giây');
@@ -204,8 +206,9 @@ const CAI = () => {
       const o = b.tl.manh[0];
       W.P.x = o.x; W.P.y = o.y; G.sim(1);
       out.m3.day = Math.hypot(W.P.x - o.x, (W.P.y - o.y) / ZK);
-      let t = 0; for (let i = 0; i < 400 && b.tl.manh.length; i++) { b.cd = 99; G.sim(1); t += 1 / 60; }
-      out.m3.giu = +t.toFixed(2);
+      const thay = new Set(b.tl.manh); let t = 0, het = null;
+      for (let i = 0; i < 600 && b.tl.manh.length; i++) { b.cd = 99; G.sim(1); t += 1 / 60; for (const m of b.tl.manh) thay.add(m); if (het == null && !b.tl.manh.includes(o)) het = t; }
+      out.m3.dot = Math.round(thay.size / 6); out.m3.giu = +(o.het - o.t0).toFixed(2); out.m3.mat = het != null;
       b.cd = 0;
       // Siết sân: 3 dải mép trong, giữa sân an toàn; sân hẹp lại; quét lại mỗi 6 giây; tối đa 2 lần thu
       const giua = [(W.x0 + W.x1) / 2 - 30, (W.y0 + W.y1) / 2];
@@ -226,13 +229,13 @@ const CAI = () => {
       // Đớp liên hoàn: 3 vạch đỏ, mỗi vạch nhắm lại chỗ em bé lúc đó, đầu chồm tới
       for (let i = 0; i < 400 && b.busy > 0; i++) { b.cd = 99; G.sim(1); }
       for (let i = 0; i < 600 && b.x < W.x1 - 6; i++) { b.cd = 99; W.P.x = W.x0 + 40; G.sim(1); }
-      const xDau = b.x, Q = [[b.x - 90, b.y], [b.x - 110, b.y - 34], [b.x - 130, b.y + 30]];
+      const xDau = b.x, Q = [[b.x - 90, b.y], [b.x - 110, b.y - 34], [b.x - 130, b.y + 30], [b.x - 150, b.y - 20]];
       r = H.ra('dl', Q[0]);
       const vach = [], seen = new Set();
       let k = 0;
       for (let i = 0; i < 260; i++) {
         const z = W.zones.find((q) => q.skill === 'Đớp liên hoàn' && q.t > 0 && !seen.has(q));
-        if (z) { seen.add(z); vach.push({ t: z.t, w: z.w, trung: G.inZone(z, W.P), ngang: G.inZone(z, { x: W.P.x - Math.sin(z.ang) * (z.w / 2 + 5), y: W.P.y + Math.cos(z.ang) * (z.w / 2 + 5) }) }); k = Math.min(2, vach.length); }
+        if (z) { seen.add(z); vach.push({ t: z.t, w: z.w, trung: G.inZone(z, W.P), ngang: G.inZone(z, { x: W.P.x - Math.sin(z.ang) * (z.w / 2 + 5), y: W.P.y + Math.cos(z.ang) * (z.w / 2 + 5) }) }); k = Math.min(3, vach.length); }
         W.P.x = Q[k][0]; W.P.y = Q[k][1]; G.sim(1);
       }
       out.dl = { vach, chom: Math.round(xDau - Math.min(b.x, xDau)), raKhoi: b.tl.raKhoi };
@@ -244,15 +247,15 @@ const CAI = () => {
       return out;
     });
     const m3 = s3.m3;
-    dat(m3.so === 6 && m3.trung && m3.t >= 0.95 && (m3.r + 4) / (s3.vMin * 0.75) < m3.t && m3.el === 'fire', 'Mưa mảnh đồng: 6 bóng tròn (một ngay chỗ em bé), báo trước ' + m3.t.toFixed(2) + ' giây (ra khỏi bóng mất ' + ((m3.r + 4) / (s3.vMin * 0.75)).toFixed(2) + ')');
-    dat(m3.cach >= 46 && m3.vat === 6 && m3.day >= 12 && Math.abs(m3.giu - 4) < 0.2, 'Mưa mảnh đồng: rơi xong nằm lại làm vật cản nóng ' + m3.giu + ' giây (đẩy em bé ra), các mảnh cách nhau ≥ ' + m3.cach + ' (khe ≥ ' + (m3.cach - 26) + ': không kẹt)');
+    dat(m3.so === 6 && m3.trung && m3.t >= 0.85 && (m3.r + 4) / (s3.vMin * 0.75) < m3.t && m3.el === 'fire', 'Mưa mảnh đồng: 6 bóng tròn (một ngay chỗ em bé), báo trước ' + m3.t.toFixed(2) + ' giây (ra khỏi bóng mất ' + ((m3.r + 4) / (s3.vMin * 0.75)).toFixed(2) + ')');
+    dat(m3.cach >= 46 && m3.vat >= 6 && m3.dot === 3 && m3.day >= 12 && Math.abs(m3.giu - 4) < 0.05 && m3.mat, 'Mưa mảnh đồng: ' + m3.dot + ' đợt (đợt sau nhắm lại chỗ em bé), rơi xong nằm lại làm vật cản nóng ' + m3.giu + ' giây (đẩy em bé ra), các mảnh cách nhau ≥ ' + m3.cach + ' (khe ≥ ' + (m3.cach - 26) + ': không kẹt)');
     const s3s = s3.s3;
-    dat(s3s.so === 3 && s3s.trung && !s3s.giua && s3s.t >= 1.15 && (s3s.day + 4) / (s3.vMin * 0.75) < s3s.t, 'Siết sân: dải mép trong (trên, dưới, trái) dày ' + s3s.day + ', báo trước ' + s3s.t.toFixed(2) + ' giây (đi ra mất ' + ((s3s.day + 4) / (s3.vMin * 0.75)).toFixed(2) + '), giữa sân an toàn');
+    dat(s3s.so === 4 && s3s.trung && !s3s.giua && s3s.t >= 1.15 && (s3s.day + 4) / (s3.vMin * 0.75) < s3s.t, 'Siết sân: dải mép trong (trên, dưới, trái + dải hẹp sau lưng đầu) dày ' + s3s.day + ', báo trước ' + s3s.t.toFixed(2) + ' giây (đi ra mất ' + ((s3s.day + 4) / (s3.vMin * 0.75)).toFixed(2) + '), giữa sân an toàn');
     dat(s3s.thu.join() === '8,0,7,7', 'Siết sân: sân hẹp lại (trái 8, trên 7, dưới 7; mép phải là đầu)');
-    dat(s3s.lai && s3s.lai.sau > 5 && s3s.lai.sau < 7.2 && s3s.lai.t >= 1.05 && !s3s.lai.giua, 'Siết sân: sau đó quét lại mép trong mỗi ~6 giây (lần sau sau ' + (s3s.lai && s3s.lai.sau) + ' giây, báo trước ' + (s3s.lai && s3s.lai.t.toFixed(2)) + '), giữa sân không trúng');
+    dat(s3s.lai && s3s.lai.sau > 4.5 && s3s.lai.sau < 6.5 && s3s.lai.t >= 0.95 && !s3s.lai.giua, 'Siết sân: sau đó quét lại mép trong mỗi ~5 giây (lần sau sau ' + (s3s.lai && s3s.lai.sau) + ' giây, báo trước ' + (s3s.lai && s3s.lai.t.toFixed(2)) + '), giữa sân không trúng');
     dat(s3s.toiDa[0] === 16 && s3s.toiDa[1] === 14 && s3s.toiDa[3] >= 120, 'Siết sân: thu tối đa 2 lần (sân còn ' + s3s.toiDa[4] + ' × ' + s3s.toiDa[3] + ')');
     const dl = s3.dl;
-    dat(dl.vach.length === 3 && dl.vach.every((v) => v.trung && !v.ngang) && dl.vach[0].t >= 0.7 && Math.min(...dl.vach.map((v) => v.t)) >= 0.55, 'Đớp liên hoàn: 3 vạch đỏ nhắm lại chỗ em bé mỗi cú, báo trước ' + dl.vach.map((v) => v.t.toFixed(2)).join(' / ') + ' giây; bước ngang ' + Math.round(dl.vach[0].w / 2 + 5) + ' điểm ảnh là né (' + ((dl.vach[0].w / 2 + 5) / (s3.vMin * 0.75)).toFixed(2) + ' giây)');
+    dat(dl.vach.length === 4 && dl.vach.every((v) => v.trung && !v.ngang) && dl.vach[0].t >= 0.7 && Math.min(...dl.vach.map((v) => v.t)) > (dl.vach[0].w / 2 + 5) / (s3.vMin * 0.75), 'Đớp liên hoàn: 4 vạch đỏ nhắm lại chỗ em bé mỗi cú, báo trước ' + dl.vach.map((v) => v.t.toFixed(2)).join(' / ') + ' giây; bước ngang ' + Math.round(dl.vach[0].w / 2 + 5) + ' điểm ảnh là né (' + ((dl.vach[0].w / 2 + 5) / (s3.vMin * 0.75)).toFixed(2) + ' giây)');
     dat(dl.chom >= 60 && dl.xMin >= 50 && dl.ve <= 8, 'Đớp liên hoàn: đầu chồm tới ' + dl.chom + ' điểm ảnh (không quá mép trái ' + dl.xMin + '), xong trườn về mép phải');
 
     // ---------- 4. không đòn một phát chết ----------

@@ -56,21 +56,24 @@
     HE: ['poison', 'ice', 'fire'],
     anh: 'thuongLuong',                                // mã sprite thật khi có ảnh
     // ----- PHIÊN 3C (pha 2 Băng, pha 3 Lửa, cảnh bỏ trốn). Tốc chạy chậm nhất (Cu Lì) 64,8 điểm ảnh/giây ngang, 48,6 dọc. -----
-    xoay: { so: 2, r: 62, loi: 14, keo: 20, toc: 16, giay: 5.5, bao: 0.8, sat: 1.0, satVung: 0.3, xa: 72, cach: 84 }, // Xoáy nước: r vùng kéo, loi lõi
-                                                       // (vũng Băng, mỗi 0,5 giây), keo tốc kéo (< 1/2 tốc chạy dọc), toc tốc trôi; bao báo chỗ xoáy mọc
-    troi: { toi: 110, gan: 70, duoi: 2.0, toc: 42, r: 30, bao: 0.7, sat: 1.6, lo: 1.2, ve: 0.9 }, // Lặn – trồi đớp: gợn bơi nhanh (toi) tới cách em bé gan, rồi đuổi duoi giây (toc < tốc chạy dọc 48,6),
+    xoay: { so: [2, 2, 3], r: 62, loi: 16, keo: 24, toc: 16, giay: 6, bao: 0.8, sat: 1.4, satVung: 0.5, xa: 72, cach: 80 }, // Xoáy nước: r vùng kéo, loi lõi
+                                                       // (vũng Băng, mỗi 0,5 giây), keo tốc kéo (< 1/2 tốc chạy dọc), toc tốc trôi (dần về phía em bé); bao báo chỗ xoáy mọc
+    troi: { toi: 110, gan: 70, duoi: 2.0, toc: 42, r: 30, bao: 0.66, sat: 1.8, lo: 1.2, ve: 0.9, lan: [1, 2, 2], duoi2: 1.0, lo1: 0.5 }, // Lặn – trồi đớp: gợn bơi nhanh (toi) tới cách em bé gan, rồi đuổi duoi giây (toc < tốc chạy dọc 48,6),
                                                        // dừng → vòng đỏ r báo bao giây → trồi đớp; đầu nằm trên đá lo giây (lộ điểm yếu) rồi lặn về mép phải ve giây
-    dong: { rong: 34, moi: 10, bao: 1.5, sat: 1.2, lech: 18 }, // Dòng nước đổi chiều: dải ngang rộng rong (đẩy 28 điểm ảnh/giây, js/song_luat.js), mỗi moi giây
+    dong: { rong: 34, moi: 10, bao: 1.5, sat: 1.6, lech: 18 }, // Dòng nước đổi chiều: dải ngang rộng rong (đẩy 28 điểm ảnh/giây, js/song_luat.js), mỗi moi giây
                                                        // đổi chiều, mũi tên đổi trước bao giây; chiêu: ép đổi chiều + tảng băng / gỗ cháy trôi quét cả dải
-    manh: { so: 6, r: 18, bao: 1.0, giu: 4, chan: 9, vung: 13, sat: 1.3, satVung: 0.25, cach: 46 }, // Mưa mảnh đồng: bóng tròn r, rơi xong nằm lại giu giây
+    manh: { so: 6, r: 18, bao: 0.9, giu: 4, chan: 9, vung: 13, sat: 1.8, satVung: 0.4, cach: 46, dot: [1, 1, 3], gian: 0.8, bao2: 0.6 }, // Mưa mảnh đồng: bóng tròn r, rơi xong nằm lại giu giây
                                                        // làm vật cản (chan) nóng (vũng vung, mỗi 0,5 giây); các mảnh cách nhau ≥ cach (khe ≥ 20 — không kẹt)
-    siet: { day: 24, bao: 1.2, moi: 6, baoMoi: 1.1, sat: 1.1, thu: [8, 7], lan: 2 }, // Siết sân: quét dải mép trong (dày day) trên / dưới / trái,
+    siet: { day: 24, phai: 20, bao: 1.2, moi: 5, baoMoi: 1.0, sat: 1.6, thu: [8, 7], lan: 2 }, // Siết sân: quét dải mép trong (dày day) trên / dưới / trái (+ dải phai sau lưng đầu),
                                                        // rồi sân hẹp lại thu (ngang, dọc) mỗi lần (tối đa lan lần); sau đó mỗi moi giây quét lại (báo baoMoi)
-    lienHoan: { so: 3, rong: 30, bao: [0.75, 0.6, 0.6], cach: 0.85, tien: 40, sat: 1.3, lo: 1.0, xMin: 56 }, // Đớp liên hoàn: 3 cú đớp thẳng (vạch rộng rong)
+    lienHoan: { so: 4, rong: 34, bao: [0.75, 0.58, 0.58, 0.58], cach: 0.7, tien: 40, sat: 1.8, lo: 1.0, xMin: 56 }, // Đớp liên hoàn: 3 cú đớp thẳng (vạch rộng rong)
                                                        // nhắm theo em bé, đầu chồm tới tien mỗi cú (không quá xMin từ mép trái); xong mệt lo giây
+    satPha: [1, 0.8, 0.8], // × sát thương theo pha (G.NOI_GIAN.vung.satTrum.thuong; trùm khác [1, 0,5, 0,45]): chiêu pha 2, 3 của 3C ít đòn hơn chiêu Ngư Tinh mượn
+                                                       // (đo bằng bot: do_trum.py) nên mỗi đòn trúng nặng hơn — vẫn không đòn nào một phát chết
     tron: { giay: 3.4, nha: [0.5, 1.0], ngoam: 1.0, lan: [1.8, 3.0] }, // cảnh bỏ trốn: nhả mảnh nhỏ, ngoạm mảnh mặt trời, lặn mất (giây từ lúc gục)
   };
   const TL = (G.thuongLuong = { CFG });
+  if (G.TL_3C !== false && G.NOI_GIAN && G.NOI_GIAN.vung) G.NOI_GIAN.vung.satTrum = Object.assign({}, G.NOI_GIAN.vung.satTrum || {}, { thuong: CFG.satPha }); // 3C (cờ ?tl3c=0: như 3B)
   const TEN = { duoi: 'Quật đuôi', phun: 'Phun nước đen', vom: 'Vòng thân', mep: 'Vỗ sóng bờ', gai: 'Vảy dựng gai', dop: 'Đớp',
     xoay: 'Xoáy nước', troi: 'Lặn – trồi đớp', dong: 'Dòng nước đổi chiều', manh: 'Mưa mảnh đồng', siet: 'Siết sân', lien: 'Đớp liên hoàn' };
   TL.TEN = TEN;
@@ -299,7 +302,8 @@
   function xoayNuoc(b, P, T, D) {
     const w = W(), C = CFG.xoay, ds = [];
     if (b.an) b.an.ct = true;
-    for (let k = 0; k < 80 && ds.length < C.so; k++) {
+    const so = C.so[clamp(b.phase | 0, 0, 2)];
+    for (let k = 0; k < 80 && ds.length < so; k++) {
       const x = G.rr(w.x0 + 24, w.x1 - 56), y = G.rr(w.y0 + 16, w.y1 - 14);
       if (Math.hypot(x - P.x, (y - P.y) / ZK()) < C.xa || ds.some((d) => Math.hypot(d[0] - x, d[1] - y) < C.cach)) continue;
       ds.push([x, y]);
@@ -320,6 +324,10 @@
     const T = b.tl, C = CFG.xoay, now = G.time || 0, P = w.P;
     T.xoay = T.xoay.filter((o) => now < o.het && !(o.z && o.z.dead && o.z.life <= 0));
     for (const o of T.xoay) {
+      if (P && !P.dead) { // trôi chậm về phía em bé (chậm hơn tốc chạy nhiều) — đứng lì một chỗ thì xoáy tới
+        const ex = P.x - o.x, ey = P.y - o.y, el = Math.hypot(ex, ey) || 1, k = Math.min(1, 1.5 * dt);
+        o.vx += (ex / el * C.toc - o.vx) * k; o.vy += (ey / el * C.toc * ZK() - o.vy) * k;
+      }
       o.x += o.vx * dt; o.y += o.vy * dt;
       if (o.x < w.x0 + 14 || o.x > w.x1 - 40) { o.vx = -o.vx; o.x = clamp(o.x, w.x0 + 14, w.x1 - 40); }
       if (o.y < w.y0 + 10 || o.y > w.y1 - 8) { o.vy = -o.vy; o.y = clamp(o.y, w.y0 + 10, w.y1 - 8); }
@@ -338,10 +346,10 @@
     later(b, T, () => {
       if (b.dead || !b.tl) return;
       b.hidden = true; b.tl.raKhoi = true; b.lunge = null;
-      b.tl.troi = { pha: 'toi', t: 0 };
+      b.tl.troi = { pha: 'toi', t: 0, con: C.lan[clamp(b.phase | 0, 0, 2)] - 1 }; // con: số lần trồi đớp còn lại sau lần này (pha 3: đớp hai lần)
       FX('burst', b.x, b.y, '#cfe8e4', 10, 60); G.sfx('boom', 1.8);
     });
-    giuBan(b, T + 1.2 + C.duoi + C.bao + C.lo + C.ve + 0.1); // (troiTick giữ bận tới khi lặn về)
+    giuBan(b, T + 1.2 + C.duoi + C.bao + C.lo + C.ve + 0.1); // (troiTick giữ bận tới khi lặn về, kể cả lần đớp thứ hai)
   }
   function troiTick(w, b, dt) {
     const T = b.tl, R0 = T.troi, C = CFG.troi, P = w.P;
@@ -366,6 +374,7 @@
         FX('burst', b.x, b.y - 10, '#cfe8e4', 16, 90); W().shake = Math.max(W().shake, 0.25);
       }
     } else if (R0.pha === 'lo') {
+      if (R0.con > 0 && R0.t >= C.lo1) { R0.con--; R0.pha = 'duoi'; R0.t = C.duoi - C.duoi2; b.hidden = true; FX('burst', b.x, b.y, '#cfe8e4', 8, 50); return; } // lặn xuống đuổi tiếp
       if (R0.t >= C.lo) { R0.pha = 've'; R0.t = 0; R0.x0 = b.x; R0.y0 = b.y; b.hidden = true; FX('burst', b.x, b.y, '#cfe8e4', 8, 50); }
     } else {
       const u = clamp(R0.t / C.ve, 0, 1), tx = w.x1 - CFG.dau.lui, ty = clamp(R0.y0, w.y0 + 12, w.y1 - 8);
@@ -401,11 +410,19 @@
   }
   // p3 · MƯA MẢNH ĐỒNG: 6 mảnh trống nóng đỏ rơi (bóng tròn báo trước; một bóng ngay chỗ em bé), rơi xong nằm lại làm vật cản nóng giu giây.
   function muaManh(b, P, T, D) {
-    const w = W(), C = CFG.manh, ds = [[clamp(P.x, w.x0 + 14, w.x1 - 40), clamp(P.y, w.y0 + 10, w.y1 - 8)]];
+    const C = CFG.manh, dot = C.dot[clamp(b.phase | 0, 0, 2)];
     if (b.an) b.an.ct = true;
+    manhDot(b, P, T);
+    for (let k = 1; k < dot; k++) later(b, T + k * C.gian - C.bao2, () => { if (!b.dead) manhDot(b, W().P, C.bao2); }); // đợt sau: nhắm lại chỗ em bé
+    const X = T + (dot - 1) * C.gian + 0.4;
+    if (X > D) giuBan(b, X);
+  }
+  function manhDot(b, P, T) {
+    const w = W(), C = CFG.manh, ds = [[clamp(P.x, w.x0 + 14, w.x1 - 40), clamp(P.y, w.y0 + 10, w.y1 - 8)]];
+    const cu = b.tl.manh.map((o) => [o.x, o.y]); // không rơi đè lên mảnh đang nằm (khe giữa các mảnh luôn đủ đi)
     for (let k = 0; k < 120 && ds.length < C.so; k++) {
       const x = G.rr(w.x0 + 16, w.x1 - 44), y = G.rr(w.y0 + 12, w.y1 - 10);
-      if (ds.some((d) => Math.hypot(d[0] - x, (d[1] - y) / ZK()) < C.cach)) continue;
+      if (ds.some((d) => Math.hypot(d[0] - x, (d[1] - y) / ZK()) < C.cach) || cu.some((d) => Math.hypot(d[0] - x, (d[1] - y) / ZK()) < C.cach)) continue;
       ds.push([x, y]);
     }
     ds.forEach(([x, y], i) => {
@@ -417,13 +434,12 @@
         FX('burst', x, y - 4, '#ffb050', 6, 50);
       } });
     });
-    const X = T + 0.4;
-    if (X > D) giuBan(b, X);
   }
   // p3 · SIẾT SÂN: thân cuộn quanh mép sân — quét dải mép trong (trên, dưới, trái; mép phải là đầu) rồi sân hẹp lại; từ đó mỗi siet.moi giây quét lại.
   function quetMep(b, t) {
     const w = W(), C = CFG.siet, d = C.day;
-    for (const g of [{ x: w.x0 - 10, y: w.y0 - 10, w: w.x1 - w.x0 + 20, h: d + 10 }, { x: w.x0 - 10, y: w.y1 - d, w: w.x1 - w.x0 + 20, h: d + 10 }, { x: w.x0 - 10, y: w.y0 - 10, w: d + 10, h: w.y1 - w.y0 + 20 }])
+    for (const g of [{ x: w.x0 - 10, y: w.y0 - 10, w: w.x1 - w.x0 + 20, h: d + 10 }, { x: w.x0 - 10, y: w.y1 - d, w: w.x1 - w.x0 + 20, h: d + 10 }, { x: w.x0 - 10, y: w.y0 - 10, w: d + 10, h: w.y1 - w.y0 + 20 },
+      { x: w.x1 - C.phai, y: w.y0 - 10, w: C.phai + 10, h: w.y1 - w.y0 + 20 }]) // mép phải (cạnh đầu): thân quét dải hẹp sau lưng đầu
       vung(b, 'rect', g, t, b.dmg * C.sat, b.el, TEN.siet, { tlSiet: true });
     b.tl.quet.push({ t0: G.time || 0, T: t });
     G.sfx('warn', 0.8);
@@ -604,9 +620,9 @@
   // 3C: pha 1 ba chiêu; pha 2 giữ chiêu pha 1 + Xoáy nước, Lặn – trồi đớp, Dòng nước đổi chiều; pha 3 Quật đuôi, Phun nước đen, Xoáy nước,
   // Lặn – trồi đớp + Mưa mảnh đồng, Siết sân, Đớp liên hoàn. Đứng sát đầu: hay bị Đớp (pha 3: Đớp liên hoàn).
   function chon3C(b, ph) {
-    const o = ph >= 2 ? ['c1', 'c2', 'x2', 'l2', 'm3', 's3', 'dl'] : ph >= 1 ? ['c1', 'c2', 'c3', 'x2', 'l2', 'd2'] : ['c1', 'c2', 'c3'];
+    const o = ph >= 2 ? ['c1', 'c2', 'c2', 'x2', 'l2', 'm3', 's3', 'dl'] : ph >= 1 ? ['c1', 'c2', 'c2', 'c3', 'x2', 'l2', 'd2'] : ['c1', 'c2', 'c3'];
     const P = W().P;
-    if (P && Math.hypot(P.x - b.x, P.y - b.y) < CFG.dop.gan) o.push(...(ph >= 2 ? ['dop', 'dl', 'dl'] : ['dop', 'dop', 'dop']));
+    if (P && Math.hypot(P.x - b.x, P.y - b.y) < CFG.dop.gan) o.push(...(ph >= 2 ? ['dop', 'dop', 'dl', 'dl'] : ['dop', 'dop', 'dop']));
     return o;
   }
   TL.chon3C = chon3C;
@@ -881,13 +897,13 @@
       // mảnh mặt trời (mảnh lớn nhất) sáng rực trong miệng, chìm theo đầu
       if (u >= C.ngoam) {
         const k = clamp((u - C.ngoam) / 0.3, 0, 1), mx = x - 16 + lui, my = y - hH * 0.42 + lanK * hH * 1.1, sang = (1 - lanK * 0.8) * k;
-        if (my < y + 4 || lanK < 1) {
+        if (my < y + 2) {
           c.save(); c.globalAlpha *= sang;
           E(mx, my, 16 + Math.sin(t * 9) * 2, 12, 'rgba(255,214,120,0.35)');
           for (let i = 0; i < 8; i++) { const a = i / 8 * TAU + t * 1.5; R(mx + Math.cos(a) * 12, my + Math.sin(a) * 9, 2, 2, '#ffe9a0'); }
           E(mx, my, 8, 6, '#c88a2a'); E(mx, my, 6, 4.5, '#ffd27a'); E(mx, my, 2.5, 2, '#fff8d0');
           c.restore();
-        } else E(mx, y + 3, 10, 3, 'rgba(255,214,120,' + (0.3 * (1 - lanK)).toFixed(2) + ')');
+        } else E(mx, y + 3, 12, 3.5, 'rgba(255,214,120,' + (0.45 * (1 - lanK) + 0.1).toFixed(2) + ')'); // đã chìm: chỉ còn quầng sáng dưới nước
       }
       if (lanK >= 1 || u > C.lan[0] + 0.6) { // vây lưng rẽ nước bơi đi về phía phải (núi xa)
         const k = clamp((u - C.lan[0] - 0.6) / 1.2, 0, 1), fx = x + k * 70, fa = 1 - k;
