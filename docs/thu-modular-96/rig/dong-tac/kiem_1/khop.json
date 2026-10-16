@@ -1,0 +1,479 @@
+{
+ "action": "kiem_1",
+ "name": "Chém kiếm 1",
+ "frameCount": 5,
+ "fps": 16.67,
+ "loop": false,
+ "frames": [
+  {
+   "frame": 0,
+   "joints": {
+    "neck": [
+     49.58,
+     51.72
+    ],
+    "shoulderFront": [
+     38.79,
+     55.26
+    ],
+    "elbowFront": [
+     34.59,
+     59.98
+    ],
+    "wristFront": [
+     37.59,
+     64.11
+    ],
+    "handFront": [
+     39.39,
+     65.88
+    ],
+    "shoulderBack": [
+     53.77,
+     55.85
+    ],
+    "elbowBack": [
+     55.81,
+     60.8
+    ],
+    "wristBack": [
+     57.73,
+     61.75
+    ],
+    "handBack": [
+     58.93,
+     63.16
+    ],
+    "hipFront": [
+     43.58,
+     71.18
+    ],
+    "kneeFront": [
+     36.39,
+     77.08
+    ],
+    "ankleFront": [
+     34.59,
+     85.34
+    ],
+    "toeFront": [
+     31.0,
+     88.29
+    ],
+    "hipBack": [
+     50.78,
+     71.18
+    ],
+    "kneeBack": [
+     59.17,
+     77.08
+    ],
+    "ankleBack": [
+     59.77,
+     85.34
+    ],
+    "toeBack": [
+     65.76,
+     88.29
+    ],
+    "hipCenter": [
+     47.18,
+     71.18
+    ],
+    "waist": [
+     48.38,
+     63.4
+    ]
+   }
+  },
+  {
+   "frame": 1,
+   "joints": {
+    "neck": [
+     49.29,
+     52.9
+    ],
+    "shoulderFront": [
+     38.15,
+     50.54
+    ],
+    "elbowFront": [
+     34.04,
+     47.0
+    ],
+    "wristFront": [
+     32.28,
+     43.46
+    ],
+    "handFront": [
+     31.11,
+     41.1
+    ],
+    "shoulderBack": [
+     52.81,
+     56.44
+    ],
+    "elbowBack": [
+     55.16,
+     61.16
+    ],
+    "wristBack": [
+     56.92,
+     61.75
+    ],
+    "handBack": [
+     58.44,
+     62.34
+    ],
+    "hipFront": [
+     42.25,
+     71.18
+    ],
+    "kneeFront": [
+     35.8,
+     77.67
+    ],
+    "ankleFront": [
+     33.45,
+     85.34
+    ],
+    "toeFront": [
+     29.93,
+     88.29
+    ],
+    "hipBack": [
+     49.88,
+     71.18
+    ],
+    "kneeBack": [
+     58.09,
+     77.67
+    ],
+    "ankleBack": [
+     58.68,
+     85.34
+    ],
+    "toeBack": [
+     65.13,
+     88.29
+    ],
+    "hipCenter": [
+     46.36,
+     71.18
+    ],
+    "waist": [
+     47.83,
+     63.87
+    ]
+   }
+  },
+  {
+   "frame": 2,
+   "joints": {
+    "neck": [
+     50.86,
+     52.9
+    ],
+    "shoulderFront": [
+     47.52,
+     52.07
+    ],
+    "elbowFront": [
+     59.21,
+     49.36
+    ],
+    "wristFront": [
+     65.17,
+     47.59
+    ],
+    "handFront": [
+     69.94,
+     47.59
+    ],
+    "shoulderBack": [
+     55.03,
+     56.44
+    ],
+    "elbowBack": [
+     56.82,
+     61.16
+    ],
+    "wristBack": [
+     58.25,
+     61.51
+    ],
+    "handBack": [
+     59.45,
+     62.93
+    ],
+    "hipFront": [
+     44.89,
+     71.18
+    ],
+    "kneeFront": [
+     37.14,
+     77.08
+    ],
+    "ankleFront": [
+     33.56,
+     85.34
+    ],
+    "toeFront": [
+     29.98,
+     88.29
+    ],
+    "hipBack": [
+     53.24,
+     71.18
+    ],
+    "kneeBack": [
+     61.59,
+     77.08
+    ],
+    "ankleBack": [
+     59.8,
+     85.34
+    ],
+    "toeBack": [
+     66.37,
+     88.29
+    ],
+    "hipCenter": [
+     49.07,
+     71.18
+    ],
+    "waist": [
+     49.97,
+     63.87
+    ]
+   }
+  },
+  {
+   "frame": 3,
+   "joints": {
+    "neck": [
+     49.32,
+     52.31
+    ],
+    "shoulderFront": [
+     49.09,
+     55.85
+    ],
+    "elbowFront": [
+     60.48,
+     60.57
+    ],
+    "wristFront": [
+     64.6,
+     62.93
+    ],
+    "handFront": [
+     66.36,
+     64.7
+    ],
+    "shoulderBack": [
+     53.43,
+     56.08
+    ],
+    "elbowBack": [
+     55.2,
+     61.16
+    ],
+    "wristBack": [
+     56.96,
+     62.34
+    ],
+    "handBack": [
+     58.13,
+     63.52
+    ],
+    "hipFront": [
+     43.45,
+     71.18
+    ],
+    "kneeFront": [
+     36.4,
+     77.67
+    ],
+    "ankleFront": [
+     33.46,
+     85.34
+    ],
+    "toeFront": [
+     29.94,
+     88.29
+    ],
+    "hipBack": [
+     51.08,
+     71.18
+    ],
+    "kneeBack": [
+     59.31,
+     77.67
+    ],
+    "ankleBack": [
+     60.48,
+     85.34
+    ],
+    "toeBack": [
+     64.6,
+     88.29
+    ],
+    "hipCenter": [
+     47.21,
+     71.18
+    ],
+    "waist": [
+     48.27,
+     63.63
+    ]
+   }
+  },
+  {
+   "frame": 4,
+   "joints": {
+    "neck": [
+     48.48,
+     51.72
+    ],
+    "shoulderFront": [
+     37.98,
+     55.26
+    ],
+    "elbowFront": [
+     33.56,
+     59.98
+    ],
+    "wristFront": [
+     36.78,
+     64.11
+    ],
+    "handFront": [
+     38.34,
+     65.88
+    ],
+    "shoulderBack": [
+     52.65,
+     55.85
+    ],
+    "elbowBack": [
+     54.68,
+     60.8
+    ],
+    "wristBack": [
+     57.07,
+     61.98
+    ],
+    "handBack": [
+     58.62,
+     62.93
+    ],
+    "hipFront": [
+     42.51,
+     71.18
+    ],
+    "kneeFront": [
+     35.35,
+     77.08
+    ],
+    "ankleFront": [
+     32.97,
+     85.34
+    ],
+    "toeFront": [
+     29.39,
+     88.29
+    ],
+    "hipBack": [
+     49.67,
+     71.18
+    ],
+    "kneeBack": [
+     58.02,
+     77.08
+    ],
+    "ankleBack": [
+     58.62,
+     85.34
+    ],
+    "toeBack": [
+     63.99,
+     88.29
+    ],
+    "hipCenter": [
+     46.09,
+     71.18
+    ],
+    "waist": [
+     47.28,
+     63.4
+    ]
+   }
+  }
+ ],
+ "source": {
+  "gameSheet": "game/art/custom/zed-moi.sprite.json, dong_tac.kiem_1 (hàng 7), cắt nguyên hàng thân ô 96",
+  "jointsBy": "đánh tay trên ảnh nguồn cao (khop-nguon.json), đổi sang ô 96 bằng phép co/dời của dung-zed-game.py",
+  "scale": [
+   [
+    0.11988,
+    0.11796,
+    28,
+    24
+   ],
+   [
+    0.11732,
+    0.11796,
+    27,
+    24
+   ],
+   [
+    0.11929,
+    0.11796,
+    27,
+    24
+   ],
+   [
+    0.11749,
+    0.11796,
+    27,
+    24
+   ],
+   [
+    0.11932,
+    0.11796,
+    27,
+    24
+   ]
+  ],
+  "note": "Khớp đánh tay trên ảnh nguồn cao (toạ độ cạnh, đọc theo lưới 10đ). Tay TRƯỚC = tay cầm kiếm vung (bên trái hình ở khung 1, giơ lên ở khung 2, chém ngang ở khung 3–4; như quy ước hàng chạy: tay lộ bắp tay trần). Tay SAU = tay nắm trước bụng bên phải hình: bắp tay và khuỷu bị thân che cả 5 khung (hidden, toạ độ chỉ ước), khung 4 không thấy cả nắm tay. Chân TRƯỚC = chân bên trái hình. Game vẽ thêm kiếm + ngón tay đè lên thân; sheet ở đây chỉ là thân (như hàng game).",
+  "highResFrames": "docs/anh-goc/zed/moi/08-kiem-1-tp-gif/08-kiem-1-tp/khung-XX.png"
+ },
+ "hidden": {
+  "1": [
+   "shoulderBack",
+   "elbowBack"
+  ],
+  "2": [
+   "shoulderBack",
+   "elbowBack"
+  ],
+  "3": [
+   "shoulderBack",
+   "elbowBack"
+  ],
+  "4": [
+   "shoulderBack",
+   "elbowBack",
+   "wristBack",
+   "handBack"
+  ],
+  "5": [
+   "shoulderBack",
+   "elbowBack"
+  ]
+ },
+ "coordinateConvention": "canh",
+ "coordinateSystem": "toạ độ CẠNH ô 96 (x,5 = tâm điểm ảnh, không trừ 0,5 như tach_lop.doi_diem), gốc trên-trái, chân (48,90)",
+ "hiddenBase": 1
+}

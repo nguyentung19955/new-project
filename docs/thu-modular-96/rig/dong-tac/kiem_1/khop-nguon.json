@@ -1,0 +1,400 @@
+{
+ "ghi_chu": "Khớp đánh tay trên ảnh nguồn cao (toạ độ cạnh, đọc theo lưới 10đ). Tay TRƯỚC = tay cầm kiếm vung (bên trái hình ở khung 1, giơ lên ở khung 2, chém ngang ở khung 3–4; như quy ước hàng chạy: tay lộ bắp tay trần). Tay SAU = tay nắm trước bụng bên phải hình: bắp tay và khuỷu bị thân che cả 5 khung (hidden, toạ độ chỉ ước), khung 4 không thấy cả nắm tay. Chân TRƯỚC = chân bên trái hình. Game vẽ thêm kiếm + ngón tay đè lên thân; sheet ở đây chỉ là thân (như hàng game).",
+ "khung": [
+  {
+   "neck": [
+    180.0,
+    235.0
+   ],
+   "shoulderFront": [
+    90.0,
+    265.0
+   ],
+   "elbowFront": [
+    55.0,
+    305.0
+   ],
+   "wristFront": [
+    80.0,
+    340.0
+   ],
+   "handFront": [
+    95.0,
+    355.0
+   ],
+   "shoulderBack": [
+    215.0,
+    270.0
+   ],
+   "elbowBack": [
+    232.0,
+    312.0
+   ],
+   "wristBack": [
+    248.0,
+    320.0
+   ],
+   "handBack": [
+    258.0,
+    332.0
+   ],
+   "hipFront": [
+    130.0,
+    400.0
+   ],
+   "kneeFront": [
+    70.0,
+    450.0
+   ],
+   "ankleFront": [
+    55.0,
+    520.0
+   ],
+   "toeFront": [
+    25.0,
+    545.0
+   ],
+   "hipBack": [
+    190.0,
+    400.0
+   ],
+   "kneeBack": [
+    260.0,
+    450.0
+   ],
+   "ankleBack": [
+    265.0,
+    520.0
+   ],
+   "toeBack": [
+    315.0,
+    545.0
+   ],
+   "hipCenter": [
+    160.0,
+    400.0
+   ]
+  },
+  {
+   "neck": [
+    190.0,
+    245.0
+   ],
+   "shoulderFront": [
+    95.0,
+    225.0
+   ],
+   "elbowFront": [
+    60.0,
+    195.0
+   ],
+   "wristFront": [
+    45.0,
+    165.0
+   ],
+   "handFront": [
+    35.0,
+    145.0
+   ],
+   "shoulderBack": [
+    220.0,
+    275.0
+   ],
+   "elbowBack": [
+    240.0,
+    315.0
+   ],
+   "wristBack": [
+    255.0,
+    320.0
+   ],
+   "handBack": [
+    268.0,
+    325.0
+   ],
+   "hipFront": [
+    130.0,
+    400.0
+   ],
+   "kneeFront": [
+    75.0,
+    455.0
+   ],
+   "ankleFront": [
+    55.0,
+    520.0
+   ],
+   "toeFront": [
+    25.0,
+    545.0
+   ],
+   "hipBack": [
+    195.0,
+    400.0
+   ],
+   "kneeBack": [
+    265.0,
+    455.0
+   ],
+   "ankleBack": [
+    270.0,
+    520.0
+   ],
+   "toeBack": [
+    325.0,
+    545.0
+   ],
+   "hipCenter": [
+    165.0,
+    400.0
+   ]
+  },
+  {
+   "neck": [
+    200.0,
+    245.0
+   ],
+   "shoulderFront": [
+    172,
+    238
+   ],
+   "elbowFront": [
+    270.0,
+    215.0
+   ],
+   "wristFront": [
+    320.0,
+    200.0
+   ],
+   "handFront": [
+    360.0,
+    200.0
+   ],
+   "shoulderBack": [
+    235.0,
+    275.0
+   ],
+   "elbowBack": [
+    250.0,
+    315.0
+   ],
+   "wristBack": [
+    262.0,
+    318.0
+   ],
+   "handBack": [
+    272.0,
+    330.0
+   ],
+   "hipFront": [
+    150.0,
+    400.0
+   ],
+   "kneeFront": [
+    85.0,
+    450.0
+   ],
+   "ankleFront": [
+    55.0,
+    520.0
+   ],
+   "toeFront": [
+    25.0,
+    545.0
+   ],
+   "hipBack": [
+    220.0,
+    400.0
+   ],
+   "kneeBack": [
+    290.0,
+    450.0
+   ],
+   "ankleBack": [
+    275.0,
+    520.0
+   ],
+   "toeBack": [
+    330.0,
+    545.0
+   ],
+   "hipCenter": [
+    185.0,
+    400.0
+   ]
+  },
+  {
+   "neck": [
+    190.0,
+    240.0
+   ],
+   "shoulderFront": [
+    188,
+    270
+   ],
+   "elbowFront": [
+    285.0,
+    310.0
+   ],
+   "wristFront": [
+    320.0,
+    330.0
+   ],
+   "handFront": [
+    335.0,
+    345.0
+   ],
+   "shoulderBack": [
+    225.0,
+    272.0
+   ],
+   "elbowBack": [
+    240.0,
+    315.0
+   ],
+   "wristBack": [
+    255.0,
+    325.0
+   ],
+   "handBack": [
+    265.0,
+    335.0
+   ],
+   "hipFront": [
+    140.0,
+    400.0
+   ],
+   "kneeFront": [
+    80.0,
+    455.0
+   ],
+   "ankleFront": [
+    55.0,
+    520.0
+   ],
+   "toeFront": [
+    25.0,
+    545.0
+   ],
+   "hipBack": [
+    205.0,
+    400.0
+   ],
+   "kneeBack": [
+    275.0,
+    455.0
+   ],
+   "ankleBack": [
+    285.0,
+    520.0
+   ],
+   "toeBack": [
+    320.0,
+    545.0
+   ],
+   "hipCenter": [
+    172.0,
+    400.0
+   ]
+  },
+  {
+   "neck": [
+    180.0,
+    235.0
+   ],
+   "shoulderFront": [
+    92.0,
+    265.0
+   ],
+   "elbowFront": [
+    55.0,
+    305.0
+   ],
+   "wristFront": [
+    82.0,
+    340.0
+   ],
+   "handFront": [
+    95.0,
+    355.0
+   ],
+   "shoulderBack": [
+    215.0,
+    270.0
+   ],
+   "elbowBack": [
+    232.0,
+    312.0
+   ],
+   "wristBack": [
+    252.0,
+    322.0
+   ],
+   "handBack": [
+    265.0,
+    330.0
+   ],
+   "hipFront": [
+    130.0,
+    400.0
+   ],
+   "kneeFront": [
+    70.0,
+    450.0
+   ],
+   "ankleFront": [
+    50.0,
+    520.0
+   ],
+   "toeFront": [
+    20.0,
+    545.0
+   ],
+   "hipBack": [
+    190.0,
+    400.0
+   ],
+   "kneeBack": [
+    260.0,
+    450.0
+   ],
+   "ankleBack": [
+    265.0,
+    520.0
+   ],
+   "toeBack": [
+    310.0,
+    545.0
+   ],
+   "hipCenter": [
+    160.0,
+    400.0
+   ]
+  }
+ ],
+ "hidden": {
+  "1": [
+   "shoulderBack",
+   "elbowBack"
+  ],
+  "2": [
+   "shoulderBack",
+   "elbowBack"
+  ],
+  "3": [
+   "shoulderBack",
+   "elbowBack"
+  ],
+  "4": [
+   "shoulderBack",
+   "elbowBack",
+   "wristBack",
+   "handBack"
+  ],
+  "5": [
+   "shoulderBack",
+   "elbowBack"
+  ]
+ },
+ "hiddenNote": "khoá = số khung đếm từ 1 (như README-R2)"
+}
