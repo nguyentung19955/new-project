@@ -136,8 +136,11 @@
   const GIU = { spear: 'thuong_giu', hammer: 'bua_giu', bow: 'phitieu_ngam' };
   const DI_BO = 0.6; // đi chậm hơn 60% tốc độ chạy đầy (đẩy cần nhẹ, bị làm chậm) → hàng ĐI BỘ
 
+  // bao-cao-B (16/10): búa báo trước rõ hơn — khung 2 (búa giơ cao quá đầu) giữ từ 0,05 tới đúng lúc nện 0,35 (~0,24 giây) thay vì chỉ
+  // 0,16 giây; khung 1 (vào thế) rút còn 0,04 giây. Chỉ dời mốc khung ảnh có sẵn, thời lượng đòn và lúc chạm không đổi. Tắt: ?camgiac=0.
+  const MOC_BUA_BT = [0, 0.05, 0.35, 0.5, 0.62, 0.74, 0.85, 0.93];
   function khungMot(D, ten, u) {
-    const a = D.dong_tac[ten], m = MOC[ten];
+    const a = D.dong_tac[ten], m = ten === 'bua_nen' && G.CAM_GIAC_VK !== false ? MOC_BUA_BT : MOC[ten];
     u = kep(u || 0, 0, 1);
     if (m && m.length === a.so) { let i = 0; while (i < a.so - 1 && u + 1e-6 >= m[i + 1]) i++; return i; }
     return Math.min(a.so - 1, Math.floor(u * a.so));

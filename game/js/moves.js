@@ -508,7 +508,7 @@
     W.projs.push({
       team: 'player', kind: 'arrow', x: P.x + P.face * B.nockX + A.ux * B.nock, y: P.y + A.uy * B.nock, px: P.x, py: P.y, fresh: true, z: B.z0,
       vx: A.ux * o.speed, vy: A.uy * o.speed, t: o.range / o.speed, w, mult: o.mult,
-      pierce: (o.pierce || 0) + (has1(h) && h.el === 'ice' ? HE.ice.pierce : 0), big: !!o.big, col, seen: [], he: h, charged: o.charged || 0, pierceMult: o.pierceMult,
+      pierce: (o.pierce || 0) + (has1(h) && h.el === 'ice' && !o.noi ? HE.ice.pierce : 0), big: !!o.big, col, seen: [], he: o.noi ? null : h, charged: o.charged || 0, pierceMult: o.pierceMult, noi: !!o.noi,
     });
     if (G.epDo) { const pr = W.projs[W.projs.length - 1], q = G.epDo.xuyen(w, pr.pierce, pr.pierceMult); pr.pierce = q[0]; pr.pierceMult = q[1]; } // đợt 6: phi tiêu ép bậc xuyên mạnh hơn
   }
@@ -598,6 +598,34 @@
     finish(P, w, { x: cx, y: cy, ux, uy, power: o.level >= 2 ? 1.3 : 0.8 });
     gain(P, w, n);
   }
+
+  // ---------- đòn nối khi đổi vũ khí (bao-cao-B, G.DON_NOI ở js/combat.js) ----------
+  // Gọi ngay lúc đổi sang vũ khí w trong cửa sổ đòn nối: đánh NGAY một đòn bằng hộp / phát ném của đòn thường đầu chuỗi (kiếm Chém ngang,
+  // thương Đâm, búa Nện, phi tiêu Ném), sát thương x G.DON_NOI_SO.k. Không đặt thời gian chờ đòn (P.cdT): đồng hồ đòn không đổi, người chơi
+  // đánh tiếp được ngay; chỉ mượn khung ảnh có sẵn của đòn đó từ lúc chạm tới hết (rút còn ~0,14 giây) cho thấy vũ khí mới vừa ra tay.
+  M.donNoi = function (P, w) {
+    const mv = st(P), K = G.DON_NOI_SO ? G.DON_NOI_SO.k : 0.7;
+    mv.wid = w.id; cancel(mv); mv.chain = 0; mv.buf = 0; // đã đổi xong: M.input không coi là "đổi giữa nhát" nữa
+    const t = w.type, m = t === 'sword' ? C.sword.chain[0] : t === 'spear' ? C.spear.chain[0] : t === 'hammer' ? C.hammer.swing : null;
+    let o, n = 0;
+    if (t === 'bow') {
+      const s = C.bow.shot;
+      bowAim(P, s.range + 10, s.speed);
+      o = { kind: 'ban', name: 'Đòn nối', pose: 0, noi: true };
+      shoot(P, w, { mult: s.mult * K, speed: s.speed, range: s.range, pierce: 0, noi: true });
+    } else if (m) {
+      const reach = reachOf(w, m.reach);
+      aim(P, reach);
+      o = { kind: t === 'sword' ? 'chem' : t === 'spear' ? 'dam' : 'nen', name: 'Đòn nối', step: 0, pose: 0, m, reach, depth: m.depth, noi: true };
+      n = boxHit(P, reach, m.depth, m.mult * K, { w, noi: true }).length;
+      swingFx(P, w, o);
+      if (n > 0) { if (G.sfxDanh) G.sfxDanh(t); else G.sfx('hit'); }
+    } else return;
+    // tư thế: khung ảnh của đòn từ lúc chạm (hitAt) tới hết, rút còn 0,25 giây cả động tác; không chặn nút Đánh (P.cdT giữ nguyên)
+    const hitAt = m && m.hitAt != null ? m.hitAt : 0.45, dur = 0.25;
+    P.atkDur = dur; P.atkT = dur * (1 - hitAt); P.hitDone = true; P.hitAt = hitAt; P.comboI = 0;
+    mv.name = o.name; mv.kind = o.kind; mv.step = 0; mv.cur = o; mv.lastT = G.time + P.atkT;
+  };
 
   // ---------- nút Đánh ----------
   const TAPS = { bow: bowTap, spear: spearTap, hammer: hammerTap };

@@ -6,6 +6,11 @@ Từ đợt ghép 2 game chỉ còn phòng vuông, nên bài này đo trong phò
     --node (15/10): chạy luật game trong Node (tests/node_trang.js), không trình duyệt.
     nho (mặc định): phòng thường, sàn 208x196      trum: phòng trùm, sàn 300x198 (không có trùm)
     mot: chỉ một quái (máu dày) thay cho cụm năm quái     khonghe: chỉ đo vũ khí chưa có hệ (nhanh hơn)
+    DPS_NOI=1 (biến môi trường, 16/10 bao-cao-B): bot đổi vũ khí ngay khi cửa sổ đòn nối mở (dùng đòn nối tối đa); kèm DPS_PRE="G.DON_NOI=false"
+      để đo cùng lối đổi mà không có đòn nối.
+    DPS_MON=1: bot giữ món đang đo làm món chính (mặc định bot xoay Thương / Búa về Kiếm liên tục, xem trong JS).
+    that (16/10, bao-cao-B): chạy luật như lúc có vẽ (G.tick, G.noRender = false) nên khựng hình khi trúng đòn làm thế giới đứng yên
+      đúng như người chơi thấy; mặc định (logic, G.sim) không có khựng hình.
     quaimoi: đánh quái mới thật (js/mobs.js: giáp che trước, lặn, cử động xuất hiện...) thay cho bia tập kiểu cũ.
       Cân bằng phải cày: cụm quái mới có máu x2,5 (như quái các ải sau khi cân bằng), để số đo không bị giới hạn bởi thời gian quái
       diễn cử động xuất hiện (trước đây quái chết nhanh hơn tốc độ mọc nên mọi vũ khí như nhau, cung chỉ thấp hơn kiếm khoảng 11%).
@@ -27,7 +32,7 @@ sys.argv = [a for a in sys.argv if a != '--node']
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 JS = r"""
-([wtype, el, secs, seed, small, one, real]) => {
+([wtype, el, secs, seed, small, one, real, that]) => {
   for (const k of G.HKEYS) G.HEROES[k].fav = [];           // bỏ thưởng vũ khí ưa thích để so cho công bằng
   // Đợt 5 (hệ thống mới): không còn bậc màu (mọi vũ khí bậc 0); cấp vũ khí đặt thẳng bằng G.vkMoi.datCap — chưa có hệ = Trắng,
   // có hệ = Thức tỉnh của hệ đó (như nâng bằng linh khí 100/400/800).
@@ -46,7 +51,19 @@ JS = r"""
   if (W.boss) { W.boss.dead = true; W.boss = null; W.px1 = null; W.shrink = null; }
   P.x = W.geo.cx; P.y = W.geo.cy;
   Object.assign(G.botCfg, { prefer: wtype, explore: false, props: false });
+  // DPS_MON=1 (bao-cao-B): bot coi món đang đo là món chính (G.botDatVk), không tự xoay về Kiếm / Phi tiêu giữa trận. Mặc định giữ lối cũ:
+  // bot_nang.js đặt món chính Kiếm + phụ Phi tiêu nên khi đo Thương / Búa bot đổi qua lại liên tục (số Thương / Búa là số trộn).
+  const vk0 = G.botVk;
+  if (window.__mon && G.botDatVk) { G.botDatVk(wtype, wtype === 'bow' ? 'sword' : 'bow'); S.botVk = null; }
   if (G.curW(P).type !== wtype) P.cur = 1 - P.cur;
+  // DPS_NOI=1 (bao-cao-B): bot dùng đòn nối tối đa — vừa trúng (cửa sổ còn mở), hết chờ đổi, món kế chưa nối trong chuỗi thì bấm đổi ngay;
+  // sau đó bot tự đổi về món chính như thường (cũng là đổi nối nếu rơi vào cửa sổ).
+  const bi0 = G.botInput;
+  if (window.__noi) G.botInput = function (S1) {
+    const inp = bi0(S1), Q = S1.P;
+    if (Q.noiT > 0 && Q.swapCd <= 0 && Q.weapons.length > 1) { const nx = Q.weapons[(Q.cur + 1) % Q.weapons.length]; if (window.__noi === 2 || G.DON_NOI === false || !(Q.noiDa || []).includes(nx.type) || !(Q.t - (Q.noiLastT == null ? -99 : Q.noiLastT) <= G.DON_NOI_SO.chuoi)) inp.swapP = true; }
+    return inp;
+  };
   let dealt = 0, hurt = 0;
   const dmg0 = G.damage, hurt0 = G.hurtPlayer;
   G.damage = function (t, amt, o) {
@@ -66,14 +83,15 @@ JS = r"""
         if (!real && e.role === 'swarm') { e.maxhp *= 0.34 / G.ROLES.swarm.hp; e.hp = e.maxhp; e.r = 5; } // bia bầy nhỏ kiểu cũ: một con nhỏ, máu mỏng
         e.inside = true; kills++;
       }
-      G.sim(1);
+      if (that) { G.noRender = false; try { G.tick(); G.click = null; } finally { G.noRender = false; } } // "that": chạy như lúc có vẽ (khựng hình bật)
+      else G.sim(1);
       if (S.mode !== 'play') { bad = 'thoát khỏi trận: ' + S.mode; break; }
       if (!W.over) P.hp = Math.max(P.hp, P.maxhp * 0.6);
       if (!isFinite(P.x) || !isFinite(P.hp)) { bad = 'số liệu hỏng'; break; }
     }
-  } finally { G.damage = dmg0; G.hurtPlayer = hurt0; G.rnd = Math.random; }
+  } finally { G.damage = dmg0; G.hurtPlayer = hurt0; G.rnd = Math.random; G.botInput = bi0; if (window.__mon && G.botDatVk) G.botDatVk('sword', 'bow'); void vk0; }
   const st = S.stats;
-  return { dps: dealt / secs, hurt: hurt / secs, kills: kills - (one ? 1 : 5), bad, melee: Math.round(st.melee), ranged: Math.round(st.ranged), el: st.el, marks: Math.round(S.W.marksGained) };
+  return { noi: S.W.stats.donNoi | 0, dps: dealt / secs, hurt: hurt / secs, kills: kills - (one ? 1 : 5), bad, melee: Math.round(st.melee), ranged: Math.round(st.ranged), el: st.el, marks: Math.round(S.W.marksGained) };
 }
 """
 
@@ -95,7 +113,8 @@ STATIC = r"""
 
 
 def main():
-    args = [a for a in sys.argv[1:] if a not in ('nho', 'trum', 'mot', 'khonghe', 'quaimoi', 'trangphuc')]
+    args = [a for a in sys.argv[1:] if a not in ('nho', 'trum', 'mot', 'khonghe', 'quaimoi', 'trangphuc', 'that')]
+    that = 'that' in sys.argv
     real = 'quaimoi' in sys.argv
     small = 'trum' not in sys.argv
     one = 'mot' in sys.argv
@@ -117,29 +136,34 @@ def main():
             pg.add_script_tag(path=os.path.join(ROOT, 'tests', 'setup.js'))
         if 'trangphuc' in sys.argv: pg.evaluate("() => { window.__tp = 1; }"); print('== mặc đủ bộ trang phục Vàng của hệ đang đo, cánh lớn')
         if os.environ.get('DPS_PRE'): pg.evaluate(os.environ['DPS_PRE'])
+        if os.environ.get('DPS_MON'): pg.evaluate("() => { window.__mon = 1; }"); print('== bot giữ món đang đo làm món chính (DPS_MON)')
+        if os.environ.get('DPS_NOI'): pg.evaluate("() => { window.__noi = %d; }" % int(os.environ['DPS_NOI'])); print('== bot dùng đòn nối tối đa (DPS_NOI)')
         st = pg.evaluate(STATIC)
         print('Trên giấy (sát thương gốc của loại vũ khí, chưa tính cấp, bậc, mài):')
         print('%-22s %10s %10s %10s %10s' % ('lối đánh', 'tầm với', 'giây/đòn', 'st/đòn', 'st/giây'))
         for k in ['sword', 'spear', 'hammer', 'bow', 'spearCharge', 'hammerCharge', 'bowCharge']:
             r = st[k]
             print('%-22s %10s %10.2f %10.1f %10.1f' % (r['name'], r['reach'], r['t'], r['hit'], r['dps']))
+        if that: print('== chế độ "thật": có khựng hình khi trúng đòn')
         print('phòng thường 208x196' if small else 'phòng trùm 300x198', '|', 'một quái' if one else 'cụm năm quái', '|', secs, 'giây x', seeds, 'hạt giống')
         print('%-7s %-6s %7s %7s %6s %7s' % ('vũ khí', 'hệ', 'st/giây', 'bị đánh', 'hạ', 'dấu ấn'))
-        for wt in ['sword', 'bow', 'spear', 'hammer']:
+        for wt in (os.environ.get('DPS_VK') or 'sword,bow,spear,hammer').split(','):  # DPS_VK=hammer: chỉ đo vài món (đo nhanh, không xét luật)
             for el in ([None] if noel else [None, 'fire', 'poison', 'ice']):
-                tot = {'dps': 0, 'hurt': 0, 'kills': 0, 'marks': 0}
+                tot = {'dps': 0, 'hurt': 0, 'kills': 0, 'marks': 0, 'noi': 0}
                 for s in range(seeds):
                     if os.environ.get('DPS_PRE'): pg.evaluate(os.environ['DPS_PRE'])  # đoạn JS chỉnh thử con số trước khi đo
-                    r = pg.evaluate(JS, [wt, el, secs, 1000 + s * 77, small, one, real])
+                    r = pg.evaluate(JS, [wt, el, secs, 1000 + s * 77, small, one, real, that])
                     if r['bad'] or errs:
                         print('LỖI', wt, el, r['bad'], errs[:3]); sys.exit(1)
                     for k in tot:
                         tot[k] += r[k] / seeds
                 table[(wt, el)] = tot
-                print('%-7s %-6s %7.1f %7.1f %6.1f %7.1f' % (wt, el or 'không', tot['dps'], tot['hurt'], tot['kills'], tot['marks']))
+                print('%-7s %-6s %7.1f %7.1f %6.1f %7.1f' % (wt, el or 'không', tot['dps'], tot['hurt'], tot['kills'], tot['marks']) + ('  đòn nối %.1f' % tot['noi'] if tot['noi'] else ''))
                 sys.stdout.flush()
         cd_lib.dong(b, pg)
     bad = []
+    if os.environ.get('DPS_VK'):
+        print('(DPS_VK: chỉ đo một phần, không xét luật)'); sys.exit(0)
     if not noel:  # đợt 5: bảng gọn Trắng → Thức tỉnh (trung bình ba hệ) của từng vũ khí
         print('\n| Vũ khí | Trắng (st/giây) | Thức tỉnh TB 3 hệ | Lửa / Độc / Băng | Thức tỉnh ÷ Trắng |')
         print('|---|---|---|---|---|')

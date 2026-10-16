@@ -18549,9 +18549,10 @@ MA._xong();
       blit(ctx, g, m, x, y, 0, oy, st.alpha);
     }
     const age = readyAge(st.id || 'slot' + Math.round(x), cd <= 0 && !st.disabled, t, st.ready);
-    if (age >= 0 && age < 0.35 && cd <= 0 && !st.disabled && st.flash !== false) {
+    const fd = st.flashDur || 0.35; // bao-cao-B: ô vừa đổi vũ khí nháy nhanh 0,08 giây (js/stage.js truyền ready + flashDur)
+    if (age >= 0 && age < fd && cd <= 0 && !st.disabled && st.flash !== false) {
       const m = memo('slfl|' + W + '|' + H, () => { const b = new Buf(W, H); b.rect(0, 0, W, H, '#fff8d8'); return { c: b.canvas(), ax: 0, ay: 0 }; });
-      blit(ctx, g, m, x, y, 0, oy, 0.6 * (1 - age / 0.35) * (st.alpha != null ? st.alpha : 1));
+      blit(ctx, g, m, x, y, 0, oy, 0.6 * (1 - age / fd) * (st.alpha != null ? st.alpha : 1));
     }
   };
 

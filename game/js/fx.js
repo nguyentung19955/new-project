@@ -669,13 +669,48 @@
   if (G.RUNG_MUOT === undefined) G.RUNG_MUOT = !coQ(/[?&]rungcu=1(&|$)/);
   if (G.DUNG_MOI === undefined) G.DUNG_MOI = !coQ(/[?&]dungcu=1(&|$)/);
   if (G.CHOP_MO === undefined) G.CHOP_MO = !coQ(/[?&]chopmo=0(&|$)/);
+  // bao-cao-B (16/10): cảm giác đánh riêng 4 món (khựng hình theo món, đẩy lùi theo món ở js/combat.js, khung báo trước búa ở js/zed_moi.js).
+  // Tắt cả cụm: ?camgiac=0. Riêng phần trả lại thời gian khựng cho đồng hồ đòn: ?bukhung=0 (G.BU_KHUNG = false).
+  if (G.CAM_GIAC_VK === undefined) G.CAM_GIAC_VK = !coQ(/[?&]camgiac=0(&|$)/);
+  if (G.BU_KHUNG === undefined) G.BU_KHUNG = !coQ(/[?&]bukhung=0(&|$)/);
   const rungTat = () => !!(G.save && G.save.rungTat);
   function trauma(a) { if (rungTat()) return; a *= VX('rung'); if (!(a > 0)) return; S.trauma = Math.min(1, Math.max(S.trauma, a * 0.75) + a * 0.3); }
   function kick(dx, dy) { if (rungTat()) return; const k = VX('rung'); S.kx = Math.max(-4, Math.min(4, S.kx + dx * k)); S.ky = Math.max(-3, Math.min(3, S.ky + dy * k)); }
   const DUNG = { cua: 0.5, tran: 150, giam: 0.6, it: 8 }; // mục 14: cửa sổ 0,5 giây, trần 150 ms, lần sau x0,6, dưới 8 ms thì bỏ
-  function stop(ms) {
+  // ---------- bao-cao-B (16/10): khựng hình riêng từng món ----------
+  // [thường, nặng] ms: kiếm 45 / nhát kết 70; thương đâm 55 / quét 65; búa nện 90 / nện đất 110 (đánh trùm 50); phi tiêu 25 / ném chùm 35.
+  // Chí mạng +25 (tối đa 115), đòn kết liễu +15 (tối đa 100), như bậc cũ. Trả [ms, phần phải trả lại cho đồng hồ đòn 0..1]:
+  // phần vượt quá số khựng CŨ của cùng đòn (45/70/90/100/115, phi tiêu 25/50) được trả lại (S.no) nên sát thương mỗi giây không tụt.
+  const KHUNG_VK = { sword: [45, 70], spear: [55, 65], hammer: [90, 110], bow: [25, 35], trumBua: 50 };
+  G.KHUNG_VK = KHUNG_VK;
+  function khungVk(e, o) {
+    const big = o.heavy || o.crit || o.dead;
+    const cu = o.ranged ? (big ? 50 : G.DUNG_MOI !== false ? 25 : 0) : o.crit ? 115 : o.dead ? 100 : o.heavy ? 90 : o.type === 'hammer' ? 70 : 45;
+    let ms;
+    if (o.ranged) ms = KHUNG_VK.bow[big ? 1 : 0];
+    else {
+      const b = KHUNG_VK[o.type] || KHUNG_VK.sword;
+      ms = b[o.heavy ? 1 : 0];
+      if (o.crit) ms = Math.min(115, ms + 25); else if (o.dead) ms = Math.max(ms, Math.min(100, ms + 15));
+      if (o.type === 'hammer' && e && e.isBoss) ms = Math.min(ms, o.crit ? 65 : KHUNG_VK.trumBua); // trùm chỉ khựng ngắn
+    }
+    return [ms, G.BU_KHUNG !== false && ms > cu ? 1 - cu / ms : 0];
+  }
+  fx.khungVk = khungVk;
+  // Đồng hồ đòn được trả lại tối đa 50% mỗi khung (đòn đang vung / đang chờ chạy nhanh hơn chút cho tới khi hết nợ). Gọi từ js/combat.js.
+  fx.traNo = function (dt, ban) {
+    if (!S || !(S.no > 0)) return 0;
+    if (!ban) { S.no = 0; return 0; } // không đang đánh: bỏ nợ, không dồn sang đòn sau
+    const x = Math.min(S.no, dt * 0.5); S.no -= x; return x;
+  };
+  function stop(ms, bu) {
     ms *= VX('khung');
     if (!(ms > 0)) return;
+    const s0 = S.stop > 0 ? S.stop : 0, r = stop0(ms);
+    if (bu > 0 && S.stop > s0) S.no = Math.min(0.3, (S.no || 0) + (S.stop - s0) * bu);
+    return r;
+  }
+  function stop0(ms) {
     if (G.DUNG_MOI !== false && ms < 120 * VX('khung')) { // trùm gục, đòn chí mạng phá trùm (>= 120 ms) giữ nguyên, không tính vào trần
       const now = S.tThuc || 0;
       if (!(now - (S.dungT0 == null ? -9 : S.dungT0) < DUNG.cua)) { S.dungT0 = now; S.dungMs = 0; S.dungN = 0; }
@@ -1201,7 +1236,14 @@
       for (let i = 0, n = NH(6); i < n; i++) { const a = (i / n) * TAU + 0.3; streak(cx, cy, Math.cos(a) * 150, Math.sin(a) * 110, 0.2, RAMP.gold, 1, 9, 0, 4); }
     } else if (hk === 2 && !o.ranged && !maHit) addRing(cx, cy, 3, 14, 0.14, PL.hi, 1, 1); // đòn nặng: một vòng mảnh
     // khựng hình và rung (nhiều mục tiêu cùng nhịp thì giảm dần theo dim; khựng hình đã tự không chồng nhau)
-    if (o.ranged) { if (big) { stop(50); trauma(0.15 * dim); } else if (G.DUNG_MOI !== false) stop(25); kick(dir * 0.8 * dim, 0); } // mục 14: phi tiêu thường trúng khựng 25 ms
+    // bao-cao-B (16/10, góp ý ChatGPT mục 1): khựng hình riêng từng món (G.CAM_GIAC_VK, tắt: ?camgiac=0 → số cũ bên dưới).
+    // Phần khựng DÀI HƠN số cũ được trả lại cho đồng hồ đòn ngay sau đó (khungVk / fx.traNo), nên nhịp đánh thật không chậm thêm.
+    const kv = G.CAM_GIAC_VK !== false ? khungVk(e, o) : null;
+    if (kv) {
+      stop(kv[0], kv[1]);
+      if (o.ranged) { if (big) trauma(0.15 * dim); kick(dir * 0.8 * dim, 0); }
+      else { trauma((o.crit ? 0.4 : o.heavy || blunt ? 0.3 : 0.14) * dim); kick(dir * (big ? 2.5 : 1.2) * dim, (blunt ? 1.5 : 0) * dim); }
+    } else if (o.ranged) { if (big) { stop(50); trauma(0.15 * dim); } else if (G.DUNG_MOI !== false) stop(25); kick(dir * 0.8 * dim, 0); } // mục 14: phi tiêu thường trúng khựng 25 ms
     else {
       stop(o.crit ? 115 : o.dead ? 100 : o.heavy ? 90 : blunt ? 70 : 45);
       trauma((o.crit ? 0.4 : o.heavy || blunt ? 0.3 : 0.14) * dim);

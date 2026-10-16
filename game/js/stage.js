@@ -979,10 +979,10 @@
       const x = 368 + i * 56, on = w === P.weapons[P.cur];
       // Khung ô vũ khí cùng bộ với nút, viền mang màu bậc. Hình vũ khí sống và chữ do game vẽ ở các dòng dưới.
       // 14/10: khung ô luôn là khung thường (gd-o-vk-0), viền màu theo bậc ép đồ (kể cả Trắng) — không còn bậc màu cũ G.RARITY
-      BA.slot(c, x, 3, 54, 35, {
+      BA.slot(c, x, 3, 54, 35, Object.assign({
         weapon: { type: w.type, branch: G.activeEl(P, w), stage: G.wStage(w), rarity: 0 },
         active: on, cd: on ? 0 : P.swapCd / (G.SWAP_CD || 1.5), icon: false, gem: false, id: 'slot' + i,
-      });
+      }, on && P.swapAt != null && G.time - P.swapAt >= 0 && G.time - P.swapAt < 0.08 ? { ready: P.swapAt, flashDur: 0.08 } : {})); // bao-cao-B: ô vừa đổi nháy 0,08 giây
       if (G.epDo) G.epDo.vien(c, x, 3, 54, 35, G.epDo.bac(w), false, true); // đợt 6: viền màu Bậc ép đồ (Rực lửa có lửa chạy)
       // 16/10 bậc ép đồ chỉ ở khung ô: viền ô này là khung bậc → ghi lại để VM.icon ghi số bậc ở góc trên phải (không vẽ thêm ô nhỏ)
       if (G.epDo && G.epDo.khung && G.epDo.khung()) G.epDo.ghiO(x, 3, 54, 35, G.epDo.bat() ? G.epDo.bac(w) : 0, [x + 52, 13]);

@@ -214,6 +214,15 @@
   // Tắt: ?dayluicu=1 (G.DAY_LUI = false) → như cũ.
   if (G.DAY_LUI === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]dayluicu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.DAY_LUI = !cu; }
   G.DAY_LUI_SO = { thuong: 2.5, nang: 3.5, giuTam: 0.8, tat: 12, tran: 240, trum: 0.2, giap: 0.2, tinhAnh: 0.5 }; // thuong / nang: điểm ảnh
+  // bao-cao-B (16/10, góp ý ChatGPT mục 1): đẩy lùi quái thường theo món (điểm ảnh, [đòn thường, đòn nặng / chí mạng]); trùm, quái giáp vẫn
+  // nhân hệ số nhỏ của G.kbHeSo (búa lên trùm chỉ ~2 điểm ảnh). Đòn kết có quãng riêng (G.MOVES push) giữ nguyên. Tắt: ?camgiac=0.
+  G.DAY_VK = { sword: [4, 5], spear: [2.5, 3], hammer: [10, 12], bow: [1, 1] };
+  // bao-cao-B (16/10, góp ý ChatGPT mục 6): ĐÒN NỐI KHI ĐỔI VŨ KHÍ. Đòn trúng → cửa sổ cua giây; đổi vũ khí trong cửa sổ thì vũ khí mới tự ra
+  // một đòn = k lần sát thương đòn thường đầu chuỗi của món đó (js/moves.js M.donNoi), không tốn / không cộng mana, không ra Đặc biệt,
+  // không mở luật hệ (vệt cháy, nổ, vỡ băng…), gây hệ với he lần tỉ lệ thường và 1 tầng, không choáng trùm; mỗi món làm đòn nối một lần
+  // trong một chuỗi (chuỗi hết khi đã quá chuoi giây kể từ đòn nối gần nhất). Thời gian chờ đổi giữ G.SWAP_CD 0,75 giây. Tắt: ?donnoi=0.
+  if (G.DON_NOI === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]donnoi=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.DON_NOI = !tat; }
+  G.DON_NOI_SO = { cua: 0.18, k: 0.6, he: 0.5, chuoi: 1.5 }; // k: góp ý đề xuất 0,7; bot đo đòn nối tối ưu tăng 9% (> 8%) nên hạ còn 0,6 (+7,4%), xem bao-cao-B
   // Vận tốc lùi để quái trượt đúng d điểm ảnh (tổng của nhịp 1/60 giây tắt dần exp(-tat/60) mỗi nhịp)
   G.kbQuang = (d) => d * 60 * (1 - Math.exp(-G.DAY_LUI_SO.tat / 60));
   G.kbHeSo = function (e) {
@@ -500,6 +509,8 @@
   // ---------- người chơi ra đòn ----------
   function playerHit(e, mult, o) {
     const P = W.P, w = o.w;
+    // bao-cao-B (16/10): đòn nối khi đổi vũ khí (G.DON_NOI). Đòn thường / đặc biệt trúng → mở cửa sổ DON_NOI_SO.cua giây (đòn nối, mưa phi tiêu không mở).
+    if (!o.noi && !o.rain) P.noiT = G.DON_NOI_SO.cua;
     let d = G.pDamage(P, w) * mult;
     let crit = false;
     // Đợt 6: dòng hiệu ứng ép đồ của vũ khí đang cầm (js/ep_do.js): chí mạng, sát thương chí mạng, lên trùm / tinh anh, sát thương hệ
@@ -520,15 +531,19 @@
     if (!G.noRender) FX('hit', e, { el, type: w.type, ranged: o.ranged, crit, dead: e.dead, heavy: o.heavy, rain: o.rain, dir: o.dir || (e.x >= P.x ? 1 : -1) });
     if (!G.noRender && G.amGhi) G.amGhi(crit, o.heavy); // mục 13: tiếng trúng kế tiếp biết đòn này chí mạng / nặng
     // mục 7: đẩy lùi thật đòn cận chiến, theo hướng người chơi → quái, không quá 80% tầm vũ khí (phi tiêu, mưa phi tiêu không đẩy)
-    if (G.DAY_LUI !== false && !o.ranged && !o.rain && !e.dead) {
+    // bao-cao-B (16/10): quãng lùi riêng từng món (G.DAY_VK [thường, nặng/chí mạng] điểm ảnh; tắt ?camgiac=0 → 2,5 / 3,5 cho mọi món cận chiến).
+    // Vẫn giữ trần 80% tầm vũ khí (giuTam) nên nhát sau của chuỗi không hụt; phi tiêu lùi 1 điểm ảnh (không cần giữ tầm); đòn nối dùng số thường.
+    const DV = G.CAM_GIAC_VK !== false ? G.DAY_VK[w.type] : null;
+    if (G.DAY_LUI !== false && (!o.ranged || (DV && w.type === 'bow')) && !o.rain && !e.dead) {
       const K = G.DAY_LUI_SO, zk = G.ZK || 0.85, TW = G.WTYPES[w.type];
       let ux = e.x - P.x, uy = (e.y - P.y) / zk;
       const d = Math.hypot(ux, uy);
       if (d < 2) { ux = o.dir || (e.x >= P.x ? 1 : -1); uy = 0; }
-      const tam = ((TW && TW.reach) || 32) + (e.r || 8), q = Math.min(o.heavy || crit ? K.nang : K.thuong, tam * K.giuTam - d);
+      const nang = (o.heavy || crit) && !o.noi, q0 = DV ? DV[nang ? 1 : 0] : nang ? K.nang : K.thuong;
+      const tam = ((TW && TW.reach) || 32) + (e.r || 8), q = o.ranged ? q0 : Math.min(q0, tam * K.giuTam - d);
       if (q > 0.2) G.kbDay(e, ux, uy, G.kbQuang(q), 'max');
     }
-    if (G.moves) G.moves.onHit(e, d, el, o); // luật riêng của hệ khi đòn trúng (js/moves.js)
+    if (G.moves && !o.noi) G.moves.onHit(e, d, el, o); // luật riêng của hệ khi đòn trúng (js/moves.js); đòn nối không mở luật hệ
     if (G.mobOnHit) G.mobOnHit(e, d, o); // quái gai phản đòn, giáp vỡ (js/mobs.js)
     const T = G.WTYPES[w.type];
     if (T.stagger && !e.isBoss && !e.dead) e.st.stun = Math.max(e.st.stun, T.stagger * (G.epDo ? G.epDo.choang(w) : 1)); // đợt 6: búa ép bậc choáng lâu hơn
@@ -544,11 +559,12 @@
       // Đã thử cho phần vượt 100% thành cơ hội gây thêm 1 tầng (búa Thành hình / Thức tỉnh): chỉ làm búa Độc mạnh thêm, búa Băng
       // không nhích (Băng bị giới hạn bởi miễn đóng băng 5 giây, không phải số tầng) → bỏ. Xem docs/review/ke-hoach-cai-thien/vu-khi-4.
       if (G.HE_THEO_NHIP !== false) chance = Math.min(1, chance * Math.max(1, (T.cd || 0.36) / 0.36));
-      if (P.firstHit && P.swapProc) chance = 1;
+      if (o.noi) chance *= G.DON_NOI_SO.he; // đòn nối: hệ mức nhỏ (nửa tỉ lệ, 1 tầng), không dùng lượt "đổi xong chắc chắn gây hệ"
+      else if (P.firstHit && P.swapProc) chance = 1;
       const bua = w.type === 'hammer';
-      if (G.rnd() < chance) G.applyStatus(e, el, d, bua && el === 'ice' && G.BUA_2TANG !== false ? 2 : 1, bua ? BUA_O : undefined);
+      if (G.rnd() < chance) G.applyStatus(e, el, d, bua && el === 'ice' && G.BUA_2TANG !== false && !o.noi ? 2 : 1, bua ? BUA_O : undefined);
     }
-    P.firstHit = false;
+    if (!o.noi) P.firstHit = false;
   }
   function hitProps(x0, x1, y, depth) {
     for (const pr of W.props) {
@@ -739,7 +755,7 @@
   const DODGE_BUF = 0.15; // V7: bấm Né sớm bấy nhiêu giây vẫn được nhớ
   G.updatePlayer = function (P, inp, dt) {
     P.t += dt;
-    for (const k of ['atkT', 'cdT', 'dodgeCd', 'inv', 'hurtT', 'skillCd', 'specCd', 'swapCd', 'gongT', 'castT', 'specT']) if (P[k] > 0) P[k] -= dt;
+    for (const k of ['atkT', 'cdT', 'dodgeCd', 'inv', 'hurtT', 'skillCd', 'specCd', 'swapCd', 'gongT', 'castT', 'specT', 'noiT']) if (P[k] > 0) P[k] -= dt;
     if (P.dead && P.chHold) P.chHold = false;
     if (P.dead) P.deadT += dt;
     for (const id in P.coats) if (P.coats[id].t > 0) P.coats[id].t -= dt;
@@ -859,7 +875,9 @@
         startAttack(P);
       }
       if (inp.swapP && P.weapons.length > 1 && P.swapCd <= 0) {
+        const noiMo = G.DON_NOI !== false && P.noiT > 0; // vừa đánh trúng trong DON_NOI_SO.cua giây
         P.cur = (P.cur + 1) % P.weapons.length; // xoay vòng (hệ thống mới: 4 vũ khí cố định; cũ: 2 món như trước)
+        P.swapAt = G.time; P.noiT = 0; // ô vũ khí nháy viền 0,08 giây (js/stage.js)
         P.swapCd = G.SWAP_CD || 1.5; // hệ thống mới 0,75 giây (xoay 4 món), cũ 1,5
         // V34: đổi vũ khí giữa đòn thì huỷ sạch đòn đang vung (không gây sát thương bằng vũ khí mới, không chạy tiếp
         // động tác cũ với hình vũ khí mới); combo và phần lấy đà về đầu ở moves.js (M.input thấy đổi vũ khí).
@@ -869,6 +887,11 @@
         P.comboI = -1;
         G.sfx('pick');
         if (!G.noRender) FX('swap', P, G.activeEl(P, curW(P)));
+        if (noiMo && G.moves && G.moves.donNoi) { // đòn nối: vũ khí mới tự ra một đòn, mỗi món một lần trong chuỗi
+          const w2 = curW(P);
+          if (!(P.t - (P.noiLastT == null ? -99 : P.noiLastT) <= G.DON_NOI_SO.chuoi)) P.noiDa = []; // quá chuoi giây từ đòn nối trước: chuỗi mới
+          if (!(P.noiDa || (P.noiDa = [])).includes(w2.type)) { P.noiDa.push(w2.type); P.noiLastT = P.t; W.stats.donNoi = (W.stats.donNoi | 0) + 1; G.moves.donNoi(P, w2); }
+        }
       }
       if (inp.potionP && P.potions > 0 && P.hp < P.maxhp && !W.noPotion) {
         P.potions--;
@@ -992,6 +1015,8 @@
     const P = W.P;
     // Khựng hình khi đòn trúng: chỉ có khi đang vẽ, nút bấm trong lúc khựng được giữ lại cho khung sau.
     if (!G.noRender && G.fx && G.fx.frozen && G.fx.frozen(dt, inp)) return;
+    // bao-cao-B: phần khựng dài hơn số cũ được trả lại cho đồng hồ đòn (đòn đang vung / chờ đòn kế chạy nhanh hơn tối đa 50%)
+    if (!G.noRender && G.fx && G.fx.traNo) { const x = G.fx.traNo(dt, P.atkT > 0 || P.cdT > 0); if (x > 0) { if (P.atkT > 0) P.atkT = Math.max(0.001, P.atkT - x); if (P.cdT > 0) P.cdT -= x; } }
     G.updatePlayer(P, inp, dt);
     for (const e of W.ents) if (!e.dead) updateEnemy(e, dt);
     if (G.DAY_LUI !== false) { for (const e of W.ents) kbBuoc(e, dt); if (W.boss && !W.boss.dead) kbBuoc(W.boss, dt); } // mục 7
@@ -1029,9 +1054,9 @@
         for (const hx of hits) {
           const e = hx[1];
           o.seen.push(e);
-          playerHit(e, o.mult, { w: o.w, ranged: true, heavy: o.big, dir: o.vx < 0 ? -1 : 1, manh: o.charged > 0 }); // manh: phát giữ rồi thả (js/bo_skill.js)
+          playerHit(e, o.mult, { w: o.w, ranged: true, heavy: o.big, dir: o.vx < 0 ? -1 : 1, manh: o.charged > 0, noi: !!o.noi }); // manh: phát giữ rồi thả (js/bo_skill.js)
           if (G.moves) G.moves.arrowHit(o, e);
-          P.mana = Math.min(P.maxmana, P.mana + P.manaHit + (G.wHas(o.w, 'mana') ? 1 : 0));
+          if (!o.noi) P.mana = Math.min(P.maxmana, P.mana + P.manaHit + (G.wHas(o.w, 'mana') ? 1 : 0)); // đòn nối không cộng mana
           if (G.sfxDanh) G.sfxDanh('bow', 1.3); else G.sfx('hit', 1.3);
           if (o.pierce > 0) { o.pierce--; if (o.pierceMult) o.mult *= o.pierceMult; } else { o.t = 0; break; } // tên thường xuyên qua thì yếu đi (pierceMult)
         }

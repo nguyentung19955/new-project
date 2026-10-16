@@ -70,7 +70,7 @@ function thuDay([role, n, dat]) {
 
     console.log('2. Đẩy lùi thật (mục 7)');
     const thuong = await A.goi(thuDay, ['rusher', 40, '']);
-    dat(thuong.lui > 1.5 && thuong.lui < 4, 'quái thường lùi ' + thuong.lui.toFixed(1) + ' điểm ảnh (đòn thường 2,5)');
+    dat(thuong.lui > 1.5 && thuong.lui < 5, 'quái thường lùi ' + thuong.lui.toFixed(1) + ' điểm ảnh (kiếm: 4 từ bao-cao-B 16/10, trước 2,5; số theo món ở tests/cam_giac_vk.test.js)');
     dat(thuong.buoc[0] > 0 && thuong.buoc[0] < 1 && thuong.buoc[5] < thuong.lui, 'lùi mượt qua nhiều khung (khung đầu ' + thuong.buoc[0] + ', khung 6 ' + thuong.buoc[5] + ')');
     const xa = await A.goi(thuDay, ['rusher', 40, 'xa']);
     dat(xa.lui < 0.3, 'quái ở sát mép tầm kiếm không bị đẩy ra khỏi tầm (lùi ' + xa.lui.toFixed(2) + ')');
