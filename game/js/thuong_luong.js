@@ -268,11 +268,12 @@
     fire: { than: '#5a2a1e', toi: '#381610', bung: '#e8a868', vay: '#ff7a2a', sang: '#ffd23f', mat: '#ffe08a' },
   };
   TL.MAU = MAU;
-  // Nhuộm ảnh mượn (Ngư Tinh) theo hệ của pha (ctx.filter; trình duyệt không hỗ trợ thì giữ màu gốc).
+  // Nhuộm ảnh mượn (Ngư Tinh: pha 1 xanh lam, pha 2 xanh thẫm, pha 3 trắng xương) theo hệ của pha (ctx.filter; trình duyệt không hỗ trợ
+  // thì giữ màu gốc). Đã soát bằng ảnh tĩnh (docs/review/ke-hoach-cai-thien/vung-4-3b/cac-luc.png). ?tldoihe=0: pha nào cũng nhuộm Độc.
   const NHUOM = {
     poison: 'hue-rotate(-75deg) saturate(0.85) brightness(0.78)',
-    ice: 'hue-rotate(-10deg) saturate(0.55) brightness(1.18)',
-    fire: 'hue-rotate(160deg) saturate(1.25) brightness(0.92)',
+    ice: 'hue-rotate(-28deg) saturate(0.45) brightness(1.45)', // ảnh pha 2 Ngư Tinh xanh thẫm → xanh băng nhạt
+    fire: 'sepia(1) saturate(3.4) hue-rotate(-28deg) brightness(0.92)', // ảnh pha 3 Ngư Tinh trắng xương → đỏ cam
   };
   TL.NHUOM = NHUOM;
   let c = null;
@@ -334,7 +335,7 @@
   function veSan(cx, w, t) {
     if (!w.tlSan) return;
     if (!w.tlCv) { try { w.tlCv = dungSan(w); } catch (e) { w.tlCv = null; if (!TL.loiVe) { TL.loiVe = e; if (window.console) console.warn('thuong_luong san', e); } return; } }
-    const rut = w.tlRut != null ? clamp(1 - (t - w.tlRut) / 2, 0.3, 1) : 1; // hạ xong: nước rút
+    const rut = w.tlRut != null ? clamp(1 - (t - w.tlRut) / 2, 0.45, 1) : 1; // hạ xong: nước rút
     const pv = c; c = cx;
     try {
       c.save(); c.globalAlpha *= rut;
