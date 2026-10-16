@@ -62,11 +62,11 @@
                                                        // dừng → vòng đỏ r báo bao giây → trồi đớp; đầu nằm trên đá lo giây (lộ điểm yếu) rồi lặn về mép phải ve giây
     dong: { rong: 34, moi: 10, bao: 1.5, sat: 1.6, lech: 18 }, // Dòng nước đổi chiều: dải ngang rộng rong (đẩy 28 điểm ảnh/giây, js/song_luat.js), mỗi moi giây
                                                        // đổi chiều, mũi tên đổi trước bao giây; chiêu: ép đổi chiều + tảng băng / gỗ cháy trôi quét cả dải
-    manh: { so: 6, r: 18, bao: 0.9, giu: 4, chan: 9, vung: 13, sat: 1.8, satVung: 0.4, cach: 46, dot: [1, 1, 3], gian: 0.8, bao2: 0.6 }, // Mưa mảnh đồng: bóng tròn r, rơi xong nằm lại giu giây
+    manh: { so: 6, r: 18, bao: 0.9, giu: 4, chan: 9, vung: 13, sat: 1.7, satVung: 0.4, cach: 46, dot: [1, 1, 3], gian: 0.8, bao2: 0.6 }, // Mưa mảnh đồng: bóng tròn r, rơi xong nằm lại giu giây
                                                        // làm vật cản (chan) nóng (vũng vung, mỗi 0,5 giây); các mảnh cách nhau ≥ cach (khe ≥ 20 — không kẹt)
     siet: { day: 24, phai: 20, bao: 1.2, moi: 5, baoMoi: 1.0, sat: 1.6, thu: [8, 7], lan: 2 }, // Siết sân: quét dải mép trong (dày day) trên / dưới / trái (+ dải phai sau lưng đầu),
                                                        // rồi sân hẹp lại thu (ngang, dọc) mỗi lần (tối đa lan lần); sau đó mỗi moi giây quét lại (báo baoMoi)
-    lienHoan: { so: 4, rong: 34, bao: [0.75, 0.58, 0.58, 0.58], cach: 0.7, tien: 40, sat: 1.8, lo: 1.0, xMin: 56 }, // Đớp liên hoàn: 3 cú đớp thẳng (vạch rộng rong)
+    lienHoan: { so: 4, rong: 34, bao: [0.75, 0.58, 0.58, 0.58], cach: 0.7, tien: 40, sat: 1.7, lo: 1.0, xMin: 56 }, // Đớp liên hoàn: 3 cú đớp thẳng (vạch rộng rong)
                                                        // nhắm theo em bé, đầu chồm tới tien mỗi cú (không quá xMin từ mép trái); xong mệt lo giây
     satPha: [1, 0.8, 0.8], // × sát thương theo pha (G.NOI_GIAN.vung.satTrum.thuong; trùm khác [1, 0,5, 0,45]): chiêu pha 2, 3 của 3C ít đòn hơn chiêu Ngư Tinh mượn
                                                        // (đo bằng bot: do_trum.py) nên mỗi đòn trúng nặng hơn — vẫn không đòn nào một phát chết

@@ -71,7 +71,7 @@
 <div id="lk-tai" data-bia="||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAMEBQYH/8QAKRAAAQMCBQMDBQAAAAAAAAAAAQIDEQAEBRIhMUETFGEiQnEVUWKBsf/EABcBAAMBAAAAAAAAAAAAAAAAAAIDBAX/xAAlEQACAQEFCQAAAAAAAAAAAAABAgADBBExUfASEyEyM0FxobH/2gAMAwEAAhEDEQA/AOfNMWj9zbWiEtBsn1ugGTPCvjXajFcBNssNsvoeMxlCgVJqzCbhHftG3aGdcJBUAUn7neRzTMcumxjD0hDSkmFBtWZMjSdR5qamzb4DtHOiimTfxmt/T3UpzLBCTt5q22sWekt0vBvImSF8+KyF5eWDaGFNZlr6YkKGiTPGvzSutZDDX1sF3P0wPUBMzvP62rStACi5TEWB9pizi/H1JsLUo3NhKiZUOfyqbE1Hu3jJkqPNFFRUuprOHU5dZSVwmE6+2mNk9u7r7R/aKKqqQLNifB+T/9k=|||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAgf/xAAmEAACAgEEAQQCAwAAAAAAAAABAgMRAAQSITEFE1FhgSJBcbHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQIDBAX/xAAeEQABBAIDAQAAAAAAAAAAAAAAAQIDEiExBBEyIv/aAAwDAQACEQMRAD8A51EIZIo53EASNwHG07mBPFno9HFyeOhl1Y2yFIbtjVkDnr54yzx2vaLSyII1cELvBQEVu5PyeshTWvFJG6qi7OR+A9/4xoa3yQzWRvzsH8YkWrkCMZYlsoSvJHfWUalzFpI4/TRBZbca3HsUcXqvJvPqpZgEAewAFHAP1mZ9aZIoyqKWVa4jX3P+jByGor8aNDgT0gXvDiHTs1EbjRAsX3jKuEH92Ofs4YYGeim/yLulscHjFuT6YNno/wBnDDGfsEej/9k=" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.16-0817";
+(window.G = window.G || {}).VERSION = "lk-2026.10.16-0911";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -47325,6 +47325,7 @@ window.FIREBASE_CONFIG = {
   const coCo = (k) => { try { return typeof location !== 'undefined' && new RegExp('[?&]' + k + '=0(&|$)').test(location.search || ''); } catch (e) { return false; } };
   if (G.TL_RIENG === undefined) G.TL_RIENG = !coCo('tlrieng');
   if (G.TL_DOI_HE === undefined) G.TL_DOI_HE = !coCo('tldoihe');
+  if (G.TL_3C === undefined) G.TL_3C = !coCo('tl3c'); // phiên 3C: chiêu riêng pha 2, 3 + cảnh bỏ trốn (?tl3c=0 → bản 3B)
   if (!G.VUNG4 || !G.TL_RIENG || !G.bossSK || !G.bossSK.ngu) { G.thuongLuong = null; return; }
 
   const W = () => G.getWorld();
@@ -47351,9 +47352,27 @@ window.FIREBASE_CONFIG = {
     heKhang: 0.25,                                     // lớp kháng hệ của pha (× 0,75 sát thương hệ đó)
     HE: ['poison', 'ice', 'fire'],
     anh: 'thuongLuong',                                // mã sprite thật khi có ảnh
+    // ----- PHIÊN 3C (pha 2 Băng, pha 3 Lửa, cảnh bỏ trốn). Tốc chạy chậm nhất (Cu Lì) 64,8 điểm ảnh/giây ngang, 48,6 dọc. -----
+    xoay: { so: [2, 2, 3], r: 62, loi: 16, keo: 24, toc: 16, giay: 6, bao: 0.8, sat: 1.4, satVung: 0.5, xa: 72, cach: 80 }, // Xoáy nước: r vùng kéo, loi lõi
+                                                       // (vũng Băng, mỗi 0,5 giây), keo tốc kéo (< 1/2 tốc chạy dọc), toc tốc trôi (dần về phía em bé); bao báo chỗ xoáy mọc
+    troi: { toi: 110, gan: 70, duoi: 2.0, toc: 42, r: 30, bao: 0.66, sat: 1.8, lo: 1.2, ve: 0.9, lan: [1, 2, 2], duoi2: 1.0, lo1: 0.5 }, // Lặn – trồi đớp: gợn bơi nhanh (toi) tới cách em bé gan, rồi đuổi duoi giây (toc < tốc chạy dọc 48,6),
+                                                       // dừng → vòng đỏ r báo bao giây → trồi đớp; đầu nằm trên đá lo giây (lộ điểm yếu) rồi lặn về mép phải ve giây
+    dong: { rong: 34, moi: 10, bao: 1.5, sat: 1.6, lech: 18 }, // Dòng nước đổi chiều: dải ngang rộng rong (đẩy 28 điểm ảnh/giây, js/song_luat.js), mỗi moi giây
+                                                       // đổi chiều, mũi tên đổi trước bao giây; chiêu: ép đổi chiều + tảng băng / gỗ cháy trôi quét cả dải
+    manh: { so: 6, r: 18, bao: 0.9, giu: 4, chan: 9, vung: 13, sat: 1.7, satVung: 0.4, cach: 46, dot: [1, 1, 3], gian: 0.8, bao2: 0.6 }, // Mưa mảnh đồng: bóng tròn r, rơi xong nằm lại giu giây
+                                                       // làm vật cản (chan) nóng (vũng vung, mỗi 0,5 giây); các mảnh cách nhau ≥ cach (khe ≥ 20 — không kẹt)
+    siet: { day: 24, phai: 20, bao: 1.2, moi: 5, baoMoi: 1.0, sat: 1.6, thu: [8, 7], lan: 2 }, // Siết sân: quét dải mép trong (dày day) trên / dưới / trái (+ dải phai sau lưng đầu),
+                                                       // rồi sân hẹp lại thu (ngang, dọc) mỗi lần (tối đa lan lần); sau đó mỗi moi giây quét lại (báo baoMoi)
+    lienHoan: { so: 4, rong: 34, bao: [0.75, 0.58, 0.58, 0.58], cach: 0.7, tien: 40, sat: 1.7, lo: 1.0, xMin: 56 }, // Đớp liên hoàn: 3 cú đớp thẳng (vạch rộng rong)
+                                                       // nhắm theo em bé, đầu chồm tới tien mỗi cú (không quá xMin từ mép trái); xong mệt lo giây
+    satPha: [1, 0.8, 0.8], // × sát thương theo pha (G.NOI_GIAN.vung.satTrum.thuong; trùm khác [1, 0,5, 0,45]): chiêu pha 2, 3 của 3C ít đòn hơn chiêu Ngư Tinh mượn
+                                                       // (đo bằng bot: do_trum.py) nên mỗi đòn trúng nặng hơn — vẫn không đòn nào một phát chết
+    tron: { giay: 3.4, nha: [0.5, 1.0], ngoam: 1.0, lan: [1.8, 3.0] }, // cảnh bỏ trốn: nhả mảnh nhỏ, ngoạm mảnh mặt trời, lặn mất (giây từ lúc gục)
   };
   const TL = (G.thuongLuong = { CFG });
-  const TEN = { duoi: 'Quật đuôi', phun: 'Phun nước đen', vom: 'Vòng thân', mep: 'Vỗ sóng bờ', gai: 'Vảy dựng gai', dop: 'Đớp' };
+  if (G.TL_3C !== false && G.NOI_GIAN && G.NOI_GIAN.vung) G.NOI_GIAN.vung.satTrum = Object.assign({}, G.NOI_GIAN.vung.satTrum || {}, { thuong: CFG.satPha }); // 3C (cờ ?tl3c=0: như 3B)
+  const TEN = { duoi: 'Quật đuôi', phun: 'Phun nước đen', vom: 'Vòng thân', mep: 'Vỗ sóng bờ', gai: 'Vảy dựng gai', dop: 'Đớp',
+    xoay: 'Xoáy nước', troi: 'Lặn – trồi đớp', dong: 'Dòng nước đổi chiều', manh: 'Mưa mảnh đồng', siet: 'Siết sân', lien: 'Đớp liên hoàn' };
   TL.TEN = TEN;
 
   // ---------- tiện ích ----------
@@ -47361,6 +47380,8 @@ window.FIREBASE_CONFIG = {
   function giuBan(b, X) { later(b, 0, () => { if (!b.dead) b.busy = Math.max(b.busy, X - 1 / 60); }); }
   function vung(b, shape, geo, t, dmg, el, ten, o) { return G.mobZone(shape, geo, t, dmg, el || null, Object.assign({ src: b, skill: ten || b.skillName || null }, o || {})); }
   function tron(b, x, y, r, t, dmg, el, ten, o) { return G.zoneCircle(x, y, r, t, dmg, el || null, Object.assign({ src: b, skill: ten || b.skillName || null }, o || {})); }
+  const C3 = () => G.TL_3C !== false;
+  TL.c3 = C3;
   const heCua = (ph) => (G.TL_DOI_HE === false ? 'poison' : CFG.HE[clamp(ph | 0, 0, 2)]);
   TL.heCua = heCua;
   const coAnhThat = () => !!(G.monsterArt && G.monsterArt.list && G.monsterArt.list.some((x) => x.id === CFG.anh));
@@ -47391,7 +47412,8 @@ window.FIREBASE_CONFIG = {
     }
     if (coAnhThat()) b.art = CFG.anh; // chỗ dựng ảnh thật (C71–C85): cùng tên cử động như trùm cũ
     b.x = w.x1 - CFG.dau.lui; b.y = (w.y0 + w.y1) / 2; b.face = -1; b.dirA = PI;
-    b.tl = { mepT: 0, mepCd: 0, duoi: null, song: [], vom: [], tia: [], goiY: false, nhuom: b.art !== CFG.anh, lan: null, lanCd: G.rr(CFG.lan.moi[0], CFG.lan.moi[1]) };
+    b.tl = { mepT: 0, mepCd: 0, duoi: null, song: [], vom: [], tia: [], goiY: false, nhuom: b.art !== CFG.anh, lan: null, lanCd: G.rr(CFG.lan.moi[0], CFG.lan.moi[1]),
+      xoay: [], troi: null, dong: null, manh: [], siet: null, quet: [], troiGo: null, raKhoi: false }; // (3C)
     datHe(b, 0);
     b.doiPha = doiPha;
   };
@@ -47399,8 +47421,13 @@ window.FIREBASE_CONFIG = {
     const cu = b.el, el = datHe(b, ph);
     b.tl.vom.length = 0; b.tl.duoi = null; b.tl.song.length = 0; // thân đang trồi chìm xuống (vùng của chiêu dở đã bị xoá ở js/boss.js)
     if (b.tl.lan) { b.tl.lan = null; b.hidden = false; }
-    b.lunge = null; b.x = W().x1 - CFG.dau.lui;
     const w = W();
+    if (C3()) { // 3C: chiêu dở chìm hết (xoáy tan, đầu đang lặn – trồi thì về mép), pha 2 mở dải dòng nước
+      for (const x of b.tl.xoay) if (x.z) x.z.dead = true;
+      b.tl.xoay.length = 0; b.tl.troi = null; b.tl.raKhoi = false; b.tl.troiGo = null; b.hidden = false;
+      if (ph >= 1 && !b.tl.dong) taoDong(w, b);
+    }
+    b.lunge = null; b.x = w.x1 - CFG.dau.lui;
     if (el !== cu && w.banner) { w.banner.s += ' — ' + goiY(el); w.banner.t = Math.max(w.banner.t || 0, 3); }
   }
   function goiY(el) { return G.t('Hệ {0}: đánh bằng {1}!', G.EL[el].name, G.EL[G.WEAK[el]].name); }
@@ -47409,6 +47436,7 @@ window.FIREBASE_CONFIG = {
   TL.di = function (b, dt) {
     const w = W(), P = w.P;
     b.moving = false;
+    if (b.tl && b.tl.raKhoi) return true; // 3C: đầu đang ở ngoài sân (Lặn – trồi đớp, Đớp liên hoàn) — không kéo về mép
     const sp = b.speed * Math.max(0.4, 1 - 0.15 * (b.st.iceN || 0)) * CFG.dau.tocDoc;
     const tx = w.x1 - CFG.dau.lui, ty = clamp(P.y, w.y0 + 12, w.y1 - 8);
     const dx = tx - b.x, dy = ty - b.y;
@@ -47556,6 +47584,263 @@ window.FIREBASE_CONFIG = {
   }
   TL.lanDoi = lanDoi;
 
+  // =====================================================================
+  // PHIÊN 3C — PHA 2 (BĂNG) VÀ PHA 3 (LỬA). Mọi đòn có vùng đỏ báo trước, né bằng chạy (tốc nhân vật chậm nhất) hoặc lăn.
+  // =====================================================================
+  // Bước đẩy (x0, y0) → (x1, y1) có đưa em bé VÀO một vùng đỏ / vũng (trừ lõi xoáy) mà em bé chưa đứng trong đó không (kéo không gây chết oan).
+  function vaoDo(w, x0, y0, x1, y1) {
+    for (const z of w.zones) {
+      if (z.dead || z.team === 'player' || z.tlXoay || !z.shape || !(z.t > 0 || z.pool)) continue;
+      try { if (G.inZone(z, { x: x1, y: y1 }, 0) && !G.inZone(z, { x: x0, y: y0 }, 0)) return true; } catch (e) { /* bỏ qua */ }
+    }
+    return false;
+  }
+  // p2 · XOÁY NƯỚC: 2 xoáy mọc xa em bé (vòng đỏ báo chỗ mọc), trôi chậm trên sân, kéo nhẹ em bé về lõi (lõi = vũng Băng).
+  function xoayNuoc(b, P, T, D) {
+    const w = W(), C = CFG.xoay, ds = [];
+    if (b.an) b.an.ct = true;
+    const so = C.so[clamp(b.phase | 0, 0, 2)];
+    for (let k = 0; k < 80 && ds.length < so; k++) {
+      const x = G.rr(w.x0 + 24, w.x1 - 56), y = G.rr(w.y0 + 16, w.y1 - 14);
+      if (Math.hypot(x - P.x, (y - P.y) / ZK()) < C.xa || ds.some((d) => Math.hypot(d[0] - x, d[1] - y) < C.cach)) continue;
+      ds.push([x, y]);
+    }
+    for (const [x, y] of ds) {
+      tron(b, x, y, C.loi + 6, T, b.dmg * C.sat, b.el, TEN.xoay, { onFire: () => {
+        if (b.dead || !b.tl) return;
+        const a = G.rr(0, TAU), t0 = G.time || 0;
+        const o = { x, y, vx: Math.cos(a) * C.toc, vy: Math.sin(a) * C.toc * ZK(), t0, het: t0 + C.giay };
+        o.z = tron(b, x, y, C.loi, 0, b.dmg * C.satVung, b.el, TEN.xoay, { pool: true, life: C.giay, tick: 0.5, tlXoay: true });
+        b.tl.xoay.push(o);
+      } });
+    }
+    const X = T + 0.2;
+    if (X > D) giuBan(b, X);
+  }
+  function xoayTick(w, b, dt) {
+    const T = b.tl, C = CFG.xoay, now = G.time || 0, P = w.P;
+    T.xoay = T.xoay.filter((o) => now < o.het && !(o.z && o.z.dead && o.z.life <= 0));
+    for (const o of T.xoay) {
+      if (P && !P.dead) { // trôi chậm về phía em bé (chậm hơn tốc chạy nhiều) — đứng lì một chỗ thì xoáy tới
+        const ex = P.x - o.x, ey = P.y - o.y, el = Math.hypot(ex, ey) || 1, k = Math.min(1, 1.5 * dt);
+        o.vx += (ex / el * C.toc - o.vx) * k; o.vy += (ey / el * C.toc * ZK() - o.vy) * k;
+      }
+      o.x += o.vx * dt; o.y += o.vy * dt;
+      if (o.x < w.x0 + 14 || o.x > w.x1 - 40) { o.vx = -o.vx; o.x = clamp(o.x, w.x0 + 14, w.x1 - 40); }
+      if (o.y < w.y0 + 10 || o.y > w.y1 - 8) { o.vy = -o.vy; o.y = clamp(o.y, w.y0 + 10, w.y1 - 8); }
+      if (o.z) { o.z.x = o.x; o.z.y = o.y; }
+      if (!P || P.dead || P.dodgeT > 0 || P.dashT > 0) continue;
+      const dx = o.x - P.x, dy = (o.y - P.y) / ZK(), d = Math.hypot(dx, dy);
+      if (d >= C.r || d < 3) continue;
+      const k = C.keo * (1 - 0.4 * d / C.r) * dt / d, nx = P.x + dx * k, ny = P.y + dy * k * ZK();
+      if (!vaoDo(w, P.x, P.y, nx, ny)) { P.x = nx; P.y = ny; }
+    }
+  }
+  // p2 · LẶN – TRỒI ĐỚP: đầu lặn hẳn, gợn nước đuổi em bé duoi giây (chậm hơn tốc chạy), dừng → vòng đỏ → trồi đớp; nằm trên đá lộ điểm yếu rồi lặn về.
+  function lanTroi(b, P, T, D) {
+    const C = CFG.troi;
+    if (b.an) b.an.ct = true;
+    later(b, T, () => {
+      if (b.dead || !b.tl) return;
+      b.hidden = true; b.tl.raKhoi = true; b.lunge = null;
+      b.tl.troi = { pha: 'toi', t: 0, con: C.lan[clamp(b.phase | 0, 0, 2)] - 1 }; // con: số lần trồi đớp còn lại sau lần này (pha 3: đớp hai lần)
+      FX('burst', b.x, b.y, '#cfe8e4', 10, 60); G.sfx('boom', 1.8);
+    });
+    giuBan(b, T + 1.2 + C.duoi + C.bao + C.lo + C.ve + 0.1); // (troiTick giữ bận tới khi lặn về, kể cả lần đớp thứ hai)
+  }
+  function troiTick(w, b, dt) {
+    const T = b.tl, R0 = T.troi, C = CFG.troi, P = w.P;
+    R0.t += dt;
+    b.busy = Math.max(b.busy, 0.2);
+    if (R0.pha === 'toi' || R0.pha === 'duoi') {
+      if (P && !P.dead) {
+        const dx = P.x - b.x, dy = P.y - b.y, d = Math.hypot(dx, dy / ZK()) || 1;
+        if (R0.pha === 'toi' && (d <= C.gan || R0.t > 2.5)) { R0.pha = 'duoi'; R0.t = 0; }
+        const v = Math.min((R0.pha === 'toi' ? C.toi : C.toc) * dt, d);
+        b.x = clamp(b.x + dx / d * v, w.x0 + 10, w.x1 - 6); b.y = clamp(b.y + dy / d * v * ZK(), w.y0 + 8, w.y1 - 6);
+      }
+      if (R0.pha === 'duoi' && R0.t >= C.duoi) {
+        R0.pha = 'bao'; R0.t = 0;
+        tron(b, b.x, b.y, C.r, C.bao, b.dmg * C.sat, null, TEN.troi, { melee: true });
+        G.sfx('warn', 1.3);
+      }
+    } else if (R0.pha === 'bao') {
+      if (R0.t >= C.bao) {
+        R0.pha = 'lo'; R0.t = 0; b.hidden = false;
+        b.exposed = Math.max(b.exposed || 0, C.lo); b.tired = Math.max(b.tired || 0, C.lo);
+        FX('burst', b.x, b.y - 10, '#cfe8e4', 16, 90); W().shake = Math.max(W().shake, 0.25);
+      }
+    } else if (R0.pha === 'lo') {
+      if (R0.con > 0 && R0.t >= C.lo1) { R0.con--; R0.pha = 'duoi'; R0.t = C.duoi - C.duoi2; b.hidden = true; FX('burst', b.x, b.y, '#cfe8e4', 8, 50); return; } // lặn xuống đuổi tiếp
+      if (R0.t >= C.lo) { R0.pha = 've'; R0.t = 0; R0.x0 = b.x; R0.y0 = b.y; b.hidden = true; FX('burst', b.x, b.y, '#cfe8e4', 8, 50); }
+    } else {
+      const u = clamp(R0.t / C.ve, 0, 1), tx = w.x1 - CFG.dau.lui, ty = clamp(R0.y0, w.y0 + 12, w.y1 - 8);
+      b.x = R0.x0 + (tx - R0.x0) * u; b.y = R0.y0 + (ty - R0.y0) * u;
+      if (u >= 1) { T.troi = null; T.raKhoi = false; b.hidden = false; b.busy = Math.min(b.busy, 0.1); T.lanCd = G.rr(CFG.lan.moi[0], CFG.lan.moi[1]); FX('burst', b.x, b.y, '#cfe8e4', 10, 60); }
+    }
+  }
+  // p2 · DÒNG NƯỚC ĐỔI CHIỀU: một dải nước ngang qua bãi đá (đẩy như dòng chảy của vùng — js/song_luat.js, không mất máu), mỗi dong.moi giây
+  // đổi chiều; mũi tên đổi trước dong.bao giây. Chiêu: ép đổi chiều ngay + tảng băng (pha 3: gỗ cháy) trôi quét cả dải. Né: đứng trên đá ngoài dải.
+  function taoDong(w, b) {
+    const C = CFG.dong, yc = (w.y0 + w.y1) / 2 + G.rr(-C.lech, C.lech);
+    const d = { doc: false, x0: w.x0 - 14, x1: w.x1 + 14, y0: Math.round(yc - C.rong / 2), y1: Math.round(yc + C.rong / 2), huong: G.rnd() < 0.5 ? 1 : -1, ph: 0, cau: [], tlDong: true };
+    const day = !!(w.song && G.songLuat && G.SONG_LUAT !== false && G.DONG_CHAY !== false);
+    if (day) w.song.dai.push(d);
+    b.tl.dong = { d, doiT: C.moi, canh: false, day };
+    return b.tl.dong;
+  }
+  TL.taoDong = taoDong;
+  function dongTick(w, b, dt) {
+    const D = b.tl.dong, C = CFG.dong;
+    D.doiT -= dt;
+    if (!D.canh && D.doiT <= C.bao) { D.canh = true; D.canhT = G.time || 0; G.sfx('warn', 0.7); FX('text', (w.x0 + w.x1) / 2, D.d.y0 - 4, 'Dòng nước sắp đổi chiều!', '#bfe8ff', 8); }
+    if (D.doiT <= 0) { D.d.huong = -D.d.huong; D.doiT = C.moi; D.canh = false; FX('burst', W().P.x, D.d.y0 + 4, '#cfe8e4', 4, 30); }
+  }
+  function doiDong(b, P, T, D) {
+    const w = W(), C = CFG.dong, d0 = b.tl.dong || taoDong(w, b), d = d0.d;
+    if (b.an) b.an.ct = true;
+    d0.doiT = T; d0.canh = true; d0.canhT = G.time || 0;
+    vung(b, 'rect', { x: w.x0 - 10, y: d.y0 - 2, w: w.x1 - w.x0 + 20, h: d.y1 - d.y0 + 4 }, T, b.dmg * C.sat, b.el, TEN.dong,
+      { onFire: () => { if (b.tl) b.tl.troiGo = { t0: G.time || 0, huong: -d.huong, el: b.el }; W().shake = Math.max(W().shake, 0.2); G.sfx('boom', 1.4); } });
+    const X = T + 0.2;
+    if (X > D) giuBan(b, X);
+  }
+  // p3 · MƯA MẢNH ĐỒNG: 6 mảnh trống nóng đỏ rơi (bóng tròn báo trước; một bóng ngay chỗ em bé), rơi xong nằm lại làm vật cản nóng giu giây.
+  function muaManh(b, P, T, D) {
+    const C = CFG.manh, dot = C.dot[clamp(b.phase | 0, 0, 2)];
+    if (b.an) b.an.ct = true;
+    manhDot(b, P, T);
+    for (let k = 1; k < dot; k++) later(b, T + k * C.gian - C.bao2, () => { if (!b.dead) manhDot(b, W().P, C.bao2); }); // đợt sau: nhắm lại chỗ em bé
+    const X = T + (dot - 1) * C.gian + 0.4;
+    if (X > D) giuBan(b, X);
+  }
+  function manhDot(b, P, T) {
+    const w = W(), C = CFG.manh, ds = [[clamp(P.x, w.x0 + 14, w.x1 - 40), clamp(P.y, w.y0 + 10, w.y1 - 8)]];
+    const cu = b.tl.manh.map((o) => [o.x, o.y]); // không rơi đè lên mảnh đang nằm (khe giữa các mảnh luôn đủ đi)
+    for (let k = 0; k < 120 && ds.length < C.so; k++) {
+      const x = G.rr(w.x0 + 16, w.x1 - 44), y = G.rr(w.y0 + 12, w.y1 - 10);
+      if (ds.some((d) => Math.hypot(d[0] - x, (d[1] - y) / ZK()) < C.cach) || cu.some((d) => Math.hypot(d[0] - x, (d[1] - y) / ZK()) < C.cach)) continue;
+      ds.push([x, y]);
+    }
+    ds.forEach(([x, y], i) => {
+      tron(b, x, y, C.r, T + i * 0.06, b.dmg * C.sat, 'fire', TEN.manh, { onFire: () => {
+        if (b.dead || !b.tl) return;
+        const t0 = G.time || 0, o = { x, y, t0, het: t0 + C.giu };
+        o.z = tron(b, x, y, C.vung, 0, b.dmg * C.satVung, 'fire', TEN.manh, { pool: true, life: C.giu, tick: 0.5, tlManh: true });
+        b.tl.manh.push(o);
+        FX('burst', x, y - 4, '#ffb050', 6, 50);
+      } });
+    });
+  }
+  // p3 · SIẾT SÂN: thân cuộn quanh mép sân — quét dải mép trong (trên, dưới, trái; mép phải là đầu) rồi sân hẹp lại; từ đó mỗi siet.moi giây quét lại.
+  function quetMep(b, t) {
+    const w = W(), C = CFG.siet, d = C.day;
+    for (const g of [{ x: w.x0 - 10, y: w.y0 - 10, w: w.x1 - w.x0 + 20, h: d + 10 }, { x: w.x0 - 10, y: w.y1 - d, w: w.x1 - w.x0 + 20, h: d + 10 }, { x: w.x0 - 10, y: w.y0 - 10, w: d + 10, h: w.y1 - w.y0 + 20 },
+      { x: w.x1 - C.phai, y: w.y0 - 10, w: C.phai + 10, h: w.y1 - w.y0 + 20 }]) // mép phải (cạnh đầu): thân quét dải hẹp sau lưng đầu
+      vung(b, 'rect', g, t, b.dmg * C.sat, b.el, TEN.siet, { tlSiet: true });
+    b.tl.quet.push({ t0: G.time || 0, T: t });
+    G.sfx('warn', 0.8);
+  }
+  function sietSan(b, P, T, D) {
+    const C = CFG.siet;
+    if (b.an) b.an.ct = true;
+    quetMep(b, T);
+    if (!b.tl.siet) b.tl.siet = { lan: 0, hen: null };
+    later(b, T, () => {
+      if (b.dead || !b.tl) return;
+      const S = b.tl.siet, w = W();
+      W().shake = Math.max(W().shake, 0.35); G.sfx('boom', 1.0);
+      if (S.lan < C.lan) { S.lan++; w.x0 += C.thu[0]; w.y0 += C.thu[1]; w.y1 -= C.thu[1]; }
+      S.hen = C.moi;
+    });
+    const X = T + 0.2;
+    if (X > D) giuBan(b, X);
+  }
+  function sietTick(w, b, dt) {
+    const S = b.tl.siet, C = CFG.siet;
+    if (S.hen == null || b.invuln > 0) return;
+    S.hen -= dt;
+    if (S.hen <= 0) { S.hen = C.moi + C.baoMoi; quetMep(b, C.baoMoi); }
+  }
+  // p3 · ĐỚP LIÊN HOÀN: 3 cú đớp thẳng nối nhau, mỗi cú nhắm lại chỗ em bé (vạch đỏ), đầu chồm tới; xong nằm mệt (lộ điểm yếu) rồi trườn về.
+  function dopLienHoan(b, P, T, D) {
+    const C = CFG.lienHoan;
+    if (b.an) b.an.ct = true;
+    b.tl.raKhoi = true;
+    const cu = (bao) => {
+      if (b.dead || !b.tl) return;
+      const w = W(), Q = w.P, x0 = b.x - 8, y0 = b.y - 2, g = Math.atan2(Q.y - y0, Q.x - x0), L = clamp(Math.hypot(Q.x - x0, Q.y - y0) + 26, 70, 160);
+      b.dirA = g; b.face = Math.cos(g) < 0 ? -1 : 1;
+      vung(b, 'line', { x: x0, y: y0, ang: g, len: L, w: C.rong }, bao, b.dmg * C.sat, null, TEN.lien, { melee: true });
+      later(b, bao, () => {
+        if (b.dead) return;
+        const xMin = W().x0 + C.xMin, di = Math.max(0, Math.min(C.tien, L - 46, Math.cos(g) < 0 ? (b.x - xMin) / Math.max(0.2, -Math.cos(g)) : C.tien));
+        b.lunge = { vx: Math.cos(g) * di / 0.15, vy: Math.sin(g) * di / 0.15, t: 0.15 };
+        if (b.an) { b.an.n = 'atk'; b.an.t = 0; }
+      });
+    };
+    cu(T);
+    for (let k = 1; k < C.so; k++) later(b, T + k * C.cach - C.bao[k], () => cu(C.bao[k]));
+    const X = T + (C.so - 1) * C.cach + 0.2;
+    later(b, X, () => tire(b, C.lo));
+    later(b, X + C.lo, () => { if (b.tl) b.tl.raKhoi = false; });
+    giuBan(b, X + C.lo);
+  }
+  // Vật cản nóng của Mưa mảnh đồng: đẩy em bé ra (không xuyên qua được), vũng nóng quanh mảnh.
+  function manhTick(w, b) {
+    const now = G.time || 0, P = w.P, R = CFG.manh.chan + 4;
+    b.tl.manh = b.tl.manh.filter((o) => now < o.het);
+    if (!P || P.dead) return;
+    for (const o of b.tl.manh) {
+      const dx = P.x - o.x, dy = (P.y - o.y) / ZK(), d = Math.hypot(dx, dy);
+      if (d >= R) continue;
+      if (d < 0.01) { P.x = o.x + R; continue; }
+      const k = (R - d) / d; P.x += dx * k; P.y += dy * k * ZK();
+    }
+  }
+  function tick3C(w, b, dt) {
+    const T = b.tl;
+    if (T.troi) troiTick(w, b, dt);
+    if (T.xoay.length) xoayTick(w, b, dt);
+    if (T.dong) dongTick(w, b, dt);
+    if (T.siet) sietTick(w, b, dt);
+    if (T.manh.length) manhTick(w, b);
+    const now = G.time || 0;
+    if (T.quet.length) T.quet = T.quet.filter((q) => now - q.t0 < q.T + 0.5);
+    if (T.troiGo && now - T.troiGo.t0 > 0.9) T.troiGo = null;
+  }
+  TL.tick3C = tick3C;
+
+  // ---------- CẢNH BỎ TRỐN (thay cho chết): nhả một mảnh trống nhỏ, ngoạm mảnh mặt trời sáng rực rồi lặn mất ----------
+  // Thuồng Luồng sau này hoá Hắc Long (docs/cot-truyen/CHUNG.md) nên KHÔNG nổ tung như trùm khác. Thắng ải như hạ trùm bình thường
+  // (G.kill, phần thưởng, sao không đổi); chỉ thay hình chết và chờ cảnh xong (w.bossDieT) mới mở cổng.
+  function boTron(w, b) {
+    if (w.tlTron) return;
+    const t0 = G.time || 0;
+    w.tlTron = { t0, x: b.x, y: b.y, el: b.el, b, snap: Object.assign({}, b, { dead: false, dying: null, hidden: false, flash: 0, exposed: 0, lunge: null, tl: Object.assign({}, b.tl, { lan: null, troi: null }) }) };
+    w.bossDieT = CFG.tron.giay + 0.3;
+    w.banner = { s: G.t('{0} ngoạm mảnh trống lớn nhất rồi lặn mất!', b.name), col: '#ffd27a', t: 3.2 };
+    w.props.push({ type: 'tlTron', x: b.x, y: b.y + 2, o: w.tlTron });
+    if (b.tl) { for (const x of b.tl.xoay) if (x.z) x.z.dead = true; b.tl.xoay.length = 0; b.tl.manh.length = 0; b.tl.troi = null; }
+    if (w.song && b.tl && b.tl.dong) w.song.dai = w.song.dai.filter((d) => d !== b.tl.dong.d); // nước rút: dải dòng nước cũng tan
+  }
+  TL.boTron = boTron;
+  if (G.mobOnKill) {
+    const k0 = G.mobOnKill;
+    G.mobOnKill = function (e) {
+      const r = k0.apply(this, arguments);
+      try { if (e && e.isBoss && e.kind === 'thuong' && e.tl && C3()) boTron(W(), e); } catch (err) { if (!TL.loiVe) TL.loiVe = err; }
+      return r;
+    };
+  }
+  if (G.fx && G.fx.death) {
+    const d0 = G.fx.death;
+    G.fx.death = function (e) {
+      if (e && e.isBoss && e.kind === 'thuong' && e.tl && C3()) { FX('burst', e.x, e.y - 20, '#ffd27a', 14, 80); return undefined; } // không nổ tung: cảnh bỏ trốn vẽ ở prop tlTron
+      return d0.apply(this, arguments);
+    };
+  }
+
   // ---------- MỖI KHUNG: sóng bờ, chân vòm chắn, đạn chạm vòm, trả sân khi thắng ----------
   function tick(dt) {
     const w = W();
@@ -47570,11 +47855,12 @@ window.FIREBASE_CONFIG = {
     const now = G.time || 0;
     if (!b.dead) sonBo(w, b, dt);
     const T = b.tl;
-    if (!b.dead && b.dying == null) lanDoi(w, b, dt);
+    if (!b.dead && b.dying == null && C3()) tick3C(w, b, dt);
+    if (!b.dead && b.dying == null && !b.tl.troi) lanDoi(w, b, dt);
     if (T.song.length) T.song = T.song.filter((s) => now - s.t0 < s.T + 0.6);
     if (T.tia.length) T.tia = T.tia.filter((s) => now - s.t0 < 0.4);
     if (T.vom.length) T.vom = T.vom.filter((v) => now < v.het);
-    if (b.dead || b.dying != null) { T.vom.length = 0; T.duoi = null; }
+    if (b.dead || b.dying != null) { T.vom.length = 0; T.duoi = null; if (C3() && b.dead) boTron(w, b); }
     // gợi ý hệ một lần sau màn ra mắt
     if (!T.goiY && !(b.invuln > 0) && b.t > 4.2 && !b.dead) { T.goiY = true; w.banner = { s: goiY(b.el), col: G.EL[b.el].col, t: 3.2 }; }
     // vòm: hai chân chắn em bé, thân vòm chắn đạn
@@ -47602,7 +47888,8 @@ window.FIREBASE_CONFIG = {
   const SK = G.bossSK, NGU = SK.ngu;
   SK.thuong = {
     // pha 1: c1-c3; pha 2: + c4 (HÌNH TẠM: chiêu Ngư Tinh); pha 3: + c5 (HÌNH TẠM) — phiên 3C thay hàm này + c4, c5 bằng chiêu riêng.
-    chon: (b, ph) => {
+    chon: (b, ph) => (C3() ? chon3C(b, ph) : SK.thuong.chon3B(b, ph)),
+    chon3B: (b, ph) => {
       // HÌNH TẠM tới phiên 3C: pha 2 thêm Bổ rìu (n1), Sóng thần (n2), Cột nước đuổi (c4); pha 3 thêm Xoáy hút (c5) — chiêu Ngư Tinh như phiên 1,
       // để độ khó pha 2, 3 không tụt so với phiên 1 (đo bằng bot: do_trum.py).
       const o = ph >= 2 ? ['c1', 'c2', 'c3', 'n1', 'n2', 'c4', 'c5'] : ph >= 1 ? ['c1', 'c2', 'c3', 'n1', 'n2', 'c4'] : ['c1', 'c2', 'c3'];
@@ -47619,13 +47906,32 @@ window.FIREBASE_CONFIG = {
     n2: { name: NGU.c2.name, anim: 'c2', to: true, f(b, P, T, D, a, sp) { return NGU.c2.f(b, P, T, D, a, sp); } }, // HÌNH TẠM (3C)
     c4: { name: NGU.c4.name, f(b, P, T, D, a, sp) { return NGU.c4.f(b, P, T, D, a, sp); } }, // HÌNH TẠM (3C)
     c5: { name: NGU.c5.name, near: true, f(b, P, T, D, a, sp) { return NGU.c5.f(b, P, T, D, a, sp); } }, // HÌNH TẠM (3C)
+    // ----- phiên 3C: chiêu riêng pha 2 (Băng), pha 3 (Lửa). anim: cử động mượn của ảnh (Ngư Tinh) tới khi có C71–C85 -----
+    x2: { name: TEN.xoay, anim: 'c4', tele: CFG.xoay.bao, to: true, f: xoayNuoc },
+    l2: { name: TEN.troi, anim: 'c5', f: lanTroi },
+    d2: { name: TEN.dong, anim: 'c2', tele: CFG.dong.bao, to: true, f: doiDong },
+    m3: { name: TEN.manh, anim: 'c4', tele: CFG.manh.bao, to: true, f: muaManh },
+    s3: { name: TEN.siet, anim: 'c2', tele: CFG.siet.bao, to: true, f: sietSan },
+    dl: { name: TEN.lien, anim: 'atk', tele: CFG.lienHoan.bao[0], near: true, f: dopLienHoan },
   };
+  // 3C: pha 1 ba chiêu; pha 2 giữ chiêu pha 1 + Xoáy nước, Lặn – trồi đớp, Dòng nước đổi chiều; pha 3 Quật đuôi, Phun nước đen, Xoáy nước,
+  // Lặn – trồi đớp + Mưa mảnh đồng, Siết sân, Đớp liên hoàn. Đứng sát đầu: hay bị Đớp (pha 3: Đớp liên hoàn).
+  function chon3C(b, ph) {
+    const o = ph >= 2 ? ['c1', 'c2', 'c2', 'x2', 'l2', 'm3', 's3', 'dl'] : ph >= 1 ? ['c1', 'c2', 'c2', 'c3', 'x2', 'l2', 'd2'] : ['c1', 'c2', 'c3'];
+    const P = W().P;
+    if (P && Math.hypot(P.x - b.x, P.y - b.y) < CFG.dop.gan) o.push(...(ph >= 2 ? ['dop', 'dop', 'dl', 'dl'] : ['dop', 'dop', 'dop']));
+    return o;
+  }
+  TL.chon3C = chon3C;
   TL.SK = SK.thuong;
 
   // ---------- CHỮ TIẾNG ANH ----------
   if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({
     'Quật đuôi': 'Tail Lash', 'Đớp': 'Snap', 'Phun nước đen': 'Black Water Jet', 'Vòng thân': 'Coil Arches', 'Vỗ sóng bờ': 'Bank Splash', 'Vảy dựng gai': 'Bristling Scales',
     'Hệ {0}: đánh bằng {1}!': '{0} form: strike with {1}!',
+    'Xoáy nước': 'Whirlpool', 'Lặn – trồi đớp': 'Dive Ambush', 'Dòng nước đổi chiều': 'Turning Current', 'Mưa mảnh đồng': 'Bronze Shard Rain',
+    'Siết sân': 'Coil Squeeze', 'Đớp liên hoàn': 'Snap Frenzy', 'Dòng nước sắp đổi chiều!': 'The current is turning!',
+    '{0} ngoạm mảnh trống lớn nhất rồi lặn mất!': '{0} snatches the biggest drum shard and dives away!',
   });
 
   // =====================================================================
@@ -47732,6 +48038,7 @@ window.FIREBASE_CONFIG = {
       if (b && b.tl) for (const s of b.tl.tia) veTia(s, t);
       // bóng vòm trên đá (thân vòm vẽ ở lớp đồ vật)
       if (b && b.tl) for (const v of b.tl.vom) { const u = clamp((t - v.t0) / 0.25, 0, 1); E(v.x, v.y + 1, v.rx * u, v.rx * ZK() * 0.5 * u, 'rgba(0,0,0,0.22)'); }
+      if (b && b.tl && b.tl.xoay && !b.dead && rut >= 1) ve3C(w, b, t); // 3C (vẽ trên đá, dưới nhân vật)
     } finally { c = pv; }
   }
   function veVet(z, t) {
@@ -47797,18 +48104,122 @@ window.FIREBASE_CONFIG = {
       if (b.exposed > 0 && Math.floor(t * 6) % 2) for (const s of [-1, 1]) E(v.x + s * rw, v.y - 2, 2, 2, M.sang);
     } finally { c = pv; }
   }
+  // --- 3C: dải dòng nước, xoáy, mảnh đồng, thân siết mép, cảnh bỏ trốn ---
+  function muiTen(x, y, h, s, col) { for (let i = 0; i <= s; i++) { R(x - h * i, y - i, 2, 1, col); R(x - h * i, y + i, 2, 1, col); } }
+  function veDong(w, b, t) {
+    const D = b.tl.dong, d = D.d, x0 = Math.max(d.x0, da(w).x0), x1 = Math.min(d.x1, da(w).x1), h = d.y1 - d.y0, M = mauB(b);
+    R(x0, d.y0, x1 - x0, h, 'rgba(14,44,48,0.8)');
+    R(x0, d.y0, x1 - x0, 2, 'rgba(200,224,216,0.6)'); R(x0, d.y1 - 2, x1 - x0, 2, 'rgba(200,224,216,0.55)'); R(x0, d.y0 + 2, x1 - x0, 3, 'rgba(0,0,0,0.25)');
+    const gap = 30, off = ((t * 28) % gap + gap) % gap, L0 = x1 - x0;
+    for (const [li, y] of [[0, d.y0 + h * 0.32], [1, d.y0 + h * 0.72]]) for (let p = -gap; p < L0 + gap; p += gap) {
+      const q = d.huong > 0 ? p + off + li * 15 : L0 - p - off - li * 15;
+      if (q < 4 || q > L0 - 4) continue;
+      R(x0 + q - d.huong * 9, y + 3 - li * 2, 7, 1, 'rgba(160,200,196,0.35)'); muiTen(x0 + q, y, d.huong, 3, 'rgba(240,250,255,0.85)');
+    }
+    if (D.canh && Math.floor(t * 5) % 2 === 0) { // sắp đổi chiều: mũi tên lớn ngược chiều nhấp nháy
+      const my = (d.y0 + d.y1) / 2;
+      for (let k = 0; k < 4; k++) { const x = x0 + L0 * (0.2 + k * 0.2); for (let j = 0; j < 3; j++) muiTen(x - d.huong * j * 6, my, -d.huong, 7, j === 2 ? '#ffffff' : '#ffd27a'); }
+    }
+    const G0 = b.tl.troiGo; // tảng băng (Băng) / gỗ cháy (Lửa) trôi quét cả dải
+    if (G0) {
+      const u = clamp((t - G0.t0) / 0.6, 0, 1), hg = d.huong, ice = G0.el === 'ice';
+      for (let i = 0; i < 5; i++) {
+        const k = (u * 1.3 - i * 0.12), x = hg > 0 ? x0 + k * L0 : x1 - k * L0, y = d.y0 + 6 + (i % 3) * (h - 12) / 2;
+        if (k < 0 || k > 1) continue;
+        E(x, y + 2, 9, 4, 'rgba(0,0,0,0.3)'); E(x, y, 8, 4, ice ? '#d6f0fa' : '#5a3020'); R(x - 4, y - 2, 6, 1, ice ? '#ffffff' : M.vay);
+        if (!ice) R(x - 2, y - 5, 3, 3, Math.floor(t * 12 + i) % 2 ? '#ffd23f' : '#ff7a2a');
+      }
+    }
+  }
+  function veXoay(o, t, el) {
+    const M = MAU[el] || MAU.ice, u = clamp((t - o.t0) / 0.3, 0, 1) * clamp((o.het - t) / 0.4, 0, 1), r = CFG.xoay.r;
+    E(o.x, o.y, r * u, r * ZK() * u, 'rgba(10,36,44,0.28)');
+    for (let k = 0; k < 3; k++) { // gợn xoắn quay
+      const rr = (8 + k * 14 + (t * 20) % 14) * u;
+      for (let i = 0; i < 10; i++) { const a = i / 10 * TAU + t * (2.5 - k * 0.6) + k; R(o.x + Math.cos(a) * rr, o.y + Math.sin(a) * rr * ZK(), 3, 1, k ? 'rgba(200,236,244,0.6)' : M.sang); }
+    }
+    E(o.x, o.y, CFG.xoay.loi * u, CFG.xoay.loi * ZK() * u, 'rgba(4,16,22,0.7)'); E(o.x, o.y, 4 * u, 2 * u, M.bung);
+  }
+  function veManh(o, t) { // mảnh trống đồng nóng đỏ nằm trên đá (vật cản)
+    const u = clamp((o.het - t) / 0.6, 0, 1), nong = 0.5 + 0.5 * Math.sin(t * 8 + o.x);
+    c.save(); c.globalAlpha *= Math.max(0.25, u);
+    E(o.x, o.y + 1, 12, 5, 'rgba(255,90,30,' + (0.25 + 0.2 * nong).toFixed(2) + ')');
+    E(o.x, o.y - 2, 9, 5, '#8a4a1e'); E(o.x, o.y - 3, 7, 3.5, '#c87a32'); R(o.x - 4, o.y - 4, 3, 1, '#ffd890'); R(o.x + 1, o.y - 2, 2, 1, '#5a2a10');
+    if (Math.floor(t * 6 + o.y) % 3 === 0) R(o.x - 1 + Math.sin(t * 9) * 3, o.y - 9 - (t * 20 % 6), 1, 2, '#ffb050');
+    c.restore();
+  }
+  function veSiet(w, b, t) { // thân cuộn quanh mép sân đã thu hẹp + bọt khi quét
+    const S = w.tlSan, M = mauB(b), D = da(w), x0g = S.x0 + CFG.san.trai - 6, y0g = S.y0 + CFG.san.tren - 8, y1g = S.y1 - CFG.san.duoi + 4;
+    const quet = b.tl.quet.find((q) => t - q.t0 < q.T + 0.4), q = quet ? clamp((t - quet.t0) / quet.T, 0, 1.3) : 0;
+    const khuc = (x, y) => { E(x, y + 1, 5, 4, M.toi); E(x, y, 4.5, 3.5, M.than); R(x - 1, y + 1, 3, 1, M.bung); };
+    const ra = quet ? (q < 1 ? q * 3 : 3 + (q - 1) * -10) : 0; // khi báo: thân phình dần ra phía trong, lúc quét co lại
+    if (D.y0 > y0g + 1 || quet) for (let x = D.x0; x <= D.x1; x += 6) khuc(x, D.y0 + ra + Math.sin(x * 0.2 + t * 3) * 1.5);
+    if (D.y1 < y1g - 1 || quet) for (let x = D.x0; x <= D.x1; x += 6) khuc(x, D.y1 - 2 - ra + Math.sin(x * 0.2 + t * 3) * 1.5);
+    if (D.x0 > x0g + 1 || quet) for (let y = D.y0; y <= D.y1; y += 5) khuc(D.x0 + ra + Math.sin(y * 0.2 + t * 3) * 1.5, y);
+    for (let x = D.x0 + 6; x < D.x1; x += 12) { R(x, D.y0 - 5, 2, 3, M.vay); R(x + 3, D.y1 - 7, 2, 3, M.vay); }
+  }
+  function ve3C(w, b, t) {
+    if (b.tl.dong) veDong(w, b, t);
+    for (const o of b.tl.manh) veManh(o, t);
+    for (const o of b.tl.xoay) veXoay(o, t, b.el);
+    if (b.tl.siet || b.tl.quet.length) veSiet(w, b, t);
+  }
+  function veTron(cx, o) { // cảnh bỏ trốn
+    const s = o.o, w = W();
+    if (!s || !w || w.tlTron !== s) { o.dead = true; return; }
+    const t = G.time || 0, u = t - s.t0, C = CFG.tron, M = MAU[s.el] || MAU.fire, sn = s.snap, x = s.x, y = s.y, hH = Math.min(110, (sn.h || 60) * (sn.scale || 1));
+    if (u > C.giay + 1.5) { o.dead = true; return; }
+    const pv = c; c = cx;
+    try {
+      const lanK = clamp((u - C.lan[0]) / (C.lan[1] - C.lan[0]), 0, 1), lui = u < 0.4 ? Math.sin(u / 0.4 * PI) * 6 : 0;
+      for (let i = 0; i < 4; i++) { const r = 10 + ((u * 34 + i * 12) % 48) * (0.6 + lanK); E(x, y + 2, r, r * 0.3, 'rgba(220,240,232,' + Math.max(0, 0.55 - r / 110).toFixed(2) + ')'); }
+      if (lanK < 1) { // đầu: khựng lại, rồi chìm dần xuống nước (cắt phần dưới mặt nước)
+        sn.an = { n: u < 0.5 ? 'phase3' : 'idle', t: u, spd: 1 }; sn.x = x + lui; sn.t = (sn.t || 0) + 0.016;
+        const chim = lanK * hH * 1.1;
+        c.save();
+        c.beginPath(); c.rect(x - 160, y - 240, 320, 243); c.clip();
+        c.translate(0, Math.round(chim));
+        c.globalAlpha *= 1 - lanK * 0.5;
+        try { A.boss(c, sn); } catch (e) { if (!TL.loiVe) TL.loiVe = e; }
+        c.restore();
+      }
+      // mảnh trống nhỏ (vành chim Lạc) nhả ra, bay vòng cung rơi xuống đá, lấp lánh
+      if (u >= C.nha[0]) {
+        const k = clamp((u - C.nha[0]) / (C.nha[1] - C.nha[0]), 0, 1), sx = x - 14, sy = y - hH * 0.45, ex = x - 72, ey = y + 10;
+        const px = sx + (ex - sx) * k, py = sy + (ey - sy) * k - Math.sin(k * PI) * 34;
+        E(px, py + (k >= 1 ? 2 : 0), 6, 3.5, '#8a6a2a'); E(px, py - 1, 5, 2.5, '#d8a850'); R(px - 2, py - 2, 3, 1, '#fff0b0');
+        R(px - 1, py, 3, 1, '#6a4a1a'); R(px + 1, py - 1, 1, 1, '#6a4a1a'); // hình chim Lạc nhỏ
+        if (k >= 1 && Math.floor(t * 4) % 2) { R(px - 6, py - 6, 1, 3, '#fff6c8'); R(px - 7, py - 5, 3, 1, '#fff6c8'); }
+      }
+      // mảnh mặt trời (mảnh lớn nhất) sáng rực trong miệng, chìm theo đầu
+      if (u >= C.ngoam) {
+        const k = clamp((u - C.ngoam) / 0.3, 0, 1), mx = x - 16 + lui, my = y - hH * 0.42 + lanK * hH * 1.1, sang = (1 - lanK * 0.8) * k;
+        if (my < y + 2) {
+          c.save(); c.globalAlpha *= sang;
+          E(mx, my, 16 + Math.sin(t * 9) * 2, 12, 'rgba(255,214,120,0.35)');
+          for (let i = 0; i < 8; i++) { const a = i / 8 * TAU + t * 1.5; R(mx + Math.cos(a) * 12, my + Math.sin(a) * 9, 2, 2, '#ffe9a0'); }
+          E(mx, my, 8, 6, '#c88a2a'); E(mx, my, 6, 4.5, '#ffd27a'); E(mx, my, 2.5, 2, '#fff8d0');
+          c.restore();
+        } else E(mx, y + 3, 12, 3.5, 'rgba(255,214,120,' + (0.45 * (1 - lanK) + 0.1).toFixed(2) + ')'); // đã chìm: chỉ còn quầng sáng dưới nước
+      }
+      if (lanK >= 1 || u > C.lan[0] + 0.6) { // vây lưng rẽ nước bơi đi về phía phải (núi xa)
+        const k = clamp((u - C.lan[0] - 0.6) / 1.2, 0, 1), fx = x + k * 70, fa = 1 - k;
+        if (fa > 0) { c.save(); c.globalAlpha *= fa; for (let i = 0; i < 4; i++) R(fx - 6 + i * 3, y - 3 - (i % 2) * 3, 2, 4 + (i % 2) * 3, M.vay); R(fx - 14, y + 1, 16, 1, 'rgba(220,240,232,0.7)'); c.restore(); }
+      }
+    } finally { c = pv; }
+  }
   if (G.roomArt) { const ls0 = G.roomArt.lopSan; G.roomArt.lopSan = function (cx, w, room, t) { if (ls0) ls0.apply(this, arguments); try { veSan(cx, w, t); } catch (e) { if (!TL.loiVe) { TL.loiVe = e; if (window.console) console.warn('thuong_luong', e); } } }; }
   const prop0 = A.prop;
   A.prop = function (cx, o) {
-    if (!o || (o.type !== 'tlThan' && o.type !== 'tlVom')) return prop0.apply(this, arguments);
-    try { if (o.type === 'tlThan') veThan(cx, o); else veVom(cx, o); } catch (e) { if (!TL.loiVe) { TL.loiVe = e; if (window.console) console.warn('thuong_luong', e); } }
+    if (!o || (o.type !== 'tlThan' && o.type !== 'tlVom' && o.type !== 'tlTron')) return prop0.apply(this, arguments);
+    try { if (o.type === 'tlThan') veThan(cx, o); else if (o.type === 'tlTron') veTron(cx, o); else veVom(cx, o); } catch (e) { if (!TL.loiVe) { TL.loiVe = e; if (window.console) console.warn('thuong_luong', e); } }
   };
   // --- đầu: ảnh mượn nhuộm theo hệ, bọt nước quanh chỗ trồi, mảnh trống trên trán sáng khi lộ điểm yếu ---
   const boss0 = A.boss;
   A.boss = function (cx, b) {
     if (!b || b.kind !== 'thuong' || b.illusion || !b.tl) return boss0.apply(this, arguments);
     const t = G.time || 0, M = mauB(b), pv = c;
-    if (b.tl.lan && b.dying == null) { // đang lặn: chỉ thấy gợn nước + vây lưng rẽ nước chạy dọc mép phải
+    if ((b.tl.lan || (b.tl.troi && b.hidden)) && b.dying == null) { // đang lặn: chỉ thấy gợn nước + vây lưng rẽ nước chạy dọc mép phải
       c = cx;
       try {
         for (let i = 0; i < 3; i++) { const r = 8 + ((t * 30 + i * 9) % 26); E(b.x, b.y + 2, r, r * 0.3, 'rgba(220,240,232,' + (0.5 - r / 70).toFixed(2) + ')'); }
