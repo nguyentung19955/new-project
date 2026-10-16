@@ -159,3 +159,10 @@ Sau đó trong `kiem-tra.html` sẽ có thêm nút `gen-ao-da` ở hàng Áo. N�
 - **Tay trước** = tay lộ bắp tay trần, vẽ đè lên thân. **Tay sau** = tay đấm ra trước, bắp tay khuất sau thân.
 - **Chân trước** = chân trụ ở khung 0. Mỗi chân giữ nguyên vai trò trước/sau suốt 12 khung.
 - **Neo bàn chân:** khung đặt giống game, căn ngang theo tâm đầu. Vì vậy chân trụ không phải lúc nào cũng ở đúng x = 48, nhưng đáy chân luôn chạm y = 90.
+
+## Thử rig gắn giáp lên khớp (16/10)
+
+- Đây là thử nghiệm riêng, nằm trong `rig/`. Chi tiết ở **[`rig/bao-cao-rig.md`](rig/bao-cao-rig.md)**, trang xem là `rig/kiem-tra-rig.html`.
+- **Cả chu kỳ 12 khung chỉ dùng 6 ảnh giáp** (giáp vai, cẳng tay, ống chân + chụp vai, khuỷu, gối), dùng chung cho cả bên trước và bên sau. Code xoay/đặt các ảnh này theo khớp trong `data.json`; không dùng sheet giáp 12 khung.
+- Giáp bám khớp 11/12 khung khi xoay liên tục và 9/12 khung khi làm tròn 8 hướng. Chụp khớp giảm điểm ảnh hở từ 48 xuống 12.
+- **Giới hạn:** xoay pixel art nhỏ làm rơi điểm ảnh và nhấp nháy (ở 8 hướng còn nhảy 45°). Ở cỡ 48×48, mảnh giáp gần như chỉ còn một chấm màu.
