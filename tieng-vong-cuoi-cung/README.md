@@ -8,7 +8,8 @@ Game metroidvania 2D pixel art. Nhân vật chính là một cô bé giữ chuô
 | --- | --- |
 | `docs/gdd.md` | Bản thiết kế game: cốt truyện, cơ chế, động tác, item, thế giới, kế hoạch |
 | `docs/dac-ta-nhan-vat-sprite.txt` | Đặc tả sprite 24×24 của nhân vật Thợ Săn Chuông |
-| `tools/sprite-lab.html` | Công cụ dựng nhân vật 3D, xem animation, xuất sprite sheet. Mở bằng Chrome |
+| `tools/sprite-lab.html` | Công cụ dựng nhân vật 3D, 26 animation (di chuyển, leo trèo, combo 3 nhát, đỡ đòn…), xuất sprite sheet. Bản trực tuyến: https://claude.ai/artifact/FAy4oP69UsN6H5LRLTFDb2 |
+| `tools/pixel-fit.html` | Đưa ảnh AI về đúng lưới pixel, khóa bảng màu, cắt tile. Bản trực tuyến: https://claude.ai/artifact/4LLj7aFE5jyrNBbS5vLVma |
 | `art/nhan-vat/` | `tho-san-chuong-chuan.png` là bản chuẩn (chuông vàng đồng). `tho-san-chuong-ban-dau.png` là bản đầu, chỉ để tham khảo |
 | `art/ke-dich/` | Quái chuông gỗ (chuông đồng xỉn) |
 | `art/item/` | 12 icon item |
@@ -32,6 +33,5 @@ Game metroidvania 2D pixel art. Nhân vật chính là một cô bé giữ chuô
 
 ## Việc còn mở
 
-- Ảnh từ ChatGPT chưa đúng lưới pixel và còn điểm ảnh bán trong suốt. Cần làm sạch bằng công cụ Pixel Fit.
+- Ảnh từ ChatGPT chưa đúng lưới pixel và còn điểm ảnh bán trong suốt. Cần làm sạch bằng Pixel Fit (đã có công cụ).
 - Tileset cần bản ghép liền mạch có đủ cạnh và góc.
-- Sprite Lab đang được làm lại thêm khung và thêm animation di chuyển, chiến đấu. Bản mới nhất nằm ở artifact, sẽ cập nhật lại vào đây.
