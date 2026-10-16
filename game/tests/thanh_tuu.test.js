@@ -6,7 +6,7 @@
 //   3. Nhận thưởng MỘT lần: đúng số vàng / linh khí / đá / bùa / quặng; nhận lần hai, nhận khi chưa đạt → không gì.
 //   4. Danh hiệu: nhận thành tựu có danh hiệu → tự đeo (khi chưa đeo gì); đổi / cất; không đeo được danh hiệu chưa có; danh hiệu từ Sổ (so.vung).
 //   5. Đọc so / nv an toàn: chưa có thì 0, có thì tính (Chép sổ, Chăm chỉ); dữ liệu hỏng không lỗi.
-//   6. Giao diện: thẻ Thành tựu ở Ông Từ (mở sau ải Rừng già 1), chấm đỏ, bấm huy hiệu + Nhận, Đổi danh hiệu, Hành trang, làng — vẽ không lỗi.
+//   6. Giao diện: thẻ Thành tựu ở Ông Từ (mở sau ải Rừng già 1; người mới: sau Hang biển 1 — mở dần), chấm đỏ, bấm huy hiệu + Nhận, Đổi danh hiệu, Hành trang, làng — vẽ không lỗi.
 //   7. Lưu / mây: tt đi qua G.fixSave + JSON nguyên vẹn.
 //   8. ?thanhtuu=0: không đếm, thẻ ẩn, không hiện danh hiệu; dữ liệu tt giữ nguyên.
 // Chạy: node game/tests/thanh_tuu.test.js
@@ -175,6 +175,10 @@ const sx = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Ar
       G.testSave({ lvl: 12 }); G.setScene(G.Village);
       r.moChua = VA.theCua('tu').map((t) => t[0]).join(',');
       G.save.stars['0-0'] = 2; G.save.stars['0-1'] = 2; // người mới (≤ 1 ải) chỉ có một chấm đỏ ở Lái Đò / Cụ Đồ…: qua 2 ải
+      // mở dần (Tư vấn 1, js/mo_dan.js): người mới thấy thẻ Thành tựu khi qua Hang biển 1; bản lưu cũ (moDan.cu) giữ mốc cũ Rừng già 1
+      r.moMoi = VA.theCua('tu').map((t) => t[0]).join(',');
+      G.save.stars['1-0'] = 1; r.moMoi2 = VA.theCua('tu').map((t) => t[0]).join(','); delete G.save.stars['1-0'];
+      G.save.moDan = { cu: 1 };
       r.mo = VA.theCua('tu').map((t) => t[0]).join(',');
       G.villageScene.checkNews(); r.cham = !!G.villageScene.state.news.tu && P.thanhTuu.cham(G.save);
       VA.open('tu'); V.tab = 'thanhTuu'; V.ttab = 'thanhTuu'; V.ttSel = null; r.ve0 = ve(); r.sel = V.ttSel;
@@ -201,7 +205,8 @@ const sx = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Ar
       return r;
     });
     const boSo = (x) => String(x).split(',').filter((t) => t !== 'so').join(','); // thẻ Sổ (Phiên A) mở từ đầu: không tính ở đây
-    dat(boSo(gd.moChua) === 'hero' && boSo(gd.mo) === 'hero,thanhTuu', 'thẻ Thành tựu chỉ hiện sau khi qua ải Rừng già 1');
+    dat(boSo(gd.moChua) === 'hero' && boSo(gd.mo) === 'hero,thanhTuu', 'bản lưu cũ: thẻ Thành tựu chỉ hiện sau khi qua ải Rừng già 1');
+    dat(boSo(gd.moMoi) === 'hero' && boSo(gd.moMoi2) === 'hero,thanhTuu', 'mở dần: người mới qua Rừng già 2 chưa có thẻ, qua Hang biển 1 mới có');
     dat(gd.cham, 'có huy hiệu chờ nhận → chấm đỏ Ông Từ');
     dat(gd.ve0 === true && gd.sel === 'buocDau' && gd.ve1 === true && gd.sel2 === 'quai100', 'vẽ thẻ không lỗi; tự chọn huy hiệu chờ nhận; chạm huy hiệu để xem');
     dat(gd.ve2 === true && gd.nhan && gd.cham2 === false, 'bấm Nhận: +100 vàng, hết chấm đỏ');
