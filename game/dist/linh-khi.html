@@ -73,7 +73,7 @@
 <div id="lk-tai" data-bia="||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAMEBQYH/8QAKRAAAQMCBQMDBQAAAAAAAAAAAQIDEQAEBRIhMUETFGEiQnEVUWKBsf/EABcBAAMBAAAAAAAAAAAAAAAAAAIDBAX/xAAlEQACAQEFCQAAAAAAAAAAAAABAgADBBExUfASEyEyM0FxobH/2gAMAwEAAhEDEQA/AOfNMWj9zbWiEtBsn1ugGTPCvjXajFcBNssNsvoeMxlCgVJqzCbhHftG3aGdcJBUAUn7neRzTMcumxjD0hDSkmFBtWZMjSdR5qamzb4DtHOiimTfxmt/T3UpzLBCTt5q22sWekt0vBvImSF8+KyF5eWDaGFNZlr6YkKGiTPGvzSutZDDX1sF3P0wPUBMzvP62rStACi5TEWB9pizi/H1JsLUo3NhKiZUOfyqbE1Hu3jJkqPNFFRUuprOHU5dZSVwmE6+2mNk9u7r7R/aKKqqQLNifB+T/9k=|||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAgf/xAAmEAACAgEEAQQCAwAAAAAAAAABAgMRAAQSITEFE1FhgSJBcbHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQIDBAX/xAAeEQABBAIDAQAAAAAAAAAAAAAAAQIDEiExBBEyIv/aAAwDAQACEQMRAD8A51EIZIo53EASNwHG07mBPFno9HFyeOhl1Y2yFIbtjVkDnr54yzx2vaLSyII1cELvBQEVu5PyeshTWvFJG6qi7OR+A9/4xoa3yQzWRvzsH8YkWrkCMZYlsoSvJHfWUalzFpI4/TRBZbca3HsUcXqvJvPqpZgEAewAFHAP1mZ9aZIoyqKWVa4jX3P+jByGor8aNDgT0gXvDiHTs1EbjRAsX3jKuEH92Ofs4YYGeim/yLulscHjFuT6YNno/wBnDDGfsEej/9k=" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.16-2130";
+(window.G = window.G || {}).VERSION = "lk-2026.10.16-2139";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -31895,6 +31895,9 @@ MA._xong();
     return s.trimEnd() + '…';
   }
   const DAT_NHO = new Map();
+  // can-chu-khung (16/10): phông Be Vietnam Pro về SAU khi game đã vẽ (mạng chậm, quá 1,2 giây chờ) → bỏ chỗ đặt chữ đã nhớ theo phông dự phòng
+  // (phông thật rộng / cao khác: chữ đặt theo số đo cũ sẽ lệch tâm hoặc tràn khung cho tới khi bộ nhớ đầy)
+  try { if (typeof document !== 'undefined' && document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', () => { if (canMoi()) { DAT_NHO.clear(); CAP.clear(); } }); } catch (e) { /* bỏ qua */ }
   T.chuDo = { lan: 0, thap: 0, cat: 0, hep: 0, giua: 0 }; // đếm cho công cụ soát
   // Tính chỗ đặt (không vẽ). Trả về { size, lines: [{ s, x, b, size, bold, color }], cat, thap } — toạ độ tuyệt đối.
   // (x, y, w, h): khung. o: { khung: mã ảnh khung | null, vien: [t, r, b, l] viền khi khung vẽ code, dem (2), size, min (6,5), bold,
@@ -31936,6 +31939,8 @@ MA._xong();
       const cao = lo - hi, room = bot - top;
       if (cao > room + 1e-6 && !chat) return null; // khung thấp hơn chữ
       const dv = Math.max(0, Math.min(dem, (room - cao) / 2)); // đệm dọc: 2 điểm khi đủ chỗ
+      // can-chu-khung: chữ sát viền trên / dưới (đệm dọc < 0,5) thì thử thu thêm tối đa 1 cỡ trước khi chịu sát
+      if (canMoi() && !chat && dem > 0 && dv < 0.5 && dongs[0].size > Math.max(min, size0 - 1) + 1e-6) return null;
       if (b0 + hi < top + dv) b0 = top + dv - hi;
       if (b0 + lo > bot - dv) b0 = bot - dv - lo;
       if (b0 + hi < top - 1e-6 && cao <= room) b0 = top - hi;
@@ -35403,8 +35408,9 @@ MA._xong();
       const Tr = C.trees[cay], on = st.cay === cay, x = Math.round(X + i * (cw + 4)), w = Math.floor(cw), E = G.EL[Tr.el];
       T.inset(x, top, w, colH, on, on ? { col: E.col } : { fill: '#16302f' });
       if (on) { const c = G.ux; c.fillStyle = E.col; c.globalAlpha = 0.12; c.fillRect(x + 2, top + 2, w - 4, colH - 4); c.globalAlpha = 1; }
-      orb(x + 8, top + 8, Tr.el, on);
-      tx(Tr.name, x + 15, top + 11, w - 18, { size: 8, bold: true, color: on ? E.col2 : SOFT });
+      const hx = T.canMoi && T.canMoi() ? 1 : 0; // can-chu-khung (16/10): tên cây + viên ngọc xuống 1 điểm, dấu chữ (Hỏa) không chạm viền trên ô
+      orb(x + 8, top + 8 + hx, Tr.el, on);
+      tx(Tr.name, x + 15, top + 11 + hx, w - 18, { size: 8, bold: true, color: on ? E.col2 : SOFT });
       const spentHere = on ? pt.spent : 0;
       CH.LAYOUT.forEach((row, ri) => {
         const ry = top + titleH + 2 + ri * rowH, bw = row.length === 2 ? Math.floor((w - 9) / 2) : w - 6;
@@ -42739,9 +42745,10 @@ MA._xong();
       for (const id in Lg) for (const e of ['fire', 'poison', 'ice']) got += num(Lg[id][e], 0);
       ui.rect(x, y, wd, 19, 'rgba(10,22,20,0.55)', 'rgba(255,220,160,0.14)');
       if (VM.gem) VM.gem(x + 8, y + 9.5, 1);
-      tx(G.t('+{0} linh khí trận này · đang có {1}', Math.round(got), Math.floor(lk(sv))), x + 17, y + 8, wd - 22, { size: 7, bold: true, color: '#ffe9a8' });
+      const nho = !!(T && T.canMoi && T.canMoi()); // can-chu-khung (16/10): hai dòng giữ đúng cỡ 7 / 6,5 (trước bị nâng lên sàn 7,5 nên chồng nhau trong dải 19)
+      tx(G.t('+{0} linh khí trận này · đang có {1}', Math.round(got), Math.floor(lk(sv))), x + 17, y + 8, wd - 22, { size: 7, bold: true, tiny: nho, color: '#ffe9a8' });
       const w = sv && Array.isArray(sv.weapons) ? sv.weapons.find((q) => L.duoc(sv, q, q.branch || 'fire') === '') : null;
-      tx(w ? G.t('Đủ đồ luyện {0} lên {1} ở Ông Thợ Rèn!', G.tv(G.WTYPES[w.type].name), L.cap(w) + 1) : G.tv('Luyện vũ khí ở Ông Thợ Rèn: vàng, linh khí, nguyên liệu rèn.'), x + 17, y + 16, wd - 22, { size: 6.5, color: w ? GOOD : '#e8dfcc' });
+      tx(w ? G.t('Đủ đồ luyện {0} lên {1} ở Ông Thợ Rèn!', G.tv(G.WTYPES[w.type].name), L.cap(w) + 1) : G.tv('Luyện vũ khí ở Ông Thợ Rèn: vàng, linh khí, nguyên liệu rèn.'), x + 17, y + 16, wd - 22, { size: 6.5, tiny: nho, color: w ? GOOD : '#e8dfcc' });
       return y + 21;
     };
     // ▲ trên HUD linh khí: đủ đồ luyện
@@ -42977,8 +42984,10 @@ MA._xong();
       T.inset(x, yy, lw, rowH - 2, sel);
       if (G.oBacVk) G.oBacVk(x + 2, yy + 2, rowH - 6, w);
       if (G.art && G.art.weaponIcon) G.art.weaponIcon(G.ux, w, x + 2 + (rowH - 6) / 2, yy + 2 + (rowH - 6) / 2, rowH - 14);
-      tx(G.tv(G.WTYPES[w.type].name), x + rowH, yy + 12, lw - rowH - 3, { size: 7.5, bold: true, color: G.bacMauVk ? G.bacMauVk(w) : TXT });
-      tx(G.t('Lv {0}', L.cap(w)) + (sv.carry && sv.carry[0] === w.id ? ' · ★' : ''), x + rowH, yy + 23, lw - rowH - 3, { size: 7, color: TXT });
+      // can-chu-khung (16/10): hai dòng (tên, cấp) là một khối nằm giữa ô theo chiều dọc (?canchucu=1: như cũ, dồn lên trên ~3 điểm)
+      const b1 = T.canMoi && T.canMoi() ? yy + (rowH - 2 - (11 + 7.5 * 0.73)) / 2 + 7.5 * 0.73 : yy + 12;
+      tx(G.tv(G.WTYPES[w.type].name), x + rowH, b1, lw - rowH - 3, { size: 7.5, bold: true, color: G.bacMauVk ? G.bacMauVk(w) : TXT });
+      tx(G.t('Lv {0}', L.cap(w)) + (sv.carry && sv.carry[0] === w.id ? ' · ★' : ''), x + rowH, b1 + 11, lw - rowH - 3, { size: 7, color: TXT });
       if (!ro && (L.duoc(sv, w, 'fire') === '' || L.choChonHe(w))) { const c = G.ux; c.fillStyle = GOOD; c.beginPath(); c.arc(x + lw - 5, yy + 5, 2.4, 0, 7); c.fill(); }
       if (G.click && G.inRect(G.click, x, yy, lw, rowH - 2)) { U.sel = w.id; G.click = null; if (G.sfx) G.sfx('ui'); }
     });
@@ -42988,7 +42997,8 @@ MA._xong();
     if (!w) { ui.text(G.tv('Chọn một vũ khí để luyện.'), rx + 6, y + 14, { size: 7.5, color: SOFT }); return y + rh; }
     const lv = L.cap(w), c = L.gia(lv + 1), lvl = sv.heroes[sv.hero].lvl;
     let yy = y + 12;
-    tx(G.wName(w) + ' · ' + G.t('Luyện {0}/{1}', lv, MAX), rx + l5, yy, rw - 10, { size: 8, bold: true, color: G.bacMauVk ? G.bacMauVk(w) : GOLD });
+    if (T.canMoi && T.canMoi()) T.chuO(G.wName(w) + ' · ' + G.t('Luyện {0}/{1}', lv, MAX), rx, y, rw, rh, { align: 'left', vung: [rx + l5 - 1, y, rw - 10, 15], size: 8, min: 7, bold: true, color: G.bacMauVk ? G.bacMauVk(w) : GOLD }); // can-chu-khung: dòng đầu trong lòng ô (trước: đè đinh góc trên trái)
+    else tx(G.wName(w) + ' · ' + G.t('Luyện {0}/{1}', lv, MAX), rx + l5, yy, rw - 10, { size: 8, bold: true, color: G.bacMauVk ? G.bacMauVk(w) : GOLD });
     yy += 11;
     const d0 = G.wBase(w, lvl);
     let d1 = null;

@@ -12,7 +12,8 @@ DỪNG vòng lặp khung hình, dựng trạng thái từng màn (bản lưu th�
   - BIỂU TƯỢNG: ảnh không phải khung dán lên lớp giao diện (để soát chữ đè biểu tượng, cụm biểu tượng + chữ trên nút).
 Lỗi (tô đỏ):
   lech-ngang  chữ căn giữa (hoặc cụm biểu tượng + chữ) lệch tâm ngang của lòng > ngưỡng (2 điểm game; khung hẹp: 6% bề rộng lòng, tối thiểu 1)
-  lech-doc    khung nhãn (cao ≤ 40): khối chữ hoa (đỉnh "H" dòng đầu → đường cơ sở dòng cuối) lệch tâm dọc của lòng > ngưỡng
+  lech-doc    khung nhãn (cao ≤ 40): khối chữ hoa (đỉnh "H" dòng đầu → đường cơ sở dòng cuối, kèm biểu tượng xếp trên / dưới) lệch tâm dọc
+              của lòng > ngưỡng (cùng ngưỡng: 2 điểm, khung hẹp 6% bề rộng lòng, tối thiểu 1)
   tran        chữ ra ngoài lòng khung > 0,25 điểm
   cham        chữ trong lòng nhưng cách mép lòng < 0,5 điểm
   cat         chữ cắt "…" hoặc bị vùng cắt che một phần
@@ -256,6 +257,8 @@ BOC = r"""
       const thr = (W) => Math.min(2, Math.max(1, 0.06 * W));
       for (const c of ds) {
         c.loi = [];
+        // huy hiệu số (bậc, số lượng) cố ý đặt ở góc ô vũ khí / ô đồ: không soát
+        if (/^gd-o-(ep|vk|do)/.test(q.ma || '') && c.s.trim().length <= 2) { c.huyHieu = 1; continue; }
         const thanh = THANH.test(q.ma || '') || (q.ten === 'anh' && q.h < 12); // chữ đè lên thanh (máu, linh khí...): chỉ soát nằm giữa
         if (!thanh) { if (c.tran > 0.25) c.loi.push('tran'); else if (c.dem < 0.25) c.loi.push('cham'); else if (c.dem < 0.5) c.sat = 1; }
         c.thanh = thanh ? 1 : 0;
@@ -282,13 +285,14 @@ BOC = r"""
         }
       }
       // lệch dọc: khung nhãn thấp (≤ 40) — khối chữ hoa của mọi dòng trong khung
-      if (q.h <= 40 && nhan && ds.length) {
-        let top = Math.min(...ds.map((c) => c.base - c.capH)), dd = Math.max(...ds.map((c) => c.base));
+      const ds2 = ds.filter((c) => !c.huyHieu);
+      if (q.h <= 40 && nhan && ds2.length) {
+        let top = Math.min(...ds2.map((c) => c.base - c.capH)), dd = Math.max(...ds2.map((c) => c.base));
         // biểu tượng xếp trên / dưới chữ (nút túi...): tính vào khối
-        const x0 = Math.min(...ds.map((c) => c.hop[0])), x1 = Math.max(...ds.map((c) => c.hop[0] + c.hop[2]));
+        const x0 = Math.min(...ds2.map((c) => c.hop[0])), x1 = Math.max(...ds2.map((c) => c.hop[0] + c.hop[2]));
         for (const i of ic) if (i.x < x1 && i.x + i.w > x0 && (i.y + i.h <= q.y + top + 0.5 || i.y >= q.y + dd - 0.5)) { top = Math.min(top, i.y - q.y); dd = Math.max(dd, i.y + i.h - q.y); }
-        const lech = (top + dd) / 2 - (L.top + bot) / 2, H = bot - L.top;
-        for (const c of ds) { c.lechD = +lech.toFixed(2); c.nguongD = +thr(H * 2).toFixed(2); if (Math.abs(lech) > c.nguongD + 1e-6) c.loi.push('lech-doc'); }
+        const lech = (top + dd) / 2 - (L.top + bot) / 2, mid = L.span((L.top + bot) / 2 - 0.5, (L.top + bot) / 2 + 0.5) || [0, q.w];
+        for (const c of ds2) { c.lechD = +lech.toFixed(2); c.nguongD = +thr(mid[1] - mid[0]).toFixed(2); if (Math.abs(lech) > c.nguongD + 1e-6) c.loi.push('lech-doc'); }
       }
       // chữ đè chữ
       for (let i = 0; i < ds.length; i++) for (let j = i + 1; j < ds.length; j++) {

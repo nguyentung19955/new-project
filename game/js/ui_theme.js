@@ -628,6 +628,9 @@
     return s.trimEnd() + '…';
   }
   const DAT_NHO = new Map();
+  // can-chu-khung (16/10): phông Be Vietnam Pro về SAU khi game đã vẽ (mạng chậm, quá 1,2 giây chờ) → bỏ chỗ đặt chữ đã nhớ theo phông dự phòng
+  // (phông thật rộng / cao khác: chữ đặt theo số đo cũ sẽ lệch tâm hoặc tràn khung cho tới khi bộ nhớ đầy)
+  try { if (typeof document !== 'undefined' && document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', () => { if (canMoi()) { DAT_NHO.clear(); CAP.clear(); } }); } catch (e) { /* bỏ qua */ }
   T.chuDo = { lan: 0, thap: 0, cat: 0, hep: 0, giua: 0 }; // đếm cho công cụ soát
   // Tính chỗ đặt (không vẽ). Trả về { size, lines: [{ s, x, b, size, bold, color }], cat, thap } — toạ độ tuyệt đối.
   // (x, y, w, h): khung. o: { khung: mã ảnh khung | null, vien: [t, r, b, l] viền khi khung vẽ code, dem (2), size, min (6,5), bold,
@@ -669,6 +672,8 @@
       const cao = lo - hi, room = bot - top;
       if (cao > room + 1e-6 && !chat) return null; // khung thấp hơn chữ
       const dv = Math.max(0, Math.min(dem, (room - cao) / 2)); // đệm dọc: 2 điểm khi đủ chỗ
+      // can-chu-khung: chữ sát viền trên / dưới (đệm dọc < 0,5) thì thử thu thêm tối đa 1 cỡ trước khi chịu sát
+      if (canMoi() && !chat && dem > 0 && dv < 0.5 && dongs[0].size > Math.max(min, size0 - 1) + 1e-6) return null;
       if (b0 + hi < top + dv) b0 = top + dv - hi;
       if (b0 + lo > bot - dv) b0 = bot - dv - lo;
       if (b0 + hi < top - 1e-6 && cao <= room) b0 = top - hi;

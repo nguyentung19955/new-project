@@ -230,9 +230,10 @@
       for (const id in Lg) for (const e of ['fire', 'poison', 'ice']) got += num(Lg[id][e], 0);
       ui.rect(x, y, wd, 19, 'rgba(10,22,20,0.55)', 'rgba(255,220,160,0.14)');
       if (VM.gem) VM.gem(x + 8, y + 9.5, 1);
-      tx(G.t('+{0} linh khí trận này · đang có {1}', Math.round(got), Math.floor(lk(sv))), x + 17, y + 8, wd - 22, { size: 7, bold: true, color: '#ffe9a8' });
+      const nho = !!(T && T.canMoi && T.canMoi()); // can-chu-khung (16/10): hai dòng giữ đúng cỡ 7 / 6,5 (trước bị nâng lên sàn 7,5 nên chồng nhau trong dải 19)
+      tx(G.t('+{0} linh khí trận này · đang có {1}', Math.round(got), Math.floor(lk(sv))), x + 17, y + 8, wd - 22, { size: 7, bold: true, tiny: nho, color: '#ffe9a8' });
       const w = sv && Array.isArray(sv.weapons) ? sv.weapons.find((q) => L.duoc(sv, q, q.branch || 'fire') === '') : null;
-      tx(w ? G.t('Đủ đồ luyện {0} lên {1} ở Ông Thợ Rèn!', G.tv(G.WTYPES[w.type].name), L.cap(w) + 1) : G.tv('Luyện vũ khí ở Ông Thợ Rèn: vàng, linh khí, nguyên liệu rèn.'), x + 17, y + 16, wd - 22, { size: 6.5, color: w ? GOOD : '#e8dfcc' });
+      tx(w ? G.t('Đủ đồ luyện {0} lên {1} ở Ông Thợ Rèn!', G.tv(G.WTYPES[w.type].name), L.cap(w) + 1) : G.tv('Luyện vũ khí ở Ông Thợ Rèn: vàng, linh khí, nguyên liệu rèn.'), x + 17, y + 16, wd - 22, { size: 6.5, tiny: nho, color: w ? GOOD : '#e8dfcc' });
       return y + 21;
     };
     // ▲ trên HUD linh khí: đủ đồ luyện
@@ -468,8 +469,10 @@
       T.inset(x, yy, lw, rowH - 2, sel);
       if (G.oBacVk) G.oBacVk(x + 2, yy + 2, rowH - 6, w);
       if (G.art && G.art.weaponIcon) G.art.weaponIcon(G.ux, w, x + 2 + (rowH - 6) / 2, yy + 2 + (rowH - 6) / 2, rowH - 14);
-      tx(G.tv(G.WTYPES[w.type].name), x + rowH, yy + 12, lw - rowH - 3, { size: 7.5, bold: true, color: G.bacMauVk ? G.bacMauVk(w) : TXT });
-      tx(G.t('Lv {0}', L.cap(w)) + (sv.carry && sv.carry[0] === w.id ? ' · ★' : ''), x + rowH, yy + 23, lw - rowH - 3, { size: 7, color: TXT });
+      // can-chu-khung (16/10): hai dòng (tên, cấp) là một khối nằm giữa ô theo chiều dọc (?canchucu=1: như cũ, dồn lên trên ~3 điểm)
+      const b1 = T.canMoi && T.canMoi() ? yy + (rowH - 2 - (11 + 7.5 * 0.73)) / 2 + 7.5 * 0.73 : yy + 12;
+      tx(G.tv(G.WTYPES[w.type].name), x + rowH, b1, lw - rowH - 3, { size: 7.5, bold: true, color: G.bacMauVk ? G.bacMauVk(w) : TXT });
+      tx(G.t('Lv {0}', L.cap(w)) + (sv.carry && sv.carry[0] === w.id ? ' · ★' : ''), x + rowH, b1 + 11, lw - rowH - 3, { size: 7, color: TXT });
       if (!ro && (L.duoc(sv, w, 'fire') === '' || L.choChonHe(w))) { const c = G.ux; c.fillStyle = GOOD; c.beginPath(); c.arc(x + lw - 5, yy + 5, 2.4, 0, 7); c.fill(); }
       if (G.click && G.inRect(G.click, x, yy, lw, rowH - 2)) { U.sel = w.id; G.click = null; if (G.sfx) G.sfx('ui'); }
     });
@@ -479,7 +482,8 @@
     if (!w) { ui.text(G.tv('Chọn một vũ khí để luyện.'), rx + 6, y + 14, { size: 7.5, color: SOFT }); return y + rh; }
     const lv = L.cap(w), c = L.gia(lv + 1), lvl = sv.heroes[sv.hero].lvl;
     let yy = y + 12;
-    tx(G.wName(w) + ' · ' + G.t('Luyện {0}/{1}', lv, MAX), rx + l5, yy, rw - 10, { size: 8, bold: true, color: G.bacMauVk ? G.bacMauVk(w) : GOLD });
+    if (T.canMoi && T.canMoi()) T.chuO(G.wName(w) + ' · ' + G.t('Luyện {0}/{1}', lv, MAX), rx, y, rw, rh, { align: 'left', vung: [rx + l5 - 1, y, rw - 10, 15], size: 8, min: 7, bold: true, color: G.bacMauVk ? G.bacMauVk(w) : GOLD }); // can-chu-khung: dòng đầu trong lòng ô (trước: đè đinh góc trên trái)
+    else tx(G.wName(w) + ' · ' + G.t('Luyện {0}/{1}', lv, MAX), rx + l5, yy, rw - 10, { size: 8, bold: true, color: G.bacMauVk ? G.bacMauVk(w) : GOLD });
     yy += 11;
     const d0 = G.wBase(w, lvl);
     let d1 = null;

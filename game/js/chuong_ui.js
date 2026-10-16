@@ -80,8 +80,9 @@
       const Tr = C.trees[cay], on = st.cay === cay, x = Math.round(X + i * (cw + 4)), w = Math.floor(cw), E = G.EL[Tr.el];
       T.inset(x, top, w, colH, on, on ? { col: E.col } : { fill: '#16302f' });
       if (on) { const c = G.ux; c.fillStyle = E.col; c.globalAlpha = 0.12; c.fillRect(x + 2, top + 2, w - 4, colH - 4); c.globalAlpha = 1; }
-      orb(x + 8, top + 8, Tr.el, on);
-      tx(Tr.name, x + 15, top + 11, w - 18, { size: 8, bold: true, color: on ? E.col2 : SOFT });
+      const hx = T.canMoi && T.canMoi() ? 1 : 0; // can-chu-khung (16/10): tên cây + viên ngọc xuống 1 điểm, dấu chữ (Hỏa) không chạm viền trên ô
+      orb(x + 8, top + 8 + hx, Tr.el, on);
+      tx(Tr.name, x + 15, top + 11 + hx, w - 18, { size: 8, bold: true, color: on ? E.col2 : SOFT });
       const spentHere = on ? pt.spent : 0;
       CH.LAYOUT.forEach((row, ri) => {
         const ry = top + titleH + 2 + ri * rowH, bw = row.length === 2 ? Math.floor((w - 9) / 2) : w - 6;
