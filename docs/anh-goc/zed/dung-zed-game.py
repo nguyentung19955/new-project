@@ -103,12 +103,30 @@ DONG = [
     # HÀNG MỚI 16/10 (docs/review/ke-hoach-cai-thien/hang-moi-16-10/bao-cao.md): chủ game gen lại đứng thở 8 khung, lộn 6, trúng đòn 4
     # (ảnh docs/anh-goc/cu-ti-hang-moi-16-10/, cắt bằng cat-diem-anh.py vào moi16/<tên>-gif/). Khoá "<hàng>~16": game/js/zed_moi.js
     # dùng thay hàng cũ cùng tên (cả các hàng cầm vũ khí dung~16_<loại> → dung_<loại>); ?hangcu=1 về hàng cũ. Chỉ bộ ninja.
-    # Kiếm 1 / kiếm 2 mới KHÔNG dùng (đổi tay: tay phải chống hông, tay trái vung), kiếm 3 gen hỏng — xem báo cáo.
+    # Kiếm 1 / kiếm 2 bản gen đầu (08-kiem-1-5k, 09-kiem-2-5k) KHÔNG dùng (đổi tay), kiếm 3 bản đầu gen hỏng — dùng bản v2 bên dưới.
     ('dung~16', '01-dung-8k', 1.0, True), ('lon~16', '04-lon-6k', 0.27, False), ('trung~16', '05-trung-don-4k', 0.2, False),
+    # KIẾM MỚI 16/10 (docs/review/ke-hoach-cai-thien/kiem-moi-16-10/bao-cao.md): kiếm 1 (5 khung) + kiếm 3 (6 khung) gen lại theo khung
+    # người đặc, tay phải trống; neo kiếm gan-vk/neo-kiem-16-10.py. Game dùng thay kiem_1 / kiem_3 cũ (tắt ?kiemmoi=0, hoặc ?hangcu=1).
+    # Kiếm 3 mới: khung 4 là đòn đâm → game dời mốc khung (MOC16 trong zed_moi.js) để khung 4 rơi đúng lúc chạm cũ (u 0,45).
+    ('kiem_1~16', '08-kiem-1-5k-v2', 0.3, False), ('kiem_3~16', '10-kiem-3-6k-v2', 0.46, False),
 ]
-CHI_NINJA = {'03-chay-2tay', '01-dung-8k', '04-lon-6k', '05-trung-don-4k'}   # hàng chỉ có ảnh bộ ninja: dung_bo bỏ qua
+CHI_NINJA = {'03-chay-2tay', '01-dung-8k', '04-lon-6k', '05-trung-don-4k', '08-kiem-1-5k-v2', '10-kiem-3-6k-v2'}   # hàng chỉ có ảnh bộ ninja: dung_bo bỏ qua
 MOI16 = os.path.join(DAY, 'moi16')
-GOC_RIENG = {t: os.path.join(MOI16, t + '-gif') for t in ('01-dung-8k', '04-lon-6k', '05-trung-don-4k')}
+GOC_RIENG = {t: os.path.join(MOI16, t + '-gif') for t in ('01-dung-8k', '04-lon-6k', '05-trung-don-4k', '08-kiem-1-5k-v2', '10-kiem-3-6k-v2')}
+# Căn theo BÀN CHÂN TRƯỚC (kiếm mới 16/10): khung 1 (và kiếm 3 khung 5–6) đứng hẹp chân hơn các khung khác → căn theo điểm giữa hai
+# bàn chân thì cả hai chân trượt. Các hàng này: tâm bàn chân trước (khối bên phải ở đáy hình) đặt đúng chỗ bàn chân trước của hàng
+# đứng mới (trung vị, ô 96) → vào đòn từ thế đứng chân trước không trượt; chân sau lùi/tiến theo ảnh.
+# Cỡ: co sao cho CAO ĐẦU bằng đúng hàng đứng mới (lần đầu theo trung bình đầu + mặt thì kiếm 1 to hơn đứng ~3 %, cao 67 so với 64).
+CHAN_TRUOC = {'08-kiem-1-5k-v2', '10-kiem-3-6k-v2'}
+
+
+def chan_truoc(im):
+    """Tâm ngang bàn chân TRƯỚC (bên phải) trên ảnh nguồn: 25 hàng đáy hình, tách hai bàn chân theo khe cột lớn nhất."""
+    a = np.array(im)[..., 3] > 0
+    y1 = im.getbbox()[3]
+    cols = np.nonzero(a[y1 - 25:y1].any(0))[0]
+    k = int(np.argmax(np.diff(cols)))
+    return float(cols[k + 1:].min() + cols[k + 1:].max()) / 2
 # Co theo CHIỀU CAO thay vì cỡ đầu (16/10): tóc bay của ảnh mới làm đo đầu sai (trúng đòn đo đầu to hơn 15% → người co nhỏ hơn
 # đứng 7 điểm ảnh ô 96). Các khung ghi ở đây (đếm từ 0, tư thế đứng thẳng) co cho cao bằng trung vị hàng dung~16.
 R_CAO = {'04-lon-6k': [5], '05-trung-don-4k': [2, 3]}
@@ -232,6 +250,13 @@ def dung_than(dong, neo_all, s, vk_cua, neo_cua, neo_nam=None, r0=28):
         for thu, ks in R_CAO.items():
             if thu in fr_cua:
                 r_hang[thu] = h16 / float(np.median([fr_cua[thu][i]['bb'][3] - fr_cua[thu][i]['bb'][1] for i in ks]))
+    for thu in CHAN_TRUOC:  # kiếm mới 16/10: cỡ ĐẦU (cao đầu, chỉ số do_dau đầu tiên) bằng đúng đầu hàng đứng mới sau co
+        if thu in fr_cua and '01-dung-8k' in fr_cua:
+            r_hang[thu] = r_hang['01-dung-8k'] * dau['01-dung-8k'][0] / dau[thu][0]
+    x_truoc = None  # CHAN_TRUOC: chỗ bàn chân trước của hàng đứng mới trong ô 96 (đứng neo ngang theo tâm đầu, như vòng lặp dưới)
+    if '01-dung-8k' in fr_cua:
+        sk16 = s * r_hang['01-dung-8k']
+        x_truoc = float(np.median([round(DAU_X - f['dau_x'] * sk16) + chan_truoc(f['im']) * sk16 for f in fr_cua['01-dung-8k']]))
     so_tay = sum((1 if thu in neo_all else 0) + len(neo_cam(neo_all, thu)) for k, thu, gi, lap, fr in dong) * (2 if neo_nam else 1)
     cot = max(len(fr) for *_, fr in dong)
     tam = Image.new('RGBA', (cot * O, (len(dong) + so_tay) * O), (0, 0, 0, 0))
@@ -267,6 +292,8 @@ def dung_than(dong, neo_all, s, vk_cua, neo_cua, neo_nam=None, r0=28):
             # bàn chân đổi bên mỗi bước nên neo theo chân làm người giật tới/lui mỗi khung.
             if k in NEO_DAU:
                 dx = round(DAU_X - f['dau_x'] * sx)  # đầu luôn ở cùng một chỗ, bằng chỗ đầu khi đứng
+            elif thu in CHAN_TRUOC and x_truoc is not None:
+                dx = round(x_truoc - chan_truoc(im) * sx)  # bàn chân trước đứng yên, bằng chỗ chân trước lúc đứng
             else:
                 dx = round(CHAN[0] - f['chan'][0] * sx)
             dy = round(CHAN[1] - f['chan'][1] * sy)

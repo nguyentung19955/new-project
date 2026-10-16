@@ -81,20 +81,30 @@
   // HÀNG MỚI 16/10 (docs/review/ke-hoach-cai-thien/hang-moi-16-10/bao-cao.md): tấm có khoá "<hàng>~16" (chủ game gen lại: đứng thở 8 khung,
   // lộn 6, trúng đòn 4; hiện chỉ bộ ninja zed-moi) → dùng THAY hàng cũ cùng tên, cả hàng cầm vũ khí dung~16_<loại> → dung_<loại>.
   // Hàng đứng mới thở thật, nối vòng 8→1 êm → phát thẳng 1→8 (không đi-về QUA_LAI). Bộ trang phục chưa có ảnh mới giữ hàng cũ.
-  // Kiếm 1/2 mới đổi tay nên chưa dùng (giữ hàng cũ). ?hangcu=1: về hàng cũ.
+  // Kiếm 1/2 bản gen đầu đổi tay nên không dùng. ?hangcu=1: về hàng cũ.
+  // KIẾM MỚI 16/10 (docs/review/ke-hoach-cai-thien/kiem-moi-16-10/bao-cao.md): kiem_1~16 (5 khung) và kiem_3~16 (6 khung) gen lại theo
+  // khung người đặc, tay phải trống, kiếm gắn theo neo mới (mọi cấp kiếm). Chỉ HÌNH: thời lượng, lúc chạm, vùng trúng, sát thương giữ
+  // nguyên. Kiếm 3 mới có đòn đâm ở khung 4 → mốc khung riêng MOC16 (khung 4 rơi đúng u 0,45 = lúc chạm cũ). Chạy + chém kiếm 1 mới
+  // dùng điểm eo đo trên khung mới (G.ZED_EO.bo.moi['kiem_1~16'], docs/anh-goc/zed/eo-kiem-16-10.py). Kiếm 2 giữ hàng cũ.
+  // ?kiemmoi=0: về kiếm 1 / kiếm 3 cũ (đứng / lộn / trúng đòn mới vẫn dùng).
   const HANG_CU = /[?&]hangcu=1(&|$)/.test(QS);
+  const KIEM_MOI = !/[?&]kiemmoi=0(&|$)/.test(QS);
+  const KIEM16 = { 'kiem_1~16': 1, 'kiem_3~16': 1 };
   function hang16(D) {
     if (!D || !D.dong_tac || D._hang16) return;
     D._hang16 = 1;
     if (HANG_CU) return;
     const dt = D.dong_tac;
     Object.keys(dt).forEach((k) => {
-      if (k.indexOf('~16') < 0) return;
-      const a = Object.assign({}, dt[k], { moi16: 1 });
+      if (k.indexOf('~16') < 0 || (KIEM16[k] && !KIEM_MOI)) return;
+      const goc = k.replace('~16', ''), a = Object.assign({}, dt[k], { moi16: 1, eo16: k });
       if (a.cam_vk) a.cam_vk = a.cam_vk.replace('~16', '');
-      dt[k.replace('~16', '')] = a;
+      if (MOC16[goc]) a.moc = MOC16[goc];
+      dt[goc] = a;
     });
   }
+  // Khoá điểm eo của hàng ten trong bảng eo B: hàng mới 16/10 có số đo riêng ("<hàng>~16") thì dùng, không thì số của hàng cũ.
+  const eoTen = (T, B, ten) => { const a = T && T.tep && T.tep.dong_tac && T.tep.dong_tac[ten]; return a && a.eo16 && B[a.eo16] ? a.eo16 : ten; };
   // ---------- CHẠY + CHÉM: ghép ở thắt lưng (13/10/2026, docs/review/ke-hoach-cai-thien/zed-chay-danh/YEU-CAU.md mục C) ----------
   // Đang chạy mà ra đòn ở hàng thân trên thẳng (G.ZED_EO.hang): chân = khung CHẠY hiện tại (nhịp P.chayT không reset), thân trên + tay +
   // vũ khí + nắm tay = khung ĐÒN hiện tại, hai nửa khớp tại điểm eo từng khung (G.ZED_EO, js/zed_eo_data.js, dựng bằng
@@ -124,7 +134,7 @@
   // hệ toạ độ đã lật theo mặt); rel = -1 khi chân quay ngược mặt (chạy ngược hướng chém); kc = bù 1 điểm ảnh khi lật chân.
   function eoTinh(T, s, o) {
     const B = G.ZED_EO.bo[BO_MA[T._ma] || 'moi'] || G.ZED_EO.bo.moi;
-    const eA = B[s.ten] && B[s.ten][s.i], eR = B.chay && B.chay[s.eo.i];
+    const te = eoTen(T, B, s.ten), eA = B[te] && B[te][s.i], eR = B.chay && B.chay[s.eo.i];
     if (!eA || !eR) return null;
     // cách mới: chân không lật (luôn cùng hướng thân trên), ngang khớp tâm hông, dọc khớp đường cắt giữa đùi
     if (s.eo.moi && eA.length >= 5 && eR.length >= 5) {
@@ -171,6 +181,9 @@
     db_phitieu: [0, 0.12, 0.25, 0.4, 0.6, 0.8],
     dam: [0, 0.22, 0.45, 0.65, 0.82], // ★ khung 3 ở 0,45 (0,30 s)
   };
+  // Mốc riêng của hàng mới 16/10 (hang16 gắn vào dong_tac[hàng].moc). Kiếm 3 mới: khung 4 = đâm (★) → khung 4 ở 0,45 như ★ cũ;
+  // khung 1–3 (vung ra sau → vung thấp → giơ lên) chia đều 0..0,45, khung 5–6 thu thế như khung 5–6 cũ (0,65 / 0,82 ≈ nhịp kiếm 1).
+  const MOC16 = { kiem_3: [0, 0.15, 0.3, 0.45, 0.65, 0.82] };
   const DB = { sword: 'db_kiem', spear: 'db_thuong', hammer: 'db_bua', bow: 'db_phitieu' };
   const GIU = { spear: 'thuong_giu', hammer: 'bua_giu', bow: 'phitieu_ngam' };
   const DI_BO = 0.6; // đi chậm hơn 60% tốc độ chạy đầy (đẩy cần nhẹ, bị làm chậm) → hàng ĐI BỘ
@@ -178,9 +191,9 @@
   // bao-cao-B (16/10): búa báo trước rõ hơn — khung 2 (búa giơ cao quá đầu) giữ từ 0,05 tới đúng lúc nện 0,35 (~0,24 giây) thay vì chỉ
   // 0,16 giây; khung 1 (vào thế) rút còn 0,04 giây. Chỉ dời mốc khung ảnh có sẵn, thời lượng đòn và lúc chạm không đổi. Tắt: ?camgiac=0.
   const MOC_BUA_BT = [0, 0.05, 0.35, 0.5, 0.62, 0.74, 0.85, 0.93];
-  const mocCua = (ten) => (ten === 'bua_nen' && G.CAM_GIAC_VK !== false ? MOC_BUA_BT : MOC[ten]);
+  const mocCua = (ten, a) => (a && a.moc) || (ten === 'bua_nen' && G.CAM_GIAC_VK !== false ? MOC_BUA_BT : MOC[ten]); // a.moc: hàng mới 16/10
   function khungMot(D, ten, u) {
-    const a = D.dong_tac[ten], m = mocCua(ten);
+    const a = D.dong_tac[ten], m = mocCua(ten, a);
     u = kep(u || 0, 0, 1);
     if (m && m.length === a.so) { let i = 0; while (i < a.so - 1 && u + 1e-6 >= m[i + 1]) i++; return i; }
     return Math.min(a.so - 1, Math.floor(u * a.so));
@@ -375,8 +388,8 @@
   // Điểm eo [y, x] (ô 96 nguồn) của khung đòn ten/i ở bộ đang mặc (G.ZED_EO, js/zed_eo_data.js) — trục nghiêng thân trên. null: không có.
   function eoKhung(T, ten, i) {
     const Z = G.ZED_EO; if (!Z || !Z.bo) return null;
-    const B = Z.bo[BO_MA[T && T._ma] || 'moi'] || Z.bo.moi;
-    return (B && B[ten] && B[ten][i]) || null;
+    const B = Z.bo[BO_MA[T && T._ma] || 'moi'] || Z.bo.moi, te = B ? eoTen(T, B, ten) : ten;
+    return (B && B[te] && B[te][i]) || null;
   }
   // Hàng ném / đấm TAY KHÔNG (phitieu, phitieu_ngam, phitieu_chum, dam — không có neo vũ khí): cánh tay đang duỗi được cắt ra và xoay
   // quanh gốc tay theo cùng góc lệch như vũ khí đâm. Mỗi khung [trục x, trục y, x0, y0, x1, y1] (ô 96 nguồn) hoặc null (tay không duỗi →
@@ -532,7 +545,7 @@
     // đâm/ném: góc cuối (ảnh + lệch) không quá ±90° so với mặt → mũi không bao giờ chĩa ra sau lưng (thương 2 ảnh đã chếch -35°)
     const kd = (x) => (g && HV_DAM[wa.ten] ? kep(x, -90, 90) : x);
     if (G.CHAY_DANH_MOI === false || wa.u == null || da.lap) return kd(n[2] + g);
-    const m = muot2() ? mocCua(wa.ten) : MOC[wa.ten], u = wa.u, i = wa.i; // muot2: cùng mốc với khung thân (búa báo trước dùng MOC_BUA_BT)
+    const m = (da && da.moc) || (muot2() ? mocCua(wa.ten) : MOC[wa.ten]), u = wa.u, i = wa.i; // muot2: cùng mốc với khung thân (búa báo trước dùng MOC_BUA_BT)
     let a = n[2];
     if (m && m.length === da.so && i + 1 < da.so && N[i + 1]) {
       const fr = phanGoc(da, m, i, u), e = fr * fr * (3 - 2 * fr);

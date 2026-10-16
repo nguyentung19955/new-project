@@ -1,0 +1,343 @@
+{
+ "ghi_chu": "Đơn vị: điểm ảnh ô 96 (= ½ điểm ảnh game, trước khi game phóng ×1,2). truot_* / bat_* = lệch lớn nhất giữa hai khung liền nhau (ca_vao_ra: tính cả đứng → khung 1 và khung cuối → đứng). Đứng = hàng đứng mới khung 1.",
+ "kiem_1": {
+  "truoc": {
+   "khung": [
+    {
+     "chan_sau": 33.0,
+     "chan_truoc": 61.5,
+     "tam_x": 48.7,
+     "tam_y": 57.2,
+     "dau_x": 50.5,
+     "cao": 65,
+     "day": 89
+    },
+    {
+     "chan_sau": 31.5,
+     "chan_truoc": 61.5,
+     "tam_x": 48.0,
+     "tam_y": 56.3,
+     "dau_x": 46.5,
+     "cao": 65,
+     "day": 89
+    },
+    {
+     "chan_sau": 32.0,
+     "chan_truoc": 62.5,
+     "tam_x": 50.1,
+     "tam_y": 56.5,
+     "dau_x": 50.0,
+     "cao": 65,
+     "day": 89
+    },
+    {
+     "chan_sau": 32.0,
+     "chan_truoc": 62.5,
+     "tam_x": 49.8,
+     "tam_y": 57.5,
+     "dau_x": 49.5,
+     "cao": 65,
+     "day": 89
+    },
+    {
+     "chan_sau": 32.0,
+     "chan_truoc": 61.5,
+     "tam_x": 47.9,
+     "tam_y": 57.3,
+     "dau_x": 49.5,
+     "cao": 65,
+     "day": 89
+    }
+   ],
+   "dung": {
+    "chan_sau": 36.0,
+    "chan_truoc": 59.5,
+    "tam_x": 48.4,
+    "tam_y": 56.4,
+    "dau_x": 49.0,
+    "cao": 64,
+    "day": 89
+   },
+   "truot_chan_truoc_trong_don": 1.0,
+   "truot_chan_sau_trong_don": 1.5,
+   "truot_chan_truoc_ca_vao_ra": 2.0,
+   "truot_chan_sau_ca_vao_ra": 4.0,
+   "bat_tam_x": 2.1,
+   "bat_tam_y": 1.0,
+   "bat_dau_x": 4.0,
+   "vao_don_chan_truoc": 2.0,
+   "ra_don_chan_truoc": -2.0,
+   "cao_tv": 65.0,
+   "cao_dung": 64
+  },
+  "sau": {
+   "khung": [
+    {
+     "chan_sau": 29.5,
+     "chan_truoc": 59.5,
+     "tam_x": 46.5,
+     "tam_y": 55.5,
+     "dau_x": 49.0,
+     "cao": 67,
+     "day": 89
+    },
+    {
+     "chan_sau": 27.0,
+     "chan_truoc": 59.5,
+     "tam_x": 45.6,
+     "tam_y": 55.5,
+     "dau_x": 50.5,
+     "cao": 65,
+     "day": 89
+    },
+    {
+     "chan_sau": 27.0,
+     "chan_truoc": 60.5,
+     "tam_x": 49.1,
+     "tam_y": 56.2,
+     "dau_x": 51.5,
+     "cao": 65,
+     "day": 89
+    },
+    {
+     "chan_sau": 27.0,
+     "chan_truoc": 59.5,
+     "tam_x": 48.4,
+     "tam_y": 57.1,
+     "dau_x": 51.5,
+     "cao": 65,
+     "day": 89
+    },
+    {
+     "chan_sau": 27.0,
+     "chan_truoc": 60.5,
+     "tam_x": 49.0,
+     "tam_y": 56.7,
+     "dau_x": 51.5,
+     "cao": 65,
+     "day": 89
+    }
+   ],
+   "dung": {
+    "chan_sau": 36.0,
+    "chan_truoc": 59.5,
+    "tam_x": 48.4,
+    "tam_y": 56.4,
+    "dau_x": 49.0,
+    "cao": 64,
+    "day": 89
+   },
+   "truot_chan_truoc_trong_don": 1.0,
+   "truot_chan_sau_trong_don": 2.5,
+   "truot_chan_truoc_ca_vao_ra": 1.0,
+   "truot_chan_sau_ca_vao_ra": 9.0,
+   "bat_tam_x": 3.5,
+   "bat_tam_y": 0.9,
+   "bat_dau_x": 2.5,
+   "vao_don_chan_truoc": 0.0,
+   "ra_don_chan_truoc": -1.0,
+   "cao_tv": 65.0,
+   "cao_dung": 64
+  },
+  "khung_cham": {
+   "truoc": 3,
+   "sau": 3
+  },
+  "moc": {
+   "truoc": [
+    0,
+    0.22,
+    0.45,
+    0.65,
+    0.82
+   ],
+   "sau": [
+    0,
+    0.22,
+    0.45,
+    0.65,
+    0.82
+   ]
+  }
+ },
+ "kiem_3": {
+  "truoc": {
+   "khung": [
+    {
+     "chan_sau": 33.0,
+     "chan_truoc": 60.0,
+     "tam_x": 48.4,
+     "tam_y": 55.4,
+     "dau_x": 48.5,
+     "cao": 68,
+     "day": 89
+    },
+    {
+     "chan_sau": 41.0,
+     "chan_truoc": 55.5,
+     "tam_x": 49.3,
+     "tam_y": 50.2,
+     "dau_x": 48.5,
+     "cao": 76,
+     "day": 89
+    },
+    {
+     "chan_sau": 29.0,
+     "chan_truoc": 63.5,
+     "tam_x": 55.5,
+     "tam_y": 65.2,
+     "dau_x": 62.5,
+     "cao": 52,
+     "day": 89
+    },
+    {
+     "chan_sau": 28.0,
+     "chan_truoc": 61.5,
+     "tam_x": 53.4,
+     "tam_y": 65.2,
+     "dau_x": 59.5,
+     "cao": 52,
+     "day": 89
+    },
+    {
+     "chan_sau": 31.0,
+     "chan_truoc": 61.5,
+     "tam_x": 52.8,
+     "tam_y": 60.2,
+     "dau_x": 57.0,
+     "cao": 61,
+     "day": 89
+    },
+    {
+     "chan_sau": 33.0,
+     "chan_truoc": 61.5,
+     "tam_x": 48.9,
+     "tam_y": 57.7,
+     "dau_x": 49.5,
+     "cao": 64,
+     "day": 89
+    }
+   ],
+   "dung": {
+    "chan_sau": 36.0,
+    "chan_truoc": 59.5,
+    "tam_x": 48.4,
+    "tam_y": 56.4,
+    "dau_x": 49.0,
+    "cao": 64,
+    "day": 89
+   },
+   "truot_chan_truoc_trong_don": 8.0,
+   "truot_chan_sau_trong_don": 12.0,
+   "truot_chan_truoc_ca_vao_ra": 8.0,
+   "truot_chan_sau_ca_vao_ra": 12.0,
+   "bat_tam_x": 6.2,
+   "bat_tam_y": 15.0,
+   "bat_dau_x": 14.0,
+   "vao_don_chan_truoc": 0.5,
+   "ra_don_chan_truoc": -2.0,
+   "cao_tv": 62.5,
+   "cao_dung": 64
+  },
+  "sau": {
+   "khung": [
+    {
+     "chan_sau": 31.5,
+     "chan_truoc": 60.0,
+     "tam_x": 51.6,
+     "tam_y": 56.5,
+     "dau_x": 57.0,
+     "cao": 65,
+     "day": 89
+    },
+    {
+     "chan_sau": 24.0,
+     "chan_truoc": 59.5,
+     "tam_x": 45.3,
+     "tam_y": 58.2,
+     "dau_x": 48.5,
+     "cao": 64,
+     "day": 89
+    },
+    {
+     "chan_sau": 24.5,
+     "chan_truoc": 60.0,
+     "tam_x": 47.2,
+     "tam_y": 57.7,
+     "dau_x": 49.0,
+     "cao": 64,
+     "day": 89
+    },
+    {
+     "chan_sau": 24.5,
+     "chan_truoc": 60.0,
+     "tam_x": 49.8,
+     "tam_y": 57.6,
+     "dau_x": 53.5,
+     "cao": 64,
+     "day": 89
+    },
+    {
+     "chan_sau": 27.5,
+     "chan_truoc": 60.0,
+     "tam_x": 50.0,
+     "tam_y": 57.8,
+     "dau_x": 53.0,
+     "cao": 64,
+     "day": 89
+    },
+    {
+     "chan_sau": 27.5,
+     "chan_truoc": 60.0,
+     "tam_x": 49.2,
+     "tam_y": 58.0,
+     "dau_x": 52.0,
+     "cao": 64,
+     "day": 89
+    }
+   ],
+   "dung": {
+    "chan_sau": 36.0,
+    "chan_truoc": 59.5,
+    "tam_x": 48.4,
+    "tam_y": 56.4,
+    "dau_x": 49.0,
+    "cao": 64,
+    "day": 89
+   },
+   "truot_chan_truoc_trong_don": 0.5,
+   "truot_chan_sau_trong_don": 7.5,
+   "truot_chan_truoc_ca_vao_ra": 0.5,
+   "truot_chan_sau_ca_vao_ra": 8.5,
+   "bat_tam_x": 6.3,
+   "bat_tam_y": 1.7,
+   "bat_dau_x": 8.5,
+   "vao_don_chan_truoc": 0.5,
+   "ra_don_chan_truoc": -0.5,
+   "cao_tv": 64.0,
+   "cao_dung": 64
+  },
+  "khung_cham": {
+   "truoc": 3,
+   "sau": 4
+  },
+  "moc": {
+   "truoc": [
+    0,
+    0.2,
+    0.45,
+    0.6,
+    0.75,
+    0.88
+   ],
+   "sau": [
+    0,
+    0.15,
+    0.3,
+    0.45,
+    0.65,
+    0.82
+   ]
+  }
+ }
+}

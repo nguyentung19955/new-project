@@ -30,6 +30,8 @@ SỬA BÓP EO (13/10/2026, docs/review/ke-hoach-cai-thien/zed-eo-sua/YEU-CAU.md,
     nào hẹp hơn thì kéo giãn ngang dần (hàng xa mép giữ nguyên → ở mép nối khớp đúng mép trái/phải của nửa kia; hệ số ≤ KEO_TOI_DA,
     mép dời ≤ DOI_TOI_DA, quá thì không kéo); nửa trên vẽ đè lên nửa dưới (nửa dưới lấn lên 1 hàng).
   - Điểm eo cũ [y, x] (2 số đầu) giữ nguyên: trục nghiêng thân trên (zed-8-huong) và cách cũ ?eosua=0 vẫn đọc.
+KIẾM 1 MỚI 16/10 (kiem_1~16, chỉ bộ ninja): điểm eo đo riêng bằng eo-kiem-16-10.py, chèn vào zed_eo_data.js → chạy lại
+  script đó SAU MỖI LẦN chạy script này (script này ghi đè cả tệp).
 HÀNG ĐƯỢC GHÉP (thân trên thẳng): HANG_EO. Hàng cúi/khuỵu (kiếm 3, búa, quét, đặc biệt…) KHÔNG ghép: game vẽ toàn thân hàng đòn.
 """
 import base64, io, json, os
