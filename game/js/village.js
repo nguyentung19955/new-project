@@ -374,7 +374,7 @@
       G.epDo.panel(CX, LIST_Y - 1, CW, { h: 170, say });
       line = G.epDo.coTheEp(sv) ? 'Đủ đá rồi! Ép lên bậc cao thì có thể hỏng, từ Vàng trở lên hỏng là tụt bậc.' : 'Đá nâng bậc rơi từ trùm và Ải Đá Bậc. Từ bậc Tím vũ khí có dòng hiệu ứng.';
     } else if (V.ftab === 'vk' && G.vkMoi) {
-      G.vkMoi.vkPanel(CX, LIST_Y - 1, CW, { rowH: 39, say });
+      G.vkMoi.vkPanel(CX, LIST_Y - 1, CW, { rowH: 39, say, lo: true }); // lo: bảng hình thái (js/hinh_thai.js; ?hinhthai=0 → bảng cũ)
       line = G.vkMoi.coTheNang(sv) ? 'Đủ linh khí rồi! Chọn vũ khí để nâng cấp, lên Mầm thì chọn hệ.' : 'Linh khí nâng vũ khí: Trắng, Mầm, Thành hình, Thức tỉnh. Hạ tinh anh và trùm để gom linh khí.';
     } else if (V.ftab === 'sharpen') {
       weaponList();
