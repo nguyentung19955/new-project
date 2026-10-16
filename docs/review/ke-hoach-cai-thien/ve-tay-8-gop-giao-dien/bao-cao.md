@@ -66,8 +66,9 @@ Cần xem (không cần gen lại):
 ## Kiểm
 
 - `node --check` mọi `game/js/*.js`: đạt.
-- `python3 game/build.py`: đạt, bản một tệp 29,18 / 30 MB.
-- `python3 game/build.py --hai-tep`: đạt. Người chơi tải 16,69 / 20 MB, lõi 4,61 MB. Ảnh mới thêm khoảng 0,27 MB.
+- `python3 game/build.py`: đạt, bản một tệp 29,63 / 30 MB (sau khi gộp phiên "Vẽ tay 8 gộp (trận)" chạy song song).
+- `python3 game/build.py --hai-tep`: đạt. Người chơi tải 16,80 / 20 MB. Ảnh của phiên này thêm khoảng 0,27 MB.
+- Bản một tệp còn cách trần 30 MB chỉ ~0,37 MB: phiên sau thêm ảnh nên để ý.
 - `tests/smoke.py`: `errors: []`. `cloud_save_regression`: đạt.
 - Nạp trang với `?cloud=0`, `?vecode=1`, `?kiemmoi=0`, `?hangcu=1`: 0 lỗi JS. `?vecode=1` không dùng ảnh mới.
 - Ảnh soát trước / sau trong `anh-soat/` (dựng bằng `cong-cu/chup-soat.py`): chào, dải mặt, bản đồ, Cụ Đồ kỹ năng / chưởng, phúc lành, rừng, lâu đài.
