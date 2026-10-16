@@ -616,7 +616,7 @@
     "caTreRau": { "dai": 112, "rong": 18, "bao": 0.7, "sat": 1.2, "lan": 3, "buoc": 0.5236, "bao2": 0.6, "cach": 0.6, "dai2": 120, "sat2": 1.0 },
     "caTreBun": { "so": 3, "r": 18, "bay": 0.8, "lech": 38, "sat": 0.8, "vung": 3.0, "vr": 22 },
     "caTreLan": { "xuong": 0.35, "duoi": 1.5, "toc": 52, "bao": 0.6, "r": 30, "sat": 1.3, "lo": 1.5, "lan2": 2 },
-    "caTreMep": { "mep": 40, "giu": 1.5, "so": 5, "cach": 30, "sau": 20, "r": 24, "bao": 0.8, "sat": 0.7, "nghi": 3.0 }
+    "caTreMep": { "mep": 40, "giu": 1.5, "so": 5, "cach": 30, "sau": 20, "r": 24, "bao": 0.8, "sat": 0.5, "nghi": 4.5 }
   }/*HET-S3A*/;
   CT.S3A = S3A;
   const TEN3A = { raiCaLuoi: 'Quăng lưới chài', raiCaDuoc: 'Quét đuốc', cocLuoi: 'Lưỡi kéo', cocDap: 'Dậm lá sen', cocBot: 'Mưa bọt',
