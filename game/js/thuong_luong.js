@@ -678,15 +678,27 @@
   // Khung đá: chỗ đứng (bounds) nới ra cho mép đá trùm chân nhân vật.
   const da = (w) => ({ x0: w.x0 - 6, x1: w.x1 + 6, y0: w.y0 - 8, y1: w.y1 + 4 });
 
+  // 16/10 quai-song-moi (docs/review/ke-hoach-cai-thien/quai-song-moi/bao-cao.md mục 3): ảnh sân gd-nen-song-san-tl (nước + bãi cát, lặp 128×128)
+  // lát kín sân thay mặt đá vẽ code; dải nước sâu quanh bãi (chỗ không đứng được) vẫn phủ tối lên trên, mép đá + lối đá ở cửa giữ nguyên.
+  // Chỉ là hình: bãi đứng, các chiêu, vùng đỏ không đổi. Cờ ?santl=0 (G.SAN_TL = false) → sân vẽ code như cũ. Ảnh chưa tải: code, tải xong dựng lại.
+  if (G.SAN_TL == null) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]santl=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.SAN_TL = !tat; }
+  const anhSan = () => { const s = G.spriteCustom; if (G.SAN_TL === false || !s || !s.gdSan) return null; const a = s.gdSan('gd-nen-song-san-tl'); return a && a.ready && a.img ? a : null; };
   // --- sân (vẽ một lần vào canvas ẩn): nước sâu quanh bãi đá, bãi đá, lối đá ở cửa ---
   function dungSan(w) {
     const g = w.geo, cv = document.createElement('canvas');
     cv.width = g.W || G.W; cv.height = g.H || G.H;
     const pv = c; c = cv.getContext('2d');
     try {
-      const D = da(w), fx0 = g.fx0, fx1 = g.fx1, fy0 = g.fy0, fy1 = g.fy1;
+      const D = da(w), fx0 = g.fx0, fx1 = g.fx1, fy0 = g.fy0, fy1 = g.fy1, A9 = anhSan();
+      cv.coAnh = !!A9;
+      if (A9) { // lát ảnh sân (cỡ game = điểm ảnh ảnh / net), bắt đầu từ góc sân
+        const tw = A9.pw / A9.net, th = A9.ph / A9.net;
+        c.save(); c.beginPath(); c.rect(fx0, fy0, fx1 - fx0, fy1 - fy0); c.clip(); c.imageSmoothingEnabled = false;
+        for (let y = fy0; y < fy1; y += th) for (let x = fx0; x < fx1; x += tw) c.drawImage(A9.img, 0, 0, A9.pw, A9.ph, Math.round(x), Math.round(y), tw, th);
+        c.restore();
+      }
       // nước sâu
-      const nuoc = (x, y, ww, hh2) => { R(x, y, ww, hh2, 'rgba(10,30,34,0.93)'); };
+      const nuoc = (x, y, ww, hh2) => { R(x, y, ww, hh2, A9 ? 'rgba(8,26,30,0.62)' : 'rgba(10,30,34,0.93)'); };
       nuoc(fx0, fy0, fx1 - fx0, D.y0 - fy0); nuoc(fx0, D.y1, fx1 - fx0, fy1 - D.y1 + 2);
       nuoc(fx0, D.y0, D.x0 - fx0, D.y1 - D.y0); nuoc(D.x1, D.y0, fx1 - D.x1, D.y1 - D.y0);
       for (let i = 0; i < 70; i++) { // đốm sáng tối dưới nước
@@ -694,7 +706,9 @@
         if (x > D.x0 - 2 && x < D.x1 + 2 && y > D.y0 - 2 && y < D.y1 + 2) continue;
         R(x, y, 3 + hh(i, 3) * 6, 1, hh(i, 4) < 0.5 ? 'rgba(40,90,92,0.55)' : 'rgba(4,14,16,0.6)');
       }
-      // bãi đá
+      // bãi đá (có ảnh sân: không phủ mặt đá, chỉ vẽ mép đá bên dưới)
+      if (A9) { R(D.x0, D.y1 - 2, D.x1 - D.x0, 2, 'rgba(40,46,38,0.85)'); R(D.x0, D.y1, D.x1 - D.x0, 2, 'rgba(10,18,16,0.7)'); }
+      else {
       E((D.x0 + D.x1) / 2, (D.y0 + D.y1) / 2 + 2, (D.x1 - D.x0) / 2 + 3, (D.y1 - D.y0) / 2 + 4, 'rgba(0,0,0,0)');
       R(D.x0, D.y0, D.x1 - D.x0, D.y1 - D.y0, '#4f564a');
       R(D.x0 + 2, D.y0 + 1, D.x1 - D.x0 - 4, 3, '#646c5c');
@@ -713,6 +727,7 @@
       }
       // rêu dọc mép nước
       for (let x = D.x0; x < D.x1; x += 5) { R(x, D.y0, 3 + ((x * 7) % 3), 1, 'rgba(90,130,70,0.8)'); R(x + 2, D.y1 - 4, 2, 1, 'rgba(90,130,70,0.6)'); }
+      }
       // lối đá ở cửa (từ cửa tới mép đá)
       for (const d of w.doors || []) {
         const q = G.roomArt && G.roomArt.doorPos ? G.roomArt.doorPos(g, d.dir) : null;
@@ -728,6 +743,7 @@
   }
   function veSan(cx, w, t) {
     if (!w.tlSan) return;
+    if (w.tlCv && !w.tlCv.coAnh && anhSan()) w.tlCv = null; // ảnh sân vừa tải xong: dựng lại một lần
     if (!w.tlCv) { try { w.tlCv = dungSan(w); } catch (e) { w.tlCv = null; if (!TL.loiVe) { TL.loiVe = e; if (window.console) console.warn('thuong_luong san', e); } return; } }
     const rut = w.tlRut != null ? clamp(1 - (t - w.tlRut) / 2, 0.45, 1) : 1; // hạ xong: nước rút
     const pv = c; c = cx;
