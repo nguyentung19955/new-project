@@ -287,6 +287,10 @@
     // V53: người làng / thẻ chưa mở với người mới thì không gợi ý tới đó (bot cân bằng vẫn dùng U.list đầy đủ)
     const nStar = Object.keys(sv.stars || {}).length, mayOpen = !!(sv.stars && sv.stars['0-1']) || nStar >= 2;
     list = list.filter((q) => !(q.kind === 'chuong' && nStar < 1) && !(q.go && q.go.who === 'may' && !mayOpen));
+    // tư vấn 16/10 (js/mo_dan.js): thẻ / người chưa tới mốc mở thì cũng không gợi ý
+    const MD = G.moDan;
+    if (MD) list = list.filter((q) => !(q.kind === 'skill' && !MD.co('kyNang')) && !(q.kind === 'chuong' && !MD.co('chuong'))
+      && !(q.go && q.go.who && !MD.nguoi(q.go.who)) && !(q.go && q.go.ftab && !MD.ftab(q.go.ftab)));
     for (const q of list) {
       const grp = { skill: 'skill', chuong: 'chuong' }[q.kind] || q.key;
       if (seen[grp]) continue;

@@ -256,7 +256,8 @@
     if (!W || W.banner || W.over) return;
     W.banner = { s: hang.shift(), col: '#f6dc92', t: 2.2 };
   }
-  function bao(s) { if (G.noRender) return; hang.push(s); if (hang.length > 4) hang.shift(); baoNgay(); }
+  function bao(s) { if (G.noRender || (G.moDan && !G.moDan.co('so'))) return; // sổ chưa mở (mở dần): vẫn ghi, không báo
+    hang.push(s); if (hang.length > 4) hang.shift(); baoNgay(); }
   let luot = { moi: 0, trumHa: false, dong: [] };
   const K = G.suKien;
   K.on('vaoAi', () => { luot = { moi: 0, trumHa: false, dong: [] }; hang.length = 0; });
@@ -578,7 +579,7 @@
     if (Y.vung(sv, D.vung).du2) return 'Cả vùng đã tìm ra điểm yếu. Cháu giỏi lắm!';
     return 'Gặp con nào ông chép con đó vào sổ. Đánh bằng hệ khắc chế để tìm ra điểm yếu của nó.';
   }
-  panel.mo = () => true; // mở ngay từ đầu (ghi cả ải hướng dẫn) — KE-HOACH.md mục 1.0
+  panel.mo = (sv) => !G.moDan || G.moDan.co('so', sv); // ghi sổ ngay từ đầu (cả ải hướng dẫn) — KE-HOACH.md mục 1.0; thẻ hiện theo mốc mở dần (js/mo_dan.js)
   panel.cham = (sv) => Y.coCho(sv);
   VA.PANELS.so = panel;
 })();

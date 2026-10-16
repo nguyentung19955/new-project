@@ -874,9 +874,11 @@
       } else if ((inp.atk || inp.atkP) && P.cdT <= 0) {
         startAttack(P);
       }
-      if (inp.swapP && P.weapons.length > 1 && P.swapCd <= 0) {
+      // tư vấn 16/10: inp.swapTo = chọn thẳng món (vòng chọn khi giữ ô vũ khí, phím 1–4); không có thì xoay sang món kế như cũ
+      const swTo = inp.swapTo != null && inp.swapTo >= 0 && inp.swapTo < P.weapons.length ? inp.swapTo : -1;
+      if (inp.swapP && P.weapons.length > 1 && P.swapCd <= 0 && swTo !== P.cur) {
         const noiMo = G.DON_NOI !== false && P.noiT > 0; // vừa đánh trúng trong DON_NOI_SO.cua giây
-        P.cur = (P.cur + 1) % P.weapons.length; // xoay vòng (hệ thống mới: 4 vũ khí cố định; cũ: 2 món như trước)
+        P.cur = swTo >= 0 ? swTo : (P.cur + 1) % P.weapons.length; // xoay vòng (hệ thống mới: 4 vũ khí cố định; cũ: 2 món như trước)
         P.swapAt = G.time; P.noiT = 0; // ô vũ khí nháy viền 0,08 giây (js/stage.js)
         P.swapCd = G.SWAP_CD || 1.5; // hệ thống mới 0,75 giây (xoay 4 món), cũ 1,5
         // V34: đổi vũ khí giữa đòn thì huỷ sạch đòn đang vung (không gây sát thương bằng vũ khí mới, không chạy tiếp

@@ -13888,7 +13888,8 @@ MA._xong();
   // V53: người mới không thấy cả 7 bảng ngay. Cô Thợ May chỉ ra mặt sau khi qua ải 2 (Rừng già 2) hoặc đã qua từ 2 ải trở lên
   // (bản lưu cũ đã chơi xa vẫn thấy cô như trước). Chưa mở: không vẽ cô, không chạm được, ô mặt trên dải lối tắt mờ đi.
   const mayOpen = () => { const st = (G.save && G.save.stars) || {}; return !!st['0-1'] || Object.keys(st).length >= 2; };
-  const shown = (k) => k !== 'may' || mayOpen();
+  // Tư vấn 16/10 (js/mo_dan.js, ?modan=0 tắt): người mới chưa thấy Thợ Rèn, Bà Hàng Xén (tới Rừng già 1), Cô Thợ May (tới khi hạ Mộc Tinh).
+  const shown = (k) => (k !== 'may' || mayOpen()) && (!G.moDan || G.moDan.nguoi(k));
   VS.shown = shown;
   // 14/10: người làng ảnh mới (nl-<mã>.sprite.json) cao/rộng hơn hình code: đỉnh đầu và bề ngang hộp chạm lấy theo ảnh (VS.coAnh do sprite_custom gắn)
   const topOf = (k) => { const a = VS.coAnh && VS.coAnh(k); return a ? -Math.max(20, a[1] - 2) : NPCS[k].top; };
@@ -14604,7 +14605,7 @@ MA._xong();
     S.path = null; S.goal = null;
     if (g.kind === 'npc') {
       const N = NPCS[g.id];
-      if (!shown(g.id)) { say('Cô Thợ May đi chợ xa. Qua ải Rừng già 2 rồi cô về may đồ cho bé.'); G.sfx && G.sfx('warn'); return; } // V53
+      if (!shown(g.id)) { say(G.moDan ? G.moDan.loiChuaMo(g.id) : 'Cô Thợ May đi chợ xa. Qua ải Rừng già 2 rồi cô về may đồ cho bé.'); G.sfx && G.sfx('warn'); return; } // V53 + mở dần (js/mo_dan.js)
       S.face = N.pos[0] >= S.x ? 1 : -1;
       S.talk = g.id; markSeen(g.id);
       if (!seen().hint) { seen().hint = 1; S.hintT = 0; G.persist(); }

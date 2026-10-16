@@ -33,7 +33,7 @@
   A.homNay = () => { const d = new Date(); return { key: ngayCua(d), thu: d.getDay(), d }; };
   // Mở ải ngày: đã hạ trùm vùng 1 (độ khó nào cũng tính). Mức k mở khi đã hạ trùm vùng k + 1.
   const daHa = (sv, r) => !!(sv && ((sv.stars && sv.stars[r + '-4']) || (sv.stars2 && sv.stars2[r + '-4'])));
-  A.mo = (sv) => daHa(sv || G.save, 0);
+  A.mo = (sv) => daHa(sv || G.save, 0) && (!G.moDan || G.moDan.co('aiNgay', sv)); // tư vấn 16/10: mở dần (js/mo_dan.js)
   A.mucMo = (sv, k) => daHa(sv || G.save, k);
   // Trạng thái trong bản lưu + hồi lượt khi sang ngày mới (ngày lùi: không hồi)
   A.st = function (sv) {

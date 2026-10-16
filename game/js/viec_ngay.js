@@ -54,7 +54,7 @@
     'Đủ ngày rồi, mở rương tuần đi!': 'Enough days, open the weekly chest!', 'Đã đổi việc.': 'Job swapped.', 'Không còn việc nào khác để đổi.': 'No other job to swap to.',
   });
   VN.bat = () => G.VIEC_NGAY_BAT !== false && !!(G.suKien && G.suKien.bat && G.suKien.bat() && G.ngay);
-  VN.mo = (sv) => { sv = sv || G.save; return VN.bat() && !!(sv && obj(sv.stars) && sv.stars[CF.moSau]); };
+  VN.mo = (sv) => { sv = sv || G.save; return VN.bat() && !!(sv && obj(sv.stars) && sv.stars[CF.moSau]) && (!G.moDan || G.moDan.co('viecNgay', sv)); }; // tư vấn 16/10: mở dần (js/mo_dan.js)
   // Mức thưởng theo trùm vùng cao nhất đã hạ (mọi độ khó): 0 chưa hạ Mộc Tinh, 1 đã hạ Mộc Tinh, 2 đã hạ Ngư Tinh
   const daHa = (sv, r) => !!((sv.stars && sv.stars[r + '-4']) || (sv.stars2 && sv.stars2[r + '-4']));
   VN.mucThuong = (sv) => { sv = sv || G.save; return daHa(sv, 1) ? 2 : daHa(sv, 0) ? 1 : 0; };

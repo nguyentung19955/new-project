@@ -487,7 +487,7 @@
   };
 
   // ---------- trên đầu Cu Tí trong làng (bọc G.villageScene.drawWorld, vẽ lên lớp giao diện ngay sau cảnh) ----------
-  TT.mo = (sv) => { sv = sv || G.save; return TT.bat() && obj(sv) && obj(sv.stars) && sv.stars['0-0'] > 0; };
+  TT.mo = (sv) => { sv = sv || G.save; return TT.bat() && obj(sv) && obj(sv.stars) && sv.stars['0-0'] > 0 && (!G.moDan || G.moDan.co('thanhTuu', sv)); }; // tư vấn 16/10: mở dần (js/mo_dan.js)
   const VS = G.villageScene;
   if (TT.bat() && VS && VS.drawWorld && !VS.drawWorld.thanhTuuBoc) {
     const goc = VS.drawWorld;

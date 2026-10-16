@@ -747,10 +747,12 @@
         S.stop -= dt;
         if (S.stop <= 0) S.stopGap = 0.07;
         if (inp) for (const k of PRESS) if (inp[k]) S.latch[k] = true;
+        if (inp && inp.swapTo != null) S.latch.swapTo = inp.swapTo; // tư vấn 16/10: món chọn thẳng (vòng chọn / phím 1–4)
         step(dt, true);
         return true;
       }
       if (inp) for (const k of PRESS) if (S.latch[k]) { inp[k] = true; S.latch[k] = false; }
+      if (inp && S.latch.swapTo != null) { if (inp.swapTo == null) inp.swapTo = S.latch.swapTo; S.latch.swapTo = null; }
       S.stopAge = 0;
       return false;
     } catch (e) { fail(e); if (S) S.stop = 0; return false; }

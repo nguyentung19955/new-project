@@ -51,7 +51,8 @@
   function open(k) {
     V.who = k; V.tab = TAB_OF[k]; V.sel = null; V.page = 0; V.confirm = false; V.node = null; V.msgT = 0; V.cd2 = false;
     if (k === 'do') {
-      V.tab = V.dtab === 'help' || (V.dtab === 'chuong' && chuongOpen()) || (V.dtab === 'rank' && PANELS.rank) ? V.dtab : 'skill';
+      V.tab = V.dtab === 'help' || (V.dtab === 'chuong' && chuongOpen()) || (V.dtab === 'rank' && PANELS.rank && theMoDan('rank')) ? V.dtab : 'skill';
+      if (V.tab === 'skill' && !theMoDan('skill')) V.tab = 'help'; // mở dần (js/mo_dan.js): người mới chỉ có thẻ Hướng dẫn
       // V29 (O7): thẻ Cây kỹ năng hết điểm mà còn điểm chưởng thì mở thẳng thẻ Cây chưởng, khỏi thấy "Còn 0 điểm"
       if (V.tab === 'skill' && chuongOpen() && G.chuong) {
         const sv = G.save, hs = sv.heroes[sv.hero];
@@ -63,7 +64,9 @@
     if (k === 'mo') V.tab = theMo('viecNgay') ? 'viecNgay' : 'settings'; // Bước 2: Việc hôm nay là thẻ đầu của Anh Mõ (có thì mở trước)
   }
   // V53: thẻ Cây chưởng chỉ hiện sau khi qua ải đầu tiên (người mới làm quen Cây kỹ năng trước)
-  function chuongOpen() { return Object.keys(G.save.stars || {}).length >= 1; }
+  function chuongOpen() { return Object.keys(G.save.stars || {}).length >= 1 && theMoDan('chuong'); }
+  // Tư vấn 16/10: thẻ / bảng đã tới mốc mở chưa (js/mo_dan.js; ?modan=0 hay bản lưu cũ: luôn mở)
+  function theMoDan(tab) { return !G.moDan || G.moDan.the(tab); }
   function goHub() {
     const was = V.tab;
     V.tab = 'hub'; V.who = null; V.sel = null; V.node = null; V.confirm = false; V.page = 0;
@@ -86,6 +89,7 @@
   if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({ 'Sân đình': 'Village Yard', 'Cổng làng': 'Village Gate', 'Sổ': 'Book', 'Thành tựu': 'Achievements', 'Việc hôm nay': "Today's jobs", 'Đang soạn…': 'Coming soon…' });
   function theMo(k) {
     if (!THE_B2[k]) return true;
+    if (!theMoDan(k)) return false; // mở dần: Sổ, Thành tựu, Việc hôm nay mở sau Hang biển 1 (js/mo_dan.js)
     const fn = PANELS[k];
     if (!fn || fn.rong || !(G.suKien && G.suKien.bat && G.suKien.bat())) return false;
     try { return typeof fn.mo !== 'function' || !!fn.mo(G.save); } catch (e) { return false; }
@@ -363,9 +367,12 @@
     // Thẻ Linh khí nâng cấp 4 vũ khí (chọn hệ, đổi hệ; js/vk_moi.js). Đợt 2: bỏ hẳn Nâng bậc, Tôi lại, Rèn đồ của luật cũ.
     // Đợt 6: thêm thẻ "Ép đồ" (bậc vũ khí, js/ep_do.js); ?epdo=0 thì ẩn
     const coEp = !!(G.epDo && G.epDo.bat());
-    if (V.ftab !== 'sharpen' && V.ftab !== 'vk' && V.ftab !== 'up' && !(V.ftab === 'ep' && coEp)) V.ftab = 'vk';
-    const tabs = coEp ? [['sharpen', 'Mài'], ['vk', 'Linh khí'], ['ep', 'Ép đồ'], ['up', 'Nâng lò']] : [['sharpen', 'Mài'], ['vk', 'Linh khí'], ['up', 'Nâng lò']];
-    const tp = coEp ? 76 : 102, tw = coEp ? 73 : 98;
+    // Tư vấn 16/10 (js/mo_dan.js): thẻ chưa tới mốc thì ẩn (Mài sau Rừng già 1, Linh khí sau Rừng già 3, Ép đồ + Nâng lò sau Mộc Tinh)
+    const md = (t) => !G.moDan || G.moDan.ftab(t[0]);
+    const tabs = (coEp ? [['sharpen', 'Mài'], ['vk', 'Linh khí'], ['ep', 'Ép đồ'], ['up', 'Nâng lò']] : [['sharpen', 'Mài'], ['vk', 'Linh khí'], ['up', 'Nâng lò']]).filter(md);
+    if (!tabs.length) tabs.push(['sharpen', 'Mài']);
+    if (!tabs.some((t) => t[0] === V.ftab)) V.ftab = tabs.some((t) => t[0] === 'vk') ? 'vk' : tabs[0][0];
+    const tp = tabs.length === 4 ? 76 : tabs.length === 3 ? 102 : Math.floor((CW + 3) / tabs.length), tw = tp - (tabs.length === 4 ? 3 : 4);
     tabs.forEach((t, i) => {
       if (T.tab(CX + i * tp, PY + 23, tw, 22, t[1], V.ftab === t[0], { pad: 2 })) { V.ftab = t[0]; V.sel = null; V.page = 0; }
     });
@@ -538,7 +545,7 @@
   // ---------- cây kỹ năng và hướng dẫn (Cụ Đồ) ----------
   function doTabs() {
     // thẻ Bảng vàng (js/bang_vang.js) chỉ có khi tệp đó được nạp
-    const tabs = [['skill', 'Cây kỹ năng']].concat(chuongOpen() ? [['chuong', 'Cây chưởng']] : [], [['help', 'Hướng dẫn']], PANELS.rank ? [['rank', 'Bảng vàng']] : []);
+    const tabs = (theMoDan('skill') ? [['skill', 'Cây kỹ năng']] : []).concat(chuongOpen() ? [['chuong', 'Cây chưởng']] : [], [['help', 'Hướng dẫn']], PANELS.rank && theMoDan('rank') ? [['rank', 'Bảng vàng']] : []);
     const w = Math.floor((CW - (tabs.length - 1) * 4) / tabs.length);
     tabs.forEach((t, i) => {
       const dot = t[0] === 'chuong' && G.chuong && G.chuong.pts(G.save.heroes[G.save.hero], G.save.hero).left > 0;
@@ -638,7 +645,7 @@
     const sv = G.save, CL = G.cloud, CU = G.cloudUI;
     if (V.cd2) return settings2();
     khungThe('mo', 'Cổng làng: cài đặt'); // Bước 2: có thẻ Việc hôm nay thì hiện hàng thẻ trên băng tiêu đề
-    if (T.btn(CX + 4, 68, 96, CDH, 'Âm thanh, pin ›', { size: 8.5, sub: sv.sound ? 'Nhạc · Truyện' : 'Đang tắt', subSize: 7 })) { V.cd2 = true; V.confirm = false; G.audioStart(); }
+    if (T.btn(CX + 4, 68, 96, CDH, 'Âm thanh, điều khiển ›', { size: 8.5, sub: sv.sound ? 'Nhạc · Truyện' : 'Đang tắt', subSize: 7 })) { V.cd2 = true; V.confirm = false; G.audioStart(); }
     // Độ nét hình (js/engine.js G.NET): Cao = canvas thế giới gấp đôi điểm ảnh (ảnh AI rõ hơn), Thường = như cũ (nhẹ máy yếu)
     if (T.btn(CX + 104, 68, 96, CDH, sv.net === 'thuong' ? 'Độ nét: Thường' : 'Độ nét: Cao', { size: 8.5 })) {
       if (sv.net === 'thuong') delete sv.net; else sv.net = 'thuong';
@@ -687,16 +694,21 @@
   // Trang 2: Nhạc, Tiếng, bật/tắt âm thanh, Tiết kiệm pin, Xem lại truyện
   function settings2() {
     const sv = G.save, AM = G.amThanh;
-    frame('Âm thanh, pin, truyện');
+    frame('Âm thanh, pin, điều khiển');
     thanhAm('Nhạc', 'nhac', 66);
     thanhAm('Tiếng', 'tieng', 104);
-    if (T.btn(CX + 4, 146, 146, CDH, sv.sound ? 'Âm thanh: bật' : 'Âm thanh: tắt', { size: 8.5, sel: !!sv.sound })) {
+    if (T.btn(CX + 4, 146, 96, CDH, sv.sound ? 'Âm thanh: bật' : 'Âm thanh: tắt', { size: 8.5, sel: !!sv.sound })) {
       sv.sound = !sv.sound; G.persist(); G.audioStart(); if (AM) AM.capNhat();
       say(sv.sound ? 'Bật cả nhạc lẫn tiếng.' : 'Tắt hết nhạc và tiếng.');
     }
-    if (T.btn(CX + 154, 146, 146, CDH, sv.pin ? 'Tiết kiệm pin: bật' : 'Tiết kiệm pin: tắt', { size: 8.5, sub: '30 khung/giây', subSize: 7, sel: !!sv.pin })) {
+    if (T.btn(CX + 104, 146, 96, CDH, sv.pin ? 'Tiết kiệm pin: bật' : 'Tiết kiệm pin: tắt', { size: 8.5, sub: '30 khung/giây', subSize: 7, sel: !!sv.pin })) {
       if (sv.pin) delete sv.pin; else sv.pin = true;
       G.persist(); say(sv.pin ? 'Tiết kiệm pin: hình vẽ 30 khung mỗi giây, máy đỡ nóng.' : 'Vẽ đủ khung hình, mượt nhất.');
+    }
+    // Tư vấn 16/10 (mục 4): Khoá mục tiêu (G.save.khoaMT, mặc định tắt; js/moves.js aimM) — đánh trúng con nào thì cứ nhắm con đó tới khi nó gục / ra khỏi tầm
+    if (T.btn(CX + 204, 146, 96, CDH, sv.khoaMT ? 'Khoá mục tiêu: bật' : 'Khoá mục tiêu: tắt', { size: 8.5, sub: 'Tự ngắm', subSize: 7, sel: !!sv.khoaMT })) {
+      if (sv.khoaMT) delete sv.khoaMT; else sv.khoaMT = true;
+      G.persist(); say(sv.khoaMT ? 'Khoá mục tiêu: nhắm mãi một con tới khi nó gục hay chạy khỏi tầm đánh.' : 'Tự ngắm: ưu tiên quái theo hướng cần gạt, không có thì quái gần nhất.');
     }
     if (T.btn(CX + 4, 186, 96, CDH, 'Xem lại truyện', { size: 8.5, disabled: !G.truyen })) { V.confirm = false; G.truyen.xemLai(); }
     // Soát mượt Phiên 2 (mục 5): tắt rung màn hình (G.save.rungTat, js/fx.js trauma / kick). Khựng hình, tiếng, chớp vẫn giữ.
@@ -735,13 +747,15 @@
   G.Village = {
     enter() {
       goHub(); VS.enter({}); G.persist();
+      if (G.moDan) G.moDan.baoLang(); // tư vấn 16/10: vừa tới mốc mở thì một dòng báo ngắn ở làng (js/mo_dan.js)
       // Bấm một gợi ý ở bảng thua (G.upgradeTips): về làng là mở luôn bảng của người làng tương ứng, chọn sẵn món cần nâng.
       const g = G.villageGo; G.villageGo = null;
       if (!g) return;
       if (g.weapon != null && G.weaponById(g.weapon)) { viewWeapon(g.weapon, 'hub'); return; }
       if (!g.who || !TAB_OF[g.who]) return;
+      if (VS.shown && !VS.shown(g.who)) return; // người chưa ra mặt (mở dần)
       open(g.who);
-      if (g.ftab) V.ftab = g.ftab;
+      if (g.ftab && (!G.moDan || G.moDan.ftab(g.ftab))) V.ftab = g.ftab;
       if (g.otab) V.otab = g.otab;
       if (g.oslot) V.oslot = g.oslot;
       if (g.who === 'xen') V.gtab = g.gtab || 'weapon';
@@ -784,9 +798,11 @@
       VS.drawTop();
       if (V.tab === 'weapon') { weaponView(); return; }
       const hit = VS.drawStrip(V.who || WHO_OF[V.tab], true, true);
-      if (hit && VS.shown && !VS.shown(hit)) say('Cô Thợ May đi chợ xa. Qua ải Rừng già 2 rồi cô về may đồ cho bé.'); // V53
+      if (hit && VS.shown && !VS.shown(hit)) say(G.moDan ? G.moDan.loiChuaMo(hit) : 'Cô Thợ May đi chợ xa. Qua ải Rừng già 2 rồi cô về may đồ cho bé.'); // V53 + mở dần
       else if (hit) { VS.goNpc(hit, true); return; }
       if (THE_B2[V.tab] && !theMo(V.tab)) V.tab = WHO_OF[V.tab] === 'tu' ? 'hero' : 'settings'; // thẻ Bước 2 bị tắt / chưa mở: về thẻ cũ
+      if ((V.tab === 'skill' || V.tab === 'rank') && !theMoDan(V.tab)) V.tab = 'help'; // mở dần: Cụ Đồ chỉ còn thẻ Hướng dẫn
+      if (V.tab === 'chuong' && !chuongOpen()) V.tab = theMoDan('skill') ? 'skill' : 'help';
       const fn = PANELS[V.tab] || settings;
       const tab = V.tab, line = fn();
       if (fn.full) return; // bảng tự vẽ người nói (Cô Thợ May)

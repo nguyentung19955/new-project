@@ -297,14 +297,33 @@
     return (dx * P.stickX + dy * P.stickY) / d >= G.AIM_CONE;
   }
   M.inCone = inCone;
+  // Tư vấn 16/10 (mục 4): đang đẩy cần mà có quái trong tầm nằm trong hình nón ±40° quanh hướng cần → ngắm con gần nhất trong nón;
+  // không có thì như cũ (quái gần nhất). Tầm, sát thương không đổi. Cờ quay lui ?ngamcu=1 (G.NGAM_HUONG = false).
+  // "Khoá mục tiêu" (Anh Mõ → Cài đặt, G.save.khoaMT, mặc định tắt): đã ngắm con nào thì giữ con đó tới khi nó chết / ra khỏi tầm đòn.
+  if (G.NGAM_HUONG === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]ngamcu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.NGAM_HUONG = !cu; }
+  const NON_COS = Math.cos((40 * Math.PI) / 180);
+  function trongNon(P, e) {
+    const dx = e.x - P.x, dy = (e.y - P.y) / ZK(), d = Math.hypot(dx, dy);
+    return d > 1e-6 && (dx * P.stickX + dy * P.stickY) / d >= NON_COS;
+  }
   function aimM(P, range) {
-    const k = ZK();
+    const k = ZK(), ds = G.targets();
     let best = null, bd = 1e9;
-    for (const e of G.targets()) {
+    const khoa = G.save && G.save.khoaMT && !G.noRender ? P.khoaE : null;
+    if (khoa && !khoa.dead && ds.includes(khoa) && Math.hypot(khoa.x - P.x, (khoa.y - P.y) / k) - khoa.r < range) best = khoa;
+    if (!best && G.NGAM_HUONG !== false && P.stickX != null) {
+      for (const e of ds) {
+        if (!trongNon(P, e)) continue;
+        const d = Math.hypot(e.x - P.x, (e.y - P.y) / k) - e.r;
+        if (d < range && d < bd) { bd = d; best = e; }
+      }
+    }
+    if (!best) for (const e of ds) {
       if (!inCone(P, e)) continue;
       const d = Math.hypot(e.x - P.x, (e.y - P.y) / k) - e.r;
       if (d < range && d < bd) { bd = d; best = e; }
     }
+    if (G.save && G.save.khoaMT) P.khoaE = best || (P.khoaE && !P.khoaE.dead ? P.khoaE : null);
     let ux, uy;
     if (best && Math.hypot(best.x - P.x, best.y - P.y) > 1) { ux = best.x - P.x; uy = (best.y - P.y) / k; }
     else if (P.stickX != null) { ux = P.stickX; uy = P.stickY; }

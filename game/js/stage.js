@@ -55,6 +55,36 @@
     curse: 'Bàn thờ lời nguyền: chịu một bất lợi để linh khí nhận tăng gấp đôi đến hết ải. Bỏ qua cũng được.',
     door: 'Hết quái rồi, cửa đã mở. Đi vào cửa có mũi tên để sang phòng kề. Bản đồ nhỏ ở góc phải cho biết phòng nào ở đâu.',
   };
+  // Tư vấn 16/10 — MỞ DẦN (js/mo_dan.js, ?modan=0 tắt): người mới ở ải hướng dẫn chưa có nút Đặc biệt / Chưởng / đổi vũ khí,
+  // nên ba lời chỉ dẫn nói về những nút đó đổi sang dạy né vùng báo đòn.
+  const TUT_MD = {
+    fight2: 'Quái sắp ra đòn thì dưới chân hiện vùng đỏ. Bấm Né để lộn ra khỏi vùng đỏ rồi chém lại.',
+    elite: 'Quái tinh anh đánh đau: chờ nó ra đòn hụt rồi mới chém, thấy vùng đỏ thì Né ngay.',
+    boss: 'Trùm đầu tiên chưa học gì từ bạn. Chém vài nhát rồi lộn né, máu thấp thì chạm Bình máu.',
+  };
+  if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({
+    'Quái sắp ra đòn thì dưới chân hiện vùng đỏ. Bấm Né để lộn ra khỏi vùng đỏ rồi chém lại.': 'When a monster is about to strike, a red zone appears under it. Press Dodge to roll out of the red zone, then strike back.',
+    'Quái tinh anh đánh đau: chờ nó ra đòn hụt rồi mới chém, thấy vùng đỏ thì Né ngay.': 'Elites hit hard: wait for a missed attack before striking, and Dodge as soon as you see red.',
+    'Trùm đầu tiên chưa học gì từ bạn. Chém vài nhát rồi lộn né, máu thấp thì chạm Bình máu.': 'The first boss has learned nothing from you. Strike a few times then roll away; tap the Potion when your health is low.',
+  });
+  const MD = () => G.moDan && G.moDan.bat() ? G.moDan : null; // mở dần đang bật
+  const coMD = (f) => !G.moDan || G.moDan.co(f); // chức năng f đã mở (cờ tắt / bản lưu cũ: luôn mở)
+  function tutHint(k) {
+    if (MD() && ((k === 'fight2' && !coMD('dacBiet')) || ((k === 'elite' || k === 'boss') && !coMD('doiVk')))) return TUT_MD[k];
+    return TUT[k] || null;
+  }
+  // Ải hướng dẫn xếp sẵn (mở dần bật): bản đồ cố định (hạt giống TUT_SEED, kiểu A: Bắt đầu → Đánh quái → Đánh quái → Tinh anh → Suối → Trùm),
+  // phòng Bắt đầu gặp MỘT con xông tới trước (thấy rõ vùng báo đòn, chưa bị vây) rồi mới tới hai con; phòng đánh quái thứ hai xếp
+  // đợt ít quái lên trước, quái bắn xa / cảm tử dồn về đợt sau. Không đổi số quái, máu, sát thương.
+  const TUT_SEED = 1610;
+  const NANG = { archer: 2, kami: 2, bomber: 2 };
+  function xepDotHuongDan(waves) {
+    if (!Array.isArray(waves) || waves.length < 2) return waves;
+    const all = [].concat(...waves).sort((a, b) => (NANG[a] || 0) - (NANG[b] || 0));
+    const sizes = waves.map((w) => w.length).sort((a, b) => a - b);
+    let i = 0;
+    return sizes.map((n) => all.slice(i, (i += n)));
+  }
   const DIRV = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
   const OPP = { up: 'down', down: 'up', left: 'right', right: 'left' };
   let runNo = 0;
@@ -72,7 +102,7 @@
     const tut = r === 0 && i === 0 && !diff && !G.save.tut.done;
     // Ải cuối vùng luôn là Kiểu C; ải dạy chơi dùng Kiểu A cho dễ theo; còn lại ngẫu nhiên, tránh kiểu vừa chơi.
     const kind = o.kind || (tut ? 'A' : G.mapgen.pickKind(i, G.save.lastKind, G.rnd));
-    const seed = o.seed || 1 + Math.floor(G.rnd() * 999999);
+    const seed = o.seed || (tut && MD() ? TUT_SEED : 1 + Math.floor(G.rnd() * 999999));
     // Đợt 6: ẢI THEO NGÀY (js/ai_ngay.js) — một phòng đánh, nhiều đợt quái + 1 tinh anh cuối, không cửa, không trùm
     const an = o.aiNgay && G.aiNgay ? o.aiNgay : null;
     const map = an ? { kind: 'N', seed, rooms: [{ id: 0, x: 0, y: 0, type: 'fight', main: true, doors: {} }], start: 0, fountain: -1, boss: -1, gate: null, w: 1, h: 1 } : G.mapgen.make(kind, seed);
@@ -240,11 +270,12 @@
         W.waves = [];
         for (let k = 0; k < n; k++) W.waves.push(buildWaves(k === n - 1 ? 'elite' : 'fight').slice(-1)[0]);
         addEnv(2);
-      } else if (S.tut && type === 'start') W.waves = [['rusher', 'rusher', 'rusher']];
+      } else if (S.tut && type === 'start') W.waves = MD() ? [['rusher'], ['rusher', 'rusher']] : [['rusher', 'rusher', 'rusher']];
       else if (S.tut && id === 1) {
         W.waves = [['swarm', 'swarm'], ['swarm', 'swarm', 'rusher']];
         W.props.push({ type: 'brazier', env: true, x: cx - 34, y: cy - 12 }, { type: 'brazier', env: true, x: cx + 36, y: cy + 22 });
       } else if (type !== 'start') {
+        if (S.tut && type === 'fight' && MD()) W.waves = xepDotHuongDan(W.waves);
         if (type === 'challenge') W.props.push({ type: 'pedestal', x: cx, y: cy - 2 });
         addEnv(1 + (G.rnd() < 0.5 ? 1 : 0));
       }
@@ -334,7 +365,7 @@
     P.inv = Math.max(P.inv, first ? 0.6 : 0.3);
     P.dashT = 0; P.dodgeT = 0; P.slideT = 0; P.spearOut = null; if (W.mvSp) W.mvSp.length = 0;
     if (W.type === 'fountain') S.preview = bossSetup().layers;
-    S.hint = S.tut ? TUT[W.type === 'fight' ? (id === 1 ? 'fight1' : 'fight2') : W.type] || null : null;
+    S.hint = S.tut ? tutHint(W.type === 'fight' ? (id === 1 ? 'fight1' : 'fight2') : W.type) : null;
     updateDoors();
   }
   function clearRoom() {
@@ -607,7 +638,30 @@
   const BTN_BIG = { atk: [450, 222, 26], dodge: [400, 248, 17], special: [401, 200, 17], skill: [448, 167, 17] };
   // Đợt 2: phòng thường nay cũng rộng như phòng trùm (geo.rong), nên dùng chung bố cục nút này.
   const bigRoom = () => !!(S && S.W && S.W.geo && S.W.geo.rong);
-  function btnPos(name) { const b = (bigRoom() && G.cx < 20 ? BTN_BIG : BTN0)[name]; return [b[0] + G.cx, b[1] + G.cy, b[2]]; }
+  // Tư vấn 16/10 (mục 4) — BỐ CỤC NÚT MỚI (cờ quay lui ?nutcu=1 → G.NUT_CU = true: bố cục cũ, chạm ô vũ khí là đổi ngay, không vòng chọn):
+  //   Đánh và Né to bằng nhau (đường kính ~60 điểm ảnh CSS trên điện thoại thật, nằm 56–64), cách nhau ~11 điểm ảnh CSS; Đặc biệt và Chưởng
+  //   cỡ vừa (~44) ngay phía trên; Bình máu nhỏ (~32, có số lần dùng "x2") trên cùng cụm. Cỡ tính theo G.scale (điểm ảnh CSS / đơn vị khung
+  //   480×270), kẹp trong khoảng để máy tính / máy tính bảng không ra nút tí hon. Cụm nút nằm ở cột phải (x ≥ ~378), không đè sàn.
+  if (G.NUT_CU === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]nutcu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.NUT_CU = cu; }
+  const NUT_MOI = () => G.NUT_CU !== true;
+  const kep = (v, a, b) => (v < a ? a : v > b ? b : v);
+  let boCuc = null, boCucKhoa = '';
+  function boCucMoi() {
+    const sc = G.scale > 0 ? G.scale : 1.44, cx = G.cx || 0, cy = G.cy || 0, khoa = sc.toFixed(3) + '|' + cx + '|' + cy;
+    if (boCuc && khoa === boCucKhoa) return boCuc;
+    const rb = kep(30 / sc, 20, 24), rm = kep(22 / sc, 15, 18), rp = kep(16 / sc, 11, 13), g = kep(11 / sc, 6, 9);
+    const ax = 474 - rb + cx, ay = 252 - rb + cy; // chừa 10 đơn vị dưới đáy cho chữ "Đánh" ở ải hướng dẫn
+    const dx = ax - rb - g - rb, dy = ay + 4;
+    const sx = dx + 4, sy = dy - rb - g - rm;
+    const kx = ax + 2, ky = ay - rb - g - rm;
+    boCuc = { atk: [ax, ay, rb], dodge: [dx, dy, rb], special: [sx, sy, rm], skill: [kx, ky, rm], potion: [Math.round((sx + kx) / 2), Math.min(sy, ky) - rm - g - rp, rp], gap: g };
+    boCucKhoa = khoa;
+    return boCuc;
+  }
+  function btnPos(name) {
+    if (NUT_MOI()) { const b = boCucMoi()[name]; return [b[0], b[1], b[2]]; }
+    const b = (bigRoom() && G.cx < 20 ? BTN_BIG : BTN0)[name]; return [b[0] + G.cx, b[1] + G.cy, b[2]];
+  }
   // Cần điều khiển lúc chưa chạm: phòng trùm thì lùi sát mép trái để không đè tường.
   function stickPos() { return [(bigRoom() && G.cx < 30 ? 42 : 62) - G.cx * 0.6, 216 + G.cy, 24]; }
   const BTN = BTN0;
@@ -615,7 +669,18 @@
   const POT = [4, 26, 54, 24], PAU = [G.CHU_RO !== false ? 70 : 62, 26, 30, 24]; // 12/10 (cờ G.CHU_RO): nút Dừng dời phải 8 để không che chữ "Bình máu"; vùng chạm hai nút không chồng nhau // cao 24 (+ vùng chạm nới 4) để vừa ngón tay trên điện thoại
   const hitBox = (d, b) => G.inRect(d, b[0] - 4, b[1] - 4, b[2] + 8, G.CHAM44 && G.theme.chamMin ? Math.max(b[3] + 9, G.theme.chamMin()) : b[3] + 9); // Rà soát C: cao đủ 44 pt cả khi khung nhỏ (iPhone SE, có tai thỏ) // vùng chạm cao 33 (khoảng 44 điểm trên điện thoại)
   function setMode(m) { S.mode = m; S.sel = null; }
-  G.stageUi = { btnPos, stickPos, POT, PAU }; // để bài kiểm tra biết nút nằm ở đâu
+  // Bình máu: bố cục mới là nút nhỏ trong cụm nút phải (chạm theo vòng tròn, nới 6), bố cục cũ là ô POT góc trái trên.
+  const potHit = (d) => { if (!NUT_MOI()) return hitBox(d, POT); const b = btnPos('potion'); return Math.hypot(d.x - b[0], d.y - b[1]) <= b[2] + 6; };
+  // Ô vũ khí góc trên phải [x, y, rộng, cao] (vùng chạm) và vòng chọn 4 món (bố cục mới)
+  const OVK = [368, 0, 112, 38];
+  const VONG = { giu: 0.3, keo: 14 }; // giữ 0,3 giây hoặc kéo ngón ra 14 đơn vị thì mở vòng chọn
+  function vongO(i) { return [374 + (i % 2) * 54, 44 + Math.floor(i / 2) * 40, 50, 36]; } // ô thứ i của vòng chọn (2×2 dưới ô vũ khí)
+  function vongChon(p) { // ô nào gần ngón nhất (trong vòng 30 đơn vị quanh tâm ô)
+    let best = -1, bd = 30;
+    for (let i = 0; i < 4; i++) { const o = vongO(i), d = Math.hypot(p.x - (o[0] + o[2] / 2), p.y - (o[1] + o[3] / 2)); if (d < bd) { bd = d; best = i; } }
+    return best;
+  }
+  G.stageUi = { btnPos, stickPos, POT, PAU, potHit, OVK, vongO, nutMoi: NUT_MOI }; // để bài kiểm tra biết nút nằm ở đâu
   function readInput() {
     const k = G.keys, kp = G.keyP;
     const inp = {
@@ -625,17 +690,24 @@
       dodgeP: !!(kp.KeyK || kp.KeyX || kp.ShiftLeft), specialP: !!(kp.KeyL || kp.KeyC), skillP: !!(kp.KeyI || kp.KeyV), skill: !!(k.KeyI || k.KeyV),
       swapP: !!(kp.KeyQ || kp.Tab), potionP: !!(kp.KeyE || kp.KeyH), pauseP: !!(kp.Escape || kp.KeyP), mapP: !!kp.KeyM,
     };
-    const mm = G.minimap.rect(S);
+    // phím 1–4: chọn thẳng món (như vòng chọn)
+    for (let i = 0; i < 4; i++) if (kp['Digit' + (i + 1)]) { inp.swapP = true; inp.swapTo = i; }
+    const mm = G.minimap.rect(S), moi = NUT_MOI();
     for (const d of G.downs) {
-      if (G.inRect(d, 368, 0, 112, 38)) { inp.swapP = true; d.role = 'ui'; continue; }
+      if (G.inRect(d, OVK[0], OVK[1], OVK[2], OVK[3])) {
+        // bố cục mới: chạm rồi nhấc = đổi sang món kế; giữ (hoặc kéo ra) = vòng chọn 4 món, nhấc ngón trên món nào thì cầm món đó
+        if (moi) { d.role = 'vk'; d.t0 = G.time || 0; S.vkTro = d; } else { inp.swapP = true; d.role = 'ui'; }
+        continue;
+      }
       // 12/10 (cờ G.CHU_RO): nút "Bản đồ" thu nhỏ ở phòng trùm có vùng chạm cao 31 (≈ 44 pt), nới xuống dưới (phía trên là dải linh khí)
       const m44 = G.CHAM44 && G.theme.chamMin ? G.theme.chamMin() : 31, mmH = G.CHU_RO !== false && mm[3] < m44 ? m44 : mm[3] + 3, mmY = G.CHU_RO !== false && mm[3] < m44 ? mm[1] - 4 : mm[1];
       if (G.inRect(d, mm[0] - 2, mmY, mm[2] + 4, mmH)) { inp.mapP = true; d.role = 'ui'; continue; }
-      if (hitBox(d, POT)) { inp.potionP = true; d.role = 'ui'; continue; }
+      if (potHit(d)) { inp.potionP = true; d.role = 'ui'; continue; }
       if (hitBox(d, PAU)) { inp.pauseP = true; d.role = 'ui'; continue; }
       // nút tròn: lấy nút gần ngón nhất, vùng chạm rộng hơn hình vẽ một chút
       let hit = null, best = 1e9;
       for (const name in BTN) {
+        if ((name === 'special' && !coMD('dacBiet')) || (name === 'skill' && !coMD('chuong'))) continue; // mở dần: nút chưa mở thì không có
         const b = btnPos(name), dd = Math.hypot(d.x - b[0], d.y - b[1]);
         if (dd <= b[2] + 6 && dd - b[2] < best) { best = dd - b[2]; hit = name; }
       }
@@ -658,6 +730,27 @@
         if (l > 0.18) { inp.mx += dx; inp.my += dy; }
       }
     }
+    // ngón đang đặt trên ô vũ khí (bố cục mới): mở vòng chọn khi giữ / kéo; nhấc ngón thì đổi
+    const vt = S.vkTro;
+    if (vt) {
+      const conGiu = G.pointers.get(vt.id) === vt;
+      if (!S.vong && (G.time - vt.t0 >= VONG.giu || Math.hypot(vt.x - vt.sx, vt.y - vt.sy) >= VONG.keo) && coMD('doiVk') && S.P.weapons.length > 1) { S.vong = { t0: G.time }; G.sfx('ui'); }
+      if (S.vong) S.vong.chon = vongChon(vt);
+      if (!conGiu) {
+        if (S.vong) { const i = S.vong.chon; if (i >= 0 && i < S.P.weapons.length && i !== S.P.cur) S.choDoi = { to: i, het: G.time + 0.8 }; }
+        else inp.swapP = true; // chạm nhanh: món kế tiếp
+        S.vong = null; S.vkTro = null;
+      }
+    } else S.vong = null;
+    // món chọn ở vòng chọn mà đang chờ đổi (0,75 giây giữa hai lần đổi): giữ lệnh tới khi đổi xong, tối đa 0,8 giây
+    if (S.choDoi) {
+      if (S.P.cur === S.choDoi.to || G.time > S.choDoi.het) S.choDoi = null;
+      else { inp.swapP = true; inp.swapTo = S.choDoi.to; }
+    }
+    // mở dần (js/mo_dan.js): chưa tới mốc thì phím / nút của chức năng đó không làm gì
+    if (!coMD('doiVk')) { inp.swapP = false; inp.swapTo = undefined; S.choDoi = null; }
+    if (!coMD('dacBiet')) inp.specialP = false;
+    if (!coMD('chuong')) { inp.skillP = false; inp.skill = false; }
     return inp;
   }
 
@@ -934,6 +1027,22 @@
   // part (Đợt 8, chỉ khi cờ G.DO_DOC_TRAN bật): vẽ riêng một lớp của bảng thứ bậc — 'duoi' (chữ phụ, lời chỉ dẫn, thông báo: trước số sát thương),
   // 'tren' (thanh máu quái, khung trùm / tinh anh: sau số sát thương), 'vien' (thanh máu em bé, ô vũ khí, bản đồ nhỏ, nút: ngoài sàn, vẽ sau cùng).
   // Không truyền part (cờ tắt): vẽ tất cả theo đúng thứ tự cũ.
+  // Vòng chọn vũ khí (bố cục mới, giữ ô vũ khí): 4 ô 2×2 ngay dưới ô vũ khí, ô dưới ngón sáng lên; nhấc ngón là cầm món đó.
+  // Chỉ dùng khung ô và hình vũ khí có sẵn (G.btnArt.slot, G.art.weaponIcon), vẽ ở lớp giao diện.
+  function veVong(c, P, BA) {
+    const n = Math.min(4, P.weapons.length), chon = S.vong.chon, a = Math.min(1, (G.time - S.vong.t0) / 0.12);
+    const ga = c.globalAlpha;
+    c.globalAlpha = ga * a;
+    ui.rect(370, 40, 108, 82, 'rgba(14,10,8,0.72)', 'rgba(255,230,170,0.35)');
+    for (let i = 0; i < n; i++) {
+      const w = P.weapons[i], o = vongO(i), sel = i === chon, dang = i === P.cur;
+      BA.slot(c, o[0], o[1], o[2], o[3], { weapon: { type: w.type, branch: G.activeEl(P, w), stage: G.wStage(w), rarity: 0 }, active: sel || (chon < 0 && dang), pressed: sel, icon: false, gem: false, id: 'vong' + i });
+      G.art.weaponIcon(c, w, o[0] + o[2] / 2, o[1] + 14, 18, sel ? 'attack' : 'idle');
+      const ten = (G.WTYPES[w.type] && G.WTYPES[w.type].name) || w.type;
+      ui.text(ten, o[0] + o[2] / 2, o[1] + o[3] - 4, { size: 6.5, align: 'center', bold: true, color: sel ? '#fff3b0' : dang ? '#ffd27a' : '#d9cdb8' });
+    }
+    c.globalAlpha = ga;
+  }
   function drawHud(part) {
     const W = S.W, P = S.P, c = G.ux;
     const doc = !!part, on = (p) => !part || part === p;
@@ -945,11 +1054,15 @@
     if (on('vien')) {
     // Giai đoạn 4 (yêu cầu 2): thanh máu to hơn, chữ số to; thanh năng lượng có số để biết đủ mana cho chiêu chưa.
     T.bar(4, 3, 120, 'hp', Math.max(0, P.hp / P.maxhp), (G.CHU_RO !== false ? Math.max(0, Math.ceil(P.hp)) : Math.ceil(P.hp)) + ' / ' + P.maxhp, { h: 11, lag: P, size: 7.5 }); // lag: phần máu vừa mất tụt dần (js/ui_theme.js); khoá theo em bé của lượt chơi này
-    T.bar(4, 15, 108, 'mana', P.mana / P.maxmana, Math.floor(P.mana) + ' / ' + P.maxmana, { h: 8, size: 6.5 });
+    if (coMD('dacBiet') || coMD('chuong')) T.bar(4, 15, 108, 'mana', P.mana / P.maxmana, Math.floor(P.mana) + ' / ' + P.maxmana, { h: 8, size: 6.5 }); // mở dần: chưa có nút tốn mana thì ẩn thanh mana
     const canDrink = P.potions > 0 && !W.noPotion;
     const heldBox = (b) => G.coTro((p) => p.role === 'ui' && hitBox({ x: p.sx, y: p.sy }, b)); // soát mượt phiên 3 mục 22: không chép mảng ngón mỗi lần
-    BA.draw(c, 'potion', POT[0] + 13, POT[1] + 12, 12, { count: P.potions, disabled: !canDrink, pressed: heldBox(POT) });
-    ui.text(W.noPotion ? 'Cấm' : 'Bình máu', POT[0] + 29, POT[1] + 15, { size: 7, bold: true, color: canDrink ? '#fff3da' : '#a89c8c' });
+    if (NUT_MOI()) {
+      // bố cục mới: bình máu là nút nhỏ trong cụm nút phải (số lần dùng ở góc), vẽ cùng các nút bên dưới
+    } else {
+      BA.draw(c, 'potion', POT[0] + 13, POT[1] + 12, 12, { count: P.potions, disabled: !canDrink, pressed: heldBox(POT) });
+      ui.text(W.noPotion ? 'Cấm' : 'Bình máu', POT[0] + 29, POT[1] + 15, { size: 7, bold: true, color: canDrink ? '#fff3da' : '#a89c8c' });
+    }
     BA.draw(c, 'pause', PAU[0] + PAU[2] / 2, PAU[1] + 12, 11, { pressed: heldBox(PAU) });
     let sx = 5;
     for (const k of G.ELS) if (P.st[k] > 0) { const gt = gdAnh('gd-tt-' + TT_MA[k]); if (gt) { ui.rect(sx, 54, 11, 11, 'rgba(14,10,8,0.85)', G.EL[k].col); G.spriteCustom.veGd(G.ux, gt, sx + 1, 55, 9, 9); } else if (G.lk && G.lk.icon) { ui.rect(sx, 54, 11, 11, 'rgba(14,10,8,0.85)', G.EL[k].col); G.lk.icon(k, sx + 5.5, 59.5, 0.9, false, 1); } else ui.rect(sx, 54, 10, 10, G.EL[k].col, '#000'); sx += 13; }
@@ -974,7 +1087,7 @@
     G.minimap.draw(S);
     // vũ khí: hình và bậc ở trên, mốc tiến hóa ở dưới, thanh dấu ấn sát đáy
     // Hệ thống mới: 4 vũ khí xoay vòng, HUD vẫn 2 ô: ô trái = món đang cầm, ô phải = món kế tiếp khi bấm đổi.
-    const hienVk = P.weapons.length > 2 ? [P.weapons[P.cur], P.weapons[(P.cur + 1) % P.weapons.length]] : P.weapons;
+    const hienVk = !coMD('doiVk') ? [P.weapons[P.cur]] : P.weapons.length > 2 ? [P.weapons[P.cur], P.weapons[(P.cur + 1) % P.weapons.length]] : P.weapons; // mở dần: chưa đổi được thì chỉ ô đang cầm
     hienVk.forEach((w, i) => {
       const x = 368 + i * 56, on = w === P.weapons[P.cur];
       // Khung ô vũ khí cùng bộ với nút, viền mang màu bậc. Hình vũ khí sống và chữ do game vẽ ở các dòng dưới.
@@ -1003,8 +1116,9 @@
       }
     });
     if (G.lk) G.lk.hud(P, W); // ba vạch linh khí cạnh ô vũ khí, biểu tượng hệ trên đầu quái (js/linhkhi.js)
+    if (S.vong && S.mode === 'play') veVong(c, P, BA);
     }
-    if (!doc && P.weapons.length > 1 && S.tut && W.type === 'elite') {
+    if (!doc && P.weapons.length > 1 && S.tut && W.type === 'elite' && coMD('doiVk')) {
       // Đợt 2: chữ nằm trong một ô nền riêng, cách ô vũ khí 5 điểm ảnh nên không còn bị ô vũ khí cắt mất chữ cuối.
       const s0 = G.tv('Chạm để đổi vũ khí →'); ui.font(7, true);
       const tw0 = Math.ceil(G.ux.measureText(s0).width) + 8;
@@ -1057,7 +1171,7 @@
     if (doc) S.docBy = by;
     }
     if (on('duoi')) {
-    if (doc && P.weapons.length > 1 && S.tut && W.type === 'elite') {
+    if (doc && P.weapons.length > 1 && S.tut && W.type === 'elite' && coMD('doiVk')) {
       // Đợt 8: nhãn này trước nằm cùng hàng với khung tinh anh nên bị khung che mất nửa chữ. Nay xuống một hàng riêng ngay dưới khung, sát ô vũ khí.
       const s0 = G.tv('Chạm để đổi vũ khí →'); ui.font(7, true);
       const tw0 = Math.ceil(G.ux.measureText(s0).width) + 8;
@@ -1206,14 +1320,14 @@
         charge: chg > 0 ? chg : undefined, chargeSteps: mcfg && mcfg.charge ? (mcfg.charge.lv1 != null ? 2 : 1) : 0,
       });
       bt = btnPos('special');
-      BA.draw(c, 'special', bt[0], bt[1], bt[2] + 1, {
+      if (coMD('dacBiet')) BA.draw(c, 'special', bt[0], bt[1], bt[2] + 1, {
         weapon: wst, cost: P.specCost, disabled: P.mana < P.specCost, pressed: held('special'),
         cd: P.specCd / 0.8, cdSec: P.specCd, label: showLab ? G.WTYPES[cw2.type].special : null, labelAt: 'top',
       });
       bt = btnPos('skill');
       // nút Chưởng (thay nút kỹ năng riêng): hình theo cây chưởng đang dùng, vòng tích lực khi giữ (Hỏa chưởng có Tích lực)
       const chs = P.ch, chc = chs ? G.chuong.cost(P) : 30, chg2 = G.chuong ? G.chuong.chargeOf(P) : 0;
-      BA.draw(c, chs ? 'chuong' : 'skill', bt[0], bt[1], bt[2] + 1, {
+      if (coMD('chuong')) BA.draw(c, chs ? 'chuong' : 'skill', bt[0], bt[1], bt[2] + 1, {
         hero: P.key, el: chs ? chs.el : null, cost: chc, disabled: P.mana < chc, pressed: held('skill') || !!P.chHold,
         cd: P.skillCd / ((chs ? chs.cd : 5) * (P.cdMul || 1)), cdSec: P.skillCd, label: showLab ? 'Chưởng' : null, labelAt: 'top',
         charge: chg2 > 0 ? chg2 : undefined, chargeSteps: 1,
@@ -1222,6 +1336,11 @@
       BA.draw(c, 'dodge', bt[0], bt[1], bt[2] + 1, {
         dir, pressed: held('dodge'), cd: P.dodgeCd / P.dodgeCdMax, cdSec: P.dodgeCd, label: showLab ? 'Né' : null, labelAt: 'top',
       });
+      if (NUT_MOI()) { // bình máu nhỏ trong cụm nút (bố cục mới), số lần dùng "xN" ở góc
+        const canDrink = P.potions > 0 && !W.noPotion, pb = btnPos('potion');
+        BA.draw(c, 'potion', pb[0], pb[1], pb[2], { count: P.potions, disabled: !canDrink, pressed: G.coTro((p) => p.role === 'ui' && potHit({ x: p.sx, y: p.sy })) });
+        if (W.noPotion) ui.text('Cấm', pb[0], pb[1] + pb[2] + 7, { size: 6.5, align: 'center', bold: true, color: '#a89c8c' });
+      }
     }
   }
 

@@ -291,7 +291,7 @@
     T.panel(X0, Y0, PW, PH, RO ? 'Hành trang (chỉ xem)' : 'Hành trang', { rightPad: 74 + roW, noBand: true });
     if (T.sbtn(X0 + PW - 66, Y0 + 3, 60, 17, RO ? '← Quay lại' : '✕ Xong', { size: 8, pad: 5 })) { close(); return; }
     if (RO) ui.text(roTxt, X0 + PW - 72, Y0 + 15, { size: 6.5, align: 'right', color: WARN });
-    const tabs = TABS; // linh khí nay ở thẻ Vũ khí
+    const tabs = TABS.filter((t) => t[0] !== 'skill' || !G.moDan || G.moDan.co('kyNang')); // linh khí nay ở thẻ Vũ khí; thẻ Kỹ năng mở dần (js/mo_dan.js)
     if (!tabs.some((t) => t[0] === B.tab)) B.tab = 'hero';
     const tw = (CW - (tabs.length - 1) * 3) / tabs.length;
     tabs.forEach((t, i) => {
