@@ -246,6 +246,15 @@
         }
         tap(72 + pick * 114 + 54, 134);
       }
+      else if (S.mode === 'phuclanh' && G.phucLanh) {
+        // phúc lành giữa ải (js/phuc_lanh.js): G.botCfg.phucLanh = 'ngau' (mặc định) | 0..2 (thẻ thứ mấy) | 'bo' (chọn rồi gỡ: đo đối chứng)
+        const c = G.botCfg.phucLanh, n = S.pl.opts.length, PL = G.phucLanh;
+        const j = typeof c === 'number' ? Math.min(c, n - 1) : ((S.map.seed >>> 7) + S.r + S.i) % n; // 'ngau': theo hạt giống bản đồ, không dùng G.rnd (giữ dãy ngẫu nhiên của trận)
+        tap(PL.theX(j) + PL.CW / 2, PL.theY() + PL.CH / 2);
+        if (S.mode === 'phuclanh') PL.chon(j); // khung chưa nhận chạm (vừa mở bảng): chọn thẳng
+        if (c === 'bo') S.pl.k = null;
+        else if (typeof c === 'string' && PL.THEO[c]) { S.pl.k = c; S.P.plSac = 1; S.P.plHoi = 0; } // ép một phúc lành (đo riêng từng cái)
+      }
       else if (S.mode === 'swap') tap(97, 218);
       else if (S.mode === 'merchant') { if (G.botCfg.explore) { tap(132, 118); tap(240, 118); } tap(127, 194); }
       else if (S.mode === 'curse') { if (G.botCfg.explore) tap(162, 182); else tap(318, 182); }
