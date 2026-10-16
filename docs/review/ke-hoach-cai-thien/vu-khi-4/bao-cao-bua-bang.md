@@ -96,3 +96,69 @@ hoặc đặt `G.BUA_BANG = false`.
 | Cờ | Tác dụng |
 |---|---|
 | `?buabang=0` | `G.BUA_BANG = false`: búa đóng băng miễn 5 giây như mọi vũ khí; quái tan băng không còn tính dấu ấn Băng (luật trước 16/10) |
+
+## Lần 2: 2 tầng mỗi nhát (16/10/2026)
+
+Chủ game chọn (16/10) hướng 2 ở mục 5: **nhát gây hệ của búa mang Băng gây 2 tầng Băng** (đủ 5 tầng sau 3 nhát ≈ 2,4 giây), giữ miễn 3 giây
+của lần 1. Cờ quay lui mới `?bua2tang=0`.
+
+### Đọc nhanh
+
+- Búa Băng Thức tỉnh `au_he.py 60 18`: 68,4 → **83,2** st/giây = **84% búa Độc** (trước 69%). **Chưa tới 90%** → không hạ (không vượt 110%).
+- `dps.py` đạt; búa Băng ÷ búa Độc 82% → **88%**. `cay.py --vk=bua` −1,5% (đạt ±10%). Tỉ lệ thắng từng ải: trong nhiễu (code không chạy, xem dưới).
+- Kiếm / thương / phi tiêu, búa Độc / Lửa: không đổi một số nào. Trùm vẫn chỉ choáng 0,5 giây (luật trong `G.applyStatus` không đổi).
+
+### Đã đổi gì
+
+| Tệp, chỗ | Nội dung | Cờ quay lui |
+|---|---|---|
+| `game/js/combat.js` cạnh `G.BUA_BANG` | `G.BUA_2TANG` (đọc `?bua2tang=0`) | `?bua2tang=0` → `G.BUA_2TANG = false` |
+| `combat.js` `playerHit` | `w.type === 'hammer' && el === 'ice'` → `G.applyStatus(..., 2, BUA_O)`; mọi trường hợp khác 1 tầng như cũ. Gai băng đòn đặc biệt, mảnh vỡ, chưởng, đạo cụ không đổi | như trên |
+
+Trong 3 giây miễn, tầng vẫn bị kẹp ở 4 (luật cũ), nên hết miễn là nhát kế tiếp đóng băng ngay.
+
+### Bảng trước / sau
+
+Trước = `PRE='G.BUA_2TANG=false'` (au_he), `DPS_PRE='G.BUA_2TANG=false'` (dps), `--pre=G.BUA_2TANG=false` (cay), `index.html?cloud=0&bua2tang=0` (balance).
+
+| Bài | Trước | Sau |
+|---|---|---|
+| `au_he.py 60 18` VK=hammer, Băng Mầm (st/giây · % khống · ấn/phút) | 45,9 · 27% · 5,1 | 50,1 · 29% · 5,3 |
+| Băng Thành hình | 61,2 · 37% · 9,6 | 64,5 · 36% · 10,6 |
+| Băng Thức tỉnh | 68,4 · 33% · 11,2 | **83,2** · 31% · 14,4 |
+| Độc / Lửa Thức tỉnh | 99,6 / 93,3 | 99,6 / 93,3 (giống hệt) |
+| **Búa Băng ÷ búa Độc Thức tỉnh** | **69%** | **84%** (mục tiêu 90–105%: **chưa đạt**) |
+| `dps.py` (trình duyệt) | **đạt** (phi tiêu −23%, cận chiến lệch 9%, thấp nhất 78%, 3 hệ lệch 8%) | **đạt** (−23%, 9%, 77%, 7%) |
+| `dps.py` búa Băng st/giây · dấu ấn | 83,9 · 34,5 | 90,6 · 39,9 |
+| `dps.py` búa Băng ÷ búa Độc | 82% | **88%** |
+| `dps.py` kiếm / giáo / phi tiêu Băng | 94,6 / 90,4 / 86,9 | giống hệt (giáo Trắng 58,7 → 58,8: lệch số ngẫu nhiên, không qua code mới) |
+| `cay.py 12 --node --vk=bua` | 188,6 phút TB (179–212) | 185,7 phút TB (167–203) → **−1,5%** (≤ ±10%: đạt) |
+| `balance.py 8 … vukhi:hammer` | 113/120 | 110/120 |
+
+Tỉ lệ thắng từng ải (búa, trước → sau, 8 lượt): 1-5 8→7, 2-1 8→5, 2-4 7→8, 2-5 7→8, 3-2 8→7, 3-3 6→8, 3-5 7→5, còn lại bằng nhau.
+Mọi bản lưu trong `tests/cay_luu.json` có vũ khí nhánh **Lửa** (vukhi chỉ đổi loại vũ khí), nên nhát búa không bao giờ gây Băng →
+code mới **không chạy** trong `balance.py`; chênh lệch là nhiễu (balance không có hạt giống). Chạy lại riêng 2-1: trước 7/8, sau 8/8.
+
+Kiểm khác: `node --check` mọi `game/js/*.js`; `python3 game/build.py` và `--hai-tep` chạy được (đã dựng lại `dist`);
+`node tests/cam_giac_danh.test.js` đạt 15 mục; `node tests/song_luat.test.js` đạt 40 điều kiện. Không đụng đăng nhập Google / lưu mây / `?cloud=0`.
+Không chơi thử bằng trình duyệt.
+
+### Vì sao vẫn chưa tới 90% (đo thử, chưa đưa vào game)
+
+`au_he.py 60 18` VK=hammer, Băng Thức tỉnh, chỉnh trong bộ nhớ bằng `PRE`:
+
+| Thử | st/giây | ÷ búa Độc |
+|---|---|---|
+| 2 tầng (bản đã làm) | 83,2 | 84% |
+| 2 tầng + miễn búa 2 giây thay vì 3 | 83,6 | 84% |
+| **3 tầng** mỗi nhát (đủ 5 tầng sau 2 nhát) | 89,5 | **90%** |
+
+Miễn 3 giây không còn là chỗ nghẽn đáng kể (2 giây chỉ +0,4). Phần chênh còn lại vẫn là Độc có sát thương theo nhịp (26,8 st/giây) mà Băng
+không có. Muốn tới 90% cần chủ game chọn tiếp: **3 tầng mỗi nhát** (vừa chạm 90%, sát đáy), hoặc hướng 3 ở mục 5 (Băng vỡ thêm cho búa),
+hoặc 1a (giảm búa Độc). Không tự làm vì ngoài phạm vi đã chọn.
+
+### Cờ
+
+| Cờ | Tác dụng |
+|---|---|
+| `?bua2tang=0` | `G.BUA_2TANG = false`: nhát búa Băng gây 1 tầng như trước lần 2 (giữ miễn 3 giây của lần 1; tắt cả hai thì thêm `?buabang=0`) |
