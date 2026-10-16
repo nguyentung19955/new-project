@@ -1,0 +1,119 @@
+{
+ "anh": "cu-ti-hang-moi-16-10/08-kiem-1-5k.png",
+ "co_anh": [
+  2216,
+  709
+ ],
+ "che_do": "chinh-thuc",
+ "so_hang_can": 1,
+ "so_cot_can": 5,
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 0,
+  "vien_khu": 9614,
+  "nga_mau_nen_trong_hinh": 120
+ },
+ "manh_bo": [],
+ "loi": [],
+ "canh_bao": [],
+ "dat": true,
+ "suy_doan": [],
+ "hang": [
+  {
+   "ten": "kiem1",
+   "so_khung": 5,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      21,
+      103,
+      387,
+      677
+     ],
+     "chan": [
+      203.5,
+      677
+     ],
+     "rong": 366,
+     "cao": 574,
+     "diem_anh": 107707,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      418,
+      148,
+      810,
+      677
+     ],
+     "chan": [
+      610.0,
+      677
+     ],
+     "rong": 392,
+     "cao": 529,
+     "diem_anh": 104289,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      852,
+      129,
+      1302,
+      677
+     ],
+     "chan": [
+      1046.0,
+      677
+     ],
+     "rong": 450,
+     "cao": 548,
+     "diem_anh": 105854,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      1293,
+      188,
+      1738,
+      677
+     ],
+     "chan": [
+      1489.5,
+      677
+     ],
+     "rong": 445,
+     "cao": 489,
+     "diem_anh": 96876,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1809,
+      109,
+      2162,
+      677
+     ],
+     "chan": [
+      1985.0,
+      677
+     ],
+     "rong": 353,
+     "cao": 568,
+     "diem_anh": 105243,
+     "nguon": "tu-dong",
+     "ghi_chu": []
+    }
+   ]
+  }
+ ]
+}

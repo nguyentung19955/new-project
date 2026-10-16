@@ -100,9 +100,19 @@ DONG = [
     # 16/10 (docs/review/ke-hoach-cai-thien/vk-khop-tay/bao-cao-2.md): chạy HAI TAY ôm cán — game dùng khi chạy cầm thương / búa
     # (hàng chay2tay_thuong, chay2tay_bua; tắt ?chay2tay=0). Chỉ có ảnh bộ ninja → các bộ khác không có hàng này (game giữ hàng chạy cũ).
     ('chay2tay', '03-chay-2tay', 0.6, True),
+    # HÀNG MỚI 16/10 (docs/review/ke-hoach-cai-thien/hang-moi-16-10/bao-cao.md): chủ game gen lại đứng thở 8 khung, lộn 6, trúng đòn 4
+    # (ảnh docs/anh-goc/cu-ti-hang-moi-16-10/, cắt bằng cat-diem-anh.py vào moi16/<tên>-gif/). Khoá "<hàng>~16": game/js/zed_moi.js
+    # dùng thay hàng cũ cùng tên (cả các hàng cầm vũ khí dung~16_<loại> → dung_<loại>); ?hangcu=1 về hàng cũ. Chỉ bộ ninja.
+    # Kiếm 1 / kiếm 2 mới KHÔNG dùng (đổi tay: tay phải chống hông, tay trái vung), kiếm 3 gen hỏng — xem báo cáo.
+    ('dung~16', '01-dung-8k', 1.0, True), ('lon~16', '04-lon-6k', 0.27, False), ('trung~16', '05-trung-don-4k', 0.2, False),
 ]
-CHI_NINJA = {'03-chay-2tay'}   # hàng chỉ có ảnh bộ ninja: dung_bo bỏ qua
-NEO_DAU = ('dung', 'di', 'chay', 'chay2tay')
+CHI_NINJA = {'03-chay-2tay', '01-dung-8k', '04-lon-6k', '05-trung-don-4k'}   # hàng chỉ có ảnh bộ ninja: dung_bo bỏ qua
+MOI16 = os.path.join(DAY, 'moi16')
+GOC_RIENG = {t: os.path.join(MOI16, t + '-gif') for t in ('01-dung-8k', '04-lon-6k', '05-trung-don-4k')}
+# Co theo CHIỀU CAO thay vì cỡ đầu (16/10): tóc bay của ảnh mới làm đo đầu sai (trúng đòn đo đầu to hơn 15% → người co nhỏ hơn
+# đứng 7 điểm ảnh ô 96). Các khung ghi ở đây (đếm từ 0, tư thế đứng thẳng) co cho cao bằng trung vị hàng dung~16.
+R_CAO = {'04-lon-6k': [5], '05-trung-don-4k': [2, 3]}
+NEO_DAU = ('dung', 'di', 'chay', 'chay2tay', 'dung~16')
 DAU_X = 49  # hoành độ tâm đầu trong ô 96 cho các hàng NEO_DAU
 VK = [('kiem', 'vk-kiem-moi'), ('thuong', 'vk-thuong'), ('bua', 'vk-bua'), ('phitieu', 'vk-phi-tieu')]
 VK_THU_MUC = dict((b, a) for a, b in VK)
@@ -216,6 +226,12 @@ def dung_than(dong, neo_all, s, vk_cua, neo_cua, neo_nam=None, r0=28):
     dau = {thu: co_dau_hang(fr) for k, thu, gi, lap, fr in dong}
     dau_dung = dau[dong[0][1]]
     r_hang = {thu: math.sqrt(dau_dung[0] / d[0] * dau_dung[1] / d[1]) for thu, d in dau.items()}
+    fr_cua = {thu: fr for k, thu, gi, lap, fr in dong}
+    if '01-dung-8k' in fr_cua:  # R_CAO: co theo chiều cao khung đứng thẳng = cao trung vị hàng đứng mới (sau co)
+        h16 = float(np.median([f['bb'][3] - f['bb'][1] for f in fr_cua['01-dung-8k']])) * r_hang['01-dung-8k']
+        for thu, ks in R_CAO.items():
+            if thu in fr_cua:
+                r_hang[thu] = h16 / float(np.median([fr_cua[thu][i]['bb'][3] - fr_cua[thu][i]['bb'][1] for i in ks]))
     so_tay = sum((1 if thu in neo_all else 0) + len(neo_cam(neo_all, thu)) for k, thu, gi, lap, fr in dong) * (2 if neo_nam else 1)
     cot = max(len(fr) for *_, fr in dong)
     tam = Image.new('RGBA', (cot * O, (len(dong) + so_tay) * O), (0, 0, 0, 0))
@@ -400,7 +416,7 @@ def xem_cam_vk(p, xem, dt, vk_meta, tam_vk, nhan='ninja'):
 
 def main():
     neo_all = json.load(open(NEO, encoding='utf-8'))
-    dong = [(k, thu, gi, lap, doc_dong(thu)) for k, thu, gi, lap in DONG]
+    dong = [(k, thu, gi, lap, doc_dong(thu, GOC_RIENG.get(thu))) for k, thu, gi, lap in DONG]
     H_dung = float(np.median([f['bb'][3] - f['bb'][1] for f in dong[0][4]]))
     s = CAO_96 / H_dung
     print('Chiều cao Zed đứng (nguồn): %.1f điểm ảnh → %d điểm ảnh ô 96; tỉ lệ co tấm đứng s = %.5f' % (H_dung, CAO_96, s))
