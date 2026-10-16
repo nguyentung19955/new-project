@@ -1,3 +1,5 @@
+> **ĐÃ BỎ (16/10, phiên 3):** báo cáo này làm trên Cu Tí CŨ (zed-v2-canonical.png). Mọi ảnh/JSON nhắc dưới đây đã xoá. Bản đúng (Cu Tí MỚI): xem `bao-cao-3.md` và `HUONG-DAN.md`.
+
 # Báo cáo phiên 2: khung que đo từ hàng chạy thật của Zed
 
 Tất cả nằm trong `docs/thu-modular/`. Sinh lại bằng `python3 docs/thu-modular/do-chay-that.py` (chạy khoảng 5 giây; dựng lại cả `kiem-tra.html`). Code game không đổi.

@@ -579,6 +579,10 @@ def main():
     c = nen_o(D0, 2, luoi=True); ve_que(c, J_o(D0['fr'][0]), 0, 0, 2, w=2); c.save(os.path.join(RA, 'que-dung-luoi.png'))
     # que chạy
     tam_o(D, S=1).save(os.path.join(RA, 'que-chay-12.png'))
+    # hàng Cu Tí chạy trơn, nền xanh #00FF00, cùng ô que (gửi kèm prompt gen)
+    hang = Image.new('RGB', (len(D['fr']) * D['W'], D['H']), (0, 255, 0))
+    for i, F in enumerate(D['fr']): hang.paste(F['im'], (i * D['W'] + F['off'][0], F['off'][1]), F['im'])
+    hang.save(os.path.join(RA, 'cu-ti-chay-12-hang.png'))
     tam_o(D, S=2, cot=6, luoi=True).save(os.path.join(RA, 'que-chay-12-luoi.png'))
     tam_o(D, S=2, cot=6, nen='that').save(os.path.join(RA, 'que-chay-12-chong-hinh.png'))
     tam_o(D, S=2, cot=6, nen='mo', so=True).save(os.path.join(RA, 'que-chay-12-chong-mo.png'))

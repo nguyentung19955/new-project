@@ -1,3 +1,5 @@
+> **ĐÃ BỎ (16/10, phiên 3):** báo cáo này làm trên Cu Tí CŨ (zed-v2-canonical.png). Mọi ảnh/JSON nhắc dưới đây đã xoá. Bản đúng (Cu Tí MỚI): xem `bao-cao-3.md` và `HUONG-DAN.md`.
+
 # Báo cáo: bộ thử mặc đồ modular (Zed)
 
 ## Đã làm
