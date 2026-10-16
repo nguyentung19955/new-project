@@ -129,7 +129,7 @@ def main():
                 + style + '\n</head>\n<body>\n' + markup + '\n<script>\n' + js + '</script>\n</body>\n</html>\n')
 
     # 15/10 soát mượt: tấm trước khi thay hàng (<mã>-muotcu, cờ ?anhmuotcu=1) chỉ có ở bản hai tệp (web) — bản một tệp giữ dưới trần 30 MB.
-    js = gom([t for t in custom if not t.get('muot_cua')], khai_truyen_mot(truyen) + khai_bia_mot(bia))
+    js = gom([t for t in custom if not t.get('muot_cua') and not t.get('net_cua')], khai_truyen_mot(truyen) + khai_bia_mot(bia))  # 17/10 do-net: tấm Cu Tí cũ (<mã>-netcu) cũng chỉ ở bản hai tệp
     script = '<script>\n' + js + '</script>'
     full = trang(js)
     frag = title + '\n' + link + '\n' + style + '\n' + markup + '\n' + script + '\n'
@@ -516,7 +516,7 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
             tot = len(w)
             tong_webp += len(w)
             so_webp += 1
-        if t.get('muot_cua'):  # 15/10 soát mượt: tấm trước khi thay hàng (<mã>-muotcu) chỉ tải khi ?anhmuotcu=1
+        if t.get('muot_cua') or t.get('net_cua'):  # 17/10 do-net: tấm Cu Tí cũ <mã>-netcu (?netcu=1) cũng vậy. 15/10 soát mượt: tấm trước khi thay hàng (<mã>-muotcu) chỉ tải khi ?anhmuotcu=1
             cu_n += 1
             cu_tot += tot
             cu_png += len(png)
@@ -539,6 +539,16 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
         bang[nhom][0] += 1
         bang[nhom][1] += tot
         bang[nhom][2] += len(png)
+    # 17/10 do-net: bản to ×1,2 của tấm Cu Tí ("tam_to", js/zed_moi.js tải khi vẽ Cu Tí trong trận lần đầu) → ảnh rời riêng, đường dẫn thay chuỗi base64
+    for t in ds:
+        if isinstance(t.get('tam_to'), str) and t['tam_to'].startswith('data:image/png;base64,'):
+            png = base64.b64decode(t['tam_to'].split(',', 1)[1])
+            ten = '%s-to.%s' % (t['ma'], hashlib.sha256(png).hexdigest()[:10])
+            with open(os.path.join(thu, ten + '.png'), 'wb') as f:
+                f.write(png)
+            t['tam_to'] = THU_MUC_ANH + '/' + ten + '.png'
+            if not t.get('net_cua'):
+                tong_tot += len(png); tong_png += len(png)  # người chơi tải (khi vào trận lần đầu), không tính vào "lõi" tải trước
     khai = ('// ===== ảnh rời (tải nhanh 12/10): ảnh nằm ở thư mục anh/ cạnh trang, js/sprite_custom.js tải theo ưu tiên =====\n'
             '(window.G = window.G || {}).ANH_ROI = ' + json.dumps({'so': len(vt), 'webp': so_webp}) + ';\n')
     bang_tr, tr_tai, tr_jpg = chep_truyen(truyen or {}, thu)
@@ -591,7 +601,7 @@ TOOL_GAME_JS = ['js/ngon_ngu.js', 'js/data.js', 'js/art.js', 'js/weapon_art.js',
 TOOL_JS = ['xu-ly-anh.js', 'khung.js', 'tu-doan.js', 'do.js', 'giao-dien.js']
 RUNTIME_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'vung', 'thay_cho', 'tam', 'khung_rong', 'khung_cao', 'goc', 'rong', 'cao', 'bong', 'dong_tac',
                 'anh', 'vu_khi', 'trang_phuc', 'vat_pham', 'dung_yen', 'nhun', 'nhun_buoc', 'neo', 'khoac_do', 'cu',
-                'net', 'nhan_vat', 'diem', 'diem_theo', 'cap', 'can_tam', 'muot_cua', 'muot', 'bo_va', 'vung_mat')  # vung_mat (15/10 sua-lang-npc): ô mặt người làng ghi tay cho dải lối tắt. can_tam (14/10 trum-chet-pha3): độ dời ngang từng khung để tâm thân trùm trùng điểm neo. net: ảnh gấp net lần (thiếu là game đọc thành 1 → hình to gấp đôi, khung bị cắt)
+                'net', 'nhan_vat', 'diem', 'diem_theo', 'cap', 'can_tam', 'muot_cua', 'muot', 'bo_va', 'vung_mat', 'net_cua', 'net_moi')  # net_cua, net_moi (17/10 do-net): tấm cũ trước khi dựng lại cho nét (?netcu=1) / tấm mới. vung_mat (15/10 sua-lang-npc): ô mặt người làng ghi tay cho dải lối tắt. can_tam (14/10 trum-chet-pha3): độ dời ngang từng khung để tâm thân trùm trùng điểm neo. net: ảnh gấp net lần (thiếu là game đọc thành 1 → hình to gấp đôi, khung bị cắt)
 HU_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'tam', 'khung_rong', 'khung_cao', 'goc', 'so', 'giay', 'lap', 'xoay', 'co', 'tron', 'net', 'vung', 'ban_kinh', 'det')  # ban_kinh, det (vẽ tay 6–7): vòng sóng hu-vong-song; hiệu ứng ảnh AI (js/fx_anh.js); vung (15/10): tải theo vùng (vung_rieng)
 GD_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'anh', 'net', 'vien', 'lap_canh')  # lap_canh (14/10): cạnh + lòng 9 mảnh lặp thay vì kéo giãn. Ảnh giao diện gd-<tên> (bản đồ, nút; js/sprite_custom.js → SC.gd, js/minimap.js)
 DO_LOAI = ('vat-pham',)  # đồ: một ảnh đứng yên (đợt 2: bỏ vu-khi, trang-phuc)

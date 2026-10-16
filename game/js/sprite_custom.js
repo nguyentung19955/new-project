@@ -104,6 +104,7 @@
   // 15/10 soát mượt (ảnh gen P1–P4, P6, docs/anh-goc/soat-muot/bao-cao.md): 7 tấm (Cá Nóc Chúa, Nhím Biển, Nhím Gai Độc, Heo Nanh Dài, Hổ Lửa pha 2,
   // Nấm Chúa pha 2, Hồ Tinh) thay một hàng bằng ảnh gen mới; tấm có mục "muot". Tấm trước đó giữ ở <mã>-muotcu.sprite.json (mục "muot_cua": <mã>):
   // bình thường KHÔNG nạp. Cờ ?anhmuotcu=1 (G.ANH_MUOT_CU): nạp tấm đó dưới đúng mã, bỏ tấm mới (các vá tạm Phiên 1 tự chạy lại vì tấm cũ không có "bo_va").
+  if (G.NET_CU === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]netcu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.NET_CU = cu; }
   if (G.ANH_MUOT_CU === undefined) {
     let cu = false;
     try { cu = typeof location !== 'undefined' && /[?&]anhmuotcu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; }
@@ -155,6 +156,12 @@
         if (!G.ANH_MUOT_CU) return null;
         tep = Object.assign({}, tep, { ma: tep.muot_cua });
       } else if (G.ANH_MUOT_CU && tep.muot) return null; // ?anhmuotcu=1: bỏ tấm đã thay hàng
+      // 17/10 do-net: tấm Cu Tí trước khi dựng lại cho nét (<mã>-netcu, mục "net_cua") chỉ có ở bản hai tệp, chỉ nạp khi ?netcu=1
+      // (bản một tệp không có → ?netcu=1 chỉ về cách vẽ cũ, js/zed_moi.js). Có tấm cũ thì bỏ tấm mới.
+      if (typeof tep.net_cua === 'string') {
+        if (!G.NET_CU) return null;
+        tep = Object.assign({}, tep, { ma: tep.net_cua });
+      } else if (G.NET_CU && tep.net_moi && Array.isArray(G.customSpriteData) && G.customSpriteData.some((t) => t && t.net_cua === tep.ma)) return null;
       if (tep.doi_tuong === 'em-be' && !EM_BE_MA.test(tep.ma)) throw new Error('đã bỏ ở đợt 2: em bé chỉ còn em-be-hunter, em-be-healer, em-be-wrestler');
       if (DO_LOAI[tep.doi_tuong]) return themDo(tep); // vật phẩm
       if (tep.doi_tuong === 'giao-dien') return themGd(tep); // ảnh giao diện (gd-<tên>): biểu tượng, ô phòng, khung bản đồ
@@ -389,6 +396,51 @@
     } catch (e) { sp.dang = null; }
     return sp.dang;
   };
+  // 17/10 do-net (docs/review/ke-hoach-cai-thien/do-net/bao-cao.md): thu nhỏ sẵn một vùng ảnh về đúng cỡ vẽ khi game vẽ ảnh NHỎ hơn ảnh
+  // (vũ khí Cu Tí, phi tiêu, trùm thu nhỏ như Hồ Tinh pha 3 ×0,72). rho = điểm ảnh thật / điểm ảnh nguồn (< 1). Mỗi điểm mới: đục nếu ≥ nửa ô
+  // nguồn đục, màu = màu CÓ THẬT trong ô gần màu trung bình nhất (như do-net/cong-cu/thu_net.py) → không pha màu, không bỏ điểm ảnh như phép
+  // thu "lấy điểm gần nhất" của trình duyệt (lởm chởm, nhấp nháy). Nhớ lại theo ảnh + vùng + cỡ. null: không cần / ?netcu=1.
+  const NHO_ANH = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  SC.nhoAnh = function (img, x, y, w, h, rho) {
+    if (G.NET_CU || !NHO_ANH || !(rho > 0) || rho > 0.95 || typeof document === 'undefined' || !img) return null;
+    rho = Math.max(0.05, Math.round(rho * 50) / 50);
+    let m = NHO_ANH.get(img); if (!m) NHO_ANH.set(img, (m = new Map()));
+    const key = x + ',' + y + ',' + w + ',' + h + ',' + rho;
+    if (m.has(key)) return m.get(key);
+    if (m.size >= 240) return null; // cỡ vẽ đổi liên tục (phóng to/nhỏ dần): thôi thu sẵn, vẽ như cũ — không phình bộ nhớ
+    let out = null;
+    try {
+      const W = Math.max(1, Math.round(w * rho)), H = Math.max(1, Math.round(h * rho)), sxs = w / W, sys = h / H;
+      const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+      const g = cv.getContext('2d', { willReadFrequently: true }); g.drawImage(img, x, y, w, h, 0, 0, w, h);
+      const d = g.getImageData(0, 0, w, h).data;
+      const o = document.createElement('canvas'); o.width = W; o.height = H;
+      const og = o.getContext('2d'), od = og.createImageData(W, H), p = od.data;
+      for (let Y = 0; Y < H; Y++) for (let X = 0; X < W; X++) {
+        const xa = X * sxs, xb = xa + sxs, ya = Y * sys, yb = ya + sys;
+        let r = 0, gg = 0, b = 0, ww = 0, tong = 0, al = 0;
+        for (let yy = Math.floor(ya); yy < Math.ceil(yb) && yy < h; yy++) for (let xx = Math.floor(xa); xx < Math.ceil(xb) && xx < w; xx++) {
+          const wt = (Math.min(xb, xx + 1) - Math.max(xa, xx)) * (Math.min(yb, yy + 1) - Math.max(ya, yy)), i = (yy * w + xx) * 4;
+          tong += wt; al += wt * d[i + 3] / 255;
+          if (d[i + 3] >= 128) { r += d[i] * wt; gg += d[i + 1] * wt; b += d[i + 2] * wt; ww += wt; }
+        }
+        if (!(ww > 0) || al / tong < 0.5) continue;
+        r /= ww; gg /= ww; b /= ww;
+        let best = -1, bd = 1e12;
+        for (let yy = Math.floor(ya); yy < Math.ceil(yb) && yy < h; yy++) for (let xx = Math.floor(xa); xx < Math.ceil(xb) && xx < w; xx++) {
+          const i = (yy * w + xx) * 4; if (d[i + 3] < 128) continue;
+          const e = (d[i] - r) * (d[i] - r) + (d[i + 1] - gg) * (d[i + 1] - gg) + (d[i + 2] - b) * (d[i + 2] - b);
+          if (e < bd) { bd = e; best = i; }
+        }
+        const k = (Y * W + X) * 4; p[k] = d[best]; p[k + 1] = d[best + 1]; p[k + 2] = d[best + 2]; p[k + 3] = 255;
+      }
+      og.putImageData(od, 0, 0);
+      out = o;
+    } catch (e) { out = null; }
+    m.set(key, out);
+    return out;
+  };
+
   // Vẽ một khung tại gốc toạ độ hiện tại (gốc = điểm giữa chân). face < 0: lật sang trái (hình gốc quay sang phải).
   // o: { alpha, flash (0..1 chớp trắng), tint: [màu, độ đậm], dy, than: { mau, muc, suong } (nhuộm thân theo trạng thái, Đợt 7) }
   SC.veKhung = function (c, sp, ten, i, face, o) {
@@ -410,7 +462,10 @@
       for (let k = 0; k < 4; k++) veNhuom(c, sp, '#fff6e0', sx, sy, sw, sh, dx + (k === 0 ? -1 : k === 1 ? 1 : 0), dy + (k === 2 ? -1 : k === 3 ? 1 : 0), sp.fw, sp.fh);
       c.globalAlpha = a1;
     }
+    let nho = null;
+    if (!th && !G.NET_CU) { try { const T = c.getTransform(), rho = Math.hypot(T.a, T.b) * sp.fw / sw; if (rho < 0.95) nho = SC.nhoAnh(sp.img, sx, sy, sw, sh, rho); } catch (e) { nho = null; } }
     if (th) c.drawImage(th, 0, 0, sw, sh, dx, dy, sp.fw, sp.fh);
+    else if (nho) c.drawImage(nho, 0, 0, nho.width, nho.height, dx, dy, sp.fw, sp.fh); // do-net: trùm thu nhỏ (Hồ Tinh pha 3)
     else c.drawImage(sp.img, sx, sy, sw, sh, dx, dy, sp.fw, sp.fh);
     if (phu > 0) { c.globalAlpha = a1 * phu; veNhuom(c, sp, '#ffffff', sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); }
     if (o.tint && o.tint[1] > 0) { c.globalAlpha = a1 * clamp(o.tint[1], 0, 1); veNhuom(c, sp, o.tint[0], sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); }
@@ -1684,7 +1739,7 @@
       if (!t || typeof src !== 'string') return false;
       theoSrc.delete(src);
       const u = t._u;
-      const ma = G.ANH_MUOT_CU && typeof t.muot_cua === 'string' ? t.muot_cua : t.ma; // ?anhmuotcu=1: tấm cũ mang mã con quái (xem G.ANH_MUOT_CU)
+      const ma = G.ANH_MUOT_CU && typeof t.muot_cua === 'string' ? t.muot_cua : G.NET_CU && typeof t.net_cua === 'string' ? t.net_cua : t.ma; // ?anhmuotcu=1 / ?netcu=1: tấm cũ mang mã gốc
       const it = { img, ma, png: src, webp: typeof t.webp === 'string' && /^anh\/[A-Za-z0-9_.-]{1,90}\.webp$/.test(t.webp) ? t.webp : null,
         bac: u[0] | 0, co: +u[1] || 0, vung: u[2] | 0, trum: !!u[3], khoa: !!(G.TAI_VUNG && u[4] && (u[2] | 0) >= 0 && (u[2] | 0) <= 3), can: 0, lan: 0, xong: img.onload, hong: img.onerror, dangTai: false, thap: false, ve: false, boWebp: false };
       img.onload = null; img.onerror = null;
