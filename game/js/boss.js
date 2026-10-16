@@ -65,6 +65,8 @@
     if (kind === 'mini') Object.assign(b, { role: 'mini' });
     b.hp = b.maxhp;
     setWeak(b);
+    // Vùng 4 phiên 3B (js/thuong_luong.js): Thuồng Luồng — sân bãi đá giữa sông (thu hẹp chỗ đứng), đầu ở mép phải, hệ theo pha (lớp kháng + điểm yếu).
+    if (kind === 'thuong' && G.thuongLuong) G.thuongLuong.tao(b, w);
     // Chống đánh xa: đứng xa trùm quá 120 thì tên chỉ còn 60% sức (js/combat.js G.damage).
     b.rangedShield = (P) => Math.hypot(P.x - b.x, P.y - b.y) > 120;
     if (kind === 'ho') {
@@ -278,8 +280,9 @@
       } },
     },
   };
-  // Vùng 4 (bước 3 phiên 1, HÌNH TẠM): Thuồng Luồng chưa có chiêu riêng → dùng chung bộ chiêu của Ngư Tinh (cùng đối tượng, nên chiêu mới
-  // js/chieu_trum.js thay cho 'ngu' cũng áp vào). Phiên 3B / 3C thay bằng SK.thuong riêng (KE-HOACH.md mục 2.4).
+  // Vùng 4 (bước 3 phiên 1, HÌNH TẠM): Thuồng Luồng mượn bộ chiêu Ngư Tinh. Phiên 3B: js/thuong_luong.js (nạp sau js/chieu_trum.js) thay
+  // G.bossSK.thuong bằng bộ chiêu riêng pha 1 (Quật đuôi, Phun nước đen, Vòng thân) + chọn chiêu theo pha (S.chon); phiên 3C thêm pha 2, 3.
+  // Dòng dưới chỉ còn là đường lui khi tắt ?tlrieng=0 (G.TL_RIENG = false): Thuồng Luồng dùng chiêu Ngư Tinh như phiên 1.
   if (G.VUNG4 && !SK.thuong) SK.thuong = SK.ngu;
   G.bossSK = SK; // chỉ để bài kiểm tra đọc thời gian báo trước tối thiểu (tele)
   // Mệt sau chiêu lớn: choáng một lúc, nhận thêm sát thương (cơ hội phản công)
@@ -298,9 +301,10 @@
   const chamOf = (b) => (G.SKILL_BO_TRUM && G.boSk && G.boSk.cham ? G.boSk.cham(b) : 1);
   function thinkBig(b) {
     const w = W(), P = dichOf(b, w.P), ph = b.phase, S = SK[b.kind];
-    const opts = ['c1', 'c2', 'c3'];
-    if (ph >= 1) opts.push('c4');
-    if (ph >= 2) opts.push('c5');
+    // S.chon (nếu có, vd Thuồng Luồng js/thuong_luong.js): bộ chiêu được dùng theo pha; không có thì c1-c3, pha 2 thêm c4, pha 3 thêm c5 như cũ.
+    const opts = S.chon ? S.chon(b, ph) : ['c1', 'c2', 'c3'];
+    if (!S.chon && ph >= 1) opts.push('c4');
+    if (!S.chon && ph >= 2) opts.push('c5');
     // Chống áp sát: em bé đứng sát thì trùm hay dùng chiêu đánh quanh mình hơn
     if (has(b, 'antiMelee') && Math.hypot(P.x - b.x, P.y - b.y) < 75) for (const k of opts.slice()) if (S[k].near) opts.push(k, k);
     const k = choose(b, opts), sk = S[k] || S.c1;
@@ -522,6 +526,7 @@
     const w = W(), P = w.P;
     b.moving = false;
     if (b.busy > 0 || b.st.stun > 0 || b.st.root > 0 || b.st.frozen > 0) return;
+    if (b.kind === 'thuong' && G.thuongLuong && G.thuongLuong.di(b, dt)) return; // Thuồng Luồng: đầu ở mép phải, chỉ trườn dọc theo em bé
     const dx = P.x - b.x, dy = P.y - b.y, d = Math.hypot(dx, dy) || 0.01;
     if (Math.abs(dx) > 4) b.face = dx > 0 ? 1 : -1;
     b.dirA = b.face > 0 ? 0 : PI;
@@ -588,6 +593,7 @@
         if (G.DO_DOC_TRAN === true && G.docTran && G.docTran.bao) G.docTran.bao(G.t(mt), '#ffb0a0', 2.6);
         else { w.banner.s += ' — ' + G.t(mt); w.banner.t = 2.6; }
       }
+      if (b.doiPha) b.doiPha(b, ph); // trùm đổi hệ theo pha (Thuồng Luồng, js/thuong_luong.js)
       G.sfx('gong');
     }
     for (const s of b.seq) s.t -= dt;
