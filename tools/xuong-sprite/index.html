@@ -13650,37 +13650,20 @@ MA._xong();
   }
 
   // ---------- 16/10 vẽ tay 6: ảnh thay dấu phòng, cột nắng, mũi tên cửa (chỉ khi đang chặn hình code) ----------
-  // Dấu phòng gd-dau-phong (ảnh phòng Bắt đầu, vòng ngoài ~R20 như ringMark cũ). Phòng khác DÙNG TẠM cùng ảnh: phóng theo bán kính vòng cũ
-  // (tinh anh 30, thử thách 34, lời nguyền 24, trùm 58) và nhuộm màu vòng cũ (ảnh đổi sang xám rồi nhân màu). Chưa có ảnh riêng: xem báo cáo.
-  const DAU = { start: [1, null, 0], elite: [1.5, '#ff8a3a', 0], challenge: [1.7, '#4ad0c0', 0], curse: [1.2, '#b46aff', -4], boss: [2.9, 'light', 0] };
-  const NHUOM_DAU = new Map();
-  function nhuomXam(a, mau) {
-    const key = a.ma + '|' + mau, o = NHUOM_DAU.get(key);
-    if (o && o.img === a.img) return o.cv;
-    let cv = a.img;
-    try {
-      const x = mk(a.pw, a.ph); x.drawImage(a.img, 0, 0);
-      const d = x.getImageData(0, 0, a.pw, a.ph), px = d.data, M = hex(mau);
-      for (let i = 0; i < px.length; i += 4) {
-        if (!px[i + 3]) continue;
-        const l = (px[i] * 0.3 + px[i + 1] * 0.59 + px[i + 2] * 0.11) / 255 * 1.35;
-        px[i] = Math.min(255, M[0] * l); px[i + 1] = Math.min(255, M[1] * l); px[i + 2] = Math.min(255, M[2] * l);
-      }
-      x.putImageData(d, 0, 0); cv = x.canvas;
-    } catch (e) { cv = a.img; }
-    NHUOM_DAU.set(key, { img: a.img, cv });
-    return cv;
-  }
+  // Dấu phòng: phòng Bắt đầu gd-dau-phong (vòng ngoài ~R20 như ringMark cũ, ảnh đã dẹt sẵn). Vẽ tay 7: mỗi loại phòng khác có ảnh riêng, màu gốc
+  // (không nhuộm): gd-dau-phong-tinh-anh (cam), -thu-thach (ngọc), -nguyen (tím), -trum (đỏ). Ảnh vẽ vòng TRÒN, rộng = 2·bán kính vòng cũ + 4
+  // (30 / 34 / 24 / 58) → kéo dẹt 0,82 như ringMark cũ. [mã, kéo dọc, lệch dọc, độ đậm]. Ảnh chưa tải: không vẽ gì (hình code đang chặn).
+  const DAU = { start: ['gd-dau-phong', 1, 0, 0.5], elite: ['gd-dau-phong-tinh-anh', 0.82, 0, 0.5], challenge: ['gd-dau-phong-thu-thach', 0.82, 0, 0.5],
+    curse: ['gd-dau-phong-nguyen', 0.82, -4, 0.5], boss: ['gd-dau-phong-trum', 0.82, 0, 0.45] };
   function dauPhongAnh(room) {
-    const g = room.g, k = DAU[g.type], a = k && gdA('gd-dau-phong');
+    const g = room.g, k = DAU[g.type], a = k && gdA(k[0]);
     if (!a) return;
-    const mau = k[1] === 'light' ? room.T.light : k[1], src = mau ? nhuomXam(a, mau) : a.img;
-    const w = a.rong * k[0], h = a.cao * k[0], cx0 = (g.fx0 + g.fx1) >> 1, cy0 = ((g.fy0 + g.fy1) >> 1) + k[2];
+    const w = a.rong, h = a.cao * k[1], cx0 = (g.fx0 + g.fx1) >> 1, cy0 = ((g.fy0 + g.fy1) >> 1) + k[2];
     const ga = c.globalAlpha, sm = c.imageSmoothingEnabled;
-    c.globalAlpha = ga * (mau ? 0.35 : 0.5); c.imageSmoothingEnabled = false; // ảnh nhuộm: lòng đá thành mảng màu đậm → nhạt hơn
-    try { c.drawImage(src, bam(cx0 - w / 2), bam(cy0 - h / 2), w, h); } finally { c.globalAlpha = ga; c.imageSmoothingEnabled = sm; }
+    c.globalAlpha = ga * k[3]; c.imageSmoothingEnabled = false;
+    try { c.drawImage(a.img, bam(cx0 - w / 2), bam(cy0 - h / 2), w, h); } finally { c.globalAlpha = ga; c.imageSmoothingEnabled = sm; }
   }
-  // Cột nắng gd-cot-nang-rung (ảnh ngả xuống bên PHẢI, cao 98 gồm lề; dải sáng từ hàng 1 tới 97, giữa dải ở đỉnh x = 4,8, ở đáy x = 43,8 —
+  // Cột nắng gd-cot-nang-rung (ảnh ngả xuống bên PHẢI, cao 98 gồm lề; dải sáng từ hàng 1 tới 97; vẽ tay 7 gen lại rộng, đứng hơn: giữa dải ở đỉnh x = 6,2, ở đáy x = 19,5 —
   // so-do.json của cong-cu/dung-dot6.py). Lật ngang cho ngả trái như cột cũ (shaft): đỉnh giữa dải đặt ở bx, nóc tường → vệt trên sàn (yt → yb).
   function cotNangAnh(o) {
     const a = gdA('gd-cot-nang-rung');
@@ -13689,7 +13672,7 @@ MA._xong();
     c.save();
     try {
       c.imageSmoothingEnabled = false;
-      c.translate(bam(o.bx + 4.8 * s), bam(o.yt - 1 * s)); c.scale(-1, 1);
+      c.translate(bam(o.bx + 6.2 * s), bam(o.yt - 1 * s)); c.scale(-1, 1);
       c.drawImage(a.img, 0, 0, w, h);
     } finally { c.restore(); c.imageSmoothingEnabled = sm; }
   }

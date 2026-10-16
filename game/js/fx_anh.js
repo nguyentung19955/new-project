@@ -29,6 +29,7 @@
         co: +tep.co > 0 ? clamp(+tep.co, 0.1, 8) : 1, cong: tep.tron === 'cong', img: null, ready: false, cot: 1,
         net: tep.net == null || !isFinite(+tep.net) ? 1 : clamp(Math.round(+tep.net), 1, 4),
         bk: Array.isArray(tep.ban_kinh) && tep.ban_kinh.every((v) => +v > 0) ? tep.ban_kinh.map(Number) : null, // 16/10 vẽ tay 6: bán kính vòng từng khung (hu-vong-song)
+        det: +tep.det > 0.05 && +tep.det <= 1 ? +tep.det : 1, // 16/10 vẽ tay 7: ảnh vòng đã dẹt sẵn (cao / rộng); 1 = vòng tròn
       };
       if (typeof Image !== 'undefined') {
         const img = new Image();

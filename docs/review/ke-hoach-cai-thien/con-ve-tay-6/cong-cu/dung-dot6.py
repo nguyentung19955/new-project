@@ -16,6 +16,13 @@ kiểm khớp từng điểm, đo neo. Khác đợt 3:
    'nang'  cột nắng: 3 dải theo kênh đỏ (> 220 lõi / > 150 / > 60) → màu #fff4b0, alpha 30% / 20% / 10% (prompt: 25% ba nấc).
    'phong' dấu phòng: như 'tach' nhưng điểm gần đặc (a > 0,8) giữ màu gốc (rêu xanh trên đá không bị tẩy xám); điểm mờ (mép) tách trộn.
  - Ảnh nhiều nấc alpha (MO): giữ 0 / 80 / 140 / 200 / 255 thay vì cắt 0 / 255.
+ - Còn vẽ tay 7 (16/10): 5 ảnh chủ game gen lại (../anh-gen-lai/, LAI) thay bản đợt 6:
+   gd-cot-nang-rung (cột rộng, đứng hơn), hu-hat-no (vẫn 5 khung trên lưới 6 ô → 'giay' co theo số khung thật để mỗi khung giữ nhịp cũ),
+   hu-khoi-tron (đủ 6 khung), hu-vong-song (vòng DẸT 5 khung có vạch đen dọc chia ô → VACH: xoá các cột gần như toàn đen ±5 điểm ảnh,
+   và mọi điểm tối; ghi "det" = cao / rộng vòng để game kéo về tỉ lệ vòng cũ), gd-dau-phong-4-loai (4 vòng rỗng cam / ngọc / tím / đỏ, cắt
+   theo 4 ô đều thành gd-dau-phong-tinh-anh / -thu-thach / -nguyen / -trum, giữ màu gốc: khử 'vong' = 'phong' + alpha lấy thêm theo
+   khoảng cách tới màu nền, để mép vòng ngọc không thủng).
+   'nang' đợt 7: dải sáng theo kênh LAM (lõi > 165 / giữa > 125 / ngoài), chỉ điểm đỏ > 150 (nền đỏ ≈ 0 → không viền xanh lục).
  - Ảnh gd-* ghi dạng "giao-dien" (js/sprite_custom.js themGd: một ảnh tĩnh); gd-mui-ten-cua 2 khung đặt cạnh nhau, ghi thêm "so": 2,
    "khung_rong" (room_art.js tự cắt khung).
 """
@@ -26,6 +33,9 @@ from scipy import ndimage
 
 DAY = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../../../..'))
 GOC = os.path.join(DAY, 'docs/review/ke-hoach-cai-thien/con-ve-tay-5/anh-gen')
+LAI_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'anh-gen-lai')
+LAI = {'gd-cot-nang-rung', 'hu-hat-no', 'hu-khoi-tron', 'hu-vong-song', 'gd-dau-phong-4-loai'}  # vẽ tay 7: ảnh gen lại
+VACH = {'hu-vong-song'}  # ảnh có vạch đen dọc chia ô
 GHI = '--ghi' in sys.argv
 RA = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ra6'); os.makedirs(RA, exist_ok=True)
 N = 2
@@ -33,7 +43,7 @@ NEN = np.array([3, 248, 3])
 # mã, tên, số ô lưới, khử, neo, cỡ (('hop', W, H): hộp chung vừa W×H điểm game), giây, lặp, xoay, đốm lẻ tối thiểu
 HU = [
     ('hu-bong-chan', 'Bóng dưới chân (Zed, quái, trùm, vật; game co theo cỡ thân)', 1, 'bong', 'giua', ('hop', 32, 10), 1.0, True, False, 40),
-    ('hu-vong-song', 'Vòng sóng lan trên sàn (trắng → nhuộm; game kéo dẹt theo vòng cũ, "ban_kinh" = bán kính từng khung)', 5, 'tach', 'giua', ('hop', 64, 64), 0.3, False, False, 6),
+    ('hu-vong-song', 'Vòng sóng lan trên sàn (trắng → nhuộm; game kéo dẹt theo vòng cũ, "ban_kinh" = bán kính từng khung)', 5, 'tach', 'giua', ('hop', 64, 32), 0.3, False, False, 6),
     ('hu-giot-he-fire', 'Lưỡi lửa dọc nhát chém vũ khí hệ Lửa (thay tongue)', 5, 'tach', 'giua', ('hop', 40, 24), 0.3, False, False, 6),
     ('hu-giot-he-ice', 'Mảnh băng dọc nhát chém vũ khí hệ Băng (thay drawIce)', 5, 'tach', 'giua', ('hop', 40, 24), 0.3, False, False, 6),
     ('hu-giot-he-poison', 'Giọt độc dọc nhát chém vũ khí hệ Độc (thay drawDrips)', 5, 'chat', 'giua', ('hop', 40, 24), 0.3, False, False, 6),
@@ -50,8 +60,22 @@ GD = [
     ('gd-dau-phong', 'Dấu phòng Bắt đầu trên sàn (phòng khác dùng tạm, nhuộm màu)', 1, 'phong', ('rong', 44)),
     ('gd-mui-ten-cua', 'Mũi tên nhún chỉ cửa đã mở (2 khung cạnh nhau, chĩa lên)', 2, 'tach', ('rong', 9)),
     ('gd-cot-nang-rung', 'Cột nắng chéo Rừng già (ngả xuống bên phải; game lật cho ngả trái như cột cũ)', 1, 'nang', ('cao', 96)),
+    # vẽ tay 7: 4 vòng rỗng (ảnh tròn; game kéo dẹt 0,82 như ringMark cũ). Rộng = 2·bán kính vòng cũ + 4 (30 / 34 / 24 / 58)
+    ('gd-dau-phong-tinh-anh', 'Dấu phòng tinh anh (vòng rỗng cam)', 1, 'vong', ('rong', 64), 'gd-dau-phong-4-loai', (0, 4)),
+    ('gd-dau-phong-thu-thach', 'Dấu phòng thử thách (vòng rỗng ngọc)', 1, 'vong', ('rong', 72), 'gd-dau-phong-4-loai', (1, 4)),
+    ('gd-dau-phong-nguyen', 'Dấu phòng lời nguyền (vòng rỗng tím)', 1, 'vong', ('rong', 52), 'gd-dau-phong-4-loai', (2, 4)),
+    ('gd-dau-phong-trum', 'Dấu phòng trùm (vòng rỗng đỏ)', 1, 'vong', ('rong', 120), 'gd-dau-phong-4-loai', (3, 4)),
 ]
 MO = {'hu-bong-chan', 'hu-moi-truong-rung-domdom', 'gd-cot-nang-rung', 'gd-dau-phong'}
+
+
+def xoa_vach(rgb):
+    """Vạch đen dọc chia ô: cột có > 100 điểm tối (max kênh < 100) → tô màu nền cột đó ±5 điểm ảnh (cả viền trộn)."""
+    rgb = rgb.copy(); toi = rgb.max(2) < 100; col = toi.sum(0)
+    for x in np.nonzero(col > 100)[0]:
+        rgb[:, max(0, x - 5):x + 6] = NEN
+    rgb[rgb.max(2) < 100] = NEN  # điểm tối lẻ còn sót
+    return rgb
 
 
 def khu_nen(rgb, khu, toi_thieu):
@@ -63,20 +87,22 @@ def khu_nen(rgb, khu, toi_thieu):
         f = np.broadcast_to(np.array([20, 24, 46], np.float32), f.shape).copy()
         return np.dstack([f, a * 255]).astype(np.float32)
     if khu == 'nang':
-        a = np.where(r > 220, 0.30, np.where(r > 150, 0.20, np.where(r > 60, 0.10, 0.0))).astype(np.float32)
+        a = np.where(r > 150, np.where(b > 165, 0.30, np.where(b > 125, 0.20, 0.10)), 0.0).astype(np.float32)
         f = np.broadcast_to(np.array([255, 244, 176], np.float32), f.shape).copy()
         return np.dstack([f, a * 255]).astype(np.float32)
     if khu == 'chat':
         d = np.sqrt(((f - NEN) ** 2).sum(2))
         a = (~((d < 60) | ((g > 225) & (r < 120) & (b < 80)))).astype(np.float32)
     else:
-        if khu in ('tach', 'phong'):
+        if khu in ('tach', 'phong', 'vong'):
             a = np.clip(1 - (g - mx) / 245.0, 0, 1)
+            if khu == 'vong':  # vòng ngọc (lục + lam): mép trộn nền có lục − max cao → thủng; lấy thêm theo khoảng cách tới màu nền
+                a = np.maximum(a, np.clip(np.sqrt(((f - NEN) ** 2).sum(2)) / 180.0, 0, 1))
         else:  # 'sang'
             a = np.clip((r - 8) / 232.0, 0, 1)
         aa = np.maximum(a, 1e-3)[..., None]
         f2 = np.where(a[..., None] > 0, (f - (1 - a[..., None]) * NEN) / aa, 0)
-        if khu == 'phong':
+        if khu in ('phong', 'vong'):
             f2 = np.where((a > 0.8)[..., None], f, f2)
         f = f2
     vat = a > 0.35
@@ -147,8 +173,13 @@ def png(sh, so_mau=128):
     return buf.getvalue()
 
 
-def dung(ma, so, khu, neo, toi_thieu, co):
-    a = khu_nen(np.array(Image.open(os.path.join(GOC, ma + '.png')).convert('RGB')), khu, toi_thieu)
+def dung(ma, so, khu, neo, toi_thieu, co, nguon=None, cat=None):
+    nguon = nguon or ma
+    rgb = np.array(Image.open(os.path.join(LAI_DIR if nguon in LAI else GOC, nguon + '.png')).convert('RGB'))
+    if cat:  # một ô trong ảnh nhiều vật (ô đều theo bề ngang)
+        cw = rgb.shape[1] / cat[1]; rgb = rgb[:, int(cat[0] * cw):int((cat[0] + 1) * cw)]
+    if ma in VACH: rgb = xoa_vach(rgb)
+    a = khu_nen(rgb, khu, toi_thieu)
     ks = tach_luoi(a, so)
     # hộp hợp của các khung theo gốc ô đều
     U = [min(k[1][0] - k[2] for k in ks), min(k[1][1] for k in ks), max(k[1][2] - k[2] for k in ks), max(k[1][3] for k in ks)]
@@ -176,7 +207,7 @@ def dung(ma, so, khu, neo, toi_thieu, co):
         sub = sh[Y0:Y0 + b.shape[0], X0:X0 + b.shape[1]]; sub[:] = np.where(b[..., 3:4] > 0, b, sub)
     for i in range(len(kh)):
         assert sh[:, i * FW * N:(i + 1) * FW * N, 3].any(), (ma, 'khung rỗng', i + 1)
-    return sh, FW, FH, GX, GY, len(kh), z0, ks, AX
+    return sh, FW, FH, GX, GY, len(kh), z0, ks, AX, len(ks) < so
 
 
 def ban_kinh(sh, FW, FH, GX, so):  # vòng sóng: nửa bề rộng (điểm game) từng khung, đo từ điểm neo
@@ -189,21 +220,28 @@ def ban_kinh(sh, FW, FH, GX, so):  # vòng sóng: nửa bề rộng (điểm gam
 
 so_do = {}
 for ma, ten, so, khu, neo, co, giay, lap, xoay, tt in HU:
-    sh, FW, FH, GX, GY, n, z0, ks, AX = dung(ma, so, khu, neo, tt, co)
+    sh, FW, FH, GX, GY, n, z0, ks, AX, thieu = dung(ma, so, khu, neo, tt, co)
+    if thieu and ma in LAI: giay = round(giay * n / so, 2)  # thiếu khung cuối: giữ nhịp từng khung như prompt
     data = png(sh, 48 if ma in MO else 128)
     t = {'loai': 'linh-khi-sprite', 'phien_ban': 1, 'doi_tuong': 'hieu-ung', 'ma': ma, 'ten': ten, 'net': N, 'khung_rong': FW, 'khung_cao': FH,
          'goc': [GX, GY], 'so': n, 'giay': giay, 'lap': lap, 'xoay': xoay, 'co': 1, 'tron': 'thuong', 'thu': round(z0, 5),
          'tam': 'data:image/png;base64,' + base64.b64encode(data).decode()}
-    if ma == 'hu-vong-song': t['ban_kinh'] = ban_kinh(sh, FW, FH, GX, n)
+    if ma == 'hu-vong-song':
+        t['ban_kinh'] = ban_kinh(sh, FW, FH, GX, n)
+        hs = []
+        for i in range(n):
+            m = sh[:, i * FW * N:(i + 1) * FW * N, 3] > 0; ys = np.nonzero(m.any(1))[0]; xs = np.nonzero(m.any(0))[0]
+            hs.append((ys[-1] + 1 - ys[0]) / (xs[-1] + 1 - xs[0]))
+        t['det'] = round(float(np.mean(hs[1:])), 3)  # cao / rộng vòng (khung 1 nhỏ, nét dày: bỏ)
     if ma.startswith('hu-moi-truong-rung'): t['vung'] = 'rung'
     Image.fromarray(sh).save(os.path.join(RA, ma + '.png'))
     ra = os.path.join(DAY, 'game/art/custom', ma + '.sprite.json') if GHI else os.path.join(RA, ma + '.sprite.json')
     json.dump(t, open(ra, 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
     so_do[ma] = {'o': [FW, FH], 'goc': [GX, GY], 'so': n, 'thu': round(z0, 4), 'png': len(data), 'byte': os.path.getsize(ra)}
-    if 'ban_kinh' in t: so_do[ma]['ban_kinh'] = t['ban_kinh']
+    if 'ban_kinh' in t: so_do[ma]['ban_kinh'] = t['ban_kinh']; so_do[ma]['det'] = t['det']
     print(ma, so_do[ma])
-for ma, ten, so, khu, co in GD:
-    sh, FW, FH, GX, GY, n, z0, ks, AX = dung(ma, so, khu, 'giua', 40, co)
+for ma, ten, so, khu, co, *ng in GD:
+    sh, FW, FH, GX, GY, n, z0, ks, AX, _ = dung(ma, so, khu, 'giua', 40, co, *ng)
     data = png(sh, 48 if ma in MO else 128)
     t = {'loai': 'linh-khi-sprite', 'phien_ban': 1, 'ma': ma, 'ten': ten, 'doi_tuong': 'giao-dien', 'rong': FW * n, 'cao': FH, 'net': N,
          'anh': 'data:image/png;base64,' + base64.b64encode(data).decode()}

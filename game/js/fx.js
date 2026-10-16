@@ -437,13 +437,14 @@
   }
   // 16/10 vẽ tay 6: vòng sóng bằng ảnh hu-vong-song (5 khung vòng to dần và nhạt dần; "ban_kinh" = bán kính từng khung khi co 1).
   // Khung theo tiến độ k, co sao cho bán kính khung = bán kính vòng cũ r, kéo dẹt theo tỉ lệ ry / r của vòng cũ (vòng trên sàn), nhuộm màu vòng.
+  // Vẽ tay 7: ảnh gen lại đã dẹt sẵn ("det" = cao / rộng ≈ 0,4) → kéo dọc (ry / r) / det để ra đúng tỉ lệ vòng cũ.
   function vongAnh(c, x, y, r, ry, k, mau) {
     const FA = G.fxAnh, a = FA && FA.get('hu-vong-song');
     if (!a || !(r >= 1)) return !!a;
     const f = Math.min(a.so - 1, Math.floor(k * a.so)), rf = (a.bk && a.bk[f]) || a.fw / 2 - 1;
     c.save();
     try {
-      c.translate(x, y); c.scale(1, ry / r);
+      c.translate(x, y); c.scale(1, ry / r / (a.det || 1));
       FA.veK(c, 'hu-vong-song', 0, 0, f, 0, r / rf, false, 1, laHex(mau) ? mau : null);
     } finally { c.restore(); }
     return true;
