@@ -4,7 +4,100 @@ Làm theo yêu cầu chủ game 16/10 11:15. Thư mục mới `docs/thu-modular-
 
 **Mở thử:** `kiem-tra-rig.html` (1 tệp tự chứa, mở thẳng bằng trình duyệt) hoặc giải nén `rig-do-sau.zip`.
 
-## Tóm tắt cho chủ game
+## Ảnh thật độ phân giải cao (16/10, theo yêu cầu 11:16)
+
+Mở `kiem-tra-rig.html` (1,4 MB, đủ 12 khung ở mọi cỡ, không phải cắt bớt). Mặc định trang hiện **cạnh nhau 96 ↔ 384**, cùng kích thước trên màn hình. Nút **Cỡ: 48 / 96 / 192 / 384** để xem từng cỡ (2 cột: xoay liên tục / 8 hướng). Bảng **"Kiểm mọi cỡ"** tự chạy ở nền vài giây sau khi mở.
+
+### Nói thẳng
+
+- **Ảnh lớn đẹp hơn rõ.** Ở 384, mặt, tóc, đai đỏ, dép đều nét như ảnh gốc; giáp có viền tối, viền đồng, chữ V, hình khối rõ. Ở 96 (game hiện 48), giáp chỉ còn vài mảng màu.
+- **Giáp gen giữ chi tiết từ cỡ nào** (đo trên ảnh giáp đã thu, xem `soat/co-lon/luoi-12-khung-*.png`):
+
+| Cỡ nhân vật | Giáp cẳng tay / vai / ống chân / ngực (điểm ảnh) | Viền tối | Viền đồng | Chữ V | Đinh tán |
+|---|---|---|---|---|---|
+| 48 (game) | 4×2 … 7×7 | không | không | không | không |
+| 96 | 8×4, 8×8, 9×6, 13×13 | lấm tấm | thành mảng cam | không | không |
+| 192 | 16×9, 16×16, 18×12, 26×26 | có | có nhưng đứt đoạn | lờ mờ | không |
+| **384** | **31×17, 32×32, 37×26, 51×51** | **có, liền** | **có, liền** | **thấy rõ** | **vài đinh (1 điểm ảnh)** |
+| (thử 768) | 63×34 … | có | có | rõ | rõ (2–3 điểm ảnh) |
+
+  → **Từ 384 giáp gen mới "ra giáp"**. Đinh tán chỉ thật sự rõ ở khoảng 768 (ảnh gốc 4 mảnh rộng 360–500 điểm ảnh, một đinh ~11–20 điểm ảnh gốc ≈ 1 điểm ảnh ở 384). Ở 384 script phải "giữ tay" đinh: cẳng tay 3, ống chân 2 đinh; vai và ngực không giữ được đinh nào.
+- **Khớp sạch ở mọi cỡ** theo cách đo của R4 (bán kính nhân theo cỡ):
+
+| Cỡ · bộ | Khe r2 liên tục trước → sau | Khe r2 8 hướng | Khe r3 sau (quy về ô 96) LT / 8H | Thứ tự lượt đúng | Bám 2 đầu | Giãn > 15% |
+|---|---|---|---|---|---|---|
+| 96 · Máy vẽ | 116 → **0** | 117 → **0** | 79 / 90 | 12/12 | 12/12 | 0 (kẹp 47 lượt) |
+| 96 · Gen | 128 → **0** | 140 → **0** | 75 / 75 | 12/12 | 11/12 | 0 (kẹp 46) |
+| 192 · Gen | 570 → **0** | 586 → **0** | 108 / 112 | 12/12 | 11/12 | 0 (kẹp 45) |
+| 384 · Gen | 2317 → **0** | 2309 → **0** | 95 / 101 | 12/12 | 11/12 | 0 (kẹp 46) |
+
+  Khe r3 còn lại gần như toàn ở **gối** (384: gối trước 1278, gối sau 1333, khuỷu trước 443, vai trước 67 điểm ảnh, cộng 12 khung × 2 chế độ). Đây chủ yếu là ống quần to hơn chụp gối, không phải giáp bị hở. Chỗ bám hụt: khung 2 (192/384) hoặc khung 3 (96), chế độ 8 hướng, giáp ống chân trước lệch ~2 điểm ảnh ô 96 ở cổ chân. Chế độ liên tục không bị. Bảng đủ: `soat/co-lon/bang-khe-co-lon.md`.
+- **Chỗ chưa đẹp ở ảnh lớn (nhìn `soat/co-lon/can-canh-x3-384.png`):**
+  - Chụp khớp ở 384 thành **quả cầu đồng to, trơn** (20×20 điểm ảnh), nhìn như bóng gắn vào khớp, lạc kiểu với giáp gen có viền, đinh. Muốn đẹp nên **gen riêng 3 chụp khớp** cùng bộ với 4 mảnh.
+  - Giáp vai/ngực ở 384 vẫn hơi "nhoè màu" vì chỉ có 8 màu và mỗi điểm ảnh = 11–15 điểm ảnh gốc.
+  - Áo/tay ở 384 rõ nét thì càng lộ việc giáp **dán lên, không ôm theo nếp áo**. Ở 48 không ai thấy, ở 384 thấy.
+
+### Ưu / nhược nếu game dùng nhân vật cỡ lớn
+
+| | Cỡ 96 (nguồn hiện tại, game hiện 48) | Cỡ 192 | Cỡ 384 |
+|---|---|---|---|
+| Lớp thân 1 động tác chạy (12 khung, 12 lớp, PNG) | 62 KB | 205 KB (×3,3) | 645 KB (×10) |
+| RAM khi giải nén 12 lớp của 1 động tác | 5 MB | 21 MB | 85 MB |
+| Tấm sprite cả nhân vật hiện có (1152×8256, 86 hàng, 272 KB) phóng tương ứng | 9,5 triệu điểm ảnh, 38 MB RAM | 2304×16512 = 38 triệu điểm ảnh, ~150 MB RAM, ~0,9–1 MB PNG (ước) | 4608×33024 = 152 triệu điểm ảnh, ~610 MB RAM, ~3 MB PNG (ước) |
+| Điện thoại | ổn | **vượt giới hạn 1 ảnh canvas của Safari iPhone (~16,7 triệu điểm ảnh)** → phải chia nhiều tấm | vượt xa, phải chia ≥ 10 tấm, RAM quá nặng cho máy yếu |
+| Vẽ mỗi khung | ~40 lần vẽ ảnh nhỏ | như 96 | như 96 nhưng tô 16 lần điểm ảnh |
+
+- **Có phải gen lại các động tác không?** Ảnh nguồn hàng chạy chỉ cao ~290 điểm ảnh; ở 384 nhân vật đã dùng ~90% độ phân giải nguồn. Nghĩa là **384 là trần** với ảnh hiện có. Lớn hơn nữa (để đinh tán rõ) thì **phải gen lại mọi động tác** ở cỡ lớn hơn. 192/384 thì **không cần gen lại thân**, chỉ cần dựng lại từ ảnh nguồn sẵn có như bản này (mọi động tác có ảnh nguồn trong `docs/anh-goc/zed/moi/`). Mỗi động tác vẫn phải chạy tách lớp + đánh khớp lại.
+- **Nhận xét của tôi:**
+  - Game giữ 48 trên màn hình thì giáp gen **không đáng tiền**: ở 48 chỉ còn mảng màu, khác bản máy vẽ không nhiều.
+  - Nếu muốn giáp thấy được thật, cần nhân vật hiện **≥ 192 điểm ảnh trên màn hình** (tức ô 384, thu ½).
+  - 384 thì ổn về chất lượng, nhưng dung lượng/RAM tăng ×16 và phải chia tấm sprite.
+  - Hướng thực tế hơn: **giữ ô 96–192 cho game**, dùng ảnh 384 cho màn hình xem nhân vật / cửa hàng giáp (1 khung đứng, nhẹ).
+
+### Làm thế nào (`tao-co-lon.py`, `tao-rig.py` tự gọi)
+
+1. **Thân ở cỡ k (2 hoặc 4):**
+   - Ảnh nguồn `docs/anh-goc/zed/moi/03-chay-v4-gif/03-chay-v4/khung-01..12.png` co BOX (như game) về đúng k × cỡ ở ô 96 (tỉ lệ 0,2255), đặt tại k × vị trí trong `data.json.source.placement`.
+   - **Lớp tách: tách lại trên ảnh lớn**, không phóng mặt nạ 96:
+     - Chạy chính luật `../tach_lop.py` (khoảng cách tới xương, trên ảnh nguồn) ra 9 nhóm. Hạ về cỡ đích theo trọng alpha.
+     - Chia nhỏ theo mặt nạ lớp 96 phóng lên: áo/đai, chân/ống quần.
+     - Điểm ảnh lớn lấy lớp 96 tại ô của nó nếu cùng nhóm, khác nhóm thì lấy lớp 96 gần nhất đúng nhóm.
+     - Kết quả: 95–96% điểm ảnh trùng lớp 96 phóng lên. Phần còn lại là đường biên mịn hơn (tay/thân, cổ/giáp).
+     - Kiểm: ghép 12 lớp lại **đúng từng điểm ảnh** ảnh lớn (sai là dừng).
+   - Khác 96: lớp lớn chỉ chứa phần nhìn thấy (không có da dựng thêm dưới áo). Với cách vẽ đủ lớp thì không lộ gì.
+2. **Khớp:**
+   - Lấy `data.json × k`, đối chiếu khớp đánh tay trên ảnh nguồn (`../khop-nguon.json`) đổi sang cỡ k.
+   - **Phát hiện data.json lệch đều −0,5 điểm ảnh ô 96 (lên-trái)** so với tâm điểm ảnh nguồn: 1 điểm ảnh ở 192, 2 điểm ảnh ở 384. Sau khi bù trung vị, lệch còn lại TB 0,08 / tối đa 0,14 (192) và 0,15 / 0,29 (384) điểm ảnh, chỉ do làm tròn.
+   - Đã sửa trong tệp chỉnh riêng **`co-lon/khop-co-lon.json`**, không sửa data.json. Cỡ 96 giữ nguyên data.json như R4 để số liệu R4 không đổi.
+3. **Giáp Gen theo cỡ:**
+   - Thu từ ảnh gốc `giap-gen/goc-*.png` về đúng độ dài xương trung bình × k. Bảng 8 màu lấy từ ảnh (`gen.json`), chọn màu theo ô.
+   - Ở cỡ lớn hạ ngưỡng đồng 45% → 35% để viền đồng mảnh không bị thép lấn. Ép viền tối ở mép, giữ đinh tán (cỡ 384).
+   - Nearest, mỗi điểm ảnh 1 màu bảng, alpha 0/255, không làm mượt.
+   - **Chụp khớp vẽ lại** ở từng cỡ: đĩa tròn, viền tối 1 điểm ảnh (192) / 2 (384), vòm đổ bóng 3 tông. Không phóng chụp 5×5.
+4. **Mask back/front làm trên ảnh giáp GỐC** (`nhan/goc/*.png`), rồi hạ cho từng cỡ, **kể cả cỡ 96 bộ Gen** (trạng thái `tu-goc` trong `nhan/nhan.json`).
+   - Luật giữ như R4, chỉ làm ở độ phân giải gốc:
+     - Xương: dải dưới cùng mỗi cột, dày đúng 1 điểm ảnh ô 96, là back.
+     - Ngực: cổ áo sau là back.
+   - Vì vậy số "trước" của Gen 96 đổi so với R4 (88 → 128). "Sau" vẫn 0. Khe r3 65 → 75. Nhãn vẫn là **luật đoán, cần người duyệt**.
+5. **Trình vẽ:** mỗi cỡ có ngữ cảnh riêng (khớp, lớp thân, mảnh). Chồng mép, bán kính khe, ngưỡng bám, ngưỡng quy tắc "tay ra sau" đều nhân k. Mọi tính năng R4 giữ nguyên: lượt back/front/trong, đổi lớp theo khung (khung 1, 5, 8, 11, 12 ở mọi cỡ), kiểm khe đúng vùng, 8 hướng, 3 cỡ chụp, 5 kiểu báo lỗi.
+6. **Trang:**
+   - Canvas phóng số nguyên theo DPR, nearest, không nhoè. Cạnh nhau: 96 phóng ×8, 384 phóng ×2 điểm màn hình (điện thoại 390, DPR 3).
+   - Trang 1,4 MB < 15 MB nên **nhúng đủ 12 khung cả 384**, không cần cắt.
+   - Bộ Máy vẽ chỉ có cỡ 96/48.
+
+### Ảnh soát (`soat/co-lon/`)
+
+- `dien-thoai-390-canh-nhau.png`, `-384.png`, `-192.png`, `-48.png`, `-to-luot-384.png`, `-ca-trang.png`: chụp Chromium 390×844 DPR 3.
+- `luoi-12-khung-192.png`, `luoi-12-khung-384.png`: 12 khung, giáp Gen, che theo độ sâu bật, liên tục + 8 hướng, thường + tô lượt.
+- `luoi-12-khung-96-vs-384.png`: 96 phóng ×4 và 384 ×1, cùng khổ.
+- `can-canh-x3-384.png` (×3), `can-canh-x3-192.png` (×6): cổ, vai, khuỷu, gối, khung 1/4/8/10.
+- `chay-384.gif`: liên tục | 8 hướng. `bang-khe-co-lon.md`, `tu-kiem-co-lon.json`.
+
+Chạy lại: `tao-rig.py` → `soat-co-lon.py` (dừng mã 1 nếu lỗi JS, tràn ngang, thứ tự sai, giãn > 15%, mask lỗi hoặc còn khe r2 ở bất kỳ cỡ nào) → `soat-rig.py` → `dong-goi.py`. Đã thử: giải nén ZIP ra chỗ khác, xoá `co-lon/`, `nhan/`, `pass/` và trang, chạy lại thì ra trang **giống từng byte**.
+
+---
+
+## Tóm tắt cho chủ game (R4)
 
 - Mỗi mảnh giáp giờ có **1 ảnh gốc + 1 ảnh nhãn** cùng cỡ: đỏ = phần bị thân che (back), xanh dương = phần đè lên thân (front), lục = dải đổi lớp riêng (tuỳ chọn). Script tự tách ra 3 ảnh lượt cùng cỡ, cùng điểm neo.
 - Trình vẽ đặt cả 3 lượt bằng **cùng một phép xoay/giãn**, rồi chèn từng lượt vào đúng chỗ giữa các lớp thân. Mỗi lớp thân vẽ đúng 1 lần, không vẽ lại nhân vật đè lên giáp.
@@ -200,7 +293,7 @@ Trang tự báo lỗi đúng với cả 5 kiểu lỗi giả lập: thiếu kh�
   - `luoi-12-khung.png`, `luoi-luot.png`
   - `soi-x6-lien-tuc.png`, `soi-x6-8-huong.png` (khung 1, 4, 8, 10)
   - `chay-rig.gif`, `tu-kiem.json`, `bang-khe.md`
-- `rig-do-sau.zip`: thư mục này + `data.json` + các sheet thân dùng tới + ảnh gen nguồn. Chạy lại được bằng `python3 thu-modular-96/rig-do-sau/tao-rig.py --gen`. Đã thử: giải nén ra chỗ khác, xoá hết ảnh/nhãn/lượt, chạy lại thì ra trang **giống từng byte**.
+- `rig-do-sau.zip` (cập nhật 16/10 chiều, ~20 MB): thư mục này + `data.json`, `khop-nguon.json`, `tach_lop.py`, các sheet thân dùng tới, ảnh gen nguồn, 12 ảnh nguồn hàng chạy; giữ cấu trúc `docs/`. Chạy lại được bằng `python3 docs/thu-modular-96/rig-do-sau/tao-rig.py --gen`. Đã thử: giải nén ra chỗ khác, xoá hết ảnh/nhãn/lượt, chạy lại thì ra trang **giống từng byte**.
 
 Chạy lại toàn bộ:
 ```
