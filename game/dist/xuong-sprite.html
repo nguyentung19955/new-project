@@ -11895,7 +11895,7 @@ MA._xong();
       // thảm ngắn dẫn vào từng cửa và một hoa văn tròn giữa phòng: nhìn là biết phòng có bốn lối
       const cc = '#4e2a32', ed = '#77593a', L = Math.min(46, (g.fy1 - g.fy0) * 0.24);
       const cx = (g.fx0 + g.fx1) >> 1, cy = (g.fy0 + g.fy1) >> 1;
-      for (const d of g.doors) {
+      if (!thamAnh(g, L)) for (const d of g.doors) {
         if (d.side === 'top' || d.side === 'bottom') {
           const y0 = d.side === 'top' ? g.fy0 : g.fy1 - L;
           r(d.at - 11, y0, 22, L, cc); r(d.at - 9, y0, 1, L, ed); r(d.at + 8, y0, 1, L, ed);
@@ -12440,6 +12440,27 @@ MA._xong();
     for (const d of g.doors) if (d.side === 'bottom') segs = segs.flatMap(([a, b]) => [[a, Math.min(b, d.at - 17)], [Math.max(a, d.at + 17), b]]);
     for (const [a, b] of segs) if (b > a) clipRect(a, y, b - a, t.mep.height, () => trDai(t.mep, g.fx0, y, g.fx1 - g.fx0, t.mep.height, false, lech));
   }
+  // Ảnh lối mòn gd-loi-mon-rung (ô lặp dọc 32×32, giữa là đất, hai bên rêu / lá): lấy DẢI ĐẤT giữa ô (cột ≥ 75% điểm nâu đất) làm vân màu;
+  // ngang thì soi gương qua lại trong dải (liền mạch), dọc lặp theo ô. null: không có ảnh / ?vecode=1 → màu phẳng #7a6a48 như cũ.
+  let loiMon = null;
+  function datLoiMon() {
+    const a = G.VE_CODE === true ? null : gdA('gd-loi-mon-rung');
+    if (!a) return null;
+    if (loiMon && loiMon.img === a.img) return loiMon.tx;
+    let tx = null;
+    try {
+      const w = a.pw, h = a.ph, x = mk(w, h); x.drawImage(a.img, 0, 0);
+      const d = x.getImageData(0, 0, w, h).data, cot = [];
+      for (let i = 0; i < w; i++) {
+        let n = 0;
+        for (let j = 0; j < h; j++) { const q = (j * w + i) * 4; if (d[q] - d[q + 1] > 15 && d[q + 1] - d[q + 2] > 5 && d[q] > 90) n++; }
+        if (n >= h * 0.75) cot.push(i);
+      }
+      if (cot.length >= 2) tx = { d, w, h, x0: cot[0], n: cot[cot.length - 1] - cot[0] + 1 };
+    } catch (e) { tx = null; }
+    loiMon = { img: a.img, tx };
+    return tx;
+  }
   // Sàn: rải theo hạt giống của phòng. Mỗi khối chọn 1 trong 3 mảng (kiểu phòng `variant` quyết định mảng nào chiếm nhiều) × lật.
   function trSan(t, g, rn, variant, tv) {
     const latOK = !tv || tv.lat !== false, DUONG = tv && tv.duong != null ? tv.duong : TR.duong;
@@ -12478,13 +12499,16 @@ MA._xong();
     // lối mòn nối tâm phòng với từng cửa (đúng trường pathField của sàn code): lớp nâu nhạt mờ, 3 nấc, chuyển nấc bằng lưới chấm
     if (DUONG > 0) {
       const pf = grid2(g, pf0), id = c.getImageData(fx, fy, w, h), d = id.data, P = hex('#7a6a48'), NAC = 3;
+      const TX = tv ? null : datLoiMon(); // 16/10 (ve-tay-8-gop-giao-dien): Rừng già — màu đất lấy từ ảnh gd-loi-mon-rung thay màu phẳng (cùng 3 nấc, cùng trường lối mòn)
       for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
         const gx = fx + x, gy = fy + y, p = pf(gx, gy);
         if (p <= 0.02) continue;
         const a = (Math.min(NAC, Math.floor(sharp(p * NAC) + bay(gx, gy))) / NAC) * DUONG;
         if (a <= 0) continue;
         const o = (y * w + x) * 4;
-        d[o] += (P[0] - d[o]) * a; d[o + 1] += (P[1] - d[o + 1]) * a; d[o + 2] += (P[2] - d[o + 2]) * a;
+        let M = P;
+        if (TX) { const k = gx % (TX.n * 2), u = TX.x0 + (k < TX.n ? k : TX.n * 2 - 1 - k), q = ((gy % TX.h) * TX.w + u) * 4; M = [TX.d[q], TX.d[q + 1], TX.d[q + 2]]; }
+        d[o] += (M[0] - d[o]) * a; d[o + 1] += (M[1] - d[o + 1]) * a; d[o + 2] += (M[2] - d[o + 2]) * a;
       }
       c.putImageData(id, fx, fy);
     }
@@ -12698,9 +12722,31 @@ MA._xong();
   // BIẾN THỂ SÀN VÀ ĐỒ TRANG TRÍ: để các phòng trong một ải không giống hệt nhau
   // ====================================================================
   const fw_ = (g) => g.fx1 - g.fx0, fh_ = (g) => g.fy1 - g.fy0;
+  // 16/10 (ve-tay-8-gop-giao-dien): thảm dẫn cửa bằng ảnh gd-tham-lau (đỏ viền vàng, lặp dọc; cửa trái / phải xoay ngang), đúng dải 22 × L
+  // của thảm code, bắt đầu lặp từ mép tường cửa. Trả false khi không có ảnh hoặc ?vecode=1 → nơi gọi vẽ code như cũ.
+  function thamAnh(g, L) {
+    const a = G.VE_CODE === true ? null : gdA('gd-tham-lau');
+    if (!a) return false;
+    const cv = ttNho(a), th = cv.height;
+    for (const d of g.doors) {
+      if (d.side === 'top' || d.side === 'bottom') {
+        const y0 = d.side === 'top' ? g.fy0 : g.fy1 - L;
+        clipRect(d.at - 11, y0, 22, L, () => { for (let p = 0; p < L; p += th) c.drawImage(cv, d.at - 11, d.side === 'top' ? y0 + p : g.fy1 - p - th); });
+      } else {
+        const x0 = d.side === 'left' ? g.fx0 : g.fx1 - L;
+        clipRect(x0, d.at - 11, L, 22, () => {
+          c.save(); c.translate(x0, d.at + 11); c.rotate(-Math.PI / 2); // trục ảnh dọc → ngang: bề rộng thảm theo chiều dọc màn
+          for (let p = 0; p < L; p += th) c.drawImage(cv, 0, d.side === 'left' ? p : L - p - th);
+          c.restore();
+        });
+      }
+    }
+    return true;
+  }
   // Thảm ngắn dẫn vào từng cửa
   function runners(g, cc, ed) {
     const L = Math.min(40, fh_(g) * 0.2);
+    if (thamAnh(g, L)) return;
     for (const d of g.doors) {
       if (d.side === 'top' || d.side === 'bottom') {
         const y0 = d.side === 'top' ? g.fy0 : g.fy1 - L;
@@ -15098,28 +15144,48 @@ MA._xong();
     const pad = 5, bw = w + pad * 2, bh = ls.length * (size + 2.5) + 6;
     let by = y - bh - 5; if (by < 17) { y += 17 - by; by = 17; }
     const bx = G.clamp(x - bw / 2, 3, 477 - bw);
-    c.save();
-    rrect(c, bx, by, bw, bh, 4); c.fillStyle = o.bg || '#fbf7ee'; c.fill(); c.lineWidth = 1.2; c.strokeStyle = INK; c.stroke();
-    c.beginPath(); c.moveTo(x - 3.5, by + bh - 0.6); c.lineTo(x, y); c.lineTo(x + 3.5, by + bh - 0.6); c.fillStyle = o.bg || '#fbf7ee'; c.fill();
-    c.beginPath(); c.moveTo(x - 3.5, by + bh); c.lineTo(x, y); c.lineTo(x + 3.5, by + bh); c.stroke();
-    c.restore();
-    ls.forEach((l, i) => ui.text(l, bx + bw / 2, by + 4 + size * 0.86 + i * (size + 2.5), { size, bold: true, align: 'center', color: INK, shadow: false }));
+    // 16/10 (ve-tay-8-gop-giao-dien): ảnh gd-bong-thoai (thân 9 mảnh, cùng khung bx..by như code) + gd-bong-thoai-duoi (đuôi, mũi đuôi tại x, y);
+    // nền vàng (o.bg) thì nhuộm lòng ảnh. ?vecode=1 hoặc chưa có ảnh: vẽ code như cũ.
+    const SCg = G.spriteCustom, than = SCg && SCg.gdThay ? SCg.gdThay('gd-bong-thoai') : null, duoi = than ? SCg.gdThay('gd-bong-thoai-duoi') : null;
+    if (than && duoi) {
+      const LONG = '#fcf5e7', nh = (g) => (o.bg ? SCg.gdNhuom(g, LONG, o.bg) : g);
+      SCg.veGd(c, nh(than), bx, by, bw, bh);
+      SCg.veGd(c, nh(duoi), x - 1, by + bh - 1, duoi.rong, Math.max(2, y - (by + bh) + 1));
+    } else {
+      c.save();
+      rrect(c, bx, by, bw, bh, 4); c.fillStyle = o.bg || '#fbf7ee'; c.fill(); c.lineWidth = 1.2; c.strokeStyle = INK; c.stroke();
+      c.beginPath(); c.moveTo(x - 3.5, by + bh - 0.6); c.lineTo(x, y); c.lineTo(x + 3.5, by + bh - 0.6); c.fillStyle = o.bg || '#fbf7ee'; c.fill();
+      c.beginPath(); c.moveTo(x - 3.5, by + bh); c.lineTo(x, y); c.lineTo(x + 3.5, by + bh); c.stroke();
+      c.restore();
+    }
+    // ảnh khung: chữ đặt bằng T.chuTrongKhung theo lòng đo sẵn của gd-bong-thoai (can-chu-khung: khối chữ giữa lòng), cùng cỡ, cùng số dòng
+    const T = G.theme;
+    if (than && duoi && T && T.chuTrongKhung) T.chuTrongKhung(s, bx, by, bw, bh, { khung: 'gd-bong-thoai', size, min: size, bold: true, dong: ls.length, gian: 2.5, dem: 1, align: 'center', color: INK, shadow: false });
+    else ls.forEach((l, i) => ui.text(l, bx + bw / 2, by + 4 + size * 0.86 + i * (size + 2.5), { size, bold: true, align: 'center', color: INK, shadow: false }));
   };
   // Dải bảy khuôn mặt lối tắt. sel: người đang được chọn. Trả về mã người vừa được chạm (khi clickable).
   VS.drawStrip = function (sel, clickable, compact) {
     const ui = G.ui, c = G.ux, n = ORDER.length, a = stripAt(0), b = stripAt(n - 1);
     let hit = null;
-    c.save();
-    rrect(c, a[0] - 16, 16.5, b[0] - a[0] + 32, compact ? 23.5 : 33, 9); c.fillStyle = 'rgba(10,22,22,0.72)'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = 'rgba(168,117,47,0.9)'; c.stroke();
-    c.restore();
+    // 16/10 (ve-tay-8-gop-giao-dien): dải nền, đĩa chân dung (thường / chọn) và chấm "có mới" bằng ảnh gd-lang-thanh-duoi, gd-lang-dia(-chon),
+    // gd-cham-moi — cùng chỗ, cùng cỡ hình code. ?vecode=1 hoặc chưa có ảnh: vẽ code như cũ.
+    const SCg = G.spriteCustom, anh = (m) => (SCg && SCg.gdThay ? SCg.gdThay(m) : null), thanh = anh('gd-lang-thanh-duoi');
+    if (thanh) SCg.veGd(c, thanh, a[0] - 16, 16.5, b[0] - a[0] + 32, compact ? 23.5 : 36); // vành ảnh dày ~3 điểm: dải đầy đủ dài thêm 3 cho tên dưới mặt không đè vành
+    else {
+      c.save();
+      rrect(c, a[0] - 16, 16.5, b[0] - a[0] + 32, compact ? 23.5 : 33, 9); c.fillStyle = 'rgba(10,22,22,0.72)'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = 'rgba(168,117,47,0.9)'; c.stroke();
+      c.restore();
+    }
     ORDER.forEach((k, i) => {
       const q = stripAt(i), cx = q[0], cy = q[1], on = sel === k;
       c.save();
       if (!shown(k)) c.globalAlpha = 0.3; // V53: ô mặt mờ (chạm vào thì được báo khi nào cô về)
-      c.beginPath(); c.arc(cx, cy, STRIP.r, 0, 7); c.fillStyle = on ? '#8a2f22' : '#1f4f4a'; c.fill(); c.lineWidth = on ? 1.6 : 1; c.strokeStyle = on ? '#f6dc92' : '#a8752f'; c.stroke();
+      const dia = anh(on ? 'gd-lang-dia-chon' : 'gd-lang-dia');
+      if (dia) SCg.veGd(c, dia, cx - STRIP.r - 1, cy - STRIP.r - 1, STRIP.r * 2 + 2, STRIP.r * 2 + 2);
+      else { c.beginPath(); c.arc(cx, cy, STRIP.r, 0, 7); c.fillStyle = on ? '#8a2f22' : '#1f4f4a'; c.fill(); c.lineWidth = on ? 1.6 : 1; c.strokeStyle = on ? '#f6dc92' : '#a8752f'; c.stroke(); }
       c.beginPath(); c.arc(cx, cy, STRIP.r - 1, 0, 7); c.clip(); VS.face(c, k, cx, cy + 1, 1);
       c.restore();
-      if (S.news[k]) { c.save(); c.beginPath(); c.arc(cx + 7.5, cy - 7.5, 3, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = INK; c.stroke(); c.restore(); }
+      if (S.news[k]) { const dm = anh('gd-cham-moi'); if (dm) SCg.veGd(c, dm, cx + 7.5 - 3.5, cy - 7.5 - 3.5, 7, 7); else { c.save(); c.beginPath(); c.arc(cx + 7.5, cy - 7.5, 3, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = INK; c.stroke(); c.restore(); } }
       if (!compact) ui.text(NPCS[k].ngan, cx, 46.5, { size: 6.5, bold: true, tiny: true, align: 'center', color: on ? '#f6dc92' : '#e8dcc0' });
       if (clickable && G.click && Math.abs(G.click.x - cx) <= STRIP.gap / 2 && G.click.y >= 14 && G.click.y <= (compact ? 43 : 50)) { hit = k; G.click = null; G.sfx && G.sfx('ui'); }
     });
@@ -15267,7 +15333,15 @@ MA._xong();
     vienTranh(c);
   }
   // Đường nét đứt nối hai điểm trên tranh
-  VS.mapDash = function (c, a, b, col) { const n = Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / 4); for (let j = 1; j < n; j++) if (j % 2) p(c, a[0] + ((b[0] - a[0]) * j) / n, a[1] + ((b[1] - a[1]) * j) / n, 2, 2, col); };
+  // 16/10 (ve-tay-8-gop-giao-dien): khoa (tuỳ chọn) = đoạn chưa mở → chấm ảnh gd-ban-do-cham-khoa, không thì gd-ban-do-cham (2×2 như chấm code).
+  VS.mapDash = function (c, a, b, col, khoa) {
+    const SCg = G.spriteCustom, g = SCg && SCg.gdThay ? SCg.gdThay(khoa ? 'gd-ban-do-cham-khoa' : 'gd-ban-do-cham') : null;
+    const n = Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / 4);
+    for (let j = 1; j < n; j++) if (j % 2) {
+      const x = a[0] + ((b[0] - a[0]) * j) / n, y = a[1] + ((b[1] - a[1]) * j) / n;
+      if (g) SCg.veGd(c, g, Math.round(x), Math.round(y), 2, 2); else p(c, x, y, 2, 2, col);
+    }
+  };
   VS.putNpc = putNpc;
 })();
 // ===== game/js/sprite_custom.js =====
@@ -16648,6 +16722,27 @@ MA._xong();
     return g;
   }
   SC.gdSan = (ma) => { const g = SC.gd[ma]; if (g && !g.ready && roiCan) roiCan(ma); return g && g.ready ? g : null; };
+  // 16/10 (ve-tay-8-gop-giao-dien): ảnh THAY hình vẽ code — có ảnh và không ?vecode=1 (G.VE_CODE) thì trả ảnh, không thì null (nơi gọi vẽ code y cũ).
+  SC.gdThay = (ma) => (G.VE_CODE === true ? null : SC.gdSan(ma));
+  // Bản nhuộm của ảnh giao diện: điểm có màu gần `tu` (lòng ảnh) đổi thành màu `den` — dùng như ảnh gốc với SC.veGd (giữ vien / 9 mảnh).
+  const NHUOM = new Map();
+  SC.gdNhuom = function (g, tu, den) {
+    if (!g || !g.ready || !den || den === tu) return g;
+    const key = g.ma + '|' + den;
+    let o = NHUOM.get(key);
+    if (o && o.img0 === g.img) return o;
+    const cv = document.createElement('canvas'); cv.width = g.pw; cv.height = g.ph;
+    const x = cv.getContext('2d'); x.drawImage(g.img, 0, 0);
+    try {
+      const id = x.getImageData(0, 0, g.pw, g.ph), d = id.data, hx = (s) => [1, 3, 5].map((i) => parseInt(s.slice(i, i + 2), 16)), A = hx(tu), B = hx(den);
+      for (let i = 0; i < d.length; i += 4) if (d[i + 3] && Math.abs(d[i] - A[0]) + Math.abs(d[i + 1] - A[1]) + Math.abs(d[i + 2] - A[2]) < 60) { d[i] = B[0]; d[i + 1] = B[1]; d[i + 2] = B[2]; }
+      x.putImageData(id, 0, 0);
+    } catch (e) { return g; }
+    o = Object.assign({}, g, { img: cv, img0: g.img, ghep9: new Map() });
+    if (NHUOM.size > 16) NHUOM.clear();
+    NHUOM.set(key, o);
+    return o;
+  };
   // Ảnh 9 mảnh dựng sẵn cho cỡ đích (w x h điểm ảnh game): một canvas w*net x h*net, nhớ lại để lần sau vẽ một phát.
   function gdGhep9(g, w, h) {
     const N = g.net, W = Math.max(1, Math.round(w * N)), H = Math.max(1, Math.round(h * N)), key = W + 'x' + H;
