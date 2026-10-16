@@ -1,0 +1,210 @@
+<title>Demo – Xem rig</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Bố cục: một cột, mỗi nhân vật một khối (máy phát animation lớn + atlas phóng to); tông đêm của Làng Chuông, một thế giới tối duy nhất. */
+:root{
+  --night:#0C0F14; --panel:#161c26; --line:#2b3546; --ink:#F3E6C8; --soft:#9aa6b4;
+  --bell:#E1B85A; --moss:#32804F; --warn:#e0645c;
+  --f-ui:"Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-data:"JetBrains Mono", ui-monospace, Menlo, monospace;
+  color-scheme:dark;
+}
+body{background:var(--night);color:var(--ink);font:15px/1.5 var(--f-ui);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 40px}
+main{max-width:900px;margin:0 auto;display:grid;gap:22px}
+h1{margin:0;font-size:22px;font-weight:700;text-wrap:balance}
+.sub{margin:4px 0 0;color:var(--soft);font-size:14px}
+section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:14px;min-width:0}
+h2{margin:0;font-size:17px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+h2 small{font:500 12px var(--f-data);color:var(--soft)}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+button{font:600 13px var(--f-ui);color:var(--ink);background:#202838;border:1px solid var(--line);border-radius:8px;padding:8px 11px;cursor:pointer;min-height:38px}
+button.on{background:var(--bell);border-color:var(--bell);color:var(--night)}
+button:focus-visible{outline:2px solid var(--bell);outline-offset:2px}
+.player{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start}
+@media (max-width:560px){.player{grid-template-columns:1fr}}
+.stage{background:#1b2230;background-image:linear-gradient(45deg,#222b3b 25%,transparent 25%),linear-gradient(-45deg,#222b3b 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#222b3b 75%),linear-gradient(-45deg,transparent 75%,#222b3b 75%);
+  background-size:16px 16px;background-position:0 0,0 8px,8px -8px,-8px 0;border-radius:8px;justify-self:center;line-height:0}
+canvas{image-rendering:pixelated;image-rendering:crisp-edges;display:block;max-width:100%}
+.info{font:500 13px/1.7 var(--f-data);color:var(--soft);min-width:0}
+.info b{color:var(--ink);font-weight:500}
+.tag{display:inline-block;padding:0 7px;border-radius:5px;font:700 11px var(--f-ui);letter-spacing:.05em;margin-left:4px}
+.tag.hit{background:var(--warn);color:var(--night)}
+.tag.bao{background:var(--bell);color:var(--night)}
+.tag.combo{border:1px solid var(--bell);color:var(--bell)}
+.ctl{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.atlas{overflow-x:auto;background:#10151d;border-radius:8px;padding:8px}
+.atlas canvas{max-width:none}
+.check{font-size:13px;color:var(--soft)}
+.check.bad{color:var(--warn)}
+.label{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);margin:0}
+#status{color:var(--soft)}
+[hidden]{display:none!important}
+</style>
+
+<main>
+  <header>
+    <h1>Xem rig nhân vật – Tiếng Vọng Cuối Cùng</h1>
+    <p class="sub" id="status">Đang dựng sprite sheet từ mô hình 3D…</p>
+  </header>
+
+  <section id="lam" hidden>
+    <h2>Lam – Thợ Săn Chuông <small id="lamMeta"></small></h2>
+    <div class="btns" id="lamBtns"></div>
+    <div class="player">
+      <div class="stage"><canvas id="lamView"></canvas></div>
+      <div class="info"><div id="lamInfo"></div>
+        <div class="ctl"><button id="lamPlay">Dừng</button><button id="lamPrev">◀ Khung</button><button id="lamNext">Khung ▶</button></div>
+      </div>
+    </div>
+    <div class="check" id="lamCheck"></div>
+    <p class="label">Atlas (phóng 3×, mỗi hàng một animation)</p>
+    <div class="atlas"><canvas id="lamAtlas"></canvas></div>
+  </section>
+
+  <section id="quai" hidden>
+    <h2>Quái Chuông Gỗ <small id="quaiMeta"></small></h2>
+    <div class="btns" id="quaiBtns"></div>
+    <div class="player">
+      <div class="stage"><canvas id="quaiView"></canvas></div>
+      <div class="info"><div id="quaiInfo"></div>
+        <div class="ctl"><button id="quaiPlay">Dừng</button><button id="quaiPrev">◀ Khung</button><button id="quaiNext">Khung ▶</button></div>
+      </div>
+    </div>
+    <div class="check" id="quaiCheck"></div>
+    <p class="label">Atlas (phóng 3×, mỗi hàng một animation)</p>
+    <div class="atlas"><canvas id="quaiAtlas"></canvas></div>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+
+  // Nạp thư viện: trong repo là ../lib/, trên trang artifact là lib/
+  function load(name) {
+    return new Promise(function (res, rej) {
+      var tries = ['../lib/' + name, 'lib/' + name];
+      (function next() {
+        var src = tries.shift();
+        if (!src) return rej(new Error('Không nạp được ' + name));
+        var s = document.createElement('script');
+        s.src = src; s.onload = res; s.onerror = function () { s.remove(); next(); };
+        document.head.appendChild(s);
+      })();
+    });
+  }
+
+  function player(pre, atlas, zoom, extra) {
+    var keys = Object.keys(atlas.anims);
+    var st = { key: keys[0], frame: 0, playing: true, acc: 0 };
+    var view = $(pre + 'View'), vctx = view.getContext('2d');
+    view.width = atlas.w * zoom; view.height = atlas.h * zoom;
+
+    // atlas phóng 3×
+    var ac = $(pre + 'Atlas'), actx = ac.getContext('2d');
+    ac.width = atlas.canvas.width * 3; ac.height = atlas.canvas.height * 3;
+    actx.imageSmoothingEnabled = false;
+    actx.drawImage(atlas.canvas, 0, 0, ac.width, ac.height);
+    actx.strokeStyle = 'rgba(243,230,200,.12)';
+    for (var x = 0; x <= atlas.cols; x++) actx.strokeRect(x * atlas.w * 3 + .5, 0, 0, ac.height);
+    for (var y = 0; y <= atlas.rows; y++) actx.strokeRect(0, y * atlas.h * 3 + .5, ac.width, 0);
+
+    $(pre + 'Meta').textContent = 'ô ' + atlas.w + '×' + atlas.h + ' · ' + keys.length + ' animation · sheet ' + atlas.canvas.width + '×' + atlas.canvas.height;
+    var chk = $(pre + 'Check');
+    if (atlas.kiemTra.length) {
+      chk.className = 'check bad';
+      chk.textContent = 'Kiểm tra mép ô / mặt đất: ' + atlas.kiemTra.map(function (k) { return k.anim + ' khung ' + (k.frame + 1) + ' (' + k.loi.join(', ') + ')'; }).join('; ');
+    } else {
+      chk.className = 'check';
+      chk.textContent = 'Kiểm tra mép ô / mặt đất: mọi khung đạt (cách mép ≥ 1 px, không lún đất quá 0,3 px).';
+    }
+
+    var btnWrap = $(pre + 'Btns');
+    keys.forEach(function (k) {
+      var b = document.createElement('button');
+      b.textContent = (atlas.anims[k].label || k) + ' (' + atlas.anims[k].frames.length + ')';
+      b.onclick = function () { st.key = k; st.frame = 0; st.acc = 0; st.playing = true; draw(); };
+      b.dataset.k = k;
+      btnWrap.appendChild(b);
+    });
+
+    function draw() {
+      var a = atlas.anims[st.key], f = a.frames[st.frame];
+      vctx.clearRect(0, 0, view.width, view.height);
+      vctx.imageSmoothingEnabled = false;
+      if (f.baoTruoc && a.vungBaoTruoc) {
+        var r = a.vungBaoTruoc;
+        vctx.fillStyle = 'rgba(225,184,90,.22)';
+        vctx.fillRect(r.x * zoom, r.y * zoom, r.w * zoom, r.h * zoom);
+      }
+      if (f.hit && a.hitbox) {
+        var h = a.hitbox;
+        vctx.fillStyle = 'rgba(224,100,92,.3)';
+        vctx.fillRect(h.x * zoom, h.y * zoom, h.w * zoom, h.h * zoom);
+      }
+      vctx.drawImage(atlas.canvas, f.x, f.y, atlas.w, atlas.h, 0, 0, view.width, view.height);
+      vctx.fillStyle = '#e0645c';
+      vctx.fillRect(atlas.pivot.x * zoom - 3, atlas.pivot.y * zoom - 1, 6, 2);
+      $(pre + 'Info').innerHTML =
+        'Animation: <b>' + (a.label || st.key) + '</b> · ' + (a.loop ? 'lặp' : 'không lặp') + '<br>' +
+        'Khung <b>' + (st.frame + 1) + '/' + a.frames.length + '</b>' + (f.hold > 1 ? ' · giữ ×' + f.hold : '') + '<br>' +
+        '<b>' + f.name + '</b>' +
+        (f.hit ? '<span class="tag hit">HIT</span>' : '') +
+        (f.baoTruoc ? '<span class="tag bao">BÁO TRƯỚC</span>' : '') +
+        (f.comboWindow ? '<span class="tag combo">nối combo</span>' : '');
+      $(pre + 'Play').textContent = st.playing ? 'Dừng' : 'Phát';
+      [].forEach.call(btnWrap.children, function (b) { b.classList.toggle('on', b.dataset.k === st.key); });
+    }
+    function step(d) {
+      var n = atlas.anims[st.key].frames.length;
+      st.playing = false; st.frame = (st.frame + d + n) % n; draw();
+    }
+    $(pre + 'Play').onclick = function () {
+      var a = atlas.anims[st.key];
+      if (!st.playing && !a.loop && st.frame === a.frames.length - 1) st.frame = 0;
+      st.playing = !st.playing; st.acc = 0; draw();
+    };
+    $(pre + 'Prev').onclick = function () { step(-1); };
+    $(pre + 'Next').onclick = function () { step(1); };
+
+    var last = performance.now();
+    function tick(now) {
+      var dt = Math.min(.25, (now - last) / 1000); last = now;
+      if (st.playing) {
+        var a = atlas.anims[st.key];
+        st.acc += dt;
+        var dur = a.frames[st.frame].hold / atlas.fps, changed = false;
+        while (st.acc >= dur) {
+          st.acc -= dur; changed = true;
+          if (st.frame === a.frames.length - 1) {
+            if (a.loop) st.frame = 0;
+            else { st.acc = -0.6; st.frame = 0; }   // phát lại sau một nhịp nghỉ
+          } else st.frame++;
+          dur = a.frames[st.frame].hold / atlas.fps;
+        }
+        if (changed) draw();
+      }
+      requestAnimationFrame(tick);
+    }
+    draw();
+    requestAnimationFrame(tick);
+  }
+
+  Promise.all([load('rig-lam.js'), load('rig-quai-chuong.js')]).then(function () {
+    if (!window.THREE) throw new Error('Không tải được Three.js');
+    var t0 = performance.now();
+    var lam = TV.taoAtlasLam(THREE);
+    var quai = TV.taoAtlasQuaiChuong(THREE);
+    $('status').textContent = 'Sprite sheet dựng ngay khi tải trang (' + Math.round(performance.now() - t0) + ' ms). Chấm đỏ là pivot; ô vàng là vùng báo trước, ô đỏ là vùng đánh trúng.';
+    $('lam').hidden = false; $('quai').hidden = false;
+    player('lam', lam, 8);
+    player('quai', quai, 6);
+  }).catch(function (e) {
+    $('status').textContent = 'Lỗi: ' + e.message + '. Tải lại trang thử lần nữa.';
+  });
+})();
+</script>
