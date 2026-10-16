@@ -25,12 +25,18 @@
   label input { width:18px; height:18px; flex:none; }
   .giap { color:#8a5a12; }
   @media (prefers-color-scheme: dark) { .giap { color:#e3b25a; } }
+  #loi { display:none; background:#b00020; color:#fff; border-radius:10px; padding:10px 12px; margin:0 0 10px; font-size:14px; overflow-wrap:anywhere; }
+  #loi.co { display:block; }
+  #loi ul { margin:4px 0 0; padding-left:18px; }
+  .nhom { font-size:13px; color:var(--phu); min-width:44px; }
+  #kq { font-size:13px; color:var(--phu); margin:8px 0 0; overflow-wrap:anywhere; }
   #khop { font:12px/1.4 ui-monospace, Menlo, Consolas, monospace; white-space:pre-wrap; overflow-wrap:anywhere; max-height:220px; overflow:auto; margin:6px 0 0; }
 </style>
 </head>
 <body>
-<h1>Thử ghép trang phục modular 96×96 — Cu Tí mới chạy</h1>
-<p class="mo">Khung nguồn 96×96, neo bàn chân (48,90), SCALE 0,5 (hiện 48×48), imageSmoothingEnabled = false. 13 lớp, 12 khung. Phóng to chỉ để xem: vẽ cỡ game rồi phóng nguyên điểm ảnh.</p>
+<div id="loi" role="alert"></div>
+<h1>Thử thay trang phục modular 96×96 — Cu Tí mới chạy</h1>
+<p class="mo">Khung nguồn 96×96, neo bàn chân (48,90), SCALE 0,5 (hiện 48×48), imageSmoothingEnabled = false. Nền cơ thể + trang phục thay được + giáp mẫu, 12 khung. Phóng to chỉ để xem: vẽ cỡ game rồi phóng nguyên điểm ảnh.</p>
 
 <div class="san"><canvas id="c"></canvas></div>
 
@@ -44,13 +50,15 @@
   <span>Phóng:</span>
   <button data-z="2">×2</button><button data-z="4">×4</button><button data-z="8" class="bat">×8</button>
 </div>
+<div id="doNut"></div>
+<p id="kq"></p>
 <div class="hang">
-  <button id="giap" class="bat">Đang mặc giáp ngực mẫu</button>
+  <button id="giap">Giáp mẫu: tắt</button>
   <button id="debug">Debug: tắt</button>
   <button id="nguon96">Cỡ game ×0,5</button>
 </div>
 
-<fieldset><legend>Bật/tắt từng lớp (thứ tự vẽ từ trên xuống = từ dưới lên màn hình)</legend><div class="lop" id="lop"></div></fieldset>
+<fieldset><legend>Bật/tắt từng lớp — thứ tự vẽ lấy từ DATA.layerOrder (số nhỏ vẽ trước, nằm dưới)</legend><div class="lop" id="lop"></div></fieldset>
 <fieldset><legend>Khớp &amp; neo của khung đang xem (ô 96, gốc trên-trái)</legend><div id="khop"></div></fieldset>
 
 <script>
@@ -58,12 +66,11 @@ const DATA = /*__DATA__*/null;
 const ANH = /*__ANH__*/null;
 
 // ====== mã vẽ theo quy cách của chủ dự án ======
-const FRAME_SIZE = 96;
-const PIVOT_X = 48;
-const PIVOT_Y = 90;
-const SCALE = 0.5;
-const LAYER_ORDER = ['rearLeg', 'rearArm', 'body', 'pants', 'torsoOutfit', 'chestArmor', 'backShoulderArmor',
-  'frontLeg', 'frontShoulderArmor', 'frontArm', 'forearmArmor', 'head', 'hair'];
+const FRAME_SIZE = DATA.frameWidth;          // 96
+const PIVOT_X = DATA.pivot[0];               // 48
+const PIVOT_Y = DATA.pivot[1];               // 90
+const SCALE = DATA.scale;                    // 0.5
+const LAYER_ORDER = DATA.layerOrder;         // NGUỒN THỨ TỰ DUY NHẤT (không khai báo lại ở đây)
 
 function drawLayer(ctx, image, frame, x, y) {
   ctx.drawImage(
@@ -78,15 +85,20 @@ function drawCharacter(ctx, character, frame, x, y) {
   ctx.imageSmoothingEnabled = false;
   for (const layerName of LAYER_ORDER) {
     const image = character.layers[layerName];
-    if (!image) continue;               // lớp trống / đang tắt
+    if (!image) continue;               // lớp trống / đang tắt / không mặc
     drawLayer(ctx, image, frame, x, y);
   }
 }
 // ===============================================
 
-const GIAP = ['chestArmor', 'backShoulderArmor', 'frontShoulderArmor', 'forearmArmor'];
-const anhLop = {};
+const KIND = DATA.layerKinds;                       // nen | do | giap
+const SLOT_CUA = {};                                // lớp đồ → ô (ao / quan)
+for (const [slot, ls] of Object.entries(DATA.outfitSlots)) ls.forEach(l => SLOT_CUA[l] = slot);
+const anh = {};                                     // đường dẫn sheet → Image đã kiểm
+const loiTai = [];
 const bat = {}; LAYER_ORDER.forEach(l => bat[l] = true);
+const mac = Object.assign({}, DATA.defaultOutfit);  // ô → tên bộ đồ ('' = không mặc)
+let coGiap = false;
 let khung = 0, dangChay = true, zoom = 8, debug = false, coGame = true;
 const N = DATA.frameCount;
 const fps = DATA.fps || 20;
@@ -96,16 +108,20 @@ const ctx = c.getContext('2d');
 const off = document.createElement('canvas');
 const octx = off.getContext('2d');
 
+function duongSheet(l) {
+  if (KIND[l] === 'do') { const b = mac[SLOT_CUA[l]]; return b ? DATA.outfits[b].sheets[l] : null; }
+  if (KIND[l] === 'giap' && !coGiap) return null;
+  return DATA.sheets[l];
+}
 function character() {
   const layers = {};
-  for (const l of LAYER_ORDER) if (bat[l] && anhLop[l]) layers[l] = anhLop[l];
+  for (const l of LAYER_ORDER) { const p = duongSheet(l); if (bat[l] && p && anh[p]) layers[l] = anh[p]; }
   return { layers };
 }
 
-// ô vẽ cỡ game: rộng 64, cao 56 điểm ảnh game; chân đặt ở (32, 50)
 const OW = 64, OH = 56, CX = 32, CY = 50;
 function ve() {
-  const s = coGame ? SCALE : 1;          // s = điểm ảnh màn hình (trước khi phóng) trên 1 điểm ảnh ô 96
+  const s = coGame ? SCALE : 1;
   const ow = coGame ? OW : OW * 2, oh = coGame ? OH : OH * 2;
   const cx = coGame ? CX : CX * 2, cy = coGame ? CY : CY * 2;
   off.width = ow; off.height = oh;
@@ -113,15 +129,14 @@ function ve() {
   octx.clearRect(0, 0, ow, oh);
   if (coGame) drawCharacter(octx, character(), khung, cx, cy);
   else { // xem ảnh nguồn 96 không thu nhỏ (chỉ để soi, game dùng nhánh trên)
-    octx.imageSmoothingEnabled = false;
-    for (const l of LAYER_ORDER) if (bat[l] && anhLop[l])
-      octx.drawImage(anhLop[l], khung * FRAME_SIZE, 0, FRAME_SIZE, FRAME_SIZE, cx - PIVOT_X, cy - PIVOT_Y, FRAME_SIZE, FRAME_SIZE);
+    const ch = character();
+    for (const l of LAYER_ORDER) if (ch.layers[l])
+      octx.drawImage(ch.layers[l], khung * FRAME_SIZE, 0, FRAME_SIZE, FRAME_SIZE, cx - PIVOT_X, cy - PIVOT_Y, FRAME_SIZE, FRAME_SIZE);
   }
   const z = coGame ? zoom : Math.max(1, zoom / 2);
   c.width = ow * z; c.height = oh * z;
   ctx.imageSmoothingEnabled = false;
   ctx.clearRect(0, 0, c.width, c.height);
-  // vạch đất
   ctx.fillStyle = 'rgba(40,120,200,.35)';
   ctx.fillRect(0, cy * z, c.width, Math.max(1, z / 4));
   ctx.drawImage(off, 0, 0, ow, oh, 0, 0, ow * z, oh * z);
@@ -129,7 +144,6 @@ function ve() {
   document.getElementById('so').textContent = 'khung ' + khung + ' / ' + (N - 1);
   hienKhop();
 }
-
 function veDebug(s, z, cx, cy) {
   const f = DATA.frames[khung];
   const ox = Math.round(cx - PIVOT_X * s), oy = Math.round(cy - PIVOT_Y * s); // góc trên-trái ô 96 sau khi đặt theo pivot
@@ -184,30 +198,52 @@ function hienKhop() {
   document.getElementById('khop').textContent = dong.join('\n');
 }
 
-// danh sách lớp
+// danh sách lớp (sinh từ DATA.layerOrder)
 const hop = document.getElementById('lop');
-const rong = new Set(DATA.emptyLayers || []); const giapMau = new Set(DATA.cuTiHasNoArt || []);
 LAYER_ORDER.forEach((l, i) => {
   const lb = document.createElement('label');
-  if (GIAP.includes(l)) lb.className = 'giap';
+  if (KIND[l] === 'giap') lb.className = 'giap';
   const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = true; cb.id = 'cb-' + l;
-  cb.onchange = () => { bat[l] = cb.checked; capNutGiap(); ve(); };
+  cb.onchange = () => { bat[l] = cb.checked; ve(); };
   lb.appendChild(cb);
-  lb.appendChild(document.createTextNode((i + 1) + '. ' + l + (rong.has(l) ? ' (trống)' : giapMau.has(l) ? ' (giáp mẫu)' : '')));
+  const loai = { nen: 'nền', do: 'đồ', giap: 'giáp' }[KIND[l]];
+  lb.appendChild(document.createTextNode((i + 1) + '. ' + l + ' (' + loai + ')'));
+  lb.title = (DATA.layerNames || {})[l] || l;
   hop.appendChild(lb);
 });
 
-const nutGiap = document.getElementById('giap');
-function capNutGiap() {
-  const mac = GIAP.some(l => bat[l]);
-  nutGiap.textContent = mac ? 'Đang mặc giáp ngực mẫu' : 'Đang cởi giáp';
-  nutGiap.classList.toggle('bat', mac);
+// nút đổi trang phục: mỗi ô (áo / quần) chọn bộ gốc / mới / (các bộ gen nếu có) / không mặc
+const doNut = document.getElementById('doNut');
+for (const slot of Object.keys(DATA.outfitSlots)) {
+  const hang = document.createElement('div'); hang.className = "hang";
+  const t = document.createElement('span'); t.className = 'nhom'; t.textContent = DATA.outfitSlotNames[slot] + ':';
+  hang.appendChild(t);
+  const lua = Object.keys(DATA.outfits).filter(b => (DATA.outfits[b].slots || []).includes(slot)).map(b => [b, b === 'goc' ? 'Gốc' : b === 'moi' ? 'Mới' : b]).concat([['', 'Không (nền)']]);
+  for (const [b, nhan] of lua) {
+    const nut = document.createElement('button'); nut.textContent = nhan; nut.dataset.slot = slot; nut.dataset.bo = b;
+    if (b) nut.title = DATA.outfits[b].name;
+    nut.onclick = () => { mac[slot] = b; capNutDo(); ve(); };
+    hang.appendChild(nut);
+  }
+  doNut.appendChild(hang);
 }
-nutGiap.onclick = () => {
-  const mac = !GIAP.some(l => bat[l]);
-  GIAP.forEach(l => { bat[l] = mac; document.getElementById('cb-' + l).checked = mac; });
-  capNutGiap(); ve();
-};
+const nutDoiNhanh = document.createElement('button'); nutDoiNhanh.textContent = 'Đổi cả bộ gốc ⇄ mới';
+nutDoiNhanh.onclick = () => { const moi = !(mac.ao === 'moi' && mac.quan === 'moi'); for (const s of Object.keys(mac)) mac[s] = moi ? 'moi' : 'goc'; capNutDo(); ve(); };
+const hn = document.createElement('div'); hn.className = 'hang'; hn.appendChild(nutDoiNhanh); doNut.appendChild(hn);
+function capNutDo() {
+  doNut.querySelectorAll('button[data-slot]').forEach(b => b.classList.toggle('bat', mac[b.dataset.slot] === b.dataset.bo));
+}
+capNutDo();
+// kết quả kiểm tra của tao-bo.py (ghi trong data.json)
+(function () {
+  const ck = DATA.checks || [];
+  const lech = ck.reduce((a, x) => a + x.nenDoGocKhacGame, 0);
+  const lo = ck.reduce((a, x) => a + x['ao_moi+quan_moi'].doGocKhongDuocPhu + x['ao_moi+quan_moi'].thanTranLo, 0);
+  document.getElementById('kq').textContent = 'Kiểm tra khi dựng: nền + đồ gốc khác ảnh game ' + lech + ' điểm ảnh; đồ mới để lộ đồ gốc/thân trần ' + lo + ' điểm ảnh (cả ' + ck.length + ' khung).';
+})();
+
+const nutGiap = document.getElementById('giap');
+nutGiap.onclick = () => { coGiap = !coGiap; nutGiap.textContent = 'Giáp mẫu: ' + (coGiap ? 'bật' : 'tắt'); nutGiap.classList.toggle('bat', coGiap); ve(); };
 document.getElementById('debug').onclick = e => { debug = !debug; e.target.textContent = 'Debug: ' + (debug ? 'bật' : 'tắt'); e.target.classList.toggle('bat', debug); ve(); };
 document.getElementById('nguon96').onclick = e => { coGame = !coGame; e.target.textContent = coGame ? 'Cỡ game ×0,5' : 'Soi ảnh 96 gốc'; e.target.classList.toggle('bat', !coGame); ve(); };
 document.getElementById('chay').onclick = e => { dangChay = !dangChay; e.target.textContent = dangChay ? 'Dừng' : 'Chạy'; e.target.classList.toggle('bat', dangChay); };
@@ -218,18 +254,47 @@ document.querySelectorAll('[data-z]').forEach(b => b.onclick = () => {
   zoom = +b.dataset.z; document.querySelectorAll('[data-z]').forEach(x => x.classList.toggle('bat', x === b)); ve();
 });
 
+// ===== tải + kiểm từng sheet: thiếu / tải lỗi / sai kích thước → báo đỏ ở đầu trang =====
+function baoLoi(msg) {
+  loiTai.push(msg);
+  const h = document.getElementById('loi');
+  h.className = 'co';
+  h.innerHTML = '<b>Lỗi sheet (' + loiTai.length + ')</b> — nhân vật có thể bị thiếu lớp:<ul>' +
+    loiTai.map(m => '<li>' + m.replace(/[<>&]/g, '') + '</li>').join('') + '</ul>';
+}
+const canTai = new Set(Object.values(DATA.sheets));
+for (const b of Object.values(DATA.outfits)) Object.values(b.sheets).forEach(p => canTai.add(p));
+for (const l of LAYER_ORDER) {
+  if (KIND[l] === 'do') { for (const b of Object.keys(DATA.outfits)) if ((DATA.outfits[b].slots || []).includes(SLOT_CUA[l]) && !DATA.outfits[b].sheets[l]) baoLoi('bộ "' + b + '" thiếu lớp ' + l); }
+  else if (!DATA.sheets[l]) baoLoi('thiếu sheet cho lớp ' + l);
+}
 let t0 = 0;
 function vong(t) {
   if (dangChay && t - t0 >= 1000 / fps) { t0 = t; khung = (khung + 1) % N; ve(); }
   requestAnimationFrame(vong);
 }
-let con = LAYER_ORDER.length;
-LAYER_ORDER.forEach(l => {
+let con = canTai.size;
+function xong1() { if (--con === 0) { ve(); requestAnimationFrame(vong); } }
+for (const p of canTai) {
+  if (!ANH || !ANH[p]) { baoLoi(p + ': không có trong tệp (thiếu ảnh nhúng)'); xong1(); continue; }
   const im = new Image();
-  im.onload = () => { anhLop[l] = im; if (--con === 0) { ve(); requestAnimationFrame(vong); } };
-  im.onerror = () => { if (--con === 0) { ve(); requestAnimationFrame(vong); } };
-  im.src = ANH[l];
-});
+  im.onload = () => {
+    const W = FRAME_SIZE * N;
+    if (im.naturalWidth !== W || im.naturalHeight !== FRAME_SIZE) baoLoi(p + ': kích thước ' + im.naturalWidth + '×' + im.naturalHeight + ', cần ' + W + '×' + FRAME_SIZE);
+    else {
+      // phải có nền trong suốt
+      const cv = document.createElement('canvas'); cv.width = W; cv.height = FRAME_SIZE;
+      const cx2 = cv.getContext('2d'); cx2.drawImage(im, 0, 0);
+      const d = cx2.getImageData(0, 0, W, FRAME_SIZE).data;
+      let trong = false; for (let i = 3; i < d.length; i += 4) if (d[i] === 0) { trong = true; break; }
+      if (!trong) baoLoi(p + ': không có nền trong suốt');
+      anh[p] = im;
+    }
+    xong1();
+  };
+  im.onerror = () => { baoLoi(p + ': tải ảnh lỗi'); xong1(); };
+  im.src = ANH[p];
+}
 </script>
 </body>
 </html>
