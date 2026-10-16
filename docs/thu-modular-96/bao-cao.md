@@ -1,5 +1,25 @@
 # Báo cáo: thử ghép trang phục modular 96×96 (Cu Tí mới)
 
+## Rà soát bộ hiện có (16/10, trước khi sửa)
+
+Đã chạy lại `tao-bo.py` trên bản hiện có: ra đúng từng byte các tệp đang có trong repo, nên bộ này tái tạo được.
+
+**Đã hoạt động thật:**
+
+- 13 sheet đều 1152×96, có nền trong suốt, 12 khung, chân chạm y = 90.
+- Chồng 9 lớp Cu Tí (không giáp) ra đúng từng điểm ảnh khung chạy trong game, 12/12 khung.
+- `kiem-tra.html` tự chứa, vẽ cỡ game (×0,5, tắt làm mượt), chạy/dừng, tua khung, bật/tắt lớp, Debug khớp/neo.
+- `data.json` có khớp và điểm neo cho cả 12 khung.
+
+**Mới là minh họa / chưa đúng:**
+
+- **Không thay được quần áo.** Áo đen nằm chung trong lớp `body`, ống quần nằm trong `frontLeg`/`rearLeg`, lớp `pants` chỉ là mẩu nhỏ ở hông, `torsoOutfit` thật ra chỉ là đai đỏ. Không có thân trần, nên mặc đồ khác thì áo/quần cũ vẫn lộ.
+- **Giáp ngực chỉ là bật/tắt một mẫu do máy vẽ.** Nó chỉ phủ khoảng 30–65% áo đen tùy khung (khung 2, 3, 6, 9 chỉ còn một dải mỏng), nên áo cũ lộ quanh giáp.
+- **Thứ tự vẽ sai:** giáp vai sau nằm trên giáp ngực (trông như dán lên ngực); giáp vai trước bị bắp tay trước đè.
+- **Danh sách lớp bị khai báo hai lần:** trang HTML tự gõ lại `LAYER_ORDER` và danh sách giáp thay vì đọc `DATA.layerOrder`.
+- **Kiểm tra ghép lại chỉ in chữ:** nếu ảnh lệch, `tao-bo.py` vẫn kết thúc "thành công" (mã thoát 0).
+- **Chưa kiểm tra sheet:** không có bước nào kiểm kích thước, số khung, kênh trong suốt hay pivot. Nếu một sheet tải lỗi, trang chỉ lặng lẽ bỏ lớp đó, không báo gì.
+
 Mọi thứ nằm trong `docs/thu-modular-96/`. Code game không đổi. Chạy lại tất cả bằng lệnh `python3 docs/thu-modular-96/tao-bo.py`, mất khoảng 2 giây.
 
 ## Xem nhanh
