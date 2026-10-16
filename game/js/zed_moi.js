@@ -46,6 +46,12 @@
 //    theo QUÃNG ĐƯỜNG thật (sải chân đo trên ảnh × cỡ hiển thị) → hết trượt chân, chạy chậm khi vừa chạy vừa chém thì bước chậm theo;
 //    (e) góc vũ khí nối êm 0,1 giây mỗi khi đổi hàng ảnh (vào chiêu đặc biệt, thả búa / thương đang giữ…), không bật 150–180°;
 //    (f) đổi vũ khí: món mới hiện dần 0,12 giây.
+//  VỪA ĐI / CHẠY VỪA RA ĐÒN — GHÉP Ở ĐAI (17/10/2026, docs/review/ke-hoach-cai-thien/chan-di-danh/bao-cao.md). Lỗi: "vừa đi vừa đâm
+//    thương chân bị bóp méo". Gốc: cách ghép zed-eo-sua cắt GIỮA ĐÙI — nửa trên mang theo hông + đùi của thế tấn rộng (thương, phi tiêu…)
+//    rồi KÉO GIÃN vùng nối cho khớp chân chạy hẹp (keoNoi ×1,8) → đùi bè thành hình nêm, chân lệch 30–48 %; lại khớp ngang theo "tâm hông"
+//    vốn nhảy 42–54 theo bước chạy mới 16/10 → thân trên lắc. Cách mới (?chandon=0 về cách cũ): thân trên khung ĐÒN tới đáy đai, chân khung
+//    ĐI (đi bộ) hoặc CHẠY từ đáy đai (bỏ tay / mảnh không nối với bàn chân), khớp TÂM ĐAI (cột nguyên, không nửa điểm ảnh), KHÔNG co giãn
+//    hàng nào. Hàng cúi / khuỵu (kiếm 3, quét, xốc, búa, đặc biệt) vẫn vẽ nguyên khung đòn (chân đứng tại chỗ, người trượt theo hướng đi).
 (function () {
   const G = window.G;
   const SC = G.spriteCustom;
@@ -127,6 +133,9 @@
   // Sửa bóp eo / vặn người (zed-eo-sua): cần dữ liệu phiên bản 2 (mỗi khung [y, x, c, l, r]). Tắt ?eosua=0.
   const eoSua = () => G.EO_SUA !== false && !!G.ZED_EO && G.ZED_EO.phien_ban >= 2;
   const LUI_NHIP = 0.8; // chạy lùi: nhịp chân chậm lại
+  // chan-di-danh 17/10: ghép ở đai (cần số đo đai [5] = tâm đai, js/zed_eo_data.js "dai": 1). Tắt: ?chandon=0.
+  if (G.CHAN_DON === undefined) G.CHAN_DON = !/[?&]chandon=0(&|$)/.test(QS);
+  const chanDon = () => G.CHAN_DON !== false && !!G.ZED_EO && !!G.ZED_EO.dai;
   // Chân có chạy ngược hướng mặt (hướng chém) không — cùng phép thử như eoTinh cũ.
   const nguocMat = (o) => { const f = o.face < 0 ? -1 : 1, md = o.mdx || 0; return Math.abs(md) > 0.2 && (md > 0 ? 1 : -1) !== f; };
   // Phép kéo vùng nối (y hệt keo_noi trong cat-than.py): { tren, l, r, L, R } — tren = nửa trên được kéo (nửa dưới nếu false); [l, r] mép
@@ -144,6 +153,12 @@
   // hệ toạ độ đã lật theo mặt); rel = -1 khi chân quay ngược mặt (chạy ngược hướng chém); kc = bù 1 điểm ảnh khi lật chân.
   function eoTinh(T, s, o) {
     const B = G.ZED_EO.bo[BO_MA[T._ma] || 'moi'] || G.ZED_EO.bo.moi;
+    if (s.eo.dai) { // ghép ở đai: khớp tâm đai (cột nguyên) + đáy đai; không kéo giãn
+      const eA = B[eoTen(T, B, s.ten)] && B[eoTen(T, B, s.ten)][s.i], tc = eoTen(T, B, s.eo.chan), eR = B[tc] && B[tc][s.eo.i];
+      if (!eA || !eR || eA.length < 6 || eR.length < 6) return null;
+      const dx = Math.round(eR[5] - eA[5]), yA = eA.length > 7 ? eA[7] : eA[0], yR = eR.length > 7 ? eR[7] : eR[0]; // [7]: đáy đai đo lại
+      return { eA, eR, yA, yR, rel: 1, kc: 0, dai: true, ox: dx / 2, oy: (yR - yA) / 2, K: null };
+    }
     const te = eoTen(T, B, s.ten), eA = B[te] && B[te][s.i], tc = eoTen(T, B, 'chay'), eR = B[tc] && B[tc][s.eo.i]; // chạy mới 16/10: eo đo trên khung chạy mới
     if (!eA || !eR) return null;
     // cách mới: chân không lật (luôn cùng hướng thân trên), ngang khớp tâm hông, dọc khớp đường cắt giữa đùi
@@ -318,7 +333,7 @@
   // ve-tay-8-dot-1: hàng chạy mới (chay~16): bàn trụ lùi trung bình gần bằng hàng cũ (do-sai.py: 4,0 / 3,94 điểm ảnh ô 96 mỗi khung →
   // ~37); thử nhịp trên chính các khung (trượt ròng ít nhất ở 32–36 với mọi tốc độ chạy) → chọn 34. Đo trong game: báo cáo mục 1.
   const SAI = { chay: 36.8, chay16: 34, chay2tay: 44.3, di: 31 };
-  function buoc(o, D, ten0, nhan) { // ten0: ép hàng ('chay'), không thì chọn đi / chạy theo P.diTL có vùng đệm; nhan: hệ số nhịp
+  function buoc(o, D, ten0, nhan, mot) { // ten0: ép hàng ('chay'), không thì chọn đi / chạy theo P.diTL có vùng đệm; nhan: hệ số nhịp; mot: chân hàng chạy một tay (ghép đai)
     const p = buocCua(o);
     if (!p) return null;
     const t = G.time || 0;
@@ -337,7 +352,7 @@
     const ten = ten0 || (b.chay || !D.dong_tac.di ? 'chay' : 'di'), a = D.dong_tac[ten];
     if (!a) return null;
     if (muot2() && (nhan || 1) <= 1) {
-      const sai = (ten === 'chay' && chay2(o, D) ? SAI.chay2tay : ten === 'chay' && a.moi16 ? SAI.chay16 : SAI[ten] || SAI.chay) * toCua(o);
+      const sai = (ten === 'chay' && !mot && chay2(o, D) ? SAI.chay2tay : ten === 'chay' && a.moi16 ? SAI.chay16 : SAI[ten] || SAI.chay) * toCua(o);
       b.ph = (b.ph + Math.max(qd / sai, (dt * 0.35) / giayLap(ten, a))) % 1;
     } else b.ph = (b.ph + (dt * (nhan || 1)) / giayLap(ten, a)) % 1;
     const v = b.ph * a.so, i = Math.floor(v) % a.so;
@@ -352,6 +367,16 @@
     if (s && !s.buoc && !(s.ghep && o.move)) nghiBuoc(o); // mục 20: không bước → lần bước sau vào từ khung 1
     // chạy + chém: ghép eo (chân hàng chạy, thân trên hàng đòn) — chỉ hàng có điểm eo, chỉ khi đang chạy
     if (s && s.ghep && o.move && coEo(s.ten) && D.dong_tac.chay) {
+      if (chanDon()) { // chan-di-danh: chân = hàng ĐI khi đi bộ, hàng CHẠY khi chạy (theo pha bước chung); ngược hướng chém → phát ngược
+        // thương / búa đang chạy: chân hàng chạy hai tay (chay2tay, như lúc chạy không đánh) nếu có số đo đai → không đổi bộ chân khi ra đòn
+        const Bo = G.ZED_EO.bo[BO_MA[layThan() && layThan()._ma] || 'moi'] || {}, hai = chay2(o, D) && !!Bo.chay2tay;
+        const lui = nguocMat(o), B = buoc(o, D, null, lui ? LUI_NHIP : 1, !hai);
+        let ten = B && D.dong_tac[B.ten] ? B.ten : 'chay';
+        if (ten === 'chay' && hai) ten = 'chay2tay';
+        const so = D.dong_tac[ten].so;
+        const i0 = B ? B.i : khungLap(D, 'chay', s.tc * (lui ? LUI_NHIP : 1));
+        return { ten: s.ten, i: s.i, u: s.u, eo: { i: lui ? so - 1 - i0 : i0, chan: ten, dai: 1, lui: lui ? 1 : 0 } };
+      }
       if (eoSua()) { // chân cùng hướng thân trên; chạy ngược hướng chém → chạy lùi (phát ngược thứ tự khung, nhịp ×0,8)
         const so = D.dong_tac.chay.so, lui = nguocMat(o), B = buoc(o, D, 'chay', lui ? LUI_NHIP : 1); // mục 20: chân theo pha bước chung
         const i = B ? (lui ? so - 1 - B.i : B.i) : lui ? so - 1 - khungLap(D, 'chay', s.tc * LUI_NHIP) : khungLap(D, 'chay', s.tc);
@@ -761,6 +786,58 @@
     c.restore();
   }
 
+  // Chân sạch (chan-di-danh): phần từ hàng y0 xuống của khung (hang, i), chỉ giữ các khối điểm ảnh NỐI VỚI BÀN CHÂN (bỏ bàn tay / ống tay
+  // đung đưa dưới đai của khung đi / chạy — thân trên khung đòn đã có tay riêng). Nhớ theo tấm + khung. Lỗi đọc ảnh → null (vẽ thẳng).
+  const CHAN_SACH = new Map();
+  function chanSach(T, hang, i, y0) {
+    if (typeof document === 'undefined') return null;
+    const k = (T._ma || '') + '|' + hang + '|' + i + '|' + y0;
+    if (CHAN_SACH.has(k)) return CHAN_SACH.get(k);
+    let cv = null;
+    try {
+      const h = 96 - y0;
+      cv = document.createElement('canvas'); cv.width = 96; cv.height = h;
+      const q = cv.getContext('2d');
+      q.drawImage(T.img, i * 96, hang * 96 + y0, 96, h, 0, 0, 96, h);
+      const d = q.getImageData(0, 0, 96, h), px = d.data, lab = new Int32Array(96 * h), giu = new Uint8Array(96 * h + 1);
+      let n = 0, goc = 0;
+      const st = [];
+      for (let p = 0; p < 96 * h; p++) if (px[p * 4 + 3] > 0) goc++;
+      // bàn tay (màu da) ở 12 hàng đầu dưới đai: tay đung đưa sát hông của khung chạy — xoá cả viền 2 điểm ảnh quanh (băng cổ tay)
+      // trước khi tìm khối nối bàn chân
+      const H12 = Math.min(h, 12), da = new Uint8Array(96 * H12);
+      for (let p = 0; p < 96 * H12; p++) {
+        const r = px[p * 4], g = px[p * 4 + 1], b = px[p * 4 + 2];
+        if (px[p * 4 + 3] > 0 && r > 140 && g >= 0.48 * r && g <= 0.74 * r && b >= 0.28 * r && b <= 0.56 * r) da[p] = 1; // da Cu Tí (không ăn đai vàng / giáp da / áo trắng của các bộ khác)
+      }
+      for (let p = 0; p < 96 * H12; p++) {
+        const x = p % 96, y = (p / 96) | 0;
+        let gan = 0;
+        for (let dy = -2; dy <= 2 && !gan; dy++) for (let dx = Math.abs(dy) - 2; dx <= 2 - Math.abs(dy) && !gan; dx++) {
+          const x2 = x + dx, y2 = y + dy;
+          if (x2 >= 0 && x2 < 96 && y2 >= 0 && y2 < H12 && da[y2 * 96 + x2]) gan = 1;
+        }
+        if (gan) px[p * 4 + 3] = 0;
+      }
+      for (let p0 = 0; p0 < 96 * h; p0++) {
+        if (lab[p0] || px[p0 * 4 + 3] === 0) continue;
+        lab[p0] = ++n; st.push(p0);
+        while (st.length) {
+          const p = st.pop(), x = p % 96, y = (p / 96) | 0;
+          const lan = (x2, y2) => { if (x2 < 0 || x2 > 95 || y2 < 0 || y2 >= h) return; const p2 = y2 * 96 + x2; if (!lab[p2] && px[p2 * 4 + 3] > 0) { lab[p2] = n; st.push(p2); } };
+          lan(x - 1, y); lan(x + 1, y); lan(x, y - 1); lan(x, y + 1);
+        }
+      }
+      const yd = 89 - y0; // hàng bàn chân (đáy chân ở hàng nguồn 89)
+      for (let y = Math.max(0, yd - 3); y <= Math.min(h - 1, yd + 1); y++) for (let x = 0; x < 96; x++) { const l = lab[y * 96 + x]; if (l) giu[l] = 1; }
+      let con = 0;
+      for (let p = 0; p < 96 * h; p++) { if (lab[p] && !giu[lab[p]]) px[p * 4 + 3] = 0; if (px[p * 4 + 3] > 0) con++; }
+      if (con < 0.6 * goc) return CHAN_SACH.set(k, null), null; // bỏ quá nhiều (bàn chân không chạm hàng đáy…): vẽ thẳng như ảnh
+      q.putImageData(d, 0, 0);
+    } catch (e) { cv = null; }
+    CHAN_SACH.set(k, cv);
+    return cv;
+  }
   let tam = null; // canvas phụ khi phải nhuộm cả hình (trúng đòn, băng, độc)
   function ve(c, o) {
     const T = layThan();
@@ -787,6 +864,30 @@
       q.save(); q.beginPath(); q.rect(-24 + ox, -45 + oy, 48, h / 2); q.rect(x0, y0, w, hh); q.clip('evenodd'); ve0(); q.restore();
       nghieng(q, [tay[0] / 2 - 24 + ox, tay[1] / 2 - 45 + oy], gTay, () => { q.beginPath(); q.rect(x0, y0, w, hh); q.clip(); ve0(); });
     };
+    if (s.eo && E && E.dai) {
+      // Ghép ở đai (chan-di-danh): chân = khung đi / chạy từ hàng đáy đai yR (đã bỏ tay đung đưa, mảnh không nối bàn chân), thân trên =
+      // khung đòn hàng 0..yA (tới đáy đai) dời (ox, oy) cho đai trùng đai. Không co giãn hàng nào.
+      const aC = D.dong_tac[s.eo.chan] || D.dong_tac.chay, yA = E.yA + 1, yR = E.yR;
+      const lopDai = (q) => {
+        const xoay = (fn) => (N ? nghieng(q, N, lean, fn) : fn());
+        const vk = () => { q.save(); q.translate(E.ox, E.oy); veVk(q, V, v); q.restore(); };
+        if (v && v.n[3]) xoay(vk);
+        const L = chanSach(T, aC.hang, s.eo.i, yR);
+        if (L) q.drawImage(L, 0, 0, 96, 96 - yR, -24, -45 + yR / 2, 48, (96 - yR) / 2);
+        else q.drawImage(T.img, s.eo.i * 96, aC.hang * 96 + yR, 96, 96 - yR, -24, -45 + yR / 2, 48, (96 - yR) / 2);
+        // đang nghiêng: lót dải đai (4 hàng nguồn ngay trên đáy đai, không xoay) để chỗ nối không hở
+        if (N) q.drawImage(TI, s.i * 96, AH * 96 + yA - 4, 96, 4, -24 + E.ox, -45 + E.oy + (yA - 4) / 2, 48, 2);
+        xoay(() => {
+          veTren(q, yA, E.ox, E.oy);
+          if (v && !v.n[3]) vk();
+          if (v && v.B.ht != null) {
+            if (coHt(v)) q.drawImage(TI, v.wa.i * 96, HT * 96, 96, yA, -24 + E.ox, -45 + E.oy, 48, yA / 2);
+            q.save(); q.translate(E.ox, E.oy); veNgon(q, V, v); q.restore();
+          }
+        });
+      };
+      return veLop(c, o, lopDai);
+    }
     if (s.eo && E && E.moi) {
       // Ghép giữa đùi (zed-eo-sua): nửa trên = khung đòn hàng 0..cA, nửa dưới = khung chạy từ hàng cR (lấn 1 hàng, bị nửa trên đè).
       const aC = D.dong_tac.chay, cA = E.eA[2], cR = E.eR[2], yA = cA + 1, yB = E.eA[0] + 1, K = E.K, S = G.ZED_EO.vung_noi || 5;
@@ -990,7 +1091,7 @@
     const w = o.weapon, VV = G.vienVk;
     if (w && VV && VV.co && VV.co(w)) return null;
     const D = T.tep, s = chon(o, D), V = lay('zed-vk'), v = V ? vkCua(o, D, s, T, false) : null, h = HV && HV.get(p);
-    return [T._ma, s.ten, s.i, s.eo ? s.eo.i + ':' + (s.eo.lui || 0) + ':' + (s.eo.moi || 0) : '', s.theo ? s.theo.ten + ':' + s.theo.i : '',
+    return [T._ma, s.ten, s.i, s.eo ? s.eo.i + ':' + (s.eo.lui || 0) + ':' + (s.eo.moi || 0) + ':' + (s.eo.chan || '') : '', s.theo ? s.theo.ten + ':' + s.theo.i : '',
       v ? v.wa.ten + ':' + v.wa.i + ':' + v.cap + ':' + (v.he || '') + ':' + Math.round(v.ang / 2) + ':' + Math.round((v.lean || 0) * 2) : V ? '-' : '0',
       h ? Math.round(h.gv / 2) + ':' + Math.round(h.lv * 2) : '', o.face < 0 ? -1 : 1, w ? w.type + ':' + (w.coat || '') : '', o.dodge >= 0 ? 1 : 0, o.roundShadow ? 1 : 0].join('|');
   }
