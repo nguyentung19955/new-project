@@ -1,0 +1,206 @@
+{
+ "kiem-0": {
+  "cap": "Trắng",
+  "ti_le_co": [
+   0.6306,
+   0.6872
+  ],
+  "iou": 0.8163,
+  "lech_nam_px_goc": 9.1,
+  "lech_mui_px_goc": 24.0,
+  "lech_nam_px_o": 2.33,
+  "lech_mui_px_o": 6.12,
+  "dung": false,
+  "o": [
+   111,
+   29
+  ]
+ },
+ "kiem-1": {
+  "cap": "Mầm",
+  "ti_le_co": [
+   0.6858,
+   0.7733
+  ],
+  "iou": 0.6732,
+  "lech_nam_px_goc": 8.5,
+  "lech_mui_px_goc": 28.0,
+  "lech_nam_px_o": 2.17,
+  "lech_mui_px_o": 7.16,
+  "dung": false,
+  "o": [
+   124,
+   48
+  ]
+ },
+ "kiem-2": {
+  "cap": "Thành hình",
+  "ti_le_co": [
+   0.811,
+   0.8936
+  ],
+  "iou": 0.586,
+  "lech_nam_px_goc": 62.7,
+  "lech_mui_px_goc": 17.0,
+  "lech_nam_px_o": 16.07,
+  "lech_mui_px_o": 4.36,
+  "dung": false,
+  "o": [
+   142,
+   68
+  ]
+ },
+ "thuong-0": {
+  "cap": "Trắng",
+  "ti_le_co": [
+   0.7467,
+   0.6572
+  ],
+  "iou": 0.9625,
+  "lech_nam_px_goc": 0.0,
+  "lech_mui_px_goc": 0.0,
+  "lech_nam_px_o": 0.0,
+  "lech_mui_px_o": 0.0,
+  "dung": true,
+  "o": [
+   115,
+   12
+  ]
+ },
+ "thuong-1": {
+  "cap": "Mầm",
+  "ti_le_co": [
+   0.6985,
+   0.7073
+  ],
+  "iou": 0.9223,
+  "lech_nam_px_goc": 0.5,
+  "lech_mui_px_goc": 0.0,
+  "lech_nam_px_o": 0.13,
+  "lech_mui_px_o": 0.0,
+  "dung": false,
+  "o": [
+   117,
+   32
+  ]
+ },
+ "thuong-2": {
+  "cap": "Thành hình",
+  "ti_le_co": [
+   0.7066,
+   0.7479
+  ],
+  "iou": 0.9045,
+  "lech_nam_px_goc": 1.5,
+  "lech_mui_px_goc": 6.0,
+  "lech_nam_px_o": 0.38,
+  "lech_mui_px_o": 1.53,
+  "dung": false,
+  "o": [
+   128,
+   66
+  ]
+ },
+ "bua-0": {
+  "cap": "Trắng",
+  "ti_le_co": [
+   1.0575,
+   1.039
+  ],
+  "iou": 0.9837,
+  "lech_nam_px_goc": 0.5,
+  "lech_mui_px_goc": 1.0,
+  "lech_nam_px_o": 0.13,
+  "lech_mui_px_o": 0.26,
+  "dung": true,
+  "o": [
+   122,
+   36
+  ]
+ },
+ "bua-1": {
+  "cap": "Mầm",
+  "ti_le_co": [
+   1.057,
+   1.0465
+  ],
+  "iou": 0.9894,
+  "lech_nam_px_goc": 0.5,
+  "lech_mui_px_goc": 0.0,
+  "lech_nam_px_o": 0.13,
+  "lech_mui_px_o": 0.0,
+  "dung": true,
+  "o": [
+   118,
+   44
+  ]
+ },
+ "bua-2": {
+  "cap": "Thành hình",
+  "ti_le_co": [
+   1.0491,
+   1.0544
+  ],
+  "iou": 0.9815,
+  "lech_nam_px_goc": 3.0,
+  "lech_mui_px_goc": 0.0,
+  "lech_nam_px_o": 0.76,
+  "lech_mui_px_o": 0.0,
+  "dung": true,
+  "o": [
+   118,
+   83
+  ]
+ },
+ "phitieu-0": {
+  "cap": "Trắng",
+  "ti_le_co": [
+   0.9965,
+   0.9965
+  ],
+  "iou": 0.9719,
+  "lech_nam_px_goc": 0.5,
+  "lech_mui_px_goc": 0.0,
+  "lech_nam_px_o": 0.13,
+  "lech_mui_px_o": 0.0,
+  "dung": true,
+  "o": [
+   85,
+   80
+  ]
+ },
+ "phitieu-1": {
+  "cap": "Mầm",
+  "ti_le_co": [
+   0.9984,
+   0.9984
+  ],
+  "iou": 0.977,
+  "lech_nam_px_goc": 0.0,
+  "lech_mui_px_goc": 0.0,
+  "lech_nam_px_o": 0.0,
+  "lech_mui_px_o": 0.0,
+  "dung": true,
+  "o": [
+   126,
+   122
+  ]
+ },
+ "phitieu-2": {
+  "cap": "Thành hình",
+  "ti_le_co": [
+   0.9979,
+   0.9979
+  ],
+  "iou": 0.9779,
+  "lech_nam_px_goc": 4.1,
+  "lech_mui_px_goc": 0.0,
+  "lech_nam_px_o": 1.05,
+  "lech_mui_px_o": 0.0,
+  "dung": true,
+  "o": [
+   111,
+   121
+  ]
+ }
+}

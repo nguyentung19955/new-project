@@ -609,17 +609,20 @@
     return z.ready && z.img && z.tep && z.tep.vk ? z : null;
   }
   const NHUOM = new Map();
-  function anhVk(V, loai, cap, he) {
+  function anhVk(V, loai, cap, he, w) {
     const r = V.tep.vk[loai][cap];
-    if (!he || typeof document === 'undefined') return { img: V.img, x: r[0], y: r[1], w: r[2], h: r[3] };
-    const anhHe = G.vkHeAnh && G.vkHeAnh(loai, cap, he, r); // 16/10: có ảnh vũ khí theo hệ (zed-vk-he, js/vien_vk.js) thì dùng, không nhuộm
+    // 16/10 gan-vk: vũ khí w đang ở cấp Luyện giữa hai mốc → ảnh "gân" cùng cỡ ô (zed-vk-gan, js/vien_vk.js G.vkGan; ?gan=0 tắt)
+    const gan = w && G.vkGan && G.vkGanAnh && G.vkGan(w, cap) ? G.vkGanAnh(loai, cap, r) : null;
+    const goc = gan || { img: V.img, x: r[0], y: r[1], w: r[2], h: r[3] };
+    if (!he || typeof document === 'undefined') return goc;
+    const anhHe = !gan && G.vkHeAnh && G.vkHeAnh(loai, cap, he, r); // 16/10: có ảnh vũ khí theo hệ (zed-vk-he, js/vien_vk.js) thì dùng, không nhuộm
     if (anhHe) return anhHe;
-    const k = loai + cap + he;
+    const k = loai + cap + he + (gan ? 'g' : ''); // ảnh gân nhuộm hệ như ảnh thường
     let cv = NHUOM.get(k);
     if (!cv) {
       cv = document.createElement('canvas'); cv.width = r[2]; cv.height = r[3];
       const q = cv.getContext('2d'); q.imageSmoothingEnabled = false;
-      q.drawImage(V.img, r[0], r[1], r[2], r[3], 0, 0, r[2], r[3]);
+      q.drawImage(goc.img, goc.x, goc.y, r[2], r[3], 0, 0, r[2], r[3]);
       q.globalCompositeOperation = 'source-atop'; q.globalAlpha = 0.3; q.fillStyle = G.EL[he].col; q.fillRect(0, 0, r[2], r[3]);
       NHUOM.set(k, cv);
     }
@@ -632,7 +635,7 @@
     try { cap = kep(G.wStage(w) | 0, 0, 3); } catch (e) { cap = 0; }
     if (!V.tep.vk[loai][cap]) return false;
     const he = w.coat && G.EL[w.coat] ? w.coat : cap > 0 && G.EL[w.branch] ? w.branch : null;
-    const a = anhVk(V, loai, cap, he), cheo = loai !== 'phitieu';
+    const a = anhVk(V, loai, cap, he, w), cheo = loai !== 'phitieu';
     const k = cheo ? (size * 1.35) / (a.w + a.h) : size / Math.max(a.w, a.h);
     // 16/10 bậc ép đồ chỉ ở KHUNG Ô (js/ep_do.js E.khung; ?vienvk=1 tắt): hình nằm trong ô nơi gọi vừa vẽ → ghi số bậc lên góc ô đó sau
     // khi vẽ hình; nơi gọi không vẽ ô (dòng kết quả, dòng nhỏ) → tự vẽ ô gd-o-ep-<bậc> quanh hình rồi ghi số.
@@ -673,7 +676,7 @@
     if (w) { try { cap = kep(G.wStage(w) | 0, 0, 3); } catch (e) { cap = 0; } }
     if (!V.tep.vk[loai][cap]) return null;
     const he = w ? (w.coat && G.EL[w.coat] ? w.coat : cap > 0 && G.EL[w.branch] ? w.branch : null) : null;
-    return anhVk(V, loai, cap, he);
+    return anhVk(V, loai, cap, he, w);
   };
   // 14/10 (vũ khí cũ còn sót, mục 4): nạp zed-vk sớm cùng ảnh lõi (ngay khi tệp này chạy, trước khi vào làng).
   try { layVk(); } catch (e) { /* chưa có bộ nạp ảnh: bỏ qua */ }

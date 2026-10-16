@@ -213,4 +213,29 @@
     if (!q || q[2] !== r[2] || q[3] !== r[3]) return null;
     return { img: z.img, x: q[0], y: q[1], w: q[2], h: q[3] };
   };
+
+  // ---------- ẢNH "GÂN" TIẾN ĐỘ LUYỆN (16/10, luyen-vu-khi/bao-cao-3.md mục 5; docs/review/ke-hoach-cai-thien/gan-vk/bao-cao.md) ----------
+  // Bộ zed-vk-gan (doi_tuong "zed", tải sau; dựng bằng docs/review/ke-hoach-cai-thien/gan-vk/dung_zed_vk_gan.py):
+  //   vk[loại] = [Trắng, Mầm, Thành hình, null] mỗi ô [x, y, rộng, cao] hoặc null — cùng thứ tự và PHẢI cùng cỡ ô zed-vk (lệch thì bỏ qua),
+  //   nên điểm cầm / nắm tay / neo cam-vk-chuan giữ nguyên.
+  // Hiện khi tiến độ tới mốc kế ≥ 25% (thanh L.tienDo ở các cấp này ≥ 33%; riêng Lv 9 thanh đếm lại từ mốc Tinh luyện), tức là ở các cấp Luyện GIỮA hai mốc hình thái:
+  //   Trắng Lv 2 (tới Mầm 3), Mầm Lv 4–5 (tới Thành hình 6), Thành hình Lv 7–11 (tới Thức tỉnh 12). Đúng cấp mốc (1, 3, 6) và Thức tỉnh: ảnh thường.
+  // Tắt: ?gan=0 (G.VK_GAN = false) hoặc ?luyen=0 (không có cấp Luyện). Dùng ở js/zed_moi.js (trên tay) và js/vk_moi.js (ô đồ, bảng Luyện).
+  G.VK_GAN = true;
+  try { if (typeof location !== 'undefined' && /[?&]gan=0(&|$)/.test(location.search || '')) G.VK_GAN = false; } catch (e) { /* giữ mặc định */ }
+  G.vkGan = function (w, cap) {
+    const L = G.luyen, CF = G.LUYEN;
+    if (G.VK_GAN === false || !w || !L || !L.bat || !L.bat() || !CF || !(cap >= 0 && cap <= 2)) return false;
+    const lv = L.cap(w), tu = cap === 0 ? 1 : CF.hinhThai[cap - 1], toi = CF.hinhThai[cap];
+    return L.hinhThai(lv) === cap && lv > tu && lv < toi; // = danh sách cấp ở trên (Lv 9 Tinh luyện: thanh tiến độ về 0 nhưng vẫn giữa Thành hình → Thức tỉnh)
+  };
+  G.vkGanAnh = function (loai, cap, r) {
+    if (G.VK_GAN === false || !r) return null;
+    const SC = G.spriteCustom, z = SC && SC.zed && SC.zed['zed-vk-gan'];
+    if (!z) return null;
+    if (!z.ready || !z.img) { if (SC.canAnh) SC.canAnh('zed-vk-gan'); return null; }
+    const h = z.tep && z.tep.vk && z.tep.vk[loai], q = h && h[cap];
+    if (!q || q[2] !== r[2] || q[3] !== r[3]) return null;
+    return { img: z.img, x: q[0], y: q[1], w: q[2], h: q[3] };
+  };
 })();
