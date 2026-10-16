@@ -75,7 +75,7 @@
     let ma = 'zed-moi';
     try { const b = G.zedBo ? G.zedBo() : 'ninja'; if (G.ZED_BO && G.ZED_BO[b]) ma = G.ZED_BO[b].tam; } catch (e) { ma = 'zed-moi'; }
     const z = (ma !== 'zed-moi' && lay(ma)) || lay('zed-moi');
-    if (z) { z._ma = z === SC.zed['zed-moi'] ? 'zed-moi' : ma; hang16(z.tep); }
+    if (z) { z._ma = z === SC.zed['zed-moi'] ? 'zed-moi' : ma; hang16(z.tep, z._ma); }
     return z;
   };
   // HÀNG MỚI 16/10 (docs/review/ke-hoach-cai-thien/hang-moi-16-10/bao-cao.md): tấm có khoá "<hàng>~16" (chủ game gen lại: đứng thở 8 khung,
@@ -99,11 +99,12 @@
   // cán không ôm được). Chạy + chém: điểm eo đo trên khung chạy mới (G.ZED_EO.bo.moi['chay~16']). Chỉ HÌNH. ?chaymoi=0: hàng chạy cũ.
   const CHAY_MOI = !/[?&]chaymoi=0(&|$)/.test(QS);
   const BUA_MOI = !/[?&]buamoi=0(&|$)/.test(QS);
-  function hang16(D) {
+  function hang16(D, ma) {
     if (!D || !D.dong_tac || D._hang16) return;
     D._hang16 = 1;
-    if (HANG_CU) return;
     const dt = D.dong_tac;
+    Object.keys(dt).forEach((k) => { if (dt[k] && typeof dt[k] === 'object') { dt[k]._khoa = k; dt[k]._ma = ma || 'zed-moi'; } }); // cam-vk-chuan: khoá gốc + tấm
+    if (HANG_CU) return;
     Object.keys(dt).forEach((k) => {
       if (k.indexOf('~16') < 0 || (KIEM16[k] && !KIEM_MOI) || (!CHAY_MOI && k.indexOf('chay~16') === 0) || (k === 'bua_nen~16' && !BUA_MOI)) return;
       const goc = k.replace('~16', ''), a = Object.assign({}, dt[k], { moi16: 1, eo16: k });
@@ -167,8 +168,31 @@
     if (m && G.NAM_CHUOI !== false && !(da.vk === 'thuong' && G.THUONG_2TAY === false) && !(da.vk === 'phitieu' && G.PHI_TIEU_TO === false)) {
       b = { neo: m.neo, ht: m.hang_tay, tl: m.vk_tl || da.vk_tl, cam: m.vk_cam || da.vk_cam, nam: true };
     } else b = { neo: da.neo, ht: da.hang_tay, tl: da.vk_tl, cam: da.vk_cam, nam: false };
+    if (b.nam) b = camChuan(da, b);
     if (BT) BT.set(da, b);
     return b;
+  }
+  // CẦM VŨ KHÍ CHUẨN (16/10/2026, docs/review/ke-hoach-cai-thien/cam-vk-chuan/LUAT.md + bao-cao.md): bảng G.CAM_CHUAN_DATA (js/cam_chuan_data.js,
+  // dựng bằng cam-vk-chuan/sua.py) thay neo từng khung (điểm cầm đúng tâm nắm tay, cán qua hai nắm tay, thêm tay thứ hai đang nằm trên cán,
+  // phi tiêu theo hướng cẳng tay) và điểm cầm trên ảnh kiếm (chuôi khuất dưới nắm tay, đốc chắn ngay mép nắm tay rồi lưỡi). Chỉ thay khi
+  // tấm còn đúng bản đã đo (neo gốc / điểm cầm gốc khớp) — tấm dựng lại thì tự về số của tấm. Chỉ HÌNH. Tắt: ?camchuan=0 (G.CAM_CHUAN).
+  function camChuan(da, b) {
+    const C = G.CAM_CHUAN !== false && G.CAM_CHUAN_DATA;
+    if (!C) return b;
+    try {
+      let neo = b.neo, cam = b.cam;
+      const R = C.bo && C.bo[da._ma || 'zed-moi'] && C.bo[da._ma || 'zed-moi'][da._khoa];
+      if (R && neo && R.so === neo.length) {
+        const g0 = neo.find((x) => x);
+        if (g0 && Math.abs(g0[0] - R.goc[0]) < 0.02 && Math.abs(g0[1] - R.goc[1]) < 0.02 && g0[2] === R.goc[2]) {
+          neo = neo.slice();
+          Object.keys(R.neo).forEach((i) => { neo[+i] = R.neo[i]; });
+        }
+      }
+      const vc = C.vk_cam && C.vk_cam[da.vk];
+      if (vc && cam && cam.length === vc.cu.length && vc.cu.every((p, j) => cam[j] && Math.abs(cam[j][0] - p[0]) < 0.02 && Math.abs(cam[j][1] - p[1]) < 0.02)) cam = vc.moi;
+      return neo === b.neo && cam === b.cam ? b : Object.assign({}, b, { neo, cam });
+    } catch (e) { return b; }
   }
   // Mốc tiến độ u bắt đầu từng khung. ★ = khung đứng ở mốc hitAt (đánh dấu trong chú thích).
   const MOC = {
