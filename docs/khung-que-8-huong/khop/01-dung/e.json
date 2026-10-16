@@ -1,0 +1,1307 @@
+{
+ "dong_tac": "01-dung",
+ "ten": "Đứng thở",
+ "ten_trong_game": "dung",
+ "huong": "e",
+ "ten_huong": "Phải (E)",
+ "o": [
+  96,
+  96
+ ],
+ "diem_cham_dat": [
+  48,
+  90
+ ],
+ "so_khung": 8,
+ "giay_moi_khung": [
+  0.1562,
+  0.1562,
+  0.1562,
+  0.1562,
+  0.1562,
+  0.1562,
+  0.1562,
+  0.1562
+ ],
+ "tong_giay_game": 1.0,
+ "lap": true,
+ "moc": null,
+ "khung_cham": null,
+ "vu_khi": null,
+ "ghi_chu": "Game phát qua lại 1-2-3-4-5-4-3-2 (bảng QUA_LAI) và chậm ×1,25; khung 1→8→1 cũng nối vòng mượt.",
+ "quy_uoc": "toạ độ [x, y, sau] trong ô 96×96, gốc trên-trái; sau = độ gần camera (lớn = gần). Lật gương sang hướng trái: x -> 96 - x.",
+ "khung": [
+  {
+   "i": 1,
+   "cham": false,
+   "giay": 0.1562,
+   "vn": "thở ra, thấp nhất",
+   "en": "breathing out, lowest",
+   "khop": {
+    "dau": [
+     49.85,
+     37.86,
+     -0.0
+    ],
+    "co": [
+     48.87,
+     51.82,
+     -0.0
+    ],
+    "nguc": [
+     48.38,
+     58.8,
+     -0.0
+    ],
+    "eo": [
+     48.0,
+     67.29,
+     -0.0
+    ],
+    "vai_t": [
+     48.7,
+     50.81,
+     -7.0
+    ],
+    "vai_p": [
+     48.7,
+     57.81,
+     7.0
+    ],
+    "khuyu_t": [
+     51.21,
+     57.75,
+     -9.61
+    ],
+    "khuyu_p": [
+     51.95,
+     67.08,
+     9.52
+    ],
+    "co_tay_t": [
+     59.16,
+     57.19,
+     -9.18
+    ],
+    "co_tay_p": [
+     59.9,
+     66.1,
+     9.09
+    ],
+    "hong_t": [
+     48.0,
+     65.04,
+     -4.5
+    ],
+    "hong_p": [
+     48.0,
+     69.54,
+     4.5
+    ],
+    "goi_t": [
+     46.26,
+     74.32,
+     -5.53
+    ],
+    "goi_p": [
+     50.08,
+     79.78,
+     5.52
+    ],
+    "co_chan_t": [
+     42.84,
+     83.17,
+     -6.51
+    ],
+    "co_chan_p": [
+     49.73,
+     90.24,
+     6.57
+    ],
+    "mui_chan_t": [
+     46.86,
+     86.56,
+     -6.89
+    ],
+    "mui_chan_p": [
+     54.66,
+     92.52,
+     6.79
+    ],
+    "vk_goc": null,
+    "vk_mui": null
+   },
+   "phu": {
+    "got_p": [
+     48.66,
+     92.3
+    ],
+    "got_t": [
+     41.22,
+     84.62
+    ],
+    "toc": [
+     42.25,
+     32.24
+    ],
+    "mat": [
+     [
+      62.18,
+      42.72
+     ]
+    ]
+   },
+   "thu_tu_ve": [
+    "cang_tay_t",
+    "canh_tay_t",
+    "ban_chan_t",
+    "cang_chan_t",
+    "dui_t",
+    "dau",
+    "than",
+    "dui_p",
+    "cang_chan_p",
+    "ban_chan_p",
+    "canh_tay_p",
+    "cang_tay_p"
+   ],
+   "truoc_sau": {
+    "cang_tay_t": "sau",
+    "canh_tay_t": "sau",
+    "ban_chan_t": "sau",
+    "cang_chan_t": "sau",
+    "dui_t": "sau",
+    "dui_p": "truoc",
+    "cang_chan_p": "truoc",
+    "ban_chan_p": "truoc",
+    "canh_tay_p": "truoc",
+    "cang_tay_p": "truoc"
+   },
+   "dai3": {
+    "vai_pkhuyu_p": 9.0,
+    "khuyu_pco_tay_p": 8.0,
+    "vai_tkhuyu_t": 9.0,
+    "khuyu_tco_tay_t": 8.0,
+    "hong_pgoi_p": 10.0,
+    "goi_pco_chan_p": 10.0,
+    "hong_tgoi_t": 10.0,
+    "goi_tco_chan_t": 10.0,
+    "eoco": 15.49,
+    "codau": 14.0
+   }
+  },
+  {
+   "i": 2,
+   "cham": false,
+   "giay": 0.1562,
+   "vn": "bắt đầu hít vào",
+   "en": "start breathing in, chest rises a little",
+   "khop": {
+    "dau": [
+     50.06,
+     37.86,
+     -0.0
+    ],
+    "co": [
+     48.94,
+     51.81,
+     -0.0
+    ],
+    "nguc": [
+     48.41,
+     58.79,
+     -0.0
+    ],
+    "eo": [
+     48.0,
+     67.28,
+     -0.0
+    ],
+    "vai_t": [
+     48.75,
+     50.81,
+     -7.0
+    ],
+    "vai_p": [
+     48.75,
+     57.81,
+     7.0
+    ],
+    "khuyu_t": [
+     51.3,
+     57.73,
+     -9.6
+    ],
+    "khuyu_p": [
+     52.05,
+     67.05,
+     9.51
+    ],
+    "co_tay_t": [
+     59.24,
+     57.06,
+     -9.11
+    ],
+    "co_tay_p": [
+     59.98,
+     65.88,
+     9.02
+    ],
+    "hong_t": [
+     48.0,
+     65.03,
+     -4.5
+    ],
+    "hong_p": [
+     48.0,
+     69.53,
+     4.5
+    ],
+    "goi_t": [
+     46.31,
+     74.32,
+     -5.53
+    ],
+    "goi_p": [
+     50.13,
+     79.76,
+     5.52
+    ],
+    "co_chan_t": [
+     42.82,
+     83.14,
+     -6.51
+    ],
+    "co_chan_p": [
+     49.7,
+     90.21,
+     6.57
+    ],
+    "mui_chan_t": [
+     46.81,
+     86.56,
+     -6.89
+    ],
+    "mui_chan_p": [
+     54.61,
+     92.53,
+     6.8
+    ],
+    "vk_goc": null,
+    "vk_mui": null
+   },
+   "phu": {
+    "got_p": [
+     48.62,
+     92.26
+    ],
+    "got_t": [
+     41.19,
+     84.58
+    ],
+    "toc": [
+     42.51,
+     32.16
+    ],
+    "mat": [
+     [
+      62.37,
+      42.85
+     ]
+    ]
+   },
+   "thu_tu_ve": [
+    "cang_tay_t",
+    "canh_tay_t",
+    "ban_chan_t",
+    "cang_chan_t",
+    "dui_t",
+    "dau",
+    "than",
+    "dui_p",
+    "cang_chan_p",
+    "ban_chan_p",
+    "canh_tay_p",
+    "cang_tay_p"
+   ],
+   "truoc_sau": {
+    "cang_tay_t": "sau",
+    "canh_tay_t": "sau",
+    "ban_chan_t": "sau",
+    "cang_chan_t": "sau",
+    "dui_t": "sau",
+    "dui_p": "truoc",
+    "cang_chan_p": "truoc",
+    "ban_chan_p": "truoc",
+    "canh_tay_p": "truoc",
+    "cang_tay_p": "truoc"
+   },
+   "dai3": {
+    "vai_pkhuyu_p": 9.0,
+    "khuyu_pco_tay_p": 8.0,
+    "vai_tkhuyu_t": 9.0,
+    "khuyu_tco_tay_t": 8.0,
+    "hong_pgoi_p": 10.0,
+    "goi_pco_chan_p": 10.0,
+    "hong_tgoi_t": 10.0,
+    "goi_tco_chan_t": 10.0,
+    "eoco": 15.49,
+    "codau": 14.0
+   }
+  },
+  {
+   "i": 3,
+   "cham": false,
+   "giay": 0.1562,
+   "vn": "hít vào",
+   "en": "breathing in",
+   "khop": {
+    "dau": [
+     50.55,
+     37.88,
+     -0.0
+    ],
+    "co": [
+     49.09,
+     51.8,
+     -0.0
+    ],
+    "nguc": [
+     48.48,
+     58.77,
+     -0.0
+    ],
+    "eo": [
+     48.0,
+     67.25,
+     -0.0
+    ],
+    "vai_t": [
+     48.87,
+     50.79,
+     -7.0
+    ],
+    "vai_p": [
+     48.87,
+     57.79,
+     7.0
+    ],
+    "khuyu_t": [
+     51.54,
+     57.7,
+     -9.58
+    ],
+    "khuyu_p": [
+     52.28,
+     66.98,
+     9.48
+    ],
+    "co_tay_t": [
+     59.41,
+     56.73,
+     -8.94
+    ],
+    "co_tay_p": [
+     60.15,
+     65.37,
+     8.84
+    ],
+    "hong_t": [
+     48.0,
+     65.0,
+     -4.5
+    ],
+    "hong_p": [
+     48.0,
+     69.5,
+     4.5
+    ],
+    "goi_t": [
+     46.44,
+     74.31,
+     -5.53
+    ],
+    "goi_p": [
+     50.25,
+     79.7,
+     5.52
+    ],
+    "co_chan_t": [
+     42.77,
+     83.07,
+     -6.5
+    ],
+    "co_chan_p": [
+     49.64,
+     90.15,
+     6.56
+    ],
+    "mui_chan_t": [
+     46.69,
+     86.55,
+     -6.89
+    ],
+    "mui_chan_p": [
+     54.51,
+     92.56,
+     6.8
+    ],
+    "vk_goc": null,
+    "vk_mui": null
+   },
+   "phu": {
+    "got_p": [
+     48.52,
+     92.17
+    ],
+    "got_t": [
+     41.11,
+     84.48
+    ],
+    "toc": [
+     43.15,
+     31.99
+    ],
+    "mat": [
+     [
+      62.8,
+      43.17
+     ]
+    ]
+   },
+   "thu_tu_ve": [
+    "cang_tay_t",
+    "canh_tay_t",
+    "ban_chan_t",
+    "cang_chan_t",
+    "dui_t",
+    "dau",
+    "than",
+    "dui_p",
+    "cang_chan_p",
+    "ban_chan_p",
+    "canh_tay_p",
+    "cang_tay_p"
+   ],
+   "truoc_sau": {
+    "cang_tay_t": "sau",
+    "canh_tay_t": "sau",
+    "ban_chan_t": "sau",
+    "cang_chan_t": "sau",
+    "dui_t": "sau",
+    "dui_p": "truoc",
+    "cang_chan_p": "truoc",
+    "ban_chan_p": "truoc",
+    "canh_tay_p": "truoc",
+    "cang_tay_p": "truoc"
+   },
+   "dai3": {
+    "vai_pkhuyu_p": 9.0,
+    "khuyu_pco_tay_p": 8.0,
+    "vai_tkhuyu_t": 9.0,
+    "khuyu_tco_tay_t": 8.0,
+    "hong_pgoi_p": 10.0,
+    "goi_pco_chan_p": 10.0,
+    "hong_tgoi_t": 10.0,
+    "goi_tco_chan_t": 10.0,
+    "eoco": 15.49,
+    "codau": 14.0
+   }
+  },
+  {
+   "i": 4,
+   "cham": false,
+   "giay": 0.1562,
+   "vn": "gần đỉnh hơi thở",
+   "en": "almost top of the breath",
+   "khop": {
+    "dau": [
+     51.05,
+     37.91,
+     -0.0
+    ],
+    "co": [
+     49.24,
+     51.79,
+     -0.0
+    ],
+    "nguc": [
+     48.55,
+     58.76,
+     -0.0
+    ],
+    "eo": [
+     48.0,
+     67.23,
+     -0.0
+    ],
+    "vai_t": [
+     48.99,
+     50.78,
+     -7.0
+    ],
+    "vai_p": [
+     48.99,
+     57.78,
+     7.0
+    ],
+    "khuyu_t": [
+     51.77,
+     57.67,
+     -9.55
+    ],
+    "khuyu_p": [
+     52.51,
+     66.92,
+     9.45
+    ],
+    "co_tay_t": [
+     59.56,
+     56.42,
+     -8.77
+    ],
+    "co_tay_p": [
+     60.3,
+     64.87,
+     8.66
+    ],
+    "hong_t": [
+     48.0,
+     64.98,
+     -4.5
+    ],
+    "hong_p": [
+     48.0,
+     69.48,
+     4.5
+    ],
+    "goi_t": [
+     46.56,
+     74.3,
+     -5.53
+    ],
+    "goi_p": [
+     50.37,
+     79.65,
+     5.52
+    ],
+    "co_chan_t": [
+     42.72,
+     83.01,
+     -6.5
+    ],
+    "co_chan_p": [
+     49.57,
+     90.08,
+     6.56
+    ],
+    "mui_chan_t": [
+     46.57,
+     86.55,
+     -6.89
+    ],
+    "mui_chan_p": [
+     54.4,
+     92.59,
+     6.81
+    ],
+    "vk_goc": null,
+    "vk_mui": null
+   },
+   "phu": {
+    "got_p": [
+     48.42,
+     92.09
+    ],
+    "got_t": [
+     41.03,
+     84.38
+    ],
+    "toc": [
+     43.8,
+     31.85
+    ],
+    "mat": [
+     [
+      63.22,
+      43.51
+     ]
+    ]
+   },
+   "thu_tu_ve": [
+    "cang_tay_t",
+    "canh_tay_t",
+    "ban_chan_t",
+    "cang_chan_t",
+    "dui_t",
+    "dau",
+    "than",
+    "dui_p",
+    "cang_chan_p",
+    "ban_chan_p",
+    "canh_tay_p",
+    "cang_tay_p"
+   ],
+   "truoc_sau": {
+    "cang_tay_t": "sau",
+    "canh_tay_t": "sau",
+    "ban_chan_t": "sau",
+    "cang_chan_t": "sau",
+    "dui_t": "sau",
+    "dui_p": "truoc",
+    "cang_chan_p": "truoc",
+    "ban_chan_p": "truoc",
+    "canh_tay_p": "truoc",
+    "cang_tay_p": "truoc"
+   },
+   "dai3": {
+    "vai_pkhuyu_p": 9.0,
+    "khuyu_pco_tay_p": 8.0,
+    "vai_tkhuyu_t": 9.0,
+    "khuyu_tco_tay_t": 8.0,
+    "hong_pgoi_p": 10.0,
+    "goi_pco_chan_p": 10.0,
+    "hong_tgoi_t": 10.0,
+    "goi_tco_chan_t": 10.0,
+    "eoco": 15.49,
+    "codau": 14.0
+   }
+  },
+  {
+   "i": 5,
+   "cham": false,
+   "giay": 0.1562,
+   "vn": "đỉnh hơi thở: vai nhích lên 1 điểm ảnh, gối hơi chùng",
+   "en": "top of the breath: shoulders 1px higher, knees slightly bent",
+   "khop": {
+    "dau": [
+     51.26,
+     37.93,
+     -0.0
+    ],
+    "co": [
+     49.31,
+     51.79,
+     -0.0
+    ],
+    "nguc": [
+     48.57,
+     58.75,
+     -0.0
+    ],
+    "eo": [
+     48.0,
+     67.22,
+     -0.0
+    ],
+    "vai_t": [
+     49.05,
+     50.78,
+     -7.0
+    ],
+    "vai_p": [
+     49.05,
+     57.78,
+     7.0
+    ],
+    "khuyu_t": [
+     51.87,
+     57.67,
+     -9.54
+    ],
+    "khuyu_p": [
+     52.6,
+     66.9,
+     9.43
+    ],
+    "co_tay_t": [
+     59.62,
+     56.29,
+     -8.7
+    ],
+    "co_tay_p": [
+     60.35,
+     64.67,
+     8.59
+    ],
+    "hong_t": [
+     48.0,
+     64.97,
+     -4.5
+    ],
+    "hong_p": [
+     48.0,
+     69.47,
+     4.5
+    ],
+    "goi_t": [
+     46.61,
+     74.3,
+     -5.54
+    ],
+    "goi_p": [
+     50.42,
+     79.63,
+     5.51
+    ],
+    "co_chan_t": [
+     42.7,
+     82.98,
+     -6.5
+    ],
+    "co_chan_p": [
+     49.55,
+     90.06,
+     6.56
+    ],
+    "mui_chan_t": [
+     46.52,
+     86.55,
+     -6.89
+    ],
+    "mui_chan_p": [
+     54.35,
+     92.6,
+     6.81
+    ],
+    "vk_goc": null,
+    "vk_mui": null
+   },
+   "phu": {
+    "got_p": [
+     48.38,
+     92.05
+    ],
+    "got_t": [
+     41.0,
+     84.34
+    ],
+    "toc": [
+     44.06,
+     31.79
+    ],
+    "mat": [
+     [
+      63.39,
+      43.65
+     ]
+    ]
+   },
+   "thu_tu_ve": [
+    "cang_tay_t",
+    "canh_tay_t",
+    "ban_chan_t",
+    "cang_chan_t",
+    "dui_t",
+    "dau",
+    "than",
+    "dui_p",
+    "cang_chan_p",
+    "ban_chan_p",
+    "canh_tay_p",
+    "cang_tay_p"
+   ],
+   "truoc_sau": {
+    "cang_tay_t": "sau",
+    "canh_tay_t": "sau",
+    "ban_chan_t": "sau",
+    "cang_chan_t": "sau",
+    "dui_t": "sau",
+    "dui_p": "truoc",
+    "cang_chan_p": "truoc",
+    "ban_chan_p": "truoc",
+    "canh_tay_p": "truoc",
+    "cang_tay_p": "truoc"
+   },
+   "dai3": {
+    "vai_pkhuyu_p": 9.0,
+    "khuyu_pco_tay_p": 8.0,
+    "vai_tkhuyu_t": 9.0,
+    "khuyu_tco_tay_t": 8.0,
+    "hong_pgoi_p": 10.0,
+    "goi_pco_chan_p": 10.0,
+    "hong_tgoi_t": 10.0,
+    "goi_tco_chan_t": 10.0,
+    "eoco": 15.49,
+    "codau": 14.0
+   }
+  },
+  {
+   "i": 6,
+   "cham": false,
+   "giay": 0.1562,
+   "vn": "thở ra",
+   "en": "breathing out",
+   "khop": {
+    "dau": [
+     51.05,
+     37.91,
+     -0.0
+    ],
+    "co": [
+     49.24,
+     51.79,
+     -0.0
+    ],
+    "nguc": [
+     48.55,
+     58.76,
+     -0.0
+    ],
+    "eo": [
+     48.0,
+     67.23,
+     -0.0
+    ],
+    "vai_t": [
+     48.99,
+     50.78,
+     -7.0
+    ],
+    "vai_p": [
+     48.99,
+     57.78,
+     7.0
+    ],
+    "khuyu_t": [
+     51.77,
+     57.67,
+     -9.55
+    ],
+    "khuyu_p": [
+     52.51,
+     66.92,
+     9.45
+    ],
+    "co_tay_t": [
+     59.56,
+     56.42,
+     -8.77
+    ],
+    "co_tay_p": [
+     60.3,
+     64.87,
+     8.66
+    ],
+    "hong_t": [
+     48.0,
+     64.98,
+     -4.5
+    ],
+    "hong_p": [
+     48.0,
+     69.48,
+     4.5
+    ],
+    "goi_t": [
+     46.56,
+     74.3,
+     -5.53
+    ],
+    "goi_p": [
+     50.37,
+     79.65,
+     5.52
+    ],
+    "co_chan_t": [
+     42.72,
+     83.01,
+     -6.5
+    ],
+    "co_chan_p": [
+     49.57,
+     90.08,
+     6.56
+    ],
+    "mui_chan_t": [
+     46.57,
+     86.55,
+     -6.89
+    ],
+    "mui_chan_p": [
+     54.4,
+     92.59,
+     6.81
+    ],
+    "vk_goc": null,
+    "vk_mui": null
+   },
+   "phu": {
+    "got_p": [
+     48.42,
+     92.09
+    ],
+    "got_t": [
+     41.03,
+     84.38
+    ],
+    "toc": [
+     43.8,
+     31.85
+    ],
+    "mat": [
+     [
+      63.22,
+      43.51
+     ]
+    ]
+   },
+   "thu_tu_ve": [
+    "cang_tay_t",
+    "canh_tay_t",
+    "ban_chan_t",
+    "cang_chan_t",
+    "dui_t",
+    "dau",
+    "than",
+    "dui_p",
+    "cang_chan_p",
+    "ban_chan_p",
+    "canh_tay_p",
+    "cang_tay_p"
+   ],
+   "truoc_sau": {
+    "cang_tay_t": "sau",
+    "canh_tay_t": "sau",
+    "ban_chan_t": "sau",
+    "cang_chan_t": "sau",
+    "dui_t": "sau",
+    "dui_p": "truoc",
+    "cang_chan_p": "truoc",
+    "ban_chan_p": "truoc",
+    "canh_tay_p": "truoc",
+    "cang_tay_p": "truoc"
+   },
+   "dai3": {
+    "vai_pkhuyu_p": 9.0,
+    "khuyu_pco_tay_p": 8.0,
+    "vai_tkhuyu_t": 9.0,
+    "khuyu_tco_tay_t": 8.0,
+    "hong_pgoi_p": 10.0,
+    "goi_pco_chan_p": 10.0,
+    "hong_tgoi_t": 10.0,
+    "goi_tco_chan_t": 10.0,
+    "eoco": 15.49,
+    "codau": 14.0
+   }
+  },
+  {
+   "i": 7,
+   "cham": false,
+   "giay": 0.1562,
+   "vn": "thở ra",
+   "en": "breathing out",
+   "khop": {
+    "dau": [
+     50.55,
+     37.88,
+     -0.0
+    ],
+    "co": [
+     49.09,
+     51.8,
+     -0.0
+    ],
+    "nguc": [
+     48.48,
+     58.77,
+     -0.0
+    ],
+    "eo": [
+     48.0,
+     67.25,
+     -0.0
+    ],
+    "vai_t": [
+     48.87,
+     50.79,
+     -7.0
+    ],
+    "vai_p": [
+     48.87,
+     57.79,
+     7.0
+    ],
+    "khuyu_t": [
+     51.54,
+     57.7,
+     -9.58
+    ],
+    "khuyu_p": [
+     52.28,
+     66.98,
+     9.48
+    ],
+    "co_tay_t": [
+     59.41,
+     56.73,
+     -8.94
+    ],
+    "co_tay_p": [
+     60.15,
+     65.37,
+     8.84
+    ],
+    "hong_t": [
+     48.0,
+     65.0,
+     -4.5
+    ],
+    "hong_p": [
+     48.0,
+     69.5,
+     4.5
+    ],
+    "goi_t": [
+     46.44,
+     74.31,
+     -5.53
+    ],
+    "goi_p": [
+     50.25,
+     79.7,
+     5.52
+    ],
+    "co_chan_t": [
+     42.77,
+     83.07,
+     -6.5
+    ],
+    "co_chan_p": [
+     49.64,
+     90.15,
+     6.56
+    ],
+    "mui_chan_t": [
+     46.69,
+     86.55,
+     -6.89
+    ],
+    "mui_chan_p": [
+     54.51,
+     92.56,
+     6.8
+    ],
+    "vk_goc": null,
+    "vk_mui": null
+   },
+   "phu": {
+    "got_p": [
+     48.52,
+     92.17
+    ],
+    "got_t": [
+     41.11,
+     84.48
+    ],
+    "toc": [
+     43.15,
+     31.99
+    ],
+    "mat": [
+     [
+      62.8,
+      43.17
+     ]
+    ]
+   },
+   "thu_tu_ve": [
+    "cang_tay_t",
+    "canh_tay_t",
+    "ban_chan_t",
+    "cang_chan_t",
+    "dui_t",
+    "dau",
+    "than",
+    "dui_p",
+    "cang_chan_p",
+    "ban_chan_p",
+    "canh_tay_p",
+    "cang_tay_p"
+   ],
+   "truoc_sau": {
+    "cang_tay_t": "sau",
+    "canh_tay_t": "sau",
+    "ban_chan_t": "sau",
+    "cang_chan_t": "sau",
+    "dui_t": "sau",
+    "dui_p": "truoc",
+    "cang_chan_p": "truoc",
+    "ban_chan_p": "truoc",
+    "canh_tay_p": "truoc",
+    "cang_tay_p": "truoc"
+   },
+   "dai3": {
+    "vai_pkhuyu_p": 9.0,
+    "khuyu_pco_tay_p": 8.0,
+    "vai_tkhuyu_t": 9.0,
+    "khuyu_tco_tay_t": 8.0,
+    "hong_pgoi_p": 10.0,
+    "goi_pco_chan_p": 10.0,
+    "hong_tgoi_t": 10.0,
+    "goi_tco_chan_t": 10.0,
+    "eoco": 15.49,
+    "codau": 14.0
+   }
+  },
+  {
+   "i": 8,
+   "cham": false,
+   "giay": 0.1562,
+   "vn": "sắp về khung 1",
+   "en": "almost back to frame 1",
+   "khop": {
+    "dau": [
+     50.06,
+     37.86,
+     -0.0
+    ],
+    "co": [
+     48.94,
+     51.81,
+     -0.0
+    ],
+    "nguc": [
+     48.41,
+     58.79,
+     -0.0
+    ],
+    "eo": [
+     48.0,
+     67.28,
+     -0.0
+    ],
+    "vai_t": [
+     48.75,
+     50.81,
+     -7.0
+    ],
+    "vai_p": [
+     48.75,
+     57.81,
+     7.0
+    ],
+    "khuyu_t": [
+     51.3,
+     57.73,
+     -9.6
+    ],
+    "khuyu_p": [
+     52.05,
+     67.05,
+     9.51
+    ],
+    "co_tay_t": [
+     59.24,
+     57.06,
+     -9.11
+    ],
+    "co_tay_p": [
+     59.98,
+     65.88,
+     9.02
+    ],
+    "hong_t": [
+     48.0,
+     65.03,
+     -4.5
+    ],
+    "hong_p": [
+     48.0,
+     69.53,
+     4.5
+    ],
+    "goi_t": [
+     46.31,
+     74.32,
+     -5.53
+    ],
+    "goi_p": [
+     50.13,
+     79.76,
+     5.52
+    ],
+    "co_chan_t": [
+     42.82,
+     83.14,
+     -6.51
+    ],
+    "co_chan_p": [
+     49.7,
+     90.21,
+     6.57
+    ],
+    "mui_chan_t": [
+     46.81,
+     86.56,
+     -6.89
+    ],
+    "mui_chan_p": [
+     54.61,
+     92.53,
+     6.8
+    ],
+    "vk_goc": null,
+    "vk_mui": null
+   },
+   "phu": {
+    "got_p": [
+     48.62,
+     92.26
+    ],
+    "got_t": [
+     41.19,
+     84.58
+    ],
+    "toc": [
+     42.51,
+     32.16
+    ],
+    "mat": [
+     [
+      62.37,
+      42.85
+     ]
+    ]
+   },
+   "thu_tu_ve": [
+    "cang_tay_t",
+    "canh_tay_t",
+    "ban_chan_t",
+    "cang_chan_t",
+    "dui_t",
+    "dau",
+    "than",
+    "dui_p",
+    "cang_chan_p",
+    "ban_chan_p",
+    "canh_tay_p",
+    "cang_tay_p"
+   ],
+   "truoc_sau": {
+    "cang_tay_t": "sau",
+    "canh_tay_t": "sau",
+    "ban_chan_t": "sau",
+    "cang_chan_t": "sau",
+    "dui_t": "sau",
+    "dui_p": "truoc",
+    "cang_chan_p": "truoc",
+    "ban_chan_p": "truoc",
+    "canh_tay_p": "truoc",
+    "cang_tay_p": "truoc"
+   },
+   "dai3": {
+    "vai_pkhuyu_p": 9.0,
+    "khuyu_pco_tay_p": 8.0,
+    "vai_tkhuyu_t": 9.0,
+    "khuyu_tco_tay_t": 8.0,
+    "hong_pgoi_p": 10.0,
+    "goi_pco_chan_p": 10.0,
+    "hong_tgoi_t": 10.0,
+    "goi_tco_chan_t": 10.0,
+    "eoco": 15.49,
+    "codau": 14.0
+   }
+  }
+ ]
+}

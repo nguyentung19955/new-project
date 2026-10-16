@@ -1,0 +1,172 @@
+[
+ {
+  "ma": "01-dung",
+  "ten": "Đứng thở",
+  "so": 8,
+  "giay": 1.0,
+  "lap": true,
+  "cham": null,
+  "max_khop": "khuỷu phải",
+  "max_goc": 2.1,
+  "giua": [
+   3,
+   4
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 4.2,
+  "max2d_huong": "se",
+  "max2d_cho": [
+   2,
+   3,
+   "khuyu_p-co_tay_p"
+  ]
+ },
+ {
+  "ma": "02-di",
+  "ten": "Đi bộ",
+  "so": 8,
+  "giay": 0.8,
+  "lap": true,
+  "cham": null,
+  "max_khop": "gối phải",
+  "max_goc": 22.6,
+  "giua": [
+   5,
+   6
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 30.1,
+  "max2d_huong": "e",
+  "max2d_cho": [
+   4,
+   5,
+   "goi_t-co_chan_t"
+  ]
+ },
+ {
+  "ma": "03-chay",
+  "ten": "Chạy",
+  "so": 12,
+  "giay": 0.6,
+  "lap": true,
+  "cham": null,
+  "max_khop": "gối phải",
+  "max_goc": 25.0,
+  "giua": [
+   12,
+   1
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 43.6,
+  "max2d_huong": "se",
+  "max2d_cho": [
+   11,
+   12,
+   "goi_p-co_chan_p"
+  ]
+ },
+ {
+  "ma": "04-lon",
+  "ten": "Lộn né",
+  "so": 6,
+  "giay": 0.27,
+  "lap": false,
+  "cham": null,
+  "max_khop": "cả người",
+  "max_goc": 95.0,
+  "giua": [
+   3,
+   4
+  ],
+  "vuot": [
+   [
+    "cả người",
+    95.0,
+    [
+     3,
+     4
+    ]
+   ]
+  ],
+  "dat": false,
+  "max2d": 180.0,
+  "max2d_huong": "s",
+  "max2d_cho": [
+   4,
+   5,
+   "hong_t-goi_t"
+  ]
+ },
+ {
+  "ma": "08-kiem-1",
+  "ten": "Kiếm nhát 1",
+  "so": 5,
+  "giay": 0.3,
+  "lap": false,
+  "cham": 3,
+  "max_khop": "khuỷu phải",
+  "max_goc": 45.0,
+  "giua": [
+   2,
+   3
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 151.0,
+  "max2d_huong": "s",
+  "max2d_cho": [
+   2,
+   3,
+   "khuyu_p-co_tay_p"
+  ]
+ },
+ {
+  "ma": "09-kiem-2",
+  "ten": "Kiếm nhát 2",
+  "so": 5,
+  "giay": 0.3,
+  "lap": false,
+  "cham": 3,
+  "max_khop": "cổ tay phải (vũ khí)",
+  "max_goc": 45.0,
+  "giua": [
+   1,
+   2
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 109.2,
+  "max2d_huong": "ne",
+  "max2d_cho": [
+   1,
+   2,
+   "khuyu_p-co_tay_p"
+  ]
+ },
+ {
+  "ma": "10-kiem-3",
+  "ten": "Kiếm nhát 3",
+  "so": 6,
+  "giay": 0.46,
+  "lap": false,
+  "cham": 3,
+  "max_khop": "cổ tay phải (vũ khí)",
+  "max_goc": 45.0,
+  "giua": [
+   2,
+   3
+  ],
+  "vuot": [],
+  "dat": true,
+  "max2d": 177.5,
+  "max2d_huong": "se",
+  "max2d_cho": [
+   2,
+   3,
+   "khuyu_t-co_tay_t"
+  ]
+ }
+]
