@@ -560,7 +560,8 @@
     c.save();
     const lt = G.lamTron || Math.round; // soát mượt phiên 3 mục 1: cùng kiểu làm tròn với camera (?noisuy=0 như cũ)
     c.translate(lt(x), lt(y));
-    if (bong) {
+    if (bong && G.bongAnh && G.bongAnh(c, 0, 0, sp.bong * (n === 'die' ? 1 - 0.5 * (s.u || 0) : 1) / 2, s.alpha == null ? 1 : s.alpha)) { /* 16/10 vẽ tay 6: ảnh bóng */ }
+    else if (bong) {
       const w = sp.bong * (n === 'die' ? 1 - 0.5 * (s.u || 0) : 1);
       c.save();
       c.globalAlpha *= 0.28 * (s.alpha == null ? 1 : s.alpha);

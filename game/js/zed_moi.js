@@ -615,7 +615,8 @@
     c.imageSmoothingEnabled = false;
     if (!o.noShadow) {
       const sw = chet ? 12 : 8, sx = chet ? x - f * 6 : x;
-      if (o.roundShadow && G.art && G.art.ellipse) G.art.ellipse(c, sx, y, sw + 1, Math.max(2, Math.round((sw + 1) * 0.45)), 'rgba(0,0,0,0.3)');
+      if (G.bongAnh && G.bongAnh(c, sx, y, sw + 1)) { /* 16/10 vẽ tay 6: ảnh hu-bong-chan khi đang chặn hình code */ }
+      else if (o.roundShadow && G.art && G.art.ellipse) G.art.ellipse(c, sx, y, sw + 1, Math.max(2, Math.round((sw + 1) * 0.45)), 'rgba(0,0,0,0.3)');
       else { c.fillStyle = 'rgba(0,0,0,0.3)'; c.fillRect(sx - sw + 2, y - 1, sw * 2 - 4, 1); c.fillRect(sx - sw, y, sw * 2, 1); c.fillRect(sx - sw + 2, y + 1, sw * 2 - 4, 1); }
     }
     c.translate(x + (f < 0 ? 1 : 0), y);

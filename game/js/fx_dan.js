@@ -208,6 +208,27 @@
     } catch (e) { fail(e); }
   };
 
+  // 16/10 vẽ tay 6: quầng + vệt bay vẽ code (glow, trail) bị chặn → ảnh hu-quang-dan (đầu quầng ở tâm đạn, đuôi kéo ngược hướng bay, xoay
+  // theo hướng bay 16 hướng), nhuộm như cũ: đạn của bé màu hệ (không hệ: trắng), đạn quái màu hệ / màu đạn. Cỡ theo vệt cũ (dài 24 khi co 1).
+  fx.projAnh = function (c, o) {
+    if (G.noRender || !(G.chanVe > 0)) return;
+    const F = G.fxAnh;
+    if (!F || !F.co('hu-quang-dan')) return;
+    try {
+      const x = Math.round(o.x), y = Math.round(o.y - (o.z || 10)), sp = Math.hypot(o.vx, o.vy) || 1, g = Math.atan2(o.vy, o.vx), el = elOf(o);
+      const H16 = Math.PI / 8, goc = G.TILE05 !== false ? Math.round(g / H16) * H16 : g;
+      let mau, co;
+      if (o.team === 'player') { mau = el ? EL_GLOW[el] : null; co = o.big ? 1.2 : 0.8; }
+      else {
+        lookOf(o);
+        const base = el ? EL_GLOW[el] : o.col || '#ffb09a';
+        mau = typeof base === 'string' && base.length === 7 && base[0] === '#' ? base : '#ffb09a';
+        co = Math.max(0.6, Math.min(1.4, Math.max(5, Math.min(22, sp * 0.09)) / 18)) * (o.dBig ? 1.3 : 1);
+      }
+      F.ve(c, 'hu-quang-dan', x, y, o.fxT || G.time || 0, goc, co, false, 1, mau);
+    } catch (e) { fail(e); }
+  };
+
   // ---------- vẽ: hình viên đạn ----------
   const art0 = A.proj;
   // Ảnh AI (js/fx_anh.js): phi tiêu mang hệ của Zed (hu-dan-ten-<hệ>), viên bào tử (hu-dan-bao-tu). Không có tệp thì vẽ như cũ.

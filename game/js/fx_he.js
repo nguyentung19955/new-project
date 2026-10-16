@@ -99,8 +99,22 @@
     return PTO;
   }
 
+  // 16/10 vẽ tay 6: vệt tay vũ khí hệ vẽ code (lưỡi lửa, giọt độc, răng cưa băng) bị chặn → ảnh hu-giot-he-<hệ> (5 khung, ảnh quay phải,
+  // hộp 40×24 khi co 1) đặt giữa hình đòn: cung trước mặt (giữa cung, cỡ theo bán kính cung), đường đâm (giữa đường, cỡ theo độ dài),
+  // vòng quét (hai bên, bên trái lật). Khung theo tiến độ hình đòn; hình đòn đã xoay theo hướng nhắm (drawFx o.rot).
+  function giotAnh(c, o, k, el) {
+    if (!(G.chanVe > 0)) return false;
+    const FA = G.fxAnh, ma = 'hu-giot-he-' + el, a = FA && FA.get(ma);
+    if (!a) return false;
+    const sh = o.sh, f = Math.min(a.so - 1, Math.floor(k * a.so)), kp = (v) => Math.max(0.5, Math.min(2, v));
+    if (sh.kind === 'line') FA.veK(c, ma, sh.x + sh.f * sh.len / 2, sh.y, f, 0, kp(sh.len / 40), sh.f < 0, 1);
+    else if (sh.kind === 'round') { const s = kp(sh.ra / 28); FA.veK(c, ma, sh.x + sh.ra * 0.6, sh.y, f, 0, s, false, 1); FA.veK(c, ma, sh.x - sh.ra * 0.6, sh.y, f, 0, s, true, 1); }
+    else FA.veK(c, ma, sh.x + sh.f * sh.ra * 0.61, sh.y, f, 0, kp((0.78 * sh.ra + 2 * sh.rb) / 64), sh.f < 0, 1);
+    return true;
+  }
   // ---------- LỬA: lưỡi lửa bám dọc vệt đòn, tàn lửa bay ----------
   function drawFlames(c, o, k) {
+    if (giotAnh(c, o, k, 'fire')) return;
     const sh = o.sh, n = o.n, t = K.S().t;
     for (let i = 0; i < n; i++) {
       const u = (i + 0.5) / n;
@@ -126,6 +140,7 @@
   const TIM = () => (G.goNhu() ? RAMP.poison : PURPLE);
   const TIM1 = () => (G.goNhu() ? '#3f8f22' : '#9a5fd6'), TIM2 = () => (G.goNhu() ? '#8fe04a' : '#b98af0');
   function drawDrips(c, o, k) {
+    if (giotAnh(c, o, k, 'poison')) return;
     const sh = o.sh, n = o.n, t1 = TIM1(), t2 = TIM2();
     const grow = Math.min(1, k * 2.4);
     // viền tím chạy dọc vệt đòn
@@ -157,6 +172,7 @@
   }
   // ---------- BĂNG: vệt trắng xanh gãy góc, sắc cạnh, mảnh băng văng ----------
   function drawIce(c, o, k) {
+    if (giotAnh(c, o, k, 'ice')) return;
     const sh = o.sh, n = o.n;
     let px = 0, py = 0, has = false;
     const grow = Math.min(1, k * 5), thin = k > 0.7;
@@ -885,6 +901,13 @@
     if (!ch) return;
     const S = K.S(), x = Math.round(P.x) - 13, y = Math.round(P.y) - 42, BW = 26;
     const full = mv.charge >= 1, blink = full && ((S.t * 12) | 0) % 2;
+    // 16/10 vẽ tay 6: vạch lấy đà vẽ code bị chặn → vòng tụ lực hu-tu-luc-vong ở đúng chỗ vạch (trên đầu, rộng ~26 như vạch): đang lấy đà
+    // thì vòng co dần theo mức đà (khung 1–4), đầy thì nảy sáng (khung 4–6 lặp) nhấp nháy vàng; màu như vạch cũ.
+    if (G.chanVe > 0 && G.fxAnh && G.fxAnh.co('hu-tu-luc-vong')) {
+      const f = full ? 3 + (((S.t * 12) | 0) % 3) : Math.min(3, Math.floor(mv.charge * 4));
+      G.fxAnh.veK(c, 'hu-tu-luc-vong', P.x, y + 2, f, 0, 26 / 36, false, 1, full ? (blink ? '#ffffff' : '#ffd23f') : mv.level >= 1 ? '#ffb347' : '#e8e2d0');
+      return;
+    }
     p(c, x - 1, y - 1, BW + 2, 6, '#140d0e');
     p(c, x, y, BW, 4, '#3a2e30');
     const n = Math.round(BW * mv.charge);

@@ -300,7 +300,7 @@ TEN_ANH = 'linh-khi-anh.%s.json'
 TRAN_MOT_TEP, TRAN_HAI_TEP, NEN_DUOI = 30 * 1024 * 1024, 26 * 1024 * 1024, 5 * 1024 * 1024
 TRUM_VUNG = ('mocTinh', 'nguTinh', 'hoTinh', 'thuongLuong')  # thuongLuong: vùng 4 Sông sâu (bước 3; chưa có ảnh ở phiên 1)
 # Hiệu ứng cơ bản (đòn đánh thường nào cũng dùng): vệt chém / đâm, mũi tên của bé, trúng đòn, chí mạng, vỡ giáp, quái chết.
-HU_CO_BAN = re.compile(r'^hu-(chem|dam|trung|dan-ten|chi-mang|pha-giap|quai-chet)(-|$)')
+HU_CO_BAN = re.compile(r'^hu-(chem|dam|trung|dan-ten|chi-mang|pha-giap|quai-chet|bong-chan|hat-no)(-|$)')  # 16/10 vẽ tay 6: bóng chân, hạt nổ (rất nhỏ, có ở mọi trận)
 
 
 # 14/10 (vũ khí cũ còn sót, mục 7): gd-lang-nen thôi tải sau — làng không còn vẽ nền code lúc chờ ảnh nên nền phải về cùng ảnh lõi.

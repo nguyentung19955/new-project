@@ -165,6 +165,8 @@
   }
   // vòng elip co dần về thân, hai màu xen nhau
   function drawThrob(c, o, k, x, y) {
+    // 16/10 vẽ tay 6: vòng co vẽ code bị chặn → ảnh hu-tu-luc-vong khung 1–4 (vòng co vào), rộng = vòng cũ (khung 1 rộng ~36 khi co 1), màu như cũ
+    if (G.chanVe > 0 && G.fxAnh && G.fxAnh.co('hu-tu-luc-vong')) { G.fxAnh.veK(c, 'hu-tu-luc-vong', x, y, Math.min(3, Math.floor(k * 4)), 0, (2 * o.w) / 36, false, 1, k < 0.5 ? '#c2f58a' : '#9a5fd6'); return; }
     const s = 1 - 0.45 * k, rx = o.w * s, ry = o.h * s;
     ring(c, x, y, rx, ry, 1, k < 0.5 ? '#c2f58a' : '#9a5fd6', k > 0.6);
   }

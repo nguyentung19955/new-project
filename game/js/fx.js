@@ -254,8 +254,35 @@
   function botDoc(x, y) { datSan('hu-bot-doc', x, y, 1, 0); }
   function emit(k, x, y, vx, vy, t, c, s, g, dr, fy, ly) {
     if (doiHat(k, x, y, vx, vy, c, s, g, fy)) return HAT_GIA;
+    hatAnh(k, x, y, c, s, ly);
     return emitHat(k, x, y, vx, vy, t, c, s, g, dr, fy, ly);
   }
+  // 16/10 vẽ tay 6: hạt vẽ code (vuông, tia, lấp lánh, khói) bị chặn → mỗi CHÙM hạt vừa sinh (cùng chỗ trong 0,1 giây) thành MỘT ảnh:
+  // hu-hat-no (tia lửa trắng, nhuộm màu giữa của dải màu hạt) cho hạt loại 0, 1, 3, 4, 6, 10; hu-khoi-tron (khói tròn, nhuộm nhẹ) cho loại 2
+  // (puffs, bụi gót, bụi nện). Hạt vẫn sinh như cũ (vô hình khi chặn). Chỉ chùm ≥ 3 hạt sinh cùng lúc mới thành ảnh; tối đa 8 ảnh mới mỗi khung. ?vecode=1: không có ảnh nào.
+  const HAT_MA = { 0: 'hu-hat-no', 1: 'hu-hat-no', 3: 'hu-hat-no', 4: 'hu-hat-no', 6: 'hu-hat-no', 10: 'hu-hat-no', 2: 'hu-khoi-tron' };
+  const CHUM = [];
+  let chumT = -1, chumN = 0;
+  const laHex = (m) => typeof m === 'string' && m.length === 7 && m[0] === '#';
+  function hatAnh(k, x, y, c, s, ly) {
+    const ma = HAT_MA[k];
+    if (!ma || !S || !G.anhThay || !G.anhThay(ma)) return;
+    const now = S.t;
+    if (now !== chumT) { chumT = now; chumN = 0; }
+    let q = null;
+    for (let i = CHUM.length - 1; i >= 0; i--) {
+      const o = CHUM[i];
+      if (now - o.t > 0.1) { CHUM.splice(i, 1); continue; }
+      if (!q && o.ma === ma && Math.abs(o.x - x) < 14 && Math.abs(o.y - y) < 12) q = o;
+    }
+    if (!q) { if (CHUM.length < 64) CHUM.push({ ma, x, y, t: now, n: 1, xong: false }); return; }
+    // chỉ chùm từ 3 hạt sinh cùng lúc trở lên mới thành ảnh (nổ, trúng đòn, bụi nện); hạt lẻ rơi theo đường bay / bước chân thì không
+    if (q.xong || ++q.n < 3 || now - q.t > 0.02 || chumN >= 8) return;
+    q.xong = true; chumN++;
+    const mau = Array.isArray(c) ? c[Math.min(1, c.length - 1)] : c;
+    anh(ma, q.x, ma === 'hu-khoi-tron' ? q.y - 3 : q.y, { sc: ma === 'hu-khoi-tron' ? (s >= 4 ? 1 : 0.8) : (s >= 3 ? 1 : 0.8), ly: ly == null ? 1 : ly, mau: laHex(mau) ? mau : null });
+  }
+
   function emitHat(k, x, y, vx, vy, t, c, s, g, dr, fy, ly) {
     let o;
     if (S.np < MAXP) o = PT[S.np++]; else { o = PT[S.ovr]; S.ovr = (S.ovr + 1) % MAXP; }
@@ -407,6 +434,19 @@
     S.E.push(o);
     if (CAP) CAP.e.push(o);
     return o;
+  }
+  // 16/10 vẽ tay 6: vòng sóng bằng ảnh hu-vong-song (5 khung vòng to dần và nhạt dần; "ban_kinh" = bán kính từng khung khi co 1).
+  // Khung theo tiến độ k, co sao cho bán kính khung = bán kính vòng cũ r, kéo dẹt theo tỉ lệ ry / r của vòng cũ (vòng trên sàn), nhuộm màu vòng.
+  function vongAnh(c, x, y, r, ry, k, mau) {
+    const FA = G.fxAnh, a = FA && FA.get('hu-vong-song');
+    if (!a || !(r >= 1)) return !!a;
+    const f = Math.min(a.so - 1, Math.floor(k * a.so)), rf = (a.bk && a.bk[f]) || a.fw / 2 - 1;
+    c.save();
+    try {
+      c.translate(x, y); c.scale(1, ry / r);
+      FA.veK(c, 'hu-vong-song', 0, 0, f, 0, r / rf, false, 1, laHex(mau) ? mau : null);
+    } finally { c.restore(); }
+    return true;
   }
   function addRing(x, y, r0, r1, t, col, th, ly, d) { return add({ ty: 'ring', x, y, r0, r1, t, c: col, th: th || 2, ly: ly == null ? 0 : ly, d: d || 0 }); }
   // ---------- hiệu ứng ảnh AI (js/fx_anh.js, tệp hu-<tên>.sprite.json) ----------
@@ -2327,11 +2367,15 @@
         }
         case 'ring': {
           const e = 1 - (1 - k) * (1 - k), r = o.r0 + (o.r1 - o.r0) * e;
+          if (G.chanVe > 0 && vongAnh(c, x, y, r, ly === 0 ? r * (G.ZK || 0.6) : r * 0.85, k, o.c)) break; // 16/10 vẽ tay 6: ảnh hu-vong-song
           ring(c, x, y, r, ly === 0 ? r * (G.ZK || 0.6) : r * 0.85, Math.max(1, Math.round(o.th * (1 - k * 0.8))), o.c, k > 0.6);
           break;
         }
         case 'flash': {
           const r = o.r * (k < 0.35 ? 0.7 + k : 1.05 - k * 0.6);
+          // 16/10 vẽ tay 6: sao chớp vẽ code (star) bị chặn → ảnh hu-sao-chop (khung theo tiến độ chớp, cỡ theo bán kính chớp: khung to nhất
+          // bán kính ~10 khi co 1), nhuộm màu viền chớp c2.
+          if (!o.sq && G.chanVe > 0 && coAnh('hu-sao-chop')) { const a = G.fxAnh.get('hu-sao-chop'); G.fxAnh.veK(c, 'hu-sao-chop', x, y, Math.min(a.so - 1, Math.floor(k * a.so)), 0, kep(o.r / 9, 0.4, 3), false, 1, laHex(o.c2) ? o.c2 : null); break; }
           star(c, x, y, r, o.c2, null);
           if (o.sq) { const h = Math.round(r * 0.55); p(c, x - h, y - h, h * 2 + 1, h * 2 + 1, o.c2); const d = Math.round(r * 0.75); p(c, x - d, y - d, 2, 2, o.c2); p(c, x + d - 1, y - d, 2, 2, o.c2); p(c, x - d, y + d - 1, 2, 2, o.c2); p(c, x + d - 1, y + d - 1, 2, 2, o.c2); }
           if (k < 0.7) star(c, x, y, r * 0.5, o.c, null);
@@ -2437,6 +2481,9 @@
         case 'dashline': {
           const f = o.f, PL = o.pl, a = o.x + (o.x1 - o.x) * Math.max(0, (k - 0.25) / 0.75), b = o.x1;
           const x0 = Math.round(Math.min(a, b)), w = Math.round(Math.abs(b - a));
+          // 16/10 vẽ tay 6: vệt lướt vẽ code bị chặn → ảnh hu-vet-luot (neo mép trước = chỗ em bé, đuôi kéo về phía sau; dài theo vệt cũ,
+          // ảnh dài 40 khi co 1), nhuộm màu hệ (c2), khung theo thời gian vệt.
+          if (G.chanVe > 0 && coAnh('hu-vet-luot')) { const an = G.fxAnh.get('hu-vet-luot'); G.fxAnh.veK(c, 'hu-vet-luot', Math.round(b), y, Math.min(an.so - 1, Math.floor(k * an.so)), 0, kep(Math.max(w, 24) / 40, 0.6, 1.6), f < 0, 1, PL && laHex(PL.c2) ? PL.c2 : null); break; }
           if (w < 2) break;
           const dth = k > 0.6;
           if (dth) { c.fillStyle = PL.c; for (let q = 0; q < w; q += 2) c.fillRect(x0 + q, y - 2, 1, o.spear ? 3 : 5); }

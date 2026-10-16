@@ -1698,6 +1698,7 @@
         const bx = shaftAt(g, rn), sx = bx - 26, sy = g.fy0 + 44;
         g.glows.push({ x: sx, y: sy, rx: 30, ry: 14, a: 0.22, col: '#f4f8b8' });
         if (g.amb) for (let i = 0; i < 5; i++) g.amb.push({ k: 'beam', bx, y0: g.fy0 - g.wh, y1: sy, ph: rn() * 20, sp: 0.6 + rn() * 0.6 });
+        if (g.amb) g.amb.push({ k: 'nang', bx, yt: g.fy0 - g.wh - g.cap + 2, yb: g.fy0 + 44 }); // 16/10 vẽ tay 6: ảnh gd-cot-nang-rung thay cột nắng (lớp sống)
         return () => {
           shaft(g, bx, '#f0f4c0', 0.2);
           if (ttMot('rung', 'hoa-nang', sx, sy + 7)) return; // ảnh AI: khóm hoa dại dưới cột nắng
@@ -2012,6 +2013,9 @@
     const g = room.g, list = g.amb;
     if (!list) return;
     const fx0 = g.fx0, fx1 = g.fx1, fy0 = g.fy0, fy1 = g.fy1, fw = fx1 - fx0;
+    // 16/10 vẽ tay 6: Rừng già có ảnh đom đóm / lá rơi (hu-moi-truong-rung-*); vùng khác chưa có ảnh thì để trống (code đã bị chặn)
+    const FA = G.fxAnh, rung = room.T === Forest && G.dangChan && G.dangChan() && FA;
+    const aDom = rung && FA.get('hu-moi-truong-rung-domdom'), aLa = rung && FA.get('hu-moi-truong-rung-la');
     for (const a of list) {
       switch (a.k) {
         case 'mote': { // lớp xa (0): chậm, mờ; lớp gần (1): nhanh hơn, rõ hơn
@@ -2027,6 +2031,7 @@
           const k = Math.sin(t * 1.6 * a.sp + a.ph);
           if (k < -0.2) break;
           const b = (0.3 + 0.7 * Math.max(0, k)) * M;
+          if (aDom) { FA.ve(c, 'hu-moi-truong-rung-domdom', x, y, t * a.sp + a.ph, 0, 0.7, false, Math.min(1, b) * 0.7); break; } // ảnh: 2 đom đóm (co 0,7, nhạt 70% cho gần độ nổi của chấm cũ), nháy theo nhịp cũ
           r(x - 1, y - 1, 3, 3, acol('#d2ff78', 0.18 * b)); r(x, y, 1, 1, acol('#f4ffb0', 0.95 * b));
           break;
         }
@@ -2036,9 +2041,11 @@
           if (u < fall) {
             const q = u / fall, y = y0 + (a.y1 - y0) * q, x = a.x + Math.sin(u * 1.9 + a.ph) * 6 * M;
             const flip = Math.floor(u * 3 + a.ph) % 2;
+            if (aLa) { FA.veK(c, 'hu-moi-truong-rung-la', x, y, Math.floor(u * 2.5 + a.ph) % 3, 0, 1, Math.sin(u * 1.9 + a.ph) < 0, 1); break; } // ảnh: khung 1–3 khi rơi, lật theo chiều đung đưa
             r(x, y, flip ? 2 : 1, flip ? 1 : 2, a.col);
           } else if (u < fall + 1.6) {
             const q = (u - fall) / 1.6;
+            if (aLa) { FA.veK(c, 'hu-moi-truong-rung-la', a.x + Math.sin(fall * 1.9 + a.ph) * 6 * M, a.y1, 3 + Math.min(4, Math.floor(q * 5)), 0, 1, false, q < 0.7 ? 1 : 1 - (q - 0.7) / 0.3); break; } // nằm trên sàn (khung 4–8) rồi tan
             r(a.x + Math.sin(fall * 1.9 + a.ph) * 6 * M, a.y1, 2, 1, acol(a.col, 1 - q));
           }
           break;
@@ -2129,11 +2136,73 @@
     }
   }
 
+  // ---------- 16/10 vẽ tay 6: ảnh thay dấu phòng, cột nắng, mũi tên cửa (chỉ khi đang chặn hình code) ----------
+  // Dấu phòng gd-dau-phong (ảnh phòng Bắt đầu, vòng ngoài ~R20 như ringMark cũ). Phòng khác DÙNG TẠM cùng ảnh: phóng theo bán kính vòng cũ
+  // (tinh anh 30, thử thách 34, lời nguyền 24, trùm 58) và nhuộm màu vòng cũ (ảnh đổi sang xám rồi nhân màu). Chưa có ảnh riêng: xem báo cáo.
+  const DAU = { start: [1, null, 0], elite: [1.5, '#ff8a3a', 0], challenge: [1.7, '#4ad0c0', 0], curse: [1.2, '#b46aff', -4], boss: [2.9, 'light', 0] };
+  const NHUOM_DAU = new Map();
+  function nhuomXam(a, mau) {
+    const key = a.ma + '|' + mau, o = NHUOM_DAU.get(key);
+    if (o && o.img === a.img) return o.cv;
+    let cv = a.img;
+    try {
+      const x = mk(a.pw, a.ph); x.drawImage(a.img, 0, 0);
+      const d = x.getImageData(0, 0, a.pw, a.ph), px = d.data, M = hex(mau);
+      for (let i = 0; i < px.length; i += 4) {
+        if (!px[i + 3]) continue;
+        const l = (px[i] * 0.3 + px[i + 1] * 0.59 + px[i + 2] * 0.11) / 255 * 1.35;
+        px[i] = Math.min(255, M[0] * l); px[i + 1] = Math.min(255, M[1] * l); px[i + 2] = Math.min(255, M[2] * l);
+      }
+      x.putImageData(d, 0, 0); cv = x.canvas;
+    } catch (e) { cv = a.img; }
+    NHUOM_DAU.set(key, { img: a.img, cv });
+    return cv;
+  }
+  function dauPhongAnh(room) {
+    const g = room.g, k = DAU[g.type], a = k && gdA('gd-dau-phong');
+    if (!a) return;
+    const mau = k[1] === 'light' ? room.T.light : k[1], src = mau ? nhuomXam(a, mau) : a.img;
+    const w = a.rong * k[0], h = a.cao * k[0], cx0 = (g.fx0 + g.fx1) >> 1, cy0 = ((g.fy0 + g.fy1) >> 1) + k[2];
+    const ga = c.globalAlpha, sm = c.imageSmoothingEnabled;
+    c.globalAlpha = ga * (mau ? 0.35 : 0.5); c.imageSmoothingEnabled = false; // ảnh nhuộm: lòng đá thành mảng màu đậm → nhạt hơn
+    try { c.drawImage(src, bam(cx0 - w / 2), bam(cy0 - h / 2), w, h); } finally { c.globalAlpha = ga; c.imageSmoothingEnabled = sm; }
+  }
+  // Cột nắng gd-cot-nang-rung (ảnh ngả xuống bên PHẢI, cao 98 gồm lề; dải sáng từ hàng 1 tới 97, giữa dải ở đỉnh x = 4,8, ở đáy x = 43,8 —
+  // so-do.json của cong-cu/dung-dot6.py). Lật ngang cho ngả trái như cột cũ (shaft): đỉnh giữa dải đặt ở bx, nóc tường → vệt trên sàn (yt → yb).
+  function cotNangAnh(o) {
+    const a = gdA('gd-cot-nang-rung');
+    if (!a) return;
+    const s = (o.yb - o.yt) / 96, w = a.rong * s, h = a.cao * s, sm = c.imageSmoothingEnabled;
+    c.save();
+    try {
+      c.imageSmoothingEnabled = false;
+      c.translate(bam(o.bx + 4.8 * s), bam(o.yt - 1 * s)); c.scale(-1, 1);
+      c.drawImage(a.img, 0, 0, w, h);
+    } finally { c.restore(); c.imageSmoothingEnabled = sm; }
+  }
+  // Mũi tên cửa gd-mui-ten-cua: 2 khung 12×8 cạnh nhau (khung 2 nhô lên 1 điểm ảnh), chĩa lên. Tâm đặt đúng tâm mũi tên code cũ (đỉnh ở (x, y),
+  // thân 5 hàng); cửa dưới / trái / phải xoay 180° / −90° / 90°. Khung theo nhịp nhún cũ (bob).
+  function muiTenAnh(a, d, g, bob) {
+    const fw = 12, fh = 8, n = a.net || 2;
+    let x, y, goc;
+    if (d.side === 'top') { x = d.at + 0.5; y = g.fy0 + 9 - bob + 3; goc = 0; }
+    else if (d.side === 'bottom') { x = d.at + 0.5; y = g.fy1 - 9 + bob - 3 + 1; goc = Math.PI; }
+    else if (d.side === 'left') { x = g.fx0 + 8 - bob + 3; y = d.at + 0.5; goc = -Math.PI / 2; }
+    else { x = g.fx1 - 9 + bob - 3 + 1; y = d.at + 0.5; goc = Math.PI / 2; }
+    c.save();
+    try {
+      c.imageSmoothingEnabled = false;
+      c.translate(bam(x), bam(y)); c.rotate(goc);
+      c.drawImage(a.img, bob * fw * n, 0, fw * n, fh * n, -fw / 2, -fh / 2, fw, fh);
+    } finally { c.restore(); }
+  }
   // ---------- lớp sống: lửa đuốc, mũi tên cửa mở, chỗ quái sắp hiện, nước dâng ----------
   function live(cx, W, room) {
     const g = room.g, t = G.time || 0, pv = c;
     c = cx;
     try {
+      const anhOn = !!(G.dangChan && G.dangChan()); // 16/10 vẽ tay 6: đang chặn hình code → vẽ ảnh thay (?vecode=1: code cũ trong nền)
+      if (anhOn) { dauPhongAnh(room); for (const a of g.amb || []) if (a.k === 'nang') cotNangAnh(a); }
       for (const f of room.ttNen) f(); // ảnh AI của đồ trang trí (phiên A3)
       for (const f of room.cuaNen) f(); // ảnh AI của cửa (lớp nền)
       ambLive(room, t);
@@ -2150,8 +2219,10 @@
       }
       // mũi tên nhún nhảy ở cửa đang mở
       const bob = Math.floor(t * 4) % 2, col = room.T === Cave ? '#d8f6ff' : room.T === Forest ? '#f4ffb0' : '#ffe08a';
+      const mt = anhOn ? gdA('gd-mui-ten-cua') : null;
       for (const d of g.doors) {
         if (d.state !== 'open') continue;
+        if (mt) { muiTenAnh(mt, d, g, bob); continue; }
         if (d.side === 'top') arrow0(d.at, g.fy0 + 9 - bob, 'up', col);
         else if (d.side === 'bottom') arrow0(d.at, g.fy1 - 9 + bob, 'down', col);
         else if (d.side === 'left') arrow0(g.fx0 + 8 - bob, d.at, 'left', col);

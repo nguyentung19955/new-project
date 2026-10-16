@@ -1282,7 +1282,8 @@
     }
     const pj = F && F.proj;
     const pjOn = pj && !(G.dangChan && G.dangChan()); // 16/10: quầng / vệt bay quanh đạn (js/fx_dan.js, fx_he.js) là hình code (kể cả canvas quầng vẽ sẵn) → tắt
-    for (const o of W.projs) { if (pjOn) pj(c, o); A.proj(c, o); }
+    const pjAnh = !pjOn && F && F.projAnh; // 16/10 vẽ tay 6: đang chặn → quầng / vệt bay bằng ảnh hu-quang-dan (js/fx_dan.js)
+    for (const o of W.projs) { if (pjOn) pj(c, o); else if (pjAnh) pjAnh(c, o); A.proj(c, o); }
     for (const s of W.slashes) A.slash(c, s);
     for (const o of W.parts) A.p(c, Math.round(o.x), Math.round(o.y), o.s, o.s, o.col);
     if (F && F.drawOver) F.drawOver(c);

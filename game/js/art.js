@@ -320,7 +320,7 @@
     const key = LOOK[o.key] ? o.key : 'smith';
     const L = LOOK[key];
     const x = Math.round(o.x), y = Math.round(o.y);
-    A.ellipse(c, x, y, (L.w >> 1) + 4, 2, 'rgba(0,0,0,0.3)');
+    if (!(G.bongAnh && G.bongAnh(c, x, y, (L.w >> 1) + 4))) A.ellipse(c, x, y, (L.w >> 1) + 4, 2, 'rgba(0,0,0,0.3)');
     c.save();
     c.translate(x, y);
     c.scale(o.face < 0 ? -1 : 1, 1);
@@ -1382,7 +1382,7 @@
   function drawMon(c, e, reg) {
     const x = Math.round(e.x), y = Math.round(e.y), sc = e.scale || 1, f = e.face < 0 ? -1 : 1;
     const st = e.st || ST0, a = mem(e), P = monPose(e, a, reg), now = G.time;
-    A.ellipse(c, x, y, e.r * 1.1, Math.max(2, e.r * 0.42), 'rgba(0,0,0,0.3)'); // bóng tròn hơn cho sàn nhìn từ trên
+    if (!(G.bongAnh && G.bongAnh(c, x, y, e.r * 1.1))) A.ellipse(c, x, y, e.r * 1.1, Math.max(2, e.r * 0.42), 'rgba(0,0,0,0.3)'); // bóng tròn hơn cho sàn nhìn từ trên
     if (e.resist) {
       // vòng hào quang kháng hệ dưới chân
       const rc = G.EL[e.resist].col, rr = Math.round(e.r * 1.1) + 3, k = Math.floor(now * 6) % 3;
@@ -2808,7 +2808,7 @@
       }
     }
     // bóng đổ
-    if (!ill && (dying == null || dying < 0.8)) A.ellipse(c, x, y, (b.big ? 34 : 24) * (z > 0 ? Math.max(0.5, 1 - z / 60) : 1) * (scale / (b.big ? 1.5 : 1)), b.big ? 5 : 4, 'rgba(0,0,0,' + (0.35 * (z > 0 ? 0.7 : 1)).toFixed(2) + ')');
+    if (!ill && (dying == null || dying < 0.8) && !(G.bongAnh && G.bongAnh(c, x, y, (b.big ? 34 : 24) * (z > 0 ? Math.max(0.5, 1 - z / 60) : 1) * (scale / (b.big ? 1.5 : 1)), z > 0 ? 0.7 : 1))) A.ellipse(c, x, y, (b.big ? 34 : 24) * (z > 0 ? Math.max(0.5, 1 - z / 60) : 1) * (scale / (b.big ? 1.5 : 1)), b.big ? 5 : 4, 'rgba(0,0,0,' + (0.35 * (z > 0 ? 0.7 : 1)).toFixed(2) + ')');
     for (const f of pre) f();
     if (P.big && dying == null && show) {
       // lửa giận bốc quanh chân
@@ -3087,7 +3087,7 @@
   A.prop = function (c, o) {
     const x = Math.round(o.x), y = Math.round(o.y);
     const t = G.time;
-    if (o.type !== 'door') A.ellipse(c, x, y, o.type === 'merchant' ? 15 : 11, 3, 'rgba(0,0,0,0.3)');
+    if (o.type !== 'door' && !(G.bongAnh && G.bongAnh(c, x, y, o.type === 'merchant' ? 15 : 11))) A.ellipse(c, x, y, o.type === 'merchant' ? 15 : 11, 3, 'rgba(0,0,0,0.3)');
     if (o.type === 'chest') {
       p(c, x - 10, y - 11, 20, 11, DARK);
       p(c, x - 9, y - 10, 18, 9, '#8a5a2a');

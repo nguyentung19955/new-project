@@ -1528,7 +1528,7 @@ MA.draw = function (c, id, x, y, o) {
   // (bút giả chỉ lấy lệnh drawImage đầu tiên để dán ảnh AI), nên bỏ hẳn bước dựng khung (veKhung/ghepHinh) — chỉ còn Pose, bóng, hiệu ứng.
   const key = bo || P.khongNho ? null : id + '|' + ph + '|' + (hv || '') + '|' + nm + '|' + fi + '|' + P.aim + (P.khoa || ''), fr = bo ? null : veKhung(B, P, key);
   c.save(); c.translate(Math.round(x), Math.round(y)); c.imageSmoothingEnabled = false; const ga = c.globalAlpha;
-  if (P.bong > 0 && d.bong !== 0) { const bw = (d.bong || B.bw * .62) * (1 - Math.min(.5, P.h / 80)) * Math.min(1, P.bong + .3); c.globalAlpha = ga * .28 * Math.min(1, P.bong); F.elip(c, o.bongGoc ? 0 : P.x, P.y, bw / 2, Math.max(1.5, bw * .14), '#000000'); c.globalAlpha = ga; } // o.bongGoc (14/10): thân là ảnh AI đứng yên tại chân → bóng không rung theo P.x của dáng vẽ code
+  if (P.bong > 0 && d.bong !== 0) { const bw = (d.bong || B.bw * .62) * (1 - Math.min(.5, P.h / 80)) * Math.min(1, P.bong + .3); if (!(G.bongAnh && G.bongAnh(c.__that || c, o.bongGoc ? 0 : P.x, P.y, bw / 2, Math.min(1, P.bong)))) { c.globalAlpha = ga * .28 * Math.min(1, P.bong); F.elip(c, o.bongGoc ? 0 : P.x, P.y, bw / 2, Math.max(1.5, bw * .14), '#000000'); c.globalAlpha = ga; } } // o.bongGoc (14/10): thân là ảnh AI đứng yên tại chân → bóng không rung theo P.x của dáng vẽ code
   if (o.fx !== false) for (const f of P._u) { c.save(); f(c, P); c.restore(); }
   const sx = Math.round(P.x), sy = Math.round(P.y - P.h);
   const ve = (img, dx, dy, a) => { c.save(); c.globalAlpha = ga * a; c.translate(sx + dx, sy + dy); if (face > 0) c.scale(-1, 1); if (bo) c.drawImage(); else c.drawImage(img, -fr.ox, -fr.oy); c.restore(); };

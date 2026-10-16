@@ -28,6 +28,7 @@
         so: clamp(tep.so | 0, 1, 64), giay: +tep.giay > 0 ? clamp(+tep.giay, 0.05, 10) : 0.5, lap: !!tep.lap, xoay: !!tep.xoay,
         co: +tep.co > 0 ? clamp(+tep.co, 0.1, 8) : 1, cong: tep.tron === 'cong', img: null, ready: false, cot: 1,
         net: tep.net == null || !isFinite(+tep.net) ? 1 : clamp(Math.round(+tep.net), 1, 4),
+        bk: Array.isArray(tep.ban_kinh) && tep.ban_kinh.every((v) => +v > 0) ? tep.ban_kinh.map(Number) : null, // 16/10 vẽ tay 6: bán kính vòng từng khung (hu-vong-song)
       };
       if (typeof Image !== 'undefined') {
         const img = new Image();
@@ -104,6 +105,20 @@
     try { return fn(); } finally { G.chanVe = k; }
   };
   G.dangChan = () => G.chanVe > 0;
+  // ---------- CÒN VẼ TAY 6 (16/10, docs/review/ke-hoach-cai-thien/con-ve-tay-6): 16 ảnh chủ game gen cho các hình code đã chặn ----------
+  // Mỗi chỗ hình code cũ (đã bị chặn) nay vẽ ảnh thay, ĐÚNG lúc đang chặn (G.dangChan()) — ?vecode=1 không chặn thì vẽ code y cũ, không
+  // vẽ thêm ảnh. G.anhThay(mã): đang ở chế độ chặn (không ?vecode=1) VÀ ảnh mã đó sẵn sàng — dùng ở chỗ SINH hình (lúc cập nhật, khi
+  // G.chanVe chưa bật). Chỉ là hình: không đổi vùng, sát thương, thời gian.
+  G.anhThay = (ma) => G.VE_CODE !== true && !G.noRender && FA.co(ma);
+  // Bóng dưới chân (hu-bong-chan, ảnh 32 điểm bề ngang khi co 1, đã có 3 nấc alpha 45/30/15%): thay elip bóng vẽ code. rx: nửa bề ngang bóng
+  // cũ → co = rx / 16 (co theo cỡ thân). mo: độ đậm thêm (bóng nhạt dần lúc nhảy / chết). Trả true nếu đã vẽ (nơi gọi bỏ lệnh elip code).
+  G.bongAnh = function (c, x, y, rx, mo) {
+    if (!(G.chanVe > 0) || !c || !(rx > 0)) return false;
+    const a = FA.get('hu-bong-chan');
+    if (!a) return false;
+    if (mo != null && !(mo > 0.01)) return true;
+    return veF(c, a, 0, x, y, 0, rx / 16, false, mo == null ? 1 : mo);
+  };
   // ---------- HIỆU ỨNG CHIÊU TRÙM VÙNG (14/10, docs/review/ke-hoach-cai-thien/trum-moi/YEU-CAU-MOC-HO-HIEU-UNG-NEN.md) ----------
   // hu-song-than, hu-bang-nhon-roi, hu-xoay-nuoc, hu-phun-bang (Ngư Tinh), hu-gai-re, hu-qua-doc-roi, hu-la-chem (Mộc Tinh),
   // hu-cau-lua-ma (Hồ Tinh), hu-doi-pha (cả ba trùm lúc đổi pha). Bật mặc định khi có ảnh; cờ tắt ?hutrum=0 (hoặc G.HU_TRUM = false)
