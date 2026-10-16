@@ -72,6 +72,38 @@
   // hu-bam-*, biểu tượng trạng thái trên đầu trùm, sao choáng trùm vùng). 15/10 don-tep B: bỏ cờ ?vetaycu=1 (G.VE_TAY_MOI).
   // G.huVt(mã): ảnh mã đó đã sẵn sàng.
   G.huVt = (ma) => FA.co(ma);
+  // ---------- BỎ HẲN HÌNH VẼ CODE TRONG TRẬN (16/10, docs/review/ke-hoach-cai-thien/con-ve-tay-5) ----------
+  // Chủ game: không giữ hình vẽ code nào trong trận, kể cả hình "nhỏ". Thay vì sửa từng hàm (hàng trăm chỗ ở fx.js, fx_he.js, fx_dan.js,
+  // fx_ky_nang.js, bo_skill.js, monster_art.js, mobs.js, room_art.js...), G.drawWorld (js/combat.js) bật CHẶN trên bút canvas thế giới:
+  // mọi lệnh tô hình bằng code (fillRect, strokeRect, fill, stroke) thành không vẽ gì; ảnh (drawImage) và chữ (fillText) vẫn vẽ.
+  // Chỗ ảnh hưởng chơi được mở lại bằng G.moVe(fn): vùng báo nguy hiểm (js/bao_truoc.js), vùng / vũng gây hại của quái, sóng, nước dâng,
+  // thân quái / Zed / trùm khi ảnh chưa tải (vẽ code dự phòng, kẻo vô hình), đạn quái chưa có ảnh. Số sát thương, thanh máu, viền đỏ
+  // khi trúng đòn nằm ở lớp giao diện (G.ux) nên không bị chặn.
+  // Cờ ?vecode=1 (hoặc G.VE_CODE = true): không chặn gì, vẽ code như trước để so.
+  let veCode = false;
+  try { veCode = typeof location !== 'undefined' && /[?&]vecode=1\b/i.test(String(location.search || '')); } catch (e) { veCode = false; }
+  if (G.VE_CODE == null) G.VE_CODE = veCode;
+  G.chanVe = 0; // > 0: đang chặn (chỉ tác dụng trên bút đã gắn G.ganChan)
+  const CHAN_M = ['fillRect', 'strokeRect', 'fill', 'stroke'];
+  G.ganChan = function (c) {
+    if (!c || c.__chanVe) return c;
+    try {
+      for (const m of CHAN_M) {
+        const g0 = c[m];
+        if (typeof g0 !== 'function') continue;
+        c[m] = function () { if (G.chanVe > 0) return undefined; return g0.apply(this, arguments); };
+      }
+      c.__chanVe = true;
+    } catch (e) { /* bút lạ: bỏ qua, vẽ như cũ */ }
+    return c;
+  };
+  // Tạm mở chặn trong fn (chỗ ảnh hưởng chơi). Không chặn thì gọi thẳng.
+  G.moVe = function (fn) {
+    if (!(G.chanVe > 0)) return fn();
+    const k = G.chanVe; G.chanVe = 0;
+    try { return fn(); } finally { G.chanVe = k; }
+  };
+  G.dangChan = () => G.chanVe > 0;
   // ---------- HIỆU ỨNG CHIÊU TRÙM VÙNG (14/10, docs/review/ke-hoach-cai-thien/trum-moi/YEU-CAU-MOC-HO-HIEU-UNG-NEN.md) ----------
   // hu-song-than, hu-bang-nhon-roi, hu-xoay-nuoc, hu-phun-bang (Ngư Tinh), hu-gai-re, hu-qua-doc-roi, hu-la-chem (Mộc Tinh),
   // hu-cau-lua-ma (Hồ Tinh), hu-doi-pha (cả ba trùm lúc đổi pha). Bật mặc định khi có ảnh; cờ tắt ?hutrum=0 (hoặc G.HU_TRUM = false)

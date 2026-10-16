@@ -2512,6 +2512,7 @@
     if (!LOPB) LOPB = document.createElement('canvas');
     if (LOPB.width !== cv.width || LOPB.height !== cv.height) { LOPB.width = cv.width; LOPB.height = cv.height; }
     const g = LOPB.getContext('2d');
+    if (G.ganChan) G.ganChan(g); // 16/10 con-ve-tay-5: lớp phụ cũng chịu chặn hình vẽ code như canvas thế giới
     g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
     g.clearRect(X0, Y0, X1 - X0, Y1 - Y0);
     g.save(); g.beginPath(); g.rect(X0, Y0, X1 - X0, Y1 - Y0); g.clip();
@@ -2544,6 +2545,7 @@
   let VBK = null;
   const FPS30 = !!(G.coTat && G.coTat(/[?&]fps=30(&|$)/)), pinYeu = () => !!((G.save && G.save.pin) || FPS30);
   function vienBe(c, P) {
+    if (G.dangChan && G.dangChan()) return; // 16/10 con-ve-tay-5: viền sáng + bóng mờ dựng bằng code quanh Zed → tắt (vệt đòn vẽ sau viền vẫn vẽ)
     if (!vienBat(P)) return;
     const nhe = G.VE_NHE !== false;
     if (nhe && pinYeu()) return;

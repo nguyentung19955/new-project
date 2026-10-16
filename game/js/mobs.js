@@ -831,6 +831,16 @@
   // Mặt khiên của quái giáp: vệt cong vàng ở phía trước (biết phải vòng ra sau)
   function shieldArc(c, e) {
     const f = e.face, r = e.r + 5;
+    // 16/10 con-ve-tay-5 (chủ game: "chấm vàng sau con bọ"): đang chặn hình vẽ code thì thay vệt chấm vàng bằng ảnh có sẵn gd-quai-giap
+    // (biểu tượng giáp, 10×10) ở mặt khiên — vẫn biết phải vòng ra sau. Chưa có ảnh: không vẽ gì. ?vecode=1: vệt chấm cũ.
+    if (G.dangChan && G.dangChan()) {
+      const g = gdAnh('gd-quai-giap');
+      if (!g || !G.spriteCustom || !G.spriteCustom.veGd) return;
+      const ga = c.globalAlpha;
+      c.globalAlpha = ga * (e.hitT > 0.2 ? 1 : 0.85);
+      try { G.spriteCustom.veGd(c, g, Math.round(e.x + f * r) - 5, Math.round(e.y - 4 - r * 0.35) - 5, 10, 10); } finally { c.globalAlpha = ga; }
+      return;
+    }
     for (let i = -4; i <= 4; i++) { const a = (i / 4) * 0.9, x = e.x + f * Math.cos(a) * r, y = e.y - 4 + Math.sin(a) * r * 0.7; p(c, x, y, 2, 2, e.hitT > 0.2 ? '#ffffff' : 'rgba(255,214,90,0.85)'); }
   }
 

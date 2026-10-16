@@ -1185,7 +1185,16 @@
   // Camera đã làm tròn dùng cho cả khung vẽ (thanh máu quái ở js/stage.js dùng chung, không lệch với thân quái).
   G.camVe = (w) => { w = w || W; return w ? (G.lamTron ? G.lamTron(w.cam || 0) : Math.round(w.cam || 0)) : 0; };
   // Thứ tự lớp: nền, vùng và vũng, hiệu ứng sát đất, nhân vật (kèm hiệu ứng bám theo), đạn, hiệu ứng phía trên, rồi lớp giao diện.
+  // 16/10 con-ve-tay-5: bọc toàn bộ phần vẽ thế giới trong CHẶN hình vẽ code (js/fx_anh.js G.ganChan / G.moVe). ?vecode=1: không chặn.
   G.drawWorld = function (reg) {
+    const chan = G.VE_CODE !== true && !G.noRender && !!G.ganChan;
+    if (!chan) return veTheGioi(reg);
+    G.ganChan(G.wx);
+    G.chanVe = (G.chanVe || 0) + 1;
+    try { return veTheGioi(reg); } finally { G.chanVe = Math.max(0, G.chanVe - 1); }
+  };
+  const moVe = (fn) => (G.moVe ? G.moVe(fn) : fn());
+  function veTheGioi(reg) {
     const c = G.wx, A = G.art, P = W.P;
     const F = G.noRender ? null : G.fx;
     const cam = G.NOI_SUY !== false ? G.camVe(W) : Math.round(W.cam);
@@ -1200,8 +1209,18 @@
       if (z.oz) continue; // 11/10 (chủ dự án): vệt, vũng hệ do trang phục của bé rải ra vẫn gây hiệu ứng nhưng không vẽ vòng trên sàn
       const nhat = dimBe < 1 && z.team === 'player';
       if (nhat) { c.save(); c.globalAlpha = dimBe; }
-      try { if (F && F.zone && F.zone(c, z, W)) continue; } finally { if (nhat) c.restore(); }
+      // 16/10: vùng / vũng / sóng gây hại của quái là tín hiệu né → vẽ code dự phòng vẫn mở (chưa có ảnh). Vùng của Zed: chặn.
+      const hai = z.team !== 'player' && z.team !== 'fx';
+      try { if (F && F.zone && (hai ? moVe(() => F.zone(c, z, W)) : F.zone(c, z, W))) continue; } finally { if (nhat) c.restore(); }
       if (nhat) { c.save(); c.globalAlpha = dimBe; }
+      if (hai) moVe(() => veVungCode(c, A, z));
+      else veVungCode(c, A, z);
+      if (nhat) c.restore();
+    }
+    if (F && F.drawGround) F.drawGround(c);
+    veTiep(c, A, P, F, cam, sx, sy);
+  }
+  function veVungCode(c, A, z) {
       if (z.wave) {
         // lúc còn báo trước thì sóng mờ và nhấp nháy, khe hở nhìn thấy ngay
         const wc = z.wait > 0 ? 'rgba(160,220,250,' + (Math.floor(G.time * 10) % 2 ? 0.3 : 0.5) + ')' : 'rgba(160,220,250,0.85)';
@@ -1209,9 +1228,8 @@
         A.p(c, Math.round(z.x) - 3, z.g1, 6, G.H - z.g1, wc);
       } else if (z.team === 'fx') A.ellipse(c, z.x, z.y, z.r, z.r * (G.ZK || 0.6), 'rgba(255,240,200,0.35)');
       else A.zone(c, z);
-      if (nhat) c.restore();
-    }
-    if (F && F.drawGround) F.drawGround(c);
+  }
+  function veTiep(c, A, P, F, cam, sx, sy) {
     const ent = F && F.entity, rec = F && F.recoil, xf = F && F.xf; // xf: nhún, nghiêng, nảy khi trúng đòn (js/fx.js), chỉ đổi hình
     // Soát mượt phiên 3 mục 22 (?venhe=0: tạo mới mỗi khung như cũ): dùng lại mảng danh sách vẽ và MỘT mục { y, f } cho mỗi quái (hàm vẽ
     // tạo một lần cho mỗi quái, đọc bút / hàm fx của khung hiện tại qua DW) → không sinh hàng chục hàm + đối tượng mới mỗi khung.
@@ -1253,7 +1271,7 @@
     list.push({ y: P.y, f: () => { const on = xf && xf(c, P, 0); A.hero(c, G.heroArgs(P)); if (on) c.restore(); if (ent) ent(c, P); } });
     if (F && F.sorted) F.sorted(list, c);
     for (const pr of W.props) if (pr.type === 'loot') A.prop(c, pr); // đồ rơi nằm ở lớp sàn: không che quái, em bé, vùng báo trước (js/do_roi.js)
-    if (G.baoTruoc) { if (G.baoTruoc.dat) G.baoTruoc.dat(c, cam, sx, sy); else G.baoTruoc.snap(c); } // 14/10: vùng báo trước bằng ảnh vẽ ở lớp đất, trước nhân vật (?baoanh=0: chụp nền như cũ)
+    if (G.baoTruoc) moVe(() => { if (G.baoTruoc.dat) G.baoTruoc.dat(c, cam, sx, sy); else G.baoTruoc.snap(c); }); // 14/10: vùng báo trước bằng ảnh vẽ ở lớp đất, trước nhân vật (?baoanh=0: chụp nền như cũ)
     list.sort((a, b) => a.y - b.y);
     for (const o of list) o.f();
     if (G.mobHeroOver) G.mobHeroOver(c, P); // em bé đứng sau quái to: vẽ thêm bóng mờ của bé lên trên để không bị che mất
@@ -1263,7 +1281,8 @@
       if (P.st.ice > 0) A.p(c, Math.round(P.x) - 5, Math.round(P.y) - 2, 10, 2, '#7fd4ff');
     }
     const pj = F && F.proj;
-    for (const o of W.projs) { if (pj) pj(c, o); A.proj(c, o); }
+    const pjOn = pj && !(G.dangChan && G.dangChan()); // 16/10: quầng / vệt bay quanh đạn (js/fx_dan.js, fx_he.js) là hình code (kể cả canvas quầng vẽ sẵn) → tắt
+    for (const o of W.projs) { if (pjOn) pj(c, o); A.proj(c, o); }
     for (const s of W.slashes) A.slash(c, s);
     for (const o of W.parts) A.p(c, Math.round(o.x), Math.round(o.y), o.s, o.s, o.col);
     if (F && F.drawOver) F.drawOver(c);
@@ -1274,6 +1293,6 @@
     if (G.doRoi && !P.dead) G.doRoi.nhan(W, P); // tên ngắn của đồ rơi khi lại gần
     if (F && F.drawUI) F.drawUI(cam);
     // V9: vùng báo trước đòn vẽ SAU số sát thương, để số không che vùng nguy hiểm (vẽ mịn ở lớp giao diện, js/bao_truoc.js)
-    if (G.baoTruoc) G.baoTruoc.draw(cam, sx, sy);
-  };
+    if (G.baoTruoc) moVe(() => G.baoTruoc.draw(cam, sx, sy));
+  }
 })();

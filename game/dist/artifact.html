@@ -59,7 +59,7 @@
 <div id="lk-tai" data-bia="||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAMEBQYH/8QAKRAAAQMCBQMDBQAAAAAAAAAAAQIDEQAEBRIhMUETFGEiQnEVUWKBsf/EABcBAAMBAAAAAAAAAAAAAAAAAAIDBAX/xAAlEQACAQEFCQAAAAAAAAAAAAABAgADBBExUfASEyEyM0FxobH/2gAMAwEAAhEDEQA/AOfNMWj9zbWiEtBsn1ugGTPCvjXajFcBNssNsvoeMxlCgVJqzCbhHftG3aGdcJBUAUn7neRzTMcumxjD0hDSkmFBtWZMjSdR5qamzb4DtHOiimTfxmt/T3UpzLBCTt5q22sWekt0vBvImSF8+KyF5eWDaGFNZlr6YkKGiTPGvzSutZDDX1sF3P0wPUBMzvP62rStACi5TEWB9pizi/H1JsLUo3NhKiZUOfyqbE1Hu3jJkqPNFFRUuprOHU5dZSVwmE6+2mNk9u7r7R/aKKqqQLNifB+T/9k=|||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAgf/xAAmEAACAgEEAQQCAwAAAAAAAAABAgMRAAQSITEFE1FhgSJBcbHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQIDBAX/xAAeEQABBAIDAQAAAAAAAAAAAAAAAQIDEiExBBEyIv/aAAwDAQACEQMRAD8A51EIZIo53EASNwHG07mBPFno9HFyeOhl1Y2yFIbtjVkDnr54yzx2vaLSyII1cELvBQEVu5PyeshTWvFJG6qi7OR+A9/4xoa3yQzWRvzsH8YkWrkCMZYlsoSvJHfWUalzFpI4/TRBZbca3HsUcXqvJvPqpZgEAewAFHAP1mZ9aZIoyqKWVa4jX3P+jByGor8aNDgT0gXvDiHTs1EbjRAsX3jKuEH92Ofs4YYGeim/yLulscHjFuT6YNno/wBnDDGfsEej/9k=" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.16-0918";
+(window.G = window.G || {}).VERSION = "lk-2026.10.16-1343";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -12531,7 +12531,16 @@
   // Camera đã làm tròn dùng cho cả khung vẽ (thanh máu quái ở js/stage.js dùng chung, không lệch với thân quái).
   G.camVe = (w) => { w = w || W; return w ? (G.lamTron ? G.lamTron(w.cam || 0) : Math.round(w.cam || 0)) : 0; };
   // Thứ tự lớp: nền, vùng và vũng, hiệu ứng sát đất, nhân vật (kèm hiệu ứng bám theo), đạn, hiệu ứng phía trên, rồi lớp giao diện.
+  // 16/10 con-ve-tay-5: bọc toàn bộ phần vẽ thế giới trong CHẶN hình vẽ code (js/fx_anh.js G.ganChan / G.moVe). ?vecode=1: không chặn.
   G.drawWorld = function (reg) {
+    const chan = G.VE_CODE !== true && !G.noRender && !!G.ganChan;
+    if (!chan) return veTheGioi(reg);
+    G.ganChan(G.wx);
+    G.chanVe = (G.chanVe || 0) + 1;
+    try { return veTheGioi(reg); } finally { G.chanVe = Math.max(0, G.chanVe - 1); }
+  };
+  const moVe = (fn) => (G.moVe ? G.moVe(fn) : fn());
+  function veTheGioi(reg) {
     const c = G.wx, A = G.art, P = W.P;
     const F = G.noRender ? null : G.fx;
     const cam = G.NOI_SUY !== false ? G.camVe(W) : Math.round(W.cam);
@@ -12546,8 +12555,18 @@
       if (z.oz) continue; // 11/10 (chủ dự án): vệt, vũng hệ do trang phục của bé rải ra vẫn gây hiệu ứng nhưng không vẽ vòng trên sàn
       const nhat = dimBe < 1 && z.team === 'player';
       if (nhat) { c.save(); c.globalAlpha = dimBe; }
-      try { if (F && F.zone && F.zone(c, z, W)) continue; } finally { if (nhat) c.restore(); }
+      // 16/10: vùng / vũng / sóng gây hại của quái là tín hiệu né → vẽ code dự phòng vẫn mở (chưa có ảnh). Vùng của Zed: chặn.
+      const hai = z.team !== 'player' && z.team !== 'fx';
+      try { if (F && F.zone && (hai ? moVe(() => F.zone(c, z, W)) : F.zone(c, z, W))) continue; } finally { if (nhat) c.restore(); }
       if (nhat) { c.save(); c.globalAlpha = dimBe; }
+      if (hai) moVe(() => veVungCode(c, A, z));
+      else veVungCode(c, A, z);
+      if (nhat) c.restore();
+    }
+    if (F && F.drawGround) F.drawGround(c);
+    veTiep(c, A, P, F, cam, sx, sy);
+  }
+  function veVungCode(c, A, z) {
       if (z.wave) {
         // lúc còn báo trước thì sóng mờ và nhấp nháy, khe hở nhìn thấy ngay
         const wc = z.wait > 0 ? 'rgba(160,220,250,' + (Math.floor(G.time * 10) % 2 ? 0.3 : 0.5) + ')' : 'rgba(160,220,250,0.85)';
@@ -12555,9 +12574,8 @@
         A.p(c, Math.round(z.x) - 3, z.g1, 6, G.H - z.g1, wc);
       } else if (z.team === 'fx') A.ellipse(c, z.x, z.y, z.r, z.r * (G.ZK || 0.6), 'rgba(255,240,200,0.35)');
       else A.zone(c, z);
-      if (nhat) c.restore();
-    }
-    if (F && F.drawGround) F.drawGround(c);
+  }
+  function veTiep(c, A, P, F, cam, sx, sy) {
     const ent = F && F.entity, rec = F && F.recoil, xf = F && F.xf; // xf: nhún, nghiêng, nảy khi trúng đòn (js/fx.js), chỉ đổi hình
     // Soát mượt phiên 3 mục 22 (?venhe=0: tạo mới mỗi khung như cũ): dùng lại mảng danh sách vẽ và MỘT mục { y, f } cho mỗi quái (hàm vẽ
     // tạo một lần cho mỗi quái, đọc bút / hàm fx của khung hiện tại qua DW) → không sinh hàng chục hàm + đối tượng mới mỗi khung.
@@ -12599,7 +12617,7 @@
     list.push({ y: P.y, f: () => { const on = xf && xf(c, P, 0); A.hero(c, G.heroArgs(P)); if (on) c.restore(); if (ent) ent(c, P); } });
     if (F && F.sorted) F.sorted(list, c);
     for (const pr of W.props) if (pr.type === 'loot') A.prop(c, pr); // đồ rơi nằm ở lớp sàn: không che quái, em bé, vùng báo trước (js/do_roi.js)
-    if (G.baoTruoc) { if (G.baoTruoc.dat) G.baoTruoc.dat(c, cam, sx, sy); else G.baoTruoc.snap(c); } // 14/10: vùng báo trước bằng ảnh vẽ ở lớp đất, trước nhân vật (?baoanh=0: chụp nền như cũ)
+    if (G.baoTruoc) moVe(() => { if (G.baoTruoc.dat) G.baoTruoc.dat(c, cam, sx, sy); else G.baoTruoc.snap(c); }); // 14/10: vùng báo trước bằng ảnh vẽ ở lớp đất, trước nhân vật (?baoanh=0: chụp nền như cũ)
     list.sort((a, b) => a.y - b.y);
     for (const o of list) o.f();
     if (G.mobHeroOver) G.mobHeroOver(c, P); // em bé đứng sau quái to: vẽ thêm bóng mờ của bé lên trên để không bị che mất
@@ -12609,7 +12627,8 @@
       if (P.st.ice > 0) A.p(c, Math.round(P.x) - 5, Math.round(P.y) - 2, 10, 2, '#7fd4ff');
     }
     const pj = F && F.proj;
-    for (const o of W.projs) { if (pj) pj(c, o); A.proj(c, o); }
+    const pjOn = pj && !(G.dangChan && G.dangChan()); // 16/10: quầng / vệt bay quanh đạn (js/fx_dan.js, fx_he.js) là hình code (kể cả canvas quầng vẽ sẵn) → tắt
+    for (const o of W.projs) { if (pjOn) pj(c, o); A.proj(c, o); }
     for (const s of W.slashes) A.slash(c, s);
     for (const o of W.parts) A.p(c, Math.round(o.x), Math.round(o.y), o.s, o.s, o.col);
     if (F && F.drawOver) F.drawOver(c);
@@ -12620,8 +12639,8 @@
     if (G.doRoi && !P.dead) G.doRoi.nhan(W, P); // tên ngắn của đồ rơi khi lại gần
     if (F && F.drawUI) F.drawUI(cam);
     // V9: vùng báo trước đòn vẽ SAU số sát thương, để số không che vùng nguy hiểm (vẽ mịn ở lớp giao diện, js/bao_truoc.js)
-    if (G.baoTruoc) G.baoTruoc.draw(cam, sx, sy);
-  };
+    if (G.baoTruoc) moVe(() => G.baoTruoc.draw(cam, sx, sy));
+  }
 })();
 
 // ===== js/moves.js =====
@@ -17346,6 +17365,7 @@
     if (!LOPB) LOPB = document.createElement('canvas');
     if (LOPB.width !== cv.width || LOPB.height !== cv.height) { LOPB.width = cv.width; LOPB.height = cv.height; }
     const g = LOPB.getContext('2d');
+    if (G.ganChan) G.ganChan(g); // 16/10 con-ve-tay-5: lớp phụ cũng chịu chặn hình vẽ code như canvas thế giới
     g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
     g.clearRect(X0, Y0, X1 - X0, Y1 - Y0);
     g.save(); g.beginPath(); g.rect(X0, Y0, X1 - X0, Y1 - Y0); g.clip();
@@ -17378,6 +17398,7 @@
   let VBK = null;
   const FPS30 = !!(G.coTat && G.coTat(/[?&]fps=30(&|$)/)), pinYeu = () => !!((G.save && G.save.pin) || FPS30);
   function vienBe(c, P) {
+    if (G.dangChan && G.dangChan()) return; // 16/10 con-ve-tay-5: viền sáng + bóng mờ dựng bằng code quanh Zed → tắt (vệt đòn vẽ sau viền vẫn vẽ)
     if (!vienBat(P)) return;
     const nhe = G.VE_NHE !== false;
     if (nhe && pinYeu()) return;
@@ -18555,6 +18576,38 @@
   // hu-bam-*, biểu tượng trạng thái trên đầu trùm, sao choáng trùm vùng). 15/10 don-tep B: bỏ cờ ?vetaycu=1 (G.VE_TAY_MOI).
   // G.huVt(mã): ảnh mã đó đã sẵn sàng.
   G.huVt = (ma) => FA.co(ma);
+  // ---------- BỎ HẲN HÌNH VẼ CODE TRONG TRẬN (16/10, docs/review/ke-hoach-cai-thien/con-ve-tay-5) ----------
+  // Chủ game: không giữ hình vẽ code nào trong trận, kể cả hình "nhỏ". Thay vì sửa từng hàm (hàng trăm chỗ ở fx.js, fx_he.js, fx_dan.js,
+  // fx_ky_nang.js, bo_skill.js, monster_art.js, mobs.js, room_art.js...), G.drawWorld (js/combat.js) bật CHẶN trên bút canvas thế giới:
+  // mọi lệnh tô hình bằng code (fillRect, strokeRect, fill, stroke) thành không vẽ gì; ảnh (drawImage) và chữ (fillText) vẫn vẽ.
+  // Chỗ ảnh hưởng chơi được mở lại bằng G.moVe(fn): vùng báo nguy hiểm (js/bao_truoc.js), vùng / vũng gây hại của quái, sóng, nước dâng,
+  // thân quái / Zed / trùm khi ảnh chưa tải (vẽ code dự phòng, kẻo vô hình), đạn quái chưa có ảnh. Số sát thương, thanh máu, viền đỏ
+  // khi trúng đòn nằm ở lớp giao diện (G.ux) nên không bị chặn.
+  // Cờ ?vecode=1 (hoặc G.VE_CODE = true): không chặn gì, vẽ code như trước để so.
+  let veCode = false;
+  try { veCode = typeof location !== 'undefined' && /[?&]vecode=1\b/i.test(String(location.search || '')); } catch (e) { veCode = false; }
+  if (G.VE_CODE == null) G.VE_CODE = veCode;
+  G.chanVe = 0; // > 0: đang chặn (chỉ tác dụng trên bút đã gắn G.ganChan)
+  const CHAN_M = ['fillRect', 'strokeRect', 'fill', 'stroke'];
+  G.ganChan = function (c) {
+    if (!c || c.__chanVe) return c;
+    try {
+      for (const m of CHAN_M) {
+        const g0 = c[m];
+        if (typeof g0 !== 'function') continue;
+        c[m] = function () { if (G.chanVe > 0) return undefined; return g0.apply(this, arguments); };
+      }
+      c.__chanVe = true;
+    } catch (e) { /* bút lạ: bỏ qua, vẽ như cũ */ }
+    return c;
+  };
+  // Tạm mở chặn trong fn (chỗ ảnh hưởng chơi). Không chặn thì gọi thẳng.
+  G.moVe = function (fn) {
+    if (!(G.chanVe > 0)) return fn();
+    const k = G.chanVe; G.chanVe = 0;
+    try { return fn(); } finally { G.chanVe = k; }
+  };
+  G.dangChan = () => G.chanVe > 0;
   // ---------- HIỆU ỨNG CHIÊU TRÙM VÙNG (14/10, docs/review/ke-hoach-cai-thien/trum-moi/YEU-CAU-MOC-HO-HIEU-UNG-NEN.md) ----------
   // hu-song-than, hu-bang-nhon-roi, hu-xoay-nuoc, hu-phun-bang (Ngư Tinh), hu-gai-re, hu-qua-doc-roi, hu-la-chem (Mộc Tinh),
   // hu-cau-lua-ma (Hồ Tinh), hu-doi-pha (cả ba trùm lúc đổi pha). Bật mặc định khi có ảnh; cờ tắt ?hutrum=0 (hoặc G.HU_TRUM = false)
@@ -21879,6 +21932,8 @@ MA._xong();
     draw0 = MA.draw; dur0 = MA.dur;
     MA.draw = function (c, id, x, y, o) {
       const sp = SC.ds[id];
+      // 16/10 con-ve-tay-5: ảnh chưa tải / chưa có (quái vùng 4 Sông sâu) → thân code vẫn hiện vì thân dán bằng drawImage từ khung dựng sẵn
+      // (không bị chặn); bóng, vệt, hạt vẽ code quanh thân thì bị chặn như mọi chỗ khác.
       if (!sp || !sp.ready) { if (sp && roiCan) roiCan(id); return draw0.call(MA, c, id, x, y, o); }
       o = o || {};
       const def = MA._defs && MA._defs[id];
@@ -23938,6 +23993,16 @@ MA._xong();
   // Mặt khiên của quái giáp: vệt cong vàng ở phía trước (biết phải vòng ra sau)
   function shieldArc(c, e) {
     const f = e.face, r = e.r + 5;
+    // 16/10 con-ve-tay-5 (chủ game: "chấm vàng sau con bọ"): đang chặn hình vẽ code thì thay vệt chấm vàng bằng ảnh có sẵn gd-quai-giap
+    // (biểu tượng giáp, 10×10) ở mặt khiên — vẫn biết phải vòng ra sau. Chưa có ảnh: không vẽ gì. ?vecode=1: vệt chấm cũ.
+    if (G.dangChan && G.dangChan()) {
+      const g = gdAnh('gd-quai-giap');
+      if (!g || !G.spriteCustom || !G.spriteCustom.veGd) return;
+      const ga = c.globalAlpha;
+      c.globalAlpha = ga * (e.hitT > 0.2 ? 1 : 0.85);
+      try { G.spriteCustom.veGd(c, g, Math.round(e.x + f * r) - 5, Math.round(e.y - 4 - r * 0.35) - 5, 10, 10); } finally { c.globalAlpha = ga; }
+      return;
+    }
     for (let i = -4; i <= 4; i++) { const a = (i / 4) * 0.9, x = e.x + f * Math.cos(a) * r, y = e.y - 4 + Math.sin(a) * r * 0.7; p(c, x, y, 2, 2, e.hitT > 0.2 ? '#ffffff' : 'rgba(255,214,90,0.85)'); }
   }
 
@@ -42882,6 +42947,16 @@ MA._xong();
   const hs = (n) => { n = (n | 0) || 11; n = Math.imul(n ^ (n >>> 16), 0x45d9f3b); n = Math.imul(n ^ (n >>> 16), 0x45d9f3b); return (n ^ (n >>> 16)) >>> 0; };
   // Phần vỏ phòng (sàn, ánh sáng, tường, trang trí, điểm nhấn) không phụ thuộc cửa đóng hay mở: dựng một lần, nhớ riêng.
   // Khi dọn xong phòng, cửa mở ra thì chỉ vẽ lại cửa lên bản sao của vỏ (không tính lại lưới chấm), khỏi giật hình lúc hạ quái cuối.
+  // 16/10 con-ve-tay-5: phần vỏ phòng vẽ bằng code thuần (dấu loại phòng trên sàn — vòng đôi có 4 vạch của phòng Bắt đầu, vòng phòng tinh anh /
+  // thử thách / trùm —, đồ trang trí code và bóng dưới chân chúng, quầng sáng / cột nắng / bóng đổ của lightPass, trang trí tường sau, điểm nhấn góc)
+  // vẽ vào một bút GIẢ (canvas 1×1, không hiện ra). Sàn, tường, cửa (ảnh hoặc code dự phòng cấu trúc) vẫn vẽ thật. ?vecode=1: như cũ.
+  let GIA = null;
+  function boCode(fn) {
+    if (G.VE_CODE === true) return fn();
+    if (!GIA) GIA = mk(1, 1);
+    const pv = c; c = GIA;
+    try { return fn(); } finally { c = pv; }
+  }
   function buildShell(T, g, seed) {
     const rn = G.srand(hs(seed || 11));
     const base = mk(g.W, g.H);
@@ -42896,17 +42971,17 @@ MA._xong();
       ghi = tt;
       T.paintVoid(g, rn);
       T.floors[g.variant % T.floors.length](g, rn);
-      mark(T, g);
-      ghiCao = cao; decor(T, g, rn); ghiCao = null;
+      boCode(() => mark(T, g));
+      ghiCao = cao; boCode(() => decor(T, g, rn)); ghiCao = null;
       T.back(g, rn);
       backPass(T, g);
       T.sides(g, rn);
       T.front(g, rn);
-      T.backDeco(g, rn);
+      boCode(() => T.backDeco(g, rn));
       const acc = accentPlan(T, g, G.srand(hs((seed || 11) * 7 + 3)));
-      lightPass(T, g);
+      boCode(() => lightPass(T, g));
       ghiCao = cao;
-      if (acc) acc();
+      if (acc) boCode(acc);
     } finally { ghi = null; ghiCao = null; }
     return { cv: base.canvas, lights: g.lights, amb: g.amb, accSide: g.accSide, tt, cao };
   }
@@ -42921,8 +42996,8 @@ MA._xong();
     try {
       ghi = cuaNen;
       for (const d of g.doors) {
-        if (cuaAnh(T, g, d, cuaNen, cuaTruoc)) continue;
-        const f = T.door(g, d, rd); if (f) fores.push(f); emblem(g, d);
+        if (boCode(() => cuaAnh(T, g, d, cuaNen, cuaTruoc))) continue; // 16/10: cửa có ảnh → nền lối đi, ánh sáng tràn sàn vẽ code dưới ảnh bỏ (lệnh ảnh vẫn ghi vào cuaNen)
+        const f = T.door(g, d, rd); if (f) fores.push(f); boCode(() => emblem(g, d));
       }
       c = fore;
       ghi = cuaTruoc;
@@ -43439,7 +43514,7 @@ MA._xong();
       for (const f of room.ttNen) f(); // ảnh AI của đồ trang trí (phiên A3)
       for (const f of room.cuaNen) f(); // ảnh AI của cửa (lớp nền)
       ambLive(room, t);
-      if (RA.lopSan) RA.lopSan(cx, W, room, t); // luật Sông sâu (js/song_luat.js): dòng chảy, cầu tre, vũng nước sâu — trên sàn, dưới dấu quái sắp mọc
+      if (RA.lopSan) (G.moVe || ((f) => f()))(() => RA.lopSan(cx, W, room, t)); // 16/10: địa hình Sông sâu (dòng chảy, cầu, vũng sâu) ảnh hưởng chơi, chưa có ảnh → giữ vẽ code // luật Sông sâu (js/song_luat.js): dòng chảy, cầu tre, vũng nước sâu — trên sàn, dưới dấu quái sắp mọc
       const la = luaAnh(); // dải lửa hu-lua-duoc: thay ngọn lửa code của đuốc và nến
       for (const l of g.lights) {
         const f = Math.floor(t * 9 + l.x) % 3;
@@ -43461,13 +43536,14 @@ MA._xong();
       }
       // nước dâng (trận Ngư Tinh): phủ phần sàn không còn đứng được
       const s = W.shrink;
-      if (s) {
+      // 16/10 con-ve-tay-5: nước dâng = phần sàn không đứng được (ảnh hưởng chơi) → vẽ code dự phòng vẫn mở trong lúc chặn hình code
+      if (s) (G.moVe || ((f) => f()))(() => {
         const wc = 'rgba(50,130,185,0.62)', foam = 'rgba(220,245,255,0.8)', f = Math.floor(t * 3) % 2;
         const y0 = Math.round(s.y0), y1 = Math.round(s.y1), x0 = Math.round(s.x0 || 0);
         r(g.fx0, g.fy0, g.fx1 - g.fx0, y0 - g.fy0, wc); r(g.fx0, y1, g.fx1 - g.fx0, g.fy1 - y1, wc);
         for (let x = g.fx0 + 2; x < g.fx1 - 14; x += 24) { r(x + f * 3, y0 - 1, 14, 1, foam); r(x + 10 - f * 3, y1, 14, 1, foam); r(x + 6, y0 - 8 - f, 6, 1, 'rgba(220,245,255,0.3)'); r(x + 3, y1 + 7 + f, 6, 1, 'rgba(220,245,255,0.3)'); }
         if (x0 > g.fx0) { r(g.fx0, y0, x0 - g.fx0, y1 - y0, wc); for (let y = y0 + 2; y < y1; y += 8) r(x0 - 1, y + f * 2, 1, 5, foam); }
-      }
+      });
       // chỗ quái sắp hiện ra: vệt tối loang dần, viền sáng theo màu chủ đề
       for (const sp of W.spawns || []) {
         if (sp.t > sp.t0) continue; // chưa tới lượt (đợt mọc lần lượt)
@@ -43475,10 +43551,10 @@ MA._xong();
         // vòng đỏ báo chỗ quái sắp mọc: viền nhấp nháy, lõi đầy dần
         const R0 = sp.big ? 22 : 16, bl = Math.floor(t * 10) % 2, BT = G.baoTruoc;
         if (BT && BT.on && !G.noRender) BT.add({ k: 'circle', x: sp.x, y: sp.y, r: R0, ky: 0.6, u: k, age: sp.t0 - Math.max(0, sp.t), el: null }); // vẽ mịn ở js/bao_truoc.js
-        else {
+        else (G.moVe || ((f) => f()))(() => { // vòng đỏ báo chỗ quái mọc: tín hiệu né, không chặn
           ell(sp.x, sp.y, R0, R0 * 0.6, bl ? 'rgba(255,58,34,0.30)' : 'rgba(255,120,90,0.22)');
           ell(sp.x, sp.y, R0 * k, R0 * 0.6 * k, 'rgba(255,70,40,0.28)');
-        }
+        });
         ell(sp.x, sp.y, rx + 2, (rx + 2) * 0.7, rgba(room.T.light, 0.18 + 0.2 * k));
         ell(sp.x, sp.y, rx, rx * 0.7, 'rgba(8,4,10,0.75)');
         if (Math.floor(t * 12) % 2) ell(sp.x, sp.y, rx * 0.5, rx * 0.35, rgba(room.T.light, 0.35));
@@ -43491,7 +43567,7 @@ MA._xong();
   const oldBg = A.bg, oldProp = A.prop;
   A.bg = function (cx, reg, seed, cam, width, shrink) {
     const W = G.getWorld ? G.getWorld() : null;
-    if (!W || !W.geo) return oldBg.apply(this, arguments);
+    if (!W || !W.geo) { const th = this, ar = arguments; return (G.moVe || ((f) => f()))(() => oldBg.apply(th, ar)); } // nền code cũ (không có hình phòng): không chặn, kẻo màn đen
     try {
       const room = get(W);
       cx.drawImage(room.base, 0, 0);
@@ -43530,7 +43606,7 @@ MA._xong();
         const ga = c.globalAlpha;
         c.globalAlpha = ga * a;
         if (q.anh) veAnh(q.anh, q.ax, q.ay, q.lat); // cụm tiền cảnh bằng ảnh AI (phiên A3)
-        else c.drawImage(room.fg, q.x0, q.y0, q.x1 - q.x0, q.y1 - q.y0, q.x0, q.y0, q.x1 - q.x0, q.y1 - q.y0);
+        else if (!(G.dangChan && G.dangChan())) c.drawImage(room.fg, q.x0, q.y0, q.x1 - q.x0, q.y1 - q.y0, q.x0, q.y0, q.x1 - q.x0, q.y1 - q.y0); // 16/10: cụm tiền cảnh vẽ code (chưa có ảnh) → tắt
         c.globalAlpha = ga;
       }
     },
@@ -47263,7 +47339,8 @@ window.FIREBASE_CONFIG = {
     A.prop = function (c, o) {
       if (!o || (o.type !== 'lucbinh' && o.type !== 'dendau')) return p0.apply(this, arguments);
       const pv = cx; cx = c;
-      try { if (o.type === 'lucbinh') veLucBinh(Math.round(o.x), Math.round(o.y), G.time || 0); else veDenDau(Math.round(o.x), Math.round(o.y), G.time || 0); }
+      // 16/10 con-ve-tay-5: lục bình / đèn dầu là vật bấm được, chưa có ảnh → giữ vẽ code (mở chặn)
+      try { (G.moVe || ((f) => f()))(() => { if (o.type === 'lucbinh') veLucBinh(Math.round(o.x), Math.round(o.y), G.time || 0); else veDenDau(Math.round(o.x), Math.round(o.y), G.time || 0); }); }
       catch (e) { if (!L.loiVe) { L.loiVe = e; if (window.console) console.warn('song_luat prop', e); } }
       finally { cx = pv; }
     };

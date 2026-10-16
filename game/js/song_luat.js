@@ -329,7 +329,8 @@
     A.prop = function (c, o) {
       if (!o || (o.type !== 'lucbinh' && o.type !== 'dendau')) return p0.apply(this, arguments);
       const pv = cx; cx = c;
-      try { if (o.type === 'lucbinh') veLucBinh(Math.round(o.x), Math.round(o.y), G.time || 0); else veDenDau(Math.round(o.x), Math.round(o.y), G.time || 0); }
+      // 16/10 con-ve-tay-5: lục bình / đèn dầu là vật bấm được, chưa có ảnh → giữ vẽ code (mở chặn)
+      try { (G.moVe || ((f) => f()))(() => { if (o.type === 'lucbinh') veLucBinh(Math.round(o.x), Math.round(o.y), G.time || 0); else veDenDau(Math.round(o.x), Math.round(o.y), G.time || 0); }); }
       catch (e) { if (!L.loiVe) { L.loiVe = e; if (window.console) console.warn('song_luat prop', e); } }
       finally { cx = pv; }
     };

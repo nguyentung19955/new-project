@@ -1,0 +1,17 @@
+20957 (ẩn danh) @ monster_art.js:1984
+12435 MA.draw @ monster_art.js:1531
+11862 F.song @ monster_art.js:1293
+8804 F.set @ monster_art.js:1285
+7456 F.lua @ monster_art.js:1289
+1302 F.hat @ monster_art.js:1287
+872 (ẩn danh) @ monster_art.js:1985
+768 laRoi @ monster_art.js:2042
+600 gaiRe @ monster_art.js:2044
+475 F.khoi @ monster_art.js:1291
+226 (ẩn danh) @ monster_art.js:2155
+171 (ẩn danh) @ monster_art.js:1352
+56 (ẩn danh) @ monster_art.js:1986
+31 (ẩn danh) @ monster_art.js:1719
+23 (ẩn danh) @ monster_art.js:2420
+4 A.enemy @ ky_nang_quai.js:1263
+2 (ẩn danh) @ monster_art.js:2280

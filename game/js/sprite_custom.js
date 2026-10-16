@@ -638,6 +638,8 @@
     draw0 = MA.draw; dur0 = MA.dur;
     MA.draw = function (c, id, x, y, o) {
       const sp = SC.ds[id];
+      // 16/10 con-ve-tay-5: ảnh chưa tải / chưa có (quái vùng 4 Sông sâu) → thân code vẫn hiện vì thân dán bằng drawImage từ khung dựng sẵn
+      // (không bị chặn); bóng, vệt, hạt vẽ code quanh thân thì bị chặn như mọi chỗ khác.
       if (!sp || !sp.ready) { if (sp && roiCan) roiCan(id); return draw0.call(MA, c, id, x, y, o); }
       o = o || {};
       const def = MA._defs && MA._defs[id];
