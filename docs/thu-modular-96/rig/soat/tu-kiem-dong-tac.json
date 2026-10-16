@@ -8,6 +8,20 @@
    "src": "data.json + khop-chinh/chay.json (lớp tách)"
   },
   {
+   "key": "chay_thuong",
+   "name": "Chạy cầm thương",
+   "N": 12,
+   "layered": false,
+   "src": "dong-tac/chay_thuong (sheet cả người)"
+  },
+  {
+   "key": "chet",
+   "name": "Chết",
+   "N": 8,
+   "layered": false,
+   "src": "dong-tac/chet (sheet cả người)"
+  },
+  {
    "key": "di",
    "name": "Đi",
    "N": 8,
@@ -27,6 +41,27 @@
    "N": 5,
    "layered": false,
    "src": "dong-tac/kiem_1 (sheet cả người)"
+  },
+  {
+   "key": "lon",
+   "name": "Lăn",
+   "N": 6,
+   "layered": false,
+   "src": "dong-tac/lon (sheet cả người)"
+  },
+  {
+   "key": "phitieu",
+   "name": "Phi tiêu",
+   "N": 6,
+   "layered": false,
+   "src": "dong-tac/phitieu (sheet cả người)"
+  },
+  {
+   "key": "trung",
+   "name": "Trúng đòn",
+   "N": 4,
+   "layered": false,
+   "src": "dong-tac/trung (sheet cả người)"
   }
  ],
  "vai": {
@@ -242,6 +277,7 @@
     "may": {
      "summary": {
       "frames": 12,
+      "bamOk0": 12,
       "bamOk": 10,
       "rung": 9,
       "nhay8": 4,
@@ -927,6 +963,7 @@
     "gen": {
      "summary": {
       "frames": 12,
+      "bamOk0": 12,
       "bamOk": 4,
       "rung": 12,
       "nhay8": 10,
@@ -1647,6 +1684,7 @@
     "may": {
      "summary": {
       "frames": 12,
+      "bamOk0": 12,
       "bamOk": 10,
       "rung": 10,
       "nhay8": 4,
@@ -2340,6 +2378,7 @@
     "gen": {
      "summary": {
       "frames": 12,
+      "bamOk0": 12,
       "bamOk": 4,
       "rung": 11,
       "nhay8": 9,
@@ -3058,11 +3097,4343 @@
     }
    }
   },
+  "chay_thuong": {
+   "tron": {
+    "may": {
+     "summary": {
+      "frames": 12,
+      "bamOk0": 10,
+      "bamOk": 6,
+      "rung": 3,
+      "nhay8": 3,
+      "meo": 5,
+      "ho": 0,
+      "gapBefore": 246,
+      "gapAfter": 0
+     },
+     "gaps": [],
+     "caps": [
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ]
+     ],
+     "rows": [
+      {
+       "frame": 1,
+       "bam": [],
+       "rung": [
+        "Giáp ống chân sau nhảy 45° (xương chỉ 16°)"
+       ],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 3,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 9,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 2,
+       "bam": [
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [
+        "Giáp vai trước nhảy 45° (xương chỉ 9°)"
+       ],
+       "meo": [
+        "Giáp ống chân trước hụt 6.4đ ở khớp cuối (xương ×2.21, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 3,
+       "bam": [
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 8,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 4,
+       "bam": [],
+       "rung": [
+        "Giáp vai trước nhảy -45° (xương chỉ -1°)"
+       ],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 0,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 5,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 6,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 7,
+       "bam": [],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân sau mất 9/38 (8 hướng)",
+        "Giáp ống chân trước mất 9/38 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 5,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 8,
+       "bam": [
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân sau lố 1.7đ ở khớp cuối (xương ×0.51, giáp chỉ ×0.75)",
+        "Giáp ống chân trước hụt 6.2đ ở khớp cuối (xương ×2.19, giáp chỉ ×1.30)",
+        "Giáp ống chân sau mất 9/38 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 6,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 9,
+       "bam": [
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân trước hụt 2.5đ ở khớp cuối (xương ×1.66, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 9,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 1,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 10,
+       "bam": [
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân trước hụt 2.4đ ở khớp cuối (xương ×1.64, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 9,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 1,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 11,
+       "bam": [
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 0,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 12,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 6,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      }
+     ]
+    },
+    "gen": {
+     "summary": {
+      "frames": 12,
+      "bamOk0": 10,
+      "bamOk": 6,
+      "rung": 6,
+      "nhay8": 6,
+      "meo": 8,
+      "ho": 0,
+      "gapBefore": 270,
+      "gapAfter": 0
+     },
+     "gaps": [],
+     "caps": [
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ]
+     ],
+     "rows": [
+      {
+       "frame": 1,
+       "bam": [
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [
+        "Giáp ống chân sau nhảy 45° (xương chỉ 16°)"
+       ],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 9,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 9,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 2,
+       "bam": [
+        "Giáp ống chân trước (cuối)",
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [
+        "Giáp ngực nhỏ nhảy 45° (xương chỉ 4°)",
+        "Giáp vai trước nhảy 45° (xương chỉ 9°)"
+       ],
+       "meo": [
+        "Giáp ống chân trước hụt 6.6đ ở khớp cuối (xương ×2.26, giáp chỉ ×1.30)",
+        "Giáp cẳng tay sau mất 7/25 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 3,
+       "bam": [],
+       "rung": [
+        "Giáp ngực nhỏ nhảy -45° (xương chỉ -5°)"
+       ],
+       "meo": [
+        "Giáp cẳng tay sau mất 6/25 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 4,
+       "bam": [],
+       "rung": [
+        "Giáp vai trước nhảy -45° (xương chỉ -1°)"
+       ],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 5,
+       "bam": [],
+       "rung": [],
+       "meo": [
+        "Giáp cẳng tay sau mất 6/25 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 6,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 7,
+       "bam": [
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân sau mất 9/34 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 8,
+       "bam": [
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [
+        "Giáp ngực nhỏ nhảy 45° (xương chỉ 5°)"
+       ],
+       "meo": [
+        "Giáp ống chân sau lố 1.6đ ở khớp cuối (xương ×0.52, giáp chỉ ×0.75)",
+        "Giáp ống chân trước hụt 6.4đ ở khớp cuối (xương ×2.24, giáp chỉ ×1.30)",
+        "Giáp ống chân sau mất 7/34 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 9,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 9,
+       "bam": [
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [
+        "Giáp ngực nhỏ nhảy -45° (xương chỉ -13°)"
+       ],
+       "meo": [
+        "Giáp ống chân trước hụt 2.7đ ở khớp cuối (xương ×1.70, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 10,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 10,
+       "bam": [
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân trước hụt 2.6đ ở khớp cuối (xương ×1.68, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 10,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 11,
+       "bam": [],
+       "rung": [],
+       "meo": [
+        "Giáp cẳng tay sau mất 6/25 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 12,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "xuong": {
+    "may": {
+     "summary": {
+      "frames": 12,
+      "bamOk0": 10,
+      "bamOk": 6,
+      "rung": 3,
+      "nhay8": 3,
+      "meo": 7,
+      "ho": 0,
+      "gapBefore": 191,
+      "gapAfter": 0
+     },
+     "gaps": [],
+     "caps": [
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ]
+     ],
+     "rows": [
+      {
+       "frame": 1,
+       "bam": [],
+       "rung": [
+        "Giáp ống chân sau nhảy 45° (xương chỉ 16°)"
+       ],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 3,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 2,
+       "bam": [
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp vai sau lố 1.5đ ở khớp cuối (xương ×0.50, giáp chỉ ×0.75)",
+        "Giáp ống chân trước hụt 6.4đ ở khớp cuối (xương ×2.21, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 3,
+       "bam": [
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [
+        "Giáp vai sau nhảy 45° (xương chỉ 20°)"
+       ],
+       "meo": [
+        "Giáp vai sau mất 10/44 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 8,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 4,
+       "bam": [],
+       "rung": [],
+       "meo": [
+        "Giáp vai sau mất 10/44 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 0,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 5,
+       "bam": [],
+       "rung": [
+        "Giáp vai sau nhảy -45° (xương chỉ -17°)"
+       ],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 6,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 7,
+       "bam": [],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân sau mất 9/38 (8 hướng)",
+        "Giáp ống chân trước mất 9/38 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 5,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 8,
+       "bam": [
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân sau lố 1.7đ ở khớp cuối (xương ×0.51, giáp chỉ ×0.75)",
+        "Giáp ống chân trước hụt 6.2đ ở khớp cuối (xương ×2.19, giáp chỉ ×1.30)",
+        "Giáp ống chân sau mất 9/38 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 6,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 9,
+       "bam": [
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân trước hụt 2.5đ ở khớp cuối (xương ×1.66, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 1,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 10,
+       "bam": [
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân trước hụt 2.4đ ở khớp cuối (xương ×1.64, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 1,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 11,
+       "bam": [
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 0,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 12,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 6,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      }
+     ]
+    },
+    "gen": {
+     "summary": {
+      "frames": 12,
+      "bamOk0": 10,
+      "bamOk": 6,
+      "rung": 6,
+      "nhay8": 6,
+      "meo": 9,
+      "ho": 0,
+      "gapBefore": 248,
+      "gapAfter": 0
+     },
+     "gaps": [],
+     "caps": [
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ]
+     ],
+     "rows": [
+      {
+       "frame": 1,
+       "bam": [
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [
+        "Giáp ống chân sau nhảy 45° (xương chỉ 16°)"
+       ],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 9,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 2,
+       "bam": [
+        "Giáp ống chân trước (cuối)",
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [
+        "Giáp ngực nhỏ nhảy 45° (xương chỉ 4°)"
+       ],
+       "meo": [
+        "Giáp ống chân trước hụt 6.6đ ở khớp cuối (xương ×2.26, giáp chỉ ×1.30)",
+        "Giáp cẳng tay sau mất 7/25 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 10,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 3,
+       "bam": [],
+       "rung": [
+        "Giáp vai sau nhảy 45° (xương chỉ 20°)",
+        "Giáp ngực nhỏ nhảy -45° (xương chỉ -5°)"
+       ],
+       "meo": [
+        "Giáp vai sau mất 11/44 (8 hướng)",
+        "Giáp cẳng tay sau mất 6/25 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 9,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 4,
+       "bam": [],
+       "rung": [],
+       "meo": [
+        "Giáp vai sau mất 11/44 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 5,
+       "bam": [],
+       "rung": [
+        "Giáp vai sau nhảy -45° (xương chỉ -17°)"
+       ],
+       "meo": [
+        "Giáp cẳng tay sau mất 6/25 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 6,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 7,
+       "bam": [
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân sau mất 9/34 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 8,
+       "bam": [
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [
+        "Giáp ngực nhỏ nhảy 45° (xương chỉ 5°)"
+       ],
+       "meo": [
+        "Giáp ống chân sau lố 1.6đ ở khớp cuối (xương ×0.52, giáp chỉ ×0.75)",
+        "Giáp ống chân trước hụt 6.4đ ở khớp cuối (xương ×2.24, giáp chỉ ×1.30)",
+        "Giáp ống chân sau mất 7/34 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 9,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 9,
+       "bam": [
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [
+        "Giáp ngực nhỏ nhảy -45° (xương chỉ -13°)"
+       ],
+       "meo": [
+        "Giáp ống chân trước hụt 2.7đ ở khớp cuối (xương ×1.70, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 10,
+       "bam": [
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân trước hụt 2.6đ ở khớp cuối (xương ×1.68, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 11,
+       "bam": [],
+       "rung": [],
+       "meo": [
+        "Giáp cẳng tay sau mất 6/25 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 10,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 12,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "chet": {
+   "tron": {
+    "may": {
+     "summary": {
+      "frames": 8,
+      "bamOk0": 3,
+      "bamOk": 1,
+      "rung": 4,
+      "nhay8": 0,
+      "meo": 8,
+      "ho": 0,
+      "gapBefore": 195,
+      "gapAfter": 0
+     },
+     "gaps": [],
+     "caps": [
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:Ø5",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:Ø5",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:Ø5",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ]
+     ],
+     "rows": [
+      {
+       "frame": 1,
+       "bam": [
+        "Giáp cẳng tay trước (cuối)",
+        "Giáp cẳng tay sau (cuối)",
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [
+        "Giáp ống chân trước xoay gắt -90°",
+        "Giáp vai trước xoay gắt -90°"
+       ],
+       "meo": [
+        "Giáp cẳng tay sau hụt 2.0đ ở khớp cuối (xương ×1.66, giáp chỉ ×1.30)",
+        "Giáp ống chân sau hụt 2.8đ ở khớp cuối (xương ×1.70, giáp chỉ ×1.30)",
+        "Giáp cẳng tay trước hụt 3.3đ ở khớp cuối (xương ×1.91, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 7,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 3,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 2,
+       "bam": [
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [
+        "Giáp cẳng tay trước xoay gắt 90°"
+       ],
+       "meo": [
+        "Giáp cẳng tay trước mất 6/26 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeBack",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 3,
+       "bam": [],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân sau mất 9/38"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 24,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 0,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 4,
+       "bam": [
+        "Giáp ống chân sau (cuối)",
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [
+        "Giáp ống chân sau xoay gắt 90°",
+        "Giáp ống chân trước xoay gắt -90°"
+       ],
+       "meo": [
+        "Giáp cẳng tay trước hụt 2.0đ ở khớp cuối (xương ×1.66, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 1,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 5,
+       "bam": [
+        "Giáp cẳng tay trước (cuối)",
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [
+        "Giáp cẳng tay trước xoay gắt -90°"
+       ],
+       "meo": [
+        "Giáp ống chân sau hụt 1.6đ ở khớp cuối (xương ×1.53, giáp chỉ ×1.30)",
+        "Giáp cẳng tay trước hụt 4.7đ ở khớp cuối (xương ×2.15, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 26,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 6,
+       "bam": [
+        "Giáp cẳng tay trước (cuối)",
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân trước hụt 2.7đ ở khớp cuối (xương ×1.69, giáp chỉ ×1.30)",
+        "Giáp cẳng tay trước hụt 4.6đ ở khớp cuối (xương ×2.13, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeFront",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 7,
+       "bam": [
+        "Giáp ống chân trước (cuối)",
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân trước hụt 2.7đ ở khớp cuối (xương ×1.68, giáp chỉ ×1.30)",
+        "Giáp cẳng tay trước hụt 4.6đ ở khớp cuối (xương ×2.13, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeFront",
+         "before": 6,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 8,
+       "bam": [
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân trước hụt 2.0đ ở khớp cuối (xương ×1.58, giáp chỉ ×1.30)",
+        "Giáp cẳng tay trước hụt 4.7đ ở khớp cuối (xương ×2.15, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeFront",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      }
+     ]
+    },
+    "gen": {
+     "summary": {
+      "frames": 8,
+      "bamOk0": 3,
+      "bamOk": 2,
+      "rung": 4,
+      "nhay8": 0,
+      "meo": 5,
+      "ho": 0,
+      "gapBefore": 176,
+      "gapAfter": 0
+     },
+     "gaps": [],
+     "caps": [
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:Ø5",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:Ø5",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:Ø5",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ]
+     ],
+     "rows": [
+      {
+       "frame": 1,
+       "bam": [
+        "Giáp ống chân sau (cuối)",
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [
+        "Giáp ống chân trước xoay gắt -90°",
+        "Giáp vai trước xoay gắt -90°"
+       ],
+       "meo": [
+        "Giáp ống chân sau hụt 3.0đ ở khớp cuối (xương ×1.74, giáp chỉ ×1.30)",
+        "Giáp cẳng tay trước hụt 2.6đ ở khớp cuối (xương ×1.72, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 3,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 2,
+       "bam": [
+        "Giáp cẳng tay sau (cuối)",
+        "Giáp ống chân trước (cuối)",
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [
+        "Giáp cẳng tay trước xoay gắt 90°"
+       ],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeBack",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 3,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 9,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 3,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 24,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 1,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 4,
+       "bam": [],
+       "rung": [
+        "Giáp ống chân sau xoay gắt 90°",
+        "Giáp ống chân trước xoay gắt -90°"
+       ],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 5,
+       "bam": [
+        "Giáp cẳng tay trước (cuối)",
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [
+        "Giáp cẳng tay trước xoay gắt -90°"
+       ],
+       "meo": [
+        "Giáp ống chân sau hụt 1.8đ ở khớp cuối (xương ×1.57, giáp chỉ ×1.30)",
+        "Giáp cẳng tay trước hụt 3.9đ ở khớp cuối (xương ×1.94, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 26,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 6,
+       "bam": [
+        "Giáp cẳng tay trước (cuối)",
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân trước hụt 2.9đ ở khớp cuối (xương ×1.73, giáp chỉ ×1.30)",
+        "Giáp cẳng tay trước hụt 3.8đ ở khớp cuối (xương ×1.93, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeFront",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 7,
+       "bam": [
+        "Giáp ống chân trước (cuối)",
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân trước hụt 2.9đ ở khớp cuối (xương ×1.72, giáp chỉ ×1.30)",
+        "Giáp cẳng tay trước hụt 3.8đ ở khớp cuối (xương ×1.92, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeFront",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 8,
+       "bam": [
+        "Giáp cẳng tay trước (cuối)",
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân trước hụt 2.2đ ở khớp cuối (xương ×1.62, giáp chỉ ×1.30)",
+        "Giáp cẳng tay trước hụt 3.9đ ở khớp cuối (xương ×1.94, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeFront",
+         "before": 3,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "xuong": {
+    "may": {
+     "summary": {
+      "frames": 8,
+      "bamOk0": 2,
+      "bamOk": 0,
+      "rung": 4,
+      "nhay8": 0,
+      "meo": 8,
+      "ho": 0,
+      "gapBefore": 134,
+      "gapAfter": 0
+     },
+     "gaps": [],
+     "caps": [
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:Ø5",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:Ø5",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:Ø5",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ]
+     ],
+     "rows": [
+      {
+       "frame": 1,
+       "bam": [
+        "Giáp cẳng tay trước (cuối)",
+        "Giáp cẳng tay sau (cuối)",
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [
+        "Giáp ống chân trước xoay gắt -90°"
+       ],
+       "meo": [
+        "Giáp vai sau hụt 1.7đ ở khớp cuối (xương ×1.58, giáp chỉ ×1.30)",
+        "Giáp cẳng tay sau hụt 2.0đ ở khớp cuối (xương ×1.66, giáp chỉ ×1.30)",
+        "Giáp ống chân sau hụt 2.8đ ở khớp cuối (xương ×1.70, giáp chỉ ×1.30)",
+        "Giáp cẳng tay trước hụt 3.3đ ở khớp cuối (xương ×1.91, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 3,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 3,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 2,
+       "bam": [
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [
+        "Giáp cẳng tay trước xoay gắt 90°",
+        "Giáp vai trước xoay gắt 135°"
+       ],
+       "meo": [
+        "Giáp cẳng tay trước mất 6/26 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeBack",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 3,
+       "bam": [
+        "Giáp vai trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp vai sau hụt 2.1đ ở khớp cuối (xương ×1.65, giáp chỉ ×1.30)",
+        "Giáp ống chân sau mất 9/38",
+        "Giáp vai trước hụt 3.9đ ở khớp cuối (xương ×1.95, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 20,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 0,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 4,
+       "bam": [
+        "Giáp ống chân sau (cuối)",
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [
+        "Giáp ống chân sau xoay gắt 90°",
+        "Giáp ống chân trước xoay gắt -90°"
+       ],
+       "meo": [
+        "Giáp cẳng tay trước hụt 2.0đ ở khớp cuối (xương ×1.66, giáp chỉ ×1.30)",
+        "Giáp vai trước hụt 2.5đ ở khớp cuối (xương ×1.72, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 1,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 5,
+       "bam": [
+        "Giáp cẳng tay trước (cuối)",
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [
+        "Giáp cẳng tay trước xoay gắt -90°",
+        "Giáp vai trước xoay gắt -90°"
+       ],
+       "meo": [
+        "Giáp ống chân sau hụt 1.6đ ở khớp cuối (xương ×1.53, giáp chỉ ×1.30)",
+        "Giáp cẳng tay trước hụt 4.7đ ở khớp cuối (xương ×2.15, giáp chỉ ×1.30)",
+        "Giáp vai trước hụt 2.8đ ở khớp cuối (xương ×1.76, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 26,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 6,
+       "bam": [
+        "Giáp cẳng tay trước (cuối)",
+        "Giáp ống chân trước (cuối)",
+        "Giáp vai trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân trước hụt 2.7đ ở khớp cuối (xương ×1.69, giáp chỉ ×1.30)",
+        "Giáp cẳng tay trước hụt 4.6đ ở khớp cuối (xương ×2.13, giáp chỉ ×1.30)",
+        "Giáp vai trước hụt 1.7đ ở khớp cuối (xương ×1.58, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeFront",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 7,
+       "bam": [
+        "Giáp ống chân trước (cuối)",
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân trước hụt 2.7đ ở khớp cuối (xương ×1.68, giáp chỉ ×1.30)",
+        "Giáp cẳng tay trước hụt 4.6đ ở khớp cuối (xương ×2.13, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeFront",
+         "before": 6,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 8,
+       "bam": [
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân trước hụt 2.0đ ở khớp cuối (xương ×1.58, giáp chỉ ×1.30)",
+        "Giáp cẳng tay trước hụt 4.7đ ở khớp cuối (xương ×2.15, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeFront",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      }
+     ]
+    },
+    "gen": {
+     "summary": {
+      "frames": 8,
+      "bamOk0": 2,
+      "bamOk": 0,
+      "rung": 4,
+      "nhay8": 0,
+      "meo": 7,
+      "ho": 0,
+      "gapBefore": 143,
+      "gapAfter": 0
+     },
+     "gaps": [],
+     "caps": [
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ]
+     ],
+     "rows": [
+      {
+       "frame": 1,
+       "bam": [
+        "Giáp ống chân sau (cuối)",
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [
+        "Giáp ống chân trước xoay gắt -90°"
+       ],
+       "meo": [
+        "Giáp vai sau hụt 2.2đ ở khớp cuối (xương ×1.69, giáp chỉ ×1.30)",
+        "Giáp ống chân sau hụt 3.0đ ở khớp cuối (xương ×1.74, giáp chỉ ×1.30)",
+        "Giáp cẳng tay trước hụt 2.6đ ở khớp cuối (xương ×1.72, giáp chỉ ×1.30)",
+        "Giáp vai trước hụt 1.8đ ở khớp cuối (xương ×1.62, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 3,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 2,
+       "bam": [
+        "Giáp cẳng tay sau (cuối)",
+        "Giáp ống chân trước (cuối)",
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [
+        "Giáp cẳng tay trước xoay gắt 90°",
+        "Giáp vai trước xoay gắt 135°"
+       ],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 3,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 3,
+       "bam": [
+        "Giáp vai trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp vai sau hụt 2.6đ ở khớp cuối (xương ×1.77, giáp chỉ ×1.30)",
+        "Giáp vai trước hụt 4.4đ ở khớp cuối (xương ×2.09, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 18,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 1,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 4,
+       "bam": [
+        "Giáp vai trước (cuối)"
+       ],
+       "rung": [
+        "Giáp ống chân sau xoay gắt 90°",
+        "Giáp ống chân trước xoay gắt -90°"
+       ],
+       "meo": [
+        "Giáp vai trước hụt 3.1đ ở khớp cuối (xương ×1.84, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 5,
+       "bam": [
+        "Giáp cẳng tay trước (cuối)",
+        "Giáp vai trước (cuối)",
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [
+        "Giáp cẳng tay trước xoay gắt -90°",
+        "Giáp vai trước xoay gắt -90°"
+       ],
+       "meo": [
+        "Giáp ống chân sau hụt 1.8đ ở khớp cuối (xương ×1.57, giáp chỉ ×1.30)",
+        "Giáp cẳng tay trước hụt 3.9đ ở khớp cuối (xương ×1.94, giáp chỉ ×1.30)",
+        "Giáp vai trước hụt 3.3đ ở khớp cuối (xương ×1.89, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 26,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 6,
+       "bam": [
+        "Giáp cẳng tay trước (cuối)",
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân trước hụt 2.9đ ở khớp cuối (xương ×1.73, giáp chỉ ×1.30)",
+        "Giáp cẳng tay trước hụt 3.8đ ở khớp cuối (xương ×1.93, giáp chỉ ×1.30)",
+        "Giáp vai trước hụt 2.2đ ở khớp cuối (xương ×1.69, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeFront",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 7,
+       "bam": [
+        "Giáp ống chân trước (cuối)",
+        "Giáp cẳng tay trước (cuối)",
+        "Giáp vai trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân trước hụt 2.9đ ở khớp cuối (xương ×1.72, giáp chỉ ×1.30)",
+        "Giáp cẳng tay trước hụt 3.8đ ở khớp cuối (xương ×1.92, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeFront",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 8,
+       "bam": [
+        "Giáp cẳng tay trước (cuối)",
+        "Giáp ống chân trước (cuối)",
+        "Giáp vai trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân trước hụt 2.2đ ở khớp cuối (xương ×1.62, giáp chỉ ×1.30)",
+        "Giáp cẳng tay trước hụt 3.9đ ở khớp cuối (xương ×1.94, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeFront",
+         "before": 3,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
   "di": {
    "tron": {
     "may": {
      "summary": {
       "frames": 8,
+      "bamOk0": 8,
       "bamOk": 8,
       "rung": 4,
       "nhay8": 2,
@@ -3508,6 +7879,7 @@
     "gen": {
      "summary": {
       "frames": 8,
+      "bamOk0": 8,
       "bamOk": 2,
       "rung": 4,
       "nhay8": 2,
@@ -3981,6 +8353,7 @@
     "may": {
      "summary": {
       "frames": 8,
+      "bamOk0": 8,
       "bamOk": 8,
       "rung": 6,
       "nhay8": 4,
@@ -4436,6 +8809,7 @@
     "gen": {
      "summary": {
       "frames": 8,
+      "bamOk0": 8,
       "bamOk": 2,
       "rung": 6,
       "nhay8": 4,
@@ -4921,6 +9295,7 @@
     "may": {
      "summary": {
       "frames": 8,
+      "bamOk0": 8,
       "bamOk": 6,
       "rung": 0,
       "nhay8": 0,
@@ -5362,6 +9737,7 @@
     "gen": {
      "summary": {
       "frames": 8,
+      "bamOk0": 8,
       "bamOk": 0,
       "rung": 0,
       "nhay8": 0,
@@ -5829,6 +10205,7 @@
     "may": {
      "summary": {
       "frames": 8,
+      "bamOk0": 8,
       "bamOk": 6,
       "rung": 0,
       "nhay8": 0,
@@ -6270,6 +10647,7 @@
     "gen": {
      "summary": {
       "frames": 8,
+      "bamOk0": 8,
       "bamOk": 0,
       "rung": 0,
       "nhay8": 0,
@@ -6739,6 +11117,7 @@
     "may": {
      "summary": {
       "frames": 5,
+      "bamOk0": 5,
       "bamOk": 3,
       "rung": 3,
       "nhay8": 2,
@@ -6959,6 +11338,7 @@
     "gen": {
      "summary": {
       "frames": 5,
+      "bamOk0": 5,
       "bamOk": 3,
       "rung": 3,
       "nhay8": 2,
@@ -7181,6 +11561,7 @@
     "may": {
      "summary": {
       "frames": 5,
+      "bamOk0": 3,
       "bamOk": 2,
       "rung": 4,
       "nhay8": 2,
@@ -7410,6 +11791,7 @@
     "gen": {
      "summary": {
       "frames": 5,
+      "bamOk0": 3,
       "bamOk": 3,
       "rung": 4,
       "nhay8": 2,
@@ -7628,6 +12010,3238 @@
         {
          "at": "shoulderFront",
          "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "lon": {
+   "tron": {
+    "may": {
+     "summary": {
+      "frames": 6,
+      "bamOk0": 6,
+      "bamOk": 5,
+      "rung": 2,
+      "nhay8": 0,
+      "meo": 2,
+      "ho": 0,
+      "gapBefore": 80,
+      "gapAfter": 0
+     },
+     "gaps": [],
+     "caps": [
+      [
+       "kneeBack:Ø5",
+       "kneeFront:Ø5",
+       "elbowFront:Ø5",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeBack:Ø5",
+       "kneeFront:Ø5",
+       "elbowFront:Ø5",
+       "shoulderFront:gốc 5×5"
+      ],
+      [],
+      [],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:Ø5",
+       "elbowFront:Ø5",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:Ø5",
+       "elbowFront:Ø5",
+       "shoulderFront:gốc 5×5"
+      ]
+     ],
+     "rows": [
+      {
+       "frame": 1,
+       "bam": [
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [
+        "Giáp cẳng tay trước xoay gắt -45°"
+       ],
+       "meo": [
+        "Giáp ống chân trước hụt 1.7đ ở khớp cuối (xương ×1.54, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeBack",
+         "before": 8,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 2,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "kneeBack",
+         "before": 0,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 5,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 5,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 3,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": []
+      },
+      {
+       "frame": 4,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": []
+      },
+      {
+       "frame": 5,
+       "bam": [],
+       "rung": [],
+       "meo": [
+        "Giáp cẳng tay sau mất 6/26 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 3,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 6,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 6,
+       "bam": [],
+       "rung": [
+        "Giáp cẳng tay sau xoay gắt -90°",
+        "Giáp cẳng tay trước xoay gắt -90°",
+        "Giáp vai trước xoay gắt -90°"
+       ],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 6,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 3,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      }
+     ]
+    },
+    "gen": {
+     "summary": {
+      "frames": 6,
+      "bamOk0": 6,
+      "bamOk": 4,
+      "rung": 2,
+      "nhay8": 0,
+      "meo": 2,
+      "ho": 0,
+      "gapBefore": 72,
+      "gapAfter": 0
+     },
+     "gaps": [],
+     "caps": [
+      [
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [],
+      [],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ]
+     ],
+     "rows": [
+      {
+       "frame": 1,
+       "bam": [],
+       "rung": [
+        "Giáp cẳng tay trước xoay gắt -45°"
+       ],
+       "meo": [
+        "Giáp ống chân trước hụt 1.9đ ở khớp cuối (xương ×1.57, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 2,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 3,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": []
+      },
+      {
+       "frame": 4,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": []
+      },
+      {
+       "frame": 5,
+       "bam": [
+        "Giáp cẳng tay sau (cuối)"
+       ],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 9,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 6,
+       "bam": [
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [
+        "Giáp cẳng tay sau xoay gắt -90°",
+        "Giáp cẳng tay trước xoay gắt -90°",
+        "Giáp vai trước xoay gắt -90°"
+       ],
+       "meo": [
+        "Giáp cẳng tay sau mất 6/25 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "xuong": {
+    "may": {
+     "summary": {
+      "frames": 6,
+      "bamOk0": 6,
+      "bamOk": 5,
+      "rung": 2,
+      "nhay8": 0,
+      "meo": 2,
+      "ho": 0,
+      "gapBefore": 48,
+      "gapAfter": 0
+     },
+     "gaps": [],
+     "caps": [
+      [
+       "kneeBack:Ø5",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeBack:Ø5",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [],
+      [],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ]
+     ],
+     "rows": [
+      {
+       "frame": 1,
+       "bam": [
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [
+        "Giáp cẳng tay trước xoay gắt -45°",
+        "Giáp vai trước xoay gắt -90°"
+       ],
+       "meo": [
+        "Giáp ống chân trước hụt 1.7đ ở khớp cuối (xương ×1.54, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeBack",
+         "before": 8,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 2,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "kneeBack",
+         "before": 0,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 5,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 3,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": []
+      },
+      {
+       "frame": 4,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": []
+      },
+      {
+       "frame": 5,
+       "bam": [],
+       "rung": [],
+       "meo": [
+        "Giáp cẳng tay sau mất 6/26 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 3,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 6,
+       "bam": [],
+       "rung": [
+        "Giáp cẳng tay sau xoay gắt -90°",
+        "Giáp cẳng tay trước xoay gắt -90°",
+        "Giáp vai trước xoay gắt -90°"
+       ],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 6,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      }
+     ]
+    },
+    "gen": {
+     "summary": {
+      "frames": 6,
+      "bamOk0": 6,
+      "bamOk": 4,
+      "rung": 2,
+      "nhay8": 0,
+      "meo": 2,
+      "ho": 0,
+      "gapBefore": 60,
+      "gapAfter": 0
+     },
+     "gaps": [],
+     "caps": [
+      [
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [],
+      [],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ]
+     ],
+     "rows": [
+      {
+       "frame": 1,
+       "bam": [],
+       "rung": [
+        "Giáp cẳng tay trước xoay gắt -45°",
+        "Giáp vai trước xoay gắt -90°"
+       ],
+       "meo": [
+        "Giáp ống chân trước hụt 1.9đ ở khớp cuối (xương ×1.57, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "kneeBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 2,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 3,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": []
+      },
+      {
+       "frame": 4,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": []
+      },
+      {
+       "frame": 5,
+       "bam": [
+        "Giáp cẳng tay sau (cuối)"
+       ],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 6,
+       "bam": [
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [
+        "Giáp cẳng tay sau xoay gắt -90°",
+        "Giáp cẳng tay trước xoay gắt -90°",
+        "Giáp vai trước xoay gắt -90°"
+       ],
+       "meo": [
+        "Giáp cẳng tay sau mất 6/25 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "phitieu": {
+   "tron": {
+    "may": {
+     "summary": {
+      "frames": 6,
+      "bamOk0": 6,
+      "bamOk": 1,
+      "rung": 4,
+      "nhay8": 3,
+      "meo": 3,
+      "ho": 0,
+      "gapBefore": 138,
+      "gapAfter": 0
+     },
+     "gaps": [],
+     "caps": [
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ]
+     ],
+     "rows": [
+      {
+       "frame": 1,
+       "bam": [],
+       "rung": [
+        "Giáp ống chân trước nhảy -45° (xương chỉ -6°)"
+       ],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 9,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 7,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 2,
+       "bam": [
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [
+        "Giáp cẳng tay trước xoay gắt -90°"
+       ],
+       "meo": [
+        "Giáp cẳng tay sau mất 8/26 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 3,
+       "bam": [
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [
+        "Giáp ống chân sau nhảy 45° (xương chỉ 6°)"
+       ],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "Ø5"
+        }
+       ]
+      },
+      {
+       "frame": 4,
+       "bam": [
+        "Giáp ống chân sau (cuối)",
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [
+        "Giáp ống chân sau nhảy -45° (xương chỉ -4°)"
+       ],
+       "meo": [
+        "Giáp ống chân trước hụt 2.9đ ở khớp cuối (xương ×1.71, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 28,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 5,
+       "bam": [
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 6,
+       "bam": [
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp cẳng tay sau mất 8/26 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 3,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 9,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      }
+     ]
+    },
+    "gen": {
+     "summary": {
+      "frames": 6,
+      "bamOk0": 6,
+      "bamOk": 2,
+      "rung": 4,
+      "nhay8": 3,
+      "meo": 6,
+      "ho": 0,
+      "gapBefore": 135,
+      "gapAfter": 0
+     },
+     "gaps": [],
+     "caps": [
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ]
+     ],
+     "rows": [
+      {
+       "frame": 1,
+       "bam": [],
+       "rung": [
+        "Giáp ống chân trước nhảy -45° (xương chỉ -6°)"
+       ],
+       "meo": [
+        "Giáp cẳng tay sau mất 6/25 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 10,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 2,
+       "bam": [
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [
+        "Giáp cẳng tay trước xoay gắt -90°"
+       ],
+       "meo": [
+        "Giáp cẳng tay sau mất 6/25 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 3,
+       "bam": [
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [
+        "Giáp ống chân sau nhảy 45° (xương chỉ 6°)"
+       ],
+       "meo": [
+        "Giáp ống chân sau hụt 1.6đ ở khớp cuối (xương ×1.54, giáp chỉ ×1.30)",
+        "Giáp ống chân trước hụt 1.6đ ở khớp cuối (xương ×1.53, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        }
+       ]
+      },
+      {
+       "frame": 4,
+       "bam": [],
+       "rung": [
+        "Giáp ống chân sau nhảy -45° (xương chỉ -4°)"
+       ],
+       "meo": [
+        "Giáp ống chân trước hụt 3.1đ ở khớp cuối (xương ×1.75, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 28,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 5,
+       "bam": [
+        "Giáp ống chân trước (cuối)",
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp cẳng tay sau mất 6/25 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 6,
+       "bam": [
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp cẳng tay sau mất 6/25 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 10,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "xuong": {
+    "may": {
+     "summary": {
+      "frames": 6,
+      "bamOk0": 6,
+      "bamOk": 1,
+      "rung": 4,
+      "nhay8": 4,
+      "meo": 3,
+      "ho": 0,
+      "gapBefore": 97,
+      "gapAfter": 0
+     },
+     "gaps": [],
+     "caps": [
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ]
+     ],
+     "rows": [
+      {
+       "frame": 1,
+       "bam": [],
+       "rung": [
+        "Giáp ống chân trước nhảy -45° (xương chỉ -6°)",
+        "Giáp vai trước nhảy 45° (xương chỉ 11°)"
+       ],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 7,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 2,
+       "bam": [
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [
+        "Giáp vai sau nhảy -45° (xương chỉ -10°)",
+        "Giáp cẳng tay trước xoay gắt -90°",
+        "Giáp vai trước xoay gắt 45°"
+       ],
+       "meo": [
+        "Giáp cẳng tay sau mất 8/26 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 3,
+       "bam": [
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [
+        "Giáp ống chân sau nhảy 45° (xương chỉ 6°)"
+       ],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "Ø5"
+        }
+       ]
+      },
+      {
+       "frame": 4,
+       "bam": [
+        "Giáp ống chân sau (cuối)",
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [
+        "Giáp ống chân sau nhảy -45° (xương chỉ -4°)"
+       ],
+       "meo": [
+        "Giáp ống chân trước hụt 2.9đ ở khớp cuối (xương ×1.71, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 28,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 5,
+       "bam": [
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 6,
+       "bam": [
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp cẳng tay sau mất 8/26 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 3,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      }
+     ]
+    },
+    "gen": {
+     "summary": {
+      "frames": 6,
+      "bamOk0": 6,
+      "bamOk": 2,
+      "rung": 4,
+      "nhay8": 4,
+      "meo": 6,
+      "ho": 0,
+      "gapBefore": 124,
+      "gapAfter": 0
+     },
+     "gaps": [],
+     "caps": [
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ]
+     ],
+     "rows": [
+      {
+       "frame": 1,
+       "bam": [],
+       "rung": [
+        "Giáp ống chân trước nhảy -45° (xương chỉ -6°)",
+        "Giáp vai trước nhảy 45° (xương chỉ 11°)"
+       ],
+       "meo": [
+        "Giáp cẳng tay sau mất 6/25 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 2,
+       "bam": [
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [
+        "Giáp vai sau nhảy -45° (xương chỉ -10°)",
+        "Giáp cẳng tay trước xoay gắt -90°",
+        "Giáp vai trước xoay gắt 45°"
+       ],
+       "meo": [
+        "Giáp cẳng tay sau mất 6/25 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 3,
+       "bam": [
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [
+        "Giáp ống chân sau nhảy 45° (xương chỉ 6°)"
+       ],
+       "meo": [
+        "Giáp ống chân sau hụt 1.6đ ở khớp cuối (xương ×1.54, giáp chỉ ×1.30)",
+        "Giáp ống chân trước hụt 1.6đ ở khớp cuối (xương ×1.53, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        }
+       ]
+      },
+      {
+       "frame": 4,
+       "bam": [],
+       "rung": [
+        "Giáp ống chân sau nhảy -45° (xương chỉ -4°)"
+       ],
+       "meo": [
+        "Giáp ống chân trước hụt 3.1đ ở khớp cuối (xương ×1.75, giáp chỉ ×1.30)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 28,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 5,
+       "bam": [
+        "Giáp ống chân trước (cuối)",
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp cẳng tay sau mất 6/25 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 6,
+       "bam": [
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp cẳng tay sau mất 6/25 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "trung": {
+   "tron": {
+    "may": {
+     "summary": {
+      "frames": 4,
+      "bamOk0": 4,
+      "bamOk": 2,
+      "rung": 1,
+      "nhay8": 1,
+      "meo": 1,
+      "ho": 0,
+      "gapBefore": 95,
+      "gapAfter": 0
+     },
+     "gaps": [],
+     "caps": [
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ]
+     ],
+     "rows": [
+      {
+       "frame": 1,
+       "bam": [],
+       "rung": [
+        "Giáp ống chân sau xoay gắt -90°",
+        "Giáp ống chân trước nhảy -45° (xương chỉ -17°)"
+       ],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 3,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 2,
+       "bam": [
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp ống chân trước mất 9/38 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 6,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 3,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 3,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 4,
+       "bam": [
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 9,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 5,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      }
+     ]
+    },
+    "gen": {
+     "summary": {
+      "frames": 4,
+      "bamOk0": 4,
+      "bamOk": 2,
+      "rung": 1,
+      "nhay8": 1,
+      "meo": 0,
+      "ho": 0,
+      "gapBefore": 80,
+      "gapAfter": 0
+     },
+     "gaps": [],
+     "caps": [
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ]
+     ],
+     "rows": [
+      {
+       "frame": 1,
+       "bam": [],
+       "rung": [
+        "Giáp ống chân sau xoay gắt -90°",
+        "Giáp ống chân trước nhảy -45° (xương chỉ -17°)"
+       ],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 9,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 2,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 3,
+       "bam": [
+        "Giáp ống chân sau (cuối)",
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 9,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 4,
+       "bam": [
+        "Giáp ống chân sau (cuối)",
+        "Giáp ống chân trước (cuối)",
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 11,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "xuong": {
+    "may": {
+     "summary": {
+      "frames": 4,
+      "bamOk0": 4,
+      "bamOk": 2,
+      "rung": 2,
+      "nhay8": 2,
+      "meo": 2,
+      "ho": 0,
+      "gapBefore": 62,
+      "gapAfter": 0
+     },
+     "gaps": [],
+     "caps": [
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:Ø5",
+       "kneeFront:Ø5",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ]
+     ],
+     "rows": [
+      {
+       "frame": 1,
+       "bam": [],
+       "rung": [
+        "Giáp ống chân sau xoay gắt -90°",
+        "Giáp ống chân trước nhảy -45° (xương chỉ -17°)",
+        "Giáp vai trước nhảy 45° (xương chỉ 11°)"
+       ],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 4,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 3,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 2,
+       "bam": [
+        "Giáp ống chân sau (cuối)"
+       ],
+       "rung": [
+        "Giáp vai sau nhảy 45° (xương chỉ 9°)",
+        "Giáp vai trước nhảy -45° (xương chỉ -7°)"
+       ],
+       "meo": [
+        "Giáp ống chân trước mất 9/38 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 6,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 3,
+       "bam": [],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 3,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 4,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 4,
+       "bam": [
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [
+        "Giáp vai trước mất 10/44 (8 hướng)"
+       ],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 5,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "Ø5"
+        },
+        {
+         "at": "elbowFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      }
+     ]
+    },
+    "gen": {
+     "summary": {
+      "frames": 4,
+      "bamOk0": 4,
+      "bamOk": 2,
+      "rung": 2,
+      "nhay8": 2,
+      "meo": 0,
+      "ho": 0,
+      "gapBefore": 68,
+      "gapAfter": 0
+     },
+     "gaps": [],
+     "caps": [
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ],
+      [
+       "shoulderBack:gốc 5×5",
+       "elbowBack:gốc 4×4",
+       "kneeBack:gốc 4×4",
+       "kneeFront:gốc 4×4",
+       "elbowFront:gốc 4×4",
+       "shoulderFront:gốc 5×5"
+      ]
+     ],
+     "rows": [
+      {
+       "frame": 1,
+       "bam": [],
+       "rung": [
+        "Giáp ống chân sau xoay gắt -90°",
+        "Giáp ống chân trước nhảy -45° (xương chỉ -17°)",
+        "Giáp vai trước nhảy 45° (xương chỉ 11°)"
+       ],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 7,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 2,
+       "bam": [],
+       "rung": [
+        "Giáp vai sau nhảy 45° (xương chỉ 9°)",
+        "Giáp vai trước nhảy -45° (xương chỉ -7°)"
+       ],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 6,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 3,
+       "bam": [
+        "Giáp ống chân sau (cuối)",
+        "Giáp ống chân trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 3,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 8,
+         "after": 0,
+         "cap": "gốc 5×5"
+        }
+       ]
+      },
+      {
+       "frame": 4,
+       "bam": [
+        "Giáp ống chân sau (cuối)",
+        "Giáp ống chân trước (cuối)",
+        "Giáp cẳng tay trước (cuối)"
+       ],
+       "rung": [],
+       "meo": [],
+       "gaps": [
+        {
+         "at": "shoulderBack",
+         "before": 5,
+         "after": 0,
+         "cap": "gốc 5×5"
+        },
+        {
+         "at": "elbowBack",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeBack",
+         "before": 1,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "kneeFront",
+         "before": 2,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "elbowFront",
+         "before": 0,
+         "after": 0,
+         "cap": "gốc 4×4"
+        },
+        {
+         "at": "shoulderFront",
+         "before": 8,
          "after": 0,
          "cap": "gốc 5×5"
         }
