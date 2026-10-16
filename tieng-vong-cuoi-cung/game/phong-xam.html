@@ -88,6 +88,8 @@ body.touch .tc{display:block}
       <label class="row" for="c-jump">Độ cao nhảy <output id="o-jump"></output><input id="c-jump" type="range" min="24" max="100" step="2"></label>
       <label class="row" for="c-grav">Trọng lực <output id="o-grav"></output><input id="c-grav" type="range" min="0.15" max="0.6" step="0.01"></label>
       <label class="row" for="c-echo">Thời gian ghi vọng <output id="o-echo"></output><input id="c-echo" type="range" min="1" max="6" step="0.5"></label>
+      <label class="row" for="c-wjx">Lực bật ngang (bật tường) <output id="o-wjx"></output><input id="c-wjx" type="range" min="1.2" max="4.6" step="0.1"></label>
+      <label class="row" for="c-stick">Thời gian bám tường <output id="o-stick"></output><input id="c-stick" type="range" min="0" max="24" step="1"></label>
       <div class="btns"><button id="cfg-def" type="button">Mặc định</button><button id="cfg-close" type="button" class="pri">Chơi tiếp</button></div>
     </div>
   </div>
@@ -97,7 +99,7 @@ body.touch .tc{display:block}
 <script>
 'use strict';
 /* ================= THAM SỐ (chỉnh cảm giác ở đây) ================= */
-const DEF = { runSpeed:2.2, jumpHeight:56, gravity:0.32, echoSeconds:3 };
+const DEF = { runSpeed:2.2, jumpHeight:56, gravity:0.32, echoSeconds:3, wallJumpVx:2.7, wallStick:6 };
 const P = Object.assign({}, DEF, {
   accelFrames:6,      // số khung để đạt tốc chạy
   decelFrames:5,      // số khung phanh (trượt nhẹ)
@@ -106,7 +108,10 @@ const P = Object.assign({}, DEF, {
   apexGravMul:0.5, apexThreshold:0.9,  // trọng lực giảm ở đỉnh nhảy
   jumpCut:0.45,       // thả nút sớm -> nhảy thấp
   coyote:6, jumpBuffer:8, corner:4,
-  wallSlideMax:1.1, wallJumpVx:2.7, wallJumpMul:0.92, wallJumpLock:9,
+  wallSlideMax:0.8, wallJumpMul:0.92, wallJumpLock:9,
+  wallSense:3,        // nhận tường trong khoảng 3 px quanh nhân vật
+  wallCoyote:8,       // rời tường vẫn bật được trong 8 khung
+  wallBackMul:0.35,   // giữ hướng về tường khi bật -> đẩy ngang yếu, quay lại tường để leo
   ladderSpeed:1.4,
   dashSpeed:5.5, dashFrames:8, dashIFrames:11, dashCooldown:18,
   pogoMul:0.85, lunge:1.1,
@@ -139,8 +144,8 @@ const rooms=[];
   r.spawn=[3,13]; rooms.push(r);
 }
 { // 2. tường cao + thang
-  const r=makeRoom(30,'Tường cao','Áp vào tường rồi Nhảy để bật lên. Giữ ↑ để leo thang.');
-  r.fill(6,3,6,10); r.fill(10,3,11,13);
+  const r=makeRoom(30,'Tường cao','Sát tường (trên không) bấm Nhảy để bật. Giữ hướng về tường khi bật để leo lên. Giữ ↑ để leo thang.');
+  r.fill(6,4,6,10); r.fill(10,5,11,13);
   r.fill(19,6,19,13,'H'); r.fill(20,6,25,6); r.fill(26,6,29,13);
   rooms.push(r);
 }
@@ -180,7 +185,7 @@ function isLadderTop(tx,ty){ return tile(tx,ty)==='H' && tile(tx,ty-1)!=='H'; }
 const S={frame:0, hitstop:0, room:0, paused:false, done:false, shx:0, shy:0, sht:0, shm:0, camx:0, camy:0};
 let ents=[], parts=[], trail=[], swingId=0;
 let rec=null, echo=null;
-const pl={x:0,y:0,w:10,h:15,vx:0,vy:0,face:1,onGround:false,coyote:0,jumpBuf:0,atkBuf:0,dashBuf:0,jumping:false,wallDir:0,wallLock:0,
+const pl={x:0,y:0,w:10,h:15,vx:0,vy:0,face:1,onGround:false,coyote:0,jumpBuf:0,atkBuf:0,dashBuf:0,jumping:false,wallDir:0,wallLock:0,wallCoy:0,lastWall:0,wallStickT:0,wjBack:0,
   climb:false,climbCd:0,dash:0,dashDir:1,dashCd:0,airDash:false,iframes:0,hp:5,atk:null,sq:0,anim:0,st:'idle'};
 
 function makeEnt(spec, room){
@@ -384,25 +389,37 @@ function updatePlayer(){
   let target=atkGround?0:dir*P.runSpeed;
   let acc=P.runSpeed/P.accelFrames, dec=P.runSpeed/P.decelFrames;
   if(!pl.onGround){ acc*=P.airControl; dec*=P.airControl*0.6; }
-  if(pl.wallLock>0) acc*=0.25;
-  if(target!==0){ const turning=pl.vx!==0 && Math.sign(pl.vx)!==Math.sign(target); pl.vx=approach(pl.vx,target,turning?acc*P.turnBoost:acc); }
-  else pl.vx=approach(pl.vx,0,atkGround?dec*0.5:dec);
+  const backToWall=pl.wallLock>0 && dir!==0 && dir===pl.wjBack;
+  if(pl.wallLock>0 && !backToWall) acc*=0.25;
+  if(backToWall) pl.vx=approach(pl.vx,target,acc*P.turnBoost*1.5);
+  else if(target!==0){ const turning=pl.vx!==0 && Math.sign(pl.vx)!==Math.sign(target); pl.vx=approach(pl.vx,target,turning?acc*P.turnBoost:acc); }
+  else if(pl.wallLock<=0) pl.vx=approach(pl.vx,0,atkGround?dec*0.5:dec);
   if(dir && !pl.atk && pl.wallLock<=0) pl.face=dir;
 
   // Dọc
   let g=P.gravity;
   if(!pl.onGround){ if(I.j && Math.abs(pl.vy)<P.apexThreshold) g*=P.apexGravMul; else if(pl.vy>0) g*=P.fallGravMul; }
   pl.vy=Math.min(pl.vy+g,P.maxFall);
-  pl.wallDir=pl.onGround?0:(collide(pl.x-2,pl.y,pl.w,pl.h)?-1:(collide(pl.x+2,pl.y,pl.w,pl.h)?1:0));
+  const ws=P.wallSense+0.5;
+  pl.wallDir=pl.onGround?0:(collide(pl.x-ws,pl.y,pl.w,pl.h)?-1:(collide(pl.x+ws,pl.y,pl.w,pl.h)?1:0));
+  if(pl.wallDir){ pl.wallCoy=P.wallCoyote; pl.lastWall=pl.wallDir; }
+  else { if(pl.wallCoy>0) pl.wallCoy--; pl.wallStickT=0; }
+  if(pl.onGround){ pl.wallCoy=0; pl.wallStickT=0; }
   let sliding=false;
-  if(pl.wallDir && dir===pl.wallDir && pl.vy>0 && !pl.atk){ pl.vy=Math.min(pl.vy,P.wallSlideMax); sliding=true; pl.face=-pl.wallDir;
+  const touching=pl.wallDir && collide(pl.x+pl.wallDir,pl.y,pl.w,pl.h);
+  if(pl.wallDir && pl.vy>0 && !pl.atk && dir!==-pl.wallDir && (touching || dir===pl.wallDir)){
+    if(pl.wallStickT<P.wallStick){ pl.wallStickT++; pl.vy=0; }   // dính nhẹ trước khi trượt
+    else pl.vy=Math.min(pl.vy,P.wallSlideMax);
+    sliding=true; pl.face=-pl.wallDir;
     if(S.frame%6===0) parts.push({x:pl.wallDir>0?pl.x+pl.w:pl.x,y:pl.y+pl.h-2,vx:-pl.wallDir*0.3,vy:0.2,t:10,c:'#c9cdd2'}); }
   if(pl.jumpBuf>0){
     if(pl.onGround||pl.coyote>0){
       pl.vy=-jumpVel; pl.jumping=true; pl.coyote=0; pl.jumpBuf=0; pl.onGround=false; pl.sq=-0.8; dust(pl.x+pl.w/2,pl.y+pl.h);
-    } else if(pl.wallDir){
-      pl.vy=-jumpVel*P.wallJumpMul; pl.vx=-pl.wallDir*P.wallJumpVx; pl.face=-pl.wallDir; pl.wallLock=P.wallJumpLock;
-      pl.jumping=true; pl.jumpBuf=0; pl.airDash=false; pl.sq=-0.8; dust(pl.wallDir>0?pl.x+pl.w:pl.x,pl.y+pl.h/2);
+    } else if(pl.wallDir || pl.wallCoy>0){
+      const wd=pl.wallDir||pl.lastWall, back=(dir===wd);
+      pl.vy=-jumpVel*P.wallJumpMul; pl.vx=-wd*P.wallJumpVx*(back?P.wallBackMul:1); pl.face=-wd; pl.wallLock=P.wallJumpLock;
+      pl.wjBack=wd; pl.wallCoy=0; pl.wallStickT=0;
+      pl.jumping=true; pl.jumpBuf=0; pl.airDash=false; pl.sq=-0.8; dust(wd>0?pl.x+pl.w:pl.x,pl.y+pl.h/2);
     }
   }
   if(pl.jumping && !I.j && pl.vy<0){ pl.vy*=P.jumpCut; pl.jumping=false; }
@@ -656,9 +673,10 @@ function setBanner(){ const r=rooms[S.room]; roomName.textContent='Phòng '+(S.r
 /* ================= BẢNG CHỈNH ================= */
 const cfgEl=document.getElementById('cfg');
 const CFG=[['c-run','o-run','runSpeed',v=>v.toFixed(1)],['c-jump','o-jump','jumpHeight',v=>(v/T).toFixed(1)+' ô'],
-  ['c-grav','o-grav','gravity',v=>v.toFixed(2)],['c-echo','o-echo','echoSeconds',v=>v.toFixed(1)+' giây']];
+  ['c-grav','o-grav','gravity',v=>v.toFixed(2)],['c-echo','o-echo','echoSeconds',v=>v.toFixed(1)+' giây'],
+  ['c-wjx','o-wjx','wallJumpVx',v=>v.toFixed(1)],['c-stick','o-stick','wallStick',v=>(v/60).toFixed(2)+' giây']];
 function syncCfg(){ CFG.forEach(([i,o,k,fmt])=>{ document.getElementById(i).value=P[k]; document.getElementById(o).textContent=fmt(P[k]); }); }
-function saveCfg(){ try{ localStorage.setItem('tv-phongxam',JSON.stringify({runSpeed:P.runSpeed,jumpHeight:P.jumpHeight,gravity:P.gravity,echoSeconds:P.echoSeconds})); }catch(e){} }
+function saveCfg(){ try{ localStorage.setItem('tv-phongxam',JSON.stringify(Object.fromEntries(Object.keys(DEF).map(k=>[k,P[k]])))); }catch(e){} }
 try{ const s=JSON.parse(localStorage.getItem('tv-phongxam')||'null'); if(s) for(const k in DEF) if(typeof s[k]==='number') P[k]=s[k]; }catch(e){}
 derive();
 CFG.forEach(([i,o,k,fmt])=>{ document.getElementById(i).addEventListener('input',ev=>{ P[k]=parseFloat(ev.target.value); derive(); document.getElementById(o).textContent=fmt(P[k]); saveCfg(); }); });
