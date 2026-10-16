@@ -14,11 +14,27 @@ html,body{height:100%;margin:0;background:var(--night);color:var(--ink);font-fam
 #game{position:fixed;inset:0;display:grid;place-items:center;background:var(--night)}
 #cv{display:block;image-rendering:pixelated;image-rendering:crisp-edges}
 button{font-family:var(--font)}
-#hint{position:absolute;top:calc(env(safe-area-inset-top,0px) + 6px);left:50%;transform:translateX(-50%);
-  max-width:min(50vw,520px);padding:5px 12px;border-radius:8px;background:rgba(12,15,20,.72);
-  font-size:13px;line-height:1.35;text-align:center;pointer-events:none;text-wrap:balance}
-#hint b{color:var(--bell);font-weight:700;letter-spacing:.02em;margin-right:6px}
+/* Hướng dẫn: 1 dòng, chữ to, mép trên; chip nút giống nút cảm ứng */
+#hint{position:absolute;top:calc(env(safe-area-inset-top,0px) + 4px);left:50%;transform:translateX(-50%);
+  max-width:min(62vw,600px);padding:4px 12px;border-radius:10px;background:rgba(12,15,20,.78);
+  font-size:16px;font-weight:700;line-height:28px;text-align:center;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  transition:background-color .2s}
+#hint.ok{background:rgba(50,128,79,.9)}
+#hint b{color:var(--bell);font-weight:700;font-size:12px;letter-spacing:.04em;margin-right:8px;opacity:.9}
 #hint span{color:var(--ink)}
+.k{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 7px;box-sizing:border-box;border-radius:12px;margin:0 2px;
+  border:2px solid rgba(243,230,200,.7);background:rgba(26,33,43,.95);color:var(--ink);font-size:12px;line-height:1;vertical-align:-5px}
+.k.v{border-color:var(--echo);color:var(--echo)}
+.k.d{padding:0;width:24px;border-color:rgba(206,240,214,.7);color:var(--echo);font-size:13px}
+#ok{position:absolute;top:calc(env(safe-area-inset-top,0px) + 44px);left:50%;transform:translateX(-50%) scale(.9);padding:2px 12px;border-radius:8px;
+  background:var(--green);color:#fff;font-weight:700;font-size:15px;pointer-events:none;opacity:0;transition:opacity .2s,transform .2s}
+#ok.show{opacity:1;transform:translateX(-50%) scale(1)}
+#next{position:absolute;right:max(16px,calc(env(safe-area-inset-right,0px) + 12px));top:34%;padding:6px 12px;border-radius:10px;
+  background:rgba(12,15,20,.78);border:2px solid var(--bell);color:var(--bell);font-weight:700;font-size:18px;pointer-events:none;animation:nudge 1s ease-in-out infinite}
+@keyframes nudge{50%{transform:translateX(6px)}}
+@keyframes pulse{50%{box-shadow:0 0 0 7px rgba(225,184,90,.38);border-color:var(--bell)}}
+.pulse{animation:pulse 1.1s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){ #next,.pulse{animation:none} .pulse{box-shadow:0 0 0 4px rgba(225,184,90,.38);border-color:var(--bell)} }
 #top{position:absolute;top:calc(env(safe-area-inset-top,0px) + 6px);right:max(8px,calc(env(safe-area-inset-right,0px) + 6px));display:flex;gap:6px}
 #top button{height:34px;min-width:34px;padding:0 10px;border-radius:8px;border:1px solid var(--line);background:rgba(26,33,43,.85);color:var(--ink);font-size:13px;font-weight:700;cursor:pointer}
 #top button:focus-visible,.cfg button:focus-visible{outline:2px solid var(--bell);outline-offset:2px}
@@ -60,7 +76,7 @@ body.touch .tc{display:block}
 .btns button{flex:1;height:38px;border-radius:8px;border:1px solid var(--line);background:#212835;color:var(--ink);font-weight:700;font-size:14px;cursor:pointer}
 .btns button.pri{background:var(--green);border-color:var(--green)}
 #rotate{position:absolute;inset:0;display:none;place-items:center;text-align:center;padding:24px;background:rgba(12,15,20,.93);font-size:18px;font-weight:700;color:var(--bell);z-index:6}
-@media (max-width:760px){ .long{display:none} #hint{font-size:12px} }
+@media (max-width:760px){ .long{display:none} #hint{font-size:14px} }
 @media (orientation:portrait){ body.touch #rotate{display:grid} }
 </style>
 
@@ -80,6 +96,8 @@ body.touch .tc{display:block}
   </div>
   <div id="keys">←→↑↓ / WASD di chuyển · Z nhảy · X chém · C lướt · V vọng · R chơi lại phòng</div>
   <div id="toast"></div>
+  <div id="ok">Đạt!</div>
+  <div id="next" hidden>Đi tiếp →</div>
   <div id="cfg" class="ui" hidden>
     <div class="cfg">
       <h2>Bảng chỉnh cảm giác</h2>
@@ -130,47 +148,91 @@ derive();
 
 /* ================= PHÒNG ================= */
 const W=480, H=270, T=16, ROWS=17;
-function makeRoom(w, name, hint){
+function makeRoom(w, name, steps){
   const g=[]; for(let y=0;y<ROWS;y++) g.push(new Array(w).fill('.'));
-  const r={w, name, hint, g, ents:[], spawn:[2,13]};
+  const r={w, name, steps, g, ents:[], spawn:[2,13]};
   r.fill=(x0,y0,x1,y1,c)=>{ c=c||'#'; for(let y=y0;y<=y1;y++) for(let x=x0;x<=x1;x++) if(y>=0&&y<ROWS&&x>=0&&x<w) g[y][x]=c; return r; };
   r.fill(0,0,w-1,0); r.fill(0,14,w-1,16);
   return r;
 }
 const rooms=[];
+/* Hướng dẫn từng bước: mỗi phòng có steps [{t, ok}]. t: 1 dòng ngắn; {J}{A}{S}{V} = chip nút Nhảy/Chém/Lướt/Vọng,
+   {>}{v}{^} = chip cần điều hướng. ok() đúng -> "Đạt!" và sang bước sau. Bước cuối không có ok = xong phòng (hiện mũi tên đi tiếp).
+   strict: phải làm đúng thứ tự (không nhảy cóc bước). */
+const GO={t:'Xong phòng! Đi tiếp sang phải'};
+function rEnts(t){ return ents.filter(e=>e.room===S.room&&(!t||e.type===t)); }
 { // 1. chạy nhảy
-  const r=makeRoom(32,'Chạy & nhảy','Giữ Nhảy lâu thì nhảy cao. Qua bục và hố nhỏ.');
+  const r=makeRoom(32,'Chạy & nhảy',[
+    {t:'Kéo cần {>} để chạy', ok:()=>Math.abs(pl.vx)>1.5},
+    {t:'Giữ {J} lâu để nhảy cao', ok:()=>EV.jump},
+    GO]);
   r.fill(0,0,0,16); r.fill(8,13,10,13); r.fill(13,12,15,13); r.fill(19,14,21,16,'.'); r.fill(24,10,26,10); r.fill(28,12,29,13);
   r.spawn=[3,13]; rooms.push(r);
 }
 { // 2. tường cao + thang
-  const r=makeRoom(30,'Tường cao','Sát tường (trên không) bấm Nhảy để bật. Giữ hướng về tường khi bật để leo lên. Giữ ↑ để leo thang.');
+  const r=makeRoom(30,'Tường cao',[
+    {t:'Nhảy vào tường, bấm {J} lần nữa để bật', ok:()=>EV.walljump},
+    {t:'Tới thang: giữ cần lên {^} để leo', ok:()=>EV.climb},
+    GO]);
   r.fill(6,4,6,10); r.fill(10,5,11,13);
   r.fill(19,6,19,13,'H'); r.fill(20,6,25,6); r.fill(26,6,29,13);
   rooms.push(r);
 }
 { // 3. hố cần lướt
-  const r=makeRoom(30,'Hố','Lướt lao ngang, có bất tử ngắn. Trần thấp: nhảy nhẹ rồi Lướt. Hố rộng: Nhảy rồi Lướt.');
+  const r=makeRoom(30,'Hố',[
+    {t:'Bấm {S} để lao ngang', ok:()=>EV.dash},
+    {t:'Hố rộng: {J} rồi {S}', ok:()=>EV.airdash},
+    GO]);
   r.fill(10,1,14,11); r.fill(10,14,14,16,'.'); r.fill(18,14,24,16,'.');
   rooms.push(r);
 }
 { // 4. câu đố 1
-  const r=makeRoom(28,'Câu đố 1','Giữ Vọng để ghi, đi lên công tắc rồi thả. Bóng làm lại y hệt và đứng giữ công tắc.');
+  const r=makeRoom(28,'Câu đố 1',[
+    {t:'Giữ {V}, đi lên công tắc', ok:()=>rec && rEnts('switch').some(s=>s.pressed)},
+    {t:'Thả {V}: bóng làm lại và giữ công tắc', ok:()=>echo && rEnts('door').some(d=>d.open>=1)},
+    GO]);
   r.ents.push({type:'switch', id:'a', tx:7, ty:13});
   r.fill(18,1,18,10); r.ents.push({type:'door', tx:18, ty0:11, ty1:13, needs:['a'], latch:false});
   rooms.push(r);
 }
 { // 5. câu đố 2
-  const r=makeRoom(34,'Câu đố 2','Hai công tắc phải được đè cùng lúc: bạn một cái, bóng một cái.');
+  const r=makeRoom(34,'Câu đố 2',[
+    {t:'Giữ {V}, lên một công tắc, rồi thả {V}', ok:()=>echo && echo.done && rEnts('switch').some(s=>s.byEcho)},
+    {t:'Bạn đứng lên công tắc còn lại', ok:()=>rEnts('door').some(d=>d.latched)},
+    GO]);
   r.ents.push({type:'switch', id:'b', tx:5, ty:13});
   r.fill(12,11,15,13); r.ents.push({type:'switch', id:'c', tx:13, ty:10});
   r.fill(24,1,24,10); r.ents.push({type:'door', tx:24, ty0:11, ty1:13, needs:['b','c'], latch:true});
   rooms.push(r);
 }
-{ // 6. phòng đánh
-  const r=makeRoom(42,'Phòng đánh','Chém 3 nhát liên tiếp. Trên không: ↓ + Chém để nảy. Hình nộm xanh: bạn và bóng chém trúng cùng lúc.');
-  r.fill(41,0,41,16); r.fill(15,13,15,13); r.fill(28,13,28,13); r.fill(31,13,32,13,'^');
-  r.ents.push({type:'dummy', tx:6, ty:13}, {type:'dummy', tx:10, ty:13}, {type:'walker', tx:21, ty:13}, {type:'twin', tx:37, ty:13});
+{ // 6. combo
+  const r=makeRoom(22,'Combo',[
+    {t:'Bấm {A} 3 lần liền', ok:()=>EV.combo3},
+    {t:'Phá cả 3 hình nộm', ok:()=>rEnts('dummy').every(e=>!e.alive)},
+    GO]);
+  r.ents.push({type:'dummy', tx:8, ty:13}, {type:'dummy', tx:12, ty:13}, {type:'dummy', tx:16, ty:13});
+  rooms.push(r);
+}
+{ // 7. chém nảy: hàng gai rộng, chạm gai là về đầu phòng
+  const r=makeRoom(26,'Chém nảy',[
+    {t:'Bấm {J} để nhảy về phía gai', ok:()=>EV.jump},
+    {t:'Trên không: kéo cần xuống {v} + {A}', ok:()=>EV.pogo},
+    {t:'Nảy tiếp tới hết hàng gai', ok:()=>pl.onGround && pl.x>(rooms[S.room].x0+17)*T},
+    GO]);
+  r.fill(6,13,16,13,'^');
+  rooms.push(r);
+}
+{ // 8. chém cùng bóng
+  const r=makeRoom(34,'Chém cùng bóng',[
+    {t:'Đứng cạnh hình nộm xanh', ok:()=>pl.onGround && rEnts('twin').some(e=>e.alive && Math.abs(pl.x+pl.w/2-(e.x+e.w/2))<30)},
+    {t:'Giữ {V}, bấm {A}', ok:()=>rec && pl.atk},
+    {t:'Thả {V}', ok:()=>echo && !rec},
+    {t:'Bấm {A} cùng lúc với bóng', ok:()=>rEnts('twin').every(e=>!e.alive),
+      back:()=>(echo && echo.done && rEnts('twin').some(e=>e.alive)) ? 1 : null},
+    {t:'Xong! Bạn đã qua cả 8 phòng thử'}]);
+  r.strict=true;
+  r.fill(33,0,33,16); r.fill(17,13,17,13); r.fill(28,13,28,13);
+  r.ents.push({type:'twin', tx:9, ty:13}, {type:'walker', tx:22, ty:13});
   rooms.push(r);
 }
 // ghép thế giới
@@ -182,16 +244,16 @@ function tile(tx,ty){ if(tx<0||tx>=WW||ty<0) return '#'; if(ty>=ROWS) return '.'
 function isLadderTop(tx,ty){ return tile(tx,ty)==='H' && tile(tx,ty-1)!=='H'; }
 
 /* ================= TRẠNG THÁI ================= */
-const S={frame:0, hitstop:0, room:0, paused:false, done:false, shx:0, shy:0, sht:0, shm:0, camx:0, camy:0};
-let ents=[], parts=[], trail=[], swingId=0;
+const S={frame:0, hitstop:0, room:0, paused:false, done:false, steps:[], okT:0, shx:0, shy:0, sht:0, shm:0, camx:0, camy:0};
+let ents=[], parts=[], trail=[], swingId=0, EV={};
 let rec=null, echo=null;
 const pl={x:0,y:0,w:10,h:15,vx:0,vy:0,face:1,onGround:false,coyote:0,jumpBuf:0,atkBuf:0,dashBuf:0,jumping:false,wallDir:0,wallLock:0,wallCoy:0,lastWall:0,wallStickT:0,wjBack:0,
   climb:false,climbCd:0,dash:0,dashDir:1,dashCd:0,airDash:false,iframes:0,hp:5,atk:null,sq:0,anim:0,st:'idle'};
 
 function makeEnt(spec, room){
   const e=Object.assign({}, spec, {room, alive:true, hitBy:new Set(), flash:0, wob:0});
-  if(e.type==='dummy'){ e.w=12; e.h=20; e.hp=3; e.x=e.tx*T+2; e.y=(e.ty+1)*T-e.h; e.hittable=true; e.respawn=0; }
-  if(e.type==='twin'){ e.w=12; e.h=22; e.hp=1; e.x=e.tx*T+2; e.y=(e.ty+1)*T-e.h; e.hittable=true; e.lastP=-999; e.lastE=-999; e.need=0; }
+  if(e.type==='dummy'){ e.w=11; e.h=15; e.hp=e.maxHp=3; e.x=e.tx*T+2; e.y=(e.ty+1)*T-e.h; e.hittable=true; }
+  if(e.type==='twin'){ e.w=11; e.h=15; e.hp=e.maxHp=1; e.x=e.tx*T+2; e.y=(e.ty+1)*T-e.h; e.hittable=true; e.lastP=-999; e.lastE=-999; e.need=0; }
   if(e.type==='walker'){ e.w=14; e.h=12; e.hp=3; e.x=e.tx*T+1; e.y=(e.ty+1)*T-e.h; e.hittable=true; e.dir=-1; e.vy=0; e.stun=0; }
   if(e.type==='switch'){ e.pressed=false; }
   if(e.type==='door'){ e.open=0; e.latched=false; }
@@ -203,7 +265,7 @@ function resetRoom(i){
   r.ents.forEach(s=>ents.push(makeEnt(Object.assign({}, s, {tx:s.tx+r.x0}), i)));
   pl.x=(r.x0+r.spawn[0])*T+3; pl.y=(r.spawn[1]+1)*T-pl.h;
   pl.vx=pl.vy=0; pl.hp=P.maxHp; pl.atk=null; pl.dash=0; pl.climb=false; pl.iframes=0; pl.face=1; pl.jumpBuf=pl.atkBuf=pl.dashBuf=0;
-  rec=null; echo=null; trail=[]; S.done=false;
+  rec=null; echo=null; trail=[]; S.done=false; S.steps[i]=0; if(i===S.room) showStep();
   S.camx=clamp(pl.x-W/2,0,WORLD_W-W);
 }
 function respawnPlayer(){
@@ -274,6 +336,7 @@ function spikeHit(r){
 function solidPt(px,py){ return tile(Math.floor(px/T),Math.floor(py/T))==='#'; }
 function shake(dx,dy,m){ const l=Math.hypot(dx,dy)||1; S.shx=dx/l; S.shy=dy/l; S.shm=m; S.sht=8; }
 function burst(x,y,c,n,sp){ for(let i=0;i<n;i++){ const a=Math.random()*Math.PI*2, v=(0.5+Math.random())*(sp||1.5); parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-0.5,t:14+Math.random()*10|0,c}); } }
+function shatter(x,y,c1,c2){ for(let i=0;i<14;i++){ const a=Math.random()*Math.PI*2, v=1+Math.random()*2.2; parts.push({x:x+(Math.random()*8-4),y:y+(Math.random()*10-5),vx:Math.cos(a)*v,vy:Math.sin(a)*v-1.6,t:26+Math.random()*14|0,c:i%3?c1:c2,s:3}); } }
 function dust(x,y){ for(let i=0;i<4;i++) parts.push({x:x+(Math.random()*8-4),y,vx:(Math.random()-0.5)*1.2,vy:-Math.random()*0.6,t:12,c:'#c9cdd2'}); }
 let toastT=0; const toastEl=document.getElementById('toast');
 function toast(msg){ toastEl.textContent=msg; toastEl.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>toastEl.classList.remove('show'),1800); }
@@ -337,7 +400,7 @@ function atkBox(o,atk){
   const [dx,dy,w,h]=a.box, cx=o.x+o.w/2, cy=o.y+o.h/2;
   return {x:o.face>0?cx+dx:cx-dx-w, y:cy+dy, w, h};
 }
-function startClimb(tx){ pl.climb=true; pl.x=tx*T+T/2-pl.w/2; pl.vx=0; pl.vy=0; pl.dash=0; pl.airDash=false; pl.atk=null; pl.jumping=false; }
+function startClimb(tx){ EV.climb=true; pl.climb=true; pl.x=tx*T+T/2-pl.w/2; pl.vx=0; pl.vy=0; pl.dash=0; pl.airDash=false; pl.atk=null; pl.jumping=false; }
 function finishGround(){
   const was=pl.onGround;
   pl.onGround=!pl.climb && (collide(pl.x,pl.y+1,pl.w,pl.h) || onLadderTop(pl));
@@ -353,7 +416,7 @@ function updatePlayer(){
   if(pl.dashBuf>0 && pl.dashCd<=0 && !pl.climb && pl.dash<=0 && (pl.onGround||!pl.airDash)){
     pl.dash=P.dashFrames; pl.dashDir=dir||pl.face; pl.face=pl.dashDir; pl.vy=0;
     pl.iframes=Math.max(pl.iframes,P.dashIFrames); if(!pl.onGround) pl.airDash=true;
-    pl.dashCd=P.dashFrames+P.dashCooldown; pl.atk=null; pl.dashBuf=0; pl.jumping=false;
+    pl.dashCd=P.dashFrames+P.dashCooldown; pl.atk=null; pl.dashBuf=0; pl.jumping=false; EV.dash=true; if(pl.airDash) EV.airdash=true;
     dust(pl.x+pl.w/2,pl.y+pl.h);
   }
   // Thang
@@ -414,11 +477,11 @@ function updatePlayer(){
     if(S.frame%6===0) parts.push({x:pl.wallDir>0?pl.x+pl.w:pl.x,y:pl.y+pl.h-2,vx:-pl.wallDir*0.3,vy:0.2,t:10,c:'#c9cdd2'}); }
   if(pl.jumpBuf>0){
     if(pl.onGround||pl.coyote>0){
-      pl.vy=-jumpVel; pl.jumping=true; pl.coyote=0; pl.jumpBuf=0; pl.onGround=false; pl.sq=-0.8; dust(pl.x+pl.w/2,pl.y+pl.h);
+      EV.jump=true; pl.vy=-jumpVel; pl.jumping=true; pl.coyote=0; pl.jumpBuf=0; pl.onGround=false; pl.sq=-0.8; dust(pl.x+pl.w/2,pl.y+pl.h);
     } else if(pl.wallDir || pl.wallCoy>0){
       const wd=pl.wallDir||pl.lastWall, back=(dir===wd);
       pl.vy=-jumpVel*P.wallJumpMul; pl.vx=-wd*P.wallJumpVx*(back?P.wallBackMul:1); pl.face=-wd; pl.wallLock=P.wallJumpLock;
-      pl.wjBack=wd; pl.wallCoy=0; pl.wallStickT=0;
+      pl.wjBack=wd; pl.wallCoy=0; pl.wallStickT=0; EV.walljump=true;
       pl.jumping=true; pl.jumpBuf=0; pl.airDash=false; pl.sq=-0.8; dust(wd>0?pl.x+pl.w:pl.x,pl.y+pl.h/2);
     }
   }
@@ -461,12 +524,12 @@ function applyHits(hb,key,src,face){
     if(!e.alive||!e.hittable||!overlap(hb,e)||e.hitBy.has(key)) continue;
     e.hitBy.add(key); hit=true;
     const cx=e.x+e.w/2, cy=e.y+e.h/2, col=src==='e'?'#CEF0D6':'#F3E6C8';
-    burst(cx,cy,col,6,1.8); e.flash=8; e.wob=(face||1)*3;
-    if(e.type==='dummy'){ e.hp--; if(e.hp<=0){ e.alive=false; e.respawn=180; burst(cx,cy,'#a8946a',14,2.2); } }
-    else if(e.type==='walker'){ e.hp--; e.stun=14; moveX(e,(face||1)*5,false); if(e.hp<=0){ e.alive=false; burst(cx,cy,'#b25a4f',16,2.4); } }
+    burst(cx,cy,col,6,1.8); e.flash=8; e.wob=3;
+    if(e.type==='dummy'){ e.hp--; if(e.hp<=0){ e.alive=false; shatter(cx,cy,'#E1B85A','#3a2a10'); } }
+    else if(e.type==='walker'){ e.hp--; e.stun=14; moveX(e,(face||1)*5,false); if(e.hp<=0){ e.alive=false; shatter(cx,cy,'#C8452F','#3a120c'); } }
     else if(e.type==='twin'){
       if(src==='e') e.lastE=S.frame; else e.lastP=S.frame;
-      if(Math.abs(e.lastP-e.lastE)<=10){ e.alive=false; burst(cx,cy,'#CEF0D6',24,2.6); burst(cx,cy,'#E1B85A',12,2); if(!S.done){ S.done=true; toast('Hạ được! Bạn đã qua cả 6 phòng thử.'); } }
+      if(Math.abs(e.lastP-e.lastE)<=10){ e.alive=false; shatter(cx,cy,'#83CC93','#1d3a26'); burst(cx,cy,'#CEF0D6',20,2.6); }
       else e.need=50;
     }
   }
@@ -495,13 +558,13 @@ function step(){
   if(S.sht>0) S.sht--;
   if(S.hitstop>0){ S.hitstop--; return; }
   S.frame++;
-
+  EV={};
   updatePlayer();
   const hb=atkBox(pl,pl.atk);
   if(hb){
     const hit=applyHits(hb,'p'+pl.atk.sw,'p',pl.face);
-    if(pl.atk.n===4 && !pl.atk.bounced && (hit||spikeHit(hb))){ pl.vy=-jumpVel*P.pogoMul; pl.jumping=false; pl.airDash=false; pl.atk.bounced=true; burst(pl.x+5,pl.y+pl.h+4,'#F3E6C8',5,1.2); }
-    if(hit) hitFx(pl.atk.n,pl.face,false);
+    if(pl.atk.n===4 && !pl.atk.bounced && (hit||spikeHit(hb))){ EV.pogo=true; pl.vy=-jumpVel*P.pogoMul; pl.jumping=false; pl.airDash=false; pl.atk.bounced=true; burst(pl.x+5,pl.y+pl.h+4,'#F3E6C8',5,1.2); }
+    if(hit){ hitFx(pl.atk.n,pl.face,false); if(pl.atk.n===3) EV.combo3=true; }
   }
   if(rec){
     rec.frames.push(snap(hb));
@@ -514,7 +577,6 @@ function step(){
   const eb=echo?{x:echo.cur.x,y:echo.cur.y,w:pl.w,h:pl.h}:null;
   for(const e of ents){
     if(e.flash>0) e.flash--; e.wob*=0.8; if(e.need>0) e.need--;
-    if(e.type==='dummy' && !e.alive){ if(--e.respawn<=0){ e.alive=true; e.hp=3; burst(e.x+6,e.y+10,'#a8946a',6,1); } }
     if(e.type==='walker' && e.alive){
       e.vy=Math.min(e.vy+0.3,5); if(moveY(e,e.vy,false)!==0) e.vy=0;
       if(e.stun>0) e.stun--;
@@ -523,7 +585,7 @@ function step(){
     }
     if(e.type==='switch'){
       const plate={x:e.tx*T+1,y:e.ty*T+10,w:14,h:6}, feet=o=>({x:o.x,y:o.y+o.h-3,w:o.w,h:4});
-      const was=e.pressed; e.pressed=overlap(feet(pl),plate) || (!!eb && overlap(feet(eb),plate));
+      const was=e.pressed; e.byEcho=!!eb && overlap(feet(eb),plate); e.pressed=overlap(feet(pl),plate) || e.byEcho;
       if(e.pressed&&!was) burst(e.tx*T+8,e.ty*T+13,'#32804F',4,0.8);
     }
   }
@@ -535,17 +597,18 @@ function step(){
     if(d.latched||all) d.open=Math.min(1,d.open+0.1);
     else { const prev=d.open; d.open=Math.max(0,d.open-0.07); if(overlap(doorRect(d),pl)) d.open=prev; }
   }
-  if(spikeHit(pl)){ hurt(0); pl.vy=-4.2; }
+  if(spikeHit(pl)){ hurt(0); if(pl.hp>0) respawnPlayer(); }  // chạm gai: mất máu (nếu không bất tử) và về đầu phòng
   if(pl.y>ROWS*T+24){ pl.hp--; if(pl.hp<=0){ resetRoom(S.room); toast('Hết máu, chơi lại phòng'); } else respawnPlayer(); }
 
   // đổi phòng
   const cx=pl.x+pl.w/2; const ri=rooms.findIndex(r=>cx>=r.x0*T && cx<(r.x0+r.w)*T);
-  if(ri>=0 && ri!==S.room){ S.room=ri; setBanner(); if(!ents.some(e=>e.room===ri)) { const r=rooms[ri]; r.ents.forEach(s=>ents.push(makeEnt(Object.assign({},s,{tx:s.tx+r.x0}),ri))); } }
+  if(ri>=0 && ri!==S.room){ S.room=ri; showStep(); if(!ents.some(e=>e.room===ri)) { const r=rooms[ri]; r.ents.forEach(s=>ents.push(makeEnt(Object.assign({},s,{tx:s.tx+r.x0}),ri))); } }
 
   // camera
   const tx=clamp(pl.x+pl.w/2-W/2+pl.face*24,0,WORLD_W-W), ty=clamp(pl.y-H/2,0,ROWS*T-H);
   S.camx+=(tx-S.camx)*0.12; S.camy+=(ty-S.camy)*0.2;
 
+  checkSteps();
   for(const p of parts){ p.x+=p.vx; p.y+=p.vy; p.vy+=0.08; p.t--; }
   parts=parts.filter(p=>p.t>0);
   for(const t of trail) t.t--; trail=trail.filter(t=>t.t>0);
@@ -611,24 +674,31 @@ function render(){
       const r=doorRect(e), x=r.x-ox, y=r.y-oy;
       if(r.h>0){ ctx.fillStyle='#2b2f36'; ctx.fillRect(x+2,y,12,r.h); ctx.fillStyle='#5a606a'; for(let k=4;k<r.h;k+=6) ctx.fillRect(x+2,y+k,12,1); }
       const need=e.needs.length; e.needs.forEach((id,k)=>{ const s=ents.find(q=>q.type==='switch'&&q.id===id); ctx.fillStyle=(e.latched||(s&&s.pressed))?C.edge:'#c25b4e'; ctx.fillRect(x+4+k*5-(need-1)*2,e.ty0*T-oy-6,3,3); });
-    } else if(e.type==='dummy'){
-      const x=Math.round(e.x-ox+e.wob), y=e.y-oy;
-      if(!e.alive){ ctx.fillStyle='#6d6250'; ctx.fillRect(x+4,y+e.h-4,4,4); continue; }
-      ctx.fillStyle='#4d463a'; ctx.fillRect(x+5,y+8,2,e.h-8);
-      ctx.fillStyle=e.flash?'#ffffff':'#a8946a'; ctx.fillRect(x,y+6,12,9); ctx.fillRect(x+3,y,6,6);
-    } else if(e.type==='twin'){
-      const x=Math.round(e.x-ox+e.wob), y=e.y-oy;
-      if(!e.alive){ ctx.fillStyle='#21413A'; ctx.fillRect(x+3,y+e.h-4,6,4); continue; }
-      ctx.fillStyle='#4d463a'; ctx.fillRect(x+5,y+9,2,e.h-9);
-      ctx.fillStyle=C.echo; ctx.fillRect(x-1,y+6,14,11); ctx.fillRect(x+2,y-1,8,8);
-      ctx.fillStyle=e.flash?'#ffffff':'#21413A'; ctx.fillRect(x,y+7,12,9); ctx.fillRect(x+3,y,6,6);
-      ctx.fillStyle=C.bell; ctx.fillRect(x+5,y+10,2,2);
-      if(e.need>0){ ctx.font='bold 9px sans-serif'; ctx.fillStyle=C.echo; ctx.textAlign='center'; ctx.fillText('cùng lúc!',x+6,y-14); ctx.textAlign='left'; }
+    } else if(e.type==='dummy' || e.type==='twin'){
+      // hình nộm: cao gần bằng nhân vật, màu nổi viền tối, thanh máu trên đầu, nháy trắng + lắc khi trúng
+      const tw=e.type==='twin', x=Math.round(e.x-ox+(e.wob>0.3?(S.frame%2?1:-1)*e.wob:0)), y=Math.round(e.y-oy);
+      const fill=tw?'#83CC93':'#E1B85A', dark=tw?'#1d3a26':'#3a2a10';
+      if(!e.alive){ ctx.fillStyle=dark; ctx.fillRect(x+3,y+e.h-3,5,3); continue; }
+      ctx.fillStyle=dark; ctx.fillRect(x+2,y-1,7,7); ctx.fillRect(x-1,y+5,13,8); ctx.fillRect(x+4,y+12,3,3); ctx.fillRect(x+1,y+14,9,1);
+      ctx.fillStyle=e.flash?'#ffffff':fill; ctx.fillRect(x+3,y,5,5); ctx.fillRect(x,y+6,11,6);
+      ctx.fillStyle=dark; ctx.fillRect(x+4,y+2,1,1); ctx.fillRect(x+6,y+2,1,1);
+      if(!tw){ // thanh máu nhỏ
+        ctx.fillStyle='#0C0F14'; ctx.fillRect(x-1,y-6,13,4);
+        ctx.fillStyle='#F3E6C8'; ctx.fillRect(x,y-5,Math.round(11*e.hp/e.maxHp),2);
+      } else { // biểu tượng bóng phía trên
+        const gy=y-12+Math.round(Math.sin(S.frame*0.08)*1.5), gx=x+2;
+        ctx.globalAlpha=0.9; ctx.fillStyle='#CEF0D6';
+        ctx.fillRect(gx+1,gy,5,1); ctx.fillRect(gx,gy+1,7,5); ctx.fillRect(gx,gy+6,2,1); ctx.fillRect(gx+3,gy+6,1,1); ctx.fillRect(gx+5,gy+6,2,1);
+        ctx.fillStyle='#1d3a26'; ctx.fillRect(gx+2,gy+2,1,2); ctx.fillRect(gx+4,gy+2,1,2); ctx.globalAlpha=1;
+        if(e.need>0){ ctx.font='bold 9px sans-serif'; ctx.fillStyle=C.echo; ctx.textAlign='center'; ctx.fillText('cùng lúc!',x+6,y-26); ctx.textAlign='left'; }
+      }
     } else if(e.type==='walker' && e.alive){
+      // địch: đỏ gạch, viền tối
       const x=Math.round(e.x-ox), y=Math.round(e.y-oy);
-      ctx.fillStyle=e.flash?'#ffffff':'#8f3f3a'; ctx.fillRect(x,y,e.w,e.h);
-      ctx.fillStyle='#F3E6C8'; ctx.fillRect(e.dir>0?x+9:x+3,y+3,2,2);
-      ctx.fillStyle='#0C0F14'; ctx.fillRect(x+2,y+e.h-2,3,2); ctx.fillRect(x+e.w-5,y+e.h-2,3,2);
+      ctx.fillStyle='#3a120c'; ctx.fillRect(x-1,y-1,e.w+2,e.h+1);
+      ctx.fillStyle=e.flash?'#ffffff':'#C8452F'; ctx.fillRect(x,y,e.w,e.h-2);
+      ctx.fillStyle='#F3E6C8'; ctx.fillRect(e.dir>0?x+8:x+3,y+3,3,3);
+      ctx.fillStyle='#0C0F14'; ctx.fillRect(e.dir>0?x+9:x+4,y+4,1,1); ctx.fillRect(x+1,y+e.h-2,4,2); ctx.fillRect(x+e.w-5,y+e.h-2,4,2);
     }
   }
   // dấu điểm bắt đầu ghi
@@ -643,18 +713,21 @@ function render(){
   drawChar(pf,1,false,pl.iframes>0 && pl.dash<=0 && (S.frame>>2)%2===0);
   drawSlash(pf,C.slash,1);
   // hạt
-  for(const p of parts){ ctx.fillStyle=p.c; ctx.globalAlpha=Math.min(1,p.t/8); ctx.fillRect(Math.round(p.x-ox),Math.round(p.y-oy),2,2); }
+  for(const p of parts){ ctx.fillStyle=p.c; ctx.globalAlpha=Math.min(1,p.t/8); ctx.fillRect(Math.round(p.x-ox),Math.round(p.y-oy),p.s||2,p.s||2); }
   ctx.globalAlpha=1;
-  // HUD: máu
-  for(let i=0;i<P.maxHp;i++){ ctx.fillStyle='#0C0F14'; ctx.fillRect(7+i*10,7,9,9); ctx.fillStyle=i<pl.hp?C.bell:'#2a2e35'; ctx.fillRect(8+i*10,8,7,7); }
-  // HUD: thanh vọng
-  const max=Math.round(P.echoSeconds*60), bx=8, by=20, bw=64;
+  // HUD góc trên trái: nhãn "Máu", "Vọng"
+  ctx.fillStyle='rgba(12,15,20,.6)'; ctx.fillRect(3,4,113,26);
+  ctx.font='bold 8px "Be Vietnam Pro", sans-serif'; ctx.textBaseline='middle'; ctx.fillStyle='#F3E6C8';
+  ctx.fillText('Máu',6,11); ctx.fillText('Vọng',6,23);
+  for(let i=0;i<P.maxHp;i++){ ctx.fillStyle='#0C0F14'; ctx.fillRect(30+i*10,6,9,9); ctx.fillStyle=i<pl.hp?C.bell:'#2a2e35'; ctx.fillRect(31+i*10,7,7,7); }
+  const max=Math.round(P.echoSeconds*60), bx=31, by=20, bw=64;
   ctx.fillStyle='#0C0F14'; ctx.fillRect(bx-1,by-1,bw+2,7); ctx.fillStyle='#2a2e35'; ctx.fillRect(bx,by,bw,5);
   let fill=1, col=C.echo;
   if(rec){ fill=1-rec.frames.length/max; col=(S.frame>>3)%2?'#ffffff':C.echo; }
   else if(echo && !echo.done){ fill=echo.i/echo.frames.length; col='#83CC93'; }
   ctx.fillStyle=col; ctx.fillRect(bx,by,Math.round(bw*fill),5);
   if(rec){ ctx.fillStyle='#e06a5a'; ctx.fillRect(bx+bw+4,by,5,5); }
+  ctx.textBaseline='top';
   if(S.paused){ ctx.fillStyle='rgba(12,15,20,.35)'; ctx.fillRect(0,0,W,H); }
 }
 
@@ -667,8 +740,41 @@ function resize(){
 }
 addEventListener('resize',resize); addEventListener('orientationchange',()=>setTimeout(resize,200)); resize();
 
-const roomName=document.getElementById('room-name'), roomHint=document.getElementById('room-hint');
-function setBanner(){ const r=rooms[S.room]; roomName.textContent='Phòng '+(S.room+1)+'/6 · '+r.name; roomHint.textContent=r.hint; }
+/* ================= HƯỚNG DẪN TỪNG BƯỚC ================= */
+const roomName=document.getElementById('room-name'), roomHint=document.getElementById('room-hint'), hintEl=document.getElementById('hint');
+const okEl=document.getElementById('ok'), nextEl=document.getElementById('next');
+const CHIP={J:['Nhảy','','b-j'],A:['Chém','','b-a'],S:['Lướt','','b-s'],V:['Vọng',' v','b-v'],'>':['→',' d','dpad'],v:['↓',' d','dpad'],'^':['↑',' d','dpad']};
+function showStep(){
+  const r=rooms[S.room], k=S.steps[S.room]||0, st=r.steps[k], last=k===r.steps.length-1;
+  roomName.textContent=(S.room+1)+'/'+rooms.length+' '+r.name;
+  roomHint.innerHTML=st.t.replace(/\{(.)\}/g,(m,c)=>{ const q=CHIP[c]; return q?'<span class="k'+q[1]+'">'+q[0]+'</span>':m; });
+  const want=new Set((st.t.match(/\{(.)\}/g)||[]).map(m=>CHIP[m[1]]&&CHIP[m[1]][2]));
+  ['b-j','b-a','b-s','b-v','dpad'].forEach(id=>document.getElementById(id).classList.toggle('pulse',want.has(id)));
+  nextEl.hidden=!(last && S.room<rooms.length-1);
+}
+let AC=null;
+function unlockAudio(){ try{ if(!AC) AC=new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended') AC.resume(); }catch(e){} }
+function blip(){
+  if(!AC) return; try{
+    const t=AC.currentTime, o=AC.createOscillator(), g=AC.createGain(); o.type='triangle';
+    o.frequency.setValueAtTime(660,t); o.frequency.setValueAtTime(990,t+0.07);
+    g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.12,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+0.22);
+    o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t+0.25);
+  }catch(e){}
+}
+addEventListener('keydown',unlockAudio); addEventListener('touchstart',unlockAudio,{passive:true});
+function good(){
+  blip(); okEl.classList.add('show'); hintEl.classList.add('ok'); clearTimeout(S.okT);
+  S.okT=setTimeout(()=>{ okEl.classList.remove('show'); hintEl.classList.remove('ok'); },900);
+}
+function checkSteps(){
+  const r=rooms[S.room], st=r.steps, k=S.steps[S.room]||0;
+  if(k>=st.length-1) return;
+  let nk=k; const lim=r.strict?k:st.length-2;
+  for(let i=k;i<=lim;i++) if(st[i].ok && st[i].ok()) nk=i+1;
+  if(nk===k && st[k].back){ const b=st[k].back(); if(b!=null){ S.steps[S.room]=b; showStep(); toast('Chưa trùng lúc, thử lại'); return; } }
+  if(nk!==k){ S.steps[S.room]=nk; good(); showStep(); if(nk===st.length-1 && S.room===rooms.length-1) toast('Bạn đã qua cả 8 phòng thử!'); }
+}
 
 /* ================= BẢNG CHỈNH ================= */
 const cfgEl=document.getElementById('cfg');
@@ -689,7 +795,7 @@ cfgEl.addEventListener('click',e=>{ if(e.target===cfgEl) closeCfg(); });
 document.getElementById('btn-reset').addEventListener('click',e=>{ resetRoom(S.room); toast('Chơi lại phòng'); e.currentTarget.blur(); });
 
 /* ================= CHẠY ================= */
-resetRoom(0); setBanner();
+resetRoom(0); showStep();
 let last=performance.now(), accT=0; const DT=1000/60;
 function loop(now){
   accT+=Math.min(100,now-last); last=now; let n=0;
