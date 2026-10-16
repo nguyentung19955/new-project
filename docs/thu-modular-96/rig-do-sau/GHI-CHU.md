@@ -1,6 +1,6 @@
 # rig-do-sau — ghi chú
 
-Thư mục này KHỞI ĐẦU từ bản copy rig-chatgpt/ (commit 559067c4), sau đó viết lại để có nhãn back/front theo vùng,
+Thư mục này KHỞI ĐẦU từ bản copy rig-chatgpt/ (commit d7ea810c), sau đó viết lại để có nhãn back/front theo vùng,
 quy tắc đổi lớp theo khung và phép đo khe đúng vùng khớp. Xem BAO-CAO.md. Ghi chú gốc của bản ChatGPT giữ bên dưới để đối chiếu.
 
 ---
