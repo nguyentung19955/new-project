@@ -639,29 +639,106 @@
   const BTN_BIG = { atk: [450, 222, 26], dodge: [400, 248, 17], special: [401, 200, 17], skill: [448, 167, 17] };
   // Đợt 2: phòng thường nay cũng rộng như phòng trùm (geo.rong), nên dùng chung bố cục nút này.
   const bigRoom = () => !!(S && S.W && S.W.geo && S.W.geo.rong);
-  // Tư vấn 16/10 (mục 4) — BỐ CỤC NÚT MỚI (cờ quay lui ?nutcu=1 → G.NUT_CU = true: bố cục cũ, chạm ô vũ khí là đổi ngay, không vòng chọn):
-  //   Đánh và Né to bằng nhau (đường kính ~60 điểm ảnh CSS trên điện thoại thật, nằm 56–64), cách nhau ~11 điểm ảnh CSS; Đặc biệt và Chưởng
-  //   cỡ vừa (~44) ngay phía trên; Bình máu nhỏ (~32, có số lần dùng "x2") trên cùng cụm. Cỡ tính theo G.scale (điểm ảnh CSS / đơn vị khung
-  //   480×270), kẹp trong khoảng để máy tính / máy tính bảng không ra nút tí hon. Cụm nút nằm ở cột phải (x ≥ ~378), không đè sàn.
+  // Tư vấn 16/10 (mục 4) — BỐ CỤC NÚT CỦA TƯ VẤN 1 (nay chỉ còn khi bật cờ ?nuttv1=1 → G.NUT_TV1 = true):
+  //   Đánh và Né to bằng nhau (~60 điểm ảnh CSS), Đặc biệt / Chưởng ~44 ngay trên, Bình máu ~32 trên cùng cụm.
+  // Cờ quay lui ?nutcu=1 → G.NUT_CU = true: bố cục cũ, chạm ô vũ khí là đổi ngay, không vòng chọn.
   if (G.NUT_CU === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]nutcu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.NUT_CU = cu; }
+  if (G.NUT_TV1 === undefined) { let tv = false; try { tv = typeof location !== 'undefined' && /[?&]nuttv1=1(&|$)/.test(location.search || ''); } catch (e) { tv = false; } G.NUT_TV1 = tv; }
   const NUT_MOI = () => G.NUT_CU !== true;
+  const NUT_TV1 = () => G.NUT_TV1 === true;
   const kep = (v, a, b) => (v < a ? a : v > b ? b : v);
   let boCuc = null, boCucKhoa = '';
-  function boCucMoi() {
-    const sc = G.scale > 0 ? G.scale : 1.44, cx = G.cx || 0, cy = G.cy || 0, khoa = sc.toFixed(3) + '|' + cx + '|' + cy;
-    if (boCuc && khoa === boCucKhoa) return boCuc;
+  function boCucTv1(sc, cx, cy) {
     const rb = kep(30 / sc, 20, 24), rm = kep(22 / sc, 15, 18), rp = kep(16 / sc, 11, 13), g = kep(11 / sc, 6, 9);
     const ax = 474 - rb + cx, ay = 252 - rb + cy; // chừa 10 đơn vị dưới đáy cho chữ "Đánh" ở ải hướng dẫn
     const dx = ax - rb - g - rb, dy = ay + 4;
     const sx = dx + 4, sy = dy - rb - g - rm;
     const kx = ax + 2, ky = ay - rb - g - rm;
-    boCuc = { atk: [ax, ay, rb], dodge: [dx, dy, rb], special: [sx, sy, rm], skill: [kx, ky, rm], potion: [Math.round((sx + kx) / 2), Math.min(sy, ky) - rm - g - rp, rp], gap: g };
+    return { atk: [ax, ay, rb], dodge: [dx, dy, rb], special: [sx, sy, rm], skill: [kx, ky, rm], potion: [Math.round((sx + kx) / 2), Math.min(sy, ky) - rm - g - rp, rp], gap: g, dem: { atk: 6, dodge: 6, special: 6, skill: 6, potion: 6 } };
+  }
+  // 17/10 — chủ game báo "chỗ ấn đánh thường nhỏ, ấn nhầm mấy lần" (nut-danh-to): NÚT ĐÁNH TO LẠI, là nút lớn nhất.
+  //   Cỡ tính bằng điểm ảnh CSS (px) qua G.scale; Vừa: Đánh ~78 px (bán kính vẽ ≥ 29 đơn vị, không nhỏ hơn nút cũ 28 + 1),
+  //   Né ~62 px, Đặc biệt / Chưởng ~48 px, Bình máu ~36 px. Cỡ nút (G.save.coNut: 'nho' ×0,85 / mặc định Vừa / 'to' ×1,15) ở Anh Mõ.
+  //   Đánh ở góc dưới phải; Né bên trái; Đặc biệt, Chưởng xếp vòng cung phía trên Đánh; Bình máu xa nhất.
+  //   Mép tới mép giữa hai nút ≥ 15 px (kể cả viền vẽ +1). Bán kính lưu trong mảng là bán kính vẽ − 1 (nơi vẽ cộng lại 1).
+  const CO_NUT = { nho: 0.85, to: 1.15 };
+  const coNut = () => (G.save && CO_NUT[G.save.coNut] ? G.save.coNut : 'vua');
+  function boCucTo(sc, cx, cy) {
+    const f = CO_NUT[coNut()] || 1;
+    const R = { // bán kính VẼ (đơn vị khung 480×270)
+      atk: kep(39 / sc, 29, 32) * f, dodge: kep(31 / sc, 22.5, 25) * f, special: kep(24 / sc, 17.5, 19) * f, skill: kep(24 / sc, 17.5, 19) * f, potion: kep(18 / sc, 13.5, 15) * f,
+    };
+    const g = kep(15 / sc, 6, 12), mx = 480 + cx, my = 270 + cy, mm = S && G.minimap ? G.minimap.rect(S) : [374, 58, 102, 68];
+    const A = [mx - 3 - R.atk, my - 9 - R.atk]; // chừa ~9 đơn vị dưới đáy cho chữ "Đánh" ở ải hướng dẫn
+    const P = { atk: A };
+    const tai = (th, d) => [A[0] + d * Math.cos(th * Math.PI / 180), A[1] - d * Math.sin(th * Math.PI / 180)];
+    const xa = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+    const trong = (p, r) => p[0] + r <= mx - 1 && p[1] + r <= my - 1 && p[1] - r >= 40 && !(p[0] + r > mm[0] - 2 && p[1] - r < mm[1] + mm[3] + 3);
+    const hop = (name, p) => { for (const k in P) if (xa(P[k], p) < R[k] + R[name] + g - 0.01) return false; return true; };
+    P.dodge = tai(185, R.atk + g + R.dodge);
+    const coDB = coMD('dacBiet'), coCh = coMD('chuong');
+    let thDB = 165;
+    if (coDB) { // Đặc biệt: góc lớn nhất (sát Né nhất) mà vẫn đủ khoảng cách
+      const d = R.atk + g + R.special;
+      while (thDB > 100 && !hop('special', tai(thDB, d))) thDB -= 1;
+      P.special = tai(thDB, d);
+    }
+    if (coCh) { // Chưởng: tiếp vòng cung, đi tiếp về phía trên / phải
+      const d = R.atk + g + R.skill;
+      let th = coDB ? thDB - 1 : 120;
+      while (th > 45 && !(hop('skill', tai(th, d)) && trong(tai(th, d), R.skill))) th -= 1;
+      P.skill = tai(th, d);
+    }
+    // Bình máu: xa Đánh nhất, ở giữa vòng cung (thử góc từ 105° ra hai phía), đẩy ra xa tới khi đủ khoảng cách với mọi nút
+    let dmax = 0;
+    for (const k in P) dmax = Math.max(dmax, xa(P[k], A) + 1);
+    for (const th of [105, 112, 98, 120, 90, 128, 136, 145, 155]) {
+      for (let d = Math.max(dmax, R.atk + g + R.potion); d < 160; d += 1) {
+        const p = tai(th, d);
+        if (hop('potion', p) && trong(p, R.potion)) { P.potion = p; break; }
+      }
+      if (P.potion) break;
+    }
+    if (!P.potion) P.potion = tai(105, dmax + 30);
+    if (!P.special) P.special = tai(135, R.atk + g + R.special);
+    if (!P.skill) P.skill = tai(80, R.atk + g + R.skill);
+    const out = { gap: g, ve: R, dem: {} };
+    for (const k in R) out[k] = [Math.round(P[k][0] * 10) / 10, Math.round(P[k][1] * 10) / 10, R[k] - 1];
+    // vùng chạm nới thêm ngoài hình vẽ: Đánh ~11 px mỗi phía (và cả góc dưới phải tới mép màn hình), các nút khác ~5 px
+    out.dem = { atk: kep(11 / sc, 6, 10), dodge: kep(5 / sc, 3, 5), special: kep(5 / sc, 3, 5), skill: kep(5 / sc, 3, 5), potion: kep(5 / sc, 3, 5) };
+    out.uuTien = kep(5 / sc, 2, 4); // chạm vào chỗ hai vùng chạm chồng nhau: Đánh được cộng thêm ~5 px
+    return out;
+  }
+  function boCucMoi() {
+    const sc = G.scale > 0 ? G.scale : 1.44, cx = G.cx || 0, cy = G.cy || 0, tv1 = NUT_TV1();
+    const mm = S && G.minimap ? G.minimap.rect(S) : null;
+    const khoa = sc.toFixed(3) + '|' + cx + '|' + cy + '|' + (tv1 ? 'tv1' : coNut() + '|' + coMD('dacBiet') + coMD('chuong') + '|' + (mm ? mm.join(',') : ''));
+    if (boCuc && khoa === boCucKhoa) return boCuc;
+    boCuc = tv1 ? boCucTv1(sc, cx, cy) : boCucTo(sc, cx, cy);
     boCucKhoa = khoa;
     return boCuc;
   }
   function btnPos(name) {
     if (NUT_MOI()) { const b = boCucMoi()[name]; return [b[0], b[1], b[2]]; }
     const b = (bigRoom() && G.cx < 20 ? BTN_BIG : BTN0)[name]; return [b[0] + G.cx, b[1] + G.cy, b[2]];
+  }
+  // Nút tròn dưới ngón (bố cục mới, gồm cả Bình máu): lấy nút có mép gần ngón nhất trong vùng chạm của nó.
+  //   Đánh: vùng chạm nới ~11 px, cả phần góc dưới phải (phía mép màn hình) tới tận mép; chỗ chồng lấn thì Đánh được ưu tiên ~5 px.
+  //   Ngón đã nhận vai trò lúc chạm xuống thì giữ nguyên tới khi nhấc: kéo từ Đánh sang nút khác không bật nút kia.
+  function nutTai(d) {
+    const B = boCucMoi(), tv1 = NUT_TV1();
+    let hit = null, best = 1e9;
+    for (const name of ['atk', 'dodge', 'special', 'skill', 'potion']) {
+      if ((name === 'special' && !coMD('dacBiet')) || (name === 'skill' && !coMD('chuong'))) continue; // mở dần: nút chưa mở thì không có
+      const b = B[name], r = b[2] + 1, dd = Math.hypot(d.x - b[0], d.y - b[1]);
+      let vao = dd <= r + B.dem[name], diem = dd - r;
+      if (name === 'atk' && !tv1) {
+        if (d.x >= b[0] - r * 0.3 && d.y >= b[1] - r * 0.3) vao = true; // góc dưới phải: tới tận mép màn hình
+        diem -= B.uuTien;
+      }
+      if (vao && diem < best) { best = diem; hit = name; }
+    }
+    return hit;
   }
   // Cần điều khiển lúc chưa chạm: phòng trùm thì lùi sát mép trái để không đè tường.
   function stickPos() { return [(bigRoom() && G.cx < 30 ? 42 : 62) - G.cx * 0.6, 216 + G.cy, 24]; }
@@ -671,7 +748,7 @@
   const hitBox = (d, b) => G.inRect(d, b[0] - 4, b[1] - 4, b[2] + 8, G.CHAM44 && G.theme.chamMin ? Math.max(b[3] + 9, G.theme.chamMin()) : b[3] + 9); // Rà soát C: cao đủ 44 pt cả khi khung nhỏ (iPhone SE, có tai thỏ) // vùng chạm cao 33 (khoảng 44 điểm trên điện thoại)
   function setMode(m) { S.mode = m; S.sel = null; }
   // Bình máu: bố cục mới là nút nhỏ trong cụm nút phải (chạm theo vòng tròn, nới 6), bố cục cũ là ô POT góc trái trên.
-  const potHit = (d) => { if (!NUT_MOI()) return hitBox(d, POT); const b = btnPos('potion'); return Math.hypot(d.x - b[0], d.y - b[1]) <= b[2] + 6; };
+  const potHit = (d) => (NUT_MOI() ? nutTai(d) === 'potion' : hitBox(d, POT));
   // Ô vũ khí góc trên phải [x, y, rộng, cao] (vùng chạm) và vòng chọn 4 món (bố cục mới)
   const OVK = [368, 0, 112, 38];
   const VONG = { giu: 0.3, keo: 14 }; // giữ 0,3 giây hoặc kéo ngón ra 14 đơn vị thì mở vòng chọn
@@ -681,7 +758,7 @@
     for (let i = 0; i < 4; i++) { const o = vongO(i), d = Math.hypot(p.x - (o[0] + o[2] / 2), p.y - (o[1] + o[3] / 2)); if (d < bd) { bd = d; best = i; } }
     return best;
   }
-  G.stageUi = { btnPos, stickPos, POT, PAU, potHit, OVK, vongO, nutMoi: NUT_MOI }; // để bài kiểm tra biết nút nằm ở đâu
+  G.stageUi = { btnPos, stickPos, POT, PAU, potHit, OVK, vongO, nutMoi: NUT_MOI, nutTai, boCuc: () => boCucMoi(), xoaBoCuc: () => { boCuc = null; } }; // để bài kiểm tra biết nút nằm ở đâu
   function readInput() {
     const k = G.keys, kp = G.keyP;
     const inp = {
@@ -705,9 +782,10 @@
       if (G.inRect(d, mm[0] - 2, mmY, mm[2] + 4, mmH)) { inp.mapP = true; d.role = 'ui'; continue; }
       if (potHit(d)) { inp.potionP = true; d.role = 'ui'; continue; }
       if (hitBox(d, PAU)) { inp.pauseP = true; d.role = 'ui'; continue; }
-      // nút tròn: lấy nút gần ngón nhất, vùng chạm rộng hơn hình vẽ một chút
+      // nút tròn: lấy nút gần ngón nhất, vùng chạm rộng hơn hình vẽ một chút (bố cục mới: nutTai ở trên, Đánh được ưu tiên)
       let hit = null, best = 1e9;
-      for (const name in BTN) {
+      if (moi) hit = nutTai(d);
+      else for (const name in BTN) {
         if ((name === 'special' && !coMD('dacBiet')) || (name === 'skill' && !coMD('chuong'))) continue; // mở dần: nút chưa mở thì không có
         const b = btnPos(name), dd = Math.hypot(d.x - b[0], d.y - b[1]);
         if (dd <= b[2] + 6 && dd - b[2] < best) { best = dd - b[2]; hit = name; }

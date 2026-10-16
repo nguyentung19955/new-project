@@ -1866,5 +1866,17 @@
 "Giảm sát thương {0}": "Damage reduction {0}",
 "Hồi chiêu nhanh {0}": "Cooldown {0}",
 "Tốc chạy {0}": "Move speed {0}",
-"Kháng {0} {1}": "{0} resist {1}"
+"Kháng {0} {1}": "{0} resist {1}",
+"Cỡ nút": "Button size",
+"Nhỏ": "Small",
+"Vừa": "Medium",
+"To": "Large",
+"Nút trong ải: nhỏ.": "In-stage buttons: small.",
+"Nút trong ải: vừa.": "In-stage buttons: medium.",
+"Nút trong ải: to, nút Đánh to nhất.": "In-stage buttons: large, Attack is the biggest.",
+"Khoá mục tiêu: bật": "Target lock: on",
+"Khoá mục tiêu: tắt": "Target lock: off",
+"Tự ngắm": "Auto-aim",
+"Khoá mục tiêu: nhắm mãi một con tới khi nó gục hay chạy khỏi tầm đánh.": "Target lock: keep aiming at one enemy until it falls or leaves your reach.",
+"Tự ngắm: ưu tiên quái theo hướng cần gạt, không có thì quái gần nhất.": "Auto-aim: prefers enemies in the stick's direction, otherwise the nearest one."
 }); })();

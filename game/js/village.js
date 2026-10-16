@@ -741,7 +741,16 @@
       G.persist(); say(sv.rungTat ? 'Đã tắt rung màn hình.' : 'Bật rung màn hình khi đánh trúng.');
     }
     if (T.btn(CX + 204, 186, 96, CDH, '‹ Trở lại', { size: 8.5 })) V.cd2 = false;
-    ui.para('Nhạc tạo ngay trong máy, không tải thêm gì. Tiết kiệm pin: vẽ 30 khung mỗi giây, trận đấu vẫn chạy đủ nhanh.', CX + 4, 232, 296, { size: 7.5, color: SOFT });
+    // 17/10 (nut-danh-to): Cỡ nút trong ải — Nhỏ / Vừa / To (G.save.coNut: 'nho' | 'to', không có = Vừa). js/stage.js boCucTo đọc trường này.
+    //   Hàng này thế chỗ dòng giải thích cũ (Tiết kiệm pin đã ghi "30 khung/giây" trên nút).
+    ui.text('Cỡ nút', CX + 4, 226 + 20, { size: 9, bold: true, color: TXT });
+    const coN = sv.coNut === 'nho' || sv.coNut === 'to' ? sv.coNut : 'vua';
+    [['nho', 'Nhỏ'], ['vua', 'Vừa'], ['to', 'To']].forEach(([k, nhan], i) => {
+      if (T.btn(CX + 56 + i * 82, 226, 78, CDH, nhan, { size: 8.5, sel: coN === k }) && coN !== k) {
+        if (k === 'vua') delete sv.coNut; else sv.coNut = k;
+        G.persist(); say(k === 'nho' ? 'Nút trong ải: nhỏ.' : k === 'to' ? 'Nút trong ải: to, nút Đánh to nhất.' : 'Nút trong ải: vừa.');
+      }
+    });
     return 'Nhạc làng có sáo trúc với đàn bầu đấy. Nghe hay thì để to lên!';
   }
   // Một thanh âm lượng: nút − và + (mỗi lần 10), kéo hoặc chạm trên thanh (mỗi nấc 5). Nhả tay mới lưu.
