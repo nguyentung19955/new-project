@@ -1,4 +1,6 @@
-# Báo cáo: thử ghép trang phục modular 96×96 (Cu Tí mới)
+# Báo cáo: thử thay trang phục modular 96×96 (Cu Tí mới, hàng chạy 12 khung)
+
+Mọi thứ nằm trong `docs/thu-modular-96/`. Code game và ảnh nguồn không bị sửa.
 
 ## Rà soát bộ hiện có (16/10, trước khi sửa)
 
@@ -22,73 +24,138 @@
 
 Mọi thứ nằm trong `docs/thu-modular-96/`. Code game không đổi. Chạy lại tất cả bằng lệnh `python3 docs/thu-modular-96/tao-bo.py`, mất khoảng 2 giây.
 
-## Xem nhanh
+## Kết quả sau khi sửa (16/10)
 
-- **`kiem-tra.html`** là một tệp duy nhất, ảnh đã nhúng sẵn, mở được trên điện thoại. Trang có:
-  - nút chạy/dừng và tua ◀ ▶ từng khung;
-  - phóng ×2, ×4, ×8 (điểm ảnh sắc nét);
-  - bật/tắt riêng 13 lớp;
-  - nút mặc/cởi giáp mẫu;
-  - nút **Debug**: vẽ khung 96×96, chữ thập đỏ ở điểm neo bàn chân (48,90), chấm khớp (đỏ = bên trước, xanh = bên sau), que nối khớp và ô tím ở các điểm neo đồ;
-  - bảng toạ độ khớp của khung đang xem.
-- **`sheets-luoi.png`**: lưới gồm 13 lớp × 12 khung, thêm hàng "ghép Cu Tí" và hàng "ghép + giáp". Ảnh phóng ×2, đường xanh là mặt đất y = 90.
+**Đã thay được áo và quần thật trên nhân vật đang chạy, đủ 12 khung.** Có thể đổi riêng áo, riêng quần, hoặc cả bộ.
 
-## Đã làm
+| Kiểm tra (tự chạy mỗi lần dựng) | Kết quả |
+|---|---|
+| Ghép nền + đồ gốc so với ảnh game | khớp từng điểm ảnh, 12/12 khung |
+| Áo mới + quần gốc: đồ gốc hoặc thân trần còn lộ | 0 điểm ảnh, 12/12 khung |
+| Áo gốc + quần mới: đồ gốc hoặc thân trần còn lộ | 0 điểm ảnh, 12/12 khung |
+| Cả bộ mới: đồ gốc hoặc thân trần còn lộ | 0 điểm ảnh, 12/12 khung |
+| Chỉ còn nền cơ thể (cởi hết đồ): lỗ trong suốt trên thân | 0 điểm ảnh, 12/12 khung |
+| 22 sheet: 1152×96, có alpha và nền trong suốt, đủ 12 khung, nằm đúng khung nhân vật, chân chạm y = 90 | đạt hết |
 
-1. **Quy cách**: mỗi khung 96×96, neo bàn chân ở (48,90), SCALE 0.5, `imageSmoothingEnabled = false`. Mỗi lớp là một ảnh PNG ngang 1152×96 (12 khung × 96), nền trong suốt, nằm trong `sheets/<tên lớp>.png`. Mọi lớp có cùng số khung và cùng cách căn.
-2. **Thứ tự lớp** dùng đúng tên: rearLeg, rearArm, body, pants, torsoOutfit, chestArmor, backShoulderArmor, frontLeg, frontShoulderArmor, frontArm, forearmArmor, head, hair.
-3. **Nhân vật mẫu là Cu Tí mới, chạy sang phải, 12 khung.**
-   - Nguồn ảnh: hàng `chay` (hàng 2) trong `game/art/custom/zed-moi.sprite.json`, tức đúng hình game đang vẽ. Hàng này vốn đã là khung 96×96, chân chạm y = 90, nên mình dùng nguyên điểm ảnh, không vẽ lại và không xoay.
-   - Để tách lớp cho chuẩn, mình dùng ảnh gốc độ phân giải cao của chính hàng đó: `docs/anh-goc/zed/moi/03-chay-v4-gif/03-chay-v4/khung-01..12.png`.
-   - Cách tách: đánh khớp bằng tay trên ảnh lớn (`khop-nguon.json`), chia điểm ảnh theo xương gần nhất và theo màu (da, đai đỏ, tóc), rồi thu về ô 96. Mỗi điểm ảnh 96 chỉ thuộc một lớp.
-   - **Kiểm tra:** chồng 9 lớp của Cu Tí lại cho ra đúng từng điểm ảnh của khung game, 12/12 khung. Trong lúc chạy, `tao-bo.py` tự so lại và sẽ báo lỗi nếu lệch.
-   - Không dùng Cu Tí cũ (zed-v2-canonical, Xưởng Rối, khung xương chibi cũ).
-4. **Giáp ngực mẫu**: 4 lớp chestArmor, backShoulderArmor, frontShoulderArmor và forearmArmor. Màu thép xanh, viền đồng. Mỗi khung được vẽ riêng bằng điểm ảnh, không xoay sprite:
-   - giáp ngực lấy đúng bề ngang thân của khung đó, từ cổ xuống mép trên đai, phủ cả phần thân nằm dưới tay trước; có cổ đồng, 2 đường nối lá giáp, sáng phía ngực và tối phía lưng;
-   - giáp vai là vỏ úp trên khớp vai, hướng theo bắp tay của khung đó;
-   - giáp cẳng tay chạy từ dưới khuỷu tới cổ tay trước.
-5. **`data.json`** ghi cho từng khung, toạ độ tính trong ô 96 với gốc ở góc trên-trái:
-   - khớp: cổ, tâm mặt, đỉnh tóc, cằm, vai, khuỷu, cổ tay, nắm tay, hông, gối, cổ chân và mũi chân (mỗi khớp có bản trước và sau), giữa hông, eo, mép trên đai;
-   - điểm neo: áo, giáp ngực, quần, tóc, mũ, đai, lưng, đồ cầm ở hai tay, giáp vai trước/sau, giáp cẳng tay;
-   - thêm thứ tự lớp, đường dẫn sheet, pivot, scale, fps (20) và tên tiếng Việt của từng khớp.
-6. **`kiem-tra.html`** có hàm `drawLayer` / `drawCharacter` theo mẫu: cắt `frame*96` từ sheet, đặt theo pivot, nhân SCALE 0.5. Nút "Soi ảnh 96 gốc" chỉ để soi ở cỡ nguồn và không ảnh hưởng gì tới hàm vẽ.
+Xem bằng mắt:
 
-## Cách chia lớp (cần chủ dự án duyệt)
+- **`so-sanh-do.png`**: 6 hàng × 12 khung, phóng ×4. Các hàng: ảnh game gốc, nền cơ thể, áo mới + quần gốc, áo gốc + quần mới, đồ mới đầy đủ, và hàng "đồ gốc còn lộ" (nếu lộ thì tô đỏ; hiện không có điểm đỏ nào).
+- **`chay-goc-moi.gif`**: nhân vật chạy, ba bản đặt cạnh nhau: đồ gốc, đồ mới, đồ mới + giáp.
+- **`kiem-tra.html`**: mở trên điện thoại được. Có nút **Áo: Gốc / Mới / Không**, **Quần: Gốc / Mới / Không** và **Đổi cả bộ gốc ⇄ mới**. Bấm được cả khi nhân vật đang chạy.
 
-- **Tay trước / tay sau.** Ảnh gốc không đổi tay giữa chu kỳ: tay đấm ra trước luôn là cùng một tay. Mình đặt:
-  - **frontArm** = tay lộ bắp tay trần, vẽ đè lên thân;
-  - **rearArm** = tay đấm ra trước. Bắp tay này khuất sau thân, nên lớp này chỉ có cẳng tay và nắm đấm.
-- **Chân trước / chân sau** là cùng một chân trong suốt 12 khung. Chân trước là chân trụ ở khung 0.
-- **body** = thân kèm áo đen. Áo vẽ liền người, ảnh gốc không có thân trần, nên tắt lớp này sẽ thấy trống.
-- **torsoOutfit** = đai đỏ và hai dải đai bay.
-- **pants** = phần quần ở hông. Ống quần nằm trong frontLeg/rearLeg, vì Cu Tí không có chân trần để lộ ra.
-- **head** = mặt, tai, mắt. **hair** = toàn bộ tóc, kể cả mái che trán.
+### Cách làm từng mục
 
-## Chỗ còn lệch / giới hạn
+1. **Chuẩn khung giữ nguyên.** Khung 96×96, 12 khung, pivot (48,90), hiển thị 48×48 (SCALE 0,5), `imageSmoothingEnabled = false`.
+2. **Tách nền cơ thể và quần áo.**
+   - **Nền cơ thể** gồm 7 lớp: `rearLeg`, `rearArm`, `body`, `frontLeg`, `frontArm`, `head`, `hair`. Đầu, tóc, tay, cổ và bàn chân lấy nguyên điểm ảnh gốc. Phần thân và chân nằm dưới áo/quần thì ảnh gốc không có, nên mình **dựng thân trần**: tô màu da và khố vải xám vào đúng hình bóng áo/quần gốc của từng khung. Phần này chỉ để không lộ lỗ; đồ luôn phủ lên trên.
+   - **Trang phục** gồm 2 ô thay được:
+     - **Áo** = `torsoOutfit` (áo) + `belt` (đai và hai dải bay);
+     - **Quần** = `rearPants` (ống quần sau) + `pants` (phần hông) + `frontPants` (ống quần trước).
+   - Áo đen, đai đỏ, quần đen gốc nay là bộ **"goc"** trong `sheets/do-goc/`.
+   - Thân trần chỉ tô **bên dưới** lớp đồ, và chỉ ở chỗ đồ gốc đặc hẳn. Vì vậy ghép với đồ gốc vẫn ra đúng ảnh game, kể cả viền mờ.
+3. **Bộ đồ mới** ở `sheets/do-moi/`, gồm áo chàm có cổ và nẹp trắng, đai vàng đồng, quần kaki quấn xà cạp trắng ở ống chân.
+   - Máy vẽ từng điểm ảnh cho từng khung, dựa theo `data.json` (gối, cổ chân, cổ, eo), không xoay sprite.
+   - Đồ mới phủ kín hình bóng đồ gốc của cùng khung và giữ các nếp gấp sáng/tối của đồ gốc. Vạt áo dài thêm xuống ngang hông.
+4. **Thứ tự vẽ** (17 lớp, số nhỏ vẽ trước):
+   `rearLeg, rearPants, rearArm, backShoulderArmor, body, pants, torsoOutfit, belt, chestArmor, frontLeg, frontPants, frontShoulderArmor, frontArm, frontShoulderArmorTop, forearmArmor, head, hair`.
+   - Giáp vai sau nay nằm **sau thân** và sau giáp ngực.
+   - Giáp vai trước được **tách làm hai lớp**. Phần nào bị cẳng tay hoặc nắm tay trước đi ngang qua thì nằm dưới tay (`frontShoulderArmor`); phần còn lại nằm trên bắp tay (`frontShoulderArmorTop`). Việc tách tính riêng cho từng khung. Ở hàng chạy này, tay trước chỉ đi ngang vai ở khung 5 (1 điểm ảnh), các khung khác giáp vai nằm trọn trên bắp tay.
+   - Giáp ngực vẽ lại theo vùng thân trần, nhưng vẫn là giáp mẫu: nó chỉ phủ khoảng 50–75% phần áo phía trên đai (khung 1–3, 6, 9 vẫn hẹp). Lần này mình chưa sửa giáp ngực vì không nằm trong yêu cầu.
+5. **Một nguồn thứ tự duy nhất.** `kiem-tra.html` dùng `const LAYER_ORDER = DATA.layerOrder`. Danh sách lớp, ô đồ, loại lớp (nền/đồ/giáp) cũng đều đọc từ `data.json`, không gõ lại ở đâu.
+6. **Lỗi thật.** Nếu ghép nền + đồ gốc khác ảnh game, hoặc đồ mới để lộ đồ gốc/thân trần, hoặc sheet sai, `tao-bo.py` in danh sách lỗi rồi `raise SystemExit(1)` (mã thoát 1).
+   - Phép so được làm hai lần: một lần trong bộ nhớ, và một lần **đọc lại các tệp PNG trên đĩa** rồi so với hàng chạy đọc lại từ game.
+   - Đã thử cố ý làm hỏng một sheet: script dừng với mã 1 và báo "khung 5: … khác ảnh game 91 điểm ảnh".
+7. **Kiểm tra sheet.**
+   - `tao-bo.py` đọc lại từng tệp và kiểm: kích thước 1152×96, có kênh alpha, có nền trong suốt, không khung nào trống, không điểm ảnh nào nằm lệch ra ngoài nhân vật (dấu hiệu sai pivot), và chân chạm đúng y = 90 ở mọi bộ đồ.
+   - Trang `kiem-tra.html` cũng tự kiểm khi mở. Nếu sheet thiếu, tải lỗi, sai kích thước hoặc không có nền trong suốt, đầu trang hiện **khung đỏ** liệt kê lỗi. Đã thử với một tệp cố ý hỏng (xoá một ảnh, thay một ảnh 1×1): khung đỏ hiện đúng 2 lỗi.
 
-- **Khớp đánh bằng mắt** trên ảnh lớn rồi quy đổi, nên có thể sai khoảng ±1–2 điểm ảnh ô 96. Lệch nhiều nhất là khuỷu và vai tay sau (bị thân che) và gối của chân đá ra sau.
-- **Đường cắt giữa các lớp** đôi chỗ răng cưa: chỗ tay trước bắt chéo ngực (khung 1–3, 5–6, 8–9), chỗ dải đai bay đè lên chân sau. Khi chồng đủ lớp thì không thấy, chỉ lộ khi tắt riêng một lớp.
-- **Thứ tự lớp theo quy cách** làm giáp vai trước (lớp 9) bị bắp tay trước (lớp 10) đè một phần. Giáp vai sau (lớp 7) lại nằm trên giáp ngực, nên trông như dán lên ngực. Nếu muốn giáp vai luôn lộ thì nên đưa frontShoulderArmor lên sau frontArm.
-- **Neo bàn chân:** khung đặt giống game, tức căn ngang theo tâm đầu để người không giật tới lui. Vì vậy chân trụ không phải lúc nào cũng nằm đúng x = 48. Đáy bàn chân luôn chạm y = 90.
-- **SCALE 0.5 khi tắt làm mượt** chỉ giữ 1 trong 4 điểm ảnh. Sheet 96 có chi tiết ở từng điểm ảnh, nên ở cỡ 48×48 nét mảnh như viền giáp hay đinh tán có khung bị mất hoặc nhảy. Bật nút "Soi ảnh 96 gốc" để so.
-- **Giáp mẫu do máy vẽ** từ khớp (đúng từng khung, khớp thân) nhưng còn đơn giản. Nếu vẽ tay hoặc gen ảnh thì nên dùng `sheets-luoi.png` và `data.json` làm khuôn.
+## Cách chạy
 
-## Gợi ý bước tiếp
+```
+python3 docs/thu-modular-96/tao-bo.py
+```
 
-1. Chủ dự án xem `kiem-tra.html` với Debug bật, chỉ ra khung nào lệch khớp. Sửa `khop-nguon.json` rồi chạy lại `tao-bo.py`.
-2. Chốt cách chia lớp: tay nào là tay trước, quần gộp vào chân hay tách riêng, có cần lớp thân trần không. Chốt luôn thứ tự giáp vai.
-3. Gen hoặc vẽ một bộ giáp thật theo khuôn 96×96: mỗi khung một ô, đặt theo các neo trong `data.json`. Sau đó thay vào `sheets/chestArmor.png` để thử ngay trên trang.
-4. Nếu ổn, làm tiếp cho các hàng đứng và đi (cũng là khung 96, chân ở 48,90, cùng nguồn `docs/anh-goc/zed/moi/`).
-5. Chỉ khi chủ dự án đồng ý mới tính tới việc đưa lớp vào game.
+- Cần Python 3 với `numpy`, `pillow`, `scipy`. Chạy mất khoảng 5 giây.
+- Chạy đúng thì in dòng `xong: …` và thoát mã 0. Có lỗi thì in `LỖI …` và thoát mã 1.
+- Khi bị lỗi, thư mục `sheets/` có thể đã bị ghi dở. Lấy lại bản cũ bằng `git checkout -- docs/thu-modular-96`.
+- Mở `kiem-tra.html` bằng trình duyệt; không cần mạng.
 
-## Tệp
+## Tệp nào cần nằm trong repo
+
+**Đầu vào (chỉ đọc, phải có):**
+
+- `game/art/custom/zed-moi.sprite.json` (hàng `chay`);
+- `docs/anh-goc/zed/moi/03-chay-v4-gif/03-chay-v4/khung-01..12.png`;
+- `docs/thu-modular-96/khop-nguon.json`.
+
+**Công cụ:**
 
 | Tệp | Là gì |
 |---|---|
+| `tao-bo.py` | dựng lại tất cả và chạy mọi kiểm tra |
+| `tach_lop.py` | tách lớp trên ảnh nguồn lớn |
+| `trang_phuc.py` | chia nền / đồ, dựng thân trần, vẽ đồ mới; chứa thứ tự lớp duy nhất |
+| `nap-anh-gen.py` | nạp ảnh gen thành bộ đồ mới |
+| `kiem-tra.tmpl.html` | khuôn trang kiểm tra |
+
+**Đầu ra (dựng lại được, vẫn giữ trong repo để xem ngay):**
+
+| Tệp | Là gì |
+|---|---|
+| `sheets/*.png` | nền cơ thể và giáp mẫu |
+| `sheets/do-goc/*.png`, `sheets/do-moi/*.png` | hai bộ trang phục |
+| `data.json` | khớp, neo, thứ tự lớp, bộ đồ, kết quả kiểm |
 | `kiem-tra.html` | trang kiểm tra tự chứa |
-| `sheets-luoi.png` | lưới lớp × khung |
-| `sheets/*.png` | 13 sprite sheet 1152×96 |
-| `data.json` | khớp, neo, thứ tự lớp |
-| `khop-nguon.json` | khớp đánh tay trên ảnh nguồn lớn (sửa ở đây) |
-| `tao-bo.py`, `tach_lop.py` | công cụ dựng lại |
-| `kiem-tra.tmpl.html` | khuôn trang (tao-bo.py nhúng dữ liệu vào) |
+| `sheets-luoi.png` | lưới mọi lớp × 12 khung |
+| `so-sanh-do.png`, `chay-goc-moi.gif` | ảnh soát và GIF chạy |
+| `mau-gen/*.png` | ảnh mẫu để gửi kèm khi gen |
+| `do-gen/<tên>/` | chỉ có khi đã nạp ảnh gen |
+
+## Giới hạn còn lại
+
+- **Đồ mới do máy vẽ còn thô.** Hình bóng giữ gần giống đồ gốc (chỉ dài thêm vạt áo); khác chủ yếu ở màu, nẹp, đai và xà cạp. Muốn kiểu dáng khác hẳn (áo choàng, giáp to) thì nên gen ảnh, xem mục dưới.
+- **Thân trần dựng lại rất đơn giản**: da phẳng và khố xám, không có cơ bắp. Nó chỉ để không lộ lỗ, vì lúc nào cũng có đồ phủ lên. Bấm "Không (nền)" sẽ thấy rõ.
+- **Ở "Không (nền)", phần dải đai bay ngoài người sẽ biến mất** (13–53 điểm ảnh tuỳ khung), vì dải đai thuộc bộ áo. Điều này là đúng ý đồ.
+- **Tay chưa có lớp áo.** Bao cổ tay đen vẫn thuộc nền. Muốn áo có tay áo thì cần thêm lớp tay áo nằm trên `frontArm`/`rearArm`.
+- **Giáp vai sau gần như bị thân che hết** khi chạy sang phải. Thứ tự này đúng, nhưng giáp vai sau ít khi thấy.
+- **Script nạp ảnh gen** co phần hình trong mỗi ô cho vừa đúng khung bao của đồ gốc cùng khung. Đồ gen rộng hơn đồ gốc nhiều sẽ bị co lại, và điểm ảnh lạc xa thân quá 3 điểm ảnh sẽ bị bỏ.
+  - Đã thử chạy vòng: dựng ảnh "gen" giả từ bộ áo mới, phóng ×4, đặt lệch, trên nền xanh, rồi nạp lại. Kết quả 0 điểm hở, khác bản gốc 20/2188 điểm ảnh, kiểm tra vẫn đạt.
+  - Chưa thử với ảnh gen thật.
+- **Khớp vẫn đánh bằng mắt**, sai khoảng ±1–2 điểm ảnh, nên xà cạp và cổ áo có khung hơi nhảy.
+- **Ở cỡ game 48×48**, nét mảnh (nẹp, viền) có khung bị mất. Bấm "Soi ảnh 96 gốc" để xem rõ.
+- Mới làm hàng chạy. Hàng đứng/đi chưa làm, và chưa đưa vào game.
+
+## Prompt gen ảnh (nếu muốn đồ đẹp hơn bản máy vẽ)
+
+Yêu cầu ảnh gen: **1 hàng 12 ô vuông, mỗi ô 384×384 (cả ảnh 4608×384), nền xanh #00FF00, không chữ, không bóng.**
+
+**Prompt 1 – áo:**
+> Pixel art sprite sheet, one row of 12 square cells (4608×384 total), flat #00FF00 background, no text, no shadow, no body. Only the upper clothing of a small chibi boy running to the right: a sleeveless brown leather vest with bronze buckles and a cloth belt whose two sash ends fly behind. In each cell, the clothing must exactly fill the magenta shape of the same cell in the reference image. Crisp hard pixels, 1-pixel dark outline, 3-tone shading.
+
+**Prompt 2 – quần:**
+> Pixel art sprite sheet, one row of 12 square cells (4608×384 total), flat #00FF00 background, no text, no shadow, no body, no shoes. Only the trousers of a small chibi boy running to the right: loose dark-green martial-arts trousers tied at the ankles. In each cell, the trousers must exactly fill the magenta shape of the same cell in the reference image. Crisp hard pixels, 1-pixel dark outline, 3-tone shading.
+
+**Prompt 3 – áo giáp (biến thể):**
+> Same layout and rules as before: 12 cells in one row, #00FF00 background, no text, no shadow. Only a light steel chest plate with red cloth belt and two flying sash ends, matching the magenta shape in each cell of the reference.
+
+**Gửi kèm:**
+
+- `mau-gen/vung-phu-ao.png` (với prompt 1 và 3) hoặc `mau-gen/vung-phu-quan.png` (với prompt 2): vùng đồ cần phủ ở từng khung, tô hồng.
+- `mau-gen/nen-co-the.png`: hàng nền cơ thể.
+- `mau-gen/do-goc.png`: đồ gốc để làm mẫu dáng.
+- `sheets-luoi.png`: lưới lớp × khung.
+
+**Nạp ảnh gen vào:**
+
+```
+python3 docs/thu-modular-96/nap-anh-gen.py ANH-GEN.png --o ao --ten ao-da --nhan "Áo da (gen)"
+python3 docs/thu-modular-96/tao-bo.py
+```
+
+Sau đó trong `kiem-tra.html` sẽ có thêm nút `gen-ao-da` ở hàng Áo. Nếu bộ gen để lộ đồ gốc, `tao-bo.py` báo lỗi và dừng.
+
+## Cách chia lớp cũ còn giữ (cần chủ dự án duyệt)
+
+- **Tay trước** = tay lộ bắp tay trần, vẽ đè lên thân. **Tay sau** = tay đấm ra trước, bắp tay khuất sau thân.
+- **Chân trước** = chân trụ ở khung 0. Mỗi chân giữ nguyên vai trò trước/sau suốt 12 khung.
+- **Neo bàn chân:** khung đặt giống game, căn ngang theo tâm đầu. Vì vậy chân trụ không phải lúc nào cũng ở đúng x = 48, nhưng đáy chân luôn chạm y = 90.
