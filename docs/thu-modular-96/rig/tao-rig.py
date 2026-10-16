@@ -316,9 +316,13 @@ DATA_MIN['frames'] = moi
 
 # ---------- động tác khác: rig/dong-tac/<ten>/{sheet.png, khop.json} ----------
 ACTS = []
+TEN_DT = {'dung': 'Đứng', 'di': 'Đi', 'kiem_1': 'Chém kiếm 1', 'chay_thuong': 'Chạy cầm thương', 'lon': 'Lăn', 'trung': 'Trúng đòn',
+          'phitieu': 'Phi tiêu', 'chet': 'Chết'}
 DT = os.path.join(RIG, 'dong-tac')
 for ten in sorted(os.listdir(DT)) if os.path.isdir(DT) else []:
     d = os.path.join(DT, ten)
+    if not os.path.isdir(d):
+        continue
     if not (os.path.isfile(os.path.join(d, 'sheet.png')) and os.path.isfile(os.path.join(d, 'khop.json'))):
         print('  bỏ qua dong-tac/%s (thiếu sheet.png hoặc khop.json)' % ten)
         continue
@@ -327,6 +331,7 @@ for ten in sorted(os.listdir(DT)) if os.path.isdir(DT) else []:
     except Exception as e:
         loi.append('dong-tac/%s/khop.json đọc lỗi: %s' % (ten, e)); continue
     k['action'] = k.get('action') or ten
+    k['name'] = k.get('name') or TEN_DT.get(k['action'], k['action'])
     k['_dir'] = ten
     # quy ước toạ độ: phiên R2 (và data.json) đổi bằng dx + (x+0,5)·s − 0,5 (tâm điểm ảnh = số nguyên) → +0,5 cho khớp với rig
     cs = str(k.get('coordinateSystem', ''))

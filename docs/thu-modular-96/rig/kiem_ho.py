@@ -33,15 +33,15 @@ def kiem(in_bang=True):
     if errs:
         bad.append('trang báo lỗi: %s' % errs)
     if in_bang:
-        print('| Động tác | Khung | Giáp vai | Bộ | Bám | Rung | Méo | Hở trước → sau |')
-        print('|---|---|---|---|---|---|---|---|')
+        print('| Động tác | Khung | Giáp vai | Bộ | Bám liên tục | Bám cả 8 hướng | Rung | Méo | Hở trước → sau |')
+        print('|---|---|---|---|---|---|---|---|---|')
     for a in acts:
         for v in ('tron', 'xuong'):
             for sk, r in allr[a['key']][v].items():
                 s = r['summary']
                 if in_bang:
-                    print('| %s | %d | %s | %s | %d/%d | %d | %d | %d → %d |' % (a['name'], a['N'], 'trộn' if v == 'tron' else 'bắp tay', sk,
-                                                                     s['bamOk'], s['frames'], s['rung'], s['meo'], s['gapBefore'], s['gapAfter']))
+                    print('| %s | %d | %s | %s | %d/%d | %d/%d | %d | %d | %d → %d |' % (a['name'], a['N'], 'trộn' if v == 'tron' else 'bắp tay', sk,
+                                                                     s['bamOk0'], s['frames'], s['bamOk'], s['frames'], s['rung'], s['meo'], s['gapBefore'], s['gapAfter']))
                 for g in r['gaps']:
                     bad.append('HỞ: %s · %s · vai %s · khung %d · %s: %d điểm ảnh (liên tục %d, 8 hướng %d) %s' % (
                         a['name'], sk, v, g['frame'], g['at'], g['after'], g['modes'][0], g['modes'][1], g['cells']))

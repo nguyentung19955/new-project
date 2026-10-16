@@ -89,7 +89,7 @@ tr[data-f],tr[data-act]{cursor:pointer}
   <h3>Tóm tắt theo động tác</h3>
   <p id="tomAll"></p>
   <table id="tAll"></table>
-  <p class="note">Số đo ở chế độ giáp vai đang chọn. Hở: điểm ảnh tay/chân quanh vai, khuỷu, gối (bán kính 2) không có giáp che, cộng cả chu kỳ, cả 2 chế độ xoay: không chụp khớp → có chụp. Bấm 1 dòng để xem động tác đó.</p>
+  <p class="note">Số đo ở chế độ giáp vai đang chọn; mỗi ô ghi Máy vẽ · Gen. Bám: số khung mọi mảnh sát cả 2 khớp ở xoay liên tục (dòng nhỏ: tính cả 8 hướng). Hở: điểm ảnh tay/chân quanh vai, khuỷu, gối (bán kính 2) không có giáp che, cộng cả chu kỳ, cả 2 chế độ xoay: không chụp khớp → có chụp. Bấm 1 dòng để xem động tác đó.</p>
 </section>
 
 <section>
@@ -613,16 +613,16 @@ function selfCheck(a, P) {
   return summarize(a, rows);
 }
 function summarize(a, rows) {
-  let nBam = 0, nRung = 0, nNhay = 0, nMeo = 0, nHo = 0, hoTruoc = 0, hoSau = 0;
+  let nBam0 = 0, nBam = 0, nRung = 0, nNhay = 0, nMeo = 0, nHo = 0, hoTruoc = 0, hoSau = 0;
   for (const r of rows) {
     r.bam = [...new Set(r.modes[0].bam.concat(r.modes[1].bam))];
     r.rung = r.modes[1].rung;
     r.meo = [...new Set(r.modes[0].meo)].concat(r.modes[1].meo.filter(s => / mất /.test(s) && !r.modes[0].meo.includes(s)).map(s => s + ' (8 hướng)'));
     r.ho = r.gaps.filter(g => g.after > 0);
     hoTruoc += r.gaps.reduce((s, g) => s + g.before, 0); hoSau += r.gaps.reduce((s, g) => s + g.after, 0);
-    if (r.bam.length) nBam++; if (r.rung.length) nRung++; if (r.rung.some(x => / nhảy /.test(x))) nNhay++; if (r.meo.length) nMeo++; if (r.ho.length) nHo++;
+    if (r.modes[0].bam.length) nBam0++; if (r.bam.length) nBam++; if (r.rung.length) nRung++; if (r.rung.some(x => / nhảy /.test(x))) nNhay++; if (r.meo.length) nMeo++; if (r.ho.length) nHo++;
   }
-  rows.summary = {frames: a.N, bamOk: a.N - nBam, rung: nRung, nhay8: nNhay, meo: nMeo, ho: nHo, gapBefore: hoTruoc, gapAfter: hoSau};
+  rows.summary = {frames: a.N, bamOk0: a.N - nBam0, bamOk: a.N - nBam, rung: nRung, nhay8: nNhay, meo: nMeo, ho: nHo, gapBefore: hoTruoc, gapAfter: hoSau};
   return rows;
 }
 const short = s => s.replace(/^Giáp /, '').replace(/^Chụp /, 'chụp ');
@@ -641,7 +641,7 @@ function renderReport() {
   t.innerHTML = h;
   t.querySelectorAll('tr[data-f]').forEach(r => r.onclick = () => { PLAY = false; setPlay(); FRAME = +r.dataset.f; draw(); });
   const s = rows.summary;
-  $('tom').innerHTML = 'Bám khớp đủ: <b>' + s.bamOk + '/' + s.frames + '</b> khung · rung: ' + s.rung + ' · méo: ' + s.meo +
+  $('tom').innerHTML = 'Bám khớp đủ: <b>' + s.bamOk0 + '/' + s.frames + '</b> khung xoay liên tục, ' + s.bamOk + '/' + s.frames + ' tính cả 8 hướng · rung: ' + s.rung + ' · méo: ' + s.meo +
     ' · điểm ảnh hở quanh khớp (2 chế độ xoay): ' + s.gapBefore + ' → <b>' + s.gapAfter + '</b> khi có chụp' + (s.ho ? ' · <b style="color:#c62828">còn hở ' + s.ho + ' khung</b>' : '') + '. Bấm 1 dòng để xem khung đó.';
 }
 function info() {
@@ -661,7 +661,7 @@ function info() {
 let gapErrors = [];
 function renderAll() {
   const t = $('tAll');
-  let h = '<tr><th style="width:20%">Động tác</th><th style="width:10%">Khung</th><th style="width:16%">Bám</th><th style="width:12%">Rung</th><th style="width:12%">Méo</th><th style="width:30%">Hở: Máy vẽ · Gen</th></tr>';
+  let h = '<tr><th style="width:20%">Động tác</th><th style="width:10%">Khung</th><th style="width:16%">Bám (liên tục)</th><th style="width:12%">Rung</th><th style="width:12%">Méo</th><th style="width:30%">Hở: Máy vẽ · Gen</th></tr>';
   let tong = 0;
   gapErrors = [];
   for (const k of ACT_KEYS) {
@@ -673,7 +673,7 @@ function renderAll() {
     for (const sk of SET_KEYS) { const rr = R[sk]; if (!rr) continue; tong += rr.summary.gapAfter;
       for (const r of rr) for (const gp of r.gaps) if (gp.after > 0) gapErrors.push('[' + a.name + ' · ' + SETDEF[sk].name + '] Hở khớp <b>' + gp.at + '</b> ở khung ' + r.frame + ': ' + gp.after + ' điểm ảnh (liên tục ' + gp.afterModes[0] + ', 8 hướng ' + gp.afterModes[1] + ').'); }
     h += '<tr data-act="' + k + '"' + (k === ACT ? ' class="cur"' : '') + '><td>' + a.name + (a.layered ? '' : '<br><span style="color:#6b665d;font-size:11px">sheet cả người</span>') + '</td><td>' + a.N + '</td>' +
-      '<td class="' + (m.bamOk === a.N && (!g || g.bamOk === a.N) ? 'ok' : 'warn') + '">' + m.bamOk + (g ? ' · ' + g.bamOk : '') + '/' + a.N + '</td>' +
+      '<td class="' + (m.bamOk0 === a.N && (!g || g.bamOk0 === a.N) ? 'ok' : 'warn') + '">' + m.bamOk0 + (g ? ' · ' + g.bamOk0 : '') + '<br><span style="color:#6b665d;font-size:11px">8h: ' + m.bamOk + (g ? ' · ' + g.bamOk : '') + '</span></td>' +
       '<td>' + m.rung + (g ? ' · ' + g.rung : '') + '</td><td>' + m.meo + (g ? ' · ' + g.meo : '') + '</td>' +
       '<td class="' + ((m.gapAfter || (g && g.gapAfter)) ? 'bad' : 'ok') + '">' + cell(m) + ' · ' + cell(g) + '</td></tr>';
   }
