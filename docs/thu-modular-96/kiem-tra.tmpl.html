@@ -297,15 +297,15 @@ LAYER_ORDER.forEach((l, i) => {
 const presetNut = document.getElementById('presetNut');
 function themNut(cha, nhan, onclick, ds) { const b = document.createElement('button'); b.textContent = nhan; Object.assign(b.dataset, ds || {}); b.onclick = onclick; cha.appendChild(b); return b; }
 for (const p of PRESETS) themNut(presetNut, p.name, () => { tho = ''; mac.ao = p.ao; mac.quan = p.quan; giap = p.armor || ''; capNut(); ve(); }, { preset: p.id });
-const THO_TEN = { 'cu-ti-do-xanh-chay-12': 'Ảnh gen thô: đồ xanh', 'cu-ti-giap-chay-12': 'Ảnh gen thô: Cu Tí giáp' };
+const THO_TEN = { 'cu-ti-do-xanh-chay-12': 'Ảnh gen thô: đồ xanh', 'cu-ti-giap-chay-12': 'Ảnh gen thô: Cu Tí giáp', 'cu-ti-than-tran-sua-chay-12': 'Ảnh gen thô: thân trần sửa' };
 for (const [t, p] of Object.entries(DATA.genFullRows || {})) themNut(presetNut, THO_TEN[t] || t, () => { tho = p; capNut(); ve(); }, { tho: p });
 
 // chọn riêng: áo / quần / giáp
 const doNut = document.getElementById('doNut');
 {
   const hang = document.createElement('div'); hang.className = 'hang';
-  const t = document.createElement('span'); t.className = 'nhom'; t.textContent = 'Thân nền:'; hang.appendChild(t);
-  const TEN_NEN = { cu: 'Máy dựng cũ', 'to-da': 'Tô da (mới)' };
+  const t = document.createElement('span'); t.className = 'nhom'; t.textContent = 'Nền:'; hang.appendChild(t);
+  const TEN_NEN = { cu: 'Máy dựng', 'to-da': 'Tô da', 'gen-sua': 'Gen sửa' };
   for (const [b, v] of Object.entries(BASES)) { const n = themNut(hang, TEN_NEN[b] || b, () => { tho = ''; thanNen = b; capNut(); ve(); }, { than: b }); n.title = v.name; }
   doNut.appendChild(hang);
 }
@@ -348,6 +348,14 @@ capNut();
   if (ck[0] && ck[0].toDa) {
     const lo = ck.reduce((a, x) => a + Object.values(x.toDa.lo).reduce((p, q) => p + q, 0), 0);
     dong.push('Thân nền tô da: hình bóng lệch game ' + cong(x => x.toDa.hinhBongLech) + ' điểm ảnh; lộ dưới mọi bộ đồ ' + lo + ' điểm (' + Object.keys(ck[0].toDa.lo).length + ' tổ hợp đồ × ' + ck.length + ' khung).');
+  }
+  if (ck[0] && ck[0].genSua) {
+    const g = ck.map(x => x.genSua);
+    const lo = g.reduce((a, x) => a + Object.values(x.lo).reduce((p, q) => p + q, 0), 0);
+    const pt = v => Math.round(v * 100) + '%';
+    dong.push('Thân nền gen sửa: ảnh gen trùng hình bóng ' + pt(Math.min(...g.map(x => x.iouSauCan))) + '–' + pt(Math.max(...g.map(x => x.iouSauCan))) +
+      ' (ô 96); lấy màu từ gen ' + g.reduce((a, x) => a + x.diemLayTuGen, 0) + ' điểm, hụt lấp tô da ' + g.reduce((a, x) => a + x.diemHutLapToDa, 0) +
+      ', lố đã cắt ' + g.reduce((a, x) => a + x.diemGenLoDaCat, 0) + '; hình bóng lệch game ' + g.reduce((a, x) => a + x.hinhBongLech, 0) + ' điểm; lộ dưới mọi bộ đồ ' + lo + ' điểm.');
   }
   const gi = DATA.genImport;
   if (gi && gi.doXanh) dong.push('Đồ xanh (gen): ' + gi.doXanh.reduce((a, x) => a + x.lapConThay, 0) + ' / ' + gi.doXanh.reduce((a, x) => a + x.diemDoNhinThay, 0) + ' điểm đồ phải lấp vì ảnh gen lệch dáng.');
