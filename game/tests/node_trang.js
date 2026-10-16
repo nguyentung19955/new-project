@@ -45,7 +45,8 @@ function ctx2d(cv) {
     globalCompositeOperation: 'source-over', imageSmoothingEnabled: false, filter: 'none', lineJoin: 'miter', lineCap: 'butt', shadowBlur: 0, shadowColor: '', shadowOffsetX: 0, shadowOffsetY: 0,
   });
   const rong = () => {};
-  return new Proxy(o, { get(t, k) { if (k in t) return t[k]; return rong; }, set(t, k, v) { t[k] = v; return true; } });
+  // Khoá lạ '__…' (trường riêng game gắn lên ctx, vd. c.__loc của js/fx_anh.js G.locVe): trình duyệt thật trả undefined, không phải hàm rỗng
+  return new Proxy(o, { get(t, k) { if (k in t) return t[k]; if (typeof k === 'string' && k.startsWith('__')) return undefined; return rong; }, set(t, k, v) { t[k] = v; return true; } });
 }
 function phanTu(tag) {
   const el = {
