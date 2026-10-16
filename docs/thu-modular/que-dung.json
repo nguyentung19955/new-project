@@ -1,18 +1,30 @@
 {
  "loai": "linh-khi-thu-modular-que",
- "phien_ban": 1,
- "dong_tac": "đứng (dáng gốc, = nhan-vat.json)",
+ "phien_ban": 3,
+ "nhan_vat": "Cu Tí MỚI (zed-moi, bộ ảnh docs/anh-goc/zed/moi/)",
+ "dong_tac": "đứng, khung 1 hàng \"dung\" (= nhan-vat.json)",
  "so_khung": 1,
- "giay_moi_khung": 1.2,
+ "giay_moi_khung": 0.1562,
+ "anh_tam_goc": "docs/anh-goc/zed/moi/01-dung.png",
  "o": [
-  256,
-  256
+  320,
+  544
  ],
  "goc_trong_o": [
-  128,
-  248
+  160,
+  520
  ],
- "he_toa_do": "GỐC (0,0) = góc TRÊN-TRÁI của khung (ô). khop_px/neo_do: (x, y) điểm ảnh trong ô 256×256 (ô i nằm ở x = (i-1)×256 trên tấm png); cùng tỉ lệ ảnh gốc. khop_game: khung 48×48, chân [24,45]. Góc: 0° sang phải, 90° xuống.",
+ "duong_chan_y": 520,
+ "he_toa_do": {
+  "goc": "GỐC (0,0) = GÓC TRÊN-TRÁI. x sang phải, y xuống, đơn vị điểm ảnh.",
+  "khop_px": "toạ độ trong Ô QUE của khung đó (ô i ở x = (i−1)×rộng_ô trên tấm que-*.png). 1 điểm ảnh ô = 1 điểm ảnh ảnh nguồn.",
+  "khop_nguon": "toạ độ trên ảnh khung đã cắt (anh_nguon). = khop_px − dat_trong_o.",
+  "khop_tam_goc": "toạ độ trên tấm ảnh gốc 2172×724 (docs/anh-goc/zed/moi/<thư mục>.png). = khop_nguon + khung_bao_tren_tam[0..1].",
+  "khop_o96": "toạ độ ô 96×96 của tấm game zed-moi.sprite.json (he_neo \"nguon-96\", chân tại 48,90). = game.dx + x_nguon×game.sx.",
+  "khop_game": "điểm ảnh game trong khung 48×48 (= khop_o96 ÷ 2); chân game tại [24,45].",
+  "khop_game_tu_chan": "điểm ảnh game tính từ chân (= khop_game − [24,45]); đây là số game cộng với vị trí nhân vật.",
+  "goc_do": "0° = sang phải, 90° = thẳng xuống, −90° = thẳng lên. xoay_so_voi_dung dương = theo chiều kim đồng hồ trên màn hình."
+ },
  "khoa_goc": {
   "than": "hong→co",
   "dau": "co→dinh_dau",
@@ -29,7 +41,7 @@
   "ct": "goi_trai→co_chan_trai",
   "bct": "co_chan_trai→mui_chan_trai"
  },
- "cach_gan_do": "Ảnh đồ vẽ ở dáng đứng → đặt neo của đồ trùng neo khung (vd áo: co), rồi xoay quanh neo một góc = xoay_so_voi_dung (độ, dương = theo chiều kim đồng hồ trên màn hình).",
+ "cach_gan_do": "Đồ vẽ trên ô que dáng đứng (que-dung.json). Ở khung k: đặt điểm neo của đồ trùng neo của khung (vd áo: co), xoay quanh neo một góc = xoay_so_voi_dung, co theo neo_do.ti_le_so_voi_dung (Cu Tí chạy trong ảnh nguồn nhỏ hơn Cu Tí đứng; ra game cả hai cùng cỡ).",
  "thu_tu_lop": {
   "ao_choang_khan": 5,
   "non_sau": 8,
@@ -37,312 +49,895 @@
   "chan_trai (xa)": "20–22",
   "than": 30,
   "ao / giap": 35,
+  "dai / tui eo": 36,
   "chan_phai (gần)": "40–42",
-  "quan": 45,
+  "quan (ống gần)": 45,
   "dau": 50,
   "mat_na": 55,
   "tay_phai (gần)": "70–72",
   "vu_khi": 75,
   "non_truoc / mu": 85
  },
+ "xuong": [
+  [
+   "than",
+   "hong",
+   "co"
+  ],
+  [
+   "dau",
+   "co",
+   "dinh_dau"
+  ],
+  [
+   "vai_phai",
+   "co",
+   "vai_phai"
+  ],
+  [
+   "vai_trai",
+   "co",
+   "vai_trai"
+  ],
+  [
+   "canh_tay_tren_phai",
+   "vai_phai",
+   "khuyu_phai"
+  ],
+  [
+   "canh_tay_duoi_phai",
+   "khuyu_phai",
+   "co_tay_phai"
+  ],
+  [
+   "ban_tay_phai",
+   "co_tay_phai",
+   "nam_tay_phai"
+  ],
+  [
+   "canh_tay_tren_trai",
+   "vai_trai",
+   "khuyu_trai"
+  ],
+  [
+   "canh_tay_duoi_trai",
+   "khuyu_trai",
+   "co_tay_trai"
+  ],
+  [
+   "ban_tay_trai",
+   "co_tay_trai",
+   "nam_tay_trai"
+  ],
+  [
+   "hong_phai",
+   "hong",
+   "hong_phai"
+  ],
+  [
+   "hong_trai",
+   "hong",
+   "hong_trai"
+  ],
+  [
+   "dui_phai",
+   "hong_phai",
+   "goi_phai"
+  ],
+  [
+   "cang_chan_phai",
+   "goi_phai",
+   "co_chan_phai"
+  ],
+  [
+   "ban_chan_phai",
+   "co_chan_phai",
+   "mui_chan_phai"
+  ],
+  [
+   "dui_trai",
+   "hong_trai",
+   "goi_trai"
+  ],
+  [
+   "cang_chan_trai",
+   "goi_trai",
+   "co_chan_trai"
+  ],
+  [
+   "ban_chan_trai",
+   "co_chan_trai",
+   "mui_chan_trai"
+  ]
+ ],
  "khung": [
   {
    "khung": 1,
+   "anh_nguon": "docs/anh-goc/zed/moi/01-dung-gif/dung/khung-01.png",
+   "dat_trong_o": [
+    28,
+    29
+   ],
+   "khung_bao_tren_tam": [
+    16,
+    139,
+    287,
+    636
+   ],
+   "game": {
+    "hang": 0,
+    "cot": 0,
+    "sx": 0.12915,
+    "sy": 0.12877,
+    "dx": 31,
+    "dy": 27,
+    "trung_tam_game_iou": 1.0
+   },
+   "khop_px": {
+    "dinh_dau": [
+     152.0,
+     58.0
+    ],
+    "tam_dau": [
+     165.0,
+     145.0
+    ],
+    "cam": [
+     205.0,
+     235.0
+    ],
+    "co": [
+     165.0,
+     250.0
+    ],
+    "vai_phai": [
+     88.0,
+     265.0
+    ],
+    "vai_trai": [
+     230.0,
+     265.0
+    ],
+    "khuyu_phai": [
+     62.0,
+     316.0
+    ],
+    "co_tay_phai": [
+     85.0,
+     338.0
+    ],
+    "nam_tay_phai": [
+     93.0,
+     348.0
+    ],
+    "khuyu_trai": [
+     225.0,
+     322.0
+    ],
+    "co_tay_trai": [
+     256.0,
+     330.0
+    ],
+    "nam_tay_trai": [
+     276.0,
+     330.0
+    ],
+    "eo": [
+     160.0,
+     322.0
+    ],
+    "hong": [
+     160.0,
+     375.0
+    ],
+    "hong_phai": [
+     125.0,
+     380.0
+    ],
+    "hong_trai": [
+     200.0,
+     380.0
+    ],
+    "goi_phai": [
+     88.0,
+     440.0
+    ],
+    "co_chan_phai": [
+     75.0,
+     477.0
+    ],
+    "mui_chan_phai": [
+     60.0,
+     508.0
+    ],
+    "goi_trai": [
+     222.0,
+     440.0
+    ],
+    "co_chan_trai": [
+     232.0,
+     476.0
+    ],
+    "mui_chan_trai": [
+     280.0,
+     500.0
+    ],
+    "goc": [
+     159.6,
+     520.0
+    ]
+   },
+   "khop_nguon": {
+    "dinh_dau": [
+     124.0,
+     29.0
+    ],
+    "tam_dau": [
+     137.0,
+     116.0
+    ],
+    "cam": [
+     177.0,
+     206.0
+    ],
+    "co": [
+     137.0,
+     221.0
+    ],
+    "vai_phai": [
+     60.0,
+     236.0
+    ],
+    "vai_trai": [
+     202.0,
+     236.0
+    ],
+    "khuyu_phai": [
+     34.0,
+     287.0
+    ],
+    "co_tay_phai": [
+     57.0,
+     309.0
+    ],
+    "nam_tay_phai": [
+     65.0,
+     319.0
+    ],
+    "khuyu_trai": [
+     197.0,
+     293.0
+    ],
+    "co_tay_trai": [
+     228.0,
+     301.0
+    ],
+    "nam_tay_trai": [
+     248.0,
+     301.0
+    ],
+    "eo": [
+     132.0,
+     293.0
+    ],
+    "hong": [
+     132.0,
+     346.0
+    ],
+    "hong_phai": [
+     97.0,
+     351.0
+    ],
+    "hong_trai": [
+     172.0,
+     351.0
+    ],
+    "goi_phai": [
+     60.0,
+     411.0
+    ],
+    "co_chan_phai": [
+     47.0,
+     448.0
+    ],
+    "mui_chan_phai": [
+     32.0,
+     479.0
+    ],
+    "goi_trai": [
+     194.0,
+     411.0
+    ],
+    "co_chan_trai": [
+     204.0,
+     447.0
+    ],
+    "mui_chan_trai": [
+     252.0,
+     471.0
+    ],
+    "goc": [
+     131.6,
+     491.0
+    ]
+   },
+   "khop_tam_goc": {
+    "dinh_dau": [
+     140.0,
+     168.0
+    ],
+    "tam_dau": [
+     153.0,
+     255.0
+    ],
+    "cam": [
+     193.0,
+     345.0
+    ],
+    "co": [
+     153.0,
+     360.0
+    ],
+    "vai_phai": [
+     76.0,
+     375.0
+    ],
+    "vai_trai": [
+     218.0,
+     375.0
+    ],
+    "khuyu_phai": [
+     50.0,
+     426.0
+    ],
+    "co_tay_phai": [
+     73.0,
+     448.0
+    ],
+    "nam_tay_phai": [
+     81.0,
+     458.0
+    ],
+    "khuyu_trai": [
+     213.0,
+     432.0
+    ],
+    "co_tay_trai": [
+     244.0,
+     440.0
+    ],
+    "nam_tay_trai": [
+     264.0,
+     440.0
+    ],
+    "eo": [
+     148.0,
+     432.0
+    ],
+    "hong": [
+     148.0,
+     485.0
+    ],
+    "hong_phai": [
+     113.0,
+     490.0
+    ],
+    "hong_trai": [
+     188.0,
+     490.0
+    ],
+    "goi_phai": [
+     76.0,
+     550.0
+    ],
+    "co_chan_phai": [
+     63.0,
+     587.0
+    ],
+    "mui_chan_phai": [
+     48.0,
+     618.0
+    ],
+    "goi_trai": [
+     210.0,
+     550.0
+    ],
+    "co_chan_trai": [
+     220.0,
+     586.0
+    ],
+    "mui_chan_trai": [
+     268.0,
+     610.0
+    ],
+    "goc": [
+     147.6,
+     630.0
+    ]
+   },
+   "khop_o96": {
+    "dinh_dau": [
+     47.01,
+     30.73
+    ],
+    "tam_dau": [
+     48.69,
+     41.94
+    ],
+    "cam": [
+     53.86,
+     53.53
+    ],
+    "co": [
+     48.69,
+     55.46
+    ],
+    "vai_phai": [
+     38.75,
+     57.39
+    ],
+    "vai_trai": [
+     57.09,
+     57.39
+    ],
+    "khuyu_phai": [
+     35.39,
+     63.96
+    ],
+    "co_tay_phai": [
+     38.36,
+     66.79
+    ],
+    "nam_tay_phai": [
+     39.39,
+     68.08
+    ],
+    "khuyu_trai": [
+     56.44,
+     64.73
+    ],
+    "co_tay_trai": [
+     60.45,
+     65.76
+    ],
+    "nam_tay_trai": [
+     63.03,
+     65.76
+    ],
+    "eo": [
+     48.05,
+     64.73
+    ],
+    "hong": [
+     48.05,
+     71.56
+    ],
+    "hong_phai": [
+     43.53,
+     72.2
+    ],
+    "hong_trai": [
+     53.21,
+     72.2
+    ],
+    "goi_phai": [
+     38.75,
+     79.93
+    ],
+    "co_chan_phai": [
+     37.07,
+     84.69
+    ],
+    "mui_chan_phai": [
+     35.13,
+     88.68
+    ],
+    "goi_trai": [
+     56.06,
+     79.93
+    ],
+    "co_chan_trai": [
+     57.35,
+     84.56
+    ],
+    "mui_chan_trai": [
+     63.55,
+     87.65
+    ],
+    "goc": [
+     48.0,
+     90.23
+    ]
+   },
+   "khop_game": {
+    "dinh_dau": [
+     23.51,
+     15.37
+    ],
+    "tam_dau": [
+     24.35,
+     20.97
+    ],
+    "cam": [
+     26.93,
+     26.76
+    ],
+    "co": [
+     24.35,
+     27.73
+    ],
+    "vai_phai": [
+     19.37,
+     28.7
+    ],
+    "vai_trai": [
+     28.54,
+     28.7
+    ],
+    "khuyu_phai": [
+     17.7,
+     31.98
+    ],
+    "co_tay_phai": [
+     19.18,
+     33.4
+    ],
+    "nam_tay_phai": [
+     19.7,
+     34.04
+    ],
+    "khuyu_trai": [
+     28.22,
+     32.37
+    ],
+    "co_tay_trai": [
+     30.22,
+     32.88
+    ],
+    "nam_tay_trai": [
+     31.51,
+     32.88
+    ],
+    "eo": [
+     24.02,
+     32.37
+    ],
+    "hong": [
+     24.02,
+     35.78
+    ],
+    "hong_phai": [
+     21.76,
+     36.1
+    ],
+    "hong_trai": [
+     26.61,
+     36.1
+    ],
+    "goi_phai": [
+     19.37,
+     39.96
+    ],
+    "co_chan_phai": [
+     18.54,
+     42.35
+    ],
+    "mui_chan_phai": [
+     17.57,
+     44.34
+    ],
+    "goi_trai": [
+     28.03,
+     39.96
+    ],
+    "co_chan_trai": [
+     28.67,
+     42.28
+    ],
+    "mui_chan_trai": [
+     31.77,
+     43.83
+    ],
+    "goc": [
+     24.0,
+     45.11
+    ]
+   },
+   "khop_game_tu_chan": {
+    "dinh_dau": [
+     -0.49,
+     -29.63
+    ],
+    "tam_dau": [
+     0.35,
+     -24.03
+    ],
+    "cam": [
+     2.93,
+     -18.24
+    ],
+    "co": [
+     0.35,
+     -17.27
+    ],
+    "vai_phai": [
+     -4.63,
+     -16.3
+    ],
+    "vai_trai": [
+     4.54,
+     -16.3
+    ],
+    "khuyu_phai": [
+     -6.3,
+     -13.02
+    ],
+    "co_tay_phai": [
+     -4.82,
+     -11.6
+    ],
+    "nam_tay_phai": [
+     -4.3,
+     -10.96
+    ],
+    "khuyu_trai": [
+     4.22,
+     -12.63
+    ],
+    "co_tay_trai": [
+     6.22,
+     -12.12
+    ],
+    "nam_tay_trai": [
+     7.51,
+     -12.12
+    ],
+    "eo": [
+     0.02,
+     -12.63
+    ],
+    "hong": [
+     0.02,
+     -9.22
+    ],
+    "hong_phai": [
+     -2.24,
+     -8.9
+    ],
+    "hong_trai": [
+     2.61,
+     -8.9
+    ],
+    "goi_phai": [
+     -4.63,
+     -5.04
+    ],
+    "co_chan_phai": [
+     -5.46,
+     -2.65
+    ],
+    "mui_chan_phai": [
+     -6.43,
+     -0.66
+    ],
+    "goi_trai": [
+     4.03,
+     -5.04
+    ],
+    "co_chan_trai": [
+     4.67,
+     -2.72
+    ],
+    "mui_chan_trai": [
+     7.77,
+     -1.17
+    ],
+    "goc": [
+     0.0,
+     0.11
+    ]
+   },
+   "goc_doan_do": {
+    "than": -87.7,
+    "dau": -93.9,
+    "ttp": 117.0,
+    "tdp": 43.7,
+    "btp": 51.3,
+    "ttt": 95.0,
+    "tdt": 14.5,
+    "btt": 0.0,
+    "dp": 121.7,
+    "cp": 109.4,
+    "bcp": 115.8,
+    "dt": 69.9,
+    "ct": 74.5,
+    "bct": 26.6
+   },
    "neo_do": {
+    "ti_le_so_voi_dung": 1.0,
     "ao": {
      "bam": "than",
      "neo": "co",
      "co": [
-      129.0,
-      135.0
+      165.0,
+      250.0
      ],
      "eo": [
-      125.0,
-      172.0
+      160.0,
+      322.0
      ],
      "vai_phai": [
-      100.0,
-      144.0
+      88.0,
+      265.0
      ],
      "vai_trai": [
-      148.0,
-      144.0
-     ],
-     "goc_do": -87.8,
-     "xoay_so_voi_dung": 0.0
-    },
-    "quan": {
-     "bam": "than+dui",
-     "neo": "hong",
-     "eo": [
-      125.0,
-      172.0
-     ],
-     "hong": [
-      127,
-      187.0
+      230.0,
+      265.0
      ],
      "hong_phai": [
-      114.0,
-      188.0
+      125.0,
+      380.0
      ],
      "hong_trai": [
-      140.0,
-      188.0
+      200.0,
+      380.0
      ],
-     "goi_phai": [
-      106.0,
-      217.0
+     "goc_do": -87.7,
+     "xoay_so_voi_dung": 0.0,
+     "tay_ao_phai": {
+      "vai": [
+       88.0,
+       265.0
+      ],
+      "khuyu": [
+       62.0,
+       316.0
+      ],
+      "goc_do": 117.0,
+      "xoay_so_voi_dung": 0.0
+     },
+     "tay_ao_trai": {
+      "vai": [
+       230.0,
+       265.0
+      ],
+      "khuyu": [
+       225.0,
+       322.0
+      ],
+      "goc_do": 95.0,
+      "xoay_so_voi_dung": 0.0
+     }
+    },
+    "quan": {
+     "bam": "than+dui+cang",
+     "neo": "hong",
+     "eo": [
+      160.0,
+      322.0
      ],
-     "goi_trai": [
-      148.0,
-      217.0
+     "hong": [
+      160.0,
+      375.0
      ],
-     "goc_dui_phai": 105.4,
-     "goc_dui_trai": 74.6
+     "ong_phai": {
+      "hong": [
+       125.0,
+       380.0
+      ],
+      "goi": [
+       88.0,
+       440.0
+      ],
+      "co_chan": [
+       75.0,
+       477.0
+      ],
+      "goc_dui": 121.7,
+      "goc_cang": 109.4,
+      "xoay_dui": 0.0,
+      "xoay_cang": 0.0
+     },
+     "ong_trai": {
+      "hong": [
+       200.0,
+       380.0
+      ],
+      "goi": [
+       222.0,
+       440.0
+      ],
+      "co_chan": [
+       232.0,
+       476.0
+      ],
+      "goc_dui": 69.9,
+      "goc_cang": 74.5,
+      "xoay_dui": 0.0,
+      "xoay_cang": 0.0
+     }
     },
     "toc_mu": {
      "bam": "dau",
-     "neo": "co",
-     "co": [
-      129.0,
-      135.0
+     "neo": "tam_dau",
+     "tam_dau": [
+      165.0,
+      145.0
      ],
      "dinh_dau": [
-      124.0,
-      26.0
+      152.0,
+      58.0
      ],
-     "tam_dau": [
-      129.0,
-      82.0
+     "co": [
+      165.0,
+      250.0
      ],
-     "goc_do": -92.6,
+     "cam": [
+      205.0,
+      235.0
+     ],
+     "ban_kinh_dau": 88.0,
+     "goc_do": -93.9,
      "xoay_so_voi_dung": 0.0
     },
     "phu_kien": {
      "lung": [
-      96.0,
-      146.0
+      113.3,
+      278.8
+     ],
+     "eo_treo_tui": [
+      160.0,
+      322.0
      ],
      "tay_cam_phai": [
-      90.0,
-      194.0
+      93.0,
+      348.0
      ],
      "tay_cam_trai": [
-      165.0,
-      191.0
+      276.0,
+      330.0
      ],
-     "goc_cang_tay_phai": 96.7,
-     "goc_cang_tay_trai": 71.6,
-     "eo_treo_tui": [
-      125.0,
-      172.0
-     ]
+     "gang_phai": {
+      "co_tay": [
+       85.0,
+       338.0
+      ],
+      "goc_do": 43.7,
+      "xoay_so_voi_dung": 0.0
+     },
+     "gang_trai": {
+      "co_tay": [
+       256.0,
+       330.0
+      ],
+      "goc_do": 14.5,
+      "xoay_so_voi_dung": 0.0
+     },
+     "giay_phai": {
+      "co_chan": [
+       75.0,
+       477.0
+      ],
+      "mui": [
+       60.0,
+       508.0
+      ],
+      "goc_do": 115.8,
+      "xoay_so_voi_dung": 0.0
+     },
+     "giay_trai": {
+      "co_chan": [
+       232.0,
+       476.0
+      ],
+      "mui": [
+       280.0,
+       500.0
+      ],
+      "goc_do": 26.6,
+      "xoay_so_voi_dung": 0.0
+     }
     }
-   },
-   "khop_px": {
-    "hong": [
-     127,
-     187.0
-    ],
-    "co": [
-     129.0,
-     135.0
-    ],
-    "dinh_dau": [
-     124.0,
-     26.0
-    ],
-    "tam_dau": [
-     129.0,
-     82.0
-    ],
-    "cam": [
-     138.0,
-     130.0
-    ],
-    "eo": [
-     125.0,
-     172.0
-    ],
-    "vai_phai": [
-     100.0,
-     144.0
-    ],
-    "hong_phai": [
-     114.0,
-     188.0
-    ],
-    "vai_trai": [
-     148.0,
-     144.0
-    ],
-    "hong_trai": [
-     140.0,
-     188.0
-    ],
-    "khuyu_phai": [
-     93.0,
-     168.0
-    ],
-    "co_tay_phai": [
-     91.0,
-     185.0
-    ],
-    "nam_tay_phai": [
-     90.0,
-     194.0
-    ],
-    "khuyu_trai": [
-     157.0,
-     168.0
-    ],
-    "co_tay_trai": [
-     162.0,
-     183.0
-    ],
-    "nam_tay_trai": [
-     165.0,
-     191.0
-    ],
-    "goi_phai": [
-     106.0,
-     217.0
-    ],
-    "co_chan_phai": [
-     104.0,
-     235.0
-    ],
-    "mui_chan_phai": [
-     119.0,
-     246.0
-    ],
-    "goi_trai": [
-     148.0,
-     217.0
-    ],
-    "co_chan_trai": [
-     147.0,
-     235.0
-    ],
-    "mui_chan_trai": [
-     168.0,
-     245.0
-    ],
-    "goc": [
-     128.0,
-     248.0
-    ]
-   },
-   "khop_game": {
-    "hong": [
-     23.87,
-     36.99
-    ],
-    "co": [
-     24.13,
-     30.16
-    ],
-    "dinh_dau": [
-     23.47,
-     15.84
-    ],
-    "tam_dau": [
-     24.13,
-     23.19
-    ],
-    "cam": [
-     25.31,
-     29.5
-    ],
-    "eo": [
-     23.61,
-     35.02
-    ],
-    "vai_phai": [
-     20.32,
-     31.34
-    ],
-    "hong_phai": [
-     22.16,
-     37.12
-    ],
-    "vai_trai": [
-     26.63,
-     31.34
-    ],
-    "hong_trai": [
-     25.58,
-     37.12
-    ],
-    "khuyu_phai": [
-     19.4,
-     34.49
-    ],
-    "co_tay_phai": [
-     19.14,
-     36.72
-    ],
-    "nam_tay_phai": [
-     19.01,
-     37.91
-    ],
-    "khuyu_trai": [
-     27.81,
-     34.49
-    ],
-    "co_tay_trai": [
-     28.47,
-     36.46
-    ],
-    "nam_tay_trai": [
-     28.86,
-     37.51
-    ],
-    "goi_phai": [
-     21.11,
-     40.93
-    ],
-    "co_chan_phai": [
-     20.85,
-     43.29
-    ],
-    "mui_chan_phai": [
-     22.82,
-     44.74
-    ],
-    "goi_trai": [
-     26.63,
-     40.93
-    ],
-    "co_chan_trai": [
-     26.5,
-     43.29
-    ],
-    "mui_chan_trai": [
-     29.25,
-     44.61
-    ],
-    "goc": [
-     24.0,
-     45.0
-    ]
-   },
-   "goc_doan_do": {
-    "than": -87.8,
-    "dau": -92.6,
-    "ttp": 106.3,
-    "tdp": 96.7,
-    "btp": 96.3,
-    "ttt": 69.4,
-    "tdt": 71.6,
-    "btt": 69.4,
-    "dp": 105.4,
-    "cp": 96.3,
-    "bcp": 36.3,
-    "dt": 74.6,
-    "ct": 93.2,
-    "bct": 25.5
    }
   }
  ]
