@@ -16,7 +16,7 @@ Nguồn: TU-VAN-CHATGPT-TOAN-BO-16-10.md
 
 ## Thử
 8. Phúc lành giữa ải (chọn 1 trong 3, chỉ có tác dụng trong lượt ải đó), cờ tắt, đo bot.
-9. 8 hướng: thử đứng + chạy + kiếm 1 ở 5 hướng trước, đưa vào game xem trên điện thoại rồi mới quyết làm tiếp.
+9. 8 hướng: KHÔNG làm (chủ game 16/10 19:20 "không cần 8 hướng"). Giữ hướng ngang như hiện tại. Khung que ở docs/khung-que-8-huong chỉ để tham khảo.
 
 ## Điều phối ghi chú
 - Bỏ qua phép tính "búa mạnh quá" (lần 2 ChatGPT nêu): cân bằng đã đo bằng bot có tính thời gian vung, khựng.
