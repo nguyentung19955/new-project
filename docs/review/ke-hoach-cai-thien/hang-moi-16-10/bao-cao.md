@@ -71,7 +71,14 @@ Chỉ hàng ĐỨNG có vũ khí (lộn, trúng đòn: không vũ khí, như cũ
 
 ## 4. Đưa vào game
 
-_(đang chờ phiên "Cu Tí to hơn + động tác mượt" xong phần sửa js/zed_moi.js — mục này điền khi tích hợp.)_
+Chờ hàng đợi: phiên "Cu Tí to hơn + động tác mượt" có `cu-ti-to-muot/bao-cao.md` lúc 13:40 → mới sửa game.
+
+- **Đã thay: đứng, lộn, trúng đòn — CHỈ bộ Ninja** (`zed-moi`). Bộ Rừng / Biển / Lâu đài chưa có ảnh mới → **giữ hàng cũ** (tấm của 3 bộ đó không đổi một điểm ảnh nào). Kiếm 1 / 2 / 3: giữ hàng cũ ở mọi bộ.
+- Cách nạp: cùng đường ảnh `zed-*` hiện có — `docs/anh-goc/zed/dung-zed-game.py` thêm 3 hàng `dung~16`, `lon~16`, `trung~16` (+ 4 hàng cầm vũ khí `dung~16_kiem|thuong|bua|phitieu`, có nắm tay / nắm chuôi như hàng cũ) vào CUỐI `game/art/custom/zed-moi.sprite.json`; tấm nén lại 256 màu bằng đúng cách của `npc-ban-do-bao-truoc/cong-cu/nen-anh.py` (391 KB → 433 KB; các hàng cũ được lượng tử lại cùng cách, sai số màu trung bình ~1,9/255 — mắt không thấy).
+- `game/js/zed_moi.js`: hàm `hang16` (gọi trong `layThan`) — tấm nào có khoá `~16` thì dùng thay hàng cũ cùng tên; hàng đứng mới phát thẳng 1→8 (bỏ đi-về `QUA_LAI` vì hàng mới nối vòng êm). **`?hangcu=1`** = về hàng cũ y như trước. Không đụng nhịp, thời lượng, khung chạm, vùng trúng; ×1,2 và các sửa mượt của phiên kia áp như cũ.
+- Soát trong game (headless bằng `cu-ti-to-muot/quay.py`, không chơi tay): `trong-game/` — `<động tác>-moi-x3.gif` / `-cu-x3.gif` (`?hangcu=1`), `<động tác>-moi.gif` cỡ thật, `dai-<động tác>-cu-tren-moi-duoi.png` (từng nhịp 1/60 s; trên = cũ, dưới = mới). Thứ tự khung đo được: đứng mới `1-2-3-4-5-6-7-8-1…` (cũ `1-2-3-4-5-4-3-2`), lộn `1→6` rồi về đứng, trúng đòn `1→4` rồi về đứng; lộn khung 6 → đứng không còn giật to.
+- Kiểm: `node --check game/js/zed_moi.js` đạt; `python3 build.py` và `python3 build.py --hai-tep` đạt; `tests/smoke.py` **0 lỗi**; quay.py báo "LỖI JS: không" cả hai chế độ.
+- Khi có ảnh kiếm gen lại (prompt A/B/C): cắt bằng `cat-diem-anh.py` vào `moi16/`, ghi neo vào neo.json (như mục 3, góc theo hàng cũ), thêm dòng `('kiem_1~16', …)` vào `DONG` + `GOC_RIENG`, chạy lại dung-zed-game.py → game tự dùng (cùng cờ `?hangcu=1`). Lưu ý hàng kiếm có ghép chạy + chém ở eo (`G.ZED_EO`, `cat-than.py`) — phải đo lại eo cho hàng mới.
 
 ## Prompt gen lại
 

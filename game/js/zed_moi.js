@@ -75,9 +75,26 @@
     let ma = 'zed-moi';
     try { const b = G.zedBo ? G.zedBo() : 'ninja'; if (G.ZED_BO && G.ZED_BO[b]) ma = G.ZED_BO[b].tam; } catch (e) { ma = 'zed-moi'; }
     const z = (ma !== 'zed-moi' && lay(ma)) || lay('zed-moi');
-    if (z) z._ma = z === SC.zed['zed-moi'] ? 'zed-moi' : ma;
+    if (z) { z._ma = z === SC.zed['zed-moi'] ? 'zed-moi' : ma; hang16(z.tep); }
     return z;
   };
+  // HÀNG MỚI 16/10 (docs/review/ke-hoach-cai-thien/hang-moi-16-10/bao-cao.md): tấm có khoá "<hàng>~16" (chủ game gen lại: đứng thở 8 khung,
+  // lộn 6, trúng đòn 4; hiện chỉ bộ ninja zed-moi) → dùng THAY hàng cũ cùng tên, cả hàng cầm vũ khí dung~16_<loại> → dung_<loại>.
+  // Hàng đứng mới thở thật, nối vòng 8→1 êm → phát thẳng 1→8 (không đi-về QUA_LAI). Bộ trang phục chưa có ảnh mới giữ hàng cũ.
+  // Kiếm 1/2 mới đổi tay nên chưa dùng (giữ hàng cũ). ?hangcu=1: về hàng cũ.
+  const HANG_CU = /[?&]hangcu=1(&|$)/.test(QS);
+  function hang16(D) {
+    if (!D || !D.dong_tac || D._hang16) return;
+    D._hang16 = 1;
+    if (HANG_CU) return;
+    const dt = D.dong_tac;
+    Object.keys(dt).forEach((k) => {
+      if (k.indexOf('~16') < 0) return;
+      const a = Object.assign({}, dt[k], { moi16: 1 });
+      if (a.cam_vk) a.cam_vk = a.cam_vk.replace('~16', '');
+      dt[k.replace('~16', '')] = a;
+    });
+  }
   // ---------- CHẠY + CHÉM: ghép ở thắt lưng (13/10/2026, docs/review/ke-hoach-cai-thien/zed-chay-danh/YEU-CAU.md mục C) ----------
   // Đang chạy mà ra đòn ở hàng thân trên thẳng (G.ZED_EO.hang): chân = khung CHẠY hiện tại (nhịp P.chayT không reset), thân trên + tay +
   // vũ khí + nắm tay = khung ĐÒN hiện tại, hai nửa khớp tại điểm eo từng khung (G.ZED_EO, js/zed_eo_data.js, dựng bằng
@@ -181,7 +198,7 @@
   const QUA_LAI = { dung: [0, 1, 2, 3, 4, 3, 2, 1], bua_giu: [0, 1, 2, 3, 2, 1] };
   function lapQuaLai(D, ten, t) {
     const q = G.THO_CUTI !== false && QUA_LAI[ten], a = D.dong_tac[ten];
-    if (!q || !a || a.so < 5 - (ten === 'bua_giu' ? 1 : 0)) return null;
+    if (!q || !a || a.moi16 || a.so < 5 - (ten === 'bua_giu' ? 1 : 0)) return null; // moi16: hàng đứng mới 16/10 phát thẳng
     const v = Math.max(0, t) / (giayLap(ten, a) / a.so), k = Math.floor(v) % q.length;
     return { ten, i: q[k], i2: q[(k + 1) % q.length], fl: v - Math.floor(v) };
   }
