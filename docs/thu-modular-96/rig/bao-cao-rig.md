@@ -6,6 +6,54 @@
 
 > Mới nhất (16/10, sau R1): **áp dụng đề xuất ChatGPT + che theo độ sâu** (sửa lỗi "giáp lắp đè, cổ không che được giáp"). Xem mục ngay dưới.
 
+> Mới nhất (16/10, gộp bản ChatGPT sửa lần 3): **sửa giáp ngực Gen lồi ra trước ở hàng chạy** (cổ khung 2/7, góc thân làm mượt, cắt giáp theo bóng thân). Xem mục **"Gộp sửa giáp ngực"** ngay dưới.
+
+## Gộp sửa giáp ngực
+
+### Nói ngắn gọn
+
+- Gộp phần sửa trong `rig-chatgpt-2/` vào rig chính, **giữ nguyên** che theo độ sâu (R3), chồng mép 1,5đ, kéo giãn, chụp khớp, 9 động tác.
+- **Khung 2 và 7 hết lồi ra trước**: giáp ngực nằm gọn trên thân (ảnh `soat/gop-giap-nguc-khung-2-3-7-12.png`, hàng trên = trước, hàng dưới = sau).
+- Kiểm Chromium headless qua `window.RIG_TEST`: **không lỗi JS, `gapErrors` rỗng, hở = 0 ở cả 9 động tác** (216 tổ hợp của `tao-rig.py` đều qua).
+
+### Đã đổi gì
+
+| Tệp | Thay đổi |
+|---|---|
+| `khop-chinh/chay.json` | Cổ khung 2: x 53,9 → **49,2**; khung 7: x 52,9 → **49,2** (y giữ). Thêm `bodyJointReview` (lý do, trước/sau) chép từ bản ChatGPT. |
+| `do-khop.py` | Ghi cùng 2 chỉnh cổ (`SUA_CO_96`) để chạy lại không mất sửa. |
+| `tao-rig.py` → `rig.json` | Giáp ngực Gen thêm `torsoMount: "smoothedNeckHip"`; thêm `chestOutsideThresholdPct: 25`, `chestSilhouetteLayers: [rearArm, body, torsoOutfit, frontArm]`. |
+| `kiem-tra-rig.tmpl.html` → `kiem-tra-rig.html` | `torsoAngles()` (góc cổ→hông mượt 50/25/25 theo chu kỳ); `place()` dùng góc này cho giáp ngực (vẫn boneFrac 0,6, chồng mép, kẹp giãn, 8 hướng); `chestSilhouette()` + `drawChestClipped()` cắt giáp ngực theo bóng thân — áp cho cả 3 cách che (Tắt / Tách trước-sau / Lớp người); bảng Tự kiểm thêm cột **"Giáp ngực ngoài thân"** (liên tục / 8 hướng, đỏ nếu > 25%) và dòng tóm tắt. |
+
+### Số đo trước / sau (hàng chạy, bộ Gen, che mặc định "Lớp người")
+
+- **Giáp thô ngoài thân** = % điểm ảnh giáp ngực TRƯỚC khi cắt nằm ngoài bóng thân trên (liên tục / 8 hướng). "Trước" = khớp cổ cũ + góc thô; "sau" = khớp mới + góc mượt.
+- **Ngoài bóng người** = đếm trên khung vẽ thật mọi điểm ảnh nằm ngoài hợp alpha các lớp thân (gồm cả giáp vai/tay/chân, nên không về 0); "trước" = trang trước khi gộp (không cắt), "sau" = trang mới.
+
+| Khung | Giáp thô ngoài thân trước | Giáp thô ngoài thân sau | Ngoài bóng người, liên tục | Ngoài bóng người, 8 hướng |
+|---:|---:|---:|---:|---:|
+| 1 | 27,3% / 34,0% | 26,8% / 34,0% | 42 → 20 | 50 → 19 |
+| 2 | 39,0% / 30,3% | 20,3% / 26,7% | 60 → 22 | 42 → 21 |
+| 3 | 29,2% / 21,9% | 32,5% / 41,3% | 31 → 9 | 23 → 14 |
+| 4 | 28,8% / 35,8% | 27,9% / 35,8% | 67 → 39 | 88 → 50 |
+| 5 | 28,7% / 36,6% | 27,7% / 36,6% | 48 → 25 | 57 → 24 |
+| 6 | 26,9% / 37,8% | 28,0% / 37,8% | 48 → 24 | 59 → 19 |
+| 7 | 39,6% / 35,4% | 26,3% / 36,9% | 67 → 28 | 62 → 36 |
+| 8 | 31,2% / 35,4% | 31,4% / 35,4% | 56 → 32 | 59 → 30 |
+| 9 | 26,7% / 21,5% | 27,4% / 38,9% | 39 → 20 | 39 → 30 |
+| 10 | 26,4% / 34,0% | 23,0% / 34,0% | 55 → 33 | 84 → 44 |
+| 11 | 24,7% / 22,7% | 26,4% / 22,7% | 42 → 22 | 35 → 23 |
+| 12 | 29,1% / 36,5% | 29,1% / 36,5% | 51 → 27 | 62 → 25 |
+
+- Khung 2: 39,0% → **20,3%** (liên tục); khung 7: 39,6% → **26,3%**. Ảnh cuối: khung 2 60 → 22, khung 7 67 → 28 điểm ảnh ngoài bóng người.
+- Phần giáp ngực còn ló ra ngoài bóng thân lúc vẽ = **0** (đã cắt theo mặt nạ).
+
+### Còn hạn chế
+
+- Số giáp thô của rig chính **cao hơn bản ChatGPT** (họ đo 14–16% ở khung 2/7) vì rig chính có **chồng mép 1,5đ** mỗi đầu (R3) → giáp ngực dài hơn, đầu trên trùm lên cổ. Vì vậy ngưỡng 25% làm **gần như mọi khung đỏ** ở cột mới dù ảnh cuối đã cắt gọn. Đề xuất: bỏ chồng mép riêng cho giáp ngực (`overlapStart/End = 0`) hoặc nâng ngưỡng lên ~35% — chưa làm, chờ chủ dự án chọn.
+- Ở chế độ 8 hướng, góc mượt làm vài khung bị làm tròn sang hướng khác: khung 3 21,9% → 41,3%, khung 9 21,5% → 38,9%, khung 7 35,4% → 36,9% (giáp thô; khi vẽ đã cắt theo bóng thân nên không lộ ra ngoài, nhưng hình giáp bên trong thân bị xoay 45°). Xoay liên tục (mặc định) không bị.
+- Đổi khớp cổ cũng làm góc **giáp vai trộn** (dùng góc thân) khung 2/7 đổi theo; tự kiểm bám/hở vẫn đạt. `nhan/chay.png` (nhãn lớp người) tạo lại theo khớp cổ mới.
+
 ## Áp dụng đề xuất ChatGPT + che theo độ sâu
 
 ### Nói ngắn gọn

@@ -181,7 +181,8 @@ rig['armorSets'] = {
             gbone('ongChanSau', 'Giáp ống chân sau', 'ongChan', 'sau', 'giap-ong-chan', 'kneeBack', 'ankleBack', 'rearPants'),
             gcap('chupGoiSau', 'Chụp gối sau', 'chupGoi', 'sau', 'chup-goi', 'kneeBack', 'rearPants', ['rearLeg', 'rearPants']),
             # giáp ngực nhỏ: theo đoạn cổ → giữa hông (chỉ phủ 60% đầu đoạn), vẽ trên thân, dưới chân/tay trước
-            gbone('nguc', 'Giáp ngực nhỏ', 'nguc', 'truoc', 'giap-nguc', 'neck', 'hipCenter', 'chestArmor', boneFrac=GEN['chestFrac']),
+            gbone('nguc', 'Giáp ngực nhỏ', 'nguc', 'truoc', 'giap-nguc', 'neck', 'hipCenter', 'chestArmor', boneFrac=GEN['chestFrac'],
+                  torsoMount='smoothedNeckHip'),
             gbone('ongChanTruoc', 'Giáp ống chân trước', 'ongChan', 'truoc', 'giap-ong-chan', 'kneeFront', 'ankleFront', 'frontPants'),
             gcap('chupGoiTruoc', 'Chụp gối trước', 'chupGoi', 'truoc', 'chup-goi', 'kneeFront', 'frontPants', ['frontLeg', 'frontPants']),
             gbone('cangTayTruoc', 'Giáp cẳng tay trước', 'cangTay', 'truoc', 'giap-cang-tay', 'elbowFront', 'wristFront', 'frontArm'),
@@ -193,6 +194,14 @@ rig['armorSets'] = {
     },
 }
 rig['boneFrac'] = 'boneFrac (tuỳ chọn, mặc định 1): khớp cuối dùng để gắn = from + (to − from) × boneFrac. Giáp ngực dùng 0,6 của đoạn cổ → giữa hông.'
+# gộp bản ChatGPT sửa lần 3 (rig-chatgpt-2): góc ngực mượt + cắt giáp ngực theo bóng thân trên
+rig['torsoMount'] = ('torsoMount "smoothedNeckHip" (giáp ngực Gen): neo đầu vẫn ở cổ, hướng = góc cổ → giữa hông làm mượt theo chu kỳ '
+                     '50% khung hiện tại + 25% mỗi khung kề (torsoAngles), chặn góc bật khi khớp cổ lệch.')
+rig['chestOutsideThresholdPct'] = 25
+rig['chestSilhouetteLayers'] = ['rearArm', 'body', 'torsoOutfit', 'frontArm']
+rig['chestSilhouetteNote'] = ('Giáp ngực Gen: mask bóng thân trên = alpha hợp của rearArm, body, torsoOutfit, frontArm theo khung. '
+                              'Khi vẽ, phần giáp ngoài mask bị cắt (drawChestClipped). Tự kiểm đo giáp THÔ trước khi cắt; đỏ nếu > 25%, '
+                              'báo cả xoay liên tục và 8 hướng.')
 
 # ---------- 2c. Giáp vai kiểu "vai" + luật chụp khớp (16/10, sửa lệch vai / hở về 0) ----------
 rig['armBlend'] = 0.35

@@ -203,7 +203,7 @@
    "frame": 1,
    "joints": {
     "neck": [
-     53.9,
+     49.2,
      53.2
     ],
     "head": [
@@ -793,7 +793,7 @@
    "frame": 6,
    "joints": {
     "neck": [
-     52.9,
+     49.2,
      52.9
     ],
     "head": [
@@ -1605,5 +1605,51 @@
    },
    "lyDo": "vai đặt giữa bắp tay (đúng ra đầu phải bắp tay); khuỷu/cổ tay đặt ngoài cẳng tay, cổ tay nằm ở nền"
   }
- ]
+ ],
+ "bodyJointReview": {
+  "method": "neck checked against alpha silhouette union of sheets/body.png and sheets/do-goc/torsoOutfit.png; hipCenter already equals midpoint of hipFront and hipBack in each frame; shoulder pair retained as authored because their alpha anchors track separated shoulder/arm contours.",
+  "corrections": [
+   {
+    "frame": 2,
+    "joint": "neck",
+    "before": [
+     53.9,
+     53.2
+    ],
+    "after": [
+     49.2,
+     53.2
+    ],
+    "reason": "moved back onto neck/upper-torso alpha; previous point lay outside the torso silhouette and tilted the neck-to-hip vector forward."
+   },
+   {
+    "frame": 7,
+    "joint": "neck",
+    "before": [
+     52.9,
+     52.9
+    ],
+    "after": [
+     49.2,
+     52.9
+    ],
+    "reason": "moved back onto neck/upper-torso alpha; previous point lay outside the torso silhouette and tilted the neck-to-hip vector forward."
+   }
+  ],
+  "allFrameCheck": {
+   "neckAlphaMask": [
+    "sheets/body.png",
+    "sheets/do-goc/torsoOutfit.png"
+   ],
+   "maxNearestAlphaDistancePx": {
+    "neck": 0.58,
+    "shoulderFront": 0.89,
+    "shoulderBack": 0.65,
+    "hipFront": 1.66,
+    "hipBack": 0.89
+   },
+   "hipCenter": "verified as midpoint(hipFront, hipBack) in all 12 frames; max rounding error 0.05 px",
+   "result": "No further shoulder/hip coordinate edits needed; all measured anchors remain within 2 px of their corresponding torso/limb alpha silhouettes."
+  }
+ }
 }

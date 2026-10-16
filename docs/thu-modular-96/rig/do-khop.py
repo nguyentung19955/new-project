@@ -148,6 +148,13 @@ CHINH_CHAY = {   # khung (1..12) -> {tên nguồn: [x, y] điểm ảnh ảnh ng
 }
 
 
+# Cổ khung 2 và 7 (đếm từ 1) nằm ngoài bóng thân, làm góc cổ→hông chúi ra trước → giáp ngực Gen lồi.
+# Theo rig-chatgpt-2 (bodyJointReview): đặt lại trên alpha thân, chỉ đổi x.
+SUA_CO_96 = {2: [49.2, 53.2], 7: [49.2, 52.9]}
+BODY_JOINT_REVIEW = json.load(open(os.path.join(BO, 'rig-chatgpt-2', 'khop-chinh', 'chay.json')))['bodyJointReview'] \
+    if os.path.exists(os.path.join(BO, 'rig-chatgpt-2', 'khop-chinh', 'chay.json')) else None
+
+
 def chinh_chay():
     D = json.load(open(os.path.join(BO, 'data.json')))
     kn = json.load(open(os.path.join(BO, 'khop-nguon.json')))['khung']
@@ -162,6 +169,8 @@ def chinh_chay():
             doi_[n] = {'truoc': J[n], 'nguon_truoc': kn[i][tn], 'nguon_moi': p}
             J[n] = doi(khung[i], p, tam_diem=True)
             doi_[n]['sau'] = J[n]
+        if i + 1 in SUA_CO_96:          # bản ChatGPT sửa lần 3: cổ khung 2/7 lùi về trên bóng thân (toạ độ ô 96)
+            J['neck'] = list(SUA_CO_96[i + 1])
         frames.append({'frame': f.get('frame', i), 'joints': J, 'sua': doi_, 'lyDo': ly_do})
         nk = {TEN_NGUON[a]: [v[0] + .5, v[1] + .5] for a, v in kn[i].items() if a in TEN_NGUON}
         for tn, p in sua.items():
@@ -180,6 +189,8 @@ def chinh_chay():
         'scale': [[round(t['sx'], 5), round(t['sy'], 5), t['dx'], t['dy']] for t in khung],
         'frames': frames,
     }
+    if BODY_JOINT_REVIEW:
+        out['bodyJointReview'] = BODY_JOINT_REVIEW
     json.dump(out, open(os.path.join(RIG, 'khop-chinh', 'chay.json'), 'w'), ensure_ascii=False, indent=1)
     soat(os.path.join(RIG, 'khop-chinh', 'soat-chay.png'), 'chay (đã chỉnh)', khung, nguon_khop, src96, {})
     n = sum(len(f['sua']) for f in frames)

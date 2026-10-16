@@ -168,7 +168,7 @@ tr[data-f],tr[data-act]{cursor:pointer}
   <h3 id="tkTitle">Tự kiểm</h3>
   <p id="tom"></p>
   <table id="tkiem"></table>
-  <p class="note">Bám: điểm ảnh giáp nằm sát cả 2 khớp (≤1,5 điểm ảnh; giáp vai kiểu "trộn" chỉ xét đầu vai). Rung: ở 8 hướng, mảnh nhảy 45° dù xương chỉ xoay ít (&lt;20°), hoặc xương xoay gắt &gt;60° giữa 2 khung. Méo: mất &gt;20% điểm ảnh khi xoay, hoặc xương dài/ngắn quá mức giáp được kéo/ép (hụt/lố &gt;1,5 điểm ảnh ở khớp cuối). Hở: điểm ảnh tay/chân quanh khớp (bán kính 2) không có giáp che, cả 2 chế độ xoay: không chụp → có chụp. Khớp bị che (hidden) thì mảnh gắn vào đó tạm ẩn, không tính.</p>
+  <p class="note">Bám: điểm ảnh giáp nằm sát cả 2 khớp (≤1,5 điểm ảnh; giáp vai kiểu "trộn" chỉ xét đầu vai). Rung: ở 8 hướng, mảnh nhảy 45° dù xương chỉ xoay ít (&lt;20°), hoặc xương xoay gắt &gt;60° giữa 2 khung. Méo: mất &gt;20% điểm ảnh khi xoay, hoặc xương dài/ngắn quá mức giáp được kéo/ép (hụt/lố &gt;1,5 điểm ảnh ở khớp cuối). Hở: điểm ảnh tay/chân quanh khớp (bán kính 2) không có giáp che, cả 2 chế độ xoay: không chụp → có chụp. Giáp ngực ngoài thân (bộ Gen): % điểm ảnh giáp ngực THÔ (trước khi cắt) nằm ngoài hợp alpha thân trên (tay sau, thân, áo, tay trước); đỏ nếu &gt; 25%. Khi vẽ, phần ngoài bóng thân bị cắt theo cùng mặt nạ. Khớp bị che (hidden) thì mảnh gắn vào đó tạm ẩn, không tính.</p>
 </section>
 </main>
 
@@ -399,6 +399,23 @@ function insertAt(a, p, f) {
 }
 const isVai = (p, vai) => p.kind === 'bone' && p.group === 'vai' && (vai || VAI) === 'tron';
 const ang = (P, Q) => Math.atan2(Q[1] - P[1], Q[0] - P[0]) * DEG;
+// (gộp rig-chatgpt-2) Góc thân neck → hipCenter làm mượt vòng tròn 3 mẫu (50% khung hiện tại,
+// 25% mỗi khung kề). Khớp cổ đã soát với alpha; làm mượt chặn góc bật.
+function torsoAngles(a) {
+  if (a._torsoAngles) return a._torsoAngles;
+  const raw = a.FR.map(f => {
+    const J = f.joints;
+    return pt2(J.neck) && pt2(J.hipCenter) ? Math.atan2(J.hipCenter[1] - J.neck[1], J.hipCenter[0] - J.neck[0]) : 0;
+  });
+  a._torsoAngles = raw.map((v, i) => {
+    if (!a.loop && (i === 0 || i === raw.length - 1)) return v;
+    const prev = raw[(i + raw.length - 1) % raw.length], next = raw[(i + 1) % raw.length];
+    const x = 0.5 * Math.cos(v) + 0.25 * Math.cos(prev) + 0.25 * Math.cos(next);
+    const y = 0.5 * Math.sin(v) + 0.25 * Math.sin(prev) + 0.25 * Math.sin(next);
+    return Math.atan2(y, x);
+  });
+  return a._torsoAngles;
+}
 // góc giáp vai (độ) mỗi khung, đã giữ ổn định: đổi < HOLD° thì giữ góc khung trước
 function vaiAngles(a, p, FR) {
   const raw = FR.map((f, i) => {
@@ -439,10 +456,17 @@ function place(a, p, f, mode, vai) {
     return {m, A: Ar, A0, B, L: ref, theta: va.raw[f] / DEG, used, sx: 1, raw: 1, clamped: false, vai: true};
   }
   const A0 = J[p.from], B0 = J[p.to], fr = p.boneFrac ?? 1;
-  const B = fr === 1 ? B0 : [A0[0] + (B0[0] - A0[0]) * fr, A0[1] + (B0[1] - A0[1]) * fr];
-  const dx = B[0] - A0[0], dy = B[1] - A0[1];
-  const L = Math.hypot(dx, dy);
-  const theta = Math.atan2(dy, dx);
+  let B, theta;
+  if (p.torsoMount === 'smoothedNeckHip' && pt2(J.neck) && pt2(J.hipCenter)) {
+    // (gộp rig-chatgpt-2) neo đầu vẫn ở cổ; hướng lấy từ góc cổ→hông đã làm mượt theo chu kỳ
+    const L0 = Math.hypot(B0[0] - A0[0], B0[1] - A0[1]) * fr;
+    theta = torsoAngles(a)[f];
+    B = [A0[0] + Math.cos(theta) * L0, A0[1] + Math.sin(theta) * L0];
+  } else {
+    B = fr === 1 ? B0 : [A0[0] + (B0[0] - A0[0]) * fr, A0[1] + (B0[1] - A0[1]) * fr];
+    theta = Math.atan2(B[1] - A0[1], B[0] - A0[0]);
+  }
+  const L = Math.hypot(B[0] - A0[0], B[1] - A0[1]);
   const used = mode === 1 ? Math.round(theta / (Math.PI / 4)) * (Math.PI / 4) : theta;
   // đề xuất ChatGPT (ý a): chồng mép oS/oE qua 2 khớp; "tudo" = bỏ kẹp chiều dài, "kep" = vẫn kẹp trong stretch.min..max
   const oS0 = fin(p.overlapStart) ? p.overlapStart : 0, oE = fin(p.overlapEnd) ? p.overlapEnd : 0;
@@ -480,6 +504,35 @@ function drawPiece(ctx, a, p, f, mode, s, ov) {
 }
 const drawable = (p, f) => p.ok && p.jointOk[f] && !p.hid[f];
 
+// (gộp rig-chatgpt-2) Giáp ngực Gen: mask bóng thân trên = alpha hợp các lớp chestSilhouetteLayers ở khung f
+function chestSilhouette(a, f, s) {
+  a._chestMasks = a._chestMasks || {};
+  const key = f + ':' + s;
+  if (a._chestMasks[key]) return a._chestMasks[key];
+  const c = canvas(W * s, H * s), x = c.getContext('2d');
+  x.imageSmoothingEnabled = false;
+  for (const L of (RIG.chestSilhouetteLayers || ['body', 'torsoOutfit']))
+    if (LAYER[L]) x.drawImage(LAYER[L], f * W, 0, W, H, 0, 0, W * s, H * s);
+  a._chestMasks[key] = c;
+  return c;
+}
+const isChestClip = (a, p, opt) => p.id === 'nguc' && a.layered && !(opt && opt.rawChest);
+// vẽ giáp ngực rồi cắt phần ngoài bóng thân (ov: lượt tách trước/sau như drawPiece)
+function drawChestClipped(ctx, a, p, f, mode, s, ov) {
+  a._chestBuffers = a._chestBuffers || {};
+  const c = a._chestBuffers[s] || (a._chestBuffers[s] = canvas(W * s, H * s)), x = c.getContext('2d');
+  x.setTransform(1, 0, 0, 1, 0, 0); x.globalCompositeOperation = 'source-over'; x.clearRect(0, 0, W * s, H * s);
+  x.imageSmoothingEnabled = false;
+  const pl = drawPiece(x, a, p, f, mode, s, ov);
+  x.setTransform(1, 0, 0, 1, 0, 0);
+  x.globalCompositeOperation = 'destination-in';
+  x.drawImage(chestSilhouette(a, f, s), 0, 0);
+  x.globalCompositeOperation = 'source-over';
+  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(c, 0, 0); ctx.restore();
+  return pl;
+}
+const drawArmor = (ctx, a, p, f, mode, s, ov, opt) => isChestClip(a, p, opt) ? drawChestClipped(ctx, a, p, f, mode, s, ov) : drawPiece(ctx, a, p, f, mode, s, ov);
+
 // Vẽ 1 khung 96×96: lớp thân (hoặc sheet), chèn giáp sau lớp insertAfter / cách tạm.
 // opt: s (1 | 2), only (chỉ vẽ các mảnh này), noBody (không vẽ người), erase (người vẽ như cục tẩy: chỉ còn phần giáp nhìn thấy),
 //      depth (ghi đè cách che: tat / tach / lop)
@@ -499,7 +552,7 @@ function renderFrame(ctx, a, P, f, mode, opt) {
       if (L === '__sheet' && a.SHEET) ctx.drawImage(a.SHEET, f * W, 0, W, H, 0, 0, W * s, H * s);
       ctx.globalCompositeOperation = 'source-over';
     }
-    for (const p of after[L] || []) drawPiece(ctx, a, p, f, mode, s);
+    for (const p of after[L] || []) drawArmor(ctx, a, p, f, mode, s, null, opt);
   }
 }
 // biến thể tách theo khung: chi = nửa phía thân; ngực = cổ áo + mép phía lưng (hướng mặt theo mũi chân)
@@ -544,13 +597,13 @@ function renderDepth(ctx, a, P, f, mode, opt, dm) {
     if (opt.erase) ctx.globalCompositeOperation = 'destination-out';
     ctx.drawImage(a.LBL[L], f * W, 0, W, H, 0, 0, W * s, H * s); ctx.globalCompositeOperation = 'source-over'; };
   const pass = q => {
-    drawPiece(ctx, a, q.p, f, mode, s, q.ov);
+    drawArmor(ctx, a, q.p, f, mode, s, q.ov, opt);
     if (!q.che.length || opt.noBody) return;
     // vẽ lại các lớp người "che" (cổ, đầu, tay trước…) đúng trong vùng điểm ảnh của mảnh
     COX.setTransform(1, 0, 0, 1, 0, 0); COX.clearRect(0, 0, COV.width, COV.height); COX.imageSmoothingEnabled = false;
     for (const L of q.che) if (a.LBL[L]) COX.drawImage(a.LBL[L], f * W, 0, W, H, 0, 0, W * s, H * s);
     TMX.setTransform(1, 0, 0, 1, 0, 0); TMX.clearRect(0, 0, TMP.width, TMP.height); TMX.imageSmoothingEnabled = false;
-    drawPiece(TMX, a, q.p, f, mode, s, q.ov);
+    drawArmor(TMX, a, q.p, f, mode, s, q.ov, opt);
     TMX.setTransform(1, 0, 0, 1, 0, 0); TMX.globalCompositeOperation = 'source-in'; TMX.drawImage(COV, 0, 0); TMX.globalCompositeOperation = 'source-over';
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     if (opt.erase) ctx.globalCompositeOperation = 'destination-out';
@@ -721,6 +774,17 @@ function selfCheck(a, P) {
     const row = {frame: f + 1, modes: [], gaps: [], hidden: [...a.HID[f]], de: 0, vis: 0, deBy: {}};
     for (let mode = 0; mode < 2; mode++) {
       const md = {bam: [], meo: [], rung: [], ang: {}};
+      const chest = P.find(p => p.id === 'nguc' && p.on && drawable(p, f));
+      if (chest && a.layered && LAYER.body && LAYER.torsoOutfit) {
+        // (gộp rig-chatgpt-2) đo giáp ngực THÔ trước khi cắt, so với bóng thân trên
+        SCX.setTransform(1, 0, 0, 1, 0, 0); SCX.clearRect(0, 0, W, H);
+        SCX.drawImage(chestSilhouette(a, f, 1), 0, 0);
+        const sil = alphaNow();
+        renderFrame(SCX, a, P, f, mode, {only: [chest], noBody: true, rawChest: true});
+        const arm = alphaNow(); let total = 0, outside = 0;
+        for (let i = 3; i < arm.length; i += 4) if (arm[i]) { total++; if (!sil[i]) outside++; }
+        md.chestOutside = {outside, total, pct: total ? outside * 100 / total : 0, threshold: RIG.chestOutsideThresholdPct || 25};
+      }
       for (const p of P) {
         if (!drawable(p, f)) continue;
         if (mode === 0 && a.LMAP) {      // đè sai + giáp còn thấy (vẽ người như cục tẩy)
@@ -784,24 +848,28 @@ function summarize(a, rows) {
     r.rung = r.modes[1].rung;
     r.meo = [...new Set(r.modes[0].meo)].concat(r.modes[1].meo.filter(s => / mất /.test(s) && !r.modes[0].meo.includes(s)).map(s => s + ' (8 hướng)'));
     r.ho = r.gaps.filter(g => g.after > 0);
+    r.chestOutside = r.modes.map(m => m.chestOutside).filter(Boolean);
+    r.chestBad = r.chestOutside.some(c => c.pct > c.threshold);
     hoTruoc += r.gaps.reduce((s, g) => s + g.before, 0); hoSau += r.gaps.reduce((s, g) => s + g.after, 0);
     de += r.de; vis += r.vis;
     for (const g of Object.values(r.modes[0].ang)) if (!g.vai) { maxSx = Math.max(maxSx, g.sx); minSx = Math.min(minSx, g.sx); if (g.sx > 1.3 + 1e-9 || g.sx < 0.75 - 1e-9) nGian++; }
     if (r.modes[0].bam.length) nBam0++; if (r.bam.length) nBam++; if (r.rung.length) nRung++; if (r.rung.some(x => / nhảy /.test(x))) nNhay++; if (r.meo.length) nMeo++; if (r.ho.length) nHo++;
   }
-  rows.summary = {frames: a.N, bamOk0: a.N - nBam0, bamOk: a.N - nBam, rung: nRung, nhay8: nNhay, meo: nMeo, ho: nHo, gapBefore: hoTruoc, gapAfter: hoSau, de, vis, maxSx, minSx, nGian};
+  rows.summary = {frames: a.N, bamOk0: a.N - nBam0, bamOk: a.N - nBam, rung: nRung, nhay8: nNhay, meo: nMeo, ho: nHo, gapBefore: hoTruoc, gapAfter: hoSau, de, vis, maxSx, minSx, nGian,
+    chestBad: rows.filter(r => r.chestBad).length, chestRows: rows.filter(r => r.chestOutside.length).length};
   return rows;
 }
 const short = s => s.replace(/^Giáp /, '').replace(/^Chụp /, 'chụp ');
 function renderReport() {
   const rows = REPORT, t = $('tkiem');
   $('tkTitle').textContent = 'Tự kiểm ' + A.N + ' khung · ' + A.name + ' · ' + SETDEF[SET].name;
-  let h = '<tr><th style="width:11%">Khung</th><th style="width:17%">Bám khớp</th><th style="width:24%">Rung (8 hướng)</th><th style="width:24%">Méo</th><th style="width:24%">Hở khớp</th></tr>';
+  let h = '<tr><th style="width:8%">Khung</th><th style="width:15%">Bám khớp</th><th style="width:19%">Rung (8 hướng)</th><th style="width:18%">Méo</th><th style="width:20%">Giáp ngực ngoài thân</th><th style="width:20%">Hở khớp</th></tr>';
   for (const r of rows) {
     h += '<tr data-f="' + (r.frame - 1) + '"><td>' + r.frame + (r.hidden.length ? '<br><span style="color:#6b665d;font-size:11px">che: ' + r.hidden.length + '</span>' : '') + '</td>' +
       '<td class="' + (r.bam.length ? 'bad' : 'ok') + '">' + (r.bam.length ? r.bam.map(short).join('; ') : '✓') + '</td>' +
       '<td class="' + (r.rung.length ? 'warn' : 'ok') + '">' + (r.rung.length ? r.rung.map(short).join('; ') : '✓') + '</td>' +
       '<td class="' + (r.meo.length ? 'warn' : 'ok') + '">' + (r.meo.length ? r.meo.map(short).join('; ') : '✓') + '</td>' +
+      '<td class="' + (r.chestBad ? 'bad' : 'ok') + '">' + (r.chestOutside.length ? r.chestOutside.map((c, i) => (i ? '8 hướng ' : 'liên tục ') + c.pct.toFixed(1) + '%').join('<br>') + (r.chestBad ? '<br>⚠ > ' + r.chestOutside[0].threshold + '%' : '') : '—') + '</td>' +
       '<td class="' + (r.ho.length ? 'bad' : 'ok') + '">' + (r.ho.length ? r.ho.map(g => g.name + ' ' + g.after + 'đ').join('; ') : '✓') +
       ' <span style="color:#6b665d">(' + r.gaps.reduce((s, g) => s + g.before, 0) + '→' + r.gaps.reduce((s, g) => s + g.after, 0) + ')</span></td></tr>';
   }
@@ -809,7 +877,8 @@ function renderReport() {
   t.querySelectorAll('tr[data-f]').forEach(r => r.onclick = () => { PLAY = false; setPlay(); FRAME = +r.dataset.f; draw(); });
   const s = rows.summary;
   $('tom').innerHTML = 'Bám khớp đủ: <b>' + s.bamOk0 + '/' + s.frames + '</b> khung xoay liên tục, ' + s.bamOk + '/' + s.frames + ' tính cả 8 hướng · rung: ' + s.rung + ' · méo: ' + s.meo +
-    ' · điểm ảnh hở quanh khớp (2 chế độ xoay): ' + s.gapBefore + ' → <b>' + s.gapAfter + '</b> khi có chụp' + (s.ho ? ' · <b style="color:#c62828">còn hở ' + s.ho + ' khung</b>' : '') + '. Bấm 1 dòng để xem khung đó.';
+    ' · điểm ảnh hở quanh khớp (2 chế độ xoay): ' + s.gapBefore + ' → <b>' + s.gapAfter + '</b> khi có chụp' + (s.ho ? ' · <b style="color:#c62828">còn hở ' + s.ho + ' khung</b>' : '') +
+    (s.chestRows ? ' · giáp ngực thô vượt ngưỡng: <b style="color:' + (s.chestBad ? '#c62828' : '#2f7d32') + '">' + s.chestBad + '/' + s.frames + '</b> khung (khi vẽ đã cắt theo bóng thân)' : '') + '. Bấm 1 dòng để xem khung đó.';
 }
 function info() {
   if (!REPORT) return;
@@ -1060,7 +1129,7 @@ init().then(async () => {
         for (const sk of SET_KEYS) { const rr = RR[sk]; o[k][key][sk] = {summary: rr.summary,
           gaps: rr.map(r => r.gaps.filter(g => g.after > 0).map(g => ({frame: r.frame, at: g.at, after: g.after, modes: g.afterModes, cells: g.cells}))).flat(),
           caps: rr.map(r => r.gaps.map(g => g.at + ':' + g.cap)),
-          rows: rr.map(r => ({frame: r.frame, bam: r.bam, rung: r.rung, meo: r.meo, de: r.de, vis: r.vis, deBy: r.deBy, gaps: r.gaps.map(g => ({at: g.at, before: g.before, after: g.after, cap: g.cap}))}))}; } }
+          rows: rr.map(r => ({frame: r.frame, chestOutside: r.chestOutside, bam: r.bam, rung: r.rung, meo: r.meo, de: r.de, vis: r.vis, deBy: r.deBy, gaps: r.gaps.map(g => ({at: g.at, before: g.before, after: g.after, cap: g.cap}))}))}; } }
         await new Promise(r => setTimeout(r, 0)); }
       current(); return o; },
     gian: () => ACT_KEYS.map(k => ({key: k, name: A_[k].name, may: stretchStats(A_[k], 'may'), gen: stretchStats(A_[k], 'gen')})),

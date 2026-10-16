@@ -850,6 +850,7 @@
      "tint": 1.0,
      "from": "neck",
      "boneFrac": 0.6,
+     "torsoMount": "smoothedNeckHip",
      "overlapStart": 1.5,
      "overlapEnd": 1.5,
      "depth": {
@@ -1131,6 +1132,15 @@
   }
  },
  "boneFrac": "boneFrac (tuỳ chọn, mặc định 1): khớp cuối dùng để gắn = from + (to − from) × boneFrac. Giáp ngực dùng 0,6 của đoạn cổ → giữa hông.",
+ "torsoMount": "torsoMount \"smoothedNeckHip\" (giáp ngực Gen): neo đầu vẫn ở cổ, hướng = góc cổ → giữa hông làm mượt theo chu kỳ 50% khung hiện tại + 25% mỗi khung kề (torsoAngles), chặn góc bật khi khớp cổ lệch.",
+ "chestOutsideThresholdPct": 25,
+ "chestSilhouetteLayers": [
+  "rearArm",
+  "body",
+  "torsoOutfit",
+  "frontArm"
+ ],
+ "chestSilhouetteNote": "Giáp ngực Gen: mask bóng thân trên = alpha hợp của rearArm, body, torsoOutfit, frontArm theo khung. Khi vẽ, phần giáp ngoài mask bị cắt (drawChestClipped). Tự kiểm đo giáp THÔ trước khi cắt; đỏ nếu > 25%, báo cả xoay liên tục và 8 hướng.",
  "armBlend": 0.35,
  "angleHold": 8,
  "shoulderMount": "Giáp vai (group \"vai\") có 2 kiểu gắn, chọn trong trang: \"xuong\" = theo bắp tay (vai → khuỷu, kéo giãn theo xương, như cũ); \"tron\" (mặc định) = neo tại khớp vai, KHÔNG kéo giãn, góc = góc thân (neck → hipCenter) + armBlend × (góc bắp tay − góc thân); vị trí neo làm tròn về điểm ảnh nguyên; góc đổi < angleHold° so với khung trước thì giữ góc cũ.",
