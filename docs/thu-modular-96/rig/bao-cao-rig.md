@@ -1,5 +1,7 @@
 # Báo cáo: thử rig gắn giáp lên khớp (16/10)
 
+> Mới: đã thử **giáp gen thật** (4 mảnh). Xem mục **"Giáp gen thật"** ngay dưới phần "Nói ngắn gọn" của bộ máy vẽ.
+
 Mọi thứ nằm trong `docs/thu-modular-96/rig/`. **Không sửa code game, không sửa ảnh nguồn, không sửa tệp nào ngoài thư mục `rig/`** (chỉ đọc `../data.json` và `../sheets/`).
 
 ## Nói ngắn gọn
@@ -11,6 +13,102 @@ Mọi thứ nằm trong `docs/thu-modular-96/rig/`. **Không sửa code game, kh
 - **Ở chế độ làm tròn 8 hướng**, giáp bám tốt 9/12 khung. Khung 4, 7 và 11 bị lệch đuôi.
 - **Chụp khớp che được hở**: điểm ảnh tay/chân lộ quanh vai, khuỷu, gối giảm từ **48 xuống 12** trên cả chu kỳ. Phần còn hở chủ yếu ở gối sau, mỗi khung 1–2 điểm ảnh.
 - **Kết luận:** cách này chạy được và tiết kiệm ảnh. Nhưng ở cỡ 96 (và nhất là 48), mảnh giáp chỉ dài 4–9 điểm ảnh. Xoay pixel art nhỏ như vậy làm **rơi điểm ảnh và nhấp nháy** (chi tiết ở mục "Giới hạn").
+
+## Giáp gen thật (16/10, bộ "Gen")
+
+Chủ game gen ảnh `anh-gen/giap-roi-4-manh.png` (4 mảnh: vai, cẳng tay, ống chân, ngực nhỏ). Đã cắt, thu nhỏ và gắn thử như **một bộ giáp thứ hai**. Bộ máy vẽ cũ vẫn giữ nguyên (kết quả của nó không đổi so với trước).
+
+### Nói ngắn gọn
+
+- **Cả chu kỳ 12 khung dùng 7 ảnh nhỏ**: 4 mảnh gen + 3 chụp khớp (vai, khuỷu, gối). Mỗi ảnh dùng cho cả 12 khung và cả bên trước lẫn bên sau. Ảnh gen không có chụp khớp, nên 3 chụp khớp lấy hình của bộ máy vẽ và tô lại bằng màu của ảnh gen.
+- **Xoay liên tục: giáp bám khớp đủ 12/12 khung.** Chỉ khung 11 có giáp ống chân trước hụt cổ chân 2,1 điểm ảnh (xương ở khung đó dài gấp 1,6 lần).
+- **Làm tròn 8 hướng: chỉ 4/12 khung bám đủ, và giáp ngực nhảy 45° ở 8/12 khung.** Thân nghiêng khoảng 106–120°, nằm ngay giữa hai nấc 90° và 135°, nên giáp ngực lật qua lật lại. **Với bộ gen, không nên dùng 8 hướng.**
+- **Chụp khớp che hở**: điểm ảnh lộ quanh khớp giảm từ 45 xuống 8 (bộ máy vẽ: 48 xuống 12).
+- **Nhận xét thẳng:** ở ô 96, mỗi mảnh chỉ còn **25–121 điểm ảnh** (ảnh gốc mỗi mảnh khoảng 80–100 nghìn điểm ảnh). Ở **cỡ game 48×48** chỉ còn **4×4, 4×2, 4×3 và 6×6 điểm ảnh**. Gần như **mất hết chi tiết gen**: đinh tán, chữ V trên cẳng tay, hình thoi trên ngực đều biến mất. Chỉ còn lại "một mảng thép xám có chấm đồng và viền đen". Ở ô 96, cẳng tay và ống chân khó phân biệt với bộ máy vẽ. Giáp ngực là món duy nhất còn nhìn ra là giáp.
+
+### Xem ở đâu
+
+| Tệp | Là gì |
+|---|---|
+| `kiem-tra-rig.html` | Trang kiểm tra. Có nút **Bộ giáp: Máy vẽ / Gen** ở đầu trang, và ô **"Phóng to nhân vật ×2 (192)"**. |
+| `soat/giap-gen-truoc-sau.png` | 4 mảnh gen: gốc cắt → thu nhỏ ô 96 → bản ô 192 → còn lại ở cỡ game 48. **Nên xem ảnh này trước.** |
+| `soat/luoi-may-vs-gen.png` | Lưới 12 khung phóng ×4. Các hàng: máy vẽ / gen × liên tục / 8 hướng, thêm gen cỡ game 48 và gen ô 192. |
+| `soat/chay-may-vs-gen.gif` | Chạy cạnh nhau: Máy vẽ, Gen, Gen 8 hướng, Gen ô 192. |
+| `soat/dien-thoai-390-gen*.png` | Chụp trang trên điện thoại 390×844 (DPR 3): bộ Gen, Gen + ×2, Gen + debug, cả trang. |
+| `soat/tu-kiem-gen.json` | Số liệu tự kiểm 12 khung của cả 2 bộ. |
+| `giap-gen/goc-*.png` | 4 mảnh cắt nguyên cỡ (nền trong suốt, đã xoay về chiều xương). |
+| `giap-gen/*.png`, `giap-gen/*-x2.png` | Bản thu nhỏ cho ô 96 (dùng trong rig) và bản ×2 (chỉ để so sánh). |
+| `giap-gen/gen.json` | Cỡ, điểm neo, bảng màu, số điểm ảnh của từng bước. |
+
+### Cắt và đặt chiều xương (`tao-giap-gen.py`)
+
+- **Tách nền**: điểm ảnh có màu xanh lá trội hơn đỏ và lam hơn 28 đơn vị thì coi là nền. Viền xanh nhạt lẫn quanh mép (hơi xanh và nằm sát nền) cũng bỏ đi, tổng cộng 1.779 điểm ảnh. Điểm còn hơi ngả xanh thì kéo màu xanh xuống cho hết ám xanh.
+- **Tìm 4 mảnh** bằng các cột trống giữa chúng. Mỗi mảnh cắt sát hình.
+- **Chiều xương**: theo quy ước, đầu xương nằm bên trái.
+  - Cẳng tay và ống chân: script đo độ dày hai đầu. Đầu loe to hơn (khuỷu/gối) đã nằm bên trái nên giữ nguyên.
+  - Giáp vai: vòm vai ở bên trái, giữ nguyên.
+  - Giáp ngực: xoay 90° ngược chiều kim đồng hồ để mép cổ sang trái, thắt lưng sang phải.
+
+| Mảnh | Gốc cắt | Ô 96 | Ô 192 (so sánh) | Gắn theo | Độ dài xương TB | anchorStart → anchorEnd | thicknessScale |
+|---|---|---|---|---|---|---|---|
+| Giáp vai | 359×360 | 8×8 | 16×16 | vai → khuỷu | 5,6đ | (1,2; 4) → (6,8; 4) | 1 |
+| Giáp cẳng tay | 458×248 | 8×4 | 16×8 | khuỷu → cổ tay | 6,0đ | (0,96; 2) → (7,04; 2) | 1 |
+| Giáp ống chân | 503×347 | 9×6 | 18×12 | gối → cổ chân | 7,0đ | (1,08; 3) → (7,92; 3) | 1 |
+| Giáp ngực nhỏ | 382×383 | 13×13 | 26×26 | cổ → 60% đoạn tới giữa hông | 10,8đ | (1,04; 6,5) → (11,96; 6,5) | 1 |
+
+- Cỡ ô 96 được chọn để khoảng cách giữa 2 điểm neo bằng **độ dài xương trung bình** trong `data.json`. Hai đầu thò ra thêm 12–15% để che khớp.
+- **Giáp ngực** gắn theo đoạn **cổ → giữa hông** (`neck` → `hipCenter`), nhưng chỉ phủ 60% đầu đoạn (`boneFrac: 0.6`, khoảng tới thắt lưng). Nó xoay theo góc thân và được vẽ **trên thân, dưới chân trước và tay trước** (chèn ở chỗ lớp `chestArmor`).
+
+### Cách thu nhỏ mà vẫn giữ nét
+
+Không dùng thu nhỏ thường (sẽ nhoè thành một mảng xám). Thay vào đó làm 4 bước:
+
+1. **Giảm màu**: gom màu của cả 4 mảnh về **bảng 8 màu lấy từ chính ảnh**: viền đen `#050403`, 2 tông tối `#231714` `#352f31`, 2 tông thép `#4b5666` `#748293`, 3 tông đồng `#944a1d` `#dd8940` `#e0c7a6`.
+2. **Thu nhỏ có chọn lọc**: mỗi điểm ảnh nhỏ ứng với một ô trong ảnh gốc.
+   - Ô phủ dưới 40% hình thì để trống.
+   - Ô có từ 50% viền đen trở lên thì tô **viền đen**.
+   - Ô có từ 45% đồng trở lên (không tính viền) thì tô **đồng**, để đai đồng mỏng không bị thép lấn mất. Ô còn lại tô thép.
+   - Màu cụ thể = trung bình màu trong ô, rồi chọn màu gần nhất trong nhóm đó.
+3. **Giữ viền**: điểm ảnh ở mép hình mà ô gốc có từ 12% viền đen thì tô viền đen. Ở ô 96 có 14–22 điểm như vậy mỗi mảnh.
+4. **Dọn điểm ảnh lẻ**: bỏ điểm đứng một mình, và đổi màu điểm bên trong khác màu hết 8 điểm xung quanh (1–6 điểm mỗi mảnh).
+
+Kết quả: mỗi mảnh ô 96 dùng 5–8 màu. Bản ×2 làm lại từ ảnh gốc (không phóng to từ bản ô 96).
+
+### Kết quả từng khung (bộ Gen)
+
+"đ" = điểm ảnh ở ô 96. Số đo do trang tự đo, giống `soat/tu-kiem-gen.json`.
+
+| Khung | Bám khớp (liên tục / 8 hướng) | Rung | Méo | Hở khớp còn lại |
+|---|---|---|---|---|
+| 1 | ✓ / ống chân trước lệch đuôi | ống chân sau xoay gắt 90° | 8 hướng: cẳng tay mất 6–7/25đ | gối sau 1đ |
+| 2 | ✓ / ống chân trước, cẳng tay trước lệch đuôi | **8 hướng: ngực nhảy 45°**; cẳng tay trước xoay gắt 90° | 8 hướng: cẳng tay sau mất 7/25đ | – |
+| 3 | ✓ / ống chân trước lệch đuôi | – | 8 hướng: ống chân sau mất 7/34đ | – |
+| 4 | ✓ / ✓ | **8 hướng: ngực nhảy 45°** | 8 hướng: cẳng tay sau mất 6/25đ | gối trước 1đ |
+| 5 | ✓ / ✓ | cẳng tay trước xoay gắt 90° | 8 hướng: ống chân sau hụt 2,0đ | – |
+| 6 | ✓ / ✓ | 8 hướng: vai sau nhảy 45°; cẳng tay trước xoay gắt 90° | 8 hướng: cẳng tay sau mất 6/25đ | – |
+| 7 | ✓ / ống chân trước lệch đuôi | **8 hướng: ngực + vai sau nhảy 45°**; ống chân trước xoay gắt 90° | 8 hướng: ống chân sau mất 8/34đ | gối sau 1đ |
+| 8 | ✓ / ống chân sau lệch đuôi | **8 hướng: ngực nhảy 45°**; cẳng tay trước xoay gắt 90° | 8 hướng: cẳng tay sau lố 1,8đ | gối sau 1đ |
+| 9 | ✓ / ống chân sau lệch đuôi | **8 hướng: ngực nhảy 45°**; cẳng tay trước xoay gắt 90° | 8 hướng: cẳng tay sau mất 6/25đ | gối sau 2đ |
+| 10 | ✓ / ống chân sau lệch đuôi | **8 hướng: ngực nhảy 45°** | 8 hướng: cẳng tay sau mất 6/25đ | gối sau 1đ |
+| 11 | ✓ / ✓ | **8 hướng: ngực nhảy 45°**; cẳng tay trước xoay gắt 90° | **ống chân trước hụt 2,1đ** (cả 2 chế độ) | – |
+| 12 | ✓ / ngực lệch đuôi | **8 hướng: ngực nhảy 45°** | 8 hướng: ống chân trước mất 8/34đ | gối trước 1đ |
+
+- **Xoay liên tục** không mảnh nào mất quá 16% điểm ảnh. Nhưng do mảnh nhỏ nên hình mảnh vẫn đổi chút ít mỗi khung (lấp lánh), giống bộ máy vẽ.
+- **"Xoay gắt"** là do chính dáng chạy trong `data.json` (cẳng tay trước lật 90° giữa 2 khung), không phải lỗi gắn. Giống hệt bộ máy vẽ.
+- Nhìn lưới: ở xoay liên tục không thấy mảnh nào rời khớp hay trôi. Giáp vai gen (8×8) to hơn bản máy vẽ nên che gọn vai trước. Viền đen ở đuôi giáp vai thành 1–2 điểm đen lởm chởm.
+
+### Chế độ "Phóng to nhân vật ×2 (192)" — chỉ để so sánh
+
+- **Game vẫn là 96/48.** Chế độ này vẽ cùng rig ở ô 192. Thân người chỉ được phóng ×2 nên không thêm chi tiết. Riêng mảnh giáp gen dùng bản thu nhỏ ×2 (gấp 4 lần số điểm ảnh: vai 164, cẳng tay 98, ống chân 126, ngực 486 điểm ảnh).
+- Ở ô 192 thì **bắt đầu thấy lại** đai đồng trên cẳng tay, mép loe ở gối, và trên giáp ngực có viền đồng cổ áo + mảng thép sáng. Đinh tán và hình thoi vẫn mất.
+- Nghĩa là: muốn giáp gen giữ được chất "gen" thì nhân vật cần cỡ khoảng **192 trở lên**, hoặc mảnh giáp phải to (như giáp ngực).
+
+### Đề xuất
+
+1. **Nếu giữ cỡ game 48×48**: đừng gen ảnh to rồi thu nhỏ. Hãy **vẽ (hoặc gen) mảnh ở đúng cỡ nhỏ** (khoảng 8×4 đến 13×13 ở ô 96) với ít chi tiết: 1 viền đen, 1 đai đồng, 2 tông thép. Hoặc giữ bộ máy vẽ tối giản: ở 48×48 nó cho kết quả gần như bằng bộ gen mà rõ hình hơn.
+2. **Chỉ dùng rig cho món to, ít xoay**: giáp ngực, khiên, áo choàng, mũ. Giáp ngực gen là mảnh duy nhất giữ được dáng sau khi thu nhỏ. Còn tay/chân (vai, cẳng tay, ống chân) thì gần như thành chấm màu, không đáng công gen.
+3. **Giáp ngực nên đặt theo neo `chestArmor` với góc cố định** (hoặc chỉ dùng xoay liên tục), không dùng 8 hướng: góc thân nằm ngay giữa hai nấc nên bị nhảy 45° ở 8/12 khung.
+4. Nếu muốn giữ chi tiết gen thật thì phải tăng cỡ nhân vật (192). Đây là quyết định lớn, ảnh hưởng toàn bộ game, cần chủ game chọn.
 
 ## Xem ở đâu
 
@@ -121,8 +219,10 @@ Các số dưới đây do trang tự đo trong Chromium, giống hệt `soat/tu
 ## Cách chạy lại
 
 ```
-python3 docs/thu-modular-96/rig/tao-rig.py    # vẽ 6 ảnh giáp, ghi rig.json, dựng kiem-tra-rig.html
-python3 docs/thu-modular-96/rig/soat-rig.py   # mở trang bằng Chromium headless, chụp màn hình, lưới, GIF, tu-kiem.json
+python3 docs/thu-modular-96/rig/tao-giap-gen.py  # cắt + thu nhỏ 4 mảnh giáp gen -> giap-gen/
+python3 docs/thu-modular-96/rig/tao-rig.py       # vẽ 6 ảnh giáp máy vẽ, ghi rig.json (cả bộ Gen), dựng kiem-tra-rig.html
+python3 docs/thu-modular-96/rig/soat-rig.py      # soát bộ máy vẽ: chụp màn hình, lưới, GIF, tu-kiem.json
+python3 docs/thu-modular-96/rig/soat-giap-gen.py # soát máy vẽ vs gen: lưới, GIF, ảnh trước/sau, tu-kiem-gen.json
 ```
 
 - Cần Python 3 + `pillow`. Riêng `soat-rig.py` cần thêm `playwright` + Chromium.
