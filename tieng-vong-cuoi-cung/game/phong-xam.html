@@ -44,7 +44,10 @@ body.touch #keys{display:none}
 .tc{display:none}
 body.touch .tc{display:block}
 #dpad{position:absolute;left:max(14px,calc(env(safe-area-inset-left,0px) + 10px));bottom:calc(env(safe-area-inset-bottom,0px) + 14px);
-  width:132px;height:132px;border-radius:50%;background:rgba(26,33,43,.42);border:2px solid rgba(206,240,214,.22)}
+  width:132px;height:132px;border-radius:50%;background:rgba(26,33,43,.42);border:2px solid rgba(206,240,214,.22);touch-action:none}
+#acts,.ab{touch-action:none}
+#knob{will-change:transform}
+#fps{font-variant-numeric:tabular-nums;color:var(--echo)!important;font-weight:700}
 #dpad i{position:absolute;width:0;height:0;border:9px solid transparent;opacity:.55}
 #dpad i.on{opacity:1}
 #dpad .u{left:57px;top:8px;border-bottom:12px solid var(--echo);border-top:0}
@@ -125,6 +128,9 @@ body.touch .tc{display:block}
       <label class="row" for="c-wjx">Lực bật ngang (bật tường) <output id="o-wjx"></output><input id="c-wjx" type="range" min="1.2" max="4.6" step="0.1"></label>
       <label class="row" for="c-stick">Thời gian bám tường <output id="o-stick"></output><input id="c-stick" type="range" min="0" max="24" step="1"></label>
       <div class="row">Kiểu Vọng<span></span><div class="seg"><button id="c-mode-tap" type="button" aria-pressed="true">Bấm 1 lần</button><button id="c-mode-hold" type="button" aria-pressed="false">Giữ</button></div></div>
+      <div class="row">Chém nảy tự động<span></span><div class="seg"><button id="c-ap-on" type="button" aria-pressed="true">Bật</button><button id="c-ap-off" type="button" aria-pressed="false">Tắt</button></div></div>
+      <p>Bật: đang trên không, gai/địch/đèn ngay bên dưới thì bấm Chém là tự chém xuống.</p>
+      <p id="fps">FPS: đang đo…</p>
       <div class="btns"><button id="cfg-def" type="button">Mặc định</button><button id="cfg-close" type="button" class="pri">Chơi tiếp</button></div>
     </div>
   </div>
@@ -134,14 +140,14 @@ body.touch .tc{display:block}
 <script>
 'use strict';
 /* ================= THAM SỐ (chỉnh cảm giác ở đây) ================= */
-const DEF = { runSpeed:2.2, jumpHeight:56, gravity:0.32, echoSeconds:3, wallJumpVx:2.7, wallStick:6, echoHold:0 };  // echoHold 0 = bấm Vọng 1 lần bật/tắt, 1 = giữ Vọng
+const DEF = { runSpeed:2.2, jumpHeight:56, gravity:0.32, echoSeconds:3, wallJumpVx:2.7, wallStick:6, echoHold:0, autoPogo:1 };  // echoHold 0 = bấm Vọng 1 lần bật/tắt, 1 = giữ Vọng; autoPogo 1 = tự chém xuống khi có vật bên dưới
 const P = Object.assign({}, DEF, {
   accelFrames:6,      // số khung để đạt tốc chạy
   decelFrames:5,      // số khung phanh (trượt nhẹ)
   airControl:0.75, turnBoost:1.6,
   maxFall:5.2, fallGravMul:1.12,
   apexGravMul:0.5, apexThreshold:0.9,  // trọng lực giảm ở đỉnh nhảy
-  jumpCut:0.45,       // thả nút sớm -> nhảy thấp
+  jumpCut:0.5,        // thả nút sớm -> vy nhân 0,5 (nhảy thấp, không khựng)
   coyote:6, jumpBuffer:8, corner:4,
   wallSlideMax:0.8, wallJumpMul:0.92, wallJumpLock:9,
   wallSense:3,        // nhận tường trong khoảng 3 px quanh nhân vật
@@ -149,7 +155,8 @@ const P = Object.assign({}, DEF, {
   wallBackMul:0.35,   // giữ hướng về tường khi bật -> đẩy ngang yếu, quay lại tường để leo
   ladderSpeed:1.4,
   dashSpeed:5.5, dashFrames:8, dashIFrames:11, dashCooldown:18,
-  pogoMul:0.85, lunge:1.1,
+  pogoMul:1, lunge:1.1,   // nảy = lực một cú nhảy đầy đủ
+  pogoReach:28, pogoDown:0.35, pogoBuf:6,   // tầm dò vật bên dưới (px), ngưỡng cần nghiêng xuống, đệm bấm sớm (khung)
   maxHp:5, hurtIFrames:50
 });
 // su: khung chuẩn bị, ac: khung ra đòn, re: khung hồi (cửa sổ nối combo), hs: hit stop, box: [dx,dy,w,h] tính từ tâm, mặt hướng phải
@@ -157,7 +164,7 @@ const ATK = {
   1:{su:2, ac:4, re:10, hs:3, mag:1.5, sh:[1,0],     box:[3,-8,22,13]},
   2:{su:3, ac:4, re:10, hs:4, mag:1.8, sh:[0.6,-0.8],box:[0,-21,22,22]},
   3:{su:4, ac:5, re:16, hs:6, mag:2.6, sh:[0,1],     box:[2,-12,24,22]},
-  4:{su:1, ac:8, re:6,  hs:3, mag:1.6, sh:[0,1],     box:[-8,4,16,16]}   // chém xuống trên không (pogo)
+  4:{su:1, ac:10, re:4, hs:3, mag:1,   sh:[0,1],     box:[-7.5,2,15,30]}   // chém xuống (pogo): rộng 1,5 thân, dài ~24 px dưới chân, 10 khung
 };
 let jumpVel = 0;
 function derive(){ jumpVel = Math.sqrt(2*P.gravity*P.jumpHeight); }
@@ -177,7 +184,8 @@ const rooms=[];
    {>}{v}{^} = chip cần điều hướng. ok() đúng -> "Đạt!" và sang bước sau. Bước cuối không có ok = xong phòng (hiện mũi tên đi tiếp).
    strict: phải làm đúng thứ tự (không nhảy cóc bước). */
 const GO={t:'Xong phòng! Đi tiếp sang phải'};
-function rEnts(t){ return ents.filter(e=>e.room===S.room&&(!t||e.type===t)); }
+const RE=[];  // mảng dùng lại, không tạo mới mỗi khung
+function rEnts(t){ RE.length=0; for(const e of ents) if(e.room===S.room&&(!t||e.type===t)) RE.push(e); return RE; }
 { // 1. chạy nhảy
   const r=makeRoom(32,'Chạy & nhảy',[
     {t:'Kéo cần {>} để chạy', ok:()=>Math.abs(pl.vx)>1.5},
@@ -231,13 +239,13 @@ function rEnts(t){ return ents.filter(e=>e.room===S.room&&(!t||e.type===t)); }
   r.ents.push({type:'dummy', tx:8, ty:13}, {type:'dummy', tx:12, ty:13}, {type:'dummy', tx:16, ty:13});
   rooms.push(r);
 }
-{ // 7. chém nảy: hàng gai rộng, chạm gai là về đầu phòng
-  const r=makeRoom(26,'Chém nảy',[
-    {t:'Bấm {J} để nhảy về phía gai', ok:()=>EV.jump},
-    {t:'Trên không: kéo cần xuống {v} + {A}', ok:()=>EV.pogo},
-    {t:'Nảy tiếp tới hết hàng gai', ok:()=>pl.onGround && pl.x>(rooms[S.room].x0+17)*T},
+{ // 7. chém nảy: đoạn gai ngắn có đèn lồng treo thấp (dễ), rồi hàng gai dài phải nảy liên tiếp
+  const r=makeRoom(34,'Chém nảy',[
+    {t:'Nhảy {J} → bấm {A} khi ở trên gai', ok:()=>EV.pogo},
+    {t:'Nảy liên tiếp qua hàng gai dài', ok:()=>pl.onGround && pl.x>(rooms[S.room].x0+25)*T},
     GO]);
-  r.fill(6,13,16,13,'^');
+  r.fill(6,13,10,13,'^'); r.fill(14,13,24,13,'^');
+  r.ents.push({type:'lantern', tx:8, hy:196}, {type:'lantern', tx:16, hy:192});
   rooms.push(r);
 }
 { // 8. chém cùng bóng
@@ -264,19 +272,30 @@ function tile(tx,ty){ if(tx<0||tx>=WW||ty<0) return '#'; if(ty>=ROWS) return '.'
 function isLadderTop(tx,ty){ return tile(tx,ty)==='H' && tile(tx,ty-1)!=='H'; }
 
 /* ================= TRẠNG THÁI ================= */
-const S={frame:0, hitstop:0, room:0, paused:false, done:false, steps:[], okT:0, shx:0, shy:0, sht:0, shm:0, camx:0, camy:0};
-let ents=[], parts=[], trail=[], swingId=0, EV={};
+const S={frame:0, hitstop:0, room:0, paused:false, done:false, steps:[], okT:0, shx:0, shy:0, sht:0, shm:0, camx:0, camy:0, pcx:0, pcy:0, look:24, camAnchor:0, pogoShown:false};
+let ents=[], parts=[], trail=[], fxs=[], swingId=0;
+const EV={jump:false,walljump:false,climb:false,dash:false,airdash:false,pogo:false,combo3:false};
+function clearEV(){ for(const k in EV) EV[k]=false; }
 let rec=null, echo=null;
 const pl={x:0,y:0,w:10,h:15,vx:0,vy:0,face:1,onGround:false,coyote:0,jumpBuf:0,atkBuf:0,dashBuf:0,jumping:false,wallDir:0,wallLock:0,wallCoy:0,lastWall:0,wallStickT:0,wjBack:0,
-  climb:false,climbCd:0,dash:0,dashDir:1,dashCd:0,airDash:false,iframes:0,hp:5,atk:null,sq:0,anim:0,st:'idle'};
+  climb:false,climbCd:0,dash:0,dashDir:1,dashCd:0,airDash:false,iframes:0,hp:5,atk:null,sq:0,anim:0,st:'idle',
+  px:0,py:0,airJump:false,pogoBuf:0,pogoSafe:0};
+// Lưu vị trí khung trước để vẽ nội suy giữa 2 bước logic
+function savePrev(){
+  pl.px=pl.x; pl.py=pl.y; S.pcx=S.camx; S.pcy=S.camy;
+  for(const e of ents){ e.px=e.x; e.py=e.y; }
+  if(echo){ echo.px=echo.cur.x; echo.py=echo.cur.y; }
+}
 
 function makeEnt(spec, room){
   const e=Object.assign({}, spec, {room, alive:true, hitBy:new Set(), flash:0, wob:0});
   if(e.type==='dummy'){ e.w=11; e.h=15; e.hp=e.maxHp=3; e.x=e.tx*T+2; e.y=(e.ty+1)*T-e.h; e.hittable=true; }
   if(e.type==='twin'){ e.w=11; e.h=15; e.hp=e.maxHp=1; e.x=e.tx*T+2; e.y=(e.ty+1)*T-e.h; e.hittable=true; e.lastP=-999; e.lastE=-999; e.need=0; }
   if(e.type==='walker'){ e.w=14; e.h=12; e.hp=3; e.x=e.tx*T+1; e.y=(e.ty+1)*T-e.h; e.hittable=true; e.dir=-1; e.vy=0; e.stun=0; }
+  if(e.type==='lantern'){ e.w=10; e.h=12; e.x=e.tx*T+3; e.y=e.hy; e.hittable=true; }   // đèn lồng treo: chém nảy được, không vỡ
   if(e.type==='switch'){ e.pressed=false; }
   if(e.type==='door'){ e.open=0; e.latched=false; }
+  e.px=e.x; e.py=e.y;
   return e;
 }
 function resetRoom(i){
@@ -285,12 +304,14 @@ function resetRoom(i){
   r.ents.forEach(s=>ents.push(makeEnt(Object.assign({}, s, {tx:s.tx+r.x0}), i)));
   pl.x=(r.x0+r.spawn[0])*T+3; pl.y=(r.spawn[1]+1)*T-pl.h;
   pl.vx=pl.vy=0; pl.hp=P.maxHp; pl.atk=null; pl.dash=0; pl.climb=false; pl.iframes=0; pl.face=1; pl.jumpBuf=pl.atkBuf=pl.dashBuf=0;
-  rec=null; echo=null; trail=[]; S.done=false; S.steps[i]=0; if(i===S.room) showStep();
-  S.camx=clamp(pl.x-W/2,0,WORLD_W-W);
+  rec=null; echo=null; trail.length=0; S.done=false; S.steps[i]=0; if(i===S.room) showStep();
+  S.camx=clamp(pl.x-W/2,0,WORLD_W-W); S.pcx=S.camx; S.camAnchor=pl.y; pl.px=pl.x; pl.py=pl.y;
+  pl.airJump=false; pl.pogoBuf=0; pl.pogoSafe=0;
 }
 function respawnPlayer(){
   const r=rooms[S.room];
   pl.x=(r.x0+r.spawn[0])*T+3; pl.y=(r.spawn[1]+1)*T-pl.h; pl.vx=pl.vy=0; pl.atk=null; pl.dash=0; pl.climb=false; pl.iframes=40;
+  pl.px=pl.x; pl.py=pl.y; pl.airJump=false; pl.pogoBuf=0; S.camAnchor=pl.y;   // dịch chuyển tức thời: không nội suy vệt
 }
 
 /* ================= TIỆN ÍCH ================= */
@@ -357,6 +378,8 @@ function solidPt(px,py){ return tile(Math.floor(px/T),Math.floor(py/T))==='#'; }
 function shake(dx,dy,m){ const l=Math.hypot(dx,dy)||1; S.shx=dx/l; S.shy=dy/l; S.shm=m; S.sht=8; }
 function burst(x,y,c,n,sp){ for(let i=0;i<n;i++){ const a=Math.random()*Math.PI*2, v=(0.5+Math.random())*(sp||1.5); parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-0.5,t:14+Math.random()*10|0,c}); } }
 function shatter(x,y,c1,c2){ for(let i=0;i<14;i++){ const a=Math.random()*Math.PI*2, v=1+Math.random()*2.2; parts.push({x:x+(Math.random()*8-4),y:y+(Math.random()*10-5),vx:Math.cos(a)*v,vy:Math.sin(a)*v-1.6,t:26+Math.random()*14|0,c:i%3?c1:c2,s:3}); } }
+function spark(x,y){ fxs.push({k:'spark',x,y,t:7}); }
+function popText(x,y,s){ fxs.push({k:'text',x,y,t:45,s}); }
 function dust(x,y){ for(let i=0;i<4;i++) parts.push({x:x+(Math.random()*8-4),y,vx:(Math.random()-0.5)*1.2,vy:-Math.random()*0.6,t:12,c:'#c9cdd2'}); }
 let toastT=0; const toastEl=document.getElementById('toast');
 function toast(msg){ toastEl.textContent=msg; toastEl.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>toastEl.classList.remove('show'),1800); }
@@ -364,46 +387,58 @@ function toast(msg){ toastEl.textContent=msg; toastEl.classList.add('show'); cle
 /* ================= INPUT ================= */
 const KEYMAP={ArrowLeft:'l',KeyA:'l',ArrowRight:'r',KeyD:'r',ArrowUp:'u',KeyW:'u',ArrowDown:'d',KeyS:'d',
   KeyZ:'j',Space:'j',KeyK:'j',KeyX:'a',KeyJ:'a',KeyC:'s',KeyL:'s',ShiftLeft:'s',KeyV:'v',KeyE:'v'};
-const kb={}, tc={}, I={}, prevI={};
+const kb={}, tc={}, I={}, prevI={}, latch={};   // latch: giữ lại cú bấm rất nhanh (bấm-thả giữa 2 bước logic) để không bị mất
 const KEYS=['l','r','u','d','j','a','s','v'];
+let stickY=0;   // thành phần hướng xuống của cần điều hướng (-1..1)
 addEventListener('keydown',e=>{
   if(!cfgEl.hidden) { if(e.code==='Escape') closeCfg(); return; }
   if(e.code==='KeyR'){ resetRoom(S.room); toast('Chơi lại phòng'); return; }
-  const k=KEYMAP[e.code]; if(k){ kb[k]=1; e.preventDefault(); }
+  const k=KEYMAP[e.code]; if(k){ if(!kb[k]) latch[k]=1; kb[k]=1; e.preventDefault(); }
 });
 addEventListener('keyup',e=>{ const k=KEYMAP[e.code]; if(k){ kb[k]=0; e.preventDefault(); } });
-addEventListener('blur',()=>{ KEYS.forEach(k=>{kb[k]=0;tc[k]=0;}); });
-function readInput(){ KEYS.forEach(k=>{ prevI[k]=I[k]; I[k]=!!(kb[k]||tc[k]); }); }
+addEventListener('blur',()=>{ KEYS.forEach(k=>{kb[k]=0;tc[k]=0;latch[k]=0;}); stickY=0; });
+function readInput(){ for(const k of KEYS){ prevI[k]=I[k]; I[k]=!!(kb[k]||tc[k]||latch[k]); latch[k]=0; } }
 function pressed(k){ return I[k]&&!prevI[k]; }
+function downHeld(){ return I.d || stickY>P.pogoDown; }
 
 // cảm ứng: cần điều hướng 8 hướng + 4 nút có thể trượt ngón giữa các nút
 const dpad=document.getElementById('dpad'), knob=document.getElementById('knob');
 const arrows={u:dpad.querySelector('.u'),d:dpad.querySelector('.d'),l:dpad.querySelector('.l'),r:dpad.querySelector('.r')};
 const actBtns=[...document.querySelectorAll('[data-k]')];
 let dpadId=null;
+// Vị trí nút đo sẵn lúc chạm xuống, lúc kéo ngón không đo lại (tránh ép trình duyệt tính bố cục mỗi lần chạm)
+const geo={cx:0,cy:0,R:66,btn:actBtns.map(b=>({k:b.dataset.k,el:b,x:0,y:0,r:30}))};
+function measure(){
+  const rc=dpad.getBoundingClientRect(); geo.cx=rc.left+rc.width/2; geo.cy=rc.top+rc.height/2; geo.R=rc.width/2||66;
+  for(const b of geo.btn){ const r=b.el.getBoundingClientRect(); b.x=r.left+r.width/2; b.y=r.top+r.height/2; b.r=r.width/2||30; }
+}
+const prevTc={}, uiOn={};
 function onTouch(e){
-  document.body.classList.add('touch');
+  if(!document.body.classList.contains('touch')) document.body.classList.add('touch');
   if(e.target.closest && e.target.closest('.ui')) return;
   e.preventDefault();
-  KEYS.forEach(k=>tc[k]=0);
-  const rc=dpad.getBoundingClientRect(), cx=rc.left+rc.width/2, cy=rc.top+rc.height/2, R=rc.width/2;
+  if(e.type==='touchstart') measure();
+  for(const k of KEYS){ prevTc[k]=tc[k]; tc[k]=0; }
+  const cx=geo.cx, cy=geo.cy, R=geo.R;
   let dT=null;
   for(const t of e.touches){
     if(t.identifier===dpadId){ dT=t; continue; }
     if(dpadId===null && Math.hypot(t.clientX-cx,t.clientY-cy)<R*1.2 && (e.type==='touchstart')){ dpadId=t.identifier; dT=t; continue; }
-    const el=document.elementFromPoint(t.clientX,t.clientY); const b=el&&el.closest&&el.closest('[data-k]');
-    if(b) tc[b.dataset.k]=1;
+    let best=null, bd=1e9;   // nút gần nhất trong bán kính 1,2 lần
+    for(const b of geo.btn){ const d=Math.hypot(t.clientX-b.x,t.clientY-b.y); if(d<b.r*1.2 && d<bd){ bd=d; best=b; } }
+    if(best) tc[best.k]=1;
   }
-  let kx=0, ky=0;
+  let kx=0, ky=0; stickY=0;
   if(!dT) dpadId=null;
   else {
     const dx=dT.clientX-cx, dy=dT.clientY-cy, d=Math.hypot(dx,dy);
-    if(d>R*0.2){ tc.r=dx>d*0.38?1:0; tc.l=dx<-d*0.38?1:0; tc.d=dy>d*0.38?1:0; tc.u=dy<-d*0.38?1:0; }
+    if(d>R*0.2){ tc.r=dx>d*0.38?1:0; tc.l=dx<-d*0.38?1:0; tc.d=dy>d*0.38?1:0; tc.u=dy<-d*0.38?1:0; stickY=dy/d; }
     const m=Math.min(d,R*0.55)/(d||1); kx=dx*m; ky=dy*m;
   }
-  knob.style.transform='translate('+kx+'px,'+ky+'px)';
-  for(const k of ['u','d','l','r']) arrows[k].classList.toggle('on',!!tc[k]);
-  actBtns.forEach(b=>b.classList.toggle('on',!!tc[b.dataset.k]));
+  for(const k of KEYS) if(tc[k] && !prevTc[k]) latch[k]=1;
+  knob.style.transform='translate3d('+kx+'px,'+ky+'px,0)';
+  for(const k of ['u','d','l','r']) if(uiOn[k]!==!!tc[k]){ uiOn[k]=!!tc[k]; arrows[k].classList.toggle('on',uiOn[k]); }
+  for(const b of geo.btn){ const on=!!tc[b.k], key='b'+b.k; if(uiOn[key]!==on){ uiOn[key]=on; b.el.classList.toggle('on',on); } }
 }
 ['touchstart','touchmove','touchend','touchcancel'].forEach(t=>document.addEventListener(t,onTouch,{passive:false}));
 if(matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window) document.body.classList.add('touch');
@@ -414,22 +449,31 @@ function startAtk(n,dir){
   pl.atk={n, t:0, sw:++swingId, bounced:false}; pl.atkBuf=0;
   if(n<4 && pl.onGround) pl.vx=pl.face*P.lunge*(n===3?1.4:1);
 }
-function atkBox(o,atk){
+function atkBox(o,atk,out){
   if(!atk) return null; const a=ATK[atk.n];
   if(atk.t<a.su || atk.t>=a.su+a.ac) return null;
-  const [dx,dy,w,h]=a.box, cx=o.x+o.w/2, cy=o.y+o.h/2;
-  return {x:o.face>0?cx+dx:cx-dx-w, y:cy+dy, w, h};
+  const b=a.box, cx=o.x+o.w/2, cy=o.y+o.h/2;
+  out.x=o.face>0?cx+b[0]:cx-b[0]-b[2]; out.y=cy+b[1]; out.w=b[2]; out.h=b[3];
+  return out;
+}
+const HB={x:0,y:0,w:0,h:0}, PR={x:0,y:0,w:0,h:0};
+// Có gai / địch / hình nộm / đèn lồng ngay dưới chân (trong pogoReach px)?
+function pogoTarget(){
+  PR.x=pl.x-2; PR.y=pl.y+pl.h-2; PR.w=pl.w+4; PR.h=P.pogoReach+2;
+  if(spikeHit(PR)) return true;
+  for(const e of ents) if(e.alive && e.hittable && e.room===S.room && overlap(PR,e)) return true;
+  return false;
 }
 function startClimb(tx){ EV.climb=true; pl.climb=true; pl.x=tx*T+T/2-pl.w/2; pl.vx=0; pl.vy=0; pl.dash=0; pl.airDash=false; pl.atk=null; pl.jumping=false; }
 function finishGround(){
   const was=pl.onGround;
   pl.onGround=!pl.climb && (collide(pl.x,pl.y+1,pl.w,pl.h) || onLadderTop(pl));
-  if(pl.onGround){ pl.coyote=P.coyote; pl.airDash=false; if(!was){ pl.sq=Math.max(pl.sq,0.6); dust(pl.x+pl.w/2,pl.y+pl.h); } }
+  if(pl.onGround){ pl.coyote=P.coyote; pl.airDash=false; pl.airJump=false; if(!was){ pl.sq=Math.max(pl.sq,0.5); dust(pl.x+pl.w/2,pl.y+pl.h); } }
   else if(pl.coyote>0) pl.coyote--;
 }
 function updatePlayer(){
   const dir=(I.r?1:0)-(I.l?1:0);
-  if(pl.climbCd>0) pl.climbCd--; if(pl.wallLock>0) pl.wallLock--; if(pl.dashCd>0) pl.dashCd--; if(pl.iframes>0) pl.iframes--;
+  if(pl.climbCd>0) pl.climbCd--; if(pl.wallLock>0) pl.wallLock--; if(pl.dashCd>0) pl.dashCd--; if(pl.iframes>0) pl.iframes--; if(pl.pogoSafe>0) pl.pogoSafe--;
   pl.sq=approach(pl.sq,0,0.12); pl.anim++;
 
   // Lướt
@@ -480,8 +524,13 @@ function updatePlayer(){
   if(dir && !pl.atk && pl.wallLock<=0) pl.face=dir;
 
   // Dọc
+  // trọng lực đổi mượt quanh đỉnh nhảy (không bậc thang), rơi nặng dần, giới hạn tốc độ rơi
   let g=P.gravity;
-  if(!pl.onGround){ if(I.j && Math.abs(pl.vy)<P.apexThreshold) g*=P.apexGravMul; else if(pl.vy>0) g*=P.fallGravMul; }
+  if(!pl.onGround){
+    const a=Math.min(1,Math.abs(pl.vy)/P.apexThreshold), top=I.j?P.apexGravMul:0.8;
+    g*=top+(1-top)*a;
+    if(pl.vy>0) g*=1+(P.fallGravMul-1)*a;
+  }
   pl.vy=Math.min(pl.vy+g,P.maxFall);
   const ws=P.wallSense+0.5;
   pl.wallDir=pl.onGround?0:(collide(pl.x-ws,pl.y,pl.w,pl.h)?-1:(collide(pl.x+ws,pl.y,pl.w,pl.h)?1:0));
@@ -497,12 +546,14 @@ function updatePlayer(){
     if(S.frame%6===0) parts.push({x:pl.wallDir>0?pl.x+pl.w:pl.x,y:pl.y+pl.h-2,vx:-pl.wallDir*0.3,vy:0.2,t:10,c:'#c9cdd2'}); }
   if(pl.jumpBuf>0){
     if(pl.onGround||pl.coyote>0){
-      EV.jump=true; pl.vy=-jumpVel; pl.jumping=true; pl.coyote=0; pl.jumpBuf=0; pl.onGround=false; pl.sq=-0.8; dust(pl.x+pl.w/2,pl.y+pl.h);
+      EV.jump=true; pl.vy=-jumpVel; pl.jumping=true; pl.coyote=0; pl.jumpBuf=0; pl.onGround=false; pl.sq=-0.6; dust(pl.x+pl.w/2,pl.y+pl.h);
     } else if(pl.wallDir || pl.wallCoy>0){
       const wd=pl.wallDir||pl.lastWall, back=(dir===wd);
       pl.vy=-jumpVel*P.wallJumpMul; pl.vx=-wd*P.wallJumpVx*(back?P.wallBackMul:1); pl.face=-wd; pl.wallLock=P.wallJumpLock;
       pl.wjBack=wd; pl.wallCoy=0; pl.wallStickT=0; EV.walljump=true;
-      pl.jumping=true; pl.jumpBuf=0; pl.airDash=false; pl.sq=-0.8; dust(wd>0?pl.x+pl.w:pl.x,pl.y+pl.h/2);
+      pl.jumping=true; pl.jumpBuf=0; pl.airDash=false; pl.sq=-0.6; dust(wd>0?pl.x+pl.w:pl.x,pl.y+pl.h/2);
+    } else if(pl.airJump){   // sau khi chém nảy được nhảy thêm 1 lần
+      pl.airJump=false; EV.jump=true; pl.vy=-jumpVel; pl.jumping=true; pl.jumpBuf=0; pl.sq=-0.6;
     }
   }
   if(pl.jumping && !I.j && pl.vy<0){ pl.vy*=P.jumpCut; pl.jumping=false; }
@@ -510,14 +561,18 @@ function updatePlayer(){
 
   if(moveX(pl,pl.vx,false)) pl.vx=0;
   const ry=moveY(pl,pl.vy,true);
-  if(ry!==0){ if(ry===1 && pl.vy>2.5) pl.sq=Math.min(1,pl.vy/5); if(ry===-1) pl.jumping=false; pl.vy=0; }
+  if(ry!==0){ if(ry===1 && pl.vy>2.5) pl.sq=Math.min(0.8,pl.vy/6); if(ry===-1) pl.jumping=false; pl.vy=0; }
   finishGround();
 
-  // Chém
+  // Chém. Trên không: cần nghiêng xuống (>0,35, kể cả chéo) hoặc (tự động) có vật ngay dưới chân -> chém xuống
+  const wantDown=!pl.onGround && !pl.climb && (downHeld() || (P.autoPogo && pl.vy>-1 && pogoTarget()));
   if(pl.atkBuf>0 && !pl.climb && pl.dash<=0){
-    if(!pl.atk) startAtk(!pl.onGround && I.d ? 4 : 1, dir);
+    if(!pl.atk || (pl.atk.n===4 && pl.atk.bounced)){ startAtk(wantDown?4:1, dir); pl.pogoBuf=(!wantDown && !pl.onGround)?P.pogoBuf:0; }
     else if(pl.atk.n<3){ const a=ATK[pl.atk.n]; if(pl.atk.t>=a.su+a.ac) startAtk(pl.atk.n+1, dir); }
+  } else if(pl.pogoBuf>0 && wantDown && pl.dash<=0 && (!pl.atk || pl.atk.n!==4)){
+    startAtk(4,0); pl.pogoBuf=0;   // bấm Chém sớm tối đa 6 khung trước khi tới gai/địch vẫn thành chém xuống
   }
+  if(pl.pogoBuf>0) pl.pogoBuf--;
   if(pl.atk){ pl.atk.t++; const a=ATK[pl.atk.n]; if(pl.atk.t>=a.su+a.ac+a.re) pl.atk=null; }
 
   pl.st = sliding?'wall' : !pl.onGround?(pl.vy<0?'jump':'fall') : Math.abs(pl.vx)>0.3?'run':'idle';
@@ -533,6 +588,7 @@ function stopRec(){
 function snap(hb){ return {x:pl.x, y:pl.y, f:pl.face, st:pl.st, n:pl.atk?pl.atk.n:0, t:pl.atk?pl.atk.t:0, hb, sw:pl.atk?pl.atk.sw:0, sq:pl.sq, a:pl.anim}; }
 function updateEcho(){
   if(!echo) return;
+  if(echo.px===undefined){ echo.px=echo.cur.x; echo.py=echo.cur.y; }
   if(echo.i<echo.frames.length){ echo.cur=echo.frames[echo.i++]; }
   else if(!echo.done){ echo.done=true; echo.cur=Object.assign({},echo.cur,{hb:null,n:0,st:'idle'}); }
   // dấu "!": bóng sắp chém trong 18 khung (0,3 giây) tới, giữ tới lúc nhát chém trúng
@@ -565,8 +621,17 @@ function hitFx(n,face,soft){
   const a=ATK[n]; S.hitstop=Math.max(S.hitstop,soft?Math.max(2,a.hs-1):a.hs);
   shake(a.sh[0]*face,a.sh[1],soft?a.mag*0.7:a.mag);
 }
+function pogoBounce(hb){
+  const a=ATK[4];
+  EV.pogo=true; pl.vy=-jumpVel*P.pogoMul; pl.jumping=false; pl.airDash=false; pl.airJump=true; pl.dashCd=0;
+  pl.atk.bounced=true; pl.atk.t=Math.max(pl.atk.t,a.su+a.ac); pl.pogoSafe=8; pl.pogoBuf=0; pl.sq=-0.6;
+  const sx=pl.x+pl.w/2, sy=Math.min(hb.y+hb.h-6, pl.y+pl.h+10);
+  spark(sx,sy); burst(sx,sy,'#F3E6C8',6,1.4);
+  S.hitstop=Math.max(S.hitstop,3); shake(0,1,1);
+  if(!S.pogoShown){ S.pogoShown=true; popText(sx,pl.y-6,'Nảy!'); }
+}
 function hurt(dir){
-  if(pl.iframes>0) return;
+  if(pl.iframes>0 || pl.pogoSafe>0) return;
   pl.hp--; pl.iframes=P.hurtIFrames; pl.vx=dir*2.4; pl.vy=-3; pl.atk=null; pl.dash=0; pl.climb=false; pl.jumping=false;
   S.hitstop=5; shake(dir||0.01,-0.6,2.6); burst(pl.x+5,pl.y+7,'#e06a5a',10,1.8);
   if(pl.hp<=0){ resetRoom(S.room); toast('Hết máu, chơi lại phòng'); }
@@ -584,16 +649,17 @@ function step(){
   if(S.sht>0) S.sht--;
   if(S.hitstop>0){ S.hitstop--; return; }
   S.frame++;
-  EV={};
+  clearEV();
   updatePlayer();
-  const hb=atkBox(pl,pl.atk);
+  const hb=atkBox(pl,pl.atk,HB);
+  let rhb=hb?{x:hb.x,y:hb.y,w:hb.w,h:hb.h}:null;   // bản sao để ghi vào bóng (chỉ khi đang ra đòn)
   if(hb){
-    const hit=applyHits(hb,'p'+pl.atk.sw,'p',pl.face);
-    if(pl.atk.n===4 && !pl.atk.bounced && (hit||spikeHit(hb))){ EV.pogo=true; pl.vy=-jumpVel*P.pogoMul; pl.jumping=false; pl.airDash=false; pl.atk.bounced=true; burst(pl.x+5,pl.y+pl.h+4,'#F3E6C8',5,1.2); }
-    if(hit){ hitFx(pl.atk.n,pl.face,false); if(pl.atk.n===3) EV.combo3=true; }
+    const n=pl.atk.n, hit=applyHits(hb,'p'+pl.atk.sw,'p',pl.face);
+    if(hit){ hitFx(n,pl.face,false); if(n===3) EV.combo3=true; }
+    if(n===4 && !pl.atk.bounced && (hit||spikeHit(hb))) pogoBounce(hb);
   }
   if(rec){
-    rec.frames.push(snap(hb));
+    rec.frames.push(snap(rhb));
     if(rec.frames.length>=Math.round(P.echoSeconds*60)) stopRec();
   }
   updateEcho();
@@ -610,34 +676,41 @@ function step(){
       if(overlap(pl,e)) hurt(Math.sign(pl.x+pl.w/2-(e.x+e.w/2))||1);
     }
     if(e.type==='switch'){
-      const plate={x:e.tx*T+1,y:e.ty*T+10,w:14,h:6}, feet=o=>({x:o.x,y:o.y+o.h-3,w:o.w,h:4});
-      const was=e.pressed; e.byEcho=!!eb && overlap(feet(eb),plate); e.pressed=overlap(feet(pl),plate) || e.byEcho;
+      const px0=e.tx*T+1, py0=e.ty*T+10, onPlate=o=>o.x<px0+14 && o.x+o.w>px0 && o.y+o.h-3<py0+6 && o.y+o.h+1>py0;
+      const was=e.pressed; e.byEcho=!!eb && onPlate(eb); e.pressed=onPlate(pl) || e.byEcho;
       if(e.pressed&&!was) burst(e.tx*T+8,e.ty*T+13,'#32804F',4,0.8);
     }
   }
   for(const d of ents){
     if(d.type!=='door') continue;
-    const sw=d.needs.map(id=>ents.find(e=>e.type==='switch'&&e.id===id));
-    const all=sw.every(s=>s&&s.pressed);
+    let all=true;
+    for(const id of d.needs){ let ok=false; for(const e of ents) if(e.type==='switch'&&e.id===id&&e.pressed){ ok=true; break; } if(!ok){ all=false; break; } }
     if(d.latch && all && !d.latched){ d.latched=true; toast('Cửa đã mở!'); }
     if(d.latched||all) d.open=Math.min(1,d.open+0.1);
     else { const prev=d.open; d.open=Math.max(0,d.open-0.07); if(overlap(doorRect(d),pl)) d.open=prev; }
   }
-  if(spikeHit(pl)){ hurt(0); if(pl.hp>0) respawnPlayer(); }  // chạm gai: mất máu (nếu không bất tử) và về đầu phòng
+  if(pl.pogoSafe<=0 && spikeHit(pl)){ hurt(0); if(pl.hp>0) respawnPlayer(); }  // chạm gai: mất máu (nếu không bất tử) và về đầu phòng
   if(pl.y>ROWS*T+24){ pl.hp--; if(pl.hp<=0){ resetRoom(S.room); toast('Hết máu, chơi lại phòng'); } else respawnPlayer(); }
 
   // đổi phòng
   const cx=pl.x+pl.w/2; const ri=rooms.findIndex(r=>cx>=r.x0*T && cx<(r.x0+r.w)*T);
   if(ri>=0 && ri!==S.room){ S.room=ri; showStep(); if(!ents.some(e=>e.room===ri)) { const r=rooms[ri]; r.ents.forEach(s=>ents.push(makeEnt(Object.assign({},s,{tx:s.tx+r.x0}),ri))); } }
 
-  // camera
-  const tx=clamp(pl.x+pl.w/2-W/2+pl.face*24,0,WORLD_W-W), ty=clamp(pl.y-H/2,0,ROWS*T-H);
-  S.camx+=(tx-S.camx)*0.12; S.camy+=(ty-S.camy)*0.2;
+  // camera: ngang lerp mượt, nhìn trước theo hướng mặt (đổi hướng từ từ); dọc có vùng chết kiểu platformer
+  S.look=approach(S.look,pl.face*24,1.2);
+  const tx=clamp(pl.x+pl.w/2-W/2+S.look,0,WORLD_W-W);
+  S.camx+=(tx-S.camx)*0.1; if(Math.abs(tx-S.camx)<0.02) S.camx=tx;
+  if(pl.onGround||pl.climb) S.camAnchor=pl.y;                 // chỉ theo khi tiếp đất ở độ cao mới
+  else if(pl.y-S.camAnchor>56) S.camAnchor=pl.y-56;            // rơi xa
+  else if(S.camAnchor-pl.y>96) S.camAnchor=pl.y+96;
+  const ty=clamp(S.camAnchor+pl.h/2-H/2,0,ROWS*T-H);
+  S.camy+=(ty-S.camy)*0.08; if(Math.abs(ty-S.camy)<0.02) S.camy=ty;
 
   checkSteps();
-  for(const p of parts){ p.x+=p.vx; p.y+=p.vy; p.vy+=0.08; p.t--; }
-  parts=parts.filter(p=>p.t>0);
-  for(const t of trail) t.t--; trail=trail.filter(t=>t.t>0);
+  let n=0;   // cập nhật hạt / vệt / hiệu ứng tại chỗ, không tạo mảng mới
+  for(const p of parts){ p.x+=p.vx; p.y+=p.vy; p.vy+=0.08; if(--p.t>0) parts[n++]=p; } parts.length=n;
+  n=0; for(const t of trail){ if(--t.t>0) trail[n++]=t; } trail.length=n;
+  n=0; for(const f of fxs){ if(f.k==='text') f.y-=0.35; if(--f.t>0) fxs[n++]=f; } fxs.length=n;
   if(pl.jumpBuf>0) pl.jumpBuf--; if(pl.atkBuf>0) pl.atkBuf--; if(pl.dashBuf>0) pl.dashBuf--;
 }
 
@@ -652,7 +725,7 @@ function drawChar(f,alpha,isEcho,flick){
   const sq=f.sq||0, dw=Math.round(sq*3);
   let w=10+dw, h=15-dw;
   if(f.st==='dash'){ w=13; h=12; }
-  const x=Math.round(f.x-ox)-Math.floor((w-10)/2), y=Math.round(f.y-oy)+(15-h);
+  const x=Math.round(f.x)-ox-Math.floor((w-10)/2), y=Math.round(f.y)-oy+(15-h);
   let bob=(f.st==='run' && (f.a>>3)%2)?1:0;
   ctx.globalAlpha=alpha;
   ctx.fillStyle=isEcho?C.echo:C.edge; ctx.fillRect(x,y+bob,w,h-bob);
@@ -662,19 +735,23 @@ function drawChar(f,alpha,isEcho,flick){
   } else { ctx.fillStyle=C.bell; ctx.fillRect(x+4,y+1+((f.a>>3)%2),2,2); }
   ctx.globalAlpha=1;
 }
+const ARCS={1:[-0.75,0.6,16],2:[0.9,-1.35,17],3:[-1.4,1.05,18],4:[0.2,2.95,17]};
 function drawSlash(f,color,alpha){
   if(!f.n) return; const a=ATK[f.n], k=f.t-a.su; if(k<0||k>=a.ac+3) return;
-  const cx=f.x+5-ox, cy=f.y+7.5-oy;
-  const arcs={1:[-0.75,0.6,16],2:[0.9,-1.35,17],3:[-1.4,1.05,18],4:[0.3,2.85,13]};
-  const [a0,a1,r]=arcs[f.n], prog=Math.min(1,(k+1)/a.ac), end=a0+(a1-a0)*prog, fc=f.n===4?1:f.f;
+  const cx=Math.round(f.x)-ox+5, cy=Math.round(f.y)-oy+7.5+(f.n===4?4:0);
+  const arc=ARCS[f.n], a0=arc[0], a1=arc[1], r=arc[2], prog=Math.min(1,(k+1)/(f.n===4?4:a.ac)), end=a0+(a1-a0)*prog, fc=f.n===4?1:f.f;
   ctx.globalAlpha=alpha*(k<a.ac?1:0.35); ctx.strokeStyle=color; ctx.lineWidth=f.n===3?4:3; ctx.lineCap='round';
   ctx.beginPath();
   for(let i=0;i<=10;i++){ const an=a0+(end-a0)*i/10; const px=cx+Math.cos(an)*r*fc, py=cy+Math.sin(an)*r; i?ctx.lineTo(px,py):ctx.moveTo(px,py); }
   ctx.stroke(); ctx.globalAlpha=1;
 }
-function render(){
-  const sm=S.sht>0?S.shm*(S.sht/8)*((S.sht%2)?1:-0.6):0;
-  ox=Math.round(S.camx+S.shx*sm); oy=Math.round(S.camy+S.shy*sm);
+const PF={x:0,y:0,f:1,st:'idle',n:0,t:0,sq:0,a:0}, EF={x:0,y:0,f:1,st:'idle',n:0,t:0,sq:0,a:0};
+function lerp(a,b,t){ return a+(b-a)*t; }
+function render(al){
+  // camera nội suy rồi làm tròn TRƯỚC; mọi vật vẽ = round(vị trí thế giới) - camera đã tròn -> không lệch 1 px với nền
+  // rung màn hình: nhỏ (tối đa 2 px), tắt dần theo bình phương
+  const shk=S.sht/8, sm=S.sht>0?Math.min(2,S.shm*0.6)*shk*shk*((S.sht%2)?1:-1):0;
+  ox=Math.round(lerp(S.pcx,S.camx,al))+Math.round(S.shx*sm); oy=Math.round(lerp(S.pcy,S.camy,al))+Math.round(S.shy*sm);
   ctx.fillStyle=C.bg; ctx.fillRect(0,0,W,H);
   const tx0=Math.max(0,Math.floor(ox/T)-1), tx1=Math.min(WW-1,Math.floor((ox+W)/T)+1);
   // nền ô
@@ -702,7 +779,7 @@ function render(){
       const need=e.needs.length; e.needs.forEach((id,k)=>{ const s=ents.find(q=>q.type==='switch'&&q.id===id); ctx.fillStyle=(e.latched||(s&&s.pressed))?C.edge:'#c25b4e'; ctx.fillRect(x+4+k*5-(need-1)*2,e.ty0*T-oy-6,3,3); });
     } else if(e.type==='dummy' || e.type==='twin'){
       // hình nộm: cao gần bằng nhân vật, màu nổi viền tối, thanh máu trên đầu, nháy trắng + lắc khi trúng
-      const tw=e.type==='twin', x=Math.round(e.x-ox+(e.wob>0.3?(S.frame%2?1:-1)*e.wob:0)), y=Math.round(e.y-oy);
+      const tw=e.type==='twin', x=Math.round(e.x+(e.wob>0.3?(S.frame%2?1:-1)*e.wob:0))-ox, y=Math.round(e.y)-oy;
       const fill=tw?'#83CC93':'#E1B85A', dark=tw?'#1d3a26':'#3a2a10';
       if(!e.alive){ ctx.fillStyle=dark; ctx.fillRect(x+3,y+e.h-3,5,3); continue; }
       ctx.fillStyle=dark; ctx.fillRect(x+2,y-1,7,7); ctx.fillRect(x-1,y+5,13,8); ctx.fillRect(x+4,y+12,3,3); ctx.fillRect(x+1,y+14,9,1);
@@ -718,9 +795,17 @@ function render(){
         ctx.fillStyle='#1d3a26'; ctx.fillRect(gx+2,gy+2,1,2); ctx.fillRect(gx+4,gy+2,1,2); ctx.globalAlpha=1;
         if(e.need>0){ ctx.font='bold 9px sans-serif'; ctx.fillStyle=C.echo; ctx.textAlign='center'; ctx.fillText('cùng lúc!',x+6,y-26); ctx.textAlign='left'; }
       }
+    } else if(e.type==='lantern'){
+      // đèn lồng treo bằng dây từ trần, lắc nhẹ khi bị chém
+      const x=Math.round(e.x+(e.wob>0.3?(S.frame%2?1:-1)*e.wob:0))-ox, y=Math.round(e.y)-oy;
+      ctx.fillStyle='#4a4f57'; ctx.fillRect(Math.round(e.x)-ox+4,T-oy,1,y-(T-oy));
+      ctx.fillStyle='#3a2a10'; ctx.fillRect(x-1,y,12,12); ctx.fillRect(x+2,y-2,6,2);
+      ctx.fillStyle=e.flash?'#ffffff':'#c25b4e'; ctx.fillRect(x,y+1,10,10);
+      ctx.fillStyle=e.flash?'#ffffff':C.bell; ctx.fillRect(x+3,y+3,4,6);
+      ctx.fillStyle='#3a2a10'; ctx.fillRect(x,y+5,10,1);
     } else if(e.type==='walker' && e.alive){
       // địch: đỏ gạch, viền tối
-      const x=Math.round(e.x-ox), y=Math.round(e.y-oy);
+      const x=Math.round(lerp(e.px,e.x,al))-ox, y=Math.round(lerp(e.py,e.y,al))-oy;
       ctx.fillStyle='#3a120c'; ctx.fillRect(x-1,y-1,e.w+2,e.h+1);
       ctx.fillStyle=e.flash?'#ffffff':'#C8452F'; ctx.fillRect(x,y,e.w,e.h-2);
       ctx.fillStyle='#F3E6C8'; ctx.fillRect(e.dir>0?x+8:x+3,y+3,3,3);
@@ -728,20 +813,31 @@ function render(){
     }
   }
   // dấu điểm bắt đầu ghi
-  if(rec){ ctx.strokeStyle=C.echo; ctx.globalAlpha=0.5+0.3*Math.sin(S.frame*0.3); ctx.lineWidth=1; ctx.strokeRect(Math.round(rec.sx-ox)+0.5,Math.round(rec.sy-oy)+0.5,9,14); ctx.globalAlpha=1; }
+  if(rec){ ctx.strokeStyle=C.echo; ctx.globalAlpha=0.5+0.3*Math.sin(S.frame*0.3); ctx.lineWidth=1; ctx.strokeRect(Math.round(rec.sx)-ox+0.5,Math.round(rec.sy)-oy+0.5,9,14); ctx.globalAlpha=1; }
   // bóng
-  if(echo){ drawChar(echo.cur,echo.done?0.45:0.6,true,false); drawSlash(echo.cur,C.echo,0.8);
-    if(echo.warn){ const wx=Math.round(echo.cur.x-ox)+5, wy=Math.round(echo.cur.y-oy)-12;
+  if(echo){ const c=echo.cur, hp=echo.px!==undefined;
+    EF.x=hp?lerp(echo.px,c.x,al):c.x; EF.y=hp?lerp(echo.py,c.y,al):c.y; EF.f=c.f; EF.st=c.st; EF.n=c.n; EF.t=c.t; EF.sq=c.sq; EF.a=c.a;
+    drawChar(EF,echo.done?0.45:0.6,true,false); drawSlash(EF,C.echo,0.8);
+    if(echo.warn){ const wx=Math.round(EF.x)-ox+5, wy=Math.round(EF.y)-oy-12;
       ctx.fillStyle='#0C0F14'; ctx.fillRect(wx-4,wy-1,9,12); ctx.fillStyle=C.bell; ctx.fillRect(wx-1,wy+1,3,6); ctx.fillRect(wx-1,wy+8,3,2); } }
   // vệt lướt
-  for(const t of trail){ ctx.globalAlpha=t.t/14; ctx.fillStyle=C.edge; ctx.fillRect(Math.round(t.x-ox),Math.round(t.y-oy)+3,12,12); }
+  for(const t of trail){ ctx.globalAlpha=t.t/14; ctx.fillStyle=C.edge; ctx.fillRect(Math.round(t.x)-ox,Math.round(t.y)-oy+3,12,12); }
   ctx.globalAlpha=1;
-  // người chơi
-  const pf=snap(null);
-  drawChar(pf,1,false,pl.iframes>0 && pl.dash<=0 && (S.frame>>2)%2===0);
-  drawSlash(pf,C.slash,1);
+  // người chơi (vị trí nội suy, dùng lại 1 object)
+  PF.x=lerp(pl.px,pl.x,al); PF.y=lerp(pl.py,pl.y,al); PF.f=pl.face; PF.st=pl.st; PF.n=pl.atk?pl.atk.n:0; PF.t=pl.atk?pl.atk.t:0; PF.sq=pl.sq; PF.a=pl.anim;
+  drawChar(PF,1,false,pl.iframes>0 && pl.dash<=0 && (S.frame>>2)%2===0);
+  drawSlash(PF,C.slash,1);
   // hạt
-  for(const p of parts){ ctx.fillStyle=p.c; ctx.globalAlpha=Math.min(1,p.t/8); ctx.fillRect(Math.round(p.x-ox),Math.round(p.y-oy),p.s||2,p.s||2); }
+  for(const p of parts){ ctx.fillStyle=p.c; ctx.globalAlpha=Math.min(1,p.t/8); ctx.fillRect(Math.round(p.x)-ox,Math.round(p.y)-oy,p.s||2,p.s||2); }
+  ctx.globalAlpha=1;
+  // tia sáng khi nảy + chữ "Nảy!"
+  for(const f of fxs){
+    const x=Math.round(f.x)-ox, y=Math.round(f.y)-oy;
+    if(f.k==='spark'){ const L=4+(7-f.t)*2; ctx.globalAlpha=f.t/7; ctx.fillStyle='#ffffff';
+      ctx.fillRect(x-L,y,L*2+1,1); ctx.fillRect(x,y-L,1,L*2+1); ctx.fillStyle=C.bell; ctx.fillRect(x-1,y-1,3,3); }
+    else { ctx.globalAlpha=Math.min(1,f.t/12); ctx.font='bold 10px "Be Vietnam Pro", sans-serif'; ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+      ctx.fillStyle='#0C0F14'; ctx.fillText(f.s,x+1,y+1); ctx.fillStyle=C.bell; ctx.fillText(f.s,x,y); ctx.textAlign='left'; }
+  }
   ctx.globalAlpha=1;
   // HUD góc trên trái: nhãn "Máu", "Vọng"
   ctx.fillStyle='rgba(12,15,20,.6)'; ctx.fillRect(3,4,113,26);
@@ -773,7 +869,10 @@ function resize(){
   const dpr=window.devicePixelRatio||1, vw=innerWidth, vh=innerHeight;
   const s=Math.floor(Math.min(vw*dpr/W, vh*dpr/H));
   const css=s>=1?s/dpr:Math.min(vw/W,vh/H);
-  cv.style.width=(W*css)+'px'; cv.style.height=(H*css)+'px';
+  const w=(W*css)+'px', h=(H*css)+'px';
+  if(cv.style.width!==w) cv.style.width=w;   // chỉ đổi khi thật sự khác (thanh địa chỉ Safari bắn resize liên tục)
+  if(cv.style.height!==h) cv.style.height=h;
+  if(document.body.classList.contains('touch')) requestAnimationFrame(measure);
 }
 addEventListener('resize',resize); addEventListener('orientationchange',()=>setTimeout(resize,200)); resize();
 
@@ -786,6 +885,7 @@ function showStep(){
   roomName.textContent=(S.room+1)+'/'+rooms.length+' '+r.name;
   let txt=st.t;
   if(P.echoHold) txt=txt.replace('Bấm {V} lần nữa','Thả {V}').replace('Bấm {V} để ghi','Giữ {V}').replace('Bấm {V}','Giữ {V}');
+  if(!P.autoPogo) txt=txt.replace('bấm {A} khi ở trên gai','kéo cần xuống {v} + {A}');
   roomHint.innerHTML=txt.replace(/\{(.)\}/g,(m,c)=>{ const q=CHIP[c]; return q?'<span class="k'+q[1]+'">'+q[0]+'</span>':m; });
   const want=new Set((txt.match(/\{(.)\}/g)||[]).map(m=>CHIP[m[1]]&&CHIP[m[1]][2]));
   ['b-j','b-a','b-s','b-v','dpad'].forEach(id=>document.getElementById(id).classList.toggle('pulse',want.has(id)));
@@ -821,7 +921,11 @@ const CFG=[['c-run','o-run','runSpeed',v=>v.toFixed(1)],['c-jump','o-jump','jump
   ['c-grav','o-grav','gravity',v=>v.toFixed(2)],['c-echo','o-echo','echoSeconds',v=>v.toFixed(1)+' giây'],
   ['c-wjx','o-wjx','wallJumpVx',v=>v.toFixed(1)],['c-stick','o-stick','wallStick',v=>(v/60).toFixed(2)+' giây']];
 const mTap=document.getElementById('c-mode-tap'), mHold=document.getElementById('c-mode-hold');
-function syncMode(){ mTap.setAttribute('aria-pressed',String(!P.echoHold)); mHold.setAttribute('aria-pressed',String(!!P.echoHold)); }
+const apOn=document.getElementById('c-ap-on'), apOff=document.getElementById('c-ap-off');
+function syncMode(){ mTap.setAttribute('aria-pressed',String(!P.echoHold)); mHold.setAttribute('aria-pressed',String(!!P.echoHold));
+  apOn.setAttribute('aria-pressed',String(!!P.autoPogo)); apOff.setAttribute('aria-pressed',String(!P.autoPogo)); }
+function setAuto(v){ P.autoPogo=v; syncMode(); saveCfg(); showStep(); }
+apOn.addEventListener('click',()=>setAuto(1)); apOff.addEventListener('click',()=>setAuto(0));
 function syncCfg(){ CFG.forEach(([i,o,k,fmt])=>{ document.getElementById(i).value=P[k]; document.getElementById(o).textContent=fmt(P[k]); }); syncMode(); }
 function setMode(h){ P.echoHold=h; rec=null; syncMode(); saveCfg(); showStep(); }
 mTap.addEventListener('click',()=>setMode(0)); mHold.addEventListener('click',()=>setMode(1));
@@ -839,11 +943,25 @@ document.getElementById('btn-reset').addEventListener('click',e=>{ resetRoom(S.r
 
 /* ================= CHẠY ================= */
 resetRoom(0); showStep();
-let last=performance.now(), accT=0; const DT=1000/60;
+// Logic cố định 60 bước/giây (accumulator), vẽ theo tần số màn hình (60/120 Hz) với nội suy vị trí theo alpha.
+const DT=1000/60, MAX_STEPS=4;
+let last=-1, accT=0;
+const fps={t0:0, frames:0, steps:0, worst:0, el:document.getElementById('fps')};
 function loop(now){
-  accT+=Math.min(100,now-last); last=now; let n=0;
-  while(accT>=DT-0.5 && n<5){ step(); accT-=DT; n++; }
-  render(); requestAnimationFrame(loop);
+  requestAnimationFrame(loop);
+  if(last<0){ last=now; fps.t0=now; }
+  let dt=now-last; last=now;
+  if(dt>250) dt=DT;                    // quay lại từ tab nền: không bù cả đống bước
+  accT+=dt; let n=0;
+  while(accT>=DT && n<MAX_STEPS){ savePrev(); step(); accT-=DT; n++; }
+  if(n===MAX_STEPS && accT>=DT) accT%=DT;   // máy quá chậm: bỏ phần dư thay vì chạy đuổi
+  render(accT/DT);
+  fps.frames++; fps.steps+=n; if(dt>fps.worst) fps.worst=dt;
+  if(now-fps.t0>=500){
+    const s=(now-fps.t0)/1000;
+    if(!cfgEl.hidden && fps.el) fps.el.textContent='FPS màn hình: '+Math.round(fps.frames/s)+' · logic: '+Math.round(fps.steps/s)+'/giây · khung chậm nhất: '+Math.round(fps.worst)+' ms';
+    fps.t0=now; fps.frames=0; fps.steps=0; fps.worst=0;
+  }
 }
 requestAnimationFrame(loop);
 </script>
