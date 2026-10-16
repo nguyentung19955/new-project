@@ -1,0 +1,1204 @@
+{
+ "action": "chay_thuong",
+ "gameKey": "chay_thuong",
+ "gameRow": {
+  "key": "chay2tay",
+  "hang": 27,
+  "so": 12,
+  "giay": 0.6,
+  "lap": true
+ },
+ "frameCount": 12,
+ "fps": 20.0,
+ "frameWidth": 96,
+ "frameHeight": 96,
+ "pivot": [
+  48,
+  90
+ ],
+ "coordinateSystem": "Điểm ảnh ô 96×96, gốc góc trên-trái, x phải, y xuống; chân (48,90). Quy đổi từ ảnh nguồn như tach_lop.doi_diem: X96 = dx + (x+0.5)·sx − 0.5 (sx, dx, dy của chính khung đó, lấy lại từ dung-zed-game.py).",
+ "frames": [
+  {
+   "frame": 0,
+   "joints": {
+    "neck": [
+     50.6,
+     51.5
+    ],
+    "head": [
+     51.5,
+     46.8
+    ],
+    "headTop": [
+     49.0,
+     25.3
+    ],
+    "chin": [
+     54.0,
+     49.7
+    ],
+    "shoulderFront": [
+     40.5,
+     54.2
+    ],
+    "elbowFront": [
+     38.7,
+     58.3
+    ],
+    "wristFront": [
+     44.6,
+     59.9
+    ],
+    "handFront": [
+     46.4,
+     60.6
+    ],
+    "shoulderBack": [
+     49.9,
+     55.4
+    ],
+    "elbowBack": [
+     52.2,
+     58.1
+    ],
+    "wristBack": [
+     57.3,
+     59.2
+    ],
+    "handBack": [
+     59.6,
+     59.9
+    ],
+    "hipFront": [
+     47.2,
+     66.7
+    ],
+    "kneeFront": [
+     52.8,
+     76.8
+    ],
+    "ankleFront": [
+     51.3,
+     84.1
+    ],
+    "toeFront": [
+     58.4,
+     87.7
+    ],
+    "hipBack": [
+     42.8,
+     67.3
+    ],
+    "kneeBack": [
+     37.2,
+     72.8
+    ],
+    "ankleBack": [
+     29.3,
+     69.4
+    ],
+    "toeBack": [
+     24.4,
+     73.7
+    ],
+    "hipCenter": [
+     45.0,
+     67.0
+    ],
+    "beltTop": [
+     45.0,
+     61.0
+    ],
+    "waist": [
+     46.8,
+     61.0
+    ]
+   }
+  },
+  {
+   "frame": 1,
+   "joints": {
+    "neck": [
+     52.2,
+     50.9
+    ],
+    "head": [
+     51.7,
+     46.7
+    ],
+    "headTop": [
+     51.0,
+     25.3
+    ],
+    "chin": [
+     55.5,
+     49.1
+    ],
+    "shoulderFront": [
+     42.1,
+     53.6
+    ],
+    "elbowFront": [
+     38.7,
+     57.4
+    ],
+    "wristFront": [
+     44.3,
+     59.2
+    ],
+    "handFront": [
+     46.6,
+     59.9
+    ],
+    "shoulderBack": [
+     51.0,
+     54.5
+    ],
+    "elbowBack": [
+     52.8,
+     56.9
+    ],
+    "wristBack": [
+     57.1,
+     58.1
+    ],
+    "handBack": [
+     60.0,
+     58.5
+    ],
+    "hipFront": [
+     47.7,
+     67.0
+    ],
+    "kneeFront": [
+     50.6,
+     73.8
+    ],
+    "ankleFront": [
+     38.0,
+     82.8
+    ],
+    "toeFront": [
+     39.8,
+     87.7
+    ],
+    "hipBack": [
+     42.5,
+     67.0
+    ],
+    "kneeBack": [
+     38.7,
+     72.4
+    ],
+    "ankleBack": [
+     34.2,
+     70.2
+    ],
+    "toeBack": [
+     33.1,
+     75.6
+    ],
+    "hipCenter": [
+     45.1,
+     67.0
+    ],
+    "beltTop": [
+     45.1,
+     60.3
+    ],
+    "waist": [
+     47.7,
+     60.3
+    ]
+   }
+  },
+  {
+   "frame": 2,
+   "joints": {
+    "neck": [
+     49.5,
+     51.0
+    ],
+    "head": [
+     51.4,
+     46.5
+    ],
+    "headTop": [
+     49.5,
+     25.3
+    ],
+    "chin": [
+     52.9,
+     49.0
+    ],
+    "shoulderFront": [
+     42.7,
+     53.3
+    ],
+    "elbowFront": [
+     40.0,
+     58.0
+    ],
+    "wristFront": [
+     45.5,
+     59.1
+    ],
+    "handFront": [
+     47.5,
+     59.5
+    ],
+    "shoulderBack": [
+     49.1,
+     54.4
+    ],
+    "elbowBack": [
+     50.0,
+     57.3
+    ],
+    "wristBack": [
+     54.7,
+     58.0
+    ],
+    "handBack": [
+     57.5,
+     58.4
+    ],
+    "hipFront": [
+     42.3,
+     66.2
+    ],
+    "kneeFront": [
+     40.5,
+     77.4
+    ],
+    "ankleFront": [
+     32.5,
+     82.6
+    ],
+    "toeFront": [
+     34.1,
+     87.9
+    ],
+    "hipBack": [
+     46.1,
+     66.2
+    ],
+    "kneeBack": [
+     46.8,
+     72.9
+    ],
+    "ankleBack": [
+     43.2,
+     75.8
+    ],
+    "toeBack": [
+     44.1,
+     76.7
+    ],
+    "hipCenter": [
+     44.2,
+     66.2
+    ],
+    "beltTop": [
+     44.2,
+     59.5
+    ],
+    "waist": [
+     45.9,
+     59.5
+    ]
+   }
+  },
+  {
+   "frame": 3,
+   "joints": {
+    "neck": [
+     48.2,
+     51.4
+    ],
+    "head": [
+     52.2,
+     46.8
+    ],
+    "headTop": [
+     48.7,
+     25.3
+    ],
+    "chin": [
+     51.0,
+     49.2
+    ],
+    "shoulderFront": [
+     40.8,
+     53.7
+    ],
+    "elbowFront": [
+     38.5,
+     58.0
+    ],
+    "wristFront": [
+     45.3,
+     59.3
+    ],
+    "handFront": [
+     47.6,
+     60.0
+    ],
+    "shoulderBack": [
+     48.2,
+     54.6
+    ],
+    "elbowBack": [
+     49.4,
+     57.5
+    ],
+    "wristBack": [
+     54.8,
+     58.6
+    ],
+    "handBack": [
+     57.3,
+     59.1
+    ],
+    "hipFront": [
+     45.3,
+     67.2
+    ],
+    "kneeFront": [
+     49.8,
+     71.0
+    ],
+    "ankleFront": [
+     41.9,
+     76.7
+    ],
+    "toeFront": [
+     43.5,
+     80.7
+    ],
+    "hipBack": [
+     40.3,
+     67.6
+    ],
+    "kneeBack": [
+     35.1,
+     77.8
+    ],
+    "ankleBack": [
+     28.3,
+     83.4
+    ],
+    "toeBack": [
+     31.2,
+     88.4
+    ],
+    "hipCenter": [
+     42.8,
+     67.4
+    ],
+    "beltTop": [
+     42.8,
+     60.4
+    ],
+    "waist": [
+     44.5,
+     60.4
+    ]
+   }
+  },
+  {
+   "frame": 4,
+   "joints": {
+    "neck": [
+     48.8,
+     51.1
+    ],
+    "head": [
+     52.0,
+     46.8
+    ],
+    "headTop": [
+     48.8,
+     25.3
+    ],
+    "chin": [
+     52.9,
+     49.1
+    ],
+    "shoulderFront": [
+     39.9,
+     53.6
+    ],
+    "elbowFront": [
+     37.6,
+     57.8
+    ],
+    "wristFront": [
+     44.3,
+     59.2
+    ],
+    "handFront": [
+     46.6,
+     59.9
+    ],
+    "shoulderBack": [
+     48.4,
+     54.5
+    ],
+    "elbowBack": [
+     51.1,
+     57.8
+    ],
+    "wristBack": [
+     56.0,
+     59.0
+    ],
+    "handBack": [
+     58.7,
+     59.2
+    ],
+    "hipFront": [
+     45.5,
+     67.0
+    ],
+    "kneeFront": [
+     52.2,
+     72.0
+    ],
+    "ankleFront": [
+     46.6,
+     78.7
+    ],
+    "toeFront": [
+     46.6,
+     83.7
+    ],
+    "hipBack": [
+     39.9,
+     67.5
+    ],
+    "kneeBack": [
+     32.0,
+     78.7
+    ],
+    "ankleBack": [
+     25.9,
+     83.7
+    ],
+    "toeBack": [
+     27.5,
+     88.1
+    ],
+    "hipCenter": [
+     42.7,
+     67.2
+    ],
+    "beltTop": [
+     42.7,
+     60.3
+    ],
+    "waist": [
+     44.8,
+     60.3
+    ]
+   }
+  },
+  {
+   "frame": 5,
+   "joints": {
+    "neck": [
+     51.3,
+     51.1
+    ],
+    "head": [
+     52.0,
+     46.9
+    ],
+    "headTop": [
+     50.2,
+     25.3
+    ],
+    "chin": [
+     55.1,
+     49.1
+    ],
+    "shoulderFront": [
+     41.2,
+     53.6
+    ],
+    "elbowFront": [
+     38.9,
+     58.1
+    ],
+    "wristFront": [
+     45.0,
+     59.6
+    ],
+    "handFront": [
+     47.0,
+     60.3
+    ],
+    "shoulderBack": [
+     49.1,
+     54.7
+    ],
+    "elbowBack": [
+     51.1,
+     57.4
+    ],
+    "wristBack": [
+     56.3,
+     58.5
+    ],
+    "handBack": [
+     58.5,
+     59.6
+    ],
+    "hipFront": [
+     47.3,
+     67.0
+    ],
+    "kneeFront": [
+     51.8,
+     77.6
+    ],
+    "ankleFront": [
+     50.2,
+     83.7
+    ],
+    "toeFront": [
+     58.5,
+     86.6
+    ],
+    "hipBack": [
+     42.7,
+     67.5
+    ],
+    "kneeBack": [
+     37.1,
+     74.7
+    ],
+    "ankleBack": [
+     30.4,
+     73.8
+    ],
+    "toeBack": [
+     26.3,
+     78.3
+    ],
+    "hipCenter": [
+     45.0,
+     67.2
+    ],
+    "beltTop": [
+     45.0,
+     60.3
+    ],
+    "waist": [
+     47.1,
+     60.3
+    ]
+   }
+  },
+  {
+   "frame": 6,
+   "joints": {
+    "neck": [
+     50.2,
+     51.1
+    ],
+    "head": [
+     51.2,
+     46.9
+    ],
+    "headTop": [
+     49.1,
+     25.3
+    ],
+    "chin": [
+     53.1,
+     49.1
+    ],
+    "shoulderFront": [
+     40.7,
+     53.6
+    ],
+    "elbowFront": [
+     38.4,
+     57.8
+    ],
+    "wristFront": [
+     45.1,
+     59.6
+    ],
+    "handFront": [
+     46.9,
+     60.1
+    ],
+    "shoulderBack": [
+     48.7,
+     54.7
+    ],
+    "elbowBack": [
+     50.7,
+     57.4
+    ],
+    "wristBack": [
+     55.4,
+     58.5
+    ],
+    "handBack": [
+     58.0,
+     59.2
+    ],
+    "hipFront": [
+     46.9,
+     67.0
+    ],
+    "kneeFront": [
+     52.5,
+     77.6
+    ],
+    "ankleFront": [
+     50.9,
+     83.7
+    ],
+    "toeFront": [
+     58.0,
+     87.0
+    ],
+    "hipBack": [
+     42.0,
+     67.5
+    ],
+    "kneeBack": [
+     35.8,
+     73.1
+    ],
+    "ankleBack": [
+     30.2,
+     72.4
+    ],
+    "toeBack": [
+     28.0,
+     76.5
+    ],
+    "hipCenter": [
+     44.5,
+     67.2
+    ],
+    "beltTop": [
+     44.5,
+     60.3
+    ],
+    "waist": [
+     46.4,
+     60.3
+    ]
+   }
+  },
+  {
+   "frame": 7,
+   "joints": {
+    "neck": [
+     49.0,
+     51.0
+    ],
+    "head": [
+     51.8,
+     46.8
+    ],
+    "headTop": [
+     49.5,
+     25.3
+    ],
+    "chin": [
+     52.8,
+     49.0
+    ],
+    "shoulderFront": [
+     40.4,
+     53.3
+    ],
+    "elbowFront": [
+     37.0,
+     57.7
+    ],
+    "wristFront": [
+     44.5,
+     59.1
+    ],
+    "handFront": [
+     46.1,
+     60.0
+    ],
+    "shoulderBack": [
+     47.9,
+     54.6
+    ],
+    "elbowBack": [
+     49.5,
+     57.3
+    ],
+    "wristBack": [
+     54.6,
+     58.4
+    ],
+    "handBack": [
+     56.9,
+     59.1
+    ],
+    "hipFront": [
+     43.8,
+     66.9
+    ],
+    "kneeFront": [
+     47.2,
+     72.9
+    ],
+    "ankleFront": [
+     34.8,
+     81.9
+    ],
+    "toeFront": [
+     39.3,
+     87.5
+    ],
+    "hipBack": [
+     39.3,
+     67.3
+    ],
+    "kneeBack": [
+     32.5,
+     70.7
+    ],
+    "ankleBack": [
+     29.1,
+     69.6
+    ],
+    "toeBack": [
+     26.9,
+     71.4
+    ],
+    "hipCenter": [
+     41.5,
+     67.1
+    ],
+    "beltTop": [
+     41.5,
+     59.7
+    ],
+    "waist": [
+     44.2,
+     59.7
+    ]
+   }
+  },
+  {
+   "frame": 8,
+   "joints": {
+    "neck": [
+     49.1,
+     50.3
+    ],
+    "head": [
+     52.0,
+     46.2
+    ],
+    "headTop": [
+     49.5,
+     24.3
+    ],
+    "chin": [
+     52.4,
+     48.3
+    ],
+    "shoulderFront": [
+     40.5,
+     52.6
+    ],
+    "elbowFront": [
+     37.6,
+     57.1
+    ],
+    "wristFront": [
+     44.3,
+     58.5
+    ],
+    "handFront": [
+     46.1,
+     59.2
+    ],
+    "shoulderBack": [
+     48.4,
+     54.0
+    ],
+    "elbowBack": [
+     50.6,
+     56.7
+    ],
+    "wristBack": [
+     55.6,
+     57.8
+    ],
+    "handBack": [
+     58.1,
+     58.5
+    ],
+    "hipFront": [
+     48.4,
+     66.4
+    ],
+    "kneeFront": [
+     52.9,
+     70.3
+    ],
+    "ankleFront": [
+     42.7,
+     75.9
+    ],
+    "toeFront": [
+     43.9,
+     80.4
+    ],
+    "hipBack": [
+     42.7,
+     66.9
+    ],
+    "kneeBack": [
+     36.0,
+     78.2
+    ],
+    "ankleBack": [
+     29.2,
+     82.2
+    ],
+    "toeBack": [
+     31.5,
+     87.2
+    ],
+    "hipCenter": [
+     45.5,
+     66.7
+    ],
+    "beltTop": [
+     45.5,
+     59.2
+    ],
+    "waist": [
+     46.3,
+     59.2
+    ]
+   }
+  },
+  {
+   "frame": 9,
+   "joints": {
+    "neck": [
+     49.4,
+     50.3
+    ],
+    "head": [
+     52.0,
+     46.1
+    ],
+    "headTop": [
+     49.8,
+     24.3
+    ],
+    "chin": [
+     53.2,
+     48.3
+    ],
+    "shoulderFront": [
+     39.8,
+     52.6
+    ],
+    "elbowFront": [
+     37.5,
+     57.1
+    ],
+    "wristFront": [
+     43.8,
+     58.5
+    ],
+    "handFront": [
+     46.0,
+     59.4
+    ],
+    "shoulderBack": [
+     47.6,
+     54.0
+    ],
+    "elbowBack": [
+     49.8,
+     56.7
+    ],
+    "wristBack": [
+     55.0,
+     57.8
+    ],
+    "handBack": [
+     57.7,
+     58.5
+    ],
+    "hipFront": [
+     46.0,
+     66.4
+    ],
+    "kneeFront": [
+     50.9,
+     71.4
+    ],
+    "ankleFront": [
+     40.9,
+     77.0
+    ],
+    "toeFront": [
+     42.0,
+     80.9
+    ],
+    "hipBack": [
+     39.8,
+     66.9
+    ],
+    "kneeBack": [
+     34.2,
+     77.7
+    ],
+    "ankleBack": [
+     26.3,
+     83.1
+    ],
+    "toeBack": [
+     28.6,
+     87.7
+    ],
+    "hipCenter": [
+     42.9,
+     66.7
+    ],
+    "beltTop": [
+     42.9,
+     59.6
+    ],
+    "waist": [
+     45.1,
+     59.6
+    ]
+   }
+  },
+  {
+   "frame": 10,
+   "joints": {
+    "neck": [
+     49.6,
+     50.2
+    ],
+    "head": [
+     51.9,
+     45.9
+    ],
+    "headTop": [
+     49.6,
+     24.3
+    ],
+    "chin": [
+     53.7,
+     48.2
+    ],
+    "shoulderFront": [
+     41.8,
+     52.5
+    ],
+    "elbowFront": [
+     39.6,
+     57.0
+    ],
+    "wristFront": [
+     46.3,
+     58.4
+    ],
+    "handFront": [
+     48.5,
+     59.0
+    ],
+    "shoulderBack": [
+     49.6,
+     53.9
+    ],
+    "elbowBack": [
+     51.9,
+     56.8
+    ],
+    "wristBack": [
+     56.8,
+     57.7
+    ],
+    "handBack": [
+     59.2,
+     58.4
+    ],
+    "hipFront": [
+     49.6,
+     66.3
+    ],
+    "kneeFront": [
+     53.7,
+     72.3
+    ],
+    "ankleFront": [
+     47.4,
+     78.4
+    ],
+    "toeFront": [
+     48.5,
+     82.5
+    ],
+    "hipBack": [
+     42.9,
+     66.7
+    ],
+    "kneeBack": [
+     37.4,
+     78.0
+    ],
+    "ankleBack": [
+     28.4,
+     82.9
+    ],
+    "toeBack": [
+     30.7,
+     87.5
+    ],
+    "hipCenter": [
+     46.2,
+     66.5
+    ],
+    "beltTop": [
+     46.2,
+     59.5
+    ],
+    "waist": [
+     46.9,
+     59.5
+    ]
+   }
+  },
+  {
+   "frame": 11,
+   "joints": {
+    "neck": [
+     51.6,
+     51.0
+    ],
+    "head": [
+     51.2,
+     46.6
+    ],
+    "headTop": [
+     50.9,
+     25.3
+    ],
+    "chin": [
+     55.0,
+     49.0
+    ],
+    "shoulderFront": [
+     41.4,
+     53.5
+    ],
+    "elbowFront": [
+     39.1,
+     58.0
+    ],
+    "wristFront": [
+     45.2,
+     59.5
+    ],
+    "handFront": [
+     47.3,
+     60.2
+    ],
+    "shoulderBack": [
+     49.3,
+     54.6
+    ],
+    "elbowBack": [
+     51.4,
+     57.3
+    ],
+    "wristBack": [
+     56.6,
+     58.4
+    ],
+    "handBack": [
+     58.9,
+     59.5
+    ],
+    "hipFront": [
+     47.5,
+     66.9
+    ],
+    "kneeFront": [
+     52.1,
+     77.4
+    ],
+    "ankleFront": [
+     50.5,
+     83.5
+    ],
+    "toeFront": [
+     58.9,
+     86.4
+    ],
+    "hipBack": [
+     43.0,
+     67.3
+    ],
+    "kneeBack": [
+     37.3,
+     74.5
+    ],
+    "ankleBack": [
+     30.4,
+     73.6
+    ],
+    "toeBack": [
+     26.3,
+     78.1
+    ],
+    "hipCenter": [
+     45.2,
+     67.1
+    ],
+    "beltTop": [
+     45.2,
+     60.2
+    ],
+    "waist": [
+     47.4,
+     60.2
+    ]
+   }
+  }
+ ],
+ "source": {
+  "sheet": "game/art/custom/zed-moi.sprite.json, dong_tac.chay2tay (hàng 27, 12 khung, 0.60 giây/lượt, lặp)",
+  "highRes": "docs/anh-goc/zed/moi/03-chay-2tay-gif/03-chay-2tay/khung-01..12.png",
+  "manual": "rig/dong-tac/chay_thuong/khop-tay.json",
+  "auto": "head = tâm mảng da mặt (như dung-zed-game.do_dau) trừ khi khop-tay ghi \"dau\"; hipCenter = giữa 2 hông nếu không ghi; beltTop/waist như tao-bo.khop_va_neo"
+ },
+ "hidden": {
+  "3": [
+   "ankleBack",
+   "toeBack"
+  ]
+ },
+ "notes": [
+  "Game chạy cầm thương dùng hàng thân \"chay2tay\" (zed_moi.js: chay + thương/búa → chay2tay), nên đo trên hàng đó.",
+  "Khung 3: chân sau khuất sau chân trước, chỉ thấy gối; cổ chân + mũi chân sau là đoán (ghi trong hidden).",
+  "Ảnh gen lặp dáng: khung 1 = 6 = 7 = 12 (chân trụ phía trước, chân sau duỗi ra sau), 2 ≈ 8, 4 ≈ 9 ≈ 10, 5 ≈ 11; chân trước/sau phân theo hình vẽ từng khung, không theo một chân thật suốt chu kỳ.",
+  "Hai nắm tay luôn ở trước ngực (cầm cán thương): handFront ≈ giữa ngực, handBack xa hơn về phía trước."
+ ]
+}
