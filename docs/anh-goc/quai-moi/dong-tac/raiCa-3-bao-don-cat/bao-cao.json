@@ -1,0 +1,102 @@
+{
+ "anh": "../song/raiCa-6-hang.png",
+ "cong_cu": "docs/review/ke-hoach-cai-thien/quai-song-moi/cong-cu/cat-6-hang.py",
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 233,
+  "vien_khu": 17218,
+  "nga_mau_nen_trong_hinh": 874
+ },
+ "hang": [
+  {
+   "ten": "bao-don",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      22,
+      373,
+      237,
+      586
+     ],
+     "co": [
+      215,
+      213
+     ],
+     "sua": "khung 1 hàng nhảy (cắm sào lấy đà)"
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      22,
+      373,
+      237,
+      586
+     ],
+     "co": [
+      215,
+      213
+     ],
+     "sua": "khung 1 hàng nhảy (cắm sào lấy đà)"
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      22,
+      373,
+      237,
+      586
+     ],
+     "co": [
+      215,
+      213
+     ],
+     "sua": "khung 1 hàng nhảy (cắm sào lấy đà)"
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      22,
+      373,
+      237,
+      586
+     ],
+     "co": [
+      215,
+      213
+     ],
+     "sua": "khung 1 hàng nhảy (cắm sào lấy đà)"
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      22,
+      373,
+      237,
+      586
+     ],
+     "co": [
+      215,
+      213
+     ],
+     "sua": "khung 1 hàng nhảy (cắm sào lấy đà)"
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      22,
+      373,
+      237,
+      586
+     ],
+     "co": [
+      215,
+      213
+     ],
+     "sua": "khung 1 hàng nhảy (cắm sào lấy đà)"
+    }
+   ]
+  }
+ ]
+}

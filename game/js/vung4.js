@@ -98,8 +98,10 @@
   const MA = G.monsterArt;
   if (MA && typeof MA.draw === 'function') {
     const d0 = MA.draw;
-    MA.draw = function (c) {
-      if (!V4.dangVe || !c || !('filter' in c)) return d0.apply(this, arguments);
+    // 16/10 quai-song-moi: quái Sông sâu đã có ảnh thật (game/art/custom/<mã>.sprite.json, vùng 'song') vẽ đúng màu ảnh, không nhuộm nước đục.
+    const anhSong = (id) => { const S = G.spriteCustom, d = MA._defs && MA._defs[id]; return !!(d && d.vung === 'song' && S && S.ds && S.ds[id]); };
+    MA.draw = function (c, id) {
+      if (!V4.dangVe || !c || !('filter' in c) || anhSong(id)) return d0.apply(this, arguments);
       // 16/10 vẽ tay 9: nhuộm nhanh (G.locVe, js/fx_anh.js; ?songnhanh=0 như cũ)
       if (G.locVe) { const f0 = G.locHien(c), th = this, ar = arguments; return G.locVe(c, f0 ? f0 + ' ' + V4.LOC : V4.LOC, () => d0.apply(th, ar)); }
       const f0 = c.filter;

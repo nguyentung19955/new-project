@@ -140,8 +140,14 @@
 
   // ---------- nạp một tệp ----------
   // tep: nội dung tệp .sprite.json (đối tượng). Trả về sprite (đang nạp ảnh) hoặc null nếu tệp hỏng.
+  // 16/10 quai-song-moi (docs/review/ke-hoach-cai-thien/quai-song-moi/bao-cao.md): 4 quái thường Sông sâu có ảnh thật. Cờ ?quaisongmoi=0
+  // (G.QUAI_SONG_MOI = false): không nạp 4 tệp này → game vẽ HÌNH TẠM như trước (ảnh con mượn nhuộm màu, js/ky_nang_quai.js KN.veTam).
+  // Bỏ ngay ở đây nên ảnh rời cũng không vào hàng tải / không tính vào "Đang tải ảnh vùng".
+  if (G.QUAI_SONG_MOI == null) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]quaisongmoi=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.QUAI_SONG_MOI = !tat; }
+  const QUAI_SONG_MOI = { raiCa: 1, diaTrau: 1, baBa: 1, cocTia: 1 };
   SC.add = function (tep) {
     if (tep && tep.doi_tuong === 'hieu-ung') return G.fxAnh ? G.fxAnh.add(tep) : null; // hiệu ứng ảnh AI (js/fx_anh.js)
+    if (tep && G.QUAI_SONG_MOI === false && tep.doi_tuong === 'quai' && QUAI_SONG_MOI[tep.ma]) return null;
     try {
       if (!tep || typeof tep !== 'object' || typeof tep.ma !== 'string' || !/^[A-Za-z0-9_-]{1,40}$/.test(tep.ma)) throw new Error('thiếu mã');
       if (LOAI_BO[tep.doi_tuong]) throw new Error('đã bỏ ở đợt 2: ' + LOAI_BO[tep.doi_tuong]);

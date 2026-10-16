@@ -1,0 +1,96 @@
+{
+ "anh": "../song/cocTia-6-hang.png",
+ "cong_cu": "docs/review/ke-hoach-cai-thien/quai-song-moi/cong-cu/cat-6-hang.py",
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 13,
+  "vien_khu": 12998,
+  "nga_mau_nen_trong_hinh": 96
+ },
+ "hang": [
+  {
+   "ten": "dung",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      25,
+      45,
+      210,
+      170
+     ],
+     "co": [
+      185,
+      125
+     ]
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      269,
+      42,
+      457,
+      171
+     ],
+     "co": [
+      188,
+      129
+     ]
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      513,
+      42,
+      700,
+      171
+     ],
+     "co": [
+      187,
+      129
+     ]
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      748,
+      39,
+      946,
+      171
+     ],
+     "co": [
+      198,
+      132
+     ]
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      997,
+      39,
+      1187,
+      171
+     ],
+     "co": [
+      190,
+      132
+     ]
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1237,
+      41,
+      1429,
+      171
+     ],
+     "co": [
+      192,
+      130
+     ]
+    }
+   ]
+  }
+ ]
+}

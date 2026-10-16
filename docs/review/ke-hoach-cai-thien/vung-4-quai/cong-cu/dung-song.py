@@ -42,16 +42,16 @@ BUOC_THAN = 0.5
 # (js/ky_nang_quai.js SO — game trải hàng báo đòn đúng thời gian báo trước). atk / hit / die: thời lượng cử động của def (js/monster_art.js MA.dur,
 # def mượn). khung: cột hàng đánh được phát (từ 0). bay: con bay / bơi (căn theo tâm thân). Số dưới là đề xuất — xem ảnh rồi chỉnh.
 CFG = {
-    'raiCa':    dict(ten='Rái Cá Cầm Sào',  muon='heoCon',   toc=44, tele=0.6,  atk=0.6,  die=1.2, khung=[2, 3, 4, 5]),   # chống sào nhảy → đập sào khi đáp
-    'diaTrau':  dict(ten='Bầy Đỉa Trâu',    muon='caCon',    toc=60, tele=0.5,  atk=0.6,  die=1.1),                       # nhổm lên → lao bám (hàng đánh lặp lúc lao)
+    'raiCa':    dict(ten='Rái Cá Cầm Sào',  muon='heoCon',   toc=44, tele=0.6,  atk=0.6,  die=1.2, khung=[3, 4, 5]),      # chống sào nhảy → đập sào khi đáp (hàng đánh = khung 2–6 hàng nhảy; game phát lúc ĐÁP → mở bằng cú đập, quai-song-moi/bao-cao.md)
+    'diaTrau':  dict(ten='Bầy Đỉa Trâu',    muon='caCon',    toc=60, tele=0.5,  atk=0.6,  die=1.1, khung=[1, 2, 3, 4, 5], cao=28),   # cao 28: bầy 3 con bè ngang, cỡ con mượn (35) thì rộng 56 > hộp 36 → ô 58×43 như ảnh gốc 116×86                       # nhổm lên → lao bám (hàng đánh lặp lúc lao)
     'baBa':     dict(ten='Ba Ba Mai Đồng',  muon='boHung',   toc=26 * 0.6, tele=0.6, atk=0.6, die=1.2, khung=[2, 3, 4, 5]),  # rụt cổ → phóng cổ đớp
-    'cocTia':   dict(ten='Cóc Tía Phun Bọt', muon='hoaBaoTu', toc=38, tele=0.7,  atk=0.6,  die=1.4, khung=[2, 3, 4, 5]),  # phồng má → phun 3 bọt
+    'cocTia':   dict(ten='Cóc Tía Phun Bọt', muon='hoaBaoTu', toc=38, tele=0.7,  atk=0.6,  die=1.4, khung=[1, 2, 3, 4, 5], cao=37),   # cao 37: thân rộng ≈ hộp va chạm 53 của con mượn  # phồng má → phun 3 bọt
     'ranNuoc':  dict(ten='Rắn Nước Sọc',    muon='chonBong', toc=78, tele=0.45, atk=0.55, die=1.2, khung=[2, 3, 4, 5]),  # lặn (báo đòn = trườn xuống nước) → trồi đớp
     'echPhinh': dict(ten='Ếch Phình Hơi',   muon='caNoc',    toc=48, tele=1.0,  atk=0.55, die=1.1, giu_co=['tele']),      # phình to dần có chủ ý (không chuẩn cỡ từng khung)
     'maDa':     dict(ten='Ma Da Tóc Rong',  muon='tieuYeu',  toc=34, tele=0.5,  atk=0.75, die=1.2, khung=[2, 3, 4, 5]),  # vung tay ném bầu nước
     'traiGai':  dict(ten='Trai Sông Gai',   muon='oc',       toc=26, tele=2.2,  atk=0.55, die=1.2, khung=[2, 3, 4, 5]),  # há vỏ 1,4 + báo 0,8 → bắn ngọc
 }
-for k in ('diaTrau', 'echPhinh'): CFG[k]['bay'] = True   # con mượn là con bơi (Bầy Cá Con, Cá Nóc): bỏ dòng này nếu ảnh mới vẽ đứng trên đất
+for k in ('echPhinh',): CFG[k]['bay'] = True   # con mượn là con bơi (Cá Nóc): bỏ nếu ảnh mới vẽ đứng trên đất. Đỉa Trâu: ảnh mới (quai-song-moi) bò trên đất → bỏ 'bay'
 
 
 def du_anh(ma):

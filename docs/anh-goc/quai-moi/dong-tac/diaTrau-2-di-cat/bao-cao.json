@@ -1,0 +1,96 @@
+{
+ "anh": "../song/diaTrau-6-hang.png",
+ "cong_cu": "docs/review/ke-hoach-cai-thien/quai-song-moi/cong-cu/cat-6-hang.py",
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 36,
+  "vien_khu": 12886,
+  "nga_mau_nen_trong_hinh": 1271
+ },
+ "hang": [
+  {
+   "ten": "di",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      30,
+      226,
+      231,
+      347
+     ],
+     "co": [
+      201,
+      121
+     ]
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      269,
+      226,
+      481,
+      347
+     ],
+     "co": [
+      212,
+      121
+     ]
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      511,
+      224,
+      720,
+      347
+     ],
+     "co": [
+      209,
+      123
+     ]
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      753,
+      225,
+      961,
+      347
+     ],
+     "co": [
+      208,
+      122
+     ]
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      993,
+      228,
+      1199,
+      347
+     ],
+     "co": [
+      206,
+      119
+     ]
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1235,
+      224,
+      1439,
+      347
+     ],
+     "co": [
+      204,
+      123
+     ]
+    }
+   ]
+  }
+ ]
+}
