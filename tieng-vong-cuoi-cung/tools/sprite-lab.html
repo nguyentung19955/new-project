@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thợ Săn Chuông – Sprite Lab</title>
+<style>
+  :root{--bg:#12151d;--panel:#1b2030;--line:#2c3448;--text:#e8e3d6;--mute:#8d96ab;--acc:#e1b85a;--red:#e0645c;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  header{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+  header h1{margin:0;font-size:17px}
+  header span{color:var(--mute);font-size:13px}
+  main{display:grid;grid-template-columns:minmax(300px,460px) 1fr;gap:16px;padding:16px}
+  @media (max-width:860px){main{grid-template-columns:1fr;padding:12px}}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:16px}
+  .panel h2{margin:0 0 10px;font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--mute)}
+  .stage{display:flex;justify-content:center;align-items:center;min-height:300px;border-radius:8px;overflow:auto;margin-bottom:10px}
+  .bg-checker{background-color:#2a3042;background-image:linear-gradient(45deg,#353c52 25%,transparent 25%),linear-gradient(-45deg,#353c52 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#353c52 75%),linear-gradient(-45deg,transparent 75%,#353c52 75%);background-size:16px 16px;background-position:0 0,0 8px,8px -8px,-8px 0}
+  .bg-dark{background:#0b0d12}
+  .bg-light{background:#d9d4c7}
+  canvas.px{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
+  button{background:#262d40;color:var(--text);border:1px solid var(--line);border-radius:7px;padding:7px 11px;font:inherit;cursor:pointer}
+  button:hover{border-color:#4a5570}
+  button.on{background:var(--acc);color:#1b1f2a;border-color:var(--acc);font-weight:600}
+  .row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;align-items:center}
+  label{display:inline-flex;gap:6px;align-items:center}
+  select,input[type=number]{background:#262d40;color:var(--text);border:1px solid var(--line);border-radius:6px;padding:5px 6px;font:inherit}
+  input[type=number]{width:64px}
+  .info{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;background:#141824;border-radius:7px;padding:9px 11px;margin-bottom:10px;line-height:1.6}
+  .info b{color:var(--acc)}
+  .hit{color:var(--red);font-weight:700}
+  .warn{color:var(--red);font-size:12.5px;min-height:18px;margin-bottom:6px}
+  .strip{display:flex;gap:6px;flex-wrap:wrap}
+  .strip .cell{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px;border-radius:6px;border:1px solid transparent}
+  .strip .cell.sel{border-color:var(--acc)}
+  .strip .cell small{color:var(--mute);font-size:11px}
+  .sheetwrap{overflow:auto;border-radius:8px;padding:8px}
+  .muted{color:var(--mute);font-size:12.5px}
+  kbd{background:#262d40;border:1px solid var(--line);border-radius:4px;padding:0 5px;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Thợ Săn Chuông · Sprite Lab</h1>
+  <span>Dựng 3D → animation → pixel 24×24 → sprite sheet</span>
+</header>
+
+<main>
+  <!-- CỘT TRÁI: xem animation -->
+  <section>
+    <div class="panel">
+      <h2>Animation</h2>
+      <div class="row" id="animButtons"></div>
+
+      <div class="stage bg-checker" id="stage">
+        <canvas id="preview" class="px"></canvas>
+      </div>
+
+      <div class="info" id="info"></div>
+      <div class="warn" id="warn"></div>
+
+      <div class="row">
+        <button id="btnPrev" title="Khung trước (←)">◀ Khung trước</button>
+        <button id="btnPlay" title="Phát / dừng (Space)">❚❚ Pause</button>
+        <button id="btnNext" title="Khung sau (→)">Khung sau ▶</button>
+        <label>FPS <input type="number" id="fps" min="1" max="60" value="12"></label>
+      </div>
+
+      <h2>Từng khung</h2>
+      <div class="strip" id="strip"></div>
+      <p class="muted">Phím tắt: <kbd>Space</kbd> phát/dừng · <kbd>←</kbd> <kbd>→</kbd> đổi khung · <kbd>1</kbd>–<kbd>8</kbd> chọn animation</p>
+    </div>
+  </section>
+
+  <!-- CỘT PHẢI: tùy chọn, xuất ảnh, sprite sheet -->
+  <section>
+    <div class="panel">
+      <h2>Hiển thị</h2>
+      <div class="row">
+        <label>Phóng to
+          <select id="zoom">
+            <option value="1">1× (24×24 thật)</option>
+            <option value="4">4×</option>
+            <option value="8">8×</option>
+            <option value="12" selected>12×</option>
+            <option value="16">16×</option>
+          </select>
+        </label>
+        <label>Nền
+          <select id="bg">
+            <option value="checker" selected>Ca rô (trong suốt)</option>
+            <option value="dark">Tối</option>
+            <option value="light">Sáng</option>
+          </select>
+        </label>
+      </div>
+      <div class="row">
+        <label><input type="checkbox" id="optRaw"> Xem render gốc 96×96</label>
+        <label><input type="checkbox" id="optPivot" checked> Hiện pivot</label>
+      </div>
+      <div class="row">
+        <label><input type="checkbox" id="optPalette" checked> Khóa bảng màu</label>
+        <label><input type="checkbox" id="optOutline" checked> Viền ngoài 1px</label>
+      </div>
+      <p class="muted">Pivot (chấm đỏ) chỉ hiện khi xem, không có trong ảnh xuất.</p>
+    </div>
+
+    <div class="panel">
+      <h2>Xuất ảnh</h2>
+      <div class="row">
+        <button id="btnExportAnim">Tải PNG animation đang chọn</button>
+        <button id="btnExportSheet">Tải PNG sprite sheet tổng</button>
+        <button id="btnExportJson">Tải JSON thông tin khung</button>
+      </div>
+      <div class="info" id="sheetInfo"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Sprite sheet (xem trước có nhãn)</h2>
+      <div class="sheetwrap bg-checker" id="sheetWrap">
+        <canvas id="sheetPreview" class="px"></canvas>
+      </div>
+      <p class="muted">Nhãn chỉ có trong bản xem trước. File PNG xuất ra là lưới sạch, mỗi ô đúng 24×24, mỗi hàng một animation.</p>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+
+/* =====================================================================
+   CẤU HÌNH CHUNG
+   1 đơn vị trong cảnh 3D = 1 pixel của ảnh 24×24.
+   ===================================================================== */
+const CELL = 24;              // kích thước ô sprite xuất ra
+const SS = 4;                 // hệ số render nội bộ
+const RENDER = CELL * SS;     // 96×96
+const VIEW = { left: -10.5, right: 13.5, top: 22, bottom: -2 }; // khung camera (đơn vị pixel)
+const PIVOT_PX = { x: -VIEW.left, y: VIEW.top };                 // pivot trong ô: (10.5, 22)
+
+// Bảng màu theo hình nhân vật đã chốt
+const PAL = {
+  ink:       0x0C0F14, // viền, mảng tối nhất, găng tay, lòng mũ
+  cloak:     0x212835, // mũ, áo choàng
+  dark:      0x1A212B, // bóng, tay chân phía xa
+  greenDark: 0x21413A, // xanh tối
+  green:     0x32804F, // xanh lá chính (áo trong)
+  mint:      0x83CC93, // viền sáng xanh, lưỡi kiếm
+  light:     0xCEF0D6, // điểm sáng, mắt, cạnh kiếm
+  slate:     0x4A5A6E, // xám kim loại: quai đeo
+  gold:      0xE1B85A, // điểm nhấn ấm: chuông, chắn kiếm
+  goldDark:  0x9C6B30, // bóng của vàng đồng
+  cream:     0xF3E6C8  // ánh sáng trên chuông
+};
+const PAL_RGB = Object.values(PAL).map(h => [(h >> 16) & 255, (h >> 8) & 255, h & 255]);
+
+/* =====================================================================
+   RENDERER + CAMERA + ÁNH SÁNG
+   Camera orthographic cố định, nhìn ngang dọc trục -Z.
+   Ánh sáng là một hướng cố định trong không gian thế giới (uniform shader).
+   ===================================================================== */
+const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1);
+renderer.setSize(RENDER, RENDER, false);
+renderer.setClearColor(0x000000, 0);   // nền trong suốt, không có bóng đổ nền
+
+const scene = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(VIEW.left, VIEW.right, VIEW.top, VIEW.bottom, 0.1, 200);
+camera.position.set(0, 0, 60);
+camera.lookAt(0, 0, 0);
+
+const LIGHT_DIR = new THREE.Vector3(0.45, 0.75, 0.5).normalize();
+
+// Shader 2 tông: mặt hướng sáng = màu gốc, mặt khuất = màu bóng.
+// Xuất thẳng giá trị sRGB nên màu trên ảnh đúng mã màu trong bảng.
+const VS = `
+  varying vec3 vN;
+  void main(){
+    vN = normalize(mat3(modelMatrix) * normal);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }`;
+const FS = `
+  uniform vec3 uBase;
+  uniform vec3 uShade;
+  uniform vec3 uLight;
+  varying vec3 vN;
+  void main(){
+    float d = dot(normalize(vN), uLight);
+    gl_FragColor = vec4(d > 0.15 ? uBase : uShade, 1.0);
+  }`;
+const hexVec = h => new THREE.Vector3(((h >> 16) & 255) / 255, ((h >> 8) & 255) / 255, (h & 255) / 255);
+const matCache = new Map();
+function mat(base, shade = base) {
+  const key = base + '_' + shade;
+  if (!matCache.has(key)) {
+    matCache.set(key, new THREE.ShaderMaterial({
+      uniforms: { uBase: { value: hexVec(base) }, uShade: { value: hexVec(shade) }, uLight: { value: LIGHT_DIR } },
+      vertexShader: VS, fragmentShader: FS
+    }));
+  }
+  return matCache.get(key);
+}
+
+/* =====================================================================
+   MODEL: dựng nhân vật từ khối đơn giản trên một hệ khớp duy nhất.
+   Mọi animation chỉ xoay / dịch các khớp này.
+   Quy ước góc xoay Z: dương = đầu chi đang buông xuống vung về phía trước (+X);
+   với thân / đầu, dương = ngả ra sau.
+   ===================================================================== */
+function joint(parent, x, y, z) {
+  const g = new THREE.Group();
+  g.position.set(x, y, z);
+  parent.add(g);
+  return g;
+}
+function box(parent, w, h, d, base, shade, x, y, z, rotZ = 0) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat(base, shade));
+  m.position.set(x, y, z);
+  m.rotation.z = rotZ;
+  parent.add(m);
+  return m;
+}
+
+const rig = {};
+rig.root = joint(scene, 0, 0, 0);          // PIVOT GỐC: giữa hai bàn chân, trên mặt đất. Không bao giờ di chuyển.
+rig.body = joint(rig.root, 0, 0, 0);       // dùng để nghiêng / ngã cả người (death)
+rig.hips = joint(rig.body, 0, 5.7, 0);     // hông
+
+// --- Chân: đùi 3, cẳng 2.5, bàn chân 0.5 → hông cao 6 khi đứng thẳng
+function makeLeg(near) {
+  const z = near ? 0.8 : -0.8;
+  const col = near ? PAL.cloak : PAL.dark;           // chân xa tối hơn để tách lớp
+  const hip = joint(rig.hips, near ? 0.3 : -0.3, 0, z);
+  box(hip, 1.7, 3.3, 1.2, col, PAL.dark, 0, -1.5, 0);  // đùi
+  const knee = joint(hip, 0, -3, 0);
+  box(knee, 1.5, 2.7, 1.1, col, PAL.dark, 0, -1.2, 0);  // cẳng chân
+  const ankle = joint(knee, 0, -2.5, 0);
+  box(ankle, 2.5, 0.9, 1.25, PAL.ink, PAL.ink, 0.45, -0.05, 0); // giày, đáy ở -0.5
+  return { hip, knee, ankle, hx: near ? 0.3 : -0.3 };
+}
+rig.legF = makeLeg(false);
+rig.legN = makeLeg(true);
+
+// --- Thân + áo choàng ngắn
+rig.torso = joint(rig.hips, 0, 0, 0);
+box(rig.torso, 4.4, 6.8, 3.0, PAL.cloak, PAL.dark, -0.1, 3.3, 0);     // thân áo choàng
+box(rig.torso, 1.45, 4.2, 3.1, PAL.green, PAL.greenDark, 1.45, 3.7, 0);       // áo trong đỏ gạch lộ phía trước
+box(rig.torso, 4.5, 0.8, 3.15, PAL.ink, PAL.ink, -0.1, 1.0, 0);     // thắt lưng
+box(rig.torso, 0.9, 5.0, 0.2, PAL.slate, PAL.slate, -0.3, 4.3, 1.62, -0.71); // quai đeo chuông chéo ngực
+
+// Vạt áo choàng sau lưng: 2 đoạn, khớp ở lưng trên
+rig.capeA = joint(rig.torso, -1.9, 6.4, 0);
+box(rig.capeA, 1.3, 3.7, 3.4, PAL.cloak, PAL.dark, -0.1, -1.8, 0);
+rig.capeB = joint(rig.capeA, -0.1, -3.5, 0);
+box(rig.capeB, 1.2, 3.1, 3.3, PAL.cloak, PAL.dark, 0, -1.5, 0);
+box(rig.capeB, 1.3, 0.6, 3.35, PAL.green, PAL.green, 0, -2.85, 0); // mép vạt áo xanh
+
+// Chuông: treo cố định sau vai trái bằng quai, chỉ được lắc nhẹ quanh điểm treo
+rig.bell = joint(rig.torso, -2.6, 6.0, -1.3);
+{
+  const bell = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 1.5, 2.6, 10), mat(PAL.gold, PAL.goldDark));
+  bell.position.set(-0.9, -1.5, 0);
+  rig.bell.add(bell);
+  box(rig.bell, 0.8, 0.7, 0.8, PAL.dark, PAL.dark, -0.9, 0.0, 0);   // móc treo
+  box(rig.bell, 0.7, 0.7, 0.7, PAL.goldDark, PAL.goldDark, -0.9, -3.0, 0); // quả lắc
+  box(rig.bell, 0.5, 1.6, 0.3, PAL.cream, PAL.cream, -1.6, -1.7, 1.45); // vệt sáng
+}
+
+// Đầu + mũ trùm nhọn. Mặt không chi tiết, chỉ 1 pixel sáng làm mắt.
+rig.head = joint(rig.torso, 0.3, 6.6, 0);
+box(rig.head, 2.8, 3.0, 2.4, PAL.ink, PAL.ink, 1.0, 2.0, 0);        // mặt (chỉ lộ phần trước)
+box(rig.head, 3.9, 4.6, 3.6, PAL.cloak, PAL.dark, -0.65, 2.5, 0);     // mũ trùm
+box(rig.head, 1.6, 1.0, 3.7, PAL.cloak, PAL.dark, 1.4, 4.3, 0);       // vành mũ chìa ra trước
+box(rig.head, 0.9, 0.9, 0.2, PAL.light, PAL.light, 1.9, 2.3, 1.3);    // mắt
+{
+  const tip = new THREE.Mesh(new THREE.ConeGeometry(1.5, 3.4, 8), mat(PAL.cloak, PAL.dark));
+  tip.position.set(-2.0, 4.4, 0);
+  tip.rotation.z = 1.05;                                              // chóp mũ chĩa ra sau-lên
+  rig.head.add(tip);
+}
+
+// Tay xa (tay trái): nằm sau thân, màu tối
+rig.fSh = joint(rig.torso, -0.2, 5.6, -1.9);
+box(rig.fSh, 1.3, 2.7, 1.1, PAL.dark, PAL.dark, 0, -1.2, 0);
+rig.fEl = joint(rig.fSh, 0, -2.4, 0);
+box(rig.fEl, 1.2, 2.0, 1.0, PAL.dark, PAL.dark, 0, -0.9, 0);
+box(rig.fEl, 1.2, 0.9, 1.0, PAL.ink, PAL.ink, 0, -2.2, 0);
+
+// Tay gần (tay phải cầm kiếm): khớp vai → khuỷu → cổ tay → kiếm
+rig.nSh = joint(rig.torso, 0.6, 5.6, 1.9);
+box(rig.nSh, 1.4, 2.9, 1.2, PAL.cloak, PAL.dark, 0, -1.2, 0);
+rig.nEl = joint(rig.nSh, 0, -2.6, 0);
+box(rig.nEl, 1.3, 2.0, 1.1, PAL.cloak, PAL.dark, 0, -0.9, 0);
+box(rig.nEl, 1.3, 1.0, 1.1, PAL.ink, PAL.ink, 0, -2.3, 0);          // bàn tay
+rig.wrist = joint(rig.nEl, 0, -2.3, 0.5);
+// Kiếm dài ~7: gắn cứng vào cổ tay, lưỡi chĩa theo hướng -Y của bàn tay
+box(rig.wrist, 0.8, 0.8, 0.5, PAL.gold, PAL.gold, 0, 1.0, 0);       // núm chuôi
+box(rig.wrist, 0.7, 1.5, 0.5, PAL.ink, PAL.ink, 0, 0.1, 0);         // chuôi
+box(rig.wrist, 2.1, 0.6, 0.6, PAL.gold, PAL.goldDark, 0, -0.9, 0);        // chắn tay
+box(rig.wrist, 1.0, 5.0, 0.4, PAL.mint, PAL.green, 0, -3.7, 0);        // lưỡi
+box(rig.wrist, 0.35, 4.4, 0.45, PAL.light, PAL.light, 0.32, -3.6, 0); // lưỡi sắc sáng
+
+// Vệt chém (smear): cung tròn quanh vai, chỉ hiện ở khung ra đòn
+rig.smear = new THREE.Mesh(new THREE.BufferGeometry(), mat(PAL.light, PAL.light));
+rig.smear.position.set(0.6, 5.6, 2.1);
+rig.smear.visible = false;
+rig.torso.add(rig.smear);
+
+/* =====================================================================
+   IK 2 xương cho chân: đặt vị trí bàn chân, tự tính góc đùi / gối.
+   Giữ bàn chân bám đất trong khi pivot gốc đứng yên.
+   ===================================================================== */
+const L1 = 3, L2 = 2.5;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+function solveLeg(leg, hipX, hipY, foot, footAng) {
+  const hx = hipX + leg.hx, hy = hipY;
+  const dx = foot[0] - hx, dy = foot[1] - hy;
+  const d = clamp(Math.hypot(dx, dy), 0.6, L1 + L2 - 0.001);
+  const phi = Math.atan2(dx, -dy);                                       // góc từ phương thẳng đứng xuống
+  const a = Math.acos(clamp((L1 * L1 + d * d - L2 * L2) / (2 * L1 * d), -1, 1));
+  const b = Math.acos(clamp((L1 * L1 + L2 * L2 - d * d) / (2 * L1 * L2), -1, 1));
+  const thigh = phi + a;                 // gối gập về phía trước
+  const knee = -(Math.PI - b);
+  leg.hip.rotation.z = thigh;
+  leg.knee.rotation.z = knee;
+  leg.ankle.rotation.z = -(thigh + knee) + footAng; // giữ bàn chân song song mặt đất
+}
+
+/* =====================================================================
+   ANIMATION: mỗi khung là một tư thế (pose) của cùng một rig.
+   footN / footF = vị trí cổ chân gần / xa (đơn vị pixel, so với pivot).
+   smear = [độ bắt đầu, độ kết thúc, bán kính trong, bán kính ngoài] quanh vai.
+   hold = số nhịp giữ khung khi xem (ảnh xuất vẫn 1 ô / khung).
+   ===================================================================== */
+const BASE = {
+  bodyRot: 0, bodyX: 0, bodyY: 0,
+  hipX: 0, hipY: 5.7, torso: -0.05, head: 0.05,
+  capeA: -0.12, capeB: -0.06, bell: 0,
+  footN: [1.2, 0.5], footF: [-1.0, 0.5], footAngN: 0, footAngF: 0,
+  nSh: 0.5, nEl: 0.9, wrist: -0.3, fSh: -0.15, fEl: 0.4,
+  smear: null, hit: false, hold: 1
+};
+
+const ATTACK_READY = { hipY: 5.3, torso: -0.12, head: 0.12, footN: [1.7, 0.5], footF: [-1.4, 0.5],
+  nSh: 0.6, nEl: 0.9, wrist: -0.4, fSh: 0.3, fEl: 0.6, capeA: -0.2, capeB: -0.1 };
+
+const DEATH_LIE = { bodyRot: -1.57, bodyX: -6.6, bodyY: 2.4, hipY: 5.4, torso: 0, head: 0.25,
+  footN: [0.8, 0.5], footF: [-0.8, 0.5], footAngN: 0.6, nSh: 0.1, nEl: 0, wrist: -0.1,
+  fSh: 0.2, fEl: 0.3, capeA: 0.5, capeB: 0.3 };
+
+const ANIMS = [
+  { key: 'idle', label: 'Idle', loop: true, frames: [
+    { hipY: 5.7 },
+    { hipY: 5.4, torso: -0.03, head: 0.08, capeA: -0.2, capeB: -0.02, bell: 0.05, nSh: 0.53, fSh: -0.11 },
+    { hipY: 5.2, torso: -0.01, head: 0.1, capeA: -0.28, capeB: 0.02, bell: 0.08, nSh: 0.56, nEl: 0.94, fSh: -0.08 },
+    { hipY: 5.5, torso: -0.04, head: 0.06, capeA: -0.16, capeB: -0.04, bell: 0.03, nSh: 0.51 }
+  ]},
+  { key: 'run', label: 'Run', loop: true, frames: [
+    { hipY: 5.4, torso: -0.28, head: 0.18, footF: [2.3, 0.5], footN: [-2.3, 1.8], footAngN: -0.4,
+      nSh: 0.2, nEl: 1.0, wrist: -0.5, fSh: 0.5, fEl: 0.9, capeA: -0.7, capeB: -0.35, bell: -0.1 },
+    { hipY: 5.0, torso: -0.3, head: 0.2, footF: [0.8, 0.5], footN: [-1.0, 2.6], footAngN: -0.2,
+      nSh: 0.35, nEl: 1.0, wrist: -0.5, fSh: 0.2, fEl: 0.9, capeA: -0.55, capeB: -0.5, bell: 0.05 },
+    { hipY: 5.8, torso: -0.26, head: 0.17, footF: [-1.5, 1.0], footAngF: -0.3, footN: [1.6, 2.4], footAngN: 0.1,
+      nSh: 0.55, nEl: 1.0, wrist: -0.5, fSh: -0.3, fEl: 0.9, capeA: -0.85, capeB: -0.3, bell: 0.15 },
+    { hipY: 5.4, torso: -0.28, head: 0.18, footN: [2.3, 0.5], footF: [-2.3, 1.8], footAngF: -0.4,
+      nSh: 0.6, nEl: 1.0, wrist: -0.5, fSh: -0.5, fEl: 0.9, capeA: -0.7, capeB: -0.35, bell: -0.1 },
+    { hipY: 5.0, torso: -0.3, head: 0.2, footN: [0.8, 0.5], footF: [-1.0, 2.6], footAngF: -0.2,
+      nSh: 0.45, nEl: 1.0, wrist: -0.5, fSh: -0.2, fEl: 0.9, capeA: -0.55, capeB: -0.5, bell: 0.05 },
+    { hipY: 5.8, torso: -0.26, head: 0.17, footN: [-1.5, 1.0], footAngN: -0.3, footF: [1.6, 2.4], footAngF: 0.1,
+      nSh: 0.25, nEl: 1.0, wrist: -0.5, fSh: 0.3, fEl: 0.9, capeA: -0.85, capeB: -0.3, bell: 0.15 }
+  ]},
+  { key: 'jump', label: 'Jump', loop: false, frames: [
+    { hipY: 4.6, torso: -0.35, head: 0.25, footN: [1.2, 0.5], footF: [-1.0, 0.5],
+      nSh: -0.3, nEl: 1.2, wrist: 0.3, fSh: -0.7, capeA: -0.25, capeB: -0.1 },
+    { hipY: 5.9, bodyY: 0.3, torso: -0.05, head: 0.1, footN: [0.5, 0.8], footAngN: -0.6, footF: [-0.6, 0.9], footAngF: -0.5,
+      nSh: 1.9, nEl: 0.6, wrist: -0.6, fSh: 2.3, fEl: 0.4, capeA: -1.6, capeB: -0.4, bell: 0.3 },
+    { hipY: 5.8, bodyY: 1.2, torso: -0.15, head: 0.1, footN: [1.3, 3.2], footAngN: 0.2, footF: [-0.2, 2.6],
+      nSh: 1.3, nEl: 0.8, wrist: -0.4, fSh: 1.4, capeA: -1.0, capeB: -0.3, bell: 0.15 },
+    { hipY: 5.9, bodyY: 1.5, torso: 0.05, head: 0.0, footN: [1.1, 2.2], footF: [-0.6, 1.7],
+      nSh: 0.9, nEl: 0.8, wrist: -0.3, fSh: 0.9, capeA: -0.6, capeB: -0.2, bell: 0 }
+  ]},
+  { key: 'fall', label: 'Fall', loop: true, frames: [
+    { hipY: 5.8, bodyY: 1.2, torso: -0.18, head: 0.25, footN: [1.0, 1.6], footAngN: 0.2, footF: [-0.8, 1.2],
+      nSh: 1.2, nEl: 0.6, wrist: -0.2, fSh: 1.6, fEl: 0.3, capeA: -2.2, capeB: -0.4, bell: -0.5 },
+    { hipY: 5.8, bodyY: 1.0, torso: -0.15, head: 0.25, footN: [1.2, 0.9], footF: [-1.0, 0.7],
+      nSh: 1.35, nEl: 0.6, wrist: -0.2, fSh: 1.9, fEl: 0.3, capeA: -2.5, capeB: -0.6, bell: -0.7 }
+  ]},
+  { key: 'attack', label: 'Attack', loop: false, frames: [
+    // 1. sẵn sàng
+    { ...ATTACK_READY },
+    // 2. anticipation: kéo kiếm ra sau-lên, xoay vai (giữ lâu để có trọng lượng)
+    { hipY: 5.0, hipX: -0.3, torso: 0.18, head: -0.05, footN: [1.7, 0.5], footF: [-1.8, 0.5],
+      nSh: -2.4, nEl: 0.6, wrist: -0.8, fSh: 0.9, fEl: 0.3, capeA: -0.15, capeB: 0.05, bell: 0.2, hold: 2 },
+    // 3. vung kiếm qua đỉnh → điểm ra đòn, kích hoạt hitbox
+    { hipY: 4.9, hipX: 0.3, torso: -0.25, head: 0.2, footN: [2.5, 0.5], footF: [-1.9, 0.5],
+      nSh: 1.9, nEl: 0.2, wrist: 0.2, fSh: -0.6, fEl: 0.5, capeA: -0.85, capeB: -0.4, bell: -0.3,
+      smear: [42, 125, 8.2, 10.6], hit: true },
+    // 4. kết thúc đường chém, kiếm vươn xa nhất
+    { hipY: 4.8, hipX: 0.35, torso: -0.35, head: 0.25, footN: [2.6, 0.5], footF: [-1.9, 0.5],
+      nSh: 1.2, nEl: 0.3, wrist: 0.25, fSh: -0.9, fEl: 0.4, capeA: -1.05, capeB: -0.5, bell: -0.35,
+      smear: [20, 60, 7.8, 9.6], hold: 2 },
+    // 5–6. recovery
+    { hipY: 5.0, hipX: 0.3, torso: -0.18, head: 0.15, footN: [2.4, 0.5], footF: [-1.7, 0.5],
+      nSh: 0.95, nEl: 0.6, wrist: -0.15, fSh: -0.4, fEl: 0.6, capeA: -0.7, capeB: -0.45, bell: 0.2 },
+    { hipY: 5.2, hipX: 0.1, torso: -0.14, head: 0.13, footN: [2.0, 0.5], footF: [-1.5, 0.5],
+      nSh: 0.75, nEl: 0.8, wrist: -0.35, fSh: 0.0, fEl: 0.6, capeA: -0.4, capeB: -0.25, bell: 0.05 },
+    // 7. trở về sẵn sàng
+    { ...ATTACK_READY }
+  ]},
+  { key: 'dodge', label: 'Dodge', loop: false, frames: [
+    { hipY: 4.4, torso: -0.5, head: 0.35, footN: [1.5, 0.5], footF: [-1.5, 0.5],
+      nSh: 0.3, nEl: 1.2, wrist: -0.6, fSh: -0.4, capeA: -0.3, capeB: -0.1 },
+    { hipY: 4.0, hipX: 1.0, bodyY: 0.4, torso: -0.95, head: 0.6, footN: [2.2, 1.4], footF: [-0.6, 1.8], footAngF: -0.3,
+      nSh: -0.6, nEl: 1.3, wrist: -0.6, fSh: -1.2, capeA: -1.3, capeB: -0.5, bell: -0.4 },
+    { hipY: 4.3, hipX: 1.0, torso: -0.7, head: 0.45, footN: [2.6, 0.5], footF: [-2.4, 1.0], footAngF: -0.4,
+      nSh: -0.3, nEl: 1.2, wrist: 0.6, fSh: -0.9, capeA: -1.7, capeB: -0.7, bell: -0.5 },
+    { hipY: 5.0, hipX: 0.4, torso: 0.08, head: 0.0, footN: [2.0, 0.5], footF: [-1.2, 0.5],
+      nSh: 0.5, nEl: 0.9, wrist: -0.3, fSh: 0.2, capeA: -0.5, capeB: 0.1, bell: 0.3 }
+  ]},
+  { key: 'hit', label: 'Hit', loop: false, frames: [
+    { hipX: -0.6, hipY: 5.3, torso: 0.42, head: 0.35, footN: [1.4, 0.5], footF: [-1.4, 0.5],
+      nSh: 0.1, nEl: 1.4, wrist: -0.4, fSh: 0.5, capeA: 0.2, capeB: 0.15, bell: 0.4 },
+    { hipX: -0.6, hipY: 5.0, torso: 0.42, head: 0.3, footN: [1.6, 0.9], footAngN: 0.3, footF: [-1.5, 0.5],
+      nSh: 1.5, nEl: 0.3, wrist: 0.4, fSh: -1.3, fEl: 0.2, capeA: 0.35, capeB: 0.2, bell: 0.5, hold: 2 },
+    { hipX: -0.3, hipY: 5.3, torso: 0.12, head: 0.1, footN: [1.3, 0.5], footF: [-1.3, 0.5],
+      nSh: 0.6, nEl: 0.9, wrist: -0.3, fSh: -0.1, capeA: -0.05, capeB: 0, bell: 0.15 }
+  ]},
+  { key: 'death', label: 'Death', loop: false, frames: [
+    { hipY: 3.7, torso: -0.3, head: -0.3, footN: [1.6, 0.5], footF: [-2.6, 0.6],
+      nSh: 0.2, nEl: 0.4, wrist: 0.9, fSh: 0.1, fEl: 0.3, capeA: 0, capeB: 0, bell: 0.1 },
+    { bodyRot: -0.2, bodyX: -0.4, bodyY: 0.3, hipY: 3.9, torso: -0.35, head: 0.1, footN: [1.6, 0.5], footF: [-2.3, 0.8],
+      nSh: 0.9, nEl: 0.4, wrist: 0.4, fSh: 1.4, capeA: -0.3, bell: -0.3 },
+    { bodyRot: -0.75, bodyX: -2.6, bodyY: 1.1, hipY: 4.6, torso: -0.25, head: 0.15, footN: [1.0, 0.5], footF: [-1.4, 0.9],
+      nSh: -0.1, nEl: 0, wrist: -0.2, fSh: 1.9, capeA: -0.6, bell: -0.5 },
+    { bodyRot: -1.3, bodyX: -5.4, bodyY: 2.0, hipY: 5.2, torso: -0.1, head: 0.2, footN: [0.9, 0.5], footF: [-1.0, 0.7],
+      nSh: -0.2, nEl: 0, wrist: 0.03, fSh: 0.6, capeA: -0.3, bell: 0.2 },
+    { ...DEATH_LIE, bell: 1.0 },
+    { ...DEATH_LIE, bell: 0.85, hold: 3 }
+  ]}
+];
+ANIMS.forEach(a => { a.frames = a.frames.map(f => ({ ...BASE, ...f })); });
+
+// Áp một tư thế lên rig
+function applyPose(p) {
+  rig.body.rotation.z = p.bodyRot;
+  rig.body.position.set(p.bodyX, p.bodyY, 0);
+  rig.hips.position.set(p.hipX, p.hipY, 0);
+  rig.torso.rotation.z = p.torso;
+  rig.head.rotation.z = p.head;
+  rig.capeA.rotation.z = p.capeA;
+  rig.capeB.rotation.z = p.capeB;
+  rig.bell.rotation.z = p.bell;
+  rig.nSh.rotation.z = p.nSh;
+  rig.nEl.rotation.z = p.nEl;
+  rig.wrist.rotation.z = p.wrist;
+  rig.fSh.rotation.z = p.fSh;
+  rig.fEl.rotation.z = p.fEl;
+  solveLeg(rig.legN, p.hipX, p.hipY, p.footN, p.footAngN);
+  solveLeg(rig.legF, p.hipX, p.hipY, p.footF, p.footAngF);
+
+  if (p.smear) {
+    const [a0, a1, rIn, rOut] = p.smear;
+    const t0 = THREE.MathUtils.degToRad(a0), t1 = THREE.MathUtils.degToRad(a1);
+    rig.smear.geometry.dispose();
+    rig.smear.geometry = new THREE.RingGeometry(rIn, rOut, 20, 1, t0, t1 - t0);
+    rig.smear.visible = true;
+  } else {
+    rig.smear.visible = false;
+  }
+}
+
+/* =====================================================================
+   PIXEL RENDER: render 96×96 → lấy mẫu nearest-neighbor xuống 24×24.
+   Không làm mờ, không khử răng cưa; alpha chỉ 0 hoặc 255.
+   ===================================================================== */
+const rawCanvas = document.createElement('canvas');
+rawCanvas.width = rawCanvas.height = RENDER;
+const rawCtx = rawCanvas.getContext('2d', { willReadFrequently: true });
+
+function captureFrame(pose) {
+  applyPose(pose);
+  renderer.render(scene, camera);
+  rawCtx.clearRect(0, 0, RENDER, RENDER);
+  rawCtx.drawImage(renderer.domElement, 0, 0);
+  const raw = rawCtx.getImageData(0, 0, RENDER, RENDER);
+  const px = new ImageData(CELL, CELL);
+  const off = SS >> 1; // lấy mẫu ở tâm mỗi khối 4×4
+  for (let y = 0; y < CELL; y++) {
+    for (let x = 0; x < CELL; x++) {
+      const i = ((y * SS + off) * RENDER + (x * SS + off)) * 4;
+      const o = (y * CELL + x) * 4;
+      if (raw.data[i + 3] >= 128) {
+        px.data[o] = raw.data[i]; px.data[o + 1] = raw.data[i + 1]; px.data[o + 2] = raw.data[i + 2]; px.data[o + 3] = 255;
+      }
+    }
+  }
+  return { raw, px };
+}
+
+// Hậu kỳ theo tùy chọn: khóa bảng màu, viền ngoài 1px
+function postProcess(src) {
+  const out = new ImageData(new Uint8ClampedArray(src.data), CELL, CELL);
+  const d = out.data;
+  if (opts.palette) {
+    for (let i = 0; i < d.length; i += 4) {
+      if (!d[i + 3]) continue;
+      let best = 0, bd = Infinity;
+      PAL_RGB.forEach((c, k) => {
+        const dist = (d[i] - c[0]) ** 2 + (d[i + 1] - c[1]) ** 2 + (d[i + 2] - c[2]) ** 2;
+        if (dist < bd) { bd = dist; best = k; }
+      });
+      [d[i], d[i + 1], d[i + 2]] = PAL_RGB[best];
+    }
+  }
+  if (opts.outline) {
+    const solid = (x, y) => x >= 0 && y >= 0 && x < CELL && y < CELL && src.data[(y * CELL + x) * 4 + 3] > 0;
+    for (let y = 0; y < CELL; y++) for (let x = 0; x < CELL; x++) {
+      if (solid(x, y)) continue;
+      if (solid(x - 1, y) || solid(x + 1, y) || solid(x, y - 1) || solid(x, y + 1)) {
+        const o = (y * CELL + x) * 4;
+        d[o] = 0x0C; d[o + 1] = 0x0F; d[o + 2] = 0x14; d[o + 3] = 255;
+      }
+    }
+  }
+  return out;
+}
+
+// Kiểm tra khung có chạm mép ô (dễ bị cắt) không
+function touchesEdge(img) {
+  for (let i = 0; i < CELL; i++) {
+    const pts = [[i, 0], [0, i], [CELL - 1, i], [i, CELL - 1]];
+    for (const [x, y] of pts) if (img.data[(y * CELL + x) * 4 + 3]) return true;
+  }
+  return false;
+}
+
+/* =====================================================================
+   BỘ NHỚ KHUNG + TRẠNG THÁI
+   ===================================================================== */
+const opts = { palette: true, outline: true, raw: false, pivot: true, zoom: 12 };
+const state = { anim: 4, frame: 0, playing: true, fps: 12 };   // mở sẵn Attack
+let cache = [];   // cache[anim][frame] = { raw, px, final }
+
+function buildCache() {
+  cache = ANIMS.map(a => a.frames.map(f => {
+    const c = captureFrame(f);
+    c.final = postProcess(c.px);
+    return c;
+  }));
+}
+function refreshPost() {
+  cache.forEach(list => list.forEach(c => { c.final = postProcess(c.px); }));
+}
+
+/* =====================================================================
+   GIAO DIỆN XEM
+   ===================================================================== */
+const $ = id => document.getElementById(id);
+const tmp24 = document.createElement('canvas'); tmp24.width = tmp24.height = CELL;
+const tmpCtx = tmp24.getContext('2d');
+const tmp96 = document.createElement('canvas'); tmp96.width = tmp96.height = RENDER;
+const tmp96Ctx = tmp96.getContext('2d');
+
+function drawCell(ctx, img, dx, dy, scale) {
+  tmpCtx.clearRect(0, 0, CELL, CELL);
+  tmpCtx.putImageData(img, 0, 0);
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(tmp24, dx, dy, CELL * scale, CELL * scale);
+}
+
+function drawPreview() {
+  const c = cache[state.anim][state.frame];
+  const cv = $('preview');
+  const z = opts.zoom;
+  cv.width = cv.height = CELL * z;
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  ctx.imageSmoothingEnabled = false;
+  if (opts.raw) {
+    tmp96Ctx.clearRect(0, 0, RENDER, RENDER);
+    tmp96Ctx.putImageData(c.raw, 0, 0);
+    ctx.drawImage(tmp96, 0, 0, cv.width, cv.height);
+  } else {
+    drawCell(ctx, c.final, 0, 0, z);
+  }
+  if (opts.pivot) {
+    const px = PIVOT_PX.x * z, py = PIVOT_PX.y * z, s = Math.max(2, z * 0.6);
+    ctx.fillStyle = '#ff3b3b';
+    ctx.fillRect(px - s / 2, py - 1, s, Math.max(1, z / 6));
+    ctx.fillRect(px - 1, py - s / 2, Math.max(1, z / 6), s);
+  }
+  updateInfo();
+  updateStripSelection();
+}
+
+function updateInfo() {
+  const a = ANIMS[state.anim];
+  const f = a.frames[state.frame];
+  const sheet = sheetSize();
+  $('info').innerHTML =
+    `Animation: <b>${a.label}</b> · ${a.frames.length} khung · ${a.loop ? 'lặp' : 'không lặp'}<br>` +
+    `Khung: <b>${state.frame + 1}/${a.frames.length}</b>${f.hold > 1 ? ` · giữ ×${f.hold}` : ''}` +
+    `${f.hit ? ' · <span class="hit">HIT – kích hoạt hitbox</span>' : ''}<br>` +
+    `PNG animation: ${a.frames.length * CELL}×${CELL} px · Sprite sheet: ${sheet.w}×${sheet.h} px`;
+  const edge = cache[state.anim].map((c, i) => touchesEdge(c.final) ? i + 1 : 0).filter(Boolean);
+  $('warn').textContent = edge.length ? `Lưu ý: khung ${edge.join(', ')} chạm mép ô 24×24.` : '';
+  $('btnPlay').textContent = state.playing ? '❚❚ Pause' : '▶ Play';
+}
+
+function buildAnimButtons() {
+  const wrap = $('animButtons');
+  wrap.innerHTML = '';
+  ANIMS.forEach((a, i) => {
+    const b = document.createElement('button');
+    b.textContent = `${a.label} (${a.frames.length})`;
+    b.onclick = () => selectAnim(i);
+    if (i === state.anim) b.classList.add('on');
+    wrap.appendChild(b);
+  });
+}
+
+function buildStrip() {
+  const wrap = $('strip');
+  wrap.innerHTML = '';
+  cache[state.anim].forEach((c, i) => {
+    const cell = document.createElement('div');
+    cell.className = 'cell bg-checker';
+    const cv = document.createElement('canvas');
+    cv.className = 'px';
+    cv.width = cv.height = CELL * 3;
+    drawCell(cv.getContext('2d'), c.final, 0, 0, 3);
+    const lab = document.createElement('small');
+    lab.textContent = ANIMS[state.anim].frames[i].hit ? `${i + 1} • HIT` : `${i + 1}`;
+    cell.append(cv, lab);
+    cell.onclick = () => { state.playing = false; state.frame = i; drawPreview(); };
+    wrap.appendChild(cell);
+  });
+  updateStripSelection();
+}
+function updateStripSelection() {
+  [...$('strip').children].forEach((el, i) => el.classList.toggle('sel', i === state.frame));
+}
+
+function selectAnim(i) {
+  state.anim = i;
+  state.frame = 0;
+  state.playing = true;
+  acc = 0;
+  buildAnimButtons();
+  buildStrip();
+  drawPreview();
+}
+function step(dir) {
+  state.playing = false;
+  const n = ANIMS[state.anim].frames.length;
+  state.frame = (state.frame + dir + n) % n;
+  drawPreview();
+}
+
+// Vòng phát animation theo FPS, có tính số nhịp giữ khung
+let last = performance.now(), acc = 0;
+function tick(now) {
+  const dt = Math.min(0.25, (now - last) / 1000);
+  last = now;
+  if (state.playing) {
+    const a = ANIMS[state.anim];
+    acc += dt;
+    let changed = false;
+    let dur = a.frames[state.frame].hold / state.fps;
+    while (acc >= dur) {
+      acc -= dur;
+      if (state.frame === a.frames.length - 1) {
+        if (a.loop) state.frame = 0;
+        else { state.playing = false; acc = 0; changed = true; break; }
+      } else state.frame++;
+      changed = true;
+      dur = a.frames[state.frame].hold / state.fps;
+    }
+    if (changed) drawPreview();
+  }
+  requestAnimationFrame(tick);
+}
+
+/* =====================================================================
+   XUẤT ẢNH: PNG animation, PNG sprite sheet tổng, JSON thông tin
+   Mỗi ô đúng 24×24, mỗi hàng một animation, nền trong suốt.
+   ===================================================================== */
+function sheetSize() {
+  const cols = Math.max(...ANIMS.map(a => a.frames.length));
+  return { cols, rows: ANIMS.length, w: cols * CELL, h: ANIMS.length * CELL };
+}
+function makeAnimCanvas(ai) {
+  const list = cache[ai];
+  const cv = document.createElement('canvas');
+  cv.width = list.length * CELL; cv.height = CELL;
+  const ctx = cv.getContext('2d');
+  list.forEach((c, i) => ctx.putImageData(c.final, i * CELL, 0));
+  return cv;
+}
+function makeSheetCanvas() {
+  const s = sheetSize();
+  const cv = document.createElement('canvas');
+  cv.width = s.w; cv.height = s.h;
+  const ctx = cv.getContext('2d');
+  cache.forEach((list, r) => list.forEach((c, i) => ctx.putImageData(c.final, i * CELL, r * CELL)));
+  return cv;
+}
+function download(blob, name) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function sheetMeta() {
+  const s = sheetSize();
+  return {
+    character: 'tho-san-chuong',
+    frameWidth: CELL, frameHeight: CELL, fps: state.fps,
+    sheetWidth: s.w, sheetHeight: s.h,
+    pivot: { x: PIVOT_PX.x, y: PIVOT_PX.y, note: 'giữa hai bàn chân, trên mặt đất' },
+    animations: ANIMS.map((a, r) => ({
+      name: a.key, row: r, frameCount: a.frames.length, loop: a.loop,
+      frames: a.frames.map((f, i) => ({ index: i + 1, x: i * CELL, y: r * CELL, w: CELL, h: CELL,
+        hold: f.hold, durationMs: Math.round(f.hold * 1000 / state.fps), hit: f.hit }))
+    }))
+  };
+}
+
+// Bản xem trước sprite sheet có nhãn (không phải file xuất)
+function drawSheetPreview() {
+  const s = sheetSize();
+  const sc = 3, labelW = 70, top = 16;
+  const cv = $('sheetPreview');
+  cv.width = labelW + s.w * sc; cv.height = top + s.h * sc;
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  ctx.font = '11px ui-monospace, Menlo, Consolas, monospace';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#e8e3d6';
+  for (let i = 0; i < s.cols; i++) ctx.fillText(String(i + 1), labelW + i * CELL * sc + CELL * sc / 2 - 3, top / 2);
+  cache.forEach((list, r) => {
+    const y = top + r * CELL * sc;
+    ctx.fillStyle = '#e8e3d6';
+    ctx.fillText(ANIMS[r].key, 4, y + CELL * sc / 2);
+    list.forEach((c, i) => drawCell(ctx, c.final, labelW + i * CELL * sc, y, sc));
+    ctx.strokeStyle = 'rgba(232,227,214,0.18)';
+    for (let i = 0; i < s.cols; i++) ctx.strokeRect(labelW + i * CELL * sc + 0.5, y + 0.5, CELL * sc - 1, CELL * sc - 1);
+  });
+  $('sheetInfo').innerHTML =
+    `Sprite sheet: <b>${s.w}×${s.h} px</b> · ${s.rows} hàng × tối đa ${s.cols} khung · ô ${CELL}×${CELL}<br>` +
+    ANIMS.map((a, r) => `Hàng ${r + 1}: ${a.key} (${a.frames.length} khung)`).join('<br>');
+}
+
+/* =====================================================================
+   GẮN SỰ KIỆN
+   ===================================================================== */
+$('btnPlay').onclick = () => {
+  const a = ANIMS[state.anim];
+  if (!state.playing && !a.loop && state.frame === a.frames.length - 1) state.frame = 0;
+  state.playing = !state.playing; acc = 0; drawPreview();
+};
+$('btnPrev').onclick = () => step(-1);
+$('btnNext').onclick = () => step(1);
+$('fps').onchange = e => { state.fps = clamp(parseInt(e.target.value, 10) || 12, 1, 60); e.target.value = state.fps; updateInfo(); };
+$('zoom').onchange = e => { opts.zoom = parseInt(e.target.value, 10); drawPreview(); };
+$('bg').onchange = e => {
+  ['stage', 'sheetWrap'].forEach(id => {
+    const el = $(id);
+    el.classList.remove('bg-checker', 'bg-dark', 'bg-light');
+    el.classList.add('bg-' + e.target.value);
+  });
+};
+$('optRaw').onchange = e => { opts.raw = e.target.checked; drawPreview(); };
+$('optPivot').onchange = e => { opts.pivot = e.target.checked; drawPreview(); };
+$('optPalette').onchange = e => { opts.palette = e.target.checked; refreshPost(); buildStrip(); drawPreview(); drawSheetPreview(); };
+$('optOutline').onchange = e => { opts.outline = e.target.checked; refreshPost(); buildStrip(); drawPreview(); drawSheetPreview(); };
+
+$('btnExportAnim').onclick = () => {
+  const a = ANIMS[state.anim];
+  makeAnimCanvas(state.anim).toBlob(b => download(b, `tho-san-chuong_${a.key}_${a.frames.length}f_24x24.png`), 'image/png');
+};
+$('btnExportSheet').onclick = () => {
+  const s = sheetSize();
+  makeSheetCanvas().toBlob(b => download(b, `tho-san-chuong_spritesheet_${s.w}x${s.h}.png`), 'image/png');
+};
+$('btnExportJson').onclick = () => {
+  download(new Blob([JSON.stringify(sheetMeta(), null, 2)], { type: 'application/json' }), 'tho-san-chuong_spritesheet.json');
+};
+
+window.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+  if (e.code === 'Space') { e.preventDefault(); $('btnPlay').click(); }
+  else if (e.key === 'ArrowLeft') step(-1);
+  else if (e.key === 'ArrowRight') step(1);
+  else if (/^[1-8]$/.test(e.key)) selectAnim(parseInt(e.key, 10) - 1);
+});
+
+/* ===== KHỞI ĐỘNG ===== */
+buildCache();
+buildAnimButtons();
+buildStrip();
+drawPreview();
+drawSheetPreview();
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>

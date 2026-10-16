@@ -1,0 +1,38 @@
+1. Bản đặc tả nhân vật
+- Tên tạm: Thợ săn chuông.
+- Dáng tổng thể: Nhân vật nhỏ, đứng nghiêng sang phải. Đầu đội mũ trùm nhọn, áo choàng ngắn, mang chuông sau vai trái và cầm kiếm một tay. Không có chi tiết mặt nhỏ; dùng một pixel sáng làm mắt.
+- Kích thước xuất: Ô sprite 24×24 px. Nhân vật chiếm khoảng 18 px chiều cao và 18 px chiều ngang khi cầm kiếm; chừa khoảng 2–3 px viền trong ô. Kiếm có thể vươn ra sát mép ô khi tấn công.
+- Tỉ lệ cơ thể: Đầu và mũ trùm cao khoảng 7 px; thân và áo choàng khoảng 7 px; chân và giày khoảng 6 px. Chuông có kích thước 3×3 px. Kiếm dài khoảng 7 px.
+- Bảng màu giới hạn:
+  - Mũ và áo choàng: xanh than #263447
+  - Mảng tối: tím than #171D2B
+  - Áo trong: đỏ gạch #A64B45
+  - Da: vàng nhạt #E5B77B
+  - Kiếm và chuông: vàng đồng #E1B85A
+  - Viền sáng: kem #F3E6C8
+  - Có thể dùng thêm một màu xám xanh để tách bóng.
+- Khung hình: Camera nhìn ngang, nhân vật hướng sang phải. Trục X là chiều ngang màn hình, Y là chiều cao, Z là chiều sâu.
+- Pivot gốc: Giữa hai bàn chân, nằm trên đường đất. Pivot này cố định trong mọi khung để nhân vật không nhấp nhô ngoài ý muốn.
+- Pivot bộ phận: Vai cho cánh tay cầm kiếm; hông cho chân; lưng trên cho áo choàng; quai đeo cố định vào thân cho chuông. Kiếm gắn vào tay, không đổi kích thước hoặc vị trí tương đối giữa các animation.
+- Quy tắc silhouette: Mũ trùm, chuông và kiếm phải tách khỏi thân bằng khoảng trống hoặc màu tương phản. Trong mỗi khung chỉ thay đổi tư thế, không thay đổi tỉ lệ đầu, thân, tay chân hay phụ kiện.
+2. Bảng animation
+Tất cả animation dùng khung rời, phát ở 12 fps làm mốc ban đầu. Có thể giữ một số khung lâu hơn để nhấn trọng lượng đòn đánh. Khung đánh trúng là thời điểm hiệu ứng sát thương được kích hoạt.
+Animation	Số khung	Diễn tiến
+Idle	4	Khung 1: tư thế nghỉ. Khung 2–3: thân và áo choàng nhúc nhích nhẹ theo nhịp thở. Khung 4: trở về gần tư thế đầu để lặp mượt. Chuông chỉ rung nhẹ, không đổi vị trí trên lưng.
+Run	6	Khung 1: chân trái chạm đất. Khung 2: nén người. Khung 3: chân phải vượt lên. Khung 4: đổi chân chạm đất. Khung 5: nén người. Khung 6: chân trái vượt lên, nối về khung 1. Áo choàng văng ngược chiều chạy.
+Jump	4	Khung 1: lấy đà, gối hơi khuỵu. Khung 2: bật khỏi đất, tay và áo choàng hất lên. Khung 3: đang lên, chân co lại. Khung 4: gần đỉnh nhảy, thân duỗi nhẹ.
+Fall	2	Khung 1: thân hơi hướng xuống, chân co. Khung 2: chân duỗi hơn, áo choàng và quai chuông bay lên. Lặp nhẹ cho đến khi chạm đất.
+Attack	7	Khung 1: tư thế sẵn sàng. Khung 2: anticipation, kéo kiếm ra sau và xoay vai. Khung 3: vung kiếm về trước, đây là điểm ra đòn và kích hoạt hitbox. Khung 4: kết thúc đường chém, kiếm vươn xa nhất. Khung 5–6: recovery, tay và thân thu lại. Khung 7: trở về tư thế sẵn sàng.
+Dodge	4	Khung 1: hạ thấp trọng tâm. Khung 2: lướt nhanh về trước, thân thu gọn. Khung 3: cuối cú lướt, áo choàng kéo dài về sau. Khung 4: chống chân và đứng lại.
+Hit	3	Khung 1: thân giật lùi. Khung 2: nghiêng người, tay mở ra để thể hiện bị choáng. Khung 3: lấy lại thăng bằng.
+Death	6	Khung 1: khuỵu gối. Khung 2: mất thăng bằng. Khung 3–4: ngã xuống. Khung 5: nằm yên, chuông rơi hoặc rung nhẹ cạnh người. Khung 6: giữ tư thế kết thúc, không lặp.
+
+
+3. Yêu cầu kỹ thuật để lập trình
+- Dựng nhân vật từ các khối hình đơn giản, gắn vào cùng một hệ khớp. Không tạo từng khung như một nhân vật riêng.
+- Dùng camera orthographic cố định và hướng sáng cố định. Tắt bóng đổ nền để nền xuất ra trong suốt.
+- Render nội bộ ở 96×96 px rồi thu xuống 24×24 px bằng nearest-neighbor; không dùng làm mờ hoặc khử răng cưa khi thu ảnh.
+- Giữ nguyên vị trí pivot, camera, tỉ lệ và khung bao giữa các frame. Chỉ xoay hoặc dịch chuyển các bộ phận theo animation.
+- Giữ chuông gắn với lưng và để nó rung nhẹ theo chuyển động; không để chuông đổi bên hoặc xuyên qua thân.
+- Trong animation attack, giữ kiếm và tay cầm liền nhau qua mọi khung. Chừa vùng trước nhân vật đủ rộng để đường chém không bị cắt khỏi ô sprite.
+- Xuất sprite sheet có nền trong suốt, mỗi frame đúng 24×24 px; sắp khung theo từng hàng và ghi nhãn tên animation cùng thứ tự frame.
