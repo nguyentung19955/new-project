@@ -13,12 +13,14 @@
 //                    mép đó, sóng tạt phủ dải sát mép (báo trước 1,1 giây). Né: bước vào giữa sân. (Mép phải là chỗ cái đầu — không tính.)
 //    Đớp (em bé đứng sát đầu < 84 điểm ảnh): quạt trước mặt, báo trước 0,6 giây; còn đứng sát thì đớp lần hai (báo trước 0,5 giây).
 //    Lặn đổi chỗ: mỗi 9–12 giây đầu lặn 1 giây (không đánh trúng được, gợn nước chạy dọc mép phải) rồi trồi chỗ khác.
-//    Pha 2, 3: HÌNH TẠM — ba chiêu pha 1 + Đớp + chiêu Ngư Tinh như phiên 1 (Bổ rìu, Sóng thần, Cột nước đuổi; pha 3 thêm Xoáy hút),
-//    phiên 3C thay (S.chon dưới đây).
+//    Pha 2, 3: phiên 3C (khối "PHIÊN 3C" dưới đây) — pha 2 Băng: Xoáy nước, Lặn – trồi đớp, Dòng nước đổi chiều (+ chiêu pha 1);
+//    pha 3 Lửa: Mưa mảnh đồng, Siết sân, Đớp liên hoàn (+ Quật đuôi, Phun nước đen, Xoáy nước, Lặn – trồi đớp). Gục → CẢNH BỎ TRỐN
+//    (nhả mảnh trống nhỏ, ngoạm mảnh mặt trời, lặn mất — không nổ tung: Thuồng Luồng sau này hoá Hắc Long). ?tl3c=0 → bản 3B (pha 2, 3
+//    mượn chiêu Ngư Tinh: Bổ rìu, Sóng thần, Cột nước đuổi, Xoáy hút; trùm nổ như cũ).
 // 3. Khung đổi hệ theo pha (mục 8.3): pha 1 Độc → pha 2 Băng → pha 3 Lửa. Mỗi pha: b.el = hệ của pha, một lớp "kháng" hệ đó (CFG.heKhang,
 //    gộp với lớp thích nghi cũ nếu trùng hệ) → điểm yếu = hệ khắc (G.WEAK) như luật cũ (+50%), thẻ "Kháng … · Yếu …" dưới thanh máu tự đổi,
 //    thân đổi màu, dòng gợi ý đổi vũ khí. Lớp thích nghi cũ vẫn chạy. Sao thứ ba (kết liễu bằng hệ yếu) theo b.weak lúc gục (pha 3: Băng).
-// Cờ: ?tldoihe=0 (G.TL_DOI_HE = false) → một hệ Độc suốt trận. ?tlrieng=0 (G.TL_RIENG = false) → tắt cả phiên 3B (Thuồng Luồng như phiên 1:
+// Cờ: ?tl3c=0 (G.TL_3C = false) → bản 3B. ?tldoihe=0 (G.TL_DOI_HE = false) → một hệ Độc suốt trận. ?tlrieng=0 (G.TL_RIENG = false) → tắt cả phiên 3B (Thuồng Luồng như phiên 1:
 // chiêu Ngư Tinh, sân thường). ?vung4=0 → không có vùng 4, tệp này không làm gì.
 // Ảnh thật: khi có sprite 'thuongLuong' (C71–C85, js/sprite_custom.js / G.monsterArt) thì tự dùng, thôi nhuộm; thân trồi vẫn vẽ code tới khi có D2.
 // Nạp sau js/chieu_trum.js, js/song_luat.js.
