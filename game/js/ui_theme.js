@@ -494,6 +494,11 @@
   // không chạm viền), chữ dài: thu cỡ tới tối thiểu → xuống dòng (nơi đủ cao) → cuối cùng mới cắt "…".
   // 15/10 don-tep B: bỏ cờ quay lui ?chucu=1 (G.CHU_CU) — luôn đặt chữ trong lòng khung. T.chuMoi giữ lại (luôn true) cho mã nơi khác còn gọi.
   const chuMoi = () => true;
+  // 16/10 (docs/review/ke-hoach-cai-thien/can-chu-khung): chữ nằm GIỮA khung — sửa công thức căn dọc (khối chữ hoa bị đẩy xuống nửa cao chữ hoa),
+  // các dòng căn trái / phải của một khối dùng chung một lề, và vài nơi gọi tự đặt chữ. Cờ quay lui ?canchucu=1 (G.CAN_CHU_CU = true): như trước.
+  if (G.CAN_CHU_CU === undefined) { let cu = false; try { cu = /[?&]canchucu=1(&|$)/.test(String(window.location && window.location.search)); } catch (e) { cu = false; } G.CAN_CHU_CU = cu; }
+  const canMoi = () => G.CAN_CHU_CU !== true;
+  T.canMoi = canMoi;
   // ma: [net, rộng ảnh, cao ảnh, hàng đầu y0, "trái,phải ..." mỗi hàng ảnh] — do do-long-khung.py --ghi tự ghi, không sửa tay
   const LONG_BANG = {
     // <LONG>
@@ -520,6 +525,7 @@
     // </LONG>
   };
   const LONG_DOC = {};
+  T.coLong = (ma) => !!LONG_BANG[ma]; // cho công cụ soát (can-chu-khung): khung có bảng lòng đo sẵn
   function longBang(ma, ga) {
     let b = LONG_DOC[ma];
     if (b === undefined) {
@@ -656,7 +662,9 @@
       const cap0 = capCao(dongs[0].size, dongs[0].bold);
       const rel = [0]; for (let i = 1; i < dongs.length; i++) rel.push(rel[i - 1] + dongs[i].size + gian - (dongs[i].size < dongs[i - 1].size ? (dongs[i - 1].size - dongs[i].size) * 0.3 : 0));
       const last = rel.length - 1;
-      let b0 = (top + bot) / 2 - (rel[last] - cap0) / 2 + cap0 / 2; // khối chữ hoa căn giữa dải lòng
+      // khối chữ hoa (đỉnh "H" dòng đầu → đường cơ sở dòng cuối) căn giữa dải lòng. can-chu-khung: trước đây cộng thừa nửa cao chữ hoa
+      // (chữ nằm thấp hơn tâm ~3 điểm ở nút cao; nút thấp thì bị kẹp lại nên không thấy)
+      let b0 = (top + bot) / 2 - (rel[last] - cap0) / 2 + (canMoi() ? 0 : cap0 / 2);
       const hi = Math.min(...ms.map((m, i) => rel[i] - m.a)), lo = Math.max(...ms.map((m, i) => rel[i] + m.d));
       const cao = lo - hi, room = bot - top;
       if (cao > room + 1e-6 && !chat) return null; // khung thấp hơn chữ
@@ -664,11 +672,20 @@
       if (b0 + hi < top + dv) b0 = top + dv - hi;
       if (b0 + lo > bot - dv) b0 = bot - dv - lo;
       if (b0 + hi < top - 1e-6 && cao <= room) b0 = top - hi;
-      const out = [];
+      const out = [], sps = [];
       for (let i = 0; i < dongs.length; i++) {
         const bl = b0 + rel[i];
         const sp = spanVung(bl - ms[i].a, bl + ms[i].d) || (chat ? giuaSpan : null);
         if (!sp) return null;
+        sps.push(sp);
+      }
+      // can-chu-khung: khối nhiều dòng căn trái / phải dùng chung một lề (lòng hẹp nhất), không dòng thụt dòng lồi theo đường cong viền
+      if (canMoi() && align !== 'center' && sps.length > 1) {
+        const l0 = Math.max(...sps.map((q) => q[0])), r0 = Math.min(...sps.map((q) => q[1]));
+        if (r0 > l0) for (let i = 0; i < sps.length; i++) sps[i] = [l0, r0];
+      }
+      for (let i = 0; i < dongs.length; i++) {
+        const bl = b0 + rel[i], sp = sps[i];
         const l = sp[0] + dm, r = sp[1] - dm;
         let t = dongs[i].s, mw = ms[i].w;
         if (mw > r - l + 1e-6) { if (!chat) return null; t = catBa(t, Math.max(4, r - l), dongs[i].size, dongs[i].bold); }

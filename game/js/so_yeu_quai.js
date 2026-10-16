@@ -476,14 +476,16 @@
     // hoàn thành vùng
     const vg = Y.vung(sv, V.soVung), bx = CX, by = GY + 3 * (O + GAP) + 1, bw = 4 * O + 3 * GAP, bh = 262 - by;
     T.inset(bx, by, bw, bh, false);
-    chu('Hoàn thành vùng', bx + 3, by + 2, bw - 6, 11, { size: 7.5, bold: true, color: GOLD, shadow: undefined });
-    chu(G.t('★★ {0}/{1} · ★★★ {2}/{1}', vg.sao2, vg.tong, vg.sao3), bx + 3, by + 13, bw - 6, 10, { size: 7, color: TXT, shadow: undefined });
+    // can-chu-khung (16/10): chữ trong ô "Hoàn thành vùng" đặt trong LÒNG ảnh ô (trước: dòng đầu đè viền / đinh góc trên)
+    const chuV = (s, x, y, w, h, o2) => (T.canMoi && T.canMoi() ? T.chuO(s, bx, by, bw, bh, Object.assign({ vung: [x, y, w, h], dem: 1, align: 'left', size: 7, min: 6.5, bold: false, color: MUC, shadow: false }, o2 || {})) : chu(s, x, y, w, h, o2));
+    chuV('Hoàn thành vùng', bx + 3, by + 2, bw - 6, 11, { size: 7.5, bold: true, color: GOLD, shadow: undefined });
+    chuV(G.t('★★ {0}/{1} · ★★★ {2}/{1}', vg.sao2, vg.tong, vg.sao3), bx + 3, by + 13, bw - 6, 10, { size: 7, color: TXT, shadow: undefined });
     let mo = '';
     if (!(vg.nhan & 1) && !(vg.cho & 1)) mo = G.t('Đủ {0} trang ★★: {1} đá nâng bậc + danh hiệu "{2}"', vg.tong, theo(CF.vungDa, V.soVung), Y.tenDanhHieu('thoSan' + V.soVung));
     else if (!(vg.nhan & 2) && !(vg.cho & 2)) mo = G.t('Đủ {0} trang ★★★: danh hiệu "{1}"', vg.tong, Y.tenDanhHieu('bacThay' + V.soVung));
     else if (!vg.cho) mo = 'Đã xong cả vùng!';
     const coNut = !!vg.cho;
-    if (mo) chu(mo, bx + 3, by + 24, bw - 6, 27, { size: 6.5, dong: 3, gian: 1.5, color: SOFT, shadow: undefined });
+    if (mo) chuV(mo, bx + 3, by + 24, bw - 6, 27, { size: 6.5, dong: 3, gian: 1.5, color: SOFT, shadow: undefined });
     if (coNut && T.sbtn(bx + bw - 54, by + bh - 19, 50, 16, 'Nhận', { size: 8, pad: 2, primary: true })) {
       const q = Y.nhanVung(sv, V.soVung);
       if (q) {

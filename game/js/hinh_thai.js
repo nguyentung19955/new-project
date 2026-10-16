@@ -145,9 +145,12 @@
       T.inset(x, ty, lw, th, chon);
       G.oBacVk(x + 3, ty + 4, 29, w);
       G.art.weaponIcon(G.ux, w, x + 17.5, ty + 18.5, 23);
-      chu(HT.tenW(w), x + 35, ty + 3, lw - 38, 19, { size: 7, min: 5.5, bold: true, dong: 2, color: E ? E.col : TXT });
-      chu(G.tv(G.STAGE_NAMES[st]) + (E ? ' · ' + G.tv(E.name) : ''), x + 35, ty + 21, lw - 38, 8, { size: 6, min: 5, color: SOFT });
-      ui.bar(x + 35, ty + 30, lw - 40, 3, c == null ? 1 : kep(n / c, 0, 1), c == null ? GOOD : n >= c ? '#ffd23f' : '#c9a24a');
+      // can-chu-khung (16/10): tên một dòng thì cả khối (tên, hình thái, thanh) dịch lên 4 cho nằm giữa ô (trước: thấp ~3 điểm)
+      const motDong = G.theme.canMoi && G.theme.canMoi() && G.theme.datChu(HT.tenW(w), x + 35, ty + 3, lw - 38, 19, { vien: [0, 0, 0, 0], dem: 0, size: 7, min: 5.5, bold: true, dong: 2, gian: 1.2, align: 'left' }).lines.length === 1;
+      const dl = motDong ? 4 : 0;
+      chu(HT.tenW(w), x + 35, ty + 3 + (motDong ? 1 : 0), lw - 38, motDong ? 13 : 19, { size: 7, min: 5.5, bold: true, dong: 2, color: E ? E.col : TXT });
+      chu(G.tv(G.STAGE_NAMES[st]) + (E ? ' · ' + G.tv(E.name) : ''), x + 35, ty + 21 - dl, lw - 38, 8, { size: 6, min: 5, color: SOFT });
+      ui.bar(x + 35, ty + 30 - dl, lw - 40, 3, c == null ? 1 : kep(n / c, 0, 1), c == null ? GOOD : n >= c ? '#ffd23f' : '#c9a24a');
       if (c != null && n >= c) ui.text('▲', x + lw - 4, ty + 10, { size: 7.5, bold: true, align: 'right', color: GOOD });
       if (bam(x, ty, lw, th)) { if (LO.sel !== w.id) { LO.sel = w.id; LO.doi = null; G.sfx && G.sfx('ui'); } }
     });
@@ -159,8 +162,11 @@
     const st = G.wStage(w), el = st > 0 && G.EL[w.branch] ? w.branch : null, E = el ? G.EL[el] : null, c = VM.gia(st), dau = sv.vkThu && sv.vkThu[0] === w.type;
     const lvl = sv.heroes && sv.heroes[sv.hero] ? sv.heroes[sv.hero].lvl : 1;
     const bac = G.epDo && G.epDo.bat() ? G.epDo.bac(w) : 0;
-    chu(G.wName(w), cx + 5, top + 3, cw - 10, 11, { size: 8, min: 6.5, bold: true, color: bac ? G.epDo.mauBac(bac) : E ? E.col : TXT });
-    chu(G.t('{0} · mài +{1} · đòn {2}', el ? G.t('{0} · hệ {1}', G.STAGE_NAMES[st], E.name) : G.STAGE_NAMES[0], w.sharpen | 0, so1(G.wBase(w, lvl))) + (bac ? ' · ' + G.t('Bậc {0}', G.epDo.tenBac(bac)) : ''), cx + 5, top + 14, cw - 10, 9, { size: 6.3, min: 5.2, color: SOFT });
+    // can-chu-khung (16/10): hai dòng đầu của thẻ phải đặt trong LÒNG ảnh ô (trước: tên đè đinh góc trên trái)
+    const moi = G.theme.canMoi && G.theme.canMoi();
+    const chuThe = (s, x2, y2, w2, h2, o2) => (moi ? G.theme.chuO(s, cx, top, cw, ch, Object.assign({ vung: [x2, y2, w2, h2], vien: [0, 0, 0, 0], dem: 0, size: 7, min: 5.5, bold: false, color: TXT, dong: 1, gian: 1.2, align: 'left' }, o2 || {})) : chu(s, x2, y2, w2, h2, o2));
+    chuThe(G.wName(w), cx + 5, top + 3, cw - 10, 11, { size: 8, min: 6.5, bold: true, color: bac ? G.epDo.mauBac(bac) : E ? E.col : TXT });
+    chuThe(G.t('{0} · mài +{1} · đòn {2}', el ? G.t('{0} · hệ {1}', G.STAGE_NAMES[st], E.name) : G.STAGE_NAMES[0], w.sharpen | 0, so1(G.wBase(w, lvl))) + (bac ? ' · ' + G.t('Bậc {0}', G.epDo.tenBac(bac)) : ''), cx + 5, top + 14, cw - 10, 9, { size: 6.3, min: 5.2, color: SOFT });
     // hình hiện tại → hình thái kế (bóng mờ + khoá khi chưa đủ linh khí)
     const iy = top + 25, ih = 38, ix1 = cx + 8, ix2 = cx + cw - 8 - ih;
     G.oBacVk(ix1, iy, ih, w);
@@ -175,7 +181,8 @@
       // mũi tên giữa hai ô
       const ax = (ix1 + ih + ix2) / 2;
       ui.text('▶', ax, iy + ih / 2 + 4, { size: 11, bold: true, align: 'center', color: du ? GOOD : '#c9b58a' });
-      chu(tenV(w.type, st + 1), ix1 + ih + 2, iy + 3, ix2 - ix1 - ih - 4, 18, { size: 6.5, min: 5.2, bold: true, dong: 2, align: 'center', color: du ? GOOD : GOLD });
+      // can-chu-khung: tên hình thái kế nằm trên mũi tên, không chồng
+      chu(tenV(w.type, st + 1), ix1 + ih + 2, iy + (moi ? 1 : 3), ix2 - ix1 - ih - 4, moi ? 13 : 18, { size: 6.5, min: 5.2, bold: true, dong: 2, align: 'center', color: du ? GOOD : GOLD });
       chu(G.STAGE_NAMES[st + 1], ix2 - 4, iy + ih + 1, ih + 8, 9, { size: 6.2, min: 5, color: du ? GOOD : SOFT, align: 'center' });
       // thanh tiến độ linh khí tới cấp kế
       const by = iy + ih + 11;

@@ -409,8 +409,10 @@
       T.inset(x, yy, lw, rowH - 2, sel);
       E.o(x + 2, yy + 2, rowH - 6, b);
       G.art.weaponIcon(G.ux, w, x + 2 + (rowH - 6) / 2, yy + 2 + (rowH - 6) / 2, rowH - 14);
-      tx(G.tv(G.WTYPES[w.type].name), x + rowH, yy + 12, lw - rowH - 3, { size: 7.5, bold: true, color: E.mauBac(b) });
-      tx(G.t('Bậc {0}', E.tenBac(b)), x + rowH, yy + 23, lw - rowH - 3, { size: 6.5, color: E.mauBac(b) });
+      // can-chu-khung (16/10): hai dòng (tên, bậc) là một khối nằm giữa ô theo chiều dọc (trước: dồn lên trên ~3 điểm)
+      const b1 = T.canMoi && T.canMoi() ? yy + (rowH - 2 - (11 + 7.5 * 0.73)) / 2 + 7.5 * 0.73 : yy + 12;
+      tx(G.tv(G.WTYPES[w.type].name), x + rowH, b1, lw - rowH - 3, { size: 7.5, bold: true, color: E.mauBac(b) });
+      tx(G.t('Bậc {0}', E.tenBac(b)), x + rowH, b1 + 11, lw - rowH - 3, { size: 6.5, color: E.mauBac(b) });
       if (!ro && E.duoc(sv, w) === '') { const c = G.ux; c.fillStyle = GOOD; c.beginPath(); c.arc(x + lw - 5, yy + 5, 2.4, 0, 7); c.fill(); }
       if (G.click && G.inRect(G.click, x, yy, lw, rowH - 2)) { U.sel = w.id; U.hoi = null; U.doi = null; G.click = null; G.sfx('ui'); }
     });

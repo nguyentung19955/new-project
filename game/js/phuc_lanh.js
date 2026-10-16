@@ -203,7 +203,8 @@
       const b = THEO[k], x = PL.theX(j), y = CY;
       const giu = dangGiu(x, y, CW, CH);
       veThe(b, x, y, S, !!giu);
-      if (!G.noRender) ui.text(String(j + 1), x + CW - 9, y + 13, { size: 7, align: 'center', color: '#a9c2b4' }); // phím tắt 1 / 2 / 3
+      // phím tắt 1 / 2 / 3. can-chu-khung (16/10): số đặt trong LÒNG thẻ ở góc phải trên (trước: đè viền vàng của thẻ)
+      if (!G.noRender) { if (T && T.canMoi && T.canMoi()) T.chuTrongKhung(String(j + 1), x, y, CW, CH, { khung: 'gd-the-thuong', vien: [6, 4, 6, 4], vung: [x + CW - 18, y, 18, 18], align: 'center', size: 7, bold: false, color: '#a9c2b4' }); else ui.text(String(j + 1), x + CW - 9, y + 13, { size: 7, align: 'center', color: '#a9c2b4' }); }
       if (G.click && G.inRect(G.click, x, y, CW, CH) && G.time - (S.modeT || 0) > 0.25) { G.click = null; chon(S, j); }
     });
   }

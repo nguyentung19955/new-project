@@ -379,7 +379,15 @@
     if (!tabs.length) tabs.push(LY ? ['luyen', 'Luyện'] : ['sharpen', 'Mài']);
     if (!tabs.some((t) => t[0] === V.ftab)) V.ftab = tabs.some((t) => t[0] === 'vk') ? 'vk' : tabs[0][0];
     const tp = tabs.length === 4 ? 76 : tabs.length === 3 ? 102 : Math.floor((CW + 3) / tabs.length), tw = tp - (tabs.length === 4 ? 3 : 4);
-    tabs.forEach((t, i) => {
+    // can-chu-khung (16/10): chữ thẻ dài (tiếng Anh "Upgrade forge") không vừa thẻ đều nhau → chia bề rộng theo chữ (tổng bề rộng hàng giữ nguyên)
+    let tws = tabs.map(() => tw);
+    if (T.canMoi && T.canMoi() && tabs.length > 1) {
+      ui.font(8, true);
+      const can = tabs.map((t) => Math.ceil(G.ux.measureText(G.tv(t[1])).width) + 30), gap = tp - tw, tong = tabs.length * tw;
+      if (can.some((q) => q > tw)) { const sc = can.reduce((a, b) => a + b, 0), du = tong - sc; tws = can.map((q) => Math.floor(du >= 0 ? q + du / tabs.length : (q * tong) / sc)); tws[tws.length - 1] = tong - tws.slice(0, -1).reduce((a, b) => a + b, 0); }
+      let xx = CX;
+      tabs.forEach((t, i) => { if (T.tab(xx, PY + 23, tws[i], 22, t[1], V.ftab === t[0], { pad: 2 })) { V.ftab = t[0]; V.sel = null; V.page = 0; } xx += tws[i] + gap; });
+    } else tabs.forEach((t, i) => {
       if (T.tab(CX + i * tp, PY + 23, tw, 22, t[1], V.ftab === t[0], { pad: 2 })) { V.ftab = t[0]; V.sel = null; V.page = 0; }
     });
     if (V.ftab !== 'up' && V.ftab !== 'vk' && V.ftab !== 'ep' && V.ftab !== 'luyen') T.inset(CX, DET_Y, CW, 52, false);
@@ -656,13 +664,15 @@
     const sv = G.save, CL = G.cloud, CU = G.cloudUI;
     if (V.cd2) return settings2();
     khungThe('mo', 'Cổng làng: cài đặt'); // Bước 2: có thẻ Việc hôm nay thì hiện hàng thẻ trên băng tiêu đề
-    if (T.btn(CX + 4, 68, 96, CDH, 'Âm thanh, điều khiển ›', { size: 8.5, sub: sv.sound ? 'Nhạc · Truyện' : 'Đang tắt', subSize: 7 })) { V.cd2 = true; V.confirm = false; G.audioStart(); }
+    // can-chu-khung (16/10): nút đầu có hai dòng (chữ + dòng phụ) mà dòng trên nằm ở hàng có mây góc: rộng 96 → 116, hai nút sau 96 → 86 (?canchucu=1 như cũ)
+    const cdW = T.canMoi && T.canMoi() ? [116, 86, 86] : [96, 96, 96], cdX = [CX + 4, CX + 8 + cdW[0], CX + 12 + cdW[0] + cdW[1]];
+    if (T.btn(cdX[0], 68, cdW[0], CDH, 'Âm thanh, điều khiển ›', { size: 8.5, sub: sv.sound ? 'Nhạc · Truyện' : 'Đang tắt', subSize: 7 })) { V.cd2 = true; V.confirm = false; G.audioStart(); }
     // Độ nét hình (js/engine.js G.NET): Cao = canvas thế giới gấp đôi điểm ảnh (ảnh AI rõ hơn), Thường = như cũ (nhẹ máy yếu)
-    if (T.btn(CX + 104, 68, 96, CDH, sv.net === 'thuong' ? 'Độ nét: Thường' : 'Độ nét: Cao', { size: 8.5 })) {
+    if (T.btn(cdX[1], 68, cdW[1], CDH, sv.net === 'thuong' ? 'Độ nét: Thường' : 'Độ nét: Cao', { size: 8.5 })) {
       if (sv.net === 'thuong') delete sv.net; else sv.net = 'thuong';
       G.persist(); say(sv.net === 'thuong' ? 'Độ nét Thường: nhẹ máy hơn, hình AI kém rõ hơn.' : 'Độ nét Cao: hình AI rõ gấp đôi.');
     }
-    if (T.btn(CX + 204, 68, 96, CDH, 'Toàn màn hình', { size: 8.5 })) {
+    if (T.btn(cdX[2], 68, cdW[2], CDH, 'Toàn màn hình', { size: 8.5 })) {
       try { const el = document.documentElement; if (document.fullscreenElement) document.exitFullscreen(); else el.requestFullscreen().catch(() => say('Thiết bị này không cho bật toàn màn hình.')); } catch (e) { say('Thiết bị này không cho bật toàn màn hình.'); }
     }
     T.head('Lưu tiến trình', CX + 4, 113);

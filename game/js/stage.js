@@ -1454,8 +1454,16 @@
     if (vn && ui.btn(G.cloudUI ? 242 : 165, 192, gw, 26, 'Việc hôm nay', { color: '#7a5a12', size: 8 })) G.viecNgay.xemTrongAi();
     // Hành trang (js/hanh_trang.js): xem nhân vật, vũ khí, trang phục, linh khí, kỹ năng, tài nguyên; trong ải chỉ xem
     if (G.hanhTrang) {
-      if (ui.btn(165, 224, 150, 26, '    Hành trang (xem)', { size: 8.5 })) { G.hanhTrang.reset(); setMode('bag'); }
-      G.hanhTrang.icon(186, 237, 1);
+      const TT = G.theme;
+      if (TT.canMoi && TT.canMoi()) { // can-chu-khung (16/10): biểu tượng túi + chữ là MỘT cụm nằm giữa nút (trước: túi sát mép trái, chữ lệch phải)
+        if (ui.btn(165, 224, 150, 26, '', { size: 8.5 })) { G.hanhTrang.reset(); setMode('bag'); }
+        const k = TT.chuTrongKhung('Hành trang (xem)', 165, 224, 150, 26, { khung: 'gd-nut-thuong', vien: [5, 10, 5, 10], vung: [165 + 17, 224, 150 - 17, 26], size: 8.5, bold: true, color: '#fff0c4' });
+        const q = k && k.lines[0];
+        if (q) { ui.font(q.size, true, true); G.hanhTrang.icon(q.x - G.ux.measureText(q.s).width / 2 - 4 - 6.5, 237, 1); } else G.hanhTrang.icon(186, 237, 1);
+      } else {
+        if (ui.btn(165, 224, 150, 26, '    Hành trang (xem)', { size: 8.5 })) { G.hanhTrang.reset(); setMode('bag'); }
+        G.hanhTrang.icon(186, 237, 1);
+      }
     }
   }
   function panelResult() {

@@ -98,10 +98,23 @@
             const nhanPhai = !open && (on || nd.need > 0) ? G.t('cần {0}', nd.need) : can ? '+' : '';
             ui.font(6.5, false, true);
             const rW = nhanPhai === '+' ? 9 : nhanPhai ? Math.ceil(G.ux.measureText(G.tv(nhanPhai)).width) + 6 : 0, nameW = low ? (open ? bw - pw - (can ? 16 : 8) + 3 : bw - rW - 4) : bw;
-            T.chuO(nd.name, bx, ry, bw, bh, { sel, align: 'left', vung: [bx, ry, nameW, low ? bh : bh - 5], size: 6.5, min: 6, bold: true, color: r > 0 ? GOLD : open ? TXT : LOCK });
+            // can-chu-khung (16/10): ô cao chưa mở (không có chấm bậc) — tên nằm giữa ô; có "cần N" thì cùng hàng nếu đủ rộng, không thì tên trên / "cần N" dưới (không chồng nhau)
+            let vTen = [bx, ry, nameW, low ? bh : bh - 5], vCan = null;
+            if (!low && !open && T.canMoi && T.canMoi()) {
+              ui.font(6.5, true, true);
+              const tw = G.ux.measureText(G.tv(nd.name)).width;
+              if (!nhanPhai) vTen = [bx, ry, bw, bh];
+              else if (tw + rW + 8 <= bw) { vTen = [bx, ry, bw - rW - 4, bh]; vCan = [bx + bw - rW - 3, ry, rW + 3, bh]; }
+              else {
+                vTen = [bx, ry, bw, bh / 2 + 1.5]; vCan = [bx + bw - rW - 3, ry + bh / 2, rW + 3, bh / 2];
+                const thu = T.datChu(nd.name, bx, ry, bw, bh, { khung: sel ? 'gd-o-con-chon' : 'gd-o-con', kKhung: T.kOCon(bw, bh), vien: [1, 1, 1, 1], align: 'left', vung: vTen, size: 6.5, min: 6, bold: true });
+                if (thu && thu.cat) vTen = [bx, ry, bw, bh / 2 + 3]; // tên có dấu cả trên lẫn dưới (Xuyên băng): cho thêm 1,5 hàng, chữ "cần N" ở góc phải dưới
+              }
+            }
+            T.chuO(nd.name, bx, ry, bw, bh, { sel, align: 'left', vung: vTen, size: 6.5, min: 6, bold: true, color: r > 0 ? GOLD : open ? TXT : LOCK });
             if (open) for (let j = 0; j < nd.max; j++) { const c = G.ux; c.fillStyle = j < r ? '#ffd23f' : open ? '#0d1716' : '#1a2423'; c.fillRect(px0 + j * 5, py, 4, 3); }
             if (nhanPhai === '+') T.chuO('+', bx, ry, bw, bh, { sel, align: low ? 'center' : 'right', vung: low ? [px0 - 10, ry, 9, bh] : [bx + bw - rW - 3, ry + bh - 10, rW + 3, 10], size: 8, min: 6.5, bold: true, color: GOOD });
-            else if (nhanPhai) T.chuO(nhanPhai, bx, ry, bw, bh, { sel, align: 'right', vung: low ? [bx + bw - rW - 3, ry, rW + 3, bh] : [bx + bw - rW - 3, ry + bh - 10, rW + 3, 10], size: 6.5, min: 6, bold: false, color: LOCK });
+            else if (nhanPhai) T.chuO(nhanPhai, bx, ry, bw, bh, { sel, align: 'right', vung: vCan || (low ? [bx + bw - rW - 3, ry, rW + 3, bh] : [bx + bw - rW - 3, ry + bh - 10, rW + 3, 10]), size: 6.5, min: 6, bold: false, color: LOCK });
           }
           U.boxes[cay + '/' + nd.id] = [bx, ry, bw, bh];
           if (G.click && G.inRect(G.click, bx - 1, ry - 1, bw + 2, bh + 2)) {

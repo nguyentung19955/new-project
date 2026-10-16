@@ -120,7 +120,8 @@
     const xf = hs.lvl >= G.MAX_LEVEL ? 1 : hs.xp / G.xpNeed(hs.lvl);
     T.bar(CX + 4, CY + 127, 104, 'xp', xf, null, { h: 7 });
     ui.text(hs.lvl >= G.MAX_LEVEL ? 'Đã tối đa' : G.t('{0}/{1} kinh nghiệm', Math.floor(hs.xp), G.xpNeed(hs.lvl)), CX + 56, CY + 144, { size: 6.5, align: 'center', color: SOFT });
-    if (!RO && T.sbtn(CX + 6, CY + 149, 100, 18, 'Nét đã học: Ông Từ', { size: 7, pad: 1 })) { VS.goNpc('tu', true); return; }
+    const nw = T.canMoi && T.canMoi() && G.LANG !== 'vi' ? 112 : 100; // can-chu-khung (16/10): tiếng Anh "Learned: Shrine Keeper" dài — nút rộng hết cột hình (112)
+    if (!RO && T.sbtn(CX + (112 - nw) / 2, CY + 149, nw, 18, 'Nét đã học: Ông Từ', { size: 7, pad: 1 })) { VS.goNpc('tu', true); return; }
     const x = CX + 122, w = CW - 128;
     region('hero', x, CY, w, CH, (y) => {
       y += 11;
@@ -335,8 +336,9 @@
   B.hubButton = function () {
     const r = B.HUB, held = [...G.pointers.values()].some((q) => !q.role && !q.stale && G.inRect(q, r[0], r[1], r[2], r[3]));
     T.plate(r[0], r[1] + (held ? 1 : 0), r[2], r[3]);
+    const moi = T.canMoi && T.canMoi(); // can-chu-khung (16/10): chữ dịch lên 1 — khỏi hàng đinh góc dưới của tấm (trước tràn 0,6 điểm), cụm túi + chữ vẫn giữa tấm
     bagIcon(r[0] + r[2] / 2, r[1] + 11 + (held ? 1 : 0), 1.25);
-    T.chuTam('Hành trang', r[0], r[1] + (held ? 1 : 0), r[2], r[3], { vung: [r[0], r[1] + (held ? 1 : 0) + 20, r[2], 11], size: 6.5, bold: true, tiny: true, align: 'center', color: GOLD });
+    T.chuTam('Hành trang', r[0], r[1] + (held ? 1 : 0), r[2], r[3], { vung: [r[0], r[1] + (held ? 1 : 0) + (moi ? 19 : 20), r[2], moi ? 10 : 11], size: 6.5, bold: true, tiny: true, align: 'center', color: GOLD });
     if ((G.click && G.inRect(G.click, r[0] - 2, r[1] - 1, r[2] + 4, r[3] + 2)) || G.keyP.KeyB) { G.click = null; B.openVillage(); return true; }
     return false;
   };

@@ -59,7 +59,7 @@
 <div id="lk-tai" data-bia="||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAMEBQYH/8QAKRAAAQMCBQMDBQAAAAAAAAAAAQIDEQAEBRIhMUETFGEiQnEVUWKBsf/EABcBAAMBAAAAAAAAAAAAAAAAAAIDBAX/xAAlEQACAQEFCQAAAAAAAAAAAAABAgADBBExUfASEyEyM0FxobH/2gAMAwEAAhEDEQA/AOfNMWj9zbWiEtBsn1ugGTPCvjXajFcBNssNsvoeMxlCgVJqzCbhHftG3aGdcJBUAUn7neRzTMcumxjD0hDSkmFBtWZMjSdR5qamzb4DtHOiimTfxmt/T3UpzLBCTt5q22sWekt0vBvImSF8+KyF5eWDaGFNZlr6YkKGiTPGvzSutZDDX1sF3P0wPUBMzvP62rStACi5TEWB9pizi/H1JsLUo3NhKiZUOfyqbE1Hu3jJkqPNFFRUuprOHU5dZSVwmE6+2mNk9u7r7R/aKKqqQLNifB+T/9k=|||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAgf/xAAmEAACAgEEAQQCAwAAAAAAAAABAgMRAAQSITEFE1FhgSJBcbHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQIDBAX/xAAeEQABBAIDAQAAAAAAAAAAAAAAAQIDEiExBBEyIv/aAAwDAQACEQMRAD8A51EIZIo53EASNwHG07mBPFno9HFyeOhl1Y2yFIbtjVkDnr54yzx2vaLSyII1cELvBQEVu5PyeshTWvFJG6qi7OR+A9/4xoa3yQzWRvzsH8YkWrkCMZYlsoSvJHfWUalzFpI4/TRBZbca3HsUcXqvJvPqpZgEAewAFHAP1mZ9aZIoyqKWVa4jX3P+jByGor8aNDgT0gXvDiHTs1EbjRAsX3jKuEH92Ofs4YYGeim/yLulscHjFuT6YNno/wBnDDGfsEej/9k=" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.16-2059";
+(window.G = window.G || {}).VERSION = "lk-2026.10.16-2128";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -265,6 +265,7 @@
 "Chỉ có tác dụng tới hết ải này.": "Lasts until this stage ends.",
 "Phúc lành của ải": "Stage blessing",
 "    Hành trang (xem)": "    Inventory (view)",
+"Hành trang (xem)": "Inventory (view)",
 " và ": " and ",
 " · gục vì: {0}": " · felled by: {0}",
 "(cần bậc Lam)": "(need Blue)",
@@ -31733,6 +31734,11 @@ MA._xong();
   // không chạm viền), chữ dài: thu cỡ tới tối thiểu → xuống dòng (nơi đủ cao) → cuối cùng mới cắt "…".
   // 15/10 don-tep B: bỏ cờ quay lui ?chucu=1 (G.CHU_CU) — luôn đặt chữ trong lòng khung. T.chuMoi giữ lại (luôn true) cho mã nơi khác còn gọi.
   const chuMoi = () => true;
+  // 16/10 (docs/review/ke-hoach-cai-thien/can-chu-khung): chữ nằm GIỮA khung — sửa công thức căn dọc (khối chữ hoa bị đẩy xuống nửa cao chữ hoa),
+  // các dòng căn trái / phải của một khối dùng chung một lề, và vài nơi gọi tự đặt chữ. Cờ quay lui ?canchucu=1 (G.CAN_CHU_CU = true): như trước.
+  if (G.CAN_CHU_CU === undefined) { let cu = false; try { cu = /[?&]canchucu=1(&|$)/.test(String(window.location && window.location.search)); } catch (e) { cu = false; } G.CAN_CHU_CU = cu; }
+  const canMoi = () => G.CAN_CHU_CU !== true;
+  T.canMoi = canMoi;
   // ma: [net, rộng ảnh, cao ảnh, hàng đầu y0, "trái,phải ..." mỗi hàng ảnh] — do do-long-khung.py --ghi tự ghi, không sửa tay
   const LONG_BANG = {
     // <LONG>
@@ -31759,6 +31765,7 @@ MA._xong();
     // </LONG>
   };
   const LONG_DOC = {};
+  T.coLong = (ma) => !!LONG_BANG[ma]; // cho công cụ soát (can-chu-khung): khung có bảng lòng đo sẵn
   function longBang(ma, ga) {
     let b = LONG_DOC[ma];
     if (b === undefined) {
@@ -31895,7 +31902,9 @@ MA._xong();
       const cap0 = capCao(dongs[0].size, dongs[0].bold);
       const rel = [0]; for (let i = 1; i < dongs.length; i++) rel.push(rel[i - 1] + dongs[i].size + gian - (dongs[i].size < dongs[i - 1].size ? (dongs[i - 1].size - dongs[i].size) * 0.3 : 0));
       const last = rel.length - 1;
-      let b0 = (top + bot) / 2 - (rel[last] - cap0) / 2 + cap0 / 2; // khối chữ hoa căn giữa dải lòng
+      // khối chữ hoa (đỉnh "H" dòng đầu → đường cơ sở dòng cuối) căn giữa dải lòng. can-chu-khung: trước đây cộng thừa nửa cao chữ hoa
+      // (chữ nằm thấp hơn tâm ~3 điểm ở nút cao; nút thấp thì bị kẹp lại nên không thấy)
+      let b0 = (top + bot) / 2 - (rel[last] - cap0) / 2 + (canMoi() ? 0 : cap0 / 2);
       const hi = Math.min(...ms.map((m, i) => rel[i] - m.a)), lo = Math.max(...ms.map((m, i) => rel[i] + m.d));
       const cao = lo - hi, room = bot - top;
       if (cao > room + 1e-6 && !chat) return null; // khung thấp hơn chữ
@@ -31903,11 +31912,20 @@ MA._xong();
       if (b0 + hi < top + dv) b0 = top + dv - hi;
       if (b0 + lo > bot - dv) b0 = bot - dv - lo;
       if (b0 + hi < top - 1e-6 && cao <= room) b0 = top - hi;
-      const out = [];
+      const out = [], sps = [];
       for (let i = 0; i < dongs.length; i++) {
         const bl = b0 + rel[i];
         const sp = spanVung(bl - ms[i].a, bl + ms[i].d) || (chat ? giuaSpan : null);
         if (!sp) return null;
+        sps.push(sp);
+      }
+      // can-chu-khung: khối nhiều dòng căn trái / phải dùng chung một lề (lòng hẹp nhất), không dòng thụt dòng lồi theo đường cong viền
+      if (canMoi() && align !== 'center' && sps.length > 1) {
+        const l0 = Math.max(...sps.map((q) => q[0])), r0 = Math.min(...sps.map((q) => q[1]));
+        if (r0 > l0) for (let i = 0; i < sps.length; i++) sps[i] = [l0, r0];
+      }
+      for (let i = 0; i < dongs.length; i++) {
+        const bl = b0 + rel[i], sp = sps[i];
         const l = sp[0] + dm, r = sp[1] - dm;
         let t = dongs[i].s, mw = ms[i].w;
         if (mw > r - l + 1e-6) { if (!chat) return null; t = catBa(t, Math.max(4, r - l), dongs[i].size, dongs[i].bold); }
@@ -34806,8 +34824,10 @@ MA._xong();
       T.inset(x, yy, lw, rowH - 2, sel);
       E.o(x + 2, yy + 2, rowH - 6, b);
       G.art.weaponIcon(G.ux, w, x + 2 + (rowH - 6) / 2, yy + 2 + (rowH - 6) / 2, rowH - 14);
-      tx(G.tv(G.WTYPES[w.type].name), x + rowH, yy + 12, lw - rowH - 3, { size: 7.5, bold: true, color: E.mauBac(b) });
-      tx(G.t('Bậc {0}', E.tenBac(b)), x + rowH, yy + 23, lw - rowH - 3, { size: 6.5, color: E.mauBac(b) });
+      // can-chu-khung (16/10): hai dòng (tên, bậc) là một khối nằm giữa ô theo chiều dọc (trước: dồn lên trên ~3 điểm)
+      const b1 = T.canMoi && T.canMoi() ? yy + (rowH - 2 - (11 + 7.5 * 0.73)) / 2 + 7.5 * 0.73 : yy + 12;
+      tx(G.tv(G.WTYPES[w.type].name), x + rowH, b1, lw - rowH - 3, { size: 7.5, bold: true, color: E.mauBac(b) });
+      tx(G.t('Bậc {0}', E.tenBac(b)), x + rowH, b1 + 11, lw - rowH - 3, { size: 6.5, color: E.mauBac(b) });
       if (!ro && E.duoc(sv, w) === '') { const c = G.ux; c.fillStyle = GOOD; c.beginPath(); c.arc(x + lw - 5, yy + 5, 2.4, 0, 7); c.fill(); }
       if (G.click && G.inRect(G.click, x, yy, lw, rowH - 2)) { U.sel = w.id; U.hoi = null; U.doi = null; G.click = null; G.sfx('ui'); }
     });
@@ -35374,10 +35394,23 @@ MA._xong();
             const nhanPhai = !open && (on || nd.need > 0) ? G.t('cần {0}', nd.need) : can ? '+' : '';
             ui.font(6.5, false, true);
             const rW = nhanPhai === '+' ? 9 : nhanPhai ? Math.ceil(G.ux.measureText(G.tv(nhanPhai)).width) + 6 : 0, nameW = low ? (open ? bw - pw - (can ? 16 : 8) + 3 : bw - rW - 4) : bw;
-            T.chuO(nd.name, bx, ry, bw, bh, { sel, align: 'left', vung: [bx, ry, nameW, low ? bh : bh - 5], size: 6.5, min: 6, bold: true, color: r > 0 ? GOLD : open ? TXT : LOCK });
+            // can-chu-khung (16/10): ô cao chưa mở (không có chấm bậc) — tên nằm giữa ô; có "cần N" thì cùng hàng nếu đủ rộng, không thì tên trên / "cần N" dưới (không chồng nhau)
+            let vTen = [bx, ry, nameW, low ? bh : bh - 5], vCan = null;
+            if (!low && !open && T.canMoi && T.canMoi()) {
+              ui.font(6.5, true, true);
+              const tw = G.ux.measureText(G.tv(nd.name)).width;
+              if (!nhanPhai) vTen = [bx, ry, bw, bh];
+              else if (tw + rW + 8 <= bw) { vTen = [bx, ry, bw - rW - 4, bh]; vCan = [bx + bw - rW - 3, ry, rW + 3, bh]; }
+              else {
+                vTen = [bx, ry, bw, bh / 2 + 1.5]; vCan = [bx + bw - rW - 3, ry + bh / 2, rW + 3, bh / 2];
+                const thu = T.datChu(nd.name, bx, ry, bw, bh, { khung: sel ? 'gd-o-con-chon' : 'gd-o-con', kKhung: T.kOCon(bw, bh), vien: [1, 1, 1, 1], align: 'left', vung: vTen, size: 6.5, min: 6, bold: true });
+                if (thu && thu.cat) vTen = [bx, ry, bw, bh / 2 + 3]; // tên có dấu cả trên lẫn dưới (Xuyên băng): cho thêm 1,5 hàng, chữ "cần N" ở góc phải dưới
+              }
+            }
+            T.chuO(nd.name, bx, ry, bw, bh, { sel, align: 'left', vung: vTen, size: 6.5, min: 6, bold: true, color: r > 0 ? GOLD : open ? TXT : LOCK });
             if (open) for (let j = 0; j < nd.max; j++) { const c = G.ux; c.fillStyle = j < r ? '#ffd23f' : open ? '#0d1716' : '#1a2423'; c.fillRect(px0 + j * 5, py, 4, 3); }
             if (nhanPhai === '+') T.chuO('+', bx, ry, bw, bh, { sel, align: low ? 'center' : 'right', vung: low ? [px0 - 10, ry, 9, bh] : [bx + bw - rW - 3, ry + bh - 10, rW + 3, 10], size: 8, min: 6.5, bold: true, color: GOOD });
-            else if (nhanPhai) T.chuO(nhanPhai, bx, ry, bw, bh, { sel, align: 'right', vung: low ? [bx + bw - rW - 3, ry, rW + 3, bh] : [bx + bw - rW - 3, ry + bh - 10, rW + 3, 10], size: 6.5, min: 6, bold: false, color: LOCK });
+            else if (nhanPhai) T.chuO(nhanPhai, bx, ry, bw, bh, { sel, align: 'right', vung: vCan || (low ? [bx + bw - rW - 3, ry, rW + 3, bh] : [bx + bw - rW - 3, ry + bh - 10, rW + 3, 10]), size: 6.5, min: 6, bold: false, color: LOCK });
           }
           U.boxes[cay + '/' + nd.id] = [bx, ry, bw, bh];
           if (G.click && G.inRect(G.click, bx - 1, ry - 1, bw + 2, bh + 2)) {
@@ -36890,8 +36923,16 @@ MA._xong();
     if (vn && ui.btn(G.cloudUI ? 242 : 165, 192, gw, 26, 'Việc hôm nay', { color: '#7a5a12', size: 8 })) G.viecNgay.xemTrongAi();
     // Hành trang (js/hanh_trang.js): xem nhân vật, vũ khí, trang phục, linh khí, kỹ năng, tài nguyên; trong ải chỉ xem
     if (G.hanhTrang) {
-      if (ui.btn(165, 224, 150, 26, '    Hành trang (xem)', { size: 8.5 })) { G.hanhTrang.reset(); setMode('bag'); }
-      G.hanhTrang.icon(186, 237, 1);
+      const TT = G.theme;
+      if (TT.canMoi && TT.canMoi()) { // can-chu-khung (16/10): biểu tượng túi + chữ là MỘT cụm nằm giữa nút (trước: túi sát mép trái, chữ lệch phải)
+        if (ui.btn(165, 224, 150, 26, '', { size: 8.5 })) { G.hanhTrang.reset(); setMode('bag'); }
+        const k = TT.chuTrongKhung('Hành trang (xem)', 165, 224, 150, 26, { khung: 'gd-nut-thuong', vien: [5, 10, 5, 10], vung: [165 + 17, 224, 150 - 17, 26], size: 8.5, bold: true, color: '#fff0c4' });
+        const q = k && k.lines[0];
+        if (q) { ui.font(q.size, true, true); G.hanhTrang.icon(q.x - G.ux.measureText(q.s).width / 2 - 4 - 6.5, 237, 1); } else G.hanhTrang.icon(186, 237, 1);
+      } else {
+        if (ui.btn(165, 224, 150, 26, '    Hành trang (xem)', { size: 8.5 })) { G.hanhTrang.reset(); setMode('bag'); }
+        G.hanhTrang.icon(186, 237, 1);
+      }
     }
   }
   function panelResult() {
@@ -39330,7 +39371,15 @@ MA._xong();
     if (!tabs.length) tabs.push(LY ? ['luyen', 'Luyện'] : ['sharpen', 'Mài']);
     if (!tabs.some((t) => t[0] === V.ftab)) V.ftab = tabs.some((t) => t[0] === 'vk') ? 'vk' : tabs[0][0];
     const tp = tabs.length === 4 ? 76 : tabs.length === 3 ? 102 : Math.floor((CW + 3) / tabs.length), tw = tp - (tabs.length === 4 ? 3 : 4);
-    tabs.forEach((t, i) => {
+    // can-chu-khung (16/10): chữ thẻ dài (tiếng Anh "Upgrade forge") không vừa thẻ đều nhau → chia bề rộng theo chữ (tổng bề rộng hàng giữ nguyên)
+    let tws = tabs.map(() => tw);
+    if (T.canMoi && T.canMoi() && tabs.length > 1) {
+      ui.font(8, true);
+      const can = tabs.map((t) => Math.ceil(G.ux.measureText(G.tv(t[1])).width) + 30), gap = tp - tw, tong = tabs.length * tw;
+      if (can.some((q) => q > tw)) { const sc = can.reduce((a, b) => a + b, 0), du = tong - sc; tws = can.map((q) => Math.floor(du >= 0 ? q + du / tabs.length : (q * tong) / sc)); tws[tws.length - 1] = tong - tws.slice(0, -1).reduce((a, b) => a + b, 0); }
+      let xx = CX;
+      tabs.forEach((t, i) => { if (T.tab(xx, PY + 23, tws[i], 22, t[1], V.ftab === t[0], { pad: 2 })) { V.ftab = t[0]; V.sel = null; V.page = 0; } xx += tws[i] + gap; });
+    } else tabs.forEach((t, i) => {
       if (T.tab(CX + i * tp, PY + 23, tw, 22, t[1], V.ftab === t[0], { pad: 2 })) { V.ftab = t[0]; V.sel = null; V.page = 0; }
     });
     if (V.ftab !== 'up' && V.ftab !== 'vk' && V.ftab !== 'ep' && V.ftab !== 'luyen') T.inset(CX, DET_Y, CW, 52, false);
@@ -39607,13 +39656,15 @@ MA._xong();
     const sv = G.save, CL = G.cloud, CU = G.cloudUI;
     if (V.cd2) return settings2();
     khungThe('mo', 'Cổng làng: cài đặt'); // Bước 2: có thẻ Việc hôm nay thì hiện hàng thẻ trên băng tiêu đề
-    if (T.btn(CX + 4, 68, 96, CDH, 'Âm thanh, điều khiển ›', { size: 8.5, sub: sv.sound ? 'Nhạc · Truyện' : 'Đang tắt', subSize: 7 })) { V.cd2 = true; V.confirm = false; G.audioStart(); }
+    // can-chu-khung (16/10): nút đầu có hai dòng (chữ + dòng phụ) mà dòng trên nằm ở hàng có mây góc: rộng 96 → 116, hai nút sau 96 → 86 (?canchucu=1 như cũ)
+    const cdW = T.canMoi && T.canMoi() ? [116, 86, 86] : [96, 96, 96], cdX = [CX + 4, CX + 8 + cdW[0], CX + 12 + cdW[0] + cdW[1]];
+    if (T.btn(cdX[0], 68, cdW[0], CDH, 'Âm thanh, điều khiển ›', { size: 8.5, sub: sv.sound ? 'Nhạc · Truyện' : 'Đang tắt', subSize: 7 })) { V.cd2 = true; V.confirm = false; G.audioStart(); }
     // Độ nét hình (js/engine.js G.NET): Cao = canvas thế giới gấp đôi điểm ảnh (ảnh AI rõ hơn), Thường = như cũ (nhẹ máy yếu)
-    if (T.btn(CX + 104, 68, 96, CDH, sv.net === 'thuong' ? 'Độ nét: Thường' : 'Độ nét: Cao', { size: 8.5 })) {
+    if (T.btn(cdX[1], 68, cdW[1], CDH, sv.net === 'thuong' ? 'Độ nét: Thường' : 'Độ nét: Cao', { size: 8.5 })) {
       if (sv.net === 'thuong') delete sv.net; else sv.net = 'thuong';
       G.persist(); say(sv.net === 'thuong' ? 'Độ nét Thường: nhẹ máy hơn, hình AI kém rõ hơn.' : 'Độ nét Cao: hình AI rõ gấp đôi.');
     }
-    if (T.btn(CX + 204, 68, 96, CDH, 'Toàn màn hình', { size: 8.5 })) {
+    if (T.btn(cdX[2], 68, cdW[2], CDH, 'Toàn màn hình', { size: 8.5 })) {
       try { const el = document.documentElement; if (document.fullscreenElement) document.exitFullscreen(); else el.requestFullscreen().catch(() => say('Thiết bị này không cho bật toàn màn hình.')); } catch (e) { say('Thiết bị này không cho bật toàn màn hình.'); }
     }
     T.head('Lưu tiến trình', CX + 4, 113);
@@ -40117,7 +40168,8 @@ MA._xong();
     const xf = hs.lvl >= G.MAX_LEVEL ? 1 : hs.xp / G.xpNeed(hs.lvl);
     T.bar(CX + 4, CY + 127, 104, 'xp', xf, null, { h: 7 });
     ui.text(hs.lvl >= G.MAX_LEVEL ? 'Đã tối đa' : G.t('{0}/{1} kinh nghiệm', Math.floor(hs.xp), G.xpNeed(hs.lvl)), CX + 56, CY + 144, { size: 6.5, align: 'center', color: SOFT });
-    if (!RO && T.sbtn(CX + 6, CY + 149, 100, 18, 'Nét đã học: Ông Từ', { size: 7, pad: 1 })) { VS.goNpc('tu', true); return; }
+    const nw = T.canMoi && T.canMoi() && G.LANG !== 'vi' ? 112 : 100; // can-chu-khung (16/10): tiếng Anh "Learned: Shrine Keeper" dài — nút rộng hết cột hình (112)
+    if (!RO && T.sbtn(CX + (112 - nw) / 2, CY + 149, nw, 18, 'Nét đã học: Ông Từ', { size: 7, pad: 1 })) { VS.goNpc('tu', true); return; }
     const x = CX + 122, w = CW - 128;
     region('hero', x, CY, w, CH, (y) => {
       y += 11;
@@ -40332,8 +40384,9 @@ MA._xong();
   B.hubButton = function () {
     const r = B.HUB, held = [...G.pointers.values()].some((q) => !q.role && !q.stale && G.inRect(q, r[0], r[1], r[2], r[3]));
     T.plate(r[0], r[1] + (held ? 1 : 0), r[2], r[3]);
+    const moi = T.canMoi && T.canMoi(); // can-chu-khung (16/10): chữ dịch lên 1 — khỏi hàng đinh góc dưới của tấm (trước tràn 0,6 điểm), cụm túi + chữ vẫn giữa tấm
     bagIcon(r[0] + r[2] / 2, r[1] + 11 + (held ? 1 : 0), 1.25);
-    T.chuTam('Hành trang', r[0], r[1] + (held ? 1 : 0), r[2], r[3], { vung: [r[0], r[1] + (held ? 1 : 0) + 20, r[2], 11], size: 6.5, bold: true, tiny: true, align: 'center', color: GOLD });
+    T.chuTam('Hành trang', r[0], r[1] + (held ? 1 : 0), r[2], r[3], { vung: [r[0], r[1] + (held ? 1 : 0) + (moi ? 19 : 20), r[2], moi ? 10 : 11], size: 6.5, bold: true, tiny: true, align: 'center', color: GOLD });
     if ((G.click && G.inRect(G.click, r[0] - 2, r[1] - 1, r[2] + 4, r[3] + 2)) || G.keyP.KeyB) { G.click = null; B.openVillage(); return true; }
     return false;
   };
@@ -41761,9 +41814,12 @@ MA._xong();
       T.inset(x, ty, lw, th, chon);
       G.oBacVk(x + 3, ty + 4, 29, w);
       G.art.weaponIcon(G.ux, w, x + 17.5, ty + 18.5, 23);
-      chu(HT.tenW(w), x + 35, ty + 3, lw - 38, 19, { size: 7, min: 5.5, bold: true, dong: 2, color: E ? E.col : TXT });
-      chu(G.tv(G.STAGE_NAMES[st]) + (E ? ' · ' + G.tv(E.name) : ''), x + 35, ty + 21, lw - 38, 8, { size: 6, min: 5, color: SOFT });
-      ui.bar(x + 35, ty + 30, lw - 40, 3, c == null ? 1 : kep(n / c, 0, 1), c == null ? GOOD : n >= c ? '#ffd23f' : '#c9a24a');
+      // can-chu-khung (16/10): tên một dòng thì cả khối (tên, hình thái, thanh) dịch lên 4 cho nằm giữa ô (trước: thấp ~3 điểm)
+      const motDong = G.theme.canMoi && G.theme.canMoi() && G.theme.datChu(HT.tenW(w), x + 35, ty + 3, lw - 38, 19, { vien: [0, 0, 0, 0], dem: 0, size: 7, min: 5.5, bold: true, dong: 2, gian: 1.2, align: 'left' }).lines.length === 1;
+      const dl = motDong ? 4 : 0;
+      chu(HT.tenW(w), x + 35, ty + 3 + (motDong ? 1 : 0), lw - 38, motDong ? 13 : 19, { size: 7, min: 5.5, bold: true, dong: 2, color: E ? E.col : TXT });
+      chu(G.tv(G.STAGE_NAMES[st]) + (E ? ' · ' + G.tv(E.name) : ''), x + 35, ty + 21 - dl, lw - 38, 8, { size: 6, min: 5, color: SOFT });
+      ui.bar(x + 35, ty + 30 - dl, lw - 40, 3, c == null ? 1 : kep(n / c, 0, 1), c == null ? GOOD : n >= c ? '#ffd23f' : '#c9a24a');
       if (c != null && n >= c) ui.text('▲', x + lw - 4, ty + 10, { size: 7.5, bold: true, align: 'right', color: GOOD });
       if (bam(x, ty, lw, th)) { if (LO.sel !== w.id) { LO.sel = w.id; LO.doi = null; G.sfx && G.sfx('ui'); } }
     });
@@ -41775,8 +41831,11 @@ MA._xong();
     const st = G.wStage(w), el = st > 0 && G.EL[w.branch] ? w.branch : null, E = el ? G.EL[el] : null, c = VM.gia(st), dau = sv.vkThu && sv.vkThu[0] === w.type;
     const lvl = sv.heroes && sv.heroes[sv.hero] ? sv.heroes[sv.hero].lvl : 1;
     const bac = G.epDo && G.epDo.bat() ? G.epDo.bac(w) : 0;
-    chu(G.wName(w), cx + 5, top + 3, cw - 10, 11, { size: 8, min: 6.5, bold: true, color: bac ? G.epDo.mauBac(bac) : E ? E.col : TXT });
-    chu(G.t('{0} · mài +{1} · đòn {2}', el ? G.t('{0} · hệ {1}', G.STAGE_NAMES[st], E.name) : G.STAGE_NAMES[0], w.sharpen | 0, so1(G.wBase(w, lvl))) + (bac ? ' · ' + G.t('Bậc {0}', G.epDo.tenBac(bac)) : ''), cx + 5, top + 14, cw - 10, 9, { size: 6.3, min: 5.2, color: SOFT });
+    // can-chu-khung (16/10): hai dòng đầu của thẻ phải đặt trong LÒNG ảnh ô (trước: tên đè đinh góc trên trái)
+    const moi = G.theme.canMoi && G.theme.canMoi();
+    const chuThe = (s, x2, y2, w2, h2, o2) => (moi ? G.theme.chuO(s, cx, top, cw, ch, Object.assign({ vung: [x2, y2, w2, h2], vien: [0, 0, 0, 0], dem: 0, size: 7, min: 5.5, bold: false, color: TXT, dong: 1, gian: 1.2, align: 'left' }, o2 || {})) : chu(s, x2, y2, w2, h2, o2));
+    chuThe(G.wName(w), cx + 5, top + 3, cw - 10, 11, { size: 8, min: 6.5, bold: true, color: bac ? G.epDo.mauBac(bac) : E ? E.col : TXT });
+    chuThe(G.t('{0} · mài +{1} · đòn {2}', el ? G.t('{0} · hệ {1}', G.STAGE_NAMES[st], E.name) : G.STAGE_NAMES[0], w.sharpen | 0, so1(G.wBase(w, lvl))) + (bac ? ' · ' + G.t('Bậc {0}', G.epDo.tenBac(bac)) : ''), cx + 5, top + 14, cw - 10, 9, { size: 6.3, min: 5.2, color: SOFT });
     // hình hiện tại → hình thái kế (bóng mờ + khoá khi chưa đủ linh khí)
     const iy = top + 25, ih = 38, ix1 = cx + 8, ix2 = cx + cw - 8 - ih;
     G.oBacVk(ix1, iy, ih, w);
@@ -41791,7 +41850,8 @@ MA._xong();
       // mũi tên giữa hai ô
       const ax = (ix1 + ih + ix2) / 2;
       ui.text('▶', ax, iy + ih / 2 + 4, { size: 11, bold: true, align: 'center', color: du ? GOOD : '#c9b58a' });
-      chu(tenV(w.type, st + 1), ix1 + ih + 2, iy + 3, ix2 - ix1 - ih - 4, 18, { size: 6.5, min: 5.2, bold: true, dong: 2, align: 'center', color: du ? GOOD : GOLD });
+      // can-chu-khung: tên hình thái kế nằm trên mũi tên, không chồng
+      chu(tenV(w.type, st + 1), ix1 + ih + 2, iy + (moi ? 1 : 3), ix2 - ix1 - ih - 4, moi ? 13 : 18, { size: 6.5, min: 5.2, bold: true, dong: 2, align: 'center', color: du ? GOOD : GOLD });
       chu(G.STAGE_NAMES[st + 1], ix2 - 4, iy + ih + 1, ih + 8, 9, { size: 6.2, min: 5, color: du ? GOOD : SOFT, align: 'center' });
       // thanh tiến độ linh khí tới cấp kế
       const by = iy + ih + 11;
@@ -42162,7 +42222,8 @@ MA._xong();
       const b = THEO[k], x = PL.theX(j), y = CY;
       const giu = dangGiu(x, y, CW, CH);
       veThe(b, x, y, S, !!giu);
-      if (!G.noRender) ui.text(String(j + 1), x + CW - 9, y + 13, { size: 7, align: 'center', color: '#a9c2b4' }); // phím tắt 1 / 2 / 3
+      // phím tắt 1 / 2 / 3. can-chu-khung (16/10): số đặt trong LÒNG thẻ ở góc phải trên (trước: đè viền vàng của thẻ)
+      if (!G.noRender) { if (T && T.canMoi && T.canMoi()) T.chuTrongKhung(String(j + 1), x, y, CW, CH, { khung: 'gd-the-thuong', vien: [6, 4, 6, 4], vung: [x + CW - 18, y, 18, 18], align: 'center', size: 7, bold: false, color: '#a9c2b4' }); else ui.text(String(j + 1), x + CW - 9, y + 13, { size: 7, align: 'center', color: '#a9c2b4' }); }
       if (G.click && G.inRect(G.click, x, y, CW, CH) && G.time - (S.modeT || 0) > 0.25) { G.click = null; chon(S, j); }
     });
   }
@@ -43444,14 +43505,16 @@ MA._xong();
     // hoàn thành vùng
     const vg = Y.vung(sv, V.soVung), bx = CX, by = GY + 3 * (O + GAP) + 1, bw = 4 * O + 3 * GAP, bh = 262 - by;
     T.inset(bx, by, bw, bh, false);
-    chu('Hoàn thành vùng', bx + 3, by + 2, bw - 6, 11, { size: 7.5, bold: true, color: GOLD, shadow: undefined });
-    chu(G.t('★★ {0}/{1} · ★★★ {2}/{1}', vg.sao2, vg.tong, vg.sao3), bx + 3, by + 13, bw - 6, 10, { size: 7, color: TXT, shadow: undefined });
+    // can-chu-khung (16/10): chữ trong ô "Hoàn thành vùng" đặt trong LÒNG ảnh ô (trước: dòng đầu đè viền / đinh góc trên)
+    const chuV = (s, x, y, w, h, o2) => (T.canMoi && T.canMoi() ? T.chuO(s, bx, by, bw, bh, Object.assign({ vung: [x, y, w, h], dem: 1, align: 'left', size: 7, min: 6.5, bold: false, color: MUC, shadow: false }, o2 || {})) : chu(s, x, y, w, h, o2));
+    chuV('Hoàn thành vùng', bx + 3, by + 2, bw - 6, 11, { size: 7.5, bold: true, color: GOLD, shadow: undefined });
+    chuV(G.t('★★ {0}/{1} · ★★★ {2}/{1}', vg.sao2, vg.tong, vg.sao3), bx + 3, by + 13, bw - 6, 10, { size: 7, color: TXT, shadow: undefined });
     let mo = '';
     if (!(vg.nhan & 1) && !(vg.cho & 1)) mo = G.t('Đủ {0} trang ★★: {1} đá nâng bậc + danh hiệu "{2}"', vg.tong, theo(CF.vungDa, V.soVung), Y.tenDanhHieu('thoSan' + V.soVung));
     else if (!(vg.nhan & 2) && !(vg.cho & 2)) mo = G.t('Đủ {0} trang ★★★: danh hiệu "{1}"', vg.tong, Y.tenDanhHieu('bacThay' + V.soVung));
     else if (!vg.cho) mo = 'Đã xong cả vùng!';
     const coNut = !!vg.cho;
-    if (mo) chu(mo, bx + 3, by + 24, bw - 6, 27, { size: 6.5, dong: 3, gian: 1.5, color: SOFT, shadow: undefined });
+    if (mo) chuV(mo, bx + 3, by + 24, bw - 6, 27, { size: 6.5, dong: 3, gian: 1.5, color: SOFT, shadow: undefined });
     if (coNut && T.sbtn(bx + bw - 54, by + bh - 19, 50, 16, 'Nhận', { size: 8, pad: 2, primary: true })) {
       const q = Y.nhanVung(sv, V.soVung);
       if (q) {

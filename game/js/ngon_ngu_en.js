@@ -36,6 +36,7 @@
 "Chỉ có tác dụng tới hết ải này.": "Lasts until this stage ends.",
 "Phúc lành của ải": "Stage blessing",
 "    Hành trang (xem)": "    Inventory (view)",
+"Hành trang (xem)": "Inventory (view)",
 " và ": " and ",
 " · gục vì: {0}": " · felled by: {0}",
 "(cần bậc Lam)": "(need Blue)",
