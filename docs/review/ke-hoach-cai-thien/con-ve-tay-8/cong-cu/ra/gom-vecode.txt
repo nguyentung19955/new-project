@@ -1,0 +1,250 @@
+  0 W f=1784  n=14160   ambLive@room_art.js:2026                                               | Lâu đài cổ › chết, Hang biển › chết, Lâu đài cổ › phòng elite (+117 cảnh)
+  1 W f=1784  n=13032   veLop@zed_moi.js:624                                                   | Lâu đài cổ › chết, Sông sâu › chết, Rừng già › chết (+117 cảnh)
+  2 U f=1784  n=1784    khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 240x24]            | Rừng già › chết, Hang biển › chết, Lâu đài cổ › chết (+117 cảnh)
+  3 U f=1784  n=3568    put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 106x7]                   | Rừng già › chết, Hang biển › chết, Lâu đài cổ › chết (+117 cảnh)
+  4 U f=1784  n=7676    doMau@ui_theme.js:957                                                  | Rừng già › phòng quái › spear fire (Thức tỉnh), Hang biển › phòng quái › sword fire (Thức  (+117 cảnh)
+  5 U f=1784  n=1784    khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 216x18]            | Rừng già › chết, Hang biển › chết, Lâu đài cổ › chết (+117 cảnh)
+  6 U f=1784  n=3568    put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 94x4]                    | Rừng già › chết, Hang biển › chết, Lâu đài cổ › chết (+117 cảnh)
+  7 U f=1784  n=1784    blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 42x46] | Rừng già › chết, Hang biển › chết, Lâu đài cổ › chết (+117 cảnh)
+  8 U f=1784  n=1784    blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 40x44] | Rừng già › chết, Hang biển › chết, Lâu đài cổ › chết (+117 cảnh)
+  9 U f=1784  n=3568    blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 62x45] | Rừng già › chết, Hang biển › chết, Lâu đài cổ › chết (+117 cảnh)
+ 10 U f=1784  n=3568    E.vien@ep_do.js:313                                                    | Rừng già › chết, Hang biển › chết, Lâu đài cổ › chết (+117 cảnh)
+ 11 U f=1784  n=3568    put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 48x3]                    | Rừng già › chết, Hang biển › chết, Lâu đài cổ › chết (+117 cảnh)
+ 12 U f=1784  n=1784    khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 220x34]            | Rừng già › chết, Hang biển › chết, Lâu đài cổ › chết (+117 cảnh)
+ 13 U f=1784  n=1784    gem@vk_moi.js:717                                                      | Rừng già › chết, Hang biển › chết, Lâu đài cổ › chết (+117 cảnh)
+ 14 U f=1784  n=1784    gem@vk_moi.js:718                                                      | Rừng già › chết, Hang biển › chết, Lâu đài cổ › chết (+117 cảnh)
+ 15 U f=1784  n=1784    gem@vk_moi.js:719                                                      | Rừng già › chết, Hang biển › chết, Lâu đài cổ › chết (+117 cảnh)
+ 16 U f=1604  n=1604    khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 170x136]           | Rừng già › chết, Hang biển › chết, Lâu đài cổ › chết (+97 cảnh)
+ 17 U f=1508  n=1508    blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 66x66] | Hang biển › chết, Rừng già › phòng elite, Rừng già › phòng challenge (+85 cảnh)
+ 18 U f=1508  n=1508    blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 30x33] | Hang biển › chết, Rừng già › phòng elite, Rừng già › phòng challenge (+85 cảnh)
+ 19 U f=1508  n=1508    blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 72x77] | Hang biển › chết, Rừng già › phòng elite, Rừng già › phòng challenge (+85 cảnh)
+ 20 U f=1508  n=4524    blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 54x58] | Hang biển › chết, Rừng già › phòng elite, Rừng già › phòng challenge (+85 cảnh)
+ 21 U f=1508  n=3016    blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 17x9] | Hang biển › chết, Rừng già › phòng elite, Rừng già › phòng challenge (+85 cảnh)
+ 22 W f=1401  n=14012   shadow@env_art.js:1223                                                 | Lâu đài cổ › chết, Lâu đài cổ › phòng elite, Lâu đài cổ › trúng đòn (+87 cảnh)
+ 23 W f=1323  n=18166   ambLive@room_art.js:2112                                               | Sông sâu › chết, Sông sâu › phòng challenge, Sông sâu › phòng elite (+87 cảnh)
+ 24 W f=1065  n=17022   halo@env_art.js:1227                                                   | Lâu đài cổ › chết, Lâu đài cổ › phòng elite, Rừng già › phòng elite (+39 cảnh)
+ 25 W f=871   n=20926   live@room_art.js:2235                                                  | Rừng già › chết, Hang biển › chết, Sông sâu › chết (+37 cảnh)
+ 26 W f=871   n=16450   live@room_art.js:2236                                                  | Rừng già › chết, Hang biển › chết, Sông sâu › chết (+37 cảnh)
+ 27 W f=862   n=4568    ambLive@room_art.js:2035                                               | Rừng già › chết, Rừng già › phòng elite, Rừng già › phòng challenge (+57 cảnh)
+ 28 W f=858   n=4677    drawParts@fx.js:360                                                    | Rừng già › phòng quái › spear fire (Thức tỉnh), Hang biển › phòng quái › sword fire (Thức  (+57 cảnh)
+ 29 W f=845   n=1019    (ẩn danh)@room_art.js:1326                                             | Rừng già › chết, Lâu đài cổ › chết, Rừng già › trúng đòn (+34 cảnh)
+ 30 W f=817   n=3742    ambLive@room_art.js:2104                                               | Hang biển › chết, Hang biển › phòng challenge, Rừng già › phòng quái › sword poison (+54 cảnh)
+ 31 W f=814   n=7932    drawParts@fx.js:383                                                    | Rừng già › phòng quái › spear fire (Thức tỉnh), Hang biển › phòng quái › phi tiêu fire, Ha (+52 cảnh)
+ 32 W f=767   n=16756   MA.draw@monster_art.js:1531                                            | Rừng già › chết, Sông sâu › chết, Hang biển › chết (+39 cảnh)
+ 33 W f=766   n=1271    ambLive@room_art.js:2075                                               | Sông sâu › phòng challenge, Sông sâu › chết, Hang biển › phòng challenge (+46 cảnh)
+ 34 W f=754   n=12002   drawParts@fx.js:364                                                    | Sông sâu › chết, Rừng già › chết, Hang biển › phòng challenge (+45 cảnh)
+ 35 U f=673   n=1442    blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 54x54] | Sông sâu › phòng elite, Hang biển › phòng challenge, Lâu đài cổ › phòng elite (+39 cảnh)
+ 36 W f=626   n=626     (ẩn danh)@room_art.js:1305                                             | Hang biển › chết, Lâu đài cổ › chết, Rừng già › phòng elite (+19 cảnh)
+ 37 W f=580   n=3280    drawParts@fx.js:361                                                    | Hang biển › chết, Lâu đài cổ › phòng challenge, Sông sâu › phòng quái › phi tiêu poison (T (+37 cảnh)
+ 38 W f=550   n=550     (ẩn danh)@room_art.js:1315                                             | Rừng già › chết, Hang biển › chết, Rừng già › phòng elite (+20 cảnh)
+ 39 W f=531   n=1436    live@room_art.js:2238                                                  | Hang biển › chết, Rừng già › chết, Lâu đài cổ › chết (+32 cảnh)
+ 40 W f=505   n=16974   drawParts@fx.js:370                                                    | Rừng già › phòng quái › sword poison, Lâu đài cổ › phòng challenge, Lâu đài cổ › phòng quá (+46 cảnh)
+ 41 U f=472   n=472     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 598x50]            | Rừng già › phòng elite, Rừng già › phòng challenge, Hang biển › phòng elite (+9 cảnh)
+ 42 W f=467   n=1342    halo@env_art.js:1228                                                   | Lâu đài cổ › chết, Rừng già › phòng elite, Rừng già › phòng challenge (+37 cảnh)
+ 43 W f=461   n=23281   ambLive@room_art.js:2062                                               | Rừng già › chết, Rừng già › phòng challenge, Rừng già › phòng quái › sword poison (+27 cảnh)
+ 44 W f=461   n=4770    ambLive@room_art.js:2110                                               | Rừng già › chết, Rừng già › phòng challenge, Rừng già › phòng quái › sword poison (+27 cảnh)
+ 45 W f=461   n=11064   ambLive@room_art.js:2055                                               | Rừng già › chết, Rừng già › phòng elite, Rừng già › phòng challenge (+27 cảnh)
+ 46 W f=461   n=11064   ambLive@room_art.js:2056                                               | Rừng già › chết, Rừng già › phòng elite, Rừng già › phòng challenge (+27 cảnh)
+ 47 W f=461   n=11064   ambLive@room_art.js:2057                                               | Rừng già › chết, Rừng già › phòng elite, Rừng già › phòng challenge (+27 cảnh)
+ 48 W f=461   n=35252   ambLive@room_art.js:2091                                               | Hang biển › phòng elite, Hang biển › chết, Hang biển › phòng challenge (+27 cảnh)
+ 49 W f=461   n=5923    ambLive@room_art.js:2122                                               | Hang biển › chết, Hang biển › phòng challenge, Hang biển › phòng elite (+27 cảnh)
+ 50 W f=461   n=5630    ambLive@room_art.js:2124                                               | Hang biển › chết, Hang biển › phòng challenge, Hang biển › phòng elite (+27 cảnh)
+ 51 W f=461   n=19091   ambLive@room_art.js:2134                                               | Lâu đài cổ › chết, Lâu đài cổ › phòng elite, Lâu đài cổ › phòng quái › spear poison (Thức  (+27 cảnh)
+ 52 W f=461   n=23359   ambLive@room_art.js:2135                                               | Lâu đài cổ › chết, Lâu đài cổ › phòng elite, Lâu đài cổ › phòng quái › spear poison (Thức  (+27 cảnh)
+ 53 W f=460   n=1575    ambLive@room_art.js:2064                                               | Rừng già › chết, Rừng già › phòng challenge, Rừng già › phòng quái › sword poison (+27 cảnh)
+ 54 W f=441   n=1506    ambLive@room_art.js:2080                                               | Hang biển › phòng challenge, Hang biển › phòng quái › hammer poison (Thức tỉnh), Hang biển (+26 cảnh)
+ 55 W f=433   n=4046    live@room_art.js:2237                                                  | Rừng già › chết, Hang biển › chết, Rừng già › phòng quái › hammer ice (+34 cảnh)
+ 56 U f=432   n=432     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 586x50]            | Hang biển › chết, Rừng già › chết, Sông sâu › chết (+12 cảnh)
+ 57 W f=423   n=867     ambLive@room_art.js:2045                                               | Rừng già › phòng elite, Rừng già › phòng quái › phi tiêu không hệ, Rừng già › phòng quái › (+26 cảnh)
+ 58 W f=419   n=792     live@room_art.js:2197                                                  | Lâu đài cổ › phòng elite, Lâu đài cổ › phòng challenge, Lâu đài cổ › chết (+21 cảnh)
+ 59 U f=400   n=563     mobBars@stage.js:839                                                   | Lâu đài cổ › phòng challenge, Sông sâu › phòng elite, Lâu đài cổ › phòng elite (+21 cảnh)
+ 60 U f=400   n=563     mobBars@stage.js:840                                                   | Lâu đài cổ › phòng challenge, Sông sâu › phòng elite, Lâu đài cổ › phòng elite (+21 cảnh)
+ 61 W f=399   n=495     brazier@env_art.js:1396                                                | Lâu đài cổ › phòng elite, Lâu đài cổ › chết, Hang biển › phòng challenge (+12 cảnh)
+ 62 W f=399   n=990     brazier@env_art.js:1397                                                | Lâu đài cổ › phòng elite, Lâu đài cổ › chết, Hang biển › phòng challenge (+12 cảnh)
+ 63 W f=387   n=387     live@room_art.js:2201                                                  | Rừng già › chết, Rừng già › phòng elite, Rừng già › phòng quái › sword poison (+24 cảnh)
+ 64 U f=376   n=1458    ui.rect@engine.js:621                                                  | Rừng già › màn kết quả, Hang biển › màn kết quả, Lâu đài cổ › màn kết quả (+49 cảnh)
+ 65 W f=370   n=740     roomFore@room_art.js:2286 ⇐ fgBuild@room_art.js:1821 + fgBuild@room_art.js:1824 [canvas 480x270] | Sông sâu › chết, Sông sâu › phòng elite, Sông sâu › phòng challenge (+23 cảnh)
+ 66 W f=343   n=1767    mushroom@env_art.js:1422                                               | Rừng già › phòng elite, Rừng già › phòng challenge, Rừng già › phòng quái › sword poison (+11 cảnh)
+ 67 W f=340   n=4017    ambLive@room_art.js:2072                                               | Hang biển › phòng challenge, Sông sâu › chết, Sông sâu › phòng challenge (+30 cảnh)
+ 68 W f=324   n=500     ambLive@room_art.js:2081                                               | Hang biển › phòng challenge, Hang biển › phòng quái › spear ice, Hang biển › phòng elite (+25 cảnh)
+ 69 U f=313   n=376     mobBars@stage.js:838                                                   | Lâu đài cổ › phòng challenge, Rừng già › phòng quái › phi tiêu không hệ, Hang biển › phòng (+21 cảnh)
+ 70 W f=309   n=381     ambLive@room_art.js:2097                                               | Lâu đài cổ › phòng challenge, Lâu đài cổ › phòng quái › sword ice, Lâu đài cổ › phòng quái (+20 cảnh)
+ 71 W f=309   n=4191    ambLive@room_art.js:2098                                               | Lâu đài cổ › phòng challenge, Lâu đài cổ › phòng quái › sword ice, Lâu đài cổ › phòng quái (+20 cảnh)
+ 72 W f=307   n=45006   R@song_luat.js:219                                                     | Sông sâu › chết, Sông sâu › phòng challenge, Sông sâu › trúng đòn (+14 cảnh)
+ 73 W f=295   n=36656   ELL@song_luat.js:220                                                   | Sông sâu › chết, Sông sâu › phòng challenge, Sông sâu › màn kết quả (+11 cảnh)
+ 74 W f=289   n=806     ambLive@room_art.js:2084                                               | Hang biển › phòng challenge, Hang biển › phòng quái › spear ice, Hang biển › phòng quái ›  (+24 cảnh)
+ 75 W f=289   n=403     ambLive@room_art.js:2085                                               | Hang biển › phòng challenge, Hang biển › phòng quái › spear ice, Hang biển › phòng quái ›  (+24 cảnh)
+ 76 U f=288   n=288     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 602x50]            | Rừng già › phòng quái › hammer ice, Hang biển › phòng quái › hammer poison (Thức tỉnh), Lâ (+25 cảnh)
+ 77 W f=252   n=1840    drawParts@fx.js:380                                                    | Lâu đài cổ › phòng quái › phi tiêu ice (Thức tỉnh), Hang biển › phòng elite, Hang biển › p (+27 cảnh)
+ 78 W f=217   n=16522   drawFx@fx.js:2414                                                      | Lâu đài cổ › phòng challenge, Sông sâu › phòng quái › phi tiêu poison (Thức tỉnh), Lâu đài (+26 cảnh)
+ 79 W f=198   n=198     roomFore@room_art.js:2271 ⇐ stake@room_art.js:1367 + reedClump@room_art.js:1362 + stake@room_art.js:1368 [canvas 480x270] | Sông sâu › chết, Sông sâu › phòng challenge, Sông sâu › trúng đòn (+14 cảnh)
+ 80 W f=196   n=196     A.bg@room_art.js:2250 ⇐ runners@room_art.js:1079 + Object.paintVoid@room_art.js:246 + backPass@room_art.js:1925 [điểm ảnh code] [canvas 480x270] | Lâu đài cổ › phòng elite, Lâu đài cổ › phòng quái › sword ice, Lâu đài cổ › phòng quái › s (+5 cảnh)
+ 81 W f=193   n=1901    Object.draw@fx_he.js:812                                               | Rừng già › phòng quái › hammer ice, Lâu đài cổ › phòng quái › hammer fire, Sông sâu › phòn (+12 cảnh)
+ 82 W f=182   n=182     veAnh@fx_chuong.js:94                                                  | Rừng già › trùm nhỏ, Hang biển › phòng quái › spear ice, Lâu đài cổ › phòng quái › sword i (+32 cảnh)
+ 83 W f=182   n=182     roomFore@room_art.js:2271 ⇐ reedClump@room_art.js:1362 [canvas 480x270] | Sông sâu › phòng elite, Sông sâu › phòng quái › sword không hệ, Sông sâu › phòng quái › sp (+7 cảnh)
+ 84 U f=180   n=180     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 116x38]            | Rừng già › màn kết quả, Hang biển › màn kết quả, Lâu đài cổ › màn kết quả (+17 cảnh)
+ 85 W f=176   n=1232    pedestal@room_art.js:2296                                              | Rừng già › phòng challenge, Hang biển › phòng challenge, Lâu đài cổ › phòng challenge (+1 cảnh)
+ 86 W f=176   n=2992    pedestal@room_art.js:2298                                              | Rừng già › phòng challenge, Hang biển › phòng challenge, Lâu đài cổ › phòng challenge (+1 cảnh)
+ 87 U f=176   n=176     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 302x26]            | Rừng già › phòng challenge, Hang biển › phòng challenge, Lâu đài cổ › phòng challenge (+1 cảnh)
+ 88 W f=167   n=1670    arrow@room_art.js:135                                                  | Rừng già › phòng fountain, Hang biển › phòng fountain, Hang biển › phòng merchant (+20 cảnh)
+ 89 U f=160   n=352     ui.rect@engine.js:622                                                  | Lâu đài cổ › chết, Sông sâu › chết, Rừng già › chết (+13 cảnh)
+ 90 W f=156   n=352     spark@env_art.js:1230                                                  | Lâu đài cổ › chết, Lâu đài cổ › màn kết quả, Hang biển › phòng elite (+19 cảnh)
+ 91 W f=153   n=177     ambLive@room_art.js:2049                                               | Rừng già › trúng đòn, Rừng già › phòng challenge, Rừng già › phòng quái › hammer ice (+10 cảnh)
+ 92 W f=152   n=152     A.bg@room_art.js:2250 ⇐ ringMark@room_art.js:1214 + Object.paintVoid@room_art.js:869 + trSan@room_art.js:861 [điểm ảnh code] [canvas 480x270] | Rừng già › phòng elite, Rừng già › phòng challenge, Rừng già › màn kết quả (+7 cảnh)
+ 93 U f=144   n=144     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 692x470]           | Rừng già › màn kết quả, Hang biển › màn kết quả, Lâu đài cổ › màn kết quả (+9 cảnh)
+ 94 U f=144   n=144     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 136x40]            | Rừng già › màn kết quả, Hang biển › màn kết quả, Lâu đài cổ › màn kết quả (+9 cảnh)
+ 95 U f=144   n=144     Object.gem@vk_moi.js:717                                               | Rừng già › màn kết quả, Hang biển › màn kết quả, Lâu đài cổ › màn kết quả (+9 cảnh)
+ 96 U f=144   n=144     Object.gem@vk_moi.js:718                                               | Rừng già › màn kết quả, Hang biển › màn kết quả, Lâu đài cổ › màn kết quả (+9 cảnh)
+ 97 U f=144   n=144     Object.gem@vk_moi.js:719                                               | Rừng già › màn kết quả, Hang biển › màn kết quả, Lâu đài cổ › màn kết quả (+9 cảnh)
+ 98 W f=136   n=1360    arrow@room_art.js:133                                                  | Rừng già › phòng merchant, Rừng già › phòng curse, Hang biển › phòng chest (+16 cảnh)
+ 99 W f=128   n=128     A.bg@room_art.js:2250 ⇐ Array.<anonymous>@room_art.js:1257 + Object.paintVoid@room_art.js:869 + trSan@room_art.js:861 [điểm ảnh code] [canvas 480x270] | Rừng già › phòng quái › sword poison, Rừng già › phòng quái › spear fire (Thức tỉnh), Rừng (+1 cảnh)
+100 W f=128   n=128     A.bg@room_art.js:2250 ⇐ crystalA@room_art.js:477 + Object.paintVoid@room_art.js:506 + backPass@room_art.js:1925 [điểm ảnh code] [canvas 480x270] | Hang biển › phòng quái › sword fire (Thức tỉnh), Hang biển › phòng quái › spear ice, Hang  (+1 cảnh)
+101 W f=126   n=152     digit@fx.js:190                                                        | Lâu đài cổ › phòng challenge, Hang biển › phòng elite, Hang biển › phòng challenge (+9 cảnh)
+102 W f=126   n=1630    digit@fx.js:192                                                        | Lâu đài cổ › phòng challenge, Hang biển › phòng elite, Hang biển › phòng challenge (+9 cảnh)
+103 U f=120   n=120     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 612x50]            | Rừng già › phòng quái › phi tiêu không hệ, Hang biển › phòng quái › phi tiêu fire, Lâu đài (+1 cảnh)
+104 W f=115   n=1150    arrow@room_art.js:134                                                  | Rừng già › phòng fountain, Hang biển › phòng bắt đầu, Hang biển › phòng fountain (+13 cảnh)
+105 U f=110   n=110     vignette@fx.js:2749 ⇐ side@fx.js:2743 [canvas 240x135]                 | Hang biển › chết, Rừng già › chết, Sông sâu › chết (+1 cảnh)
+106 U f=105   n=105     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 392x52]            | Rừng già › màn kết quả, Hang biển › màn kết quả, Lâu đài cổ › màn kết quả (+5 cảnh)
+107 U f=105   n=105     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 372x20]            | Rừng già › màn kết quả, Hang biển › màn kết quả, Lâu đài cổ › màn kết quả (+5 cảnh)
+108 U f=105   n=105     put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 172x5]                   | Rừng già › màn kết quả, Hang biển › màn kết quả, Lâu đài cổ › màn kết quả (+5 cảnh)
+109 W f=102   n=918     shieldArc@mobs.js:844                                                  | Hang biển › phòng elite, Hang biển › phòng challenge, Rừng già › phòng elite (+1 cảnh)
+110 W f=96    n=236     ambLive@room_art.js:2092                                               | Hang biển › trúng đòn, Hang biển › phòng quái › spear ice, Hang biển › phòng challenge (+15 cảnh)
+111 W f=96    n=96      A.bg@room_art.js:2250 ⇐ stake@room_art.js:1367 + Object.paintVoid@room_art.js:1387 + (ẩn danh)@room_art.js:1395 [canvas 480x270] | Sông sâu › phòng quái › sword không hệ, Sông sâu › phòng quái › spear không hệ, Sông sâu › (+1 cảnh)
+112 W f=88    n=88      A.bg@room_art.js:2250 ⇐ ringMark@room_art.js:1214 + Object.paintVoid@room_art.js:506 + backPass@room_art.js:1925 [điểm ảnh code] [canvas 480x270] | Hang biển › phòng elite, Hang biển › phòng challenge
+113 W f=87    n=87      A.bg@room_art.js:2250 ⇐ Array.<anonymous>@room_art.js:1257 + cuaAnh@room_art.js:1320 + Object.paintVoid@room_art.js:869 [canvas 480x270] | Rừng già › chết, Rừng già › trúng đòn, Rừng già › bảng thua
+114 W f=87    n=87      A.bg@room_art.js:2250 ⇐ Array.<anonymous>@room_art.js:1251 + Object.paintVoid@room_art.js:506 + backPass@room_art.js:1925 [điểm ảnh code] [canvas 480x | Hang biển › chết, Hang biển › trúng đòn, Hang biển › bảng thua
+115 W f=87    n=87      A.bg@room_art.js:2250 ⇐ runners@room_art.js:1079 + cuaAnh@room_art.js:1320 + Object.paintVoid@room_art.js:246 [canvas 480x270] | Lâu đài cổ › chết, Lâu đài cổ › trúng đòn, Lâu đài cổ › bảng thua
+116 W f=87    n=87      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + lnS@room_art.js:1357 + stake@room_art.js:1367 [canvas 480x270] | Sông sâu › chết, Sông sâu › trúng đòn, Sông sâu › bảng thua
+117 U f=84    n=84      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 472x32]            | Rừng già › phòng fountain, Hang biển › phòng fountain, Lâu đài cổ › phòng fountain (+9 cảnh)
+118 W f=84    n=84      merchant@env_art.js:1367                                               | Rừng già › phòng merchant, Hang biển › phòng merchant, Lâu đài cổ › phòng merchant (+9 cảnh)
+119 W f=84    n=924     altar@env_art.js:1338                                                  | Rừng già › phòng curse, Hang biển › phòng curse, Lâu đài cổ › phòng curse (+9 cảnh)
+120 W f=84    n=168     altar@env_art.js:1339                                                  | Rừng già › phòng curse, Hang biển › phòng curse, Lâu đài cổ › phòng curse (+9 cảnh)
+121 W f=82    n=164     live@room_art.js:2200                                                  | Hang biển › chết, Hang biển › phòng quái › sword fire (Thức tỉnh), Hang biển › phòng quái  (+10 cảnh)
+122 U f=80    n=160     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 192x58]            | Rừng già › màn kết quả, Hang biển › màn kết quả, Lâu đài cổ › màn kết quả (+1 cảnh)
+123 U f=80    n=80      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 232x66]            | Rừng già › màn kết quả, Hang biển › màn kết quả, Lâu đài cổ › màn kết quả (+1 cảnh)
+124 U f=75    n=75      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 452x60]            | Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2, Rừng già › trùm vùng pha 3 (+9 cảnh)
+125 U f=75    n=150     T.bossBar@ui_theme.js:888                                              | Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2, Rừng già › trùm vùng pha 3 (+9 cảnh)
+126 U f=75    n=150     T.bossBar@ui_theme.js:889                                              | Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2, Rừng già › trùm vùng pha 3 (+9 cảnh)
+127 U f=75    n=150     T.bossBar@ui_theme.js:890                                              | Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2, Rừng già › trùm vùng pha 3 (+9 cảnh)
+128 U f=75    n=75      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 428x24]            | Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2, Rừng già › trùm vùng pha 3 (+9 cảnh)
+129 U f=75    n=75      put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 200x7]                   | Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2, Rừng già › trùm vùng pha 3 (+9 cảnh)
+130 W f=74    n=263     drawFx@fx.js:2422                                                      | Lâu đài cổ › phòng challenge, Sông sâu › phòng quái › phi tiêu poison (Thức tỉnh), Lâu đài (+21 cảnh)
+131 U f=64    n=64      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 100x26]            | Rừng già › chest (đứng gần), Rừng già › fountain (đứng gần), Rừng già › merchant (đứng gần (+13 cảnh)
+132 U f=64    n=64      blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 72x72] | Rừng già › chest (đứng gần), Rừng già › fountain (đứng gần), Rừng già › merchant (đứng gần (+13 cảnh)
+133 U f=64    n=64      put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 308x3]                   | Lâu đài cổ › chết, Sông sâu › chết, Rừng già › chết (+5 cảnh)
+134 U f=64    n=128     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 280x58]            | Lâu đài cổ › chết, Sông sâu › chết, Rừng già › chết (+5 cảnh)
+135 W f=64    n=64      A.bg@room_art.js:2250 ⇐ ringMark@room_art.js:1214 + crystalA@room_art.js:477 + Object.paintVoid@room_art.js:506 [canvas 480x270] | Hang biển › màn kết quả, Hang biển › trùm nhỏ, Hang biển › trùm vùng pha 1 (+5 cảnh)
+136 W f=63    n=215     drawFx@fx.js:2424                                                      | Lâu đài cổ › phòng challenge, Sông sâu › phòng quái › phi tiêu poison (Thức tỉnh), Hang bi (+20 cảnh)
+137 W f=62    n=620     arrow@room_art.js:136                                                  | Rừng già › phòng bắt đầu, Rừng già › phòng chest, Lâu đài cổ › phòng bắt đầu (+5 cảnh)
+138 U f=61    n=61      T.bar@ui_theme.js:1007                                                 | Lâu đài cổ › chết, Hang biển › chết, Rừng già › chết (+1 cảnh)
+139 U f=61    n=61      T.bar@ui_theme.js:1008                                                 | Lâu đài cổ › chết, Hang biển › chết, Rừng già › chết (+1 cảnh)
+140 W f=56    n=672     dauSuoi@env_art.js:1245                                                | Rừng già › phòng fountain, Hang biển › phòng fountain, Lâu đài cổ › phòng fountain (+5 cảnh)
+141 W f=56    n=56      A.bg@room_art.js:2250 ⇐ runners@room_art.js:1082 + Object.paintVoid@room_art.js:246 + backPass@room_art.js:1925 [điểm ảnh code] [canvas 480x270] | Lâu đài cổ › phòng challenge, Lâu đài cổ › bảng paused, Lâu đài cổ › bảng map (+1 cảnh)
+142 W f=49    n=98      (ẩn danh)@monster_art.js:2280                                          | Hang biển › chết, Hang biển › phòng elite, Hang biển › phòng challenge
+143 W f=44    n=44      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + stake@room_art.js:1367 + (ẩn danh)@room_art.js:1395 [canvas 480x270] | Sông sâu › phòng elite
+144 W f=44    n=44      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + lnS@room_art.js:1357 + Object.paintVoid@room_art.js:1385 [canvas 480x270] | Sông sâu › phòng challenge
+145 U f=42    n=42      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 432x50]            | Rừng già › phòng fountain, Hang biển › phòng fountain, Rừng già › fountain (bảng) (+3 cảnh)
+146 W f=42    n=42      A.bg@room_art.js:2250 ⇐ runners@room_art.js:1082 + cuaAnh@room_art.js:1323 + Object.paintVoid@room_art.js:246 [canvas 480x270] | Lâu đài cổ › phòng merchant, Lâu đài cổ › phòng curse, Lâu đài cổ › merchant (bảng) (+3 cảnh)
+147 U f=42    n=42      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 476x50]            | Sông sâu › phòng chest, Sông sâu › phòng merchant, Sông sâu › phòng curse (+3 cảnh)
+148 W f=38    n=6148    quad@fx.js:1096                                                        | Lâu đài cổ › phòng quái › sword ice, Rừng già › phòng quái › sword poison, Hang biển › phò (+5 cảnh)
+149 W f=31    n=83      fx.proj@fx_dan.js:202 ⇐ (ẩn danh)@fx_dan.js:30 [canvas 19x19]          | Hang biển › chết, Hang biển › bảng thua
+150 W f=31    n=83      fx.proj@fx_dan.js:203 ⇐ (ẩn danh)@fx_dan.js:30 [canvas 11x11]          | Hang biển › chết, Hang biển › bảng thua
+151 W f=31    n=747     trail@fx_dan.js:182                                                    | Hang biển › chết, Hang biển › bảng thua
+152 W f=31    n=83      A.proj@fx_dan.js:275                                                   | Hang biển › chết, Hang biển › bảng thua
+153 W f=31    n=62      (ẩn danh)@monster_art.js:2439                                          | Lâu đài cổ › phòng challenge, Lâu đài cổ › phòng elite
+154 W f=29    n=1926    Object.drawThrob@fx_ky_nang.js:171                                     | Lâu đài cổ › phòng challenge, Lâu đài cổ › phòng quái › spear poison (Thức tỉnh), Lâu đài  (+5 cảnh)
+155 U f=28    n=28      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 732x314]           | Rừng già › chest (bảng), Hang biển › chest (bảng), Lâu đài cổ › chest (bảng) (+1 cảnh)
+156 U f=28    n=84      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 220x206]           | Rừng già › chest (bảng), Hang biển › chest (bảng), Lâu đài cổ › chest (bảng) (+1 cảnh)
+157 U f=28    n=28      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 692x346]           | Rừng già › merchant (bảng), Hang biển › merchant (bảng), Lâu đài cổ › merchant (bảng) (+1 cảnh)
+158 U f=28    n=112     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 156x166]           | Rừng già › merchant (bảng), Hang biển › merchant (bảng), Lâu đài cổ › merchant (bảng) (+1 cảnh)
+159 U f=28    n=28      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 180x54]            | Rừng già › merchant (bảng), Hang biển › merchant (bảng), Lâu đài cổ › merchant (bảng) (+1 cảnh)
+160 U f=28    n=28      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 652x306]           | Rừng già › curse (bảng), Hang biển › curse (bảng), Lâu đài cổ › curse (bảng) (+1 cảnh)
+161 U f=28    n=28      put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 140x31]                  | Rừng già › curse (bảng), Hang biển › curse (bảng), Lâu đài cổ › curse (bảng) (+1 cảnh)
+162 U f=28    n=28      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 280x62]            | Rừng già › curse (bảng), Hang biển › curse (bảng), Lâu đài cổ › curse (bảng) (+1 cảnh)
+163 U f=28    n=28      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 216x36]            | Rừng già › màn kết quả, Rừng già › trùm nhỏ
+164 U f=28    n=28      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 186x36]            | Hang biển › màn kết quả, Hang biển › trùm nhỏ
+165 W f=28    n=28      A.bg@room_art.js:2250 ⇐ Object.carpet@room_art.js:278 + Object.paintVoid@room_art.js:246 + backPass@room_art.js:1925 [điểm ảnh code] [canvas 480x270] | Lâu đài cổ › màn kết quả, Lâu đài cổ › trùm nhỏ
+166 U f=28    n=28      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 184x36]            | Lâu đài cổ › màn kết quả, Lâu đài cổ › trùm nhỏ
+167 W f=27    n=34710   (ẩn danh)@monster_art.js:1984                                          | Hang biển › trùm vùng pha 1, Hang biển › trùm vùng pha 2, Hang biển › trùm vùng pha 3 (+3 cảnh)
+168 W f=27    n=4017    (ẩn danh)@monster_art.js:1985                                          | Hang biển › trùm vùng pha 1, Hang biển › trùm vùng pha 2, Hang biển › trùm vùng pha 3 (+3 cảnh)
+169 W f=25    n=125     tongue@fx.js:1447                                                      | Rừng già › phòng challenge, Rừng già › phòng elite
+170 W f=25    n=125     tongue@fx.js:1448                                                      | Rừng già › phòng challenge, Rừng già › phòng elite
+171 W f=25    n=125     tongue@fx.js:1449                                                      | Rừng già › phòng challenge, Rừng già › phòng elite
+172 W f=25    n=125     tongue@fx.js:1450                                                      | Rừng già › phòng challenge, Rừng già › phòng elite
+173 W f=25    n=75      Object.drawBomb@mobs.js:696                                            | Rừng già › chết, Sông sâu › chết
+174 W f=24    n=3573    F.set@monster_art.js:1285                                              | Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2, Rừng già › trùm vùng pha 3
+175 U f=24    n=24      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 206x36]            | Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2, Rừng già › trùm vùng pha 3
+176 U f=24    n=24      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 204x36]            | Hang biển › trùm vùng pha 1, Hang biển › trùm vùng pha 2, Hang biển › trùm vùng pha 3
+177 W f=24    n=6513    F.lua@monster_art.js:1289                                              | Lâu đài cổ › trùm vùng pha 1, Lâu đài cổ › trùm vùng pha 2, Lâu đài cổ › trùm vùng pha 3
+178 U f=24    n=24      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 190x36]            | Lâu đài cổ › trùm vùng pha 1, Lâu đài cổ › trùm vùng pha 2, Lâu đài cổ › trùm vùng pha 3
+179 W f=22    n=648     F.khoi@monster_art.js:1291                                             | Rừng già › chết, Sông sâu › chết
+180 W f=21    n=21      A.bg@room_art.js:2250 ⇐ cuaAnh@room_art.js:1323 + Object.paintVoid@room_art.js:869 + trSan@room_art.js:861 [điểm ảnh code] [canvas 480x270] | Rừng già › phòng chest, Rừng già › chest (bảng), Rừng già › chest (đứng gần)
+181 W f=21    n=21      A.bg@room_art.js:2250 ⇐ Array.<anonymous>@room_art.js:1257 + cuaAnh@room_art.js:1312 + Object.paintVoid@room_art.js:869 [canvas 480x270] | Rừng già › phòng fountain, Rừng già › fountain (bảng), Rừng già › fountain (đứng gần)
+182 W f=21    n=21      A.bg@room_art.js:2250 ⇐ spill@room_art.js:147 + Object.paintVoid@room_art.js:869 + trSan@room_art.js:861 [điểm ảnh code] [canvas 480x270] | Rừng già › phòng merchant, Rừng già › merchant (bảng), Rừng già › merchant (đứng gần)
+183 W f=21    n=21      A.bg@room_art.js:2250 ⇐ spill@room_art.js:147 + ringMark@room_art.js:1214 + Object.paintVoid@room_art.js:869 [canvas 480x270] | Rừng già › phòng curse, Rừng già › curse (bảng), Rừng già › curse (đứng gần)
+184 W f=21    n=22      fx.proj@fx_dan.js:195 ⇐ (ẩn danh)@fx_dan.js:30 [canvas 13x13]          | Sông sâu › phòng quái › phi tiêu poison (Thức tỉnh), Hang biển › phòng quái › phi tiêu fir
+185 W f=21    n=396     fx.proj@fx.js:1305                                                     | Sông sâu › phòng quái › phi tiêu poison (Thức tỉnh), Hang biển › phòng quái › phi tiêu fir
+186 W f=21    n=484     fx.proj@fx.js:1306                                                     | Sông sâu › phòng quái › phi tiêu poison (Thức tỉnh), Hang biển › phòng quái › phi tiêu fir
+187 W f=21    n=110     fx.proj@fx.js:1308                                                     | Sông sâu › phòng quái › phi tiêu poison (Thức tỉnh), Hang biển › phòng quái › phi tiêu fir
+188 W f=21    n=594     fx.proj@fx.js:1309                                                     | Sông sâu › phòng quái › phi tiêu poison (Thức tỉnh), Hang biển › phòng quái › phi tiêu fir
+189 W f=21    n=22      fx.proj@fx_ky_nang.js:253                                              | Sông sâu › phòng quái › phi tiêu poison (Thức tỉnh), Hang biển › phòng quái › phi tiêu fir
+190 W f=21    n=21      A.bg@room_art.js:2250 ⇐ spill@room_art.js:147 + Array.<anonymous>@room_art.js:1251 + Object.paintVoid@room_art.js:506 [canvas 480x270] | Hang biển › phòng chest, Hang biển › chest (bảng), Hang biển › chest (đứng gần)
+191 W f=21    n=21      A.bg@room_art.js:2250 ⇐ crystalA@room_art.js:477 + bumps@room_art.js:498 + cuaAnh@room_art.js:1312 [canvas 480x270] | Hang biển › phòng fountain, Hang biển › fountain (bảng), Hang biển › fountain (đứng gần)
+192 W f=21    n=21      A.bg@room_art.js:2250 ⇐ crystalA@room_art.js:477 + cuaAnh@room_art.js:1323 + Object.paintVoid@room_art.js:506 [canvas 480x270] | Hang biển › phòng merchant, Hang biển › merchant (bảng), Hang biển › merchant (đứng gần)
+193 W f=21    n=21      A.bg@room_art.js:2250 ⇐ ringMark@room_art.js:1214 + bumps@room_art.js:498 + cuaAnh@room_art.js:1323 [canvas 480x270] | Hang biển › phòng curse, Hang biển › curse (bảng), Hang biển › curse (đứng gần)
+194 W f=21    n=21      A.bg@room_art.js:2250 ⇐ spill@room_art.js:147 + runners@room_art.js:1079 + Object.paintVoid@room_art.js:246 [canvas 480x270] | Lâu đài cổ › phòng chest, Lâu đài cổ › chest (bảng), Lâu đài cổ › chest (đứng gần)
+195 W f=21    n=21      A.bg@room_art.js:2250 ⇐ spill@room_art.js:147 + Object.carpet@room_art.js:273 + Object.paintVoid@room_art.js:246 [canvas 480x270] | Lâu đài cổ › phòng fountain, Lâu đài cổ › fountain (bảng), Lâu đài cổ › fountain (đứng gần
+196 W f=21    n=21      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + (ẩn danh)@room_art.js:1395 + reedClump@room_art.js:1362 [canvas 480x270] | Sông sâu › phòng chest, Sông sâu › chest (bảng), Sông sâu › chest (đứng gần)
+197 W f=21    n=42      roomFore@room_art.js:2286 ⇐ fgBuild@room_art.js:1821 + fgBuild@room_art.js:1824 + fgBuild@room_art.js:1825 [canvas 480x270] | Sông sâu › phòng chest, Sông sâu › chest (bảng), Sông sâu › chest (đứng gần)
+198 W f=21    n=21      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + reedClump@room_art.js:1362 + stake@room_art.js:1367 [canvas 480x270] | Sông sâu › phòng fountain, Sông sâu › fountain (bảng), Sông sâu › fountain (đứng gần)
+199 W f=21    n=21      roomFore@room_art.js:2271 ⇐ reedClump@room_art.js:1362 + reedClump@room_art.js:1363 [canvas 480x270] | Sông sâu › phòng fountain, Sông sâu › fountain (bảng), Sông sâu › fountain (đứng gần)
+200 W f=21    n=21      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + River.floors@room_art.js:1418 + lnS@room_art.js:1357 [canvas 480x270] | Sông sâu › phòng merchant, Sông sâu › merchant (bảng), Sông sâu › merchant (đứng gần)
+201 W f=21    n=21      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + River.floors@room_art.js:1418 + reedClump@room_art.js:1362 [canvas 480x270] | Sông sâu › phòng curse, Sông sâu › curse (bảng), Sông sâu › curse (đứng gần)
+202 U f=21    n=21      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 178x36]            | Sông sâu › màn kết quả, Sông sâu › trùm nhỏ
+203 U f=20    n=20      BT.draw@bao_truoc.js:862 ⇐ pxDraw@bao_truoc.js:566 [điểm ảnh code] [canvas 960x540] | Rừng già › phòng quái › sword poison, Rừng già › phòng quái › spear fire (Thức tỉnh), Rừng (+17 cảnh)
+204 W f=20    n=20      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + Object.door@room_art.js:1504 + River.floors@room_art.js:1418 [canvas 480x270] | Sông sâu › màn kết quả
+205 W f=17    n=45      A.proj@fx_dan.js:282                                                   | Hang biển › chết, Hang biển › bảng thua
+206 U f=16    n=16      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 372x434]           | Rừng già › bảng paused, Hang biển › bảng paused, Lâu đài cổ › bảng paused (+1 cảnh)
+207 U f=16    n=48      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 300x62]            | Rừng già › bảng paused, Hang biển › bảng paused, Lâu đài cổ › bảng paused (+1 cảnh)
+208 U f=16    n=16      put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 150x29]                  | Rừng già › bảng paused, Hang biển › bảng paused, Lâu đài cổ › bảng paused (+1 cảnh)
+209 U f=16    n=16      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 300x58]            | Rừng già › bảng paused, Hang biển › bảng paused, Lâu đài cổ › bảng paused (+1 cảnh)
+210 U f=16    n=16      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 940x454]           | Rừng già › bảng bag, Hang biển › bảng bag, Lâu đài cổ › bảng bag (+1 cảnh)
+211 U f=16    n=16      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 120x40]            | Rừng già › bảng bag, Hang biển › bảng bag, Lâu đài cổ › bảng bag (+1 cảnh)
+212 U f=16    n=64      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 220x44]            | Rừng già › bảng bag, Hang biển › bảng bag, Lâu đài cổ › bảng bag (+1 cảnh)
+213 U f=16    n=176     oConAnh@ui_theme.js:778                                                | Rừng già › bảng bag, Hang biển › bảng bag, Lâu đài cổ › bảng bag (+1 cảnh)
+214 U f=16    n=16      oConAnh@ui_theme.js:779                                                | Rừng già › bảng bag, Hang biển › bảng bag, Lâu đài cổ › bảng bag (+1 cảnh)
+215 U f=16    n=16      heroArt@hanh_trang.js:74                                               | Rừng già › bảng bag, Hang biển › bảng bag, Lâu đài cổ › bảng bag (+1 cảnh)
+216 U f=16    n=16      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 208x16]            | Rừng già › bảng bag, Hang biển › bảng bag, Lâu đài cổ › bảng bag (+1 cảnh)
+217 U f=16    n=32      put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 90x3]                    | Rừng già › bảng bag, Hang biển › bảng bag, Lâu đài cổ › bảng bag (+1 cảnh)
+218 W f=15    n=15      (ẩn danh)@monster_art.js:2420                                          | Lâu đài cổ › chết
+219 W f=15    n=17      A.enemy@ky_nang_quai.js:1263                                           | Sông sâu › chết, Sông sâu › phòng challenge
+220 W f=13    n=17      tongue@fx.js:1451                                                      | Rừng già › phòng elite, Rừng già › phòng challenge
+221 W f=12    n=576     gaiRe@monster_art.js:2044                                              | Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2, Rừng già › trùm vùng pha 3
+222 W f=12    n=12      Object.drawStuck@fx_dan.js:344                                         | Hang biển › phòng quái › phi tiêu fire, Sông sâu › phòng quái › phi tiêu poison (Thức tỉnh
+223 W f=12    n=12      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + lnS@room_art.js:1357 + Object.door@room_art.js:1504 [canvas 480x270] | Sông sâu › bảng paused, Sông sâu › bảng map, Sông sâu › bảng bag
+224 W f=12    n=72      Object.drawBomb@mobs.js:709                                            | Sông sâu › chết
+225 W f=12    n=72      Object.drawBomb@mobs.js:710                                            | Sông sâu › chết
+226 W f=10    n=10      A.bg@room_art.js:2250 ⇐ ringMark@room_art.js:1214 + cuaAnh@room_art.js:1323 + Object.paintVoid@room_art.js:869 [canvas 480x270] | Rừng già › phòng bắt đầu
+227 W f=10    n=10      A.bg@room_art.js:2250 ⇐ ringMark@room_art.js:1214 + crystalA@room_art.js:477 + cuaAnh@room_art.js:1312 [canvas 480x270] | Hang biển › phòng bắt đầu
+228 U f=10    n=10      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 468x50]            | Hang biển › phòng bắt đầu
+229 W f=10    n=10      A.bg@room_art.js:2250 ⇐ Object.carpet@room_art.js:278 + cuaAnh@room_art.js:1323 + Object.paintVoid@room_art.js:246 [canvas 480x270] | Lâu đài cổ › phòng bắt đầu
+230 W f=10    n=10      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + stake@room_art.js:1367 + River.floors@room_art.js:1418 [canvas 480x270] | Sông sâu › phòng bắt đầu
+231 W f=10    n=20      roomFore@room_art.js:2286 ⇐ fgBuild@room_art.js:1821 + fgBuild@room_art.js:1827 + fgBuild@room_art.js:1824 [canvas 480x270] | Sông sâu › phòng bắt đầu
+232 W f=6     n=29      Object.drawDrips@fx_he.js:159                                          | Lâu đài cổ › phòng elite, Lâu đài cổ › phòng challenge
+233 W f=6     n=29      Object.drawDrips@fx_he.js:160                                          | Lâu đài cổ › phòng elite, Lâu đài cổ › phòng challenge
+234 W f=6     n=18      Object.drawShard@fx_he.js:616                                          | Sông sâu › phòng quái › phi tiêu poison (Thức tỉnh)
+235 W f=6     n=12      Object.drawShard@fx_he.js:617                                          | Sông sâu › phòng quái › phi tiêu poison (Thức tỉnh)
+236 W f=6     n=6       Object.drawShard@fx_he.js:618                                          | Sông sâu › phòng quái › phi tiêu poison (Thức tỉnh)
+237 W f=5     n=5       drawCharge@fx_he.js:911                                                | Hang biển › phòng quái › phi tiêu fire, Rừng già › phòng elite, Rừng già › phòng challenge (+1 cảnh)
+238 W f=5     n=5       drawCharge@fx_he.js:912                                                | Hang biển › phòng quái › phi tiêu fire, Rừng già › phòng elite, Rừng già › phòng challenge (+1 cảnh)
+239 W f=5     n=44      Object.drawDrips@fx_he.js:151                                          | Lâu đài cổ › phòng elite, Lâu đài cổ › phòng challenge
+240 W f=4     n=15      fx.proj@fx_ky_nang.js:255                                              | Sông sâu › phòng quái › phi tiêu poison (Thức tỉnh), Hang biển › phòng quái › phi tiêu fir
+241 W f=3     n=40      Object.drawIce@fx_he.js:189                                            | Hang biển › phòng quái › spear ice
+242 W f=3     n=20      Object.drawIce@fx_he.js:190                                            | Hang biển › phòng quái › spear ice
+243 W f=3     n=52      Object.drawIce@fx_he.js:184                                            | Hang biển › phòng quái › spear ice
+244 W f=3     n=3       A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + lnS@room_art.js:1357 + reedClump@room_art.js:1362 [canvas 480x270] | Sông sâu › trùm vùng pha 1, Sông sâu › trùm vùng pha 2, Sông sâu › trùm vùng pha 3
+245 W f=3     n=3       veSan@thuong_luong.js:724 ⇐ R@thuong_luong.js:662 [canvas 480x270]     | Sông sâu › trùm vùng pha 1, Sông sâu › trùm vùng pha 2, Sông sâu › trùm vùng pha 3
+246 W f=3     n=672     R@thuong_luong.js:662                                                  | Sông sâu › trùm vùng pha 1, Sông sâu › trùm vùng pha 2, Sông sâu › trùm vùng pha 3
+247 W f=3     n=450     E@thuong_luong.js:663                                                  | Sông sâu › trùm vùng pha 1, Sông sâu › trùm vùng pha 2, Sông sâu › trùm vùng pha 3
+248 U f=3     n=3       khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 254x36]            | Sông sâu › trùm vùng pha 1, Sông sâu › trùm vùng pha 2, Sông sâu › trùm vùng pha 3
+249 W f=1     n=1       A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + Object.paintVoid@room_art.js:1385 + rampFill@room_art.js:209 [điểm ảnh code] [canvas 480x2 | Sông sâu › trùm nhỏ

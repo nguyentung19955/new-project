@@ -1,0 +1,238 @@
+  0 U f=2804  n=14242   doMau@ui_theme.js:957                                                  | Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2, Hang biển › trùm nhỏ (+119 cảnh)
+  1 U f=2779  n=2779    gem@vk_moi.js:717                                                      | Rừng già › trùm nhỏ, Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2 (+119 cảnh)
+  2 U f=2779  n=2779    gem@vk_moi.js:718                                                      | Rừng già › trùm nhỏ, Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2 (+119 cảnh)
+  3 U f=2779  n=2779    gem@vk_moi.js:719                                                      | Rừng già › trùm nhỏ, Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2 (+119 cảnh)
+  4 U f=2774  n=2774    khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 240x24]            | Rừng già › trùm nhỏ, Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2 (+118 cảnh)
+  5 U f=2774  n=5548    put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 106x7]                   | Rừng già › trùm nhỏ, Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2 (+118 cảnh)
+  6 U f=2774  n=2774    khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 216x18]            | Rừng già › trùm nhỏ, Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2 (+118 cảnh)
+  7 U f=2774  n=5548    put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 94x4]                    | Rừng già › trùm nhỏ, Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2 (+118 cảnh)
+  8 U f=2774  n=2774    blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 42x46] | Rừng già › trùm nhỏ, Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2 (+118 cảnh)
+  9 U f=2774  n=2774    blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 40x44] | Rừng già › trùm nhỏ, Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2 (+118 cảnh)
+ 10 U f=2774  n=5548    blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 62x45] | Rừng già › trùm nhỏ, Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2 (+118 cảnh)
+ 11 U f=2774  n=5548    E.vien@ep_do.js:313                                                    | Rừng già › trùm nhỏ, Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2 (+118 cảnh)
+ 12 U f=2774  n=5548    put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 48x3]                    | Rừng già › trùm nhỏ, Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2 (+118 cảnh)
+ 13 U f=2774  n=2774    khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 220x34]            | Rừng già › trùm nhỏ, Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2 (+118 cảnh)
+ 14 U f=2528  n=2528    blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 66x66] | Rừng già › trùm nhỏ, Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2 (+88 cảnh)
+ 15 U f=2528  n=2528    blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 30x33] | Rừng già › trùm nhỏ, Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2 (+88 cảnh)
+ 16 U f=2498  n=2498    blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 72x77] | Rừng già › trùm nhỏ, Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2 (+86 cảnh)
+ 17 U f=2498  n=7494    blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 54x58] | Rừng già › trùm nhỏ, Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2 (+86 cảnh)
+ 18 U f=2498  n=4996    blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 17x9] | Rừng già › trùm nhỏ, Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2 (+86 cảnh)
+ 19 U f=1956  n=1956    khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 170x136]           | Rừng già › phòng quái › sword poison, Rừng già › phòng quái › spear fire (Thức tỉnh), Rừng (+97 cảnh)
+ 20 U f=1637  n=3535    blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 54x54] | Rừng già › phòng quái › phi tiêu không hệ, Lâu đài cổ › phòng quái › hammer fire, Rừng già (+39 cảnh)
+ 21 U f=1037  n=4166    ui.rect@engine.js:621                                                  | Rừng già › trùm vùng pha 1, Lâu đài cổ › trùm vùng pha 1, Hang biển › trùm vùng pha 2 (+56 cảnh)
+ 22 U f=818   n=818     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 116x38]            | Rừng già › trùm nhỏ, Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2 (+18 cảnh)
+ 23 W f=759   n=759     A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:506 + backPass@room_art.js:1925 [điểm ảnh code] [canvas 480x270] | Hang biển › trùm nhỏ, Hang biển › trùm vùng pha 1, Hang biển › trùm vùng pha 2 (+28 cảnh)
+ 24 W f=749   n=749     A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:869 + trSan@room_art.js:861 [điểm ảnh code] + backPass@room_art.js:1925 [điểm ảnh code] [canvas 4 | Rừng già › trùm nhỏ, Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2 (+27 cảnh)
+ 25 U f=681   n=1043    mobBars@stage.js:839                                                   | Sông sâu › phòng quái › phi tiêu poison (Thức tỉnh), Hang biển › phòng quái › phi tiêu fir (+21 cảnh)
+ 26 U f=681   n=1043    mobBars@stage.js:840                                                   | Sông sâu › phòng quái › phi tiêu poison (Thức tỉnh), Hang biển › phòng quái › phi tiêu fir (+21 cảnh)
+ 27 U f=560   n=560     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 598x50]            | Rừng già › phòng quái › spear fire (Thức tỉnh), Hang biển › phòng quái › spear ice, Lâu đà (+9 cảnh)
+ 28 U f=556   n=556     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 452x60]            | Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2, Rừng già › trùm vùng pha 3 (+10 cảnh)
+ 29 U f=556   n=1112    T.bossBar@ui_theme.js:888                                              | Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2, Rừng già › trùm vùng pha 3 (+10 cảnh)
+ 30 U f=556   n=1112    T.bossBar@ui_theme.js:889                                              | Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2, Rừng già › trùm vùng pha 3 (+10 cảnh)
+ 31 U f=556   n=1112    T.bossBar@ui_theme.js:890                                              | Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2, Rừng già › trùm vùng pha 3 (+10 cảnh)
+ 32 U f=556   n=556     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 428x24]            | Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2, Rừng già › trùm vùng pha 3 (+10 cảnh)
+ 33 U f=556   n=556     put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 200x7]                   | Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2, Rừng già › trùm vùng pha 3 (+10 cảnh)
+ 34 W f=540   n=540     A.bg@room_art.js:2250 ⇐ runners@room_art.js:1079 + Object.paintVoid@room_art.js:246 + backPass@room_art.js:1925 [điểm ảnh code] [canvas 480x270] | Lâu đài cổ › trùm vùng pha 1, Lâu đài cổ › trùm vùng pha 2, Lâu đài cổ › trùm vùng pha 3 (+11 cảnh)
+ 35 U f=537   n=799     ui.rect@engine.js:622                                                  | Làng › do › skill, Lâu đài cổ › chết, Sông sâu › chết (+24 cảnh)
+ 36 U f=530   n=703     mobBars@stage.js:838                                                   | Hang biển › phòng quái › phi tiêu fire, Lâu đài cổ › phòng quái › phi tiêu ice (Thức tỉnh) (+21 cảnh)
+ 37 U f=520   n=520     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 586x50]            | Rừng già › phòng quái › sword poison, Hang biển › phòng quái › sword fire (Thức tỉnh), Lâu (+12 cảnh)
+ 38 W f=423   n=65979   R@song_luat.js:219                                                     | Sông sâu › phòng quái › phi tiêu poison (Thức tỉnh), Sông sâu › phòng quái › sword không h (+14 cảnh)
+ 39 W f=411   n=46198   ELL@song_luat.js:220                                                   | Sông sâu › chết, Sông sâu › phòng challenge, Sông sâu › màn kết quả (+11 cảnh)
+ 40 U f=376   n=376     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 602x50]            | Rừng già › phòng quái › hammer ice, Hang biển › phòng quái › hammer poison (Thức tỉnh), Lâ (+25 cảnh)
+ 41 W f=339   n=339     A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + stake@room_art.js:1367 + (ẩn danh)@room_art.js:1395 [canvas 480x270] | Sông sâu › phòng quái › sword không hệ, Sông sâu › phòng quái › spear không hệ, Sông sâu › (+5 cảnh)
+ 42 U f=332   n=332     T.bar@ui_theme.js:1007                                                 | Rừng già › chết, Hang biển › chết, Lâu đài cổ › trùm nhỏ (+9 cảnh)
+ 43 U f=332   n=332     T.bar@ui_theme.js:1008                                                 | Rừng già › chết, Hang biển › chết, Lâu đài cổ › trùm nhỏ (+9 cảnh)
+ 44 U f=310   n=310     VS.drawStrip@village_scene.js:1141                                     | Làng › Ăn mừng nâng cấp, Làng (giữa làng), Làng (đi lại) (+19 cảnh)
+ 45 U f=310   n=2170    (ẩn danh)@village_scene.js:1147                                        | Làng › Ăn mừng nâng cấp, Làng (giữa làng), Làng (đi lại) (+19 cảnh)
+ 46 U f=310   n=930     (ẩn danh)@village_scene.js:1150                                        | Làng › Ăn mừng nâng cấp, Làng (giữa làng), Làng (đi lại) (+19 cảnh)
+ 47 W f=294   n=294     roomFore@room_art.js:2271 ⇐ reedClump@room_art.js:1362 [canvas 480x270] | Sông sâu › phòng quái › sword không hệ, Sông sâu › phòng quái › spear không hệ, Sông sâu › (+7 cảnh)
+ 48 U f=262   n=262     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 392x52]            | Rừng già › trùm nhỏ, Hang biển › trùm nhỏ, Lâu đài cổ › trùm nhỏ (+5 cảnh)
+ 49 U f=262   n=262     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 372x20]            | Rừng già › trùm nhỏ, Hang biển › trùm nhỏ, Lâu đài cổ › trùm nhỏ (+5 cảnh)
+ 50 U f=262   n=262     put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 172x5]                   | Rừng già › trùm nhỏ, Hang biển › trùm nhỏ, Lâu đài cổ › trùm nhỏ (+5 cảnh)
+ 51 U f=208   n=208     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 612x50]            | Rừng già › phòng quái › phi tiêu không hệ, Hang biển › phòng quái › phi tiêu fire, Lâu đài (+1 cảnh)
+ 52 W f=202   n=202     roomFore@room_art.js:2271 ⇐ stake@room_art.js:1367 + reedClump@room_art.js:1362 + stake@room_art.js:1368 [canvas 480x270] | Sông sâu › chết, Sông sâu › phòng challenge, Sông sâu › trúng đòn (+14 cảnh)
+ 53 U f=179   n=179     Object.gem@vk_moi.js:717                                               | Làng › Ăn mừng nâng cấp, Rừng già › màn kết quả, Hang biển › màn kết quả (+11 cảnh)
+ 54 U f=179   n=179     Object.gem@vk_moi.js:718                                               | Làng › Ăn mừng nâng cấp, Rừng già › màn kết quả, Hang biển › màn kết quả (+11 cảnh)
+ 55 U f=179   n=179     Object.gem@vk_moi.js:719                                               | Làng › Ăn mừng nâng cấp, Rừng già › màn kết quả, Hang biển › màn kết quả (+11 cảnh)
+ 56 U f=176   n=176     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 302x26]            | Rừng già › phòng challenge, Hang biển › phòng challenge, Lâu đài cổ › phòng challenge (+1 cảnh)
+ 57 U f=168   n=168     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 190x36]            | Lâu đài cổ › trùm vùng pha 1, Lâu đài cổ › trùm vùng pha 2, Lâu đài cổ › trùm vùng pha 3 (+2 cảnh)
+ 58 W f=165   n=165     VS.drawWorld@village_scene.js:1045                                     | Làng › Ăn mừng nâng cấp, Làng (giữa làng), Làng (đi lại) (+21 cảnh)
+ 59 W f=165   n=1980    ambGround@village_scene.js:913                                         | Làng › Ăn mừng nâng cấp, Làng (giữa làng), Làng (đi lại) (+21 cảnh)
+ 60 W f=165   n=658     VS.drawWorld@village_scene.js:1051                                     | Làng › Ăn mừng nâng cấp, Làng (đi lại), Làng (giữa làng) (+21 cảnh)
+ 61 W f=165   n=5775    putNpc@village_scene.js:182                                            | Làng › Ăn mừng nâng cấp, Làng (giữa làng), Làng (đi lại) (+21 cảnh)
+ 62 W f=165   n=2937    luaLo@village_scene.js:953                                             | Làng › Ăn mừng nâng cấp, Làng (giữa làng), Làng (đi lại) (+21 cảnh)
+ 63 W f=165   n=3465    Object.hero@hero_tinhlinh.js:1441                                      | Làng › Ăn mừng nâng cấp, Làng (giữa làng), Làng (đi lại) (+21 cảnh)
+ 64 W f=165   n=825     Array.<anonymous>@village_scene.js:1082                                | Làng › Ăn mừng nâng cấp, Làng (giữa làng), Làng (đi lại) (+21 cảnh)
+ 65 W f=165   n=342     ambTop@village_scene.js:944                                            | Làng › Ăn mừng nâng cấp, Làng (giữa làng), Làng (đi lại) (+21 cảnh)
+ 66 W f=165   n=165     VS.drawWorld@village_scene.js:1103 ⇐ dung@village_scene.js:509 + dung@village_scene.js:510 + dung@village_scene.js:511 [canvas 720x270] | Làng › Ăn mừng nâng cấp, Làng (giữa làng), Làng (đi lại) (+21 cảnh)
+ 67 W f=165   n=11693   ambLight@village_scene.js:930                                          | Làng › Ăn mừng nâng cấp, Làng (giữa làng), Làng (đi lại) (+21 cảnh)
+ 68 W f=165   n=660     ambLight@village_scene.js:934                                          | Làng › Ăn mừng nâng cấp, Làng (giữa làng), Làng (đi lại) (+21 cảnh)
+ 69 W f=165   n=3787    ambLight@village_scene.js:937                                          | Làng › Ăn mừng nâng cấp, Làng (đi lại), Làng (giữa làng) (+21 cảnh)
+ 70 W f=165   n=6976    VS.drawWorld@village_scene.js:1109                                     | Làng › Ăn mừng nâng cấp, Làng (đi lại), Làng (giữa làng) (+21 cảnh)
+ 71 U f=160   n=160     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 1000x34]           | Làng › Ăn mừng nâng cấp, Làng (giữa làng), Làng (đi lại) (+20 cảnh)
+ 72 U f=144   n=144     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 692x470]           | Rừng già › màn kết quả, Hang biển › màn kết quả, Lâu đài cổ › màn kết quả (+9 cảnh)
+ 73 U f=144   n=144     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 136x40]            | Rừng già › màn kết quả, Hang biển › màn kết quả, Lâu đài cổ › màn kết quả (+9 cảnh)
+ 74 U f=141   n=141     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 120x40]            | Làng › Ăn mừng nâng cấp, Làng › ren › forge › sharpen, Làng › ren › forge › vk (+21 cảnh)
+ 75 U f=138   n=138     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 204x36]            | Hang biển › trùm vùng pha 1, Hang biển › trùm vùng pha 2, Hang biển › trùm vùng pha 3 (+1 cảnh)
+ 76 W f=135   n=135     VS.drawWorld@village_scene.js:1112                                     | Làng › Ăn mừng nâng cấp, Làng › ren › forge › sharpen, Làng › ren › forge › vk (+19 cảnh)
+ 77 U f=132   n=132     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 206x36]            | Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 3, Rừng già › trùm vùng pha 2
+ 78 U f=122   n=122     T.bar@ui_theme.js:1015                                                 | Lâu đài cổ › trùm nhỏ, Rừng già › trùm nhỏ, Hang biển › trùm nhỏ (+3 cảnh)
+ 79 U f=121   n=691     oConAnh@ui_theme.js:778                                                | Làng › do › chuong, Làng › Ăn mừng nâng cấp, Làng › Hành trang › hero (+17 cảnh)
+ 80 W f=120   n=4173    F.hat@monster_art.js:1287                                              | Hang biển › trùm vùng pha 1, Hang biển › trùm vùng pha 3, Hang biển › trùm vùng pha 2 (+6 cảnh)
+ 81 U f=110   n=110     vignette@fx.js:2749 ⇐ side@fx.js:2743 [canvas 240x135]                 | Hang biển › chết, Rừng già › chết, Sông sâu › chết (+1 cảnh)
+ 82 U f=105   n=105     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 652x454]           | Làng › Ăn mừng nâng cấp, Làng › ren › forge › sharpen, Làng › ren › forge › vk (+13 cảnh)
+ 83 W f=100   n=39219   F.set@monster_art.js:1285                                              | Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 3, Rừng già › trùm vùng pha 2
+ 84 W f=98    n=98      A.bg@room_art.js:2250 ⇐ runners@room_art.js:1082 + Object.paintVoid@room_art.js:246 + backPass@room_art.js:1925 [điểm ảnh code] [canvas 480x270] | Lâu đài cổ › phòng challenge, Lâu đài cổ › phòng merchant, Lâu đài cổ › phòng curse (+7 cảnh)
+ 85 W f=95    n=124790  (ẩn danh)@monster_art.js:1984                                          | Hang biển › trùm vùng pha 1, Hang biển › trùm vùng pha 3, Hang biển › trùm vùng pha 2 (+4 cảnh)
+ 86 U f=93    n=93      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 184x36]            | Lâu đài cổ › trùm nhỏ, Lâu đài cổ › trùm vùng pha 2, Lâu đài cổ › màn kết quả
+ 87 W f=90    n=90      A.bg@room_art.js:2250 ⇐ Object.carpet@room_art.js:278 + Object.paintVoid@room_art.js:246 + backPass@room_art.js:1925 [điểm ảnh code] [canvas 480x270] | Lâu đài cổ › trùm nhỏ, Lâu đài cổ › màn kết quả, Lâu đài cổ › phòng bắt đầu
+ 88 W f=85    n=53611   F.song@monster_art.js:1293                                             | Hang biển › trùm vùng pha 3, Lâu đài cổ › trùm vùng pha 1, Hang biển › trùm vùng pha 1 (+3 cảnh)
+ 89 W f=84    n=1367    ambGround@village_scene.js:920                                         | Làng › Ăn mừng nâng cấp, Làng (đi lại), Làng (giữa làng) (+8 cảnh)
+ 90 U f=84    n=84      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 472x32]            | Rừng già › phòng fountain, Hang biển › phòng fountain, Lâu đài cổ › phòng fountain (+9 cảnh)
+ 91 U f=80    n=160     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 192x58]            | Rừng già › màn kết quả, Hang biển › màn kết quả, Lâu đài cổ › màn kết quả (+1 cảnh)
+ 92 U f=80    n=80      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 232x66]            | Rừng già › màn kết quả, Hang biển › màn kết quả, Lâu đài cổ › màn kết quả (+1 cảnh)
+ 93 U f=75    n=75      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 216x36]            | Rừng già › trùm nhỏ, Rừng già › màn kết quả
+ 94 U f=72    n=72      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 186x36]            | Hang biển › trùm nhỏ, Hang biển › màn kết quả
+ 95 U f=70    n=280     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 146x50]            | Làng › Ăn mừng nâng cấp, Làng › ren › forge › sharpen, Làng › ren › forge › vk (+6 cảnh)
+ 96 U f=69    n=69      blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 72x72] | Lâu đài cổ › phòng quái › phi tiêu ice (Thức tỉnh), Rừng già › chest (đứng gần), Rừng già  (+14 cảnh)
+ 97 W f=65    n=17118   F.lua@monster_art.js:1289                                              | Lâu đài cổ › trùm vùng pha 1, Lâu đài cổ › trùm vùng pha 2, Lâu đài cổ › trùm vùng pha 3
+ 98 U f=64    n=64      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 100x26]            | Rừng già › chest (đứng gần), Rừng già › fountain (đứng gần), Rừng già › merchant (đứng gần (+13 cảnh)
+ 99 U f=64    n=64      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 306x36]            | Hang biển › trùm vùng pha 2, Rừng già › trùm vùng pha 2, Lâu đài cổ › trùm vùng pha 2
+100 U f=64    n=64      put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 308x3]                   | Lâu đài cổ › chết, Sông sâu › chết, Rừng già › chết (+5 cảnh)
+101 U f=64    n=128     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 280x58]            | Lâu đài cổ › chết, Sông sâu › chết, Rừng già › chết (+5 cảnh)
+102 U f=63    n=63      vien@noi_gian.js:87 ⇐ side@noi_gian.js:81 [canvas 240x135]             | Hang biển › trùm vùng pha 3, Rừng già › trùm vùng pha 3, Lâu đài cổ › trùm vùng pha 3
+103 U f=63    n=63      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 344x36]            | Hang biển › trùm vùng pha 3, Rừng già › trùm vùng pha 3, Lâu đài cổ › trùm vùng pha 3
+104 W f=59    n=118     (ẩn danh)@monster_art.js:2280                                          | Hang biển › chết, Hang biển › phòng elite, Hang biển › phòng challenge (+2 cảnh)
+105 W f=57    n=57      (ẩn danh)@monster_art.js:2420                                          | Lâu đài cổ › chết, Lâu đài cổ › phòng quái › sword ice, Lâu đài cổ › phòng quái › hammer f (+2 cảnh)
+106 W f=52    n=52      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + Object.paintVoid@room_art.js:1385 + rampFill@room_art.js:209 [điểm ảnh code] [canvas 480x2 | Sông sâu › phòng challenge, Sông sâu › trùm nhỏ, Sông sâu › trùm vùng pha 1 (+2 cảnh)
+107 U f=50    n=50      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 304x138]           | Làng › Ăn mừng nâng cấp, Làng › ren › forge › vk, Làng › may › outfit (+2 cảnh)
+108 U f=50    n=50      T.btn@ui_theme.js:283                                                  | Làng › do › skill, Làng › do › chuong, Làng › do › help (+2 cảnh)
+109 W f=50    n=408     (ẩn danh)@monster_art.js:1986                                          | Hang biển › trùm vùng pha 1, Hang biển › trùm vùng pha 3, Hang biển › trùm vùng pha 2
+110 W f=48    n=48      ambTop@village_scene.js:945                                            | Làng › Ăn mừng nâng cấp, Làng › ren › forge › sharpen, Làng › ren › forge › vk (+4 cảnh)
+111 W f=47    n=1177    F.khoi@monster_art.js:1291                                             | Rừng già › chết, Sông sâu › chết, Sông sâu › phòng quái › sword không hệ (+3 cảnh)
+112 W f=47    n=141     Object.drawBomb@mobs.js:696                                            | Rừng già › chết, Sông sâu › chết, Rừng già › phòng quái › phi tiêu không hệ (+2 cảnh)
+113 U f=46    n=176     oConAnh@ui_theme.js:779                                                | Làng › do › chuong, Làng › Xem vũ khí, Làng › do › rank (+7 cảnh)
+114 W f=46    n=6721    (ẩn danh)@monster_art.js:1985                                          | Hang biển › trùm vùng pha 1, Hang biển › trùm vùng pha 2, Hang biển › trùm vùng pha 3 (+4 cảnh)
+115 U f=45    n=180     oConAnh@ui_theme.js:783                                                | Làng › Ăn mừng nâng cấp, Làng › ren › forge › vk, Làng › ren › forge › ep (+1 cảnh)
+116 U f=42    n=42      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 432x50]            | Rừng già › phòng fountain, Hang biển › phòng fountain, Rừng già › fountain (bảng) (+3 cảnh)
+117 U f=42    n=42      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 476x50]            | Sông sâu › phòng chest, Sông sâu › phòng merchant, Sông sâu › phòng curse (+3 cảnh)
+118 W f=42    n=42      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + River.floors@room_art.js:1418 + Object.door@room_art.js:1495 [canvas 480x270] | Sông sâu › phòng merchant, Sông sâu › phòng curse, Sông sâu › merchant (bảng) (+3 cảnh)
+119 U f=36    n=36      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 940x454]           | Làng › Hành trang › hero, Làng › Hành trang › weapon, Làng › Hành trang › skill (+5 cảnh)
+120 U f=36    n=144     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 220x44]            | Làng › Hành trang › hero, Làng › Hành trang › weapon, Làng › Hành trang › skill (+5 cảnh)
+121 W f=36    n=1874    laRoi@monster_art.js:2042                                              | Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 3, Rừng già › trùm vùng pha 2
+122 U f=35    n=70      put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 58x3]                    | Làng › Ăn mừng nâng cấp, Làng › ren › forge › vk
+123 W f=31    n=62      (ẩn danh)@monster_art.js:2439                                          | Lâu đài cổ › phòng challenge, Lâu đài cổ › phòng elite
+124 W f=30    n=210     veLop@zed_moi.js:624                                                   | Làng (giữa làng), Làng (đi lại)
+125 U f=30    n=30      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 520x40]            | Làng (giữa làng), Làng (đi lại)
+126 U f=30    n=30      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 88x62]             | Làng (giữa làng), Làng (đi lại)
+127 U f=30    n=30      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 304x94]            | Làng › ren › forge › up, Làng › xen › gear, Làng › do › rank (+3 cảnh)
+128 W f=30    n=3204    gaiRe@monster_art.js:2044                                              | Rừng già › trùm vùng pha 1, Rừng già › trùm vùng pha 2, Rừng già › trùm vùng pha 3
+129 U f=28    n=28      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 732x314]           | Rừng già › chest (bảng), Hang biển › chest (bảng), Lâu đài cổ › chest (bảng) (+1 cảnh)
+130 U f=28    n=84      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 220x206]           | Rừng già › chest (bảng), Hang biển › chest (bảng), Lâu đài cổ › chest (bảng) (+1 cảnh)
+131 U f=28    n=28      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 692x346]           | Rừng già › merchant (bảng), Hang biển › merchant (bảng), Lâu đài cổ › merchant (bảng) (+1 cảnh)
+132 U f=28    n=112     khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 156x166]           | Rừng già › merchant (bảng), Hang biển › merchant (bảng), Lâu đài cổ › merchant (bảng) (+1 cảnh)
+133 U f=28    n=28      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 180x54]            | Rừng già › merchant (bảng), Hang biển › merchant (bảng), Lâu đài cổ › merchant (bảng) (+1 cảnh)
+134 U f=28    n=28      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 652x306]           | Rừng già › curse (bảng), Hang biển › curse (bảng), Lâu đài cổ › curse (bảng) (+1 cảnh)
+135 U f=28    n=28      put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 140x31]                  | Rừng già › curse (bảng), Hang biển › curse (bảng), Lâu đài cổ › curse (bảng) (+1 cảnh)
+136 U f=28    n=28      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 280x62]            | Rừng già › curse (bảng), Hang biển › curse (bảng), Lâu đài cổ › curse (bảng) (+1 cảnh)
+137 U f=26    n=26      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 296x40]            | Làng › Ăn mừng nâng cấp
+138 U f=25    n=25      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 304x116]           | Làng › ren › forge › sharpen, Làng › ren › forge › ep, Làng › do › skill (+2 cảnh)
+139 U f=23    n=23      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 198x36]            | Hang biển › trùm vùng pha 2
+140 U f=23    n=23      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 222x36]            | Hang biển › trùm vùng pha 3
+141 U f=22    n=22      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 178x36]            | Sông sâu › màn kết quả, Sông sâu › trùm nhỏ
+142 U f=21    n=21      heroArt@hanh_trang.js:74                                               | Làng › Hành trang › hero, Rừng già › bảng bag, Hang biển › bảng bag (+2 cảnh)
+143 U f=21    n=21      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 208x16]            | Làng › Hành trang › hero, Rừng già › bảng bag, Hang biển › bảng bag (+2 cảnh)
+144 U f=21    n=42      put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 90x3]                    | Làng › Hành trang › hero, Rừng già › bảng bag, Hang biển › bảng bag (+2 cảnh)
+145 U f=21    n=21      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 200x36]            | Rừng già › trùm vùng pha 2
+146 W f=21    n=21      A.bg@room_art.js:2250 ⇐ Object.carpet@room_art.js:273 + Object.paintVoid@room_art.js:246 + backPass@room_art.js:1925 [điểm ảnh code] [canvas 480x270] | Lâu đài cổ › phòng fountain, Lâu đài cổ › fountain (bảng), Lâu đài cổ › fountain (đứng gần
+147 W f=21    n=21      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + (ẩn danh)@room_art.js:1395 + Object.door@room_art.js:1495 [canvas 480x270] | Sông sâu › phòng chest, Sông sâu › chest (bảng), Sông sâu › chest (đứng gần)
+148 W f=21    n=21      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + stake@room_art.js:1367 + Object.paintVoid@room_art.js:1385 [canvas 480x270] | Sông sâu › phòng fountain, Sông sâu › fountain (bảng), Sông sâu › fountain (đứng gần)
+149 W f=21    n=21      roomFore@room_art.js:2271 ⇐ reedClump@room_art.js:1362 + reedClump@room_art.js:1363 [canvas 480x270] | Sông sâu › phòng fountain, Sông sâu › fountain (bảng), Sông sâu › fountain (đứng gần)
+150 U f=20    n=20      BT.draw@bao_truoc.js:862 ⇐ pxDraw@bao_truoc.js:566 [điểm ảnh code] [canvas 960x540] | Rừng già › phòng quái › sword poison, Rừng già › phòng quái › spear fire (Thức tỉnh), Rừng (+17 cảnh)
+151 U f=20    n=20      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 224x36]            | Rừng già › trùm vùng pha 3
+152 U f=20    n=20      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 210x36]            | Lâu đài cổ › trùm vùng pha 3
+153 W f=20    n=20      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + Object.door@room_art.js:1504 + River.floors@room_art.js:1418 [canvas 480x270] | Sông sâu › màn kết quả
+154 U f=16    n=16      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 372x434]           | Rừng già › bảng paused, Hang biển › bảng paused, Lâu đài cổ › bảng paused (+1 cảnh)
+155 U f=16    n=48      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 300x62]            | Rừng già › bảng paused, Hang biển › bảng paused, Lâu đài cổ › bảng paused (+1 cảnh)
+156 U f=16    n=16      put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 150x29]                  | Rừng già › bảng paused, Hang biển › bảng paused, Lâu đài cổ › bảng paused (+1 cảnh)
+157 U f=16    n=16      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 300x58]            | Rừng già › bảng paused, Hang biển › bảng paused, Lâu đài cổ › bảng paused (+1 cảnh)
+158 U f=15    n=15      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 84x40]             | Làng › tu › hero, Làng › tu › so, Làng › tu › thanhTuu
+159 U f=15    n=15      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 64x40]             | Làng › tu › hero, Làng › tu › so, Làng › tu › thanhTuu
+160 W f=12    n=12      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + Object.door@room_art.js:1504 + (ẩn danh)@room_art.js:1395 [canvas 480x270] | Sông sâu › bảng paused, Sông sâu › bảng map, Sông sâu › bảng bag
+161 W f=12    n=72      Object.drawBomb@mobs.js:709                                            | Sông sâu › chết
+162 W f=12    n=72      Object.drawBomb@mobs.js:710                                            | Sông sâu › chết
+163 U f=10    n=20      VS.bubble@village_scene.js:1130                                        | Làng › lai › map
+164 U f=10    n=10      khungDat@ui_theme.js:455 ⇐ gdBien@ui_theme.js:67 [sửa điểm ảnh] + R@ui_theme.js:80 [canvas 84x54] | Làng › ren › forge › ep, Làng › Hành trang › weapon
+165 U f=10    n=10      khungDat@ui_theme.js:455 ⇐ gdBien@ui_theme.js:67 [sửa điểm ảnh] + R@ui_theme.js:80 [canvas 180x36] | Làng › may › outfit, Làng › Hành trang › hero
+166 U f=10    n=460     oConAnh@ui_theme.js:787                                                | Làng › do › chuong, Làng › Xem vũ khí
+167 U f=10    n=10      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 280x16]            | Làng › tu › hero, Làng › tu › thanhTuu
+168 U f=10    n=20      put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 126x3]                   | Làng › tu › hero, Làng › tu › thanhTuu
+169 U f=10    n=30      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 192x70]            | Làng › mo › settings, Làng › mo › viecNgay
+170 U f=10    n=10      khungDat@ui_theme.js:455 ⇐ gdBien@ui_theme.js:67 [sửa điểm ảnh] + R@ui_theme.js:80 [canvas 292x70] | Làng › mo › settings, Làng › mo › viecNgay
+171 U f=10    n=10      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 292x70]            | Làng › mo › settings, Làng › mo › viecNgay
+172 U f=10    n=10      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 400x70]            | Làng › mo › settings, Làng › mo › viecNgay
+173 U f=10    n=10      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 184x70]            | Làng › mo › settings, Làng › mo › viecNgay
+174 U f=10    n=10      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 940x494]           | Làng › Xem vũ khí, Làng › Ải ngày
+175 U f=10    n=10      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 140x40]            | Làng › Xem vũ khí, Làng › Ải ngày
+176 W f=10    n=20      (ẩn danh)@room_art.js:2220                                             | Hang biển › nước dâng Ngư Tinh
+177 W f=10    n=480     (ẩn danh)@room_art.js:2221                                             | Hang biển › nước dâng Ngư Tinh
+178 W f=10    n=140     (ẩn danh)@room_art.js:2222                                             | Hang biển › nước dâng Ngư Tinh
+179 W f=10    n=98      (ẩn danh)@monster_art.js:1719                                          | Rừng già › phòng quái › spear fire (Thức tỉnh), Rừng già › phòng quái › hammer ice
+180 U f=10    n=10      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 468x50]            | Hang biển › phòng bắt đầu
+181 W f=10    n=10      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + stake@room_art.js:1367 + River.floors@room_art.js:1418 [canvas 480x270] | Sông sâu › phòng bắt đầu
+182 W f=8     n=28      B.ve@bia.js:119                                                        | Màn chào
+183 W f=8     n=56      B.ve@bia.js:125                                                        | Màn chào
+184 W f=8     n=56      B.ve@bia.js:127                                                        | Màn chào
+185 U f=8     n=8       B.veMan@bia.js:143                                                     | Màn chào
+186 U f=8     n=8       B.veMan@bia.js:149                                                     | Màn chào
+187 U f=8     n=8       B.veMan@bia.js:153                                                     | Màn chào
+188 U f=8     n=8       B.veMan@bia.js:156                                                     | Màn chào
+189 U f=8     n=16      titleLogo@village.js:918                                               | Màn chào
+190 U f=8     n=8       khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 262x40]            | Màn chào
+191 U f=8     n=8       khungDat@ui_theme.js:455 ⇐ gdBien@ui_theme.js:67 [sửa điểm ảnh] + R@ui_theme.js:80 [canvas 216x50] | Màn chào
+192 U f=8     n=8       khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 216x50]            | Màn chào
+193 U f=8     n=8       khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 104x38]            | Màn chào
+194 U f=6     n=6       khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 128x128]           | Lâu đài cổ › trùm nhỏ
+195 W f=6     n=6       veSan@thuong_luong.js:724 ⇐ R@thuong_luong.js:662 [canvas 480x270]     | Sông sâu › trùm vùng pha 1, Sông sâu › trùm vùng pha 2, Sông sâu › trùm vùng pha 3
+196 W f=6     n=648     R@thuong_luong.js:662                                                  | Sông sâu › trùm vùng pha 1, Sông sâu › trùm vùng pha 2, Sông sâu › trùm vùng pha 3
+197 U f=6     n=6       khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 254x36]            | Sông sâu › trùm vùng pha 1, Sông sâu › trùm vùng pha 2, Sông sâu › trùm vùng pha 3
+198 W f=5     n=5       mapScreen@village.js:190 ⇐ vienTranh@village_scene.js:1255 + VS.mapArt@village_scene.js:1248 [canvas 480x270] | Làng › lai › map
+199 W f=5     n=685     VS.mapDash@village_scene.js:1298                                       | Làng › lai › map
+200 U f=5     n=10      VS.bubble@village_scene.js:1131                                        | Làng › lai › map
+201 U f=5     n=10      VS.bubble@village_scene.js:1132                                        | Làng › lai › map
+202 U f=5     n=10      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 136x42]            | Làng › lai › map
+203 U f=5     n=5       khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 464x134]           | Làng › lai › map
+204 U f=5     n=5       khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 128x82]            | Làng › lai › map
+205 U f=5     n=5       khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 80x82]             | Làng › ren › forge › vk
+206 U f=5     n=5       put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 191x5]                   | Làng › ren › forge › vk
+207 U f=5     n=5       khungDat@ui_theme.js:455 ⇐ gdBien@ui_theme.js:67 [sửa điểm ảnh] + R@ui_theme.js:80 [canvas 386x36] | Làng › ren › forge › vk
+208 U f=5     n=5       khungDat@ui_theme.js:455 ⇐ gdBien@ui_theme.js:67 [sửa điểm ảnh] + R@ui_theme.js:80 [canvas 260x74] | Làng › ren › forge › up
+209 U f=5     n=5       khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 132x40]            | Làng › xen › gear
+210 U f=5     n=5       khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 94x40]             | Làng › xen › gear
+211 U f=5     n=15      khungDat@ui_theme.js:455 ⇐ gdBien@ui_theme.js:67 [sửa điểm ảnh] + R@ui_theme.js:80 [canvas 152x62] | Làng › xen › gear
+212 U f=5     n=15      khungDat@ui_theme.js:455 ⇐ gdBien@ui_theme.js:67 [sửa điểm ảnh] + R@ui_theme.js:80 [canvas 160x62] | Làng › xen › gear
+213 U f=5     n=10      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 196x50]            | Làng › may › outfit
+214 U f=5     n=5       khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 300x40]            | Làng › may › outfit
+215 U f=5     n=15      khungDat@ui_theme.js:455 ⇐ gdBien@ui_theme.js:67 [sửa điểm ảnh] + R@ui_theme.js:80 [canvas 96x54] | Làng › do › skill
+216 U f=5     n=5       khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 340x46]            | Làng › do › skill
+217 U f=5     n=5       (ẩn danh)@chuong_ui.js:82                                              | Làng › do › chuong
+218 U f=5     n=50      (ẩn danh)@chuong_ui.js:102                                             | Làng › do › chuong
+219 U f=5     n=45      (ẩn danh)@chuong_ui.js:89                                              | Làng › do › chuong
+220 U f=5     n=10      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 180x36]            | Làng › do › chuong
+221 U f=5     n=5       khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 108x42]            | Làng › do › chuong
+222 U f=5     n=10      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 60x42]             | Làng › do › help
+223 U f=5     n=15      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 198x38]            | Làng › tu › so
+224 U f=5     n=60      veQuai@so_yeu_quai.js:378 ⇐ MA.draw@monster_art.js:1531 [canvas 46x50] | Làng › tu › so
+225 U f=5     n=5       veO@so_yeu_quai.js:437                                                 | Làng › tu › so
+226 U f=5     n=5       veQuai@so_yeu_quai.js:378 ⇐ MA.draw@monster_art.js:1531 [canvas 58x62] | Làng › tu › so
+227 U f=5     n=5       khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 200x42]            | Làng › Hành trang › hero
+228 U f=5     n=10      khungDat@ui_theme.js:455 ⇐ gdBien@ui_theme.js:67 [sửa điểm ảnh] + R@ui_theme.js:80 [canvas 300x36] | Làng › Hành trang › weapon
+229 U f=5     n=15      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 148x36]            | Làng › Hành trang › weapon
+230 U f=5     n=5       khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 428x40]            | Làng › Hành trang › weapon
+231 U f=5     n=10      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 240x38]            | Làng › Hành trang › skill
+232 U f=5     n=15      khungDat@ui_theme.js:455 ⇐ gdBien@ui_theme.js:67 [sửa điểm ảnh] + R@ui_theme.js:80 [canvas 80x34] | Làng › Hành trang › skill
+233 U f=5     n=5       khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 440x40]            | Làng › Hành trang › skill
+234 U f=5     n=5       T.resIcon@ui_theme.js:1276 ⇐ R@ui_theme.js:80 [canvas 7x7]             | Làng › Hành trang › res
+235 U f=5     n=5       put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 146x4]                   | Làng › Xem vũ khí
+236 U f=1     n=1       khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 298x40]            | Làng › Ăn mừng nâng cấp
+237 U f=1     n=1       khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 292x40]            | Làng › Ăn mừng nâng cấp

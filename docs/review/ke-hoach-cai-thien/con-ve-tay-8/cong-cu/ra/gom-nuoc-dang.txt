@@ -1,0 +1,34 @@
+  0 W f=10    n=10      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:506 + backPass@room_art.js:1925 [điểm ảnh code] [canvas 480x270] | Hang biển › nước dâng Ngư Tinh
+  1 W f=10    n=20      (ẩn danh)@room_art.js:2220                                             | Hang biển › nước dâng Ngư Tinh
+  2 W f=10    n=480     (ẩn danh)@room_art.js:2221                                             | Hang biển › nước dâng Ngư Tinh
+  3 W f=10    n=140     (ẩn danh)@room_art.js:2222                                             | Hang biển › nước dâng Ngư Tinh
+  4 W f=10    n=13308   (ẩn danh)@monster_art.js:1984                                          | Hang biển › nước dâng Ngư Tinh
+  5 W f=10    n=1426    (ẩn danh)@monster_art.js:1985                                          | Hang biển › nước dâng Ngư Tinh
+  6 U f=10    n=10      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 204x36]            | Hang biển › nước dâng Ngư Tinh
+  7 U f=10    n=10      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 452x60]            | Hang biển › nước dâng Ngư Tinh
+  8 U f=10    n=20      T.bossBar@ui_theme.js:888                                              | Hang biển › nước dâng Ngư Tinh
+  9 U f=10    n=20      T.bossBar@ui_theme.js:889                                              | Hang biển › nước dâng Ngư Tinh
+ 10 U f=10    n=20      T.bossBar@ui_theme.js:890                                              | Hang biển › nước dâng Ngư Tinh
+ 11 U f=10    n=10      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 428x24]            | Hang biển › nước dâng Ngư Tinh
+ 12 U f=10    n=10      put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 200x7]                   | Hang biển › nước dâng Ngư Tinh
+ 13 U f=10    n=60      doMau@ui_theme.js:957                                                  | Hang biển › nước dâng Ngư Tinh
+ 14 U f=10    n=40      ui.rect@engine.js:621                                                  | Hang biển › nước dâng Ngư Tinh
+ 15 U f=10    n=10      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 240x24]            | Hang biển › nước dâng Ngư Tinh
+ 16 U f=10    n=20      put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 106x7]                   | Hang biển › nước dâng Ngư Tinh
+ 17 U f=10    n=10      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 216x18]            | Hang biển › nước dâng Ngư Tinh
+ 18 U f=10    n=20      put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 94x4]                    | Hang biển › nước dâng Ngư Tinh
+ 19 U f=10    n=10      blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 42x46] | Hang biển › nước dâng Ngư Tinh
+ 20 U f=10    n=10      blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 40x44] | Hang biển › nước dâng Ngư Tinh
+ 21 U f=10    n=10      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 116x38]            | Hang biển › nước dâng Ngư Tinh
+ 22 U f=10    n=20      blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 62x45] | Hang biển › nước dâng Ngư Tinh
+ 23 U f=10    n=20      E.vien@ep_do.js:313                                                    | Hang biển › nước dâng Ngư Tinh
+ 24 U f=10    n=20      put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 48x3]                    | Hang biển › nước dâng Ngư Tinh
+ 25 U f=10    n=10      khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 220x34]            | Hang biển › nước dâng Ngư Tinh
+ 26 U f=10    n=10      gem@vk_moi.js:717                                                      | Hang biển › nước dâng Ngư Tinh
+ 27 U f=10    n=10      gem@vk_moi.js:718                                                      | Hang biển › nước dâng Ngư Tinh
+ 28 U f=10    n=10      gem@vk_moi.js:719                                                      | Hang biển › nước dâng Ngư Tinh
+ 29 U f=10    n=10      blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 66x66] | Hang biển › nước dâng Ngư Tinh
+ 30 U f=10    n=10      blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 30x33] | Hang biển › nước dâng Ngư Tinh
+ 31 U f=10    n=10      blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 72x77] | Hang biển › nước dâng Ngư Tinh
+ 32 U f=10    n=30      blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 54x58] | Hang biển › nước dâng Ngư Tinh
+ 33 U f=10    n=20      blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 17x9] | Hang biển › nước dâng Ngư Tinh

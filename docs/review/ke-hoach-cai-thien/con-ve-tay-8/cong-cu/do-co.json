@@ -1,0 +1,681 @@
+{
+ "gd-ruot-thanh": [
+  {
+   "nguon": "all",
+   "ham": "doMau@ui_theme.js:957",
+   "rong": 329,
+   "cao": 20,
+   "canh": "Hang biển › nước dâng Ngư Tinh"
+  },
+  {
+   "nguon": "all",
+   "ham": "put@ui_theme.js:42 ⇐ R@ui_theme.js:80 [canvas 191x5]",
+   "rong": 191,
+   "cao": 5,
+   "canh": "Làng › ren › forge › vk"
+  }
+ ],
+ "gd-mau-quai-nho": [
+  {
+   "nguon": "all",
+   "ham": "mobBars@stage.js:839",
+   "rong": 138,
+   "cao": 33,
+   "canh": "Lâu đài cổ › phòng quái › sword ice"
+  }
+ ],
+ "gd-ruot-thanh-trum": [
+  {
+   "nguon": "all",
+   "ham": "T.bossBar@ui_theme.js:888",
+   "rong": 210,
+   "cao": 1,
+   "canh": "Hang biển › nước dâng Ngư Tinh"
+  },
+  {
+   "nguon": "all",
+   "ham": "T.bar@ui_theme.js:1007",
+   "rong": 106,
+   "cao": 7,
+   "canh": "Sông sâu › chết"
+  }
+ ],
+ "hu-bao-vung": [
+  {
+   "nguon": "all",
+   "ham": "BT.draw@bao_truoc.js:862 ⇐ pxDraw@bao_truoc.js:566 [điểm ảnh code] [canvas 960x540]",
+   "rong": 215,
+   "cao": 41,
+   "canh": "Rừng già › phòng quái › sword poison"
+  }
+ ],
+ "gd-icon-linh-khi": [
+  {
+   "nguon": "all",
+   "ham": "gem@vk_moi.js:717",
+   "rong": 8,
+   "cao": 10,
+   "canh": "Hang biển › nước dâng Ngư Tinh"
+  },
+  {
+   "nguon": "all",
+   "ham": "Object.gem@vk_moi.js:717",
+   "rong": 8,
+   "cao": 10,
+   "canh": "Rừng già › chết"
+  }
+ ],
+ "gd-vien-o-vk": [
+  {
+   "nguon": "all",
+   "ham": "E.vien@ep_do.js:313",
+   "rong": 108,
+   "cao": 33,
+   "canh": "Hang biển › nước dâng Ngư Tinh"
+  }
+ ],
+ "gd-vien-man-do": [
+  {
+   "nguon": "all",
+   "ham": "vignette@fx.js:2749 ⇐ side@fx.js:2743 [canvas 240x135]",
+   "rong": 480,
+   "cao": 270,
+   "canh": "Rừng già › chết"
+  },
+  {
+   "nguon": "all",
+   "ham": "vien@noi_gian.js:87 ⇐ side@noi_gian.js:81 [canvas 240x135]",
+   "rong": 480,
+   "cao": 270,
+   "canh": "Rừng già › trùm vùng pha 3"
+  }
+ ],
+ "hu-nuoc-dang": [
+  {
+   "nguon": "rieng",
+   "ham": "(ẩn danh)@room_art.js:2221",
+   "rong": 282,
+   "cao": 124,
+   "canh": "Hang biển › nước dâng Ngư Tinh"
+  }
+ ],
+ "gd-song-dong": [
+  {
+   "nguon": "song",
+   "ham": "veDai@song_luat.js:243",
+   "rong": 29,
+   "cao": 185,
+   "canh": "Sông sâu › địa hình 3"
+  }
+ ],
+ "gd-song-cau": [
+  {
+   "nguon": "song",
+   "ham": "veCau@song_luat.js:256",
+   "rong": 62,
+   "cao": 23,
+   "canh": "Sông sâu › địa hình 3"
+  }
+ ],
+ "gd-song-vung-sau": [
+  {
+   "nguon": "song",
+   "ham": "veSau@song_luat.js:266",
+   "rong": 40,
+   "cao": 21,
+   "canh": "Sông sâu › địa hình 2"
+  }
+ ],
+ "hu-vung-luc-binh": [
+  {
+   "nguon": "song",
+   "ham": "veVung@song_luat.js:277",
+   "rong": 56,
+   "cao": 25,
+   "canh": "Sông sâu › vũng lục bình / dầu cháy 0"
+  }
+ ],
+ "hu-vung-dau-chay": [
+  {
+   "nguon": "song",
+   "ham": "veVung@song_luat.js:281",
+   "rong": 64,
+   "cao": 25,
+   "canh": "Sông sâu › vũng lục bình / dầu cháy 0"
+  }
+ ],
+ "gd-vat-luc-binh": [
+  {
+   "nguon": "song",
+   "ham": "veLucBinh@song_luat.js:310",
+   "rong": 23,
+   "cao": 14,
+   "canh": "Sông sâu › địa hình 0"
+  }
+ ],
+ "gd-vat-den-dau": [
+  {
+   "nguon": "song",
+   "ham": "veDenDau@song_luat.js:317",
+   "rong": 31,
+   "cao": 11,
+   "canh": "Sông sâu › địa hình 0"
+  }
+ ],
+ "gd-nen-song": [
+  {
+   "nguon": "all",
+   "ham": "A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + River.floors@room_art.js:1418 + Object.door@room_art.js:1495 [canvas 480x270]",
+   "rong": 480,
+   "cao": 270,
+   "canh": "Sông sâu › phòng merchant"
+  },
+  {
+   "nguon": "all",
+   "ham": "roomFore@room_art.js:2271 ⇐ reedClump@room_art.js:1362 [canvas 480x270]",
+   "rong": 480,
+   "cao": 270,
+   "canh": "Sông sâu › phòng bắt đầu"
+  }
+ ],
+ "gd-tham-lau": [
+  {
+   "nguon": "all",
+   "ham": "A.bg@room_art.js:2250 ⇐ runners@room_art.js:1079 + Object.paintVoid@room_art.js:246 + backPass@room_art.js:1925 [điểm ảnh code] [canvas 480x270]",
+   "rong": 480,
+   "cao": 270,
+   "canh": "Lâu đài cổ › phòng quái › sword ice"
+  }
+ ],
+ "gd-loi-mon-rung": [
+  {
+   "nguon": "all",
+   "ham": "A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:869 + trSan@room_art.js:861 [điểm ảnh code] + backPass@room_art.js:1925 [điểm ảnh code] [canvas 480x270]",
+   "rong": 480,
+   "cao": 270,
+   "canh": "Rừng già › phòng bắt đầu"
+  }
+ ],
+ "gd-san-thuong-luong": [
+  {
+   "nguon": "all",
+   "ham": "veSan@thuong_luong.js:724 ⇐ R@thuong_luong.js:662 [canvas 480x270]",
+   "rong": 480,
+   "cao": 270,
+   "canh": "Sông sâu › trùm vùng pha 1"
+  }
+ ],
+ "hu-ngu-tinh-mo-man": [
+  {
+   "nguon": "all",
+   "ham": "(ẩn danh)@monster_art.js:1984",
+   "rong": 127,
+   "cao": 35,
+   "canh": "Hang biển › nước dâng Ngư Tinh"
+  },
+  {
+   "nguon": "all",
+   "ham": "(ẩn danh)@monster_art.js:1986",
+   "rong": 32,
+   "cao": 27,
+   "canh": "Hang biển › trùm vùng pha 1"
+  }
+ ],
+ "hu-moc-tinh-set": [
+  {
+   "nguon": "all",
+   "ham": "F.set@monster_art.js:1285",
+   "rong": 27,
+   "cao": 11,
+   "canh": "Rừng già › trùm vùng pha 1"
+  }
+ ],
+ "hu-ho-tinh-lua": [
+  {
+   "nguon": "all",
+   "ham": "F.lua@monster_art.js:1289",
+   "rong": 252,
+   "cao": 166,
+   "canh": "Lâu đài cổ › trùm vùng pha 1"
+  }
+ ],
+ "noi-anh-trum": [
+  {
+   "nguon": "all",
+   "ham": "F.song@monster_art.js:1293",
+   "rong": 56,
+   "cao": 5,
+   "canh": "Hang biển › trùm vùng pha 1"
+  },
+  {
+   "nguon": "all",
+   "ham": "F.hat@monster_art.js:1287",
+   "rong": 18,
+   "cao": 9,
+   "canh": "Rừng già › trùm vùng pha 1"
+  },
+  {
+   "nguon": "all",
+   "ham": "laRoi@monster_art.js:2042",
+   "rong": 141,
+   "cao": 28,
+   "canh": "Rừng già › trùm vùng pha 1"
+  },
+  {
+   "nguon": "all",
+   "ham": "gaiRe@monster_art.js:2044",
+   "rong": 39,
+   "cao": 7,
+   "canh": "Rừng già › trùm vùng pha 1"
+  },
+  {
+   "nguon": "all",
+   "ham": "(ẩn danh)@monster_art.js:2280",
+   "rong": 3,
+   "cao": 3,
+   "canh": "Hang biển › phòng quái › sword fire (Thức tỉnh)"
+  }
+ ],
+ "hu-bom-song": [
+  {
+   "nguon": "all",
+   "ham": "Object.drawBomb@mobs.js:709",
+   "rong": 13,
+   "cao": 15,
+   "canh": "Sông sâu › chết"
+  },
+  {
+   "nguon": "all",
+   "ham": "Object.drawBomb@mobs.js:696",
+   "rong": 12,
+   "cao": 13,
+   "canh": "Rừng già › phòng quái › sword poison"
+  }
+ ],
+ "noi-bong-lang": [
+  {
+   "nguon": "all",
+   "ham": "putNpc@village_scene.js:182",
+   "rong": 407,
+   "cao": 111,
+   "canh": "Làng (giữa làng)"
+  }
+ ],
+ "hu-quang-den": [
+  {
+   "nguon": "all",
+   "ham": "ambLight@village_scene.js:930",
+   "rong": 326,
+   "cao": 91,
+   "canh": "Làng (giữa làng)"
+  },
+  {
+   "nguon": "vc",
+   "ham": "ambLive@room_art.js:2134",
+   "rong": 18,
+   "cao": 17,
+   "canh": "Lâu đài cổ › phòng bắt đầu"
+  },
+  {
+   "nguon": "vc",
+   "ham": "ambLive@room_art.js:2097",
+   "rong": 92,
+   "cao": 21,
+   "canh": "Lâu đài cổ › phòng bắt đầu"
+  }
+ ],
+ "hu-lang-lo-ren": [
+  {
+   "nguon": "all",
+   "ham": "ambLight@village_scene.js:937",
+   "rong": 59,
+   "cao": 23,
+   "canh": "Làng (giữa làng)"
+  },
+  {
+   "nguon": "all",
+   "ham": "ambLight@village_scene.js:934",
+   "rong": 5,
+   "cao": 7,
+   "canh": "Làng (giữa làng)"
+  },
+  {
+   "nguon": "all",
+   "ham": "luaLo@village_scene.js:953",
+   "rong": 19,
+   "cao": 20,
+   "canh": "Làng (giữa làng)"
+  }
+ ],
+ "hu-gon-nuoc": [
+  {
+   "nguon": "all",
+   "ham": "ambGround@village_scene.js:920",
+   "rong": 19,
+   "cao": 65,
+   "canh": "Làng (giữa làng)"
+  },
+  {
+   "nguon": "all",
+   "ham": "ambGround@village_scene.js:913",
+   "rong": 45,
+   "cao": 255,
+   "canh": "Làng (giữa làng)"
+  },
+  {
+   "nguon": "all",
+   "ham": "VS.drawWorld@village_scene.js:1051",
+   "rong": 42,
+   "cao": 218,
+   "canh": "Làng (giữa làng)"
+  },
+  {
+   "nguon": "vc",
+   "ham": "ambLive@room_art.js:2072",
+   "rong": 21,
+   "cao": 9,
+   "canh": "Hang biển › phòng quái › sword fire (Thức tỉnh)"
+  }
+ ],
+ "noi-la-domdom-lang": [
+  {
+   "nguon": "all",
+   "ham": "ambTop@village_scene.js:944",
+   "rong": 1,
+   "cao": 2,
+   "canh": "Làng (giữa làng)"
+  },
+  {
+   "nguon": "all",
+   "ham": "VS.drawWorld@village_scene.js:1109",
+   "rong": 441,
+   "cao": 170,
+   "canh": "Làng (giữa làng)"
+  }
+ ],
+ "gd-lang-thanh-duoi": [
+  {
+   "nguon": "all",
+   "ham": "VS.drawStrip@village_scene.js:1141",
+   "rong": 218,
+   "cao": 33,
+   "canh": "Làng (giữa làng)"
+  },
+  {
+   "nguon": "all",
+   "ham": "(ẩn danh)@village_scene.js:1147",
+   "rong": 206,
+   "cao": 20,
+   "canh": "Làng (giữa làng)"
+  }
+ ],
+ "gd-cham-moi": [
+  {
+   "nguon": "all",
+   "ham": "(ẩn danh)@village_scene.js:1150",
+   "rong": 130,
+   "cao": 6,
+   "canh": "Làng (giữa làng)"
+  },
+  {
+   "nguon": "all",
+   "ham": "T.btn@ui_theme.js:283",
+   "rong": 6,
+   "cao": 6,
+   "canh": "Làng › do › skill"
+  }
+ ],
+ "gd-bong-thoai": [
+  {
+   "nguon": "all",
+   "ham": "VS.bubble@village_scene.js:1130",
+   "rong": 110,
+   "cao": 72,
+   "canh": "Làng › lai › map"
+  }
+ ],
+ "gd-ban-do-cham": [
+  {
+   "nguon": "all",
+   "ham": "VS.mapDash@village_scene.js:1298",
+   "rong": 371,
+   "cao": 167,
+   "canh": "Làng › lai › map"
+  },
+  {
+   "nguon": "all",
+   "ham": "mapScreen@village.js:190 ⇐ vienTranh@village_scene.js:1255 + VS.mapArt@village_scene.js:1248 [canvas 480x270]",
+   "rong": 480,
+   "cao": 270,
+   "canh": "Làng › lai › map"
+  }
+ ],
+ "hu-bia-hat": [
+  {
+   "nguon": "all",
+   "ham": "B.ve@bia.js:125",
+   "rong": 113,
+   "cao": 96,
+   "canh": "Màn chào"
+  },
+  {
+   "nguon": "all",
+   "ham": "B.ve@bia.js:119",
+   "rong": 241,
+   "cao": 74,
+   "canh": "Màn chào"
+  }
+ ],
+ "gd-bia-gach": [
+  {
+   "nguon": "all",
+   "ham": "titleLogo@village.js:918",
+   "rong": 132,
+   "cao": 1,
+   "canh": "Màn chào"
+  }
+ ],
+ "giu-lop-phu": [
+  {
+   "nguon": "all",
+   "ham": "VS.drawWorld@village_scene.js:1112",
+   "rong": 480,
+   "cao": 270,
+   "canh": "Làng › ren › forge › sharpen"
+  },
+  {
+   "nguon": "all",
+   "ham": "B.veMan@bia.js:143",
+   "rong": 320,
+   "cao": 122,
+   "canh": "Màn chào"
+  },
+  {
+   "nguon": "all",
+   "ham": "heroArt@hanh_trang.js:74",
+   "rong": 110,
+   "cao": 11,
+   "canh": "Làng › Hành trang › hero"
+  }
+ ],
+ "gd-o-diem": [
+  {
+   "nguon": "all",
+   "ham": "ui.rect@engine.js:621",
+   "rong": 57,
+   "cao": 92,
+   "canh": "Làng › do › skill"
+  }
+ ],
+ "gd-chuong-o": [
+  {
+   "nguon": "all",
+   "ham": "(ẩn danh)@chuong_ui.js:102",
+   "rong": 71,
+   "cao": 3,
+   "canh": "Làng › do › chuong"
+  },
+  {
+   "nguon": "all",
+   "ham": "(ẩn danh)@chuong_ui.js:89",
+   "rong": 206,
+   "cao": 45,
+   "canh": "Làng › do › chuong"
+  },
+  {
+   "nguon": "all",
+   "ham": "(ẩn danh)@chuong_ui.js:82",
+   "rong": 94,
+   "cao": 116,
+   "canh": "Làng › do › chuong"
+  }
+ ],
+ "gd-long-khung": [
+  {
+   "nguon": "all",
+   "ham": "khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 [canvas 652x454]",
+   "rong": 326,
+   "cao": 227,
+   "canh": "Làng › ren › forge › sharpen"
+  },
+  {
+   "nguon": "all",
+   "ham": "oConAnh@ui_theme.js:778",
+   "rong": 302,
+   "cao": 164,
+   "canh": "Làng › ren › forge › sharpen"
+  }
+ ],
+ "noi-so-yeu-quai": [
+  {
+   "nguon": "all",
+   "ham": "veQuai@so_yeu_quai.js:378 ⇐ MA.draw@monster_art.js:1531 [canvas 46x50]",
+   "rong": 125,
+   "cao": 93,
+   "canh": "Làng › tu › so"
+  },
+  {
+   "nguon": "all",
+   "ham": "veO@so_yeu_quai.js:437",
+   "rong": 32,
+   "cao": 32,
+   "canh": "Làng › tu › so"
+  }
+ ],
+ "hu-hat-bui": [
+  {
+   "nguon": "vc",
+   "ham": "ambLive@room_art.js:2026",
+   "rong": 268,
+   "cao": 27,
+   "canh": "Rừng già › phòng bắt đầu"
+  },
+  {
+   "nguon": "vc",
+   "ham": "ambLive@room_art.js:2104",
+   "rong": 14,
+   "cao": 43,
+   "canh": "Rừng già › phòng bắt đầu"
+  }
+ ],
+ "hu-suong-dai": [
+  {
+   "nguon": "vc",
+   "ham": "ambLive@room_art.js:2112",
+   "rong": 296,
+   "cao": 190,
+   "canh": "Rừng già › phòng bắt đầu"
+  },
+  {
+   "nguon": "vc",
+   "ham": "ambLive@room_art.js:2122",
+   "rong": 296,
+   "cao": 116,
+   "canh": "Hang biển › phòng bắt đầu"
+  }
+ ],
+ "hu-moi-truong-rung-co-lay": [
+  {
+   "nguon": "vc",
+   "ham": "ambLive@room_art.js:2055",
+   "rong": 291,
+   "cao": 157,
+   "canh": "Rừng già › phòng bắt đầu"
+  }
+ ],
+ "hu-moi-truong-rung-nam-sang": [
+  {
+   "nguon": "vc",
+   "ham": "ambLive@room_art.js:2062",
+   "rong": 263,
+   "cao": 9,
+   "canh": "Rừng già › phòng bắt đầu"
+  }
+ ],
+ "hu-moi-truong-bien-giot": [
+  {
+   "nguon": "vc",
+   "ham": "ambLive@room_art.js:2080",
+   "rong": 31,
+   "cao": 5,
+   "canh": "Hang biển › phòng bắt đầu"
+  },
+  {
+   "nguon": "vc",
+   "ham": "ambLive@room_art.js:2084",
+   "rong": 233,
+   "cao": 6,
+   "canh": "Hang biển › phòng bắt đầu"
+  }
+ ],
+ "noi-moi-truong-co-san": [
+  {
+   "nguon": "vc",
+   "ham": "ambLive@room_art.js:2092",
+   "rong": 101,
+   "cao": 3,
+   "canh": "Hang biển › phòng bắt đầu"
+  },
+  {
+   "nguon": "vc",
+   "ham": "ambLive@room_art.js:2035",
+   "rong": 217,
+   "cao": 63,
+   "canh": "Rừng già › phòng bắt đầu"
+  }
+ ],
+ "gd-cot-nang-bien-lau": [
+  {
+   "nguon": "vc",
+   "ham": "A.bg@room_art.js:2250 ⇐ crystalA@room_art.js:477 + Object.paintVoid@room_art.js:506 + backPass@room_art.js:1925 [điểm ảnh code] [canvas 480x270]",
+   "rong": 480,
+   "cao": 270,
+   "canh": "Hang biển › phòng quái › sword fire (Thức tỉnh)"
+  },
+  {
+   "nguon": "vc",
+   "ham": "A.bg@room_art.js:2250 ⇐ runners@room_art.js:1079 + Object.paintVoid@room_art.js:246 + backPass@room_art.js:1925 [điểm ảnh code] [canvas 480x270]",
+   "rong": 480,
+   "cao": 270,
+   "canh": "Lâu đài cổ › phòng quái › sword ice"
+  }
+ ],
+ "hu-luoi-lua": [
+  {
+   "nguon": "vc",
+   "ham": "tongue@fx.js:1447",
+   "rong": 17,
+   "cao": 14,
+   "canh": "Rừng già › phòng elite"
+  }
+ ],
+ "hu-vet-vung": [
+  {
+   "nguon": "vc",
+   "ham": "quad@fx.js:1096",
+   "rong": 64,
+   "cao": 44,
+   "canh": "Rừng già › phòng quái › sword poison"
+  }
+ ]
+}

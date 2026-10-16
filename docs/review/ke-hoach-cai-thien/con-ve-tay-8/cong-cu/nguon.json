@@ -1,0 +1,583 @@
+[
+ {
+  "ma": "gd-ruot-thanh",
+  "src": [
+   [
+    "all",
+    "^doMau@ui_theme"
+   ],
+   [
+    "all",
+    "put@ui_theme.js:42 ⇐ .*191x5"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-mau-quai-nho",
+  "src": [
+   [
+    "all",
+    "^mobBars@stage.js:839"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-ruot-thanh-trum",
+  "src": [
+   [
+    "all",
+    "^T.bossBar@ui_theme.js:888"
+   ],
+   [
+    "all",
+    "^T.bar@ui_theme.js:1007"
+   ]
+  ]
+ },
+ {
+  "ma": "hu-bao-vung",
+  "src": [
+   [
+    "all",
+    "^BT.draw@bao_truoc"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-icon-linh-khi",
+  "src": [
+   [
+    "all",
+    "^gem@vk_moi.js:717"
+   ],
+   [
+    "all",
+    "^Object.gem@vk_moi.js:717"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-vien-o-vk",
+  "src": [
+   [
+    "all",
+    "^E.vien@ep_do"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-vien-man-do",
+  "src": [
+   [
+    "all",
+    "^vignette@fx.js"
+   ],
+   [
+    "all",
+    "^vien@noi_gian"
+   ]
+  ]
+ },
+ {
+  "ma": "hu-nuoc-dang",
+  "src": [
+   [
+    "rieng",
+    "room_art.js:2221"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-song-dong",
+  "src": [
+   [
+    "song",
+    "^veDai@song_luat.js:243"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-song-cau",
+  "src": [
+   [
+    "song",
+    "^veCau@song_luat.js:256"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-song-vung-sau",
+  "src": [
+   [
+    "song",
+    "^veSau@song_luat.js:266"
+   ]
+  ]
+ },
+ {
+  "ma": "hu-vung-luc-binh",
+  "src": [
+   [
+    "song",
+    "^veVung@song_luat.js:277"
+   ]
+  ]
+ },
+ {
+  "ma": "hu-vung-dau-chay",
+  "src": [
+   [
+    "song",
+    "^veVung@song_luat.js:281"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-vat-luc-binh",
+  "src": [
+   [
+    "song",
+    "^veLucBinh@song_luat.js:310"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-vat-den-dau",
+  "src": [
+   [
+    "song",
+    "^veDenDau@song_luat.js:317"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-nen-song",
+  "src": [
+   [
+    "all",
+    "River.floors"
+   ],
+   [
+    "all",
+    "^roomFore@room_art.js:2271 ⇐ reedClump@room_art.js:1362 \\[canvas"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-tham-lau",
+  "src": [
+   [
+    "all",
+    "runners@room_art.js:1079"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-loi-mon-rung",
+  "src": [
+   [
+    "all",
+    "trSan@room_art.js:861"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-san-thuong-luong",
+  "src": [
+   [
+    "all",
+    "^veSan@thuong_luong"
+   ]
+  ]
+ },
+ {
+  "ma": "hu-ngu-tinh-mo-man",
+  "src": [
+   [
+    "all",
+    "monster_art.js:1984$"
+   ],
+   [
+    "all",
+    "monster_art.js:1986$"
+   ]
+  ]
+ },
+ {
+  "ma": "hu-tia-gay",
+  "src": [
+   [
+    "all",
+    "^F.set@monster_art"
+   ]
+  ]
+ },
+ {
+  "ma": "hu-lua-bung",
+  "src": [
+   [
+    "all",
+    "^F.lua@monster_art"
+   ]
+  ]
+ },
+ {
+  "ma": "noi-anh-trum",
+  "src": [
+   [
+    "all",
+    "^F.song@monster_art"
+   ],
+   [
+    "all",
+    "^F.hat@monster_art"
+   ],
+   [
+    "all",
+    "^laRoi@monster_art"
+   ],
+   [
+    "all",
+    "^gaiRe@monster_art"
+   ],
+   [
+    "all",
+    "monster_art.js:2280$"
+   ]
+  ]
+ },
+ {
+  "ma": "hu-bom-song",
+  "src": [
+   [
+    "all",
+    "^Object.drawBomb@mobs.js:709"
+   ],
+   [
+    "all",
+    "^Object.drawBomb@mobs.js:696"
+   ]
+  ]
+ },
+ {
+  "ma": "noi-bong-lang",
+  "src": [
+   [
+    "all",
+    "^putNpc@village_scene"
+   ],
+   [
+    "all",
+    "^Object.hero@hero_tinhlinh"
+   ]
+  ]
+ },
+ {
+  "ma": "hu-quang-den",
+  "src": [
+   [
+    "all",
+    "^ambLight@village_scene.js:930"
+   ],
+   [
+    "vc",
+    "^ambLive@room_art.js:2134"
+   ],
+   [
+    "vc",
+    "^ambLive@room_art.js:2097"
+   ]
+  ]
+ },
+ {
+  "ma": "hu-lang-tia-lo",
+  "src": [
+   [
+    "all",
+    "^ambLight@village_scene.js:937"
+   ],
+   [
+    "all",
+    "^ambLight@village_scene.js:934"
+   ],
+   [
+    "all",
+    "^luaLo@village_scene"
+   ]
+  ]
+ },
+ {
+  "ma": "hu-gon-nuoc",
+  "src": [
+   [
+    "all",
+    "^ambGround@village_scene.js:920"
+   ],
+   [
+    "all",
+    "^ambGround@village_scene.js:913"
+   ],
+   [
+    "all",
+    "^VS.drawWorld@village_scene.js:1051"
+   ],
+   [
+    "vc",
+    "^ambLive@room_art.js:2072"
+   ]
+  ]
+ },
+ {
+  "ma": "noi-la-domdom-lang",
+  "src": [
+   [
+    "all",
+    "^ambTop@village_scene.js:944"
+   ],
+   [
+    "all",
+    "^VS.drawWorld@village_scene.js:1109"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-lang-thanh-duoi",
+  "src": [
+   [
+    "all",
+    "^VS.drawStrip"
+   ],
+   [
+    "all",
+    "village_scene.js:1147$"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-cham-moi",
+  "src": [
+   [
+    "all",
+    "village_scene.js:1150$"
+   ],
+   [
+    "all",
+    "^T.btn@ui_theme.js:283"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-bong-thoai",
+  "src": [
+   [
+    "all",
+    "^VS.bubble@village_scene.js:1130"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-ban-do-cham",
+  "src": [
+   [
+    "all",
+    "^VS.mapDash"
+   ],
+   [
+    "all",
+    "^mapScreen@village.js:190"
+   ]
+  ]
+ },
+ {
+  "ma": "hu-bia-hat",
+  "src": [
+   [
+    "all",
+    "^B.ve@bia.js:125"
+   ],
+   [
+    "all",
+    "^B.ve@bia.js:119"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-bia-gach",
+  "src": [
+   [
+    "all",
+    "^titleLogo@village.js"
+   ]
+  ]
+ },
+ {
+  "ma": "giu-lop-phu",
+  "src": [
+   [
+    "all",
+    "^VS.drawWorld@village_scene.js:1112"
+   ],
+   [
+    "all",
+    "^B.veMan@bia.js:143"
+   ],
+   [
+    "all",
+    "^heroArt@hanh_trang"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-o-diem",
+  "src": [
+   [
+    "all",
+    "^ui.rect@engine.js:621"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-chuong-o",
+  "src": [
+   [
+    "all",
+    "chuong_ui.js:102$"
+   ],
+   [
+    "all",
+    "chuong_ui.js:89$"
+   ],
+   [
+    "all",
+    "chuong_ui.js:82$"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-long-khung",
+  "src": [
+   [
+    "all",
+    "khungDat@ui_theme.js:455 ⇐ R@ui_theme.js:80 \\[canvas 652x454"
+   ],
+   [
+    "all",
+    "^oConAnh@ui_theme.js:778"
+   ]
+  ]
+ },
+ {
+  "ma": "noi-so-yeu-quai",
+  "src": [
+   [
+    "all",
+    "^veQuai@so_yeu_quai"
+   ],
+   [
+    "all",
+    "^veO@so_yeu_quai"
+   ]
+  ]
+ },
+ {
+  "ma": "hu-hat-bui",
+  "src": [
+   [
+    "vc",
+    "^ambLive@room_art.js:2026"
+   ],
+   [
+    "vc",
+    "^ambLive@room_art.js:2104"
+   ]
+  ]
+ },
+ {
+  "ma": "hu-suong-dai",
+  "src": [
+   [
+    "vc",
+    "^ambLive@room_art.js:2112"
+   ],
+   [
+    "vc",
+    "^ambLive@room_art.js:2122"
+   ]
+  ]
+ },
+ {
+  "ma": "hu-moi-truong-rung-co-lay",
+  "src": [
+   [
+    "vc",
+    "^ambLive@room_art.js:2055"
+   ]
+  ]
+ },
+ {
+  "ma": "hu-moi-truong-rung-nam-sang",
+  "src": [
+   [
+    "vc",
+    "^ambLive@room_art.js:2062"
+   ]
+  ]
+ },
+ {
+  "ma": "hu-moi-truong-bien-giot",
+  "src": [
+   [
+    "vc",
+    "^ambLive@room_art.js:2080"
+   ],
+   [
+    "vc",
+    "^ambLive@room_art.js:2084"
+   ]
+  ]
+ },
+ {
+  "ma": "noi-moi-truong-co-san",
+  "src": [
+   [
+    "vc",
+    "^ambLive@room_art.js:2092"
+   ],
+   [
+    "vc",
+    "^ambLive@room_art.js:2035"
+   ]
+  ]
+ },
+ {
+  "ma": "gd-cot-nang-bien-lau",
+  "src": [
+   [
+    "vc",
+    "A.bg@room_art.js:2250 ⇐ crystalA@room_art.js:477 \\+ Object.paintVoid"
+   ],
+   [
+    "vc",
+    "A.bg@room_art.js:2250 ⇐ runners@room_art.js:1079 \\+ Object.paintVoid"
+   ]
+  ]
+ },
+ {
+  "ma": "hu-luoi-lua",
+  "src": [
+   [
+    "vc",
+    "^tongue@fx.js:1447"
+   ]
+  ]
+ },
+ {
+  "ma": "hu-vet-vung",
+  "src": [
+   [
+    "vc",
+    "^quad@fx.js:1096"
+   ]
+  ]
+ }
+]

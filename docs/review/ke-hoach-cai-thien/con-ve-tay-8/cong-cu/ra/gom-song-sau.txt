@@ -1,0 +1,64 @@
+  0 U f=120   n=120     khungDat@ui_theme.js:455 ⇐ (ẩn danh)@ui_theme.js:767 [canvas 586x50]   | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+  1 U f=120   n=120     khungDat@ui_theme.js:455 ⇐ (ẩn danh)@ui_theme.js:974 [canvas 240x24]   | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+  2 U f=120   n=120     put@ui_theme.js:42 ⇐ (ẩn danh)@ui_theme.js:975 [canvas 106x7]          | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+  3 U f=120   n=480     doMau@ui_theme.js:957                                                  | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+  4 U f=120   n=120     put@ui_theme.js:42 ⇐ P@ui_theme.js:81 [canvas 106x7]                   | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+  5 U f=120   n=120     khungDat@ui_theme.js:455 ⇐ (ẩn danh)@ui_theme.js:974 [canvas 216x18]   | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+  6 U f=120   n=120     put@ui_theme.js:42 ⇐ (ẩn danh)@ui_theme.js:975 [canvas 94x4]           | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+  7 U f=120   n=120     put@ui_theme.js:42 ⇐ P@ui_theme.js:81 [canvas 94x4]                    | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+  8 U f=120   n=120     blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 42x46] | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+  9 U f=120   n=120     blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 40x44] | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+ 10 U f=120   n=120     khungDat@ui_theme.js:455 ⇐ (ẩn danh)@ui_theme.js:767 [canvas 170x136]  | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+ 11 U f=120   n=240     blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 62x45] | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+ 12 U f=120   n=240     E.vien@ep_do.js:313                                                    | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+ 13 U f=120   n=240     put@ui_theme.js:42 ⇐ (ẩn danh)@ui_theme.js:961 [canvas 48x3]           | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+ 14 U f=120   n=120     khungDat@ui_theme.js:455 ⇐ (ẩn danh)@ui_theme.js:767 [canvas 220x34]   | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+ 15 U f=120   n=120     gem@vk_moi.js:717                                                      | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+ 16 U f=120   n=120     gem@vk_moi.js:718                                                      | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+ 17 U f=120   n=120     gem@vk_moi.js:719                                                      | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+ 18 U f=120   n=120     blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 66x66] | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+ 19 U f=120   n=120     blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 30x33] | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+ 20 U f=120   n=120     blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 72x77] | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+ 21 U f=120   n=360     blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 54x58] | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+ 22 U f=120   n=240     blit@btn_art.js:763 ⇐ Buf.canvas@btn_art.js:129 [điểm ảnh code] [canvas 17x9] | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+8 cảnh)
+ 23 W f=98    n=98      roomFore@room_art.js:2271 ⇐ stake@room_art.js:1367 + reedClump@room_art.js:1362 + stake@room_art.js:1368 [canvas 480x270] | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 3, Sông sâu › v (+6 cảnh)
+ 24 W f=65    n=775     veLucBinh@song_luat.js:307                                             | Sông sâu › địa hình 0, Sông sâu › địa hình 5, Sông sâu › địa hình 3 (+7 cảnh)
+ 25 W f=65    n=455     veLucBinh@song_luat.js:309                                             | Sông sâu › địa hình 0, Sông sâu › địa hình 1, Sông sâu › địa hình 3 (+7 cảnh)
+ 26 W f=65    n=4160    veLucBinh@song_luat.js:310                                             | Sông sâu › địa hình 0, Sông sâu › địa hình 1, Sông sâu › địa hình 3 (+7 cảnh)
+ 27 W f=65    n=65      veLucBinh@song_luat.js:311                                             | Sông sâu › địa hình 0, Sông sâu › địa hình 1, Sông sâu › địa hình 3 (+7 cảnh)
+ 28 W f=65    n=650     veLucBinh@song_luat.js:312                                             | Sông sâu › địa hình 0, Sông sâu › địa hình 1, Sông sâu › địa hình 3 (+7 cảnh)
+ 29 W f=65    n=65      veLucBinh@song_luat.js:313                                             | Sông sâu › địa hình 0, Sông sâu › địa hình 1, Sông sâu › địa hình 3 (+7 cảnh)
+ 30 W f=65    n=130     veLucBinh@song_luat.js:314                                             | Sông sâu › địa hình 0, Sông sâu › địa hình 1, Sông sâu › địa hình 3 (+7 cảnh)
+ 31 W f=60    n=1500    veVung@song_luat.js:277                                                | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+2 cảnh)
+ 32 W f=60    n=360     veVung@song_luat.js:278                                                | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+2 cảnh)
+ 33 W f=60    n=180     veVung@song_luat.js:279                                                | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v (+2 cảnh)
+ 34 W f=44    n=44      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + lnS@room_art.js:1357 + Object.paintVoid@room_art.js:1385 [canvas 480x270] | Sông sâu › vũng lục bình / dầu cháy 3, Sông sâu › vũng lục bình / dầu cháy 4, Sông sâu › đ (+1 cảnh)
+ 35 W f=44    n=44      veDai@song_luat.js:229                                                 | Sông sâu › vũng lục bình / dầu cháy 3, Sông sâu › vũng lục bình / dầu cháy 5, Sông sâu › đ (+1 cảnh)
+ 36 W f=44    n=132     veDai@song_luat.js:230                                                 | Sông sâu › vũng lục bình / dầu cháy 3, Sông sâu › vũng lục bình / dầu cháy 5, Sông sâu › đ (+1 cảnh)
+ 37 W f=44    n=552     veDai@song_luat.js:242                                                 | Sông sâu › vũng lục bình / dầu cháy 5, Sông sâu › vũng lục bình / dầu cháy 3, Sông sâu › đ (+1 cảnh)
+ 38 W f=44    n=4416    veDai@song_luat.js:243                                                 | Sông sâu › vũng lục bình / dầu cháy 5, Sông sâu › vũng lục bình / dầu cháy 3, Sông sâu › đ (+1 cảnh)
+ 39 W f=44    n=44      veCau@song_luat.js:254                                                 | Sông sâu › vũng lục bình / dầu cháy 3, Sông sâu › vũng lục bình / dầu cháy 5, Sông sâu › đ (+1 cảnh)
+ 40 W f=44    n=792     veCau@song_luat.js:256                                                 | Sông sâu › vũng lục bình / dầu cháy 3, Sông sâu › vũng lục bình / dầu cháy 5, Sông sâu › đ (+1 cảnh)
+ 41 W f=44    n=88      veCau@song_luat.js:257                                                 | Sông sâu › vũng lục bình / dầu cháy 3, Sông sâu › vũng lục bình / dầu cháy 5, Sông sâu › đ (+1 cảnh)
+ 42 W f=44    n=176     veCau@song_luat.js:258                                                 | Sông sâu › vũng lục bình / dầu cháy 3, Sông sâu › vũng lục bình / dầu cháy 5, Sông sâu › đ (+1 cảnh)
+ 43 W f=39    n=475     veDenDau@song_luat.js:317                                              | Sông sâu › địa hình 0, Sông sâu › địa hình 5, Sông sâu › địa hình 1 (+3 cảnh)
+ 44 W f=39    n=117     veDenDau@song_luat.js:318                                              | Sông sâu › địa hình 0, Sông sâu › địa hình 1, Sông sâu › địa hình 5 (+3 cảnh)
+ 45 W f=39    n=273     veDenDau@song_luat.js:319                                              | Sông sâu › địa hình 0, Sông sâu › địa hình 1, Sông sâu › địa hình 5 (+3 cảnh)
+ 46 W f=39    n=78      veDenDau@song_luat.js:320                                              | Sông sâu › địa hình 0, Sông sâu › địa hình 1, Sông sâu › địa hình 5 (+3 cảnh)
+ 47 W f=39    n=156     veDenDau@song_luat.js:322                                              | Sông sâu › địa hình 0, Sông sâu › địa hình 1, Sông sâu › địa hình 5 (+3 cảnh)
+ 48 W f=39    n=78      veDenDau@song_luat.js:323                                              | Sông sâu › địa hình 0, Sông sâu › địa hình 1, Sông sâu › địa hình 5 (+3 cảnh)
+ 49 W f=39    n=507     veDenDau@song_luat.js:324                                              | Sông sâu › địa hình 0, Sông sâu › địa hình 1, Sông sâu › địa hình 5 (+3 cảnh)
+ 50 W f=36    n=900     veVung@song_luat.js:281                                                | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v
+ 51 W f=36    n=504     veVung@song_luat.js:284                                                | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v
+ 52 W f=36    n=72      veVung@song_luat.js:286                                                | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › v
+ 53 W f=22    n=22      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + stake@room_art.js:1367 + River.floors@room_art.js:1418 [canvas 480x270] | Sông sâu › vũng lục bình / dầu cháy 0, Sông sâu › địa hình 0
+ 54 W f=22    n=22      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + Object.door@room_art.js:1504 + lnS@room_art.js:1357 [canvas 480x270] | Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › địa hình 1
+ 55 W f=22    n=22      roomFore@room_art.js:2271 ⇐ reedClump@room_art.js:1362 + reedClump@room_art.js:1363 [canvas 480x270] | Sông sâu › vũng lục bình / dầu cháy 1, Sông sâu › địa hình 1
+ 56 W f=22    n=22      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + (ẩn danh)@room_art.js:1395 + lnS@room_art.js:1357 [canvas 480x270] | Sông sâu › vũng lục bình / dầu cháy 5, Sông sâu › địa hình 5
+ 57 W f=10    n=10      A.bg@room_art.js:2250 ⇐ Object.paintVoid@room_art.js:1387 + stake@room_art.js:1367 + lnS@room_art.js:1357 [canvas 480x270] | Sông sâu › địa hình 2
+ 58 W f=10    n=210     veSau@song_luat.js:266                                                 | Sông sâu › địa hình 2
+ 59 W f=10    n=190     veSau@song_luat.js:267                                                 | Sông sâu › địa hình 2
+ 60 W f=10    n=170     veSau@song_luat.js:268                                                 | Sông sâu › địa hình 2
+ 61 W f=10    n=130     veSau@song_luat.js:269                                                 | Sông sâu › địa hình 2
+ 62 W f=10    n=100     veSau@song_luat.js:270                                                 | Sông sâu › địa hình 2
+ 63 W f=10    n=20      veSau@song_luat.js:272                                                 | Sông sâu › địa hình 2
