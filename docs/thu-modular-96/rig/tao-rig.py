@@ -7,6 +7,7 @@ Việc làm:
      chụp vai, chụp khuỷu, chụp gối.  -> rig/giap/*.png
   2. Ghi metadata điểm neo / thứ tự chồng                         -> rig/rig.json
   3. Dựng trang tự chứa (ảnh base64) từ khuôn                      -> rig/kiem-tra-rig.html
+  (Thêm bộ giáp "Gen" từ rig/giap-gen/gen.json — chạy tao-giap-gen.py trước.)
 
 Chỉ ĐỌC ../data.json và ../sheets/ (theo DATA.layerOrder). Không sửa tệp nào ngoài rig/.
 Chạy:  python3 docs/thu-modular-96/rig/tao-rig.py
@@ -145,6 +146,53 @@ rig = {
                    'chupVai': 'Chụp vai', 'chupKhuyu': 'Chụp khuỷu', 'chupGoi': 'Chụp gối'},
     'frameOverrides': {},
 }
+# ---------- 2b. Bộ giáp "Gen" (ảnh gen thật, do tao-giap-gen.py cắt + thu nhỏ) ----------
+GEN = json.load(open(os.path.join(RIG, 'giap-gen', 'gen.json')))
+GP = GEN['pieces']
+gimg = ['giap-vai', 'giap-cang-tay', 'giap-ong-chan', 'giap-nguc', 'chup-vai', 'chup-khuyu', 'chup-goi']
+
+
+def gbone(id_, ten, nhom, ben, anh, tu, den, sau, **k):
+    g = GP[anh]
+    p = bone(id_, ten, nhom, ben, anh, tu, den, g['anchorStart'], g['anchorEnd'], sau, t=g['thicknessScale'])
+    p.update(k)
+    return p
+
+
+def gcap(id_, ten, nhom, ben, anh, tai, sau, mask):
+    return cap(id_, ten, nhom, ben, anh, tai, GP[anh]['anchor'], sau, mask)
+
+
+rig['armorSets'] = {
+    'may': {'name': 'Máy vẽ', 'about': 'bộ vẽ tối giản bằng mã (dùng images/pieces ở trên)', 'usesTopLevel': True},
+    'gen': {
+        'name': 'Gen',
+        'about': 'Ảnh gen thật %s: 4 mảnh cắt + thu nhỏ giữ nét bằng tao-giap-gen.py; 3 chụp khớp là hình bộ máy vẽ tô bằng bảng màu gen.' % GEN['source'],
+        'images': {k: 'giap-gen/%s.png' % k for k in gimg},
+        'imagesX2': {k: 'giap-gen/%s-x2.png' % k for k in gimg},
+        'imagesX2Note': 'Bản ×2 CHỈ dùng cho chế độ xem "Phóng to nhân vật ×2 (192)". Điểm neo ghi theo cỡ ×1; bản ×2 đúng gấp đôi cỡ nên neo ×2.',
+        'imageSources': {k: ('cắt từ ảnh gen, gốc cắt: giap-gen/goc-%s.png' % k) if k.startswith('giap') else GP[k]['note'] for k in gimg},
+        'palette': GEN['palette'],
+        'pieces': [
+            gbone('vaiSau', 'Giáp vai sau', 'vai', 'sau', 'giap-vai', 'shoulderBack', 'elbowBack', 'rearArm'),
+            gbone('cangTaySau', 'Giáp cẳng tay sau', 'cangTay', 'sau', 'giap-cang-tay', 'elbowBack', 'wristBack', 'rearArm'),
+            gcap('chupVaiSau', 'Chụp vai sau', 'chupVai', 'sau', 'chup-vai', 'shoulderBack', 'rearArm', ['rearArm']),
+            gcap('chupKhuyuSau', 'Chụp khuỷu sau', 'chupKhuyu', 'sau', 'chup-khuyu', 'elbowBack', 'rearArm', ['rearArm']),
+            gbone('ongChanSau', 'Giáp ống chân sau', 'ongChan', 'sau', 'giap-ong-chan', 'kneeBack', 'ankleBack', 'rearPants'),
+            gcap('chupGoiSau', 'Chụp gối sau', 'chupGoi', 'sau', 'chup-goi', 'kneeBack', 'rearPants', ['rearLeg', 'rearPants']),
+            # giáp ngực nhỏ: theo đoạn cổ → giữa hông (chỉ phủ 60% đầu đoạn), vẽ trên thân, dưới chân/tay trước
+            gbone('nguc', 'Giáp ngực nhỏ', 'nguc', 'truoc', 'giap-nguc', 'neck', 'hipCenter', 'chestArmor', boneFrac=GEN['chestFrac']),
+            gbone('ongChanTruoc', 'Giáp ống chân trước', 'ongChan', 'truoc', 'giap-ong-chan', 'kneeFront', 'ankleFront', 'frontPants'),
+            gcap('chupGoiTruoc', 'Chụp gối trước', 'chupGoi', 'truoc', 'chup-goi', 'kneeFront', 'frontPants', ['frontLeg', 'frontPants']),
+            gbone('cangTayTruoc', 'Giáp cẳng tay trước', 'cangTay', 'truoc', 'giap-cang-tay', 'elbowFront', 'wristFront', 'frontArm'),
+            gbone('vaiTruoc', 'Giáp vai trước', 'vai', 'truoc', 'giap-vai', 'shoulderFront', 'elbowFront', 'frontArm'),
+            gcap('chupKhuyuTruoc', 'Chụp khuỷu trước', 'chupKhuyu', 'truoc', 'chup-khuyu', 'elbowFront', 'frontArm', ['frontArm']),
+            gcap('chupVaiTruoc', 'Chụp vai trước', 'chupVai', 'truoc', 'chup-vai', 'shoulderFront', 'frontArm', ['frontArm']),
+        ],
+        'groupNames': dict(rig['groupNames'], nguc='Giáp ngực nhỏ'),
+    },
+}
+rig['boneFrac'] = 'boneFrac (tuỳ chọn, mặc định 1): khớp cuối dùng để gắn = from + (to − from) × boneFrac. Giáp ngực dùng 0,6 của đoạn cổ → giữa hông.'
 json.dump(rig, open(os.path.join(RIG, 'rig.json'), 'w'), ensure_ascii=False, indent=1)
 
 # ---------- 3. Trang tự chứa ----------
@@ -172,6 +220,10 @@ for L in DATA['layerOrder']:
     anh['layer:' + L] = b64(full)
 for k, p in rig['images'].items():
     anh['img:' + k] = b64(os.path.join(RIG, p))
+for k, p in rig['armorSets']['gen']['images'].items():
+    anh['gen:' + k] = b64(os.path.join(RIG, p))
+for k, p in rig['armorSets']['gen']['imagesX2'].items():
+    anh['genx2:' + k] = b64(os.path.join(RIG, p))
 
 # chỉ đưa vào trang phần data cần dùng (khung, khớp, thứ tự lớp)
 DATA_MIN = {k: DATA[k] for k in ('name', 'frameWidth', 'frameHeight', 'frameCount', 'pivot', 'scale',
@@ -187,4 +239,4 @@ open(os.path.join(RIG, 'kiem-tra-rig.html'), 'w', encoding='utf-8').write(html)
 if loi:
     print('LỖI:', *loi, sep='\n  ')
     sys.exit(1)
-print('xong: %d ảnh giáp, %d lớp thân, trang %d KB' % (len(rig['images']), sum(k.startswith('layer:') for k in anh), len(html) // 1024))
+print('xong: %d ảnh giáp máy vẽ + %d gen, %d lớp thân, trang %d KB' % (len(rig['images']), len(rig['armorSets']['gen']['images']), sum(k.startswith('layer:') for k in anh), len(html) // 1024))
