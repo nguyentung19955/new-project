@@ -134,6 +134,18 @@
     if (G.TRUM9 == null) G.TRUM9 = !het && !tat('trum9');
     if (G.SONG9 == null) G.SONG9 = !tat('vt9') && !tat('songnhanh');
   }
+  // ---------- VẼ TAY 8 GỘP: TRẬN (16/10, docs/review/ke-hoach-cai-thien/ve-tay-8-gop-tran/bao-cao.md) ----------
+  // Ảnh gộp g2–g8 (lửa, nước, hiệu ứng trắng, vật Sông sâu, ô lặp Sông sâu, phủ màn, tường / cửa Sông sâu).
+  //   ?gop8=0   G.GOP8   mọi chỗ của phiên này vẽ như bản trước (code / để trống)
+  //   ?vecode=1          như cũ: vẽ code toàn bộ (cũng tắt phiên này)
+  // G.gop8(mã): cờ bật, không ?vecode=1, ảnh mã đó sẵn sàng. G.gop8Bat(): cờ bật và không ?vecode=1 (dùng cho ảnh giao diện gd-*).
+  {
+    let q = '';
+    try { q = typeof location !== 'undefined' ? String(location.search || '') : ''; } catch (e) { q = ''; }
+    if (G.GOP8 == null) G.GOP8 = !/[?&]gop8=0\b/i.test(q);
+  }
+  G.gop8Bat = () => G.GOP8 !== false && G.VE_CODE !== true && !G.noRender;
+  G.gop8 = (ma) => G.gop8Bat() && FA.co(ma);
   // Bóng dưới chân ở LÀNG (lớp làng không bị chặn vẽ): ảnh hu-bong-chan khi G.NOI9. Trả true nếu đã vẽ.
   G.bongLang = function (c, x, y, rx, mo) {
     if (G.NOI9 === false || !c || !(rx > 0)) return false;
@@ -317,6 +329,23 @@
   // KHÔNG dùng cho ảnh co theo bán kính vùng thật (vũng, vùng báo trước, nổ có bán kính sát thương): hình phải khớp đúng vùng chạm.
   const bac05 = (s) => (G.TILE05 !== false && s >= 0.75 ? Math.round(s * 2) / 2 : s);
   FA.bac05 = bac05;
+  // Vẽ tay 8 gộp: vẽ khung f của ảnh ma KÉO vào ô (x, y, w, h) (vũng bầu dục theo rx / ry, dải dòng chảy, nước dâng...). quay: xoay 90°
+  // theo chiều kim đồng hồ (ô vẫn tính sau khi xoay). Trả về true nếu đã vẽ.
+  FA.veO = function (c, ma, f, x, y, w, h, mo, mau, quay) {
+    const a = FA.ds[ma];
+    if (!a || !a.ready || !c || !(w > 0) || !(h > 0)) return false;
+    f = ((f | 0) % a.so + a.so) % a.so;
+    const n = a.net, sw = a.fw * n, sh = a.fh * n;
+    c.save();
+    try {
+      c.imageSmoothingEnabled = false;
+      if (mo != null && mo < 1) c.globalAlpha *= clamp(mo, 0, 1);
+      const img = mau ? FA.nhuom(a, mau) || a.img : a.img;
+      if (quay) { c.translate(x + w, y); c.rotate(Math.PI / 2); c.drawImage(img, (f % a.cot) * sw, Math.floor(f / a.cot) * sh, sw, sh, 0, 0, h, w); }
+      else c.drawImage(img, (f % a.cot) * sw, Math.floor(f / a.cot) * sh, sw, sh, x, y, w, h);
+    } finally { c.restore(); }
+    return true;
+  };
   function veF(c, a, f, x, y, goc, co, lat, mo, mau, kieu) {
     const s = a.co * (co > 0 ? co : 1);
     let flip = !!lat, rot = 0;

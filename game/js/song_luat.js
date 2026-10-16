@@ -224,8 +224,41 @@
       else { R(x - i, y - dy * i, 1, 2, col); R(x + i, y - dy * i, 1, 2, col); }
     }
   }
+  // 16/10 vẽ tay 8 gộp (?gop8=0 / ?vecode=1 tắt): dải, cầu, vũng sâu, vũng độc / vệt dầu, lục bình, đèn dầu bằng ảnh gen (G.gop8).
+  // Chỉ là hình: vùng, tốc dòng, thời gian không đổi. Mũi tên lớn nhấp nháy của phòng dạy (d.lon) vẫn vẽ code để thật nổi.
+  const FA = () => G.fxAnh;
+  function daiAnh(d, t) { // ô lặp hu-song-dong (mũi tên chảy XUỐNG) kéo theo bề ngang dải, cuộn theo đúng tốc dòng, xoay theo hướng chảy
+    if (!(G.gop8 && G.gop8('hu-song-dong'))) return false;
+    const a = FA().ds['hu-song-dong'], doc = d.doc, w = d.x1 - d.x0, h = d.y1 - d.y0;
+    const fx = doc ? 0 : d.huong, fy = doc ? d.huong : 0, rong = doc ? w : h, dai = doc ? h : w;
+    const sp = doc ? CFG.v * CFG.ky : CFG.v, L = rong * (a.fh / a.fw), off = ((t * sp + d.ph) % L + L) % L;
+    cx.save();
+    try {
+      cx.beginPath(); cx.rect(d.x0, d.y0, w, h); cx.clip();
+      cx.translate(d.x0 + w / 2, d.y0 + h / 2); cx.rotate(Math.atan2(-fx, fy));
+      for (let y = -dai / 2 - L + off; y < dai / 2; y += L) FA().veO(cx, 'hu-song-dong', 0, -rong / 2, Math.floor(y), rong, Math.ceil(L) + 1);
+    } finally { cx.restore(); }
+    return true;
+  }
+  function cauAnh(c, doc) {
+    const S = G.spriteCustom, a = G.gop8Bat && G.gop8Bat() && S && S.gdSan ? S.gdSan('gd-song-cau') : null;
+    if (!a) return false;
+    const [x0, y0, x1, y1] = c, w = x1 - x0, h = y1 - y0;
+    cx.save();
+    try {
+      cx.imageSmoothingEnabled = false;
+      if (doc) cx.drawImage(a.img, x0 - 4, y0 - 3, w + 8, h + 6);
+      else { cx.translate(x1 + 3, y0 - 4); cx.rotate(Math.PI / 2); cx.drawImage(a.img, 0, 0, h + 8, w + 6); }
+    } finally { cx.restore(); }
+    return true;
+  }
   function veDai(d, t) {
     const doc = d.doc, w = d.x1 - d.x0, h = d.y1 - d.y0;
+    if (daiAnh(d, t)) {
+      if (d.lon && Math.floor(t * 2.5) % 2 === 0) { const hx = doc ? 0 : d.huong, hy = doc ? d.huong : 0, mx = (d.x0 + d.x1) / 2, my = (d.y0 + d.y1) / 2; for (let k = 0; k < 3; k++) muiTen(mx + hx * k * 6, my + hy * k * 5, hx, hy, 8, k === 2 ? '#ffffff' : 'rgba(255,255,255,0.75)'); }
+      for (const c of d.cau || []) veCau(c, doc);
+      return;
+    }
     R(d.x0, d.y0, w, h, 'rgba(14,44,48,0.78)');
     if (doc) { R(d.x0, d.y0, 2, h, 'rgba(200,224,216,0.55)'); R(d.x1 - 2, d.y0, 2, h, 'rgba(200,224,216,0.55)'); R(d.x0 + 2, d.y0, 3, h, 'rgba(0,0,0,0.25)'); }
     else { R(d.x0, d.y0, w, 2, 'rgba(200,224,216,0.55)'); R(d.x0, d.y1 - 2, w, 2, 'rgba(200,224,216,0.5)'); R(d.x0, d.y0 + 2, w, 3, 'rgba(0,0,0,0.25)'); }
@@ -250,6 +283,7 @@
     for (const c of d.cau || []) veCau(c, doc);
   }
   function veCau(c, doc) { // cầu tre: ván ngang dòng, hai sợi dây chão hai mép
+    if (cauAnh(c, doc)) return;
     const [x0, y0, x1, y1] = c, w = x1 - x0, h = y1 - y0;
     R(x0 + 2, y0 + 3, w, h, 'rgba(0,0,0,0.35)');
     if (doc) {
@@ -263,6 +297,7 @@
     }
   }
   function veSau(o, t) { // vũng nước sâu lạnh: xanh thẫm, viền bọt trắng (khác vũng nông xám-lục của nền)
+    if (G.gop8 && G.gop8('hu-song-vung-sau')) { const a = FA().ds['hu-song-vung-sau'], w = o.rx * 2.36, hh = o.ry * 2.4; FA().veO(cx, 'hu-song-vung-sau', FA().khung(a, t + o.x * 0.01), o.x - w / 2, o.y - hh / 2, w, hh); return; }
     ELL(o.x, o.y + 1, o.rx + 2, o.ry + 2, 'rgba(0,0,0,0.35)');
     ELL(o.x, o.y, o.rx + 1, o.ry + 1, '#d8eef0');
     ELL(o.x, o.y, o.rx, o.ry, '#0a3a4e');
@@ -273,6 +308,13 @@
   }
   function veVung(z, t) { // vũng độc lục bình / vệt lửa dầu đang cháy (mờ dần về cuối)
     const a = Math.max(0, Math.min(1, z.life / CFG.vungGiay)), f = Math.floor(t * 8) % 3;
+    const ma = z.song === 'lucbinh' ? 'hu-vung-luc-binh' : 'hu-vung-dau-chay';
+    if (G.gop8 && G.gop8(ma)) {
+      const A = FA().ds[ma], w = z.r * 2.2, h = w * (A.fh / A.fw);
+      const k = z.song === 'lucbinh' ? Math.min(A.so - 1, Math.floor((1 - a) * A.so)) : FA().khung(A, t);
+      FA().veO(cx, ma, k, z.x - w / 2, z.y - h * (z.song === 'lucbinh' ? 0.5 : 0.62), w, h, z.song === 'lucbinh' ? 1 : Math.min(1, a * 1.6));
+      return;
+    }
     if (z.song === 'lucbinh') {
       ELL(z.x, z.y, z.r, z.r * 0.45, 'rgba(120,60,160,' + (0.35 * a + 0.1).toFixed(2) + ')');
       for (let i = 0; i < 6; i++) { const an = i * 1.05 + t, x = z.x + Math.cos(an) * z.r * 0.6, y = z.y + Math.sin(an) * z.r * 0.25; R(x, y - f, 2, 2, 'rgba(200,140,255,' + (0.8 * a).toFixed(2) + ')'); }
@@ -304,6 +346,7 @@
     if (k > 0.6) { R(x - 15, y, 2, 1, 'rgba(' + col + ',0.6)'); R(x + 14, y, 2, 1, 'rgba(' + col + ',0.6)'); }
   }
   function veLucBinh(x, y, t) {
+    if (G.gop8 && G.gop8('hu-vat-luc-binh')) { FA().ve(cx, 'hu-vat-luc-binh', x, y + 4, t + x * 0.01, 0, 1.2, false, 1); return; }
     quang(x, y, '190,120,255', t);
     const b = Math.round(Math.sin(t * 1.7 + x) * 0.6);
     ELL(x, y + 1, 11, 4, 'rgba(0,0,0,0.3)');
@@ -314,6 +357,7 @@
     const f = Math.floor(t * 4) % 3; R(x - 7 + f * 2, y - 22 - f + b, 1, 1, '#d8a8ff'); R(x + 6 - f, y - 20 - f * 2 + b, 1, 1, '#c890ff');
   }
   function veDenDau(x, y, t) {
+    if (G.gop8 && G.gop8('hu-vat-den-dau')) { FA().ve(cx, 'hu-vat-den-dau', x, y + 2, t + x * 0.01, 0, 1.2, false, 1); return; }
     quang(x, y, '255,170,80', t);
     ELL(x, y + 1, 6, 2, 'rgba(0,0,0,0.3)');
     R(x - 1, y - 30, 3, 31, '#3a3020'); R(x, y - 30, 1, 31, '#a08a5a'); for (let k = y - 26; k < y; k += 6) R(x - 1, k, 3, 1, '#2a2216'); // cọc tre

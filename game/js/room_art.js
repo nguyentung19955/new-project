@@ -44,7 +44,9 @@
   // ---------- Ảnh AI của cửa (tools/tach-phong, phiên A2): gd-cua-<rung|bien|lau>-<tren|duoi|ben>[-khoa], gd-cua-o-khoa, gd-cua-dau-lau ----------
   // Nền phòng dựng sẵn ở cỡ 480x270, còn ảnh AI nét gấp đôi: nên ảnh KHÔNG vẽ vào nền dựng sẵn mà ghi thành lệnh, vẽ thẳng mỗi khung
   // (nền: ngay sau nền phòng, dưới nhân vật; trước: ngay sau lớp phủ trước, đè lên nhân vật). Không có tệp thì không có lệnh nào.
-  const gdA = (ma) => { const s = G.spriteCustom; return s && s.gdSan ? s.gdSan(ma) : null; };
+  // 16/10 vẽ tay 8 gộp: ảnh Sông sâu (gd-nen-song-*, gd-cua-song-*, gd-tt-song-*) chỉ dùng khi G.gop8Bat() (?gop8=0 / ?vecode=1: vẽ code như phiên 2B)
+  const SONG_ANH = /^gd-(?:nen|cua|tt)-song-/;
+  const gdA = (ma) => { const s = G.spriteCustom; if (SONG_ANH.test(ma) && !(G.gop8Bat && G.gop8Bat())) return null; return s && s.gdSan ? s.gdSan(ma) : null; };
   let ghi = null; // đang dựng phòng: danh sách lệnh vẽ sống của lớp hiện tại
   const song = (f) => { if (ghi) ghi.push(f); else f(); };
   const bam = (v) => { const n = G.NET || 1; return Math.round(v * n) / n; };
@@ -732,12 +734,14 @@
   const TR_BAT_BUOC = ['san0', 'san1', 'san2', 'tuong-sau', 'tuong-ben', 'tuong-truoc', 'ngoai'];
   const trNho = new WeakMap(); // ảnh đã nạp -> bản thu về cỡ game (1 điểm ảnh game = 1 điểm ảnh)
   let trBao = false;
+  // 16/10 vẽ tay 8 gộp: cỡ riêng theo vùng (Sông sâu: tường sau / trước là đoạn lặp liền cắt từ ảnh gen, không phải 64 điểm)
+  const TR_CO_V = { song: { 'tuong-sau': [165, 49], 'tuong-truoc': [48, 12] } };
   function trAnh(k, vung) {
     const a = gdA('gd-nen-' + (vung || 'rung') + '-' + k);
     if (!a) return null;
     let o = trNho.get(a);
     if (!o || o.img !== a.img) {
-      const co = TR_CO[k], x = mk(co[0], co[1]);
+      const co = (TR_CO_V[vung] && TR_CO_V[vung][k]) || TR_CO[k], x = mk(co[0], co[1]);
       x.imageSmoothingEnabled = a.pw !== co[0] || a.ph !== co[1];
       x.drawImage(a.img, 0, 0, a.pw, a.ph, 0, 0, co[0], co[1]);
       o = { img: a.img, cv: x.canvas };
@@ -770,7 +774,8 @@
     if (G.NEN_TILE === false) return null;
     const t = {};
     for (const k in TR_CO) t[k] = trAnh(k, vung);
-    const thieu = TR_BAT_BUOC.filter((k) => !t[k]);
+    // vẽ tay 8 gộp: Sông sâu chưa có ảnh sàn (gd-nen-song-san*) vẫn dùng tường / nước ngoài / mép bằng ảnh; sàn vẽ code (River.floors hỏi t.san0)
+    const thieu = (vung === 'song' ? TR_BAT_BUOC.filter((k) => !/^san/.test(k)) : TR_BAT_BUOC).filter((k) => !t[k]);
     if (!thieu.length) return t;
     if (!trBaoV[vung]) {
       const d = (G.spriteCustom && G.spriteCustom.gd) || {};
@@ -1441,7 +1446,7 @@
       let luoi = false;
       for (let x = g.fx0 + 8; x < g.fx1 - 6; x += ri(rn, 22, 34)) {
         if (near(x, 24)) continue;
-        if (rn() < 0.55) { stake(x, g.fy0 + 2, ri(rn, 14, 22)); if (!luoi && !near(x + 22, 26) && x + 22 < g.fx1 - 6 && rn() < 0.5) { luoi = true; stake(x + 22, g.fy0 + 2, 18); for (let i = 0; i < 6; i++) { lnS(x, g.fy0 - 16 + i * 2, x + 22, g.fy0 - 14 + i * 2, 'rgba(200,190,150,0.45)'); } for (let k = 0; k < 22; k += 4) lnS(x + k, g.fy0 - 16, x + k + 1, g.fy0 - 5, 'rgba(200,190,150,0.4)'); } }
+        if (rn() < 0.55) { const hc = ri(rn, 14, 22); if (!ttMot('song', 'coc', x, g.fy0 + 3)) stake(x, g.fy0 + 2, hc); if (!luoi && !near(x + 22, 26) && x + 22 < g.fx1 - 6 && rn() < 0.5) { luoi = true; stake(x + 22, g.fy0 + 2, 18); for (let i = 0; i < 6; i++) { lnS(x, g.fy0 - 16 + i * 2, x + 22, g.fy0 - 14 + i * 2, 'rgba(200,190,150,0.45)'); } for (let k = 0; k < 22; k += 4) lnS(x + k, g.fy0 - 16, x + k + 1, g.fy0 - 5, 'rgba(200,190,150,0.4)'); } }
         else reedClump(x, g.fy0 + 1, ri(rn, 12, 20), rn);
       }
       // chân bờ sẫm, gợn bùn
@@ -1517,14 +1522,14 @@
   // đồ trang trí Sông sâu (gd-tt-song-<tên> khi có ảnh D4): thuyền úp, chum sành, bó cọc tre, khóm lau
   DECOR[3] = [
     (x, y) => { ell(x, y + 1, 13, 3, 'rgba(0,0,0,0.3)'); if (ttMot('song', 'thuyen-up', x, y + 1)) return; r(x - 12, y - 6, 24, 7, DARK); r(x - 11, y - 5, 22, 5, '#5a4630'); r(x - 11, y - 5, 22, 1, '#7a6040'); r(x - 13, y - 2, 2, 3, '#5a4630'); r(x + 11, y - 2, 2, 3, '#5a4630'); for (let k = -8; k < 10; k += 5) r(x + k, y - 5, 1, 5, '#3e3020'); r(x - 4, y - 7, 6, 2, '#6a5236'); },
-    (x, y) => { ell(x, y + 1, 7, 3, 'rgba(0,0,0,0.3)'); if (ttMot('song', 'chum', x, y + 1)) return; ell(x, y - 6, 6, 7, DARK); ell(x, y - 6, 5, 6, '#6a4a34'); r(x - 4, y - 10, 2, 7, '#8a6448'); r(x - 3, y - 14, 6, 2, '#4a3424'); r(x - 2, y - 14, 4, 1, '#122a2a'); },
-    (x, y) => { ell(x, y + 1, 7, 2, 'rgba(0,0,0,0.3)'); if (ttMot('song', 'coc-tre', x, y + 1)) return; stake(x - 3, y + 1, 14); stake(x + 2, y + 1, 18); stake(x + 6, y + 1, 11); r(x - 5, y - 8, 13, 2, S4.rope); },
+    (x, y) => { ell(x, y + 1, 7, 3, 'rgba(0,0,0,0.3)'); if (ttMot('song', ['chum', 'da-bun'], x, y + 1)) return; /* vẽ tay 8 gộp: chưa có ảnh chum → cụm đá bùn */ ell(x, y - 6, 6, 7, DARK); ell(x, y - 6, 5, 6, '#6a4a34'); r(x - 4, y - 10, 2, 7, '#8a6448'); r(x - 3, y - 14, 6, 2, '#4a3424'); r(x - 2, y - 14, 4, 1, '#122a2a'); },
+    (x, y) => { ell(x, y + 1, 7, 2, 'rgba(0,0,0,0.3)'); if (ttMot('song', ['coc-tre', 'coc'], x, y + 1)) return; stake(x - 3, y + 1, 14); stake(x + 2, y + 1, 18); stake(x + 6, y + 1, 11); r(x - 5, y - 8, 13, 2, S4.rope); },
     (x, y, g, rn) => { if (ttMot('song', 'khom-lau', x, y + 1)) { rn(); return; } reedClump(x, y + 1, 16, rn); },
   ];
   KHOA_Y.song = [12, 3, 4];
   Object.assign(River, { shade: [12, 7, 4, 5], voidCol: S4.void, sat: 0.84, centerLight: 0.08, edgeDark: 0.18, ma: 'song', cuaNen: mix(S4.floor, S4.bank, 0.4) });
   TRV.song = { lat: true, duong: 0 };
-  River.floors = River.floors.map((ve, kieu) => (g, rn) => { const t = tileVung('song'); if (!t) return ve(g, rn); trSan(t, g, rn, kieu, TRV.song); });
+  River.floors = River.floors.map((ve, kieu) => (g, rn) => { const t = tileVung('song'); if (!t || !t.san0 || !t.san1 || !t.san2) return ve(g, rn); trSan(t, g, rn, kieu, TRV.song); });
 
   // ====================================================================
   // DỰNG PHÒNG
