@@ -88,6 +88,54 @@ Gửi kèm: `que-chay-8.png`, `nhan-vat-zed-dung-x4.png`
 ## 6. Giới hạn đã biết
 
 - Xoay ảnh pixel nhiều độ sẽ làm méo nét. Thân xoay khoảng 14°, đầu khoảng 8° thì còn chấp nhận được. Tay và đùi khi chạy xoay tới 40–60°, nên đồ ở tay và chân phải vẽ **theo từng khung** (như P5) hoặc chia mảnh nhỏ.
-- Que đi, chạy và kiếm do máy dựng bằng góc khớp (động học thuận), **không đo từ hình chạy thật** của Zed. Khung xương đúng tỉ lệ Zed, nhưng dáng chạy không trùng từng điểm với `docs/anh-goc/zed/v2/00-than-dung-di-chay.png` hàng 3.
+- Que đi, `que-chay-8` và kiếm do máy dựng bằng góc khớp (động học thuận). Từ phiên 2 đã có **`que-chay-that`** đo từ hình chạy thật (mục 7) — dùng que này khi gen đồ cho chạy.
 - Khớp của dáng đứng được đo bằng mắt trên ảnh phóng ×4, sai khoảng ±2 điểm ảnh (±0.3 điểm game).
 - Đầu Zed rất to (chiếm khoảng 47% chiều cao), nên mũ/nón quyết định dáng nhìn. Nên thử mũ trước.
+
+## 7. Chạy THẬT (phiên 2): que đo từ sprite, bộ phận tách từng khung
+
+Nguồn: hàng 3 (chạy, 8 khung) của `docs/anh-goc/zed/zed-v2-canonical.png`, cùng tấm và cùng tỉ lệ với dáng đứng ở trên. Ô que = ô 256 của tấm gốc dời xuống 9 px cho đất ở y = 248 (không co, không dời ngang). Sinh lại: `python3 docs/thu-modular/do-chay-that.py`.
+
+| Tệp | Là gì |
+|---|---|
+| `zed-chay-that-hang.png` | Hàng chạy thật trơn: 8 ô 256×256, nền xanh, cùng đường đất. **Gửi kèm khi gen.** |
+| `que-chay-that-chong-zed.png` / `.gif` | Que đo được đè lên Zed thật từng khung. **Gửi kèm khi gen.** |
+| `que-chay-that-chong-zed-luoi.png` | Như trên ×3, có lưới toạ độ và số khớp (2 hàng × 4 khung) |
+| `que-chay-that.png`, `.gif`, `-luoi.png` | Que trơn, giống các que phiên 1 |
+| `que-chay-that.json` | 23 khớp **từng khung** (px ô + điểm game), góc xương, neo đồ, nguồn từng khớp (tự động / chỉnh tay) |
+| `que-chay-that.chinh-tay.json` | Các khớp đã sửa tay sau khi soát bằng mắt, có ghi chú từng khung |
+| `que-chay-that-tu-dong-va-chinh.png` | So: que cam = đo tự động, que đen = sau chỉnh tay |
+| `bo-phan-chay/khung-NN/*.png` | Bộ phận cắt từ sprite thật **mỗi khung**: đầu, thân, tay trên/dưới, bàn tay, đùi, cẳng chân, bàn chân (phải/trái) + khăn |
+| `bo-phan-chay.json`, `bo-phan-chay.png` | Vị trí đặt (`dat_tai_o`), pivot, góc, lớp từng bộ phận từng khung; ảnh tổng: gốc / bản đồ màu / ráp lại / tách rời |
+| `mau-gen/vung-*.png` | 1 hàng 8 khung: Zed xám, **vùng món đồ cần phủ tô cam** (áo, quần, mũ, găng, giày). Gửi kèm khi gen theo từng phần |
+| `ghep-thu-giap-non-chay-that.png` / `.gif` | Giáp + nón lá có sẵn đặt lên Zed chạy thật bằng neo từng khung |
+
+Trong hàng này tay chân **không đổi bên**: chân phải (gần) = chân trước, chân trái (xa) = chân sau đá lên; tay phải = nắm tay trước ngực, tay trái = tay xa (ló dưới tay phải ở khung 1, 2, 7, 8; vung ra sau ở khung 3–6). Khung 3 và 6 là lúc bay (hai chân không chạm đất).
+
+### Prompt mẫu gen theo TỪNG PHẦN cho cả chu kỳ chạy
+
+Gửi **đúng 3 ảnh theo thứ tự**: (1) `zed-chay-that-hang.png`, (2) `que-chay-that-chong-zed.png`, (3) `mau-gen/vung-<phần>.png`. Ảnh ra phải là **1 hàng 8 ô, mỗi ô 256×256**, để cắt thẳng theo ô và đặt chồng lên khung cùng số.
+
+**C1. Áo (thân + tay áo ngắn)** — ảnh 3: `mau-gen/vung-ao.png`
+> Pixel art, 1 hàng 8 khung, mỗi ô 256×256, đúng vị trí và cỡ như ảnh 1. Mỗi khung vẽ CHỈ chiếc áo ngắn tay vải nâu phủ đúng vùng tô cam ở ảnh 3 của khung đó, theo dáng chạy của ảnh 1 và que ảnh 2. Không vẽ người, không vẽ que. Nền xanh #00FF00 thuần, không chữ, không bóng.
+
+**C2. Quần** — ảnh 3: `mau-gen/vung-quan.png`
+> Pixel art, 1 hàng 8 khung, mỗi ô 256×256, khớp từng khung ảnh 1. Mỗi khung vẽ CHỈ chiếc quần võ ống thụng màu chàm phủ đúng vùng tô cam ở ảnh 3 (chân trước đậm, chân sau nhạt hơn). Không vẽ người, không vẽ que. Nền #00FF00 thuần, không chữ, không bóng.
+
+**C3. Mũ / tóc** — ảnh 3: `mau-gen/vung-mu.png`
+> Pixel art, 1 hàng 8 khung, mỗi ô 256×256, khớp từng khung ảnh 1. Mỗi khung vẽ CHỈ chiếc mũ trụ đồng đội trên đầu ở vùng tô cam ảnh 3, chừa lỗ cho 2 sừng, nghiêng theo đầu từng khung. Không vẽ mặt, không người. Nền #00FF00 thuần, không chữ, không bóng.
+
+**C4. Găng tay** — ảnh 3: `mau-gen/vung-gang.png`
+> Pixel art, 1 hàng 8 khung, mỗi ô 256×256, khớp từng khung ảnh 1. Mỗi khung vẽ CHỈ đôi găng da đỏ ở vùng tô cam ảnh 3 (cẳng tay + nắm tay), tay xa nhạt hơn. Không người. Nền #00FF00 thuần, không chữ, không bóng.
+
+**C5. Giày / dép** — ảnh 3: `mau-gen/vung-giay.png`
+> Pixel art, 1 hàng 8 khung, mỗi ô 256×256, khớp từng khung ảnh 1. Mỗi khung vẽ CHỈ đôi giày vải đen ở vùng tô cam ảnh 3, đúng hướng bàn chân từng khung. Không người. Nền #00FF00 thuần, không chữ, không bóng.
+
+Nhận ảnh về: mở `kiem-tra.html` → dáng `chay-that` → bật **Zed thật dưới que**, so từng khung với `que-chay-that.json` (neo `neo_do` của khung đó). Món đồ đúng thì nằm gọn trong vùng tô cam của khung cùng số; lệch chỗ thì gửi Claude đo lại.
+
+### Giới hạn của phiên 2
+
+- Gối và khuỷu nằm trong quần thụng và ống tay, nên đặt theo chỗ gập của khối quần/ống tay: sai số khoảng ±5 px (±0.7 điểm game). Các khớp khác ±3 px.
+- Tự động chỉ giữ được đỉnh đầu, tâm đầu, cằm; 19/23 khớp mỗi khung là chỉnh tay (lý do ghi ở `que-chay-that.chinh-tay.json`). Bộ đo tự động vẫn để lại để đo nhanh hàng khác, nhưng phải soát.
+- Thân chạy nghiêng 18–32° so với dáng đứng: giáp vẽ ở dáng đứng xoay theo thì méo và lệch (xem `ghep-thu-giap-non-chay-that.png`). Vì vậy đồ cho chạy nên gen theo từng khung như C1–C5.
+- Hàng chạy game đang dùng (`moi/03-chay-v4`, 12 khung) là bản vẽ khác (bộ ninja, cỡ khác), không phải hàng đo ở đây.
