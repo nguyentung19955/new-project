@@ -182,6 +182,19 @@
      136
     ]
    ]
+  },
+  "gen-sua": {
+   "name": "Gen sửa: màu thân/tay/chân lấy từ ảnh gen sửa hàng chạy gốc (đầu, tóc giữ sprite; hình bóng giữ như tô da)",
+   "sheets": {
+    "rearLeg": "sheets/nen-gen-sua/rearLeg.png",
+    "rearArm": "sheets/nen-gen-sua/rearArm.png",
+    "body": "sheets/nen-gen-sua/body.png",
+    "frontLeg": "sheets/nen-gen-sua/frontLeg.png",
+    "frontArm": "sheets/nen-gen-sua/frontArm.png",
+    "head": "sheets/head.png",
+    "hair": "sheets/hair.png"
+   },
+   "source": "anh-gen/cu-ti-than-tran-sua-chay-12.png"
   }
  },
  "defaultBodyBase": "to-da",
@@ -908,7 +921,8 @@
  },
  "genFullRows": {
   "cu-ti-do-xanh-chay-12": "anh-gen-96/cu-ti-do-xanh-chay-12.png",
-  "cu-ti-giap-chay-12": "anh-gen-96/cu-ti-giap-chay-12.png"
+  "cu-ti-giap-chay-12": "anh-gen-96/cu-ti-giap-chay-12.png",
+  "cu-ti-than-tran-sua-chay-12": "anh-gen-96/cu-ti-than-tran-sua-chay-12.png"
  },
  "source": {
   "gameSheet": "game/art/custom/zed-moi.sprite.json, dong_tac.chay (hàng 2, 12 khung, 0,6 giây/vòng)",
@@ -1028,7 +1042,7 @@
   "Chân TRƯỚC/SAU giữ cùng một chân suốt 12 khung (chân trước = chân trụ ở khung 0).",
   "Nền cơ thể (bodyLayers) = điểm ảnh gốc của đầu, tóc, tay, bàn chân, cổ + thân/chân trần dựng thêm (da + khố) ở đúng hình bóng áo/quần gốc từng khung.",
   "Trang phục (outfitLayers) thay theo 2 ô: ao = torsoOutfit + belt, quan = rearPants + pants + frontPants. Mỗi bộ trong outfits có đủ 5 lớp.",
-  "Thân nền có 2 bản (bodyBases): \"cu\" = sheets/<lớp>.png (da phẳng + khố, ghép với đồ gốc ra đúng từng điểm ảnh game); \"to-da\" = thay 3 lớp rearLeg/body/frontLeg bằng sheets/nen-to-da/ (tô da có đổ bóng lên đúng hình bóng sprite, quần đùi xám). Lớp nào bản to-da không có thì dùng sheets chung.",
+  "Thân nền có 2 bản (bodyBases): \"cu\" = sheets/<lớp>.png (da phẳng + khố, ghép với đồ gốc ra đúng từng điểm ảnh game); \"to-da\" = thay 3 lớp rearLeg/body/frontLeg bằng sheets/nen-to-da/ (tô da có đổ bóng lên đúng hình bóng sprite, quần đùi xám). Lớp nào bản to-da không có thì dùng sheets chung. \"gen-sua\" = 7 lớp nền: body/frontLeg/rearLeg/frontArm/rearArm ở sheets/nen-gen-sua/ (cùng độ trong suốt với tô da, chỉ đổi màu chỗ nhìn thấy theo ảnh gen), head/hair dùng sheet sprite gốc.",
   "Giáp vai trước tách 2 lớp: frontShoulderArmor (dưới tay trước, chỉ phần cẳng tay đi ngang qua) và frontShoulderArmorTop (trên bắp tay)."
  ],
  "checks": [
@@ -1072,6 +1086,29 @@
     "daiBayNgoaiNguoi": 7,
     "diemToDa": 415,
     "voiDoGocKhacGameChiOVienMo": 93,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
+   },
+   "genSua": {
+    "khung": 0,
+    "iouTruocCan": 0.887,
+    "iouSauCan": 0.887,
+    "doi": [
+     0,
+     0
+    ],
+    "diemLayTuGen": 568,
+    "diemHutLapToDa": 34,
+    "diemGenLoDaCat": 5,
+    "diemGenTrungDauToc": 562,
+    "hinhBongLech": 0,
     "lo": {
      "ao_goc+quan_goc": 0,
      "ao_moi+quan_goc": 0,
@@ -1132,6 +1169,29 @@
      "ao_goc+quan_gen-xanh": 0,
      "ao_gen-xanh+quan_gen-xanh": 0
     }
+   },
+   "genSua": {
+    "khung": 1,
+    "iouTruocCan": 0.877,
+    "iouSauCan": 0.877,
+    "doi": [
+     0,
+     0
+    ],
+    "diemLayTuGen": 509,
+    "diemHutLapToDa": 34,
+    "diemGenLoDaCat": 9,
+    "diemGenTrungDauToc": 544,
+    "hinhBongLech": 0,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
    }
   },
   {
@@ -1174,6 +1234,29 @@
     "daiBayNgoaiNguoi": 21,
     "diemToDa": 384,
     "voiDoGocKhacGameChiOVienMo": 92,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
+   },
+   "genSua": {
+    "khung": 2,
+    "iouTruocCan": 0.887,
+    "iouSauCan": 0.887,
+    "doi": [
+     0,
+     0
+    ],
+    "diemLayTuGen": 454,
+    "diemHutLapToDa": 41,
+    "diemGenLoDaCat": 5,
+    "diemGenTrungDauToc": 570,
+    "hinhBongLech": 0,
     "lo": {
      "ao_goc+quan_goc": 0,
      "ao_moi+quan_goc": 0,
@@ -1234,6 +1317,29 @@
      "ao_goc+quan_gen-xanh": 0,
      "ao_gen-xanh+quan_gen-xanh": 0
     }
+   },
+   "genSua": {
+    "khung": 3,
+    "iouTruocCan": 0.894,
+    "iouSauCan": 0.894,
+    "doi": [
+     0,
+     0
+    ],
+    "diemLayTuGen": 456,
+    "diemHutLapToDa": 21,
+    "diemGenLoDaCat": 14,
+    "diemGenTrungDauToc": 563,
+    "hinhBongLech": 0,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
    }
   },
   {
@@ -1276,6 +1382,29 @@
     "daiBayNgoaiNguoi": 23,
     "diemToDa": 425,
     "voiDoGocKhacGameChiOVienMo": 97,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
+   },
+   "genSua": {
+    "khung": 4,
+    "iouTruocCan": 0.89,
+    "iouSauCan": 0.89,
+    "doi": [
+     0,
+     0
+    ],
+    "diemLayTuGen": 547,
+    "diemHutLapToDa": 27,
+    "diemGenLoDaCat": 10,
+    "diemGenTrungDauToc": 568,
+    "hinhBongLech": 0,
     "lo": {
      "ao_goc+quan_goc": 0,
      "ao_moi+quan_goc": 0,
@@ -1336,6 +1465,29 @@
      "ao_goc+quan_gen-xanh": 0,
      "ao_gen-xanh+quan_gen-xanh": 0
     }
+   },
+   "genSua": {
+    "khung": 5,
+    "iouTruocCan": 0.891,
+    "iouSauCan": 0.891,
+    "doi": [
+     0,
+     0
+    ],
+    "diemLayTuGen": 589,
+    "diemHutLapToDa": 26,
+    "diemGenLoDaCat": 4,
+    "diemGenTrungDauToc": 560,
+    "hinhBongLech": 0,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
    }
   },
   {
@@ -1378,6 +1530,29 @@
     "daiBayNgoaiNguoi": 29,
     "diemToDa": 399,
     "voiDoGocKhacGameChiOVienMo": 105,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
+   },
+   "genSua": {
+    "khung": 6,
+    "iouTruocCan": 0.874,
+    "iouSauCan": 0.874,
+    "doi": [
+     0,
+     0
+    ],
+    "diemLayTuGen": 516,
+    "diemHutLapToDa": 55,
+    "diemGenLoDaCat": 6,
+    "diemGenTrungDauToc": 571,
+    "hinhBongLech": 0,
     "lo": {
      "ao_goc+quan_goc": 0,
      "ao_moi+quan_goc": 0,
@@ -1438,6 +1613,29 @@
      "ao_goc+quan_gen-xanh": 0,
      "ao_gen-xanh+quan_gen-xanh": 0
     }
+   },
+   "genSua": {
+    "khung": 7,
+    "iouTruocCan": 0.871,
+    "iouSauCan": 0.871,
+    "doi": [
+     0,
+     0
+    ],
+    "diemLayTuGen": 552,
+    "diemHutLapToDa": 38,
+    "diemGenLoDaCat": 20,
+    "diemGenTrungDauToc": 584,
+    "hinhBongLech": 0,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
    }
   },
   {
@@ -1480,6 +1678,29 @@
     "daiBayNgoaiNguoi": 29,
     "diemToDa": 383,
     "voiDoGocKhacGameChiOVienMo": 91,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
+   },
+   "genSua": {
+    "khung": 8,
+    "iouTruocCan": 0.876,
+    "iouSauCan": 0.876,
+    "doi": [
+     0,
+     0
+    ],
+    "diemLayTuGen": 474,
+    "diemHutLapToDa": 38,
+    "diemGenLoDaCat": 8,
+    "diemGenTrungDauToc": 581,
+    "hinhBongLech": 0,
     "lo": {
      "ao_goc+quan_goc": 0,
      "ao_moi+quan_goc": 0,
@@ -1540,6 +1761,29 @@
      "ao_goc+quan_gen-xanh": 0,
      "ao_gen-xanh+quan_gen-xanh": 0
     }
+   },
+   "genSua": {
+    "khung": 9,
+    "iouTruocCan": 0.891,
+    "iouSauCan": 0.891,
+    "doi": [
+     0,
+     0
+    ],
+    "diemLayTuGen": 490,
+    "diemHutLapToDa": 23,
+    "diemGenLoDaCat": 10,
+    "diemGenTrungDauToc": 586,
+    "hinhBongLech": 0,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
    }
   },
   {
@@ -1591,6 +1835,29 @@
      "ao_goc+quan_gen-xanh": 0,
      "ao_gen-xanh+quan_gen-xanh": 0
     }
+   },
+   "genSua": {
+    "khung": 10,
+    "iouTruocCan": 0.893,
+    "iouSauCan": 0.893,
+    "doi": [
+     0,
+     0
+    ],
+    "diemLayTuGen": 572,
+    "diemHutLapToDa": 39,
+    "diemGenLoDaCat": 5,
+    "diemGenTrungDauToc": 593,
+    "hinhBongLech": 0,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
    }
   },
   {
@@ -1633,6 +1900,29 @@
     "daiBayNgoaiNguoi": 33,
     "diemToDa": 511,
     "voiDoGocKhacGameChiOVienMo": 117,
+    "lo": {
+     "ao_goc+quan_goc": 0,
+     "ao_moi+quan_goc": 0,
+     "ao_goc+quan_moi": 0,
+     "ao_moi+quan_moi": 0,
+     "ao_gen-xanh+quan_goc": 0,
+     "ao_goc+quan_gen-xanh": 0,
+     "ao_gen-xanh+quan_gen-xanh": 0
+    }
+   },
+   "genSua": {
+    "khung": 11,
+    "iouTruocCan": 0.885,
+    "iouSauCan": 0.885,
+    "doi": [
+     0,
+     0
+    ],
+    "diemLayTuGen": 656,
+    "diemHutLapToDa": 46,
+    "diemGenLoDaCat": 5,
+    "diemGenTrungDauToc": 585,
+    "hinhBongLech": 0,
     "lo": {
      "ao_goc+quan_goc": 0,
      "ao_moi+quan_goc": 0,

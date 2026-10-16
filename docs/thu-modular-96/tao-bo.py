@@ -24,6 +24,7 @@ sys.path.insert(0, DAY)
 import tach_lop as T
 import trang_phuc as TP
 import nen_to_da as ND
+import nen_gen_sua as NG
 
 O, N = 96, T.SO_KHUNG
 PIVOT = (48, 90)
@@ -269,6 +270,10 @@ def main():
     giap_bo.update(bo_giap_gen())
     # thân nền tô da (tô da lên chính hình bóng sprite game, xem nen_to_da.py)
     toda, td_vung, td_ngoai, td_bang = ND.dung(F)
+    # thân nền gen sửa (màu thân/tay/chân từ ảnh gen sửa hàng chạy gốc, mặt nạ lớp giữ như tô da; xem nen_gen_sua.py)
+    gs, gs_hang, gs_so = (None, None, [])
+    if NG.co_anh():
+        gs, gs_hang, gs_so = NG.dung(F, {l: (toda[l] if l in toda else nen[l]) for l in TP.NEN}, td_ngoai)
 
     # ===== KIỂM TRA (lỗi → dừng, mã thoát 1) =====
     kq = []
@@ -329,6 +334,25 @@ def main():
             lo = sum(int((td_vung[i][l] & (top == TP.IDX[l])).sum()) for l in ND.LOP_TO)
             r['toDa']['lo']['ao_%s+quan_%s' % (ao, quan)] = lo
             if lo: loi.append('khung %d (nền tô da, áo %s, quần %s): lộ %d điểm thân tô da dưới đồ' % (i, ao, quan, lo))
+        # ---- thân nền gen sửa ----
+        if gs is not None:
+            nen_gs = {l: (gs[l][:, sl] if l in gs else nen_td[l]) for l in TP.NEN}
+            for l in gs:
+                kh_a = int((gs[l][:, sl, 3] != nen_td[l][:, :, 3]).sum())
+                if kh_a: loi.append('khung %d: lớp %s bản gen sửa khác độ trong suốt bản tô da %d điểm' % (i, l, kh_a))
+            g_gs, _ = TP.ghep(nen_gs)
+            lech_gs = int((g_gs[:, :, 3] != dich).sum())
+            if lech_gs: loi.append('khung %d: hình bóng nền gen sửa lệch hình bóng game %d điểm ảnh' % (i, lech_gs))
+            so_g = {k_: v_ for k_, v_ in gs_so[i].items() if k_ not in ('hut', 'lo')}
+            so_g.update({'hinhBongLech': lech_gs, 'lo': {}})
+            for ao, quan in [('goc', 'goc')] + tohop:
+                lay2 = dict(nen_gs)
+                lay2.update({l: bo[ao][l][:, sl] for l in TP.SLOT['ao']}); lay2.update({l: bo[quan][l][:, sl] for l in TP.SLOT['quan']})
+                _, top = TP.ghep(lay2)
+                lo = sum(int((td_vung[i][l] & (top == TP.IDX[l])).sum()) for l in ND.LOP_TO)
+                so_g['lo']['ao_%s+quan_%s' % (ao, quan)] = lo
+                if lo: loi.append('khung %d (nền gen sửa, áo %s, quần %s): lộ %d điểm thân dưới đồ' % (i, ao, quan, lo))
+            r['genSua'] = so_g
         kq.append(r)
     if loi:
         print('LỖI:'); [print('  -', x) for x in loi]
@@ -346,6 +370,11 @@ def main():
         for l in bo[b]: luu(bo[b][l], duong_bo[b][l])
     duong_td = {l: 'sheets/nen-to-da/%s.png' % l for l in ND.LOP_TO}
     for l in ND.LOP_TO: luu(toda[l], duong_td[l])
+    duong_gs = {}
+    if gs is not None:
+        duong_gs = {l: ('sheets/nen-gen-sua/%s.png' % l if l in gs else duong_td.get(l, duong[l])) for l in TP.NEN}
+        for l in gs: luu(gs[l], duong_gs[l])
+        luu(gs_hang, 'anh-gen-96/cu-ti-than-tran-sua-chay-12.png')
     duong_giap = {gb: {l: (duong[l] if gb == 'may-ve' else 'sheets/giap-%s/%s.png' % (gb, l)) for l in glop} for gb, (_, glop) in giap_bo.items()}
     for gb, (_, glop) in giap_bo.items():
         if gb == 'may-ve': continue
@@ -375,12 +404,14 @@ def main():
         'defaultOutfit': {'ao': 'goc', 'quan': 'goc'},
         'bodyBases': {'cu': {'name': 'Máy dựng cũ (da phẳng + khố xám)', 'sheets': {}},
                       'to-da': {'name': 'Tô da (mới): tô da lên đúng hình bóng sprite game', 'sheets': duong_td,
-                                'skinPalette': [list(c) for c in td_bang]}},
+                                'skinPalette': [list(c) for c in td_bang]},
+                      **({'gen-sua': {'name': 'Gen sửa: màu thân/tay/chân lấy từ ảnh gen sửa hàng chạy gốc (đầu, tóc giữ sprite; hình bóng giữ như tô da)',
+                                      'sheets': duong_gs, 'source': 'anh-gen/cu-ti-than-tran-sua-chay-12.png'}} if duong_gs else {})},
         'defaultBodyBase': 'to-da',
         'armorSets': {gb: {'name': giap_bo[gb][0], 'sheets': duong_giap[gb]} for gb in giap_bo},
         'presets': presets,
         'genImport': gen_so,
-        'genFullRows': {t: 'anh-gen-96/%s.png' % t for t in ('cu-ti-do-xanh-chay-12', 'cu-ti-giap-chay-12') if os.path.exists(os.path.join(DAY, 'anh-gen-96', t + '.png'))},
+        'genFullRows': {t: 'anh-gen-96/%s.png' % t for t in ('cu-ti-do-xanh-chay-12', 'cu-ti-giap-chay-12', 'cu-ti-than-tran-sua-chay-12') if os.path.exists(os.path.join(DAY, 'anh-gen-96', t + '.png'))},
         'source': {
             'gameSheet': 'game/art/custom/zed-moi.sprite.json, dong_tac.chay (hàng 2, 12 khung, 0,6 giây/vòng)',
             'highResFrames': 'docs/anh-goc/zed/moi/03-chay-v4-gif/03-chay-v4/khung-01..12.png (ảnh nguồn của chính hàng đó)',
@@ -410,7 +441,7 @@ def main():
             'Chân TRƯỚC/SAU giữ cùng một chân suốt 12 khung (chân trước = chân trụ ở khung 0).',
             'Nền cơ thể (bodyLayers) = điểm ảnh gốc của đầu, tóc, tay, bàn chân, cổ + thân/chân trần dựng thêm (da + khố) ở đúng hình bóng áo/quần gốc từng khung.',
             'Trang phục (outfitLayers) thay theo 2 ô: ao = torsoOutfit + belt, quan = rearPants + pants + frontPants. Mỗi bộ trong outfits có đủ 5 lớp.',
-            'Thân nền có 2 bản (bodyBases): "cu" = sheets/<lớp>.png (da phẳng + khố, ghép với đồ gốc ra đúng từng điểm ảnh game); "to-da" = thay 3 lớp rearLeg/body/frontLeg bằng sheets/nen-to-da/ (tô da có đổ bóng lên đúng hình bóng sprite, quần đùi xám). Lớp nào bản to-da không có thì dùng sheets chung.',
+            'Thân nền có 2 bản (bodyBases): "cu" = sheets/<lớp>.png (da phẳng + khố, ghép với đồ gốc ra đúng từng điểm ảnh game); "to-da" = thay 3 lớp rearLeg/body/frontLeg bằng sheets/nen-to-da/ (tô da có đổ bóng lên đúng hình bóng sprite, quần đùi xám). Lớp nào bản to-da không có thì dùng sheets chung. "gen-sua" = 7 lớp nền: body/frontLeg/rearLeg/frontArm/rearArm ở sheets/nen-gen-sua/ (cùng độ trong suốt với tô da, chỉ đổi màu chỗ nhìn thấy theo ảnh gen), head/hair dùng sheet sprite gốc.',
             'Giáp vai trước tách 2 lớp: frontShoulderArmor (dưới tay trước, chỉ phần cẳng tay đi ngang qua) và frontShoulderArmorTop (trên bắp tay).',
         ],
         'checks': kq,
@@ -436,6 +467,9 @@ def main():
     html(data)
     print('xong: nền + đồ gốc = ảnh game 12/12 khung; đồ mới phủ kín (0 điểm lộ) ở 12/12 khung; %d sheet hợp lệ.' % len(tat_ca_duong(data)))
     print('     nền tô da: hình bóng trùng game 12/12 khung (0 điểm lệch); mọi bộ đồ phủ kín thân tô da (0 điểm lộ).')
+    if gs is not None:
+        print('     nền gen sửa: ảnh gen trùng hình bóng %s (ô 96, sau căn); hình bóng nền trùng game 12/12 khung; mọi bộ đồ phủ kín (0 điểm lộ).'
+              % ' '.join('%.2f' % x['iouSauCan'] for x in gs_so))
 
 
 def luu(s, p):
@@ -708,6 +742,14 @@ def so_sanh_nen(anh, data, game):
     rows = [('Ảnh game (gốc)', 'game'), ('Nền cũ (máy dựng:\nda phẳng + khố xám)', 'cu'), ('Nền tô da (mới)', 'to-da'),
             ('Tô da + đồ máy vẽ\n(đồ vẫn phủ kín)', 'moi'),
             ('Hình bóng tô da\nso với game:\nlệch (đỏ) %d điểm\nvàng = điểm của đai\n(thuộc bộ áo, nền\nkhông có là đúng)' % tong_lech, 'bong')]
+    rgs = None
+    if 'gen-sua' in data['bodyBases'] and 'cu-ti-than-tran-sua-chay-12' in data.get('genFullRows', {}):
+        rgs = np.array(Image.open(os.path.join(DAY, data['genFullRows']['cu-ti-than-tran-sua-chay-12'])).convert('RGBA'))
+        gso = [c['genSua'] for c in data['checks']]
+        rows[3:3] = [('Ảnh gen sửa về ô 96\n(đã dời căn): trùng\nhình bóng %.0f–%.0f%%\nđỏ = lố ra ngoài, đã cắt\nvàng = hụt, lấp tô da' %
+                      (100 * min(x['iouSauCan'] for x in gso), 100 * max(x['iouSauCan'] for x in gso)), 'gs-tho'),
+                     ('Nền gen sửa\n(thân/tay/chân từ gen,\nđầu tóc giữ sprite)', 'gen-sua')]
+        rows.insert(6, ('Gen sửa + đồ máy vẽ\n(đồ vẫn phủ kín)', 'gs-moi'))
     img = Image.new('RGB', (LW + N * CW, TOP + len(rows) * CH), (250, 250, 250))
     d = ImageDraw.Draw(img)
     for c in range(N): d.text((LW + c * CW + 6, 6), 'khung %d' % c, fill=(0, 0, 0), font=FNT)
@@ -717,12 +759,12 @@ def so_sanh_nen(anh, data, game):
             ch = o_ca_ro(O, O, 4)
             gk = game[:, c * O:(c + 1) * O]
             if cfg == 'game': f = gk
-            elif cfg in ('cu', 'to-da'): f = TP.ghep(nen_khung(anh, data, c, cfg))[0]
+            elif cfg in ('cu', 'to-da', 'gen-sua'): f = TP.ghep(nen_khung(anh, data, c, cfg))[0]
             elif cfg == 'moi':
                 lay = nen_khung(anh, data, c, 'to-da')
                 lay.update({l: anh[data['outfits']['moi']['sheets'][l]][:, c * O:(c + 1) * O] for l in TP.DO})
                 f = TP.ghep(lay)[0]
-            else:
+            elif cfg == 'bong':
                 g = TP.ghep(nen_khung(anh, data, c, 'to-da'))[0]
                 f = np.zeros((O, O, 4), np.uint8)
                 f[g[:, :, 3] > 0] = (150, 150, 150, 255)
@@ -730,6 +772,19 @@ def so_sanh_nen(anh, data, game):
                 bay = (gk[:, :, 3] > 0) & (g[:, :, 3] == 0) & dai
                 f[bay] = (255, 200, 0, 255)
                 f[((g[:, :, 3] > 0) != (gk[:, :, 3] > 0)) & ~bay] = (255, 0, 0, 255)
+            elif cfg == 'gs-tho':
+                f = rgs[:, c * O:(c + 1) * O].copy()
+                g, top = TP.ghep(nen_khung(anh, data, c, 'gen-sua'))
+                dich = g[:, :, 3] > 0
+                gm = f[:, :, 3] > 0
+                g_td = TP.ghep(nen_khung(anh, data, c, 'to-da'))[0]
+                hut = np.isin(top, [TP.IDX[l] for l in ('rearLeg', 'rearArm', 'body', 'frontLeg', 'frontArm')]) & (g == g_td).all(2)   # màu không đổi = không lấy được từ gen
+                f[gm & ~dich] = (255, 0, 0, 255)
+                f[hut] = (255, 200, 0, 255)
+            elif cfg == 'gs-moi':
+                lay = nen_khung(anh, data, c, 'gen-sua')
+                lay.update({l: anh[data['outfits']['moi']['sheets'][l]][:, c * O:(c + 1) * O] for l in TP.DO})
+                f = TP.ghep(lay)[0]
             ch.alpha_composite(Image.fromarray(np.ascontiguousarray(f)))
             x0, y0 = LW + c * CW, TOP + r * CH
             img.paste(ch.crop((X0, Y0, X1, Y1)).resize((CW, CH), Image.NEAREST), (x0, y0))
@@ -738,14 +793,15 @@ def so_sanh_nen(anh, data, game):
 
 
 def gif_nen(anh, data):
-    """GIF chạy: game gốc | nền cũ | nền tô da (×4)."""
+    """GIF chạy: game gốc | nền máy dựng | nền tô da | nền gen sửa (×4)."""
     Z = 4; W, H = (X1 - X0), (Y1 - Y0)
     game = T.hang_game()
     fr = []
     for c in range(N):
-        im = Image.new('RGB', (3 * (W * Z + 8) - 8, H * Z + 24), (236, 233, 224))
+        cot = [(t, b) for t, b in (('game gốc', None), ('máy dựng', 'cu'), ('tô da', 'to-da'), ('gen sửa', 'gen-sua')) if b is None or b in data['bodyBases']]
+        im = Image.new('RGB', (len(cot) * (W * Z + 8) - 8, H * Z + 24), (236, 233, 224))
         d = ImageDraw.Draw(im)
-        for j, (nhan, base) in enumerate((('game gốc', None), ('nền cũ', 'cu'), ('nền tô da (mới)', 'to-da'))):
+        for j, (nhan, base) in enumerate(cot):
             ch = Image.new('RGBA', (O, O), (236, 233, 224, 255))
             f = game[:, c * O:(c + 1) * O] if base is None else TP.ghep(nen_khung(anh, data, c, base))[0]
             ch.alpha_composite(Image.fromarray(np.ascontiguousarray(f)))
