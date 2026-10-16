@@ -252,6 +252,9 @@
   // miễn 5 giây); quái vừa tan băng do búa (st.bangBua, freezeImm > 0) bị hạ vẫn tính dấu ấn Băng. ?buabang=0 → G.BUA_BANG = false (luật cũ).
   if (G.BUA_BANG === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]buabang=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.BUA_BANG = !tat; }
   const BUA_O = { bua: true };
+  // bua-2tang (16/10, lần 2): nhát gây hệ của BÚA mang Băng gây 2 tầng Băng (đủ 5 tầng sau 3 nhát thay vì 5). Chỉ búa + Băng; trùm vẫn
+  // chỉ choáng 0,5 giây (luật trong G.applyStatus). ?bua2tang=0 → G.BUA_2TANG = false (1 tầng như trước).
+  if (G.BUA_2TANG === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]bua2tang=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.BUA_2TANG = !tat; }
   G.bangBuaCon = (st) => G.BUA_BANG !== false && !!st.bangBua && st.freezeImm > 0;
   if (G.LK_THEO_THAY === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]lkthay=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.LK_THEO_THAY = !tat; }
   G.lkHeThay = function (st, on) {
@@ -542,7 +545,8 @@
       // không nhích (Băng bị giới hạn bởi miễn đóng băng 5 giây, không phải số tầng) → bỏ. Xem docs/review/ke-hoach-cai-thien/vu-khi-4.
       if (G.HE_THEO_NHIP !== false) chance = Math.min(1, chance * Math.max(1, (T.cd || 0.36) / 0.36));
       if (P.firstHit && P.swapProc) chance = 1;
-      if (G.rnd() < chance) G.applyStatus(e, el, d, 1, w.type === 'hammer' ? BUA_O : undefined);
+      const bua = w.type === 'hammer';
+      if (G.rnd() < chance) G.applyStatus(e, el, d, bua && el === 'ice' && G.BUA_2TANG !== false ? 2 : 1, bua ? BUA_O : undefined);
     }
     P.firstHit = false;
   }
