@@ -39,13 +39,11 @@ tr.cur{background:#fff4d6}
 .legend span{display:inline-block;margin-right:10px;font-size:12px}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
 #tom{font-size:14px;margin:0 0 6px}
-.seg{min-width:96px;font-weight:600}
+.seg{min-width:64px;font-weight:600}
 .seg.on{background:var(--acc);color:#fff;border-color:var(--acc)}
-#x2note{display:none;border:1px dashed var(--warn);background:#fff8e6;border-radius:9px;padding:6px 10px;margin:6px 0 0;font-size:13px;color:#5c4400}
+.seg:disabled{opacity:.45}
+#coNote{border:1px dashed var(--warn);background:#fff8e6;border-radius:9px;padding:6px 10px;margin:4px 0 0;font-size:13px;color:#5c4400}
 #boNote{font-size:13px;color:var(--mute);margin:0;overflow-wrap:anywhere;flex-basis:100%}
-</style>
-
-<style>
 .wrapT{overflow-x:auto}
 table.num td,table.num th{text-align:center}
 table.num td:first-child,table.num th:first-child{text-align:left}
@@ -57,20 +55,30 @@ td.tot{font-weight:700}
 </head>
 <body>
 <main>
-<h1>Rig giáp theo độ sâu (back / front)</h1>
-<p class="sub">Cu Tí mới chạy 12 khung · mỗi mảnh giáp = 1 ảnh gốc + 1 ảnh nhãn (đỏ = <b>back</b> bị thân che, xanh dương = <b>front</b> đè lên thân, lục = <b>trong</b> đổi lớp theo khung) · khớp lấy từ data.json · khung 96×96, chân (48,90), cỡ game 48×48.</p>
+<h1>Rig giáp theo độ sâu — ảnh thật độ phân giải cao</h1>
+<p class="sub">Cu Tí mới chạy 12 khung · giáp gen thật · mỗi mảnh giáp = 1 ảnh + 1 ảnh nhãn (đỏ = <b>back</b> bị thân che, xanh dương = <b>front</b> đè lên thân, lục = <b>trong</b> đổi lớp theo khung) · cỡ 96 = ô game nguồn (game hiện 48); cỡ 192 / 384 dựng lại từ ảnh nguồn hàng chạy, cùng cách co/đặt như game.</p>
 <div id="loi"></div>
 
-<div class="bar" id="boBar" style="margin:4px 0 8px">
+<div class="bar" id="coBar" style="margin:4px 0 4px">
+  <b style="font-size:14px">Cỡ:</b>
+</div>
+<div class="bar" style="margin:4px 0">
+  <label class="chip"><input type="checkbox" id="cmp">Cạnh nhau 96 ↔ 384</label>
+  <label for="goc"><b>Góc:</b></label>
+  <select id="goc"><option value="0">Xoay liên tục</option><option value="1">Làm tròn 8 hướng</option></select>
+</div>
+<p id="coNote"></p>
+
+<div class="bar" id="boBar" style="margin:6px 0 8px">
   <b style="font-size:14px">Bộ giáp:</b>
-  <button class="seg on" data-bo="may" aria-pressed="true">Máy vẽ</button>
-  <button class="seg" data-bo="gen" aria-pressed="false">Gen</button>
+  <button class="seg" data-bo="gen" aria-pressed="false">Gen (chính)</button>
+  <button class="seg" data-bo="may" aria-pressed="false">Máy vẽ</button>
   <p id="boNote"></p>
 </div>
 
 <div class="stage">
-  <div class="col"><h2>Xoay liên tục</h2><div class="cap" id="t0">ô nguồn 96×96</div><canvas id="c0"></canvas><div class="cap">cỡ game 48×48</div><canvas id="g0"></canvas></div>
-  <div class="col"><h2>Làm tròn 8 hướng</h2><div class="cap" id="t1">ô nguồn 96×96</div><canvas id="c1"></canvas><div class="cap">cỡ game 48×48</div><canvas id="g1"></canvas></div>
+  <div class="col"><h2 id="h0">Xoay liên tục</h2><div class="cap" id="t0"></div><canvas id="c0"></canvas></div>
+  <div class="col"><h2 id="h1">Làm tròn 8 hướng</h2><div class="cap" id="t1"></div><canvas id="c1"></canvas></div>
 </div>
 
 <div class="bar">
@@ -79,8 +87,7 @@ td.tot{font-weight:700}
   <span id="khung">Khung 1/12</span>
   <button id="next" aria-label="Khung sau">▶</button>
   <label class="chip"><input type="checkbox" id="cham">Chậm ×¼</label>
-  <label class="chip"><input type="checkbox" id="ca96">Cả khung 96</label>
-  <label class="chip"><input type="checkbox" id="x2">Phóng to nhân vật ×2 (192)</label>
+  <label class="chip"><input type="checkbox" id="ca96">Cả ô</label>
 </div>
 <div class="bar">
   <label for="xem"><b>Xem lượt:</b></label>
@@ -93,7 +100,13 @@ td.tot{font-weight:700}
   <label for="co"><b>Chụp khớp:</b></label>
   <select id="co"></select>
 </div>
-<p id="x2note"><b>Chỉ để so sánh, game vẫn dùng 96/48.</b> Thân người chỉ phóng ×2; giáp Gen dùng bản thu nhỏ ×2 (đã tách lượt bằng nhãn riêng). Bộ Máy vẽ không có bản ×2 nên chỉ phóng to.</p>
+
+<section>
+  <h3>Kiểm mọi cỡ (12 khung × 2 chế độ góc)</h3>
+  <p id="tomCo"></p>
+  <div class="wrapT"><table id="tcoLon" class="num"></table></div>
+  <p class="note">Khe = điểm ảnh thân của chi còn <b>thấy được</b> (lớp trên cùng sau khi vẽ đủ lớp) trong đĩa quanh 6 khớp vai/khuỷu/gối. Bán kính <b>tỉ lệ theo cỡ</b>: "r2" = 2 điểm ảnh ô 96 = 4 ở cỡ 192 = 8 ở cỡ 384. Trước = không chụp, không chồng mép; sau = cấu hình đang chọn. Ô "≈96" = số khe chia k² (quy về điểm ảnh ô 96 để so các cỡ).</p>
+</section>
 
 <section>
   <h3>Bật/tắt từng mảnh</h3>
@@ -137,22 +150,22 @@ td.tot{font-weight:700}
 </section>
 
 <section>
-  <h3>Khe ở khớp theo khung (trước → sau)</h3>
+  <h3>Khe ở khớp theo khung (trước → sau) — <span class="coTen"></span></h3>
   <p id="tomKhe"></p>
   <div class="wrapT"><table id="tkhe" class="num"></table></div>
-  <p class="note"><b>Cách đo:</b> vẽ ĐỦ lớp (thân + giáp) rồi xét đĩa bán kính r quanh 6 khớp (vai, khuỷu, gối × trước/sau). Đếm điểm ảnh mà lớp trên cùng là <b>chính chi đó</b> (tay: frontArm/rearArm; chân: frontLeg+frontPants / rearLeg+rearPants) — tức thân chi còn lộ, không bị giáp che. Điểm ảnh đã bị lớp khác (thân, tay trước…) che thì không tính. <b>Trước</b> = không chụp khớp, không chồng mép. <b>Sau</b> = cấu hình đang chọn.</p>
+  <p class="note"><b>Cách đo:</b> vẽ ĐỦ lớp (thân + giáp) rồi xét đĩa bán kính r quanh 6 khớp (vai, khuỷu, gối × trước/sau). Đếm điểm ảnh mà lớp trên cùng là <b>chính chi đó</b> (tay: frontArm/rearArm; chân: frontLeg+frontPants / rearLeg+rearPants) — tức thân chi còn lộ, không bị giáp che. Điểm ảnh đã bị lớp khác (thân, tay trước…) che thì không tính. r tính theo điểm ảnh ô 96, nhân k ở cỡ lớn. <b>Trước</b> = không chụp khớp, không chồng mép. <b>Sau</b> = cấu hình đang chọn.</p>
 </section>
 
 <section>
-  <h3>So cỡ chụp khớp (tổng 12 khung)</h3>
+  <h3>So cỡ chụp khớp (tổng 12 khung) — <span class="coTen"></span></h3>
   <div class="wrapT"><table id="tco" class="num"></table></div>
 </section>
 
 <section>
-  <h3>Tự kiểm 12 khung × 2 chế độ góc</h3>
+  <h3>Tự kiểm 12 khung × 2 chế độ góc — <span class="coTen"></span></h3>
   <p id="tom"></p>
   <div class="wrapT"><table id="tkiem"></table></div>
-  <p class="note">Bám: mỗi mảnh xương phải có điểm ảnh trong 1,5 điểm ảnh quanh <b>cả 2 khớp đầu và cuối</b> (vẽ riêng mảnh, không tính chụp khớp). Thứ tự: mỗi lớp thân vẽ đúng 1 lần; mỗi lượt giáp đúng 1 lần; back nằm dưới lớp chi của nó, front nằm trên. Mask: lượt cùng cỡ ảnh gốc, ghép lại đúng ảnh gốc, không chồng, back/front không rỗng. Giãn: ngoài 0,85–1,15 là lỗi.</p>
+  <p class="note">Bám: mỗi mảnh xương phải có điểm ảnh trong 1,5 điểm ảnh ô 96 (× k ở cỡ lớn) quanh <b>cả 2 khớp đầu và cuối</b> (vẽ riêng mảnh, không tính chụp khớp). Thứ tự: mỗi lớp thân vẽ đúng 1 lần; mỗi lượt giáp đúng 1 lần; back nằm dưới lớp chi của nó, front nằm trên. Mask: lượt cùng cỡ ảnh gốc, ghép lại đúng ảnh gốc, không chồng, back/front không rỗng. Giãn: ngoài 0,85–1,15 là lỗi.</p>
 </section>
 </main>
 <script>
@@ -169,10 +182,10 @@ const errors = [], warns = [];
 const $ = id => document.getElementById(id);
 
 // ---------- Giả lập lỗi (chỉ trong bộ nhớ) ----------
-let FR = DATA.frames.map(f => ({frame: f.frame, joints: Object.assign({}, f.joints)}));
+const FR96 = DATA.frames.map(f => ({frame: f.frame, joints: Object.assign({}, f.joints)}));
 RIG = JSON.parse(JSON.stringify(RIG));
 ANH = Object.assign({}, ANH);
-if (GIA === 'khop') delete FR[3].joints.kneeFront;
+if (GIA === 'khop') delete FR96[3].joints.kneeFront;
 if (GIA === 'anh') delete ANH['may:giap-cang-tay-front'];
 if (GIA === 'neo') { const p = RIG.pieces.find(p => p.id === 'vaiTruoc'); p.anchorEnd = [p.anchorStart[0], p.anchorStart[1]]; const q = RIG.pieces.find(p => p.id === 'vaiSau'); q.anchorStart = [40, 3]; }
 if (GIA === 'mask') ANH['may:giap-vai-back'] = ANH['may:giap-cang-tay-back'];
@@ -180,21 +193,31 @@ if (GIA === 'lop') { const p = RIG.pieces.find(p => p.id === 'ongChanTruoc'); p.
 $('gia').value = GIA;
 $('gia').onchange = e => { const u = new URL(location.href); if (e.target.value) u.searchParams.set('loi', e.target.value); else u.searchParams.delete('loi'); location.href = u.toString(); };
 
-const SETDEF = {may: {name: 'Máy vẽ', images: RIG.images, imagesX2: {}, pieces: RIG.pieces, pre: 'may:', pre2: null,
-  note: 'Vẽ pixel tối giản bằng mã: 3 mảnh xương + 3 chụp khớp (3 cỡ).'}};
+const N = DATA.frameCount, W96 = DATA.frameWidth, H96 = DATA.frameHeight;
+const CL = (RIG.armorSets && RIG.armorSets.gen && RIG.armorSets.gen.coLon) || {};
+const KLIST = [1].concat(Object.values(CL).map(c => c.k).sort((a, b) => a - b));     // hệ số cỡ: 1 (96), 2 (192), 4 (384)
+const SIZE_LIST = [48, 96].concat(KLIST.filter(k => k > 1).map(k => 96 * k));
+const SIZE_MAX = SIZE_LIST[SIZE_LIST.length - 1];
+const kOf = s => s === 48 ? 1 : s / 96;
+
+const SETDEF = {may: {name: 'Máy vẽ', note: 'Vẽ pixel tối giản bằng mã: 3 mảnh xương + 3 chụp khớp (3 cỡ). Chỉ có ở cỡ 96 (và 48).',
+  by: {1: {images: RIG.images, pieces: RIG.pieces, pre: 'may:'}}}};
 if (RIG.armorSets && RIG.armorSets.gen) { const g = RIG.armorSets.gen;
-  SETDEF.gen = {name: g.name || 'Gen', images: g.images, imagesX2: g.imagesX2 || {}, pieces: g.pieces, pre: 'gen:', pre2: 'genx2:',
-    note: '4 mảnh cắt từ ảnh gen thật (vai, cẳng tay, ống chân, ngực nhỏ) + 3 chụp khớp tô màu gen.'}; }
+  SETDEF.gen = {name: 'Gen', note: 'Bộ CHÍNH: 4 mảnh cắt từ ảnh gen thật (vai, cẳng tay, ống chân, ngực nhỏ) + 3 chụp khớp. Cỡ 96: thu nhỏ của R4; cỡ 192/384: thu lại từ ảnh gốc đúng tỉ lệ cỡ đó, chụp khớp vẽ lại cho cỡ đó.',
+    by: {1: {images: g.images, pieces: g.pieces, pre: 'gen:'}}};
+  for (const [w, c] of Object.entries(CL)) SETDEF.gen.by[c.k] = {images: c.images, pieces: c.pieces, pre: 'g' + w + ':'}; }
 const SET_KEYS = Object.keys(SETDEF);
-let SET = SETDEF[qs.get('bo')] ? qs.get('bo') : 'may';
-let X2 = qs.get('x2') === '1';
+let SET = SETDEF[qs.get('bo')] ? qs.get('bo') : (SETDEF.gen ? 'gen' : 'may');
+let SIZE = SIZE_LIST.includes(+qs.get('size')) ? +qs.get('size') : SIZE_MAX;
+let CMP = qs.get('cmp') !== null ? qs.get('cmp') !== '0' : SIZE_MAX > 96;
+let MODE = qs.get('goc') === '1' ? 1 : 0;
+if (SET === 'may' && (CMP || SIZE > 96)) { CMP = false; SIZE = 96; }
 const CO_LIST = Object.keys((RIG.chupKhop || {}).cacCo || {nho: 1, gon: 1, to: 1});
 let CO = CO_LIST.includes(qs.get('co')) ? qs.get('co') : (RIG.chupKhop || {}).co || 'gon';
 let VIEW = qs.get('xem') || 'thuong';
 const VUNG = ['back', 'front', 'trong'];
 const VCOL = {back: [214, 40, 40], front: [29, 78, 216], trong: [47, 158, 50]};
 
-const W = DATA.frameWidth, H = DATA.frameHeight, N = DATA.frameCount;
 const ORDER = DATA.layerOrder;                         // nguồn thứ tự lớp thân duy nhất
 const SKIP = new Set(RIG.skipLayerKinds || []);
 const BODY = ORDER.filter(L => !SKIP.has((DATA.layerKinds || {})[L]));
@@ -214,8 +237,24 @@ const KHOP_KIEM = [
 ];
 // Cấu hình so khe: "truoc" = không chụp, không chồng mép; còn lại = chồng mép mặc định + từng cỡ chụp.
 const BIEN = [{id: 'truoc', co: null, ov: 0, ten: 'Trước: không chụp, không chồng mép'},
-  {id: 'chong', co: null, ov: OVQ, ten: 'Chỉ chồng mép (' + OVDEF + ' đ), không chụp'}]
+  {id: 'chong', co: null, ov: OVQ, ten: 'Chỉ chồng mép (' + OVDEF + ' đ ô 96), không chụp'}]
   .concat(CO_LIST.map(c => ({id: c, co: c, ov: OVQ, ten: 'Chồng mép + chụp ' + ((RIG.chupKhop.cacCo || {})[c] || c)})));
+
+// ---------- Ngữ cảnh theo cỡ: toạ độ khớp, lớp thân, mảnh giáp ----------
+// Mọi hàm vẽ/kiểm dùng các biến dưới đây; use(sk, k) đổi sang bộ/cỡ khác (đồng bộ, không chồng nhau).
+let KS = 1, W = W96, H = H96, FR = FR96, LAYER = {}, PIECES = [];
+const CTX = {}, SETS = {}, MASKLOG = {};
+for (const k of KLIST) {
+  const lech = k === 1 ? null : CL[String(96 * k)].khopLech;
+  const fr = k === 1 ? FR96 : FR96.map((f, i) => ({frame: f.frame, joints: Object.fromEntries(Object.entries(f.joints).map(([j, p]) => {
+    const d = ((lech || [])[i] || {})[j] || [0, 0]; return [j, pt2(p) ? [p[0] * k + d[0], p[1] * k + d[1]] : p]; }))}));
+  CTX[k] = {k, W: W96 * k, H: H96 * k, FR: fr, LAYER: {}, scr: null, lalpha: {}};
+}
+function useK(k) { const c = CTX[k]; KS = k; W = c.W; H = c.H; FR = c.FR; LAYER = c.LAYER; }
+function use(sk, k) { useK(k); PIECES = (SETS[sk] || {})[k] || []; }
+function withCtx(sk, k, fn) { const kk = KS, pp = PIECES; use(sk, k); try { return fn(); } finally { useK(kk); PIECES = pp; } }
+const setOf = k => SETS[SET] && SETS[SET][k] ? SET : 'gen';        // Máy vẽ chỉ có cỡ 96
+const tagOf = (sk, k) => '[' + SETDEF[sk].name + (k > 1 ? ' ' + 96 * k : '') + '] ';
 
 function loadImg(key) {
   return new Promise(res => {
@@ -233,42 +272,40 @@ function tinted(img, t) {
   if (t !== 1) { const d = x.getImageData(0, 0, c.width, c.height); for (let i = 0; i < d.data.length; i += 4) { d.data[i] *= t; d.data[i+1] *= t; d.data[i+2] *= t; } x.putImageData(d, 0, 0); }
   return c;
 }
-function idImage(img) {   // mỗi điểm ảnh 1 màu riêng: đếm điểm ảnh bị mất khi xoay
+function idImage(img) {   // mỗi điểm ảnh 1 màu riêng (R = cột+1, G = hàng+1): đếm điểm ảnh bị mất khi xoay
   const c = canvas(img.width, img.height), x = c.getContext('2d');
   x.drawImage(img, 0, 0);
   const d = x.getImageData(0, 0, c.width, c.height); let n = 0;
   for (let y = 0; y < c.height; y++) for (let X = 0; X < c.width; X++) { const i = (y * c.width + X) * 4;
-    if (d.data[i+3] > 0) { d.data[i] = 1 + X * 9; d.data[i+1] = 1 + y * 9; d.data[i+2] = 200; d.data[i+3] = 255; n++; } else d.data[i+3] = 0; }
+    if (d.data[i+3] > 0) { d.data[i] = 1 + X; d.data[i+1] = 1 + y; d.data[i+2] = 200; d.data[i+3] = 255; n++; } else d.data[i+3] = 0; }
   x.putImageData(d, 0, 0); c.nOpaque = n; return c;
 }
 
-const LAYER = {}, SETS = {}, REPORTS = {};
-let PIECES = [];
-const MASKLOG = {};   // kết quả kiểm mask theo bộ
-
 async function init() {
-  for (const L of BODY) {
-    const im = await loadImg('layer:' + L);
-    if (!im) { errors.push('Thiếu ảnh lớp thân <b>' + L + '</b> (sheets/).'); continue; }
-    if (im.width !== W * N || im.height !== H) errors.push('Lớp ' + L + ' sai cỡ ' + im.width + '×' + im.height + ' (cần ' + (W*N) + '×' + H + ').');
-    LAYER[L] = im;
-  }
-  if (FR.length !== N) errors.push('data.json có ' + FR.length + ' khung, cần ' + N + '.');
-  for (const sk of SET_KEYS) SETS[sk] = await buildSet(sk);
+  for (const k of KLIST) { const c = CTX[k];
+    for (const L of BODY) {
+      const im = await loadImg((k === 1 ? 'layer:' : 'layer' + 96 * k + ':') + L);
+      if (!im) { errors.push('Thiếu ảnh lớp thân <b>' + L + '</b>' + (k > 1 ? ' cỡ ' + 96 * k : '') + '.'); continue; }
+      if (im.width !== c.W * N || im.height !== c.H) errors.push('Lớp ' + L + ' cỡ ' + 96 * k + ' sai kích thước ' + im.width + '×' + im.height + ' (cần ' + (c.W * N) + '×' + c.H + ').');
+      c.LAYER[L] = im;
+    } }
+  if (FR96.length !== N) errors.push('data.json có ' + FR96.length + ' khung, cần ' + N + '.');
+  for (const sk of SET_KEYS) { SETS[sk] = {};
+    for (const k of Object.keys(SETDEF[sk].by).map(Number)) { useK(k); SETS[sk][k] = await buildSet(sk, k); } }
+  useK(1);
 }
 
 // Nạp 1 ảnh giáp + 3 lượt; kiểm mask: cùng cỡ, ghép lại đúng ảnh gốc, không chồng nhau.
-async function loadArt(S, key, tint, x2, bad, rong) {
-  const pre = x2 ? S.pre2 : S.pre, tbl = x2 ? S.imagesX2 : S.images;
-  if (!(key in tbl)) { if (!x2) bad.push('ảnh "' + key + '" không khai báo trong images'); return null; }
-  const orig = await loadImg(pre + key);
-  if (!orig) { bad.push('thiếu ảnh <b>' + tbl[key] + '</b>'); return null; }
+async function loadArt(S, key, tint, bad, rong) {
+  if (!(key in S.images)) { bad.push('ảnh "' + key + '" không khai báo trong images'); return null; }
+  const orig = await loadImg(S.pre + key);
+  if (!orig) { bad.push('thiếu ảnh <b>' + S.images[key] + '</b>'); return null; }
   const A = {w: orig.width, h: orig.height, orig, pass: {}, n: {}, img: tinted(orig, tint), idImg: idImage(orig)};
   const od = pixels(orig).data, sum = new Uint8Array(A.w * A.h);
   for (const v of VUNG) {
     const k = key + '-' + v;
-    const im = await loadImg(pre + k);
-    if (!im) { bad.push('thiếu ảnh lượt <b>' + (tbl[k] || k) + '</b>'); continue; }
+    const im = await loadImg(S.pre + k);
+    if (!im) { bad.push('thiếu ảnh lượt <b>' + (S.images[k] || k) + '</b>'); continue; }
     if (im.width !== A.w || im.height !== A.h) { bad.push('mask/lượt "' + k + '" cỡ ' + im.width + '×' + im.height + ' ≠ ảnh gốc ' + A.w + '×' + A.h + ' (phải cùng cỡ, cùng neo)'); continue; }
     const d = pixels(im).data; let n = 0, sai = 0;
     for (let i = 0; i < A.w * A.h; i++) if (d[i*4+3]) { n++; sum[i]++;
@@ -287,22 +324,18 @@ async function loadArt(S, key, tint, x2, bad, rong) {
   return A;
 }
 
-async function buildSet(sk) {
-  const S = SETDEF[sk], out = [], tag = '[' + S.name + '] ', log = [];
+async function buildSet(sk, k) {
+  const S = SETDEF[sk].by[k], out = [], tag = tagOf(sk, k), log = [];
   for (const p0 of S.pieces) {
     const p = JSON.parse(JSON.stringify(p0)), bad = [];
     const tint = p.tint ?? 1;
-    p.art = {}; p.art2 = {};
+    p.art = {};
     const keys = p.kind === 'cap' ? Object.fromEntries(CO_LIST.map(c => [c, (p.imageTheoCo || {})[c]])) : {_: p.image};
-    for (const [c, k] of Object.entries(keys)) {
-      if (!k) { bad.push('thiếu imageTheoCo.' + c); continue; }
-      p.art[c] = await loadArt(S, k, tint, false, bad, p.vungRong);
-      if (S.pre2 && k in S.imagesX2) { const b2 = []; p.art2[c] = await loadArt(S, k, tint, true, b2, p.vungRong);
-        if (b2.length) warns.push(tag + p.name + ' (×2): ' + b2.join('; ') + ' → ô ×2 sẽ phóng bản thường.');
-        if (p.art2[c] && p.art[c] && (p.art2[c].w !== 2 * p.art[c].w || p.art2[c].h !== 2 * p.art[c].h)) p.art2[c] = null; }
+    for (const [c, key] of Object.entries(keys)) {
+      if (!key) { bad.push('thiếu imageTheoCo.' + c); continue; }
+      p.art[c] = await loadArt(S, key, tint, bad, p.vungRong);
     }
     log.push({id: p.id, name: p.name, art: Object.fromEntries(Object.entries(p.art).filter(e => e[1]).map(([c, a]) => [c, Object.assign({w: a.w, h: a.h}, a.n)]))});
-    // lớp vẽ từng vùng
     for (const v of VUNG) { const z = (p.vung || {})[v];
       if (!z) { bad.push('thiếu khai báo vung.' + v); continue; }
       const L = z.before || z.after;
@@ -311,15 +344,15 @@ async function buildSet(sk) {
     const im = p.art._ || p.art[CO];
     if (p.kind === 'bone') {
       const inImg = a => im && a[0] >= 0 && a[0] <= im.w && a[1] >= 0 && a[1] <= im.h;
-      for (const k of ['anchorStart', 'anchorEnd']) {
-        if (!pt2(p[k])) bad.push(k + ' không phải [x,y]');
-        else if (im && !inImg(p[k])) bad.push(k + ' [' + p[k] + '] nằm ngoài ảnh ' + im.w + '×' + im.h);
+      for (const kk of ['anchorStart', 'anchorEnd']) {
+        if (!pt2(p[kk])) bad.push(kk + ' không phải [x,y]');
+        else if (im && !inImg(p[kk])) bad.push(kk + ' [' + p[kk] + '] nằm ngoài ảnh ' + im.w + '×' + im.h);
       }
       if (pt2(p.anchorStart) && pt2(p.anchorEnd) && Math.hypot(p.anchorEnd[0]-p.anchorStart[0], p.anchorEnd[1]-p.anchorStart[1]) < 1) bad.push('anchorStart và anchorEnd trùng nhau');
       if (!fin(p.thicknessScale) || p.thicknessScale <= 0) bad.push('thicknessScale phải > 0');
       if (!p.stretch || !fin(p.stretch.min) || !fin(p.stretch.max) || p.stretch.max < p.stretch.min) bad.push('stretch.min/max không hợp lệ');
       else if (p.stretch.min < 0.85 || p.stretch.max > 1.15) bad.push('stretch phải nằm trong 0,85–1,15 (méo ≤ 15%)');
-      for (const k of ['overlapStart', 'overlapEnd']) if (p[k] !== undefined && !(Number.isInteger(p[k]) && p[k] >= 0 && p[k] <= 4)) bad.push(k + ' phải là số nguyên 0–4');
+      for (const kk of ['overlapStart', 'overlapEnd']) if (p[kk] !== undefined && !(Number.isInteger(p[kk]) && p[kk] >= 0 && p[kk] <= 4)) bad.push(kk + ' phải là số nguyên 0–4');
     } else if (p.kind !== 'cap') bad.push('kind phải là bone hoặc cap');
     const need = p.kind === 'bone' ? [p.from, p.to] : [p.at];
     p.jointOk = FR.map((f, i) => {
@@ -328,10 +361,10 @@ async function buildSet(sk) {
       return !miss.length;
     });
     if (bad.length) errors.push(tag + '<b>' + p.name + '</b>: ' + bad.join('; ') + ' → mảnh này không vẽ.');
-    p.ok = !bad.length; p.on = true; p.ext = new Map();
+    p.ok = !bad.length; p.on = true;
     out.push(p);
   }
-  MASKLOG[sk] = log;
+  MASKLOG[sk + '|' + k] = log;
   return out;
 }
 
@@ -342,7 +375,7 @@ function ruleState(r, f) {
   const J = FR[f].joints, P = J[r.khop], a = J[r.duong[0]], b = r.duong.length > 1 ? J[r.duong[1]] : null;
   if (!pt2(P) || !pt2(a) || (b && (!pt2(b) || Math.abs(b[1] - a[1]) < 1e-6))) return {dung: false, d: null};
   const xl = b ? a[0] + (b[0] - a[0]) * (P[1] - a[1]) / (b[1] - a[1]) : a[0];   // x của đường tại tung độ khớp (1 khớp = đường dọc)
-  const d = (P[0] - xl) * FACE;              // >0: phía trước (mặt), <0: phía sau (lưng)
+  const d = (P[0] - xl) * FACE / KS;          // quy về điểm ảnh ô 96; >0: phía trước (mặt), <0: phía sau (lưng)
   const dung = r.phia === 'sau' ? d < -(r.nguong || 0) : d > (r.nguong || 0);
   return {dung, d};
 }
@@ -354,7 +387,7 @@ function lopOf(p, v, f) {
 
 // ---------- Hình học ----------
 const cfgNow = () => ({co: CO, ov: OVQ});
-function artOf(p, cfg, x2) { const c = p.kind === 'cap' ? cfg.co : '_'; return (x2 ? p.art2 : p.art)[c]; }
+function artOf(p, cfg) { const c = p.kind === 'cap' ? cfg.co : '_'; return p.art[c]; }
 function ovOf(p, cfg) { return p.kind !== 'bone' ? [0, 0] : cfg.ov === null || cfg.ov === undefined ? [p.overlapStart ?? OVDEF, p.overlapEnd ?? OVDEF] : [cfg.ov, cfg.ov]; }
 // Trả về ma trận đặt ảnh giáp. mode 0 = liên tục, 1 = 8 hướng. Cùng 1 ma trận cho mọi lượt của mảnh.
 function place(p, f, mode, cfg) {
@@ -379,9 +412,9 @@ function place(p, f, mode, cfg) {
 const apply = (m, x, y) => { const q = m.transformPoint(new DOMPoint(x, y)); return [q.x, q.y]; };
 
 // Ảnh 1 lượt đã kéo dài mép (chồng qua khớp). Mép mỗi hàng lấy theo ẢNH GỐC; điểm kéo dài thuộc lượt
-// đang giữ điểm ảnh mép đó → back/front không giẫm lên nhau, cùng neo (lệch đúng ovS·k điểm ảnh).
+// đang giữ điểm ảnh mép đó → back/front không giẫm lên nhau, cùng neo. k = hệ số cỡ (chồng mép tính theo ô 96).
 function extOf(p, art, v, ovS, ovE, k, kind) {
-  const key = v + '|' + ovS + '|' + ovE + '|' + kind;
+  const key = v + '|' + ovS + '|' + ovE + '|' + k + '|' + kind;
   const cache = art.ext || (art.ext = new Map());
   if (cache.has(key)) return cache.get(key);
   const src = art.pass[v];
@@ -406,21 +439,13 @@ function extOf(p, art, v, ovS, ovE, k, kind) {
   return r;
 }
 function drawPass(ctx, p, f, mode, v, s, cfg, kind) {
-  const pl = place(p, f, mode, cfg);
-  const a1 = artOf(p, cfg), a2 = s === 2 ? artOf(p, cfg, true) : null;
-  if (!a1) return pl;
+  const pl = place(p, f, mode, cfg), a = artOf(p, cfg);
+  if (!a) return pl;
   const [ovS, ovE] = ovOf(p, cfg);
+  const e = extOf(p, a, v, ovS, ovE, KS, kind); if (!e) return pl;
   ctx.save();
-  if (s === 2 && a2 && a2.pass[v] !== undefined) {
-    const e = extOf(p, a2, v, ovS, ovE, 2, kind); if (!e) { ctx.restore(); return pl; }
-    if (p.kind === 'cap') ctx.setTransform(1, 0, 0, 1, Math.round(2 * pl.A[0] - a2.w / 2), Math.round(2 * pl.A[1] - a2.h / 2));
-    else ctx.setTransform(new DOMMatrix().scale(2).multiply(pl.m).scale(0.5).translate(-e.pad, 0));
-    ctx.drawImage(e.c, 0, 0);
-  } else {
-    const e = extOf(p, a1, v, ovS, ovE, 1, kind); if (!e) { ctx.restore(); return pl; }
-    ctx.setTransform(new DOMMatrix().scale(s).multiply(pl.m).translate(-e.pad, 0));
-    ctx.drawImage(e.c, 0, 0);
-  }
+  ctx.setTransform(new DOMMatrix().scale(s).multiply(pl.m).translate(-e.pad, 0));
+  ctx.drawImage(e.c, 0, 0);
   ctx.restore();
   return pl;
 }
@@ -466,64 +491,66 @@ function renderFrame(ctx, f, mode, opt) {
 }
 
 // ---------- Hiển thị (phóng số nguyên theo DPR, nearest-neighbor) ----------
-const SRC = [canvas(W, H), canvas(W, H)], SRC2 = [canvas(2 * W, 2 * H), canvas(2 * W, 2 * H)], GAME = [canvas(W/2, H/2), canvas(W/2, H/2)];
-let CROP = {x: 0, y: 0, w: W, h: H}, CROP_AUTO = CROP, K = 4;
+let CROP_AUTO = {x: 0, y: 0, w: W96, h: H96};
 function computeCrop() {
-  let x0 = W, y0 = H, x1 = 0, y1 = 0;
-  const c = canvas(W, H), x = c.getContext('2d'), keep = PIECES;
-  for (const sk of SET_KEYS) for (let f = 0; f < N; f++) {
-    PIECES = SETS[sk];
+  let x0 = W96, y0 = H96, x1 = 0, y1 = 0;
+  const c = canvas(W96, H96), x = c.getContext('2d');
+  for (const sk of SET_KEYS) withCtx(sk, 1, () => { for (let f = 0; f < N; f++) {
     renderFrame(x, f, 0, {cfg: {co: 'to', ov: 2}});
-    const d = x.getImageData(0, 0, W, H).data;
-    for (let y = 0; y < H; y++) for (let X = 0; X < W; X++) if (d[(y*W+X)*4+3]) { x0 = Math.min(x0, X); y0 = Math.min(y0, y); x1 = Math.max(x1, X+1); y1 = Math.max(y1, y+1); }
-  }
-  PIECES = keep;
-  if (x1 <= x0) return {x: 0, y: 0, w: W, h: H};
-  x0 = Math.max(0, x0 - 4) & ~1; y0 = Math.max(0, y0 - 4) & ~1; x1 = Math.min(W, (x1 + 5) & ~1); y1 = Math.min(H, (y1 + 5) & ~1);
+    const d = x.getImageData(0, 0, W96, H96).data;
+    for (let y = 0; y < H96; y++) for (let X = 0; X < W96; X++) if (d[(y*W96+X)*4+3]) { x0 = Math.min(x0, X); y0 = Math.min(y0, y); x1 = Math.max(x1, X+1); y1 = Math.max(y1, y+1); }
+  } });
+  if (x1 <= x0) return {x: 0, y: 0, w: W96, h: H96};
+  x0 = Math.max(0, x0 - 4) & ~1; y0 = Math.max(0, y0 - 4) & ~1; x1 = Math.min(W96, (x1 + 5) & ~1); y1 = Math.min(H96, (y1 + 5) & ~1);
   return {x: x0, y: y0, w: x1 - x0, h: y1 - y0};
 }
+// Vùng cắt (toạ độ của ảnh cỡ đó). Cắt theo ô 96 (số chẵn) rồi nhân hệ số → luôn nguyên.
+function cropOf(size) { const c = $('ca96').checked ? {x: 0, y: 0, w: W96, h: H96} : CROP_AUTO, k = size === 48 ? 0.5 : size / 96;
+  return {x: c.x * k, y: c.y * k, w: c.w * k, h: c.h * k}; }
+function views() { return CMP ? [{size: 96, mode: MODE}, {size: SIZE_MAX, mode: MODE}] : [{size: SIZE, mode: 0}, {size: SIZE, mode: 1}]; }
+const curK = () => CMP ? kOf(SIZE_MAX) : kOf(SIZE);
+const curKey = () => setOf(curK()) + '|' + curK();
+let KV = [4, 4];
 function layout() {
-  CROP = $('ca96').checked ? {x: 0, y: 0, w: W, h: H} : CROP_AUTO;
   const dpr = window.devicePixelRatio || 1;
   const colW = $('c0').parentElement.clientWidth - 14;
   const maxH = Math.max(160, window.innerHeight * 0.5);
-  K = Math.max(1, Math.min(Math.floor(colW * dpr / CROP.w), Math.floor(maxH * dpr / CROP.h)));
-  K -= K % 2; K = Math.max(2, K);       // số chẵn: khung cỡ game (×2K) cũng nguyên
-  for (const id of ['c0', 'c1', 'g0', 'g1']) {
-    const c = $(id); c.width = CROP.w * K; c.height = CROP.h * K;
-    c.style.width = (c.width / dpr) + 'px'; c.style.height = (c.height / dpr) + 'px';
-  }
+  const fit = cr => Math.max(1, Math.min(Math.floor(colW * dpr / cr.w), Math.floor(maxH * dpr / cr.h)));
+  const vs = views();
+  if (CMP) { const kb = fit(cropOf(vs[1].size)); KV = [kb * vs[1].size / vs[0].size, kb]; }   // cùng kích thước trên màn hình
+  else { const kk = fit(cropOf(SIZE)); KV = [kk, kk]; }
+  vs.forEach((v, i) => { const cr = cropOf(v.size), c = $('c' + i);
+    c.width = cr.w * KV[i]; c.height = cr.h * KV[i];
+    c.style.width = (c.width / dpr) + 'px'; c.style.height = (c.height / dpr) + 'px'; });
   draw();
 }
 
+const BUF = {}, BUF48 = canvas(W96 / 2, H96 / 2);
+const buf = k => BUF[k] || (BUF[k] = canvas(W96 * k, H96 * k));
 let FRAME = 0, PLAY = true, PLAN0 = [];
 function draw() {
-  for (let mode = 0; mode < 2; mode++) {
-    const sx = SRC[mode].getContext('2d');
-    const plan = renderFrame(sx, FRAME, mode, {view: VIEW});
-    if (mode === 0) PLAN0 = plan;
-    const gx = GAME[mode].getContext('2d'); gx.imageSmoothingEnabled = false;
-    gx.clearRect(0, 0, W/2, H/2); gx.drawImage(SRC[mode], 0, 0, W/2, H/2);
-    const c = $('c' + mode), x = c.getContext('2d');
+  views().forEach((v, i) => {
+    const k = kOf(v.size), sk = setOf(k), src = buf(k);
+    const plan = withCtx(sk, k, () => renderFrame(src.getContext('2d'), FRAME, v.mode, {view: VIEW}));
+    if (i === (CMP ? 1 : 0)) PLAN0 = plan;
+    let img = src;
+    if (v.size === 48) { const g = BUF48.getContext('2d'); g.imageSmoothingEnabled = false; g.clearRect(0, 0, W96 / 2, H96 / 2); g.drawImage(src, 0, 0, W96 / 2, H96 / 2); img = BUF48; }
+    const cr = cropOf(v.size), c = $('c' + i), x = c.getContext('2d');
     x.imageSmoothingEnabled = false; x.fillStyle = '#c9d1d8'; x.fillRect(0, 0, c.width, c.height);
-    if (X2) {
-      renderFrame(SRC2[mode].getContext('2d'), FRAME, mode, {s: 2, view: VIEW});
-      x.drawImage(SRC2[mode], CROP.x * 2, CROP.y * 2, CROP.w * 2, CROP.h * 2, 0, 0, CROP.w * K, CROP.h * K);
-    } else x.drawImage(SRC[mode], CROP.x, CROP.y, CROP.w, CROP.h, 0, 0, CROP.w * K, CROP.h * K);
-    $('t' + mode).textContent = X2 ? 'ô 192 (×2, so sánh)' : 'ô nguồn 96×96';
-    drawDebug(x, mode);
-    const g = $('g' + mode), y = g.getContext('2d');
-    y.imageSmoothingEnabled = false; y.fillStyle = '#c9d1d8'; y.fillRect(0, 0, g.width, g.height);
-    y.drawImage(GAME[mode], CROP.x/2, CROP.y/2, CROP.w/2, CROP.h/2, 0, 0, CROP.w * K, CROP.h * K);
-  }
+    x.drawImage(img, cr.x, cr.y, cr.w, cr.h, 0, 0, c.width, c.height);
+    $('h' + i).textContent = CMP ? 'Cỡ ' + v.size + (v.size === 96 ? ' (ô game nguồn)' : ' (ảnh thật, độ phân giải cao)') : (v.mode ? 'Làm tròn 8 hướng' : 'Xoay liên tục');
+    $('t' + i).textContent = (CMP ? (v.mode ? '8 hướng' : 'liên tục') + ' · ' : '') + 'ô ' + v.size + '×' + v.size + ' · bộ ' + SETDEF[sk].name + ' · 1 điểm ảnh = ' + KV[i] + ' điểm màn hình';
+    const crR = v.size === 48 ? cropOf(96) : cr;
+    withCtx(sk, k, () => drawDebug(x, v.mode, v.size === 48 ? KV[i] / 2 : KV[i], crR));
+  });
   $('khung').textContent = 'Khung ' + (FRAME + 1) + '/' + N;
   info(); planTable();
   document.querySelectorAll('tr[data-f]').forEach(r => r.classList.toggle('cur', +r.dataset.f === FRAME));
 }
-function drawDebug(x, mode) {
-  const J = FR[FRAME].joints, k = K, P = a => [(a[0] - CROP.x) * k, (a[1] - CROP.y) * k];
-  const r = Math.max(2, k * 0.35);
-  x.lineWidth = Math.max(1, k / 4);
+function drawDebug(x, mode, k, CROP) {
+  const J = FR[FRAME].joints, P = a => [(a[0] - CROP.x) * k, (a[1] - CROP.y) * k];
+  const r = Math.max(2, k * 0.35 * KS);
+  x.lineWidth = Math.max(1, k * KS / 4);
   const chains = [['shoulderFront','elbowFront','wristFront'], ['hipFront','kneeFront','ankleFront'], ['shoulderBack','elbowBack','wristBack'], ['hipBack','kneeBack','ankleBack']];
   if (PIECES.some(p => p.on && p.from === 'neck')) chains.unshift(['neck', 'hipCenter']);
   const front = ch => !/Back$/.test(ch[ch.length - 1]);
@@ -535,7 +562,7 @@ function drawDebug(x, mode) {
   if ($('dThan').checked && pt2(J.neck) && pt2(J.hipCenter)) {
     const a = J.neck, b = J.hipCenter, t = (yy) => [a[0] + (b[0] - a[0]) * (yy - a[1]) / (b[1] - a[1]), yy];
     const q0 = P(t(CROP.y)), q1 = P(t(CROP.y + CROP.h));
-    x.strokeStyle = '#7c3aed'; x.lineWidth = Math.max(1, k / 4); x.setLineDash([k, k / 2]); x.beginPath(); x.moveTo(q0[0], q0[1]); x.lineTo(q1[0], q1[1]); x.stroke(); x.setLineDash([]);
+    x.strokeStyle = '#7c3aed'; x.setLineDash([k * KS, k * KS / 2]); x.beginPath(); x.moveTo(q0[0], q0[1]); x.lineTo(q1[0], q1[1]); x.stroke(); x.setLineDash([]);
   }
   if ($('dKhop').checked) chains.forEach(ch => ch.forEach(n => { if (!pt2(J[n])) return; const q = P(J[n]);
     x.fillStyle = front(ch) ? '#00e5ff' : '#ff4fd8'; x.strokeStyle = '#000'; x.lineWidth = 1; x.beginPath(); x.arc(q[0], q[1], r, 0, 7); x.fill(); x.stroke(); }));
@@ -545,25 +572,26 @@ function drawDebug(x, mode) {
     const pts = p.kind === 'bone' ? [[p.anchorStart, pl.A, '#ffd400'], [p.anchorEnd, pl.B, '#ff7a00']] : [[pl.anchor, pl.A, '#ffd400']];
     for (const [a, jp, col] of pts) {
       const w = P(apply(pl.m, a[0], a[1])), j = P(jp);
-      if ($('dNoi').checked) { x.strokeStyle = '#e00000'; x.lineWidth = Math.max(1, k / 5); x.setLineDash([k / 2, k / 3]); x.beginPath(); x.moveTo(w[0], w[1]); x.lineTo(j[0], j[1]); x.stroke(); x.setLineDash([]); }
+      if ($('dNoi').checked) { x.strokeStyle = '#e00000'; x.lineWidth = Math.max(1, k * KS / 5); x.setLineDash([k * KS / 2, k * KS / 3]); x.beginPath(); x.moveTo(w[0], w[1]); x.lineTo(j[0], j[1]); x.stroke(); x.setLineDash([]); }
       if ($('dNeo').checked) { x.fillStyle = col; x.strokeStyle = '#000'; x.lineWidth = 1; x.fillRect(w[0] - r, w[1] - r, 2 * r, 2 * r); x.strokeRect(w[0] - r, w[1] - r, 2 * r, 2 * r); }
     }
   }
 }
 
-// ---------- Tự kiểm ----------
+// ---------- Tự kiểm (theo cỡ đang dùng: bán kính, ngưỡng nhân KS) ----------
 const near = (d, cx, cy, R) => { for (let y = Math.floor(cy - R); y <= cy + R; y++) for (let x = Math.floor(cx - R); x <= cx + R; x++) {
   if (x < 0 || y < 0 || x >= W || y >= H) continue; if (Math.hypot(x + .5 - cx, y + .5 - cy) <= R && d[(y*W+x)*4+3]) return true; } return false; };
 const wrap = a => { while (a > 180) a -= 360; while (a < -180) a += 360; return a; };
-const SCR = canvas(W, H), SX = SCR.getContext('2d', {willReadFrequently: true});
-const LALPHA = {};
+function scr() { const c = CTX[KS]; return c.scr || (c.scr = canvas(W, H)); }
 function alphaOf(it, f, mode, cfg) {
-  if (it.k === 'L') { const key = it.L + '|' + f; if (LALPHA[key]) return LALPHA[key]; }
+  const LA = CTX[KS].lalpha;
+  if (it.k === 'L') { const key = it.L + '|' + f; if (LA[key]) return LA[key]; }
+  const SX = scr().getContext('2d', {willReadFrequently: true});
   SX.setTransform(1, 0, 0, 1, 0, 0); SX.clearRect(0, 0, W, H);
   drawItem(SX, it, f, mode, 1, cfg, 'thuong');
   const d = SX.getImageData(0, 0, W, H).data, a = new Uint8Array(W * H);
   for (let i = 0; i < W * H; i++) a[i] = d[i * 4 + 3] ? 1 : 0;
-  if (it.k === 'L') LALPHA[it.L + '|' + f] = a;
+  if (it.k === 'L') LA[it.L + '|' + f] = a;
   return a;
 }
 // Bản đồ "lớp trên cùng" sau khi vẽ đủ lớp: owner[i] = chỉ số mục trong kế hoạch vẽ.
@@ -577,11 +605,11 @@ function gapsOf(f, mode, cfg) {
   for (const g of KHOP_KIEM) {
     const c = J[g.khop]; if (!pt2(c)) continue;
     const res = {};
-    for (const R of [2, 3]) { let n = 0;
+    for (const R0 of [2, 3]) { const R = R0 * KS; let n = 0;
       for (let y = Math.floor(c[1] - R); y <= c[1] + R; y++) for (let x = Math.floor(c[0] - R); x <= c[0] + R; x++) {
         if (x < 0 || y < 0 || x >= W || y >= H || Math.hypot(x + .5 - c[0], y + .5 - c[1]) > R) continue;
         const o = own[y * W + x]; if (o >= 0 && plan[o].k === 'L' && g.lop.includes(plan[o].L)) n++; }
-      res['r' + R] = n; }
+      res['r' + R0] = n; }
     out[g.id] = res;
   }
   return out;
@@ -605,37 +633,33 @@ function checkPlan(plan, f) {
   });
   return bad;
 }
-let REPORT = null;
-function selfCheck() {
+function checkModes(f) {
   const c = canvas(W, H), x = c.getContext('2d', {willReadFrequently: true});
   const alpha = () => x.getImageData(0, 0, W, H).data;
   const cfg = cfgNow();
-  const rows = [];
-  for (let f = 0; f < N; f++) {
-    const row = {frame: f + 1, modes: [], khe: {}, rules: {}};
-    for (const r of RULES) row.rules[r.id] = ruleState(r, f);
-    for (let mode = 0; mode < 2; mode++) {
-      const md = {bam: [], gian: [], rung: [], thuTu: [], ang: {}};
-      md.thuTu = checkPlan(buildPlan(f, cfg), f);
-      for (const p of PIECES) {
-        if (!drawable(p, f) || p.kind !== 'bone') continue;
-        const pl = place(p, f, mode, cfg);
-        renderFrame(x, f, mode, {only: [p], noBody: true, cfg}); const d = alpha();
-        const okA = near(d, pl.A[0], pl.A[1], 1.5), okB = near(d, pl.B[0], pl.B[1], 1.5);
-        const endW = apply(pl.m, p.anchorEnd[0], p.anchorEnd[1]), endErr = Math.hypot(endW[0] - pl.B[0], endW[1] - pl.B[1]);
-        if (!okA || !okB) md.bam.push({name: p.name, dau: !okA, cuoi: !okB, endErr});
-        if (pl.sx < 0.85 - 1e-9 || pl.sx > 1.15 + 1e-9) md.gian.push(p.name + ' giãn ' + pl.sx.toFixed(2));
-        x.setTransform(1,0,0,1,0,0); x.clearRect(0, 0, W, H); x.setTransform(pl.m); x.drawImage(p.art._.idImg, 0, 0); x.setTransform(1,0,0,1,0,0);
-        const e = alpha(), seen = new Set();
-        for (let i = 0; i < e.length; i += 4) if (e[i+3]) seen.add(e[i] * 256 + e[i+1]);
-        md.ang[p.id] = {theta: pl.theta * DEG, used: pl.used * DEG, sx: pl.sx, raw: pl.raw, clamped: pl.clamped, lost: p.art._.idImg.nOpaque - seen.size, endErr};
-      }
-      row.modes.push(md);
+  const row = {frame: f + 1, modes: [], khe: {}, rules: {}};
+  for (const r of RULES) row.rules[r.id] = ruleState(r, f);
+  for (let mode = 0; mode < 2; mode++) {
+    const md = {bam: [], gian: [], rung: [], thuTu: [], ang: {}};
+    md.thuTu = checkPlan(buildPlan(f, cfg), f);
+    for (const p of PIECES) {
+      if (!drawable(p, f) || p.kind !== 'bone') continue;
+      const pl = place(p, f, mode, cfg);
+      renderFrame(x, f, mode, {only: [p], noBody: true, cfg}); const d = alpha();
+      const okA = near(d, pl.A[0], pl.A[1], 1.5 * KS), okB = near(d, pl.B[0], pl.B[1], 1.5 * KS);
+      const endW = apply(pl.m, p.anchorEnd[0], p.anchorEnd[1]), endErr = Math.hypot(endW[0] - pl.B[0], endW[1] - pl.B[1]) / KS;
+      if (!okA || !okB) md.bam.push({name: p.name, dau: !okA, cuoi: !okB, endErr});
+      if (pl.sx < 0.85 - 1e-9 || pl.sx > 1.15 + 1e-9) md.gian.push(p.name + ' giãn ' + pl.sx.toFixed(2));
+      x.setTransform(1,0,0,1,0,0); x.clearRect(0, 0, W, H); x.setTransform(pl.m); x.drawImage(p.art._.idImg, 0, 0); x.setTransform(1,0,0,1,0,0);
+      const e = alpha(), seen = new Set();
+      for (let i = 0; i < e.length; i += 4) if (e[i+3]) seen.add(e[i] * 256 + e[i+1]);
+      md.ang[p.id] = {theta: pl.theta * DEG, used: pl.used * DEG, sx: pl.sx, raw: pl.raw, clamped: pl.clamped, lost: p.art._.idImg.nOpaque - seen.size, endErr};
     }
-    for (const b of BIEN) for (let mode = 0; mode < 2; mode++) row.khe[b.id + '|' + mode] = gapsOf(f, mode, b);
-    row.khe['sau|0'] = gapsOf(f, 0, cfg); row.khe['sau|1'] = gapsOf(f, 1, cfg);
-    rows.push(row);
+    row.modes.push(md);
   }
+  return row;
+}
+function finishRows(rows) {
   for (let f = 0; f < N; f++) {
     const pv = rows[(f + N - 1) % N].modes, cu = rows[f].modes;
     for (const id in cu[0].ang) {
@@ -646,13 +670,39 @@ function selfCheck() {
       else if (Math.abs(d1) >= 45 && Math.abs(d0) < 20) cu[1].rung.push(p.name + ' nhảy ' + Math.round(d1) + '° (xương chỉ ' + Math.round(d0) + '°)');
     }
   }
-  REPORT = rows;
-  return rows;
 }
+// Danh sách việc kiểm cho 1 bộ × 1 cỡ (chạy liền hoặc chia nhỏ để trang không đứng).
+function jobsOf(sk, k) {
+  const rows = [], jobs = [];
+  for (let f = 0; f < N; f++) {
+    jobs.push(() => { rows[f] = checkModes(f); });
+    for (const b of BIEN) jobs.push(() => { for (let m = 0; m < 2; m++) rows[f].khe[b.id + '|' + m] = gapsOf(f, m, b); });
+    jobs.push(() => { const cfg = cfgNow(); rows[f].khe['sau|0'] = gapsOf(f, 0, cfg); rows[f].khe['sau|1'] = gapsOf(f, 1, cfg); });
+  }
+  jobs.push(() => { finishRows(rows); summarize(rows, sk, k); });
+  return {rows, jobs};
+}
+const REPORTS = {}, PROG = {};
+function runSync(sk, k) { const {rows, jobs} = jobsOf(sk, k); withCtx(sk, k, () => jobs.forEach(j => j())); REPORTS[sk + '|' + k] = rows; return rows; }
+function runAsync(sk, k) {
+  return new Promise(res => { const {rows, jobs} = jobsOf(sk, k); let i = 0; const key = sk + '|' + k;
+    const step = () => { const t0 = performance.now();
+      while (i < jobs.length && performance.now() - t0 < 40) { const j = jobs[i++]; withCtx(sk, k, j); }
+      PROG[key] = Math.floor(N * i / jobs.length); renderAll();
+      if (i < jobs.length) setTimeout(step, 0); else { REPORTS[key] = rows; delete PROG[key]; renderAll(); if (key === curKey()) showReport(); res(rows); } };
+    setTimeout(step, 0); });
+}
+let QUEUE = Promise.resolve();
+function queueBig() {
+  for (const sk of SET_KEYS) for (const k of KLIST) if (k > 1 && SETS[sk][k]) { PROG[sk + '|' + k] = 0; QUEUE = QUEUE.then(() => runAsync(sk, k)); }
+  renderAll();
+  return QUEUE;
+}
+
 const sumK = (row, key, R) => Object.values(row.khe[key]).reduce((s, g) => s + g['r' + R], 0);
-function renderReport() {
-  const rows = REPORT, short = s => s.replace(/^Giáp /, '').replace(/^Chụp /, 'chụp ');
-  // --- bảng khe ---
+const short = s => s.replace(/^Giáp /, '').replace(/^Chụp /, 'chụp ');
+// Tính tóm tắt + dựng sẵn HTML các bảng của 1 bộ × 1 cỡ (gọi trong withCtx của bộ/cỡ đó).
+function summarize(rows, sk, k) {
   let h = '<tr><th>Khung</th><th>Liên tục r2<br>trước→sau</th><th>Liên tục r3<br>trước→sau</th><th>8 hướng r2<br>trước→sau</th><th>8 hướng r3<br>trước→sau</th><th>Khớp còn khe (sau, r2)</th></tr>';
   const T = {};
   for (const r of rows) {
@@ -662,10 +712,8 @@ function renderReport() {
     for (let m = 0; m < 2; m++) for (const g of KHOP_KIEM) { const v = (r.khe['sau|' + m][g.id] || {}).r2; if (v) con.push(g.ten + (m ? ' (8h)' : '') + ' ' + v + 'đ'); }
     h += '<tr data-f="' + (r.frame - 1) + '"><td>' + r.frame + '</td>' + cell(0, 2) + cell(0, 3) + cell(1, 2) + cell(1, 3) + '<td style="text-align:left">' + (con.join('; ') || '✓') + '</td></tr>';
   }
-  h += '<tr><td class="tot">Tổng</td>' + ['0|2', '0|3', '1|2', '1|3'].map(k => '<td class="tot">' + T[k][0] + '→' + T[k][1] + '</td>').join('') + '<td></td></tr>';
-  $('tkhe').innerHTML = h;
-  $('tomKhe').innerHTML = 'Chụp đang chọn: <b>' + ((RIG.chupKhop.cacCo || {})[CO] || CO) + '</b>, chồng mép ' + OVDEF + ' điểm ảnh. Tổng điểm ảnh thân lộ trong đĩa r=2: liên tục ' + T['0|2'][0] + ' → <b>' + T['0|2'][1] + '</b>, 8 hướng ' + T['1|2'][0] + ' → <b>' + T['1|2'][1] + '</b>.';
-  // --- bảng so cỡ ---
+  h += '<tr><td class="tot">Tổng</td>' + ['0|2', '0|3', '1|2', '1|3'].map(q => '<td class="tot">' + T[q][0] + '→' + T[q][1] + '</td>').join('') + '<td></td></tr>';
+  const tomKhe = 'Chụp đang chọn: <b>' + ((RIG.chupKhop.cacCo || {})[CO] || CO) + '</b>, chồng mép ' + OVDEF + ' điểm ảnh ô 96' + (k > 1 ? ' (= ' + OVDEF * k + ' điểm ảnh ở cỡ này)' : '') + '. Đĩa r=2 ở cỡ này = bán kính ' + 2 * k + ' điểm ảnh. Tổng điểm ảnh thân lộ trong đĩa r=2: liên tục ' + T['0|2'][0] + ' → <b>' + T['0|2'][1] + '</b>, 8 hướng ' + T['1|2'][0] + ' → <b>' + T['1|2'][1] + '</b>.';
   let c = '<tr><th style="width:40%">Cấu hình</th><th>Liên tục r2</th><th>Liên tục r3</th><th>8 hướng r2</th><th>8 hướng r3</th><th>Khung có khe r2</th></tr>';
   const SO = {};
   for (const b of BIEN) { const t = [0, 0, 0, 0]; let nf = 0;
@@ -673,9 +721,7 @@ function renderReport() {
       if (sumK(r, b.id + '|0', 2) + sumK(r, b.id + '|1', 2)) nf++; }
     SO[b.id] = {lienTucR2: t[0], lienTucR3: t[1], tamHuongR2: t[2], tamHuongR3: t[3], khungCoKheR2: nf};
     c += '<tr' + (b.co === CO ? ' class="cur"' : '') + '><td style="text-align:left">' + b.ten + '</td>' + t.map(v => '<td class="' + (v ? 'warn' : 'ok') + '">' + v + '</td>').join('') + '<td>' + nf + '/' + N + '</td></tr>'; }
-  $('tco').innerHTML = c;
-  // --- bảng tự kiểm ---
-  let k = '<tr><th style="width:9%">Khung</th><th style="width:25%">Bám 2 đầu</th><th style="width:16%">Thứ tự vẽ</th><th style="width:16%">Giãn</th><th style="width:16%">Đổi lớp theo khung</th><th style="width:18%">Rung (8 hướng)</th></tr>';
+  let kk = '<tr><th style="width:9%">Khung</th><th style="width:25%">Bám 2 đầu</th><th style="width:16%">Thứ tự vẽ</th><th style="width:16%">Giãn</th><th style="width:16%">Đổi lớp theo khung</th><th style="width:18%">Rung (8 hướng)</th></tr>';
   let nBam = 0, nTT = 0, nGian = 0, nRung = 0, nClamp = 0; const doi = {}; const bamList = [];
   for (const r of rows) {
     const bam = []; r.modes.forEach((m, mi) => m.bam.forEach(b => { bam.push(short(b.name) + (b.dau ? ' đầu' : '') + (b.cuoi ? ' cuối' : '') + (mi ? ' (8h)' : '') + ' lệch ' + b.endErr.toFixed(1));
@@ -687,37 +733,64 @@ function renderReport() {
     const dl = RULES.filter(q => r.rules[q.id].dung).map(q => { (doi[q.id] = doi[q.id] || []).push(r.frame); return q.ten; });
     const rung = r.modes[1].rung;
     if (bam.length) nBam++; if (tt.length) nTT++; if (gian.length) nGian++; if (rung.length) nRung++;
-    k += '<tr data-f="' + (r.frame - 1) + '"><td>' + r.frame + '</td>' +
+    kk += '<tr data-f="' + (r.frame - 1) + '"><td>' + r.frame + '</td>' +
       '<td class="' + (bam.length ? 'bad' : 'ok') + '">' + (bam.join('; ') || '✓') + '</td>' +
       '<td class="' + (tt.length ? 'bad' : 'ok') + '">' + (tt.join('; ') || '✓') + '</td>' +
       '<td class="' + (gian.length ? 'bad' : cl.length ? 'warn' : 'ok') + '">' + (gian.concat(cl).join('; ') || '✓') + '</td>' +
       '<td>' + (dl.join('; ') || '—') + '</td>' +
       '<td class="' + (rung.length ? 'warn' : 'ok') + '">' + (rung.map(short).join('; ') || '✓') + '</td></tr>';
   }
-  $('tkiem').innerHTML = k;
-  const maskBad = errors.filter(e => /mask|lượt/.test(e)).length;
-  $('tom').innerHTML = 'Bám 2 đầu đủ: <b>' + (N - nBam) + '/' + N + '</b> khung · thứ tự vẽ đúng: <b>' + (N - nTT) + '/' + N + '</b> · giãn ngoài 0,85–1,15: <b>' + nGian + '</b> (lượt bị kẹp: ' + nClamp + ') · rung: ' + nRung + ' · lỗi mask: ' + maskBad +
+  const tag = tagOf(sk, k), maskBad = errors.filter(e => e.startsWith(tag) && /mask|lượt/.test(e)).length;
+  const tom = 'Bám 2 đầu đủ: <b>' + (N - nBam) + '/' + N + '</b> khung · thứ tự vẽ đúng: <b>' + (N - nTT) + '/' + N + '</b> · giãn ngoài 0,85–1,15: <b>' + nGian + '</b> (lượt bị kẹp: ' + nClamp + ') · rung: ' + nRung + ' · lỗi mask: ' + maskBad +
     ' · đổi lớp: ' + (RULES.map(q => q.ten + ' ở khung ' + ((doi[q.id] || []).join(', ') || 'không khung nào')).join('; ') || 'không có quy tắc');
-  document.querySelectorAll('tr[data-f]').forEach(tr => tr.onclick = () => { PLAY = false; setPlay(); FRAME = +tr.dataset.f; draw(); });
   const kheRows = rows.map(r => { const o = {frame: r.frame};
     for (const key of Object.keys(r.khe)) o[key] = {r2: sumK(r, key, 2), r3: sumK(r, key, 3), chiTiet: r.khe[key]}; return o; });
-  REPORT.summary = {frames: N, co: CO, ov: OVDEF, bamOk: N - nBam, bamLoi: bamList, thuTuOk: N - nTT, gianLoi: nGian, kep: nClamp, rung: nRung, maskLoi: maskBad,
-    doiLop: doi, khe: kheRows, soCo: SO, mask: MASKLOG[SET], tongKhe: T};
+  const thuTu = [...new Set(rows.flatMap(r => r.modes[0].thuTu.concat(r.modes[1].thuTu)))];
+  rows.html = {tkhe: h, tomKhe, tco: c, tkiem: kk, tom};
+  rows.summary = {set: sk, size: 96 * k, k, frames: N, co: CO, ov: OVDEF, bamOk: N - nBam, bamLoi: bamList, thuTuOk: N - nTT, thuTuLoi: thuTu.slice(0, 6), gianLoi: nGian, kep: nClamp, rung: nRung, maskLoi: maskBad,
+    doiLop: doi, khe: kheRows, soCo: SO, mask: MASKLOG[sk + '|' + k], tongKhe: T};
+}
+function showReport() {
+  const rows = REPORTS[curKey()], k = curK(), ten = 'bộ ' + SETDEF[setOf(k)].name + ', cỡ ' + 96 * k;
+  document.querySelectorAll('.coTen').forEach(e => e.textContent = ten);
+  if (!rows) { const w = '<tr><td>Đang kiểm cỡ này… (' + (PROG[curKey()] || 0) + '/' + N + ' khung)</td></tr>';
+    for (const id of ['tkhe', 'tco', 'tkiem']) $(id).innerHTML = w; $('tomKhe').textContent = ''; $('tom').textContent = ''; return; }
+  for (const id of ['tkhe', 'tco', 'tkiem']) $(id).innerHTML = rows.html[id];
+  $('tomKhe').innerHTML = rows.html.tomKhe; $('tom').innerHTML = rows.html.tom;
+  document.querySelectorAll('tr[data-f]').forEach(tr => tr.onclick = () => { PLAY = false; setPlay(); FRAME = +tr.dataset.f; draw(); });
+}
+function renderAll() {
+  let h = '<tr><th style="width:17%">Cỡ · bộ</th><th>LT r2<br>trước→sau</th><th>LT r3<br>trước→sau</th><th>8H r2<br>trước→sau</th><th>8H r3<br>trước→sau</th><th>r3 sau ≈96<br>LT / 8H</th><th>Thứ tự đúng</th><th>Bám 2 đầu</th><th>Giãn lỗi · kẹp</th><th>Mask lỗi</th></tr>';
+  for (const k of KLIST) for (const sk of SET_KEYS) { if (!SETS[sk] || !SETS[sk][k]) continue;
+    const key = sk + '|' + k, r = REPORTS[key], ten = (96 * k) + ' · ' + SETDEF[sk].name;
+    if (!r || !r.summary) { h += '<tr' + (key === curKey() ? ' class="cur"' : '') + '><td>' + ten + '</td><td colspan="9" class="warn">đang kiểm… ' + (PROG[key] || 0) + '/' + N + ' khung</td></tr>'; continue; }
+    const s = r.summary, T = s.tongKhe, kq = v => (v / (k * k)).toFixed(1);
+    const cell = q => '<td class="' + (T[q][1] ? 'warn' : 'ok') + '">' + T[q][0] + '→<b>' + T[q][1] + '</b></td>';
+    h += '<tr' + (key === curKey() ? ' class="cur"' : '') + '><td>' + ten + '</td>' + cell('0|2') + cell('0|3') + cell('1|2') + cell('1|3') +
+      '<td>' + kq(T['0|3'][1]) + ' / ' + kq(T['1|3'][1]) + '</td>' +
+      '<td class="' + (s.thuTuOk === N ? 'ok' : 'bad') + '">' + s.thuTuOk + '/' + N + '</td>' +
+      '<td class="' + (s.bamOk === N ? 'ok' : 'warn') + '">' + s.bamOk + '/' + N + '</td>' +
+      '<td class="' + (s.gianLoi ? 'bad' : 'ok') + '">' + s.gianLoi + ' · ' + s.kep + '</td>' +
+      '<td class="' + (s.maskLoi ? 'bad' : 'ok') + '">' + s.maskLoi + '</td></tr>'; }
+  $('tcoLon').innerHTML = h;
+  const xong = Object.values(REPORTS).filter(r => r && r.summary).length, tong = SET_KEYS.reduce((n, sk) => n + Object.keys(SETS[sk] || {}).length, 0);
+  $('tomCo').innerHTML = xong < tong ? 'Đang kiểm cỡ lớn ở nền (' + xong + '/' + tong + ' bộ-cỡ xong) — trang vẫn dùng được.' : 'Đã kiểm xong ' + tong + ' bộ-cỡ. Dòng tô vàng = cỡ đang xem; bấm nút cỡ để xem bảng chi tiết bên dưới.';
 }
 function info() {
-  if (!REPORT) return;
-  const r = REPORT[FRAME];
+  const rows = REPORTS[curKey()];
+  if (!rows) { $('tinfo').innerHTML = ''; return; }
+  const r = rows[FRAME];
   let h = '<tr><th style="width:34%">Mảnh</th><th>Góc liên tục</th><th>Góc 8 hướng</th><th>Giãn (cần)</th><th>Mất</th></tr>';
-  for (const p of PIECES) {
+  withCtx(setOf(curK()), curK(), () => { for (const p of PIECES) {
     const a = r.modes[0].ang[p.id], b = r.modes[1].ang[p.id];
     if (!a) continue;
     h += '<tr><td>' + p.name.replace('Giáp ', '') + '</td><td>' + Math.round(a.theta) + '°</td><td>' + Math.round(b.used) + '°</td><td' + (a.clamped ? ' class="warn"' : '') + '>' + a.sx.toFixed(2) + (a.clamped ? ' (' + a.raw.toFixed(2) + ')' : '') + '</td><td>' + a.lost + ' / ' + b.lost + '</td></tr>';
-  }
+  } });
   $('tinfo').innerHTML = h;
 }
 function planTable() {
-  const rs = RULES.map(q => { const s = ruleState(q, FRAME); return q.ten + ': ' + (s.d === null ? '?' : (s.dung ? '<b>CÓ</b>' : 'không') + ' (lệch ' + s.d.toFixed(1) + ' đ)'); });
-  $('planNote').innerHTML = 'Chế độ liên tục. Vẽ từ trên xuống dưới (dòng sau đè dòng trước). ' + rs.join(' · ');
+  const k = curK(), rs = withCtx(setOf(k), k, () => RULES.map(q => { const s = ruleState(q, FRAME); return q.ten + ': ' + (s.d === null ? '?' : (s.dung ? '<b>CÓ</b>' : 'không') + ' (lệch ' + s.d.toFixed(1) + ' đ ô 96)'); }));
+  $('planNote').innerHTML = 'Cỡ ' + 96 * k + ', ' + (CMP ? (MODE ? '8 hướng' : 'liên tục') : 'chế độ liên tục') + '. Vẽ từ trên xuống dưới (dòng sau đè dòng trước). ' + rs.join(' · ');
   let h = '', i = 0;
   for (const it of PLAN0) { i++;
     if (it.k === 'L') h += '<tr><td style="width:8%">' + i + '</td><td>lớp thân <b>' + it.L + '</b></td></tr>';
@@ -732,20 +805,32 @@ $('prev').onclick = () => { PLAY = false; setPlay(); FRAME = (FRAME + N - 1) % N
 $('next').onclick = () => { PLAY = false; setPlay(); FRAME = (FRAME + 1) % N; draw(); };
 for (const id of ['dXuong', 'dKhop', 'dNeo', 'dNoi', 'dThan']) $(id).onchange = draw;
 $('ca96').onchange = layout;
-$('x2').checked = X2;
-function showX2() { $('x2note').style.display = X2 ? 'block' : 'none'; }
-$('x2').onchange = () => { X2 = $('x2').checked; showX2(); draw(); };
 $('xem').value = VIEW;
 $('xem').onchange = () => { VIEW = $('xem').value; draw(); };
 $('co').innerHTML = CO_LIST.map(c => '<option value="' + c + '">' + ((RIG.chupKhop.cacCo || {})[c] || c) + '</option>').join('');
 $('co').value = CO;
-$('co').onchange = () => { CO = $('co').value; for (const sk of SET_KEYS) { PIECES = SETS[sk]; selfCheck(); renderReport(); REPORTS[sk] = REPORT; } setSet(SET); };
-function setSet(sk) {
-  if (!SETS[sk]) return;
-  SET = sk; PIECES = SETS[sk]; REPORT = REPORTS[sk];
+$('co').onchange = () => { CO = $('co').value; for (const key of Object.keys(REPORTS)) delete REPORTS[key];
+  for (const sk of SET_KEYS) runSync(sk, 1); queueBig(); refresh(); };
+$('goc').value = String(MODE);
+$('goc').onchange = () => { MODE = +$('goc').value; draw(); };
+$('cmp').checked = CMP;
+$('cmp').onchange = () => { CMP = $('cmp').checked; if (CMP) SET = 'gen'; refresh(); };
+const coBar = $('coBar');
+for (const s of SIZE_LIST) { const b = document.createElement('button'); b.className = 'seg'; b.dataset.size = s; b.textContent = s + (s === 48 ? ' (game)' : '');
+  b.onclick = () => setSize(s); coBar.append(b); }
+function setSize(s) { if (!SIZE_LIST.includes(s)) return; SIZE = s; CMP = false; $('cmp').checked = false; if (kOf(s) > 1) SET = 'gen'; refresh(); }
+function setSet(sk) { if (!SETS[sk]) return; SET = sk; if (sk === 'may' && (CMP || SIZE > 96)) { CMP = false; $('cmp').checked = false; SIZE = 96; } refresh(); }
+function refresh() {
+  document.querySelectorAll('#coBar .seg').forEach(b => { const on = !CMP && +b.dataset.size === SIZE; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+  const sk = setOf(curK());
   document.querySelectorAll('#boBar .seg').forEach(b => { const on = b.dataset.bo === sk; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
   $('boNote').textContent = SETDEF[sk].note;
-  chips(); renderReport(); draw();
+  const k = curK(), lech = k > 1 ? CL[String(96 * k)].khopThongKe : null;
+  $('coNote').innerHTML = CMP ? '<b>Cạnh nhau:</b> trái = ô 96 (cỡ game nguồn), phải = ' + SIZE_MAX + ' dựng từ ảnh nguồn thật. Hai bên cùng kích thước trên màn hình: 1 điểm ảnh 96 = ' + (SIZE_MAX / 96) + '×' + (SIZE_MAX / 96) + ' điểm ảnh ' + SIZE_MAX + '.'
+    : SIZE === 48 ? '<b>Cỡ 48 = cỡ game đang hiện</b>: vẽ ở ô 96 rồi thu ½ (nearest).'
+    : SIZE === 96 ? '<b>Cỡ 96 = ô game nguồn</b> (bản R4).'
+    : '<b>Cỡ ' + SIZE + ' (×' + k + ')</b>: thân co từ ảnh nguồn hàng chạy (BOX, như game) về ×' + k + '; khớp = data.json × ' + k + ' + tệp chỉnh co-lon/khop-co-lon.json (lệch trung vị ' + lech.trungVi.map(v => v.toFixed(2)).join(', ') + ' điểm ảnh = ' + lech.trungViTheo96.map(v => v.toFixed(2)).join(', ') + ' ô 96); giáp Gen thu từ ảnh gốc đúng tỉ lệ cỡ này. Chỉ có bộ Gen.';
+  chips(); renderAll(); showReport(); layout();
 }
 document.querySelectorAll('#boBar .seg').forEach(b => { if (!SETDEF[b.dataset.bo]) b.disabled = true; b.onclick = () => setSet(b.dataset.bo); });
 let last = 0, acc = 0;
@@ -755,16 +840,19 @@ function tick(t) {
     if (acc >= step) { acc %= step; FRAME = (FRAME + 1) % N; draw(); } }
   requestAnimationFrame(tick);
 }
+// Bật/tắt mảnh: áp cho mảnh cùng id ở mọi cỡ của bộ đang xem.
 function chips() {
   const box = $('manh'); box.innerHTML = '';
-  for (const p of PIECES) {
+  const sk = setOf(curK()), all = Object.values(SETS[sk] || {});
+  const setOn = (id, on) => all.forEach(P => P.forEach(p => { if (p.id === id && p.ok) p.on = on; }));
+  for (const p of SETS[sk][curK()] || []) {
     const l = document.createElement('label'); l.className = 'chip' + (p.side === 'sau' ? ' sau' : '');
     const i = document.createElement('input'); i.type = 'checkbox'; i.checked = p.on; i.disabled = !p.ok;
-    i.onchange = () => { p.on = i.checked; draw(); };
+    i.onchange = () => { setOn(p.id, i.checked); draw(); };
     l.append(i, document.createTextNode(p.name + (p.ok ? '' : ' ⚠'))); box.append(l); p.box = i;
   }
-  $('batHet').onclick = () => { PIECES.forEach(p => { if (p.ok) { p.on = true; p.box.checked = true; } }); draw(); };
-  $('tatHet').onclick = () => { PIECES.forEach(p => { p.on = false; p.box.checked = false; }); draw(); };
+  $('batHet').onclick = () => { all.forEach(P => P.forEach(p => { if (p.ok) p.on = true; })); chips(); draw(); };
+  $('tatHet').onclick = () => { all.forEach(P => P.forEach(p => { p.on = false; })); chips(); draw(); };
 }
 function showErrors() {
   const e = $('loi');
@@ -774,31 +862,32 @@ function showErrors() {
 }
 
 init().then(() => {
-  // lỗi thứ tự vẽ (giả lập "lop") cũng phải hiện ở khung đỏ
-  for (const sk of SET_KEYS) { PIECES = SETS[sk]; SET = sk; selfCheck(); renderReport(); REPORTS[sk] = REPORT;
-    const tt = new Set(); REPORT.forEach(r => r.modes.forEach(m => m.thuTu.forEach(s => tt.add(s))));
-    if (tt.size) errors.push('[' + SETDEF[sk].name + '] Thứ tự vẽ sai: ' + [...tt].slice(0, 4).join('; ')); }
-  SET = SETDEF[qs.get('bo')] ? qs.get('bo') : 'may';
+  // cỡ 96 kiểm ngay (như R4); lỗi thứ tự vẽ (giả lập "lop") cũng phải hiện ở khung đỏ
+  for (const sk of SET_KEYS) { const rows = runSync(sk, 1);
+    if (rows.summary.thuTuLoi.length) errors.push(tagOf(sk, 1) + 'Thứ tự vẽ sai: ' + rows.summary.thuTuLoi.slice(0, 4).join('; ')); }
   showErrors();
-  PIECES = SETS[SET];
   CROP_AUTO = computeCrop();
-  showX2();
-  layout();
-  setSet(SET);
+  refresh();
   window.addEventListener('resize', layout);
   requestAnimationFrame(tick);
+  const DONE = new Promise(res => setTimeout(() => queueBig().then(res), 300));
+  const frameAt = (f, mode, sk, size, view) => { const k = kOf(size); sk = sk && SETS[sk] && SETS[sk][k] ? sk : setOf(k);
+    return withCtx(sk, k, () => { const c = canvas(W, H); renderFrame(c.getContext('2d'), f, mode, {view: view || 'thuong'});
+      if (size !== 48) return c.toDataURL(); const g = canvas(W96 / 2, H96 / 2); g.getContext('2d').drawImage(c, 0, 0, W96 / 2, H96 / 2); return g.toDataURL(); }); };
   window.RIG_TEST = {
-    errors, warns, report: () => REPORT, reports: () => Object.fromEntries(SET_KEYS.map(k => [k, REPORTS[k].summary])), sets: () => SET_KEYS,
-    frame: (f, mode, game, sk, x2, view) => { const keep = PIECES; if (sk) PIECES = SETS[sk];
-      const s = x2 ? 2 : 1, c = canvas(W * s, H * s), x = c.getContext('2d'); renderFrame(x, f, mode, {s, view: view || 'thuong'}); PIECES = keep;
-      if (!game) return c.toDataURL(); const g = canvas(W/2, H/2); g.getContext('2d').drawImage(c, 0, 0, W/2, H/2); return g.toDataURL(); },
-    joints: f => FR[f].joints,
-    plan: (f, sk) => { const keep = PIECES; if (sk) PIECES = SETS[sk]; const p = buildPlan(f, cfgNow()).map(it => it.k === 'L' ? 'L:' + it.L : it.v + ':' + it.p.id + (it.rule ? '@' + it.rule : '')); PIECES = keep; return p; },
-    setSet, setView: v => { VIEW = v; $('xem').value = v; draw(); },
-    setX2: on => { X2 = !!on; $('x2').checked = X2; showX2(); draw(); },
+    errors, warns, report: () => REPORTS[curKey()],
+    reports: () => Object.fromEntries(SET_KEYS.map(k => [k, REPORTS[k + '|1'].summary])),          // cỡ 96 (giữ như R4)
+    reportsAll: () => Object.fromEntries(Object.entries(REPORTS).filter(([, r]) => r && r.summary).map(([k, r]) => [k, r.summary])),
+    checkAll: () => DONE.then(() => true), sets: () => SET_KEYS, sizes: () => SIZE_LIST,
+    frame: (f, mode, game, sk, x2, view) => frameAt(f, mode, sk, game ? 48 : x2 ? 192 : 96, view),   // API cũ của R4
+    frameAt, joints: (f, size) => CTX[kOf(size || 96)].FR[f].joints,
+    plan: (f, sk, size) => { const k = kOf(size || 96); return withCtx(sk || setOf(k), k, () => buildPlan(f, cfgNow()).map(it => it.k === 'L' ? 'L:' + it.L : it.v + ':' + it.p.id + (it.rule ? '@' + it.rule : ''))); },
+    setSet, setSize, setCmp: (on, mode) => { CMP = !!on; $('cmp').checked = CMP; if (CMP) SET = 'gen'; if (mode !== undefined) { MODE = mode; $('goc').value = String(mode); } refresh(); },
+    setView: v => { VIEW = v; $('xem').value = v; draw(); },
+    setX2: on => setSize(on ? 192 : 96),
     stop: f => { PLAY = false; setPlay(); FRAME = f || 0; draw(); },
     debug: on => { for (const id of ['dXuong', 'dKhop', 'dNeo', 'dNoi', 'dThan']) $(id).checked = on; draw(); },
-    crop: () => CROP, K: () => K, ready: true,
+    crop: () => CROP_AUTO, cropOf, K: () => KV[0], KV: () => KV.slice(), ready: true,
   };
 });
 })();

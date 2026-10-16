@@ -19,6 +19,8 @@ Mỗi điểm ảnh có hình của ảnh gốc phải mang đúng 1 nhãn.
 Sổ nhãn  nhan/nhan.json  ghi trạng thái từng ảnh nhãn:
     "tu-dong-can-duyet" : do script sinh theo luật bên dưới — CẦN NGƯỜI DUYỆT; chạy lại sẽ sinh lại.
     "da-duyet"          : người làm asset đã sửa/duyệt tay — script KHÔNG ghi đè nữa, chỉ dùng để tách.
+    "tu-goc"            : tao-co-lon.py hạ từ nhãn vẽ trên ảnh giáp GỐC (nhan/goc/) — bộ Gen cỡ 96; vẫn cần người duyệt
+                          nhãn gốc. Script này không ghi đè, chỉ tách.
 Muốn sửa tay: mở nhan/<bộ>/<ảnh>.png bằng trình vẽ pixel, tô lại 3 màu trên, đổi trạng thái thành
 "da-duyet" trong nhan/nhan.json rồi chạy lại tao-rig.py.
 
@@ -172,7 +174,7 @@ def main():
             key = '%s/%s' % (bo, ten)
             nf = NHAN / bo / (ten + '.png')
             tt = so.get(key, {}).get('trangThai')
-            if tt == 'da-duyet' and nf.exists():
+            if tt in ('da-duyet', 'tu-goc') and nf.exists():   # tu-goc: tao-co-lon.py hạ từ nhãn ảnh gốc
                 lab, luat = Image.open(nf), so[key].get('luat', 'người duyệt')
             else:
                 lab, luat = sinh_nhan(im, kieu, ten.endswith('-x2'))
@@ -190,7 +192,7 @@ def main():
             ket[key] = dem
             for s in canh:
                 print('  cảnh báo %s: %s' % (key, s))
-    SO.write_text(json.dumps(so, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
+    SO.write_text(json.dumps(dict(sorted(so.items())), ensure_ascii=False, indent=1) + "\n", encoding="utf-8")   # sắp khoá: chạy lại ra đúng từng byte
     can = sum(1 for v in so.values() if v['trangThai'] != 'da-duyet')
     print('tao-mask: %d ảnh nhãn (%d tự sinh cần duyệt), tách ra %d lượt back/front/trong' % (len(ket), can, 3 * len(ket)))
     if tong_loi:

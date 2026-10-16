@@ -87,6 +87,11 @@ for co, bo in CHUP.items():
         ve(rows, GMAP).save(os.path.join(RIG, 'giap-gen', '%s-%s.png' % (ten, co)))
         ve(rows, GMAP, 2).save(os.path.join(RIG, 'giap-gen', '%s-%s-x2.png' % (ten, co)))
 
+# ---------- 2b. Độ phân giải cao (192, 384) + nhãn Gen hạ từ ảnh GỐC ----------
+subprocess.check_call([sys.executable, os.path.join(RIG, 'tao-co-lon.py')])
+COLON = json.load(open(os.path.join(RIG, 'co-lon', 'co-lon.json'), encoding='utf-8'))
+KHOP_LON = json.load(open(os.path.join(RIG, 'co-lon', 'khop-co-lon.json'), encoding='utf-8'))
+
 # ---------- 3. Nhãn + tách lượt ----------
 subprocess.check_call([sys.executable, os.path.join(RIG, 'tao-mask.py')])
 SO = json.load(open(os.path.join(RIG, 'nhan', 'nhan.json'), encoding='utf-8'))
@@ -209,7 +214,7 @@ rig['armorSets'] = {
         'name': 'Gen', 'source': GEN['source'],
         'images': anh_bo('gen', 'giap-gen', ANH_GEN),
         'imagesX2': anh_bo('gen', 'giap-gen', ANH_GEN, x2=True),
-        'imagesX2Note': 'Bản ×2 CHỈ dùng cho ô xem "nhân vật ×2 (192)"; neo ghi theo cỡ ×1.',
+        'imagesX2Note': 'Bản ×2 cũ của R4 (phóng thân ×2). Trang không dùng nữa: cỡ 192/384 xem armorSets.gen.coLon.',
         'pieces': pieces('gen', GEN_NEO, nguc),
     },
 }
@@ -217,6 +222,27 @@ for P in (rig['pieces'], rig['armorSets']['gen']['pieces']):
     for p in P:
         if p['kind'] == 'bone':
             p['overlapStart'] = p['overlapEnd'] = rig['chongKhop']['mac']
+# Cỡ lớn: cùng mảnh, cùng vùng/lớp, chỉ khác ảnh + điểm neo (theo cỡ ảnh) và đường dẫn nhãn.
+coLon = {}
+for W_, c in COLON['co'].items():
+    P = json.loads(json.dumps(rig['armorSets']['gen']['pieces']))
+    for p in P:
+        if p['kind'] == 'bone':
+            g = c['giap'][p['image']]
+            p['anchorStart'], p['anchorEnd'], p['thicknessScale'] = g['anchorStart'], g['anchorEnd'], g['thicknessScale']
+            p['nhan'] = 'co-lon/nhan-%s/%s.png' % (W_, p['image'])
+        else:
+            p['nhan'] = 'co-lon/nhan-%s/%s-<cỡ>.png' % (W_, p['imageTheoCo']['gon'].rsplit('-', 1)[0])
+    coLon[W_] = {'k': c['k'], 'W': c['W'], 'images': c['images'], 'pieces': P, 'than': c['than'],
+                 'khopLech': KHOP_LON['lech'][W_], 'khopThongKe': KHOP_LON['thongKe'][W_]}
+rig['armorSets']['gen']['coLon'] = coLon
+rig['coLon'] = {
+    'sizes': sorted(int(w) for w in coLon),
+    'note': 'Chế độ Độ phân giải cao: nhân vật dựng từ ảnh nguồn hàng chạy (co BOX về k·(cỡ ô 96), đặt k·placement), '
+            'lớp tách lại trên ảnh lớn bằng luật tach_lop rồi chia theo mặt nạ lớp 96; khớp = data.json × k + co-lon/khop-co-lon.json; '
+            'giáp Gen thu từ ảnh gốc về đúng tỉ lệ cỡ đó; nhãn back/front hạ từ nhãn vẽ trên ảnh gốc (nhan/goc/). '
+            'Chồng mép, bán kính đo khe, ngưỡng bám, ngưỡng quy tắc đổi lớp đều nhân k. Chỉ có bộ Gen.',
+}
 json.dump(rig, open(os.path.join(RIG, 'rig.json'), 'w'), ensure_ascii=False, indent=1)
 
 # ---------- 5. Trang tự chứa ----------
@@ -232,7 +258,11 @@ for L in DATA['layerOrder']:
         loi.append('lớp %s không có sheet (%s)' % (L, p))
         continue
     anh['layer:' + L] = b64(os.path.join(BO, p))
-for pre, imgs in (('may:', rig['images']), ('gen:', rig['armorSets']['gen']['images']), ('genx2:', rig['armorSets']['gen']['imagesX2'])):
+for W_, c in coLon.items():
+    for L, p in c['than'].items():
+        anh['layer%s:%s' % (W_, L)] = b64(os.path.join(RIG, p))
+TACH = [('may:', rig['images']), ('gen:', rig['armorSets']['gen']['images'])] + [('g%s:' % W_, c['images']) for W_, c in coLon.items()]
+for pre, imgs in TACH:   # (bản -x2 cũ của R4 không nhúng nữa: cỡ 192 dùng co-lon/giap-192/)
     for k, p in imgs.items():
         f = os.path.join(RIG, p)
         if not os.path.exists(f):
@@ -250,6 +280,6 @@ open(os.path.join(RIG, 'kiem-tra-rig.html'), 'w', encoding='utf-8').write(html)
 if loi:
     print('LỖI:', *loi, sep='\n  ')
     sys.exit(1)
-print('xong: %d ảnh Máy vẽ + %d Gen (+%d ×2), %d lớp thân, trang %d KB'
-      % (len(rig['images']), len(rig['armorSets']['gen']['images']), len(rig['armorSets']['gen']['imagesX2']),
-         sum(k.startswith('layer:') for k in anh), len(html) // 1024))
+print('xong: %d ảnh Máy vẽ + %d Gen (+ cỡ lớn %s), %d lớp thân × %d cỡ, trang %d KB'
+      % (len(rig['images']), len(rig['armorSets']['gen']['images']), {w: len(c['images']) for w, c in coLon.items()},
+         sum(k.startswith('layer:') for k in anh), 1 + len(coLon), len(html) // 1024))
