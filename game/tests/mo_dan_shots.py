@@ -81,12 +81,14 @@ def main():
         ev("() => { G.save.stars['0-2'] = 3; G.startStage(0, 2, 0); }"); g.wait(1200)
         chup(g, '6-hud-moi.png')
         # cỡ nút ở điện thoại thật (844x390 → G.scale ~1,44): tính lại bằng cùng công thức với G.scale giả
-        so = ev("""() => { const sc0 = G.scale, out = {}; for (const sc of [1.25, 1.44, 1.6]) { G.scale = sc; G.cx = 0; const a = G.stageUi.btnPos('atk'), d = G.stageUi.btnPos('dodge'),
+        so = ev("""() => { const sc0 = G.scale, cx0 = G.cx, out = {}; for (const sc of [1.25, 1.44, 1.6]) { G.scale = sc; G.cx = 0; G.stageUi.xoaBoCuc(); const a = G.stageUi.btnPos('atk'), d = G.stageUi.btnPos('dodge'),
             s = G.stageUi.btnPos('special'), k = G.stageUi.btnPos('skill');
-            out[sc] = { danh: 2 * a[2] * sc, ne: 2 * d[2] * sc, cach: (Math.hypot(a[0] - d[0], a[1] - d[1]) - a[2] - d[2]) * sc, dacBiet: 2 * s[2] * sc, chuong: 2 * k[2] * sc }; }
-            G.scale = sc0; window.dispatchEvent(new Event('resize')); return out; }""")
+            out[sc] = { danh: 2 * (a[2] + 1) * sc, ne: 2 * (d[2] + 1) * sc, cach: (Math.hypot(a[0] - d[0], a[1] - d[1]) - a[2] - d[2] - 2) * sc, dacBiet: 2 * (s[2] + 1) * sc, chuong: 2 * (k[2] + 1) * sc }; G.stageUi.xoaBoCuc(); }
+            G.scale = sc0; G.cx = cx0; G.stageUi.xoaBoCuc(); window.dispatchEvent(new Event('resize')); return out; }""")
         for sc, v in so.items():
-            ok(56 <= v['danh'] <= 64.5 and 56 <= v['ne'] <= 64.5 and 9.5 <= v['cach'] <= 12.5, 'G.scale ' + sc + ': Đánh %.0f px, Né %.0f px, cách %.1f px (Đặc biệt %.0f, Chưởng %.0f)' % (v['danh'], v['ne'], v['cach'], v['dacBiet'], v['chuong']))
+            # nut-danh-to (17/10): Đánh to lại, lớn nhất (≥ 72 px, bán kính ≥ 28 đơn vị như nút cũ); Né ~62; mép tới mép ≥ 14 px
+            ok(v['danh'] >= 72 and v['danh'] >= 2 * 29 * float(sc) - 0.5 and 58 <= v['ne'] <= 75 and v['ne'] < v['danh'] and v['cach'] >= 14 and v['dacBiet'] < v['ne'],
+               'G.scale ' + sc + ': Đánh %.0f px, Né %.0f px, cách %.1f px (Đặc biệt %.0f, Chưởng %.0f)' % (v['danh'], v['ne'], v['cach'], v['dacBiet'], v['chuong']))
         g.wait(300)
         # chạm nhanh ô vũ khí: sang món kế
         c0 = ev("() => G.getRun().P.cur")
