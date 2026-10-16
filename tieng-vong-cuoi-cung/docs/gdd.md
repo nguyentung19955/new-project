@@ -91,6 +91,14 @@ Giữ nút **Vọng** để ghi tối đa 3 giây chuyển động; thả ra, m�
 
 **Quy tắc thiết kế:** dễ hiểu trong 10 giây, mất 50 giờ để thành thạo.
 
+### Luật Tiếng Vọng đã chốt cho demo
+
+- **Bấm Vọng:** ghi tối đa 3 giây (bấm lần nữa để dừng sớm). Bóng phát lại đúng 1 lần, rồi **giữ nguyên tư thế cuối** tại chỗ (đứng yên, tiếp tục đè công tắc nếu đang đứng trên đó) cho tới khi người chơi bấm Vọng lần nữa (xóa bóng cũ, ghi mới). Không có giới hạn thời gian sau khi phát xong → câu đố không bắt chạy đua 3 giây.
+- Bóng chỉ chém gây sát thương trong lúc phát lại; khi đang giữ tư thế thì không đánh.
+- Bóng giữ tư thế: vẽ mờ hơn một chút + nhịp sáng nhẹ để người chơi biết nó vẫn đang giữ.
+- **Cộng hưởng** (bản demo của Hòa Âm): nhát chém của Lam và của bóng trúng cùng một mục tiêu trong vòng 12 khung → sát thương ×3, hit-stop 8 khung, vòng sóng âm, rung nhẹ, tiếng chuông hai nốt.
+- Bản chơi thử: `game/demo.html` (Làng Chuông, 5–8 phút).
+
 | Cách dùng | Ví dụ trong game | Kỹ năng người chơi cần |
 | --- | --- | --- |
 | Giải đố | Bóng đứng giữ công tắc trong khi bạn chạy qua cửa | Lên kế hoạch |

@@ -10,21 +10,24 @@
          }
    anims.attack còn có: vungBaoTruoc / hitbox = {x,y,w,h} (px trong ô) — vùng chuông đập xuống,
    game vẽ cảnh báo ở các khung baoTruoc, bật hitbox ở khung hit.
+   TV.taoAtlasQuaiChuong(THREE, { cell: 48, pal: {...} }) dựng cùng rig ở ô lớn hơn (pivot, hitbox nhân theo).
+   TV.taoAtlasBoss(THREE) → boss "Chuông Gác Làng": ô 48×48, chuông đồng sáng hơn.
    ===================================================================== */
 (function (root) {
 'use strict';
 var TV = root.TV = root.TV || {};
 
-TV.taoAtlasQuaiChuong = function (THREE) {
+TV.taoAtlasQuaiChuong = function (THREE, opt) {
+  opt = opt || {};
   /* ---------- CẤU HÌNH ----------
      Dựng mô hình quay mặt sang PHẢI (+X = phía trước) cho dễ tính,
      lúc lấy mẫu xuống ô 32×32 thì lật ngang → nhân vật quay mặt sang TRÁI.
      1 đơn vị = 1 px. Gốc (0,0) = giữa hai chân, trên mặt đất. */
-  const CELL = 32, SS = 4, RENDER = CELL * SS;
+  const CELL = opt.cell || 32, SS = 4, RENDER = CELL * SS, K = CELL / 32;   // K: hệ số phóng so với ô gốc 32
   const VIEW = { left: -13, right: 19, top: 29, bottom: -3 };      // theo hệ dựng (mặt sang phải)
-  const PIVOT_PX = { x: VIEW.right, y: VIEW.top };                  // sau khi lật: (19, 29)
-  const toCellX = x => VIEW.right - x;                              // x dựng → x trong ô (đã lật)
-  const toCellY = y => VIEW.top - y;
+  const PIVOT_PX = { x: VIEW.right * K, y: VIEW.top * K };          // sau khi lật: (19, 29) ở ô 32
+  const toCellX = x => (VIEW.right - x) * K;                        // x dựng → x trong ô (đã lật)
+  const toCellY = y => (VIEW.top - y) * K;
 
   const PAL = {
     ink:    0x0C0F14,  // viền, lòng chuông, vết nứt
@@ -36,6 +39,7 @@ TV.taoAtlasQuaiChuong = function (THREE) {
     moss:   0x32804F,  // rêu
     glow:   0xE1B85A   // vết nứt rực lên khi báo trước đòn, sóng chấn
   };
+  Object.assign(PAL, opt.pal || {});
   const PAL_RGB = Object.values(PAL).map(h => [(h >> 16) & 255, (h >> 8) & 255, h & 255]);
 
   /* ---------- RENDERER + CAMERA + SHADER 2 TÔNG (giống rig Lam) ---------- */
@@ -447,7 +451,7 @@ TV.taoAtlasQuaiChuong = function (THREE) {
     }) };
     if (a.zone) {
       const z = a.zone;
-      const rect = { x: toCellX(z.x1), y: toCellY(z.y1), w: z.x1 - z.x0, h: z.y1 - z.y0 };
+      const rect = { x: toCellX(z.x1), y: toCellY(z.y1), w: (z.x1 - z.x0) * K, h: (z.y1 - z.y0) * K };
       entry.vungBaoTruoc = rect;
       entry.hitbox = Object.assign({}, rect);
     }
@@ -466,5 +470,10 @@ TV.taoAtlasQuaiChuong = function (THREE) {
     huong: 'trai',
     anims, kiemTra
   };
+};
+
+// Boss "Chuông Gác Làng": cùng rig, ô 48×48, đồng sáng hơn cho khác quái thường
+TV.taoAtlasBoss = function (THREE) {
+  return TV.taoAtlasQuaiChuong(THREE, { cell: 48, pal: { bronze: 0x9C6B30, verd: 0x5E6A4C } });
 };
 })(typeof window !== 'undefined' ? window : this);
