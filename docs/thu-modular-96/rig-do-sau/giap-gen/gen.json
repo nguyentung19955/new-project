@@ -66,11 +66,11 @@
     16
    ],
    "anchorStart": [
-    3.2,
+    1.2,
     4.0
    ],
    "anchorEnd": [
-    8.8,
+    6.8,
     4.0
    ],
    "thicknessScale": 1.0,
@@ -115,11 +115,11 @@
     8
    ],
    "anchorStart": [
-    2.96,
+    0.96,
     2.0
    ],
    "anchorEnd": [
-    9.04,
+    7.04,
     2.0
    ],
    "thicknessScale": 1.0,
@@ -164,11 +164,11 @@
     12
    ],
    "anchorStart": [
-    3.08,
+    1.08,
     3.0
    ],
    "anchorEnd": [
-    9.92,
+    7.92,
     3.0
    ],
    "thicknessScale": 1.0,
@@ -213,11 +213,11 @@
     26
    ],
    "anchorStart": [
-    3.04,
+    1.04,
     6.5
    ],
    "anchorEnd": [
-    13.96,
+    11.96,
     6.5
    ],
    "thicknessScale": 1.0,
@@ -245,8 +245,8 @@
     5
    ],
    "anchor": [
-    3.5,
-    3.5
+    2.5,
+    2.5
    ],
    "note": "hình chụp khớp của bộ máy vẽ, tô bằng bảng màu gen (ảnh gen không có chụp khớp)"
   },
@@ -257,8 +257,8 @@
     4
    ],
    "anchor": [
-    3.5,
-    3.5
+    2.0,
+    2.0
    ],
    "note": "hình chụp khớp của bộ máy vẽ, tô bằng bảng màu gen (ảnh gen không có chụp khớp)"
   },
@@ -269,11 +269,10 @@
     4
    ],
    "anchor": [
-    3.5,
-    3.5
+    2.0,
+    2.0
    ],
    "note": "hình chụp khớp của bộ máy vẽ, tô bằng bảng màu gen (ảnh gen không có chụp khớp)"
   }
- },
- "rigAnchorPad": 2
+ }
 }

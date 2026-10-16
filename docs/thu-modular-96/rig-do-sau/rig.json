@@ -1,40 +1,99 @@
 {
- "version": 1,
- "about": "Thử rig: mỗi mảnh giáp có hai ảnh pass sau/trước cùng canvas và neo, dùng lại qua 12 khung.",
- "coordinates": "anchorStart/anchorEnd/anchor: tọa độ trong ảnh giáp đã pad 2 px dọc trục xương. place giữ stretch trong min/max (mặc định ±15%); pixel mép được nối dài để chồng khớp mà không co giãn quá ngưỡng. Chụp khớp che phần nối còn lệch. thicknessScale nhân bề dày. tint<1 làm tối bản bên sau.",
- "images": {
-  "giap-vai": "giap/giap-vai.png",
-  "giap-vai-back": "giap/giap-vai-back.png",
-  "giap-vai-front": "giap/giap-vai-front.png",
-  "giap-cang-tay": "giap/giap-cang-tay.png",
-  "giap-cang-tay-back": "giap/giap-cang-tay-back.png",
-  "giap-cang-tay-front": "giap/giap-cang-tay-front.png",
-  "giap-ong-chan": "giap/giap-ong-chan.png",
-  "giap-ong-chan-back": "giap/giap-ong-chan-back.png",
-  "giap-ong-chan-front": "giap/giap-ong-chan-front.png",
-  "chup-vai": "giap/chup-vai.png",
-  "chup-vai-back": "giap/chup-vai-back.png",
-  "chup-vai-front": "giap/chup-vai-front.png",
-  "chup-khuyu": "giap/chup-khuyu.png",
-  "chup-khuyu-back": "giap/chup-khuyu-back.png",
-  "chup-khuyu-front": "giap/chup-khuyu-front.png",
-  "chup-goi": "giap/chup-goi.png",
-  "chup-goi-back": "giap/chup-goi-back.png",
-  "chup-goi-front": "giap/chup-goi-front.png"
- },
- "imageSources": {
-  "giap-vai": "vẽ pixel tối giản bằng tao-rig.py (không lấy từ ảnh gen)",
-  "giap-cang-tay": "vẽ pixel tối giản bằng tao-rig.py (không lấy từ ảnh gen)",
-  "giap-ong-chan": "vẽ pixel tối giản bằng tao-rig.py (không lấy từ ảnh gen)",
-  "chup-vai": "vẽ pixel tối giản bằng tao-rig.py (không lấy từ ảnh gen)",
-  "chup-khuyu": "vẽ pixel tối giản bằng tao-rig.py (không lấy từ ảnh gen)",
-  "chup-goi": "vẽ pixel tối giản bằng tao-rig.py (không lấy từ ảnh gen)"
- },
- "layering": "Mảnh giáp được chèn NGAY SAU lớp insertAfter (tên lấy từ DATA.layerOrder). Nhiều mảnh cùng insertAfter thì vẽ theo thứ tự trong danh sách pieces. Muốn giáp ôm quanh chi mà chi che mép trong, tách ảnh thành backImage/frontImage (cùng canvas và neo; phần còn lại alpha trong suốt), đặt backAfter/frontAfter ở hai lớp sâu/nông. frameOverrides: {\"<khung>\": {\"insertAfter\": \"...\"}} để ghi đè theo khung.",
+ "version": 2,
+ "about": "rig-do-sau: mỗi mảnh giáp = 1 ảnh gốc + 1 ảnh nhãn (đỏ back / xanh dương front / lục trong). tao-mask.py tách ra 3 lượt cùng cỡ, cùng neo. Renderer đặt cả 3 lượt bằng CÙNG một ma trận, mỗi lượt chèn vào thứ tự lớp thân theo khai báo \"vung\" của mảnh, quy tắc \"quyTacLop\" đổi lớp theo khung.",
+ "coordinates": "anchorStart/anchorEnd/anchor: toạ độ trong ảnh giáp GỐC (không nới). x.5 = tâm điểm ảnh. Khớp lấy từ data.json. Mảnh xương: xoay + giãn dọc trục trong stretch.min..max (≤ ±15%), bề dày nhân thicknessScale. Chụp khớp: không xoay, tâm ảnh đặt vào khớp (làm tròn lưới điểm ảnh).",
+ "layering": "Mỗi vùng {\"before\": L} hoặc {\"after\": L}, L thuộc DATA.layerOrder. Thứ tự vẽ 1 khung: với mỗi L theo layerOrder: các lượt \"before L\" → lớp thân L → các lượt \"after L\". Lớp thân vẽ đúng 1 lần, không vẽ lại nhân vật đè lên giáp. \"chi\" = lớp thân của chi mang giáp: back/trong phải nằm dưới, front phải nằm trên.",
  "skipLayerKinds": [
   "giap"
  ],
  "outfit": "goc",
+ "huongMat": "phai",
+ "huongMatNote": "nhân vật nhìn sang phải (mũi chân trước ở bên phải cổ chân). \"phía sau\" đường thân = x nhỏ hơn.",
+ "chongKhop": {
+  "mac": 2,
+  "note": "overlapStart/overlapEnd (điểm ảnh ảnh gốc, số nguyên ≥ 0): renderer kéo dài điểm ảnh mép mỗi hàng ra ngoài 2 đầu mảnh xương đúng chừng ấy để chồng qua khớp; ảnh trên đĩa không đổi. Mặc định dùng \"mac\" nếu mảnh không ghi."
+ },
+ "chupKhop": {
+  "co": "gon",
+  "cacCo": {
+   "nho": "nhỏ (cỡ gốc: vai 5×5, khuỷu/gối 4×4)",
+   "gon": "gọn 5×5",
+   "to": "to 7×7 (cỡ bản ChatGPT)"
+  },
+  "note": "Cỡ chụp khớp đang dùng; trang thử có ô chọn và bảng so khe theo từng cỡ."
+ },
+ "quyTacLop": [
+  {
+   "id": "tayRaSau",
+   "ten": "Tay trước vung ra sau vai",
+   "manh": [
+    "cangTayTruoc",
+    "vaiTruoc"
+   ],
+   "vung": "back",
+   "khop": "wristFront",
+   "duong": [
+    "shoulderFront"
+   ],
+   "phia": "sau",
+   "nguong": 1.0,
+   "khiDung": {
+    "before": "body"
+   },
+   "note": "Cổ tay trước lùi ra sau đường dọc qua vai trước quá 1 điểm ảnh (tay vung ra sau lưng): mép trong (vùng back) của giáp cẳng tay + giáp bắp tay áp vào thân → vẽ dưới lớp body, thân che phần mép lấn vào thân. Không đúng thì dùng mặc định của mảnh (ngay dưới frontArm). Thử neck→hipCenter trước: khớp tay trước luôn ở sau đường đó (11–12/12 khung) nên không phân biệt được pha vung, đã bỏ."
+  }
+ ],
+ "quyTacNote": "Điểm \"khop\" so với đường thẳng qua 2 khớp \"duong\" (kéo dài), tại cùng tung độ; \"duong\" chỉ 1 khớp = đường dọc qua khớp đó. phia \"sau\" = lệch về phía lưng quá \"nguong\" điểm ảnh. Đúng → vùng \"vung\" của các mảnh \"manh\" dùng lớp \"khiDung\", sai → lớp mặc định trong mảnh.",
+ "images": {
+  "giap-vai": "giap/giap-vai.png",
+  "giap-vai-back": "pass/may/giap-vai-back.png",
+  "giap-vai-front": "pass/may/giap-vai-front.png",
+  "giap-vai-trong": "pass/may/giap-vai-trong.png",
+  "giap-cang-tay": "giap/giap-cang-tay.png",
+  "giap-cang-tay-back": "pass/may/giap-cang-tay-back.png",
+  "giap-cang-tay-front": "pass/may/giap-cang-tay-front.png",
+  "giap-cang-tay-trong": "pass/may/giap-cang-tay-trong.png",
+  "giap-ong-chan": "giap/giap-ong-chan.png",
+  "giap-ong-chan-back": "pass/may/giap-ong-chan-back.png",
+  "giap-ong-chan-front": "pass/may/giap-ong-chan-front.png",
+  "giap-ong-chan-trong": "pass/may/giap-ong-chan-trong.png",
+  "chup-vai-nho": "giap/chup-vai-nho.png",
+  "chup-vai-nho-back": "pass/may/chup-vai-nho-back.png",
+  "chup-vai-nho-front": "pass/may/chup-vai-nho-front.png",
+  "chup-vai-nho-trong": "pass/may/chup-vai-nho-trong.png",
+  "chup-vai-gon": "giap/chup-vai-gon.png",
+  "chup-vai-gon-back": "pass/may/chup-vai-gon-back.png",
+  "chup-vai-gon-front": "pass/may/chup-vai-gon-front.png",
+  "chup-vai-gon-trong": "pass/may/chup-vai-gon-trong.png",
+  "chup-vai-to": "giap/chup-vai-to.png",
+  "chup-vai-to-back": "pass/may/chup-vai-to-back.png",
+  "chup-vai-to-front": "pass/may/chup-vai-to-front.png",
+  "chup-vai-to-trong": "pass/may/chup-vai-to-trong.png",
+  "chup-khuyu-nho": "giap/chup-khuyu-nho.png",
+  "chup-khuyu-nho-back": "pass/may/chup-khuyu-nho-back.png",
+  "chup-khuyu-nho-front": "pass/may/chup-khuyu-nho-front.png",
+  "chup-khuyu-nho-trong": "pass/may/chup-khuyu-nho-trong.png",
+  "chup-khuyu-gon": "giap/chup-khuyu-gon.png",
+  "chup-khuyu-gon-back": "pass/may/chup-khuyu-gon-back.png",
+  "chup-khuyu-gon-front": "pass/may/chup-khuyu-gon-front.png",
+  "chup-khuyu-gon-trong": "pass/may/chup-khuyu-gon-trong.png",
+  "chup-khuyu-to": "giap/chup-khuyu-to.png",
+  "chup-khuyu-to-back": "pass/may/chup-khuyu-to-back.png",
+  "chup-khuyu-to-front": "pass/may/chup-khuyu-to-front.png",
+  "chup-khuyu-to-trong": "pass/may/chup-khuyu-to-trong.png",
+  "chup-goi-nho": "giap/chup-goi-nho.png",
+  "chup-goi-nho-back": "pass/may/chup-goi-nho-back.png",
+  "chup-goi-nho-front": "pass/may/chup-goi-nho-front.png",
+  "chup-goi-nho-trong": "pass/may/chup-goi-nho-trong.png",
+  "chup-goi-gon": "giap/chup-goi-gon.png",
+  "chup-goi-gon-back": "pass/may/chup-goi-gon-back.png",
+  "chup-goi-gon-front": "pass/may/chup-goi-gon-front.png",
+  "chup-goi-gon-trong": "pass/may/chup-goi-gon-trong.png",
+  "chup-goi-to": "giap/chup-goi-to.png",
+  "chup-goi-to-back": "pass/may/chup-goi-to-back.png",
+  "chup-goi-to-front": "pass/may/chup-goi-to-front.png",
+  "chup-goi-to-trong": "pass/may/chup-goi-to-trong.png"
+ },
  "pieces": [
   {
    "id": "vaiSau",
@@ -43,13 +102,14 @@
    "side": "sau",
    "kind": "bone",
    "image": "giap-vai",
+   "from": "shoulderBack",
    "to": "elbowBack",
    "anchorStart": [
-    3.5,
+    1.5,
     3.0
    ],
    "anchorEnd": [
-    9.5,
+    7.5,
     3.0
    ],
    "thicknessScale": 1.0,
@@ -57,15 +117,27 @@
     "min": 0.85,
     "max": 1.15
    },
-   "overlapStart": 2.0,
-   "overlapEnd": 2.0,
-   "insertAfter": "rearArm",
    "tint": 0.72,
-   "from": "shoulderBack",
-   "backImage": "giap-vai-back",
-   "frontImage": "giap-vai-front",
-   "backAfter": "rearArm",
-   "frontAfter": "backShoulderArmor"
+   "nhan": "nhan/may/giap-vai.png",
+   "vungRong": [
+    "trong"
+   ],
+   "chi": [
+    "rearArm"
+   ],
+   "vung": {
+    "back": {
+     "before": "rearArm"
+    },
+    "front": {
+     "after": "rearArm"
+    },
+    "trong": {
+     "before": "rearArm"
+    }
+   },
+   "overlapStart": 2,
+   "overlapEnd": 2
   },
   {
    "id": "cangTaySau",
@@ -74,13 +146,14 @@
    "side": "sau",
    "kind": "bone",
    "image": "giap-cang-tay",
+   "from": "elbowBack",
    "to": "wristBack",
    "anchorStart": [
-    3.0,
+    1.0,
     2.0
    ],
    "anchorEnd": [
-    8.5,
+    6.5,
     2.0
    ],
    "thicknessScale": 1.0,
@@ -88,15 +161,27 @@
     "min": 0.85,
     "max": 1.15
    },
-   "overlapStart": 2.0,
-   "overlapEnd": 2.0,
-   "insertAfter": "rearArm",
    "tint": 0.72,
-   "from": "elbowBack",
-   "backImage": "giap-cang-tay-back",
-   "frontImage": "giap-cang-tay-front",
-   "backAfter": "rearArm",
-   "frontAfter": "backShoulderArmor"
+   "nhan": "nhan/may/giap-cang-tay.png",
+   "vungRong": [
+    "trong"
+   ],
+   "chi": [
+    "rearArm"
+   ],
+   "vung": {
+    "back": {
+     "before": "rearArm"
+    },
+    "front": {
+     "after": "rearArm"
+    },
+    "trong": {
+     "before": "rearArm"
+    }
+   },
+   "overlapStart": 2,
+   "overlapEnd": 2
   },
   {
    "id": "chupVaiSau",
@@ -104,21 +189,32 @@
    "group": "chupVai",
    "side": "sau",
    "kind": "cap",
-   "image": "chup-vai",
    "at": "shoulderBack",
-   "anchor": [
-    3.5,
-    3.5
+   "imageTheoCo": {
+    "nho": "chup-vai-nho",
+    "gon": "chup-vai-gon",
+    "to": "chup-vai-to"
+   },
+   "tint": 0.72,
+   "nhan": "nhan/may/chup-vai-<cỡ>.png",
+   "vungRong": [
+    "back",
+    "trong"
    ],
-   "insertAfter": "rearArm",
-   "maskLayers": [
+   "chi": [
     "rearArm"
    ],
-   "tint": 0.72,
-   "backImage": "chup-vai-back",
-   "frontImage": "chup-vai-front",
-   "backAfter": "rearArm",
-   "frontAfter": "backShoulderArmor"
+   "vung": {
+    "back": {
+     "before": "rearArm"
+    },
+    "front": {
+     "after": "rearArm"
+    },
+    "trong": {
+     "before": "rearArm"
+    }
+   }
   },
   {
    "id": "chupKhuyuSau",
@@ -126,21 +222,32 @@
    "group": "chupKhuyu",
    "side": "sau",
    "kind": "cap",
-   "image": "chup-khuyu",
    "at": "elbowBack",
-   "anchor": [
-    3.5,
-    3.5
+   "imageTheoCo": {
+    "nho": "chup-khuyu-nho",
+    "gon": "chup-khuyu-gon",
+    "to": "chup-khuyu-to"
+   },
+   "tint": 0.72,
+   "nhan": "nhan/may/chup-khuyu-<cỡ>.png",
+   "vungRong": [
+    "back",
+    "trong"
    ],
-   "insertAfter": "rearArm",
-   "maskLayers": [
+   "chi": [
     "rearArm"
    ],
-   "tint": 0.72,
-   "backImage": "chup-khuyu-back",
-   "frontImage": "chup-khuyu-front",
-   "backAfter": "rearArm",
-   "frontAfter": "backShoulderArmor"
+   "vung": {
+    "back": {
+     "before": "rearArm"
+    },
+    "front": {
+     "after": "rearArm"
+    },
+    "trong": {
+     "before": "rearArm"
+    }
+   }
   },
   {
    "id": "ongChanSau",
@@ -149,13 +256,14 @@
    "side": "sau",
    "kind": "bone",
    "image": "giap-ong-chan",
+   "from": "kneeBack",
    "to": "ankleBack",
    "anchorStart": [
-    3.0,
+    1.0,
     2.5
    ],
    "anchorEnd": [
-    10.0,
+    8.0,
     2.5
    ],
    "thicknessScale": 1.0,
@@ -163,15 +271,28 @@
     "min": 0.85,
     "max": 1.15
    },
-   "overlapStart": 2.0,
-   "overlapEnd": 2.0,
-   "insertAfter": "rearPants",
    "tint": 0.72,
-   "from": "kneeBack",
-   "backImage": "giap-ong-chan-back",
-   "frontImage": "giap-ong-chan-front",
-   "backAfter": "rearPants",
-   "frontAfter": "rearArm"
+   "nhan": "nhan/may/giap-ong-chan.png",
+   "vungRong": [
+    "trong"
+   ],
+   "chi": [
+    "rearLeg",
+    "rearPants"
+   ],
+   "vung": {
+    "back": {
+     "before": "rearLeg"
+    },
+    "front": {
+     "after": "rearPants"
+    },
+    "trong": {
+     "before": "rearLeg"
+    }
+   },
+   "overlapStart": 2,
+   "overlapEnd": 2
   },
   {
    "id": "chupGoiSau",
@@ -179,22 +300,33 @@
    "group": "chupGoi",
    "side": "sau",
    "kind": "cap",
-   "image": "chup-goi",
    "at": "kneeBack",
-   "anchor": [
-    3.5,
-    3.5
+   "imageTheoCo": {
+    "nho": "chup-goi-nho",
+    "gon": "chup-goi-gon",
+    "to": "chup-goi-to"
+   },
+   "tint": 0.72,
+   "nhan": "nhan/may/chup-goi-<cỡ>.png",
+   "vungRong": [
+    "back",
+    "trong"
    ],
-   "insertAfter": "rearPants",
-   "maskLayers": [
+   "chi": [
     "rearLeg",
     "rearPants"
    ],
-   "tint": 0.72,
-   "backImage": "chup-goi-back",
-   "frontImage": "chup-goi-front",
-   "backAfter": "rearArm",
-   "frontAfter": "backShoulderArmor"
+   "vung": {
+    "back": {
+     "before": "rearLeg"
+    },
+    "front": {
+     "after": "rearPants"
+    },
+    "trong": {
+     "before": "rearLeg"
+    }
+   }
   },
   {
    "id": "ongChanTruoc",
@@ -203,13 +335,14 @@
    "side": "truoc",
    "kind": "bone",
    "image": "giap-ong-chan",
+   "from": "kneeFront",
    "to": "ankleFront",
    "anchorStart": [
-    3.0,
+    1.0,
     2.5
    ],
    "anchorEnd": [
-    10.0,
+    8.0,
     2.5
    ],
    "thicknessScale": 1.0,
@@ -217,15 +350,28 @@
     "min": 0.85,
     "max": 1.15
    },
-   "overlapStart": 2.0,
-   "overlapEnd": 2.0,
-   "insertAfter": "frontPants",
    "tint": 1.0,
-   "from": "kneeFront",
-   "backImage": "giap-ong-chan-back",
-   "frontImage": "giap-ong-chan-front",
-   "backAfter": "frontLeg",
-   "frontAfter": "frontPants"
+   "nhan": "nhan/may/giap-ong-chan.png",
+   "vungRong": [
+    "trong"
+   ],
+   "chi": [
+    "frontLeg",
+    "frontPants"
+   ],
+   "vung": {
+    "back": {
+     "before": "frontLeg"
+    },
+    "front": {
+     "after": "frontPants"
+    },
+    "trong": {
+     "before": "frontLeg"
+    }
+   },
+   "overlapStart": 2,
+   "overlapEnd": 2
   },
   {
    "id": "chupGoiTruoc",
@@ -233,22 +379,33 @@
    "group": "chupGoi",
    "side": "truoc",
    "kind": "cap",
-   "image": "chup-goi",
    "at": "kneeFront",
-   "anchor": [
-    3.5,
-    3.5
+   "imageTheoCo": {
+    "nho": "chup-goi-nho",
+    "gon": "chup-goi-gon",
+    "to": "chup-goi-to"
+   },
+   "tint": 1.0,
+   "nhan": "nhan/may/chup-goi-<cỡ>.png",
+   "vungRong": [
+    "back",
+    "trong"
    ],
-   "insertAfter": "frontPants",
-   "maskLayers": [
+   "chi": [
     "frontLeg",
     "frontPants"
    ],
-   "tint": 1.0,
-   "backImage": "chup-goi-back",
-   "frontImage": "chup-goi-front",
-   "backAfter": "body",
-   "frontAfter": "frontArm"
+   "vung": {
+    "back": {
+     "before": "frontLeg"
+    },
+    "front": {
+     "after": "frontPants"
+    },
+    "trong": {
+     "before": "frontLeg"
+    }
+   }
   },
   {
    "id": "cangTayTruoc",
@@ -257,13 +414,14 @@
    "side": "truoc",
    "kind": "bone",
    "image": "giap-cang-tay",
+   "from": "elbowFront",
    "to": "wristFront",
    "anchorStart": [
-    3.0,
+    1.0,
     2.0
    ],
    "anchorEnd": [
-    8.5,
+    6.5,
     2.0
    ],
    "thicknessScale": 1.0,
@@ -271,15 +429,27 @@
     "min": 0.85,
     "max": 1.15
    },
-   "overlapStart": 2.0,
-   "overlapEnd": 2.0,
-   "insertAfter": "frontArm",
    "tint": 1.0,
-   "from": "elbowFront",
-   "backImage": "giap-cang-tay-back",
-   "frontImage": "giap-cang-tay-front",
-   "backAfter": "body",
-   "frontAfter": "frontArm"
+   "nhan": "nhan/may/giap-cang-tay.png",
+   "vungRong": [
+    "trong"
+   ],
+   "chi": [
+    "frontArm"
+   ],
+   "vung": {
+    "back": {
+     "before": "frontArm"
+    },
+    "front": {
+     "after": "frontArm"
+    },
+    "trong": {
+     "before": "frontArm"
+    }
+   },
+   "overlapStart": 2,
+   "overlapEnd": 2
   },
   {
    "id": "vaiTruoc",
@@ -288,13 +458,14 @@
    "side": "truoc",
    "kind": "bone",
    "image": "giap-vai",
+   "from": "shoulderFront",
    "to": "elbowFront",
    "anchorStart": [
-    3.5,
+    1.5,
     3.0
    ],
    "anchorEnd": [
-    9.5,
+    7.5,
     3.0
    ],
    "thicknessScale": 1.0,
@@ -302,15 +473,27 @@
     "min": 0.85,
     "max": 1.15
    },
-   "overlapStart": 2.0,
-   "overlapEnd": 2.0,
-   "insertAfter": "frontArm",
    "tint": 1.0,
-   "from": "shoulderFront",
-   "backImage": "giap-vai-back",
-   "frontImage": "giap-vai-front",
-   "backAfter": "body",
-   "frontAfter": "frontArm"
+   "nhan": "nhan/may/giap-vai.png",
+   "vungRong": [
+    "trong"
+   ],
+   "chi": [
+    "frontArm"
+   ],
+   "vung": {
+    "back": {
+     "before": "frontArm"
+    },
+    "front": {
+     "after": "frontArm"
+    },
+    "trong": {
+     "before": "frontArm"
+    }
+   },
+   "overlapStart": 2,
+   "overlapEnd": 2
   },
   {
    "id": "chupKhuyuTruoc",
@@ -318,21 +501,32 @@
    "group": "chupKhuyu",
    "side": "truoc",
    "kind": "cap",
-   "image": "chup-khuyu",
    "at": "elbowFront",
-   "anchor": [
-    3.5,
-    3.5
+   "imageTheoCo": {
+    "nho": "chup-khuyu-nho",
+    "gon": "chup-khuyu-gon",
+    "to": "chup-khuyu-to"
+   },
+   "tint": 1.0,
+   "nhan": "nhan/may/chup-khuyu-<cỡ>.png",
+   "vungRong": [
+    "back",
+    "trong"
    ],
-   "insertAfter": "frontArm",
-   "maskLayers": [
+   "chi": [
     "frontArm"
    ],
-   "tint": 1.0,
-   "backImage": "chup-khuyu-back",
-   "frontImage": "chup-khuyu-front",
-   "backAfter": "body",
-   "frontAfter": "frontArm"
+   "vung": {
+    "back": {
+     "before": "frontArm"
+    },
+    "front": {
+     "after": "frontArm"
+    },
+    "trong": {
+     "before": "frontArm"
+    }
+   }
   },
   {
    "id": "chupVaiTruoc",
@@ -340,21 +534,32 @@
    "group": "chupVai",
    "side": "truoc",
    "kind": "cap",
-   "image": "chup-vai",
    "at": "shoulderFront",
-   "anchor": [
-    3.5,
-    3.5
+   "imageTheoCo": {
+    "nho": "chup-vai-nho",
+    "gon": "chup-vai-gon",
+    "to": "chup-vai-to"
+   },
+   "tint": 1.0,
+   "nhan": "nhan/may/chup-vai-<cỡ>.png",
+   "vungRong": [
+    "back",
+    "trong"
    ],
-   "insertAfter": "frontArm",
-   "maskLayers": [
+   "chi": [
     "frontArm"
    ],
-   "tint": 1.0,
-   "backImage": "chup-vai-back",
-   "frontImage": "chup-vai-front",
-   "backAfter": "body",
-   "frontAfter": "frontArm"
+   "vung": {
+    "back": {
+     "before": "frontArm"
+    },
+    "front": {
+     "after": "frontArm"
+    },
+    "trong": {
+     "before": "frontArm"
+    }
+   }
   }
  ],
  "groupNames": {
@@ -363,108 +568,172 @@
   "ongChan": "Giáp ống chân",
   "chupVai": "Chụp vai",
   "chupKhuyu": "Chụp khuỷu",
-  "chupGoi": "Chụp gối"
+  "chupGoi": "Chụp gối",
+  "nguc": "Giáp ngực nhỏ"
  },
- "frameOverrides": {},
+ "nhanTrangThai": {
+  "may/chup-goi-gon": "tu-dong-can-duyet",
+  "may/chup-goi-nho": "tu-dong-can-duyet",
+  "may/chup-goi-to": "tu-dong-can-duyet",
+  "may/chup-khuyu-gon": "tu-dong-can-duyet",
+  "may/chup-khuyu-nho": "tu-dong-can-duyet",
+  "may/chup-khuyu-to": "tu-dong-can-duyet",
+  "may/chup-vai-gon": "tu-dong-can-duyet",
+  "may/chup-vai-nho": "tu-dong-can-duyet",
+  "may/chup-vai-to": "tu-dong-can-duyet",
+  "may/giap-cang-tay": "tu-dong-can-duyet",
+  "may/giap-ong-chan": "tu-dong-can-duyet",
+  "may/giap-vai": "tu-dong-can-duyet",
+  "gen/chup-goi-gon-x2": "tu-dong-can-duyet",
+  "gen/chup-goi-gon": "tu-dong-can-duyet",
+  "gen/chup-goi-nho-x2": "tu-dong-can-duyet",
+  "gen/chup-goi-nho": "tu-dong-can-duyet",
+  "gen/chup-goi-to-x2": "tu-dong-can-duyet",
+  "gen/chup-goi-to": "tu-dong-can-duyet",
+  "gen/chup-goi-x2": "tu-dong-can-duyet",
+  "gen/chup-goi": "tu-dong-can-duyet",
+  "gen/chup-khuyu-gon-x2": "tu-dong-can-duyet",
+  "gen/chup-khuyu-gon": "tu-dong-can-duyet",
+  "gen/chup-khuyu-nho-x2": "tu-dong-can-duyet",
+  "gen/chup-khuyu-nho": "tu-dong-can-duyet",
+  "gen/chup-khuyu-to-x2": "tu-dong-can-duyet",
+  "gen/chup-khuyu-to": "tu-dong-can-duyet",
+  "gen/chup-khuyu-x2": "tu-dong-can-duyet",
+  "gen/chup-khuyu": "tu-dong-can-duyet",
+  "gen/chup-vai-gon-x2": "tu-dong-can-duyet",
+  "gen/chup-vai-gon": "tu-dong-can-duyet",
+  "gen/chup-vai-nho-x2": "tu-dong-can-duyet",
+  "gen/chup-vai-nho": "tu-dong-can-duyet",
+  "gen/chup-vai-to-x2": "tu-dong-can-duyet",
+  "gen/chup-vai-to": "tu-dong-can-duyet",
+  "gen/chup-vai-x2": "tu-dong-can-duyet",
+  "gen/chup-vai": "tu-dong-can-duyet",
+  "gen/giap-cang-tay-x2": "tu-dong-can-duyet",
+  "gen/giap-cang-tay": "tu-dong-can-duyet",
+  "gen/giap-nguc-x2": "tu-dong-can-duyet",
+  "gen/giap-nguc": "tu-dong-can-duyet",
+  "gen/giap-ong-chan-x2": "tu-dong-can-duyet",
+  "gen/giap-ong-chan": "tu-dong-can-duyet",
+  "gen/giap-vai-x2": "tu-dong-can-duyet",
+  "gen/giap-vai": "tu-dong-can-duyet"
+ },
  "armorSets": {
   "may": {
    "name": "Máy vẽ",
-   "about": "bộ vẽ tối giản bằng mã (dùng images/pieces ở trên)",
    "usesTopLevel": true
   },
   "gen": {
    "name": "Gen",
-   "about": "Ảnh gen thật docs/thu-modular-96/anh-gen/giap-roi-4-manh.png: 4 mảnh cắt + thu nhỏ giữ nét bằng tao-giap-gen.py; 3 chụp khớp là hình bộ máy vẽ tô bằng bảng màu gen.",
+   "source": "docs/thu-modular-96/anh-gen/giap-roi-4-manh.png",
    "images": {
     "giap-vai": "giap-gen/giap-vai.png",
-    "giap-vai-back": "giap-gen/giap-vai-back.png",
-    "giap-vai-front": "giap-gen/giap-vai-front.png",
+    "giap-vai-back": "pass/gen/giap-vai-back.png",
+    "giap-vai-front": "pass/gen/giap-vai-front.png",
+    "giap-vai-trong": "pass/gen/giap-vai-trong.png",
     "giap-cang-tay": "giap-gen/giap-cang-tay.png",
-    "giap-cang-tay-back": "giap-gen/giap-cang-tay-back.png",
-    "giap-cang-tay-front": "giap-gen/giap-cang-tay-front.png",
+    "giap-cang-tay-back": "pass/gen/giap-cang-tay-back.png",
+    "giap-cang-tay-front": "pass/gen/giap-cang-tay-front.png",
+    "giap-cang-tay-trong": "pass/gen/giap-cang-tay-trong.png",
     "giap-ong-chan": "giap-gen/giap-ong-chan.png",
-    "giap-ong-chan-back": "giap-gen/giap-ong-chan-back.png",
-    "giap-ong-chan-front": "giap-gen/giap-ong-chan-front.png",
+    "giap-ong-chan-back": "pass/gen/giap-ong-chan-back.png",
+    "giap-ong-chan-front": "pass/gen/giap-ong-chan-front.png",
+    "giap-ong-chan-trong": "pass/gen/giap-ong-chan-trong.png",
     "giap-nguc": "giap-gen/giap-nguc.png",
-    "giap-nguc-back": "giap-gen/giap-nguc-back.png",
-    "giap-nguc-front": "giap-gen/giap-nguc-front.png",
-    "chup-vai": "giap-gen/chup-vai.png",
-    "chup-vai-back": "giap-gen/chup-vai-back.png",
-    "chup-vai-front": "giap-gen/chup-vai-front.png",
-    "chup-khuyu": "giap-gen/chup-khuyu.png",
-    "chup-khuyu-back": "giap-gen/chup-khuyu-back.png",
-    "chup-khuyu-front": "giap-gen/chup-khuyu-front.png",
-    "chup-goi": "giap-gen/chup-goi.png",
-    "chup-goi-back": "giap-gen/chup-goi-back.png",
-    "chup-goi-front": "giap-gen/chup-goi-front.png"
+    "giap-nguc-back": "pass/gen/giap-nguc-back.png",
+    "giap-nguc-front": "pass/gen/giap-nguc-front.png",
+    "giap-nguc-trong": "pass/gen/giap-nguc-trong.png",
+    "chup-vai-nho": "giap-gen/chup-vai-nho.png",
+    "chup-vai-nho-back": "pass/gen/chup-vai-nho-back.png",
+    "chup-vai-nho-front": "pass/gen/chup-vai-nho-front.png",
+    "chup-vai-nho-trong": "pass/gen/chup-vai-nho-trong.png",
+    "chup-vai-gon": "giap-gen/chup-vai-gon.png",
+    "chup-vai-gon-back": "pass/gen/chup-vai-gon-back.png",
+    "chup-vai-gon-front": "pass/gen/chup-vai-gon-front.png",
+    "chup-vai-gon-trong": "pass/gen/chup-vai-gon-trong.png",
+    "chup-vai-to": "giap-gen/chup-vai-to.png",
+    "chup-vai-to-back": "pass/gen/chup-vai-to-back.png",
+    "chup-vai-to-front": "pass/gen/chup-vai-to-front.png",
+    "chup-vai-to-trong": "pass/gen/chup-vai-to-trong.png",
+    "chup-khuyu-nho": "giap-gen/chup-khuyu-nho.png",
+    "chup-khuyu-nho-back": "pass/gen/chup-khuyu-nho-back.png",
+    "chup-khuyu-nho-front": "pass/gen/chup-khuyu-nho-front.png",
+    "chup-khuyu-nho-trong": "pass/gen/chup-khuyu-nho-trong.png",
+    "chup-khuyu-gon": "giap-gen/chup-khuyu-gon.png",
+    "chup-khuyu-gon-back": "pass/gen/chup-khuyu-gon-back.png",
+    "chup-khuyu-gon-front": "pass/gen/chup-khuyu-gon-front.png",
+    "chup-khuyu-gon-trong": "pass/gen/chup-khuyu-gon-trong.png",
+    "chup-khuyu-to": "giap-gen/chup-khuyu-to.png",
+    "chup-khuyu-to-back": "pass/gen/chup-khuyu-to-back.png",
+    "chup-khuyu-to-front": "pass/gen/chup-khuyu-to-front.png",
+    "chup-khuyu-to-trong": "pass/gen/chup-khuyu-to-trong.png",
+    "chup-goi-nho": "giap-gen/chup-goi-nho.png",
+    "chup-goi-nho-back": "pass/gen/chup-goi-nho-back.png",
+    "chup-goi-nho-front": "pass/gen/chup-goi-nho-front.png",
+    "chup-goi-nho-trong": "pass/gen/chup-goi-nho-trong.png",
+    "chup-goi-gon": "giap-gen/chup-goi-gon.png",
+    "chup-goi-gon-back": "pass/gen/chup-goi-gon-back.png",
+    "chup-goi-gon-front": "pass/gen/chup-goi-gon-front.png",
+    "chup-goi-gon-trong": "pass/gen/chup-goi-gon-trong.png",
+    "chup-goi-to": "giap-gen/chup-goi-to.png",
+    "chup-goi-to-back": "pass/gen/chup-goi-to-back.png",
+    "chup-goi-to-front": "pass/gen/chup-goi-to-front.png",
+    "chup-goi-to-trong": "pass/gen/chup-goi-to-trong.png"
    },
    "imagesX2": {
     "giap-vai": "giap-gen/giap-vai-x2.png",
+    "giap-vai-back": "pass/gen/giap-vai-x2-back.png",
+    "giap-vai-front": "pass/gen/giap-vai-x2-front.png",
+    "giap-vai-trong": "pass/gen/giap-vai-x2-trong.png",
     "giap-cang-tay": "giap-gen/giap-cang-tay-x2.png",
+    "giap-cang-tay-back": "pass/gen/giap-cang-tay-x2-back.png",
+    "giap-cang-tay-front": "pass/gen/giap-cang-tay-x2-front.png",
+    "giap-cang-tay-trong": "pass/gen/giap-cang-tay-x2-trong.png",
     "giap-ong-chan": "giap-gen/giap-ong-chan-x2.png",
+    "giap-ong-chan-back": "pass/gen/giap-ong-chan-x2-back.png",
+    "giap-ong-chan-front": "pass/gen/giap-ong-chan-x2-front.png",
+    "giap-ong-chan-trong": "pass/gen/giap-ong-chan-x2-trong.png",
     "giap-nguc": "giap-gen/giap-nguc-x2.png",
-    "chup-vai": "giap-gen/chup-vai-x2.png",
-    "chup-khuyu": "giap-gen/chup-khuyu-x2.png",
-    "chup-goi": "giap-gen/chup-goi-x2.png",
-    "giap-vai-back": "giap-gen/giap-vai-x2-back.png",
-    "giap-cang-tay-back": "giap-gen/giap-cang-tay-x2-back.png",
-    "giap-ong-chan-back": "giap-gen/giap-ong-chan-x2-back.png",
-    "giap-nguc-back": "giap-gen/giap-nguc-x2-back.png",
-    "chup-vai-back": "giap-gen/chup-vai-x2-back.png",
-    "chup-khuyu-back": "giap-gen/chup-khuyu-x2-back.png",
-    "chup-goi-back": "giap-gen/chup-goi-x2-back.png",
-    "giap-vai-front": "giap-gen/giap-vai-x2-front.png",
-    "giap-cang-tay-front": "giap-gen/giap-cang-tay-x2-front.png",
-    "giap-ong-chan-front": "giap-gen/giap-ong-chan-x2-front.png",
-    "giap-nguc-front": "giap-gen/giap-nguc-x2-front.png",
-    "chup-vai-front": "giap-gen/chup-vai-x2-front.png",
-    "chup-khuyu-front": "giap-gen/chup-khuyu-x2-front.png",
-    "chup-goi-front": "giap-gen/chup-goi-x2-front.png"
+    "giap-nguc-back": "pass/gen/giap-nguc-x2-back.png",
+    "giap-nguc-front": "pass/gen/giap-nguc-x2-front.png",
+    "giap-nguc-trong": "pass/gen/giap-nguc-x2-trong.png",
+    "chup-vai-nho": "giap-gen/chup-vai-nho-x2.png",
+    "chup-vai-nho-back": "pass/gen/chup-vai-nho-x2-back.png",
+    "chup-vai-nho-front": "pass/gen/chup-vai-nho-x2-front.png",
+    "chup-vai-nho-trong": "pass/gen/chup-vai-nho-x2-trong.png",
+    "chup-vai-gon": "giap-gen/chup-vai-gon-x2.png",
+    "chup-vai-gon-back": "pass/gen/chup-vai-gon-x2-back.png",
+    "chup-vai-gon-front": "pass/gen/chup-vai-gon-x2-front.png",
+    "chup-vai-gon-trong": "pass/gen/chup-vai-gon-x2-trong.png",
+    "chup-vai-to": "giap-gen/chup-vai-to-x2.png",
+    "chup-vai-to-back": "pass/gen/chup-vai-to-x2-back.png",
+    "chup-vai-to-front": "pass/gen/chup-vai-to-x2-front.png",
+    "chup-vai-to-trong": "pass/gen/chup-vai-to-x2-trong.png",
+    "chup-khuyu-nho": "giap-gen/chup-khuyu-nho-x2.png",
+    "chup-khuyu-nho-back": "pass/gen/chup-khuyu-nho-x2-back.png",
+    "chup-khuyu-nho-front": "pass/gen/chup-khuyu-nho-x2-front.png",
+    "chup-khuyu-nho-trong": "pass/gen/chup-khuyu-nho-x2-trong.png",
+    "chup-khuyu-gon": "giap-gen/chup-khuyu-gon-x2.png",
+    "chup-khuyu-gon-back": "pass/gen/chup-khuyu-gon-x2-back.png",
+    "chup-khuyu-gon-front": "pass/gen/chup-khuyu-gon-x2-front.png",
+    "chup-khuyu-gon-trong": "pass/gen/chup-khuyu-gon-x2-trong.png",
+    "chup-khuyu-to": "giap-gen/chup-khuyu-to-x2.png",
+    "chup-khuyu-to-back": "pass/gen/chup-khuyu-to-x2-back.png",
+    "chup-khuyu-to-front": "pass/gen/chup-khuyu-to-x2-front.png",
+    "chup-khuyu-to-trong": "pass/gen/chup-khuyu-to-x2-trong.png",
+    "chup-goi-nho": "giap-gen/chup-goi-nho-x2.png",
+    "chup-goi-nho-back": "pass/gen/chup-goi-nho-x2-back.png",
+    "chup-goi-nho-front": "pass/gen/chup-goi-nho-x2-front.png",
+    "chup-goi-nho-trong": "pass/gen/chup-goi-nho-x2-trong.png",
+    "chup-goi-gon": "giap-gen/chup-goi-gon-x2.png",
+    "chup-goi-gon-back": "pass/gen/chup-goi-gon-x2-back.png",
+    "chup-goi-gon-front": "pass/gen/chup-goi-gon-x2-front.png",
+    "chup-goi-gon-trong": "pass/gen/chup-goi-gon-x2-trong.png",
+    "chup-goi-to": "giap-gen/chup-goi-to-x2.png",
+    "chup-goi-to-back": "pass/gen/chup-goi-to-x2-back.png",
+    "chup-goi-to-front": "pass/gen/chup-goi-to-x2-front.png",
+    "chup-goi-to-trong": "pass/gen/chup-goi-to-x2-trong.png"
    },
-   "imagesX2Note": "Bản ×2 CHỈ dùng cho chế độ xem \"Phóng to nhân vật ×2 (192)\". Điểm neo ghi theo cỡ ×1; bản ×2 đúng gấp đôi cỡ nên neo ×2.",
-   "imageSources": {
-    "giap-vai": "cắt từ ảnh gen, gốc cắt: giap-gen/goc-giap-vai.png",
-    "giap-cang-tay": "cắt từ ảnh gen, gốc cắt: giap-gen/goc-giap-cang-tay.png",
-    "giap-ong-chan": "cắt từ ảnh gen, gốc cắt: giap-gen/goc-giap-ong-chan.png",
-    "giap-nguc": "cắt từ ảnh gen, gốc cắt: giap-gen/goc-giap-nguc.png",
-    "chup-vai": "hình chụp khớp của bộ máy vẽ, tô bằng bảng màu gen (ảnh gen không có chụp khớp)",
-    "chup-khuyu": "hình chụp khớp của bộ máy vẽ, tô bằng bảng màu gen (ảnh gen không có chụp khớp)",
-    "chup-goi": "hình chụp khớp của bộ máy vẽ, tô bằng bảng màu gen (ảnh gen không có chụp khớp)"
-   },
-   "palette": [
-    {
-     "rgb": "#050403",
-     "role": "viền"
-    },
-    {
-     "rgb": "#231714",
-     "role": "thép/tối"
-    },
-    {
-     "rgb": "#352f31",
-     "role": "thép/tối"
-    },
-    {
-     "rgb": "#4b5666",
-     "role": "thép/tối"
-    },
-    {
-     "rgb": "#944a1d",
-     "role": "đồng"
-    },
-    {
-     "rgb": "#748293",
-     "role": "thép/tối"
-    },
-    {
-     "rgb": "#dd8940",
-     "role": "đồng"
-    },
-    {
-     "rgb": "#e0c7a6",
-     "role": "đồng"
-    }
-   ],
+   "imagesX2Note": "Bản ×2 CHỈ dùng cho ô xem \"nhân vật ×2 (192)\"; neo ghi theo cỡ ×1.",
    "pieces": [
     {
      "id": "vaiSau",
@@ -473,13 +742,14 @@
      "side": "sau",
      "kind": "bone",
      "image": "giap-vai",
+     "from": "shoulderBack",
      "to": "elbowBack",
      "anchorStart": [
-      3.2,
+      1.2,
       4.0
      ],
      "anchorEnd": [
-      8.8,
+      6.8,
       4.0
      ],
      "thicknessScale": 1.0,
@@ -487,15 +757,27 @@
       "min": 0.85,
       "max": 1.15
      },
-     "overlapStart": 2.0,
-     "overlapEnd": 2.0,
-     "insertAfter": "rearArm",
      "tint": 0.72,
-     "from": "shoulderBack",
-     "backImage": "giap-vai-back",
-     "frontImage": "giap-vai-front",
-     "backAfter": "rearArm",
-     "frontAfter": "backShoulderArmor"
+     "nhan": "nhan/gen/giap-vai.png",
+     "vungRong": [
+      "trong"
+     ],
+     "chi": [
+      "rearArm"
+     ],
+     "vung": {
+      "back": {
+       "before": "rearArm"
+      },
+      "front": {
+       "after": "rearArm"
+      },
+      "trong": {
+       "before": "rearArm"
+      }
+     },
+     "overlapStart": 2,
+     "overlapEnd": 2
     },
     {
      "id": "cangTaySau",
@@ -504,13 +786,14 @@
      "side": "sau",
      "kind": "bone",
      "image": "giap-cang-tay",
+     "from": "elbowBack",
      "to": "wristBack",
      "anchorStart": [
-      2.96,
+      0.96,
       2.0
      ],
      "anchorEnd": [
-      9.04,
+      7.04,
       2.0
      ],
      "thicknessScale": 1.0,
@@ -518,15 +801,27 @@
       "min": 0.85,
       "max": 1.15
      },
-     "overlapStart": 2.0,
-     "overlapEnd": 2.0,
-     "insertAfter": "rearArm",
      "tint": 0.72,
-     "from": "elbowBack",
-     "backImage": "giap-cang-tay-back",
-     "frontImage": "giap-cang-tay-front",
-     "backAfter": "rearArm",
-     "frontAfter": "backShoulderArmor"
+     "nhan": "nhan/gen/giap-cang-tay.png",
+     "vungRong": [
+      "trong"
+     ],
+     "chi": [
+      "rearArm"
+     ],
+     "vung": {
+      "back": {
+       "before": "rearArm"
+      },
+      "front": {
+       "after": "rearArm"
+      },
+      "trong": {
+       "before": "rearArm"
+      }
+     },
+     "overlapStart": 2,
+     "overlapEnd": 2
     },
     {
      "id": "chupVaiSau",
@@ -534,21 +829,32 @@
      "group": "chupVai",
      "side": "sau",
      "kind": "cap",
-     "image": "chup-vai",
      "at": "shoulderBack",
-     "anchor": [
-      3.5,
-      3.5
+     "imageTheoCo": {
+      "nho": "chup-vai-nho",
+      "gon": "chup-vai-gon",
+      "to": "chup-vai-to"
+     },
+     "tint": 0.72,
+     "nhan": "nhan/gen/chup-vai-<cỡ>.png",
+     "vungRong": [
+      "back",
+      "trong"
      ],
-     "insertAfter": "rearArm",
-     "maskLayers": [
+     "chi": [
       "rearArm"
      ],
-     "tint": 0.72,
-     "backImage": "chup-vai-back",
-     "frontImage": "chup-vai-front",
-     "backAfter": "rearArm",
-     "frontAfter": "backShoulderArmor"
+     "vung": {
+      "back": {
+       "before": "rearArm"
+      },
+      "front": {
+       "after": "rearArm"
+      },
+      "trong": {
+       "before": "rearArm"
+      }
+     }
     },
     {
      "id": "chupKhuyuSau",
@@ -556,21 +862,32 @@
      "group": "chupKhuyu",
      "side": "sau",
      "kind": "cap",
-     "image": "chup-khuyu",
      "at": "elbowBack",
-     "anchor": [
-      3.5,
-      3.5
+     "imageTheoCo": {
+      "nho": "chup-khuyu-nho",
+      "gon": "chup-khuyu-gon",
+      "to": "chup-khuyu-to"
+     },
+     "tint": 0.72,
+     "nhan": "nhan/gen/chup-khuyu-<cỡ>.png",
+     "vungRong": [
+      "back",
+      "trong"
      ],
-     "insertAfter": "rearArm",
-     "maskLayers": [
+     "chi": [
       "rearArm"
      ],
-     "tint": 0.72,
-     "backImage": "chup-khuyu-back",
-     "frontImage": "chup-khuyu-front",
-     "backAfter": "rearArm",
-     "frontAfter": "backShoulderArmor"
+     "vung": {
+      "back": {
+       "before": "rearArm"
+      },
+      "front": {
+       "after": "rearArm"
+      },
+      "trong": {
+       "before": "rearArm"
+      }
+     }
     },
     {
      "id": "ongChanSau",
@@ -579,13 +896,14 @@
      "side": "sau",
      "kind": "bone",
      "image": "giap-ong-chan",
+     "from": "kneeBack",
      "to": "ankleBack",
      "anchorStart": [
-      3.08,
+      1.08,
       3.0
      ],
      "anchorEnd": [
-      9.92,
+      7.92,
       3.0
      ],
      "thicknessScale": 1.0,
@@ -593,15 +911,28 @@
       "min": 0.85,
       "max": 1.15
      },
-     "overlapStart": 2.0,
-     "overlapEnd": 2.0,
-     "insertAfter": "rearPants",
      "tint": 0.72,
-     "from": "kneeBack",
-     "backImage": "giap-ong-chan-back",
-     "frontImage": "giap-ong-chan-front",
-     "backAfter": "rearPants",
-     "frontAfter": "rearArm"
+     "nhan": "nhan/gen/giap-ong-chan.png",
+     "vungRong": [
+      "trong"
+     ],
+     "chi": [
+      "rearLeg",
+      "rearPants"
+     ],
+     "vung": {
+      "back": {
+       "before": "rearLeg"
+      },
+      "front": {
+       "after": "rearPants"
+      },
+      "trong": {
+       "before": "rearLeg"
+      }
+     },
+     "overlapStart": 2,
+     "overlapEnd": 2
     },
     {
      "id": "chupGoiSau",
@@ -609,22 +940,33 @@
      "group": "chupGoi",
      "side": "sau",
      "kind": "cap",
-     "image": "chup-goi",
      "at": "kneeBack",
-     "anchor": [
-      3.5,
-      3.5
+     "imageTheoCo": {
+      "nho": "chup-goi-nho",
+      "gon": "chup-goi-gon",
+      "to": "chup-goi-to"
+     },
+     "tint": 0.72,
+     "nhan": "nhan/gen/chup-goi-<cỡ>.png",
+     "vungRong": [
+      "back",
+      "trong"
      ],
-     "insertAfter": "rearPants",
-     "maskLayers": [
+     "chi": [
       "rearLeg",
       "rearPants"
      ],
-     "tint": 0.72,
-     "backImage": "chup-goi-back",
-     "frontImage": "chup-goi-front",
-     "backAfter": "rearArm",
-     "frontAfter": "backShoulderArmor"
+     "vung": {
+      "back": {
+       "before": "rearLeg"
+      },
+      "front": {
+       "after": "rearPants"
+      },
+      "trong": {
+       "before": "rearLeg"
+      }
+     }
     },
     {
      "id": "nguc",
@@ -633,13 +975,14 @@
      "side": "truoc",
      "kind": "bone",
      "image": "giap-nguc",
+     "from": "neck",
      "to": "hipCenter",
      "anchorStart": [
-      3.04,
+      1.04,
       6.5
      ],
      "anchorEnd": [
-      13.96,
+      11.96,
       6.5
      ],
      "thicknessScale": 1.0,
@@ -647,16 +990,28 @@
       "min": 0.85,
       "max": 1.15
      },
-     "overlapStart": 2.0,
-     "overlapEnd": 2.0,
-     "insertAfter": "chestArmor",
      "tint": 1.0,
-     "from": "neck",
+     "nhan": "nhan/gen/giap-nguc.png",
+     "vungRong": [
+      "trong"
+     ],
+     "chi": [
+      "body"
+     ],
+     "vung": {
+      "back": {
+       "before": "body"
+      },
+      "front": {
+       "after": "chestArmor"
+      },
+      "trong": {
+       "before": "body"
+      }
+     },
      "boneFrac": 0.6,
-     "backImage": "giap-nguc-back",
-     "frontImage": "giap-nguc-front",
-     "backAfter": "backShoulderArmor",
-     "frontAfter": "chestArmor"
+     "overlapStart": 2,
+     "overlapEnd": 2
     },
     {
      "id": "ongChanTruoc",
@@ -665,13 +1020,14 @@
      "side": "truoc",
      "kind": "bone",
      "image": "giap-ong-chan",
+     "from": "kneeFront",
      "to": "ankleFront",
      "anchorStart": [
-      3.08,
+      1.08,
       3.0
      ],
      "anchorEnd": [
-      9.92,
+      7.92,
       3.0
      ],
      "thicknessScale": 1.0,
@@ -679,15 +1035,28 @@
       "min": 0.85,
       "max": 1.15
      },
-     "overlapStart": 2.0,
-     "overlapEnd": 2.0,
-     "insertAfter": "frontPants",
      "tint": 1.0,
-     "from": "kneeFront",
-     "backImage": "giap-ong-chan-back",
-     "frontImage": "giap-ong-chan-front",
-     "backAfter": "frontLeg",
-     "frontAfter": "frontPants"
+     "nhan": "nhan/gen/giap-ong-chan.png",
+     "vungRong": [
+      "trong"
+     ],
+     "chi": [
+      "frontLeg",
+      "frontPants"
+     ],
+     "vung": {
+      "back": {
+       "before": "frontLeg"
+      },
+      "front": {
+       "after": "frontPants"
+      },
+      "trong": {
+       "before": "frontLeg"
+      }
+     },
+     "overlapStart": 2,
+     "overlapEnd": 2
     },
     {
      "id": "chupGoiTruoc",
@@ -695,22 +1064,33 @@
      "group": "chupGoi",
      "side": "truoc",
      "kind": "cap",
-     "image": "chup-goi",
      "at": "kneeFront",
-     "anchor": [
-      3.5,
-      3.5
+     "imageTheoCo": {
+      "nho": "chup-goi-nho",
+      "gon": "chup-goi-gon",
+      "to": "chup-goi-to"
+     },
+     "tint": 1.0,
+     "nhan": "nhan/gen/chup-goi-<cỡ>.png",
+     "vungRong": [
+      "back",
+      "trong"
      ],
-     "insertAfter": "frontPants",
-     "maskLayers": [
+     "chi": [
       "frontLeg",
       "frontPants"
      ],
-     "tint": 1.0,
-     "backImage": "chup-goi-back",
-     "frontImage": "chup-goi-front",
-     "backAfter": "body",
-     "frontAfter": "frontArm"
+     "vung": {
+      "back": {
+       "before": "frontLeg"
+      },
+      "front": {
+       "after": "frontPants"
+      },
+      "trong": {
+       "before": "frontLeg"
+      }
+     }
     },
     {
      "id": "cangTayTruoc",
@@ -719,13 +1099,14 @@
      "side": "truoc",
      "kind": "bone",
      "image": "giap-cang-tay",
+     "from": "elbowFront",
      "to": "wristFront",
      "anchorStart": [
-      2.96,
+      0.96,
       2.0
      ],
      "anchorEnd": [
-      9.04,
+      7.04,
       2.0
      ],
      "thicknessScale": 1.0,
@@ -733,15 +1114,27 @@
       "min": 0.85,
       "max": 1.15
      },
-     "overlapStart": 2.0,
-     "overlapEnd": 2.0,
-     "insertAfter": "frontArm",
      "tint": 1.0,
-     "from": "elbowFront",
-     "backImage": "giap-cang-tay-back",
-     "frontImage": "giap-cang-tay-front",
-     "backAfter": "body",
-     "frontAfter": "frontArm"
+     "nhan": "nhan/gen/giap-cang-tay.png",
+     "vungRong": [
+      "trong"
+     ],
+     "chi": [
+      "frontArm"
+     ],
+     "vung": {
+      "back": {
+       "before": "frontArm"
+      },
+      "front": {
+       "after": "frontArm"
+      },
+      "trong": {
+       "before": "frontArm"
+      }
+     },
+     "overlapStart": 2,
+     "overlapEnd": 2
     },
     {
      "id": "vaiTruoc",
@@ -750,13 +1143,14 @@
      "side": "truoc",
      "kind": "bone",
      "image": "giap-vai",
+     "from": "shoulderFront",
      "to": "elbowFront",
      "anchorStart": [
-      3.2,
+      1.2,
       4.0
      ],
      "anchorEnd": [
-      8.8,
+      6.8,
       4.0
      ],
      "thicknessScale": 1.0,
@@ -764,15 +1158,27 @@
       "min": 0.85,
       "max": 1.15
      },
-     "overlapStart": 2.0,
-     "overlapEnd": 2.0,
-     "insertAfter": "frontArm",
      "tint": 1.0,
-     "from": "shoulderFront",
-     "backImage": "giap-vai-back",
-     "frontImage": "giap-vai-front",
-     "backAfter": "body",
-     "frontAfter": "frontArm"
+     "nhan": "nhan/gen/giap-vai.png",
+     "vungRong": [
+      "trong"
+     ],
+     "chi": [
+      "frontArm"
+     ],
+     "vung": {
+      "back": {
+       "before": "frontArm"
+      },
+      "front": {
+       "after": "frontArm"
+      },
+      "trong": {
+       "before": "frontArm"
+      }
+     },
+     "overlapStart": 2,
+     "overlapEnd": 2
     },
     {
      "id": "chupKhuyuTruoc",
@@ -780,21 +1186,32 @@
      "group": "chupKhuyu",
      "side": "truoc",
      "kind": "cap",
-     "image": "chup-khuyu",
      "at": "elbowFront",
-     "anchor": [
-      3.5,
-      3.5
+     "imageTheoCo": {
+      "nho": "chup-khuyu-nho",
+      "gon": "chup-khuyu-gon",
+      "to": "chup-khuyu-to"
+     },
+     "tint": 1.0,
+     "nhan": "nhan/gen/chup-khuyu-<cỡ>.png",
+     "vungRong": [
+      "back",
+      "trong"
      ],
-     "insertAfter": "frontArm",
-     "maskLayers": [
+     "chi": [
       "frontArm"
      ],
-     "tint": 1.0,
-     "backImage": "chup-khuyu-back",
-     "frontImage": "chup-khuyu-front",
-     "backAfter": "body",
-     "frontAfter": "frontArm"
+     "vung": {
+      "back": {
+       "before": "frontArm"
+      },
+      "front": {
+       "after": "frontArm"
+      },
+      "trong": {
+       "before": "frontArm"
+      }
+     }
     },
     {
      "id": "chupVaiTruoc",
@@ -802,33 +1219,34 @@
      "group": "chupVai",
      "side": "truoc",
      "kind": "cap",
-     "image": "chup-vai",
      "at": "shoulderFront",
-     "anchor": [
-      3.5,
-      3.5
+     "imageTheoCo": {
+      "nho": "chup-vai-nho",
+      "gon": "chup-vai-gon",
+      "to": "chup-vai-to"
+     },
+     "tint": 1.0,
+     "nhan": "nhan/gen/chup-vai-<cỡ>.png",
+     "vungRong": [
+      "back",
+      "trong"
      ],
-     "insertAfter": "frontArm",
-     "maskLayers": [
+     "chi": [
       "frontArm"
      ],
-     "tint": 1.0,
-     "backImage": "chup-vai-back",
-     "frontImage": "chup-vai-front",
-     "backAfter": "body",
-     "frontAfter": "frontArm"
+     "vung": {
+      "back": {
+       "before": "frontArm"
+      },
+      "front": {
+       "after": "frontArm"
+      },
+      "trong": {
+       "before": "frontArm"
+      }
+     }
     }
-   ],
-   "groupNames": {
-    "vai": "Giáp vai",
-    "cangTay": "Giáp cẳng tay",
-    "ongChan": "Giáp ống chân",
-    "chupVai": "Chụp vai",
-    "chupKhuyu": "Chụp khuỷu",
-    "chupGoi": "Chụp gối",
-    "nguc": "Giáp ngực nhỏ"
-   }
+   ]
   }
- },
- "boneFrac": "boneFrac (tuỳ chọn, mặc định 1): khớp cuối dùng để gắn = from + (to − from) × boneFrac. Giáp ngực dùng 0,6 của đoạn cổ → giữa hông."
+ }
 }
