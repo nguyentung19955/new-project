@@ -269,15 +269,17 @@
       { M: 3.35, v: 950, lk: 80, r: 50, nl: [1, 4], m: [1, 1] },    // cần mảnh Ngư Tinh
       { M: 3.70, v: 1000, lk: 90, r: 55, nl: [2, 5] },
       { M: 4.50, v: 1350, lk: 290, r: 65, nl: [2, 10] },            // 12: Thức tỉnh; trần trước Hồ Tinh (bot phiên 1: xem dưới)
-      { M: 4.90, v: 1300, lk: 100, r: 70, nl: [2, 6], m: [2, 1] },  // cần mảnh Hồ Tinh; trần trước Thuồng Luồng
-      { M: 5.30, v: 1450, lk: 120, r: 75, nl: [0, 6], m: [3, 1] },  // cần mảnh Thuồng Luồng (vùng 4 không có nguyên liệu riêng: Gỗ linh)
+      { M: 4.90, v: 1300, lk: 100, r: 70, nl: [2, 6], m: [2, 1] },  // cần mảnh Hồ Tinh
+      { M: 5.30, v: 1450, lk: 120, r: 75, nl: [0, 6] },             // trần trước Thuồng Luồng (phiên 3: bỏ mảnh TL, xem tran); vùng 4 không có nguyên liệu riêng: Gỗ linh
       { M: 5.70, v: 1850, lk: 200, r: 90, nl: [1, 10], m: [3, 2] }, // 15: Viên mãn (Vảy cá)
     ],
     // Cấp Luyện tối đa theo số trùm vùng đã hạ (0..4: chưa hạ, Mộc Tinh, Ngư Tinh, Hồ Tinh, Thuồng Luồng); cấp đầu tiên vượt mỗi mốc
-    // (6, 10, 13, 14) cần mảnh của trùm đó. Phiên 1 (bot 8 lượt, sau luật trùm công bằng của tư vấn 2): thiết kế 11 trước Hồ Tinh và cấp 12
+    // (6, 10, 13, 15) cần mảnh của trùm đó. Phiên 1 (bot 8 lượt, sau luật trùm công bằng của tư vấn 2): thiết kế 11 trước Hồ Tinh và cấp 12
     // cần mảnh Hồ Tinh làm bot kẹt ở cấp 11 cả vùng 3 (ải 3-5 chơi 9,1 lần > 9, tổng 44 lần so với 39) vì bot thật lên Thức tỉnh từ 3-2 →
     // trần trước Hồ Tinh 12, mảnh Hồ Tinh chuyển sang cấp 13 (39 lần, 181 phút; luật cũ 39 lần, 184 phút). Bảng: luyen-vu-khi/bao-cao-1.md.
-    tran: [5, 9, 12, 13, 15],
+    // Phiên 3 (bot 8 lượt --vung4): trần 13 trước Thuồng Luồng làm 4-5 chơi 11,2 lần (> 9; luật cũ 7,2), vàng dồn 9.956 → trần trước
+    // Thuồng Luồng 14, cấp 14 không cần mảnh, cấp 15 cần 2 mảnh Thuồng Luồng. Bảng: luyen-vu-khi/bao-cao-3.md.
+    tran: [5, 9, 12, 14, 15],
     hinhThai: [3, 6, 12],       // cấp lên Mầm (chọn hệ), Thành hình, Thức tỉnh
     phuTu: 9,                   // từ cấp 9 (Tinh luyện): phần phụ của loại
     phu: { sword: 0.10, spear: 0.12, hammer: 0.30, bow: 0.20 }, // tốc đánh / tầm / choáng / sát thương xuyên (phi tiêu xuyên thêm xuyenThem quái)

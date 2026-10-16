@@ -252,7 +252,7 @@
       matUse = ['Luyện cấp 3–6 và cấp 14', 'Luyện cấp 7–10 và cấp 15', 'Luyện cấp 11–13'];
     }
     R.forEach((r, i) => { if (!r.matChung) a.push(['mat' + i, matUse[i] || 'Nguyên liệu vùng', G.t('Qua ải {0}', r.name)]); }); // vùng 4 không có nguyên liệu riêng (Q2 = A)
-    const LY = !!(G.luyen && G.luyen.bat()), qua = ['Luyện lên cấp 6', 'Luyện lên cấp 10', 'Luyện lên cấp 13', 'Luyện lên cấp 14 và 15'];
+    const LY = !!(G.luyen && G.luyen.bat()), qua = ['Luyện lên cấp 6', 'Luyện lên cấp 10', 'Luyện lên cấp 13', 'Luyện lên cấp 15'];
     R.forEach((r, i) => a.push(['shard' + i, LY ? (i >= 3 ? qua[3] : G.t('{0}; nâng bộ trang phục', qua[i])) : i === 0 ? 'Nâng bộ Ninja và bộ Rừng lên cấp 2, 3' : i >= 3 ? 'Để dành (chưa có bộ trang phục vùng này)' : 'Nâng bộ của vùng này lên cấp 2, 3', G.t('Hạ trùm vùng {0} (ải 5 {1})', r.bossName, r.name)]));
     return a;
   }

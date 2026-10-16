@@ -56,7 +56,7 @@
     'Luyện vũ khí ở Ông Thợ Rèn': 'Temper weapons at the Smith',
     'Qua ải, rương báu, phòng thử thách, thương nhân, trùm, Ải Rèn, Bà Hàng Xén (thẻ NLR)': 'Stages, chests, challenge rooms, merchants, bosses, Forge Trial, the Grocer',
     'Luyện cấp 3–6 và cấp 14': 'Temper Lv 3–6 and Lv 14', 'Luyện cấp 7–10 và cấp 15': 'Temper Lv 7–10 and Lv 15', 'Luyện cấp 11–13': 'Temper Lv 11–13',
-    'Luyện lên cấp 6': 'Temper to Lv 6', 'Luyện lên cấp 10': 'Temper to Lv 10', 'Luyện lên cấp 13': 'Temper to Lv 13', 'Luyện lên cấp 14 và 15': 'Temper to Lv 14 and 15', '{0}; nâng bộ trang phục': '{0}; upgrade outfits',
+    'Luyện lên cấp 6': 'Temper to Lv 6', 'Luyện lên cấp 10': 'Temper to Lv 10', 'Luyện lên cấp 13': 'Temper to Lv 13', 'Luyện lên cấp 15': 'Temper to Lv 15', '{0}; nâng bộ trang phục': '{0}; upgrade outfits',
     'Linh khí vào một túi chung. Cu Tí mang đủ 4 vũ khí (Kiếm, Thương, Búa, Phi tiêu); ở Ông Thợ Rèn luyện từng món từ cấp 1 lên 15: cấp 3 thành Mầm (chọn Lửa, Độc hoặc Băng), cấp 6 Thành hình, cấp 12 Thức tỉnh.':
       'Spirit goes into one shared pouch. Cu Tí carries all 4 weapons (Sword, Spear, Hammer, Shuriken); at the Smith, temper each from Lv 1 to 15: Lv 3 Sprout (pick Fire, Poison or Ice), Lv 6 Formed, Lv 12 Awakened.',
     'Luyện vũ khí ở Ông Thợ Rèn lần nào cũng thành công, không tụt cấp. Khung ô đổi màu theo cấp: Trắng, Xanh lam, Xanh lục, Tím, Vàng, Đỏ, Rực lửa.':

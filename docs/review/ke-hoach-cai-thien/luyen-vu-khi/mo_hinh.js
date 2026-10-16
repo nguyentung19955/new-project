@@ -26,15 +26,15 @@ const LUYEN = [
   { M: 2.65, v: 700, lk: 70, r: 38, nl: [1, 4] },
   { M: 3.00, v: 850, lk: 100, r: 45, nl: [1, 8] },             // 9: Tinh luyện — mở phần phụ của loại; trần trước Ngư Tinh
   { M: 3.35, v: 950, lk: 80, r: 50, nl: [1, 4], m: [1, 1] },   // cần mảnh Ngư Tinh
-  { M: 3.70, v: 1000, lk: 90, r: 55, nl: [2, 5] },             // trần trước Hồ Tinh
-  { M: 4.50, v: 1350, lk: 290, r: 65, nl: [2, 10], m: [2, 1] }, // 12: Thức tỉnh — cần mảnh Hồ Tinh
-  { M: 4.90, v: 1300, lk: 100, r: 70, nl: [2, 6] },             // trần trước Thuồng Luồng
-  { M: 5.30, v: 1450, lk: 120, r: 75, nl: [0, 6], m: [3, 1] },  // cần mảnh Thuồng Luồng (vùng 4 không có nguyên liệu riêng: dùng Gỗ linh)
+  { M: 3.70, v: 1000, lk: 90, r: 55, nl: [2, 5] },
+  { M: 4.50, v: 1350, lk: 290, r: 65, nl: [2, 10] },            // 12: Thức tỉnh; trần trước Hồ Tinh (phiên 1)
+  { M: 4.90, v: 1300, lk: 100, r: 70, nl: [2, 6], m: [2, 1] },  // cần mảnh Hồ Tinh (phiên 1)
+  { M: 5.30, v: 1450, lk: 120, r: 75, nl: [0, 6] },             // trần trước Thuồng Luồng (phiên 3: không cần mảnh); vùng 4 dùng Gỗ linh
   { M: 5.70, v: 1850, lk: 200, r: 90, nl: [1, 10], m: [3, 2] }, // 15: Viên mãn (Vảy cá)
 ];
 // Thử nhanh không sửa tệp: KV=0.7 KR=1.5 KLK=1 (nhân giá vàng / NLR / LK), LECH=2 (phi tiêu theo sau tối đa bao nhiêu cấp)
 for (const c of LUYEN) if (c) { c.v = Math.round((c.v || 0) * +(process.env.KV || 1) / 10) * 10; c.r = Math.round((c.r || 0) * +(process.env.KR || 1)); c.lk = Math.round((c.lk || 0) * +(process.env.KLK || 1) / 10) * 10; }
-const TRAN = [5, 9, 11, 13, 15]; // cấp tối đa theo số trùm vùng đã hạ (0..4)
+const TRAN = [5, 9, 12, 14, 15]; // khớp G.LUYEN.tran trong game (thiết kế 5/9/11/13/15; phiên 1 → 12 trước Hồ Tinh, phiên 3 → 14 trước Thuồng Luồng) // cấp tối đa theo số trùm vùng đã hạ (0..4)
 const MANH_DAU = +(process.env.MDAU || 2); // hạ trùm vùng LẦN ĐẦU: thêm bấy nhiêu mảnh (3 → 5), thưởng bảo đảm
 const PHU = 0.06;                 // từ cấp 9 phần phụ của loại (tốc đánh / tầm / choáng / xuyên) chiếm ~6% trong M (như ép đồ: sát thương = M / (1 + phần phụ))
 const DA_NLR = 2, BUA_NLR = 6;    // quy đổi đá nâng bậc, bùa giữ bậc → nguyên liệu rèn

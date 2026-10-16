@@ -56,7 +56,7 @@ const CA = [
     console.log('0. Nạp game');
     const n0 = await A.goi(() => ({ co: !!G.luyen, bat: G.luyen.bat(), n: G.LUYEN.cap.length - 1, tran: G.LUYEN.tran.join(','), thu: G.AI_NGAY.thuTu.join(','), tut: G.EP_DO.tutTu,
       M: G.LUYEN.cap.slice(1).map((c) => c.M).join(','), tong: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].reduce((a, L) => { const c = G.luyen.gia(L); if (c) { a.v += c.v; a.lk += c.lk; a.r += c.r; } return a; }, { v: 0, lk: 0, r: 0 }) }));
-    dat(n0.co && n0.bat && n0.n === 15 && n0.tran === '5,9,12,13,15', 'G.luyen có, cờ bật mặc định, 15 cấp, giới hạn theo trùm 5/9/12/13/15 (phiên 1: trần trước Hồ Tinh 12)');
+    dat(n0.co && n0.bat && n0.n === 15 && n0.tran === '5,9,12,14,15', 'G.luyen có, cờ bật mặc định, 15 cấp, giới hạn theo trùm 5/9/12/14/15 (phiên 1: trần trước Hồ Tinh 12; phiên 3: trước Thuồng Luồng 14)');
     dat(n0.M === '1,1.15,1.35,1.55,1.75,2.05,2.35,2.65,3,3.35,3.7,4.5,4.9,5.3,5.7', 'M theo bảng thiết kế (trần ×5,7 — Q1-A)');
     dat(n0.tong.v === 11400 && n0.tong.lk === 1450 && n0.tong.r === 598, 'cộng giá 1→15: 11.400 vàng, 1.450 linh khí, 598 NLR');
     dat(n0.thu === 'ren,vang' && n0.tut === 99, 'ải ngày: Ải Rèn + Ải Vàng; không tụt bậc');
@@ -173,7 +173,7 @@ const CA = [
       for (let k = 0; k < 50; k++) L.nang(s, w);
       r.tran12 = w.luyen === 12 && G.wStage(w) === 3 && L.duoc(s, w) === 'Cần hạ Hồ Tinh';
       s.stars['2-4'] = 3; const m2 = s.shards[2]; for (let k = 0; k < 50; k++) L.nang(s, w);
-      r.tran13 = w.luyen === 13 && s.shards[2] === m2 - 1;
+      r.tran13 = w.luyen === 14 && s.shards[2] === m2 - 1 && L.duoc(s, w) === 'Cần hạ Thuồng Luồng'; // phiên 3: trần trước Thuồng Luồng 14, cấp 14 không cần mảnh
       if (s.shards.length > 3) { s.stars['3-4'] = 3; for (let k = 0; k < 5; k++) L.nang(s, w); }
       r.vm = s.shards.length > 3 ? w.luyen === 15 && w.dongVM === 'chiMang' && G.epDo.dong(w, 'chiMang') === 0.08 && L.datDong(w, 'trum') && G.epDo.dong(w, 'trum') === 0.16 && G.epDo.dong(w, 'chiMang') === 0 : 'không có vùng 4';
       r.phu = [G.epDo.phu(w), G.epDo.satThuong(w), G.epDo.bac(w)];
@@ -185,7 +185,7 @@ const CA = [
     dat(lu.l2, 'Luyện 1 → 2: trừ đúng 100 vàng, 10 linh khí, 5 NLR');
     dat(lu.he === 'Chọn hệ' && !lu.he2 && lu.l3, 'lên 3 (Mầm) phải chọn hệ; chọn Băng → Mầm Băng, trừ 4 Gỗ linh');
     dat(lu.tran5 && lu.manh === 'Thiếu mảnh Mộc Tinh' && lu.l6, 'chưa hạ Mộc Tinh: tối đa cấp 5 ("Cần hạ Mộc Tinh"); cấp 6 cần 1 mảnh Mộc Tinh, lên Thành hình');
-    dat(lu.tran9 && lu.tran12 && lu.tran13, 'giới hạn theo trùm: 9 sau Mộc Tinh, 12 sau Ngư Tinh (cấp 12 lên Thức tỉnh), 13 sau Hồ Tinh (cấp 13 cần 1 mảnh Hồ Tinh)');
+    dat(lu.tran9 && lu.tran12 && lu.tran13, 'giới hạn theo trùm: 9 sau Mộc Tinh, 12 sau Ngư Tinh (cấp 12 lên Thức tỉnh), 14 sau Hồ Tinh (cấp 13 cần 1 mảnh Hồ Tinh, cấp 14 không cần mảnh)');
     dat(lu.vm === true || lu.vm === 'không có vùng 4', 'cấp 15: dòng Viên mãn mặc định Chí mạng +8%, đổi miễn phí (Trùm +16%) — ' + lu.vm);
     dat(lu.phu[0] === 0.1 && lu.phu[1] === 1 && lu.phu[2] >= 4, 'từ cấp 9 kiếm +10% tốc đánh (E.phu), ép đồ không nhân sát thương nữa, khung ô theo cấp Luyện (bậc ' + lu.phu[2] + ')');
     dat(lu.hong === 0, 'không có tỉ lệ thất bại: 200/200 lần đủ đồ đều lên cấp');
