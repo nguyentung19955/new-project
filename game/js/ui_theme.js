@@ -357,7 +357,8 @@
     if (gp) {
       const kp = T.kBang(w, h);
       khungDat(khungLop(gp, 'bang|' + w + '|' + h + '|' + (title ? 1 : 0) + '|' + kp, w + 6, h + 7, () => {
-        R(2, 3, w + 4, h + 4, 'rgba(0,0,0,0.45)');
+        const gb = G.gop8Bat && G.gop8Bat() ? khungCo('gd-bong-khung') : null; // vẽ tay 8 gộp: bóng đổ 9 mảnh (?gop8=0: mảng tối phẳng)
+        if (gb) khungVe(gb, 2, 3, w + 4, h + 4); else R(2, 3, w + 4, h + 4, 'rgba(0,0,0,0.45)');
         khungVeK(gp, 0, 0, w + 6, h + 6, kp);
         if (title) R(3 + 12, 3 + 19, w - 24, 1, C.br);
       }), x - 3, y - 3, w + 6, h + 7);

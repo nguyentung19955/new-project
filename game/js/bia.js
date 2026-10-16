@@ -121,6 +121,7 @@
       for (const d of H.dom) { // đom đóm: trôi chậm theo vòng nhỏ, sáng mờ theo nhịp
         const px = d.x + Math.sin(t * d.v + d.p) * d.b, py = d.y + Math.sin(t * d.v * 0.7 + d.p * 1.3) * d.b * 0.6;
         const k = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * 1.7 + d.p * 3));
+        if (G.gop8 && G.gop8('hu-bia-hat')) { G.fxAnh.ve(c, 'hu-bia-hat', px, py, t + d.p, 0, 0.5, false, 0.85 * k); continue; } // vẽ tay 8 gộp (?gop8=0 tắt)
         c.fillStyle = 'rgba(255,224,130,' + (0.18 * k).toFixed(3) + ')';
         c.fillRect(px - 1.5, py - 1.5, 3, 3);
         c.fillStyle = 'rgba(255,246,190,' + (0.85 * k).toFixed(3) + ')';

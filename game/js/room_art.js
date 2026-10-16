@@ -2140,6 +2140,13 @@
         }
         case 'drip': { // giọt nước đọng ở chóp nhũ đá, rơi xuống chân vách và toé nhẹ
           const P = 3.2 / a.sp, u = (t + a.ph) % P, fallT = 0.42;
+          if (co8('hu-moi-truong-bien-giot')) { // vẽ tay 8 gộp: đọng (khung 1–2, ở chóp), rơi (khung 3, trượt theo đường rơi cũ), toé (khung 5–6, đáy ảnh ở chân vách)
+            const ag = FA.ds['hu-moi-truong-bien-giot'], hg = ag.fh;
+            if (u < P - fallT - 0.35) { if (u > P * 0.35) FA.veK(c, 'hu-moi-truong-bien-giot', a.x + 0.5, a.y - 3, u > P * 0.55 ? 1 : 0, 0, 1, false, 0.9); }
+            else if (u < P - 0.35) { const q = (u - (P - fallT - 0.35)) / fallT; FA.veK(c, 'hu-moi-truong-bien-giot', a.x + 0.5, a.y - 3 + (a.y1 - a.y) * q * q - hg * 0.4, 2, 0, 1, false, 0.9); }
+            else { const q = (u - (P - 0.35)) / 0.35; FA.veK(c, 'hu-moi-truong-bien-giot', a.x + 0.5, a.y1 + 1 - hg, q < 0.5 ? 4 : 5, 0, 1, false, Math.min(1, 1.4 * (1 - q) * M)); }
+            break;
+          }
           if (u < P - fallT - 0.35) { if (u > P * 0.35) r(a.x, a.y, 1, u > P * 0.55 ? 2 : 1, acol('#9fdcff', 0.8)); }
           else if (u < P - 0.35) { const q = (u - (P - fallT - 0.35)) / fallT; r(a.x, a.y + (a.y1 - a.y) * q * q, 1, 2, '#9fdcff'); }
           else {
