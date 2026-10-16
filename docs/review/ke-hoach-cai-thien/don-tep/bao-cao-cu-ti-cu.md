@@ -7,8 +7,7 @@ Chủ game quyết (16/10 07:24): "Xoá đi [ảnh Cu Tí cũ], công cụ nào 
 - Lệnh `git rm` bị bộ phân loại an toàn của phiên chặn (lý do: "Irreversible Local Destruction").
 - Theo yêu cầu mục 4, tôi **dừng xoá** và không tìm cách lách. Phiên này không xoá tệp nào, và không sửa code game.
 - Danh sách xoá đầy đủ, mỗi dòng một tệp, đã kiểm tra là không còn ai đọc:
-  **`docs/review/ke-hoach-cai-thien/don-tep/xoa-cu-ti-cu.txt`**. Gồm **410 tệp, khoảng 149 MB** (149 324 767 byte).
-- Danh sách **chờ**, chưa nên xoá ngay (lý do ở mục "Chờ" bên dưới): `don-tep/xoa-cu-ti-cu-cho.txt`. Gồm 47 tệp, khoảng 5,5 MB.
+  **`docs/review/ke-hoach-cai-thien/don-tep/xoa-cu-ti-cu.txt`**. Gồm **414 tệp, khoảng 152 MB** (152 402 313 byte).
 
 Phiên điều phối xoá bằng lệnh (chạy từ thư mục gốc repo):
 
@@ -44,7 +43,7 @@ Lịch sử git vẫn giữ các tệp này, nên khôi phục lại được b�
 Mỗi mục đều đã grep toàn bộ code (`*.py`, `*.js`, `*.html`, `*.yml`, `*.sh`, `*.gd`, trừ `game/dist`). Không có code nào nằm ngoài danh sách đọc chúng.
 Có vài chỗ nhắc tên, nhưng chỉ trong ghi chú hoặc chuỗi chữ. Tôi đã xem từng chỗ.
 
-### 1. Ảnh và công cụ của Cu Tí cũ: 230 tệp, 75,9 MB
+### 1. Ảnh và công cụ của Cu Tí cũ: 234 tệp, 79,6 MB
 
 Cu Tí cũ gồm bản ninja khăn đỏ và bản v2 tóc trắng có sừng, cùng làm ngày 12/10. Hệ ghép lớp v2 dùng chúng đã bỏ từ khi có Cu Tí mới 13/10.
 
@@ -55,7 +54,7 @@ Cu Tí cũ gồm bản ninja khăn đỏ và bản v2 tóc trắng có sừng, c
 | `docs/anh-goc/zed/goc/` (ảnh gốc ninja và v2 bản đầu) | 7 | 14,4 MB |
 | `zed-canonical.png`, `zed-tham-chieu.png`, `zed-tham-chieu-v2.png`, `zed-v2-tham-chieu.png`, `zed-v2-tham-chieu-to.png` | 5 | 2,7 MB |
 | `docs/anh-goc/zed/kiem/` (kết quả `kiem-sheet.py` trên 2 tấm canonical) | 14 | 1,8 MB |
-| `lop-ghep/zed-v2-ao-choang.png`, `lop-ghep/zed-v2-lop.json` | 2 | 0,6 MB |
+| `zed-v2-canonical.png` + cả thư mục `lop-ghep/` (lớp giáp, nón, áo choàng v2) | 6 | 4,2 MB |
 | `docs/anh-goc/zed/neo/` (`zed-v2.neo*.json`) | 3 | 0,1 MB |
 | `prompt-ninja/`, `prompt-v2/`, `prompt-v2-toc-trang/`, `prompt-v3/` (có cả `tao-ban-v2.py`), `prompt-1-…` đến `prompt-13-….txt` | 144 | 0,1 MB |
 | Công cụ ghép lớp v2: `ghep-thu.py`, `ghep-thu-cu.py`, `README-ghep-lop.md`, `kiem-sheet.py`, `xem-gif.py` | 5 | 0,1 MB |
@@ -73,17 +72,16 @@ Cu Tí cũ gồm bản ninja khăn đỏ và bản v2 tóc trắng có sừng, c
 | `docs/phac-thao/hero-tinh-linh/` (trừ `nguon/to.js`) | 23 | 6,1 MB | Tờ phác 4 bé hero và công cụ dựng tờ (`dung.py`, `dung_phong.py`, `thu.py`, `thu.html`, `muon-phong/`). `kiem_tra.py` chạy thử thì hỏng (`Cannot read properties of undefined (reading 'helm')`), vì đồ mặc cũ đã bỏ ở đợt 2 |
 | `docs/phac-thao/hero/` (4 hướng hero cũ + công cụ `nguon/`, `ban-2/nguon/`) | 35 | 2,3 MB | Hero cũ. Không ai đọc |
 
-## Chờ: chưa đưa vào danh sách xoá (`xoa-cu-ti-cu-cho.txt`)
+## Chờ phiên thu-modular: đã xong, nay đưa vào danh sách xoá
 
-- **`docs/anh-goc/zed/zed-v2-canonical.png`** và **`lop-ghep/zed-v2-non-sau.png`, `zed-v2-giap.png`, `zed-v2-non-truoc.png`** (3,7 MB):
-  - Đây là Cu Tí cũ, nhưng `docs/thu-modular/tao-bo-thu.py` hiện vẫn đọc (dòng 10 và dòng 525–529).
-  - Một phiên khác đang làm lại bộ thử modular bằng Cu Tí mới. Xoá bây giờ thì script của phiên đó gãy, và dễ xung đột khi phiên đó rebase.
-  - Khi `tao-bo-thu.py` không còn đọc các tệp này nữa thì xoá.
-- **Ảnh và JSON trong `docs/thu-modular/`** (`nhan-vat-zed-dung*.png`, `ghep-thu-giap-non-*`, `que-*`, `bo-phan*`, `kiem-tra.html`…; 1,9 MB):
-  - Hiện tất cả đều dựng từ Cu Tí cũ (`zed-v2-canonical.png`).
-  - Phiên kia sẽ ghi đè chúng khi dựng lại bằng Cu Tí mới. Xoá bây giờ sẽ gây xung đột "sửa/xoá" cho phiên đó.
-  - Tôi để nguyên. Danh sách chờ chỉ để đối chiếu: tệp nào sau khi phiên kia xong vẫn còn dùng Cu Tí cũ thì xoá.
-- **`docs/review/ke-hoach-cai-thien/zed-asset/tham-khao/`** (7,7 MB): bảng tham chiếu chủ game đưa cho thiết kế modular (lớp áo, mũ, neo vũ khí). Không ai đọc, nhưng có thể phiên modular còn tham khảo. Tôi để lại và không đưa vào danh sách chờ.
+- Lúc tôi lập danh sách, `docs/thu-modular/tao-bo-thu.py` còn đọc `zed-v2-canonical.png` và `lop-ghep/zed-v2-non-sau.png`, `zed-v2-giap.png`, `zed-v2-non-truoc.png`. Nên ban đầu tôi để 4 tệp này ở danh sách chờ.
+- Trong lúc tôi làm, phiên thu-modular đã đẩy "phiên 3" (`docs/thu-modular/bao-cao-3.md`):
+  - Phiên đó làm lại bằng Cu Tí MỚI.
+  - Phiên đó đã tự xoá hoặc thay mọi ảnh dùng Cu Tí cũ.
+  - `tao-bo-thu.py` không còn đọc các tệp trên. Chỉ còn một dòng ghi chú nhắc tên.
+- Vì vậy tôi đã chuyển 4 tệp đó vào `xoa-cu-ti-cu.txt` (3,7 MB) và bỏ tệp danh sách chờ.
+- Các tệp còn lại trong `docs/thu-modular/` và `docs/thu-modular-96/` là của phiên đó, dùng Cu Tí mới. Tôi không đụng.
+- **`docs/review/ke-hoach-cai-thien/zed-asset/tham-khao/`** (7,7 MB): bảng tham chiếu chủ game đưa cho thiết kế modular (lớp áo, mũ, neo vũ khí). Không ai đọc, nhưng có thể phiên modular còn tham khảo. Tôi để lại, chưa xoá.
 
 ## Công cụ đã soát và GIỮ
 
@@ -112,6 +110,7 @@ Phiên này không xoá tệp nào, nên đây là kiểm trên cây hiện tạ
 
 ## Việc tiếp theo cho phiên điều phối
 
-1. Chạy lệnh xoá ở đầu báo cáo. Commit theo 2 nhóm: Cu Tí cũ (230 tệp đầu, đường dẫn `docs/anh-goc/zed/…`, `zed-asset/ghep-sua/anh/…`) và công cụ cũ (phần còn lại).
-2. Khi phiên thu-modular đã chuyển sang Cu Tí mới, xoá các tệp trong `xoa-cu-ti-cu-cho.txt` mà không còn ai đọc.
-3. Có thể dọn tiếp, ngoài phạm vi lần này: các bản động tác cũ của Cu Tí **mới** trong `docs/anh-goc/zed/moi/` mà `dung-zed-game.py` không dùng. Ví dụ `03-chay`, `03-chay-v3`, `08-kiem-1-b2`, `16-thuong-xoc-b2`, `chua-ro-6khung`. Cần grep riêng `gan-vk/*.py` trước khi xoá.
+1. Chạy lệnh xoá ở đầu báo cáo. Có thể commit theo 2 nhóm:
+   - Cu Tí cũ: các dòng `docs/anh-goc/zed/…` và `docs/review/…/zed-asset/ghep-sua/anh/…`.
+   - Công cụ cũ: `godot/…`, `docs/LINH_KHI_AI_ART_HANDOFF…`, `docs/phong-cach-moi/…`, `docs/phac-thao/hero…`.
+2. Có thể dọn tiếp, ngoài phạm vi lần này: các bản động tác cũ của Cu Tí **mới** trong `docs/anh-goc/zed/moi/` mà `dung-zed-game.py` không dùng. Ví dụ `03-chay`, `03-chay-v3`, `08-kiem-1-b2`, `16-thuong-xoc-b2`, `chua-ro-6khung`. Cần grep riêng `gan-vk/*.py` trước khi xoá.
