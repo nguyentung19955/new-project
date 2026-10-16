@@ -166,3 +166,6 @@ Sau đó trong `kiem-tra.html` sẽ có thêm nút `gen-ao-da` ở hàng Áo. N�
 - **Cả chu kỳ 12 khung chỉ dùng 6 ảnh giáp** (giáp vai, cẳng tay, ống chân + chụp vai, khuỷu, gối), dùng chung cho cả bên trước và bên sau. Code xoay/đặt các ảnh này theo khớp trong `data.json`; không dùng sheet giáp 12 khung.
 - Giáp bám khớp 11/12 khung khi xoay liên tục và 9/12 khung khi làm tròn 8 hướng. Chụp khớp giảm điểm ảnh hở từ 48 xuống 12.
 - **Giới hạn:** xoay pixel art nhỏ làm rơi điểm ảnh và nhấp nháy (ở 8 hướng còn nhảy 45°). Ở cỡ 48×48, mảnh giáp gần như chỉ còn một chấm màu.
+- **Giáp gen thật (bộ "Gen")**: 4 mảnh trong `anh-gen/giap-roi-4-manh.png` đã được cắt, thu nhỏ giữ nét (bảng 8 màu, giữ viền đen + đai đồng) và gắn thử. Trên trang có nút chọn bộ **Máy vẽ / Gen** và ô xem **×2 (192)** (chỉ để so sánh).
+  - Cả chu kỳ dùng **7 ảnh** (4 mảnh + 3 chụp khớp). Xoay liên tục bám khớp **12/12 khung**. Làm tròn 8 hướng chỉ **4/12**, giáp ngực nhảy 45° ở 8 khung.
+  - **Ở cỡ game 48×48, mảnh gen chỉ còn 4×2 đến 6×6 điểm ảnh**, gần như mất hết chi tiết gen. Đề xuất: vẽ mảnh ở đúng cỡ nhỏ, hoặc chỉ dùng rig cho món to (giáp ngực, khiên, áo choàng). Chi tiết ở mục "Giáp gen thật" trong `rig/bao-cao-rig.md`.
