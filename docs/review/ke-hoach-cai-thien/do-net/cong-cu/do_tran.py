@@ -231,6 +231,8 @@ def main():
                         pg.evaluate(NHIP, ['J', 'J', 1]); pg.evaluate(NHIP, ['', '', 6 if loai != 'hammer' else 16])
                     else:
                         pg.evaluate(NHIP, ['', '', 10])
+                if ti:  # lần vẽ đầu chỉ để ảnh bản to (tải lười) kịp nạp, như trong game (làng vẽ trước khi vào trận)
+                    pg.evaluate(VE, [kieu, ma, o]); pg.wait_for_timeout(400)
                 r = pg.evaluate(VE, [kieu, ma, o])
                 if r['ok'] is not True:
                     errs.append('%s %s: %s' % (ten, tp, r['ok']))

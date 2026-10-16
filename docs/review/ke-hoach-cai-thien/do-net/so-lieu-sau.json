@@ -1,0 +1,3459 @@
+{
+ "url": "file:///home/claude/new-project/game/dist/linh-khi.html?cloud=0",
+ "loi": [],
+ "hinh": {
+  "ti-ninja-dung": {
+   "m844": null,
+   "m1280": {
+    "diem": 3417,
+    "mo_vien": 0.0,
+    "pha_tron": 4.07,
+    "lap_cot": 23.7,
+    "doc_canh": 0.441,
+    "NHOE": 4.07
+   },
+   "the": {
+    "diem": 2015,
+    "mo_vien": 0.55,
+    "pha_tron": 7.84,
+    "lap_cot": 0.0,
+    "doc_canh": 0.504,
+    "NHOE": 8.11
+   },
+   "lenh": {
+    "anh 1856x3944 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "zed-vk → canvas#1 384x384": {
+     "lan": 2,
+     "phong": [
+      "1.2×1.2"
+     ],
+     "xoay": [
+      3
+     ],
+     "muot": [
+      false
+     ],
+     "le": 2
+    },
+    "canvas#3 60x16 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "0.993×0.973"
+     ],
+     "xoay": [
+      -15
+     ],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "canvas#1 384x384 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "tí",
+   "co_the": [
+    65,
+    85
+   ]
+  },
+  "ti-rung-dung": {
+   "m844": null,
+   "m1280": {
+    "diem": 3254,
+    "mo_vien": 0.0,
+    "pha_tron": 7.07,
+    "lap_cot": 23.67,
+    "doc_canh": 0.447,
+    "NHOE": 7.07
+   },
+   "the": {
+    "diem": 1942,
+    "mo_vien": 0.41,
+    "pha_tron": 12.1,
+    "lap_cot": 0.0,
+    "doc_canh": 0.491,
+    "NHOE": 12.31
+   },
+   "lenh": {
+    "anh 1856x2552 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "zed-vk → canvas#1 384x384": {
+     "lan": 2,
+     "phong": [
+      "1.2×1.2"
+     ],
+     "xoay": [
+      3
+     ],
+     "muot": [
+      false
+     ],
+     "le": 2
+    },
+    "canvas#3 60x16 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "0.993×0.973"
+     ],
+     "xoay": [
+      -15
+     ],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "canvas#1 384x384 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "tí",
+   "co_the": [
+    65,
+    82
+   ]
+  },
+  "ti-bien-dung": {
+   "m844": null,
+   "m1280": {
+    "diem": 3363,
+    "mo_vien": 0.0,
+    "pha_tron": 7.79,
+    "lap_cot": 23.53,
+    "doc_canh": 0.429,
+    "NHOE": 7.79
+   },
+   "the": {
+    "diem": 1991,
+    "mo_vien": 0.5,
+    "pha_tron": 14.01,
+    "lap_cot": 0.0,
+    "doc_canh": 0.502,
+    "NHOE": 14.26
+   },
+   "lenh": {
+    "anh 1856x2552 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "zed-vk → canvas#1 384x384": {
+     "lan": 2,
+     "phong": [
+      "1.2×1.2"
+     ],
+     "xoay": [
+      3
+     ],
+     "muot": [
+      false
+     ],
+     "le": 2
+    },
+    "canvas#3 60x16 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "0.993×0.973"
+     ],
+     "xoay": [
+      -15
+     ],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "canvas#1 384x384 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "tí",
+   "co_the": [
+    65,
+    83
+   ]
+  },
+  "ti-lau-dung": {
+   "m844": null,
+   "m1280": {
+    "diem": 3407,
+    "mo_vien": 0.0,
+    "pha_tron": 7.22,
+    "lap_cot": 23.35,
+    "doc_canh": 0.425,
+    "NHOE": 7.22
+   },
+   "the": {
+    "diem": 2010,
+    "mo_vien": 0.4,
+    "pha_tron": 12.09,
+    "lap_cot": 0.0,
+    "doc_canh": 0.5,
+    "NHOE": 12.29
+   },
+   "lenh": {
+    "anh 1856x2552 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "zed-vk → canvas#1 384x384": {
+     "lan": 2,
+     "phong": [
+      "1.2×1.2"
+     ],
+     "xoay": [
+      3
+     ],
+     "muot": [
+      false
+     ],
+     "le": 2
+    },
+    "canvas#3 60x16 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "0.993×0.973"
+     ],
+     "xoay": [
+      -15
+     ],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "canvas#1 384x384 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "tí",
+   "co_the": [
+    64,
+    82
+   ]
+  },
+  "ti-ninja-chay": {
+   "m844": null,
+   "m1280": {
+    "diem": 3237,
+    "mo_vien": 0.0,
+    "pha_tron": 4.76,
+    "lap_cot": 23.35,
+    "doc_canh": 0.444,
+    "NHOE": 4.76
+   },
+   "the": {
+    "diem": 1904,
+    "mo_vien": 0.53,
+    "pha_tron": 9.03,
+    "lap_cot": 0.0,
+    "doc_canh": 0.493,
+    "NHOE": 9.3
+   },
+   "lenh": {
+    "anh 1856x3944 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "zed-vk → canvas#1 384x384": {
+     "lan": 2,
+     "phong": [
+      "1.2×1.2"
+     ],
+     "xoay": [
+      2
+     ],
+     "muot": [
+      false
+     ],
+     "le": 2
+    },
+    "canvas#3 60x16 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "0.993×0.973"
+     ],
+     "xoay": [
+      -16
+     ],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "canvas#1 384x384 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "tí",
+   "co_the": [
+    65,
+    81
+   ]
+  },
+  "ti-rung-chay": {
+   "m844": null,
+   "m1280": {
+    "diem": 3071,
+    "mo_vien": 0.0,
+    "pha_tron": 6.12,
+    "lap_cot": 22.99,
+    "doc_canh": 0.422,
+    "NHOE": 6.12
+   },
+   "the": {
+    "diem": 1822,
+    "mo_vien": 0.11,
+    "pha_tron": 11.36,
+    "lap_cot": 0.0,
+    "doc_canh": 0.471,
+    "NHOE": 11.42
+   },
+   "lenh": {
+    "anh 1856x2552 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "zed-vk → canvas#1 384x384": {
+     "lan": 2,
+     "phong": [
+      "1.2×1.2"
+     ],
+     "xoay": [
+      2
+     ],
+     "muot": [
+      false
+     ],
+     "le": 2
+    },
+    "canvas#3 60x16 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "0.993×0.973"
+     ],
+     "xoay": [
+      -16
+     ],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "canvas#1 384x384 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "tí",
+   "co_the": [
+    66,
+    86
+   ]
+  },
+  "ti-bien-chay": {
+   "m844": null,
+   "m1280": {
+    "diem": 3036,
+    "mo_vien": 0.0,
+    "pha_tron": 7.38,
+    "lap_cot": 23.53,
+    "doc_canh": 0.449,
+    "NHOE": 7.38
+   },
+   "the": {
+    "diem": 1795,
+    "mo_vien": 0.28,
+    "pha_tron": 12.76,
+    "lap_cot": 0.0,
+    "doc_canh": 0.521,
+    "NHOE": 12.9
+   },
+   "lenh": {
+    "anh 1856x2552 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "zed-vk → canvas#1 384x384": {
+     "lan": 2,
+     "phong": [
+      "1.2×1.2"
+     ],
+     "xoay": [
+      2
+     ],
+     "muot": [
+      false
+     ],
+     "le": 2
+    },
+    "canvas#3 60x16 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "0.993×0.973"
+     ],
+     "xoay": [
+      -16
+     ],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "canvas#1 384x384 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "tí",
+   "co_the": [
+    64,
+    84
+   ]
+  },
+  "ti-lau-chay": {
+   "m844": null,
+   "m1280": {
+    "diem": 3383,
+    "mo_vien": 0.0,
+    "pha_tron": 6.95,
+    "lap_cot": 23.3,
+    "doc_canh": 0.425,
+    "NHOE": 6.95
+   },
+   "the": {
+    "diem": 2005,
+    "mo_vien": 0.4,
+    "pha_tron": 11.22,
+    "lap_cot": 0.0,
+    "doc_canh": 0.481,
+    "NHOE": 11.42
+   },
+   "lenh": {
+    "anh 1856x2552 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "zed-vk → canvas#1 384x384": {
+     "lan": 2,
+     "phong": [
+      "1.2×1.2"
+     ],
+     "xoay": [
+      2
+     ],
+     "muot": [
+      false
+     ],
+     "le": 2
+    },
+    "canvas#3 60x16 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "0.993×0.973"
+     ],
+     "xoay": [
+      -16
+     ],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "canvas#1 384x384 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "tí",
+   "co_the": [
+    65,
+    88
+   ]
+  },
+  "ti-ninja-kiem": {
+   "m844": null,
+   "m1280": {
+    "diem": 4028,
+    "mo_vien": 0.0,
+    "pha_tron": 4.32,
+    "lap_cot": 23.39,
+    "doc_canh": 0.41,
+    "NHOE": 4.32
+   },
+   "the": {
+    "diem": 2387,
+    "mo_vien": 0.5,
+    "pha_tron": 7.79,
+    "lap_cot": 0.0,
+    "doc_canh": 0.482,
+    "NHOE": 8.04
+   },
+   "lenh": {
+    "anh 1856x3944 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "zed-vk → canvas#1 384x384": {
+     "lan": 2,
+     "phong": [
+      "1.2×1.2"
+     ],
+     "xoay": [
+      -23
+     ],
+     "muot": [
+      false
+     ],
+     "le": 2
+    },
+    "canvas#3 60x16 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "0.993×0.973"
+     ],
+     "xoay": [
+      -41
+     ],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "canvas#1 384x384 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "tí",
+   "co_the": [
+    94,
+    114
+   ]
+  },
+  "ti-rung-kiem": {
+   "m844": null,
+   "m1280": {
+    "diem": 4059,
+    "mo_vien": 0.0,
+    "pha_tron": 8.45,
+    "lap_cot": 23.41,
+    "doc_canh": 0.431,
+    "NHOE": 8.45
+   },
+   "the": {
+    "diem": 2407,
+    "mo_vien": 0.21,
+    "pha_tron": 15.08,
+    "lap_cot": 0.0,
+    "doc_canh": 0.512,
+    "NHOE": 15.18
+   },
+   "lenh": {
+    "canvas#3 60x16 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "0.993×0.973"
+     ],
+     "xoay": [
+      -77
+     ],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "anh 1856x2552 → canvas#1 384x384": {
+     "lan": 2,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 2
+    },
+    "canvas#1 384x384 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "tí",
+   "co_the": [
+    59,
+    116
+   ]
+  },
+  "ti-bien-kiem": {
+   "m844": null,
+   "m1280": {
+    "diem": 4012,
+    "mo_vien": 0.0,
+    "pha_tron": 9.5,
+    "lap_cot": 23.27,
+    "doc_canh": 0.429,
+    "NHOE": 9.5
+   },
+   "the": {
+    "diem": 2380,
+    "mo_vien": 0.17,
+    "pha_tron": 15.59,
+    "lap_cot": 0.0,
+    "doc_canh": 0.498,
+    "NHOE": 15.67
+   },
+   "lenh": {
+    "canvas#3 60x16 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "0.993×0.973"
+     ],
+     "xoay": [
+      -77
+     ],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "anh 1856x2552 → canvas#1 384x384": {
+     "lan": 2,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 2
+    },
+    "canvas#1 384x384 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "tí",
+   "co_the": [
+    58,
+    115
+   ]
+  },
+  "ti-lau-kiem": {
+   "m844": null,
+   "m1280": {
+    "diem": 4167,
+    "mo_vien": 0.0,
+    "pha_tron": 7.51,
+    "lap_cot": 23.3,
+    "doc_canh": 0.441,
+    "NHOE": 7.51
+   },
+   "the": {
+    "diem": 2479,
+    "mo_vien": 0.2,
+    "pha_tron": 13.31,
+    "lap_cot": 0.0,
+    "doc_canh": 0.502,
+    "NHOE": 13.41
+   },
+   "lenh": {
+    "canvas#3 60x16 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "0.993×0.973"
+     ],
+     "xoay": [
+      -77
+     ],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "anh 1856x2552 → canvas#1 384x384": {
+     "lan": 2,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 2
+    },
+    "canvas#1 384x384 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "tí",
+   "co_the": [
+    59,
+    117
+   ]
+  },
+  "ti-ninja-spear-dung": {
+   "m844": null,
+   "m1280": {
+    "diem": 3666,
+    "mo_vien": 0.0,
+    "pha_tron": 4.94,
+    "lap_cot": 25.76,
+    "doc_canh": 0.421,
+    "NHOE": 4.94
+   },
+   "the": {
+    "diem": 2173,
+    "mo_vien": 0.92,
+    "pha_tron": 8.84,
+    "lap_cot": 3.29,
+    "doc_canh": 0.47,
+    "NHOE": 9.3
+   },
+   "lenh": {
+    "canvas#5 768x192 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "1.2×1.2"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "zed-vk → canvas#1 384x384": {
+     "lan": 4,
+     "phong": [
+      "1.2×1.2"
+     ],
+     "xoay": [
+      -12
+     ],
+     "muot": [
+      false
+     ],
+     "le": 4
+    },
+    "canvas#7 87x9 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "1.01×1.01"
+     ],
+     "xoay": [
+      -30
+     ],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "canvas#1 384x384 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "tí",
+   "co_the": [
+    85,
+    85
+   ]
+  },
+  "ti-ninja-spear-chem": {
+   "m844": null,
+   "m1280": {
+    "diem": 4245,
+    "mo_vien": 0.0,
+    "pha_tron": 4.66,
+    "lap_cot": 29.41,
+    "doc_canh": 0.421,
+    "NHOE": 4.66
+   },
+   "the": {
+    "diem": 2514,
+    "mo_vien": 0.76,
+    "pha_tron": 8.63,
+    "lap_cot": 7.69,
+    "doc_canh": 0.463,
+    "NHOE": 9.01
+   },
+   "lenh": {
+    "canvas#8 576x192 → canvas#1 384x384": {
+     "lan": 2,
+     "phong": [
+      "1.2×1.2"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 2
+    },
+    "zed-vk → canvas#1 384x384": {
+     "lan": 2,
+     "phong": [
+      "1.2×1.2"
+     ],
+     "xoay": [
+      4
+     ],
+     "muot": [
+      false
+     ],
+     "le": 2
+    },
+    "canvas#7 87x9 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "1.01×1.01"
+     ],
+     "xoay": [
+      -13
+     ],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "canvas#1 384x384 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "tí",
+   "co_the": [
+    97,
+    90
+   ]
+  },
+  "ti-ninja-hammer-dung": {
+   "m844": null,
+   "m1280": {
+    "diem": 3710,
+    "mo_vien": 0.0,
+    "pha_tron": 4.53,
+    "lap_cot": 23.43,
+    "doc_canh": 0.44,
+    "NHOE": 4.53
+   },
+   "the": {
+    "diem": 2190,
+    "mo_vien": 2.05,
+    "pha_tron": 8.17,
+    "lap_cot": 0.0,
+    "doc_canh": 0.486,
+    "NHOE": 9.2
+   },
+   "lenh": {
+    "anh 1856x3944 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "zed-vk → canvas#1 384x384": {
+     "lan": 4,
+     "phong": [
+      "1.2×1.2"
+     ],
+     "xoay": [
+      0
+     ],
+     "muot": [
+      false
+     ],
+     "le": 4
+    },
+    "canvas#10 56x17 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "1×0.976"
+     ],
+     "xoay": [
+      -17
+     ],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "canvas#1 384x384 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "tí",
+   "co_the": [
+    67,
+    85
+   ]
+  },
+  "ti-ninja-hammer-chem": {
+   "m844": null,
+   "m1280": {
+    "diem": 3670,
+    "mo_vien": 0.0,
+    "pha_tron": 5.72,
+    "lap_cot": 23.38,
+    "doc_canh": 0.439,
+    "NHOE": 5.72
+   },
+   "the": {
+    "diem": 2173,
+    "mo_vien": 1.79,
+    "pha_tron": 9.53,
+    "lap_cot": 0.0,
+    "doc_canh": 0.453,
+    "NHOE": 10.42
+   },
+   "lenh": {
+    "anh 1856x3944 → canvas#1 384x384": {
+     "lan": 2,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 2
+    },
+    "zed-vk → canvas#1 384x384": {
+     "lan": 2,
+     "phong": [
+      "1.2×1.2"
+     ],
+     "xoay": [
+      1
+     ],
+     "muot": [
+      false
+     ],
+     "le": 2
+    },
+    "canvas#10 56x17 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "1×0.976"
+     ],
+     "xoay": [
+      -16
+     ],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "canvas#1 384x384 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "tí",
+   "co_the": [
+    74,
+    98
+   ]
+  },
+  "ti-ninja-bow-dung": {
+   "m844": null,
+   "m1280": {
+    "diem": 3120,
+    "mo_vien": 0.0,
+    "pha_tron": 3.3,
+    "lap_cot": 23.49,
+    "doc_canh": 0.422,
+    "NHOE": 3.3
+   },
+   "the": {
+    "diem": 1840,
+    "mo_vien": 0.11,
+    "pha_tron": 6.41,
+    "lap_cot": 0.0,
+    "doc_canh": 0.483,
+    "NHOE": 6.47
+   },
+   "lenh": {
+    "anh 1856x3944 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "zed-vk → canvas#1 384x384": {
+     "lan": 2,
+     "phong": [
+      "1.2×1.2"
+     ],
+     "xoay": [
+      31
+     ],
+     "muot": [
+      false
+     ],
+     "le": 2
+    },
+    "canvas#12 12x11 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "1.05×1.07"
+     ],
+     "xoay": [
+      70
+     ],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "canvas#1 384x384 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "tí",
+   "co_the": [
+    47,
+    85
+   ]
+  },
+  "ti-ninja-bow-chem": {
+   "m844": null,
+   "m1280": {
+    "diem": 3246,
+    "mo_vien": 0.0,
+    "pha_tron": 5.45,
+    "lap_cot": 23.38,
+    "doc_canh": 0.407,
+    "NHOE": 5.45
+   },
+   "the": {
+    "diem": 1925,
+    "mo_vien": 0.0,
+    "pha_tron": 9.56,
+    "lap_cot": 0.0,
+    "doc_canh": 0.462,
+    "NHOE": 9.56
+   },
+   "lenh": {
+    "anh 1856x3944 → canvas#1 384x384": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 1
+    },
+    "canvas#1 384x384 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "tí",
+   "co_the": [
+    53,
+    83
+   ]
+  },
+  "quai-baBa": {
+   "m844": null,
+   "m1280": {
+    "diem": 7351,
+    "mo_vien": 0.0,
+    "pha_tron": 14.61,
+    "lap_cot": 23.29,
+    "doc_canh": 0.397,
+    "NHOE": 14.61
+   },
+   "the": {
+    "diem": 4360,
+    "mo_vien": 0.0,
+    "pha_tron": 24.61,
+    "lap_cot": 0.0,
+    "doc_canh": 0.452,
+    "NHOE": 24.61
+   },
+   "lenh": {
+    "baBa → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    118,
+    68
+   ]
+  },
+  "quai-boHung": {
+   "m844": null,
+   "m1280": {
+    "diem": 4978,
+    "mo_vien": 0.0,
+    "pha_tron": 12.96,
+    "lap_cot": 22.78,
+    "doc_canh": 0.404,
+    "NHOE": 12.96
+   },
+   "the": {
+    "diem": 2941,
+    "mo_vien": 0.0,
+    "pha_tron": 21.39,
+    "lap_cot": 0.0,
+    "doc_canh": 0.469,
+    "NHOE": 21.39
+   },
+   "lenh": {
+    "boHung → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    90,
+    67
+   ]
+  },
+  "quai-caChuon": {
+   "m844": null,
+   "m1280": {
+    "diem": 4967,
+    "mo_vien": 0.0,
+    "pha_tron": 17.62,
+    "lap_cot": 23.23,
+    "doc_canh": 0.411,
+    "NHOE": 17.62
+   },
+   "the": {
+    "diem": 2944,
+    "mo_vien": 0.0,
+    "pha_tron": 28.12,
+    "lap_cot": 0.0,
+    "doc_canh": 0.474,
+    "NHOE": 28.12
+   },
+   "lenh": {
+    "caChuon → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    91,
+    79
+   ]
+  },
+  "quai-caCon": {
+   "m844": null,
+   "m1280": {
+    "diem": 5183,
+    "mo_vien": 0.0,
+    "pha_tron": 18.08,
+    "lap_cot": 23.08,
+    "doc_canh": 0.41,
+    "NHOE": 18.08
+   },
+   "the": {
+    "diem": 3067,
+    "mo_vien": 0.0,
+    "pha_tron": 30.06,
+    "lap_cot": 0.0,
+    "doc_canh": 0.464,
+    "NHOE": 30.06
+   },
+   "lenh": {
+    "caCon → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    79,
+    79
+   ]
+  },
+  "quai-caNoc": {
+   "m844": null,
+   "m1280": {
+    "diem": 3414,
+    "mo_vien": 0.0,
+    "pha_tron": 19.68,
+    "lap_cot": 23.13,
+    "doc_canh": 0.403,
+    "NHOE": 19.68
+   },
+   "the": {
+    "diem": 2023,
+    "mo_vien": 0.0,
+    "pha_tron": 31.54,
+    "lap_cot": 0.0,
+    "doc_canh": 0.461,
+    "NHOE": 31.54
+   },
+   "lenh": {
+    "caNoc → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    69,
+    62
+   ]
+  },
+  "quai-caNocChua": {
+   "m844": null,
+   "m1280": {
+    "diem": 16996,
+    "mo_vien": 0.0,
+    "pha_tron": 20.02,
+    "lap_cot": 23.28,
+    "doc_canh": 0.386,
+    "NHOE": 20.02
+   },
+   "the": {
+    "diem": 10064,
+    "mo_vien": 0.0,
+    "pha_tron": 32.63,
+    "lap_cot": 0.0,
+    "doc_canh": 0.443,
+    "NHOE": 32.63
+   },
+   "lenh": {
+    "caNocChua → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    138,
+    137
+   ]
+  },
+  "quai-chonBong": {
+   "m844": null,
+   "m1280": {
+    "diem": 5266,
+    "mo_vien": 0.0,
+    "pha_tron": 10.05,
+    "lap_cot": 22.75,
+    "doc_canh": 0.381,
+    "NHOE": 10.05
+   },
+   "the": {
+    "diem": 3115,
+    "mo_vien": 0.77,
+    "pha_tron": 17.3,
+    "lap_cot": 2.47,
+    "doc_canh": 0.426,
+    "NHOE": 17.69
+   },
+   "lenh": {
+    "chonBong → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    106,
+    74
+   ]
+  },
+  "quai-cocTia": {
+   "m844": null,
+   "m1280": {
+    "diem": 9674,
+    "mo_vien": 0.0,
+    "pha_tron": 11.76,
+    "lap_cot": 23.08,
+    "doc_canh": 0.386,
+    "NHOE": 11.76
+   },
+   "the": {
+    "diem": 5726,
+    "mo_vien": 0.0,
+    "pha_tron": 19.63,
+    "lap_cot": 0.0,
+    "doc_canh": 0.439,
+    "NHOE": 19.63
+   },
+   "lenh": {
+    "cocTia → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    116,
+    82
+   ]
+  },
+  "quai-cua": {
+   "m844": null,
+   "m1280": {
+    "diem": 7015,
+    "mo_vien": 0.0,
+    "pha_tron": 14.07,
+    "lap_cot": 23.33,
+    "doc_canh": 0.403,
+    "NHOE": 14.07
+   },
+   "the": {
+    "diem": 4151,
+    "mo_vien": 0.0,
+    "pha_tron": 24.16,
+    "lap_cot": 0.0,
+    "doc_canh": 0.461,
+    "NHOE": 24.16
+   },
+   "lenh": {
+    "cua → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    105,
+    74
+   ]
+  },
+  "trum-cuaDa-p2": {
+   "m844": null,
+   "m1280": {
+    "diem": 23813,
+    "mo_vien": 0.0,
+    "pha_tron": 13.99,
+    "lap_cot": 23.27,
+    "doc_canh": 0.429,
+    "NHOE": 13.99
+   },
+   "the": {
+    "diem": 14078,
+    "mo_vien": 0.0,
+    "pha_tron": 24.4,
+    "lap_cot": 0.0,
+    "doc_canh": 0.499,
+    "NHOE": 24.4
+   },
+   "lenh": {
+    "cuaDa-p2 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "trum",
+   "co_the": [
+    166,
+    152
+   ]
+  },
+  "quai-cuaDa": {
+   "m844": null,
+   "m1280": {
+    "diem": 26347,
+    "mo_vien": 0.0,
+    "pha_tron": 14.01,
+    "lap_cot": 23.3,
+    "doc_canh": 0.433,
+    "NHOE": 14.01
+   },
+   "the": {
+    "diem": 15578,
+    "mo_vien": 0.0,
+    "pha_tron": 23.98,
+    "lap_cot": 0.0,
+    "doc_canh": 0.508,
+    "NHOE": 23.98
+   },
+   "lenh": {
+    "cuaDa → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    177,
+    157
+   ]
+  },
+  "quai-cuaTuong": {
+   "m844": null,
+   "m1280": {
+    "diem": 18882,
+    "mo_vien": 0.0,
+    "pha_tron": 15.67,
+    "lap_cot": 23.04,
+    "doc_canh": 0.411,
+    "NHOE": 15.67
+   },
+   "the": {
+    "diem": 11174,
+    "mo_vien": 0.0,
+    "pha_tron": 25.87,
+    "lap_cot": 0.0,
+    "doc_canh": 0.477,
+    "NHOE": 25.87
+   },
+   "lenh": {
+    "cuaTuong → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    163,
+    139
+   ]
+  },
+  "quai-denLong": {
+   "m844": null,
+   "m1280": {
+    "diem": 3465,
+    "mo_vien": 0.0,
+    "pha_tron": 14.2,
+    "lap_cot": 23.12,
+    "doc_canh": 0.429,
+    "NHOE": 14.2
+   },
+   "the": {
+    "diem": 2057,
+    "mo_vien": 0.0,
+    "pha_tron": 24.06,
+    "lap_cot": 0.7,
+    "doc_canh": 0.492,
+    "NHOE": 24.06
+   },
+   "lenh": {
+    "denLong → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    76,
+    84
+   ]
+  },
+  "quai-diaTrau": {
+   "m844": null,
+   "m1280": {
+    "diem": 5968,
+    "mo_vien": 0.0,
+    "pha_tron": 13.84,
+    "lap_cot": 23.56,
+    "doc_canh": 0.403,
+    "NHOE": 13.84
+   },
+   "the": {
+    "diem": 3528,
+    "mo_vien": 0.0,
+    "pha_tron": 22.59,
+    "lap_cot": 0.0,
+    "doc_canh": 0.469,
+    "NHOE": 22.59
+   },
+   "lenh": {
+    "diaTrau → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    99,
+    65
+   ]
+  },
+  "quai-doiThan": {
+   "m844": null,
+   "m1280": {
+    "diem": 4731,
+    "mo_vien": 0.0,
+    "pha_tron": 13.93,
+    "lap_cot": 23.3,
+    "doc_canh": 0.417,
+    "NHOE": 13.93
+   },
+   "the": {
+    "diem": 2811,
+    "mo_vien": 0.0,
+    "pha_tron": 24.4,
+    "lap_cot": 0.0,
+    "doc_canh": 0.485,
+    "NHOE": 24.4
+   },
+   "lenh": {
+    "doiThan → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    95,
+    81
+   ]
+  },
+  "quai-haiQuy": {
+   "m844": null,
+   "m1280": {
+    "diem": 8211,
+    "mo_vien": 0.0,
+    "pha_tron": 20.44,
+    "lap_cot": 23.18,
+    "doc_canh": 0.4,
+    "NHOE": 20.44
+   },
+   "the": {
+    "diem": 4855,
+    "mo_vien": 0.0,
+    "pha_tron": 33.53,
+    "lap_cot": 0.0,
+    "doc_canh": 0.451,
+    "NHOE": 33.53
+   },
+   "lenh": {
+    "haiQuy → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    90,
+    97
+   ]
+  },
+  "quai-heoCon": {
+   "m844": null,
+   "m1280": {
+    "diem": 6533,
+    "mo_vien": 0.0,
+    "pha_tron": 6.35,
+    "lap_cot": 23.36,
+    "doc_canh": 0.393,
+    "NHOE": 6.35
+   },
+   "the": {
+    "diem": 3876,
+    "mo_vien": 0.0,
+    "pha_tron": 10.32,
+    "lap_cot": 0.0,
+    "doc_canh": 0.448,
+    "NHOE": 10.32
+   },
+   "lenh": {
+    "heoCon → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    104,
+    78
+   ]
+  },
+  "quai-heoNanh": {
+   "m844": null,
+   "m1280": {
+    "diem": 14916,
+    "mo_vien": 0.0,
+    "pha_tron": 11.52,
+    "lap_cot": 23.43,
+    "doc_canh": 0.38,
+    "NHOE": 11.52
+   },
+   "the": {
+    "diem": 8797,
+    "mo_vien": 0.0,
+    "pha_tron": 19.98,
+    "lap_cot": 0.0,
+    "doc_canh": 0.431,
+    "NHOE": 19.98
+   },
+   "lenh": {
+    "heoNanh → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    149,
+    101
+   ]
+  },
+  "trum-hoLua-p2": {
+   "m844": null,
+   "m1280": {
+    "diem": 20840,
+    "mo_vien": 0.0,
+    "pha_tron": 20.11,
+    "lap_cot": 23.27,
+    "doc_canh": 0.406,
+    "NHOE": 20.11
+   },
+   "the": {
+    "diem": 12350,
+    "mo_vien": 0.0,
+    "pha_tron": 34.36,
+    "lap_cot": 0.0,
+    "doc_canh": 0.469,
+    "NHOE": 34.36
+   },
+   "lenh": {
+    "hoLua-p2 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "trum",
+   "co_the": [
+    158,
+    137
+   ]
+  },
+  "quai-hoLua": {
+   "m844": null,
+   "m1280": {
+    "diem": 17270,
+    "mo_vien": 0.0,
+    "pha_tron": 16.42,
+    "lap_cot": 23.24,
+    "doc_canh": 0.409,
+    "NHOE": 16.42
+   },
+   "the": {
+    "diem": 10235,
+    "mo_vien": 0.0,
+    "pha_tron": 28.78,
+    "lap_cot": 0.0,
+    "doc_canh": 0.477,
+    "NHOE": 28.78
+   },
+   "lenh": {
+    "hoLua → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    152,
+    127
+   ]
+  },
+  "trum-hoTinh-p2": {
+   "m844": null,
+   "m1280": {
+    "diem": 97290,
+    "mo_vien": 0.0,
+    "pha_tron": 7.75,
+    "lap_cot": 23.11,
+    "doc_canh": 0.403,
+    "NHOE": 7.75
+   },
+   "the": {
+    "diem": 85856,
+    "mo_vien": 51.95,
+    "pha_tron": 11.63,
+    "lap_cot": 0.0,
+    "doc_canh": 0.448,
+    "NHOE": 37.61
+   },
+   "lenh": {
+    "hoTinh-p2 → world": {
+     "lan": 3,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    },
+    "hoTinh-p2 → canvas#13 356x342": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      true
+     ],
+     "le": 0
+    },
+    "canvas#13 356x342 → world": {
+     "lan": 2,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "trum",
+   "co_the": [
+    430,
+    311
+   ]
+  },
+  "trum-hoTinh-p3": {
+   "m844": null,
+   "m1280": {
+    "diem": 45090,
+    "mo_vien": 0.0,
+    "pha_tron": 14.95,
+    "lap_cot": 23.21,
+    "doc_canh": 0.395,
+    "NHOE": 14.95
+   },
+   "the": {
+    "diem": 26847,
+    "mo_vien": 0.0,
+    "pha_tron": 24.32,
+    "lap_cot": 0.0,
+    "doc_canh": 0.449,
+    "NHOE": 24.32
+   },
+   "lenh": {
+    "hoTinh-p3 → canvas#14 372x326": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      true
+     ],
+     "le": 0
+    },
+    "canvas#15 268x235 → world": {
+     "lan": 1,
+     "phong": [
+      "0.999×0.999"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 1
+    }
+   },
+   "kieu": "trum",
+   "co_the": [
+    187,
+    234
+   ]
+  },
+  "quai-hoTinh": {
+   "m844": null,
+   "m1280": {
+    "diem": 55204,
+    "mo_vien": 0.0,
+    "pha_tron": 12.56,
+    "lap_cot": 23.13,
+    "doc_canh": 0.409,
+    "NHOE": 12.56
+   },
+   "the": {
+    "diem": 32829,
+    "mo_vien": 0.0,
+    "pha_tron": 20.91,
+    "lap_cot": 0.0,
+    "doc_canh": 0.463,
+    "NHOE": 20.91
+   },
+   "lenh": {
+    "hoTinh → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    222,
+    245
+   ]
+  },
+  "quai-hoaBaoTu": {
+   "m844": null,
+   "m1280": {
+    "diem": 5386,
+    "mo_vien": 0.0,
+    "pha_tron": 17.17,
+    "lap_cot": 23.12,
+    "doc_canh": 0.405,
+    "NHOE": 17.17
+   },
+   "the": {
+    "diem": 3198,
+    "mo_vien": 0.0,
+    "pha_tron": 27.33,
+    "lap_cot": 0.0,
+    "doc_canh": 0.474,
+    "NHOE": 27.33
+   },
+   "lenh": {
+    "hoaBaoTu → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    81,
+    90
+   ]
+  },
+  "quai-huChua": {
+   "m844": null,
+   "m1280": {
+    "diem": 7789,
+    "mo_vien": 0.0,
+    "pha_tron": 16.51,
+    "lap_cot": 23.38,
+    "doc_canh": 0.391,
+    "NHOE": 16.51
+   },
+   "the": {
+    "diem": 4615,
+    "mo_vien": 0.0,
+    "pha_tron": 27.97,
+    "lap_cot": 0.0,
+    "doc_canh": 0.45,
+    "NHOE": 27.97
+   },
+   "lenh": {
+    "huChua → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    89,
+    106
+   ]
+  },
+  "quai-huLua": {
+   "m844": null,
+   "m1280": {
+    "diem": 2649,
+    "mo_vien": 0.0,
+    "pha_tron": 16.57,
+    "lap_cot": 21.12,
+    "doc_canh": 0.413,
+    "NHOE": 16.57
+   },
+   "the": {
+    "diem": 1582,
+    "mo_vien": 0.76,
+    "pha_tron": 29.77,
+    "lap_cot": 2.42,
+    "doc_canh": 0.486,
+    "NHOE": 30.15
+   },
+   "lenh": {
+    "huLua → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    60,
+    82
+   ]
+  },
+  "quai-linhMa": {
+   "m844": null,
+   "m1280": {
+    "diem": 2965,
+    "mo_vien": 0.0,
+    "pha_tron": 17.81,
+    "lap_cot": 23.27,
+    "doc_canh": 0.412,
+    "NHOE": 17.81
+   },
+   "the": {
+    "diem": 1764,
+    "mo_vien": 0.0,
+    "pha_tron": 30.22,
+    "lap_cot": 0.0,
+    "doc_canh": 0.488,
+    "NHOE": 30.22
+   },
+   "lenh": {
+    "linhMa → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    68,
+    72
+   ]
+  },
+  "quai-meoDen": {
+   "m844": null,
+   "m1280": {
+    "diem": 4317,
+    "mo_vien": 0.0,
+    "pha_tron": 11.47,
+    "lap_cot": 22.99,
+    "doc_canh": 0.384,
+    "NHOE": 11.47
+   },
+   "the": {
+    "diem": 2557,
+    "mo_vien": 0.0,
+    "pha_tron": 19.98,
+    "lap_cot": 0.0,
+    "doc_canh": 0.435,
+    "NHOE": 19.98
+   },
+   "lenh": {
+    "meoDen → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    73,
+    79
+   ]
+  },
+  "trum-mocTinh-p2": {
+   "m844": null,
+   "m1280": {
+    "diem": 42406,
+    "mo_vien": 0.0,
+    "pha_tron": 13.01,
+    "lap_cot": 23.21,
+    "doc_canh": 0.408,
+    "NHOE": 13.01
+   },
+   "the": {
+    "diem": 27490,
+    "mo_vien": 0.0,
+    "pha_tron": 22.1,
+    "lap_cot": 0.0,
+    "doc_canh": 0.464,
+    "NHOE": 22.1
+   },
+   "lenh": {
+    "mocTinh-p2 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "trum",
+   "co_the": [
+    177,
+    272
+   ]
+  },
+  "trum-mocTinh-p3": {
+   "m844": null,
+   "m1280": {
+    "diem": 51018,
+    "mo_vien": 0.0,
+    "pha_tron": 13.57,
+    "lap_cot": 30.17,
+    "doc_canh": 0.403,
+    "NHOE": 13.57
+   },
+   "the": {
+    "diem": 33289,
+    "mo_vien": 10.68,
+    "pha_tron": 23.54,
+    "lap_cot": 8.4,
+    "doc_canh": 0.461,
+    "NHOE": 28.88
+   },
+   "lenh": {
+    "anh 216x54 → world": {
+     "lan": 2,
+     "phong": [
+      "2.81×2.81"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 2
+    },
+    "mocTinh-p3 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "trum",
+   "co_the": [
+    236,
+    270
+   ]
+  },
+  "quai-mocTinh": {
+   "m844": null,
+   "m1280": {
+    "diem": 51416,
+    "mo_vien": 0.0,
+    "pha_tron": 12.06,
+    "lap_cot": 23.21,
+    "doc_canh": 0.402,
+    "NHOE": 12.06
+   },
+   "the": {
+    "diem": 33761,
+    "mo_vien": 0.0,
+    "pha_tron": 20.28,
+    "lap_cot": 0.0,
+    "doc_canh": 0.464,
+    "NHOE": 20.28
+   },
+   "lenh": {
+    "mocTinh → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    220,
+    277
+   ]
+  },
+  "trum-namChua-p2": {
+   "m844": null,
+   "m1280": {
+    "diem": 21186,
+    "mo_vien": 0.0,
+    "pha_tron": 14.59,
+    "lap_cot": 27.61,
+    "doc_canh": 0.437,
+    "NHOE": 14.59
+   },
+   "the": {
+    "diem": 12542,
+    "mo_vien": 13.0,
+    "pha_tron": 24.54,
+    "lap_cot": 6.47,
+    "doc_canh": 0.51,
+    "NHOE": 31.04
+   },
+   "lenh": {
+    "anh 216x54 → world": {
+     "lan": 2,
+     "phong": [
+      "1.88×1.88"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 2
+    },
+    "namChua-p2 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "trum",
+   "co_the": [
+    161,
+    166
+   ]
+  },
+  "quai-namChua": {
+   "m844": null,
+   "m1280": {
+    "diem": 19687,
+    "mo_vien": 0.0,
+    "pha_tron": 14.08,
+    "lap_cot": 28.22,
+    "doc_canh": 0.424,
+    "NHOE": 14.08
+   },
+   "the": {
+    "diem": 11671,
+    "mo_vien": 12.9,
+    "pha_tron": 24.4,
+    "lap_cot": 6.43,
+    "doc_canh": 0.506,
+    "NHOE": 30.85
+   },
+   "lenh": {
+    "anh 216x54 → world": {
+     "lan": 2,
+     "phong": [
+      "1.88×1.88"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 2
+    },
+    "namChua → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    161,
+    137
+   ]
+  },
+  "quai-namPhong": {
+   "m844": null,
+   "m1280": {
+    "diem": 3793,
+    "mo_vien": 0.0,
+    "pha_tron": 14.26,
+    "lap_cot": 22.41,
+    "doc_canh": 0.366,
+    "NHOE": 14.26
+   },
+   "the": {
+    "diem": 2248,
+    "mo_vien": 0.71,
+    "pha_tron": 23.13,
+    "lap_cot": 2.26,
+    "doc_canh": 0.387,
+    "NHOE": 23.49
+   },
+   "lenh": {
+    "namPhong → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    67,
+    84
+   ]
+  },
+  "quai-namPhongChua": {
+   "m844": null,
+   "m1280": {
+    "diem": 18686,
+    "mo_vien": 0.0,
+    "pha_tron": 13.3,
+    "lap_cot": 23.32,
+    "doc_canh": 0.371,
+    "NHOE": 13.3
+   },
+   "the": {
+    "diem": 11044,
+    "mo_vien": 1.08,
+    "pha_tron": 22.53,
+    "lap_cot": 0.0,
+    "doc_canh": 0.405,
+    "NHOE": 23.07
+   },
+   "lenh": {
+    "anh 216x54 → world": {
+     "lan": 2,
+     "phong": [
+      "1.62×1.62"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 2
+    },
+    "namPhongChua → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    144,
+    114
+   ]
+  },
+  "trum-nguTinh-p2": {
+   "m844": null,
+   "m1280": {
+    "diem": 41482,
+    "mo_vien": 0.0,
+    "pha_tron": 10.12,
+    "lap_cot": 23.01,
+    "doc_canh": 0.43,
+    "NHOE": 10.12
+   },
+   "the": {
+    "diem": 24525,
+    "mo_vien": 0.0,
+    "pha_tron": 16.83,
+    "lap_cot": 0.0,
+    "doc_canh": 0.503,
+    "NHOE": 16.83
+   },
+   "lenh": {
+    "nguTinh-p2 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "trum",
+   "co_the": [
+    232,
+    210
+   ]
+  },
+  "trum-nguTinh-p3": {
+   "m844": null,
+   "m1280": {
+    "diem": 43203,
+    "mo_vien": 0.0,
+    "pha_tron": 12.9,
+    "lap_cot": 23.22,
+    "doc_canh": 0.426,
+    "NHOE": 12.9
+   },
+   "the": {
+    "diem": 25545,
+    "mo_vien": 0.0,
+    "pha_tron": 21.15,
+    "lap_cot": 0.0,
+    "doc_canh": 0.488,
+    "NHOE": 21.15
+   },
+   "lenh": {
+    "nguTinh-p3 → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "trum",
+   "co_the": [
+    194,
+    224
+   ]
+  },
+  "quai-nguTinh": {
+   "m844": null,
+   "m1280": {
+    "diem": 36605,
+    "mo_vien": 0.0,
+    "pha_tron": 9.53,
+    "lap_cot": 23.06,
+    "doc_canh": 0.46,
+    "NHOE": 9.53
+   },
+   "the": {
+    "diem": 21676,
+    "mo_vien": 0.0,
+    "pha_tron": 16.13,
+    "lap_cot": 0.0,
+    "doc_canh": 0.537,
+    "NHOE": 16.13
+   },
+   "lenh": {
+    "nguTinh → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    187,
+    231
+   ]
+  },
+  "quai-nhim": {
+   "m844": null,
+   "m1280": {
+    "diem": 2663,
+    "mo_vien": 0.0,
+    "pha_tron": 17.95,
+    "lap_cot": 23.44,
+    "doc_canh": 0.433,
+    "NHOE": 17.95
+   },
+   "the": {
+    "diem": 1572,
+    "mo_vien": 0.0,
+    "pha_tron": 28.88,
+    "lap_cot": 0.0,
+    "doc_canh": 0.504,
+    "NHOE": 28.88
+   },
+   "lenh": {
+    "nhim → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    58,
+    58
+   ]
+  },
+  "quai-nhimDoc": {
+   "m844": null,
+   "m1280": {
+    "diem": 5607,
+    "mo_vien": 0.0,
+    "pha_tron": 18.44,
+    "lap_cot": 22.86,
+    "doc_canh": 0.391,
+    "NHOE": 18.44
+   },
+   "the": {
+    "diem": 3325,
+    "mo_vien": 0.0,
+    "pha_tron": 30.92,
+    "lap_cot": 0.0,
+    "doc_canh": 0.451,
+    "NHOE": 30.92
+   },
+   "lenh": {
+    "nhimDoc → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    86,
+    67
+   ]
+  },
+  "quai-nhimThan": {
+   "m844": null,
+   "m1280": {
+    "diem": 3408,
+    "mo_vien": 0.0,
+    "pha_tron": 14.99,
+    "lap_cot": 23.13,
+    "doc_canh": 0.377,
+    "NHOE": 14.99
+   },
+   "the": {
+    "diem": 2018,
+    "mo_vien": 0.4,
+    "pha_tron": 25.57,
+    "lap_cot": 0.0,
+    "doc_canh": 0.448,
+    "NHOE": 25.77
+   },
+   "lenh": {
+    "nhimThan → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    66,
+    65
+   ]
+  },
+  "lang-nl-do": {
+   "m844": null,
+   "m1280": {
+    "diem": 2958,
+    "mo_vien": 0.0,
+    "pha_tron": 13.96,
+    "lap_cot": 23.33,
+    "doc_canh": 0.423,
+    "NHOE": 13.96
+   },
+   "the": {
+    "diem": 1754,
+    "mo_vien": 0.0,
+    "pha_tron": 22.12,
+    "lap_cot": 0.0,
+    "doc_canh": 0.482,
+    "NHOE": 22.12
+   },
+   "lenh": {
+    "nl-do → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "lang",
+   "co_the": [
+    66,
+    67
+   ]
+  },
+  "lang-nl-lai": {
+   "m844": null,
+   "m1280": {
+    "diem": 3686,
+    "mo_vien": 0.0,
+    "pha_tron": 11.86,
+    "lap_cot": 22.89,
+    "doc_canh": 0.386,
+    "NHOE": 11.86
+   },
+   "the": {
+    "diem": 2192,
+    "mo_vien": 0.0,
+    "pha_tron": 18.75,
+    "lap_cot": 0.0,
+    "doc_canh": 0.431,
+    "NHOE": 18.75
+   },
+   "lenh": {
+    "nl-lai → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "lang",
+   "co_the": [
+    54,
+    92
+   ]
+  },
+  "lang-nl-may": {
+   "m844": null,
+   "m1280": {
+    "diem": 4005,
+    "mo_vien": 0.0,
+    "pha_tron": 11.51,
+    "lap_cot": 23.53,
+    "doc_canh": 0.416,
+    "NHOE": 11.51
+   },
+   "the": {
+    "diem": 2382,
+    "mo_vien": 0.0,
+    "pha_tron": 17.21,
+    "lap_cot": 0.0,
+    "doc_canh": 0.459,
+    "NHOE": 17.21
+   },
+   "lenh": {
+    "nl-may → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "lang",
+   "co_the": [
+    60,
+    88
+   ]
+  },
+  "lang-nl-mo": {
+   "m844": null,
+   "m1280": {
+    "diem": 4034,
+    "mo_vien": 0.0,
+    "pha_tron": 10.93,
+    "lap_cot": 23.46,
+    "doc_canh": 0.413,
+    "NHOE": 10.93
+   },
+   "the": {
+    "diem": 2379,
+    "mo_vien": 0.0,
+    "pha_tron": 18.71,
+    "lap_cot": 0.0,
+    "doc_canh": 0.485,
+    "NHOE": 18.71
+   },
+   "lenh": {
+    "nl-mo → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "lang",
+   "co_the": [
+    65,
+    90
+   ]
+  },
+  "lang-nl-ren": {
+   "m844": null,
+   "m1280": {
+    "diem": 4354,
+    "mo_vien": 0.0,
+    "pha_tron": 8.36,
+    "lap_cot": 23.16,
+    "doc_canh": 0.385,
+    "NHOE": 8.36
+   },
+   "the": {
+    "diem": 2584,
+    "mo_vien": 0.0,
+    "pha_tron": 15.17,
+    "lap_cot": 0.0,
+    "doc_canh": 0.457,
+    "NHOE": 15.17
+   },
+   "lenh": {
+    "nl-ren → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "lang",
+   "co_the": [
+    64,
+    90
+   ]
+  },
+  "lang-nl-sen": {
+   "m844": null,
+   "m1280": {
+    "diem": 1882,
+    "mo_vien": 0.0,
+    "pha_tron": 8.45,
+    "lap_cot": 23.33,
+    "doc_canh": 0.408,
+    "NHOE": 8.45
+   },
+   "the": {
+    "diem": 1111,
+    "mo_vien": 0.0,
+    "pha_tron": 14.76,
+    "lap_cot": 0.0,
+    "doc_canh": 0.475,
+    "NHOE": 14.76
+   },
+   "lenh": {
+    "nl-sen → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "lang",
+   "co_the": [
+    42,
+    68
+   ]
+  },
+  "lang-nl-tu": {
+   "m844": null,
+   "m1280": {
+    "diem": 3967,
+    "mo_vien": 0.0,
+    "pha_tron": 7.66,
+    "lap_cot": 23.49,
+    "doc_canh": 0.413,
+    "NHOE": 7.66
+   },
+   "the": {
+    "diem": 2353,
+    "mo_vien": 0.0,
+    "pha_tron": 12.32,
+    "lap_cot": 0.0,
+    "doc_canh": 0.476,
+    "NHOE": 12.32
+   },
+   "lenh": {
+    "nl-tu → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "lang",
+   "co_the": [
+    55,
+    90
+   ]
+  },
+  "lang-nl-xen": {
+   "m844": null,
+   "m1280": {
+    "diem": 3152,
+    "mo_vien": 0.0,
+    "pha_tron": 10.12,
+    "lap_cot": 23.18,
+    "doc_canh": 0.427,
+    "NHOE": 10.12
+   },
+   "the": {
+    "diem": 1846,
+    "mo_vien": 0.0,
+    "pha_tron": 17.17,
+    "lap_cot": 0.0,
+    "doc_canh": 0.501,
+    "NHOE": 17.17
+   },
+   "lenh": {
+    "nl-xen → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "lang",
+   "co_the": [
+    60,
+    74
+   ]
+  },
+  "quai-oc": {
+   "m844": null,
+   "m1280": {
+    "diem": 10406,
+    "mo_vien": 0.0,
+    "pha_tron": 16.61,
+    "lap_cot": 23.24,
+    "doc_canh": 0.41,
+    "NHOE": 16.61
+   },
+   "the": {
+    "diem": 6163,
+    "mo_vien": 0.0,
+    "pha_tron": 27.36,
+    "lap_cot": 0.0,
+    "doc_canh": 0.477,
+    "NHOE": 27.36
+   },
+   "lenh": {
+    "oc → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    115,
+    88
+   ]
+  },
+  "quai-ongVo": {
+   "m844": null,
+   "m1280": {
+    "diem": 2522,
+    "mo_vien": 0.0,
+    "pha_tron": 15.9,
+    "lap_cot": 23.35,
+    "doc_canh": 0.434,
+    "NHOE": 15.9
+   },
+   "the": {
+    "diem": 1496,
+    "mo_vien": 0.0,
+    "pha_tron": 26.67,
+    "lap_cot": 0.0,
+    "doc_canh": 0.507,
+    "NHOE": 26.67
+   },
+   "lenh": {
+    "ongVo → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    81,
+    65
+   ]
+  },
+  "quai-raiCa": {
+   "m844": null,
+   "m1280": {
+    "diem": 5239,
+    "mo_vien": 0.0,
+    "pha_tron": 16.42,
+    "lap_cot": 23.7,
+    "doc_canh": 0.403,
+    "NHOE": 16.42
+   },
+   "the": {
+    "diem": 3099,
+    "mo_vien": 0.0,
+    "pha_tron": 25.91,
+    "lap_cot": 0.0,
+    "doc_canh": 0.464,
+    "NHOE": 25.91
+   },
+   "lenh": {
+    "raiCa → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    102,
+    77
+   ]
+  },
+  "quai-socNo": {
+   "m844": null,
+   "m1280": {
+    "diem": 6845,
+    "mo_vien": 0.0,
+    "pha_tron": 11.06,
+    "lap_cot": 23.33,
+    "doc_canh": 0.391,
+    "NHOE": 11.06
+   },
+   "the": {
+    "diem": 4051,
+    "mo_vien": 0.0,
+    "pha_tron": 18.88,
+    "lap_cot": 0.0,
+    "doc_canh": 0.429,
+    "NHOE": 18.88
+   },
+   "lenh": {
+    "socNo → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    101,
+    78
+   ]
+  },
+  "quai-sua": {
+   "m844": null,
+   "m1280": {
+    "diem": 5927,
+    "mo_vien": 0.0,
+    "pha_tron": 15.67,
+    "lap_cot": 23.59,
+    "doc_canh": 0.419,
+    "NHOE": 15.67
+   },
+   "the": {
+    "diem": 3507,
+    "mo_vien": 0.0,
+    "pha_tron": 26.01,
+    "lap_cot": 0.0,
+    "doc_canh": 0.492,
+    "NHOE": 26.01
+   },
+   "lenh": {
+    "sua → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    71,
+    96
+   ]
+  },
+  "quai-tieuYeu": {
+   "m844": null,
+   "m1280": {
+    "diem": 4966,
+    "mo_vien": 0.0,
+    "pha_tron": 17.42,
+    "lap_cot": 22.95,
+    "doc_canh": 0.397,
+    "NHOE": 17.42
+   },
+   "the": {
+    "diem": 2940,
+    "mo_vien": 0.0,
+    "pha_tron": 28.78,
+    "lap_cot": 0.0,
+    "doc_canh": 0.462,
+    "NHOE": 28.78
+   },
+   "lenh": {
+    "tieuYeu → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    83,
+    76
+   ]
+  },
+  "quai-tuongDa": {
+   "m844": null,
+   "m1280": {
+    "diem": 5197,
+    "mo_vien": 0.0,
+    "pha_tron": 19.53,
+    "lap_cot": 23.53,
+    "doc_canh": 0.428,
+    "NHOE": 19.53
+   },
+   "the": {
+    "diem": 3075,
+    "mo_vien": 0.0,
+    "pha_tron": 32.46,
+    "lap_cot": 0.0,
+    "doc_canh": 0.506,
+    "NHOE": 32.46
+   },
+   "lenh": {
+    "tuongDa → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    70,
+    78
+   ]
+  },
+  "quai-tuongMa": {
+   "m844": null,
+   "m1280": {
+    "diem": 7098,
+    "mo_vien": 0.0,
+    "pha_tron": 10.48,
+    "lap_cot": 23.19,
+    "doc_canh": 0.416,
+    "NHOE": 10.48
+   },
+   "the": {
+    "diem": 4199,
+    "mo_vien": 0.0,
+    "pha_tron": 18.69,
+    "lap_cot": 0.0,
+    "doc_canh": 0.503,
+    "NHOE": 18.69
+   },
+   "lenh": {
+    "tuongMa → world": {
+     "lan": 1,
+     "phong": [
+      "1×1"
+     ],
+     "xoay": [],
+     "muot": [
+      false
+     ],
+     "le": 0
+    }
+   },
+   "kieu": "quai",
+   "co_the": [
+    85,
+    92
+   ]
+  }
+ }
+}

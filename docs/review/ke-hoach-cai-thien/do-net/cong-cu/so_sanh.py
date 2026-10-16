@@ -2,7 +2,11 @@
 python3 so_sanh.py <thư mục trước> <thư mục sau> <thư mục ảnh ra> <tên,tên,…>
 Mỗi tên: <ra>/<tên>.png = hàng 1: canvas thế giới ×4 (trước | sau | heoCon chuẩn), hàng 2: màn 844×390 (dpr 3), hàng 3: màn 1280×720."""
 import json, os, sys
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
+try:
+    FONT = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 13)
+except Exception:
+    FONT = None
 
 T, S, RA = sys.argv[1], sys.argv[2], sys.argv[3]
 TEN = sys.argv[4].split(',')
@@ -18,7 +22,7 @@ def hang(ims, nhan):
     W = sum(i.width for i in ims) + 24 * (len(ims) + 1); H = max(i.height for i in ims) + 22
     o = Image.new('RGBA', (W, H), NEN); x = 24; d = ImageDraw.Draw(o)
     for im, n in zip(ims, nhan):
-        o.alpha_composite(im, (x, 20)); d.text((x, 4), n, fill=(255, 235, 160, 255)); x += im.width + 24
+        o.alpha_composite(im, (x, 20)); d.text((x, 2), n, fill=(255, 235, 160, 255), font=FONT); x += im.width + 24
     return o
 
 
@@ -42,7 +46,7 @@ for ten in TEN:
 # bảng
 t, s = json.load(open(os.path.join(T, 'so-lieu.json')))['hinh'], json.load(open(os.path.join(S, 'so-lieu.json')))['hinh']
 h0 = s.get('quai-heoCon', {}).get('the', {}).get('NHOE')
-print('| Hình | NHOE trước | NHOE sau | viền lửng % trước → sau | lặp cột % trước → sau | 1280×720 trước → sau | so heoCon (%.1f) |' % (h0 or 0))
+print('| Hình | NHOE trước | NHOE sau | viền lửng %% trước → sau | lặp cột %% trước → sau | 1280×720 trước → sau | so heoCon (%.1f) |' % (h0 or 0))
 print('|---|---|---|---|---|---|---|')
 for k in sorted(t, key=lambda k: -(t[k]['the'] or {}).get('NHOE', 0)):
     a, b = t[k].get('the') or {}, (s.get(k) or {}).get('the') or {}
