@@ -1,0 +1,77 @@
+[
+ {
+  "ten": "gd-nen-song-san0",
+  "chu_ky": [
+   190,
+   192
+  ],
+  "lech_lap": [
+   16.5,
+   19.6
+  ],
+  "vet_noi_goc": 2.06,
+  "vet_noi_truoc_mep": 0.0,
+  "vet_noi_ra": 0.0,
+  "byte": 24505
+ },
+ {
+  "ten": "gd-nen-song-san1",
+  "chu_ky": [
+   189,
+   192
+  ],
+  "lech_lap": [
+   18.9,
+   20.3
+  ],
+  "vet_noi_goc": 1.98,
+  "vet_noi_truoc_mep": 0.0,
+  "vet_noi_ra": 0.0,
+  "byte": 25565
+ },
+ {
+  "ten": "gd-nen-song-san2",
+  "chu_ky": [
+   190,
+   192
+  ],
+  "lech_lap": [
+   16.1,
+   18.1
+  ],
+  "vet_noi_goc": 1.1,
+  "vet_noi_truoc_mep": 0.0,
+  "vet_noi_ra": 0.0,
+  "byte": 25149
+ },
+ {
+  "ten": "gd-nen-song-san-nhan",
+  "chu_ky": [
+   189,
+   191
+  ],
+  "lech_lap": [
+   16.0,
+   19.2
+  ],
+  "vet_noi_goc": 1.63,
+  "vet_noi_truoc_mep": 0.0,
+  "vet_noi_ra": 0.0,
+  "byte": 27350
+ },
+ {
+  "ten": "gd-nen-song-san-tl",
+  "chu_ky": [
+   418,
+   418
+  ],
+  "lech_lap": [
+   3.5,
+   3.3
+  ],
+  "vet_noi_goc": 4.05,
+  "vet_noi_truoc_mep": 0.0,
+  "vet_noi_ra": 0.0,
+  "byte": 86090
+ }
+]

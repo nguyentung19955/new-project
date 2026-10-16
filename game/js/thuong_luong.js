@@ -698,7 +698,7 @@
         c.restore();
       }
       // nước sâu
-      const nuoc = (x, y, ww, hh2) => { R(x, y, ww, hh2, A9 ? 'rgba(8,26,30,0.62)' : 'rgba(10,30,34,0.93)'); };
+      const nuoc = (x, y, ww, hh2) => { R(x, y, ww, hh2, A9 ? 'rgba(8,26,30,0.74)' : 'rgba(10,30,34,0.93)'); };
       nuoc(fx0, fy0, fx1 - fx0, D.y0 - fy0); nuoc(fx0, D.y1, fx1 - fx0, fy1 - D.y1 + 2);
       nuoc(fx0, D.y0, D.x0 - fx0, D.y1 - D.y0); nuoc(D.x1, D.y0, fx1 - D.x1, D.y1 - D.y0);
       for (let i = 0; i < 70; i++) { // đốm sáng tối dưới nước
@@ -707,7 +707,10 @@
         R(x, y, 3 + hh(i, 3) * 6, 1, hh(i, 4) < 0.5 ? 'rgba(40,90,92,0.55)' : 'rgba(4,14,16,0.6)');
       }
       // bãi đá (có ảnh sân: không phủ mặt đá, chỉ vẽ mép đá bên dưới)
-      if (A9) { R(D.x0, D.y1 - 2, D.x1 - D.x0, 2, 'rgba(40,46,38,0.85)'); R(D.x0, D.y1, D.x1 - D.x0, 2, 'rgba(10,18,16,0.7)'); }
+      if (A9) { // viền bãi: mép trên sáng, hai bên + mép dưới sẫm, bóng xuống nước — chỗ đứng được vẫn rõ như sân code
+        R(D.x0, D.y0, D.x1 - D.x0, 1, 'rgba(190,176,120,0.55)'); R(D.x0 - 1, D.y0, 2, D.y1 - D.y0, 'rgba(40,46,38,0.8)'); R(D.x1 - 1, D.y0, 2, D.y1 - D.y0, 'rgba(40,46,38,0.8)');
+        R(D.x0, D.y1 - 2, D.x1 - D.x0, 2, 'rgba(40,46,38,0.85)'); R(D.x0, D.y1, D.x1 - D.x0, 2, 'rgba(10,18,16,0.7)');
+      }
       else {
       E((D.x0 + D.x1) / 2, (D.y0 + D.y1) / 2 + 2, (D.x1 - D.x0) / 2 + 3, (D.y1 - D.y0) / 2 + 4, 'rgba(0,0,0,0)');
       R(D.x0, D.y0, D.x1 - D.x0, D.y1 - D.y0, '#4f564a');
