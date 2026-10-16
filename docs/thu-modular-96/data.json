@@ -12,47 +12,128 @@
  "coordinateSystem": "Điểm ảnh của ô 96×96, gốc GÓC TRÊN-TRÁI ô, x sang phải, y xuống dưới. Chân chạm (48,90). Toạ độ có .5 là tâm điểm ảnh.",
  "layerOrder": [
   "rearLeg",
+  "rearPants",
   "rearArm",
+  "backShoulderArmor",
   "body",
   "pants",
   "torsoOutfit",
+  "belt",
   "chestArmor",
-  "backShoulderArmor",
   "frontLeg",
+  "frontPants",
   "frontShoulderArmor",
   "frontArm",
+  "frontShoulderArmorTop",
   "forearmArmor",
   "head",
   "hair"
  ],
+ "layerKinds": {
+  "rearLeg": "nen",
+  "rearPants": "do",
+  "rearArm": "nen",
+  "backShoulderArmor": "giap",
+  "body": "nen",
+  "pants": "do",
+  "torsoOutfit": "do",
+  "belt": "do",
+  "chestArmor": "giap",
+  "frontLeg": "nen",
+  "frontPants": "do",
+  "frontShoulderArmor": "giap",
+  "frontArm": "nen",
+  "frontShoulderArmorTop": "giap",
+  "forearmArmor": "giap",
+  "head": "nen",
+  "hair": "nen"
+ },
+ "bodyLayers": [
+  "rearLeg",
+  "rearArm",
+  "body",
+  "frontLeg",
+  "frontArm",
+  "head",
+  "hair"
+ ],
  "armorLayers": [
-  "chestArmor",
   "backShoulderArmor",
+  "chestArmor",
   "frontShoulderArmor",
+  "frontShoulderArmorTop",
   "forearmArmor"
  ],
+ "outfitLayers": [
+  "torsoOutfit",
+  "belt",
+  "rearPants",
+  "pants",
+  "frontPants"
+ ],
+ "outfitSlots": {
+  "ao": [
+   "torsoOutfit",
+   "belt"
+  ],
+  "quan": [
+   "rearPants",
+   "pants",
+   "frontPants"
+  ]
+ },
+ "outfitSlotNames": {
+  "ao": "Áo (áo + đai)",
+  "quan": "Quần"
+ },
  "sheets": {
   "rearLeg": "sheets/rearLeg.png",
   "rearArm": "sheets/rearArm.png",
   "body": "sheets/body.png",
-  "pants": "sheets/pants.png",
-  "torsoOutfit": "sheets/torsoOutfit.png",
-  "chestArmor": "sheets/chestArmor.png",
-  "backShoulderArmor": "sheets/backShoulderArmor.png",
   "frontLeg": "sheets/frontLeg.png",
-  "frontShoulderArmor": "sheets/frontShoulderArmor.png",
   "frontArm": "sheets/frontArm.png",
-  "forearmArmor": "sheets/forearmArmor.png",
   "head": "sheets/head.png",
-  "hair": "sheets/hair.png"
+  "hair": "sheets/hair.png",
+  "backShoulderArmor": "sheets/backShoulderArmor.png",
+  "chestArmor": "sheets/chestArmor.png",
+  "frontShoulderArmor": "sheets/frontShoulderArmor.png",
+  "frontShoulderArmorTop": "sheets/frontShoulderArmorTop.png",
+  "forearmArmor": "sheets/forearmArmor.png"
  },
- "emptyLayers": [],
- "cuTiHasNoArt": [
-  "chestArmor",
-  "backShoulderArmor",
-  "frontShoulderArmor",
-  "forearmArmor"
- ],
+ "outfits": {
+  "goc": {
+   "name": "Đồ gốc (áo đen, đai đỏ, quần đen)",
+   "slots": [
+    "ao",
+    "quan"
+   ],
+   "sheets": {
+    "torsoOutfit": "sheets/do-goc/torsoOutfit.png",
+    "belt": "sheets/do-goc/belt.png",
+    "rearPants": "sheets/do-goc/rearPants.png",
+    "pants": "sheets/do-goc/pants.png",
+    "frontPants": "sheets/do-goc/frontPants.png"
+   }
+  },
+  "moi": {
+   "name": "Đồ mới máy vẽ (áo chàm, đai vàng, quần kaki + xà cạp)",
+   "slots": [
+    "ao",
+    "quan"
+   ],
+   "sheets": {
+    "torsoOutfit": "sheets/do-moi/torsoOutfit.png",
+    "belt": "sheets/do-moi/belt.png",
+    "rearPants": "sheets/do-moi/rearPants.png",
+    "pants": "sheets/do-moi/pants.png",
+    "frontPants": "sheets/do-moi/frontPants.png"
+   }
+  }
+ },
+ "defaultOutfit": {
+  "ao": "goc",
+  "quan": "goc"
+ },
  "source": {
   "gameSheet": "game/art/custom/zed-moi.sprite.json, dong_tac.chay (hàng 2, 12 khung, 0,6 giây/vòng)",
   "highResFrames": "docs/anh-goc/zed/moi/03-chay-v4-gif/03-chay-v4/khung-01..12.png (ảnh nguồn của chính hàng đó)",
@@ -147,11 +228,249 @@
   "shoulderBackArmor": "neo giáp vai sau",
   "forearmFrontArmor": "neo giáp cẳng tay trước"
  },
+ "layerNames": {
+  "rearLeg": "chân sau trần + bàn chân (nền)",
+  "rearPants": "ống quần sau",
+  "rearArm": "tay sau (nền)",
+  "backShoulderArmor": "giáp vai sau (sau thân)",
+  "body": "thân trần + cổ (nền)",
+  "pants": "quần phần hông",
+  "torsoOutfit": "áo",
+  "belt": "đai + dải bay",
+  "chestArmor": "giáp ngực",
+  "frontLeg": "chân trước trần + bàn chân (nền)",
+  "frontPants": "ống quần trước",
+  "frontShoulderArmor": "giáp vai trước – phần dưới cẳng tay",
+  "frontArm": "tay trước (nền)",
+  "frontShoulderArmorTop": "giáp vai trước – phần trên bắp tay",
+  "forearmArmor": "giáp cẳng tay",
+  "head": "mặt (nền)",
+  "hair": "tóc (nền)"
+ },
  "notes": [
-  "Tay TRƯỚC = tay lộ bắp tay trần (vẽ đè lên thân). Tay SAU = tay đấm ra trước, bắp tay khuất sau thân. Ảnh gốc không đổi tay giữa chu kỳ.",
+  "Tay TRƯỚC = tay lộ bắp tay trần (vẽ đè lên thân). Tay SAU = tay đấm ra trước, bắp tay khuất sau thân.",
   "Chân TRƯỚC/SAU giữ cùng một chân suốt 12 khung (chân trước = chân trụ ở khung 0).",
-  "body = thân + áo đen (áo vẽ liền người, không có thân trần), torsoOutfit = đai đỏ + hai dải đai bay, pants = phần quần ở hông; ống quần nằm trong frontLeg/rearLeg.",
-  "Lớp trống (Cu Tí không có): giáp, xem emptyLayers. Giáp mẫu nằm ở 4 lớp armorLayers."
+  "Nền cơ thể (bodyLayers) = điểm ảnh gốc của đầu, tóc, tay, bàn chân, cổ + thân/chân trần dựng thêm (da + khố) ở đúng hình bóng áo/quần gốc từng khung.",
+  "Trang phục (outfitLayers) thay theo 2 ô: ao = torsoOutfit + belt, quan = rearPants + pants + frontPants. Mỗi bộ trong outfits có đủ 5 lớp.",
+  "Giáp vai trước tách 2 lớp: frontShoulderArmor (dưới tay trước, chỉ phần cẳng tay đi ngang qua) và frontShoulderArmorTop (trên bắp tay)."
+ ],
+ "checks": [
+  {
+   "frame": 0,
+   "nenDoGocKhacGame": 0,
+   "ao_moi+quan_goc": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_goc+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_moi+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "lỗTrongSuốtKhiChỉCóNền": 0,
+   "daiBayNgoaiThan": 13
+  },
+  {
+   "frame": 1,
+   "nenDoGocKhacGame": 0,
+   "ao_moi+quan_goc": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_goc+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_moi+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "lỗTrongSuốtKhiChỉCóNền": 0,
+   "daiBayNgoaiThan": 48
+  },
+  {
+   "frame": 2,
+   "nenDoGocKhacGame": 0,
+   "ao_moi+quan_goc": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_goc+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_moi+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "lỗTrongSuốtKhiChỉCóNền": 0,
+   "daiBayNgoaiThan": 36
+  },
+  {
+   "frame": 3,
+   "nenDoGocKhacGame": 0,
+   "ao_moi+quan_goc": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_goc+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_moi+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "lỗTrongSuốtKhiChỉCóNền": 0,
+   "daiBayNgoaiThan": 53
+  },
+  {
+   "frame": 4,
+   "nenDoGocKhacGame": 0,
+   "ao_moi+quan_goc": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_goc+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_moi+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "lỗTrongSuốtKhiChỉCóNền": 0,
+   "daiBayNgoaiThan": 25
+  },
+  {
+   "frame": 5,
+   "nenDoGocKhacGame": 0,
+   "ao_moi+quan_goc": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_goc+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_moi+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "lỗTrongSuốtKhiChỉCóNền": 0,
+   "daiBayNgoaiThan": 31
+  },
+  {
+   "frame": 6,
+   "nenDoGocKhacGame": 0,
+   "ao_moi+quan_goc": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_goc+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_moi+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "lỗTrongSuốtKhiChỉCóNền": 0,
+   "daiBayNgoaiThan": 37
+  },
+  {
+   "frame": 7,
+   "nenDoGocKhacGame": 0,
+   "ao_moi+quan_goc": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_goc+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_moi+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "lỗTrongSuốtKhiChỉCóNền": 0,
+   "daiBayNgoaiThan": 38
+  },
+  {
+   "frame": 8,
+   "nenDoGocKhacGame": 0,
+   "ao_moi+quan_goc": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_goc+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_moi+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "lỗTrongSuốtKhiChỉCóNền": 0,
+   "daiBayNgoaiThan": 38
+  },
+  {
+   "frame": 9,
+   "nenDoGocKhacGame": 0,
+   "ao_moi+quan_goc": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_goc+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_moi+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "lỗTrongSuốtKhiChỉCóNền": 0,
+   "daiBayNgoaiThan": 50
+  },
+  {
+   "frame": 10,
+   "nenDoGocKhacGame": 0,
+   "ao_moi+quan_goc": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_goc+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_moi+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "lỗTrongSuốtKhiChỉCóNền": 0,
+   "daiBayNgoaiThan": 25
+  },
+  {
+   "frame": 11,
+   "nenDoGocKhacGame": 0,
+   "ao_moi+quan_goc": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_goc+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "ao_moi+quan_moi": {
+    "thanTranLo": 0,
+    "doGocKhongDuocPhu": 0
+   },
+   "lỗTrongSuốtKhiChỉCóNền": 0,
+   "daiBayNgoaiThan": 44
+  }
  ],
  "frames": [
   {
