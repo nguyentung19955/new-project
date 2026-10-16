@@ -42,32 +42,32 @@ Bám 2 đầu lỗi: không
 
 | Khung | Liên tục r2 trước | sau | Liên tục r3 trước | sau | 8 hướng r2 trước | sau | 8 hướng r3 trước | sau |
 |---|---|---|---|---|---|---|---|---|
-| 1 | 8 | 0 | 29 | 7 | 12 | 0 | 35 | 7 |
-| 2 | 7 | 0 | 32 | 3 | 11 | 0 | 34 | 4 |
-| 3 | 8 | 0 | 28 | 9 | 8 | 0 | 27 | 11 |
-| 4 | 7 | 0 | 22 | 3 | 6 | 0 | 22 | 4 |
-| 5 | 4 | 0 | 24 | 4 | 5 | 0 | 25 | 4 |
-| 6 | 8 | 0 | 28 | 10 | 10 | 0 | 31 | 7 |
-| 7 | 7 | 0 | 26 | 7 | 14 | 0 | 34 | 8 |
-| 8 | 7 | 0 | 34 | 6 | 9 | 0 | 35 | 7 |
-| 9 | 10 | 0 | 27 | 1 | 9 | 0 | 25 | 3 |
-| 10 | 7 | 0 | 25 | 2 | 6 | 0 | 25 | 3 |
-| 11 | 6 | 0 | 23 | 5 | 7 | 0 | 25 | 4 |
-| 12 | 9 | 0 | 31 | 8 | 12 | 0 | 34 | 7 |
-| **Tổng** | **88** | **0** | **329** | **65** | **109** | **0** | **352** | **69** |
+| 1 | 12 | 0 | 33 | 8 | 16 | 0 | 39 | 8 |
+| 2 | 13 | 0 | 38 | 4 | 13 | 0 | 37 | 4 |
+| 3 | 11 | 0 | 31 | 12 | 11 | 0 | 30 | 11 |
+| 4 | 9 | 0 | 24 | 3 | 8 | 0 | 24 | 5 |
+| 5 | 7 | 0 | 28 | 4 | 9 | 0 | 30 | 4 |
+| 6 | 12 | 0 | 33 | 12 | 13 | 0 | 34 | 9 |
+| 7 | 9 | 0 | 28 | 7 | 14 | 0 | 34 | 8 |
+| 8 | 11 | 0 | 38 | 7 | 13 | 0 | 39 | 8 |
+| 9 | 14 | 0 | 31 | 2 | 12 | 0 | 28 | 3 |
+| 10 | 9 | 0 | 29 | 3 | 8 | 0 | 27 | 3 |
+| 11 | 10 | 0 | 28 | 5 | 10 | 0 | 30 | 5 |
+| 12 | 11 | 0 | 33 | 8 | 13 | 0 | 35 | 7 |
+| **Tổng** | **128** | **0** | **374** | **75** | **140** | **0** | **387** | **75** |
 
 Khe r=3 còn lại (sau) theo khớp:
 
-- k1 LT goiT=4, k1 LT goiS=3, k1 8H khuyuT=1, k1 8H goiT=3, k1 8H goiS=3, k2 LT goiT=3, k2 8H goiT=4, k3 LT goiT=5, k3 LT goiS=4, k3 8H khuyuT=1, k3 8H goiT=5, k3 8H goiS=5, k4 LT goiS=3, k4 8H goiT=1, k4 8H goiS=3, k5 LT goiT=3, k5 LT goiS=1, k5 8H goiT=3, k5 8H goiS=1, k6 LT khuyuT=1, k6 LT goiT=5, k6 LT goiS=4, k6 8H goiT=4, k6 8H goiS=3, k7 LT goiT=3, k7 LT goiS=4, k7 8H goiT=4, k7 8H goiS=4, k8 LT khuyuT=2, k8 LT goiT=3, k8 LT goiS=1, k8 8H khuyuT=3, k8 8H goiT=3, k8 8H goiS=1, k9 LT goiT=1, k9 8H goiT=2, k9 8H goiS=1, k10 LT goiT=2, k10 8H goiT=2, k10 8H goiS=1, k11 LT goiT=2, k11 LT goiS=3, k11 8H goiT=2, k11 8H goiS=2, k12 LT goiT=3, k12 LT goiS=5, k12 8H goiT=3, k12 8H goiS=4
+- k1 LT goiT=5, k1 LT goiS=3, k1 8H khuyuT=1, k1 8H goiT=4, k1 8H goiS=3, k2 LT goiT=4, k2 8H goiT=4, k3 LT khuyuT=1, k3 LT goiT=6, k3 LT goiS=5, k3 8H khuyuT=1, k3 8H goiT=5, k3 8H goiS=5, k4 LT goiS=3, k4 8H goiT=1, k4 8H goiS=4, k5 LT goiT=3, k5 LT goiS=1, k5 8H goiT=3, k5 8H goiS=1, k6 LT khuyuT=1, k6 LT goiT=5, k6 LT goiS=6, k6 8H khuyuT=1, k6 8H goiT=4, k6 8H goiS=4, k7 LT goiT=3, k7 LT goiS=4, k7 8H goiT=4, k7 8H goiS=4, k8 LT khuyuT=3, k8 LT goiT=3, k8 LT goiS=1, k8 8H khuyuT=4, k8 8H goiT=3, k8 8H goiS=1, k9 LT khuyuT=1, k9 LT goiT=1, k9 8H goiT=2, k9 8H goiS=1, k10 LT goiT=2, k10 LT goiS=1, k10 8H goiT=2, k10 8H goiS=1, k11 LT goiT=2, k11 LT goiS=3, k11 8H khuyuT=1, k11 8H goiT=2, k11 8H goiS=2, k12 LT goiT=3, k12 LT goiS=5, k12 8H goiT=3, k12 8H goiS=4
 
 So cấu hình (tổng 12 khung):
 
 | Cấu hình | LT r2 | LT r3 | 8H r2 | 8H r3 | khung có khe r2 |
 |---|---|---|---|---|---|
-| truoc | 88 | 329 | 109 | 352 | 12/12 |
-| chong | 42 | 149 | 53 | 169 | 12/12 |
-| nho | 2 | 108 | 2 | 117 | 3/12 |
-| gon | 0 | 65 | 0 | 69 | 0/12 |
+| truoc | 128 | 374 | 140 | 387 | 12/12 |
+| chong | 114 | 254 | 107 | 246 | 12/12 |
+| nho | 12 | 150 | 12 | 150 | 9/12 |
+| gon | 0 | 75 | 0 | 75 | 0/12 |
 | to | 0 | 0 | 0 | 0 | 0/12 |
 
 Bám 2 đầu lỗi: k3 8H Giáp ống chân trước cuối lệch 1.78
