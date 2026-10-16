@@ -1,0 +1,3387 @@
+{
+ "loai": "linh-khi-thu-modular-bo-phan-chay",
+ "phien_ban": 1,
+ "nhan_vat": "zed-v2",
+ "nguon": "docs/anh-goc/zed/zed-v2-canonical.png hàng 3 (chạy, 8 khung), ô dời xuống 9 px (xem que-chay-that.json)",
+ "he_toa_do": "GỐC (0,0) = góc TRÊN-TRÁI ô 256×256. dat_tai_o = vị trí góc trên-trái của ảnh bộ phận trong ô. pivot_o / khop_cuoi_o = toạ độ khớp trong ô; pivot_trong_anh = toạ độ pivot trong ảnh bộ phận.",
+ "cach_tach": "Mặt nạ theo xương que-chay-that.json: điểm tóc/sừng và điểm trong vòng đầu phía trên đường cổ → đầu; còn lại: các bộ phận có điểm nằm trong bán kính (ban_kinh_px) → bộ phận lớp cao nhất; ngoài mọi bán kính: nằm trên hông và sau cổ → khăn (phụ kiện), còn lại → bộ phận gần nhất. Mỗi điểm ảnh thuộc đúng 1 tệp.",
+ "ban_kinh_px": {
+  "than": 20,
+  "canh-tay-tren-phai": 8,
+  "canh-tay-duoi-phai": 8,
+  "ban-tay-phai": 9,
+  "canh-tay-tren-trai": 7,
+  "canh-tay-duoi-trai": 7,
+  "ban-tay-trai": 9,
+  "dui-phai": 18,
+  "cang-chan-phai": 13,
+  "ban-chan-phai": 10,
+  "dui-trai": 18,
+  "cang-chan-trai": 13,
+  "ban-chan-trai": 10
+ },
+ "lop": {
+  "dau": 50,
+  "than": 30,
+  "canh-tay-tren-phai": 70,
+  "canh-tay-duoi-phai": 71,
+  "ban-tay-phai": 72,
+  "canh-tay-tren-trai": 10,
+  "canh-tay-duoi-trai": 11,
+  "ban-tay-trai": 12,
+  "dui-phai": 40,
+  "cang-chan-phai": 41,
+  "ban-chan-phai": 42,
+  "dui-trai": 20,
+  "cang-chan-trai": 21,
+  "ban-chan-trai": 22,
+  "khan": 5
+ },
+ "kiem_rap_lai_so_diem_lech": [
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0
+ ],
+ "gioi_han": [
+  "Quần ống thụng che gối: ranh đùi/cẳng chân là đường chia theo xương, không theo nếp vẽ.",
+  "Chỗ tay gần đè lên ngực: phần ngực sát tay vào tay (lớp cao hơn). Tay xa khuất sau thân ở khung 3–6 chỉ còn nắm tay.",
+  "Mép giữa 2 bộ phận là đường cắt cứng; xoay bộ phận nhiều sẽ hở mép — chỉ dùng để thay đồ theo từng khung, không để xoay tự do."
+ ],
+ "khung": [
+  {
+   "khung": 1,
+   "bo_phan": {
+    "dau": {
+     "anh": "bo-phan-chay/khung-01/dau.png",
+     "dat_tai_o": [
+      101,
+      29
+     ],
+     "hop": [
+      101,
+      29,
+      243,
+      155
+     ],
+     "so_diem_anh": 10877,
+     "lop": 50,
+     "pivot": "co",
+     "pivot_o": [
+      148,
+      140
+     ],
+     "pivot_trong_anh": [
+      47,
+      111
+     ],
+     "goc_do": -77.4
+    },
+    "than": {
+     "anh": "bo-phan-chay/khung-01/than.png",
+     "dat_tai_o": [
+      104,
+      128
+     ],
+     "hop": [
+      104,
+      128,
+      166,
+      212
+     ],
+     "so_diem_anh": 1418,
+     "lop": 30,
+     "pivot": "hong",
+     "pivot_o": [
+      124,
+      190
+     ],
+     "pivot_trong_anh": [
+      20,
+      62
+     ],
+     "khop_cuoi": "co",
+     "khop_cuoi_o": [
+      148,
+      140
+     ],
+     "goc_do": -64.4
+    },
+    "canh-tay-tren-phai": {
+     "anh": "bo-phan-chay/khung-01/canh-tay-tren-phai.png",
+     "dat_tai_o": [
+      139,
+      137
+     ],
+     "hop": [
+      139,
+      137,
+      162,
+      162
+     ],
+     "so_diem_anh": 285,
+     "lop": 70,
+     "pivot": "vai_phai",
+     "pivot_o": [
+      147,
+      141
+     ],
+     "pivot_trong_anh": [
+      8,
+      4
+     ],
+     "khop_cuoi": "khuyu_phai",
+     "khop_cuoi_o": [
+      156,
+      160
+     ],
+     "goc_do": 64.7
+    },
+    "canh-tay-duoi-phai": {
+     "anh": "bo-phan-chay/khung-01/canh-tay-duoi-phai.png",
+     "dat_tai_o": [
+      148,
+      152
+     ],
+     "hop": [
+      148,
+      152,
+      177,
+      173
+     ],
+     "so_diem_anh": 365,
+     "lop": 71,
+     "pivot": "khuyu_phai",
+     "pivot_o": [
+      156,
+      160
+     ],
+     "pivot_trong_anh": [
+      8,
+      8
+     ],
+     "khop_cuoi": "co_tay_phai",
+     "khop_cuoi_o": [
+      178,
+      166
+     ],
+     "goc_do": 15.3
+    },
+    "ban-tay-phai": {
+     "anh": "bo-phan-chay/khung-01/ban-tay-phai.png",
+     "dat_tai_o": [
+      169,
+      155
+     ],
+     "hop": [
+      169,
+      155,
+      198,
+      184
+     ],
+     "so_diem_anh": 639,
+     "lop": 72,
+     "pivot": "co_tay_phai",
+     "pivot_o": [
+      178,
+      166
+     ],
+     "pivot_trong_anh": [
+      9,
+      11
+     ],
+     "khop_cuoi": "nam_tay_phai",
+     "khop_cuoi_o": [
+      187,
+      166
+     ],
+     "goc_do": 0.0
+    },
+    "canh-tay-tren-trai": {
+     "anh": "bo-phan-chay/khung-01/canh-tay-tren-trai.png",
+     "dat_tai_o": [
+      125,
+      135
+     ],
+     "hop": [
+      125,
+      135,
+      129,
+      141
+     ],
+     "so_diem_anh": 7,
+     "lop": 10,
+     "pivot": "vai_trai",
+     "pivot_o": [
+      132,
+      140
+     ],
+     "pivot_trong_anh": [
+      7,
+      5
+     ],
+     "khop_cuoi": "khuyu_trai",
+     "khop_cuoi_o": [
+      140,
+      162
+     ],
+     "goc_do": 70.0
+    },
+    "ban-tay-trai": {
+     "anh": "bo-phan-chay/khung-01/ban-tay-trai.png",
+     "dat_tai_o": [
+      152,
+      169
+     ],
+     "hop": [
+      152,
+      169,
+      180,
+      189
+     ],
+     "so_diem_anh": 306,
+     "lop": 12,
+     "pivot": "co_tay_trai",
+     "pivot_o": [
+      158,
+      172
+     ],
+     "pivot_trong_anh": [
+      6,
+      3
+     ],
+     "khop_cuoi": "nam_tay_trai",
+     "khop_cuoi_o": [
+      164,
+      177
+     ],
+     "goc_do": 39.8
+    },
+    "dui-phai": {
+     "anh": "bo-phan-chay/khung-01/dui-phai.png",
+     "dat_tai_o": [
+      110,
+      174
+     ],
+     "hop": [
+      110,
+      174,
+      173,
+      226
+     ],
+     "so_diem_anh": 1540,
+     "lop": 40,
+     "pivot": "hong_phai",
+     "pivot_o": [
+      128,
+      192
+     ],
+     "pivot_trong_anh": [
+      18,
+      18
+     ],
+     "khop_cuoi": "goi_phai",
+     "khop_cuoi_o": [
+      158,
+      206
+     ],
+     "goc_do": 25.0
+    },
+    "cang-chan-phai": {
+     "anh": "bo-phan-chay/khung-01/cang-chan-phai.png",
+     "dat_tai_o": [
+      133,
+      193
+     ],
+     "hop": [
+      133,
+      193,
+      172,
+      249
+     ],
+     "so_diem_anh": 883,
+     "lop": 41,
+     "pivot": "goi_phai",
+     "pivot_o": [
+      158,
+      206
+     ],
+     "pivot_trong_anh": [
+      25,
+      13
+     ],
+     "khop_cuoi": "co_chan_phai",
+     "khop_cuoi_o": [
+      155,
+      233
+     ],
+     "goc_do": 96.3
+    },
+    "ban-chan-phai": {
+     "anh": "bo-phan-chay/khung-01/ban-chan-phai.png",
+     "dat_tai_o": [
+      146,
+      219
+     ],
+     "hop": [
+      146,
+      219,
+      190,
+      246
+     ],
+     "so_diem_anh": 780,
+     "lop": 42,
+     "pivot": "co_chan_phai",
+     "pivot_o": [
+      155,
+      233
+     ],
+     "pivot_trong_anh": [
+      9,
+      14
+     ],
+     "khop_cuoi": "mui_chan_phai",
+     "khop_cuoi_o": [
+      186,
+      228
+     ],
+     "goc_do": -9.2
+    },
+    "dui-trai": {
+     "anh": "bo-phan-chay/khung-01/dui-trai.png",
+     "dat_tai_o": [
+      83,
+      172
+     ],
+     "hop": [
+      83,
+      172,
+      116,
+      213
+     ],
+     "so_diem_anh": 355,
+     "lop": 20,
+     "pivot": "hong_trai",
+     "pivot_o": [
+      118,
+      188
+     ],
+     "pivot_trong_anh": [
+      35,
+      16
+     ],
+     "khop_cuoi": "goi_trai",
+     "khop_cuoi_o": [
+      92,
+      198
+     ],
+     "goc_do": 159.0
+    },
+    "cang-chan-trai": {
+     "anh": "bo-phan-chay/khung-01/cang-chan-trai.png",
+     "dat_tai_o": [
+      56,
+      184
+     ],
+     "hop": [
+      56,
+      184,
+      106,
+      212
+     ],
+     "so_diem_anh": 627,
+     "lop": 21,
+     "pivot": "goi_trai",
+     "pivot_o": [
+      92,
+      198
+     ],
+     "pivot_trong_anh": [
+      36,
+      14
+     ],
+     "khop_cuoi": "co_chan_trai",
+     "khop_cuoi_o": [
+      72,
+      196
+     ],
+     "goc_do": -174.3
+    },
+    "ban-chan-trai": {
+     "anh": "bo-phan-chay/khung-01/ban-chan-trai.png",
+     "dat_tai_o": [
+      48,
+      186
+     ],
+     "hop": [
+      48,
+      186,
+      83,
+      220
+     ],
+     "so_diem_anh": 764,
+     "lop": 22,
+     "pivot": "co_chan_trai",
+     "pivot_o": [
+      72,
+      196
+     ],
+     "pivot_trong_anh": [
+      24,
+      10
+     ],
+     "khop_cuoi": "mui_chan_trai",
+     "khop_cuoi_o": [
+      52,
+      212
+     ],
+     "goc_do": 141.3
+    },
+    "khan": {
+     "anh": "bo-phan-chay/khung-01/khan.png",
+     "dat_tai_o": [
+      32,
+      45
+     ],
+     "hop": [
+      32,
+      45,
+      144,
+      190
+     ],
+     "so_diem_anh": 4571,
+     "lop": 5
+    }
+   }
+  },
+  {
+   "khung": 2,
+   "bo_phan": {
+    "dau": {
+     "anh": "bo-phan-chay/khung-02/dau.png",
+     "dat_tai_o": [
+      93,
+      30
+     ],
+     "hop": [
+      93,
+      30,
+      232,
+      156
+     ],
+     "so_diem_anh": 10774,
+     "lop": 50,
+     "pivot": "co",
+     "pivot_o": [
+      138,
+      141
+     ],
+     "pivot_trong_anh": [
+      45,
+      111
+     ],
+     "goc_do": -77.5
+    },
+    "than": {
+     "anh": "bo-phan-chay/khung-02/than.png",
+     "dat_tai_o": [
+      94,
+      130
+     ],
+     "hop": [
+      94,
+      130,
+      156,
+      207
+     ],
+     "so_diem_anh": 1425,
+     "lop": 30,
+     "pivot": "hong",
+     "pivot_o": [
+      114,
+      191
+     ],
+     "pivot_trong_anh": [
+      20,
+      61
+     ],
+     "khop_cuoi": "co",
+     "khop_cuoi_o": [
+      138,
+      141
+     ],
+     "goc_do": -64.4
+    },
+    "canh-tay-tren-phai": {
+     "anh": "bo-phan-chay/khung-02/canh-tay-tren-phai.png",
+     "dat_tai_o": [
+      132,
+      139
+     ],
+     "hop": [
+      132,
+      139,
+      153,
+      164
+     ],
+     "so_diem_anh": 270,
+     "lop": 70,
+     "pivot": "vai_phai",
+     "pivot_o": [
+      140,
+      142
+     ],
+     "pivot_trong_anh": [
+      8,
+      3
+     ],
+     "khop_cuoi": "khuyu_phai",
+     "khop_cuoi_o": [
+      146,
+      162
+     ],
+     "goc_do": 73.3
+    },
+    "canh-tay-duoi-phai": {
+     "anh": "bo-phan-chay/khung-02/canh-tay-duoi-phai.png",
+     "dat_tai_o": [
+      138,
+      154
+     ],
+     "hop": [
+      138,
+      154,
+      164,
+      173
+     ],
+     "so_diem_anh": 318,
+     "lop": 71,
+     "pivot": "khuyu_phai",
+     "pivot_o": [
+      146,
+      162
+     ],
+     "pivot_trong_anh": [
+      8,
+      8
+     ],
+     "khop_cuoi": "co_tay_phai",
+     "khop_cuoi_o": [
+      166,
+      166
+     ],
+     "goc_do": 11.3
+    },
+    "ban-tay-phai": {
+     "anh": "bo-phan-chay/khung-02/ban-tay-phai.png",
+     "dat_tai_o": [
+      157,
+      155
+     ],
+     "hop": [
+      157,
+      155,
+      188,
+      186
+     ],
+     "so_diem_anh": 653,
+     "lop": 72,
+     "pivot": "co_tay_phai",
+     "pivot_o": [
+      166,
+      166
+     ],
+     "pivot_trong_anh": [
+      9,
+      11
+     ],
+     "khop_cuoi": "nam_tay_phai",
+     "khop_cuoi_o": [
+      175,
+      164
+     ],
+     "goc_do": -12.5
+    },
+    "ban-tay-trai": {
+     "anh": "bo-phan-chay/khung-02/ban-tay-trai.png",
+     "dat_tai_o": [
+      142,
+      171
+     ],
+     "hop": [
+      142,
+      171,
+      175,
+      190
+     ],
+     "so_diem_anh": 331,
+     "lop": 12,
+     "pivot": "co_tay_trai",
+     "pivot_o": [
+      149,
+      176
+     ],
+     "pivot_trong_anh": [
+      7,
+      5
+     ],
+     "khop_cuoi": "nam_tay_trai",
+     "khop_cuoi_o": [
+      155,
+      180
+     ],
+     "goc_do": 33.7
+    },
+    "dui-phai": {
+     "anh": "bo-phan-chay/khung-02/dui-phai.png",
+     "dat_tai_o": [
+      100,
+      175
+     ],
+     "hop": [
+      100,
+      175,
+      165,
+      227
+     ],
+     "so_diem_anh": 1551,
+     "lop": 40,
+     "pivot": "hong_phai",
+     "pivot_o": [
+      118,
+      193
+     ],
+     "pivot_trong_anh": [
+      18,
+      18
+     ],
+     "khop_cuoi": "goi_phai",
+     "khop_cuoi_o": [
+      150,
+      207
+     ],
+     "goc_do": 23.6
+    },
+    "cang-chan-phai": {
+     "anh": "bo-phan-chay/khung-02/cang-chan-phai.png",
+     "dat_tai_o": [
+      125,
+      194
+     ],
+     "hop": [
+      125,
+      194,
+      164,
+      248
+     ],
+     "so_diem_anh": 828,
+     "lop": 41,
+     "pivot": "goi_phai",
+     "pivot_o": [
+      150,
+      207
+     ],
+     "pivot_trong_anh": [
+      25,
+      13
+     ],
+     "khop_cuoi": "co_chan_phai",
+     "khop_cuoi_o": [
+      148,
+      232
+     ],
+     "goc_do": 94.6
+    },
+    "ban-chan-phai": {
+     "anh": "bo-phan-chay/khung-02/ban-chan-phai.png",
+     "dat_tai_o": [
+      139,
+      220
+     ],
+     "hop": [
+      139,
+      220,
+      180,
+      244
+     ],
+     "so_diem_anh": 741,
+     "lop": 42,
+     "pivot": "co_chan_phai",
+     "pivot_o": [
+      148,
+      232
+     ],
+     "pivot_trong_anh": [
+      9,
+      12
+     ],
+     "khop_cuoi": "mui_chan_phai",
+     "khop_cuoi_o": [
+      178,
+      228
+     ],
+     "goc_do": -7.6
+    },
+    "dui-trai": {
+     "anh": "bo-phan-chay/khung-02/dui-trai.png",
+     "dat_tai_o": [
+      63,
+      173
+     ],
+     "hop": [
+      63,
+      173,
+      101,
+      211
+     ],
+     "so_diem_anh": 288,
+     "lop": 20,
+     "pivot": "hong_trai",
+     "pivot_o": [
+      108,
+      189
+     ],
+     "pivot_trong_anh": [
+      45,
+      16
+     ],
+     "khop_cuoi": "goi_trai",
+     "khop_cuoi_o": [
+      84,
+      203
+     ],
+     "goc_do": 149.7
+    },
+    "cang-chan-trai": {
+     "anh": "bo-phan-chay/khung-02/cang-chan-trai.png",
+     "dat_tai_o": [
+      45,
+      190
+     ],
+     "hop": [
+      45,
+      190,
+      98,
+      235
+     ],
+     "so_diem_anh": 845,
+     "lop": 21,
+     "pivot": "goi_trai",
+     "pivot_o": [
+      84,
+      203
+     ],
+     "pivot_trong_anh": [
+      39,
+      13
+     ],
+     "khop_cuoi": "co_chan_trai",
+     "khop_cuoi_o": [
+      64,
+      212
+     ],
+     "goc_do": 155.8
+    },
+    "ban-chan-trai": {
+     "anh": "bo-phan-chay/khung-02/ban-chan-trai.png",
+     "dat_tai_o": [
+      34,
+      202
+     ],
+     "hop": [
+      34,
+      202,
+      75,
+      238
+     ],
+     "so_diem_anh": 907,
+     "lop": 22,
+     "pivot": "co_chan_trai",
+     "pivot_o": [
+      64,
+      212
+     ],
+     "pivot_trong_anh": [
+      30,
+      10
+     ],
+     "khop_cuoi": "mui_chan_trai",
+     "khop_cuoi_o": [
+      42,
+      226
+     ],
+     "goc_do": 147.5
+    },
+    "khan": {
+     "anh": "bo-phan-chay/khung-02/khan.png",
+     "dat_tai_o": [
+      22,
+      41
+     ],
+     "hop": [
+      22,
+      41,
+      138,
+      191
+     ],
+     "so_diem_anh": 4820,
+     "lop": 5
+    }
+   }
+  },
+  {
+   "khung": 3,
+   "bo_phan": {
+    "dau": {
+     "anh": "bo-phan-chay/khung-03/dau.png",
+     "dat_tai_o": [
+      85,
+      24
+     ],
+     "hop": [
+      85,
+      24,
+      224,
+      147
+     ],
+     "so_diem_anh": 10398,
+     "lop": 50,
+     "pivot": "co",
+     "pivot_o": [
+      140,
+      133
+     ],
+     "pivot_trong_anh": [
+      55,
+      109
+     ],
+     "goc_do": -82.9
+    },
+    "than": {
+     "anh": "bo-phan-chay/khung-03/than.png",
+     "dat_tai_o": [
+      92,
+      130
+     ],
+     "hop": [
+      92,
+      130,
+      157,
+      197
+     ],
+     "so_diem_anh": 1177,
+     "lop": 30,
+     "pivot": "hong",
+     "pivot_o": [
+      112,
+      184
+     ],
+     "pivot_trong_anh": [
+      20,
+      54
+     ],
+     "khop_cuoi": "co",
+     "khop_cuoi_o": [
+      140,
+      133
+     ],
+     "goc_do": -61.2
+    },
+    "canh-tay-tren-phai": {
+     "anh": "bo-phan-chay/khung-03/canh-tay-tren-phai.png",
+     "dat_tai_o": [
+      128,
+      130
+     ],
+     "hop": [
+      128,
+      130,
+      151,
+      157
+     ],
+     "so_diem_anh": 318,
+     "lop": 70,
+     "pivot": "vai_phai",
+     "pivot_o": [
+      136,
+      133
+     ],
+     "pivot_trong_anh": [
+      8,
+      3
+     ],
+     "khop_cuoi": "khuyu_phai",
+     "khop_cuoi_o": [
+      145,
+      155
+     ],
+     "goc_do": 67.8
+    },
+    "canh-tay-duoi-phai": {
+     "anh": "bo-phan-chay/khung-03/canh-tay-duoi-phai.png",
+     "dat_tai_o": [
+      137,
+      147
+     ],
+     "hop": [
+      137,
+      147,
+      166,
+      168
+     ],
+     "so_diem_anh": 420,
+     "lop": 71,
+     "pivot": "khuyu_phai",
+     "pivot_o": [
+      145,
+      155
+     ],
+     "pivot_trong_anh": [
+      8,
+      8
+     ],
+     "khop_cuoi": "co_tay_phai",
+     "khop_cuoi_o": [
+      169,
+      156
+     ],
+     "goc_do": 2.4
+    },
+    "ban-tay-phai": {
+     "anh": "bo-phan-chay/khung-03/ban-tay-phai.png",
+     "dat_tai_o": [
+      160,
+      144
+     ],
+     "hop": [
+      160,
+      144,
+      187,
+      169
+     ],
+     "so_diem_anh": 489,
+     "lop": 72,
+     "pivot": "co_tay_phai",
+     "pivot_o": [
+      169,
+      156
+     ],
+     "pivot_trong_anh": [
+      9,
+      12
+     ],
+     "khop_cuoi": "nam_tay_phai",
+     "khop_cuoi_o": [
+      177,
+      155
+     ],
+     "goc_do": -7.1
+    },
+    "canh-tay-tren-trai": {
+     "anh": "bo-phan-chay/khung-03/canh-tay-tren-trai.png",
+     "dat_tai_o": [
+      101,
+      124
+     ],
+     "hop": [
+      101,
+      124,
+      120,
+      153
+     ],
+     "so_diem_anh": 245,
+     "lop": 10,
+     "pivot": "vai_trai",
+     "pivot_o": [
+      118,
+      130
+     ],
+     "pivot_trong_anh": [
+      17,
+      6
+     ],
+     "khop_cuoi": "khuyu_trai",
+     "khop_cuoi_o": [
+      98,
+      148
+     ],
+     "goc_do": 138.0
+    },
+    "canh-tay-duoi-trai": {
+     "anh": "bo-phan-chay/khung-03/canh-tay-duoi-trai.png",
+     "dat_tai_o": [
+      91,
+      142
+     ],
+     "hop": [
+      91,
+      142,
+      106,
+      161
+     ],
+     "so_diem_anh": 165,
+     "lop": 11,
+     "pivot": "khuyu_trai",
+     "pivot_o": [
+      98,
+      148
+     ],
+     "pivot_trong_anh": [
+      7,
+      6
+     ],
+     "khop_cuoi": "co_tay_trai",
+     "khop_cuoi_o": [
+      84,
+      158
+     ],
+     "goc_do": 144.5
+    },
+    "ban-tay-trai": {
+     "anh": "bo-phan-chay/khung-03/ban-tay-trai.png",
+     "dat_tai_o": [
+      70,
+      152
+     ],
+     "hop": [
+      70,
+      152,
+      94,
+      170
+     ],
+     "so_diem_anh": 232,
+     "lop": 12,
+     "pivot": "co_tay_trai",
+     "pivot_o": [
+      84,
+      158
+     ],
+     "pivot_trong_anh": [
+      14,
+      6
+     ],
+     "khop_cuoi": "nam_tay_trai",
+     "khop_cuoi_o": [
+      78,
+      160
+     ],
+     "goc_do": 161.6
+    },
+    "dui-phai": {
+     "anh": "bo-phan-chay/khung-03/dui-phai.png",
+     "dat_tai_o": [
+      98,
+      166
+     ],
+     "hop": [
+      98,
+      166,
+      164,
+      202
+     ],
+     "so_diem_anh": 801,
+     "lop": 40,
+     "pivot": "hong_phai",
+     "pivot_o": [
+      116,
+      186
+     ],
+     "pivot_trong_anh": [
+      18,
+      20
+     ],
+     "khop_cuoi": "goi_phai",
+     "khop_cuoi_o": [
+      150,
+      186
+     ],
+     "goc_do": 0.0
+    },
+    "cang-chan-phai": {
+     "anh": "bo-phan-chay/khung-03/cang-chan-phai.png",
+     "dat_tai_o": [
+      108,
+      173
+     ],
+     "hop": [
+      108,
+      173,
+      164,
+      202
+     ],
+     "so_diem_anh": 909,
+     "lop": 41,
+     "pivot": "goi_phai",
+     "pivot_o": [
+      150,
+      186
+     ],
+     "pivot_trong_anh": [
+      42,
+      13
+     ],
+     "khop_cuoi": "co_chan_phai",
+     "khop_cuoi_o": [
+      114,
+      200
+     ],
+     "goc_do": 158.7
+    },
+    "ban-chan-phai": {
+     "anh": "bo-phan-chay/khung-03/ban-chan-phai.png",
+     "dat_tai_o": [
+      105,
+      190
+     ],
+     "hop": [
+      105,
+      190,
+      141,
+      222
+     ],
+     "so_diem_anh": 709,
+     "lop": 42,
+     "pivot": "co_chan_phai",
+     "pivot_o": [
+      114,
+      200
+     ],
+     "pivot_trong_anh": [
+      9,
+      10
+     ],
+     "khop_cuoi": "mui_chan_phai",
+     "khop_cuoi_o": [
+      145,
+      215
+     ],
+     "goc_do": 25.8
+    },
+    "dui-trai": {
+     "anh": "bo-phan-chay/khung-03/dui-trai.png",
+     "dat_tai_o": [
+      64,
+      166
+     ],
+     "hop": [
+      64,
+      166,
+      100,
+      212
+     ],
+     "so_diem_anh": 344,
+     "lop": 20,
+     "pivot": "hong_trai",
+     "pivot_o": [
+      106,
+      182
+     ],
+     "pivot_trong_anh": [
+      42,
+      16
+     ],
+     "khop_cuoi": "goi_trai",
+     "khop_cuoi_o": [
+      78,
+      196
+     ],
+     "goc_do": 153.4
+    },
+    "cang-chan-trai": {
+     "anh": "bo-phan-chay/khung-03/cang-chan-trai.png",
+     "dat_tai_o": [
+      34,
+      183
+     ],
+     "hop": [
+      34,
+      183,
+      92,
+      212
+     ],
+     "so_diem_anh": 928,
+     "lop": 21,
+     "pivot": "goi_trai",
+     "pivot_o": [
+      78,
+      196
+     ],
+     "pivot_trong_anh": [
+      44,
+      13
+     ],
+     "khop_cuoi": "co_chan_trai",
+     "khop_cuoi_o": [
+      46,
+      200
+     ],
+     "goc_do": 172.9
+    },
+    "ban-chan-trai": {
+     "anh": "bo-phan-chay/khung-03/ban-chan-trai.png",
+     "dat_tai_o": [
+      25,
+      190
+     ],
+     "hop": [
+      25,
+      190,
+      57,
+      231
+     ],
+     "so_diem_anh": 812,
+     "lop": 22,
+     "pivot": "co_chan_trai",
+     "pivot_o": [
+      46,
+      200
+     ],
+     "pivot_trong_anh": [
+      21,
+      10
+     ],
+     "khop_cuoi": "mui_chan_trai",
+     "khop_cuoi_o": [
+      32,
+      222
+     ],
+     "goc_do": 122.5
+    },
+    "khan": {
+     "anh": "bo-phan-chay/khung-03/khan.png",
+     "dat_tai_o": [
+      11,
+      32
+     ],
+     "hop": [
+      11,
+      32,
+      140,
+      184
+     ],
+     "so_diem_anh": 3824,
+     "lop": 5
+    }
+   }
+  },
+  {
+   "khung": 4,
+   "bo_phan": {
+    "dau": {
+     "anh": "bo-phan-chay/khung-04/dau.png",
+     "dat_tai_o": [
+      84,
+      26
+     ],
+     "hop": [
+      84,
+      26,
+      220,
+      147
+     ],
+     "so_diem_anh": 10486,
+     "lop": 50,
+     "pivot": "co",
+     "pivot_o": [
+      144,
+      138
+     ],
+     "pivot_trong_anh": [
+      60,
+      112
+     ],
+     "goc_do": -89.4
+    },
+    "than": {
+     "anh": "bo-phan-chay/khung-04/than.png",
+     "dat_tai_o": [
+      92,
+      137
+     ],
+     "hop": [
+      92,
+      137,
+      163,
+      195
+     ],
+     "so_diem_anh": 1186,
+     "lop": 30,
+     "pivot": "hong",
+     "pivot_o": [
+      112,
+      186
+     ],
+     "pivot_trong_anh": [
+      20,
+      49
+     ],
+     "khop_cuoi": "co",
+     "khop_cuoi_o": [
+      144,
+      138
+     ],
+     "goc_do": -56.3
+    },
+    "canh-tay-tren-phai": {
+     "anh": "bo-phan-chay/khung-04/canh-tay-tren-phai.png",
+     "dat_tai_o": [
+      134,
+      136
+     ],
+     "hop": [
+      134,
+      136,
+      157,
+      174
+     ],
+     "so_diem_anh": 334,
+     "lop": 70,
+     "pivot": "vai_phai",
+     "pivot_o": [
+      142,
+      138
+     ],
+     "pivot_trong_anh": [
+      8,
+      2
+     ],
+     "khop_cuoi": "khuyu_phai",
+     "khop_cuoi_o": [
+      152,
+      160
+     ],
+     "goc_do": 65.6
+    },
+    "canh-tay-duoi-phai": {
+     "anh": "bo-phan-chay/khung-04/canh-tay-duoi-phai.png",
+     "dat_tai_o": [
+      144,
+      147
+     ],
+     "hop": [
+      144,
+      147,
+      174,
+      175
+     ],
+     "so_diem_anh": 487,
+     "lop": 71,
+     "pivot": "khuyu_phai",
+     "pivot_o": [
+      152,
+      160
+     ],
+     "pivot_trong_anh": [
+      8,
+      13
+     ],
+     "khop_cuoi": "co_tay_phai",
+     "khop_cuoi_o": [
+      176,
+      156
+     ],
+     "goc_do": -9.5
+    },
+    "ban-tay-phai": {
+     "anh": "bo-phan-chay/khung-04/ban-tay-phai.png",
+     "dat_tai_o": [
+      167,
+      144
+     ],
+     "hop": [
+      167,
+      144,
+      193,
+      172
+     ],
+     "so_diem_anh": 526,
+     "lop": 72,
+     "pivot": "co_tay_phai",
+     "pivot_o": [
+      176,
+      156
+     ],
+     "pivot_trong_anh": [
+      9,
+      12
+     ],
+     "khop_cuoi": "nam_tay_phai",
+     "khop_cuoi_o": [
+      185,
+      155
+     ],
+     "goc_do": -6.3
+    },
+    "canh-tay-tren-trai": {
+     "anh": "bo-phan-chay/khung-04/canh-tay-tren-trai.png",
+     "dat_tai_o": [
+      97,
+      132
+     ],
+     "hop": [
+      97,
+      132,
+      121,
+      152
+     ],
+     "so_diem_anh": 252,
+     "lop": 10,
+     "pivot": "vai_trai",
+     "pivot_o": [
+      122,
+      136
+     ],
+     "pivot_trong_anh": [
+      25,
+      4
+     ],
+     "khop_cuoi": "khuyu_trai",
+     "khop_cuoi_o": [
+      96,
+      146
+     ],
+     "goc_do": 159.0
+    },
+    "canh-tay-duoi-trai": {
+     "anh": "bo-phan-chay/khung-04/canh-tay-duoi-trai.png",
+     "dat_tai_o": [
+      86,
+      139
+     ],
+     "hop": [
+      86,
+      139,
+      104,
+      154
+     ],
+     "so_diem_anh": 156,
+     "lop": 11,
+     "pivot": "khuyu_trai",
+     "pivot_o": [
+      96,
+      146
+     ],
+     "pivot_trong_anh": [
+      10,
+      7
+     ],
+     "khop_cuoi": "co_tay_trai",
+     "khop_cuoi_o": [
+      80,
+      143
+     ],
+     "goc_do": -169.4
+    },
+    "ban-tay-trai": {
+     "anh": "bo-phan-chay/khung-04/ban-tay-trai.png",
+     "dat_tai_o": [
+      67,
+      134
+     ],
+     "hop": [
+      67,
+      134,
+      89,
+      151
+     ],
+     "so_diem_anh": 277,
+     "lop": 12,
+     "pivot": "co_tay_trai",
+     "pivot_o": [
+      80,
+      143
+     ],
+     "pivot_trong_anh": [
+      13,
+      9
+     ],
+     "khop_cuoi": "nam_tay_trai",
+     "khop_cuoi_o": [
+      74,
+      142
+     ],
+     "goc_do": -170.5
+    },
+    "dui-phai": {
+     "anh": "bo-phan-chay/khung-04/dui-phai.png",
+     "dat_tai_o": [
+      98,
+      170
+     ],
+     "hop": [
+      98,
+      170,
+      160,
+      216
+     ],
+     "so_diem_anh": 1218,
+     "lop": 40,
+     "pivot": "hong_phai",
+     "pivot_o": [
+      116,
+      188
+     ],
+     "pivot_trong_anh": [
+      18,
+      18
+     ],
+     "khop_cuoi": "goi_phai",
+     "khop_cuoi_o": [
+      140,
+      192
+     ],
+     "goc_do": 9.5
+    },
+    "cang-chan-phai": {
+     "anh": "bo-phan-chay/khung-04/cang-chan-phai.png",
+     "dat_tai_o": [
+      127,
+      179
+     ],
+     "hop": [
+      127,
+      179,
+      159,
+      233
+     ],
+     "so_diem_anh": 787,
+     "lop": 41,
+     "pivot": "goi_phai",
+     "pivot_o": [
+      140,
+      192
+     ],
+     "pivot_trong_anh": [
+      13,
+      13
+     ],
+     "khop_cuoi": "co_chan_phai",
+     "khop_cuoi_o": [
+      148,
+      208
+     ],
+     "goc_do": 63.4
+    },
+    "ban-chan-phai": {
+     "anh": "bo-phan-chay/khung-04/ban-chan-phai.png",
+     "dat_tai_o": [
+      138,
+      198
+     ],
+     "hop": [
+      138,
+      198,
+      179,
+      230
+     ],
+     "so_diem_anh": 759,
+     "lop": 42,
+     "pivot": "co_chan_phai",
+     "pivot_o": [
+      148,
+      208
+     ],
+     "pivot_trong_anh": [
+      10,
+      10
+     ],
+     "khop_cuoi": "mui_chan_phai",
+     "khop_cuoi_o": [
+      176,
+      210
+     ],
+     "goc_do": 4.1
+    },
+    "dui-trai": {
+     "anh": "bo-phan-chay/khung-04/dui-trai.png",
+     "dat_tai_o": [
+      61,
+      167
+     ],
+     "hop": [
+      61,
+      167,
+      101,
+      203
+     ],
+     "so_diem_anh": 434,
+     "lop": 20,
+     "pivot": "hong_trai",
+     "pivot_o": [
+      106,
+      184
+     ],
+     "pivot_trong_anh": [
+      45,
+      17
+     ],
+     "khop_cuoi": "goi_trai",
+     "khop_cuoi_o": [
+      72,
+      190
+     ],
+     "goc_do": 170.0
+    },
+    "cang-chan-trai": {
+     "anh": "bo-phan-chay/khung-04/cang-chan-trai.png",
+     "dat_tai_o": [
+      30,
+      176
+     ],
+     "hop": [
+      30,
+      176,
+      86,
+      203
+     ],
+     "so_diem_anh": 811,
+     "lop": 21,
+     "pivot": "goi_trai",
+     "pivot_o": [
+      72,
+      190
+     ],
+     "pivot_trong_anh": [
+      42,
+      14
+     ],
+     "khop_cuoi": "co_chan_trai",
+     "khop_cuoi_o": [
+      44,
+      188
+     ],
+     "goc_do": -175.9
+    },
+    "ban-chan-trai": {
+     "anh": "bo-phan-chay/khung-04/ban-chan-trai.png",
+     "dat_tai_o": [
+      18,
+      178
+     ],
+     "hop": [
+      18,
+      178,
+      55,
+      215
+     ],
+     "so_diem_anh": 854,
+     "lop": 22,
+     "pivot": "co_chan_trai",
+     "pivot_o": [
+      44,
+      188
+     ],
+     "pivot_trong_anh": [
+      26,
+      10
+     ],
+     "khop_cuoi": "mui_chan_trai",
+     "khop_cuoi_o": [
+      28,
+      204
+     ],
+     "goc_do": 135.0
+    },
+    "khan": {
+     "anh": "bo-phan-chay/khung-04/khan.png",
+     "dat_tai_o": [
+      9,
+      33
+     ],
+     "hop": [
+      9,
+      33,
+      137,
+      186
+     ],
+     "so_diem_anh": 4960,
+     "lop": 5
+    }
+   }
+  },
+  {
+   "khung": 5,
+   "bo_phan": {
+    "dau": {
+     "anh": "bo-phan-chay/khung-05/dau.png",
+     "dat_tai_o": [
+      88,
+      33
+     ],
+     "hop": [
+      88,
+      33,
+      228,
+      157
+     ],
+     "so_diem_anh": 10809,
+     "lop": 50,
+     "pivot": "co",
+     "pivot_o": [
+      140,
+      144
+     ],
+     "pivot_trong_anh": [
+      52,
+      111
+     ],
+     "goc_do": -81.2
+    },
+    "than": {
+     "anh": "bo-phan-chay/khung-05/than.png",
+     "dat_tai_o": [
+      92,
+      139
+     ],
+     "hop": [
+      92,
+      139,
+      158,
+      212
+     ],
+     "so_diem_anh": 1033,
+     "lop": 30,
+     "pivot": "hong",
+     "pivot_o": [
+      112,
+      190
+     ],
+     "pivot_trong_anh": [
+      20,
+      51
+     ],
+     "khop_cuoi": "co",
+     "khop_cuoi_o": [
+      140,
+      144
+     ],
+     "goc_do": -58.7
+    },
+    "canh-tay-tren-phai": {
+     "anh": "bo-phan-chay/khung-05/canh-tay-tren-phai.png",
+     "dat_tai_o": [
+      120,
+      137
+     ],
+     "hop": [
+      120,
+      137,
+      141,
+      165
+     ],
+     "so_diem_anh": 283,
+     "lop": 70,
+     "pivot": "vai_phai",
+     "pivot_o": [
+      128,
+      140
+     ],
+     "pivot_trong_anh": [
+      8,
+      3
+     ],
+     "khop_cuoi": "khuyu_phai",
+     "khop_cuoi_o": [
+      135,
+      163
+     ],
+     "goc_do": 73.1
+    },
+    "canh-tay-duoi-phai": {
+     "anh": "bo-phan-chay/khung-05/canh-tay-duoi-phai.png",
+     "dat_tai_o": [
+      127,
+      155
+     ],
+     "hop": [
+      127,
+      155,
+      156,
+      182
+     ],
+     "so_diem_anh": 426,
+     "lop": 71,
+     "pivot": "khuyu_phai",
+     "pivot_o": [
+      135,
+      163
+     ],
+     "pivot_trong_anh": [
+      8,
+      8
+     ],
+     "khop_cuoi": "co_tay_phai",
+     "khop_cuoi_o": [
+      160,
+      166
+     ],
+     "goc_do": 6.8
+    },
+    "ban-tay-phai": {
+     "anh": "bo-phan-chay/khung-05/ban-tay-phai.png",
+     "dat_tai_o": [
+      151,
+      156
+     ],
+     "hop": [
+      151,
+      156,
+      181,
+      188
+     ],
+     "so_diem_anh": 761,
+     "lop": 72,
+     "pivot": "co_tay_phai",
+     "pivot_o": [
+      160,
+      166
+     ],
+     "pivot_trong_anh": [
+      9,
+      10
+     ],
+     "khop_cuoi": "nam_tay_phai",
+     "khop_cuoi_o": [
+      169,
+      165
+     ],
+     "goc_do": -6.3
+    },
+    "canh-tay-tren-trai": {
+     "anh": "bo-phan-chay/khung-05/canh-tay-tren-trai.png",
+     "dat_tai_o": [
+      95,
+      131
+     ],
+     "hop": [
+      95,
+      131,
+      120,
+      156
+     ],
+     "so_diem_anh": 282,
+     "lop": 10,
+     "pivot": "vai_trai",
+     "pivot_o": [
+      112,
+      138
+     ],
+     "pivot_trong_anh": [
+      17,
+      7
+     ],
+     "khop_cuoi": "khuyu_trai",
+     "khop_cuoi_o": [
+      96,
+      150
+     ],
+     "goc_do": 143.1
+    },
+    "canh-tay-duoi-trai": {
+     "anh": "bo-phan-chay/khung-05/canh-tay-duoi-trai.png",
+     "dat_tai_o": [
+      93,
+      143
+     ],
+     "hop": [
+      93,
+      143,
+      104,
+      158
+     ],
+     "so_diem_anh": 79,
+     "lop": 11,
+     "pivot": "khuyu_trai",
+     "pivot_o": [
+      96,
+      150
+     ],
+     "pivot_trong_anh": [
+      3,
+      7
+     ],
+     "khop_cuoi": "co_tay_trai",
+     "khop_cuoi_o": [
+      87,
+      150
+     ],
+     "goc_do": 180.0
+    },
+    "ban-tay-trai": {
+     "anh": "bo-phan-chay/khung-05/ban-tay-trai.png",
+     "dat_tai_o": [
+      72,
+      140
+     ],
+     "hop": [
+      72,
+      140,
+      97,
+      159
+     ],
+     "so_diem_anh": 344,
+     "lop": 12,
+     "pivot": "co_tay_trai",
+     "pivot_o": [
+      87,
+      150
+     ],
+     "pivot_trong_anh": [
+      15,
+      10
+     ],
+     "khop_cuoi": "nam_tay_trai",
+     "khop_cuoi_o": [
+      81,
+      149
+     ],
+     "goc_do": -170.5
+    },
+    "dui-phai": {
+     "anh": "bo-phan-chay/khung-05/dui-phai.png",
+     "dat_tai_o": [
+      98,
+      174
+     ],
+     "hop": [
+      98,
+      174,
+      165,
+      222
+     ],
+     "so_diem_anh": 1421,
+     "lop": 40,
+     "pivot": "hong_phai",
+     "pivot_o": [
+      116,
+      192
+     ],
+     "pivot_trong_anh": [
+      18,
+      18
+     ],
+     "khop_cuoi": "goi_phai",
+     "khop_cuoi_o": [
+      140,
+      205
+     ],
+     "goc_do": 28.4
+    },
+    "cang-chan-phai": {
+     "anh": "bo-phan-chay/khung-05/cang-chan-phai.png",
+     "dat_tai_o": [
+      115,
+      192
+     ],
+     "hop": [
+      115,
+      192,
+      154,
+      249
+     ],
+     "so_diem_anh": 887,
+     "lop": 41,
+     "pivot": "goi_phai",
+     "pivot_o": [
+      140,
+      205
+     ],
+     "pivot_trong_anh": [
+      25,
+      13
+     ],
+     "khop_cuoi": "co_chan_phai",
+     "khop_cuoi_o": [
+      134,
+      232
+     ],
+     "goc_do": 102.5
+    },
+    "ban-chan-phai": {
+     "anh": "bo-phan-chay/khung-05/ban-chan-phai.png",
+     "dat_tai_o": [
+      126,
+      220
+     ],
+     "hop": [
+      126,
+      220,
+      170,
+      247
+     ],
+     "so_diem_anh": 784,
+     "lop": 42,
+     "pivot": "co_chan_phai",
+     "pivot_o": [
+      134,
+      232
+     ],
+     "pivot_trong_anh": [
+      8,
+      12
+     ],
+     "khop_cuoi": "mui_chan_phai",
+     "khop_cuoi_o": [
+      166,
+      230
+     ],
+     "goc_do": -3.6
+    },
+    "dui-trai": {
+     "anh": "bo-phan-chay/khung-05/dui-trai.png",
+     "dat_tai_o": [
+      67,
+      172
+     ],
+     "hop": [
+      67,
+      172,
+      104,
+      215
+     ],
+     "so_diem_anh": 356,
+     "lop": 20,
+     "pivot": "hong_trai",
+     "pivot_o": [
+      106,
+      188
+     ],
+     "pivot_trong_anh": [
+      39,
+      16
+     ],
+     "khop_cuoi": "goi_trai",
+     "khop_cuoi_o": [
+      82,
+      198
+     ],
+     "goc_do": 157.4
+    },
+    "cang-chan-trai": {
+     "anh": "bo-phan-chay/khung-05/cang-chan-trai.png",
+     "dat_tai_o": [
+      39,
+      182
+     ],
+     "hop": [
+      39,
+      182,
+      95,
+      212
+     ],
+     "so_diem_anh": 818,
+     "lop": 21,
+     "pivot": "goi_trai",
+     "pivot_o": [
+      82,
+      198
+     ],
+     "pivot_trong_anh": [
+      43,
+      16
+     ],
+     "khop_cuoi": "co_chan_trai",
+     "khop_cuoi_o": [
+      54,
+      194
+     ],
+     "goc_do": -171.9
+    },
+    "ban-chan-trai": {
+     "anh": "bo-phan-chay/khung-05/ban-chan-trai.png",
+     "dat_tai_o": [
+      30,
+      185
+     ],
+     "hop": [
+      30,
+      185,
+      65,
+      222
+     ],
+     "so_diem_anh": 816,
+     "lop": 22,
+     "pivot": "co_chan_trai",
+     "pivot_o": [
+      54,
+      194
+     ],
+     "pivot_trong_anh": [
+      24,
+      9
+     ],
+     "khop_cuoi": "mui_chan_trai",
+     "khop_cuoi_o": [
+      36,
+      212
+     ],
+     "goc_do": 135.0
+    },
+    "khan": {
+     "anh": "bo-phan-chay/khung-05/khan.png",
+     "dat_tai_o": [
+      16,
+      41
+     ],
+     "hop": [
+      16,
+      41,
+      140,
+      190
+     ],
+     "so_diem_anh": 4902,
+     "lop": 5
+    }
+   }
+  },
+  {
+   "khung": 6,
+   "bo_phan": {
+    "dau": {
+     "anh": "bo-phan-chay/khung-06/dau.png",
+     "dat_tai_o": [
+      86,
+      23
+     ],
+     "hop": [
+      86,
+      23,
+      224,
+      146
+     ],
+     "so_diem_anh": 10266,
+     "lop": 50,
+     "pivot": "co",
+     "pivot_o": [
+      140,
+      132
+     ],
+     "pivot_trong_anh": [
+      54,
+      109
+     ],
+     "goc_do": -83.1
+    },
+    "than": {
+     "anh": "bo-phan-chay/khung-06/than.png",
+     "dat_tai_o": [
+      94,
+      128
+     ],
+     "hop": [
+      94,
+      128,
+      157,
+      197
+     ],
+     "so_diem_anh": 1325,
+     "lop": 30,
+     "pivot": "hong",
+     "pivot_o": [
+      114,
+      186
+     ],
+     "pivot_trong_anh": [
+      20,
+      58
+     ],
+     "khop_cuoi": "co",
+     "khop_cuoi_o": [
+      140,
+      132
+     ],
+     "goc_do": -64.3
+    },
+    "canh-tay-tren-phai": {
+     "anh": "bo-phan-chay/khung-06/canh-tay-tren-phai.png",
+     "dat_tai_o": [
+      132,
+      130
+     ],
+     "hop": [
+      132,
+      130,
+      155,
+      167
+     ],
+     "so_diem_anh": 348,
+     "lop": 70,
+     "pivot": "vai_phai",
+     "pivot_o": [
+      140,
+      134
+     ],
+     "pivot_trong_anh": [
+      8,
+      4
+     ],
+     "khop_cuoi": "khuyu_phai",
+     "khop_cuoi_o": [
+      150,
+      156
+     ],
+     "goc_do": 65.6
+    },
+    "canh-tay-duoi-phai": {
+     "anh": "bo-phan-chay/khung-06/canh-tay-duoi-phai.png",
+     "dat_tai_o": [
+      142,
+      146
+     ],
+     "hop": [
+      142,
+      146,
+      169,
+      169
+     ],
+     "so_diem_anh": 404,
+     "lop": 71,
+     "pivot": "khuyu_phai",
+     "pivot_o": [
+      150,
+      156
+     ],
+     "pivot_trong_anh": [
+      8,
+      10
+     ],
+     "khop_cuoi": "co_tay_phai",
+     "khop_cuoi_o": [
+      172,
+      153
+     ],
+     "goc_do": -7.8
+    },
+    "ban-tay-phai": {
+     "anh": "bo-phan-chay/khung-06/ban-tay-phai.png",
+     "dat_tai_o": [
+      163,
+      143
+     ],
+     "hop": [
+      163,
+      143,
+      189,
+      169
+     ],
+     "so_diem_anh": 497,
+     "lop": 72,
+     "pivot": "co_tay_phai",
+     "pivot_o": [
+      172,
+      153
+     ],
+     "pivot_trong_anh": [
+      9,
+      10
+     ],
+     "khop_cuoi": "nam_tay_phai",
+     "khop_cuoi_o": [
+      181,
+      152
+     ],
+     "goc_do": -6.3
+    },
+    "canh-tay-tren-trai": {
+     "anh": "bo-phan-chay/khung-06/canh-tay-tren-trai.png",
+     "dat_tai_o": [
+      99,
+      126
+     ],
+     "hop": [
+      99,
+      126,
+      120,
+      146
+     ],
+     "so_diem_anh": 177,
+     "lop": 10,
+     "pivot": "vai_trai",
+     "pivot_o": [
+      120,
+      132
+     ],
+     "pivot_trong_anh": [
+      21,
+      6
+     ],
+     "khop_cuoi": "khuyu_trai",
+     "khop_cuoi_o": [
+      100,
+      140
+     ],
+     "goc_do": 158.2
+    },
+    "canh-tay-duoi-trai": {
+     "anh": "bo-phan-chay/khung-06/canh-tay-duoi-trai.png",
+     "dat_tai_o": [
+      91,
+      133
+     ],
+     "hop": [
+      91,
+      133,
+      108,
+      149
+     ],
+     "so_diem_anh": 158,
+     "lop": 11,
+     "pivot": "khuyu_trai",
+     "pivot_o": [
+      100,
+      140
+     ],
+     "pivot_trong_anh": [
+      9,
+      7
+     ],
+     "khop_cuoi": "co_tay_trai",
+     "khop_cuoi_o": [
+      86,
+      144
+     ],
+     "goc_do": 164.1
+    },
+    "ban-tay-trai": {
+     "anh": "bo-phan-chay/khung-06/ban-tay-trai.png",
+     "dat_tai_o": [
+      71,
+      135
+     ],
+     "hop": [
+      71,
+      135,
+      96,
+      154
+     ],
+     "so_diem_anh": 333,
+     "lop": 12,
+     "pivot": "co_tay_trai",
+     "pivot_o": [
+      86,
+      144
+     ],
+     "pivot_trong_anh": [
+      15,
+      9
+     ],
+     "khop_cuoi": "nam_tay_trai",
+     "khop_cuoi_o": [
+      80,
+      145
+     ],
+     "goc_do": 170.5
+    },
+    "dui-phai": {
+     "anh": "bo-phan-chay/khung-06/dui-phai.png",
+     "dat_tai_o": [
+      100,
+      166
+     ],
+     "hop": [
+      100,
+      166,
+      170,
+      202
+     ],
+     "so_diem_anh": 831,
+     "lop": 40,
+     "pivot": "hong_phai",
+     "pivot_o": [
+      118,
+      188
+     ],
+     "pivot_trong_anh": [
+      18,
+      22
+     ],
+     "khop_cuoi": "goi_phai",
+     "khop_cuoi_o": [
+      150,
+      186
+     ],
+     "goc_do": -3.6
+    },
+    "cang-chan-phai": {
+     "anh": "bo-phan-chay/khung-06/cang-chan-phai.png",
+     "dat_tai_o": [
+      104,
+      173
+     ],
+     "hop": [
+      104,
+      173,
+      164,
+      202
+     ],
+     "so_diem_anh": 889,
+     "lop": 41,
+     "pivot": "goi_phai",
+     "pivot_o": [
+      150,
+      186
+     ],
+     "pivot_trong_anh": [
+      46,
+      13
+     ],
+     "khop_cuoi": "co_chan_phai",
+     "khop_cuoi_o": [
+      116,
+      198
+     ],
+     "goc_do": 160.6
+    },
+    "ban-chan-phai": {
+     "anh": "bo-phan-chay/khung-06/ban-chan-phai.png",
+     "dat_tai_o": [
+      108,
+      188
+     ],
+     "hop": [
+      108,
+      188,
+      149,
+      224
+     ],
+     "so_diem_anh": 791,
+     "lop": 42,
+     "pivot": "co_chan_phai",
+     "pivot_o": [
+      116,
+      198
+     ],
+     "pivot_trong_anh": [
+      8,
+      10
+     ],
+     "khop_cuoi": "mui_chan_phai",
+     "khop_cuoi_o": [
+      146,
+      214
+     ],
+     "goc_do": 28.1
+    },
+    "dui-trai": {
+     "anh": "bo-phan-chay/khung-06/dui-trai.png",
+     "dat_tai_o": [
+      67,
+      168
+     ],
+     "hop": [
+      67,
+      168,
+      101,
+      213
+     ],
+     "so_diem_anh": 328,
+     "lop": 20,
+     "pivot": "hong_trai",
+     "pivot_o": [
+      108,
+      184
+     ],
+     "pivot_trong_anh": [
+      41,
+      16
+     ],
+     "khop_cuoi": "goi_trai",
+     "khop_cuoi_o": [
+      80,
+      197
+     ],
+     "goc_do": 155.1
+    },
+    "cang-chan-trai": {
+     "anh": "bo-phan-chay/khung-06/cang-chan-trai.png",
+     "dat_tai_o": [
+      48,
+      184
+     ],
+     "hop": [
+      48,
+      184,
+      94,
+      215
+     ],
+     "so_diem_anh": 913,
+     "lop": 21,
+     "pivot": "goi_trai",
+     "pivot_o": [
+      80,
+      197
+     ],
+     "pivot_trong_anh": [
+      32,
+      13
+     ],
+     "khop_cuoi": "co_chan_trai",
+     "khop_cuoi_o": [
+      48,
+      200
+     ],
+     "goc_do": 174.6
+    },
+    "ban-chan-trai": {
+     "anh": "bo-phan-chay/khung-06/ban-chan-trai.png",
+     "dat_tai_o": [
+      26,
+      191
+     ],
+     "hop": [
+      26,
+      191,
+      59,
+      233
+     ],
+     "so_diem_anh": 825,
+     "lop": 22,
+     "pivot": "co_chan_trai",
+     "pivot_o": [
+      48,
+      200
+     ],
+     "pivot_trong_anh": [
+      22,
+      9
+     ],
+     "khop_cuoi": "mui_chan_trai",
+     "khop_cuoi_o": [
+      30,
+      226
+     ],
+     "goc_do": 124.7
+    },
+    "khan": {
+     "anh": "bo-phan-chay/khung-06/khan.png",
+     "dat_tai_o": [
+      13,
+      32
+     ],
+     "hop": [
+      13,
+      32,
+      140,
+      186
+     ],
+     "so_diem_anh": 5077,
+     "lop": 5
+    }
+   }
+  },
+  {
+   "khung": 7,
+   "bo_phan": {
+    "dau": {
+     "anh": "bo-phan-chay/khung-07/dau.png",
+     "dat_tai_o": [
+      88,
+      29
+     ],
+     "hop": [
+      88,
+      29,
+      225,
+      153
+     ],
+     "so_diem_anh": 10713,
+     "lop": 50,
+     "pivot": "co",
+     "pivot_o": [
+      136,
+      142
+     ],
+     "pivot_trong_anh": [
+      48,
+      113
+     ],
+     "goc_do": -81.3
+    },
+    "than": {
+     "anh": "bo-phan-chay/khung-07/than.png",
+     "dat_tai_o": [
+      94,
+      134
+     ],
+     "hop": [
+      94,
+      134,
+      155,
+      213
+     ],
+     "so_diem_anh": 1057,
+     "lop": 30,
+     "pivot": "hong",
+     "pivot_o": [
+      114,
+      190
+     ],
+     "pivot_trong_anh": [
+      20,
+      56
+     ],
+     "khop_cuoi": "co",
+     "khop_cuoi_o": [
+      136,
+      142
+     ],
+     "goc_do": -65.4
+    },
+    "canh-tay-tren-phai": {
+     "anh": "bo-phan-chay/khung-07/canh-tay-tren-phai.png",
+     "dat_tai_o": [
+      120,
+      137
+     ],
+     "hop": [
+      120,
+      137,
+      140,
+      165
+     ],
+     "so_diem_anh": 292,
+     "lop": 70,
+     "pivot": "vai_phai",
+     "pivot_o": [
+      128,
+      140
+     ],
+     "pivot_trong_anh": [
+      8,
+      3
+     ],
+     "khop_cuoi": "khuyu_phai",
+     "khop_cuoi_o": [
+      134,
+      163
+     ],
+     "goc_do": 75.4
+    },
+    "canh-tay-duoi-phai": {
+     "anh": "bo-phan-chay/khung-07/canh-tay-duoi-phai.png",
+     "dat_tai_o": [
+      126,
+      153
+     ],
+     "hop": [
+      126,
+      153,
+      157,
+      172
+     ],
+     "so_diem_anh": 400,
+     "lop": 71,
+     "pivot": "khuyu_phai",
+     "pivot_o": [
+      134,
+      163
+     ],
+     "pivot_trong_anh": [
+      8,
+      10
+     ],
+     "khop_cuoi": "co_tay_phai",
+     "khop_cuoi_o": [
+      160,
+      162
+     ],
+     "goc_do": -2.2
+    },
+    "ban-tay-phai": {
+     "anh": "bo-phan-chay/khung-07/ban-tay-phai.png",
+     "dat_tai_o": [
+      151,
+      152
+     ],
+     "hop": [
+      151,
+      152,
+      180,
+      179
+     ],
+     "so_diem_anh": 602,
+     "lop": 72,
+     "pivot": "co_tay_phai",
+     "pivot_o": [
+      160,
+      162
+     ],
+     "pivot_trong_anh": [
+      9,
+      10
+     ],
+     "khop_cuoi": "nam_tay_phai",
+     "khop_cuoi_o": [
+      170,
+      161
+     ],
+     "goc_do": -5.7
+    },
+    "canh-tay-tren-trai": {
+     "anh": "bo-phan-chay/khung-07/canh-tay-tren-trai.png",
+     "dat_tai_o": [
+      105,
+      131
+     ],
+     "hop": [
+      105,
+      131,
+      118,
+      151
+     ],
+     "so_diem_anh": 141,
+     "lop": 10,
+     "pivot": "vai_trai",
+     "pivot_o": [
+      112,
+      138
+     ],
+     "pivot_trong_anh": [
+      7,
+      7
+     ],
+     "khop_cuoi": "khuyu_trai",
+     "khop_cuoi_o": [
+      122,
+      163
+     ],
+     "goc_do": 68.2
+    },
+    "ban-tay-trai": {
+     "anh": "bo-phan-chay/khung-07/ban-tay-trai.png",
+     "dat_tai_o": [
+      141,
+      171
+     ],
+     "hop": [
+      141,
+      171,
+      164,
+      185
+     ],
+     "so_diem_anh": 198,
+     "lop": 12,
+     "pivot": "co_tay_trai",
+     "pivot_o": [
+      140,
+      174
+     ],
+     "pivot_trong_anh": [
+      -1,
+      3
+     ],
+     "khop_cuoi": "nam_tay_trai",
+     "khop_cuoi_o": [
+      147,
+      177
+     ],
+     "goc_do": 23.2
+    },
+    "dui-phai": {
+     "anh": "bo-phan-chay/khung-07/dui-phai.png",
+     "dat_tai_o": [
+      100,
+      174
+     ],
+     "hop": [
+      100,
+      174,
+      172,
+      227
+     ],
+     "so_diem_anh": 1663,
+     "lop": 40,
+     "pivot": "hong_phai",
+     "pivot_o": [
+      118,
+      192
+     ],
+     "pivot_trong_anh": [
+      18,
+      18
+     ],
+     "khop_cuoi": "goi_phai",
+     "khop_cuoi_o": [
+      154,
+      205
+     ],
+     "goc_do": 19.9
+    },
+    "cang-chan-phai": {
+     "anh": "bo-phan-chay/khung-07/cang-chan-phai.png",
+     "dat_tai_o": [
+      126,
+      193
+     ],
+     "hop": [
+      126,
+      193,
+      164,
+      248
+     ],
+     "so_diem_anh": 748,
+     "lop": 41,
+     "pivot": "goi_phai",
+     "pivot_o": [
+      154,
+      205
+     ],
+     "pivot_trong_anh": [
+      28,
+      12
+     ],
+     "khop_cuoi": "co_chan_phai",
+     "khop_cuoi_o": [
+      150,
+      230
+     ],
+     "goc_do": 99.1
+    },
+    "ban-chan-phai": {
+     "anh": "bo-phan-chay/khung-07/ban-chan-phai.png",
+     "dat_tai_o": [
+      140,
+      214
+     ],
+     "hop": [
+      140,
+      214,
+      185,
+      245
+     ],
+     "so_diem_anh": 820,
+     "lop": 42,
+     "pivot": "co_chan_phai",
+     "pivot_o": [
+      150,
+      230
+     ],
+     "pivot_trong_anh": [
+      10,
+      16
+     ],
+     "khop_cuoi": "mui_chan_phai",
+     "khop_cuoi_o": [
+      180,
+      224
+     ],
+     "goc_do": -11.3
+    },
+    "dui-trai": {
+     "anh": "bo-phan-chay/khung-07/dui-trai.png",
+     "dat_tai_o": [
+      72,
+      172
+     ],
+     "hop": [
+      72,
+      172,
+      104,
+      213
+     ],
+     "so_diem_anh": 245,
+     "lop": 20,
+     "pivot": "hong_trai",
+     "pivot_o": [
+      108,
+      188
+     ],
+     "pivot_trong_anh": [
+      36,
+      16
+     ],
+     "khop_cuoi": "goi_trai",
+     "khop_cuoi_o": [
+      86,
+      197
+     ],
+     "goc_do": 157.8
+    },
+    "cang-chan-trai": {
+     "anh": "bo-phan-chay/khung-07/cang-chan-trai.png",
+     "dat_tai_o": [
+      44,
+      182
+     ],
+     "hop": [
+      44,
+      182,
+      98,
+      211
+     ],
+     "so_diem_anh": 747,
+     "lop": 21,
+     "pivot": "goi_trai",
+     "pivot_o": [
+      86,
+      197
+     ],
+     "pivot_trong_anh": [
+      42,
+      15
+     ],
+     "khop_cuoi": "co_chan_trai",
+     "khop_cuoi_o": [
+      60,
+      194
+     ],
+     "goc_do": -173.4
+    },
+    "ban-chan-trai": {
+     "anh": "bo-phan-chay/khung-07/ban-chan-trai.png",
+     "dat_tai_o": [
+      34,
+      185
+     ],
+     "hop": [
+      34,
+      185,
+      71,
+      219
+     ],
+     "so_diem_anh": 820,
+     "lop": 22,
+     "pivot": "co_chan_trai",
+     "pivot_o": [
+      60,
+      194
+     ],
+     "pivot_trong_anh": [
+      26,
+      9
+     ],
+     "khop_cuoi": "mui_chan_trai",
+     "khop_cuoi_o": [
+      40,
+      212
+     ],
+     "goc_do": 138.0
+    },
+    "khan": {
+     "anh": "bo-phan-chay/khung-07/khan.png",
+     "dat_tai_o": [
+      11,
+      39
+     ],
+     "hop": [
+      11,
+      39,
+      136,
+      190
+     ],
+     "so_diem_anh": 4974,
+     "lop": 5
+    }
+   }
+  },
+  {
+   "khung": 8,
+   "bo_phan": {
+    "dau": {
+     "anh": "bo-phan-chay/khung-08/dau.png",
+     "dat_tai_o": [
+      85,
+      30
+     ],
+     "hop": [
+      85,
+      30,
+      223,
+      154
+     ],
+     "so_diem_anh": 10562,
+     "lop": 50,
+     "pivot": "co",
+     "pivot_o": [
+      142,
+      144
+     ],
+     "pivot_trong_anh": [
+      57,
+      114
+     ],
+     "goc_do": -85.2
+    },
+    "than": {
+     "anh": "bo-phan-chay/khung-08/than.png",
+     "dat_tai_o": [
+      104,
+      141
+     ],
+     "hop": [
+      104,
+      141,
+      161,
+      215
+     ],
+     "so_diem_anh": 992,
+     "lop": 30,
+     "pivot": "hong",
+     "pivot_o": [
+      124,
+      193
+     ],
+     "pivot_trong_anh": [
+      20,
+      52
+     ],
+     "khop_cuoi": "co",
+     "khop_cuoi_o": [
+      142,
+      144
+     ],
+     "goc_do": -69.8
+    },
+    "canh-tay-tren-phai": {
+     "anh": "bo-phan-chay/khung-08/canh-tay-tren-phai.png",
+     "dat_tai_o": [
+      126,
+      141
+     ],
+     "hop": [
+      126,
+      141,
+      146,
+      167
+     ],
+     "so_diem_anh": 283,
+     "lop": 70,
+     "pivot": "vai_phai",
+     "pivot_o": [
+      134,
+      142
+     ],
+     "pivot_trong_anh": [
+      8,
+      1
+     ],
+     "khop_cuoi": "khuyu_phai",
+     "khop_cuoi_o": [
+      140,
+      165
+     ],
+     "goc_do": 75.4
+    },
+    "canh-tay-duoi-phai": {
+     "anh": "bo-phan-chay/khung-08/canh-tay-duoi-phai.png",
+     "dat_tai_o": [
+      132,
+      155
+     ],
+     "hop": [
+      132,
+      155,
+      163,
+      174
+     ],
+     "so_diem_anh": 396,
+     "lop": 71,
+     "pivot": "khuyu_phai",
+     "pivot_o": [
+      140,
+      165
+     ],
+     "pivot_trong_anh": [
+      8,
+      10
+     ],
+     "khop_cuoi": "co_tay_phai",
+     "khop_cuoi_o": [
+      166,
+      164
+     ],
+     "goc_do": -2.2
+    },
+    "ban-tay-phai": {
+     "anh": "bo-phan-chay/khung-08/ban-tay-phai.png",
+     "dat_tai_o": [
+      157,
+      152
+     ],
+     "hop": [
+      157,
+      152,
+      185,
+      179
+     ],
+     "so_diem_anh": 520,
+     "lop": 72,
+     "pivot": "co_tay_phai",
+     "pivot_o": [
+      166,
+      164
+     ],
+     "pivot_trong_anh": [
+      9,
+      12
+     ],
+     "khop_cuoi": "nam_tay_phai",
+     "khop_cuoi_o": [
+      176,
+      163
+     ],
+     "goc_do": -5.7
+    },
+    "canh-tay-tren-trai": {
+     "anh": "bo-phan-chay/khung-08/canh-tay-tren-trai.png",
+     "dat_tai_o": [
+      111,
+      134
+     ],
+     "hop": [
+      111,
+      134,
+      123,
+      155
+     ],
+     "so_diem_anh": 133,
+     "lop": 10,
+     "pivot": "vai_trai",
+     "pivot_o": [
+      118,
+      140
+     ],
+     "pivot_trong_anh": [
+      7,
+      6
+     ],
+     "khop_cuoi": "khuyu_trai",
+     "khop_cuoi_o": [
+      128,
+      165
+     ],
+     "goc_do": 68.2
+    },
+    "ban-tay-trai": {
+     "anh": "bo-phan-chay/khung-08/ban-tay-trai.png",
+     "dat_tai_o": [
+      149,
+      173
+     ],
+     "hop": [
+      149,
+      173,
+      165,
+      185
+     ],
+     "so_diem_anh": 115,
+     "lop": 12,
+     "pivot": "co_tay_trai",
+     "pivot_o": [
+      146,
+      173
+     ],
+     "pivot_trong_anh": [
+      -3,
+      0
+     ],
+     "khop_cuoi": "nam_tay_trai",
+     "khop_cuoi_o": [
+      152,
+      175
+     ],
+     "goc_do": 18.4
+    },
+    "dui-phai": {
+     "anh": "bo-phan-chay/khung-08/dui-phai.png",
+     "dat_tai_o": [
+      110,
+      177
+     ],
+     "hop": [
+      110,
+      177,
+      177,
+      231
+     ],
+     "so_diem_anh": 1594,
+     "lop": 40,
+     "pivot": "hong_phai",
+     "pivot_o": [
+      128,
+      195
+     ],
+     "pivot_trong_anh": [
+      18,
+      18
+     ],
+     "khop_cuoi": "goi_phai",
+     "khop_cuoi_o": [
+      162,
+      208
+     ],
+     "goc_do": 20.9
+    },
+    "cang-chan-phai": {
+     "anh": "bo-phan-chay/khung-08/cang-chan-phai.png",
+     "dat_tai_o": [
+      140,
+      195
+     ],
+     "hop": [
+      140,
+      195,
+      176,
+      249
+     ],
+     "so_diem_anh": 838,
+     "lop": 41,
+     "pivot": "goi_phai",
+     "pivot_o": [
+      162,
+      208
+     ],
+     "pivot_trong_anh": [
+      22,
+      13
+     ],
+     "khop_cuoi": "co_chan_phai",
+     "khop_cuoi_o": [
+      163,
+      234
+     ],
+     "goc_do": 87.8
+    },
+    "ban-chan-phai": {
+     "anh": "bo-phan-chay/khung-08/ban-chan-phai.png",
+     "dat_tai_o": [
+      154,
+      222
+     ],
+     "hop": [
+      154,
+      222,
+      197,
+      247
+     ],
+     "so_diem_anh": 758,
+     "lop": 42,
+     "pivot": "co_chan_phai",
+     "pivot_o": [
+      163,
+      234
+     ],
+     "pivot_trong_anh": [
+      9,
+      12
+     ],
+     "khop_cuoi": "mui_chan_phai",
+     "khop_cuoi_o": [
+      192,
+      230
+     ],
+     "goc_do": -7.9
+    },
+    "dui-trai": {
+     "anh": "bo-phan-chay/khung-08/dui-trai.png",
+     "dat_tai_o": [
+      83,
+      176
+     ],
+     "hop": [
+      83,
+      176,
+      117,
+      220
+     ],
+     "so_diem_anh": 348,
+     "lop": 20,
+     "pivot": "hong_trai",
+     "pivot_o": [
+      118,
+      191
+     ],
+     "pivot_trong_anh": [
+      35,
+      15
+     ],
+     "khop_cuoi": "goi_trai",
+     "khop_cuoi_o": [
+      98,
+      200
+     ],
+     "goc_do": 155.8
+    },
+    "cang-chan-trai": {
+     "anh": "bo-phan-chay/khung-08/cang-chan-trai.png",
+     "dat_tai_o": [
+      53,
+      186
+     ],
+     "hop": [
+      53,
+      186,
+      109,
+      218
+     ],
+     "so_diem_anh": 812,
+     "lop": 21,
+     "pivot": "goi_trai",
+     "pivot_o": [
+      98,
+      200
+     ],
+     "pivot_trong_anh": [
+      45,
+      14
+     ],
+     "khop_cuoi": "co_chan_trai",
+     "khop_cuoi_o": [
+      70,
+      198
+     ],
+     "goc_do": -175.9
+    },
+    "ban-chan-trai": {
+     "anh": "bo-phan-chay/khung-08/ban-chan-trai.png",
+     "dat_tai_o": [
+      44,
+      189
+     ],
+     "hop": [
+      44,
+      189,
+      81,
+      228
+     ],
+     "so_diem_anh": 887,
+     "lop": 22,
+     "pivot": "co_chan_trai",
+     "pivot_o": [
+      70,
+      198
+     ],
+     "pivot_trong_anh": [
+      26,
+      9
+     ],
+     "khop_cuoi": "mui_chan_trai",
+     "khop_cuoi_o": [
+      50,
+      222
+     ],
+     "goc_do": 129.8
+    },
+    "khan": {
+     "anh": "bo-phan-chay/khung-08/khan.png",
+     "dat_tai_o": [
+      14,
+      40
+     ],
+     "hop": [
+      14,
+      40,
+      138,
+      193
+     ],
+     "so_diem_anh": 4760,
+     "lop": 5
+    }
+   }
+  }
+ ]
+}
