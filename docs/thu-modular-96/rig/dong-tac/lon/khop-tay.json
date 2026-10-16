@@ -1,0 +1,35 @@
+{
+  "ghi_chu": "Khớp đánh tay (bằng mắt, lưới 10 điểm ảnh) trên ẢNH NGUỒN CAO docs/anh-goc/zed/moi/04-lon-gif/04-lon/khung-XX.png (toạ độ điểm ảnh ảnh khung, gốc trên-trái). Tay TRƯỚC = tay lộ bắp tay trần (gần người xem); tay SAU = tay kia (phần lớn khuất sau đầu/thân). Chân SAU = chân duỗi ra sau ở khung 1 (giữ cùng chân qua các khung theo vị trí bàn chân); chân TRƯỚC = chân co dưới bụng. Thân nằm/cuộn nên mép trên đai (daiTrenDiem) và eo ghi thẳng điểm. Khung 3–4 cuộn tròn: hầu hết khớp bị che, vị trí là ĐOÁN theo dáng cuộn (ghi trong 'an').",
+  "khung": [
+    {"dinh":[215,25],"cam":[262,163],"co":[218,168],"daiTrenDiem":[158,200],"eo":[148,205],
+     "vaiT":[205,178],"khuyuT":[240,198],"coTayT":[285,195],"banTayT":[300,200],"vaiS":[225,165],"khuyuS":[260,168],"coTayS":[292,168],"banTayS":[320,168],
+     "hongT":[150,228],"goiT":[232,240],"coChanT":[180,280],"muiChanT":[212,298],"hongS":[125,228],"goiS":[85,245],"coChanS":[45,262],"muiChanS":[15,295]},
+    {"dinh":[250,50],"cam":[288,183],"co":[248,170],"daiTrenDiem":[160,105],"eo":[150,112],
+     "vaiT":[215,165],"khuyuT":[238,205],"coTayT":[265,228],"banTayT":[280,240],"vaiS":[250,150],"khuyuS":[285,195],"coTayS":[300,228],"banTayS":[308,238],
+     "hongT":[140,150],"goiT":[165,195],"coChanT":[150,218],"muiChanT":[185,230],"hongS":[115,145],"goiS":[70,165],"coChanS":[35,200],"muiChanS":[15,228]},
+    {"dau":[70,160],"dinh":[30,175],"cam":[100,150],"co":[110,140],"daiTrenDiem":[185,150],"eo":[195,158],
+     "vaiT":[120,135],"khuyuT":[95,125],"coTayT":[110,115],"banTayT":[120,108],"vaiS":[130,150],"khuyuS":[130,185],"coTayS":[145,178],"banTayS":[155,168],
+     "hongT":[180,120],"goiT":[165,50],"coChanT":[120,38],"muiChanT":[95,28],"hongS":[190,130],"goiS":[185,70],"coChanS":[165,75],"muiChanS":[155,68]},
+    {"dau":[120,195],"dinh":[90,215],"cam":[150,185],"co":[150,170],"daiTrenDiem":[95,75],"eo":[85,85],
+     "vaiT":[160,165],"khuyuT":[175,125],"coTayT":[172,95],"banTayT":[185,78],"vaiS":[140,170],"khuyuS":[120,150],"coTayS":[132,145],"banTayS":[142,135],
+     "hongT":[70,100],"goiT":[130,60],"coChanT":[195,55],"muiChanT":[212,98],"hongS":[60,110],"goiS":[120,110],"coChanS":[195,178],"muiChanS":[213,168]},
+    {"dinh":[240,25],"cam":[265,165],"co":[225,178],"daiTrenDiem":[145,185],"eo":[135,190],
+     "vaiT":[165,150],"khuyuT":[135,135],"coTayT":[118,152],"banTayT":[108,160],"vaiS":[215,190],"khuyuS":[235,215],"coTayS":[245,255],"banTayS":[268,280],
+     "hongT":[140,215],"goiT":[208,235],"coChanT":[168,272],"muiChanT":[200,285],"hongS":[115,215],"goiS":[75,240],"coChanS":[40,265],"muiChanS":[15,285]},
+    {"dinh":[150,22],"cam":[165,180],"co":[150,192],"daiTren":248,
+     "vaiT":[75,212],"khuyuT":[52,245],"coTayT":[65,270],"banTayT":[75,280],"vaiS":[180,220],"khuyuS":[195,250],"coTayS":[225,255],"banTayS":[240,258],
+     "hongT":[160,305],"goiT":[195,355],"coChanT":[195,400],"muiChanT":[230,422],"hongS":[85,305],"goiS":[60,355],"coChanS":[40,400],"muiChanS":[20,425]}
+  ],
+  "an": {
+    "1": ["shoulderBack", "elbowBack"],
+    "2": ["neck", "shoulderBack", "elbowBack", "wristBack"],
+    "3": ["head", "headTop", "chin", "neck", "shoulderFront", "elbowFront", "wristFront", "shoulderBack", "elbowBack", "hipFront", "hipBack", "hipCenter", "kneeFront", "kneeBack", "ankleFront", "ankleBack", "toeBack"],
+    "4": ["head", "headTop", "chin", "neck", "shoulderFront", "elbowFront", "wristFront", "shoulderBack", "elbowBack", "hipFront", "hipBack", "hipCenter", "kneeFront", "kneeBack", "ankleBack"],
+    "5": ["hipBack"]
+  },
+  "ghi_chu_ra": [
+    "Lăn là cuộn người: khung 1 lao tới chống tay, khung 2 chúi đầu, khung 3 lộn ngược (bàn chân trên, đầu/tóc bên trái, đai bên phải, 2 nắm tay ôm giữa), khung 4 cuộn tròn (đai trên-trái, 1 bàn chân + tay ôm ống chân trên-phải, không thấy mặt), khung 5 chống dậy, khung 6 đứng thẳng.",
+    "Khung 3 và 4 gần như chỉ thấy một khối tròn, KHÔNG thấy mặt: chỉ chắc vị trí 2 nắm tay, 1 bàn chân và đai; các khớp còn lại là đoán và ghi trong hidden.",
+    "Thân nằm ngang/nghiêng ở khung 1–5 nên beltTop và waist ghi thẳng điểm (không theo cách tao-bo lấy tung độ đai)."
+  ]
+}

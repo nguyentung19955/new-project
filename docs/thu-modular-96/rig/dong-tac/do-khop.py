@@ -56,7 +56,8 @@ def khop_khung(f, kt):
     if 'hipCenter' not in k:
         k['hipCenter'] = [round((k['hipFront'][0] + k['hipBack'][0]) / 2, 1), round((k['hipFront'][1] + k['hipBack'][1]) / 2, 1)]
     hip = k['hipCenter']
-    k['beltTop'] = [hip[0], D.doi(f, (0, kt['daiTren']))[1]] if 'daiTren' in kt else [hip[0], round(hip[1] - 5, 1)]
+    if 'daiTrenDiem' in kt: k['beltTop'] = D.doi(f, kt['daiTrenDiem'])   # thân nằm/nghiêng: ghi thẳng điểm mép trên đai
+    else: k['beltTop'] = [hip[0], D.doi(f, (0, kt['daiTren']))[1]] if 'daiTren' in kt else [hip[0], round(hip[1] - 5, 1)]
     if 'eo' in kt: k['waist'] = D.doi(f, kt['eo'])
     else: k['waist'] = [round((k['neck'][0] + hip[0]) / 2 - 1, 1), k['beltTop'][1]]   # như tao-bo.khop_va_neo
     return {n: k[n] for n in TEN_KHOP}
