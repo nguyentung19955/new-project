@@ -111,7 +111,7 @@ body.touch .tc{display:block}
   <div id="toast"></div>
   <div id="banner"></div>
   <div id="fade"></div>
-  <div id="load" class="panel"><div class="box"><span class="bellico">🔔</span><h1>Đang rèn chuông…</h1><span id="load-bar"><span id="load-fill"></span></span><p id="load-msg">Dựng nhân vật từ mô hình 3D</p></div></div>
+  <div id="load" class="panel"><div class="box"><span class="bellico">🔔</span><h1 id="load-h">Đang rèn chuông…</h1><span id="load-bar"><span id="load-fill"></span></span><p id="load-msg">Nạp nhân vật</p></div></div>
   <div id="start" class="panel ui" hidden><div class="box">
     <h1>Tiếng Vọng Cuối Cùng</h1>
     <p class="big">Demo Làng Chuông · khoảng 5–8 phút</p>
@@ -128,7 +128,7 @@ body.touch .tc{display:block}
   <div id="rotate">Xoay ngang điện thoại để chơi</div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="lib/atlas-in-san.js"></script>
 <script src="lib/rig-lam.js"></script>
 <script src="lib/rig-quai-chuong.js"></script>
 <script src="lib/tiles.js"></script>
@@ -1284,22 +1284,59 @@ function tint(src,color,a){ const c=document.createElement('canvas'); c.width=sr
 function mkSet(at){ const cell=at.w; for(const k in at.anims) lutOf(at.anims[k]);
   return { n:at.canvas, m:mirror(at.canvas), aw:at.canvas.width, cell, px:Math.round(at.pivot.x), pxm:Math.round(cell-at.pivot.x), py:Math.round(at.pivot.y), anims:at.anims }; }
 function addTints(set){ set.g=tint(set.n,'#E1B85A',1); set.gm=tint(set.m,'#E1B85A',1); set.w=tint(set.n,'#ffffff',1); set.wm=tint(set.m,'#ffffff',1); return set; }
+const DUNG_RIG=/[?&]rig=1(?:&|$)/.test(location.search);
+function coWebGL(){ try{ const c=document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl')||c.getContext('experimental-webgl'))); }catch(e){ return false; } }
+function napThree(){
+  if(window.THREE) return Promise.resolve();
+  return new Promise((res,rej)=>{ const s=document.createElement('script'); s.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+    s.onload=()=>res(); s.onerror=()=>rej(new Error('không tải được thư viện 3D')); document.head.appendChild(s); });
+}
+async function atlasRig(){
+  if(!coWebGL()) throw new Error('trình duyệt không có WebGL');
+  setLoad(0.15,'Nạp thư viện 3D'); await napThree();
+  if(!window.TV || !TV.taoAtlasLam || !TV.taoAtlasQuaiChuong || !TV.taoAtlasBoss) throw new Error('thiếu file rig');
+  setLoad(0.25,'Dựng Lam từ mô hình 3D'); await wait(30);
+  const lam=TV.taoAtlasLam(THREE);
+  setLoad(0.45,'Dựng Quái Chuông Gỗ'); await wait(30);
+  const quaiChuong=TV.taoAtlasQuaiChuong(THREE);
+  setLoad(0.6,'Đúc Chuông Gác Làng'); await wait(30);
+  return { lam, quaiChuong, boss:TV.taoAtlasBoss(THREE) };
+}
+async function atlasInSan(){
+  if(!window.TV || !TV.atlasInSan) throw new Error('thiếu atlas in sẵn');
+  setLoad(0.3,'Nạp nhân vật');
+  const A=await TV.atlasInSan;
+  if(!A.boss) throw new Error('atlas in sẵn thiếu boss');
+  return A;
+}
+async function napAtlas(){
+  const cach=DUNG_RIG ? [atlasRig, atlasInSan] : [atlasInSan, atlasRig], loi=[];
+  for(const f of cach){ try{ return await f(); }catch(e){ loi.push(String(e&&e.message||e)); } }
+  baoLoi('Không dựng được nhân vật trên trình duyệt này. Hãy tải lại trang; nếu vẫn lỗi, thử mở bằng Safari hoặc Chrome bản mới. (Chi tiết: '+loi.join('; ')+')');
+  window.TVDEMO={ready:false, err:loi.join('; ')};
+  return null;
+}
+function baoLoi(msg){
+  setLoad(0,msg); const h=document.getElementById('load-h'); if(h) h.textContent='Chưa mở được game';
+  const b=loadEl.querySelector('.bellico'); if(b) b.style.animation='none';
+}
 async function boot(){
   try{
     setLoad(0.05,'Nạp ảnh nền Làng Chuông');
     const ims=await Promise.all([loadImg(IMG_SRC.xa),loadImg(IMG_SRC.giua),loadImg(IMG_SRC.gan)]);
     IMG.xa=ims[0]; IMG.giua=ims[1]; IMG.gan=ims[2];
-    if(!window.THREE || !window.TV || !TV.taoAtlasLam){ setLoad(0,'Không tải được thư viện 3D — kiểm tra mạng rồi tải lại trang.'); return; }
-    setLoad(0.2,'Dựng Lam từ mô hình 3D'); await wait(30);
-    const la=TV.taoAtlasLam(THREE);
+    // Mặc định: atlas in sẵn (không cần WebGL). Thêm ?rig=1 vào link để dựng bằng Three.js như cũ.
+    const A=await napAtlas();
+    if(!A) return;
+    const la=A.lam;
     LS=mkSet(la); AN=LS.anims;
     LES=Object.assign({},LS,{n:tint(LS.n,'#CEF0D6',0.8),m:tint(LS.m,'#CEF0D6',0.8)});
-    setLoad(0.55,'Dựng Quái Chuông Gỗ'); await wait(30);
-    QS=addTints(mkSet(TV.taoAtlasQuaiChuong(THREE)));
+    setLoad(0.6,'Dựng Quái Chuông Gỗ'); await wait(10);
+    QS=addTints(mkSet(A.quaiChuong));
     const hb=QS.anims.attack.hitbox||{x:1.5,y:21,w:10,h:8};
     QHB.dx=hb.x-QS.px-3; QHB.dy=hb.y-QS.py-2; QHB.w=hb.w+6; QHB.h=hb.h+2;
-    setLoad(0.75,'Đúc Chuông Gác Làng'); await wait(30);
-    BS=addTints(mkSet(TV.taoAtlasBoss(THREE)));
+    setLoad(0.75,'Đúc Chuông Gác Làng'); await wait(10);
+    BS=addTints(mkSet(A.boss));
     setLoad(0.92,'Lát gạch làng'); await wait(20);
     TV.tiles.taoAtlas();
     newGame();
@@ -1307,7 +1344,7 @@ async function boot(){
     setLoad(1,'Xong!'); await wait(150);
     loadEl.hidden=true; startEl.hidden=false;
     requestAnimationFrame(loop);
-  }catch(err){ setLoad(0,'Lỗi khi rèn chuông: '+(err&&err.message||err)); window.TVDEMO={ready:false, err:String(err&&err.message||err)}; }
+  }catch(err){ baoLoi('Lỗi khi mở game: '+(err&&err.message||err)+' — hãy tải lại trang.'); window.TVDEMO={ready:false, err:String(err&&err.message||err)}; }
 }
 document.getElementById('btn-start').addEventListener('click',()=>{ audioInit(); startEl.hidden=true; S.paused=false; bell(659.3,1.2,0.08); });
 document.getElementById('btn-again').addEventListener('click',()=>{ audioInit(); newGame(); endEl.hidden=true; S.paused=false; });
