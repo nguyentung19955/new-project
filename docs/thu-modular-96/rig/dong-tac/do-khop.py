@@ -137,19 +137,20 @@ def mot(ten):
         c.paste(nen, (ox, oy))
         dr.rectangle([ox, oy, ox + O * S - 1, oy + O * S - 1], outline=(90, 90, 90, 255))
         ve_que(dr, frames[i]['joints'], S, ox, oy, set(an_tay.get(i + 1, [])))
-        nh = 'khung %d' % (i + 1) + ('  che: ' + ', '.join(an_tay[i + 1]) if an_tay.get(i + 1) else '')
+        nh = 'khung %d' % (i + 1) + ('  ·  %d khớp bị che (vòng rỗng)' % len(an_tay[i + 1]) if an_tay.get(i + 1) else '')
         dr.text((ox + 4, oy - 19), nh, fill=(255, 255, 255, 255), font=FNT)
     c.convert('RGB').save(os.path.join(ra, 'soat.png'), optimize=True)
     # ảnh soát trên nguồn cao (khớp đánh tay chồng lên ảnh gốc, thu về cao 300)
     tiles = []
     for i, f in enumerate(fr):
-        im = f['im']; q = 300 / im.height
+        im = f['im']; q = min(300 / im.height, 340 / im.width)
         tl = Image.new('RGBA', (int(im.width * q), 300), (215, 215, 215, 255))
-        tl.alpha_composite(im.resize(tl.size, Image.LANCZOS))
+        nho = im.resize((int(im.width * q), int(im.height * q)), Image.LANCZOS)
+        oy = 300 - nho.height; tl.alpha_composite(nho, (0, oy))
         dd = ImageDraw.Draw(tl)
         k = frames[i]['joints']
         # vẽ theo toạ độ nguồn: đổi ngược từ ô 96
-        kn = {nm: [((v[0] + 0.5 - f['dx']) / f['sx'] - 0.5) * q, ((v[1] + 0.5 - f['dy']) / f['sy'] - 0.5) * q] for nm, v in k.items()}
+        kn = {nm: [((v[0] + 0.5 - f['dx']) / f['sx'] - 0.5) * q, ((v[1] + 0.5 - f['dy']) / f['sy'] - 0.5) * q + oy] for nm, v in k.items()}
         ve_que(dd, kn, 1, -0.5, -0.5, set(an_tay.get(i + 1, [])), r=3)
         dd.text((3, 3), str(i + 1), fill=(0, 0, 0, 255), font=FNT)
         tiles.append(tl)
