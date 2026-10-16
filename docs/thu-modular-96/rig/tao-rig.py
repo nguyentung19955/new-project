@@ -268,6 +268,31 @@ rig['capRule'] = ('Luật chụp khớp (hở về 0): đo điểm ảnh tay/ch�
                   '(cả 2 chế độ xoay). Chọn cỡ chụp NHỎ NHẤT (gốc, rồi Ø5/6/7 trong capVariants) mà ở MỌI khung của động tác, dời '
                   'chụp ≤1đ quanh vị trí làm tròn là che kín; không cỡ nào che kín cả động tác thì chọn theo từng khung. '
                   'Chụp không xoay nên không méo.')
+# ---------- 2d. Che theo độ sâu + đề xuất ChatGPT (16/10 chiều) ----------
+import tach_truoc_sau as TS
+for _p in rig['pieces'] + rig['armorSets']['gen']['pieces']:
+    if _p['kind'] == 'bone':
+        _p['overlapStart'] = 1.5      # chồng mép qua khớp (đề xuất ChatGPT, ý a)
+        _p['overlapEnd'] = 1.5
+N_TACH, TACH_STATS = TS.tach_giap(rig)
+rig['overlapNote'] = ('overlapStart/overlapEnd (điểm ảnh ô 96, đề xuất ChatGPT ý a): đầu mảnh xương lùi qua khớp đầu và vượt qua khớp cuối '
+                      'thêm chừng ấy dọc trục xương để kín khớp. Không áp cho giáp vai kiểu "trộn" (neo tại vai, không kéo giãn).')
+rig['stretchDefault'] = 'kep'
+rig['stretchNote'] = ('Kéo giãn: "kep" (mặc định) = vẫn kẹp chiều dài trong stretch.min..max nhưng có chồng mép; "tudo" = như patch ChatGPT, '
+                      'bỏ kẹp, đầu cuối luôn tới khớp (ảnh có thể bị kéo dài tới ×2,4). Xem bao-cao-rig.md mục "Áp dụng đề xuất ChatGPT".')
+rig['personLabels'] = {'order': TS.LORDER, 'names': TS.LNAME, 'colors': {k: list(v) for k, v in TS.LCOL.items()},
+                       'note': ('Lớp người giả cho "che theo độ sâu": nhan/<động tác>.png, kênh R = số thứ tự lớp (1 = rearLeg … 7 = head). '
+                                'Hàng chạy lấy từ lớp tách thật (lớp trên cùng tại điểm ảnh) + vùng cổ cắt từ thân; động tác sheet cả người '
+                                'gán theo ống xương gần nhất (tách_truoc_sau.py).')}
+rig['depthModes'] = {'tat': 'Tắt: như bản R1 (hàng chạy chèn theo insertAfter; sheet cả người: cách tạm).',
+                     'tach': 'Tách trước-sau: mỗi mảnh xương vẽ 2 lượt (backImage dưới lớp backAfter, frontImage trên lớp frontAfter); biến thể chọn theo khung.',
+                     'lop': 'Che bằng lớp người: vẽ nguyên mảnh ở lớp frontAfter rồi vẽ lại các lớp người trong "che" lên trên, chỉ trong vùng của mảnh.'}
+rig['depthDefault'] = 'lop'
+rig['depthNote'] = ('piece.depth: rule (nguc/vai/chi), backAfter/frontAfter (lớp người giả; "" = dưới mọi lớp), che (lớp người nằm TRƯỚC mảnh), '
+                    'limb (lớp chi để đo hở), variants {tên: {backImage, frontImage, backImageX2, frontImageX2}} cùng cỡ & neo với ảnh gốc. '
+                    'Biến thể tự chọn theo khung: chi = nửa phía thân (từ trục cổ→giữa hông); ngực = cổ áo + mép lưng (phía lưng theo hướng mũi chân, '
+                    'không rõ hướng thì chỉ cổ áo). Ghi đè: depthOverrides {"<động tác>": {"<khung từ 1>": {"<id mảnh>": "<biến thể>"}}}.')
+rig['depthOverrides'] = {}
 json.dump(rig, open(os.path.join(RIG, 'rig.json'), 'w'), ensure_ascii=False, indent=1)
 
 # ---------- 3. Trang tự chứa ----------
@@ -363,6 +388,29 @@ for ten in sorted(os.listdir(DT)) if os.path.isdir(DT) else []:
         k['action'] = 'chay_' + ten
     ACTS.append(k)
     anh['act:' + k['action']] = b64(os.path.join(d, 'sheet.png'))
+# ảnh tách trước/sau + nhãn lớp người
+for _p in rig['pieces'] + rig['armorSets']['gen']['pieces']:
+    for _v in (_p.get('depth') or {}).get('variants', {}).values():
+        for _k in ('backImage', 'frontImage', 'backImageX2', 'frontImageX2'):
+            if _k in _v:
+                anh['tach:' + _v[_k]] = b64(os.path.join(RIG, _v[_k]))
+_lop = []
+for L in DATA['layerOrder']:
+    if DATA.get('layerKinds', {}).get(L) in rig['skipLayerKinds']:
+        continue
+    _lop.append((L, Image.open(os.path.join(BO, DATA.get('sheets', {}).get(L) or outfit.get(L))).convert('RGBA')))
+_acts = []
+for k in ACTS:
+    _acts.append({'key': k['action'], 'frames': k['frames'], 'hid': [set(h) for h in k['hidden']],
+                  'sheet': Image.open(os.path.join(DT, k['_dir'], 'sheet.png')).convert('RGBA')})
+NHAN = TS.nhan_nguoi(_acts, DATA_MIN['frames'], _lop)
+for k in NHAN:
+    anh['nhan:' + k] = b64(os.path.join(RIG, 'nhan', k + '.png'))
+if '--soat-nhan' in sys.argv:
+    _comp = Image.new('RGBA', _lop[0][1].size, (0, 0, 0, 0))
+    for _, im in _lop:
+        _comp.alpha_composite(im)
+    TS.soat_nhan(list(NHAN), dict({'chay': _comp}, **{a['key']: a['sheet'] for a in _acts}))
 for bo, v in rig['capVariants'].items():
     for ten, lst in v.items():
         for c in lst:
@@ -378,6 +426,7 @@ open(os.path.join(RIG, 'kiem-tra-rig.html'), 'w', encoding='utf-8').write(html)
 if loi:
     print('LỖI:', *loi, sep='\n  ')
     sys.exit(1)
+print('tách trước/sau: %d ảnh; nhãn lớp người: %d động tác' % (N_TACH, len(NHAN)))
 print('xong: %d ảnh giáp máy vẽ + %d gen, %d lớp thân, %d động tác, trang %d KB' % (len(rig['images']), len(rig['armorSets']['gen']['images']), sum(k.startswith('layer:') for k in anh), 1 + len(ACTS), len(html) // 1024))
 
 # ---------- 4. Tự kiểm trên Chromium: còn hở > 0 ở bất kỳ khung nào → dừng lỗi thật ----------

@@ -47,7 +47,30 @@
    },
    "insertAfter": "rearArm",
    "tint": 0.72,
-   "from": "shoulderBack"
+   "from": "shoulderBack",
+   "overlapStart": 1.5,
+   "overlapEnd": 1.5,
+   "depth": {
+    "rule": "vai",
+    "backAfter": "rearLeg",
+    "frontAfter": "rearArm",
+    "che": [
+     "body",
+     "neck",
+     "frontLeg",
+     "frontArm",
+     "head"
+    ],
+    "limb": "rearArm",
+    "variants": {
+     "vien": {
+      "backImage": "giap/tach/giap-vai-vien-sau.png",
+      "frontImage": "giap/tach/giap-vai-vien-truoc.png",
+      "backPixels": 6,
+      "totalPixels": 44
+     }
+    }
+   }
   },
   {
    "id": "cangTaySau",
@@ -72,7 +95,36 @@
    },
    "insertAfter": "rearArm",
    "tint": 0.72,
-   "from": "elbowBack"
+   "from": "elbowBack",
+   "overlapStart": 1.5,
+   "overlapEnd": 1.5,
+   "depth": {
+    "rule": "chi",
+    "backAfter": "rearLeg",
+    "frontAfter": "rearArm",
+    "che": [
+     "body",
+     "neck",
+     "frontLeg",
+     "frontArm",
+     "head"
+    ],
+    "limb": "rearArm",
+    "variants": {
+     "trong-y0": {
+      "backImage": "giap/tach/giap-cang-tay-trong-y0-sau.png",
+      "frontImage": "giap/tach/giap-cang-tay-trong-y0-truoc.png",
+      "backPixels": 13,
+      "totalPixels": 26
+     },
+     "trong-y1": {
+      "backImage": "giap/tach/giap-cang-tay-trong-y1-sau.png",
+      "frontImage": "giap/tach/giap-cang-tay-trong-y1-truoc.png",
+      "backPixels": 13,
+      "totalPixels": 26
+     }
+    }
+   }
   },
   {
    "id": "chupVaiSau",
@@ -90,7 +142,18 @@
    "maskLayers": [
     "rearArm"
    ],
-   "tint": 0.72
+   "tint": 0.72,
+   "depth": {
+    "frontAfter": "rearArm",
+    "che": [
+     "body",
+     "neck",
+     "frontLeg",
+     "frontArm",
+     "head"
+    ],
+    "limb": "rearArm"
+   }
   },
   {
    "id": "chupKhuyuSau",
@@ -108,7 +171,18 @@
    "maskLayers": [
     "rearArm"
    ],
-   "tint": 0.72
+   "tint": 0.72,
+   "depth": {
+    "frontAfter": "rearArm",
+    "che": [
+     "body",
+     "neck",
+     "frontLeg",
+     "frontArm",
+     "head"
+    ],
+    "limb": "rearArm"
+   }
   },
   {
    "id": "ongChanSau",
@@ -133,7 +207,37 @@
    },
    "insertAfter": "rearPants",
    "tint": 0.72,
-   "from": "kneeBack"
+   "from": "kneeBack",
+   "overlapStart": 1.5,
+   "overlapEnd": 1.5,
+   "depth": {
+    "rule": "chi",
+    "backAfter": "",
+    "frontAfter": "rearLeg",
+    "che": [
+     "rearArm",
+     "body",
+     "neck",
+     "frontLeg",
+     "frontArm",
+     "head"
+    ],
+    "limb": "rearLeg",
+    "variants": {
+     "trong-y0": {
+      "backImage": "giap/tach/giap-ong-chan-trong-y0-sau.png",
+      "frontImage": "giap/tach/giap-ong-chan-trong-y0-truoc.png",
+      "backPixels": 16,
+      "totalPixels": 38
+     },
+     "trong-y1": {
+      "backImage": "giap/tach/giap-ong-chan-trong-y1-sau.png",
+      "frontImage": "giap/tach/giap-ong-chan-trong-y1-truoc.png",
+      "backPixels": 13,
+      "totalPixels": 38
+     }
+    }
+   }
   },
   {
    "id": "chupGoiSau",
@@ -152,7 +256,19 @@
     "rearLeg",
     "rearPants"
    ],
-   "tint": 0.72
+   "tint": 0.72,
+   "depth": {
+    "frontAfter": "rearLeg",
+    "che": [
+     "rearArm",
+     "body",
+     "neck",
+     "frontLeg",
+     "frontArm",
+     "head"
+    ],
+    "limb": "rearLeg"
+   }
   },
   {
    "id": "ongChanTruoc",
@@ -177,7 +293,30 @@
    },
    "insertAfter": "frontPants",
    "tint": 1.0,
-   "from": "kneeFront"
+   "from": "kneeFront",
+   "overlapStart": 1.5,
+   "overlapEnd": 1.5,
+   "depth": {
+    "rule": "chi",
+    "backAfter": "neck",
+    "frontAfter": "frontLeg",
+    "che": [],
+    "limb": "frontLeg",
+    "variants": {
+     "trong-y0": {
+      "backImage": "giap/tach/giap-ong-chan-trong-y0-sau.png",
+      "frontImage": "giap/tach/giap-ong-chan-trong-y0-truoc.png",
+      "backPixels": 16,
+      "totalPixels": 38
+     },
+     "trong-y1": {
+      "backImage": "giap/tach/giap-ong-chan-trong-y1-sau.png",
+      "frontImage": "giap/tach/giap-ong-chan-trong-y1-truoc.png",
+      "backPixels": 13,
+      "totalPixels": 38
+     }
+    }
+   }
   },
   {
    "id": "chupGoiTruoc",
@@ -196,7 +335,12 @@
     "frontLeg",
     "frontPants"
    ],
-   "tint": 1.0
+   "tint": 1.0,
+   "depth": {
+    "frontAfter": "frontLeg",
+    "che": [],
+    "limb": "frontLeg"
+   }
   },
   {
    "id": "cangTayTruoc",
@@ -221,7 +365,32 @@
    },
    "insertAfter": "frontArm",
    "tint": 1.0,
-   "from": "elbowFront"
+   "from": "elbowFront",
+   "overlapStart": 1.5,
+   "overlapEnd": 1.5,
+   "depth": {
+    "rule": "chi",
+    "backAfter": "frontLeg",
+    "frontAfter": "frontArm",
+    "che": [
+     "head"
+    ],
+    "limb": "frontArm",
+    "variants": {
+     "trong-y0": {
+      "backImage": "giap/tach/giap-cang-tay-trong-y0-sau.png",
+      "frontImage": "giap/tach/giap-cang-tay-trong-y0-truoc.png",
+      "backPixels": 13,
+      "totalPixels": 26
+     },
+     "trong-y1": {
+      "backImage": "giap/tach/giap-cang-tay-trong-y1-sau.png",
+      "frontImage": "giap/tach/giap-cang-tay-trong-y1-truoc.png",
+      "backPixels": 13,
+      "totalPixels": 26
+     }
+    }
+   }
   },
   {
    "id": "vaiTruoc",
@@ -246,7 +415,27 @@
    },
    "insertAfter": "frontArm",
    "tint": 1.0,
-   "from": "shoulderFront"
+   "from": "shoulderFront",
+   "overlapStart": 1.5,
+   "overlapEnd": 1.5,
+   "depth": {
+    "rule": "vai",
+    "backAfter": "body",
+    "frontAfter": "frontArm",
+    "che": [
+     "neck",
+     "head"
+    ],
+    "limb": "frontArm",
+    "variants": {
+     "vien": {
+      "backImage": "giap/tach/giap-vai-vien-sau.png",
+      "frontImage": "giap/tach/giap-vai-vien-truoc.png",
+      "backPixels": 6,
+      "totalPixels": 44
+     }
+    }
+   }
   },
   {
    "id": "chupKhuyuTruoc",
@@ -264,7 +453,14 @@
    "maskLayers": [
     "frontArm"
    ],
-   "tint": 1.0
+   "tint": 1.0,
+   "depth": {
+    "frontAfter": "frontArm",
+    "che": [
+     "head"
+    ],
+    "limb": "frontArm"
+   }
   },
   {
    "id": "chupVaiTruoc",
@@ -282,7 +478,14 @@
    "maskLayers": [
     "frontArm"
    ],
-   "tint": 1.0
+   "tint": 1.0,
+   "depth": {
+    "frontAfter": "frontArm",
+    "che": [
+     "head"
+    ],
+    "limb": "frontArm"
+   }
   }
  ],
  "groupNames": {
@@ -389,7 +592,32 @@
      },
      "insertAfter": "rearArm",
      "tint": 0.72,
-     "from": "shoulderBack"
+     "from": "shoulderBack",
+     "overlapStart": 1.5,
+     "overlapEnd": 1.5,
+     "depth": {
+      "rule": "vai",
+      "backAfter": "rearLeg",
+      "frontAfter": "rearArm",
+      "che": [
+       "body",
+       "neck",
+       "frontLeg",
+       "frontArm",
+       "head"
+      ],
+      "limb": "rearArm",
+      "variants": {
+       "vien": {
+        "backImage": "giap-gen/tach/giap-vai-vien-sau.png",
+        "frontImage": "giap-gen/tach/giap-vai-vien-truoc.png",
+        "backImageX2": "giap-gen/tach/giap-vai-vien-sau-x2.png",
+        "frontImageX2": "giap-gen/tach/giap-vai-vien-truoc-x2.png",
+        "backPixels": 8,
+        "totalPixels": 44
+       }
+      }
+     }
     },
     {
      "id": "cangTaySau",
@@ -414,7 +642,40 @@
      },
      "insertAfter": "rearArm",
      "tint": 0.72,
-     "from": "elbowBack"
+     "from": "elbowBack",
+     "overlapStart": 1.5,
+     "overlapEnd": 1.5,
+     "depth": {
+      "rule": "chi",
+      "backAfter": "rearLeg",
+      "frontAfter": "rearArm",
+      "che": [
+       "body",
+       "neck",
+       "frontLeg",
+       "frontArm",
+       "head"
+      ],
+      "limb": "rearArm",
+      "variants": {
+       "trong-y0": {
+        "backImage": "giap-gen/tach/giap-cang-tay-trong-y0-sau.png",
+        "frontImage": "giap-gen/tach/giap-cang-tay-trong-y0-truoc.png",
+        "backImageX2": "giap-gen/tach/giap-cang-tay-trong-y0-sau-x2.png",
+        "frontImageX2": "giap-gen/tach/giap-cang-tay-trong-y0-truoc-x2.png",
+        "backPixels": 12,
+        "totalPixels": 25
+       },
+       "trong-y1": {
+        "backImage": "giap-gen/tach/giap-cang-tay-trong-y1-sau.png",
+        "frontImage": "giap-gen/tach/giap-cang-tay-trong-y1-truoc.png",
+        "backImageX2": "giap-gen/tach/giap-cang-tay-trong-y1-sau-x2.png",
+        "frontImageX2": "giap-gen/tach/giap-cang-tay-trong-y1-truoc-x2.png",
+        "backPixels": 13,
+        "totalPixels": 25
+       }
+      }
+     }
     },
     {
      "id": "chupVaiSau",
@@ -432,7 +693,18 @@
      "maskLayers": [
       "rearArm"
      ],
-     "tint": 0.72
+     "tint": 0.72,
+     "depth": {
+      "frontAfter": "rearArm",
+      "che": [
+       "body",
+       "neck",
+       "frontLeg",
+       "frontArm",
+       "head"
+      ],
+      "limb": "rearArm"
+     }
     },
     {
      "id": "chupKhuyuSau",
@@ -450,7 +722,18 @@
      "maskLayers": [
       "rearArm"
      ],
-     "tint": 0.72
+     "tint": 0.72,
+     "depth": {
+      "frontAfter": "rearArm",
+      "che": [
+       "body",
+       "neck",
+       "frontLeg",
+       "frontArm",
+       "head"
+      ],
+      "limb": "rearArm"
+     }
     },
     {
      "id": "ongChanSau",
@@ -475,7 +758,41 @@
      },
      "insertAfter": "rearPants",
      "tint": 0.72,
-     "from": "kneeBack"
+     "from": "kneeBack",
+     "overlapStart": 1.5,
+     "overlapEnd": 1.5,
+     "depth": {
+      "rule": "chi",
+      "backAfter": "",
+      "frontAfter": "rearLeg",
+      "che": [
+       "rearArm",
+       "body",
+       "neck",
+       "frontLeg",
+       "frontArm",
+       "head"
+      ],
+      "limb": "rearLeg",
+      "variants": {
+       "trong-y0": {
+        "backImage": "giap-gen/tach/giap-ong-chan-trong-y0-sau.png",
+        "frontImage": "giap-gen/tach/giap-ong-chan-trong-y0-truoc.png",
+        "backImageX2": "giap-gen/tach/giap-ong-chan-trong-y0-sau-x2.png",
+        "frontImageX2": "giap-gen/tach/giap-ong-chan-trong-y0-truoc-x2.png",
+        "backPixels": 12,
+        "totalPixels": 34
+       },
+       "trong-y1": {
+        "backImage": "giap-gen/tach/giap-ong-chan-trong-y1-sau.png",
+        "frontImage": "giap-gen/tach/giap-ong-chan-trong-y1-truoc.png",
+        "backImageX2": "giap-gen/tach/giap-ong-chan-trong-y1-sau-x2.png",
+        "frontImageX2": "giap-gen/tach/giap-ong-chan-trong-y1-truoc-x2.png",
+        "backPixels": 22,
+        "totalPixels": 34
+       }
+      }
+     }
     },
     {
      "id": "chupGoiSau",
@@ -494,7 +811,19 @@
       "rearLeg",
       "rearPants"
      ],
-     "tint": 0.72
+     "tint": 0.72,
+     "depth": {
+      "frontAfter": "rearLeg",
+      "che": [
+       "rearArm",
+       "body",
+       "neck",
+       "frontLeg",
+       "frontArm",
+       "head"
+      ],
+      "limb": "rearLeg"
+     }
     },
     {
      "id": "nguc",
@@ -520,7 +849,47 @@
      "insertAfter": "chestArmor",
      "tint": 1.0,
      "from": "neck",
-     "boneFrac": 0.6
+     "boneFrac": 0.6,
+     "overlapStart": 1.5,
+     "overlapEnd": 1.5,
+     "depth": {
+      "rule": "nguc",
+      "backAfter": "body",
+      "frontAfter": "neck",
+      "che": [
+       "neck",
+       "frontLeg",
+       "frontArm",
+       "head"
+      ],
+      "limb": "body",
+      "variants": {
+       "co": {
+        "backImage": "giap-gen/tach/giap-nguc-co-sau.png",
+        "frontImage": "giap-gen/tach/giap-nguc-co-truoc.png",
+        "backImageX2": "giap-gen/tach/giap-nguc-co-sau-x2.png",
+        "frontImageX2": "giap-gen/tach/giap-nguc-co-truoc-x2.png",
+        "backPixels": 24,
+        "totalPixels": 121
+       },
+       "co-lung-y0": {
+        "backImage": "giap-gen/tach/giap-nguc-co-lung-y0-sau.png",
+        "frontImage": "giap-gen/tach/giap-nguc-co-lung-y0-truoc.png",
+        "backImageX2": "giap-gen/tach/giap-nguc-co-lung-y0-sau-x2.png",
+        "frontImageX2": "giap-gen/tach/giap-nguc-co-lung-y0-truoc-x2.png",
+        "backPixels": 34,
+        "totalPixels": 121
+       },
+       "co-lung-y1": {
+        "backImage": "giap-gen/tach/giap-nguc-co-lung-y1-sau.png",
+        "frontImage": "giap-gen/tach/giap-nguc-co-lung-y1-truoc.png",
+        "backImageX2": "giap-gen/tach/giap-nguc-co-lung-y1-sau-x2.png",
+        "frontImageX2": "giap-gen/tach/giap-nguc-co-lung-y1-truoc-x2.png",
+        "backPixels": 34,
+        "totalPixels": 121
+       }
+      }
+     }
     },
     {
      "id": "ongChanTruoc",
@@ -545,7 +914,34 @@
      },
      "insertAfter": "frontPants",
      "tint": 1.0,
-     "from": "kneeFront"
+     "from": "kneeFront",
+     "overlapStart": 1.5,
+     "overlapEnd": 1.5,
+     "depth": {
+      "rule": "chi",
+      "backAfter": "neck",
+      "frontAfter": "frontLeg",
+      "che": [],
+      "limb": "frontLeg",
+      "variants": {
+       "trong-y0": {
+        "backImage": "giap-gen/tach/giap-ong-chan-trong-y0-sau.png",
+        "frontImage": "giap-gen/tach/giap-ong-chan-trong-y0-truoc.png",
+        "backImageX2": "giap-gen/tach/giap-ong-chan-trong-y0-sau-x2.png",
+        "frontImageX2": "giap-gen/tach/giap-ong-chan-trong-y0-truoc-x2.png",
+        "backPixels": 12,
+        "totalPixels": 34
+       },
+       "trong-y1": {
+        "backImage": "giap-gen/tach/giap-ong-chan-trong-y1-sau.png",
+        "frontImage": "giap-gen/tach/giap-ong-chan-trong-y1-truoc.png",
+        "backImageX2": "giap-gen/tach/giap-ong-chan-trong-y1-sau-x2.png",
+        "frontImageX2": "giap-gen/tach/giap-ong-chan-trong-y1-truoc-x2.png",
+        "backPixels": 22,
+        "totalPixels": 34
+       }
+      }
+     }
     },
     {
      "id": "chupGoiTruoc",
@@ -564,7 +960,12 @@
       "frontLeg",
       "frontPants"
      ],
-     "tint": 1.0
+     "tint": 1.0,
+     "depth": {
+      "frontAfter": "frontLeg",
+      "che": [],
+      "limb": "frontLeg"
+     }
     },
     {
      "id": "cangTayTruoc",
@@ -589,7 +990,36 @@
      },
      "insertAfter": "frontArm",
      "tint": 1.0,
-     "from": "elbowFront"
+     "from": "elbowFront",
+     "overlapStart": 1.5,
+     "overlapEnd": 1.5,
+     "depth": {
+      "rule": "chi",
+      "backAfter": "frontLeg",
+      "frontAfter": "frontArm",
+      "che": [
+       "head"
+      ],
+      "limb": "frontArm",
+      "variants": {
+       "trong-y0": {
+        "backImage": "giap-gen/tach/giap-cang-tay-trong-y0-sau.png",
+        "frontImage": "giap-gen/tach/giap-cang-tay-trong-y0-truoc.png",
+        "backImageX2": "giap-gen/tach/giap-cang-tay-trong-y0-sau-x2.png",
+        "frontImageX2": "giap-gen/tach/giap-cang-tay-trong-y0-truoc-x2.png",
+        "backPixels": 12,
+        "totalPixels": 25
+       },
+       "trong-y1": {
+        "backImage": "giap-gen/tach/giap-cang-tay-trong-y1-sau.png",
+        "frontImage": "giap-gen/tach/giap-cang-tay-trong-y1-truoc.png",
+        "backImageX2": "giap-gen/tach/giap-cang-tay-trong-y1-sau-x2.png",
+        "frontImageX2": "giap-gen/tach/giap-cang-tay-trong-y1-truoc-x2.png",
+        "backPixels": 13,
+        "totalPixels": 25
+       }
+      }
+     }
     },
     {
      "id": "vaiTruoc",
@@ -614,7 +1044,29 @@
      },
      "insertAfter": "frontArm",
      "tint": 1.0,
-     "from": "shoulderFront"
+     "from": "shoulderFront",
+     "overlapStart": 1.5,
+     "overlapEnd": 1.5,
+     "depth": {
+      "rule": "vai",
+      "backAfter": "body",
+      "frontAfter": "frontArm",
+      "che": [
+       "neck",
+       "head"
+      ],
+      "limb": "frontArm",
+      "variants": {
+       "vien": {
+        "backImage": "giap-gen/tach/giap-vai-vien-sau.png",
+        "frontImage": "giap-gen/tach/giap-vai-vien-truoc.png",
+        "backImageX2": "giap-gen/tach/giap-vai-vien-sau-x2.png",
+        "frontImageX2": "giap-gen/tach/giap-vai-vien-truoc-x2.png",
+        "backPixels": 8,
+        "totalPixels": 44
+       }
+      }
+     }
     },
     {
      "id": "chupKhuyuTruoc",
@@ -632,7 +1084,14 @@
      "maskLayers": [
       "frontArm"
      ],
-     "tint": 1.0
+     "tint": 1.0,
+     "depth": {
+      "frontAfter": "frontArm",
+      "che": [
+       "head"
+      ],
+      "limb": "frontArm"
+     }
     },
     {
      "id": "chupVaiTruoc",
@@ -650,7 +1109,14 @@
      "maskLayers": [
       "frontArm"
      ],
-     "tint": 1.0
+     "tint": 1.0,
+     "depth": {
+      "frontAfter": "frontArm",
+      "che": [
+       "head"
+      ],
+      "limb": "frontArm"
+     }
     }
    ],
    "groupNames": {
@@ -820,5 +1286,74 @@
    ]
   }
  },
- "capRule": "Luật chụp khớp (hở về 0): đo điểm ảnh tay/chân trong bán kính 2đ quanh khớp mà mảnh xương cùng bên không che (cả 2 chế độ xoay). Chọn cỡ chụp NHỎ NHẤT (gốc, rồi Ø5/6/7 trong capVariants) mà ở MỌI khung của động tác, dời chụp ≤1đ quanh vị trí làm tròn là che kín; không cỡ nào che kín cả động tác thì chọn theo từng khung. Chụp không xoay nên không méo."
+ "capRule": "Luật chụp khớp (hở về 0): đo điểm ảnh tay/chân trong bán kính 2đ quanh khớp mà mảnh xương cùng bên không che (cả 2 chế độ xoay). Chọn cỡ chụp NHỎ NHẤT (gốc, rồi Ø5/6/7 trong capVariants) mà ở MỌI khung của động tác, dời chụp ≤1đ quanh vị trí làm tròn là che kín; không cỡ nào che kín cả động tác thì chọn theo từng khung. Chụp không xoay nên không méo.",
+ "overlapNote": "overlapStart/overlapEnd (điểm ảnh ô 96, đề xuất ChatGPT ý a): đầu mảnh xương lùi qua khớp đầu và vượt qua khớp cuối thêm chừng ấy dọc trục xương để kín khớp. Không áp cho giáp vai kiểu \"trộn\" (neo tại vai, không kéo giãn).",
+ "stretchDefault": "kep",
+ "stretchNote": "Kéo giãn: \"kep\" (mặc định) = vẫn kẹp chiều dài trong stretch.min..max nhưng có chồng mép; \"tudo\" = như patch ChatGPT, bỏ kẹp, đầu cuối luôn tới khớp (ảnh có thể bị kéo dài tới ×2,4). Xem bao-cao-rig.md mục \"Áp dụng đề xuất ChatGPT\".",
+ "personLabels": {
+  "order": [
+   "rearLeg",
+   "rearArm",
+   "body",
+   "neck",
+   "frontLeg",
+   "frontArm",
+   "head"
+  ],
+  "names": {
+   "rearLeg": "chân sau",
+   "rearArm": "tay sau",
+   "body": "thân",
+   "neck": "cổ",
+   "frontLeg": "chân trước",
+   "frontArm": "tay trước",
+   "head": "đầu + tóc + cằm"
+  },
+  "colors": {
+   "rearLeg": [
+    150,
+    0,
+    150
+   ],
+   "rearArm": [
+    230,
+    60,
+    230
+   ],
+   "body": [
+    0,
+    170,
+    0
+   ],
+   "neck": [
+    255,
+    40,
+    40
+   ],
+   "frontLeg": [
+    30,
+    60,
+    220
+   ],
+   "frontArm": [
+    0,
+    210,
+    255
+   ],
+   "head": [
+    255,
+    190,
+    0
+   ]
+  },
+  "note": "Lớp người giả cho \"che theo độ sâu\": nhan/<động tác>.png, kênh R = số thứ tự lớp (1 = rearLeg … 7 = head). Hàng chạy lấy từ lớp tách thật (lớp trên cùng tại điểm ảnh) + vùng cổ cắt từ thân; động tác sheet cả người gán theo ống xương gần nhất (tách_truoc_sau.py)."
+ },
+ "depthModes": {
+  "tat": "Tắt: như bản R1 (hàng chạy chèn theo insertAfter; sheet cả người: cách tạm).",
+  "tach": "Tách trước-sau: mỗi mảnh xương vẽ 2 lượt (backImage dưới lớp backAfter, frontImage trên lớp frontAfter); biến thể chọn theo khung.",
+  "lop": "Che bằng lớp người: vẽ nguyên mảnh ở lớp frontAfter rồi vẽ lại các lớp người trong \"che\" lên trên, chỉ trong vùng của mảnh."
+ },
+ "depthDefault": "lop",
+ "depthNote": "piece.depth: rule (nguc/vai/chi), backAfter/frontAfter (lớp người giả; \"\" = dưới mọi lớp), che (lớp người nằm TRƯỚC mảnh), limb (lớp chi để đo hở), variants {tên: {backImage, frontImage, backImageX2, frontImageX2}} cùng cỡ & neo với ảnh gốc. Biến thể tự chọn theo khung: chi = nửa phía thân (từ trục cổ→giữa hông); ngực = cổ áo + mép lưng (phía lưng theo hướng mũi chân, không rõ hướng thì chỉ cổ áo). Ghi đè: depthOverrides {\"<động tác>\": {\"<khung từ 1>\": {\"<id mảnh>\": \"<biến thể>\"}}}.",
+ "depthOverrides": {}
 }
