@@ -2520,8 +2520,8 @@ for (const id of Object.keys(MA.hinhTam)) {
 try { (function () {
 if (!MA.hinhTam || !MA._doiMau) return;
 const MOI = {
-  raiCaChua: { muon: 'tuongMa', loai: 'tinhanh', ten: 'Rái Cá Thủ Lĩnh', loc: [['sep', 0.75], ['hue', -10], ['sat', 1.3], ['bri', 0.88]] },     // ← Tướng Ma (đứng 2 chân, cầm vũ khí lửa)
-  cocChua: { muon: 'namPhongChua', loai: 'tinhanh', ten: 'Cóc Tía Chúa', loc: [['hue', 55], ['sat', 0.9], ['bri', 0.82]] },                 // ← Nấm Phồng Chúa (ngồi, tròn, nhảy dập)
+  raiCaChua: { muon: 'tuongMa', loai: 'tinhanh', ten: 'Rái Cá Thủ Lĩnh', loc: [['sep', 1], ['sat', 1.15], ['bri', 0.85]] },     // ← Tướng Ma (đứng 2 chân, cầm vũ khí lửa)
+  cocChua: { muon: 'namPhongChua', loai: 'tinhanh', ten: 'Cóc Tía Chúa', loc: [['hue', -60], ['sat', 0.75], ['bri', 0.8]] },                 // ← Nấm Phồng Chúa (ngồi, tròn, nhảy dập)
   caTre: { muon: 'cuaDa', loai: 'trumnho', ten: 'Cá Trê Râu Roi', loc: [['sep', 0.55], ['sat', 0.45], ['bri', 0.5], ['con', 1.25]],           // ← Cua Đá (thân dẹt, bò sát đất)
     locP2: [['sep', 0.9], ['hue', -15], ['sat', 1.7], ['bri', 0.62], ['con', 1.2]] },                                                        //   pha 2: ánh cam (râu sáng cam)
 };
