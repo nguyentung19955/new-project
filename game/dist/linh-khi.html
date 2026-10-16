@@ -73,7 +73,7 @@
 <div id="lk-tai" data-bia="||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAMEBQYH/8QAKRAAAQMCBQMDBQAAAAAAAAAAAQIDEQAEBRIhMUETFGEiQnEVUWKBsf/EABcBAAMBAAAAAAAAAAAAAAAAAAIDBAX/xAAlEQACAQEFCQAAAAAAAAAAAAABAgADBBExUfASEyEyM0FxobH/2gAMAwEAAhEDEQA/AOfNMWj9zbWiEtBsn1ugGTPCvjXajFcBNssNsvoeMxlCgVJqzCbhHftG3aGdcJBUAUn7neRzTMcumxjD0hDSkmFBtWZMjSdR5qamzb4DtHOiimTfxmt/T3UpzLBCTt5q22sWekt0vBvImSF8+KyF5eWDaGFNZlr6YkKGiTPGvzSutZDDX1sF3P0wPUBMzvP62rStACi5TEWB9pizi/H1JsLUo3NhKiZUOfyqbE1Hu3jJkqPNFFRUuprOHU5dZSVwmE6+2mNk9u7r7R/aKKqqQLNifB+T/9k=|||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAgf/xAAmEAACAgEEAQQCAwAAAAAAAAABAgMRAAQSITEFE1FhgSJBcbHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQIDBAX/xAAeEQABBAIDAQAAAAAAAAAAAAAAAQIDEiExBBEyIv/aAAwDAQACEQMRAD8A51EIZIo53EASNwHG07mBPFno9HFyeOhl1Y2yFIbtjVkDnr54yzx2vaLSyII1cELvBQEVu5PyeshTWvFJG6qi7OR+A9/4xoa3yQzWRvzsH8YkWrkCMZYlsoSvJHfWUalzFpI4/TRBZbca3HsUcXqvJvPqpZgEAewAFHAP1mZ9aZIoyqKWVa4jX3P+jByGor8aNDgT0gXvDiHTs1EbjRAsX3jKuEH92Ofs4YYGeim/yLulscHjFuT6YNno/wBnDDGfsEej/9k=" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.16-0742";
+(window.G = window.G || {}).VERSION = "lk-2026.10.16-0755";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -14447,7 +14447,7 @@
     if (!S.chon && ph >= 2) opts.push('c5');
     // Chống áp sát: em bé đứng sát thì trùm hay dùng chiêu đánh quanh mình hơn
     if (has(b, 'antiMelee') && Math.hypot(P.x - b.x, P.y - b.y) < 75) for (const k of opts.slice()) if (S[k].near) opts.push(k, k);
-    const k = choose(b, opts), sk = S[k] || S.c1;
+    const k0 = choose(b, opts), sk = S[k0] || S.c1, k = sk.anim || k0; // sk.anim: chiêu mượn cử động khác (vd Đớp của Thuồng Luồng dùng 'atk')
     const B = bangNG(b), spd = B ? ngPh(B.toc, ph) : [1, 1.1, 1.2][ph], a = ang(b, P);
     let D = dur(b.art, k) / spd, T = moc(b.art, k)[0] * D, aspd = spd;
     b.skillName = sk.name; // tên chiêu đang ra: bảng thua (js/stage.js) đọc
@@ -14467,7 +14467,8 @@
     // Bắt bài lăn né: thêm một vùng đỏ đúng chỗ em bé sẽ lăn tới
     if (has(b, 'antiDodge')) later(b, T + 0.3, () => { const P2 = W().P; circle(clamp(P2.x + (P2.ddx || 0) * 46, w.x0, w.x1), clamp(P2.y + (P2.ddy || 0) * 34, w.y0, w.y1), 18, 0.6, b.dmg, null); });
     if (B && ph >= 2) later(b, T, () => { W().shake = Math.max(W().shake, 0.12); }); // hóa cuồng: dậm rung nhẹ
-    b.cd = nghiNG(b, [1.3, 1.0, 0.8][ph], 1.3);
+    const NG0 = S.nghi || [1.3, 1.0, 0.8]; // S.nghi: nghỉ sau chiêu theo pha của riêng trùm này (Thuồng Luồng, js/thuong_luong.js)
+    b.cd = nghiNG(b, NG0[ph], NG0[0]);
   }
   // Nổi giận: nghỉ sau chiêu (× nghi) và NỐI CHIÊU — đầu mỗi chuỗi gieo số chiêu liền nhau (noi: [xác suất ≥ 2, xác suất 3]); chiêu chưa phải
   // chiêu cuối của chuỗi thì nghỉ noiNghi (0,3 giây) rồi ra chiêu kế. Chuỗi đang dở mà đổi pha thì bỏ (b.ngConLai = 0 ở chỗ đổi pha).
@@ -47305,7 +47306,10 @@ window.FIREBASE_CONFIG = {
 //                    Lúc đó đầu trườn lên đá: LỘ ĐIỂM YẾU 2 giây (mảnh trống trên trán sáng). Chống áp sát: vảy dựng gai quanh đầu.
 //    Vỗ sóng bờ (chống đứng sát mép, có từ pha 1): em bé đứng cách mép trên / dưới / trái < 40 điểm ảnh quá 1,5 giây → thân quẫy dưới nước
 //                    mép đó, sóng tạt phủ dải sát mép (báo trước 1,1 giây). Né: bước vào giữa sân. (Mép phải là chỗ cái đầu — không tính.)
-//    Pha 2, 3: HÌNH TẠM — giữ ba chiêu pha 1 + mượn c4 / c5 của Ngư Tinh như phiên 1, phiên 3C thay (S.chon dưới đây).
+//    Đớp (em bé đứng sát đầu < 84 điểm ảnh): quạt trước mặt, báo trước 0,6 giây; còn đứng sát thì đớp lần hai (báo trước 0,5 giây).
+//    Lặn đổi chỗ: mỗi 9–12 giây đầu lặn 1 giây (không đánh trúng được, gợn nước chạy dọc mép phải) rồi trồi chỗ khác.
+//    Pha 2, 3: HÌNH TẠM — ba chiêu pha 1 + Đớp + chiêu Ngư Tinh như phiên 1 (Bổ rìu, Sóng thần, Cột nước đuổi; pha 3 thêm Xoáy hút),
+//    phiên 3C thay (S.chon dưới đây).
 // 3. Khung đổi hệ theo pha (mục 8.3): pha 1 Độc → pha 2 Băng → pha 3 Lửa. Mỗi pha: b.el = hệ của pha, một lớp "kháng" hệ đó (CFG.heKhang,
 //    gộp với lớp thích nghi cũ nếu trùng hệ) → điểm yếu = hệ khắc (G.WEAK) như luật cũ (+50%), thẻ "Kháng … · Yếu …" dưới thanh máu tự đổi,
 //    thân đổi màu, dòng gợi ý đổi vũ khí. Lớp thích nghi cũ vẫn chạy. Sao thứ ba (kết liễu bằng hệ yếu) theo b.weak lúc gục (pha 3: Băng).
@@ -47330,17 +47334,24 @@ window.FIREBASE_CONFIG = {
   // ---------- SỐ LIỆU (giây, điểm ảnh game, sat × b.dmg) ----------
   const CFG = {
     san: { trai: 16, phai: 24, tren: 18, duoi: 14 }, // bãi đá: thu chỗ đứng vào từ mỗi mép (sàn trùm 282 × 186 → 242 × 154 ≈ 71%)
-    dau: { lui: 4, len: 52, tocDoc: 0.8 },            // đầu: cách mép phải; trườn lên đá bao xa (Vòng thân); tốc trườn dọc × b.speed
-    duoi: { phan: 0.32, bao: 1.2, sat: 1.4, lo: 0.6 }, // Quật đuôi: dải sát mép dày 32% bề dọc sân; báo trước; sát thương; mệt sau quét
-    phun: { bao: 0.8, rong: 22, them: 30, sat: 1.2, vet: { rong: 16, giay: 3, sat: 0.5 } }, // Phun nước đen + vệt độc (vũng: 0,3 × sat mỗi 0,5 giây)
-    vom: { so: 3, rx: 30, giu: 2.0, sat: 1.3, chan: 7, cach: 64, gaiR: 44, gaiBao: 0.6, gaiSat: 1.0 }, // Vòng thân; gai: chống áp sát
-    mep: { gan: 40, giay: 1.5, sau: 44, bao: 1.1, sat: 1.0, nghi: 2.5 }, // Vỗ sóng bờ
+    dau: { lui: 4, len: 52, tocDoc: 0.55 },           // đầu: cách mép phải; trườn lên đá bao xa (Vòng thân); tốc trườn dọc theo em bé × b.speed
+    lan: { moi: [9, 12], giay: 1.0, cach: 46 },       // lặn đổi chỗ: mỗi 9–12 giây đầu lặn 1 giây (không đánh trúng được), trồi chỗ khác dọc mép phải
+    dop: { gan: 84, r: 80, span: 1.5, bao: 0.6, sat: 1.5, lai: 0.55, bao2: 0.5 }, // Đớp: em bé đứng gần đầu (< gan) thì hay đớp (quạt trước mặt, báo trước bao giây);
+                                                       // em bé còn đứng gần thì đớp lần hai (nhắm lại, báo trước bao2)
+    duoi: { phan: 0.33, bao: 1.15, lai: 0.55, sat: 1.6, lo: 0.3 }, // Quật đuôi: dải sát mép dày 33% bề dọc sân, quét mép phía em bé (báo trước bao) rồi quất ngược
+                                                       // sang mép kia sau lai giây (hai dải hiện cùng lúc từ đầu chiêu) — giữa sân (28%) luôn an toàn; mệt sau quét
+    phun: { bao: 0.8, rong: 22, them: 30, sat: 1.3, so: 3, lan2: 0.5, bao2: 0.55, vet: { rong: 16, giay: 3, sat: 0.5 } }, // Phun nước đen (so lần: mỗi lần sau nhắm lại sau lan2 giây,
+                                                       // báo trước bao2) + vệt độc (vũng: 0,3 × sat mỗi 0,5 giây)
+    vom: { so: 3, rx: 30, giu: 2.0, sat: 1.5, chan: 7, cach: 64, gaiR: 44, gaiBao: 0.6, gaiSat: 1.0, phun: 1.1 }, // Vòng thân; gai: chống áp sát;
+                                                       // phun: đầu nằm trên đá phun một tia (báo trước như Phun nước đen) sau phun giây
+    mep: { gan: 40, giay: 1.5, sau: 44, bao: 1.1, sat: 1.2, nghi: 2.5 }, // Vỗ sóng bờ
+    nghi: [0.9, 1.0, 0.8],                             // nghỉ sau chiêu theo pha (trùm khác 1,3 / 1,0 / 0,8; nổi giận bật thì pha 2, 3 = nghi[0] × G.NOI_GIAN)
     heKhang: 0.25,                                     // lớp kháng hệ của pha (× 0,75 sát thương hệ đó)
     HE: ['poison', 'ice', 'fire'],
     anh: 'thuongLuong',                                // mã sprite thật khi có ảnh
   };
   const TL = (G.thuongLuong = { CFG });
-  const TEN = { duoi: 'Quật đuôi', phun: 'Phun nước đen', vom: 'Vòng thân', mep: 'Vỗ sóng bờ', gai: 'Vảy dựng gai' };
+  const TEN = { duoi: 'Quật đuôi', phun: 'Phun nước đen', vom: 'Vòng thân', mep: 'Vỗ sóng bờ', gai: 'Vảy dựng gai', dop: 'Đớp' };
   TL.TEN = TEN;
 
   // ---------- tiện ích ----------
@@ -47378,13 +47389,14 @@ window.FIREBASE_CONFIG = {
     }
     if (coAnhThat()) b.art = CFG.anh; // chỗ dựng ảnh thật (C71–C85): cùng tên cử động như trùm cũ
     b.x = w.x1 - CFG.dau.lui; b.y = (w.y0 + w.y1) / 2; b.face = -1; b.dirA = PI;
-    b.tl = { mepT: 0, mepCd: 0, duoi: null, song: [], vom: [], tia: [], goiY: false, nhuom: b.art !== CFG.anh };
+    b.tl = { mepT: 0, mepCd: 0, duoi: null, song: [], vom: [], tia: [], goiY: false, nhuom: b.art !== CFG.anh, lan: null, lanCd: G.rr(CFG.lan.moi[0], CFG.lan.moi[1]) };
     datHe(b, 0);
     b.doiPha = doiPha;
   };
   function doiPha(b, ph) {
     const cu = b.el, el = datHe(b, ph);
     b.tl.vom.length = 0; b.tl.duoi = null; b.tl.song.length = 0; // thân đang trồi chìm xuống (vùng của chiêu dở đã bị xoá ở js/boss.js)
+    if (b.tl.lan) { b.tl.lan = null; b.hidden = false; }
     b.lunge = null; b.x = W().x1 - CFG.dau.lui;
     const w = W();
     if (el !== cu && w.banner) { w.banner.s += ' — ' + goiY(el); w.banner.t = Math.max(w.banner.t || 0, 3); }
@@ -47405,25 +47417,54 @@ window.FIREBASE_CONFIG = {
   };
 
   // ---------- CHIÊU PHA 1 ----------
-  // c1 · QUẬT ĐUÔI
+  // c1 · QUẬT ĐUÔI: quét dải mép phía em bé, rồi quất ngược sang dải mép kia (cả hai dải báo đỏ từ đầu chiêu, giữa sân an toàn)
   function quatDuoi(b, P, T, D) {
     const w = W(), C = CFG.duoi, H = w.y1 - w.y0, d = Math.round(H * C.phan);
     if (b.an) b.an.ct = true;
-    const ben = P.y < (w.y0 + w.y1) / 2 ? 'tren' : 'duoi';
-    const y = ben === 'tren' ? w.y0 - 10 : w.y1 - d, h = d + 10;
-    vung(b, 'rect', { x: w.x0 - 10, y, w: w.x1 - w.x0 + 20, h }, T, b.dmg * C.sat, null, TEN.duoi, { onFire: () => { W().shake = Math.max(W().shake, 0.3); G.sfx('boom', 1.2); } });
-    b.tl.duoi = { ben, t0: G.time || 0, T, quet: 0.35 };
-    later(b, T + 0.4, () => { if (b.tl) b.tl.duoi = null; });
-    later(b, Math.max(D, T + 0.4), () => tire(b, C.lo));
+    const dau = P.y < (w.y0 + w.y1) / 2 ? 'tren' : 'duoi', sau = dau === 'tren' ? 'duoi' : 'tren';
+    const dai = (ben, t) => vung(b, 'rect', { x: w.x0 - 10, y: ben === 'tren' ? w.y0 - 10 : w.y1 - d, w: w.x1 - w.x0 + 20, h: d + 10 }, t, b.dmg * C.sat, null, TEN.duoi,
+      { onFire: () => { W().shake = Math.max(W().shake, 0.3); G.sfx('boom', 1.2); } });
+    dai(dau, T); dai(sau, T + C.lai);
+    b.tl.duoi = { ben: dau, t0: G.time || 0, T, quet: 0.35 };
+    later(b, T + 0.4, () => { if (b.tl && !b.dead) b.tl.duoi = { ben: sau, t0: (G.time || 0) - T + C.lai - 0.4, T, quet: 0.35 }; });
+    later(b, T + C.lai + 0.4, () => { if (b.tl) b.tl.duoi = null; });
+    const X = T + C.lai + 0.4;
+    if (X > D) giuBan(b, X);
+    later(b, Math.max(D, X), () => tire(b, C.lo));
   }
-  // c2 · PHUN NƯỚC ĐEN
-  function phunNuoc(b, P, T, D, a) {
-    const w = W(), C = CFG.phun;
+  // ĐỚP (em bé đứng sát đầu): quạt trước mặt, đầu chồm tới một chút
+  function dop(b, P, T, D, a) {
+    const C = CFG.dop;
     if (b.an) b.an.ct = true;
-    const x0 = b.x - 14, y0 = b.y - 6, g = Math.atan2(P.y - y0, P.x - x0);
-    const L = clamp(Math.hypot(P.x - x0, P.y - y0) + C.them, 60, w.x1 - w.x0 + 20);
-    const el = b.el;
-    vung(b, 'line', { x: x0, y: y0, ang: g, len: L, w: C.rong }, T, b.dmg * C.sat, el, TEN.phun, {
+    const can = (g, t) => {
+      vung(b, 'cone', { x: b.x - 6, y: b.y, ang: g, r: C.r, span: C.span }, t, b.dmg * C.sat, null, TEN.dop, { melee: true });
+      later(b, t, () => { if (!b.dead) b.lunge = { vx: Math.cos(g) * 24 / 0.15, vy: Math.sin(g) * 12 / 0.15, t: 0.15 }; });
+    };
+    can(a, T);
+    // đớp lần hai nếu em bé vẫn đứng sát đầu (nhắm lại, báo trước bao2)
+    later(b, T + C.lai - C.bao2, () => {
+      const Q = W().P;
+      if (b.dead || Math.hypot(Q.x - b.x, Q.y - b.y) > CFG.dop.gan) return;
+      const g = Math.atan2(Q.y - b.y, Q.x - b.x); b.dirA = g; can(g, C.bao2); b.busy = Math.max(b.busy, C.bao2 + 0.3);
+      if (b.an) { b.an.n = 'atk'; b.an.t = 0; }
+    });
+  }
+  // c2 · PHUN NƯỚC ĐEN: tia thẳng từ đầu tới chỗ em bé, để lại vệt độc; phun lần hai nhắm lại chỗ em bé (báo trước riêng)
+  function phunNuoc(b, P, T, D) {
+    const C = CFG.phun;
+    if (b.an) b.an.ct = true;
+    const tia = (tx, ty, t) => tiaNuoc(b, tx, ty, t);
+    tia(P.x, P.y, T);
+    for (let k = 1; k < C.so; k++) { const tk = T + k * C.lan2; later(b, tk - C.bao2, () => { if (!b.dead) { const Q = W().P; tia(Q.x, Q.y, C.bao2); } }); }
+    const X = T + (C.so - 1) * C.lan2 + 0.2;
+    if (X > D) giuBan(b, X);
+  }
+  // Một tia nước từ miệng tới (tx, ty), nổ sau t giây, để lại vệt độc (hệ của pha).
+  function tiaNuoc(b, tx, ty, t) {
+    const w = W(), C = CFG.phun;
+    const x0 = b.x - 14, y0 = b.y - 6, g = Math.atan2(ty - y0, tx - x0), el = b.el;
+    const L = clamp(Math.hypot(tx - x0, ty - y0) + C.them, 60, w.x1 - w.x0 + 20);
+    vung(b, 'line', { x: x0, y: y0, ang: g, len: L, w: C.rong }, t, b.dmg * C.sat, el, TEN.phun, {
       onFire: () => {
         if (b.dead) return;
         vung(b, 'line', { x: x0, y: y0, ang: g, len: L, w: C.vet.rong }, 0, b.dmg * C.vet.sat, el, TEN.phun, { pool: true, life: C.vet.giay, tick: 0.5, tlVet: el });
@@ -47455,6 +47496,7 @@ window.FIREBASE_CONFIG = {
       b.exposed = Math.max(b.exposed || 0, C.giu);
       FX('burst', b.x - 20, b.y, '#cfe8e4', 10, 60);
       if (b.layers.some((l) => l.type === 'antiMelee')) later(b, 0.3, () => { if (!b.dead) tron(b, b.x, b.y, C.gaiR, C.gaiBao, b.dmg * C.gaiSat, null, TEN.gai); });
+      if (C.phun > 0) later(b, C.phun - CFG.phun.bao, () => { if (!b.dead) { const Q = W().P; tiaNuoc(b, Q.x, Q.y, CFG.phun.bao); } }); // đầu nằm trên đá vẫn phun một tia
     });
     const X = T + C.giu + 0.35;
     later(b, T + C.giu + 0.05, () => { if (!b.dead) b.lunge = { vx: CFG.dau.len / 0.3, vy: 0, t: 0.3 }; });
@@ -47491,6 +47533,27 @@ window.FIREBASE_CONFIG = {
   }
   TL.sonBo = sonBo;
 
+  // ---------- LẶN ĐỔI CHỖ (mỗi khung): đầu lặn xuống (không đánh trúng được), gợn nước chạy dọc mép phải, trồi lên chỗ khác ----------
+  function lanDoi(w, b, dt) {
+    const T = b.tl, C = CFG.lan;
+    if (T.lan) {
+      T.lan.t += dt;
+      const u = clamp(T.lan.t / C.giay, 0, 1);
+      b.y = T.lan.y0 + (T.lan.y1 - T.lan.y0) * u;
+      if (u >= 1) { T.lan = null; b.hidden = false; FX('burst', b.x, b.y, '#cfe8e4', 10, 60); T.lanCd = G.rr(C.moi[0], C.moi[1]); }
+      return;
+    }
+    if (T.lanCd > 0) { T.lanCd -= dt; return; }
+    if (b.busy > 0 || b.invuln > 0 || b.lunge || b.tired > 0 || (b.st && b.st.stun > 0)) return;
+    const P = w.P, lo = w.y0 + 12, hi = w.y1 - 8;
+    let y1 = G.rr(lo, hi);
+    for (let k = 0; k < 6 && (Math.abs(y1 - b.y) < C.cach || Math.abs(y1 - P.y) < 24); k++) y1 = G.rr(lo, hi);
+    T.lan = { t: 0, y0: b.y, y1 };
+    b.hidden = true; b.busy = Math.max(b.busy, C.giay); b.cd = Math.max(b.cd, 0.5);
+    FX('burst', b.x, b.y, '#cfe8e4', 8, 50);
+  }
+  TL.lanDoi = lanDoi;
+
   // ---------- MỖI KHUNG: sóng bờ, chân vòm chắn, đạn chạm vòm, trả sân khi thắng ----------
   function tick(dt) {
     const w = W();
@@ -47505,6 +47568,7 @@ window.FIREBASE_CONFIG = {
     const now = G.time || 0;
     if (!b.dead) sonBo(w, b, dt);
     const T = b.tl;
+    if (!b.dead && b.dying == null) lanDoi(w, b, dt);
     if (T.song.length) T.song = T.song.filter((s) => now - s.t0 < s.T + 0.6);
     if (T.tia.length) T.tia = T.tia.filter((s) => now - s.t0 < 0.4);
     if (T.vom.length) T.vom = T.vom.filter((v) => now < v.het);
@@ -47536,10 +47600,21 @@ window.FIREBASE_CONFIG = {
   const SK = G.bossSK, NGU = SK.ngu;
   SK.thuong = {
     // pha 1: c1-c3; pha 2: + c4 (HÌNH TẠM: chiêu Ngư Tinh); pha 3: + c5 (HÌNH TẠM) — phiên 3C thay hàm này + c4, c5 bằng chiêu riêng.
-    chon: (b, ph) => (ph >= 2 ? ['c1', 'c2', 'c3', 'c4', 'c5'] : ph >= 1 ? ['c1', 'c2', 'c3', 'c4'] : ['c1', 'c2', 'c3']),
+    chon: (b, ph) => {
+      // HÌNH TẠM tới phiên 3C: pha 2 thêm Bổ rìu (n1), Sóng thần (n2), Cột nước đuổi (c4); pha 3 thêm Xoáy hút (c5) — chiêu Ngư Tinh như phiên 1,
+      // để độ khó pha 2, 3 không tụt so với phiên 1 (đo bằng bot: do_trum.py).
+      const o = ph >= 2 ? ['c1', 'c2', 'c3', 'n1', 'n2', 'c4', 'c5'] : ph >= 1 ? ['c1', 'c2', 'c3', 'n1', 'n2', 'c4'] : ['c1', 'c2', 'c3'];
+      const P = W().P;
+      if (P && Math.hypot(P.x - b.x, P.y - b.y) < CFG.dop.gan) o.push('dop', 'dop', 'dop'); // đứng sát đầu: hay bị đớp
+      return o;
+    },
+    nghi: CFG.nghi, // nghỉ sau chiêu theo pha (js/boss.js thinkBig; trùm khác 1,3 / 1,0 / 0,8)
+    dop: { name: TEN.dop, anim: 'atk', tele: CFG.dop.bao, near: true, f: dop },
     c1: { name: TEN.duoi, tele: CFG.duoi.bao, to: true, f: quatDuoi },
     c2: { name: TEN.phun, tele: CFG.phun.bao, f: phunNuoc },
     c3: { name: TEN.vom, near: true, to: true, f: vongThan },
+    n1: { name: NGU.c1.name, anim: 'c1', near: NGU.c1.near, to: NGU.c1.to, tele: NGU.c1.tele, f(b, P, T, D, a, sp) { return NGU.c1.f(b, P, T, D, a, sp); } }, // HÌNH TẠM (3C)
+    n2: { name: NGU.c2.name, anim: 'c2', to: true, f(b, P, T, D, a, sp) { return NGU.c2.f(b, P, T, D, a, sp); } }, // HÌNH TẠM (3C)
     c4: { name: NGU.c4.name, f(b, P, T, D, a, sp) { return NGU.c4.f(b, P, T, D, a, sp); } }, // HÌNH TẠM (3C)
     c5: { name: NGU.c5.name, near: true, f(b, P, T, D, a, sp) { return NGU.c5.f(b, P, T, D, a, sp); } }, // HÌNH TẠM (3C)
   };
@@ -47547,7 +47622,7 @@ window.FIREBASE_CONFIG = {
 
   // ---------- CHỮ TIẾNG ANH ----------
   if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({
-    'Quật đuôi': 'Tail Lash', 'Phun nước đen': 'Black Water Jet', 'Vòng thân': 'Coil Arches', 'Vỗ sóng bờ': 'Bank Splash', 'Vảy dựng gai': 'Bristling Scales',
+    'Quật đuôi': 'Tail Lash', 'Đớp': 'Snap', 'Phun nước đen': 'Black Water Jet', 'Vòng thân': 'Coil Arches', 'Vỗ sóng bờ': 'Bank Splash', 'Vảy dựng gai': 'Bristling Scales',
     'Hệ {0}: đánh bằng {1}!': '{0} form: strike with {1}!',
   });
 
@@ -47731,6 +47806,14 @@ window.FIREBASE_CONFIG = {
   A.boss = function (cx, b) {
     if (!b || b.kind !== 'thuong' || b.illusion || !b.tl) return boss0.apply(this, arguments);
     const t = G.time || 0, M = mauB(b), pv = c;
+    if (b.tl.lan && b.dying == null) { // đang lặn: chỉ thấy gợn nước + vây lưng rẽ nước chạy dọc mép phải
+      c = cx;
+      try {
+        for (let i = 0; i < 3; i++) { const r = 8 + ((t * 30 + i * 9) % 26); E(b.x, b.y + 2, r, r * 0.3, 'rgba(220,240,232,' + (0.5 - r / 70).toFixed(2) + ')'); }
+        for (let i = 0; i < 4; i++) R(b.x - 6 + i * 3, b.y - 4 - (i % 2) * 3, 2, 4 + (i % 2) * 3, M.vay);
+      } finally { c = pv; }
+      return;
+    }
     c = cx;
     try {
       if (b.dying == null) { E(b.x, b.y + 2, 30, 8, 'rgba(8,20,22,0.55)'); for (let i = 0; i < 8; i++) { const a = i / 8 * TAU + t; E(b.x + Math.cos(a) * 28, b.y + 2 + Math.sin(a) * 7, 3, 1.2, 'rgba(220,240,232,0.6)'); } }
