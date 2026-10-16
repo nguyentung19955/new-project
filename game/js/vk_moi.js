@@ -613,6 +613,8 @@
   function anhVk(V, loai, cap, he) {
     const r = V.tep.vk[loai][cap];
     if (!he || typeof document === 'undefined') return { img: V.img, x: r[0], y: r[1], w: r[2], h: r[3] };
+    const anhHe = G.vkHeAnh && G.vkHeAnh(loai, cap, he, r); // 16/10: có ảnh vũ khí theo hệ (zed-vk-he, js/vien_vk.js) thì dùng, không nhuộm
+    if (anhHe) return anhHe;
     const k = loai + cap + he;
     let cv = NHUOM.get(k);
     if (!cv) {
@@ -633,6 +635,17 @@
     const he = w.coat && G.EL[w.coat] ? w.coat : cap > 0 && G.EL[w.branch] ? w.branch : null;
     const a = anhVk(V, loai, cap, he), cheo = loai !== 'phitieu';
     const k = cheo ? (size * 1.35) / (a.w + a.h) : size / Math.max(a.w, a.h);
+    // 16/10 bậc ép đồ chỉ ở KHUNG Ô (js/ep_do.js E.khung; ?vienvk=1 tắt): hình nằm trong ô nơi gọi vừa vẽ → ghi số bậc lên góc ô đó sau
+    // khi vẽ hình; nơi gọi không vẽ ô (dòng kết quả, dòng nhỏ) → tự vẽ ô gd-o-ep-<bậc> quanh hình rồi ghi số.
+    const E = G.epDo, khung = E && E.khung && E.khung() && E.oChua;
+    let oK = null, bK = 0;
+    if (khung) {
+      try {
+        bK = E.bat() ? E.bac(w) : 0;
+        oK = E.oChua(x, y);
+        if (!oK) { const s0 = Math.round(size + 4); E.o(Math.round(x - s0 / 2), Math.round(y - s0 / 2), s0, bK, c); oK = E.oChua(x, y); }
+      } catch (e) { oK = null; }
+    }
     c.save();
     c.imageSmoothingEnabled = k < 1;
     c.translate(Math.round(x), Math.round(y));
@@ -647,6 +660,7 @@
       try { VV.sau(c, w, V.img, r0[0], r0[1], r0[2], r0[3], kv, dx, dy, 1 / k); } catch (e) { /* bỏ qua */ }
     } else c.drawImage(a.img, a.x, a.y, a.w, a.h, (-a.w * k) / 2, (-a.h * k) / 2, a.w * k, a.h * k);
     c.restore();
+    if (oK && bK > 0) { try { const p = oK.so || [oK.x + oK.w - 1, oK.y + oK.h - 1]; E.soBac(c, p[0], p[1], bK, Math.min(oK.w, oK.h) < 24); } catch (e) { /* bỏ qua */ } }
     return true;
   };
   // Ô zed-vk của một vũ khí (đúng loại, cấp, nhuộm hệ như ô đồ): { img, x, y, w, h } hoặc null khi ảnh chưa tải xong.
@@ -760,7 +774,7 @@
       T.inset(x, y, wd, rowH - 2, VM.ui.doi === w.id);
       // đợt 6: ô và màu tên theo Bậc ép đồ (js/ep_do.js) khi đã ép; chưa ép thì như cũ
       const bac = G.epDo && G.epDo.bat() ? G.epDo.bac(w) : 0;
-      if (bac) G.epDo.o(x + 3, y + 3, 32, bac); else T.slot(x + 3, y + 3, 32, 0);
+      if (bac || (G.epDo.khung && G.epDo.khung())) G.epDo.o(x + 3, y + 3, 32, bac); else T.slot(x + 3, y + 3, 32, 0); // 16/10: khung ô theo bậc cả Trắng
       G.art.weaponIcon(G.ux, w, x + 19, y + 19, 26);
       const bw = ro ? 0 : 150, tw = wd - 44 - bw;
       tx(G.wName(w) + (bac ? ' · ' + G.t('Bậc {0}', G.epDo.tenBac(bac)) : '') + (dau ? ' · ' + G.t('cầm khi vào ải') : ''), x + 40, y + 10, tw, { size: 7.5, bold: true, color: bac ? G.epDo.mauBac(bac) : E ? E.col : TXT });

@@ -984,6 +984,8 @@
         active: on, cd: on ? 0 : P.swapCd / (G.SWAP_CD || 1.5), icon: false, gem: false, id: 'slot' + i,
       });
       if (G.epDo) G.epDo.vien(c, x, 3, 54, 35, G.epDo.bac(w), false, true); // đợt 6: viền màu Bậc ép đồ (Rực lửa có lửa chạy)
+      // 16/10 bậc ép đồ chỉ ở khung ô: viền ô này là khung bậc → ghi lại để VM.icon ghi số bậc ở góc trên phải (không vẽ thêm ô nhỏ)
+      if (G.epDo && G.epDo.khung && G.epDo.khung()) G.epDo.ghiO(x, 3, 54, 35, G.epDo.bat() ? G.epDo.bac(w) : 0, [x + 52, 13]);
       G.art.weaponIcon(c, Object.assign({}, w, { coat: P.coats[w.id] && P.coats[w.id].t > 0 ? P.coats[w.id].el : null }), x + 13, 13, 19, on ? (P.atkT > 0 ? 'attack' : 'idle') : 'sleep');
       const mi = markInfo(w);
       // bậc và độ mài nằm ở phần phải của ô, không chồng lên hình vũ khí (hình chiếm 26 điểm bên trái)

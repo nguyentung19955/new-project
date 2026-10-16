@@ -264,11 +264,46 @@
   const SC = () => G.spriteCustom;
   const gd = (ma) => { const s = SC(); return s && s.gdSan ? s.gdSan(ma) : null; };
   // Ô vũ khí theo bậc: ảnh gd-o-ep-<bậc>; chưa có ảnh thì khung màu bằng code (Rực lửa: viền lửa chạy)
-  E.o = function (x, y, s, b) {
-    const g = gd('gd-o-ep-' + b), c = G.ux;
+  E.o = function (x, y, s, b, c) {
+    c = c || G.ux;
+    E.ghiO(x, y, s, s, b);
+    const g = gd('gd-o-ep-' + b);
     if (g && SC().veGd(c, g, x, y, s, s)) return;
-    ui.rect(x, y, s, s, '#141a22');
+    if (c === G.ux) ui.rect(x, y, s, s, '#141a22'); else { c.fillStyle = '#141a22'; c.fillRect(x, y, s, s); }
     E.vien(c, x, y, s, s, b, true);
+  };
+  // ---------- 16/10 KHUNG Ô THEO BẬC (docs/review/ke-hoach-cai-thien/vu-khi-chatgpt/bao-cao-A.md) ----------
+  // Bậc ép đồ chỉ hiện ở khung ô đồ: ô gd-o-ep-<bậc> (ảnh khung có sẵn, mỗi bậc một màu) + số bậc nhỏ ở góc dưới phải (Trắng không ghi số).
+  // Ô vẽ trong khung hình này được ghi lại (E.ghiO) để VM.icon (js/vk_moi.js) biết hình vũ khí đã nằm trong ô nào → ghi số bậc lên góc ô
+  // SAU khi vẽ vũ khí (số không bị hình che); chưa có ô thì VM.icon tự vẽ ô nhỏ quanh hình. Bật lại bản cũ: ?vienvk=1 (G.KHUNG_BAC = false).
+  E.khung = () => G.KHUNG_BAC !== false && G.VIEN_VK !== true;
+  const DA_O = [];
+  let oLuc = null;
+  E.ghiO = function (x, y, w, h, b, so) { // so: [x, y] chỗ ghi số riêng (ô trong trận); mặc định góc dưới phải
+    const t = G.time || 0;
+    if (t !== oLuc) { DA_O.length = 0; oLuc = t; }
+    if (DA_O.length > 24) DA_O.shift();
+    DA_O.push({ x, y, w, h, b: b | 0, so: so || null });
+  };
+  E.oChua = function (px, py) { // ô gần nhất vừa vẽ (cùng khung hình) chứa điểm (px, py)
+    if ((G.time || 0) !== oLuc) return null;
+    for (let i = DA_O.length - 1; i >= 0; i--) { const o = DA_O[i]; if (px >= o.x && px <= o.x + o.w && py >= o.y && py <= o.y + o.h) return o; }
+    return null;
+  };
+  // Số bậc (1..6 = Xanh lam..Rực lửa) trong một miếng nền sẫm nhỏ; (x, y) = góc dưới phải. c: bút đang vẽ.
+  E.soBac = function (c, x, y, b, nho) {
+    if (!(b > 0)) return;
+    const s = String(b), sz = nho ? 5.5 : 6.5;
+    const ux = G.ux; G.ux = c;
+    c.save();
+    try {
+      ui.font(sz, true);
+      const m = c.measureText(s), tw = Math.ceil(m.width), th = Math.ceil((m.actualBoundingBoxAscent || sz * 0.72) + (m.actualBoundingBoxDescent || 0));
+      const w = tw + 2, h = th + 2, x0 = Math.round(x - w), y0 = Math.round(y - h);
+      c.fillStyle = 'rgba(12,10,16,0.9)'; c.fillRect(x0, y0, w, h);
+      c.fillStyle = E.mauBac(b); c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+      c.fillText(s, x0 + 1 + (tw - m.width) / 2, y0 + 1 + (m.actualBoundingBoxAscent || sz * 0.72));
+    } finally { c.restore(); G.ux = ux; }
   };
   // Viền màu bậc nhuộm bằng code (ô vũ khí trong trận, ô dự phòng khi thiếu ảnh). Rực lửa: lửa chạy quanh viền.
   // trang: vẽ cả viền bậc Trắng (ô vũ khí trong trận: khung ảnh không còn theo bậc màu cũ G.RARITY, viền luôn theo bậc ép đồ)
@@ -293,7 +328,7 @@
   G.bacMauVk = (w) => (E.bat() ? E.mauBac(E.bac(w)) : CF.mau[0]);
   G.bacTenVk = (w) => E.tenBac(E.bat() ? E.bac(w) : 0);
   // Ô: đã ép (bậc > 0) thì ô ép đồ gd-o-ep-<bậc>; bậc Trắng thì ô thường (như bảng Linh khí của js/vk_moi.js).
-  G.oBacVk = function (x, y, s, w) { const b = E.bat() ? E.bac(w) : 0; if (b) E.o(x, y, s, b); else if (G.theme) G.theme.slot(x, y, s, 0); };
+  G.oBacVk = function (x, y, s, w) { const b = E.bat() ? E.bac(w) : 0; if (b || E.khung()) E.o(x, y, s, b); else if (G.theme) G.theme.slot(x, y, s, 0); };
   E.iconDa = function (x, y, s) {
     const g = gd('gd-da-nang-bac');
     if (g && SC().veGd(G.ux, g, x - s / 2, y - s / 2, s, s)) return;

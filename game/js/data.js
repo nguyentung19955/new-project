@@ -191,7 +191,7 @@
   // (15/10 don-tep B: bỏ cờ quay lui ?cbcu=1 / G.CB_CU.)
   G.EP_DO = {
     ten: ['Trắng', 'Xanh lam', 'Xanh lục', 'Tím', 'Vàng', 'Đỏ', 'Rực lửa'],
-    mau: ['#d6d2c8', '#5aa8ff', '#62d65a', '#c07cff', '#ffd24a', '#ff5a44', '#ff9a2a'],
+    mau: ['#d9dde4', '#5798ff', '#69c96b', '#b27bff', '#ffd166', '#f05b55', '#ff7c3e'], // 16/10 thang màu khung ô (góp ý ChatGPT mục 4)
     // TỔNG sức mạnh vũ khí theo bậc (sát thương × phần phụ của loại). Sát thương thật = tong / (1 + phu.giaTri × bậc), để phần phụ
     // (kiếm tốc đánh, thương tầm, búa choáng, phi tiêu xuyên) cộng lại đúng bằng tong: Rực lửa ≈ ×1,75.
     tong: [1, 1.08, 1.17, 1.28, 1.4, 1.55, 1.75],
@@ -387,9 +387,13 @@
   G.CAM_VK = true;
   try { if (typeof location !== 'undefined' && /[?&]camvk=0(&|$)/.test(location.search || '')) G.CAM_VK = false; } catch (e) { /* giữ mặc định */ }
   // VIỀN VŨ KHÍ THEO BẬC ÉP ĐỒ + ÁNH THEO CẤP MÀI (15/10/2026, docs/review/ke-hoach-cai-thien/vien-vk-bac): js/vien_vk.js vẽ viền / hào quang màu bậc
-  // quanh hình vũ khí (trên tay Zed và trong ô), vệt trắng lướt theo cấp mài. Chỉ đổi HÌNH. Tắt: ?vienvk=0 (như trước).
-  G.VIEN_VK = true;
-  try { if (typeof location !== 'undefined' && /[?&]vienvk=0(&|$)/.test(location.search || '')) G.VIEN_VK = false; } catch (e) { /* giữ mặc định */ }
+  // quanh hình vũ khí (trên tay Zed và trong ô), vệt trắng lướt theo cấp mài. Chỉ đổi HÌNH.
+  // 16/10 (docs/review/ke-hoach-cai-thien/vu-khi-chatgpt/bao-cao-A.md): chủ game chọn bậc ép đồ CHỈ hiện ở KHUNG Ô ĐỒ → mặc định TẮT viền /
+  // hào quang / đốm / ánh mài trên vũ khí; mọi ô vũ khí vẽ khung ô màu bậc + số bậc (G.KHUNG_BAC, js/ep_do.js E.o, js/vk_moi.js VM.icon).
+  // Bật lại bản cũ (viền trên vũ khí, không có số bậc ở ô): ?vienvk=1.
+  G.VIEN_VK = false;
+  try { if (typeof location !== 'undefined' && /[?&]vienvk=1(&|$)/.test(location.search || '')) G.VIEN_VK = true; } catch (e) { /* giữ mặc định */ }
+  G.KHUNG_BAC = !G.VIEN_VK;
   // NẮM CHUÔI THẬT (15/10/2026, docs/review/ke-hoach-cai-thien/vk-khop-tay/bao-cao.md, js/zed_moi.js): nắm tay ôm chuôi + lớp ngón tay trước;
   // thương hai tay (tay phải đuôi cán, tay trái thân cán); phi tiêu to ×1,3 và kẹp ở ngón. Chỉ đổi HÌNH. Tắt từng phần như trước:
   // ?namchuoi=0 (tất cả), ?thuong2tay=0 (hàng thương), ?phitieuto=0 (phi tiêu cầm + bay).

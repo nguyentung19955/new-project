@@ -20,7 +20,7 @@
 // gian + nối góc như gocMuot). Ném phi tiêu / đấm tay không (không có neo vũ khí): cánh tay đang duỗi (bảng TAY) xoay quanh gốc tay cùng góc.
 // Vệt/hiệu ứng: mũi vũ khí (doiTip) đã xoay theo; js/fx.js aimed() hỏi G.zedMoi.lechHinh. Tắt: ?huongvk=0.
 // VIỀN VŨ KHÍ THEO BẬC ÉP ĐỒ + ÁNH THEO CẤP MÀI (15/10/2026, docs/review/ke-hoach-cai-thien/vien-vk-bac/YEU-CAU.md): veVk gọi G.vienVk.truoc/sau
-// (js/vien_vk.js) quanh ảnh vũ khí, mọi hàng có vũ khí (đứng/đi/chạy/chém/phi tiêu đang cầm). Tắt: ?vienvk=0.
+// (js/vien_vk.js) quanh ảnh vũ khí, mọi hàng có vũ khí (đứng/đi/chạy/chém/phi tiêu đang cầm). 16/10: mặc định TẮT (bậc chỉ ở khung ô); bật lại ?vienvk=1.
 // SỬA BÓP EO / VẶN NGƯỜI KHI CHẠY + CHÉM (13/10/2026, docs/review/ke-hoach-cai-thien/zed-eo-sua/YEU-CAU.md): chân luôn cùng hướng thân trên
 // (hướng chém); chạy ngược hướng chém → chạy LÙI (hàng chạy phát ngược thứ tự khung, nhịp ×0,8). Đường ghép dời xuống giữa đùi (đai + hông +
 // đùi trên của khung đòn), vùng nối 5 hàng nguồn: nửa hẹp hơn giãn ngang dần cho khớp mép nửa kia, nửa trên đè nửa dưới. Số đo từng khung cả
@@ -260,6 +260,8 @@
   function anhVk(V, loai, cap, he) {
     const r = V.tep.vk[loai][cap];
     if (!he || typeof document === 'undefined') return { img: V.img, x: r[0], y: r[1], w: r[2], h: r[3] };
+    const anhHe = G.vkHeAnh && G.vkHeAnh(loai, cap, he, r); // 16/10: có ảnh vũ khí theo hệ (zed-vk-he, js/vien_vk.js) thì dùng, không nhuộm
+    if (anhHe) return anhHe;
     const k = loai + cap + he;
     let cv = NHUOM.get(k);
     if (!cv) {

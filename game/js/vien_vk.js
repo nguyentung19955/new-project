@@ -1,3 +1,6 @@
+// 16/10/2026 (docs/review/ke-hoach-cai-thien/vu-khi-chatgpt/bao-cao-A.md): chủ game chọn bậc ép đồ CHỈ hiện ở khung ô đồ → cả tệp này (viền,
+//   hào quang, đốm, lửa chạy, ánh lướt theo cấp mài) mặc định TẮT (G.VIEN_VK = false). Bật lại bản cũ: ?vienvk=1. Khung ô: js/ep_do.js.
+//   Cuối tệp: G.vkHeAnh — nạp ảnh vũ khí theo hệ (bộ zed-vk-he) khi đã có ảnh.
 // VIỀN + HÀO QUANG VŨ KHÍ THEO BẬC ÉP ĐỒ, ÁNH LƯỚT THEO CẤP MÀI (15/10/2026) — docs/review/ke-hoach-cai-thien/vien-vk-bac/YEU-CAU.md
 //   Bậc ép đồ (G.EP_DO.mau, js/ep_do.js E.bac): Trắng không viền · Xanh lam, Xanh lục: viền 1 điểm ảnh màu bậc · Tím, Vàng: viền + hào quang
 //   mờ mềm nhấp nháy nhẹ · Đỏ: thêm vài đốm sáng bay quanh lưỡi · Rực lửa: như Đỏ + đốm lửa vàng/cam chạy dọc vũ khí (kiểu lửa E.vien).
@@ -192,4 +195,22 @@
   }
   if (typeof setTimeout === 'function' && typeof document !== 'undefined') setTimeout(dungSan, 1500);
   VV.dungSan = dungSan;
+
+  // ---------- ẢNH VŨ KHÍ THEO HỆ (16/10, bao-cao-A mục 3) ----------
+  // Bộ zed-vk-he (doi_tuong "zed", tải sau; dựng bằng docs/review/ke-hoach-cai-thien/vu-khi-chatgpt/dung_zed_vk_he.py):
+  //   vk[loại][hệ] = [null, [x, y, rộng, cao] Mầm, … Thành hình, … Thức tỉnh]; hệ: fire | poison | ice.
+  // Mỗi ô PHẢI cùng rộng × cao với ô cấp đó của zed-vk (điểm cầm B.cam / nắm tay tính theo ô zed-vk) — lệch cỡ thì bỏ qua ô đó.
+  // Có ảnh: dùng thẳng (không nhuộm). Chưa có / chưa tải xong / ?vkhe=0: null → nơi gọi dùng ảnh cấp nhuộm 30% màu hệ như cũ.
+  // Dùng ở js/zed_moi.js anhVk (trên tay) và js/vk_moi.js anhVk (ô đồ, Phi Thương, nút).
+  G.VK_HE_ANH = true;
+  try { if (typeof location !== 'undefined' && /[?&]vkhe=0(&|$)/.test(location.search || '')) G.VK_HE_ANH = false; } catch (e) { /* giữ mặc định */ }
+  G.vkHeAnh = function (loai, cap, he, r) {
+    if (G.VK_HE_ANH === false || !he || !(cap > 0) || !r) return null;
+    const SC = G.spriteCustom, z = SC && SC.zed && SC.zed['zed-vk-he'];
+    if (!z) return null;
+    if (!z.ready || !z.img) { if (SC.canAnh) SC.canAnh('zed-vk-he'); return null; }
+    const h = z.tep && z.tep.vk && z.tep.vk[loai] && z.tep.vk[loai][he], q = h && h[cap];
+    if (!q || q[2] !== r[2] || q[3] !== r[3]) return null;
+    return { img: z.img, x: q[0], y: q[1], w: q[2], h: q[3] };
+  };
 })();

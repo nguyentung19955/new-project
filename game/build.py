@@ -317,7 +317,7 @@ def bat_buoc(t):
     ma, d = t['ma'], t.get('doi_tuong')
     if ma in HINH_LON_SAU:  # 11/10 (chủ dự án duyệt): hình lớn không cần ở màn chào → tải sau; game vẽ code cho tới khi ảnh về
         return False
-    if d == 'zed' and ma in ('zed-rung', 'zed-bien', 'zed-lau'):  # trang phục Zed bộ Rừng / Biển / Lâu đài (mở sau trùm vùng 1 / 2 / 3): tải sau; chưa về thì js/zed_moi.js vẽ bộ ninja
+    if d == 'zed' and ma in ('zed-rung', 'zed-bien', 'zed-lau', 'zed-vk-he'):  # zed-vk-he (16/10, ảnh vũ khí theo hệ): tải sau, chưa về thì ảnh cấp nhuộm như cũ; trang phục Zed bộ Rừng / Biển / Lâu đài (mở sau trùm vùng 1 / 2 / 3): tải sau; chưa về thì js/zed_moi.js vẽ bộ ninja
         return False
     if d in ('nguoi-lang', 'giao-dien', 'vat-pham', 'zed', 'em-be'):  # zed: bộ Zed mới (zed-moi, zed-vk) cần ngay ở làng; em-be: 3 NPC
         return True

@@ -59,7 +59,7 @@
 <div id="lk-tai" data-bia="||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAMEBQYH/8QAKRAAAQMCBQMDBQAAAAAAAAAAAQIDEQAEBRIhMUETFGEiQnEVUWKBsf/EABcBAAMBAAAAAAAAAAAAAAAAAAIDBAX/xAAlEQACAQEFCQAAAAAAAAAAAAABAgADBBExUfASEyEyM0FxobH/2gAMAwEAAhEDEQA/AOfNMWj9zbWiEtBsn1ugGTPCvjXajFcBNssNsvoeMxlCgVJqzCbhHftG3aGdcJBUAUn7neRzTMcumxjD0hDSkmFBtWZMjSdR5qamzb4DtHOiimTfxmt/T3UpzLBCTt5q22sWekt0vBvImSF8+KyF5eWDaGFNZlr6YkKGiTPGvzSutZDDX1sF3P0wPUBMzvP62rStACi5TEWB9pizi/H1JsLUo3NhKiZUOfyqbE1Hu3jJkqPNFFRUuprOHU5dZSVwmE6+2mNk9u7r7R/aKKqqQLNifB+T/9k=|||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAgf/xAAmEAACAgEEAQQCAwAAAAAAAAABAgMRAAQSITEFE1FhgSJBcbHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQIDBAX/xAAeEQABBAIDAQAAAAAAAAAAAAAAAQIDEiExBBEyIv/aAAwDAQACEQMRAD8A51EIZIo53EASNwHG07mBPFno9HFyeOhl1Y2yFIbtjVkDnr54yzx2vaLSyII1cELvBQEVu5PyeshTWvFJG6qi7OR+A9/4xoa3yQzWRvzsH8YkWrkCMZYlsoSvJHfWUalzFpI4/TRBZbca3HsUcXqvJvPqpZgEAewAFHAP1mZ9aZIoyqKWVa4jX3P+jByGor8aNDgT0gXvDiHTs1EbjRAsX3jKuEH92Ofs4YYGeim/yLulscHjFuT6YNno/wBnDDGfsEej/9k=" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.16-1836";
+(window.G = window.G || {}).VERSION = "lk-2026.10.16-1856";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -2198,7 +2198,7 @@
   // (15/10 don-tep B: bỏ cờ quay lui ?cbcu=1 / G.CB_CU.)
   G.EP_DO = {
     ten: ['Trắng', 'Xanh lam', 'Xanh lục', 'Tím', 'Vàng', 'Đỏ', 'Rực lửa'],
-    mau: ['#d6d2c8', '#5aa8ff', '#62d65a', '#c07cff', '#ffd24a', '#ff5a44', '#ff9a2a'],
+    mau: ['#d9dde4', '#5798ff', '#69c96b', '#b27bff', '#ffd166', '#f05b55', '#ff7c3e'], // 16/10 thang màu khung ô (góp ý ChatGPT mục 4)
     // TỔNG sức mạnh vũ khí theo bậc (sát thương × phần phụ của loại). Sát thương thật = tong / (1 + phu.giaTri × bậc), để phần phụ
     // (kiếm tốc đánh, thương tầm, búa choáng, phi tiêu xuyên) cộng lại đúng bằng tong: Rực lửa ≈ ×1,75.
     tong: [1, 1.08, 1.17, 1.28, 1.4, 1.55, 1.75],
@@ -2394,9 +2394,13 @@
   G.CAM_VK = true;
   try { if (typeof location !== 'undefined' && /[?&]camvk=0(&|$)/.test(location.search || '')) G.CAM_VK = false; } catch (e) { /* giữ mặc định */ }
   // VIỀN VŨ KHÍ THEO BẬC ÉP ĐỒ + ÁNH THEO CẤP MÀI (15/10/2026, docs/review/ke-hoach-cai-thien/vien-vk-bac): js/vien_vk.js vẽ viền / hào quang màu bậc
-  // quanh hình vũ khí (trên tay Zed và trong ô), vệt trắng lướt theo cấp mài. Chỉ đổi HÌNH. Tắt: ?vienvk=0 (như trước).
-  G.VIEN_VK = true;
-  try { if (typeof location !== 'undefined' && /[?&]vienvk=0(&|$)/.test(location.search || '')) G.VIEN_VK = false; } catch (e) { /* giữ mặc định */ }
+  // quanh hình vũ khí (trên tay Zed và trong ô), vệt trắng lướt theo cấp mài. Chỉ đổi HÌNH.
+  // 16/10 (docs/review/ke-hoach-cai-thien/vu-khi-chatgpt/bao-cao-A.md): chủ game chọn bậc ép đồ CHỈ hiện ở KHUNG Ô ĐỒ → mặc định TẮT viền /
+  // hào quang / đốm / ánh mài trên vũ khí; mọi ô vũ khí vẽ khung ô màu bậc + số bậc (G.KHUNG_BAC, js/ep_do.js E.o, js/vk_moi.js VM.icon).
+  // Bật lại bản cũ (viền trên vũ khí, không có số bậc ở ô): ?vienvk=1.
+  G.VIEN_VK = false;
+  try { if (typeof location !== 'undefined' && /[?&]vienvk=1(&|$)/.test(location.search || '')) G.VIEN_VK = true; } catch (e) { /* giữ mặc định */ }
+  G.KHUNG_BAC = !G.VIEN_VK;
   // NẮM CHUÔI THẬT (15/10/2026, docs/review/ke-hoach-cai-thien/vk-khop-tay/bao-cao.md, js/zed_moi.js): nắm tay ôm chuôi + lớp ngón tay trước;
   // thương hai tay (tay phải đuôi cán, tay trái thân cán); phi tiêu to ×1,3 và kẹp ở ngón. Chỉ đổi HÌNH. Tắt từng phần như trước:
   // ?namchuoi=0 (tất cả), ?thuong2tay=0 (hàng thương), ?phitieuto=0 (phi tiêu cầm + bay).
@@ -28725,7 +28729,7 @@ MA._xong();
 // gian + nối góc như gocMuot). Ném phi tiêu / đấm tay không (không có neo vũ khí): cánh tay đang duỗi (bảng TAY) xoay quanh gốc tay cùng góc.
 // Vệt/hiệu ứng: mũi vũ khí (doiTip) đã xoay theo; js/fx.js aimed() hỏi G.zedMoi.lechHinh. Tắt: ?huongvk=0.
 // VIỀN VŨ KHÍ THEO BẬC ÉP ĐỒ + ÁNH THEO CẤP MÀI (15/10/2026, docs/review/ke-hoach-cai-thien/vien-vk-bac/YEU-CAU.md): veVk gọi G.vienVk.truoc/sau
-// (js/vien_vk.js) quanh ảnh vũ khí, mọi hàng có vũ khí (đứng/đi/chạy/chém/phi tiêu đang cầm). Tắt: ?vienvk=0.
+// (js/vien_vk.js) quanh ảnh vũ khí, mọi hàng có vũ khí (đứng/đi/chạy/chém/phi tiêu đang cầm). 16/10: mặc định TẮT (bậc chỉ ở khung ô); bật lại ?vienvk=1.
 // SỬA BÓP EO / VẶN NGƯỜI KHI CHẠY + CHÉM (13/10/2026, docs/review/ke-hoach-cai-thien/zed-eo-sua/YEU-CAU.md): chân luôn cùng hướng thân trên
 // (hướng chém); chạy ngược hướng chém → chạy LÙI (hàng chạy phát ngược thứ tự khung, nhịp ×0,8). Đường ghép dời xuống giữa đùi (đai + hông +
 // đùi trên của khung đòn), vùng nối 5 hàng nguồn: nửa hẹp hơn giãn ngang dần cho khớp mép nửa kia, nửa trên đè nửa dưới. Số đo từng khung cả
@@ -28965,6 +28969,8 @@ MA._xong();
   function anhVk(V, loai, cap, he) {
     const r = V.tep.vk[loai][cap];
     if (!he || typeof document === 'undefined') return { img: V.img, x: r[0], y: r[1], w: r[2], h: r[3] };
+    const anhHe = G.vkHeAnh && G.vkHeAnh(loai, cap, he, r); // 16/10: có ảnh vũ khí theo hệ (zed-vk-he, js/vien_vk.js) thì dùng, không nhuộm
+    if (anhHe) return anhHe;
     const k = loai + cap + he;
     let cv = NHUOM.get(k);
     if (!cv) {
@@ -32987,6 +32993,8 @@ MA._xong();
   function anhVk(V, loai, cap, he) {
     const r = V.tep.vk[loai][cap];
     if (!he || typeof document === 'undefined') return { img: V.img, x: r[0], y: r[1], w: r[2], h: r[3] };
+    const anhHe = G.vkHeAnh && G.vkHeAnh(loai, cap, he, r); // 16/10: có ảnh vũ khí theo hệ (zed-vk-he, js/vien_vk.js) thì dùng, không nhuộm
+    if (anhHe) return anhHe;
     const k = loai + cap + he;
     let cv = NHUOM.get(k);
     if (!cv) {
@@ -33007,6 +33015,17 @@ MA._xong();
     const he = w.coat && G.EL[w.coat] ? w.coat : cap > 0 && G.EL[w.branch] ? w.branch : null;
     const a = anhVk(V, loai, cap, he), cheo = loai !== 'phitieu';
     const k = cheo ? (size * 1.35) / (a.w + a.h) : size / Math.max(a.w, a.h);
+    // 16/10 bậc ép đồ chỉ ở KHUNG Ô (js/ep_do.js E.khung; ?vienvk=1 tắt): hình nằm trong ô nơi gọi vừa vẽ → ghi số bậc lên góc ô đó sau
+    // khi vẽ hình; nơi gọi không vẽ ô (dòng kết quả, dòng nhỏ) → tự vẽ ô gd-o-ep-<bậc> quanh hình rồi ghi số.
+    const E = G.epDo, khung = E && E.khung && E.khung() && E.oChua;
+    let oK = null, bK = 0;
+    if (khung) {
+      try {
+        bK = E.bat() ? E.bac(w) : 0;
+        oK = E.oChua(x, y);
+        if (!oK) { const s0 = Math.round(size + 4); E.o(Math.round(x - s0 / 2), Math.round(y - s0 / 2), s0, bK, c); oK = E.oChua(x, y); }
+      } catch (e) { oK = null; }
+    }
     c.save();
     c.imageSmoothingEnabled = k < 1;
     c.translate(Math.round(x), Math.round(y));
@@ -33021,6 +33040,7 @@ MA._xong();
       try { VV.sau(c, w, V.img, r0[0], r0[1], r0[2], r0[3], kv, dx, dy, 1 / k); } catch (e) { /* bỏ qua */ }
     } else c.drawImage(a.img, a.x, a.y, a.w, a.h, (-a.w * k) / 2, (-a.h * k) / 2, a.w * k, a.h * k);
     c.restore();
+    if (oK && bK > 0) { try { const p = oK.so || [oK.x + oK.w - 1, oK.y + oK.h - 1]; E.soBac(c, p[0], p[1], bK, Math.min(oK.w, oK.h) < 24); } catch (e) { /* bỏ qua */ } }
     return true;
   };
   // Ô zed-vk của một vũ khí (đúng loại, cấp, nhuộm hệ như ô đồ): { img, x, y, w, h } hoặc null khi ảnh chưa tải xong.
@@ -33134,7 +33154,7 @@ MA._xong();
       T.inset(x, y, wd, rowH - 2, VM.ui.doi === w.id);
       // đợt 6: ô và màu tên theo Bậc ép đồ (js/ep_do.js) khi đã ép; chưa ép thì như cũ
       const bac = G.epDo && G.epDo.bat() ? G.epDo.bac(w) : 0;
-      if (bac) G.epDo.o(x + 3, y + 3, 32, bac); else T.slot(x + 3, y + 3, 32, 0);
+      if (bac || (G.epDo.khung && G.epDo.khung())) G.epDo.o(x + 3, y + 3, 32, bac); else T.slot(x + 3, y + 3, 32, 0); // 16/10: khung ô theo bậc cả Trắng
       G.art.weaponIcon(G.ux, w, x + 19, y + 19, 26);
       const bw = ro ? 0 : 150, tw = wd - 44 - bw;
       tx(G.wName(w) + (bac ? ' · ' + G.t('Bậc {0}', G.epDo.tenBac(bac)) : '') + (dau ? ' · ' + G.t('cầm khi vào ải') : ''), x + 40, y + 10, tw, { size: 7.5, bold: true, color: bac ? G.epDo.mauBac(bac) : E ? E.col : TXT });
@@ -33890,11 +33910,46 @@ MA._xong();
   const SC = () => G.spriteCustom;
   const gd = (ma) => { const s = SC(); return s && s.gdSan ? s.gdSan(ma) : null; };
   // Ô vũ khí theo bậc: ảnh gd-o-ep-<bậc>; chưa có ảnh thì khung màu bằng code (Rực lửa: viền lửa chạy)
-  E.o = function (x, y, s, b) {
-    const g = gd('gd-o-ep-' + b), c = G.ux;
+  E.o = function (x, y, s, b, c) {
+    c = c || G.ux;
+    E.ghiO(x, y, s, s, b);
+    const g = gd('gd-o-ep-' + b);
     if (g && SC().veGd(c, g, x, y, s, s)) return;
-    ui.rect(x, y, s, s, '#141a22');
+    if (c === G.ux) ui.rect(x, y, s, s, '#141a22'); else { c.fillStyle = '#141a22'; c.fillRect(x, y, s, s); }
     E.vien(c, x, y, s, s, b, true);
+  };
+  // ---------- 16/10 KHUNG Ô THEO BẬC (docs/review/ke-hoach-cai-thien/vu-khi-chatgpt/bao-cao-A.md) ----------
+  // Bậc ép đồ chỉ hiện ở khung ô đồ: ô gd-o-ep-<bậc> (ảnh khung có sẵn, mỗi bậc một màu) + số bậc nhỏ ở góc dưới phải (Trắng không ghi số).
+  // Ô vẽ trong khung hình này được ghi lại (E.ghiO) để VM.icon (js/vk_moi.js) biết hình vũ khí đã nằm trong ô nào → ghi số bậc lên góc ô
+  // SAU khi vẽ vũ khí (số không bị hình che); chưa có ô thì VM.icon tự vẽ ô nhỏ quanh hình. Bật lại bản cũ: ?vienvk=1 (G.KHUNG_BAC = false).
+  E.khung = () => G.KHUNG_BAC !== false && G.VIEN_VK !== true;
+  const DA_O = [];
+  let oLuc = null;
+  E.ghiO = function (x, y, w, h, b, so) { // so: [x, y] chỗ ghi số riêng (ô trong trận); mặc định góc dưới phải
+    const t = G.time || 0;
+    if (t !== oLuc) { DA_O.length = 0; oLuc = t; }
+    if (DA_O.length > 24) DA_O.shift();
+    DA_O.push({ x, y, w, h, b: b | 0, so: so || null });
+  };
+  E.oChua = function (px, py) { // ô gần nhất vừa vẽ (cùng khung hình) chứa điểm (px, py)
+    if ((G.time || 0) !== oLuc) return null;
+    for (let i = DA_O.length - 1; i >= 0; i--) { const o = DA_O[i]; if (px >= o.x && px <= o.x + o.w && py >= o.y && py <= o.y + o.h) return o; }
+    return null;
+  };
+  // Số bậc (1..6 = Xanh lam..Rực lửa) trong một miếng nền sẫm nhỏ; (x, y) = góc dưới phải. c: bút đang vẽ.
+  E.soBac = function (c, x, y, b, nho) {
+    if (!(b > 0)) return;
+    const s = String(b), sz = nho ? 5.5 : 6.5;
+    const ux = G.ux; G.ux = c;
+    c.save();
+    try {
+      ui.font(sz, true);
+      const m = c.measureText(s), tw = Math.ceil(m.width), th = Math.ceil((m.actualBoundingBoxAscent || sz * 0.72) + (m.actualBoundingBoxDescent || 0));
+      const w = tw + 2, h = th + 2, x0 = Math.round(x - w), y0 = Math.round(y - h);
+      c.fillStyle = 'rgba(12,10,16,0.9)'; c.fillRect(x0, y0, w, h);
+      c.fillStyle = E.mauBac(b); c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+      c.fillText(s, x0 + 1 + (tw - m.width) / 2, y0 + 1 + (m.actualBoundingBoxAscent || sz * 0.72));
+    } finally { c.restore(); G.ux = ux; }
   };
   // Viền màu bậc nhuộm bằng code (ô vũ khí trong trận, ô dự phòng khi thiếu ảnh). Rực lửa: lửa chạy quanh viền.
   // trang: vẽ cả viền bậc Trắng (ô vũ khí trong trận: khung ảnh không còn theo bậc màu cũ G.RARITY, viền luôn theo bậc ép đồ)
@@ -33919,7 +33974,7 @@ MA._xong();
   G.bacMauVk = (w) => (E.bat() ? E.mauBac(E.bac(w)) : CF.mau[0]);
   G.bacTenVk = (w) => E.tenBac(E.bat() ? E.bac(w) : 0);
   // Ô: đã ép (bậc > 0) thì ô ép đồ gd-o-ep-<bậc>; bậc Trắng thì ô thường (như bảng Linh khí của js/vk_moi.js).
-  G.oBacVk = function (x, y, s, w) { const b = E.bat() ? E.bac(w) : 0; if (b) E.o(x, y, s, b); else if (G.theme) G.theme.slot(x, y, s, 0); };
+  G.oBacVk = function (x, y, s, w) { const b = E.bat() ? E.bac(w) : 0; if (b || E.khung()) E.o(x, y, s, b); else if (G.theme) G.theme.slot(x, y, s, 0); };
   E.iconDa = function (x, y, s) {
     const g = gd('gd-da-nang-bac');
     if (g && SC().veGd(G.ux, g, x - s / 2, y - s / 2, s, s)) return;
@@ -34087,6 +34142,9 @@ MA._xong();
 })();
 
 // ===== js/vien_vk.js =====
+// 16/10/2026 (docs/review/ke-hoach-cai-thien/vu-khi-chatgpt/bao-cao-A.md): chủ game chọn bậc ép đồ CHỈ hiện ở khung ô đồ → cả tệp này (viền,
+//   hào quang, đốm, lửa chạy, ánh lướt theo cấp mài) mặc định TẮT (G.VIEN_VK = false). Bật lại bản cũ: ?vienvk=1. Khung ô: js/ep_do.js.
+//   Cuối tệp: G.vkHeAnh — nạp ảnh vũ khí theo hệ (bộ zed-vk-he) khi đã có ảnh.
 // VIỀN + HÀO QUANG VŨ KHÍ THEO BẬC ÉP ĐỒ, ÁNH LƯỚT THEO CẤP MÀI (15/10/2026) — docs/review/ke-hoach-cai-thien/vien-vk-bac/YEU-CAU.md
 //   Bậc ép đồ (G.EP_DO.mau, js/ep_do.js E.bac): Trắng không viền · Xanh lam, Xanh lục: viền 1 điểm ảnh màu bậc · Tím, Vàng: viền + hào quang
 //   mờ mềm nhấp nháy nhẹ · Đỏ: thêm vài đốm sáng bay quanh lưỡi · Rực lửa: như Đỏ + đốm lửa vàng/cam chạy dọc vũ khí (kiểu lửa E.vien).
@@ -34281,6 +34339,24 @@ MA._xong();
   }
   if (typeof setTimeout === 'function' && typeof document !== 'undefined') setTimeout(dungSan, 1500);
   VV.dungSan = dungSan;
+
+  // ---------- ẢNH VŨ KHÍ THEO HỆ (16/10, bao-cao-A mục 3) ----------
+  // Bộ zed-vk-he (doi_tuong "zed", tải sau; dựng bằng docs/review/ke-hoach-cai-thien/vu-khi-chatgpt/dung_zed_vk_he.py):
+  //   vk[loại][hệ] = [null, [x, y, rộng, cao] Mầm, … Thành hình, … Thức tỉnh]; hệ: fire | poison | ice.
+  // Mỗi ô PHẢI cùng rộng × cao với ô cấp đó của zed-vk (điểm cầm B.cam / nắm tay tính theo ô zed-vk) — lệch cỡ thì bỏ qua ô đó.
+  // Có ảnh: dùng thẳng (không nhuộm). Chưa có / chưa tải xong / ?vkhe=0: null → nơi gọi dùng ảnh cấp nhuộm 30% màu hệ như cũ.
+  // Dùng ở js/zed_moi.js anhVk (trên tay) và js/vk_moi.js anhVk (ô đồ, Phi Thương, nút).
+  G.VK_HE_ANH = true;
+  try { if (typeof location !== 'undefined' && /[?&]vkhe=0(&|$)/.test(location.search || '')) G.VK_HE_ANH = false; } catch (e) { /* giữ mặc định */ }
+  G.vkHeAnh = function (loai, cap, he, r) {
+    if (G.VK_HE_ANH === false || !he || !(cap > 0) || !r) return null;
+    const SC = G.spriteCustom, z = SC && SC.zed && SC.zed['zed-vk-he'];
+    if (!z) return null;
+    if (!z.ready || !z.img) { if (SC.canAnh) SC.canAnh('zed-vk-he'); return null; }
+    const h = z.tep && z.tep.vk && z.tep.vk[loai] && z.tep.vk[loai][he], q = h && h[cap];
+    if (!q || q[2] !== r[2] || q[3] !== r[3]) return null;
+    return { img: z.img, x: q[0], y: q[1], w: q[2], h: q[3] };
+  };
 })();
 
 // ===== js/ai_ngay.js =====
@@ -35590,6 +35666,8 @@ MA._xong();
         active: on, cd: on ? 0 : P.swapCd / (G.SWAP_CD || 1.5), icon: false, gem: false, id: 'slot' + i,
       });
       if (G.epDo) G.epDo.vien(c, x, 3, 54, 35, G.epDo.bac(w), false, true); // đợt 6: viền màu Bậc ép đồ (Rực lửa có lửa chạy)
+      // 16/10 bậc ép đồ chỉ ở khung ô: viền ô này là khung bậc → ghi lại để VM.icon ghi số bậc ở góc trên phải (không vẽ thêm ô nhỏ)
+      if (G.epDo && G.epDo.khung && G.epDo.khung()) G.epDo.ghiO(x, 3, 54, 35, G.epDo.bat() ? G.epDo.bac(w) : 0, [x + 52, 13]);
       G.art.weaponIcon(c, Object.assign({}, w, { coat: P.coats[w.id] && P.coats[w.id].t > 0 ? P.coats[w.id].el : null }), x + 13, 13, 19, on ? (P.atkT > 0 ? 'attack' : 'idle') : 'sleep');
       const mi = markInfo(w);
       // bậc và độ mài nằm ở phần phải của ô, không chồng lên hình vũ khí (hình chiếm 26 điểm bên trái)
