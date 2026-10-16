@@ -4,6 +4,132 @@
 
 > Mới nhất (16/10 chiều): **sửa lệch vai, hở khớp về 0, thêm 8 động tác**. Xem 3 mục **"Sửa lệch vai"**, **"Hở khớp về 0"**, **"Nhiều động tác"** ngay dưới đây.
 
+> Mới nhất (16/10, sau R1): **áp dụng đề xuất ChatGPT + che theo độ sâu** (sửa lỗi "giáp lắp đè, cổ không che được giáp"). Xem mục ngay dưới.
+
+## Áp dụng đề xuất ChatGPT + che theo độ sâu
+
+### Nói ngắn gọn
+
+- **Vấn đề 1 (giáp lắp đè) đã sửa.** Trang có thêm công tắc **"Che theo độ sâu: Tắt / Tách trước-sau / Che bằng lớp người"**. **Mặc định là "Che bằng lớp người"** vì đẹp nhất:
+  - Cổ, cằm, tóc và tay trước giờ **nằm trên** giáp ngực và giáp vai, không bị giáp đè nữa.
+  - Giáp bên SAU (tay sau, chân sau) ở 8 động tác dùng sheet cả người giờ **nhìn thấy được** (trước đây bị sheet che mất hẳn), nhưng vẫn bị thân che đúng chỗ.
+  - Số điểm ảnh "đè sai" (giáp vẽ lên phần người lẽ ra ở trước nó) **về 0 ở cả 9 động tác, cả 2 bộ**. Lúc Tắt, riêng bộ Gen có 86–439 điểm ảnh đè sai mỗi động tác, hầu hết là giáp ngực đè lên cổ.
+- **Vấn đề 2 (hở khớp):** hở vẫn **= 0 ở mọi khung**: 9 động tác × 2 bộ × 2 chế độ xoay × 3 cách che × 2 kiểu giáp vai × 2 kiểu kéo giãn (216 tổ hợp). Script dựng trang **dừng lỗi thật (mã 1)** nếu còn 1 điểm ảnh hở; đã thử cố ý tắt luật chụp khớp và script dừng đúng.
+  - Thêm **chồng mép 1,5 điểm ảnh** ở 2 đầu mỗi mảnh xương (ý a của ChatGPT), nên chỗ khớp **kín hơn ngay cả trước khi có chụp khớp**. Ví dụ hàng chạy: hở trước khi chụp 90 → 27 (Máy vẽ), 121 → 46 (Gen).
+- **Không làm theo ChatGPT ở 2 điểm** (lý do ở dưới): (1) **không bỏ chế độ 8 hướng**, vẫn giữ 2 chế độ để so; (2) **không bỏ kẹp chiều dài** làm mặc định, vì bỏ kẹp làm giáp bị kéo dài trung bình 49%, có khung tới 2,7 lần.
+
+### Đã áp dụng gì từ đề xuất ChatGPT
+
+| Ý | Làm gì | Kết quả |
+|---|---|---|
+| (a) Chồng mép `overlapStart/overlapEnd` | **Đã áp**, 1,5 điểm ảnh mỗi đầu, cho mọi mảnh xương của 2 bộ (trừ giáp vai kiểu "trộn": neo tại vai, không kéo). | Hở trước khi có chụp khớp giảm ở mọi động tác (bảng dưới). |
+| (a) Bỏ kẹp chiều dài | **Không làm mặc định.** Thêm công tắc **"Kéo giãn: Kẹp + chồng mép / Không kẹp (ChatGPT)"** để chủ game tự so. | Xem bảng "Đo kéo giãn". |
+| (b) Vẽ 2 lượt `backImage/frontImage` ở lớp sâu/nông | **Đã áp**, dùng đúng tên trường của ChatGPT (`backImage`, `frontImage`, `backAfter`, `frontAfter`) trong `rig.json` → `depth`. Thêm kiểm lỗi: thiếu ảnh tách, sai cỡ, lớp không tồn tại → báo khung đỏ và vẽ nguyên mảnh. | Là cách "Tách trước-sau". |
+| (c) Bỏ chế độ 8 hướng | **Không làm** (theo yêu cầu): giữ 2 cột "Xoay liên tục" và "Làm tròn 8 hướng". | |
+| (d) Họ chưa tách ảnh trước/sau | **Đã làm thật:** tự tạo ảnh tách cho mọi mảnh xương của **cả 2 bộ** (máy vẽ: 10 ảnh, gen: 32 ảnh gồm cả bản ×2). | |
+
+Ghi chú: một phiên khác đã lưu nguyên bản ChatGPT ở `../rig-chatgpt/`. Tôi không dùng thư mục đó, chỉ áp ý của patch vào bản R1 trong `rig/`.
+
+### Đo kéo giãn (vì sao giữ kẹp)
+
+"Kéo giãn" = độ dài ảnh giáp sau khi đặt ÷ độ dài gốc của ảnh. 1,00 = đúng cỡ vẽ. Mỗi ô ghi Máy vẽ · Gen.
+
+| Động tác | Nếu bỏ kẹp: giãn lớn nhất | Lượt mảnh-khung vượt ×1,3 nếu bỏ kẹp | Hụt khớp cuối > 1,5đ: R1 → kẹp + chồng mép |
+|---|---|---|---|
+| Chạy | +118% · +104% | 32/48 · 30/60 | 2 → 2 · 1 → 1 |
+| Chạy cầm thương | +164% · +170% | 44/47 · 41/59 | 4 → 4 · 4 → 4 |
+| Chết | +169% · +144% | 22/22 · 25/26 | 12 → 12 · 10 → 10 |
+| Đi | +77% · +81% | 22/32 · 20/40 | 0 → 0 · 0 → 0 |
+| Đứng | +47% · +51% | 16/32 · 16/40 | 0 → 0 · 0 → 0 |
+| Chém kiếm 1 | +71% · +75% | 14/15 · 16/20 | 0 → 0 · 0 → 1 |
+| Lăn | +97% · +101% | 12/14 · 12/17 | 1 → 1 · 1 → 1 |
+| Phi tiêu | +114% · +119% | 20/22 · 18/28 | 1 → 1 · 3 → 3 |
+| Trúng đòn | +109% · +89% | 15/16 · 16/20 | 0 → 0 · 0 → 0 |
+
+- **Giãn trung bình** trên mọi mảnh-khung: bản R1 **+2%**, kẹp + chồng mép **+26%**, bỏ kẹp (ChatGPT) **+49%**.
+- **Nếu bỏ kẹp, 391/558 lượt mảnh-khung bị kéo quá ×1,3.** Lý do: mảnh chỉ dài 6–11 điểm ảnh, cộng thêm 3 điểm ảnh chồng mép là đã dài hơn 30–50%. Ở hàng chết, giáp cẳng tay bị kéo gần **gấp 2,7 lần**: mỗi điểm ảnh thành 2–3 điểm ảnh, đường viền và chấm đồng bị kéo thành vệt. → **méo quá, nên giữ kẹp.**
+- **Cách đã chọn ("Kẹp + chồng mép", mặc định):** vẫn kẹp trong ×0,75–×1,3 như R1. Nếu không đủ độ giãn thì **bớt chồng mép ở đầu trước**, ưu tiên chạm khớp cuối. Nhờ vậy số khung bám khớp **không bao giờ kém hơn R1** (bảng trên: cột hụt khớp cuối giữ nguyên). Đổi lại, giáp dài hơn R1 trung bình 24%.
+- Bỏ kẹp có lợi: bám khớp liên tục đủ mọi khung, ví dụ Chết 3 → 8/8, Chạy cầm thương 10 → 12/12. Nhưng chính các khung đó là khung bị kéo dài nhất. Hai động tác này nên soát lại khớp (xương dài bất thường), không nên kéo giáp theo.
+
+### Tách trước/sau làm thế nào (`tach_truoc_sau.py`)
+
+Script tự cắt mỗi ảnh mảnh giáp thành 2 ảnh **cùng cỡ, cùng điểm neo**: ảnh "sau" và ảnh "trước". Phần không thuộc ảnh nào thì trong suốt. Cắt theo quy tắc, **không vẽ tay**. Trục x của ảnh là chiều xương, đầu xương ở bên trái.
+
+| Mảnh | Lượt SAU (vẽ dưới) | Lượt TRƯỚC (vẽ trên) |
+|---|---|---|
+| Giáp ngực (Gen) | **Cổ áo**: 3 cột gần cổ. Cộng **mép lưng**: 1 điểm ảnh ngoài cùng ở phía lưng. Vẽ dưới cổ, đầu, tay trước. | Mặt ngực: trên thân, dưới chân trước, tay trước, đầu. |
+| Giáp vai | **Mép trong** sát cổ/thân: 2 cột phía khớp vai. Vai trước: dưới cổ, tay trước, đầu. Vai sau: dưới tay sau. | Vỏ ngoài: trên lớp tay. |
+| Cẳng tay, ống chân | **Nửa phía thân**: dưới lớp chi của nó. | Nửa ngoài + hàng giữa: trên lớp chi. |
+| Chụp khớp | Không tách, luôn nằm trên lớp chi. | |
+
+- **Chọn theo khung (tự động):**
+  - Cẳng tay/ống chân: "nửa phía thân" lấy theo phía nào của xương quay về trục cổ → giữa hông ở khung đó.
+  - Giáp ngực: "phía lưng" lấy theo hướng mũi chân. Nếu 2 bàn chân quay khác hướng (dáng đứng nhìn chính diện), chỉ tách cổ áo, không tách mép lưng.
+  - Muốn ép tay một khung thì ghi vào `depthOverrides` trong `rig.json`. Hiện chưa cần.
+- **Lớp người.** Muốn "vẽ dưới cổ" thì phải biết điểm ảnh nào là cổ. Script gán mỗi điểm ảnh người vào 1 trong 7 lớp: chân sau, tay sau, thân, **cổ**, chân trước, tay trước, đầu (gồm tóc, cằm). Kết quả lưu ở `nhan/<động tác>.png`.
+  - **Hàng chạy:** lấy từ lớp tách thật. Cổ = phần thân ngay dưới cằm.
+  - **8 động tác sheet cả người:** gán theo **ống xương gần nhất** dựa vào khớp. Tay trước được ưu tiên; khớp bị che thì bỏ qua.
+  - Soát bằng mắt: `soat/nhan-lop-nguoi.png` (người | màu lớp). Trong trang bật ô **"Tô màu lớp người"**.
+  - Đúng ở dáng đứng/chạy/đi. **Kém ở dáng cuộn tròn** (Lăn khung 3–4) và **nằm** (Chết khung 6–8). Ở các khung đó phần lớn khớp bị che nên giáp đã ẩn, nên ảnh hưởng ít.
+
+### Hai cách che: so sánh
+
+- **Tách trước-sau:** vẽ ảnh "sau" ở lớp sâu, ảnh "trước" ở lớp nông.
+- **Che bằng lớp người:** vẽ **nguyên mảnh**, rồi vẽ lại **đúng điểm ảnh** của các lớp người lẽ ra ở trước (cổ, đầu/cằm/tóc, tay trước; với mảnh bên sau thì cả thân) **chỉ trong vùng của mảnh đó**.
+
+Số đo cả chu kỳ, xoay liên tục, giáp vai trộn, kẹp + chồng mép. Mỗi ô ghi Máy vẽ · Gen.
+
+| Động tác | Đè sai: Tắt | Đè sai: Tách | Đè sai: Lớp người | Giáp còn thấy: Tách | Giáp còn thấy: Lớp người |
+|---|---|---|---|---|---|
+| Chạy | 0 · 86 | 0 · 21 | **0 · 0** | 79% · 84% | **99% · 97%** |
+| Chạy cầm thương | 0 · 439 | 0 · 33 | **0 · 0** | 103% · 86% | 129% · 105% |
+| Chết | 2 · 92 | 2 · 5 | **0 · 0** | 110% · 94% | 129% · 115% |
+| Đi | 0 · 155 | 0 · 28 | **0 · 0** | 121% · 103% | 144% · 118% |
+| Đứng | 0 · 178 | 0 · 48 | **0 · 0** | 135% · 113% | 175% · 133% |
+| Chém kiếm 1 | 3 · 149 | 3 · 17 | **0 · 0** | 116% · 91% | 135% · 107% |
+| Lăn | 0 · 122 | 0 · 8 | **0 · 0** | 123% · 98% | 148% · 118% |
+| Phi tiêu | 0 · 180 | 0 · 29 | **0 · 0** | 141% · 106% | 161% · 121% |
+| Trúng đòn | 0 · 126 | 0 · 12 | **0 · 0** | 132% · 106% | 167% · 127% |
+
+- **Đè sai:** điểm ảnh người lẽ ra ở TRƯỚC mảnh giáp mà bị giáp vẽ đè. Chỉ tính điểm ảnh người đặc (không tính mép mờ). Lúc Tắt, gần như toàn bộ là **giáp ngực Gen đè lên cổ**, đúng như chủ game báo.
+- **Giáp còn thấy:** so với lúc Tắt. Trên 100% vì ở sheet cả người, lúc Tắt giáp bên sau bị che hết, giờ thì hiện ra.
+- **Hở:** = 0 ở cả 3 cách.
+
+**Chọn "Che bằng lớp người" làm mặc định**, vì:
+
+1. Đè sai = 0 ở mọi động tác. "Tách" vẫn còn 5–48 điểm ảnh: mặt ngực vẫn đè phần cổ nằm ngoài dải cổ áo.
+2. Giữ nguyên hình giáp. "Tách" giấu nửa trong của cẳng tay/ống chân dưới tay/chân, nên giáp mỏng đi một nửa: ở hàng chạy chỉ còn 79–84% điểm ảnh giáp. Giáp máy vẽ dày 4 điểm ảnh, mất 2 hàng thì trông như vòng mỏng.
+3. Nhìn ảnh soát ×6 (`soat/do-sau-*.png`): ở "Che bằng lớp người", cổ và cằm nổi lên trên cổ áo, giáp vai không che cổ, tay trước nằm trên giáp ngực. Ở "Tách", cẳng tay bị "lủng" nửa trong.
+4. "Tách" vẫn có ích khi muốn giáp **ôm quanh** chi (ví dụ vòng tay nhìn thấy cả mặt sau). Tôi giữ nó để so, và giữ ảnh tách cho phiên sau.
+
+### Xem ở đâu (phần mới)
+
+| Tệp | Là gì |
+|---|---|
+| `kiem-tra-rig.html` | Có thêm: công tắc **Che theo độ sâu**, công tắc **Kéo giãn**, bảng **So 3 cách che** (bấm 1 dòng để chuyển), bảng **Kéo giãn**, ô **Tô màu lớp người**, mục báo lỗi mới "Thiếu ảnh tách giáp ngực gen". |
+| `soat/do-sau-<động tác>.png` | **Nên xem trước.** 4 khung tiêu biểu mỗi động tác, phóng ×6 quanh cổ–vai–tay. 6 hàng = Máy vẽ/Gen × Tắt/Tách/Lớp người. |
+| `soat/do-sau-tong.png` | Cả 9 động tác, toàn thân ×3, 3 cách cạnh nhau (bộ Gen). |
+| `soat/do-sau.gif`, `soat/do-sau-chay.gif` | Chạy cạnh nhau 3 cách (mọi động tác; riêng hàng chạy có cả 2 bộ). |
+| `soat/nhan-lop-nguoi.png` | Soát nhãn lớp người (người \| màu lớp) mọi động tác. |
+| `soat/dien-thoai-390-sau-*.png` | Chụp trang trên điện thoại 390×844 (DPR 3): Tắt/Tách/Lớp người (Chạy Gen), Đứng Gen/Máy vẽ, bảng so, bảng kéo giãn, tô màu lớp, cả trang. Đã kiểm: **không tràn ngang**; canvas phóng số nguyên (K = 8 điểm ảnh máy / điểm ảnh nguồn ở DPR 3). |
+| `soat/bao-loi-tach.png` | Khung đỏ khi cố ý xoá 1 ảnh tách. |
+| `giap/tach/`, `giap-gen/tach/` | Ảnh tách trước/sau (`…-sau.png` / `…-truoc.png`, bản gen có `-x2`). |
+| `nhan/<động tác>.png` | Nhãn lớp người (kênh đỏ = số lớp 1..7). |
+| `soat/tu-kiem-dong-tac.json` | Số tự kiểm mọi tổ hợp, khoá `"<giáp vai>\|<che>\|<kéo giãn>"`, ví dụ `"tron\|lop\|kep"`. |
+
+Chạy lại (theo thứ tự):
+
+```
+python3 docs/thu-modular-96/rig/tao-rig.py --soat-nhan   # tách ảnh + nhãn lớp + dựng trang + tự kiểm hở 216 tổ hợp (còn hở → mã 1)
+python3 docs/thu-modular-96/rig/soat-do-sau.py           # ảnh soát ×6, GIF, chụp điện thoại
+```
+
+### Còn hạn chế
+
+- Nhãn lớp người của sheet cả người là **đoán theo khớp**. Chỗ tay trước nằm sát thân có thể lẫn 1–2 điểm ảnh. Muốn chính xác như hàng chạy thì cần tách lớp các động tác đó.
+- Ảnh soát cũ (`soat/luoi-dong-tac.png`, `soat/dien-thoai-390-dt-*.png`…) là ảnh của bản R1, **chưa chụp lại** theo mặc định mới. Ảnh mới nằm ở `soat/do-sau-*` và `soat/dien-thoai-390-sau-*`.
+- Ở cỡ game 48×48, khác biệt giữa 3 cách chỉ còn 1–3 điểm ảnh quanh cổ. Rõ nhất ở ô 96 và khi phóng to.
+
 ## Sửa lệch vai (hàng chạy)
 
 ### Nói ngắn gọn
