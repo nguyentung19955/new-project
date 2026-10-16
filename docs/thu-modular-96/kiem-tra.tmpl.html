@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thử ghép modular 96</title>
+<style>
+  :root { --nen:#f4f1ea; --chu:#1d1d1f; --phu:#5c5c66; --khung:#ffffff; --vien:#d6d1c4; --nhan:#2f6fb3; }
+  @media (prefers-color-scheme: dark) { :root { --nen:#18181b; --chu:#ececf0; --phu:#a3a3ad; --khung:#232328; --vien:#3a3a42; --nhan:#6fa8e8; } }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:12px 16px 40px; background:var(--nen); color:var(--chu); font:15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  h1 { font-size:18px; margin:0 0 4px; }
+  p.mo { margin:0 0 10px; color:var(--phu); font-size:13px; overflow-wrap:anywhere; }
+  .san { background:var(--khung); border:1px solid var(--vien); border-radius:10px; padding:8px; display:flex; justify-content:center; overflow:hidden; }
+  canvas#c { image-rendering: pixelated; image-rendering: crisp-edges; max-width:100%; height:auto; background:
+     repeating-conic-gradient(#d9d9d9 0 25%, #f2f2f2 0 50%) 0 0 / 16px 16px; }
+  .hang { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin:10px 0 0; }
+  button, select { font:inherit; font-size:14px; padding:7px 11px; border-radius:8px; border:1px solid var(--vien); background:var(--khung); color:var(--chu); min-height:38px; }
+  button.bat { background:var(--nhan); color:#fff; border-color:var(--nhan); }
+  .so { font-variant-numeric: tabular-nums; min-width:92px; text-align:center; font-size:14px; }
+  fieldset { border:1px solid var(--vien); border-radius:10px; margin:12px 0 0; padding:8px 10px 10px; min-width:0; }
+  legend { font-size:13px; color:var(--phu); padding:0 4px; }
+  .lop { display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap:4px 10px; }
+  label { display:flex; gap:6px; align-items:center; font-size:14px; min-width:0; overflow-wrap:anywhere; }
+  label input { width:18px; height:18px; flex:none; }
+  .giap { color:#8a5a12; }
+  @media (prefers-color-scheme: dark) { .giap { color:#e3b25a; } }
+  #khop { font:12px/1.4 ui-monospace, Menlo, Consolas, monospace; white-space:pre-wrap; overflow-wrap:anywhere; max-height:220px; overflow:auto; margin:6px 0 0; }
+</style>
+</head>
+<body>
+<h1>Thử ghép trang phục modular 96×96 — Cu Tí mới chạy</h1>
+<p class="mo">Khung nguồn 96×96, neo bàn chân (48,90), SCALE 0,5 (hiện 48×48), imageSmoothingEnabled = false. 13 lớp, 12 khung. Phóng to chỉ để xem: vẽ cỡ game rồi phóng nguyên điểm ảnh.</p>
+
+<div class="san"><canvas id="c"></canvas></div>
+
+<div class="hang">
+  <button id="chay" class="bat">Dừng</button>
+  <button id="lui" aria-label="khung trước">◀</button>
+  <span class="so" id="so">0 / 11</span>
+  <button id="toi" aria-label="khung sau">▶</button>
+</div>
+<div class="hang">
+  <span>Phóng:</span>
+  <button data-z="2">×2</button><button data-z="4">×4</button><button data-z="8" class="bat">×8</button>
+</div>
+<div class="hang">
+  <button id="giap" class="bat">Đang mặc giáp ngực mẫu</button>
+  <button id="debug">Debug: tắt</button>
+  <button id="nguon96">Cỡ game ×0,5</button>
+</div>
+
+<fieldset><legend>Bật/tắt từng lớp (thứ tự vẽ từ trên xuống = từ dưới lên màn hình)</legend><div class="lop" id="lop"></div></fieldset>
+<fieldset><legend>Khớp &amp; neo của khung đang xem (ô 96, gốc trên-trái)</legend><div id="khop"></div></fieldset>
+
+<script>
+const DATA = /*__DATA__*/null;
+const ANH = /*__ANH__*/null;
+
+// ====== mã vẽ theo quy cách của chủ dự án ======
+const FRAME_SIZE = 96;
+const PIVOT_X = 48;
+const PIVOT_Y = 90;
+const SCALE = 0.5;
+const LAYER_ORDER = ['rearLeg', 'rearArm', 'body', 'pants', 'torsoOutfit', 'chestArmor', 'backShoulderArmor',
+  'frontLeg', 'frontShoulderArmor', 'frontArm', 'forearmArmor', 'head', 'hair'];
+
+function drawLayer(ctx, image, frame, x, y) {
+  ctx.drawImage(
+    image,
+    frame * FRAME_SIZE, 0, FRAME_SIZE, FRAME_SIZE,
+    Math.round(x - PIVOT_X * SCALE), Math.round(y - PIVOT_Y * SCALE),
+    FRAME_SIZE * SCALE, FRAME_SIZE * SCALE
+  );
+}
+
+function drawCharacter(ctx, character, frame, x, y) {
+  ctx.imageSmoothingEnabled = false;
+  for (const layerName of LAYER_ORDER) {
+    const image = character.layers[layerName];
+    if (!image) continue;               // lớp trống / đang tắt
+    drawLayer(ctx, image, frame, x, y);
+  }
+}
+// ===============================================
+
+const GIAP = ['chestArmor', 'backShoulderArmor', 'frontShoulderArmor', 'forearmArmor'];
+const anhLop = {};
+const bat = {}; LAYER_ORDER.forEach(l => bat[l] = true);
+let khung = 0, dangChay = true, zoom = 8, debug = false, coGame = true;
+const N = DATA.frameCount;
+const fps = DATA.fps || 20;
+
+const c = document.getElementById('c');
+const ctx = c.getContext('2d');
+const off = document.createElement('canvas');
+const octx = off.getContext('2d');
+
+function character() {
+  const layers = {};
+  for (const l of LAYER_ORDER) if (bat[l] && anhLop[l]) layers[l] = anhLop[l];
+  return { layers };
+}
+
+// ô vẽ cỡ game: rộng 64, cao 56 điểm ảnh game; chân đặt ở (32, 50)
+const OW = 64, OH = 56, CX = 32, CY = 50;
+function ve() {
+  const s = coGame ? SCALE : 1;          // s = điểm ảnh màn hình (trước khi phóng) trên 1 điểm ảnh ô 96
+  const ow = coGame ? OW : OW * 2, oh = coGame ? OH : OH * 2;
+  const cx = coGame ? CX : CX * 2, cy = coGame ? CY : CY * 2;
+  off.width = ow; off.height = oh;
+  octx.imageSmoothingEnabled = false;
+  octx.clearRect(0, 0, ow, oh);
+  if (coGame) drawCharacter(octx, character(), khung, cx, cy);
+  else { // xem ảnh nguồn 96 không thu nhỏ (chỉ để soi, game dùng nhánh trên)
+    octx.imageSmoothingEnabled = false;
+    for (const l of LAYER_ORDER) if (bat[l] && anhLop[l])
+      octx.drawImage(anhLop[l], khung * FRAME_SIZE, 0, FRAME_SIZE, FRAME_SIZE, cx - PIVOT_X, cy - PIVOT_Y, FRAME_SIZE, FRAME_SIZE);
+  }
+  const z = coGame ? zoom : Math.max(1, zoom / 2);
+  c.width = ow * z; c.height = oh * z;
+  ctx.imageSmoothingEnabled = false;
+  ctx.clearRect(0, 0, c.width, c.height);
+  // vạch đất
+  ctx.fillStyle = 'rgba(40,120,200,.35)';
+  ctx.fillRect(0, cy * z, c.width, Math.max(1, z / 4));
+  ctx.drawImage(off, 0, 0, ow, oh, 0, 0, ow * z, oh * z);
+  if (debug) veDebug(s, z, cx, cy);
+  document.getElementById('so').textContent = 'khung ' + khung + ' / ' + (N - 1);
+  hienKhop();
+}
+
+function veDebug(s, z, cx, cy) {
+  const f = DATA.frames[khung];
+  const ox = Math.round(cx - PIVOT_X * s), oy = Math.round(cy - PIVOT_Y * s); // góc trên-trái ô 96 sau khi đặt theo pivot
+  const P = p => [(ox + (p[0] + 0.5) * s) * z, (oy + (p[1] + 0.5) * s) * z];
+  const lw = Math.max(1, z / 4);
+  ctx.lineWidth = lw;
+  ctx.strokeStyle = '#ff2fa0';
+  ctx.strokeRect(ox * z + lw / 2, oy * z + lw / 2, FRAME_SIZE * s * z - lw, FRAME_SIZE * s * z - lw);
+  const J = f.joints;
+  const que = [
+    ['neck', 'hipCenter', '#ffffff'], ['neck', 'head', '#ffffff'],
+    ['shoulderBack', 'elbowBack', '#2ec27e'], ['elbowBack', 'wristBack', '#2ec27e'], ['wristBack', 'handBack', '#2ec27e'],
+    ['hipBack', 'kneeBack', '#3b8eea'], ['kneeBack', 'ankleBack', '#3b8eea'], ['ankleBack', 'toeBack', '#3b8eea'],
+    ['hipFront', 'kneeFront', '#ff9f1a'], ['kneeFront', 'ankleFront', '#ff9f1a'], ['ankleFront', 'toeFront', '#ff9f1a'],
+    ['shoulderFront', 'elbowFront', '#ffe600'], ['elbowFront', 'wristFront', '#ffe600'], ['wristFront', 'handFront', '#ffe600'],
+    ['shoulderBack', 'shoulderFront', '#ffffff'], ['hipBack', 'hipFront', '#ffffff'],
+  ];
+  ctx.lineCap = 'round';
+  for (const [a, b, col] of que) {
+    const A = P(J[a]), B = P(J[b]);
+    ctx.strokeStyle = 'rgba(0,0,0,.65)'; ctx.lineWidth = lw * 3;
+    ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
+    ctx.strokeStyle = col; ctx.lineWidth = lw * 1.5;
+    ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
+  }
+  const r = Math.max(2, z * 0.45);
+  for (const k of Object.keys(J)) {
+    const [x, y] = P(J[k]);
+    ctx.fillStyle = k.endsWith('Front') ? '#ff3b30' : k.endsWith('Back') ? '#0a84ff' : '#ffffff';
+    ctx.strokeStyle = '#000'; ctx.lineWidth = lw;
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  }
+  // neo đồ: ô vuông tím
+  for (const k of Object.keys(f.anchors)) {
+    const [x, y] = P(f.anchors[k]);
+    ctx.strokeStyle = '#b05cff'; ctx.lineWidth = lw;
+    ctx.strokeRect(x - r, y - r, r * 2, r * 2);
+  }
+  // neo bàn chân (pivot)
+  const [px, py] = [(ox + PIVOT_X * s) * z, (oy + PIVOT_Y * s) * z];
+  ctx.strokeStyle = '#ff0000'; ctx.lineWidth = lw * 1.5;
+  ctx.beginPath(); ctx.moveTo(px - r * 3, py); ctx.lineTo(px + r * 3, py); ctx.moveTo(px, py - r * 3); ctx.lineTo(px, py + r * 3); ctx.stroke();
+}
+
+function hienKhop() {
+  const f = DATA.frames[khung];
+  const dong = [];
+  dong.push('Khung ' + khung + '  pivot (' + DATA.pivot.join(',') + ')');
+  for (const [k, v] of Object.entries(f.joints)) dong.push((DATA.jointNames[k] || k) + ' [' + k + ']: ' + v.join(', '));
+  dong.push('— neo —');
+  for (const [k, v] of Object.entries(f.anchors)) dong.push((DATA.anchorNames[k] || k) + ' [' + k + ']: ' + v.join(', '));
+  document.getElementById('khop').textContent = dong.join('\n');
+}
+
+// danh sách lớp
+const hop = document.getElementById('lop');
+const rong = new Set(DATA.emptyLayers || []); const giapMau = new Set(DATA.cuTiHasNoArt || []);
+LAYER_ORDER.forEach((l, i) => {
+  const lb = document.createElement('label');
+  if (GIAP.includes(l)) lb.className = 'giap';
+  const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = true; cb.id = 'cb-' + l;
+  cb.onchange = () => { bat[l] = cb.checked; capNutGiap(); ve(); };
+  lb.appendChild(cb);
+  lb.appendChild(document.createTextNode((i + 1) + '. ' + l + (rong.has(l) ? ' (trống)' : giapMau.has(l) ? ' (giáp mẫu)' : '')));
+  hop.appendChild(lb);
+});
+
+const nutGiap = document.getElementById('giap');
+function capNutGiap() {
+  const mac = GIAP.some(l => bat[l]);
+  nutGiap.textContent = mac ? 'Đang mặc giáp ngực mẫu' : 'Đang cởi giáp';
+  nutGiap.classList.toggle('bat', mac);
+}
+nutGiap.onclick = () => {
+  const mac = !GIAP.some(l => bat[l]);
+  GIAP.forEach(l => { bat[l] = mac; document.getElementById('cb-' + l).checked = mac; });
+  capNutGiap(); ve();
+};
+document.getElementById('debug').onclick = e => { debug = !debug; e.target.textContent = 'Debug: ' + (debug ? 'bật' : 'tắt'); e.target.classList.toggle('bat', debug); ve(); };
+document.getElementById('nguon96').onclick = e => { coGame = !coGame; e.target.textContent = coGame ? 'Cỡ game ×0,5' : 'Soi ảnh 96 gốc'; e.target.classList.toggle('bat', !coGame); ve(); };
+document.getElementById('chay').onclick = e => { dangChay = !dangChay; e.target.textContent = dangChay ? 'Dừng' : 'Chạy'; e.target.classList.toggle('bat', dangChay); };
+document.getElementById('lui').onclick = () => { dangChay = false; syncChay(); khung = (khung + N - 1) % N; ve(); };
+document.getElementById('toi').onclick = () => { dangChay = false; syncChay(); khung = (khung + 1) % N; ve(); };
+function syncChay() { const b = document.getElementById('chay'); b.textContent = 'Chạy'; b.classList.remove('bat'); }
+document.querySelectorAll('[data-z]').forEach(b => b.onclick = () => {
+  zoom = +b.dataset.z; document.querySelectorAll('[data-z]').forEach(x => x.classList.toggle('bat', x === b)); ve();
+});
+
+let t0 = 0;
+function vong(t) {
+  if (dangChay && t - t0 >= 1000 / fps) { t0 = t; khung = (khung + 1) % N; ve(); }
+  requestAnimationFrame(vong);
+}
+let con = LAYER_ORDER.length;
+LAYER_ORDER.forEach(l => {
+  const im = new Image();
+  im.onload = () => { anhLop[l] = im; if (--con === 0) { ve(); requestAnimationFrame(vong); } };
+  im.onerror = () => { if (--con === 0) { ve(); requestAnimationFrame(vong); } };
+  im.src = ANH[l];
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "ghi_chu": "Khớp đánh tay trên ẢNH NGUỒN cao (docs/anh-goc/zed/moi/03-chay-v4-gif/03-chay-v4/khung-XX.png), toạ độ điểm ảnh của từng ảnh khung (gốc trên-trái). Tay TRƯỚC = tay lộ bắp tay trần (vẽ đè lên thân); tay SAU = tay đấm ra trước (bắp tay khuất sau thân). Chân TRƯỚC = cùng một chân suốt chu kỳ (chân trụ ở khung 1). tao-bo.py đổi sang khung 96×96.",
+  "khung": [
+    {"vaiT":[85,133],"khuyuT":[60,150],"coTayT":[57,172],"banTayT":[58,180], "vaiS":[108,140],"khuyuS":[122,153],"coTayS":[142,148],"banTayS":[152,142],
+     "hongT":[104,192],"goiT":[113,228],"coChanT":[117,256],"muiChanT":[146,277], "hongS":[88,192],"goiS":[55,215],"coChanS":[32,193],"muiChanS":[12,198]},
+    {"vaiT":[85,135],"khuyuT":[72,158],"coTayT":[95,166],"banTayT":[104,168], "vaiS":[110,142],"khuyuS":[120,152],"coTayS":[136,148],"banTayS":[145,143],
+     "hongT":[100,195],"goiT":[95,228],"coChanT":[80,256],"muiChanT":[103,277], "hongS":[85,195],"goiS":[42,218],"coChanS":[28,200],"muiChanS":[10,206]},
+    {"vaiT":[62,138],"khuyuT":[52,155],"coTayT":[80,155],"banTayT":[90,150], "vaiS":[88,140],"khuyuS":[98,148],"coTayS":[115,145],"banTayS":[124,140],
+     "hongT":[75,195],"goiT":[55,232],"coChanT":[40,258],"muiChanT":[58,270], "hongS":[68,195],"goiS":[40,205],"coChanS":[18,200],"muiChanS":[8,205]},
+    {"vaiT":[68,138],"khuyuT":[60,155],"coTayT":[88,157],"banTayT":[98,155], "vaiS":[95,142],"khuyuS":[110,150],"coTayS":[128,148],"banTayS":[140,142],
+     "hongT":[85,198],"goiT":[45,240],"coChanT":[30,262],"muiChanT":[40,280], "hongS":[92,198],"goiS":[108,212],"coChanS":[72,228],"muiChanS":[78,238]},
+    {"vaiT":[82,133],"khuyuT":[60,152],"coTayT":[55,172],"banTayT":[60,180], "vaiS":[115,142],"khuyuS":[130,153],"coTayS":[148,148],"banTayS":[157,143],
+     "hongT":[90,195],"goiT":[55,232],"coChanT":[30,262],"muiChanT":[35,282], "hongS":[100,195],"goiS":[125,205],"coChanS":[88,232],"muiChanS":[95,245]},
+    {"vaiT":[90,138],"khuyuT":[95,160],"coTayT":[125,158],"banTayT":[135,157], "vaiS":[115,142],"khuyuS":[135,150],"coTayS":[155,148],"banTayS":[167,145],
+     "hongT":[100,198],"goiT":[60,242],"coChanT":[35,258],"muiChanT":[25,280], "hongS":[115,198],"goiS":[140,232],"coChanS":[135,258],"muiChanS":[162,277]},
+    {"vaiT":[75,135],"khuyuT":[65,158],"coTayT":[105,160],"banTayT":[118,158], "vaiS":[115,142],"khuyuS":[130,150],"coTayS":[150,148],"banTayS":[160,142],
+     "hongT":[88,195],"goiT":[55,215],"coChanT":[30,200],"muiChanT":[12,210], "hongS":[105,195],"goiS":[118,232],"coChanS":[120,258],"muiChanS":[150,278]},
+    {"vaiT":[80,135],"khuyuT":[55,155],"coTayT":[50,180],"banTayT":[52,187], "vaiS":[115,145],"khuyuS":[125,158],"coTayS":[140,152],"banTayS":[150,145],
+     "hongT":[85,198],"goiT":[45,222],"coChanT":[28,205],"muiChanT":[10,210], "hongS":[100,198],"goiS":[95,232],"coChanS":[75,258],"muiChanS":[98,278]},
+    {"vaiT":[60,140],"khuyuT":[52,158],"coTayT":[82,158],"banTayT":[90,152], "vaiS":[90,142],"khuyuS":[100,150],"coTayS":[115,148],"banTayS":[122,143],
+     "hongT":[68,198],"goiT":[40,210],"coChanT":[15,205],"muiChanT":[8,212], "hongS":[75,198],"goiS":[55,235],"coChanS":[40,258],"muiChanS":[55,272]},
+    {"vaiT":[70,140],"khuyuT":[62,158],"coTayT":[88,158],"banTayT":[100,155], "vaiS":[100,145],"khuyuS":[112,152],"coTayS":[130,150],"banTayS":[143,145],
+     "hongT":[95,200],"goiT":[110,212],"coChanT":[78,232],"muiChanT":[88,245], "hongS":[85,200],"goiS":[45,240],"coChanS":[30,262],"muiChanS":[40,282]},
+    {"vaiT":[82,135],"khuyuT":[68,155],"coTayT":[70,175],"banTayT":[73,183], "vaiS":[120,145],"khuyuS":[130,158],"coTayS":[150,150],"banTayS":[162,145],
+     "hongT":[100,198],"goiT":[128,208],"coChanT":[90,238],"muiChanT":[100,252], "hongS":[90,198],"goiS":[55,235],"coChanS":[30,262],"muiChanS":[35,282]},
+    {"vaiT":[90,135],"khuyuT":[68,155],"coTayT":[63,178],"banTayT":[65,190], "vaiS":[120,148],"khuyuS":[135,160],"coTayS":[160,155],"banTayS":[175,150],
+     "hongT":[118,200],"goiT":[145,238],"coChanT":[140,262],"muiChanT":[172,280], "hongS":[100,200],"goiS":[60,245],"coChanS":[32,262],"muiChanS":[25,282]}
+  ]
+}
