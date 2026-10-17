@@ -755,12 +755,26 @@
     //   Hàng này thế chỗ dòng giải thích cũ (Tiết kiệm pin đã ghi "30 khung/giây" trên nút).
     ui.text('Cỡ nút', CX + 4, 226 + 20, { size: 9, bold: true, color: TXT });
     const coN = sv.coNut === 'nho' || sv.coNut === 'to' ? sv.coNut : 'vua';
+    // 17/10 tối (binh-mau-goc): hàng này thêm nút "Bình máu" (bấm đổi vòng Trên trái → Trên phải → Như cũ), lưu theo máy (js/stage.js G.binhGoc).
+    //   Ba nút cỡ thu hẹp 78 → 58 để có chỗ; vẫn cao 32 như mọi nút của bảng.
+    const BG = G.binhGoc, coBG = !!BG;
+    let nx = CX + 56, nw = 78;
+    if (coBG) { ui.font(9, true); const lw = Math.ceil(G.ux.measureText(G.tv ? G.tv('Cỡ nút') : 'Cỡ nút').width); nx = CX + Math.max(40, lw + 10); nw = Math.floor((CX + 222 - nx - 8) / 3); }
+    V.coNutO = [nx, nw]; // chỗ ba nút cỡ (bài kiểm tra tests/nut_danh_shots.py đọc)
     [['nho', 'Nhỏ'], ['vua', 'Vừa'], ['to', 'To']].forEach(([k, nhan], i) => {
-      if (T.btn(CX + 56 + i * 82, 226, 78, CDH, nhan, { size: 8.5, sel: coN === k }) && coN !== k) {
+      if (T.btn(nx + i * (nw + 4), 226, nw, CDH, nhan, { size: 8.5, sel: coN === k }) && coN !== k) {
         if (k === 'vua') delete sv.coNut; else sv.coNut = k;
         G.persist(); say(k === 'nho' ? 'Nút trong ải: nhỏ.' : k === 'to' ? 'Nút trong ải: to, nút Đánh to nhất.' : 'Nút trong ải: vừa.');
       }
     });
+    if (coBG) {
+      const BV = { trai: 'Trên trái', phai: 'Trên phải', cu: 'Như cũ' }, tat = G.BINH_GOC !== true, ch = tat ? 'cu' : BG.chon();
+      if (T.btn(CX + 226, 226, 74, CDH, 'Bình máu', { size: 8.5, sub: BV[ch], subSize: 7, disabled: tat }) && !tat) {
+        const ke = ch === 'trai' ? 'phai' : ch === 'phai' ? 'cu' : 'trai';
+        BG.dat(ke);
+        say(ke === 'trai' ? 'Nút Bình máu: góc trên bên trái, ngay dưới thanh máu.' : ke === 'phai' ? 'Nút Bình máu: góc trên bên phải, dưới ô vũ khí và Bản đồ.' : 'Nút Bình máu: như cũ, phía trên nút Đặc biệt.');
+      }
+    }
     return 'Nhạc làng có sáo trúc với đàn bầu đấy. Nghe hay thì để to lên!';
   }
   // Một thanh âm lượng: nút − và + (mỗi lần 10), kéo hoặc chạm trên thanh (mỗi nấc 5). Nhả tay mới lưu.

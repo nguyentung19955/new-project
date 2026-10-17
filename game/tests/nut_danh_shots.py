@@ -30,7 +30,7 @@ DO = """() => { const U = G.stageUi, sc = G.scale, S = G.getRun(), out = { sc, d
     const g = (Math.hypot(a[0] - b[0], a[1] - b[1]) - a[2] - b[2] - 2) * sc; if (g < out.gap) { out.gap = Math.round(g * 10) / 10; out.cap = ten[i] + '-' + ten[j]; } }
   const mm = G.minimap.rect(S), o = U.OVK, cham = (b, x, y, w, h) => b[0] + b[2] + 1 > x && b[0] - b[2] - 1 < x + w && b[1] + b[2] + 1 > y && b[1] - b[2] - 1 < y + h;
   for (const n of ten) { if (cham(B[n], mm[0], mm[1], mm[2], mm[3])) out.dung.push(n + ' đè bản đồ'); if (cham(B[n], o[0], o[1], o[2], o[3] + 14)) out.dung.push(n + ' đè ô vũ khí / linh khí');
-    if (cham(B[n], 0, 0, 130, 30)) out.dung.push(n + ' đè thanh máu'); if (B[n][1] + B[n][2] + 1 > 270 + (G.cy || 0)) out.dung.push(n + ' tràn đáy'); }
+    if (cham(B[n], 0, 0, 130, 24)) out.dung.push(n + ' đè thanh máu'); /* binh-mau-goc: thanh máu + mana cao tới y = 23; Bình máu góc trái nằm ngay dưới (y ≥ 26) */ if (B[n][1] + B[n][2] + 1 > 270 + (G.cy || 0)) out.dung.push(n + ' tràn đáy'); }
   const xa = (n) => Math.hypot(B[n][0] - B.atk[0], B[n][1] - B.atk[1]);
   out.lonNhat = ten.every((n) => n === 'atk' || B[n][2] < B.atk[2]);
   out.binhXaNhat = ten.every((n) => n === 'potion' || n === 'atk' || xa(n) < xa('potion'));
@@ -153,10 +153,11 @@ def main():
         g.ev("() => { G.setScene(G.Village); if (G.truyen) G.truyen.dang = null; G.villageApi.open('mo'); G.villageApi.V.tab = 'settings'; G.villageApi.V.cd2 = true; }")
         g.wait(400)
         chup(g, 'cai-dat-co-nut.png')
-        g.tap(160 + 56 + 2 * 82 + 39, 226 + 16); g.wait(200)
+        o = g.ev("() => G.villageApi.V.coNutO || [216, 78]")  # binh-mau-goc: hàng cỡ nút thu hẹp để có chỗ nút Bình máu
+        g.tap(o[0] + 2 * (o[1] + 4) + o[1] / 2, 226 + 16); g.wait(200)
         luu = g.ev("() => [G.save.coNut, JSON.parse(localStorage.getItem(G.SAVE_KEY)).coNut]")
         ok(luu == ['to', 'to'], 'Cài đặt: bấm "To" → G.save.coNut = to, có trong bản lưu (' + str(luu) + ')')
-        g.tap(160 + 56 + 82 + 39, 226 + 16); g.wait(200)
+        g.tap(o[0] + (o[1] + 4) + o[1] / 2, 226 + 16); g.wait(200)
         ok(g.ev("() => G.save.coNut === undefined"), 'Cài đặt: bấm "Vừa" → về mặc định (xoá trường)')
         g.ev("() => G.ngonNgu.doi()"); g.wait(600)
         en = g.ev("() => [G.LANG, G.tv('Cỡ nút'), G.tv('Nhỏ'), G.tv('Vừa'), G.tv('To')].join('|')")

@@ -191,6 +191,7 @@
   LK.state = { last: null }; // cho bài kiểm tra: số liệu vạch vẽ ở khung gần nhất
   // an (tư vấn 17/10 mục 4, HUD gọn): không vẽ tấm linh khí, chỉ biểu tượng hệ trên đầu quái
   LK.hud = function (P, W, an) {
+    HUD.w = G.binhGoc && G.binhGoc.lkW ? G.binhGoc.lkW() : 110; // 17/10 tối (binh-mau-goc): Bình máu ở góc phải thì tấm "Linh khí N" hẹp lại, nằm bên trái nút
     const w = G.curW(P);
     if (!w || !w.marks) return;
     if (an) { if (W) badges(W); return; }

@@ -18047,8 +18047,10 @@ MA._xong();
   MM.rect = function (S) {
     const g = S.W && S.W.geo;
     // Đợt 2: phòng thường sàn rộng (tường phải tới x = 394) thì bản đồ nhỏ thu hẹp lại cho vừa cột phải, không đè sàn.
-    if (g && g.rong && !g.big) return [393, 58, 85, 68];
-    return g && g.big ? (G.CHU_RO !== false ? [418, 58, 58, 19] : [424, 58, 52, 15]) : [374, 58, 102, 68]; // 12/10: nút Bản đồ phòng trùm to hơn (vùng chạm ở js/stage.js) // dời xuống nhường chỗ cho ba vạch linh khí dưới ô vũ khí (js/linhkhi.js)
+    // 17/10 tối (binh-mau-goc): nút Bình máu đặt ở góc trên phải thì bản đồ nhỏ / nút "Bản đồ" dời xuống dưới nút (js/stage.js G.binhGoc.mmRect)
+    //   (mép dưới giữ nguyên → cụm nút phải không đổi; bản đồ thấp lại, ô phòng tự thu nhỏ theo khung)
+    const r = g && g.rong && !g.big ? [393, 58, 85, 68] : g && g.big ? (G.CHU_RO !== false ? [418, 58, 58, 19] : [424, 58, 52, 15]) : [374, 58, 102, 68];
+    return G.binhGoc && G.binhGoc.mmRect ? G.binhGoc.mmRect(r) : r; // 12/10: nút Bản đồ phòng trùm to hơn (vùng chạm ở js/stage.js) // dời xuống nhường chỗ cho ba vạch linh khí dưới ô vũ khí (js/linhkhi.js)
   };
   MM.draw = function (S) {
     const b = MM.rect(S), x = b[0], y = b[1], w = b[2], h = b[3];

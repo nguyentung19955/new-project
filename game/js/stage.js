@@ -89,6 +89,32 @@
   if (G.HUD_GON == null) G.HUD_GON = !coUrl(/[?&]hudgon=0(&|$)/);
   if (G.AN_SUC_MANH == null) G.AN_SUC_MANH = !coUrl(/[?&]ansucmanh=0(&|$)/);
   if (G.MAN_RONG == null) G.MAN_RONG = coUrl(/[?&]manrong=1(&|$)/);
+  // ---------- 17/10 tối — NÚT BÌNH MÁU LÊN GÓC (docs/review/ke-hoach-cai-thien/binh-mau-goc/bao-cao.md) ----------
+  // Chủ game: "nút này nên ở trên cùng bên phải hoặc bên trái, chứ ô máu thì đang ở trên ô chưởng". Cỡ nút giữ nguyên (G.BINH_TO), chỉ đổi CHỖ.
+  //   'trai' (mặc định): ngay dưới thanh máu–mana, bên trái nút Tạm dừng (máu đi với máu).
+  //   'phai': góc trên phải, ngay dưới ô vũ khí + "Bản đồ"; tấm "Linh khí N" hẹp lại bên trái nút; bản đồ nhỏ bắt đầu dưới nút (mép dưới giữ nguyên).
+  //   'cu'  : như trước phiên (trong cụm nút phải, phía trên Đặc biệt / Chưởng).
+  // Chọn ở Anh Mõ → Âm thanh, điều khiển → nút "Bình máu"; lưu THEO MÁY (localStorage 'linhkhi.binhViTri', không vào bản lưu mây).
+  // Cờ ?binhgoc=0 → G.BINH_GOC = false: luôn như cũ, bỏ qua lựa chọn đã lưu.
+  if (G.BINH_GOC == null) G.BINH_GOC = !coUrl(/[?&]binhgoc=0(&|$)/);
+  const BINH_KHOA = 'linhkhi.binhViTri';
+  let binhChon = null; // đọc localStorage một lần rồi giữ
+  function binhDoc() {
+    if (binhChon == null) { let v = null; try { v = window.localStorage.getItem(BINH_KHOA); } catch (e) { v = null; } binhChon = v === 'phai' || v === 'cu' ? v : 'trai'; }
+    return binhChon;
+  }
+  // câu mẹo bình máu (câu dài cho ?meogon=0, câu ngắn cho hộp mẹo) theo chỗ đặt nút
+  const BINH_CAU = {
+    trai: ['Máu thấp! Chạm ô Bình máu (góc trên bên trái) để hồi 30% máu.', 'Máu thấp! Chạm Bình máu (góc trên trái) để hồi 30%.'],
+    phai: ['Máu thấp! Chạm ô Bình máu (góc trên bên phải) để hồi 30% máu.', 'Máu thấp! Chạm Bình máu (góc trên phải) để hồi 30%.'],
+    cu: ['Máu thấp! Chạm nút Bình máu (trong cụm nút bên phải) để hồi 30% máu.', 'Máu thấp! Chạm Bình máu để hồi 30% máu.'],
+  };
+  if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({
+    'Máu thấp! Chạm Bình máu (góc trên trái) để hồi 30%.': 'Low HP! Tap the Potion (top left) to heal 30%.',
+    'Máu thấp! Chạm ô Bình máu (góc trên bên phải) để hồi 30% máu.': 'Low HP! Tap the Potion slot (top right) to heal 30% HP.',
+    'Máu thấp! Chạm Bình máu (góc trên phải) để hồi 30%.': 'Low HP! Tap the Potion (top right) to heal 30%.',
+    'Máu thấp! Chạm nút Bình máu (trong cụm nút bên phải) để hồi 30% máu.': 'Low HP! Tap the Potion button (in the right-hand button group) to heal 30% HP.',
+  });
   // Mục 1 — câu NGẮN cho hộp mẹo (câu dài giữ nguyên ở chỗ khác: bảng thua "Mẹo:", hướng dẫn của Cụ Đồ...). Khoá = câu dài tiếng Việt đúng từng chữ;
   // không có trong bảng thì hộp dùng câu dài (thu chữ / nới hộp, quá 2 dòng thì cắt "…").
   const NGAN_TUT = {
@@ -131,7 +157,8 @@
     for (const k in TUT_MD) if (TUT_MD[k] === s) return NGAN_MD[k];
     if (s === TUT_LY.merchant) return NGAN_TUT.merchant;
     if (G.MOVE_TIPS) for (const k in G.MOVE_TIPS) if (G.MOVE_TIPS[k] === s) return NGAN_VK[k] || null;
-    if (s === 'Máu thấp! Chạm ô Bình máu (góc trên bên trái) để hồi 30% máu.') return NGAN_BINH;
+    if (s === 'Máu thấp! Chạm ô Bình máu (góc trên bên trái) để hồi 30% máu.') return G.BINH_GOC === true && binhVt() === 'trai' ? BINH_CAU.trai[1] : NGAN_BINH; // ?binhgoc=0: như cũ
+    for (const k in BINH_CAU) if (s === BINH_CAU[k][0]) return BINH_CAU[k][1];
     if (G.chuong && G.chuong.tip && s === G.chuong.tip) { const m = /(\d+)\s*mana/.exec(s); return G.t(NGAN_CHUONG, m ? m[1] : 30); }
     for (const q of NGAN_QUAI) if (s.indexOf(q[0]) === 0) return q[1];
     return null;
@@ -774,6 +801,36 @@
   const NUT_TV1 = () => G.NUT_TV1 === true;
   const kep = (v, a, b) => (v < a ? a : v > b ? b : v);
   let boCuc = null, boCucKhoa = '';
+  // Nút Bình máu lên góc (xem đầu tệp, G.BINH_GOC): chỗ đặt đang dùng. Bố cục cũ (?nutcu=1) vốn có ô Bình máu góc trên trái → 'trai'.
+  function binhVt() {
+    if (G.BINH_GOC !== true) return 'cu';
+    if (!NUT_MOI()) return 'trai';
+    if (NUT_TV1()) return 'cu';
+    return binhDoc();
+  }
+  // bán kính VẼ của nút Bình máu (đơn vị khung 480×270) — cùng công thức boCucTo
+  function rBinh() {
+    const sc = G.scale > 0 ? G.scale : 1.44, f = CO_NUT[coNut()] || 1;
+    return (G.BINH_TO === true ? kep(23.5 / sc, 16, 17.5) : kep(18 / sc, 13.5, 15)) * f;
+  }
+  const BINH_GOC_Y = 26; // mép trên nút ở góc trái = mép trên nút Tạm dừng (PAU), ngay dưới thanh mana
+  const BINH_PHAI_Y = 43; // góc phải: mép trên nút ngay dưới vùng chạm ô vũ khí / "Bản đồ" (đáy 39) + phần nới vùng chạm
+  // góc phải: đáy vùng chạm nút Bình máu + 1 = chỗ bắt đầu của tấm "Linh khí N" / bản đồ nhỏ (đơn vị khung 480×270)
+  function binhPhaiDay() { return Math.ceil(BINH_PHAI_Y + 2 * rBinh() + kep(5 / (G.scale > 0 ? G.scale : 1.44), 3, 5) + 1); }
+  // bản đồ nhỏ khi Bình máu ở góc phải (js/minimap.js MM.rect gọi): mép trên dời xuống dưới nút, mép dưới GIỮ NGUYÊN để cụm nút phải không xê dịch; thấp quá thì thành nút "Bản đồ" nhỏ (cao 19) như phòng trùm
+  function binhMmRect(r) {
+    if (binhVt() !== 'phai') return r;
+    const top = binhPhaiDay() + 4; // + 4: cả phần nới vùng chạm của nút "Bản đồ" (−4) cũng không chạm vùng chạm Bình máu
+    if (r[3] < 30) return [r[0], top, r[2], r[3]];
+    return [r[0], top, r[2], Math.max(19, r[1] + r[3] - top)];
+  }
+  G.binhGoc = {
+    vt: () => binhVt(), r: rBinh, mmRect: binhMmRect, khoa: BINH_KHOA,
+    lkW: () => (binhVt() === 'phai' ? Math.floor(HG.bd[0] + HG.bd[2] - 2 * rBinh() - kep(5 / (G.scale > 0 ? G.scale : 1.44), 3, 5) - 2 - 368) : 110), // tấm "Linh khí N" (js/linhkhi.js HUD.w, x = 368): góc phải thì dừng trước vùng chạm nút Bình máu
+    dat(v) { binhChon = v === 'phai' || v === 'cu' ? v : 'trai'; try { if (binhChon === 'trai') window.localStorage.removeItem(BINH_KHOA); else window.localStorage.setItem(BINH_KHOA, binhChon); } catch (e) { /* máy không cho lưu: chỉ đổi lần chơi này */ } boCuc = null; },
+    chon: () => binhDoc(),
+    cau: () => (G.BINH_GOC === true ? BINH_CAU[binhVt()][0] : 'Máu thấp! Chạm ô Bình máu (góc trên bên trái) để hồi 30% máu.'), // câu mẹo dài đang dùng
+  };
   function boCucTv1(sc, cx, cy) {
     const rb = kep(30 / sc, 20, 24), rm = kep(22 / sc, 15, 18), rp = kep(16 / sc, 11, 13), g = kep(11 / sc, 6, 9);
     const ax = 474 - rb + cx, ay = 252 - rb + cy; // chừa 10 đơn vị dưới đáy cho chữ "Đánh" ở ải hướng dẫn
@@ -822,10 +879,14 @@
       while (th > 45 && !(hop('skill', tai(th, d)) && trong(tai(th, d), R.skill))) th -= 1;
       P.skill = tai(th, d);
     }
+    // Nút Bình máu lên góc (G.BINH_GOC): đặt thẳng ở góc, cụm nút phải giữ y như trước (Bình máu vốn được xếp SAU các nút khác nên chúng không đổi)
+    const vt = binhVt();
+    if (vt === 'trai') P.potion = [4 + R.potion, BINH_GOC_Y + R.potion]; // mép trái thẳng mép thanh máu (x = 4)
+    else if (vt === 'phai') P.potion = [HG.bd[0] + HG.bd[2] - R.potion, BINH_PHAI_Y + R.potion]; // mép phải thẳng mép ô "Bản đồ"
     // Bình máu: xa Đánh nhất, ở giữa vòng cung (thử góc từ 105° ra hai phía), đẩy ra xa tới khi đủ khoảng cách với mọi nút
     let dmax = 0;
     for (const k in P) dmax = Math.max(dmax, xa(P[k], A) + 1);
-    for (const th of [105, 112, 98, 120, 90, 128, 136, 145, 155]) {
+    if (!P.potion) for (const th of [105, 112, 98, 120, 90, 128, 136, 145, 155]) {
       for (let d = Math.max(dmax, R.atk + khe('atk', 'potion') + R.potion); d < 160; d += 1) {
         const p = tai(th, d);
         if (hop('potion', p) && trong(p, R.potion)) { P.potion = p; break; }
@@ -845,7 +906,7 @@
   function boCucMoi() {
     const sc = G.scale > 0 ? G.scale : 1.44, cx = G.cx || 0, cy = G.cy || 0, tv1 = NUT_TV1();
     const mm = S && G.minimap ? G.minimap.rect(S) : null;
-    const khoa = sc.toFixed(3) + '|' + cx + '|' + cy + '|' + (G.BINH_TO === true ? 'bt|' : '') + (tv1 ? 'tv1' : coNut() + '|' + coMD('dacBiet') + coMD('chuong') + '|' + (mm ? mm.join(',') : ''));
+    const khoa = sc.toFixed(3) + '|' + cx + '|' + cy + '|' + (G.BINH_TO === true ? 'bt|' : '') + binhVt() + '|' + (tv1 ? 'tv1' : coNut() + '|' + coMD('dacBiet') + coMD('chuong') + '|' + (mm ? mm.join(',') : ''));
     if (boCuc && khoa === boCucKhoa) return boCuc;
     boCuc = tv1 ? boCucTv1(sc, cx, cy) : boCucTo(sc, cx, cy);
     boCucKhoa = khoa;
@@ -1040,7 +1101,7 @@
       const sv = G.save;
       if (sv.tut && !sv.tut.potion && !G.noRender && !W.banner && P.potions > 0 && !W.noPotion && !P.dead && P.hp < P.maxhp * 0.4) {
         sv.tut.potion = 1;
-        W.banner = { s: 'Máu thấp! Chạm ô Bình máu (góc trên bên trái) để hồi 30% máu.', col: '#ffb0a0', t: 5, tip: true, urgent: true };
+        W.banner = { s: G.BINH_GOC === true ? BINH_CAU[binhVt()][0] : 'Máu thấp! Chạm ô Bình máu (góc trên bên trái) để hồi 30% máu.', col: '#ffb0a0', t: 5, tip: true, urgent: true };
       }
       pickLoot(W, P); // đồ rơi trên sàn (sau trùm, tinh anh, quái): đi lại gần là nhặt
       // bước vào cửa đang mở thì sang phòng kề (phòng trùm: chỉ sau khi đã thắng)
@@ -1415,6 +1476,7 @@
     }
     BA.draw(c, 'pause', PAU[0] + PAU[2] / 2, PAU[1] + 12, 11, { pressed: heldBox(PAU) });
     let sx = 5;
+    if (NUT_MOI() && binhVt() === 'trai') { const pb = btnPos('potion'); sx = Math.ceil(pb[0] + pb[2] + 1) + 4; } // Bình máu ở góc trái: hàng dấu cháy / độc... dời sang phải nút
     for (const k of G.ELS) if (P.st[k] > 0) { const gt = gdAnh('gd-tt-' + TT_MA[k]); if (gt) { ui.rect(sx, 54, 11, 11, 'rgba(14,10,8,0.85)', G.EL[k].col); G.spriteCustom.veGd(G.ux, gt, sx + 1, 55, 9, 9); } else if (G.lk && G.lk.icon) { ui.rect(sx, 54, 11, 11, 'rgba(14,10,8,0.85)', G.EL[k].col); G.lk.icon(k, sx + 5.5, 59.5, 0.9, false, 1); } else ui.rect(sx, 54, 10, 10, G.EL[k].col, '#000'); sx += 13; }
     const cw = G.curW(P), coat = P.coats[cw.id];
     if (coat && coat.t > 0) ui.text(G.t('Bùa {0} {1} giây', G.EL[coat.el].name, Math.ceil(coat.t)), sx + 1, 62.5, { size: 7.5, color: G.EL[coat.el].col, bold: true });
@@ -1705,7 +1767,7 @@
       BA.draw(c, 'dodge', bt[0], bt[1], bt[2] + 1, {
         dir, pressed: held('dodge'), cd: P.dodgeCd / P.dodgeCdMax, cdSec: P.dodgeCd, label: showLab ? 'Né' : null, labelAt: 'top',
       });
-      if (NUT_MOI()) { // bình máu nhỏ trong cụm nút (bố cục mới), số lần dùng "xN" ở góc
+      if (NUT_MOI() && !(S.vong && binhVt() === 'phai')) { // bình máu nhỏ trong cụm nút (bố cục mới), số lần dùng "xN" ở góc; góc phải: vòng chọn vũ khí đang mở thì nhường chỗ
         const canDrink = P.potions > 0 && !W.noPotion, pb = btnPos('potion');
         BA.draw(c, 'potion', pb[0], pb[1], pb[2], { count: P.potions, disabled: !canDrink, pressed: G.coTro((p) => p.role === 'ui' && potHit({ x: p.sx, y: p.sy })) });
         if (W.noPotion) ui.text('Cấm', pb[0], pb[1] + pb[2] + 7, { size: 6.5, align: 'center', bold: true, color: '#a89c8c' });
