@@ -19,6 +19,12 @@
       "frames": 8,
       "fps": 12,
       "loop": true
+    },
+    "jump": {
+      "row": 2,
+      "frames": 4,
+      "fps": 10,
+      "loop": false
     }
   }
 }

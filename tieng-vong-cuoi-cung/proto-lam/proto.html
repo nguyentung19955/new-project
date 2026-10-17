@@ -55,6 +55,7 @@ button.bat { border-color:var(--vang); color:var(--vang); }
 <div class="hang" id="hangAnim">
   <button data-anim="idle" data-cao="44" id="bIdle64">Idle 64</button>
   <button data-anim="run" data-cao="44" id="bRun64">Run 64</button>
+  <button data-anim="jump" data-cao="44" id="bJump64">Jump 64</button>
   <button data-anim="idle">Idle</button>
   <button data-anim="run">Run</button>
   <button data-anim="slash">Slash</button>
@@ -86,7 +87,7 @@ button.bat { border-color:var(--vang); color:var(--vang); }
 <h2>Toàn bộ khung của animation</h2>
 <div class="pixel"><canvas id="dai"></canvas></div>
 <div class="ghi">Mỗi khung ×3 · số dưới khung là hold (ms) · khung vàng = cờ hit. Lệch khép vòng (áo/chuông, px): <code id="lech">–</code></div>
-<div class="ghi"><b>Idle 64</b> (vòng 3 – chỉnh ngoại hình cuối: chuông treo sau mũ cách mép mũ 3 px có dây chéo 1 px, áo choàng xoè sau thêm 2–3 px với 3 vạt rách mũi 1 px, mũi/gót ủng nhô 1 px, đầu kiếm hạ 3 px; vòng 2: mũ nhọn ngả sau, áo choàng dài, chuôi/chắn kiếm lộ, ủng to có vạch): 6 khung · 8 FPS · ô 64×64 · pivot [32,63] · kiếm ở tay xa, chuông sau vai gần – xuất bằng <code>python3 proto-lam/xuat-idle.py</code> → <code>out/idle/</code> + <code>game/anim/lam-idle-proto.png</code>. <b>Run 64</b>: 8 khung · 12 FPS (83 ms/khung) · cùng mô hình/camera/pivot với Idle 64 – F0 chân gần vươn trước sắp tiếp đất, F1 chịu lực (thân thấp nhất), F2 hai chân ngang nhau, F3 đạp sau (thân cao nhất), F4–F7 đối xứng với chân xa; sải ±6 px, nhún ≈ 2 px, tay vung đối pha, kiếm luôn ở tay xa hướng trước (chếch lên/xuống theo tay), áo choàng + chuông bay ra sau theo "gió" chạy; vòng 2: chân xa sáng hơn một bậc, vạt áo phía gần vén 2–3 px, gốc dây chuông dời theo mũ (chạm mép mũ mọi khung), gió nhấp −1,5 – các chỉnh này chỉ bật khi là Run, Idle trùng từng pixel – xuất bằng <code>python3 proto-lam/xuat-run.py</code> → <code>out/run/</code> + sheet <code>game/anim/lam-proto.png</code> (hàng 0 idle, hàng 1 run). Slash là bản cũ (chưa chỉnh theo mô hình mới). Xuất cũ: <code>xuat.py</code>. Đề xuất kỹ thuật: <code>DE-XUAT.md</code>.</div>
+<div class="ghi"><b>Idle 64</b> (vòng 3 – chỉnh ngoại hình cuối: chuông treo sau mũ cách mép mũ 3 px có dây chéo 1 px, áo choàng xoè sau thêm 2–3 px với 3 vạt rách mũi 1 px, mũi/gót ủng nhô 1 px, đầu kiếm hạ 3 px; vòng 2: mũ nhọn ngả sau, áo choàng dài, chuôi/chắn kiếm lộ, ủng to có vạch): 6 khung · 8 FPS · ô 64×64 · pivot [32,63] · kiếm ở tay xa, chuông sau vai gần – xuất bằng <code>python3 proto-lam/xuat-idle.py</code> → <code>out/idle/</code> + <code>game/anim/lam-idle-proto.png</code>. <b>Run 64</b>: 8 khung · 12 FPS (83 ms/khung) · cùng mô hình/camera/pivot với Idle 64 – F0 chân gần vươn trước sắp tiếp đất, F1 chịu lực (thân thấp nhất), F2 hai chân ngang nhau, F3 đạp sau (thân cao nhất), F4–F7 đối xứng với chân xa; sải ±6 px, nhún ≈ 2 px, tay vung đối pha, kiếm luôn ở tay xa hướng trước (chếch lên/xuống theo tay), áo choàng + chuông bay ra sau theo "gió" chạy; vòng 2: chân xa sáng hơn một bậc, vạt áo phía gần vén 2–3 px, gốc dây chuông dời theo mũ (chạm mép mũ mọi khung), gió nhấp −1,5 – các chỉnh này chỉ bật khi là Run, Idle trùng từng pixel – xuất bằng <code>python3 proto-lam/xuat-run.py</code> → <code>out/run/</code> + sheet <code>game/anim/lam-proto.png</code> (hàng 0 idle, hàng 1 run). <b>Jump 64</b>: 4 khung · 10 FPS (100 ms/khung) · KHÔNG loop, giữ F3 (trang này phát lặp chỉ để xem) · cùng mô hình/camera/pivot [32,63] – F0 lấy đà (hông hạ ≈ 1,6 px, gối khuỵu, hai chân vẫn chạm hàng 63), F1 bật (hông +2,3 px, chân duỗi, đáy ủng 0–2 px trên pivot), F2 bay lên (gối bắt đầu co, ủng 2–3 px, áo choàng bị gió đi lên ép xuống), F3 gần đỉnh (gối co rõ, ủng 4 px, thân ổn định – giữ tới khi gameplay chuyển Fall); tay gần nâng 1–2 px giữ thăng bằng, kiếm vẫn tay xa; sprite KHÔNG tự dịch lên (độ cao do physics) – xuất bằng <code>python3 proto-lam/xuat-jump.py</code> → <code>out/jump/</code> + sheet <code>lam-proto.png</code> hàng 2. Slash là bản cũ (chưa chỉnh theo mô hình mới). Xuất cũ: <code>xuat.py</code>. Đề xuất kỹ thuật: <code>DE-XUAT.md</code>.</div>
 
 <script src="vendor/three.min.js"></script>
 <script src="nen.js"></script>
@@ -522,6 +523,32 @@ PROTO.tao = function (THREE, tuy) {
     },
     gio: function (t) { return RUN.gioNhap * Math.sin(4 * Math.PI * t / RUN.T); },   // gió nhấp 2 nhịp/vòng theo bước chân, pha chọn để áo bay cao nhất ở F0/F4 (thân đang hạ) → đuôi áo trễ pha ≈ 1 khung so với thân; vòng 2 (mục 4): biên độ −2,5 → −1,5 để đuôi áo bớt nhấp
     frames: [[0, 83, 'gần vươn trước'], [83, 83, 'gần chịu lực'], [166, 83, 'ngang nhau'], [249, 83, 'đạp sau'], [332, 83, 'xa vươn trước'], [415, 83, 'xa chịu lực'], [498, 83, 'ngang nhau'], [581, 83, 'đạp sau']] };
+  // jump: 4 khung · 10 FPS (100 ms/khung, T = 400 ms) · KHÔNG loop, giữ F3 (docs/tieu-chi-animation-lam.md mục 2). Pivot [32,63] cố định ở mọi khung;
+  // KHÔNG dịch toàn bộ sprite lên để giả quỹ đạo – độ cao thật do physics (player.y); khi bay bàn chân trong hình được phép cao hơn pivot.
+  // F0 lấy đà: hông hạ 0,035 ≈ 1,6 px (chanCung 0 → chân đi theo hông nên gối khuỵu), hai bàn chân vẫn chạm hàng 63, dang hơn idle ≈ 1 px (gần idle và Run F0/F1 ≤ 3 px)
+  // F1 bật: hông +0,055 ≈ 2,5 px so idle, chân duỗi gần thẳng (hông–mắt cá ≈ 0,285 / tối đa 0,291 – xa hơn thì IK kẹp, bàn chân bị kéo lên), mũi ủng hạ 18° → đáy ủng ≈ 0–1 px trên đất
+  // F2 bay lên: gối bắt đầu co (hông–mắt cá ≈ 0,25–0,265), đáy ủng ≈ 2 px trên pivot, áo choàng bị gió đi lên ép xuống (trễ, chưa kịp bay) · F3 gần đỉnh: gối co rõ (≈ 0,215–0,25), đáy ủng ≈ 4 px, thân ổn định, giữ tới khi gameplay chuyển Fall.
+  // Tay gần (trống) nâng dần ≈ 3 px giữ thăng bằng; tay xa vẫn cầm kiếm, lưỡi hướng trước hơi chúc xuống (an toàn, không chui vào thân/áo). Chuông + áo choàng: con lắc tất định như Run, "gió" = −vận tốc đi lên (ép áo xuống), tắt dần về 0 gần đỉnh.
+  var JUMP = { T: 400, gio: PROTO.TUY.jumpGio != null ? PROTO.TUY.jumpGio : -4.0, lechXa: -0.025 };   // lechXa: bù thị sai chân xa (như RUN_LECH_XA) để đáy hai ủng cùng hàng khi chạm đất/bay
+  PROTO.JUMP = JUMP;
+  function jumpVy(t) {   // vận tốc đi lên quy ước (0..1) theo thời gian: 0 lúc khuỵu, bật nhanh tới 1 ngay sau F1, giảm dần về ≈0,25 ở F3 (gần đỉnh)
+    if (t <= 40) return 0; if (t <= 100) return (t - 40) / 60; return Math.max(0.25, 1 - (t - 100) / 300 * 0.75);
+  }
+  ANIMS.jump = { loop: false, label: 'Jump – nhảy', T: JUMP.T,
+    keys: keys([
+      [0,   { ik: 1, chanCung: 0, hy: 0.255, lean: 9, headPitch: 5, fXx: 0.09, fXy: 0.03, fXa: 0, fGx: -0.10, fGy: 0.03 + JUMP.lechXa, fGa: 0,
+              gHx: 0.17, gHy: 0.33, gHz: 0.05, gBx: 1, gBy: -0.04, gBz: -0.05, xHx: -0.14, xHy: 0.27, xHz: -0.13 }, 'out'],
+      [100, { ik: 1, chanCung: 0, hy: 0.34, lean: 3, headPitch: -1, fXx: 0.06, fXy: 0.062, fXa: -18, fGx: -0.06, fGy: 0.085 + JUMP.lechXa, fGa: -18,
+              gHx: 0.20, gHy: 0.385, gHz: 0.05, gBx: 1, gBy: -0.04, gBz: -0.05, xHx: -0.05, xHy: 0.345, xHz: -0.14 }, 'out'],
+      [200, { ik: 1, chanCung: 0, hy: 0.345, lean: 4, headPitch: 1, fXx: 0.06, fXy: 0.10, fXa: -10, fGx: -0.05, fGy: 0.11 + JUMP.lechXa, fGa: -5,
+              gHx: 0.19, gHy: 0.37, gHz: 0.05, gBx: 1, gBy: -0.08, gBz: -0.05, xHx: -0.03, xHy: 0.36, xHz: -0.14 }, 'io'],
+      [300, { ik: 1, chanCung: 0, hy: 0.34, lean: 5, headPitch: 2, fXx: 0.08, fXy: 0.14, fXa: -5, fGx: -0.08, fGy: 0.13 + JUMP.lechXa, fGa: 0,
+              gHx: 0.19, gHy: 0.365, gHz: 0.05, gBx: 1, gBy: -0.10, gBz: -0.05, xHx: -0.02, xHy: 0.365, xHz: -0.14 }, 'out'],
+      [400, { ik: 1, chanCung: 0, hy: 0.34, lean: 5, headPitch: 2, fXx: 0.08, fXy: 0.14, fXa: -5, fGx: -0.08, fGy: 0.13 + JUMP.lechXa, fGa: 0,
+              gHx: 0.19, gHy: 0.365, gHz: 0.05, gBx: 1, gBy: -0.10, gBz: -0.05, xHx: -0.02, xHy: 0.365, xHz: -0.14 }, 'lin']]),
+    gio: function (t) { return JUMP.gio * jumpVy(t); },   // gió âm = luồng khí đi xuống khi Lam bay lên → áo choàng/chuông bị ép xuống (trễ), về 0 gần đỉnh
+    vy: jumpVy,
+    frames: [[0, 100, 'lấy đà'], [100, 100, 'bật lên'], [200, 100, 'bay lên'], [300, 100, 'gần đỉnh – giữ']] };
   ANIMS.slash = { loop: false, label: 'Slash – chém ngang', T: 860,
     keys: keys([
       [0, {}, 'out'],
@@ -537,7 +564,7 @@ PROTO.tao = function (THREE, tuy) {
     gio: function () { return 0; },
     frames: [[0, 50, 'bắt đầu'], [90, 80, 'lấy đà'], [200, 100, 'lấy đà – giữ'], [262, 40, 'vung'], [300, 110, 'VA CHẠM', true], [410, 70, 'va chạm – giữ', true],
              [485, 70, 'quá đà'], [555, 90, 'quá đà 2'], [645, 110, 'hồi thế'], [760, 100, 'về idle']] };
-  lam.ANIMS = ANIMS; lam.THU_TU = ['idle', 'run', 'slash'];
+  lam.ANIMS = ANIMS; lam.THU_TU = ['idle', 'run', 'jump', 'slash'];
 
   lam.mau = function (A, t) {   // nội suy keyframe → P
     if (A.proc) return A.proc(t);
@@ -784,6 +811,34 @@ PROTO.xuatIdle = function (cao, tuyX) {
   var R2 = new THREE.WebGLRenderer({ canvas: cv2, antialias: true, alpha: true, preserveDrawingBuffer: true }); R2.setPixelRatio(1); R2.outputEncoding = THREE.LinearEncoding;
   R2.setClearColor(0x000000, 0); R2.render(lam.scene, lam.taoCamPx(cao));
   return { cell: CO[cao].cell, ppu: CO[cao].ppu, cam: CAM, lechVong: K.lechVong, frames: fr, muot: cv2.toDataURL('image/png') };
+};
+
+/* ---------- API xuất JUMP 4 khung ô 64 cho xuat-jump.py (cùng kiểu xuatRun): ảnh + mặt nạ ID + toạ độ 3D→pixel (mắt cá/mũi/gót/gối/bàn tay/đầu kiếm/hông/đỉnh đầu) + vy quy ước ---------- */
+PROTO.xuatJump = function (cao, tuyX) {
+  var THREE = window.THREE, V3 = THREE.Vector3; tuyX = tuyX || {};
+  function b64(arr) { var s = ''; for (var j = 0; j < arr.length; j += 8192) s += String.fromCharCode.apply(null, arr.subarray(j, j + 8192)); return btoa(s); }
+  var cv = document.createElement('canvas'); cv.width = 64; cv.height = 64;
+  var R = new THREE.WebGLRenderer({ canvas: cv, antialias: false, alpha: true, preserveDrawingBuffer: true }); R.setPixelRatio(1); R.outputEncoding = THREE.LinearEncoding;
+  var lam = PROTO.tao(THREE), B = lam.B;
+  var K = lam.tinhAnim('jump'), fr = [], cam = lam.taoCamPx(cao), n = CO[cao].cell;
+  function diem(bone, lx, ly, lz) {
+    var v = new V3(lx, ly, lz); bone.updateWorldMatrix(true, false); bone.localToWorld(v); var p = lam.chieu(cam, v);
+    return [Math.round((n - p[0]) * 100) / 100, Math.round(p[1] * 100) / 100];
+  }
+  for (var i = 0; i < K.frames.length; i++) {
+    var f = lam.datKhung('jump', i), r = lam.renderPixel(R, cao, tuyX);
+    var P = f.P;
+    fr.push({ ten: f.ten, hold: f.hold, t: f.t, px: b64(r.px), id: b64(r.id), pivot: r.pivot, sim: f.sim, vy: ANIMS_vy(lam, f.t), gio: lam.ANIMS.jump.gio(f.t),
+      P: { hy: P.hy, hx: P.hx, lean: P.lean, headPitch: P.headPitch, fXx: P.fXx, fXy: P.fXy, fXa: P.fXa, fGx: P.fGx, fGy: P.fGy, fGa: P.fGa, gHx: P.gHx, gHy: P.gHy, gBy: P.gBy, xHx: P.xHx, xHy: P.xHy },
+      toaDo: { matCaGan: diem(B.chanX.ban, 0, 0, 0), muiGan: diem(B.chanX.ban, 0.11, -0.034, 0), gotGan: diem(B.chanX.ban, -0.05, -0.034, 0), goiGan: diem(B.chanX.goi, 0, 0, 0),
+               matCaXa: diem(B.chanG.ban, 0, 0, 0), muiXa: diem(B.chanG.ban, 0.11, -0.034, 0), gotXa: diem(B.chanG.ban, -0.05, -0.034, 0), goiXa: diem(B.chanG.goi, 0, 0, 0),
+               tayXa: diem(B.tayG.ban, 0, 0, 0), tayGan: diem(B.tayX.ban, 0, 0, 0), dauKiem: diem(lam.kiem, 0, -0.33 - 0.055 - 0.035, 0),
+               hong: diem(B.hong, 0, 0, 0), dinhDau: diem(B.dau, 0.01, 0.165 + 0.27, 0) } });
+  }
+  function ANIMS_vy(lam, t) { return lam.ANIMS.jump.vy ? lam.ANIMS.jump.vy(t) : 0; }
+  lam.datKhung('idle', 5);   // toạ độ tham chiếu của Idle khung cuối (cùng hàm diem) để so: hông, tay gần, mắt cá, đỉnh đầu
+  var idleTC = { hong: diem(B.hong, 0, 0, 0), tayGan: diem(B.tayX.ban, 0, 0, 0), tayXa: diem(B.tayG.ban, 0, 0, 0), matCaGan: diem(B.chanX.ban, 0, 0, 0), matCaXa: diem(B.chanG.ban, 0, 0, 0), dinhDau: diem(B.dau, 0.01, 0.165 + 0.27, 0), dauKiem: diem(lam.kiem, 0, -0.33 - 0.055 - 0.035, 0) };
+  return { cell: n, ppu: CO[cao].ppu, cam: CAM, T: K.T, loop: K.loop, frames: fr, idleThamChieu: idleTC };
 };
 
 /* ---------- API xuất RUN 8 khung ô 64 cho xuat-run.py: ảnh + mặt nạ ID + toạ độ 3D→pixel của mắt cá/mũi/gót/bàn tay/đầu kiếm/hông ---------- */
