@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Proto Lam 3/4</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<!--BUILD-->
+<style>
+:root { color-scheme:dark; --nen:#0E1218; --o:#161C25; --vien:#2C3546; --chu:#E6EBF0; --mo:#8A96A6; --xanh:#32804F; --xanh2:#83CC93; --vang:#E1B85A; }
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body { margin:0; background:var(--nen); color:var(--chu); font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+body { padding-block:10px calc(16px + env(safe-area-inset-bottom, 0px)); padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); max-width:720px; margin:0 auto; }
+h1 { font-size:17px; margin:4px 0 8px; display:flex; justify-content:space-between; align-items:baseline; }
+h1 small { color:var(--mo); font-weight:400; font-size:12px; }
+h2 { font-size:12px; color:var(--mo); text-transform:uppercase; letter-spacing:.06em; margin:14px 0 6px; }
+.khung3d { position:relative; background:var(--o); border:1px solid var(--vien); border-radius:12px; overflow:hidden; height:250px; touch-action:none; }
+.khung3d canvas { width:100%; height:100%; display:block; transform:scaleX(-1); }
+.khung3d .goc { position:absolute; left:8px; bottom:8px; font-size:11px; color:var(--mo); background:rgba(14,18,24,.7); padding:3px 7px; border-radius:6px; }
+.hang { display:flex; gap:6px; flex-wrap:wrap; margin:8px 0; }
+button { appearance:none; border:1px solid var(--vien); background:#1B2330; color:var(--chu); font:600 15px/1 inherit; min-height:46px; padding:0 14px; border-radius:10px; flex:1 1 auto; cursor:pointer; }
+button:active { background:#243040; }
+button.chon { background:var(--xanh); border-color:var(--xanh2); color:#fff; }
+button.nho { flex:0 0 auto; min-width:52px; }
+button.bat { border-color:var(--vang); color:var(--vang); }
+.tt { display:flex; justify-content:space-between; align-items:center; font-size:13px; color:var(--mo); padding:2px 2px; min-height:22px; }
+.tt b { color:var(--chu); }
+.tt .hit { color:var(--vang); font-weight:700; }
+.pixel { background:#0A0D12; border:1px solid var(--vien); border-radius:12px; padding:10px; overflow-x:auto; }
+.pixel .day { display:flex; align-items:flex-end; gap:16px; flex-wrap:wrap; justify-content:center; }
+.pixel canvas, .nen canvas { image-rendering:pixelated; image-rendering:crisp-edges; display:block; }
+.pixel .o { text-align:center; font-size:11px; color:var(--mo); }
+.pixel .o canvas { margin:0 auto 4px; background:
+  repeating-conic-gradient(#11161e 0 25%, #0A0D12 0 50%) 0 0/8px 8px; }
+.nen { border:1px solid var(--vien); border-radius:12px; overflow:hidden; background:#000; }
+.nen .day { display:flex; gap:0; align-items:flex-end; }
+.ghi { font-size:12px; color:var(--mo); margin:6px 2px; }
+.ghi code { color:var(--xanh2); }
+#loi { display:none; background:#3A1F22; color:#FFB4B4; padding:8px 10px; border-radius:8px; margin:8px 0; font-size:13px; white-space:pre-wrap; }
+</style>
+</head>
+<body>
+<h1>Proto Lam 3/4 <small>3D → pixel · tieng-vong-cuoi-cung/proto-lam</small></h1>
+<div id="loi"></div>
+
+<div class="khung3d"><canvas id="c3d"></canvas><div class="goc" id="goc"></div></div>
+<div class="hang">
+  <button class="nho" id="bVeGoc">Về góc 3/4</button>
+  <button class="nho" id="bLuoi">Lưới 3D</button>
+  <span style="flex:1"></span>
+  <button class="nho" id="bCo36">36 px</button>
+  <button class="nho" id="bCo44">44 px</button>
+</div>
+
+<div class="hang" id="hangAnim">
+  <button data-anim="idle">Idle</button>
+  <button data-anim="run">Run</button>
+  <button data-anim="slash">Slash</button>
+</div>
+<div class="hang">
+  <button class="nho" id="bTruoc">◀</button>
+  <button id="bPhat">Dừng</button>
+  <button class="nho" id="bSau">▶</button>
+</div>
+<div class="tt"><span id="ttKhung"></span><span id="ttThoi"></span></div>
+<div class="hang">
+  <button class="nho" id="bVien">Viền</button>
+  <button class="nho" id="bAo">Áo + chuông</button>
+  <button class="nho" id="bVienTrong">Viền trong</button>
+  <button class="nho" id="bMat">Mắt</button>
+</div>
+
+<h2>Bản pixel – nền tối</h2>
+<div class="pixel"><div class="day">
+  <div class="o"><canvas id="px1"></canvas>×1</div>
+  <div class="o"><canvas id="px3"></canvas>×3</div>
+  <div class="o"><canvas id="px6"></canvas>×6</div>
+</div></div>
+
+<h2>Trên nền Làng Chuông</h2>
+<div class="nen"><canvas id="nen3" style="width:100%"></canvas></div>
+<div class="ghi" id="ghiNen"></div>
+
+<h2>Toàn bộ khung của animation</h2>
+<div class="pixel"><canvas id="dai"></canvas></div>
+<div class="ghi">Mỗi khung ×3 · số dưới khung là hold (ms) · khung vàng = cờ hit. Lệch khép vòng (áo/chuông, px): <code id="lech">–</code></div>
+<div class="ghi">Xuất sprite sheet/GIF: <code>python3 proto-lam/xuat.py</code> (Chromium headless). Đề xuất kỹ thuật: <code>DE-XUAT.md</code>.</div>
+
+<script src="vendor/three.min.js"></script>
+<script src="nen.js"></script>
+<script>
+/* =====================================================================
+   PROTO LAM 3/4 – mô hình 3D mượt + xương + IK + áo/chuông tất định → pixel
+   Tất cả nằm trong file này; xuat.py mở trang này headless và gọi PROTO.xuat().
+   ===================================================================== */
+(function () {
+'use strict';
+var PROTO = {};
+window.PROTO = PROTO;
+
+/* ---------- bảng màu ---------- */
+var HEX = { vien:'#0C0F14', ao0:'#1A212B', ao1:'#212835', ao2:'#2C3546', xam:'#4A5A6E',
+            x0:'#21413A', x1:'#32804F', x2:'#83CC93', v0:'#9C6B30', v1:'#E1B85A', v2:'#F3E6C8', sang:'#CEF0D6' };
+var PAL_TEN = Object.keys(HEX);
+var PAL_RGB = PAL_TEN.map(function (k) { var h = HEX[k]; return [parseInt(h.substr(1, 2), 16), parseInt(h.substr(3, 2), 16), parseInt(h.substr(5, 2), 16)]; });
+function palIdx(r, g, b) { var best = 0, bd = 1e9; for (var i = 0; i < PAL_RGB.length; i++) { var p = PAL_RGB[i], d = (p[0]-r)*(p[0]-r)+(p[1]-g)*(p[1]-g)+(p[2]-b)*(p[2]-b); if (d < bd) { bd = d; best = i; } } return best; }
+function PI_(t) { return PAL_TEN.indexOf(t); }
+PROTO.HEX = HEX; PROTO.PAL_RGB = PAL_RGB;
+
+/* ---------- ID bộ phận ---------- */
+var ID = { mat:1, mu:2, vienMu:3, than:4, ao:5, tayG:6, tayX:7, chanG:8, chanX:9, luoi:10, chuoi:11, chuong:12, day:13, thatLung:14 };
+var NHOM = {}; // nhóm để vẽ viền trong
+[[ID.mat,'dau'],[ID.mu,'dau'],[ID.vienMu,'dau'],[ID.than,'than'],[ID.thatLung,'than'],[ID.ao,'ao'],[ID.tayG,'tayG'],[ID.tayX,'tayX'],
+ [ID.chanG,'chanG'],[ID.chanX,'chanX'],[ID.luoi,'kiem'],[ID.chuoi,'kiem'],[ID.chuong,'chuong'],[ID.day,'chuong']].forEach(function (a) { NHOM[a[0]] = a[1]; });
+var BAOVE = {}; [ID.luoi, ID.chuong].forEach(function (i) { BAOVE[i] = 1; });
+var MANH = {}; MANH[ID.luoi] = 3; MANH[ID.chuong] = 2; MANH[ID.day] = 2; MANH[ID.vienMu] = 1; MANH[ID.chuoi] = 2;
+PROTO.ID = ID;
+
+/* ---------- camera 3/4 ---------- */
+var CAM = { az: -30, el: 12, side: -1 };   // az âm = lệch về phía sau lưng; side −1 = camera bên trái Lam (−Z), ảnh lật ngang khi xuất để Lam nhìn sang phải
+PROTO.CAM = CAM;
+var CO = { 36: { ppu: 34, cell: 48 }, 44: { ppu: 42, cell: 64 } };
+PROTO.CO = CO;
+
+function easeBez(x1, y1, x2, y2) {   // cubic-bezier như CSS, trả hàm t→s
+  function bx(t) { var u = 1 - t; return 3*u*u*t*x1 + 3*u*t*t*x2 + t*t*t; }
+  function by(t) { var u = 1 - t; return 3*u*u*t*y1 + 3*u*t*t*y2 + t*t*t; }
+  return function (x) { if (x <= 0) return 0; if (x >= 1) return 1; var lo = 0, hi = 1, t = x; for (var i = 0; i < 24; i++) { t = (lo + hi) / 2; if (bx(t) < x) lo = t; else hi = t; } return by(t); };
+}
+var EASE = { lin: function (x) { return x; }, io: easeBez(.42, 0, .58, 1), 'in': easeBez(.55, 0, 1, .45), out: easeBez(0, .55, .45, 1),
+             manh: easeBez(.7, 0, .3, 1), bat: easeBez(.2, .9, .3, 1) };
+
+var deg = Math.PI / 180;
+
+PROTO.tao = function (THREE, tuy) {
+  tuy = tuy || {};
+  var V3 = THREE.Vector3;
+  var lam = { THREE: THREE, meshes: [], mats: [] };
+  var scene = new THREE.Scene(); lam.scene = scene;
+  var top = new THREE.Group(); scene.add(top); lam.top = top;
+
+  /* ---------- shader toon 3 bậc + ID ---------- */
+  var U = { uL: { value: new V3(0.25, 1.0, -0.55).normalize() }, t1: { value: 0.46 }, t2: { value: 0.80 } };
+  lam.U = U;
+  var VS = 'attribute float aTrim; varying float vT; varying vec3 vN; void main(){ vT=aTrim; vN=normalize(normalMatrix*normal); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }';
+  var FS = 'precision highp float; uniform vec3 c0,c1,c2,b0,b1,b2,h0,h1,h2; uniform vec3 uL; uniform float t1,t2,bias; varying vec3 vN; varying float vT;' +
+    'void main(){ vec3 n=normalize(vN); bool bk=!gl_FrontFacing; if(bk) n=-n; float d=dot(n,uL)*0.5+0.5+bias; vec3 a;' +
+    ' if(vT>0.55) a=d>t2?h2:(d>t1?h1:h0); else if(bk) a=d>t2?b2:(d>t1?b1:b0); else a=d>t2?c2:(d>t1?c1:c0); gl_FragColor=vec4(a,1.0); }';
+  var VSI = 'void main(){ gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }';
+  var FSI = 'precision highp float; uniform float uId; void main(){ float z=clamp(gl_FragCoord.z,0.0,1.0)*255.0; gl_FragColor=vec4(uId/255.0, floor(z)/255.0, fract(z), 1.0); }';
+  function col(t) { return new THREE.Color(HEX[t]); }
+  function vatLieu(ramp, id, tuyVL) {
+    tuyVL = tuyVL || {};
+    var sau = tuyVL.sau || [ramp[0], ramp[0], ramp[1]], trim = tuyVL.trim || ['x0', 'x1', 'x2'];
+    var m = new THREE.ShaderMaterial({
+      uniforms: { c0: { value: col(ramp[0]) }, c1: { value: col(ramp[1]) }, c2: { value: col(ramp[2]) },
+                  b0: { value: col(sau[0]) }, b1: { value: col(sau[1]) }, b2: { value: col(sau[2]) },
+                  h0: { value: col(trim[0]) }, h1: { value: col(trim[1]) }, h2: { value: col(trim[2]) },
+                  uL: U.uL, t1: U.t1, t2: U.t2, bias: { value: tuyVL.bias || 0 } },
+      vertexShader: VS, fragmentShader: FS, side: tuyVL.hai ? THREE.DoubleSide : THREE.FrontSide });
+    var mi = new THREE.ShaderMaterial({ uniforms: { uId: { value: id } }, vertexShader: VSI, fragmentShader: FSI, side: m.side });
+    lam.mats.push(m);
+    return { m: m, mi: mi, id: id };
+  }
+  function datTrim(geo, val) {   // thuộc tính aTrim mặc định 0
+    var n = geo.attributes.position.count, a = new Float32Array(n); if (val) a.fill(val);
+    geo.setAttribute('aTrim', new THREE.BufferAttribute(a, 1)); return geo;
+  }
+  function luoi(geo, vl, cha, lop) {
+    if (!geo.attributes.aTrim) datTrim(geo, 0);
+    var mesh = new THREE.Mesh(geo, vl.m); mesh.userData = { m: vl.m, mi: vl.mi, id: vl.id, lop: lop || 'than' };
+    mesh.frustumCulled = false; (cha || top).add(mesh); lam.meshes.push(mesh); return mesh;
+  }
+  /* ---------- vật liệu ---------- */
+  var VL = {
+    mu: vatLieu(['ao0', 'ao1', 'ao2'], ID.mu, { hai: true, sau: ['vien', 'vien', 'ao0'], trim: ['x0', 'x1', 'x1'], bias: 0.05 }),
+    mat: vatLieu(['vien', 'vien', 'ao0'], ID.mat),
+    ao: vatLieu(['ao0', 'ao1', 'ao2'], ID.ao, { hai: true, sau: ['vien', 'ao0', 'ao0'], trim: ['x0', 'x1', 'x1'] }),
+    than: vatLieu(['x0', 'x1', 'x1'], ID.than, { bias: 0.04 }),
+    thatLung: vatLieu(['vien', 'ao0', 'ao1'], ID.thatLung),
+    khoa: vatLieu(['x1', 'x2', 'sang'], ID.thatLung),
+    tayAoG: vatLieu(['ao1', 'ao2', 'xam'], ID.tayG, { bias: -0.08 }), tayAoX: vatLieu(['ao1', 'ao2', 'xam'], ID.tayX, { bias: 0.04 }),   // tay phải xa camera: tối hơn
+    gangG: vatLieu(['vien', 'ao0', 'ao1'], ID.tayG), gangX: vatLieu(['vien', 'ao0', 'ao1'], ID.tayX),
+    quanG: vatLieu(['vien', 'ao0', 'ao1'], ID.chanG, { bias: -0.04 }), quanX: vatLieu(['ao1', 'ao2', 'ao2'], ID.chanX, { bias: 0.1 }),   // chân trái (X) gần camera: sáng hơn
+    giayG: vatLieu(['vien', 'ao0', 'ao1'], ID.chanG, { trim: ['x0', 'x1', 'x1'] }), giayX: vatLieu(['vien', 'ao0', 'ao1'], ID.chanX, { trim: ['x0', 'x1', 'x1'] }),
+    luoi: vatLieu(['x2', 'sang', 'sang'], ID.luoi, { bias: 0.1 }),
+    chuoi: vatLieu(['v0', 'v1', 'v1'], ID.chuoi),
+    chuong: vatLieu(['v0', 'v1', 'v2'], ID.chuong, { hai: true, sau: ['vien', 'v0', 'v0'], bias: 0.06 }),
+    day: vatLieu(['ao0', 'ao1', 'ao2'], ID.day)
+  };
+
+  /* ---------- hình học mượt ---------- */
+  function capsule(r, len, seg) { return new THREE.CapsuleGeometry(r, len, 4, seg || 10); }   // dọc Y, tâm giữa
+  function cau(r, sx, sy, sz) { var g = new THREE.SphereGeometry(r, 12, 9); if (sx) g.scale(sx, sy, sz); return g; }
+  function lathe(pts, seg) { return new THREE.LatheGeometry(pts.map(function (p) { return new THREE.Vector2(p[0], p[1]); }), seg || 14); }
+  /* lưới tham số rows×cols, cập nhật được (dùng cho mũ, áo) */
+  function luoiThamSo(rows, cols, lat) {   // lat: đảo chiều mặt (hàng đi xuống như áo choàng)
+    var geo = new THREE.BufferGeometry();
+    var pos = new Float32Array(rows * cols * 3), trim = new Float32Array(rows * cols), idx = [];
+    for (var r = 0; r < rows - 1; r++) for (var c = 0; c < cols - 1; c++) { var a = r * cols + c, b = a + 1, d = a + cols, e = d + 1; if (lat) idx.push(a, d, b, b, d, e); else idx.push(a, b, d, b, e, d); }
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('aTrim', new THREE.BufferAttribute(trim, 1));
+    geo.setIndex(idx); geo.computeVertexNormals();
+    return geo;
+  }
+
+  /* ---------- xương ---------- */
+  function xuong(ten, cha, x, y, z) { var o = new THREE.Object3D(); o.name = ten; o.position.set(x || 0, y || 0, z || 0); cha.add(o); return o; }
+  var B = {};
+  B.hong = xuong('hong', top, 0, 0.31, 0);
+  B.song = xuong('song', B.hong, 0, 0.03, 0);
+  B.nguc = xuong('nguc', B.song, 0, 0.10, 0);     // y 0.44
+  B.co = xuong('co', B.nguc, 0.0, 0.11, 0);        // y 0.55
+  B.dau = xuong('dau', B.co, 0.0, 0.02, 0);         // khớp cổ y 0.57; tâm đầu +0.11
+  var DAU_T = new V3(0.01, 0.11, 0);                 // tâm đầu trong hệ dau
+  B.thanMesh = null;
+
+  /* thân (áo xanh) */
+  var thanPts = [[0.085, -0.02], [0.095, 0.0], [0.09, 0.05], [0.085, 0.09], [0.10, 0.14], [0.11, 0.18], [0.10, 0.215], [0.07, 0.235], [0.0, 0.24]];
+  B.thanMesh = luoi(lathe(thanPts, 16), VL.than, B.hong); B.thanMesh.position.set(0, -0.01, 0);
+  luoi(lathe([[0.0, -0.025], [0.08, -0.02], [0.095, 0.0], [0.07, 0.02], [0.0, 0.03]], 16), VL.quanG, B.hong).position.set(0, -0.005, 0);  // quần/hông
+  luoi(new THREE.TorusGeometry(0.095, 0.014, 6, 16), VL.thatLung, B.hong).rotation.x = Math.PI / 2;   // thắt lưng y 0.31→ đặt
+  var tl = lam.meshes[lam.meshes.length - 1]; tl.position.set(0, 0.075, 0);
+  luoi(cau(0.022, 1, 1, 0.6), VL.khoa, B.hong).position.set(0.085, 0.075, 0.02);   // khóa/ấn tiếng vọng phía trước
+  /* đầu + mặt (bóng tối) */
+  luoi(cau(0.10, 1, 1.05, 0.95), VL.mat, B.dau).position.copy(DAU_T);
+  /* mũ trùm: lưới tham số dựng lại mỗi khung (mũi mũ trễ) */
+  var MU_ROWS = 9, MU_COLS = 18;
+  var MU_PROF = [ // [y, bán kính, lệch sau, nửa góc hở (độ)]  — hệ tâm đầu
+    [-0.115, 0.135, 0.015, 68], [-0.045, 0.142, 0.01, 70], [0.035, 0.142, 0.0, 60], [0.10, 0.132, -0.012, 36],
+    [0.145, 0.115, -0.02, 0], [0.19, 0.088, 0.0, 0], [0.24, 0.052, 0.045, 0], [0.28, 0.022, 0.095, 0], [0.305, 0.0, 0.13, 0]];
+  var muGeo = luoiThamSo(MU_ROWS, MU_COLS);
+  var muMesh = luoi(muGeo, VL.mu, B.dau); muMesh.position.copy(DAU_T);
+  lam.muBend = 0;
+  function dungMu(bend) {
+    var P = muGeo.attributes.position.array, T = muGeo.attributes.aTrim.array;
+    for (var r = 0; r < MU_ROWS; r++) {
+      var pr = MU_PROF[r], y = pr[0], rad = pr[1], o = pr[3] * deg, t = r / (MU_ROWS - 1);
+      var bx = pr[2] + bend * t * t * 0.9, by = y - Math.abs(bend) * t * t * 0.25;
+      var phiMax = Math.PI - o;
+      for (var c = 0; c < MU_COLS; c++) {
+        // cột 0,1 và COLS-2,COLS-1 kẹp sát mép hở để làm dải viền xanh
+        var u;
+        if (c === 0) u = 0; else if (c === 1) u = 0.035; else if (c === MU_COLS - 2) u = 0.965; else if (c === MU_COLS - 1) u = 1; else u = 0.035 + 0.93 * (c - 1) / (MU_COLS - 3);
+        var phi = -phiMax + 2 * phiMax * u;   // 0 = sau lưng (−X)
+        var i = (r * MU_COLS + c);
+        P[i * 3] = -Math.cos(phi) * rad - bx; P[i * 3 + 1] = by; P[i * 3 + 2] = Math.sin(phi) * rad;
+        T[i] = 0;   // (viền xanh mép mũ tắt: thành nhiễu ở cỡ 36)
+      }
+    }
+    muGeo.attributes.position.needsUpdate = true; muGeo.attributes.aTrim.needsUpdate = true; muGeo.computeVertexNormals();
+  }
+  dungMu(0);
+  // viền xanh mép mũ: ID riêng để ưu tiên nét mảnh (không vẽ mesh thêm, dùng aTrim ở trên; mesh phụ mảnh cho chiều sâu)
+  /* tay */
+  var L1T = 0.125, L2T = 0.115;
+  function tay(s, vlAo, vlGang, z) {
+    var vai = xuong('vai' + s, B.nguc, -0.005, 0.065, z);
+    luoi(cau(0.042), vlAo, vai);
+    var ct = luoi(capsule(0.034, L1T - 0.02), vlAo, vai); ct.position.set(0, -L1T / 2, 0);
+    var khuyu = xuong('khuyu' + s, vai, 0, -L1T, 0);
+    luoi(cau(0.034), vlAo, khuyu);
+    var cang = luoi(capsule(0.03, L2T - 0.03), vlAo, khuyu); cang.position.set(0, -L2T / 2, 0);
+    var coTay = xuong('coTay' + s, khuyu, 0, -L2T, 0);
+    luoi(cau(0.038, 1, 1.15, 0.9), vlGang, coTay).position.set(0, -0.015, 0);
+    var ban = xuong('ban' + s, coTay, 0, -0.02, 0);
+    return { vai: vai, khuyu: khuyu, coTay: coTay, ban: ban };
+  }
+  B.tayG = tay('G', VL.tayAoG, VL.gangG, 0.118);   // phải = gần camera (+Z)
+  B.tayX = tay('X', VL.tayAoX, VL.gangX, -0.118);  // trái = xa
+  /* kiếm: lưỡi dọc −Y của bàn tay phải (nối tiếp cẳng tay) */
+  var kiem = new THREE.Object3D(); B.tayG.ban.add(kiem); lam.kiem = kiem;
+  var LUOI = 0.32;
+  (function () {
+    var sh = new THREE.Shape(); sh.moveTo(-0.021, 0); sh.lineTo(0.021, 0); sh.lineTo(0.018, -LUOI * 0.78); sh.lineTo(0, -LUOI); sh.lineTo(-0.018, -LUOI * 0.78); sh.closePath();
+    var g = new THREE.ExtrudeGeometry(sh, { depth: 0.012, bevelEnabled: true, bevelThickness: 0.004, bevelSize: 0.003, bevelSegments: 1 });
+    g.translate(0, -0.055, -0.006);
+    luoi(g, VL.luoi, kiem, 'kiem');
+    var chan = luoi(new THREE.BoxGeometry(0.075, 0.016, 0.022), VL.chuoi, kiem, 'kiem'); chan.position.set(0, -0.052, 0);   // chắn
+    luoi(capsule(0.014, 0.07, 8), VL.chuoi, kiem, 'kiem').position.set(0, -0.008, 0);   // chuôi (trong bàn tay)
+    luoi(cau(0.018), VL.chuoi, kiem, 'kiem').position.set(0, 0.04, 0);   // núm
+  })();
+  /* chân (IK) */
+  var L1C = 0.14, L2C = 0.135;
+  function chan(s, vlQ, vlG, z) {
+    var dui = xuong('dui' + s, B.hong, 0, 0, z);
+    luoi(cau(0.052), vlQ, dui);
+    luoi(capsule(0.046, L1C - 0.03), vlQ, dui).position.set(0, -L1C / 2, 0);
+    var goi = xuong('goi' + s, dui, 0, -L1C, 0);
+    luoi(cau(0.044), vlQ, goi);
+    luoi(capsule(0.038, L2C - 0.04), vlQ, goi).position.set(0, -L2C / 2 + 0.005, 0);
+    var co = xuong('coChan' + s, goi, 0, -L2C, 0);
+    var ban = xuong('banChan' + s, co, 0, 0, 0);
+    var ong = luoi(capsule(0.042, 0.05), vlG, ban); ong.position.set(0, 0.03, 0);   // ống giày
+    var vong = luoi(new THREE.TorusGeometry(0.043, 0.01, 6, 14), vlG, ban); vong.rotation.x = Math.PI / 2; vong.position.set(0, 0.07, 0); datTrim(vong.geometry, 1);
+    var g = capsule(0.032, 0.06, 8); g.rotateZ(Math.PI / 2); var bc = luoi(g, vlG, ban); bc.position.set(0.02, -0.003, 0);
+    return { dui: dui, goi: goi, co: co, ban: ban };
+  }
+  B.chanG = chan('G', VL.quanG, VL.giayG, 0.062);
+  B.chanX = chan('X', VL.quanX, VL.giayX, -0.062);
+
+  /* ---------- áo choàng ngắn (lưới tham số, 3 đoạn con lắc) ---------- */
+  var AO_ROWS = 4, AO_COLS = 13, AO_L = [0.075, 0.08, 0.08], AO_PHI = 108 * deg;   // phủ lưng 216°, hở trước để thấy thân và tay
+  var aoGeo = luoiThamSo(AO_ROWS, AO_COLS, true);
+  var aoMesh = luoi(aoGeo, VL.ao, top, 'ao');   // dựng trong hệ top (thế giới nhân vật)
+  var AO_NEO = new V3(0.0, 0.085, 0);            // điểm giữa vòng cổ trong hệ nguc (y≈0.525)
+  var aoSt = { th: [0, 0, 0], w: [0, 0, 0], ps: [0, 0, 0], wp: [0, 0, 0] };
+  lam.aoSt = aoSt;
+  var tmpV = new V3(), tmpV2 = new V3(), tmpQ = new THREE.Quaternion();
+  function dungAo() {
+    var P = aoGeo.attributes.position.array, T = aoGeo.attributes.aTrim.array;
+    B.nguc.updateWorldMatrix(true, false);
+    var trim = [];
+    for (var c = 0; c < AO_COLS; c++) {
+      var u = c / (AO_COLS - 1), phi = -AO_PHI + 2 * AO_PHI * u;
+      var wB = 0.3 + 0.7 * Math.pow(Math.cos(phi / 2), 2);
+      // vòng cổ trong hệ ngực → hệ top
+      tmpV.set(-Math.cos(phi) * 0.15 - 0.01, AO_NEO.y - 0.04 * Math.pow(Math.max(0, Math.cos(phi)), 2), Math.sin(phi) * 0.15);   // cổ áo võng xuống ở lưng → chỗ cho chuông
+      B.nguc.localToWorld(tmpV); top.worldToLocal(tmpV);
+      var x = tmpV.x, y = tmpV.y, z = tmpV.z;
+      // hướng toả ngang (hệ top, giữ theo yaw của ngực)
+      tmpV2.set(-Math.cos(phi), 0, Math.sin(phi)); tmpV2.applyQuaternion(B.nguc.getWorldQuaternion(tmpQ)); tmpV2.y = 0; tmpV2.normalize();
+      for (var r = 0; r < AO_ROWS; r++) {
+        var i = r * AO_COLS + c;
+        var fl = r * 0.016, rang = (r === AO_ROWS - 1 && (c % 2 === 1)) ? 0.022 : 0;
+        P[i * 3] = x + tmpV2.x * fl; P[i * 3 + 1] = y; P[i * 3 + 2] = z + tmpV2.z * fl;
+        T[i] = (r === AO_ROWS - 1 || c === 0 || c === AO_COLS - 1) ? 1 : 0;
+        if (r < AO_ROWS - 1) {
+          var th = aoSt.th[r] * wB, ps = aoSt.ps[r];
+          var L = AO_L[r] + ((r === AO_ROWS - 2) ? rangDuoi(c) : 0);
+          // hướng treo: xoay (0,−1,0) quanh Z góc −th (về −X), rồi quanh X góc ps
+          var dx = -Math.sin(th), dy = -Math.cos(th), dz = 0;
+          var dy2 = dy * Math.cos(ps) - dz * Math.sin(ps), dz2 = dy * Math.sin(ps) + dz * Math.cos(ps);
+          x += dx * L; y += dy2 * L; z += dz2 * L;
+        }
+      }
+    }
+    function rangDuoi(c) { return (c % 2 === 1) ? 0.022 : 0; }
+    aoGeo.attributes.position.needsUpdate = true; aoGeo.attributes.aTrim.needsUpdate = true; aoGeo.computeVertexNormals();
+  }
+  /* ---------- chuông sau vai trái (con lắc cầu) ---------- */
+  var CH_NEO = new V3(-0.175, 0.115, -0.07);   // sau vai trái, ngay dưới mép mũ, nhô ra sau lưng   // hệ nguc: sau vai trái, NGOÀI vòng cổ áo choàng (bán kính 0,18) để chuông luôn nổi trên áo
+  var CH_L = 0.055;   // dây
+  var chuong = new THREE.Object3D(); top.add(chuong); lam.chuong = chuong;
+  luoi(new THREE.CylinderGeometry(0.007, 0.007, CH_L, 6), VL.day, chuong, 'ao').position.set(0, -CH_L / 2, 0);
+  (function () {
+    var y0 = -CH_L;
+    var pts = [[0.0, y0 + 0.01], [0.013, y0 + 0.008], [0.02, y0 - 0.005], [0.027, y0 - 0.03], [0.034, y0 - 0.058], [0.048, y0 - 0.078], [0.05, y0 - 0.088], [0.036, y0 - 0.086], [0.0, y0 - 0.08]];
+    luoi(lathe(pts.reverse(), 12), VL.chuong, chuong, 'ao');   // điểm từ dưới lên → pháp tuyến hướng ra
+    luoi(cau(0.012), VL.chuong, chuong, 'ao').position.set(0, y0 - 0.082, 0);  // quả lắc
+  })();
+  var chSt = { th: [0], w: [0], ps: [0], wp: [0] };   // mảng 1 phần tử để dùng chung conLac()
+  lam.chSt = chSt;
+  var _down2 = new V3(0, -1, 0);
+  function dungChuong() {
+    B.nguc.updateWorldMatrix(true, false);
+    tmpV.copy(CH_NEO); B.nguc.localToWorld(tmpV); top.worldToLocal(tmpV);
+    chuong.position.copy(tmpV);
+    var th = chSt.th[0], ps = chSt.ps[0];
+    var dx = -Math.sin(th), dy = -Math.cos(th);
+    var dir = new V3(dx, dy * Math.cos(ps), dy * Math.sin(ps)).normalize();
+    chuong.quaternion.setFromUnitVectors(_down2, dir);
+  }
+
+  /* ---------- tư thế ---------- */
+  var BASE = { hx: 0, hy: 0.302, hyaw: 0, lean: 5, chestYaw: 0, tho: 0, headPitch: 2, headYaw: 24, headRoll: 0,
+    pG: 14, rG: 10, yG: 12, eG: 28, wG: 72, tG: 0,
+    pX: -6, rX: 10, yX: 0, eX: 22, wX: 0,
+    fGx: 0.06, fGy: 0.035, fGa: 0, fXx: -0.06, fXy: 0.035, fXa: 0, v: 0 };
+  lam.BASE = BASE;
+  var KENH = Object.keys(BASE);
+  function tron(a, b) { var o = {}; KENH.forEach(function (k) { o[k] = a[k]; }); if (b) for (var k in b) o[k] = b[k]; return o; }
+
+  var _q = new THREE.Quaternion(), _qp = new THREE.Quaternion(), _down = new V3(0, -1, 0);
+  function huongXuong(bone, dirWorld) {   // xoay bone để trục −Y (hệ cục bộ) trùng hướng dirWorld
+    bone.parent.getWorldQuaternion(_qp);
+    _q.setFromUnitVectors(_down, dirWorld.clone().normalize());
+    bone.quaternion.copy(_qp.invert().multiply(_q));
+  }
+  function ikChan(C, tx, ty, goc, hyaw) {
+    C.dui.updateWorldMatrix(true, false);
+    var H = new V3(); C.dui.getWorldPosition(H); top.worldToLocal(H);
+    var A = new V3(tx, ty, H.z);
+    var d = A.clone().sub(H), dist = Math.min(d.length(), L1C + L2C - 0.004); d.normalize();
+    var fwd = new V3(Math.cos(hyaw), 0, Math.sin(hyaw));
+    var p = fwd.clone().sub(d.clone().multiplyScalar(fwd.dot(d))); if (p.lengthSq() < 1e-6) p.set(1, 0, 0); p.normalize();
+    var ca = (L1C * L1C + dist * dist - L2C * L2C) / (2 * L1C * dist); ca = Math.max(-1, Math.min(1, ca));
+    var al = Math.acos(ca);
+    var K = H.clone().add(d.clone().multiplyScalar(L1C * Math.cos(al))).add(p.clone().multiplyScalar(L1C * Math.sin(al)));
+    var A2 = H.clone().add(d.clone().multiplyScalar(dist));   // hệ top = thế giới (top ở gốc, không xoay)
+    huongXuong(C.dui, K.clone().sub(H)); C.dui.updateWorldMatrix(true, false);
+    huongXuong(C.goi, A2.clone().sub(K)); C.goi.updateWorldMatrix(true, false);
+    // bàn chân: góc tuyệt đối (pitch) quanh Z + yaw hông
+    var qw = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, hyaw, goc * deg, 'YXZ'));
+    C.co.parent.getWorldQuaternion(_qp); C.co.quaternion.copy(_qp.invert().multiply(qw));
+  }
+  lam.datTuThe = function (P) {
+    B.hong.position.set(P.hx, P.hy, 0); B.hong.rotation.set(0, P.hyaw * deg, 0);
+    B.song.rotation.set(0, 0, -P.lean * deg);
+    B.nguc.rotation.set(0, P.chestYaw * deg, 0); B.nguc.position.y = 0.10 + P.tho * 0.006;
+    B.thanMesh.scale.setScalar(1 + P.tho * 0.012);
+    B.dau.rotation.set(P.headRoll * deg, P.headYaw * deg, -P.headPitch * deg, 'YXZ');
+    B.tayG.vai.rotation.set(-P.rG * deg, P.yG * deg, P.pG * deg, 'YXZ');
+    B.tayG.khuyu.rotation.set(0, 0, P.eG * deg);
+    B.tayG.ban.rotation.set(0, P.tG * deg, P.wG * deg, 'YXZ');
+    B.tayX.vai.rotation.set(P.rX * deg, P.yX * deg, P.pX * deg, 'YXZ');
+    B.tayX.khuyu.rotation.set(0, 0, P.eX * deg);
+    B.tayX.ban.rotation.set(0, 0, P.wX * deg);
+    top.updateMatrixWorld(true);
+    ikChan(B.chanG, P.fGx, P.fGy, P.fGa, -P.hyaw * deg);
+    ikChan(B.chanX, P.fXx, P.fXy, P.fXa, -P.hyaw * deg);
+    top.updateMatrixWorld(true);
+  };
+
+  /* ---------- animation ---------- */
+  function keys(ks) { return ks.map(function (k) { return { t: k[0], P: tron(BASE, k[1]), ease: k[2] || 'io' }; }); }
+  var ANIMS = {};
+  ANIMS.idle = { loop: true, label: 'Idle – thở', T: 1400,
+    keys: keys([[0, {}], [700, { tho: 1, hy: 0.306, headPitch: -1, pG: 17, wG: 68, pX: -3, headYaw: 22, lean: 4 }], [1400, {}]]),
+    gio: function (t) { return 1.2 * Math.sin(2 * Math.PI * t / 1400) + 0.5; },
+    frames: [[0, 200, 'thở ra'], [200, 160, ''], [360, 160, ''], [520, 180, ''], [700, 200, 'hít vào'], [900, 160, ''], [1060, 160, ''], [1240, 160, '']] };
+  // run: thủ tục (liên tục) – sải 0,36, nhún 2 nhịp/vòng
+  ANIMS.run = { loop: true, label: 'Run', T: 560, proc: function (t) {
+      var T = 560, u = ((t % T) + T) % T / T, P = tron(BASE);
+      function chan(u) {   // u: pha của chân (0 = chạm đất phía trước)
+        var ST = 0.55, S = 0.21, out = {};
+        if (u < ST) { var s = u / ST; out.x = S - 2 * S * s; out.y = 0.035; out.a = 12 * (1 - Math.min(1, s * 3)) - 25 * Math.max(0, (s - 0.7) / 0.3); }
+        else { var s2 = (u - ST) / (1 - ST), e = EASE.io(s2); out.x = -S + 2 * S * e; out.y = 0.035 + 0.15 * Math.sin(Math.PI * s2) * (1 - 0.35 * s2); out.a = -35 * (1 - s2) + 15 * s2; }
+        return out;
+      }
+      var g = chan(u), x = chan((u + 0.5) % 1);
+      P.fGx = g.x; P.fGy = g.y; P.fGa = g.a; P.fXx = x.x; P.fXy = x.y; P.fXa = x.a;
+      var b = Math.cos(4 * Math.PI * (u + 0.06));   // −1 ngay sau chạm đất
+      P.hy = 0.298 + 0.02 * b; P.hx = 0.03;
+      P.lean = 17 + 2 * b; P.hyaw = 4 * Math.sin(2 * Math.PI * u); P.chestYaw = -6 * Math.sin(2 * Math.PI * u);
+      P.headPitch = 4 - 2 * b; P.headYaw = 18; P.tho = 0;
+      var sw = Math.sin(2 * Math.PI * u);           // tay phải ngược pha chân phải
+      P.pG = -38 * sw + 5; P.eG = 95 - 10 * sw; P.rG = 8; P.yG = 18; P.wG = -165 + 48 * sw; P.tG = 0;   // cổ tay bù góc vai+khuỷu → lưỡi kiếm luôn kéo lê sau-dưới, chếch về phía camera để không bị thân che
+      P.pX = 38 * sw + 5; P.eX = 90 + 10 * sw; P.rX = 8; P.wX = 10;
+      P.v = 1.3;
+      return P;
+    },
+    gio: function () { return 0; },
+    frames: [[0, 80, 'chạm đất P'], [70, 60, ''], [140, 70, 'đạp'], [210, 70, 'bay'], [280, 80, 'chạm đất T'], [350, 60, ''], [420, 70, 'đạp'], [490, 70, 'bay']] };
+  ANIMS.slash = { loop: false, label: 'Slash – chém ngang', T: 860,
+    keys: keys([
+      [0, {}, 'out'],
+      [80, { hy: 0.287, hx: -0.02, hyaw: 22, lean: -5, chestYaw: 8, headYaw: 14, headPitch: 4, pG: 70, rG: 12, yG: -125, eG: 62, wG: -12, tG: 0, pX: 45, eX: 42, rX: 16, fGx: 0.09, fXx: -0.11 }, 'io'],
+      [235, { hy: 0.281, hx: -0.025, hyaw: 26, lean: -6, chestYaw: 10, headYaw: 14, headPitch: 5, pG: 76, rG: 14, yG: -142, eG: 72, wG: -16, tG: 0, pX: 50, eX: 45, rX: 16, fGx: 0.09, fXx: -0.11 }, 'out'],
+      [262, { hy: 0.288, hx: 0.0, hyaw: 4, lean: 8, chestYaw: 0, headYaw: 10, headPitch: 3, pG: 92, rG: 6, yG: -70, eG: 22, wG: -2, tG: 0, pX: 10, eX: 30, rX: 12, fGx: 0.11, fXx: -0.13 }, 'in'],
+      [300, { hy: 0.295, hx: 0.045, hyaw: -10, lean: 15, chestYaw: -4, headYaw: 6, headPitch: 3, pG: 86, rG: 2, yG: 22, eG: 0, wG: 0, tG: 0, pX: -38, eX: 24, rX: 10, fGx: 0.13, fXx: -0.15 }, 'bat'],
+      [470, { hy: 0.294, hx: 0.05, hyaw: -12, lean: 16, chestYaw: -5, headYaw: 6, headPitch: 3, pG: 85, rG: 2, yG: 26, eG: 0, wG: 0, tG: 0, pX: -40, eX: 24, rX: 10, fGx: 0.13, fXx: -0.15 }, 'lin'],
+      [485, { hy: 0.291, hx: 0.05, hyaw: -28, lean: 14, chestYaw: -8, headYaw: 8, headPitch: 4, pG: 52, rG: -4, yG: 38, eG: 8, wG: 4, tG: 0, pX: -30, eX: 30, rX: 10, fGx: 0.13, fXx: -0.15 }, 'io'],
+      [555, { hy: 0.295, hx: 0.04, hyaw: -18, lean: 10, chestYaw: -4, headYaw: 12, headPitch: 3, pG: 28, rG: 0, yG: 28, eG: 18, wG: 14, tG: 0, pX: -15, eX: 30, rX: 10, fGx: 0.12, fXx: -0.13 }, 'io'],
+      [645, { hy: 0.304, hx: 0.02, hyaw: -4, lean: 5, chestYaw: 0, headYaw: 20, headPitch: 2, pG: 18, rG: 8, yG: 18, eG: 30, wG: 45, tG: 0, pX: -8, eX: 24, rX: 10, fGx: 0.09, fXx: -0.09 }, 'io'],
+      [760, {}, 'io'], [860, {}, 'lin']]),
+    gio: function () { return 0; },
+    frames: [[0, 50, 'bắt đầu'], [90, 80, 'lấy đà'], [200, 100, 'lấy đà – giữ'], [262, 40, 'vung'], [300, 110, 'VA CHẠM', true], [410, 70, 'va chạm – giữ', true],
+             [485, 70, 'quá đà'], [555, 90, 'quá đà 2'], [645, 110, 'hồi thế'], [760, 100, 'về idle']] };
+  lam.ANIMS = ANIMS; lam.THU_TU = ['idle', 'run', 'slash'];
+
+  lam.mau = function (A, t) {   // nội suy keyframe → P
+    if (A.proc) return A.proc(t);
+    var ks = A.keys;
+    if (A.loop) { t = ((t % A.T) + A.T) % A.T; } else t = Math.max(0, Math.min(A.T, t));
+    var i = 0; while (i < ks.length - 2 && t > ks[i + 1].t) i++;
+    var a = ks[i], b = ks[i + 1], s = (b.t === a.t) ? 1 : (t - a.t) / (b.t - a.t);
+    var e = EASE[b.ease] || EASE.io; s = e(Math.max(0, Math.min(1, s)));
+    var P = {}; KENH.forEach(function (k) { P[k] = a.P[k] + (b.P[k] - a.P[k]) * s; });
+    return P;
+  };
+
+  /* ---------- mô phỏng áo/chuông/mũi mũ (tất định, dt cố định) ---------- */
+  var DT = 1 / 120, G = 7.0;
+  var neoAo = [new V3(), new V3(), new V3()], neoCh = [new V3(), new V3(), new V3()], neoDau = [new V3(), new V3(), new V3()];
+  function viTri(bone, local, out) { out.copy(local); bone.localToWorld(out); top.worldToLocal(out); }
+  function conLac(st, k, ax, ay, az, L, c, ks, thCha, gio) {
+    // st.th[k], st.w[k]: góc trước/sau; st.ps[k], st.wp[k]: góc ngang
+    var th = st.th[k], ps = st.ps[k];
+    var acc = ((ax + gio) * Math.cos(th) - (G + ay) * Math.sin(th)) / L - c * st.w[k] + ks * (thCha - th);
+    st.w[k] += acc * DT; st.th[k] += st.w[k] * DT;
+    if (st.th[k] < -0.12) { st.th[k] = -0.12; if (st.w[k] < 0) st.w[k] = 0; }
+    if (st.th[k] > 0.85) { st.th[k] = 0.85; if (st.w[k] > 0) st.w[k] = 0; }
+    var accp = (-az * Math.cos(ps) - (G + ay) * Math.sin(ps)) / L - c * st.wp[k] + ks * (0 - ps);
+    st.wp[k] += accp * DT; st.ps[k] += st.wp[k] * DT;
+    st.ps[k] = Math.max(-0.6, Math.min(0.6, st.ps[k]));
+  }
+  var hoodSt = { b: 0, w: 0 }, DINH_MU = new V3(0.0, 0.3, 0);
+  function buocSim(P, gio, lanDau) {
+    lam.datTuThe(P);
+    var neo = [neoAo, neoCh, neoDau];
+    for (var j = 0; j < 3; j++) { neo[j][2].copy(neo[j][1]); neo[j][1].copy(neo[j][0]); }
+    viTri(B.nguc, AO_NEO, neoAo[0]); viTri(B.nguc, CH_NEO, neoCh[0]); viTri(B.dau, DINH_MU, neoDau[0]);
+    if (lanDau) { for (j = 0; j < 3; j++) { neo[j][1].copy(neo[j][0]); neo[j][2].copy(neo[j][0]); } }
+    function gia(n) { return [(n[0].x - 2 * n[1].x + n[2].x) / (DT * DT), (n[0].y - 2 * n[1].y + n[2].y) / (DT * DT), (n[0].z - 2 * n[1].z + n[2].z) / (DT * DT)]; }
+    var aA = gia(neoAo), aC = gia(neoCh), aD = gia(neoDau);
+    var LIM = 30, KA = 0.35;   // vải nhẹ: chỉ nhận 35% gia tốc neo, chặn đỉnh
+    aA = aA.map(function (v) { return Math.max(-LIM, Math.min(LIM, v * KA)); }); aC = aC.map(function (v) { return Math.max(-LIM, Math.min(LIM, v * 0.5)); });
+    var wind = gio + 2.2 * P.v;
+    for (var k = 0; k < 3; k++) conLac(aoSt, k, aA[0], aA[1], aA[2], AO_L[k], 3.6 + k * 0.4, k === 0 ? 16 : 26, k === 0 ? 0 : aoSt.th[k - 1], wind * (0.6 + 0.2 * k));
+    conLac(chSt, 0, aC[0], aC[1], aC[2], 0.10, 1.8, 0, 0, gio * 0.3 + 1.0 * P.v);
+    // mũi mũ: lò xo quanh 0 theo gia tốc đầu (ngang + dọc)
+    var hb = hoodSt; var ha = Math.max(-LIM, Math.min(LIM, aD[0])) * 0.004 + Math.max(-LIM, Math.min(LIM, aD[1])) * 0.0015;
+    hb.w += (-ha - 160 * hb.b - 14 * hb.w) * DT; hb.b += hb.w * DT; hb.b = Math.max(-0.12, Math.min(0.12, hb.b));
+  }
+  function chupSim() { return { th: aoSt.th.slice(), ps: aoSt.ps.slice(), cth: chSt.th[0], cps: chSt.ps[0], hb: hoodSt.b }; }
+  function datSim(s) { aoSt.th = s.th.slice(); aoSt.ps = s.ps.slice(); chSt.th[0] = s.cth; chSt.ps[0] = s.cps; hoodSt.b = s.hb; }
+  function resetSim() { aoSt.th = [0, 0, 0]; aoSt.w = [0, 0, 0]; aoSt.ps = [0, 0, 0]; aoSt.wp = [0, 0, 0]; chSt.th = [0]; chSt.w = [0]; chSt.ps = [0]; chSt.wp = [0]; hoodSt.b = 0; hoodSt.w = 0; }
+  var CACHE = {};
+  lam.idleRest = null;
+  /* tính toàn bộ khung của một animation: pose + trạng thái áo/chuông tại từng khung (có khung trung gian liên tục) */
+  lam.tinhAnim = function (ten) {
+    if (CACHE[ten]) return CACHE[ten];
+    var A = ANIMS[ten];
+    resetSim();
+    if (!A.loop) { if (!lam.idleRest) lam.tinhAnim('idle'); datSim(lam.idleRest); aoSt.w = [0, 0, 0]; aoSt.wp = [0, 0, 0]; chSt.w = [0]; chSt.wp = [0]; hoodSt.w = 0; }
+    var vong = A.loop ? 8 : 1, Tms = A.T, nB = Math.round(Tms / 1000 / DT);
+    var snaps = [], lech = 0, prev = null, lanDau = true;
+    for (var v = 0; v < vong; v++) {
+      var fi = 0;
+      for (var i = 0; i < nB; i++) {
+        var t = i / nB * Tms;
+        buocSim(lam.mau(A, t), A.gio(t), lanDau); lanDau = false;
+        if (v === vong - 1) {
+          while (fi < A.frames.length && A.frames[fi][0] <= t + 1e-6) { snaps.push({ t: A.frames[fi][0], sim: chupSim() }); fi++; }
+        }
+      }
+      var s = chupSim();
+      if (prev) lech = Math.max(Math.abs(s.th[2] - prev.th[2]) * 0.24, Math.abs(s.cth - prev.cth) * 0.14);   // ~độ lệch vị trí (đơn vị)
+      prev = s;
+    }
+    if (ten === 'idle') lam.idleRest = snaps[0].sim;
+    var out = { ten: ten, loop: A.loop, label: A.label, T: Tms, lechVong: lech, frames: A.frames.map(function (f, i) {
+      return { t: f[0], hold: f[1], ten: f[2] || '', hit: !!f[3], P: lam.mau(A, f[0]), sim: snaps[i] ? snaps[i].sim : chupSim() }; }) };
+    CACHE[ten] = out; return out;
+  };
+  lam.datKhung = function (ten, i) {
+    var K = lam.tinhAnim(ten), f = K.frames[((i % K.frames.length) + K.frames.length) % K.frames.length];
+    lam.datTuThe(f.P); datSim(f.sim); dungAo(); dungChuong(); dungMu(hoodSt.b);
+    lam.khungHienTai = f; return f;
+  };
+  lam.datLop = function (ao) { lam.meshes.forEach(function (m) { if (m.userData.lop === 'ao') m.visible = !!ao; }); };
+
+  /* ---------- camera pixel ---------- */
+  lam.taoCamPx = function (cao) {
+    var c = CO[cao], H = c.cell / c.ppu;
+    var az = CAM.az * deg, el = CAM.el * deg;
+    var dir = new V3(Math.sin(az) * Math.cos(el), Math.sin(el), CAM.side * Math.cos(az) * Math.cos(el));   // từ tâm → camera (az âm = lệch về phía sau lưng −X)
+    var f = dir.clone().negate(), right = new V3().crossVectors(f, new V3(0, 1, 0)).normalize(), up = new V3().crossVectors(right, f).normalize();
+    var ndcY = 1 - 2 * (c.cell - 4 + 0.5) / c.cell;
+    var T = up.clone().multiplyScalar(-ndcY * H / 2);
+    var cam = new THREE.OrthographicCamera(-H / 2, H / 2, H / 2, -H / 2, 0.1, 20);
+    cam.position.copy(T).add(dir.clone().multiplyScalar(6)); cam.up.copy(up); cam.lookAt(T); cam.updateMatrixWorld(true); cam.updateProjectionMatrix();
+    cam.userData = { cell: c.cell, ppu: c.ppu, dir: dir, right: right, up: up };
+    return cam;
+  };
+  lam.chieu = function (cam, v) { var w = v.clone(); w.project(cam); var n = cam.userData.cell; return [(w.x + 1) / 2 * n, (1 - (w.y + 1) / 2) * n]; };
+
+  /* ---------- render pixel ---------- */
+  var rt = null, rtN = 0, buf = null;
+  function damBaoRT(n) { if (rt && rtN === n) return; if (rt) rt.dispose(); rt = new THREE.WebGLRenderTarget(n, n, { minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, format: THREE.RGBAFormat, type: THREE.UnsignedByteType, depthBuffer: true, stencilBuffer: false }); buf = new Uint8Array(n * n * 4); rtN = n; }
+  function doiVL(id) { lam.meshes.forEach(function (m) { m.material = id ? m.userData.mi : m.userData.m; }); }
+  function chup(R, cam, id) {
+    doiVL(id); var cc = new THREE.Color(); R.getClearColor(cc); var ca = R.getClearAlpha();
+    R.setRenderTarget(rt); R.setClearColor(0x000000, 0); R.clear(true, true, true); R.render(scene, cam);
+    R.readRenderTargetPixels(rt, 0, 0, rtN, rtN, buf); R.setRenderTarget(null); R.setClearColor(cc, ca); doiVL(false);
+    return buf.slice(0);
+  }
+  /* trả về {px: RGBA n×n, id: Uint8Array, ci: Int16Array, hitbox} */
+  lam.renderPixel = function (R, cao, tuyR) {
+    tuyR = tuyR || {};
+    var cam = lam.taoCamPx(cao), n = cam.userData.cell, ss = 2, N = n * ss;
+    damBaoRT(N);
+    var colB = chup(R, cam, false), idB = chup(R, cam, true);
+    var ci = new Int16Array(n * n).fill(-1), id = new Uint8Array(n * n), dep = new Float32Array(n * n).fill(9);
+    for (var y = 0; y < n; y++) for (var x = 0; x < n; x++) {
+      var mau = [], dem = {}, nOp = 0;
+      for (var sy = 0; sy < ss; sy++) for (var sx = 0; sx < ss; sx++) {
+        var X = x * ss + sx, Y = N - 1 - (y * ss + sy), k = (Y * N + X) * 4, pid = idB[k];
+        if (!pid) continue; nOp++;
+        mau.push([pid, palIdx(colB[k], colB[k + 1], colB[k + 2]), (idB[k + 1] + idB[k + 2] / 255) / 255]);
+        dem[pid] = (dem[pid] || 0) + 1;
+      }
+      if (!nOp) continue;
+      if (nOp * 2 < ss * ss) { var giu = mau.filter(function (m) { return MANH[m[0]] >= 2; }); if (!giu.length) continue; mau = giu; dem = {}; giu.forEach(function (m) { dem[m[0]] = (dem[m[0]] || 0) + 1; }); }
+      var best = 0, bs = -1;
+      for (var p in dem) { var dmin = 9; mau.forEach(function (m) { if (m[0] == p && m[2] < dmin) dmin = m[2]; }); var sc = dem[p] + (MANH[p] || 0) - dmin * 0.01; if (sc > bs) { bs = sc; best = +p; } }
+      var cd = {}, cb = -1, cbn = 0, dm = 9;
+      mau.forEach(function (m) { if (m[0] === best) { cd[m[1]] = (cd[m[1]] || 0) + 1; if (m[2] < dm) dm = m[2]; } });
+      for (var c in cd) if (cd[c] > cbn || (cd[c] === cbn && +c > cb)) { cbn = cd[c]; cb = +c; }
+      var o = y * n + x; ci[o] = cb; id[o] = best; dep[o] = dm;
+    }
+    return lam.hauKy(ci, id, dep, n, cam, tuyR);
+  };
+  lam.hauKy = function (ci, id, dep, n, cam, tuyR) {
+    var x, y, o, i, N4 = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+    function co(x, y) { return x >= 0 && y >= 0 && x < n && y < n && id[y * n + x] > 0; }
+    // 1) pixel đơn lẻ
+    for (y = 0; y < n; y++) for (x = 0; x < n; x++) { o = y * n + x; if (!id[o] || BAOVE[id[o]]) continue; var c8 = 0; for (var dy = -1; dy <= 1; dy++) for (var dx = -1; dx <= 1; dx++) if ((dx || dy) && co(x + dx, y + dy)) c8++; if (c8 <= 1) { id[o] = 0; ci[o] = -1; } }
+    // 2) đốm màu lẻ trong cùng nhóm
+    var ci2 = Int16Array.from(ci);
+    for (y = 1; y < n - 1; y++) for (x = 1; x < n - 1; x++) { o = y * n + x; if (!id[o] || BAOVE[id[o]]) continue; var c0 = -2, ok = true; for (i = 0; i < 4; i++) { var q = (y + N4[i][1]) * n + x + N4[i][0]; if (!id[q] || NHOM[id[q]] !== NHOM[id[o]]) { ok = false; break; } if (c0 === -2) c0 = ci[q]; else if (ci[q] !== c0) { ok = false; break; } } if (ok && c0 !== ci[o]) ci2[o] = c0; }
+    ci = ci2;
+    var VIEN = PI_('vien'), SANG = PI_('sang');
+    // 3) viền trong theo nhóm: pixel xa hơn tối lại
+    if (tuyR.vienTrong !== false) {
+      var mark = new Uint8Array(n * n);
+      for (y = 0; y < n; y++) for (x = 0; x < n; x++) { o = y * n + x; if (!id[o]) continue;
+        for (i = 0; i < 2; i++) { var x2 = x + N4[i * 2][0], y2 = y + N4[i * 2][1]; if (x2 >= n || y2 >= n) continue; var q2 = y2 * n + x2; if (!id[q2]) continue;
+          var ga = NHOM[id[o]], gb = NHOM[id[q2]]; if (ga === gb) continue;
+          if (!(ga === 'kiem' || gb === 'kiem' || ga === 'chuong' || gb === 'chuong' || ga === 'dau' || gb === 'dau' || ga === 'tayG' || gb === 'tayG' || ga === 'chanG' || gb === 'chanG' || ga === 'ao' || gb === 'ao')) continue;
+          var xa = dep[o] > dep[q2] ? o : q2;   // xa camera hơn
+          if (BAOVE[id[xa]]) xa = (xa === o) ? q2 : o; if (BAOVE[id[xa]]) continue;
+          mark[xa] = 1; } }
+      for (o = 0; o < n * n; o++) if (mark[o]) ci[o] = VIEN;
+    }
+    // 4) mắt: 2 điểm sáng trong bóng mũ
+    if (tuyR.mat !== false) {
+      var e = new V3(0.082, 0.005, -0.035).add(DAU_T); B.dau.localToWorld(e); var pe = lam.chieu(cam, e);   // mắt gần camera (−Z); trước khi lật, lưng ở bên phải màn hình
+      var ex = Math.round(pe[0] - 0.5), ey = Math.round(pe[1] - 0.5), okE = function (x, y) { return x >= 0 && y >= 0 && x < n && y < n && (id[y * n + x] === ID.mat || id[y * n + x] === ID.mu); };
+      var dat = -1; for (var k = 0; k < 5 && dat < 0; k++) if (okE(ex + k, ey)) dat = ex + k;
+      if (dat >= 0) { ci[ey * n + dat] = SANG; id[ey * n + dat] = ID.mat; if (okE(dat + 2, ey)) { ci[ey * n + dat + 2] = SANG; id[ey * n + dat + 2] = ID.mat; } }
+    }
+    // 4a) viền sáng xanh (như bản chốt): mép trên/trái của mũ và áo choàng nhận #32804F, 1 px, ổn định
+    if (tuyR.vienSang !== false) {
+      var X1 = PI_('x1'), sang2 = [];
+      for (y = 0; y < n; y++) for (x = 0; x < n; x++) { o = y * n + x; if (id[o] !== ID.mu && id[o] !== ID.ao) continue;
+        if ((x > 0 && !id[o - 1]) || (y > 0 && !id[o - n])) sang2.push(o); }
+      sang2.forEach(function (o) { ci[o] = X1; });
+    }
+    // 4b) chuôi kiếm: bảo đảm 1 px vàng ở chắn kiếm khi chắn không bị che (chống nhấp nháy chuôi)
+    if (tuyR.chuoi !== false) {
+      var gc = new V3(0, -0.052, 0); lam.kiem.localToWorld(gc); var w = gc.clone().project(cam), zG = (w.z + 1) / 2;
+      var gx = Math.round((w.x + 1) / 2 * n - 0.5), gy = Math.round((1 - (w.y + 1) / 2) * n - 0.5);
+      if (gx >= 0 && gy >= 0 && gx < n && gy < n) { var og = gy * n + gx; if (id[og] && id[og] !== ID.luoi && dep[og] > zG - 0.004) { ci[og] = PI_('v1'); id[og] = ID.chuoi; } }
+    }
+    // 5) viền ngoài 1 px (lân cận 4)
+    var vienNgoai = new Uint8Array(n * n);
+    if (tuyR.vien !== false) for (y = 0; y < n; y++) for (x = 0; x < n; x++) { o = y * n + x; if (id[o]) continue; for (i = 0; i < 4; i++) if (co(x + N4[i][0], y + N4[i][1])) { vienNgoai[o] = 1; break; } }
+    // xuất RGBA + hộp lưỡi kiếm
+    var px = new Uint8ClampedArray(n * n * 4), hb = null, x0 = n, y0 = n, x1 = -1, y1 = -1;
+    for (o = 0; o < n * n; o++) {
+      var c = -1; if (id[o]) c = ci[o]; else if (vienNgoai[o]) c = VIEN;
+      if (c >= 0) { var rgb = PAL_RGB[c]; px[o * 4] = rgb[0]; px[o * 4 + 1] = rgb[1]; px[o * 4 + 2] = rgb[2]; px[o * 4 + 3] = 255; }
+      if (id[o] === ID.luoi) { x = o % n; y = (o / n) | 0; if (x < x0) x0 = x; if (y < y0) y0 = y; if (x > x1) x1 = x; if (y > y1) y1 = y; }
+    }
+    if (x1 >= 0) hb = { x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1 };
+    var pv = lam.chieu(cam, new V3(0, 0, 0)), pvx = Math.round(pv[0]), pvy = Math.round(pv[1]);
+    if (CAM.side < 0 && tuyR.lat !== false) {   // lật ngang: Lam nhìn sang phải
+      var px2 = new Uint8ClampedArray(n * n * 4), id2 = new Uint8Array(n * n), ci2b = new Int16Array(n * n);
+      for (y = 0; y < n; y++) for (x = 0; x < n; x++) { var a = y * n + x, b = y * n + (n - 1 - x); px2[b * 4] = px[a * 4]; px2[b * 4 + 1] = px[a * 4 + 1]; px2[b * 4 + 2] = px[a * 4 + 2]; px2[b * 4 + 3] = px[a * 4 + 3]; id2[b] = id[a]; ci2b[b] = ci[a]; }
+      px = px2; id = id2; ci = ci2b; pvx = n - 1 - pvx;
+      if (hb) hb.x = n - (hb.x + hb.w);
+    }
+    return { px: px, id: id, ci: ci, n: n, hitbox: hb, pivot: [pvx, pvy] };
+  };
+
+  lam.B = B; lam.dungAo = dungAo; lam.dungChuong = function () { dungChuong(); }; lam.dungMu = dungMu;
+  lam.datKhung('idle', 0);
+  return lam;
+};
+
+/* ---------- API xuất cho xuat.py ---------- */
+PROTO.xuat = function (caos, tuyX) {
+  var THREE = window.THREE;
+  var cv = document.createElement('canvas'); cv.width = 64; cv.height = 64;
+  var R = new THREE.WebGLRenderer({ canvas: cv, antialias: false, alpha: true, preserveDrawingBuffer: true }); R.setPixelRatio(1); R.outputEncoding = THREE.LinearEncoding;
+  var lam = PROTO.tao(THREE);
+  var out = { cam: CAM, co: {}, thuTu: lam.THU_TU };
+  caos.forEach(function (cao) {
+    var o = { cell: CO[cao].cell, ppu: CO[cao].ppu, anims: {} };
+    lam.THU_TU.forEach(function (ten) {
+      var K = lam.tinhAnim(ten), fr = [];
+      for (var i = 0; i < K.frames.length; i++) {
+        var f = lam.datKhung(ten, i), r = lam.renderPixel(R, cao, tuyX || {});
+        var s = ''; for (var j = 0; j < r.px.length; j += 8192) s += String.fromCharCode.apply(null, r.px.subarray(j, j + 8192));
+        fr.push({ ten: f.ten, hold: f.hold, hit: f.hit, t: f.t, px: btoa(s), hitbox: r.hitbox, pivot: r.pivot });
+      }
+      o.anims[ten] = { loop: K.loop, label: K.label, T: K.T, lechVong: K.lechVong, frames: fr };
+    });
+    out.co[cao] = o;
+  });
+  return out;
+};
+})();
+</script>
+<script>
+/* =====================================================================  GIAO DIỆN  ===================================================================== */
+(function () {
+'use strict';
+var $ = function (id) { return document.getElementById(id); };
+function loi(m) { var e = $('loi'); e.style.display = 'block'; e.textContent += m + '\n'; }
+window.addEventListener('error', function (ev) { loi(ev.message); });
+if (!window.THREE) { loi('Không nạp được Three.js (vendor/three.min.js).'); return; }
+var THREE = window.THREE, V3 = THREE.Vector3;
+
+var st = { anim: 'idle', khung: 0, cao: 36, phat: true, vien: true, ao: true, vienTrong: true, mat: true, luoi: false };
+var c3d = $('c3d');
+var R;
+try { R = new THREE.WebGLRenderer({ canvas: c3d, antialias: true, alpha: true, preserveDrawingBuffer: true }); } catch (e) { loi('WebGL không chạy được: ' + e.message); return; }
+R.outputEncoding = THREE.LinearEncoding; R.setClearColor(0x161C25, 1);
+var lam = PROTO.tao(THREE);
+var Rpx = R;   // dùng chung renderer cho render pixel (render target riêng)
+
+/* camera 3D xoay được */
+var orb = { az: PROTO.CAM.az, el: PROTO.CAM.el, zoom: 1 };
+var cam3 = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 50);
+var luoiSan = new THREE.GridHelper(1.2, 12, 0x2C3546, 0x1F2733); luoiSan.position.y = -0.001; luoiSan.visible = false; lam.scene.add(luoiSan);
+var bongSan = new THREE.Mesh(new THREE.CircleGeometry(0.22, 24), new THREE.MeshBasicMaterial({ color: 0x0E1218, transparent: true, opacity: 0.6 })); bongSan.rotation.x = -Math.PI / 2; bongSan.position.y = 0.0005; lam.scene.add(bongSan);
+function datCam3() {
+  var w = c3d.clientWidth, h = c3d.clientHeight, dpr = Math.min(2, window.devicePixelRatio || 1);
+  R.setSize(w, h, false); R.setPixelRatio(dpr);
+  var H = 1.45 / orb.zoom, W = H * w / h;
+  cam3.left = -W / 2; cam3.right = W / 2; cam3.top = H / 2; cam3.bottom = -H / 2; cam3.updateProjectionMatrix();
+  var az = orb.az * Math.PI / 180, el = orb.el * Math.PI / 180;
+  var dir = new V3(Math.sin(az) * Math.cos(el), Math.sin(el), PROTO.CAM.side * Math.cos(az) * Math.cos(el));
+  var T = new V3(0.05, 0.5, 0);
+  cam3.position.copy(T).add(dir.multiplyScalar(8)); cam3.up.set(0, 1, 0); cam3.lookAt(T);
+  $('goc').textContent = 'xoay ' + Math.round(orb.az) + '° · nghiêng ' + Math.round(orb.el) + '°' + (Math.abs(orb.az - PROTO.CAM.az) < 0.5 && Math.abs(orb.el - PROTO.CAM.el) < 0.5 ? ' · góc 3/4 chuẩn' : '');
+}
+/* vuốt để xoay */
+(function () {
+  var keo = null;
+  c3d.addEventListener('pointerdown', function (e) { keo = { x: e.clientX, y: e.clientY, az: orb.az, el: orb.el }; c3d.setPointerCapture(e.pointerId); });
+  c3d.addEventListener('pointermove', function (e) { if (!keo) return; orb.az = keo.az + (e.clientX - keo.x) * 0.5; orb.el = Math.max(-20, Math.min(70, keo.el + (e.clientY - keo.y) * 0.4)); datCam3(); ve3D(); });
+  c3d.addEventListener('pointerup', function () { keo = null; }); c3d.addEventListener('pointercancel', function () { keo = null; });
+})();
+$('bVeGoc').onclick = function () { orb.az = PROTO.CAM.az; orb.el = PROTO.CAM.el; datCam3(); ve3D(); };
+$('bLuoi').onclick = function () { st.luoi = !st.luoi; luoiSan.visible = st.luoi; this.classList.toggle('chon', st.luoi); ve3D(); };
+
+function ve3D() { lam.datLop(st.ao); R.setRenderTarget(null); R.render(lam.scene, cam3); }
+
+/* ---------- pixel ---------- */
+var CACHE_PX = {};
+function khoa() { return [st.anim, st.cao, st.vien, st.ao, st.vienTrong, st.mat].join('|'); }
+function layKhungPx() {
+  var k = khoa(); if (CACHE_PX[k]) return CACHE_PX[k];
+  var K = lam.tinhAnim(st.anim), arr = [];
+  lam.datLop(st.ao);
+  for (var i = 0; i < K.frames.length; i++) { lam.datKhung(st.anim, i); var r = lam.renderPixel(Rpx, st.cao, { vien: st.vien, vienTrong: st.vienTrong, mat: st.mat }); arr.push(r); }
+  CACHE_PX[k] = { K: K, fr: arr }; return CACHE_PX[k];
+}
+function imgData(r) { var c = document.createElement('canvas'); c.width = r.n; c.height = r.n; c.getContext('2d').putImageData(new ImageData(r.px, r.n, r.n), 0, 0); return c; }
+var nen = new Image(); var nenSan = false; nen.onload = function () { nenSan = true; veTatCa(); }; nen.src = window.NEN_LANG_CHUONG || '';
+
+function vePixel() {
+  var D = layKhungPx(), r = D.fr[st.khung], n = r.n, im = imgData(r);
+  [[1, 'px1'], [3, 'px3'], [6, 'px6']].forEach(function (a) { var c = $(a[1]), s = a[0]; c.width = n * s; c.height = n * s; c.style.width = n * s + 'px'; c.style.height = n * s + 'px'; var g = c.getContext('2d'); g.imageSmoothingEnabled = false; g.drawImage(im, 0, 0, n * s, n * s); });
+  // nền làng: ×3 bên trái, ×1 bên phải cùng một canvas
+  var c = $('nen3'), W = 360, H = 120; c.width = W; c.height = H; c.style.height = 'auto'; var g = c.getContext('2d'); g.imageSmoothingEnabled = false;
+  if (nenSan) {
+    g.drawImage(nen, 150, 241 - 34, 80, 40, 0, 0, 240, 120);       // ×3: 80×40 quanh lối đi (mặt đất y=241)
+    g.drawImage(nen, 100, 241 - 100, 120, 120, 240, 0, 120, 120);  // ×1
+  } else { g.fillStyle = '#1A212B'; g.fillRect(0, 0, W, H); }
+  var pv = r.pivot;
+  g.drawImage(im, 0, 0, n, n, 120 - pv[0] * 3, 102 - pv[1] * 3, n * 3, n * 3);
+  g.drawImage(im, 0, 0, n, n, 300 - pv[0], 100 - pv[1], n, n);
+  $('ghiNen').textContent = 'Trái: ×3 · Phải: ×1 (đúng tỉ lệ game 480×270) · cỡ ' + st.cao + ' px, ô ' + n + '×' + n;
+  // dải khung
+  var d = $('dai'), s3 = 3, cols = D.fr.length; d.width = cols * (n * s3 + 6); d.height = n * s3 + 18; d.style.width = d.width + 'px'; d.style.height = d.height + 'px';
+  var gd = d.getContext('2d'); gd.imageSmoothingEnabled = false; gd.fillStyle = '#0A0D12'; gd.fillRect(0, 0, d.width, d.height);
+  for (var i = 0; i < cols; i++) { var x = i * (n * s3 + 6); gd.drawImage(imgData(D.fr[i]), 0, 0, n, n, x, 0, n * s3, n * s3);
+    gd.strokeStyle = i === st.khung ? '#83CC93' : (D.K.frames[i].hit ? '#E1B85A' : '#2C3546'); gd.lineWidth = i === st.khung ? 2 : 1; gd.strokeRect(x + 0.5, 0.5, n * s3 - 1, n * s3 - 1);
+    gd.fillStyle = D.K.frames[i].hit ? '#E1B85A' : '#8A96A6'; gd.font = '11px sans-serif'; gd.textAlign = 'center'; gd.fillText((i + 1) + ' · ' + D.K.frames[i].hold, x + n * s3 / 2, n * s3 + 13); }
+  $('lech').textContent = D.K.loop ? (D.K.lechVong * PROTO.CO[st.cao].ppu).toFixed(2) : 'không lặp';
+  var f = D.K.frames[st.khung], tong = D.K.frames.reduce(function (a, b) { return a + b.hold; }, 0);
+  $('ttKhung').innerHTML = 'Khung <b>' + (st.khung + 1) + '/' + D.K.frames.length + '</b> · ' + (f.ten || '') + (f.hit ? ' <span class="hit">HIT</span>' : '');
+  $('ttThoi').innerHTML = 'hold <b>' + f.hold + ' ms</b> · tổng <b>' + tong + ' ms</b>' + (D.K.loop ? ' · lặp' : '');
+}
+function veTatCa() { lam.datKhung(st.anim, st.khung); vePixel(); datCam3(); ve3D(); }
+
+/* ---------- điều khiển ---------- */
+function capNhatNut() {
+  document.querySelectorAll('#hangAnim button').forEach(function (b) { b.classList.toggle('chon', b.dataset.anim === st.anim); });
+  $('bCo36').classList.toggle('chon', st.cao === 36); $('bCo44').classList.toggle('chon', st.cao === 44);
+  $('bVien').classList.toggle('chon', st.vien); $('bAo').classList.toggle('chon', st.ao); $('bVienTrong').classList.toggle('chon', st.vienTrong); $('bMat').classList.toggle('chon', st.mat);
+  $('bPhat').textContent = st.phat ? 'Dừng' : 'Phát';
+}
+document.querySelectorAll('#hangAnim button').forEach(function (b) { b.onclick = function () { st.anim = b.dataset.anim; st.khung = 0; capNhatNut(); veTatCa(); }; });
+$('bCo36').onclick = function () { st.cao = 36; capNhatNut(); veTatCa(); }; $('bCo44').onclick = function () { st.cao = 44; capNhatNut(); veTatCa(); };
+$('bVien').onclick = function () { st.vien = !st.vien; capNhatNut(); veTatCa(); };
+$('bAo').onclick = function () { st.ao = !st.ao; capNhatNut(); veTatCa(); };
+$('bVienTrong').onclick = function () { st.vienTrong = !st.vienTrong; capNhatNut(); veTatCa(); };
+$('bMat').onclick = function () { st.mat = !st.mat; capNhatNut(); veTatCa(); };
+$('bPhat').onclick = function () { st.phat = !st.phat; capNhatNut(); };
+$('bTruoc').onclick = function () { st.phat = false; var nK = lam.tinhAnim(st.anim).frames.length; st.khung = (st.khung + nK - 1) % nK; capNhatNut(); veTatCa(); };
+$('bSau').onclick = function () { st.phat = false; var nK = lam.tinhAnim(st.anim).frames.length; st.khung = (st.khung + 1) % nK; capNhatNut(); veTatCa(); };
+
+/* vòng phát */
+var tCho = 0, tTruoc = performance.now();
+function vong(now) {
+  requestAnimationFrame(vong);
+  var dt = now - tTruoc; tTruoc = now;
+  if (!st.phat) return;
+  tCho += dt;
+  var K = lam.tinhAnim(st.anim), hold = K.frames[st.khung].hold;
+  if (tCho >= hold) { tCho -= hold; if (tCho > hold) tCho = 0; st.khung = (st.khung + 1) % K.frames.length; veTatCa(); }
+}
+window.addEventListener('resize', function () { datCam3(); ve3D(); });
+capNhatNut(); veTatCa(); requestAnimationFrame(vong);
+})();
+</script>
+</body>
+</html>
