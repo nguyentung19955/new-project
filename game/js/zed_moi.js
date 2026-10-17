@@ -82,9 +82,12 @@
     if (G.NET_CU || !t || !t.to || typeof t.tam_to !== 'string' || typeof Image === 'undefined') return null;
     if (!T._to) {
       const img = new Image(), r = { img, ready: false };
+      // 17/10 (dung-luong-17-10): bản ảnh rời có thêm WebP lossless của bản to ("tam_to_webp", điểm ảnh y hệt) → tải WebP khi trình duyệt
+      // đọc được (js/sprite_custom.js SC.roi.webp); WebP lỗi thì tải lại bản PNG như trước.
+      const SC0 = G.spriteCustom, wp = typeof t.tam_to_webp === 'string' && SC0 && SC0.roi && SC0.roi.webp === true ? t.tam_to_webp : null;
       img.onload = () => { r.ready = true; };
-      img.onerror = () => { r.hong = true; };
-      img.src = t.tam_to; T._to = r;
+      img.onerror = () => { if (wp && img.src.indexOf('.webp') > 0) { img.src = t.tam_to; return; } r.hong = true; };
+      img.src = wp || t.tam_to; T._to = r;
     }
     return T._to.ready ? T._to.img : null;
   }

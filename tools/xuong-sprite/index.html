@@ -15601,7 +15601,8 @@ MA._xong();
   // (chưa có thì tải ngay). Chỉ có ở bản 2 tệp ảnh rời (G.ANH_ROI); bản một tệp, công cụ: null, như cũ.
   let roiNhan = null, roiCan = null;
   // Nguồn ảnh hợp lệ: ảnh PNG base64 nhúng sẵn (như cũ) hoặc đường dẫn ảnh rời anh/….png của bản 2 tệp ảnh rời.
-  SC.laAnh = (s) => typeof s === 'string' && (s.indexOf('data:image/png;base64,') === 0 || (!!G.ANH_ROI && /^anh\/[A-Za-z0-9_.-]{1,90}\.png$/.test(s)));
+  // 17/10 (dung-luong-17-10): bản một tệp nhúng WebP lossless (data:image/webp) cho ảnh nào nhỏ hơn PNG — điểm ảnh y hệt (game/build.py webp_mot).
+  SC.laAnh = (s) => typeof s === 'string' && (s.indexOf('data:image/png;base64,') === 0 || s.indexOf('data:image/webp;base64,') === 0 || (!!G.ANH_ROI && /^anh\/[A-Za-z0-9_.-]{1,90}\.png$/.test(s)));
   SC.canAnh = (ma) => { if (roiCan) roiCan(ma); };
   // Gắn ảnh nguồn src vào img (đã gắn sẵn onload / onerror). Ảnh của tệp tải sau: giải mã xong (ngoài luồng chính) mới gọi onload,
   // để lần vẽ đầu không phải giải mã PNG ngay trong khung hình. Trình duyệt không có img.decode: như cũ.

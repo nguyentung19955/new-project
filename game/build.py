@@ -107,6 +107,8 @@ def main():
             if src.startswith(('http:', 'https:', '//')) or 'tests/' in src or 'bot' in os.path.basename(src):
                 sys.exit('Không được đóng gói tệp này: ' + src)
             code = read(src)
+            if gon_bat():
+                code = gon_js(code)  # 17/10: bỏ chú thích / thụt lề (gon_js), mã chạy y hệt
             if src == 'js/sprite_custom.js' and nhung:
                 data = json.dumps(nhung, ensure_ascii=False, separators=(',', ':'))
                 ps.append('// ===== art/custom (hình tự vẽ, Xưởng Sprite) =====\n(window.G = window.G || {})' + gan + data + ';\n')
@@ -130,7 +132,8 @@ def main():
 
     # 15/10 soát mượt: tấm trước khi thay hàng (<mã>-muotcu, cờ ?anhmuotcu=1) chỉ có ở bản hai tệp (web) — bản một tệp giữ dưới trần 30 MB.
     # 17/10 thuong-luong-that: tấm ghi "chi_hai_tep" (Thuồng Luồng thật 3 pha, ~2,9 MB) chỉ ở bản web — bản một tệp (trần 30 MB, đã sát trần) vẽ hình tạm cũ.
-    js = gom([bo_net_cao(t) for t in custom if not t.get('muot_cua') and not t.get('net_cua') and not t.get('san_cua') and not t.get('chi_hai_tep')], khai_truyen_mot(truyen) + khai_bia_mot(bia))  # 17/10 do-net: tấm Cu Tí cũ (<mã>-netcu) cũng chỉ ở bản hai tệp
+    mot, bot_webp = webp_mot([bo_net_cao(t) for t in custom if not t.get('muot_cua') and not t.get('net_cua') and not t.get('san_cua') and not t.get('chi_hai_tep')])  # 17/10: ảnh WebP lossless khi nhỏ hơn (webp_mot)
+    js = gom(mot, khai_truyen_mot(truyen) + khai_bia_mot(bia))  # 17/10 do-net: tấm Cu Tí cũ (<mã>-netcu) cũng chỉ ở bản hai tệp
     script = '<script>\n' + js + '</script>'
     full = trang(js)
     frag = title + '\n' + link + '\n' + style + '\n' + markup + '\n' + script + '\n'
@@ -143,12 +146,201 @@ def main():
         print('Đã ghi dist/%s (%d KB, %d tệp JS)' % (name, len(text.encode('utf-8')) // 1024, len(srcs)))
     if custom:
         print('Đã nhúng %d hình tự vẽ: %s' % (len(custom), ', '.join(t['ma'] for t in custom)))
+    if bot_webp:
+        print('Bản một tệp nhúng WebP lossless khi nhỏ hơn PNG: bớt %.2f MB (LK_WEBP_MOT=0 để nhúng PNG như trước)' % (bot_webp / 1048576))
+    if gon_bat():
+        print('Mã gọn (bỏ chú thích / thụt lề, LK_GON=0 để tắt): mã JS %.2f MB → %.2f MB' % (sum(len(read(x).encode()) for x in srcs) / 1048576, sum(len(gon_js(read(x)).encode()) for x in srcs) / 1048576))
     if truyen:
         print('Ảnh truyện nhúng trong bản một tệp (tải lười: chỉ giải mã khi mở truyện): %d ảnh, %d KB' % (len(truyen), sum(len(nhung_truyen(v)[1]) for v in truyen.values()) // 1024))
     if bia:
         print('Bìa màn hình chính nhúng trong bản một tệp: %d ảnh, %d KB' % (len(bia), sum(len(nhung_truyen(v)[1]) for v in bia.values()) // 1024))
     hai_tep(custom, gom, trang, frag, truyen, bia)
     build_tool(full)
+
+
+# ---------- Dung lượng 17/10 (docs/review/ke-hoach-cai-thien/dung-luong-17-10/bao-cao.md) ----------
+# (1) MÃ GỌN: mã các tệp game/js/*.js trong mọi bản đóng gói bỏ chú thích + thụt lề (gon_js; mã chạy y hệt). Tệp nguồn giữ nguyên.
+#     Cờ tắt: LK_GON=0 (đóng gói nguyên văn như trước).
+# (2) BẢN MỘT TỆP NHÚNG WEBP LOSSLESS: ảnh nào bản WebP lossless (cùng bộ nhớ đệm game/.dem-webp với bản ảnh rời) nhỏ hơn PNG thì nhúng
+#     WebP (data:image/webp), điểm ảnh y hệt (ma_webp so từng điểm) — CHỈ ảnh không có điểm mờ (alpha_gon), vì ảnh có điểm mờ vẽ từ WebP
+#     lệch 1–3/255 trên Chromium. Cờ tắt: LK_WEBP_MOT=0 (hoặc LK_WEBP=0) → nhúng PNG như trước.
+def gon_bat():
+    return os.environ.get('LK_GON', '1') != '0'
+
+
+_RE_SAU = {'return', 'typeof', 'instanceof', 'in', 'of', 'new', 'delete', 'void', 'throw', 'case', 'do', 'else', 'yield', 'await'}
+
+
+def _chu(c):
+    return c.isalnum() or c in '_$\\' or ord(c) > 127
+
+
+def gon_js(s):
+    """Bỏ chú thích và khoảng trắng thừa của MỘT tệp JS, KHÔNG đổi mã: mọi từ, số, chuỗi, mẫu chữ (`…`), biểu thức chính quy giữ y hệt
+    từng ký tự; chỗ xuống dòng giữa hai từ vẫn giữ một dấu xuống dòng (luật tự thêm dấu chấm phẩy của JS không đổi).
+    Đã so bằng bộ đọc JS acorn: dãy mảnh (từ, dấu, chuỗi…) và chỗ xuống dòng giữa các mảnh của cả 77 tệp y hệt bản gốc
+    (docs/review/ke-hoach-cai-thien/dung-luong-17-10/cong-cu/kiem_gon.js). Lỗi đọc (tệp JS sai cú pháp) → ValueError, dừng đóng gói."""
+    out, n, i = [], len(s), 0
+    tpl = []           # mỗi tầng ${ … } đang mở trong mẫu chữ: số ngoặc { chưa đóng
+    truoc = ''         # loại mảnh có nghĩa vừa ghi: '' đầu tệp, 'w' từ / số, 'p' + dấu, 's' chuỗi, 'r' biểu thức chính quy
+    tu = ''            # từ vừa ghi (khi truoc == 'w')
+    cho = None         # khoảng trắng đang chờ: None, ' ', '\n'
+
+    def ghi(t, loai):
+        nonlocal cho, truoc
+        if cho == '\n':
+            out.append('\n')
+        elif cho == ' ' and out:
+            a, b = out[-1][-1], t[0]
+            if (_chu(a) and _chu(b)) or (a in '+-' and b in '+-') or (a == '/' and b in '/*') or (a.isdigit() and b == '.') or (a == '.' and b.isdigit()):
+                out.append(' ')
+        cho = None
+        out.append(t)
+        truoc = loai
+
+    def doc_mau(j):
+        # đọc tiếp mẫu chữ từ j (ngay sau ` hoặc sau } đóng ${ }); trả (vị trí sau mảnh, có mở ${ hay không)
+        while j < n:
+            c = s[j]
+            if c == '\\':
+                j += 2
+            elif c == '`':
+                return j + 1, False
+            elif c == '$' and j + 1 < n and s[j + 1] == '{':
+                return j + 2, True
+            else:
+                j += 1
+        raise ValueError('mẫu chữ không đóng')
+
+    while i < n:
+        c = s[i]
+        if c in ' \t\r\n\f\v\ufeff\u00a0\u2028\u2029':
+            j = i
+            while j < n and s[j] in ' \t\r\n\f\v\ufeff\u00a0\u2028\u2029':
+                j += 1
+            cho = '\n' if (cho == '\n' or any(x in s[i:j] for x in '\n\r\u2028\u2029')) else ' '
+            i = j
+            continue
+        if c == '/' and i + 1 < n and s[i + 1] == '/':
+            j = i
+            while j < n and s[j] not in '\n\r\u2028\u2029':
+                j += 1
+            cho = cho or ' '
+            i = j
+            continue
+        if c == '/' and i + 1 < n and s[i + 1] == '*':
+            j = s.find('*/', i + 2)
+            if j < 0:
+                raise ValueError('chú thích /* không đóng')
+            cho = '\n' if (cho == '\n' or any(x in s[i:j] for x in '\n\r\u2028\u2029')) else (cho or ' ')
+            i = j + 2
+            continue
+        if c in '\'"':
+            j = i + 1
+            while j < n and s[j] != c:
+                if s[j] == '\\':
+                    j += 1
+                elif s[j] in '\n\r':
+                    raise ValueError('chuỗi không đóng')
+                j += 1
+            ghi(s[i:j + 1], 's')
+            i = j + 1
+            continue
+        if c == '`':
+            j, mo = doc_mau(i + 1)
+            ghi(s[i:j], 's')
+            if mo:
+                tpl.append(0)
+                truoc = 'p'
+            i = j
+            continue
+        if c == '/' and (truoc in ('', 'p') and (not out or out[-1][-1] not in ')]}') or (truoc == 'w' and tu in _RE_SAU)):
+            j, lop = i + 1, False
+            while j < n:
+                x = s[j]
+                if x == '\\':
+                    j += 2
+                    continue
+                if x in '\n\r':
+                    raise ValueError('biểu thức chính quy không đóng')
+                if lop:
+                    lop = x != ']'
+                elif x == '[':
+                    lop = True
+                elif x == '/':
+                    break
+                j += 1
+            j += 1
+            while j < n and _chu(s[j]):
+                j += 1
+            ghi(s[i:j], 'r')
+            i = j
+            continue
+        if _chu(c) or (c == '.' and i + 1 < n and s[i + 1].isdigit()):
+            j = i + 1
+            while j < n and (_chu(s[j]) or (s[j] == '.' and s[i].isdigit()) or (s[j] in '+-' and s[j - 1] in 'eE' and s[i].isdigit() and not s[i:j].lower().startswith('0x'))):
+                j += 1
+            ghi(s[i:j], 'w')
+            tu = s[i:j]
+            i = j
+            continue
+        if c == '{' and tpl:
+            tpl[-1] += 1
+        elif c == '}' and tpl:
+            if tpl[-1] == 0:
+                tpl.pop()
+                j, mo = doc_mau(i + 1)
+                ghi(s[i:j], 's')
+                if mo:
+                    tpl.append(0)
+                    truoc = 'p'
+                i = j
+                continue
+            tpl[-1] -= 1
+        ghi(c, 'p')
+        i += 1
+    if tpl:
+        raise ValueError('mẫu chữ không đóng')
+    return ''.join(out) + '\n'
+
+
+def alpha_gon(png):
+    """True nếu mọi điểm ảnh hoặc trong suốt hẳn hoặc đục hẳn (không có điểm mờ). Đo 17/10 trên Chromium: ảnh có điểm MỜ vẽ từ WebP lệch
+    1–3/255 so với vẽ từ PNG (hai bộ giải mã nhân alpha làm tròn khác nhau) dù điểm ảnh trong tệp y hệt; ảnh không có điểm mờ thì vẽ y hệt.
+    Nên bản một tệp chỉ nhúng WebP cho ảnh không có điểm mờ."""
+    from PIL import Image
+    im = Image.open(io.BytesIO(png))
+    if im.mode == 'P':
+        tr = im.info.get('transparency')
+        if tr is None:
+            return True
+        if isinstance(tr, int):
+            return True
+        return all(x in (0, 255) for x in tr)
+    a = im.convert('RGBA').getchannel('A')
+    lo, hi = a.getextrema()
+    return all(v in (0, 255) for v, c in enumerate(a.histogram()) if c)
+
+
+def webp_mot(ds):
+    """Bản một tệp: thay ảnh PNG (tam, anh, tam_to) bằng WebP lossless khi nhỏ hơn. ds: danh sách hình (không sửa tại chỗ)."""
+    if os.environ.get('LK_WEBP_MOT') == '0' or os.environ.get('LK_WEBP') == '0':
+        return ds, 0
+    ds = [dict(t) for t in ds]
+    vt, pngs = [], []
+    for i, t in enumerate(ds):
+        for k in ('tam', 'anh', 'tam_to'):
+            v = t.get(k)
+            if isinstance(v, str) and v.startswith('data:image/png;base64,'):
+                vt.append((i, k)); pngs.append(base64.b64decode(v.split(',', 1)[1]))
+    webps = webp_nhieu(pngs)
+    bot = 0
+    for (i, k), png, w in zip(vt, pngs, webps):
+        if w and len(w) < len(png) and alpha_gon(png):
+            moi = 'data:image/webp;base64,' + base64.b64encode(w).decode('ascii')
+            bot += len(ds[i][k]) - len(moi)
+            ds[i][k] = moi
+    return ds, bot
 
 
 # ---------- Cảnh truyện (15/10): ảnh tải lười ----------
@@ -541,15 +733,24 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
         bang[nhom][1] += tot
         bang[nhom][2] += len(png)
     # 17/10 do-net: bản to ×1,2 của tấm Cu Tí ("tam_to", js/zed_moi.js tải khi vẽ Cu Tí trong trận lần đầu) → ảnh rời riêng, đường dẫn thay chuỗi base64
-    for t in ds:
-        if isinstance(t.get('tam_to'), str) and t['tam_to'].startswith('data:image/png;base64,'):
-            png = base64.b64decode(t['tam_to'].split(',', 1)[1])
-            ten = '%s-to.%s' % (t['ma'], hashlib.sha256(png).hexdigest()[:10])
-            with open(os.path.join(thu, ten + '.png'), 'wb') as f:
-                f.write(png)
-            t['tam_to'] = THU_MUC_ANH + '/' + ten + '.png'
-            if not t.get('net_cua'):
-                tong_tot += len(png); tong_png += len(png)  # người chơi tải (khi vào trận lần đầu), không tính vào "lõi" tải trước
+    ds_to = [t for t in ds if isinstance(t.get('tam_to'), str) and t['tam_to'].startswith('data:image/png;base64,')]
+    png_to = [base64.b64decode(t['tam_to'].split(',', 1)[1]) for t in ds_to]
+    webp_to = webp_nhieu(png_to)  # 17/10 (dung-luong-17-10): bản to cũng có WebP lossless ("tam_to_webp", js/zed_moi.js chọn khi đọc được WebP)
+    for t, png, w in zip(ds_to, png_to, webp_to):
+        ten = '%s-to.%s' % (t['ma'], hashlib.sha256(png).hexdigest()[:10])
+        with open(os.path.join(thu, ten + '.png'), 'wb') as f:
+            f.write(png)
+        t['tam_to'] = THU_MUC_ANH + '/' + ten + '.png'
+        tot = len(png)
+        if t.get('doi_tuong') == 'zed' and w and len(w) < len(png) and alpha_gon(png):  # chỉ Cu Tí (js/zed_moi.js đọc tam_to_webp); như bản một tệp: chỉ ảnh không có điểm mờ (vẽ y hệt PNG)
+            tw = '%s-to.%s' % (t['ma'], hashlib.sha256(w).hexdigest()[:10])
+            with open(os.path.join(thu, tw + '.webp'), 'wb') as f:
+                f.write(w)
+            t['tam_to_webp'] = THU_MUC_ANH + '/' + tw + '.webp'
+            tot = len(w)
+            tong_webp += len(w)
+        if not t.get('net_cua'):
+            tong_tot += tot; tong_png += len(png)  # người chơi tải (khi vào trận lần đầu), không tính vào "lõi" tải trước
     # 17/10 nét cao: ảnh "tam_n3" / "tam_n4" (Cu Tí, vệt kiếm nặng) → ảnh rời riêng; game CHỈ tải khi bật ?netcao=3|4 → không tính người chơi tải
     net_cao = {}
     for t in ds:

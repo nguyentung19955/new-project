@@ -1,0 +1,6856 @@
+{
+"mot_tep": {
+"tong": 27339777,
+"muc": [
+[
+105417,
+"baBa",
+"Quái thường / tinh anh: Sông sâu"
+],
+[
+72889,
+"boHung",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+83081,
+"caChuon",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+81887,
+"caCon",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+60037,
+"caNoc",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+283048,
+"caNocChua",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+73854,
+"chonBong",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+121445,
+"cocTia",
+"Quái thường / tinh anh: Sông sâu"
+],
+[
+105237,
+"cua",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+363756,
+"cuaDa-p2",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+565418,
+"cuaDa",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+312637,
+"cuaTuong",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+62314,
+"denLong",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+80384,
+"diaTrau",
+"Quái thường / tinh anh: Sông sâu"
+],
+[
+86136,
+"doiThan",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+17248,
+"em-be-healer",
+"Ảnh nhân vật: em bé, người làng"
+],
+[
+18676,
+"em-be-hunter",
+"Ảnh nhân vật: em bé, người làng"
+],
+[
+16841,
+"em-be-wrestler",
+"Ảnh nhân vật: em bé, người làng"
+],
+[
+4117,
+"gd-ai-ngay-da",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3953,
+"gd-ai-ngay-mai",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4114,
+"gd-ai-ngay-vang",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+297,
+"gd-ban-do-cham-khoa",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+295,
+"gd-ban-do-cham",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+121102,
+"gd-ban-do-vung",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+10248,
+"gd-bang-viec",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+465,
+"gd-bia-gach",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+429,
+"gd-bong-khung",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+294,
+"gd-bong-thoai-duoi",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+739,
+"gd-bong-thoai",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+15527,
+"gd-bt-dai",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+23746,
+"gd-bt-quat",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+76856,
+"gd-bt-tron",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+73544,
+"gd-bt-vanh",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+698,
+"gd-bua-fire",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2479,
+"gd-bua-giu-bac",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+665,
+"gd-bua-ice",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+813,
+"gd-bua-poison",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3088,
+"gd-can-de",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1492,
+"gd-can-num",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+427,
+"gd-cham-moi",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+435,
+"gd-cham-than",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+265,
+"gd-chuong-o-noi",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+387,
+"gd-chuong-o-trong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+400,
+"gd-chuong-o",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+25105,
+"gd-cong-ai-ngay",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2886,
+"gd-cot-nang-bien",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2724,
+"gd-cot-nang-lau",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1093,
+"gd-cot-nang-rung",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1776,
+"gd-cua-bien-ben-khoa",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+1842,
+"gd-cua-bien-ben",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+2312,
+"gd-cua-bien-duoi-khoa",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+2242,
+"gd-cua-bien-duoi",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+3238,
+"gd-cua-bien-tren-khoa",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+2980,
+"gd-cua-bien-tren",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+590,
+"gd-cua-dau-lau",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1759,
+"gd-cua-lau-ben-khoa",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+1853,
+"gd-cua-lau-ben",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+2379,
+"gd-cua-lau-duoi-khoa",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+2065,
+"gd-cua-lau-duoi",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+3353,
+"gd-cua-lau-tren-khoa",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+3091,
+"gd-cua-lau-tren",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+573,
+"gd-cua-o-khoa",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2060,
+"gd-cua-rung-ben-khoa",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+1974,
+"gd-cua-rung-ben",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+2656,
+"gd-cua-rung-duoi-khoa",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+2410,
+"gd-cua-rung-duoi",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+3582,
+"gd-cua-rung-tren-khoa",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+3364,
+"gd-cua-rung-tren",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+1708,
+"gd-cua-song-ben-khoa",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+1454,
+"gd-cua-song-ben",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+3184,
+"gd-cua-song-duoi-khoa",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+2898,
+"gd-cua-song-duoi",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+3014,
+"gd-cua-song-tren-khoa",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+2720,
+"gd-cua-song-tren",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+2607,
+"gd-da-nang-bac",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4799,
+"gd-dai-thong-bao",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+5891,
+"gd-danh-hieu-bac",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+5878,
+"gd-danh-hieu-dong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+5724,
+"gd-danh-hieu-vang",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4695,
+"gd-dau-phong-nguyen",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+7422,
+"gd-dau-phong-thu-thach",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+6310,
+"gd-dau-phong-tinh-anh",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+15537,
+"gd-dau-phong-trum",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4749,
+"gd-dau-phong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+381,
+"gd-he-fire",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+388,
+"gd-he-ice",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+400,
+"gd-he-poison",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+469,
+"gd-huy-chuong-1",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+469,
+"gd-huy-chuong-2",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+457,
+"gd-huy-chuong-3",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1378,
+"gd-huy-hinh-0",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1599,
+"gd-huy-hinh-1",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1686,
+"gd-huy-hinh-10",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1586,
+"gd-huy-hinh-11",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1690,
+"gd-huy-hinh-12",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2000,
+"gd-huy-hinh-13",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1856,
+"gd-huy-hinh-14",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1703,
+"gd-huy-hinh-15",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1682,
+"gd-huy-hinh-2",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1619,
+"gd-huy-hinh-3",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1694,
+"gd-huy-hinh-4",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1636,
+"gd-huy-hinh-5",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1661,
+"gd-huy-hinh-6",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1324,
+"gd-huy-hinh-7",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1871,
+"gd-huy-hinh-8",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1479,
+"gd-huy-hinh-9",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3455,
+"gd-huy-khung-bac",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3562,
+"gd-huy-khung-dong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3640,
+"gd-huy-khung-khoa",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3696,
+"gd-huy-khung-vang",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+577,
+"gd-icon-linh-khi",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2117,
+"gd-icon-viec-0",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2196,
+"gd-icon-viec-1",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2155,
+"gd-icon-viec-10",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2298,
+"gd-icon-viec-11",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2275,
+"gd-icon-viec-2",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1945,
+"gd-icon-viec-3",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2352,
+"gd-icon-viec-4",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2078,
+"gd-icon-viec-5",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2084,
+"gd-icon-viec-6",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2412,
+"gd-icon-viec-7",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1952,
+"gd-icon-viec-8",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2475,
+"gd-icon-viec-9",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+25577,
+"gd-khung-ban-do",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+26044,
+"gd-khung-bang",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3414,
+"gd-khung-canh-bao",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+490,
+"gd-khung-mana",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+865,
+"gd-khung-mau-quai",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+549,
+"gd-khung-mau",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1095,
+"gd-khung-nho",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+13211,
+"gd-khung-thoai",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+613,
+"gd-khung-tinh-anh",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+832,
+"gd-khung-trum-nho",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1322,
+"gd-khung-trum",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+307,
+"gd-khung-vach-lk-moc",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+945,
+"gd-khung-vach-lk",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+501,
+"gd-khung-xp",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1083,
+"gd-lang-bang-tranh",
+"Nền: làng"
+],
+[
+9923,
+"gd-lang-cay-da",
+"Nền: làng"
+],
+[
+1921,
+"gd-lang-cay-rom",
+"Nền: làng"
+],
+[
+615,
+"gd-lang-chum",
+"Nền: làng"
+],
+[
+484,
+"gd-lang-coc",
+"Nền: làng"
+],
+[
+4361,
+"gd-lang-cong",
+"Nền: làng"
+],
+[
+599,
+"gd-lang-cot-den",
+"Nền: làng"
+],
+[
+963,
+"gd-lang-day-phoi",
+"Nền: làng"
+],
+[
+691,
+"gd-lang-de",
+"Nền: làng"
+],
+[
+476,
+"gd-lang-den-long",
+"Nền: làng"
+],
+[
+1380,
+"gd-lang-dia-chon",
+"Nền: làng"
+],
+[
+1288,
+"gd-lang-dia",
+"Nền: làng"
+],
+[
+9437,
+"gd-lang-dinh",
+"Nền: làng"
+],
+[
+1883,
+"gd-lang-do",
+"Nền: làng"
+],
+[
+468,
+"gd-lang-ga-mo",
+"Nền: làng"
+],
+[
+466,
+"gd-lang-ga",
+"Nền: làng"
+],
+[
+1435,
+"gd-lang-gieng",
+"Nền: làng"
+],
+[
+3573,
+"gd-lang-hang-xen",
+"Nền: làng"
+],
+[
+8655,
+"gd-lang-lo-ren",
+"Nền: làng"
+],
+[
+125487,
+"gd-lang-nen",
+"Nền: làng"
+],
+[
+7042,
+"gd-lang-nha-may",
+"Nền: làng"
+],
+[
+5613,
+"gd-lang-thanh-duoi",
+"Nền: làng"
+],
+[
+4888,
+"gd-logo",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2263,
+"gd-loi-mon-rung",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+286,
+"gd-loi-noi",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1885,
+"gd-long-khung",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+744,
+"gd-mau-quai-nho",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+774,
+"gd-mui-ten-cua",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2598,
+"gd-nen-bien-mep",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+13329,
+"gd-nen-bien-ngoai",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+5820,
+"gd-nen-bien-san-nhan",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+6095,
+"gd-nen-bien-san0",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+6107,
+"gd-nen-bien-san1",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+6083,
+"gd-nen-bien-san2",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+2971,
+"gd-nen-bien-tuong-ben",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+10194,
+"gd-nen-bien-tuong-sau",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+2997,
+"gd-nen-bien-tuong-truoc",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+2453,
+"gd-nen-lau-mep",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+13396,
+"gd-nen-lau-ngoai",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+5843,
+"gd-nen-lau-san-nhan",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+5826,
+"gd-nen-lau-san0",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+5874,
+"gd-nen-lau-san1",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+6038,
+"gd-nen-lau-san2",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+2938,
+"gd-nen-lau-tuong-ben",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+9293,
+"gd-nen-lau-tuong-sau",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+2364,
+"gd-nen-lau-tuong-truoc",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+1185,
+"gd-nen-rung-mep",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+3393,
+"gd-nen-rung-ngoai",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+1688,
+"gd-nen-rung-san-nhan",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+1355,
+"gd-nen-rung-san0",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+1413,
+"gd-nen-rung-san1",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+1676,
+"gd-nen-rung-san2",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+1451,
+"gd-nen-rung-tuong-ben",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+3254,
+"gd-nen-rung-tuong-sau",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+1397,
+"gd-nen-rung-tuong-truoc",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+2931,
+"gd-nen-song-mep",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+14122,
+"gd-nen-song-ngoai",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+4700,
+"gd-nen-song-san-nhan",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+35258,
+"gd-nen-song-san-tl",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+4303,
+"gd-nen-song-san0",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+4703,
+"gd-nen-song-san1",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+4343,
+"gd-nen-song-san2",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+2435,
+"gd-nen-song-tuong-ben",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+18401,
+"gd-nen-song-tuong-sau",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+2251,
+"gd-nen-song-tuong-truoc",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+418,
+"gd-ngoc-fire",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+433,
+"gd-ngoc-ice",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+405,
+"gd-ngoc-poison",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+914,
+"gd-nut-binh-mau",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3615,
+"gd-nut-chinh",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3760,
+"gd-nut-chon",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+789,
+"gd-nut-chuong-fire",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+676,
+"gd-nut-chuong-ice",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1016,
+"gd-nut-chuong-poison",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1707,
+"gd-nut-dac-biet-bow",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1837,
+"gd-nut-dac-biet-hammer",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1627,
+"gd-nut-dac-biet-spear",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1838,
+"gd-nut-dac-biet-sword",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1611,
+"gd-nut-danh-bow",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1401,
+"gd-nut-danh-hammer",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+996,
+"gd-nut-danh-spear",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1202,
+"gd-nut-danh-sword",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1053,
+"gd-nut-ne",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3582,
+"gd-nut-nguy",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+6251,
+"gd-nut-noi-chuyen-bam",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+5747,
+"gd-nut-noi-chuyen-sang",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+6459,
+"gd-nut-noi-chuyen",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+568,
+"gd-nut-tam-dung",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3723,
+"gd-nut-thuong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2079,
+"gd-nut-vuong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2056,
+"gd-o-con-chon",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1865,
+"gd-o-con",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+475,
+"gd-o-diem-trong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+544,
+"gd-o-diem",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+875,
+"gd-o-do-0-chon",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+894,
+"gd-o-do-0",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3314,
+"gd-o-ep-0",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3343,
+"gd-o-ep-1",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3365,
+"gd-o-ep-2",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3355,
+"gd-o-ep-3",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3328,
+"gd-o-ep-4",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3252,
+"gd-o-ep-5",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3466,
+"gd-o-ep-6",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+731,
+"gd-o-phong-cur",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1094,
+"gd-o-phong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2394,
+"gd-o-tuan-dau",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1888,
+"gd-o-tuan",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+820,
+"gd-o-vk-0",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+303,
+"gd-phong-boss",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+319,
+"gd-phong-challenge",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+331,
+"gd-phong-chest",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+317,
+"gd-phong-curse",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+311,
+"gd-phong-elite",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+287,
+"gd-phong-fight",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+314,
+"gd-phong-fountain",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+296,
+"gd-phong-key",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+295,
+"gd-phong-lock",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+308,
+"gd-phong-merchant",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+334,
+"gd-phong-portal",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+323,
+"gd-phong-start",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+5468,
+"gd-phuc-lanh-ca",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4817,
+"gd-phuc-lanh-guom",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+8065,
+"gd-phuc-lanh-hoa",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+7156,
+"gd-phuc-lanh-ngan",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+6781,
+"gd-phuc-lanh-ngua",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+5136,
+"gd-phuc-lanh-no",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+7039,
+"gd-phuc-lanh-noc",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+7190,
+"gd-phuc-lanh-nui",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+5767,
+"gd-phuc-lanh-riu",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+8000,
+"gd-phuc-lanh-song",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+7373,
+"gd-phuc-lanh-suong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4652,
+"gd-phuc-lanh-than",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3781,
+"gd-phuc-lanh-tre",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+7467,
+"gd-phuc-lanh-trong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+468,
+"gd-quai-gai",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+450,
+"gd-quai-giap",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+461,
+"gd-quai-hut",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+423,
+"gd-quai-nhanh",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+446,
+"gd-quai-no",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+347,
+"gd-quai-sap-danh",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3985,
+"gd-ruong-ngay-mo",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3616,
+"gd-ruong-ngay",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+508,
+"gd-ruot-thanh-trum",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1589,
+"gd-ruot-thanh",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+456,
+"gd-sao-rong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+481,
+"gd-sao",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4403,
+"gd-so-bia",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1977,
+"gd-so-dau-fire",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1932,
+"gd-so-dau-ice",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1900,
+"gd-so-dau-poison",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4370,
+"gd-so-o-0",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3989,
+"gd-so-o-1",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3989,
+"gd-so-o-2",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+416,
+"gd-so-sao-0",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1044,
+"gd-so-sao-1",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+732,
+"gd-so-sao-2",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1100,
+"gd-so-sao-3",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+73654,
+"gd-so-trang",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3613,
+"gd-song-cau",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+5167,
+"gd-tham-lau",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+412,
+"gd-thanh-cuon-num",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+625,
+"gd-thanh-cuon",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+689,
+"gd-thanh-tren-vach",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2835,
+"gd-thanh-tren",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4472,
+"gd-the-ai-chon",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2757,
+"gd-the-ai-khoa",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3284,
+"gd-the-ai",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1075,
+"gd-the-nho",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1403,
+"gd-the-sap-co",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1888,
+"gd-the-so",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2043,
+"gd-the-thanh-tuu",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+837,
+"gd-the-thuong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+6844,
+"gd-the-trum-chon",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4825,
+"gd-the-trum-khoa",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+5940,
+"gd-the-trum",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1910,
+"gd-the-viec-ngay",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+9239,
+"gd-the-viec-xong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+8464,
+"gd-the-viec",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1971,
+"gd-the-zed",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3856,
+"gd-trong-dong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+456,
+"gd-trum-vach-ten",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+454,
+"gd-tt-bang",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+772,
+"gd-tt-bien-dong-da-2",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+771,
+"gd-tt-bien-dong-da",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+1887,
+"gd-tt-bien-mo-neo",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+595,
+"gd-tt-bien-nhu-da-2",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+556,
+"gd-tt-bien-nhu-da-3",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+651,
+"gd-tt-bien-nhu-da-4",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+716,
+"gd-tt-bien-nhu-da",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+2443,
+"gd-tt-bien-tien-canh-phai",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+2578,
+"gd-tt-bien-tien-canh-trai",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+695,
+"gd-tt-bien-tinh-the-2",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+1131,
+"gd-tt-bien-tinh-the-to-2",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+1090,
+"gd-tt-bien-tinh-the-to",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+686,
+"gd-tt-bien-tinh-the",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+485,
+"gd-tt-bien-vo-so",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+886,
+"gd-tt-bien-vung-nuoc",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+1204,
+"gd-tt-bien-vung-sang",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+399,
+"gd-tt-chay",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+407,
+"gd-tt-doc",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+522,
+"gd-tt-lau-chan-nen",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+1158,
+"gd-tt-lau-co-do",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+1099,
+"gd-tt-lau-co-xanh",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+1199,
+"gd-tt-lau-cot-da",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+964,
+"gd-tt-lau-cua-so-kinh",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+949,
+"gd-tt-lau-cua-so",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+463,
+"gd-tt-lau-duoc",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+710,
+"gd-tt-lau-hom-go",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+448,
+"gd-tt-lau-nen",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+6672,
+"gd-tt-lau-tham-tron",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+5923,
+"gd-tt-lau-tham-vuong",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+806,
+"gd-tt-lau-thung-go",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+2402,
+"gd-tt-lau-tien-canh-phai",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+2673,
+"gd-tt-lau-tien-canh-trai",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+1756,
+"gd-tt-lau-tuong-hiep-si",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+615,
+"gd-tt-lau-xuong-so",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+1038,
+"gd-tt-rung-bui-qua",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+1403,
+"gd-tt-rung-co-thu",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+616,
+"gd-tt-rung-day-leo-2",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+736,
+"gd-tt-rung-day-leo-3",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+655,
+"gd-tt-rung-day-leo",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+707,
+"gd-tt-rung-goc-cay",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+1102,
+"gd-tt-rung-hoa-nang",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+709,
+"gd-tt-rung-khuc-go",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+717,
+"gd-tt-rung-nam-do",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+668,
+"gd-tt-rung-nam-sang-2",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+695,
+"gd-tt-rung-nam-sang",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+1157,
+"gd-tt-rung-tan-la-2",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+1189,
+"gd-tt-rung-tan-la-3",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+1216,
+"gd-tt-rung-tan-la",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+3215,
+"gd-tt-rung-tien-canh-phai",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+3546,
+"gd-tt-rung-tien-canh-trai",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+692,
+"gd-tt-song-coc",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+545,
+"gd-tt-song-da-bun",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+2520,
+"gd-tt-song-tien-canh-phai",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+2515,
+"gd-tt-song-tien-canh-trai",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+382,
+"gd-tt-troi",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+527,
+"gd-tui",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1548,
+"gd-vat-ban-tho-het",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1504,
+"gd-vat-ban-tho",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1604,
+"gd-vat-be-thu-thach-het",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1469,
+"gd-vat-be-thu-thach",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+999,
+"gd-vat-chau-than-tat",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1224,
+"gd-vat-chau-than",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+604,
+"gd-vat-nam-doc-vo",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1435,
+"gd-vat-nam-doc",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1653,
+"gd-vat-ruong-do",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1630,
+"gd-vat-ruong-mo",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1521,
+"gd-vat-ruong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1939,
+"gd-vat-suoi-mana-het",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2072,
+"gd-vat-suoi-mana",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1962,
+"gd-vat-suoi-mau-het",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1883,
+"gd-vat-suoi-mau",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2431,
+"gd-vat-thuong-nhan",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+593,
+"gd-vat-tinh-the-vo",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1656,
+"gd-vat-tinh-the",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1109,
+"gd-vien-man-do",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+5080,
+"gd-vong-fire",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4087,
+"gd-vong-ice",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3026,
+"gd-vong-ngoc",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4479,
+"gd-vong-poison",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3469,
+"gd-vong-sat",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+5506,
+"gd-vong-thuong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+129181,
+"haiQuy",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+89635,
+"heoCon",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+187986,
+"heoNanh",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+341241,
+"hoLua-p2",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+391295,
+"hoLua",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+1168552,
+"hoTinh-p2",
+"Trùm: Lâu đài cổ"
+],
+[
+1307602,
+"hoTinh-p3",
+"Trùm: Lâu đài cổ"
+],
+[
+1218400,
+"hoTinh",
+"Trùm: Lâu đài cổ"
+],
+[
+83886,
+"hoaBaoTu",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+5072,
+"hu-am-sat",
+"Hiệu ứng (hu-*)"
+],
+[
+8862,
+"hu-bam-bang",
+"Hiệu ứng (hu-*)"
+],
+[
+5518,
+"hu-bam-doc",
+"Hiệu ứng (hu-*)"
+],
+[
+8077,
+"hu-bam-lua-rong",
+"Hiệu ứng (hu-*)"
+],
+[
+6543,
+"hu-bam-lua",
+"Hiệu ứng (hu-*)"
+],
+[
+3150,
+"hu-ban-cung-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+2821,
+"hu-ban-cung-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+3121,
+"hu-ban-cung-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+1487,
+"hu-ban-cung",
+"Hiệu ứng (hu-*)"
+],
+[
+15013,
+"hu-bang-nhon-roi",
+"Hiệu ứng (hu-*)"
+],
+[
+58360,
+"hu-bang-vo",
+"Hiệu ứng (hu-*)"
+],
+[
+1072,
+"hu-bao-vung-soc",
+"Hiệu ứng (hu-*)"
+],
+[
+4718,
+"hu-bao-vung-vong",
+"Hiệu ứng (hu-*)"
+],
+[
+6880,
+"hu-be-trung-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+5751,
+"hu-be-trung-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+5639,
+"hu-be-trung-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+5529,
+"hu-be-trung",
+"Hiệu ứng (hu-*)"
+],
+[
+1118,
+"hu-bia-hat",
+"Hiệu ứng (hu-*)"
+],
+[
+1894,
+"hu-bom-bang",
+"Hiệu ứng (hu-*)"
+],
+[
+1819,
+"hu-bom-phao",
+"Hiệu ứng (hu-*)"
+],
+[
+962,
+"hu-bom-song",
+"Hiệu ứng (hu-*)"
+],
+[
+2272,
+"hu-bom-to",
+"Hiệu ứng (hu-*)"
+],
+[
+939,
+"hu-bong-chan",
+"Hiệu ứng (hu-*)"
+],
+[
+2827,
+"hu-bot-doc",
+"Hiệu ứng (hu-*)"
+],
+[
+3175,
+"hu-bua-tam-giac",
+"Hiệu ứng (hu-*)"
+],
+[
+7444,
+"hu-cao-quai",
+"Hiệu ứng (hu-*)"
+],
+[
+10200,
+"hu-cau-dat-lan",
+"Hiệu ứng (hu-*)"
+],
+[
+9114,
+"hu-cau-lua-ma",
+"Hiệu ứng (hu-*)"
+],
+[
+9037,
+"hu-chem-bua",
+"Hiệu ứng (hu-*)"
+],
+[
+4765,
+"hu-chem-kiem-nang-1",
+"Hiệu ứng (hu-*)"
+],
+[
+7485,
+"hu-chem-kiem-nang-2",
+"Hiệu ứng (hu-*)"
+],
+[
+8450,
+"hu-chem-kiem-nang-3",
+"Hiệu ứng (hu-*)"
+],
+[
+9059,
+"hu-chem-kiem-nang-4",
+"Hiệu ứng (hu-*)"
+],
+[
+4594,
+"hu-chem-kiem-nang-gon-1",
+"Hiệu ứng (hu-*)"
+],
+[
+4882,
+"hu-chem-kiem-nang-gon-2",
+"Hiệu ứng (hu-*)"
+],
+[
+5283,
+"hu-chem-kiem-nang-gon-3",
+"Hiệu ứng (hu-*)"
+],
+[
+4064,
+"hu-chem-kiem-nang-gon-4",
+"Hiệu ứng (hu-*)"
+],
+[
+6626,
+"hu-chem-kiem",
+"Hiệu ứng (hu-*)"
+],
+[
+5044,
+"hu-chem-luot-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+5135,
+"hu-chem-luot-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+4979,
+"hu-chem-luot-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+5577,
+"hu-chem-luot",
+"Hiệu ứng (hu-*)"
+],
+[
+22434,
+"hu-chi-mang",
+"Hiệu ứng (hu-*)"
+],
+[
+938,
+"hu-choang",
+"Hiệu ứng (hu-*)"
+],
+[
+10542,
+"hu-chuong-bang",
+"Hiệu ứng (hu-*)"
+],
+[
+3750,
+"hu-chuong-doc",
+"Hiệu ứng (hu-*)"
+],
+[
+6530,
+"hu-chuong-lua",
+"Hiệu ứng (hu-*)"
+],
+[
+18459,
+"hu-cong",
+"Hiệu ứng (hu-*)"
+],
+[
+7786,
+"hu-cot-lua",
+"Hiệu ứng (hu-*)"
+],
+[
+6737,
+"hu-cot-nuoc",
+"Hiệu ứng (hu-*)"
+],
+[
+4214,
+"hu-dam-giao",
+"Hiệu ứng (hu-*)"
+],
+[
+1568,
+"hu-dan-bao-tu",
+"Hiệu ứng (hu-*)"
+],
+[
+1193,
+"hu-dan-bot",
+"Hiệu ứng (hu-*)"
+],
+[
+1161,
+"hu-dan-bua",
+"Hiệu ứng (hu-*)"
+],
+[
+1220,
+"hu-dan-cau",
+"Hiệu ứng (hu-*)"
+],
+[
+873,
+"hu-dan-gai-bang",
+"Hiệu ứng (hu-*)"
+],
+[
+768,
+"hu-dan-gai",
+"Hiệu ứng (hu-*)"
+],
+[
+819,
+"hu-dan-hat-doc",
+"Hiệu ứng (hu-*)"
+],
+[
+2241,
+"hu-dan-lua",
+"Hiệu ứng (hu-*)"
+],
+[
+1025,
+"hu-dan-phao",
+"Hiệu ứng (hu-*)"
+],
+[
+1695,
+"hu-dan-qua-no",
+"Hiệu ứng (hu-*)"
+],
+[
+3491,
+"hu-dan-ten-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+3578,
+"hu-dan-ten-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+3790,
+"hu-dan-ten-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+115680,
+"hu-dap-san",
+"Hiệu ứng (hu-*)"
+],
+[
+11729,
+"hu-day-leo",
+"Hiệu ứng (hu-*)"
+],
+[
+4400,
+"hu-doc-toe",
+"Hiệu ứng (hu-*)"
+],
+[
+137969,
+"hu-doi-pha",
+"Hiệu ứng (hu-*)"
+],
+[
+2883,
+"hu-doi-vk",
+"Hiệu ứng (hu-*)"
+],
+[
+17910,
+"hu-dong-bang",
+"Hiệu ứng (hu-*)"
+],
+[
+3699,
+"hu-dong-dau",
+"Hiệu ứng (hu-*)"
+],
+[
+22454,
+"hu-ep-thanh-cong",
+"Hiệu ứng (hu-*)"
+],
+[
+18932,
+"hu-ep-that-bai",
+"Hiệu ứng (hu-*)"
+],
+[
+13545,
+"hu-ep-tut-bac",
+"Hiệu ứng (hu-*)"
+],
+[
+5119,
+"hu-gai-bang",
+"Hiệu ứng (hu-*)"
+],
+[
+12778,
+"hu-gai-re",
+"Hiệu ứng (hu-*)"
+],
+[
+8915,
+"hu-gai-toa",
+"Hiệu ứng (hu-*)"
+],
+[
+3289,
+"hu-giot-doc-san",
+"Hiệu ứng (hu-*)"
+],
+[
+4439,
+"hu-giot-he-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+5246,
+"hu-giot-he-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+4473,
+"hu-giot-he-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+990,
+"hu-gon-nuoc",
+"Hiệu ứng (hu-*)"
+],
+[
+16403,
+"hu-hao-quang-gian",
+"Hiệu ứng (hu-*)"
+],
+[
+489,
+"hu-hat-bui",
+"Hiệu ứng (hu-*)"
+],
+[
+2337,
+"hu-hat-linh-khi",
+"Hiệu ứng (hu-*)"
+],
+[
+2615,
+"hu-hat-no",
+"Hiệu ứng (hu-*)"
+],
+[
+13100,
+"hu-hoi-mau",
+"Hiệu ứng (hu-*)"
+],
+[
+17838,
+"hu-huy-hieu",
+"Hiệu ứng (hu-*)"
+],
+[
+18183,
+"hu-khi-the",
+"Hiệu ứng (hu-*)"
+],
+[
+15675,
+"hu-khien-nuoc",
+"Hiệu ứng (hu-*)"
+],
+[
+3960,
+"hu-khoi-doc-nho",
+"Hiệu ứng (hu-*)"
+],
+[
+5606,
+"hu-khoi-tron",
+"Hiệu ứng (hu-*)"
+],
+[
+41833,
+"hu-la-chem",
+"Hiệu ứng (hu-*)"
+],
+[
+1768,
+"hu-lang-khung-cui",
+"Hiệu ứng (hu-*)"
+],
+[
+1051,
+"hu-lang-lua-lo",
+"Hiệu ứng (hu-*)"
+],
+[
+732,
+"hu-lang-tia-lo",
+"Hiệu ứng (hu-*)"
+],
+[
+4074,
+"hu-lao-bui",
+"Hiệu ứng (hu-*)"
+],
+[
+24109,
+"hu-lap-lanh",
+"Hiệu ứng (hu-*)"
+],
+[
+34753,
+"hu-len-cap",
+"Hiệu ứng (hu-*)"
+],
+[
+4843,
+"hu-lon",
+"Hiệu ứng (hu-*)"
+],
+[
+3221,
+"hu-lua-bung",
+"Hiệu ứng (hu-*)"
+],
+[
+908,
+"hu-lua-duoc",
+"Hiệu ứng (hu-*)"
+],
+[
+752,
+"hu-luoi-lua",
+"Hiệu ứng (hu-*)"
+],
+[
+3042,
+"hu-manh-da",
+"Hiệu ứng (hu-*)"
+],
+[
+2475,
+"hu-manh-san-ho",
+"Hiệu ứng (hu-*)"
+],
+[
+34767,
+"hu-may-doc",
+"Hiệu ứng (hu-*)"
+],
+[
+919,
+"hu-moi-truong-bien-giot",
+"Hiệu ứng (hu-*)"
+],
+[
+812,
+"hu-moi-truong-rung-co-lay",
+"Hiệu ứng (hu-*)"
+],
+[
+6308,
+"hu-moi-truong-rung-domdom",
+"Hiệu ứng (hu-*)"
+],
+[
+1475,
+"hu-moi-truong-rung-la",
+"Hiệu ứng (hu-*)"
+],
+[
+1548,
+"hu-moi-truong-rung-nam-sang",
+"Hiệu ứng (hu-*)"
+],
+[
+50655,
+"hu-mua-phi-tieu",
+"Hiệu ứng (hu-*)"
+],
+[
+6050,
+"hu-nam-con",
+"Hiệu ứng (hu-*)"
+],
+[
+18755,
+"hu-nam-moc",
+"Hiệu ứng (hu-*)"
+],
+[
+8488,
+"hu-nen-dat-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+11395,
+"hu-nen-dat-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+11999,
+"hu-nen-dat-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+12021,
+"hu-nen-dat",
+"Hiệu ứng (hu-*)"
+],
+[
+16114,
+"hu-ngu-tinh-mo-man",
+"Hiệu ứng (hu-*)"
+],
+[
+16092,
+"hu-nhan-thuong",
+"Hiệu ứng (hu-*)"
+],
+[
+5302,
+"hu-nhua-rung",
+"Hiệu ứng (hu-*)"
+],
+[
+52069,
+"hu-no-bang",
+"Hiệu ứng (hu-*)"
+],
+[
+53793,
+"hu-no-doc",
+"Hiệu ứng (hu-*)"
+],
+[
+34456,
+"hu-no-khoi",
+"Hiệu ứng (hu-*)"
+],
+[
+60072,
+"hu-no-lua",
+"Hiệu ứng (hu-*)"
+],
+[
+7284,
+"hu-no-nho-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+6479,
+"hu-no-nho-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+6299,
+"hu-no-nho-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+7005,
+"hu-no-nho",
+"Hiệu ứng (hu-*)"
+],
+[
+4962,
+"hu-nuoc-dang",
+"Hiệu ứng (hu-*)"
+],
+[
+7638,
+"hu-nut-dat",
+"Hiệu ứng (hu-*)"
+],
+[
+2520,
+"hu-nut-re-moc",
+"Hiệu ứng (hu-*)"
+],
+[
+4802,
+"hu-nut-san",
+"Hiệu ứng (hu-*)"
+],
+[
+12240,
+"hu-pha-giap",
+"Hiệu ứng (hu-*)"
+],
+[
+8665,
+"hu-phan-don",
+"Hiệu ứng (hu-*)"
+],
+[
+6869,
+"hu-phan-than",
+"Hiệu ứng (hu-*)"
+],
+[
+9450,
+"hu-phi-tieu-chum",
+"Hiệu ứng (hu-*)"
+],
+[
+77926,
+"hu-phun-bang",
+"Hiệu ứng (hu-*)"
+],
+[
+52155,
+"hu-phun-lua-quat",
+"Hiệu ứng (hu-*)"
+],
+[
+13732,
+"hu-qua-doc-roi",
+"Hiệu ứng (hu-*)"
+],
+[
+3611,
+"hu-quai-cao-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+3454,
+"hu-quai-cao-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+3350,
+"hu-quai-cao-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+3584,
+"hu-quai-cao",
+"Hiệu ứng (hu-*)"
+],
+[
+12506,
+"hu-quai-chet",
+"Hiệu ứng (hu-*)"
+],
+[
+11889,
+"hu-quai-dap",
+"Hiệu ứng (hu-*)"
+],
+[
+41030,
+"hu-quai-hien",
+"Hiệu ứng (hu-*)"
+],
+[
+1716,
+"hu-quang-dan",
+"Hiệu ứng (hu-*)"
+],
+[
+755,
+"hu-quang-den",
+"Hiệu ứng (hu-*)"
+],
+[
+6128,
+"hu-quet-giao-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+5719,
+"hu-quet-giao-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+5579,
+"hu-quet-giao-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+9213,
+"hu-quet-giao",
+"Hiệu ứng (hu-*)"
+],
+[
+14891,
+"hu-ra-chieu-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+15026,
+"hu-ra-chieu-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+42726,
+"hu-ra-chieu-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+11644,
+"hu-ra-chieu",
+"Hiệu ứng (hu-*)"
+],
+[
+15297,
+"hu-ra-chuong-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+15072,
+"hu-ra-chuong-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+41276,
+"hu-ra-chuong-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+13454,
+"hu-ra-chuong",
+"Hiệu ứng (hu-*)"
+],
+[
+1805,
+"hu-ray-bang",
+"Hiệu ứng (hu-*)"
+],
+[
+2026,
+"hu-sao-chop",
+"Hiệu ứng (hu-*)"
+],
+[
+58337,
+"hu-soc-nhiet",
+"Hiệu ứng (hu-*)"
+],
+[
+5979,
+"hu-song-dat",
+"Hiệu ứng (hu-*)"
+],
+[
+19192,
+"hu-song-doi",
+"Hiệu ứng (hu-*)"
+],
+[
+32103,
+"hu-song-dong",
+"Hiệu ứng (hu-*)"
+],
+[
+14116,
+"hu-song-than",
+"Hiệu ứng (hu-*)"
+],
+[
+9894,
+"hu-song-vung-sau",
+"Hiệu ứng (hu-*)"
+],
+[
+883,
+"hu-suong-dai",
+"Hiệu ứng (hu-*)"
+],
+[
+33588,
+"hu-tam-giac-bua",
+"Hiệu ứng (hu-*)"
+],
+[
+1079,
+"hu-tia-gay",
+"Hiệu ứng (hu-*)"
+],
+[
+2701,
+"hu-tia-mom",
+"Hiệu ứng (hu-*)"
+],
+[
+4235,
+"hu-tich-chuong",
+"Hiệu ứng (hu-*)"
+],
+[
+88754,
+"hu-tien-hoa-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+115249,
+"hu-tien-hoa-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+113081,
+"hu-tien-hoa-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+80155,
+"hu-tien-hoa",
+"Hiệu ứng (hu-*)"
+],
+[
+14727,
+"hu-tram-nguyet-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+47742,
+"hu-tram-nguyet-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+45850,
+"hu-tram-nguyet-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+13016,
+"hu-tram-nguyet",
+"Hiệu ứng (hu-*)"
+],
+[
+80495,
+"hu-trum-no-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+66158,
+"hu-trum-no-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+68602,
+"hu-trum-no-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+79244,
+"hu-trum-no",
+"Hiệu ứng (hu-*)"
+],
+[
+29721,
+"hu-trung-nang",
+"Hiệu ứng (hu-*)"
+],
+[
+3518,
+"hu-trung-phi-tieu",
+"Hiệu ứng (hu-*)"
+],
+[
+5694,
+"hu-trung",
+"Hiệu ứng (hu-*)"
+],
+[
+6692,
+"hu-tu-luc-vong",
+"Hiệu ứng (hu-*)"
+],
+[
+17512,
+"hu-tu-luc",
+"Hiệu ứng (hu-*)"
+],
+[
+29219,
+"hu-tuong-song",
+"Hiệu ứng (hu-*)"
+],
+[
+4783,
+"hu-tuong-tinh-the",
+"Hiệu ứng (hu-*)"
+],
+[
+1693,
+"hu-va-cham",
+"Hiệu ứng (hu-*)"
+],
+[
+3888,
+"hu-vat-den-dau",
+"Hiệu ứng (hu-*)"
+],
+[
+5042,
+"hu-vat-luc-binh",
+"Hiệu ứng (hu-*)"
+],
+[
+7505,
+"hu-vet-chay",
+"Hiệu ứng (hu-*)"
+],
+[
+3622,
+"hu-vet-dau",
+"Hiệu ứng (hu-*)"
+],
+[
+1960,
+"hu-vet-luot",
+"Hiệu ứng (hu-*)"
+],
+[
+6533,
+"hu-vet-nhot",
+"Hiệu ứng (hu-*)"
+],
+[
+1555,
+"hu-vet-vung",
+"Hiệu ứng (hu-*)"
+],
+[
+33243,
+"hu-vo-oc",
+"Hiệu ứng (hu-*)"
+],
+[
+40033,
+"hu-vong-hoi-quai",
+"Hiệu ứng (hu-*)"
+],
+[
+63474,
+"hu-vong-phep",
+"Hiệu ứng (hu-*)"
+],
+[
+6399,
+"hu-vong-song",
+"Hiệu ứng (hu-*)"
+],
+[
+4568,
+"hu-vung-dau-chay",
+"Hiệu ứng (hu-*)"
+],
+[
+34353,
+"hu-vung-dien",
+"Hiệu ứng (hu-*)"
+],
+[
+36516,
+"hu-vung-doc",
+"Hiệu ứng (hu-*)"
+],
+[
+12715,
+"hu-vung-lua",
+"Hiệu ứng (hu-*)"
+],
+[
+8883,
+"hu-vung-luc-binh",
+"Hiệu ứng (hu-*)"
+],
+[
+8235,
+"hu-vung-quai-bang",
+"Hiệu ứng (hu-*)"
+],
+[
+15690,
+"hu-vung-quai-do",
+"Hiệu ứng (hu-*)"
+],
+[
+26482,
+"hu-vung-quai-doc",
+"Hiệu ứng (hu-*)"
+],
+[
+16189,
+"hu-vung-quai-lua",
+"Hiệu ứng (hu-*)"
+],
+[
+190934,
+"hu-xoay-nuoc",
+"Hiệu ứng (hu-*)"
+],
+[
+3942,
+"hu-xoc-toi",
+"Hiệu ứng (hu-*)"
+],
+[
+126887,
+"huChua",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+48969,
+"huLua",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+51158,
+"linhMa",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+79460,
+"meoDen",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+973656,
+"mocTinh-p2",
+"Trùm: Rừng già"
+],
+[
+1008654,
+"mocTinh-p3",
+"Trùm: Rừng già"
+],
+[
+1139515,
+"mocTinh",
+"Trùm: Rừng già"
+],
+[
+282783,
+"namChua-p2",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+387033,
+"namChua",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+43230,
+"namPhong",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+221714,
+"namPhongChua",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+764941,
+"nguTinh-p2",
+"Trùm: Hang biển"
+],
+[
+788058,
+"nguTinh-p3",
+"Trùm: Hang biển"
+],
+[
+714224,
+"nguTinh",
+"Trùm: Hang biển"
+],
+[
+52569,
+"nhim",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+94518,
+"nhimDoc",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+55522,
+"nhimThan",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+23274,
+"nl-do",
+"Ảnh nhân vật: em bé, người làng"
+],
+[
+29638,
+"nl-lai",
+"Ảnh nhân vật: em bé, người làng"
+],
+[
+30825,
+"nl-may",
+"Ảnh nhân vật: em bé, người làng"
+],
+[
+30506,
+"nl-mo",
+"Ảnh nhân vật: em bé, người làng"
+],
+[
+34627,
+"nl-ren",
+"Ảnh nhân vật: em bé, người làng"
+],
+[
+13810,
+"nl-sen",
+"Ảnh nhân vật: em bé, người làng"
+],
+[
+28916,
+"nl-tu",
+"Ảnh nhân vật: em bé, người làng"
+],
+[
+24858,
+"nl-xen",
+"Ảnh nhân vật: em bé, người làng"
+],
+[
+151501,
+"oc",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+49115,
+"ongVo",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+74187,
+"raiCa",
+"Quái thường / tinh anh: Sông sâu"
+],
+[
+90245,
+"socNo",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+94014,
+"sua",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+80173,
+"tieuYeu",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+79424,
+"tuongDa",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+120066,
+"tuongMa",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+609,
+"vp-gold",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+787,
+"vp-linhkhi-fire",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+765,
+"vp-linhkhi-ice",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+676,
+"vp-linhkhi-poison",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+589,
+"vp-mat0",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+673,
+"vp-mat1",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+662,
+"vp-mat2",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+689,
+"vp-ore",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+646,
+"vp-potion",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+697,
+"vp-shard0",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+668,
+"vp-shard1",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+676,
+"vp-shard2",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+715,
+"vp-stone",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+641,
+"vp-xp",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+589671,
+"zed-bien",
+"Ảnh nhân vật: Cu Tí (thân, vũ khí)"
+],
+[
+647484,
+"zed-lau",
+"Ảnh nhân vật: Cu Tí (thân, vũ khí)"
+],
+[
+917647,
+"zed-moi",
+"Ảnh nhân vật: Cu Tí (thân, vũ khí)"
+],
+[
+616652,
+"zed-rung",
+"Ảnh nhân vật: Cu Tí (thân, vũ khí)"
+],
+[
+30911,
+"zed-vk-gan",
+"Ảnh nhân vật: Cu Tí (thân, vũ khí)"
+],
+[
+38075,
+"zed-vk-he",
+"Ảnh nhân vật: Cu Tí (thân, vũ khí)"
+],
+[
+85140,
+"zed-vk",
+"Ảnh nhân vật: Cu Tí (thân, vũ khí)"
+]
+],
+"phan": {
+"Ảnh truyện (WebP, giải mã khi mở truyện)": 1250125,
+"Bìa màn hình chính (2 bìa) + nền mờ màn tải": 411060,
+"Ảnh trong mã (thuong_cao_data…)": 12986,
+"Mã JS + HTML + CSS (không tính ảnh)": 2415424,
+"Âm thanh": 0,
+"Phông chữ": 0
+},
+"so_webp": 624,
+"so_hinh": 679
+},
+"web": {
+"tong": 19943413,
+"muc": [
+[
+78606,
+"baBa",
+"Quái thường / tinh anh: Sông sâu"
+],
+[
+54192,
+"boHung",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+61750,
+"caChuon",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+60868,
+"caCon",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+44472,
+"caNoc",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+211774,
+"caNocChua",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+54920,
+"chonBong",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+90620,
+"cocTia",
+"Quái thường / tinh anh: Sông sâu"
+],
+[
+78472,
+"cua",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+272524,
+"cuaDa-p2",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+423722,
+"cuaDa",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+234018,
+"cuaTuong",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+46172,
+"denLong",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+59826,
+"diaTrau",
+"Quái thường / tinh anh: Sông sâu"
+],
+[
+64154,
+"doiThan",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+12510,
+"em-be-healer",
+"Ảnh nhân vật: em bé, người làng"
+],
+[
+13582,
+"em-be-hunter",
+"Ảnh nhân vật: em bé, người làng"
+],
+[
+12206,
+"em-be-wrestler",
+"Ảnh nhân vật: em bé, người làng"
+],
+[
+2976,
+"gd-ai-ngay-da",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2852,
+"gd-ai-ngay-mai",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2976,
+"gd-ai-ngay-vang",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+86,
+"gd-ban-do-cham-khoa",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+90,
+"gd-ban-do-cham",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+90714,
+"gd-ban-do-vung",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+7570,
+"gd-bang-viec",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+222,
+"gd-bia-gach",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+62,
+"gd-bong-khung",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+94,
+"gd-bong-thoai-duoi",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+414,
+"gd-bong-thoai",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+10558,
+"gd-bt-dai",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+15514,
+"gd-bt-quat",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+49198,
+"gd-bt-tron",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+49974,
+"gd-bt-vanh",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+416,
+"gd-bua-fire",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1736,
+"gd-bua-giu-bac",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+392,
+"gd-bua-ice",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+500,
+"gd-bua-poison",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2196,
+"gd-can-de",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+998,
+"gd-can-num",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+200,
+"gd-cham-moi",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+192,
+"gd-cham-than",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+72,
+"gd-chuong-o-noi",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+154,
+"gd-chuong-o-trong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+170,
+"gd-chuong-o",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+18712,
+"gd-cong-ai-ngay",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1638,
+"gd-cot-nang-bien",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1540,
+"gd-cot-nang-lau",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+462,
+"gd-cot-nang-rung",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1210,
+"gd-cua-bien-ben-khoa",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+1266,
+"gd-cua-bien-ben",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+1610,
+"gd-cua-bien-duoi-khoa",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+1562,
+"gd-cua-bien-duoi",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+2306,
+"gd-cua-bien-tren-khoa",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+2118,
+"gd-cua-bien-tren",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+324,
+"gd-cua-dau-lau",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1198,
+"gd-cua-lau-ben-khoa",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+1274,
+"gd-cua-lau-ben",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+1662,
+"gd-cua-lau-duoi-khoa",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+1430,
+"gd-cua-lau-duoi",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+2392,
+"gd-cua-lau-tren-khoa",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+2202,
+"gd-cua-lau-tren",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+318,
+"gd-cua-o-khoa",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1424,
+"gd-cua-rung-ben-khoa",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+1364,
+"gd-cua-rung-ben",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+1868,
+"gd-cua-rung-duoi-khoa",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+1688,
+"gd-cua-rung-duoi",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+2564,
+"gd-cua-rung-tren-khoa",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+2404,
+"gd-cua-rung-tren",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+1150,
+"gd-cua-song-ben-khoa",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+936,
+"gd-cua-song-ben",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+2264,
+"gd-cua-song-duoi-khoa",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+2054,
+"gd-cua-song-duoi",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+2138,
+"gd-cua-song-tren-khoa",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+1922,
+"gd-cua-song-tren",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+1832,
+"gd-da-nang-bac",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3442,
+"gd-dai-thong-bao",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4282,
+"gd-danh-hieu-bac",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4270,
+"gd-danh-hieu-dong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4158,
+"gd-danh-hieu-vang",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3380,
+"gd-dau-phong-nguyen",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+5424,
+"gd-dau-phong-thu-thach",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4594,
+"gd-dau-phong-tinh-anh",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+11518,
+"gd-dau-phong-trum",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2904,
+"gd-dau-phong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+180,
+"gd-he-fire",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+184,
+"gd-he-ice",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+192,
+"gd-he-poison",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+232,
+"gd-huy-chuong-1",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+234,
+"gd-huy-chuong-2",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+224,
+"gd-huy-chuong-3",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+912,
+"gd-huy-hinh-0",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1082,
+"gd-huy-hinh-1",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1144,
+"gd-huy-hinh-10",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1066,
+"gd-huy-hinh-11",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1146,
+"gd-huy-hinh-12",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1370,
+"gd-huy-hinh-13",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1272,
+"gd-huy-hinh-14",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1152,
+"gd-huy-hinh-15",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1140,
+"gd-huy-hinh-2",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1098,
+"gd-huy-hinh-3",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1148,
+"gd-huy-hinh-4",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1104,
+"gd-huy-hinh-5",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1128,
+"gd-huy-hinh-6",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+864,
+"gd-huy-hinh-7",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1282,
+"gd-huy-hinh-8",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+992,
+"gd-huy-hinh-9",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2472,
+"gd-huy-khung-bac",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2550,
+"gd-huy-khung-dong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2610,
+"gd-huy-khung-khoa",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2650,
+"gd-huy-khung-vang",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+280,
+"gd-icon-linh-khi",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1472,
+"gd-icon-viec-0",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1528,
+"gd-icon-viec-1",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1498,
+"gd-icon-viec-10",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1606,
+"gd-icon-viec-11",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1592,
+"gd-icon-viec-2",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1346,
+"gd-icon-viec-3",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1642,
+"gd-icon-viec-4",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1446,
+"gd-icon-viec-5",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1442,
+"gd-icon-viec-6",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1694,
+"gd-icon-viec-7",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1348,
+"gd-icon-viec-8",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1738,
+"gd-icon-viec-9",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+19048,
+"gd-khung-ban-do",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+19374,
+"gd-khung-bang",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2400,
+"gd-khung-canh-bao",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+242,
+"gd-khung-mana",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+500,
+"gd-khung-mau-quai",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+286,
+"gd-khung-mau",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+678,
+"gd-khung-nho",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+9748,
+"gd-khung-thoai",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+332,
+"gd-khung-tinh-anh",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+494,
+"gd-khung-trum-nho",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+864,
+"gd-khung-trum",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+108,
+"gd-khung-vach-lk-moc",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+548,
+"gd-khung-vach-lk",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+246,
+"gd-khung-xp",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+688,
+"gd-lang-bang-tranh",
+"Nền: làng"
+],
+[
+7334,
+"gd-lang-cay-da",
+"Nền: làng"
+],
+[
+1332,
+"gd-lang-cay-rom",
+"Nền: làng"
+],
+[
+354,
+"gd-lang-chum",
+"Nền: làng"
+],
+[
+258,
+"gd-lang-coc",
+"Nền: làng"
+],
+[
+3162,
+"gd-lang-cong",
+"Nền: làng"
+],
+[
+338,
+"gd-lang-cot-den",
+"Nền: làng"
+],
+[
+612,
+"gd-lang-day-phoi",
+"Nền: làng"
+],
+[
+414,
+"gd-lang-de",
+"Nền: làng"
+],
+[
+230,
+"gd-lang-den-long",
+"Nền: làng"
+],
+[
+904,
+"gd-lang-dia-chon",
+"Nền: làng"
+],
+[
+852,
+"gd-lang-dia",
+"Nền: làng"
+],
+[
+6968,
+"gd-lang-dinh",
+"Nền: làng"
+],
+[
+1306,
+"gd-lang-do",
+"Nền: làng"
+],
+[
+238,
+"gd-lang-ga-mo",
+"Nền: làng"
+],
+[
+242,
+"gd-lang-ga",
+"Nền: làng"
+],
+[
+966,
+"gd-lang-gieng",
+"Nền: làng"
+],
+[
+2564,
+"gd-lang-hang-xen",
+"Nền: làng"
+],
+[
+6382,
+"gd-lang-lo-ren",
+"Nền: làng"
+],
+[
+94014,
+"gd-lang-nen",
+"Nền: làng"
+],
+[
+5168,
+"gd-lang-nha-may",
+"Nền: làng"
+],
+[
+3112,
+"gd-lang-thanh-duoi",
+"Nền: làng"
+],
+[
+3554,
+"gd-logo",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1572,
+"gd-loi-mon-rung",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+106,
+"gd-loi-noi",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1294,
+"gd-long-khung",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+358,
+"gd-mau-quai-nho",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+424,
+"gd-mui-ten-cua",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1832,
+"gd-nen-bien-mep",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+9878,
+"gd-nen-bien-ngoai",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+4234,
+"gd-nen-bien-san-nhan",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+4454,
+"gd-nen-bien-san0",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+4464,
+"gd-nen-bien-san1",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+4444,
+"gd-nen-bien-san2",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+2104,
+"gd-nen-bien-tuong-ben",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+7530,
+"gd-nen-bien-tuong-sau",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+2126,
+"gd-nen-bien-tuong-truoc",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+1724,
+"gd-nen-lau-mep",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+9928,
+"gd-nen-lau-ngoai",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+4252,
+"gd-nen-lau-san-nhan",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+4254,
+"gd-nen-lau-san0",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+4290,
+"gd-nen-lau-san1",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+4412,
+"gd-nen-lau-san2",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+2080,
+"gd-nen-lau-tuong-ben",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+6854,
+"gd-nen-lau-tuong-sau",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+1652,
+"gd-nen-lau-tuong-truoc",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+774,
+"gd-nen-rung-mep",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+2426,
+"gd-nen-rung-ngoai",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+1136,
+"gd-nen-rung-san-nhan",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+886,
+"gd-nen-rung-san0",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+930,
+"gd-nen-rung-san1",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+1128,
+"gd-nen-rung-san2",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+964,
+"gd-nen-rung-tuong-ben",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+2324,
+"gd-nen-rung-tuong-sau",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+926,
+"gd-nen-rung-tuong-truoc",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+2062,
+"gd-nen-song-mep",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+10452,
+"gd-nen-song-ngoai",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+3396,
+"gd-nen-song-san-nhan",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+26318,
+"gd-nen-song-san-tl",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+3110,
+"gd-nen-song-san0",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+3410,
+"gd-nen-song-san1",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+3140,
+"gd-nen-song-san2",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+1628,
+"gd-nen-song-tuong-ben",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+13640,
+"gd-nen-song-tuong-sau",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+1526,
+"gd-nen-song-tuong-truoc",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+190,
+"gd-ngoc-fire",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+204,
+"gd-ngoc-ice",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+178,
+"gd-ngoc-poison",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+576,
+"gd-nut-binh-mau",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2578,
+"gd-nut-chinh",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2686,
+"gd-nut-chon",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+472,
+"gd-nut-chuong-fire",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+388,
+"gd-nut-chuong-ice",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+642,
+"gd-nut-chuong-poison",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1150,
+"gd-nut-dac-biet-bow",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1246,
+"gd-nut-dac-biet-hammer",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1090,
+"gd-nut-dac-biet-spear",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1246,
+"gd-nut-dac-biet-sword",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1090,
+"gd-nut-danh-bow",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+936,
+"gd-nut-danh-hammer",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+630,
+"gd-nut-danh-spear",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+786,
+"gd-nut-danh-sword",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+690,
+"gd-nut-ne",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2554,
+"gd-nut-nguy",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4556,
+"gd-nut-noi-chuyen-bam",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4164,
+"gd-nut-noi-chuyen-sang",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4714,
+"gd-nut-noi-chuyen",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+314,
+"gd-nut-tam-dung",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2656,
+"gd-nut-thuong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1426,
+"gd-nut-vuong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1390,
+"gd-o-con-chon",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1266,
+"gd-o-con",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+226,
+"gd-o-diem-trong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+284,
+"gd-o-diem",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+508,
+"gd-o-do-0-chon",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+540,
+"gd-o-do-0",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2366,
+"gd-o-ep-0",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2388,
+"gd-o-ep-1",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2402,
+"gd-o-ep-2",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2398,
+"gd-o-ep-3",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2378,
+"gd-o-ep-4",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2320,
+"gd-o-ep-5",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2478,
+"gd-o-ep-6",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+434,
+"gd-o-phong-cur",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+708,
+"gd-o-phong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1674,
+"gd-o-tuan-dau",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1304,
+"gd-o-tuan",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+494,
+"gd-o-vk-0",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+122,
+"gd-phong-boss",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+124,
+"gd-phong-challenge",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+138,
+"gd-phong-chest",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+124,
+"gd-phong-curse",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+124,
+"gd-phong-elite",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+102,
+"gd-phong-fight",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+122,
+"gd-phong-fountain",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+112,
+"gd-phong-key",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+112,
+"gd-phong-lock",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+116,
+"gd-phong-merchant",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+130,
+"gd-phong-portal",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+124,
+"gd-phong-start",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3974,
+"gd-phuc-lanh-ca",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3486,
+"gd-phuc-lanh-guom",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+5916,
+"gd-phuc-lanh-hoa",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+5232,
+"gd-phuc-lanh-ngan",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4952,
+"gd-phuc-lanh-ngua",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3726,
+"gd-phuc-lanh-no",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+5154,
+"gd-phuc-lanh-noc",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+5264,
+"gd-phuc-lanh-nui",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4198,
+"gd-phuc-lanh-riu",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+5874,
+"gd-phuc-lanh-song",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+5398,
+"gd-phuc-lanh-suong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3358,
+"gd-phuc-lanh-than",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2706,
+"gd-phuc-lanh-tre",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+5464,
+"gd-phuc-lanh-trong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+230,
+"gd-quai-gai",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+224,
+"gd-quai-giap",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+230,
+"gd-quai-hut",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+204,
+"gd-quai-nhanh",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+216,
+"gd-quai-no",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+146,
+"gd-quai-sap-danh",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2870,
+"gd-ruong-ngay-mo",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2594,
+"gd-ruong-ngay",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+234,
+"gd-ruot-thanh-trum",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+994,
+"gd-ruot-thanh",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+230,
+"gd-sao-rong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+256,
+"gd-sao",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3180,
+"gd-so-bia",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1362,
+"gd-so-dau-fire",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1328,
+"gd-so-dau-ice",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1302,
+"gd-so-dau-poison",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3164,
+"gd-so-o-0",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2880,
+"gd-so-o-1",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2876,
+"gd-so-o-2",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+200,
+"gd-so-sao-0",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+670,
+"gd-so-sao-1",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+436,
+"gd-so-sao-2",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+712,
+"gd-so-sao-3",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+55108,
+"gd-so-trang",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2548,
+"gd-song-cau",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3738,
+"gd-tham-lau",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+180,
+"gd-thanh-cuon-num",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+342,
+"gd-thanh-cuon",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+386,
+"gd-thanh-tren-vach",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1988,
+"gd-thanh-tren",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3060,
+"gd-the-ai-chon",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1792,
+"gd-the-ai-khoa",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2220,
+"gd-the-ai",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+666,
+"gd-the-nho",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+914,
+"gd-the-sap-co",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1310,
+"gd-the-so",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1416,
+"gd-the-thanh-tuu",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+496,
+"gd-the-thuong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4720,
+"gd-the-trum-chon",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3124,
+"gd-the-trum-khoa",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4098,
+"gd-the-trum",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1312,
+"gd-the-viec-ngay",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+6798,
+"gd-the-viec-xong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+6216,
+"gd-the-viec",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1370,
+"gd-the-zed",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2764,
+"gd-trong-dong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+172,
+"gd-trum-vach-ten",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+220,
+"gd-tt-bang",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+456,
+"gd-tt-bien-dong-da-2",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+464,
+"gd-tt-bien-dong-da",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+1290,
+"gd-tt-bien-mo-neo",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+330,
+"gd-tt-bien-nhu-da-2",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+298,
+"gd-tt-bien-nhu-da-3",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+372,
+"gd-tt-bien-nhu-da-4",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+422,
+"gd-tt-bien-nhu-da",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+1698,
+"gd-tt-bien-tien-canh-phai",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+1798,
+"gd-tt-bien-tien-canh-trai",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+388,
+"gd-tt-bien-tinh-the-2",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+716,
+"gd-tt-bien-tinh-the-to-2",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+696,
+"gd-tt-bien-tinh-the-to",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+392,
+"gd-tt-bien-tinh-the",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+254,
+"gd-tt-bien-vo-so",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+548,
+"gd-tt-bien-vung-nuoc",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+772,
+"gd-tt-bien-vung-sang",
+"Nền / sàn / cửa / trang trí: Hang biển"
+],
+[
+178,
+"gd-tt-chay",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+184,
+"gd-tt-doc",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+278,
+"gd-tt-lau-chan-nen",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+758,
+"gd-tt-lau-co-do",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+714,
+"gd-tt-lau-co-xanh",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+788,
+"gd-tt-lau-cot-da",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+588,
+"gd-tt-lau-cua-so-kinh",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+596,
+"gd-tt-lau-cua-so",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+236,
+"gd-tt-lau-duoc",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+422,
+"gd-tt-lau-hom-go",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+226,
+"gd-tt-lau-nen",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+4878,
+"gd-tt-lau-tham-tron",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+4316,
+"gd-tt-lau-tham-vuong",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+492,
+"gd-tt-lau-thung-go",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+1668,
+"gd-tt-lau-tien-canh-phai",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+1870,
+"gd-tt-lau-tien-canh-trai",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+1180,
+"gd-tt-lau-tuong-hiep-si",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+346,
+"gd-tt-lau-xuong-so",
+"Nền / sàn / cửa / trang trí: Lâu đài cổ"
+],
+[
+666,
+"gd-tt-rung-bui-qua",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+922,
+"gd-tt-rung-co-thu",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+340,
+"gd-tt-rung-day-leo-2",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+430,
+"gd-tt-rung-day-leo-3",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+380,
+"gd-tt-rung-day-leo",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+414,
+"gd-tt-rung-goc-cay",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+698,
+"gd-tt-rung-hoa-nang",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+420,
+"gd-tt-rung-khuc-go",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+426,
+"gd-tt-rung-nam-do",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+378,
+"gd-tt-rung-nam-sang-2",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+406,
+"gd-tt-rung-nam-sang",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+742,
+"gd-tt-rung-tan-la-2",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+768,
+"gd-tt-rung-tan-la-3",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+796,
+"gd-tt-rung-tan-la",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+2276,
+"gd-tt-rung-tien-canh-phai",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+2526,
+"gd-tt-rung-tien-canh-trai",
+"Nền / sàn / cửa / trang trí: Rừng già"
+],
+[
+398,
+"gd-tt-song-coc",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+292,
+"gd-tt-song-da-bun",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+1752,
+"gd-tt-song-tien-canh-phai",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+1748,
+"gd-tt-song-tien-canh-trai",
+"Nền / sàn / cửa / trang trí: Sông sâu"
+],
+[
+168,
+"gd-tt-troi",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+288,
+"gd-tui",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1040,
+"gd-vat-ban-tho-het",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1006,
+"gd-vat-ban-tho",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1074,
+"gd-vat-be-thu-thach-het",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+984,
+"gd-vat-be-thu-thach",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+626,
+"gd-vat-chau-than-tat",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+798,
+"gd-vat-chau-than",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+332,
+"gd-vat-nam-doc-vo",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+964,
+"gd-vat-nam-doc",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1126,
+"gd-vat-ruong-do",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1102,
+"gd-vat-ruong-mo",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1032,
+"gd-vat-ruong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1332,
+"gd-vat-suoi-mana-het",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1442,
+"gd-vat-suoi-mana",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1350,
+"gd-vat-suoi-mau-het",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1302,
+"gd-vat-suoi-mau",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1702,
+"gd-vat-thuong-nhan",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+320,
+"gd-vat-tinh-the-vo",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+1126,
+"gd-vat-tinh-the",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+448,
+"gd-vien-man-do",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3686,
+"gd-vong-fire",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2942,
+"gd-vong-ice",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2142,
+"gd-vong-ngoc",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+3232,
+"gd-vong-poison",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+2480,
+"gd-vong-sat",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+4002,
+"gd-vong-thuong",
+"Giao diện (gd-* khác: bảng, nút, bản đồ, icon)"
+],
+[
+96328,
+"haiQuy",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+66758,
+"heoCon",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+140478,
+"heoNanh",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+255584,
+"hoLua-p2",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+293128,
+"hoLua",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+875994,
+"hoTinh-p2",
+"Trùm: Lâu đài cổ"
+],
+[
+980274,
+"hoTinh-p3",
+"Trùm: Lâu đài cổ"
+],
+[
+913318,
+"hoTinh",
+"Trùm: Lâu đài cổ"
+],
+[
+62452,
+"hoaBaoTu",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+3600,
+"hu-am-sat",
+"Hiệu ứng (hu-*)"
+],
+[
+6438,
+"hu-bam-bang",
+"Hiệu ứng (hu-*)"
+],
+[
+3930,
+"hu-bam-doc",
+"Hiệu ứng (hu-*)"
+],
+[
+5834,
+"hu-bam-lua-rong",
+"Hiệu ứng (hu-*)"
+],
+[
+4704,
+"hu-bam-lua",
+"Hiệu ứng (hu-*)"
+],
+[
+2148,
+"hu-ban-cung-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+1900,
+"hu-ban-cung-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+2124,
+"hu-ban-cung-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+914,
+"hu-ban-cung",
+"Hiệu ứng (hu-*)"
+],
+[
+11052,
+"hu-bang-nhon-roi",
+"Hiệu ứng (hu-*)"
+],
+[
+15780,
+"hu-bang-vo",
+"Hiệu ứng (hu-*)"
+],
+[
+522,
+"hu-bao-vung-soc",
+"Hiệu ứng (hu-*)"
+],
+[
+3260,
+"hu-bao-vung-vong",
+"Hiệu ứng (hu-*)"
+],
+[
+4950,
+"hu-be-trung-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+4102,
+"hu-be-trung-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+4016,
+"hu-be-trung-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+3950,
+"hu-be-trung",
+"Hiệu ứng (hu-*)"
+],
+[
+612,
+"hu-bia-hat",
+"Hiệu ứng (hu-*)"
+],
+[
+1216,
+"hu-bom-bang",
+"Hiệu ứng (hu-*)"
+],
+[
+1166,
+"hu-bom-phao",
+"Hiệu ứng (hu-*)"
+],
+[
+490,
+"hu-bom-song",
+"Hiệu ứng (hu-*)"
+],
+[
+1500,
+"hu-bom-to",
+"Hiệu ứng (hu-*)"
+],
+[
+290,
+"hu-bong-chan",
+"Hiệu ứng (hu-*)"
+],
+[
+1828,
+"hu-bot-doc",
+"Hiệu ứng (hu-*)"
+],
+[
+2134,
+"hu-bua-tam-giac",
+"Hiệu ứng (hu-*)"
+],
+[
+5316,
+"hu-cao-quai",
+"Hiệu ứng (hu-*)"
+],
+[
+7396,
+"hu-cau-dat-lan",
+"Hiệu ứng (hu-*)"
+],
+[
+6632,
+"hu-cau-lua-ma",
+"Hiệu ứng (hu-*)"
+],
+[
+6582,
+"hu-chem-bua",
+"Hiệu ứng (hu-*)"
+],
+[
+3352,
+"hu-chem-kiem-nang-1",
+"Hiệu ứng (hu-*)"
+],
+[
+5394,
+"hu-chem-kiem-nang-2",
+"Hiệu ứng (hu-*)"
+],
+[
+6112,
+"hu-chem-kiem-nang-3",
+"Hiệu ứng (hu-*)"
+],
+[
+6580,
+"hu-chem-kiem-nang-4",
+"Hiệu ứng (hu-*)"
+],
+[
+3188,
+"hu-chem-kiem-nang-gon-1",
+"Hiệu ứng (hu-*)"
+],
+[
+3404,
+"hu-chem-kiem-nang-gon-2",
+"Hiệu ứng (hu-*)"
+],
+[
+3702,
+"hu-chem-kiem-nang-gon-3",
+"Hiệu ứng (hu-*)"
+],
+[
+2798,
+"hu-chem-kiem-nang-gon-4",
+"Hiệu ứng (hu-*)"
+],
+[
+4772,
+"hu-chem-kiem",
+"Hiệu ứng (hu-*)"
+],
+[
+3560,
+"hu-chem-luot-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+3630,
+"hu-chem-luot-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+3510,
+"hu-chem-luot-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+3974,
+"hu-chem-luot",
+"Hiệu ứng (hu-*)"
+],
+[
+15378,
+"hu-chi-mang",
+"Hiệu ứng (hu-*)"
+],
+[
+506,
+"hu-choang",
+"Hiệu ứng (hu-*)"
+],
+[
+4034,
+"hu-chuong-bang",
+"Hiệu ứng (hu-*)"
+],
+[
+2610,
+"hu-chuong-doc",
+"Hiệu ứng (hu-*)"
+],
+[
+4040,
+"hu-chuong-lua",
+"Hiệu ứng (hu-*)"
+],
+[
+13650,
+"hu-cong",
+"Hiệu ứng (hu-*)"
+],
+[
+5630,
+"hu-cot-lua",
+"Hiệu ứng (hu-*)"
+],
+[
+4840,
+"hu-cot-nuoc",
+"Hiệu ứng (hu-*)"
+],
+[
+2964,
+"hu-dam-giao",
+"Hiệu ứng (hu-*)"
+],
+[
+984,
+"hu-dan-bao-tu",
+"Hiệu ứng (hu-*)"
+],
+[
+690,
+"hu-dan-bot",
+"Hiệu ứng (hu-*)"
+],
+[
+680,
+"hu-dan-bua",
+"Hiệu ứng (hu-*)"
+],
+[
+712,
+"hu-dan-cau",
+"Hiệu ứng (hu-*)"
+],
+[
+462,
+"hu-dan-gai-bang",
+"Hiệu ứng (hu-*)"
+],
+[
+376,
+"hu-dan-gai",
+"Hiệu ứng (hu-*)"
+],
+[
+420,
+"hu-dan-hat-doc",
+"Hiệu ứng (hu-*)"
+],
+[
+1078,
+"hu-dan-lua",
+"Hiệu ứng (hu-*)"
+],
+[
+562,
+"hu-dan-phao",
+"Hiệu ứng (hu-*)"
+],
+[
+1072,
+"hu-dan-qua-no",
+"Hiệu ứng (hu-*)"
+],
+[
+2418,
+"hu-dan-ten-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+2482,
+"hu-dan-ten-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+2640,
+"hu-dan-ten-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+86544,
+"hu-dap-san",
+"Hiệu ứng (hu-*)"
+],
+[
+8596,
+"hu-day-leo",
+"Hiệu ứng (hu-*)"
+],
+[
+3108,
+"hu-doc-toe",
+"Hiệu ứng (hu-*)"
+],
+[
+103260,
+"hu-doi-pha",
+"Hiệu ứng (hu-*)"
+],
+[
+1936,
+"hu-doi-vk",
+"Hiệu ứng (hu-*)"
+],
+[
+11680,
+"hu-dong-bang",
+"Hiệu ứng (hu-*)"
+],
+[
+2570,
+"hu-dong-dau",
+"Hiệu ứng (hu-*)"
+],
+[
+16620,
+"hu-ep-thanh-cong",
+"Hiệu ứng (hu-*)"
+],
+[
+13972,
+"hu-ep-that-bai",
+"Hiệu ứng (hu-*)"
+],
+[
+9952,
+"hu-ep-tut-bac",
+"Hiệu ứng (hu-*)"
+],
+[
+3632,
+"hu-gai-bang",
+"Hiệu ứng (hu-*)"
+],
+[
+9386,
+"hu-gai-re",
+"Hiệu ứng (hu-*)"
+],
+[
+6436,
+"hu-gai-toa",
+"Hiệu ứng (hu-*)"
+],
+[
+2204,
+"hu-giot-doc-san",
+"Hiệu ứng (hu-*)"
+],
+[
+3096,
+"hu-giot-he-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+3700,
+"hu-giot-he-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+3116,
+"hu-giot-he-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+496,
+"hu-gon-nuoc",
+"Hiệu ứng (hu-*)"
+],
+[
+12054,
+"hu-hao-quang-gian",
+"Hiệu ứng (hu-*)"
+],
+[
+106,
+"hu-hat-bui",
+"Hiệu ứng (hu-*)"
+],
+[
+1530,
+"hu-hat-linh-khi",
+"Hiệu ứng (hu-*)"
+],
+[
+1724,
+"hu-hat-no",
+"Hiệu ứng (hu-*)"
+],
+[
+8474,
+"hu-hoi-mau",
+"Hiệu ứng (hu-*)"
+],
+[
+13156,
+"hu-huy-hieu",
+"Hiệu ứng (hu-*)"
+],
+[
+13424,
+"hu-khi-the",
+"Hiệu ứng (hu-*)"
+],
+[
+11540,
+"hu-khien-nuoc",
+"Hiệu ứng (hu-*)"
+],
+[
+2700,
+"hu-khoi-doc-nho",
+"Hiệu ứng (hu-*)"
+],
+[
+3958,
+"hu-khoi-tron",
+"Hiệu ứng (hu-*)"
+],
+[
+31174,
+"hu-la-chem",
+"Hiệu ứng (hu-*)"
+],
+[
+1156,
+"hu-lang-khung-cui",
+"Hiệu ứng (hu-*)"
+],
+[
+620,
+"hu-lang-lua-lo",
+"Hiệu ứng (hu-*)"
+],
+[
+318,
+"hu-lang-tia-lo",
+"Hiệu ứng (hu-*)"
+],
+[
+2790,
+"hu-lao-bui",
+"Hiệu ứng (hu-*)"
+],
+[
+7616,
+"hu-lap-lanh",
+"Hiệu ứng (hu-*)"
+],
+[
+23168,
+"hu-len-cap",
+"Hiệu ứng (hu-*)"
+],
+[
+3430,
+"hu-lon",
+"Hiệu ứng (hu-*)"
+],
+[
+2172,
+"hu-lua-bung",
+"Hiệu ứng (hu-*)"
+],
+[
+486,
+"hu-lua-duoc",
+"Hiệu ứng (hu-*)"
+],
+[
+298,
+"hu-luoi-lua",
+"Hiệu ứng (hu-*)"
+],
+[
+2028,
+"hu-manh-da",
+"Hiệu ứng (hu-*)"
+],
+[
+1602,
+"hu-manh-san-ho",
+"Hiệu ứng (hu-*)"
+],
+[
+25862,
+"hu-may-doc",
+"Hiệu ứng (hu-*)"
+],
+[
+416,
+"hu-moi-truong-bien-giot",
+"Hiệu ứng (hu-*)"
+],
+[
+362,
+"hu-moi-truong-rung-co-lay",
+"Hiệu ứng (hu-*)"
+],
+[
+3554,
+"hu-moi-truong-rung-domdom",
+"Hiệu ứng (hu-*)"
+],
+[
+822,
+"hu-moi-truong-rung-la",
+"Hiệu ứng (hu-*)"
+],
+[
+830,
+"hu-moi-truong-rung-nam-sang",
+"Hiệu ứng (hu-*)"
+],
+[
+37790,
+"hu-mua-phi-tieu",
+"Hiệu ứng (hu-*)"
+],
+[
+4284,
+"hu-nam-con",
+"Hiệu ứng (hu-*)"
+],
+[
+13858,
+"hu-nam-moc",
+"Hiệu ứng (hu-*)"
+],
+[
+6156,
+"hu-nen-dat-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+8336,
+"hu-nen-dat-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+8786,
+"hu-nen-dat-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+8818,
+"hu-nen-dat",
+"Hiệu ứng (hu-*)"
+],
+[
+11840,
+"hu-ngu-tinh-mo-man",
+"Hiệu ứng (hu-*)"
+],
+[
+11848,
+"hu-nhan-thuong",
+"Hiệu ứng (hu-*)"
+],
+[
+3760,
+"hu-nhua-rung",
+"Hiệu ứng (hu-*)"
+],
+[
+35322,
+"hu-no-bang",
+"Hiệu ứng (hu-*)"
+],
+[
+35544,
+"hu-no-doc",
+"Hiệu ứng (hu-*)"
+],
+[
+25638,
+"hu-no-khoi",
+"Hiệu ứng (hu-*)"
+],
+[
+40006,
+"hu-no-lua",
+"Hiệu ứng (hu-*)"
+],
+[
+5246,
+"hu-no-nho-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+4642,
+"hu-no-nho-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+4506,
+"hu-no-nho-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+5050,
+"hu-no-nho",
+"Hiệu ứng (hu-*)"
+],
+[
+3464,
+"hu-nuoc-dang",
+"Hiệu ứng (hu-*)"
+],
+[
+5512,
+"hu-nut-dat",
+"Hiệu ứng (hu-*)"
+],
+[
+1640,
+"hu-nut-re-moc",
+"Hiệu ứng (hu-*)"
+],
+[
+3382,
+"hu-nut-san",
+"Hiệu ứng (hu-*)"
+],
+[
+8990,
+"hu-pha-giap",
+"Hiệu ứng (hu-*)"
+],
+[
+6282,
+"hu-phan-don",
+"Hiệu ứng (hu-*)"
+],
+[
+4942,
+"hu-phan-than",
+"Hiệu ứng (hu-*)"
+],
+[
+6872,
+"hu-phi-tieu-chum",
+"Hiệu ứng (hu-*)"
+],
+[
+58244,
+"hu-phun-bang",
+"Hiệu ứng (hu-*)"
+],
+[
+38894,
+"hu-phun-lua-quat",
+"Hiệu ứng (hu-*)"
+],
+[
+10090,
+"hu-qua-doc-roi",
+"Hiệu ứng (hu-*)"
+],
+[
+2496,
+"hu-quai-cao-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+2378,
+"hu-quai-cao-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+2296,
+"hu-quai-cao-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+2488,
+"hu-quai-cao",
+"Hiệu ứng (hu-*)"
+],
+[
+9182,
+"hu-quai-chet",
+"Hiệu ứng (hu-*)"
+],
+[
+8696,
+"hu-quai-dap",
+"Hiệu ứng (hu-*)"
+],
+[
+30574,
+"hu-quai-hien",
+"Hiệu ứng (hu-*)"
+],
+[
+1032,
+"hu-quang-dan",
+"Hiệu ứng (hu-*)"
+],
+[
+224,
+"hu-quang-den",
+"Hiệu ứng (hu-*)"
+],
+[
+4384,
+"hu-quet-giao-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+4080,
+"hu-quet-giao-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+3970,
+"hu-quet-giao-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+6714,
+"hu-quet-giao",
+"Hiệu ứng (hu-*)"
+],
+[
+10084,
+"hu-ra-chieu-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+9946,
+"hu-ra-chieu-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+12592,
+"hu-ra-chieu-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+7428,
+"hu-ra-chieu",
+"Hiệu ứng (hu-*)"
+],
+[
+10182,
+"hu-ra-chuong-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+9922,
+"hu-ra-chuong-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+12732,
+"hu-ra-chuong-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+8666,
+"hu-ra-chuong",
+"Hiệu ứng (hu-*)"
+],
+[
+1070,
+"hu-ray-bang",
+"Hiệu ứng (hu-*)"
+],
+[
+1264,
+"hu-sao-chop",
+"Hiệu ứng (hu-*)"
+],
+[
+40090,
+"hu-soc-nhiet",
+"Hiệu ứng (hu-*)"
+],
+[
+4272,
+"hu-song-dat",
+"Hiệu ứng (hu-*)"
+],
+[
+14190,
+"hu-song-doi",
+"Hiệu ứng (hu-*)"
+],
+[
+23774,
+"hu-song-dong",
+"Hiệu ứng (hu-*)"
+],
+[
+10380,
+"hu-song-than",
+"Hiệu ứng (hu-*)"
+],
+[
+7162,
+"hu-song-vung-sau",
+"Hiệu ứng (hu-*)"
+],
+[
+294,
+"hu-suong-dai",
+"Hiệu ứng (hu-*)"
+],
+[
+21886,
+"hu-tam-giac-bua",
+"Hiệu ứng (hu-*)"
+],
+[
+564,
+"hu-tia-gay",
+"Hiệu ứng (hu-*)"
+],
+[
+1400,
+"hu-tia-mom",
+"Hiệu ứng (hu-*)"
+],
+[
+2944,
+"hu-tich-chuong",
+"Hiệu ứng (hu-*)"
+],
+[
+59716,
+"hu-tien-hoa-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+76510,
+"hu-tien-hoa-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+73734,
+"hu-tien-hoa-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+52084,
+"hu-tien-hoa",
+"Hiệu ứng (hu-*)"
+],
+[
+9208,
+"hu-tram-nguyet-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+14088,
+"hu-tram-nguyet-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+13324,
+"hu-tram-nguyet-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+8312,
+"hu-tram-nguyet",
+"Hiệu ứng (hu-*)"
+],
+[
+60160,
+"hu-trum-no-fire",
+"Hiệu ứng (hu-*)"
+],
+[
+49408,
+"hu-trum-no-ice",
+"Hiệu ứng (hu-*)"
+],
+[
+51240,
+"hu-trum-no-poison",
+"Hiệu ứng (hu-*)"
+],
+[
+59238,
+"hu-trum-no",
+"Hiệu ứng (hu-*)"
+],
+[
+10180,
+"hu-trung-nang",
+"Hiệu ứng (hu-*)"
+],
+[
+2438,
+"hu-trung-phi-tieu",
+"Hiệu ứng (hu-*)"
+],
+[
+3380,
+"hu-trung",
+"Hiệu ứng (hu-*)"
+],
+[
+4770,
+"hu-tu-luc-vong",
+"Hiệu ứng (hu-*)"
+],
+[
+12906,
+"hu-tu-luc",
+"Hiệu ứng (hu-*)"
+],
+[
+21672,
+"hu-tuong-song",
+"Hiệu ứng (hu-*)"
+],
+[
+3322,
+"hu-tuong-tinh-the",
+"Hiệu ứng (hu-*)"
+],
+[
+1054,
+"hu-va-cham",
+"Hiệu ứng (hu-*)"
+],
+[
+2652,
+"hu-vat-den-dau",
+"Hiệu ứng (hu-*)"
+],
+[
+3520,
+"hu-vat-luc-binh",
+"Hiệu ứng (hu-*)"
+],
+[
+5370,
+"hu-vet-chay",
+"Hiệu ứng (hu-*)"
+],
+[
+2452,
+"hu-vet-dau",
+"Hiệu ứng (hu-*)"
+],
+[
+1222,
+"hu-vet-luot",
+"Hiệu ứng (hu-*)"
+],
+[
+4656,
+"hu-vet-nhot",
+"Hiệu ứng (hu-*)"
+],
+[
+906,
+"hu-vet-vung",
+"Hiệu ứng (hu-*)"
+],
+[
+24654,
+"hu-vo-oc",
+"Hiệu ứng (hu-*)"
+],
+[
+24496,
+"hu-vong-hoi-quai",
+"Hiệu ứng (hu-*)"
+],
+[
+44178,
+"hu-vong-phep",
+"Hiệu ứng (hu-*)"
+],
+[
+4488,
+"hu-vong-song",
+"Hiệu ứng (hu-*)"
+],
+[
+3166,
+"hu-vung-dau-chay",
+"Hiệu ứng (hu-*)"
+],
+[
+25502,
+"hu-vung-dien",
+"Hiệu ứng (hu-*)"
+],
+[
+27184,
+"hu-vung-doc",
+"Hiệu ứng (hu-*)"
+],
+[
+9326,
+"hu-vung-lua",
+"Hiệu ứng (hu-*)"
+],
+[
+6388,
+"hu-vung-luc-binh",
+"Hiệu ứng (hu-*)"
+],
+[
+5966,
+"hu-vung-quai-bang",
+"Hiệu ứng (hu-*)"
+],
+[
+11554,
+"hu-vung-quai-do",
+"Hiệu ứng (hu-*)"
+],
+[
+19658,
+"hu-vung-quai-doc",
+"Hiệu ứng (hu-*)"
+],
+[
+11938,
+"hu-vung-quai-lua",
+"Hiệu ứng (hu-*)"
+],
+[
+142996,
+"hu-xoay-nuoc",
+"Hiệu ứng (hu-*)"
+],
+[
+2736,
+"hu-xoc-toi",
+"Hiệu ứng (hu-*)"
+],
+[
+94706,
+"huChua",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+36250,
+"huLua",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+37900,
+"linhMa",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+59132,
+"meoDen",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+729804,
+"mocTinh-p2",
+"Trùm: Rừng già"
+],
+[
+756060,
+"mocTinh-p3",
+"Trùm: Rừng già"
+],
+[
+854168,
+"mocTinh",
+"Trùm: Rừng già"
+],
+[
+211740,
+"namChua-p2",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+289932,
+"namChua",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+31968,
+"namPhong",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+165816,
+"namPhongChua",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+573280,
+"nguTinh-p2",
+"Trùm: Hang biển"
+],
+[
+590622,
+"nguTinh-p3",
+"Trùm: Hang biển"
+],
+[
+535216,
+"nguTinh",
+"Trùm: Hang biển"
+],
+[
+38800,
+"nhim",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+70256,
+"nhimDoc",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+41108,
+"nhimThan",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+17218,
+"nl-do",
+"Ảnh nhân vật: em bé, người làng"
+],
+[
+22004,
+"nl-lai",
+"Ảnh nhân vật: em bé, người làng"
+],
+[
+22896,
+"nl-may",
+"Ảnh nhân vật: em bé, người làng"
+],
+[
+22662,
+"nl-mo",
+"Ảnh nhân vật: em bé, người làng"
+],
+[
+25746,
+"nl-ren",
+"Ảnh nhân vật: em bé, người làng"
+],
+[
+10128,
+"nl-sen",
+"Ảnh nhân vật: em bé, người làng"
+],
+[
+21468,
+"nl-tu",
+"Ảnh nhân vật: em bé, người làng"
+],
+[
+18420,
+"nl-xen",
+"Ảnh nhân vật: em bé, người làng"
+],
+[
+113160,
+"oc",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+36378,
+"ongVo",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+55182,
+"raiCa",
+"Quái thường / tinh anh: Sông sâu"
+],
+[
+67222,
+"socNo",
+"Quái thường / tinh anh: Rừng già"
+],
+[
+69954,
+"sua",
+"Quái thường / tinh anh: Hang biển"
+],
+[
+556528,
+"thuongLuong-p2",
+"Trùm: Sông sâu"
+],
+[
+536716,
+"thuongLuong-p3",
+"Trùm: Sông sâu"
+],
+[
+748244,
+"thuongLuong",
+"Trùm: Sông sâu"
+],
+[
+59662,
+"tieuYeu",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+59100,
+"tuongDa",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+89594,
+"tuongMa",
+"Quái thường / tinh anh: Lâu đài cổ"
+],
+[
+328,
+"vp-gold",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+442,
+"vp-linhkhi-fire",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+428,
+"vp-linhkhi-ice",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+356,
+"vp-linhkhi-poison",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+310,
+"vp-mat0",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+374,
+"vp-mat1",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+366,
+"vp-mat2",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+390,
+"vp-ore",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+350,
+"vp-potion",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+384,
+"vp-shard0",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+362,
+"vp-shard1",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+368,
+"vp-shard2",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+404,
+"vp-stone",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+350,
+"vp-xp",
+"Giao diện: vật phẩm (vp-*)"
+],
+[
+188038,
+"zed-bien",
+"Ảnh nhân vật: Cu Tí (thân, vũ khí)"
+],
+[
+238998,
+"zed-bien (bản to ×1,2)",
+"Ảnh nhân vật: Cu Tí (thân, vũ khí)"
+],
+[
+200572,
+"zed-lau",
+"Ảnh nhân vật: Cu Tí (thân, vũ khí)"
+],
+[
+269816,
+"zed-lau (bản to ×1,2)",
+"Ảnh nhân vật: Cu Tí (thân, vũ khí)"
+],
+[
+282630,
+"zed-moi",
+"Ảnh nhân vật: Cu Tí (thân, vũ khí)"
+],
+[
+380180,
+"zed-moi (bản to ×1,2)",
+"Ảnh nhân vật: Cu Tí (thân, vũ khí)"
+],
+[
+191462,
+"zed-rung",
+"Ảnh nhân vật: Cu Tí (thân, vũ khí)"
+],
+[
+255790,
+"zed-rung (bản to ×1,2)",
+"Ảnh nhân vật: Cu Tí (thân, vũ khí)"
+],
+[
+20150,
+"zed-vk-gan",
+"Ảnh nhân vật: Cu Tí (thân, vũ khí)"
+],
+[
+28162,
+"zed-vk-he",
+"Ảnh nhân vật: Cu Tí (thân, vũ khí)"
+],
+[
+44734,
+"zed-vk",
+"Ảnh nhân vật: Cu Tí (thân, vũ khí)"
+]
+],
+"phan": {
+"Trang chính (mã + thông số hình), nén gzip": 942145,
+"Bìa (1 bìa WebP, tải sớm)": 156310,
+"Ảnh trong mã (ma-rieng)": 19062
+},
+"cu": 3419774,
+"so_cu": 36,
+"tai_dau": 5325547,
+"trang_tho": 2957949
+}
+}

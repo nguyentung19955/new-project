@@ -19,7 +19,7 @@
     try {
       if (!tep || typeof tep !== 'object' || typeof tep.ma !== 'string' || !/^hu-[A-Za-z0-9_-]{1,37}$/.test(tep.ma)) throw new Error('mã phải bắt đầu bằng hu-');
       const SC0 = G.spriteCustom; // tải nhanh 12/10: bản ảnh rời cho đường dẫn anh/….png (js/sprite_custom.js SC.laAnh)
-      if (typeof tep.tam !== 'string' || !(tep.tam.indexOf('data:image/png;base64,') === 0 || (SC0 && SC0.laAnh && SC0.laAnh(tep.tam)))) throw new Error('thiếu dải khung PNG');
+      if (typeof tep.tam !== 'string' || !(tep.tam.indexOf('data:image/png;base64,') === 0 || tep.tam.indexOf('data:image/webp;base64,') === 0 || (SC0 && SC0.laAnh && SC0.laAnh(tep.tam)))) throw new Error('thiếu dải khung PNG');
       const fw = tep.khung_rong | 0, fh = tep.khung_cao | 0;
       if (fw < 1 || fh < 1 || fw > 512 || fh > 512) throw new Error('cỡ khung sai');
       const goc = Array.isArray(tep.goc) ? tep.goc : [fw / 2, fh / 2];
