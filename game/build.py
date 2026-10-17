@@ -634,7 +634,8 @@ TOOL_GAME_JS = ['js/ngon_ngu.js', 'js/data.js', 'js/art.js', 'js/weapon_art.js',
 TOOL_JS = ['xu-ly-anh.js', 'khung.js', 'tu-doan.js', 'do.js', 'giao-dien.js']
 RUNTIME_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'vung', 'thay_cho', 'tam', 'khung_rong', 'khung_cao', 'goc', 'rong', 'cao', 'bong', 'dong_tac',
                 'anh', 'vu_khi', 'trang_phuc', 'vat_pham', 'dung_yen', 'nhun', 'nhun_buoc', 'neo', 'khoac_do', 'cu',
-                'net', 'nhan_vat', 'diem', 'diem_theo', 'cap', 'can_tam', 'muot_cua', 'muot', 'bo_va', 'vung_mat', 'net_cua', 'net_moi')  # net_cua, net_moi (17/10 do-net): tấm cũ trước khi dựng lại cho nét (?netcu=1) / tấm mới. vung_mat (15/10 sua-lang-npc): ô mặt người làng ghi tay cho dải lối tắt. can_tam (14/10 trum-chet-pha3): độ dời ngang từng khung để tâm thân trùm trùng điểm neo. net: ảnh gấp net lần (thiếu là game đọc thành 1 → hình to gấp đôi, khung bị cắt)
+                'net', 'nhan_vat', 'diem', 'diem_theo', 'cap', 'can_tam', 'muot_cua', 'muot', 'bo_va', 'vung_mat', 'net_cua', 'net_moi',
+                'tam_n3', 'tam_n4', 'o_n3', 'o_n4')  # tam_n3/4 + o_n3/4 (17/10 net-cao-quai): ảnh nét cao quái / trùm / người làng (trang ảnh + chỗ từng khung) — chỉ bản ảnh rời (bo_net_cao bỏ ở bản một tệp). net_cua, net_moi (17/10 do-net): tấm cũ trước khi dựng lại cho nét (?netcu=1) / tấm mới. vung_mat (15/10 sua-lang-npc): ô mặt người làng ghi tay cho dải lối tắt. can_tam (14/10 trum-chet-pha3): độ dời ngang từng khung để tâm thân trùm trùng điểm neo. net: ảnh gấp net lần (thiếu là game đọc thành 1 → hình to gấp đôi, khung bị cắt)
 HU_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'tam', 'khung_rong', 'khung_cao', 'goc', 'so', 'giay', 'lap', 'xoay', 'co', 'tron', 'net', 'vung', 'ban_kinh', 'det', 'tam_n4', 'tam_n3')  # tam_n4, tam_n3 (17/10 net-cao-hieu-ung-giao-dien): nét cao (chỉ bản ảnh rời, NET_CAO_KEYS)  # ban_kinh, det (vẽ tay 6–7): vòng sóng hu-vong-song; hiệu ứng ảnh AI (js/fx_anh.js); vung (15/10): tải theo vùng (vung_rieng)
 GD_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'anh', 'net', 'vien', 'lap_canh', 'anh_n3', 'anh_n4', 'san_cua', 'san_moi')  # san_cua / san_moi (17/10 tu-van-17-10-nen-song): sàn trước khi dịu (?sanmoi=0) / sàn mới  # anh_n3 / anh_n4 (17/10 nét cao — nền): chỉ bản ảnh rời, NET_CAO_KEYS  # lap_canh (14/10): cạnh + lòng 9 mảnh lặp thay vì kéo giãn. Ảnh giao diện gd-<tên> (bản đồ, nút; js/sprite_custom.js → SC.gd, js/minimap.js)
 DO_LOAI = ('vat-pham',)  # đồ: một ảnh đứng yên (đợt 2: bỏ vu-khi, trang-phuc)
@@ -652,7 +653,7 @@ SHIM = '''window.G = window.G || {};
 # 17/10 NÉT CAO (thử nghiệm ?netcao=3|4, docs/review/ke-hoach-cai-thien/net-cao/bao-cao.md): ảnh Cu Tí / vệt kiếm nặng dựng sẵn cho canvas nét 3 / 4
 # ("tam_n3", "tam_n4" + "to_n3", "to_n4"). CHỈ ở bản ảnh rời (web), thành tệp ảnh riêng game chỉ tải khi bật cờ; bản một tệp (trần 30 MB) và
 # chế độ 2 tệp kiểu JSON bỏ hẳn (bật cờ ở đó thì game dùng bản to ×1,2 như cũ, chỉ canvas to hơn).
-NET_CAO_KEYS = ('tam_n3', 'tam_n4', 'to_n3', 'to_n4', 'anh_n3', 'anh_n4')  # anh_n3 / anh_n4: ảnh giao diện gd-* (nền, đồ trang trí… net-cao-nen/bao-cao.md)
+NET_CAO_KEYS = ('tam_n3', 'tam_n4', 'to_n3', 'to_n4', 'anh_n3', 'anh_n4', 'o_n3', 'o_n4')  # anh_n3 / anh_n4: ảnh giao diện gd-* (nền, đồ trang trí… net-cao-nen/bao-cao.md); o_n3/4: chỗ từng khung trong trang ảnh nét cao quái (net-cao-quai)
 
 
 def bo_net_cao(t):

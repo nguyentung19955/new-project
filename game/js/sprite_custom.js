@@ -209,6 +209,14 @@
       // quai-moi-4-con: quái thường / tinh anh vẽ lại cũng có "can_tam" (đo lúc dựng tấm) — luôn dùng.
       // 15/10 soát mượt: "bo_va": vá tạm Phiên 1 không cần nữa vì ảnh mới đã vẽ đúng ('xi_vao', 'xi_ve' ở js/mobs.js; 'khung_trang' ở KHUNG_TRANG).
       sp.boVa = Array.isArray(tep.bo_va) ? tep.bo_va.filter((x) => typeof x === 'string').slice(0, 8) : null;
+      // 17/10 NÉT CAO quái / trùm / người làng (docs/review/ke-hoach-cai-thien/net-cao-quai/bao-cao.md): "tam_n3" / "tam_n4" = các khung của tấm
+      // này dựng lại từ ẢNH GỐC ở 3 / 4 điểm ảnh / điểm game, CẮT SÁT và XẾP KÍN vào một hoặc nhiều trang ảnh (đỡ RAM điện thoại); "o_n3" / "o_n4"
+      // = { c: số cột tấm thường, o: [ô hang × c + cột → [trang, x, y, rộng, cao, dx, dy] hoặc 0] }. Chỉ bản web có (bản một tệp bỏ). Chỉ tải khi
+      // canvas đang ở đúng nét đó (?netcao=3|4); ô 0 / chưa tải xong → vẽ tấm thường như cũ.
+      for (const nn of [3, 4]) {
+        const v = tep['tam_n' + nn], ds = typeof v === 'string' ? [v] : Array.isArray(v) ? v.filter((x) => typeof x === 'string') : [], o = tep['o_n' + nn];
+        if (ds.length && o && Array.isArray(o.o) && o.c > 0) (sp.tamN || (sp.tamN = {}))[nn] = { ds, c: o.c | 0, o: o.o };
+      }
       if (tep.can_tam && typeof tep.can_tam === 'object') { sp.ct = {}; for (const k of Object.keys(dt)) { const v = tep.can_tam[k]; if (Array.isArray(v)) sp.ct[k] = v.map((x) => clamp(Math.round(+x || 0), -40, 40)); } }
       // Em bé thân AI: đồ đang mặc (mũ, áo, đồ lưng, bùa, dấu mặt nạ, cánh) vẫn khoác lên thân AI, trừ khi tệp ghi "khoac_do": false.
       // "neo": { "dau": [dx, dy], "than": [dx, dy], "tay": [dx, dy], "<động tác>": { "dau": [..], "than": [..], "tay": [..] } } dời chỗ đặt đồ
@@ -486,6 +494,25 @@
     return out;
   };
 
+  // NÉT CAO (net-cao-quai): bản "tam_n<G.NET>" của tấm sp (tải lười lần đầu cần, mỗi nét một bản). Đã về hết: trả { ds: [trang], c, o, n };
+  // chưa về / hỏng / không có / mặc định nét 2: null → vẽ tấm thường như cũ. Đỡ RAM: bản nào 45 giây không vẽ thì bỏ (ảnh giải mã được trình
+  // duyệt thu hồi; cần lại thì tải lại, thường từ bộ nhớ đệm) — đi qua nhiều vùng không cộng dồn ảnh nét cao của mọi con.
+  const NC_DANG = new Set(); let ncSoat = 0;
+  function anhNetCao(sp) {
+    const n = G.NET | 0, b = n >= 3 && sp.tamN ? sp.tamN[n] : null;
+    if (!b || G.NET_CU || typeof Image === 'undefined') return null;
+    const kr = '_n' + n, now = Date.now();
+    if (!sp[kr]) {
+      const r = { ds: [], con: b.ds.length, ready: false, n, c: b.c, o: b.o, kr };
+      b.ds.forEach((src, k) => { const img = new Image(); img.onload = () => { if (--r.con === 0) r.ready = true; }; img.onerror = () => { r.hong = true; }; img.src = src; r.ds[k] = img; });
+      sp[kr] = r; NC_DANG.add(sp);
+    }
+    sp[kr].t = now;
+    if (now - ncSoat > 10000) { ncSoat = now; for (const q of NC_DANG) for (const k of ['_n3', '_n4']) if (q[k] && now - q[k].t > 45000) { delete q[k]; if (!q._n3 && !q._n4) NC_DANG.delete(q); } }
+    return sp[kr].ready && !sp[kr].hong ? sp[kr] : null;
+  }
+  SC.anhNetCao = anhNetCao;
+
   // Vẽ một khung tại gốc toạ độ hiện tại (gốc = điểm giữa chân). face < 0: lật sang trái (hình gốc quay sang phải).
   // o: { alpha, flash (0..1 chớp trắng), tint: [màu, độ đậm], dy, than: { mau, muc, suong } (nhuộm thân theo trạng thái, Đợt 7) }
   SC.veKhung = function (c, sp, ten, i, face, o) {
@@ -508,10 +535,15 @@
       c.globalAlpha = a1;
     }
     let nho = null;
-    if (!th && !G.NET_CU) { try { const T = c.getTransform(), rho = Math.hypot(T.a, T.b) * sp.fw / sw; if (rho < 0.95) nho = SC.nhoAnh(sp.img, sx, sy, sw, sh, rho); } catch (e) { nho = null; } }
+    // nét cao (net-cao-quai): thân vẽ từ mảnh cắt sát của bản "tam_n<N>" (đặt đúng chỗ trong ô, cỡ ÷ N). Thân nhuộm trạng thái (th) và các lớp
+    // phủ (chớp, nhuộm, viền) vẫn lấy tấm thường như cũ. Mặc định nét 2: e = null → y hệt trước.
+    const hc = th ? null : anhNetCao(sp), e = hc ? hc.o[a.hang * hc.c + i] : null, hI = e ? hc.ds[e[0]] : null;
+    const hsx = e ? e[1] : sx, hsy = e ? e[2] : sy, hsw = e ? e[3] : sw, hsh = e ? e[4] : sh;
+    const hdx = e ? dx + e[5] / hc.n : dx, hdy = e ? dy + e[6] / hc.n : dy, hdw = e ? e[3] / hc.n : sp.fw, hdh = e ? e[4] / hc.n : sp.fh;
+    if (!th && !G.NET_CU) { try { const T = c.getTransform(), rho = Math.hypot(T.a, T.b) * hdw / hsw; if (rho < 0.95) nho = SC.nhoAnh(hI || sp.img, hsx, hsy, hsw, hsh, rho); } catch (e2) { nho = null; } }
     if (th) c.drawImage(th, 0, 0, sw, sh, dx, dy, sp.fw, sp.fh);
-    else if (nho) c.drawImage(nho, 0, 0, nho.width, nho.height, dx, dy, sp.fw, sp.fh); // do-net: trùm thu nhỏ (Hồ Tinh pha 3)
-    else c.drawImage(sp.img, sx, sy, sw, sh, dx, dy, sp.fw, sp.fh);
+    else if (nho) c.drawImage(nho, 0, 0, nho.width, nho.height, hdx, hdy, hdw, hdh); // do-net: trùm thu nhỏ (Hồ Tinh pha 3)
+    else c.drawImage(hI || sp.img, hsx, hsy, hsw, hsh, hdx, hdy, hdw, hdh);
     if (phu > 0) { c.globalAlpha = a1 * phu; veNhuom(c, sp, '#ffffff', sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); }
     if (o.tint && o.tint[1] > 0) { c.globalAlpha = a1 * clamp(o.tint[1], 0, 1); veNhuom(c, sp, o.tint[0], sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); }
     if (vien) { c.globalAlpha = a1 * 0.3 * vien; veNhuom(c, sp, '#ff4a3a', sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); } // đỏ nhẹ
