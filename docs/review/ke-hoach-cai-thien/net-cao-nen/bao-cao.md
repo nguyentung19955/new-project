@@ -12,7 +12,7 @@ Tiếp theo phiên máy [net-cao/bao-cao.md](../net-cao/bao-cao.md) (cờ `?netc
 | Bật `?netcao=3` / `?netcao=4` | **Toàn bộ sàn, tường, nền ngoài, thảm của mọi vùng nét hơn hẳn**, kể cả Rừng già (không có ảnh gốc): trước đây ảnh sàn bị **thu về 1 điểm / điểm game** rồi mới phóng lên (nên ở nét 2 sàn vẫn mờ); nay nền phòng dựng thẳng ở cỡ canvas. |
 | Ảnh dựng lại từ ảnh gốc ở nét 3 / 4 | **56 ảnh**: Hang biển 9 mảng nền, Lâu đài cổ 9 mảng nền + 16 đồ trang trí + thảm cửa, Sông sâu 10 mảng nền + 6 cửa + 4 đồ + cầu, sân trùm Thuồng Luồng. Mỗi ảnh đã chứng minh **cùng chỗ cắt** với ảnh đang dùng (dựng lại ở nét 2 ra **trùng 100 %** ảnh game). |
 | Thiếu ảnh gốc | **Rừng già** (9 mảng nền, 16 đồ, 6 cửa), đồ trang trí + cửa Hang biển, cửa Lâu đài, **17 vật trong phòng** (rương, suối, bàn thờ…), **làng** (nền làng đang chỉ net 1, mọi công trình). Danh sách + prompt gen lại: [thieu-goc.md](thieu-goc.md). |
-| Dung lượng | Bản một tệp **29,86 MB** (≤ 30, không chứa ảnh nét cao). Bản web tải đầu **17,75 MB** (≤ 20, không đổi). Ảnh nét cao nền: **≈ 0,5 MB (nét 3), ≈ 0,9 MB (nét 4)**, chỉ tải khi bật. Cả game (cộng Cu Tí): 1,10 / 1,86 MB. |
+| Dung lượng | Bản một tệp **29,89 MB** (≤ 30, không chứa ảnh nét cao). Bản web tải đầu **17,76 MB** (≤ 20, không đổi). Ảnh nét cao nền: **≈ 0,5 MB (nét 3), ≈ 0,9 MB (nét 4)**, chỉ tải khi bật. Cả game (cộng Cu Tí): 1,10 / 1,86 MB. |
 | Lát tile | Khít mép ở cả nét 2 / 3 / 4: dải trộn mép tính theo điểm game (×N), soát ảnh phóng ×4, không hở, không vạch. |
 | Máy | Dựng một phòng: 11–30 ms (nét 2) → 30–39 ms (nét 3) → 55–71 ms (nét 4), chỉ lúc vào phòng. RAM nền phòng: nhớ 2 phòng thay vì 4 khi bật (~33 MB ở nét 4). |
 
@@ -61,7 +61,7 @@ Bảng đủ 158 ảnh nhóm nền (mã, cỡ, net, có gốc hay không): `cong
 | Bài | Kết quả |
 |---|---|
 | `node --check` mọi `game/js/*.js` | Đạt |
-| `python3 game/build.py` / `--hai-tep` | Đạt — một tệp 29,86 MB; người chơi tải 17,75 MB / 20; ảnh nét cao in riêng 1,10 / 1,86 MB |
+| `python3 game/build.py` / `--hai-tep` | Đạt — một tệp 29,89 MB; người chơi tải 17,76 MB / 20; ảnh nét cao in riêng 1,10 / 1,86 MB |
 | `dist/linh-khi.html?cloud=0` headless: mặc định / `?netcao=3` / `?netcao=4` (9 cảnh + làng) | **0 lỗi JS** |
 | Bản web `linh-khi-nhe.html` mặc định / 3 / 4 (ảnh nét cao tải lười thật) | **0 lỗi JS** |
 | **Mặc định giống hệt**: nền dựng sẵn 8 phòng so bản trước phiên | **0 điểm khác** (ảnh cả màn có hạt bay / lửa chạy theo giờ thật nên mỗi lần chụp khác vài điểm kể cả cùng một bản — không dùng để so) |
