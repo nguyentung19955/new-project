@@ -1,0 +1,580 @@
+{
+ "tiLe": {
+  "goc_mu_tren_cao": 0.37,
+  "render_mu_tren_cao": 0.427,
+  "ghiChu": "mũ gốc đo tay trên mẫu (đỉnh → cằm mũ ≈ 0,37 chiều cao); render đo bằng mặt nạ ID mũ+mặt / toàn thân",
+  "render_chuong_tren_cao": 0.14,
+  "goc_chuong_tren_cao": 0.14,
+  "goc_rong_tren_cao": 0.992,
+  "render_rong_tren_cao": 1.051
+ },
+ "chiTietMatTuMoHinh": [
+  "Mắt: 2 vệt vàng nhạt rõ – render 512 KHÔNG có mắt (chỉ được chấm lại 2 px ở hậu kỳ)",
+  "Khoang mặt đen trong mũ + mép mũ xanh sáng: render chỉ có khối mũ xám, viền xanh tô thêm ở hậu kỳ",
+  "Chỏm mũ nhọn gập về sau, mũ có nếp góc cạnh: render mũ tròn như quả bóng",
+  "Khoen tròn + dây chuông: render chỉ là 1 sợi 1 px, không có khoen",
+  "Chuông to (≈ 14 % chiều cao) có vành, quả lắc, bóng tối: render chuông ≈ 14 %, không chi tiết",
+  "Trâm tròn sáng + đai chéo tối trên ngực: render trâm ≈ 1 px, đai bị lẫn vào thân",
+  "Gấu áo thân xanh rách răng cưa, có bóng tối #21413A: render thân là khối xanh phẳng, gấu thẳng",
+  "Áo choàng quấn ra TRƯỚC và sang bên, lót xanh lộ rộng, mép xanh: render áo là tấm phẳng treo sau lưng",
+  "Găng/ống tay xám sáng #4A5A6E có cổ tay: render tay là ống tối cùng màu áo",
+  "Chắn kiếm vàng rõ + chuôi: render chỉ còn mẩu vàng nhỏ, không có chắn ngang",
+  "Ủng cao có vạch xanh + khoá, mũi ủng nhô: render ủng là bầu tối, vạch mỏng",
+  "Tỉ lệ: gốc mũ/đầu ≈ 0.37 chiều cao, render ≈ 0.43; gốc rộng/cao ≈ 0.99, render ≈ 1.05"
+ ],
+ "haPhanGiai": [
+  {
+   "id": 1,
+   "ten": "mắt/khoang mặt",
+   "dienTich64": 26.1,
+   "beDayMax": 4.12,
+   "oThangDaSo": 25,
+   "pxPipeline": 26,
+   "nhanXet": ""
+  },
+  {
+   "id": 2,
+   "ten": "mũ",
+   "dienTich64": 207.7,
+   "beDayMax": 9.02,
+   "oThangDaSo": 209,
+   "pxPipeline": 214,
+   "nhanXet": ""
+  },
+  {
+   "id": 4,
+   "ten": "thân (áo xanh)",
+   "dienTich64": 83.3,
+   "beDayMax": 5.27,
+   "oThangDaSo": 83,
+   "pxPipeline": 78,
+   "nhanXet": ""
+  },
+  {
+   "id": 5,
+   "ten": "áo choàng",
+   "dienTich64": 162.8,
+   "beDayMax": 6.71,
+   "oThangDaSo": 169,
+   "pxPipeline": 176,
+   "nhanXet": ""
+  },
+  {
+   "id": 6,
+   "ten": "tay xa",
+   "dienTich64": 24.2,
+   "beDayMax": 2.75,
+   "oThangDaSo": 22,
+   "pxPipeline": 23,
+   "nhanXet": ""
+  },
+  {
+   "id": 7,
+   "ten": "tay gần",
+   "dienTich64": 28.9,
+   "beDayMax": 3.26,
+   "oThangDaSo": 30,
+   "pxPipeline": 31,
+   "nhanXet": ""
+  },
+  {
+   "id": 8,
+   "ten": "chân xa (quần)",
+   "dienTich64": 9.2,
+   "beDayMax": 2.5,
+   "oThangDaSo": 8,
+   "pxPipeline": 7,
+   "nhanXet": ""
+  },
+  {
+   "id": 9,
+   "ten": "chân gần (quần)",
+   "dienTich64": 16.6,
+   "beDayMax": 3.5,
+   "oThangDaSo": 18,
+   "pxPipeline": 18,
+   "nhanXet": ""
+  },
+  {
+   "id": 10,
+   "ten": "lưỡi kiếm",
+   "dienTich64": 27.3,
+   "beDayMax": 2.55,
+   "oThangDaSo": 27,
+   "pxPipeline": 34,
+   "nhanXet": ""
+  },
+  {
+   "id": 11,
+   "ten": "chuôi/chắn kiếm",
+   "dienTich64": 11.7,
+   "beDayMax": 2.24,
+   "oThangDaSo": 13,
+   "pxPipeline": 16,
+   "nhanXet": ""
+  },
+  {
+   "id": 12,
+   "ten": "chuông",
+   "dienTich64": 20.7,
+   "beDayMax": 3.82,
+   "oThangDaSo": 21,
+   "pxPipeline": 27,
+   "nhanXet": ""
+  },
+  {
+   "id": 13,
+   "ten": "dây chuông",
+   "dienTich64": 1.6,
+   "beDayMax": 0.5,
+   "oThangDaSo": 1,
+   "pxPipeline": 4,
+   "nhanXet": " mỏng < 1 px"
+  },
+  {
+   "id": 14,
+   "ten": "thắt lưng/đai",
+   "dienTich64": 17.1,
+   "beDayMax": 1.25,
+   "oThangDaSo": 15,
+   "pxPipeline": 19,
+   "nhanXet": ""
+  },
+  {
+   "id": 15,
+   "ten": "vạch ủng xa",
+   "dienTich64": 1.2,
+   "beDayMax": 0.75,
+   "oThangDaSo": 0,
+   "pxPipeline": 2,
+   "nhanXet": "MẤT (0 ô thắng) mỏng < 1 px chỉ còn nhờ \"bảo vệ\"/vẽ lại"
+  },
+  {
+   "id": 16,
+   "ten": "vạch ủng gần",
+   "dienTich64": 11.9,
+   "beDayMax": 1.82,
+   "oThangDaSo": 12,
+   "pxPipeline": 17,
+   "nhanXet": ""
+  },
+  {
+   "id": 17,
+   "ten": "trâm",
+   "dienTich64": 5.3,
+   "beDayMax": 1.9,
+   "oThangDaSo": 5,
+   "pxPipeline": 7,
+   "nhanXet": ""
+  },
+  {
+   "id": 18,
+   "ten": "ủng xa",
+   "dienTich64": 38.4,
+   "beDayMax": 4.81,
+   "oThangDaSo": 39,
+   "pxPipeline": 39,
+   "nhanXet": ""
+  },
+  {
+   "id": 19,
+   "ten": "ủng gần",
+   "dienTich64": 48.5,
+   "beDayMax": 6.05,
+   "oThangDaSo": 49,
+   "pxPipeline": 50,
+   "nhanXet": ""
+  }
+ ],
+ "flicker": {
+  "khung": [
+   {
+    "khung": 0,
+    "pxDoiSoKhungTruoc": 608,
+    "pxChi1Khung": 137,
+    "domLe": 52,
+    "soDom": 29,
+    "mepDich": 85,
+    "theoBoPhan": {
+     "mũ": 1,
+     "thân (áo xanh)": 5,
+     "áo choàng": 10,
+     "tay xa": 3,
+     "tay gần": 4,
+     "chân xa (quần)": 1,
+     "lưỡi kiếm": 15,
+     "chuôi/chắn kiếm": 4,
+     "chuông": 2,
+     "dây chuông": 1,
+     "thắt lưng/đai": 4,
+     "vạch ủng gần": 1,
+     "ủng xa": 5,
+     "ủng gần": 5,
+     "viền ngoài/nền": 76
+    }
+   },
+   {
+    "khung": 1,
+    "pxDoiSoKhungTruoc": 588,
+    "pxChi1Khung": 252,
+    "domLe": 37,
+    "soDom": 23,
+    "mepDich": 215,
+    "theoBoPhan": {
+     "mắt/khoang mặt": 3,
+     "mũ": 72,
+     "thân (áo xanh)": 16,
+     "áo choàng": 13,
+     "tay xa": 6,
+     "tay gần": 8,
+     "chân xa (quần)": 1,
+     "chân gần (quần)": 2,
+     "lưỡi kiếm": 8,
+     "chuông": 1,
+     "dây chuông": 2,
+     "thắt lưng/đai": 19,
+     "vạch ủng gần": 4,
+     "trâm": 3,
+     "ủng gần": 5,
+     "viền ngoài/nền": 89
+    }
+   },
+   {
+    "khung": 2,
+    "pxDoiSoKhungTruoc": 693,
+    "pxChi1Khung": 97,
+    "domLe": 32,
+    "soDom": 23,
+    "mepDich": 65,
+    "theoBoPhan": {
+     "mũ": 1,
+     "thân (áo xanh)": 3,
+     "áo choàng": 15,
+     "tay xa": 1,
+     "tay gần": 2,
+     "chân xa (quần)": 4,
+     "lưỡi kiếm": 25,
+     "chuông": 1,
+     "dây chuông": 1,
+     "thắt lưng/đai": 6,
+     "vạch ủng gần": 3,
+     "ủng xa": 2,
+     "ủng gần": 3,
+     "viền ngoài/nền": 30
+    }
+   },
+   {
+    "khung": 3,
+    "pxDoiSoKhungTruoc": 666,
+    "pxChi1Khung": 289,
+    "domLe": 26,
+    "soDom": 16,
+    "mepDich": 263,
+    "theoBoPhan": {
+     "mắt/khoang mặt": 9,
+     "mũ": 65,
+     "thân (áo xanh)": 24,
+     "áo choàng": 20,
+     "tay xa": 4,
+     "tay gần": 9,
+     "chân xa (quần)": 3,
+     "chân gần (quần)": 4,
+     "lưỡi kiếm": 10,
+     "chuông": 1,
+     "dây chuông": 3,
+     "thắt lưng/đai": 15,
+     "vạch ủng xa": 7,
+     "trâm": 3,
+     "ủng xa": 3,
+     "ủng gần": 10,
+     "viền ngoài/nền": 99
+    }
+   },
+   {
+    "khung": 4,
+    "pxDoiSoKhungTruoc": 625,
+    "pxChi1Khung": 141,
+    "domLe": 30,
+    "soDom": 17,
+    "mepDich": 111,
+    "theoBoPhan": {
+     "mắt/khoang mặt": 1,
+     "mũ": 1,
+     "thân (áo xanh)": 9,
+     "áo choàng": 10,
+     "tay xa": 4,
+     "tay gần": 3,
+     "chân gần (quần)": 3,
+     "lưỡi kiếm": 15,
+     "chuôi/chắn kiếm": 5,
+     "dây chuông": 2,
+     "thắt lưng/đai": 5,
+     "vạch ủng gần": 3,
+     "ủng xa": 1,
+     "ủng gần": 4,
+     "viền ngoài/nền": 75
+    }
+   },
+   {
+    "khung": 5,
+    "pxDoiSoKhungTruoc": 586,
+    "pxChi1Khung": 261,
+    "domLe": 24,
+    "soDom": 18,
+    "mepDich": 237,
+    "theoBoPhan": {
+     "mắt/khoang mặt": 4,
+     "mũ": 73,
+     "thân (áo xanh)": 16,
+     "áo choàng": 20,
+     "tay xa": 2,
+     "tay gần": 12,
+     "chân xa (quần)": 1,
+     "lưỡi kiếm": 11,
+     "chuông": 2,
+     "dây chuông": 2,
+     "thắt lưng/đai": 12,
+     "vạch ủng xa": 1,
+     "vạch ủng gần": 4,
+     "trâm": 3,
+     "ủng gần": 3,
+     "viền ngoài/nền": 95
+    }
+   },
+   {
+    "khung": 6,
+    "pxDoiSoKhungTruoc": 698,
+    "pxChi1Khung": 114,
+    "domLe": 42,
+    "soDom": 22,
+    "mepDich": 72,
+    "theoBoPhan": {
+     "mắt/khoang mặt": 1,
+     "mũ": 4,
+     "thân (áo xanh)": 7,
+     "áo choàng": 15,
+     "tay xa": 1,
+     "tay gần": 3,
+     "chân gần (quần)": 5,
+     "lưỡi kiếm": 26,
+     "dây chuông": 2,
+     "thắt lưng/đai": 5,
+     "vạch ủng gần": 2,
+     "ủng xa": 1,
+     "ủng gần": 5,
+     "viền ngoài/nền": 37
+    }
+   },
+   {
+    "khung": 7,
+    "pxDoiSoKhungTruoc": 658,
+    "pxChi1Khung": 273,
+    "domLe": 40,
+    "soDom": 24,
+    "mepDich": 233,
+    "theoBoPhan": {
+     "mắt/khoang mặt": 11,
+     "mũ": 71,
+     "thân (áo xanh)": 17,
+     "áo choàng": 19,
+     "tay xa": 2,
+     "tay gần": 8,
+     "lưỡi kiếm": 6,
+     "chuôi/chắn kiếm": 2,
+     "chuông": 6,
+     "dây chuông": 4,
+     "thắt lưng/đai": 16,
+     "vạch ủng gần": 1,
+     "trâm": 1,
+     "ủng xa": 11,
+     "ủng gần": 3,
+     "viền ngoài/nền": 95
+    }
+   }
+  ],
+  "tongDomLe": 283,
+  "tongTheoBoPhan": {
+   "viền ngoài/nền": 596,
+   "mũ": 288,
+   "áo choàng": 122,
+   "lưỡi kiếm": 116,
+   "thân (áo xanh)": 97,
+   "thắt lưng/đai": 82,
+   "tay gần": 49,
+   "ủng gần": 38,
+   "mắt/khoang mặt": 29,
+   "tay xa": 23,
+   "ủng xa": 23,
+   "vạch ủng gần": 18,
+   "dây chuông": 17,
+   "chân gần (quần)": 14,
+   "chuông": 13,
+   "chuôi/chắn kiếm": 11,
+   "chân xa (quần)": 10,
+   "trâm": 10,
+   "vạch ủng xa": 8
+  },
+  "tongLe": 1564,
+  "tongPxCoHinhTrungBinh": 993,
+  "pxDauThanDoiMoiKhung": [
+   128,
+   152,
+   136,
+   146,
+   125,
+   129,
+   151,
+   145
+  ],
+  "muSauCanChinh": [
+   {
+    "cap": "F0↔F1",
+    "pxMu": 240,
+    "khacSauCanChinh": 21,
+    "dich": [
+     0,
+     -1
+    ]
+   },
+   {
+    "cap": "F1↔F2",
+    "pxMu": 242,
+    "khacSauCanChinh": 20,
+    "dich": [
+     0,
+     1
+    ]
+   },
+   {
+    "cap": "F2↔F3",
+    "pxMu": 241,
+    "khacSauCanChinh": 21,
+    "dich": [
+     0,
+     1
+    ]
+   },
+   {
+    "cap": "F3↔F4",
+    "pxMu": 236,
+    "khacSauCanChinh": 24,
+    "dich": [
+     0,
+     -1
+    ]
+   },
+   {
+    "cap": "F4↔F5",
+    "pxMu": 240,
+    "khacSauCanChinh": 24,
+    "dich": [
+     0,
+     -1
+    ]
+   },
+   {
+    "cap": "F5↔F6",
+    "pxMu": 242,
+    "khacSauCanChinh": 25,
+    "dich": [
+     0,
+     1
+    ]
+   },
+   {
+    "cap": "F6↔F7",
+    "pxMu": 243,
+    "khacSauCanChinh": 15,
+    "dich": [
+     0,
+     1
+    ]
+   },
+   {
+    "cap": "F7↔F0",
+    "pxMu": 238,
+    "khacSauCanChinh": 16,
+    "dich": [
+     0,
+     -1
+    ]
+   }
+  ]
+ },
+ "maBoPhan": {
+  "capKeKhacNhomCungMau": {
+   "ao ↔ than (#32804F)": 4,
+   "tayX ↔ than (#0C0F14)": 2,
+   "tayG ↔ than (#0C0F14)": 1,
+   "dau ↔ tayG (#0C0F14)": 1,
+   "ao ↔ than (#0C0F14)": 1,
+   "ao ↔ tayX (#0C0F14)": 1,
+   "chanG ↔ than (#0C0F14)": 1
+  },
+  "soPxDinhCungMau": 21,
+  "soPxVienTrongVoHinh": 13,
+  "capKeXamChenh1Bac": {
+   "tayX ↔ than": 13,
+   "chanG ↔ chanX": 5
+  },
+  "soPxXamChenh1Bac": 27,
+  "mauTheoNhom": {
+   "ao": {
+    "#2C3546": 87,
+    "#32804F": 83,
+    "#0C0F14": 4,
+    "#21413A": 2
+   },
+   "chanG": {
+    "#212835": 36,
+    "#0C0F14": 7,
+    "#1A212B": 3,
+    "#21413A": 1,
+    "#32804F": 1
+   },
+   "chanX": {
+    "#1A212B": 42,
+    "#212835": 16,
+    "#32804F": 14,
+    "#2C3546": 10,
+    "#21413A": 3
+   },
+   "chuong": {
+    "#E1B85A": 21,
+    "#9C6B30": 8,
+    "#F3E6C8": 2
+   },
+   "dau": {
+    "#2C3546": 86,
+    "#212835": 72,
+    "#32804F": 33,
+    "#0C0F14": 30,
+    "#1A212B": 17,
+    "#F3E6C8": 2
+   },
+   "kiem": {
+    "#CEF0D6": 30,
+    "#E1B85A": 16,
+    "#83CC93": 4
+   },
+   "tayG": {
+    "#0C0F14": 12,
+    "#212835": 7,
+    "#1A212B": 4
+   },
+   "tayX": {
+    "#0C0F14": 10,
+    "#1A212B": 10,
+    "#212835": 8,
+    "#2C3546": 3
+   },
+   "than": {
+    "#32804F": 54,
+    "#0C0F14": 32,
+    "#CEF0D6": 7,
+    "#212835": 6,
+    "#1A212B": 5
+   }
+  }
+ }
+}
