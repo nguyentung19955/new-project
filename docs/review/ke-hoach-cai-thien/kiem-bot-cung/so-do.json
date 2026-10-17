@@ -1,0 +1,144 @@
+{
+ "loi_trang": {
+  "truoc": [],
+  "sau": [],
+  "tat": []
+ },
+ "loi_zed": {
+  "truoc": [],
+  "sau": [],
+  "tat": []
+ },
+ "nhat": {
+  "kiem_1": {
+   "cap1": {
+    "truoc": {
+     "nhay_lon_nhat_do_moi_nhip": 48.0,
+     "luc_nhanh_nhat_u": 0.75,
+     "so_nhip_khung": 1,
+     "mui_thap_nhat_duoi_dat_px": 8.5
+    },
+    "sau": {
+     "nhay_lon_nhat_do_moi_nhip": 59.8,
+     "luc_nhanh_nhat_u": 0.42,
+     "so_nhip_khung": 0,
+     "mui_thap_nhat_duoi_dat_px": -0.6
+    },
+    "tat": {
+     "nhay_lon_nhat_do_moi_nhip": 48.0,
+     "luc_nhanh_nhat_u": 0.75,
+     "so_nhip_khung": 1,
+     "mui_thap_nhat_duoi_dat_px": 8.5
+    }
+   },
+   "cap4": {
+    "truoc": {
+     "nhay_lon_nhat_do_moi_nhip": 48.0,
+     "luc_nhanh_nhat_u": 0.75,
+     "so_nhip_khung": 1,
+     "mui_thap_nhat_duoi_dat_px": 15.3
+    },
+    "sau": {
+     "nhay_lon_nhat_do_moi_nhip": 59.8,
+     "luc_nhanh_nhat_u": 0.42,
+     "so_nhip_khung": 0,
+     "mui_thap_nhat_duoi_dat_px": -0.6
+    },
+    "tat": {
+     "nhay_lon_nhat_do_moi_nhip": 48.0,
+     "luc_nhanh_nhat_u": 0.75,
+     "so_nhip_khung": 1,
+     "mui_thap_nhat_duoi_dat_px": 15.3
+    }
+   }
+  },
+  "kiem_2": {
+   "cap1": {
+    "truoc": {
+     "nhay_lon_nhat_do_moi_nhip": 32.0,
+     "luc_nhanh_nhat_u": 0.75,
+     "so_nhip_khung": 1,
+     "mui_thap_nhat_duoi_dat_px": -6.6
+    },
+    "sau": {
+     "nhay_lon_nhat_do_moi_nhip": 50.1,
+     "luc_nhanh_nhat_u": 0.42,
+     "so_nhip_khung": 3,
+     "mui_thap_nhat_duoi_dat_px": -0.6
+    },
+    "tat": {
+     "nhay_lon_nhat_do_moi_nhip": 32.0,
+     "luc_nhanh_nhat_u": 0.75,
+     "so_nhip_khung": 1,
+     "mui_thap_nhat_duoi_dat_px": -6.6
+    }
+   },
+   "cap4": {
+    "truoc": {
+     "nhay_lon_nhat_do_moi_nhip": 32.0,
+     "luc_nhanh_nhat_u": 0.75,
+     "so_nhip_khung": 1,
+     "mui_thap_nhat_duoi_dat_px": -5.3
+    },
+    "sau": {
+     "nhay_lon_nhat_do_moi_nhip": 44.8,
+     "luc_nhanh_nhat_u": 0.42,
+     "so_nhip_khung": 3,
+     "mui_thap_nhat_duoi_dat_px": -0.6
+    },
+    "tat": {
+     "nhay_lon_nhat_do_moi_nhip": 32.0,
+     "luc_nhanh_nhat_u": 0.75,
+     "so_nhip_khung": 1,
+     "mui_thap_nhat_duoi_dat_px": -5.3
+    }
+   }
+  },
+  "kiem_3": {
+   "cap1": {
+    "truoc": {
+     "nhay_lon_nhat_do_moi_nhip": 31.8,
+     "luc_nhanh_nhat_u": 0.56,
+     "so_nhip_khung": 0,
+     "mui_thap_nhat_duoi_dat_px": 10.5
+    },
+    "sau": {
+     "nhay_lon_nhat_do_moi_nhip": 41.9,
+     "luc_nhanh_nhat_u": 0.42,
+     "so_nhip_khung": 0,
+     "mui_thap_nhat_duoi_dat_px": -0.6
+    },
+    "tat": {
+     "nhay_lon_nhat_do_moi_nhip": 31.8,
+     "luc_nhanh_nhat_u": 0.56,
+     "so_nhip_khung": 0,
+     "mui_thap_nhat_duoi_dat_px": 10.5
+    }
+   },
+   "cap4": {
+    "truoc": {
+     "nhay_lon_nhat_do_moi_nhip": 31.8,
+     "luc_nhanh_nhat_u": 0.56,
+     "so_nhip_khung": 0,
+     "mui_thap_nhat_duoi_dat_px": 18.1
+    },
+    "sau": {
+     "nhay_lon_nhat_do_moi_nhip": 41.9,
+     "luc_nhanh_nhat_u": 0.42,
+     "so_nhip_khung": 1,
+     "mui_thap_nhat_duoi_dat_px": -0.6
+    },
+    "tat": {
+     "nhay_lon_nhat_do_moi_nhip": 31.8,
+     "luc_nhanh_nhat_u": 0.56,
+     "so_nhip_khung": 0,
+     "mui_thap_nhat_duoi_dat_px": 18.1
+    }
+   }
+  }
+ },
+ "tat_giong_truoc_diem_anh_khac": {
+  "0": 0,
+  "3": 0
+ }
+}

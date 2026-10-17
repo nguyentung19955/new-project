@@ -492,7 +492,8 @@
   // trung bình, bán kính = khoảng cách chỗ cầm tới mũi thật, xoay ảnh về giữa cung vung; giáo: đầu ảnh ở chỗ cầm lúc đâm hết tầm,
   // dài tới mũi; lướt chém: mép trước của ảnh chạm mũi kiếm. Ảnh bám theo em bé (lướt, nhún) suốt lúc phát. Chỉ là hình.
   // ANH_VK: bán kính mép ngoài của ảnh (điểm ảnh của ảnh gốc, chưa nhân "co" của tệp) đo từ điểm neo, và góc giữa cung (radian).
-  const ANH_VK = { 'hu-chem-kiem': { r: 25, c: 0 }, 'hu-chem-bua': { r: 30, c: -0.21 }, 'hu-dam-giao': { r: 44, c: 0 }, 'hu-chem-luot': { r: 43.5, c: 0 } };
+  // hu-chem-kiem-1/-2/-3 (kiếm bớt cứng 17/10): chỗ chờ ảnh vệt riêng từng nhát — đo lại r, c khi có ảnh.
+  const ANH_VK = { 'hu-chem-kiem': { r: 25, c: 0 }, 'hu-chem-kiem-1': { r: 25, c: 0 }, 'hu-chem-kiem-2': { r: 25, c: 0 }, 'hu-chem-kiem-3': { r: 25, c: 0 }, 'hu-chem-bua': { r: 30, c: -0.21 }, 'hu-dam-giao': { r: 44, c: 0 }, 'hu-chem-luot': { r: 43.5, c: 0 } };
   const CU = { px: 0, py: 0, r: 0, am: 0, ex: 0, ey: 0, ea: 0, eL: 0 };
   // Phiên vet-combo 12/10 (cờ G.VET_TRON, tắt: ?vettron=0 -> y hệt trước): vệt chém là HIỆU ỨNG, vẽ theo đường vung nhìn từ ngoài,
   // không cắt theo lớp thân. Trước đây cung vệt bỏ mọi mẫu mà kiếm đang vẽ SAU thân (q.front === false, G.KIEM_MUOT). Ở thân bộ
@@ -1007,7 +1008,10 @@
     const real = S.trOk > 0 && P === S.W.P;
     if (P === S.W.P) { P.fxS = -0.08; P.fxSV = 0; P.fxL = f * 2.5; P.fxLV = 0; } // nhún: vươn người theo nhát chém
     // Có ảnh AI cho vệt đòn của loại vũ khí này: vẽ ảnh thay cho trăng khuyết / mũi đâm (hạt và vết nứt giữ nguyên)
-    const maVet = VET_ANH[o.type], vetAnh = !!maVet && coAnh(maVet);
+    // Kiếm bớt cứng 17/10 (docs/review/ke-hoach-cai-thien/kiem-bot-cung/PROMPT.md prompt 4): CHỖ CHỜ ảnh vệt riêng từng nhát kiếm
+    // hu-chem-kiem-1 / -2 / -3 (cắt từ tấm vệt chém 3×3). Chưa có tệp → dùng hu-chem-kiem như cũ. Tắt: ?kiemmuot=0.
+    const maK = o.type === 'sword' && G.KIEM_DEO !== false ? 'hu-chem-kiem-' + (((o.combo || 0) % 3) + 1) : null;
+    const maVet = maK && coAnh(maK) ? maK : VET_ANH[o.type], vetAnh = !!maVet && coAnh(maVet);
     const scVet = b05(Math.max(0.6, Math.min(1.8, (o.type === 'spear' ? R0 + 2 : R0) / 32)) * (o.combo === 2 ? 1.12 : 1)); // cỡ vệt ảnh như cũ (mục 21: bậc 0,5)
     if (vetAnh && !anhVk(maVet, P, o.type, scVet)) anh(maVet, P.x + f * (o.type === 'spear' ? 8 : o.type === 'hammer' ? 4 : 2), P.y - (o.type === 'hammer' ? 17 : 13), { f, sc: scVet });
     if (o.type === 'sword') {

@@ -663,14 +663,30 @@
     if (w.type !== 'fist' && VK_LOAI[w.type] !== da.vk) return null;
     let H = huongCua(o, T, wa);
     if (H && ve) H = hvMuot(H);
-    const g = H ? H.g : 0, lean = H && !s.theo ? H.lean : 0; // chạy kiểu cũ (thân hàng chạy, s.theo): không nghiêng thân chạy
+    const g = H ? H.g : 0;
+    let lean = H && !s.theo ? H.lean : 0; // chạy kiểu cũ (thân hàng chạy, s.theo): không nghiêng thân chạy
     let ang = gocMuot(o, da, wa, n, g, B.neo), mo = 1;
     if (muot2()) {
       ang = noiHang(o, wa.ten, ang, ve);
       const p = o.p, t = G.time || 0; // (f) vừa đổi vũ khí (P.swapAt, js/combat.js): món mới hiện dần
       if (p && p.swapAt != null && t - p.swapAt >= 0 && t - p.swapAt < DOI_MO) mo = 0.3 + 0.7 * ss((t - p.swapAt) / DOI_MO);
     }
-    return { da, n, wa, B, cap: capVk(w), he: heVk(w), ang, cam: !!wa.cam, lean, hv: !!H, w, mo };
+    // KIẾM BỚT CỨNG (2) + (3): thân nghiêng / nhún / nhích theo tiến độ; mũi kiếm không xuống dưới đất. tk: dời cả người (wx) / thân trên (uy).
+    let tk = null;
+    if (!s.theo && wa === s && kiemDeo(wa.ten) && wa.u != null) {
+      const E = s.eo ? eoTinh(T, s, o) : null, e = E ? [E.eA[0] + 2 * E.oy, E.eA[1] + 2 * E.ox] : eoKhung(T, wa.ten, wa.i);
+      const th = e ? thanKiem(wa.ten, wa.u) : null;
+      if (th) { lean += th.lean; if (!E) tk = { wx: th.wx, uy: th.uy }; }
+      const V = lay('zed-vk'), R = V && V.tep.vk[da.vk] && V.tep.vk[da.vk][capVk(w)], gc = B.cam && B.cam[capVk(w)];
+      if (R && gc) {
+        let gx = n[0] / 2 - 24 + (E ? E.ox : 0), gy = n[1] / 2 - 45 + (E ? E.oy : 0);
+        if (e && lean) { const b = (lean * Math.PI) / 180, px = e[1] / 2 - 24, py = e[0] / 2 - 45, cx = gx - px, cy = gy - py; gy = py + cx * Math.sin(b) + cy * Math.cos(b); }
+        if (tk) gy += tk.uy;
+        const L = (R[2] - gc[0]) * B.tl, a2 = kepDat(ang + lean, gy, L);
+        ang = a2 - lean;
+      }
+    }
+    return { da, n, wa, B, cap: capVk(w), he: heVk(w), ang, cam: !!wa.cam, lean, hv: !!H, w, mo, tk };
   }
   // cu-ti-to-muot (e): đổi HÀNG ảnh có vũ khí (đứng → chiêu đặc biệt, búa giữ → nện đất, thương giữ → xốc / quét…) mà góc vừa vẽ lệch
   // quá 20° so với góc mới → trong NOI_HANG giây đầu góc đi dần (đường ngắn nhất, chậm–nhanh–chậm) từ góc vừa vẽ. Lần đo của fx (ve = false)
@@ -712,6 +728,7 @@
     const e = eoKhung(T, s.ten, s.i);
     return e ? [e[1] / 2 - 24, e[0] / 2 - 45] : null;
   }
+  const nghiengGoc = (q, P, deg, fn) => nghieng(q, P, deg, fn);
   function nghieng(q, P, deg, fn) {
     q.save(); q.translate(P[0], P[1]); q.rotate((deg * Math.PI) / 180); q.translate(-P[0], -P[1]);
     try { fn(); } finally { q.restore(); }
@@ -753,7 +770,9 @@
     if (G.CHAY_DANH_MOI === false || wa.u == null || da.lap) return kd(n[2] + g);
     const m = (da && da.moc) || (muot2() ? mocCua(wa.ten) : MOC[wa.ten]), u = wa.u, i = wa.i; // muot2: cùng mốc với khung thân (búa báo trước dùng MOC_BUA_BT)
     let a = n[2];
-    if (m && m.length === da.so && i + 1 < da.so && N[i + 1]) {
+    const ck = m && m.length === da.so && kiemDeo(wa.ten) ? cungKiem(m, N, da, u, wa.ten) : null; // kiếm bớt cứng (1): đường cong liền cả nhát
+    if (ck) a = ck.a;
+    else if (m && m.length === da.so && i + 1 < da.so && N[i + 1]) {
       const fr = phanGoc(da, m, i, u), e = fr * fr * (3 - 2 * fr);
       a = n[2] + (buocGoc(wa.ten, i, n[2], N[i + 1][2]) - n[2]) * e;
     }
@@ -773,8 +792,77 @@
     }
     return a;
   }
+  // ---------- KIẾM BỚT CỨNG (17/10/2026, docs/review/ke-hoach-cai-thien/kiem-bot-cung/bao-cao.md) — CHỈ HÌNH ----------
+  // Chủ game thấy kiếm 1/2/3 "còn cứng": chỉ tay vung, góc kiếm đi chậm–nhanh–chậm TRONG TỪNG KHUNG nên kiếm khựng lại ở mỗi khung (như
+  // các tư thế chụp rời), thân đứng im, mũi kiếm xuyên đất. Ở đây (cờ G.KIEM_DEO, tắt ?kiemmuot=0):
+  //  (1) góc kiếm = MỘT đường cong liền qua cả nhát (nội suy Hermite giữ đơn điệu qua các góc neo, cộng dồn đúng chiều vung như duongVung):
+  //      đầu nhát chậm, nhanh nhất ngay trước khung ★, chậm dần lúc thu; không dừng ở mỗi khung. Mốc góc: giữa mỗi khung (45%), khung ngay
+  //      trước ★ ở 70% (giữ thế giơ lâu hơn rồi bổ nhanh), khung ★ ở 12% đầu, khung cuối ở 75% (thu về chậm).
+  //  (2) thân có lực: thân trên nghiêng quanh eo (ngả ra sau lúc lấy đà, đổ tới lúc ★), nhún xuống ≤ 1,5 điểm ảnh lúc lấy đà, cả người
+  //      nhích tới ≤ 2,5 điểm ảnh lúc ★ rồi trả về (chỉ hình — vị trí, hộp va chạm, vùng trúng không đổi).
+  //  (3) mũi kiếm không xuống dưới vạch đất: góc neo kiếm 1 khung 4 (60° → 35°), kiếm 3 khung 5–6 (120° / 110° → 40° / 32°), rồi kẹp theo
+  //      độ dài lưỡi từng cấp và điểm cầm từng khung (kẹp về phía gần: mũi chúc trước thì nằm sát đất phía trước, chúc sau thì phía sau).
+  // Không có cơ chế dừng hình khi trúng trong game → không thêm hit-stop. Thời lượng đòn, mốc ★ (u 0,45), sát thương không đổi.
+  if (G.KIEM_DEO === undefined) G.KIEM_DEO = !/[?&]kiemmuot=0(&|$)/.test(QS);
+  const KIEM_HANG = { kiem_1: 1, kiem_2: 1, kiem_3: 1 };
+  const kiemDeo = (ten) => G.KIEM_DEO !== false && G.CHAY_DANH_MOI !== false && !!KIEM_HANG[ten];
+  const GOC_KIEM = { 'kiem_1~16': { 3: 35 }, 'kiem_3~16': { 4: 40, 5: 32 } }; // (3) góc neo mới (độ, dương = chúc xuống)
+  // (2) thân theo tiến độ u: [u, giá trị]; lean = độ (dương = đổ tới), wx = điểm ảnh game tới trước, uy = thân trên hạ xuống (âm = nhổm)
+  const THAN_KIEM = {
+    kiem_1: { lean: [[0, 0], [0.15, -3], [0.33, -2], [0.47, 6], [0.7, 5], [0.9, 2], [1, 0]], wx: [[0, 0], [0.15, -0.5], [0.47, 1.5], [0.72, 1.5], [1, 0]], uy: [[0, 0], [0.15, 1], [0.33, 0], [0.5, 0.5], [0.75, 0.5], [1, 0]] },
+    kiem_2: { lean: [[0, 0], [0.15, 3], [0.47, 4], [0.65, -3], [0.85, -1], [1, 0]], wx: [[0, 0], [0.15, -0.5], [0.47, 1], [0.7, 0.5], [1, 0]], uy: [[0, 0], [0.15, 1], [0.47, 0], [0.65, -0.5], [1, 0]] },
+    kiem_3: { lean: [[0, 0], [0.12, -5], [0.3, -2], [0.47, 8], [0.65, 7], [0.88, 3], [1, 0]], wx: [[0, 0], [0.12, -1], [0.47, 2.5], [0.7, 2], [1, 0]], uy: [[0, 0], [0.12, 1.5], [0.3, 0.5], [0.47, 1], [0.7, 1], [1, 0]] },
+  };
+  // Hermite đơn điệu (Fritsch–Carlson) qua các điểm (ts, as): đạo hàm hai đầu = 0 (vào chậm, ra chậm), giữa không đổi chiều → không vọt.
+  function hermite(ts, as, x) {
+    const n = ts.length;
+    if (x <= ts[0]) return as[0];
+    if (x >= ts[n - 1]) return as[n - 1];
+    let k = 0; while (k < n - 2 && x > ts[k + 1]) k++;
+    const d = (i) => (as[i + 1] - as[i]) / Math.max(1e-6, ts[i + 1] - ts[i]);
+    const tan = (i) => {
+      if (i <= 0 || i >= n - 1) return 0;
+      const d0 = d(i - 1), d1 = d(i), h0 = ts[i] - ts[i - 1], h1 = ts[i + 1] - ts[i];
+      if (d0 * d1 <= 0) return 0;
+      const w1 = 2 * h1 + h0, w2 = h1 + 2 * h0;
+      return (w1 + w2) / (w1 / d0 + w2 / d1);
+    };
+    const h = ts[k + 1] - ts[k], t = (x - ts[k]) / h, t2 = t * t, t3 = t2 * t;
+    return (2 * t3 - 3 * t2 + 1) * as[k] + (t3 - 2 * t2 + t) * h * tan(k) + (-2 * t3 + 3 * t2) * as[k + 1] + (t3 - t2) * h * tan(k + 1);
+  }
+  const theoU = (bang, u) => hermite(bang.map((r) => r[0]), bang.map((r) => r[1]), kep(u, 0, 1));
+  // (1) Góc kiếm liền tại tiến độ uu. Trả { a }.
+  function cungKiem(m, N, da, uu, ten) {
+    const so = da.so, sua = GOC_KIEM[da._khoa] || GOC_KIEM[da.eo16] || null, h = m.indexOf(0.45);
+    const ts = [], as = [];
+    let acc = null;
+    for (let j = 0; j < so; j++) {
+      if (!N[j]) continue;
+      const g = sua && sua[j] != null ? sua[j] : N[j][2];
+      acc = acc == null ? g : buocGoc(ten, j - 1, acc, g);
+      const L = (j + 1 < so ? m[j + 1] : 1) - m[j];
+      ts.push(j === 0 ? 0 : m[j] + L * (j === h ? 0.12 : j === h - 1 ? 0.7 : j === so - 1 ? 0.75 : 0.45)); as.push(acc);
+    }
+    if (!ts.length) return null;
+    return { a: hermite(ts, as, uu) };
+  }
+  // (3) Kẹp góc a (đã cộng nghiêng) để mũi (cách điểm cầm L, điểm ảnh game) không thấp hơn vạch đất (y = 0 ở chân). gy: điểm cầm.
+  function kepDat(a, gy, L) {
+    const k = (-0.5 - gy) / L;
+    if (!(L > 0) || k >= 1 || k <= 0) return a;
+    const amin = (Math.asin(k) * 180) / Math.PI, y = ((a % 360) + 360) % 360;
+    if (y <= amin || y >= 180 - amin) return a;
+    return a + ((y < 90 ? amin : 180 - amin) - y);
+  }
+  // (2) Thân: { lean, wx, uy } ở tiến độ u của hàng ten (null: không áp).
+  function thanKiem(ten, u) {
+    const B = THAN_KIEM[ten];
+    if (!B || !kiemDeo(ten) || u == null) return null;
+    return { lean: theoU(B.lean, u), wx: theoU(B.wx, u), uy: theoU(B.uy, u) };
+  }
   // Góc đường vung liền tại tiến độ uu (mốc m của hàng, neo N): góc khung đầu, cộng dồn bước ngắn nhất sang từng khung kế, nội suy như gocMuot.
   function duongVung(m, N, da, uu, ten) {
+    if (kiemDeo(ten)) { const ck = cungKiem(m, N, da, uu, ten); if (ck) return ck.a; }
     let acc = N[0] ? N[0][2] : 0, j = 0;
     while (j < da.so - 1 && uu + 1e-6 >= m[j + 1] && N[j + 1]) { acc = buocGoc(ten, j, acc, N[j + 1][2]); j++; }
     if (j + 1 < da.so && N[j + 1]) { const fr = phanGoc(da, m, j, uu), e2 = fr * fr * (3 - 2 * fr); acc += (buocGoc(ten, j, acc, N[j + 1][2]) - acc) * e2; }
@@ -1039,9 +1127,11 @@
       };
       return veLop(c, o, lopEo);
     }
-    const lop = (q) => {
+    const tk = v && v.tk; // kiếm bớt cứng (2): cả người nhích tới wx, thân trên hạ uy (chỉ hình)
+    const lop0 = (q) => {
       if (N) { // nửa dưới đứng yên (lấn lên 6 hàng nguồn để chỗ nối không hở), nửa trên + vũ khí + nắm tay xoay quanh eo
         const e = eoKhung(T, s.ten, s.i), yC = e[0] + 1, yL = Math.max(0, yC - 6);
+        const nghieng = (q2, P2, d2, fn) => { if (tk && tk.uy) { q2.save(); q2.translate(0, tk.uy); } try { nghiengGoc(q2, P2, d2, fn); } finally { if (tk && tk.uy) q2.restore(); } };
         if (v && v.n[3]) nghieng(q, N, lean, () => veVk(q, V, v));
         veT(q, T, TI, s.i * 96, AH * 96 + yL, 96, 96 - yL, -24, -45 + yL / 2, 48, (96 - yL) / 2);
         nghieng(q, N, lean, () => {
@@ -1056,6 +1146,7 @@
       if (v && !v.n[3]) veVk(q, V, v);
       if (v && !s.theo && v.B.ht != null) { if (coHt(v)) veT(q, T, TI, v.wa.i * 96, HT * 96, 96, 96, -24, -45, 48, 48); veNgon(q, V, v); } // nắm tay + ngón đè lên cán
     };
+    const lop = tk && tk.wx ? (q) => { q.save(); q.translate(tk.wx, 0); try { lop0(q); } finally { q.restore(); } } : lop0;
     return veLop(c, o, lop);
   }
   // Vẽ bóng + lật theo mặt + nhuộm (trúng đòn, băng, độc) + hào quang Gồng quanh một hàm vẽ người lop(q) (toạ độ tính từ chân).
@@ -1146,6 +1237,7 @@
     let gx = v.n[0] / 2 - 24 + ox, gy = v.n[1] / 2 - 45 + oy, ang = v.ang != null ? v.ang : v.n[2];
     const N = trucNghieng(T, s, v, E); // nghiêng thân trên (zed-8-huong): nắm tay xoay quanh eo, hướng vũ khí cộng thêm góc nghiêng
     if (N) { const b = (v.lean * Math.PI) / 180, cx = gx - N[0], cy = gy - N[1]; gx = N[0] + cx * Math.cos(b) - cy * Math.sin(b); gy = N[1] + cx * Math.sin(b) + cy * Math.cos(b); ang += v.lean; }
+    if (v.tk) { gx += v.tk.wx; gy += v.tk.uy; } // kiếm bớt cứng (2): vệt chém theo người nhích / nhún
     const r = (ang * Math.PI) / 180, K = toCua(o); // cu-ti-to-muot: Tí vẽ ×K quanh chân → nắm tay và độ dài lưỡi cũng ×K
     q.gx = X0 + f * gx * K; q.gy = Y0 + gy * K;
     q.dx = f * Math.cos(r); q.dy = Math.sin(r);
@@ -1183,7 +1275,7 @@
     if (w && VV && VV.co && VV.co(w)) return null;
     const D = T.tep, s = chon(o, D), V = lay('zed-vk'), v = V ? vkCua(o, D, s, T, false) : null, h = HV && HV.get(p);
     return [T._ma, s.ten, s.i, s.eo ? s.eo.i + ':' + (s.eo.lui || 0) + ':' + (s.eo.moi || 0) + ':' + (s.eo.chan || '') : '', s.theo ? s.theo.ten + ':' + s.theo.i : '',
-      v ? v.wa.ten + ':' + v.wa.i + ':' + v.cap + ':' + (v.he || '') + ':' + Math.round(v.ang / 2) + ':' + Math.round((v.lean || 0) * 2) : V ? '-' : '0',
+      v ? v.wa.ten + ':' + v.wa.i + ':' + v.cap + ':' + (v.he || '') + ':' + Math.round(v.ang / 2) + ':' + Math.round((v.lean || 0) * 2) + (v.tk ? ':' + Math.round(v.tk.wx * 2) + ',' + Math.round(v.tk.uy * 2) : '') : V ? '-' : '0',
       h ? Math.round(h.gv / 2) + ':' + Math.round(h.lv * 2) : '', o.face < 0 ? -1 : 1, w ? w.type + ':' + (w.coat || '') : '', o.dodge >= 0 ? 1 : 0, o.roundShadow ? 1 : 0].join('|');
   }
   G.zedMoi = { chon, MOC, eoTinh, lechHinh, lechTu, khoaVe, loi: [] };
