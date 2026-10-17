@@ -15493,7 +15493,7 @@ MA._xong();
   // Để sẵn: nếu sau này tệp pha có thêm hàng move hoặc die thì game dùng luôn, không phải sửa code (trang công cụ hiện chỉ xuất 4 hàng).
   // 14/10 (YEU-CAU-TRUM-NHO): ba trùm nhỏ Nấm Chúa / Cua Đá / Hổ Lửa có thêm tệp pha 2 (<mã>-p2). Trùm nhỏ chỉ đổi HÌNH (js/mobs.js truyền
   // o.phase = 2 khi máu < 50%), không đổi chiêu hay số. Tắt: G.TRUM_NHO_PHA = false hoặc ?trumnho=0 (trùm nhỏ giữ hình pha 1 suốt trận).
-  const PHA_MA = /^(nguTinh|mocTinh|hoTinh|namChua|cuaDa|hoLua)-p([23])$/, PHA_HANG = { idle: 1, tele: 1, atk: 1, hit: 1, move: 1, die: 1 };
+  const PHA_MA = /^(nguTinh|mocTinh|hoTinh|namChua|cuaDa|hoLua|thuongLuong)-p([23])$/, PHA_HANG = { idle: 1, tele: 1, atk: 1, hit: 1, move: 1, die: 1 };
 
   // Em bé còn dùng (ba bạn NPC ngồi ở sân đình, truyện, bảng Ông Từ). Thân Cu Tí cũ, đòn theo vũ khí, thân theo bộ: đã bỏ (đợt 2).
   const EM_BE_MA = /^em-be-(hunter|healer|wrestler)$/;
@@ -15622,9 +15622,14 @@ MA._xong();
   // Bỏ ngay ở đây nên ảnh rời cũng không vào hàng tải / không tính vào "Đang tải ảnh vùng".
   if (G.QUAI_SONG_MOI == null) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]quaisongmoi=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.QUAI_SONG_MOI = !tat; }
   const QUAI_SONG_MOI = { raiCa: 1, diaTrau: 1, baBa: 1, cocTia: 1 };
+  // 17/10 thuong-luong-that (docs/review/ke-hoach-cai-thien/thuong-luong-that/bao-cao.md): Thuồng Luồng có ảnh thật 3 pha (thuongLuong, -p2, -p3;
+  // js/thuong_luong.js chỉ dùng lúc VẼ). Cờ ?tlmoi=0 (G.TL_MOI = false): không nạp 3 tệp này → Ngư Tinh nhuộm màu như trước.
+  if (G.TL_MOI == null) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]tlmoi=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.TL_MOI = !tat; }
+  const TL_MOI_MA = /^thuongLuong(-p[23])?$/;
   SC.add = function (tep) {
     if (tep && tep.doi_tuong === 'hieu-ung') return G.fxAnh ? G.fxAnh.add(tep) : null; // hiệu ứng ảnh AI (js/fx_anh.js)
     if (tep && G.QUAI_SONG_MOI === false && tep.doi_tuong === 'quai' && QUAI_SONG_MOI[tep.ma]) return null;
+    if (tep && G.TL_MOI === false && tep.doi_tuong === 'quai' && TL_MOI_MA.test(String(tep.ma))) return null;
     try {
       if (!tep || typeof tep !== 'object' || typeof tep.ma !== 'string' || !/^[A-Za-z0-9_-]{1,40}$/.test(tep.ma)) throw new Error('thiếu mã');
       if (LOAI_BO[tep.doi_tuong]) throw new Error('đã bỏ ở đợt 2: ' + LOAI_BO[tep.doi_tuong]);
@@ -16262,7 +16267,9 @@ MA._xong();
       if (!sp || !sp.ready) { if (sp && roiCan) roiCan(id); return draw0.call(MA, c, id, x, y, o); }
       o = o || {};
       const def = MA._defs && MA._defs[id];
-      if (!def) { SC.veQuai(c, sp, x, y, o, true, 0); return; }
+      // thuong-luong-that: sp.durMuon (js/thuong_luong.js) = thời lượng cử động mượn của trùm khác (Thuồng Luồng: của Ngư Tinh) → nhịp khung
+      // khớp đúng thời lượng / mốc chiêu thật. Tệp khác không có → 0 như cũ.
+      if (!def) { SC.veQuai(c, sp, x, y, o, true, (sp.durMuon && sp.durMuon(o.anim)) || 0); return; }
       // Quái có sẵn: để hình gốc vẽ bóng và hiệu ứng (vệt chém, tia lửa...), chỉ thay phần thân bằng hình tự vẽ.
       const T0 = c.getTransform(), a0 = c.globalAlpha, D = dur0.call(MA, id, o.anim) || 0;
       let xong = false;
