@@ -115,6 +115,7 @@ body.touch .tc{display:block}
   <canvas id="cv" width="480" height="270"></canvas>
   <div id="hint"></div>
   <div id="top" class="ui">
+    <button id="btn-2d" type="button" aria-label="Đổi sprite Lam 2D/3D" title="Đổi sprite Lam (tải lại trang)">Lam 3D</button>
     <button id="btn-set" type="button" aria-label="Cài đặt">⚙</button>
     <button id="btn-mute" type="button" aria-label="Tắt tiếng">🔊</button>
   </div>
@@ -166,6 +167,7 @@ body.touch .tc{display:block}
 <script src="lib/rig-lam.js"></script>
 <script src="lib/rig-quai-chuong.js"></script>
 <script src="lib/tiles-ai.js"></script>
+<script src="lib/anim2d.js"></script>
 <script>
 'use strict';
 /* Ảnh nền 3 lớp (bản build tự chứa thay đường dẫn bằng data URI) */
@@ -226,10 +228,11 @@ const S={frame:0, play:0, hitstop:0, room:0, paused:true, shx:0, shy:0, sht:0, s
   btnToast:false, kengN:0, cp:null, won:false, winT:0, hintKey:'', echoId:0};
 const pl={x:0,y:0,w:10,h:15,vx:0,vy:0,face:1,onGround:false,coyote:0,jumpBuf:0,atkBuf:0,dashBuf:0,jumping:false,wallDir:0,wallLock:0,wallCoy:0,lastWall:0,wallStickT:0,wjBack:0,
   dash:0,dashDir:1,dashCd:0,airDash:false,iframes:0,hp:5,atkN:0,atkT:0,atkSw:0,atkBounced:false,anim:0,st:'idle',px:0,py:0,airJump:false,pogoBuf:0,pogoSafe:0,
-  dead:false,deadT:0,hurtT:0,wjT:0,wjDir:0,landT:0,castT:0,runPh:0,idleT:0,dropT:0, ak:null, af:0, flip:false, sdx:0};
+  dead:false,deadT:0,hurtT:0,wjT:0,wjDir:0,landT:0,castT:0,runPh:0,idleT:0,dropT:0, ak:null, af:0, flip:false, sdx:0, a2:null, k2:0, l2:false};
+  // a2/k2/l2: tên animation + khung + lật của Lam 2D (?anim=2d) — ghi vào bản ghi Tiếng Vọng y như ak/af/flip
 let swingId=0;
 let rec=null, echo=null;            // rec: đang ghi; echo: bóng (phát lại rồi giữ tư thế)
-const REC=[]; for(let i=0;i<P.echoFrames+2;i++) REC.push({x:0,y:0,ak:null,af:0,flip:false,sdx:0,hb:false,hx:0,hy:0,hw:0,hh:0,n:0,sw:0,f:1,at:0});
+const REC=[]; for(let i=0;i<P.echoFrames+2;i++) REC.push({x:0,y:0,ak:null,af:0,flip:false,sdx:0,a2:null,k2:0,l2:false,hb:false,hx:0,hy:0,hw:0,hh:0,n:0,sw:0,f:1,at:0});
 const RECST={n:0,sx:0,sy:0}, ECHO={id:0,n:0,i:0,cur:null,done:false,px:0,py:0,warn:false};
 
 /* pool hạt / hiệu ứng / vệt lướt: tạo sẵn, dùng vòng tròn, không tạo đối tượng mỗi khung */
@@ -239,7 +242,7 @@ function part(x,y,vx,vy,t,c,s,g){ const p=PARTS[partI]; partI=(partI+1)%PARTS.le
 const FXS=[]; for(let i=0;i<48;i++) FXS.push({on:false,k:'',x:0,y:0,t:0,T:1,s:'',r:0,c:'',big:false});
 let fxI=0;
 function fx(k,x,y,t,s,r,c,big){ const f=FXS[fxI]; fxI=(fxI+1)%FXS.length; f.on=true; f.k=k; f.x=x; f.y=y; f.t=t; f.T=t; f.s=s||''; f.r=r||0; f.c=c||''; f.big=!!big; return f; }
-const TRAIL=[]; for(let i=0;i<10;i++) TRAIL.push({on:false,x:0,y:0,ak:null,af:0,flip:false,sdx:0,t:0});
+const TRAIL=[]; for(let i=0;i<10;i++) TRAIL.push({on:false,x:0,y:0,ak:null,af:0,flip:false,sdx:0,a2:null,k2:0,l2:false,t:0});
 let trailI=0;
 
 /* ================= TIỆN ÍCH ================= */
@@ -573,7 +576,7 @@ function updatePlayer(){
       pl.dash--; pl.vx=pl.dashDir*P.dashSpeed; pl.vy=0;
       if(moveX(pl,pl.vx,true)) pl.dash=0;
       if(pl.dash===0) pl.vx=pl.dashDir*P.runSpeed;
-      if(S.frame%2===0){ const t=TRAIL[trailI]; trailI=(trailI+1)%TRAIL.length; t.on=true; t.x=pl.x; t.y=pl.y; t.ak=pl.ak; t.af=pl.af; t.flip=pl.flip; t.sdx=pl.sdx; t.t=12; }
+      if(S.frame%2===0){ const t=TRAIL[trailI]; trailI=(trailI+1)%TRAIL.length; t.on=true; t.x=pl.x; t.y=pl.y; t.ak=pl.ak; t.af=pl.af; t.flip=pl.flip; t.sdx=pl.sdx; t.a2=pl.a2; t.k2=pl.k2; t.l2=pl.l2; t.t=12; }
       pl.st='dash'; finishGround(); return;
     }
   }
@@ -683,6 +686,26 @@ function lamAnim(){
   else { a=AN.idle; f=loopF(a,pl.idleT); }
   pl.ak=a; pl.af=f; pl.flip=flip; pl.sdx=sdx;
 }
+/* Lam 2D (?anim=2d, lib/anim2d.js): chọn tên animation theo trạng thái rồi update() bộ phát — CHỈ trong bước logic 60 Hz.
+   Hitbox/vật lý không đổi (vẫn 10×15); sprite chỉ là hình vẽ. Sheet thiếu animation nào thì ghepSheet2D() đã thêm hàng tạm
+   (jump/fall = khung run-2 "bay", attack = khối màu TV.Anim.placeholder), nên tên ở đây luôn có trong sheet.
+   Đòn chém giữ thời lượng ATK cũ (su+ac+re); animation attack không loop chỉ hiển thị, xong() không điều khiển gameplay. */
+let LAM2D=null, LAM2D_E=null, bp2=null, sw2=0;   // sheet thật, sheet tô màu bóng, bộ phát của Lam, nhát chém đang hiển thị
+function co2(){ for(let i=0;i<arguments.length;i++) if(LAM2D.anims[arguments[i]]) return arguments[i]; return 'idle'; }
+function lamAnim2D(){
+  if(!bp2) return;
+  let ten;
+  if(pl.dead) ten=co2('death','fall');
+  else if(pl.hurtT>0) ten=co2('hit','idle');
+  else if(pl.dash>0) ten=co2('dash','run');
+  else if(pl.atkN){ ten=co2(ATK[pl.atkN].anim,'attack'); if(pl.atkSw!==sw2){ sw2=pl.atkSw; bp2.set('idle'); } }   // nhát mới (combo) → đổi tên tạm để set() chạy lại từ khung 0
+  else if(pl.st==='wall') ten=co2('wallSlide','fall');
+  else if(!pl.onGround) ten=pl.vy<0?'jump':'fall';   // jump không loop: giữ khung cuối tới khi rơi
+  else if(Math.abs(pl.vx)>0.3) ten='run';
+  else ten='idle';
+  bp2.set(ten); bp2.update(DT);
+  pl.a2=bp2.ten; pl.k2=bp2.khung; pl.l2=pl.face<0;
+}
 
 /* ================= TIẾNG VỌNG ================= */
 // Bấm Vọng: ghi tối đa 3 giây (bấm lần nữa để dừng sớm). Bóng phát lại 1 lần rồi giữ nguyên tư thế cuối cho tới lần bấm sau.
@@ -695,7 +718,7 @@ function stopRec(){
 }
 function recordFrame(hb){
   const s=REC[rec.n++];
-  s.x=pl.x; s.y=pl.y; s.ak=pl.ak; s.af=pl.af; s.flip=pl.flip; s.sdx=pl.sdx; s.f=pl.face; s.n=pl.atkN; s.at=pl.atkT; s.sw=pl.atkSw;
+  s.x=pl.x; s.y=pl.y; s.ak=pl.ak; s.af=pl.af; s.flip=pl.flip; s.sdx=pl.sdx; s.a2=pl.a2; s.k2=pl.k2; s.l2=pl.l2; s.f=pl.face; s.n=pl.atkN; s.at=pl.atkT; s.sw=pl.atkSw;
   if(hb){ s.hb=true; s.hx=hb.x; s.hy=hb.y; s.hw=hb.w; s.hh=hb.h; } else s.hb=false;
 }
 function updateEcho(){
@@ -1087,6 +1110,7 @@ function step(){
   S.frame++; if(!S.won) S.play++;
   updatePlayer();
   lamAnim();
+  lamAnim2D();
   const hb=pl.dead?null:atkBox(pl,pl.atkN,pl.atkT,pl.face,HB);
   if(hb){
     const n=pl.atkN, hit=applyHits(hb,'p',pl.atkSw,pl.face,n);
@@ -1132,7 +1156,13 @@ function spr(set,img,imgM,a,f,mir,x,y){
   const sx=mir?set.aw-fr.x-set.cell:fr.x;
   ctx.drawImage(mir?imgM:img,sx,fr.y,set.cell,set.cell,x-(mir?set.pxm:set.px),y-set.py,set.cell,set.cell);
 }
-function drawLam(set,s,x,y){ if(!s.ak) return; spr(set,set.n,set.m,s.ak,s.af,s.flip,Math.round(x)-ox+5+s.sdx,Math.round(y)-oy+15); }
+function drawLam(set,s,x,y){
+  if(LAM2D){   // Lam 2D: vẽ khung đã ghi (a2/k2/l2) theo pivot trong JSON, chân = đáy hitbox (x+5, y+15) như bản cũ; bóng/vệt dùng sheet tô màu
+    if(s.a2) TV.Anim.veKhung(ctx,set===LS?LAM2D:LAM2D_E,s.a2,s.k2,Math.round(x)-ox+5,Math.round(y)-oy+15,s.l2);
+    return;
+  }
+  if(!s.ak) return; spr(set,set.n,set.m,s.ak,s.af,s.flip,Math.round(x)-ox+5+s.sdx,Math.round(y)-oy+15);
+}
 const ARCS={1:[-0.75,0.6,16],2:[0.9,-1.35,17],3:[-1.4,1.05,18],4:[0.2,2.95,17],5:[0.7,-2.3,17],6:[-2.0,1.1,18]};
 /* Vẽ pixel thật: mỗi điểm là 1 ô 1×1 tọa độ nguyên, không trùng điểm (để độ trong suốt đều, không khử răng cưa) */
 const PXS=new Set();
@@ -1148,7 +1178,7 @@ function pxDisc(x,y,r){ x=Math.round(x); y=Math.round(y); for(let dy=-r;dy<=r;dy
 // Nét chém: cung pixel 2–3 lớp màu từ ngoài vào trong, đầu dày, đuôi mảnh dần
 const SL_P=['#F3E6C8','#CEF0D6','#83CC93'], SL_E=['#CEF0D6','#83CC93','#32804F'];
 function drawSlash(x,y,f,n,t,cols,alpha){
-  if(!n || LAM48) return;   // Lam 48 / Lam 3D đã có vệt chém vẽ sẵn trong sprite
+  if(!n || (LAM48 && !(LAM2D && LAM2D.tam.indexOf('attack')>=0))) return;   // Lam 48 / Lam 3D / Lam 2D có attack thật: vệt chém đã nằm trong sprite; chỉ vẽ lại khi attack 2D là khối tạm
   const a=ATK[n], k=t-a.su; if(k<0||k>=a.ac+3) return;
   const cx=Math.round(x)-ox+5, cy=Math.round(y)-oy+7+(n===4?4:0);
   const arc=ARCS[n], a0=arc[0], a1=arc[1], r=arc[2], prog=Math.min(1,(k+1)/(n===4?4:a.ac)), span=(a1-a0)*prog, fc=n===4?1:f;
@@ -1307,7 +1337,7 @@ function render(al){
       ctx.globalAlpha=0.36+0.14*pz; drawLam(LES,c,ex,ey);
     }
     ctx.globalAlpha=1;
-    if(echo.warn){ const wx=Math.round(ex)-ox+5, wy=Math.round(ey)-oy-14;
+    if(echo.warn){ const wx=Math.round(ex)-ox+5, wy=Math.round(ey)-oy-(LAM2D?LAM2D.pivot[1]-11:14);   // dấu "!" trên đầu: Lam 2D cao hơn hitbox nên đẩy lên theo pivot
       ctx.fillStyle='#0C0F14'; ctx.fillRect(wx-4,wy-1,9,12); ctx.fillStyle='#E1B85A'; ctx.fillRect(wx-1,wy+1,3,6); ctx.fillRect(wx-1,wy+8,3,2); }
   }
   // vệt lướt
@@ -1384,6 +1414,59 @@ const LAM24=/[?&]lam=24(?:&|$)/.test(location.search), LAM_48=/[?&]lam=48(?:&|$)
 // và Lam cân đối hơn với ô gạch 16 px và Quái Chuông Gỗ. ?cao=46 để so.
 const LAM_CAO=/[?&]cao=46(?:&|$)/.test(location.search)?46:36;
 let LAM48=false, LAM3D=false;   // LAM48: sprite lớn đã có vệt chém vẽ sẵn (48 và 3D)
+/* Lam 2D từ sheet ChatGPT (anim/lam-chatgpt-80.png + .anim.json, lib/anim2d.js). Bật bằng ?anim=2d, hoặc #anim=2d
+   (bản artifact không giữ query), hoặc nút "Lam 3D/2D" góc trên (đổi hash rồi tải lại). Không cờ → y hệt bản cũ (atlas 3D). */
+const ANIM2D=/(?:^|[?&#])anim=2d(?:[&\s]|$)/.test(location.search+' '+location.hash);
+const ANIM2D_JSON='anim/lam-chatgpt-80.anim.json';
+const btn2d=document.getElementById('btn-2d'); btn2d.textContent=ANIM2D?'Lam 2D':'Lam 3D';
+btn2d.addEventListener('click',()=>{
+  if(/[?&]anim=2d/.test(location.search)){ const u=new URL(location.href); u.searchParams.delete('anim'); u.hash=''; location.href=u.href; return; }
+  location.hash=ANIM2D?'':'anim=2d'; location.reload();
+});
+/* Ghép sheet dùng trong game: giữ nguyên các hàng thật, THÊM hàng tạm cho animation còn thiếu (không vẽ lại Lam):
+   idle thiếu → chép run-0; jump/fall thiếu → chép khung run-2 (khung "bay", chân rời đất) hoặc idle-0; attack thiếu → khối màu TV.Anim.placeholder.
+   Trả sheet TV.Anim.taoSheet(canvas ghép, json ghép) + .thatSu (tên có trong JSON) + .tam (tên hàng tạm). */
+function ghepSheet2D(img,json){
+  const d=TV.Anim.kiemTra(json), fw=d.fw, fh=d.fh, A={};
+  for(const k of d.ten) A[k]=Object.assign({},json.animations[k]);
+  const them=[];
+  if(!A.idle) them.push({ten:'idle',chep:{ten:'run',khung:0},fps:8,loop:true});
+  const bay=A.run&&A.run.frames>2?{ten:'run',khung:2}:{ten:A.idle?'idle':'run',khung:0};
+  if(!A.jump) them.push({ten:'jump',chep:bay,fps:8,loop:false});
+  if(!A.fall) them.push({ten:'fall',chep:bay,fps:8,loop:true});
+  if(!A.attack) them.push({ten:'attack',ph:true,frames:6,fps:14,loop:false,hitFrames:[2,3]});
+  const iw=img.naturalWidth||img.width, ih=img.naturalHeight||img.height;
+  const c=document.createElement('canvas'); c.width=Math.max(iw,d.cols*fw,6*fw); c.height=Math.max(ih,d.rows*fh)+them.length*fh;
+  const g=c.getContext('2d'); g.imageSmoothingEnabled=false; g.drawImage(img,0,0);
+  let row=Math.max(d.rows,Math.ceil(ih/fh));
+  for(const t of them){
+    if(t.ph){
+      const ph=TV.Anim.placeholder({version:1,image:'tam',frameWidth:fw,frameHeight:fh,pivot:json.pivot,animations:{attack:{row:0,frames:t.frames,fps:t.fps,loop:t.loop}}});
+      g.drawImage(ph,0,0,t.frames*fw,fh,0,row*fh,t.frames*fw,fh);
+      A[t.ten]={row,frames:t.frames,fps:t.fps,loop:t.loop,hitFrames:t.hitFrames};
+    } else {
+      const src=A[t.chep.ten]; g.drawImage(img,t.chep.khung*fw,src.row*fh,fw,fh,0,row*fh,fw,fh);
+      A[t.ten]={row,frames:1,fps:t.fps,loop:t.loop};
+    }
+    row++;
+  }
+  const J={version:1,image:json.image,frameWidth:fw,frameHeight:fh,pivot:[json.pivot[0],json.pivot[1]],animations:A};
+  const s=TV.Anim.taoSheet(c,J); s.json=J; s.thatSu=d.ten.slice(); s.tam=them.map(t=>t.ten); s.anhGhep=c;
+  return s;
+}
+async function napAnim2D(){
+  if(!window.TV || !TV.Anim) throw new Error('thiếu lib/anim2d.js');
+  const N=TV.ANIM2D_NHUNG;   // bản build: JSON + PNG nhúng sẵn (build-demo.py)
+  let json, src;
+  if(N){ json=N.json; src=N.anh; }
+  else { const r=await fetch(ANIM2D_JSON,{cache:'no-cache'}); if(!r.ok) throw new Error('lỗi mạng '+r.status+' khi tải '+ANIM2D_JSON); json=await r.json(); src='anim/'+json.image; }
+  TV.Anim.kiemTra(json);
+  let img, tamAnh=false;
+  try{ img=await TV.Anim.napAnh(src); }
+  catch(e){ console.warn('anim2d: '+e.message+' → placeholder'); img=TV.Anim.placeholder(json); tamAnh=true; }
+  const s=ghepSheet2D(img,json); if(tamAnh){ s.placeholder=true; s.tam=s.thatSu.concat(s.tam); s.thatSu=[]; }
+  return s;
+}
 function coWebGL(){ try{ const c=document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl')||c.getContext('experimental-webgl'))); }catch(e){ return false; } }
 function napThree(){
   if(window.THREE) return Promise.resolve();
@@ -1453,6 +1536,17 @@ async function boot(){
     LAM48 = la!==A.lam; LAM3D = !!l3 && la===l3;   // pivot giữa chân – hitbox gameplay giữ nguyên 10×15
     LS=mkSet(la); AN=LS.anims;
     LES=Object.assign({},LS,{n:tint(LS.n,'#CEF0D6',0.8),m:tint(LS.m,'#CEF0D6',0.8)});
+    LAM2D=LAM2D_E=bp2=null;
+    if(ANIM2D){   // ?anim=2d: sheet ChatGPT; lỗi → báo nhỏ, chơi tiếp bằng Lam cũ
+      setLoad(0.5,'Nạp Lam 2D (sheet ChatGPT)');
+      try{
+        const s=await napAnim2D();
+        LAM2D_E=TV.Anim.taoSheet(tint(s.anhGhep,'#CEF0D6',0.8),s.json);   // bản tô màu cho bóng Tiếng Vọng + vệt lướt
+        LAM2D=s; bp2=TV.Anim.tao(s); bp2.set('idle'); sw2=0;
+        warn('Lam 2D thử nghiệm (sheet ChatGPT) · '+(s.tam.length?'tạm: '+s.tam.join(', '):'thật: '+s.thatSu.join(', '))+(s.placeholder?' (thiếu PNG)':''),0);
+        console.info('anim2d: thật = '+s.thatSu.join(', ')+' · tạm = '+s.tam.join(', '));
+      }catch(e){ console.warn('anim2d:',e); warn('Không nạp được Lam 2D – dùng Lam cũ',0); }
+    }
     setLoad(0.6,'Dựng Quái Chuông Gỗ'); await wait(10);
     QS=addTints(mkSet(A.quaiChuong));
     const hb=QS.anims.attack.hitbox||{x:1.5,y:21,w:10,h:8};
@@ -1463,7 +1557,7 @@ async function boot(){
     if(TV.tiles.sanSang) await TV.tiles.sanSang;   // tiles-ai.js: atlas PNG giải mã không đồng bộ
     TV.tiles.taoAtlas();
     newGame();
-    window.TVDEMO={ready:true, lam:la.kiemTra.length, imgs:ims.filter(Boolean).length};
+    window.TVDEMO={ready:true, lam:la.kiemTra.length, imgs:ims.filter(Boolean).length, anim2d:LAM2D?{thatSu:LAM2D.thatSu,tam:LAM2D.tam,pivot:LAM2D.pivot,o:[LAM2D.fw,LAM2D.fh]}:null};
     setLoad(1,'Xong!'); await wait(150);
     loadEl.hidden=true; startEl.hidden=false; booting=false;
     requestAnimationFrame(loop);
