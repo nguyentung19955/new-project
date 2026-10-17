@@ -1,62 +1,81 @@
-# Báo cáo RUN – Lam 3/4, 8 khung · 12 FPS · loop (vòng 1)
+# Báo cáo RUN – Lam 3/4, 8 khung · 12 FPS · loop – **vòng 2** (sửa 4 điểm theo review)
 
-Phạm vi: chỉ thêm animation **run** vào `proto-lam/proto.html` (khối keyframe/thủ tục + API `PROTO.xuatRun`, một kênh tư thế `chanCung` để chân đi theo hông khi tay dùng IK) và script `proto-lam/xuat-run.py`. **Không đổi** mô hình, rig, camera (xoay 22°, nhìn xuống 12°), tỉ lệ, bảng màu, pivot, hậu kỳ pixel. Idle giữ nguyên bản chuẩn V3 (6 khung render lại từ cùng trang **trùng từng pixel** với `out/idle/idle-*.png`). Không đụng `game/demo.html`, `game/lib/*`, `art/sprite/*`, `tools/*`, `game/xem-thu/anim2d.html`.
+Phạm vi: đúng 4 mục ChatGPT yêu cầu, chỉ trong `proto-lam/proto.html` (các chỉnh **chỉ bật khi animation là Run** qua `lam.datCheDo('run')`) và `proto-lam/xuat-run.py` (thêm so sánh vòng 1/vòng 2, kiểm Idle trùng pixel). **Giữ nguyên:** 8 khung, 12 FPS, pivot [32,63], quỹ đạo hai chân, rig, camera (xoay 22°, nhìn xuống 12°), tỉ lệ, toon 3 tông, hậu kỳ pixel, bảng 12 màu, alpha 0/255, viền ngoài 1 px. Không làm Jump/Fall/Attack; không đụng `game/demo.html`, `game/lib/*`, `art/sprite/*`, `tools/*`, `game/xem-thu/anim2d.html`.
 
-Ảnh để xem: `run-x4.png` / `run-x8.png` (8 khung có số + ms), `run.gif` (×4, lặp vô hạn), `silhouette.png` (bóng đen + pivot + quỹ đạo mũi 2 bàn chân), `quy-dao-chan.png`, `chong-silhouette.png`, `idle-run-idle.gif`, `trong-game.png` (×2, 8 khung dọc lối đi Làng Chuông cạnh Quái Chuông Gỗ), `lat-check.png`, `anim2d-check.png`. Số liệu: `kiem-tra.json`. Sheet: `game/anim/lam-proto.png` + `lam-proto.anim.json` (hàng 0 idle 6 khung 8 FPS – **bằng từng pixel** hàng 0 của `lam-idle-proto.png`; hàng 1 run 8 khung 12 FPS; hàng 2–4 trong suốt). `lam-idle-proto.*` giữ nguyên để đối chiếu.
+Ảnh để xem: **`so-sanh-v1-v2-x4.png`** (vòng 1 trên / vòng 2 dưới, 8 khung), `run-x4.png` / `run-x8.png`, `run.gif` (×4, lặp vô hạn), `silhouette.png`, `quy-dao-chan.png`, `chong-silhouette.png`, `idle-run-idle.gif`, `trong-game.png`, `lat-check.png`, `anim2d-check.png`. Số liệu: `kiem-tra.json` (khoá mới: `mauChan`, `vatAoGan`, `soVoiVong1`, `idle`, `chuong.dinhDayChamMuMoiKhung`). Bản vòng 1 giữ ở `vong1/` (run-0..7.png, run-x4.png, kiem-tra.json). Sheet: `game/anim/lam-proto.png` (hàng 0 idle – trùng từng pixel `lam-idle-proto.png`; hàng 1 run mới) + `lam-proto.anim.json` (không đổi nội dung).
 
-Cách dựng: thủ tục theo pha u ∈ [0,1), chân gần camera pha u, chân xa pha u + 0,5. Chân chống đất u = 0 → 0,375 (F0..F3) trượt **đều** ra sau x = +S, +S/3, −S/3, −S (S = 0,15 đơn vị ≈ 6,3 px), mắt cá đặt theo góc bàn chân để mũi/gót luôn chạm hàng 63; pha vung gót đá cao rồi hạ, F0 còn ≈ 1 px trên đất. Chân xa hạ bù 0,025 đơn vị vì camera nhìn xuống 12° làm chân xa (z +0,07) hiện cao hơn chân gần ≈ 1,3 px. Tay dùng IK như Idle (mục tiêu bàn tay vung ± 0,045–0,05); kiếm ở tay xa, lưỡi luôn hướng trước, xoay cổ tay ±21–28°. Áo choàng/chuông: mô phỏng con lắc tất định, "gió" = 2,2 × v (v = 2,0) + nhấp −2,5·sin(4πt/T) theo nhịp bước, chạy ấm 8 vòng rồi lấy khung ở vòng cuối.
+## Mục 1 – Chân xa sáng hơn một bậc (chỉ màu trong bảng) – ĐẠT
 
-## 1. RUN – từng dòng tiêu chí
+*Làm gì:* đổi ramp toon của quần xa + ủng xa đúng **một bậc trong bảng** (`vien→ao0`, `ao0→ao1`): quần xa `['vien','ao0','ao0']` → `['ao0','ao1','ao1']`, ủng xa `['vien','ao0','ao0']` → `['ao0','ao1','ao1']`. Chỉ đổi 3 uniform màu khi đặt khung Run (`datMauChanXa(true)`); bias, ID, hình học, chân gần giữ nguyên. Không thêm màu: vẫn 12 màu kể cả trong suốt, `mauNgoaiBang = []`.
 
-**Tư thế từng khung** (xem `run-x8.png`, cột x mũi ủng theo mặt nạ ID – gần | xa; pivot x = 32):
+*Trước → sau (pixel quần + ủng chân xa theo mặt nạ ID, `kiem-tra.json → mauChan`):*
 
-| Khung | Yêu cầu | Thực tế | |
-|---|---|---|---|
-| F0 | chân gần vươn trước, chân xa ra sau, sắp tiếp đất | ủng gần tâm x 38 (trước +6), đáy hàng **62** (1 px trên đất, góc gót +8°); ủng xa tâm x 29 (sau −3), đáy hàng 60 (vừa rời đất) | ĐẠT |
-| F1 | chân trước chịu lực, thân hạ thấp | ủng gần x 34, đáy hàng **63**, bàn chân phẳng; hông thấp nhất (y 51,1 px) | ĐẠT |
-| F2 | hai chân ngang nhau, thân bắt đầu nâng | ủng gần x 30 (đáy 63, gót nhấc), ủng xa x 38 (đáy 59, gối nâng) – cách nhau 8 px ở mặt nạ (3D: mắt cá 29 / 36); hông về giữa (50,2) | ĐẠT (hai chân "ngang nhau" theo nghĩa đang vượt nhau; mặt nạ ủng còn lệch 8 px vì ủng dài 10 px) |
-| F3 | đạp mạnh về sau, thân cao nhất | ủng gần x 25,5 (sau −6,5), đáy **63** chỉ bằng mũi (góc −26°); ủng xa vươn trước x 39,5 đáy 62; hông cao nhất (49,4) | ĐẠT |
-| F4–F7 | đối xứng với chân xa | F4 ủng xa x 40,5 đáy 62 / gần x 27 đáy 60; F5 xa đáy **63** hông thấp nhất; F6 xa đáy **63** gần đáy 59; F7 xa đáy **63** (mũi) hông cao nhất | ĐẠT |
+| Khung | Vòng 1 | Vòng 2 |
+|---|---|---|
+| F0 | #1A212B ×36, #0C0F14 ×10 | **#212835 ×36**, #0C0F14 ×7 (viền trong), #1A212B ×3 |
+| F1 | #1A212B ×9, #0C0F14 ×8 | #212835 ×9, #0C0F14 ×6, #1A212B ×2 |
+| F2 | #1A212B ×32, #0C0F14 ×12 | #212835 ×32, #1A212B ×7, #0C0F14 ×5 |
+| F3 | #1A212B ×48, #0C0F14 ×7 | #212835 ×48, #1A212B ×7 |
+| F4 | #1A212B ×50, #0C0F14 ×8 | #212835 ×50, #1A212B ×8 |
+| F5 | #1A212B ×40, #0C0F14 ×11 | #212835 ×40, #0C0F14 ×7, #1A212B ×4 |
+| F6 | #1A212B ×26, #0C0F14 ×11 | #212835 ×26, #0C0F14 ×7, #1A212B ×4 |
+| F7 | #1A212B ×40, #0C0F14 ×11 | #212835 ×40, #1A212B ×7, #0C0F14 ×4 |
 
-Hai nửa chu kỳ cân đối: tư thế F4–F7 là F0–F3 đổi chân (cùng công thức, pha + 0,5); hông y [50,2 / 51,1 / 50,2 / 49,4] lặp đúng ở F4–F7; sai khác pixel kề nhau nửa đầu 612/737/669/644, nửa sau 605/720/639/632 (chênh ≤ 2,5 %). Khác nhau giữa 2 nửa chỉ do chân gần/xa không cùng màu và áo choàng che khác nhau. **ĐẠT**.
+Tổng 8 khung: chân xa **#0C0F14/#1A212B (≈ 78 / 281 px)** → **#212835 ×281, #1A212B ×42, #0C0F14 ×36** (phần #0C0F14 còn lại là viền trong giữa chân xa và chân gần/áo). Chân gần không đổi: #1A212B ×307, #212835 ×163, #2C3546 ×31. Chân xa không còn trùng bậc màu tối nhất của áo choàng/viền; hai chân khác nhau cả về màu lẫn viền trong nên đọc được chân trước/sau ở mọi khung (xem `so-sanh-v1-v2-x4.png`, rõ nhất F0/F2/F4/F6).
 
-**Biên độ và chuyển động:**
+## Mục 2 – Vạt áo choàng phía gần vén lên 2–3 px khi chạy – ĐẠT (có ghi chú thật)
 
-- Sải chân 4–7 px: nửa biên độ x mắt cá **6,3 px (gần) / 6,2 px (xa)**; theo mặt nạ mũi ủng 6,5 / 7,5 px (mặt nạ cộng thêm góc nghiêng bàn chân). Chân chống đất trượt ra sau đều: mũi −4,23 / −4,56 / −4,91 px mỗi khung (gần, F0→F3), −4,37 / −4,60 / −4,70 (xa, F4→F7); theo tâm mặt nạ ủng −4,0 / −4,0 / −4,5 cả hai chân – không nhảy. **ĐẠT** (hơi nhanh dần vì đường gót→mũi dài thêm khi bàn chân ngả, chênh 0,7 px).
-- Nhún thân 1–2 px: hông **1,77 px** đỉnh–đỉnh (thấp F1/F5, cao F3/F7); đỉnh mũ hàng 21–23 = **2 px**. **ĐẠT**.
-- Tay vung đối pha, bàn tay 2–4 px: bàn tay xa (kiếm) dịch **3,6 px** (x 39,8 → 43,5), bàn tay gần **4,9 px** (x 27,1 → 32,0, đã kéo ra trước bụng để thấy trên nền áo xanh). Tay xa trước nhất ở F0, chân xa trước nhất ở F4 → lệch đúng 4 khung = đối pha. **ĐẠT** (tay gần vượt 0,9 px so với mốc 4 px – đo theo mục tiêu 3D; trên ảnh chỉ thấy găng dịch ~4 px).
-- Tay cầm kiếm giữ kiếm, không đổi tay, không xuyên thân: kiếm luôn ở **tay xa**; mọi khung lưỡi + chuôi/chắn + găng tay xa là **một khối liên thông 4** (`kiemLien`), có cặp pixel kề tay–chuôi và chuôi–lưỡi; lưỡi 33–37 px, chuôi+chắn 15–17 px (idle 33–36 / 16–18). Lưỡi luôn ở phía trước thân (không pixel lưỡi/chuôi nào ở cột < 28), **không pixel nào kề áo choàng**; góc lưỡi so với ngang: +20,7 / +13,7 / −4,3 / −21,6 / −27,8 / −21,5 / −4,3 / +13,8° (chếch lên khi tay ra trước, chếch xuống khi tay ra sau – hướng mũi luôn về trước nên không chui vào áo/thân). Đầu kiếm (58,41) → (55,56): cung mượt, không nhảy. **ĐẠT**.
-- Áo choàng bay ngược hướng chạy, đuôi dao động 2–4 px, trễ pha: cột trái bbox áo 6–10 (idle 12–13) → **xoè sau 21–25 px**, góc mô phỏng đoạn cuối 0,29–0,85 rad (+ góc tĩnh 0,62) – bay hẳn ra sau ≈ 50–80°, gấu nâng lên hàng 55–57 (idle 58–59) nên hé chân. Đuôi áo (pixel trái nhất) dao động **x 4 px, y 4 px**; hàng gấu 55–57 = 2 px. Pha: áo cao nhất ở **F0/F4**, thân cao nhất ở F3/F7 → **trễ 1 khung**. Khép vòng mô phỏng 0,0006 px. **ĐẠT** (đuôi đo theo pixel trái nhất dao động 4 px – đúng mép trên của mốc).
-- Chuông 1–2 px, không biến dạng: tâm chuông dao động **1,2 px ngang / 1,0 px dọc**, 25–30 pixel chuông mỗi khung, thân chuông cách mép mũ **2–3 px** nền, không trùm mặt, dây liền (liên thông 8) 3–7 px ở mọi khung. **ĐẠT**. *Còn khác idle:* gốc dây ló ra sau mép mũ 1–2 px (idle chạm mũ) vì thân nghiêng 16° đưa mũ tới trước nhiều hơn vai – dây vẫn nối từ sau vai xuống chuông, trên ảnh nhìn như buộc ở viền sau mũ.
-- Thân nghiêng tới: sống lưng 15,5–16,5°, đầu hơi cúi 2,5–3,5°; hông xoay ±3°, ngực ngược ±4°.
+*Làm gì:* cột 0–5 của lưới áo (mép trước bên gần camera → gần lưng) rút chiều dài mỗi đoạn theo `AO_VEN_RUN = [0.26, 0.26, 0.24, 0.20, 0.14, 0.07, 0]` (vén/ngắn vạt gần), chỉ khi Run (`lam.aoVen`); Idle `aoVen = null`. Bên xa và lưng (cột 6–18) không đổi → áo vẫn xoè sau 22–25 px, 3 vạt rách còn nguyên.
 
-**Pivot [32,63] cố định:** `pivotRender` = [32,63] ở 8/8 khung; không căn giữa theo bbox (tâm bbox lệch pivot −0,5 … +2 px tuỳ khung, ghi ở `lat`). Nhún làm bằng hông/sống lưng, không dịch sprite. **ĐẠT**.
+*Trước → sau – hàng gấu vạt gần (hàng thấp nhất của áo trong cột 18–34, sát hai chân) và số hàng chân lộ dưới gấu đó tới đất (`vatAoGan`, `soVoiVong1.gauVatGanVenLenPx`):*
 
-**Chân chống đất ở hàng 63, không trượt bất thường:** đáy ủng gần [62, **63, 63, 63**, 60, 58, 59, 62], đáy ủng xa [60, 56, 59, 62, 62, **63, 63, 63**] → cả 6 khung chịu lực đều ở hàng 63 (`datHang63 = true`), nâng chân tối đa 5 px (gần) / 7 px (xa). Quỹ đạo x,y từng khung của mắt cá/mũi/gót 2 bàn chân (3D chiếu) và bbox ủng theo mặt nạ ID đều ghi trong `kiem-tra.json` (`quyDaoChan3D`, `ungGanBbox`, `ungXaBbox`), vẽ ở `quy-dao-chan.png` và `silhouette.png`. **ĐẠT**.
+| | F0 | F1 | F2 | F3 | F4 | F5 | F6 | F7 |
+|---|---|---|---|---|---|---|---|---|
+| gấu vạt gần vòng 1 | 55 | 56 | 57 | 56 | 55 | 56 | 56 | 56 |
+| gấu vạt gần vòng 2 | 53 | 54 | 54 | 53 | 53 | 54 | 54 | 53 |
+| **vén lên (px)** | **2** | **2** | **3** | **3** | **2** | **2** | **2** | **3** |
+| hàng chân lộ dưới gấu vòng 1 → 2 | 8→10 | 7→9 | 6→9 | 7→10 | 8→10 | 7→9 | 7→9 | 7→10 |
 
-**Khép vòng F7 → F0:** sai khác pixel F7→F0 = **632**, các cặp kề khác 605–737 (trung bình 661) → điểm nối không nổi bật hơn các bước khác; trạng thái áo/chuông khép vòng (lệch 0,0006 px sau 8 vòng ấm). anim2d "Phát 20 vòng": 800 bước logic, 40 bước/vòng, nối 7→0 liền mạch. **ĐẠT**.
+*Ghi chú thật:* render thử **ẩn áo choàng** (lớp `ao`) và so mặt nạ ID với bản có áo cho thấy ở vòng 1 áo choàng thực tế **không che pixel chân nào** (chỉ 1 px vạch ủng gần ở F3). Phần đùi/gối bị che là do **gấu áo thân (thân xanh + quần hông)**, không phải vạt áo choàng. Vì vậy vén vạt gần làm vùng chân tách khỏi khối áo trong silhouette thêm 2–3 hàng (số ở bảng trên, kiểm trên `silhouette.png`/`chong-silhouette.png`), nhưng **số pixel chân gần (ID) từng khung không tăng** (18/18/24/20/25/18/21/15 như vòng 1). Muốn thấy thêm gối thật sự phải ngắn gấu áo thân khi chạy – ngoài 4 mục, chưa làm, chờ duyệt.
 
-**Idle → Run → Idle** (`idle-run-idle.gif`, `chuyenIdleRun`): idle khung 6 → run F0 khác 970 px, run F7 → idle khung 1 khác 850 px (đổi tư thế cả thân + áo bay lên, không phải nhảy vị trí); hàng 63 idle: ủng cột 28–40, run F0: 35–38, run F7: 30–41 → chân vẫn nằm trong cùng vùng đất, không giật ngang. Mắt, chuông, kiếm cùng vị trí ±2 px.
+## Mục 3 – Dây chuông bám mép mũ ở mọi khung – ĐẠT
 
-## 5. Điều kiện nghiệm thu chung
+*Làm gì:* gốc dây (neo trong hệ ngực) **dời theo mũ khi thân nghiêng**: mỗi độ nghiêng thêm so với idle (`lean − 3°`, run = 16° ± 0,5°) dời neo `(+0,0026, +0,0012, 0)` đơn vị → tổng ≈ (+0,034, +0,016) ≈ 1,5 px tới trước, 0,7 px lên; đồng thời chuông ngả sau thêm `CH_REST_RUN = 0,20 rad` chỉ khi Run để thân chuông không bị kéo sát mũ. Dời này dùng cả trong mô phỏng con lắc (gia tốc neo) và khi dựng, chỉ khi `cheDoRun`; Idle lean 3–4° nhưng cờ tắt nên không đổi.
 
-- PNG riêng từng khung ✔ (`run-0..7.png` 64×64), sheet 512×320 ✔ (`game/anim/lam-proto.png`), JSON ✔ (`lam-proto.anim.json` version 1), GIF ✔ (`run.gif` ×4, 8 khung, **loop = 0 = lặp vô hạn**; thời lượng GIF làm tròn bội 10 ms nên xen 80/90 ms, trung bình 83,75 ms). **ĐẠT**.
-- Alpha / palette / kích thước / pivot bằng script ✔: **12 màu kể cả trong suốt** (cùng bảng Idle, không màu ngoài bảng), alpha chỉ 0/255, 8 ô 64×64, pivot render [32,63] mọi khung, viền ngoài 1 px, viền trong theo ID. **ĐẠT**.
-- Contact sheet có số khung + ms ✔ (`run-x4.png`), phóng nearest ×8 ✔ (`run-x8.png`). **ĐẠT**.
-- Thử trên nền gameplay cỡ thật ✔ (`trong-game.png`: 480×270 ×2, 8 khung dọc lối đi y=241, Quái Chuông Gỗ bên phải) và nạp sheet vào `game/xem-thu/anim2d.html` headless (không sửa trang; nạp qua ô URL) → `anim2d-check.png`: animation **run**, 8 khung @ 12 fps, loop true, "Kiểm lật" ĐẠT (lệch trái/phải/đáy 0, 0 pixel không khớp). **ĐẠT**.
-- Hướng gốc và lật ✔ (`lat-check.png`, pivotLat = [31,63]): 8/8 khung lệch trái/phải/đáy = 0, 0 pixel sai. **ĐẠT**.
-- Không khung nào thiếu kiếm, chuông, mắt, bộ phận: mỗi khung đều có 2 điểm mắt, lưỡi ≥ 33 px, chuôi/chắn ≥ 15 px, chuông ≥ 25 px, dây ≥ 3 px, trâm ≥ 6 px, vạch ủng gần ≥ 12 px, 2 ủng, 2 tay, 2 ống chân, mũ, thân, áo. *Che khuất tạm thời (không phải thiếu):* vạch cổ ủng **chân xa** không lộ ở F1–F2 (chân xa đang vung sau, bị chân gần + áo choàng che); đùi chân xa chỉ còn 1 px ở F6. **ĐẠT có ghi chú**.
-- Animation loop không giật ở điểm nối ✔ (mục khép vòng). Non-loop: không áp dụng. Chuỗi Idle → Run → Jump → Fall → Idle → Attack → Idle: mới có Idle → Run → Idle (các animation khác chưa làm theo quy trình duyệt lần lượt).
-- Không tự ý đổi thiết kế Lam ✔.
+*Trước → sau (`chuong.dinhDayCachMuPx` = số pixel nền giữa đỉnh dây và mũ cùng hàng về phía trước; `khoangCachToiMu` = pixel nền giữa thân chuông và mép lưng mũ):*
+
+| | F0 | F1 | F2 | F3 | F4 | F5 | F6 | F7 |
+|---|---|---|---|---|---|---|---|---|
+| đỉnh dây cách mũ vòng 1 | 2 | 2 | 1 | 1 | 1 | 2 | 1 | 1 |
+| **đỉnh dây cách mũ vòng 2** | **0** | **0** | **0** | **0** | **0** | **0** | **0** | **0** |
+| đỉnh dây kề pixel mũ (8 lân cận) | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ |
+| dây (px) vòng 1 → 2 | 7→4 | 6→3 | 5→5 | 6→4 | 3→4 | 5→3 | 3→4 | 4→5 |
+| thân chuông cách mũ vòng 1 → 2 | 3→2 | 3→2 | 3→2 | 3→2 | 2→2 | 2→1 | 2→2 | 3→2 |
+
+Đỉnh dây giờ ở cột 27 (vòng 1: 25–26) đúng mép lưng mũ, dây liền (liên thông 8) 3–5 px ở mọi khung, chuông 26–28 px, **không xuyên mũ** (`khongXuyenMu = true`, ≥ 1 px nền, F5 là 1 px), không trùm mặt. Dao động chuông **1,0 px ngang / 0,8 px dọc** (vòng 1: 1,2 / 1,0) – trong mốc 1–2 px, hình chuông không biến dạng (26–28 px/khung).
+
+## Mục 4 – Giảm biên độ gió nhấp – ĐẠT
+
+*Làm gì:* `gio` −2,5 → **−1,5** × sin(4πt/T) (`RUN.gioNhap`); gió nền 2,2·v giữ nguyên nên áo vẫn bay hẳn ra sau.
+
+*Trước → sau:* đuôi áo (pixel trái nhất) dao động **x 4 / y 4 px → x 3 / y 2 px**; hàng gấu 55–57 (2 px) → 54–56 (2 px); góc đoạn cuối áo 0,29–0,85 rad → 0,41–0,77 rad (vẫn + góc tĩnh 0,62 → bay sau ≈ 60–80°); xoè sau 21–25 px → 22–25 px (`bayRaSau = true`). Sai khác pixel khung kề **612/737/669/644/605/720/639/632 → 588/693/666/625/586/698/658/608** (hai cặp lớn nhất F1→F2, F5→F6 giảm 44/22 px); khép vòng F7→F0 = 608 ≤ max → không nổi bật. Pha vẫn trễ 1 khung so với thân (áo cao nhất F0/F4, thân cao nhất F3/F7). Lệch khép vòng mô phỏng 0,0005 px.
+
+## Xác nhận GIỮ NGUYÊN (số đo `kiem-tra.json`)
+
+- **Quỹ đạo hai chân:** mắt cá/mũi/gót 2 bàn chân (3D chiếu) so với `vong1/kiem-tra.json`: lệch tối đa **0,000 px** ở cả 8 khung (`soVoiVong1.lechQuyDaoChan3DPxToiDa = 0`); đáy ủng theo mặt nạ gần [62,63,63,63,60,58,59,62], xa [60,56,59,62,62,63,63,63] – y hệt vòng 1; `datHang63 = true`; dịch x mũi −4,23/−4,56/−4,91 (gần), −4,37/−4,60/−4,70 (xa); sải 6,3 / 6,2 px.
+- **Pivot** `pivotRender = [32,63]` 8/8 khung; lật (`lat-check.png`, pivotLat [31,63]) lệch 0/0/0, 0 pixel sai ở 8 khung; anim2d "Kiểm lật" ĐẠT, "Phát 20 vòng" 800 bước, nối 7→0 liền.
+- **Màu/alpha:** 12 màu kể cả trong suốt, 0 màu ngoài bảng, alpha chỉ 0/255, viền ngoài 1 px, viền trong theo ID.
+- **Nhún/tay/kiếm:** hông 1,77 px, đỉnh mũ 2 px; tay xa 3,63 px, tay gần 4,91 px, đối pha; kiếm liền tay ở 8 khung, không kề áo choàng, lưỡi 33–37 px, góc lưỡi y như vòng 1.
+- **Idle V3 trùng từng pixel:** `xuat-run.py` render lại 6 khung idle từ cùng trang (sau khi đã sửa) và so với `out/idle/idle-0..5.png`: **0 pixel khác ở cả 6 khung** (`idle.trungPixel = [true×6]`), và trùng hàng 0 của `game/anim/lam-idle-proto.png` (`trungSheetIdleProto = true`). Hàng 0 sheet `lam-proto.png` cũng trùng từng pixel `lam-idle-proto.png` (kiểm riêng bằng PIL, 6/6 ô). `xuat-idle.py`, `out/idle/*` không đổi.
+- Chuỗi Idle → Run → Idle: hàng 63 idle ủng cột 28–40, run F0 35–38, F7 30–41 – cùng vùng đất như vòng 1.
 
 ## Thẳng thắn – điểm còn yếu
 
-1. **Chân đọc chưa rõ trong silhouette.** Áo choàng dài + vạt bên gần che đùi/gối, chân chỉ lộ ≈ 6–9 hàng dưới gấu (hàng 55–63), và chân xa màu gần đen (#0C0F14/#1A212B) trùng màu mặt trong áo nên ở F3/F7 bàn chân đạp sau nhìn là một khối tối dính gấu áo; gót đá cao sau lưng (F0/F4, 5–7 px) nằm hẳn sau áo nên không thấy. Nhịp chạy nhận ra nhờ ủng trước/sau luân phiên, nhún, tay và áo bay hơn là nhờ hình chân. Muốn rõ hơn phải đổi mô hình/màu (vạt áo bên gần ngắn hơn, chân xa sáng hơn một bậc) – ngoài phạm vi, chờ duyệt.
-2. **Gốc dây chuông ló 1–2 px sau mép mũ** (idle: chạm) do thân nghiêng 16°; dây liền và chuông không xuyên mũ, nhưng chỗ buộc nhìn hơi lơ lửng ở F0–F3/F5/F7 khi phóng to.
-3. **Áo choàng bay mạnh và gấu dao động theo pixel trái nhất 4 px** (mép trên của 2–4 px); đuôi áo thay đổi hình (vạt rách co giãn 55–57) nên giữa F1→F2 và F5→F6 sai khác pixel lớn nhất (737/720) – vẫn dưới ngưỡng "giật" nhưng là nơi mắt dễ thấy áo "nhấp". Nếu muốn êm hơn có thể giảm `gio` −2,5 → −1,5 (đuôi còn ≈ 2–3 px).
-
-Ngoài ra: đáy ủng chân gần ở F0 nằm hàng 62 (sắp tiếp đất) rồi F1 hàng 63 – đúng tiêu chí nhưng khác Idle (chân luôn hàng 63) nên khi chuyển Idle → Run bàn chân trước nhấc 1 px đúng khung đầu; tay gần vung 4,9 px hơi vượt mốc 4 px.
+1. **Mục 2 chỉ "đúng chữ", chưa đúng ý.** Vạt áo choàng gần đã vén 2–3 px nhưng không lộ thêm pixel gối/đùi nào vì áo choàng vốn không che chân; cái che là gấu áo thân + quần hông (hàng ≈ 50–54). Chân vẫn chỉ đọc được từ hàng 50–54 xuống. Nếu muốn thấy gối thật, vòng sau cần cho phép ngắn gấu áo thân/quần hông 2–3 px khi Run (Idle giữ nguyên bằng cùng cơ chế `cheDoRun`).
+2. **Ủng xa giờ sáng hơn ủng gần** (#212835 vs #1A212B) vì dịch nguyên một bậc cả quần lẫn ủng; đọc trước/sau dựa vào chồng lấp + viền trong chứ không còn theo quy ước "xa tối hơn". Nếu muốn giữ quy ước, ủng xa có thể lấy ramp `['ao0','ao0','ao1']` (bằng ủng gần) – nhưng khi đó hai ủng trùng màu.
+3. **Chuông sát mũ hơn:** thân chuông cách mép mũ 2 px (F5: 1 px) thay vì 3 px như idle/vòng 1, và dây ngắn còn 3 px ở F1/F5 (mốc ≥ 3). Dây treo nghiêng hơn (chuông ngả sau thêm 0,2 rad) nên nhìn như bị gió thổi – hợp khi chạy nhưng khác tư thế idle rõ hơn trước.
+4. F2/F6 ("ngang nhau") hai ủng vẫn chồng thành một khối tối 8 px rộng; vạch cổ ủng xa vẫn bị che ở F1–F2; đùi xa chỉ 1 px ở F6 – như vòng 1.
 
 ## Cách chạy lại
 
-`python3 proto-lam/xuat-run.py` (≈ 10 s; `--xem` chỉ in số liệu + `run-x8.png`), rồi `python3 proto-lam/build.py` để cập nhật `proto.build.html` (tab **Run 64**).
+`python3 proto-lam/xuat-run.py` (≈ 9 s; `--xem` chỉ in số liệu + `run-x8.png`; lần đầu tự lưu `vong1/` nếu chưa có), rồi `python3 proto-lam/build.py` để cập nhật `proto.build.html` (tab **Run 64**). Tham số vòng 2 trong `proto.html`: `MAU_CHAN_XA.run`, `AO_VEN_RUN`, `DAY_THEO_MU`, `CH_REST_RUN`, `RUN.gioNhap` (có thể ghi đè qua `PROTO.TUY` khi dò số).

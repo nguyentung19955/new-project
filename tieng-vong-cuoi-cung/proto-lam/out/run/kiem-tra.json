@@ -46,7 +46,7 @@
    64
   ],
   [
-   10,
+   9,
    21,
    58,
    64
@@ -58,7 +58,7 @@
    64
   ],
   [
-   6,
+   7,
    22,
    58,
    64
@@ -70,7 +70,7 @@
    64
   ],
   [
-   10,
+   9,
    20,
    60,
    64
@@ -90,11 +90,11 @@
   53,
   55,
   51,
-  48,
+  49,
   50,
-  52,
   51,
-  50
+  51,
+  51
  ],
  "pivotRender": [
   [
@@ -854,19 +854,19 @@
   }
  },
  "saiKhacKeNhau": [
-  612,
-  737,
-  669,
-  644,
-  605,
-  720,
-  639,
-  632
+  588,
+  693,
+  666,
+  625,
+  586,
+  698,
+  658,
+  608
  ],
- "saiKhacF7F0": 632,
- "saiKhacKeNhauTrungBinh": 660.9,
+ "saiKhacF7F0": 608,
+ "saiKhacKeNhauTrungBinh": 644.9,
  "khepVongKhongGiat": true,
- "lechKhepVongMoPhongPx": 0.0006,
+ "lechKhepVongMoPhongPx": 0.0005,
  "nhunThan": {
   "hangDinhBbox": [
    21,
@@ -992,44 +992,44 @@
   "bienDoTayGanPx": 4.91,
   "tamTayGanMatNa": [
    [
-    29.1,
-    45.7,
-    32
+    29.0,
+    45.9,
+    31
    ],
    [
-    29.1,
-    45.8,
-    37
+    29.5,
+    46.0,
+    30
    ],
    [
-    29.8,
-    44.9,
-    33
+    30.1,
+    45.2,
+    30
    ],
    [
-    30.3,
-    44.8,
+    30.5,
+    45.1,
+    31
+   ],
+   [
+    30.6,
+    45.4,
     35
    ],
    [
-    30.4,
-    45.2,
-    39
+    30.0,
+    45.4,
+    37
    ],
    [
-    29.9,
+    30.0,
+    45.6,
+    29
+   ],
+   [
+    29.3,
     45.3,
-    38
-   ],
-   [
-    29.6,
-    45.1,
-    36
-   ],
-   [
-    29.6,
-    45.0,
-    28
+    31
    ]
   ],
   "tamTayXaMatNa": [
@@ -1265,22 +1265,22 @@
     8,
     38,
     35,
-    55
+    54
    ],
    [
     7,
     39,
     35,
-    56
+    54
    ],
    [
     10,
     38,
     34,
-    57
+    56
    ],
    [
-    11,
+    10,
     37,
     34,
     56
@@ -1289,22 +1289,22 @@
     8,
     38,
     35,
-    55
+    54
    ],
    [
-    7,
+    8,
     39,
     35,
-    56
+    54
    ],
    [
     10,
     38,
     35,
-    57
+    55
    ],
    [
-    11,
+    10,
     37,
     35,
     56
@@ -1313,7 +1313,7 @@
   "duoiAo": [
    [
     8,
-    53
+    54
    ],
    [
     7,
@@ -1321,190 +1321,139 @@
    ],
    [
     10,
-    57
+    56
    ],
    [
-    11,
+    10,
     56
    ],
    [
     8,
-    53
+    54
    ],
    [
-    7,
+    8,
     54
    ],
    [
     10,
-    57
+    55
    ],
    [
-    11,
-    55
+    10,
+    56
    ]
   ],
   "hangGau": [
+   54,
+   54,
+   56,
+   56,
+   54,
+   54,
    55,
-   56,
-   57,
-   56,
-   55,
-   56,
-   57,
    56
   ],
-  "bienDoDuoiXPx": 4,
-  "bienDoDuoiYPx": 4,
+  "bienDoDuoiXPx": 3,
+  "bienDoDuoiYPx": 2,
   "bienDoGauPx": 2,
   "xoeSauPx": [
    24,
    25,
    22,
-   21,
-   24,
-   25,
    22,
-   21
+   24,
+   24,
+   22,
+   22
   ],
   "khungDuoiXaNhat": [
-   1,
-   5
+   1
   ],
   "thSimDoanCuoi": [
-   0.85,
-   0.663,
-   0.288,
-   0.37,
-   0.85,
-   0.663,
-   0.288,
-   0.37
+   0.774,
+   0.735,
+   0.407,
+   0.418,
+   0.774,
+   0.735,
+   0.407,
+   0.418
   ],
   "thSimDoanDau": [
-   0.382,
-   0.449,
-   0.219,
-   0.159,
-   0.382,
-   0.449,
-   0.219,
-   0.159
+   0.364,
+   0.418,
+   0.243,
+   0.193,
+   0.364,
+   0.418,
+   0.243,
+   0.193
   ],
   "bayRaSau": true
  },
  "chuong": {
   "tam": [
    [
-    20.0,
-    33.9,
-    25
-   ],
-   [
-    19.9,
-    34.4,
-    26
-   ],
-   [
-    20.4,
-    34.6,
-    26
-   ],
-   [
-    20.8,
-    34.0,
+    20.6,
+    32.8,
     27
    ],
    [
     21.0,
-    33.9,
+    33.1,
+    27
+   ],
+   [
+    21.0,
+    33.2,
     28
    ],
    [
-    20.9,
-    34.4,
+    21.3,
+    32.6,
+    26
+   ],
+   [
+    21.3,
+    32.9,
+    27
+   ],
+   [
+    21.6,
+    33.0,
     28
+   ],
+   [
+    21.4,
+    33.0,
+    27
    ],
    [
     21.1,
-    34.2,
-    30
-   ],
-   [
-    20.8,
-    33.6,
-    26
+    32.4,
+    27
    ]
   ],
-  "bienDoXPx": 1.2,
-  "bienDoYPx": 1.0,
+  "bienDoXPx": 1.0,
+  "bienDoYPx": 0.8,
   "soPixel": [
-   25,
-   26,
+   27,
+   27,
+   28,
    26,
    27,
    28,
-   28,
-   30,
-   26
+   27,
+   27
   ],
   "ngoaiMu": [
    {
     "bboxChuong": [
-     17,
-     31,
-     23,
-     37
-    ],
-    "khoangCachToiMu": 3,
-    "chuongTrumMat": false
-   },
-   {
-    "bboxChuong": [
-     17,
-     32,
-     23,
-     37
-    ],
-    "khoangCachToiMu": 3,
-    "chuongTrumMat": false
-   },
-   {
-    "bboxChuong": [
-     18,
-     32,
-     23,
-     37
-    ],
-    "khoangCachToiMu": 3,
-    "chuongTrumMat": false
-   },
-   {
-    "bboxChuong": [
-     18,
-     31,
-     23,
-     37
-    ],
-    "khoangCachToiMu": 3,
-    "chuongTrumMat": false
-   },
-   {
-    "bboxChuong": [
      18,
      31,
      24,
-     37
-    ],
-    "khoangCachToiMu": 2,
-    "chuongTrumMat": false
-   },
-   {
-    "bboxChuong": [
-     18,
-     32,
-     24,
-     37
+     36
     ],
     "khoangCachToiMu": 2,
     "chuongTrumMat": false
@@ -1514,7 +1463,7 @@
      18,
      31,
      24,
-     37
+     36
     ],
     "khoangCachToiMu": 2,
     "chuongTrumMat": false
@@ -1523,60 +1472,80 @@
     "bboxChuong": [
      18,
      31,
-     23,
-     37
+     24,
+     36
     ],
-    "khoangCachToiMu": 3,
+    "khoangCachToiMu": 2,
+    "chuongTrumMat": false
+   },
+   {
+    "bboxChuong": [
+     19,
+     30,
+     24,
+     35
+    ],
+    "khoangCachToiMu": 2,
+    "chuongTrumMat": false
+   },
+   {
+    "bboxChuong": [
+     19,
+     31,
+     24,
+     36
+    ],
+    "khoangCachToiMu": 2,
+    "chuongTrumMat": false
+   },
+   {
+    "bboxChuong": [
+     19,
+     31,
+     25,
+     36
+    ],
+    "khoangCachToiMu": 1,
+    "chuongTrumMat": false
+   },
+   {
+    "bboxChuong": [
+     19,
+     31,
+     24,
+     36
+    ],
+    "khoangCachToiMu": 2,
+    "chuongTrumMat": false
+   },
+   {
+    "bboxChuong": [
+     18,
+     30,
+     24,
+     35
+    ],
+    "khoangCachToiMu": 2,
     "chuongTrumMat": false
    }
   ],
   "day": [
    {
     "lien": true,
-    "soPixel": 7,
+    "soPixel": 4,
     "dinhDay": [
-     25,
+     27,
      29
     ],
-    "dinhChamMu": false,
-    "dinhChamCoAo": false
-   },
-   {
-    "lien": true,
-    "soPixel": 6,
-    "dinhDay": [
-     25,
-     30
-    ],
-    "dinhChamMu": false,
-    "dinhChamCoAo": false
-   },
-   {
-    "lien": true,
-    "soPixel": 5,
-    "dinhDay": [
-     25,
-     29
-    ],
-    "dinhChamMu": false,
-    "dinhChamCoAo": false
-   },
-   {
-    "lien": true,
-    "soPixel": 6,
-    "dinhDay": [
-     25,
-     28
-    ],
-    "dinhChamMu": false,
+    "dinhChamMu": true,
     "dinhChamCoAo": false
    },
    {
     "lien": true,
     "soPixel": 3,
     "dinhDay": [
-     26,
-     29
+     27,
+     30
     ],
     "dinhChamMu": true,
     "dinhChamCoAo": false
@@ -1585,17 +1554,7 @@
     "lien": true,
     "soPixel": 5,
     "dinhDay": [
-     25,
-     30
-    ],
-    "dinhChamMu": false,
-    "dinhChamCoAo": false
-   },
-   {
-    "lien": true,
-    "soPixel": 3,
-    "dinhDay": [
-     26,
+     27,
      29
     ],
     "dinhChamMu": true,
@@ -1605,36 +1564,251 @@
     "lien": true,
     "soPixel": 4,
     "dinhDay": [
-     25,
+     27,
      28
     ],
-    "dinhChamMu": false,
+    "dinhChamMu": true,
+    "dinhChamCoAo": false
+   },
+   {
+    "lien": true,
+    "soPixel": 4,
+    "dinhDay": [
+     27,
+     29
+    ],
+    "dinhChamMu": true,
+    "dinhChamCoAo": false
+   },
+   {
+    "lien": true,
+    "soPixel": 3,
+    "dinhDay": [
+     27,
+     30
+    ],
+    "dinhChamMu": true,
+    "dinhChamCoAo": false
+   },
+   {
+    "lien": true,
+    "soPixel": 4,
+    "dinhDay": [
+     27,
+     29
+    ],
+    "dinhChamMu": true,
+    "dinhChamCoAo": false
+   },
+   {
+    "lien": true,
+    "soPixel": 5,
+    "dinhDay": [
+     27,
+     28
+    ],
+    "dinhChamMu": true,
     "dinhChamCoAo": false
    }
   ],
   "thSim": [
-   0.309,
-   0.367,
-   0.251,
-   0.175,
-   0.256,
-   0.315,
-   0.233,
-   0.199
+   0.307,
+   0.366,
+   0.253,
+   0.176,
+   0.254,
+   0.314,
+   0.235,
+   0.2
   ],
   "khongXuyenMu": true,
   "dayLienMoiKhung": true,
   "dinhDayChamMu": [
-   false,
-   false,
-   false,
-   false,
    true,
-   false,
    true,
-   false
+   true,
+   true,
+   true,
+   true,
+   true,
+   true
   ],
   "dinhDayCachMuPx": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "dinhDayChamMuMoiKhung": true
+ },
+ "mauChan": {
+  "chanXa(quan+ung)": [
+   {
+    "#212835": 36,
+    "#0C0F14": 7,
+    "#1A212B": 3
+   },
+   {
+    "#212835": 9,
+    "#0C0F14": 6,
+    "#1A212B": 2
+   },
+   {
+    "#212835": 32,
+    "#1A212B": 7,
+    "#0C0F14": 5
+   },
+   {
+    "#212835": 48,
+    "#1A212B": 7
+   },
+   {
+    "#212835": 50,
+    "#1A212B": 8
+   },
+   {
+    "#212835": 40,
+    "#0C0F14": 7,
+    "#1A212B": 4
+   },
+   {
+    "#212835": 26,
+    "#0C0F14": 7,
+    "#1A212B": 4
+   },
+   {
+    "#212835": 40,
+    "#1A212B": 7,
+    "#0C0F14": 4
+   }
+  ],
+  "chanGan(quan+ung)": [
+   {
+    "#1A212B": 42,
+    "#212835": 16,
+    "#2C3546": 10
+   },
+   {
+    "#1A212B": 39,
+    "#212835": 21,
+    "#2C3546": 3
+   },
+   {
+    "#1A212B": 39,
+    "#212835": 29
+   },
+   {
+    "#1A212B": 43,
+    "#212835": 22
+   },
+   {
+    "#1A212B": 37,
+    "#212835": 24,
+    "#2C3546": 2
+   },
+   {
+    "#1A212B": 29,
+    "#212835": 18,
+    "#0C0F14": 2,
+    "#2C3546": 1
+   },
+   {
+    "#1A212B": 38,
+    "#212835": 16,
+    "#2C3546": 9,
+    "#0C0F14": 3
+   },
+   {
+    "#1A212B": 40,
+    "#212835": 17,
+    "#2C3546": 6
+   }
+  ],
+  "tongChanXa": {
+   "#212835": 281,
+   "#1A212B": 42,
+   "#0C0F14": 36
+  },
+  "tongChanGan": {
+   "#1A212B": 307,
+   "#212835": 163,
+   "#2C3546": 31,
+   "#0C0F14": 5
+  }
+ },
+ "vatAoGan": {
+  "hangGauCot18_34": [
+   53,
+   54,
+   54,
+   53,
+   53,
+   54,
+   54,
+   53
+  ],
+  "soHangChanDuoiGau": [
+   10,
+   9,
+   9,
+   10,
+   10,
+   9,
+   9,
+   10
+  ]
+ },
+ "soVoiVong1": {
+  "lechQuyDaoChan3DPxToiDa": 0.0,
+  "lechQuyDaoChanTungKhung": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "pivotVong1": [
+   [
+    32,
+    63
+   ],
+   [
+    32,
+    63
+   ],
+   [
+    32,
+    63
+   ],
+   [
+    32,
+    63
+   ],
+   [
+    32,
+    63
+   ],
+   [
+    32,
+    63
+   ],
+   [
+    32,
+    63
+   ],
+   [
+    32,
+    63
+   ]
+  ],
+  "dinhDayCachMuPxVong1": [
    2,
    2,
    1,
@@ -1643,18 +1817,234 @@
    2,
    1,
    1
+  ],
+  "dinhDayCachMuPxVong2": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "khoangCachChuongMuVong1": [
+   3,
+   3,
+   3,
+   3,
+   2,
+   2,
+   2,
+   3
+  ],
+  "khoangCachChuongMuVong2": [
+   2,
+   2,
+   2,
+   2,
+   2,
+   1,
+   2,
+   2
+  ],
+  "duoiAoVong1": [
+   [
+    8,
+    53
+   ],
+   [
+    7,
+    54
+   ],
+   [
+    10,
+    57
+   ],
+   [
+    11,
+    56
+   ],
+   [
+    8,
+    53
+   ],
+   [
+    7,
+    54
+   ],
+   [
+    10,
+    57
+   ],
+   [
+    11,
+    55
+   ]
+  ],
+  "duoiAoVong2": [
+   [
+    8,
+    54
+   ],
+   [
+    7,
+    54
+   ],
+   [
+    10,
+    56
+   ],
+   [
+    10,
+    56
+   ],
+   [
+    8,
+    54
+   ],
+   [
+    8,
+    54
+   ],
+   [
+    10,
+    55
+   ],
+   [
+    10,
+    56
+   ]
+  ],
+  "bienDoDuoiVong1": [
+   4,
+   4
+  ],
+  "bienDoDuoiVong2": [
+   3,
+   2
+  ],
+  "hangGauVong1": [
+   55,
+   56,
+   57,
+   56,
+   55,
+   56,
+   57,
+   56
+  ],
+  "hangGauVong2": [
+   54,
+   54,
+   56,
+   56,
+   54,
+   54,
+   55,
+   56
+  ],
+  "xoeSauVong1": [
+   24,
+   25,
+   22,
+   21,
+   24,
+   25,
+   22,
+   21
+  ],
+  "xoeSauVong2": [
+   24,
+   25,
+   22,
+   22,
+   24,
+   24,
+   22,
+   22
+  ],
+  "saiKhacKeNhauVong1": [
+   612,
+   737,
+   669,
+   644,
+   605,
+   720,
+   639,
+   632
+  ],
+  "saiKhacKeNhauVong2": [
+   588,
+   693,
+   666,
+   625,
+   586,
+   698,
+   658,
+   608
+  ],
+  "dayUngGanVong1": [
+   62,
+   63,
+   63,
+   63,
+   60,
+   58,
+   59,
+   62
+  ],
+  "dayUngXaVong1": [
+   60,
+   56,
+   59,
+   62,
+   62,
+   63,
+   63,
+   63
+  ],
+  "hangGauVatGanVong1": [
+   55,
+   56,
+   57,
+   56,
+   55,
+   56,
+   56,
+   56
+  ],
+  "hangGauVatGanVong2": [
+   53,
+   54,
+   54,
+   53,
+   53,
+   54,
+   54,
+   53
+  ],
+  "gauVatGanVenLenPx": [
+   2,
+   2,
+   3,
+   3,
+   2,
+   2,
+   2,
+   3
   ]
  },
  "boPhan": {
   "matSang(#F3E6C8)": [
-   5,
-   5,
    4,
-   4,
-   7,
    6,
+   5,
    6,
-   5
+   5,
+   6,
+   5,
+   4
   ],
   "luoi": [
    34,
@@ -1677,24 +2067,24 @@
    17
   ],
   "chuong": [
-   25,
-   26,
+   27,
+   27,
+   28,
    26,
    27,
    28,
-   28,
-   30,
-   26
+   27,
+   27
   ],
   "dayChuong": [
-   7,
-   6,
-   5,
-   6,
+   4,
    3,
    5,
+   4,
+   4,
    3,
-   4
+   4,
+   5
   ],
   "tram": [
    7,
@@ -1710,7 +2100,7 @@
    17,
    14,
    15,
-   17,
+   18,
    15,
    12,
    13,
@@ -1747,14 +2137,14 @@
    46
   ],
   "tayGan": [
-   32,
-   37,
-   33,
+   31,
+   30,
+   30,
+   31,
    35,
-   39,
-   38,
-   36,
-   28
+   37,
+   29,
+   31
   ],
   "tayXa": [
    23,
@@ -1789,32 +2179,32 @@
   "mu": [
    214,
    218,
-   219,
-   212,
+   218,
+   211,
    214,
    214,
    215,
-   211
+   210
   ],
   "than": [
    78,
    82,
    84,
-   84,
+   86,
    79,
    68,
    64,
    82
   ],
   "aoChoang": [
-   198,
-   200,
    176,
-   172,
-   195,
-   198,
-   168,
-   171
+   179,
+   154,
+   150,
+   173,
+   166,
+   147,
+   150
   ],
   "mat2Diem": [
    2,
@@ -1834,6 +2224,27 @@
    2
   ],
   "chanXa": []
+ },
+ "idle": {
+  "soKhung": 6,
+  "trungPixel": [
+   true,
+   true,
+   true,
+   true,
+   true,
+   true
+  ],
+  "soPixelKhac": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "trungSheetIdleProto": true,
+  "tatCaTrung": true
  },
  "lat": [
   {
@@ -1902,13 +2313,13 @@
   {
    "khung": 3,
    "thuan": {
-    "trai": -22,
+    "trai": -23,
     "phai": 25,
     "day": 0
    },
    "lat": {
     "trai": -25,
-    "phai": 22,
+    "phai": 23,
     "day": 0
    },
    "lech": {
@@ -1917,7 +2328,7 @@
     "day": 0
    },
    "saiPixel": 0,
-   "tamLech": 1.5,
+   "tamLech": 1.0,
    "dung": true
   },
   {
@@ -1944,13 +2355,13 @@
   {
    "khung": 5,
    "thuan": {
-    "trai": -26,
+    "trai": -25,
     "phai": 25,
     "day": 0
    },
    "lat": {
     "trai": -25,
-    "phai": 26,
+    "phai": 25,
     "day": 0
    },
    "lech": {
@@ -1959,7 +2370,7 @@
     "day": 0
    },
    "saiPixel": 0,
-   "tamLech": -0.5,
+   "tamLech": 0.0,
    "dung": true
   },
   {
@@ -1986,13 +2397,13 @@
   {
    "khung": 7,
    "thuan": {
-    "trai": -22,
+    "trai": -23,
     "phai": 27,
     "day": 0
    },
    "lat": {
     "trai": -27,
-    "phai": 22,
+    "phai": 23,
     "day": 0
    },
    "lech": {
@@ -2001,7 +2412,7 @@
     "day": 0
    },
    "saiPixel": 0,
-   "tamLech": 2.5,
+   "tamLech": 2.0,
    "dung": true
   }
  ],
@@ -2019,8 +2430,8 @@
    30,
    41
   ],
-  "saiKhacIdle5_Run0": 970,
-  "saiKhacRun7_Idle0": 850
+  "saiKhacIdle5_Run0": 995,
+  "saiKhacRun7_Idle0": 905
  },
  "anim2d": {
   "trang": {
@@ -2030,7 +2441,7 @@
    "nguon": "PNG 512×320",
    "msg": "Đã nạp URL (512×320)."
   },
-  "kiemLat": "ĐẠT — lật đối xứng đúng quanh cột pivot X\nrun khung 5 · pivot tạm X=66, Y=65\nLệch trái 0 px · lệch phải 0 px · lệch đáy 0 px · pixel không khớp 0\nbbox thuận: cột 40…91, đáy hàng 65 · bbox lật: cột 41…92, đáy hàng 65\nTâm bbox so với pivot x: -0.5 px (chỉ thông tin — hình lệch tâm thì khi lật nhìn như dịch 1 px; KHÔNG tự căn giữa theo bbox).",
+  "kiemLat": "ĐẠT — lật đối xứng đúng quanh cột pivot X\nrun khung 5 · pivot tạm X=66, Y=65\nLệch trái 0 px · lệch phải 0 px · lệch đáy 0 px · pixel không khớp 0\nbbox thuận: cột 41…91, đáy hàng 65 · bbox lật: cột 41…91, đáy hàng 65\nTâm bbox so với pivot x: 0 px (chỉ thông tin — hình lệch tâm thì khi lật nhìn như dịch 0 px; KHÔNG tự căn giữa theo bbox).",
   "phat20Vong": "Không có lần nào khung nhảy sai thứ tự\nrun · 8 khung @ 12 fps · dt bước = 16.67 ms (tốc độ 1.00×)\n20 vòng trong 800 bước logic · mỗi vòng 40…40 bước (lý thuyết 40.00 bước = 666.7 ms)\nĐiểm nối 7→0: liền mạch; số bước mỗi vòng dao động ±1 là do dt không chia hết cho ms khung, không phải giật.",
   "loiJS": []
  }

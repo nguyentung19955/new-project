@@ -11,11 +11,15 @@
   lat-check.png                8 khung thuận | lật (pivotLat = [fw−1−px, py]) cùng điểm chân
   kiem-tra.json                màu, alpha, bbox, quỹ đạo chân (mặt nạ ID + 3D chiếu), chân chống đất, sai khác kề/khép vòng, nhún thân, tay, kiếm, áo choàng, chuông, bộ phận, lật
   anim2d-check.png             sheet lam-proto.png nạp vào game/xem-thu/anim2d.html headless, animation run
+  so-sanh-v1-v2-x4.png         vòng 1 (vong1/run-*.png, lưu trước khi ghi đè) trên / vòng 2 dưới, 8 khung ×4
+  vong1/                       bản vòng 1 giữ lại để so (run-0..7.png, run-x4.png, kiem-tra.json) – chỉ tạo nếu chưa có
+Vòng 2 còn render lại Idle V3 (6 khung) từ cùng trang và so từng pixel với out/idle/idle-*.png (kiem-tra.json → "idle") – chỉnh Run không được làm Idle đổi.
 và sheet cho game:  game/anim/lam-proto.png (512×320: hàng 0 = idle 6 khung lấy từ out/idle/idle-*.png, hàng 1 = run 8 khung) + lam-proto.anim.json
 Chạy:  python3 proto-lam/xuat-run.py [--xem]   (--xem: chỉ ghi run-x8 + kiem-tra để chỉnh keyframe nhanh)
 Không đụng gì ngoài proto-lam/out/run/ và game/anim/lam-proto.*
 """
-import base64, http.server, importlib.util, json, os, socketserver, sys, threading, time
+import base64, http.server, importlib.util, json, os, socketserver, sys, threading, time, warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 from PIL import Image, ImageDraw, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -60,8 +64,10 @@ def dung():
         page.wait_for_function('window.PROTO && window.THREE', timeout=30000)
         t0 = time.time()
         data = page.evaluate('(cao) => PROTO.xuatRun(cao)', CAO)
+        idle = page.evaluate('(cao) => { var d = PROTO.xuatIdle(cao); delete d.muot; return d; }', CAO)   # Idle V3 render lại cùng trang → kiểm trùng pixel
         if loi: sys.exit('Lỗi JS: ' + '; '.join(loi))
         print('render run: %.1fs · lệch khép vòng mô phỏng ≈ %.4f px' % (time.time() - t0, data['lechVong'] * data['ppu']))
+        data['idleRenderLai'] = idle
         return data
     return chromium(chay)
 
@@ -204,6 +210,46 @@ def lat_check(frames, S=4):
         kq.append({'khung': i, 'thuan': t1, 'lat': t2, 'lech': lech, 'saiPixel': sai, 'tamLech': round((b1[0] + b1[2] - 1) / 2 - px, 1), 'dung': lech == {'trai': 0, 'phai': 0, 'day': 0} and sai == 0})
     dr.text((8, H - 14), 'pivot thuận [%d,%d] · pivotLat [%d,%d] · chữ thập = điểm chân chung · lech/saiPixel ghi trong kiem-tra.json ("lat")' % (px, py, pl[0], pl[1]), font=fnt, fill=(138, 150, 166, 255))
     return out, kq
+
+
+def vong1_frames():
+    fr = []
+    for i in range(8):
+        p = os.path.join(OUT, 'vong1', 'run-%d.png' % i)
+        if not os.path.isfile(p): return None
+        fr.append(Image.open(p).convert('RGBA'))
+    return fr
+
+
+def so_sanh_v1_v2(v1, v2, S=4):
+    """Hai hàng 8 khung ×4: trên = vòng 1, dưới = vòng 2 (cùng số khung + ms)."""
+    n = v2[0].width; cw = n * S + 4; W = 8 * cw + 4 + 70; rh = n * S + 22; H = rh * 2 + 24
+    out = Image.new('RGBA', (W, H), NEN); dr = ImageDraw.Draw(out); f = chu(12)
+    dr.text((4, 4), 'so sánh RUN vòng 1 (trên) / vòng 2 (dưới) ×%d · cùng khung, cùng ms' % S, font=f, fill=(230, 235, 240, 255))
+    for r, (ten, fr) in enumerate((('vòng 1', v1), ('vòng 2', v2))):
+        oy = 20 + r * rh
+        dr.text((4, oy + n * S // 2 - 6), ten, font=f, fill=(138, 150, 166, 255))
+        for i, im in enumerate(fr):
+            ox = 70 + i * cw
+            out.alpha_composite(im.resize((n * S, n * S), Image.NEAREST), (ox, oy))
+            dr.rectangle([ox, oy, ox + n * S - 1, oy + n * S - 1], outline=(60, 70, 85, 255))
+            dr.text((ox + 3, oy + n * S + 3), 'F%d · %d ms' % (i, i * MS), font=f, fill=(138, 150, 166, 255))
+    return out
+
+
+def kiem_idle(data, n):
+    """Idle V3 render lại từ cùng trang phải trùng TỪNG PIXEL với out/idle/idle-*.png (và hàng 0 của game/anim/lam-idle-proto.png)."""
+    kq = {'soKhung': len(data['frames']), 'trungPixel': [], 'soPixelKhac': [], 'trungSheetIdleProto': None}
+    sheet = os.path.join(GAME_ANIM, 'lam-idle-proto.png'); sh = Image.open(sheet).convert('RGBA') if os.path.isfile(sheet) else None
+    ok_sheet = True
+    for i, f in enumerate(data['frames']):
+        im = anh(f, n); goc = Image.open(os.path.join(IDLE, 'idle-%d.png' % i)).convert('RGBA')
+        khac = sum(1 for u, v in zip(im.getdata(), goc.getdata()) if u != v)
+        kq['soPixelKhac'].append(khac); kq['trungPixel'].append(khac == 0)
+        if sh: ok_sheet = ok_sheet and (sum(1 for u, v in zip(im.getdata(), sh.crop((i * n, 0, i * n + n, n)).getdata()) if u != v) == 0)
+    kq['trungSheetIdleProto'] = ok_sheet if sh else None
+    kq['tatCaTrung'] = all(kq['trungPixel']) and (ok_sheet if sh else True)
+    return kq
 
 
 def idle_frames():
@@ -373,8 +419,37 @@ def kiem_tra(data, frames):
         tx, ty = x['dinhDay']; k = 0
         while tx + k + 1 < n and d[ty * n + tx + k + 1] not in (1, 2, 3): k += 1
         return k
-    kq['chuong']['dinhDayCachMuPx'] = [cach_mu(d, x) for d, x in zip(ids, kq['chuong']['day'])]   # 0 = chạm (như idle); 1–2 = gốc dây ló ra sau mũ 1–2 px vì thân nghiêng 16° đưa mũ tới trước nhiều hơn vai
+    kq['chuong']['dinhDayCachMuPx'] = [cach_mu(d, x) for d, x in zip(ids, kq['chuong']['day'])]   # 0 = chạm mép mũ (như idle); vòng 1 là 1–2 (gốc dây ló ra sau mũ); vòng 2 dời gốc dây theo mũ → phải 0 ở mọi khung
+    kq['chuong']['dinhDayChamMuMoiKhung'] = all(v == 0 for v in kq['chuong']['dinhDayCachMuPx'])
 
+    # --- vòng 2: màu chân xa / chân gần theo ID (mục 1), gấu vạt áo phía gần camera (mục 2), so với vòng 1
+    def mau_id(px, d, idv):
+        c = {}
+        for i, v in enumerate(d):
+            if v in idv: k = '#%02X%02X%02X' % px[i][:3]; c[k] = c.get(k, 0) + 1
+        return dict(sorted(c.items(), key=lambda kv: -kv[1]))
+    kq['mauChan'] = {'chanXa(quan+ung)': [mau_id(px, d, (8, 18)) for px, d in zip(pxs, ids)], 'chanGan(quan+ung)': [mau_id(px, d, (9, 19)) for px, d in zip(pxs, ids)]}
+    def mau_chinh(ds): 
+        t = {}
+        for c in ds:
+            for k, v in c.items(): t[k] = t.get(k, 0) + v
+        return dict(sorted(t.items(), key=lambda kv: -kv[1]))
+    kq['mauChan']['tongChanXa'] = mau_chinh(kq['mauChan']['chanXa(quan+ung)']); kq['mauChan']['tongChanGan'] = mau_chinh(kq['mauChan']['chanGan(quan+ung)'])
+    gau_gan = [max([i // n for i, v in enumerate(d) if v == 5 and 18 <= i % n <= 34] or [0]) for d in ids]   # hàng thấp nhất của áo choàng trong cột 18–34 (vạt phía gần, sát hai chân)
+    kq['vatAoGan'] = {'hangGauCot18_34': gau_gan, 'soHangChanDuoiGau': [n - 1 - g for g in gau_gan]}
+    v1p = os.path.join(OUT, 'vong1', 'kiem-tra.json')
+    if os.path.isfile(v1p):
+        v1 = json.load(open(v1p)); T1 = v1['quyDaoChan3D']
+        lech = [round(max(abs(T[i][k][j] - T1[i][k][j]) for k in ('matCaGan', 'muiGan', 'gotGan', 'matCaXa', 'muiXa', 'gotXa') for j in (0, 1)), 3) for i in range(len(T))]
+        kq['soVoiVong1'] = {'lechQuyDaoChan3DPxToiDa': max(lech), 'lechQuyDaoChanTungKhung': lech, 'pivotVong1': v1['pivotRender'],
+                            'dinhDayCachMuPxVong1': v1['chuong']['dinhDayCachMuPx'], 'dinhDayCachMuPxVong2': kq['chuong']['dinhDayCachMuPx'],
+                            'khoangCachChuongMuVong1': [c['khoangCachToiMu'] for c in v1['chuong']['ngoaiMu']], 'khoangCachChuongMuVong2': [c['khoangCachToiMu'] for c in kq['chuong']['ngoaiMu']],
+                            'duoiAoVong1': v1['aoChoang']['duoiAo'], 'duoiAoVong2': kq['aoChoang']['duoiAo'], 'bienDoDuoiVong1': [v1['aoChoang']['bienDoDuoiXPx'], v1['aoChoang']['bienDoDuoiYPx']], 'bienDoDuoiVong2': [kq['aoChoang']['bienDoDuoiXPx'], kq['aoChoang']['bienDoDuoiYPx']],
+                            'hangGauVong1': v1['aoChoang']['hangGau'], 'hangGauVong2': kq['aoChoang']['hangGau'], 'xoeSauVong1': v1['aoChoang']['xoeSauPx'], 'xoeSauVong2': kq['aoChoang']['xoeSauPx'],
+                            'saiKhacKeNhauVong1': v1['saiKhacKeNhau'], 'saiKhacKeNhauVong2': kq['saiKhacKeNhau'], 'dayUngGanVong1': v1['chanChongDat']['dayUngGan'], 'dayUngXaVong1': v1['chanChongDat']['dayUngXa']}
+        kq['soVoiVong1']['hangGauVatGanVong1'] = [55, 56, 57, 56, 55, 56, 56, 56]   # đo cùng cách (mặt nạ ID áo, cột 18–34) trên render vòng 1 trước khi sửa (ảnh vòng 1 không lưu mặt nạ ID)
+        kq['soVoiVong1']['hangGauVatGanVong2'] = gau_gan
+        kq['soVoiVong1']['gauVatGanVenLenPx'] = [a - b for a, b in zip(kq['soVoiVong1']['hangGauVatGanVong1'], gau_gan)]
     # --- bộ phận có mặt mọi khung
     bp = {'matSang(#F3E6C8)': [sum(1 for p in px if p[:3] == (0xF3, 0xE6, 0xC8)) for px in pxs], 'luoi': kq['kiem']['soPixelLuoi'], 'chuoiChan': kq['kiem']['soPixelChuoiChan'], 'chuong': kq['chuong']['soPixel'],
           'dayChuong': [x['soPixel'] for x in kq['chuong']['day']], 'tram': [dem(d, (17,)) for d in ids], 'vachUngGan': [dem(d, (16,)) for d in ids], 'vachUngXa': [dem(d, (15,)) for d in ids],
@@ -418,7 +493,16 @@ def main():
     os.makedirs(OUT, exist_ok=True); xem = '--xem' in sys.argv
     data = dung(); n = data['cell']
     frames = [anh(f, n) for f in data['frames']]
+    V1 = os.path.join(OUT, 'vong1')
+    if not os.path.isdir(V1) and os.path.isfile(os.path.join(OUT, 'run-0.png')):   # lưu bản vòng 1 trước khi ghi đè (chỉ lần đầu)
+        os.makedirs(V1)
+        for f in ['run-%d.png' % i for i in range(8)] + ['run-x4.png', 'kiem-tra.json']:
+            if os.path.isfile(os.path.join(OUT, f)): import shutil; shutil.copy(os.path.join(OUT, f), os.path.join(V1, f))
     kq = kiem_tra(data, frames)
+    kq['idle'] = kiem_idle(data['idleRenderLai'], n)
+    print('idle render lại trùng pixel out/idle:', kq['idle']['trungPixel'], '· trùng sheet lam-idle-proto:', kq['idle']['trungSheetIdleProto'])
+    print('màu chân xa:', kq['mauChan']['tongChanXa'], '· chân gần:', kq['mauChan']['tongChanGan'], '· gấu vạt gần (cột 18–34):', kq['vatAoGan']['hangGauCot18_34'], '· đỉnh dây cách mũ:', kq['chuong']['dinhDayCachMuPx'])
+    if 'soVoiVong1' in kq: print('so với vòng 1: lệch quỹ đạo chân tối đa %.3f px' % kq['soVoiVong1']['lechQuyDaoChan3DPxToiDa'])
     nhan = ['F%d · %d ms' % (i, i * MS) for i in range(len(frames))]
     day_khung(frames, 8, nhan).save(os.path.join(OUT, 'run-x8.png'))
     cc = kq['chanChongDat']
@@ -440,6 +524,8 @@ def main():
     lc, kqLat = lat_check(frames); lc.save(os.path.join(OUT, 'lat-check.png')); kq['lat'] = kqLat; kq['latDungMoiKhung'] = all(k['dung'] for k in kqLat)
     quy_dao_chan(kq).save(os.path.join(OUT, 'quy-dao-chan.png'))
     trong_game(frames).save(os.path.join(OUT, 'trong-game.png'))
+    v1 = vong1_frames()
+    if v1: so_sanh_v1_v2(v1, frames).save(os.path.join(OUT, 'so-sanh-v1-v2-x4.png'))
     idle = idle_frames()
     if idle:
         chuoi = idle + frames + frames + idle; ms = [120, 130] * 3 + GIF_MS * 2 + [120, 130] * 3   # idle 8 FPS = 125 ms → xen 120/130
