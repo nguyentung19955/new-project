@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Ghép demo.html thành MỘT file tự chứa để đăng artifact: nhúng lib/*.js vào <script>,
 3 ảnh nền thành data URI base64, và atlas sprite in sẵn (art/sprite/atlas.json + PNG: lam.png, lam48.png, lam3d.png,
-quai-chuong.png, boss.png, lam3d.png — tạo bằng tools/in-atlas.py, tools/in-lam48.py, tools/in-lam3d.py) thành TV.ATLAS_NHUNG. Three.js chỉ nạp từ cdnjs khi mở ?rig=1
+quai-chuong.png, boss.png, lam3d36.png — tạo bằng tools/in-atlas.py, tools/in-lam48.py, tools/in-lam3d.py) thành TV.ATLAS_NHUNG. Three.js chỉ nạp từ cdnjs khi mở ?rig=1
 hoặc khi thiếu atlas in sẵn.
 Chạy: python3 build-demo.py  →  ra demo.build.html cạnh file này."""
 import base64, json, os, re
@@ -51,7 +51,7 @@ def inline_img(m):
     return "'data:image/png;base64," + base64.b64encode(data).decode() + "'"
 
 out = re.sub(r"'(\.\./art/nen/lang-chuong/game/(?:xa|giua|gan)\.png)'", inline_img, out)
-assert n_js == 4 and n_img == 3 and n_sprite in (0, 3, 4, 5), (n_js, n_img, n_sprite)
+assert n_js == 4 and n_img == 3 and n_sprite in (0, 3, 4, 5, 6), (n_js, n_img, n_sprite)
 assert 'three.min.js"></script>' not in out
 dst = os.path.join(HERE, 'demo.build.html')
 open(dst, 'w', encoding='utf-8').write(out)

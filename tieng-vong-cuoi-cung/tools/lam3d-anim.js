@@ -14,31 +14,31 @@
 'use strict';
 var L3 = root.LAM3D = root.LAM3D || {};
 var META = {
-  idle: { loop: true, label: "Idle", f: [["đứng thẳng",1],["thở ra",1],["hạ người – thấp nhất",1],["vạt áo phất",1],["hít vào",1],["ưỡn ngực – cao nhất",1]] },
+  idle: { loop: true, label: "Idle", f: [["đứng thẳng",2],["thở ra",2],["hạ người – thấp nhất",3],["vạt áo phất",2],["hít vào",2],["ưỡn ngực – cao nhất",3]] },
   run: { loop: true, label: "Run", f: [["chân trước chạm đất",1],["nhún – dồn lực",1],["chân lướt qua",1],["đạp đất – bay",1],["chân kia chạm đất",1],["nhún – dồn lực (2)",1],["chân lướt qua (2)",1],["đạp đất – bay (2)",1]] },
-  jump: { loop: false, label: "Jump", f: [["lấy đà",1],["bật lên",1],["lên 1",1],["lên 2",1],["đỉnh nhảy",1],["chuyển sang rơi",1]] },
+  jump: { loop: false, label: "Jump", f: [["lấy đà – nén sâu",2],["bật lên – duỗi người",1],["lên 1",1],["lên 2",1],["đỉnh nhảy – lơ lửng",2],["chuyển sang rơi",1]] },
   fall: { loop: true, label: "Fall", f: [["rơi – áo bay lên",1],["rơi – vạt áo quất",1],["rơi – dang tay giữ thăng bằng",1]] },
-  attack: { loop: false, label: "Attack 1", f: [["thủ thế",1],["kéo kiếm ra sau ngang ngực",1],["dồn trọng tâm – kiếm ngang sau lưng",2],["vung ngang – kiếm lướt qua ngực",1],["chém thẳng ngang ngực – HIT",2,"H"],["theo đà – kiếm vượt qua",1,"C"],["hạ kiếm – sẵn sàng nối",1,"C"],["thu kiếm – kiếm thấp phía trước",1],["kiếm thấp phía trước (nối nhát 2)",1]] },
-  dodge: { loop: false, label: "Dodge", f: [["nhún thấp",1],["phóng người",1],["lướt thấp",1],["trượt chân",1],["phanh lại",1],["đứng vững",1]] },
-  hit: { loop: false, label: "Hit", f: [["trúng đòn",1],["bật ngửa",2],["loạng choạng",1],["hồi lại",1]] },
-  death: { loop: false, label: "Death", f: [["trúng đòn chí mạng",1],["khuỵu gối",1],["gục đầu",1],["chúi người",1],["đổ xuống",1],["sắp chạm đất",1],["đập xuống – nảy",1],["nằm im",3]] },
-  land: { loop: false, label: "Land", f: [["chạm đất – nén người mạnh",1],["nén thấp nhất – hấp lực",1],["đứng dậy",1]] },
-  crouch: { loop: false, label: "Crouch", f: [["hạ người xuống",1],["ngồi xổm – kiếm thủ trước",1]] },
-  slide: { loop: false, label: "Slide", f: [["lao người – bắt đầu trượt",1],["trượt thấp sát đất",1],["trượt dài – áo kéo phía sau",1],["giảm tốc – chống dậy",1]] },
+  attack: { loop: false, label: "Attack 1", f: [["thủ thế",1],["kéo kiếm ra sau – vặn vai",1],["nén người – kiếm sau lưng (lấy đà)",3],["vung – kiếm lướt qua ngực",1],["chém duỗi hết tầm – HIT",3,"H"],["theo đà – thân xoay theo kiếm",1,"C"],["hạ kiếm – sẵn sàng nối",2,"C"],["thu kiếm – kiếm thấp phía trước",1],["kiếm thấp phía trước (nối nhát 2)",1]] },
+  dodge: { loop: false, label: "Dodge", f: [["nhún thấp",2],["phóng người",1],["lướt thấp",1],["trượt chân",1],["phanh lại",1],["đứng vững",1]] },
+  hit: { loop: false, label: "Hit", f: [["trúng đòn",2],["bật ngửa",2],["loạng choạng",1],["hồi lại",1]] },
+  death: { loop: false, label: "Death", f: [["trúng đòn chí mạng",2],["khuỵu gối",1],["gục đầu",1],["chúi người",1],["đổ xuống",1],["sắp chạm đất",1],["đập xuống – nảy",2],["nằm im",4]] },
+  land: { loop: false, label: "Land", f: [["chạm đất – nén người mạnh",1],["nén thấp nhất – hấp lực",2],["bật lên – vươn người",1],["đứng vững",1]] },
+  crouch: { loop: false, label: "Crouch", f: [["hạ người xuống",1],["ngồi xổm – kiếm thủ trước",2]] },
+  slide: { loop: false, label: "Slide", f: [["lao người – bắt đầu trượt",1],["trượt thấp sát đất",1],["trượt dài – áo kéo phía sau",2],["giảm tốc – chống dậy",1]] },
   wallSlide: { loop: true, label: "Wall Slide", f: [["áp tường – trượt xuống",1],["trượt – tay miết tường",1],["trượt – áo choàng phần phật",1]] },
-  wallJump: { loop: false, label: "Wall Jump", f: [["co người – hai chân dồn vào tường",1],["đạp tường – bật ra sau",1],["bay ngược – co chân",1],["xoay người – cuộn tròn trên không",1]] },
+  wallJump: { loop: false, label: "Wall Jump", f: [["co người – hai chân dồn vào tường",2],["đạp tường – bật ra sau",1],["bay ngược – co chân",1],["xoay người – cuộn tròn trên không",1]] },
   wallClimb: { loop: true, label: "Wall Climb", f: [["tay xa vươn lên – chân gần đạp",1],["tay xa bám – kéo người lên",1],["chân xa đẩy – đổi bên",1],["tay gần vươn lên – chân xa đạp",1],["tay gần bám – kéo người lên",1],["chân gần đẩy – đổi bên",1]] },
   ladderClimb: { loop: true, label: "Ladder", f: [["tay xa nắm bậc trên – chân gần bước",1],["kéo lên – chân xa trụ",1],["đổi tay – thân thẳng",1],["tay gần nắm bậc trên – chân xa bước",1],["kéo lên – chân gần trụ",1],["đổi tay – thân thẳng (2)",1]] },
-  ledgeGrab: { loop: false, label: "Ledge", f: [["chộp mép tường",1],["treo người – đung đưa",1],["kéo người lên – chân đạp tường",1],["chống tay – đẩy ngực qua mép",1],["leo qua – co gối lên mép",1],["đứng dậy trên mép",1]] },
-  dash: { loop: false, label: "Dash", f: [["lấy đà – cúi người",1],["lướt nhanh – thu gọn thân",1],["lướt – áo choàng bay thẳng",1],["phanh – hạ chân xuống",1]] },
-  attack2: { loop: false, label: "Attack 2", f: [["kiếm thấp phía trước (từ nhát 1)",1],["hạ kiếm xuống dưới chéo ra sau",1],["dồn lực – kiếm chéo sát đất",2],["vung chéo lên – kiếm quét qua trước",1],["chém chéo lên – HIT",2,"H"],["theo đà – kiếm vút lên cao",1,"C"],["kiếm trên cao (nối nhát 3)",1,"C"]] },
-  attack3: { loop: false, label: "Attack 3", f: [["kiếm trên cao (từ nhát 2)",1],["giơ kiếm qua đầu – ngả ra sau",1],["vươn kiếm ra sau – nén lực tối đa",3],["bổ xuống – kiếm qua đỉnh đầu",1],["bổ thẳng xuống trước mặt – HIT",3,"H"],["đè nặng – kiếm ghim sát đất",1,"C"],["rút kiếm lên – thở dốc",1],["đứng dậy – thu kiếm",1],["thủ thế",1]] },
-  airAttack: { loop: false, label: "Air Attack", f: [["lơ lửng – co chân, kéo kiếm ra sau",1],["giơ kiếm qua đầu trên không",1],["chém vòng xuống trước – HIT",2,"H"],["theo đà – kiếm chĩa xuống trước",1],["thu kiếm – vẫn co chân",1],["duỗi chân – chuyển sang rơi",1]] },
-  downStrike: { loop: false, label: "Down Strike", f: [["co người trên không – xoay mũi kiếm xuống",1],["đâm thẳng xuống dưới chân – HIT",2,"H"],["mũi kiếm chạm – nảy bật lên",1],["bật lên – rút kiếm ngang",1],["duỗi người – chuẩn bị rơi",1]] },
-  upSlash: { loop: false, label: "Up Slash", f: [["hạ thấp – kiếm chéo sau sát đất",1],["nhún gối – dồn lực hất",2],["hất kiếm lên – kiếm quét qua trước",1],["hất thẳng lên cao – HIT",2,"H"],["theo đà – kiếm trên đầu",1],["hạ kiếm – thủ thế",1]] },
-  parry: { loop: false, label: "Ngân (Parry)", f: [["nâng kiếm lên chắn",1],["đỡ thành công – kiếm chéo trước mặt, chuông ngân",2],["dư chấn – chuông lắc ngược",1],["chuông lắc nhẹ – hạ kiếm",1],["về thủ thế",1]] },
-  chargeAttack: { loop: false, label: "Charge", f: [["kéo kiếm ra sau – bắt đầu tụ lực",1],["tụ lực – rung 1",2],["tụ lực – rung 2",2],["tụ lực – rung 3, giữ hơi",3],["bung lực – lao tới",1],["bung chém – HIT",2,"H"],["theo đà – trượt chân",1],["thu kiếm – thủ thế",1]] },
-  echoCast: { loop: false, label: "Echo Cast", f: [["giơ tay xa lên cao",1],["gõ nhẹ chuông – ghi tiếng vọng",2],["tiếng vọng lan ra",2],["hạ tay – về thủ thế",1]] },
+  ledgeGrab: { loop: false, label: "Ledge", f: [["chộp mép tường",1],["treo người – đung đưa",2],["kéo người lên – chân đạp tường",1],["chống tay – đẩy ngực qua mép",1],["leo qua – co gối lên mép",1],["đứng dậy trên mép",1]] },
+  dash: { loop: false, label: "Dash", f: [["lấy đà – cúi người",2],["lướt nhanh – thu gọn thân",1],["lướt – áo choàng bay thẳng",1],["phanh – hạ chân xuống",1]] },
+  attack2: { loop: false, label: "Attack 2", f: [["kiếm thấp phía trước (từ nhát 1)",1],["hạ kiếm xuống dưới chéo ra sau",1],["nén thấp – kiếm chéo sát đất (lấy đà)",3],["vung chéo lên – kiếm quét qua trước",1],["chém chéo lên, nhón chân – HIT",3,"H"],["theo đà – kiếm vút lên cao",1,"C"],["kiếm trên cao (nối nhát 3)",2,"C"]] },
+  attack3: { loop: false, label: "Attack 3", f: [["kiếm trên cao (từ nhát 2)",1],["giơ kiếm qua đầu – ngả ra sau",1],["vươn kiếm ra sau – nén lực tối đa",3],["bổ xuống – kiếm qua đỉnh đầu",1],["bổ xuống – kiếm ngang trước mặt",1],["bổ thẳng xuống trước mặt – HIT",3,"H"],["đè nặng – kiếm ghim sát đất",2,"C"],["rút kiếm lên – thở dốc",1],["đứng dậy – thu kiếm",1],["thủ thế",1]] },
+  airAttack: { loop: false, label: "Air Attack", f: [["lơ lửng – co chân, kéo kiếm ra sau",1],["giơ kiếm qua đầu trên không",2],["chém vòng xuống trước – HIT",3,"H"],["theo đà – kiếm chĩa xuống trước",1],["thu kiếm – vẫn co chân",1],["duỗi chân – chuyển sang rơi",1]] },
+  downStrike: { loop: false, label: "Down Strike", f: [["co người trên không – xoay mũi kiếm xuống",2],["đâm thẳng xuống dưới chân – HIT",3,"H"],["mũi kiếm chạm – nảy bật lên",1],["bật lên – rút kiếm ngang",1],["duỗi người – chuẩn bị rơi",1]] },
+  upSlash: { loop: false, label: "Up Slash", f: [["hạ thấp – kiếm chéo sau sát đất",1],["nhún gối – dồn lực hất",3],["hất kiếm lên – kiếm quét qua trước",1],["hất thẳng lên cao – HIT",3,"H"],["theo đà – kiếm trên đầu",1],["hạ kiếm – thủ thế",1]] },
+  parry: { loop: false, label: "Ngân (Parry)", f: [["nâng kiếm lên chắn",1],["đỡ thành công – kiếm chéo trước mặt, chuông ngân",3],["dư chấn – chuông lắc ngược",1],["chuông lắc nhẹ – hạ kiếm",1],["về thủ thế",1]] },
+  chargeAttack: { loop: false, label: "Charge", f: [["kéo kiếm ra sau – bắt đầu tụ lực",1],["tụ lực – rung 1",2],["tụ lực – rung 2",2],["tụ lực – rung 3, giữ hơi",4],["bung lực – lao tới",1],["bung chém – HIT",3,"H"],["theo đà – trượt chân",1],["thu kiếm – thủ thế",1]] },
+  echoCast: { loop: false, label: "Echo Cast", f: [["giơ tay xa lên cao",2],["gõ nhẹ chuông – ghi tiếng vọng",3],["tiếng vọng lan ra",2],["hạ tay – về thủ thế",1]] },
   heal: { loop: false, label: "Heal", f: [["lùi chân – hạ người",1],["quỳ một gối – chống kiếm",1],["ôm chuông – hồi máu",3],["ôm chuông – ánh sáng lan",2],["chống kiếm đứng dậy",1],["đứng thẳng – hồi phục",1]] },
 };
 L3.THU_TU = Object.keys(META);
@@ -48,30 +48,30 @@ L3.COMBO = ['attack', 'attack2', 'attack3'];
 var G = 0.07;   // cổ chân khi chạm đất
 var K = {};
 K.idle = { keys: [
-  { hy: 0.49, p: 8, c: 2, n: -4, aN: [24, 52], aF: [-12, 24, 6], k: 24, sq: 1.0 },
-  { hy: 0.485, c: 0, n: -2, aN: [22, 50], aF: [-10, 22, 6], k: 22, sq: 0.995 },
-  { hy: 0.475, p: 10, c: -1, n: 0, aN: [20, 48], aF: [-8, 20, 7], k: 20, sq: 0.985 },
-  { hy: 0.48, c: 1, n: -2, aN: [22, 50], aF: [-10, 22, 6], k: 22, sq: 0.99 },
-  { hy: 0.49, p: 8, c: 3, n: -5, aN: [25, 53], aF: [-13, 25, 6], k: 25, sq: 1.0 },
-  { hy: 0.495, p: 7, c: 4, n: -6, aN: [26, 54], aF: [-14, 26, 6], k: 26, sq: 1.01 }
+  { hy: 0.485, p: 8, c: 2, n: -4, aN: [24, 52], aF: [-12, 24, 6], k: 24, sq: 1.0 },
+  { hy: 0.475, p: 9, c: 0, n: -2, aN: [22, 50], aF: [-10, 22, 6], k: 21, sq: 0.99 },
+  { hy: 0.462, p: 11, c: -2, n: 1, aN: [19, 47], aF: [-7, 19, 7], k: 18, sq: 0.975 },
+  { hy: 0.47, p: 10, c: 0, n: -1, aN: [21, 49], aF: [-9, 21, 6], k: 20, sq: 0.985 },
+  { hy: 0.488, p: 8, c: 3, n: -5, aN: [25, 53], aF: [-13, 25, 6], k: 25, sq: 1.005 },
+  { hy: 0.498, p: 6, c: 5, n: -7, aN: [27, 55], aF: [-15, 27, 6], k: 28, sq: 1.02 }
 ] };
 K.run = { v: [3.4, 0], keys: [
-  { hx: 0.02, hy: 0.47, p: 16, s: 7, c: 4, n: -12, tw: -8, fN: [0.25, G, 14], fF: [-0.22, 0.16, -40], aN: [-30, 70], aF: [55, 75, 4], k: -15, sq: 1 },
-  { hx: 0.0, hy: 0.42, p: 20, tw: -4, fN: [0.08, G, 0], fF: [-0.18, 0.30, -60], aN: [-12, 65], aF: [30, 70, 4], k: -5, sq: 0.95 },
-  { hx: 0.0, hy: 0.47, p: 18, tw: 2, fN: [-0.08, G, -8], fF: [0.04, 0.24, -25], aN: [12, 60], aF: [0, 60, 4], k: 8, sq: 1.0 },
-  { hx: 0.02, hy: 0.53, p: 16, tw: 6, fN: [-0.25, 0.15, -45], fF: [0.20, 0.17, 0], aN: [40, 60], aF: [-28, 62, 4], k: 22, sq: 1.04 },
-  { hx: 0.02, hy: 0.47, p: 16, tw: 8, fF: [0.25, G, 14], fN: [-0.22, 0.16, -40], aN: [55, 62], aF: [-34, 66, 4], k: 30, sq: 1 },
-  { hx: 0.0, hy: 0.42, p: 20, tw: 4, fF: [0.08, G, 0], fN: [-0.18, 0.30, -60], aN: [32, 62], aF: [-14, 64, 4], k: 18, sq: 0.95 },
-  { hx: 0.0, hy: 0.47, p: 18, tw: -2, fF: [-0.08, G, -8], fN: [0.04, 0.24, -25], aN: [6, 64], aF: [12, 62, 4], k: 2, sq: 1.0 },
-  { hx: 0.02, hy: 0.53, p: 16, tw: -6, fF: [-0.25, 0.15, -45], fN: [0.20, 0.17, 0], aN: [-22, 68], aF: [40, 70, 4], k: -10, sq: 1.04 }
+  { hx: 0.02, hy: 0.46, p: 18, s: 7, c: 4, n: -12, tw: -10, fN: [0.27, G, 14], fF: [-0.24, 0.17, -45], aN: [-38, 72], aF: [62, 78, 4], k: -18, sq: 0.98 },
+  { hx: 0.0, hy: 0.395, p: 23, s: 9, tw: -5, fN: [0.08, G, 0], fF: [-0.18, 0.31, -65], aN: [-16, 66], aF: [34, 72, 4], k: -6, sq: 0.93 },
+  { hx: 0.0, hy: 0.47, p: 19, tw: 2, fN: [-0.08, G, -8], fF: [0.05, 0.25, -25], aN: [12, 60], aF: [0, 60, 4], k: 8, sq: 1.0 },
+  { hx: 0.02, hy: 0.545, p: 15, tw: 7, fN: [-0.27, 0.16, -50], fF: [0.22, 0.18, 0], aN: [46, 60], aF: [-32, 64, 4], k: 26, sq: 1.05 },
+  { hx: 0.02, hy: 0.46, p: 18, tw: 10, fF: [0.27, G, 14], fN: [-0.24, 0.17, -45], aN: [60, 62], aF: [-38, 68, 4], k: 34, sq: 0.98 },
+  { hx: 0.0, hy: 0.395, p: 23, tw: 5, fF: [0.08, G, 0], fN: [-0.18, 0.31, -65], aN: [34, 62], aF: [-16, 66, 4], k: 20, sq: 0.93 },
+  { hx: 0.0, hy: 0.47, p: 19, tw: -2, fF: [-0.08, G, -8], fN: [0.05, 0.25, -25], aN: [6, 64], aF: [12, 62, 4], k: 2, sq: 1.0 },
+  { hx: 0.02, hy: 0.545, p: 15, tw: -7, fF: [-0.27, 0.16, -50], fN: [0.22, 0.18, 0], aN: [-26, 70], aF: [46, 72, 4], k: -12, sq: 1.05 }
 ] };
 K.jump = { keys: [
-  { hy: 0.37, p: 26, s: 10, c: 6, n: -2, fN: [0.10, G, 0], fF: [-0.10, G, -10], aN: [-40, 45], aF: [-55, 30, 8], k: 150, sq: 0.9, v: [0, 0] },
-  { hy: 0.58, p: 2, s: -4, c: -4, n: -14, fN: [0.03, 0.12, -45], fF: [-0.09, 0.14, -50], aN: [125, 25], aF: [150, 20, 12], k: 100, sq: 1.08, v: [0, 6], de: 3 },
-  { hy: 0.57, p: 6, s: 0, c: 0, n: -10, fN: [0.13, 0.30, -10], fF: [-0.03, 0.24, -35], aN: [80, 60], aF: [95, 45, 12], k: 60, sq: 1.03, v: [0, 4] },
-  { hy: 0.58, p: 10, n: -6, fN: [0.15, 0.37, -5], fF: [0.0, 0.32, -25], aN: [60, 70], aF: [70, 45, 14], k: 40, sq: 1.0, v: [0, 2] },
-  { hy: 0.58, p: 10, n: -4, fN: [0.11, 0.34, 0], fF: [-0.03, 0.30, -20], aN: [55, 65], aF: [65, 40, 18], k: 35, sq: 1.0, v: [0, 0.2] },
-  { hy: 0.56, p: 6, n: -2, fN: [0.07, 0.22, -15], fF: [-0.10, 0.20, -30], aN: [65, 35, 22], aF: [85, 25, 26], k: 30, sq: 1.01, v: [0, -2] }
+  { hy: 0.34, p: 28, s: 12, c: 6, n: 0, fN: [0.11, G, 0], fF: [-0.11, G, -10], aN: [-45, 45], aF: [-60, 30, 8], k: 150, sq: 0.88, v: [0, 0] },
+  { hy: 0.585, p: 0, s: -5, c: -5, n: -16, fN: [0.03, 0.12, -50], fF: [-0.09, 0.15, -55], aN: [-35, 20], aF: [150, 18, 12], k: -120, sq: 1.06, v: [0, 6], de: 3 },
+  { hy: 0.58, p: 6, s: 0, c: 0, n: -10, fN: [0.13, 0.30, -10], fF: [-0.03, 0.24, -35], aN: [10, 40], aF: [96, 45, 12], k: -40, sq: 1.04, v: [0, 4] },
+  { hy: 0.58, p: 10, n: -6, fN: [0.15, 0.37, -5], fF: [0.0, 0.33, -25], aN: [35, 45], aF: [70, 45, 14], k: -12, sq: 1.0, v: [0, 2] },
+  { hy: 0.58, p: 11, n: -3, fN: [0.11, 0.35, 0], fF: [-0.03, 0.31, -20], aN: [45, 40, 10], aF: [64, 40, 18], k: -4, sq: 0.98, v: [0, 0.2] },
+  { hy: 0.56, p: 6, n: -2, fN: [0.07, 0.22, -15], fF: [-0.10, 0.20, -30], aN: [62, 30, 22], aF: [88, 25, 26], k: 8, sq: 1.02, v: [0, -2.5] }
 ] };
 K.fall = { v: [0, -5.5], keys: [
   { hy: 0.56, p: 4, s: -2, n: -2, fN: [0.08, 0.15, -20], fF: [-0.11, 0.19, -35], aN: [75, 25, 25], aF: [105, 20, 30], k: 35 },
@@ -79,37 +79,39 @@ K.fall = { v: [0, -5.5], keys: [
   { hy: 0.56, p: 5, n: -3, fN: [0.09, 0.16, -18], fF: [-0.12, 0.17, -38], aN: [72, 28, 28], aF: [100, 22, 32], k: 38 }
 ] };
 K.land = { keys: [
-  { hy: 0.34, p: 28, s: 12, c: 6, n: 4, fN: [0.13, G, 0], fF: [-0.13, G, -10], aN: [45, 30, 15], aF: [30, 20, 20], k: 10, sq: 0.86, v: [0, -1] },
-  { hy: 0.31, p: 32, s: 14, c: 8, n: 8, aN: [35, 35, 10], aF: [20, 25, 15], k: 5, sq: 0.9, v: [0, 0] },
-  { hy: 0.46, p: 12, s: 6, c: 3, n: -2, aN: [26, 48], aF: [-8, 25, 8], k: 20, sq: 1.0, fN: [0.10, G, 0], fF: [-0.09, G, 0] }
+  { hy: 0.35, p: 26, s: 12, c: 6, n: 2, fN: [0.13, G, 0], fF: [-0.13, G, -10], aN: [50, 30, 15], aF: [36, 20, 20], k: 12, sq: 0.88, v: [0, -1] },
+  { hy: 0.30, p: 32, s: 15, c: 8, n: 8, aN: [36, 35, 10], aF: [20, 25, 15], k: 4, sq: 0.86, v: [0, 0] },
+  { hy: 0.505, p: 4, s: 0, c: -2, n: -10, aN: [30, 46], aF: [-16, 26, 8], k: 30, sq: 1.05, fN: [0.10, G, 0], fF: [-0.09, G, 0] },
+  { hy: 0.48, p: 9, s: 4, c: 2, n: -4, aN: [25, 52], aF: [-12, 24, 6], k: 24, sq: 1.0 }
 ] };
 K.attack = { keys: [
   { hy: 0.48, p: 10, aN: [30, 55], k: 25, fN: [0.10, G, 0], fF: [-0.10, G, 0] },
-  { hy: 0.47, p: 6, tw: -14, aN: [-20, 70], k: 120, aF: [30, 30, 10], fN: [0.12, G, 0], fF: [-0.12, G, 0], n: -6 },
-  { hx: -0.03, hy: 0.45, p: 4, s: 0, tw: -24, aN: [-62, 30], k: 178, aF: [45, 35, 14], n: -8, fN: [0.14, G, 0], fF: [-0.15, G, -5], sq: 0.98 },
-  { hx: 0.01, hy: 0.46, p: 12, tw: 0, aN: [105, 10], ky: -85, kb: 1, kw: -90, aF: [-10, 35, 12], n: -4, fN: [0.18, G, 0], fF: [-0.13, G, -10], sm: 0.8, de: 3 },
-  { hx: 0.06, hy: 0.44, p: 18, s: 6, tw: 10, aN: [96, 0], ky: 45, kb: 1, kw: -90, aF: [-45, 30, 16], n: -8, fN: [0.25, G, 0], fF: [-0.14, 0.08, -25], sq: 0.98, de: 2 },
-  { hx: 0.06, hy: 0.44, p: 20, tw: 14, aN: [90, 6], ky: 110, kb: 1, kw: -88, aF: [-50, 35, 16] },
-  { hx: 0.04, hy: 0.45, p: 16, tw: 8, aN: [55, 30], ky: 50, kb: 0.3, k: -25, aF: [-30, 30, 12] },
+  { hy: 0.46, p: 8, tw: -16, aN: [-24, 66], k: 125, aF: [32, 30, 10], fN: [0.12, G, 0], fF: [-0.13, G, 0], n: -6, sq: 0.98 },
+  { hx: -0.04, hy: 0.42, p: 6, s: 2, tw: -30, aN: [-66, 30], k: 180, aF: [50, 35, 14], n: -9, fN: [0.15, G, 0], fF: [-0.16, G, -5], sq: 0.94 },
+  { hx: 0.02, hy: 0.45, p: 12, tw: -4, aN: [92, 14], ky: -15, kb: 1, kw: -70, aF: [-12, 35, 12], n: -5, fN: [0.20, G, 0], fF: [-0.14, G, -10], sm: 0.9, de: 3 },
+  { hx: 0.08, hy: 0.44, p: 20, s: 7, tw: 16, aN: [96, 0], ky: 38, kb: 1, kw: -90, aF: [-55, 30, 16], n: -9, fN: [0.28, G, 0], fF: [-0.16, 0.08, -30], sq: 1.03, de: 2, sm: 1.7 },
+  { hx: 0.08, hy: 0.44, p: 22, tw: 22, aN: [88, 8], ky: 95, kb: 1, kw: -84, aF: [-58, 35, 16], n: -6 },
+  { hx: 0.05, hy: 0.45, p: 16, tw: 9, aN: [55, 30], ky: 45, kb: 0.3, k: -25, aF: [-30, 30, 12] },
   { hx: 0.02, hy: 0.47, p: 12, tw: 2, aN: [38, 42], ky: 10, kb: 0, k: -25, aF: [-18, 26, 8], fN: [0.16, G, 0], fF: [-0.12, G, 0] },
   { hx: 0.0, hy: 0.48, p: 10, tw: 0, aN: [35, 35], k: -28, aF: [-14, 25, 6] }
 ] };
 K.attack2 = { keys: [
   { hy: 0.48, p: 10, aN: [35, 35], k: 332, fN: [0.14, G, 0], fF: [-0.11, G, 0] },
-  { hy: 0.44, p: 18, tw: -12, aN: [-30, 18], k: 238, aF: [20, 30, 10], fN: [0.15, G, 0], fF: [-0.12, G, -5] },
-  { hx: -0.02, hy: 0.39, p: 28, s: 10, tw: -24, aN: [-55, 8], k: 212, aF: [40, 30, 14], n: 4, sq: 0.95, fN: [0.17, G, 0], fF: [-0.13, G, -15] },
+  { hy: 0.43, p: 19, tw: -14, aN: [-30, 18], k: 238, aF: [20, 30, 10], fN: [0.15, G, 0], fF: [-0.12, G, -5], sq: 0.97 },
+  { hx: -0.03, hy: 0.36, p: 30, s: 11, tw: -28, aN: [-58, 8], k: 212, aF: [44, 30, 14], n: 5, sq: 0.92, fN: [0.18, G, 0], fF: [-0.14, G, -15] },
   { hx: 0.02, hy: 0.45, p: 14, s: 4, tw: -4, aN: [35, 8], k: 302, aF: [-10, 30, 12], n: -4, sq: 1.0, sm: 0.7, de: 2 },
-  { hx: 0.05, hy: 0.53, p: 0, s: -6, c: -6, tw: 10, aN: [125, 6], k: 400, aF: [-45, 25, 18], n: -14, sq: 1.06, fN: [0.20, G, 0], fF: [-0.12, 0.10, -35], de: 2 },
-  { hx: 0.05, hy: 0.53, p: -2, s: -8, tw: 12, aN: [165, 20], k: 448, aF: [-40, 30, 16], n: -16 },
-  { hx: 0.03, hy: 0.50, p: 2, s: -4, tw: 6, aN: [160, 32], k: 462, aF: [-25, 30, 12], n: -10, fF: [-0.12, G, -10] }
+  { hx: 0.06, hy: 0.55, p: -2, s: -8, c: -7, tw: 14, aN: [128, 4], k: 402, aF: [-50, 25, 18], n: -16, sq: 1.08, fN: [0.21, 0.09, -20], fF: [-0.13, 0.12, -40], de: 2 },
+  { hx: 0.05, hy: 0.54, p: -4, s: -9, tw: 18, aN: [166, 20], k: 450, aF: [-44, 30, 16], n: -18, sq: 1.04 },
+  { hx: 0.03, hy: 0.50, p: 2, s: -4, tw: 6, aN: [160, 32], k: 462, aF: [-25, 30, 12], n: -10, sq: 1.0, fN: [0.20, G, 0], fF: [-0.12, G, -10] }
 ] };
 K.attack3 = { keys: [
   { hy: 0.50, p: 2, s: -4, aN: [160, 32], k: 100, aF: [-25, 30, 12], n: -10, fN: [0.14, G, 0], fF: [-0.12, G, 0] },
   { hx: -0.02, hy: 0.51, p: -8, s: -8, c: -6, aN: [176, 60], k: 150, aF: [150, 40, 14], n: -16, sq: 1.03, fN: [0.13, G, 0], fF: [-0.14, G, -10] },
-  { hx: -0.04, hy: 0.49, p: -14, s: -10, c: -8, aN: [186, 90], k: 205, aF: [165, 70, 14], n: -18, sq: 1.05, fN: [0.12, G, 10], fF: [-0.16, G, -15] },
+  { hx: -0.05, hy: 0.50, p: -16, s: -11, c: -8, aN: [188, 92], k: 208, aF: [168, 72, 14], n: -19, sq: 1.06, fN: [0.12, G, 10], fF: [-0.17, G, -15] },
   { hx: 0.0, hy: 0.48, p: 8, s: 4, c: 2, aN: [150, 18], k: 100, aF: [110, 40, 12], n: -6, sq: 1.0, sm: 0.6, de: 3 },
-  { hx: 0.06, hy: 0.36, p: 24, s: 8, c: 4, aN: [40, 0], k: -50, aF: [10, 30, 14], n: -4, sq: 0.9, fN: [0.27, G, 0], fF: [-0.20, G, -25], de: 3 },
-  { hx: 0.06, hy: 0.33, p: 28, s: 10, c: 5, aN: [28, 4], k: -68, aF: [0, 35, 14], n: 0, sq: 0.92 },
+  { hx: 0.04, hy: 0.42, p: 18, s: 6, c: 3, aN: [92, 4], k: 22, aF: [50, 35, 14], n: -6, sq: 0.97, fN: [0.22, G, 0], fF: [-0.18, G, -15], sm: 0.8, de: 2 },
+  { hx: 0.07, hy: 0.35, p: 26, s: 9, c: 5, aN: [38, 0], k: -52, aF: [8, 30, 14], n: -4, sq: 0.88, fN: [0.28, G, 0], fF: [-0.21, G, -25], de: 3 },
+  { hx: 0.07, hy: 0.32, p: 29, s: 10, c: 5, aN: [28, 4], k: -68, aF: [0, 35, 14], n: 1, sq: 0.92 },
   { hx: 0.04, hy: 0.40, p: 20, s: 8, c: 4, aN: [25, 30], k: -40, aF: [-10, 30, 10], n: -2, sq: 0.97 },
   { hx: 0.02, hy: 0.45, p: 14, s: 6, c: 3, aN: [36, 44], k: -18, aF: [-5, 26, 8], n: -2, sq: 1.0, fN: [0.14, G, 0], fF: [-0.12, G, 0] },
   { hx: 0.0, hy: 0.48, p: 10, s: 4, c: 2, aN: [28, 52], k: 22, aF: [-12, 24, 6], n: -4, fN: [0.10, G, 0], fF: [-0.09, G, 0] }
@@ -267,13 +269,18 @@ L3.THU_TU.forEach(function (ten) {
 });
 /* sự kiện: gõ chuông (xung vận tốc cho con lắc) */
 ['death', 'dodge', 'dash', 'wallJump', 'slide'].forEach(function (t) { ANIMS[t].tayTuongDoi = true; });   // tay theo thân khi lăn/lướt
+ANIMS.fall.canVai = 0.94; ANIMS.wallClimb.canVai = 0.97;
 ANIMS.wallSlide.tuong = -0.31; ANIMS.wallJump.tuong = -0.31;   // áo choàng áp vào tường sau lưng
 ANIMS.parry.su = [{ khung: 1, chuong: [-2.2, 0.6] }];
 ANIMS.echoCast.su = [{ khung: 1, chuong: [1.6, 0.8] }];
 ANIMS.hit.su = [{ khung: 0, chuong: [-2.5, 1.2] }];
 ANIMS.death.su = [{ khung: 0, chuong: [-2.5, 1.2] }, { khung: 6, chuong: [0, 2.0] }];
-ANIMS.land.su = [{ khung: 0, chuong: [0, -2.0] }];
-ANIMS.attack3.su = [{ khung: 4, chuong: [1.5, -1.5] }];
+ANIMS.land.su = [{ khung: 0, chuong: [0.6, -2.0] }];
+ANIMS.attack3.su = [{ khung: 5, chuong: [1.4, -1.2] }];
+/* chuông lắc SAU khi dừng/chém (biên độ vừa: con lắc có cản + giới hạn góc trong lam3d-core.js) */
+ANIMS.attack.su = [{ khung: 4, chuong: [-1.6, 0.4] }];
+ANIMS.attack2.su = [{ khung: 4, chuong: [-1.0, -1.2] }];
+ANIMS.jump.su = [{ khung: 1, chuong: [0, -1.4] }];
 L3.ANIMS = ANIMS;
 
 /* ---------------- hiệu ứng pixel (vẽ lên chỗ trống quanh nhân vật) ---------------- */

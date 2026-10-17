@@ -64,7 +64,7 @@ input[type=range] { width: 100%; height: 36px; accent-color: var(--xanh); min-wi
 <div class="trang">
   <header>
     <h1>Studio 3D – <b>Lam</b></h1>
-    <p>Mô hình 3D mượt, render thẳng xuống pixel đúng như trong game.</p>
+    <p>Mô hình 3D mượt, render thẳng xuống pixel đúng như trong game — hai cỡ: 36 px và 46 px.</p>
   </header>
 
   <section class="san" aria-label="Xem trước">
@@ -73,10 +73,10 @@ input[type=range] { width: 100%; height: 36px; accent-color: var(--xanh); min-wi
       <canvas id="c3d" width="600" height="600" aria-label="Mô hình 3D của Lam, vuốt để xoay"></canvas>
     </div>
     <div class="khung">
-      <h2><span>Bản pixel 64×64</span><span id="tpx">khung 1/6</span></h2>
+      <h2><span id="tieu-de-px">Cỡ 36 · ô 48×48</span><span id="tpx">khung 1/6</span></h2>
       <div class="o-pixel">
         <canvas id="cpx" width="384" height="384" aria-label="Bản pixel đang phát"></canvas>
-        <div class="nhan-khung"><span id="ten-khung">đứng thẳng</span><span id="co-hit" class="co hit" hidden>HIT</span><span id="co-noi" class="co noi" hidden>nối combo</span></div>
+        <div class="nhan-khung"><span id="ten-khung">đứng thẳng</span><span id="co-giu" class="co">×1</span><span id="co-hit" class="co hit" hidden>HIT</span><span id="co-noi" class="co noi" hidden>nối combo</span></div>
       </div>
     </div>
   </section>
@@ -88,6 +88,9 @@ input[type=range] { width: 100%; height: 36px; accent-color: var(--xanh); min-wi
       <button id="b-phat" class="chinh">Tạm dừng</button>
       <button id="b-toi" aria-label="Tới 1 khung">khung ▶</button>
       <span style="flex:1"></span>
+      <button id="c-36" aria-pressed="true">Cao 36</button>
+      <button id="c-46" aria-pressed="false">Cao 46</button>
+      <button id="b-bong" aria-pressed="false">Bóng ×1</button>
       <button id="b-x4" aria-pressed="false">×4</button>
       <button id="b-x6" aria-pressed="true">×6</button>
     </div>
@@ -113,6 +116,7 @@ input[type=range] { width: 100%; height: 36px; accent-color: var(--xanh); min-wi
           <button id="n-toi" aria-pressed="false">Tối</button>
           <button id="n-luoi" aria-pressed="false">Lưới ô</button>
         </div>
+        <p class="ghi-chu"><b>Cao 36 / Cao 46</b>: hai cỡ xuất cho game (?cao=36 mặc định, ?cao=46). Cỡ 36 phóng to tương đối chuông, bản kiếm và mũ để không dính thành một khối. <b>Bóng ×1</b>: xem đúng kích thước thật cạnh bản tô màu theo bộ phận (mũ đỏ, kiếm vàng, chuông cam) để soát silhouette. Nhãn ×2, ×3 là số nhịp khung được giữ (lấy đà, điểm chạm giữ lâu hơn khung chuyển tiếp).</p>
         <p class="ghi-chu">Ô pixel là đúng ảnh game dùng: mỗi khung được dựng lại từ mô hình 3D (áo choàng và chuông mô phỏng vật lý), tô 3 bậc sáng theo palette, viền ngoài 1 pixel và viền trong ở chỗ tay, kiếm chồng lên thân.</p>
         <p class="ghi-chu">Kéo thanh trượt để thử góc camera hay hướng sáng; ô pixel tự dựng lại sau nửa giây.</p>
       </fieldset>
@@ -138,7 +142,8 @@ R.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 R.setClearColor(0x212835, 1);
 
 var song = LAM3D.tao(THREE, {});   // mô hình phát liên tục cho khung 3D
-var pix = LAM3D.tao(THREE, {});    // mô hình riêng để in khung pixel (không phá nhịp mô phỏng của khung 3D)
+var PIX = { 36: LAM3D.tao(THREE, { cao: 36 }), 46: LAM3D.tao(THREE, { cao: 46 }) };   // mô hình riêng để in khung pixel, mỗi cỡ một bản
+var co = 36, pix = PIX[co], bongX1 = false;
 // nền khung 3D: đĩa đất + vạch
 var dat = new THREE.Mesh(new THREE.CircleGeometry(1.25, 48), new THREE.MeshBasicMaterial({ color: 0x1A212B }));
 dat.rotation.x = -Math.PI / 2; dat.position.y = -0.002; song.scene.add(dat);
@@ -183,10 +188,24 @@ function inPixel() {
   pix.O.camCao = +$('s-cam').value;
   var t0 = performance.now();
   var fr = pix.chayAnim(R, ten);
+  var o = pix.O.o;
   khung = fr.map(function (f) {
-    var c = document.createElement('canvas'); c.width = 64; c.height = 64;
-    c.getContext('2d').putImageData(new ImageData(f.px, 64, 64), 0, 0);
-    return { c: c, ten: f.ten, hit: f.hit, noi: f.comboWindow, hold: f.hold };
+    var c = document.createElement('canvas'); c.width = o; c.height = o;
+    c.getContext('2d').putImageData(new ImageData(f.px, o, o), 0, 0);
+    // bản đồ bộ phận (soát silhouette): mũ đỏ, kiếm vàng, chuông cam, mắt trắng, còn lại xám
+    var m = document.createElement('canvas'); m.width = o; m.height = o;
+    var mg = m.getContext('2d'), im = mg.createImageData(o, o), I = LAM3D.ID;
+    for (var q = 0; q < o * o; q++) {
+      if (!f.px[q * 4 + 3]) continue;
+      var v = f.id[q], cc = f.px[q * 4] === 12 && f.px[q * 4 + 1] === 15 ? [20, 20, 24] : [120, 120, 130];
+      if (v === I.mu || v === I.vienMu || v === I.mat) cc = [200, 70, 70];
+      else if (v === I.luoi || v === I.chuoi) cc = [240, 220, 80];
+      else if (v === I.chuong) cc = [255, 140, 30];
+      else if (v === I.mat2) cc = [255, 255, 255];
+      im.data[q * 4] = cc[0]; im.data[q * 4 + 1] = cc[1]; im.data[q * 4 + 2] = cc[2]; im.data[q * 4 + 3] = 255;
+    }
+    mg.putImageData(im, 0, 0);
+    return { c: c, m: m, ten: f.ten, hit: f.hit, noi: f.comboWindow, hold: f.hold };
   });
   trangThai.textContent = 'Dựng ' + khung.length + ' khung trong ' + Math.round(performance.now() - t0) + ' ms';
   khungHien = -1;
@@ -204,7 +223,7 @@ function chiSoKhung(tt) {
   return i;
 }
 function veKhung(i) {
-  var n = 64 * phong;
+  var o = pix.O.o, n = 64 * phong;   // khung hiển thị luôn 64 ô → cỡ 36 (ô 48) trông nhỏ hơn đúng tỉ lệ
   if (cpx.width !== n) { cpx.width = n; cpx.height = n; }
   gpx.imageSmoothingEnabled = false;
   if (nen === 'lang' && anhNen.complete && anhNen.naturalWidth) gpx.drawImage(anhNen, 0, 0, n, n);
@@ -216,7 +235,17 @@ function veKhung(i) {
     }
   }
   var k = khung[i];
-  if (k) gpx.drawImage(k.c, 0, 0, n, n);
+  // canh theo chân: pivot cỡ đang xem trùng pivot ô 64 (32, 59)
+  var dx = (32 - pix.O.px) * phong, dy = (59 - pix.O.py) * phong;
+  if (k && !bongX1) gpx.drawImage(k.c, dx, dy, o * phong, o * phong);
+  if (k && bongX1) {
+    gpx.fillStyle = '#212835'; gpx.fillRect(0, 0, n, n);
+    var p2 = Math.max(2, Math.floor(phong / 2));
+    gpx.drawImage(k.c, 6, 6, o, o);                               // ×1 thật
+    gpx.drawImage(k.c, 6, o + 14, o * p2, o * p2);                // phóng
+    gpx.drawImage(k.m, o * p2 + 14, o + 14, o * p2, o * p2);      // bản đồ bộ phận
+  }
+  $('co-giu').textContent = '×' + (k ? k.hold : 1);
   $('tpx').textContent = 'khung ' + (i + 1) + '/' + khung.length;
   $('ten-khung').textContent = k ? k.ten : '';
   $('co-hit').hidden = !(k && k.hit); $('co-noi').hidden = !(k && k.noi);
@@ -262,6 +291,15 @@ $('b-x6').addEventListener('click', function () { datPhong(6); });
   });
 });
 anhNen.onload = function () { veKhung(Math.max(0, khungHien)); };
+function datCo(c) {
+  co = c; pix = PIX[c];
+  $('c-36').setAttribute('aria-pressed', c === 36); $('c-46').setAttribute('aria-pressed', c === 46);
+  $('tieu-de-px').textContent = 'Cỡ ' + c + ' · ô ' + pix.O.o + '×' + pix.O.o;
+  inPixel(); veKhung(Math.max(0, chiSoKhung(thoiGianTuThe())));
+}
+$('c-36').addEventListener('click', function () { datCo(36); });
+$('c-46').addEventListener('click', function () { datCo(46); });
+$('b-bong').addEventListener('click', function () { bongX1 = !bongX1; $('b-bong').setAttribute('aria-pressed', bongX1); veKhung(Math.max(0, khungHien)); });
 
 var hen = 0;
 function thanh(id, don, apDung) {

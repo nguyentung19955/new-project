@@ -1,6 +1,6 @@
 /* =====================================================================
    atlas-in-san.js — nạp atlas sprite đã in sẵn (game/tools/in-atlas.py), KHÔNG cần WebGL/Three.js.
-   Nguồn: art/sprite/atlas.json + lam.png, lam48.png (tools/in-lam48.py), lam3d.png (tools/in-lam3d.py), quai-chuong.png, boss.png.
+   Nguồn: art/sprite/atlas.json + lam.png, lam48.png (tools/in-lam48.py), lam3d.png + lam3d36.png (tools/in-lam3d.py), quai-chuong.png, boss.png.
    Bản build một file đặt sẵn TV.ATLAS_NHUNG = { json:{...}, anh:{ 'lam.png':'data:...', ... } }.
    API:  TV.atlasInSan : Promise → { lam, lam48, lam3d, quaiChuong, boss }  (lỗi: err.phan = danh sách phần hỏng)
          TV.napLaiAtlas() : nạp lại (nút Thử lại), cập nhật TV.atlasInSan
@@ -12,7 +12,7 @@
 var TV = root.TV = root.TV || {};
 var BASE = TV.ATLAS_GOC || '../art/sprite/';
 
-var TEN = { lam: 'nhân vật Lam', lam48: 'nhân vật Lam 48', lam3d: 'nhân vật Lam 3D', quaiChuong: 'Quái Chuông Gỗ', boss: 'Chuông Gác Làng' };
+var TEN = { lam: 'nhân vật Lam', lam48: 'nhân vật Lam 48', lam3d: 'nhân vật Lam 3D (cao 46)', lam3d36: 'nhân vật Lam 3D (cao 36)', quaiChuong: 'Quái Chuông Gỗ', boss: 'Chuông Gác Làng' };
 var lan = 0;   // số lần nạp lại: thêm ?r= để trình duyệt không dùng bản lỗi trong bộ nhớ đệm
 function bust(src) { return (lan && !/^data:/.test(src)) ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'r=' + lan + '_' + Date.now() : src; }
 
@@ -41,7 +41,7 @@ function dungAtlas(k, meta) {
   return napAnh(src).then(function (im) {
     var c = document.createElement('canvas');
     c.width = im.naturalWidth || im.width; c.height = im.naturalHeight || im.height;
-    c.getContext('2d').drawImage(im, 0, 0);
+    var g = c.getContext('2d'); g.imageSmoothingEnabled = false; g.drawImage(im, 0, 0);
     var at = { canvas: c };
     for (var key in meta) if (key !== 'anh') at[key] = meta[key];
     if (!at.kiemTra) at.kiemTra = [];

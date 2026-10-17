@@ -54,6 +54,9 @@ var ID = { mu: 1, mat: 2, vienMu: 3, khoac: 4, than: 5, vat: 6, ao: 7, tayG: 8, 
            ungG: 12, ungX: 13, luoi: 14, chuoi: 15, chuong: 16, tram: 17, mat2: 18, chem: 19, fx: 20 };
 L3.ID = ID;
 var NHOM = {};
+/* bộ phận được bảo vệ khỏi bước dọn pixel lẻ / đốm màu (chi tiết nhỏ nhưng quan trọng để đọc nhân vật) */
+var BAOVE = {}; [ID.mat, ID.mat2, ID.chuong, ID.chuoi, ID.luoi].forEach(function (i) { BAOVE[i] = 1; });
+L3.BAOVE = BAOVE;
 [[ID.mu, 'dau'], [ID.mat, 'dau'], [ID.vienMu, 'dau'], [ID.mat2, 'dau'],
  [ID.khoac, 'than'], [ID.than, 'than'], [ID.vat, 'than'], [ID.tram, 'than'],
  [ID.ao, 'ao'], [ID.tayG, 'tayG'], [ID.tayX, 'tayX'], [ID.chanG, 'chanG'], [ID.ungG, 'chanG'],
@@ -69,8 +72,17 @@ var K = {
 L3.K = K;
 var D2R = Math.PI / 180;
 
+/* Hai cỡ xuất: nhân vật cao ~46 px (ô 64×64) và ~36 px (ô 48×48).
+   Cỡ nhỏ "chibi hóa" nhẹ: chuông, bản kiếm, mũ to tương đối hơn để không dính thành một khối khi còn 36 px. */
+L3.CO = {
+  46: { o: 64, px: 32, py: 59, ppu: 46 / 1.6, phong: { chuong: 1.0, kiemDay: 1.1, kiemDai: 1.0, mu: 1.0 } },
+  36: { o: 48, px: 24, py: 44, ppu: 36 / 1.6, phong: { chuong: 1.16, kiemDay: 1.25, kiemDai: 0.96, mu: 1.05 } }
+};
+
 function tao(THREE, tuy) {
   tuy = tuy || {};
+  var CO = L3.CO[tuy.cao || 46] || L3.CO[46];
+  var PH = CO.phong;
   var V3 = THREE.Vector3;
   var lam = { THREE: THREE, mats: [], meshes: [] };
   var U = lam.uni = {
@@ -175,7 +187,7 @@ function tao(THREE, tuy) {
   B.nguc = xuong('nguc', B.lung, K.nguc[0], K.nguc[1]);
   B.co = xuong('co', B.nguc, K.co[0], K.co[1]);
   B.dau = xuong('dau', B.co, K.dau[0], K.dau[1]);
-  B.dau.scale.setScalar(0.88);   // mũ trùm to kiểu chibi (~1/3.5 chiều cao) nhưng không lấn thân
+  B.dau.scale.setScalar(0.88 * PH.mu);   // mũ trùm to kiểu chibi (~1/3.5 chiều cao) nhưng không lấn thân
   ['G', 'X'].forEach(function (s) {
     var z = s === 'G' ? 1 : -1, sau = s === 'X';
     B['vai' + s] = xuong('vai' + s, B.nguc, K.vai[0], K.vai[1], K.vai[2] * z);
@@ -269,10 +281,11 @@ function tao(THREE, tuy) {
   luoi(cau(0.03), { ho: 'vang', b: 1 }, ID.chuoi, kiem).position.set(-0.07, 0, 0);
   var gd = capsule(0.022, 0.022, 0.15, 8); gd.translate(0, 0.075, 0);
   luoi(gd, { ho: 'vang', b: 1 }, ID.chuoi, kiem).position.set(0.05, 0, 0);
+  kiem.scale.set(PH.kiemDai, PH.kiemDay, PH.kiemDay);   // bản kiếm dày hơn ở cỡ nhỏ (đọc rõ ở 36 px)
   var LUOI = 0.56;
   lam.luoiDai = LUOI;
   luoi(epHinh([[0.06, 0.04], [0.06 + LUOI * 0.8, 0.036], [0.06 + LUOI, 0.0], [0.06 + LUOI * 0.8, -0.036], [0.06, -0.04]], [0, 2, 4], 0.008, 0.012, 3),
-       { ho: 'kiem', b: 0, bias: 0.12 }, ID.luoi, kiem);
+       { ho: 'kiem', b: 1, bias: 0.04 }, ID.luoi, kiem);   // lưỡi sáng hơn viền mũ (x1/x2) để kiếm không hòa vào mép mũ
 
   /* chuông vàng treo sau mũ (con lắc) */
   var chuong = lam.chuong = xuong('chuong', top);
@@ -283,7 +296,8 @@ function tao(THREE, tuy) {
   luoi(cgeo, { ho: 'vang', b: 1, bias: 0.05 }, ID.chuong, chuong);
   luoi(new THREE.TorusGeometry(0.022, 0.009, 6, 12), { ho: 'vang', b: 1 }, ID.chuong, chuong).position.set(0, -0.018, 0);
   luoi(cau(0.03), { ho: 'vang', b: 0 }, ID.chuong, chuong).position.set(0, -0.27, 0);
-  lam.chuongNeo = new V3(-0.38, 0.22, 0.27);   // trên mũ (hệ đầu)
+  chuong.scale.setScalar(PH.chuong);
+  lam.chuongNeo = new V3(-0.44, 0.24, 0.24);   // sau gáy mũ, lùi hẳn ra sau để không dính vào khối mũ (hệ đầu)
   lam.chuongDai = 0.07;
 
   /* ----- vải: áo choàng (vai) + vạt áo xanh (eo) ----- */
@@ -480,7 +494,13 @@ function tao(THREE, tuy) {
   };
   lam.gio = new V3(0, 0, 0);     // vận tốc nhân vật trong thế giới (gió tương đối = -v)
   lam.gioThem = new V3(0, 0, 0); // gió môi trường
+  /* chuKy (giây): với hoạt cảnh lặp, tần số gió được làm tròn để đúng số nguyên chu kỳ trong một vòng
+     → vải khép vòng (khung cuối nối mượt khung đầu). Không có số ngẫu nhiên nào: mọi lần in đều ra y hệt. */
+  lam.chuKy = null;
+  function tanSo(w) { var T = lam.chuKy; if (!T) return w; return 2 * Math.PI * Math.max(1, Math.round(w * T / (2 * Math.PI))) / T; }
+  var W1 = 2.3, W2 = 3.7;
   lam.buoc = function (dt, tg) {
+    W1 = tanSo(2.3); W2 = tanSo(3.7);
     top.updateMatrixWorld(true);
     capVa();
     var n = 2, h = dt / n, g = -9.8;
@@ -495,10 +515,10 @@ function tao(THREE, tuy) {
           var ax = keo * f * (wx - vx), ay = g + keo * f * (wy - vy), az = keo * f * (wz - vz);
           // gió nhẹ có nhịp (sống động khi đứng yên)
           if (vt.o.va === 'ao' && tg != null) {
-            var nh = Math.sin(tg * 2.3 + (i % C) * 0.7) * 0.5 + Math.sin(tg * 3.7 + j) * 0.3;
+            var nh = Math.sin(tg * W1 + (i % C) * 0.7) * 0.5 + Math.sin(tg * W2 + j) * 0.3;
             ax += -3.2 * f * (1 + nh); az += 0.4 * nh * f;
           }
-          var damp = 0.992;
+          var damp = vt.o.va === 'ao' ? (lam.canVai || 0.986) : 0.955;   // vạt áo ngắn cản mạnh hơn → không lật qua lật lại giữa 2 đùi (ổn định, khép vòng)
           var nx = p[k] + (p[k] - q[k]) * damp + ax * h * h;
           var ny = p[k + 1] + (p[k + 1] - q[k + 1]) * damp + ay * h * h;
           var nz = p[k + 2] + (p[k + 2] - q[k + 2]) * damp + az * h * h;
@@ -538,12 +558,13 @@ function tao(THREE, tuy) {
   };
   /* chuông: hạt verlet trên dây ngắn từ điểm neo sau mũ, va chạm khối mũ */
   var CH = lam.CH = { p: new V3(), q: new V3() };
+  var GOC_CHUONG = 55;
   function neoChuong() { tmpV2.copy(lam.chuongNeo); B.dau.localToWorld(tmpV2); return top.worldToLocal(tmpV2.clone()); }
   lam.datLaiChuong = function () { var a = neoChuong(); CH.p.set(a.x - 0.01, a.y - lam.chuongDai, a.z); CH.q.copy(CH.p); };
   lam.goChuong = function (vx, vy) { CH.q.x -= vx / 120; CH.q.y -= vy / 120; };
   function buocChuong(h) {
     var a = neoChuong();
-    var vx = (CH.p.x - CH.q.x) * 0.975, vy = (CH.p.y - CH.q.y) * 0.975;
+    var vx = (CH.p.x - CH.q.x) * 0.955, vy = (CH.p.y - CH.q.y) * 0.955;   // cản đủ để lắc vài nhịp rồi lặng
     CH.q.copy(CH.p);
     var keo = 1.2;
     CH.p.x += vx + keo * (-lam.gio.x - vx / h) * h * h;
@@ -554,6 +575,13 @@ function tao(THREE, tuy) {
       CH.p.z = a.z;
       tmpV.subVectors(CH.p, a); var d = tmpV.length() || 1e-6;
       CH.p.copy(a).addScaledVector(tmpV, lam.chuongDai / d);
+    }
+    // giới hạn biên độ: chuông chỉ lắc trong ±GOC_CHUONG quanh phương treo thẳng (không hất lên trên mũ, không phá silhouette)
+    var ga = Math.atan2(CH.p.x - a.x, -(CH.p.y - a.y)), gm = GOC_CHUONG * D2R;
+    if (Math.abs(ga) > gm) {
+      var g2 = Math.sign(ga) * gm;
+      CH.p.x = a.x + Math.sin(g2) * lam.chuongDai; CH.p.y = a.y - Math.cos(g2) * lam.chuongDai;
+      CH.q.x = CH.p.x - (CH.p.x - CH.q.x) * 0.3; CH.q.y = CH.p.y - (CH.p.y - CH.q.y) * 0.3;
     }
   }
   lam.capNhatLuoi = function () {
@@ -647,7 +675,7 @@ function tao(THREE, tuy) {
   lam.datThoiGian = function (A, t) { var P = lam.mau(A, t); if (A.tayTuongDoi) P.tdTay = 0; lam.datTuThe(P); lam.gio.set(P.v[0], P.v[1], 0); return P; };
 
   /* ---------- camera trực giao & render pixel ---------- */
-  var O = lam.O = { o: tuy.o || 64, px: 32, py: 59, ppu: (tuy.ppu || 46 / 1.6), camCao: 8, ss: tuy.ss || 2 };
+  var O = lam.O = { o: CO.o, px: CO.px, py: CO.py, ppu: CO.ppu, camCao: 8, ss: tuy.ss || 2, cao: tuy.cao || 46 };
   lam.camPx = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 30);
   lam.datCam = function () {
     var c = lam.camPx, e = O.camCao * D2R, ppu = O.ppu;
@@ -711,7 +739,7 @@ function tao(THREE, tuy) {
     var col = chup(renderer, false), idb = chup(renderer, true);
     var ci = new Int16Array(n * n).fill(-1), id = new Uint8Array(n * n), dep = new Float32Array(n * n);
     // gộp (ss=1: lấy thẳng; ss=2: màu đa số, ưu tiên nét mảnh)
-    var MANH = {}; MANH[ID.luoi] = 3; MANH[ID.vienMu] = 2; MANH[ID.mat2] = 3; MANH[ID.chuoi] = 2;
+    var MANH = {}; MANH[ID.luoi] = 3; MANH[ID.vienMu] = 2; MANH[ID.mat2] = 3; MANH[ID.chuoi] = 2; MANH[ID.chuong] = 2;
     for (var y = 0; y < n; y++) for (var x = 0; x < n; x++) {
       var dem = {}, nOpaque = 0, best = 0, bestScore = -1;
       var mau = [];
@@ -752,9 +780,9 @@ function tao(THREE, tuy) {
     fx = fx || {};
     function a(x, y) { return x >= 0 && y >= 0 && x < n && y < n && id[y * n + x] > 0; }
     var N4 = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-    // 1) bỏ pixel đơn lẻ không dính gì (trừ lưỡi kiếm)
+    // 1) bỏ pixel đơn lẻ không dính gì — KHÔNG đụng các bộ phận được bảo vệ (mắt, chuông, chuôi, lưỡi kiếm)
     for (y = 0; y < n; y++) for (x = 0; x < n; x++) {
-      o = y * n + x; if (!id[o] || id[o] === ID.luoi) continue;
+      o = y * n + x; if (!id[o] || BAOVE[id[o]]) continue;
       var c8 = 0; for (var dy = -1; dy <= 1; dy++) for (var dx = -1; dx <= 1; dx++) if ((dx || dy) && a(x + dx, y + dy)) c8++;
       if (c8 === 0) { id[o] = 0; ci[o] = -1; }
     }
@@ -768,7 +796,7 @@ function tao(THREE, tuy) {
         if (!id[q] || NHOM[id[q]] !== NHOM[id[o]]) { ok = false; break; }
         if (c0 === -2) c0 = ci[q]; else if (ci[q] !== c0) { ok = false; break; }
       }
-      if (ok && c0 !== ci[o] && id[o] !== ID.mat2) ci2[o] = c0;
+      if (ok && c0 !== ci[o] && !BAOVE[id[o]]) ci2[o] = c0;
     }
     ci = ci2;
     // 3) viền trong theo bộ phận: pixel phía SAU giáp bộ phận phía trước → màu viền
@@ -779,12 +807,13 @@ function tao(THREE, tuy) {
     for (y = 0; y < n; y++) for (x = 0; x < n; x++) {
       o = y * n + x; if (!id[o]) continue;
       var gp = NHOM[id[o]];
-      if (!gp) continue;
+      if (!gp || gp === 'chuong' || BAOVE[id[o]]) continue;   // chuông không bị viền trong ăn mất (viền nằm ở phía bộ phận kia)
       for (i = 0; i < 4; i++) {
         var xx = x + N4[i][0], yy = y + N4[i][1];
         if (!a(xx, yy)) continue;
         var q2 = yy * n + xx, gq = NHOM[id[q2]];
         if (!gq || gq === gp) continue;
+        if (gq === 'chuong' && gp !== 'kiem') { vt[o] = 1; break; }   // tách chuông khỏi mũ/áo bằng viền tối
         if ((gp === 'kiem' && gq === 'tayG') || (gp === 'tayG' && gq === 'kiem')) continue;
         if (dep[o] <= dep[q2] + EPS) continue;
         if (TRUOC[gq] || SAU[gp] || (gq === 'than' && gp === 'ao')) { vt[o] = 1; break; }
@@ -884,24 +913,34 @@ function tao(THREE, tuy) {
   /* ---------- chạy 1 hoạt cảnh → các khung pixel ---------- */
   lam.chayAnim = function (renderer, ten, tuyChon) {
     tuyChon = tuyChon || {};
-    var A = L3.ANIMS[ten], cb = lam.chuanBi(A), dt = 1 / 60, out = [];
+    var A = L3.ANIMS[ten], cb = lam.chuanBi(A), dt = 1 / 60, out = [], n = A.frames.length;
     lam.datCam();
-    // khởi động: đặt tư thế đầu, vải rủ tự nhiên, chạy trước 2 vòng (lặp) hoặc giữ tư thế đầu 0.7s
+    // khởi động (tất định, không số ngẫu nhiên): đặt tư thế đầu, vải rủ tự nhiên,
+    // chạy ấm 4 vòng (lặp) hoặc giữ tư thế đầu 0.8 s (không lặp)
     lam.tuong = A.tuong == null ? null : A.tuong;
-    var t0 = cb.loop ? -2 * cb.dai : -0.7;
+    lam.chuKy = cb.loop ? cb.dai : null;
+    lam.canVai = A.canVai || null;   // cản thêm cho áo choàng (rơi: gió ngược mạnh dễ làm vải lật hỗn loạn)
+    var t0 = cb.loop ? -4 * cb.dai : -0.8;
     lam.datThoiGian(A, cb.loop ? t0 : 0);
     lam.datLaiVai();
     var t = t0, tg = 0;
-    for (var i = 0; i < A.frames.length; i++) {
-      var tK = cb.T[i];
+    function toi(tK) {   // mô phỏng tới thời điểm tK (bước ≤ 1/60 s)
       while (t < tK - 1e-6) {
         var h = Math.min(dt, tK - t);
-        t += h; tg += h;
+        t += h; tg = cb.loop ? t : tg + h;
         lam.datThoiGian(A, cb.loop ? t : Math.max(0, t));
         suKien(A, cb, t - h, t);
         lam.buoc(h, tg);
       }
-      var fr = A.frames[i];
+    }
+    function chupVai() { return lam.vai.map(function (vt) { return Float32Array.from(vt.p); }).concat([new Float32Array([lam.CH.p.x, lam.CH.p.y, lam.CH.p.z])]); }
+    function datVai(a, b, w) {   // vải/chuông = a·(1-w) + b·w
+      lam.vai.forEach(function (vt, k) { for (var q = 0; q < vt.p.length; q++) vt.p[q] = a[k][q] + (b[k][q] - a[k][q]) * w; });
+      var c = a[a.length - 1], d = b[b.length - 1];
+      lam.CH.p.set(c[0] + (d[0] - c[0]) * w, c[1] + (d[1] - c[1]) * w, c[2] + (d[2] - c[2]) * w);
+    }
+    function ve(i) {
+      var fr = A.frames[i], tK = cb.T[i];
       // vệt chém: lấy mẫu vị trí lưỡi giữa khung trước và khung này
       var fx = { ve: [] };
       var sm = fr.sm != null ? fr.sm : (fr.hit ? 1 : 0);
@@ -921,12 +960,30 @@ function tao(THREE, tuy) {
       r.ten = fr.name; r.hold = fr.hold || 1; r.hit = !!fr.hit; r.comboWindow = !!fr.comboWindow;
       out.push(r);
     }
+    var i;
+    if (!cb.loop) {
+      for (i = 0; i < n; i++) { toi(cb.T[i]); ve(i); }
+    } else {
+      // KHÉP VÒNG: mô phỏng 2 vòng liên tiếp S1, S2 rồi trộn out(t) = S2(t)·(1 − t/T) + S1(t)·t/T.
+      // Tại t = 0 ra S2(0); tại t → T ra S1(T) = S2(0) ⇒ khung cuối nối liền khung đầu, không giật.
+      var S1 = [], S2 = [];
+      for (i = 0; i < n; i++) { toi(cb.T[i]); S1.push(chupVai()); }
+      toi(cb.dai);
+      var lech = 0, a0 = chupVai();
+      out.lechPhan = [];
+      a0.forEach(function (arr, k) { var l = 0; for (var q = 0; q < arr.length; q++) l = Math.max(l, Math.abs(arr[q] - S1[0][k][q])); out.lechPhan.push(+(l * O.ppu).toFixed(2)); lech = Math.max(lech, l); });
+      out.lechVong = lech * O.ppu;   // độ lệch thô giữa 2 vòng trước khi trộn (px) — chỉ để theo dõi
+      for (i = 0; i < n; i++) { toi(cb.dai + cb.T[i]); S2.push(chupVai()); }
+      for (i = 0; i < n; i++) { datVai(S2[i], S1[i], cb.T[i] / cb.dai); ve(i); }
+    }
+    lam.chuKy = null; lam.canVai = null;
     return out;
   };
   function suKien(A, cb, ta, tb) {
     if (!A.su) return;
     A.su.forEach(function (e) {
       var te = cb.T[e.khung] + (e.dt || 0);
+      if (cb.loop) { var k0 = Math.floor(ta / cb.dai); te += k0 * cb.dai; if (te <= ta) te += cb.dai; }
       if (te > ta && te <= tb && e.chuong) lam.goChuong(e.chuong[0], e.chuong[1]);
     });
   }

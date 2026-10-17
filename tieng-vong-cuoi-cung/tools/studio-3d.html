@@ -71,7 +71,7 @@ input[type=range] { width: 100%; height: 36px; accent-color: var(--xanh); min-wi
 <div class="trang">
   <header>
     <h1>Studio 3D – <b>Lam</b></h1>
-    <p>Mô hình 3D mượt, render thẳng xuống pixel đúng như trong game.</p>
+    <p>Mô hình 3D mượt, render thẳng xuống pixel đúng như trong game — hai cỡ: 36 px và 46 px.</p>
   </header>
 
   <section class="san" aria-label="Xem trước">
@@ -80,10 +80,10 @@ input[type=range] { width: 100%; height: 36px; accent-color: var(--xanh); min-wi
       <canvas id="c3d" width="600" height="600" aria-label="Mô hình 3D của Lam, vuốt để xoay"></canvas>
     </div>
     <div class="khung">
-      <h2><span>Bản pixel 64×64</span><span id="tpx">khung 1/6</span></h2>
+      <h2><span id="tieu-de-px">Cỡ 36 · ô 48×48</span><span id="tpx">khung 1/6</span></h2>
       <div class="o-pixel">
         <canvas id="cpx" width="384" height="384" aria-label="Bản pixel đang phát"></canvas>
-        <div class="nhan-khung"><span id="ten-khung">đứng thẳng</span><span id="co-hit" class="co hit" hidden>HIT</span><span id="co-noi" class="co noi" hidden>nối combo</span></div>
+        <div class="nhan-khung"><span id="ten-khung">đứng thẳng</span><span id="co-giu" class="co">×1</span><span id="co-hit" class="co hit" hidden>HIT</span><span id="co-noi" class="co noi" hidden>nối combo</span></div>
       </div>
     </div>
   </section>
@@ -95,6 +95,9 @@ input[type=range] { width: 100%; height: 36px; accent-color: var(--xanh); min-wi
       <button id="b-phat" class="chinh">Tạm dừng</button>
       <button id="b-toi" aria-label="Tới 1 khung">khung ▶</button>
       <span style="flex:1"></span>
+      <button id="c-36" aria-pressed="true">Cao 36</button>
+      <button id="c-46" aria-pressed="false">Cao 46</button>
+      <button id="b-bong" aria-pressed="false">Bóng ×1</button>
       <button id="b-x4" aria-pressed="false">×4</button>
       <button id="b-x6" aria-pressed="true">×6</button>
     </div>
@@ -120,6 +123,7 @@ input[type=range] { width: 100%; height: 36px; accent-color: var(--xanh); min-wi
           <button id="n-toi" aria-pressed="false">Tối</button>
           <button id="n-luoi" aria-pressed="false">Lưới ô</button>
         </div>
+        <p class="ghi-chu"><b>Cao 36 / Cao 46</b>: hai cỡ xuất cho game (?cao=36 mặc định, ?cao=46). Cỡ 36 phóng to tương đối chuông, bản kiếm và mũ để không dính thành một khối. <b>Bóng ×1</b>: xem đúng kích thước thật cạnh bản tô màu theo bộ phận (mũ đỏ, kiếm vàng, chuông cam) để soát silhouette. Nhãn ×2, ×3 là số nhịp khung được giữ (lấy đà, điểm chạm giữ lâu hơn khung chuyển tiếp).</p>
         <p class="ghi-chu">Ô pixel là đúng ảnh game dùng: mỗi khung được dựng lại từ mô hình 3D (áo choàng và chuông mô phỏng vật lý), tô 3 bậc sáng theo palette, viền ngoài 1 pixel và viền trong ở chỗ tay, kiếm chồng lên thân.</p>
         <p class="ghi-chu">Kéo thanh trượt để thử góc camera hay hướng sáng; ô pixel tự dựng lại sau nửa giây.</p>
       </fieldset>
@@ -184,6 +188,9 @@ var ID = { mu: 1, mat: 2, vienMu: 3, khoac: 4, than: 5, vat: 6, ao: 7, tayG: 8, 
            ungG: 12, ungX: 13, luoi: 14, chuoi: 15, chuong: 16, tram: 17, mat2: 18, chem: 19, fx: 20 };
 L3.ID = ID;
 var NHOM = {};
+/* bộ phận được bảo vệ khỏi bước dọn pixel lẻ / đốm màu (chi tiết nhỏ nhưng quan trọng để đọc nhân vật) */
+var BAOVE = {}; [ID.mat, ID.mat2, ID.chuong, ID.chuoi, ID.luoi].forEach(function (i) { BAOVE[i] = 1; });
+L3.BAOVE = BAOVE;
 [[ID.mu, 'dau'], [ID.mat, 'dau'], [ID.vienMu, 'dau'], [ID.mat2, 'dau'],
  [ID.khoac, 'than'], [ID.than, 'than'], [ID.vat, 'than'], [ID.tram, 'than'],
  [ID.ao, 'ao'], [ID.tayG, 'tayG'], [ID.tayX, 'tayX'], [ID.chanG, 'chanG'], [ID.ungG, 'chanG'],
@@ -199,8 +206,17 @@ var K = {
 L3.K = K;
 var D2R = Math.PI / 180;
 
+/* Hai cỡ xuất: nhân vật cao ~46 px (ô 64×64) và ~36 px (ô 48×48).
+   Cỡ nhỏ "chibi hóa" nhẹ: chuông, bản kiếm, mũ to tương đối hơn để không dính thành một khối khi còn 36 px. */
+L3.CO = {
+  46: { o: 64, px: 32, py: 59, ppu: 46 / 1.6, phong: { chuong: 1.0, kiemDay: 1.1, kiemDai: 1.0, mu: 1.0 } },
+  36: { o: 48, px: 24, py: 44, ppu: 36 / 1.6, phong: { chuong: 1.16, kiemDay: 1.25, kiemDai: 0.96, mu: 1.05 } }
+};
+
 function tao(THREE, tuy) {
   tuy = tuy || {};
+  var CO = L3.CO[tuy.cao || 46] || L3.CO[46];
+  var PH = CO.phong;
   var V3 = THREE.Vector3;
   var lam = { THREE: THREE, mats: [], meshes: [] };
   var U = lam.uni = {
@@ -305,7 +321,7 @@ function tao(THREE, tuy) {
   B.nguc = xuong('nguc', B.lung, K.nguc[0], K.nguc[1]);
   B.co = xuong('co', B.nguc, K.co[0], K.co[1]);
   B.dau = xuong('dau', B.co, K.dau[0], K.dau[1]);
-  B.dau.scale.setScalar(0.88);   // mũ trùm to kiểu chibi (~1/3.5 chiều cao) nhưng không lấn thân
+  B.dau.scale.setScalar(0.88 * PH.mu);   // mũ trùm to kiểu chibi (~1/3.5 chiều cao) nhưng không lấn thân
   ['G', 'X'].forEach(function (s) {
     var z = s === 'G' ? 1 : -1, sau = s === 'X';
     B['vai' + s] = xuong('vai' + s, B.nguc, K.vai[0], K.vai[1], K.vai[2] * z);
@@ -399,10 +415,11 @@ function tao(THREE, tuy) {
   luoi(cau(0.03), { ho: 'vang', b: 1 }, ID.chuoi, kiem).position.set(-0.07, 0, 0);
   var gd = capsule(0.022, 0.022, 0.15, 8); gd.translate(0, 0.075, 0);
   luoi(gd, { ho: 'vang', b: 1 }, ID.chuoi, kiem).position.set(0.05, 0, 0);
+  kiem.scale.set(PH.kiemDai, PH.kiemDay, PH.kiemDay);   // bản kiếm dày hơn ở cỡ nhỏ (đọc rõ ở 36 px)
   var LUOI = 0.56;
   lam.luoiDai = LUOI;
   luoi(epHinh([[0.06, 0.04], [0.06 + LUOI * 0.8, 0.036], [0.06 + LUOI, 0.0], [0.06 + LUOI * 0.8, -0.036], [0.06, -0.04]], [0, 2, 4], 0.008, 0.012, 3),
-       { ho: 'kiem', b: 0, bias: 0.12 }, ID.luoi, kiem);
+       { ho: 'kiem', b: 1, bias: 0.04 }, ID.luoi, kiem);   // lưỡi sáng hơn viền mũ (x1/x2) để kiếm không hòa vào mép mũ
 
   /* chuông vàng treo sau mũ (con lắc) */
   var chuong = lam.chuong = xuong('chuong', top);
@@ -413,7 +430,8 @@ function tao(THREE, tuy) {
   luoi(cgeo, { ho: 'vang', b: 1, bias: 0.05 }, ID.chuong, chuong);
   luoi(new THREE.TorusGeometry(0.022, 0.009, 6, 12), { ho: 'vang', b: 1 }, ID.chuong, chuong).position.set(0, -0.018, 0);
   luoi(cau(0.03), { ho: 'vang', b: 0 }, ID.chuong, chuong).position.set(0, -0.27, 0);
-  lam.chuongNeo = new V3(-0.38, 0.22, 0.27);   // trên mũ (hệ đầu)
+  chuong.scale.setScalar(PH.chuong);
+  lam.chuongNeo = new V3(-0.44, 0.24, 0.24);   // sau gáy mũ, lùi hẳn ra sau để không dính vào khối mũ (hệ đầu)
   lam.chuongDai = 0.07;
 
   /* ----- vải: áo choàng (vai) + vạt áo xanh (eo) ----- */
@@ -610,7 +628,13 @@ function tao(THREE, tuy) {
   };
   lam.gio = new V3(0, 0, 0);     // vận tốc nhân vật trong thế giới (gió tương đối = -v)
   lam.gioThem = new V3(0, 0, 0); // gió môi trường
+  /* chuKy (giây): với hoạt cảnh lặp, tần số gió được làm tròn để đúng số nguyên chu kỳ trong một vòng
+     → vải khép vòng (khung cuối nối mượt khung đầu). Không có số ngẫu nhiên nào: mọi lần in đều ra y hệt. */
+  lam.chuKy = null;
+  function tanSo(w) { var T = lam.chuKy; if (!T) return w; return 2 * Math.PI * Math.max(1, Math.round(w * T / (2 * Math.PI))) / T; }
+  var W1 = 2.3, W2 = 3.7;
   lam.buoc = function (dt, tg) {
+    W1 = tanSo(2.3); W2 = tanSo(3.7);
     top.updateMatrixWorld(true);
     capVa();
     var n = 2, h = dt / n, g = -9.8;
@@ -625,10 +649,10 @@ function tao(THREE, tuy) {
           var ax = keo * f * (wx - vx), ay = g + keo * f * (wy - vy), az = keo * f * (wz - vz);
           // gió nhẹ có nhịp (sống động khi đứng yên)
           if (vt.o.va === 'ao' && tg != null) {
-            var nh = Math.sin(tg * 2.3 + (i % C) * 0.7) * 0.5 + Math.sin(tg * 3.7 + j) * 0.3;
+            var nh = Math.sin(tg * W1 + (i % C) * 0.7) * 0.5 + Math.sin(tg * W2 + j) * 0.3;
             ax += -3.2 * f * (1 + nh); az += 0.4 * nh * f;
           }
-          var damp = 0.992;
+          var damp = vt.o.va === 'ao' ? (lam.canVai || 0.986) : 0.955;   // vạt áo ngắn cản mạnh hơn → không lật qua lật lại giữa 2 đùi (ổn định, khép vòng)
           var nx = p[k] + (p[k] - q[k]) * damp + ax * h * h;
           var ny = p[k + 1] + (p[k + 1] - q[k + 1]) * damp + ay * h * h;
           var nz = p[k + 2] + (p[k + 2] - q[k + 2]) * damp + az * h * h;
@@ -668,12 +692,13 @@ function tao(THREE, tuy) {
   };
   /* chuông: hạt verlet trên dây ngắn từ điểm neo sau mũ, va chạm khối mũ */
   var CH = lam.CH = { p: new V3(), q: new V3() };
+  var GOC_CHUONG = 55;
   function neoChuong() { tmpV2.copy(lam.chuongNeo); B.dau.localToWorld(tmpV2); return top.worldToLocal(tmpV2.clone()); }
   lam.datLaiChuong = function () { var a = neoChuong(); CH.p.set(a.x - 0.01, a.y - lam.chuongDai, a.z); CH.q.copy(CH.p); };
   lam.goChuong = function (vx, vy) { CH.q.x -= vx / 120; CH.q.y -= vy / 120; };
   function buocChuong(h) {
     var a = neoChuong();
-    var vx = (CH.p.x - CH.q.x) * 0.975, vy = (CH.p.y - CH.q.y) * 0.975;
+    var vx = (CH.p.x - CH.q.x) * 0.955, vy = (CH.p.y - CH.q.y) * 0.955;   // cản đủ để lắc vài nhịp rồi lặng
     CH.q.copy(CH.p);
     var keo = 1.2;
     CH.p.x += vx + keo * (-lam.gio.x - vx / h) * h * h;
@@ -684,6 +709,13 @@ function tao(THREE, tuy) {
       CH.p.z = a.z;
       tmpV.subVectors(CH.p, a); var d = tmpV.length() || 1e-6;
       CH.p.copy(a).addScaledVector(tmpV, lam.chuongDai / d);
+    }
+    // giới hạn biên độ: chuông chỉ lắc trong ±GOC_CHUONG quanh phương treo thẳng (không hất lên trên mũ, không phá silhouette)
+    var ga = Math.atan2(CH.p.x - a.x, -(CH.p.y - a.y)), gm = GOC_CHUONG * D2R;
+    if (Math.abs(ga) > gm) {
+      var g2 = Math.sign(ga) * gm;
+      CH.p.x = a.x + Math.sin(g2) * lam.chuongDai; CH.p.y = a.y - Math.cos(g2) * lam.chuongDai;
+      CH.q.x = CH.p.x - (CH.p.x - CH.q.x) * 0.3; CH.q.y = CH.p.y - (CH.p.y - CH.q.y) * 0.3;
     }
   }
   lam.capNhatLuoi = function () {
@@ -777,7 +809,7 @@ function tao(THREE, tuy) {
   lam.datThoiGian = function (A, t) { var P = lam.mau(A, t); if (A.tayTuongDoi) P.tdTay = 0; lam.datTuThe(P); lam.gio.set(P.v[0], P.v[1], 0); return P; };
 
   /* ---------- camera trực giao & render pixel ---------- */
-  var O = lam.O = { o: tuy.o || 64, px: 32, py: 59, ppu: (tuy.ppu || 46 / 1.6), camCao: 8, ss: tuy.ss || 2 };
+  var O = lam.O = { o: CO.o, px: CO.px, py: CO.py, ppu: CO.ppu, camCao: 8, ss: tuy.ss || 2, cao: tuy.cao || 46 };
   lam.camPx = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 30);
   lam.datCam = function () {
     var c = lam.camPx, e = O.camCao * D2R, ppu = O.ppu;
@@ -841,7 +873,7 @@ function tao(THREE, tuy) {
     var col = chup(renderer, false), idb = chup(renderer, true);
     var ci = new Int16Array(n * n).fill(-1), id = new Uint8Array(n * n), dep = new Float32Array(n * n);
     // gộp (ss=1: lấy thẳng; ss=2: màu đa số, ưu tiên nét mảnh)
-    var MANH = {}; MANH[ID.luoi] = 3; MANH[ID.vienMu] = 2; MANH[ID.mat2] = 3; MANH[ID.chuoi] = 2;
+    var MANH = {}; MANH[ID.luoi] = 3; MANH[ID.vienMu] = 2; MANH[ID.mat2] = 3; MANH[ID.chuoi] = 2; MANH[ID.chuong] = 2;
     for (var y = 0; y < n; y++) for (var x = 0; x < n; x++) {
       var dem = {}, nOpaque = 0, best = 0, bestScore = -1;
       var mau = [];
@@ -882,9 +914,9 @@ function tao(THREE, tuy) {
     fx = fx || {};
     function a(x, y) { return x >= 0 && y >= 0 && x < n && y < n && id[y * n + x] > 0; }
     var N4 = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-    // 1) bỏ pixel đơn lẻ không dính gì (trừ lưỡi kiếm)
+    // 1) bỏ pixel đơn lẻ không dính gì — KHÔNG đụng các bộ phận được bảo vệ (mắt, chuông, chuôi, lưỡi kiếm)
     for (y = 0; y < n; y++) for (x = 0; x < n; x++) {
-      o = y * n + x; if (!id[o] || id[o] === ID.luoi) continue;
+      o = y * n + x; if (!id[o] || BAOVE[id[o]]) continue;
       var c8 = 0; for (var dy = -1; dy <= 1; dy++) for (var dx = -1; dx <= 1; dx++) if ((dx || dy) && a(x + dx, y + dy)) c8++;
       if (c8 === 0) { id[o] = 0; ci[o] = -1; }
     }
@@ -898,7 +930,7 @@ function tao(THREE, tuy) {
         if (!id[q] || NHOM[id[q]] !== NHOM[id[o]]) { ok = false; break; }
         if (c0 === -2) c0 = ci[q]; else if (ci[q] !== c0) { ok = false; break; }
       }
-      if (ok && c0 !== ci[o] && id[o] !== ID.mat2) ci2[o] = c0;
+      if (ok && c0 !== ci[o] && !BAOVE[id[o]]) ci2[o] = c0;
     }
     ci = ci2;
     // 3) viền trong theo bộ phận: pixel phía SAU giáp bộ phận phía trước → màu viền
@@ -909,12 +941,13 @@ function tao(THREE, tuy) {
     for (y = 0; y < n; y++) for (x = 0; x < n; x++) {
       o = y * n + x; if (!id[o]) continue;
       var gp = NHOM[id[o]];
-      if (!gp) continue;
+      if (!gp || gp === 'chuong' || BAOVE[id[o]]) continue;   // chuông không bị viền trong ăn mất (viền nằm ở phía bộ phận kia)
       for (i = 0; i < 4; i++) {
         var xx = x + N4[i][0], yy = y + N4[i][1];
         if (!a(xx, yy)) continue;
         var q2 = yy * n + xx, gq = NHOM[id[q2]];
         if (!gq || gq === gp) continue;
+        if (gq === 'chuong' && gp !== 'kiem') { vt[o] = 1; break; }   // tách chuông khỏi mũ/áo bằng viền tối
         if ((gp === 'kiem' && gq === 'tayG') || (gp === 'tayG' && gq === 'kiem')) continue;
         if (dep[o] <= dep[q2] + EPS) continue;
         if (TRUOC[gq] || SAU[gp] || (gq === 'than' && gp === 'ao')) { vt[o] = 1; break; }
@@ -1014,24 +1047,34 @@ function tao(THREE, tuy) {
   /* ---------- chạy 1 hoạt cảnh → các khung pixel ---------- */
   lam.chayAnim = function (renderer, ten, tuyChon) {
     tuyChon = tuyChon || {};
-    var A = L3.ANIMS[ten], cb = lam.chuanBi(A), dt = 1 / 60, out = [];
+    var A = L3.ANIMS[ten], cb = lam.chuanBi(A), dt = 1 / 60, out = [], n = A.frames.length;
     lam.datCam();
-    // khởi động: đặt tư thế đầu, vải rủ tự nhiên, chạy trước 2 vòng (lặp) hoặc giữ tư thế đầu 0.7s
+    // khởi động (tất định, không số ngẫu nhiên): đặt tư thế đầu, vải rủ tự nhiên,
+    // chạy ấm 4 vòng (lặp) hoặc giữ tư thế đầu 0.8 s (không lặp)
     lam.tuong = A.tuong == null ? null : A.tuong;
-    var t0 = cb.loop ? -2 * cb.dai : -0.7;
+    lam.chuKy = cb.loop ? cb.dai : null;
+    lam.canVai = A.canVai || null;   // cản thêm cho áo choàng (rơi: gió ngược mạnh dễ làm vải lật hỗn loạn)
+    var t0 = cb.loop ? -4 * cb.dai : -0.8;
     lam.datThoiGian(A, cb.loop ? t0 : 0);
     lam.datLaiVai();
     var t = t0, tg = 0;
-    for (var i = 0; i < A.frames.length; i++) {
-      var tK = cb.T[i];
+    function toi(tK) {   // mô phỏng tới thời điểm tK (bước ≤ 1/60 s)
       while (t < tK - 1e-6) {
         var h = Math.min(dt, tK - t);
-        t += h; tg += h;
+        t += h; tg = cb.loop ? t : tg + h;
         lam.datThoiGian(A, cb.loop ? t : Math.max(0, t));
         suKien(A, cb, t - h, t);
         lam.buoc(h, tg);
       }
-      var fr = A.frames[i];
+    }
+    function chupVai() { return lam.vai.map(function (vt) { return Float32Array.from(vt.p); }).concat([new Float32Array([lam.CH.p.x, lam.CH.p.y, lam.CH.p.z])]); }
+    function datVai(a, b, w) {   // vải/chuông = a·(1-w) + b·w
+      lam.vai.forEach(function (vt, k) { for (var q = 0; q < vt.p.length; q++) vt.p[q] = a[k][q] + (b[k][q] - a[k][q]) * w; });
+      var c = a[a.length - 1], d = b[b.length - 1];
+      lam.CH.p.set(c[0] + (d[0] - c[0]) * w, c[1] + (d[1] - c[1]) * w, c[2] + (d[2] - c[2]) * w);
+    }
+    function ve(i) {
+      var fr = A.frames[i], tK = cb.T[i];
       // vệt chém: lấy mẫu vị trí lưỡi giữa khung trước và khung này
       var fx = { ve: [] };
       var sm = fr.sm != null ? fr.sm : (fr.hit ? 1 : 0);
@@ -1051,12 +1094,30 @@ function tao(THREE, tuy) {
       r.ten = fr.name; r.hold = fr.hold || 1; r.hit = !!fr.hit; r.comboWindow = !!fr.comboWindow;
       out.push(r);
     }
+    var i;
+    if (!cb.loop) {
+      for (i = 0; i < n; i++) { toi(cb.T[i]); ve(i); }
+    } else {
+      // KHÉP VÒNG: mô phỏng 2 vòng liên tiếp S1, S2 rồi trộn out(t) = S2(t)·(1 − t/T) + S1(t)·t/T.
+      // Tại t = 0 ra S2(0); tại t → T ra S1(T) = S2(0) ⇒ khung cuối nối liền khung đầu, không giật.
+      var S1 = [], S2 = [];
+      for (i = 0; i < n; i++) { toi(cb.T[i]); S1.push(chupVai()); }
+      toi(cb.dai);
+      var lech = 0, a0 = chupVai();
+      out.lechPhan = [];
+      a0.forEach(function (arr, k) { var l = 0; for (var q = 0; q < arr.length; q++) l = Math.max(l, Math.abs(arr[q] - S1[0][k][q])); out.lechPhan.push(+(l * O.ppu).toFixed(2)); lech = Math.max(lech, l); });
+      out.lechVong = lech * O.ppu;   // độ lệch thô giữa 2 vòng trước khi trộn (px) — chỉ để theo dõi
+      for (i = 0; i < n; i++) { toi(cb.dai + cb.T[i]); S2.push(chupVai()); }
+      for (i = 0; i < n; i++) { datVai(S2[i], S1[i], cb.T[i] / cb.dai); ve(i); }
+    }
+    lam.chuKy = null; lam.canVai = null;
     return out;
   };
   function suKien(A, cb, ta, tb) {
     if (!A.su) return;
     A.su.forEach(function (e) {
       var te = cb.T[e.khung] + (e.dt || 0);
+      if (cb.loop) { var k0 = Math.floor(ta / cb.dai); te += k0 * cb.dai; if (te <= ta) te += cb.dai; }
       if (te > ta && te <= tb && e.chuong) lam.goChuong(e.chuong[0], e.chuong[1]);
     });
   }
@@ -1084,31 +1145,31 @@ L3.FPS = 12;
 'use strict';
 var L3 = root.LAM3D = root.LAM3D || {};
 var META = {
-  idle: { loop: true, label: "Idle", f: [["đứng thẳng",1],["thở ra",1],["hạ người – thấp nhất",1],["vạt áo phất",1],["hít vào",1],["ưỡn ngực – cao nhất",1]] },
+  idle: { loop: true, label: "Idle", f: [["đứng thẳng",2],["thở ra",2],["hạ người – thấp nhất",3],["vạt áo phất",2],["hít vào",2],["ưỡn ngực – cao nhất",3]] },
   run: { loop: true, label: "Run", f: [["chân trước chạm đất",1],["nhún – dồn lực",1],["chân lướt qua",1],["đạp đất – bay",1],["chân kia chạm đất",1],["nhún – dồn lực (2)",1],["chân lướt qua (2)",1],["đạp đất – bay (2)",1]] },
-  jump: { loop: false, label: "Jump", f: [["lấy đà",1],["bật lên",1],["lên 1",1],["lên 2",1],["đỉnh nhảy",1],["chuyển sang rơi",1]] },
+  jump: { loop: false, label: "Jump", f: [["lấy đà – nén sâu",2],["bật lên – duỗi người",1],["lên 1",1],["lên 2",1],["đỉnh nhảy – lơ lửng",2],["chuyển sang rơi",1]] },
   fall: { loop: true, label: "Fall", f: [["rơi – áo bay lên",1],["rơi – vạt áo quất",1],["rơi – dang tay giữ thăng bằng",1]] },
-  attack: { loop: false, label: "Attack 1", f: [["thủ thế",1],["kéo kiếm ra sau ngang ngực",1],["dồn trọng tâm – kiếm ngang sau lưng",2],["vung ngang – kiếm lướt qua ngực",1],["chém thẳng ngang ngực – HIT",2,"H"],["theo đà – kiếm vượt qua",1,"C"],["hạ kiếm – sẵn sàng nối",1,"C"],["thu kiếm – kiếm thấp phía trước",1],["kiếm thấp phía trước (nối nhát 2)",1]] },
-  dodge: { loop: false, label: "Dodge", f: [["nhún thấp",1],["phóng người",1],["lướt thấp",1],["trượt chân",1],["phanh lại",1],["đứng vững",1]] },
-  hit: { loop: false, label: "Hit", f: [["trúng đòn",1],["bật ngửa",2],["loạng choạng",1],["hồi lại",1]] },
-  death: { loop: false, label: "Death", f: [["trúng đòn chí mạng",1],["khuỵu gối",1],["gục đầu",1],["chúi người",1],["đổ xuống",1],["sắp chạm đất",1],["đập xuống – nảy",1],["nằm im",3]] },
-  land: { loop: false, label: "Land", f: [["chạm đất – nén người mạnh",1],["nén thấp nhất – hấp lực",1],["đứng dậy",1]] },
-  crouch: { loop: false, label: "Crouch", f: [["hạ người xuống",1],["ngồi xổm – kiếm thủ trước",1]] },
-  slide: { loop: false, label: "Slide", f: [["lao người – bắt đầu trượt",1],["trượt thấp sát đất",1],["trượt dài – áo kéo phía sau",1],["giảm tốc – chống dậy",1]] },
+  attack: { loop: false, label: "Attack 1", f: [["thủ thế",1],["kéo kiếm ra sau – vặn vai",1],["nén người – kiếm sau lưng (lấy đà)",3],["vung – kiếm lướt qua ngực",1],["chém duỗi hết tầm – HIT",3,"H"],["theo đà – thân xoay theo kiếm",1,"C"],["hạ kiếm – sẵn sàng nối",2,"C"],["thu kiếm – kiếm thấp phía trước",1],["kiếm thấp phía trước (nối nhát 2)",1]] },
+  dodge: { loop: false, label: "Dodge", f: [["nhún thấp",2],["phóng người",1],["lướt thấp",1],["trượt chân",1],["phanh lại",1],["đứng vững",1]] },
+  hit: { loop: false, label: "Hit", f: [["trúng đòn",2],["bật ngửa",2],["loạng choạng",1],["hồi lại",1]] },
+  death: { loop: false, label: "Death", f: [["trúng đòn chí mạng",2],["khuỵu gối",1],["gục đầu",1],["chúi người",1],["đổ xuống",1],["sắp chạm đất",1],["đập xuống – nảy",2],["nằm im",4]] },
+  land: { loop: false, label: "Land", f: [["chạm đất – nén người mạnh",1],["nén thấp nhất – hấp lực",2],["bật lên – vươn người",1],["đứng vững",1]] },
+  crouch: { loop: false, label: "Crouch", f: [["hạ người xuống",1],["ngồi xổm – kiếm thủ trước",2]] },
+  slide: { loop: false, label: "Slide", f: [["lao người – bắt đầu trượt",1],["trượt thấp sát đất",1],["trượt dài – áo kéo phía sau",2],["giảm tốc – chống dậy",1]] },
   wallSlide: { loop: true, label: "Wall Slide", f: [["áp tường – trượt xuống",1],["trượt – tay miết tường",1],["trượt – áo choàng phần phật",1]] },
-  wallJump: { loop: false, label: "Wall Jump", f: [["co người – hai chân dồn vào tường",1],["đạp tường – bật ra sau",1],["bay ngược – co chân",1],["xoay người – cuộn tròn trên không",1]] },
+  wallJump: { loop: false, label: "Wall Jump", f: [["co người – hai chân dồn vào tường",2],["đạp tường – bật ra sau",1],["bay ngược – co chân",1],["xoay người – cuộn tròn trên không",1]] },
   wallClimb: { loop: true, label: "Wall Climb", f: [["tay xa vươn lên – chân gần đạp",1],["tay xa bám – kéo người lên",1],["chân xa đẩy – đổi bên",1],["tay gần vươn lên – chân xa đạp",1],["tay gần bám – kéo người lên",1],["chân gần đẩy – đổi bên",1]] },
   ladderClimb: { loop: true, label: "Ladder", f: [["tay xa nắm bậc trên – chân gần bước",1],["kéo lên – chân xa trụ",1],["đổi tay – thân thẳng",1],["tay gần nắm bậc trên – chân xa bước",1],["kéo lên – chân gần trụ",1],["đổi tay – thân thẳng (2)",1]] },
-  ledgeGrab: { loop: false, label: "Ledge", f: [["chộp mép tường",1],["treo người – đung đưa",1],["kéo người lên – chân đạp tường",1],["chống tay – đẩy ngực qua mép",1],["leo qua – co gối lên mép",1],["đứng dậy trên mép",1]] },
-  dash: { loop: false, label: "Dash", f: [["lấy đà – cúi người",1],["lướt nhanh – thu gọn thân",1],["lướt – áo choàng bay thẳng",1],["phanh – hạ chân xuống",1]] },
-  attack2: { loop: false, label: "Attack 2", f: [["kiếm thấp phía trước (từ nhát 1)",1],["hạ kiếm xuống dưới chéo ra sau",1],["dồn lực – kiếm chéo sát đất",2],["vung chéo lên – kiếm quét qua trước",1],["chém chéo lên – HIT",2,"H"],["theo đà – kiếm vút lên cao",1,"C"],["kiếm trên cao (nối nhát 3)",1,"C"]] },
-  attack3: { loop: false, label: "Attack 3", f: [["kiếm trên cao (từ nhát 2)",1],["giơ kiếm qua đầu – ngả ra sau",1],["vươn kiếm ra sau – nén lực tối đa",3],["bổ xuống – kiếm qua đỉnh đầu",1],["bổ thẳng xuống trước mặt – HIT",3,"H"],["đè nặng – kiếm ghim sát đất",1,"C"],["rút kiếm lên – thở dốc",1],["đứng dậy – thu kiếm",1],["thủ thế",1]] },
-  airAttack: { loop: false, label: "Air Attack", f: [["lơ lửng – co chân, kéo kiếm ra sau",1],["giơ kiếm qua đầu trên không",1],["chém vòng xuống trước – HIT",2,"H"],["theo đà – kiếm chĩa xuống trước",1],["thu kiếm – vẫn co chân",1],["duỗi chân – chuyển sang rơi",1]] },
-  downStrike: { loop: false, label: "Down Strike", f: [["co người trên không – xoay mũi kiếm xuống",1],["đâm thẳng xuống dưới chân – HIT",2,"H"],["mũi kiếm chạm – nảy bật lên",1],["bật lên – rút kiếm ngang",1],["duỗi người – chuẩn bị rơi",1]] },
-  upSlash: { loop: false, label: "Up Slash", f: [["hạ thấp – kiếm chéo sau sát đất",1],["nhún gối – dồn lực hất",2],["hất kiếm lên – kiếm quét qua trước",1],["hất thẳng lên cao – HIT",2,"H"],["theo đà – kiếm trên đầu",1],["hạ kiếm – thủ thế",1]] },
-  parry: { loop: false, label: "Ngân (Parry)", f: [["nâng kiếm lên chắn",1],["đỡ thành công – kiếm chéo trước mặt, chuông ngân",2],["dư chấn – chuông lắc ngược",1],["chuông lắc nhẹ – hạ kiếm",1],["về thủ thế",1]] },
-  chargeAttack: { loop: false, label: "Charge", f: [["kéo kiếm ra sau – bắt đầu tụ lực",1],["tụ lực – rung 1",2],["tụ lực – rung 2",2],["tụ lực – rung 3, giữ hơi",3],["bung lực – lao tới",1],["bung chém – HIT",2,"H"],["theo đà – trượt chân",1],["thu kiếm – thủ thế",1]] },
-  echoCast: { loop: false, label: "Echo Cast", f: [["giơ tay xa lên cao",1],["gõ nhẹ chuông – ghi tiếng vọng",2],["tiếng vọng lan ra",2],["hạ tay – về thủ thế",1]] },
+  ledgeGrab: { loop: false, label: "Ledge", f: [["chộp mép tường",1],["treo người – đung đưa",2],["kéo người lên – chân đạp tường",1],["chống tay – đẩy ngực qua mép",1],["leo qua – co gối lên mép",1],["đứng dậy trên mép",1]] },
+  dash: { loop: false, label: "Dash", f: [["lấy đà – cúi người",2],["lướt nhanh – thu gọn thân",1],["lướt – áo choàng bay thẳng",1],["phanh – hạ chân xuống",1]] },
+  attack2: { loop: false, label: "Attack 2", f: [["kiếm thấp phía trước (từ nhát 1)",1],["hạ kiếm xuống dưới chéo ra sau",1],["nén thấp – kiếm chéo sát đất (lấy đà)",3],["vung chéo lên – kiếm quét qua trước",1],["chém chéo lên, nhón chân – HIT",3,"H"],["theo đà – kiếm vút lên cao",1,"C"],["kiếm trên cao (nối nhát 3)",2,"C"]] },
+  attack3: { loop: false, label: "Attack 3", f: [["kiếm trên cao (từ nhát 2)",1],["giơ kiếm qua đầu – ngả ra sau",1],["vươn kiếm ra sau – nén lực tối đa",3],["bổ xuống – kiếm qua đỉnh đầu",1],["bổ xuống – kiếm ngang trước mặt",1],["bổ thẳng xuống trước mặt – HIT",3,"H"],["đè nặng – kiếm ghim sát đất",2,"C"],["rút kiếm lên – thở dốc",1],["đứng dậy – thu kiếm",1],["thủ thế",1]] },
+  airAttack: { loop: false, label: "Air Attack", f: [["lơ lửng – co chân, kéo kiếm ra sau",1],["giơ kiếm qua đầu trên không",2],["chém vòng xuống trước – HIT",3,"H"],["theo đà – kiếm chĩa xuống trước",1],["thu kiếm – vẫn co chân",1],["duỗi chân – chuyển sang rơi",1]] },
+  downStrike: { loop: false, label: "Down Strike", f: [["co người trên không – xoay mũi kiếm xuống",2],["đâm thẳng xuống dưới chân – HIT",3,"H"],["mũi kiếm chạm – nảy bật lên",1],["bật lên – rút kiếm ngang",1],["duỗi người – chuẩn bị rơi",1]] },
+  upSlash: { loop: false, label: "Up Slash", f: [["hạ thấp – kiếm chéo sau sát đất",1],["nhún gối – dồn lực hất",3],["hất kiếm lên – kiếm quét qua trước",1],["hất thẳng lên cao – HIT",3,"H"],["theo đà – kiếm trên đầu",1],["hạ kiếm – thủ thế",1]] },
+  parry: { loop: false, label: "Ngân (Parry)", f: [["nâng kiếm lên chắn",1],["đỡ thành công – kiếm chéo trước mặt, chuông ngân",3],["dư chấn – chuông lắc ngược",1],["chuông lắc nhẹ – hạ kiếm",1],["về thủ thế",1]] },
+  chargeAttack: { loop: false, label: "Charge", f: [["kéo kiếm ra sau – bắt đầu tụ lực",1],["tụ lực – rung 1",2],["tụ lực – rung 2",2],["tụ lực – rung 3, giữ hơi",4],["bung lực – lao tới",1],["bung chém – HIT",3,"H"],["theo đà – trượt chân",1],["thu kiếm – thủ thế",1]] },
+  echoCast: { loop: false, label: "Echo Cast", f: [["giơ tay xa lên cao",2],["gõ nhẹ chuông – ghi tiếng vọng",3],["tiếng vọng lan ra",2],["hạ tay – về thủ thế",1]] },
   heal: { loop: false, label: "Heal", f: [["lùi chân – hạ người",1],["quỳ một gối – chống kiếm",1],["ôm chuông – hồi máu",3],["ôm chuông – ánh sáng lan",2],["chống kiếm đứng dậy",1],["đứng thẳng – hồi phục",1]] },
 };
 L3.THU_TU = Object.keys(META);
@@ -1118,30 +1179,30 @@ L3.COMBO = ['attack', 'attack2', 'attack3'];
 var G = 0.07;   // cổ chân khi chạm đất
 var K = {};
 K.idle = { keys: [
-  { hy: 0.49, p: 8, c: 2, n: -4, aN: [24, 52], aF: [-12, 24, 6], k: 24, sq: 1.0 },
-  { hy: 0.485, c: 0, n: -2, aN: [22, 50], aF: [-10, 22, 6], k: 22, sq: 0.995 },
-  { hy: 0.475, p: 10, c: -1, n: 0, aN: [20, 48], aF: [-8, 20, 7], k: 20, sq: 0.985 },
-  { hy: 0.48, c: 1, n: -2, aN: [22, 50], aF: [-10, 22, 6], k: 22, sq: 0.99 },
-  { hy: 0.49, p: 8, c: 3, n: -5, aN: [25, 53], aF: [-13, 25, 6], k: 25, sq: 1.0 },
-  { hy: 0.495, p: 7, c: 4, n: -6, aN: [26, 54], aF: [-14, 26, 6], k: 26, sq: 1.01 }
+  { hy: 0.485, p: 8, c: 2, n: -4, aN: [24, 52], aF: [-12, 24, 6], k: 24, sq: 1.0 },
+  { hy: 0.475, p: 9, c: 0, n: -2, aN: [22, 50], aF: [-10, 22, 6], k: 21, sq: 0.99 },
+  { hy: 0.462, p: 11, c: -2, n: 1, aN: [19, 47], aF: [-7, 19, 7], k: 18, sq: 0.975 },
+  { hy: 0.47, p: 10, c: 0, n: -1, aN: [21, 49], aF: [-9, 21, 6], k: 20, sq: 0.985 },
+  { hy: 0.488, p: 8, c: 3, n: -5, aN: [25, 53], aF: [-13, 25, 6], k: 25, sq: 1.005 },
+  { hy: 0.498, p: 6, c: 5, n: -7, aN: [27, 55], aF: [-15, 27, 6], k: 28, sq: 1.02 }
 ] };
 K.run = { v: [3.4, 0], keys: [
-  { hx: 0.02, hy: 0.47, p: 16, s: 7, c: 4, n: -12, tw: -8, fN: [0.25, G, 14], fF: [-0.22, 0.16, -40], aN: [-30, 70], aF: [55, 75, 4], k: -15, sq: 1 },
-  { hx: 0.0, hy: 0.42, p: 20, tw: -4, fN: [0.08, G, 0], fF: [-0.18, 0.30, -60], aN: [-12, 65], aF: [30, 70, 4], k: -5, sq: 0.95 },
-  { hx: 0.0, hy: 0.47, p: 18, tw: 2, fN: [-0.08, G, -8], fF: [0.04, 0.24, -25], aN: [12, 60], aF: [0, 60, 4], k: 8, sq: 1.0 },
-  { hx: 0.02, hy: 0.53, p: 16, tw: 6, fN: [-0.25, 0.15, -45], fF: [0.20, 0.17, 0], aN: [40, 60], aF: [-28, 62, 4], k: 22, sq: 1.04 },
-  { hx: 0.02, hy: 0.47, p: 16, tw: 8, fF: [0.25, G, 14], fN: [-0.22, 0.16, -40], aN: [55, 62], aF: [-34, 66, 4], k: 30, sq: 1 },
-  { hx: 0.0, hy: 0.42, p: 20, tw: 4, fF: [0.08, G, 0], fN: [-0.18, 0.30, -60], aN: [32, 62], aF: [-14, 64, 4], k: 18, sq: 0.95 },
-  { hx: 0.0, hy: 0.47, p: 18, tw: -2, fF: [-0.08, G, -8], fN: [0.04, 0.24, -25], aN: [6, 64], aF: [12, 62, 4], k: 2, sq: 1.0 },
-  { hx: 0.02, hy: 0.53, p: 16, tw: -6, fF: [-0.25, 0.15, -45], fN: [0.20, 0.17, 0], aN: [-22, 68], aF: [40, 70, 4], k: -10, sq: 1.04 }
+  { hx: 0.02, hy: 0.46, p: 18, s: 7, c: 4, n: -12, tw: -10, fN: [0.27, G, 14], fF: [-0.24, 0.17, -45], aN: [-38, 72], aF: [62, 78, 4], k: -18, sq: 0.98 },
+  { hx: 0.0, hy: 0.395, p: 23, s: 9, tw: -5, fN: [0.08, G, 0], fF: [-0.18, 0.31, -65], aN: [-16, 66], aF: [34, 72, 4], k: -6, sq: 0.93 },
+  { hx: 0.0, hy: 0.47, p: 19, tw: 2, fN: [-0.08, G, -8], fF: [0.05, 0.25, -25], aN: [12, 60], aF: [0, 60, 4], k: 8, sq: 1.0 },
+  { hx: 0.02, hy: 0.545, p: 15, tw: 7, fN: [-0.27, 0.16, -50], fF: [0.22, 0.18, 0], aN: [46, 60], aF: [-32, 64, 4], k: 26, sq: 1.05 },
+  { hx: 0.02, hy: 0.46, p: 18, tw: 10, fF: [0.27, G, 14], fN: [-0.24, 0.17, -45], aN: [60, 62], aF: [-38, 68, 4], k: 34, sq: 0.98 },
+  { hx: 0.0, hy: 0.395, p: 23, tw: 5, fF: [0.08, G, 0], fN: [-0.18, 0.31, -65], aN: [34, 62], aF: [-16, 66, 4], k: 20, sq: 0.93 },
+  { hx: 0.0, hy: 0.47, p: 19, tw: -2, fF: [-0.08, G, -8], fN: [0.05, 0.25, -25], aN: [6, 64], aF: [12, 62, 4], k: 2, sq: 1.0 },
+  { hx: 0.02, hy: 0.545, p: 15, tw: -7, fF: [-0.27, 0.16, -50], fN: [0.22, 0.18, 0], aN: [-26, 70], aF: [46, 72, 4], k: -12, sq: 1.05 }
 ] };
 K.jump = { keys: [
-  { hy: 0.37, p: 26, s: 10, c: 6, n: -2, fN: [0.10, G, 0], fF: [-0.10, G, -10], aN: [-40, 45], aF: [-55, 30, 8], k: 150, sq: 0.9, v: [0, 0] },
-  { hy: 0.58, p: 2, s: -4, c: -4, n: -14, fN: [0.03, 0.12, -45], fF: [-0.09, 0.14, -50], aN: [125, 25], aF: [150, 20, 12], k: 100, sq: 1.08, v: [0, 6], de: 3 },
-  { hy: 0.57, p: 6, s: 0, c: 0, n: -10, fN: [0.13, 0.30, -10], fF: [-0.03, 0.24, -35], aN: [80, 60], aF: [95, 45, 12], k: 60, sq: 1.03, v: [0, 4] },
-  { hy: 0.58, p: 10, n: -6, fN: [0.15, 0.37, -5], fF: [0.0, 0.32, -25], aN: [60, 70], aF: [70, 45, 14], k: 40, sq: 1.0, v: [0, 2] },
-  { hy: 0.58, p: 10, n: -4, fN: [0.11, 0.34, 0], fF: [-0.03, 0.30, -20], aN: [55, 65], aF: [65, 40, 18], k: 35, sq: 1.0, v: [0, 0.2] },
-  { hy: 0.56, p: 6, n: -2, fN: [0.07, 0.22, -15], fF: [-0.10, 0.20, -30], aN: [65, 35, 22], aF: [85, 25, 26], k: 30, sq: 1.01, v: [0, -2] }
+  { hy: 0.34, p: 28, s: 12, c: 6, n: 0, fN: [0.11, G, 0], fF: [-0.11, G, -10], aN: [-45, 45], aF: [-60, 30, 8], k: 150, sq: 0.88, v: [0, 0] },
+  { hy: 0.585, p: 0, s: -5, c: -5, n: -16, fN: [0.03, 0.12, -50], fF: [-0.09, 0.15, -55], aN: [-35, 20], aF: [150, 18, 12], k: -120, sq: 1.06, v: [0, 6], de: 3 },
+  { hy: 0.58, p: 6, s: 0, c: 0, n: -10, fN: [0.13, 0.30, -10], fF: [-0.03, 0.24, -35], aN: [10, 40], aF: [96, 45, 12], k: -40, sq: 1.04, v: [0, 4] },
+  { hy: 0.58, p: 10, n: -6, fN: [0.15, 0.37, -5], fF: [0.0, 0.33, -25], aN: [35, 45], aF: [70, 45, 14], k: -12, sq: 1.0, v: [0, 2] },
+  { hy: 0.58, p: 11, n: -3, fN: [0.11, 0.35, 0], fF: [-0.03, 0.31, -20], aN: [45, 40, 10], aF: [64, 40, 18], k: -4, sq: 0.98, v: [0, 0.2] },
+  { hy: 0.56, p: 6, n: -2, fN: [0.07, 0.22, -15], fF: [-0.10, 0.20, -30], aN: [62, 30, 22], aF: [88, 25, 26], k: 8, sq: 1.02, v: [0, -2.5] }
 ] };
 K.fall = { v: [0, -5.5], keys: [
   { hy: 0.56, p: 4, s: -2, n: -2, fN: [0.08, 0.15, -20], fF: [-0.11, 0.19, -35], aN: [75, 25, 25], aF: [105, 20, 30], k: 35 },
@@ -1149,37 +1210,39 @@ K.fall = { v: [0, -5.5], keys: [
   { hy: 0.56, p: 5, n: -3, fN: [0.09, 0.16, -18], fF: [-0.12, 0.17, -38], aN: [72, 28, 28], aF: [100, 22, 32], k: 38 }
 ] };
 K.land = { keys: [
-  { hy: 0.34, p: 28, s: 12, c: 6, n: 4, fN: [0.13, G, 0], fF: [-0.13, G, -10], aN: [45, 30, 15], aF: [30, 20, 20], k: 10, sq: 0.86, v: [0, -1] },
-  { hy: 0.31, p: 32, s: 14, c: 8, n: 8, aN: [35, 35, 10], aF: [20, 25, 15], k: 5, sq: 0.9, v: [0, 0] },
-  { hy: 0.46, p: 12, s: 6, c: 3, n: -2, aN: [26, 48], aF: [-8, 25, 8], k: 20, sq: 1.0, fN: [0.10, G, 0], fF: [-0.09, G, 0] }
+  { hy: 0.35, p: 26, s: 12, c: 6, n: 2, fN: [0.13, G, 0], fF: [-0.13, G, -10], aN: [50, 30, 15], aF: [36, 20, 20], k: 12, sq: 0.88, v: [0, -1] },
+  { hy: 0.30, p: 32, s: 15, c: 8, n: 8, aN: [36, 35, 10], aF: [20, 25, 15], k: 4, sq: 0.86, v: [0, 0] },
+  { hy: 0.505, p: 4, s: 0, c: -2, n: -10, aN: [30, 46], aF: [-16, 26, 8], k: 30, sq: 1.05, fN: [0.10, G, 0], fF: [-0.09, G, 0] },
+  { hy: 0.48, p: 9, s: 4, c: 2, n: -4, aN: [25, 52], aF: [-12, 24, 6], k: 24, sq: 1.0 }
 ] };
 K.attack = { keys: [
   { hy: 0.48, p: 10, aN: [30, 55], k: 25, fN: [0.10, G, 0], fF: [-0.10, G, 0] },
-  { hy: 0.47, p: 6, tw: -14, aN: [-20, 70], k: 120, aF: [30, 30, 10], fN: [0.12, G, 0], fF: [-0.12, G, 0], n: -6 },
-  { hx: -0.03, hy: 0.45, p: 4, s: 0, tw: -24, aN: [-62, 30], k: 178, aF: [45, 35, 14], n: -8, fN: [0.14, G, 0], fF: [-0.15, G, -5], sq: 0.98 },
-  { hx: 0.01, hy: 0.46, p: 12, tw: 0, aN: [105, 10], ky: -85, kb: 1, kw: -90, aF: [-10, 35, 12], n: -4, fN: [0.18, G, 0], fF: [-0.13, G, -10], sm: 0.8, de: 3 },
-  { hx: 0.06, hy: 0.44, p: 18, s: 6, tw: 10, aN: [96, 0], ky: 45, kb: 1, kw: -90, aF: [-45, 30, 16], n: -8, fN: [0.25, G, 0], fF: [-0.14, 0.08, -25], sq: 0.98, de: 2 },
-  { hx: 0.06, hy: 0.44, p: 20, tw: 14, aN: [90, 6], ky: 110, kb: 1, kw: -88, aF: [-50, 35, 16] },
-  { hx: 0.04, hy: 0.45, p: 16, tw: 8, aN: [55, 30], ky: 50, kb: 0.3, k: -25, aF: [-30, 30, 12] },
+  { hy: 0.46, p: 8, tw: -16, aN: [-24, 66], k: 125, aF: [32, 30, 10], fN: [0.12, G, 0], fF: [-0.13, G, 0], n: -6, sq: 0.98 },
+  { hx: -0.04, hy: 0.42, p: 6, s: 2, tw: -30, aN: [-66, 30], k: 180, aF: [50, 35, 14], n: -9, fN: [0.15, G, 0], fF: [-0.16, G, -5], sq: 0.94 },
+  { hx: 0.02, hy: 0.45, p: 12, tw: -4, aN: [92, 14], ky: -15, kb: 1, kw: -70, aF: [-12, 35, 12], n: -5, fN: [0.20, G, 0], fF: [-0.14, G, -10], sm: 0.9, de: 3 },
+  { hx: 0.08, hy: 0.44, p: 20, s: 7, tw: 16, aN: [96, 0], ky: 38, kb: 1, kw: -90, aF: [-55, 30, 16], n: -9, fN: [0.28, G, 0], fF: [-0.16, 0.08, -30], sq: 1.03, de: 2, sm: 1.7 },
+  { hx: 0.08, hy: 0.44, p: 22, tw: 22, aN: [88, 8], ky: 95, kb: 1, kw: -84, aF: [-58, 35, 16], n: -6 },
+  { hx: 0.05, hy: 0.45, p: 16, tw: 9, aN: [55, 30], ky: 45, kb: 0.3, k: -25, aF: [-30, 30, 12] },
   { hx: 0.02, hy: 0.47, p: 12, tw: 2, aN: [38, 42], ky: 10, kb: 0, k: -25, aF: [-18, 26, 8], fN: [0.16, G, 0], fF: [-0.12, G, 0] },
   { hx: 0.0, hy: 0.48, p: 10, tw: 0, aN: [35, 35], k: -28, aF: [-14, 25, 6] }
 ] };
 K.attack2 = { keys: [
   { hy: 0.48, p: 10, aN: [35, 35], k: 332, fN: [0.14, G, 0], fF: [-0.11, G, 0] },
-  { hy: 0.44, p: 18, tw: -12, aN: [-30, 18], k: 238, aF: [20, 30, 10], fN: [0.15, G, 0], fF: [-0.12, G, -5] },
-  { hx: -0.02, hy: 0.39, p: 28, s: 10, tw: -24, aN: [-55, 8], k: 212, aF: [40, 30, 14], n: 4, sq: 0.95, fN: [0.17, G, 0], fF: [-0.13, G, -15] },
+  { hy: 0.43, p: 19, tw: -14, aN: [-30, 18], k: 238, aF: [20, 30, 10], fN: [0.15, G, 0], fF: [-0.12, G, -5], sq: 0.97 },
+  { hx: -0.03, hy: 0.36, p: 30, s: 11, tw: -28, aN: [-58, 8], k: 212, aF: [44, 30, 14], n: 5, sq: 0.92, fN: [0.18, G, 0], fF: [-0.14, G, -15] },
   { hx: 0.02, hy: 0.45, p: 14, s: 4, tw: -4, aN: [35, 8], k: 302, aF: [-10, 30, 12], n: -4, sq: 1.0, sm: 0.7, de: 2 },
-  { hx: 0.05, hy: 0.53, p: 0, s: -6, c: -6, tw: 10, aN: [125, 6], k: 400, aF: [-45, 25, 18], n: -14, sq: 1.06, fN: [0.20, G, 0], fF: [-0.12, 0.10, -35], de: 2 },
-  { hx: 0.05, hy: 0.53, p: -2, s: -8, tw: 12, aN: [165, 20], k: 448, aF: [-40, 30, 16], n: -16 },
-  { hx: 0.03, hy: 0.50, p: 2, s: -4, tw: 6, aN: [160, 32], k: 462, aF: [-25, 30, 12], n: -10, fF: [-0.12, G, -10] }
+  { hx: 0.06, hy: 0.55, p: -2, s: -8, c: -7, tw: 14, aN: [128, 4], k: 402, aF: [-50, 25, 18], n: -16, sq: 1.08, fN: [0.21, 0.09, -20], fF: [-0.13, 0.12, -40], de: 2 },
+  { hx: 0.05, hy: 0.54, p: -4, s: -9, tw: 18, aN: [166, 20], k: 450, aF: [-44, 30, 16], n: -18, sq: 1.04 },
+  { hx: 0.03, hy: 0.50, p: 2, s: -4, tw: 6, aN: [160, 32], k: 462, aF: [-25, 30, 12], n: -10, sq: 1.0, fN: [0.20, G, 0], fF: [-0.12, G, -10] }
 ] };
 K.attack3 = { keys: [
   { hy: 0.50, p: 2, s: -4, aN: [160, 32], k: 100, aF: [-25, 30, 12], n: -10, fN: [0.14, G, 0], fF: [-0.12, G, 0] },
   { hx: -0.02, hy: 0.51, p: -8, s: -8, c: -6, aN: [176, 60], k: 150, aF: [150, 40, 14], n: -16, sq: 1.03, fN: [0.13, G, 0], fF: [-0.14, G, -10] },
-  { hx: -0.04, hy: 0.49, p: -14, s: -10, c: -8, aN: [186, 90], k: 205, aF: [165, 70, 14], n: -18, sq: 1.05, fN: [0.12, G, 10], fF: [-0.16, G, -15] },
+  { hx: -0.05, hy: 0.50, p: -16, s: -11, c: -8, aN: [188, 92], k: 208, aF: [168, 72, 14], n: -19, sq: 1.06, fN: [0.12, G, 10], fF: [-0.17, G, -15] },
   { hx: 0.0, hy: 0.48, p: 8, s: 4, c: 2, aN: [150, 18], k: 100, aF: [110, 40, 12], n: -6, sq: 1.0, sm: 0.6, de: 3 },
-  { hx: 0.06, hy: 0.36, p: 24, s: 8, c: 4, aN: [40, 0], k: -50, aF: [10, 30, 14], n: -4, sq: 0.9, fN: [0.27, G, 0], fF: [-0.20, G, -25], de: 3 },
-  { hx: 0.06, hy: 0.33, p: 28, s: 10, c: 5, aN: [28, 4], k: -68, aF: [0, 35, 14], n: 0, sq: 0.92 },
+  { hx: 0.04, hy: 0.42, p: 18, s: 6, c: 3, aN: [92, 4], k: 22, aF: [50, 35, 14], n: -6, sq: 0.97, fN: [0.22, G, 0], fF: [-0.18, G, -15], sm: 0.8, de: 2 },
+  { hx: 0.07, hy: 0.35, p: 26, s: 9, c: 5, aN: [38, 0], k: -52, aF: [8, 30, 14], n: -4, sq: 0.88, fN: [0.28, G, 0], fF: [-0.21, G, -25], de: 3 },
+  { hx: 0.07, hy: 0.32, p: 29, s: 10, c: 5, aN: [28, 4], k: -68, aF: [0, 35, 14], n: 1, sq: 0.92 },
   { hx: 0.04, hy: 0.40, p: 20, s: 8, c: 4, aN: [25, 30], k: -40, aF: [-10, 30, 10], n: -2, sq: 0.97 },
   { hx: 0.02, hy: 0.45, p: 14, s: 6, c: 3, aN: [36, 44], k: -18, aF: [-5, 26, 8], n: -2, sq: 1.0, fN: [0.14, G, 0], fF: [-0.12, G, 0] },
   { hx: 0.0, hy: 0.48, p: 10, s: 4, c: 2, aN: [28, 52], k: 22, aF: [-12, 24, 6], n: -4, fN: [0.10, G, 0], fF: [-0.09, G, 0] }
@@ -1337,13 +1400,18 @@ L3.THU_TU.forEach(function (ten) {
 });
 /* sự kiện: gõ chuông (xung vận tốc cho con lắc) */
 ['death', 'dodge', 'dash', 'wallJump', 'slide'].forEach(function (t) { ANIMS[t].tayTuongDoi = true; });   // tay theo thân khi lăn/lướt
+ANIMS.fall.canVai = 0.94; ANIMS.wallClimb.canVai = 0.97;
 ANIMS.wallSlide.tuong = -0.31; ANIMS.wallJump.tuong = -0.31;   // áo choàng áp vào tường sau lưng
 ANIMS.parry.su = [{ khung: 1, chuong: [-2.2, 0.6] }];
 ANIMS.echoCast.su = [{ khung: 1, chuong: [1.6, 0.8] }];
 ANIMS.hit.su = [{ khung: 0, chuong: [-2.5, 1.2] }];
 ANIMS.death.su = [{ khung: 0, chuong: [-2.5, 1.2] }, { khung: 6, chuong: [0, 2.0] }];
-ANIMS.land.su = [{ khung: 0, chuong: [0, -2.0] }];
-ANIMS.attack3.su = [{ khung: 4, chuong: [1.5, -1.5] }];
+ANIMS.land.su = [{ khung: 0, chuong: [0.6, -2.0] }];
+ANIMS.attack3.su = [{ khung: 5, chuong: [1.4, -1.2] }];
+/* chuông lắc SAU khi dừng/chém (biên độ vừa: con lắc có cản + giới hạn góc trong lam3d-core.js) */
+ANIMS.attack.su = [{ khung: 4, chuong: [-1.6, 0.4] }];
+ANIMS.attack2.su = [{ khung: 4, chuong: [-1.0, -1.2] }];
+ANIMS.jump.su = [{ khung: 1, chuong: [0, -1.4] }];
 L3.ANIMS = ANIMS;
 
 /* ---------------- hiệu ứng pixel (vẽ lên chỗ trống quanh nhân vật) ---------------- */
@@ -1395,7 +1463,7 @@ function hao(ve, lam, b) {   // kiếm tụ lực: quầng sáng quanh lưỡi +
 <script>
 (function () {
 'use strict';
-var NEN_LANG = 'data:image/png;base64,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';
+var NEN_LANG = 'data:image/png;base64,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';
 var $ = function (id) { return document.getElementById(id); };
 var trangThai = $('trang-thai');
 if (!window.THREE) { trangThai.textContent = 'Không tải được thư viện 3D. Kiểm tra mạng rồi tải lại trang.'; return; }
@@ -1407,7 +1475,8 @@ R.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 R.setClearColor(0x212835, 1);
 
 var song = LAM3D.tao(THREE, {});   // mô hình phát liên tục cho khung 3D
-var pix = LAM3D.tao(THREE, {});    // mô hình riêng để in khung pixel (không phá nhịp mô phỏng của khung 3D)
+var PIX = { 36: LAM3D.tao(THREE, { cao: 36 }), 46: LAM3D.tao(THREE, { cao: 46 }) };   // mô hình riêng để in khung pixel, mỗi cỡ một bản
+var co = 36, pix = PIX[co], bongX1 = false;
 // nền khung 3D: đĩa đất + vạch
 var dat = new THREE.Mesh(new THREE.CircleGeometry(1.25, 48), new THREE.MeshBasicMaterial({ color: 0x1A212B }));
 dat.rotation.x = -Math.PI / 2; dat.position.y = -0.002; song.scene.add(dat);
@@ -1452,10 +1521,24 @@ function inPixel() {
   pix.O.camCao = +$('s-cam').value;
   var t0 = performance.now();
   var fr = pix.chayAnim(R, ten);
+  var o = pix.O.o;
   khung = fr.map(function (f) {
-    var c = document.createElement('canvas'); c.width = 64; c.height = 64;
-    c.getContext('2d').putImageData(new ImageData(f.px, 64, 64), 0, 0);
-    return { c: c, ten: f.ten, hit: f.hit, noi: f.comboWindow, hold: f.hold };
+    var c = document.createElement('canvas'); c.width = o; c.height = o;
+    c.getContext('2d').putImageData(new ImageData(f.px, o, o), 0, 0);
+    // bản đồ bộ phận (soát silhouette): mũ đỏ, kiếm vàng, chuông cam, mắt trắng, còn lại xám
+    var m = document.createElement('canvas'); m.width = o; m.height = o;
+    var mg = m.getContext('2d'), im = mg.createImageData(o, o), I = LAM3D.ID;
+    for (var q = 0; q < o * o; q++) {
+      if (!f.px[q * 4 + 3]) continue;
+      var v = f.id[q], cc = f.px[q * 4] === 12 && f.px[q * 4 + 1] === 15 ? [20, 20, 24] : [120, 120, 130];
+      if (v === I.mu || v === I.vienMu || v === I.mat) cc = [200, 70, 70];
+      else if (v === I.luoi || v === I.chuoi) cc = [240, 220, 80];
+      else if (v === I.chuong) cc = [255, 140, 30];
+      else if (v === I.mat2) cc = [255, 255, 255];
+      im.data[q * 4] = cc[0]; im.data[q * 4 + 1] = cc[1]; im.data[q * 4 + 2] = cc[2]; im.data[q * 4 + 3] = 255;
+    }
+    mg.putImageData(im, 0, 0);
+    return { c: c, m: m, ten: f.ten, hit: f.hit, noi: f.comboWindow, hold: f.hold };
   });
   trangThai.textContent = 'Dựng ' + khung.length + ' khung trong ' + Math.round(performance.now() - t0) + ' ms';
   khungHien = -1;
@@ -1473,7 +1556,7 @@ function chiSoKhung(tt) {
   return i;
 }
 function veKhung(i) {
-  var n = 64 * phong;
+  var o = pix.O.o, n = 64 * phong;   // khung hiển thị luôn 64 ô → cỡ 36 (ô 48) trông nhỏ hơn đúng tỉ lệ
   if (cpx.width !== n) { cpx.width = n; cpx.height = n; }
   gpx.imageSmoothingEnabled = false;
   if (nen === 'lang' && anhNen.complete && anhNen.naturalWidth) gpx.drawImage(anhNen, 0, 0, n, n);
@@ -1485,7 +1568,17 @@ function veKhung(i) {
     }
   }
   var k = khung[i];
-  if (k) gpx.drawImage(k.c, 0, 0, n, n);
+  // canh theo chân: pivot cỡ đang xem trùng pivot ô 64 (32, 59)
+  var dx = (32 - pix.O.px) * phong, dy = (59 - pix.O.py) * phong;
+  if (k && !bongX1) gpx.drawImage(k.c, dx, dy, o * phong, o * phong);
+  if (k && bongX1) {
+    gpx.fillStyle = '#212835'; gpx.fillRect(0, 0, n, n);
+    var p2 = Math.max(2, Math.floor(phong / 2));
+    gpx.drawImage(k.c, 6, 6, o, o);                               // ×1 thật
+    gpx.drawImage(k.c, 6, o + 14, o * p2, o * p2);                // phóng
+    gpx.drawImage(k.m, o * p2 + 14, o + 14, o * p2, o * p2);      // bản đồ bộ phận
+  }
+  $('co-giu').textContent = '×' + (k ? k.hold : 1);
   $('tpx').textContent = 'khung ' + (i + 1) + '/' + khung.length;
   $('ten-khung').textContent = k ? k.ten : '';
   $('co-hit').hidden = !(k && k.hit); $('co-noi').hidden = !(k && k.noi);
@@ -1531,6 +1624,15 @@ $('b-x6').addEventListener('click', function () { datPhong(6); });
   });
 });
 anhNen.onload = function () { veKhung(Math.max(0, khungHien)); };
+function datCo(c) {
+  co = c; pix = PIX[c];
+  $('c-36').setAttribute('aria-pressed', c === 36); $('c-46').setAttribute('aria-pressed', c === 46);
+  $('tieu-de-px').textContent = 'Cỡ ' + c + ' · ô ' + pix.O.o + '×' + pix.O.o;
+  inPixel(); veKhung(Math.max(0, chiSoKhung(thoiGianTuThe())));
+}
+$('c-36').addEventListener('click', function () { datCo(36); });
+$('c-46').addEventListener('click', function () { datCo(46); });
+$('b-bong').addEventListener('click', function () { bongX1 = !bongX1; $('b-bong').setAttribute('aria-pressed', bongX1); veKhung(Math.max(0, khungHien)); });
 
 var hen = 0;
 function thanh(id, don, apDung) {
