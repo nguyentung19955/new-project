@@ -187,11 +187,13 @@
   LK.textPos = { x: 352, y: 50 }; // chỗ chữ "+1 Lửa" hiện ra, ngay bên trái tấm vạch
   const pulse = { fire: 0, poison: 0, ice: 0 };
   let pulseT = 0;
-  LK.pulse = function (el) { pulse[el] = 0.4; };
+  LK.pulse = function (el) { pulse[el] = 0.4; LK.pulseAt = G.time || 0; }; // pulseAt: lúc nhặt gần nhất (tư vấn 17/10 mục 4: HUD gọn hiện tấm ít giây)
   LK.state = { last: null }; // cho bài kiểm tra: số liệu vạch vẽ ở khung gần nhất
-  LK.hud = function (P, W) {
+  // an (tư vấn 17/10 mục 4, HUD gọn): không vẽ tấm linh khí, chỉ biểu tượng hệ trên đầu quái
+  LK.hud = function (P, W, an) {
     const w = G.curW(P);
     if (!w || !w.marks) return;
+    if (an) { if (W) badges(W); return; }
     // Hệ thống mới (js/vk_moi.js): một tấm "Linh khí N" (túi chung) thay ba vạch hệ của từng vũ khí; dấu hệ trên đầu quái giữ nguyên.
     if (G.vkMoi && G.vkMoi.hud) {
       let xong = false;

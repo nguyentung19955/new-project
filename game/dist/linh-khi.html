@@ -73,7 +73,7 @@
 <div id="lk-tai" data-bia="||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAMEBQYH/8QAKRAAAQMCBQMDBQAAAAAAAAAAAQIDEQAEBRIhMUETFGEiQnEVUWKBsf/EABcBAAMBAAAAAAAAAAAAAAAAAAIDBAX/xAAlEQACAQEFCQAAAAAAAAAAAAABAgADBBExUfASEyEyM0FxobH/2gAMAwEAAhEDEQA/AOfNMWj9zbWiEtBsn1ugGTPCvjXajFcBNssNsvoeMxlCgVJqzCbhHftG3aGdcJBUAUn7neRzTMcumxjD0hDSkmFBtWZMjSdR5qamzb4DtHOiimTfxmt/T3UpzLBCTt5q22sWekt0vBvImSF8+KyF5eWDaGFNZlr6YkKGiTPGvzSutZDDX1sF3P0wPUBMzvP62rStACi5TEWB9pizi/H1JsLUo3NhKiZUOfyqbE1Hu3jJkqPNFFRUuprOHU5dZSVwmE6+2mNk9u7r7R/aKKqqQLNifB+T/9k=|||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAgf/xAAmEAACAgEEAQQCAwAAAAAAAAABAgMRAAQSITEFE1FhgSJBcbHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQIDBAX/xAAeEQABBAIDAQAAAAAAAAAAAAAAAQIDEiExBBEyIv/aAAwDAQACEQMRAD8A51EIZIo53EASNwHG07mBPFno9HFyeOhl1Y2yFIbtjVkDnr54yzx2vaLSyII1cELvBQEVu5PyeshTWvFJG6qi7OR+A9/4xoa3yQzWRvzsH8YkWrkCMZYlsoSvJHfWUalzFpI4/TRBZbca3HsUcXqvJvPqpZgEAewAFHAP1mZ9aZIoyqKWVa4jX3P+jByGor8aNDgT0gXvDiHTs1EbjRAsX3jKuEH92Ofs4YYGeim/yLulscHjFuT6YNno/wBnDDGfsEej/9k=" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.17-1628";
+(window.G = window.G || {}).VERSION = "lk-2026.10.17-1653";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -34249,11 +34249,13 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
   LK.textPos = { x: 352, y: 50 }; // chỗ chữ "+1 Lửa" hiện ra, ngay bên trái tấm vạch
   const pulse = { fire: 0, poison: 0, ice: 0 };
   let pulseT = 0;
-  LK.pulse = function (el) { pulse[el] = 0.4; };
+  LK.pulse = function (el) { pulse[el] = 0.4; LK.pulseAt = G.time || 0; }; // pulseAt: lúc nhặt gần nhất (tư vấn 17/10 mục 4: HUD gọn hiện tấm ít giây)
   LK.state = { last: null }; // cho bài kiểm tra: số liệu vạch vẽ ở khung gần nhất
-  LK.hud = function (P, W) {
+  // an (tư vấn 17/10 mục 4, HUD gọn): không vẽ tấm linh khí, chỉ biểu tượng hệ trên đầu quái
+  LK.hud = function (P, W, an) {
     const w = G.curW(P);
     if (!w || !w.marks) return;
+    if (an) { if (W) badges(W); return; }
     // Hệ thống mới (js/vk_moi.js): một tấm "Linh khí N" (túi chung) thay ba vạch hệ của từng vũ khí; dấu hệ trên đầu quái giữ nguyên.
     if (G.vkMoi && G.vkMoi.hud) {
       let xong = false;
@@ -36967,6 +36969,124 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
     'Dùng để luyện vũ khí và nâng bộ trang phục': 'Used to temper weapons and upgrade outfits',
     'Mẹo: về làng luyện vũ khí ở Ông Thợ Rèn, hoặc chơi lại ải cũ để lên cấp rồi quay lại.': 'Tip: temper your weapons at the Smith in the village, or replay old stages to level up, then come back.',
   });
+  // ---------- TƯ VẤN 17/10 — DỄ ĐỌC TRONG TRẬN (docs/review/ke-hoach-cai-thien/tu-van-17-10-de-doc/bao-cao.md) ----------
+  // Sáu cờ, mỗi mục tắt riêng (gõ cuối địa chỉ trang). Chỉ đổi cách HIỆN; luật chơi, số liệu không đổi.
+  //  G.MEO_GON      (?meogon=0 tắt)  mục 1: lời chỉ dẫn / mẹo thành hộp nhỏ ở cạnh trái, tối đa 2 dòng, câu ngắn, tự ẩn sau 5 giây hoặc lần chạm kế.
+  //  G.BAO_TRUM_GON (?baotrum=0 tắt) mục 2: phòng có trùm: "LỘ ĐIỂM YẾU!" và dòng báo hiện ngay dưới thanh máu trùm 1 giây rồi thu thành biểu tượng ảnh cạnh thanh.
+  //  G.BINH_TO      (?binhto=0 tắt)  mục 3: nút Bình máu ~47 px, Đặc biệt / Chưởng ~54 px (ở 844×390, cỡ Vừa); vùng chạm các nút không chồng nhau.
+  //  G.HUD_GON      (?hudgon=0 tắt)  mục 4: ô vũ khí + bản đồ nhỏ góc trên phải thu thành hai biểu tượng; chạm bản đồ thì mở bản đồ nhỏ 4 giây.
+  //  G.AN_SUC_MANH  (?ansucmanh=0 tắt) mục 5: bỏ dòng "Sức mạnh … / khuyên …" khỏi HUD trong trận (màn chọn ải, bảng thua vẫn có).
+  //  G.MAN_RONG     (?manrong=1 BẬT, mặc định tắt) mục 6: màn rộng — tô hai dải lề bằng ảnh nền ngoài phòng của vùng (lặp đúng lưới điểm ảnh, tối bớt).
+  const coUrl = (re) => { try { return typeof location !== 'undefined' && re.test(location.search || ''); } catch (e) { return false; } };
+  if (G.MEO_GON == null) G.MEO_GON = !coUrl(/[?&]meogon=0(&|$)/);
+  if (G.BAO_TRUM_GON == null) G.BAO_TRUM_GON = !coUrl(/[?&]baotrum=0(&|$)/);
+  if (G.BINH_TO == null) G.BINH_TO = !coUrl(/[?&]binhto=0(&|$)/);
+  if (G.HUD_GON == null) G.HUD_GON = !coUrl(/[?&]hudgon=0(&|$)/);
+  if (G.AN_SUC_MANH == null) G.AN_SUC_MANH = !coUrl(/[?&]ansucmanh=0(&|$)/);
+  if (G.MAN_RONG == null) G.MAN_RONG = coUrl(/[?&]manrong=1(&|$)/);
+  // Mục 1 — câu NGẮN cho hộp mẹo (câu dài giữ nguyên ở chỗ khác: bảng thua "Mẹo:", hướng dẫn của Cụ Đồ...). Khoá = câu dài tiếng Việt đúng từng chữ;
+  // không có trong bảng thì hộp dùng câu dài (thu chữ / nới hộp, quá 2 dòng thì cắt "…").
+  const NGAN_TUT = {
+    start: 'Kéo cần trái để đi. Đánh: chém. Né: lăn tránh.', fight1: 'Đập chậu than để đốt quái, được thêm linh khí.',
+    chest: 'Lại gần rương, bấm Đánh để mở. Bùa hệ: 60 giây.', fight2: 'Đủ 25 mana (thanh xanh) thì bấm Đặc biệt.',
+    elite: 'Tinh anh mang hệ. Chạm ô vũ khí để đổi phi tiêu.', fountain: 'Suối đỏ hồi máu, xanh hồi mana. Chọn một, bấm Đánh.',
+    boss: 'Trùm sau kháng hệ bạn dùng nhiều: hãy đổi vũ khí.', merchant: 'Lại gần thương nhân, bấm Đánh để xem hàng.',
+    challenge: 'Hạ hết quái trước khi hết giờ để nhận thưởng.', curse: 'Chịu bất lợi để linh khí ×2 đến hết ải (tùy chọn).',
+    door: 'Hết quái! Đi vào cửa có mũi tên để sang phòng.',
+  };
+  const NGAN_MD = { fight2: 'Thấy vùng đỏ dưới chân: bấm Né lăn ra rồi chém lại.', elite: 'Tinh anh đau: chờ nó đánh hụt rồi chém, thấy đỏ là Né.', boss: 'Chém vài nhát rồi lăn né. Máu thấp: chạm Bình máu.' };
+  const NGAN_VK = { sword: 'Kiếm: bấm Đánh chém 3 nhát, Né rồi đánh để lướt chém.', bow: 'Phi tiêu: bấm ném nhanh, giữ rồi thả ném chùm.', spear: 'Thương: bấm đâm rồi quét, giữ rồi thả để xốc tới.', hammer: 'Búa: giữ Đánh lấy đà, thả ra nện đất.' };
+  const NGAN_BINH = 'Máu thấp! Chạm Bình máu để hồi 30% máu.';
+  // mẹo lần đầu gặp từng con (js/ky_nang_quai.js MEO, js/chieu_trum.js MEO3A): mở đầu câu dài → câu ngắn
+  const NGAN_QUAI = [
+    ['Heo Rừng Con cào chân', 'Heo Con húc thẳng: né ngang, nó đâm tường thì đánh.'], ['Bầy Ong Vò Vẽ', 'Ong Vò Vẽ bổ theo vạch đỏ 3 lần: bước ngang khỏi vạch.'],
+    ['Bọ Hung lăn', 'Bọ Hung lăn đất theo vạch đỏ: tránh vạch, đánh sau lưng.'], ['Hoa Phun Bào Tử', 'Hoa Bào Tử: ra khỏi vòng đỏ, đừng đứng trong vũng độc.'],
+    ['Chồn Bóng', 'Chồn Bóng hiện sau lưng ở vòng đỏ: lộn ra xa rồi đánh.'], ['Nấm Phồng', 'Nấm Phồng nổ ra mây độc: chạy xa vòng đỏ.'],
+    ['Sóc ném hạt dẻ', 'Sóc ném hạt dẻ nổ ở vòng đỏ: bước ngang hoặc tiến tới.'], ['Nhím Gai Độc', 'Nhím Độc lăn, bật tường 1 lần: tránh cả hai vạch đỏ.'],
+    ['Cua Lính', 'Cua Lính lướt ngang tới kẹp: đừng đứng cùng hàng ngang.'], ['Bầy Cá Con', 'Bầy Cá Con lượn theo vạch đỏ hai lượt: tránh cả hai.'],
+    ['Ốc Mượn Hồn', 'Ốc rút vỏ thì không ăn đòn: chờ nó ra, tránh vệt nhớt.'], ['Hải Quỳ', 'Hải Quỳ bắn 3 tia: đứng giữa hai vạch đỏ hoặc lùi xa.'],
+    ['Cá Chuồn', 'Cá Chuồn đáp xuống vòng đỏ dưới chân: chạy ra ngoài.'], ['Cá Nóc', 'Cá Nóc hút lại rồi nổ 8 gai: chạy xa, đứng giữa hai vạch.'],
+    ['Sứa Bom', 'Sứa Bom: rời vũng điện trước khi vòng đỏ đầy.'], ['Nhím Biển', 'Nhím Biển bắn gai xoáy: luồn qua khe, đừng đứng sát.'],
+    ['Lính Ma', 'Lính Ma chém theo vạch đỏ sau lưng: bước ra khỏi vạch.'], ['Bầy Dơi Than', 'Dơi Than bổ hình chữ V: tránh hai vạch đỏ.'],
+    ['Tượng Đá', 'Tượng Đá đập sóng vòng: đánh xong lùi xa hoặc lộn qua.'], ['Đèn Lồng Ma', 'Đèn Lồng Ma bắn lửa đuổi: chém tan hoặc chạy vòng.'],
+    ['Mèo Đen', 'Mèo Đen có 2 bóng ảo: chỉ con thật ăn đòn, né vạch đỏ.'], ['Hũ Lửa', 'Hũ Lửa lăn rồi vỡ ra lửa: tránh vạch và vòng đỏ.'],
+    ['Tiểu Yêu', 'Tiểu Yêu đặt 3 bùa thành tam giác: chạy ra khỏi đó.'], ['Nhím Than Hồng', 'Nhím Than trồi gai lửa thành hàng: bước ngang khỏi hàng.'],
+    ['Rái Cá chống sào', 'Rái Cá nhảy xuống vòng đỏ: chạy ra, nó đáp hụt thì đánh.'], ['Bầy Đỉa', 'Đỉa bám chân làm chậm: bấm lăn để giũ ra.'],
+    ['Ba Ba', 'Ba Ba có mai trước: né vạch đỏ rồi đánh sau lưng.'], ['Cóc Tía phun', 'Cóc Tía phun bọt độc xuống vòng đỏ: ra khỏi vòng.'],
+    ['Rắn Nước', 'Rắn Nước lặn rồi trồi ở vòng đỏ: thấy gợn nước thì chạy.'], ['Ếch Phình', 'Ếch Phình nảy tới nổ ở vòng đỏ: chạy xa hoặc đánh nổ sớm.'],
+    ['Ma Da', 'Ma Da tạo xoáy nước kéo bạn vào: chạy ra ngoài vòng đỏ.'], ['Trai Sông Gai', 'Trai Gai khép vỏ thì chặn trước: né vạch, đánh từ sau.'],
+    ['Rái Cá Thủ Lĩnh', 'Rái Cá Chúa quăng lưới: mắc thì bấm Né liên tục.'], ['Cóc Tía Chúa', 'Cóc Chúa thè lưỡi kéo bạn: lăn ra khỏi vòng đỏ.'],
+  ];
+  const NGAN_CHUONG = 'Nút Chưởng: bắn chưởng theo hệ, tự ngắm. Tốn {0} mana.';
+  // câu ngắn của một câu dài (hoặc null)
+  function cauNgan(s, b) {
+    if (!s) return null;
+    if (b && b.ngan) return b.ngan;
+    for (const k in TUT) if (TUT[k] === s) return NGAN_TUT[k];
+    for (const k in TUT_MD) if (TUT_MD[k] === s) return NGAN_MD[k];
+    if (s === TUT_LY.merchant) return NGAN_TUT.merchant;
+    if (G.MOVE_TIPS) for (const k in G.MOVE_TIPS) if (G.MOVE_TIPS[k] === s) return NGAN_VK[k] || null;
+    if (s === 'Máu thấp! Chạm ô Bình máu (góc trên bên trái) để hồi 30% máu.') return NGAN_BINH;
+    if (G.chuong && G.chuong.tip && s === G.chuong.tip) { const m = /(\d+)\s*mana/.exec(s); return G.t(NGAN_CHUONG, m ? m[1] : 30); }
+    for (const q of NGAN_QUAI) if (s.indexOf(q[0]) === 0) return q[1];
+    return null;
+  }
+  if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({
+    'Kéo cần trái để đi. Đánh: chém. Né: lăn tránh.': 'Drag the left stick to move. Attack: slash. Dodge: roll.',
+    'Đập chậu than để đốt quái, được thêm linh khí.': 'Break braziers to burn monsters for extra Linh Khí.',
+    'Lại gần rương, bấm Đánh để mở. Bùa hệ: 60 giây.': 'Walk to the chest, press Attack to open. Charms last 60s.',
+    'Đủ 25 mana (thanh xanh) thì bấm Đặc biệt.': 'With 25 mana (blue bar), press Special.',
+    'Tinh anh mang hệ. Chạm ô vũ khí để đổi phi tiêu.': 'Elites carry an element. Tap the weapon slot for darts.',
+    'Suối đỏ hồi máu, xanh hồi mana. Chọn một, bấm Đánh.': 'Red spring heals, blue gives mana. Pick one, press Attack.',
+    'Trùm sau kháng hệ bạn dùng nhiều: hãy đổi vũ khí.': 'Later bosses resist your main element: switch weapons.',
+    'Lại gần thương nhân, bấm Đánh để xem hàng.': 'Walk to the merchant, press Attack to browse.',
+    'Hạ hết quái trước khi hết giờ để nhận thưởng.': 'Defeat every monster before time runs out.',
+    'Chịu bất lợi để linh khí ×2 đến hết ải (tùy chọn).': 'Take a curse for double Linh Khí this stage (optional).',
+    'Hết quái! Đi vào cửa có mũi tên để sang phòng.': 'All clear! Walk through the arrow door.',
+    'Thấy vùng đỏ dưới chân: bấm Né lăn ra rồi chém lại.': 'Red zone under you? Dodge out, then strike back.',
+    'Tinh anh đau: chờ nó đánh hụt rồi chém, thấy đỏ là Né.': 'Elites hit hard: strike after a miss, Dodge on red.',
+    'Chém vài nhát rồi lăn né. Máu thấp: chạm Bình máu.': 'Strike a few times, then roll. Low health: tap Potion.',
+    'Kiếm: bấm Đánh chém 3 nhát, Né rồi đánh để lướt chém.': 'Sword: Attack for 3 hits; Dodge then Attack to dash-slash.',
+    'Phi tiêu: bấm ném nhanh, giữ rồi thả ném chùm.': 'Darts: tap to throw, hold and release for a volley.',
+    'Thương: bấm đâm rồi quét, giữ rồi thả để xốc tới.': 'Spear: tap to thrust and sweep, hold and release to lunge.',
+    'Búa: giữ Đánh lấy đà, thả ra nện đất.': 'Hammer: hold Attack to wind up, release to smash.',
+    'Máu thấp! Chạm Bình máu để hồi 30% máu.': 'Low health! Tap Potion to heal 30%.',
+    'Nút Chưởng: bắn chưởng theo hệ, tự ngắm. Tốn {0} mana.': 'Palm button: element blast, auto-aims. Costs {0} mana.',
+    'Heo Con húc thẳng: né ngang, nó đâm tường thì đánh.': 'Boar charges straight: sidestep, hit it when it hits a wall.',
+    'Ong Vò Vẽ bổ theo vạch đỏ 3 lần: bước ngang khỏi vạch.': 'Hornets dive 3 times along red lines: step off the line.',
+    'Bọ Hung lăn đất theo vạch đỏ: tránh vạch, đánh sau lưng.': 'Beetle rolls along the red line: avoid it, hit from behind.',
+    'Hoa Bào Tử: ra khỏi vòng đỏ, đừng đứng trong vũng độc.': 'Spore flower: leave red circles, stay out of poison pools.',
+    'Chồn Bóng hiện sau lưng ở vòng đỏ: lộn ra xa rồi đánh.': 'Shadow weasel appears at the red circle: roll away, then hit.',
+    'Nấm Phồng nổ ra mây độc: chạy xa vòng đỏ.': 'Puff mushroom bursts into poison gas: run from the red circle.',
+    'Sóc ném hạt dẻ nổ ở vòng đỏ: bước ngang hoặc tiến tới.': 'Squirrel nuts blow up at the red circle: sidestep or close in.',
+    'Nhím Độc lăn, bật tường 1 lần: tránh cả hai vạch đỏ.': 'Poison hedgehog rolls and bounces once: avoid both red lines.',
+    'Cua Lính lướt ngang tới kẹp: đừng đứng cùng hàng ngang.': 'Crab dashes sideways: don\'t stand in its row.',
+    'Bầy Cá Con lượn theo vạch đỏ hai lượt: tránh cả hai.': 'Fish school swims the red line twice: avoid both passes.',
+    'Ốc rút vỏ thì không ăn đòn: chờ nó ra, tránh vệt nhớt.': 'Snail in its shell ignores hits: wait, avoid the slime.',
+    'Hải Quỳ bắn 3 tia: đứng giữa hai vạch đỏ hoặc lùi xa.': 'Anemone shoots 3 jets: stand between red lines or back off.',
+    'Cá Chuồn đáp xuống vòng đỏ dưới chân: chạy ra ngoài.': 'Flying fish lands on the red circle: run out of it.',
+    'Cá Nóc hút lại rồi nổ 8 gai: chạy xa, đứng giữa hai vạch.': 'Pufferfish pulls, then shoots 8 spikes: run, stand between lines.',
+    'Sứa Bom: rời vũng điện trước khi vòng đỏ đầy.': 'Jelly bomb: leave the shock pool before the circle fills.',
+    'Nhím Biển bắn gai xoáy: luồn qua khe, đừng đứng sát.': 'Sea urchin spirals spikes: slip through gaps, keep away.',
+    'Lính Ma chém theo vạch đỏ sau lưng: bước ra khỏi vạch.': 'Ghost soldier slashes the red line behind you: step off it.',
+    'Dơi Than bổ hình chữ V: tránh hai vạch đỏ.': 'Coal bats dive in a V: avoid both red lines.',
+    'Tượng Đá đập sóng vòng: đánh xong lùi xa hoặc lộn qua.': 'Stone statue sends shockwaves: hit, then back off or roll through.',
+    'Đèn Lồng Ma bắn lửa đuổi: chém tan hoặc chạy vòng.': 'Ghost lantern fire chases you: slash it or run in circles.',
+    'Mèo Đen có 2 bóng ảo: chỉ con thật ăn đòn, né vạch đỏ.': 'Black cat makes 2 decoys: only the real one takes hits.',
+    'Hũ Lửa lăn rồi vỡ ra lửa: tránh vạch và vòng đỏ.': 'Fire jar rolls and bursts: avoid the red line and circle.',
+    'Tiểu Yêu đặt 3 bùa thành tam giác: chạy ra khỏi đó.': 'Imp sets 3 charms in a triangle: get out of it.',
+    'Nhím Than trồi gai lửa thành hàng: bước ngang khỏi hàng.': 'Ember hedgehog raises fire spikes in a row: step aside.',
+    'Rái Cá nhảy xuống vòng đỏ: chạy ra, nó đáp hụt thì đánh.': 'Otter vaults onto the red circle: run out, hit it when it misses.',
+    'Đỉa bám chân làm chậm: bấm lăn để giũ ra.': 'Leeches cling and slow you: roll to shake them off.',
+    'Ba Ba có mai trước: né vạch đỏ rồi đánh sau lưng.': 'Turtle shell guards the front: dodge the line, hit from behind.',
+    'Cóc Tía phun bọt độc xuống vòng đỏ: ra khỏi vòng.': 'Purple toad spits poison bubbles: leave the red circles.',
+    'Rắn Nước lặn rồi trồi ở vòng đỏ: thấy gợn nước thì chạy.': 'Water snake bites at the red circle: run from ripples.',
+    'Ếch Phình nảy tới nổ ở vòng đỏ: chạy xa hoặc đánh nổ sớm.': 'Bloat frog bounces in and explodes: run, or pop it early.',
+    'Ma Da tạo xoáy nước kéo bạn vào: chạy ra ngoài vòng đỏ.': 'Water ghost whirlpool pulls you in: run out of the red circle.',
+    'Trai Gai khép vỏ thì chặn trước: né vạch, đánh từ sau.': 'Spiked clam blocks when shut: dodge lines, hit from behind.',
+    'Rái Cá Chúa quăng lưới: mắc thì bấm Né liên tục.': 'Otter chief throws nets: if caught, mash Dodge.',
+    'Cóc Chúa thè lưỡi kéo bạn: lăn ra khỏi vòng đỏ.': 'Toad queen\'s tongue pulls you: roll out of the red circle.',
+  });
   const MD = () => G.moDan && G.moDan.bat() ? G.moDan : null; // mở dần đang bật
   const coMD = (f) => !G.moDan || G.moDan.co(f); // chức năng f đã mở (cờ tắt / bản lưu cũ: luôn mở)
   function tutHint(k) {
@@ -37566,26 +37686,33 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
   const coNut = () => (G.save && CO_NUT[G.save.coNut] ? G.save.coNut : 'vua');
   function boCucTo(sc, cx, cy) {
     const f = CO_NUT[coNut()] || 1;
+    const bt = G.BINH_TO === true; // tư vấn 17/10 mục 3: Bình máu ~47 px (trước ~39), Đặc biệt / Chưởng ~54 px (trước ~50) ở 844×390 cỡ Vừa
     const R = { // bán kính VẼ (đơn vị khung 480×270)
-      atk: kep(39 / sc, 29, 32) * f, dodge: kep(31 / sc, 22.5, 25) * f, special: kep(24 / sc, 17.5, 19) * f, skill: kep(24 / sc, 17.5, 19) * f, potion: kep(18 / sc, 13.5, 15) * f,
+      atk: kep(39 / sc, 29, 32) * f, dodge: kep(31 / sc, 22.5, 25) * f,
+      special: (bt ? kep(27 / sc, 18.5, 19.5) : kep(24 / sc, 17.5, 19)) * f, skill: (bt ? kep(27 / sc, 18.5, 19.5) : kep(24 / sc, 17.5, 19)) * f,
+      potion: (bt ? kep(23.5 / sc, 16, 17.5) : kep(18 / sc, 13.5, 15)) * f,
     };
+    // vùng chạm nới thêm ngoài hình vẽ: Đánh ~11 px mỗi phía (và cả góc dưới phải tới mép màn hình), các nút khác ~5 px
+    const DEM = { atk: kep(11 / sc, 6, 10), dodge: kep(5 / sc, 3, 5), special: kep(5 / sc, 3, 5), skill: kep(5 / sc, 3, 5), potion: kep(5 / sc, 3, 5) };
     const g = kep(15 / sc, 6, 12), mx = 480 + cx, my = 270 + cy, mm = S && G.minimap ? G.minimap.rect(S) : [374, 58, 102, 68];
     const A = [mx - 3 - R.atk, my - 9 - R.atk]; // chừa ~9 đơn vị dưới đáy cho chữ "Đánh" ở ải hướng dẫn
     const P = { atk: A };
     const tai = (th, d) => [A[0] + d * Math.cos(th * Math.PI / 180), A[1] - d * Math.sin(th * Math.PI / 180)];
     const xa = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
     const trong = (p, r) => p[0] + r <= mx - 1 && p[1] + r <= my - 1 && p[1] - r >= 40 && !(p[0] + r > mm[0] - 2 && p[1] - r < mm[1] + mm[3] + 3);
-    const hop = (name, p) => { for (const k in P) if (xa(P[k], p) < R[k] + R[name] + g - 0.01) return false; return true; };
-    P.dodge = tai(185, R.atk + g + R.dodge);
+    // mục 3: khe giữa hai nút còn phải lớn hơn tổng phần nới vùng chạm của hai nút (+1) → vùng chạm không bao giờ chồng nhau
+    const khe = (a, b) => (bt ? Math.max(g, DEM[a] + DEM[b] + 1) : g);
+    const hop = (name, p) => { for (const k in P) if (xa(P[k], p) < R[k] + R[name] + khe(k, name) - 0.01) return false; return true; };
+    P.dodge = tai(185, R.atk + khe('atk', 'dodge') + R.dodge);
     const coDB = coMD('dacBiet'), coCh = coMD('chuong');
     let thDB = 165;
     if (coDB) { // Đặc biệt: góc lớn nhất (sát Né nhất) mà vẫn đủ khoảng cách
-      const d = R.atk + g + R.special;
+      const d = R.atk + khe('atk', 'special') + R.special;
       while (thDB > 100 && !hop('special', tai(thDB, d))) thDB -= 1;
       P.special = tai(thDB, d);
     }
     if (coCh) { // Chưởng: tiếp vòng cung, đi tiếp về phía trên / phải
-      const d = R.atk + g + R.skill;
+      const d = R.atk + khe('atk', 'skill') + R.skill;
       let th = coDB ? thDB - 1 : 120;
       while (th > 45 && !(hop('skill', tai(th, d)) && trong(tai(th, d), R.skill))) th -= 1;
       P.skill = tai(th, d);
@@ -37594,7 +37721,7 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
     let dmax = 0;
     for (const k in P) dmax = Math.max(dmax, xa(P[k], A) + 1);
     for (const th of [105, 112, 98, 120, 90, 128, 136, 145, 155]) {
-      for (let d = Math.max(dmax, R.atk + g + R.potion); d < 160; d += 1) {
+      for (let d = Math.max(dmax, R.atk + khe('atk', 'potion') + R.potion); d < 160; d += 1) {
         const p = tai(th, d);
         if (hop('potion', p) && trong(p, R.potion)) { P.potion = p; break; }
       }
@@ -37606,14 +37733,14 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
     const out = { gap: g, ve: R, dem: {} };
     for (const k in R) out[k] = [Math.round(P[k][0] * 10) / 10, Math.round(P[k][1] * 10) / 10, R[k] - 1];
     // vùng chạm nới thêm ngoài hình vẽ: Đánh ~11 px mỗi phía (và cả góc dưới phải tới mép màn hình), các nút khác ~5 px
-    out.dem = { atk: kep(11 / sc, 6, 10), dodge: kep(5 / sc, 3, 5), special: kep(5 / sc, 3, 5), skill: kep(5 / sc, 3, 5), potion: kep(5 / sc, 3, 5) };
+    out.dem = DEM;
     out.uuTien = kep(5 / sc, 2, 4); // chạm vào chỗ hai vùng chạm chồng nhau: Đánh được cộng thêm ~5 px
     return out;
   }
   function boCucMoi() {
     const sc = G.scale > 0 ? G.scale : 1.44, cx = G.cx || 0, cy = G.cy || 0, tv1 = NUT_TV1();
     const mm = S && G.minimap ? G.minimap.rect(S) : null;
-    const khoa = sc.toFixed(3) + '|' + cx + '|' + cy + '|' + (tv1 ? 'tv1' : coNut() + '|' + coMD('dacBiet') + coMD('chuong') + '|' + (mm ? mm.join(',') : ''));
+    const khoa = sc.toFixed(3) + '|' + cx + '|' + cy + '|' + (G.BINH_TO === true ? 'bt|' : '') + (tv1 ? 'tv1' : coNut() + '|' + coMD('dacBiet') + coMD('chuong') + '|' + (mm ? mm.join(',') : ''));
     if (boCuc && khoa === boCucKhoa) return boCuc;
     boCuc = tv1 ? boCucTv1(sc, cx, cy) : boCucTo(sc, cx, cy);
     boCucKhoa = khoa;
@@ -37671,16 +37798,23 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
     };
     // phím 1–4: chọn thẳng món (như vòng chọn)
     for (let i = 0; i < 4; i++) if (kp['Digit' + (i + 1)]) { inp.swapP = true; inp.swapTo = i; }
-    const mm = G.minimap.rect(S), moi = NUT_MOI();
+    const mm = G.minimap.rect(S), moi = NUT_MOI(), gon = hudGon(), ovk = gon ? OVK_GON : OVK;
     for (const d of G.downs) {
-      if (G.inRect(d, OVK[0], OVK[1], OVK[2], OVK[3])) {
+      // tư vấn 17/10 mục 1: lần chạm kế tiếp (sau 0,3 giây kể từ lúc hộp mẹo hiện) thì hộp mẹo ẩn; chạm vẫn làm việc của nó như thường
+      if (G.MEO_GON === true && S.meoG && S.meoG.s && !S.meoG.an && (G.time || 0) - S.meoG.cham > 0.3) S.meoG.an = true;
+      if (G.inRect(d, ovk[0], ovk[1], ovk[2], ovk[3])) {
         // bố cục mới: chạm rồi nhấc = đổi sang món kế; giữ (hoặc kéo ra) = vòng chọn 4 món, nhấc ngón trên món nào thì cầm món đó
         if (moi) { d.role = 'vk'; d.t0 = G.time || 0; S.vkTro = d; } else { inp.swapP = true; d.role = 'ui'; }
         continue;
       }
       // 12/10 (cờ G.CHU_RO): nút "Bản đồ" thu nhỏ ở phòng trùm có vùng chạm cao 31 (≈ 44 pt), nới xuống dưới (phía trên là dải linh khí)
+      if (gon) { // tư vấn 17/10 mục 4: biểu tượng Bản đồ → mở bản đồ nhỏ 4 giây; đang mở (hoặc phòng trùm) → bản đồ to như cũ
+        if (G.inRect(d, OBD_GON[0], OBD_GON[1], OBD_GON[2], OBD_GON[3])) { if (bdMo() || (S.W.geo && S.W.geo.big)) inp.mapP = true; else { S.bdMoDen = (G.time || 0) + HG.mo; G.sfx('ui'); } d.role = 'ui'; continue; }
+        if (bdMo() && G.inRect(d, mm[0] - 2, mm[1], mm[2] + 4, mm[3] + 3)) { inp.mapP = true; d.role = 'ui'; continue; }
+      } else {
       const m44 = G.CHAM44 && G.theme.chamMin ? G.theme.chamMin() : 31, mmH = G.CHU_RO !== false && mm[3] < m44 ? m44 : mm[3] + 3, mmY = G.CHU_RO !== false && mm[3] < m44 ? mm[1] - 4 : mm[1];
       if (G.inRect(d, mm[0] - 2, mmY, mm[2] + 4, mmH)) { inp.mapP = true; d.role = 'ui'; continue; }
+      }
       if (potHit(d)) { inp.potionP = true; d.role = 'ui'; continue; }
       if (hitBox(d, PAU)) { inp.pauseP = true; d.role = 'ui'; continue; }
       // nút tròn: lấy nút gần ngón nhất, vùng chạm rộng hơn hình vẽ một chút (bố cục mới: nutTai ở trên, Đánh được ưu tiên)
@@ -37820,6 +37954,7 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
         // Bảng vừa mở hoặc đóng: ngón đang giữ không được bấm nhầm vào nút mới hiện.
         S.shownMode = S.mode; S.modeT = G.time; G.stalePointers(); G.click = null;
       }
+      if (G.MAN_RONG === true && S.W) veLeRong(S.W); // tư vấn 17/10 mục 6 (?manrong=1): lề màn rộng tô ảnh nền ngoài phòng (vẽ trước mọi chữ / nút)
       if (DOC()) {
         // Đợt 8 — thứ bậc hình ảnh: G.drawWorld gọi lại G.docTran.duoi() (chữ phụ, thông báo) NGAY TRƯỚC số sát thương và G.docTran.tren()
         // (thanh máu quái / trùm) NGAY SAU số, rồi mới vẽ vùng báo đòn. Phần nào chưa được gọi (đang chuyển phòng...) thì vẽ bù ở đây.
@@ -37949,7 +38084,8 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
     const D = G.theme.DOC, T = G.theme, c = G.ux, X0 = 126, X1 = 364, mid = (X0 + X1) / 2, maxW = X1 - X0 - 14; // từ 126: né thanh máu, thanh mana của em bé (tới x = 124)
     msgDong(W);
     MSG.khung = { dong: 0, hop: null };
-    const list = S.msgs.filter((e) => e.b.t > 0);
+    const tg = trumSong(W); // tư vấn 17/10 mục 2: phòng có trùm thì mỗi dòng chỉ hiện chữ BAO_TRUM.hien giây rồi thu thành biểu tượng
+    const list = S.msgs.filter((e) => e.b.t > 0 && !(tg && (G.time || 0) - e.at >= BAO_TRUM.hien));
     if (!list.length) return by;
     // Khối trên cùng đã cao (trùm có thẻ kháng/yếu và đang "LỘ ĐIỂM YẾU!") thì chỉ còn chỗ cho 1 dòng: dải không được xuống quá mép trên sàn 20 điểm ảnh.
     let con = by + D.dongToiDa * 12 + 4 <= W.geo.fy0 + 20 ? D.dongToiDa : 1;
@@ -38028,6 +38164,130 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
     }
     c.globalAlpha = ga;
   }
+  // ---------- Tư vấn 17/10 mục 1 (G.MEO_GON): HỘP MẸO NHỎ Ở CẠNH TRÁI ----------
+  // Một hộp mỗi lúc: mẹo (W.banner.tip, có đếm giờ) trước, lời chỉ dẫn ải hướng dẫn sau. Nằm ở lề trái (cột trái + lề đen của màn rộng), ngay dưới
+  // tên vùng, trên cần điều khiển: không phủ sàn giữa Cu Tí và quái, không chạm cụm nút bên phải. Tối đa 2 dòng (cao ≤ 25 đơn vị ≈ 36 px ở 844×390),
+  // câu ngắn (cauNgan). Hiện tối đa 5 giây (chỉ đếm lúc đang hiện) hoặc tới lần chạm màn kế tiếp (readInput đặt S.meoG.an); lời chỉ dẫn đã ẩn thì
+  // không hiện lại (phòng mới / câu mới thì hiện). Hộp chỉ lấn vào mép sàn khi câu quá dài (màn 16:9 không có lề đen): khi đó có ai đứng dưới thì mờ 35%.
+  const MEO_G = { giay: 5, mo: 0.25, khung: null };
+  function meoGon(W, hint, tipB) {
+    const st = S.meoG || (S.meoG = { s: null, t: 0, an: false, het: 0, last: G.time || 0, daAn: {} });
+    const dt = Math.max(0, Math.min(0.1, (G.time || 0) - st.last)); st.last = G.time || 0;
+    MEO_G.khung = null;
+    let q = null;
+    if (tipB && tipB.t > 0) q = { s: tipB.s, b: tipB, col: tipB.col || '#ffd27a' };
+    else if (hint && !st.daAn[hint]) q = { s: hint, b: null, col: '#f1e6c6' };
+    if (!q) { st.s = null; return; }
+    if (st.s !== q.s) { st.s = q.s; st.t = 0; st.an = false; st.het = 0; st.cham = G.time || 0; }
+    st.t += dt;
+    if (!st.an && st.t >= MEO_G.giay) st.an = true;
+    if (st.an) { // ẩn: mờ dần 0,25 giây rồi thôi (mẹo: cho hết giờ luôn; lời chỉ dẫn: nhớ là đã ẩn)
+      st.het += dt;
+      if (st.het >= MEO_G.mo) { if (q.b) q.b.t = Math.min(q.b.t, 0.0001); else st.daAn[q.s] = true; st.s = null; return; }
+    }
+    const T = G.theme, c = G.ux, s = cauNgan(q.s, q.b) || q.s;
+    const x0 = Math.round(2 - Math.max(0, Math.min(G.cx || 0, 56))), y0 = G.AN_SUC_MANH === true ? 91 : 109;
+    let size = 7, lines = null, x1 = 79;
+    for (const xx of [79, 92, 108, 124, 172]) { // 79: hết cột trái (tường bên); 92: lấn mép sàn chừng 3 điểm chỗ đi được; rộng hơn chỉ khi câu quá dài
+      for (const sz of [7, 6.5]) { const l = ui.wrap(s, xx - x0 - 10, sz, true); if (l.length <= 2) { lines = l; size = sz; x1 = xx; break; } }
+      if (lines) break;
+    }
+    if (!lines) { // quá dài cả khi nới: 2 dòng, cắt "…"
+      size = 6.5; x1 = 172; lines = ui.wrap(s, x1 - x0 - 10, size, true).slice(0, 2);
+      ui.font(size, true); let l = lines[1] || '';
+      while (l.length > 4 && c.measureText(l + '…').width > x1 - x0 - 10) l = l.slice(0, -1);
+      lines[1] = l + '…';
+    }
+    let tw = 0; ui.font(size, true);
+    for (const l of lines) tw = Math.max(tw, c.measureText(l).width);
+    const lh = size + 2.5, pw = Math.ceil(tw) + 10, ph = Math.round(lines.length * lh + 6), px = x0, py = y0;
+    let a = Math.min(1, st.t / 0.15) * (st.an ? Math.max(0, 1 - st.het / MEO_G.mo) : 1);
+    if (q.b && q.b.t < 0.4) a *= Math.max(0, q.b.t / 0.4);
+    if (px + pw > (W.geo ? W.geo.fx0 : 80) - 1) { // lấn mép sàn: ai / vùng đòn dưới hộp thì mờ còn 35%
+      const cam = W.cam || 0, X0 = px - 6 + cam, X1 = px + pw + 6 + cam, Y0 = py - 6, Y1 = py + ph + 30;
+      const duoi = (o, rr) => o && !o.dead && o.x + (rr || 0) >= X0 && o.x - (rr || 0) <= X1 && o.y + (rr || 0) >= Y0 && o.y - (rr || 0) <= Y1;
+      if (duoi(S.P) || duoi(W.boss) || W.ents.some((e) => duoi(e)) || W.zones.some((z) => z.team !== 'player' && duoi(z, z.r || 0))) a *= 0.35;
+    }
+    const ga = c.globalAlpha;
+    c.globalAlpha = ga * a;
+    T.plate(px, py, pw, ph, { a: 0.8 });
+    lines.forEach((l, i) => ui.text(l, px + 5, py + 3 + size + 0.5 + i * lh, { size, bold: true, color: q.col }));
+    c.globalAlpha = ga;
+    MEO_G.khung = [px, py, px + pw, py + ph];
+  }
+
+  // ---------- Tư vấn 17/10 mục 2 (G.BAO_TRUM_GON): THÔNG BÁO PHÒNG TRÙM THU THÀNH BIỂU TƯỢNG ----------
+  // Phòng có trùm (còn sống): "LỘ ĐIỂM YẾU!" và mỗi dòng báo (W.banner, G.docTran.bao) hiện ngay dưới thanh máu trùm BAO_TRUM.hien giây, rồi thu thành
+  // biểu tượng ẢNH nhỏ cạnh thanh (còn tới khi hết lý do: hết lộ điểm yếu / dòng báo hết giờ). Ảnh có sẵn: gd-sao (lộ điểm yếu), gd-he-<hệ> (dòng
+  // "Hệ X: đánh bằng Y" của Thuồng Luồng → hệ Y), gd-cham-than (mọi dòng khác). Thiếu ảnh thì không vẽ biểu tượng (chữ vẫn hiện đủ 1 giây).
+  const BAO_TRUM = { hien: 1.0, co: 12 };
+  const trumSong = (W) => !!(G.BAO_TRUM_GON === true && W && W.boss && !W.boss.dead);
+  function bieuTuongBao(e) {
+    if (e.b && e.b.icon) return e.b.icon;
+    const m = /(?:đánh bằng|hit it with) ([^!]+)!/i.exec(e.s || '');
+    if (m) for (const k of G.ELS) if (G.EL[k].name === m[1].trim() || G.tv(G.EL[k].name) === m[1].trim()) return 'gd-he-' + k;
+    return 'gd-cham-than';
+  }
+  // vẽ các biểu tượng cạnh khung thanh máu trùm (bên phải; hết chỗ thì bên trái). ds: [{ ma, nhay }]
+  function veBieuTuong(ds, big) {
+    const half = big ? 113 : 98, n = BAO_TRUM.co, c = G.ux, ga = c.globalAlpha, daCo = {};
+    let iR = 0, iL = 0;
+    for (const d of ds) {
+      if (daCo[d.ma]) continue; daCo[d.ma] = 1;
+      const a = gdAnh(d.ma); if (!a) continue;
+      let x, y;
+      if (iR < 2) { x = 240 + half + 2; y = 3 + iR * (n + 2); iR++; } else { x = 240 - half - 2 - n; y = 3 + iL * (n + 2); iL++; }
+      c.globalAlpha = ga * (d.nhay ? (Math.floor(G.time * 6) % 2 ? 1 : 0.6) : 1);
+      const k = Math.min(n / (a.rong || n), n / (a.cao || n)), w = (a.rong || n) * k, h = (a.cao || n) * k;
+      G.spriteCustom.veGd(c, a, Math.round(x + (n - w) / 2), Math.round(y + (n - h) / 2), w, h);
+    }
+    c.globalAlpha = ga;
+  }
+
+  // ---------- Tư vấn 17/10 mục 4 (G.HUD_GON): Ô VŨ KHÍ + BẢN ĐỒ NHỎ THU THÀNH BIỂU TƯỢNG ----------
+  // Góc trên phải chỉ còn hai ô: vũ khí đang cầm (chạm: đổi món kế, giữ: vòng chọn — như ô cũ) và "Bản đồ" (chạm: mở bản đồ nhỏ 4 giây; đang mở mà
+  // chạm nữa, hay ở phòng trùm: mở bản đồ to như cũ). Tấm "Linh khí N" chỉ hiện 2,5 giây sau khi nhặt linh khí. Bố cục cụm nút vẫn chừa chỗ bản đồ
+  // nhỏ (G.minimap.rect) để bản đồ mở ra không đè nút. Ảnh biểu tượng bản đồ riêng (gd-icon-ban-do) có thì vẽ, chưa có thì tấm + chữ "Bản đồ".
+  const HG = { vk: [406, 3, 34, 32], bd: [443, 3, 35, 32], mo: 4, lk: 2.5 };
+  const hudGon = () => G.HUD_GON === true && NUT_MOI();
+  const bdMo = () => !!(S && S.bdMoDen && (G.time || 0) < S.bdMoDen && !(S.W && S.W.geo && S.W.geo.big));
+  const OVK_GON = [HG.vk[0] - 3, 0, HG.vk[2] + 5, HG.vk[3] + 7], OBD_GON = [HG.bd[0] - 1, 0, HG.bd[2] + 3, HG.bd[3] + 7]; // vùng chạm (≥ 44 pt)
+  function veBanDoGon(S) {
+    if (bdMo()) { G.minimap.draw(S); return; }
+    const b = HG.bd, T = G.theme, ic = gdAnh('gd-icon-ban-do'), held = G.coTro((p) => p.role === 'ui' && G.inRect({ x: p.sx, y: p.sy }, OBD_GON[0], OBD_GON[1], OBD_GON[2], OBD_GON[3]));
+    T.plate(b[0], b[1] + (held ? 1 : 0), b[2], b[3]);
+    const gi = G.minimap.gateInfo(S);
+    if (ic) G.spriteCustom.veGd(G.ux, ic, b[0] + (b[2] - 20) / 2, b[1] + 3, 20, 18);
+    else ui.text('Bản đồ', b[0] + b[2] / 2, b[1] + 15, { size: 7, bold: true, align: 'center', color: '#f6dc92' });
+    if (gi) ui.text(gi.n + '/' + gi.need, b[0] + b[2] / 2, b[1] + 26, { size: 6.5, bold: true, align: 'center', color: gi.open ? '#9be37a' : '#d9cdb8' });
+  }
+  // Mục 6 (G.MAN_RONG, ?manrong=1): hai dải lề của màn rộng (và trên / dưới khi máy cao) tô bằng ảnh nền ngoài phòng của vùng (gd-nen-<vùng>-ngoai,
+  // lặp tiếp đúng lưới của phòng, không kéo giãn), tối bớt 45% để không tranh với trận. Vẽ trên lớp giao diện, chỉ ở phần ngoài khung 480×270.
+  function veLeRong(W) {
+    const mx = G.mx || 0, my = G.my || 0;
+    if (!(mx > 0.5 || my > 0.5) || !G.roomArt || !G.roomArt.anhNgoai) return;
+    const t = G.roomArt.anhNgoai(S.r);
+    if (!t) return;
+    const c = G.ux, tw = t.width, th = t.height, sm = c.imageSmoothingEnabled;
+    c.save();
+    c.beginPath();
+    if (mx > 0.5) { c.rect(-mx - 1, -my - 1, mx + 1, G.H + 2 * my + 2); c.rect(G.W, -my - 1, mx + 1, G.H + 2 * my + 2); }
+    if (my > 0.5) { c.rect(0, -my - 1, G.W, my + 1); c.rect(0, G.H, G.W, my + 1); }
+    c.clip();
+    c.imageSmoothingEnabled = false;
+    for (let y = -Math.ceil(my / th) * th; y < G.H + my; y += th) for (let x = -Math.ceil(mx / tw) * tw; x < G.W + mx; x += tw) {
+      if (x >= 0 && x + tw <= G.W && y >= 0 && y + th <= G.H) continue; // ô nằm trọn trong khung: không cần
+      c.drawImage(t, x, y);
+    }
+    c.fillStyle = 'rgba(0,0,0,0.45)';
+    c.fillRect(-mx - 1, -my - 1, G.W + 2 * mx + 2, G.H + 2 * my + 2);
+    c.restore();
+    c.imageSmoothingEnabled = sm;
+  }
+  G.hudGon = { // cho bài kiểm tra / ảnh chụp
+    meoKhung: () => MEO_G.khung, moBanDo: () => { if (S) S.bdMoDen = (G.time || 0) + HG.mo; }, HG, OVK_GON, OBD_GON, bdMo,
+  };
+
   function drawHud(part) {
     const W = S.W, P = S.P, c = G.ux;
     const doc = !!part, on = (p) => !part || part === p;
@@ -38064,28 +38324,32 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
     else if (wide2) { ui.text(G.t('{0} {1}', G.REGIONS[S.r].name, S.i + 1), 5, 76, { size: 7, color: '#d9cdb8' }); ui.text(ROOM_NAME[W.type], 5, 85, { size: 7, color: '#d9cdb8' }); }
     else ui.text(G.t('{0} {1} · {2}', G.REGIONS[S.r].name, S.i + 1, ROOM_NAME[W.type]), 5, 76, { size: 7, color: '#d9cdb8' });
     // sức mạnh của bé lúc vào ải so với sức mạnh khuyên dùng của ải (xanh đủ, vàng sát nút, đỏ thiếu)
-    if (wide2) { ui.text(G.t('Sức mạnh {0}', S.power), 5, 95, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) }); ui.text(G.t('khuyên {0}', S.rec), 5, 104, { size: 6.5, color: '#bfb39c' }); }
+    // Tư vấn 17/10 mục 5 (G.AN_SUC_MANH, ?ansucmanh=0 hiện lại): trong trận không hiện nữa — đã có ở màn chọn ải và bảng thua
+    if (G.AN_SUC_MANH === true) { /* bỏ dòng sức mạnh */ }
+    else if (wide2) { ui.text(G.t('Sức mạnh {0}', S.power), 5, 95, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) }); ui.text(G.t('khuyên {0}', S.rec), 5, 104, { size: 6.5, color: '#bfb39c' }); }
     else if (narrow) { ui.text(G.t('Sức mạnh {0}', S.power), 5, 85, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) }); ui.text(G.t('khuyên {0}', S.rec), 5, 94, { size: 6.5, color: '#bfb39c' }); }
     else ui.text(G.t('Sức mạnh {0} / khuyên {1}', S.power, S.rec), 5, 86, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) });
     }
     if (on('vien')) {
-    G.minimap.draw(S);
+    if (hudGon()) veBanDoGon(S); else G.minimap.draw(S); // tư vấn 17/10 mục 4: thu gọn thành biểu tượng
+    const gon = hudGon();
     // vũ khí: hình và bậc ở trên, mốc tiến hóa ở dưới, thanh dấu ấn sát đáy
     // Hệ thống mới: 4 vũ khí xoay vòng, HUD vẫn 2 ô: ô trái = món đang cầm, ô phải = món kế tiếp khi bấm đổi.
-    const hienVk = !coMD('doiVk') ? [P.weapons[P.cur]] : P.weapons.length > 2 ? [P.weapons[P.cur], P.weapons[(P.cur + 1) % P.weapons.length]] : P.weapons; // mở dần: chưa đổi được thì chỉ ô đang cầm
+    const hienVk = gon || !coMD('doiVk') ? [P.weapons[P.cur]] : P.weapons.length > 2 ? [P.weapons[P.cur], P.weapons[(P.cur + 1) % P.weapons.length]] : P.weapons; // mở dần: chưa đổi được thì chỉ ô đang cầm
     hienVk.forEach((w, i) => {
-      const x = 368 + i * 56, on = w === P.weapons[P.cur];
+      const x = gon ? HG.vk[0] : 368 + i * 56, on = w === P.weapons[P.cur], ow = gon ? HG.vk[2] : 54, oh = gon ? HG.vk[3] : 35;
       // Khung ô vũ khí cùng bộ với nút, viền mang màu bậc. Hình vũ khí sống và chữ do game vẽ ở các dòng dưới.
       // 14/10: khung ô luôn là khung thường (gd-o-vk-0), viền màu theo bậc ép đồ (kể cả Trắng) — không còn bậc màu cũ G.RARITY
-      BA.slot(c, x, 3, 54, 35, Object.assign({
+      BA.slot(c, x, 3, ow, oh, Object.assign({
         weapon: { type: w.type, branch: G.activeEl(P, w), stage: G.wStage(w), rarity: 0 },
         active: on, cd: on ? 0 : P.swapCd / (G.SWAP_CD || 1.5), icon: false, gem: false, id: 'slot' + i,
       }, on && P.swapAt != null && G.time - P.swapAt >= 0 && G.time - P.swapAt < 0.08 ? { ready: P.swapAt, flashDur: 0.08 } : {})); // bao-cao-B: ô vừa đổi nháy 0,08 giây
-      if (G.epDo) G.epDo.vien(c, x, 3, 54, 35, G.epDo.bac(w), false, true); // đợt 6: viền màu Bậc ép đồ (Rực lửa có lửa chạy)
+      if (G.epDo) G.epDo.vien(c, x, 3, ow, oh, G.epDo.bac(w), false, true); // đợt 6: viền màu Bậc ép đồ (Rực lửa có lửa chạy)
       // 16/10 bậc ép đồ chỉ ở khung ô: viền ô này là khung bậc → ghi lại để VM.icon ghi số bậc ở góc trên phải (không vẽ thêm ô nhỏ)
-      if (G.epDo && G.epDo.khung && G.epDo.khung()) G.epDo.ghiO(x, 3, 54, 35, G.epDo.bat() ? G.epDo.bac(w) : 0, [x + 52, 13]);
-      G.art.weaponIcon(c, Object.assign({}, w, { coat: P.coats[w.id] && P.coats[w.id].t > 0 ? P.coats[w.id].el : null }), x + 13, 13, 19, on ? (P.atkT > 0 ? 'attack' : 'idle') : 'sleep');
+      if (G.epDo && G.epDo.khung && G.epDo.khung()) G.epDo.ghiO(x, 3, ow, oh, G.epDo.bat() ? G.epDo.bac(w) : 0, [x + ow - 2, 13]);
+      G.art.weaponIcon(c, Object.assign({}, w, { coat: P.coats[w.id] && P.coats[w.id].t > 0 ? P.coats[w.id].el : null }), gon ? x + ow / 2 : x + 13, gon ? 16 : 13, gon ? 20 : 19, on ? (P.atkT > 0 ? 'attack' : 'idle') : 'sleep');
       const mi = markInfo(w);
+      if (gon) { ui.bar(x + 3, 3 + oh - 5, ow - 6, 2.5, mi.frac, mi.col); return; } // ô gọn: chỉ hình vũ khí + vạch tiến độ
       // bậc và độ mài nằm ở phần phải của ô, không chồng lên hình vũ khí (hình chiếm 26 điểm bên trái)
       if (w.sharpen) ui.text('+' + w.sharpen, x + 51, 22, { size: 7, align: 'right', bold: true, color: on ? '#fff3da' : '#cbbd9e' });
       ui.text(G.CHU_RO !== false && !G.wStage(w) ? 'Chưa hệ' : G.STAGE_NAMES[G.wStage(w)], x + 27, 29.5, { size: 6.5, align: 'center', color: w.branch ? G.EL[w.branch].col : '#b8b0a0' });
@@ -38100,15 +38364,17 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
         c.globalAlpha = ga;
       }
     });
-    if (G.lk) G.lk.hud(P, W); // ba vạch linh khí cạnh ô vũ khí, biểu tượng hệ trên đầu quái (js/linhkhi.js)
+    if (G.lk) G.lk.hud(P, W, gon && !((G.time || 0) - (G.lk.pulseAt || -99) < HG.lk) && !bdMo()); // ba vạch linh khí (ô gọn: tấm chỉ hiện ít giây sau khi nhặt)
+    // ba vạch linh khí cạnh ô vũ khí, biểu tượng hệ trên đầu quái (js/linhkhi.js)
     if (S.vong && S.mode === 'play') veVong(c, P, BA);
     }
     if (!doc && P.weapons.length > 1 && S.tut && W.type === 'elite' && coMD('doiVk')) {
       // Đợt 2: chữ nằm trong một ô nền riêng, cách ô vũ khí 5 điểm ảnh nên không còn bị ô vũ khí cắt mất chữ cuối.
       const s0 = G.tv('Chạm để đổi vũ khí →'); ui.font(7, true);
       const tw0 = Math.ceil(G.ux.measureText(s0).width) + 8;
-      T.plate(362 - tw0, 14, tw0, 12, { a: 0.78 });
-      ui.text(s0, 362 - 4, 23, { size: 7, align: 'right', bold: true, color: '#ffd27a' });
+      const r0 = hudGon() ? HG.vk[0] - 4 : 362;
+      T.plate(r0 - tw0, 14, tw0, 12, { a: 0.78 });
+      ui.text(s0, r0 - 4, 23, { size: 7, align: 'right', bold: true, color: '#ffd27a' });
     }
     // trùm: thanh máu và các lớp thích nghi nằm trên mặt tường sau, không che sàn.
     // Phân cấp (Giai đoạn 4): trùm vùng khung to viền vàng, tên chữ to, số phần trăm; trùm nhỏ khung vừa; tinh anh khung nhỏ.
@@ -38118,6 +38384,7 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
     if (on('tren')) {
     if (b && !b.dead) {
       const big = b.kind !== 'mini';
+      const tg = trumSong(W); // tư vấn 17/10 mục 2
       topY = T.bossBar(240, 2, { tier: big ? 'big' : 'mini', name: b.name, frac: b.hp / b.maxhp, lag: b, marks: big || !G.NOI_GIAN ? [0.3, 0.6] : [G.NOI_GIAN.nho.nguong] }); // 15/10 noi-gian-manh: trùm nhỏ một vạch pha (50%)
       // các lớp thích nghi và điểm yếu: một hàng thẻ nhỏ ngay dưới khung, căn giữa
       const chips = [];
@@ -38134,7 +38401,16 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
         lx += q[3] + 3;
       }
       if (chips.length) topY += 15;
-      if (b.exposed > 0) { if (doc) nenChu(['LỘ ĐIỂM YẾU!'], 240, topY + 9, 8.5); ui.text('LỘ ĐIỂM YẾU!', 240, topY + 9, { size: 8.5, align: 'center', color: Math.floor(G.time * 8) % 2 ? '#ffd23f' : '#fff3b0', bold: true }); topY += 11; }
+      if (tg) { // biểu tượng của các thông báo đã thu
+        const ds = [], now = G.time || 0;
+        if (b.exposed > 0 && now - b.lyT0 >= BAO_TRUM.hien) ds.push({ ma: 'gd-sao', nhay: true });
+        const L = doc ? (S.msgW === W && S.msgs ? S.msgs : []) : W.banner && !W.banner.tip && W.banner.at != null ? [{ b: W.banner, s: W.banner.s, at: W.banner.at }] : [];
+        for (const e of L) if (e.b.t > 0 && e.at != null && now - e.at >= BAO_TRUM.hien) ds.push({ ma: bieuTuongBao(e) });
+        veBieuTuong(ds, big);
+      }
+      // tư vấn 17/10 mục 2: "LỘ ĐIỂM YẾU!" chỉ hiện chữ BAO_TRUM.hien giây đầu, sau đó là biểu tượng gd-sao nhấp nháy cạnh thanh máu
+      if (b.exposed > 0) { if (!(b.lyT0 >= 0)) b.lyT0 = G.time || 0; } else b.lyT0 = -1;
+      if (b.exposed > 0 && (!tg || (G.time || 0) - b.lyT0 < BAO_TRUM.hien)) { if (doc) nenChu(['LỘ ĐIỂM YẾU!'], 240, topY + 9, 8.5); ui.text('LỘ ĐIỂM YẾU!', 240, topY + 9, { size: 8.5, align: 'center', color: Math.floor(G.time * 8) % 2 ? '#ffd23f' : '#fff3b0', bold: true }); topY += 11; }
     } else if (W.type === 'elite' && S.mode === 'play') {
       // phòng tinh anh: khung nhỏ ở mép trên với tên loài và dấu hiệu (nhanh, bọc giáp...)
       const el = W.ents.find((e) => e && !e.dead && e.role === 'elite');
@@ -38160,8 +38436,9 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
       // Đợt 8: nhãn này trước nằm cùng hàng với khung tinh anh nên bị khung che mất nửa chữ. Nay xuống một hàng riêng ngay dưới khung, sát ô vũ khí.
       const s0 = G.tv('Chạm để đổi vũ khí →'); ui.font(7, true);
       const tw0 = Math.ceil(G.ux.measureText(s0).width) + 8;
-      T.plate(364 - tw0, by, tw0, 12, { a: 0.78 });
-      ui.text(s0, 364 - 4, by + 9, { size: 7, align: 'right', bold: true, color: '#ffd27a' });
+      const r0 = hudGon() ? HG.vk[0] - 2 : 364;
+      T.plate(r0 - tw0, by, tw0, 12, { a: 0.78 });
+      ui.text(s0, r0 - 4, by + 9, { size: 7, align: 'right', bold: true, color: '#ffd27a' });
       by += 14;
     }
     if (doc) by = veThongBao(W, by);
@@ -38173,7 +38450,8 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
     let tipB = W.banner && W.banner.tip ? W.banner : null;
     // Phòng đầu ải hướng dẫn chỉ một ô chữ: mẹo vũ khí chờ (không đếm giờ), sang phòng kế mới hiện.
     if (tipB && !tipB.urgent && hint && S.tut && W.type === 'start') { tipB.t = Math.max(tipB.t, 5); S.heldTip = tipB; tipB = null; }
-    if (S.mode === 'play' && (hint || tipB) && W.geo.rong && !W.geo.big) {
+    if (G.MEO_GON === true) { if (S.mode === 'play') meoGon(W, hint, tipB); else MEO_G.khung = null; } // tư vấn 17/10 mục 1: hộp nhỏ cạnh trái
+    else if (S.mode === 'play' && (hint || tipB) && W.geo.rong && !W.geo.big) {
       // Đợt 2 (sàn phòng thường rộng 300): cột trái chỉ còn 66 điểm ảnh nên lời chỉ dẫn dời xuống ĐÁY GIỮA, nằm trên dải tường trước
       // (y 252–270). Một dòng thì không chạm sàn; câu dài hai dòng thì lấn mép dưới sàn chừng 9 điểm ảnh. Cỡ chữ giữ 7 như cũ.
       // Chỉ hiện MỘT ô mỗi lúc để không che trận đánh: dòng mẹo (có đếm giờ) hiện trước, hết giờ thì lời chỉ dẫn hiện lại.
@@ -38215,7 +38493,8 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
         hy += ph + 3;
       }
     }
-    if (!doc && W.banner && !W.banner.tip) {
+    if (!doc && W.banner && !W.banner.tip && W.banner.at == null) W.banner.at = G.time || 0;
+    if (!doc && W.banner && !W.banner.tip && !(trumSong(W) && (G.time || 0) - W.banner.at >= BAO_TRUM.hien)) {
       // dòng báo nằm trên tường sau; dài quá thì thu chữ, vẫn dài thì xuống dòng
       const maxW = W.geo.rong ? 290 : 228;
       let size = 10, lines = [W.banner.s];
@@ -47792,6 +48071,8 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
   const RA = (G.roomArt = { THEMES, SIDE_OF });
   // Vùng dùng để chọn theme phòng: vùng 4 có theme riêng (trừ khi tắt ?nensong=0), còn lại như G.vungVe (vùng mượn hình tạm).
   RA.vungTheme = (reg) => (reg === 3 && THEMES[3] && G.NEN_SONG !== false ? 3 : G.vungVe ? G.vungVe(reg) : reg);
+  // Tư vấn 17/10 mục 6 (js/stage.js veLeRong, ?manrong=1): ảnh nền ngoài phòng của vùng (gd-nen-<vùng>-ngoai, 64×64 cỡ game, lặp hai chiều) hoặc null.
+  RA.anhNgoai = (reg) => { const th = THEMES[RA.vungTheme(reg)]; try { return th && th.ma ? trAnh('ngoai', th.ma) : null; } catch (e) { return null; } };
   // Khung phòng. big: phòng trùm rộng hơn. Sàn là hình chữ nhật fx0..fx1, fy0..fy1; nhân vật đứng trong bounds.
   // Đợt 2 (mở rộng sân đấu, quyết định Q3): bề ngang sàn phòng thường, tính bằng điểm ảnh game. Trước là 208 (sàn x 136–344).
   // Muốn quay về sàn cũ chỉ cần đổi số này về 208. Mép phải sàn không vượt x = 380 (như phòng trùm) để cột nút bên phải
@@ -52535,7 +52816,7 @@ window.FIREBASE_CONFIG = {
       if (ph >= 1 && !b.tl.dong) taoDong(w, b);
     }
     b.lunge = null; b.x = w.x1 - CFG.dau.lui;
-    if (el !== cu && w.banner) { w.banner.s += ' — ' + goiY(el); w.banner.t = Math.max(w.banner.t || 0, 3); }
+    if (el !== cu && w.banner) { w.banner.s += ' — ' + goiY(el); w.banner.t = Math.max(w.banner.t || 0, 3); w.banner.icon = 'gd-he-' + G.WEAK[el]; } // icon: biểu tượng khi dòng báo thu gọn (js/stage.js, tư vấn 17/10 mục 2)
   }
   function goiY(el) { return G.t('Hệ {0}: đánh bằng {1}!', G.EL[el].name, G.EL[G.WEAK[el]].name); }
 
@@ -52971,7 +53252,7 @@ window.FIREBASE_CONFIG = {
     if (T.vom.length) T.vom = T.vom.filter((v) => now < v.het);
     if (b.dead || b.dying != null) { T.vom.length = 0; T.duoi = null; if (C3() && b.dead) boTron(w, b); }
     // gợi ý hệ một lần sau màn ra mắt
-    if (!T.goiY && !(b.invuln > 0) && b.t > 4.2 && !b.dead) { T.goiY = true; w.banner = { s: goiY(b.el), col: G.EL[b.el].col, t: 3.2 }; }
+    if (!T.goiY && !(b.invuln > 0) && b.t > 4.2 && !b.dead) { T.goiY = true; w.banner = { s: goiY(b.el), col: G.EL[b.el].col, t: 3.2, icon: 'gd-he-' + G.WEAK[b.el] }; }
     // vòm: hai chân chắn em bé, thân vòm chắn đạn
     const P = w.P;
     for (const v of T.vom) {

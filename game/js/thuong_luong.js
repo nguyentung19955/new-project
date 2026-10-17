@@ -143,7 +143,7 @@
       if (ph >= 1 && !b.tl.dong) taoDong(w, b);
     }
     b.lunge = null; b.x = w.x1 - CFG.dau.lui;
-    if (el !== cu && w.banner) { w.banner.s += ' — ' + goiY(el); w.banner.t = Math.max(w.banner.t || 0, 3); }
+    if (el !== cu && w.banner) { w.banner.s += ' — ' + goiY(el); w.banner.t = Math.max(w.banner.t || 0, 3); w.banner.icon = 'gd-he-' + G.WEAK[el]; } // icon: biểu tượng khi dòng báo thu gọn (js/stage.js, tư vấn 17/10 mục 2)
   }
   function goiY(el) { return G.t('Hệ {0}: đánh bằng {1}!', G.EL[el].name, G.EL[G.WEAK[el]].name); }
 
@@ -579,7 +579,7 @@
     if (T.vom.length) T.vom = T.vom.filter((v) => now < v.het);
     if (b.dead || b.dying != null) { T.vom.length = 0; T.duoi = null; if (C3() && b.dead) boTron(w, b); }
     // gợi ý hệ một lần sau màn ra mắt
-    if (!T.goiY && !(b.invuln > 0) && b.t > 4.2 && !b.dead) { T.goiY = true; w.banner = { s: goiY(b.el), col: G.EL[b.el].col, t: 3.2 }; }
+    if (!T.goiY && !(b.invuln > 0) && b.t > 4.2 && !b.dead) { T.goiY = true; w.banner = { s: goiY(b.el), col: G.EL[b.el].col, t: 3.2, icon: 'gd-he-' + G.WEAK[b.el] }; }
     // vòm: hai chân chắn em bé, thân vòm chắn đạn
     const P = w.P;
     for (const v of T.vom) {

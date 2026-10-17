@@ -13291,6 +13291,8 @@ MA._xong();
   const RA = (G.roomArt = { THEMES, SIDE_OF });
   // Vùng dùng để chọn theme phòng: vùng 4 có theme riêng (trừ khi tắt ?nensong=0), còn lại như G.vungVe (vùng mượn hình tạm).
   RA.vungTheme = (reg) => (reg === 3 && THEMES[3] && G.NEN_SONG !== false ? 3 : G.vungVe ? G.vungVe(reg) : reg);
+  // Tư vấn 17/10 mục 6 (js/stage.js veLeRong, ?manrong=1): ảnh nền ngoài phòng của vùng (gd-nen-<vùng>-ngoai, 64×64 cỡ game, lặp hai chiều) hoặc null.
+  RA.anhNgoai = (reg) => { const th = THEMES[RA.vungTheme(reg)]; try { return th && th.ma ? trAnh('ngoai', th.ma) : null; } catch (e) { return null; } };
   // Khung phòng. big: phòng trùm rộng hơn. Sàn là hình chữ nhật fx0..fx1, fy0..fy1; nhân vật đứng trong bounds.
   // Đợt 2 (mở rộng sân đấu, quyết định Q3): bề ngang sàn phòng thường, tính bằng điểm ảnh game. Trước là 208 (sàn x 136–344).
   // Muốn quay về sàn cũ chỉ cần đổi số này về 208. Mép phải sàn không vượt x = 380 (như phòng trùm) để cột nút bên phải
