@@ -30,6 +30,7 @@
         net: tep.net == null || !isFinite(+tep.net) ? 1 : clamp(Math.round(+tep.net), 1, 4),
         bk: Array.isArray(tep.ban_kinh) && tep.ban_kinh.every((v) => +v > 0) ? tep.ban_kinh.map(Number) : null, // 16/10 vẽ tay 6: bán kính vòng từng khung (hu-vong-song)
         det: +tep.det > 0.05 && +tep.det <= 1 ? +tep.det : 1, // 16/10 vẽ tay 7: ảnh vòng đã dẹt sẵn (cao / rộng); 1 = vòng tròn
+        tamN4: typeof tep.tam_n4 === 'string' ? tep.tam_n4 : null, // nét cao (?netcao=3|4): cùng khung, ảnh gấp 4 điểm / điểm game; tải lười
       };
       if (typeof Image !== 'undefined') {
         const img = new Image();
@@ -348,6 +349,13 @@
     } finally { c.restore(); }
     return true;
   };
+  // NÉT CAO (net-cao/bao-cao.md): canvas thế giới nét ≥ 3 và tệp có "tam_n4" (vệt kiếm nặng) → vẽ bản nét 4 (tải lần đầu cần, chưa về thì
+  // bản thường). Cùng khung, cùng neo: chỉ ô nguồn to gấp đôi. Mặc định (nét 2) không bao giờ đụng tới.
+  function cao(a) {
+    if (!a.tamN4 || !(G.NET > 2) || typeof Image === 'undefined') return null;
+    if (!a.hi) { const img = new Image(), h = { img, ok: false }; img.onload = () => { h.ok = true; }; img.onerror = () => { h.hong = true; }; img.src = a.tamN4; a.hi = h; }
+    return a.hi.ok ? a.hi.img : null;
+  }
   function veF(c, a, f, x, y, goc, co, lat, mo, mau, kieu) {
     const s = a.co * (co > 0 ? co : 1);
     let flip = !!lat, rot = 0;
@@ -360,8 +368,8 @@
       c.imageSmoothingEnabled = false;
       if (a.cong) c.globalCompositeOperation = 'lighter';
       if (mo != null && mo < 1) c.globalAlpha *= clamp(mo, 0, 1);
-      const n = a.net, sw = a.fw * n, sh = a.fh * n;
-      c.drawImage(mau ? FA.nhuom(a, mau, kieu) || a.img : a.img, (f % a.cot) * sw, Math.floor(f / a.cot) * sh, sw, sh, -a.ax, -a.ay, a.fw, a.fh);
+      const hi = mau ? null : cao(a), n = hi ? 4 : a.net, sw = a.fw * n, sh = a.fh * n;
+      c.drawImage(hi || (mau ? FA.nhuom(a, mau, kieu) || a.img : a.img), (f % a.cot) * sw, Math.floor(f / a.cot) * sh, sw, sh, -a.ax, -a.ay, a.fw, a.fh);
     } finally { c.restore(); }
     return true;
   }

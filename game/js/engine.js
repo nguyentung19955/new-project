@@ -14,16 +14,22 @@
   // toạ độ 480x270 như cũ nhờ phép phóng xNET đặt sẵn. Chỗ nào tự đặt lại phép biến hình (setTransform) trên canvas thế giới
   // thì nhân thêm G.NET (dùng G.wxDat). Hình vẽ bằng code: mỗi điểm ảnh cũ thành 2x2, trông y như trước; ảnh AI có "net": 2
   // thì hiện đủ chi tiết gấp đôi. Cài đặt "Độ nét" (Anh Mõ): Cao = 2, Thường = 1 (G.save.net = 'thuong').
+  // NÉT CAO (thử nghiệm 17/10, docs/review/ke-hoach-cai-thien/net-cao/bao-cao.md): ?netcao=3 / ?netcao=4 (hoặc cài đặt "Rất cao" = 4) → canvas
+  // thế giới 1440×810 / 1920×1080; mọi chỗ đã tính theo G.NET (wxDat, lamTron, canvas phụ) tự theo. Cu Tí, vũ khí, vệt kiếm nặng có ảnh
+  // dựng sẵn đúng cỡ (tải lười, chỉ khi bật); quái / nền vẽ phóng nguyên lần (×1,5 / ×2) như cũ. Mặc định (không cờ) y như trước: 2.
   G.NET = 0;
+  { let m = null; try { m = /[?&]netcao=([0-9])(&|$)/.exec((typeof location !== 'undefined' && location.search) || ''); } catch (e) { m = null; } G.NET_CAO = m && +m[1] >= 3 ? Math.min(4, +m[1]) : m && m[1] === '0' ? -1 : 0; }
   G.setNet = function (n) {
-    n = n >= 2 ? 2 : 1;
+    n = n >= 4 ? 4 : n >= 3 ? 3 : n >= 2 ? 2 : 1;
     if (G.NET === n && world.width === G.W * n) return;
     G.NET = n;
     world.width = G.W * n; world.height = G.H * n; // đổi cỡ canvas thì mọi trạng thái bút bị đặt lại
     G.wx.imageSmoothingEnabled = false;
     G.wx.setTransform(n, 0, 0, n, 0, 0);
   };
-  G.netMuon = () => (G.save && G.save.net === 'thuong' ? 1 : 2);
+  // Có ảnh nét cao dựng sẵn không (chỉ bản web ảnh rời; bản một tệp không có → cài đặt không hiện "Rất cao").
+  G.netCaoCo = () => { try { const z = G.spriteCustom && G.spriteCustom.zed && G.spriteCustom.zed['zed-moi']; return !!(z && z.tep && Array.isArray(z.tep.tam_n4)); } catch (e) { return false; } };
+  G.netMuon = () => (G.save && G.save.net === 'thuong' ? 1 : G.NET_CAO > 0 ? G.NET_CAO : G.save && G.save.net === 'ratcao' && G.NET_CAO !== -1 ? 4 : 2); // ?netcao=0: bỏ qua cài đặt Rất cao
   // Đặt phép biến hình cho canvas thế giới theo toạ độ game: tương đương c.setTransform(a, 0, 0, a, x, y) của bản cũ.
   G.wxDat = function (c, x, y, a) { const n = G.NET || 1; a = a == null ? 1 : a; c.setTransform(a * n, 0, 0, a * n, (x || 0) * n, (y || 0) * n); };
   G.setNet(2);
@@ -404,7 +410,7 @@
       phan('cài đặt', [], () => {
       s.sound = s.sound !== false;
       if (s.lang !== 'en') delete s.lang; // ngôn ngữ: không có (mặc định) là tiếng Việt, 'en' là tiếng Anh (js/ngon_ngu.js)
-      if (s.net !== 'thuong') delete s.net; // độ nét: không có (mặc định) là Cao, 'thuong' là Thường
+      if (s.net !== 'thuong' && s.net !== 'ratcao') delete s.net; // độ nét: không có (mặc định) là Cao, 'thuong' là Thường, 'ratcao' là Rất cao (thử nghiệm, nét 4)
       if (s.pin !== true) delete s.pin; // tiết kiệm pin (vẽ 30 khung/giây, js/engine.js V6): không có là tắt
       // âm lượng Nhạc / Tiếng 0..100 (G.amThanh): không có trường là mặc định; số hỏng thì bỏ (về mặc định)
       for (const k of ['nhac', 'tieng']) { if (typeof s[k] === 'number' && isFinite(s[k])) s[k] = G.clamp(Math.round(s[k]), 0, 100); else delete s[k]; }

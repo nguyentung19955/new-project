@@ -1,0 +1,273 @@
+{
+ "url": "http://127.0.0.1:8765/linh-khi-nhe.html",
+ "loi": [
+  "m844 n2: console: A bad HTTP response code (404) was received when fetching the script.",
+  "m844 n3: console: A bad HTTP response code (404) was received when fetching the script.",
+  "m844 n4: console: A bad HTTP response code (404) was received when fetching the script.",
+  "m1280 n2: console: A bad HTTP response code (404) was received when fetching the script.",
+  "m1280 n3: console: A bad HTTP response code (404) was received when fetching the script.",
+  "m1280 n4: console: A bad HTTP response code (404) was received when fetching the script."
+ ],
+ "chup": {
+  "m844-n2-dung": {
+   "net": 2,
+   "canvas_rong": 960,
+   "trang_thai": {
+    "u": null,
+    "combo": -1
+   },
+   "vung_ti": [
+    919,
+    433,
+    1395,
+    736
+   ],
+   "quai": [
+    null,
+    null
+   ]
+  },
+  "m844-n2-kiem": {
+   "net": 2,
+   "canvas_rong": 960,
+   "trang_thai": {
+    "u": 0.4999999999999999,
+    "combo": 0
+   },
+   "vung_ti": [
+    919,
+    433,
+    1395,
+    736
+   ],
+   "quai": [
+    null,
+    null
+   ]
+  },
+  "m844-n3-dung": {
+   "net": 3,
+   "canvas_rong": 1440,
+   "trang_thai": {
+    "u": null,
+    "combo": -1
+   },
+   "vung_ti": [
+    919,
+    433,
+    1395,
+    736
+   ],
+   "quai": [
+    null,
+    null
+   ]
+  },
+  "m844-n3-kiem": {
+   "net": 3,
+   "canvas_rong": 1440,
+   "trang_thai": {
+    "u": 0.4999999999999999,
+    "combo": 0
+   },
+   "vung_ti": [
+    919,
+    433,
+    1395,
+    736
+   ],
+   "quai": [
+    null,
+    null
+   ]
+  },
+  "m844-n4-dung": {
+   "net": 4,
+   "canvas_rong": 1920,
+   "trang_thai": {
+    "u": null,
+    "combo": -1
+   },
+   "vung_ti": [
+    919,
+    433,
+    1395,
+    736
+   ],
+   "quai": [
+    null,
+    null
+   ]
+  },
+  "m844-n4-kiem": {
+   "net": 4,
+   "canvas_rong": 1920,
+   "trang_thai": {
+    "u": 0.4999999999999999,
+    "combo": 0
+   },
+   "vung_ti": [
+    919,
+    433,
+    1395,
+    736
+   ],
+   "quai": [
+    null,
+    null
+   ]
+  },
+  "m1280-n2-dung": {
+   "net": 2,
+   "canvas_rong": 960,
+   "trang_thai": {
+    "u": null,
+    "combo": -1
+   },
+   "vung_ti": [
+    432,
+    269,
+    718,
+    451
+   ],
+   "quai": [
+    null,
+    null
+   ]
+  },
+  "m1280-n2-kiem": {
+   "net": 2,
+   "canvas_rong": 960,
+   "trang_thai": {
+    "u": 0.4999999999999999,
+    "combo": 0
+   },
+   "vung_ti": [
+    432,
+    269,
+    718,
+    451
+   ],
+   "quai": [
+    null,
+    null
+   ]
+  },
+  "m1280-n3-dung": {
+   "net": 3,
+   "canvas_rong": 1440,
+   "trang_thai": {
+    "u": null,
+    "combo": -1
+   },
+   "vung_ti": [
+    432,
+    269,
+    718,
+    451
+   ],
+   "quai": [
+    null,
+    null
+   ]
+  },
+  "m1280-n3-kiem": {
+   "net": 3,
+   "canvas_rong": 1440,
+   "trang_thai": {
+    "u": 0.4999999999999999,
+    "combo": 0
+   },
+   "vung_ti": [
+    432,
+    269,
+    718,
+    451
+   ],
+   "quai": [
+    null,
+    null
+   ]
+  },
+  "m1280-n4-dung": {
+   "net": 4,
+   "canvas_rong": 1920,
+   "trang_thai": {
+    "u": null,
+    "combo": -1
+   },
+   "vung_ti": [
+    432,
+    269,
+    718,
+    451
+   ],
+   "quai": [
+    null,
+    null
+   ]
+  },
+  "m1280-n4-kiem": {
+   "net": 4,
+   "canvas_rong": 1920,
+   "trang_thai": {
+    "u": 0.4999999999999999,
+    "combo": 0
+   },
+   "vung_ti": [
+    432,
+    269,
+    718,
+    451
+   ],
+   "quai": [
+    null,
+    null
+   ]
+  }
+ },
+ "gio": {
+  "n2": {
+   "thuong": {
+    "tb": 2.6075000000186264,
+    "p50": 2.5,
+    "p90": 3,
+    "max": 7.400000000372529
+   },
+   "cham4": {
+    "tb": 11.13499999997827,
+    "p50": 11,
+    "p90": 14.299999999813735,
+    "max": 17.90000000037253
+   }
+  },
+  "n3": {
+   "thuong": {
+    "tb": 4.32499999999612,
+    "p50": 4.099999999627471,
+    "p90": 5.400000000372529,
+    "max": 11.400000000372529
+   },
+   "cham4": {
+    "tb": 17.18999999999845,
+    "p50": 17.399999999906868,
+    "p90": 21.699999999720603,
+    "max": 31.40000000037253
+   }
+  },
+  "n4": {
+   "thuong": {
+    "tb": 5.798333333300737,
+    "p50": 5.5,
+    "p90": 6.7000000001862645,
+    "max": 16.200000000186265
+   },
+   "cham4": {
+    "tb": 24.69000000002173,
+    "p50": 24.5,
+    "p90": 30.5,
+    "max": 35.299999999813735
+   }
+  }
+ }
+}

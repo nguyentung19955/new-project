@@ -679,9 +679,11 @@
     const cdW = T.canMoi && T.canMoi() ? [116, 86, 86] : [96, 96, 96], cdX = [CX + 4, CX + 8 + cdW[0], CX + 12 + cdW[0] + cdW[1]];
     if (T.btn(cdX[0], 68, cdW[0], CDH, 'Âm thanh, điều khiển ›', { size: 8.5, sub: sv.sound ? 'Nhạc · Truyện' : 'Đang tắt', subSize: 7 })) { V.cd2 = true; V.confirm = false; G.audioStart(); }
     // Độ nét hình (js/engine.js G.NET): Cao = canvas thế giới gấp đôi điểm ảnh (ảnh AI rõ hơn), Thường = như cũ (nhẹ máy yếu)
-    if (T.btn(cdX[1], 68, cdW[1], CDH, sv.net === 'thuong' ? 'Độ nét: Thường' : 'Độ nét: Cao', { size: 8.5 })) {
-      if (sv.net === 'thuong') delete sv.net; else sv.net = 'thuong';
-      G.persist(); say(sv.net === 'thuong' ? 'Độ nét Thường: nhẹ máy hơn, hình AI kém rõ hơn.' : 'Độ nét Cao: hình AI rõ gấp đôi.');
+    // Rất cao (thử nghiệm 17/10, net-cao/bao-cao.md): canvas gấp 4, Cu Tí dựng ảnh nét hơn; chỉ hiện khi bản game có ảnh nét cao (bản web).
+    // Bấm: Cao → Rất cao → Thường → Cao (không có ảnh nét cao: Cao ↔ Thường như cũ).
+    if (T.btn(cdX[1], 68, cdW[1], CDH, sv.net === 'thuong' ? 'Độ nét: Thường' : sv.net === 'ratcao' ? 'Độ nét: Rất cao' : 'Độ nét: Cao', { size: 8.5 })) {
+      if (sv.net === 'thuong') delete sv.net; else if (sv.net === 'ratcao' || !(G.netCaoCo && G.netCaoCo())) sv.net = 'thuong'; else sv.net = 'ratcao';
+      G.persist(); say(sv.net === 'thuong' ? 'Độ nét Thường: nhẹ máy hơn, hình AI kém rõ hơn.' : sv.net === 'ratcao' ? 'Độ nét Rất cao (thử): Cu Tí nét hơn nữa, máy yếu có thể giật.' : 'Độ nét Cao: hình AI rõ gấp đôi.');
     }
     if (T.btn(cdX[2], 68, cdW[2], CDH, 'Toàn màn hình', { size: 8.5 })) {
       try { const el = document.documentElement; if (document.fullscreenElement) document.exitFullscreen(); else el.requestFullscreen().catch(() => say('Thiết bị này không cho bật toàn màn hình.')); } catch (e) { say('Thiết bị này không cho bật toàn màn hình.'); }

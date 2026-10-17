@@ -88,8 +88,31 @@
     }
     return T._to.ready ? T._to.img : null;
   }
+  // NÉT CAO (thử nghiệm 17/10, docs/review/ke-hoach-cai-thien/net-cao/bao-cao.md): bản ảnh cho canvas nét n = 3 / 4 — "tam_n<n>" (mảng
+  // TRANG ảnh, mỗi trang "to_n<n>".trang ô) + "to_n<n>" (cùng cách xếp ô như "to", k = 1,2 × n / 2, ô o), dựng từ ẢNH GỐC bằng
+  // net-cao/cong-cu/dung_net_cao.py. Chỉ tải khi canvas đang ở nét đó (?netcao=3|4). Trả mảng trang khi đã về hết, chưa thì null.
+  function anhNet(T, n) {
+    const t = T && T.tep, ds = t && t['tam_n' + n], kr = '_n' + n;
+    if (G.NET_CU || !t || !t['to_n' + n] || !Array.isArray(ds) || !ds.length || typeof Image === 'undefined') return null;
+    if (!T[kr]) {
+      const r = { ds: [], con: ds.length, ready: false };
+      ds.forEach((src, i) => { const img = new Image(); img.onload = () => { if (--r.con === 0) r.ready = true; }; img.onerror = () => { r.hong = true; }; img.src = src; r.ds[i] = img; });
+      T[kr] = r;
+    }
+    return T[kr].ready && !T[kr].hong ? T[kr].ds : null;
+  }
   // Vẽ một vùng (trong MỘT ô 96) của tấm thân T. Canvas phụ đang ở nét to (q.__to === T) thì lấy cùng vùng ở bản to.
   function veT(q, T, I, sx, sy, sw, sh, dx, dy, dw, dh) {
+    if (q.__toN > 2 && q.__to === T && I === T.img) { // nét cao: canvas phụ ở nét 1,2 × N → lấy ô ở bản "tam_n<N>" (thiếu ô: bản to như dưới)
+      const m = T.tep['to_n' + q.__toN], ds = m ? anhNet(T, q.__toN) : null;
+      if (ds) {
+        const col = Math.floor(sx / 96 + 1e-6), row = Math.floor(sy / 96 + 1e-6), j = m.o_cua[row * m.cot_goc + col];
+        if (j != null && j >= 0) {
+          const per = m.trang || 1e9, p = Math.floor(j / per), jj = j % per, k = m.k;
+          if (ds[p]) { q.drawImage(ds[p], (jj % m.cot) * m.o + (sx - col * 96) * k, Math.floor(jj / m.cot) * m.o + (sy - row * 96) * k, sw * k, sh * k, dx, dy, dw, dh); return; }
+        }
+      }
+    }
     const to = q.__to === T && I === T.img ? T.tep.to : null, im = to ? anhTo(T) : null; // ảnh khác tấm thân (I ≠ T.img, vd. tấm thương cao): vẽ như cũ
     if (im) {
       const col = Math.floor(sx / 96 + 1e-6), row = Math.floor(sy / 96 + 1e-6), j = to.o_cua[row * to.cot_goc + col];
@@ -1076,6 +1099,7 @@
     if (!a) return false;
     sVe = s; tVe = T;
     anhTo(T); // do-net: bắt đầu tải bản to ngay lần vẽ đầu (làng / chân dung) để vào trận là có
+    if (G.NET > 2) anhNet(T, G.NET); // nét cao (?netcao=3|4): bản ảnh đúng nét canvas, chỉ tải khi bật
     const V = lay('zed-vk'), v = V ? vkCua(o, D, s, T, true) : null;
     // Hàng tay không (ném phi tiêu, đấm): không có vũ khí để xoay → xoay cánh tay duỗi (TAY) + nghiêng thân trên như đòn đâm.
     let Hb = null;
@@ -1244,14 +1268,17 @@
     if ((tint || K !== 1 || chinh) && typeof document !== 'undefined') {
       // vùng 160×160 điểm ảnh game quanh chân (vũ khí dài vẫn lọt), nét ×2; vẽ ra ×K quanh chân (đúng lưới điểm ảnh thật)
       // do-net: có bản to đúng cỡ K (tấm "to") → canvas phụ ở nét 2K, dựng từ bản to, chép ra 1:1 (không phóng lúc vẽ)
-      const T = tVe, toK = T && K !== 1 && T.tep.to && Math.abs(T.tep.to.k - K) < 1e-6 && anhTo(T) ? K : 1, Z = Math.round(320 * toK);
+      // nét cao (G.NET 3 / 4, có bản "to_n<N>" đúng cỡ K và đã tải): canvas phụ ở nét N·K (toK = K·N/2) → chép 1:1 ra canvas thế giới nét N.
+      // Không có / chưa tải: như nét 2 (canvas phụ nét 2K, khi chép ra bị phóng N/2 lần — đúng cỡ, kém nét).
+      const T = tVe, NC = G.NET > 2 ? G.NET : 0, mc = NC && T && K !== 1 ? T.tep['to_n' + NC] : null, nc = mc && Math.abs(mc.k - (K * NC) / 2) < 1e-6 && anhNet(T, NC) ? NC : 0;
+      const toK = nc ? (K * nc) / 2 : T && K !== 1 && T.tep.to && Math.abs(T.tep.to.k - K) < 1e-6 && anhTo(T) ? K : 1, Z = Math.round(320 * toK);
       tam = tam || document.createElement('canvas');
       if (tam.width !== Z) { tam.width = Z; tam.height = Z; }
       const q = tam.getContext('2d');
       q.setTransform(1, 0, 0, 1, 0, 0); q.globalCompositeOperation = 'source-over'; q.globalAlpha = 1; q.clearRect(0, 0, Z, Z);
       q.imageSmoothingEnabled = false; q.setTransform(2 * toK, 0, 0, 2 * toK, 160 * toK, 220 * toK);
-      q.__to = toK !== 1 ? T : null;
-      try { lop(q); } finally { q.__to = null; }
+      q.__to = toK !== 1 ? T : null; q.__toN = nc;
+      try { lop(q); } finally { q.__to = null; q.__toN = 0; }
       q.setTransform(1, 0, 0, 1, 0, 0);
       if (chinh && !MO.dang) { // nhớ ảnh khung này (chưa nhuộm) làm khung cũ cho lần mờ chuyển sau
         MO.anh = MO.anh || document.createElement('canvas');

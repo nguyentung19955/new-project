@@ -59,7 +59,7 @@
 <div id="lk-tai" data-bia="||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAMEBQYH/8QAKRAAAQMCBQMDBQAAAAAAAAAAAQIDEQAEBRIhMUETFGEiQnEVUWKBsf/EABcBAAMBAAAAAAAAAAAAAAAAAAIDBAX/xAAlEQACAQEFCQAAAAAAAAAAAAABAgADBBExUfASEyEyM0FxobH/2gAMAwEAAhEDEQA/AOfNMWj9zbWiEtBsn1ugGTPCvjXajFcBNssNsvoeMxlCgVJqzCbhHftG3aGdcJBUAUn7neRzTMcumxjD0hDSkmFBtWZMjSdR5qamzb4DtHOiimTfxmt/T3UpzLBCTt5q22sWekt0vBvImSF8+KyF5eWDaGFNZlr6YkKGiTPGvzSutZDDX1sF3P0wPUBMzvP62rStACi5TEWB9pizi/H1JsLUo3NhKiZUOfyqbE1Hu3jJkqPNFFRUuprOHU5dZSVwmE6+2mNk9u7r7R/aKKqqQLNifB+T/9k=|||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAgf/xAAmEAACAgEEAQQCAwAAAAAAAAABAgMRAAQSITEFE1FhgSJBcbHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQIDBAX/xAAeEQABBAIDAQAAAAAAAAAAAAAAAQIDEiExBBEyIv/aAAwDAQACEQMRAD8A51EIZIo53EASNwHG07mBPFno9HFyeOhl1Y2yFIbtjVkDnr54yzx2vaLSyII1cELvBQEVu5PyeshTWvFJG6qi7OR+A9/4xoa3yQzWRvzsH8YkWrkCMZYlsoSvJHfWUalzFpI4/TRBZbca3HsUcXqvJvPqpZgEAewAFHAP1mZ9aZIoyqKWVa4jX3P+jByGor8aNDgT0gXvDiHTs1EbjRAsX3jKuEH92Ofs4YYGeim/yLulscHjFuT6YNno/wBnDDGfsEej/9k=" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.17-1500";
+(window.G = window.G || {}).VERSION = "lk-2026.10.17-1509";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -3225,16 +3225,22 @@
   // toạ độ 480x270 như cũ nhờ phép phóng xNET đặt sẵn. Chỗ nào tự đặt lại phép biến hình (setTransform) trên canvas thế giới
   // thì nhân thêm G.NET (dùng G.wxDat). Hình vẽ bằng code: mỗi điểm ảnh cũ thành 2x2, trông y như trước; ảnh AI có "net": 2
   // thì hiện đủ chi tiết gấp đôi. Cài đặt "Độ nét" (Anh Mõ): Cao = 2, Thường = 1 (G.save.net = 'thuong').
+  // NÉT CAO (thử nghiệm 17/10, docs/review/ke-hoach-cai-thien/net-cao/bao-cao.md): ?netcao=3 / ?netcao=4 (hoặc cài đặt "Rất cao" = 4) → canvas
+  // thế giới 1440×810 / 1920×1080; mọi chỗ đã tính theo G.NET (wxDat, lamTron, canvas phụ) tự theo. Cu Tí, vũ khí, vệt kiếm nặng có ảnh
+  // dựng sẵn đúng cỡ (tải lười, chỉ khi bật); quái / nền vẽ phóng nguyên lần (×1,5 / ×2) như cũ. Mặc định (không cờ) y như trước: 2.
   G.NET = 0;
+  { let m = null; try { m = /[?&]netcao=([0-9])(&|$)/.exec((typeof location !== 'undefined' && location.search) || ''); } catch (e) { m = null; } G.NET_CAO = m && +m[1] >= 3 ? Math.min(4, +m[1]) : m && m[1] === '0' ? -1 : 0; }
   G.setNet = function (n) {
-    n = n >= 2 ? 2 : 1;
+    n = n >= 4 ? 4 : n >= 3 ? 3 : n >= 2 ? 2 : 1;
     if (G.NET === n && world.width === G.W * n) return;
     G.NET = n;
     world.width = G.W * n; world.height = G.H * n; // đổi cỡ canvas thì mọi trạng thái bút bị đặt lại
     G.wx.imageSmoothingEnabled = false;
     G.wx.setTransform(n, 0, 0, n, 0, 0);
   };
-  G.netMuon = () => (G.save && G.save.net === 'thuong' ? 1 : 2);
+  // Có ảnh nét cao dựng sẵn không (chỉ bản web ảnh rời; bản một tệp không có → cài đặt không hiện "Rất cao").
+  G.netCaoCo = () => { try { const z = G.spriteCustom && G.spriteCustom.zed && G.spriteCustom.zed['zed-moi']; return !!(z && z.tep && Array.isArray(z.tep.tam_n4)); } catch (e) { return false; } };
+  G.netMuon = () => (G.save && G.save.net === 'thuong' ? 1 : G.NET_CAO > 0 ? G.NET_CAO : G.save && G.save.net === 'ratcao' && G.NET_CAO !== -1 ? 4 : 2); // ?netcao=0: bỏ qua cài đặt Rất cao
   // Đặt phép biến hình cho canvas thế giới theo toạ độ game: tương đương c.setTransform(a, 0, 0, a, x, y) của bản cũ.
   G.wxDat = function (c, x, y, a) { const n = G.NET || 1; a = a == null ? 1 : a; c.setTransform(a * n, 0, 0, a * n, (x || 0) * n, (y || 0) * n); };
   G.setNet(2);
@@ -3615,7 +3621,7 @@
       phan('cài đặt', [], () => {
       s.sound = s.sound !== false;
       if (s.lang !== 'en') delete s.lang; // ngôn ngữ: không có (mặc định) là tiếng Việt, 'en' là tiếng Anh (js/ngon_ngu.js)
-      if (s.net !== 'thuong') delete s.net; // độ nét: không có (mặc định) là Cao, 'thuong' là Thường
+      if (s.net !== 'thuong' && s.net !== 'ratcao') delete s.net; // độ nét: không có (mặc định) là Cao, 'thuong' là Thường, 'ratcao' là Rất cao (thử nghiệm, nét 4)
       if (s.pin !== true) delete s.pin; // tiết kiệm pin (vẽ 30 khung/giây, js/engine.js V6): không có là tắt
       // âm lượng Nhạc / Tiếng 0..100 (G.amThanh): không có trường là mặc định; số hỏng thì bỏ (về mặc định)
       for (const k of ['nhac', 'tieng']) { if (typeof s[k] === 'number' && isFinite(s[k])) s[k] = G.clamp(Math.round(s[k]), 0, 100); else delete s[k]; }
@@ -19265,6 +19271,7 @@
         net: tep.net == null || !isFinite(+tep.net) ? 1 : clamp(Math.round(+tep.net), 1, 4),
         bk: Array.isArray(tep.ban_kinh) && tep.ban_kinh.every((v) => +v > 0) ? tep.ban_kinh.map(Number) : null, // 16/10 vẽ tay 6: bán kính vòng từng khung (hu-vong-song)
         det: +tep.det > 0.05 && +tep.det <= 1 ? +tep.det : 1, // 16/10 vẽ tay 7: ảnh vòng đã dẹt sẵn (cao / rộng); 1 = vòng tròn
+        tamN4: typeof tep.tam_n4 === 'string' ? tep.tam_n4 : null, // nét cao (?netcao=3|4): cùng khung, ảnh gấp 4 điểm / điểm game; tải lười
       };
       if (typeof Image !== 'undefined') {
         const img = new Image();
@@ -19583,6 +19590,13 @@
     } finally { c.restore(); }
     return true;
   };
+  // NÉT CAO (net-cao/bao-cao.md): canvas thế giới nét ≥ 3 và tệp có "tam_n4" (vệt kiếm nặng) → vẽ bản nét 4 (tải lần đầu cần, chưa về thì
+  // bản thường). Cùng khung, cùng neo: chỉ ô nguồn to gấp đôi. Mặc định (nét 2) không bao giờ đụng tới.
+  function cao(a) {
+    if (!a.tamN4 || !(G.NET > 2) || typeof Image === 'undefined') return null;
+    if (!a.hi) { const img = new Image(), h = { img, ok: false }; img.onload = () => { h.ok = true; }; img.onerror = () => { h.hong = true; }; img.src = a.tamN4; a.hi = h; }
+    return a.hi.ok ? a.hi.img : null;
+  }
   function veF(c, a, f, x, y, goc, co, lat, mo, mau, kieu) {
     const s = a.co * (co > 0 ? co : 1);
     let flip = !!lat, rot = 0;
@@ -19595,8 +19609,8 @@
       c.imageSmoothingEnabled = false;
       if (a.cong) c.globalCompositeOperation = 'lighter';
       if (mo != null && mo < 1) c.globalAlpha *= clamp(mo, 0, 1);
-      const n = a.net, sw = a.fw * n, sh = a.fh * n;
-      c.drawImage(mau ? FA.nhuom(a, mau, kieu) || a.img : a.img, (f % a.cot) * sw, Math.floor(f / a.cot) * sh, sw, sh, -a.ax, -a.ay, a.fw, a.fh);
+      const hi = mau ? null : cao(a), n = hi ? 4 : a.net, sw = a.fw * n, sh = a.fh * n;
+      c.drawImage(hi || (mau ? FA.nhuom(a, mau, kieu) || a.img : a.img), (f % a.cot) * sw, Math.floor(f / a.cot) * sh, sw, sh, -a.ax, -a.ay, a.fw, a.fh);
     } finally { c.restore(); }
     return true;
   }
@@ -29809,8 +29823,31 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
     }
     return T._to.ready ? T._to.img : null;
   }
+  // NÉT CAO (thử nghiệm 17/10, docs/review/ke-hoach-cai-thien/net-cao/bao-cao.md): bản ảnh cho canvas nét n = 3 / 4 — "tam_n<n>" (mảng
+  // TRANG ảnh, mỗi trang "to_n<n>".trang ô) + "to_n<n>" (cùng cách xếp ô như "to", k = 1,2 × n / 2, ô o), dựng từ ẢNH GỐC bằng
+  // net-cao/cong-cu/dung_net_cao.py. Chỉ tải khi canvas đang ở nét đó (?netcao=3|4). Trả mảng trang khi đã về hết, chưa thì null.
+  function anhNet(T, n) {
+    const t = T && T.tep, ds = t && t['tam_n' + n], kr = '_n' + n;
+    if (G.NET_CU || !t || !t['to_n' + n] || !Array.isArray(ds) || !ds.length || typeof Image === 'undefined') return null;
+    if (!T[kr]) {
+      const r = { ds: [], con: ds.length, ready: false };
+      ds.forEach((src, i) => { const img = new Image(); img.onload = () => { if (--r.con === 0) r.ready = true; }; img.onerror = () => { r.hong = true; }; img.src = src; r.ds[i] = img; });
+      T[kr] = r;
+    }
+    return T[kr].ready && !T[kr].hong ? T[kr].ds : null;
+  }
   // Vẽ một vùng (trong MỘT ô 96) của tấm thân T. Canvas phụ đang ở nét to (q.__to === T) thì lấy cùng vùng ở bản to.
   function veT(q, T, I, sx, sy, sw, sh, dx, dy, dw, dh) {
+    if (q.__toN > 2 && q.__to === T && I === T.img) { // nét cao: canvas phụ ở nét 1,2 × N → lấy ô ở bản "tam_n<N>" (thiếu ô: bản to như dưới)
+      const m = T.tep['to_n' + q.__toN], ds = m ? anhNet(T, q.__toN) : null;
+      if (ds) {
+        const col = Math.floor(sx / 96 + 1e-6), row = Math.floor(sy / 96 + 1e-6), j = m.o_cua[row * m.cot_goc + col];
+        if (j != null && j >= 0) {
+          const per = m.trang || 1e9, p = Math.floor(j / per), jj = j % per, k = m.k;
+          if (ds[p]) { q.drawImage(ds[p], (jj % m.cot) * m.o + (sx - col * 96) * k, Math.floor(jj / m.cot) * m.o + (sy - row * 96) * k, sw * k, sh * k, dx, dy, dw, dh); return; }
+        }
+      }
+    }
     const to = q.__to === T && I === T.img ? T.tep.to : null, im = to ? anhTo(T) : null; // ảnh khác tấm thân (I ≠ T.img, vd. tấm thương cao): vẽ như cũ
     if (im) {
       const col = Math.floor(sx / 96 + 1e-6), row = Math.floor(sy / 96 + 1e-6), j = to.o_cua[row * to.cot_goc + col];
@@ -30797,6 +30834,7 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
     if (!a) return false;
     sVe = s; tVe = T;
     anhTo(T); // do-net: bắt đầu tải bản to ngay lần vẽ đầu (làng / chân dung) để vào trận là có
+    if (G.NET > 2) anhNet(T, G.NET); // nét cao (?netcao=3|4): bản ảnh đúng nét canvas, chỉ tải khi bật
     const V = lay('zed-vk'), v = V ? vkCua(o, D, s, T, true) : null;
     // Hàng tay không (ném phi tiêu, đấm): không có vũ khí để xoay → xoay cánh tay duỗi (TAY) + nghiêng thân trên như đòn đâm.
     let Hb = null;
@@ -30965,14 +31003,17 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
     if ((tint || K !== 1 || chinh) && typeof document !== 'undefined') {
       // vùng 160×160 điểm ảnh game quanh chân (vũ khí dài vẫn lọt), nét ×2; vẽ ra ×K quanh chân (đúng lưới điểm ảnh thật)
       // do-net: có bản to đúng cỡ K (tấm "to") → canvas phụ ở nét 2K, dựng từ bản to, chép ra 1:1 (không phóng lúc vẽ)
-      const T = tVe, toK = T && K !== 1 && T.tep.to && Math.abs(T.tep.to.k - K) < 1e-6 && anhTo(T) ? K : 1, Z = Math.round(320 * toK);
+      // nét cao (G.NET 3 / 4, có bản "to_n<N>" đúng cỡ K và đã tải): canvas phụ ở nét N·K (toK = K·N/2) → chép 1:1 ra canvas thế giới nét N.
+      // Không có / chưa tải: như nét 2 (canvas phụ nét 2K, khi chép ra bị phóng N/2 lần — đúng cỡ, kém nét).
+      const T = tVe, NC = G.NET > 2 ? G.NET : 0, mc = NC && T && K !== 1 ? T.tep['to_n' + NC] : null, nc = mc && Math.abs(mc.k - (K * NC) / 2) < 1e-6 && anhNet(T, NC) ? NC : 0;
+      const toK = nc ? (K * nc) / 2 : T && K !== 1 && T.tep.to && Math.abs(T.tep.to.k - K) < 1e-6 && anhTo(T) ? K : 1, Z = Math.round(320 * toK);
       tam = tam || document.createElement('canvas');
       if (tam.width !== Z) { tam.width = Z; tam.height = Z; }
       const q = tam.getContext('2d');
       q.setTransform(1, 0, 0, 1, 0, 0); q.globalCompositeOperation = 'source-over'; q.globalAlpha = 1; q.clearRect(0, 0, Z, Z);
       q.imageSmoothingEnabled = false; q.setTransform(2 * toK, 0, 0, 2 * toK, 160 * toK, 220 * toK);
-      q.__to = toK !== 1 ? T : null;
-      try { lop(q); } finally { q.__to = null; }
+      q.__to = toK !== 1 ? T : null; q.__toN = nc;
+      try { lop(q); } finally { q.__to = null; q.__toN = 0; }
       q.setTransform(1, 0, 0, 1, 0, 0);
       if (chinh && !MO.dang) { // nhớ ảnh khung này (chưa nhuộm) làm khung cũ cho lần mờ chuyển sau
         MO.anh = MO.anh || document.createElement('canvas');
@@ -40842,9 +40883,11 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
     const cdW = T.canMoi && T.canMoi() ? [116, 86, 86] : [96, 96, 96], cdX = [CX + 4, CX + 8 + cdW[0], CX + 12 + cdW[0] + cdW[1]];
     if (T.btn(cdX[0], 68, cdW[0], CDH, 'Âm thanh, điều khiển ›', { size: 8.5, sub: sv.sound ? 'Nhạc · Truyện' : 'Đang tắt', subSize: 7 })) { V.cd2 = true; V.confirm = false; G.audioStart(); }
     // Độ nét hình (js/engine.js G.NET): Cao = canvas thế giới gấp đôi điểm ảnh (ảnh AI rõ hơn), Thường = như cũ (nhẹ máy yếu)
-    if (T.btn(cdX[1], 68, cdW[1], CDH, sv.net === 'thuong' ? 'Độ nét: Thường' : 'Độ nét: Cao', { size: 8.5 })) {
-      if (sv.net === 'thuong') delete sv.net; else sv.net = 'thuong';
-      G.persist(); say(sv.net === 'thuong' ? 'Độ nét Thường: nhẹ máy hơn, hình AI kém rõ hơn.' : 'Độ nét Cao: hình AI rõ gấp đôi.');
+    // Rất cao (thử nghiệm 17/10, net-cao/bao-cao.md): canvas gấp 4, Cu Tí dựng ảnh nét hơn; chỉ hiện khi bản game có ảnh nét cao (bản web).
+    // Bấm: Cao → Rất cao → Thường → Cao (không có ảnh nét cao: Cao ↔ Thường như cũ).
+    if (T.btn(cdX[1], 68, cdW[1], CDH, sv.net === 'thuong' ? 'Độ nét: Thường' : sv.net === 'ratcao' ? 'Độ nét: Rất cao' : 'Độ nét: Cao', { size: 8.5 })) {
+      if (sv.net === 'thuong') delete sv.net; else if (sv.net === 'ratcao' || !(G.netCaoCo && G.netCaoCo())) sv.net = 'thuong'; else sv.net = 'ratcao';
+      G.persist(); say(sv.net === 'thuong' ? 'Độ nét Thường: nhẹ máy hơn, hình AI kém rõ hơn.' : sv.net === 'ratcao' ? 'Độ nét Rất cao (thử): Cu Tí nét hơn nữa, máy yếu có thể giật.' : 'Độ nét Cao: hình AI rõ gấp đôi.');
     }
     if (T.btn(cdX[2], 68, cdW[2], CDH, 'Toàn màn hình', { size: 8.5 })) {
       try { const el = document.documentElement; if (document.fullscreenElement) document.exitFullscreen(); else el.requestFullscreen().catch(() => say('Thiết bị này không cho bật toàn màn hình.')); } catch (e) { say('Thiết bị này không cho bật toàn màn hình.'); }

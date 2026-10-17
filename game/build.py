@@ -129,7 +129,7 @@ def main():
                 + style + '\n</head>\n<body>\n' + markup + '\n<script>\n' + js + '</script>\n</body>\n</html>\n')
 
     # 15/10 soát mượt: tấm trước khi thay hàng (<mã>-muotcu, cờ ?anhmuotcu=1) chỉ có ở bản hai tệp (web) — bản một tệp giữ dưới trần 30 MB.
-    js = gom([t for t in custom if not t.get('muot_cua') and not t.get('net_cua')], khai_truyen_mot(truyen) + khai_bia_mot(bia))  # 17/10 do-net: tấm Cu Tí cũ (<mã>-netcu) cũng chỉ ở bản hai tệp
+    js = gom([bo_net_cao(t) for t in custom if not t.get('muot_cua') and not t.get('net_cua')], khai_truyen_mot(truyen) + khai_bia_mot(bia))  # 17/10 do-net: tấm Cu Tí cũ (<mã>-netcu) cũng chỉ ở bản hai tệp
     script = '<script>\n' + js + '</script>'
     full = trang(js)
     frag = title + '\n' + link + '\n' + style + '\n' + markup + '\n' + script + '\n'
@@ -359,8 +359,8 @@ def hai_tep(custom, gom, trang, frag, truyen=None, bia=None):
         return
     if anh_roi_bat():
         return anh_roi(custom, gom, trang, frag, truyen or {}, bia or {})
-    truoc = [t for t in custom if bat_buoc(t)]
-    sau = sorted((t for t in custom if not bat_buoc(t)), key=thu_tu_sau)
+    truoc = [bo_net_cao(t) for t in custom if bat_buoc(t)]
+    sau = sorted((bo_net_cao(t) for t in custom if not bat_buoc(t)), key=thu_tu_sau)
     if not sau:
         return
     # Tệp ảnh tải sau: một mảng JSON hợp lệ, MỖI HÌNH MỘT DÒNG, để game đọc dần từng dòng khi tệp đang về (js/sprite_custom.js).
@@ -549,6 +549,25 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
             t['tam_to'] = THU_MUC_ANH + '/' + ten + '.png'
             if not t.get('net_cua'):
                 tong_tot += len(png); tong_png += len(png)  # người chơi tải (khi vào trận lần đầu), không tính vào "lõi" tải trước
+    # 17/10 nét cao: ảnh "tam_n3" / "tam_n4" (Cu Tí, vệt kiếm nặng) → ảnh rời riêng; game CHỈ tải khi bật ?netcao=3|4 → không tính người chơi tải
+    net_cao = {}
+    for t in ds:
+        for k in ('tam_n3', 'tam_n4'):
+            v = t.get(k)
+            if not isinstance(v, (str, list)):
+                continue
+            ra_ = []
+            for s_ in ([v] if isinstance(v, str) else v):  # zed: mảng trang ảnh; hiệu ứng: một ảnh
+                if not (isinstance(s_, str) and s_.startswith('data:image/png;base64,')):
+                    sys.exit('%s: "%s" phải là ảnh PNG base64' % (t['ma'], k))
+                png = base64.b64decode(s_.split(',', 1)[1])
+                ten = '%s-%s.%s' % (t['ma'], k[4:], hashlib.sha256(png).hexdigest()[:10])
+                with open(os.path.join(thu, ten + '.png'), 'wb') as f:
+                    f.write(png)
+                ra_.append(THU_MUC_ANH + '/' + ten + '.png')
+                net_cao[k] = net_cao.get(k, 0) + len(png)
+                tong_png += len(png)
+            t[k] = ra_[0] if isinstance(v, str) else ra_
     khai = ('// ===== ảnh rời (tải nhanh 12/10): ảnh nằm ở thư mục anh/ cạnh trang, js/sprite_custom.js tải theo ưu tiên =====\n'
             '(window.G = window.G || {}).ANH_ROI = ' + json.dumps({'so': len(vt), 'webp': so_webp}) + ';\n')
     bang_tr, tr_tai, tr_jpg = chep_truyen(truyen or {}, thu)
@@ -593,6 +612,9 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
     print('NGƯỜI CHƠI TẢI (thước đo chính): trang %.2f MB nén + ảnh %.2f MB + bìa %.2f MB = %.2f MB / trần %.0f MB%s; trình duyệt không có WebP: %.2f MB'
           % (z1 / 1048576, tong_tot / 1048576, bia_tai / 1048576, nguoi / 1048576, TRAN_NGUOI_TAI / 1048576, '  ← VƯỢT TRẦN' if nguoi > TRAN_NGUOI_TAI else '',
              (z1 + tong_png - cu_png + bia_jpg) / 1048576))  # 15/10 soát mượt: không tính tấm cũ (chỉ tải khi bật cờ)
+    if net_cao:
+        print('Ảnh NÉT CAO (thử nghiệm, chỉ tải khi bật ?netcao=3|4, KHÔNG tính vào tải đầu): nét 3 %.2f MB, nét 4 %.2f MB (mỗi người chỉ tải một bản)'
+              % (net_cao.get('tam_n3', 0) / 1048576, net_cao.get('tam_n4', 0) / 1048576))
     print('Ảnh truyện (tải lười, chỉ khi mở truyện, KHÔNG tính vào tải đầu): %d ảnh, %.2f MB (JPEG dự phòng %.2f MB) → xem hết truyện: %.2f MB'
           % (len(bang_tr), tr_tai / 1048576, tr_jpg / 1048576, (nguoi + tr_tai) / 1048576))
     loi = bang.get('loi', [0, 0, 0])
@@ -613,7 +635,7 @@ TOOL_JS = ['xu-ly-anh.js', 'khung.js', 'tu-doan.js', 'do.js', 'giao-dien.js']
 RUNTIME_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'vung', 'thay_cho', 'tam', 'khung_rong', 'khung_cao', 'goc', 'rong', 'cao', 'bong', 'dong_tac',
                 'anh', 'vu_khi', 'trang_phuc', 'vat_pham', 'dung_yen', 'nhun', 'nhun_buoc', 'neo', 'khoac_do', 'cu',
                 'net', 'nhan_vat', 'diem', 'diem_theo', 'cap', 'can_tam', 'muot_cua', 'muot', 'bo_va', 'vung_mat', 'net_cua', 'net_moi')  # net_cua, net_moi (17/10 do-net): tấm cũ trước khi dựng lại cho nét (?netcu=1) / tấm mới. vung_mat (15/10 sua-lang-npc): ô mặt người làng ghi tay cho dải lối tắt. can_tam (14/10 trum-chet-pha3): độ dời ngang từng khung để tâm thân trùm trùng điểm neo. net: ảnh gấp net lần (thiếu là game đọc thành 1 → hình to gấp đôi, khung bị cắt)
-HU_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'tam', 'khung_rong', 'khung_cao', 'goc', 'so', 'giay', 'lap', 'xoay', 'co', 'tron', 'net', 'vung', 'ban_kinh', 'det')  # ban_kinh, det (vẽ tay 6–7): vòng sóng hu-vong-song; hiệu ứng ảnh AI (js/fx_anh.js); vung (15/10): tải theo vùng (vung_rieng)
+HU_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'tam', 'khung_rong', 'khung_cao', 'goc', 'so', 'giay', 'lap', 'xoay', 'co', 'tron', 'net', 'vung', 'ban_kinh', 'det', 'tam_n4')  # tam_n4: nét cao (chỉ bản ảnh rời, NET_CAO_KEYS)  # ban_kinh, det (vẽ tay 6–7): vòng sóng hu-vong-song; hiệu ứng ảnh AI (js/fx_anh.js); vung (15/10): tải theo vùng (vung_rieng)
 GD_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'anh', 'net', 'vien', 'lap_canh')  # lap_canh (14/10): cạnh + lòng 9 mảnh lặp thay vì kéo giãn. Ảnh giao diện gd-<tên> (bản đồ, nút; js/sprite_custom.js → SC.gd, js/minimap.js)
 DO_LOAI = ('vat-pham',)  # đồ: một ảnh đứng yên (đợt 2: bỏ vu-khi, trang-phuc)
 DA_BO = {'vu-khi': 'ảnh vũ khí cũ (vk-*)', 'trang-phuc': 'ảnh trang phục cũ (tp-*)', 'ghep': 'hồ sơ ghép trang bị (ghep-*)'}  # đợt 2: game không đọc nữa
@@ -625,6 +647,16 @@ SHIM = '''window.G = window.G || {};
   G.ui = G.ui || {}; // lớp vẽ giao diện rỗng: js/minimap.js giữ đúng đối tượng này, trang Tách Giao Diện gắn hàm vẽ vào để xem thử bản đồ
 })(window.G);
 '''
+
+
+# 17/10 NÉT CAO (thử nghiệm ?netcao=3|4, docs/review/ke-hoach-cai-thien/net-cao/bao-cao.md): ảnh Cu Tí / vệt kiếm nặng dựng sẵn cho canvas nét 3 / 4
+# ("tam_n3", "tam_n4" + "to_n3", "to_n4"). CHỈ ở bản ảnh rời (web), thành tệp ảnh riêng game chỉ tải khi bật cờ; bản một tệp (trần 30 MB) và
+# chế độ 2 tệp kiểu JSON bỏ hẳn (bật cờ ở đó thì game dùng bản to ×1,2 như cũ, chỉ canvas to hơn).
+NET_CAO_KEYS = ('tam_n3', 'tam_n4', 'to_n3', 'to_n4')
+
+
+def bo_net_cao(t):
+    return {k: v for k, v in t.items() if k not in NET_CAO_KEYS} if any(k in t for k in NET_CAO_KEYS) else t
 
 
 def custom_sprites():
