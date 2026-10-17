@@ -105,6 +105,9 @@
   // Nấm Chúa pha 2, Hồ Tinh) thay một hàng bằng ảnh gen mới; tấm có mục "muot". Tấm trước đó giữ ở <mã>-muotcu.sprite.json (mục "muot_cua": <mã>):
   // bình thường KHÔNG nạp. Cờ ?anhmuotcu=1 (G.ANH_MUOT_CU): nạp tấm đó dưới đúng mã, bỏ tấm mới (các vá tạm Phiên 1 tự chạy lại vì tấm cũ không có "bo_va").
   if (G.NET_CU === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]netcu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.NET_CU = cu; }
+  // 17/10 sàn dịu (docs/review/ke-hoach-cai-thien/tu-van-17-10-nen-song/bao-cao.md): ảnh sàn gd-nen-*-san* bớt tương phản chi tiết; sàn trước đó
+  // giữ ở <mã>-sancu (mục "san_cua"), chỉ có ở bản hai tệp (web), chỉ nạp khi ?sanmoi=0 (G.SAN_MOI = false). Bản một tệp: ?sanmoi=0 không đổi gì.
+  if (G.SAN_MOI === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]sanmoi=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.SAN_MOI = !tat; }
   if (G.ANH_MUOT_CU === undefined) {
     let cu = false;
     try { cu = typeof location !== 'undefined' && /[?&]anhmuotcu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; }
@@ -162,6 +165,10 @@
         if (!G.NET_CU) return null;
         tep = Object.assign({}, tep, { ma: tep.net_cua });
       } else if (G.NET_CU && tep.net_moi && Array.isArray(G.customSpriteData) && G.customSpriteData.some((t) => t && t.net_cua === tep.ma)) return null;
+      if (typeof tep.san_cua === 'string') { // 17/10 sàn dịu: sàn cũ, chỉ khi ?sanmoi=0; có sàn cũ thì bỏ sàn mới
+        if (G.SAN_MOI !== false) return null;
+        tep = Object.assign({}, tep, { ma: tep.san_cua });
+      } else if (G.SAN_MOI === false && tep.san_moi && Array.isArray(G.customSpriteData) && G.customSpriteData.some((t) => t && t.san_cua === tep.ma)) return null;
       if (tep.doi_tuong === 'em-be' && !EM_BE_MA.test(tep.ma)) throw new Error('đã bỏ ở đợt 2: em bé chỉ còn em-be-hunter, em-be-healer, em-be-wrestler');
       if (DO_LOAI[tep.doi_tuong]) return themDo(tep); // vật phẩm
       if (tep.doi_tuong === 'giao-dien') return themGd(tep); // ảnh giao diện (gd-<tên>): biểu tượng, ô phòng, khung bản đồ
@@ -1799,7 +1806,7 @@
       if (!t || typeof src !== 'string') return false;
       theoSrc.delete(src);
       const u = t._u;
-      const ma = G.ANH_MUOT_CU && typeof t.muot_cua === 'string' ? t.muot_cua : G.NET_CU && typeof t.net_cua === 'string' ? t.net_cua : t.ma; // ?anhmuotcu=1 / ?netcu=1: tấm cũ mang mã gốc
+      const ma = G.ANH_MUOT_CU && typeof t.muot_cua === 'string' ? t.muot_cua : G.NET_CU && typeof t.net_cua === 'string' ? t.net_cua : G.SAN_MOI === false && typeof t.san_cua === 'string' ? t.san_cua : t.ma; // ?anhmuotcu=1 / ?netcu=1: tấm cũ mang mã gốc
       const it = { img, ma, png: src, webp: typeof t.webp === 'string' && /^anh\/[A-Za-z0-9_.-]{1,90}\.webp$/.test(t.webp) ? t.webp : null,
         bac: u[0] | 0, co: +u[1] || 0, vung: u[2] | 0, trum: !!u[3], khoa: !!(G.TAI_VUNG && u[4] && (u[2] | 0) >= 0 && (u[2] | 0) <= 3), can: 0, lan: 0, xong: img.onload, hong: img.onerror, dangTai: false, thap: false, ve: false, boWebp: false };
       img.onload = null; img.onerror = null;

@@ -3,6 +3,14 @@
 Làm theo `../TU-VAN-CHATGPT-17-10.md` mục 2.1, 2.2, 5, 6 và việc 3. **Không chơi thử**: chỉ `node --check`, build, chạy headless bằng lệnh.
 Không đổi luật chơi, không đổi số liệu cân bằng. Không đụng đăng nhập Google / lưu mây / `?cloud=0`.
 
+## Cờ quay lui
+
+| Cờ | Về như cũ |
+|---|---|
+| `?goiy1=0` | Không có dòng "Nên làm" ở màn kết quả và ở làng |
+| `?luyen=0` | Toàn bộ chữ cũ (mài, quặng, ép đồ…) — như trước |
+| `?sanmoi=0` | Ảnh sàn 4 vùng như trước (bản web) |
+
 ## Phần A
 
 ### A1. Sông sâu: kiểm kê + bảng màu + prompt gộp
@@ -61,3 +69,76 @@ Câu tiếng Anh cho mọi câu mới đã thêm.
 | `python3 game/build.py` / `--hai-tep` | Đạt — một tệp 29,85 MB / 30; người chơi tải 17,74 MB / 20 |
 | Headless `dist/linh-khi.html?cloud=0`: thắng / thua / bỏ ải rồi về làng — mặc định, `&goiy1=0`, `&luyen=0` | **0 lỗi JS**; có dòng gợi ý (mặc định, `luyen=0`), không có (`goiy1=0`) |
 | `game/tests/smoke.py` | 0 lỗi |
+
+## Phần B — tương phản Cu Tí / quái với nền (làm sau phiên "Nét cao — nền", `../net-cao-nen/bao-cao.md`)
+
+Đã chờ báo cáo phiên nét cao nền rồi mới sửa (phiên đó thêm ảnh nét 3 / 4 cho sàn; phiên này sửa luôn cả bản nét cao).
+
+### Đã làm — sửa ẢNH sàn (không vẽ code, không làm mờ)
+
+Công cụ `cong-cu/san-diu.py --ghi` sửa thẳng 16 ảnh sàn `gd-nen-<vùng>-san0/1/2/san-nhan` (4 vùng):
+
+1. **Rừng già: dọn đốm lẻ** — điểm game nào khác màu cả 4 điểm kề (đốm lá 1 điểm) lấy màu nhiều nhất của điểm kề; mảng lớn giữ nguyên, không thêm màu mới (số màu 6 → 6). Ba vùng kia sàn là vân hạt dày nên không dọn (sẽ đổi kiểu vẽ).
+2. **Bớt tương phản chi tiết** quanh màu trung bình của mảng: Rừng già **24%**, Sông sâu 22%, Hang biển và Lâu đài 20%.
+3. **Sáng thêm một chút** (nhân theo tỉ lệ, giữ độ đậm màu): Rừng già +14 mức, Lâu đài +12, Sông sâu +8, Hang biển 0 (đã sáng).
+   Lý do: Cu Tí và mọi quái đều có **viền tối `#14182e`** và nhiều con thân tối / nâu — nền sáng hơn thì viền tách khỏi nền rõ hơn. Làm tối nền (thử trước) thì Rừng già **kém đi** (viền đọc được giảm 4–5 điểm %).
+4. **Bản nét cao** (`anh_n3`, `anh_n4` của Hang biển, Lâu đài, Sông sâu) ép cùng màu trung bình, cùng hệ số, rồi ghi lại khoá `net_cao_cua` → build giữ ảnh nét cao (không có dòng "CHÚ Ý"). Rừng già chưa có ảnh nét cao (phiên trước ghi thiếu ảnh gốc), nét cao tự phóng từ ảnh mới.
+
+Độ lệch chuẩn độ sáng của ảnh sàn (càng thấp càng ít rối): Rừng già 13,6 / 11,2 / 15,1 / 18,1 → 11,9 / 9,8 / 14,0 / 16,9 (kèm bớt ~400–700 đốm lẻ mỗi mảng); Hang biển ~23 → ~19; Lâu đài ~15 → ~11; Sông sâu ~31 → ~25.
+
+### Cờ tắt `?sanmoi=0`
+
+Ảnh sàn cũ giữ ở `game/art/custom/gd-nen-*-san*-sancu.sprite.json` (mục `san_cua`), **chỉ có ở bản web hai tệp** và chỉ tải khi bật `?sanmoi=0`
+(như tấm `-netcu` của phiên do-net; không tính vào tải đầu). Đã thử bản web `linh-khi-nhe.html` qua máy chủ thử: mặc định nạp `gd-nen-rung-san0.<mã>.webp`,
+`?sanmoi=0` nạp `gd-nen-rung-san0-sancu.<mã>.webp`, có / không `?netcao=3` đều đúng. **Bản một tệp** (chỉ còn dùng cho trang công cụ) không chứa sàn cũ (giữ dưới trần 30 MB) → `?sanmoi=0` ở đó không đổi gì.
+
+### Đo ở 480×270 (`cong-cu/do-tuong-phan.py` + `cong-cu/do-vien.py`)
+
+Mỗi vùng: ải 1, phòng đầu, Cu Tí giữa phòng, 4 quái thường của vùng quanh, chụp canvas thế giới thu về 480×270 (bot dựng cảnh, không chơi).
+Hai cột cuối là **% điểm viền** của nhân vật lệch hẳn với nền ngay cạnh (độ sáng ≥ 30 mức / màu ΔE ≥ 30) — càng cao càng dễ nhìn ra dáng.
+
+| Vùng | Ai | Thân − nền (độ sáng) | Viền lệch sáng ≥ 30 (%) | Viền lệch màu ≥ 30 (%) |
+|---|---|---|---|---|
+| Rừng già | Hoa Bào Tử | 3 → 16 | 51 → 58 | 72 → 75 |
+| Rừng già | Heo Con | 15 → 28 | 55 → 64 | 75 → 74 |
+| Rừng già | **Cu Tí** | 30 → 37 | 83 → 84 | 81 → 81 |
+| Rừng già | Bọ Hung | 8 → 19 | 54 → 58 | 75 → 75 |
+| Rừng già | Chồn Bóng | 10 → 1 | 39 → 50 | 67 → 67 |
+| Hang biển | Hải Quỳ / Cua / Ốc / Cá Chuồn | 2–12 (không đổi) | 62–76 → 62–76 | 64–79 (không đổi) |
+| Hang biển | **Cu Tí** | 44 → 44 | 81 → 84 | 69 → 72 |
+| Lâu đài cổ | Đèn Lồng | 18 → 7 | 59 → 60 | 53 → 62 |
+| Lâu đài cổ | Linh Ma | 7 → 4 | 37 → 42 | 23 → 30 |
+| Lâu đài cổ | **Cu Tí** | 17 → 26 | 78 → 82 | 61 → 71 |
+| Lâu đài cổ | Tượng Đá | 25 → 14 | 51 → 52 | 40 → 46 |
+| Lâu đài cổ | Mèo Đen | 7 → 17 | 42 → 47 | 23 → 33 |
+| Sông sâu | Cóc Tía | 7 → 16 | 72 → 71 | 74 → 74 |
+| Sông sâu | Rái Cá | 16 → 25 | 68 → 68 | 53 → 53 |
+| Sông sâu | **Cu Tí** | 53 → 58 | 89 → 87 | 77 → 79 |
+| Sông sâu | Ba Ba | 16 → 22 | 59 → 58 | 38 → 38 |
+| Sông sâu | Rắn Nước (hình tạm, đứng trên dòng nước) | 2 → 2 | 42 → 42 | 45 → 45 |
+
+Số đầy đủ: `anh/do-truoc.json`, `anh/do-sau.json`. Ảnh TRƯỚC / SAU (480×270, trái / phải): `anh/truoc-sau-rung.png`, `anh/truoc-sau-bien.png`,
+`anh/truoc-sau-lau.png`, `anh/truoc-sau-song.png`; Rừng già phóng ×2: `anh/rung-x2-truoc-sau.png`.
+
+**Nói thẳng về mục "quái sáng hơn nền ≥ 30–40 mức"**: chưa đạt được chỉ bằng sửa sàn. Quái Rừng già / Lâu đài phần lớn **cùng độ sáng với sàn** (thân 55–90, sàn 60–95), còn Cu Tí thì **tối** —
+sàn tối đi giúp quái thì làm Cu Tí chìm, và ngược lại. Phiên này chọn hướng **nền dịu + sáng hơn một chút** để viền tối của mọi nhân vật nổi lên (cả Cu Tí lẫn quái đều tăng hoặc giữ),
+và quái vẫn tách khỏi nền nhờ **màu** (cột cuối: Rừng già 67–81%).
+
+### Còn chìm — cần chủ game quyết
+
+1. **Lâu đài cổ: Linh Ma, Mèo Đen** (viền lệch màu 30–33%): con tối trên sàn đỏ tối. Muốn sửa tận gốc phải sáng ảnh quái (hoặc thêm viền sáng 1 điểm ở ảnh quái) — đổi hình quái nên chưa làm.
+2. **Sông sâu: Ba Ba** (thân ô-liu trên sàn tre vàng ô-liu, 38%) và Rắn Nước (hình tạm) — nên xử lý khi gen ảnh Sông sâu theo `PROMPT.md` (luật "thân sáng hơn sàn" đã ghi vào prompt).
+3. Gợi ý của tư vấn "vùng sàn ít chi tiết quanh chân nhân vật" chưa làm (sẽ phải vẽ code chạy theo nhân vật).
+
+### Kiểm phần B
+
+| Bài | Kết quả |
+|---|---|
+| `node --check` mọi `game/js/*.js` | Đạt |
+| `python3 game/build.py` / `--hai-tep` | Đạt — một tệp **29,88 MB** / 30; người chơi tải **17,69 MB** / 20; không có dòng "CHÚ Ý" ảnh nét cao |
+| Headless `dist/linh-khi.html?cloud=0` 4 vùng: mặc định, `&sanmoi=0`, `&netcao=3` | **0 lỗi JS** |
+| Bản web `linh-khi-nhe.html` qua máy chủ thử: mặc định, `&sanmoi=0`, `&netcao=3`, `&sanmoi=0&netcao=3` | 0 lỗi JS của game (chỉ báo thiếu `sw.js` vì máy chủ thử không có tệp đó); đúng ảnh sàn mới / cũ |
+| Gợi ý một việc (phần A) chạy lại trên bản mới | 0 lỗi |
+| `game/tests/smoke.py` | 0 lỗi |
+
+Không đổi luật, số liệu, vùng trúng, va chạm, chỗ đặt đồ / quái. Không đụng đăng nhập Google / lưu mây / `?cloud=0`.

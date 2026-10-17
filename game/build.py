@@ -129,7 +129,7 @@ def main():
                 + style + '\n</head>\n<body>\n' + markup + '\n<script>\n' + js + '</script>\n</body>\n</html>\n')
 
     # 15/10 soát mượt: tấm trước khi thay hàng (<mã>-muotcu, cờ ?anhmuotcu=1) chỉ có ở bản hai tệp (web) — bản một tệp giữ dưới trần 30 MB.
-    js = gom([bo_net_cao(t) for t in custom if not t.get('muot_cua') and not t.get('net_cua')], khai_truyen_mot(truyen) + khai_bia_mot(bia))  # 17/10 do-net: tấm Cu Tí cũ (<mã>-netcu) cũng chỉ ở bản hai tệp
+    js = gom([bo_net_cao(t) for t in custom if not t.get('muot_cua') and not t.get('net_cua') and not t.get('san_cua')], khai_truyen_mot(truyen) + khai_bia_mot(bia))  # 17/10 do-net: tấm Cu Tí cũ (<mã>-netcu) cũng chỉ ở bản hai tệp
     script = '<script>\n' + js + '</script>'
     full = trang(js)
     frag = title + '\n' + link + '\n' + style + '\n' + markup + '\n' + script + '\n'
@@ -516,7 +516,7 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
             tot = len(w)
             tong_webp += len(w)
             so_webp += 1
-        if t.get('muot_cua') or t.get('net_cua'):  # 17/10 do-net: tấm Cu Tí cũ <mã>-netcu (?netcu=1) cũng vậy. 15/10 soát mượt: tấm trước khi thay hàng (<mã>-muotcu) chỉ tải khi ?anhmuotcu=1
+        if t.get('muot_cua') or t.get('net_cua') or t.get('san_cua'):  # 17/10 sàn dịu: sàn cũ <mã>-sancu (?sanmoi=0) cũng chỉ ở bản hai tệp, không tính tải đầu. 17/10 do-net: tấm Cu Tí cũ <mã>-netcu (?netcu=1) cũng vậy. 15/10 soát mượt: tấm trước khi thay hàng (<mã>-muotcu) chỉ tải khi ?anhmuotcu=1
             cu_n += 1
             cu_tot += tot
             cu_png += len(png)
@@ -636,7 +636,7 @@ RUNTIME_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'vung', 'thay_cho
                 'anh', 'vu_khi', 'trang_phuc', 'vat_pham', 'dung_yen', 'nhun', 'nhun_buoc', 'neo', 'khoac_do', 'cu',
                 'net', 'nhan_vat', 'diem', 'diem_theo', 'cap', 'can_tam', 'muot_cua', 'muot', 'bo_va', 'vung_mat', 'net_cua', 'net_moi')  # net_cua, net_moi (17/10 do-net): tấm cũ trước khi dựng lại cho nét (?netcu=1) / tấm mới. vung_mat (15/10 sua-lang-npc): ô mặt người làng ghi tay cho dải lối tắt. can_tam (14/10 trum-chet-pha3): độ dời ngang từng khung để tâm thân trùm trùng điểm neo. net: ảnh gấp net lần (thiếu là game đọc thành 1 → hình to gấp đôi, khung bị cắt)
 HU_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'tam', 'khung_rong', 'khung_cao', 'goc', 'so', 'giay', 'lap', 'xoay', 'co', 'tron', 'net', 'vung', 'ban_kinh', 'det', 'tam_n4')  # tam_n4: nét cao (chỉ bản ảnh rời, NET_CAO_KEYS)  # ban_kinh, det (vẽ tay 6–7): vòng sóng hu-vong-song; hiệu ứng ảnh AI (js/fx_anh.js); vung (15/10): tải theo vùng (vung_rieng)
-GD_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'anh', 'net', 'vien', 'lap_canh', 'anh_n3', 'anh_n4')  # anh_n3 / anh_n4 (17/10 nét cao — nền): chỉ bản ảnh rời, NET_CAO_KEYS  # lap_canh (14/10): cạnh + lòng 9 mảnh lặp thay vì kéo giãn. Ảnh giao diện gd-<tên> (bản đồ, nút; js/sprite_custom.js → SC.gd, js/minimap.js)
+GD_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'anh', 'net', 'vien', 'lap_canh', 'anh_n3', 'anh_n4', 'san_cua', 'san_moi')  # san_cua / san_moi (17/10 tu-van-17-10-nen-song): sàn trước khi dịu (?sanmoi=0) / sàn mới  # anh_n3 / anh_n4 (17/10 nét cao — nền): chỉ bản ảnh rời, NET_CAO_KEYS  # lap_canh (14/10): cạnh + lòng 9 mảnh lặp thay vì kéo giãn. Ảnh giao diện gd-<tên> (bản đồ, nút; js/sprite_custom.js → SC.gd, js/minimap.js)
 DO_LOAI = ('vat-pham',)  # đồ: một ảnh đứng yên (đợt 2: bỏ vu-khi, trang-phuc)
 DA_BO = {'vu-khi': 'ảnh vũ khí cũ (vk-*)', 'trang-phuc': 'ảnh trang phục cũ (tp-*)', 'ghep': 'hồ sơ ghép trang bị (ghep-*)'}  # đợt 2: game không đọc nữa
 SHIM = '''window.G = window.G || {};
