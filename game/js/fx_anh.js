@@ -31,10 +31,11 @@
         bk: Array.isArray(tep.ban_kinh) && tep.ban_kinh.every((v) => +v > 0) ? tep.ban_kinh.map(Number) : null, // 16/10 vẽ tay 6: bán kính vòng từng khung (hu-vong-song)
         det: +tep.det > 0.05 && +tep.det <= 1 ? +tep.det : 1, // 16/10 vẽ tay 7: ảnh vòng đã dẹt sẵn (cao / rộng); 1 = vòng tròn
         tamN4: typeof tep.tam_n4 === 'string' ? tep.tam_n4 : null, // nét cao (?netcao=3|4): cùng khung, ảnh gấp 4 điểm / điểm game; tải lười
+        tamN3: typeof tep.tam_n3 === 'string' ? tep.tam_n3 : null, // nét cao 3 (17/10 net-cao-hieu-ung-giao-dien): ảnh gấp 3 điểm / điểm game; tải lười
       };
       if (typeof Image !== 'undefined') {
         const img = new Image();
-        img.onload = () => { a.img = img; a.cot = Math.max(1, Math.floor(img.width / (fw * a.net))); a.ready = true; };
+        img.onload = () => { a.img = img; a.cot = Math.max(1, Math.floor(img.width / (fw * a.net))); a.img0 = img; a.net0 = a.net; a.cot0 = a.cot; a.ready = true; };
         img.onerror = () => { FA.loi.push(a.ma + ': ảnh hỏng'); };
         const SCx = G.spriteCustom; // Phiên hiệu năng (V3): ảnh của tệp tải sau giải mã ngoài luồng chính rồi mới dùng
         if (SCx && SCx.napAnh) SCx.napAnh(img, tep.tam); else img.src = tep.tam;
@@ -51,9 +52,9 @@
   FA.clear = () => { for (const k of Object.keys(FA.ds)) delete FA.ds[k]; };
   // Tải nhanh 12/10: hình có trong game mà ảnh rời chưa về → báo js/sprite_custom.js tải ngay (SC.canAnh); trong lúc đó vẽ bằng code.
   const can = (a) => { if (a && !a.ready && G.spriteCustom && G.spriteCustom.canAnh) G.spriteCustom.canAnh(a.ma); };
-  FA.get = (ma) => { const a = FA.ds[ma]; can(a); return a && a.ready ? a : null; };
+  FA.get = (ma) => { const a = FA.ds[ma]; can(a); return a && a.ready ? chon(a) : null; };
   // Có ảnh sẵn sàng để vẽ không (không có thì nơi gọi vẽ bằng code như cũ).
-  FA.co = (ma) => { const a = FA.ds[ma]; can(a); return !!(a && a.ready); };
+  FA.co = (ma) => { const a = FA.ds[ma]; can(a); if (a && a.ready) chon(a); return !!(a && a.ready); };
   FA.giay = (ma) => { const a = FA.ds[ma]; return a ? a.giay : 0; };
   FA.lap = (ma) => { const a = FA.ds[ma]; return !!(a && a.lap); };
   // Khung ở thời điểm t (giây từ lúc bắt đầu). Hiệu ứng một lần đã hết thì trả về -1.
@@ -281,6 +282,7 @@
   FA.veK = function (c, ma, x, y, f, goc, co, lat, mo, mau, kieu) {
     const a = FA.ds[ma];
     if (!a || !a.ready || !c) return false;
+    chon(a);
     f = Math.max(0, Math.min(a.so - 1, f | 0));
     return veF(c, a, f, x, y, goc, co, lat, mo, mau, kieu);
   };
@@ -294,6 +296,7 @@
   FA.ve = function (c, ma, x, y, t, goc, co, lat, mo, mau, kieu) {
     const a = FA.ds[ma];
     if (!a || !a.ready || !c) return false;
+    chon(a);
     const f = FA.khung(a, t);
     if (f < 0) return false;
     const ok = veF(c, a, f, x, y, goc, co, lat, mo, mau, kieu);
@@ -308,6 +311,7 @@
   FA.veAffine = function (c, ma, f, S, D, mo) {
     const a = FA.ds[ma];
     if (!a || !a.ready || !c) return false;
+    chon(a);
     const sx1 = S[1][0] - S[0][0], sy1 = S[1][1] - S[0][1], sx2 = S[2][0] - S[0][0], sy2 = S[2][1] - S[0][1];
     const det = sx1 * sy2 - sx2 * sy1;
     if (!det) return false;
@@ -337,6 +341,7 @@
   FA.veO = function (c, ma, f, x, y, w, h, mo, mau, quay) {
     const a = FA.ds[ma];
     if (!a || !a.ready || !c || !(w > 0) || !(h > 0)) return false;
+    chon(a);
     f = ((f | 0) % a.so + a.so) % a.so;
     const n = a.net, sw = a.fw * n, sh = a.fh * n;
     c.save();
@@ -349,13 +354,34 @@
     } finally { c.restore(); }
     return true;
   };
-  // NÉT CAO (net-cao/bao-cao.md): canvas thế giới nét ≥ 3 và tệp có "tam_n4" (vệt kiếm nặng) → vẽ bản nét 4 (tải lần đầu cần, chưa về thì
-  // bản thường). Cùng khung, cùng neo: chỉ ô nguồn to gấp đôi. Mặc định (nét 2) không bao giờ đụng tới.
-  function cao(a) {
-    if (!a.tamN4 || !(G.NET > 2) || typeof Image === 'undefined') return null;
-    if (!a.hi) { const img = new Image(), h = { img, ok: false }; img.onload = () => { h.ok = true; }; img.onerror = () => { h.hong = true; }; img.src = a.tamN4; a.hi = h; }
-    return a.hi.ok ? a.hi.img : null;
+  // NÉT CAO (net-cao/bao-cao.md; 17/10 net-cao-hieu-ung-giao-dien): canvas thế giới nét ≥ 3 và tệp có "tam_n3" / "tam_n4" → ĐỔI ảnh của hiệu ứng
+  // sang bản nét cao (a.img / a.net / a.cot đổi cùng lúc, nên mọi chỗ vẽ — kể cả fx.js, fx_he.js, mobs.js… đọc thẳng a.img, a.net — đều theo).
+  // Nét 3: ưu tiên tam_n3 (không có thì tam_n4, như vệt kiếm nặng); nét 4: tam_n4 (không có thì tam_n3). Ảnh tải lười lần đầu cần; chưa về /
+  // hỏng thì giữ bản thường. Nét về 2 (tắt cờ / đổi cài đặt) thì trả lại ảnh thường. Mặc định (nét 2) không bao giờ đổi gì.
+  function taiCao(a, n) {
+    const src = n === 3 ? a.tamN3 : a.tamN4;
+    if (!src || typeof Image === 'undefined') return null;
+    a.hi = a.hi || {};
+    let h = a.hi[n];
+    if (!h) {
+      const img = new Image(), m = (h = a.hi[n] = { img, ok: false });
+      img.onload = () => { m.ok = true; }; img.onerror = () => { m.hong = true; };
+      const SCx = G.spriteCustom;
+      if (SCx && SCx.napAnh) SCx.napAnh(img, src); else img.src = src;
+    }
+    return h.ok ? h.img : null;
   }
+  function chon(a) {
+    if (!a.img0) return a;
+    let n = 0;
+    if (G.NET > 2 && (a.tamN3 || a.tamN4)) n = G.NET === 3 ? (a.tamN3 ? 3 : 4) : (a.tamN4 ? 4 : 3);
+    const hi = n ? taiCao(a, n) : null;
+    if (hi) {
+      if (a.img !== hi) { a.img = hi; a.net = n; a.cot = Math.max(1, Math.floor(hi.width / (a.fw * n))); }
+    } else if (a.img !== a.img0) { a.img = a.img0; a.net = a.net0; a.cot = a.cot0; }
+    return a;
+  }
+  FA.chon = (ma) => { const a = FA.ds[ma]; return a && a.ready ? chon(a) : null; };
   function veF(c, a, f, x, y, goc, co, lat, mo, mau, kieu) {
     const s = a.co * (co > 0 ? co : 1);
     let flip = !!lat, rot = 0;
@@ -368,8 +394,8 @@
       c.imageSmoothingEnabled = false;
       if (a.cong) c.globalCompositeOperation = 'lighter';
       if (mo != null && mo < 1) c.globalAlpha *= clamp(mo, 0, 1);
-      const hi = mau ? null : cao(a), n = hi ? 4 : a.net, sw = a.fw * n, sh = a.fh * n;
-      c.drawImage(hi || (mau ? FA.nhuom(a, mau, kieu) || a.img : a.img), (f % a.cot) * sw, Math.floor(f / a.cot) * sh, sw, sh, -a.ax, -a.ay, a.fw, a.fh);
+      const n = a.net, sw = a.fw * n, sh = a.fh * n;
+      c.drawImage(mau ? FA.nhuom(a, mau, kieu) || a.img : a.img, (f % a.cot) * sw, Math.floor(f / a.cot) * sh, sw, sh, -a.ax, -a.ay, a.fw, a.fh);
     } finally { c.restore(); }
     return true;
   }

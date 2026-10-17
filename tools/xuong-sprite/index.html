@@ -16960,8 +16960,9 @@ MA._xong();
   // nét cao đã về (js/room_art.js dựng lại phòng khi số này đổi). Mặc định (nét 1 / 2) không bao giờ chạy tới đây.
   SC.gdHiSo = 0;
   function gdNetCao(g) {
-    const N = G.NET | 0;
-    if (N < 3 || !g.anhN || typeof g.anhN[N] !== 'string' || typeof Image === 'undefined') return null;
+    const N0 = G.NET | 0, cu = (n) => !!g.anhN && typeof g.anhN[n] === 'string';
+    const N = cu(N0) ? N0 : N0 === 3 && cu(4) ? 4 : N0 === 4 && cu(3) ? 3 : N0; // 17/10 net-cao-hieu-ung-giao-dien: thiếu bậc này thì lấy bậc kia (phúc lành vốn nét 3 chỉ có anh_n4)
+    if (N0 < 3 || !cu(N) || typeof Image === 'undefined') return null;
     const k = 'hi' + N;
     if (!g[k]) {
       const h = (g[k] = { ok: false, o: null }), img = new Image();
