@@ -71,9 +71,11 @@
     return () => { for (const k in keep) w[k] = keep[k]; };
   }
   // ---------- chụp thân sạch ----------
-  DQ.body = function (e) {
+  // giuDang: giữ dáng đang có (trúng đòn, chớp…), chỉ bỏ trạng thái và biểu tượng
+  DQ.body = function (e, giuDang) {
     DQ.iso(true);
     const s = clean(e), back = only([e]);
+    if (giuDang) for (const k of NEU) if (k !== 'mvLift' && k !== 'boTroiT' && k !== 'boChamT') e[k] = s[k];
     const E0 = G.fx.state().E.slice(), np0 = G.fx.state().np;
     fxClear();
     const F = G.fx, L = { drawGround: F.drawGround, drawOver: F.drawOver, entity: F.entity, proj: F.proj, projAnh: F.projAnh, drawUI: F.drawUI, sorted: F.sorted }, BT = G.baoTruoc;
@@ -268,13 +270,15 @@
     const ex0 = e.x, ey0 = e.y, out = [];
     for (let i = 0; i < K.f; i++) {
       inp = K.inp(i);
+      // vẽ trước mỗi nhịp như game thật (hộp thân của khung vừa vẽ được ghi lại cho js/dinh_quai.js)
+      const bpre = DQ.bbox(DQ.body(e, true)); // thân lúc số / hình sinh ra (khung vừa vẽ)
       FR = []; trung = false; sat = [];
       const ex = e.x, ey = e.y;
       G.noRender = false; G.tick(); G.click = null;
       const fr = FR, tr = trung, sa = sat; FR = null;
       e.hp = e.maxhp; P.hp = P.maxhp; DQ.freeze(e);
       if (e.art === 'traiGai') e.face = -ben; // Trai Sông Gai khép vỏ chặn đòn phía trước: đánh từ sau lưng
-      if (tr) out.push(DQ.doTrung(e, fr, i, sa));
+      if (tr) { const r = DQ.doTrung(e, fr, i, sa); if (bpre) r.bso = { x0: bpre.x0 - e.x, x1: bpre.x1 - e.x, y0: bpre.y0 - e.y, y1: bpre.y1 - e.y }; out.push(r); }
     }
     target = null;
     e.x = ex0; e.y = ey0;
@@ -282,13 +286,14 @@
   };
   // Đo một khung có trúng: thân lúc này, hình hiệu ứng vừa sinh (gom theo hàm), số sát thương.
   DQ.doTrung = function (e, fr, f, sa) {
-    const B = DQ.body(e), bb = DQ.bbox(B), ex = e.x, ey = e.y;
-    const res = { f, src: sa, face: e.face, b: bb ? { x0: bb.x0 - ex, x1: bb.x1 - ex, y0: bb.y0 - ey, y1: bb.y1 - ey } : null, nhom: [], so: [] };
+    const B = DQ.body(e, true), bb = DQ.bbox(B), ex = e.x, ey = e.y;
+    const res = { f, src: sa, face: e.face, ey: +ey.toFixed(2), b: bb ? { x0: bb.x0 - ex, x1: bb.x1 - ex, y0: bb.y0 - ey, y1: bb.y1 - ey } : null, nhom: [], so: [] };
     for (const r of fr) {
       if (r.o) res.o = { type: r.o.type, heavy: !!r.o.heavy, crit: !!r.o.crit, ranged: !!r.o.ranged, el: r.o.el || null, dir: r.o.dir };
       for (const q of r.N) if (q.chu || r.laMt) res.so.push({ api: r.api, x: q.x0 - ex, y: q.y0 - ey, moi: q.moi });
       // hình gần quái (neo trong 70 điểm)
-      const E = r.E.filter((o) => o.x != null && Math.abs(o.x - ex) < 70 && Math.abs(o.y - ey) < 140);
+      // bỏ hình lớp sàn (ly 0: vết cháy, vòng phép, vòng trên sàn — cố ý nằm dưới chân); chỉ xét hình nổi trên không
+      const E = r.E.filter((o) => o.x != null && o.ly !== 0 && Math.abs(o.x - ex) < 70 && Math.abs(o.y - ey) < 140);
       if (!E.length) continue;
       const g = chupHinh(e, E, 0.05), eb = DQ.bbox(g);
       const cmp = eb ? DQ.cmp(B, g) : null;

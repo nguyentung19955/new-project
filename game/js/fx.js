@@ -904,7 +904,8 @@
   // Số sát thương lên quái. o: { el, crit, m (hệ số kháng/yếu), dot }
   api('dmg', (t, d, o) => {
     o = o || {};
-    const top = t.y - Math.min(60, (t.h || 24) * (t.scale || 1)) - 4;
+    const TQ = G.dinhQuai ? G.dinhQuai.than(t) : null; // dinh-quai: số mọc ngay trên đỉnh đầu thật; trùm cao: không lên quá dưới thanh máu trùm (y ≥ 37)
+    const top = TQ ? Math.max(37, t.y + TQ.y0 - 4 - G.dinhQuai.nhac(t)) : t.y - Math.min(60, (t.h || 24) * (t.scale || 1)) - 4;
     if (DOC()) { dmgDoc(t, d, o, top); return; }
     const s = String(Math.max(1, Math.round(d)));
     if (o.crit) num(t.x, top - 2, s + '!', { col: '#ffd23f', size: 13, pop: 1.2, t: 1, edge: 'rgba(90,30,0,0.95)', kind: 1 });
@@ -1299,7 +1300,8 @@
   // o: { el, type (loại vũ khí), ranged, crit, dead, heavy, dir, rain }
   api('hit', (e, o) => {
     const el = o.el, PL = pal(el), dir = o.dir || 1;
-    const hh = Math.min(16, (e.h || 24) * (e.scale || 1) * 0.55);
+    const ct = G.dinhQuai ? G.dinhQuai.caoTrung(e) : null; // dinh-quai: chỗ chạm theo thân thật (trùm cao: không còn ở chân)
+    const hh = ct != null ? ct + G.dinhQuai.nhac(e) : Math.min(16, (e.h || 24) * (e.scale || 1) * 0.55);
     const cx = e.x - dir * Math.min(e.r, 12) * 0.5, cy = e.y - hh;
     const ang = dir > 0 ? 0 : Math.PI;
     if (o.rain) {
@@ -1468,6 +1470,9 @@
     const sc = e.scale || 1;
     BODY.w = Math.max(4, Math.min(22, (e.isPlayer ? 6 : e.r) * (e.isBoss && e.kind !== 'mini' ? 0.7 : 0.9)));
     BODY.h = e.isPlayer ? 28 : Math.min(44, (e.h || 24) * sc);
+    // hieu-ung-dinh-quai (js/dinh_quai.js, ?dinhquai=0 tắt): chiều cao = đỉnh đầu thật của ảnh quái (trùm cao tới ~150 điểm), quái rộng (trùm) bề ngang theo thân thật
+    const T = !e.isPlayer && G.dinhQuai ? G.dinhQuai.than(e) : null;
+    if (T) { BODY.h = Math.min(160, Math.max(BODY.h, -T.y0)); if (T.w > 60) BODY.w = Math.min(60, T.w * 0.42); } // không nhỏ hơn cũ (hình trạng thái quái nhỏ giữ cỡ); chỉ quái rộng (trùm) mới rộng ra
     return BODY;
   }
   const BODY = { w: 6, h: 24 };
@@ -1587,14 +1592,16 @@
   fx.entity = function (c, e) {
     if (G.noRender || !S || e.dead || e.hidden) return;
     try {
-      const v = stView(e), B = bodyOf(e), x = Math.round(e.x), y = Math.round(e.y), t = S.t;
+      // hieu-ung-dinh-quai (?dinhquai=0 tắt): neo theo thân thật (tâm ngang, đỉnh đầu) và nhấc theo thân khi bị hất tung (hàm này vẽ ngoài phép dời thân)
+      const DQ = !e.isPlayer && G.dinhQuai ? G.dinhQuai.than(e) : null, up = DQ ? G.dinhQuai.nhac(e) : 0;
+      const v = stView(e), B = bodyOf(e), x = Math.round(e.x + (DQ ? DQ.cx : 0)), y = Math.round(e.y) - up, t = S.t;
       const id = (e.fxId || (e.fxId = 1 + ((R() * 1000) | 0)));
-      const top = y - Math.round((e.h || 24) * (e.scale || 1));
+      const top = DQ ? y + Math.round(DQ.y0) : y - Math.round((e.h || 24) * (e.scale || 1));
       // Chủ dự án (11/10, 13:22): quái dùng trạng thái trên thân (Đợt 7) thì KHÔNG vẽ khung khối băng nữa — quái đã chậm lại, thân xanh và có mảnh băng ở chân là đủ.
       const khoiBang = v.frozen && !(G.TRANG_THAI_TREN_THAN !== false && !e.isPlayer && e.ttR);
       // Đợt 3 (cờ tắt ?hudot3=0): lớp trạng thái trên thân bằng ảnh hu-bam-bang / hu-bam-lua / hu-bam-doc (lặp), neo ở chân,
       // cỡ theo thân (ảnh cao 30 điểm ảnh ≈ thân nhân vật nhỏ). Mỗi con lệch nhịp theo fxId. Thay tinh thể / khối băng, lưỡi lửa, vệt độc vẽ code.
-      const scT = Math.max(0.5, Math.min(1.5, (B.h + 4) / 30)) * (e.isPlayer ? 0.85 : 1), tT = t + id * 0.37;
+      const scT = (DQ ? Math.max(0.5, Math.min(2.8, Math.max((4 - DQ.y0) / 30, DQ.w / 38))) : Math.max(0.5, Math.min(1.5, (B.h + 4) / 30))) * (e.isPlayer ? 0.85 : 1), tT = t + id * 0.37; // dinh-quai: cỡ theo thân thật (cao hoặc rộng), trùm to được hình to tới ×2,8
       const anhBang = (khoiBang || v.frozen || v.ice > 0) && d3('hu-bam-bang');
       if (anhBang) G.fxAnh.ve(c, 'hu-bam-bang', x, y + 1, tT, 0, scT, false, v.frozen ? 0.95 : Math.min(0.85, 0.45 + 0.1 * v.ice));
       else if (khoiBang) {
@@ -1652,7 +1659,7 @@
         // Ảnh AI sao choáng (hu-choang, chạy lặp): điểm neo là giữa vòng sao, đặt ngay trên đầu.
         // 15/10 con-ve-tay: trùm vùng choáng đã có sao trên đầu ở cử động 'stun' (js/monster_art.js TRUM.choang, nay cũng là ảnh hu-choang) → không vẽ lần hai
         if (e.isBoss && e.kind !== 'mini' && e.art) { /* sao do TRUM.choang vẽ */ }
-        else if (coAnh('hu-choang')) G.fxAnh.ve(c, 'hu-choang', x, top - 4, t + id * 0.37, 0, 1);
+        else if (coAnh('hu-choang')) G.fxAnh.ve(c, 'hu-choang', x, top - 4, t + id * 0.37, 0, DQ ? Math.max(1, Math.min(2.6, DQ.w / 40)) : 1);
         else for (let i = 0; i < 3; i++) { const a = t * 6 + i * 2.094; const sx = x + Math.round(Math.cos(a) * 7), sy = top - 4 + Math.round(Math.sin(a) * 2); if (Math.sin(a) > -0.3) star(c, sx, sy, 1, '#ffd23f', '#ffffff'); else p(c, sx, sy, 1, 1, '#a8742a'); }
       }
     } catch (err) { fail(err); }
@@ -1669,9 +1676,9 @@
   // Ảnh AI cho vụ nổ (hu-no-lua, hu-no-doc, hu-no-bang): điểm neo là tâm vụ nổ trên sàn, cỡ theo bán kính (ảnh chuẩn cho r = 40).
   // Có ảnh thì bỏ vòng sóng và chớp sáng vẽ bằng code, hạt bớt một nửa.
   function noAnh(ma, x, y, r) { return anh(ma, x, y, { sc: Math.max(0.5, Math.min(2.2, r / 40)) }); }
-  function blastFire(x, y, r, power) {
+  function blastFire(x, y, r, power, dy) { // dy (dinh-quai): nhấc ảnh nổ lên chỗ thân quái bị trúng (vết cháy vẫn trên sàn)
     add({ ty: 'scorch', x, y, r: r * 0.55, t: 2.2, ly: 0 });
-    const ai = noAnh('hu-no-lua', x, y, r);
+    const ai = noAnh('hu-no-lua', x, y - (dy || 0), r);
     if (ai) power *= 0.5;
     else {
       addRing(x, y, 5, r, 0.3, '#ffd23f', 4, 0);
@@ -1684,8 +1691,8 @@
     for (let i = 0; i < n * 0.4; i++) { const a = R() * TAU, v = rr(r * 0.8, r * 1.8); emit(2, x + Math.cos(a) * 8, y - 8 + Math.sin(a) * 4, Math.cos(a) * v, Math.sin(a) * v * 0.5 - 26, rr(0.4, 0.8), R() < 0.6 ? RAMP.smoke : RAMP.dark, R() < 0.4 ? 5 : 3, -18, 2.6, null, 1); }
     for (let i = 0; i < Math.round(8 * hatK()); i++) { const a = R() * TAU, v = rr(60, 150); emit(0, x, y - 6, Math.cos(a) * v, Math.sin(a) * v * 0.6 - 60, rr(0.4, 0.8), RAMP.ember, 1, 220, 0, y + rr(-4, 6), 1); }
   }
-  function blastPoison(x, y, r, power) {
-    if (noAnh('hu-no-doc', x, y, r)) power *= 0.5;
+  function blastPoison(x, y, r, power, dy) {
+    if (noAnh('hu-no-doc', x, y - (dy || 0), r)) power *= 0.5;
     else {
       addRing(x, y, 5, r, 0.34, '#c2f58a', 3, 0);
       addRing(x, y, 2, r * 0.75, 0.3, '#6fcf3a', 2, 0, 0.06);
@@ -1696,8 +1703,8 @@
     for (let i = 0; i < n; i++) { const a = R() * TAU, v = rr(40, 130); emit(5, x, y - 8, Math.cos(a) * v, Math.sin(a) * v * 0.5 - rr(60, 140), rr(0.5, 0.9), RAMP.poison, 2, 380, 0, y + rr(-8, 10), 1); }
     for (let i = 0; i < Math.round(7 * hatK()); i++) botDoc(x + rr(-r, r) * 0.6, y + rr(-r, r) * 0.3, rr(-26, -10), rr(0.5, 1.0), RAMP.poison); // đợt 3: hu-bot-doc
   }
-  function blastIce(x, y, r, power) {
-    if (noAnh('hu-no-bang', x, y, r)) power *= 0.5;
+  function blastIce(x, y, r, power, dy) {
+    if (noAnh('hu-no-bang', x, y - (dy || 0), r)) power *= 0.5;
     else {
       addRing(x, y, 5, r, 0.26, '#ffffff', 3, 0);
       addRing(x, y, 2, r * 0.85, 0.3, '#7fd4ff', 2, 0, 0.05);

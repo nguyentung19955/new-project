@@ -854,7 +854,8 @@
     }
   });
   api('spPin', (q) => {
-    const PL = pal(q.he ? q.he.el : null), y = q.y - 12;
+    const tq = G.dinhQuai ? G.dinhQuai.quaiTai(q.x, q.y) : null, ct = tq ? G.dinhQuai.caoTrung(tq) : null; // dinh-quai: sao va chạm ở chỗ giáo cắm vào thân
+    const PL = pal(q.he ? q.he.el : null), y = ct != null ? tq.y - ct : q.y - 12;
     // Đợt 3: ảnh hu-va-cham (sao va chạm, mảnh văng theo hướng giáo bay) thay chớp sáng; nhuộm hệ của giáo
     const vq = scr(q);
     if (!(d3('hu-va-cham') && K.anhHuong('hu-va-cham', q.x, y, vq[0], vq[1], { sc: q.pin ? 1.3 : 1, mau: mauHe(q.he && q.he.el) })))

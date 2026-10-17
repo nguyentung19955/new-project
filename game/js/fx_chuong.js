@@ -241,9 +241,11 @@
     const big = q && q.big > 0, side = cay === 'doc' && q && !q.main, el = G.CHUONG.trees[cay].el;
     const k = KN() ? KN().nhan(big ? 'toiThuong' : side ? 'thuong' : 'kyNang', el) : 1;
     const power = Math.min(1.8, (big ? 1.1 : 1) * k); // số hạt của vụ nổ; js/fx.js còn nhân thêm G.VFX.hat
-    if (cay === 'hoa') blastFire(x, y, r, power);
-    else if (cay === 'doc') blastPoison(x, y, Math.max(16, r * 0.8), side ? 0.6 : power);
-    else blastIce(x, y, r, power);
+    // hieu-ung-dinh-quai (?dinhquai=0 tắt): nổ ngay trên thân con vừa trúng → ảnh nổ nhấc lên chỗ chạm thân (vùng nổ, vết trên sàn giữ nguyên)
+    const DQ = G.dinhQuai, tq = DQ ? DQ.quaiTai(x, y) : null, dy = tq ? DQ.caoTrung(tq) || 0 : 0;
+    if (cay === 'hoa') blastFire(x, y, r, power, dy);
+    else if (cay === 'doc') blastPoison(x, y, Math.max(16, r * 0.8), side ? 0.6 : power, dy);
+    else blastIce(x, y, r, power, dy);
     if (KN() && !side) {
       const PL = pal(el);
       KN().rune(x, y, r * (big ? 1.05 : 0.95), PL, big ? 0.7 : 0.5, big ? 8 : 6, big ? 3.2 : 2.2);
@@ -251,7 +253,8 @@
     }
   });
   api('chHit', (kind, e, q) => {
-    const y = e.y - Math.min(16, (e.h || 20) * 0.5), v = scr(q);
+    const ct = G.dinhQuai ? G.dinhQuai.caoTrung(e) : null; // dinh-quai: chỗ chạm theo thân thật
+    const y = e.y - (ct != null ? ct + G.dinhQuai.nhac(e) : Math.min(16, (e.h || 20) * 0.5)), v = scr(q);
     if (kind === 'bang') {
       add({ ty: 'flash', x: e.x, y, r: 6, t: 0.08, c: '#ffffff', c2: '#bfeaff', ly: 1 });
       for (let i = 0; i < 6; i++) emit(4, e.x, y, v[0] * rr(40, 120) + rr(-30, 30), v[1] * rr(40, 120) + rr(-50, 10), rr(0.25, 0.45), RAMP.ice, 1, 200, 1, e.y + rr(-2, 4), 1);

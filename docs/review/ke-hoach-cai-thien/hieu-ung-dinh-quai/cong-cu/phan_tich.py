@@ -32,8 +32,9 @@ def xet_trung(g, b):
     return ('dính', 0, '') if dev <= 0 else ('lệch', dev, ', '.join(ly))
 
 
-def xet_so(s, b):
-    """Số sát thương: đáy chữ (y + 4) cách đỉnh đầu -2..12 điểm."""
+def xet_so(s, b, ey=None):
+    """Số sát thương: đáy chữ (y + 4) cách đỉnh đầu -2..12 điểm. Trùm cao chạm mép trên màn: số đặt sát dưới thanh máu trùm (y = 32) cũng tính là đúng."""
+    if ey is not None and abs(s['y'] + ey - 32) < 0.6 and b['y0'] + ey < 36: return ('dính', 0, 'sát dưới thanh máu trùm')
     gap = b['y0'] - (s['y'] + 4)
     if gap > 12: return ('lệch', gap - 12, 'lơ lửng trên đầu %d điểm' % round(gap))
     if gap < -2: return ('lệch', -gap - 2, 'đè lên thân %d điểm' % round(-gap))
@@ -60,7 +61,7 @@ def phan_loai(k):
                 if r: out.append(ca(nhom_t, q, bien + ' · nhát %d' % (x['thu'] + 1) + ' · ' + g['api'], r[0], r[1], r[2]))
             for s in x['so']:
                 if not s.get('moi'): continue
-                r = xet_so(s, b)
+                r = xet_so(s, x.get('bso') or b, x.get('ey'))
                 out.append(ca(('Mép phòng: ' if nguon == 'mep' else '') + 'Số sát thương', q, bien + ' · ' + ten, r[0], r[1], r[2]))
     # ---- trạng thái trên thân
     for x in k['tt']:

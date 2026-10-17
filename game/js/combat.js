@@ -1290,7 +1290,8 @@
         if (b.kind === 'mini') A.enemy(c, b); else A.boss(c, b);
         if (k) c.translate(-k, 0);
         if (on) c.restore();
-        if (!b.hidden) A.status(c, b, Math.round(b.x), Math.round(b.y - b.h - 6));
+        const TQ = G.dinhQuai ? G.dinhQuai.than(b) : null; // dinh-quai: biểu tượng ngay trên đỉnh đầu thật của trùm
+        if (!b.hidden) A.status(c, b, Math.round(b.x + (TQ ? TQ.cx : 0)), Math.round(TQ ? b.y + TQ.y0 - 5 : b.y - b.h - 6));
         if (ent) ent(c, b);
       } });
     }

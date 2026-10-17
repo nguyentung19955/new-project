@@ -116,8 +116,8 @@
 "r": 0,
 "bien": "mặt trái · Kiếm (3 nhát)",
 "kq": "lệch",
-"x": 17,
-"ghi": "lơ lửng trên đầu 29 điểm"
+"x": 15,
+"ghi": "lơ lửng trên đầu 27 điểm"
 },
 {
 "nhom": "Hình trúng — Kiếm (3 nhát)",
@@ -445,9 +445,9 @@
 "loai": "thuong",
 "r": 0,
 "bien": "mặt trái · nhát 3 · hit",
-"kq": "lệch",
-"x": 1.0,
-"ghi": "ở chân"
+"kq": "dính",
+"x": 0,
+"ghi": ""
 },
 {
 "nhom": "Số sát thương",
@@ -755,9 +755,9 @@
 "loai": "tinhanh",
 "r": 0,
 "bien": "mặt trái · Kiếm (3 nhát)",
-"kq": "dính",
-"x": 0,
-"ghi": ""
+"kq": "lệch",
+"x": 2.5,
+"ghi": "đè lên thân 4 điểm"
 },
 {
 "nhom": "Hình trúng — Kiếm (3 nhát)",
@@ -765,9 +765,9 @@
 "loai": "tinhanh",
 "r": 0,
 "bien": "mặt trái · nhát 3 · hit",
-"kq": "lệch",
-"x": 5.6,
-"ghi": "ngoài thân, ở chân"
+"kq": "dính",
+"x": 0,
+"ghi": ""
 },
 {
 "nhom": "Số sát thương",
@@ -806,7 +806,7 @@
 "r": 0,
 "bien": "mặt trái · nhát 1 · hit",
 "kq": "lệch",
-"x": 5.8,
+"x": 4.8,
 "ghi": "ở chân"
 },
 {
@@ -825,9 +825,9 @@
 "loai": "trumnho",
 "r": 0,
 "bien": "mặt trái · nhát 2 · hit",
-"kq": "lệch",
-"x": 0.8,
-"ghi": "ở chân"
+"kq": "dính",
+"x": 0,
+"ghi": ""
 },
 {
 "nhom": "Số sát thương",
@@ -866,7 +866,7 @@
 "r": 0,
 "bien": "mặt trái · nhát 1 · hit",
 "kq": "lệch",
-"x": 9.3,
+"x": 10.3,
 "ghi": "ngoài thân, ở chân"
 },
 {
@@ -886,7 +886,7 @@
 "r": 0,
 "bien": "mặt trái · nhát 1 · hit",
 "kq": "lệch",
-"x": 9.3,
+"x": 9.9,
 "ghi": "ở chân"
 },
 {
@@ -906,7 +906,7 @@
 "r": 0,
 "bien": "mặt trái · nhát 2 · hit",
 "kq": "lệch",
-"x": 10.7,
+"x": 9.9,
 "ghi": "ở chân"
 },
 {
@@ -916,8 +916,8 @@
 "r": 0,
 "bien": "mặt trái · Kiếm (3 nhát)",
 "kq": "lệch",
-"x": 67.5,
-"ghi": "đè lên thân 70 điểm"
+"x": 65.5,
+"ghi": "đè lên thân 68 điểm"
 },
 {
 "nhom": "Hình trúng — Kiếm (3 nhát)",
@@ -926,7 +926,7 @@
 "r": 0,
 "bien": "mặt trái · nhát 3 · hit",
 "kq": "lệch",
-"x": 11.9,
+"x": 10.9,
 "ghi": "ở chân"
 },
 {
@@ -936,7 +936,7 @@
 "r": 0,
 "bien": "mặt trái · Kiếm (3 nhát)",
 "kq": "lệch",
-"x": 63.5,
+"x": 64.0,
 "ghi": "đè lên thân 66 điểm"
 },
 {
@@ -946,7 +946,7 @@
 "r": 0,
 "bien": "mặt trái · nhát 1 · hit",
 "kq": "lệch",
-"x": 10.9,
+"x": 10.1,
 "ghi": "ở chân"
 },
 {
@@ -1276,8 +1276,8 @@
 "r": 1,
 "bien": "mặt trái · Kiếm (3 nhát)",
 "kq": "lệch",
-"x": 5.5,
-"ghi": "lơ lửng trên đầu 18 điểm"
+"x": 7,
+"ghi": "lơ lửng trên đầu 19 điểm"
 },
 {
 "nhom": "Hình trúng — Kiếm (3 nhát)",
@@ -1356,8 +1356,8 @@
 "r": 1,
 "bien": "mặt trái · Kiếm (3 nhát)",
 "kq": "lệch",
-"x": 2.5,
-"ghi": "lơ lửng trên đầu 14 điểm"
+"x": 3,
+"ghi": "lơ lửng trên đầu 15 điểm"
 },
 {
 "nhom": "Hình trúng — Kiếm (3 nhát)",
@@ -1595,9 +1595,9 @@
 "loai": "tinhanh",
 "r": 1,
 "bien": "mặt trái · Kiếm (3 nhát)",
-"kq": "dính",
-"x": 0,
-"ghi": ""
+"kq": "lệch",
+"x": 4,
+"ghi": "đè lên thân 6 điểm"
 },
 {
 "nhom": "Hình trúng — Kiếm (3 nhát)",
@@ -1675,9 +1675,9 @@
 "loai": "tinhanh",
 "r": 1,
 "bien": "mặt trái · Kiếm (3 nhát)",
-"kq": "lệch",
-"x": 1,
-"ghi": "đè lên thân 3 điểm"
+"kq": "dính",
+"x": 0,
+"ghi": ""
 },
 {
 "nhom": "Hình trúng — Kiếm (3 nhát)",
@@ -1725,9 +1725,9 @@
 "loai": "trum",
 "r": 1,
 "bien": "mặt trái · nhát 1 · hit",
-"kq": "lệch",
-"x": 7.9,
-"ghi": "ở chân"
+"kq": "dính",
+"x": 0,
+"ghi": ""
 },
 {
 "nhom": "Số sát thương",
@@ -1746,7 +1746,7 @@
 "r": 1,
 "bien": "mặt trái · nhát 2 · hit",
 "kq": "lệch",
-"x": 9.2,
+"x": 0.4,
 "ghi": "ở chân"
 },
 {
@@ -1756,8 +1756,8 @@
 "r": 1,
 "bien": "mặt trái · Kiếm (3 nhát)",
 "kq": "lệch",
-"x": 44.5,
-"ghi": "đè lên thân 47 điểm"
+"x": 24.0,
+"ghi": "đè lên thân 26 điểm"
 },
 {
 "nhom": "Hình trúng — Kiếm (3 nhát)",
@@ -1765,9 +1765,9 @@
 "loai": "trum",
 "r": 1,
 "bien": "mặt trái · nhát 3 · hit",
-"kq": "lệch",
-"x": 8.1,
-"ghi": "ở chân"
+"kq": "dính",
+"x": 0,
+"ghi": ""
 },
 {
 "nhom": "Số sát thương",
@@ -1786,7 +1786,7 @@
 "r": 1,
 "bien": "mặt trái · nhát 1 · hit",
 "kq": "lệch",
-"x": 10.5,
+"x": 19,
 "ghi": "ngoài thân, ở chân"
 },
 {
@@ -1915,9 +1915,9 @@
 "loai": "thuong",
 "r": 2,
 "bien": "mặt trái · Kiếm (3 nhát)",
-"kq": "dính",
-"x": 0,
-"ghi": ""
+"kq": "lệch",
+"x": 1,
+"ghi": "lơ lửng trên đầu 13 điểm"
 },
 {
 "nhom": "Hình trúng — Kiếm (3 nhát)",
@@ -2076,8 +2076,8 @@
 "r": 2,
 "bien": "mặt trái · Kiếm (3 nhát)",
 "kq": "lệch",
-"x": 4,
-"ghi": "lơ lửng trên đầu 16 điểm"
+"x": 5.5,
+"ghi": "lơ lửng trên đầu 18 điểm"
 },
 {
 "nhom": "Hình trúng — Kiếm (3 nhát)",
@@ -2235,9 +2235,9 @@
 "loai": "thuong",
 "r": 2,
 "bien": "mặt trái · Kiếm (3 nhát)",
-"kq": "lệch",
-"x": 1,
-"ghi": "lơ lửng trên đầu 13 điểm"
+"kq": "dính",
+"x": 0,
+"ghi": ""
 },
 {
 "nhom": "Hình trúng — Kiếm (3 nhát)",
@@ -2606,7 +2606,7 @@
 "r": 2,
 "bien": "mặt trái · nhát 1 · hit",
 "kq": "lệch",
-"x": 6.8,
+"x": 8.2,
 "ghi": "ở chân"
 },
 {
@@ -2626,7 +2626,7 @@
 "r": 2,
 "bien": "mặt trái · nhát 2 · hit",
 "kq": "lệch",
-"x": 7.3,
+"x": 8.2,
 "ghi": "ở chân"
 },
 {
@@ -2636,8 +2636,8 @@
 "r": 2,
 "bien": "mặt trái · Kiếm (3 nhát)",
 "kq": "lệch",
-"x": 51.9,
-"ghi": "đè lên thân 54 điểm"
+"x": 66.9,
+"ghi": "đè lên thân 69 điểm"
 },
 {
 "nhom": "Hình trúng — Kiếm (3 nhát)",
@@ -2646,7 +2646,7 @@
 "r": 2,
 "bien": "mặt trái · nhát 3 · hit",
 "kq": "lệch",
-"x": 9.4,
+"x": 9.2,
 "ghi": "ở chân"
 },
 {
@@ -2666,7 +2666,7 @@
 "r": 2,
 "bien": "mặt trái · nhát 1 · hit",
 "kq": "lệch",
-"x": 7.9,
+"x": 8.7,
 "ghi": "ở chân"
 },
 {
@@ -2796,8 +2796,8 @@
 "r": 3,
 "bien": "mặt trái · Kiếm (3 nhát)",
 "kq": "lệch",
-"x": 3.5,
-"ghi": "lơ lửng trên đầu 16 điểm"
+"x": 6,
+"ghi": "lơ lửng trên đầu 18 điểm"
 },
 {
 "nhom": "Hình trúng — Kiếm (3 nhát)",
@@ -3116,8 +3116,8 @@
 "r": 3,
 "bien": "mặt trái · Kiếm (3 nhát)",
 "kq": "lệch",
-"x": 2.5,
-"ghi": "lơ lửng trên đầu 14 điểm"
+"x": 3,
+"ghi": "lơ lửng trên đầu 15 điểm"
 },
 {
 "nhom": "Hình trúng — Kiếm (3 nhát)",
@@ -3435,9 +3435,9 @@
 "loai": "tinhanh",
 "r": 3,
 "bien": "mặt trái · Kiếm (3 nhát)",
-"kq": "dính",
-"x": 0,
-"ghi": ""
+"kq": "lệch",
+"x": 2.4,
+"ghi": "đè lên thân 4 điểm"
 },
 {
 "nhom": "Hình trúng — Kiếm (3 nhát)",
@@ -3445,9 +3445,9 @@
 "loai": "tinhanh",
 "r": 3,
 "bien": "mặt trái · nhát 3 · hit",
-"kq": "lệch",
-"x": 6.1,
-"ghi": "ngoài thân, ở chân"
+"kq": "dính",
+"x": 0,
+"ghi": ""
 },
 {
 "nhom": "Số sát thương",
@@ -3456,8 +3456,8 @@
 "r": 3,
 "bien": "mặt trái · Kiếm (3 nhát)",
 "kq": "lệch",
-"x": 29.4,
-"ghi": "đè lên thân 31 điểm"
+"x": 29.6,
+"ghi": "đè lên thân 32 điểm"
 },
 {
 "nhom": "Hình trúng — Phi tiêu bay",
@@ -3525,9 +3525,9 @@
 "loai": "trumnho",
 "r": 3,
 "bien": "mặt trái · nhát 3 · hit",
-"kq": "lệch",
-"x": 0.9,
-"ghi": "ở chân"
+"kq": "dính",
+"x": 0,
+"ghi": ""
 },
 {
 "nhom": "Số sát thương",
@@ -3565,9 +3565,9 @@
 "loai": "trum",
 "r": 3,
 "bien": "mặt trái · nhát 1 · hit",
-"kq": "lệch",
-"x": 5.0,
-"ghi": "ở chân"
+"kq": "dính",
+"x": 0,
+"ghi": ""
 },
 {
 "nhom": "Số sát thương",
@@ -3585,9 +3585,9 @@
 "loai": "trum",
 "r": 3,
 "bien": "mặt trái · nhát 2 · hit",
-"kq": "lệch",
-"x": 5.8,
-"ghi": "ở chân"
+"kq": "dính",
+"x": 0,
+"ghi": ""
 },
 {
 "nhom": "Số sát thương",
@@ -3596,8 +3596,8 @@
 "r": 3,
 "bien": "mặt trái · Kiếm (3 nhát)",
 "kq": "lệch",
-"x": 44.5,
-"ghi": "đè lên thân 46 điểm"
+"x": 24,
+"ghi": "đè lên thân 26 điểm"
 },
 {
 "nhom": "Hình trúng — Kiếm (3 nhát)",
@@ -3605,9 +3605,9 @@
 "loai": "trum",
 "r": 3,
 "bien": "mặt trái · nhát 3 · hit",
-"kq": "lệch",
-"x": 7.9,
-"ghi": "ở chân"
+"kq": "dính",
+"x": 0,
+"ghi": ""
 },
 {
 "nhom": "Số sát thương",
@@ -3625,9 +3625,9 @@
 "loai": "trum",
 "r": 3,
 "bien": "mặt trái · nhát 1 · hit",
-"kq": "lệch",
-"x": 6.1,
-"ghi": "ở chân"
+"kq": "dính",
+"x": 0,
+"ghi": ""
 },
 {
 "nhom": "Số sát thương",

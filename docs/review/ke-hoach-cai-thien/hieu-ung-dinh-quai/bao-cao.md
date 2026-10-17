@@ -28,7 +28,7 @@ Luật chấm một ca (một hiệu ứng × một con × một biến thể):
 
 ### Kết quả tổng (NET 2)
 
-**6 326 ca đo → 4 069 dính, 2 257 lệch.** (112 ca "không có hình riêng" không tính.) Bảng đầy đủ hiệu ứng × quái: [bang-truoc.md](bang-truoc.md). NET 3: [bang-truoc-net3.md](bang-truoc-net3.md) (867 ca, 426 dính), NET 4: [bang-truoc-net4.md](bang-truoc-net4.md) (870 ca, 424 dính) — **cùng các lỗi như NET 2**, NET cao không thêm lỗi mới.
+**6 326 ca đo → 4 069 dính, 2 257 lệch.** (112 ca "không có hình riêng" không tính.) Bảng đầy đủ hiệu ứng × quái: [bang-truoc.md](bang-truoc.md) (ở phần B đã đo lại với cách chấm tinh hơn — bỏ hình nằm trên sàn có chủ ý — nên bảng này nay ghi 4 224 dính / 2 103 lệch). NET 3: [bang-truoc-net3.md](bang-truoc-net3.md), NET 4: [bang-truoc-net4.md](bang-truoc-net4.md) (lần đo đầu: 867 ca / 426 dính và 870 ca / 424 dính) — **cùng các lỗi như NET 2**, NET cao không thêm lỗi mới.
 
 | Nhóm | Ca | Dính | Lệch | Lỗi chính |
 |---|---:|---:|---:|---|
@@ -63,4 +63,61 @@ Luật chấm một ca (một hiệu ứng × một con × một biến thể):
 
 ## PHẦN B — SỬA
 
-(đang chờ hai phiên "Nét cao: quái…" và "Nét cao: hiệu ứng + giao diện" xong rồi mới sửa)
+Hai phiên "Nét cao: quái, tinh anh, trùm, người làng" và "Nét cao: hiệu ứng + giao diện" đã có báo cáo trước khi sửa (không phải chờ). Đã kéo bản mới nhất, dựng lại bảng thân theo ảnh quái mới.
+
+### Bảng tổng: trước / sau
+
+"Trước" = game mở với `?dinhquai=0` (cờ tắt, đã kiểm: cho **đúng y hệt** số đo của bản cũ ở phần A — 6 326 ca, 4 069 dính). Lần đo lại này bỏ khỏi "hình trúng" các hình **nằm trên sàn có chủ ý** (vết cháy, vòng phép, vòng sàn quanh chân — lớp sàn), nên số trước là 4 224 dính chứ không phải 4 069.
+
+| NET | Trước: ca / dính / lệch | Sau: ca / dính / lệch |
+|---|---|---|
+| **NET 2** (đầy đủ) | 6 327 / 4 224 / **2 103** | 6 272 / 6 138 / **134** |
+| NET 3 (`?netcao=3`, bản gọn) | 866 / 436 / **430** | 840 / 812 / **28** |
+| NET 4 (`?netcao=4`, bản gọn) | 870 / 433 / **437** | 840 / 808 / **32** |
+
+(Số ca hai bên chênh vài chục vì bot đánh thật: số lần trúng mỗi đòn đổi chút ít.)
+
+| Nhóm (NET 2) | Trước: ca / dính / lệch | Sau: ca / dính / lệch |
+|---|---|---|
+| Hình trúng (4 vũ khí, 4 chiêu, chưởng, phúc lành/hệ, sát mép) | 2 422 / 2 020 / 402 | 2 423 / 2 354 / 69 |
+| Số sát thương (kể cả sát mép) | 2 955 / 1 952 / 1 003 | 2 955 / 2 939 / 16 |
+| Trạng thái trên thân (cháy, độc, băng, đóng băng, choáng, trói, chậm) | 634 / 30 / 604 | 576 / 545 / 31 |
+| Biểu tượng trên đầu trùm | 64 / 4 / 60 | 64 / 64 / 0 |
+| Hình một lần khi vừa dính | 100 / 74 / 26 | 103 / 92 / 11 |
+| Tắt khi quái chết | 48 / 48 / 0 | 48 / 48 / 0 |
+| Đòn quái (đạn, vật ném, bụi lao) | 104 / 96 / 8 | 103 / 96 / 7 |
+
+Bảng hiệu ứng × quái sau khi sửa: [bang-sau.md](bang-sau.md) (NET 3: [bang-sau-net3.md](bang-sau-net3.md), NET 4: [bang-sau-net4.md](bang-sau-net4.md)); bảng trước tương ứng: [bang-truoc.md](bang-truoc.md).
+
+Ảnh TRƯỚC / SAU (trái / phải): **`anh/truoc-sau.png`** (chớp trúng trên trùm, Hỏa chưởng, số sát thương, cháy trên trùm, sao choáng, trạng thái khi bị hất tung). Ảnh lưới sau khi sửa: `anh/sau/1…8-*.png`, GIF `anh/sau/gif-*.gif` (so với `anh/truoc/`).
+
+### Đã sửa gì (chỉ chỗ vẽ và cỡ hình)
+
+Không đổi sát thương, vùng trúng, thời lượng, luật chơi; không vẽ hiệu ứng mới (chỉ dời / co giãn ảnh có sẵn).
+
+1. **Bảng neo thân từng quái, từng pha trùm, hai mặt** — `game/js/dinh_quai_bang.js` (đo tự động từ điểm ảnh thật bằng `cong-cu/tao_bang.py`; thay ảnh quái thì chạy lại). Thêm **hộp thân của khung đang vẽ**: lúc vẽ thân quái, game ghi lại đỉnh / đáy thân của đúng khung đó (trùm cúi, vươn, quái phồng to khi trúng đòn) để hiệu ứng theo dáng thật. Hàm chung ở `game/js/dinh_quai.js`.
+2. **Trạng thái đi theo khi bị hất tung**: lửa, bọt độc, băng, sao choáng, dây leo, vòng chậm nhấc lên cùng thân (trước đây ở lại dưới đất).
+3. **Chớp trúng / tia va chạm**: đặt ở chỗ đòn chạm thân theo chiều cao thật — quái thường vẫn 16 điểm trên chân như cũ, trùm và quái cao thì lên 30–55 % chiều cao thân (hết cảnh chớp ở rễ / xúc tu). Áp cho mọi vũ khí, 4 chiêu Đặc biệt, Băng chưởng, sao va chạm của Phi Thương.
+4. **Hỏa / Độc / Băng chưởng**: ảnh nổ nhấc lên đúng chỗ thân con vừa trúng; vùng nổ, vết cháy và vòng phép trên sàn giữ nguyên chỗ cũ.
+5. **Số sát thương**: mọc ngay trên đỉnh đầu thật (quái bay hết lơ lửng); trùm cao chạm mép trên màn thì số đặt sát dưới thanh máu trùm (không bị thanh máu che, không đè giữa thân).
+6. **Cỡ theo quái**: lửa / bọt độc / băng trên trùm và tinh anh to theo thân (tối đa ×2,8, trước chặn ×1,5); sao choáng to theo bề ngang thân (tối đa ×2,6); vòng độc lúc vừa dính theo bề ngang thân. Quái nhỏ giữ cỡ cũ (đo lại: không trùm lấp thân).
+7. **Biểu tượng trạng thái trên đầu trùm**: ngay trên đỉnh đầu thật, giữa thân.
+8. Hình nằm đúng tâm ngang của thân (thân lệch một bên như Ngư Tinh, Rái Cá), lật đúng khi quái quay mặt.
+
+Tệp đã sửa: `game/js/dinh_quai.js` (mới), `game/js/dinh_quai_bang.js` (mới), `game/js/fx.js`, `game/js/fx_chuong.js`, `game/js/fx_he.js`, `game/js/fx_ky_nang.js`, `game/js/combat.js` (một dòng vẽ biểu tượng trùm), `game/js/bo_skill.js` (dây leo / vòng chậm), `game/js/sprite_custom.js` (ghi hộp thân khung vừa vẽ), `game/index.html`, `game/dist/*`.
+
+**Cờ tắt `?dinhquai=0`**: mọi chỗ trên trở về y hệt trước (đo lại cho đúng từng con số của bản cũ).
+
+### Còn lệch (134 ca / 6 272 ở NET 2)
+
+- **Ngọn lửa hẹp** (13 ca "cỡ"): ảnh lửa trên thân là ngọn lửa cao, rộng chỉ ~40 % thân với quái bè ngang (Bọ Hung, Cua, tinh anh, trùm); chiều cao đã đúng. Muốn đầy hơn cần ảnh lửa rộng hơn (không vẽ thêm bằng code theo luật).
+- **Hình trúng còn sát mép thân** (69 ca): phần lớn 3–8 điểm ở quái bay nhỏ (Cá Con, Đèn Lồng, Nhím Biển) và trùm có dáng lệch (Ngư Tinh, Nấm Chúa) khi chưởng / phi tiêu trúng ở rìa thân.
+- **Số sát thương trên Mộc Tinh / Hồ Tinh** (16 ca): trùm cao gần chạm mép trên màn, số nhịp cháy / độc đặt sát dưới thanh máu trùm nên đè lên ngọn cây 14–24 điểm (cố ý để thanh máu không che số).
+- **Trai Sông Gai** ném ngọc từ mép vỏ cách thân 3,4 điểm, **dây leo** của vài con dẹt (Ba Ba, Cua Đá) đo hơi cao hơn chân — nhỏ, để nguyên.
+
+### Kiểm
+
+- `node --check` các tệp đã sửa: không lỗi.
+- `python3 game/build.py`: bản một tệp **29,92 MB** (≤ 30). `python3 game/build.py --hai-tep`: bản web tải đầu **17,74 MB** (≤ 20).
+- Bot không màn hình (`cong-cu/kiem_js.py`, bot tự đánh, vẽ từng khung, mỗi vùng ải 3 + phòng trùm): **0 lỗi JS** ở mặc định, ở `?dinhquai=0` và ở `?netcao=4`; các lần đo khác cũng 0 lỗi JS. Không chơi thử bằng tay.
+- Không đụng đăng nhập Google / lưu mây / `?cloud=0`.

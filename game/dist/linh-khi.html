@@ -73,7 +73,7 @@
 <div id="lk-tai" data-bia="||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAMEBQYH/8QAKRAAAQMCBQMDBQAAAAAAAAAAAQIDEQAEBRIhMUETFGEiQnEVUWKBsf/EABcBAAMBAAAAAAAAAAAAAAAAAAIDBAX/xAAlEQACAQEFCQAAAAAAAAAAAAABAgADBBExUfASEyEyM0FxobH/2gAMAwEAAhEDEQA/AOfNMWj9zbWiEtBsn1ugGTPCvjXajFcBNssNsvoeMxlCgVJqzCbhHftG3aGdcJBUAUn7neRzTMcumxjD0hDSkmFBtWZMjSdR5qamzb4DtHOiimTfxmt/T3UpzLBCTt5q22sWekt0vBvImSF8+KyF5eWDaGFNZlr6YkKGiTPGvzSutZDDX1sF3P0wPUBMzvP62rStACi5TEWB9pizi/H1JsLUo3NhKiZUOfyqbE1Hu3jJkqPNFFRUuprOHU5dZSVwmE6+2mNk9u7r7R/aKKqqQLNifB+T/9k=|||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAgf/xAAmEAACAgEEAQQCAwAAAAAAAAABAgMRAAQSITEFE1FhgSJBcbHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQIDBAX/xAAeEQABBAIDAQAAAAAAAAAAAAAAAQIDEiExBBEyIv/aAAwDAQACEQMRAD8A51EIZIo53EASNwHG07mBPFno9HFyeOhl1Y2yFIbtjVkDnr54yzx2vaLSyII1cELvBQEVu5PyeshTWvFJG6qi7OR+A9/4xoa3yQzWRvzsH8YkWrkCMZYlsoSvJHfWUalzFpI4/TRBZbca3HsUcXqvJvPqpZgEAewAFHAP1mZ9aZIoyqKWVa4jX3P+jByGor8aNDgT0gXvDiHTs1EbjRAsX3jKuEH92Ofs4YYGeim/yLulscHjFuT6YNno/wBnDDGfsEej/9k=" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.17-1653";
+(window.G = window.G || {}).VERSION = "lk-2026.10.17-1757";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -13061,7 +13061,8 @@
         if (b.kind === 'mini') A.enemy(c, b); else A.boss(c, b);
         if (k) c.translate(-k, 0);
         if (on) c.restore();
-        if (!b.hidden) A.status(c, b, Math.round(b.x), Math.round(b.y - b.h - 6));
+        const TQ = G.dinhQuai ? G.dinhQuai.than(b) : null; // dinh-quai: biểu tượng ngay trên đỉnh đầu thật của trùm
+        if (!b.hidden) A.status(c, b, Math.round(b.x + (TQ ? TQ.cx : 0)), Math.round(TQ ? b.y + TQ.y0 - 5 : b.y - b.h - 6));
         if (ent) ent(c, b);
       } });
     }
@@ -16347,7 +16348,8 @@
   // Số sát thương lên quái. o: { el, crit, m (hệ số kháng/yếu), dot }
   api('dmg', (t, d, o) => {
     o = o || {};
-    const top = t.y - Math.min(60, (t.h || 24) * (t.scale || 1)) - 4;
+    const TQ = G.dinhQuai ? G.dinhQuai.than(t) : null; // dinh-quai: số mọc ngay trên đỉnh đầu thật; trùm cao: không lên quá dưới thanh máu trùm (y ≥ 37)
+    const top = TQ ? Math.max(37, t.y + TQ.y0 - 4 - G.dinhQuai.nhac(t)) : t.y - Math.min(60, (t.h || 24) * (t.scale || 1)) - 4;
     if (DOC()) { dmgDoc(t, d, o, top); return; }
     const s = String(Math.max(1, Math.round(d)));
     if (o.crit) num(t.x, top - 2, s + '!', { col: '#ffd23f', size: 13, pop: 1.2, t: 1, edge: 'rgba(90,30,0,0.95)', kind: 1 });
@@ -16742,7 +16744,8 @@
   // o: { el, type (loại vũ khí), ranged, crit, dead, heavy, dir, rain }
   api('hit', (e, o) => {
     const el = o.el, PL = pal(el), dir = o.dir || 1;
-    const hh = Math.min(16, (e.h || 24) * (e.scale || 1) * 0.55);
+    const ct = G.dinhQuai ? G.dinhQuai.caoTrung(e) : null; // dinh-quai: chỗ chạm theo thân thật (trùm cao: không còn ở chân)
+    const hh = ct != null ? ct + G.dinhQuai.nhac(e) : Math.min(16, (e.h || 24) * (e.scale || 1) * 0.55);
     const cx = e.x - dir * Math.min(e.r, 12) * 0.5, cy = e.y - hh;
     const ang = dir > 0 ? 0 : Math.PI;
     if (o.rain) {
@@ -16911,6 +16914,9 @@
     const sc = e.scale || 1;
     BODY.w = Math.max(4, Math.min(22, (e.isPlayer ? 6 : e.r) * (e.isBoss && e.kind !== 'mini' ? 0.7 : 0.9)));
     BODY.h = e.isPlayer ? 28 : Math.min(44, (e.h || 24) * sc);
+    // hieu-ung-dinh-quai (js/dinh_quai.js, ?dinhquai=0 tắt): chiều cao = đỉnh đầu thật của ảnh quái (trùm cao tới ~150 điểm), quái rộng (trùm) bề ngang theo thân thật
+    const T = !e.isPlayer && G.dinhQuai ? G.dinhQuai.than(e) : null;
+    if (T) { BODY.h = Math.min(160, Math.max(BODY.h, -T.y0)); if (T.w > 60) BODY.w = Math.min(60, T.w * 0.42); } // không nhỏ hơn cũ (hình trạng thái quái nhỏ giữ cỡ); chỉ quái rộng (trùm) mới rộng ra
     return BODY;
   }
   const BODY = { w: 6, h: 24 };
@@ -17030,14 +17036,16 @@
   fx.entity = function (c, e) {
     if (G.noRender || !S || e.dead || e.hidden) return;
     try {
-      const v = stView(e), B = bodyOf(e), x = Math.round(e.x), y = Math.round(e.y), t = S.t;
+      // hieu-ung-dinh-quai (?dinhquai=0 tắt): neo theo thân thật (tâm ngang, đỉnh đầu) và nhấc theo thân khi bị hất tung (hàm này vẽ ngoài phép dời thân)
+      const DQ = !e.isPlayer && G.dinhQuai ? G.dinhQuai.than(e) : null, up = DQ ? G.dinhQuai.nhac(e) : 0;
+      const v = stView(e), B = bodyOf(e), x = Math.round(e.x + (DQ ? DQ.cx : 0)), y = Math.round(e.y) - up, t = S.t;
       const id = (e.fxId || (e.fxId = 1 + ((R() * 1000) | 0)));
-      const top = y - Math.round((e.h || 24) * (e.scale || 1));
+      const top = DQ ? y + Math.round(DQ.y0) : y - Math.round((e.h || 24) * (e.scale || 1));
       // Chủ dự án (11/10, 13:22): quái dùng trạng thái trên thân (Đợt 7) thì KHÔNG vẽ khung khối băng nữa — quái đã chậm lại, thân xanh và có mảnh băng ở chân là đủ.
       const khoiBang = v.frozen && !(G.TRANG_THAI_TREN_THAN !== false && !e.isPlayer && e.ttR);
       // Đợt 3 (cờ tắt ?hudot3=0): lớp trạng thái trên thân bằng ảnh hu-bam-bang / hu-bam-lua / hu-bam-doc (lặp), neo ở chân,
       // cỡ theo thân (ảnh cao 30 điểm ảnh ≈ thân nhân vật nhỏ). Mỗi con lệch nhịp theo fxId. Thay tinh thể / khối băng, lưỡi lửa, vệt độc vẽ code.
-      const scT = Math.max(0.5, Math.min(1.5, (B.h + 4) / 30)) * (e.isPlayer ? 0.85 : 1), tT = t + id * 0.37;
+      const scT = (DQ ? Math.max(0.5, Math.min(2.8, Math.max((4 - DQ.y0) / 30, DQ.w / 38))) : Math.max(0.5, Math.min(1.5, (B.h + 4) / 30))) * (e.isPlayer ? 0.85 : 1), tT = t + id * 0.37; // dinh-quai: cỡ theo thân thật (cao hoặc rộng), trùm to được hình to tới ×2,8
       const anhBang = (khoiBang || v.frozen || v.ice > 0) && d3('hu-bam-bang');
       if (anhBang) G.fxAnh.ve(c, 'hu-bam-bang', x, y + 1, tT, 0, scT, false, v.frozen ? 0.95 : Math.min(0.85, 0.45 + 0.1 * v.ice));
       else if (khoiBang) {
@@ -17095,7 +17103,7 @@
         // Ảnh AI sao choáng (hu-choang, chạy lặp): điểm neo là giữa vòng sao, đặt ngay trên đầu.
         // 15/10 con-ve-tay: trùm vùng choáng đã có sao trên đầu ở cử động 'stun' (js/monster_art.js TRUM.choang, nay cũng là ảnh hu-choang) → không vẽ lần hai
         if (e.isBoss && e.kind !== 'mini' && e.art) { /* sao do TRUM.choang vẽ */ }
-        else if (coAnh('hu-choang')) G.fxAnh.ve(c, 'hu-choang', x, top - 4, t + id * 0.37, 0, 1);
+        else if (coAnh('hu-choang')) G.fxAnh.ve(c, 'hu-choang', x, top - 4, t + id * 0.37, 0, DQ ? Math.max(1, Math.min(2.6, DQ.w / 40)) : 1);
         else for (let i = 0; i < 3; i++) { const a = t * 6 + i * 2.094; const sx = x + Math.round(Math.cos(a) * 7), sy = top - 4 + Math.round(Math.sin(a) * 2); if (Math.sin(a) > -0.3) star(c, sx, sy, 1, '#ffd23f', '#ffffff'); else p(c, sx, sy, 1, 1, '#a8742a'); }
       }
     } catch (err) { fail(err); }
@@ -17112,9 +17120,9 @@
   // Ảnh AI cho vụ nổ (hu-no-lua, hu-no-doc, hu-no-bang): điểm neo là tâm vụ nổ trên sàn, cỡ theo bán kính (ảnh chuẩn cho r = 40).
   // Có ảnh thì bỏ vòng sóng và chớp sáng vẽ bằng code, hạt bớt một nửa.
   function noAnh(ma, x, y, r) { return anh(ma, x, y, { sc: Math.max(0.5, Math.min(2.2, r / 40)) }); }
-  function blastFire(x, y, r, power) {
+  function blastFire(x, y, r, power, dy) { // dy (dinh-quai): nhấc ảnh nổ lên chỗ thân quái bị trúng (vết cháy vẫn trên sàn)
     add({ ty: 'scorch', x, y, r: r * 0.55, t: 2.2, ly: 0 });
-    const ai = noAnh('hu-no-lua', x, y, r);
+    const ai = noAnh('hu-no-lua', x, y - (dy || 0), r);
     if (ai) power *= 0.5;
     else {
       addRing(x, y, 5, r, 0.3, '#ffd23f', 4, 0);
@@ -17127,8 +17135,8 @@
     for (let i = 0; i < n * 0.4; i++) { const a = R() * TAU, v = rr(r * 0.8, r * 1.8); emit(2, x + Math.cos(a) * 8, y - 8 + Math.sin(a) * 4, Math.cos(a) * v, Math.sin(a) * v * 0.5 - 26, rr(0.4, 0.8), R() < 0.6 ? RAMP.smoke : RAMP.dark, R() < 0.4 ? 5 : 3, -18, 2.6, null, 1); }
     for (let i = 0; i < Math.round(8 * hatK()); i++) { const a = R() * TAU, v = rr(60, 150); emit(0, x, y - 6, Math.cos(a) * v, Math.sin(a) * v * 0.6 - 60, rr(0.4, 0.8), RAMP.ember, 1, 220, 0, y + rr(-4, 6), 1); }
   }
-  function blastPoison(x, y, r, power) {
-    if (noAnh('hu-no-doc', x, y, r)) power *= 0.5;
+  function blastPoison(x, y, r, power, dy) {
+    if (noAnh('hu-no-doc', x, y - (dy || 0), r)) power *= 0.5;
     else {
       addRing(x, y, 5, r, 0.34, '#c2f58a', 3, 0);
       addRing(x, y, 2, r * 0.75, 0.3, '#6fcf3a', 2, 0, 0.06);
@@ -17139,8 +17147,8 @@
     for (let i = 0; i < n; i++) { const a = R() * TAU, v = rr(40, 130); emit(5, x, y - 8, Math.cos(a) * v, Math.sin(a) * v * 0.5 - rr(60, 140), rr(0.5, 0.9), RAMP.poison, 2, 380, 0, y + rr(-8, 10), 1); }
     for (let i = 0; i < Math.round(7 * hatK()); i++) botDoc(x + rr(-r, r) * 0.6, y + rr(-r, r) * 0.3, rr(-26, -10), rr(0.5, 1.0), RAMP.poison); // đợt 3: hu-bot-doc
   }
-  function blastIce(x, y, r, power) {
-    if (noAnh('hu-no-bang', x, y, r)) power *= 0.5;
+  function blastIce(x, y, r, power, dy) {
+    if (noAnh('hu-no-bang', x, y - (dy || 0), r)) power *= 0.5;
     else {
       addRing(x, y, 5, r, 0.26, '#ffffff', 3, 0);
       addRing(x, y, 2, r * 0.85, 0.3, '#7fd4ff', 2, 0, 0.05);
@@ -18360,6 +18368,103 @@
   };
 })();
 
+// ===== js/dinh_quai_bang.js =====
+// TỆP TẠO TỰ ĐỘNG bằng docs/review/ke-hoach-cai-thien/hieu-ung-dinh-quai/cong-cu/tao_bang.py — đừng sửa tay.
+// Bảng neo thân quái (hieu-ung-dinh-quai phần B): hộp điểm ảnh thật của thân lúc đứng thở, tính từ điểm chân (e.x, e.y), điểm game.
+// mã → [pha][mặt: 0 = quay trái, 1 = quay phải] = [x0, x1, y0, y1]. Trùm vùng: "trum:<kind>" (3 pha); trùm nhỏ: 2 pha.
+(function () { const G = window.G; if (!G) return; G.DINH_QUAI_BANG = {"heoCon":[[[-24.5,22.5,-35,0],[-22.5,24.5,-35,0]]],"ongVo":[[[-20,16.5,-27,-1.5],[-16.5,20,-27,-1.5]]],"boHung":[[[-25,18.5,-29,0.5],[-18.5,25,-29,0.5]]],"hoaBaoTu":[[[-22,14,-37.5,0],[-14,22,-37.5,0]]],"chonBong":[[[-17.5,20,-32.5,0],[-20,17.5,-32.5,0]]],"namPhong":[[[-15,14.5,-25,0],[-14.5,15,-25,0]]],"socNo":[[[-20,26.5,-33.5,0],[-26.5,20,-33.5,0]]],"nhimDoc":[[[-20.5,19,-28.5,0],[-19,20.5,-28.5,0]]],"heoNanh":[[[-37,32.5,-49,0],[-32.5,37,-49,0]]],"namPhongChua":[[[-35,34.5,-49,-0.5],[-34.5,35,-49,-0.5]]],"namChua":[[[-37.5,35,-64,-0.0],[-37.5,35,-64,-0.0]],[[-41,42,-71.5,24.5],[-37.5,37,-71.5,21.5]]],"trum:moc":[[[-57.5,54,-129.5,0.5],[-54,57.5,-129.5,0.5]],[[-42,41,-133,25],[-49,49,-133,28]],[[-51,57,-132,21],[-51,57,-132,28.5]]],"cua":[[[-26,21.5,-32.5,0],[-21.5,26,-32.5,0]]],"caCon":[[[-17.5,18,-34,1],[-18,17.5,-34,1]]],"oc":[[[-29.5,25.5,-41,0],[-25.5,29.5,-41,0]]],"haiQuy":[[[-21,20.5,-44,0],[-20.5,21,-44,0]]],"caChuon":[[[-20.5,21.5,-31,0],[-21.5,20.5,-31,0]]],"caNoc":[[[-14.5,16,-26,0],[-16,14.5,-26,0]]],"sua":[[[-16.5,16,-41,1.5],[-16,16.5,-41,1.5]]],"nhim":[[[-12,13,-25,0],[-13,12,-25,0]]],"cuaTuong":[[[-43,41.5,-64.5,-0.5],[-41.5,43,-64.5,-0.5]]],"caNocChua":[[[-29,37,-65,-0.5],[-37,29,-65,-0.5]]],"cuaDa":[[[-53.5,45,-74.5,-0.5],[-45,53.5,-74.5,-0.5]],[[-43,43,-74,24],[-48,48,-74,28.5]]],"trum:ngu":[[[-52,41,-111.5,1],[-41,52,-111.5,1]],[[-59.5,54,-102,32.5],[-51,59.5,-102,29.5]],[[-56,57.5,-98.5,34.5],[-49,51.5,-98.5,25]]],"linhMa":[[[-18,12.5,-32,0],[-12.5,18,-32,0]]],"doiThan":[[[-21,21,-39,0],[-21,21,-39,0]]],"tuongDa":[[[-21.5,16.5,-35,0],[-16.5,21,-35,0]]],"denLong":[[[-15,15,-35,-0.5],[-15,15,-35,-0.5]]],"meoDen":[[[-16,17.5,-35,0],[-17.5,16,-35,0]]],"huLua":[[[-14.5,12.5,-26.5,0],[-12.5,14.5,-26.5,0]]],"tieuYeu":[[[-19.5,19,-32,0],[-19,19.5,-32,0]]],"nhimThan":[[[-15,14.5,-30,0],[-14.5,15,-30,0]]],"tuongMa":[[[-20.5,18,-41.5,0],[-18,20.5,-41.5,0]]],"huChua":[[[-21,19.5,-46.5,0],[-19.5,21,-46.5,0]]],"hoLua":[[[-33,40,-60,-0.5],[-40,33,-60,-0.5]],[[-54.5,56,-71,31.5],[-48,49.5,-64.5,30]]],"trum:ho":[[[-52.5,61,-118.5,0.5],[-61,52.5,-118.5,0.5]],[[-104.5,111,-146.5,23.5],[-106,109.5,-146.5,23.5]],[[-59.5,60,-149,27],[-60,59.5,-149,27.5]]],"raiCa":[[[-31,15.5,-35,0],[-15.5,31,-35,0]]],"diaTrau":[[[-22.5,22,-28,0],[-22,22.5,-28,0]]],"baBa":[[[-32,24,-29.5,0],[-24,32,-29.5,0]]],"cocTia":[[[-27,26,-36,0],[-26,27,-36,0]]],"ranNuoc":[[[-17.5,20,-32.5,0],[-20,17.5,-32.5,0]]],"echPhinh":[[[-14.5,16,-26,0],[-16,14.5,-26,0]]],"maDa":[[[-19.5,19,-32,0],[-19,19.5,-32,0]]],"traiGai":[[[-29.5,25.5,-41,0],[-25.5,29.5,-41,0]]],"raiCaChua":[[[-20.5,18,-41.5,0],[-18,20.5,-41.5,0]]],"cocChua":[[[-35,34.5,-49,-0.5],[-34.5,35,-49,-0.5]]],"caTre":[[[-53.5,45,-74.5,-0.5],[-45,53.5,-74.5,-0.5]],[[-46,46,-74,27],[-41,41.5,-74,24]]],"trum:thuong":[[[-52,41,-111.5,1],[-41,52,-111.5,1]],[[-59.5,53,-102,32],[-61,62.5,-102,35]],[[-51.5,49,-98.5,25],[-60.5,61.5,-98.5,34.5]]]}; })();
+
+// ===== js/dinh_quai.js =====
+// HIỆU ỨNG DÍNH QUÁI (17/10, docs/review/ke-hoach-cai-thien/hieu-ung-dinh-quai/bao-cao.md phần B).
+// Neo hiệu ứng nhắm vào quái theo THÂN THẬT của quái (hộp điểm ảnh đo sẵn ở js/dinh_quai_bang.js, từng con, từng pha trùm, hai mặt)
+// thay cho chiều cao hình vẽ cũ e.h / các số cố định (16 điểm, chặn 60 điểm, cỡ tối đa 1,5). Chỉ đổi CHỖ VẼ và CỠ hình:
+// không đổi sát thương, vùng trúng, thời lượng, luật chơi. Nơi dùng: js/fx.js (bodyOf, fx.entity, hit, dmg), js/fx_chuong.js (chHit, chBoom),
+// js/fx_he.js (spPin), js/combat.js (biểu tượng trên đầu trùm), js/bo_skill.js (dây leo, vòng chậm).
+// Cờ tắt: ?dinhquai=0 (G.DINH_QUAI = false) → mọi chỗ vẽ y hệt trước.
+(function () {
+  const G = window.G;
+  if (!G) return;
+  if (G.DINH_QUAI === undefined) { let tat = false; try { tat = /[?&]dinhquai=0(&|$)/.test(String(location.search || '')); } catch (e) { tat = false; } G.DINH_QUAI = !tat; }
+  const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
+  const OUT = { x0: 0, x1: 0, y0: 0, y1: 0, w: 0, h: 0, cx: 0 };
+  // Hộp thân (điểm game, tính từ chân e.x, e.y; mặt hiện tại; pha hiện tại của trùm). null: không có số đo → nơi gọi vẽ như cũ.
+  function than(e) {
+    if (G.DINH_QUAI === false || !e || e.isPlayer) return null;
+    const B = G.DINH_QUAI_BANG;
+    if (!B) return null;
+    const key = e.isBoss && e.kind !== 'mini' ? 'trum:' + e.kind : e.art;
+    const T = key && B[key];
+    if (!T || !T.length) return null;
+    const p = e.isBoss ? clamp(e.phase | 0, 0, T.length - 1) : 0, m = e.face > 0 ? 1 : 0;
+    const a = T[p] && T[p][m], g = T[0][m];
+    if (!a || !g) return null;
+    // Bề ngang lấy ở pha 1 (pha sau có thể kèm bóng phân thân / rễ / sóng quanh chân); đáy thân không xuống dưới chân quá 1 điểm.
+    OUT.x0 = g[0]; OUT.x1 = g[1]; OUT.y0 = a[2]; OUT.y1 = Math.min(a[3], 1);
+    // Khung ảnh vừa vẽ (ghiKhung): đỉnh / đáy thân theo đúng dáng đang vẽ (trùm cúi, vươn, quái phồng to…) thay cho dáng đứng thở trong bảng
+    const K = e.__dqK;
+    if (K && G.time - K.t <= 0.1 && K.y1 > K.y0) { OUT.y0 = K.y0; OUT.y1 = Math.min(K.y1, 1); }
+    OUT.w = OUT.x1 - OUT.x0; OUT.h = Math.max(4, OUT.y1 - OUT.y0); OUT.cx = clamp((OUT.x0 + OUT.x1) / 2, -12, 12);
+    return OUT;
+  }
+  // Độ cao (dương, tính từ chân) của chỗ đòn chạm thân: 16 điểm như cũ với quái thường, nhưng ít nhất 30 % và nhiều nhất 55 % chiều cao thân.
+  function caoTrung(e) {
+    const T = than(e);
+    if (!T) return null;
+    return -T.y1 + clamp(16, 0.3 * T.h, 0.55 * T.h);
+  }
+  // Thân đang bị nhấc lên (Địa Chấn hất tung — cùng công thức js/combat.js veQuaiDW)
+  function nhac(e) {
+    if (G.DINH_QUAI === false || !e || e.isPlayer || e.isBoss) return 0;
+    return e.mvLift > 0 ? Math.round(Math.sin((e.mvLift / 0.45) * Math.PI) * 10) : 0;
+  }
+  // Quái đứng ở chỗ (x, y) (chỗ chưởng nổ): con gần nhất trong tầm thân
+  function quaiTai(x, y) {
+    if (G.DINH_QUAI === false || !G.targets) return null;
+    let best = null, bd = 1e9;
+    for (const e of G.targets()) {
+      const d = Math.abs(e.x - x) - (e.r || 8), dy = Math.abs(e.y - y);
+      if (d < 22 && dy < 22 && d + dy < bd) { bd = d + dy; best = e; }
+    }
+    return best;
+  }
+  // Hộp điểm ảnh đục (alpha ≥ 128) của một khung trong tấm sprite, theo điểm game tính từ góc trái trên của ô. Nhớ theo tấm + hàng + khung.
+  const BB = new Map();
+  function khungBB(sp, hang, i) {
+    const key = sp.ma + '|' + hang + '|' + i;
+    if (BB.has(key)) return BB.get(key);
+    let r = null;
+    try {
+      const n = sp.net || 1, w = sp.fw * n, h = sp.fh * n, cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+      const x = cv.getContext('2d', { willReadFrequently: true }); x.drawImage(sp.img, i * w, hang * h, w, h, 0, 0, w, h);
+      const d = x.getImageData(0, 0, w, h).data;
+      let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+      for (let Y = 0; Y < h; Y++) for (let X = 0; X < w; X++) if (d[(Y * w + X) * 4 + 3] >= 128) { if (X < x0) x0 = X; if (X > x1) x1 = X; if (Y < y0) y0 = Y; if (Y > y1) y1 = Y; }
+      if (x1 >= x0) r = [x0 / n, (x1 + 1) / n, y0 / n, (y1 + 1) / n];
+    } catch (e) { r = null; }
+    if (BB.size < 4000) BB.set(key, r);
+    return r;
+  }
+  // js/sprite_custom.js (SC.veKhung) gọi ngay sau khi vẽ thân quái: ghi hộp thân của khung đang vẽ (tính từ gốc vẽ ≈ chân, đã gồm lật mặt
+  // và co / giãn của bút) vào quái đang vẽ (G.fx.dangVe). Chỉ khung thân đầu tiên mỗi nhịp (bóng phân thân vẽ sau không tính).
+  function ghiKhung(c, sp, hang, i, dx, dy) {
+    if (G.DINH_QUAI === false || G.noRender) return;
+    const e = G.fx && G.fx.dangVe;
+    if (!e || e.isPlayer || e.__dqT === G.time || !c.getTransform) return;
+    e.__dqT = G.time;
+    const b = khungBB(sp, hang, i);
+    if (!b) return;
+    const T = c.getTransform(), n = G.NET || 1;
+    let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+    for (const lx of [dx + b[0], dx + b[1]]) for (const ly of [dy + b[2], dy + b[3]]) {
+      const X = (T.a * lx + T.c * ly) / n, Y = (T.b * lx + T.d * ly) / n;
+      if (X < x0) x0 = X; if (X > x1) x1 = X; if (Y < y0) y0 = Y; if (Y > y1) y1 = Y;
+    }
+    const K = e.__dqK || (e.__dqK = { x0: 0, x1: 0, y0: 0, y1: 0, t: 0 });
+    K.x0 = x0; K.x1 = x1; K.y0 = y0; K.y1 = y1; K.t = G.time;
+  }
+  G.dinhQuai = { than, caoTrung, nhac, quaiTai, ghiKhung, bat: () => G.DINH_QUAI !== false };
+})();
+
 // ===== js/fx_he.js =====
 // Hiệu ứng ra chiêu theo lối đánh của từng vũ khí và theo hệ (Lửa, Độc, Băng).
 // Chia theo cấp: Mầm chỉ có vệt chém nhuốm màu hệ; Thành hình thêm hình của đặc trưng 1 (vệt cháy, vũng độc, gai băng);
@@ -19217,7 +19322,8 @@
     }
   });
   api('spPin', (q) => {
-    const PL = pal(q.he ? q.he.el : null), y = q.y - 12;
+    const tq = G.dinhQuai ? G.dinhQuai.quaiTai(q.x, q.y) : null, ct = tq ? G.dinhQuai.caoTrung(tq) : null; // dinh-quai: sao va chạm ở chỗ giáo cắm vào thân
+    const PL = pal(q.he ? q.he.el : null), y = ct != null ? tq.y - ct : q.y - 12;
     // Đợt 3: ảnh hu-va-cham (sao va chạm, mảnh văng theo hướng giáo bay) thay chớp sáng; nhuộm hệ của giáo
     const vq = scr(q);
     if (!(d3('hu-va-cham') && K.anhHuong('hu-va-cham', q.x, y, vq[0], vq[1], { sc: q.pin ? 1.3 : 1, mau: mauHe(q.he && q.he.el) })))
@@ -22919,6 +23025,7 @@ MA._xong();
     if (th) c.drawImage(th, 0, 0, sw, sh, dx, dy, sp.fw, sp.fh);
     else if (nho) c.drawImage(nho, 0, 0, nho.width, nho.height, hdx, hdy, hdw, hdh); // do-net: trùm thu nhỏ (Hồ Tinh pha 3)
     else c.drawImage(hI || sp.img, hsx, hsy, hsw, hsh, hdx, hdy, hdw, hdh);
+    if (sp.doi === 'quai' && G.dinhQuai && G.DINH_QUAI !== false) G.dinhQuai.ghiKhung(c, sp, a.hang, i, dx, dy); // hieu-ung-dinh-quai: hộp thân của khung vừa vẽ (?dinhquai=0: không ghi)
     if (phu > 0) { c.globalAlpha = a1 * phu; veNhuom(c, sp, '#ffffff', sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); }
     if (o.tint && o.tint[1] > 0) { c.globalAlpha = a1 * clamp(o.tint[1], 0, 1); veNhuom(c, sp, o.tint[0], sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); }
     if (vien) { c.globalAlpha = a1 * 0.3 * vien; veNhuom(c, sp, '#ff4a3a', sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); } // đỏ nhẹ
@@ -29546,9 +29653,11 @@ MA._xong();
     const big = q && q.big > 0, side = cay === 'doc' && q && !q.main, el = G.CHUONG.trees[cay].el;
     const k = KN() ? KN().nhan(big ? 'toiThuong' : side ? 'thuong' : 'kyNang', el) : 1;
     const power = Math.min(1.8, (big ? 1.1 : 1) * k); // số hạt của vụ nổ; js/fx.js còn nhân thêm G.VFX.hat
-    if (cay === 'hoa') blastFire(x, y, r, power);
-    else if (cay === 'doc') blastPoison(x, y, Math.max(16, r * 0.8), side ? 0.6 : power);
-    else blastIce(x, y, r, power);
+    // hieu-ung-dinh-quai (?dinhquai=0 tắt): nổ ngay trên thân con vừa trúng → ảnh nổ nhấc lên chỗ chạm thân (vùng nổ, vết trên sàn giữ nguyên)
+    const DQ = G.dinhQuai, tq = DQ ? DQ.quaiTai(x, y) : null, dy = tq ? DQ.caoTrung(tq) || 0 : 0;
+    if (cay === 'hoa') blastFire(x, y, r, power, dy);
+    else if (cay === 'doc') blastPoison(x, y, Math.max(16, r * 0.8), side ? 0.6 : power, dy);
+    else blastIce(x, y, r, power, dy);
     if (KN() && !side) {
       const PL = pal(el);
       KN().rune(x, y, r * (big ? 1.05 : 0.95), PL, big ? 0.7 : 0.5, big ? 8 : 6, big ? 3.2 : 2.2);
@@ -29556,7 +29665,8 @@ MA._xong();
     }
   });
   api('chHit', (kind, e, q) => {
-    const y = e.y - Math.min(16, (e.h || 20) * 0.5), v = scr(q);
+    const ct = G.dinhQuai ? G.dinhQuai.caoTrung(e) : null; // dinh-quai: chỗ chạm theo thân thật
+    const y = e.y - (ct != null ? ct + G.dinhQuai.nhac(e) : Math.min(16, (e.h || 20) * 0.5)), v = scr(q);
     if (kind === 'bang') {
       add({ ty: 'flash', x: e.x, y, r: 6, t: 0.08, c: '#ffffff', c2: '#bfeaff', ly: 1 });
       for (let i = 0; i < 6; i++) emit(4, e.x, y, v[0] * rr(40, 120) + rr(-30, 30), v[1] * rr(40, 120) + rr(-50, 10), rr(0.25, 0.45), RAMP.ice, 1, 200, 1, e.y + rr(-2, 4), 1);
@@ -29792,8 +29902,9 @@ MA._xong();
     if (G.noRender || el !== 'poison' || !t || !K.S()) return;
     try {
       const B = bodyOf(t), y = t.y - B.h * 0.5;
-      addRing(t.x, y, 3, B.w + 9, 0.22, '#b98af0', 1, 1);
-      addRing(t.x, t.y, 2, B.w + 7, 0.26, '#8fe04a', 1, 0);
+      const TQ = G.dinhQuai ? G.dinhQuai.than(t) : null, bw = TQ ? Math.max(B.w, TQ.w * 0.42) : B.w; // dinh-quai: vòng theo bề ngang thân thật
+      addRing(t.x, y, 3, bw + 9, 0.22, '#b98af0', 1, 1);
+      addRing(t.x, t.y, 2, bw + 7, 0.26, '#8fe04a', 1, 0);
       add({ ty: 'flash', x: t.x, y, r: 5, t: 0.08, c: '#e6ffc0', c2: '#8fe04a', ly: 1 });
       for (let i = 0; i < nHat(3); i++) emit(1, t.x + rr(-B.w, B.w), y + rr(-4, 4), rr(-10, 10), rr(-30, -14), rr(0.5, 0.8), TOXIC, 2, -6, 0.8, null, 1);
     } catch (e) { fail(e); }
@@ -35720,7 +35831,7 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
         // ảnh hu-day-leo: mầm nhú → dây vươn (khung 1–4) trong 0,32 giây đầu, giữ (khung 4–5 xen nhau), 0,25 giây cuối héo rụng (khung 6)
         const T0 = e.boTroiT0 || e.boTroiT, qua = T0 - e.boTroiT;
         const f = qua < 0.32 ? Math.floor(qua / 0.08) : e.boTroiT < 0.25 ? 5 : 3 + (Math.floor(G.time * 4) % 2);
-        veK(c, 'hu-day-leo', e.x, e.y + 1, f, Math.max(0.7, Math.min(1.8, ((e.r || 8) * 2 + 10) / 28)), (e.fxId || 0) % 2 === 1, 1);
+        veK(c, 'hu-day-leo', e.x, e.y + 1 - (G.dinhQuai ? G.dinhQuai.nhac(e) : 0), f, Math.max(0.7, Math.min(1.8, ((e.r || 8) * 2 + 10) / 28)), (e.fxId || 0) % 2 === 1, 1);
       } else if (e.boTroiT > 0 && e.st && e.st.root > 0) {
         const r = (e.r || 8) + 2, n = 10;
         c.globalAlpha = Math.min(1, e.boTroiT / 0.3);
@@ -35731,7 +35842,7 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
         }
         c.globalAlpha = 1;
       }
-      if (e.boChamT > 0) { c.globalAlpha = 0.5; vong(c, e.x, e.y, (e.r || 8) + 1, '#7fd4ff', 8, G.time * 3); c.globalAlpha = 1; }
+      if (e.boChamT > 0) { c.globalAlpha = 0.5; vong(c, e.x, e.y - (G.dinhQuai ? G.dinhQuai.nhac(e) : 0), (e.r || 8) + 1, '#7fd4ff', 8, G.time * 3); c.globalAlpha = 1; }
     }
     // vòng sóng (Sóng dội), vòng thuỷ triều (Thuỷ triều)
     for (const v of W.boVe || []) {

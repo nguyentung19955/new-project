@@ -1,19 +1,19 @@
-# Bảng đo hiệu ứng dính quái — `truoc-net3` (NET 3, url &netcao=3)
+# Bảng đo hiệu ứng dính quái — `truoc-net3` (NET 3, url &netcao=3&dinhquai=0)
 
-Tổng: **867 ca**, đúng (dính) **426**, lệch **441**. Ca "không có hình" (trạng thái không có hình riêng) không tính: 56.
+Tổng: **866 ca**, đúng (dính) **436**, lệch **430**. Ca "không có hình" (trạng thái không có hình riêng) không tính: 56.
 
 ## Theo hiệu ứng
 
 | Hiệu ứng | Ca | Dính | Lệch | Kiểu lệch hay gặp |
 |---|---:|---:|---:|---|
 | Biểu tượng trạng thái trên đầu | 32 | 2 | 30 | lệch: đè lên (26), lệch: lơ lửng (4) |
-| Hình trúng — Kiếm (3 nhát) | 136 | 117 | 19 | lệch: ở chân (16), lệch: ngoài thân, (2), lệch: ngoài thân (1) |
-| Hình trúng — Phi tiêu bay | 46 | 41 | 5 | lệch: ở chân (3), lệch: ngoài thân, (2) |
-| Số sát thương | 182 | 126 | 56 | lệch: đè lên (29), lệch: lơ lửng (27) |
+| Hình trúng — Kiếm (3 nhát) | 136 | 128 | 8 | lệch: ở chân (8) |
+| Hình trúng — Phi tiêu bay | 46 | 42 | 4 | lệch: ngoài thân, (2), lệch: ở chân (2) |
+| Số sát thương | 182 | 124 | 58 | lệch: đè lên (31), lệch: lơ lửng (27) |
 | Trạng thái: Băng (chậm) | 49 | 2 | 47 | không theo khi bị hất (40), sai cỡ (6), lệch: chỉ 67% (1) |
 | Trạng thái: Choáng | 64 | 4 | 60 | không theo khi bị hất (40), sai cỡ (12), lệch: sao lơ (4) |
 | Trạng thái: Cháy | 54 | 1 | 53 | không theo khi bị hất (40), sai cỡ (13) |
-| Trạng thái: Trói chân (dây leo) | 49 | 6 | 43 | không theo khi bị hất (40), lệch: không ở chân (2), sai cỡ (1) |
+| Trạng thái: Trói chân (dây leo) | 48 | 6 | 42 | không theo khi bị hất (40), lệch: không ở chân (1), sai cỡ (1) |
 | Trạng thái: Đóng băng | 49 | 2 | 47 | không theo khi bị hất (40), sai cỡ (6), lệch: chỉ 63% (1) |
 | Trạng thái: Độc | 50 | 0 | 50 | không theo khi bị hất (40), sai cỡ (9), lệch: chỉ 50% (1) |
 | Tắt khi quái chết | 48 | 48 | 0 |  |
@@ -32,13 +32,13 @@ Tổng: **867 ca**, đúng (dính) **426**, lệch **441**. Ca "không có hình
 | boHung (quái thường, Rừng già) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
 | hoaBaoTu (quái thường, Rừng già) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | lệch 2 (1/4) | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
 | chonBong (quái thường, Rừng già) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
-| namPhong (quái thường, Rừng già) | lệch 1 (1/3) |  |  | ✓ |  |  |  |  |  |  |  |  | lệch 1 (1/4) | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
+| namPhong (quái thường, Rừng già) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | lệch 1 (1/4) | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
 | socNo (quái thường, Rừng già) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | hất | hất | – |  | cỡ (2/3) | ✓ |  |  |
 | nhimDoc (quái thường, Rừng già) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
 | heoNanh (tinh anh, Rừng già) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | cỡ · hất | hất | hất | hất | cỡ · hất | hất | – |  | ✓ | ✓ |  |  |
-| namPhongChua (tinh anh, Rừng già) | lệch 6 (1/3) |  |  | ✓ |  |  |  |  |  |  |  |  | lệch 29 (1/4) | cỡ · hất | hất | hất | hất | cỡ · hất | hất | – |  | cỡ (1/2) | ✓ |  |  |
-| namChua (trùm nhỏ, Rừng già) | lệch 6 (2/3) |  |  | lệch 9 |  |  |  |  |  |  |  |  | lệch 30 (3/4) | ✓ | cỡ | ✓ | ✓ | lệch 14 · cỡ | ✓ | – | lệch 14 | ✓ | ✓ |  |  |
-| moc (trùm vùng, Rừng già) | lệch 12 |  |  | lệch 11 |  |  |  |  |  |  |  |  | lệch 67 | cỡ | cỡ | cỡ | cỡ | ✓ | ✓ | – | lệch 7 | cỡ (2/3) | ✓ |  |  |
+| namPhongChua (tinh anh, Rừng già) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | lệch 29 (2/4) | cỡ · hất | hất | hất | hất | cỡ · hất | hất | – |  | cỡ (1/2) | ✓ |  |  |
+| namChua (trùm nhỏ, Rừng già) | lệch 5 (1/3) |  |  | lệch 10 |  |  |  |  |  |  |  |  | lệch 30 (3/4) | ✓ | cỡ | ✓ | ✓ | lệch 14 · cỡ | ✓ | – | lệch 14 | ✓ | ✓ |  |  |
+| moc (trùm vùng, Rừng già) | lệch 11 |  |  | lệch 10 |  |  |  |  |  |  |  |  | lệch 67 | cỡ | cỡ | cỡ | cỡ | ✓ | ✓ | – | lệch 7 | cỡ (2/3) | ✓ |  |  |
 | cua (quái thường, Hang biển) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | hất | hất | – |  | cỡ (1/3) | ✓ |  |  |
 | caCon (quái thường, Hang biển) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
 | oc (quái thường, Hang biển) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | cỡ · hất | hất | – |  | cỡ (1/2) | ✓ |  |  |
@@ -47,34 +47,34 @@ Tổng: **867 ca**, đúng (dính) **426**, lệch **441**. Ca "không có hình
 | caNoc (quái thường, Hang biển) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | lệch 4 | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
 | sua (quái thường, Hang biển) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
 | nhim (quái thường, Hang biển) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
-| cuaTuong (tinh anh, Hang biển) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | cỡ · hất | cỡ · hất | hất | hất | cỡ · hất | hất | – |  | cỡ (1/2) | ✓ |  |  |
-| caNocChua (tinh anh, Hang biển) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | lệch 1 (2/4) | cỡ · hất | hất | hất | hất | cỡ · hất | hất | – |  | ✓ | ✓ |  |  |
+| cuaTuong (tinh anh, Hang biển) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | lệch 4 (1/4) | cỡ · hất | cỡ · hất | hất | hất | cỡ · hất | hất | – |  | cỡ (1/2) | ✓ |  |  |
+| caNocChua (tinh anh, Hang biển) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | lệch 1 (1/4) | cỡ · hất | hất | hất | hất | cỡ · hất | hất | – |  | ✓ | ✓ |  |  |
 | cuaDa (trùm nhỏ, Hang biển) |  |  |  |  |  |  |  |  |  |  |  |  |  | cỡ | cỡ | cỡ | cỡ | lệch 2 · cỡ | lệch 53 | – | lệch 2 | cỡ (1/2) | ✓ |  |  |
-| ngu (trùm vùng, Hang biển) | lệch 9 |  |  | lệch 11 |  |  |  |  |  |  |  |  | lệch 44 | cỡ | cỡ | cỡ | cỡ | ✓ | ✓ | – | lệch 4 | lệch 99 (2/3) | ✓ |  |  |
+| ngu (trùm vùng, Hang biển) | lệch 0 (1/3) |  |  | lệch 19 |  |  |  |  |  |  |  |  | lệch 44 | cỡ | cỡ | cỡ | cỡ | ✓ | ✓ | – | lệch 4 | lệch 99 (2/3) | ✓ |  |  |
 | linhMa (quái thường, Lâu đài cổ) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
-| doiThan (quái thường, Lâu đài cổ) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | lệch 2 (1/4) | hất | hất | hất | hất | hất | hất | – |  | lệch 3 · cỡ (2/4) | ✓ |  |  |
+| doiThan (quái thường, Lâu đài cổ) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | lệch 2 (2/4) | hất | hất | hất | hất | hất | hất | – |  | lệch 3 · cỡ (2/4) | ✓ |  |  |
 | tuongDa (quái thường, Lâu đài cổ) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
-| denLong (quái thường, Lâu đài cổ) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | lệch 5 | hất | hất | hất | hất | lệch 1 · hất | hất | – |  | lệch 0 (1/2) | ✓ |  |  |
+| denLong (quái thường, Lâu đài cổ) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | lệch 6 | hất | hất | hất | hất | lệch 1 · hất | hất | – |  | lệch 0 (1/2) | ✓ |  |  |
 | meoDen (quái thường, Lâu đài cổ) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
-| huLua (quái thường, Lâu đài cổ) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | lệch 1 (2/4) | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
+| huLua (quái thường, Lâu đài cổ) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | lệch 1 (1/4) | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
 | tieuYeu (quái thường, Lâu đài cổ) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
 | nhimThan (quái thường, Lâu đài cổ) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
 | tuongMa (tinh anh, Lâu đài cổ) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
 | huChua (tinh anh, Lâu đài cổ) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
 | hoLua (trùm nhỏ, Lâu đài cổ) |  |  |  |  |  |  |  |  |  |  |  |  |  | cỡ | cỡ | cỡ | cỡ | lệch 1 · cỡ | cỡ | – | lệch 1 (3/4) | cỡ (1/2) | ✓ |  |  |
-| ho (trùm vùng, Lâu đài cổ) | lệch 9 |  |  | lệch 8 |  |  |  |  |  |  |  |  | lệch 52 | cỡ | lệch 4 · cỡ | cỡ | cỡ | ✓ | ✓ | – | lệch 2 | cỡ (1/2) | ✓ |  |  |
-| raiCa (quái thường, Sông sâu) | lệch 3 (1/3) |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | hất | hất | – |  | cỡ (1/2) | ✓ |  |  |
+| ho (trùm vùng, Lâu đài cổ) | lệch 9 |  |  | lệch 9 |  |  |  |  |  |  |  |  | lệch 67 | cỡ | lệch 4 · cỡ | cỡ | cỡ | ✓ | ✓ | – | lệch 2 | cỡ (1/2) | ✓ |  |  |
+| raiCa (quái thường, Sông sâu) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | hất | hất | – |  | cỡ (1/2) | ✓ |  |  |
 | diaTrau (quái thường, Sông sâu) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | lệch 8 | hất | hất | hất | hất | lệch 1 · hất | hất | – |  | cỡ (1/2) | ✓ |  |  |
-| baBa (quái thường, Sông sâu) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | cỡ · hất | hất | hất | hất | cỡ · hất | lệch 14 · hất | – |  | cỡ (1/2) | ✓ |  |  |
+| baBa (quái thường, Sông sâu) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | cỡ · hất | hất | hất | hất | cỡ · hất | hất | – |  | cỡ (1/2) | ✓ |  |  |
 | cocTia (quái thường, Sông sâu) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | hất | hất | – |  | cỡ (1/2) | ✓ |  |  |
 | ranNuoc (quái thường, Sông sâu) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
 | echPhinh (quái thường, Sông sâu) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | lệch 4 | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
 | maDa (quái thường, Sông sâu) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
 | traiGai (quái thường, Sông sâu) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | cỡ · hất | hất | – |  | cỡ (1/2) | ✓ |  |  |
 | raiCaChua (tinh anh, Sông sâu) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | ✓ | hất | hất | hất | hất | hất | hất | – |  | ✓ | ✓ |  |  |
-| cocChua (tinh anh, Sông sâu) | lệch 6 (1/3) |  |  | ✓ |  |  |  |  |  |  |  |  | lệch 29 (1/4) | cỡ · hất | hất | hất | hất | cỡ · hất | hất | – |  | cỡ (1/2) | ✓ |  |  |
-| caTre (trùm nhỏ, Sông sâu) | lệch 1 (1/3) |  |  | ✓ |  |  |  |  |  |  |  |  | lệch 7 | cỡ | cỡ | ✓ | ✓ | lệch 0 · cỡ | ✓ | – | lệch 0 (3/4) | cỡ (2/3) | ✓ |  |  |
-| thuong (trùm vùng, Sông sâu) | lệch 8 |  |  | lệch 6 |  |  |  |  |  |  |  |  | lệch 44 | cỡ | cỡ | cỡ | cỡ | ✓ | ✓ | – | lệch 5 | cỡ (2/3) | ✓ |  |  |
+| cocChua (tinh anh, Sông sâu) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | lệch 29 (2/4) | cỡ · hất | hất | hất | hất | cỡ · hất | hất | – |  | cỡ (1/2) | ✓ |  |  |
+| caTre (trùm nhỏ, Sông sâu) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | lệch 7 | cỡ | cỡ | ✓ | ✓ | lệch 0 · cỡ | ✓ | – | lệch 0 (3/4) | cỡ (2/3) | ✓ |  |  |
+| thuong (trùm vùng, Sông sâu) | ✓ |  |  | ✓ |  |  |  |  |  |  |  |  | lệch 44 | cỡ | cỡ | cỡ | cỡ | ✓ | ✓ | – | lệch 5 | cỡ (2/3) | ✓ |  |  |
 
 ## Các ca lệch (đầy đủ ở so-lieu/truoc-net3-ca.json)
 
@@ -86,37 +86,31 @@ Tổng: **867 ca**, đúng (dính) **426**, lệch **441**. Ca "không có hình
 - Biểu tượng trạng thái trên đầu · **namChua**: 4 ca — lệch 13.7 điểm (đè lên thân 17 điểm)
 - Biểu tượng trạng thái trên đầu · **ngu**: 4 ca — lệch 4 điểm (lơ lửng 16 điểm)
 - Biểu tượng trạng thái trên đầu · **thuong**: 4 ca — lệch 5.3 điểm (đè lên thân 8 điểm)
-- Hình trúng — Kiếm (3 nhát) · **caTre**: 1 ca — lệch 0.6 điểm (ở chân)
-- Hình trúng — Kiếm (3 nhát) · **cocChua**: 1 ca — lệch 5.9 điểm (ngoài thân, ở chân)
-- Hình trúng — Kiếm (3 nhát) · **ho**: 3 ca — lệch 9.3 điểm (ở chân)
-- Hình trúng — Kiếm (3 nhát) · **moc**: 3 ca — lệch 11.9 điểm (ở chân)
-- Hình trúng — Kiếm (3 nhát) · **namChua**: 2 ca — lệch 5.6 điểm (ở chân)
-- Hình trúng — Kiếm (3 nhát) · **namPhong**: 1 ca — lệch 0.9 điểm (ở chân)
-- Hình trúng — Kiếm (3 nhát) · **namPhongChua**: 1 ca — lệch 5.9 điểm (ngoài thân, ở chân)
-- Hình trúng — Kiếm (3 nhát) · **ngu**: 3 ca — lệch 9.3 điểm (ở chân)
-- Hình trúng — Kiếm (3 nhát) · **raiCa**: 1 ca — lệch 3.4 điểm (ngoài thân)
-- Hình trúng — Kiếm (3 nhát) · **thuong**: 3 ca — lệch 7.8 điểm (ở chân)
-- Hình trúng — Phi tiêu bay · **ho**: 1 ca — lệch 7.9 điểm (ở chân)
-- Hình trúng — Phi tiêu bay · **moc**: 1 ca — lệch 11 điểm (ở chân)
-- Hình trúng — Phi tiêu bay · **namChua**: 1 ca — lệch 9 điểm (ngoài thân, ở chân)
-- Hình trúng — Phi tiêu bay · **ngu**: 1 ca — lệch 10.7 điểm (ngoài thân, ở chân)
-- Hình trúng — Phi tiêu bay · **thuong**: 1 ca — lệch 6 điểm (ở chân)
+- Hình trúng — Kiếm (3 nhát) · **ho**: 3 ca — lệch 9.2 điểm (ở chân)
+- Hình trúng — Kiếm (3 nhát) · **moc**: 3 ca — lệch 10.8 điểm (ở chân)
+- Hình trúng — Kiếm (3 nhát) · **namChua**: 1 ca — lệch 4.6 điểm (ở chân)
+- Hình trúng — Kiếm (3 nhát) · **ngu**: 1 ca — lệch 0.4 điểm (ở chân)
+- Hình trúng — Phi tiêu bay · **ho**: 1 ca — lệch 8.8 điểm (ở chân)
+- Hình trúng — Phi tiêu bay · **moc**: 1 ca — lệch 10.2 điểm (ở chân)
+- Hình trúng — Phi tiêu bay · **namChua**: 1 ca — lệch 10 điểm (ngoài thân, ở chân)
+- Hình trúng — Phi tiêu bay · **ngu**: 1 ca — lệch 19.3 điểm (ngoài thân, ở chân)
 - Số sát thương · **caChuon**: 4 ca — lệch 9.7 điểm (lơ lửng trên đầu 22 điểm)
 - Số sát thương · **caNoc**: 4 ca — lệch 3.7 điểm (lơ lửng trên đầu 16 điểm)
-- Số sát thương · **caNocChua**: 2 ca — lệch 1 điểm (đè lên thân 3 điểm)
+- Số sát thương · **caNocChua**: 1 ca — lệch 1 điểm (đè lên thân 3 điểm)
 - Số sát thương · **caTre**: 4 ca — lệch 7.2 điểm (đè lên thân 9 điểm)
-- Số sát thương · **cocChua**: 1 ca — lệch 29.4 điểm (đè lên thân 31 điểm)
-- Số sát thương · **denLong**: 4 ca — lệch 5 điểm (lơ lửng trên đầu 17 điểm)
+- Số sát thương · **cocChua**: 2 ca — lệch 29.4 điểm (đè lên thân 31 điểm)
+- Số sát thương · **cuaTuong**: 1 ca — lệch 4 điểm (đè lên thân 6 điểm)
+- Số sát thương · **denLong**: 4 ca — lệch 5.7 điểm (lơ lửng trên đầu 18 điểm)
 - Số sát thương · **diaTrau**: 4 ca — lệch 7.7 điểm (lơ lửng trên đầu 20 điểm)
-- Số sát thương · **doiThan**: 1 ca — lệch 1.7 điểm (lơ lửng trên đầu 14 điểm)
+- Số sát thương · **doiThan**: 2 ca — lệch 1.7 điểm (lơ lửng trên đầu 14 điểm)
 - Số sát thương · **echPhinh**: 4 ca — lệch 3.7 điểm (lơ lửng trên đầu 16 điểm)
-- Số sát thương · **ho**: 4 ca — lệch 51.9 điểm (đè lên thân 54 điểm)
+- Số sát thương · **ho**: 4 ca — lệch 66.9 điểm (đè lên thân 69 điểm)
 - Số sát thương · **hoaBaoTu**: 1 ca — lệch 2 điểm (đè lên thân 4 điểm)
-- Số sát thương · **huLua**: 2 ca — lệch 1 điểm (lơ lửng trên đầu 13 điểm)
+- Số sát thương · **huLua**: 1 ca — lệch 1 điểm (lơ lửng trên đầu 13 điểm)
 - Số sát thương · **moc**: 4 ca — lệch 67.4 điểm (đè lên thân 69 điểm)
 - Số sát thương · **namChua**: 3 ca — lệch 30.3 điểm (đè lên thân 32 điểm)
 - Số sát thương · **namPhong**: 1 ca — lệch 1.3 điểm (đè lên thân 3 điểm)
-- Số sát thương · **namPhongChua**: 1 ca — lệch 29.3 điểm (đè lên thân 31 điểm)
+- Số sát thương · **namPhongChua**: 2 ca — lệch 29.3 điểm (đè lên thân 31 điểm)
 - Số sát thương · **ngu**: 4 ca — lệch 44.4 điểm (đè lên thân 46 điểm)
 - Số sát thương · **ongVo**: 4 ca — lệch 17.7 điểm (lơ lửng trên đầu 30 điểm)
 - Số sát thương · **thuong**: 4 ca — lệch 44.3 điểm (đè lên thân 46 điểm)
@@ -257,7 +251,7 @@ Tổng: **867 ca**, đúng (dính) **426**, lệch **441**. Ca "không có hình
 - Trạng thái: Cháy · **traiGai**: 1 ca — không theo khi bị hất 10 điểm (thân nhấc 10 điểm, hình nhấc 0)
 - Trạng thái: Cháy · **tuongDa**: 1 ca — không theo khi bị hất 10 điểm (thân nhấc 10 điểm, hình nhấc 0)
 - Trạng thái: Cháy · **tuongMa**: 1 ca — không theo khi bị hất 10 điểm (thân nhấc 10 điểm, hình nhấc 0)
-- Trạng thái: Trói chân (dây leo) · **baBa**: 2 ca — lệch 13.5 điểm (không ở chân)
+- Trạng thái: Trói chân (dây leo) · **baBa**: 1 ca — không theo khi bị hất 10 điểm (thân nhấc 10 điểm, hình nhấc 0)
 - Trạng thái: Trói chân (dây leo) · **boHung**: 1 ca — không theo khi bị hất 10 điểm (thân nhấc 10 điểm, hình nhấc 0)
 - Trạng thái: Trói chân (dây leo) · **caChuon**: 1 ca — không theo khi bị hất 10 điểm (thân nhấc 10 điểm, hình nhấc 0)
 - Trạng thái: Trói chân (dây leo) · **caCon**: 1 ca — không theo khi bị hất 10 điểm (thân nhấc 10 điểm, hình nhấc 0)

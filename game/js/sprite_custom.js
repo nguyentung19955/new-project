@@ -544,6 +544,7 @@
     if (th) c.drawImage(th, 0, 0, sw, sh, dx, dy, sp.fw, sp.fh);
     else if (nho) c.drawImage(nho, 0, 0, nho.width, nho.height, hdx, hdy, hdw, hdh); // do-net: trùm thu nhỏ (Hồ Tinh pha 3)
     else c.drawImage(hI || sp.img, hsx, hsy, hsw, hsh, hdx, hdy, hdw, hdh);
+    if (sp.doi === 'quai' && G.dinhQuai && G.DINH_QUAI !== false) G.dinhQuai.ghiKhung(c, sp, a.hang, i, dx, dy); // hieu-ung-dinh-quai: hộp thân của khung vừa vẽ (?dinhquai=0: không ghi)
     if (phu > 0) { c.globalAlpha = a1 * phu; veNhuom(c, sp, '#ffffff', sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); }
     if (o.tint && o.tint[1] > 0) { c.globalAlpha = a1 * clamp(o.tint[1], 0, 1); veNhuom(c, sp, o.tint[0], sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); }
     if (vien) { c.globalAlpha = a1 * 0.3 * vien; veNhuom(c, sp, '#ff4a3a', sx, sy, sw, sh, dx, dy, sp.fw, sp.fh); } // đỏ nhẹ

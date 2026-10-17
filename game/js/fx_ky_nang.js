@@ -147,8 +147,9 @@
     if (G.noRender || el !== 'poison' || !t || !K.S()) return;
     try {
       const B = bodyOf(t), y = t.y - B.h * 0.5;
-      addRing(t.x, y, 3, B.w + 9, 0.22, '#b98af0', 1, 1);
-      addRing(t.x, t.y, 2, B.w + 7, 0.26, '#8fe04a', 1, 0);
+      const TQ = G.dinhQuai ? G.dinhQuai.than(t) : null, bw = TQ ? Math.max(B.w, TQ.w * 0.42) : B.w; // dinh-quai: vòng theo bề ngang thân thật
+      addRing(t.x, y, 3, bw + 9, 0.22, '#b98af0', 1, 1);
+      addRing(t.x, t.y, 2, bw + 7, 0.26, '#8fe04a', 1, 0);
       add({ ty: 'flash', x: t.x, y, r: 5, t: 0.08, c: '#e6ffc0', c2: '#8fe04a', ly: 1 });
       for (let i = 0; i < nHat(3); i++) emit(1, t.x + rr(-B.w, B.w), y + rr(-4, 4), rr(-10, 10), rr(-30, -14), rr(0.5, 0.8), TOXIC, 2, -6, 0.8, null, 1);
     } catch (e) { fail(e); }

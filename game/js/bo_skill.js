@@ -345,7 +345,7 @@
         // ảnh hu-day-leo: mầm nhú → dây vươn (khung 1–4) trong 0,32 giây đầu, giữ (khung 4–5 xen nhau), 0,25 giây cuối héo rụng (khung 6)
         const T0 = e.boTroiT0 || e.boTroiT, qua = T0 - e.boTroiT;
         const f = qua < 0.32 ? Math.floor(qua / 0.08) : e.boTroiT < 0.25 ? 5 : 3 + (Math.floor(G.time * 4) % 2);
-        veK(c, 'hu-day-leo', e.x, e.y + 1, f, Math.max(0.7, Math.min(1.8, ((e.r || 8) * 2 + 10) / 28)), (e.fxId || 0) % 2 === 1, 1);
+        veK(c, 'hu-day-leo', e.x, e.y + 1 - (G.dinhQuai ? G.dinhQuai.nhac(e) : 0), f, Math.max(0.7, Math.min(1.8, ((e.r || 8) * 2 + 10) / 28)), (e.fxId || 0) % 2 === 1, 1);
       } else if (e.boTroiT > 0 && e.st && e.st.root > 0) {
         const r = (e.r || 8) + 2, n = 10;
         c.globalAlpha = Math.min(1, e.boTroiT / 0.3);
@@ -356,7 +356,7 @@
         }
         c.globalAlpha = 1;
       }
-      if (e.boChamT > 0) { c.globalAlpha = 0.5; vong(c, e.x, e.y, (e.r || 8) + 1, '#7fd4ff', 8, G.time * 3); c.globalAlpha = 1; }
+      if (e.boChamT > 0) { c.globalAlpha = 0.5; vong(c, e.x, e.y - (G.dinhQuai ? G.dinhQuai.nhac(e) : 0), (e.r || 8) + 1, '#7fd4ff', 8, G.time * 3); c.globalAlpha = 1; }
     }
     // vòng sóng (Sóng dội), vòng thuỷ triều (Thuỷ triều)
     for (const v of W.boVe || []) {
