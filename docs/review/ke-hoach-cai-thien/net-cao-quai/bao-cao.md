@@ -71,7 +71,7 @@ Nhận xét khi xem ảnh:
 | `dist/linh-khi.html?cloud=0` (bản một tệp) mặc định / `?netcao=3` / `?netcao=4`, vẽ quái + trùm + làng | **0 lỗi JS** (không có ảnh nét cao → vẽ tấm thường, đúng như thiết kế) |
 | Bản web mặc định / 3 / 4, vẽ cả 60 hình | **0 lỗi JS**; nét 3 và 4: **60/60 hình vẽ bằng ảnh nét cao**. (Chỉ có dòng lỗi mạng: máy thử không ra được Google Fonts / Firebase, và `sw.js` 404 như phiên trước.) |
 | Xếp kín so với lưới đủ: cùng 60 hình ở nét 3 / 4 | 59/60 trùng từng điểm; Hồ Tinh pha 3 (vẽ ×0,72, thu sẵn) lệch pha lấy mẫu, cùng khung bao |
-| **Bot** (`cong-cu/bot_netcao.py`, bản web, vòng lặp game chạy thật): 3 vùng × (phòng 10 quái mọi vai + tinh anh, 10 giây) + (trùm vùng bị trừ máu tới chết qua đủ 3 pha) | Nét 2 / 3 / 4: **0 lỗi JS**; 3 trùm đều qua pha 1 → 2 → 3 → gục ở cả 3 nét. Nét 3: 19 082 lần vẽ thân bằng ảnh nét cao, 134 lần bằng tấm thường (đúng lúc ảnh đang về); nét 4: 18 969 / 94. Nét 2: 0 lần ảnh nét cao. Số thô: `cong-cu/ra/bot.json` (không lưu repo) |
+| **Bot** (`cong-cu/bot_netcao.py`, bản web, vòng lặp game chạy thật): 3 vùng × (phòng 10 quái mọi vai + tinh anh, 10 giây) + (trùm vùng bị trừ máu tới chết qua đủ 3 pha) | Nét 2 / 3 / 4: **0 lỗi JS**; 3 trùm đều qua pha 1 → 2 → 3 → gục ở cả 3 nét. Nét 3: 20 040 lần vẽ thân bằng ảnh nét cao, 96 lần bằng tấm thường (đúng lúc ảnh đang về); nét 4: 19 313 / 118. Nét 2: 0 lần ảnh nét cao. Số thô: `cong-cu/ra/bot.json` (không lưu repo) |
 | `tests/smoke.py`, `tests/*.test.js` | 0 lỗi; đều đạt (`may_luat` bỏ qua như trước: thiếu thư viện) |
 
 ## 6. Đề xuất cho phần máy dùng chung (không sửa ở phiên này)
