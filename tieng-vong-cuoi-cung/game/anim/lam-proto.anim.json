@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "image": "lam-proto.png",
+  "frameWidth": 64,
+  "frameHeight": 64,
+  "pivot": [
+    32,
+    63
+  ],
+  "animations": {
+    "idle": {
+      "row": 0,
+      "frames": 6,
+      "fps": 8,
+      "loop": true
+    },
+    "run": {
+      "row": 1,
+      "frames": 8,
+      "fps": 12,
+      "loop": true
+    }
+  }
+}
