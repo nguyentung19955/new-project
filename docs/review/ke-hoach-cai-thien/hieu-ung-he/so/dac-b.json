@@ -1,0 +1,1565 @@
+{
+ "dac:phan-ung-khoi|fire|3": {
+  "hinh": {
+   "hu-chem-kiem-nang-1": {
+    "n": 1,
+    "ms": [
+     400
+    ]
+   },
+   "hu-chem-kiem-nang-2": {
+    "n": 1,
+    "ms": [
+     512
+    ]
+   },
+   "hu-trung": {
+    "n": 2,
+    "ms": [
+     320
+    ]
+   },
+   "hu-no-khoi": {
+    "n": 1,
+    "ms": [
+     720
+    ]
+   },
+   "scorch": {
+    "n": 1,
+    "ms": [
+     1800
+    ]
+   },
+   "hu-hat-no": {
+    "n": 1,
+    "ms": [
+     450
+    ]
+   },
+   "hu-chem-kiem-nang-3": {
+    "n": 1,
+    "ms": [
+     672
+    ]
+   },
+   "hu-chem-kiem-nang-4": {
+    "n": 1,
+    "ms": [
+     544
+    ]
+   },
+   "hu-trung-nang": {
+    "n": 1,
+    "ms": [
+     360
+    ]
+   },
+   "hu-no-lua": {
+    "n": 1,
+    "ms": [
+     670
+    ]
+   }
+  },
+  "lop_max": 6,
+  "phan_ung": [
+   "smoke"
+  ],
+  "so": [
+   {
+    "k": 1,
+    "b": 0,
+    "s": "2",
+    "dot": true,
+    "mau": "#8fe04a",
+    "co": 6
+   },
+   {
+    "k": 10,
+    "b": 0,
+    "s": "35",
+    "dot": false,
+    "mau": "#ffd23f",
+    "co": 8
+   },
+   {
+    "k": 31,
+    "b": 0,
+    "s": "13",
+    "dot": false,
+    "mau": "#ffd23f",
+    "co": 8
+   },
+   {
+    "k": 40,
+    "b": 0,
+    "s": "1",
+    "dot": true,
+    "mau": "#ff9a4a",
+    "co": 6
+   },
+   {
+    "k": 54,
+    "b": 0,
+    "s": "26",
+    "dot": false,
+    "mau": "#ffd23f",
+    "co": 8
+   },
+   {
+    "k": 77,
+    "b": 0,
+    "s": "2",
+    "dot": true,
+    "mau": "#ff9a4a",
+    "co": 6
+   }
+  ],
+  "lop_thay_duoc": {
+   "hu-chem-kiem-nang-1": 944.75,
+   "#hat-code": 357.5,
+   "hu-chem-kiem-nang-2": 3255.75,
+   "hu-trung": 7096.75,
+   "hu-no-khoi": 66289,
+   "scorch": 15811,
+   "he:drawFlames": 0,
+   "hu-hat-no": 907,
+   "hu-chem-kiem-nang-3": 1388.75,
+   "hu-chem-kiem-nang-4": 34148.5,
+   "hu-trung-nang": 5355.25,
+   "hu-no-lua": 25227.75
+  }
+ },
+ "dac:phan-ung-khoi|poison|3": {
+  "hinh": {
+   "hu-chem-kiem-nang-1": {
+    "n": 1,
+    "ms": [
+     400
+    ]
+   },
+   "hu-chem-kiem-nang-2": {
+    "n": 1,
+    "ms": [
+     512
+    ]
+   },
+   "hu-trung": {
+    "n": 2,
+    "ms": [
+     320
+    ]
+   },
+   "hu-no-khoi": {
+    "n": 2,
+    "ms": [
+     720
+    ]
+   },
+   "scorch": {
+    "n": 2,
+    "ms": [
+     1800
+    ]
+   },
+   "hu-chem-kiem-nang-3": {
+    "n": 1,
+    "ms": [
+     672
+    ]
+   },
+   "hu-chem-kiem-nang-4": {
+    "n": 1,
+    "ms": [
+     544
+    ]
+   },
+   "hu-trung-nang": {
+    "n": 1,
+    "ms": [
+     360
+    ]
+   },
+   "hu-doc-toe": {
+    "n": 1,
+    "ms": [
+     720
+    ]
+   },
+   "ring": {
+    "n": 1,
+    "ms": [
+     340
+    ]
+   },
+   "he:drawCloud": {
+    "n": 1,
+    "ms": [
+     3283
+    ]
+   }
+  },
+  "lop_max": 10,
+  "phan_ung": [
+   "smoke",
+   "smoke"
+  ],
+  "so": [
+   {
+    "k": 1,
+    "b": 0,
+    "s": "1",
+    "dot": true,
+    "mau": "#ff9a4a",
+    "co": 6
+   },
+   {
+    "k": 10,
+    "b": 0,
+    "s": "31",
+    "dot": false,
+    "mau": "#c2f58a",
+    "co": 8
+   },
+   {
+    "k": 31,
+    "b": 0,
+    "s": "13",
+    "dot": false,
+    "mau": "#c2f58a",
+    "co": 8
+   },
+   {
+    "k": 40,
+    "b": 0,
+    "s": "2",
+    "dot": true,
+    "mau": "#ff9a4a",
+    "co": 6
+   },
+   {
+    "k": 54,
+    "b": 0,
+    "s": "58",
+    "dot": false,
+    "mau": "#c2f58a",
+    "co": 8
+   },
+   {
+    "k": 77,
+    "b": 0,
+    "s": "2",
+    "dot": true,
+    "mau": "#ff9a4a",
+    "co": 6
+   }
+  ],
+  "lop_thay_duoc": {
+   "hu-chem-kiem-nang-1": 943.75,
+   "#hat-code": 7080.5,
+   "hu-chem-kiem-nang-2": 3424.25,
+   "hu-trung": 7170.5,
+   "hu-no-khoi": 119689,
+   "scorch": 13434.25,
+   "he:drawDrips": 0,
+   "hu-chem-kiem-nang-3": 1378.75,
+   "hu-chem-kiem-nang-4": 34931.25,
+   "hu-trung-nang": 5817.25,
+   "hu-doc-toe": 4595.5,
+   "ring": 3218.75,
+   "he:drawCloud": 16192.5
+  }
+ },
+ "dac:phan-ung-soc-nhiet|fire|3": {
+  "hinh": {
+   "hu-chem-kiem-nang-1": {
+    "n": 1,
+    "ms": [
+     400
+    ]
+   },
+   "hu-chem-kiem-nang-2": {
+    "n": 1,
+    "ms": [
+     512
+    ]
+   },
+   "hu-trung": {
+    "n": 2,
+    "ms": [
+     320
+    ]
+   },
+   "hu-soc-nhiet": {
+    "n": 1,
+    "ms": [
+     620
+    ]
+   },
+   "hu-hat-no": {
+    "n": 2,
+    "ms": [
+     450
+    ]
+   },
+   "hu-chem-kiem-nang-3": {
+    "n": 1,
+    "ms": [
+     672
+    ]
+   },
+   "hu-chem-kiem-nang-4": {
+    "n": 1,
+    "ms": [
+     544
+    ]
+   },
+   "hu-trung-nang": {
+    "n": 1,
+    "ms": [
+     360
+    ]
+   },
+   "hu-no-lua": {
+    "n": 1,
+    "ms": [
+     670
+    ]
+   }
+  },
+  "lop_max": 6,
+  "phan_ung": [
+   "shock"
+  ],
+  "so": [
+   {
+    "k": 10,
+    "b": 0,
+    "s": "43",
+    "dot": false,
+    "mau": "#ffd23f",
+    "co": 8
+   },
+   {
+    "k": 33,
+    "b": 0,
+    "s": "13",
+    "dot": false,
+    "mau": "#ffd23f",
+    "co": 8
+   },
+   {
+    "k": 42,
+    "b": 0,
+    "s": "1",
+    "dot": true,
+    "mau": "#ff9a4a",
+    "co": 6
+   },
+   {
+    "k": 56,
+    "b": 0,
+    "s": "26",
+    "dot": false,
+    "mau": "#ffd23f",
+    "co": 8
+   },
+   {
+    "k": 79,
+    "b": 0,
+    "s": "2",
+    "dot": true,
+    "mau": "#ff9a4a",
+    "co": 6
+   }
+  ],
+  "lop_thay_duoc": {
+   "hu-chem-kiem-nang-1": 944.75,
+   "#hat-code": 1778,
+   "hu-chem-kiem-nang-2": 3419,
+   "hu-trung": 6773.75,
+   "hu-soc-nhiet": 56094,
+   "he:drawFlames": 0,
+   "hu-hat-no": 1781.75,
+   "hu-chem-kiem-nang-3": 1368.25,
+   "hu-chem-kiem-nang-4": 34143.25,
+   "hu-trung-nang": 5360.5,
+   "hu-no-lua": 24917
+  }
+ },
+ "dac:phan-ung-soc-nhiet|ice|3": {
+  "hinh": {
+   "hu-chem-kiem-nang-1": {
+    "n": 1,
+    "ms": [
+     400
+    ]
+   },
+   "hu-chem-kiem-nang-2": {
+    "n": 1,
+    "ms": [
+     512
+    ]
+   },
+   "hu-trung": {
+    "n": 2,
+    "ms": [
+     320
+    ]
+   },
+   "hu-soc-nhiet": {
+    "n": 1,
+    "ms": [
+     620
+    ]
+   },
+   "hu-hat-no": {
+    "n": 2,
+    "ms": [
+     450
+    ]
+   },
+   "hu-chem-kiem-nang-3": {
+    "n": 1,
+    "ms": [
+     672
+    ]
+   },
+   "hu-chem-kiem-nang-4": {
+    "n": 1,
+    "ms": [
+     544
+    ]
+   },
+   "hu-trung-nang": {
+    "n": 1,
+    "ms": [
+     360
+    ]
+   },
+   "he:drawSpikes": {
+    "n": 1,
+    "ms": [
+     1050
+    ]
+   },
+   "ring": {
+    "n": 1,
+    "ms": [
+     260
+    ]
+   }
+  },
+  "lop_max": 7,
+  "phan_ung": [
+   "shock"
+  ],
+  "so": [
+   {
+    "k": 1,
+    "b": 0,
+    "s": "1",
+    "dot": true,
+    "mau": "#ff9a4a",
+    "co": 6
+   },
+   {
+    "k": 10,
+    "b": 0,
+    "s": "43",
+    "dot": false,
+    "mau": "#e9f9ff",
+    "co": 8
+   },
+   {
+    "k": 33,
+    "b": 0,
+    "s": "13",
+    "dot": false,
+    "mau": "#e9f9ff",
+    "co": 8
+   },
+   {
+    "k": 56,
+    "b": 0,
+    "s": "29",
+    "dot": false,
+    "mau": "#e9f9ff",
+    "co": 8
+   }
+  ],
+  "lop_thay_duoc": {
+   "hu-chem-kiem-nang-1": 944.5,
+   "#hat-code": 2887,
+   "hu-chem-kiem-nang-2": 3427.75,
+   "hu-trung": 6644.5,
+   "hu-soc-nhiet": 55550.75,
+   "he:drawIce": 0,
+   "hu-hat-no": 2005.75,
+   "hu-chem-kiem-nang-3": 1355.5,
+   "hu-chem-kiem-nang-4": 34067.5,
+   "hu-trung-nang": 3745,
+   "he:drawSpikes": 34106.75,
+   "ring": 5579.75,
+   "hu-khoi-tron": 0
+  }
+ },
+ "dac:dong-bang-vo|ice|3": {
+  "hinh": {
+   "hu-chem-kiem-nang-1": {
+    "n": 1,
+    "ms": [
+     400
+    ]
+   },
+   "hu-chem-kiem-nang-2": {
+    "n": 1,
+    "ms": [
+     512
+    ]
+   },
+   "hu-trung": {
+    "n": 2,
+    "ms": [
+     320
+    ]
+   },
+   "hu-dong-bang": {
+    "n": 1,
+    "ms": [
+     420
+    ]
+   },
+   "hu-hat-no": {
+    "n": 2,
+    "ms": [
+     450
+    ]
+   },
+   "hu-chem-kiem-nang-3": {
+    "n": 1,
+    "ms": [
+     672
+    ]
+   },
+   "hu-bang-vo": {
+    "n": 2,
+    "ms": [
+     420
+    ]
+   },
+   "ring": {
+    "n": 2,
+    "ms": [
+     260,
+     280
+    ]
+   },
+   "hu-chem-kiem-nang-4": {
+    "n": 1,
+    "ms": [
+     544
+    ]
+   },
+   "hu-trung-nang": {
+    "n": 1,
+    "ms": [
+     360
+    ]
+   },
+   "he:drawSpikes": {
+    "n": 1,
+    "ms": [
+     1050
+    ]
+   }
+  },
+  "lop_max": 7,
+  "phan_ung": [
+   "freeze"
+  ],
+  "so": [
+   {
+    "k": 10,
+    "b": 0,
+    "s": "12",
+    "dot": false,
+    "mau": "#e9f9ff",
+    "co": 8
+   },
+   {
+    "k": 30,
+    "b": 0,
+    "s": "22",
+    "dot": false,
+    "mau": "#e9f9ff",
+    "co": 8
+   },
+   {
+    "k": 55,
+    "b": 0,
+    "s": "29",
+    "dot": false,
+    "mau": "#e9f9ff",
+    "co": 8
+   }
+  ],
+  "lop_thay_duoc": {
+   "hu-chem-kiem-nang-1": 936.25,
+   "#hat-code": 3665.25,
+   "hu-chem-kiem-nang-2": 2812.5,
+   "hu-trung": 5982.5,
+   "hu-dong-bang": 11992.75,
+   "he:drawIce": 0,
+   "hu-hat-no": 1526,
+   "hu-chem-kiem-nang-3": 1359.75,
+   "hu-bang-vo": 13687,
+   "ring": 12254,
+   "hu-chem-kiem-nang-4": 33691,
+   "hu-trung-nang": 3652,
+   "he:drawSpikes": 31709.25,
+   "hu-khoi-tron": 0
+  }
+ },
+ "dac:dong-bang-vo|ice|1": {
+  "hinh": {
+   "hu-chem-kiem-nang-1": {
+    "n": 1,
+    "ms": [
+     400
+    ]
+   },
+   "hu-chem-kiem-nang-2": {
+    "n": 1,
+    "ms": [
+     512
+    ]
+   },
+   "hu-trung": {
+    "n": 2,
+    "ms": [
+     320
+    ]
+   },
+   "hu-chem-kiem-nang-3": {
+    "n": 1,
+    "ms": [
+     672
+    ]
+   },
+   "hu-dong-bang": {
+    "n": 1,
+    "ms": [
+     420
+    ]
+   },
+   "hu-hat-no": {
+    "n": 2,
+    "ms": [
+     450
+    ]
+   },
+   "hu-chem-kiem-nang-4": {
+    "n": 1,
+    "ms": [
+     544
+    ]
+   },
+   "hu-trung-nang": {
+    "n": 1,
+    "ms": [
+     360
+    ]
+   }
+  },
+  "lop_max": 6,
+  "phan_ung": [
+   "freeze"
+  ],
+  "so": [
+   {
+    "k": 10,
+    "b": 0,
+    "s": "12",
+    "dot": false,
+    "mau": "#e9f9ff",
+    "co": 8
+   },
+   {
+    "k": 30,
+    "b": 0,
+    "s": "13",
+    "dot": false,
+    "mau": "#e9f9ff",
+    "co": 8
+   },
+   {
+    "k": 54,
+    "b": 0,
+    "s": "22",
+    "dot": false,
+    "mau": "#e9f9ff",
+    "co": 8
+   }
+  ],
+  "lop_thay_duoc": {
+   "hu-chem-kiem-nang-1": 760.5,
+   "#hat-code": 3187.25,
+   "hu-chem-kiem-nang-2": 2330.25,
+   "hu-trung": 6099,
+   "he:drawIce": 0,
+   "hu-chem-kiem-nang-3": 1029.5,
+   "hu-dong-bang": 11968.75,
+   "hu-hat-no": 1821.75,
+   "hu-chem-kiem-nang-4": 25741.25,
+   "hu-trung-nang": 3941
+  }
+ },
+ "dac:no-lan-khi-chet|fire|3": {
+  "hinh": {
+   "hu-chem-kiem-nang-1": {
+    "n": 1,
+    "ms": [
+     400
+    ]
+   },
+   "hu-chem-kiem-nang-2": {
+    "n": 1,
+    "ms": [
+     512
+    ]
+   },
+   "hu-trung": {
+    "n": 2,
+    "ms": [
+     320
+    ]
+   },
+   "hu-chem-kiem-nang-3": {
+    "n": 1,
+    "ms": [
+     672
+    ]
+   },
+   "hu-chem-kiem-nang-4": {
+    "n": 1,
+    "ms": [
+     544
+    ]
+   },
+   "hu-quai-chet": {
+    "n": 1,
+    "ms": [
+     620
+    ]
+   },
+   "orb": {
+    "n": 1,
+    "ms": [
+     1400
+    ]
+   },
+   "scorch": {
+    "n": 1,
+    "ms": [
+     2200
+    ]
+   },
+   "hu-no-lua": {
+    "n": 2,
+    "ms": [
+     670
+    ]
+   },
+   "hu-hat-no": {
+    "n": 1,
+    "ms": [
+     450
+    ]
+   },
+   "hu-trung-nang": {
+    "n": 1,
+    "ms": [
+     360
+    ]
+   }
+  },
+  "lop_max": 9,
+  "phan_ung": [],
+  "so": [
+   {
+    "k": 1,
+    "b": 0,
+    "s": "1",
+    "dot": true,
+    "mau": "#ff9a4a",
+    "co": 6
+   },
+   {
+    "k": 10,
+    "b": 0,
+    "s": "12",
+    "dot": false,
+    "mau": "#ffd23f",
+    "co": 8
+   },
+   {
+    "k": 30,
+    "b": 0,
+    "s": "13",
+    "dot": false,
+    "mau": "#ffd23f",
+    "co": 8
+   },
+   {
+    "k": 38,
+    "b": 0,
+    "s": "1",
+    "dot": true,
+    "mau": "#ff9a4a",
+    "co": 6
+   },
+   {
+    "k": 54,
+    "b": 0,
+    "s": "22",
+    "dot": false,
+    "mau": "#ffd23f",
+    "co": 8
+   }
+  ],
+  "lop_thay_duoc": {
+   "hu-chem-kiem-nang-1": 941,
+   "#hat-code": 5187.75,
+   "hu-chem-kiem-nang-2": 3018.25,
+   "hu-trung": 6412.75,
+   "he:drawFlames": 0,
+   "hu-chem-kiem-nang-3": 1421.75,
+   "hu-chem-kiem-nang-4": 34751.25,
+   "hu-quai-chet": 16737.5,
+   "orb": 1830.25,
+   "scorch": 7888.25,
+   "hu-no-lua": 43121.25,
+   "hu-hat-no": 266,
+   "hu-trung-nang": 5306
+  }
+ },
+ "dac:lay-doc-khi-chet|poison|3": {
+  "hinh": {
+   "hu-chem-kiem-nang-1": {
+    "n": 1,
+    "ms": [
+     400
+    ]
+   },
+   "hu-chem-kiem-nang-2": {
+    "n": 1,
+    "ms": [
+     512
+    ]
+   },
+   "hu-trung": {
+    "n": 1,
+    "ms": [
+     320
+    ]
+   },
+   "hu-chem-kiem-nang-3": {
+    "n": 1,
+    "ms": [
+     672
+    ]
+   },
+   "hu-quai-chet": {
+    "n": 1,
+    "ms": [
+     620
+    ]
+   },
+   "orb": {
+    "n": 1,
+    "ms": [
+     1400
+    ]
+   },
+   "hu-trung-nang": {
+    "n": 1,
+    "ms": [
+     360
+    ]
+   },
+   "hu-chem-kiem-nang-4": {
+    "n": 1,
+    "ms": [
+     544
+    ]
+   },
+   "hu-doc-toe": {
+    "n": 1,
+    "ms": [
+     720
+    ]
+   },
+   "ring": {
+    "n": 1,
+    "ms": [
+     340
+    ]
+   },
+   "he:drawCloud": {
+    "n": 1,
+    "ms": [
+     3283
+    ]
+   }
+  },
+  "lop_max": 8,
+  "phan_ung": [],
+  "so": [
+   {
+    "k": 1,
+    "b": 0,
+    "s": "2",
+    "dot": true,
+    "mau": "#8fe04a",
+    "co": 6
+   },
+   {
+    "k": 10,
+    "b": 0,
+    "s": "14",
+    "dot": false,
+    "mau": "#c2f58a",
+    "co": 8
+   },
+   {
+    "k": 30,
+    "b": 0,
+    "s": "15",
+    "dot": false,
+    "mau": "#c2f58a",
+    "co": 8
+   }
+  ],
+  "lop_thay_duoc": {
+   "hu-chem-kiem-nang-1": 944.25,
+   "#hat-code": 13816.5,
+   "hu-chem-kiem-nang-2": 3180.75,
+   "hu-trung": 3325.5,
+   "he:drawDrips": 0,
+   "hu-chem-kiem-nang-3": 1199.25,
+   "hu-quai-chet": 22037.75,
+   "orb": 2662.75,
+   "hu-trung-nang": 5647.5,
+   "hu-chem-kiem-nang-4": 26236.5,
+   "hu-doc-toe": 4763,
+   "ring": 3727.25,
+   "he:drawCloud": 17936.75
+  }
+ },
+ "dac:trum|fire|1": {
+  "hinh": {
+   "hu-chem-kiem-nang-1": {
+    "n": 1,
+    "ms": [
+     400
+    ]
+   },
+   "hu-chem-kiem-nang-2": {
+    "n": 1,
+    "ms": [
+     512
+    ]
+   },
+   "hu-trung": {
+    "n": 2,
+    "ms": [
+     320
+    ]
+   },
+   "hu-chem-kiem-nang-3": {
+    "n": 1,
+    "ms": [
+     672
+    ]
+   },
+   "hu-chem-kiem-nang-4": {
+    "n": 1,
+    "ms": [
+     544
+    ]
+   },
+   "hu-trung-nang": {
+    "n": 1,
+    "ms": [
+     360
+    ]
+   },
+   "hu-hat-no": {
+    "n": 1,
+    "ms": [
+     450
+    ]
+   }
+  },
+  "lop_max": 4,
+  "phan_ung": [],
+  "so": [
+   {
+    "k": 10,
+    "b": 0,
+    "s": "12",
+    "dot": false,
+    "mau": "#ffd23f",
+    "co": 8
+   },
+   {
+    "k": 30,
+    "b": 0,
+    "s": "13",
+    "dot": false,
+    "mau": "#ffd23f",
+    "co": 8
+   },
+   {
+    "k": 36,
+    "b": 0,
+    "s": "1",
+    "dot": true,
+    "mau": "#ff9a4a",
+    "co": 6
+   },
+   {
+    "k": 54,
+    "b": 0,
+    "s": "22",
+    "dot": false,
+    "mau": "#ffd23f",
+    "co": 8
+   },
+   {
+    "k": 73,
+    "b": 0,
+    "s": "1",
+    "dot": true,
+    "mau": "#ff9a4a",
+    "co": 6
+   }
+  ],
+  "lop_thay_duoc": {
+   "hu-khoi-tron": 0,
+   "hu-chem-kiem-nang-1": 765.5,
+   "#hat-code": 0,
+   "hu-chem-kiem-nang-2": 2842.5,
+   "hu-trung": 12099,
+   "he:drawFlames": 0,
+   "hu-chem-kiem-nang-3": 1040.25,
+   "hu-chem-kiem-nang-4": 26617.5,
+   "hu-trung-nang": 10997.5,
+   "hu-hat-no": 542
+  }
+ },
+ "dac:trum|fire|3": {
+  "hinh": {
+   "hu-chem-kiem-nang-1": {
+    "n": 1,
+    "ms": [
+     400
+    ]
+   },
+   "hu-chem-kiem-nang-2": {
+    "n": 1,
+    "ms": [
+     512
+    ]
+   },
+   "hu-trung": {
+    "n": 2,
+    "ms": [
+     320
+    ]
+   },
+   "hu-hat-no": {
+    "n": 2,
+    "ms": [
+     450
+    ]
+   },
+   "hu-chem-kiem-nang-3": {
+    "n": 1,
+    "ms": [
+     672
+    ]
+   },
+   "hu-chem-kiem-nang-4": {
+    "n": 1,
+    "ms": [
+     544
+    ]
+   },
+   "hu-trung-nang": {
+    "n": 1,
+    "ms": [
+     360
+    ]
+   },
+   "hu-no-lua": {
+    "n": 1,
+    "ms": [
+     670
+    ]
+   }
+  },
+  "lop_max": 5,
+  "phan_ung": [],
+  "so": [
+   {
+    "k": 10,
+    "b": 0,
+    "s": "12",
+    "dot": false,
+    "mau": "#ffd23f",
+    "co": 8
+   },
+   {
+    "k": 30,
+    "b": 0,
+    "s": "13",
+    "dot": false,
+    "mau": "#ffd23f",
+    "co": 8
+   },
+   {
+    "k": 36,
+    "b": 0,
+    "s": "1",
+    "dot": true,
+    "mau": "#ff9a4a",
+    "co": 6
+   },
+   {
+    "k": 54,
+    "b": 0,
+    "s": "26",
+    "dot": false,
+    "mau": "#ffd23f",
+    "co": 8
+   },
+   {
+    "k": 73,
+    "b": 0,
+    "s": "2",
+    "dot": true,
+    "mau": "#ff9a4a",
+    "co": 6
+   }
+  ],
+  "lop_thay_duoc": {
+   "hu-khoi-tron": 0,
+   "hu-chem-kiem-nang-1": 944.75,
+   "#hat-code": 0,
+   "hu-chem-kiem-nang-2": 3586,
+   "hu-trung": 12082.75,
+   "he:drawFlames": 0,
+   "hu-hat-no": 1259.75,
+   "hu-chem-kiem-nang-3": 1219.5,
+   "hu-chem-kiem-nang-4": 34494.5,
+   "hu-trung-nang": 10700.25,
+   "hu-no-lua": 24968.75
+  }
+ },
+ "dac:trum|poison|1": {
+  "hinh": {
+   "hu-chem-kiem-nang-1": {
+    "n": 1,
+    "ms": [
+     400
+    ]
+   },
+   "hu-chem-kiem-nang-2": {
+    "n": 1,
+    "ms": [
+     512
+    ]
+   },
+   "hu-trung": {
+    "n": 2,
+    "ms": [
+     320
+    ]
+   },
+   "hu-chem-kiem-nang-3": {
+    "n": 1,
+    "ms": [
+     672
+    ]
+   },
+   "hu-chem-kiem-nang-4": {
+    "n": 1,
+    "ms": [
+     544
+    ]
+   },
+   "hu-trung-nang": {
+    "n": 1,
+    "ms": [
+     360
+    ]
+   }
+  },
+  "lop_max": 3,
+  "phan_ung": [],
+  "so": [
+   {
+    "k": 10,
+    "b": 0,
+    "s": "12",
+    "dot": false,
+    "mau": "#c2f58a",
+    "co": 8
+   },
+   {
+    "k": 30,
+    "b": 0,
+    "s": "14",
+    "dot": false,
+    "mau": "#c2f58a",
+    "co": 8
+   },
+   {
+    "k": 36,
+    "b": 0,
+    "s": "1",
+    "dot": true,
+    "mau": "#8fe04a",
+    "co": 6
+   },
+   {
+    "k": 54,
+    "b": 0,
+    "s": "23",
+    "dot": false,
+    "mau": "#c2f58a",
+    "co": 8
+   },
+   {
+    "k": 73,
+    "b": 0,
+    "s": "1",
+    "dot": true,
+    "mau": "#8fe04a",
+    "co": 6
+   }
+  ],
+  "lop_thay_duoc": {
+   "hu-khoi-tron": 0,
+   "hu-chem-kiem-nang-1": 752.25,
+   "#hat-code": 3037.25,
+   "hu-chem-kiem-nang-2": 2841.75,
+   "hu-trung": 12331.5,
+   "he:drawDrips": 0,
+   "hu-chem-kiem-nang-3": 1069.5,
+   "hu-chem-kiem-nang-4": 26788,
+   "hu-trung-nang": 11230.5,
+   "hu-hat-no": 0
+  }
+ },
+ "dac:trum|poison|3": {
+  "hinh": {
+   "hu-chem-kiem-nang-1": {
+    "n": 1,
+    "ms": [
+     400
+    ]
+   },
+   "hu-chem-kiem-nang-2": {
+    "n": 1,
+    "ms": [
+     512
+    ]
+   },
+   "hu-trung": {
+    "n": 2,
+    "ms": [
+     320
+    ]
+   },
+   "hu-chem-kiem-nang-3": {
+    "n": 1,
+    "ms": [
+     672
+    ]
+   },
+   "hu-chem-kiem-nang-4": {
+    "n": 1,
+    "ms": [
+     544
+    ]
+   },
+   "hu-trung-nang": {
+    "n": 1,
+    "ms": [
+     360
+    ]
+   },
+   "hu-doc-toe": {
+    "n": 1,
+    "ms": [
+     720
+    ]
+   },
+   "ring": {
+    "n": 1,
+    "ms": [
+     340
+    ]
+   },
+   "he:drawCloud": {
+    "n": 1,
+    "ms": [
+     3283
+    ]
+   }
+  },
+  "lop_max": 6,
+  "phan_ung": [],
+  "so": [
+   {
+    "k": 10,
+    "b": 0,
+    "s": "12",
+    "dot": false,
+    "mau": "#c2f58a",
+    "co": 8
+   },
+   {
+    "k": 30,
+    "b": 0,
+    "s": "14",
+    "dot": false,
+    "mau": "#c2f58a",
+    "co": 8
+   },
+   {
+    "k": 36,
+    "b": 0,
+    "s": "1",
+    "dot": true,
+    "mau": "#8fe04a",
+    "co": 6
+   },
+   {
+    "k": 54,
+    "b": 0,
+    "s": "24",
+    "dot": false,
+    "mau": "#c2f58a",
+    "co": 8
+   },
+   {
+    "k": 73,
+    "b": 0,
+    "s": "3",
+    "dot": true,
+    "mau": "#8fe04a",
+    "co": 6
+   }
+  ],
+  "lop_thay_duoc": {
+   "hu-khoi-tron": 0,
+   "hu-chem-kiem-nang-1": 939,
+   "#hat-code": 9124.25,
+   "hu-chem-kiem-nang-2": 3588.75,
+   "hu-trung": 12321,
+   "he:drawDrips": 0,
+   "hu-chem-kiem-nang-3": 1289.25,
+   "hu-chem-kiem-nang-4": 34973.5,
+   "hu-trung-nang": 11268.5,
+   "hu-hat-no": 0,
+   "hu-doc-toe": 4392.75,
+   "ring": 3487.75,
+   "he:drawCloud": 19237
+  }
+ },
+ "dac:trum|ice|1": {
+  "hinh": {
+   "hu-chem-kiem-nang-1": {
+    "n": 1,
+    "ms": [
+     400
+    ]
+   },
+   "hu-chem-kiem-nang-2": {
+    "n": 1,
+    "ms": [
+     512
+    ]
+   },
+   "hu-trung": {
+    "n": 2,
+    "ms": [
+     320
+    ]
+   },
+   "hu-chem-kiem-nang-3": {
+    "n": 1,
+    "ms": [
+     672
+    ]
+   },
+   "hu-chem-kiem-nang-4": {
+    "n": 1,
+    "ms": [
+     544
+    ]
+   },
+   "hu-trung-nang": {
+    "n": 1,
+    "ms": [
+     360
+    ]
+   }
+  },
+  "lop_max": 3,
+  "phan_ung": [],
+  "so": [
+   {
+    "k": 10,
+    "b": 0,
+    "s": "12",
+    "dot": false,
+    "mau": "#e9f9ff",
+    "co": 8
+   },
+   {
+    "k": 30,
+    "b": 0,
+    "s": "13",
+    "dot": false,
+    "mau": "#e9f9ff",
+    "co": 8
+   },
+   {
+    "k": 54,
+    "b": 0,
+    "s": "22",
+    "dot": false,
+    "mau": "#e9f9ff",
+    "co": 8
+   }
+  ],
+  "lop_thay_duoc": {
+   "hu-khoi-tron": 0,
+   "hu-chem-kiem-nang-1": 765.5,
+   "#hat-code": 3527.25,
+   "hu-chem-kiem-nang-2": 2846,
+   "hu-trung": 12296.25,
+   "he:drawIce": 0,
+   "hu-chem-kiem-nang-3": 1042.25,
+   "hu-chem-kiem-nang-4": 26550.5,
+   "hu-trung-nang": 9956.25,
+   "hu-hat-no": 0
+  }
+ },
+ "dac:trum|ice|3": {
+  "hinh": {
+   "hu-chem-kiem-nang-1": {
+    "n": 1,
+    "ms": [
+     400
+    ]
+   },
+   "hu-chem-kiem-nang-2": {
+    "n": 1,
+    "ms": [
+     512
+    ]
+   },
+   "hu-trung": {
+    "n": 2,
+    "ms": [
+     320
+    ]
+   },
+   "hu-chem-kiem-nang-3": {
+    "n": 1,
+    "ms": [
+     672
+    ]
+   },
+   "hu-hat-no": {
+    "n": 1,
+    "ms": [
+     450
+    ]
+   },
+   "hu-chem-kiem-nang-4": {
+    "n": 1,
+    "ms": [
+     544
+    ]
+   },
+   "hu-trung-nang": {
+    "n": 1,
+    "ms": [
+     360
+    ]
+   },
+   "he:drawSpikes": {
+    "n": 1,
+    "ms": [
+     1050
+    ]
+   },
+   "ring": {
+    "n": 1,
+    "ms": [
+     260
+    ]
+   }
+  },
+  "lop_max": 6,
+  "phan_ung": [],
+  "so": [
+   {
+    "k": 10,
+    "b": 0,
+    "s": "12",
+    "dot": false,
+    "mau": "#e9f9ff",
+    "co": 8
+   },
+   {
+    "k": 30,
+    "b": 0,
+    "s": "13",
+    "dot": false,
+    "mau": "#e9f9ff",
+    "co": 8
+   },
+   {
+    "k": 54,
+    "b": 0,
+    "s": "29",
+    "dot": false,
+    "mau": "#e9f9ff",
+    "co": 8
+   }
+  ],
+  "lop_thay_duoc": {
+   "hu-khoi-tron": 0,
+   "hu-chem-kiem-nang-1": 944.5,
+   "#hat-code": 3607.25,
+   "hu-chem-kiem-nang-2": 3596.5,
+   "hu-trung": 12275.25,
+   "he:drawIce": 0,
+   "hu-chem-kiem-nang-3": 1215.5,
+   "hu-hat-no": 1439,
+   "hu-chem-kiem-nang-4": 34829.5,
+   "hu-trung-nang": 10110.5,
+   "he:drawSpikes": 30436.25,
+   "ring": 3441.5
+  }
+ }
+}

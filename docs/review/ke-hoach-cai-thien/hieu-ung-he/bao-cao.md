@@ -126,4 +126,83 @@ kín thân; Độc có vòng **tím** to quanh quái; trượt thì vệt vẫn 
 
 ## PHẦN B — SỬA
 
-*(đang làm — xem commit sau)*
+**Chờ phiên trước:** báo cáo `net-cao-hieu-ung-giao-dien/bao-cao.md` đã có sẵn khi bắt đầu phần B (không phải chờ). Phiên "Soát hiệu ứng dính quái" mới xong
+phần A (đo) — phần B của phiên này **không đụng** chỗ neo hiệu ứng vào thân quái (`fx.entity`, `hu-bam-*`, số sát thương theo chiều cao, biểu tượng trùm);
+chỉ bọc thêm từ bên ngoài.
+
+### Đã đổi gì (chỉ HÌNH và tín hiệu báo trúng)
+
+Tệp mới `game/js/fx_he_moi.js` (nạp sau `fx_ky_nang.js`) + 5 chỗ nhỏ trong `game/js/fx.js` (lúc vẽ ảnh hiệu ứng: đọc `o.cham` để phát chậm,
+`o.vien` để vẽ viền sáng, truyền `o.mau` cho vệt bám vũ khí). Không đụng `combat.js`, `moves.js`, luật, số, bản lưu, đăng nhập / lưu mây.
+
+| Mục | Cờ tắt riêng | Làm gì |
+|---|---|---|
+| 1. Bớt nhanh, bớt rối | `?hecham=0` | Vệt chính (kiếm, thương, búa, phi tiêu, chiêu, chưởng) **hiện lâu ×1,6** (vd kiếm nặng 250/320/420/340 → 400/512/672/544 ms; búa 360 → 576 ms) nhưng **tối đa 2 lớp vệt** cùng lúc — vệt cũ hơn tắt trong 0,06 giây. **Vệt nhuộm đúng màu hệ** (Độc xanh lá, Lửa cam đỏ, Băng xanh nhạt — đổi theo độ sáng nên giữ nét sáng tối của ảnh). Bỏ lớp **giọt hệ** đè dọc vệt (trùng màu với vệt đã nhuộm). Chùm hạt chỉ còn **khi trúng**, 1 chùm / nhịp; khói tối đa 1 lần / 0,25 giây; giọt độc / mảnh băng trên sàn tối đa 3. Bỏ vòng **tím** của Độc (lúc dính + "nhói" mỗi nhịp). Trúng nhiều quái cùng lúc: chớp to ở con đầu, các con sau 0,6 lần. |
+| 2. Bậc cao rõ hơn mà không rối hơn | `?hebac=0` | Thành hình: vệt có **viền sáng mảnh** màu hệ; Thức tỉnh: **viền dày và sáng hơn**. Viền là chính ảnh vệt vẽ thêm một lần (cộng sáng, to hơn 3 %/bậc). Không thêm hạt: hạt thấy được của kiếm Lửa Mầm / Thành hình / Thức tỉnh = 1 704 / 1 835 / 1 556 điểm·khung (trước 1 942 / 8 798 / 5 804). |
+| 3. Hình khớp vùng trúng | `?hetam=0` | Vệt đòn thường cận chiến (kiếm nặng, thương đâm, quét vòng, búa nện) thu cỡ quanh tay / chuôi để **phần có hình không vượt tầm trúng + 4 điểm** (không nhỏ hơn 0,45 cỡ cũ). Giọt / mảnh rơi trên sàn xa hơn tầm thì bỏ. |
+| 4. Báo trúng rõ | `?hebao=0` | **TRÚNG** (đòn có hệ): sau chớp trắng có sẵn, thân quái **chớp màu hệ 0,2 giây** + **dấu bám thân 0,5 giây** (bọt độc `hu-bot-doc`, lửa nhỏ `hu-lua-bung`, tinh thể băng `hu-tuong-tinh-the`), dấu đi theo quái. **Biểu tượng trạng thái** cạnh thanh máu quái (ảnh có sẵn `gd-tt-doc / chay / bang`, lớp giao diện, trên mọi hình): Độc kèm **số tầng 1–5**, Lửa "đang cháy", Băng kèm **số tầng chậm 1–4**, **đóng băng** = biểu tượng to hơn, nhấp sáng. Trùm: thêm số tầng cạnh hàng biểu tượng có sẵn. **Nhịp độc / cháy**: số nhỏ màu chủ đạo của hệ (cam / xanh lá), không bị số khác đẩy mất; cùng con trong 0,6 giây thì cộng dồn vào số đang hiện. **TRƯỢT**: không chớp, không dấu, không biểu tượng mới. |
+
+Cờ chung **`?hemoi=0`**: không bọc gì cả → y hệt trước (đã so: **2 916 khung, 60 ca, 0 điểm ảnh khác** — xem Kiểm thử).
+
+### Số đo TRƯỚC → SAU (cùng công cụ phần A; bảng đủ: [`bang-do-sau.md`](bang-do-sau.md); số: `so/gon-b.json`, `so/tam-b.json`, `so/dac-b.json`)
+
+| Chỉ số (trúng 3 quái, 13 đòn × 3 hệ) | Mầm | Thành hình | Thức tỉnh |
+|---|---|---|---|
+| Lớp hiệu ứng cùng lúc — tối đa | 13 → **11** | 20 → **16** | 23 → **15** |
+| Lớp cùng lúc — trung bình | 7,5 → **6,5** | 11,0 → **8,9** | 11,4 → **9,2** |
+| Hạt / chùm hạt **thấy được** (điểm ảnh·khung, trung bình) | 12 756 → **4 130** | 19 048 → **5 525** | 19 941 → **5 946** |
+| Lớp giọt hệ đè vệt (điểm ảnh·khung) | 4 232 → **0** | 4 212 → **0** | 4 212 → **0** |
+| Ca "quá rối" (≥ 12 lớp hoặc ≥ 90 hạt kể cả hạt bị chặn không thấy) | 5 → **0** / 39 | 17 → **11** / 39 | 18 → **14** / 39 |
+
+Ca "quá rối" còn lại chủ yếu vì **số hạt đếm thô** (hạt vẽ code bị chặn, không hiện ra màn hình) và **luật Thành hình / Thức tỉnh tạo vũng, mây,
+gai trên sàn** (là thông tin chơi, không bỏ). Số lớp tối đa còn 15 (búa Băng nện đất nấc 2 / thương Băng: gai băng + đóng băng + vòng sóng).
+
+**Tầm (lệch = hình vệt xa hơn chỗ trúng, điểm game; khoảng min–max qua 3 hệ × 4 bậc):**
+
+| Đòn | Trước | Sau |
+|---|---|---|
+| Kiếm nặng nhát 1 | +32…+39 | **+18…+24** |
+| Kiếm nặng nhát 2 | +22…+32 | **+10…+19** |
+| Kiếm nặng nhát 3 | +9…+27 | **+2…+15** |
+| Thương đâm 1 / 2 / 3 | +21…+47 | **+5…+17** |
+| Thương quét vòng | +27…+65 | **+19…+36** |
+| Búa nện thường | +14…+34 | **+14…+22** |
+| Thương xốc tới | −15…+27 | −15…+13 |
+| Búa nện đất nấc 1 / 2 | −20…+8 | −20 (sóng chấn trúng xa hơn hình — như cũ) |
+
+Còn lệch vì: vệt kiếm nặng nhát 1–2 đã thu tới mức nhỏ nhất cho phép (0,45 — nhỏ hơn thì vệt teo, mất dáng đường chém); búa còn chỗ toé ở đầu búa
+(`hu-nen-dat-*`, đúng chỗ búa chạm) loang ra trước; quét vòng còn vòng bụi sàn. Muốn về ~0 cần **ảnh vệt mới vẽ đúng tầm** (xem đề xuất).
+
+### Ảnh TRƯỚC / SAU
+
+`anh/truoc/` (phần A) và `anh/sau/` — cùng tên tệp, cùng cảnh: kiếm nặng 3 nhát, mỗi hệ ở Mầm và Thức tỉnh × trúng 1 / trúng 3 / trượt;
+mỗi ca `…​.gif` (đúng tốc độ), `…-cham-x3.gif` (chậm 3 lần), `…-khung.png` (chuỗi khung). Ví dụ so: `anh/truoc/sword-doc-thuc-tinh-trung-3-khung.png`
+↔ `anh/sau/sword-doc-thuc-tinh-trung-3-khung.png` (vệt xanh lá thay vệt xanh trắng, hết vòng tím, có biểu tượng độc + số tầng trên đầu từng con).
+
+### Kiểm thử
+
+- `node --check` mọi tệp `game/js/*.js`: đạt. `game/tests/cloud_save_regression.test.js`: đạt (không đụng lưu mây).
+- `python3 game/build.py` (một tệp **29,94 MB** ≤ 30) và `--hai-tep` (người chơi tải đầu **17,75 MB** ≤ 20): đạt.
+- Bot chơi thật có vẽ (`cong-cu/bot_loi.py`): 4 vũ khí × 3 hệ × (Mầm / Thức tỉnh), 12 giây mỗi ca, bấm cả Đặc biệt và Chưởng — **0 lỗi JS** ở mặc định,
+  ở `?hemoi=0`, và ở cả 4 cờ riêng tắt cùng lúc; `G.fx.errs = 0`, không có lỗi trong `fx_he_moi.js`.
+- `?hemoi=0` y hệt trước (`cong-cu/so_khung.py`, tắt vòng vẽ tự chạy để hai lần chạy cùng trạng thái): bản trước khi sửa vs bản mới `?hemoi=0`,
+  60 ca (5 đòn × 3 hệ × 2 bậc × trúng 3 / trượt), **2 916 khung, 0 khung khác**.
+- Không chơi thử bằng tay; mọi ảnh do bot chụp.
+
+### Rủi ro còn lại
+
+- Phiên "dính quái" sẽ sửa biểu tượng trên đầu trùm / chiều cao số: số tầng độc của trùm đặt theo hàng biểu tượng hiện tại của `js/art.js` A.status —
+  nếu phiên đó dời hàng biểu tượng thì cần dời theo (1 dòng trong `fx_he_moi.js`, phần `e.isBoss`).
+- Biểu tượng quái thường đặt bên phải thanh máu (theo `e.h` như thanh máu) — quái bay / quái cao bất thường có thể lệch giống thanh máu.
+- Viền sáng Băng (cộng sáng) trên nền cỏ hơi ngả xanh lục.
+- Lửa: lớp cháy trên thân quái (`hu-bam-lua`, phần của phiên dính quái) vẫn rất to, che gần hết quái — chưa đổi ở phiên này.
+
+### Quay lui
+
+- Cờ: `?hemoi=0` (tất cả), hoặc từng mục `?hecham=0`, `?hebac=0`, `?hetam=0`, `?hebao=0`.
+- Hoặc `git revert` commit phần B (một commit: `fx_he_moi.js`, 5 chỗ trong `fx.js`, 1 dòng `index.html`, dist).
+
+### Cần chủ game quyết
+
+1. Muốn vệt **khớp tầm hẳn** (lệch ≤ 4 điểm) thì cần **gen lại ảnh vệt** kiếm nặng / búa / quét vòng ngắn hơn (prompt có thể soạn khi duyệt) — thu cỡ thêm sẽ làm vệt teo.
+2. Ảnh còn thiếu (đang dùng tạm ảnh có sẵn): biểu tượng **đóng băng** riêng và **dấu trúng** riêng cho 3 hệ — prompt ở [`PROMPT.md`](PROMPT.md).

@@ -22,6 +22,7 @@ for k, v in d.items():
     # hiệu ứng theo tên: số lần, đời (ms), cỡ
     anh = collections.OrderedDict()
     for h in ba['hinh']:
+        if h.get('an'): continue
         t = BAN(h['ten'])
         a = anh.setdefault(t, {'n': 0, 'ms': set(), 'co': set(), 'mau': set()})
         a['n'] += 1; a['ms'].add(h['ms'])
@@ -29,6 +30,7 @@ for k, v in d.items():
         if h['mau']: a['mau'].add(h['mau'])
     anhT = collections.OrderedDict()
     for h in tr['hinh']:
+        if h.get('an'): continue
         t = BAN(h['ten']); a = anhT.setdefault(t, {'n': 0, 'ms': set()}); a['n'] += 1; a['ms'].add(h['ms'])
     # mặt nạ hình (trượt) theo cửa sổ; vùng trúng (lưới)
     vt = v['vung']; r, hq = vt['r'], vt['h']

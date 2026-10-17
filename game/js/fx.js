@@ -2543,7 +2543,8 @@
             const X = Math.round((th ? th.x : o.x - (o.tdx || 0)) + (o.tdx || 0)), Y = Math.round((th ? th.y : o.y - (o.tdy || 0)) + (o.tdy || 0));
             c.save(); c.translate(X, Y); c.rotate(o.xg);
             let ok = false;
-            try { ok = !!FA && FA.ve(c, o.ma, 0, 0, o.t0 - o.t, 0, o.sc, o.f < 0); } finally { c.restore(); }
+            const cmX = o.cham || 1; // hiệu ứng hệ mới (js/fx_he_moi.js, ?hemoi=0): o.cham phát chậm lại, o.mau nhuộm màu hệ, o.vien viền sáng theo bậc
+            try { if (o.vien && G.heMoi) G.heMoi.vien(c, o, o.ma, 0, 0, (o.t0 - o.t) / cmX, 0, o.sc, o.f < 0, 1); ok = !!FA && FA.ve(c, o.ma, 0, 0, (o.t0 - o.t) / cmX, 0, o.sc, o.f < 0, null, o.mau, o.kieu); } finally { c.restore(); }
             if (!ok) o.t = 0;
             break;
           }
@@ -2551,18 +2552,21 @@
           if (o.hold && FA) {
             // mục 8: tt = giây đã chạy; vis = lúc hết khung cuối (gian: đúng thời lượng gốc; không: min(thời lượng, số khung / nhịp ảnh)).
             // Từ 75% vis tới hết phần giữ: mờ dần về 0; trong phần giữ vẽ đứng ở khung cuối. Nhóm nổ / trúng đòn nảy 1 → 1,08 → 1 trong 0,12 giây đầu.
-            const tt = o.t0 - o.t, base = o.t0 - o.hold, gy = FA.giay(o.ma) || base, vis = o.gian ? base : Math.min(base, gy);
+            const cmH = o.cham || 1, hd = o.hold / cmH, tt = (o.t0 - o.t) / cmH, base = o.t0 / cmH - hd, gy = FA.giay(o.ma) || base, vis = o.gian ? base : Math.min(base, gy); // o.cham: js/fx_he_moi.js (đời, phần giữ đã kéo dài cùng hệ số)
             const tv = Math.min(tt, vis - 1e-4), mo0 = o.mo3 == null ? 1 : o.mo3;
-            const fade = tt <= vis * 0.75 ? 1 : Math.max(0, 1 - (tt - vis * 0.75) / (vis * 0.25 + o.hold));
+            const fade = tt <= vis * 0.75 ? 1 : Math.max(0, 1 - (tt - vis * 0.75) / (vis * 0.25 + hd));
             const nay = HU_NAY.test(o.ma) && tt < 0.12 ? 1 + 0.08 * Math.sin((Math.PI * tt) / 0.12) : 1;
             const ax = th ? th.x : o.x, ay = th ? th.y : o.y, X = Math.round(ax), Y = Math.round(ay);
             if (nay !== 1) { c.save(); c.translate(X, Y); c.scale(nay, nay); c.translate(-X, -Y); } // nảy bằng phép phóng quanh điểm neo (cỡ gốc giữ bậc 0,5, mục 21)
             let ok = false;
-            try { ok = fade > 0.003 && FA.ve(c, o.ma, ax, ay, o.gian ? (Math.max(0, tv) / Math.max(1e-4, base)) * gy * 0.999 : Math.max(0, tv), o.goc, o.sc, o.f < 0, mo0 * fade, o.mau, o.kieu); } finally { if (nay !== 1) c.restore(); }
+            const tK = o.gian ? (Math.max(0, tv) / Math.max(1e-4, base)) * gy * 0.999 : Math.max(0, tv);
+            try { if (o.vien && G.heMoi && fade > 0.003) G.heMoi.vien(c, o, o.ma, ax, ay, tK, o.goc, o.sc, o.f < 0, mo0 * fade); ok = fade > 0.003 && FA.ve(c, o.ma, ax, ay, tK, o.goc, o.sc, o.f < 0, mo0 * fade, o.mau, o.kieu); } finally { if (nay !== 1) c.restore(); }
             if (!ok) o.t = 0;
             break;
           }
-          if (!FA || !FA.ve(c, o.ma, th ? th.x : o.x, th ? th.y : o.y, o.gian ? k * FA.giay(o.ma) * 0.999 : o.t0 - o.t, o.goc, o.sc, o.f < 0, moA, o.mau, o.kieu)) o.t = 0;
+          const tA = o.gian ? k * FA.giay(o.ma) * 0.999 : (o.t0 - o.t) / (o.cham || 1);
+          if (o.vien && G.heMoi && FA) G.heMoi.vien(c, o, o.ma, th ? th.x : o.x, th ? th.y : o.y, tA, o.goc, o.sc, o.f < 0, moA);
+          if (!FA || !FA.ve(c, o.ma, th ? th.x : o.x, th ? th.y : o.y, tA, o.goc, o.sc, o.f < 0, moA, o.mau, o.kieu)) o.t = 0;
           break;
         }
         case 'ring': {

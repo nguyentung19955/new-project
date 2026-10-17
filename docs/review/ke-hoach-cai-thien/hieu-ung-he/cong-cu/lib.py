@@ -8,9 +8,12 @@ def mo(p, them='', w=844, h=390, dpr=2):
     b = p.chromium.launch(executable_path='/opt/pw-browsers/chromium', args=['--allow-file-access-from-files'])
     g = b.new_page(viewport={'width': w, 'height': h}, device_scale_factor=dpr)
     g.route('http*://**', lambda r: r.abort())
+    if os.environ.get('DET'):  # so khung từng điểm ảnh: tắt vòng requestAnimationFrame thật để hai lần chạy bắt đầu từ cùng một trạng thái (bot tự gọi từng nhịp)
+        g.add_init_script("window.requestAnimationFrame = function () { return 0; };")
     loi = []
     g.on('pageerror', lambda e: loi.append(str(e)))
     g.goto('file://' + GAME + '/dist/linh-khi.html?cloud=0' + them)
+    if os.environ.get('DET'): g.wait_for_function("window.G && G.fxAnh && G.spriteCustom", timeout=120000)
     g.wait_for_function("window.G && G.scene && G.fxAnh && G.fxAnh.co('hu-chem-luot-fire') && G.spriteCustom && G.spriteCustom.get('heoCon')", timeout=120000)
     g.wait_for_timeout(1500)
     for f in ('bot.js', 'setup.js', 'au_lib.js'):
