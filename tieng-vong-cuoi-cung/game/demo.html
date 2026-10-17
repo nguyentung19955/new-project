@@ -664,7 +664,7 @@ function lamAnim(){
   else if(pl.hurtT>0){ a=AN.hit; f=progF(a,1-pl.hurtT/18); }
   else if(pl.dash>0){ a=AN.dash; f=progF(a,1-pl.dash/P.dashFrames); }
   else if(pl.atkN){ const d=ATK[pl.atkN]; a=AN[d.anim]; f=atkF(a,pl.atkT,d); }
-  else if(pl.st==='wall'){ a=AN.wallSlide; f=loopF(a,pl.anim); flip=pl.lastWall<0; sdx=-2*pl.lastWall; }
+  else if(pl.st==='wall'){ a=AN.wallSlide; f=loopF(a,pl.anim); flip=pl.lastWall<0; sdx=-(LAM48?5:2)*pl.lastWall; }
   else if(pl.wjT>0){ a=AN.wallJump; f=progF(a,1-pl.wjT/16); flip=pl.wjDir<0; }
   else if(!pl.onGround){
     if(pl.vy<-4){ a=AN.jump; f=1; } else if(pl.vy<-2.4){ a=AN.jump; f=2; } else if(pl.vy<-0.9){ a=AN.jump; f=3; }
@@ -1141,7 +1141,7 @@ function pxDisc(x,y,r){ x=Math.round(x); y=Math.round(y); for(let dy=-r;dy<=r;dy
 // Nét chém: cung pixel 2–3 lớp màu từ ngoài vào trong, đầu dày, đuôi mảnh dần
 const SL_P=['#F3E6C8','#CEF0D6','#83CC93'], SL_E=['#CEF0D6','#83CC93','#32804F'];
 function drawSlash(x,y,f,n,t,cols,alpha){
-  if(!n) return; const a=ATK[n], k=t-a.su; if(k<0||k>=a.ac+3) return;
+  if(!n || LAM48) return;   // Lam 48 đã có vệt chém vẽ sẵn trong sprite const a=ATK[n], k=t-a.su; if(k<0||k>=a.ac+3) return;
   const cx=Math.round(x)-ox+5, cy=Math.round(y)-oy+7+(n===4?4:0);
   const arc=ARCS[n], a0=arc[0], a1=arc[1], r=arc[2], prog=Math.min(1,(k+1)/(n===4?4:a.ac)), span=(a1-a0)*prog, fc=n===4?1:f;
   if(Math.abs(span)<0.02) return;
@@ -1368,6 +1368,9 @@ function mkSet(at){ const cell=at.w; for(const k in at.anims) lutOf(at.anims[k])
   return { n:at.canvas, m:mirror(at.canvas), aw:at.canvas.width, cell, px:Math.round(at.pivot.x), pxm:Math.round(cell-at.pivot.x), py:Math.round(at.pivot.y), anims:at.anims }; }
 function addTints(set){ set.g=tint(set.n,'#E1B85A',1); set.gm=tint(set.m,'#E1B85A',1); set.w=tint(set.n,'#ffffff',1); set.wm=tint(set.m,'#ffffff',1); return set; }
 const DUNG_RIG=/[?&]rig=1(?:&|$)/.test(location.search);
+// Mặc định Lam 48×48 (rig 2D in sẵn: art/sprite/lam48.png). Thêm ?lam=24 để về bản 24×24 cũ.
+const LAM24=/[?&]lam=24(?:&|$)/.test(location.search);
+let LAM48=false;
 function coWebGL(){ try{ const c=document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl')||c.getContext('experimental-webgl'))); }catch(e){ return false; } }
 function napThree(){
   if(window.THREE) return Promise.resolve();
@@ -1432,7 +1435,8 @@ async function boot(){
     // Mặc định: atlas in sẵn (không cần WebGL). Thêm ?rig=1 vào link để dựng bằng Three.js như cũ.
     const A=await napAtlas();
     if(!A) return;
-    const la=A.lam;
+    const la=(!LAM24 && A.lam48) ? A.lam48 : A.lam;
+    LAM48 = la===A.lam48;   // pivot giữa chân (24,46) – hitbox gameplay giữ nguyên 10×15
     LS=mkSet(la); AN=LS.anims;
     LES=Object.assign({},LS,{n:tint(LS.n,'#CEF0D6',0.8),m:tint(LS.m,'#CEF0D6',0.8)});
     setLoad(0.6,'Dựng Quái Chuông Gỗ'); await wait(10);

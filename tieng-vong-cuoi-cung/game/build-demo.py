@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Ghép demo.html thành MỘT file tự chứa để đăng artifact: nhúng lib/*.js vào <script>,
-3 ảnh nền thành data URI base64, và atlas sprite in sẵn (art/sprite/atlas.json + PNG,
-tạo bằng tools/in-atlas.py) thành TV.ATLAS_NHUNG. Three.js chỉ nạp từ cdnjs khi mở ?rig=1
+3 ảnh nền thành data URI base64, và atlas sprite in sẵn (art/sprite/atlas.json + PNG: lam.png, lam48.png,
+quai-chuong.png, boss.png — tạo bằng tools/in-atlas.py và tools/in-lam48.py) thành TV.ATLAS_NHUNG. Three.js chỉ nạp từ cdnjs khi mở ?rig=1
 hoặc khi thiếu atlas in sẵn.
 Chạy: python3 build-demo.py  →  ra demo.build.html cạnh file này."""
 import base64, json, os, re
@@ -25,6 +25,8 @@ def atlas_block():
         return ''
     meta = json.load(open(jp, encoding='utf-8'))
     assert {'lam', 'quaiChuong', 'boss'} <= set(meta), sorted(meta)
+    if 'lam48' not in meta:
+        print('CẢNH BÁO: atlas.json chưa có lam48 — chạy tools/in-lam48.py; demo sẽ dùng Lam 24×24')
     anh = {}
     for k, m in meta.items():
         data = open(os.path.join(SPRITE, m['anh']), 'rb').read()
@@ -49,7 +51,7 @@ def inline_img(m):
     return "'data:image/png;base64," + base64.b64encode(data).decode() + "'"
 
 out = re.sub(r"'(\.\./art/nen/lang-chuong/game/(?:xa|giua|gan)\.png)'", inline_img, out)
-assert n_js == 4 and n_img == 3 and n_sprite in (0, 3), (n_js, n_img, n_sprite)
+assert n_js == 4 and n_img == 3 and n_sprite in (0, 3, 4), (n_js, n_img, n_sprite)
 assert 'three.min.js"></script>' not in out
 dst = os.path.join(HERE, 'demo.build.html')
 open(dst, 'w', encoding='utf-8').write(out)

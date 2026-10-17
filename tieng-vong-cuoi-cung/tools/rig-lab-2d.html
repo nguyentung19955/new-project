@@ -1,0 +1,889 @@
+<title>Rig Lab 2D – Lam</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Bố cục: xưởng tối một cột trên điện thoại; màn xem nhân vật luôn ở trên, bảng chỉnh khớp bên dưới (rộng: 2 cột) */
+:root{
+  --nen:#11151b; --tam:#181e26; --tam2:#202834; --vach:#2c3644;
+  --chu:#dfe7e2; --mo:#8f9ca6; --dong:#e1b85a; --dong-toi:#9c6b30; --vong:#cef0d6; --xanh:#32804f; --do:#e07a6a;
+  --f-chu:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-so:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+html,body{background:var(--nen);color:var(--chu)}
+body{font-family:var(--f-chu);font-size:15px;line-height:1.45;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px 40px}
+*{box-sizing:border-box}
+h1{font-size:1.35rem;font-weight:800;margin:0;letter-spacing:.01em;text-wrap:balance}
+h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.09em;color:var(--mo);margin:0 0 8px;font-weight:700}
+.dau{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin-bottom:12px}
+.dau p{margin:0;color:var(--mo);font-size:.88rem}
+.khung{display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:900px){.khung{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}}
+.o{background:var(--tam);border:1px solid var(--vach);border-radius:10px;padding:12px;min-width:0}
+.chon{display:flex;flex-wrap:wrap;gap:6px}
+button,.nut{font:inherit;font-weight:600;color:var(--chu);background:var(--tam2);border:1px solid var(--vach);border-radius:8px;min-height:44px;padding:8px 12px;cursor:pointer;touch-action:manipulation}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--dong);outline-offset:2px}
+button[aria-pressed="true"]{background:var(--dong);color:#1a1408;border-color:var(--dong)}
+.chon button{min-height:40px;padding:6px 10px;font-size:.86rem}
+.man{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start}
+.xem{position:relative;flex:1 1 300px;min-width:0}
+#cv{display:block;width:100%;max-width:100%;image-rendering:pixelated;image-rendering:crisp-edges;border-radius:8px;background:#3a3446}
+.ss{flex:0 0 auto;display:flex;flex-direction:row;flex-wrap:wrap;gap:10px;align-items:flex-start}
+.ss figure{margin:0;text-align:center}
+.ss canvas,.ss img{image-rendering:pixelated;background:#3a3446;border-radius:6px;display:block}
+.ss figcaption{font-size:.74rem;color:var(--mo);margin-top:3px}
+.dk{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.dk button{min-width:48px}
+.tt{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:.9rem}
+.tt b{font-family:var(--f-so);font-weight:500}
+.the{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:99px;border:1px solid var(--vach);color:var(--mo)}
+.the.hit{background:var(--dong);color:#1a1408;border-color:var(--dong)}
+.the.cb{background:var(--xanh);color:#e9fff0;border-color:var(--xanh)}
+.dai{display:flex;gap:4px;overflow-x:auto;padding-bottom:4px;margin-top:10px}
+.dai canvas{flex:0 0 auto;width:72px;height:72px;image-rendering:pixelated;background:#3a3446;border-radius:6px;border:2px solid transparent;cursor:pointer}
+.dai canvas.dang{border-color:var(--dong)}
+.dai canvas.hit{box-shadow:inset 0 -3px 0 var(--dong)}
+.nhom{border-top:1px solid var(--vach);padding-top:10px;margin-top:10px}
+.nhom:first-of-type{border-top:0;margin-top:0;padding-top:0}
+.tr{display:grid;grid-template-columns:7.2em minmax(0,1fr) 3.6em;gap:8px;align-items:center;min-height:40px}
+.tr label{font-size:.86rem;color:var(--mo)}
+.tr.sua label{color:var(--dong)}
+.tr output{font-family:var(--f-so);font-size:.86rem;text-align:right}
+input[type=range]{width:100%;height:32px;accent-color:var(--dong)}
+textarea{width:100%;min-height:120px;font-family:var(--f-so);font-size:.78rem;color:var(--chu);background:var(--nen);border:1px solid var(--vach);border-radius:8px;padding:8px}
+.ghi{font-size:.84rem;color:var(--mo);margin:6px 0 0}
+.ghi code{font-family:var(--f-so);color:var(--vong);font-size:.8rem}
+#tam{max-width:100%;image-rendering:pixelated;background:#3a3446;border-radius:6px;display:block;margin-top:8px}
+.hang{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.bao{font-size:.84rem;color:var(--vong);min-height:1.2em}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+
+<header class="dau">
+  <h1>Rig Lab 2D – Lam</h1>
+  <p>Thợ giữ chuông · ô 48×48 · 26 animation · xoay bộ phận bằng RotSprite</p>
+</header>
+
+<div class="khung">
+  <section class="o" aria-label="Xem animation">
+    <div class="chon" id="chon" role="group" aria-label="Chọn animation"></div>
+    <div class="man" style="margin-top:12px">
+      <div class="xem"><canvas id="cv" width="80" height="56" aria-label="Lam đang chuyển động"></canvas></div>
+      <div class="ss">
+        <figure><canvas id="chuan" width="48" height="48" style="width:96px;height:96px"></canvas><figcaption>Chuẩn 48</figcaption></figure>
+        <figure><img id="goc" alt="Ảnh gốc nguyên con" style="width:96px;height:96px"><figcaption>Ảnh gốc</figcaption></figure>
+      </div>
+    </div>
+    <div class="dk">
+      <button id="bPhat" aria-pressed="true">⏸ Dừng</button>
+      <button id="bLui" aria-label="Khung trước">◀</button>
+      <button id="bTien" aria-label="Khung sau">▶</button>
+      <button id="z4" aria-pressed="true">×4</button>
+      <button id="z6" aria-pressed="false">×6</button>
+      <button id="bNen" aria-pressed="false">Nền Làng Chuông</button>
+      <button id="bXuong" aria-pressed="false">Hiện khớp</button>
+      <button id="bCham" aria-pressed="false">Chậm ×¼</button>
+    </div>
+    <div class="tt" id="tt"></div>
+    <div class="dai" id="dai" aria-label="Các khung"></div>
+  </section>
+
+  <section class="o" aria-label="Chỉnh khớp">
+    <h2>Chỉnh góc khớp – khung đang chọn</h2>
+    <p class="ghi" style="margin:0 0 10px">Kéo thanh trượt để sửa khung đang xem (tự dừng phát). Góc tính bằng độ, dương = ngược chiều kim đồng hồ. Ô màu vàng là khớp đã sửa.</p>
+    <div id="truot"></div>
+    <div class="hang" style="margin-top:10px">
+      <button id="bHoanKhung">Hoàn tác khung này</button>
+      <button id="bHoanTat">Hoàn tác tất cả</button>
+    </div>
+    <div class="nhom" style="margin-top:14px">
+      <h2>Xuất / nạp keyframe</h2>
+      <div class="hang"><button id="bXuat">Xuất JSON keyframe</button><button id="bChep">Sao chép</button><button id="bNap">Nạp JSON đã dán</button></div>
+      <textarea id="json" spellcheck="false" aria-label="JSON keyframe" placeholder="Bấm Xuất JSON keyframe, hoặc dán JSON vào đây rồi bấm Nạp"></textarea>
+      <p class="bao" id="bao"></p>
+      <p class="ghi">Lưu JSON thành <code>art/nhan-vat/lam-48/tu-the-chinh.json</code>, rồi chạy <code>python3 -I tools/in-lam48.py</code> để in lại <code>lam48.png</code> cho game.</p>
+    </div>
+    <div class="nhom">
+      <h2>Sprite sheet</h2>
+      <button id="bSheet">Xuất sprite sheet</button>
+      <p class="ghi">9 cột × 26 hàng, ô 48×48, gốc ở giữa chân (24, 46). Trên iPhone: nhấn giữ ảnh rồi chọn Lưu vào Ảnh.</p>
+      <img id="tam" alt="Sprite sheet Lam 48" hidden>
+    </div>
+  </section>
+</div>
+
+<script>window.LAB_DATA={"meta":{"pal":{"O":"0C0F14","k":"1A212B","c":"212835","m":"2C3546","g":"4A5A6E","d":"21413A","G":"32804F","L":"83CC93","W":"CEF0D6","b":"9C6B30","y":"E1B85A","w":"F3E6C8"},"lop":["tayTrenS","cangTayS","duiS","ongS","giayS","ao2","ao1","than","duiT","ongT","giayT","vat","dau","chuong","tayTrenT","cangTayT","kiem"],"cay":{"than":[null,null],"dau":["than","co"],"chuong":["dau","moc"],"tayTrenT":["than","vaiT"],"cangTayT":["tayTrenT","khuyuT"],"kiem":["cangTayT","namT"],"tayTrenS":["than","vaiS"],"cangTayS":["tayTrenS","khuyuS"],"ao1":["than","aoGoc"],"ao2":["ao1","aoGiua"],"vat":[null,null],"duiT":[null,null],"ongT":["duiT","goiT"],"giayT":["ongT","coChanT"],"duiS":[null,null],"ongS":["duiS","goiS"],"giayS":["ongS","coChanS"]},"parts":{"dau":{"o":[12,2],"w":22,"h":19,"p":[24,19],"j":{"moc":[13,14]}},"chuong":{"o":[10,13],"w":7,"h":11,"p":[13,14],"j":{}},"than":{"o":[14,16],"w":18,"h":18,"p":[24,33],"j":{"co":[24,19],"vaiT":[29,23],"vaiS":[19,23],"aoGoc":[19,21]}},"vat":{"o":[19,33],"w":13,"h":5,"p":[24,33],"j":{}},"ao1":{"o":[3,20],"w":18,"h":12,"p":[19,21],"j":{"aoGiua":[12,31]}},"ao2":{"o":[3,30],"w":18,"h":12,"p":[12,31],"j":{}},"tayTrenT":{"o":[27,22],"w":5,"h":7,"p":[29,23],"j":{"khuyuT":[29,28]}},"cangTayT":{"o":[27,28],"w":6,"h":6,"p":[29,28],"j":{"namT":[30,32]}},"tayTrenS":{"o":[17,22],"w":5,"h":7,"p":[19,23],"j":{"khuyuS":[19,28]}},"cangTayS":{"o":[17,28],"w":6,"h":6,"p":[19,28],"j":{"namS":[20,32]}},"duiT":{"o":[24,33],"w":7,"h":7,"p":[27,34],"j":{"goiT":[27,39]}},"ongT":{"o":[24,39],"w":7,"h":5,"p":[27,39],"j":{"coChanT":[27,43]}},"giayT":{"o":[24,42],"w":9,"h":4,"p":[27,43],"j":{}},"duiS":{"o":[16,33],"w":7,"h":7,"p":[19,34],"j":{"goiS":[19,39]}},"ongS":{"o":[16,39],"w":7,"h":5,"p":[19,39],"j":{"coChanS":[19,43]}},"giayS":{"o":[16,42],"w":9,"h":4,"p":[19,43],"j":{}},"kiem":{"o":[28,28],"w":18,"h":8,"p":[30,32],"j":{}}},"dat":46,"tam":24},"png":{"dau":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAATCAYAAACUef2IAAABMklEQVR42q2VPYrCUBSFzwtCwPkRRRhwYMZGsXYBNtbWuoVZgaVYzgpmDdbWNi7AWrQYFUTEEIlGwcqpbnw+7/sJzKnCS/jel5PkRsAxz7niVV2Lo0DorheuwHK1/nCu/dPCd7PPbiDSAD8qteR4NZ8a4UIHVQ0JSkCbueCgr4U3FIrvAIDTcY+nl7z1GahwD/+UwdcQ3VEvqdDjbNWcjvvUcK0xwVxqUOuwViHDbdYy1KnjMFhb4TKUqvRs/fp+9g5uM70z1kE5uAvUWMXlcjbCZeh4OUZ31AMAHMIt4igQmTTvqu9nWdPGZyPp9xBub8ZxFAhaMFmbbp+g7JfHweXkOyXtORoBlAwzW6/ya0PWVAOApE8yL1frWMwm5iGkjk3aQAZTdpvf9GDTn4OLOo//AC5+pTvlM3rbAAAAAElFTkSuQmCC","chuong":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAALCAYAAACzkJeoAAAAgklEQVR42n2QMQoCQQxF3wyWgRSm3PN4Co/jAcRbWGvnBbbaQnC8gTYiK24fG7PMCuurPryfBJL4ImoeeXg9ErXo+uIAXV+8Lk4Ktcj1ymW7mZzI0bpfjwBc9qtxWxY1DxFs1w2i5uPk87zjlzwnABYAp0NhFlFzUfP3rfXIAOnfhz4cSzSJ6otPnAAAAABJRU5ErkJggg==","than":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAABGUlEQVR42mNkwAF4+EX+M+ABXz6+YUTmM+IyQEHNCJ85DA9unUMxkBHdEEIGYDPwy8c3jEzIhvAJiTOQChTUjBh4+EX+MzFQCTAhu4adnQuvFxbtnsAQPt0XHj4YBiGDr5/fYzWkfG89Q3BgCm4XERM2CmpGDJ3OjQxJ3ZEYcuHTfbG7CJeryvfWMzAwMDCs37IH7ko5VQ2GTudGhi8f3zCyMDAwMGSuzmBgYGBgmBezCKeNMAMYGBgY1AqtGX5t/c6AkSBhiRBm67yYRQxJS+IwDEAGgT4uDCszN8PTEQty6ux0boQbiMsAXEHAhJ5/vnx8w9jp3Mjw/uBr0tMROWD9lj1w71NkEEkuIsV7eA0StBelfRihJw0AGPZyRNIVLRAAAAAASUVORK5CYII=","vat":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAFCAYAAACeuGYRAAAAZ0lEQVR42mPk4Rf5L2qkxiBoL8qADwT6uDB0OjcyfPn4hpEJJvj+4GsGYgFc0+tztzA03uo/Cmev37KHoXxvPQMPv8h/BgYGBjiDh1/kv1GD/3+jBv//6GLNZybDxTAAD78IhiS6GABq7Sl80uJWqgAAAABJRU5ErkJggg==","ao1":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAMCAYAAABvEu28AAAAoElEQVR42mNkIBHw8Iv8Rxf78vENIyOpBiioGWHIPbh1joGFWEOwGcDAwMDw9fN7BgYGBgYmSg35+fMbYYOINQSvQcQYwq7Az/Dp3UuGLx/fMDKRGmvIhiR1R+J3EQ+/yP/yvfUEDVm/ZQ9hryErwhYmDAwMDLf6jzJ8+fiGEatB2FyDbAg21+B00fotexjeH3yNIY5sCLJrMAwi5Bp8AABf3mtIXvUpzAAAAABJRU5ErkJggg==","ao2":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAMCAYAAABvEu28AAAAw0lEQVR42mNkQAM8/CL/1QqtGd4ffM3A/YWHgYGBgeHr5/cMP39+Y2BX4GdI6o5kWL9lD8Ot/qMMXz6+YYTpY0I3pHxvPYrBMEMIASZ0gfVb9jC8P/ia4eeDjyji+FyDYhAu1xALmIhxDTLA5hq4Qdhc8+ndSwZSABO6a16fu4WiAD22cBqEzTUw8Pr5faK8xcDAwMCC7hqowv8MDAxwtqgCP17XwGPLqMH/Pw+/yH9c8s1nJuOUJ0khQUNgiohSSAAAAIgvgM3DKBitAAAAAElFTkSuQmCC","tayTrenT":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAHCAYAAADAp4fuAAAATElEQVR42mNkYGBg4OEX+c8ABV8+vmFk5OEX+S8qqcjAzSvIIKeqwXBo6zIGJgYsgHhBFgYGBoafP78xMDAwMDy6fYOBgYGBgRGb7QC4yBG5zazePQAAAABJRU5ErkJggg==","cangTayT":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAZElEQVR42mPk4Rf5LyqpyMDNK8ggp6rBcGjrMoYvH98wMjHgACwMDAwMghFSDIE+LgwMDAwMh7ZCJBh5+EX+K6gZMcipasBVH9q6jAHFqJZpGXA2IwMDAwMPv8h/ZAVfPr5hBAD4AROXUW2zoQAAAABJRU5ErkJggg==","tayTrenS":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAHCAYAAADAp4fuAAAAP0lEQVR42mNkYGBg4OEX+c8ABV8+vmFk5OEX+c8nJM7Azs7FwM0ryPDg1jkGJgYsgHhBFhjj589vcEFGbLYDAGIiDySqvWmqAAAAAElFTkSuQmCC","cangTayS":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAX0lEQVR42mPk4Rf5zyckzsDOzsXAzSvI8ODWOYYvH98wMjHgACwMDAwM7Ar8DIL2ohCRWxCKkYdf5L+opCIDN68gXPWDW+cYUIwKn+4LZzMyMDAw8PCL/EdW8OXjG0YAaqER6pWAdd4AAAAASUVORK5CYII=","duiT":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAATElEQVR42mNkYGBg4OEX+c+ABr58fMPIyMMv8l9UUpGBm1cQLiGnqsFwaOsyBiYGLODR7RsMDAwM2CVhgLDkz5/fGL5+fo8hyYjPtQDtihSOvTDhAAAAAABJRU5ErkJggg==","ongT":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAFCAYAAACJmvbYAAAAW0lEQVR42mPk4Rf5r1ZozcDAwMAQ6OPCAAOdzo0MjDz8Iv9FJRUZuHkF4RJyqhoMh7YuY2BiwAIe3b7BwMDAAJH8+fMbw9fP7zEUMTIwMDDw8Iv8R5f48vENIwCvjhS4NKsHCwAAAABJRU5ErkJggg==","giayT":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAECAYAAABcDxXOAAAAY0lEQVR42mPk4Rf5L2qkxiBoL8rAwMDAEOjjwsDAwMDQ6dzI8OXjG0YGBgYGRh5+kf+ikooM3LyCDMhATlWD4dDWZQxfPr5hZOThF/nPJyTOwM7OhaGQgYGB4cGtcxCTGAgAANHyE2FSwbfoAAAAAElFTkSuQmCC","duiS":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAASElEQVR42mNkYGBg4OEX+c+ABr58fMPIyMMv8p9PSJyBnZ0LLsHNK8jw4NY5BiYGLODr5/cMDAwM2CVhgDjJnz+/YUgy4nMtAHVOEfmCxOcdAAAAAElFTkSuQmCC","ongS":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAFCAYAAACJmvbYAAAAWUlEQVR42m3KuwmAMAAA0YsIAY2EQLKCA7hARnQNF3EJKysrIQQ/kCpWFn6ufSeUttl1LQDGO+6mfqQESHNEyoowLADUjQGg4KdjC09M6fxMAkBpm9+wx1VczMATgBqVh74AAAAASUVORK5CYII=","giayS":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAECAYAAABcDxXOAAAAW0lEQVR42oXKQQpAQBhA4feXUgzTyCQ7TuKITmXrAFYOoCRDzWqsiJVv+XqidBnyoiJuNACmswBM/YDbFgGQZ4oT3tLMME8jblskuqP352c89hVbtwBBlC4DPy5oMRZbIbUehwAAAABJRU5ErkJggg==","kiem":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAICAYAAAD0g6+qAAAAj0lEQVR42mNgQAM8/CL/GSgFPPwi/x/uiPpPjmEsME1fPr5hJMdlMH0sDAwMDM+vb2FY2ZoB13jo4SGiXWInb/cfbtC7S5NQJFMmVBI0INDHBW6pnbwdAyOy13j4Rf5fXenGoB2+i0HUSA1Ds6C9KJx9q/8oivdY0MMGBu7vP8aIHk6vz93CCBu8MUdOjAMA1zg6LJK4s1IAAAAASUVORK5CYII="},"nen":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAA4CAYAAABqtn+aAAAPRUlEQVR42u1bS6wkyVU9cSMys7K+r6pedff0zHjGao+xNYM1QraFhIdhbQsJCSSQAS+8YuUlgh2sWLBlzw7EwjvEDsECBAuQBtkw0owMg/o371evu/6ZGR8WWREVmZVVmfVGsKFTeuquyqzMiBP3c+65kexL98YGAGYvXmLSifBktgYATCIBdHsQXCAIOG4XCQQnaGNAjAEAtDEA4D5XHYITZtMbfO0sxn/KsPK84ASp9O4zA6TB0SPkDKnKLxIMINqN4dnFFUJimGcKAHC/30ZItHePz27n+OCtMf716QucDUeFMUml0RKEjdSF7/xrQs5AggsAgASw3J5PtUEUBQDl516uUghOe2ARYyDGHJCHjkRp/GyRockhWKPLHHgAEAS88H2iNF6kEqY0rlRrpFq7/wti+KfHU5yfnxeA8e/bi4PCuOyCAwDnBJJKIs00Qs7x7sMzcE74/nv38GS2bjwZa41lIP3BZFLmoG8thYiBiO2tbNMj5MXBcU7QOn8+J0I3FDiLI8QeuACcJYZEeGPQhR2yDwwAB5xSGoLvLNEecZjfl6QhhAEhbLXxD588h1IaP/742q2A7xq1IOocRMG8h+kcuL4gKK2htTl6T2nyv5CzPZAOWaCdaNV9Q84L4FkLPNULLLhSaQceAFBL5Cc2yzkejbr45htD/ODbDzGJBNbX1+CcGoFHjFUDQwKMMURRAE5UeY0dnG8BWhtnUae6NwCIKtArwKsK335I4OX4XMKDAGC9WGLQCpFIhVa7hcfPVviTH34Va+zHPeumvruW42CqmVstqTSMMc5itDZHk07ZGqvAOwSkfcaDSR7TeOk5fiLxwWwSQg5dQ1LlLjbPFJIkQ7jeYGaAv/jr5/j2vQ6efn65B15d5q2Kgb/8Vq8QA49dWwavzgqzbbb1r6GS6/qgHXNjqTTUCTGZrm5ucb+T04u3Jvkk3329jd/97r2CK/jg1WXdMrgKDJ9erE7LEtvY2WgSxBqFmioqQ4wKFiY4uXupBmASYwyJVOCMoc+AUW8XPUY9gVSbSvpSl5H9uMZh8HyjTsLP0qtTszGOxD7f8iyYHOYkV94DMPRcalYyrE4vxDdG7T3eVwarygLLg+lF4qSBVbmwzdB1JLt8vuziABAJ7ryjKtapEmkWByycJIAkyXC/EyJRDJ/NJJbzFH//0QLLeXraanjg+g+MOGG23BRAr7NiwZpZRDlTlw8/kYRE6IU5v0uk2rPAQ/e1ybByzrEQYEKgHYWIuEGfAdO5xONneczqjfuOVB4C7VhMvL6+RqI01iBcTm8ahYCqUs5+LieRau63+04ZU6Al8zRzIHZLN/Mtzd63LrbSWcRhtlVCtk4xM3nse/Nh7rrheoPp9fTkxGHBOw85Ik54mWSYtFuYvbjdUaED1iNN0fpcGcUOW4p1uTquaGNfJDhYGNVatvKSS+W8AeDDR0NE3KA37uPd13cx73sfjByQ7YBXlmvHrHAlFa4SiURpaKMxXSdoBeJOAdsCUxf/mmbfRCqYNKm8vpx5xRErZEAeBGysUB4QbcGRKA1lDNqCo3823AOtKqkQy2vcJ59fQAOIObls3gs4Wv0zl2haoah14fLnKiVGa+NKwM+eX2DYitx8OGPoRMFeEkmkwsVsieFoXAAp5KxQcq5SVThfKOX8WKGMwVko0BYctFVRGMuB7ITBnrvWxjLOcRZuSzlOGMURBq2w0gKPBepjAb4qBr792v2DWdeVa9DuO1ET546dF+9N+s6kkyTDw26Emyy/+bAd4CfPX2I0HmORNCO2PqgPJud4enEJYwweDTu4WiZYtwag7aDq4mqTSuSQOGEtz3dZywXzJKIR4HTetzeeGY8Rhxz/9eQ5AsZwnSqnow3MCP2zgZOdqiZ8jJI8vbhESAyZAZ7M1nlGW7xEq39WmUSc4mGOl26HOGKTw2bgdhTicpk466+ysjrlKK/UtATAMTobIV28RF8QZlKjfzZAquGlclVQouvcdza9wSiOcL8T4q1O4JLR33x0gfVqAer0Cu67VwsfmNSpXNBaoY15Q6bweQa8bOiitR5XyFbdARaGOQsZtEPH5K3s1QS8F7dTTDoR2mJ3e0vK/+3jH+HX358A6QpE7GDcs9L+nkhwgj5ZdSwMQyQ4BkcqozpyflA2I6Mh4u4WILN1DQKUhODCgXcMxMuba3z9tXM8nc7AGYORG3wiFcYrQjCT+J0P/zx/cJaBGYMs6hy1AGnquR0RAzyBtYr82hhoXXcFjXudCBezZfX9GgJJvpobBoSWgFOU15tk1zgihu521Y5ZYMAYTJqgF3C0BTmFBwDe7ue//8nlPE9Wm/RkTlg1Ka0NQs4c0FUKis24lCYIoNGOQtwu12AVcznFAsn/gTQVgVRmCIOgUiGuSiicEzKQq24SxfCg38K4HeJzKTDqCfQ7LdxkRZX3FBCPlXNl67O8NpEKRu1EhVWS5uO8AxPwF4jsADKpnLVtUukkJc52pLJJ/PnyZIhNkoKJYowZ9QQeDQnf+2CE77wzwFcHrUK/ok5d8UHzx2Gzr7+4Poh+EmHb52Xb0H+vc7iUa9zKsA/nRA40qQw2EpBKIgg4pJLgnPYaOYfIZsgZjJQIOcPtco1Wu4XpPFd5Pvy1vJp582EbXWYqf19ljRaoukW01sEPhBkdRugK5ly47j51XkdKqhJ9kJgMuzsxMtOFEqbMBW08lEqDtvEvVQZr5ICTCAr64h//0ePGrYBj3K7sxmVLtG1Uv/LYawWg3sr8BRMs/+OcHMAUxy2sPMExDAJkmQKZ/IIwyqnMYrE6uiJlC4yhEXKGABqb1ebuTJ8dJstlNdqKrY+fXRR6ImWwrHT3RQ+lNCjNMmiZOWtapQq20eRPIIoi16uoqkis27EwclbnW59/fPALg5xsS32npGGFA7/TZ61DMMCUyriCQpSkWCUpEsX29MBj1ucvkgsTnEBhELjGSqFxxMhlZWkIQcCRZQrDfqdwrf+by5trpGmG9XLl3KYdhXi7Lwq9Fq5zi//VnxsDs9tGbmTnaj3A1wirXL0spPoubDlhItWdPKEgZuQgaCi/T7oFTjCNjdQQTCPLdpbZjUQlF7S6G9uq3F1mQGmCTy9WmM6lq0h+/t0Yy3mK6VxiKnWlJZ/aMyFi7jsFtmeBw3aAABpdZjAOCJQmGAdUyzl3FO+AC+cPpKM9jXKHbJXur9zt9AbGGEyXGxgpsZIaC8OwMPk9b1Y5af7nJwv8/p/+Nz69WGFmgLhEd5rUpVWuVaAuFX2O21VWkLQWhkEfUaSbVkUCAM77MW4XyV6JJg25GlgqiTAIDspXcRhg0o2da9wXDMN2gGydA/f+V/L6+hff6KLTCzGaC0znEpmUiGsGHQK5J2xBsjHvFBWmywxuMo1uQDlwST4uxtid3HhfUNXakWlbytl/pZKIW5EzZ6ayQuy7nd7gK+NdyfbOg76rQuwqL+cplvMUnV6IX3m/iz/4vdfx5sM2fuubr2Hx8sVRF9ba7FEbaYqWaAO7NMBkMtnFvm0ctCKCLecsB21aiVQtGOeUW6Dtm3KiRuVLt9vGfJ058LpRiFWSYrClB/ObGb7zzlkuXYGgjMEn8xScMbQF4W8/niISHH/4m19yCeXHH10h7g+a9zmONNSvrq7QjfY3cy6kQTfIyfQqSZ0VHrJ6ol3rwC5WWMJEpFnmYpzSGkS8kH3hURoiBqV0Id4kSuM3Hg3wV/9xjVTlCgxjwL9cL2BMvsLaM/ep5zK//Wc/zRUbYxBxqnTlPbfREuDipILf8sBcC1HOpQ/FwDr1xxdaXS087ETOAss8L25FSLNsW5lkhWseTCb4y3+/RKqUAy9gDCERQsp7Ie9N+rCtA2UMzPZPbAcRFRIWHZ8U1e9wUGCF5pgVRQAgiHckugmZrpXSCj1QrYGtYpFkO8K83iSIW7vVyjJVSDb3xueIOeHr5z0MWxEiTvjGqA3OCW/0Y0cjIk6IOSHihLM4wsNWgG9NuuCcCnGrsZS0XQA7Sdst49gn0uOAMIgEEsWQqPycTXCn0KWyXkj+F0YpaFa0gGW6i33L1WYrNuxXI8PRGFNECLZS/U9frLGRCpHgmCcSfW8+3SiEVgqbVg/PqI3RaHxyGWdbmScB7vWBLb1qmkCqnkXEIKShQmAko3NCLHhBpVFKuy2/acYwaIcukZT1vNF4B8jPLq/AOeEfn6UOaME0Yuw2Yp6qRksDCH/vivtczODBdpGzChC72/uyBttMamOgjWvdOMirEq/EsRfaaxarBO3Sxu1UFhvP/i6qOAwwboX4pYeDQvKpEm9PcaNDe2UKiYMxZMfU8zjcozGH7lcm79YiyXfFxToDSEAZhpCK+wIFFwiDAGGQ73P2t4wRY0g90P1BdAdneLlJ8XdPXqDbP8u5JQkIphtv9T1kGX4M9CdYjqfKmEYu23QPthWXXQz01VulNcB5wb2suOpalss1goA7OV5wQuh1+csW0x+NcTYc7QA7YffpoYlJc1zsLGwUZ3lV1MTSywS9Tq3e8yNO5DKxW+HtDyxnLO9nqduWkZZUj7rYV+e+Ta6xHpJlKn/TapUhiMNCAqnKwocSRrmosCCSdVWtDQa92Flg1c58H1SlNKDlfgO8xrqkoXxjkaFG1lb5zgZr1q0LPEmry4wDrMtylw7iEInSe9vnmmR4p0i7V72UrPyRVHorYFKB2szWWaNE4L8iVdXFu6sFHurM1e2ZtlbYZaZArXzwfBD951dSGRvbBBf5bnciZFuXc+IlJycsaG0w7ETox4Hbueq7705L3Adg7yWVA0nkWDD37+vHq/Lk/F0R1m0XhhXc9maVFgDz78N58aUgn7rw7U5+IlaMgYtEOmFVy/z/SuudOuPpgna3lr/9twxQgQirosJz16O8ydzRCUu3tsX/qqJdMGwHCOKwkJEDxgouW04gVe0EP5mQ341rBxyBJzpyIkSBKHTsVpnK42U7xHqT7Cy04kWZsvXVgdjkbaQqSnHMbbNM5X/bqd6usspKpGnfu7IWFlw4F/ZJMhFDksk9tyvzwDpF2XHJEnAtQY2trsnhN5cskbZJRMvM1cD+YSuRJjsvDgKY75KSSLPM8b1sy7MCkXPCVO8yp32QpSPiDny4iXRfZZGHnuW7YNmSgoDjQb/lkoflhH4lUv5d09e92He//6Mv3iD9f3ywL3/tW68A/AJHwY86veHRi1+dH76ywP9VC3x1vALw//z4H/ru6iK3MHWlAAAAAElFTkSuQmCC","goc":"data:image/jpeg;base64,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"};</script>
+<script>/* =====================================================================
+   lam48-rig.js — Rig 2D pixel-perfect cho Lam 48×48 (dùng chung: Rig Lab 2D trên trình duyệt
+   và tools/in-lam48.py chạy bằng Node).
+   - Bộ phận: art/nhan-vat/lam-48/bo-phan-48/bo-phan.json (tạo bởi tools/lam48_bo_phan.py)
+   - Xoay bộ phận bằng RotSprite: phóng EPX/Scale2x ×8 → xoay nearest → thu nhỏ, chọn màu đa số
+   - Xương cha–con, IK 2 khớp cho tay/chân, áo choàng + chuông có quán tính (trễ 1–2 khung)
+   - Dọn viền sau khi ghép: viền ngoài 1px liền, bỏ điểm lẻ, bỏ viền đôi
+   Góc: độ, DƯƠNG = ngược chiều kim đồng hồ trên màn hình. Tay/chân thõng: + = vung ra trước;
+   thân/đầu: âm = cúi tới trước; kiếm: góc tuyệt đối, 0 = chĩa sang phải, 90 = chĩa lên.
+   ===================================================================== */
+(function (root) {
+'use strict';
+var L48 = {};
+var KEYS = '.OkcmgdGLWbyw';            // chỉ số 0 = trong suốt
+var IDX = {}; for (var i = 0; i < KEYS.length; i++) IDX[KEYS[i]] = i;
+L48.KEYS = KEYS; L48.IDX = IDX;
+var O = IDX.O, W_ = IDX.W, L_ = IDX.L, G_ = IDX.G, y_ = IDX.y, w_ = IDX.w, b_ = IDX.b, g_ = IDX.g, m_ = IDX.m, d_ = IDX.d;
+var CELL = 48;
+var D2R = Math.PI / 180;
+
+/* ---------------- chuẩn bị bộ phận ---------------- */
+L48.chuanBi = function (data) {
+  var rig = { data: data, parts: {}, pal: [], cache: {} };
+  rig.pal.push(null);
+  for (var k = 1; k < KEYS.length; k++) {
+    var hx = data.pal[KEYS[k]];
+    rig.pal.push([parseInt(hx.substr(0, 2), 16), parseInt(hx.substr(2, 2), 16), parseInt(hx.substr(4, 2), 16)]);
+  }
+  for (var n in data.parts) {
+    var q = data.parts[n], d = new Uint8Array(q.w * q.h);
+    for (var y = 0; y < q.h; y++) for (var x = 0; x < q.w; x++) d[y * q.w + x] = IDX[q.rows[y][x]] || 0;
+    rig.parts[n] = { n: n, w: q.w, h: q.h, d: d, o: q.o, p: q.p, j: q.j,
+      plx: q.p[0] - q.o[0], ply: q.p[1] - q.o[1], up: null };
+  }
+  return rig;
+};
+/* Thay dữ liệu điểm ảnh 1 bộ phận (Rig Lab đọc từ ảnh data URI) */
+L48.datDiemAnh = function (rig, n, d) { var P = rig.parts[n]; P.d = d; P.up = null; for (var k in rig.cache) if (k.indexOf(n + '|') === 0) delete rig.cache[k]; };
+
+/* EPX / Scale2x */
+function epx(s, w, h) {
+  var W2 = w * 2, o = new Uint8Array(W2 * h * 2);
+  for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) {
+    var P = s[y * w + x],
+      A = y > 0 ? s[(y - 1) * w + x] : P, B = x < w - 1 ? s[y * w + x + 1] : P,
+      C = x > 0 ? s[y * w + x - 1] : P, D = y < h - 1 ? s[(y + 1) * w + x] : P;
+    var e0 = P, e1 = P, e2 = P, e3 = P;
+    if (C === A && C !== D && A !== B) e0 = A;
+    if (A === B && A !== C && B !== D) e1 = B;
+    if (D === C && D !== B && C !== A) e2 = C;
+    if (B === D && B !== A && D !== C) e3 = D;
+    var i0 = (y * 2) * W2 + x * 2;
+    o[i0] = e0; o[i0 + 1] = e1; o[i0 + W2] = e2; o[i0 + W2 + 1] = e3;
+  }
+  return o;
+}
+function up8(P) {
+  if (P.up) return P.up;
+  var d = P.d, w = P.w, h = P.h;
+  for (var k = 0; k < 3; k++) { d = epx(d, w, h); w *= 2; h *= 2; }
+  P.up = { d: d, w: w, h: h };
+  return P.up;
+}
+function chuanGoc(a) { a = Math.round(a) % 360; if (a < -180) a += 360; if (a >= 180) a -= 360; return a; }
+
+/* Xoay 1 bộ phận quanh khớp của nó. Kết quả: ảnh nhỏ + (ox,oy) = vị trí góc trên-trái so với khớp */
+function xoay(rig, n, deg) {
+  var a = chuanGoc(deg), key = n + '|' + a;
+  if (rig.cache[key]) return rig.cache[key];
+  var P = rig.parts[n], r;
+  if (a === 0) {
+    r = { w: P.w, h: P.h, d: P.d, ox: -P.plx, oy: -P.ply, xoay: false };
+  } else {
+    var U = up8(P), c = Math.cos(a * D2R), s = Math.sin(a * D2R);
+    var xs = [], ys = [], cx = [0, P.w, 0, P.w], cy = [0, 0, P.h, P.h];
+    for (var k = 0; k < 4; k++) { var X = cx[k] - P.plx, Y = cy[k] - P.ply; xs.push(X * c + Y * s); ys.push(-X * s + Y * c); }
+    var x0 = Math.floor(Math.min.apply(null, xs)) - 1, x1 = Math.ceil(Math.max.apply(null, xs)) + 1;
+    var y0 = Math.floor(Math.min.apply(null, ys)) - 1, y1 = Math.ceil(Math.max.apply(null, ys)) + 1;
+    var w = x1 - x0, h = y1 - y0, d = new Uint8Array(w * h);
+    var OFF = [[0, 0, 2], [-0.25, -0.25, 1], [0.25, -0.25, 1], [-0.25, 0.25, 1], [0.25, 0.25, 1]];
+    var votes = new Float32Array(KEYS.length);
+    for (var j = 0; j < h; j++) for (var i = 0; i < w; i++) {
+      votes.fill(0); var center = 0;
+      for (var t = 0; t < OFF.length; t++) {
+        var px = x0 + i + 0.5 + OFF[t][0], py = y0 + j + 0.5 + OFF[t][1];
+        var lx = P.plx + (px * c - py * s), ly = P.ply + (px * s + py * c);
+        var u = Math.floor(lx * 8), v = Math.floor(ly * 8), col = 0;
+        if (u >= 0 && v >= 0 && u < U.w && v < U.h) col = U.d[v * U.w + u];
+        votes[col] += OFF[t][2]; if (t === 0) center = col;
+      }
+      var best = center, bv = votes[center];
+      for (var q = 0; q < votes.length; q++) if (votes[q] > bv) { bv = votes[q]; best = q; }
+      d[j * w + i] = best;
+    }
+    // dọn trong bộ phận: điểm lẻ khác màu mà cả 4 bên giống nhau → lấy màu bên
+    var e = new Uint8Array(d);
+    for (j = 0; j < h; j++) for (i = 0; i < w; i++) {
+      var v0 = d[j * w + i]; if (!v0) continue;
+      var nb = [i > 0 ? d[j * w + i - 1] : 0, i < w - 1 ? d[j * w + i + 1] : 0, j > 0 ? d[(j - 1) * w + i] : 0, j < h - 1 ? d[(j + 1) * w + i] : 0];
+      if (v0 !== W_ && v0 !== y_ && v0 !== w_ && nb[0] && nb[0] === nb[1] && nb[1] === nb[2] && nb[2] === nb[3] && nb[0] !== v0) e[j * w + i] = nb[0];
+    }
+    r = { w: w, h: h, d: e, ox: x0, oy: y0, xoay: true };
+  }
+  rig.cache[key] = r;
+  return r;
+}
+L48.xoay = xoay;
+
+/* ---------------- hình học ---------------- */
+function rot(vx, vy, a) { var c = Math.cos(a * D2R), s = Math.sin(a * D2R); return [vx * c + vy * s, -vx * s + vy * c]; }
+function gocGiua(ux, uy, vx, vy) { return -Math.atan2(ux * vy - uy * vx, ux * vx + uy * vy) / D2R; }
+function sub(a, b) { return [a[0] - b[0], a[1] - b[1]]; }
+function len(v) { return Math.hypot(v[0], v[1]); }
+function dPart(rig, n, j) { var P = rig.parts[n]; return sub(P.j[j], P.p); }      // khớp con − khớp mình (tư thế chuẩn)
+function restPivot(rig, n) { return rig.parts[n].p; }
+
+/* IK 2 khớp: gốc S, đích T, xương 1 (n1→khớp j1), xương 2 (n2→khớp j2); uon = +1/−1 chọn phía khuỷu/gối.
+   Trả góc THẾ GIỚI của 2 xương (so với hướng chuẩn của chúng). */
+function ik(rig, S, T, n1, j1, n2, j2, uon) {
+  var v1 = dPart(rig, n1, j1), v2 = dPart(rig, n2, j2), L1 = len(v1), L2 = len(v2);
+  var dx = T[0] - S[0], dy = T[1] - S[1], dd = Math.hypot(dx, dy);
+  dd = Math.max(Math.abs(L1 - L2) + 0.01, Math.min(L1 + L2 - 0.001, dd));
+  var base = Math.atan2(dy, dx), cosA = (L1 * L1 + dd * dd - L2 * L2) / (2 * L1 * dd);
+  var A = Math.acos(Math.max(-1, Math.min(1, cosA))) * (uon >= 0 ? 1 : -1);
+  var e = [S[0] + Math.cos(base + A) * L1, S[1] + Math.sin(base + A) * L1];
+  var a1 = gocGiua(v1[0], v1[1], e[0] - S[0], e[1] - S[1]);
+  var a2 = gocGiua(v2[0], v2[1], T[0] - e[0], T[1] - e[1]);
+  return [a1, a2];
+}
+
+/* ---------------- tư thế ----------------
+   Tư thế "mềm" (do người/mã viết):
+     x,y   dời thân (hông) so với chuẩn; goc  xoay cả người quanh hông
+     than  góc thân; dau  góc đầu (so với thân)
+     tayT:[x,y] đích tay trước (tọa độ khung, IK) hoặc tayTrenT/cangTayT (góc so với cha); uonT ±1
+     tayS: tương tự cho tay sau (uonS)
+     kiem  góc kiếm tuyệt đối; anKiem: true để ẩn
+     chanT/chanS:[x,y] đích cổ chân (IK) hoặc duiT/ongT; giayT/giayS góc ủng TUYỆT ĐỐI (mặc định 0 = phẳng)
+     gio   gió thổi áo (độ, âm = bay ra sau); ao1/ao2/chuong/vat: cộng thêm
+     chuongTay: chuông cầm ở tay sau; tayTruoc: vẽ tay sau lên trước (giơ chuông)
+     hieuUng: {vet, sang, song, tia, bui, hoi, tuLuc, nhay}
+   Tư thế "cứng" (sau khi giải): toàn số góc, dùng để vẽ + xuất JSON keyframe. */
+var GOC_KEYS = ['x', 'y', 'goc', 'hong', 'than', 'dau', 'tayTrenT', 'cangTayT', 'kiem', 'tayTrenS', 'cangTayS',
+  'duiT', 'ongT', 'giayT', 'duiS', 'ongS', 'giayS', 'vat', 'ao1', 'ao2', 'chuong'];
+L48.GOC_KEYS = GOC_KEYS;
+
+function hip(t) { return [24 + (t.x || 0), 33 + (t.y || 0)]; }
+function viTriCon(rig, cha, chaPos, chaGoc, j) { var v = dPart(rig, cha, j), r = rot(v[0], v[1], chaGoc); return [chaPos[0] + r[0], chaPos[1] + r[1]]; }
+
+L48.giai = function (rig, t) {
+  var g = {}; GOC_KEYS.forEach(function (k) { g[k] = 0; });
+  g.x = t.x || 0; g.y = t.y || 0; g.goc = t.goc || 0; g.hong = t.hong || 0;
+  g.than = t.than || 0; g.dau = t.dau || 0;
+  var H = hip(g), thanW = g.goc + g.than;
+  // tay
+  ['T', 'S'].forEach(function (s) {
+    var up = 'tayTren' + s, lo = 'cangTay' + s, vai = 'vai' + s;
+    var S = viTriCon(rig, 'than', H, thanW, vai);
+    if (t['tay' + s]) {
+      var r = ik(rig, S, t['tay' + s], up, 'khuyu' + s, lo, 'nam' + s, t['uon' + s] == null ? 1 : t['uon' + s]);
+      g[up] = r[0] - thanW; g[lo] = r[1] - r[0];
+    } else { g[up] = t[up] || 0; g[lo] = t[lo] || 0; }
+  });
+  g.kiem = t.kiem == null ? 24 : t.kiem;
+  // chân
+  ['T', 'S'].forEach(function (s) {
+    var dui = 'dui' + s, ong = 'ong' + s, giay = 'giay' + s;
+    var hp = rot(rig.parts[dui].p[0] - 24 + (s === 'T' ? -g.hong : g.hong), rig.parts[dui].p[1] - 33, g.goc), Hs = [H[0] + hp[0], H[1] + hp[1]];
+    var dich = t['chan' + s];
+    if (!dich && !t.chanTu && t[dui] == null && t[ong] == null) dich = [rig.parts[ong].j['coChan' + s][0], rig.parts[ong].j['coChan' + s][1]];
+    if (dich) {
+      var r = ik(rig, Hs, dich, dui, 'goi' + s, ong, 'coChan' + s, t['uonChan' + s] == null ? -1 : t['uonChan' + s]);
+      g[dui] = r[0] - g.goc; g[ong] = r[1] - r[0];
+    } else { g[dui] = t[dui] || 0; g[ong] = t[ong] || 0; }
+    var ongW = g.goc + g[dui] + g[ong];
+    g[giay] = (t[giay] == null ? (t.giayTheo ? ongW : 0) : t[giay]) - ongW;   // lưu tương đối
+  });
+  g.vat = t.vat || 0; g.ao1 = t.ao1 || 0; g.ao2 = t.ao2 || 0; g.chuong = t.chuong || 0;
+  g._gio = t.gio || 0; g._vx = t.vx || 0; g._vy = t.vy || 0; g._lacChuong = t.lacChuong || 0;
+  g._co = { chuongTay: !!t.chuongTay, tayTruoc: !!t.tayTruoc, anKiem: !!t.anKiem, matTat: !!t.matTat, kiemSau: !!t.kiemSau, kiemLung: !!t.kiemLung };
+  g._hu = t.hieuUng || null;
+  return g;
+};
+
+/* Quán tính áo choàng / chuông / vạt áo trên cả chuỗi khung (đã giải). vong: lặp.
+   Áo đi theo góc thân với độ trễ, cộng gió + vận tốc; đoạn 2 trễ thêm 1 nhịp. Chuông: con lắc. */
+L48.quanTinh = function (rig, ds, vong, holds) {
+  var n = ds.length; if (!n) return ds;
+  var seq = [];
+  for (var i = 0; i < n; i++) { var hh = holds ? holds[i] || 1 : 1; for (var k = 0; k < hh; k++) seq.push(i); }
+  var N = seq.length, laps = vong ? 3 : 1;
+  var a1 = null, a2 = null, bc = null, bv = 0, vv = null, out = {};
+  for (var lap = 0; lap < laps; lap++) for (var s = 0; s < N; s++) {
+    var i2 = seq[s], g = ds[i2], prev = ds[seq[(s - 1 + N) % N]];
+    if (!vong && s === 0) prev = g;
+    var thanW = g.goc + g.than, vy = (g.y - prev.y) + g._vy, vx = (g.x - prev.x) + g._vx;
+    var dauW = thanW + g.dau;
+    // áo: đích tuyệt đối
+    var dich1 = thanW * 0.55 + g._gio - vx * 4.5 - vy * 3.5;
+    var dich2 = dich1 * 1.1 - vx * 2.5 - vy * 3;
+    if (a1 === null) { a1 = dich1; a2 = dich2; }
+    a1 += (dich1 - a1) * 0.55;
+    a2 += (a1 * 1.0 + (dich2 - dich1) - a2) * 0.45;
+    // chuông: con lắc theo gia tốc đầu
+    var dichB = -dauW * 0.6 - vx * 9 + g._lacChuong;
+    if (bc === null) bc = dichB;
+    bv = bv * 0.55 + (dichB - bc) * 0.5; bc += bv;
+    var dv = (g.duiT + g.duiS) * 0.25;
+    if (vv === null) vv = dv;
+    vv += (dv - vv) * 0.6;
+    if (lap === laps - 1) out[i2] = [a1, a2, bc, vv];
+  }
+  ds.forEach(function (g, i) {
+    var o = out[i] || [0, 0, 0, 0], thanW = g.goc + g.than;
+    g.ao1 += Math.max(-75, Math.min(16, o[0] - thanW));
+    g.ao2 += Math.max(-50, Math.min(50, o[1] - o[0]));
+    g.chuong += Math.max(-70, Math.min(70, o[2]));
+    g.vat += Math.max(-25, Math.min(25, o[3])) ;
+  });
+  return ds;
+};
+
+/* ---------------- vẽ 1 khung ---------------- */
+function blit(buf, own, rot_, r, X, Y, id, isRot) {
+  for (var j = 0; j < r.h; j++) for (var i = 0; i < r.w; i++) {
+    var v = r.d[j * r.w + i]; if (!v) continue;
+    var x = X + r.ox + i, y = Y + r.oy + j;
+    if (x < 0 || y < 0 || x >= CELL || y > 45) continue;   // không vẽ dưới mặt đất
+    buf[y * CELL + x] = v; own[y * CELL + x] = id; rot_[y * CELL + x] = isRot ? 1 : 0;
+  }
+}
+L48.ve = function (rig, g, opt) {
+  opt = opt || {};
+  var buf = new Uint8Array(CELL * CELL), own = new Uint8Array(CELL * CELL), rt = new Uint8Array(CELL * CELL);
+  var co = g._co || {};
+  var H = hip(g), thanW = g.goc + g.than;
+  var W = {}, A = {};   // vị trí khớp (đã làm tròn) + góc thế giới của từng bộ phận
+  function R2(p) { return [Math.round(p[0]), Math.round(p[1])]; }
+  A.than = thanW; W.than = R2(H);
+  function con(n, cha, j, goc) { W[n] = R2(viTriCon(rig, cha, W[cha], A[cha], j)); A[n] = goc; }
+  con('dau', 'than', 'co', thanW + g.dau);
+  con('tayTrenT', 'than', 'vaiT', thanW + g.tayTrenT); con('cangTayT', 'tayTrenT', 'khuyuT', A.tayTrenT + g.cangTayT);
+  con('tayTrenS', 'than', 'vaiS', thanW + g.tayTrenS); con('cangTayS', 'tayTrenS', 'khuyuS', A.tayTrenS + g.cangTayS);
+  // kiếm: góc tuyệt đối, chuôi ở nắm tay trước (kiếm vẽ nằm ngang ⇒ góc 0 = phải)
+  if (co.kiemLung) { var kl = rot(4, -3, thanW); W.kiem = R2([W.than[0] + kl[0], W.than[1] + kl[1]]); A.kiem = thanW + 197; }
+  else con('kiem', 'cangTayT', 'namT', g.kiem);
+  con('ao1', 'than', 'aoGoc', thanW + g.ao1); con('ao2', 'ao1', 'aoGiua', A.ao1 + g.ao2);
+  if (co.chuongTay) { W.chuong = R2(viTriCon(rig, 'cangTayS', W.cangTayS, A.cangTayS, 'namS')); W.chuong[1] -= 1; A.chuong = g.chuong * 0.5; }
+  else con('chuong', 'dau', 'moc', g.chuong);
+  ['T', 'S'].forEach(function (s) {
+    var hp = rot(rig.parts['dui' + s].p[0] - 24 + (s === 'T' ? -g.hong : g.hong), rig.parts['dui' + s].p[1] - 33, g.goc);
+    W['dui' + s] = R2([H[0] + hp[0], H[1] + hp[1]]); A['dui' + s] = g.goc + g['dui' + s];
+    con('ong' + s, 'dui' + s, 'goi' + s, A['dui' + s] + g['ong' + s]);
+    con('giay' + s, 'ong' + s, 'coChan' + s, A['ong' + s] + g['giay' + s]);
+  });
+  W.vat = R2(H); A.vat = g.goc + g.vat;
+  var lop = rig.data.lop.slice();
+  if (co.tayTruoc) { lop = lop.filter(function (n) { return n !== 'tayTrenS' && n !== 'cangTayS'; }); var iD = lop.indexOf('chuong'); lop.splice(iD + 1, 0, 'tayTrenS', 'cangTayS'); }
+  if (co.chuongTay) { lop = lop.filter(function (n) { return n !== 'chuong'; }); lop.splice(lop.indexOf('cangTayS') + 1, 0, 'chuong'); }
+  if (co.kiemSau) { lop = lop.filter(function (n) { return n !== 'kiem'; }); lop.splice(lop.indexOf('than'), 0, 'kiem'); }
+  if (co.kiemLung) { lop = lop.filter(function (n) { return n !== 'kiem'; }); lop.splice(lop.indexOf('than') + 1, 0, 'kiem'); }
+  if (co.anKiem) lop = lop.filter(function (n) { return n !== 'kiem'; });
+  var ids = {};
+  lop.forEach(function (n, k) {
+    ids[n] = k + 1;
+    var r = xoay(rig, n, A[n]);
+    blit(buf, own, rt, r, W[n][0], W[n][1], k + 1, r.xoay);
+  });
+  // mắt sáng trong bóng mũ (luôn 1 điểm W, thêm 1 điểm L)
+  if (!co.matTat) {
+    var em = rot(29 - 24, 14 - 19, A.dau); var ex = Math.round(W.dau[0] + em[0]), ey = Math.round(W.dau[1] + em[1]);
+    if (ex >= 0 && ey >= 0 && ex < CELL && ey < CELL && own[ey * CELL + ex] === ids.dau && buf[ey * CELL + ex] !== 0) buf[ey * CELL + ex] = W_;
+  } else {
+    for (var q = 0; q < buf.length; q++) if (own[q] === ids.dau && (buf[q] === W_ || buf[q] === L_)) {
+      var qx = q % CELL, qy = (q / CELL) | 0, em2 = rot(29 - 24, 14 - 19, A.dau);
+      if (Math.abs(qx - (W.dau[0] + em2[0])) < 2.5 && Math.abs(qy - (W.dau[1] + em2[1])) < 2.5) buf[q] = O;
+    }
+  }
+  if (opt.donVien !== false) donVien(buf, own, rt);
+  var hu = g._hu;
+  if (hu) hieuUng(rig, buf, own, ids, W, A, g, hu);
+  return { d: buf, khop: W, goc: A, ids: ids, own: own };
+};
+
+/* ---------------- dọn viền ---------------- */
+function at4(s, x, y) { return (x < 0 || y < 0 || x >= CELL || y >= CELL) ? 0 : s[y * CELL + x]; }
+function donVien(buf, own, rt) {
+  var N = CELL, i, x, y;
+  function at(x, y) { return (x < 0 || y < 0 || x >= N || y >= N) ? 0 : buf[y * N + x]; }
+  // 1) viền ngoài liên tục: điểm có màu giáp nền (4 hướng) → viền
+  var s = new Uint8Array(buf);
+  for (y = 0; y < N; y++) for (x = 0; x < N; x++) {
+    i = y * N + x; var v = s[i]; if (!v || v === O) continue;
+    var sx = function (a, b) { return (a < 0 || b < 0 || a >= N || b >= N) ? 0 : s[b * N + a]; };
+    if (!sx(x - 1, y) || !sx(x + 1, y) || !sx(x, y - 1) || !sx(x, y + 1)) buf[i] = O;
+  }
+  // 2) bỏ điểm lẻ (không có hàng xóm 8 hướng) và gai viền 1 điểm
+  s = new Uint8Array(buf);
+  for (y = 0; y < N; y++) for (x = 0; x < N; x++) {
+    i = y * N + x; if (!s[i]) continue;
+    var c8 = 0, last = 0;
+    for (var dy = -1; dy <= 1; dy++) for (var dx = -1; dx <= 1; dx++) {
+      if (!dx && !dy) continue; var xx = x + dx, yy = y + dy;
+      if (xx >= 0 && yy >= 0 && xx < N && yy < N && s[yy * N + xx]) { c8++; last = s[yy * N + xx]; }
+    }
+    var c4 = (at4(s, x - 1, y) ? 1 : 0) + (at4(s, x + 1, y) ? 1 : 0) + (at4(s, x, y - 1) ? 1 : 0) + (at4(s, x, y + 1) ? 1 : 0);
+    if (c8 === 0) buf[i] = 0;
+    else if (s[i] === O && c4 <= 1 && c8 <= 2 && rt[i]) buf[i] = 0;          // răng cưa / gai của bộ phận xoay
+    else if (c8 === 1 && s[i] === O && last === O) buf[i] = 0;
+  }
+  // 3) viền đôi: điểm viền ngoài mà mọi hàng xóm có màu (4 hướng) đều là viền, và
+  //    (a) hàng xóm trong thuộc BỘ PHẬN KHÁC (2 viền chồng nhau), hoặc
+  //    (b) góc chữ L răng cưa của bộ phận vừa xoay; bỏ được mà không đứt viền.
+  s = new Uint8Array(buf);
+  var RX = [-1, 0, 1, 1, 1, 0, -1, -1], RY = [-1, -1, -1, 0, 1, 1, 1, 0];
+  var S = function (a, b) { return (a < 0 || b < 0 || a >= N || b >= N) ? 0 : s[b * N + a]; };
+  for (y = 0; y < N; y++) for (x = 0; x < N; x++) {
+    i = y * N + x; if (s[i] !== O) continue;
+    var n4 = [[x - 1, y], [x + 1, y], [x, y - 1], [x, y + 1]], empty = 0, filled = [], ok = true;
+    n4.forEach(function (p) { var v = S(p[0], p[1]); if (!v) empty++; else { filled.push(p); if (v !== O) ok = false; } });
+    if (!ok || !empty || filled.length < 2) continue;
+    // liên thông vòng 8
+    var ring = []; for (var k = 0; k < 8; k++) ring.push(S(x + RX[k], y + RY[k]) ? 1 : 0);
+    var trans = 0; for (k = 0; k < 8; k++) if (ring[k] && !ring[(k + 1) % 8]) trans++;
+    if (trans !== 1) continue;
+    var khac = false, lgoc = false;
+    filled.forEach(function (p) { var o2 = own[p[1] * N + p[0]]; if (o2 !== own[i]) khac = true; });
+    if (filled.length === 2 && rt[i]) {
+      var a = filled[0], b = filled[1];
+      if (a[0] !== b[0] && a[1] !== b[1]) {   // vuông góc → góc L
+        var cxn = a[0] + b[0] - x, cyn = a[1] + b[1] - y, cv = S(cxn, cyn);
+        if (cv && cv !== O) lgoc = true;
+      }
+    }
+    if (khac || lgoc) buf[i] = 0;
+  }
+}
+L48.donVien = donVien;
+
+/* ---------------- hiệu ứng (vẽ sau khi dọn viền, không viền) ---------------- */
+function put(buf, x, y, c, chiTrong) {
+  x = Math.round(x); y = Math.round(y);
+  if (x < 0 || y < 0 || x >= CELL || y >= CELL) return;
+  if (chiTrong && buf[y * CELL + x]) return;
+  buf[y * CELL + x] = c;
+}
+function hieuUng(rig, buf, own, ids, W, A, g, hu) {
+  var grip = W.kiem;
+  if (hu.vet != null) {   // vệt chém: cung từ góc vet → góc kiếm hiện tại, quanh nắm tay
+    var a0 = hu.vet, a1 = A.kiem, r = hu.r || 17, cx = hu.cx != null ? hu.cx : grip[0], cy = hu.cy != null ? hu.cy : grip[1];
+    var span = a1 - a0, steps = Math.ceil(Math.abs(span) * D2R * r * 2) + 2;
+    for (var t = 0; t <= steps; t++) {
+      var u = t / steps, th = u < 0.3 ? 1 : u < 0.7 ? 2 : 3, an = (a0 + span * u) * D2R;
+      for (var l = 0; l < th + (hu.day || 0); l++) {
+        var rr = r - l, col = l === 0 ? W_ : l === 1 ? L_ : G_;
+        put(buf, cx + Math.cos(an) * rr, cy - Math.sin(an) * rr * (hu.det || 1), col, true);
+      }
+    }
+  }
+  if (hu.sang) {   // chuông sáng #CEF0D6
+    for (var q = 0; q < buf.length; q++) if (own[q] === ids.chuong) {
+      var v = buf[q]; if (v === y_ || v === w_) buf[q] = W_; else if (v === b_) buf[q] = L_;
+    }
+    for (q = 0; q < buf.length; q++) if (own[q] === ids.chuong && buf[q]) {
+      var hx = q % CELL, hy = (q / CELL) | 0;
+      [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(function (o) { put(buf, hx + o[0] * 2, hy + o[1] * 2, L_, true); });
+    }
+  }
+  if (hu.song) {   // vòng tiếng vọng quanh chuông
+    var P = W.chuong, cxs = P[0], cys = P[1] + 5;
+    [].concat(hu.song).forEach(function (R, k) {
+      var n = Math.max(8, Math.round(R * 6));
+      for (var t2 = 0; t2 < n; t2++) { if ((t2 + k) % 4 === 3) continue; var an2 = t2 / n * Math.PI * 2; put(buf, cxs + Math.cos(an2) * R, cys + Math.sin(an2) * R * 0.85, k ? L_ : W_, k > 0); }
+    });
+  }
+  if (hu.tia) {    // tia lóe (đỡ đòn): [x,y,cỡ]
+    var tx = hu.tia[0], ty = hu.tia[1], ts = hu.tia[2] || 3;
+    for (var s2 = -ts; s2 <= ts; s2++) { put(buf, tx + s2, ty, Math.abs(s2) < 2 ? W_ : L_); put(buf, tx, ty + s2, Math.abs(s2) < 2 ? W_ : L_); }
+    put(buf, tx - 1, ty - 1, W_); put(buf, tx + 1, ty + 1, W_); put(buf, tx + 1, ty - 1, L_); put(buf, tx - 1, ty + 1, L_);
+  }
+  if (hu.bui) {    // bụi chân: [x, độ loang]
+    var bx = hu.bui[0], bs = hu.bui[1] || 4;
+    for (var k2 = 0; k2 < bs; k2++) { put(buf, bx - 2 - k2 * 2, 45 - (k2 % 2), k2 % 2 ? m_ : g_, true); put(buf, bx + 2 + k2 * 2, 45 - ((k2 + 1) % 2), k2 % 2 ? g_ : m_, true); }
+  }
+  if (hu.hoi) {    // hồi máu: đốm sáng bay lên quanh người, hu.hoi = pha 0..1
+    var ph = hu.hoi;
+    [[14, 30], [33, 26], [18, 18], [36, 36], [12, 40], [30, 12]].forEach(function (p, k3) {
+      var yy = p[1] - ((ph * 14 + k3 * 5) % 14); put(buf, p[0], yy, k3 % 2 ? L_ : W_, true); if (k3 % 3 === 0) put(buf, p[0], yy - 1, L_, true);
+    });
+  }
+  if (hu.tuLuc) {  // tụ lực: đốm lóe dọc lưỡi kiếm
+    var a = A.kiem * D2R, ph2 = hu.tuLuc;
+    for (var k4 = 0; k4 < 4; k4++) {
+      var dd = 7 + ((k4 * 4 + ph2 * 3) % 12), off = (k4 % 2 ? 2 : -2);
+      put(buf, grip[0] + Math.cos(a) * dd - Math.sin(a) * off, grip[1] - Math.sin(a) * dd - Math.cos(a) * off, k4 % 2 ? L_ : W_, true);
+    }
+  }
+}
+
+/* ---------------- tiện ích ---------------- */
+L48.rgba = function (rig, d, out, ox, oy, stride) {
+  for (var y = 0; y < CELL; y++) for (var x = 0; x < CELL; x++) {
+    var v = d[y * CELL + x], k = ((oy + y) * stride + ox + x) * 4;
+    if (!v) { out[k + 3] = 0; continue; }
+    var c = rig.pal[v]; out[k] = c[0]; out[k + 1] = c[1]; out[k + 2] = c[2]; out[k + 3] = 255;
+  }
+};
+/* Giải + quán tính + vẽ cả 1 animation. sua: {i: {góc ghi đè}} (từ JSON keyframe Rig Lab) */
+L48.dungAnim = function (rig, anim, sua) {
+  var ds = anim.frames.map(function (f) { return L48.giai(rig, f.tt || {}); });
+  L48.quanTinh(rig, ds, anim.loop, anim.frames.map(function (f) { return f.hold || 1; }));
+  if (sua) for (var i in sua) if (ds[i]) for (var k in sua[i]) if (GOC_KEYS.indexOf(k) >= 0) ds[i][k] = sua[i][k];
+  return ds.map(function (g) { return { g: g, r: L48.ve(rig, g) }; });
+};
+L48.CELL = CELL;
+
+if (typeof module !== 'undefined' && module.exports) module.exports = L48;
+root.TV = root.TV || {}; root.TV.L48 = L48;
+})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
+</script>
+<script>/* =====================================================================
+   lam48-anim.js — 26 animation của Lam 48×48 (tên, số khung, hold, cờ hit/comboWindow giữ y như
+   Sprite Lab cũ / art/sprite/atlas.json). Mỗi khung: tt = tư thế "mềm" (xem lam48-rig.js).
+   Tọa độ đích tay/chân theo khung 48×48 ở tư thế chuẩn: vai trước (29,23), vai sau (19,23),
+   cổ chân trước (27,43), sau (19,43), mặt đất y = 46. Kiếm: góc tuyệt đối (0 = phải, 90 = lên).
+   ===================================================================== */
+(function (root) {
+'use strict';
+function F(name, hold, tt, hit, combo) { return { name: name, hold: hold || 1, hit: !!hit, comboWindow: !!combo, tt: tt || {} }; }
+function X(a, b) { var o = {}, k; for (k in a) o[k] = a[k]; for (k in b) o[k] = b[k]; return o; }
+// chân co trên không
+var CO = { chanTu: true, duiT: 45, ongT: -75, duiS: 28, ongS: -68, giayT: -20, giayS: -30 };
+var DUOI = { chanTu: true, duiT: 15, ongT: -25, duiS: -5, ongS: -20, giayT: -22, giayS: -28 };
+var THU = { y: 1, than: -3, tayT: [31, 30], kiem: 30, tayS: [20, 31], chanT: [30, 43], chanS: [17, 43] };   // thủ thế
+var BUOC = { chanT: [30, 43], chanS: [17, 43] };
+
+var A = {};
+A.idle = { loop: true, label: 'Idle', frames: [
+  F('đứng thẳng', 1, {}),
+  F('thở ra', 1, { gio: -3, kiem: 23 }),
+  F('hạ người – thấp nhất', 1, { y: 1, gio: -6, kiem: 21 }),
+  F('vạt áo phất', 1, { y: 1, gio: -10, kiem: 21 }),
+  F('hít vào', 1, { gio: -5, kiem: 23 }),
+  F('ưỡn ngực – cao nhất', 1, { gio: -2, kiem: 25 })
+]};
+var R = { than: -8, dau: 3, hong: 4, vx: 1.5, gio: 2 };
+A.run = { loop: true, label: 'Run', frames: [
+  F('chân trước chạm đất', 1, X(R, { y: 1, chanT: [28, 43], chanS: [18, 41], giayT: 8, giayS: -35, tayT: [27, 31], kiem: -26, tayS: [25, 29] })),
+  F('nhún – dồn lực', 1, X(R, { y: 2, chanT: [24, 43], chanS: [18, 38], giayS: -45, tayT: [28, 32], kiem: -22, tayS: [24, 30] })),
+  F('chân lướt qua', 1, X(R, { y: 1, chanT: [20, 43], chanS: [24, 38], giayT: -5, giayS: -20, tayT: [30, 32], kiem: -16, tayS: [21, 31] })),
+  F('đạp đất – bay', 1, X(R, { y: -1, chanT: [17, 41], chanS: [28, 40], giayT: -40, giayS: 0, tayT: [31, 31], kiem: -10, tayS: [17, 30] })),
+  F('chân kia chạm đất', 1, X(R, { y: 1, chanS: [28, 43], chanT: [18, 41], giayS: 8, giayT: -35, tayT: [32, 30], kiem: -6, tayS: [15, 30] })),
+  F('nhún – dồn lực (2)', 1, X(R, { y: 2, chanS: [24, 43], chanT: [18, 38], giayT: -45, tayT: [31, 31], kiem: -10, tayS: [17, 31] })),
+  F('chân lướt qua (2)', 1, X(R, { y: 1, chanS: [20, 43], chanT: [24, 38], giayS: -5, giayT: -20, tayT: [30, 32], kiem: -16, tayS: [21, 31] })),
+  F('đạp đất – bay (2)', 1, X(R, { y: -1, chanS: [17, 41], chanT: [28, 40], giayS: -40, giayT: 0, tayT: [28, 31], kiem: -22, tayS: [25, 29] }))
+]};
+A.jump = { loop: false, label: 'Jump', frames: [
+  F('lấy đà', 1, { y: 3, than: -6, tayT: [27, 33], kiem: -20, tayS: [17, 33] }),
+  F('bật lên', 1, X(DUOI, { y: -1, than: -3, duiT: 5, ongT: -5, duiS: -12, ongS: -12, tayT: [32, 23], kiem: 45, tayS: [23, 18], vy: -4 })),
+  F('lên 1', 1, X(DUOI, { y: -1, than: -4, duiT: 30, ongT: -45, duiS: 5, ongS: -35, tayT: [31, 26], kiem: 32, tayS: [21, 24], vy: -3 })),
+  F('lên 2', 1, X(CO, { y: -1, than: -4, duiT: 40, ongT: -65, duiS: 18, ongS: -55, tayT: [31, 27], kiem: 25, tayS: [19, 25], vy: -1 })),
+  F('đỉnh nhảy', 1, X(CO, { y: -1, tayT: [31, 26], kiem: 15, tayS: [16, 26], gio: -8 })),
+  F('chuyển sang rơi', 1, X(DUOI, { y: -1, duiT: 25, ongT: -40, duiS: 5, ongS: -28, tayT: [31, 26], kiem: 10, tayS: [15, 25], vy: 2 }))
+]};
+A.fall = { loop: true, label: 'Fall', frames: [
+  F('rơi – áo bay lên', 1, X(DUOI, { y: -1, tayT: [31, 26], kiem: 5, tayS: [15, 24], vy: 2.5, gio: -8 })),
+  F('rơi – vạt áo quất', 1, X(DUOI, { y: -1, duiT: 18, ongT: -30, tayT: [31, 25], kiem: 8, tayS: [14, 23], vy: 2.5, gio: -20 })),
+  F('rơi – dang tay giữ thăng bằng', 1, X(DUOI, { y: -1, duiS: -8, ongS: -15, tayT: [31, 27], kiem: 3, tayS: [14, 25], vy: 2.5, gio: -12 }))
+]};
+A.attack = { loop: false, label: 'Attack 1', frames: [
+  F('thủ thế', 1, THU),
+  F('kéo kiếm ra sau ngang ngực', 1, X(BUOC, { y: 1, than: 4, tayT: [23, 26], kiem: 165, tayS: [24, 30], gio: -4 })),
+  F('dồn trọng tâm – kiếm ngang sau lưng', 2, X(BUOC, { y: 2, than: 8, tayT: [20, 26], kiem: 172, tayS: [26, 29], gio: -6 })),
+  F('vung ngang – kiếm lướt qua ngực', 1, X(BUOC, { y: 1, than: -2, tayT: [27, 24], kiem: 95, tayS: [20, 30], hieuUng: { vet: 172, det: 0.55 } })),
+  F('chém thẳng ngang ngực – HIT', 2, { y: 2, than: -10, dau: 4, tayT: [31, 28], kiem: 0, tayS: [16, 30], chanT: [31, 43], chanS: [17, 43], hieuUng: { vet: 165, det: 0.5, day: 1 } }, true),
+  F('theo đà – kiếm vượt qua', 1, { y: 2, than: -12, dau: 4, tayT: [31, 31], kiem: -35, tayS: [16, 31], chanT: [31, 43], chanS: [17, 43], hieuUng: { vet: 30, det: 0.5 } }, false, true),
+  F('hạ kiếm – sẵn sàng nối', 1, X(BUOC, { y: 2, than: -8, tayT: [30, 33], kiem: -45, tayS: [18, 31] }), false, true),
+  F('thu kiếm – kiếm thấp phía trước', 1, X(BUOC, { y: 1, than: -4, tayT: [30, 33], kiem: -30, tayS: [19, 31] })),
+  F('kiếm thấp phía trước (nối nhát 2)', 1, X(BUOC, { y: 1, than: -3, tayT: [30, 34], kiem: -25, tayS: [20, 31] }))
+]};
+A.dodge = { loop: false, label: 'Dodge', frames: [
+  F('nhún thấp', 1, { y: 3, than: -12, tayT: [27, 33], kiem: -20, tayS: [18, 32] }),
+  F('phóng người', 1, { y: 2, x: 1, than: -22, hong: 3, chanT: [28, 41], chanS: [15, 42], giayS: -40, tayT: [27, 31], kiem: -150, tayS: [15, 30], vx: 4, kiemSau: true, gio: -30 }),
+  F('lướt thấp', 1, { y: 4, x: 2, than: -28, hong: 3, chanT: [30, 42], chanS: [15, 43], giayS: -30, tayT: [26, 32], kiem: -160, tayS: [14, 31], vx: 5, kiemSau: true, gio: -40, hieuUng: { bui: [16, 3] } }),
+  F('trượt chân', 1, { y: 3, x: 2, than: -18, chanT: [31, 43], chanS: [17, 43], tayT: [27, 32], kiem: -150, tayS: [15, 31], vx: 3, kiemSau: true, gio: -20, hieuUng: { bui: [30, 4] } }),
+  F('phanh lại', 1, { y: 2, x: 1, than: 6, chanT: [31, 43], chanS: [18, 43], tayT: [31, 31], kiem: 10, tayS: [14, 29], vx: 1 }),
+  F('đứng vững', 1, {})
+]};
+A.hit = { loop: false, label: 'Hit', frames: [
+  F('trúng đòn', 1, { x: -1, than: 12, dau: 6, tayT: [32, 26], kiem: 60, tayS: [14, 27], matTat: true, vx: -3, lacChuong: 30 }),
+  F('bật ngửa', 2, { x: -2, y: 1, than: 16, dau: 8, tayT: [33, 24], kiem: 75, tayS: [13, 25], matTat: true, vx: -2 }),
+  F('loạng choạng', 1, { x: -1, y: 2, than: 4, tayT: [31, 30], kiem: 30, tayS: [17, 31] }),
+  F('hồi lại', 1, { y: 1, than: -2, kiem: 24 })
+]};
+var NAM = { chanTu: true, duiT: 0, ongT: 0, duiS: 0, ongS: 0, giayT: -90, giayS: -90, matTat: true };
+A.death = { loop: false, label: 'Death', frames: [
+  F('trúng đòn chí mạng', 1, { x: -1, than: 14, dau: 8, matTat: true, tayT: [33, 25], kiem: 70, tayS: [13, 26], vx: -3, lacChuong: 35 }),
+  F('khuỵu gối', 1, { y: 5, than: -6, dau: -6, tayT: [31, 34], kiem: -40, tayS: [19, 35] }),
+  F('gục đầu', 1, { y: 7, than: -12, dau: -18, tayT: [31, 37], kiem: -70, tayS: [20, 37], matTat: true }),
+  F('chúi người', 1, X(NAM, { y: 8, goc: -25, duiT: 55, ongT: -85, duiS: 45, ongS: -80, giayT: -20, giayS: -25, tayT: [33, 38], kiem: -60, tayS: [24, 38] })),
+  F('đổ xuống', 1, X(NAM, { x: -4, y: 8, goc: -50, duiT: 35, ongT: -50, duiS: 30, ongS: -45, giayT: -50, giayS: -55, tayT: [37, 38], kiem: -40, tayS: [30, 40] })),
+  F('sắp chạm đất', 1, X(NAM, { x: -8, y: 6, goc: -72, duiT: 15, ongT: -20, duiS: 12, ongS: -18, tayT: [40, 40], kiem: -20, tayS: [34, 41] })),
+  F('đập xuống – nảy', 1, X(NAM, { x: -10, y: 4, goc: -88, dau: 6, duiT: 8, ongT: -12, tayT: [42, 41], kiem: -8, tayS: [36, 42] })),
+  F('nằm im', 3, X(NAM, { x: -10, y: 5, goc: -90, duiT: 6, ongT: -10, tayT: [42, 42], kiem: -4, tayS: [36, 43] }))
+]};
+A.land = { loop: false, label: 'Land', frames: [
+  F('chạm đất – nén người mạnh', 1, { y: 4, than: -10, tayT: [31, 31], kiem: -10, tayS: [15, 29], vy: 3, hieuUng: { bui: [23, 4] } }),
+  F('nén thấp nhất – hấp lực', 1, { y: 5, than: -12, dau: 2, tayT: [30, 34], kiem: -15, tayS: [16, 32], hieuUng: { bui: [23, 6] } }),
+  F('đứng dậy', 1, { y: 1, than: -3, kiem: 15 })
+]};
+A.crouch = { loop: false, label: 'Crouch', frames: [
+  F('hạ người xuống', 1, { y: 4, than: -5, tayT: [30, 34], kiem: 10, tayS: [19, 34] }),
+  F('ngồi xổm – kiếm thủ trước', 1, { y: 6, than: -8, dau: 3, chanT: [30, 43], chanS: [18, 43], tayT: [31, 35], kiem: 15, tayS: [21, 37] })
+]};
+A.slide = { loop: false, label: 'Slide', frames: [
+  F('lao người – bắt đầu trượt', 1, { y: 4, than: 10, chanT: [32, 43], chanS: [18, 43], tayT: [27, 31], kiem: -160, tayS: [16, 33], kiemSau: true, vx: 5, gio: -30 }),
+  F('trượt thấp sát đất', 1, { y: 8, than: 22, chanT: [36, 44], chanS: [21, 44], giayS: -20, tayS: [13, 39], tayT: [25, 34], kiem: -170, vx: 6, kiemSau: true, gio: -50, hieuUng: { bui: [36, 4] } }),
+  F('trượt dài – áo kéo phía sau', 1, { y: 8, than: 24, chanT: [36, 44], chanS: [21, 44], giayS: -20, tayS: [13, 40], tayT: [25, 34], kiem: -172, vx: 6, kiemSau: true, gio: -65, hieuUng: { bui: [34, 5] } }),
+  F('giảm tốc – chống dậy', 1, { y: 5, than: 8, chanT: [31, 43], chanS: [19, 43], tayS: [15, 40], tayT: [28, 33], kiem: -150, vx: 2, kiemSau: true, gio: -15 })
+]};
+var TUONG = { kiemLung: true, tayTruoc: true, than: -4, dau: 6, tayS: [31, 27], chanT: [30, 41], chanS: [23, 43], giayT: 20, vy: 3 };
+A.wallSlide = { loop: true, label: 'Wall Slide', frames: [
+  F('áp tường – trượt xuống', 1, X(TUONG, { y: 2, tayT: [34, 21], gio: -5 })),
+  F('trượt – tay miết tường', 1, X(TUONG, { y: 2, tayT: [34, 23], gio: -9 })),
+  F('trượt – áo choàng phần phật', 1, X(TUONG, { y: 3, tayT: [34, 22], gio: -14 }))
+]};
+A.wallJump = { loop: false, label: 'Wall Jump', frames: [
+  F('co người – hai chân dồn vào tường', 1, { y: 4, than: -10, hong: 2, chanT: [21, 43], chanS: [16, 42], giayS: -20, tayT: [27, 33], kiem: -150, tayS: [21, 31], kiemSau: true }),
+  F('đạp tường – bật ra sau', 1, X(DUOI, { y: -1, goc: -15, than: -10, duiT: -25, ongT: -5, duiS: -40, ongS: -5, giayT: -40, giayS: -50, tayT: [33, 25], kiem: 25, tayS: [27, 21], vx: 4, vy: -3 })),
+  F('bay ngược – co chân', 1, X(CO, { y: -2, than: -6, tayT: [31, 28], kiem: 10, tayS: [18, 26], vy: -2 })),
+  F('xoay người – cuộn tròn trên không', 1, X(CO, { y: -2, x: 1, goc: -35, duiT: 70, ongT: -100, duiS: 55, ongS: -95, tayT: [30, 31], kiem: -30, tayS: [22, 30], vy: 0 }))
+]};
+var LEO = { kiemLung: true, tayTruoc: true, hong: 3, than: 0, dau: 4 };
+A.wallClimb = { loop: true, label: 'Wall Climb', frames: [
+  F('tay xa vươn lên – chân gần đạp', 1, X(LEO, { y: 0, tayS: [31, 15], tayT: [34, 26], chanT: [29, 40], chanS: [24, 43], giayT: 15 })),
+  F('tay xa bám – kéo người lên', 1, X(LEO, { y: -1, tayS: [31, 17], tayT: [34, 27], chanT: [28, 41], chanS: [26, 41], giayT: 10 })),
+  F('chân xa đẩy – đổi bên', 1, X(LEO, { y: -2, tayS: [31, 19], tayT: [34, 22], chanS: [29, 40], chanT: [25, 43], giayS: 15 })),
+  F('tay gần vươn lên – chân xa đạp', 1, X(LEO, { y: 0, tayT: [34, 15], tayS: [31, 24], chanS: [29, 40], chanT: [24, 43], giayS: 15 })),
+  F('tay gần bám – kéo người lên', 1, X(LEO, { y: -1, tayT: [34, 17], tayS: [31, 25], chanS: [28, 41], chanT: [26, 41], giayS: 10 })),
+  F('chân gần đẩy – đổi bên', 1, X(LEO, { y: -2, tayT: [34, 19], tayS: [31, 21], chanT: [29, 40], chanS: [25, 43], giayT: 15 }))
+]};
+var THANG = { kiemLung: true, tayTruoc: true, hong: 2, than: 0, dau: 2 };
+A.ladderClimb = { loop: true, label: 'Ladder', frames: [
+  F('tay xa nắm bậc trên – chân gần bước', 1, X(THANG, { y: 0, tayS: [30, 16], tayT: [33, 27], chanT: [28, 39], chanS: [22, 43] })),
+  F('kéo lên – chân xa trụ', 1, X(THANG, { y: -1, tayS: [30, 18], tayT: [33, 25], chanT: [27, 40], chanS: [23, 42] })),
+  F('đổi tay – thân thẳng', 1, X(THANG, { y: -2, tayS: [30, 21], tayT: [33, 21], chanT: [26, 42], chanS: [24, 41] })),
+  F('tay gần nắm bậc trên – chân xa bước', 1, X(THANG, { y: 0, tayT: [33, 16], tayS: [30, 27], chanS: [27, 39], chanT: [23, 43] })),
+  F('kéo lên – chân gần trụ', 1, X(THANG, { y: -1, tayT: [33, 18], tayS: [30, 25], chanS: [26, 40], chanT: [24, 42] })),
+  F('đổi tay – thân thẳng (2)', 1, X(THANG, { y: -2, tayT: [33, 21], tayS: [30, 21], chanS: [25, 42], chanT: [25, 41] }))
+]};
+A.ledgeGrab = { loop: false, label: 'Ledge', frames: [
+  F('chộp mép tường', 1, X(DUOI, { kiemLung: true, y: 1, duiT: 8, ongT: -12, duiS: -4, ongS: -10, tayT: [34, 15], tayS: [33, 17], tayTruoc: true, vy: 3, dau: 6 })),
+  F('treo người – đung đưa', 1, X(DUOI, { kiemLung: true, y: 1, duiT: 18, ongT: -10, duiS: 8, ongS: -12, tayT: [34, 16], tayS: [33, 18], tayTruoc: true, gio: -8, dau: 6 })),
+  F('kéo người lên – chân đạp tường', 1, { kiemLung: true, y: 0, than: -8, tayT: [34, 21], tayS: [32, 22], tayTruoc: true, chanT: [31, 40], chanS: [24, 42], giayT: 25, dau: 4 }),
+  F('chống tay – đẩy ngực qua mép', 1, { kiemLung: true, y: 0, than: -20, tayT: [32, 28], tayS: [28, 28], chanT: [29, 41], chanS: [22, 43], dau: 8 }),
+  F('leo qua – co gối lên mép', 1, { kiemLung: true, y: 1, than: -15, tayT: [32, 31], tayS: [27, 31], chanT: [31, 37], chanS: [22, 43], giayT: 0, dau: 6 }),
+  F('đứng dậy trên mép', 1, { y: 0, than: -3, kiem: 20 })
+]};
+A.dash = { loop: false, label: 'Dash', frames: [
+  F('lấy đà – cúi người', 1, { y: 2, than: -14, tayT: [26, 33], kiem: -150, tayS: [17, 31], vx: 2, kiemSau: true }),
+  F('lướt nhanh – thu gọn thân', 1, { y: 1, than: -24, hong: 3, chanT: [21, 41], chanS: [15, 40], giayT: -30, giayS: -40, tayT: [23, 31], kiem: -170, tayS: [15, 30], vx: 6, kiemSau: true, gio: -45 }),
+  F('lướt – áo choàng bay thẳng', 1, { y: 1, than: -24, hong: 3, chanT: [20, 41], chanS: [14, 41], giayT: -30, giayS: -40, tayT: [23, 31], kiem: -172, tayS: [14, 30], vx: 6, kiemSau: true, gio: -62 }),
+  F('phanh – hạ chân xuống', 1, { y: 3, than: 5, chanT: [31, 43], chanS: [18, 43], tayT: [27, 32], kiem: -150, tayS: [15, 30], vx: 1, kiemSau: true, hieuUng: { bui: [31, 3] } })
+]};
+A.attack2 = { loop: false, label: 'Attack 2', frames: [
+  F('kiếm thấp phía trước (từ nhát 1)', 1, X(BUOC, { y: 1, than: -3, tayT: [30, 34], kiem: -25, tayS: [20, 31] })),
+  F('hạ kiếm xuống dưới chéo ra sau', 1, X(BUOC, { y: 2, than: -6, tayT: [23, 35], kiem: -150, tayS: [24, 31] })),
+  F('dồn lực – kiếm chéo sát đất', 2, X(BUOC, { y: 3, than: -12, tayT: [20, 36], kiem: -164, tayS: [26, 31] })),
+  F('vung chéo lên – kiếm quét qua trước', 1, X(BUOC, { y: 2, than: -6, tayT: [27, 32], kiem: -70, tayS: [20, 31], hieuUng: { vet: -164 } })),
+  F('chém chéo lên – HIT', 2, X(BUOC, { y: 0, than: 3, dau: 2, tayT: [31, 24], kiem: 45, tayS: [16, 30], hieuUng: { vet: -150, day: 1 } }), true),
+  F('theo đà – kiếm vút lên cao', 1, X(BUOC, { y: 0, than: 5, tayT: [30, 19], kiem: 85, tayS: [16, 31], hieuUng: { vet: 20 } }), false, true),
+  F('kiếm trên cao (nối nhát 3)', 1, X(BUOC, { y: 0, than: 6, tayT: [28, 17], kiem: 110, tayS: [18, 31] }), false, true)
+]};
+A.attack3 = { loop: false, label: 'Attack 3', frames: [
+  F('kiếm trên cao (từ nhát 2)', 1, X(BUOC, { y: 0, than: 6, tayT: [28, 17], kiem: 110, tayS: [18, 31] })),
+  F('giơ kiếm qua đầu – ngả ra sau', 1, X(BUOC, { y: 0, than: 10, tayT: [24, 16], kiem: 150, tayS: [27, 28] })),
+  F('vươn kiếm ra sau – nén lực tối đa', 3, X(BUOC, { y: 1, than: 14, tayT: [21, 17], kiem: 172, tayS: [30, 27], gio: -6, kiemSau: true })),
+  F('bổ xuống – kiếm qua đỉnh đầu', 1, X(BUOC, { y: 0, than: 0, tayT: [30, 15], kiem: 75, tayS: [24, 30], hieuUng: { vet: 172 } })),
+  F('bổ thẳng xuống trước mặt – HIT', 3, { y: 3, than: -16, dau: 4, tayT: [33, 30], kiem: -50, tayS: [17, 32], chanT: [32, 43], chanS: [17, 43], hieuUng: { vet: 168, day: 1, bui: [38, 3] } }, true),
+  F('đè nặng – kiếm ghim sát đất', 1, { y: 4, than: -18, dau: 4, tayT: [33, 33], kiem: -72, tayS: [17, 33], chanT: [32, 43], chanS: [17, 43] }, false, true),
+  F('rút kiếm lên – thở dốc', 1, X(BUOC, { y: 2, than: -9, tayT: [31, 32], kiem: -45, tayS: [18, 32] })),
+  F('đứng dậy – thu kiếm', 1, X(BUOC, { y: 1, than: -3, tayT: [31, 31], kiem: 0, tayS: [20, 31] })),
+  F('thủ thế', 1, THU)
+]};
+A.airAttack = { loop: false, label: 'Air Attack', frames: [
+  F('lơ lửng – co chân, kéo kiếm ra sau', 1, X(CO, { y: -2, than: 5, tayT: [22, 24], kiem: 160, tayS: [24, 28] })),
+  F('giơ kiếm qua đầu trên không', 1, X(CO, { y: -2, than: 8, tayT: [26, 15], kiem: 120, tayS: [22, 29] })),
+  F('chém vòng xuống trước – HIT', 2, X(CO, { y: -2, than: -12, tayT: [33, 27], kiem: -20, tayS: [16, 28], hieuUng: { vet: 125, day: 1 } }), true),
+  F('theo đà – kiếm chĩa xuống trước', 1, X(CO, { y: -2, than: -10, tayT: [32, 31], kiem: -45, tayS: [16, 29], hieuUng: { vet: 10 } })),
+  F('thu kiếm – vẫn co chân', 1, X(CO, { y: -2, than: -5, tayT: [30, 30], kiem: -20, tayS: [17, 28] })),
+  F('duỗi chân – chuyển sang rơi', 1, X(DUOI, { y: -2, tayT: [31, 28], kiem: 10, tayS: [16, 26], vy: 2 }))
+]};
+A.downStrike = { loop: false, label: 'Down Strike', frames: [
+  F('co người trên không – xoay mũi kiếm xuống', 1, X(CO, { y: -2, than: -5, tayT: [29, 30], kiem: -60, tayS: [18, 27] })),
+  F('đâm thẳng xuống dưới chân – HIT', 2, X(CO, { y: -2, than: -4, tayT: [27, 31], kiem: -90, tayS: [17, 26], hieuUng: { vet: -50, r: 15 } }), true),
+  F('mũi kiếm chạm – nảy bật lên', 1, X(CO, { y: -2, than: -2, tayT: [27, 30], kiem: -90, tayS: [16, 25], hieuUng: { tia: [27, 45, 3] } })),
+  F('bật lên – rút kiếm ngang', 1, X(DUOI, { y: -2, than: 2, tayT: [31, 27], kiem: 0, tayS: [16, 24], vy: -3 })),
+  F('duỗi người – chuẩn bị rơi', 1, X(DUOI, { y: -2, tayT: [32, 27], kiem: 15, tayS: [15, 25], vy: 1 }))
+]};
+A.upSlash = { loop: false, label: 'Up Slash', frames: [
+  F('hạ thấp – kiếm chéo sau sát đất', 1, X(BUOC, { y: 2, than: -8, tayT: [22, 35], kiem: -150, kiemSau: true, tayS: [25, 31] })),
+  F('nhún gối – dồn lực hất', 2, X(BUOC, { y: 4, than: -12, tayT: [21, 37], kiem: -162, kiemSau: true, tayS: [26, 33] })),
+  F('hất kiếm lên – kiếm quét qua trước', 1, X(BUOC, { y: 1, than: -2, tayT: [29, 30], kiem: -40, tayS: [21, 31], hieuUng: { vet: -162 } })),
+  F('hất thẳng lên cao – HIT', 2, { y: -1, than: 6, tayT: [29, 15], kiem: 92, tayS: [17, 30], chanT: [28, 43], chanS: [19, 43], giayT: -10, hieuUng: { vet: -110, day: 1 } }, true),
+  F('theo đà – kiếm trên đầu', 1, X(BUOC, { y: 0, than: 5, tayT: [27, 16], kiem: 115, tayS: [18, 31] })),
+  F('hạ kiếm – thủ thế', 1, THU)
+]};
+A.parry = { loop: false, label: 'Ngân (Parry)', frames: [
+  F('nâng kiếm lên chắn', 1, X(BUOC, { y: 1, than: 2, tayT: [31, 27], kiem: 100, tayS: [21, 31] })),
+  F('đỡ thành công – kiếm chéo trước mặt, chuông ngân', 2, X(BUOC, { y: 2, than: 5, tayT: [31, 25], kiem: 115, tayS: [20, 31], lacChuong: 45, hieuUng: { tia: [28, 17, 4] } })),
+  F('dư chấn – chuông lắc ngược', 1, X(BUOC, { y: 1, than: 3, tayT: [31, 26], kiem: 108, tayS: [20, 31], lacChuong: -40 })),
+  F('chuông lắc nhẹ – hạ kiếm', 1, X(BUOC, { y: 1, tayT: [31, 29], kiem: 60, tayS: [20, 31], lacChuong: 18 })),
+  F('về thủ thế', 1, THU)
+]};
+var TU = { y: 3, than: 8, tayT: [20, 31], kiem: -168, tayS: [27, 31], kiemSau: true, chanT: [30, 43], chanS: [17, 43] };
+A.chargeAttack = { loop: false, label: 'Charge', frames: [
+  F('kéo kiếm ra sau – bắt đầu tụ lực', 1, X(TU, { y: 2, than: 6, tayT: [21, 30], kiem: -165 })),
+  F('tụ lực – rung 1', 2, X(TU, { hieuUng: { tuLuc: 0 } })),
+  F('tụ lực – rung 2', 2, X(TU, { x: 1, hieuUng: { tuLuc: 1 } })),
+  F('tụ lực – rung 3, giữ hơi', 3, X(TU, { y: 4, hieuUng: { tuLuc: 2 } })),
+  F('bung lực – lao tới', 1, { x: 2, y: 1, than: -14, tayT: [30, 28], kiem: 10, tayS: [15, 30], chanT: [32, 43], chanS: [17, 43], vx: 4, hieuUng: { vet: -160, det: 0.5 } }),
+  F('bung chém – HIT', 2, { x: 2, y: 2, than: -16, dau: 4, tayT: [31, 29], kiem: 0, tayS: [14, 30], chanT: [33, 43], chanS: [18, 43], vx: 3, hieuUng: { vet: -170, det: 0.45, day: 1, bui: [34, 4] } }, true),
+  F('theo đà – trượt chân', 1, { x: 2, y: 2, than: -10, tayT: [31, 32], kiem: -30, tayS: [15, 31], chanT: [33, 43], chanS: [19, 43], vx: 1, hieuUng: { bui: [36, 3] } }),
+  F('thu kiếm – thủ thế', 1, X(THU, { x: 1 }))
+]};
+var NGAN = { chuongTay: true, tayTruoc: true, tayT: [30, 33], kiem: 15 };
+A.echoCast = { loop: false, label: 'Echo Cast', frames: [
+  F('giơ tay xa lên cao', 1, X(NGAN, { y: 1, than: 3, tayS: [26, 22] })),
+  F('gõ nhẹ chuông – ghi tiếng vọng', 2, X(NGAN, { y: 0, than: 4, dau: 4, tayS: [29, 17], hieuUng: { sang: true, song: [6] } })),
+  F('tiếng vọng lan ra', 2, X(NGAN, { y: 0, than: 4, dau: 4, tayS: [29, 17], hieuUng: { sang: true, song: [11, 7] } })),
+  F('hạ tay – về thủ thế', 1, X(NGAN, { y: 1, tayS: [23, 28], tayTruoc: false }))
+]};
+var QUY = { y: 7, than: -6, chanT: [30, 43], chanS: [12, 44], giayS: -70, tayT: [31, 31], kiem: -88 };
+A.heal = { loop: false, label: 'Heal', frames: [
+  F('lùi chân – hạ người', 1, { y: 2, than: -5, chanT: [29, 43], chanS: [16, 43], tayT: [30, 32], kiem: -30, tayS: [19, 33] }),
+  F('quỳ một gối – chống kiếm', 1, X(QUY, { tayS: [22, 37] })),
+  F('ôm chuông – hồi máu', 3, X(QUY, { chuongTay: true, tayTruoc: true, tayS: [25, 31], dau: -4, hieuUng: { sang: true, hoi: 0 } })),
+  F('ôm chuông – ánh sáng lan', 2, X(QUY, { chuongTay: true, tayTruoc: true, tayS: [25, 31], dau: -4, hieuUng: { sang: true, hoi: 0.5, song: [7] } })),
+  F('chống kiếm đứng dậy', 1, { y: 4, than: -4, chanT: [30, 43], chanS: [16, 43], tayT: [31, 31], kiem: -86, tayS: [20, 34] }),
+  F('đứng thẳng – hồi phục', 1, { kiem: 24 })
+]};
+
+var THU_TU = ['idle', 'run', 'jump', 'fall', 'attack', 'dodge', 'hit', 'death', 'land', 'crouch', 'slide', 'wallSlide', 'wallJump',
+  'wallClimb', 'ladderClimb', 'ledgeGrab', 'dash', 'attack2', 'attack3', 'airAttack', 'downStrike', 'upSlash', 'parry', 'chargeAttack', 'echoCast', 'heal'];
+var out = { thuTu: THU_TU, anims: A, combo: ['attack', 'attack2', 'attack3'], fps: 12 };
+if (typeof module !== 'undefined' && module.exports) module.exports = out;
+root.TV = root.TV || {}; root.TV.L48_ANIM = out;
+})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
+</script>
+<script>
+(function(){
+'use strict';
+var L48=TV.L48, AN=TV.L48_ANIM, D=window.LAB_DATA;
+var rig=null, cur='idle', fi=0, phat=true, zoom=4, nenLang=false, xuong=false, cham=false;
+var sua={}, cache={}, t0=0, acc=0;
+var $=function(id){return document.getElementById(id);};
+var cv=$('cv'), ctx=cv.getContext('2d');
+var SCN_W=80, SCN_H=56, OX=16, OY=4;    // ô 48 đặt giữa cảnh 80×56
+var NHOM=[['Thân',[['x','Dời ngang',-16,16],['y','Dời dọc',-12,12],['goc','Xoay cả người',-180,180],['hong','Khép hông',-4,6],['than','Thân',-90,90],['dau','Đầu (mũ)',-60,60]]],
+  ['Tay trước + kiếm',[['tayTrenT','Cánh tay',-180,180],['cangTayT','Cẳng tay',-170,170],['kiem','Kiếm',-180,180]]],
+  ['Tay sau',[['tayTrenS','Cánh tay',-180,180],['cangTayS','Cẳng tay',-170,170]]],
+  ['Chân trước',[['duiT','Đùi',-120,120],['ongT','Ống chân',-150,150],['giayT','Ủng',-90,90]]],
+  ['Chân sau',[['duiS','Đùi',-120,120],['ongS','Ống chân',-150,150],['giayS','Ủng',-90,90]]],
+  ['Chuyển động phụ',[['vat','Vạt áo',-45,45],['ao1','Áo choàng 1',-90,60],['ao2','Áo choàng 2',-60,60],['chuong','Chuông',-90,90]]]];
+
+function napAnh(src){return new Promise(function(res,rej){var im=new Image();im.onload=function(){res(im);};im.onerror=rej;im.src=src;});}
+function boPhan(){
+  var meta=JSON.parse(JSON.stringify(D.meta)), keys=Object.keys(meta.parts), ma={};
+  for(var k in meta.pal) ma[meta.pal[k].toLowerCase()]=k;
+  return Promise.all(keys.map(function(n){return napAnh(D.png[n]).then(function(im){
+    var c=document.createElement('canvas'); c.width=im.width; c.height=im.height; var g=c.getContext('2d'); g.drawImage(im,0,0);
+    var px=g.getImageData(0,0,c.width,c.height).data, rows=[];
+    for(var y=0;y<c.height;y++){var s='';for(var x=0;x<c.width;x++){var i=(y*c.width+x)*4;
+      if(px[i+3]<128){s+='.';continue;}
+      var hx=((1<<24)|(px[i]<<16)|(px[i+1]<<8)|px[i+2]).toString(16).slice(1); s+=ma[hx]||'O';}
+      rows.push(s);}
+    meta.parts[n].rows=rows;});})).then(function(){return meta;});
+}
+function dung(k){ if(!cache[k]) cache[k]=L48.dungAnim(rig,AN.anims[k],sua[k]); return cache[k]; }
+function veO(g,d,ox,oy){ var im=g.createImageData(48,48); L48.rgba(rig,d,im.data,0,0,48); var c=document.createElement('canvas'); c.width=48;c.height=48; c.getContext('2d').putImageData(im,0,0); g.drawImage(c,ox,oy); return c; }
+function veCanh(){
+  var fr=dung(cur)[fi]; if(!fr) return;
+  cv.width=SCN_W*zoom; cv.height=SCN_H*zoom; ctx.imageSmoothingEnabled=false;
+  ctx.save(); ctx.scale(zoom,zoom);
+  if(nenLang && NEN){ ctx.drawImage(NEN,0,0); }
+  else { ctx.fillStyle='#3a3446'; ctx.fillRect(0,0,SCN_W,SCN_H); ctx.fillStyle='#4a4258'; ctx.fillRect(0,OY+46,SCN_W,SCN_H-OY-46); }
+  veO(ctx,fr.r.d,OX,OY);
+  if(xuong){ var kh=fr.r.khop; ctx.fillStyle='#e1b85a'; for(var n in kh){ ctx.fillRect(OX+kh[n][0]-0.5,OY+kh[n][1]-0.5,1,1); } ctx.fillStyle='#e07a6a'; ctx.fillRect(OX+24-0.5,OY+46-0.5,1,1); }
+  ctx.restore();
+  var f=AN.anims[cur].frames[fi];
+  $('tt').innerHTML='<span>Khung <b>'+(fi+1)+'/'+AN.anims[cur].frames.length+'</b></span><span>'+f.name+'</span><span class="the">giữ '+f.hold+'</span>'+(f.hit?'<span class="the hit">hit</span>':'')+(f.comboWindow?'<span class="the cb">nối combo</span>':'');
+  var th=$('dai').children; for(var i=0;i<th.length;i++) th[i].classList.toggle('dang',i===fi);
+  if(!dangKeo) dongBoTruot();
+}
+function veDai(){
+  var el=$('dai'); el.innerHTML='';
+  dung(cur).forEach(function(fr,i){ var c=document.createElement('canvas'); c.width=48;c.height=48; var g=c.getContext('2d'); g.fillStyle='#3a3446'; g.fillRect(0,0,48,48); veO(g,fr.r.d,0,0);
+    if(AN.anims[cur].frames[i].hit) c.classList.add('hit'); c.title=AN.anims[cur].frames[i].name; c.setAttribute('role','button'); c.setAttribute('aria-label','Khung '+(i+1));
+    c.addEventListener('click',function(){ fi=i; datPhat(false); veCanh(); }); el.appendChild(c); });
+}
+function chonAnim(k){ cur=k; fi=0; acc=0; [].forEach.call($('chon').children,function(b){b.setAttribute('aria-pressed',b.dataset.k===k?'true':'false');}); veDai(); veCanh(); }
+function datPhat(v){ phat=v; $('bPhat').setAttribute('aria-pressed',v?'true':'false'); $('bPhat').textContent=v?'⏸ Dừng':'▶ Phát'; }
+function vong(t){
+  var dt=t0?t-t0:0; t0=t;
+  if(phat){ acc+=dt*(cham?0.25:1); var f=AN.anims[cur].frames, ms=1000/AN.fps*(f[fi].hold||1);
+    if(acc>=ms){ acc-=ms; if(acc>ms) acc=0; fi++; if(fi>=f.length) fi=AN.anims[cur].loop?0:(acc=-500,0); veCanh(); } }
+  requestAnimationFrame(vong);
+}
+/* thanh trượt */
+var dangKeo=false, IN={};
+function dungTruot(){
+  var el=$('truot'); el.innerHTML='';
+  NHOM.forEach(function(g){ var d=document.createElement('div'); d.className='nhom'; d.innerHTML='<h2>'+g[0]+'</h2>';
+    g[1].forEach(function(s){ var r=document.createElement('div'); r.className='tr'; var id='r_'+s[0];
+      r.innerHTML='<label for="'+id+'">'+s[1]+'</label><input type="range" id="'+id+'" min="'+s[2]+'" max="'+s[3]+'" step="1"><output for="'+id+'">0</output>';
+      var inp=r.querySelector('input'), out=r.querySelector('output');
+      inp.addEventListener('input',function(){ dangKeo=true; datPhat(false); var v=+inp.value; out.textContent=v;
+        sua[cur]=sua[cur]||{}; sua[cur][fi]=sua[cur][fi]||{}; sua[cur][fi][s[0]]=v; delete cache[cur]; r.classList.add('sua'); veCanh(); });
+      inp.addEventListener('change',function(){ dangKeo=false; veDai(); veCanh(); });
+      IN[s[0]]={inp:inp,out:out,row:r}; d.appendChild(r); });
+    el.appendChild(d); });
+}
+function dongBoTruot(){
+  var g=dung(cur)[fi].g, s=(sua[cur]||{})[fi]||{};
+  for(var k in IN){ var v=Math.round(g[k]*10)/10; IN[k].inp.value=Math.round(v); IN[k].out.textContent=Math.round(v); IN[k].row.classList.toggle('sua',k in s); }
+}
+function bao(m){ $('bao').textContent=m; }
+function xuat(){
+  var o={phienBan:1,ghiChu:'Keyframe Lam 48 – góc ghi đè theo khung (Rig Lab 2D)',anims:{}}, n=0;
+  for(var k in sua){ var a={}; for(var i in sua[k]){ var q={}; for(var j in sua[k][i]) q[j]=sua[k][i][j]; if(Object.keys(q).length){a[i]=q;n++;} } if(Object.keys(a).length) o.anims[k]=a; }
+  // kèm toàn bộ góc đã giải của animation đang xem để tham khảo
+  o.dangXem={anim:cur,khung:dung(cur).map(function(f){var q={}; L48.GOC_KEYS.forEach(function(k){q[k]=Math.round(f.g[k]*10)/10;}); return q;})};
+  $('json').value=JSON.stringify(o,null,1); bao(n?('Đã xuất '+n+' khung đã sửa.'):'Chưa sửa khung nào; JSON chỉ có góc của animation đang xem.');
+}
+function nap(){
+  try{ var o=JSON.parse($('json').value); var a=o.anims||o; var n=0; sua={};
+    for(var k in a){ if(!AN.anims[k]) continue; sua[k]={}; for(var i in a[k]){ sua[k][i]={}; for(var j in a[k][i]) if(L48.GOC_KEYS.indexOf(j)>=0){ sua[k][i][j]=+a[k][i][j]; } n++; } }
+    cache={}; veDai(); veCanh(); bao('Đã nạp '+n+' khung.');
+  }catch(e){ bao('JSON chưa đúng: '+e.message+'. Kiểm tra dấu ngoặc rồi thử lại.'); }
+}
+function sheet(){
+  var cols=9, rows=AN.thuTu.length, c=document.createElement('canvas'); c.width=cols*48; c.height=rows*48; var g=c.getContext('2d');
+  var im=g.createImageData(c.width,c.height);
+  AN.thuTu.forEach(function(k,r){ dung(k).forEach(function(fr,i){ L48.rgba(rig,fr.r.d,im.data,i*48,r*48,c.width); }); });
+  g.putImageData(im,0,0); var el=$('tam'); el.src=c.toDataURL('image/png'); el.hidden=false; el.style.width=Math.min(c.width*2,el.parentNode.clientWidth-4)+'px';
+}
+var NEN=null;
+function khoiDong(meta){
+  rig=L48.chuanBi(meta);
+  AN.thuTu.forEach(function(k){ var b=document.createElement('button'); b.textContent=k; b.dataset.k=k; b.setAttribute('aria-pressed','false'); b.addEventListener('click',function(){chonAnim(k);}); $('chon').appendChild(b); });
+  dungTruot();
+  var g0=L48.giai(rig,{}), r0=L48.ve(rig,g0), cc=$('chuan').getContext('2d'); veO(cc,r0.d,0,0);
+  $('goc').src=D.goc;
+  napAnh(D.nen).then(function(im){NEN=im;});
+  chonAnim('idle'); requestAnimationFrame(vong);
+}
+$('bPhat').onclick=function(){datPhat(!phat);};
+$('bLui').onclick=function(){datPhat(false); var n=AN.anims[cur].frames.length; fi=(fi-1+n)%n; veCanh();};
+$('bTien').onclick=function(){datPhat(false); var n=AN.anims[cur].frames.length; fi=(fi+1)%n; veCanh();};
+$('z4').onclick=function(){zoom=4;$('z4').setAttribute('aria-pressed','true');$('z6').setAttribute('aria-pressed','false');veCanh();};
+$('z6').onclick=function(){zoom=6;$('z6').setAttribute('aria-pressed','true');$('z4').setAttribute('aria-pressed','false');veCanh();};
+$('bNen').onclick=function(){nenLang=!nenLang;this.setAttribute('aria-pressed',String(nenLang));veCanh();};
+$('bXuong').onclick=function(){xuong=!xuong;this.setAttribute('aria-pressed',String(xuong));veCanh();};
+$('bCham').onclick=function(){cham=!cham;this.setAttribute('aria-pressed',String(cham));};
+$('bHoanKhung').onclick=function(){ if(sua[cur]) delete sua[cur][fi]; delete cache[cur]; veDai(); veCanh(); };
+$('bHoanTat').onclick=function(){ sua={}; cache={}; veDai(); veCanh(); bao('Đã bỏ mọi chỉnh sửa.'); };
+$('bXuat').onclick=xuat; $('bNap').onclick=nap; $('bSheet').onclick=sheet;
+$('bChep').onclick=function(){ var t=$('json'); if(!t.value) xuat();
+  var p=navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t.value):Promise.reject();
+  p.then(function(){bao('Đã sao chép JSON.');},function(){t.focus();t.select();bao('Không sao chép tự động được: JSON đã được chọn, hãy bấm Sao chép của máy.');}); };
+boPhan().then(khoiDong,function(e){ $('tt').textContent='Không đọc được ảnh bộ phận: '+(e&&e.message||e); });
+})();
+</script>

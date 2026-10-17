@@ -1,8 +1,8 @@
 /* =====================================================================
    atlas-in-san.js — nạp atlas sprite đã in sẵn (game/tools/in-atlas.py), KHÔNG cần WebGL/Three.js.
-   Nguồn: art/sprite/atlas.json + lam.png, quai-chuong.png, boss.png.
+   Nguồn: art/sprite/atlas.json + lam.png, lam48.png (tools/in-lam48.py), quai-chuong.png, boss.png.
    Bản build một file đặt sẵn TV.ATLAS_NHUNG = { json:{...}, anh:{ 'lam.png':'data:...', ... } }.
-   API:  TV.atlasInSan : Promise → { lam, quaiChuong, boss }  (lỗi: err.phan = danh sách phần hỏng)
+   API:  TV.atlasInSan : Promise → { lam, lam48, quaiChuong, boss }  (lỗi: err.phan = danh sách phần hỏng)
          TV.napLaiAtlas() : nạp lại (nút Thử lại), cập nhật TV.atlasInSan
          mỗi atlas có API y hệt TV.taoAtlasLam / taoAtlasQuaiChuong / taoAtlasBoss
          (canvas = ảnh đã vẽ vào canvas, w, h, cols, rows, pivot, fps, anims, kiemTra...).
@@ -12,7 +12,7 @@
 var TV = root.TV = root.TV || {};
 var BASE = TV.ATLAS_GOC || '../art/sprite/';
 
-var TEN = { lam: 'nhân vật Lam', quaiChuong: 'Quái Chuông Gỗ', boss: 'Chuông Gác Làng' };
+var TEN = { lam: 'nhân vật Lam', lam48: 'nhân vật Lam 48', quaiChuong: 'Quái Chuông Gỗ', boss: 'Chuông Gác Làng' };
 var lan = 0;   // số lần nạp lại: thêm ?r= để trình duyệt không dùng bản lỗi trong bộ nhớ đệm
 function bust(src) { return (lan && !/^data:/.test(src)) ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'r=' + lan + '_' + Date.now() : src; }
 
