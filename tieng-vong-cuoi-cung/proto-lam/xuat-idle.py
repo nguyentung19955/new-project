@@ -5,6 +5,7 @@
   idle.gif                      ×4, 8 FPS, lặp
   overlay-mau.png               ảnh mẫu (cùng chiều cao) | render mượt | chồng 50% | viền silhouette 2 màu
   so-sanh-mau-x4.png            mẫu | khung 1 ×4
+  so-sanh-v1-v2-x4.png          khung 1 vòng 1 (vong1-idle-0.png, giữ lại để so) | khung 1 vòng 2 | mẫu – ×4
   kiem-tra.json                 số màu, bbox từng khung, mặt nạ chân, sai khác pixel giữa các khung (khép vòng)
 và sheet thử cho game:  game/anim/lam-idle-proto.png (512×320, hàng 0 = idle) + lam-idle-proto.anim.json
 Chạy:  python3 proto-lam/xuat-idle.py [--xem]   (--xem: chỉ ghi overlay + idle-x8 vào out/idle/ để chỉnh mô hình nhanh)
@@ -141,6 +142,19 @@ def so_sanh_x4(frames):
     return out
 
 
+def so_sanh_v1_v2(frames):
+    v1p = os.path.join(OUT, 'vong1-idle-0.png')
+    if not os.path.isfile(v1p): return None
+    v1 = Image.open(v1p).convert('RGBA'); im0 = frames[0]; bb = bbox(im0); hchar = bb[3] - bb[1] + 1
+    mau = mau_scaled(hchar * 4)
+    cot = [('khung 1 – vòng 1', v1.resize((v1.width * 4, v1.height * 4), Image.NEAREST)), ('khung 1 – vòng 2', im0.resize((im0.width * 4, im0.height * 4), Image.NEAREST)), ('mẫu (cùng cao)', mau)]
+    H = max(im.height for _, im in cot) + 28; W = sum(im.width for _, im in cot) + 8 * (len(cot) + 1)
+    out = Image.new('RGBA', (W, H), NEN); dr = ImageDraw.Draw(out); fnt = chu(12); x = 8
+    for t, im in cot:
+        out.alpha_composite(im, (x, 20 + (H - 28 - im.height))); dr.text((x, 4), t, font=fnt, fill=(230, 235, 240, 255)); x += im.width + 8
+    return out
+
+
 def gif(frames, duong_dan, S=4):
     n = frames[0].width; ims = []
     for im in frames:
@@ -160,13 +174,37 @@ def kiem_tra(data, frames):
     kq['bbox'] = [list(bbox(im)) for im in frames]
     kq['caoNhanVat'] = [b[3] - b[1] + 1 for b in kq['bbox']]
     kq['pivotRender'] = [f['pivot'] for f in data['frames']]
-    # mặt nạ chân: các hàng ủng (6 hàng dưới cùng, y 58..63) phải giống hệt nhau ở 6 khung (toàn bộ pixel kể cả viền)
+    ids = [mat_na_id(f, n) for f in data['frames']]; pxs = [list(im.getdata()) for im in frames]
+    # mặt nạ ỦNG theo ID (vòng 2): ID 15/16 = vạch cổ ủng, 18/19 = ống ủng + bàn chân. Hai bàn chân phải đứng yên tuyệt đối:
+    # tập pixel mang ID ủng (hợp của 6 khung) phải có cùng ID và cùng màu ở cả 6 khung. Áo choàng dài ĐƯỢC chạm hàng 58–63 (chỉ báo cho biết).
+    ID_UNG = {15, 16, 18, 19}
+    mask = sorted(set(i for d in ids for i, v in enumerate(d) if v in ID_UNG))
+    kq['ungSoPixel'] = len(mask)
+    kq['ungBbox'] = [min(i % n for i in mask), min(i // n for i in mask), max(i % n for i in mask), max(i // n for i in mask)] if mask else None
+    kq['ungKhac'] = [[i % n, i // n, [d[i] for d in ids], ['#%02X%02X%02X' % p[i][:3] if p[i][3] else '-' for p in pxs]] for i in mask if any(d[i] != ids[0][i] or p[i] != pxs[0][i] for d, p in zip(ids, pxs))]
+    kq['ungCoDinh'] = not kq['ungKhac']
+    kq['chanCoDinh'] = kq['ungCoDinh']   # tên cũ (vòng 1) – nay = mặt nạ ủng theo ID
     yC = n - 6
     chan = [im.crop((0, yC, n, n)).tobytes() for im in frames]
-    kq['chanCoDinh'] = all(c == chan[0] for c in chan)
-    kq['vungChanHang'] = [yC, n - 1]
-    ids = [mat_na_id(f, n) for f in data['frames']]; pxs = [list(im.getdata()) for im in frames]
-    kq['chanKhac'] = [[i % n, i // n, [d[i] for d in ids], ['#%02X%02X%02X' % p[i][:3] if p[i][3] else '-' for p in pxs]] for i in range(yC * n, n * n) if any(p[i] != pxs[0][i] for p in pxs)]
+    kq['hang58_63GiongNhau'] = all(c == chan[0] for c in chan)   # chỉ tham khảo: áo choàng được phép chạm vùng này
+    kq['hang58_63SoPixelKhac'] = sum(1 for i in range(yC * n, n * n) if any(p[i] != pxs[0][i] for p in pxs))
+    kq['hang58_63KhacTheoID'] = sorted(set(d[i] for d in ids for i in range(yC * n, n * n) if any(p[i] != pxs[0][i] for p in pxs)))
+    # vạch cổ ủng ≥ 2 hàng, chuôi/chắn/dây/trâm/mắt còn ở mọi khung
+    def dem(idv): return [sum(1 for v in d if v == idv) for d in ids]
+    def cao_id(idv):
+        out = []
+        for d in ids:
+            ys = [i // n for i, v in enumerate(d) if v == idv]; out.append(max(ys) - min(ys) + 1 if ys else 0)
+        return out
+    kq['vachUngCaoHang'] = {'gan': cao_id(16), 'xa': cao_id(15)}
+    kq['soPixel'] = {'chuoiChan': dem(11), 'dayChuong': dem(13), 'chuong': dem(12), 'tram': dem(17), 'luoi': dem(10)}
+    kq['matSang'] = [sum(1 for p in px if p[:3] == (0xF3, 0xE6, 0xC8)) for px in pxs]   # #F3E6C8: 2 mắt + chỏm chuông
+    # dây chuông liền: cột dây phải nối thẳng vào pixel chuông bên dưới
+    def day_lien(d):
+        ds = [(i % n, i // n) for i, v in enumerate(d) if v == 13]
+        if not ds: return False
+        return all(any(d[(y + 1) * n + x] in (12, 13) for _ in [0]) for x, y in ds)
+    kq['dayChuongLien'] = [day_lien(d) for d in ids]
     # sai khác pixel giữa khung kề nhau và 6→1
     def diff(a, b):
         pa, pb = a.getdata(), b.getdata(); return sum(1 for u, v in zip(pa, pb) if u != v)
@@ -200,6 +238,8 @@ def main():
     day_khung(frames, 4).save(os.path.join(OUT, 'idle-x4.png'))
     gif(frames, os.path.join(OUT, 'idle.gif'))
     so_sanh_x4(frames).save(os.path.join(OUT, 'so-sanh-mau-x4.png'))
+    ss = so_sanh_v1_v2(frames)
+    if ss: ss.save(os.path.join(OUT, 'so-sanh-v1-v2-x4.png'))
     json.dump(kq, open(os.path.join(OUT, 'kiem-tra.json'), 'w'), ensure_ascii=False, indent=1)
     # sheet thử cho game: 512×320, hàng 0 = 6 khung idle
     os.makedirs(GAME_ANIM, exist_ok=True)

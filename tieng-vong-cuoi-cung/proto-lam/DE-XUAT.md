@@ -71,3 +71,8 @@ Mỗi khung lưu kèm: hold (ms, không đều), cờ `hit`, hộp lưỡi kiế
 - **Kiếm ở tay xa (tay phải), tay gần để trống**, tay đặt bằng IK 2 đoạn (`ik: 1`, mục tiêu `gH*`/`xH*`, hướng lưỡi `gB*`); run/slash vẫn dùng kênh góc cũ.
 - Cỡ ô 64: ppu 45 (nhân vật 46 px + viền), gốc chiếu vào pivot [32,63]. Idle: 6 khung × 125 ms, chân cố định tuyệt đối, khép vòng.
 - Xuất: `python3 proto-lam/xuat-idle.py` → `out/idle/` + `game/anim/lam-idle-proto.png/.anim.json`.
+
+## 9. Vòng 2 – sửa ngoại hình theo review (xem `out/idle/BAO-CAO.md`)
+
+- Giữ nguyên kỹ thuật vòng 1 (rig, camera 22°/12°, ppu 45, pivot, 6 khung 8 FPS, bảng màu, pipeline). Chỉ sửa mô hình: mũ đo lại theo mẫu (rộng ngang mắt, chỏm nhọn ngả sau ở lưng mũ, mép dưới xoè, khoang mặt đen mở rộng); áo choàng 7×19, 6 đoạn, dài gần mắt cá, toả quạt, gấu có 3 vạt rách chọn theo toạ độ chiếu; trâm ID riêng; ủng to hơn, vạch cổ ủng torus riêng; bàn tay xa đưa ra trước bụng + kiếm đẩy trước tay để lộ chuôi/chắn; chuông neo ngoài mép lưng mũ, dây vàng, chỏm sáng riêng.
+- Chân cố định kiểm bằng **mặt nạ ID ủng** (`ungG`/`ungX`/vạch): trong idle gốc đùi giữ ở độ cao hông tĩnh nên cả chân cứng tuyệt đối; viền trong gấu áo ↔ chân tô lên gấu áo.
