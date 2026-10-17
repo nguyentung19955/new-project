@@ -337,6 +337,9 @@ def khoa_game(T):
     for k in dt:
         if '~16' in k:
             m[k.replace('~16', '')] = k
+    for k in dt:  # kiếm nặng 17/10 (kiem_N~kn) thay kiem_N sau hàng ~16, như hang16 của js/zed_moi.js (tắt ?kiemnang=0)
+        if '~kn' in k and os.environ.get('KIEMNANG') != '0':
+            m[k.replace('~kn', '')] = k
     return m
 
 

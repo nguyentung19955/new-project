@@ -997,6 +997,71 @@
     }
   }
   const VET_ANH = { sword: 'hu-chem-kiem', hammer: 'hu-chem-bua', spear: 'hu-dam-giao' }; // ảnh AI cho vệt đòn thường
+  // ---------- KIẾM NẶNG 17/10 (docs/review/ke-hoach-cai-thien/kiem-nang/bao-cao.md) — vệt chém riêng combo kiếm nặng của Cu Tí ----------
+  // Chỉ khi Cu Tí đang vẽ bằng hàng kiếm nặng (G.zedMoi.kiemNang: bộ ninja, cầm kiếm, không ?kiemnang=0). Ảnh cắt từ tấm vệt chủ game gen
+  // (docs/anh-goc/kiem-nang/cat-vet-kiem-nang.py), đặt theo MŨI KIẾM THẬT ở đúng lúc trong nhát (hỏi G.tinhLinh.tip ở tiến độ u như cungVk):
+  //   nhát 1: hu-chem-kiem-nang-1 (tia lửa lê đất) bám mũi kiếm trên mặt đất suốt khung 1–3; hu-chem-kiem-nang-2 (hất lên): đuôi vệt →
+  //           mũi kiếm lúc quét sát đất (u 0,3), đầu vệt → mũi lúc vừa hất xong (u 0,62) (xoay + co hai điểm, như búa bua-khop-2);
+  //   nhát 2: hu-chem-kiem-nang-3 (bổ xuống + nổ đất) đứng thẳng, đáy ở mặt đất ngay dưới mũi kiếm khung 7 (u 0,8), nổ đúng lúc mũi chạm;
+  //   nhát 3: hu-chem-kiem-nang-4 (chém ngang): đuôi → mũi lúc kéo kiếm ra sau (u 0,3), đầu → mũi lúc chém ngang hết tầm (u 0,6).
+  // Vệt cũ không nhuộm theo hệ → vệt mới cũng không (hạt hệ elemBits giữ nguyên như cũ). Thời lượng, chạm, sát thương không đổi (chỉ hình).
+  const ANH_KN = { // điểm mốc ảnh (điểm ảnh game so với neo, chưa nhân "co") — vet-moc.json
+    'hu-chem-kiem-nang-2': { dx: 26.5, dy: -38.5 },
+    'hu-chem-kiem-nang-4': { dx: 48, dy: 0 },
+  };
+  // Mũi kiếm (so với chân em bé, toạ độ màn) ở tiến độ u của nhát đang đánh; null: không đo được.
+  function muiKN(P, u) {
+    const TL = G.tinhLinh;
+    if (!TL || !TL.tip || !G.heroArgs) return null;
+    const o = G.heroArgs(P);
+    if (u != null) o.atk = u;
+    const q = TL.tip(o);
+    if (!q || q.anim !== 'atk' || q.wt !== 'sword') return null;
+    const l = q.L * Math.hypot(q.dx, q.dy), a = Math.atan2(q.dy, q.dx);
+    return { x: q.gx - P.x + Math.cos(a) * l, y: q.gy - P.y + Math.sin(a) * l };
+  }
+  function knThem(ma, P, x, y, xg, sc, d, mui) {
+    const FA = G.fxAnh;
+    if (!FA || !FA.co(ma)) return false;
+    const f = P.face < 0 ? -1 : 1;
+    const h = add({ ty: 'anh', ma, x: P.x + x, y: P.y + y, t: FA.giay(ma) || 0.2, f, sc, goc: 0, ly: 1, d: d || 0, neo: 'khoa' });
+    h.xg = xg; h.theo = P; h.tdx = x; h.tdy = y;
+    if (mui) h.muiKN = mui; // bám mũi kiếm từng hình (lê đất)
+    return true;
+  }
+  // Hai điểm: đuôi ảnh → A, đầu ảnh → B (so với chân em bé). Ảnh vẽ quay phải; mặt trái thì lật ngang rồi xoay.
+  function knHai(ma, P, A, B, d) {
+    const M = ANH_KN[ma], FA = G.fxAnh;
+    if (!M || !A || !B || !FA || !FA.co(ma)) return false;
+    const f = P.face < 0 ? -1 : 1, co = (FA.ds[ma] && FA.ds[ma].co) || 1;
+    const vx = f * M.dx * co, vy = M.dy * co, wx = B.x - A.x, wy = B.y - A.y;
+    const L = Math.hypot(vx, vy), sc = Math.max(0.5, Math.min(1.6, Math.hypot(wx, wy) / L));
+    return knThem(ma, P, A.x, A.y, Math.atan2(wy, wx) - Math.atan2(vy, vx), sc, d);
+  }
+  // Vệt kiếm nặng: game gọi 'swing' lúc CHẠM (u 0,45, js/combat.js doHit) → ở đây chỉ báo "đã có vệt" (bỏ vệt kiếm cũ); ảnh được thả theo
+  // tiến độ nhát ở buocKN (mỗi nhịp, js/fx.js stepPlayer) để tia lửa có TRƯỚC lúc chạm và khung to nhất của vệt rơi đúng ★:
+  //   nhát 1: u ≥ 0 tia lửa (bám mũi kiếm, tắt khi u > 0,45); u ≥ 0,2 vệt hất lên;  nhát 2: u ≥ 0,38 bổ xuống + nổ (nổ ~ u 0,72, mũi chạm đất);
+  //   nhát 3: u ≥ 0,25 chém ngang (khung to nhất ~ ★). Mỗi ảnh một lần mỗi nhát (nhớ theo P.lastAtk).
+  function vetKN(P) {
+    const ZM = G.zedMoi;
+    return !!(ZM && ZM.kiemNang && ZM.kiemNang(P));
+  }
+  const KN = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  function buocKN(P) {
+    if (!KN || G.noRender || !(P.atkT > 0) || !(P.atkDur > 0) || P.dashT > 0 || !vetKN(P)) return;
+    let r = KN.get(P);
+    if (!r || r.id !== P.lastAtk) KN.set(P, (r = { id: P.lastAtk, xong: {} }));
+    const u = 1 - P.atkT / P.atkDur, c = (((P.comboI | 0) % 3) + 3) % 3, x = r.xong;
+    try {
+      if (c === 0) {
+        if (!x.a) { x.a = 1; const m = muiKN(P, Math.max(0.02, u)); if (m) knThem('hu-chem-kiem-nang-1', P, m.x, 0, 0, 0.8, 0, 1); }
+        if (!x.b && u >= 0.2) { x.b = 1; knHai('hu-chem-kiem-nang-2', P, muiKN(P, 0.3), muiKN(P, 0.62), 0); }
+      } else if (c === 1) {
+        if (!x.a && u >= 0.38) { x.a = 1; const m = muiKN(P, 0.8); if (m) knThem('hu-chem-kiem-nang-3', P, m.x, 0, 0, 0.75, 0); }
+      } else if (!x.a && u >= 0.25) { x.a = 1; knHai('hu-chem-kiem-nang-4', P, muiKN(P, 0.3), muiKN(P, 0.6), 0); }
+    } catch (e) { fail(e); }
+  }
+
   // Soát mượt phiên 3 mục 21 (?tile05=0 tắt): cỡ TUỲ Ý của ảnh trang trí (vệt vũ khí, cào / chết theo thân, nổ trùm ngẫu nhiên) làm tròn bậc 0,5
   // (js/fx_anh.js FA.bac05). Ảnh co theo bán kính vùng thật (vũng, nổ có bán kính sát thương, chớp va chạm) giữ cỡ đúng.
   const b05 = (v) => (G.fxAnh && G.fxAnh.bac05 ? G.fxAnh.bac05(v) : v);
@@ -1011,9 +1076,10 @@
     // Kiếm bớt cứng 17/10 (docs/review/ke-hoach-cai-thien/kiem-bot-cung/PROMPT.md prompt 4): CHỖ CHỜ ảnh vệt riêng từng nhát kiếm
     // hu-chem-kiem-1 / -2 / -3 (cắt từ tấm vệt chém 3×3). Chưa có tệp → dùng hu-chem-kiem như cũ. Tắt: ?kiemmuot=0.
     const maK = o.type === 'sword' && G.KIEM_DEO !== false ? 'hu-chem-kiem-' + (((o.combo || 0) % 3) + 1) : null;
-    const maVet = maK && coAnh(maK) ? maK : VET_ANH[o.type], vetAnh = !!maVet && coAnh(maVet);
+    const kn = o.type === 'sword' && vetKN(P); // kiếm nặng 17/10: vệt riêng 4 hàng ảnh (đã đặt) thay vệt kiếm cũ
+    const maVet = kn ? null : maK && coAnh(maK) ? maK : VET_ANH[o.type], vetAnh = kn || (!!maVet && coAnh(maVet));
     const scVet = b05(Math.max(0.6, Math.min(1.8, (o.type === 'spear' ? R0 + 2 : R0) / 32)) * (o.combo === 2 ? 1.12 : 1)); // cỡ vệt ảnh như cũ (mục 21: bậc 0,5)
-    if (vetAnh && !anhVk(maVet, P, o.type, scVet)) anh(maVet, P.x + f * (o.type === 'spear' ? 8 : o.type === 'hammer' ? 4 : 2), P.y - (o.type === 'hammer' ? 17 : 13), { f, sc: scVet });
+    if (maVet && vetAnh && !anhVk(maVet, P, o.type, scVet)) anh(maVet, P.x + f * (o.type === 'spear' ? 8 : o.type === 'hammer' ? 4 : 2), P.y - (o.type === 'hammer' ? 17 : 13), { f, sc: scVet });
     if (o.type === 'sword') {
       const fin = o.combo === 2;
       if (fin) {
@@ -2285,6 +2351,7 @@
   function stepPlayer(W, P, dt, tick) {
     playerSquash(P, dt);
     trailStep(P, dt);
+    buocKN(P);
     const moving = P.moving && !(P.dodgeT > 0) && !(P.dashT > 0) && !P.dead && VX('bui') > 0;
     if (moving) {
       S.stepT -= dt;
@@ -2405,6 +2472,12 @@
         case 'anh': { // hiệu ứng ảnh AI (js/fx_anh.js); hết khung thì tắt sớm
           const FA = G.fxAnh, th = o.theo;
           if (o.xg != null) { // vệt bám mũi vũ khí (anhVkDat): neo dời theo em bé, xoay quanh điểm neo
+            if (o.muiKN && th) { // kiếm nặng: tia lửa lê đất chạy theo mũi kiếm, tắt khi kiếm rời đất (hất lên, u > 0,45) hay hết nhát
+              if (!(th.atkT > 0) || 1 - th.atkT / (th.atkDur || 1) > 0.45) { o.t = 0; break; }
+              const m = muiKN(th);
+              if (!m || m.y < -6) break; // mũi kiếm chưa xuống đất (đang nối từ thế đứng): chưa hiện
+              o.tdx = m.x;
+            }
             const X = Math.round((th ? th.x : o.x - (o.tdx || 0)) + (o.tdx || 0)), Y = Math.round((th ? th.y : o.y - (o.tdy || 0)) + (o.tdy || 0));
             c.save(); c.translate(X, Y); c.rotate(o.xg);
             let ok = false;
