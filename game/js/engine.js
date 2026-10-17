@@ -260,10 +260,59 @@
   G.sfxDanh = function (type, cu) {
     const ch = amCho; amCho = { crit: false, nang: false };
     if (G.AM_MOI === false) { G.sfx('hit', cu); return; }
+    if (type === 'sword' && G.KN_AM !== false && G.fx && G.fx.nhatKN) { // kiếm nặng Cu Tí (17/10): tiếng va chạm riêng từng nhát
+      const i = G.fx.nhatKN({ type: 'sword' });
+      if (i >= 0 && amKN(i)) { if (ch.crit) G.sfx('chiMang'); return; }
+    }
     const nang = ch.nang || type === 'hammer';
     G.sfx(AM_VK[type] || 'hit', nang && type !== 'hammer' ? 0.82 : 1, nang ? 1.3 : 1);
     if (ch.crit) G.sfx('chiMang');
   };
+  // ---------- KIẾM NẶNG CỦA CU TÍ (17/10, docs/review/ke-hoach-cai-thien/tu-van-17-10-don-kiem/bao-cao.md) ----------
+  // G.KN_AM (tắt: ?knam=0 → tiếng trúng kiếm chung 'hitKiem' như cũ): mỗi nhát một tiếng va chạm tạo bằng WebAudio (không tệp âm thanh):
+  //  nhát 1 hất lên: tiếng kim loại rít lên ngắn (tam giác 300 → 560 Hz + tiếng xẹt);
+  //  nhát 2 bổ xuống: tiếng chặt nặng (vuông 170 → 85 Hz + tiếng đất bục);
+  //  nhát 3 kết: NẶNG NHẤT — tiếng ùng trầm (sin 80 → 38 Hz, 0,26 s) + lớp chặt (vuông 210 → 100 Hz) + tiếng nổ rè dài hơn.
+  // Vẫn theo luật giới hạn tiếng cùng lúc (V30) và âm lượng "Tiếng" ở Anh Mõ.
+  if (G.KN_AM === undefined) { let t = false; try { t = /[?&]knam=0(&|$)/.test(location.search || ''); } catch (e) { t = false; } G.KN_AM = !t; }
+  const AM_KN = [
+    { lop: [['triangle', 300, 560, 0.07, 0.05], ['square', 1200, 900, 0.025, 0.012]], on: [0.035, 0.018, 2600] },
+    { lop: [['square', 170, 85, 0.1, 0.055]], on: [0.07, 0.03, 900] },
+    { lop: [['sine', 80, 38, 0.26, 0.11], ['square', 210, 100, 0.12, 0.05]], on: [0.14, 0.05, 700] },
+  ];
+  let onBuf = null;
+  function amKN(i) {
+    if (!ac || !G.save.sound || G.noRender || ac.state !== 'running' || !sfxBus) return true; // không có tiếng thì thôi (không phát tiếng cũ)
+    const d = AM_KN[i];
+    if (!d) return false;
+    try {
+      const now = ac.currentTime, h = 1 + (Math.random() * 2 - 1) * 0.05;
+      for (let k = voices.length - 1; k >= 0; k--) if (voices[k].end <= now) voices.splice(k, 1);
+      let sum = 0, same = 0;
+      for (const v of voices) { sum += v.g; if (v.name === 'kn') same++; }
+      if (same >= MAX_SAME || voices.length >= MAX_VOICES) return true;
+      let tong = 0; for (const l of d.lop) tong += l[4]; tong += d.on[1];
+      const k = Math.min(1, (MAX_GAIN - sum) / tong);
+      if (k * tong < 0.01) return true;
+      let het = 0;
+      for (const l of d.lop) {
+        const o = ac.createOscillator(), g = ac.createGain();
+        o.type = l[0]; o.frequency.setValueAtTime(l[1] * h, now); o.frequency.exponentialRampToValueAtTime(l[2] * h, now + l[3]);
+        g.gain.setValueAtTime(l[4] * k, now); g.gain.exponentialRampToValueAtTime(0.0001, now + l[3]);
+        o.connect(g); g.connect(sfxBus); o.start(now); o.stop(now + l[3] + 0.02);
+        het = Math.max(het, l[3]);
+      }
+      // tiếng rè (nhiễu trắng lọc thông thấp) — bộ đệm dựng một lần
+      if (!onBuf) { const n = Math.floor(ac.sampleRate * 0.2); onBuf = ac.createBuffer(1, n, ac.sampleRate); const a = onBuf.getChannelData(0); for (let j = 0; j < n; j++) a[j] = Math.random() * 2 - 1; }
+      const src = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+      src.buffer = onBuf; f.type = 'lowpass'; f.frequency.value = d.on[2];
+      g.gain.setValueAtTime(d.on[1] * k, now); g.gain.exponentialRampToValueAtTime(0.0001, now + d.on[0]);
+      src.connect(f); f.connect(g); g.connect(sfxBus); src.start(now); src.stop(now + d.on[0] + 0.02);
+      voices.push({ name: 'kn', end: now + Math.max(het, d.on[0]) + 0.02, g: k * tong });
+    } catch (e) { /* bỏ qua lỗi âm thanh */ }
+    return true;
+  }
+  G.amKN = amKN;
   // Tiếng vung: bản mới hẹn ở 60% quãng từ lúc ra đòn tới lúc chạm (hitAt, mặc định 0,45 động tác). dur: thời lượng đòn, phase: đã đi sẵn.
   G.sfxVung = function (pitch, dur, hitAt, phase) {
     if (G.AM_MOI === false) { G.sfx('swing', pitch); return; }

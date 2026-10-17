@@ -698,6 +698,42 @@
     return [ms, G.BU_KHUNG !== false && ms > cu ? 1 - cu / ms : 0];
   }
   fx.khungVk = khungVk;
+  // ---------- ĐÒN KIẾM NẶNG CỦA CU TÍ (17/10, docs/review/ke-hoach-cai-thien/tu-van-17-10-don-kiem/bao-cao.md) ----------
+  // Chỉ khi Cu Tí cầm kiếm có hàng kiếm nặng (G.zedMoi.kiemNang) và đòn đang ra là nhát chuỗi kiếm (không phải đòn nối / nhát lướt).
+  //  - G.KN_DUNG (tắt: ?kndung=0 → số khựng cũ 45 / 70): khựng nhát 1, 2 = 48 ms (3 nhịp ở 60 hình/giây = 50 ms), nhát kết = 95 ms (6 nhịp = 100 ms) (chí mạng +25 tối đa 115, kết liễu +15
+  //    tối đa 100 như cũ). KHÔNG giảm dần theo cửa sổ 0,5 giây (mục 14) — để nhát 2 không bị cắt còn ~30 ms. Không trả lại thời gian
+  //    cho đồng hồ đòn (như số cũ của kiếm: phần trả = 0) → thời lượng đòn tính theo đồng hồ game giữ nguyên.
+  //  - G.KN_RUNG (tắt: ?knrung=0 → rung cũ): nhát kết trúng rung khung hình RIÊNG: tối đa 2 điểm ảnh game, 70 ms, tắt dần (thay cho rung +
+  //    cú giật cũ của đòn nặng). Nút "Rung màn" ở Anh Mõ tắt cả rung này. Nhát 1, 2 giữ rung nhẹ cũ.
+  if (G.KN_DUNG === undefined) G.KN_DUNG = !coQ(/[?&]kndung=0(&|$)/);
+  if (G.KN_RUNG === undefined) G.KN_RUNG = !coQ(/[?&]knrung=0(&|$)/);
+  const KN_MS = [48, 48, 95], KN_RK = { t: 0.07, px: 2 };
+  G.KN_MS = KN_MS;
+  // Trả số nhát (0, 1, 2) nếu đòn vừa trúng là nhát chuỗi kiếm nặng của Cu Tí; không thì -1.
+  function nhatKN(o) {
+    try {
+      if (!o || o.ranged || o.type !== 'sword' || !G.zedMoi || !G.zedMoi.kiemNang) return -1;
+      const P = S && S.W && S.W.P, mv = P && P.mv, cur = mv && mv.cur;
+      if (!cur || cur.kind !== 'chem' || cur.noi || !(P.atkT > 0) || !G.zedMoi.kiemNang(P)) return -1;
+      const i = cur.step | 0;
+      return i >= 0 && i <= 2 ? i : -1;
+    } catch (err) { return -1; }
+  }
+  fx.nhatKN = nhatKN;
+  function khungKN(i, o) {
+    let ms = KN_MS[i];
+    if (o.crit) ms = Math.min(115, ms + 25); else if (o.dead) ms = Math.max(ms, Math.min(100, ms + 15));
+    return ms;
+  }
+  fx.khungKN = khungKN;
+  function stopKN(ms) { // như stop0 nhưng không giảm theo cửa sổ (mục 14); đang khựng thì chỉ kéo dài phần thiếu
+    ms *= VX('khung');
+    if (!(ms > 0)) return;
+    const s = ms / 1000;
+    if (S.stop > 0) { if (s > S.stop) S.stop = s; return; }
+    S.stop = s;
+  }
+  function rungKN(dir) { if (rungTat() || !(VX('rung') > 0)) return; S.rkT = KN_RK.t; S.rkD = dir < 0 ? -1 : 1; S.kx = 0; S.ky = 0; }
   // Đồng hồ đòn được trả lại tối đa 50% mỗi khung (đòn đang vung / đang chờ chạy nhanh hơn chút cho tới khi hết nợ). Gọi từ js/combat.js.
   fx.traNo = function (dt, ban) {
     if (!S || !(S.no > 0)) return 0;
@@ -1050,7 +1086,7 @@
   function buocKN(P) {
     if (!KN || G.noRender || !(P.atkT > 0) || !(P.atkDur > 0) || P.dashT > 0 || !vetKN(P)) return;
     let r = KN.get(P);
-    if (!r || r.id !== P.lastAtk) KN.set(P, (r = { id: P.lastAtk, xong: {} }));
+    if (!r || r.id !== P.lastAtk) KN.set(P, (r = { id: P.lastAtk, xong: {}, chay: !!P.moving }));
     const u = 1 - P.atkT / P.atkDur, c = (((P.comboI | 0) % 3) + 3) % 3, x = r.xong;
     try {
       if (c === 0) {
@@ -1058,7 +1094,11 @@
         if (!x.b && u >= 0.2) { x.b = 1; knHai('hu-chem-kiem-nang-2', P, muiKN(P, 0.3), muiKN(P, 0.62), 0); }
       } else if (c === 1) {
         if (!x.a && u >= 0.38) { x.a = 1; const m = muiKN(P, 0.8); if (m) knThem('hu-chem-kiem-nang-3', P, m.x, 0, 0, 0.75, 0); }
-      } else if (!x.a && u >= 0.25) { x.a = 1; knHai('hu-chem-kiem-nang-4', P, muiKN(P, 0.3), muiKN(P, 0.6), 0); }
+      } else {
+        if (!x.a && u >= 0.25) { x.a = 1; knHai('hu-chem-kiem-nang-4', P, muiKN(P, 0.3), muiKN(P, G.KN_NHIP !== false ? 0.5 : 0.6), 0); } // KN_NHIP: kiếm hết tầm ngang ở u 0,5 (sau đó theo đà vòng lên)
+        // đòn kiếm nặng 17/10 (G.KN_GHIM, js/zed_moi.js): nhát 3 ra lúc đang chạy → bụi chân ảnh hu-lao-bui sau gót lúc ghìm lại (một lần)
+        if (!x.g && r.chay && G.KN_GHIM !== false && coAnh('hu-lao-bui')) { x.g = 1; const f = P.face < 0 ? -1 : 1; anh('hu-lao-bui', P.x - f * 20, P.y + 1, { f, sc: 0.8 }); }
+      }
     } catch (e) { fail(e); }
   }
 
@@ -1325,7 +1365,12 @@
     // bao-cao-B (16/10, góp ý ChatGPT mục 1): khựng hình riêng từng món (G.CAM_GIAC_VK, tắt: ?camgiac=0 → số cũ bên dưới).
     // Phần khựng DÀI HƠN số cũ được trả lại cho đồng hồ đòn ngay sau đó (khungVk / fx.traNo), nên nhịp đánh thật không chậm thêm.
     const kv = G.CAM_GIAC_VK !== false ? khungVk(e, o) : null;
-    if (kv) {
+    const kn = G.KN_DUNG !== false || G.KN_RUNG !== false ? nhatKN(o) : -1; // kiếm nặng Cu Tí (17/10)
+    if (kn >= 0 && (G.KN_DUNG !== false || (kn === 2 && G.KN_RUNG !== false))) {
+      if (G.KN_DUNG !== false) stopKN(khungKN(kn, o)); else if (kv) stop(kv[0], kv[1]); else stop(o.crit ? 115 : o.dead ? 100 : o.heavy ? 90 : 45);
+      if (kn === 2 && G.KN_RUNG !== false) rungKN(dir);
+      else { trauma((o.crit ? 0.4 : o.heavy ? 0.3 : 0.14) * dim); kick(dir * (big ? 2.5 : 1.2) * dim, 0); }
+    } else if (kv) {
       stop(kv[0], kv[1]);
       if (o.ranged) { if (big) trauma(0.15 * dim); kick(dir * 0.8 * dim, 0); }
       else { trauma((o.crit ? 0.4 : o.heavy || blunt ? 0.3 : 0.14) * dim); kick(dir * (big ? 2.5 : 1.2) * dim, (blunt ? 1.5 : 0) * dim); }
@@ -2306,6 +2351,16 @@
     S.shakeSeen = W.shake > 0 ? W.shake : 0;
     S.trauma = Math.max(0, S.trauma - dt * 1.9);
     const a = S.trauma * S.trauma;
+    if (S.rkT > 0) { // kiếm nặng nhát kết (G.KN_RUNG): rung riêng ≤ 2 điểm ảnh game, 70 ms, tắt dần; đè lên rung khác trong lúc đó
+      const n = G.NET || 1, f = (KN_RK.t - S.rkT) / KN_RK.t, env = (1 - f) * Math.min(1, VX('rung')), A = KN_RK.px * env;
+      const kx = S.rkD * A * Math.cos(f * Math.PI * 4), ky = A * 0.5 * Math.sin(f * Math.PI * 5);
+      S.sx = Math.max(-2, Math.min(2, Math.round(kx * n) / n));
+      S.sy = Math.max(-2, Math.min(2, Math.round(ky * n) / n));
+      S.rkT -= dt;
+      S.kx = 0; S.ky = 0;
+      if (!(S.rkT > 0)) S.rkT = 0;
+      return;
+    }
     if (G.RUNG_MUOT !== false) {
       // Mục 5: nhiễu mượt (3 sóng sin lệch pha, ~25 / 15 / 37 lần mỗi giây) thay cho số ngẫu nhiên mới mỗi khung; mức sàn 0,75 điểm ảnh
       // cho đòn thường (trauma ~0,15 → 4 x 0,02 = 0,09 điểm ảnh, làm tròn về 0 nên trước đây không thấy gì), nhạt dần khi trauma < 0,08.
