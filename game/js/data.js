@@ -190,8 +190,13 @@
   // (G.STAGE_K, trùm giữ nguyên), Bổ rìu san hô Ngư Tinh mảnh 1,4 → 1,0 (js/chieu_trum.js), dòng Hút máu giảm nửa (G.EP_DO).
   // (15/10 don-tep B: bỏ cờ quay lui ?cbcu=1 / G.CB_CU.)
   G.EP_DO = {
-    ten: ['Trắng', 'Xanh lam', 'Xanh lục', 'Tím', 'Vàng', 'Đỏ', 'Rực lửa'],
-    mau: ['#d9dde4', '#5798ff', '#69c96b', '#b27bff', '#ffd166', '#f05b55', '#ff7c3e'], // 16/10 thang màu khung ô (góp ý ChatGPT mục 4)
+    // 17/10 mau-bac (chủ game): thứ tự màu quen thuộc Trắng → Xanh lục → Xanh lam → Tím → Vàng → Đỏ → Rực lửa (trước: bậc 1 Lam, bậc 2 Lục).
+    // CHỈ đổi tên + màu hiển thị; SỐ bậc (bản lưu w.ep.b, cấp Luyện, tong / gia / tiLe...) giữ nguyên ý nghĩa sức mạnh.
+    // anh[b] = số ảnh khung ô gd-o-ep-<số> dùng cho bậc b (ảnh gd-o-ep-1 là khung lam, gd-o-ep-2 là khung lục — giữ tệp ảnh, chỉ đổi chỗ dùng).
+    // Cờ quay lui ?maucu=1 (G.MAU_CU): thứ tự cũ (bậc 1 Lam, bậc 2 Lục).
+    ten: ['Trắng', 'Xanh lục', 'Xanh lam', 'Tím', 'Vàng', 'Đỏ', 'Rực lửa'],
+    mau: ['#d9dde4', '#69c96b', '#5798ff', '#b27bff', '#ffd166', '#f05b55', '#ff7c3e'], // 16/10 thang màu khung ô (góp ý ChatGPT mục 4)
+    anh: [0, 2, 1, 3, 4, 5, 6],
     // TỔNG sức mạnh vũ khí theo bậc (sát thương × phần phụ của loại). Sát thương thật = tong / (1 + phu.giaTri × bậc), để phần phụ
     // (kiếm tốc đánh, thương tầm, búa choáng, phi tiêu xuyên) cộng lại đúng bằng tong: Rực lửa ≈ ×1,75.
     tong: [1, 1.08, 1.17, 1.28, 1.4, 1.55, 1.75],
@@ -228,6 +233,10 @@
     roi: { mini: [1, 1, 2], miniDau: [2, 2, 3], vung: [3, 4, 5], vungDau: [6, 8, 10], kho2: 1.5 },
     bua: { trumVung: 0.1, thuongNhan: 600 }, // bùa giữ bậc: trùm vùng 10%; thương nhân trong ải bán 600 vàng (ải ngày Đá Bậc khó: G.AI_NGAY)
   };
+  G.MAU_CU = false;
+  try { if (typeof location !== 'undefined' && /[?&]maucu=1(&|$)/.test(location.search || '')) G.MAU_CU = true; } catch (e) { /* giữ mặc định */ }
+  if (G.MAU_CU) { const D = G.EP_DO; D.ten = ['Trắng', 'Xanh lam', 'Xanh lục', 'Tím', 'Vàng', 'Đỏ', 'Rực lửa']; D.mau = ['#d9dde4', '#5798ff', '#69c96b', '#b27bff', '#ffd166', '#f05b55', '#ff7c3e']; D.anh = [0, 1, 2, 3, 4, 5, 6]; }
+  G.chuoiMauBac = (s) => (G.MAU_CU ? String(s).replace('Xanh lục, Xanh lam', 'Xanh lam, Xanh lục') : s); // câu gợi ý kể thứ tự màu bậc
   if (G.VUNG4) { const R4 = G.EP_DO.roi; R4.mini.push(2); R4.miniDau.push(4); R4.vung.push(6); R4.vungDau.push(12); } // vùng 4: số xuất phát
   G.EP_DO_BAT = true;
   try { if (typeof location !== 'undefined' && /[?&]epdo=0(&|$)/.test(location.search || '')) G.EP_DO_BAT = false; } catch (e) { /* giữ mặc định */ }
@@ -918,12 +927,13 @@
     // GĐ2 (V48): ghi rõ phản ứng chỉ có giữa hai vũ khí khác hệ, và tương tác ẩn Độc - Băng.
     'Lửa gặp Độc gây Nổ khói. Lửa gặp Băng gây Sốc nhiệt. Độc gặp Băng không phản ứng, nhưng Băng làm Độc tan chậm một nửa. Phản ứng chỉ có giữa hai vũ khí khác hệ (đổi vũ khí khi quái còn dính hệ cũ); chưởng không gây phản ứng với vũ khí.',
     'Hạ trùm bằng hệ khắc chế nó để nhận sao thứ ba.',
-    'Vũ khí có bảy bậc ép đồ: Trắng, Xanh lam, Xanh lục, Tím, Vàng, Đỏ, Rực lửa. Ép ở Ông Thợ Rèn (thẻ Ép đồ) bằng đá nâng bậc rơi từ trùm.',
+    'Vũ khí có bảy bậc ép đồ: Trắng, Xanh lục, Xanh lam, Tím, Vàng, Đỏ, Rực lửa. Ép ở Ông Thợ Rèn (thẻ Ép đồ) bằng đá nâng bậc rơi từ trùm.',
     'Thành hình mở đặc trưng hệ thứ nhất, Thức tỉnh mở đặc trưng thứ hai.',
     'Mỗi ải có Sức mạnh khuyên dùng. Số đỏ là bé còn yếu: chơi lại ải cũ để lên cấp, kiếm linh khí, quặng, nguyên liệu và đá nâng bậc, rồi nâng cấp, mài và ép đồ vũ khí.',
     'Thiếu nguyên liệu của vùng đã qua? Bà Hàng Xén (thẻ Nguyên liệu) và Thương nhân trong ải đổi vàng lấy nguyên liệu. Thiếu quặng thì mua ở thẻ Quặng của Bà Hàng Xén (mỗi ngày có hạn).',
     'Hạ trùm vùng thì Cô Thợ May bày bán bộ đồ của vùng đó (thẻ Mua, trả bằng vàng). Mua xong cô nâng bộ bằng linh khí, vàng và mảnh trùm; mỗi cấp bộ mở một skill riêng, chỉ có tác dụng khi đang mặc bộ đó.',
   ];
+  if (G.MAU_CU) G.HINTS = G.HINTS.map(G.chuoiMauBac); // ?maucu=1: câu bảy bậc kể theo thứ tự màu cũ
 })();
 
 // ===================== BƯỚC 2 — PHIÊN B: VIỆC HÔM NAY (việc làng hằng ngày của Anh Mõ) =====================

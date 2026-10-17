@@ -1,5 +1,5 @@
 // ÉP ĐỒ — đợt 6 (13/10/2026), docs/review/ke-hoach-cai-thien/he-thong-moi/YEU-CAU-6-EP-DO-AI-NGAY.md
-//   - 4 vũ khí cố định có thêm trục "Bậc" (ép đồ) độc lập với trục "Cấp" hệ: Bậc Trắng → Xanh lam → Xanh lục → Tím → Vàng → Đỏ → Rực lửa.
+//   - 4 vũ khí cố định có thêm trục "Bậc" (ép đồ) độc lập với trục "Cấp" hệ: Bậc Trắng → Xanh lục → Xanh lam → Tím → Vàng → Đỏ → Rực lửa.
 //     Lưu trên từng vũ khí: w.ep = { b: 0..6, d: [{ m: mã dòng, q: 0,8..1,2 }], may: { '<bậc đích>': điểm may mắn } }.
 //   - Ép tốn ĐÁ NÂNG BẬC (sv.daBac) + vàng (+ mảnh trùm ở Đỏ, Rực lửa); có tỉ lệ thất bại; từ Vàng trở lên thất bại tụt 1 bậc
 //     (BÙA GIỮ BẬC sv.buaBac chặn). Điểm may mắn chống xui. Từ Tím mỗi bậc mở 1 dòng hiệu ứng ngẫu nhiên; đổi dòng (tẩy luyện) luôn thành công.
@@ -262,11 +262,13 @@
   // ---------- vẽ ----------
   const SC = () => G.spriteCustom;
   const gd = (ma) => { const s = SC(); return s && s.gdSan ? s.gdSan(ma) : null; };
+  // 17/10 mau-bac: số ảnh khung theo bậc (G.EP_DO.anh: bậc 1 Xanh lục dùng ảnh gd-o-ep-2, bậc 2 Xanh lam dùng gd-o-ep-1; ?maucu=1 như cũ)
+  const anhBac = (b) => { b = kep(b | 0, 0, MAX); return CF.anh ? CF.anh[b] : b; };
   // Ô vũ khí theo bậc: ảnh gd-o-ep-<bậc>; chưa có ảnh thì khung màu bằng code (Rực lửa: viền lửa chạy)
   E.o = function (x, y, s, b, c) {
     c = c || G.ux;
     E.ghiO(x, y, s, s, b);
-    const g = gd('gd-o-ep-' + b);
+    const g = gd('gd-o-ep-' + anhBac(b));
     if (g && SC().veGd(c, g, x, y, s, s)) return;
     if (c === G.ux) ui.rect(x, y, s, s, '#141a22'); else { c.fillStyle = '#141a22'; c.fillRect(x, y, s, s); }
     E.vien(c, x, y, s, s, b, true);
@@ -289,7 +291,7 @@
     for (let i = DA_O.length - 1; i >= 0; i--) { const o = DA_O[i]; if (px >= o.x && px <= o.x + o.w && py >= o.y && py <= o.y + o.h) return o; }
     return null;
   };
-  // Số bậc (1..6 = Xanh lam..Rực lửa) trong một miếng nền sẫm nhỏ; (x, y) = góc dưới phải. c: bút đang vẽ.
+  // Số bậc (1..6 = Xanh lục..Rực lửa) trong một miếng nền sẫm nhỏ; (x, y) = góc dưới phải. c: bút đang vẽ.
   // so (tuỳ chọn): số ghi thay bậc — Luyện vũ khí ghi cấp Luyện 1–15 (js/luyen.js), màu vẫn theo bậc khung b; 2 chữ số thì chữ nhỏ hơn 0,5
   E.soBac = function (c, x, y, b, nho, so) {
     if (!(b > 0) && so == null) return;
@@ -312,9 +314,9 @@
   const VIEN9 = new Map();
   function vienAnh(c, x, y, w, h, b) {
     if (G.NOI9 === false || typeof document === 'undefined') return false;
-    const g = gd('gd-o-ep-' + b);
+    const g = gd('gd-o-ep-' + anhBac(b));
     if (!g || !g.img || !(w > 12 && h > 12)) return false;
-    const key = b + '|' + w + 'x' + h;
+    const key = anhBac(b) + '|' + w + 'x' + h;
     let cv = VIEN9.get(key);
     if (!cv || cv.__img !== g.img) {
       const N = 4, W = Math.round(w * N), H = Math.round(h * N), im = g.img, pw = im.naturalWidth || im.width, ph = im.naturalHeight || im.height;

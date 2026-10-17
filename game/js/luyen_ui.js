@@ -59,7 +59,9 @@
     'Luyện lên cấp 6': 'Temper to Lv 6', 'Luyện lên cấp 10': 'Temper to Lv 10', 'Luyện lên cấp 13': 'Temper to Lv 13', 'Luyện lên cấp 15': 'Temper to Lv 15', '{0}; nâng bộ trang phục': '{0}; upgrade outfits',
     'Linh khí vào một túi chung. Cu Tí mang đủ 4 vũ khí (Kiếm, Thương, Búa, Phi tiêu); ở Ông Thợ Rèn luyện từng món từ cấp 1 lên 15: cấp 3 thành Mầm (chọn Lửa, Độc hoặc Băng), cấp 6 Thành hình, cấp 12 Thức tỉnh.':
       'Spirit goes into one shared pouch. Cu Tí carries all 4 weapons (Sword, Spear, Hammer, Shuriken); at the Smith, temper each from Lv 1 to 15: Lv 3 Sprout (pick Fire, Poison or Ice), Lv 6 Formed, Lv 12 Awakened.',
-    'Luyện vũ khí ở Ông Thợ Rèn lần nào cũng thành công, không tụt cấp. Khung ô đổi màu theo cấp: Trắng, Xanh lam, Xanh lục, Tím, Vàng, Đỏ, Rực lửa.':
+    'Luyện vũ khí ở Ông Thợ Rèn lần nào cũng thành công, không tụt cấp. Khung ô đổi màu theo cấp: Trắng, Xanh lục, Xanh lam, Tím, Vàng, Đỏ, Rực lửa.':
+      'Tempering at the Smith always succeeds and never drops a level. The slot frame changes colour with the level: White, Green, Blue, Purple, Gold, Red, Blazing.',
+    'Luyện vũ khí ở Ông Thợ Rèn lần nào cũng thành công, không tụt cấp. Khung ô đổi màu theo cấp: Trắng, Xanh lam, Xanh lục, Tím, Vàng, Đỏ, Rực lửa.': // ?maucu=1
       'Tempering at the Smith always succeeds and never drops a level. The slot frame changes colour with the level: White, Blue, Green, Purple, Gold, Red, Blazing.',
     'Mỗi ải có Sức mạnh khuyên dùng. Số đỏ là bé còn yếu: chơi lại ải cũ để lên cấp, kiếm vàng, linh khí, nguyên liệu rèn và nguyên liệu vùng, rồi luyện vũ khí.':
       'Each stage has a recommended Power. Red means you are still weak: replay old stages to level up and gather gold, spirit, forge materials and region materials, then temper your weapons.',
@@ -69,7 +71,7 @@
   // Sổ: gợi ý G.HINTS số 1, 7, 9, 10 nói theo Luyện (cờ tắt thì giữ câu cũ của js/data.js)
   if (L.bat() && Array.isArray(G.HINTS) && G.HINTS.length > 10) {
     G.HINTS[1] = 'Linh khí vào một túi chung. Cu Tí mang đủ 4 vũ khí (Kiếm, Thương, Búa, Phi tiêu); ở Ông Thợ Rèn luyện từng món từ cấp 1 lên 15: cấp 3 thành Mầm (chọn Lửa, Độc hoặc Băng), cấp 6 Thành hình, cấp 12 Thức tỉnh.';
-    G.HINTS[7] = 'Luyện vũ khí ở Ông Thợ Rèn lần nào cũng thành công, không tụt cấp. Khung ô đổi màu theo cấp: Trắng, Xanh lam, Xanh lục, Tím, Vàng, Đỏ, Rực lửa.';
+    G.HINTS[7] = (G.chuoiMauBac || String)('Luyện vũ khí ở Ông Thợ Rèn lần nào cũng thành công, không tụt cấp. Khung ô đổi màu theo cấp: Trắng, Xanh lục, Xanh lam, Tím, Vàng, Đỏ, Rực lửa.');
     G.HINTS[9] = 'Mỗi ải có Sức mạnh khuyên dùng. Số đỏ là bé còn yếu: chơi lại ải cũ để lên cấp, kiếm vàng, linh khí, nguyên liệu rèn và nguyên liệu vùng, rồi luyện vũ khí.';
     G.HINTS[10] = 'Thiếu nguyên liệu của vùng đã qua? Bà Hàng Xén (thẻ Nguyên liệu) và Thương nhân trong ải đổi vàng lấy nguyên liệu. Thiếu nguyên liệu rèn thì mua ở thẻ NLR của Bà Hàng Xén (mỗi ngày có hạn).';
   }

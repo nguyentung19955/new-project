@@ -2,7 +2,7 @@
 //   hào quang, đốm, lửa chạy, ánh lướt theo cấp mài) mặc định TẮT (G.VIEN_VK = false). Bật lại bản cũ: ?vienvk=1. Khung ô: js/ep_do.js.
 //   Cuối tệp: G.vkHeAnh — nạp ảnh vũ khí theo hệ (bộ zed-vk-he) khi đã có ảnh.
 // VIỀN + HÀO QUANG VŨ KHÍ THEO BẬC ÉP ĐỒ, ÁNH LƯỚT THEO CẤP MÀI (15/10/2026) — docs/review/ke-hoach-cai-thien/vien-vk-bac/YEU-CAU.md
-//   Bậc ép đồ (G.EP_DO.mau, js/ep_do.js E.bac): Trắng không viền · Xanh lam, Xanh lục: viền 1 điểm ảnh màu bậc · Tím, Vàng: viền + hào quang
+//   Bậc ép đồ (G.EP_DO.mau, js/ep_do.js E.bac): Trắng không viền · Xanh lục, Xanh lam: viền 1 điểm ảnh màu bậc · Tím, Vàng: viền + hào quang
 //   mờ mềm nhấp nháy nhẹ · Đỏ: thêm vài đốm sáng bay quanh lưỡi · Rực lửa: như Đỏ + đốm lửa vàng/cam chạy dọc vũ khí (kiểu lửa E.vien).
 //   Cấp mài (w.sharpen, tối đa G.MAX_SHARPEN = 15): +1..+2 không ánh · +3..+5 một vệt trắng lướt mỗi 2,5 s · +6..+8 mỗi 1,6 s · +9..+15 hai vệt mỗi 1 s.
 //   Dùng ở: vũ khí trên tay Zed (js/zed_moi.js veVk — đứng, đi, chạy, chém, phi tiêu đang cầm) và hình vũ khí trong ô (js/vk_moi.js VM.icon:
@@ -123,7 +123,7 @@
     c.drawImage(can, dx - m.pad * m.q, dy - m.pad * m.q, m.W * m.q, m.H * m.q);
     c.globalAlpha = ga; c.imageSmoothingEnabled = sm;
   }
-  // TRƯỚC ảnh vũ khí: hào quang (Tím trở lên) + viền (Xanh lam trở lên)
+  // TRƯỚC ảnh vũ khí: hào quang (Tím trở lên) + viền (Xanh lục trở lên)
   VV.truoc = function (c, w, img, sx, sy, sw, sh, key, dx, dy, gp, t) {
     if (!VV.bat() || !w) return;
     const b = VV.bac(w);

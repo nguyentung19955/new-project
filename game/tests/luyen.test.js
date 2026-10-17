@@ -96,7 +96,7 @@ const CA = [
     for (const [k, [[st, sh, b], [L, v, lk, r]]] of CA.entries()) {
       const cu = await dung(st, sh, b);
       const m = await chuyen(cu.raw);
-      const ten = ['Trắng', 'Mầm', 'Thành hình', 'Thức tỉnh'][st] + ' +' + sh + ' ' + ['Trắng', 'Xanh lam', 'Xanh lục', 'Tím', 'Vàng', 'Đỏ', 'Rực lửa'][b];
+      const ten = ['Trắng', 'Mầm', 'Thành hình', 'Thức tỉnh'][st] + ' +' + sh + ' ' + ['Trắng', 'Xanh lục', 'Xanh lam', 'Tím', 'Vàng', 'Đỏ', 'Rực lửa'][b];
       const h = m.bao || { vang: 0, lk: 0, nlr: 0 };
       const lech = m.p / cu.p - 1;
       tut.push(lech);
