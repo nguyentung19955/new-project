@@ -1,0 +1,179 @@
+{
+ "so_do": {
+  "1": [
+   {
+    "khung": 1,
+    "sao": false,
+    "chanTruoc": 0.0,
+    "dauCao": -5.1,
+    "muiKiemTrenDat": 96.2
+   },
+   {
+    "khung": 2,
+    "sao": false,
+    "chanTruoc": -0.7,
+    "dauCao": 0.1,
+    "muiKiemTrenDat": 114.9
+   },
+   {
+    "khung": 3,
+    "sao": false,
+    "chanTruoc": 4.7,
+    "dauCao": -3.9,
+    "muiKiemTrenDat": 99.1
+   },
+   {
+    "khung": 4,
+    "sao": true,
+    "chanTruoc": 6.0,
+    "dauCao": -9.3,
+    "muiKiemTrenDat": 44.6
+   },
+   {
+    "khung": 5,
+    "sao": false,
+    "chanTruoc": 6.0,
+    "dauCao": -11.8,
+    "muiKiemTrenDat": 15.1
+   },
+   {
+    "khung": 6,
+    "sao": false,
+    "chanTruoc": 6.0,
+    "dauCao": -10.5,
+    "muiKiemTrenDat": 21.2
+   },
+   {
+    "khung": 7,
+    "sao": false,
+    "chanTruoc": -0.0,
+    "dauCao": -1.1,
+    "muiKiemTrenDat": 69.2
+   }
+  ],
+  "2": [
+   {
+    "khung": 1,
+    "sao": false,
+    "chanTruoc": 0.0,
+    "dauCao": -7.8,
+    "muiKiemTrenDat": 22.0
+   },
+   {
+    "khung": 2,
+    "sao": false,
+    "chanTruoc": 3.0,
+    "dauCao": -7.5,
+    "muiKiemTrenDat": 21.4
+   },
+   {
+    "khung": 3,
+    "sao": true,
+    "chanTruoc": 2.9,
+    "dauCao": -2.1,
+    "muiKiemTrenDat": 94.3
+   },
+   {
+    "khung": 4,
+    "sao": false,
+    "chanTruoc": 2.7,
+    "dauCao": -1.5,
+    "muiKiemTrenDat": 110.9
+   },
+   {
+    "khung": 5,
+    "sao": false,
+    "chanTruoc": 3.0,
+    "dauCao": -1.8,
+    "muiKiemTrenDat": 111.6
+   },
+   {
+    "khung": 6,
+    "sao": false,
+    "chanTruoc": -0.0,
+    "dauCao": -1.1,
+    "muiKiemTrenDat": 69.2
+   }
+  ],
+  "3": [
+   {
+    "khung": 1,
+    "sao": false,
+    "chanTruoc": 0.0,
+    "dauCao": -9.3,
+    "muiKiemTrenDat": 57.2
+   },
+   {
+    "khung": 2,
+    "sao": false,
+    "chanTruoc": 0.0,
+    "dauCao": -6.8,
+    "muiKiemTrenDat": 85.2
+   },
+   {
+    "khung": 3,
+    "sao": false,
+    "chanTruoc": 6.0,
+    "dauCao": -6.5,
+    "muiKiemTrenDat": 81.7
+   },
+   {
+    "khung": 4,
+    "sao": true,
+    "chanTruoc": 7.0,
+    "dauCao": -12.4,
+    "muiKiemTrenDat": 49.2
+   },
+   {
+    "khung": 5,
+    "sao": false,
+    "chanTruoc": 6.9,
+    "dauCao": -13.8,
+    "muiKiemTrenDat": 20.4
+   },
+   {
+    "khung": 6,
+    "sao": false,
+    "chanTruoc": 7.0,
+    "dauCao": -11.8,
+    "muiKiemTrenDat": 26.3
+   },
+   {
+    "khung": 7,
+    "sao": false,
+    "chanTruoc": -0.0,
+    "dauCao": -1.1,
+    "muiKiemTrenDat": 69.2
+   }
+  ]
+ },
+ "moc": {
+  "1": [
+   0,
+   0.1,
+   0.25,
+   0.45,
+   0.6,
+   0.74,
+   0.88
+  ],
+  "2": [
+   0,
+   0.22,
+   0.45,
+   0.62,
+   0.78,
+   0.9
+  ],
+  "3": [
+   0,
+   0.12,
+   0.3,
+   0.45,
+   0.6,
+   0.75,
+   0.88
+  ]
+ },
+ "ghi_chu": "chanTruoc: lệch bàn chân trước so với thủ thế (đơn vị khung que, 1 bàn chân ≈ 7); dauCao: đầu cao hơn (+) / thấp hơn (−) thủ thế; muiKiemTrenDat: mũi kiếm (dài 28) cao hơn vạch đất, phải > 0"
+}
