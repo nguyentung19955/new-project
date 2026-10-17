@@ -85,7 +85,7 @@ Chỉ bỏ ở HUD trong ải. Màn chọn ải (Chú Lái Đò), bảng thua ("
 | Bài | Kết quả |
 |---|---|
 | `node --check` mọi `game/js/*.js` | Đạt |
-| `python3 game/build.py` / `--hai-tep` | Đạt — một tệp **29,91 MB** / 30; người chơi tải **17,70 MB** / 20 |
+| `python3 game/build.py` / `--hai-tep` | Đạt — một tệp **29,91 MB** / 30; người chơi tải **17,74 MB** / 20 (sau khi gộp các phiên khác) |
 | `soat.py` lỗi JS: 5 cảnh (phòng quái có mẹo, ải hướng dẫn, trùm Rừng già, trùm Sông sâu, HUD + chạm bản đồ) × 844×390, 1280×720 × {mặc định, tắt **từng** cờ, tắt hết, `?manrong=1`} — bản một tệp | **0 lỗi JS** (16/16) |
 | Như trên, bản web hai tệp (`linh-khi-nhe.html` qua http) | 0 lỗi JS (chỉ dòng `sw.js` 404 của môi trường thử, có từ trước) |
 | Tắt hết 5 cờ so bản trước phiên: lớp giao diện, đồng hồ cố định, 5 cảnh × 2 cỡ màn × 2 thời điểm | **0 điểm ảnh khác** |
