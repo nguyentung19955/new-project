@@ -685,12 +685,15 @@
   const anhSan = () => { const s = G.spriteCustom; if (G.SAN_TL === false || !s || !s.gdSan) return null; const a = s.gdSan('gd-nen-song-san-tl'); return a && a.ready && a.img ? a : null; };
   // --- sân (vẽ một lần vào canvas ẩn): nước sâu quanh bãi đá, bãi đá, lối đá ở cửa ---
   function dungSan(w) {
-    const g = w.geo, cv = document.createElement('canvas');
-    cv.width = g.W || G.W; cv.height = g.H || G.H;
+    // 17/10 nét cao — nền (net-cao-nen/bao-cao.md): canvas thế giới nét ≥ 3 → sân dựng ở cỡ thật (K điểm / điểm game), ảnh sân nét cao
+    // (anh_n3 / anh_n4) hiện đủ chi tiết; hình code vẫn theo ô điểm game. Mặc định K = 1 như cũ.
+    const g = w.geo, cv = document.createElement('canvas'), K = (G.NET || 1) >= 3 ? G.NET | 0 : 1;
+    cv.width = (g.W || G.W) * K; cv.height = (g.H || G.H) * K; cv.k = K;
     const pv = c; c = cv.getContext('2d');
+    if (K > 1) { c.setTransform(K, 0, 0, K, 0, 0); c.imageSmoothingEnabled = false; }
     try {
       const D = da(w), fx0 = g.fx0, fx1 = g.fx1, fy0 = g.fy0, fy1 = g.fy1, A9 = anhSan();
-      cv.coAnh = !!A9;
+      cv.coAnh = !!A9; cv.anh = A9;
       if (A9) { // lát ảnh sân (cỡ game = điểm ảnh ảnh / net), bắt đầu từ góc sân
         const tw = A9.pw / A9.net, th = A9.ph / A9.net;
         c.save(); c.beginPath(); c.rect(fx0, fy0, fx1 - fx0, fy1 - fy0); c.clip(); c.imageSmoothingEnabled = false;
@@ -747,12 +750,13 @@
   function veSan(cx, w, t) {
     if (!w.tlSan) return;
     if (w.tlCv && !w.tlCv.coAnh && anhSan()) w.tlCv = null; // ảnh sân vừa tải xong: dựng lại một lần
+    if (w.tlCv && (w.tlCv.k !== ((G.NET || 1) >= 3 ? G.NET | 0 : 1) || ((G.NET || 1) >= 3 && w.tlCv.coAnh && anhSan() !== w.tlCv.anh))) w.tlCv = null; // nét cao: đổi nét / ảnh nét cao vừa về
     if (!w.tlCv) { try { w.tlCv = dungSan(w); } catch (e) { w.tlCv = null; if (!TL.loiVe) { TL.loiVe = e; if (window.console) console.warn('thuong_luong san', e); } return; } }
     const rut = w.tlRut != null ? clamp(1 - (t - w.tlRut) / 2, 0.45, 1) : 1; // hạ xong: nước rút
     const pv = c; c = cx;
     try {
       c.save(); c.globalAlpha *= rut;
-      c.drawImage(w.tlCv, 0, 0);
+      if (w.tlCv.k > 1) c.drawImage(w.tlCv, 0, 0, w.tlCv.width / w.tlCv.k, w.tlCv.height / w.tlCv.k); else c.drawImage(w.tlCv, 0, 0);
       c.restore();
       // gợn sóng chạy, bọt mép đá
       const S = w.tlSan, D = rut < 1 ? { x0: S.x0 + CFG.san.trai - 6, x1: S.x1 - CFG.san.phai + 6, y0: S.y0 + CFG.san.tren - 8, y1: S.y1 - CFG.san.duoi + 4 } : da(w), g = w.geo;

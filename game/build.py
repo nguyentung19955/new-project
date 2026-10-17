@@ -552,7 +552,7 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
     # 17/10 nét cao: ảnh "tam_n3" / "tam_n4" (Cu Tí, vệt kiếm nặng) → ảnh rời riêng; game CHỈ tải khi bật ?netcao=3|4 → không tính người chơi tải
     net_cao = {}
     for t in ds:
-        for k in ('tam_n3', 'tam_n4'):
+        for k in ('tam_n3', 'tam_n4', 'anh_n3', 'anh_n4'):  # anh_n*: ảnh gd-* nét cao (net-cao-nen), cùng cách
             v = t.get(k)
             if not isinstance(v, (str, list)):
                 continue
@@ -565,7 +565,7 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
                 with open(os.path.join(thu, ten + '.png'), 'wb') as f:
                     f.write(png)
                 ra_.append(THU_MUC_ANH + '/' + ten + '.png')
-                net_cao[k] = net_cao.get(k, 0) + len(png)
+                net_cao['tam_n' + k[-1]] = net_cao.get('tam_n' + k[-1], 0) + len(png)
                 tong_png += len(png)
             t[k] = ra_[0] if isinstance(v, str) else ra_
     khai = ('// ===== ảnh rời (tải nhanh 12/10): ảnh nằm ở thư mục anh/ cạnh trang, js/sprite_custom.js tải theo ưu tiên =====\n'
@@ -636,7 +636,7 @@ RUNTIME_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'vung', 'thay_cho
                 'anh', 'vu_khi', 'trang_phuc', 'vat_pham', 'dung_yen', 'nhun', 'nhun_buoc', 'neo', 'khoac_do', 'cu',
                 'net', 'nhan_vat', 'diem', 'diem_theo', 'cap', 'can_tam', 'muot_cua', 'muot', 'bo_va', 'vung_mat', 'net_cua', 'net_moi')  # net_cua, net_moi (17/10 do-net): tấm cũ trước khi dựng lại cho nét (?netcu=1) / tấm mới. vung_mat (15/10 sua-lang-npc): ô mặt người làng ghi tay cho dải lối tắt. can_tam (14/10 trum-chet-pha3): độ dời ngang từng khung để tâm thân trùm trùng điểm neo. net: ảnh gấp net lần (thiếu là game đọc thành 1 → hình to gấp đôi, khung bị cắt)
 HU_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'tam', 'khung_rong', 'khung_cao', 'goc', 'so', 'giay', 'lap', 'xoay', 'co', 'tron', 'net', 'vung', 'ban_kinh', 'det', 'tam_n4')  # tam_n4: nét cao (chỉ bản ảnh rời, NET_CAO_KEYS)  # ban_kinh, det (vẽ tay 6–7): vòng sóng hu-vong-song; hiệu ứng ảnh AI (js/fx_anh.js); vung (15/10): tải theo vùng (vung_rieng)
-GD_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'anh', 'net', 'vien', 'lap_canh')  # lap_canh (14/10): cạnh + lòng 9 mảnh lặp thay vì kéo giãn. Ảnh giao diện gd-<tên> (bản đồ, nút; js/sprite_custom.js → SC.gd, js/minimap.js)
+GD_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'anh', 'net', 'vien', 'lap_canh', 'anh_n3', 'anh_n4')  # anh_n3 / anh_n4 (17/10 nét cao — nền): chỉ bản ảnh rời, NET_CAO_KEYS  # lap_canh (14/10): cạnh + lòng 9 mảnh lặp thay vì kéo giãn. Ảnh giao diện gd-<tên> (bản đồ, nút; js/sprite_custom.js → SC.gd, js/minimap.js)
 DO_LOAI = ('vat-pham',)  # đồ: một ảnh đứng yên (đợt 2: bỏ vu-khi, trang-phuc)
 DA_BO = {'vu-khi': 'ảnh vũ khí cũ (vk-*)', 'trang-phuc': 'ảnh trang phục cũ (tp-*)', 'ghep': 'hồ sơ ghép trang bị (ghep-*)'}  # đợt 2: game không đọc nữa
 SHIM = '''window.G = window.G || {};
@@ -652,7 +652,7 @@ SHIM = '''window.G = window.G || {};
 # 17/10 NÉT CAO (thử nghiệm ?netcao=3|4, docs/review/ke-hoach-cai-thien/net-cao/bao-cao.md): ảnh Cu Tí / vệt kiếm nặng dựng sẵn cho canvas nét 3 / 4
 # ("tam_n3", "tam_n4" + "to_n3", "to_n4"). CHỈ ở bản ảnh rời (web), thành tệp ảnh riêng game chỉ tải khi bật cờ; bản một tệp (trần 30 MB) và
 # chế độ 2 tệp kiểu JSON bỏ hẳn (bật cờ ở đó thì game dùng bản to ×1,2 như cũ, chỉ canvas to hơn).
-NET_CAO_KEYS = ('tam_n3', 'tam_n4', 'to_n3', 'to_n4')
+NET_CAO_KEYS = ('tam_n3', 'tam_n4', 'to_n3', 'to_n4', 'anh_n3', 'anh_n4')  # anh_n3 / anh_n4: ảnh giao diện gd-* (nền, đồ trang trí… net-cao-nen/bao-cao.md)
 
 
 def bo_net_cao(t):
@@ -689,7 +689,13 @@ def custom_sprites():
             v = t.get('vien')
             if v is not None and not (isinstance(v, list) and len(v) == 4 and all(isinstance(x, (int, float)) and not isinstance(x, bool) and 0 <= x <= 400 for x in v)):
                 sys.exit('art/custom/%s: "vien" phải là 4 số [trên, phải, dưới, trái]' % name)
-            out.append({k: t[k] for k in GD_KEYS if k in t})
+            g = {k: t[k] for k in GD_KEYS if k in t}
+            # 17/10 nét cao — nền: ảnh nét cao dựng cho ĐÚNG ảnh thường hiện có ("net_cao_cua" = 12 ký tự đầu sha256 của chuỗi "anh").
+            # Ảnh thường đã đổi (gen lại, cắt lại) mà chưa dựng lại bản nét cao → bỏ bản nét cao (game dùng ảnh thường), báo để dựng lại.
+            if ('anh_n3' in g or 'anh_n4' in g) and t.get('net_cao_cua') != hashlib.sha256(t['anh'].encode()).hexdigest()[:12]:
+                print('CHÚ Ý: art/custom/%s: ảnh nét cao (anh_n3/anh_n4) dựng cho ảnh cũ → bỏ; chạy lại docs/review/ke-hoach-cai-thien/net-cao-nen/cong-cu/dung_net.py' % name)
+                g.pop('anh_n3', None); g.pop('anh_n4', None)
+            out.append(g)
             continue
         if t.get('doi_tuong') == 'zed':
             # bộ Zed mới 13/10 (docs/anh-goc/zed/dung-zed-game.py): zed-moi (thân + nắm tay + neo vũ khí), zed-vk (vũ khí 4 loại × 4 cấp)

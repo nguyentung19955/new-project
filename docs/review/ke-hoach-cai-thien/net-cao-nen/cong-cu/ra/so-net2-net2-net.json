@@ -1,0 +1,212 @@
+{
+ "gd-cot-nang-bien": {
+  "iou": 0.0,
+  "giong": NaN,
+  "lech_tb": NaN
+ },
+ "gd-cot-nang-lau": {
+  "iou": 0.0,
+  "giong": NaN,
+  "lech_tb": NaN
+ },
+ "gd-cua-song-ben-khoa": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-cua-song-ben": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-cua-song-duoi-khoa": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-cua-song-duoi": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-cua-song-tren-khoa": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-cua-song-tren": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-bien-mep": {
+  "iou": 0.997,
+  "giong": 0.0,
+  "lech_tb": 13.86
+ },
+ "gd-nen-bien-ngoai": {
+  "iou": 1.0,
+  "giong": 0.161,
+  "lech_tb": 2.2
+ },
+ "gd-nen-bien-san-nhan": {
+  "iou": 1.0,
+  "giong": 0.019,
+  "lech_tb": 5.59
+ },
+ "gd-nen-bien-san0": {
+  "iou": 1.0,
+  "giong": 0.1401,
+  "lech_tb": 4.35
+ },
+ "gd-nen-bien-san1": {
+  "iou": 1.0,
+  "giong": 0.1542,
+  "lech_tb": 4.14
+ },
+ "gd-nen-bien-san2": {
+  "iou": 1.0,
+  "giong": 0.1425,
+  "lech_tb": 4.06
+ },
+ "gd-nen-bien-tuong-ben": {
+  "iou": 0.9987,
+  "giong": 0.0,
+  "lech_tb": 6.94
+ },
+ "gd-nen-bien-tuong-sau": {
+  "iou": 1.0,
+  "giong": 0.0376,
+  "lech_tb": 5.85
+ },
+ "gd-nen-bien-tuong-truoc": {
+  "iou": 1.0,
+  "giong": 0.0947,
+  "lech_tb": 6.49
+ },
+ "gd-nen-lau-mep": {
+  "iou": 0.9959,
+  "giong": 0.0,
+  "lech_tb": 9.59
+ },
+ "gd-nen-lau-ngoai": {
+  "iou": 1.0,
+  "giong": 0.2324,
+  "lech_tb": 1.03
+ },
+ "gd-nen-lau-san-nhan": {
+  "iou": 1.0,
+  "giong": 0.0165,
+  "lech_tb": 6.75
+ },
+ "gd-nen-lau-san0": {
+  "iou": 1.0,
+  "giong": 0.0723,
+  "lech_tb": 4.9
+ },
+ "gd-nen-lau-san1": {
+  "iou": 1.0,
+  "giong": 0.0095,
+  "lech_tb": 5.41
+ },
+ "gd-nen-lau-san2": {
+  "iou": 1.0,
+  "giong": 0.0,
+  "lech_tb": 5.59
+ },
+ "gd-nen-lau-tuong-ben": {
+  "iou": 1.0,
+  "giong": 0.0153,
+  "lech_tb": 6.11
+ },
+ "gd-nen-lau-tuong-sau": {
+  "iou": 1.0,
+  "giong": 0.123,
+  "lech_tb": 4.88
+ },
+ "gd-nen-lau-tuong-truoc": {
+  "iou": 1.0,
+  "giong": 0.2298,
+  "lech_tb": 4.84
+ },
+ "gd-nen-song-mep": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-song-ngoai": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-song-san-nhan": {
+  "iou": 1.0,
+  "giong": 0.1536,
+  "lech_tb": 4.78
+ },
+ "gd-nen-song-san-tl": {
+  "iou": 1.0,
+  "giong": 0.474,
+  "lech_tb": 1.75
+ },
+ "gd-nen-song-san0": {
+  "iou": 1.0,
+  "giong": 0.0957,
+  "lech_tb": 4.32
+ },
+ "gd-nen-song-san1": {
+  "iou": 1.0,
+  "giong": 0.1555,
+  "lech_tb": 4.28
+ },
+ "gd-nen-song-san2": {
+  "iou": 1.0,
+  "giong": 0.0731,
+  "lech_tb": 4.65
+ },
+ "gd-nen-song-tuong-ben": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-song-tuong-sau": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-song-tuong-truoc": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-song-cau": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-tham-lau": {
+  "iou": 1.0,
+  "giong": 0.0594,
+  "lech_tb": 1.95
+ },
+ "gd-tt-song-coc": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-tt-song-da-bun": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-tt-song-tien-canh-phai": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-tt-song-tien-canh-trai": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ }
+}

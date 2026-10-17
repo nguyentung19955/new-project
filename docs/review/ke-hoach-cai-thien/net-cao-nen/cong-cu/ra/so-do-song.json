@@ -1,0 +1,186 @@
+{
+ "gd-nen-song-tuong-sau": {
+  "doan": [
+   0,
+   330
+  ],
+  "lech_mep": 9.1,
+  "co_anh": [
+   330,
+   98
+  ],
+  "png": 44231
+ },
+ "gd-nen-song-tuong-truoc": {
+  "doan": [
+   42,
+   96
+  ],
+  "lech_mep": 22.5,
+  "dinh_coc_goc": 118,
+  "co_anh": [
+   96,
+   24
+  ],
+  "png": 5683
+ },
+ "gd-nen-song-tuong-ben": {
+  "ghi_chu": "ảnh gen chỉ có một cột cọc: lấy đoạn thân 18–78% chiều cao, kéo 28×128 ảnh, lặp dọc",
+  "cot_goc": [
+   728,
+   243,
+   806,
+   468
+  ],
+  "co_anh": [
+   28,
+   128
+  ],
+  "png": 5010
+ },
+ "gd-cua-song": {
+  "khung_goc": [
+   [
+    49,
+    470,
+    280,
+    620
+   ],
+   [
+    300,
+    470,
+    522,
+    618
+   ],
+   [
+    604,
+    484,
+    760,
+    617
+   ],
+   [
+    778,
+    484,
+    938,
+    618
+   ],
+   [
+    1014,
+    487,
+    1240,
+    618
+   ],
+   [
+    1258,
+    487,
+    1487,
+    618
+   ]
+  ]
+ },
+ "gd-cot-nang-bien": {
+  "co_anh": [
+   56,
+   78
+  ],
+  "png": 3933
+ },
+ "gd-cot-nang-lau": {
+  "co_anh": [
+   56,
+   80
+  ],
+  "png": 3890
+ },
+ "gd-cua-song-tren": {
+  "co_anh": [
+   84,
+   54
+  ],
+  "png": 6293
+ },
+ "gd-cua-song-tren-khoa": {
+  "co_anh": [
+   84,
+   56
+  ],
+  "png": 7017
+ },
+ "gd-cua-song-ben": {
+  "co_anh": [
+   30,
+   74
+  ],
+  "png": 2888
+ },
+ "gd-cua-song-ben-khoa": {
+  "co_anh": [
+   30,
+   74
+  ],
+  "png": 3774
+ },
+ "gd-cua-song-duoi": {
+  "co_anh": [
+   92,
+   54
+  ],
+  "png": 6689
+ },
+ "gd-cua-song-duoi-khoa": {
+  "co_anh": [
+   92,
+   52
+  ],
+  "png": 7733
+ },
+ "gd-tt-song-coc": {
+  "co_anh": [
+   20,
+   28
+  ],
+  "png": 1056
+ },
+ "gd-tt-song-da-bun": {
+  "co_anh": [
+   30,
+   18
+  ],
+  "png": 850
+ },
+ "gd-tt-song-tien-canh-phai": {
+  "co_anh": [
+   80,
+   70
+  ],
+  "png": 5856
+ },
+ "gd-tt-song-tien-canh-trai": {
+  "co_anh": [
+   80,
+   70
+  ],
+  "png": 5870
+ },
+ "gd-song-cau": {
+  "co_anh": [
+   124,
+   44
+  ],
+  "png": 8135
+ },
+ "gd-nen-song-mep": {
+  "co_anh": [
+   128,
+   24
+  ],
+  "png": 6563
+ },
+ "gd-nen-song-ngoai": {
+  "co_anh": [
+   128,
+   128
+  ],
+  "png": 27512
+ }
+}

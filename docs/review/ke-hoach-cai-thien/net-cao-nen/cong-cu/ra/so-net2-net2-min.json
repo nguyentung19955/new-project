@@ -1,0 +1,82 @@
+{
+ "gd-tt-lau-chan-nen": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-tt-lau-co-do": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-tt-lau-co-xanh": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-tt-lau-cot-da": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-tt-lau-cua-so-kinh": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-tt-lau-cua-so": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-tt-lau-duoc": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-tt-lau-hom-go": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-tt-lau-nen": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-tt-lau-tham-tron": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-tt-lau-tham-vuong": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-tt-lau-thung-go": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-tt-lau-tien-canh-phai": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-tt-lau-tien-canh-trai": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-tt-lau-tuong-hiep-si": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-tt-lau-xuong-so": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ }
+}

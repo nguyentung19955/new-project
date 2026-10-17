@@ -1465,6 +1465,9 @@
       g.img = src; g.pw = src.width; g.ph = src.height; g.rong = Math.max(1, Math.round(src.width / g.net)); g.cao = Math.max(1, Math.round(src.height / g.net));
       g.ghep9.clear(); g.ready = true;
     };
+    // 17/10 NÉT CAO — NỀN (net-cao-nen/bao-cao.md): "anh_n3" / "anh_n4" = cùng ảnh dựng từ ảnh gốc ở 3 / 4 điểm thật mỗi điểm game (cùng khung,
+    // cùng chỗ đặt). Chỉ bản web ảnh rời có (build.py NET_CAO_KEYS); chỉ tải khi canvas thế giới đang ở nét đó (?netcao=3|4), xem SC.gdSan.
+    g.anhN = typeof tep.anh_n3 === 'string' || typeof tep.anh_n4 === 'string' ? { 3: tep.anh_n3, 4: tep.anh_n4 } : null;
     SC.gd[g.ma] = g;
     if (tep.anhCanvas && tep.anhCanvas.getContext) xong(tep.anhCanvas); // công cụ đưa thẳng canvas (vẽ ngay, không chờ)
     else {
@@ -1473,7 +1476,26 @@
     }
     return g;
   }
-  SC.gdSan = (ma) => { const g = SC.gd[ma]; if (g && !g.ready && roiCan) roiCan(ma); return g && g.ready ? g : null; };
+  SC.gdSan = (ma) => { const g = SC.gd[ma]; if (g && !g.ready && roiCan) roiCan(ma); return g && g.ready ? gdNetCao(g) || g : null; };
+  // NÉT CAO — NỀN: canvas thế giới nét N ≥ 3 và tệp có "anh_n<N>" → trả bản nét N (một vật cố định cho mỗi ảnh: cùng mã, cỡ game, viền;
+  // img / pw / ph / net là của ảnh nét cao). Lần đầu cần thì bắt đầu tải, chưa về thì trả null (nơi gọi dùng ảnh thường). SC.gdHiSo: số ảnh
+  // nét cao đã về (js/room_art.js dựng lại phòng khi số này đổi). Mặc định (nét 1 / 2) không bao giờ chạy tới đây.
+  SC.gdHiSo = 0;
+  function gdNetCao(g) {
+    const N = G.NET | 0;
+    if (N < 3 || !g.anhN || typeof g.anhN[N] !== 'string' || typeof Image === 'undefined') return null;
+    const k = 'hi' + N;
+    if (!g[k]) {
+      const h = (g[k] = { ok: false, o: null }), img = new Image();
+      img.onload = () => {
+        h.o = Object.assign({}, g, { img, pw: img.width, ph: img.height, net: N, ghep9: new Map(), hi0: g });
+        h.ok = true; SC.gdHiSo++;
+      };
+      img.onerror = () => { h.hong = true; };
+      img.src = g.anhN[N];
+    }
+    return g[k].ok ? g[k].o : null;
+  }
   // 16/10 (ve-tay-8-gop-giao-dien): ảnh THAY hình vẽ code — có ảnh và không ?vecode=1 (G.VE_CODE) thì trả ảnh, không thì null (nơi gọi vẽ code y cũ).
   SC.gdThay = (ma) => (G.VE_CODE === true ? null : SC.gdSan(ma));
   // Bản nhuộm của ảnh giao diện: điểm có màu gần `tu` (lòng ảnh) đổi thành màu `den` — dùng như ảnh gốc với SC.veGd (giữ vien / 9 mảnh).

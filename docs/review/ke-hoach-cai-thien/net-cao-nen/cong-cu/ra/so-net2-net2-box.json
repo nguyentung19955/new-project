@@ -1,0 +1,117 @@
+{
+ "gd-nen-bien-mep": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-bien-ngoai": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-bien-san-nhan": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-bien-san0": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-bien-san1": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-bien-san2": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-bien-tuong-ben": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-bien-tuong-sau": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-bien-tuong-truoc": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-lau-mep": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-lau-ngoai": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-lau-san-nhan": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-lau-san0": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-lau-san1": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-lau-san2": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-lau-tuong-ben": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-lau-tuong-sau": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-lau-tuong-truoc": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-song-san-nhan": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-song-san-tl": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-song-san0": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-song-san1": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ },
+ "gd-nen-song-san2": {
+  "iou": 1.0,
+  "giong": 1.0,
+  "lech_tb": 0.0
+ }
+}

@@ -13,6 +13,45 @@
     x.imageSmoothingEnabled = false;
     return x;
   }
+  // 17/10 NÉT CAO — NỀN (docs/review/ke-hoach-cai-thien/net-cao-nen/bao-cao.md): KB = số điểm ảnh thật trên một điểm ảnh game của
+  // NỀN PHÒNG DỰNG SẴN. Mặc định (NET 1 / 2) KB = 1: nền dựng ở 480×270 như cũ, từng điểm ảnh y hệt. Khi bật nét cao (G.NET 3 / 4,
+  // ?netcao=3|4) KB = G.NET: nền dựng thẳng ở cỡ canvas thế giới → ảnh sàn / tường / nền ngoài / thảm không còn bị thu về 1 điểm game.
+  // Hình vẽ code vẫn vẽ theo ô điểm game (phép phóng KB), các lượt tô từng điểm (lưới chấm, ánh sáng, lối mòn) tính theo ô điểm game
+  // rồi tô cho mọi điểm thật trong ô → phần code trông y như cũ, chỉ phần ảnh nét hơn.
+  let KB = 1;
+  function mkB(w, h) { // canvas nền dựng sẵn: w×h điểm game, KB điểm thật mỗi điểm game
+    if (KB === 1) return mk(w, h);
+    const x = mk(w * KB, h * KB);
+    x.setTransform(KB, 0, 0, KB, 0, 0);
+    return x;
+  }
+  // Ảnh thu về cỡ game (tile, thảm) mang thêm bản nét cao .hi (cỡ × KB): vẽ ảnh thì lấy bản .hi khi nền đang dựng ở KB > 1.
+  function dI(src) {
+    const a = arguments, h = KB > 1 ? src.hi : null;
+    if (!h) return c.drawImage.apply(c, a);
+    if (a.length === 3) return c.drawImage(h, a[1], a[2], src.width, src.height);
+    if (a.length === 5) return c.drawImage(h, a[1], a[2], a[3], a[4]);
+    return c.drawImage(h, a[1] * KB, a[2] * KB, a[3] * KB, a[4] * KB, a[5], a[6], a[7], a[8]);
+  }
+  // Bản nét cao của ảnh a cho cỡ game w×h: đúng w*KB × h*KB. Ảnh đã có đúng số điểm đó (ảnh net KB) → chép 1:1; ảnh nhỏ hơn → phóng
+  // lấy điểm gần nhất (không nhoè); ảnh to hơn → thu có làm mịn như bản cỡ game.
+  function banHi(a, w, h) {
+    const W = w * KB, H = h * KB, x = mk(W, H);
+    x.imageSmoothingEnabled = a.pw > W || a.ph > H;
+    x.drawImage(a.img, 0, 0, a.pw, a.ph, 0, 0, W, H);
+    return x.canvas;
+  }
+  // Tô từng điểm của khung (x0, y0, w, h điểm game) trên nền dựng sẵn. tinh(gx, gy) chạy MỘT lần mỗi điểm game, theo đúng thứ tự cũ
+  // (hàng trên xuống, trái sang phải) và trả false để bỏ điểm; to(d, o) tô một điểm thật (chỉ số o trong d) — mọi điểm thật trong ô.
+  function toDiem(x0, y0, w, h, tinh, to) {
+    const k = KB, W = w * k, id = c.getImageData(x0 * k, y0 * k, W, h * k), d = id.data;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      if (tinh(x0 + x, y0 + y) === false) continue;
+      if (k === 1) { to(d, (y * w + x) * 4); continue; }
+      for (let j = 0; j < k; j++) for (let i = 0; i < k; i++) to(d, ((y * k + j) * W + x * k + i) * 4);
+    }
+    c.putImageData(id, x0 * k, y0 * k);
+  }
   let c = null; // canvas đang vẽ
   const r = (x, y, w, h, col) => { c.fillStyle = col; c.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); };
   function hex(h) { return [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)]; }
@@ -100,6 +139,7 @@
       o = { img: a.img, cv: x.canvas };
       ttNhoNho.set(a, o);
     }
+    if (KB > 1 && (!o.cv.hi || o.kb !== KB || o.hiImg !== a.img)) { o.cv.hi = banHi(a, o.cv.width, o.cv.height); o.kb = KB; o.hiImg = a.img; }
     return o.cv;
   }
   // Dải lửa đuốc/nến hu-lua-duoc (kiểu hieu-ung: 3 khung 8×12, neo giữa đáy). Trang công cụ đưa bản xem thử qua G.roomArt.luaThu.
@@ -199,16 +239,13 @@
   }
   const SKIP = -99;
   function rampFill(x0, y0, w, h, ramp, fn) {
-    const cols = ramp.map(hex), n = cols.length - 1, id = c.getImageData(x0, y0, w, h), d = id.data;
-    for (let y = 0; y < h; y++) {
-      for (let x = 0; x < w; x++) {
-        const gx = x0 + x, gy = y0 + y, f = fn(gx, gy);
-        if (f === SKIP) continue;
-        const k = Math.max(0, Math.min(n, Math.floor(sharp(f) + bay(gx, gy)))), cc = cols[k], o = (y * w + x) * 4;
-        d[o] = cc[0]; d[o + 1] = cc[1]; d[o + 2] = cc[2]; d[o + 3] = 255;
-      }
-    }
-    c.putImageData(id, x0, y0);
+    const cols = ramp.map(hex), n = cols.length - 1;
+    let cc = null;
+    toDiem(x0, y0, w, h, (gx, gy) => {
+      const f = fn(gx, gy);
+      if (f === SKIP) return false;
+      cc = cols[Math.max(0, Math.min(n, Math.floor(sharp(f) + bay(gx, gy))))];
+    }, (d, o) => { d[o] = cc[0]; d[o + 1] = cc[1]; d[o + 2] = cc[2]; d[o + 3] = 255; });
   }
 
   // ====================================================================
@@ -284,7 +321,7 @@
       }
       // hoa văn tròn (ảnh AI gd-tt-lau-tham-tron: tâm ảnh ở giữa phòng, thu về cỡ game và vẽ vào nền như sàn)
       const at = gdA('gd-tt-lau-tham-tron');
-      if (at) { const cv = ttNho(at); c.drawImage(cv, cx - (cv.width >> 1), cy - (cv.height >> 1)); return; }
+      if (at) { const cv = ttNho(at); dI(cv, cx - (cv.width >> 1), cy - (cv.height >> 1)); return; }
       const R1 = 30;
       for (let dy = -R1; dy <= R1; dy++) {
         const hw = Math.round(Math.sqrt(R1 * R1 - dy * dy));
@@ -747,6 +784,7 @@
       o = { img: a.img, cv: x.canvas };
       trNho.set(a, o);
     }
+    if (KB > 1 && (!o.cv.hi || o.kb !== KB || o.hiImg !== a.img)) { o.cv.hi = banHi(a, o.cv.width, o.cv.height); o.kb = KB; o.hiImg = a.img; }
     return o.cv;
   }
   // Bộ tile Rừng già sẵn dùng, hoặc null (cờ tắt, hay thiếu tệp bắt buộc) → gọi nơi nào cũng rẽ về code cũ.
@@ -789,9 +827,9 @@
   // Một ô 16×16 lấy từ (su, sv) của mảng, đặt ở (dx, dy), có lật ngang / lật dọc. Toạ độ nguyên, không làm mịn.
   function trO(src, su, sv, dx, dy, lx, ly) {
     const O = TR.o;
-    if (!lx && !ly) { c.drawImage(src, su, sv, O, O, dx, dy, O, O); return; }
+    if (!lx && !ly) { dI(src, su, sv, O, O, dx, dy, O, O); return; }
     c.save(); c.translate(dx + (lx ? O : 0), dy + (ly ? O : 0)); c.scale(lx ? -1 : 1, ly ? -1 : 1);
-    c.drawImage(src, su, sv, O, O, 0, 0, O, O);
+    dI(src, su, sv, O, O, 0, 0, O, O);
     c.restore();
   }
   // Dải lặp một chiều (tường sau, tường trước, tường bên, cỏ mép): lát kín khung (x, y, w, h), lệch đầu `lech` điểm ảnh; lat: lật ngang.
@@ -799,13 +837,13 @@
     clipRect(x, y, w, h, () => {
       const L = doc ? src.height : src.width;
       for (let p = -(lech % L); p < (doc ? h : w); p += L) {
-        if (lat) { c.save(); c.translate(x + src.width + (doc ? 0 : p), y + (doc ? p : 0)); c.scale(-1, 1); c.drawImage(src, 0, 0); c.restore(); }
-        else c.drawImage(src, x + (doc ? 0 : p), y + (doc ? p : 0));
+        if (lat) { c.save(); c.translate(x + src.width + (doc ? 0 : p), y + (doc ? p : 0)); c.scale(-1, 1); dI(src, 0, 0); c.restore(); }
+        else dI(src, x + (doc ? 0 : p), y + (doc ? p : 0));
       }
     });
   }
   // 14/10: các mảnh dùng chung cho ba vùng (Rừng giữ nguyên code riêng của mình bên dưới).
-  function trNgoai(t, g) { for (let y = 0; y < g.H; y += t.ngoai.height) for (let x = 0; x < g.W; x += t.ngoai.width) c.drawImage(t.ngoai, x, y); }
+  function trNgoai(t, g) { for (let y = 0; y < g.H; y += t.ngoai.height) for (let x = 0; x < g.W; x += t.ngoai.width) dI(t.ngoai, x, y); }
   function trBen(t, g, rn) {
     const y0 = g.fy0 - g.wh - g.cap, h = g.fy1 + g.fw - y0, lech = rn ? ri(rn, 0, 3) * TR.o : 0;
     trDai(t['tuong-ben'], g.fx0 - g.sw, y0, g.sw, h, true, lech, false);
@@ -875,19 +913,17 @@
     });
     // lối mòn nối tâm phòng với từng cửa (đúng trường pathField của sàn code): lớp nâu nhạt mờ, 3 nấc, chuyển nấc bằng lưới chấm
     if (DUONG > 0) {
-      const pf = grid2(g, pf0), id = c.getImageData(fx, fy, w, h), d = id.data, P = hex('#7a6a48'), NAC = 3;
+      const pf = grid2(g, pf0), P = hex('#7a6a48'), NAC = 3;
       const TX = tv ? null : datLoiMon(); // 16/10 (ve-tay-8-gop-giao-dien): Rừng già — màu đất lấy từ ảnh gd-loi-mon-rung thay màu phẳng (cùng 3 nấc, cùng trường lối mòn)
-      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-        const gx = fx + x, gy = fy + y, p = pf(gx, gy);
-        if (p <= 0.02) continue;
-        const a = (Math.min(NAC, Math.floor(sharp(p * NAC) + bay(gx, gy))) / NAC) * DUONG;
-        if (a <= 0) continue;
-        const o = (y * w + x) * 4;
-        let M = P;
+      let a = 0, M = P;
+      toDiem(fx, fy, w, h, (gx, gy) => {
+        const p = pf(gx, gy);
+        if (p <= 0.02) return false;
+        a = (Math.min(NAC, Math.floor(sharp(p * NAC) + bay(gx, gy))) / NAC) * DUONG;
+        if (a <= 0) return false;
+        M = P;
         if (TX) { const k = gx % (TX.n * 2), u = TX.x0 + (k < TX.n ? k : TX.n * 2 - 1 - k), q = ((gy % TX.h) * TX.w + u) * 4; M = [TX.d[q], TX.d[q + 1], TX.d[q + 2]]; }
-        d[o] += (M[0] - d[o]) * a; d[o + 1] += (M[1] - d[o + 1]) * a; d[o + 2] += (M[2] - d[o + 2]) * a;
-      }
-      c.putImageData(id, fx, fy);
+      }, (d, o) => { d[o] += (M[0] - d[o]) * a; d[o + 1] += (M[1] - d[o + 1]) * a; d[o + 2] += (M[2] - d[o + 2]) * a; });
     }
   }
   const Forest = {
@@ -896,7 +932,7 @@
       const t = tileRung();
       if (t) { // tile: nền tối ngoài phòng lát kín cả màn
         r(0, 0, g.W, g.H, F.void);
-        for (let y = 0; y < g.H; y += t.ngoai.height) for (let x = 0; x < g.W; x += t.ngoai.width) c.drawImage(t.ngoai, x, y);
+        for (let y = 0; y < g.H; y += t.ngoai.height) for (let x = 0; x < g.W; x += t.ngoai.width) dI(t.ngoai, x, y);
         return;
       }
       r(0, 0, g.W, g.H, F.void);
@@ -1108,12 +1144,12 @@
     for (const d of g.doors) {
       if (d.side === 'top' || d.side === 'bottom') {
         const y0 = d.side === 'top' ? g.fy0 : g.fy1 - L;
-        clipRect(d.at - 11, y0, 22, L, () => { for (let p = 0; p < L; p += th) c.drawImage(cv, d.at - 11, d.side === 'top' ? y0 + p : g.fy1 - p - th); });
+        clipRect(d.at - 11, y0, 22, L, () => { for (let p = 0; p < L; p += th) dI(cv, d.at - 11, d.side === 'top' ? y0 + p : g.fy1 - p - th); });
       } else {
         const x0 = d.side === 'left' ? g.fx0 : g.fx1 - L;
         clipRect(x0, d.at - 11, L, 22, () => {
           c.save(); c.translate(x0, d.at + 11); c.rotate(-Math.PI / 2); // trục ảnh dọc → ngang: bề rộng thảm theo chiều dọc màn
-          for (let p = 0; p < L; p += th) c.drawImage(cv, 0, d.side === 'left' ? p : L - p - th);
+          for (let p = 0; p < L; p += th) dI(cv, 0, d.side === 'left' ? p : L - p - th);
           c.restore();
         });
       }
@@ -1166,7 +1202,7 @@
         }
       });
       const av = gdA('gd-tt-lau-tham-vuong'); // ảnh AI: tấm thảm vuông, tâm ảnh ở giữa phòng (vẽ vào nền như sàn)
-      if (av) { const cv = ttNho(av); c.drawImage(cv, cx - (cv.width >> 1), cy - (cv.height >> 1)); }
+      if (av) { const cv = ttNho(av); dI(cv, cx - (cv.width >> 1), cy - (cv.height >> 1)); }
       else {
         r(cx - 34, cy - 24, 68, 48, '#77593a'); r(cx - 32, cy - 22, 64, 44, '#4e2a32'); r(cx - 28, cy - 18, 56, 36, '#5c3038');
         for (let x = cx - 26; x < cx + 26; x += 6) { r(x, cy - 16, 3, 1, '#77593a'); r(x, cy + 15, 3, 1, '#77593a'); }
@@ -1244,7 +1280,7 @@
     (g) => runners(g, '#3a3050', '#6a6a8a'),
     (g) => {
       const cx = (g.fx0 + g.fx1) >> 1, cy = (g.fy0 + g.fy1) >> 1, av = gdA('gd-tt-lau-tham-vuong');
-      if (av) { const cv = ttNho(av); c.drawImage(cv, cx - (cv.width >> 1), cy - (cv.height >> 1)); }
+      if (av) { const cv = ttNho(av); dI(cv, cx - (cv.width >> 1), cy - (cv.height >> 1)); }
       else {
         r(cx - 34, cy - 24, 68, 48, '#77593a'); r(cx - 32, cy - 22, 64, 44, '#4e2a32'); r(cx - 28, cy - 18, 56, 36, '#5c3038');
         for (let x = cx - 26; x < cx + 26; x += 6) { r(x, cy - 16, 3, 1, '#77593a'); r(x, cy + 15, 3, 1, '#77593a'); }
@@ -1633,7 +1669,7 @@
   }
   function buildShell(T, g, seed) {
     const rn = G.srand(hs(seed || 11));
-    const base = mk(g.W, g.H);
+    const base = mkB(g.W, g.H);
     g.lights = [];
     g.glows = []; // quầng sáng hắt xuống sàn (đuốc, tinh thể, nấm...): tô một lần ở lightPass
     g.casts = []; // bóng đổ hình bình hành (cột, gốc cây, tượng)
@@ -1660,8 +1696,8 @@
     return { cv: base.canvas, lights: g.lights, amb: g.amb, accSide: g.accSide, tt, cao };
   }
   function buildRoom(T, g, seed, shell) {
-    const base = mk(g.W, g.H), fore = mk(g.W, g.H);
-    base.drawImage(shell.cv, 0, 0);
+    const base = mkB(g.W, g.H), fore = mk(g.W, g.H);
+    if (KB > 1) base.drawImage(shell.cv, 0, 0, g.W, g.H); else base.drawImage(shell.cv, 0, 0);
     g.lights = shell.lights.slice(); g.amb = shell.amb.slice(); g.accSide = shell.accSide;
     c = base;
     const fores = [], rd = G.srand((seed || 11) + 5);
@@ -1698,18 +1734,18 @@
   // Cột sáng (nắng/ánh trần): hình thang từ nóc tường xuống một vệt trên sàn, làm sáng bằng lưới chấm (một nửa số điểm ảnh), cạnh sắc.
   function shaft(g, bx, col, a) {
     const yt = g.fy0 - g.wh - g.cap + 2, yb = g.fy0 + 44, lc = hex(col);
-    const y0 = Math.max(0, yt), id = c.getImageData(0, y0, g.W, yb - y0 + 1), d = id.data;
-    for (let y = y0; y <= yb; y++) {
-      const q = (y - yt) / (yb - yt), xl = Math.round(bx - 7 - q * 30), xr = Math.round(bx + 7 - q * 22);
-      const al = a * (0.55 + 0.45 * q) * (y > yb - 6 ? (yb - y) / 6 : 1);
-      for (let x = Math.max(0, xl); x <= Math.min(g.W - 1, xr); x++) {
-        const edge = Math.min(x - xl, xr - x), th = edge < 2 ? 0.25 : 0.62; // mép cột thưa chấm hơn
-        if (bay(x, y) > th) continue;
-        const o = ((y - y0) * g.W + x) * 4;
-        d[o] += (lc[0] - d[o]) * al; d[o + 1] += (lc[1] - d[o + 1]) * al; d[o + 2] += (lc[2] - d[o + 2]) * al;
+    const y0 = Math.max(0, yt);
+    let al = 0, xl = 0, xr = -1, yHang = null;
+    toDiem(0, y0, g.W, yb - y0 + 1, (x, y) => {
+      if (y !== yHang) { // đầu mỗi hàng: bề ngang cột sáng ở hàng này
+        yHang = y;
+        const q = (y - yt) / (yb - yt); xl = Math.round(bx - 7 - q * 30); xr = Math.round(bx + 7 - q * 22);
+        al = a * (0.55 + 0.45 * q) * (y > yb - 6 ? (yb - y) / 6 : 1);
       }
-    }
-    c.putImageData(id, 0, y0);
+      if (x < xl || x > xr) return false;
+      const edge = Math.min(x - xl, xr - x), th = edge < 2 ? 0.25 : 0.62; // mép cột thưa chấm hơn
+      if (bay(x, y) > th) return false;
+    }, (d, o) => { d[o] += (lc[0] - d[o]) * al; d[o + 1] += (lc[1] - d[o + 1]) * al; d[o + 2] += (lc[2] - d[o + 2]) * al; });
   }
   // Sông sâu: miếu nhỏ ven sông có nén hương (phòng suối hồi luôn là miếu: "giếng nước trong cạnh miếu nhỏ", KE-HOACH.md mục 1.4)
   // hoặc thuyền thúng úp nghiêng có lưới. Không vẽ đèn dầu / lục bình làm cảnh (khỏi lẫn với vật bấm được của js/song_luat.js).
@@ -1904,7 +1940,6 @@
   // hắt xuống sàn. Mọi nấc sáng tối tô bằng lưới chấm. Sàn được giảm độ đậm màu một chút để em bé và quái nổi lên.
   function lightPass(T, g) {
     const x0 = g.fx0, y0 = g.fy0, w = g.fx1 - g.fx0, h = g.fy1 - g.fy0;
-    const id = c.getImageData(x0, y0, w, h), d = id.data;
     const cx = (g.fx0 + g.fx1) / 2, cy = (g.fy0 + g.fy1) / 2 + 6, rx = w * 0.5, ry = h * 0.5;
     const LC = hex(T.light), glows = (g.glows || []).map((o) => Object.assign({ c: hex(o.col) }, o)), casts = g.casts || [];
     const STEP = 0.05, SAT = T.sat || 0.86, sh = T.shade, CL = T.centerLight || 0.09, ED = T.edgeDark || 0.16;
@@ -1941,11 +1976,11 @@
         KK[n] = k; KP[n] = kp; TC[n * 3] = tr; TC[n * 3 + 1] = tg; TC[n * 3 + 2] = tb;
       }
     }
-    for (let y = 0; y < h; y++) {
-      const gy = y0 + y, row = (y >> 1) * gw;
-      for (let x = 0; x < w; x++) {
-        const gx = x0 + x, o = (y * w + x) * 4, n = row + (x >> 1), k = KK[n], kp = KP[n];
-        const qk = Math.floor(sharp(k / STEP) + bay(gx, gy)) * STEP;
+    let qk = 0, kp = 0, n = 0;
+    toDiem(x0, y0, w, h, (gx, gy) => {
+      n = ((gy - y0) >> 1) * gw + ((gx - x0) >> 1); kp = KP[n];
+      qk = Math.floor(sharp(KK[n] / STEP) + bay(gx, gy)) * STEP;
+    }, (d, o) => {
         let R = d[o], Gc = d[o + 1], B = d[o + 2];
         const lum = R * 0.3 + Gc * 0.59 + B * 0.11;
         R = lum + (R - lum) * SAT; Gc = lum + (Gc - lum) * SAT; B = lum + (B - lum) * SAT;
@@ -1955,27 +1990,23 @@
           R = R * (1 + qk * 0.35) + TC[t3] * f; Gc = Gc * (1 + qk * 0.35) + TC[t3 + 1] * f; B = B * (1 + qk * 0.35) + TC[t3 + 2] * f;
         }
         d[o] = R > 255 ? 255 : R; d[o + 1] = Gc > 255 ? 255 : Gc; d[o + 2] = B > 255 ? 255 : B;
-      }
-    }
-    c.putImageData(id, x0, y0);
+    });
   }
   // Hậu cảnh (tường sau, thân cây, vách hang): trầm dần lên phía trên và hơi ngả về màu khoảng tối của vùng,
   // để mắt dồn vào sàn. Đồ sáng (đuốc, nấm, tinh thể, cửa sổ) vẽ sau lượt này nên vẫn là điểm nhấn.
   function backPass(T, g) {
     const x0 = Math.max(0, g.fx0 - g.sw), y0 = Math.max(0, g.fy0 - g.wh - g.cap), w = Math.min(g.W, g.fx1 + g.sw) - x0, h = g.fy0 - y0;
-    const id = c.getImageData(x0, y0, w, h), d = id.data, V = hex(T.voidCol || '#000000'), STEP = 0.06;
-    for (let y = 0; y < h; y++) {
-      const gy = y0 + y, up = 1 - smooth(0, 1, y / h); // 1 ở nóc tường, 0 ở chân tường
-      for (let x = 0; x < w; x++) {
-        const gx = x0 + x, o = (y * w + x) * 4;
-        const a = Math.floor(sharp((0.1 + 0.32 * up) / STEP) + bay(gx, gy)) * STEP;
-        let R = d[o], Gc = d[o + 1], B = d[o + 2];
-        const lum = R * 0.3 + Gc * 0.59 + B * 0.11;
-        R = lum + (R - lum) * 0.82; Gc = lum + (Gc - lum) * 0.82; B = lum + (B - lum) * 0.82;
-        d[o] = R + (V[0] - R) * a; d[o + 1] = Gc + (V[1] - Gc) * a; d[o + 2] = B + (V[2] - B) * a;
-      }
-    }
-    c.putImageData(id, x0, y0);
+    const V = hex(T.voidCol || '#000000'), STEP = 0.06;
+    let a = 0;
+    toDiem(x0, y0, w, h, (gx, gy) => {
+      const up = 1 - smooth(0, 1, (gy - y0) / h); // 1 ở nóc tường, 0 ở chân tường
+      a = Math.floor(sharp((0.1 + 0.32 * up) / STEP) + bay(gx, gy)) * STEP;
+    }, (d, o) => {
+      let R = d[o], Gc = d[o + 1], B = d[o + 2];
+      const lum = R * 0.3 + Gc * 0.59 + B * 0.11;
+      R = lum + (R - lum) * 0.82; Gc = lum + (Gc - lum) * 0.82; B = lum + (B - lum) * 0.82;
+      d[o] = R + (V[0] - R) * a; d[o + 1] = Gc + (V[1] - Gc) * a; d[o + 2] = B + (V[2] - B) * a;
+    });
   }
 
   const cache = new Map(), shells = new Map();
@@ -1990,7 +2021,9 @@
   }
   RA.xoaDem = function () { cache.clear(); shells.clear(); };
   function get(W) {
-    const n = demAnh(), ct = (G.TILE_RUNG !== false) + '|' + (G.NEN_TILE !== false);
+    const kb = (G.NET || 1) >= 3 ? G.NET | 0 : 1; // nét cao: nền dựng ở cỡ canvas thế giới; mặc định 1 như cũ
+    const n = demAnh(), ct = (G.TILE_RUNG !== false) + '|' + (G.NEN_TILE !== false) + '|' + kb + (kb > 1 ? '|' + ((G.spriteCustom && G.spriteCustom.gdHiSo) || 0) : ''); // nét cao: ảnh nét cao vừa tải xong → dựng lại phòng
+    KB = kb;
     if (n !== soAnh || ct !== coTile) { soAnh = n; coTile = ct; RA.xoaDem(); }
     const doors = W.doors || [];
     const key = [W.uid, W.region, RA.vungTheme(W.region), W.type, W.seed, doors.map((d) => d.dir + (d.open ? 1 : 0) + (d.gate ? 'g' : '') + (d.boss ? 'b' : '')).join(',')].join('|');
@@ -2008,12 +2041,12 @@
         let shell = shells.get(skey);
         if (!shell) {
           shell = buildShell(T, Object.assign({}, g, { doors: g.doors }), W.seed);
-          if (shells.size >= 4) shells.delete(shells.keys().next().value);
+          while (shells.size >= (KB > 1 ? 2 : 4)) shells.delete(shells.keys().next().value);
           shells.set(skey, shell);
         }
         room = buildRoom(T, g, W.seed, shell);
       } finally { building = false; }
-      if (cache.size >= 4) cache.delete(cache.keys().next().value);
+      while (cache.size >= (KB > 1 ? 2 : 4)) cache.delete(cache.keys().next().value); // nét cao: nền to KB² lần → nhớ ít phòng hơn
       cache.set(key, room);
     }
     return room;
@@ -2347,7 +2380,7 @@
     if (!W || !W.geo) { const th = this, ar = arguments; return (G.moVe || ((f) => f()))(() => oldBg.apply(th, ar)); } // nền code cũ (không có hình phòng): không chặn, kẻo màn đen
     try {
       const room = get(W);
-      cx.drawImage(room.base, 0, 0);
+      if (room.base.width !== G.W) cx.drawImage(room.base, 0, 0, G.W, G.H); else cx.drawImage(room.base, 0, 0); // nét cao: nền dựng ở cỡ thật
       live(cx, W, room);
     } catch (e) {
       if (!A.roomErr) { A.roomErr = e; if (window.console) console.warn('room_art bg', e); }

@@ -1,0 +1,1972 @@
+[
+ {
+  "ma": "gd-cot-nang-bien",
+  "nhom": "Hang biển",
+  "ten": "Cột sáng chéo Hang biển (lam nhạt, 30 / 20 / 10 %)",
+  "rong": 28,
+  "cao": 39,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 0.0,
+   "giong": NaN,
+   "lech_tb": NaN
+  }
+ },
+ {
+  "ma": "gd-cot-nang-lau",
+  "nhom": "Lâu đài cổ",
+  "ten": "Cột nắng chéo qua kính màu Lâu đài (vàng ấm, 30 / 20 / 10 %)",
+  "rong": 28,
+  "cao": 40,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 0.0,
+   "giong": NaN,
+   "lech_tb": NaN
+  }
+ },
+ {
+  "ma": "gd-cot-nang-rung",
+  "nhom": "Rừng già",
+  "ten": "Cột nắng chéo Rừng già (ngả xuống bên phải; game lật cho ngả trái như cột cũ)",
+  "rong": 27,
+  "cao": 98,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-cua-bien-ben-khoa",
+  "nhom": "Hang biển",
+  "ten": "Cửa bên · khoá",
+  "rong": 16,
+  "cao": 37,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-cua-bien-ben",
+  "nhom": "Hang biển",
+  "ten": "Cửa bên · mở",
+  "rong": 16,
+  "cao": 37,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-cua-bien-duoi-khoa",
+  "nhom": "Hang biển",
+  "ten": "Cửa dưới · khoá",
+  "rong": 46,
+  "cao": 23,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-cua-bien-duoi",
+  "nhom": "Hang biển",
+  "ten": "Cửa dưới · mở",
+  "rong": 46,
+  "cao": 20,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-cua-bien-tren-khoa",
+  "nhom": "Hang biển",
+  "ten": "Cửa trên · khoá",
+  "rong": 40,
+  "cao": 38,
+  "net": 2,
+  "kb": 3,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-cua-bien-tren",
+  "nhom": "Hang biển",
+  "ten": "Cửa trên · mở",
+  "rong": 40,
+  "cao": 37,
+  "net": 2,
+  "kb": 3,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-cua-dau-lau",
+  "nhom": "Cửa chung",
+  "ten": "Đầu lâu cửa Trùm",
+  "rong": 11,
+  "cao": 11,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-cua-lau-ben-khoa",
+  "nhom": "Lâu đài cổ",
+  "ten": "Cửa bên · khoá",
+  "rong": 16,
+  "cao": 44,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-cua-lau-ben",
+  "nhom": "Lâu đài cổ",
+  "ten": "Cửa bên · mở",
+  "rong": 16,
+  "cao": 48,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-cua-lau-duoi-khoa",
+  "nhom": "Lâu đài cổ",
+  "ten": "Cửa dưới · khoá",
+  "rong": 46,
+  "cao": 23,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-cua-lau-duoi",
+  "nhom": "Lâu đài cổ",
+  "ten": "Cửa dưới · mở",
+  "rong": 46,
+  "cao": 20,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-cua-lau-tren-khoa",
+  "nhom": "Lâu đài cổ",
+  "ten": "Cửa trên · khoá",
+  "rong": 40,
+  "cao": 40,
+  "net": 2,
+  "kb": 3,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-cua-lau-tren",
+  "nhom": "Lâu đài cổ",
+  "ten": "Cửa trên · mở",
+  "rong": 40,
+  "cao": 40,
+  "net": 2,
+  "kb": 3,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-cua-o-khoa",
+  "nhom": "Cửa chung",
+  "ten": "Ổ khoá đỏ",
+  "rong": 12,
+  "cao": 15,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-cua-rung-ben-khoa",
+  "nhom": "Rừng già",
+  "ten": "Cửa bên · khoá",
+  "rong": 16,
+  "cao": 39,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-cua-rung-ben",
+  "nhom": "Rừng già",
+  "ten": "Cửa bên · mở",
+  "rong": 16,
+  "cao": 39,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-cua-rung-duoi-khoa",
+  "nhom": "Rừng già",
+  "ten": "Cửa dưới · khoá",
+  "rong": 46,
+  "cao": 26,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-cua-rung-duoi",
+  "nhom": "Rừng già",
+  "ten": "Cửa dưới · mở",
+  "rong": 46,
+  "cao": 21,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-cua-rung-tren-khoa",
+  "nhom": "Rừng già",
+  "ten": "Cửa trên · khoá",
+  "rong": 40,
+  "cao": 39,
+  "net": 2,
+  "kb": 4,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-cua-rung-tren",
+  "nhom": "Rừng già",
+  "ten": "Cửa trên · mở",
+  "rong": 40,
+  "cao": 38,
+  "net": 2,
+  "kb": 3,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-cua-song-ben-khoa",
+  "nhom": "Sông sâu",
+  "ten": "Cửa bên · khoá (xoay 90°)",
+  "rong": 15,
+  "cao": 37,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-cua-song-ben",
+  "nhom": "Sông sâu",
+  "ten": "Cửa bên · mở (ảnh gen nhìn thẳng → xoay 90°, kéo dọc)",
+  "rong": 15,
+  "cao": 37,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-cua-song-duoi-khoa",
+  "nhom": "Sông sâu",
+  "ten": "Cửa dưới · khoá",
+  "rong": 46,
+  "cao": 26,
+  "net": 2,
+  "kb": 3,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-cua-song-duoi",
+  "nhom": "Sông sâu",
+  "ten": "Cửa dưới · mở",
+  "rong": 46,
+  "cao": 27,
+  "net": 2,
+  "kb": 3,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-cua-song-tren-khoa",
+  "nhom": "Sông sâu",
+  "ten": "Cửa trên · khoá",
+  "rong": 42,
+  "cao": 28,
+  "net": 2,
+  "kb": 3,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-cua-song-tren",
+  "nhom": "Sông sâu",
+  "ten": "Cửa trên · mở",
+  "rong": 42,
+  "cao": 27,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-lang-bang-tranh",
+  "nhom": "Làng",
+  "ten": "Bảng tranh bản đồ",
+  "rong": 23,
+  "cao": 23,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-lang-cay-da",
+  "nhom": "Làng",
+  "ten": "Cây đa",
+  "rong": 103,
+  "cao": 81,
+  "net": 2,
+  "kb": 11,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-lang-cay-rom",
+  "nhom": "Làng",
+  "ten": "Cây rơm",
+  "rong": 27,
+  "cao": 29,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-lang-chum",
+  "nhom": "Làng",
+  "ten": "Chum sành",
+  "rong": 11,
+  "cao": 12,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-lang-coc",
+  "nhom": "Làng",
+  "ten": "Con cóc",
+  "rong": 8,
+  "cao": 6,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-lang-cong",
+  "nhom": "Làng",
+  "ten": "Cổng làng",
+  "rong": 62,
+  "cao": 56,
+  "net": 2,
+  "kb": 4,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-lang-cot-den",
+  "nhom": "Làng",
+  "ten": "Cột đèn",
+  "rong": 9,
+  "cao": 18,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-lang-day-phoi",
+  "nhom": "Làng",
+  "ten": "Dây phơi",
+  "rong": 36,
+  "cao": 26,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-lang-de",
+  "nhom": "Làng",
+  "ten": "Cái đe",
+  "rong": 18,
+  "cao": 13,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-lang-den-long",
+  "nhom": "Làng",
+  "ten": "Đèn lồng đỏ (treo rời)",
+  "rong": 5,
+  "cao": 10,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-lang-dinh",
+  "nhom": "Làng",
+  "ten": "Đình làng",
+  "rong": 119,
+  "cao": 70,
+  "net": 2,
+  "kb": 10,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-lang-do",
+  "nhom": "Làng",
+  "ten": "Con đò",
+  "rong": 44,
+  "cao": 26,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-lang-ga-mo",
+  "nhom": "Làng",
+  "ten": "Gà mổ thóc",
+  "rong": 7,
+  "cao": 6,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-lang-ga",
+  "nhom": "Làng",
+  "ten": "Gà đứng",
+  "rong": 7,
+  "cao": 7,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-lang-gieng",
+  "nhom": "Làng",
+  "ten": "Giếng làng",
+  "rong": 32,
+  "cao": 18,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-lang-hang-xen",
+  "nhom": "Làng",
+  "ten": "Sạp hàng xén",
+  "rong": 72,
+  "cao": 55,
+  "net": 2,
+  "kb": 3,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-lang-lo-ren",
+  "nhom": "Làng",
+  "ten": "Lò rèn",
+  "rong": 84,
+  "cao": 68,
+  "net": 2,
+  "kb": 9,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-lang-nen",
+  "nhom": "Làng",
+  "ten": "Nền làng",
+  "rong": 720,
+  "cao": 270,
+  "net": 1,
+  "kb": 133,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-lang-nha-may",
+  "nhom": "Làng",
+  "ten": "Nhà thợ may",
+  "rong": 77,
+  "cao": 51,
+  "net": 2,
+  "kb": 7,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-loi-mon-rung",
+  "nhom": "Rừng già",
+  "ten": "Lối mòn đất (rừng già)",
+  "rong": 32,
+  "cao": 32,
+  "net": 1,
+  "kb": 2,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-nen-bien-mep",
+  "nhom": "Hang biển",
+  "ten": "Phủ mép dưới",
+  "rong": 64,
+  "cao": 12,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-bien-ngoai",
+  "nhom": "Hang biển",
+  "ten": "Nền ngoài phòng",
+  "rong": 64,
+  "cao": 64,
+  "net": 2,
+  "kb": 14,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-bien-san-nhan",
+  "nhom": "Hang biển",
+  "ten": "Sàn điểm nhấn",
+  "rong": 64,
+  "cao": 64,
+  "net": 2,
+  "kb": 15,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-bien-san0",
+  "nhom": "Hang biển",
+  "ten": "Sàn A",
+  "rong": 64,
+  "cao": 64,
+  "net": 2,
+  "kb": 15,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-bien-san1",
+  "nhom": "Hang biển",
+  "ten": "Sàn B",
+  "rong": 64,
+  "cao": 64,
+  "net": 2,
+  "kb": 15,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-bien-san2",
+  "nhom": "Hang biển",
+  "ten": "Sàn C",
+  "rong": 64,
+  "cao": 64,
+  "net": 2,
+  "kb": 15,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-bien-tuong-ben",
+  "nhom": "Hang biển",
+  "ten": "Tường bên (trái)",
+  "rong": 14,
+  "cao": 64,
+  "net": 2,
+  "kb": 3,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-bien-tuong-sau",
+  "nhom": "Hang biển",
+  "ten": "Tường sau",
+  "rong": 64,
+  "cao": 49,
+  "net": 2,
+  "kb": 12,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-bien-tuong-truoc",
+  "nhom": "Hang biển",
+  "ten": "Tường trước",
+  "rong": 64,
+  "cao": 12,
+  "net": 2,
+  "kb": 3,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-lau-mep",
+  "nhom": "Lâu đài cổ",
+  "ten": "Phủ mép dưới",
+  "rong": 64,
+  "cao": 12,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-lau-ngoai",
+  "nhom": "Lâu đài cổ",
+  "ten": "Nền ngoài phòng",
+  "rong": 64,
+  "cao": 64,
+  "net": 2,
+  "kb": 14,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-lau-san-nhan",
+  "nhom": "Lâu đài cổ",
+  "ten": "Sàn điểm nhấn",
+  "rong": 64,
+  "cao": 64,
+  "net": 2,
+  "kb": 14,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-lau-san0",
+  "nhom": "Lâu đài cổ",
+  "ten": "Sàn A",
+  "rong": 64,
+  "cao": 64,
+  "net": 2,
+  "kb": 15,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-lau-san1",
+  "nhom": "Lâu đài cổ",
+  "ten": "Sàn B",
+  "rong": 64,
+  "cao": 64,
+  "net": 2,
+  "kb": 15,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-lau-san2",
+  "nhom": "Lâu đài cổ",
+  "ten": "Sàn C",
+  "rong": 64,
+  "cao": 64,
+  "net": 2,
+  "kb": 15,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-lau-tuong-ben",
+  "nhom": "Lâu đài cổ",
+  "ten": "Tường bên (trái)",
+  "rong": 14,
+  "cao": 64,
+  "net": 2,
+  "kb": 3,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-lau-tuong-sau",
+  "nhom": "Lâu đài cổ",
+  "ten": "Tường sau",
+  "rong": 64,
+  "cao": 49,
+  "net": 2,
+  "kb": 10,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-lau-tuong-truoc",
+  "nhom": "Lâu đài cổ",
+  "ten": "Tường trước",
+  "rong": 64,
+  "cao": 12,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-rung-mep",
+  "nhom": "Rừng già",
+  "ten": "Cỏ mép dưới",
+  "rong": 64,
+  "cao": 12,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-nen-rung-ngoai",
+  "nhom": "Rừng già",
+  "ten": "Nền ngoài phòng",
+  "rong": 64,
+  "cao": 64,
+  "net": 2,
+  "kb": 4,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-nen-rung-san-nhan",
+  "nhom": "Rừng già",
+  "ten": "Sàn điểm nhấn",
+  "rong": 64,
+  "cao": 64,
+  "net": 2,
+  "kb": 6,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-nen-rung-san0",
+  "nhom": "Rừng già",
+  "ten": "Sàn A · nhiều rêu",
+  "rong": 64,
+  "cao": 64,
+  "net": 2,
+  "kb": 4,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-nen-rung-san1",
+  "nhom": "Rừng già",
+  "ten": "Sàn B · nhiều đất",
+  "rong": 64,
+  "cao": 64,
+  "net": 2,
+  "kb": 4,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-nen-rung-san2",
+  "nhom": "Rừng già",
+  "ten": "Sàn C · nhiều sỏi",
+  "rong": 64,
+  "cao": 64,
+  "net": 2,
+  "kb": 6,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-nen-rung-tuong-ben",
+  "nhom": "Rừng già",
+  "ten": "Tường bên (trái)",
+  "rong": 14,
+  "cao": 64,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-nen-rung-tuong-sau",
+  "nhom": "Rừng già",
+  "ten": "Tường sau",
+  "rong": 64,
+  "cao": 49,
+  "net": 2,
+  "kb": 4,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-nen-rung-tuong-truoc",
+  "nhom": "Rừng già",
+  "ten": "Tường trước",
+  "rong": 64,
+  "cao": 12,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-nen-song-mep",
+  "nhom": "Sông sâu",
+  "ten": "Mép sàn ván tiếp nước (lặp ngang)",
+  "rong": 64,
+  "cao": 12,
+  "net": 2,
+  "kb": 3,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-song-ngoai",
+  "nhom": "Sông sâu",
+  "ten": "Nước đục ngoài phòng (lặp hai chiều)",
+  "rong": 64,
+  "cao": 64,
+  "net": 2,
+  "kb": 15,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-song-san-nhan",
+  "nhom": "Sông sâu",
+  "ten": "Sàn điểm nhấn",
+  "rong": 64,
+  "cao": 64,
+  "net": 2,
+  "kb": 12,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-song-san-tl",
+  "nhom": "Sông sâu",
+  "ten": "Sân trùm Thuồng Luồng",
+  "rong": 128,
+  "cao": 128,
+  "net": 2,
+  "kb": 43,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-song-san0",
+  "nhom": "Sông sâu",
+  "ten": "Sàn A",
+  "rong": 64,
+  "cao": 64,
+  "net": 2,
+  "kb": 11,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-song-san1",
+  "nhom": "Sông sâu",
+  "ten": "Sàn B",
+  "rong": 64,
+  "cao": 64,
+  "net": 2,
+  "kb": 11,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-song-san2",
+  "nhom": "Sông sâu",
+  "ten": "Sàn C",
+  "rong": 64,
+  "cao": 64,
+  "net": 2,
+  "kb": 11,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-song-tuong-ben",
+  "nhom": "Sông sâu",
+  "ten": "Tường bên Sông sâu (TRÁI; phải lật): thân MỘT cột cọc tre lặp dọc (ảnh gen chỉ có một cột)",
+  "rong": 14,
+  "cao": 64,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-song-tuong-sau",
+  "nhom": "Sông sâu",
+  "ten": "Tường sau Sông sâu: hàng rào cọc tre + lau sậy (lặp ngang)",
+  "rong": 165,
+  "cao": 49,
+  "net": 2,
+  "kb": 20,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-nen-song-tuong-truoc",
+  "nhom": "Sông sâu",
+  "ten": "Tường trước Sông sâu: hàng rào cọc tre thấp (lặp ngang)",
+  "rong": 48,
+  "cao": 12,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-song-cau",
+  "nhom": "Sông sâu",
+  "ten": "Cầu ván tre (dòng dọc: nằm ngang như ảnh; dòng ngang: game xoay 90°)",
+  "rong": 62,
+  "cao": 22,
+  "net": 2,
+  "kb": 3,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-tham-lau",
+  "nhom": "Lâu đài cổ",
+  "ten": "Thảm đỏ viền vàng (lâu đài), lặp dọc",
+  "rong": 22,
+  "cao": 40,
+  "net": 2,
+  "kb": 5,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 0.0594,
+   "lech_tb": 1.95
+  }
+ },
+ {
+  "ma": "gd-tt-bien-dong-da-2",
+  "nhom": "Hang biển",
+  "ten": "Đống đá (kiểu 2)",
+  "rong": 14,
+  "cao": 10,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-bien-dong-da",
+  "nhom": "Hang biển",
+  "ten": "Đống đá",
+  "rong": 15,
+  "cao": 10,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-bien-mo-neo",
+  "nhom": "Hang biển",
+  "ten": "Mỏ neo cũ (điểm nhấn)",
+  "rong": 26,
+  "cao": 26,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-bien-nhu-da-2",
+  "nhom": "Hang biển",
+  "ten": "Nhũ đá vừa",
+  "rong": 7,
+  "cao": 11,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-bien-nhu-da-3",
+  "nhom": "Hang biển",
+  "ten": "Nhũ đá ngắn",
+  "rong": 6,
+  "cao": 8,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-bien-nhu-da-4",
+  "nhom": "Hang biển",
+  "ten": "Nhũ đá đôi",
+  "rong": 8,
+  "cao": 14,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-bien-nhu-da",
+  "nhom": "Hang biển",
+  "ten": "Nhũ đá dài",
+  "rong": 8,
+  "cao": 18,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-bien-tien-canh-phai",
+  "nhom": "Hang biển",
+  "ten": "Tiền cảnh góc dưới phải",
+  "rong": 40,
+  "cao": 35,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-bien-tien-canh-trai",
+  "nhom": "Hang biển",
+  "ten": "Tiền cảnh góc dưới trái",
+  "rong": 40,
+  "cao": 35,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-bien-tinh-the-2",
+  "nhom": "Hang biển",
+  "ten": "Cụm tinh thể nhỏ (kiểu 2)",
+  "rong": 8,
+  "cao": 10,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-bien-tinh-the-to-2",
+  "nhom": "Hang biển",
+  "ten": "Cụm tinh thể to (kiểu 2)",
+  "rong": 17,
+  "cao": 18,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-bien-tinh-the-to",
+  "nhom": "Hang biển",
+  "ten": "Cụm tinh thể to",
+  "rong": 16,
+  "cao": 18,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-bien-tinh-the",
+  "nhom": "Hang biển",
+  "ten": "Cụm tinh thể nhỏ",
+  "rong": 8,
+  "cao": 10,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-bien-vo-so",
+  "nhom": "Hang biển",
+  "ten": "Vỏ sò",
+  "rong": 6,
+  "cao": 5,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-bien-vung-nuoc",
+  "nhom": "Hang biển",
+  "ten": "Vũng nước",
+  "rong": 17,
+  "cao": 10,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-bien-vung-sang",
+  "nhom": "Hang biển",
+  "ten": "Vũng nước dưới tia sáng",
+  "rong": 25,
+  "cao": 14,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-lau-chan-nen",
+  "nhom": "Lâu đài cổ",
+  "ten": "Chân nến",
+  "rong": 5,
+  "cao": 15,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-tt-lau-co-do",
+  "nhom": "Lâu đài cổ",
+  "ten": "Cờ đỏ",
+  "rong": 16,
+  "cao": 25,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-tt-lau-co-xanh",
+  "nhom": "Lâu đài cổ",
+  "ten": "Cờ xanh",
+  "rong": 16,
+  "cao": 24,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-tt-lau-cot-da",
+  "nhom": "Lâu đài cổ",
+  "ten": "Cột đá",
+  "rong": 12,
+  "cao": 30,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-tt-lau-cua-so-kinh",
+  "nhom": "Lâu đài cổ",
+  "ten": "Cửa sổ kính màu (điểm nhấn)",
+  "rong": 16,
+  "cao": 17,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-tt-lau-cua-so",
+  "nhom": "Lâu đài cổ",
+  "ten": "Cửa sổ nhỏ",
+  "rong": 11,
+  "cao": 22,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-tt-lau-duoc",
+  "nhom": "Lâu đài cổ",
+  "ten": "Giá đuốc",
+  "rong": 4,
+  "cao": 11,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-tt-lau-hom-go",
+  "nhom": "Lâu đài cổ",
+  "ten": "Hòm gỗ",
+  "rong": 14,
+  "cao": 8,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-tt-lau-nen",
+  "nhom": "Lâu đài cổ",
+  "ten": "Cây nến",
+  "rong": 4,
+  "cao": 6,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-tt-lau-tham-tron",
+  "nhom": "Lâu đài cổ",
+  "ten": "Hoa văn tròn giữa phòng",
+  "rong": 60,
+  "cao": 60,
+  "net": 2,
+  "kb": 7,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-tt-lau-tham-vuong",
+  "nhom": "Lâu đài cổ",
+  "ten": "Tấm thảm giữa phòng",
+  "rong": 68,
+  "cao": 42,
+  "net": 2,
+  "kb": 6,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-tt-lau-thung-go",
+  "nhom": "Lâu đài cổ",
+  "ten": "Thùng gỗ",
+  "rong": 12,
+  "cao": 13,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-tt-lau-tien-canh-phai",
+  "nhom": "Lâu đài cổ",
+  "ten": "Tiền cảnh góc dưới phải",
+  "rong": 40,
+  "cao": 28,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-tt-lau-tien-canh-trai",
+  "nhom": "Lâu đài cổ",
+  "ten": "Tiền cảnh góc dưới trái",
+  "rong": 40,
+  "cao": 34,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-tt-lau-tuong-hiep-si",
+  "nhom": "Lâu đài cổ",
+  "ten": "Tượng hiệp sĩ (điểm nhấn)",
+  "rong": 16,
+  "cao": 32,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-tt-lau-xuong-so",
+  "nhom": "Lâu đài cổ",
+  "ten": "Xương sọ",
+  "rong": 12,
+  "cao": 7,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-tt-rung-bui-qua",
+  "nhom": "Rừng già",
+  "ten": "Bụi quả",
+  "rong": 20,
+  "cao": 12,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-rung-co-thu",
+  "nhom": "Rừng già",
+  "ten": "Gốc cổ thụ (điểm nhấn)",
+  "rong": 21,
+  "cao": 20,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-rung-day-leo-2",
+  "nhom": "Rừng già",
+  "ten": "Dây leo (kiểu 2)",
+  "rong": 6,
+  "cao": 17,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-rung-day-leo-3",
+  "nhom": "Rừng già",
+  "ten": "Dây leo (kiểu 3)",
+  "rong": 6,
+  "cao": 20,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-rung-day-leo",
+  "nhom": "Rừng già",
+  "ten": "Dây leo",
+  "rong": 6,
+  "cao": 18,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-rung-goc-cay",
+  "nhom": "Rừng già",
+  "ten": "Gốc cây cụt",
+  "rong": 12,
+  "cao": 9,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-rung-hoa-nang",
+  "nhom": "Rừng già",
+  "ten": "Khóm hoa dưới cột nắng",
+  "rong": 21,
+  "cao": 12,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-rung-khuc-go",
+  "nhom": "Rừng già",
+  "ten": "Khúc gỗ",
+  "rong": 15,
+  "cao": 7,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-rung-nam-do",
+  "nhom": "Rừng già",
+  "ten": "Nấm đỏ",
+  "rong": 11,
+  "cao": 10,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-rung-nam-sang-2",
+  "nhom": "Rừng già",
+  "ten": "Nấm sáng (kiểu 2)",
+  "rong": 11,
+  "cao": 8,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-rung-nam-sang",
+  "nhom": "Rừng già",
+  "ten": "Nấm sáng",
+  "rong": 11,
+  "cao": 9,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-rung-tan-la-2",
+  "nhom": "Rừng già",
+  "ten": "Chùm tán lá (kiểu 2)",
+  "rong": 20,
+  "cao": 14,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-rung-tan-la-3",
+  "nhom": "Rừng già",
+  "ten": "Chùm tán lá (kiểu 3)",
+  "rong": 20,
+  "cao": 14,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-rung-tan-la",
+  "nhom": "Rừng già",
+  "ten": "Chùm tán lá",
+  "rong": 21,
+  "cao": 14,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-rung-tien-canh-phai",
+  "nhom": "Rừng già",
+  "ten": "Tiền cảnh góc dưới phải",
+  "rong": 39,
+  "cao": 36,
+  "net": 2,
+  "kb": 3,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-rung-tien-canh-trai",
+  "nhom": "Rừng già",
+  "ten": "Tiền cảnh góc dưới trái",
+  "rong": 40,
+  "cao": 36,
+  "net": 2,
+  "kb": 3,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-tt-song-coc",
+  "nhom": "Sông sâu",
+  "ten": "Cọc tre buộc thuyền",
+  "rong": 10,
+  "cao": 14,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-tt-song-da-bun",
+  "nhom": "Sông sâu",
+  "ten": "Cụm đá bùn",
+  "rong": 15,
+  "cao": 9,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-tt-song-tien-canh-phai",
+  "nhom": "Sông sâu",
+  "ten": "Tiền cảnh lau sậy (ngả phải)",
+  "rong": 40,
+  "cao": 35,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-tt-song-tien-canh-trai",
+  "nhom": "Sông sâu",
+  "ten": "Tiền cảnh lau sậy (ngả trái)",
+  "rong": 40,
+  "cao": 35,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": true,
+  "so_net2": {
+   "iou": 1.0,
+   "giong": 1.0,
+   "lech_tb": 0.0
+  }
+ },
+ {
+  "ma": "gd-vat-ban-tho-het",
+  "nhom": "Vật trong phòng",
+  "ten": "Bàn thờ đã tắt",
+  "rong": 26,
+  "cao": 18,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-vat-ban-tho",
+  "nhom": "Vật trong phòng",
+  "ten": "Bàn thờ lời nguyền",
+  "rong": 26,
+  "cao": 27,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-vat-be-thu-thach-het",
+  "nhom": "Vật trong phòng",
+  "ten": "Bệ thử thách đã dùng",
+  "rong": 20,
+  "cao": 31,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-vat-be-thu-thach",
+  "nhom": "Vật trong phòng",
+  "ten": "Bệ thử thách",
+  "rong": 20,
+  "cao": 31,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-vat-chau-than-tat",
+  "nhom": "Vật trong phòng",
+  "ten": "Chậu than đã tắt",
+  "rong": 16,
+  "cao": 13,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-vat-chau-than",
+  "nhom": "Vật trong phòng",
+  "ten": "Chậu than đang cháy",
+  "rong": 18,
+  "cao": 23,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-vat-nam-doc-vo",
+  "nhom": "Vật trong phòng",
+  "ten": "Nấm độc đã vỡ",
+  "rong": 13,
+  "cao": 5,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-vat-nam-doc",
+  "nhom": "Vật trong phòng",
+  "ten": "Nấm độc",
+  "rong": 23,
+  "cao": 21,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-vat-ruong-do",
+  "nhom": "Vật trong phòng",
+  "ten": "Rương đồ",
+  "rong": 24,
+  "cao": 28,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-vat-ruong-mo",
+  "nhom": "Vật trong phòng",
+  "ten": "Rương báu đã mở",
+  "rong": 24,
+  "cao": 26,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-vat-ruong",
+  "nhom": "Vật trong phòng",
+  "ten": "Rương báu",
+  "rong": 28,
+  "cao": 21,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-vat-suoi-mana-het",
+  "nhom": "Vật trong phòng",
+  "ten": "Suối mana đã cạn",
+  "rong": 30,
+  "cao": 25,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-vat-suoi-mana",
+  "nhom": "Vật trong phòng",
+  "ten": "Suối mana",
+  "rong": 30,
+  "cao": 29,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-vat-suoi-mau-het",
+  "nhom": "Vật trong phòng",
+  "ten": "Suối máu đã cạn",
+  "rong": 30,
+  "cao": 25,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-vat-suoi-mau",
+  "nhom": "Vật trong phòng",
+  "ten": "Suối máu",
+  "rong": 30,
+  "cao": 30,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-vat-thuong-nhan",
+  "nhom": "Vật trong phòng",
+  "ten": "Sạp thương nhân",
+  "rong": 36,
+  "cao": 34,
+  "net": 2,
+  "kb": 2,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-vat-tinh-the-vo",
+  "nhom": "Vật trong phòng",
+  "ten": "Tinh thể băng đã vỡ",
+  "rong": 13,
+  "cao": 4,
+  "net": 2,
+  "kb": 0,
+  "dung_lai": false,
+  "so_net2": null
+ },
+ {
+  "ma": "gd-vat-tinh-the",
+  "nhom": "Vật trong phòng",
+  "ten": "Tinh thể băng",
+  "rong": 23,
+  "cao": 25,
+  "net": 2,
+  "kb": 1,
+  "dung_lai": false,
+  "so_net2": null
+ }
+]
