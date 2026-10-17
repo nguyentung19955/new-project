@@ -600,6 +600,12 @@ def main():
         'ti_le': round(q, 5), 'ghi_chu': 'Mỗi loại một hàng [x, y, rộng, cao] × 4 cấp; ti_le = điểm ảnh tấm / điểm ảnh ảnh gốc.',
     }
     ghi_tep('zed-moi', than)
+    try:  # KIẾM VUÔNG 17/10: giữ mục "kiem_vuong" (docs/anh-goc/zed/dung-kiem-vuong.py) khi dựng lại tấm zed-vk
+        cu_ = json.load(open(os.path.join(RA_GAME, 'zed-vk.sprite.json'), encoding='utf-8'))
+        if 'kiem_vuong' in cu_:
+            vk['kiem_vuong'] = cu_['kiem_vuong']
+    except (OSError, ValueError):
+        pass
     ghi_tep('zed-vk', vk)
     print('Tấm thân: %d×%d, %d hàng thân + %d hàng nắm tay' % (tam.width, tam.height, len(dong), hang_tay - len(dong)))
     if tran:

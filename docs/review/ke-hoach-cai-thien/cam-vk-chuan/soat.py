@@ -73,6 +73,34 @@ def ap_anh_thay(T, ma='zed-moi'):
     return ra
 
 
+def ap_kiem_vuong(V):
+    """KIẾM VUÔNG 17/10 (game mặc định, js/sprite_custom.js ghepKiemVuong): dán ảnh 4 kiếm mới (mục "kiem_vuong") dưới tấm zed-vk, ô kiếm
+    trỏ sang ảnh mới; trả 4 điểm cầm mới (hàng kiếm nào cũng dùng — js/zed_moi.js bienThe). Không có mục / --kiemvuong=0: None."""
+    import base64, io
+    K = V.get('kiem_vuong')
+    if not K or '--kiemvuong=0' in sys.argv:
+        return None
+    k2 = Image.open(io.BytesIO(base64.b64decode(K['tam'].split(',', 1)[1]))).convert('RGBA')
+    im = V['_img']; H0 = im.height
+    t = Image.new('RGBA', (max(im.width, k2.width), H0 + 2 + k2.height), (0, 0, 0, 0)); t.paste(im, (0, 0)); t.paste(k2, (0, H0 + 2))
+    V['_img'] = t
+    V['vk'] = dict(V['vk'], kiem=[[r[0], r[1] + H0 + 2, r[2], r[3]] for r in K['vk']])
+    return K['cam']
+
+
+def sua_kiem_vuong(T, sua, cam_kv):
+    """Bọc hàm sửa: hàng cầm kiếm lấy điểm cầm kiếm vuông (neo theo bảng như cũ)."""
+    if not cam_kv:
+        return sua
+    def f(k, i, cap):
+        r = sua(k, i, cap) if sua else None
+        if T['dong_tac'][k].get('vk') != 'kiem':
+            return r
+        da = T['dong_tac'][k]; neo0 = da['nam']['neo'] if 'nam' in da else da['neo']
+        return ((r[0] if r else neo0[i]), cam_kv[cap])
+    return f
+
+
 def dem(T, V, k, sua=None):
     """Số (khung × cấp) lỗi, tổng, và đếm theo mã lỗi."""
     da = T['dong_tac'][k]
@@ -126,6 +154,9 @@ def main():
     T = DC.VZ.tai('zed-moi'); V = DC.VZ.tai('zed-vk')
     print('Khung thay ảnh (thuong-tay-trai-cao Lần 2) đo theo ảnh mới:', ap_anh_thay(T))
     B = doc_bang(); sua = lam_sua(T, B)
+    cam_kv = ap_kiem_vuong(V)
+    print('Kiếm vuông (mặc định game):', 'BẬT, điểm cầm %s' % cam_kv if cam_kv else 'TẮT (kiếm cũ)')
+    sua = sua_kiem_vuong(T, sua, cam_kv)
     km = DC.khoa_game(T)
     bang, so_do = [], {}
     os.makedirs(os.path.join(DAY, 'luoi'), exist_ok=True)

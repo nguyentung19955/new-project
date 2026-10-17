@@ -15673,6 +15673,34 @@ MA._xong();
   // Tệp "doi_tuong": "zed" (mã zed-moi, zed-vk; dựng bằng docs/anh-goc/zed/dung-zed-game.py): chỉ nạp ảnh và giữ nguyên số liệu
   // vào SC.zed[mã] = { tep, img, ready }. Cách chọn khung, gắn vũ khí theo neo và vẽ nằm ở js/zed_moi.js.
   SC.zed = {};
+  // KIẾM VUÔNG 17/10 (docs/review/ke-hoach-cai-thien/kiem-vuong/bao-cao.md): chủ game gen bộ kiếm mới đầu vuông, cán dài hai tay
+  // (docs/anh-goc/zed/moi/vk-kiem-vuong.png → docs/anh-goc/zed/dung-kiem-vuong.py → mục "kiem_vuong" của zed-vk.sprite.json). Khi nạp
+  // zed-vk: dán ảnh 4 kiếm mới xuống dưới tấm cũ (canvas), ô kiem 4 cấp trỏ sang ảnh mới, nhớ điểm cầm / đầu vuông ở z.kv → MỌI chỗ dùng
+  // ô zed-vk 'kiem' (trên tay Cu Tí mọi bộ trang phục, HUD, túi đồ, Lò rèn, Luyện, nút đánh) đổi theo. Cùng tỉ lệ ô, lưỡi dài bằng lưỡi cũ
+  // từng cấp; điểm cầm theo nắm tay trước sát chắn tay (js/zed_moi.js bienThe). Ảnh theo hệ / ảnh "gân" kiểu kiếm cũ không dùng cho kiếm
+  // (js/vien_vk.js) → nhuộm hệ trên ảnh mới. Chỉ HÌNH. ?kiemvuong=0: không ghép, kiếm cũ y hệt trước.
+  function kiemVuongBat() {
+    if (G.KIEM_VUONG === undefined) { let t = false; try { t = typeof location !== 'undefined' && /[?&]kiemvuong=0(&|$)/.test(location.search || ''); } catch (e) { t = false; } G.KIEM_VUONG = !t; }
+    return G.KIEM_VUONG !== false;
+  }
+  function ghepKiemVuong(z, img, k2) {
+    const tep = z.tep, K = tep.kiem_vuong;
+    let ok = false;
+    try {
+      if (k2 && K && Array.isArray(K.vk) && K.vk.length === 4 && tep.vk && tep.vk.kiem) {
+        const W0 = img.naturalWidth || img.width, H0 = img.naturalHeight || img.height, W1 = k2.naturalWidth || k2.width, H1 = k2.naturalHeight || k2.height;
+        const cv = document.createElement('canvas'); cv.width = Math.max(W0, W1); cv.height = H0 + 2 + H1;
+        const q = cv.getContext('2d'); q.drawImage(img, 0, 0); q.drawImage(k2, 0, H0 + 2);
+        const vk = Object.assign({}, tep.vk, { kiem: K.vk.map((r) => [r[0], r[1] + H0 + 2, r[2], r[3]]) });
+        z.tep = Object.assign({}, tep, { vk });
+        z.kv = { cam: K.cam, mui: K.mui, cu: tep.vk.kiem };
+        z.img = cv; ok = true;
+      }
+    } catch (e) { ok = false; }
+    if (!ok) { z.tep = tep; z.kv = null; z.img = img; }
+    z.ready = true;
+  }
+  SC.kiemVuong = () => { const z = SC.zed && SC.zed['zed-vk']; return z && z.ready && z.kv ? z.kv : null; };
   function themZed(tep) {
     if (!/^zed-[a-z0-9-]{1,30}$/.test(tep.ma)) throw new Error('mã tệp Zed phải là zed-<tên>');
     if (!SC.laAnh(tep.tam)) throw new Error('thiếu tấm ảnh');
@@ -15680,6 +15708,16 @@ MA._xong();
     SC.zed[tep.ma] = z;
     if (typeof Image !== 'undefined') {
       const img = new Image();
+      if (tep.ma === 'zed-vk' && kiemVuongBat() && tep.kiem_vuong && SC.laAnh(tep.kiem_vuong.tam) && typeof document !== 'undefined') {
+        // KIẾM VUÔNG 17/10: chờ cả hai ảnh, ghép xong mới báo sẵn sàng (mọi chỗ dùng zed-vk thấy cùng một tấm)
+        const k2 = new Image(); let con = 2, xong = false;
+        const het = () => { if (--con > 0 || xong || SC.zed[tep.ma] !== z) return; xong = true; ghepKiemVuong(z, img, k2.naturalWidth ? k2 : null); };
+        k2.onload = het; k2.onerror = het;
+        img.onload = het;
+        img.onerror = () => { SC.loi.push(tep.ma + ': ảnh hỏng'); };
+        SC.napAnh(img, tep.tam); SC.napAnh(k2, tep.kiem_vuong.tam);
+        return z;
+      }
       img.onload = () => { if (SC.zed[tep.ma] !== z) return; z.img = img; z.ready = true; };
       img.onerror = () => { SC.loi.push(tep.ma + ': ảnh hỏng'); };
       SC.napAnh(img, tep.tam);

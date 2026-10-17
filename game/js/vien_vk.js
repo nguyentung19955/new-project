@@ -207,7 +207,7 @@
   G.vkHeAnh = function (loai, cap, he, r) {
     if (G.VK_HE_ANH === false || !he || !(cap > 0) || !r) return null;
     const SC = G.spriteCustom, z = SC && SC.zed && SC.zed['zed-vk-he'];
-    if (!z) return null;
+    if (!z || (loai === 'kiem' && SC.kiemVuong && SC.kiemVuong())) return null; // kiếm vuông 17/10: ảnh hệ kiểu kiếm cũ → không dùng, nhuộm hệ ảnh mới
     if (!z.ready || !z.img) { if (SC.canAnh) SC.canAnh('zed-vk-he'); return null; }
     const h = z.tep && z.tep.vk && z.tep.vk[loai] && z.tep.vk[loai][he], q = h && h[cap];
     if (!q || q[2] !== r[2] || q[3] !== r[3]) return null;
@@ -232,7 +232,7 @@
   G.vkGanAnh = function (loai, cap, r) {
     if (G.VK_GAN === false || !r) return null;
     const SC = G.spriteCustom, z = SC && SC.zed && SC.zed['zed-vk-gan'];
-    if (!z) return null;
+    if (!z || (loai === 'kiem' && SC.kiemVuong && SC.kiemVuong())) return null; // kiếm vuông 17/10: ảnh gân kiểu kiếm cũ → không dùng (ảnh cấp thường)
     if (!z.ready || !z.img) { if (SC.canAnh) SC.canAnh('zed-vk-gan'); return null; }
     const h = z.tep && z.tep.vk && z.tep.vk[loai], q = h && h[cap];
     if (!q || q[2] !== r[2] || q[3] !== r[3]) return null;

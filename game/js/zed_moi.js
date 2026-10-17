@@ -290,6 +290,19 @@
   // Nắm chuôi (vk-khop-tay): dữ liệu vẽ của một hàng có vũ khí — biến thể mới (da.nam) hoặc cũ khi cờ tắt. Nhớ theo hàng (cờ không đổi giữa chừng).
   const BT = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
   function bienThe(da) {
+    const b0 = bienThe0(da);
+    return da.vk === 'kiem' && SC.kiemVuong && SC.kiemVuong() ? kiemVuongB(b0) : b0;
+  }
+  // KIẾM VUÔNG 17/10 (docs/review/ke-hoach-cai-thien/kiem-vuong/bao-cao.md; ghép ảnh: js/sprite_custom.js ghepKiemVuong): hàng cầm kiếm dùng
+  // điểm cầm của ảnh kiếm mới (z.kv.cam, đo bằng docs/anh-goc/zed/dung-kiem-vuong.py): nắm tay cầm (neo) — cả lúc một tay lẫn hai tay
+  // (neo[4] = tay thứ hai nằm SAU trên cán) — sát chắn tay như kiếm cũ, phần cán còn lại đi về phía chuôi. Neo, góc, tỉ lệ vk_tl giữ nguyên.
+  const KV_B = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  function kiemVuongB(b) {
+    let r = KV_B && KV_B.get(b);
+    if (!r) { r = Object.assign({}, b, { cam: SC.kiemVuong().cam, kv: 1 }); if (KV_B) KV_B.set(b, r); }
+    return r;
+  }
+  function bienThe0(da) {
     let b = BT && BT.get(da);
     if (b) return b;
     const m = da.nam;
@@ -747,11 +760,12 @@
         let gx = n[0] / 2 - 24 + (E ? E.ox : 0), gy = n[1] / 2 - 45 + (E ? E.oy : 0);
         if (e && lean) { const b = (lean * Math.PI) / 180, px = e[1] / 2 - 24, py = e[0] / 2 - 45, cx = gx - px, cy = gy - py; gy = py + cx * Math.sin(b) + cy * Math.cos(b); }
         if (tk) gy += tk.uy;
-        const L = (R[2] - gc[0]) * B.tl, a2 = kepDat(ang + lean, gy, L), aTho = ang + lean;
+        const L = (R[2] - gc[0]) * B.tl, a2 = datGoc(kepDat, ang + lean, gy, L, B, capVk(w)), aTho = ang + lean;
         ang = a2 - lean;
         const dd = da.kn && DINH_DAT[wa.ten]; // kiếm nặng: khung lê kiếm / mũi sát đất → mũi CHẠM đất đúng độ dài lưỡi từng cấp
-        if (dd && wa.u >= dd[0] && wa.u <= dd[1]) ang = dinhDat(ang + lean, gy, L) - lean;
-        const q = KN_MUOT && da.kn && wa.ten === 'kiem_1' && wa.u > 0.17 && wa.u < 0.45 ? quetDat(aTho, gy, L) : null; // KN_MUOT
+        if (dd && wa.u >= dd[0] && wa.u <= dd[1]) ang = datGoc(dinhDat, ang + lean, gy, L, B, capVk(w)) - lean;
+        let q = KN_MUOT && da.kn && wa.ten === 'kiem_1' && wa.u > 0.17 && wa.u < 0.45 ? quetDat(aTho, gy, L) : null; // KN_MUOT
+        if (q) { const h = goc2Vuong(B, capVk(w), q.a); if (h > 0) q = quetDat(aTho, gy + h, L) || q; } // kiếm vuông: góc đầu vuông thấp hơn trục
         if (q) { ang = q.a - lean; co = q.co; }
       }
     }
@@ -966,6 +980,36 @@
   // đất → lưỡi cấp thấp (ngắn hơn tới 7 điểm ảnh) lơ lửng trên đất. Ở đây: góc đang chúc xuống thì hạ / nâng cho mũi nằm đúng vạch đất
   // theo độ dài lưỡi cấp đang cầm (như kepDat nhưng hai phía). Kiếm đang chĩa lên (lúc nối từ thế đứng) thì để nguyên.
   const DINH_DAT = { kiem_1: [0, 0.3], kiem_2: [0.72, 1] };
+  // KIẾM VUÔNG 17/10: đầu kiếm là cạnh vuông → góc thấp nhất của cạnh đầu (trên hoặc dưới trục cán, tuỳ chiều kiếm) mới là "mũi" chạm đất.
+  // Chặn / đặt theo góc đó: dời góc pha φ = atan(lệch / L), độ dài √(L² + lệch²) (lệch = cạnh đầu so với trục điểm cầm, z.kv.mui).
+  // Kiếm vuông: góc đầu vuông thấp nhất nằm dưới điểm cuối trục cán bao nhiêu (điểm ảnh game) ở góc a; 0 khi không phải kiếm vuông.
+  function goc2Vuong(B, cap, a) {
+    const K = B.kv && SC.kiemVuong && SC.kiemVuong(), m = K && K.mui && K.mui[cap], g = B.cam && B.cam[cap];
+    if (!m || !g) return 0;
+    const c = Math.cos((a * Math.PI) / 180);
+    return Math.max(0, (m[1] - g[1]) * B.tl * c, -(g[1] - m[0]) * B.tl * c);
+  }
+  function datGoc(f, a, gy, L, B, cap) {
+    const K = B.kv && SC.kiemVuong && SC.kiemVuong(), m = K && K.mui && K.mui[cap], g = B.cam && B.cam[cap];
+    if (!m || !g) return f(a, gy, L);
+    const r = (a * Math.PI) / 180, wb = (m[1] - g[1]) * B.tl, wt = -(g[1] - m[0]) * B.tl;
+    if (f === kepDat) { // vùng góc cấm của cả cạnh đầu = hợp vùng cấm hai góc (mỗi góc như kepDat) → đẩy về mép gần nhất của vùng hợp
+      let lo = 1e9, hi = -1e9;
+      for (const w of [wb, wt]) {
+        const Le = Math.hypot(L, w), k = (-0.5 - gy) / Le;
+        if (!(Le > 0) || k >= 1 || k <= 0) continue;
+        const ph = (Math.atan2(w, L) * 180) / Math.PI, amin = (Math.asin(k) * 180) / Math.PI;
+        lo = Math.min(lo, amin - ph); hi = Math.max(hi, 180 - amin - ph);
+      }
+      if (!(hi > lo)) return a;
+      const y = ((a % 360) + 360) % 360, y2 = y > hi + 90 ? y - 360 : y; // góc quy về quanh vùng cấm
+      if (y2 <= lo || y2 >= hi) return a;
+      return a + (y2 - lo < hi - y2 ? lo - y2 : hi - y2);
+    }
+    const w = L * Math.sin(r) + wb * Math.cos(r) >= L * Math.sin(r) + wt * Math.cos(r) ? wb : wt;
+    const ph = (Math.atan2(w, L) * 180) / Math.PI;
+    return f(a + ph, gy, Math.hypot(L, w)) - ph;
+  }
   function dinhDat(a, gy, L) {
     const k = (-0.5 - gy) / L;
     if (!(L > 0) || k >= 1 || k <= 0) return a;
@@ -1381,10 +1425,13 @@
     const N = trucNghieng(T, s, v, E); // nghiêng thân trên (zed-8-huong): nắm tay xoay quanh eo, hướng vũ khí cộng thêm góc nghiêng
     if (N) { const b = (v.lean * Math.PI) / 180, cx = gx - N[0], cy = gy - N[1]; gx = N[0] + cx * Math.cos(b) - cy * Math.sin(b); gy = N[1] + cx * Math.sin(b) + cy * Math.cos(b); ang += v.lean; }
     if (v.tk) { gx += v.tk.wx; gy += v.tk.uy; } // kiếm bớt cứng (2): vệt chém theo người nhích / nhún
-    const r = (ang * Math.PI) / 180, K = toCua(o); // cu-ti-to-muot: Tí vẽ ×K quanh chân → nắm tay và độ dài lưỡi cũng ×K
+    // kiếm vuông 17/10: mũi cho vệt chém = GIỮA cạnh đầu vuông (lệch khỏi trục điểm cầm một chút) → hướng + độ dài tới điểm đó
+    const KV = v.B.kv && SC.kiemVuong && SC.kiemVuong(), mu = KV && KV.mui && KV.mui[v.cap];
+    const L0 = (R[2] - g[0]) * v.B.tl, lw = mu ? ((mu[0] + mu[1]) / 2 - g[1]) * v.B.tl : 0;
+    const r = (ang * Math.PI) / 180 + Math.atan2(lw, L0), K = toCua(o); // cu-ti-to-muot: Tí vẽ ×K quanh chân → nắm tay và độ dài lưỡi cũng ×K
     q.gx = X0 + f * gx * K; q.gy = Y0 + gy * K;
     q.dx = f * Math.cos(r); q.dy = Math.sin(r);
-    q.L = Math.max(4, (R[2] - g[0]) * v.B.tl * (v.co > 0 && v.co < 1 ? v.co : 1)) * K; // v.co: KN_MUOT
+    q.L = Math.max(4, Math.hypot(L0, lw) * (v.co > 0 && v.co < 1 ? v.co : 1)) * K; // v.co: KN_MUOT
     q.front = !v.n[3];
   }
 
