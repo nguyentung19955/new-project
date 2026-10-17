@@ -54,7 +54,7 @@ Nhận xét khi xem ảnh:
 
 | | |
 |---|---|
-| **Dung lượng** | Bản một tệp **29,88 MB** (≤ 30, như trước phiên; ảnh nét cao KHÔNG nằm trong đó, chỉ thêm ít mã). Bản web tải đầu **17,72 MB** / 20 (trước phiên 17,69: thêm 0,03 MB là bảng chỗ khung trong trang nhẹ). **Ảnh nét cao quái/trùm/làng: nét 3 = 26,8 MB, nét 4 = 42,5 MB** (PNG, tổng mọi vùng; chỉ tải khi bật, mỗi người chỉ tải một bản, và chỉ con đang hiện). Mỗi vùng ≈ 8–9 MB (nét 3) / 13–14 MB (nét 4); Sông 0,8 / 1,4 MB; làng 0,4 / 0,7 MB. |
+| **Dung lượng** | Bản một tệp **29,88 MB** (≤ 30, như trước phiên; ảnh nét cao KHÔNG nằm trong đó, chỉ thêm ít mã). Bản web tải đầu **17,73 MB** / 20 (thêm ~0,03 MB là bảng chỗ khung trong trang nhẹ). **Ảnh nét cao quái/trùm/làng: nét 3 = 26,8 MB, nét 4 = 42,5 MB** (PNG, tổng mọi vùng; chỉ tải khi bật, mỗi người chỉ tải một bản, và chỉ con đang hiện). Mỗi vùng ≈ 8–9 MB (nét 3) / 13–14 MB (nét 4); Sông 0,8 / 1,4 MB; làng 0,4 / 0,7 MB. |
 | **RAM** (khi bật) | Ảnh giải mã ≈ 4 MB / triệu điểm. Phòng quái thường ở nét 4: thêm ~20–40 MB. **Trận trùm vùng nét 4: ~40 MB mỗi pha** (Hồ Tinh 9,7 triệu điểm / pha; lúc đổi pha có 2 pha cùng lúc trong 45 giây). Cộng với Cu Tí (~68 MB, phiên trước) và canvas 8 MB. Máy RAM ít có thể bị tải lại trang → lý do nữa để **chưa bật mặc định**. |
 | Máy yếu | Số điểm tô mỗi khung hình đã tính ở phiên Cu Tí (canvas to hơn); vẽ quái từ ảnh nét cao là chép 1:1, không thêm phép tính nào. |
 | Kho mã (git) | Thêm ~95 MB (ảnh PNG dạng chữ base64 trong 60 tệp `.sprite.json`). |
@@ -65,7 +65,7 @@ Nhận xét khi xem ảnh:
 | Bài | Kết quả |
 |---|---|
 | `node --check` mọi `game/js/*.js` | Đạt |
-| `python3 game/build.py` / `--hai-tep` | Đạt — một tệp 29,88 MB; người chơi tải 17,72 MB / 20; ảnh nét cao in riêng (cả game: nét 3 28,5 MB, nét 4 45,5 MB gồm Cu Tí + nền + quái) |
+| `python3 game/build.py` / `--hai-tep` | Đạt — một tệp 29,88 MB; người chơi tải 17,73 MB / 20 (sau khi gộp phiên hiệu ứng + giao diện); ảnh nét cao in riêng (cả game: nét 3 33,7 MB, nét 4 53,8 MB gồm Cu Tí + nền + hiệu ứng + quái) |
 | **Mặc định giống hệt trước** — 60 hình (mọi quái, trùm các pha, làng, em bé) vẽ bằng hàm game, canvas thật + ảnh chụp màn 844×390 dpr 3, so với bản dựng từ commit ngay trước phiên (sau khi gộp phiên nền, sàn dịu) | **0 điểm ảnh khác / 120 ảnh** |
 | Cảnh trận mặc định (`net-cao/cong-cu/chup_tran.py`, đứng + chém kiếm nặng, 2 cỡ màn, canvas + màn) so với trước | **0 điểm ảnh khác / 12 ảnh** |
 | `dist/linh-khi.html?cloud=0` (bản một tệp) mặc định / `?netcao=3` / `?netcao=4`, vẽ quái + trùm + làng | **0 lỗi JS** (không có ảnh nét cao → vẽ tấm thường, đúng như thiết kế) |
