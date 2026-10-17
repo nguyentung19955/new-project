@@ -165,7 +165,7 @@ body.touch .tc{display:block}
 <script src="lib/atlas-in-san.js"></script>
 <script src="lib/rig-lam.js"></script>
 <script src="lib/rig-quai-chuong.js"></script>
-<script src="lib/tiles.js"></script>
+<script src="lib/tiles-ai.js"></script>
 <script>
 'use strict';
 /* Ảnh nền 3 lớp (bản build tự chứa thay đường dẫn bằng data URI) */
@@ -214,7 +214,7 @@ fill(RC,6,3,6,11,'W'); fill(RC,9,7,12,13,'W'); fill(RC,15,3,15,10,'W'); fill(RC,
 fill(RD,5,11,7,11,'='); fill(RD,21,10,23,10,'=');
 // (e) Phòng boss: trần đá, tường hai bên, cửa vào ở cột 1
 fill(RE,0,0,RE.w-1,1,'S'); fill(RE,0,2,1,10,'S'); fill(RE,29,2,29,13,'S');
-const TILES=G.map(r=>r.join(''));   // lưới chữ cho tiles.js (cửa, công tắc vẽ riêng)
+const TILES=G.map(r=>r.join(''));   // lưới chữ cho tiles-ai.js (cửa, công tắc vẽ riêng)
 const TILES_DRAW=TILES.concat([TILES[ROWS-1],TILES[ROWS-1]]);   // chỉ để vẽ: thêm 2 hàng đất dưới đáy khi camera hạ xuống (chế độ cảm ứng)
 const WORLD_W=WW*T;
 function tile(tx,ty){ if(tx<0||tx>=WW||ty<0) return '#'; if(ty>=ROWS) return '.'; return G[ty][tx]; }
@@ -1442,6 +1442,7 @@ async function boot(){
     setLoad(0.75,'Đúc Chuông Gác Làng'); await wait(10);
     BS=addTints(mkSet(A.boss));
     setLoad(0.92,'Lát gạch làng'); await wait(20);
+    if(TV.tiles.sanSang) await TV.tiles.sanSang;   // tiles-ai.js: atlas PNG giải mã không đồng bộ
     TV.tiles.taoAtlas();
     newGame();
     window.TVDEMO={ready:true, lam:la.kiemTra.length, imgs:ims.filter(Boolean).length};

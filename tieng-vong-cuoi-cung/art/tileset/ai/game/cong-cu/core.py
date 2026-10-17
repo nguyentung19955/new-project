@@ -1,7 +1,9 @@
 import numpy as np
 from PIL import Image
 R = '/home/claude/new-project/tieng-vong-cuoi-cung/art/tileset/ai/'
-W = '/tmp/claude-0/-home-claude-new-project/61b1e687-1d72-54b0-838f-e897e6195def/scratchpad/w/'
+import os
+W = os.environ.get('TV_W', '/tmp/tv-tiles-w/')
+os.makedirs(W, exist_ok=True)
 
 def la_hong(a):
     r, g, b = a[..., 0].astype(int), a[..., 1].astype(int), a[..., 2].astype(int)

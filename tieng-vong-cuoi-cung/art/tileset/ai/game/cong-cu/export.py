@@ -1,6 +1,7 @@
 import sys, json, base64, io
 sys.path.insert(0, '.')
 from build import *
+from velai import dat_tile, dat_goc_trong, da_tile, da_goc_trong, tuong_tile, tuong_goc_trong, van_tile  # bản vẽ lại 2
 
 OUT = '/home/claude/new-project/tieng-vong-cuoi-cung/art/tileset/ai/game/'
 
@@ -36,7 +37,7 @@ def nang(t, k):
     t[m, :3] = np.clip(t[m, :3] * k, 0, 255).astype(int)
     return t
 
-NANG = {'dat': 1.12, 'da': 1.0, 'tuong': 1.08}
+NANG = {'dat': 1.0, 'da': 1.0, 'tuong': 1.0}  # bảng màu velai.py đã chỉnh sẵn
 
 def tat_ca():
     nhom = {'dat': [], 'da': [], 'vat': []}

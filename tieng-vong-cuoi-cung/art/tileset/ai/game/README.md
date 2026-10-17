@@ -11,4 +11,13 @@
 3. Đá: lưới 3×3 AI cắt bỏ khung, ghép 9 vùng theo hướng lộ ra; mép giáp ô cùng loại không viền nên đá cuội nối liền. Tường leo: ván gỗ AI + đinh đồng chỉ ở mép lộ.
 4. Viền #0C0F14 chỉ vẽ ở mép lộ ra ngoài; góc ngoài bo tròn; góc trong là ô phủ thêm.
 5. Mỗi nhóm (đất / đá + tường / vật thể) giảm còn ≤ 32 màu. Đất sáng thêm 12 %, tường 8 % để nổi trên nền parallax.
-6. Mã dựng lại: `cong-cu/` (Python + Pillow, numpy; chạy `export.py` rồi `gen_js.py`, sửa đường dẫn thư mục làm việc trong `core.py`).
+6. Mã dựng lại: `cong-cu/` (Python + Pillow, numpy; chạy `export.py` rồi `gen_js.py`).
+
+## Bản 2 (vẽ lại theo góp ý) – `cong-cu/velai.py`
+- Đất trơn: mảng màu lớn 2–3 sắc nâu gần nhau, mỗi ô chỉ 0–2 viên sỏi/vết nứt (biến thể 3 gần như trơn); đất sát mặt cỏ sáng & chi tiết hơn rồi nhạt dần, đất sâu tối hơn.
+- Rêu ô-liu tối #2F3F2A / #46552F / #5E6B3A, bỏ vàng chanh.
+- Đá liền khối: hoa văn đá cuội 32×32 lặp liền, `tiles-ai.js` chọn biến thể đá theo vị trí ô (`(cột&1)|((hàng&1)<<1)`) nên đá chạy xuyên mép ô; viền đen chỉ ở mép lộ.
+- Tường leo: ván dọc 16×64 lặp liền (biến thể = `hàng&3`), sáng hơn 1 bậc, highlight mép trái/trên mỗi tấm, vân thưa, đinh vàng 1 px ở mối nối.
+- Ván một chiều: giữ hình dáng AI, tô lại bảng màu gỗ mới (highlight mép trên/trái, đinh lẻ).
+- `so-sanh.png`: trước/sau ×4 trên bản đồ mẫu.
+- Dựng lại: `TV_W=<thư mục tạm> python3 export.py && python3 gen_js.py` (chạy trong `cong-cu/`).

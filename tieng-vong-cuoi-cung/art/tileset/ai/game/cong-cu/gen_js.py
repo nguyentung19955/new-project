@@ -28,10 +28,10 @@ JS = r'''/* Tiếng Vọng Cuối Cùng – tileset từ ảnh AI (art/tileset/a
 
   var C = {
     vien: '#0C0F14',
-    dat0: '#2A1510', dat1: '#5C2D18', dat2: '#9A5B27',
-    da0: '#3A3A40', da1: '#5E5D59', da2: '#8C8D86', vua: '#1E1C1C',
-    reu0: '#3C5628', reu1: '#717E2D',
-    go0: '#5A3F2B', go1: '#7A5A3A', go2: '#9A7A55',
+    dat0: '#281A13', dat1: '#3B271B', dat2: '#583B27',
+    da0: '#36363C', da1: '#46464B', da2: '#5B5A55', vua: '#222127',
+    reu0: '#2F3F2A', reu1: '#5E6B3A',
+    go0: '#4F3624', go1: '#6C4C32', go2: '#94704B',
     sat: '#353232',
     dong: '#E1B85A', dongToi: '#9C6B30', kem: '#F3E6C8',
     mau: '#6E2F28'
@@ -88,6 +88,9 @@ JS = r'''/* Tiếng Vọng Cuối Cùng – tileset từ ảnh AI (art/tileset/a
         var vl = VL_KY[ch];
         var kb = laKhoi(at(c, r - 1)), kd = laKhoi(at(c + 1, r)), kn = laKhoi(at(c, r + 1)), kt = laKhoi(at(c - 1, r));
         var m = (kb ? B : 0) | (kd ? D : 0) | (kn ? N : 0) | (kt ? TY : 0);
+        // đá / tường: biến thể theo vị trí để hoa văn lặp liền (đá 32×32, tường 16×64) – không lộ lưới ô
+        if (vl === 'da') vbien = (c & 1) | ((r & 1) << 1);
+        else if (vl === 'tuong') vbien = r & 3;
         ds.push(vl + '_' + m + '_' + vbien);
         if (kb && kt && !laKhoi(at(c - 1, r - 1))) ds.push(vl + '_gt_BT');
         if (kb && kd && !laKhoi(at(c + 1, r - 1))) ds.push(vl + '_gt_BD');
