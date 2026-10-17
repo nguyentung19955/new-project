@@ -558,6 +558,17 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
     js = gom(ds, khai, "['customSpriteData'] = ")
     if '.customSpriteData = ' in js:
         sys.exit('Trang nhẹ còn chuỗi ".customSpriteData = ": công cụ sẽ đọc nhầm trang thiếu ảnh')
+    # 17/10 thuong-tay-trai-cao Lần 2: ảnh khung thay trong mã (G.THUONG_CAO_DATA ... "anh") → ảnh rời, đường dẫn thay chuỗi base64
+    # (game tải bằng new Image() như tam_to, nên đường dẫn tương đối dùng được y như data URL)
+    def _ra_roi(m):
+        nonlocal tong_tot, tong_png
+        png = base64.b64decode(m.group(1))
+        ten = 'ma-rieng.%s' % hashlib.sha256(png).hexdigest()[:10]
+        with open(os.path.join(thu, ten + '.png'), 'wb') as f:
+            f.write(png)
+        tong_tot += len(png); tong_png += len(png)
+        return '"' + THU_MUC_ANH + '/' + ten + '.png"'
+    js = re.sub(r'"data:image/png;base64,([A-Za-z0-9+/=]+)"', _ra_roi, js)
     if re.search(r'data:image/png;base64,[A-Za-z0-9+/]{64}', js):
         sys.exit('Trang chính chế độ ảnh rời còn ảnh base64')
     nhe = gan_bia(trang(js), bia or {}, bang_bia)  # màn tải HTML bắt đầu tải bìa ngay khi trang đang về

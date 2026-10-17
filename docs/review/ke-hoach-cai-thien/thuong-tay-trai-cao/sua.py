@@ -13,6 +13,8 @@ Mức nâng dy (điểm ảnh ô 96 = ½ điểm game):
   - hàng đòn: theo khoảng cách hai tay sao cho cán chếch thêm ~13°, kẹp 4..6 (= 2..3 điểm game);
   - GIỮ BẢN CŨ (dy 0): khung đâm trúng của thương 1 / 3 (khung 3–4) và thương 2 (khung 3–4) — mũi + hướng đâm giữ đúng chỗ đâm;
     quét khung 6 (hai tay chỉ cách 3 điểm game: nâng 2 điểm game làm cán dựng 30°, hai nắm tay chồng nhau — xấu).
+LẦN 2 (17/10): quét khung 6 THAY ẢNH bằng khung chủ game gen lại (quet-k6/dung_k6.py → quet-k6/k6.json): mục khung có "anh"
+  (thay cho "cot") = ảnh 2 ô (thân | nắm tay thân) bản thường 96, bản to ×1,2 (ô 116) và bản BOX cho ?netcu=1; neo = neo đo trên ảnh mới.
 Chạy (từ gốc repo): python3 docs/review/ke-hoach-cai-thien/thuong-tay-trai-cao/sua.py
 """
 import base64, io, json, math, os, sys
@@ -34,7 +36,9 @@ HANG = ['dung~16_thuong', 'di_thuong', 'chay2tay_thuong', 'thuong_1', 'thuong_2'
 DY_HANG = {'dung~16_thuong': 4, 'di_thuong': 5, 'chay2tay_thuong': 4, 'thuong_giu': 6}
 GIU_CU = {('thuong_1', 2): 'khung đâm trúng', ('thuong_1', 3): 'khung đâm trúng', ('thuong_3', 2): 'khung đâm trúng',
           ('thuong_3', 3): 'khung đâm trúng', ('thuong_2', 2): 'khung hất trúng', ('thuong_2', 3): 'khung hất trúng',
-          ('thuong_quet', 5): 'hai tay quá gần (3 điểm game): cán dựng 30°, hai nắm tay chồng nhau'}
+          }
+# Lần 2: khung thay hẳn bằng ảnh gen lại (không dời cột): (khoá, khung) → tệp json của dung_k6.py
+ANH_THAY = {('thuong_quet', 5): os.path.join(DAY, 'quet-k6', 'k6.json')}
 
 
 def dy_cua(k, i, n):
@@ -72,6 +76,10 @@ def tinh(T, SUA):
             n = neo_dung(T, SUA, k, i)
             if not n or len(n) < 5 or not n[4]:
                 continue
+            if (k, i) in ANH_THAY:
+                A = json.load(open(ANH_THAY[(k, i)], encoding='utf-8'))
+                ra.append((k, i, 0, n, A['neo'], None, None, {'anh': A['anh'], 'ly_do': 'thay ảnh gen lại (Lần 2, %s)' % A['nguon']}))
+                continue
             dy = dy_cua(k, i, n)
             if not dy:
                 ra.append((k, i, 0, n, None, None, None, {'ly_do': GIU_CU.get((k, i), '')}))
@@ -106,10 +114,12 @@ def main():
     for (k, i, dy, n, n2, than, ht, info) in kq:
         if not n2:
             continue
-        bo.setdefault(k, {'so': T['dong_tac'][k]['so'], 'khung': {}})['khung'][str(i)] = {
-            'cu': [n[0], n[1], n[2]], 'neo': n2, 'cot': cot_doi(info, dy)}
+        bo.setdefault(k, {'so': T['dong_tac'][k]['so'], 'khung': {}})['khung'][str(i)] = (
+            {'cu': [n[0], n[1], n[2]], 'neo': n2, 'anh': info['anh']} if 'anh' in info else
+            {'cu': [n[0], n[1], n[2]], 'neo': n2, 'cot': cot_doi(info, dy)})
     data = {'phien': 1, 'ghi_chu': 'thuong-tay-trai-cao 17/10: nâng nắm tay trái khi cầm thương hai tay (sua.py); khoá = khoá dong_tac gốc; '
-            'cu = neo đang dùng (sau cam-vk-chuan) để nhận ra tấm đã dựng lại; cot = [x, y0, y1, dời lên] trên ô 96 của hàng thân và hàng nắm tay',
+            'cu = neo đang dùng (sau cam-vk-chuan) để nhận ra tấm đã dựng lại; cot = [x, y0, y1, dời lên] trên ô 96 của hàng thân và hàng nắm tay; '
+            'anh (Lần 2, quét khung 6) = ảnh khung thay hẳn: tam = 2 ô 96 (thân | nắm tay thân), to = 2 ô o_to bản to ×k, cu = bản BOX cho ?netcu=1',
             'bo': {'zed-moi': bo}}
     js = ('// THƯƠNG: NÂNG TAY TRÁI (17/10/2026, docs/review/ke-hoach-cai-thien/thuong-tay-trai-cao/bao-cao.md) — TỆP DỰNG TỰ ĐỘNG bằng\n'
           '// docs/review/ke-hoach-cai-thien/thuong-tay-trai-cao/sua.py, đừng sửa tay. js/zed_moi.js (thuongCao): khi Cu Tí cầm thương hai tay,\n'

@@ -740,16 +740,16 @@
   "khung": 6,
   "dy": 0,
   "goc_cu": -6.0,
-  "goc_moi": -6.0,
+  "goc_moi": -40.6,
   "tay2_cu": [
    68.83,
    60.08
   ],
   "tay2_moi": [
-   68.83,
-   60.08
+   69.53,
+   52.17
   ],
-  "ly_do": "hai tay quá gần (3 điểm game): cán dựng 30°, hai nắm tay chồng nhau"
+  "ly_do": "thay ảnh gen lại (Lần 2, docs/anh-goc/zed/moi/14-thuong-quet-k6-moi.png)"
  },
  {
   "hang": "thuong_giu",

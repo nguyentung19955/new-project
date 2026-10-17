@@ -39,6 +39,14 @@ def doi_cot(a, ct):
     return out
 
 
+def o_anh(a, ten='tam'):
+    """(thân, nắm tay thân) ô 96 từ mục "anh" của bảng (data URL 2 ô ngang)."""
+    import base64, io
+    im = np.array(Image.open(io.BytesIO(base64.b64decode(a[ten].split(',', 1)[1]))).convert('RGBA'))
+    o = im.shape[0]
+    return im[:, :o].copy(), im[:, o:2 * o].copy()
+
+
 def khung(T, V, SUA, B, k, i, sau, Z, cap=0):
     """Ảnh RGBA ô (96+2·PAD)·Z của khung; sau=True dùng bảng nâng tay."""
     da = T['dong_tac'][k]
@@ -47,7 +55,11 @@ def khung(T, V, SUA, B, k, i, sau, Z, cap=0):
     ht = SU.o96(T['_img'], da['nam']['hang_tay'], i)
     r = B['bo']['zed-moi'].get(k, {}).get('khung', {}).get(str(i)) if sau else None
     if r and n and abs(n[0] - r['cu'][0]) < 0.02 and abs(n[1] - r['cu'][1]) < 0.02 and abs(n[2] - r['cu'][2]) < 0.05:
-        n = r['neo']; than = doi_cot(than, r['cot']); ht = doi_cot(ht, r['cot'])
+        n = r['neo']
+        if 'anh' in r:  # Lần 2: khung thay hẳn bằng ảnh gen lại (2 ô 96: thân | nắm tay thân), như anhCao của game
+            than, ht = o_anh(r['anh'])
+        else:
+            than = doi_cot(than, r['cot']); ht = doi_cot(ht, r['cot'])
     PAD = VZ.PAD; W = (96 + 2 * PAD) * Z
     nen = Image.new('RGBA', (W, W), (0, 0, 0, 0))
     b = Image.fromarray(than).resize((96 * Z, 96 * Z), Image.NEAREST)
@@ -96,7 +108,7 @@ def main():
         d.text((4, 2), '%s - tren: TRUOC (?thuongcao=0), duoi: SAU - x4 (moi o = 2x2 diem game), cap Trang' % k, fill=(235, 235, 235))
         for i, (a, b, doi) in enumerate(o):
             P.paste(a, (i * (w + 4), 18)); P.paste(b, (i * (w + 4), 22 + h))
-            d.text((i * (w + 4) + 4, 24 + 2 * h), 'khung %d: %s' % (i + 1, 'NANG TAY' if doi else 'giu nhu cu'),
+            d.text((i * (w + 4) + 4, 24 + 2 * h), 'khung %d: %s' % (i + 1, ('ANH MOI' if 'anh' in B['bo']['zed-moi'].get(k, {}).get('khung', {}).get(str(i), {}) else 'NANG TAY') if doi else 'giu nhu cu'),
                    fill=(120, 230, 120) if doi else (200, 200, 200))
         P.save(os.path.join(DAY, 'luoi', TEN[k] + '.png'), optimize=True)
         print('Ghi luoi/%s.png' % TEN[k])

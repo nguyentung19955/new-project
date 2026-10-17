@@ -99,6 +99,11 @@
         return;
       }
     }
+    const t2 = q.__to === T && I && I !== T.img ? I.__to : null; // canvas khung thay ảnh (thương quét k6) có bản to riêng
+    if (t2) {
+      const col = Math.floor(sx / 96 + 1e-6), row = Math.floor(sy / 96 + 1e-6);
+      if (t2.co[col]) { q.drawImage(t2.img, col * t2.o + (sx - col * 96) * t2.k, row * t2.o + (sy - row * 96) * t2.k, sw * t2.k, sh * t2.k, dx, dy, dw, dh); return; }
+    }
     q.drawImage(I, sx, sy, sw, sh, dx, dy, dw, dh);
   }
   const nhoAnh = (img, x, y, w, h, rho) => (SC.nhoAnh ? SC.nhoAnh(img, x, y, w, h, rho) : null); // js/sprite_custom.js
@@ -268,11 +273,32 @@
       let co = false;
       Object.keys(R.khung).forEach((i) => {
         const r = R.khung[i], n = neo[+i];
-        if (n && Math.abs(n[0] - r.cu[0]) < 0.02 && Math.abs(n[1] - r.cu[1]) < 0.02 && Math.abs(n[2] - r.cu[2]) < 0.05) { neo[+i] = r.neo; k[+i] = r.cot; co = true; }
+        if (n && Math.abs(n[0] - r.cu[0]) < 0.02 && Math.abs(n[1] - r.cu[1]) < 0.02 && Math.abs(n[2] - r.cu[2]) < 0.05) {
+          if (r.anh && !anhThay(r.anh)) return; // khung thay ảnh mà không tải được ảnh: giữ khung + neo cũ
+          neo[+i] = r.neo; k[+i] = r.anh ? { anh: r.anh } : r.cot; co = true;
+        }
       });
       return co ? Object.assign({}, b, { neo, cao: { k, khoa: da._khoa, hang: da.hang } }) : b;
     } catch (e) { return b; }
   }
+  // LẦN 2 (17/10, thuong-tay-trai-cao/bao-cao.md "Lần 2: khung 6 quét"): khung THAY HẲN bằng ảnh chủ game gen lại (mục "anh" của bảng,
+  // dựng bằng thuong-tay-trai-cao/quet-k6/dung_k6.py): tam = 2 ô 96 (thân | nắm tay thân) thu nhỏ nét, to = cùng 2 ô bản to ×k (ô o_to)
+  // dựng thẳng từ ảnh gốc, cu = bản BOX cho ?netcu=1. Ảnh data URL, tải một lần. null: không có Image (máy chủ) → giữ khung cũ.
+  const ANH_TH = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  function anhThay(a) {
+    if (!ANH_TH || typeof Image === 'undefined' || !a || typeof a.tam !== 'string') return null;
+    let r = ANH_TH.get(a);
+    if (!r) {
+      const tai = (src) => { const o = { img: new Image(), ok: false }; o.img.onload = () => { o.ok = true; }; o.img.onerror = () => { o.hong = true; }; o.img.src = src; return o; };
+      r = { than: tai(G.NET_CU && a.cu ? a.cu : a.tam), to: !G.NET_CU && a.to ? tai(a.to) : null };
+      ANH_TH.set(a, r);
+    }
+    return r;
+  }
+  try { // tải sẵn ngay khi nạp (ảnh nhỏ), để lần vẽ đầu đã có
+    const D = G.THUONG_CAO !== false && G.THUONG_CAO_DATA && G.THUONG_CAO_DATA.bo;
+    if (D) Object.keys(D).forEach((b) => Object.keys(D[b]).forEach((h) => Object.keys(D[b][h].khung || {}).forEach((i) => { const a = D[b][h].khung[i].anh; if (a) anhThay(a); })));
+  } catch (e) { /* tải lúc vẽ */ }
   // Canvas khung đã nâng tay của một hàng (hàng 0: thân, hàng 1: nắm tay thân hang_tay), nhớ theo tấm ảnh + khoá hàng. null: chưa dựng được.
   const CAO = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
   function anhCao(T, B) {
@@ -281,7 +307,7 @@
     if (!m) CAO.set(T.img, (m = {}));
     const key = B.cao.khoa;
     if (m[key] !== undefined) return m[key];
-    let cv = null;
+    let cv = null, cho = false;
     try {
       const so = B.neo.length;
       cv = document.createElement('canvas'); cv.width = so * 96; cv.height = 192;
@@ -290,6 +316,23 @@
       const lop = [B.cao.hang, B.ht];
       Object.keys(B.cao.k).forEach((i) => {
         const x0 = +i * 96, ct = B.cao.k[i];
+        if (ct && ct.anh) { // khung thay ảnh: chép 2 ô (thân, nắm tay thân); bản to vào canvas riêng cv.__to (veT dùng khi vẽ nét to)
+          const A = anhThay(ct.anh);
+          if (!A || A.than.hong) return;
+          if (!A.than.ok || (A.to && !A.to.ok && !A.to.hong)) { cho = true; return; }
+          q.drawImage(A.than.img, 0, 0, 96, 96, x0, 0, 96, 96);
+          if (B.ht != null) q.drawImage(A.than.img, 96, 0, 96, 96, x0, 96, 96, 96);
+          if (A.to && A.to.ok) {
+            const o = ct.anh.o_to || 116, k = ct.anh.k || 1.2;
+            if (!cv.__to) { const c2 = document.createElement('canvas'); c2.width = so * o; c2.height = 2 * o; cv.__to = { img: c2, o, k, co: {} }; }
+            const q2 = cv.__to.img.getContext('2d');
+            q2.imageSmoothingEnabled = false;
+            q2.drawImage(A.to.img, 0, 0, o, o, +i * o, 0, o, o);
+            if (B.ht != null) q2.drawImage(A.to.img, o, 0, o, o, +i * o, o, o, o);
+            cv.__to.co[+i] = true;
+          }
+          return;
+        }
         lop.forEach((h, j) => {
           if (h == null) return;
           const y0 = j * 96;
@@ -299,6 +342,7 @@
         });
       });
     } catch (e) { cv = null; ghiLoi(e); }
+    if (cho) return null; // ảnh thay khung chưa tải xong: chưa nhớ, lần vẽ sau dựng lại
     m[key] = cv;
     return cv;
   }

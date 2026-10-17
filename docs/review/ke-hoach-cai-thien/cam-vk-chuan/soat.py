@@ -46,6 +46,33 @@ def lam_sua(T, B, ma='zed-moi'):
     return f
 
 
+def ap_anh_thay(T, ma='zed-moi'):
+    """Khung thay hẳn bằng ảnh gen lại (thuong-tay-trai-cao Lần 2, mục "anh" của game/js/thuong_cao_data.js — game dùng mặc định):
+    dán ảnh thân + nắm tay thân vào tấm T['_img'] (bản sao) và đặt neo mới vào biến thể nắm chuôi → đo đúng khung game đang vẽ.
+    Trả danh sách (khoá, khung) đã thay."""
+    import base64, io, copy
+    s = open(os.path.join(DC.ROOT, 'game/js/thuong_cao_data.js'), encoding='utf-8').read()
+    B = json.loads(s.split('G.THUONG_CAO_DATA = ', 1)[1].rsplit(';', 1)[0])
+    ra = []
+    for k, R in B['bo'].get(ma, {}).items():
+        for i, r in R['khung'].items():
+            if 'anh' not in r:
+                continue
+            da = T['dong_tac'][k]; i = int(i)
+            n = da['nam']['neo'][i]
+            if not n or abs(n[0] - r['cu'][0]) >= 0.02 or abs(n[1] - r['cu'][1]) >= 0.02 or abs(n[2] - r['cu'][2]) >= 0.05:
+                continue
+            im = Image.open(io.BytesIO(base64.b64decode(r['anh']['tam'].split(',', 1)[1]))).convert('RGBA')
+            if T['_img'] is DC.VZ.tai(ma)['_img']:
+                T['_img'] = T['_img'].copy()
+            for lop, h in ((0, da['hang']), (1, da['nam']['hang_tay'])):
+                o = im.crop((lop * 96, 0, lop * 96 + 96, 96))
+                T['_img'].paste(o, (i * 96, h * 96))
+            da['nam']['neo'] = copy.deepcopy(da['nam']['neo']); da['nam']['neo'][i] = r['neo']
+            ra.append((k, i))
+    return ra
+
+
 def dem(T, V, k, sua=None):
     """Số (khung × cấp) lỗi, tổng, và đếm theo mã lỗi."""
     da = T['dong_tac'][k]
@@ -97,6 +124,7 @@ def gif(T, V, sua, chuoi, ten, cap=0, Z=3, ms=110):
 def main():
     ve_anh = '--khong-anh' not in sys.argv
     T = DC.VZ.tai('zed-moi'); V = DC.VZ.tai('zed-vk')
+    print('Khung thay ảnh (thuong-tay-trai-cao Lần 2) đo theo ảnh mới:', ap_anh_thay(T))
     B = doc_bang(); sua = lam_sua(T, B)
     km = DC.khoa_game(T)
     bang, so_do = [], {}

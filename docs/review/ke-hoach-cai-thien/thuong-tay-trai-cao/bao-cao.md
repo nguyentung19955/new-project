@@ -77,3 +77,41 @@ Khung đâm / hất trúng của thương 1–3 giữ cũ **có chủ ý** (gi�
 - Nạp `linh-khi.html?cloud=0` bằng trình duyệt không giao diện (không bấm phím), gọi hàm vẽ Cu Tí cầm thương: 0 lỗi JS, `G.zedMoi.loi` rỗng.
   Bản mặc định khác `?thuongcao=0` ở mọi khung đứng / đi / chạy / đòn đã nâng; khung đâm trúng giống hệt bản cũ.
 - Không đụng master, không force push, không tạo PR.
+
+## Lần 2: khung 6 quét (17/10)
+
+Chủ game đã gen lại khung 6 (thu thế) của hàng thương quét theo prompt ở mục "Khung giữ bản cũ". **Không chơi thử**: chỉ ảnh soát và GIF dựng bằng máy.
+
+**Đã làm**
+- Dùng bản **1 khung to** (`docs/anh-goc/zed/moi/14-thuong-quet-k6-moi.png`): khớp tốt, không cần bản dự phòng.
+- Cỡ: **cao đầu bằng khung 6 cũ** của hàng quét (người cao 64 so với 66 điểm ảnh ô 96 cũ). Chỗ: **bàn chân trước đứng đúng chỗ cũ**, chân chạm đất như cũ.
+- Thu nhỏ kiểu **nét** (`do-net/cong-cu/thu_net.py`: mỗi điểm một màu có thật), có sẵn **bản to ×1,2** dựng thẳng từ ảnh gốc (trong trận chép 1:1, không phóng lúc vẽ). Thêm bản cũ kiểu BOX cho `?netcu=1`.
+- Neo đo lại trên ảnh mới: tay phải (dưới) `61,65 ; 58,92`, tay trái (trên, xa ra trước) `69,53 ; 52,17`. Hai tay cách nhau **5,2 điểm game** (cũ 3,2), tay trái cao hơn ~3,4 điểm game.
+  **Cán đi thẳng qua hai nắm tay**, chếch lên **−40,6°** (cũ −6°). Thế cầm rộng hẳn, hai nắm tay không còn chồng nhau.
+- Chỉ thay khung 6. Khung 1–5 và các hàng khác giữ nguyên từng số.
+
+**Bật / tắt**
+- Mặc định: khung 6 mới.
+- `?thuongcao=0`: về khung 6 cũ + neo cũ (y như trước).
+- `?netcu=1`: khung 6 mới, bản thu nhỏ kiểu cũ, vẽ cách cũ.
+
+**Cách làm (kỹ thuật)**
+- Không sửa tấm `zed-moi`. Ảnh khung mới (2 ô: thân | lớp ngón tay trước) nằm trong `game/js/thuong_cao_data.js`, mục `thuong_quet` khung 6, khoá `anh` (bản thường, bản to, bản cũ). +13 KB.
+- `js/zed_moi.js`: `thuongCao` nhận mục `anh`; `anhCao` chép ảnh thay khung (không dời cột); `veT` lấy ô bản to của khung thay khi vẽ nét to. Tải sẵn ảnh khi nạp trang.
+- `game/build.py` (bản hai tệp): ảnh base64 còn trong mã được tách ra `anh/ma-rieng.<mã>.png` như các ảnh rời khác.
+- Dựng lại: `python3 docs/review/ke-hoach-cai-thien/thuong-tay-trai-cao/quet-k6/dung_k6.py --ghi` (chỉ ghi mục quét khung 6, không đụng mục khác).
+  `sua.py` cũng biết mục này (`ANH_THAY`). Lưu ý: chạy lại cả `sua.py` sẽ đo lại "cột" các hàng khác trên tấm đã dựng nét (lần này **không** chạy lại, để giữ nguyên).
+
+**Kiểm**
+- Soát cầm vũ khí `cam-vk-chuan/soat.py` (nay đo luôn khung thay ảnh, `ap_anh_thay`): **0 lỗi** mọi hàng × 4 cấp. Khung 6 mới: tâm nắm đo lệch neo ≤ 0,9 đơn vị ô 96 (ngưỡng 2), tay trái nằm trên cán.
+- `node --check` mọi `game/js/*.js`: đạt.
+- `python3 game/build.py` và `--hai-tep`: đạt. Bản một tệp **29,74 / 30 MB**. Người chơi tải **17,68 / 20 MB**.
+- Nạp trang bằng trình duyệt không giao diện (không bấm phím), gọi hàm vẽ Cu Tí ở khung 6 quét: 0 lỗi JS, `G.zedMoi.loi` rỗng. Bản một tệp và bản hai tệp đều dùng ảnh mới (cả bản to); `?thuongcao=0` ra khung cũ; `?netcu=1` ra khung mới vẽ cách cũ (`quet-k6/kiem-may-ve.png`: mặc định | thuongcao=0 | netcu=1 | hai tệp | hai tệp thuongcao=0).
+
+**Ảnh soát** (`quet-k6/`)
+- `gif-quet-x3.gif` (thương Trắng), `gif-quet-cap4-x3.gif` (Thức tỉnh): đứng → quét 6 khung → đứng, trái TRƯỚC | phải SAU, ×3, dừng lâu ở khung 6.
+- `k6-x4.png`: khung 6 ×4, trên TRƯỚC / dưới SAU; cột 1 thân trơn, cột 2–5 bốn cấp thương.
+- `k6-to-x4.png`: khung 6 mới: bản thường | bản to ×1,2 | bản BOX (`?netcu=1`).
+- Dựng lại ảnh: `python3 docs/review/ke-hoach-cai-thien/thuong-tay-trai-cao/quet-k6/soat_k6.py`.
+
+Không đụng đăng nhập Google, lưu mây, `?cloud=0`. Không đụng master, không force push, không tạo PR.

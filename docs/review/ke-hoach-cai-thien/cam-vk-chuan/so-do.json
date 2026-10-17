@@ -1831,40 +1831,35 @@
     "loi": 4,
     "tong": 32,
     "ma": {
-     "tam": 4,
-     "truc": 4
+     "tam": 4
     },
     "khung": [
      [
       8,
       1,
       [
-       "tam",
-       "truc"
+       "tam"
       ]
      ],
      [
       8,
       2,
       [
-       "tam",
-       "truc"
+       "tam"
       ]
      ],
      [
       8,
       3,
       [
-       "tam",
-       "truc"
+       "tam"
       ]
      ],
      [
       8,
       4,
       [
-       "tam",
-       "truc"
+       "tam"
       ]
      ]
     ]
@@ -1896,41 +1891,10 @@
    "nhan": "búa nện đất",
    "vk": "bua",
    "truoc": {
-    "loi": 4,
+    "loi": 0,
     "tong": 24,
-    "ma": {
-     "thieu2": 4
-    },
-    "khung": [
-     [
-      5,
-      1,
-      [
-       "thieu2"
-      ]
-     ],
-     [
-      5,
-      2,
-      [
-       "thieu2"
-      ]
-     ],
-     [
-      5,
-      3,
-      [
-       "thieu2"
-      ]
-     ],
-     [
-      5,
-      4,
-      [
-       "thieu2"
-      ]
-     ]
-    ]
+    "ma": {},
+    "khung": []
    },
    "sau": {
     "loi": 0,
