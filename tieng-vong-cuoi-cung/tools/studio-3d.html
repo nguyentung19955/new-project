@@ -1,0 +1,1558 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Studio 3D – Lam</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Bố cục: bàn làm việc của họa sĩ — sân khấu 3D và ô pixel cạnh nhau (xếp chồng trên điện thoại), bảng điều khiển bên dưới.
+   Một bảng màu tối duy nhất, lấy thẳng từ palette khóa của game. */
+:root {
+  --nen: #0C0F14; --mat: #1A212B; --mat2: #212835; --vien: #2C3546; --chu: #E6ECEF; --chu-mo: #8E9BAA;
+  --xanh: #83CC93; --xanh-dam: #32804F; --vang: #E1B85A; --sang: #CEF0D6; --hit: #9C6B30;
+  --f-tieu-de: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-than: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-so: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  color-scheme: dark;
+}
+html, body { background: var(--nen); color: var(--chu); }
+body { font-family: var(--f-than); font-size: 15px; line-height: 1.45; -webkit-text-size-adjust: 100%; }
+.trang { max-width: 1180px; margin: 0 auto; padding-block: 14px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 14px; }
+header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+h1 { font-family: var(--f-tieu-de); font-weight: 800; font-size: 1.45rem; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+h1 b { color: var(--xanh); font-weight: 800; }
+header p { margin: 0; color: var(--chu-mo); font-size: 0.9rem; }
+.san { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 760px) { .san { grid-template-columns: 1fr; } }
+.khung { background: var(--mat); border: 1px solid var(--vien); border-radius: 10px; overflow: hidden; display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+.khung h2 { margin: 0; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--chu-mo);
+  padding: 9px 12px; border-bottom: 1px solid var(--vien); display: flex; justify-content: space-between; gap: 8px; }
+.khung h2 span:last-child { font-family: var(--f-so); letter-spacing: 0; text-transform: none; color: var(--sang); }
+#c3d { width: 100%; aspect-ratio: 1 / 1; max-width: 100%; display: block; touch-action: none; cursor: grab; background: var(--mat2); }
+#c3d:active { cursor: grabbing; }
+.o-pixel { display: grid; place-items: center; background: var(--mat2); aspect-ratio: 1 / 1; max-width: 100%; position: relative; }
+#cpx { image-rendering: pixelated; image-rendering: crisp-edges; max-width: 100%; max-height: 100%; }
+.nhan-khung { position: absolute; left: 10px; right: 10px; bottom: 8px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+  font-size: 0.85rem; color: var(--chu); text-shadow: 0 1px 0 var(--nen); }
+.co { font-family: var(--f-so); font-size: 0.72rem; padding: 2px 7px; border-radius: 999px; border: 1px solid var(--vien); color: var(--chu-mo); background: var(--nen); }
+.co.hit { color: var(--nen); background: var(--vang); border-color: var(--vang); }
+.co.noi { color: var(--nen); background: var(--xanh); border-color: var(--xanh); }
+.dieu-khien { display: grid; gap: 12px; }
+.hang { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+button { font: inherit; font-weight: 600; color: var(--chu); background: var(--mat2); border: 1px solid var(--vien); border-radius: 9px;
+  min-height: 46px; min-width: 46px; padding: 0 14px; touch-action: manipulation; cursor: pointer; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--vang); outline-offset: 2px; }
+button[aria-pressed="true"] { background: var(--xanh-dam); border-color: var(--xanh); color: #fff; }
+button.chinh { background: var(--vang); border-color: var(--vang); color: var(--nen); min-width: 96px; }
+.anims { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 6px; }
+.anims button { min-height: 44px; font-size: 0.86rem; padding: 0 8px; text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.anims button small { font-family: var(--f-so); color: var(--chu-mo); font-weight: 500; font-size: 0.72rem; }
+.anims button[aria-pressed="true"] small { color: var(--sang); }
+fieldset { border: 1px solid var(--vien); border-radius: 10px; margin: 0; padding: 10px 12px 12px; display: grid; gap: 10px; min-width: 0; }
+legend { font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--chu-mo); padding: 0 6px; }
+.thanh { display: grid; grid-template-columns: minmax(110px, 9.5em) 1fr 3.4em; gap: 10px; align-items: center; }
+.thanh label { font-size: 0.9rem; }
+.thanh output { font-family: var(--f-so); font-size: 0.85rem; color: var(--sang); text-align: right; font-variant-numeric: tabular-nums; }
+input[type=range] { width: 100%; height: 36px; accent-color: var(--xanh); min-width: 0; }
+.cot2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 760px) { .cot2 { grid-template-columns: 1fr; } }
+.ghi-chu { color: var(--chu-mo); font-size: 0.85rem; margin: 0; max-width: 70ch; }
+#trang-thai { font-family: var(--f-so); font-size: 0.8rem; color: var(--chu-mo); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="trang">
+  <header>
+    <h1>Studio 3D – <b>Lam</b></h1>
+    <p>Mô hình 3D mượt, render thẳng xuống pixel đúng như trong game.</p>
+  </header>
+
+  <section class="san" aria-label="Xem trước">
+    <div class="khung">
+      <h2><span>Mô hình 3D · vuốt để xoay</span><span id="t3d">0.00 s</span></h2>
+      <canvas id="c3d" width="600" height="600" aria-label="Mô hình 3D của Lam, vuốt để xoay"></canvas>
+    </div>
+    <div class="khung">
+      <h2><span>Bản pixel 64×64</span><span id="tpx">khung 1/6</span></h2>
+      <div class="o-pixel">
+        <canvas id="cpx" width="384" height="384" aria-label="Bản pixel đang phát"></canvas>
+        <div class="nhan-khung"><span id="ten-khung">đứng thẳng</span><span id="co-hit" class="co hit" hidden>HIT</span><span id="co-noi" class="co noi" hidden>nối combo</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="dieu-khien">
+    <div class="hang" role="group" aria-label="Phát">
+      <button id="b-dau" aria-label="Về khung đầu">⏮</button>
+      <button id="b-lui" aria-label="Lùi 1 khung">◀ khung</button>
+      <button id="b-phat" class="chinh">Tạm dừng</button>
+      <button id="b-toi" aria-label="Tới 1 khung">khung ▶</button>
+      <span style="flex:1"></span>
+      <button id="b-x4" aria-pressed="false">×4</button>
+      <button id="b-x6" aria-pressed="true">×6</button>
+    </div>
+
+    <fieldset>
+      <legend>Hoạt cảnh (26)</legend>
+      <div class="anims" id="anims"></div>
+    </fieldset>
+
+    <div class="cot2">
+      <fieldset>
+        <legend>Camera &amp; ánh sáng</legend>
+        <div class="thanh"><label for="s-cam">Độ cao camera</label><input id="s-cam" type="range" min="0" max="25" step="1" value="8"><output id="o-cam">8°</output></div>
+        <div class="thanh"><label for="s-xoay">Góc xoay nhân vật</label><input id="s-xoay" type="range" min="0" max="70" step="1" value="35"><output id="o-xoay">35°</output></div>
+        <div class="thanh"><label for="s-as-cao">Ánh sáng – độ cao</label><input id="s-as-cao" type="range" min="5" max="85" step="1" value="50"><output id="o-as-cao">50°</output></div>
+        <div class="thanh"><label for="s-as-ngang">Ánh sáng – hướng</label><input id="s-as-ngang" type="range" min="-60" max="90" step="1" value="35"><output id="o-as-ngang">35°</output></div>
+        <div class="hang"><button id="b-macdinh">Về mặc định</button><span id="trang-thai"></span></div>
+      </fieldset>
+      <fieldset>
+        <legend>Nền ô pixel</legend>
+        <div class="hang" role="group" aria-label="Nền">
+          <button id="n-lang" aria-pressed="true">Làng Chuông</button>
+          <button id="n-toi" aria-pressed="false">Tối</button>
+          <button id="n-luoi" aria-pressed="false">Lưới ô</button>
+        </div>
+        <p class="ghi-chu">Ô pixel là đúng ảnh game dùng: mỗi khung được dựng lại từ mô hình 3D (áo choàng và chuông mô phỏng vật lý), tô 3 bậc sáng theo palette, viền ngoài 1 pixel và viền trong ở chỗ tay, kiếm chồng lên thân.</p>
+        <p class="ghi-chu">Kéo thanh trượt để thử góc camera hay hướng sáng; ô pixel tự dựng lại sau nửa giây.</p>
+      </fieldset>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>/* =====================================================================
+   lam3d-core.js — Lam (thợ giữ chuông) dựng 3D mượt rồi GIẢM XUỐNG PIXEL (kiểu Dead Cells).
+   Chạy với Three.js r128 (biến toàn cục THREE, cdnjs) — dùng chung cho:
+     tools/studio-3d.html (xem/chỉnh trên iPhone) và tools/in-lam3d.py (in sẵn atlas bằng Chromium headless).
+   Thành phần:
+     • Mô hình: mũ trùm (Extrude bo tròn) + viền xanh (Tube) + mặt tối + 2 mắt sáng, áo choàng VẢI MÔ PHỎNG
+       (verlet, gắn vai, va chạm thân, đuôi rách răng cưa), vạt áo xanh trước (vải), tay chân capsule thuôn,
+       khớp cầu chồng lên nhau, ủng, kiếm, chuông vàng con lắc sau mũ.
+     • Xương: phân cấp Object3D (hông → lưng → ngực → cổ → đầu; vai → khuỷu → cổ tay; háng → gối → cổ chân),
+       IK 2 xương cho chân (và tay khi bám tường/thang), keyframe nội suy Catmull-Rom (đường cong bậc 3),
+       thân/đầu trễ sau hông (overlap), squash/stretch.
+     • Render pixel: camera trực giao nhìn ngang, shader toon 3 bậc khóa palette, render thẳng 64×64
+       (hoặc ×2 rồi gộp màu đa số), hậu kỳ: viền ngoài 1px, viền trong theo bộ phận, dọn pixel lẻ, mắt,
+       vệt chém (smear), hiệu ứng chuông.
+   API: LAM3D.tao(THREE, tuyChon) → đối tượng lam  ·  lam.chayAnim(ten) → khung pixel  ·  LAM3D.ANIMS (lam3d-anim.js)
+   ===================================================================== */
+(function (root) {
+'use strict';
+var L3 = root.LAM3D = root.LAM3D || {};
+
+/* ---------------- Palette khóa ---------------- */
+var HEX = {
+  vien: '#0C0F14', a0: '#1A212B', a1: '#212835', a2: '#2C3546', a3: '#4A5A6E',
+  x0: '#21413A', x1: '#32804F', x2: '#83CC93', v0: '#9C6B30', v1: '#E1B85A', v2: '#F3E6C8', k: '#CEF0D6'
+};
+L3.HEX = HEX;
+var PAL = [];   // [r,g,b] theo thứ tự
+var PAL_TEN = [];
+for (var kk in HEX) { PAL_TEN.push(kk); PAL.push(hexRgb(HEX[kk])); }
+L3.PAL = PAL; L3.PAL_TEN = PAL_TEN;
+function hexRgb(h) { return [parseInt(h.substr(1, 2), 16), parseInt(h.substr(3, 2), 16), parseInt(h.substr(5, 2), 16)]; }
+function palIdx(r, g, b) {
+  var best = 0, bd = 1e9;
+  for (var i = 0; i < PAL.length; i++) {
+    var p = PAL[i], d = (p[0] - r) * (p[0] - r) + (p[1] - g) * (p[1] - g) + (p[2] - b) * (p[2] - b);
+    if (d < bd) { bd = d; best = i; }
+  }
+  return best;
+}
+var IV = PAL_TEN.indexOf('vien');
+function PI_(t) { return PAL_TEN.indexOf(t); }
+
+/* Họ màu (tối → sáng). Vật liệu lấy 3 bậc liên tiếp từ vị trí b; tay/chân phía sau lùi 1 bậc */
+var HO = {
+  toi:  ['vien', 'a0', 'a1', 'a2', 'a3'],
+  xanh: ['a0', 'x0', 'x1', 'x2', 'k'],
+  vang: ['v0', 'v0', 'v1', 'v2', 'v2'],
+  kiem: ['x1', 'x2', 'k', 'v2', 'v2'],
+  den:  ['vien', 'vien', 'vien', 'vien', 'vien']
+};
+
+/* ---------------- Mã bộ phận (pass ID) & nhóm để vẽ viền trong ---------------- */
+var ID = { mu: 1, mat: 2, vienMu: 3, khoac: 4, than: 5, vat: 6, ao: 7, tayG: 8, tayX: 9, chanG: 10, chanX: 11,
+           ungG: 12, ungX: 13, luoi: 14, chuoi: 15, chuong: 16, tram: 17, mat2: 18, chem: 19, fx: 20 };
+L3.ID = ID;
+var NHOM = {};
+[[ID.mu, 'dau'], [ID.mat, 'dau'], [ID.vienMu, 'dau'], [ID.mat2, 'dau'],
+ [ID.khoac, 'than'], [ID.than, 'than'], [ID.vat, 'than'], [ID.tram, 'than'],
+ [ID.ao, 'ao'], [ID.tayG, 'tayG'], [ID.tayX, 'tayX'], [ID.chanG, 'chanG'], [ID.ungG, 'chanG'],
+ [ID.chanX, 'chanX'], [ID.ungX, 'chanX'], [ID.luoi, 'kiem'], [ID.chuoi, 'kiem'], [ID.chuong, 'chuong']
+].forEach(function (a) { NHOM[a[0]] = a[1]; });
+
+/* ---------------- Kích thước (đơn vị; Lam cao ~1.6) ---------------- */
+var K = {
+  hongY: 0.50, hang: [0.0, -0.04, 0.085], dui: 0.20, cang: 0.21, coChan: 0.07,
+  lung: [0, 0.08], nguc: [0, 0.17], co: [0.01, 0.235], dau: [0, 0.03],
+  vai: [-0.01, 0.16, 0.165], canhTay: 0.16, cangTay: 0.15
+};
+L3.K = K;
+var D2R = Math.PI / 180;
+
+function tao(THREE, tuy) {
+  tuy = tuy || {};
+  var V3 = THREE.Vector3;
+  var lam = { THREE: THREE, mats: [], meshes: [] };
+  var U = lam.uni = {
+    uL: { value: new V3(0.5, 0.75, 0.45).normalize() },
+    t1: { value: 0.40 }, t2: { value: 0.70 }
+  };
+  lam.anhSang = { cao: 50, ngang: 35 };   // độ: cao (trên-trước), xoay ngang về phía camera
+
+  /* ----- vật liệu toon 3 bậc ----- */
+  var VS = 'varying vec3 vN; void main(){ vN = normalize(normalMatrix*normal); gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }';
+  var FS = 'precision highp float; uniform vec3 c0,c1,c2,b0,b1,b2; uniform vec3 uL; uniform float t1,t2,bias; varying vec3 vN;' +
+    'void main(){ vec3 n=normalize(vN); bool bk=!gl_FrontFacing; if(bk) n=-n;' +
+    ' float d=dot(n,uL)*0.5+0.5+bias; vec3 a;' +
+    ' if(bk) a = d>t2?b2:(d>t1?b1:b0); else a = d>t2?c2:(d>t1?c1:c0);' +
+    ' gl_FragColor=vec4(a,1.0); }';
+  var VSV = 'attribute float aVien; varying float vH; varying vec3 vN; void main(){ vH=aVien; vN = normalize(normalMatrix*normal); gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }';
+  var FSV = 'precision highp float; uniform vec3 c0,c1,c2,b0,b1,b2,h0,h1,h2; uniform vec3 uL; uniform float t1,t2,bias; varying vec3 vN; varying float vH;' +
+    'void main(){ vec3 n=normalize(vN); bool bk=!gl_FrontFacing; if(bk) n=-n;' +
+    ' float d=dot(n,uL)*0.5+0.5+bias; vec3 a;' +
+    ' if(vH>0.5) a = d>t2?h2:(d>t1?h1:h0); else if(bk) a = d>t2?b2:(d>t1?b1:b0); else a = d>t2?c2:(d>t1?c1:c0);' +
+    ' gl_FragColor=vec4(a,1.0); }';
+  var VSI = 'void main(){ gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }';
+  var FSI = 'precision highp float; uniform float uId; void main(){ float z=clamp(gl_FragCoord.z,0.0,1.0)*255.0;' +
+    ' gl_FragColor=vec4(uId/255.0, floor(z)/255.0, fract(z), 1.0); }';
+  function bac(ho, b) {
+    var h = HO[ho], o = [];
+    for (var i = 0; i < 3; i++) o.push(new THREE.Color(HEX[h[Math.max(0, Math.min(h.length - 1, b + i))]]));
+    return o;
+  }
+  function vatLieu(spec, id, sau) {
+    // spec: {ho, b, bias, hoSau, bSau, hai}
+    var b = spec.b - (sau ? 1 : 0);
+    var c = bac(spec.ho, b), bb = bac(spec.hoSau || spec.ho, (spec.bSau != null ? spec.bSau : spec.b) - (sau ? 1 : 0));
+    var m = new THREE.ShaderMaterial({
+      uniforms: { c0: { value: c[0] }, c1: { value: c[1] }, c2: { value: c[2] }, b0: { value: bb[0] }, b1: { value: bb[1] }, b2: { value: bb[2] },
+        uL: U.uL, t1: U.t1, t2: U.t2, bias: { value: spec.bias || 0 } },
+      vertexShader: spec.vien ? VSV : VS, fragmentShader: spec.vien ? FSV : FS, side: spec.hai ? THREE.DoubleSide : THREE.FrontSide
+    });
+    if (spec.vien) { var hh = bac(spec.vien[0], spec.vien[1] - (sau ? 1 : 0)); m.uniforms.h0 = { value: hh[0] }; m.uniforms.h1 = { value: hh[1] }; m.uniforms.h2 = { value: hh[2] }; }
+    var mi = new THREE.ShaderMaterial({ uniforms: { uId: { value: id } }, vertexShader: VSI, fragmentShader: FSI,
+      side: spec.hai ? THREE.DoubleSide : THREE.FrontSide });
+    lam.mats.push(m);
+    return { m: m, mi: mi };
+  }
+  function luoi(geo, spec, id, cha, sau) {
+    var v = vatLieu(spec, id, sau);
+    var me = new THREE.Mesh(geo, v.m);
+    me.userData.m = v.m; me.userData.mi = v.mi; me.userData.id = id;
+    me.frustumCulled = false;
+    if (cha) cha.add(me);
+    lam.meshes.push(me);
+    return me;
+  }
+
+  /* ----- hình học ----- */
+  // capsule thuôn dọc trục -Y: đầu trên (0,0) bán kính r1, đầu dưới (0,-len) bán kính r2
+  function capsule(r1, r2, len, seg) {
+    seg = seg || 14;
+    var pts = [], n = 6, i, a;
+    for (i = 0; i <= n; i++) { a = -Math.PI / 2 + (i / n) * Math.PI / 2; pts.push(new THREE.Vector2(Math.cos(a) * r2 + 1e-4, -len + Math.sin(a) * r2)); }
+    for (i = 0; i <= n; i++) { a = (i / n) * Math.PI / 2; pts.push(new THREE.Vector2(Math.cos(a) * r1 + 1e-4, Math.sin(a) * r1)); }
+    return new THREE.LatheGeometry(pts, seg);
+  }
+  function cau(r, sx, sy, sz) {
+    var g = new THREE.SphereGeometry(r, 16, 12);
+    if (sx) g.scale(sx, sy, sz);
+    return g;
+  }
+  // đường cong mượt qua các điểm 2D; nhon = chỉ số điểm giữ góc nhọn
+  function muot(pts, nhon, n) {
+    var out = [], N = pts.length;
+    for (var i = 0; i < N; i++) {
+      var p0 = pts[(i - 1 + N) % N], p1 = pts[i], p2 = pts[(i + 1) % N], p3 = pts[(i + 2) % N];
+      if (nhon.indexOf(i) >= 0) p0 = [2 * p1[0] - p2[0], 2 * p1[1] - p2[1]];
+      if (nhon.indexOf((i + 1) % N) >= 0) p3 = [2 * p2[0] - p1[0], 2 * p2[1] - p1[1]];
+      for (var s = 0; s < n; s++) {
+        var t = s / n, t2 = t * t, t3 = t2 * t;
+        out.push(new THREE.Vector2(
+          0.5 * ((2 * p1[0]) + (-p0[0] + p2[0]) * t + (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 + (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3),
+          0.5 * ((2 * p1[1]) + (-p0[1] + p2[1]) * t + (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 + (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3)));
+      }
+    }
+    return out;
+  }
+  function epHinh(pts2, nhon, sau, vat, n) {
+    var sh = new THREE.Shape(muot(pts2, nhon, n || 6));
+    var g = new THREE.ExtrudeGeometry(sh, { depth: sau, bevelEnabled: true, bevelThickness: vat, bevelSize: vat * 0.9,
+      bevelSegments: 3, curveSegments: 8 });
+    g.translate(0, 0, -sau / 2);
+    g.computeVertexNormals();
+    return g;
+  }
+
+  /* ----- xương ----- */
+  function xuong(ten, cha, x, y, z) { var o = new THREE.Object3D(); o.name = ten; o.position.set(x || 0, y || 0, z || 0); if (cha) cha.add(o); return o; }
+  var top = lam.top = xuong('top');           // xoay ngang (yaw) – đặt ở pivot (giữa chân, mặt đất)
+  var S = lam.S = xuong('squash', top);        // squash/stretch quanh mặt đất
+  var R = lam.R = xuong('goc', S, 0, K.hongY, 0);
+  var B = lam.B = {};
+  B.hong = xuong('hong', R);
+  B.lung = xuong('lung', B.hong, K.lung[0], K.lung[1]);
+  B.nguc = xuong('nguc', B.lung, K.nguc[0], K.nguc[1]);
+  B.co = xuong('co', B.nguc, K.co[0], K.co[1]);
+  B.dau = xuong('dau', B.co, K.dau[0], K.dau[1]);
+  B.dau.scale.setScalar(0.88);   // mũ trùm to kiểu chibi (~1/3.5 chiều cao) nhưng không lấn thân
+  ['G', 'X'].forEach(function (s) {
+    var z = s === 'G' ? 1 : -1, sau = s === 'X';
+    B['vai' + s] = xuong('vai' + s, B.nguc, K.vai[0], K.vai[1], K.vai[2] * z);
+    B['khuyu' + s] = xuong('khuyu' + s, B['vai' + s], 0, -K.canhTay, 0);
+    B['tay' + s] = xuong('tay' + s, B['khuyu' + s], 0, -K.cangTay, 0);
+    B['hang' + s] = xuong('hang' + s, B.hong, K.hang[0], K.hang[1], K.hang[2] * z);
+    B['goi' + s] = xuong('goi' + s, B['hang' + s], 0, -K.dui, 0);
+    B['coChan' + s] = xuong('coChan' + s, B['goi' + s], 0, -K.cang, 0);
+    var idT = sau ? ID.tayX : ID.tayG, idC = sau ? ID.chanX : ID.chanG, idU = sau ? ID.ungX : ID.ungG;
+    // tay: ống tay áo thuôn + khớp cầu + găng + cổ tay xanh
+    var toi = { ho: 'toi', b: 1 }, toi2 = { ho: 'toi', b: 2 };
+    luoi(capsule(0.056, 0.047, K.canhTay), toi, idT, B['vai' + s], sau);
+    luoi(cau(0.05), toi, idT, B['khuyu' + s], sau);
+    luoi(capsule(0.047, 0.043, K.cangTay), toi, idT, B['khuyu' + s], sau);
+    var gang = luoi(cau(0.055, 1, 1.1, 1), toi2, idT, B['tay' + s], sau); gang.position.set(0, -0.045, 0);
+    var cuff = luoi(new THREE.TorusGeometry(0.047, 0.02, 8, 16), { ho: 'xanh', b: 1, bias: 0.12 }, idT, B['tay' + s], sau);
+    cuff.rotation.x = Math.PI / 2; cuff.position.y = 0.0;
+    // chân: đùi + khớp gối + cẳng + ủng
+    luoi(capsule(0.075, 0.064, K.dui), { ho: 'toi', b: 2, bias: -0.05 }, idC, B['hang' + s], sau);
+    luoi(cau(0.064), { ho: 'toi', b: 2, bias: -0.05 }, idC, B['goi' + s], sau);
+    luoi(capsule(0.062, 0.052, K.cang), { ho: 'toi', b: 2, bias: -0.05 }, idC, B['goi' + s], sau);
+    var bang = luoi(new THREE.TorusGeometry(0.062, 0.02, 8, 16), { ho: 'xanh', b: 1, bias: 0.12 }, idC, B['goi' + s], sau);
+    bang.rotation.x = Math.PI / 2; bang.position.y = -0.03;
+    var ung = luoi(epHinh([[-0.065, 0.11], [0.055, 0.11], [0.06, 0.02], [0.10, -0.02], [0.15, -0.045], [0.155, -0.07],
+      [-0.06, -0.07], [-0.075, -0.02]], [4, 5, 6], 0.075, 0.022, 5), { ho: 'toi', b: 2 }, idU, B['coChan' + s], sau);
+    var vu = luoi(new THREE.TorusGeometry(0.066, 0.024, 8, 18), { ho: 'xanh', b: 1, bias: 0.12 }, idU, B['coChan' + s], sau);
+    vu.rotation.x = Math.PI / 2; vu.position.set(-0.005, 0.10, 0); vu.scale.set(1.08, 1, 0.9);
+    var mui = luoi(cau(0.03, 1.4, 0.9, 1.3), { ho: 'xanh', b: 1, bias: 0.1 }, idU, B['coChan' + s], sau);
+    mui.position.set(0.12, -0.035, 0);
+  });
+
+  /* thân: hông + bụng + ngực (khối cầu chồng nhau) */
+  var toiThan = { ho: 'toi', b: 1 };
+  luoi(cau(0.15, 1, 0.8, 0.9), toiThan, ID.than, B.hong).position.set(0, -0.02, 0);
+  luoi(capsule(0.15, 0.145, 0.16), toiThan, ID.than, B.nguc).position.set(0, 0.03, 0);
+  luoi(cau(0.16, 1, 1.05, 1.05), toiThan, ID.than, B.nguc).position.set(0, 0.07, 0);
+  // vạt khoác vai (phần dưới mũ trùm phủ vai)
+  var khoacPts = [];
+  [[0.10, 0.27], [0.17, 0.22], [0.225, 0.14], [0.25, 0.07], [0.245, 0.03], [0.225, 0.02]].forEach(function (p) { khoacPts.push(new THREE.Vector2(p[0], p[1])); });
+  var khoac = luoi(new THREE.LatheGeometry(khoacPts, 22), { ho: 'toi', b: 1, hai: true, hoSau: 'toi', bSau: 0 }, ID.khoac, B.nguc);
+  khoac.scale.set(1.0, 1, 0.95); khoac.position.set(-0.03, 0, 0);
+  // dây đeo chéo + trâm tròn trước ngực
+  var dayCurve = new THREE.CatmullRomCurve3([new V3(0.02, 0.24, 0.17), new V3(0.15, 0.13, 0.08), new V3(0.17, 0.0, -0.02), new V3(0.12, -0.14, -0.12)]);
+  luoi(new THREE.TubeGeometry(dayCurve, 16, 0.022, 6, false), { ho: 'toi', b: 2 }, ID.tram, B.nguc);
+  var tram = luoi(new THREE.TorusGeometry(0.036, 0.016, 8, 16), { ho: 'kiem', b: 0, bias: 0.15 }, ID.tram, B.nguc);
+  tram.position.set(0.20, 0.10, 0.07); tram.rotation.y = Math.PI / 2 - 0.5;
+  var tramTam = luoi(cau(0.026, 0.5, 1, 1), { ho: 'xanh', b: 0 }, ID.tram, B.nguc); tramTam.position.set(0.205, 0.10, 0.07);
+
+  /* mũ trùm: ép đùn hồ sơ bên bo tròn, mỏ mũ nhọn chĩa trước-trên */
+  var MU = [[-0.16, -0.02], [-0.29, 0.08], [-0.345, 0.23], [-0.32, 0.39], [-0.23, 0.51], [-0.08, 0.585], [0.07, 0.60],
+            [0.19, 0.565], [0.285, 0.475], [0.235, 0.425], [0.16, 0.355], [0.10, 0.27], [0.085, 0.15], [0.12, 0.04], [0.16, -0.02],
+            [0.05, -0.06]];
+  var mu = luoi(epHinh(MU, [8, 14], 0.36, 0.07, 7), { ho: 'toi', b: 2, bias: 0.11 }, ID.mu, B.dau);
+  // khoảng tối trong mũ
+  var mat = luoi(cau(1, 0.085, 0.15, 0.17), { ho: 'den', b: 0 }, ID.mat, B.dau); mat.position.set(0.135, 0.19, 0);
+  // viền xanh mép trước mũ: dải ôm theo đường viền từ đỉnh → mỏ nhọn → miệng mũ → cằm (phủ cả mép bo)
+  (function () {
+    var SM = muot(MU, [8, 14], 7), n = SM.length, area = 0, i;
+    for (i = 0; i < n; i++) { var p0 = SM[i], p1 = SM[(i + 1) % n]; area += p0.x * p1.y - p1.x * p0.y; }
+    var sg = area > 0 ? 1 : -1, ngoai = [], trong = [], bocNgoai = [];
+    for (i = 6 * 7 + 3; i <= 14 * 7; i++) {
+      var pa = SM[(i - 1 + n) % n], pb = SM[(i + 1) % n], dx = pb.x - pa.x, dy = pb.y - pa.y, L = Math.sqrt(dx * dx + dy * dy) || 1;
+      var nx = sg * dy / L, ny = -sg * dx / L;   // pháp tuyến hướng ra ngoài
+      ngoai.push(new THREE.Vector2(SM[i].x + nx * 0.066, SM[i].y + ny * 0.066)); bocNgoai.push(new THREE.Vector2(SM[i].x + nx * 0.074, SM[i].y + ny * 0.074));
+      trong.push(new THREE.Vector2(SM[i].x - nx * 0.022, SM[i].y - ny * 0.022));
+    }
+    // dải: mặt gần (trong→ngoài) + mép trước (gần→xa) + mặt xa
+    var zf = 0.256, pos = [], idx = [], m = ngoai.length;
+    function v(p, z) { pos.push(p.x, p.y, z); return pos.length / 3 - 1; }
+    for (i = 0; i < m - 1; i++) {
+      [[trong, zf, ngoai, zf], [ngoai, zf, bocNgoai, zf - 0.075]].forEach(function (st) {
+        var a0 = v(st[0][i], st[1]), a1 = v(st[2][i], st[3]), b0 = v(st[0][i + 1], st[1]), b1 = v(st[2][i + 1], st[3]);
+        idx.push(a0, a1, b0, b0, a1, b1);
+      });
+    }
+    var g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setIndex(idx); g.computeVertexNormals();
+    luoi(g, { ho: 'xanh', b: 1, bias: 0.16, hai: true }, ID.vienMu, B.dau);
+  })();
+  // hai mắt (khối nhỏ để xem 3D; bản pixel vẽ chắc ở hậu kỳ)
+  lam.mat = [];
+  [1, -1].forEach(function (s) {
+    var e = luoi(cau(0.024, 1, 1.4, 1), { ho: 'kiem', b: 2 }, ID.mat2, B.dau);
+    e.position.set(0.205, 0.19, 0.072 * s); lam.mat.push(e);
+  });
+
+  /* kiếm: cán tối, chuôi vàng, lưỡi sáng (lưỡi dọc +X trong hệ kiếm) */
+  var kiem = lam.kiem = xuong('kiem', B.tayG, 0, -0.045, 0.0);
+  var cg = new THREE.CylinderGeometry(0.02, 0.02, 0.10, 8); cg.rotateZ(Math.PI / 2);
+  luoi(cg, { ho: 'toi', b: 1 }, ID.chuoi, kiem).position.set(-0.01, 0, 0);
+  luoi(cau(0.03), { ho: 'vang', b: 1 }, ID.chuoi, kiem).position.set(-0.07, 0, 0);
+  var gd = capsule(0.022, 0.022, 0.15, 8); gd.translate(0, 0.075, 0);
+  luoi(gd, { ho: 'vang', b: 1 }, ID.chuoi, kiem).position.set(0.05, 0, 0);
+  var LUOI = 0.56;
+  lam.luoiDai = LUOI;
+  luoi(epHinh([[0.06, 0.04], [0.06 + LUOI * 0.8, 0.036], [0.06 + LUOI, 0.0], [0.06 + LUOI * 0.8, -0.036], [0.06, -0.04]], [0, 2, 4], 0.008, 0.012, 3),
+       { ho: 'kiem', b: 0, bias: 0.12 }, ID.luoi, kiem);
+
+  /* chuông vàng treo sau mũ (con lắc) */
+  var chuong = lam.chuong = xuong('chuong', top);
+  var cpts = [];
+  [[0.001, 0.0], [0.03, -0.002], [0.045, -0.025], [0.05, -0.06], [0.056, -0.10], [0.075, -0.135], [0.092, -0.155], [0.088, -0.165], [0.06, -0.162], [0.001, -0.15]]
+    .reverse().forEach(function (p) { cpts.push(new THREE.Vector2(p[0], p[1])); });
+  var cgeo = new THREE.LatheGeometry(cpts, 18); cgeo.translate(0, -0.035, 0); cgeo.scale(1.45, 1.4, 1.45);
+  luoi(cgeo, { ho: 'vang', b: 1, bias: 0.05 }, ID.chuong, chuong);
+  luoi(new THREE.TorusGeometry(0.022, 0.009, 6, 12), { ho: 'vang', b: 1 }, ID.chuong, chuong).position.set(0, -0.018, 0);
+  luoi(cau(0.03), { ho: 'vang', b: 0 }, ID.chuong, chuong).position.set(0, -0.27, 0);
+  lam.chuongNeo = new V3(-0.38, 0.22, 0.27);   // trên mũ (hệ đầu)
+  lam.chuongDai = 0.07;
+
+  /* ----- vải: áo choàng (vai) + vạt áo xanh (eo) ----- */
+  lam.vai = [];
+  function taoVai(o) {
+    // o: {cot, hang, neo(i) → [bone, V3 local], xuong: hướng rủ, dai(i,j), them(i) độ dài thêm hàng cuối, spec, id, va}
+    var C = o.cot, Rr = o.hang, N = C * Rr;
+    var p = new Float32Array(N * 3), q = new Float32Array(N * 3), ghim = [], cs = [];
+    var vt = { o: o, C: C, R: Rr, p: p, q: q, ghim: ghim, cs: cs, rest: [] };
+    var geo = new THREE.BufferGeometry();
+    var pos = new Float32Array(N * 3);
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    var idx = [];
+    for (var j = 0; j < Rr - 1; j++) for (var i = 0; i < C - 1; i++) {
+      var a = j * C + i, b = a + 1, c = a + C, d = c + 1;
+      if (j === Rr - 2 && o.rang && o.rang(i)) { idx.push(a, c, b, b, c, d); }   // răng cưa xử lý qua độ dài cột
+      else idx.push(a, c, b, b, c, d);
+    }
+    geo.setIndex(idx);
+    var vien = new Float32Array(N);
+    if (o.vien) for (var jj = 0; jj < Rr; jj++) for (var ii = 0; ii < C; ii++) vien[jj * C + ii] = o.vien(ii, jj) ? 1 : 0;
+    geo.setAttribute('aVien', new THREE.BufferAttribute(vien, 1));
+    vt.mesh = luoi(geo, o.spec, o.id, top);
+    vt.geo = geo;
+    lam.vai.push(vt);
+    return vt;
+  }
+  // áo choàng: neo cung sau lưng (từ vai gần → sau lưng → vai xa)
+  var AO_C = 9, AO_R = 9;
+  var aoDai = [0.0, 0.10, 0.03, 0.14, 0.05, 0.16, 0.02, 0.12, 0.0];   // độ dài thêm hàng cuối (đuôi rách)
+  lam.ao = taoVai({
+    cot: AO_C, hang: AO_R, id: ID.ao, spec: { ho: 'toi', b: 1, hai: true, hoSau: 'xanh', bSau: 1, vien: ['xanh', 1] },
+    vien: function (i, j) { return j === AO_R - 1 || (j >= AO_R - 3 && (i === 0 || i === AO_C - 1)); },
+    neo: function (i) {
+      var u = i / (AO_C - 1), a = (-0.5 + u) * Math.PI * 0.85;   // ±77° quanh lưng
+      return [B.nguc, new V3(-0.06 - Math.cos(a) * 0.17, 0.17, Math.sin(a) * 0.19)];
+    },
+    hang0: function (i, j) {   // vị trí nghỉ (hệ top) so với điểm neo
+      var u = i / (AO_C - 1), a = (-0.5 + u) * Math.PI * 0.85, t = j / (AO_R - 1);
+      var lo = 0.09 * j + (j === AO_R - 1 ? aoDai[i] : 0);
+      return new V3(-Math.cos(a) * 0.13 * t - 0.22 * t, -lo, Math.sin(a) * 0.17 * t);
+    },
+    va: 'ao'
+  });
+  // vạt áo xanh trước (từ eo rủ xuống gối, mép dưới răng cưa)
+  var VT_C = 6, VT_R = 5;
+  var vtDai = [0.02, 0.07, 0.0, 0.08, 0.01, 0.05];
+  lam.vat = taoVai({
+    cot: VT_C, hang: VT_R, id: ID.vat, spec: { ho: 'xanh', b: 1, hai: true, hoSau: 'xanh', bSau: 0, bias: 0.12 },
+    neo: function (i) {
+      var u = i / (VT_C - 1), a = (-0.5 + u) * Math.PI * 0.8;
+      return [B.hong, new V3(0.02 + Math.cos(a) * 0.15, 0.03, Math.sin(a) * 0.15)];
+    },
+    hang0: function (i, j) {
+      var u = i / (VT_C - 1), a = (-0.5 + u) * Math.PI * 0.8, t = j / (VT_R - 1);
+      var lo = 0.052 * j + (j === VT_R - 1 ? vtDai[i] * 0.8 : 0);
+      return new V3(Math.cos(a) * 0.05 * t, -lo, Math.sin(a) * 0.04 * t);
+    },
+    va: 'vat'
+  });
+
+  /* ---------- tư thế ---------- */
+  var MD = L3.MAC_DINH = {
+    hx: 0, hy: K.hongY, p: 8, s: 4, c: 2, n: -4, tw: 0, rr: 0, sq: 1, yaw: 0,
+    aN: [25, 50, 0], aF: [-12, 25, 6], k: 25, ky: 0, kb: 0, kw: -90,
+    fN: [0.07, 0.07, 0], fF: [-0.08, 0.07, 0],
+    hN: null, hF: null
+  };
+  lam.yaw = 35;   // độ – xoay mô hình 3/4 về phía camera
+  var tmpV = new V3(), tmpV2 = new V3();
+
+  function ikGoc(gocCha, goc0, x0, y0, tx, ty, L1, L2, chieu) {
+    // trả về [góc tuyệt đối khúc 1, góc tuyệt đối khúc 2] (từ hướng -Y, CCW +); chieu=+1: khớp giữa gập về trước
+    var dx = tx - x0, dy = ty - y0, d = Math.sqrt(dx * dx + dy * dy);
+    d = Math.max(1e-4, Math.min(d, L1 + L2 - 1e-4));
+    var th = Math.atan2(dx, -dy);
+    var c1 = (L1 * L1 + d * d - L2 * L2) / (2 * L1 * d); c1 = Math.max(-1, Math.min(1, c1));
+    var a1 = th + chieu * Math.acos(c1);
+    var kx = x0 + L1 * Math.sin(a1), ky = y0 - L1 * Math.cos(a1);
+    var a2 = Math.atan2(tx - kx, -(ty - ky));
+    return [a1, a2];
+  }
+  function viTriS(o) {   // vị trí khớp trong hệ S (trước squash)
+    o.getWorldPosition(tmpV); return S.worldToLocal(tmpV.clone());
+  }
+  function goc2(v) { return Math.atan2(v.x, -v.y); }
+
+  lam.datTuThe = function (P) {
+    top.rotation.set(0, -(lam.yaw + (P.yaw || 0)) * D2R, 0);
+    var sq = P.sq || 1;
+    S.scale.set(1 / Math.sqrt(sq), sq, 1 / Math.sqrt(sq));
+    R.position.set(P.hx, P.hy, 0);
+    R.rotation.set(0, 0, -P.rr * D2R);
+    B.hong.rotation.set(0, -P.tw * 0.35 * D2R, -P.p * D2R);
+    B.lung.rotation.set(0, -P.tw * 0.25 * D2R, -P.s * D2R);
+    B.nguc.rotation.set(0, -P.tw * 0.4 * D2R, -P.c * D2R);
+    B.co.rotation.set(0, 0, -P.n * 0.4 * D2R);
+    B.dau.rotation.set(0, 0, -P.n * 0.6 * D2R);
+    // tay FK
+    var tay = [['G', P.aN, 1], ['X', P.aF, -1]];
+    // góc vai tính theo phương thẳng đứng của thế giới (không theo độ nghiêng ngực) — trừ khi P.tdTay = 0
+    var chaZ = P.tdTay === 0 ? 0 : (R.rotation.z + B.hong.rotation.z + B.lung.rotation.z + B.nguc.rotation.z);
+    tay.forEach(function (t) {
+      var s = t[0], a = t[1], z = t[2];
+      B['vai' + s].rotation.set(-z * (a[2] || 0) * D2R, s === 'G' ? (P.ky || 0) * D2R : 0, a[0] * D2R - chaZ, 'YZX');
+      B['khuyu' + s].rotation.set(0, 0, a[1] * D2R);
+      B['tay' + s].rotation.set(0, 0, 0);
+    });
+    top.updateMatrixWorld(true);
+    // tay IK (bám tường/thang): hN/hF = [x, y, trọng số]
+    [['G', P.hN], ['X', P.hF]].forEach(function (t) {
+      var h = t[1], s = t[0];
+      if (!h || !(h[2] > 0)) return;
+      var vai = B['vai' + s], v0 = viTriS(vai);
+      var cha = R.rotation.z + B.hong.rotation.z + B.lung.rotation.z + B.nguc.rotation.z;
+      var ik = ikGoc(cha, 0, v0.x, v0.y, h[0], h[1], K.canhTay, K.cangTay, -1);
+      var w = Math.min(1, h[2]);
+      var fk0 = vai.rotation.z, fk1 = B['khuyu' + s].rotation.z;
+      vai.rotation.z = fk0 + w * ((ik[0] - cha) - fk0);
+      B['khuyu' + s].rotation.z = fk1 + w * ((ik[1] - ik[0]) - fk1);
+    });
+    top.updateMatrixWorld(true);
+    // kiếm: góc tuyệt đối k (độ, từ phía trước +X, ngược kim đồng hồ = lên)
+    var cang = viTriS(B.tayG), khuyu = viTriS(B.khuyuG);
+    var gf = goc2(cang.clone().sub(khuyu));
+    var kb = Math.max(0, Math.min(1, P.kb || 0));
+    lam.kiem.rotation.set(0, 0, (1 - kb) * (P.k * D2R - gf) + kb * (P.kw == null ? -90 : P.kw) * D2R);
+    // chân IK
+    var gh = R.rotation.z + B.hong.rotation.z;
+    [['G', P.fN, 1], ['X', P.fF, -1]].forEach(function (t) {
+      var s = t[0], f = t[1];
+      var h0 = viTriS(B['hang' + s]);
+      var ik = ikGoc(gh, 0, h0.x, h0.y, f[0], f[1], K.dui, K.cang, 1);
+      B['hang' + s].rotation.set(0, 0, ik[0] - gh);
+      B['goi' + s].rotation.set(0, 0, ik[1] - ik[0]);
+      B['coChan' + s].rotation.set(0, 0, (f[2] || 0) * D2R - ik[1]);
+    });
+    top.updateMatrixWorld(true);
+  };
+
+  /* ---------- mô phỏng vải + chuông ---------- */
+  var VA = [];   // capsule va chạm (hệ top): {a,b,r}
+  function capVa() {
+    VA.length = 0;
+    function p(o, x, y, z) { tmpV.set(x, y, z); o.localToWorld(tmpV); return top.worldToLocal(tmpV.clone()); }
+    VA.push({ a: p(B.hong, 0, -0.04, 0), b: p(B.nguc, 0, 0.16, 0), r: 0.175, ten: 'than' });
+    VA.push({ a: p(B.dau, -0.07, 0.15, 0), b: p(B.dau, -0.04, 0.38, 0), r: 0.27, ten: 'mu' });
+    ['G', 'X'].forEach(function (s) {
+      VA.push({ a: p(B['hang' + s], 0, 0, 0), b: p(B['goi' + s], 0, 0, 0), r: 0.085, ten: 'dui' });
+      VA.push({ a: p(B['goi' + s], 0, 0, 0), b: p(B['coChan' + s], 0, 0, 0), r: 0.075, ten: 'cang' });
+    });
+  }
+  function dayRa(x, y, z, c) {
+    var ax = c.a.x, ay = c.a.y, az = c.a.z, bx = c.b.x - ax, by = c.b.y - ay, bz = c.b.z - az;
+    var L = bx * bx + by * by + bz * bz, t = L > 0 ? ((x - ax) * bx + (y - ay) * by + (z - az) * bz) / L : 0;
+    t = t < 0 ? 0 : t > 1 ? 1 : t;
+    var cx = ax + bx * t, cy = ay + by * t, cz = az + bz * t, dx = x - cx, dy = y - cy, dz = z - cz;
+    var d2 = dx * dx + dy * dy + dz * dz;
+    if (d2 >= c.r * c.r) return null;
+    var d = Math.sqrt(d2) || 1e-5, k = c.r / d;
+    return [cx + dx * k, cy + dy * k, cz + dz * k];
+  }
+  function neoVt(vt, i) {
+    var n = vt.o.neo(i); tmpV.copy(n[1]); n[0].localToWorld(tmpV); return top.worldToLocal(tmpV.clone());
+  }
+  lam.datLaiVai = function () {
+    top.updateMatrixWorld(true);
+    lam.vai.forEach(function (vt) {
+      var C = vt.C;
+      vt.cs.length = 0;
+      for (var i = 0; i < C; i++) {
+        var a = neoVt(vt, i);
+        for (var j = 0; j < vt.R; j++) {
+          var r = vt.o.hang0(i, j), k = (j * C + i) * 3;
+          vt.p[k] = a.x + r.x; vt.p[k + 1] = a.y + r.y; vt.p[k + 2] = a.z + r.z;
+          vt.q[k] = vt.p[k]; vt.q[k + 1] = vt.p[k + 1]; vt.q[k + 2] = vt.p[k + 2];
+        }
+      }
+      function rang(a, b, cung) {
+        var dx = vt.p[a * 3] - vt.p[b * 3], dy = vt.p[a * 3 + 1] - vt.p[b * 3 + 1], dz = vt.p[a * 3 + 2] - vt.p[b * 3 + 2];
+        vt.cs.push([a, b, Math.sqrt(dx * dx + dy * dy + dz * dz), cung]);
+      }
+      for (var j2 = 0; j2 < vt.R; j2++) for (var i2 = 0; i2 < C; i2++) {
+        var a2 = j2 * C + i2;
+        if (i2 < C - 1) rang(a2, a2 + 1, 1);
+        if (j2 < vt.R - 1) rang(a2, a2 + C, 1);
+        if (i2 < C - 1 && j2 < vt.R - 1) { rang(a2, a2 + C + 1, 0.5); rang(a2 + 1, a2 + C, 0.5); }
+        if (j2 < vt.R - 2) rang(a2, a2 + 2 * C, 0.35);
+        if (i2 < C - 2) rang(a2, a2 + 2, 0.25);
+      }
+    });
+    lam.datLaiChuong();
+    lam.capNhatLuoi();
+  };
+  lam.gio = new V3(0, 0, 0);     // vận tốc nhân vật trong thế giới (gió tương đối = -v)
+  lam.gioThem = new V3(0, 0, 0); // gió môi trường
+  lam.buoc = function (dt, tg) {
+    top.updateMatrixWorld(true);
+    capVa();
+    var n = 2, h = dt / n, g = -9.8;
+    for (var s = 0; s < n; s++) {
+      lam.vai.forEach(function (vt) {
+        var C = vt.C, N = C * vt.R, p = vt.p, q = vt.q;
+        var keo = vt.o.va === 'ao' ? 3.2 : 2.2;   // lực cản không khí
+        var wx = -lam.gio.x + lam.gioThem.x, wy = -lam.gio.y + lam.gioThem.y, wz = lam.gioThem.z;
+        for (var i = C; i < N; i++) {
+          var k = i * 3, j = (i / C) | 0, f = j / (vt.R - 1);
+          var vx = (p[k] - q[k]) / h, vy = (p[k + 1] - q[k + 1]) / h, vz = (p[k + 2] - q[k + 2]) / h;
+          var ax = keo * f * (wx - vx), ay = g + keo * f * (wy - vy), az = keo * f * (wz - vz);
+          // gió nhẹ có nhịp (sống động khi đứng yên)
+          if (vt.o.va === 'ao' && tg != null) {
+            var nh = Math.sin(tg * 2.3 + (i % C) * 0.7) * 0.5 + Math.sin(tg * 3.7 + j) * 0.3;
+            ax += -3.2 * f * (1 + nh); az += 0.4 * nh * f;
+          }
+          var damp = 0.992;
+          var nx = p[k] + (p[k] - q[k]) * damp + ax * h * h;
+          var ny = p[k + 1] + (p[k + 1] - q[k + 1]) * damp + ay * h * h;
+          var nz = p[k + 2] + (p[k + 2] - q[k + 2]) * damp + az * h * h;
+          q[k] = p[k]; q[k + 1] = p[k + 1]; q[k + 2] = p[k + 2];
+          p[k] = nx; p[k + 1] = ny; p[k + 2] = nz;
+        }
+        var neo = [];
+        for (var i0 = 0; i0 < C; i0++) neo.push(neoVt(vt, i0));
+        for (var it = 0; it < 10; it++) {
+          for (var a0 = 0; a0 < C; a0++) { var kk = a0 * 3; p[kk] = neo[a0].x; p[kk + 1] = neo[a0].y; p[kk + 2] = neo[a0].z; q[kk] = p[kk]; q[kk + 1] = p[kk + 1]; q[kk + 2] = p[kk + 2]; }
+          for (var c = 0; c < vt.cs.length; c++) {
+            var cs = vt.cs[c], ia = cs[0] * 3, ib = cs[1] * 3;
+            var dx = p[ib] - p[ia], dy = p[ib + 1] - p[ia + 1], dz = p[ib + 2] - p[ia + 2];
+            var d = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1e-6, diff = (d - cs[2]) / d * cs[3];
+            var wa = cs[0] < C ? 0 : 1, wb = cs[1] < C ? 0 : 1, ws = wa + wb; if (!ws) continue;
+            // chỉ co lại mạnh, giãn nén mềm hơn cho dây uốn
+            if (cs[3] < 0.5 && d < cs[2]) diff *= 0.3;
+            var ka = diff * wa / ws, kb = diff * wb / ws;
+            p[ia] += dx * ka; p[ia + 1] += dy * ka; p[ia + 2] += dz * ka;
+            p[ib] -= dx * kb; p[ib + 1] -= dy * kb; p[ib + 2] -= dz * kb;
+          }
+          for (var i3 = C; i3 < N; i3++) {
+            var k3 = i3 * 3;
+            for (var v = 0; v < VA.length; v++) {
+              if (vt.o.va === 'vat' && (VA[v].ten === 'mu')) continue;
+              var r = dayRa(p[k3], p[k3 + 1], p[k3 + 2], VA[v]);
+              if (r) { p[k3] = r[0]; p[k3 + 1] = r[1]; p[k3 + 2] = r[2]; }
+            }
+            if (lam.tuong != null && p[k3] < lam.tuong) { p[k3] = lam.tuong; q[k3] = p[k3]; }
+            if (p[k3 + 1] < 0.012) { p[k3 + 1] = 0.012; q[k3] = p[k3] - (p[k3] - q[k3]) * 0.6; }
+          }
+        }
+      });
+      buocChuong(h);
+    }
+    lam.capNhatLuoi();
+  };
+  /* chuông: hạt verlet trên dây ngắn từ điểm neo sau mũ, va chạm khối mũ */
+  var CH = lam.CH = { p: new V3(), q: new V3() };
+  function neoChuong() { tmpV2.copy(lam.chuongNeo); B.dau.localToWorld(tmpV2); return top.worldToLocal(tmpV2.clone()); }
+  lam.datLaiChuong = function () { var a = neoChuong(); CH.p.set(a.x - 0.01, a.y - lam.chuongDai, a.z); CH.q.copy(CH.p); };
+  lam.goChuong = function (vx, vy) { CH.q.x -= vx / 120; CH.q.y -= vy / 120; };
+  function buocChuong(h) {
+    var a = neoChuong();
+    var vx = (CH.p.x - CH.q.x) * 0.975, vy = (CH.p.y - CH.q.y) * 0.975;
+    CH.q.copy(CH.p);
+    var keo = 1.2;
+    CH.p.x += vx + keo * (-lam.gio.x - vx / h) * h * h;
+    CH.p.y += vy + (-9.8 + keo * (-lam.gio.y - vy / h)) * h * h;
+    CH.p.z = a.z;
+    for (var it = 0; it < 4; it++) {
+      // dây bán cứng: chuông treo cách neo ~chuongDai
+      CH.p.z = a.z;
+      tmpV.subVectors(CH.p, a); var d = tmpV.length() || 1e-6;
+      CH.p.copy(a).addScaledVector(tmpV, lam.chuongDai / d);
+    }
+  }
+  lam.capNhatLuoi = function () {
+    lam.vai.forEach(function (vt) {
+      var pos = vt.geo.attributes.position.array; pos.set(vt.p);
+      vt.geo.attributes.position.needsUpdate = true; vt.geo.computeVertexNormals();
+    });
+    var a = neoChuong();
+    chuong.position.copy(a);
+    tmpV.subVectors(CH.p, a).normalize();
+    chuong.quaternion.setFromUnitVectors(new V3(0, -1, 0), tmpV);
+    top.updateMatrixWorld(true);
+  };
+
+  /* ---------- nội suy hoạt cảnh ---------- */
+  var KENH = ['hx', 'hy', 'p', 's', 'c', 'n', 'tw', 'rr', 'sq', 'yaw', 'k', 'ky', 'kb', 'kw',
+              'aN0', 'aN1', 'aN2', 'aF0', 'aF1', 'aF2', 'fN0', 'fN1', 'fN2', 'fF0', 'fF1', 'fF2',
+              'hN0', 'hN1', 'hN2', 'hF0', 'hF1', 'hF2', 'vx', 'vy'];
+  var TRE = { c: 0.035, n: 0.07, aF0: 0.03, aF1: 0.05, s: 0.015 };   // độ trễ (giây) – đầu, thân trễ sau hông
+  function phang(P) {
+    var o = { hx: P.hx, hy: P.hy, p: P.p, s: P.s, c: P.c, n: P.n, tw: P.tw, rr: P.rr, sq: P.sq, yaw: P.yaw || 0, k: P.k,
+      ky: P.ky || 0, kb: P.kb || 0, kw: P.kw == null ? -90 : P.kw,
+      vx: (P.v || [0, 0])[0], vy: (P.v || [0, 0])[1] };
+    ['aN', 'aF', 'fN', 'fF'].forEach(function (c) { for (var i = 0; i < 3; i++) o[c + i] = P[c][i] || 0; });
+    ['hN', 'hF'].forEach(function (c) {
+      var h = P[c];
+      o[c + '0'] = h ? h[0] : NaN; o[c + '1'] = h ? h[1] : NaN; o[c + '2'] = h ? (h[2] == null ? 1 : h[2]) : 0;
+    });
+    return o;
+  }
+  lam.chuanBi = function (A) {
+    // A: {loop, frames:[{hold,...}], keys:[{...pose overrides}]} → dữ liệu nội suy
+    if (A._cb) return A._cb;
+    var keys = [], cur = JSON.parse(JSON.stringify(MD)), T = [], t = 0;
+    if (A.goc) for (var g in A.goc) cur[g] = JSON.parse(JSON.stringify(A.goc[g]));
+    for (var i = 0; i < A.frames.length; i++) {
+      var kf = A.keys[i] || {};
+      for (var c in kf) cur[c] = JSON.parse(JSON.stringify(kf[c]));
+      if (!('hN' in kf) && !A.giuTay) cur.hN = kf.hN || null;
+      if (!('hF' in kf) && !A.giuTay) cur.hF = kf.hF || null;
+      var f = phang(cur);
+      // điền NaN cho mục tiêu tay rỗng bằng giá trị gần nhất
+      keys.push(f); T.push(t); t += (A.frames[i].hold || 1) / L3.FPS;
+    }
+    ['hN', 'hF'].forEach(function (c) {
+      for (var a = 0; a < 2; a++) {
+        var ten = c + a, last = NaN;
+        for (var i2 = 0; i2 < keys.length; i2++) { if (!isNaN(keys[i2][ten])) last = keys[i2][ten]; else keys[i2][ten] = last; }
+        last = NaN;
+        for (var i3 = keys.length - 1; i3 >= 0; i3--) { if (!isNaN(keys[i3][ten])) last = keys[i3][ten]; else keys[i3][ten] = isNaN(last) ? 0 : last; }
+      }
+    });
+    A._cb = { keys: keys, T: T, dai: t, loop: !!A.loop };
+    return A._cb;
+  };
+  function cr(p0, p1, p2, p3, t) {
+    var t2 = t * t, t3 = t2 * t;
+    return 0.5 * ((2 * p1) + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2 + (-p0 + 3 * p1 - 3 * p2 + p3) * t3);
+  }
+  lam.mau = function (A, t) {
+    // lấy tư thế tại thời điểm t (giây); kênh trễ lấy mẫu ở t - trễ
+    var cb = lam.chuanBi(A), keys = cb.keys, T = cb.T, n = keys.length, out = {};
+    for (var ci = 0; ci < KENH.length; ci++) {
+      var ten = KENH[ci], tt = t - (TRE[ten] || 0) * (A.tre == null ? 1 : A.tre);
+      var ten0 = ten;
+      if (ten === 'c' || ten === 'n' || ten === 's') ten0 = ten;
+      var i, u, v0, v1, v2, v3;
+      if (cb.loop) {
+        tt = ((tt % cb.dai) + cb.dai) % cb.dai;
+        for (i = n - 1; i > 0 && T[i] > tt; i--);
+        var tN = i + 1 < n ? T[i + 1] : cb.dai;
+        u = (tt - T[i]) / (tN - T[i]);
+        v0 = keys[(i - 1 + n) % n][ten0]; v1 = keys[i][ten0]; v2 = keys[(i + 1) % n][ten0]; v3 = keys[(i + 2) % n][ten0];
+      } else {
+        if (tt <= 0) { out[ten] = keys[0][ten0]; continue; }
+        if (tt >= T[n - 1]) { out[ten] = keys[n - 1][ten0]; continue; }
+        for (i = n - 1; i > 0 && T[i] > tt; i--);
+        u = (tt - T[i]) / (T[i + 1] - T[i]);
+        v0 = keys[Math.max(0, i - 1)][ten0]; v1 = keys[i][ten0]; v2 = keys[Math.min(n - 1, i + 1)][ten0]; v3 = keys[Math.min(n - 1, i + 2)][ten0];
+        var kd = keys[i + 1] && A.keys[i + 1] && A.keys[i + 1].de;   // "de": vào khung sau nhanh (ease-out mạnh)
+        if (kd) u = 1 - Math.pow(1 - u, kd);
+      }
+      out[ten] = cr(v0, v1, v2, v3, u);
+    }
+    return { hx: out.hx, hy: out.hy, p: out.p, s: out.s, c: out.c, n: out.n, tw: out.tw, rr: out.rr, sq: out.sq, yaw: out.yaw, k: out.k,
+      ky: out.ky, kb: out.kb, kw: out.kw,
+      aN: [out.aN0, out.aN1, out.aN2], aF: [out.aF0, out.aF1, out.aF2], fN: [out.fN0, out.fN1, out.fN2], fF: [out.fF0, out.fF1, out.fF2],
+      hN: out.hN2 > 0.001 ? [out.hN0, out.hN1, out.hN2] : null, hF: out.hF2 > 0.001 ? [out.hF0, out.hF1, out.hF2] : null,
+      v: [out.vx, out.vy] };
+  };
+  lam.datThoiGian = function (A, t) { var P = lam.mau(A, t); if (A.tayTuongDoi) P.tdTay = 0; lam.datTuThe(P); lam.gio.set(P.v[0], P.v[1], 0); return P; };
+
+  /* ---------- camera trực giao & render pixel ---------- */
+  var O = lam.O = { o: tuy.o || 64, px: 32, py: 59, ppu: (tuy.ppu || 46 / 1.6), camCao: 8, ss: tuy.ss || 2 };
+  lam.camPx = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 30);
+  lam.datCam = function () {
+    var c = lam.camPx, e = O.camCao * D2R, ppu = O.ppu;
+    c.left = -O.px / ppu; c.right = (O.o - O.px) / ppu; c.top = O.py / ppu; c.bottom = -(O.o - O.py) / ppu;
+    c.position.set(0, 12 * Math.sin(e), 12 * Math.cos(e)); c.up.set(0, 1, 0); c.lookAt(0, 0, 0);
+    c.updateProjectionMatrix(); c.updateMatrixWorld(true);
+  };
+  lam.datCam();
+  lam.capNhatAnhSang = function (cam) {
+    var a = lam.anhSang, e = a.cao * D2R, h = a.ngang * D2R;
+    // hướng tới nguồn sáng (hệ thế giới): phía trước nhân vật (+X), lên trên, lệch về camera
+    var w = new V3(Math.cos(e) * Math.cos(h), Math.sin(e), Math.cos(e) * Math.sin(h)).normalize();
+    cam.updateMatrixWorld(true);
+    U.uL.value.copy(w).transformDirection(cam.matrixWorldInverse);
+  };
+  lam.scene = new THREE.Scene();
+  lam.scene.add(top);
+
+  var rt = null, buf = null, rtSize = 0;
+  function damBaoRT(n) {
+    if (rt && rtSize === n) return;
+    if (rt) rt.dispose();
+    rt = new THREE.WebGLRenderTarget(n, n, { minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, format: THREE.RGBAFormat,
+      type: THREE.UnsignedByteType, depthBuffer: true, stencilBuffer: false });
+    buf = new Uint8Array(n * n * 4); rtSize = n;
+  }
+  function doiVatLieu(id) { lam.meshes.forEach(function (m) { m.material = id ? m.userData.mi : m.userData.m; }); }
+  function chup(renderer, id) {
+    doiVatLieu(id);
+    var cc = new THREE.Color(); renderer.getClearColor(cc); var ca = renderer.getClearAlpha();
+    renderer.setRenderTarget(rt);
+    renderer.setClearColor(0x000000, 0); renderer.clear(true, true, true);
+    renderer.render(lam.scene, lam.camPx);
+    renderer.readRenderTargetPixels(rt, 0, 0, rtSize, rtSize, buf);
+    renderer.setRenderTarget(null); renderer.setClearColor(cc, ca);
+    doiVatLieu(false);
+    return buf.slice(0);
+  }
+
+  /* chiếu điểm (hệ top) → tọa độ pixel ô */
+  lam.chieu = function (v) {
+    var w = v.clone(); top.localToWorld(w); w.project(lam.camPx);
+    return [(w.x + 1) / 2 * O.o, (1 - (w.y + 1) / 2) * O.o];
+  };
+  /* chiếu cho vệt chém: phóng đại chiều sâu thành độ lệch dọc (nhát vung ngang thành cung elip thấy rõ) */
+  lam.chieuChem = function (v) {
+    var w = v.clone(); top.localToWorld(w);
+    var vai = new V3(); B.vaiG.getWorldPosition(vai);
+    var p = lam.chieu(v);
+    return [p[0], p[1] + (w.z - vai.z) * O.ppu * 1.2];
+  };
+  lam.diemKiem = function (u) {   // u: 0 = chuôi, 1 = mũi kiếm → hệ top
+    var v = new V3(0.06 + lam.luoiDai * u, 0, 0); lam.kiem.localToWorld(v); return top.worldToLocal(v);
+  };
+
+  /* Render 1 khung pixel: trả về {px: Uint8ClampedArray RGBA o×o, id: Uint8Array, ci: chỉ số palette} */
+  lam.renderPixel = function (renderer, fx) {
+    var n = O.o, ss = O.ss, N = n * ss;
+    damBaoRT(N);
+    lam.capNhatAnhSang(lam.camPx);
+    var col = chup(renderer, false), idb = chup(renderer, true);
+    var ci = new Int16Array(n * n).fill(-1), id = new Uint8Array(n * n), dep = new Float32Array(n * n);
+    // gộp (ss=1: lấy thẳng; ss=2: màu đa số, ưu tiên nét mảnh)
+    var MANH = {}; MANH[ID.luoi] = 3; MANH[ID.vienMu] = 2; MANH[ID.mat2] = 3; MANH[ID.chuoi] = 2;
+    for (var y = 0; y < n; y++) for (var x = 0; x < n; x++) {
+      var dem = {}, nOpaque = 0, best = 0, bestScore = -1;
+      var mau = [];
+      for (var sy = 0; sy < ss; sy++) for (var sx = 0; sx < ss; sx++) {
+        var X = x * ss + sx, Y = (N - 1 - (y * ss + sy)), k = (Y * N + X) * 4;
+        var pid = idb[k];
+        if (!pid) continue;
+        nOpaque++;
+        var d = (idb[k + 1] + idb[k + 2] / 255) / 255;
+        var c = palIdx(col[k], col[k + 1], col[k + 2]);
+        mau.push([pid, c, d]);
+        dem[pid] = (dem[pid] || 0) + 1;
+      }
+      if (!nOpaque) continue;
+      if (ss > 1 && nOpaque * 2 < ss * ss) {
+        // ít hơn nửa ô có vật: chỉ giữ nếu là nét mảnh quan trọng
+        var giu = mau.filter(function (m) { return MANH[m[0]] >= 2; });
+        if (!giu.length) continue;
+        mau = giu; dem = {}; giu.forEach(function (m) { dem[m[0]] = (dem[m[0]] || 0) + 1; });
+      }
+      for (var pid2 in dem) {
+        var sc = dem[pid2] + (MANH[pid2] ? MANH[pid2] : 0) * (ss > 1 ? 1 : 0);
+        var dmin = 9; mau.forEach(function (m) { if (m[0] == pid2 && m[2] < dmin) dmin = m[2]; });
+        sc -= dmin * 0.01;
+        if (sc > bestScore) { bestScore = sc; best = +pid2; }
+      }
+      var cdem = {}, cb = -1, cbn = 0, dm = 9;
+      mau.forEach(function (m) { if (m[0] === best) { cdem[m[1]] = (cdem[m[1]] || 0) + 1; if (m[2] < dm) dm = m[2]; } });
+      for (var cc in cdem) if (cdem[cc] > cbn || (cdem[cc] === cbn && +cc > cb)) { cbn = cdem[cc]; cb = +cc; }
+      var o = y * n + x; ci[o] = cb; id[o] = best; dep[o] = dm;
+    }
+    return lam.hauKy(ci, id, dep, fx);
+  };
+
+  /* ---------- hậu kỳ pixel ---------- */
+  lam.hauKy = function (ci, id, dep, fx) {
+    var n = O.o, x, y, o, i;
+    fx = fx || {};
+    function a(x, y) { return x >= 0 && y >= 0 && x < n && y < n && id[y * n + x] > 0; }
+    var N4 = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+    // 1) bỏ pixel đơn lẻ không dính gì (trừ lưỡi kiếm)
+    for (y = 0; y < n; y++) for (x = 0; x < n; x++) {
+      o = y * n + x; if (!id[o] || id[o] === ID.luoi) continue;
+      var c8 = 0; for (var dy = -1; dy <= 1; dy++) for (var dx = -1; dx <= 1; dx++) if ((dx || dy) && a(x + dx, y + dy)) c8++;
+      if (c8 === 0) { id[o] = 0; ci[o] = -1; }
+    }
+    // 2) dọn đốm màu lẻ trong cùng bộ phận
+    var ci2 = Int16Array.from(ci);
+    for (y = 1; y < n - 1; y++) for (x = 1; x < n - 1; x++) {
+      o = y * n + x; if (!id[o]) continue;
+      var c0 = -2, ok = true;
+      for (i = 0; i < 4; i++) {
+        var q = (y + N4[i][1]) * n + x + N4[i][0];
+        if (!id[q] || NHOM[id[q]] !== NHOM[id[o]]) { ok = false; break; }
+        if (c0 === -2) c0 = ci[q]; else if (ci[q] !== c0) { ok = false; break; }
+      }
+      if (ok && c0 !== ci[o] && id[o] !== ID.mat2) ci2[o] = c0;
+    }
+    ci = ci2;
+    // 3) viền trong theo bộ phận: pixel phía SAU giáp bộ phận phía trước → màu viền
+    var TRUOC = { tayG: 1, kiem: 1, chanG: 1, dau: 1 };
+    var SAU = { tayX: 1, chanX: 1, chuong: 1 };
+    var EPS = 0.04 / 30;   // ~0.04 đơn vị chiều sâu
+    var vt = new Uint8Array(n * n);
+    for (y = 0; y < n; y++) for (x = 0; x < n; x++) {
+      o = y * n + x; if (!id[o]) continue;
+      var gp = NHOM[id[o]];
+      if (!gp) continue;
+      for (i = 0; i < 4; i++) {
+        var xx = x + N4[i][0], yy = y + N4[i][1];
+        if (!a(xx, yy)) continue;
+        var q2 = yy * n + xx, gq = NHOM[id[q2]];
+        if (!gq || gq === gp) continue;
+        if ((gp === 'kiem' && gq === 'tayG') || (gp === 'tayG' && gq === 'kiem')) continue;
+        if (dep[o] <= dep[q2] + EPS) continue;
+        if (TRUOC[gq] || SAU[gp] || (gq === 'than' && gp === 'ao')) { vt[o] = 1; break; }
+      }
+    }
+    // không cho viền trong ăn hết bộ phận mảnh: bỏ điểm viền đơn độc
+    for (y = 0; y < n; y++) for (x = 0; x < n; x++) {
+      o = y * n + x; if (!vt[o]) continue;
+      var lien = 0;
+      for (var dy2 = -1; dy2 <= 1; dy2++) for (var dx2 = -1; dx2 <= 1; dx2++) {
+        if (!dx2 && !dy2) continue;
+        var X2 = x + dx2, Y2 = y + dy2;
+        if (!a(X2, Y2) || vt[Y2 * n + X2] || ci[Y2 * n + X2] === IV) lien++;
+      }
+      if (!lien) vt[o] = 0;
+    }
+    for (o = 0; o < n * n; o++) if (vt[o]) ci[o] = IV;
+    // 4) mắt: chiếu 2 điểm mắt, vẽ nếu thấy khoảng tối trong mũ
+    var mats = lam.mat.map(function (e) { var v = new V3(); e.getWorldPosition(v); top.worldToLocal(v); return lam.chieu(v); });
+    // mắt gần (index 0) & mắt xa (index 1): mỗi mắt 1 pixel #CEF0D6, cách nhau ≥ 1 pixel, chỉ vẽ trong khoảng tối của mũ
+    function laMat(x, y) { if (!a(x, y)) return false; var ii = id[y * n + x]; return ii === ID.mat || ii === ID.mat2; }
+    var m0 = [Math.floor(mats[0][0]), Math.floor(mats[0][1])], m1 = [Math.floor(mats[1][0]), Math.floor(mats[1][1])];
+    var ve0 = null;
+    [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].some(function (d) { if (laMat(m0[0] + d[0], m0[1] + d[1])) { ve0 = [m0[0] + d[0], m0[1] + d[1]]; return true; } return false; });
+    if (ve0) {
+      var cands = [[m1[0], m1[1]], [ve0[0] + 2, ve0[1]], [ve0[0] - 2, ve0[1]], [m1[0] - 1, m1[1]], [m1[0] + 1, m1[1]]];
+      var ve1 = null;
+      cands.some(function (c) { if (Math.abs(c[0] - ve0[0]) >= 2 && Math.abs(c[1] - ve0[1]) <= 1 && laMat(c[0], c[1])) { ve1 = c; return true; } return false; });
+      [ve0, ve1].forEach(function (m) { if (!m) return; ci[m[1] * n + m[0]] = PI_('k'); id[m[1] * n + m[0]] = ID.mat2; });
+      // bỏ pixel mắt thừa do khối cầu mắt render ra (giữ đúng 2 điểm sáng rõ)
+      for (var qq = 0; qq < n * n; qq++) if (id[qq] === ID.mat2 && !((qq === ve0[1] * n + ve0[0]) || (ve1 && qq === ve1[1] * n + ve1[0]))) { id[qq] = ID.mat; ci[qq] = IV; }
+    }
+    // 5) viền ngoài 1px
+    var ra = new Int16Array(n * n); ra.set(ci);
+    var idr = Uint8Array.from(id);
+    for (y = 0; y < n; y++) for (x = 0; x < n; x++) {
+      o = y * n + x; if (id[o]) continue;
+      for (i = 0; i < 4; i++) if (a(x + N4[i][0], y + N4[i][1])) { ra[o] = IV; idr[o] = 255; break; }
+    }
+    // 6) vệt chém + hiệu ứng (chỉ vẽ lên chỗ trống / viền ngoài, không đè thân)
+    var ve = function (x, y, ten, deViens) {
+      x = Math.round(x); y = Math.round(y);
+      if (x < 0 || y < 0 || x >= n || y >= n) return;
+      var oo = y * n + x;
+      if (idr[oo] && idr[oo] !== 255 && idr[oo] !== ID.chem && idr[oo] !== ID.fx && !deViens) return;
+      ra[oo] = PI_(ten); idr[oo] = ten === 'fx' ? ID.fx : ID.chem;
+    };
+    if (fx.chem) veChem(fx.chem, ve, ra, idr, n);
+    if (fx.ve) fx.ve.forEach(function (f) { f(ve, ra, idr, n, lam); });
+    // ra RGBA
+    var px = new Uint8ClampedArray(n * n * 4);
+    for (o = 0; o < n * n; o++) {
+      if (ra[o] < 0) continue;
+      var c = PAL[ra[o]]; px[o * 4] = c[0]; px[o * 4 + 1] = c[1]; px[o * 4 + 2] = c[2]; px[o * 4 + 3] = 255;
+    }
+    return { px: px, id: idr, ci: ra, n: n };
+  };
+  /* vệt chém: dải quét giữa các vị trí lưỡi kiếm (danh sách đoạn [chuôi, mũi] theo thời gian, cũ → mới) */
+  function veChem(ds, ve, ra, idr, n) {
+    var m = ds.length;
+    if (m < 2) return;
+    var mask = new Int16Array(n * n).fill(-1);
+    for (var s = 0; s < m - 1; s++) {
+      var A0 = ds[s][0], A1 = ds[s][1], B0 = ds[s + 1][0], B1 = ds[s + 1][1];
+      var tuoi = (s + 1) / (m - 1);   // 0 cũ → 1 mới
+      // tô tứ giác A0 A1 B1 B0 theo dải từ chuôi (u=0) tới mũi (u=1)
+      var poly = [A0, A1, B1, B0];
+      var minx = Math.floor(Math.min(A0[0], A1[0], B0[0], B1[0])), maxx = Math.ceil(Math.max(A0[0], A1[0], B0[0], B1[0]));
+      var miny = Math.floor(Math.min(A0[1], A1[1], B0[1], B1[1])), maxy = Math.ceil(Math.max(A0[1], A1[1], B0[1], B1[1]));
+      for (var y = Math.max(0, miny); y <= Math.min(n - 1, maxy); y++) for (var x = Math.max(0, minx); x <= Math.min(n - 1, maxx); x++) {
+        if (!trongDa(poly, x + 0.5, y + 0.5)) continue;
+        // u: khoảng cách tương đối tới mũi (lớp ngoài sáng hơn)
+        var u = viTriU(A0, A1, B0, B1, x + 0.5, y + 0.5);
+        if (u < 0.38) continue;   // chỉ giữ dải ngoài → hình lưỡi liềm
+        var cap = u > 0.84 ? 3 : u > 0.6 ? 2 : 1;
+        if (tuoi < 0.34) cap = Math.min(cap, 1); else if (tuoi < 0.67) cap = Math.min(cap, 2);
+        var o = y * n + x; if (cap > mask[o]) mask[o] = cap;
+      }
+    }
+    var TEN = [null, 'x2', 'k', 'v2'];
+    for (var o2 = 0; o2 < n * n; o2++) if (mask[o2] > 0) ve(o2 % n, (o2 / n) | 0, TEN[mask[o2]]);
+  }
+  function trongDa(p, x, y) {
+    var c = false;
+    for (var i = 0, j = p.length - 1; i < p.length; j = i++) {
+      if (((p[i][1] > y) !== (p[j][1] > y)) && (x < (p[j][0] - p[i][0]) * (y - p[i][1]) / (p[j][1] - p[i][1]) + p[i][0])) c = !c;
+    }
+    return c;
+  }
+  function viTriU(A0, A1, B0, B1, x, y) {
+    // ước lượng u theo khoảng cách tới đường chuôi so với đường mũi
+    var c0 = [(A0[0] + B0[0]) / 2, (A0[1] + B0[1]) / 2], c1 = [(A1[0] + B1[0]) / 2, (A1[1] + B1[1]) / 2];
+    var dx = c1[0] - c0[0], dy = c1[1] - c0[1], L = dx * dx + dy * dy || 1;
+    return Math.max(0, Math.min(1, ((x - c0[0]) * dx + (y - c0[1]) * dy) / L));
+  }
+
+  /* ---------- chạy 1 hoạt cảnh → các khung pixel ---------- */
+  lam.chayAnim = function (renderer, ten, tuyChon) {
+    tuyChon = tuyChon || {};
+    var A = L3.ANIMS[ten], cb = lam.chuanBi(A), dt = 1 / 60, out = [];
+    lam.datCam();
+    // khởi động: đặt tư thế đầu, vải rủ tự nhiên, chạy trước 2 vòng (lặp) hoặc giữ tư thế đầu 0.7s
+    lam.tuong = A.tuong == null ? null : A.tuong;
+    var t0 = cb.loop ? -2 * cb.dai : -0.7;
+    lam.datThoiGian(A, cb.loop ? t0 : 0);
+    lam.datLaiVai();
+    var t = t0, tg = 0;
+    for (var i = 0; i < A.frames.length; i++) {
+      var tK = cb.T[i];
+      while (t < tK - 1e-6) {
+        var h = Math.min(dt, tK - t);
+        t += h; tg += h;
+        lam.datThoiGian(A, cb.loop ? t : Math.max(0, t));
+        suKien(A, cb, t - h, t);
+        lam.buoc(h, tg);
+      }
+      var fr = A.frames[i];
+      // vệt chém: lấy mẫu vị trí lưỡi giữa khung trước và khung này
+      var fx = { ve: [] };
+      var sm = fr.sm != null ? fr.sm : (fr.hit ? 1 : 0);
+      if (sm > 0 && i > 0) {
+        var ta = cb.T[i] - (cb.T[i] - cb.T[i - 1]) * sm, ds = [], M = 16;
+        for (var s = 0; s <= M; s++) {
+          var ts = ta + (tK - ta) * s / M;
+          var Ps = lam.mau(A, ts); if (A.tayTuongDoi) Ps.tdTay = 0; lam.datTuThe(Ps);
+          ds.push([lam.chieuChem(lam.diemKiem(-0.25)), lam.chieuChem(lam.diemKiem(1.08))]);
+        }
+        fx.chem = ds;
+      }
+      lam.datThoiGian(A, tK);
+      lam.capNhatLuoi();
+      if (fr.fx && L3.FX) fr.fx.split(' ').forEach(function (f) { if (L3.FX[f]) fx.ve.push(L3.FX[f]); });
+      var r = lam.renderPixel(renderer, fx);
+      r.ten = fr.name; r.hold = fr.hold || 1; r.hit = !!fr.hit; r.comboWindow = !!fr.comboWindow;
+      out.push(r);
+    }
+    return out;
+  };
+  function suKien(A, cb, ta, tb) {
+    if (!A.su) return;
+    A.su.forEach(function (e) {
+      var te = cb.T[e.khung] + (e.dt || 0);
+      if (te > ta && te <= tb && e.chuong) lam.goChuong(e.chuong[0], e.chuong[1]);
+    });
+  }
+  lam.datTuThe(MD);
+  lam.datLaiVai();
+  return lam;
+}
+L3.tao = tao;
+L3.FPS = 12;
+})(typeof window !== 'undefined' ? window : this);
+</script>
+<script>/* =====================================================================
+   lam3d-anim.js — 26 hoạt cảnh của Lam 3D (dùng với lam3d-core.js).
+   Mỗi khung là một TƯ THẾ CHÍNH (key pose); giữa các khung nội suy Catmull-Rom (bậc 3), thân/đầu trễ sau hông.
+   Kênh (độ / đơn vị, Lam cao 1.6; nhân vật nhìn sang PHẢI = +x; mặt đất y = 0):
+     hx,hy  vị trí hông            p,s,c,n  nghiêng hông/lưng/ngực/đầu (+ = cúi tới)   tw  vặn thân   rr  lăn cả người
+     aN,aF  tay gần (cầm kiếm)/tay xa: [vai (0 = buông, 90 = đưa ngang trước), khuỷu (+ gập tới), dang ngang]
+     ky     vung ngang tay kiếm quanh trục đứng (chém ngang)    k  góc lưỡi kiếm tuyệt đối (0 = trước, 90 = lên)
+     kb,kw  1 = dùng góc cổ tay kw thay k (lưỡi nối dài cánh tay khi vung ngang)
+     fN,fF  bàn chân gần/xa (IK): [x, y cổ chân, ngón (+ = hếch)]     hN,hF  tay bám (IK): [x, y]
+     sq     squash/stretch (1 = thường)     v  vận tốc nhân vật [vx, vy] (đ/s) → gió thổi áo choàng, chuông
+   Cờ khung: H = hit, C = comboWindow (giữ y như bản cũ). sm = phần vệt chém, fx = hiệu ứng pixel.
+   ===================================================================== */
+(function (root) {
+'use strict';
+var L3 = root.LAM3D = root.LAM3D || {};
+var META = {
+  idle: { loop: true, label: "Idle", f: [["đứng thẳng",1],["thở ra",1],["hạ người – thấp nhất",1],["vạt áo phất",1],["hít vào",1],["ưỡn ngực – cao nhất",1]] },
+  run: { loop: true, label: "Run", f: [["chân trước chạm đất",1],["nhún – dồn lực",1],["chân lướt qua",1],["đạp đất – bay",1],["chân kia chạm đất",1],["nhún – dồn lực (2)",1],["chân lướt qua (2)",1],["đạp đất – bay (2)",1]] },
+  jump: { loop: false, label: "Jump", f: [["lấy đà",1],["bật lên",1],["lên 1",1],["lên 2",1],["đỉnh nhảy",1],["chuyển sang rơi",1]] },
+  fall: { loop: true, label: "Fall", f: [["rơi – áo bay lên",1],["rơi – vạt áo quất",1],["rơi – dang tay giữ thăng bằng",1]] },
+  attack: { loop: false, label: "Attack 1", f: [["thủ thế",1],["kéo kiếm ra sau ngang ngực",1],["dồn trọng tâm – kiếm ngang sau lưng",2],["vung ngang – kiếm lướt qua ngực",1],["chém thẳng ngang ngực – HIT",2,"H"],["theo đà – kiếm vượt qua",1,"C"],["hạ kiếm – sẵn sàng nối",1,"C"],["thu kiếm – kiếm thấp phía trước",1],["kiếm thấp phía trước (nối nhát 2)",1]] },
+  dodge: { loop: false, label: "Dodge", f: [["nhún thấp",1],["phóng người",1],["lướt thấp",1],["trượt chân",1],["phanh lại",1],["đứng vững",1]] },
+  hit: { loop: false, label: "Hit", f: [["trúng đòn",1],["bật ngửa",2],["loạng choạng",1],["hồi lại",1]] },
+  death: { loop: false, label: "Death", f: [["trúng đòn chí mạng",1],["khuỵu gối",1],["gục đầu",1],["chúi người",1],["đổ xuống",1],["sắp chạm đất",1],["đập xuống – nảy",1],["nằm im",3]] },
+  land: { loop: false, label: "Land", f: [["chạm đất – nén người mạnh",1],["nén thấp nhất – hấp lực",1],["đứng dậy",1]] },
+  crouch: { loop: false, label: "Crouch", f: [["hạ người xuống",1],["ngồi xổm – kiếm thủ trước",1]] },
+  slide: { loop: false, label: "Slide", f: [["lao người – bắt đầu trượt",1],["trượt thấp sát đất",1],["trượt dài – áo kéo phía sau",1],["giảm tốc – chống dậy",1]] },
+  wallSlide: { loop: true, label: "Wall Slide", f: [["áp tường – trượt xuống",1],["trượt – tay miết tường",1],["trượt – áo choàng phần phật",1]] },
+  wallJump: { loop: false, label: "Wall Jump", f: [["co người – hai chân dồn vào tường",1],["đạp tường – bật ra sau",1],["bay ngược – co chân",1],["xoay người – cuộn tròn trên không",1]] },
+  wallClimb: { loop: true, label: "Wall Climb", f: [["tay xa vươn lên – chân gần đạp",1],["tay xa bám – kéo người lên",1],["chân xa đẩy – đổi bên",1],["tay gần vươn lên – chân xa đạp",1],["tay gần bám – kéo người lên",1],["chân gần đẩy – đổi bên",1]] },
+  ladderClimb: { loop: true, label: "Ladder", f: [["tay xa nắm bậc trên – chân gần bước",1],["kéo lên – chân xa trụ",1],["đổi tay – thân thẳng",1],["tay gần nắm bậc trên – chân xa bước",1],["kéo lên – chân gần trụ",1],["đổi tay – thân thẳng (2)",1]] },
+  ledgeGrab: { loop: false, label: "Ledge", f: [["chộp mép tường",1],["treo người – đung đưa",1],["kéo người lên – chân đạp tường",1],["chống tay – đẩy ngực qua mép",1],["leo qua – co gối lên mép",1],["đứng dậy trên mép",1]] },
+  dash: { loop: false, label: "Dash", f: [["lấy đà – cúi người",1],["lướt nhanh – thu gọn thân",1],["lướt – áo choàng bay thẳng",1],["phanh – hạ chân xuống",1]] },
+  attack2: { loop: false, label: "Attack 2", f: [["kiếm thấp phía trước (từ nhát 1)",1],["hạ kiếm xuống dưới chéo ra sau",1],["dồn lực – kiếm chéo sát đất",2],["vung chéo lên – kiếm quét qua trước",1],["chém chéo lên – HIT",2,"H"],["theo đà – kiếm vút lên cao",1,"C"],["kiếm trên cao (nối nhát 3)",1,"C"]] },
+  attack3: { loop: false, label: "Attack 3", f: [["kiếm trên cao (từ nhát 2)",1],["giơ kiếm qua đầu – ngả ra sau",1],["vươn kiếm ra sau – nén lực tối đa",3],["bổ xuống – kiếm qua đỉnh đầu",1],["bổ thẳng xuống trước mặt – HIT",3,"H"],["đè nặng – kiếm ghim sát đất",1,"C"],["rút kiếm lên – thở dốc",1],["đứng dậy – thu kiếm",1],["thủ thế",1]] },
+  airAttack: { loop: false, label: "Air Attack", f: [["lơ lửng – co chân, kéo kiếm ra sau",1],["giơ kiếm qua đầu trên không",1],["chém vòng xuống trước – HIT",2,"H"],["theo đà – kiếm chĩa xuống trước",1],["thu kiếm – vẫn co chân",1],["duỗi chân – chuyển sang rơi",1]] },
+  downStrike: { loop: false, label: "Down Strike", f: [["co người trên không – xoay mũi kiếm xuống",1],["đâm thẳng xuống dưới chân – HIT",2,"H"],["mũi kiếm chạm – nảy bật lên",1],["bật lên – rút kiếm ngang",1],["duỗi người – chuẩn bị rơi",1]] },
+  upSlash: { loop: false, label: "Up Slash", f: [["hạ thấp – kiếm chéo sau sát đất",1],["nhún gối – dồn lực hất",2],["hất kiếm lên – kiếm quét qua trước",1],["hất thẳng lên cao – HIT",2,"H"],["theo đà – kiếm trên đầu",1],["hạ kiếm – thủ thế",1]] },
+  parry: { loop: false, label: "Ngân (Parry)", f: [["nâng kiếm lên chắn",1],["đỡ thành công – kiếm chéo trước mặt, chuông ngân",2],["dư chấn – chuông lắc ngược",1],["chuông lắc nhẹ – hạ kiếm",1],["về thủ thế",1]] },
+  chargeAttack: { loop: false, label: "Charge", f: [["kéo kiếm ra sau – bắt đầu tụ lực",1],["tụ lực – rung 1",2],["tụ lực – rung 2",2],["tụ lực – rung 3, giữ hơi",3],["bung lực – lao tới",1],["bung chém – HIT",2,"H"],["theo đà – trượt chân",1],["thu kiếm – thủ thế",1]] },
+  echoCast: { loop: false, label: "Echo Cast", f: [["giơ tay xa lên cao",1],["gõ nhẹ chuông – ghi tiếng vọng",2],["tiếng vọng lan ra",2],["hạ tay – về thủ thế",1]] },
+  heal: { loop: false, label: "Heal", f: [["lùi chân – hạ người",1],["quỳ một gối – chống kiếm",1],["ôm chuông – hồi máu",3],["ôm chuông – ánh sáng lan",2],["chống kiếm đứng dậy",1],["đứng thẳng – hồi phục",1]] },
+};
+L3.THU_TU = Object.keys(META);
+L3.COMBO = ['attack', 'attack2', 'attack3'];
+
+/* ---------------- TƯ THẾ CHÍNH ---------------- */
+var G = 0.07;   // cổ chân khi chạm đất
+var K = {};
+K.idle = { keys: [
+  { hy: 0.49, p: 8, c: 2, n: -4, aN: [24, 52], aF: [-12, 24, 6], k: 24, sq: 1.0 },
+  { hy: 0.485, c: 0, n: -2, aN: [22, 50], aF: [-10, 22, 6], k: 22, sq: 0.995 },
+  { hy: 0.475, p: 10, c: -1, n: 0, aN: [20, 48], aF: [-8, 20, 7], k: 20, sq: 0.985 },
+  { hy: 0.48, c: 1, n: -2, aN: [22, 50], aF: [-10, 22, 6], k: 22, sq: 0.99 },
+  { hy: 0.49, p: 8, c: 3, n: -5, aN: [25, 53], aF: [-13, 25, 6], k: 25, sq: 1.0 },
+  { hy: 0.495, p: 7, c: 4, n: -6, aN: [26, 54], aF: [-14, 26, 6], k: 26, sq: 1.01 }
+] };
+K.run = { v: [3.4, 0], keys: [
+  { hx: 0.02, hy: 0.47, p: 16, s: 7, c: 4, n: -12, tw: -8, fN: [0.25, G, 14], fF: [-0.22, 0.16, -40], aN: [-30, 70], aF: [55, 75, 4], k: -15, sq: 1 },
+  { hx: 0.0, hy: 0.42, p: 20, tw: -4, fN: [0.08, G, 0], fF: [-0.18, 0.30, -60], aN: [-12, 65], aF: [30, 70, 4], k: -5, sq: 0.95 },
+  { hx: 0.0, hy: 0.47, p: 18, tw: 2, fN: [-0.08, G, -8], fF: [0.04, 0.24, -25], aN: [12, 60], aF: [0, 60, 4], k: 8, sq: 1.0 },
+  { hx: 0.02, hy: 0.53, p: 16, tw: 6, fN: [-0.25, 0.15, -45], fF: [0.20, 0.17, 0], aN: [40, 60], aF: [-28, 62, 4], k: 22, sq: 1.04 },
+  { hx: 0.02, hy: 0.47, p: 16, tw: 8, fF: [0.25, G, 14], fN: [-0.22, 0.16, -40], aN: [55, 62], aF: [-34, 66, 4], k: 30, sq: 1 },
+  { hx: 0.0, hy: 0.42, p: 20, tw: 4, fF: [0.08, G, 0], fN: [-0.18, 0.30, -60], aN: [32, 62], aF: [-14, 64, 4], k: 18, sq: 0.95 },
+  { hx: 0.0, hy: 0.47, p: 18, tw: -2, fF: [-0.08, G, -8], fN: [0.04, 0.24, -25], aN: [6, 64], aF: [12, 62, 4], k: 2, sq: 1.0 },
+  { hx: 0.02, hy: 0.53, p: 16, tw: -6, fF: [-0.25, 0.15, -45], fN: [0.20, 0.17, 0], aN: [-22, 68], aF: [40, 70, 4], k: -10, sq: 1.04 }
+] };
+K.jump = { keys: [
+  { hy: 0.37, p: 26, s: 10, c: 6, n: -2, fN: [0.10, G, 0], fF: [-0.10, G, -10], aN: [-40, 45], aF: [-55, 30, 8], k: 150, sq: 0.9, v: [0, 0] },
+  { hy: 0.58, p: 2, s: -4, c: -4, n: -14, fN: [0.03, 0.12, -45], fF: [-0.09, 0.14, -50], aN: [125, 25], aF: [150, 20, 12], k: 100, sq: 1.08, v: [0, 6], de: 3 },
+  { hy: 0.57, p: 6, s: 0, c: 0, n: -10, fN: [0.13, 0.30, -10], fF: [-0.03, 0.24, -35], aN: [80, 60], aF: [95, 45, 12], k: 60, sq: 1.03, v: [0, 4] },
+  { hy: 0.58, p: 10, n: -6, fN: [0.15, 0.37, -5], fF: [0.0, 0.32, -25], aN: [60, 70], aF: [70, 45, 14], k: 40, sq: 1.0, v: [0, 2] },
+  { hy: 0.58, p: 10, n: -4, fN: [0.11, 0.34, 0], fF: [-0.03, 0.30, -20], aN: [55, 65], aF: [65, 40, 18], k: 35, sq: 1.0, v: [0, 0.2] },
+  { hy: 0.56, p: 6, n: -2, fN: [0.07, 0.22, -15], fF: [-0.10, 0.20, -30], aN: [65, 35, 22], aF: [85, 25, 26], k: 30, sq: 1.01, v: [0, -2] }
+] };
+K.fall = { v: [0, -5.5], keys: [
+  { hy: 0.56, p: 4, s: -2, n: -2, fN: [0.08, 0.15, -20], fF: [-0.11, 0.19, -35], aN: [75, 25, 25], aF: [105, 20, 30], k: 35 },
+  { hy: 0.555, p: 6, n: 0, fN: [0.06, 0.13, -25], fF: [-0.09, 0.21, -30], aN: [80, 20, 30], aF: [112, 15, 34], k: 30 },
+  { hy: 0.56, p: 5, n: -3, fN: [0.09, 0.16, -18], fF: [-0.12, 0.17, -38], aN: [72, 28, 28], aF: [100, 22, 32], k: 38 }
+] };
+K.land = { keys: [
+  { hy: 0.34, p: 28, s: 12, c: 6, n: 4, fN: [0.13, G, 0], fF: [-0.13, G, -10], aN: [45, 30, 15], aF: [30, 20, 20], k: 10, sq: 0.86, v: [0, -1] },
+  { hy: 0.31, p: 32, s: 14, c: 8, n: 8, aN: [35, 35, 10], aF: [20, 25, 15], k: 5, sq: 0.9, v: [0, 0] },
+  { hy: 0.46, p: 12, s: 6, c: 3, n: -2, aN: [26, 48], aF: [-8, 25, 8], k: 20, sq: 1.0, fN: [0.10, G, 0], fF: [-0.09, G, 0] }
+] };
+K.attack = { keys: [
+  { hy: 0.48, p: 10, aN: [30, 55], k: 25, fN: [0.10, G, 0], fF: [-0.10, G, 0] },
+  { hy: 0.47, p: 6, tw: -14, aN: [-20, 70], k: 120, aF: [30, 30, 10], fN: [0.12, G, 0], fF: [-0.12, G, 0], n: -6 },
+  { hx: -0.03, hy: 0.45, p: 4, s: 0, tw: -24, aN: [-62, 30], k: 178, aF: [45, 35, 14], n: -8, fN: [0.14, G, 0], fF: [-0.15, G, -5], sq: 0.98 },
+  { hx: 0.01, hy: 0.46, p: 12, tw: 0, aN: [105, 10], ky: -85, kb: 1, kw: -90, aF: [-10, 35, 12], n: -4, fN: [0.18, G, 0], fF: [-0.13, G, -10], sm: 0.8, de: 3 },
+  { hx: 0.06, hy: 0.44, p: 18, s: 6, tw: 10, aN: [96, 0], ky: 45, kb: 1, kw: -90, aF: [-45, 30, 16], n: -8, fN: [0.25, G, 0], fF: [-0.14, 0.08, -25], sq: 0.98, de: 2 },
+  { hx: 0.06, hy: 0.44, p: 20, tw: 14, aN: [90, 6], ky: 110, kb: 1, kw: -88, aF: [-50, 35, 16] },
+  { hx: 0.04, hy: 0.45, p: 16, tw: 8, aN: [55, 30], ky: 50, kb: 0.3, k: -25, aF: [-30, 30, 12] },
+  { hx: 0.02, hy: 0.47, p: 12, tw: 2, aN: [38, 42], ky: 10, kb: 0, k: -25, aF: [-18, 26, 8], fN: [0.16, G, 0], fF: [-0.12, G, 0] },
+  { hx: 0.0, hy: 0.48, p: 10, tw: 0, aN: [35, 35], k: -28, aF: [-14, 25, 6] }
+] };
+K.attack2 = { keys: [
+  { hy: 0.48, p: 10, aN: [35, 35], k: 332, fN: [0.14, G, 0], fF: [-0.11, G, 0] },
+  { hy: 0.44, p: 18, tw: -12, aN: [-30, 18], k: 238, aF: [20, 30, 10], fN: [0.15, G, 0], fF: [-0.12, G, -5] },
+  { hx: -0.02, hy: 0.39, p: 28, s: 10, tw: -24, aN: [-55, 8], k: 212, aF: [40, 30, 14], n: 4, sq: 0.95, fN: [0.17, G, 0], fF: [-0.13, G, -15] },
+  { hx: 0.02, hy: 0.45, p: 14, s: 4, tw: -4, aN: [35, 8], k: 302, aF: [-10, 30, 12], n: -4, sq: 1.0, sm: 0.7, de: 2 },
+  { hx: 0.05, hy: 0.53, p: 0, s: -6, c: -6, tw: 10, aN: [125, 6], k: 400, aF: [-45, 25, 18], n: -14, sq: 1.06, fN: [0.20, G, 0], fF: [-0.12, 0.10, -35], de: 2 },
+  { hx: 0.05, hy: 0.53, p: -2, s: -8, tw: 12, aN: [165, 20], k: 448, aF: [-40, 30, 16], n: -16 },
+  { hx: 0.03, hy: 0.50, p: 2, s: -4, tw: 6, aN: [160, 32], k: 462, aF: [-25, 30, 12], n: -10, fF: [-0.12, G, -10] }
+] };
+K.attack3 = { keys: [
+  { hy: 0.50, p: 2, s: -4, aN: [160, 32], k: 100, aF: [-25, 30, 12], n: -10, fN: [0.14, G, 0], fF: [-0.12, G, 0] },
+  { hx: -0.02, hy: 0.51, p: -8, s: -8, c: -6, aN: [176, 60], k: 150, aF: [150, 40, 14], n: -16, sq: 1.03, fN: [0.13, G, 0], fF: [-0.14, G, -10] },
+  { hx: -0.04, hy: 0.49, p: -14, s: -10, c: -8, aN: [186, 90], k: 205, aF: [165, 70, 14], n: -18, sq: 1.05, fN: [0.12, G, 10], fF: [-0.16, G, -15] },
+  { hx: 0.0, hy: 0.48, p: 8, s: 4, c: 2, aN: [150, 18], k: 100, aF: [110, 40, 12], n: -6, sq: 1.0, sm: 0.6, de: 3 },
+  { hx: 0.06, hy: 0.36, p: 24, s: 8, c: 4, aN: [40, 0], k: -50, aF: [10, 30, 14], n: -4, sq: 0.9, fN: [0.27, G, 0], fF: [-0.20, G, -25], de: 3 },
+  { hx: 0.06, hy: 0.33, p: 28, s: 10, c: 5, aN: [28, 4], k: -68, aF: [0, 35, 14], n: 0, sq: 0.92 },
+  { hx: 0.04, hy: 0.40, p: 20, s: 8, c: 4, aN: [25, 30], k: -40, aF: [-10, 30, 10], n: -2, sq: 0.97 },
+  { hx: 0.02, hy: 0.45, p: 14, s: 6, c: 3, aN: [36, 44], k: -18, aF: [-5, 26, 8], n: -2, sq: 1.0, fN: [0.14, G, 0], fF: [-0.12, G, 0] },
+  { hx: 0.0, hy: 0.48, p: 10, s: 4, c: 2, aN: [28, 52], k: 22, aF: [-12, 24, 6], n: -4, fN: [0.10, G, 0], fF: [-0.09, G, 0] }
+] };
+K.airAttack = { v: [0, 0.5], keys: [
+  { hy: 0.58, p: 10, aN: [-20, 60], k: 165, aF: [40, 40, 14], fN: [0.11, 0.32, -10], fF: [-0.02, 0.28, -25], n: -4 },
+  { hy: 0.58, p: -4, s: -6, aN: [172, 50], k: 140, aF: [80, 40, 14], fN: [0.10, 0.34, -10], fF: [-0.04, 0.30, -25], n: -12, sq: 1.03 },
+  { hy: 0.57, p: 22, s: 10, aN: [82, 0], k: -30, aF: [-30, 30, 16], fN: [0.13, 0.30, 0], fF: [0.0, 0.26, -20], n: 0, sq: 0.97, de: 3 },
+  { hy: 0.57, p: 26, s: 12, aN: [55, 10], k: -62, aF: [-40, 32, 16], n: 4, sq: 1.0 },
+  { hy: 0.57, p: 14, s: 6, aN: [42, 42], k: -20, aF: [-10, 30, 12], n: -2, fN: [0.11, 0.30, -10], fF: [-0.02, 0.27, -25] },
+  { hy: 0.56, p: 6, s: 2, aN: [55, 40, 15], k: 20, aF: [70, 25, 22], n: -2, fN: [0.07, 0.20, -18], fF: [-0.10, 0.18, -30], v: [0, -2] }
+] };
+K.downStrike = { keys: [
+  { hy: 0.60, p: 8, s: 4, aN: [12, 105], k: -90, aF: [30, 90, 10], fN: [0.12, 0.36, -10], fF: [-0.03, 0.31, -25], n: 2, v: [0, 1] },
+  { hy: 0.62, p: 0, s: 0, c: 0, aN: [6, 12], k: -90, aF: [10, 60, 18], fN: [0.04, 0.22, -55], fF: [-0.08, 0.25, -55], n: 6, sq: 1.07, v: [0, -7], de: 3 },
+  { hy: 0.57, p: 6, s: 2, aN: [12, 40], k: -78, aF: [50, 40, 22], fN: [0.10, 0.30, -10], fF: [-0.04, 0.27, -25], n: 0, sq: 0.92, v: [0, 3] },
+  { hy: 0.58, p: 8, aN: [62, 40], k: 8, aF: [90, 30, 22], fN: [0.12, 0.34, -5], fF: [-0.02, 0.30, -22], n: -6, sq: 1.03, v: [0, 2] },
+  { hy: 0.56, p: 6, aN: [60, 35, 18], k: 25, aF: [85, 25, 26], fN: [0.07, 0.20, -18], fF: [-0.10, 0.18, -30], n: -3, sq: 1.0, v: [0, -1] }
+] };
+K.upSlash = { keys: [
+  { hy: 0.40, p: 24, s: 8, tw: -14, aN: [-48, 10], k: 222, aF: [30, 30, 12], fN: [0.15, G, 0], fF: [-0.13, G, -10], n: 2 },
+  { hx: -0.01, hy: 0.35, p: 30, s: 12, tw: -20, aN: [-60, 6], k: 226, aF: [45, 30, 14], sq: 0.92, n: 6 },
+  { hx: 0.02, hy: 0.46, p: 12, s: 2, tw: -2, aN: [55, 8], k: 330, aF: [-10, 30, 14], sq: 1.0, n: -6, sm: 0.7, de: 2 },
+  { hx: 0.03, hy: 0.58, p: -4, s: -8, c: -6, tw: 14, aN: [172, 0], k: 450, aF: [-40, 25, 18], sq: 1.07, n: -18, fN: [0.10, 0.11, -35], fF: [-0.10, 0.13, -40], de: 3 },
+  { hx: 0.02, hy: 0.54, p: -2, s: -6, tw: 10, aN: [182, 38], k: 478, aF: [-30, 30, 16], sq: 1.02, n: -14, fN: [0.10, G, 0], fF: [-0.10, G, -10] },
+  { hx: 0.0, hy: 0.48, p: 10, s: 4, c: 2, tw: 0, aN: [30, 50], k: 385, aF: [-12, 24, 6], sq: 1.0, n: -4 }
+] };
+K.parry = { keys: [
+  { hy: 0.47, p: 4, aN: [72, 82], k: 98, aF: [20, 70, 10], n: -6, fN: [0.13, G, 0], fF: [-0.14, G, -5] },
+  { hx: -0.03, hy: 0.45, p: -8, s: -4, aN: [76, 88], k: 116, aF: [30, 80, 12], n: -10, sq: 0.97, fN: [0.12, G, 0], fF: [-0.17, G, 0], fx: 'do' },
+  { hx: -0.02, hy: 0.46, p: -3, s: -2, aN: [74, 84], k: 106, aF: [25, 75, 10], n: -8, sq: 1.0 },
+  { hx: -0.01, hy: 0.47, p: 4, aN: [50, 62], k: 66, aF: [5, 40, 8], n: -5 },
+  { hx: 0.0, hy: 0.48, p: 8, aN: [28, 52], k: 26, aF: [-12, 24, 6], n: -4, fN: [0.10, G, 0], fF: [-0.10, G, 0] }
+] };
+K.chargeAttack = { keys: [
+  { hx: -0.02, hy: 0.44, p: 12, tw: -14, aN: [-50, 40], k: 170, aF: [30, 30, 12], fN: [0.20, G, 0], fF: [-0.16, G, -5], n: -4 },
+  { hx: -0.03, hy: 0.40, p: 16, s: 6, tw: -22, aN: [-64, 25], k: 182, aF: [45, 35, 14], sq: 0.96, fx: 'tu1' },
+  { hx: -0.035, hy: 0.39, p: 17, tw: -24, aN: [-66, 24], k: 184, sq: 0.95, fx: 'tu2' },
+  { hx: -0.04, hy: 0.38, p: 18, tw: -26, aN: [-68, 22], k: 186, sq: 0.94, fx: 'tu3' },
+  { hx: 0.06, hy: 0.45, p: 20, s: 8, tw: -2, aN: [105, 10], ky: -85, kb: 1, kw: -92, aF: [-45, 25, 16], sq: 1.03, fN: [0.24, G, 0], fF: [-0.14, 0.10, -30], sm: 0.8, de: 3, v: [4, 0] },
+  { hx: 0.10, hy: 0.42, p: 26, s: 10, tw: 10, aN: [95, 0], ky: 45, kw: -90, aF: [-55, 25, 18], sq: 0.97, fN: [0.30, G, 0], fF: [-0.16, 0.08, -30], de: 2, v: [3, 0] },
+  { hx: 0.10, hy: 0.41, p: 26, tw: 14, aN: [85, 8], ky: 105, kw: -85, aF: [-50, 30, 18], fN: [0.31, G, 5], fF: [-0.12, G, -20], v: [1.5, 0] },
+  { hx: 0.04, hy: 0.46, p: 14, tw: 8, aN: [40, 40], ky: -10, kb: 0, k: -22, aF: [-15, 26, 8], fN: [0.18, G, 0], fF: [-0.12, G, 0], v: [0, 0] }
+] };
+K.echoCast = { keys: [
+  { hy: 0.49, p: 4, n: -8, aF: [165, 25, 18], aN: [28, 52], k: 24 },
+  { hy: 0.49, p: 2, n: -10, aF: [196, 70, 26], fx: 'vong1' },
+  { hy: 0.495, p: 4, n: -12, aF: [160, 40, 22], fx: 'vong2', sq: 1.01 },
+  { hy: 0.49, p: 8, n: -4, aF: [-8, 24, 6] }
+] };
+K.heal = { keys: [
+  { hy: 0.43, p: 14, s: 6, fN: [0.12, G, 0], fF: [-0.18, G, -10], aN: [40, 50], k: 0, n: 2 },
+  { hx: 0.0, hy: 0.29, p: 12, s: 8, c: 4, fN: [0.17, G, 0], fF: [-0.17, 0.07, -55], aN: [58, 25], k: -88, aF: [30, 80, 10], n: 10 },
+  { hy: 0.29, p: 18, s: 10, c: 8, aN: [56, 26], aF: [60, 125, 6], n: 22, fx: 'hoi1' },
+  { hy: 0.295, p: 14, s: 8, c: 4, aF: [65, 120, 6], n: 12, fx: 'hoi2', sq: 1.01 },
+  { hy: 0.40, p: 18, s: 6, c: 2, aN: [50, 30], k: -70, aF: [10, 40, 8], n: 0, fN: [0.14, G, 0], fF: [-0.13, G, -10], sq: 1.0 },
+  { hy: 0.49, p: 7, s: 3, c: 3, aN: [26, 52], k: 24, aF: [-12, 24, 6], n: -6, fN: [0.08, G, 0], fF: [-0.09, G, 0] }
+] };
+K.dodge = { keys: [
+  { hy: 0.37, p: 32, s: 10, aN: [-20, 40], k: 170, aF: [-35, 35, 12], fN: [0.10, G, 0], fF: [-0.12, G, -15], sq: 0.92 },
+  { hx: 0.04, hy: 0.42, p: 50, s: 10, rr: 14, aN: [60, 30], k: 15, aF: [70, 20, 14], fN: [-0.05, 0.12, -40], fF: [-0.30, 0.16, -60], sq: 1.05, v: [6, 0] },
+  { hx: 0.04, hy: 0.36, p: 50, s: 12, rr: 18, aN: [40, 30], k: -5, aF: [40, 25, 14], fN: [0.02, 0.10, -30], fF: [-0.32, 0.10, -50], sq: 0.97, v: [6.5, 0] },
+  { hx: 0.02, hy: 0.30, p: 34, s: 10, rr: 8, aN: [30, 40], k: 0, aF: [10, 35, 12], fN: [0.24, G, 10], fF: [-0.18, G, -25], v: [3, 0] },
+  { hx: -0.02, hy: 0.38, p: 14, s: 4, rr: 0, aN: [35, 45], k: 15, aF: [-5, 30, 10], fN: [0.20, G, 0], fF: [-0.14, G, -5], v: [1, 0] },
+  { hx: 0.0, hy: 0.48, p: 9, aN: [26, 52], k: 24, aF: [-12, 24, 6], fN: [0.09, G, 0], fF: [-0.09, G, 0], v: [0, 0] }
+] };
+K.hit = { keys: [
+  { hx: -0.03, hy: 0.47, p: -16, s: -8, c: -8, n: -22, aN: [62, 40, 18], aF: [72, 30, 26], k: 70, sq: 0.95, fN: [0.10, G, 0], fF: [-0.12, G, 0] },
+  { hx: -0.06, hy: 0.46, p: -26, s: -12, c: -10, n: -26, aN: [75, 30, 22], aF: [85, 25, 30], k: 95, sq: 1.02, fN: [0.17, 0.12, 25] },
+  { hx: -0.03, hy: 0.44, p: -4, s: -2, c: 0, n: -6, aN: [45, 45, 10], aF: [30, 30, 14], k: 40, sq: 0.97, fN: [0.13, G, 0], fF: [-0.14, G, -5] },
+  { hx: 0.0, hy: 0.48, p: 8, s: 4, c: 2, n: -4, aN: [26, 52], aF: [-12, 24, 6], k: 24, sq: 1.0, fN: [0.08, G, 0], fF: [-0.09, G, 0] }
+] };
+K.death = { keys: [
+  { hx: -0.03, hy: 0.47, p: -20, s: -10, c: -10, n: -26, aN: [65, 35, 18], aF: [75, 30, 26], k: 80, sq: 0.96, fN: [0.10, G, 0], fF: [-0.12, G, 0] },
+  { hx: -0.02, hy: 0.33, p: 8, s: 8, c: 4, n: 16, aN: [30, 30, 10], aF: [15, 20, 12], k: 10, fN: [0.15, G, 0], fF: [-0.12, 0.07, -60] },
+  { hx: 0.0, hy: 0.32, p: 20, s: 14, c: 10, n: 34, aN: [6, 15, 6], aF: [-4, 12, 8], k: -70, sq: 0.97 },
+  { hx: 0.0, hy: 0.32, p: 26, s: 14, c: 8, n: 30, rr: 22, aN: [40, 20, 8], aF: [30, 15, 10], k: -40, fN: [0.10, G, -20], fF: [-0.18, 0.08, -60] },
+  { hx: -0.12, hy: 0.35, p: 18, s: 10, c: 6, n: 18, rr: 52, aN: [100, 20, 10], aF: [95, 15, 14], k: -10, fN: [-0.10, 0.10, -50], fF: [-0.30, 0.10, -60] },
+  { hx: -0.20, hy: 0.35, p: 10, s: 6, c: 4, n: 10, rr: 72, aN: [140, 15, 10], aF: [130, 10, 16], k: 0, fN: [-0.30, 0.10, -70], fF: [-0.44, 0.10, -75], v: [0, -2] },
+  { hx: -0.24, hy: 0.34, p: 4, s: 2, c: 2, n: 4, rr: 86, aN: [160, 10, 10], aF: [150, 6, 16], k: 6, fN: [-0.42, 0.07, -85], fF: [-0.55, 0.08, -85], sq: 0.94, v: [0, 0] },
+  { hx: -0.24, hy: 0.35, p: 2, s: 0, c: 0, n: 2, rr: 88, aN: [165, 6, 10], aF: [155, 4, 16], k: 4, fN: [-0.43, 0.07, -88], fF: [-0.56, 0.07, -88], sq: 1.0 }
+] };
+K.crouch = { keys: [
+  { hy: 0.40, p: 16, s: 6, aN: [45, 45], k: 25, fN: [0.13, G, 0], fF: [-0.12, G, -5], sq: 0.97, n: -2 },
+  { hy: 0.31, p: 22, s: 10, c: 4, aN: [68, 45], k: 32, aF: [20, 40, 10], fN: [0.16, G, 0], fF: [-0.11, G, -25], sq: 0.97, n: -6 }
+] };
+K.slide = { keys: [
+  { hx: -0.04, hy: 0.33, p: -2, s: 0, aN: [40, 50], k: 10, aF: [-30, 20, 14], fN: [0.30, G, 15], fF: [0.04, G, -5], v: [5, 0], n: -4 },
+  { hx: -0.12, hy: 0.21, p: -24, s: -8, c: -4, rr: -8, aN: [55, 40], k: 15, aF: [-50, 10, 16], hF: [-0.36, 0.08], fN: [0.38, 0.065, 30], fF: [0.16, 0.06, 15], v: [6, 0], n: 8 },
+  { hx: -0.13, hy: 0.20, p: -26, s: -8, rr: -9, aN: [60, 38], k: 18, hF: [-0.37, 0.08], fN: [0.40, 0.065, 32], fF: [0.18, 0.06, 18], v: [5, 0], n: 10 },
+  { hx: -0.05, hy: 0.32, p: 14, s: 6, rr: 0, aN: [45, 45], k: 20, aF: [-20, 30, 12], fN: [0.26, G, 5], fF: [-0.02, G, -10], v: [1.5, 0], n: -2 }
+] };
+/* tường ở phía SAU lưng (x = -0.30): lưng/áo choàng áp tường, tay xa miết tường */
+K.wallSlide = { v: [0, -2.6], keys: [
+  { hx: -0.02, hy: 0.55, p: -8, s: -4, n: 2, hF: [-0.31, 0.80], aN: [70, 40, 10], k: 20, fN: [0.17, 0.33, 0], fF: [-0.22, 0.24, -75] },
+  { hx: -0.025, hy: 0.545, p: -7, n: 4, hF: [-0.31, 0.84], aN: [72, 38, 10], k: 24, fN: [0.18, 0.31, 0], fF: [-0.22, 0.22, -75] },
+  { hx: -0.02, hy: 0.55, p: -9, n: 1, hF: [-0.31, 0.77], aN: [68, 42, 10], k: 18, fN: [0.16, 0.34, 0], fF: [-0.22, 0.25, -75] }
+] };
+K.wallJump = { keys: [
+  { hx: -0.06, hy: 0.45, p: 28, s: 8, n: 4, hF: [-0.30, 0.82], aN: [20, 70], k: 140, fN: [-0.22, 0.26, -70], fF: [-0.25, 0.16, -70], sq: 0.93, v: [0, -1] },
+  { hx: 0.02, hy: 0.56, p: 30, s: 6, rr: 16, aN: [105, 25], k: 60, aF: [120, 20, 14], fN: [-0.28, 0.16, -50], fF: [-0.33, 0.22, -55], sq: 1.06, v: [4, 4], de: 3 },
+  { hx: 0.02, hy: 0.58, p: 18, rr: 10, aN: [70, 60], k: 40, aF: [80, 50, 16], fN: [0.08, 0.33, -10], fF: [-0.04, 0.28, -25], sq: 1.0, v: [3, 2] },
+  { hx: 0.02, hy: 0.62, p: 30, s: 14, c: 10, rr: 38, n: 18, aN: [40, 110], k: -60, aF: [30, 120, 10], fN: [0.12, 0.40, -5], fF: [0.04, 0.36, -15], sq: 0.94, v: [3, 0] }
+] };
+/* leo tường: tường ở PHÍA TRƯỚC (x = +0.27), tay chân bám luân phiên */
+var TW = 0.30;
+K.wallClimb = { keys: [
+  { hy: 0.50, p: 14, s: 6, n: -10, hF: [TW, 0.98], hN: [TW - 0.03, 0.74], aN: [0, 0, 30], aF: [0, 0, 12], k: -100, fN: [TW - 0.08, 0.30, 55], fF: [TW - 0.12, 0.10, 35] },
+  { hy: 0.56, p: 12, s: 5, n: -8, hF: [TW, 0.93], hN: [TW - 0.03, 0.70], k: -100, fN: [TW - 0.08, 0.25, 50], fF: [TW - 0.12, 0.06, 30], sq: 1.02 },
+  { hy: 0.58, p: 13, s: 6, n: -6, hF: [TW, 0.88], hN: [TW - 0.03, 0.69], k: -95, fN: [TW - 0.12, 0.12, 30], fF: [TW - 0.08, 0.28, 55] },
+  { hy: 0.50, p: 14, s: 6, n: -10, hN: [TW - 0.03, 0.98], hF: [TW, 0.74], k: -70, fF: [TW - 0.08, 0.30, 55], fN: [TW - 0.12, 0.10, 35] },
+  { hy: 0.56, p: 12, s: 5, n: -8, hN: [TW - 0.03, 0.93], hF: [TW, 0.70], k: -70, fF: [TW - 0.08, 0.25, 50], fN: [TW - 0.12, 0.06, 30], sq: 1.02 },
+  { hy: 0.58, p: 13, s: 6, n: -6, hN: [TW - 0.03, 0.88], hF: [TW, 0.69], k: -80, fF: [TW - 0.12, 0.12, 30], fN: [TW - 0.08, 0.28, 55] }
+] };
+/* leo thang: thân thẳng đứng, hai tay dang ra trước mặt nắm thanh, tay chân luân phiên */
+var TL = 0.20, YL = 15;
+K.ladderClimb = { keys: [
+  { yaw: YL, hy: 0.52, p: 0, s: 0, n: -8, hF: [TL, 1.10], hN: [TL, 0.78], aN: [0, 0, 32], aF: [0, 0, 20], k: -100, fN: [TL - 0.06, 0.30, 0], fF: [TL - 0.10, 0.10, 0] },
+  { yaw: YL, hy: 0.58, p: -2, n: -6, hF: [TL, 1.04], hN: [TL, 0.76], k: -100, fN: [TL - 0.07, 0.25, 0], fF: [TL - 0.11, 0.12, -20], sq: 1.02 },
+  { yaw: YL, hy: 0.56, p: 0, n: -8, hF: [TL, 0.94], hN: [TL, 0.94], k: -90, fN: [TL - 0.08, 0.18, 0], fF: [TL - 0.08, 0.18, 0] },
+  { yaw: YL, hy: 0.52, p: 0, n: -8, hN: [TL, 1.10], hF: [TL, 0.78], k: -80, fF: [TL - 0.06, 0.30, 0], fN: [TL - 0.10, 0.10, 0] },
+  { yaw: YL, hy: 0.58, p: -2, n: -6, hN: [TL, 1.04], hF: [TL, 0.76], k: -80, fF: [TL - 0.07, 0.25, 0], fN: [TL - 0.11, 0.12, -20], sq: 1.02 },
+  { yaw: YL, hy: 0.56, p: 0, n: -8, hN: [TL, 0.94], hF: [TL, 0.94], k: -90, fF: [TL - 0.08, 0.18, 0], fN: [TL - 0.08, 0.18, 0] }
+] };
+/* bám mép: mép tường ở trước mặt; khung cuối hạ dần để vừa ô (game tự nâng nhân vật) */
+K.ledgeGrab = { keys: [
+  { hx: -0.02, hy: 0.42, p: -2, n: -18, hN: [0.20, 1.17], hF: [0.24, 1.18], k: -100, fN: [0.10, 0.06, -30], fF: [0.0, 0.05, -40], sq: 1.04, v: [0, -1] },
+  { hx: -0.07, hy: 0.41, p: -8, n: -16, hN: [0.20, 1.17], hF: [0.24, 1.18], k: -100, fN: [-0.04, 0.05, -40], fF: [-0.12, 0.06, -45], v: [0, 0] },
+  { hx: -0.02, hy: 0.56, p: 10, n: -12, hN: [0.20, 1.17], hF: [0.24, 1.18], k: -100, fN: [0.20, 0.36, 55], fF: [0.05, 0.12, -20] },
+  { hx: 0.02, hy: 0.62, p: 42, s: 16, n: 8, hN: [0.24, 0.92], hF: [0.28, 0.92], k: 30, fN: [0.14, 0.40, 40], fF: [-0.04, 0.18, -30] },
+  { hx: 0.06, hy: 0.46, p: 30, s: 12, n: 4, hN: [0.30, 0.50], hF: [0.32, 0.50], k: 20, fN: [0.20, 0.30, 0], fF: [-0.06, 0.22, -40] },
+  { hx: 0.02, hy: 0.42, p: 16, s: 6, n: -4, aN: [30, 50], aF: [-8, 25, 8], k: 22, fN: [0.12, G, 0], fF: [-0.10, G, -10] }
+] };
+K.dash = { keys: [
+  { hy: 0.40, p: 30, s: 10, aN: [-30, 40], k: 175, aF: [-40, 35, 12], fN: [0.14, G, 0], fF: [-0.13, G, -15], sq: 0.92, v: [1, 0] },
+  { hx: 0.04, hy: 0.45, p: 44, s: 12, rr: 8, aN: [-55, 15], k: 190, aF: [-60, 15, 14], fN: [0.06, 0.20, -35], fF: [-0.26, 0.18, -55], sq: 1.04, v: [9, 0], de: 3 },
+  { hx: 0.04, hy: 0.45, p: 46, s: 12, rr: 9, aN: [-58, 12], k: 192, aF: [-62, 12, 14], fN: [0.04, 0.21, -38], fF: [-0.28, 0.19, -58], sq: 1.05, v: [9.5, 0] },
+  { hx: 0.0, hy: 0.40, p: 14, s: 4, rr: 0, aN: [30, 45], k: 20, aF: [10, 35, 12], fN: [0.22, G, 10], fF: [-0.17, G, -10], sq: 0.95, v: [1.5, 0] }
+] };
+
+/* ---------------- ghép thành ANIMS ---------------- */
+var ANIMS = {};
+L3.THU_TU.forEach(function (ten) {
+  var m = META[ten], k = K[ten] || { keys: [] }, keys = [];
+  var frames = m.f.map(function (f, i) {
+    var o = k.keys[i] || {}, kk = {};
+    for (var c in o) if (c !== 'sm' && c !== 'fx' && c !== 'de') kk[c] = o[c];
+    if (o.de) kk.de = o.de;
+    if (i === 0 && k.v && !kk.v) kk.v = k.v;
+    keys.push(kk);
+    return { name: f[0], hold: f[1], hit: (f[2] || '').indexOf('H') >= 0, comboWindow: (f[2] || '').indexOf('C') >= 0,
+      sm: o.sm, fx: o.fx };
+  });
+  ANIMS[ten] = { loop: m.loop, label: m.label, frames: frames, keys: keys };
+});
+/* sự kiện: gõ chuông (xung vận tốc cho con lắc) */
+['death', 'dodge', 'dash', 'wallJump', 'slide'].forEach(function (t) { ANIMS[t].tayTuongDoi = true; });   // tay theo thân khi lăn/lướt
+ANIMS.wallSlide.tuong = -0.31; ANIMS.wallJump.tuong = -0.31;   // áo choàng áp vào tường sau lưng
+ANIMS.parry.su = [{ khung: 1, chuong: [-2.2, 0.6] }];
+ANIMS.echoCast.su = [{ khung: 1, chuong: [1.6, 0.8] }];
+ANIMS.hit.su = [{ khung: 0, chuong: [-2.5, 1.2] }];
+ANIMS.death.su = [{ khung: 0, chuong: [-2.5, 1.2] }, { khung: 6, chuong: [0, 2.0] }];
+ANIMS.land.su = [{ khung: 0, chuong: [0, -2.0] }];
+ANIMS.attack3.su = [{ khung: 4, chuong: [1.5, -1.5] }];
+L3.ANIMS = ANIMS;
+
+/* ---------------- hiệu ứng pixel (vẽ lên chỗ trống quanh nhân vật) ---------------- */
+function vong(ve, cx, cy, r, mau, cham) {
+  var n = Math.ceil(2 * Math.PI * r * 1.5);
+  for (var i = 0; i < n; i++) {
+    if (cham && (i % 3) === 2) continue;
+    var a = i / n * Math.PI * 2; ve(cx + Math.cos(a) * r, cy + Math.sin(a) * r, mau);
+  }
+}
+function tamChuong(lam) { return lam.chieu(lam.CH.p.clone().add(new lam.THREE.Vector3(0, -0.10, 0))); }
+L3.FX = {
+  vong1: function (ve, ra, idr, n, lam) { var c = tamChuong(lam); vong(ve, c[0], c[1], 6, 'k', false); vong(ve, c[0], c[1], 7, 'x2', true); },
+  vong2: function (ve, ra, idr, n, lam) { var c = tamChuong(lam); vong(ve, c[0], c[1], 11, 'k', true); vong(ve, c[0], c[1], 16, 'x2', true); },
+  do: function (ve, ra, idr, n, lam) {
+    var c = lam.chieu(lam.diemKiem(0.55));
+    for (var i = -4; i <= 4; i++) { ve(c[0] + i, c[1], Math.abs(i) < 2 ? 'v2' : 'k', true); ve(c[0], c[1] + i, Math.abs(i) < 2 ? 'v2' : 'k', true); }
+    ve(c[0] - 2, c[1] - 2, 'k'); ve(c[0] + 2, c[1] - 2, 'k'); ve(c[0] - 2, c[1] + 2, 'k'); ve(c[0] + 2, c[1] + 2, 'k');
+  },
+  hoi1: function (ve, ra, idr, n, lam) { hat(ve, lam, 0); },
+  hoi2: function (ve, ra, idr, n, lam) { hat(ve, lam, 1); },
+  tu1: function (ve, ra, idr, n, lam) { hao(ve, lam, 1); },
+  tu2: function (ve, ra, idr, n, lam) { hao(ve, lam, 2); },
+  tu3: function (ve, ra, idr, n, lam) { hao(ve, lam, 3); }
+};
+function hat(ve, lam, b) {   // đốm sáng hồi máu bay lên quanh người
+  var c = lam.chieu(new lam.THREE.Vector3(0, 0.55, 0));
+  var DS = [[-12, -6], [11, -10], [-8, -18], [14, 2], [-15, 4], [6, -22], [-3, -27], [16, -16]];
+  DS.forEach(function (d, i) {
+    var x = c[0] + d[0], y = c[1] + d[1] - b * 5 - (i % 3);
+    if ((i + b) % 2) { ve(x, y, 'k'); ve(x + 1, y, 'x2'); ve(x - 1, y, 'x2'); ve(x, y + 1, 'x2'); ve(x, y - 1, 'x2'); }
+    else ve(x, y, b ? 'k' : 'x2');
+  });
+}
+function hao(ve, lam, b) {   // kiếm tụ lực: quầng sáng quanh lưỡi + tia
+  for (var i = 0; i <= 14; i++) {
+    var p = lam.chieu(lam.diemKiem(0.15 + i / 14 * 0.95));
+    var r = b >= 2 ? 2 : 1;
+    for (var dy = -r; dy <= r; dy++) for (var dx = -r; dx <= r; dx++) if (Math.abs(dx) + Math.abs(dy) <= r) ve(p[0] + dx, p[1] + dy, (Math.abs(dx) + Math.abs(dy) < r || b === 3) ? 'k' : 'x2');
+  }
+  if (b >= 2) {
+    var t = lam.chieu(lam.diemKiem(1.0));
+    var T = b === 3 ? 6 : 3;
+    for (var j = 2; j <= T; j++) { ve(t[0] + j, t[1] - j, 'v2'); ve(t[0] - j, t[1] - j, 'k'); }
+  }
+}
+})(typeof window !== 'undefined' ? window : this);
+</script>
+<script>
+(function () {
+'use strict';
+var NEN_LANG = 'data:image/png;base64,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';
+var $ = function (id) { return document.getElementById(id); };
+var trangThai = $('trang-thai');
+if (!window.THREE) { trangThai.textContent = 'Không tải được thư viện 3D. Kiểm tra mạng rồi tải lại trang.'; return; }
+var c3d = $('c3d'), cpx = $('cpx'), gpx = cpx.getContext('2d');
+var R;
+try { R = new THREE.WebGLRenderer({ canvas: c3d, antialias: true }); }
+catch (e) { trangThai.textContent = 'Trình duyệt chưa bật WebGL nên không dựng được 3D.'; return; }
+R.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+R.setClearColor(0x212835, 1);
+
+var song = LAM3D.tao(THREE, {});   // mô hình phát liên tục cho khung 3D
+var pix = LAM3D.tao(THREE, {});    // mô hình riêng để in khung pixel (không phá nhịp mô phỏng của khung 3D)
+// nền khung 3D: đĩa đất + vạch
+var dat = new THREE.Mesh(new THREE.CircleGeometry(1.25, 48), new THREE.MeshBasicMaterial({ color: 0x1A212B }));
+dat.rotation.x = -Math.PI / 2; dat.position.y = -0.002; song.scene.add(dat);
+var vach = new THREE.GridHelper(2.5, 10, 0x2C3546, 0x2C3546); vach.position.y = 0; song.scene.add(vach);
+var cam = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
+var quay = { az: 0, el: 10, kc: 5.2 };
+function datCam() {
+  var a = quay.az * Math.PI / 180, e = quay.el * Math.PI / 180;
+  cam.position.set(Math.sin(a) * Math.cos(e) * quay.kc, 0.78 + Math.sin(e) * quay.kc, Math.cos(a) * Math.cos(e) * quay.kc);
+  cam.lookAt(0, 0.78, 0);
+}
+datCam();
+// vuốt để xoay
+var keo = null;
+c3d.addEventListener('pointerdown', function (e) { keo = { x: e.clientX, y: e.clientY, az: quay.az, el: quay.el }; c3d.setPointerCapture(e.pointerId); });
+c3d.addEventListener('pointermove', function (e) {
+  if (!keo) return;
+  quay.az = keo.az - (e.clientX - keo.x) * 0.5;
+  quay.el = Math.max(-10, Math.min(70, keo.el + (e.clientY - keo.y) * 0.35));
+  datCam();
+});
+['pointerup', 'pointercancel'].forEach(function (n) { c3d.addEventListener(n, function () { keo = null; }); });
+
+/* ---------- trạng thái ---------- */
+var ten = 'idle', A, cb, khung = [], dangPhat = true, t = 0, tg = 0, phong = 6, nen = 'lang', khungHien = -1;
+var anhNen = new Image(); anhNen.src = NEN_LANG;
+var cacKhung = {};
+
+// nút chọn hoạt cảnh
+var ds = $('anims');
+LAM3D.THU_TU.forEach(function (k) {
+  var b = document.createElement('button');
+  b.type = 'button'; b.dataset.ten = k; b.setAttribute('aria-pressed', k === ten ? 'true' : 'false');
+  b.innerHTML = '<span></span><small></small>';
+  b.firstChild.textContent = k; b.lastChild.textContent = LAM3D.ANIMS[k].frames.length;
+  b.addEventListener('click', function () { chon(k); });
+  ds.appendChild(b);
+});
+
+function inPixel() {
+  pix.yaw = song.yaw; pix.anhSang.cao = song.anhSang.cao; pix.anhSang.ngang = song.anhSang.ngang;
+  pix.O.camCao = +$('s-cam').value;
+  var t0 = performance.now();
+  var fr = pix.chayAnim(R, ten);
+  khung = fr.map(function (f) {
+    var c = document.createElement('canvas'); c.width = 64; c.height = 64;
+    c.getContext('2d').putImageData(new ImageData(f.px, 64, 64), 0, 0);
+    return { c: c, ten: f.ten, hit: f.hit, noi: f.comboWindow, hold: f.hold };
+  });
+  trangThai.textContent = 'Dựng ' + khung.length + ' khung trong ' + Math.round(performance.now() - t0) + ' ms';
+  khungHien = -1;
+}
+function chon(k) {
+  ten = k; A = LAM3D.ANIMS[k]; cb = song.chuanBi(A); t = 0;
+  [].forEach.call(ds.children, function (b) { b.setAttribute('aria-pressed', b.dataset.ten === k ? 'true' : 'false'); });
+  song.tuong = A.tuong == null ? null : A.tuong;
+  song.datThoiGian(A, 0); song.datLaiVai();
+  inPixel();
+}
+function chiSoKhung(tt) {
+  var i = cb.T.length - 1;
+  while (i > 0 && cb.T[i] > tt + 1e-6) i--;
+  return i;
+}
+function veKhung(i) {
+  var n = 64 * phong;
+  if (cpx.width !== n) { cpx.width = n; cpx.height = n; }
+  gpx.imageSmoothingEnabled = false;
+  if (nen === 'lang' && anhNen.complete && anhNen.naturalWidth) gpx.drawImage(anhNen, 0, 0, n, n);
+  else {
+    gpx.fillStyle = '#212835'; gpx.fillRect(0, 0, n, n);
+    if (nen === 'luoi') {
+      gpx.fillStyle = '#2C3546';
+      for (var y = 0; y < 64; y++) for (var x = 0; x < 64; x++) if ((x + y) % 2) gpx.fillRect(x * phong, y * phong, phong, phong);
+    }
+  }
+  var k = khung[i];
+  if (k) gpx.drawImage(k.c, 0, 0, n, n);
+  $('tpx').textContent = 'khung ' + (i + 1) + '/' + khung.length;
+  $('ten-khung').textContent = k ? k.ten : '';
+  $('co-hit').hidden = !(k && k.hit); $('co-noi').hidden = !(k && k.noi);
+  khungHien = i;
+}
+function thoiGianTuThe() { return cb.loop ? ((t % cb.dai) + cb.dai) % cb.dai : Math.min(t, cb.T[cb.T.length - 1]); }
+
+var truoc = performance.now();
+function vong(now) {
+  var dt = Math.min(0.05, (now - truoc) / 1000); truoc = now;
+  if (dangPhat) {
+    t += dt;
+    if (!cb.loop && t > cb.dai + 0.6) { t = 0; song.datThoiGian(A, 0); song.datLaiVai(); }
+  }
+  var tp = thoiGianTuThe();
+  song.datThoiGian(A, tp);
+  tg += dt; song.buoc(dt, tg);
+  // kích thước canvas 3D theo khung hiển thị
+  var w = c3d.clientWidth;
+  if (w && Math.abs(c3d.width - w * R.getPixelRatio()) > 1) { R.setSize(w, w, false); cam.aspect = 1; cam.updateProjectionMatrix(); }
+  song.capNhatAnhSang(cam);
+  R.render(song.scene, cam);
+  $('t3d').textContent = tp.toFixed(2) + ' s';
+  var i = chiSoKhung(tp);
+  if (i !== khungHien) veKhung(i);
+  requestAnimationFrame(vong);
+}
+
+/* ---------- nút ---------- */
+function datPhat(v) { dangPhat = v; $('b-phat').textContent = v ? 'Tạm dừng' : 'Phát'; }
+$('b-phat').addEventListener('click', function () { datPhat(!dangPhat); });
+function denKhung(i) { datPhat(false); i = (i + khung.length) % khung.length; t = cb.T[i] + 1e-4; veKhung(i); }
+$('b-toi').addEventListener('click', function () { denKhung(chiSoKhung(thoiGianTuThe()) + 1); });
+$('b-lui').addEventListener('click', function () { denKhung(chiSoKhung(thoiGianTuThe()) - 1); });
+$('b-dau').addEventListener('click', function () { denKhung(0); });
+function datPhong(p) { phong = p; $('b-x4').setAttribute('aria-pressed', p === 4); $('b-x6').setAttribute('aria-pressed', p === 6); veKhung(Math.max(0, khungHien)); }
+$('b-x4').addEventListener('click', function () { datPhong(4); });
+$('b-x6').addEventListener('click', function () { datPhong(6); });
+['lang', 'toi', 'luoi'].forEach(function (k) {
+  $('n-' + k).addEventListener('click', function () {
+    nen = k; ['lang', 'toi', 'luoi'].forEach(function (j) { $('n-' + j).setAttribute('aria-pressed', j === k); });
+    veKhung(Math.max(0, khungHien));
+  });
+});
+anhNen.onload = function () { veKhung(Math.max(0, khungHien)); };
+
+var hen = 0;
+function thanh(id, don, apDung) {
+  var s = $('s-' + id), o = $('o-' + id);
+  s.addEventListener('input', function () {
+    o.textContent = s.value + don; apDung(+s.value);
+    clearTimeout(hen); hen = setTimeout(inPixel, 450);
+  });
+}
+thanh('cam', '°', function () {});
+thanh('xoay', '°', function (v) { song.yaw = v; });
+thanh('as-cao', '°', function (v) { song.anhSang.cao = v; });
+thanh('as-ngang', '°', function (v) { song.anhSang.ngang = v; });
+$('b-macdinh').addEventListener('click', function () {
+  [['cam', 8], ['xoay', 35], ['as-cao', 50], ['as-ngang', 35]].forEach(function (a) { $('s-' + a[0]).value = a[1]; $('o-' + a[0]).textContent = a[1] + '°'; });
+  song.yaw = 35; song.anhSang.cao = 50; song.anhSang.ngang = 35; inPixel();
+});
+
+chon('idle');
+requestAnimationFrame(vong);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,286 @@
+<title>Studio 3D – Lam</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Bố cục: bàn làm việc của họa sĩ — sân khấu 3D và ô pixel cạnh nhau (xếp chồng trên điện thoại), bảng điều khiển bên dưới.
+   Một bảng màu tối duy nhất, lấy thẳng từ palette khóa của game. */
+:root {
+  --nen: #0C0F14; --mat: #1A212B; --mat2: #212835; --vien: #2C3546; --chu: #E6ECEF; --chu-mo: #8E9BAA;
+  --xanh: #83CC93; --xanh-dam: #32804F; --vang: #E1B85A; --sang: #CEF0D6; --hit: #9C6B30;
+  --f-tieu-de: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-than: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-so: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  color-scheme: dark;
+}
+html, body { background: var(--nen); color: var(--chu); }
+body { font-family: var(--f-than); font-size: 15px; line-height: 1.45; -webkit-text-size-adjust: 100%; }
+.trang { max-width: 1180px; margin: 0 auto; padding-block: 14px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 14px; }
+header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+h1 { font-family: var(--f-tieu-de); font-weight: 800; font-size: 1.45rem; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+h1 b { color: var(--xanh); font-weight: 800; }
+header p { margin: 0; color: var(--chu-mo); font-size: 0.9rem; }
+.san { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 760px) { .san { grid-template-columns: 1fr; } }
+.khung { background: var(--mat); border: 1px solid var(--vien); border-radius: 10px; overflow: hidden; display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+.khung h2 { margin: 0; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--chu-mo);
+  padding: 9px 12px; border-bottom: 1px solid var(--vien); display: flex; justify-content: space-between; gap: 8px; }
+.khung h2 span:last-child { font-family: var(--f-so); letter-spacing: 0; text-transform: none; color: var(--sang); }
+#c3d { width: 100%; aspect-ratio: 1 / 1; max-width: 100%; display: block; touch-action: none; cursor: grab; background: var(--mat2); }
+#c3d:active { cursor: grabbing; }
+.o-pixel { display: grid; place-items: center; background: var(--mat2); aspect-ratio: 1 / 1; max-width: 100%; position: relative; }
+#cpx { image-rendering: pixelated; image-rendering: crisp-edges; max-width: 100%; max-height: 100%; }
+.nhan-khung { position: absolute; left: 10px; right: 10px; bottom: 8px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+  font-size: 0.85rem; color: var(--chu); text-shadow: 0 1px 0 var(--nen); }
+.co { font-family: var(--f-so); font-size: 0.72rem; padding: 2px 7px; border-radius: 999px; border: 1px solid var(--vien); color: var(--chu-mo); background: var(--nen); }
+.co.hit { color: var(--nen); background: var(--vang); border-color: var(--vang); }
+.co.noi { color: var(--nen); background: var(--xanh); border-color: var(--xanh); }
+.dieu-khien { display: grid; gap: 12px; }
+.hang { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+button { font: inherit; font-weight: 600; color: var(--chu); background: var(--mat2); border: 1px solid var(--vien); border-radius: 9px;
+  min-height: 46px; min-width: 46px; padding: 0 14px; touch-action: manipulation; cursor: pointer; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--vang); outline-offset: 2px; }
+button[aria-pressed="true"] { background: var(--xanh-dam); border-color: var(--xanh); color: #fff; }
+button.chinh { background: var(--vang); border-color: var(--vang); color: var(--nen); min-width: 96px; }
+.anims { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 6px; }
+.anims button { min-height: 44px; font-size: 0.86rem; padding: 0 8px; text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.anims button small { font-family: var(--f-so); color: var(--chu-mo); font-weight: 500; font-size: 0.72rem; }
+.anims button[aria-pressed="true"] small { color: var(--sang); }
+fieldset { border: 1px solid var(--vien); border-radius: 10px; margin: 0; padding: 10px 12px 12px; display: grid; gap: 10px; min-width: 0; }
+legend { font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--chu-mo); padding: 0 6px; }
+.thanh { display: grid; grid-template-columns: minmax(110px, 9.5em) 1fr 3.4em; gap: 10px; align-items: center; }
+.thanh label { font-size: 0.9rem; }
+.thanh output { font-family: var(--f-so); font-size: 0.85rem; color: var(--sang); text-align: right; font-variant-numeric: tabular-nums; }
+input[type=range] { width: 100%; height: 36px; accent-color: var(--xanh); min-width: 0; }
+.cot2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 760px) { .cot2 { grid-template-columns: 1fr; } }
+.ghi-chu { color: var(--chu-mo); font-size: 0.85rem; margin: 0; max-width: 70ch; }
+#trang-thai { font-family: var(--f-so); font-size: 0.8rem; color: var(--chu-mo); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="trang">
+  <header>
+    <h1>Studio 3D – <b>Lam</b></h1>
+    <p>Mô hình 3D mượt, render thẳng xuống pixel đúng như trong game.</p>
+  </header>
+
+  <section class="san" aria-label="Xem trước">
+    <div class="khung">
+      <h2><span>Mô hình 3D · vuốt để xoay</span><span id="t3d">0.00 s</span></h2>
+      <canvas id="c3d" width="600" height="600" aria-label="Mô hình 3D của Lam, vuốt để xoay"></canvas>
+    </div>
+    <div class="khung">
+      <h2><span>Bản pixel 64×64</span><span id="tpx">khung 1/6</span></h2>
+      <div class="o-pixel">
+        <canvas id="cpx" width="384" height="384" aria-label="Bản pixel đang phát"></canvas>
+        <div class="nhan-khung"><span id="ten-khung">đứng thẳng</span><span id="co-hit" class="co hit" hidden>HIT</span><span id="co-noi" class="co noi" hidden>nối combo</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="dieu-khien">
+    <div class="hang" role="group" aria-label="Phát">
+      <button id="b-dau" aria-label="Về khung đầu">⏮</button>
+      <button id="b-lui" aria-label="Lùi 1 khung">◀ khung</button>
+      <button id="b-phat" class="chinh">Tạm dừng</button>
+      <button id="b-toi" aria-label="Tới 1 khung">khung ▶</button>
+      <span style="flex:1"></span>
+      <button id="b-x4" aria-pressed="false">×4</button>
+      <button id="b-x6" aria-pressed="true">×6</button>
+    </div>
+
+    <fieldset>
+      <legend>Hoạt cảnh (26)</legend>
+      <div class="anims" id="anims"></div>
+    </fieldset>
+
+    <div class="cot2">
+      <fieldset>
+        <legend>Camera &amp; ánh sáng</legend>
+        <div class="thanh"><label for="s-cam">Độ cao camera</label><input id="s-cam" type="range" min="0" max="25" step="1" value="8"><output id="o-cam">8°</output></div>
+        <div class="thanh"><label for="s-xoay">Góc xoay nhân vật</label><input id="s-xoay" type="range" min="0" max="70" step="1" value="35"><output id="o-xoay">35°</output></div>
+        <div class="thanh"><label for="s-as-cao">Ánh sáng – độ cao</label><input id="s-as-cao" type="range" min="5" max="85" step="1" value="50"><output id="o-as-cao">50°</output></div>
+        <div class="thanh"><label for="s-as-ngang">Ánh sáng – hướng</label><input id="s-as-ngang" type="range" min="-60" max="90" step="1" value="35"><output id="o-as-ngang">35°</output></div>
+        <div class="hang"><button id="b-macdinh">Về mặc định</button><span id="trang-thai"></span></div>
+      </fieldset>
+      <fieldset>
+        <legend>Nền ô pixel</legend>
+        <div class="hang" role="group" aria-label="Nền">
+          <button id="n-lang" aria-pressed="true">Làng Chuông</button>
+          <button id="n-toi" aria-pressed="false">Tối</button>
+          <button id="n-luoi" aria-pressed="false">Lưới ô</button>
+        </div>
+        <p class="ghi-chu">Ô pixel là đúng ảnh game dùng: mỗi khung được dựng lại từ mô hình 3D (áo choàng và chuông mô phỏng vật lý), tô 3 bậc sáng theo palette, viền ngoài 1 pixel và viền trong ở chỗ tay, kiếm chồng lên thân.</p>
+        <p class="ghi-chu">Kéo thanh trượt để thử góc camera hay hướng sáng; ô pixel tự dựng lại sau nửa giây.</p>
+      </fieldset>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>/*LAM3D_CORE*/</script>
+<script>/*LAM3D_ANIM*/</script>
+<script>
+(function () {
+'use strict';
+var NEN_LANG = '/*NEN_LANG*/';
+var $ = function (id) { return document.getElementById(id); };
+var trangThai = $('trang-thai');
+if (!window.THREE) { trangThai.textContent = 'Không tải được thư viện 3D. Kiểm tra mạng rồi tải lại trang.'; return; }
+var c3d = $('c3d'), cpx = $('cpx'), gpx = cpx.getContext('2d');
+var R;
+try { R = new THREE.WebGLRenderer({ canvas: c3d, antialias: true }); }
+catch (e) { trangThai.textContent = 'Trình duyệt chưa bật WebGL nên không dựng được 3D.'; return; }
+R.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+R.setClearColor(0x212835, 1);
+
+var song = LAM3D.tao(THREE, {});   // mô hình phát liên tục cho khung 3D
+var pix = LAM3D.tao(THREE, {});    // mô hình riêng để in khung pixel (không phá nhịp mô phỏng của khung 3D)
+// nền khung 3D: đĩa đất + vạch
+var dat = new THREE.Mesh(new THREE.CircleGeometry(1.25, 48), new THREE.MeshBasicMaterial({ color: 0x1A212B }));
+dat.rotation.x = -Math.PI / 2; dat.position.y = -0.002; song.scene.add(dat);
+var vach = new THREE.GridHelper(2.5, 10, 0x2C3546, 0x2C3546); vach.position.y = 0; song.scene.add(vach);
+var cam = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
+var quay = { az: 0, el: 10, kc: 5.2 };
+function datCam() {
+  var a = quay.az * Math.PI / 180, e = quay.el * Math.PI / 180;
+  cam.position.set(Math.sin(a) * Math.cos(e) * quay.kc, 0.78 + Math.sin(e) * quay.kc, Math.cos(a) * Math.cos(e) * quay.kc);
+  cam.lookAt(0, 0.78, 0);
+}
+datCam();
+// vuốt để xoay
+var keo = null;
+c3d.addEventListener('pointerdown', function (e) { keo = { x: e.clientX, y: e.clientY, az: quay.az, el: quay.el }; c3d.setPointerCapture(e.pointerId); });
+c3d.addEventListener('pointermove', function (e) {
+  if (!keo) return;
+  quay.az = keo.az - (e.clientX - keo.x) * 0.5;
+  quay.el = Math.max(-10, Math.min(70, keo.el + (e.clientY - keo.y) * 0.35));
+  datCam();
+});
+['pointerup', 'pointercancel'].forEach(function (n) { c3d.addEventListener(n, function () { keo = null; }); });
+
+/* ---------- trạng thái ---------- */
+var ten = 'idle', A, cb, khung = [], dangPhat = true, t = 0, tg = 0, phong = 6, nen = 'lang', khungHien = -1;
+var anhNen = new Image(); anhNen.src = NEN_LANG;
+var cacKhung = {};
+
+// nút chọn hoạt cảnh
+var ds = $('anims');
+LAM3D.THU_TU.forEach(function (k) {
+  var b = document.createElement('button');
+  b.type = 'button'; b.dataset.ten = k; b.setAttribute('aria-pressed', k === ten ? 'true' : 'false');
+  b.innerHTML = '<span></span><small></small>';
+  b.firstChild.textContent = k; b.lastChild.textContent = LAM3D.ANIMS[k].frames.length;
+  b.addEventListener('click', function () { chon(k); });
+  ds.appendChild(b);
+});
+
+function inPixel() {
+  pix.yaw = song.yaw; pix.anhSang.cao = song.anhSang.cao; pix.anhSang.ngang = song.anhSang.ngang;
+  pix.O.camCao = +$('s-cam').value;
+  var t0 = performance.now();
+  var fr = pix.chayAnim(R, ten);
+  khung = fr.map(function (f) {
+    var c = document.createElement('canvas'); c.width = 64; c.height = 64;
+    c.getContext('2d').putImageData(new ImageData(f.px, 64, 64), 0, 0);
+    return { c: c, ten: f.ten, hit: f.hit, noi: f.comboWindow, hold: f.hold };
+  });
+  trangThai.textContent = 'Dựng ' + khung.length + ' khung trong ' + Math.round(performance.now() - t0) + ' ms';
+  khungHien = -1;
+}
+function chon(k) {
+  ten = k; A = LAM3D.ANIMS[k]; cb = song.chuanBi(A); t = 0;
+  [].forEach.call(ds.children, function (b) { b.setAttribute('aria-pressed', b.dataset.ten === k ? 'true' : 'false'); });
+  song.tuong = A.tuong == null ? null : A.tuong;
+  song.datThoiGian(A, 0); song.datLaiVai();
+  inPixel();
+}
+function chiSoKhung(tt) {
+  var i = cb.T.length - 1;
+  while (i > 0 && cb.T[i] > tt + 1e-6) i--;
+  return i;
+}
+function veKhung(i) {
+  var n = 64 * phong;
+  if (cpx.width !== n) { cpx.width = n; cpx.height = n; }
+  gpx.imageSmoothingEnabled = false;
+  if (nen === 'lang' && anhNen.complete && anhNen.naturalWidth) gpx.drawImage(anhNen, 0, 0, n, n);
+  else {
+    gpx.fillStyle = '#212835'; gpx.fillRect(0, 0, n, n);
+    if (nen === 'luoi') {
+      gpx.fillStyle = '#2C3546';
+      for (var y = 0; y < 64; y++) for (var x = 0; x < 64; x++) if ((x + y) % 2) gpx.fillRect(x * phong, y * phong, phong, phong);
+    }
+  }
+  var k = khung[i];
+  if (k) gpx.drawImage(k.c, 0, 0, n, n);
+  $('tpx').textContent = 'khung ' + (i + 1) + '/' + khung.length;
+  $('ten-khung').textContent = k ? k.ten : '';
+  $('co-hit').hidden = !(k && k.hit); $('co-noi').hidden = !(k && k.noi);
+  khungHien = i;
+}
+function thoiGianTuThe() { return cb.loop ? ((t % cb.dai) + cb.dai) % cb.dai : Math.min(t, cb.T[cb.T.length - 1]); }
+
+var truoc = performance.now();
+function vong(now) {
+  var dt = Math.min(0.05, (now - truoc) / 1000); truoc = now;
+  if (dangPhat) {
+    t += dt;
+    if (!cb.loop && t > cb.dai + 0.6) { t = 0; song.datThoiGian(A, 0); song.datLaiVai(); }
+  }
+  var tp = thoiGianTuThe();
+  song.datThoiGian(A, tp);
+  tg += dt; song.buoc(dt, tg);
+  // kích thước canvas 3D theo khung hiển thị
+  var w = c3d.clientWidth;
+  if (w && Math.abs(c3d.width - w * R.getPixelRatio()) > 1) { R.setSize(w, w, false); cam.aspect = 1; cam.updateProjectionMatrix(); }
+  song.capNhatAnhSang(cam);
+  R.render(song.scene, cam);
+  $('t3d').textContent = tp.toFixed(2) + ' s';
+  var i = chiSoKhung(tp);
+  if (i !== khungHien) veKhung(i);
+  requestAnimationFrame(vong);
+}
+
+/* ---------- nút ---------- */
+function datPhat(v) { dangPhat = v; $('b-phat').textContent = v ? 'Tạm dừng' : 'Phát'; }
+$('b-phat').addEventListener('click', function () { datPhat(!dangPhat); });
+function denKhung(i) { datPhat(false); i = (i + khung.length) % khung.length; t = cb.T[i] + 1e-4; veKhung(i); }
+$('b-toi').addEventListener('click', function () { denKhung(chiSoKhung(thoiGianTuThe()) + 1); });
+$('b-lui').addEventListener('click', function () { denKhung(chiSoKhung(thoiGianTuThe()) - 1); });
+$('b-dau').addEventListener('click', function () { denKhung(0); });
+function datPhong(p) { phong = p; $('b-x4').setAttribute('aria-pressed', p === 4); $('b-x6').setAttribute('aria-pressed', p === 6); veKhung(Math.max(0, khungHien)); }
+$('b-x4').addEventListener('click', function () { datPhong(4); });
+$('b-x6').addEventListener('click', function () { datPhong(6); });
+['lang', 'toi', 'luoi'].forEach(function (k) {
+  $('n-' + k).addEventListener('click', function () {
+    nen = k; ['lang', 'toi', 'luoi'].forEach(function (j) { $('n-' + j).setAttribute('aria-pressed', j === k); });
+    veKhung(Math.max(0, khungHien));
+  });
+});
+anhNen.onload = function () { veKhung(Math.max(0, khungHien)); };
+
+var hen = 0;
+function thanh(id, don, apDung) {
+  var s = $('s-' + id), o = $('o-' + id);
+  s.addEventListener('input', function () {
+    o.textContent = s.value + don; apDung(+s.value);
+    clearTimeout(hen); hen = setTimeout(inPixel, 450);
+  });
+}
+thanh('cam', '°', function () {});
+thanh('xoay', '°', function (v) { song.yaw = v; });
+thanh('as-cao', '°', function (v) { song.anhSang.cao = v; });
+thanh('as-ngang', '°', function (v) { song.anhSang.ngang = v; });
+$('b-macdinh').addEventListener('click', function () {
+  [['cam', 8], ['xoay', 35], ['as-cao', 50], ['as-ngang', 35]].forEach(function (a) { $('s-' + a[0]).value = a[1]; $('o-' + a[0]).textContent = a[1] + '°'; });
+  song.yaw = 35; song.anhSang.cao = 50; song.anhSang.ngang = 35; inPixel();
+});
+
+chon('idle');
+requestAnimationFrame(vong);
+})();
+</script>
