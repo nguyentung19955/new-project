@@ -59,7 +59,7 @@
 <div id="lk-tai" data-bia="||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAMEBQYH/8QAKRAAAQMCBQMDBQAAAAAAAAAAAQIDEQAEBRIhMUETFGEiQnEVUWKBsf/EABcBAAMBAAAAAAAAAAAAAAAAAAIDBAX/xAAlEQACAQEFCQAAAAAAAAAAAAABAgADBBExUfASEyEyM0FxobH/2gAMAwEAAhEDEQA/AOfNMWj9zbWiEtBsn1ugGTPCvjXajFcBNssNsvoeMxlCgVJqzCbhHftG3aGdcJBUAUn7neRzTMcumxjD0hDSkmFBtWZMjSdR5qamzb4DtHOiimTfxmt/T3UpzLBCTt5q22sWekt0vBvImSF8+KyF5eWDaGFNZlr6YkKGiTPGvzSutZDDX1sF3P0wPUBMzvP62rStACi5TEWB9pizi/H1JsLUo3NhKiZUOfyqbE1Hu3jJkqPNFFRUuprOHU5dZSVwmE6+2mNk9u7r7R/aKKqqQLNifB+T/9k=|||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAgf/xAAmEAACAgEEAQQCAwAAAAAAAAABAgMRAAQSITEFE1FhgSJBcbHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQIDBAX/xAAeEQABBAIDAQAAAAAAAAAAAAAAAQIDEiExBBEyIv/aAAwDAQACEQMRAD8A51EIZIo53EASNwHG07mBPFno9HFyeOhl1Y2yFIbtjVkDnr54yzx2vaLSyII1cELvBQEVu5PyeshTWvFJG6qi7OR+A9/4xoa3yQzWRvzsH8YkWrkCMZYlsoSvJHfWUalzFpI4/TRBZbca3HsUcXqvJvPqpZgEAewAFHAP1mZ9aZIoyqKWVa4jX3P+jByGor8aNDgT0gXvDiHTs1EbjRAsX3jKuEH92Ofs4YYGeim/yLulscHjFuT6YNno/wBnDDGfsEej/9k=" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.17-1048";
+(window.G = window.G || {}).VERSION = "lk-2026.10.17-1500";
 
 // ===== js/ngon_ngu.js =====
 // Ngôn ngữ: tiếng Việt (mặc định) và tiếng Anh. Tệp này nạp TRƯỚC mọi tệp khác của game.
@@ -4149,6 +4149,15 @@
     trum1: { ai: '0-4', ten: 'Hạ Mộc Tinh', bao: 'Mở mới: Ép đồ, Nâng lò, và Cô Thợ May về làng may trang phục.' },
     vung2: { ai: '1-0', ten: 'Qua Hang biển 1', bao: 'Mở mới: Sổ yêu quái, Việc hôm nay, Thành tựu, Ải ngày, Bảng vàng.' },
   };
+  // 17/10 (tư vấn 17/10 mục 5): Luyện 1–15 bật (js/luyen.js) thì không còn mài / thẻ Linh khí / ép đồ / nâng lò → câu báo nói theo Luyện.
+  // Cờ ?luyen=0 giữ câu cũ ở MOC / CHUA. Chỉ là chữ: mốc mở, chức năng mở không đổi.
+  const BAO_LY = {
+    ai1: 'Mở mới: nút Đặc biệt và Chưởng, Cụ Đồ dạy kỹ năng, Ông Thợ Rèn luyện vũ khí.',
+    ai3: 'Luyện vũ khí lên cấp 3 ở Ông Thợ Rèn để chọn hệ Lửa, Độc, Băng.',
+    trum1: 'Mở mới: Cô Thợ May về làng may trang phục.',
+  };
+  const CHUA_LY = { ren: 'Ông Thợ Rèn đang nhóm lò. Qua ải Rừng già 1 rồi ghé ông luyện vũ khí.' };
+  const LYm = () => !!(G.luyen && G.luyen.bat());
   const THU_TU = ['ai1', 'ai2', 'ai3', 'trum1', 'vung2'];
   // Chức năng → mốc. Chức năng không có trong bảng thì luôn mở.
   const CN = {
@@ -4180,7 +4189,7 @@
   // Người làng k đã ra mặt chưa (chỉ phần mốc mới; mốc cũ của Cô Thợ May vẫn ở js/village_scene.js)
   MD.nguoi = (k, sv) => !NPC_CN[k] || MD.co(NPC_CN[k], sv);
   // Cờ tắt (hay mốc mới đã qua mà mốc cũ chưa): câu cũ của Cô Thợ May (V53, mở sau Rừng già 2)
-  MD.loiChuaMo = (k) => G.tv(!MD.bat() || !CHUA[k] || MD.nguoi(k) ? 'Cô Thợ May đi chợ xa. Qua ải Rừng già 2 rồi cô về may đồ cho bé.' : CHUA[k]);
+  MD.loiChuaMo = (k) => G.tv(!MD.bat() || !CHUA[k] || MD.nguoi(k) ? 'Cô Thợ May đi chợ xa. Qua ải Rừng già 2 rồi cô về may đồ cho bé.' : (LYm() && CHUA_LY[k]) || CHUA[k]);
   // Thẻ bảng làng → chức năng
   const THE = { skill: 'kyNang', chuong: 'chuong', rank: 'bangVang', so: 'so', thanhTuu: 'thanhTuu', viecNgay: 'viecNgay', outfit: 'thoMay', gear: 'hangXen', forge: 'ren' };
   MD.the = (tab, sv) => !THE[tab] || MD.co(THE[tab], sv);
@@ -4197,7 +4206,7 @@
     if (!obj(sv.moDan.bao)) sv.moDan.bao = {};
     const B = sv.moDan.bao;
     let s = null;
-    for (const k of THU_TU) if (!B[k] && MD.dat(k, sv)) { B[k] = 1; s = MOC[k].bao; }
+    for (const k of THU_TU) if (!B[k] && MD.dat(k, sv)) { B[k] = 1; s = (LYm() && BAO_LY[k]) || MOC[k].bao; }
     return s ? G.tv(s) : null;
   };
   MD.baoLang = function () {
@@ -4248,6 +4257,10 @@
     'Mở mới: Ép đồ, Nâng lò, và Cô Thợ May về làng may trang phục.': 'New: Refining, Forge upgrades, and the Tailor is back to make outfits.',
     'Mở mới: Sổ yêu quái, Việc hôm nay, Thành tựu, Ải ngày, Bảng vàng.': "New: Monster Book, Today's jobs, Achievements, Daily trials, Hall of Fame.",
     'Ông Thợ Rèn đang nhóm lò. Qua ải Rừng già 1 rồi ghé ông mài vũ khí.': 'The Smith is lighting the forge. Clear Old Forest 1, then come sharpen your weapons.',
+    'Mở mới: nút Đặc biệt và Chưởng, Cụ Đồ dạy kỹ năng, Ông Thợ Rèn luyện vũ khí.': 'New: Special and Palm buttons, the Old Scholar teaches skills, the Smith tempers weapons.',
+    'Luyện vũ khí lên cấp 3 ở Ông Thợ Rèn để chọn hệ Lửa, Độc, Băng.': 'Temper a weapon to Lv 3 at the Smith to pick Fire, Poison or Ice.',
+    'Mở mới: Cô Thợ May về làng may trang phục.': 'New: the Tailor is back to make outfits.',
+    'Ông Thợ Rèn đang nhóm lò. Qua ải Rừng già 1 rồi ghé ông luyện vũ khí.': 'The Smith is lighting the forge. Clear Old Forest 1, then come temper your weapons.',
     'Bà Hàng Xén chưa dọn hàng. Qua ải Rừng già 1 rồi bà ra chợ.': 'The Grocer has not set up yet. Clear Old Forest 1 and she will open.',
     'Cô Thợ May đi chợ xa. Hạ Mộc Tinh rồi cô về may đồ cho bé.': 'The Tailor is away at the market. Defeat the Tree Spirit and she will come back.',
     'Âm thanh, điều khiển ›': 'Sound, controls ›', 'Âm thanh, pin, điều khiển': 'Sound, battery, controls',
@@ -33468,7 +33481,7 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
   T.RES = RES;
   T.resName = function (kind) {
     const R = G.REGIONS || [];
-    if (kind === 'gold') return 'Vàng'; if (kind === 'ore') return 'Quặng'; if (kind === 'stone') return 'Đá tôi'; if (kind === 'xp') return 'Kinh nghiệm';
+    if (kind === 'gold') return 'Vàng'; if (kind === 'ore') return G.luyen && G.luyen.bat() ? 'Nguyên liệu rèn' : 'Quặng'; /* 17/10: Luyện bật thì ô quặng là nguyên liệu rèn */ if (kind === 'stone') return 'Đá tôi'; if (kind === 'xp') return 'Kinh nghiệm';
     const i = +kind.slice(-1);
     if (kind.indexOf('mat') === 0) return R[i] ? R[i].mat : 'Nguyên liệu';
     return R[i] ? G.t('Mảnh trùm {0}', R[i].bossName) : 'Mảnh trùm';
@@ -36554,10 +36567,18 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
     'Quái tinh anh đánh đau: chờ nó ra đòn hụt rồi mới chém, thấy vùng đỏ thì Né ngay.': 'Elites hit hard: wait for a missed attack before striking, and Dodge as soon as you see red.',
     'Trùm đầu tiên chưa học gì từ bạn. Chém vài nhát rồi lộn né, máu thấp thì chạm Bình máu.': 'The first boss has learned nothing from you. Strike a few times then roll away; tap the Potion when your health is low.',
   });
+  // 17/10 (tư vấn 17/10 mục 5): câu theo luật Luyện 1–15 (cờ ?luyen=0 giữ câu cũ ở TUT)
+  const TUT_LY = { merchant: 'Thương nhân bán bình máu, bùa hệ và nguyên liệu rèn. Lại gần rồi bấm Đánh để xem hàng.' };
+  if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({
+    'Thương nhân bán bình máu, bùa hệ và nguyên liệu rèn. Lại gần rồi bấm Đánh để xem hàng.': 'The merchant sells potions, element charms and forge materials. Walk up and press Attack to browse.',
+    'Dùng để luyện vũ khí và nâng bộ trang phục': 'Used to temper weapons and upgrade outfits',
+    'Mẹo: về làng luyện vũ khí ở Ông Thợ Rèn, hoặc chơi lại ải cũ để lên cấp rồi quay lại.': 'Tip: temper your weapons at the Smith in the village, or replay old stages to level up, then come back.',
+  });
   const MD = () => G.moDan && G.moDan.bat() ? G.moDan : null; // mở dần đang bật
   const coMD = (f) => !G.moDan || G.moDan.co(f); // chức năng f đã mở (cờ tắt / bản lưu cũ: luôn mở)
   function tutHint(k) {
     if (MD() && ((k === 'fight2' && !coMD('dacBiet')) || ((k === 'elite' || k === 'boss') && !coMD('doiVk')))) return TUT_MD[k];
+    if (k === 'merchant' && G.luyen && G.luyen.bat()) return TUT_LY.merchant; // 17/10: Luyện bật thì thương nhân bán nguyên liệu rèn (không còn quặng)
     return TUT[k] || null;
   }
   // Ải hướng dẫn xếp sẵn (mở dần bật): bản đồ cố định (hạt giống TUT_SEED, kiểu A: Bắt đầu → Đánh quái → Đánh quái → Tinh anh → Suối → Trùm),
@@ -36916,7 +36937,7 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
     // lựa chọn "vũ khí mới" của luật cũ nay là túi linh khí cùng giá trị (G.ROI_MOI.ruong)
     const lkN = G.ROI_MOI.ruong.lk[G.clamp(S.r | 0, 0, G.ROI_MOI.ruong.lk.length - 1)];
     return [
-      { kind: 'lk', n: lkN, label: G.t('{0} linh khí', lkN), sub: 'Dùng để nâng vũ khí (Mầm, Thành hình, Thức tỉnh) và nâng bộ trang phục' },
+      { kind: 'lk', n: lkN, label: G.t('{0} linh khí', lkN), sub: G.luyen && G.luyen.bat() ? 'Dùng để luyện vũ khí và nâng bộ trang phục' : 'Dùng để nâng vũ khí (Mầm, Thành hình, Thức tỉnh) và nâng bộ trang phục' },
       { kind: 'ore', n: 5 + S.r * 3, label: G.t(G.chuQuang().slice(1), 5 + S.r * 3), sub: G.luyen && G.luyen.bat() ? 'Dùng để luyện vũ khí ở lò rèn' : 'Dùng để mài vũ khí ở lò rèn' },
       { kind: 'charm', el: S.tut ? 'fire' : G.pick(G.ELS), label: '', sub: 'Phủ hệ lên cả hai vũ khí trong 60 giây' },
     ].map((o) => { if (o.kind === 'charm') o.label = G.t('Bùa {0}', G.EL[o.el].name); return o; });
@@ -38068,7 +38089,9 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
     const TH = G.theme, texts = R.lines.filter((l) => !l.w), weps = R.lines.filter((l) => l.w);
     // Khối linh khí (js/linhkhi.js) nằm sát trên hàng nút: mỗi vũ khí đang mang một dòng. Phần thưởng xếp phía trên khối này.
     const lkN = G.lk && S.P ? 1 : 0, lkTop = lkN ? (!R.win && !S.quit ? 186 : 213) - (11 + lkN * 21) : 0;
-    const lim = lkN ? lkTop - 3 : 208;
+    // 17/10 gợi ý một việc (js/goi_y_1.js, ?goiy1=0 tắt): chừa một dòng ngay trên khối linh khí (thua: dòng thay cho câu Mẹo)
+    const gy1 = G.goiY1 && G.goiY1.co(R) ? 1 : 0, gyY = (lkN ? lkTop : 211) - 13, gyThay = gy1 && !R.win && !S.quit;
+    const lim = (lkN ? lkTop - 3 : 208) - (gy1 && !gyThay ? 13 : 0);
     const rows = Math.max(1, Math.floor((lim - y) / 11.5));
     // dòng nổi bật (lên cấp, cứu được em bé, kỷ lục): xét trên bản tiếng Việt của dòng; dòng kỷ lục của bảng vàng mở đầu bằng ★
     const hot = (l) => { const v = viOf(R, l); return v.includes('lên cấp') || v.includes('Cứu được') || v.indexOf('· ') === 0 || v.includes('Kỷ lục') || (G.LANG !== 'vi' && l.charAt(0) === '★'); };
@@ -38105,7 +38128,8 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
     // chữ còn dư thì xuống cột phải, dưới các thẻ vũ khí
     texts.slice(rows).forEach((l, i) => { const cy = ry + 9 + i * 11.5; if (cy <= lim) line(l, 246, cy); });
     if (lkN) G.lk.resultBlock(S, 84, lkTop, 312);
-    if (!R.win && !S.quit) ui.para('Mẹo: về làng mài vũ khí ở lò rèn, hoặc chơi lại ải cũ để lên cấp rồi quay lại.', 86, 196, 308, { size: 7.5, color: '#d9cdb8' });
+    if (gy1 && G.goiY1.veKetQua(R, 84, gyThay ? 192 : gyY, 312)) { S = null; G.setScene(G.Village); return; }
+    else if (!R.win && !S.quit && !gyThay) ui.para(G.luyen && G.luyen.bat() ? 'Mẹo: về làng luyện vũ khí ở Ông Thợ Rèn, hoặc chơi lại ải cũ để lên cấp rồi quay lại.' : 'Mẹo: về làng mài vũ khí ở lò rèn, hoặc chơi lại ải cũ để lên cấp rồi quay lại.', 86, 196, 308, { size: 7.5, color: '#d9cdb8' });
     // Thắng thì có nút đi thẳng sang ải kế (hoặc vùng kế sau trùm vùng), không phải vòng về làng.
     // vùng 4: độ khó 2 của vùng sau chỉ mở khi đã hạ trùm vùng đó ở độ khó thường (Q8 = A)
     const nx = R.win ? (S.i < 4 ? [S.r, S.i + 1] : S.r < G.REGIONS.length - 1 && !(S.diff && S.r >= 2 && !G.save.stars[(S.r + 1) + '-4']) ? [S.r + 1, 0] : null) : null;
@@ -40623,6 +40647,11 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
       const got = U.bqMua(sv, k5);
       if (got) { G.persist(); G.sfx('pick'); say(G.t(LY ? 'Của cháu đây, {0} nguyên liệu rèn.' : 'Của cháu đây, {0} quặng.', got)); }
     }
+    // 17/10 (tư vấn 17/10 mục 5): Luyện bật thì nói "nguyên liệu rèn / luyện" thay cho "quặng / mài" (cờ ?luyen=0 giữ câu cũ)
+    if (LY) {
+      ui.para('Nguyên liệu rèn vẫn rơi nhiều nhất khi thắng ải; bà chỉ bán thêm chút ít cho cháu khỏi thiếu lúc luyện.', CX + 2, y + 50, CW - 4, { size: 7, color: SOFT });
+      return con > 0 ? 'Thiếu nguyên liệu rèn để luyện vũ khí thì mua của bà, mỗi ngày bà có ít hàng thôi.' : 'Hôm nay bà bán hết nguyên liệu rèn rồi, mai cháu quay lại nhé.';
+    }
     ui.para('Quặng vẫn rơi nhiều nhất khi thắng ải; bà chỉ bán thêm chút ít cho cháu khỏi thiếu lúc mài.', CX + 2, y + 50, CW - 4, { size: 7, color: SOFT });
     return con > 0 ? 'Thiếu quặng mài vũ khí thì mua của bà, mỗi ngày bà có ít hàng thôi.' : 'Hôm nay bà bán hết quặng rồi, mai cháu quay lại nhé.';
   }
@@ -40766,9 +40795,12 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
     ['Các loại quái', 'Mỗi vùng quái con đánh một kiểu riêng. Rừng già: húc thẳng, lăn cầu đất, mưa bào tử, lẩn bóng sau lưng, nổ mây độc. Hang biển: lướt ngang kẹp, rút vỏ để vệt nhớt làm chậm, hút lại gần, vũng điện, gai xoáy ốc. Lâu đài cổ: chớp chém, phân thân, lửa ma đuổi, bùa tam giác, gai lửa trồi. Đòn nào cũng có vạch hay vòng đỏ báo trước: thấy là né. Quái giáp vẫn che phía trước và hồi máu cho bạn, quái bắn xa vẫn gọi thêm bầy.'] // 24 quái con đánh riêng theo vùng (js/ky_nang_quai.js)
     ['Tinh anh và trùm', 'Tinh anh có chiêu riêng và một dấu hiệu trên đầu: tia chớp là nhanh, khiên là bọc giáp, quả bom là nổ khi chết, giọt máu là hút máu. Trùm nhỏ có hai chiêu riêng. Trùm vùng có ba pha, đổi ở 2/3 và 1/3 máu, pha sau thêm chiêu và nhanh hơn; sau chiêu lớn trùm choáng một lúc, đó là lúc đánh mạnh nhất.'],
     ['Vật trong phòng', 'Chậu than, nấm độc và tinh thể băng phát nổ khi bị đánh, gây hiệu ứng lên quái đứng gần. Đây là cách gây hệ khi vũ khí còn trắng.'],
+    // 17/10 (tư vấn 17/10 mục 5): Luyện bật thì hai trang "Bốn vũ khí", "Xem vũ khí" nói theo Luyện 1–15 (cờ ?luyen=0 giữ câu cũ)
+    G.luyen && G.luyen.bat() ? ['Bốn vũ khí', 'Cu Tí luôn mang đủ 4 vũ khí: Kiếm, Thương, Búa, Phi tiêu; nút đổi vũ khí xoay vòng. Luyện từng món ở Ông Thợ Rèn từ cấp 1 lên 15 bằng vàng, linh khí, nguyên liệu rèn và nguyên liệu vùng: cấp 3 thành Mầm (chọn hệ Lửa, Độc hoặc Băng), cấp 6 Thành hình, cấp 12 Thức tỉnh. Luyện lần nào cũng thành công, không tụt cấp. Quái, rương, trùm không rơi vũ khí hay quần áo nữa mà cho vàng, linh khí và nguyên liệu.'] :
     ['Bốn vũ khí', G.t('Cu Tí luôn mang đủ 4 vũ khí: Kiếm, Thương, Búa, Phi tiêu; nút đổi vũ khí xoay vòng. Nâng vũ khí bằng linh khí ở Ông Thợ Rèn: Trắng, Mầm (chọn hệ Lửa, Độc hoặc Băng), Thành hình, Thức tỉnh ({0}, {1}, {2} linh khí). Quái, rương, trùm không rơi vũ khí hay quần áo nữa mà cho vàng và linh khí.', G.VK_MOI.gia[0], G.VK_MOI.gia[1], G.VK_MOI.gia[2])],
     ['Đặc trưng hệ theo cấp', G.t('Trắng: chưa có hệ. Linh khí (túi chung) có từ: hạ tinh anh ({0}), trùm nhỏ ({1}), trùm vùng ({2}); quái thường {3}% rơi viên linh khí ({4}), đi lại gần để nhặt; kết liễu quái đang dính hệ (+1). Mầm: chọn hệ Lửa, Độc hoặc Băng; có tỉ lệ gây cháy, độc, chậm nhưng chưa có luật hệ. Thành hình: mở đặc trưng 1, thứ để lại trên sân (vệt cháy, vũng độc, gai băng). Thức tỉnh: mở đặc trưng 2, phản ứng dây chuyền (nổ lan, lây độc, băng vỡ).', G.LINHKHI.elite, G.LINHKHI.mini, G.LINHKHI.boss, Math.round(G.LINHKHI.drop * 100), G.LINHKHI.orb)],
-    ['Xem vũ khí', 'Ở Ông Thợ Rèn (thẻ Linh khí, nút Xem linh khí) xem cấp, bậc ép đồ và các đặc trưng hệ đã mở, sắp mở của từng vũ khí.'],
+    G.luyen && G.luyen.bat() ? ['Xem vũ khí', 'Ở Ông Thợ Rèn (thẻ Luyện) hoặc Hành trang › Vũ khí xem cấp Luyện, hình thái và các đặc trưng hệ đã mở, sắp mở của từng vũ khí.']
+      : ['Xem vũ khí', 'Ở Ông Thợ Rèn (thẻ Linh khí, nút Xem linh khí) xem cấp, bậc ép đồ và các đặc trưng hệ đã mở, sắp mở của từng vũ khí.'],
     // 15/10 (bo-do-mua): bộ vùng mua bằng vàng ở Cô Thợ May; ?bocu=1 thì câu cũ (hạ trùm là có bộ)
     G.BO_MUA_BAT !== false
       ? ['Bộ trang phục', G.t('Cu Tí có sẵn bộ Ninja. Hạ trùm vùng thì Cô Thợ May bày bán bộ của vùng đó (thẻ Mua): Rừng {0}, Biển {1}, Lâu đài {2} vàng. Mua xong mới mặc và nâng cấp được (thẻ Nâng cấp: linh khí, vàng, mảnh trùm); đổi bộ ở Hành trang › Nhân vật.', G.zedBoGia('rung'), G.zedBoGia('bien'), G.zedBoGia('lau'))]
@@ -40913,12 +40945,21 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
     if (V.cdLuu && !G.pointers.size) { const kk = V.cdLuu; V.cdLuu = null; G.persist(); if (kk === 'tieng') G.sfx('pick'); }
   }
 
+  if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({ // 17/10: câu theo Luyện (tư vấn 17/10 mục 5)
+    'Nguyên liệu rèn vẫn rơi nhiều nhất khi thắng ải; bà chỉ bán thêm chút ít cho cháu khỏi thiếu lúc luyện.': 'Forge materials still drop most from winning stages; I only sell a little so you never run short when tempering.',
+    'Thiếu nguyên liệu rèn để luyện vũ khí thì mua của bà, mỗi ngày bà có ít hàng thôi.': 'Short on forge materials for tempering? Buy from me, I only have a little each day.',
+    'Hôm nay bà bán hết nguyên liệu rèn rồi, mai cháu quay lại nhé.': 'I sold all my forge materials today, come back tomorrow.',
+    'Cu Tí luôn mang đủ 4 vũ khí: Kiếm, Thương, Búa, Phi tiêu; nút đổi vũ khí xoay vòng. Luyện từng món ở Ông Thợ Rèn từ cấp 1 lên 15 bằng vàng, linh khí, nguyên liệu rèn và nguyên liệu vùng: cấp 3 thành Mầm (chọn hệ Lửa, Độc hoặc Băng), cấp 6 Thành hình, cấp 12 Thức tỉnh. Luyện lần nào cũng thành công, không tụt cấp. Quái, rương, trùm không rơi vũ khí hay quần áo nữa mà cho vàng, linh khí và nguyên liệu.':
+      'Cu Tí always carries all 4 weapons: Sword, Spear, Hammer, Shuriken; the swap button cycles them. Temper each at the Smith from Lv 1 to 15 with gold, spirit, forge materials and region materials: Lv 3 Sprout (pick Fire, Poison or Ice), Lv 6 Formed, Lv 12 Awakened. Tempering always succeeds and never drops a level. Monsters, chests and bosses no longer drop weapons or clothes; they give gold, spirit and materials.',
+    'Ở Ông Thợ Rèn (thẻ Luyện) hoặc Hành trang › Vũ khí xem cấp Luyện, hình thái và các đặc trưng hệ đã mở, sắp mở của từng vũ khí.': 'At the Smith (Temper tab) or Bag › Weapons, see each weapon\'s Temper level, form and the element traits it has or will unlock.',
+  });
   const PANELS = { forge, gear, outfit, hero, skill, chuong, help, settings,
     so: theRong('tu', 'Sân đình: sổ yêu quái'), thanhTuu: theRong('tu', 'Sân đình: thành tựu'), viecNgay: theRong('mo', 'Cổng làng: việc hôm nay') }; // Bước 2: Phiên A / C / B điền
   Object.assign(G.villageApi, { PANELS, pager, say, costText, frame, npcSide, viewWeapon, weaponView, doTabs });
   G.Village = {
     enter() {
       goHub(); VS.enter({}); G.persist();
+      if (G.goiY1) G.goiY1.baoLang(); // 17/10: một việc nên làm tiếp sau lượt chơi (js/goi_y_1.js); dòng "Mở mới" dưới đây có thì đè lên
       if (G.moDan) G.moDan.baoLang(); // tư vấn 16/10: vừa tới mốc mở thì một dòng báo ngắn ở làng (js/mo_dan.js)
       // Bấm một gợi ý ở bảng thua (G.upgradeTips): về làng là mở luôn bảng của người làng tương ứng, chọn sẵn món cần nâng.
       const g = G.villageGo; G.villageGo = null;
@@ -42407,7 +42448,10 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
     if (v.m === 'vuKhi') return (G.WTYPES[v.x] || {}).name || '';
     return String(v.x);
   }
-  VN.chu = (v) => { const t = MAU[v.m]; return t ? G.t(t.chu, v.can, tenX(v)) : String(v.m); };
+  // 17/10 (tư vấn 17/10 mục 5): Luyện bật thì việc "Nâng cấp ở làng" không nhắc mài / ép đồ (cờ ?luyen=0 giữ câu cũ)
+  const CHU_LY = { nangCap: 'Nâng cấp {0} lần ở làng (luyện vũ khí, học điểm…)' };
+  if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({ 'Nâng cấp {0} lần ở làng (luyện vũ khí, học điểm…)': 'Upgrade {0} time in the village (temper, skills…)' });
+  VN.chu = (v) => { const t = MAU[v.m]; return t ? G.t((G.luyen && G.luyen.bat() && CHU_LY[v.m]) || t.chu, v.can, tenX(v)) : String(v.m); };
 
   // ---------- đếm tiến độ ----------
   const tutCua = (d) => !!(d && (d.tut || (d.S && d.S.tut)));
@@ -45121,6 +45165,13 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
     if (D.loai === 'trumnho') return 'Trùm nhỏ báo trước mọi đòn mạnh bằng vạch đỏ: né ra khỏi vạch, đánh ngay lúc nó vừa ra đòn xong.';
     return 'Né vạch đỏ báo trước, đánh ngay lúc nó vừa ra đòn xong.';
   };
+  // 17/10 (tư vấn 17/10 mục 5): Luyện bật thì đá nâng bậc tự đổi ra nguyên liệu rèn (js/luyen.js E.themDa) → chữ ghi đúng thứ nhận được
+  const LYs = () => !!(G.luyen && G.luyen.bat());
+  const nlrDa = (n) => n * ((G.QUY_DOI && G.QUY_DOI.da) || 2);
+  if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({
+    'Đủ {0} trang ★★: {1} nguyên liệu rèn + danh hiệu "{2}"': 'All {0} pages ★★: {1} forge materials + title "{2}"',
+    '★★★ {0} nguyên liệu rèn': '★★★ {0} forge materials',
+  });
   function chuQua(q) {
     const a = [];
     if (q.vang) a.push(G.t('{0} vàng', q.vang));
@@ -45263,7 +45314,7 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
     chuV('Hoàn thành vùng', bx + 3, by + 2, bw - 6, 11, { size: 7.5, bold: true, color: GOLD, shadow: undefined });
     chuV(G.t('★★ {0}/{1} · ★★★ {2}/{1}', vg.sao2, vg.tong, vg.sao3), bx + 3, by + 13, bw - 6, 10, { size: 7, color: TXT, shadow: undefined });
     let mo = '';
-    if (!(vg.nhan & 1) && !(vg.cho & 1)) mo = G.t('Đủ {0} trang ★★: {1} đá nâng bậc + danh hiệu "{2}"', vg.tong, theo(CF.vungDa, V.soVung), Y.tenDanhHieu('thoSan' + V.soVung));
+    if (!(vg.nhan & 1) && !(vg.cho & 1)) mo = LYs() ? G.t('Đủ {0} trang ★★: {1} nguyên liệu rèn + danh hiệu "{2}"', vg.tong, nlrDa(theo(CF.vungDa, V.soVung)), Y.tenDanhHieu('thoSan' + V.soVung)) : G.t('Đủ {0} trang ★★: {1} đá nâng bậc + danh hiệu "{2}"', vg.tong, theo(CF.vungDa, V.soVung), Y.tenDanhHieu('thoSan' + V.soVung));
     else if (!(vg.nhan & 2) && !(vg.cho & 2)) mo = G.t('Đủ {0} trang ★★★: danh hiệu "{1}"', vg.tong, Y.tenDanhHieu('bacThay' + V.soVung));
     else if (!vg.cho) mo = 'Đã xong cả vùng!';
     const coNut = !!vg.cho;
@@ -45273,7 +45324,7 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
       if (q) {
         phatHu('hu-nhan-thuong', bx + bw - 29, by + bh - 4, 0.7);
         G.persist(); if (G.sfx) G.sfx('evolve');
-        const a = []; if (q.da) a.push(G.t('+{0} đá nâng bậc', q.da)); for (const d of q.dh) a.push(G.t('Danh hiệu mới: {0}', Y.tenDanhHieu(d)));
+        const a = []; if (q.da) a.push(LYs() ? G.t('+{0} nguyên liệu rèn', nlrDa(q.da)) : G.t('+{0} đá nâng bậc', q.da)); for (const d of q.dh) a.push(G.t('Danh hiệu mới: {0}', Y.tenDanhHieu(d)));
         V.msg = a.join(' · '); V.msgT = 3;
         if (G.villageScene && G.villageScene.checkNews) G.villageScene.checkNews();
       }
@@ -45339,7 +45390,7 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
       const ke = [1, 2, 4].find((b) => !(nho & b) && !(m & b));
       if (ke) {
         const q = Y.thuongNac(D, ke);
-        const s = ke === 1 ? G.t('★ {0} vàng', q.vang) : ke === 2 ? G.t('★★ {0} linh khí', q.lk) : q.da ? G.t('★★★ {0} đá nâng bậc', q.da) : G.t('★★★ viền vàng');
+        const s = ke === 1 ? G.t('★ {0} vàng', q.vang) : ke === 2 ? G.t('★★ {0} linh khí', q.lk) : q.da ? (LYs() ? G.t('★★★ {0} nguyên liệu rèn', nlrDa(q.da)) : G.t('★★★ {0} đá nâng bậc', q.da)) : G.t('★★★ viền vàng');
         dongQua = G.t('Nấc sau: {0}', s);
       } else dongQua = 'Đã nhận đủ quà trang này.';
     }
@@ -45350,7 +45401,7 @@ G.THUONG_CAO_DATA = {"phien":1,"ghi_chu":"thuong-tay-trai-cao 17/10: nâng nắm
         if (cho & 2 && t && t.k && D.he) phatHu('hu-dong-dau', px + ps - 9, py + ps - 3, 0.9); // nấc ★★ (tìm ra điểm yếu): con dấu đóng xuống
         else phatHu('hu-nhan-thuong', ir - 24, qy + 18, 0.7);
         G.persist(); if (G.sfx) G.sfx('evolve');
-        const a = []; if (q.vang) a.push(G.t('+{0} vàng', q.vang)); if (q.lk) a.push(G.t('+{0} linh khí', q.lk)); if (q.da) a.push(G.t('+{0} đá nâng bậc', q.da));
+        const a = []; if (q.vang) a.push(G.t('+{0} vàng', q.vang)); if (q.lk) a.push(G.t('+{0} linh khí', q.lk)); if (q.da) a.push(LYs() ? G.t('+{0} nguyên liệu rèn', nlrDa(q.da)) : G.t('+{0} đá nâng bậc', q.da));
         V.msg = a.join(' · '); V.msgT = 2.5;
         if (G.villageScene && G.villageScene.checkNews) G.villageScene.checkNews();
       }
@@ -52898,6 +52949,88 @@ window.FIREBASE_CONFIG = {
         E(x, y, 4.5, 3.5, lo ? '#ffd27a' : '#a8743a'); R(x - 1, y - 1, 2, 2, lo ? '#fff3b0' : '#d8a050');
       } finally { c = pv; }
     }
+  };
+})();
+
+// ===== js/goi_y_1.js =====
+// GỢI Ý MỘT VIỆC (17/10, docs/review/ke-hoach-cai-thien/TU-VAN-CHATGPT-17-10.md mục 5: "Sau lượt chơi, cần chỉ rõ một việc quan trọng nhất nên làm").
+// Sau mỗi lượt chơi (màn kết quả thắng / bỏ ải, và lúc về làng) hiện MỘT dòng "Nên làm: …". Chỉ đọc dữ liệu có sẵn, không đổi luật / số / bản lưu:
+//   - ải đích: thắng thì ải kế (như nút "Ải tiếp theo"), thua / bỏ thì chính ải đó; Sức mạnh và Sức mạnh khuyên dùng: G.power, G.stageRec;
+//   - việc nâng cấp: G.upgradeTips (js/upgrade.js — đã xếp theo "làm được ngay mà tăng nhiều", đã theo luật Luyện khi Luyện bật, đã bỏ người
+//     làng / thẻ chưa mở). Chọn: điểm kỹ năng chưa học → việc làm được ngay khi còn yếu hơn khuyên dùng → đi ải kế khi đã đủ sức → việc thiếu đồ.
+// Bấm vào dòng ở màn kết quả: về làng, mở đúng người làng (G.villageGo, như bảng thua). Bảng thua (đã có danh sách "Nên cày gì") không đổi.
+// Cờ tắt: ?goiy1=0 (G.GOI_Y_1 = false) → màn kết quả và làng y như trước.
+(function () {
+  'use strict';
+  const G = window.G;
+  if (!G) return;
+  if (G.GOI_Y_1 === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]goiy1=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.GOI_Y_1 = !tat; }
+  const GY = (G.goiY1 = { cho: null });
+  GY.bat = () => G.GOI_Y_1 !== false;
+  if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({
+    'Nên làm: {0}': 'Next: {0}', 'Nên làm: {0} ({1})': 'Next: {0} ({1})', 'đi tiếp ải {0}': 'go on to {0}',
+    'chơi lại ải cũ để lên cấp, gom đồ (khuyên dùng {0})': 'replay old stages to level up and gather materials (recommended {0})',
+    'Bấm để tới chỗ người làng': 'Tap to go to the villager',
+  });
+  const stName = (r, i) => (i === 4 ? G.t('trùm {0}', G.REGIONS[r].bossName) : G.tv(G.REGIONS[r].name) + ' ' + (i + 1));
+  // Ải kế sau ải (r, i) — cùng luật với nút "Ải tiếp theo / Sang vùng mới" ở js/stage.js
+  function aiKe(r, i, diff) {
+    const sv = G.save;
+    if (i < 4) return [r, i + 1];
+    if (r < G.REGIONS.length - 1 && !(diff && r >= 2 && !(sv && sv.stars && sv.stars[(r + 1) + '-4']))) return [r + 1, 0];
+    return null;
+  }
+  // Chọn MỘT việc. ctx = { r, i, diff, win }. Trả { s (chữ đã dịch), go (G.villageGo) } hoặc null.
+  GY.chon = function (ctx) {
+    const sv = G.save;
+    if (!sv || !sv.heroes || !ctx || ctx.r == null || !G.upgradeTips || !G.power || !G.stageRec) return null;
+    const ke = ctx.win ? aiKe(ctx.r, ctx.i, ctx.diff) : null, t = ke || [ctx.r, ctx.i];
+    let T = null;
+    try { T = G.upgradeTips(t[0], t[1], ctx.diff | 0, 3); } catch (e) { T = null; }
+    const tips = (T && T.tips) || [], pw = T ? T.power : G.power(), rec = T ? T.rec : G.stageRec(t[0], t[1], ctx.diff | 0);
+    const lam = (q) => ({ s: G.t('Nên làm: {0}', q.text), go: q.go || null });
+    const hoc = tips.find((q) => q.ok && (q.kind === 'skill' || q.kind === 'chuong'));
+    if (hoc) return lam(hoc); // điểm kỹ năng chưa học: miễn phí, luôn nhắc trước
+    const ok = tips.find((q) => q.ok);
+    if (pw < rec && ok) return lam(ok);
+    if (ke && pw >= rec) return { s: G.t('Nên làm: {0}', G.t('đi tiếp ải {0}', stName(ke[0], ke[1]))), go: { who: 'lai', stage: ke } };
+    if (ok) return lam(ok);
+    const q = tips[0];
+    if (q) return { s: G.t('Nên làm: {0} ({1})', q.text, q.sub), go: q.go || null };
+    if (pw < rec) return { s: G.t('Nên làm: {0}', G.t('chơi lại ải cũ để lên cấp, gom đồ (khuyên dùng {0})', rec)), go: null };
+    return null;
+  };
+  // Gọi lúc lượt chơi kết thúc: nghe sự kiện "hetAi" (js/su_kien.js phát trong G.onStageEnd, sau Bảng vàng; KHÔNG bọc G.onStageEnd vì
+  // js/su_kien.js đã đặt getter / setter cho nó). Tính một lần, giữ cho màn kết quả (R.goiY1) và cho lúc về làng (GY.cho).
+  function hetAi(d) {
+    try {
+      const S = d && d.S, R = d && d.R;
+      if (!GY.bat() || !S || !R || S.aiNgay || S.tut) { GY.cho = null; return; }
+      const g = GY.chon({ r: S.r, i: S.i, diff: S.diff, win: !!R.win });
+      R.goiY1 = g; GY.cho = g;
+    } catch (e) { GY.cho = null; if (typeof console !== 'undefined') console.warn('goi_y_1: bỏ qua', e); }
+  }
+  if (G.suKien && G.suKien.on) G.suKien.on('hetAi', hetAi);
+  // Màn kết quả (js/stage.js): có dòng để vẽ không
+  GY.co = (R) => !!(GY.bat() && R && R.goiY1 && R.goiY1.s);
+  // Vẽ một dòng ở (x, y) rộng wd; bấm thì về làng mở người làng. Trả true nếu đã bấm (đã đổi cảnh).
+  GY.veKetQua = function (R, x, y, wd) {
+    if (!GY.co(R)) return false;
+    const ui = G.ui, g = R.goiY1, h = 11;
+    ui.rect(x, y, wd, h, 'rgba(60,110,60,0.35)', 'rgba(143,208,122,0.6)');
+    const a = ui.wrap(g.s, wd - (g.go ? 16 : 8), 7, true);
+    ui.text(a[0] + (a.length > 1 ? '…' : ''), x + 4, y + 8, { size: 7, bold: true, color: '#fff0c4' });
+    if (g.go) {
+      ui.text('▶', x + wd - 4, y + 8, { size: 7, align: 'right', color: '#f6dc92' });
+      if (G.click && G.inRect && G.inRect(G.click, x, y, wd, h)) { G.click = null; G.sfx && G.sfx('ui'); GY.cho = null; G.villageGo = g.go; return true; }
+    }
+    return false;
+  };
+  // Về làng: một dòng báo (gọi TRƯỚC dòng "Mở mới" của js/mo_dan.js — có mốc mới thì câu mốc mới đè lên)
+  GY.baoLang = function () {
+    const g = GY.cho; GY.cho = null;
+    if (!GY.bat() || !g || !g.s || !G.villageScene || !G.villageScene.say) return;
+    try { G.villageScene.say(g.s, 5); } catch (e) { /* bỏ qua */ }
   };
 })();
 

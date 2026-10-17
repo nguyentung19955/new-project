@@ -229,7 +229,10 @@
     if (v.m === 'vuKhi') return (G.WTYPES[v.x] || {}).name || '';
     return String(v.x);
   }
-  VN.chu = (v) => { const t = MAU[v.m]; return t ? G.t(t.chu, v.can, tenX(v)) : String(v.m); };
+  // 17/10 (tư vấn 17/10 mục 5): Luyện bật thì việc "Nâng cấp ở làng" không nhắc mài / ép đồ (cờ ?luyen=0 giữ câu cũ)
+  const CHU_LY = { nangCap: 'Nâng cấp {0} lần ở làng (luyện vũ khí, học điểm…)' };
+  if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({ 'Nâng cấp {0} lần ở làng (luyện vũ khí, học điểm…)': 'Upgrade {0} time in the village (temper, skills…)' });
+  VN.chu = (v) => { const t = MAU[v.m]; return t ? G.t((G.luyen && G.luyen.bat() && CHU_LY[v.m]) || t.chu, v.can, tenX(v)) : String(v.m); };
 
   // ---------- đếm tiến độ ----------
   const tutCua = (d) => !!(d && (d.tut || (d.S && d.S.tut)));

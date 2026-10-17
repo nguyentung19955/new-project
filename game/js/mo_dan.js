@@ -26,6 +26,15 @@
     trum1: { ai: '0-4', ten: 'Hạ Mộc Tinh', bao: 'Mở mới: Ép đồ, Nâng lò, và Cô Thợ May về làng may trang phục.' },
     vung2: { ai: '1-0', ten: 'Qua Hang biển 1', bao: 'Mở mới: Sổ yêu quái, Việc hôm nay, Thành tựu, Ải ngày, Bảng vàng.' },
   };
+  // 17/10 (tư vấn 17/10 mục 5): Luyện 1–15 bật (js/luyen.js) thì không còn mài / thẻ Linh khí / ép đồ / nâng lò → câu báo nói theo Luyện.
+  // Cờ ?luyen=0 giữ câu cũ ở MOC / CHUA. Chỉ là chữ: mốc mở, chức năng mở không đổi.
+  const BAO_LY = {
+    ai1: 'Mở mới: nút Đặc biệt và Chưởng, Cụ Đồ dạy kỹ năng, Ông Thợ Rèn luyện vũ khí.',
+    ai3: 'Luyện vũ khí lên cấp 3 ở Ông Thợ Rèn để chọn hệ Lửa, Độc, Băng.',
+    trum1: 'Mở mới: Cô Thợ May về làng may trang phục.',
+  };
+  const CHUA_LY = { ren: 'Ông Thợ Rèn đang nhóm lò. Qua ải Rừng già 1 rồi ghé ông luyện vũ khí.' };
+  const LYm = () => !!(G.luyen && G.luyen.bat());
   const THU_TU = ['ai1', 'ai2', 'ai3', 'trum1', 'vung2'];
   // Chức năng → mốc. Chức năng không có trong bảng thì luôn mở.
   const CN = {
@@ -57,7 +66,7 @@
   // Người làng k đã ra mặt chưa (chỉ phần mốc mới; mốc cũ của Cô Thợ May vẫn ở js/village_scene.js)
   MD.nguoi = (k, sv) => !NPC_CN[k] || MD.co(NPC_CN[k], sv);
   // Cờ tắt (hay mốc mới đã qua mà mốc cũ chưa): câu cũ của Cô Thợ May (V53, mở sau Rừng già 2)
-  MD.loiChuaMo = (k) => G.tv(!MD.bat() || !CHUA[k] || MD.nguoi(k) ? 'Cô Thợ May đi chợ xa. Qua ải Rừng già 2 rồi cô về may đồ cho bé.' : CHUA[k]);
+  MD.loiChuaMo = (k) => G.tv(!MD.bat() || !CHUA[k] || MD.nguoi(k) ? 'Cô Thợ May đi chợ xa. Qua ải Rừng già 2 rồi cô về may đồ cho bé.' : (LYm() && CHUA_LY[k]) || CHUA[k]);
   // Thẻ bảng làng → chức năng
   const THE = { skill: 'kyNang', chuong: 'chuong', rank: 'bangVang', so: 'so', thanhTuu: 'thanhTuu', viecNgay: 'viecNgay', outfit: 'thoMay', gear: 'hangXen', forge: 'ren' };
   MD.the = (tab, sv) => !THE[tab] || MD.co(THE[tab], sv);
@@ -74,7 +83,7 @@
     if (!obj(sv.moDan.bao)) sv.moDan.bao = {};
     const B = sv.moDan.bao;
     let s = null;
-    for (const k of THU_TU) if (!B[k] && MD.dat(k, sv)) { B[k] = 1; s = MOC[k].bao; }
+    for (const k of THU_TU) if (!B[k] && MD.dat(k, sv)) { B[k] = 1; s = (LYm() && BAO_LY[k]) || MOC[k].bao; }
     return s ? G.tv(s) : null;
   };
   MD.baoLang = function () {
@@ -125,6 +134,10 @@
     'Mở mới: Ép đồ, Nâng lò, và Cô Thợ May về làng may trang phục.': 'New: Refining, Forge upgrades, and the Tailor is back to make outfits.',
     'Mở mới: Sổ yêu quái, Việc hôm nay, Thành tựu, Ải ngày, Bảng vàng.': "New: Monster Book, Today's jobs, Achievements, Daily trials, Hall of Fame.",
     'Ông Thợ Rèn đang nhóm lò. Qua ải Rừng già 1 rồi ghé ông mài vũ khí.': 'The Smith is lighting the forge. Clear Old Forest 1, then come sharpen your weapons.',
+    'Mở mới: nút Đặc biệt và Chưởng, Cụ Đồ dạy kỹ năng, Ông Thợ Rèn luyện vũ khí.': 'New: Special and Palm buttons, the Old Scholar teaches skills, the Smith tempers weapons.',
+    'Luyện vũ khí lên cấp 3 ở Ông Thợ Rèn để chọn hệ Lửa, Độc, Băng.': 'Temper a weapon to Lv 3 at the Smith to pick Fire, Poison or Ice.',
+    'Mở mới: Cô Thợ May về làng may trang phục.': 'New: the Tailor is back to make outfits.',
+    'Ông Thợ Rèn đang nhóm lò. Qua ải Rừng già 1 rồi ghé ông luyện vũ khí.': 'The Smith is lighting the forge. Clear Old Forest 1, then come temper your weapons.',
     'Bà Hàng Xén chưa dọn hàng. Qua ải Rừng già 1 rồi bà ra chợ.': 'The Grocer has not set up yet. Clear Old Forest 1 and she will open.',
     'Cô Thợ May đi chợ xa. Hạ Mộc Tinh rồi cô về may đồ cho bé.': 'The Tailor is away at the market. Defeat the Tree Spirit and she will come back.',
     'Âm thanh, điều khiển ›': 'Sound, controls ›', 'Âm thanh, pin, điều khiển': 'Sound, battery, controls',

@@ -67,10 +67,18 @@
     'Quái tinh anh đánh đau: chờ nó ra đòn hụt rồi mới chém, thấy vùng đỏ thì Né ngay.': 'Elites hit hard: wait for a missed attack before striking, and Dodge as soon as you see red.',
     'Trùm đầu tiên chưa học gì từ bạn. Chém vài nhát rồi lộn né, máu thấp thì chạm Bình máu.': 'The first boss has learned nothing from you. Strike a few times then roll away; tap the Potion when your health is low.',
   });
+  // 17/10 (tư vấn 17/10 mục 5): câu theo luật Luyện 1–15 (cờ ?luyen=0 giữ câu cũ ở TUT)
+  const TUT_LY = { merchant: 'Thương nhân bán bình máu, bùa hệ và nguyên liệu rèn. Lại gần rồi bấm Đánh để xem hàng.' };
+  if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({
+    'Thương nhân bán bình máu, bùa hệ và nguyên liệu rèn. Lại gần rồi bấm Đánh để xem hàng.': 'The merchant sells potions, element charms and forge materials. Walk up and press Attack to browse.',
+    'Dùng để luyện vũ khí và nâng bộ trang phục': 'Used to temper weapons and upgrade outfits',
+    'Mẹo: về làng luyện vũ khí ở Ông Thợ Rèn, hoặc chơi lại ải cũ để lên cấp rồi quay lại.': 'Tip: temper your weapons at the Smith in the village, or replay old stages to level up, then come back.',
+  });
   const MD = () => G.moDan && G.moDan.bat() ? G.moDan : null; // mở dần đang bật
   const coMD = (f) => !G.moDan || G.moDan.co(f); // chức năng f đã mở (cờ tắt / bản lưu cũ: luôn mở)
   function tutHint(k) {
     if (MD() && ((k === 'fight2' && !coMD('dacBiet')) || ((k === 'elite' || k === 'boss') && !coMD('doiVk')))) return TUT_MD[k];
+    if (k === 'merchant' && G.luyen && G.luyen.bat()) return TUT_LY.merchant; // 17/10: Luyện bật thì thương nhân bán nguyên liệu rèn (không còn quặng)
     return TUT[k] || null;
   }
   // Ải hướng dẫn xếp sẵn (mở dần bật): bản đồ cố định (hạt giống TUT_SEED, kiểu A: Bắt đầu → Đánh quái → Đánh quái → Tinh anh → Suối → Trùm),
@@ -429,7 +437,7 @@
     // lựa chọn "vũ khí mới" của luật cũ nay là túi linh khí cùng giá trị (G.ROI_MOI.ruong)
     const lkN = G.ROI_MOI.ruong.lk[G.clamp(S.r | 0, 0, G.ROI_MOI.ruong.lk.length - 1)];
     return [
-      { kind: 'lk', n: lkN, label: G.t('{0} linh khí', lkN), sub: 'Dùng để nâng vũ khí (Mầm, Thành hình, Thức tỉnh) và nâng bộ trang phục' },
+      { kind: 'lk', n: lkN, label: G.t('{0} linh khí', lkN), sub: G.luyen && G.luyen.bat() ? 'Dùng để luyện vũ khí và nâng bộ trang phục' : 'Dùng để nâng vũ khí (Mầm, Thành hình, Thức tỉnh) và nâng bộ trang phục' },
       { kind: 'ore', n: 5 + S.r * 3, label: G.t(G.chuQuang().slice(1), 5 + S.r * 3), sub: G.luyen && G.luyen.bat() ? 'Dùng để luyện vũ khí ở lò rèn' : 'Dùng để mài vũ khí ở lò rèn' },
       { kind: 'charm', el: S.tut ? 'fire' : G.pick(G.ELS), label: '', sub: 'Phủ hệ lên cả hai vũ khí trong 60 giây' },
     ].map((o) => { if (o.kind === 'charm') o.label = G.t('Bùa {0}', G.EL[o.el].name); return o; });
@@ -1581,7 +1589,9 @@
     const TH = G.theme, texts = R.lines.filter((l) => !l.w), weps = R.lines.filter((l) => l.w);
     // Khối linh khí (js/linhkhi.js) nằm sát trên hàng nút: mỗi vũ khí đang mang một dòng. Phần thưởng xếp phía trên khối này.
     const lkN = G.lk && S.P ? 1 : 0, lkTop = lkN ? (!R.win && !S.quit ? 186 : 213) - (11 + lkN * 21) : 0;
-    const lim = lkN ? lkTop - 3 : 208;
+    // 17/10 gợi ý một việc (js/goi_y_1.js, ?goiy1=0 tắt): chừa một dòng ngay trên khối linh khí (thua: dòng thay cho câu Mẹo)
+    const gy1 = G.goiY1 && G.goiY1.co(R) ? 1 : 0, gyY = (lkN ? lkTop : 211) - 13, gyThay = gy1 && !R.win && !S.quit;
+    const lim = (lkN ? lkTop - 3 : 208) - (gy1 && !gyThay ? 13 : 0);
     const rows = Math.max(1, Math.floor((lim - y) / 11.5));
     // dòng nổi bật (lên cấp, cứu được em bé, kỷ lục): xét trên bản tiếng Việt của dòng; dòng kỷ lục của bảng vàng mở đầu bằng ★
     const hot = (l) => { const v = viOf(R, l); return v.includes('lên cấp') || v.includes('Cứu được') || v.indexOf('· ') === 0 || v.includes('Kỷ lục') || (G.LANG !== 'vi' && l.charAt(0) === '★'); };
@@ -1618,7 +1628,8 @@
     // chữ còn dư thì xuống cột phải, dưới các thẻ vũ khí
     texts.slice(rows).forEach((l, i) => { const cy = ry + 9 + i * 11.5; if (cy <= lim) line(l, 246, cy); });
     if (lkN) G.lk.resultBlock(S, 84, lkTop, 312);
-    if (!R.win && !S.quit) ui.para('Mẹo: về làng mài vũ khí ở lò rèn, hoặc chơi lại ải cũ để lên cấp rồi quay lại.', 86, 196, 308, { size: 7.5, color: '#d9cdb8' });
+    if (gy1 && G.goiY1.veKetQua(R, 84, gyThay ? 192 : gyY, 312)) { S = null; G.setScene(G.Village); return; }
+    else if (!R.win && !S.quit && !gyThay) ui.para(G.luyen && G.luyen.bat() ? 'Mẹo: về làng luyện vũ khí ở Ông Thợ Rèn, hoặc chơi lại ải cũ để lên cấp rồi quay lại.' : 'Mẹo: về làng mài vũ khí ở lò rèn, hoặc chơi lại ải cũ để lên cấp rồi quay lại.', 86, 196, 308, { size: 7.5, color: '#d9cdb8' });
     // Thắng thì có nút đi thẳng sang ải kế (hoặc vùng kế sau trùm vùng), không phải vòng về làng.
     // vùng 4: độ khó 2 của vùng sau chỉ mở khi đã hạ trùm vùng đó ở độ khó thường (Q8 = A)
     const nx = R.win ? (S.i < 4 ? [S.r, S.i + 1] : S.r < G.REGIONS.length - 1 && !(S.diff && S.r >= 2 && !G.save.stars[(S.r + 1) + '-4']) ? [S.r + 1, 0] : null) : null;

@@ -484,6 +484,11 @@
       const got = U.bqMua(sv, k5);
       if (got) { G.persist(); G.sfx('pick'); say(G.t(LY ? 'Của cháu đây, {0} nguyên liệu rèn.' : 'Của cháu đây, {0} quặng.', got)); }
     }
+    // 17/10 (tư vấn 17/10 mục 5): Luyện bật thì nói "nguyên liệu rèn / luyện" thay cho "quặng / mài" (cờ ?luyen=0 giữ câu cũ)
+    if (LY) {
+      ui.para('Nguyên liệu rèn vẫn rơi nhiều nhất khi thắng ải; bà chỉ bán thêm chút ít cho cháu khỏi thiếu lúc luyện.', CX + 2, y + 50, CW - 4, { size: 7, color: SOFT });
+      return con > 0 ? 'Thiếu nguyên liệu rèn để luyện vũ khí thì mua của bà, mỗi ngày bà có ít hàng thôi.' : 'Hôm nay bà bán hết nguyên liệu rèn rồi, mai cháu quay lại nhé.';
+    }
     ui.para('Quặng vẫn rơi nhiều nhất khi thắng ải; bà chỉ bán thêm chút ít cho cháu khỏi thiếu lúc mài.', CX + 2, y + 50, CW - 4, { size: 7, color: SOFT });
     return con > 0 ? 'Thiếu quặng mài vũ khí thì mua của bà, mỗi ngày bà có ít hàng thôi.' : 'Hôm nay bà bán hết quặng rồi, mai cháu quay lại nhé.';
   }
@@ -627,9 +632,12 @@
     ['Các loại quái', 'Mỗi vùng quái con đánh một kiểu riêng. Rừng già: húc thẳng, lăn cầu đất, mưa bào tử, lẩn bóng sau lưng, nổ mây độc. Hang biển: lướt ngang kẹp, rút vỏ để vệt nhớt làm chậm, hút lại gần, vũng điện, gai xoáy ốc. Lâu đài cổ: chớp chém, phân thân, lửa ma đuổi, bùa tam giác, gai lửa trồi. Đòn nào cũng có vạch hay vòng đỏ báo trước: thấy là né. Quái giáp vẫn che phía trước và hồi máu cho bạn, quái bắn xa vẫn gọi thêm bầy.'] // 24 quái con đánh riêng theo vùng (js/ky_nang_quai.js)
     ['Tinh anh và trùm', 'Tinh anh có chiêu riêng và một dấu hiệu trên đầu: tia chớp là nhanh, khiên là bọc giáp, quả bom là nổ khi chết, giọt máu là hút máu. Trùm nhỏ có hai chiêu riêng. Trùm vùng có ba pha, đổi ở 2/3 và 1/3 máu, pha sau thêm chiêu và nhanh hơn; sau chiêu lớn trùm choáng một lúc, đó là lúc đánh mạnh nhất.'],
     ['Vật trong phòng', 'Chậu than, nấm độc và tinh thể băng phát nổ khi bị đánh, gây hiệu ứng lên quái đứng gần. Đây là cách gây hệ khi vũ khí còn trắng.'],
+    // 17/10 (tư vấn 17/10 mục 5): Luyện bật thì hai trang "Bốn vũ khí", "Xem vũ khí" nói theo Luyện 1–15 (cờ ?luyen=0 giữ câu cũ)
+    G.luyen && G.luyen.bat() ? ['Bốn vũ khí', 'Cu Tí luôn mang đủ 4 vũ khí: Kiếm, Thương, Búa, Phi tiêu; nút đổi vũ khí xoay vòng. Luyện từng món ở Ông Thợ Rèn từ cấp 1 lên 15 bằng vàng, linh khí, nguyên liệu rèn và nguyên liệu vùng: cấp 3 thành Mầm (chọn hệ Lửa, Độc hoặc Băng), cấp 6 Thành hình, cấp 12 Thức tỉnh. Luyện lần nào cũng thành công, không tụt cấp. Quái, rương, trùm không rơi vũ khí hay quần áo nữa mà cho vàng, linh khí và nguyên liệu.'] :
     ['Bốn vũ khí', G.t('Cu Tí luôn mang đủ 4 vũ khí: Kiếm, Thương, Búa, Phi tiêu; nút đổi vũ khí xoay vòng. Nâng vũ khí bằng linh khí ở Ông Thợ Rèn: Trắng, Mầm (chọn hệ Lửa, Độc hoặc Băng), Thành hình, Thức tỉnh ({0}, {1}, {2} linh khí). Quái, rương, trùm không rơi vũ khí hay quần áo nữa mà cho vàng và linh khí.', G.VK_MOI.gia[0], G.VK_MOI.gia[1], G.VK_MOI.gia[2])],
     ['Đặc trưng hệ theo cấp', G.t('Trắng: chưa có hệ. Linh khí (túi chung) có từ: hạ tinh anh ({0}), trùm nhỏ ({1}), trùm vùng ({2}); quái thường {3}% rơi viên linh khí ({4}), đi lại gần để nhặt; kết liễu quái đang dính hệ (+1). Mầm: chọn hệ Lửa, Độc hoặc Băng; có tỉ lệ gây cháy, độc, chậm nhưng chưa có luật hệ. Thành hình: mở đặc trưng 1, thứ để lại trên sân (vệt cháy, vũng độc, gai băng). Thức tỉnh: mở đặc trưng 2, phản ứng dây chuyền (nổ lan, lây độc, băng vỡ).', G.LINHKHI.elite, G.LINHKHI.mini, G.LINHKHI.boss, Math.round(G.LINHKHI.drop * 100), G.LINHKHI.orb)],
-    ['Xem vũ khí', 'Ở Ông Thợ Rèn (thẻ Linh khí, nút Xem linh khí) xem cấp, bậc ép đồ và các đặc trưng hệ đã mở, sắp mở của từng vũ khí.'],
+    G.luyen && G.luyen.bat() ? ['Xem vũ khí', 'Ở Ông Thợ Rèn (thẻ Luyện) hoặc Hành trang › Vũ khí xem cấp Luyện, hình thái và các đặc trưng hệ đã mở, sắp mở của từng vũ khí.']
+      : ['Xem vũ khí', 'Ở Ông Thợ Rèn (thẻ Linh khí, nút Xem linh khí) xem cấp, bậc ép đồ và các đặc trưng hệ đã mở, sắp mở của từng vũ khí.'],
     // 15/10 (bo-do-mua): bộ vùng mua bằng vàng ở Cô Thợ May; ?bocu=1 thì câu cũ (hạ trùm là có bộ)
     G.BO_MUA_BAT !== false
       ? ['Bộ trang phục', G.t('Cu Tí có sẵn bộ Ninja. Hạ trùm vùng thì Cô Thợ May bày bán bộ của vùng đó (thẻ Mua): Rừng {0}, Biển {1}, Lâu đài {2} vàng. Mua xong mới mặc và nâng cấp được (thẻ Nâng cấp: linh khí, vàng, mảnh trùm); đổi bộ ở Hành trang › Nhân vật.', G.zedBoGia('rung'), G.zedBoGia('bien'), G.zedBoGia('lau'))]
@@ -774,12 +782,21 @@
     if (V.cdLuu && !G.pointers.size) { const kk = V.cdLuu; V.cdLuu = null; G.persist(); if (kk === 'tieng') G.sfx('pick'); }
   }
 
+  if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({ // 17/10: câu theo Luyện (tư vấn 17/10 mục 5)
+    'Nguyên liệu rèn vẫn rơi nhiều nhất khi thắng ải; bà chỉ bán thêm chút ít cho cháu khỏi thiếu lúc luyện.': 'Forge materials still drop most from winning stages; I only sell a little so you never run short when tempering.',
+    'Thiếu nguyên liệu rèn để luyện vũ khí thì mua của bà, mỗi ngày bà có ít hàng thôi.': 'Short on forge materials for tempering? Buy from me, I only have a little each day.',
+    'Hôm nay bà bán hết nguyên liệu rèn rồi, mai cháu quay lại nhé.': 'I sold all my forge materials today, come back tomorrow.',
+    'Cu Tí luôn mang đủ 4 vũ khí: Kiếm, Thương, Búa, Phi tiêu; nút đổi vũ khí xoay vòng. Luyện từng món ở Ông Thợ Rèn từ cấp 1 lên 15 bằng vàng, linh khí, nguyên liệu rèn và nguyên liệu vùng: cấp 3 thành Mầm (chọn hệ Lửa, Độc hoặc Băng), cấp 6 Thành hình, cấp 12 Thức tỉnh. Luyện lần nào cũng thành công, không tụt cấp. Quái, rương, trùm không rơi vũ khí hay quần áo nữa mà cho vàng, linh khí và nguyên liệu.':
+      'Cu Tí always carries all 4 weapons: Sword, Spear, Hammer, Shuriken; the swap button cycles them. Temper each at the Smith from Lv 1 to 15 with gold, spirit, forge materials and region materials: Lv 3 Sprout (pick Fire, Poison or Ice), Lv 6 Formed, Lv 12 Awakened. Tempering always succeeds and never drops a level. Monsters, chests and bosses no longer drop weapons or clothes; they give gold, spirit and materials.',
+    'Ở Ông Thợ Rèn (thẻ Luyện) hoặc Hành trang › Vũ khí xem cấp Luyện, hình thái và các đặc trưng hệ đã mở, sắp mở của từng vũ khí.': 'At the Smith (Temper tab) or Bag › Weapons, see each weapon\'s Temper level, form and the element traits it has or will unlock.',
+  });
   const PANELS = { forge, gear, outfit, hero, skill, chuong, help, settings,
     so: theRong('tu', 'Sân đình: sổ yêu quái'), thanhTuu: theRong('tu', 'Sân đình: thành tựu'), viecNgay: theRong('mo', 'Cổng làng: việc hôm nay') }; // Bước 2: Phiên A / C / B điền
   Object.assign(G.villageApi, { PANELS, pager, say, costText, frame, npcSide, viewWeapon, weaponView, doTabs });
   G.Village = {
     enter() {
       goHub(); VS.enter({}); G.persist();
+      if (G.goiY1) G.goiY1.baoLang(); // 17/10: một việc nên làm tiếp sau lượt chơi (js/goi_y_1.js); dòng "Mở mới" dưới đây có thì đè lên
       if (G.moDan) G.moDan.baoLang(); // tư vấn 16/10: vừa tới mốc mở thì một dòng báo ngắn ở làng (js/mo_dan.js)
       // Bấm một gợi ý ở bảng thua (G.upgradeTips): về làng là mở luôn bảng của người làng tương ứng, chọn sẵn món cần nâng.
       const g = G.villageGo; G.villageGo = null;

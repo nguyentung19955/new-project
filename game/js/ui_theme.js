@@ -1337,7 +1337,7 @@
   T.RES = RES;
   T.resName = function (kind) {
     const R = G.REGIONS || [];
-    if (kind === 'gold') return 'Vàng'; if (kind === 'ore') return 'Quặng'; if (kind === 'stone') return 'Đá tôi'; if (kind === 'xp') return 'Kinh nghiệm';
+    if (kind === 'gold') return 'Vàng'; if (kind === 'ore') return G.luyen && G.luyen.bat() ? 'Nguyên liệu rèn' : 'Quặng'; /* 17/10: Luyện bật thì ô quặng là nguyên liệu rèn */ if (kind === 'stone') return 'Đá tôi'; if (kind === 'xp') return 'Kinh nghiệm';
     const i = +kind.slice(-1);
     if (kind.indexOf('mat') === 0) return R[i] ? R[i].mat : 'Nguyên liệu';
     return R[i] ? G.t('Mảnh trùm {0}', R[i].bossName) : 'Mảnh trùm';

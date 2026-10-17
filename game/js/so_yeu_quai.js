@@ -341,6 +341,13 @@
     if (D.loai === 'trumnho') return 'Trùm nhỏ báo trước mọi đòn mạnh bằng vạch đỏ: né ra khỏi vạch, đánh ngay lúc nó vừa ra đòn xong.';
     return 'Né vạch đỏ báo trước, đánh ngay lúc nó vừa ra đòn xong.';
   };
+  // 17/10 (tư vấn 17/10 mục 5): Luyện bật thì đá nâng bậc tự đổi ra nguyên liệu rèn (js/luyen.js E.themDa) → chữ ghi đúng thứ nhận được
+  const LYs = () => !!(G.luyen && G.luyen.bat());
+  const nlrDa = (n) => n * ((G.QUY_DOI && G.QUY_DOI.da) || 2);
+  if (G.ngonNgu && G.ngonNgu.them) G.ngonNgu.them({
+    'Đủ {0} trang ★★: {1} nguyên liệu rèn + danh hiệu "{2}"': 'All {0} pages ★★: {1} forge materials + title "{2}"',
+    '★★★ {0} nguyên liệu rèn': '★★★ {0} forge materials',
+  });
   function chuQua(q) {
     const a = [];
     if (q.vang) a.push(G.t('{0} vàng', q.vang));
@@ -483,7 +490,7 @@
     chuV('Hoàn thành vùng', bx + 3, by + 2, bw - 6, 11, { size: 7.5, bold: true, color: GOLD, shadow: undefined });
     chuV(G.t('★★ {0}/{1} · ★★★ {2}/{1}', vg.sao2, vg.tong, vg.sao3), bx + 3, by + 13, bw - 6, 10, { size: 7, color: TXT, shadow: undefined });
     let mo = '';
-    if (!(vg.nhan & 1) && !(vg.cho & 1)) mo = G.t('Đủ {0} trang ★★: {1} đá nâng bậc + danh hiệu "{2}"', vg.tong, theo(CF.vungDa, V.soVung), Y.tenDanhHieu('thoSan' + V.soVung));
+    if (!(vg.nhan & 1) && !(vg.cho & 1)) mo = LYs() ? G.t('Đủ {0} trang ★★: {1} nguyên liệu rèn + danh hiệu "{2}"', vg.tong, nlrDa(theo(CF.vungDa, V.soVung)), Y.tenDanhHieu('thoSan' + V.soVung)) : G.t('Đủ {0} trang ★★: {1} đá nâng bậc + danh hiệu "{2}"', vg.tong, theo(CF.vungDa, V.soVung), Y.tenDanhHieu('thoSan' + V.soVung));
     else if (!(vg.nhan & 2) && !(vg.cho & 2)) mo = G.t('Đủ {0} trang ★★★: danh hiệu "{1}"', vg.tong, Y.tenDanhHieu('bacThay' + V.soVung));
     else if (!vg.cho) mo = 'Đã xong cả vùng!';
     const coNut = !!vg.cho;
@@ -493,7 +500,7 @@
       if (q) {
         phatHu('hu-nhan-thuong', bx + bw - 29, by + bh - 4, 0.7);
         G.persist(); if (G.sfx) G.sfx('evolve');
-        const a = []; if (q.da) a.push(G.t('+{0} đá nâng bậc', q.da)); for (const d of q.dh) a.push(G.t('Danh hiệu mới: {0}', Y.tenDanhHieu(d)));
+        const a = []; if (q.da) a.push(LYs() ? G.t('+{0} nguyên liệu rèn', nlrDa(q.da)) : G.t('+{0} đá nâng bậc', q.da)); for (const d of q.dh) a.push(G.t('Danh hiệu mới: {0}', Y.tenDanhHieu(d)));
         V.msg = a.join(' · '); V.msgT = 3;
         if (G.villageScene && G.villageScene.checkNews) G.villageScene.checkNews();
       }
@@ -559,7 +566,7 @@
       const ke = [1, 2, 4].find((b) => !(nho & b) && !(m & b));
       if (ke) {
         const q = Y.thuongNac(D, ke);
-        const s = ke === 1 ? G.t('★ {0} vàng', q.vang) : ke === 2 ? G.t('★★ {0} linh khí', q.lk) : q.da ? G.t('★★★ {0} đá nâng bậc', q.da) : G.t('★★★ viền vàng');
+        const s = ke === 1 ? G.t('★ {0} vàng', q.vang) : ke === 2 ? G.t('★★ {0} linh khí', q.lk) : q.da ? (LYs() ? G.t('★★★ {0} nguyên liệu rèn', nlrDa(q.da)) : G.t('★★★ {0} đá nâng bậc', q.da)) : G.t('★★★ viền vàng');
         dongQua = G.t('Nấc sau: {0}', s);
       } else dongQua = 'Đã nhận đủ quà trang này.';
     }
@@ -570,7 +577,7 @@
         if (cho & 2 && t && t.k && D.he) phatHu('hu-dong-dau', px + ps - 9, py + ps - 3, 0.9); // nấc ★★ (tìm ra điểm yếu): con dấu đóng xuống
         else phatHu('hu-nhan-thuong', ir - 24, qy + 18, 0.7);
         G.persist(); if (G.sfx) G.sfx('evolve');
-        const a = []; if (q.vang) a.push(G.t('+{0} vàng', q.vang)); if (q.lk) a.push(G.t('+{0} linh khí', q.lk)); if (q.da) a.push(G.t('+{0} đá nâng bậc', q.da));
+        const a = []; if (q.vang) a.push(G.t('+{0} vàng', q.vang)); if (q.lk) a.push(G.t('+{0} linh khí', q.lk)); if (q.da) a.push(LYs() ? G.t('+{0} nguyên liệu rèn', nlrDa(q.da)) : G.t('+{0} đá nâng bậc', q.da));
         V.msg = a.join(' · '); V.msgT = 2.5;
         if (G.villageScene && G.villageScene.checkNews) G.villageScene.checkNews();
       }
