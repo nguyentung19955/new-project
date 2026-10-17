@@ -1,0 +1,192 @@
+{
+ "kichThuoc": [
+  64,
+  64
+ ],
+ "pivot": [
+  32,
+  63
+ ],
+ "thuTuVe": [
+  "ao-choang-sau",
+  "tay-xa+kiem",
+  "chan-xa+ung",
+  "chan-gan+ung",
+  "than+dai+tram",
+  "ao-choang-truoc",
+  "tay-gan",
+  "mu-dau",
+  "mat",
+  "chuong+day+khoen"
+ ],
+ "lop": {
+  "ao-choang-sau": {
+   "tep": "lop/ao-choang-sau.png",
+   "soPixel": 166,
+   "hop": [
+    9,
+    40,
+    23,
+    61
+   ]
+  },
+  "tay-xa+kiem": {
+   "tep": "lop/tay-xa+kiem.png",
+   "soPixel": 137,
+   "hop": [
+    36,
+    42,
+    57,
+    54
+   ]
+  },
+  "chan-xa+ung": {
+   "tep": "lop/chan-xa+ung.png",
+   "soPixel": 93,
+   "hop": [
+    30,
+    52,
+    40,
+    64
+   ]
+  },
+  "chan-gan+ung": {
+   "tep": "lop/chan-gan+ung.png",
+   "soPixel": 84,
+   "hop": [
+    21,
+    52,
+    29,
+    64
+   ]
+  },
+  "than+dai+tram": {
+   "tep": "lop/than+dai+tram.png",
+   "soPixel": 163,
+   "hop": [
+    26,
+    35,
+    38,
+    55
+   ]
+  },
+  "ao-choang-truoc": {
+   "tep": "lop/ao-choang-truoc.png",
+   "soPixel": 78,
+   "hop": [
+    17,
+    37,
+    31,
+    53
+   ]
+  },
+  "tay-gan": {
+   "tep": "lop/tay-gan.png",
+   "soPixel": 47,
+   "hop": [
+    21,
+    43,
+    29,
+    51
+   ]
+  },
+  "mu-dau": {
+   "tep": "lop/mu-dau.png",
+   "soPixel": 325,
+   "hop": [
+    19,
+    18,
+    40,
+    39
+   ]
+  },
+  "mat": {
+   "tep": "lop/mat.png",
+   "soPixel": 4,
+   "hop": [
+    33,
+    30,
+    36,
+    33
+   ]
+  },
+  "chuong+day+khoen": {
+   "tep": "lop/chuong+day+khoen.png",
+   "soPixel": 71,
+   "hop": [
+    13,
+    28,
+    23,
+    40
+   ]
+  }
+ },
+ "diemNeo": {
+  "pivot": [
+   32,
+   63
+  ],
+  "vaiGan": [
+   23,
+   43
+  ],
+  "vaiXa": [
+   38,
+   43
+  ],
+  "khuyuGan": [
+   21,
+   45
+  ],
+  "coTayGan": [
+   24,
+   47
+  ],
+  "coTayXa": [
+   38,
+   48
+  ],
+  "chuoiKiem": [
+   41,
+   47
+  ],
+  "hongGan": [
+   24,
+   53
+  ],
+  "hongXa": [
+   34,
+   53
+  ],
+  "goiGan": [
+   24,
+   57
+  ],
+  "goiXa": [
+   34,
+   57
+  ],
+  "coChanGan": [
+   24,
+   61
+  ],
+  "coChanXa": [
+   34,
+   61
+  ],
+  "co": [
+   31,
+   36
+  ],
+  "mocChuong": [
+   19,
+   30
+  ],
+  "tramNguc": [
+   34,
+   39
+  ]
+ },
+ "ghepTrungTungPixel": true,
+ "ghiChu": "toạ độ [x, y] pixel trong ô 64; lớp = ô màu của bộ phận + viền #0C0F14 kề cạnh; ghép theo thuTuVe (sau→trước) ra đúng lam-chuan.png"
+}
