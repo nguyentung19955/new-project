@@ -4,11 +4,11 @@ CẮT SÁT phần có hình rồi XẾP KÍN vào các TRANG ảnh (mỗi trang 
   "tam_n3" / "tam_n4": một ảnh (chuỗi) hoặc mảng trang ảnh PNG
   "o_n3" / "o_n4":     { "c": số cột của tấm thường, "o": [ô 0, ô 1, …] } — ô thứ hang × c + cột: [trang, x, y, rộng, cao, dx, dy] (điểm ảnh
                        của trang; dx, dy = chỗ của phần cắt trong ô gốc, cũng theo điểm ảnh nét N) hoặc 0 (ô không dùng → vẽ tấm thường)
-  "net_cao": ghi chú
+  "net_cao": ghi chú; "net_cao_cua": 12 ký tự đầu sha256 của "tam" (tấm thường đổi mà chưa dựng lại → build.py bỏ bản nét cao)
 Mọi mục cũ giữ nguyên từng ký tự (đã so). build.py chỉ đưa các mục này vào bản web (ảnh rời riêng); bản một tệp bỏ hết.
   python3 ghi_net_cao.py [mã,…]   (không có mã: mọi con trong ra/dung-3.json)
   python3 ghi_net_cao.py --xoa    bỏ các mục nét cao khỏi mọi tệp (quay lui)"""
-import base64, json, os, sys
+import base64, hashlib, json, os, sys
 import numpy as np
 from PIL import Image
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -16,7 +16,7 @@ sys.path.insert(0, HERE); sys.path.insert(0, os.path.join(HERE, '..', '..', 'do-
 import thu_net
 import kiem_ke as K
 RONG, CAO = 3072, 2048
-KHOA = ('tam_n3', 'tam_n4', 'o_n3', 'o_n4', 'net_cao')
+KHOA = ('tam_n3', 'tam_n4', 'o_n3', 'o_n4', 'net_cao', 'net_cao_cua')
 
 
 def xep(ma, N, d):
@@ -78,6 +78,7 @@ def ghi(ma, xoa=False):
             d['tam_n%d' % N] = anh[0] if len(anh) == 1 else anh
             d['o_n%d' % N] = o
             tt.append('nét %d: %d trang, %.1f triệu điểm (lưới đủ %.1f)' % (N, len(anh), dien / 1e6, luoi / 1e6))
+        d['net_cao_cua'] = hashlib.sha256(d['tam'].encode()).hexdigest()[:12]  # build.py bỏ bản nét cao nếu tấm thường đổi mà chưa dựng lại
         d['net_cao'] = 'net-cao-quai 17/10: tam_n3 / tam_n4 dựng lại từ ảnh gốc (docs/review/ke-hoach-cai-thien/net-cao-quai/cong-cu), khung cắt sát xếp kín; ' + '; '.join(tt)
     assert all(d[k] == v for k, v in cu.items()), ma
     with open(f, 'w', encoding='utf-8') as fo:

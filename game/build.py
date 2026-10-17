@@ -718,7 +718,14 @@ def custom_sprites():
         # Em bé: đợt 2 chỉ còn 3 NPC (bạn đồng hành) em-be-hunter, em-be-healer, em-be-wrestler; nhân vật chơi là Zed (zed-*).
         if t.get('doi_tuong') == 'em-be' and not re.match(r'^em-be-(hunter|healer|wrestler)$', ma):
             sys.exit('art/custom/%s: đã bỏ ở đợt 2 — em bé chỉ còn em-be-hunter, em-be-healer, em-be-wrestler' % name)
-        out.append({k: t[k] for k in RUNTIME_KEYS if k in t})
+        q = {k: t[k] for k in RUNTIME_KEYS if k in t}
+        # 17/10 net-cao-quai: bản nét cao (tam_n3/4, o_n3/4) dựng cho ĐÚNG tấm thường hiện có ("net_cao_cua" = 12 ký tự đầu sha256 của chuỗi "tam",
+        # như ảnh nền). Tấm đã đổi mà chưa dựng lại bản nét cao → bỏ bản nét cao (game vẽ tấm thường), báo để dựng lại.
+        if any(k in q for k in ('tam_n3', 'tam_n4')) and t.get('net_cao_cua') != hashlib.sha256(t['tam'].encode()).hexdigest()[:12]:
+            print('CHÚ Ý: art/custom/%s: ảnh nét cao (tam_n3/tam_n4) dựng cho tấm cũ → bỏ; chạy lại docs/review/ke-hoach-cai-thien/net-cao-quai/cong-cu (kiem_ke → dung_net_cao → ghi_net_cao)' % name)
+            for k in ('tam_n3', 'tam_n4', 'o_n3', 'o_n4'):
+                q.pop(k, None)
+        out.append(q)
     return out
 
 

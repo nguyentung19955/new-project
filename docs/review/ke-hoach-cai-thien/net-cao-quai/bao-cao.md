@@ -33,7 +33,7 @@ Bảng đầy đủ (từng con: còn gốc không, khớp bao nhiêu khung, ả
    - Tệp `<mã>.sprite.json` chỉ **thêm** `tam_n3`, `tam_n4` (trang ảnh), `o_n3`, `o_n4` (chỗ từng khung trong trang) và `net_cao` (ghi chú). Mọi mục cũ giữ nguyên từng ký tự (công cụ tự so).
 4. **Cách vẽ** (`js/sprite_custom.js`, hàm vẽ khung `SC.veKhung` — dùng chung cho quái, trùm, người làng, em bé): khi canvas đang ở nét 3/4 và con đó có bản nét đó → tải lười **lần đầu cần vẽ** (vào vùng nào thì chỉ tải con của vùng đó, đúng con đang hiện), vẽ mảnh cắt sát đúng chỗ trong ô, cỡ ÷ N → **chép 1:1**, không phóng. Chưa về thì vẽ tấm thường như cũ. **Bản nào 45 giây không vẽ thì bỏ** cho trình duyệt thu hồi RAM (cần lại thì tải lại, thường từ bộ nhớ đệm) → đi qua nhiều vùng không cộng dồn.
    - Vẫn dùng tấm thường (như cũ) cho: **thân nhuộm theo trạng thái** (cháy / độc / băng, Đợt 7), các **lớp phủ** chớp trắng / nhuộm / viền đỏ (lớp mờ chồng lên, mép lệch tối đa 1 điểm nét 2, khó thấy).
-5. **Đóng gói** (`game/build.py`, phần máy dùng chung — chỉ thêm tên mục): `tam_n3/4`, `o_n3/4` vào danh sách mục game đọc; `o_n3/4` vào danh sách mục nét cao để **bản một tệp bỏ hết** như phiên Cu Tí. Bản web: mỗi trang ảnh thành tệp riêng `anh/<mã>-n3|n4.<mã nội dung>.png` (cách của phiên Cu Tí, không sửa).
+5. **Đóng gói** (`game/build.py`, phần máy dùng chung — chỉ thêm tên mục): `tam_n3/4`, `o_n3/4` vào danh sách mục game đọc; `o_n3/4` vào danh sách mục nét cao để **bản một tệp bỏ hết** như phiên Cu Tí. Bản web: mỗi trang ảnh thành tệp riêng `anh/<mã>-n3|n4.<mã nội dung>.png` (cách của phiên Cu Tí, không sửa). Thêm một chốt như phiên nền: tệp ghi `net_cao_cua` (dấu của tấm thường lúc dựng); **tấm thường đổi mà chưa dựng lại bản nét cao thì build tự bỏ bản nét cao** (game vẽ tấm thường) và in `CHÚ Ý` để dựng lại — không bao giờ hiện hình cũ lệch hình mới.
 
 ## 3. Ảnh so nét 2 | 3 | 4
 
@@ -54,7 +54,7 @@ Nhận xét khi xem ảnh:
 
 | | |
 |---|---|
-| **Dung lượng** | Bản một tệp **29,86 MB** (≤ 30; ảnh nét cao KHÔNG nằm trong đó, chỉ thêm ít mã). Bản web tải đầu **17,78 MB** / 20 (trước 17,74: thêm 0,03 MB bảng chỗ khung trong trang nhẹ). **Ảnh nét cao quái/trùm/làng: nét 3 = 26,8 MB, nét 4 = 42,5 MB** (PNG, tổng mọi vùng; chỉ tải khi bật, mỗi người chỉ tải một bản, và chỉ con đang hiện). Mỗi vùng ≈ 8–9 MB (nét 3) / 13–14 MB (nét 4); Sông 0,8 / 1,4 MB; làng 0,4 / 0,7 MB. |
+| **Dung lượng** | Bản một tệp **29,88 MB** (≤ 30, như trước phiên; ảnh nét cao KHÔNG nằm trong đó, chỉ thêm ít mã). Bản web tải đầu **17,72 MB** / 20 (trước phiên 17,69: thêm 0,03 MB là bảng chỗ khung trong trang nhẹ). **Ảnh nét cao quái/trùm/làng: nét 3 = 26,8 MB, nét 4 = 42,5 MB** (PNG, tổng mọi vùng; chỉ tải khi bật, mỗi người chỉ tải một bản, và chỉ con đang hiện). Mỗi vùng ≈ 8–9 MB (nét 3) / 13–14 MB (nét 4); Sông 0,8 / 1,4 MB; làng 0,4 / 0,7 MB. |
 | **RAM** (khi bật) | Ảnh giải mã ≈ 4 MB / triệu điểm. Phòng quái thường ở nét 4: thêm ~20–40 MB. **Trận trùm vùng nét 4: ~40 MB mỗi pha** (Hồ Tinh 9,7 triệu điểm / pha; lúc đổi pha có 2 pha cùng lúc trong 45 giây). Cộng với Cu Tí (~68 MB, phiên trước) và canvas 8 MB. Máy RAM ít có thể bị tải lại trang → lý do nữa để **chưa bật mặc định**. |
 | Máy yếu | Số điểm tô mỗi khung hình đã tính ở phiên Cu Tí (canvas to hơn); vẽ quái từ ảnh nét cao là chép 1:1, không thêm phép tính nào. |
 | Kho mã (git) | Thêm ~95 MB (ảnh PNG dạng chữ base64 trong 60 tệp `.sprite.json`). |
@@ -65,13 +65,13 @@ Nhận xét khi xem ảnh:
 | Bài | Kết quả |
 |---|---|
 | `node --check` mọi `game/js/*.js` | Đạt |
-| `python3 game/build.py` / `--hai-tep` | Đạt — một tệp 29,86 MB; người chơi tải 17,78 MB / 20; ảnh nét cao in riêng |
-| **Mặc định giống hệt trước** — 60 hình (mọi quái, trùm các pha, làng, em bé) vẽ bằng hàm game, canvas thật + ảnh chụp màn 844×390 dpr 3, so với bản dựng từ commit trước phiên | **0 điểm ảnh khác / 120 ảnh** |
+| `python3 game/build.py` / `--hai-tep` | Đạt — một tệp 29,88 MB; người chơi tải 17,72 MB / 20; ảnh nét cao in riêng (cả game: nét 3 28,5 MB, nét 4 45,5 MB gồm Cu Tí + nền + quái) |
+| **Mặc định giống hệt trước** — 60 hình (mọi quái, trùm các pha, làng, em bé) vẽ bằng hàm game, canvas thật + ảnh chụp màn 844×390 dpr 3, so với bản dựng từ commit ngay trước phiên (sau khi gộp phiên nền, sàn dịu) | **0 điểm ảnh khác / 120 ảnh** |
 | Cảnh trận mặc định (`net-cao/cong-cu/chup_tran.py`, đứng + chém kiếm nặng, 2 cỡ màn, canvas + màn) so với trước | **0 điểm ảnh khác / 12 ảnh** |
 | `dist/linh-khi.html?cloud=0` (bản một tệp) mặc định / `?netcao=3` / `?netcao=4`, vẽ quái + trùm + làng | **0 lỗi JS** (không có ảnh nét cao → vẽ tấm thường, đúng như thiết kế) |
 | Bản web mặc định / 3 / 4, vẽ cả 60 hình | **0 lỗi JS**; nét 3 và 4: **60/60 hình vẽ bằng ảnh nét cao**. (Chỉ có dòng lỗi mạng: máy thử không ra được Google Fonts / Firebase, và `sw.js` 404 như phiên trước.) |
 | Xếp kín so với lưới đủ: cùng 60 hình ở nét 3 / 4 | 59/60 trùng từng điểm; Hồ Tinh pha 3 (vẽ ×0,72, thu sẵn) lệch pha lấy mẫu, cùng khung bao |
-| **Bot** (`cong-cu/bot_netcao.py`, bản web, vòng lặp game chạy thật): 3 vùng × (phòng 10 quái mọi vai + tinh anh, 10 giây) + (trùm vùng bị trừ máu tới chết qua đủ 3 pha) | Nét 2 / 3 / 4: **0 lỗi JS**; 3 trùm đều qua pha 1 → 2 → 3 → gục ở cả 3 nét. Nét 3: 20 040 lần vẽ thân bằng ảnh nét cao, 96 lần bằng tấm thường (đúng lúc ảnh đang về); nét 4: 19 313 / 118. Nét 2: 0 lần ảnh nét cao. Số thô: `cong-cu/ra/bot.json` (không lưu repo) |
+| **Bot** (`cong-cu/bot_netcao.py`, bản web, vòng lặp game chạy thật): 3 vùng × (phòng 10 quái mọi vai + tinh anh, 10 giây) + (trùm vùng bị trừ máu tới chết qua đủ 3 pha) | Nét 2 / 3 / 4: **0 lỗi JS**; 3 trùm đều qua pha 1 → 2 → 3 → gục ở cả 3 nét. Nét 3: 18 292 lần vẽ thân bằng ảnh nét cao, 143 lần bằng tấm thường (đúng lúc ảnh đang về); nét 4: 17 547 / 116. Nét 2: 0 lần ảnh nét cao. Số thô: `cong-cu/ra/bot.json` (không lưu repo) |
 | `tests/smoke.py`, `tests/*.test.js` | 0 lỗi; đều đạt (`may_luat` bỏ qua như trước: thiếu thư viện) |
 
 ## 6. Đề xuất cho phần máy dùng chung (không sửa ở phiên này)
