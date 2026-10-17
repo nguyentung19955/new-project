@@ -1424,7 +1424,10 @@
     T.plate(b[0], b[1] + (held ? 1 : 0), b[2], b[3]);
     const gi = G.minimap.gateInfo(S);
     if (ic) G.spriteCustom.veGd(G.ux, ic, b[0] + (b[2] - 20) / 2, b[1] + 3, 20, 18);
-    else ui.text('Bản đồ', b[0] + b[2] / 2, b[1] + 15, { size: 7, bold: true, align: 'center', color: '#f6dc92' });
+    else if (T.chuFont && T.chuFont()) { // chu-giua-font-that (17/10): chữ (và dòng số cổng) là một khối giữa tấm (trước: chữ cao hơn tâm ~3,7 điểm)
+      T.chuTam('Bản đồ', b[0], b[1] + (held ? 1 : 0), b[2], b[3], { size: 7, bold: true, color: '#f6dc92', phu: gi ? { s: gi.n + '/' + gi.need, size: 6.5, bold: true, color: gi.open ? '#9be37a' : '#d9cdb8' } : null });
+      return;
+    } else ui.text('Bản đồ', b[0] + b[2] / 2, b[1] + 15, { size: 7, bold: true, align: 'center', color: '#f6dc92' });
     if (gi) ui.text(gi.n + '/' + gi.need, b[0] + b[2] / 2, b[1] + 26, { size: 6.5, bold: true, align: 'center', color: gi.open ? '#9be37a' : '#d9cdb8' });
   }
   // Mục 6 (G.MAN_RONG, ?manrong=1): hai dải lề của màn rộng (và trên / dưới khi máy cao) tô bằng ảnh nền ngoài phòng của vùng (gd-nen-<vùng>-ngoai,
@@ -1887,9 +1890,11 @@
       const TT = G.theme;
       if (TT.canMoi && TT.canMoi()) { // can-chu-khung (16/10): biểu tượng túi + chữ là MỘT cụm nằm giữa nút (trước: túi sát mép trái, chữ lệch phải)
         if (ui.btn(165, 224, 150, 26, '', { size: 8.5 })) { G.hanhTrang.reset(); setMode('bag'); }
-        const k = TT.chuTrongKhung('Hành trang (xem)', 165, 224, 150, 26, { khung: 'gd-nut-thuong', vien: [5, 10, 5, 10], vung: [165 + 17, 224, 150 - 17, 26], size: 8.5, bold: true, color: '#fff0c4' });
+        // chu-giua-font-that (17/10): cụm (túi 13 + khe 4 + chữ) đúng tâm nút → tâm chữ = tâm nút + 8,5 (?chufont=0: như trước)
+        const k = TT.chuTrongKhung('Hành trang (xem)', 165, 224, 150, 26, Object.assign({ khung: 'gd-nut-thuong', vien: [5, 10, 5, 10], vung: [165 + 17, 224, 150 - 17, 26], size: 8.5, bold: true, color: '#fff0c4' }, TT.chuFont && TT.chuFont() ? { tamX: 165 + 75 + 8.5 } : {}));
         const q = k && k.lines[0];
-        if (q) { ui.font(q.size, true, true); G.hanhTrang.icon(q.x - G.ux.measureText(q.s).width / 2 - 4 - 6.5, 237, 1); } else G.hanhTrang.icon(186, 237, 1);
+        if (q && TT.chuFont && TT.chuFont()) { const m = TT.hopMuc(G.LANG !== 'vi' && G.tv ? G.tv(q.s) : q.s, true), f = Math.max(6.5, q.size); G.hanhTrang.icon(q.x - (m.w / 2) * f - m.l * f - 4 - 6.5, 237, 1); } // túi cách mép mực trái của chữ 4 điểm
+        else if (q) { ui.font(q.size, true, true); G.hanhTrang.icon(q.x - G.ux.measureText(q.s).width / 2 - 4 - 6.5, 237, 1); } else G.hanhTrang.icon(186, 237, 1);
       } else {
         if (ui.btn(165, 224, 150, 26, '    Hành trang (xem)', { size: 8.5 })) { G.hanhTrang.reset(); setMode('bag'); }
         G.hanhTrang.icon(186, 237, 1);

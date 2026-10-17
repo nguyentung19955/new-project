@@ -622,6 +622,7 @@
   // ---------- vẽ giao diện (toạ độ 480x270, chữ nét ở độ phân giải thật) ----------
   const FONT = '"Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
   const ui = (G.ui = {});
+  ui.FONT = FONT; // chu-giua-font-that (17/10): js/ui_theme.js đo hộp mực chữ ở cỡ lớn bằng đúng họ phông này
   ui.begin = function () {
     const c = G.ux;
     c.setTransform(1, 0, 0, 1, 0, 0);

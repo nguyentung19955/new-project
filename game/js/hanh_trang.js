@@ -343,8 +343,19 @@
     const r = B.HUB, held = [...G.pointers.values()].some((q) => !q.role && !q.stale && G.inRect(q, r[0], r[1], r[2], r[3]));
     T.plate(r[0], r[1] + (held ? 1 : 0), r[2], r[3]);
     const moi = T.canMoi && T.canMoi(); // can-chu-khung (16/10): chữ dịch lên 1 — khỏi hàng đinh góc dưới của tấm (trước tràn 0,6 điểm), cụm túi + chữ vẫn giữa tấm
+    if (T.chuFont && T.chuFont()) { // chu-giua-font-that (17/10): túi + chữ là một khối đúng tâm tấm theo cả hai chiều (trước: cao hơn tâm 0,8–1,3)
+      const yy = r[1] + (held ? 1 : 0), L = T.longKhung('gd-khung-nho', r[2], r[3]) || { top: 2, bot: r[3] - 2 };
+      const s = G.LANG !== 'vi' && G.tv ? G.tv('Hành trang') : 'Hành trang', m = T.hopMuc(s, true), f = 6.5;
+      const ih = 13 * 1.25, khe = Math.max(1, (m.a - m.ab) * f + 0.5), C = yy + (L.top + L.bot) / 2;
+      const top = Math.round(C - (ih + khe + m.ab * f) / 2), tw = (m.l + m.r) * f;
+      let bl = Math.min(2 * C - top, yy + L.bot - m.d * f - 0.25);
+      for (let k = 0; k < 4 && L.span; k++) { const q = L.span(bl - yy - m.a * f, bl - yy + m.d * f); if (q && q[1] - q[0] >= tw + 0.5) break; bl -= 0.25; } // tránh đinh góc dưới của tấm
+      bagIcon(r[0] + r[2] / 2, top + ih / 2, 1.25);
+      ui.text(s, r[0] + r[2] / 2 + (m.w / 2 - (m.r - m.l) / 2) * f, bl, { size: f, bold: true, tiny: true, align: 'center', color: GOLD });
+    } else {
     bagIcon(r[0] + r[2] / 2, r[1] + 11 + (held ? 1 : 0), 1.25);
     T.chuTam('Hành trang', r[0], r[1] + (held ? 1 : 0), r[2], r[3], { vung: [r[0], r[1] + (held ? 1 : 0) + (moi ? 19 : 20), r[2], moi ? 10 : 11], size: 6.5, bold: true, tiny: true, align: 'center', color: GOLD });
+    }
     if ((G.click && G.inRect(G.click, r[0] - 2, r[1] - 1, r[2] + 4, r[3] + 2)) || G.keyP.KeyB) { G.click = null; B.openVillage(); return true; }
     return false;
   };

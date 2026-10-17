@@ -604,9 +604,107 @@
     const v = ga.vien, k = Math.min(1, h / (v[0] + v[2] + 2), w / (v[1] + v[3] + 2)), vc = v.map((q) => q * k);
     return h - vc[0] - vc[2] >= 9 && w - vc[1] - vc[3] >= 18 ? longCode(w, h, vc) : null;
   }
+  // ---------- 17/10 (docs/review/ke-hoach-cai-thien/chu-giua-font-that): HỘP MỰC THẬT, ĐO CHẮC Ở MỌI TRÌNH DUYỆT ----------
+  // Ảnh iPhone của chủ game: chữ trên nút / thẻ / tiêu đề ô bị nhỏ đi và lệch lên. Gốc: (1) cách đặt cũ ép cả dấu / chân chữ (ặ, ọ, y, g)
+  // cách viền 2 điểm, phông thật có dấu và chân chữ cao hơn phông thử → chữ bị thu nhỏ và đẩy lên; (2) số đo hộp mực
+  // (measureText().actualBoundingBox*) ở cỡ chữ nhỏ (6,5–10) không đáng tin giữa các trình duyệt (Safari làm tròn lên số nguyên, phông chưa
+  // về thì đo bằng phông dự phòng). Cách mới (cờ quay lui ?chufont=0 → G.CHU_FONT = false: như trước phiên):
+  //   - đo MỘT LẦN mỗi chuỗi ở cỡ lớn (REF px) rồi chia tỉ lệ → làm tròn của trình duyệt chỉ còn ~1/REF;
+  //   - mỗi đời phông tự kiểm số đo của trình duyệt bằng cách QUÉT ĐIỂM ẢNH chữ mẫu; lệch > 3 % cỡ chữ thì mọi chuỗi đo bằng quét điểm ảnh;
+  //   - phông đổi (về muộn, nạp xong, đổi trạng thái) → "đời phông" mới: xoá mọi số đo / chỗ đặt chữ đã nhớ, khung sau đặt lại;
+  //   - căn DỌC theo THÂN CHỮ thật của đúng chuỗi (hộp mực của chuỗi đã bỏ dấu: đỉnh thân chữ → đường cơ sở), dấu và chân chữ được tràn vào
+  //     phần đệm (chỉ cần nằm trong lòng khung, cách viền ≥ 0,5); căn NGANG theo hộp mực thật (không theo bề rộng bước chữ).
+  if (G.CHU_FONT === undefined) { let t = true; try { t = !/[?&]chufont=0(&|$)/.test(String(window.location && window.location.search)); } catch (e) { t = true; } G.CHU_FONT = t; }
+  const chuFont = () => G.CHU_FONT !== false && canMoi();
+  T.chuFont = chuFont;
+  const REF = 64, MUC = new Map();
+  let docCv = null, docG = null, cheDo = null, doiPhong = 0;
+  const famPhong = () => (ui.FONT || '"Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif');
+  function butDo() {
+    if (!docG) { docCv = document.createElement('canvas'); docCv.width = 16; docCv.height = 16; docG = docCv.getContext('2d', { willReadFrequently: true }); }
+    return docG;
+  }
+  const boDau = (s) => { try { return s.normalize('NFD').replace(/[̀-ͯ]/g, ''); } catch (e) { return s; } };
+  // đo bằng trình duyệt ở cỡ REF (đơn vị: em)
+  function doTD(s, bold) {
+    const g = butDo(); g.font = (bold ? '700 ' : '500 ') + REF + 'px ' + famPhong(); g.textAlign = 'left'; g.textBaseline = 'alphabetic';
+    const m = g.measureText(s);
+    if (m.actualBoundingBoxAscent == null) return null;
+    return { w: m.width / REF, l: m.actualBoundingBoxLeft / REF, r: m.actualBoundingBoxRight / REF, a: m.actualBoundingBoxAscent / REF, d: m.actualBoundingBoxDescent / REF };
+  }
+  // đo bằng quét điểm ảnh (không tin số đo của trình duyệt)
+  function doQuet(s, bold) {
+    const g = butDo(), f = (bold ? '700 ' : '500 ') + REF + 'px ' + famPhong();
+    g.font = f; const W = g.measureText(s).width;
+    const pad = REF, cw = Math.ceil(W + pad * 2), ch = Math.ceil(REF * 2.8), base = Math.round(REF * 1.7);
+    if (docCv.width < cw || docCv.height < ch) { docCv.width = Math.max(docCv.width, cw); docCv.height = Math.max(docCv.height, ch); }
+    g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, docCv.width, docCv.height);
+    g.font = f; g.textAlign = 'left'; g.textBaseline = 'alphabetic'; g.fillStyle = '#000'; g.fillText(s, pad, base);
+    const d = g.getImageData(0, 0, cw, ch).data;
+    let x0 = cw, x1 = -1, y0 = ch, y1 = -1;
+    for (let y = 0; y < ch; y++) { const o = y * cw * 4; for (let x = 0; x < cw; x++) if (d[o + x * 4 + 3] > 24) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; y1 = y; } }
+    if (x1 < 0) return { w: W / REF, l: 0, r: 0, a: 0, d: 0 };
+    return { w: W / REF, l: (pad - x0) / REF, r: (x1 + 1 - pad) / REF, a: (base - y0) / REF, d: (y1 + 1 - base) / REF };
+  }
+  // tự kiểm một lần mỗi đời phông: số đo trình duyệt khớp quét điểm ảnh không
+  function chonCheDo() {
+    if (cheDo) return cheDo;
+    cheDo = 'td';
+    try {
+      for (const bold of [true, false]) for (const mau of ['Hxgậ', 'ỹọ']) {
+        const a = doTD(mau, bold), b = doQuet(mau, bold);
+        if (!a || ['a', 'd', 'l', 'r'].some((k) => !isFinite(a[k]) || Math.abs(a[k] - b[k]) > 0.03)) { cheDo = 'quet'; break; }
+      }
+    } catch (e) { cheDo = 'quet'; }
+    T.chuDo.cheDo = cheDo;
+    return cheDo;
+  }
+  // Hộp mực của chuỗi s (đã dịch nếu không phải tiếng Việt) theo em: w (bước chữ), l / r (mực trái / phải của điểm neo trái), a / d (mực trên /
+  // dưới đường cơ sở), ab (đỉnh THÂN chữ: mực trên của chuỗi đã bỏ dấu).
+  T.hopMuc = function (s, bold) {
+    s = String(s);
+    const k = (bold ? 1 : 0) + '|' + s;
+    let q = MUC.get(k);
+    if (q) return q;
+    const qd = chonCheDo() === 'quet' ? doQuet : (t, b) => doTD(t, b) || doQuet(t, b);
+    q = qd(s, bold);
+    const t = boDau(s);
+    q.ab = t === s ? q.a : t.trim() ? qd(t, bold).a : q.a;
+    if (MUC.size > 1500) MUC.clear();
+    MUC.set(k, q);
+    return q;
+  };
+  // Đổi phông (về muộn / nạp xong / trạng thái phông đổi): bỏ hết số đo và chỗ đặt chữ đã nhớ.
+  function phongDoi() { doiPhong++; cheDo = null; MUC.clear(); DAT_NHO.clear(); CAP.clear(); T.chuDo.doiPhong = doiPhong; }
+  T.phongDoi = phongDoi;
+  let kyPhong = '';
+  function soPhong() { // dấu vân trạng thái các phông của trang (không cần sự kiện: Safari có khi không báo loadingdone)
+    try {
+      const f = document.fonts; if (!f) return;
+      let k = f.status + '|';
+      if (f.forEach) f.forEach((x) => { k += x.family + x.weight + x.status + ';'; });
+      if (k !== kyPhong) { const dau = kyPhong === ''; kyPhong = k; if (!dau) phongDoi(); }
+    } catch (e) { /* bỏ qua */ }
+  }
+  try {
+    if (typeof document !== 'undefined' && document.fonts && G.CHU_FONT !== false) {
+      soPhong();
+      if (document.fonts.ready && document.fonts.ready.then) document.fonts.ready.then(() => { soPhong(); phongDoi(); });
+      let n = 0; const tick = () => { soPhong(); n++; setTimeout(tick, n < 50 ? 400 : 3000); }; setTimeout(tick, 400);
+    }
+  } catch (e) { /* bỏ qua */ }
   // Đo chữ ở cỡ s (đã qua sàn tiny 6,5): bề rộng, hộp chữ thật trên / dưới đường cơ sở. Tiếng Anh: canvas tự dịch khi đo (js/ngon_ngu.js).
   function doChu(s, size, bold) {
     ui.font(size, bold, true);
+    if (chuFont()) { // 17/10: hộp mực đo chắc (T.hopMuc), chia theo cỡ
+      const fs = ui.fs(size, true);
+      let giau = false;
+      if (DIGIT.test(s) && s.length >= 3) giau = HAS.test(mark(s));
+      if (!giau) {
+        const q = T.hopMuc(G.LANG !== 'vi' && G.tv ? G.tv(s) : s, bold);
+        return { w: Math.max(q.w, q.l + q.r) * fs, a: q.a * fs, d: q.d * fs, l: q.l * fs, r: q.r * fs, adv: q.w * fs, ab: q.ab * fs, muc: true };
+      }
+    }
     let m = G.ux.measureText(s);
     let w = Math.max(m.width, (m.actualBoundingBoxLeft || 0) + (m.actualBoundingBoxRight || 0));
     if (DIGIT.test(s) && s.length >= 3) { // "số + tài nguyên" vẽ thành biểu tượng (richText): đo như lúc vẽ
@@ -614,13 +712,17 @@
       if (HAS.test(t)) {
         const ih = Math.round(Math.max(6.5, size) * 1.05 * 2) / 2; let tw = 0, cur = '';
         for (const ch of t) { const k = ch.charCodeAt(0) - PUA; if (k >= 0 && k < KINDS.length) { tw += ih + 1; } else cur += ch; }
-        m = G.ux.measureText(cur.replace(/[-]/g, '')); w = tw + m.width;
+        m = G.ux.measureText(cur.replace(/[-]/g, '')); w = tw + m.width;
+        if (chuFont()) { // chữ kèm biểu tượng: mực dọc theo phần chữ, ngang theo bước (biểu tượng nằm trong dòng)
+          const q = T.hopMuc(cur.replace(/[-]/g, ''), bold), fs = ui.fs(size, true), ihc = Math.max(6.5, size) * 1.05;
+          return { w, a: Math.max(q.a * fs, ihc - 1), d: Math.max(q.d * fs, 0), ab: Math.max(q.ab * fs, ihc - 1), giau: true };
+        }
       }
     }
     return { w, a: m.actualBoundingBoxAscent != null ? m.actualBoundingBoxAscent : size * 0.95, d: m.actualBoundingBoxDescent != null ? m.actualBoundingBoxDescent : size * 0.25 };
   }
   const CAP = new Map();
-  function capCao(size, bold) { const k = size + '|' + (bold ? 1 : 0) + '|' + G.ux.font.replace(/^[^"]*/, ''); let v = CAP.get(k); if (v == null) { v = doChu('H', size, bold).a || size * 0.72; CAP.set(k, v); } return v; }
+  function capCao(size, bold) { const k = size + '|' + (bold ? 1 : 0) + '|' + G.ux.font.replace(/^[^"]*/, ''); let v = CAP.get(k); if (v == null) { v = chuFont() ? T.hopMuc('H', bold).a * ui.fs(size, true) : doChu('H', size, bold).a || size * 0.72; CAP.set(k, v); } return v; }
   // xuống dòng theo bề rộng (chữ đã dịch nếu không phải tiếng Việt)
   function chiaDong(s, maxW, size, bold) {
     const words = String(s).split(' '), lines = []; let cur = '';
@@ -636,7 +738,7 @@
   const DAT_NHO = new Map();
   // can-chu-khung (16/10): phông Be Vietnam Pro về SAU khi game đã vẽ (mạng chậm, quá 1,2 giây chờ) → bỏ chỗ đặt chữ đã nhớ theo phông dự phòng
   // (phông thật rộng / cao khác: chữ đặt theo số đo cũ sẽ lệch tâm hoặc tràn khung cho tới khi bộ nhớ đầy)
-  try { if (typeof document !== 'undefined' && document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', () => { if (canMoi()) { DAT_NHO.clear(); CAP.clear(); } }); } catch (e) { /* bỏ qua */ }
+  try { if (typeof document !== 'undefined' && document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', () => { if (chuFont()) phongDoi(); else if (canMoi()) { DAT_NHO.clear(); CAP.clear(); } }); } catch (e) { /* bỏ qua */ }
   T.chuDo = { lan: 0, thap: 0, cat: 0, hep: 0, giua: 0 }; // đếm cho công cụ soát
   // Tính chỗ đặt (không vẽ). Trả về { size, lines: [{ s, x, b, size, bold, color }], cat, thap } — toạ độ tuyệt đối.
   // (x, y, w, h): khung. o: { khung: mã ảnh khung | null, vien: [t, r, b, l] viền khi khung vẽ code, dem (2), size, min (6,5), bold,
@@ -649,7 +751,7 @@
     const ps = o.phu && o.phu.s ? (G.LANG === 'vi' || !G.tv ? String(o.phu.s) : G.tv(String(o.phu.s))) : '';
     const ga = o.khung ? khungCo(o.khung) : null;
     const vg = o.vung;
-    const key = [src, ps, G.LANG, x, y, w, h, ga ? o.khung + '|' + ga.pw + '|' + (o.kKhung || '') + '|' + (o.vienAnh || '') + (o.trongVien ? '|tv' : '') : 'c' + (o.vien || ''), o.size, o.min, o.bold ? 1 : 0, o.dong, o.align, o.dem, o.gian, vg ? vg.join(',') : '', o.phu ? o.phu.size + '|' + (o.phu.bold ? 1 : 0) : '', G.ux.font.replace(/^[^"]*/, '')].join('|');
+    const key = [src, ps, G.LANG, x, y, w, h, ga ? o.khung + '|' + ga.pw + '|' + (o.kKhung || '') + '|' + (o.vienAnh || '') + (o.trongVien ? '|tv' : '') : 'c' + (o.vien || ''), o.size, o.min, o.bold ? 1 : 0, o.dong, o.align, o.dem, o.gian, vg ? vg.join(',') : '', o.phu ? o.phu.size + '|' + (o.phu.bold ? 1 : 0) : '', o.tamX, G.ux.font.replace(/^[^"]*/, ''), chuFont() ? 'm' + doiPhong : ''].join('|');
     const nho = DAT_NHO.get(key);
     if (nho) return nho;
     T.chuDo.lan++;
@@ -671,6 +773,7 @@
       const cap0 = capCao(dongs[0].size, dongs[0].bold);
       const rel = [0]; for (let i = 1; i < dongs.length; i++) rel.push(rel[i - 1] + dongs[i].size + gian - (dongs[i].size < dongs[i - 1].size ? (dongs[i - 1].size - dongs[i].size) * 0.3 : 0));
       const last = rel.length - 1;
+      if (chuFont()) return thuMuc(dongs, ms, rel, dm, chat);
       // khối chữ hoa (đỉnh "H" dòng đầu → đường cơ sở dòng cuối) căn giữa dải lòng. can-chu-khung: trước đây cộng thừa nửa cao chữ hoa
       // (chữ nằm thấp hơn tâm ~3 điểm ở nút cao; nút thấp thì bị kẹp lại nên không thấy)
       let b0 = (top + bot) / 2 - (rel[last] - cap0) / 2 + (canMoi() ? 0 : cap0 / 2);
@@ -704,6 +807,62 @@
         out.push({ s: t, x: x + xx, b: y + bl, size: dongs[i].size, bold: dongs[i].bold, cat: t !== dongs[i].s });
       }
       return { lines: out, thap: cao > room + 1e-6, dem: dm };
+    }
+    // 17/10 chu-giua-font-that: THÂN chữ (đỉnh thân dòng đầu → đường cơ sở dòng cuối) đúng tâm lòng; mực thật (kể cả dấu, chân chữ) chỉ cần
+    // nằm trong lòng, cách viền ≥ 0,5 (không còn ép cách 2 điểm → chữ không bị thu nhỏ / đẩy lên vì dấu ặ ọ, chân y g). Không vừa khi đặt giữa:
+    // thử nhỏ tối đa 1 cỡ, rồi mới dịch tối thiểu cho mực vào trong lòng. Ngang: tâm hộp mực thật vào tâm lòng.
+    // tâm lòng trung bình theo từng hàng (0,5 điểm) từ a tới b — không nhảy cóc khi một hàng chạm núm / hoa văn của viền
+    function tamHang(spf, a, b) {
+      let n = 0, sum = 0, l0 = -1e9, r0 = 1e9;
+      for (let t = a; t <= b + 1e-6; t += 0.5) { const q = spf(Math.min(t, b) - 0.25, Math.min(t, b) + 0.25); if (q) { sum += (q[0] + q[1]) / 2; n++; l0 = Math.max(l0, q[0]); r0 = Math.min(r0, q[1]); } }
+      return n ? [sum / n - 0.5 * (r0 - l0), sum / n + 0.5 * (r0 - l0)] : null;
+    }
+    function thuMuc(dongs, ms, rel, dm, chat) {
+      const last = rel.length - 1;
+      const than = ms[0].ab != null ? ms[0].ab : capCao(dongs[0].size, dongs[0].bold);
+      let b0 = (top + bot) / 2 - (rel[last] - than) / 2;
+      const hi = Math.min(...ms.map((m, i) => rel[i] - m.a)), lo = Math.max(...ms.map((m, i) => rel[i] + m.d));
+      const cao = lo - hi, room = bot - top;
+      if (cao > room + 1e-6 && !chat) return null; // khung thấp hơn chữ
+      // dịch tối thiểu để mực cách mép lòng ≥ m (0 nếu vừa)
+      const canDich = (m) => { const mm = Math.max(0, Math.min(m, (room - cao) / 2)); return b0 + hi < top + mm ? top + mm - (b0 + hi) : b0 + lo > bot - mm ? bot - mm - (b0 + lo) : 0; };
+      let dich = false, dd = canDich(0.35);
+      if (Math.abs(dd) > 0.4) {
+        if (!chat && dem > 0 && dongs[0].size > Math.max(min, size0 - 1) + 1e-6) return null; // thử nhỏ 1 cỡ trước khi lệch tâm
+        dd = canDich(0); // cỡ cuối: mực được sát mép lòng (không ra ngoài) để thân chữ giữ giữa
+        if (Math.abs(dd) > 0.4 && !chat && dongs[0].size > min + 1e-6) return null; // vẫn lệch quá ngưỡng: nhỏ thêm (tới cỡ tối thiểu)
+        dich = Math.abs(dd) > 0.4;
+      }
+      b0 += dd;
+      if (b0 + hi < top - 1e-6 && cao <= room) b0 = top - hi;
+      const out = [], sps = [];
+      for (let i = 0; i < dongs.length; i++) {
+        const bl = b0 + rel[i];
+        const sp = spanVung(bl - ms[i].a, bl + ms[i].d) || (chat ? giuaSpan : null);
+        if (!sp) return null;
+        sps.push(sp);
+      }
+      if (align !== 'center' && sps.length > 1) {
+        const l0 = Math.max(...sps.map((q) => q[0])), r0 = Math.min(...sps.map((q) => q[1]));
+        if (r0 > l0) for (let i = 0; i < sps.length; i++) sps[i] = [l0, r0];
+      }
+      for (let i = 0; i < dongs.length; i++) {
+        const bl = b0 + rel[i], sp = sps[i];
+        const l = sp[0] + dm, r = sp[1] - dm;
+        let t = dongs[i].s, m = ms[i];
+        if (m.w > r - l + 1e-6) { if (!chat) return null; t = catBa(t, Math.max(4, r - l), dongs[i].size, dongs[i].bold); m = doChu(t, dongs[i].size, dongs[i].bold); }
+        let xx;
+        // tâm ngang: tâm lòng ở các hàng THÂN chữ (không theo hàng dấu / chân chữ chạm hoa văn góc)
+        // o.tamX: nơi gọi chỉ định tâm (cụm biểu tượng + chữ); không thì tâm lòng ở hàng thân chữ
+        const spT = align === 'center' ? tamHang(spanVung, bl - (m.ab != null ? m.ab : m.a), bl) : null; // tâm lòng trung bình các hàng thân chữ
+        const tam = o.tamX != null ? o.tamX - x : spT ? (spT[0] + spT[1]) / 2 : (l + r) / 2;
+        const cg = align === 'center' ? Math.min(r - m.w / 2, Math.max(l + m.w / 2, tam)) : (l + r) / 2;
+        if (Math.abs(cg - tam) > 0.4 && !chat && (dongs[i].size > min + 1e-6 || dm > 0)) return null; // …rồi đệm ngang hẹp dần // chữ chạm hoa văn hai đầu: thử nhỏ 1 cỡ trước khi lệch tâm
+        if (m.muc) xx = align === 'left' ? l + m.l : align === 'right' ? r - m.r + m.adv : cg + m.adv / 2 - (m.r - m.l) / 2;
+        else xx = align === 'left' ? l : align === 'right' ? r : cg;
+        out.push({ s: t, x: x + xx, b: y + bl, size: dongs[i].size, bold: dongs[i].bold, cat: t !== dongs[i].s });
+      }
+      return { lines: out, thap: cao > room + 1e-6, dem: dm, dich };
     }
     const ph = o.phu ? Math.max(6.5, o.phu.size || 7) : 0, phB = o.phu ? !!o.phu.bold : false;
     // dòng phụ thu cỡ riêng (không kéo dòng chính nhỏ theo)
@@ -1089,7 +1248,13 @@
       if (ls.hit > 0 && fw > 0) { c.globalAlpha = ga * 0.35 * Math.min(1, gd) * (ls.hit / 0.14); if (!(kR != null && daiAnh('gd-ruot-thanh', 5, 4, x + cap, y + 2, fw, h - 4, c))) { c.fillStyle = '#ffffff'; c.fillRect(x + cap, y + 2, fw, h - 4); } }
       c.globalAlpha = ga;
     }
-    if (label) txt(label, x + w / 2, y + h / 2 + 2.6, { size: o.size || 6.5, bold: true, align: 'center', color: '#fff' });
+    if (label) {
+      const lb = String(label);
+      if (chuFont() && !(DIGIT.test(lb) && lb.length >= 3 && HAS.test(mark(lb)))) { // chu-giua-font-that: số trên thanh giữa thanh theo thân chữ thật (trước: đường cơ sở cố định +2,6)
+        const f = ui.fs(o.size || 6.5), m = T.hopMuc(G.LANG !== 'vi' && G.tv ? G.tv(lb) : lb, true);
+        txt(label, x + w / 2 + (m.w / 2 - (m.r - m.l) / 2) * f, y + h / 2 + (m.ab * f) / 2, { size: o.size || 6.5, bold: true, align: 'center', color: '#fff' });
+      } else txt(label, x + w / 2, y + h / 2 + 2.6, { size: o.size || 6.5, bold: true, align: 'center', color: '#fff' });
+    }
   };
   T.lagOf = lagOf; // thanh máu nhỏ trên đầu quái (js/stage.js) dùng chung cách tụt dần
 
