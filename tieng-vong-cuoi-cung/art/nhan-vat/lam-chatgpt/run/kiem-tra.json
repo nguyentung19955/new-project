@@ -1,0 +1,1115 @@
+{
+ "nguon": "art/nhan-vat/lam-chatgpt/run-sheet-v1.png",
+ "soKhung": 8,
+ "cao": 46,
+ "pivot": [
+  32,
+  63
+ ],
+ "fps": 12,
+ "khung": {
+  "0": {
+   "bboxNguon": [
+    8,
+    262,
+    304,
+    572
+   ],
+   "caoNguon": 311,
+   "rongNguon": 297,
+   "matNguon": [
+    [
+     182.5,
+     354.4
+    ],
+    [
+     196.7,
+     359.4
+    ]
+   ],
+   "matDatLai": 1,
+   "loLap": 0,
+   "domHoa": 0,
+   "domDenBo": 43,
+   "mauBo": 4,
+   "vienNgoaiDoi": 15,
+   "suaTay": 0,
+   "dich": [
+    12,
+    18
+   ],
+   "chongDat": true,
+   "hangMat": 32,
+   "nhunDau": 0,
+   "pixelRoiNgoaiO": 0,
+   "bbox": [
+    12,
+    18,
+    54,
+    63
+   ],
+   "cao": 46,
+   "rong": 43,
+   "hangDay": 63,
+   "soPixel": 942,
+   "soMau": 11,
+   "mau": {
+    "#0C0F14": 383,
+    "#1A212B": 79,
+    "#212835": 99,
+    "#2C3546": 54,
+    "#4A5A6E": 1,
+    "#21413A": 71,
+    "#32804F": 193,
+    "#9C6B30": 3,
+    "#E1B85A": 27,
+    "#F3E6C8": 15,
+    "#CEF0D6": 17
+   },
+   "alphaChi0_255": true,
+   "hangDayUng": 63,
+   "matCuoi": [
+    [
+     37,
+     31
+    ],
+    [
+     39,
+     32
+    ]
+   ],
+   "luoiKiemPx": 17,
+   "chuongVangPx": 30,
+   "vachUngXanhPx": 0
+  },
+  "1": {
+   "bboxNguon": [
+    296,
+    262,
+    584,
+    571
+   ],
+   "caoNguon": 310,
+   "rongNguon": 289,
+   "matNguon": [
+    [
+     470.5,
+     355.3
+    ],
+    [
+     484.7,
+     360.6
+    ]
+   ],
+   "matDatLai": 2,
+   "loLap": 2,
+   "domHoa": 1,
+   "domDenBo": 49,
+   "mauBo": 3,
+   "vienNgoaiDoi": 11,
+   "suaTay": 0,
+   "dich": [
+    12,
+    18
+   ],
+   "chongDat": true,
+   "hangMat": 32,
+   "nhunDau": 0,
+   "pixelRoiNgoaiO": 0,
+   "bbox": [
+    12,
+    18,
+    53,
+    63
+   ],
+   "cao": 46,
+   "rong": 42,
+   "hangDay": 63,
+   "soPixel": 947,
+   "soMau": 10,
+   "mau": {
+    "#0C0F14": 397,
+    "#1A212B": 77,
+    "#212835": 96,
+    "#2C3546": 65,
+    "#21413A": 77,
+    "#32804F": 177,
+    "#9C6B30": 7,
+    "#E1B85A": 21,
+    "#F3E6C8": 15,
+    "#CEF0D6": 15
+   },
+   "alphaChi0_255": true,
+   "hangDayUng": 63,
+   "matCuoi": [
+    [
+     37,
+     31
+    ],
+    [
+     39,
+     32
+    ]
+   ],
+   "luoiKiemPx": 15,
+   "chuongVangPx": 28,
+   "vachUngXanhPx": 0
+  },
+  "2": {
+   "bboxNguon": [
+    586,
+    258,
+    839,
+    547
+   ],
+   "caoNguon": 290,
+   "rongNguon": 254,
+   "matNguon": [
+    [
+     731.3,
+     351.8
+    ],
+    [
+     745.7,
+     359.1
+    ]
+   ],
+   "matDatLai": 1,
+   "loLap": 0,
+   "domHoa": 0,
+   "domDenBo": 48,
+   "mauBo": 1,
+   "vienNgoaiDoi": 5,
+   "suaTay": 0,
+   "dich": [
+    16,
+    18
+   ],
+   "chongDat": false,
+   "hangMat": 32,
+   "nhunDau": 0,
+   "pixelRoiNgoaiO": 0,
+   "bbox": [
+    16,
+    18,
+    52,
+    60
+   ],
+   "cao": 43,
+   "rong": 37,
+   "hangDay": 60,
+   "soPixel": 822,
+   "soMau": 10,
+   "mau": {
+    "#0C0F14": 326,
+    "#1A212B": 52,
+    "#212835": 92,
+    "#2C3546": 77,
+    "#21413A": 58,
+    "#32804F": 155,
+    "#9C6B30": 6,
+    "#E1B85A": 25,
+    "#F3E6C8": 15,
+    "#CEF0D6": 16
+   },
+   "alphaChi0_255": true,
+   "hangDayUng": 60,
+   "matCuoi": [
+    [
+     37,
+     31
+    ],
+    [
+     37,
+     32
+    ],
+    [
+     39,
+     32
+    ]
+   ],
+   "luoiKiemPx": 16,
+   "chuongVangPx": 31,
+   "vachUngXanhPx": 0
+  },
+  "3": {
+   "bboxNguon": [
+    814,
+    261,
+    1119,
+    571
+   ],
+   "caoNguon": 311,
+   "rongNguon": 306,
+   "matNguon": [
+    [
+     1000.5,
+     353.4
+    ],
+    [
+     1015.5,
+     357.8
+    ]
+   ],
+   "matDatLai": 1,
+   "loLap": 0,
+   "domHoa": 0,
+   "domDenBo": 54,
+   "mauBo": 2,
+   "vienNgoaiDoi": 12,
+   "suaTay": 0,
+   "dich": [
+    10,
+    18
+   ],
+   "chongDat": true,
+   "hangMat": 32,
+   "nhunDau": 0,
+   "pixelRoiNgoaiO": 0,
+   "bbox": [
+    10,
+    18,
+    53,
+    63
+   ],
+   "cao": 46,
+   "rong": 44,
+   "hangDay": 63,
+   "soPixel": 990,
+   "soMau": 10,
+   "mau": {
+    "#0C0F14": 399,
+    "#1A212B": 77,
+    "#212835": 116,
+    "#2C3546": 57,
+    "#21413A": 85,
+    "#32804F": 197,
+    "#9C6B30": 2,
+    "#E1B85A": 25,
+    "#F3E6C8": 15,
+    "#CEF0D6": 17
+   },
+   "alphaChi0_255": true,
+   "hangDayUng": 63,
+   "matCuoi": [
+    [
+     37,
+     31
+    ],
+    [
+     37,
+     32
+    ],
+    [
+     39,
+     32
+    ]
+   ],
+   "luoiKiemPx": 17,
+   "chuongVangPx": 27,
+   "vachUngXanhPx": 0
+  },
+  "4": {
+   "bboxNguon": [
+    1094,
+    260,
+    1386,
+    583
+   ],
+   "caoNguon": 324,
+   "rongNguon": 293,
+   "matNguon": [
+    [
+     1275.7,
+     353.4
+    ],
+    [
+     1289.7,
+     358.5
+    ]
+   ],
+   "matDatLai": 2,
+   "loLap": 0,
+   "domHoa": 1,
+   "domDenBo": 65,
+   "mauBo": 2,
+   "vienNgoaiDoi": 4,
+   "suaTay": 0,
+   "dich": [
+    11,
+    16
+   ],
+   "chongDat": true,
+   "hangMat": 30,
+   "nhunDau": -2,
+   "pixelRoiNgoaiO": 0,
+   "bbox": [
+    11,
+    16,
+    53,
+    63
+   ],
+   "cao": 48,
+   "rong": 43,
+   "hangDay": 63,
+   "soPixel": 904,
+   "soMau": 10,
+   "mau": {
+    "#0C0F14": 353,
+    "#1A212B": 60,
+    "#212835": 94,
+    "#2C3546": 63,
+    "#21413A": 84,
+    "#32804F": 180,
+    "#9C6B30": 10,
+    "#E1B85A": 26,
+    "#F3E6C8": 16,
+    "#CEF0D6": 18
+   },
+   "alphaChi0_255": true,
+   "hangDayUng": 63,
+   "matCuoi": [
+    [
+     37,
+     29
+    ],
+    [
+     39,
+     30
+    ]
+   ],
+   "luoiKiemPx": 18,
+   "chuongVangPx": 36,
+   "vachUngXanhPx": 0
+  },
+  "5": {
+   "bboxNguon": [
+    1352,
+    261,
+    1656,
+    579
+   ],
+   "caoNguon": 319,
+   "rongNguon": 305,
+   "matNguon": [
+    [
+     1545.8,
+     353.6
+    ],
+    [
+     1560.4,
+     359.2
+    ]
+   ],
+   "matDatLai": 0,
+   "loLap": 0,
+   "domHoa": 1,
+   "domDenBo": 59,
+   "mauBo": 6,
+   "vienNgoaiDoi": 17,
+   "suaTay": 0,
+   "dich": [
+    9,
+    17
+   ],
+   "chongDat": true,
+   "hangMat": 31,
+   "nhunDau": -1,
+   "pixelRoiNgoaiO": 0,
+   "bbox": [
+    9,
+    17,
+    53,
+    63
+   ],
+   "cao": 47,
+   "rong": 45,
+   "hangDay": 63,
+   "soPixel": 968,
+   "soMau": 10,
+   "mau": {
+    "#0C0F14": 387,
+    "#1A212B": 78,
+    "#212835": 123,
+    "#2C3546": 50,
+    "#21413A": 89,
+    "#32804F": 181,
+    "#9C6B30": 2,
+    "#E1B85A": 23,
+    "#F3E6C8": 20,
+    "#CEF0D6": 15
+   },
+   "alphaChi0_255": true,
+   "hangDayUng": 63,
+   "matCuoi": [
+    [
+     37,
+     30
+    ],
+    [
+     39,
+     31
+    ]
+   ],
+   "luoiKiemPx": 15,
+   "chuongVangPx": 25,
+   "vachUngXanhPx": 0
+  },
+  "6": {
+   "bboxNguon": [
+    1651,
+    261,
+    1913,
+    548
+   ],
+   "caoNguon": 288,
+   "rongNguon": 263,
+   "matNguon": [
+    [
+     1805.5,
+     353.3
+    ],
+    [
+     1819.9,
+     357.9
+    ]
+   ],
+   "matDatLai": 2,
+   "loLap": 0,
+   "domHoa": 1,
+   "domDenBo": 46,
+   "mauBo": 4,
+   "vienNgoaiDoi": 17,
+   "suaTay": 0,
+   "dich": [
+    15,
+    18
+   ],
+   "chongDat": false,
+   "hangMat": 32,
+   "nhunDau": 0,
+   "pixelRoiNgoaiO": 0,
+   "bbox": [
+    15,
+    18,
+    53,
+    60
+   ],
+   "cao": 43,
+   "rong": 39,
+   "hangDay": 60,
+   "soPixel": 838,
+   "soMau": 10,
+   "mau": {
+    "#0C0F14": 350,
+    "#1A212B": 52,
+    "#212835": 97,
+    "#2C3546": 63,
+    "#21413A": 56,
+    "#32804F": 163,
+    "#9C6B30": 6,
+    "#E1B85A": 25,
+    "#F3E6C8": 11,
+    "#CEF0D6": 15
+   },
+   "alphaChi0_255": true,
+   "hangDayUng": 60,
+   "matCuoi": [
+    [
+     37,
+     31
+    ],
+    [
+     39,
+     32
+    ]
+   ],
+   "luoiKiemPx": 15,
+   "chuongVangPx": 31,
+   "vachUngXanhPx": 0
+  },
+  "7": {
+   "bboxNguon": [
+    1890,
+    265,
+    2171,
+    576
+   ],
+   "caoNguon": 312,
+   "rongNguon": 282,
+   "matNguon": [
+    [
+     2067.5,
+     355.6
+    ],
+    [
+     2082.1,
+     362.1
+    ]
+   ],
+   "matDatLai": 0,
+   "loLap": 0,
+   "domHoa": 1,
+   "domDenBo": 54,
+   "mauBo": 8,
+   "vienNgoaiDoi": 15,
+   "suaTay": 0,
+   "dich": [
+    11,
+    18
+   ],
+   "chongDat": true,
+   "hangMat": 32,
+   "nhunDau": 0,
+   "pixelRoiNgoaiO": 0,
+   "bbox": [
+    11,
+    18,
+    51,
+    63
+   ],
+   "cao": 46,
+   "rong": 41,
+   "hangDay": 63,
+   "soPixel": 929,
+   "soMau": 10,
+   "mau": {
+    "#0C0F14": 383,
+    "#1A212B": 55,
+    "#212835": 124,
+    "#2C3546": 59,
+    "#21413A": 75,
+    "#32804F": 175,
+    "#9C6B30": 7,
+    "#E1B85A": 19,
+    "#F3E6C8": 10,
+    "#CEF0D6": 22
+   },
+   "alphaChi0_255": true,
+   "hangDayUng": 63,
+   "matCuoi": [
+    [
+     37,
+     31
+    ],
+    [
+     39,
+     32
+    ]
+   ],
+   "luoiKiemPx": 22,
+   "chuongVangPx": 26,
+   "vachUngXanhPx": 0
+  }
+ },
+ "kichThuocSheet": [
+  2172,
+  724
+ ],
+ "tachNen": "alpha ≥ 128 (sheet có alpha thật; viền mềm alpha < 128 bị bỏ)",
+ "tachKhung": "thành phần liên thông (8 mảnh lớn)",
+ "tyLe": {
+  "s": 0.14791,
+  "caoNguon": [
+   311,
+   310,
+   290,
+   311,
+   324,
+   319,
+   288,
+   312
+  ],
+  "trungVi": 311.0,
+  "caoRaTheoKhung": [
+   46.0,
+   45.9,
+   42.9,
+   46.0,
+   47.9,
+   47.2,
+   42.6,
+   46.1
+  ]
+ },
+ "thuNho": {
+  "diem": {
+   "da-so": [
+    {
+     "manhRoi": 0,
+     "lo": 1,
+     "dom12px": 25,
+     "matMat": 1,
+     "diem": 37
+    },
+    {
+     "manhRoi": 0,
+     "lo": 1,
+     "dom12px": 26,
+     "matMat": 2,
+     "diem": 48
+    },
+    {
+     "manhRoi": 0,
+     "lo": 1,
+     "dom12px": 28,
+     "matMat": 1,
+     "diem": 40
+    },
+    {
+     "manhRoi": 0,
+     "lo": 0,
+     "dom12px": 26,
+     "matMat": 1,
+     "diem": 36
+    },
+    {
+     "manhRoi": 0,
+     "lo": 1,
+     "dom12px": 22,
+     "matMat": 2,
+     "diem": 44
+    },
+    {
+     "manhRoi": 0,
+     "lo": 0,
+     "dom12px": 29,
+     "matMat": 0,
+     "diem": 29
+    },
+    {
+     "manhRoi": 0,
+     "lo": 1,
+     "dom12px": 27,
+     "matMat": 2,
+     "diem": 49
+    },
+    {
+     "manhRoi": 0,
+     "lo": 1,
+     "dom12px": 23,
+     "matMat": 0,
+     "diem": 25
+    }
+   ],
+   "da-soTong": 308,
+   "nearest": [
+    {
+     "manhRoi": 0,
+     "lo": 1,
+     "dom12px": 64,
+     "matMat": 1,
+     "diem": 76
+    },
+    {
+     "manhRoi": 0,
+     "lo": 1,
+     "dom12px": 55,
+     "matMat": 1,
+     "diem": 67
+    },
+    {
+     "manhRoi": 0,
+     "lo": 1,
+     "dom12px": 55,
+     "matMat": 0,
+     "diem": 57
+    },
+    {
+     "manhRoi": 0,
+     "lo": 0,
+     "dom12px": 50,
+     "matMat": 0,
+     "diem": 50
+    },
+    {
+     "manhRoi": 0,
+     "lo": 1,
+     "dom12px": 55,
+     "matMat": 1,
+     "diem": 67
+    },
+    {
+     "manhRoi": 0,
+     "lo": 0,
+     "dom12px": 76,
+     "matMat": 0,
+     "diem": 76
+    },
+    {
+     "manhRoi": 0,
+     "lo": 1,
+     "dom12px": 59,
+     "matMat": 1,
+     "diem": 71
+    },
+    {
+     "manhRoi": 0,
+     "lo": 1,
+     "dom12px": 60,
+     "matMat": 0,
+     "diem": 62
+    }
+   ],
+   "nearestTong": 526
+  },
+  "chon": "da-so",
+  "quyTac": "auto: điểm = mảnh rời×5 + lỗ×2 + đốm 1–2 px + mắt mất×10, sau dọn; thấp hơn thắng, hoà → da-so"
+ },
+ "can": {
+  "cotMat": 38,
+  "hangMatChuan": 32,
+  "vungDauThan": "hàng ≤ 45",
+  "quyTac": "ngang: tâm 2 mắt → cột 38; dọc: khung chống đất hàng đáy = 63, khung bay giữ hàng mắt = 32"
+ },
+ "onDinhThoiGianPx": [
+  32,
+  28,
+  44,
+  32,
+  31,
+  32,
+  22,
+  43
+ ],
+ "lat": [
+  {
+   "khung": 0,
+   "thuan": {
+    "trai": -20,
+    "phai": 22,
+    "day": 0
+   },
+   "lat": {
+    "trai": -22,
+    "phai": 20,
+    "day": 0
+   },
+   "lech": {
+    "trai": 0,
+    "phai": 0,
+    "day": 0
+   },
+   "saiPixel": 0,
+   "dung": true
+  },
+  {
+   "khung": 1,
+   "thuan": {
+    "trai": -20,
+    "phai": 21,
+    "day": 0
+   },
+   "lat": {
+    "trai": -21,
+    "phai": 20,
+    "day": 0
+   },
+   "lech": {
+    "trai": 0,
+    "phai": 0,
+    "day": 0
+   },
+   "saiPixel": 0,
+   "dung": true
+  },
+  {
+   "khung": 2,
+   "thuan": {
+    "trai": -16,
+    "phai": 20,
+    "day": -3
+   },
+   "lat": {
+    "trai": -20,
+    "phai": 16,
+    "day": -3
+   },
+   "lech": {
+    "trai": 0,
+    "phai": 0,
+    "day": 0
+   },
+   "saiPixel": 0,
+   "dung": true
+  },
+  {
+   "khung": 3,
+   "thuan": {
+    "trai": -22,
+    "phai": 21,
+    "day": 0
+   },
+   "lat": {
+    "trai": -21,
+    "phai": 22,
+    "day": 0
+   },
+   "lech": {
+    "trai": 0,
+    "phai": 0,
+    "day": 0
+   },
+   "saiPixel": 0,
+   "dung": true
+  },
+  {
+   "khung": 4,
+   "thuan": {
+    "trai": -21,
+    "phai": 21,
+    "day": 0
+   },
+   "lat": {
+    "trai": -21,
+    "phai": 21,
+    "day": 0
+   },
+   "lech": {
+    "trai": 0,
+    "phai": 0,
+    "day": 0
+   },
+   "saiPixel": 0,
+   "dung": true
+  },
+  {
+   "khung": 5,
+   "thuan": {
+    "trai": -23,
+    "phai": 21,
+    "day": 0
+   },
+   "lat": {
+    "trai": -21,
+    "phai": 23,
+    "day": 0
+   },
+   "lech": {
+    "trai": 0,
+    "phai": 0,
+    "day": 0
+   },
+   "saiPixel": 0,
+   "dung": true
+  },
+  {
+   "khung": 6,
+   "thuan": {
+    "trai": -17,
+    "phai": 21,
+    "day": -3
+   },
+   "lat": {
+    "trai": -21,
+    "phai": 17,
+    "day": -3
+   },
+   "lech": {
+    "trai": 0,
+    "phai": 0,
+    "day": 0
+   },
+   "saiPixel": 0,
+   "dung": true
+  },
+  {
+   "khung": 7,
+   "thuan": {
+    "trai": -21,
+    "phai": 19,
+    "day": 0
+   },
+   "lat": {
+    "trai": -19,
+    "phai": 21,
+    "day": 0
+   },
+   "lech": {
+    "trai": 0,
+    "phai": 0,
+    "day": 0
+   },
+   "saiPixel": 0,
+   "dung": true
+  }
+ ],
+ "saiKhacKhungKe": [
+  352,
+  440,
+  554,
+  853,
+  739,
+  643,
+  461,
+  402
+ ],
+ "saiKhacKhungKeVung": {
+  "dauThan(hang<46)": [
+   141,
+   158,
+   227,
+   485,
+   425,
+   338,
+   174,
+   196
+  ],
+  "chan(hang>=46)": [
+   211,
+   282,
+   327,
+   368,
+   314,
+   305,
+   287,
+   206
+  ]
+ },
+ "saiKhacChanMoiCap": [
+  [
+   0,
+   211,
+   268,
+   265,
+   315,
+   259,
+   279,
+   206
+  ],
+  [
+   211,
+   0,
+   282,
+   347,
+   313,
+   230,
+   278,
+   223
+  ],
+  [
+   268,
+   282,
+   0,
+   327,
+   219,
+   293,
+   137,
+   279
+  ],
+  [
+   265,
+   347,
+   327,
+   0,
+   368,
+   305,
+   322,
+   260
+  ],
+  [
+   315,
+   313,
+   219,
+   368,
+   0,
+   314,
+   250,
+   294
+  ],
+  [
+   259,
+   230,
+   293,
+   305,
+   314,
+   0,
+   305,
+   220
+  ],
+  [
+   279,
+   278,
+   137,
+   322,
+   250,
+   305,
+   0,
+   287
+  ],
+  [
+   206,
+   223,
+   279,
+   260,
+   294,
+   220,
+   287,
+   0
+  ]
+ ],
+ "chanGiongNhat": [
+  [
+   137,
+   2,
+   6
+  ],
+  [
+   206,
+   0,
+   7
+  ],
+  [
+   211,
+   0,
+   1
+  ],
+  [
+   219,
+   2,
+   4
+  ],
+  [
+   220,
+   5,
+   7
+  ],
+  [
+   223,
+   1,
+   7
+  ]
+ ],
+ "tongMau": [
+  "#0C0F14",
+  "#1A212B",
+  "#212835",
+  "#21413A",
+  "#2C3546",
+  "#32804F",
+  "#4A5A6E",
+  "#9C6B30",
+  "#CEF0D6",
+  "#E1B85A",
+  "#F3E6C8"
+ ],
+ "soMauTong": 11,
+ "mauNgoaiBang": [],
+ "sheetGame": {
+  "png": "game/anim/lam-chatgpt.png",
+  "json": "game/anim/lam-chatgpt.anim.json",
+  "idle": "TẠM: 1 khung = run-0 (chưa có khung đứng ChatGPT)"
+ },
+ "anim2d": {
+  "trang": {
+   "ten": "run",
+   "fps": "12",
+   "loop": "true",
+   "nguon": "PNG 512×320",
+   "msg": "Đã nạp URL (512×320)."
+  },
+  "phat20Vong": "Không có lần nào khung nhảy sai thứ tự\nrun · 8 khung @ 12 fps · dt bước = 16.67 ms (tốc độ 1.00×)\n20 vòng trong 800 bước logic · mỗi vòng 40…40 bước (lý thuyết 40.00 bước = 666.7 ms)\nĐiểm nối 7→0: liền mạch; số bước mỗi vòng dao động ±1 là do dt không chia hết cho ms khung, không phải giật.",
+  "kiemLat": "ĐẠT — lật đối xứng đúng quanh cột pivot X\nrun khung 4 · pivot tạm X=66, Y=65\nLệch trái 0 px · lệch phải 0 px · lệch đáy 0 px · pixel không khớp 0\nbbox thuận: cột 45…87, đáy hàng 65 · bbox lật: cột 45…87, đáy hàng 65\nTâm bbox so với pivot x: 0 px (chỉ thông tin — hình lệch tâm thì khi lật nhìn như dịch 0 px; KHÔNG tự căn giữa theo bbox).",
+  "loiJS": []
+ }
+}
