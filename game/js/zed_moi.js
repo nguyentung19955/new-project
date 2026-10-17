@@ -760,6 +760,7 @@
         let gx = n[0] / 2 - 24 + (E ? E.ox : 0), gy = n[1] / 2 - 45 + (E ? E.oy : 0);
         if (e && lean) { const b = (lean * Math.PI) / 180, px = e[1] / 2 - 24, py = e[0] / 2 - 45, cx = gx - px, cy = gy - py; gy = py + cx * Math.sin(b) + cy * Math.cos(b); }
         if (tk) gy += tk.uy;
+        heDat = heVk(w);
         const L = (R[2] - gc[0]) * B.tl, a2 = datGoc(kepDat, ang + lean, gy, L, B, capVk(w)), aTho = ang + lean;
         ang = a2 - lean;
         const dd = da.kn && DINH_DAT[wa.ten]; // kiếm nặng: khung lê kiếm / mũi sát đất → mũi CHẠM đất đúng độ dài lưỡi từng cấp
@@ -983,14 +984,25 @@
   // KIẾM VUÔNG 17/10: đầu kiếm là cạnh vuông → góc thấp nhất của cạnh đầu (trên hoặc dưới trục cán, tuỳ chiều kiếm) mới là "mũi" chạm đất.
   // Chặn / đặt theo góc đó: dời góc pha φ = atan(lệch / L), độ dài √(L² + lệch²) (lệch = cạnh đầu so với trục điểm cầm, z.kv.mui).
   // Kiếm vuông: góc đầu vuông thấp nhất nằm dưới điểm cuối trục cán bao nhiêu (điểm ảnh game) ở góc a; 0 khi không phải kiếm vuông.
+  // 17/10 tối (gan-anh-17-10-toi): đang cầm kiếm có ẢNH THEO HỆ (lửa / dây / mảnh băng thò quanh mũi) → khung phía mũi lấy rộng hơn
+  // (G.vkHeMui, js/vien_vk.js) khi chặn / đặt mũi trên đất để phần trang trí cũng không lọt dưới đất. heDat: hệ của kiếm đang tính (đặt ở vkKhung trước khi chặn đất).
+  let heDat = null;
+  function muiVk(K, cap) {
+    const m = K && K.mui && K.mui[cap];
+    if (!m || !heDat || !G.vkHeMui) return m;
+    const m2 = G.vkHeMui(cap, heDat);
+    return m2 ? [Math.min(m[0], m2[0]), Math.max(m[1], m2[1])] : m;
+  }
   function goc2Vuong(B, cap, a) {
-    const K = B.kv && SC.kiemVuong && SC.kiemVuong(), m = K && K.mui && K.mui[cap], g = B.cam && B.cam[cap];
+    const K = B.kv && SC.kiemVuong && SC.kiemVuong(), m = muiVk(K, cap), g = B.cam && B.cam[cap];
     if (!m || !g) return 0;
     const c = Math.cos((a * Math.PI) / 180);
     return Math.max(0, (m[1] - g[1]) * B.tl * c, -(g[1] - m[0]) * B.tl * c);
   }
   function datGoc(f, a, gy, L, B, cap) {
-    const K = B.kv && SC.kiemVuong && SC.kiemVuong(), m = K && K.mui && K.mui[cap], g = B.cam && B.cam[cap];
+    // khung phía mũi gồm cả trang trí theo hệ (muiVk) cả khi chặn lẫn khi đặt mũi chạm đất: lửa / dây / mảnh băng chạm vạch đất, lưỡi cao hơn
+    // ~2–3 điểm (tia lửa lê đất nới ngưỡng tương ứng, js/fx.js nangHe).
+    const K = B.kv && SC.kiemVuong && SC.kiemVuong(), m = muiVk(K, cap), g = B.cam && B.cam[cap];
     if (!m || !g) return f(a, gy, L);
     const r = (a * Math.PI) / 180, wb = (m[1] - g[1]) * B.tl, wt = -(g[1] - m[0]) * B.tl;
     if (f === kepDat) { // vùng góc cấm của cả cạnh đầu = hợp vùng cấm hai góc (mỗi góc như kepDat) → đẩy về mép gần nhất của vùng hợp

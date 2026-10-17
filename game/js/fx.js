@@ -1042,10 +1042,67 @@
   //   nhát 2: hu-chem-kiem-nang-3 (bổ xuống + nổ đất) đứng thẳng, đáy ở mặt đất ngay dưới mũi kiếm khung 7 (u 0,8), nổ đúng lúc mũi chạm;
   //   nhát 3: hu-chem-kiem-nang-4 (chém ngang): đuôi → mũi lúc kéo kiếm ra sau (u 0,3), đầu → mũi lúc chém ngang hết tầm (u 0,6).
   // Vệt cũ không nhuộm theo hệ → vệt mới cũng không (hạt hệ elemBits giữ nguyên như cũ). Thời lượng, chạm, sát thương không đổi (chỉ hình).
-  const ANH_KN = { // điểm mốc ảnh (điểm ảnh game so với neo, chưa nhân "co") — vet-moc.json
+  const ANH_KN = { // điểm mốc ảnh (điểm ảnh game so với neo, chưa nhân "co") — vet-moc.json / vet-moc-gon.json
     'hu-chem-kiem-nang-2': { dx: 26.5, dy: -38.5 },
     'hu-chem-kiem-nang-4': { dx: 48, dy: 0 },
+    'hu-chem-kiem-nang-gon-2': { dx: 21, dy: -31 },
+    'hu-chem-kiem-nang-gon-4': { dx: 40, dy: -3 },
   };
+  // VỆT GỌN 17/10 tối (docs/review/ke-hoach-cai-thien/gan-anh-17-10-toi/bao-cao.md): chủ game gen tấm vệt kiếm nặng mới ngắn gọn hơn ~40 %,
+  // vẽ TRẮNG (docs/anh-goc/kiem-nang/vet-kiem-nang-gon-trang-4x6.png → cat-vet-kiem-nang.py --gon → hu-chem-kiem-nang-gon-1..4). Có ảnh thì
+  // thay hu-chem-kiem-nang-1..4, cùng chỗ đặt / cùng lúc thả; nhuộm theo hệ vũ khí (Lửa cam đỏ, Độc xanh lá, Băng xanh nhạt; không hệ: trắng-xanh
+  // như vệt cũ) bằng dải màu của js/fx_he_moi.js (kiểu 'hemoigon'); viền sáng theo bậc (?hebac) và thu theo tầm (?hetam) như mọi vệt.
+  // Cỡ: KN_GON_CO (nhân thêm vào cỡ đặt theo mũi kiếm) — đo bằng hieu-ung-he/cong-cu/do.py + tam.py để hình không vượt tầm trúng quá ~4 điểm.
+  // Chỉ HÌNH. ?vetgon=0 (G.VET_GON = false): vệt hiện nay y hệt.
+  if (G.LUA_RONG === undefined) { let t = false; try { t = typeof location !== 'undefined' && /[?&]luarong=0(&|$)/.test(location.search || ''); } catch (e) { t = false; } G.LUA_RONG = !t; }
+  if (G.VET_GON === undefined) { let t = false; try { t = typeof location !== 'undefined' && /[?&]vetgon=0(&|$)/.test(location.search || ''); } catch (e) { t = false; } G.VET_GON = !t; }
+  const KN_GON_CO = { 1: 0.7, 2: 1, 3: 1, 4: 1 }; // tia lửa lê đất: ảnh gọn vẽ to hơn ảnh cũ (cả móc vệt) → 0,7 cho vừa mũi kiếm
+  function maKN(n) {
+    const g = 'hu-chem-kiem-nang-gon-' + n;
+    return G.VET_GON !== false && G.fxAnh && G.fxAnh.co(g) ? g : 'hu-chem-kiem-nang-' + n;
+  }
+  // Vệt gọn KHÔNG vẽ xa hơn chỗ trúng thật: tầm đòn của nhát đang ra (js/moves.js chain[nhát].reach, ×1,15 khi vũ khí có dòng "tầm") →
+  // mép thân quái xa nhất còn trúng ≈ 0,9 × tầm (đo bằng lưới quái, hieu-ung-he/cong-cu/do.py: 32/34/40 → 30/30/36); khung ảnh (kể cả
+  // viền sáng bậc cao +6 %) được vượt tối đa GON_DU điểm. Quá thì thu ảnh quanh điểm neo (không nhỏ hơn 0,6 lần), còn quá nữa thì lùi điểm neo
+  // về phía Cu Tí. Tia lửa lê đất (bám mũi kiếm từng hình) kẹp lại mỗi hình ở lớp vẽ (o.gonLim). Chỉ chỗ / cỡ vẽ, không đổi đòn.
+  const GON_DU = 4, GON_VIEN = 1.06;
+  function tamKN(P) {
+    try {
+      const M = G.MOVES, c = (((P.comboI | 0) % 3) + 3) % 3, ch = M && M.sword && M.sword.chain[c], cur = P.mv && P.mv.cur;
+      let L = cur && cur.reach ? cur.reach : ch ? ch.reach : 0;
+      if (!(L > 0)) return null;
+      const w = G.curW && G.curW(P);
+      if (w && G.wHas && G.wHas(w, 'reach')) L *= 1.15;
+      return L;
+    } catch (e) { return null; }
+  }
+  function gonGioi(h, P, a) {
+    const L = tamKN(P);
+    if (!(L > 0) || !a) return;
+    const lim = L * 0.9 + GON_DU, f = h.f < 0 ? -1 : 1, s = a.co * (h.sc > 0 ? h.sc : 1) * GON_VIEN, cs = Math.cos(h.xg || 0), sn = Math.sin(h.xg || 0);
+    let R = -1e9; // phần ảnh vươn ra trước điểm neo (theo hướng mặt)
+    for (const [u, v] of [[-a.ax, -a.ay], [a.fw - a.ax, -a.ay], [-a.ax, a.fh - a.ay], [a.fw - a.ax, a.fh - a.ay]]) {
+      const px = (f < 0 ? -u : u) * s, py = v * s;
+      R = Math.max(R, (px * cs - py * sn) * f);
+    }
+    const neo = (h.tdx || 0) * f;
+    if (h.muiKN) { h.gonLim = lim; h.gonR = Math.max(0, R); return; }
+    if (neo + R <= lim || R <= 0) return;
+    const k = Math.max(0.6, Math.min(1, (lim - neo) / R));
+    h.sc = (h.sc > 0 ? h.sc : 1) * k;
+    const du = neo + R * k - lim;
+    if (du > 0) { h.tdx = (h.tdx || 0) - f * du; h.x -= f * du; }
+    h.gonK = +k.toFixed(2);
+  }
+  // Kiếm vuông có ảnh theo hệ (17/10 tối): chặn đất tính cả lửa / dây / mảnh băng quanh mũi nên mũi lê đất cao hơn vạch ~2–3 điểm →
+  // tia lửa lê đất (đặt ở vạch đất dưới mũi) vẫn hiện: nới ngưỡng "mũi đã xuống đất" thêm 4 điểm khi đang dùng ảnh hệ.
+  function nangHe(P) {
+    try {
+      const w = G.curW && G.curW(P), he = heKN(P), cap = w && G.wStage ? G.wStage(w) : 0;
+      return he !== 'trang' && G.vkHeMui && G.vkHeMui(cap, he) ? 4 : 0;
+    } catch (e) { return 0; }
+  }
+  function heKN(P) { try { const w = G.curW && G.curW(P); const el = w && G.activeEl ? G.activeEl(P, w) : null; return el === 'fire' || el === 'poison' || el === 'ice' ? el : 'trang'; } catch (e) { return 'trang'; } }
   // Mũi kiếm (so với chân em bé, toạ độ màn) ở tiến độ u của nhát đang đánh; null: không đo được.
   function muiKN(P, u) {
     const TL = G.tinhLinh;
@@ -1061,9 +1118,13 @@
     const FA = G.fxAnh;
     if (!FA || !FA.co(ma)) return false;
     const f = P.face < 0 ? -1 : 1;
+    const gon = ma.indexOf('-gon-') > 0;
+    if (gon) sc *= KN_GON_CO[ma.slice(-1)] || 1;
     const h = add({ ty: 'anh', ma, x: P.x + x, y: P.y + y, t: FA.giay(ma) || 0.2, f, sc, goc: 0, ly: 1, d: d || 0, neo: 'khoa' });
     h.xg = xg; h.theo = P; h.tdx = x; h.tdy = y;
+    if (gon && G.heMoi && G.heMoi.DAI) { h.mau = heKN(P); h.kieu = 'hemoigon'; } // vệt gọn vẽ trắng → nhuộm màu hệ (không hệ: trắng-xanh)
     if (mui) h.muiKN = mui; // bám mũi kiếm từng hình (lê đất)
+    if (gon) gonGioi(h, P, FA.ds[ma]); // vệt gọn: kẹp theo tầm trúng (sau khi biết có bám mũi không)
     return true;
   }
   // Hai điểm: đuôi ảnh → A, đầu ảnh → B (so với chân em bé). Ảnh vẽ quay phải; mặt trái thì lật ngang rồi xoay.
@@ -1091,12 +1152,12 @@
     const u = 1 - P.atkT / P.atkDur, c = (((P.comboI | 0) % 3) + 3) % 3, x = r.xong;
     try {
       if (c === 0) {
-        if (!x.a) { x.a = 1; const m = muiKN(P, Math.max(0.02, u)); if (m) knThem('hu-chem-kiem-nang-1', P, m.x, 0, 0, 0.8, 0, 1); }
-        if (!x.b && u >= 0.2) { x.b = 1; knHai('hu-chem-kiem-nang-2', P, muiKN(P, 0.3), muiKN(P, 0.62), 0); }
+        if (!x.a) { x.a = 1; const m = muiKN(P, Math.max(0.02, u)); if (m) knThem(maKN(1), P, m.x, 0, 0, 0.8, 0, 1); }
+        if (!x.b && u >= 0.2) { x.b = 1; knHai(maKN(2), P, muiKN(P, 0.3), muiKN(P, 0.62), 0); }
       } else if (c === 1) {
-        if (!x.a && u >= 0.38) { x.a = 1; const m = muiKN(P, 0.8); if (m) knThem('hu-chem-kiem-nang-3', P, m.x, 0, 0, 0.75, 0); }
+        if (!x.a && u >= 0.38) { x.a = 1; const m = muiKN(P, 0.8); if (m) knThem(maKN(3), P, m.x, 0, 0, 0.75, 0); }
       } else {
-        if (!x.a && u >= 0.25) { x.a = 1; knHai('hu-chem-kiem-nang-4', P, muiKN(P, 0.3), muiKN(P, G.KN_NHIP !== false ? 0.5 : 0.6), 0); } // KN_NHIP: kiếm hết tầm ngang ở u 0,5 (sau đó theo đà vòng lên)
+        if (!x.a && u >= 0.25) { x.a = 1; knHai(maKN(4), P, muiKN(P, 0.3), muiKN(P, G.KN_NHIP !== false ? 0.5 : 0.6), 0); } // KN_NHIP: kiếm hết tầm ngang ở u 0,5 (sau đó theo đà vòng lên)
         // đòn kiếm nặng 17/10 (G.KN_GHIM, js/zed_moi.js): nhát 3 ra lúc đang chạy → bụi chân ảnh hu-lao-bui sau gót lúc ghìm lại (một lần)
         if (!x.g && r.chay && G.KN_GHIM !== false && coAnh('hu-lao-bui')) { x.g = 1; const f = P.face < 0 ? -1 : 1; anh('hu-lao-bui', P.x - f * 20, P.y + 1, { f, sc: 0.8 }); }
       }
@@ -1629,7 +1690,15 @@
         const f = ((t * 6) | 0) % 4;
         p(c, x - Math.round(B.w) - 2 + f, y, 5, 1, 'rgba(200,236,255,0.6)'); p(c, x + Math.round(B.w) - 4 - f, y + 1, 5, 1, 'rgba(200,236,255,0.5)');
       }
-      if (v.fire && d3('hu-bam-lua')) G.fxAnh.ve(c, 'hu-bam-lua', x, y + 1, tT, 0, scT, false, 0.85);
+      // LỬA RỘNG 17/10 tối (docs/review/ke-hoach-cai-thien/gan-anh-17-10-toi/bao-cao.md; ?luarong=0 tắt): quái thân bè / to (trùm, tinh anh,
+      // thân rộng ≥ 38 điểm và rộng ≥ 1,3 × cao: Bọ Hung, Cua, Heo…) → ảnh lửa cháy bè ngang hu-bam-lua-rong, co theo BỀ NGANG thân (bảng neo
+      // js/dinh_quai_bang.js: 90 % bề ngang, lửa không cao quá 80 % thân). Quái nhỏ / cao giữ hu-bam-lua. Chỉ hình.
+      const luaRong = v.fire && DQ && G.LUA_RONG !== false && (e.isBoss || e.tinhAnh || (DQ.w >= 38 && DQ.w >= 1.3 * DQ.h)) && d3('hu-bam-lua-rong');
+      if (luaRong) {
+        const aR = G.fxAnh.ds['hu-bam-lua-rong'], fw = (aR && aR.fw) || 40, fh = (aR && aR.fh) || 23;
+        const scR = Math.max(0.8, Math.min(3.2, (DQ.w * 0.9) / fw, (DQ.h * 0.8) / fh));
+        G.fxAnh.ve(c, 'hu-bam-lua-rong', x, y + 1, tT, 0, scR, false, 0.85);
+      } else if (v.fire && d3('hu-bam-lua')) G.fxAnh.ve(c, 'hu-bam-lua', x, y + 1, tT, 0, scT, false, 0.85);
       else if (v.fire) {
         const n = e.isPlayer ? 2 : B.w > 12 ? 5 : B.w > 7 ? 4 : 3;
         for (let i = 0; i < n; i++) {
@@ -2537,8 +2606,9 @@
             if (o.muiKN && th) { // kiếm nặng: tia lửa lê đất chạy theo mũi kiếm, tắt khi kiếm rời đất (hất lên, u > 0,45) hay hết nhát
               if (!(th.atkT > 0) || 1 - th.atkT / (th.atkDur || 1) > 0.45) { o.t = 0; break; }
               const m = muiKN(th);
-              if (!m || m.y < -6) break; // mũi kiếm chưa xuống đất (đang nối từ thế đứng): chưa hiện
+              if (!m || m.y < -6 - nangHe(th)) break; // mũi kiếm chưa xuống đất (đang nối từ thế đứng): chưa hiện
               o.tdx = m.x;
+              if (o.gonLim != null) { const f = o.f < 0 ? -1 : 1; if (m.x * f + o.gonR > o.gonLim) o.tdx = f * (o.gonLim - o.gonR); } // vệt gọn: không vượt tầm trúng
             }
             const X = Math.round((th ? th.x : o.x - (o.tdx || 0)) + (o.tdx || 0)), Y = Math.round((th ? th.y : o.y - (o.tdy || 0)) + (o.tdy || 0));
             c.save(); c.translate(X, Y); c.rotate(o.xg);

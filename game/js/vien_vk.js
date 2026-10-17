@@ -204,14 +204,32 @@
   // Dùng ở js/zed_moi.js anhVk (trên tay) và js/vk_moi.js anhVk (ô đồ, Phi Thương, nút).
   G.VK_HE_ANH = true;
   try { if (typeof location !== 'undefined' && /[?&]vkhe=0(&|$)/.test(location.search || '')) G.VK_HE_ANH = false; } catch (e) { /* giữ mặc định */ }
+  // cờ tắt riêng ảnh kiếm vuông theo hệ / gân (17/10 tối): ?kiemvuonghe=0, ?kiemvuonggan=0
+  const coTat = (t) => { try { return typeof location !== 'undefined' && new RegExp('[?&]' + t + '=0(&|$)').test(location.search || ''); } catch (e) { return false; } };
+  if (G.KIEM_VUONG_HE === undefined) G.KIEM_VUONG_HE = !coTat('kiemvuonghe');
+  if (G.KIEM_VUONG_GAN === undefined) G.KIEM_VUONG_GAN = !coTat('kiemvuonggan');
   G.vkHeAnh = function (loai, cap, he, r) {
     if (G.VK_HE_ANH === false || !he || !(cap > 0) || !r) return null;
     const SC = G.spriteCustom, z = SC && SC.zed && SC.zed['zed-vk-he'];
-    if (!z || (loai === 'kiem' && SC.kiemVuong && SC.kiemVuong())) return null; // kiếm vuông 17/10: ảnh hệ kiểu kiếm cũ → không dùng, nhuộm hệ ảnh mới
+    // KIẾM VUÔNG 17/10 tối (docs/review/ke-hoach-cai-thien/gan-anh-17-10-toi/bao-cao.md): kiếm vuông đang bật → ô kiếm vuông theo hệ
+    // vk.kiem_vuong[hệ][cấp] (ảnh moi/vk-kiem-vuong-he.png, docs/anh-goc/zed/dung-kiem-vuong-he.py, cùng cỡ ô kiếm vuông). ?kiemvuonghe=0:
+    // không dùng → nhuộm 30 % màu hệ trên ảnh kiếm vuông như phiên kiem-vuong. Kiếm Trắng (cấp 0) không vào đây (ảnh thường).
+    const kv = loai === 'kiem' && SC && SC.kiemVuong && SC.kiemVuong();
+    if (!z || (kv && G.KIEM_VUONG_HE === false)) return null;
     if (!z.ready || !z.img) { if (SC.canAnh) SC.canAnh('zed-vk-he'); return null; }
-    const h = z.tep && z.tep.vk && z.tep.vk[loai] && z.tep.vk[loai][he], q = h && h[cap];
+    const h = z.tep && z.tep.vk && z.tep.vk[kv ? 'kiem_vuong' : loai] && z.tep.vk[kv ? 'kiem_vuong' : loai][he], q = h && h[cap];
     if (!q || q[2] !== r[2] || q[3] !== r[3]) return null;
     return { img: z.img, x: q[0], y: q[1], w: q[2], h: q[3] };
+  };
+
+  // Khung phía mũi [y trên, y dưới) của ảnh kiếm vuông theo hệ cấp cap (lửa / dây / mảnh băng thò ra ngoài cạnh đầu vuông) — js/zed_moi.js
+  // chặn đất theo khung này khi đang cầm kiếm có ảnh hệ. null: không dùng ảnh hệ (cờ tắt, chưa tải) → khung của ảnh kiếm vuông gốc.
+  G.vkHeMui = function (cap, he) {
+    if (G.VK_HE_ANH === false || G.KIEM_VUONG_HE === false || !he || !(cap > 0)) return null;
+    const SC = G.spriteCustom, z = SC && SC.zed && SC.zed['zed-vk-he'];
+    if (!z || !z.ready || !SC.kiemVuong || !SC.kiemVuong()) return null;
+    const m = z.tep && z.tep.mui_kv && z.tep.mui_kv[he];
+    return (m && m[cap]) || null;
   };
 
   // ---------- ẢNH "GÂN" TIẾN ĐỘ LUYỆN (16/10, luyen-vu-khi/bao-cao-3.md mục 5; docs/review/ke-hoach-cai-thien/gan-vk/bao-cao.md) ----------
@@ -232,9 +250,12 @@
   G.vkGanAnh = function (loai, cap, r) {
     if (G.VK_GAN === false || !r) return null;
     const SC = G.spriteCustom, z = SC && SC.zed && SC.zed['zed-vk-gan'];
-    if (!z || (loai === 'kiem' && SC.kiemVuong && SC.kiemVuong())) return null; // kiếm vuông 17/10: ảnh gân kiểu kiếm cũ → không dùng (ảnh cấp thường)
+    // KIẾM VUÔNG 17/10 tối: kiếm vuông đang bật → ô gân kiếm vuông vk.kiem_vuong (ảnh moi/vk-kiem-vuong-gan.png, dung-kiem-vuong-he.py).
+    // ?kiemvuonggan=0: không dùng → ảnh cấp thường (như phiên kiem-vuong).
+    const kv = loai === 'kiem' && SC && SC.kiemVuong && SC.kiemVuong();
+    if (!z || (kv && G.KIEM_VUONG_GAN === false)) return null;
     if (!z.ready || !z.img) { if (SC.canAnh) SC.canAnh('zed-vk-gan'); return null; }
-    const h = z.tep && z.tep.vk && z.tep.vk[loai], q = h && h[cap];
+    const h = z.tep && z.tep.vk && z.tep.vk[kv ? 'kiem_vuong' : loai], q = h && h[cap];
     if (!q || q[2] !== r[2] || q[3] !== r[3]) return null;
     return { img: z.img, x: q[0], y: q[1], w: q[2], h: q[3] };
   };

@@ -12,6 +12,8 @@ In ra các điểm mốc (điểm ảnh game so với điểm neo "goc", chưa n
   hàng 2, 4: đuôi vệt (điểm bắt đầu) và đầu vệt (điểm kết thúc) đo trên khung to nhất → game xoay + co ảnh sao cho đuôi → mũi kiếm lúc
   bắt đầu vung, đầu → mũi kiếm lúc vừa chém xong (hai điểm); hàng 1, 3: neo = giữa đáy (mặt đất).
 Chạy:  python3 docs/anh-goc/kiem-nang/cat-vet-kiem-nang.py
+       python3 docs/anh-goc/kiem-nang/cat-vet-kiem-nang.py --gon   (17/10 tối: tấm vet-kiem-nang-gon-trang-4x6.png — vệt GỌN, vẽ TRẮNG để game
+       nhuộm màu hệ → hu-chem-kiem-nang-gon-1..4, mốc vet-moc-gon.json; js/fx.js chọn khi ?vetgon khác 0)
 """
 import base64, json, os, sys
 import numpy as np
@@ -21,7 +23,8 @@ GOC = os.path.abspath(os.path.join(DAY, '..', '..', '..'))
 sys.path.insert(0, os.path.join(GOC, 'docs', 'review', 'ke-hoach-cai-thien', 'do-net', 'cong-cu'))
 import thu_net  # noqa: E402
 
-ANH = os.path.join(DAY, 'vet-kiem-nang-4x6.png')
+GON = '--gon' in sys.argv
+ANH = os.path.join(DAY, 'vet-kiem-nang-gon-trang-4x6.png' if GON else 'vet-kiem-nang-4x6.png')
 RA = os.path.join(GOC, 'game', 'art', 'custom')
 O = 256
 KG = 0.2          # điểm ảnh game / điểm ảnh ảnh gốc
@@ -63,6 +66,8 @@ def main():
     assert len(dai) == 4, dai
     bang = {}
     for j, ((y0, y1), (ma, ten, giay, kieu)) in enumerate(zip(dai, HANG)):
+        if GON:
+            ma = ma.replace('kiem-nang-', 'kiem-nang-gon-'); ten = ten.replace('Kiếm nặng', 'Kiếm nặng (vệt gọn, trắng — game nhuộm hệ)')
         o = a[max(0, y0 - 2):y1 + 3]
         cells = [o[:, c * O:(c + 1) * O] for c in range(6)]
         # khung bao chung (theo ô)
@@ -100,7 +105,7 @@ def main():
         bang[ma] = moc
         print('%s: khung %d×%d game, neo %s, mốc %s, %d KB' % (ma, fw, fh, goc, moc, os.path.getsize(p) // 1024))
         Image.fromarray(dai_anh).save(os.path.join(DAY, 'cat-' + ma + '.png'))
-    json.dump(bang, open(os.path.join(DAY, 'vet-moc.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    json.dump(bang, open(os.path.join(DAY, 'vet-moc-gon.json' if GON else 'vet-moc.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 
 
 if __name__ == '__main__':

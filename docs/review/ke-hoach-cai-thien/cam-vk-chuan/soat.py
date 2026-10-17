@@ -85,6 +85,23 @@ def ap_kiem_vuong(V):
     t = Image.new('RGBA', (max(im.width, k2.width), H0 + 2 + k2.height), (0, 0, 0, 0)); t.paste(im, (0, 0)); t.paste(k2, (0, H0 + 2))
     V['_img'] = t
     V['vk'] = dict(V['vk'], kiem=[[r[0], r[1] + H0 + 2, r[2], r[3]] for r in K['vk']])
+    # 17/10 tối (gan-anh-17-10-toi): --kiemvuonghe=fire|poison|ice → ô kiếm cấp 1–3 thay bằng ảnh theo hệ (zed-vk-he, vk.kiem_vuong[hệ]);
+    # --kiemvuonghe=gan → ô cấp 0–2 thay bằng ảnh gân (zed-vk-gan, vk.kiem_vuong). Cùng cỡ ô, cùng điểm cầm (như game).
+    he = next((a.split('=', 1)[1] for a in sys.argv if a.startswith('--kiemvuonghe=')), None)
+    if he:
+        tep = 'zed-vk-gan' if he == 'gan' else 'zed-vk-he'
+        Z = json.load(open(os.path.join(DC.ROOT, 'game/art/custom', tep + '.sprite.json'), encoding='utf-8'))
+        z = Image.open(io.BytesIO(base64.b64decode(Z['tam'].split(',', 1)[1]))).convert('RGBA')
+        o = Z['vk']['kiem_vuong'] if he == 'gan' else Z['vk']['kiem_vuong'][he]
+        im = V['_img']; H1 = im.height
+        t = Image.new('RGBA', (max(im.width, z.width), H1 + 2 + z.height), (0, 0, 0, 0)); t.paste(im, (0, 0)); t.paste(z, (0, H1 + 2))
+        V['_img'] = t
+        kiem = list(V['vk']['kiem'])
+        for c, q in enumerate(o):
+            if q:
+                assert q[2:] == kiem[c][2:], (he, c, q, kiem[c])
+                kiem[c] = [q[0], q[1] + H1 + 2, q[2], q[3]]
+        V['vk'] = dict(V['vk'], kiem=kiem)
     return K['cam']
 
 

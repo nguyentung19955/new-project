@@ -1,0 +1,4 @@
+ice cấp 0: 111 nhịp — khung sát đất: 0/18 nhịp có điểm ảnh dưới vạch (tổng 0); khung khác: 0/93 (tổng 0)
+ice cấp 1: 111 nhịp — khung sát đất: 0/18 nhịp có điểm ảnh dưới vạch (tổng 0); khung khác: 0/93 (tổng 0)
+ice cấp 2: 111 nhịp — khung sát đất: 3/18 nhịp có điểm ảnh dưới vạch (tổng 13); khung khác: 5/93 (tổng 36)
+ice cấp 3: 111 nhịp — khung sát đất: 0/18 nhịp có điểm ảnh dưới vạch (tổng 0); khung khác: 0/93 (tổng 0)

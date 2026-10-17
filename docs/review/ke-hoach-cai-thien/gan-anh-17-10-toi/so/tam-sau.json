@@ -1,0 +1,242 @@
+{
+ "kiem-3nhat|-|0|1": {
+  "tam_trung": 30,
+  "tam_hinh": 31,
+  "lech": 1,
+  "sau_hinh": -38,
+  "sau_trung": null,
+  "cao_hinh": 38
+ },
+ "kiem-3nhat|-|0|2": {
+  "tam_trung": 30,
+  "tam_hinh": 31,
+  "lech": 1,
+  "sau_hinh": -2,
+  "sau_trung": null,
+  "cao_hinh": 32
+ },
+ "kiem-3nhat|-|0|3": {
+  "tam_trung": 36,
+  "tam_hinh": 34,
+  "lech": -2,
+  "sau_hinh": -34,
+  "sau_trung": null,
+  "cao_hinh": 41
+ },
+ "kiem-3nhat|fire|1|1": {
+  "tam_trung": 30,
+  "tam_hinh": 31,
+  "lech": 1,
+  "sau_hinh": -45,
+  "sau_trung": null,
+  "cao_hinh": 40
+ },
+ "kiem-3nhat|fire|1|2": {
+  "tam_trung": 30,
+  "tam_hinh": 31,
+  "lech": 1,
+  "sau_hinh": -3,
+  "sau_trung": null,
+  "cao_hinh": 33
+ },
+ "kiem-3nhat|fire|1|3": {
+  "tam_trung": 36,
+  "tam_hinh": 34,
+  "lech": -2,
+  "sau_hinh": -38,
+  "sau_trung": null,
+  "cao_hinh": 42
+ },
+ "kiem-3nhat|fire|2|1": {
+  "tam_trung": 30,
+  "tam_hinh": 31,
+  "lech": 1,
+  "sau_hinh": -49,
+  "sau_trung": null,
+  "cao_hinh": 42
+ },
+ "kiem-3nhat|fire|2|2": {
+  "tam_trung": 30,
+  "tam_hinh": 32,
+  "lech": 2,
+  "sau_hinh": -3,
+  "sau_trung": null,
+  "cao_hinh": 36
+ },
+ "kiem-3nhat|fire|2|3": {
+  "tam_trung": 48,
+  "tam_hinh": 41,
+  "lech": -7,
+  "sau_hinh": -42,
+  "sau_trung": null,
+  "cao_hinh": 43
+ },
+ "kiem-3nhat|fire|3|1": {
+  "tam_trung": 30,
+  "tam_hinh": 32,
+  "lech": 2,
+  "sau_hinh": -49,
+  "sau_trung": null,
+  "cao_hinh": 43
+ },
+ "kiem-3nhat|fire|3|2": {
+  "tam_trung": 30,
+  "tam_hinh": 33,
+  "lech": 3,
+  "sau_hinh": -3,
+  "sau_trung": null,
+  "cao_hinh": 36
+ },
+ "kiem-3nhat|fire|3|3": {
+  "tam_trung": 48,
+  "tam_hinh": 41,
+  "lech": -7,
+  "sau_hinh": -42,
+  "sau_trung": null,
+  "cao_hinh": 43
+ },
+ "kiem-3nhat|poison|1|1": {
+  "tam_trung": 30,
+  "tam_hinh": 36,
+  "lech": 6,
+  "sau_hinh": -45,
+  "sau_trung": null,
+  "cao_hinh": 40
+ },
+ "kiem-3nhat|poison|1|2": {
+  "tam_trung": 30,
+  "tam_hinh": 36,
+  "lech": 6,
+  "sau_hinh": -3,
+  "sau_trung": null,
+  "cao_hinh": 33
+ },
+ "kiem-3nhat|poison|1|3": {
+  "tam_trung": 36,
+  "tam_hinh": 45,
+  "lech": 9,
+  "sau_hinh": -38,
+  "sau_trung": null,
+  "cao_hinh": 42
+ },
+ "kiem-3nhat|poison|2|1": {
+  "tam_trung": 30,
+  "tam_hinh": 31,
+  "lech": 1,
+  "sau_hinh": -49,
+  "sau_trung": null,
+  "cao_hinh": 42
+ },
+ "kiem-3nhat|poison|2|2": {
+  "tam_trung": 30,
+  "tam_hinh": 32,
+  "lech": 2,
+  "sau_hinh": -3,
+  "sau_trung": null,
+  "cao_hinh": 36
+ },
+ "kiem-3nhat|poison|2|3": {
+  "tam_trung": 36,
+  "tam_hinh": 48,
+  "lech": 12,
+  "sau_hinh": -42,
+  "sau_trung": null,
+  "cao_hinh": 42
+ },
+ "kiem-3nhat|poison|3|1": {
+  "tam_trung": 30,
+  "tam_hinh": 36,
+  "lech": 6,
+  "sau_hinh": -49,
+  "sau_trung": null,
+  "cao_hinh": 43
+ },
+ "kiem-3nhat|poison|3|2": {
+  "tam_trung": 30,
+  "tam_hinh": 36,
+  "lech": 6,
+  "sau_hinh": -3,
+  "sau_trung": null,
+  "cao_hinh": 36
+ },
+ "kiem-3nhat|poison|3|3": {
+  "tam_trung": 36,
+  "tam_hinh": 51,
+  "lech": 15,
+  "sau_hinh": -42,
+  "sau_trung": null,
+  "cao_hinh": 43
+ },
+ "kiem-3nhat|ice|1|1": {
+  "tam_trung": 30,
+  "tam_hinh": 31,
+  "lech": 1,
+  "sau_hinh": -45,
+  "sau_trung": null,
+  "cao_hinh": 50
+ },
+ "kiem-3nhat|ice|1|2": {
+  "tam_trung": 30,
+  "tam_hinh": 31,
+  "lech": 1,
+  "sau_hinh": -3,
+  "sau_trung": null,
+  "cao_hinh": 40
+ },
+ "kiem-3nhat|ice|1|3": {
+  "tam_trung": 36,
+  "tam_hinh": 38,
+  "lech": 2,
+  "sau_hinh": -38,
+  "sau_trung": null,
+  "cao_hinh": 43
+ },
+ "kiem-3nhat|ice|2|1": {
+  "tam_trung": 30,
+  "tam_hinh": 33,
+  "lech": 3,
+  "sau_hinh": -40,
+  "sau_trung": null,
+  "cao_hinh": 44
+ },
+ "kiem-3nhat|ice|2|2": {
+  "tam_trung": 30,
+  "tam_hinh": 34,
+  "lech": 4,
+  "sau_hinh": -3,
+  "sau_trung": null,
+  "cao_hinh": 37
+ },
+ "kiem-3nhat|ice|2|3": {
+  "tam_trung": 72,
+  "tam_hinh": 85,
+  "lech": 13,
+  "sau_hinh": -42,
+  "sau_trung": null,
+  "cao_hinh": 42
+ },
+ "kiem-3nhat|ice|3|1": {
+  "tam_trung": 30,
+  "tam_hinh": 32,
+  "lech": 2,
+  "sau_hinh": -49,
+  "sau_trung": null,
+  "cao_hinh": 45
+ },
+ "kiem-3nhat|ice|3|2": {
+  "tam_trung": 30,
+  "tam_hinh": 37,
+  "lech": 7,
+  "sau_hinh": -3,
+  "sau_trung": null,
+  "cao_hinh": 36
+ },
+ "kiem-3nhat|ice|3|3": {
+  "tam_trung": 72,
+  "tam_hinh": 84,
+  "lech": 12,
+  "sau_hinh": -42,
+  "sau_trung": null,
+  "cao_hinh": 44
+ }
+}

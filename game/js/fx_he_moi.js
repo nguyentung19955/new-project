@@ -24,6 +24,41 @@
   if (G.HE_BAO == null) G.HE_BAO = !coTat('hebao');
   const HM = (G.heMoi = {});
   HM.bat = (k) => G.HE_MOI !== false && (!k || G[k] !== false);
+  // Dải màu nhuộm vệt theo độ sáng (tối → chủ đạo → sáng → lõi): vệt ảnh trắng-xanh của kiếm / thương / búa thành đúng màu hệ, giữ nét sáng tối.
+  const DAI = (HM.DAI = {
+    fire: ['#7a1e08', '#d8481a', '#ff7a2a', '#ffb24a', '#fff0b8'],
+    poison: ['#14460c', '#2f8f22', '#58d63a', '#a8f060', '#effcc8'],
+    ice: ['#173f6e', '#2f7fc0', '#6cc4f4', '#bfeaff', '#ffffff'],
+    // 17/10 tối (gan-anh-17-10-toi): vệt kiếm nặng GỌN vẽ trắng — không hệ thì nhuộm về trắng-xanh như vệt cũ (đo từ ảnh vệt cũ)
+    trang: ['#15306a', '#2a6ab0', '#6fb0e6', '#bfe8fa', '#fafdff'],
+  });
+  // (17/10 tối) Dải màu + nhuộm 'hemoi' đặt TRƯỚC chỗ ?hemoi=0 thoát: vệt kiếm nặng gọn (ảnh trắng, js/fx.js knThem, ?vetgon=0 tắt) luôn cần
+  // nhuộm. Không ai khác dùng kiểu 'hemoi' / 'hemoigon' khi ?hemoi=0 → các hình khác y hệt trước.
+  // FA.nhuom kiểu 'hemoi' (mau = tên hệ): đổi từng điểm ảnh theo độ sáng sang dải màu DAI của hệ (giữ độ trong). Làm một lần mỗi (ảnh, hệ).
+  const A0 = G.fxAnh, nhuom0 = A0 && A0.nhuom, NH = new Map();
+  const hex3 = (m) => { const v = parseInt(m.slice(1), 16); return [(v >> 16) & 255, (v >> 8) & 255, v & 255]; };
+  if (nhuom0) A0.nhuom = function (a, mau, kieu) {
+    if ((kieu !== 'hemoi' && kieu !== 'hemoigon') || !DAI[mau]) return nhuom0.apply(this, arguments);
+    if (!a || !a.img || typeof document === 'undefined') return a && a.img;
+    const gon = kieu === 'hemoigon', key = a.ma + '|' + mau + '|' + (a.net || 1) + (gon ? '|g' : '');
+    const o = NH.get(key);
+    if (o && o.img === a.img) return o.cv;
+    try {
+      const cv = document.createElement('canvas'); cv.width = a.img.width; cv.height = a.img.height;
+      const g = cv.getContext('2d'); g.drawImage(a.img, 0, 0);
+      const d = g.getImageData(0, 0, cv.width, cv.height), px = d.data, R = DAI[mau].map(hex3), n = R.length - 1;
+      for (let i = 0; i < px.length; i += 4) {
+        if (!px[i + 3]) continue;
+        const l0 = Math.min(1, (px[i] * 0.3 + px[i + 1] * 0.55 + px[i + 2] * 0.15) / 255);
+        // 'hemoigon' (ảnh vẽ TRẮNG, độ sáng chỉ 0,6–1): giãn độ sáng 150..255 → 0,2..1 của dải để vệt có đủ đậm nhạt màu hệ
+        const L = (gon ? 0.2 + 0.8 * Math.max(0, Math.min(1, (l0 * 255 - 150) / 105)) : l0) * n, j = Math.min(n - 1, Math.floor(L)), u = L - j;
+        px[i] = R[j][0] + (R[j + 1][0] - R[j][0]) * u; px[i + 1] = R[j][1] + (R[j + 1][1] - R[j][1]) * u; px[i + 2] = R[j][2] + (R[j + 1][2] - R[j][2]) * u;
+      }
+      g.putImageData(d, 0, 0);
+      NH.set(key, { img: a.img, cv });
+      return cv;
+    } catch (e) { NH.set(key, { img: a.img, cv: a.img }); return a.img; }
+  };
   if (G.HE_MOI === false) return; // ?hemoi=0: không bọc gì cả
 
   // ---------- số (chỉ là hình) ----------
@@ -48,12 +83,6 @@
     poison: { vet: '#58d63a', vien: '#b6ff6a', so: '#8fe04a', chop: '#58d63a' },
     ice: { vet: '#8fd8ff', vien: '#d8f4ff', so: '#a8e2ff', chop: '#7fd4ff' },
   });
-  // Dải màu nhuộm vệt theo độ sáng (tối → chủ đạo → sáng → lõi): vệt ảnh trắng-xanh của kiếm / thương / búa thành đúng màu hệ, giữ nét sáng tối.
-  const DAI = {
-    fire: ['#7a1e08', '#d8481a', '#ff7a2a', '#ffb24a', '#fff0b8'],
-    poison: ['#14460c', '#2f8f22', '#58d63a', '#a8f060', '#effcc8'],
-    ice: ['#173f6e', '#2f7fc0', '#6cc4f4', '#bfeaff', '#ffffff'],
-  };
   const DAU = { fire: 'hu-lua-bung', poison: 'hu-bot-doc', ice: 'hu-tuong-tinh-the' }; // dấu bám thân khi trúng (ảnh có sẵn)
   const TT = { fire: 'gd-tt-chay', poison: 'gd-tt-doc', ice: 'gd-tt-bang' };          // biểu tượng trạng thái (ảnh có sẵn, 9×9)
   const FA = () => G.fxAnh;
@@ -131,6 +160,7 @@
   // ---------- duyệt hình mới của Cu Tí sau mỗi lần cập nhật ----------
   const S0 = () => fx.state();
   let lanTrung = -9, hatNhip = -1, khoiLan = -9, trungNhip = -1;
+  const knNho = { L: 0, f: 1, x: 0, t: -9, id: null };
   function xuLy() {
     const S = S0();
     if (!S || !S.W || !S.W.P || !S.E) return;
@@ -176,8 +206,19 @@
     let n = 0;
     // mục 3 (cờ HE_TAM): giọt / mảnh rơi trên sàn của Cu Tí không nằm xa hơn tầm trúng của đòn đang ra (theo hướng mặt)
     const P = S.W.P, v = HM.bat('HE_TAM') && P.atkT > 0 ? vkNay(P) : null, L = v ? tamDon(P, v) : null, f = (P.aimUx != null ? P.aimUx : P.face) < 0 ? -1 : 1;
+    // 17/10 tối (gan-anh-17-10-toi, ?vetgon=0 tắt): combo kiếm nặng — hạt văng ra lúc vung (giọt độc, tàn lửa, mảnh băng vẽ sẵn) của Cu Tí
+    // không bay xa hơn mép thân quái xa nhất còn trúng (≈ 0,9 × tầm) + SO.tamDu; trong 0,5 giây sau một lần trúng thì để nguyên (hạt trúng ở thân quái).
+    //   (hạt sống lâu hơn nhát chém → nhớ tầm / hướng / chỗ đứng của nhát vừa ra thêm 0,8 giây)
+    if (L > 0 && v && v.type === 'sword' && G.VET_GON !== false && G.zedMoi && G.zedMoi.kiemNang && G.zedMoi.kiemNang(P)) { if (knNho.id !== P.lastAtk) { knNho.id = P.lastAtk; knNho.x = P.x; } knNho.L = L; knNho.f = f; knNho.t = S.t; } // chỗ đứng lúc BẮT ĐẦU nhát (nhát kết lao tới)
+    const kn = S.t >= knNho.t && S.t - knNho.t < 0.8 && (S.t - lanTrung > 0.5 || S.t < lanTrung); // S.t < …: đồng hồ hiệu ứng vừa đặt lại (G.fx.reset) → số cũ bỏ
     for (let i = 0; i < S.np; i++) {
       const q = PT[i];
+      if (kn && q.pl && q.t > 0) {
+        // mỗi hạt nhớ giới hạn của nhát lúc nó sinh ra (hạt dùng lại trong vùng nhớ chung: đời q.t tăng lên = hạt mới → nhớ lại)
+        if (q.knT == null || q.t > q.knT) { q.knL = knNho.L * 0.9 + SO.tamDu; q.knX = knNho.x; q.knF = knNho.f; }
+        q.knT = q.t;
+        if ((q.x - q.knX) * q.knF + 3 > q.knL) { q.t = 0; continue; } // +3: nửa bề ngang ảnh hạt (giọt độc, tàn lửa)
+      }
       if (q.k !== 12 || !q.pl || !(q.t > 0) || (q.ma !== 'hu-giot-doc-san' && q.ma !== 'hu-ray-bang')) continue;
       if (L > 0 && (q.x - P.x) * f > L + SO.tamDu) { q.t = 0; continue; }
       if (++n > SO.giotSan) q.t = 0;
@@ -227,31 +268,8 @@
     c.save();
     try {
       c.globalCompositeOperation = 'lighter';
-      A.ve(c, ma, x, y, t, goc, (co > 0 ? co : 1) * (1 + VIEN_CO * n), lat, (mo == null ? 1 : mo) * (n >= 2 ? 0.55 : 0.38), o.vienMau || null, o.vienMau && DAI[o.vienMau] ? 'hemoi' : '');
+      A.ve(c, ma, x, y, t, goc, (co > 0 ? co : 1) * (1 + VIEN_CO * n), lat, (mo == null ? 1 : mo) * (n >= 2 ? 0.55 : 0.38), o.vienMau || null, o.vienMau && DAI[o.vienMau] ? (o.kieu === 'hemoigon' ? 'hemoigon' : 'hemoi') : '');
     } finally { c.restore(); }
-  };
-  // FA.nhuom kiểu 'hemoi' (mau = tên hệ): đổi từng điểm ảnh theo độ sáng sang dải màu DAI của hệ (giữ độ trong). Làm một lần mỗi (ảnh, hệ).
-  const A0 = FA(), nhuom0 = A0 && A0.nhuom, NH = new Map();
-  const hex3 = (m) => { const v = parseInt(m.slice(1), 16); return [(v >> 16) & 255, (v >> 8) & 255, v & 255]; };
-  if (nhuom0) A0.nhuom = function (a, mau, kieu) {
-    if (kieu !== 'hemoi' || !DAI[mau]) return nhuom0.apply(this, arguments);
-    if (!a || !a.img || typeof document === 'undefined') return a && a.img;
-    const key = a.ma + '|' + mau + '|' + (a.net || 1);
-    const o = NH.get(key);
-    if (o && o.img === a.img) return o.cv;
-    try {
-      const cv = document.createElement('canvas'); cv.width = a.img.width; cv.height = a.img.height;
-      const g = cv.getContext('2d'); g.drawImage(a.img, 0, 0);
-      const d = g.getImageData(0, 0, cv.width, cv.height), px = d.data, R = DAI[mau].map(hex3), n = R.length - 1;
-      for (let i = 0; i < px.length; i += 4) {
-        if (!px[i + 3]) continue;
-        const L = Math.min(1, (px[i] * 0.3 + px[i + 1] * 0.55 + px[i + 2] * 0.15) / 255) * n, j = Math.min(n - 1, Math.floor(L)), u = L - j;
-        px[i] = R[j][0] + (R[j + 1][0] - R[j][0]) * u; px[i + 1] = R[j][1] + (R[j + 1][1] - R[j][1]) * u; px[i + 2] = R[j][2] + (R[j + 1][2] - R[j][2]) * u;
-      }
-      g.putImageData(d, 0, 0);
-      NH.set(key, { img: a.img, cv });
-      return cv;
-    } catch (e) { NH.set(key, { img: a.img, cv: a.img }); return a.img; }
   };
   const up0 = fx.update, fr0 = fx.frozen;
   fx.update = function (dt) { const r = up0.apply(this, arguments); if (!G.noRender) { try { xuLy(); } catch (e) { HM.loi = String(e && e.stack || e); } } return r; };

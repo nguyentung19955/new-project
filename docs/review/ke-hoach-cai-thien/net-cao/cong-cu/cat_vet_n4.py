@@ -2,7 +2,7 @@
 đúng các bước của docs/anh-goc/kiem-nang/cat-vet-kiem-nang.py (bỏ nền xanh, cùng khung bao chung 6 khung, thu_net.thu), chỉ khác cỡ ra:
 gấp 4 điểm ảnh / điểm game thay vì 2 (cỡ khung game, neo "goc", số khung, giây… giữ nguyên của tệp đang có). Ghi THÊM "tam_n4" vào
 game/art/custom/hu-chem-kiem-nang-<1..4>.sprite.json (js/fx_anh.js chỉ tải khi canvas nét ≥ 3).
-  python3 cat_vet_n4.py [--ghi]"""
+  python3 cat_vet_n4.py [--ghi] [--gon]   (--gon, 17/10 tối: vệt gọn trắng vet-kiem-nang-gon-trang-4x6.png → hu-chem-kiem-nang-gon-<1..4>)"""
 import base64, importlib.util, json, os, sys
 import numpy as np
 from PIL import Image
@@ -25,6 +25,8 @@ def main():
     dai = CV.dai_hang(fg)
     assert len(dai) == 4
     for (y0, y1), (ma, *_r) in zip(dai, CV.HANG):
+        if CV.GON:
+            ma = ma.replace('kiem-nang-', 'kiem-nang-gon-')
         p = os.path.join(CV.RA, ma + '.sprite.json')
         tep = json.load(open(p, encoding='utf-8'))
         fw, fh = tep['khung_rong'], tep['khung_cao']

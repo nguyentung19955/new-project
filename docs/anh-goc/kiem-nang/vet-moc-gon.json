@@ -1,0 +1,30 @@
+{
+ "hu-chem-kiem-nang-gon-1": {
+  "rong": 43.0,
+  "cao": 28.0
+ },
+ "hu-chem-kiem-nang-gon-2": {
+  "duoi": [
+   0,
+   0
+  ],
+  "dau": [
+   21.0,
+   -31.0
+  ]
+ },
+ "hu-chem-kiem-nang-gon-3": {
+  "rong": 37.0,
+  "cao": 36.0
+ },
+ "hu-chem-kiem-nang-gon-4": {
+  "duoi": [
+   0,
+   0
+  ],
+  "dau": [
+   40.0,
+   -3.0
+  ]
+ }
+}
