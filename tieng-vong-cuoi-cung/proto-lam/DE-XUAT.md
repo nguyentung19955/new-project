@@ -63,3 +63,11 @@ Khớp gối/khuỷu/vai/hông là **khối cầu chồng** lên đầu các đo
 7. Lật ngang khi cần (game), pivot = hình chiếu điểm giữa 2 chân, ghi trong JSON.
 
 Mỗi khung lưu kèm: hold (ms, không đều), cờ `hit`, hộp lưỡi kiếm (khung hit), tên khung.
+
+## 8. Cập nhật idle 64 (xem `out/idle/BAO-CAO.md`)
+
+- Mô hình chỉnh lại theo `art/nhan-vat/lam-48/nguyen-con-v2-mat-sang.png`: mũ 0,58→0,99, vai 0,50, đai chéo + trâm ngực, thắt lưng 0,40, gấu vạt 0,215, ủng cao tới 0,13 có vạch xanh, áo choàng 6 hàng tới ≈ 0,16, chuông treo ở (−0,20; 0,67; −0,08).
+- **Camera xoay +22° về phía trước mặt** (thay vì −30° về sau lưng) để thấy vạt xanh, trâm và mặt trong mũ; chuông đặt xa lưng hơn nên vẫn nổi ngoài silhouette. Hướng sáng khai báo trong hệ camera (shader dùng `normalMatrix`).
+- **Kiếm ở tay xa (tay phải), tay gần để trống**, tay đặt bằng IK 2 đoạn (`ik: 1`, mục tiêu `gH*`/`xH*`, hướng lưỡi `gB*`); run/slash vẫn dùng kênh góc cũ.
+- Cỡ ô 64: ppu 45 (nhân vật 46 px + viền), gốc chiếu vào pivot [32,63]. Idle: 6 khung × 125 ms, chân cố định tuyệt đối, khép vòng.
+- Xuất: `python3 proto-lam/xuat-idle.py` → `out/idle/` + `game/anim/lam-idle-proto.png/.anim.json`.

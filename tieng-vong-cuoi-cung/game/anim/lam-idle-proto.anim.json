@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "image": "lam-idle-proto.png",
+  "frameWidth": 64,
+  "frameHeight": 64,
+  "pivot": [
+    32,
+    63
+  ],
+  "animations": {
+    "idle": {
+      "row": 0,
+      "frames": 6,
+      "fps": 8,
+      "loop": true
+    }
+  }
+}
