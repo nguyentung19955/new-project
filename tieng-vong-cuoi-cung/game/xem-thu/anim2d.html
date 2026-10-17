@@ -37,7 +37,7 @@ h1 { font-size: 20px; margin: 0; font-weight: 700; text-wrap: balance; }
 .stage { background: var(--stage); border-radius: 10px; overflow: hidden; position: relative; }
 .stage canvas { display: block; width: 100%; height: auto; image-rendering: pixelated; image-rendering: crisp-edges; }
 .stage .tag { position: absolute; left: 10px; top: 8px; font: 600 11px/1 var(--ft-mono); color: #CEF0D6; opacity: .8; letter-spacing: .04em; }
-.info { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.info { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .info div { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; min-width: 0; }
 .info small { display: block; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
 .info b { font: 600 17px/1.3 var(--ft-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -69,6 +69,13 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--gold); outl
 .sheet canvas { display: block; width: 100%; height: auto; image-rendering: pixelated; }
 .note { font-size: 13px; color: var(--muted); }
 .note code { font-family: var(--ft-mono); font-size: 12px; }
+.kq { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font-size: 13px; color: var(--muted); white-space: pre-wrap; overflow-wrap: anywhere; }
+.kq b { color: var(--fg); }
+.kq.dat { border-color: var(--accent); }
+.kq.dat .tong { color: var(--accent); font-weight: 700; }
+.kq.loi { border-color: var(--hit); }
+.kq.loi .tong { color: var(--hit); font-weight: 700; }
+.kq .so { font-family: var(--ft-mono); font-variant-numeric: tabular-nums; color: var(--fg); }
 @media (max-width: 420px) { .info { grid-template-columns: repeat(2, 1fr); } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
@@ -92,6 +99,8 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--gold); outl
     <div><small>Khung</small><b id="iKhung">—</b></div>
     <div><small>fps</small><b id="iFps">—</b></div>
     <div><small>loop</small><b id="iLoop">—</b></div>
+    <div><small>acc / ms khung</small><b id="iAcc">—</b></div>
+    <div><small>khungCuoi()</small><b id="iKhungCuoi">—</b></div>
     <div><small>xong()</small><b id="iXong">—</b></div>
     <div><small>hitFrames</small><b id="iHit">—</b></div>
   </div>
@@ -110,6 +119,14 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--gold); outl
   <div class="group"><label for="speed">Tốc độ (nhân vào dt bước logic)</label>
     <div class="speed"><input type="range" id="speed" min="0.25" max="2" step="0.25" value="1"><output id="speedOut">1.00×</output></div></div>
 
+  <div class="group"><span class="lbl">Kiểm tra (chỉ đo và báo, không tự sửa)</span>
+    <div class="row">
+      <button id="bKiemLat">Kiểm lật</button>
+      <button id="bVong">Phát 20 vòng</button>
+    </div>
+    <div class="kq" id="kqKiem" aria-live="polite">Chưa chạy. <b>Kiểm lật</b>: vẽ khung hiện tại thuận và lật lên canvas tạm cùng pivot rồi so bbox pixel. <b>Phát 20 vòng</b>: chạy mô phỏng bộ phát loop 20 vòng với dt bước logic × tốc độ, đếm số lần khung nhảy sai thứ tự.</div>
+  </div>
+
   <div class="png">
     <span class="lbl">Sheet PNG thật (512×320, 5 hàng × 8 cột) — tùy chọn</span>
     <input type="file" id="fPng" accept="image/png,image/*" aria-label="Chọn tệp PNG từ máy">
@@ -120,7 +137,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--gold); outl
   <div class="group"><span class="lbl">Toàn bộ sheet (ô đang phát được khoanh)</span>
     <div class="sheet"><canvas id="cvSheet" width="512" height="320"></canvas></div></div>
 
-  <p class="note">Vòng lặp cố định 60 bước/giây (accumulator); <code>update(1000/60 × tốc độ)</code> chỉ chạy trong bước logic, phần vẽ chỉ gọi <code>frame()</code>/<code>ve()</code>. Vạch ngang là mặt đất, dấu + là pivot [32,63]: khi đổi animation chân không được nhảy. hitFrames chỉ là nhãn hiển thị, không có hitbox.</p>
+  <p class="note">Vòng lặp cố định 60 bước/giây (accumulator); <code>update(1000/60 × tốc độ)</code> chỉ chạy trong bước logic, phần vẽ chỉ gọi <code>frame()</code>/<code>ve()</code>. Vạch ngang là mặt đất, dấu + là pivot [32,63]: khi đổi animation chân không được nhảy. hitFrames chỉ là nhãn hiển thị, không có hitbox. <code>xong()</code> chỉ true khi khung cuối (animation không loop) đã hiển thị đủ 1000/fps ms; <code>khungCuoi()</code> true ngay khi tới khung cuối.</p>
 </div>
 
 <!--@LIB@--><script src="../lib/anim2d.js"></script><!--@/LIB@-->
@@ -209,6 +226,50 @@ $('bLat').onclick = function () { lat = !lat; this.className = lat ? 'on' : ''; 
 $('bAuto').onclick = function () { auto = !auto; autoT = 0; this.className = auto ? 'on' : ''; };
 $('speed').addEventListener('input', function () { speed = +this.value; $('speedOut').value = speed.toFixed(2) + '×'; });
 
+/* ---- kiểm tra: chỉ đo và hiển thị ---- */
+function baoKq(html, trangThai) { var k = $('kqKiem'); k.innerHTML = html; k.className = 'kq' + (trangThai ? ' ' + trangThai : ''); }
+function so(v) { return '<span class="so">' + (typeof v === 'number' && !isNaN(v) ? (v > 0 ? '+' : '') + v : '—') + '</span>'; }
+$('bKiemLat').onclick = function () {
+  if (!sheet || !bp || !bp.ten) { baoKq('Chưa có sheet.', 'loi'); return; }
+  try {
+    var r = TV.Anim.kiemLat(sheet, bp.ten, bp.frame());
+    var tong = r.dung ? 'ĐẠT — lật đối xứng đúng quanh cột pivot X' : 'KHÔNG ĐẠT — xem số lệch bên dưới';
+    baoKq('<span class="tong">' + tong + '</span>\n' +
+      '<b>' + r.ten + '</b> khung <b>' + r.khung + '</b> · pivot tạm X=' + r.X + ', Y=' + r.Y + '\n' +
+      'Lệch trái ' + so(r.lech.trai) + ' px · lệch phải ' + so(r.lech.phai) + ' px · lệch đáy ' + so(r.lech.day) + ' px · pixel không khớp ' + so(r.saiPixel) + '\n' +
+      'bbox thuận: cột ' + r.thuan.trai + '…' + r.thuan.phai + ', đáy hàng ' + r.thuan.day +
+      ' · bbox lật: cột ' + r.lat.trai + '…' + r.lat.phai + ', đáy hàng ' + r.lat.day + '\n' +
+      'Tâm bbox so với pivot x: ' + so(r.tamLech) + ' px (chỉ thông tin — hình lệch tâm thì khi lật nhìn như dịch ' + (isNaN(r.tamLech) ? '?' : Math.abs(2 * r.tamLech)) + ' px; KHÔNG tự căn giữa theo bbox).',
+      r.dung ? 'dat' : 'loi');
+  } catch (e) { baoKq('Lỗi: ' + e.message, 'loi'); }
+};
+$('bVong').onclick = function () {
+  if (!sheet || !bp || !bp.ten) { baoKq('Chưa có sheet.', 'loi'); return; }
+  var a = sheet.anims[bp.ten];
+  if (!a.loop) { baoKq('Animation <b>' + bp.ten + '</b> không loop — chọn idle/run/jump/fall (loop) rồi bấm lại.', 'loi'); return; }
+  var mo = TV.Anim.tao(sheet).set(bp.ten);             // bộ phát riêng, không đụng cái đang hiển thị
+  var dt = DT * speed, truoc = mo.frame(), vong = 0, buoc = 0, sai = 0, saiDs = [];
+  var buocVong = 0, minV = Infinity, maxV = 0;
+  while (vong < 20 && buoc < 100000) {
+    mo.update(dt); buoc++; buocVong++;
+    var k = mo.frame();
+    if (k !== truoc) {
+      var duKien = (truoc + 1) % a.frames;
+      if (k !== duKien) {                                  // nhảy sai thứ tự (bao gồm bỏ khung hay lùi)
+        sai++; if (saiDs.length < 8) saiDs.push('bước ' + buoc + ': ' + truoc + '→' + k);
+      }
+      if (k < truoc || k === 0) { vong++; if (buocVong < minV) minV = buocVong; if (buocVong > maxV) maxV = buocVong; buocVong = 0; }
+      truoc = k;
+    }
+  }
+  var msVong = (a.frames * a.msKhung).toFixed(1), lyThuyet = (a.frames * a.msKhung / dt).toFixed(2);
+  baoKq('<span class="tong">' + (sai === 0 ? 'Không có lần nào khung nhảy sai thứ tự' : sai + ' lần khung nhảy sai thứ tự') + '</span>\n' +
+    '<b>' + bp.ten + '</b> · ' + a.frames + ' khung @ ' + a.fps + ' fps · dt bước = ' + dt.toFixed(2) + ' ms (tốc độ ' + speed.toFixed(2) + '×)\n' +
+    '20 vòng trong <span class="so">' + buoc + '</span> bước logic · mỗi vòng ' + (isFinite(minV) ? minV + '…' + maxV : '—') + ' bước (lý thuyết ' + lyThuyet + ' bước = ' + msVong + ' ms)\n' +
+    'Điểm nối ' + (a.frames - 1) + '→0: ' + (sai === 0 ? 'liền mạch; số bước mỗi vòng dao động ±1 là do dt không chia hết cho ms khung, không phải giật.' : 'có nhảy sai — ' + saiDs.join(', ') + (sai > saiDs.length ? ', …' : '') + ' (chỉ báo, không tự sửa).'),
+    sai === 0 ? 'dat' : 'loi');
+};
+
 /* ---- vòng lặp cố định: logic 60 bước/giây, vẽ riêng ---- */
 var DT = 1000 / 60, MAX_STEPS = 5, last = -1, accT = 0;
 function step() {
@@ -261,6 +322,8 @@ function capNhatSo() {
   $('iKhung').textContent = (k + 1) + ' / ' + a.frames;
   $('iFps').textContent = a.fps;
   $('iLoop').textContent = a.loop ? 'true' : 'false';
+  $('iAcc').textContent = Math.round(bp.acc) + ' / ' + Math.round(a.msKhung);
+  $('iKhungCuoi').textContent = bp.khungCuoi() ? 'true' : 'false';
   $('iXong').textContent = bp.xong() ? 'true' : 'false';
   var h = $('iHit'); h.textContent = hf.length ? ('[' + hf.join(', ') + ']' + (trung ? ' ◆' : '')) : '—'; h.className = trung ? 'hit' : '';
   var key = bp.ten + '|' + k;

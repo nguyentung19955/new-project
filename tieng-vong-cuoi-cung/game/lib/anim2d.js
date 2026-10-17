@@ -18,11 +18,36 @@
                                             anims, cols, rows, w, h, placeholder:false }
                                      Kiểm tra json.version===1 và các trường bắt buộc, báo lỗi rõ.
                                      Bản lật ngang (imgLat) tạo MỘT lần, vẽ quay trái không scale(-1).
-     TV.Anim.tao(sheet)           → bộ phát { ten, khung, acc, set(ten), update(dtMs), frame(), xong() }
+     TV.Anim.tao(sheet)           → bộ phát { ten, khung, acc, het, set(ten), update(dtMs), frame(),
+                                              xong(), khungCuoi(), hitFrames() }
+         xong()      = het: animation KHÔNG loop đã hiển thị khung cuối đủ 1000/fps ms (tính theo
+                       thời lượng, không phải "vừa tới khung cuối"). set() sang tên khác → het=false.
+         khungCuoi() = không loop && khung === frames-1 (đã TỚI khung cuối, có thể chưa hết thời lượng).
+         Khi non-loop đứng ở khung cuối, acc vẫn cộng dồn tới msKhung rồi dừng (khung không tăng).
      TV.Anim.ve(ctx, sheet, boPhat, xChan, yChan, lat)  — vẽ ô hiện tại, pivot trùng (round x, round y)
      TV.Anim.veKhung(ctx, sheet, ten, khung, xChan, yChan, lat) — vẽ một khung bất kỳ (dùng cho phát lại)
+     TV.Anim.kiemLat(sheet, ten, khung) → kiểm chứng lật BẰNG ẢNH: vẽ khung thuận và lật lên 2 canvas tạm
+                                     cùng pivot nguyên (X, Y), đo bbox pixel không trong suốt mỗi bản, trả
+                                     { X, Y, thuan:{trai,phai,day}, lat:{trai,phai,day},
+                                       lech:{trai,phai,day}, saiPixel, tamLech, dung }
+                                     lech.trai = (trái thuận − X) − (X − phải lật)   (kỳ vọng 0)
+                                     lech.phai = (phải thuận − X) − (X − trái lật)   (kỳ vọng 0)
+                                     lech.day  = đáy thuận − đáy lật                  (kỳ vọng 0)
+                                     saiPixel  = số pixel (x,y) thuận mà alpha khác pixel (2X−x, y) lật (kỳ vọng 0)
+                                     tamLech   = tâm bbox thuận − X (chỉ THÔNG TIN: ≠0 nghĩa là hình không
+                                                 đối xứng quanh pivot x, KHÔNG phải lỗi công thức; không tự căn giữa).
+                                     dung = lech đều 0 && saiPixel === 0.
      TV.Anim.placeholder(json)    → canvas sheet tạm (khối màu) khi chưa có PNG
      TV.Anim.nap(urlJson)         → Promise sheet; PNG lỗi → placeholder, sheet.placeholder = true
+
+   KIỂM CHỨNG CÔNG THỨC LẬT (đã chạy test node với canvas giả bằng mảng, 2026-10-17):
+     imgLat = ảnh lật ngang toàn sheet → cột sheet c nằm ở cột w−1−c. Khung k thuận chiếm cột [k·fw, (k+1)·fw),
+     nên trong imgLat nó chiếm [w−(k+1)·fw, w−k·fw) ⇒ sx = w − (k+1)·fw ĐÚNG (kể cả khi ảnh rộng hơn lưới).
+     Cột trong ô: c thuận ↔ fw−1−c lật. Đích lật = X − pivotLat[0] + (fw−1−c) = X + px − c; đích thuận = X − px + c.
+     ⇒ cột px luôn rơi đúng cột X ở cả hai chiều, mọi pixel đối xứng qua X: lech = {0,0,0}, saiPixel = 0
+     với pivot x lệch tâm (px=3/fw=8, px=2/fw=9, px=0/fw=6) và ảnh rộng hơn lưới (tamLech ≠ 0 nhưng vẫn
+     đối xứng đúng). Không phát hiện sai; không sửa công thức. Nút "Kiểm lật" trong trang thử chạy cùng
+     phép đo này trên canvas thật của trình duyệt.
 
    CÁCH DÙNG TRONG VÒNG LẶP CỐ ĐỊNH (như demo.html: logic 60 bước/giây, render riêng):
      // trong step() — bước logic:
@@ -111,7 +136,7 @@ Anim.taoSheet = function (img, json) {
 Anim.tao = function (sheet) {
   if (!sheet || !sheet.anims) loi('tao: cần sheet từ TV.Anim.taoSheet');
   var daBao = {};
-  var bp = { sheet: sheet, ten: null, khung: 0, acc: 0 };
+  var bp = { sheet: sheet, ten: null, khung: 0, acc: 0, het: false };
   bp.anim = function () { return bp.ten ? sheet.anims[bp.ten] : null; };
   bp.set = function (ten) {
     if (ten === bp.ten) return bp;                       // cùng tên → không reset
@@ -119,25 +144,40 @@ Anim.tao = function (sheet) {
       if (!daBao[ten]) { daBao[ten] = true; console.warn('anim2d: không có animation "' + ten + '" trong sheet (giữ nguyên "' + bp.ten + '")'); }
       return bp;
     }
-    bp.ten = ten; bp.khung = 0; bp.acc = 0;
+    bp.ten = ten; bp.khung = 0; bp.acc = 0; bp.het = false;
     return bp;
   };
+  /* Khung cuối của animation không loop: acc cộng dồn tới msKhung rồi het=true (khung không tăng) */
+  function demKhungCuoi(a) {
+    if (bp.acc >= a.msKhung) { bp.het = true; bp.acc = a.msKhung; }
+  }
   bp.update = function (dtMs) {
     var a = bp.anim();
     if (!a || !(dtMs > 0)) return bp;
-    if (!a.loop && bp.khung >= a.frames - 1) { bp.khung = a.frames - 1; bp.acc = 0; return bp; }   // đã xong: đứng yên ở khung cuối
+    if (!a.loop && bp.khung >= a.frames - 1) {           // đang ở khung cuối: đếm nốt thời lượng khung cuối
+      bp.khung = a.frames - 1;
+      if (bp.het) return bp;
+      bp.acc += dtMs;
+      demKhungCuoi(a);
+      return bp;
+    }
     bp.acc += dtMs;
     var n = Math.floor(bp.acc / a.msKhung);              // có thể nhảy nhiều khung nếu dt lớn
     if (n <= 0) return bp;
     bp.acc -= n * a.msKhung;
     var k = bp.khung + n;
     if (a.loop) k %= a.frames;
-    else if (k >= a.frames - 1) { k = a.frames - 1; bp.acc = 0; }
+    else if (k >= a.frames - 1) {
+      if (k > a.frames - 1) bp.acc += (k - (a.frames - 1)) * a.msKhung;   // nhảy vượt khung cuối: thời gian vượt tính vào khung cuối
+      k = a.frames - 1;
+      demKhungCuoi(a);
+    }
     bp.khung = k;
     return bp;
   };
   bp.frame = function () { return bp.ten ? bp.khung : 0; };          // chỉ đọc
-  bp.xong = function () { var a = bp.anim(); return !!a && !a.loop && bp.khung >= a.frames - 1; };
+  bp.xong = function () { return !!bp.anim() && bp.het; };            // theo thời lượng: khung cuối đã hiển thị đủ msKhung
+  bp.khungCuoi = function () { var a = bp.anim(); return !!a && !a.loop && bp.khung === a.frames - 1; };
   bp.hitFrames = function () { var a = bp.anim(); return a ? a.hitFrames : []; };   // metadata, chỉ để đọc
   return bp;
 };
@@ -159,6 +199,47 @@ Anim.veKhung = function (ctx, sheet, ten, khung, xChan, yChan, lat) {
 Anim.ve = function (ctx, sheet, boPhat, xChan, yChan, lat) {
   if (!boPhat || !boPhat.ten) return;
   Anim.veKhung(ctx, sheet, boPhat.ten, boPhat.khung, xChan, yChan, !!lat);
+};
+
+/* ---- 4b. kiểm chứng lật bằng ảnh (xem ghi chú đầu file) — chỉ ĐO và BÁO, không sửa gì ---- */
+function bboxAlpha(data, w, h) {
+  var trai = -1, phai = -1, day = -1;
+  for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) {
+    if (data[(y * w + x) * 4 + 3] > 0) {
+      if (trai < 0 || x < trai) trai = x;
+      if (x > phai) phai = x;
+      if (y > day) day = y;
+    }
+  }
+  return { trai: trai, phai: phai, day: day, rong: trai < 0 };
+}
+Anim.kiemLat = function (sheet, ten, khung) {
+  var a = sheet.anims[ten];
+  if (!a) loi('kiemLat: không có animation "' + ten + '"');
+  if (!laSoNguyen(khung) || khung < 0) khung = 0; else if (khung >= a.frames) khung = a.frames - 1;
+  var fw = sheet.fw, fh = sheet.fh, W = fw * 2 + 4, H = fh * 2 + 2;
+  var X = fw + 2, Y = fh + 1;                             // pivot nguyên, ô nằm trọn trong canvas tạm ở cả hai chiều
+  var c1 = document.createElement('canvas'), c2 = document.createElement('canvas');
+  c1.width = W; c1.height = H; c2.width = W; c2.height = H;
+  var g1 = c1.getContext('2d'), g2 = c2.getContext('2d');
+  Anim.veKhung(g1, sheet, ten, khung, X, Y, false);
+  Anim.veKhung(g2, sheet, ten, khung, X, Y, true);
+  var d1 = g1.getImageData(0, 0, W, H).data, d2 = g2.getImageData(0, 0, W, H).data;
+  var b1 = bboxAlpha(d1, W, H), b2 = bboxAlpha(d2, W, H);
+  var sai = 0;                                            // pixel thuận (x,y) phải khớp pixel lật (2X−x, y)
+  for (var y = 0; y < H; y++) for (var x = 0; x < W; x++) {
+    var xl = 2 * X - x; if (xl < 0 || xl >= W) continue;
+    var a1 = d1[(y * W + x) * 4 + 3] > 0, a2 = d2[(y * W + xl) * 4 + 3] > 0;
+    if (a1 !== a2) sai++;
+  }
+  var lech = b1.rong || b2.rong
+    ? { trai: NaN, phai: NaN, day: NaN }
+    : { trai: (b1.trai - X) - (X - b2.phai), phai: (b1.phai - X) - (X - b2.trai), day: b1.day - b2.day };
+  return {
+    ten: ten, khung: khung, X: X, Y: Y, thuan: b1, lat: b2, lech: lech, saiPixel: sai,
+    tamLech: b1.rong ? NaN : (b1.trai + b1.phai) / 2 - X,
+    dung: !b1.rong && !b2.rong && lech.trai === 0 && lech.phai === 0 && lech.day === 0 && sai === 0
+  };
 };
 
 /* ---- 5. placeholder: khối màu đơn giản, KHÔNG vẽ Lam ---- */
