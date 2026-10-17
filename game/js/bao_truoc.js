@@ -13,7 +13,17 @@
   if (!A) return;
   const TAU = Math.PI * 2;
   const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
-  const APPEAR = 0.15, FLASH = 0.22, CANCEL = 0.16;
+  const APPEAR = 0.15;
+  // 17/10 bao-truoc-tat (chủ game: "Báo trước xong thì phải tắt đi chứ", docs/review/ke-hoach-cai-thien/bao-truoc-tat/bao-cao.md):
+  // hình báo trước TẮT ngay khi đòn ra — chớp nổ (khung 8) còn 0,1 giây thay vì 0,22; đòn bị huỷ (quái chết / bị choáng / bị ngắt)
+  // mờ trong 0,08 giây thay vì 0,16. Chỉ đổi thời gian HIỆN của hình; lúc ra đòn, vùng trúng, sát thương không đổi.
+  // Cờ quay lui: ?baotat=0 (G.BAO_TAT = false) → 0,22 / 0,16 như cũ.
+  let tatBao = false;
+  try { tatBao = /[?&]baotat=0\b/i.test(String(window.location && window.location.search)); } catch (e) { tatBao = false; }
+  if (G.BAO_TAT == null) G.BAO_TAT = !tatBao;
+  let FLASH = 0.1, CANCEL = 0.08;
+  const nhipTat = () => { const moi = G.BAO_TAT !== false; FLASH = moi ? 0.1 : 0.22; CANCEL = moi ? 0.08 : 0.16; };
+  nhipTat();
 
   const BT = (G.baoTruoc = { q: [], ghosts: [], gone: [], on: true, mask: true, errs: 0 });
   // Vùng báo đang hiện ở khung trước / khung này (vật vùng -> hình đã vẽ). Vùng biến mất mà chưa nổ (quái chết, bị choáng
@@ -74,6 +84,8 @@
     }
     const sh = z.shape;
     if (sh !== 'circle' && sh !== 'rect' && sh !== 'line' && sh !== 'cone' && sh !== 'donut') return false;
+    if (z._btTat) return true; // bao-truoc-tat: đã tắt vì quái chết / bị choáng — không hiện lại, không chớp nổ
+    if (z.t > 0 && seHuy(z)) { z._btTat = true; return true; } // BT.draw thấy vùng biến mất → mờ CANCEL giây
     if (z.t > 0) {
       const it = geo(z), t0 = z.t0 || 0;
       it.age = t0 ? t0 - z.t : since(z);
@@ -89,6 +101,23 @@
     }
     return true;
   };
+
+  // bao-truoc-tat: vùng báo của quái đã chết / đang choáng (đông băng) mà luật chơi SẼ huỷ ở lượt tính kế tiếp (combat.js: quái chết →
+  // vùng có cancel bị xoá; mobs.js: choáng khi đòn chưa ra → cancelZones; ky_nang_quai.js: choáng → xoá vùng knHuy), hoặc vùng CHỈ ĐỂ BÁO
+  // (không sát thương) của quái đang choáng: tắt hình ngay khung này thay vì đợi lượt tính (khựng hình lúc hạ quái kéo dài thêm ~0,1 giây).
+  // Không đụng vùng nào còn nổ thật: vật đã ném ra (knGiu), vùng của trùm nhỏ / trùm vùng (trùm choáng vẫn nổ đúng giờ).
+  function seHuy(z) {
+    const s = z.src;
+    if (!s || G.BAO_TAT === false || z.team === 'player') return false;
+    if (s.dead) return !!z.cancel;
+    const Wd = G.getWorld ? G.getWorld() : null;
+    if (s.isBoss || s.role === 'mini' || s.kind === 'mini' || (Wd && Wd.boss === s)) return false;
+    const st = s.st;
+    if (!st || !(st.stun > 0 || st.frozen > 0) || z.knGiu) return false;
+    if (z.knHuy) return true;
+    if (s.act && !s.act.fired) return true;
+    return !(z.dmg > 0);
+  }
 
   // ---------- hình ----------
   function rr(c, x, y, w, h, r) {
@@ -810,6 +839,11 @@
   // Gọi từ G.drawWorld ngay trước khi vẽ nhân vật (chỗ BT.snap cũ). Kiểu ảnh: vẽ mọi vùng của khung này lên lớp đất.
   BT.dat = function (c, cam, sx, sy) {
     datXong = false;
+    nhipTat();
+    if (G.BAO_TAT !== false) { // bao-truoc-tat: chớp nổ / mờ huỷ đã hết giờ thì không vẽ thêm khung nào nữa (trước còn lố một khung)
+      BT.ghosts = BT.ghosts.filter((g) => G.time - g.at >= 0 && G.time - g.at < FLASH - 0.004);
+      BT.gone = BT.gone.filter((g) => G.time - g.at >= 0 && G.time - g.at < CANCEL - 0.004);
+    }
     if (!BT.on || G.noRender) return;
     if (!anhBat()) { BT.snap(c); return; }
     need = false; snapOk = false;
@@ -840,11 +874,12 @@
   // ---------- vẽ một lượt lên tấm phụ rồi dán lên #ui ----------
   let cv = null, cx = null;
   BT.draw = function (cam, sx, sy) {
+    nhipTat();
     const q = BT.q;
     const W = G.getWorld ? G.getWorld() : null;
     if (W !== curW) { curW = W; BT.ghosts.length = 0; BT.gone.length = 0; lastSeen.clear(); nowSeen.clear(); }
     // vùng khung trước còn, khung này mất mà chưa nổ: đòn bị huỷ -> mờ dần
-    if (!G.noRender) for (const [z, it] of lastSeen) if (!nowSeen.has(z) && !fired.has(z) && z.dead && BT.gone.length < 40) { it.at = G.time; BT.gone.push(it); }
+    if (!G.noRender) for (const [z, it] of lastSeen) if (!nowSeen.has(z) && !fired.has(z) && (z.dead || z._btTat) && BT.gone.length < 40) { it.at = G.time; BT.gone.push(it); }
     const tmp = lastSeen; lastSeen = nowSeen; nowSeen = tmp; nowSeen.clear();
     BT.ghosts = BT.ghosts.filter((g) => G.time - g.at >= 0 && G.time - g.at < FLASH);
     BT.gone = BT.gone.filter((g) => G.time - g.at >= 0 && G.time - g.at < CANCEL);
