@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "image": "lam.png",
+  "frameWidth": 64,
+  "frameHeight": 64,
+  "pivot": [32, 63],
+  "animations": {
+    "idle":   { "row": 0, "frames": 6, "fps": 8,  "loop": true },
+    "run":    { "row": 1, "frames": 8, "fps": 12, "loop": true },
+    "jump":   { "row": 2, "frames": 4, "fps": 10, "loop": false },
+    "fall":   { "row": 3, "frames": 2, "fps": 8,  "loop": true },
+    "attack": { "row": 4, "frames": 6, "fps": 14, "loop": false, "hitFrames": [2, 3] }
+  }
+}

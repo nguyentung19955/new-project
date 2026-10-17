@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!--@HEAD@-->
+<title>Thử Anim2D</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Bố cục: một cột, sân khấu canvas trên cùng, bảng số liệu, rồi các nhóm nút to cho ngón tay. */
+:root {
+  --bg: #f3f1ea; --fg: #1b2028; --muted: #5d6673; --panel: #ffffff; --line: #d9d5c9;
+  --accent: #2f7a4b; --accent-fg: #ffffff; --gold: #b8862f; --hit: #c9472f; --hit-bg: #fde4de;
+  --stage: #1d2430; --stage-grid: #2a3340;
+  --ft-body: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --ft-mono: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #15191f; --fg: #e8e6df; --muted: #9aa3ad; --panel: #1e242c; --line: #333b45;
+  --accent: #5fbf84; --accent-fg: #10281a; --gold: #e1b85a; --hit: #ff7a5c; --hit-bg: #4a2a22;
+  --stage: #0c0f14; --stage-grid: #1a212b; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #15191f; --fg: #e8e6df; --muted: #9aa3ad; --panel: #1e242c; --line: #333b45;
+  --accent: #5fbf84; --accent-fg: #10281a; --gold: #e1b85a; --hit: #ff7a5c; --hit-bg: #4a2a22;
+  --stage: #0c0f14; --stage-grid: #1a212b; color-scheme: dark; }
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--fg); font: 15px/1.45 var(--ft-body);
+  padding-block: 12px 32px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.wrap { max-width: 560px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+header { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+h1 { font-size: 20px; margin: 0; font-weight: 700; text-wrap: balance; }
+.badge { font: 600 12px/1 var(--ft-mono); padding: 6px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); letter-spacing: .02em; }
+.badge.ok { border-color: var(--accent); color: var(--accent); }
+.badge.ph { border-color: var(--gold); color: var(--gold); }
+.stage { background: var(--stage); border-radius: 10px; overflow: hidden; position: relative; }
+.stage canvas { display: block; width: 100%; height: auto; image-rendering: pixelated; image-rendering: crisp-edges; }
+.stage .tag { position: absolute; left: 10px; top: 8px; font: 600 11px/1 var(--ft-mono); color: #CEF0D6; opacity: .8; letter-spacing: .04em; }
+.info { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.info div { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; min-width: 0; }
+.info small { display: block; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
+.info b { font: 600 17px/1.3 var(--ft-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.info b.hit { color: var(--hit); }
+.frames { display: flex; gap: 4px; flex-wrap: wrap; }
+.frames span { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 6px; border: 1px solid var(--line);
+  font: 600 13px var(--ft-mono); color: var(--muted); background: var(--panel); }
+.frames span.h { background: var(--hit-bg); color: var(--hit); border-color: var(--hit); }
+.frames span.c { outline: 3px solid var(--accent); outline-offset: -1px; color: var(--fg); }
+.frames span.h.c { color: var(--hit); }
+.group { display: flex; flex-direction: column; gap: 6px; }
+.group label, .group .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+button { font: 600 16px var(--ft-body); min-height: 48px; padding: 0 16px; border-radius: 10px; border: 1px solid var(--line);
+  background: var(--panel); color: var(--fg); flex: 1 1 auto; cursor: pointer; touch-action: manipulation; }
+button.on { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+button:focus-visible, input:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.speed { display: flex; align-items: center; gap: 10px; }
+.speed input[type=range] { flex: 1; min-width: 0; height: 44px; accent-color: var(--accent); }
+.speed output { font: 600 16px var(--ft-mono); min-width: 52px; text-align: right; font-variant-numeric: tabular-nums; }
+.png { display: flex; flex-direction: column; gap: 8px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+.png input[type=file] { font-size: 14px; min-height: 44px; }
+.png .url { display: flex; gap: 8px; }
+.png input[type=url] { flex: 1; min-width: 0; min-height: 48px; font: 14px var(--ft-mono); padding: 0 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+.png .url button { flex: 0 0 auto; }
+.msg { font-size: 13px; color: var(--muted); min-height: 1.2em; }
+.msg.err { color: var(--hit); }
+.sheet { background: var(--stage); border-radius: 10px; overflow: hidden; }
+.sheet canvas { display: block; width: 100%; height: auto; image-rendering: pixelated; }
+.note { font-size: 13px; color: var(--muted); }
+.note code { font-family: var(--ft-mono); font-size: 12px; }
+@media (max-width: 420px) { .info { grid-template-columns: repeat(2, 1fr); } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+<!--@/HEAD@-->
+</head>
+<body>
+<!--@BODY@-->
+<div class="wrap">
+  <header>
+    <h1>Thử Anim2D · Lam</h1>
+    <span class="badge" id="nguon">đang nạp…</span>
+  </header>
+
+  <div class="stage">
+    <canvas id="cv" width="400" height="240"></canvas>
+    <span class="tag" id="tag">×3</span>
+  </div>
+
+  <div class="info">
+    <div><small>Animation</small><b id="iTen">—</b></div>
+    <div><small>Khung</small><b id="iKhung">—</b></div>
+    <div><small>fps</small><b id="iFps">—</b></div>
+    <div><small>loop</small><b id="iLoop">—</b></div>
+    <div><small>xong()</small><b id="iXong">—</b></div>
+    <div><small>hitFrames</small><b id="iHit">—</b></div>
+  </div>
+  <div class="frames" id="frames"></div>
+
+  <div class="group"><span class="lbl">Animation</span>
+    <div class="row" id="rAnim"></div></div>
+
+  <div class="group"><span class="lbl">Phóng · Lật · Chuyển nhanh</span>
+    <div class="row">
+      <button id="z1">×1</button><button id="z3" class="on">×3</button><button id="z6">×6</button>
+      <button id="bLat">Lật ◀</button>
+      <button id="bAuto">Chuyển nhanh</button>
+    </div></div>
+
+  <div class="group"><label for="speed">Tốc độ (nhân vào dt bước logic)</label>
+    <div class="speed"><input type="range" id="speed" min="0.25" max="2" step="0.25" value="1"><output id="speedOut">1.00×</output></div></div>
+
+  <div class="png">
+    <span class="lbl">Sheet PNG thật (512×320, 5 hàng × 8 cột) — tùy chọn</span>
+    <input type="file" id="fPng" accept="image/png,image/*" aria-label="Chọn tệp PNG từ máy">
+    <div class="url"><input type="url" id="uPng" placeholder="https://…/lam.png" aria-label="Dán URL PNG"><button id="bUrl">Nạp URL</button></div>
+    <div class="msg" id="msg"></div>
+  </div>
+
+  <div class="group"><span class="lbl">Toàn bộ sheet (ô đang phát được khoanh)</span>
+    <div class="sheet"><canvas id="cvSheet" width="512" height="320"></canvas></div></div>
+
+  <p class="note">Vòng lặp cố định 60 bước/giây (accumulator); <code>update(1000/60 × tốc độ)</code> chỉ chạy trong bước logic, phần vẽ chỉ gọi <code>frame()</code>/<code>ve()</code>. Vạch ngang là mặt đất, dấu + là pivot [32,63]: khi đổi animation chân không được nhảy. hitFrames chỉ là nhãn hiển thị, không có hitbox.</p>
+</div>
+
+<!--@LIB@--><script src="../lib/anim2d.js"></script><!--@/LIB@-->
+<script>
+(function () {
+'use strict';
+var NHUNG = null; /*@JSON@*/
+var $ = function (id) { return document.getElementById(id); };
+var cv = $('cv'), ctx = cv.getContext('2d'), cvS = $('cvSheet'), ctxS = cvS.getContext('2d');
+var sheet = null, json = null, bp = null;
+var zoom = 3, lat = false, auto = false, autoT = 0, speed = 1;
+var THU_TU = ['idle', 'run', 'jump', 'fall', 'attack'];
+var W = 400, H = 240;
+
+function msg(t, err) { var m = $('msg'); m.textContent = t || ''; m.className = 'msg' + (err ? ' err' : ''); }
+
+/* ---- nạp sheet ---- */
+function dungSheet(s) {
+  sheet = s; json = s.json;
+  var tenCu = bp && bp.ten;
+  bp = TV.Anim.tao(sheet);
+  bp.set(tenCu && sheet.anims[tenCu] ? tenCu : (sheet.anims.idle ? 'idle' : sheet.tenAnims[0]));
+  var b = $('nguon');
+  if (s.placeholder) { b.textContent = 'placeholder (chưa có PNG)'; b.className = 'badge ph'; }
+  else { b.textContent = 'PNG ' + s.w + '×' + s.h; b.className = 'badge ok'; }
+  veSheetTo();
+  dungNutAnim();
+}
+function dungNutAnim() {
+  var r = $('rAnim'); r.innerHTML = '';
+  sheet.tenAnims.forEach(function (t) {
+    var b = document.createElement('button'); b.textContent = t; b.dataset.ten = t;
+    b.onclick = function () { bp.set(t); auto = false; $('bAuto').className = ''; };
+    r.appendChild(b);
+  });
+}
+function napTuAnh(img, nhan) {
+  try {
+    var s = TV.Anim.taoSheet(img, json); s.json = json;
+    dungSheet(s); msg('Đã nạp ' + nhan + ' (' + s.w + '×' + s.h + ').');
+  } catch (e) { msg(e.message, true); }
+}
+$('fPng').addEventListener('change', function (ev) {
+  var f = ev.target.files && ev.target.files[0]; if (!f) return;
+  var rd = new FileReader();
+  rd.onload = function () {
+    var im = new Image();
+    im.onload = function () { napTuAnh(im, f.name); };
+    im.onerror = function () { msg('Không đọc được ảnh ' + f.name, true); };
+    im.src = rd.result;
+  };
+  rd.readAsDataURL(f);
+});
+$('bUrl').onclick = function () {
+  var u = $('uPng').value.trim(); if (!u) { msg('Dán URL PNG trước đã.', true); return; }
+  msg('Đang tải…');
+  var im = new Image(); im.crossOrigin = 'anonymous';
+  im.onload = function () { napTuAnh(im, 'URL'); };
+  im.onerror = function () { msg('Không tải được từ URL (bản trực tuyến chặn ảnh ngoài — hãy chọn tệp từ máy).', true); };
+  im.src = u;
+};
+
+function khoiDong() {
+  if (NHUNG) {
+    json = NHUNG;
+    var s = TV.Anim.taoSheet(TV.Anim.placeholder(json), json); s.placeholder = true; s.json = json;
+    dungSheet(s); msg('Bản nhúng: dùng placeholder. Chọn tệp PNG để thử sheet thật.');
+    return;
+  }
+  TV.Anim.nap('../anim/lam.anim.json').then(function (s) {
+    dungSheet(s);
+    msg(s.placeholder ? 'Chưa có anim/lam.png → placeholder. ' + (s.loiAnh || '') : 'Đã nạp anim/lam.png.');
+  }, function (e) {
+    msg('Lỗi nạp JSON: ' + e.message, true);
+    $('nguon').textContent = 'lỗi'; $('nguon').className = 'badge';
+  });
+}
+
+/* ---- điều khiển ---- */
+function datZoom(z) {
+  zoom = z; ['z1', 'z3', 'z6'].forEach(function (id) { $(id).className = (+id.slice(1) === z) ? 'on' : ''; }); $('tag').textContent = '×' + z;
+  H = (sheet ? sheet.fh : 64) * z + 56; cv.height = H;   // đủ chỗ cho ô ×6 (384 px) không bị cắt
+}
+$('z1').onclick = function () { datZoom(1); }; $('z3').onclick = function () { datZoom(3); }; $('z6').onclick = function () { datZoom(6); };
+$('bLat').onclick = function () { lat = !lat; this.className = lat ? 'on' : ''; this.textContent = lat ? 'Lật ▶' : 'Lật ◀'; };
+$('bAuto').onclick = function () { auto = !auto; autoT = 0; this.className = auto ? 'on' : ''; };
+$('speed').addEventListener('input', function () { speed = +this.value; $('speedOut').value = speed.toFixed(2) + '×'; });
+
+/* ---- vòng lặp cố định: logic 60 bước/giây, vẽ riêng ---- */
+var DT = 1000 / 60, MAX_STEPS = 5, last = -1, accT = 0;
+function step() {
+  if (!bp) return;
+  if (auto) {
+    autoT += DT;
+    if (autoT >= 1500) { autoT -= 1500; var i = THU_TU.indexOf(bp.ten); bp.set(THU_TU[(i + 1) % THU_TU.length]); }
+  }
+  bp.update(DT * speed);
+}
+function loop(now) {
+  requestAnimationFrame(loop);
+  if (last < 0) last = now;
+  var dt = now - last; last = now;
+  if (dt > 250) dt = DT;
+  accT += dt; var n = 0;
+  while (accT >= DT && n < MAX_STEPS) { step(); accT -= DT; n++; }
+  if (n === MAX_STEPS && accT >= DT) accT %= DT;
+  render();
+}
+
+/* ---- vẽ ---- */
+function render() {
+  ctx.imageSmoothingEnabled = false;
+  ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--stage').trim() || '#1d2430';
+  ctx.fillRect(0, 0, W, H);
+  // lưới mờ theo ô pixel ×zoom
+  ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--stage-grid').trim() || '#2a3340';
+  var g = 8 * zoom;
+  for (var x = (W / 2) % g; x < W; x += g) ctx.fillRect(Math.round(x), 0, 1, H);
+  for (var y = (H - 32) % g; y < H; y += g) ctx.fillRect(0, Math.round(y), W, 1);
+  var xChan = W / 2, yChan = H - 32;
+  // mặt đất
+  ctx.fillStyle = '#83CC93'; ctx.fillRect(0, yChan + 1, W, 2);
+  if (sheet && bp) {
+    ctx.save();
+    ctx.translate(xChan, yChan); ctx.scale(zoom, zoom);
+    TV.Anim.ve(ctx, sheet, bp, 0, 0, lat);   // pivot tại (0,0) sau khi dịch → trùng xChan,yChan
+    ctx.restore();
+  }
+  // dấu + tại pivot
+  ctx.fillStyle = '#F3E6C8'; ctx.fillRect(xChan - 6, yChan, 13, 1); ctx.fillRect(xChan, yChan - 6, 1, 13);
+  capNhatSo();
+}
+var fsCache = '';
+function capNhatSo() {
+  if (!bp || !bp.ten) return;
+  var a = sheet.anims[bp.ten], k = bp.frame(), hf = a.hitFrames, trung = hf.indexOf(k) >= 0;
+  $('iTen').textContent = bp.ten;
+  $('iKhung').textContent = (k + 1) + ' / ' + a.frames;
+  $('iFps').textContent = a.fps;
+  $('iLoop').textContent = a.loop ? 'true' : 'false';
+  $('iXong').textContent = bp.xong() ? 'true' : 'false';
+  var h = $('iHit'); h.textContent = hf.length ? ('[' + hf.join(', ') + ']' + (trung ? ' ◆' : '')) : '—'; h.className = trung ? 'hit' : '';
+  var key = bp.ten + '|' + k;
+  if (key !== fsCache) {
+    fsCache = key; var fr = $('frames'); fr.innerHTML = '';
+    for (var i = 0; i < a.frames; i++) {
+      var s = document.createElement('span'); s.textContent = i;
+      s.className = (hf.indexOf(i) >= 0 ? 'h' : '') + (i === k ? ' c' : '');
+      fr.appendChild(s);
+    }
+    var nut = $('rAnim').children;
+    for (var j = 0; j < nut.length; j++) nut[j].className = nut[j].dataset.ten === bp.ten ? 'on' : '';
+    veSheetTo();
+  }
+}
+function veSheetTo() {
+  if (!sheet) return;
+  cvS.width = sheet.w; cvS.height = sheet.h;
+  ctxS.imageSmoothingEnabled = false;
+  ctxS.fillStyle = '#1d2430'; ctxS.fillRect(0, 0, sheet.w, sheet.h);
+  ctxS.drawImage(sheet.img, 0, 0);
+  ctxS.strokeStyle = 'rgba(131,204,147,0.35)';
+  for (var c = 0; c <= sheet.cols; c++) { ctxS.beginPath(); ctxS.moveTo(c * sheet.fw + 0.5, 0); ctxS.lineTo(c * sheet.fw + 0.5, sheet.h); ctxS.stroke(); }
+  for (var r = 0; r <= sheet.rows; r++) { ctxS.beginPath(); ctxS.moveTo(0, r * sheet.fh + 0.5); ctxS.lineTo(sheet.w, r * sheet.fh + 0.5); ctxS.stroke(); }
+  if (bp && bp.ten) {
+    var a = sheet.anims[bp.ten];
+    ctxS.strokeStyle = '#E1B85A'; ctxS.lineWidth = 3;
+    ctxS.strokeRect(bp.khung * sheet.fw + 1.5, a.row * sheet.fh + 1.5, sheet.fw - 3, sheet.fh - 3);
+    ctxS.lineWidth = 1;
+  }
+}
+
+datZoom(3);
+khoiDong();
+requestAnimationFrame(loop);
+})();
+</script>
+<!--@/BODY@-->
+</body>
+</html>
